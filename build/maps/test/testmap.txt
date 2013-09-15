@@ -1,0 +1,48 @@
+---Tiles---
+aaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaa
+aaabbbaabbaaaaaaaaaa
+aabbbbbbbbabaaaaaaaa
+aabbbbbbbbccccaaaaaa
+aaabbbbbbccddddaaaaa
+aaabbbbbbcddbbdaaaaa
+aabbbbbbbeebbbdaaaaa
+aabbbbbbbcddbbdaaaaa
+aabbbbbbbcddbbdaaaaa
+aaabbbbbbccddddaaaaa
+aaabbbbbbbccccaaaaaa
+aaaabbbbbbbbbbaaaaaa
+aaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaa
+---Tiles---
+
+---Legend---
+a = cave wall
+b = forest floor
+c = lava
+d = red wall
+e = parquet floor
+---Legend---
+
+---Properties---
+Description = Unknown Area
+Level = 1
+MonsterType = IsHostile
+WanderingRate = 100
+---Properties---
+
+---Things---
+4x4 entrance point
+12x6 [IsHostile]
+11x7 [IsDoor]
+12x7 [IsHostile]
+12x8 [IsHostile]
+4x9 entrance point
+12x9 [IsHostile]
+6x11 entrance point
+---Things---

@@ -1,0 +1,75 @@
+---Tiles---
+aaaaaaaaabbbbbbbbbbbbbcbbbbbbbbbbbbbbbbb
+abaaaaaaabbbbbbbbbbbbbcbbbbbbbbbbbbbbbbb
+aabaaabaabddbbbddbbbbbdbbbbbbbdddbbbbbbb
+babaaaaebbdbbbbbddbbbddddbbbbbdbbbbbebbb
+aaaaaaaabedeebbbbddbbddbdbbbdddbbbbbbbbb
+bbaaabaabeededebbbdddbdbddbdddddbebbbbbb
+aaaaabaadbddbdebbbbdddddddddbbddbbbebbbb
+aaabaaaadebdbdbbebbbdddddddbbbbbbbbbbbbb
+aaaaaababbddddeebbbbdddddbbbbbebbebebbbb
+aabaaaaaaeebddebbdbbbbdbbbbdbbbbbebbbbbb
+aaaabbbaaaaebbeddddbbbebbddddebebeebbbbb
+abbbbbbbbaaabbbddddbbdddddbdbddeebdebbbb
+bbbbbbbebbaaaeedddddddddbdddddddbdddbeeb
+bbbbbbbbaaaaaadbddeddbebddddbddddddddbbb
+bbbbbbfbaaaaaaabddbdddbbbbbbbbbdddddbbbb
+bbfffffbbabaaaaabddddddebbbbbbdbdddddbbb
+bbffbffffaabbaaaadbdedbbbebbbeddddedbbbb
+bbfffffbfbbbaaaaabbdebdebbbbeddbbbebebbb
+bbfffbffffbbaaaaaaadbbebbbbbeebbebbbbbbb
+bfffffffffbbbaaaaaabfbbbbbbbbbbbbbbbbbbb
+bbfffbbffbbbbbafffffdfbbbbbbbbbbbbbbbbbb
+bbbfffffbbbbbeffbbfffbfbbbbbbbbbbgbbbbbb
+bbbfffbbeebbbefbbfbfdfdbbbbbbbbgggbbbbbb
+bbfbfffffbbffeffffffbbbbbbbbggggggbbbbbb
+bbbfffbfebdfffbffffdbfbbbbbggbbggbbbbbbb
+bbffffffffffffffbfffffbbbdggbbbggbbbbbbb
+bbfffffbbeffffffffffdbddddddbbbgbbbbbbbb
+bbfffffbbdbffffffffdffddddddddbgbbbbbbbb
+bbffbfbeebbfffffffffffddddddddbgbbbbbbbb
+bbbfffbbefffdfffffffeddddbdbbdggbbbbbbbb
+bbbfbfbbeebdffffbeefbddddbbbbdgbbbbbbbbb
+bbbbbbaabebbfffefefffbddddbdfdbbbbbbbbbb
+bbfbaaabbeeffebbffbdffddddbdbdbbbbbbbbbb
+bfaaaabbbbbbdefbfbbbddbbddddbbbbbbbbbbbb
+aaaaddabaabebbdbbbdddddddddbbbbbbbbbbbbb
+aaaaadaaaaaabeeebbbbddddddbbbbbbbbbbbbbb
+bffaaaaaaaaaaabebbbbbbddbbbbbbbbbbbbbbbb
+bbffffaaabfbfbbbbbbbbbddbbbbbbbbbbbbbbbb
+bbbbffffffbbbbbbbbbbbbbdbbbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbbbbbbbbbbdbbbbbbbbbbbbbbbb
+---Tiles---
+
+---Legend---
+a = sea
+b = mountains
+c = stone floor
+d = plains
+e = hills
+f = forests
+g = lava sea
+---Legend---
+
+---Properties---
+Description = The Northern Wilds
+FloorTile = 1
+IsWorldMap = 1
+Level = 15
+MonsterType = IsHostile
+WallTile = 10
+WanderingRate = 0
+---Properties---
+
+---Things---
+0x0 redistribution point
+1x0 redistribution point
+2x0 redistribution point
+3x0 redistribution point
+4x0 redistribution point
+5x0 redistribution point
+6x0 redistribution point
+22x0 doom
+34x21 firetop
+23x39 annenvale
+---Things---

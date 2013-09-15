@@ -1,0 +1,44 @@
+---Tiles---
+aaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaa
+aaaaaaabbbbaaaaaaaaa
+aaaaabbbbbbbbbaaaaaa
+aaababbbbbbbabbbaaaa
+aaababbabbbbbbbbaaaa
+aaabbbbbaaaaabbbbaaa
+aaabbaabbaaaabbbbaaa
+aabbbaaaabcccbabbaaa
+aabbbacaabcacaabbaaa
+aabbaacbbbbacaabbbaa
+aabbbbcccccccaabbbaa
+aabbbaaaaacabbabbbaa
+aaabbbaabacaabbbbaaa
+aaabbbbabbcaaabbbaaa
+aaabbbbbbbcabbbbbbaa
+aaaaaabbbbcbbbbbaaaa
+aaaaaaabbbcbbbbaaaaa
+aaaaaaabbbcbbaaaaaaa
+aaaaaaaaaacaaaaaaaaa
+---Tiles---
+
+---Legend---
+a = cave wall
+b = lava sea
+c = stone floor
+---Legend---
+
+---Properties---
+Description = Inside Mount Doom
+FloorTile = 1
+IsWorldMap = 1
+Level = 20
+MonsterType = IsHostile
+WallTile = 10
+WanderingRate = 0
+---Properties---
+
+---Things---
+6x9 dungeon
+10x9 dark tower
+10x19 wilds
+---Things---

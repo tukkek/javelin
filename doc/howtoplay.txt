@@ -1,0 +1,17 @@
+HOW TO PLAY
+
+Javelin is a complex game with simple rules. You can learn everything just by playing so just go ahead and try! Don't be upset if something unexpected happens or you die, since it can be a difficult game, especially until you reach around level 6.
+
+You control a squad and do battle around the world. Towns have shops, let you rest to recover health and upgrade your units when they have enough experience points (XP).
+
+There are several types of terrain in the game: plains (offer easy battles), forest (moderate), mountains (hard) and swamp (very hard). When the game starts you will probably want to stay very close to the nearest city and level up your party once or twice before adventuring farther.
+
+Every time you start a new game a new world is generated! If you don't like the world you're in you can press S to quit and start a new game.
+
+Don't forget that fleeing is an option if a situation ever seems less than favorable - it has no disadvantages except forfeiting any rewards from the battle. 
+
+Your objective is to beat your own highscore, which is recorded when the game ends. Good luck and have fun!
+
+Check out these websites for more information:
+    * javelinrl.wordpress.com - news and updates
+    * d20srd.org - d20 reference 

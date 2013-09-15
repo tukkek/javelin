@@ -1,0 +1,21 @@
+package javelin.controller.upgrade.feat;
+
+import javelin.model.feat.PointBlankShot;
+import javelin.model.unit.Combatant;
+
+public class PreciseShot extends FeatUpgrade {
+	public PreciseShot() {
+		super(javelin.model.feat.PreciseShot.SINGLETON);
+		prerequisite = PointBlankShot.SINGLETON;
+	}
+
+	@Override
+	public String info(Combatant m) {
+		return "";
+	}
+
+	@Override
+	public boolean isstackable() {
+		return false;
+	}
+}

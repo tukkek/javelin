@@ -1,0 +1,322 @@
+---Tiles---
+aaaaaaaaaaaaaaaaaaaa
+aaabbaaaaaaaaaaaaaaa
+aabbaabbbaaaaaccccca
+aabaabbbbbaaacccccca
+abbabbbbbbaaacccccca
+abbabbbbbbaaaaccccca
+abbaabbbbbbaaaaaacca
+aabaaabaabbbaaddacca
+abbabbbbaabbbdddaaca
+abbabbbbbaabbdddccca
+abbaabbbbbabbdddccca
+abbbaaaaaaabbdddccca
+aabbaabbaaabbbddaaca
+aaabbbbbbaabbbddccca
+aaabbdddbbebeaaaaaca
+aaaaaddddbebeefffcca
+eeeeeeeeeeebeeeffcca
+ebbebbbbebbbbbeaccca
+ebbebbbbbbbbbbecccca
+ebbebbbbebbbbbeaaaca
+ebbeabbbebbbbbecccca
+ebbebbbbebbbbbecccca
+eeeeebeeeeebeeeeccca
+ebbbbbbbbbbbbbbeaaca
+ebbbbbbbbbbbbbbeaaca
+eeeeceeeeeeebeeeeeca
+eccccccebbbbbbbbbeca
+eccececebbbbbbbbbeca
+eccccccebebbbbbebeca
+eccccccbbbbbbbbbbeca
+eccccccebebbbbbebeca
+eeeeceeebbbbbbbbbeca
+eccccccebebbbbbebeca
+eccccccbbbbbbbbbbeca
+eccccccebebbbbbebeca
+eccccccebbbbbbbbbeca
+ecccccceeeeebeeeeeca
+eeeeceeeaaaabaaaaaca
+ecccccceaabbbbabbaba
+eccgggceaabbbbabbaaa
+eccgggceaaaabbbbbbba
+ecccccceaaaabbbbbbba
+hhhhchhhhhaaabbbbbba
+hiiiiiiiihaaaabbbbba
+hiiiiiiiihabaaabbbaa
+hiiiiiiiihabbbabaaaa
+hiiiiiiiihabbbbbaaaa
+hiiiiiiiihabbbaaaaaa
+hiiiiiiiihaabbaaaaaa
+hhhhhhhhhhaaaaaaaaaa
+---Tiles---
+
+---Legend---
+a = cave wall
+b = floor
+c = stone floor
+d = lava
+e = stone wall
+f = pool
+g = river
+h = metal wall
+i = red floor
+---Legend---
+
+---Properties---
+Description = Goblin Grotto
+FloorTile = 1
+Level = 8
+MonsterType = IsHostile
+WanderingRate = 300
+---Properties---
+
+---Things---
+3x1 [IsUndead]
+4x1 [IsUndead]
+2x2 [IsUndead]
+3x2 [IsUndead]
+2x3 [IsUndead]
+8x3 entrance point
+1x4 [IsUndead]
+2x4 [IsUndead]
+5x4 entrance point
+15x4 goblin hero
+1x5 [IsUndead]
+2x5 [IsUndead]
+1x6 [IsUndead]
+2x6 [IsUndead]
+2x7 stone door
+   KeyName = golden key
+6x7 trapped black door
+   KeyName = golden key
+3x8 secret door
+4x8 [IsGoblinoid]
+5x8 [IsGoblinoid]
+7x8 [IsBandit]
+18x8 door
+   KeyName = bronze key
+1x9 [IsGoblinoid]
+2x9 [IsGoblinoid]
+4x9 [IsGoblinoid]
+5x9 [IsGoblinoid]
+7x9 [IsBandit]
+8x9 [IsBandit]
+16x9 goblin archer
+17x9 goblin rockthrower
+18x9 goblin archer
+1x10 [IsGoblinoid]
+2x10 [IsGoblinoid]
+5x10 [IsGoblinoid]
+6x10 blue imp
+7x10 [IsBandit]
+8x10 [IsBandit]
+9x10 [IsBandit]
+16x10 goblin archer
+17x10 goblin chieftain
+18x10 goblin archer
+2x11 [IsGoblinoid]
+3x11 [IsGoblinoid]
+16x11 goblin archer
+17x11 goblin rockthrower
+18x11 goblin shaman
+2x12 [IsGoblinoid]
+3x12 [IsGoblinoid]
+6x12 healing salve
+7x12 healing salve
+18x12 trapped black door
+   KeyName = ornate key
+4x13 Fireball trap
+5x13 Teleport Monster trap
+6x13 Teleport Monster trap
+7x13 blindness trap
+8x13 curse trap
+16x13 invincible portcullis
+   KeyName = iron key
+3x14 weedy goblin
+4x14 Fireball trap
+8x14 healing salve
+9x14 potion of cure poison
+18x14 invisible riddle door
+   KeyName = copper key
+11x15 trapped black door
+   KeyName = copper key
+8x18 door
+   KeyName = copper key
+3x19 secret door
+5x22 door
+   KeyName = bronze key
+11x22 door
+   KeyName = bronze key
+18x23 rotten door
+   KeyName = brass key
+4x25 door
+   KeyName = copper key
+12x25 strong door
+   KeyName = iron key
+1x26 goblin archer
+2x26 goblin archer
+3x26 invincible portcullis
+   KeyName = bronze key
+5x26 invincible portcullis
+   KeyName = dull key
+6x26 goblin archer
+1x27 goblin archer
+2x27 goblin archer
+4x27 invisible riddle door
+   KeyName = copper key
+6x27 goblin chieftain
+1x28 goblin archer
+2x28 goblin archer
+3x28 goblin archer
+4x28 goblin archer
+5x28 goblin archer
+6x28 goblin chieftain
+1x29 goblin archer
+2x29 goblin archer
+3x29 flying goblin
+4x29 flying goblin
+5x29 flying goblin
+6x29 flying goblin
+7x29 door
+   KeyName = brass key
+1x30 goblin archer
+2x30 goblin archer
+3x30 flying goblin
+4x30 flying goblin
+5x30 flying goblin
+6x30 flying goblin
+4x31 door
+   KeyName = copper key
+8x31 goblin archer
+16x31 goblin archer
+8x32 goblin archer
+16x32 goblin archer
+7x33 door
+   KeyName = bronze key
+8x33 goblin archer
+10x33 big orc
+11x33 big orc
+12x33 big orc
+13x33 big orc
+14x33 big orc
+16x33 goblin archer
+18x33 big goblin
+10x34 goblin shaman
+11x34 orc warrior
+12x34 orc warrior
+13x34 orc warrior
+14x34 goblin shaman
+18x34 big goblin
+12x35 orc champion
+18x35 big goblin
+12x36 door
+   KeyName = copper key
+18x36 big goblin
+4x37 door
+   KeyName = brass key
+18x37 rotten door
+   KeyName = brass key
+10x38 [IsUndead]
+11x38 [IsUndead]
+12x38 [IsUndead]
+13x38 [IsUndead]
+17x38 secret door
+10x39 [IsUndead]
+11x39 small gravestone
+13x39 [IsUndead]
+15x39 gravestone
+16x39 gravestone
+2x40 crocodile
+6x40 crocodile
+13x40 [IsUndead]
+14x40 [IsUndead]
+15x40 [IsUndead]
+16x40 [IsUndead]
+2x41 ralkan
+3x41 ralkan
+4x41 crocodile
+5x41 ralkan
+6x41 ralkan
+12x41 gravestone
+13x41 [IsUndead]
+14x41 [IsUndead]
+15x41 gravestone
+16x41 [IsUndead]
+4x42 door
+   KeyName = brass key
+14x42 [IsUndead]
+15x42 [IsUndead]
+16x42 [IsUndead]
+17x42 small gravestone
+18x42 gravestone
+1x43 copper coin
+2x43 silver coin
+3x43 copper coin
+4x43 silver coin
+5x43 copper coin
+6x43 copper coin
+7x43 silver coin
+8x43 copper coin
+15x43 small gravestone
+16x43 [IsUndead]
+17x43 [IsUndead]
+1x44 silver coin
+2x44 silver coin
+3x44 silver coin
+4x44 copper coin
+5x44 silver coin
+6x44 copper coin
+7x44 silver coin
+8x44 silver coin
+11x44 [IsPotion]
+15x44 [IsUndead]
+16x44 [IsUndead]
+17x44 [IsUndead]
+1x45 gold coin
+2x45 gold coin
+3x45 silver coin
+4x45 copper coin
+5x45 copper coin
+6x45 silver coin
+7x45 silver coin
+8x45 sovereign
+11x45 [IsPotion]
+12x45 [IsPotion]
+13x45 [IsPotion]
+15x45 small gravestone
+1x46 sovereign
+2x46 gold coin
+3x46 silver coin
+4x46 silver coin
+5x46 silver coin
+6x46 gold coin
+7x46 sovereign
+8x46 sovereign
+11x46 [IsPotion]
+12x46 [IsPotion]
+13x46 [IsPotion]
+14x46 door
+   KeyName = bronze key
+1x47 sovereign
+2x47 gold coin
+3x47 gold coin
+4x47 gold coin
+5x47 gold coin
+6x47 gold coin
+7x47 sovereign
+8x47 sovereign
+11x47 [IsPotion]
+12x47 [IsPotion]
+13x47 [IsPotion]
+1x48 sovereign
+2x48 sovereign
+3x48 sovereign
+4x48 sovereign
+5x48 sovereign
+6x48 sovereign
+7x48 sovereign
+8x48 sovereign
+12x48 [IsPotion]
+13x48 [IsPotion]
+---Things---

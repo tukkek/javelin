@@ -1,0 +1,11 @@
+ITEM GUIDE
+
+Potion of barkskin: raises armor class. 
+Potion of cure light wounds: cures 1d8+1 hit points. 
+Potion of cure moderate wounds: cures 2d8+3 hit points. 
+Potion of cure serious wounds: cures 3d8+5 hit points. 
+Potion of cure critical wounds: cures 4d8+7 hit points. 
+Scroll of secure shelter: use it to rest for 8 hours on the world screen.
+Scroll of word of recall: returns party to last visited town.
+Scroll of raise dead & restoration: after battle, ressurects a killed ally.
+Scroll of ressurect & restoration: after battle, ressurects a killed ally with full hit points.

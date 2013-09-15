@@ -1,0 +1,58 @@
+---Tiles---
+aaaaaaabaaaaaaaaaaaa
+aaabaaabbbaaaaaaaaaa
+aabbbbaabbaaaacdddaa
+aaaaabbaabbaacddddaa
+aabbaaaabbaaccdddaaa
+aacccaaabbaaddddedaa
+abccbaabbdaacaddddaa
+accbaaabdaaaaddddcca
+acaaaaeeddaddcacaaaa
+acaeeeeedaadaaaacaaa
+acceaeeedaddaaacaaaa
+aaeeaeedddddaaaacaca
+aaeeaaadddbbdaaaacca
+aaaeeeddddbbbddaaaca
+aacaeedabbbbbbdacaaa
+acaaaadddbbeeebddddd
+aacddddccceeeeaabbca
+accccacaceebeecaccaa
+acaaaaaaaceeecaaacaa
+aaaaaaaaaaaaaaaaaaaa
+---Tiles---
+
+---Legend---
+a = mountains
+b = forests
+c = hills
+d = plains
+e = sea
+---Legend---
+
+---Properties---
+Description = The Annen Vale
+FloorTile = 1
+IsWorldMap = 1
+Level = 10
+MonsterType = IsHostile
+VisionRange = 4
+WallTile = 10
+WanderingRate = 0
+---Properties---
+
+---Things---
+0x0 redistribution point
+0x0 yanthrall temple
+1x0 redistribution point
+1x0 deep dungeon
+2x0 redistribution point
+3x0 redistribution point
+7x0 wilds
+16x4 town
+9x8 dungeon
+7x12 town
+17x12 dungeon
+19x15 karrain
+1x18 grotto
+17x18 mysterious dungeon
+---Things---

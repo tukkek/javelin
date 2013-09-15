@@ -1,0 +1,56 @@
+---Tiles---
+aaaaaaaaaaaaaabbbccc
+adaaaaaaaaaaaabbbbac
+adaaaeebeaaaaccbbbac
+adddeecbeeacccccbbbc
+aaeedcbbeeaccccccbbb
+addebbbbbeacccecccbb
+aaddebbbbeeeeeeeedbb
+aaedebbbbeeeeeeeeedb
+aaaeeeebbeceeeeeeaab
+aaaaaeeeeeeeeeeddaab
+accaaaaaeeeeeebbbbbb
+eecaaaeeeebbbbbcbbbb
+aeeeeeeeeeeeeecceebb
+aaeccaaaeeeeeeeeeebb
+aaaaaccccecceeeeeebb
+aaaacccccaeceeeeeebb
+aaaacccccaaeeeeeeebb
+aaaacccccaaceeebebbb
+aaaaaccaaaccebbbbbbb
+aaaaaaaaaabbbbbbbbbb
+---Tiles---
+
+---Legend---
+a = mountains
+b = sea
+c = forests
+d = hills
+e = plains
+---Legend---
+
+---Properties---
+Description = North Karrain Valley
+FloorTile = 1
+IsWorldMap = 1
+Level = 1
+MonsterType = IsHostile
+VisionRange = 4
+WallTile = 10
+WanderingRate = 0
+---Properties---
+
+---Things---
+1x1 dwarftown
+6x2 goblin village
+19x2 town
+13x3 ruin
+13x7 tutorial inn
+3x8 caves
+13x9 town
+0x11 annenvale
+2x13 graveyard
+10x15 town
+6x16 dark forest
+13x17 town
+---Things---

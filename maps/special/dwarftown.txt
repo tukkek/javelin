@@ -1,0 +1,325 @@
+---Tiles---
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbaaaaaaabba
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaacccadddddddddaaaabbbacccaaabba
+aaccccccccccccccccccacccacaccacccadcccccccdaaaaabbacccaabbba
+aaccccccccccccccccccaccccccccacccadcccccccdaaaaabbaaaaabbbba
+aaccaaccccccccccaaccacccacaaaacccadcccccccdaaaaaabbbaabbbbaa
+aaccaaccccccccccaaccaaaaaccccacccadcccccccdaaaaaabbbabbbbaaa
+aaccccccccccccccccccaccccccccacccaddddcddddaaaaaaabbbbbaaaaa
+aaccccccccccccccccccacccaccccacccaaaadcdaaaaaaaaaabbbbaaaaaa
+aaccaaccccccccccaaccaaaaaccccacccaddddcddddaaaaaaabbbbaaaaaa
+aaccaaccccccccccaaccacccacaaaacccadcccccccdaaaaaaabbbaaaaaaa
+aaccccccccccccccccccacccccaccacccadcccccccdaaaaaabbbbaaaaaaa
+aaccccccccccccccccccacccacaccccccadcccccccdaaaaaabbbaaaaaaaa
+aaccaaccccccccccaaccaacaaccccacccadcccccccdaaaaaabbbaaaaaaaa
+aaccaaccccccccccaaccacccacaccccccaddddcddddaaaaaabbbaaaaaaaa
+aaccccccccccccccccccacccacaccacccaaaadcdaaaaaaaaabbbaaaaaaaa
+aaccccccccccccccccccaaaaacaaaaccccccccccccccccccccccccccccca
+aaccaaccaaccaaccaaccacccaccccaccccccccccccccccccccccccccccca
+aaccaaccaaccaaccaaccaccccccccaccccccccccccccccccccccccccccca
+aaccccccccccccccccccacccaccccccccaaaaaaaaaaaaaaaaaabbbaaaaaa
+aaccccccccccccccccccacccaccccacccaaaaaaaaaaaaaaaaaabbbbaaaaa
+aaaaaaacaaccaacaaaaaacccaccccacccaaaaaaaaaaaaaaaaaaabbbbaaaa
+aaaaaaacaaccaacaaaaaaaaaaaaaaacccaaaaaaaaaaaaaaaaaaaabbbbaaa
+aacccccccccccccccccccccccccccccccaaaaaaaaaaaaaaaaaaaaabbbaaa
+accccccccccccccccccccccccccccccccaaaaaaaaaaaaaaaaaaaaabbbaaa
+aacccccccccccccccccccccccccccccccaaaaaaaaaaaaaaaaaaaaabbbaaa
+aaaaacaaacaaacccaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbaaa
+aaccccacccccacccaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbaaa
+aaccccacccccacccaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbaaa
+aaccccccccccacccaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbaaaa
+aaccccacccccacccaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbaaaa
+aaaaaaaaaaaaacccaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbaaaaa
+aaccccacccccacccaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbaaaaaa
+aaccccacccccacccaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbaaaaaaa
+aaccccacccccacccaaaaaaaaaaacccccccccccccaccccaaaaabbaaaaaaaa
+aaaaaaaaacaaacccaaaaaaaaaaacccccccccccccaccccaaaabbaaaaaaaaa
+aacccaccccccccccaaaaaaaaaaacccccccccccccaccccaaabbbaaaaaaaaa
+aacccaccccccccccaaaaaaaaaaacccccccccccccaacaaaaabbbaaaaaaaaa
+aaccccccccaaacccaaaaaaaaaaacccccccccccccaccccaabbbaaaaaaaaaa
+aacccaccccacaccccccccccccccccccccccccccccccccaabbaaaaaaaaaaa
+aacccaccccacacccccccccccccccccccccccccccaccccaabbaaaaaaaaaaa
+aacaaaaaaaacacccccccccccccccccccccccccccaacaaabbbaaaaaaaaaaa
+accccaccccacacccccccccccccccccccccccccccaccccabbaaaaaaaaaaaa
+accccaccccacaaaaaaaaaaaaaaacccccccccccccaccccabbaaaaaaaaaaaa
+acccccccccacaccccaccccacccacccccccccccccaccccabbaaaaaaaaaaaa
+accccaccccacaccccaccccacccacccccccccccccaaacaabbaaaaaaaaaaaa
+accccaaaaaacaccccaccccacccacccccccccccccaccccabbaaaaaaaaaaaa
+accccaccccacaccccaccccacccacccccccccccccaccccabbaaaaaaaaaaaa
+acccccccccacaccccaccccacccaaaaaaaaacaaaaaccccabbaaaaaaaaaaaa
+accccaccccacaaaaaaaaaaacccccccacccccccccaaaaaabbaaaaaaaaaaaa
+accccaccccacaaaaaaaaaaacccccccacacacacacaaaaaabbaaaaaaaaaaaa
+aaaaaaaaaaacaaaaaaaaaaacccccccacccccccccaaaaaabbaaaaaaaaaaaa
+acccccccccacaaaaaaaaaaaaacaaaaacacccccacaaaaaabbaaaaaaaaaaaa
+acccccccccaaaaaaaaaaaaacccccccacccccccccaaaaabbbaaaaaaaaaaaa
+acceeeeeccaaaaaaaaaaaaacccccccacacacccacaaaaabbbaaaaaaaaaaaa
+acceeeeeccaaaaaaaaaaaaacccccccacccccccccaaaabbbaaaaaaaaaaaaa
+acceeeeeccaaaaaaaaaaaaacccccccacccacacacaaaabbbaaaaaaaaaaaaa
+acceeeeeccaaaaaaaaaaaaacccccccacccccccccaaabbbbaaaaaaaaaaaaa
+acccccccccaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbaaaaaaaaaaaaaa
+acccccccccaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbaaaaaaaaaaaaaa
+---Tiles---
+
+---Legend---
+a = stone wall
+b = river
+c = stone floor
+d = metal wall
+e = pool
+---Legend---
+
+---Properties---
+Description = Dwarftown
+FloorTile = 1
+Level = 10
+MonsterType = IsHostile
+WallTile = 10
+WanderingRate = 20
+---Properties---
+
+---Things---
+28x2 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+35x2 sovereign
+   Number = 1000
+36x2 sovereign
+   Number = 1000
+37x2 sovereign
+   Number = 1000
+38x2 sovereign
+   Number = 1000
+39x2 sovereign
+   Number = 1000
+40x2 sovereign
+   Number = 1000
+41x2 sovereign
+   Number = 1000
+21x3 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+24x3 [IsDoor]
+26x3 [IsDoor]
+28x3 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+35x3 sovereign
+   Number = 1000
+36x3 sovereign
+   Number = 1000
+37x3 sovereign
+   Number = 1000
+38x3 sovereign
+   Number = 1000
+39x3 sovereign
+   Number = 1000
+40x3 sovereign
+   Number = 1000
+41x3 sovereign
+   Number = 1000
+51x3 secret door
+35x4 sovereign
+   Number = 1000
+36x4 sovereign
+   Number = 1000
+37x4 sovereign
+   Number = 1000
+38x4 sovereign
+   Number = 1000
+39x4 sovereign
+   Number = 1000
+40x4 sovereign
+   Number = 1000
+41x4 sovereign
+   Number = 1000
+31x5 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+35x5 sovereign
+   Number = 1000
+36x5 sovereign
+   Number = 1000
+37x5 sovereign
+38x5 sovereign
+   Number = 1000
+39x5 sovereign
+   Number = 1000
+40x5 sovereign
+   Number = 1000
+41x5 sovereign
+   Number = 1000
+21x6 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+22x6 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+24x6 [IsDoor]
+38x6 invincible portcullis
+   KeyName = skull key
+38x8 invincible portcullis
+   KeyName = dull key
+31x9 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+21x10 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+24x10 [IsDoor]
+28x11 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+29x11 invincible portcullis
+   KeyName = copper key
+31x11 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+22x12 [IsDoor]
+26x12 [IsDoor]
+28x12 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+22x13 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+28x13 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+29x13 invincible portcullis
+   KeyName = golden key
+22x14 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+22x17 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+24x17 [IsDoor]
+26x17 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+29x18 [IsDoor]
+7x21 trapped black door
+   KeyName = dull key
+10x21 ornate door
+   KeyName = ornate key
+11x21 ornate door
+   KeyName = brass key
+14x21 trapped black door
+   KeyName = copper key
+1x23 entrance point
+5x23 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+6x23 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+14x23 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+15x23 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+16x23 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+17x23 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+17x24 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+9x25 unbreakable door
+   KeyName = bronze key
+3x27 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+6x28 invincible portcullis
+   KeyName = ornate key
+32x36 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+14x37 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+35x37 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+14x38 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+25x39 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+26x39 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+27x39 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+28x39 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+37x41 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+37x41 dwarf clansman
+33x42 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+45x46 secret door
+34x51 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+37x52 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+31x53 invincible portcullis
+   KeyName = iron key
+33x53 invincible portcullis
+   KeyName = iron key
+37x53 dwarf clansman
+   AIMode = Attack
+   TargetX = 0
+   TargetY = 0
+34x54 invincible portcullis
+   KeyName = ornate key
+34x56 invincible portcullis
+   KeyName = bronze key
+---Things---

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<TyrantPlugIn>
+  <Item>
+    <Name>my own armour</Name>
+    <Frequency>50</Frequency>
+    <HPS>70</HPS>
+    <Image>340</Image>
+    <ImageSource>Items</ImageSource>
+    <IsArmour>1</IsArmour>
+    <IsItem>1</IsItem>
+    <IsThing>1</IsThing>
+    <ItemWeight>20000</ItemWeight> 
+    <LevelMin>1</LevelMin>
+    <NameType>0</NameType>
+    <Number>1</Number>
+    <WieldType>9</WieldType>
+    <Z>20</Z>
+  </Item>
+  <Item>
+    <Name>my own potion</Name>
+    <Frequency>60</Frequency>
+    <HPS>3</HPS>
+    <HealingPower>8</HealingPower>
+    <Image>240</Image>
+    <ImageSource>Items</ImageSource>
+    <IsDrinkable>1</IsDrinkable>
+    <IsItem>1</IsItem>
+    <IsMagicItem>1</IsMagicItem>
+    <IsPotion>1</IsPotion>
+    <IsThing>1</IsThing>
+    <ItemWeight>500</ItemWeight>
+    <NameType>0</NameType>
+    <Number>1</Number>
+    <Name>my own potion</Name>
+    <OnDrunk>
+      <MetaData>
+        <Bonus>2000</Bonus>
+        <Chance>100</Chance>
+        <Modifier>Modifier</Modifier>
+        <Multiplier>100</Multiplier>
+        <Stat>MoveSpeed</Stat>
+        <TargetProperty>Target</TargetProperty>
+        <Time>2000</Time>
+        <TypeInfo>TemporaryEffect</TypeInfo>
+      </MetaData>
+    </OnDrunk>
+    <Z>20</Z>
+  </Item>
+</TyrantPlugIn>

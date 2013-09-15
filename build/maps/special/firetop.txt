@@ -1,0 +1,191 @@
+---Tiles---
+aaaaaaaaaaaaaaaaaaaa
+aabbbbbbbbabbbbabbba
+aabbbbbbbbabbbbabbba
+aabbbbbbbbabbbbabbba
+aabbbbbbbbaabaaabbba
+aabbbbbbbbabbbbbbbba
+aaaaaaaabbabbbbbbbba
+abbbbbbabbbbbbbbbaaa
+abbbbbbabbabbbbbbacc
+aaaaaaaabbaaaaaaaacc
+abbabbbabbabbbbbbbcc
+abbabbbabbabbbbbbbcc
+abbbbbbbbbbbbbbbbbcc
+aababbbabbabbbabaacc
+abbabbbabbabbaabbaac
+abbabbbabbabbabbbbac
+abbaabaabbaaaabbbbac
+abbadddabbaddaabbaac
+aaaaddddbbddddabaadc
+aaadddddbbdddddddddc
+aaddddddbbddedddddac
+aaddddddbbeeedddddcc
+aaddddddbbddddddddcd
+aadddddddeeddeddddcd
+aaaddddefedddddddaca
+aaaadeeedddeddedaaca
+aaaaedddfeddddedaaca
+aaaaddeeffdfededdaca
+aaaaddeefddddddddccd
+aaadddddfeefdddedced
+ddddddeedddddddedcdd
+ddddddeeddfdeddddcde
+dddddeedddddfffddcdd
+dddddddddddddeedfcdd
+ddddeddddddeeddddcde
+ddddeddddddddddeecee
+ddddddeddddefeeeffee
+dddddddddeeefeeffffe
+ddddddddeefffeeffffe
+dddddddeeffffffffffe
+dddddddeefffffeffffe
+dddddddeffffffeffffe
+dddddddeffffffeffffe
+eddddddeefffffeffffe
+eedddddeeefffeeeefee
+eeedddddeefffeeeeeee
+eeeedddddeffefeeeeee
+eeeeeddddfffffeefffe
+eeeeeddddfefffeffffe
+eeeeeddddfffffeffffe
+eeeeedddeefffeeffffe
+eeeeedddeefefeeffeee
+eeeeedddeeffffeeeeee
+eeeeedddeeffffeeeeed
+eeeeddddeeefffeeeeed
+eeeedddeeeeffeeeeedd
+eeeddddeeeffffeeeedd
+eeddddeeeeffffeeeedd
+eeddddeeeeffffeeeddd
+eedddeeeefffffeedddd
+eedddeeeeffffddddddd
+eedddeefffffdddddddd
+eedddeeffffdddddddde
+eedddeeeccddddddddee
+eedddeddcccdddddeeee
+eedddddddcccddeeeeee
+eeddddddddccfeeeeeee
+eedddddddeefffeeeeee
+eeedddddeeeeffeeeeee
+eeeddddeeeeeffeeeeee
+eeeddddeeeeeefeeeeee
+eeedddddeeeeefeeeeee
+eeedddddeeeeffeeeeee
+eeeedddddeeeffeeeeee
+eeeedddddeefffeeeeee
+eeeeeddddfefffeeeeee
+eeeeeedddfffffeeeeee
+eeeeeeeddfffddeeeeee
+eeeeeeeddfffddeeeeee
+eeeeeeedddfdddeeeeee
+---Tiles---
+
+---Legend---
+a = metal wall
+b = red floor
+c = stone floor
+d = lava
+e = cave wall
+f = cave floor
+---Legend---
+
+---Properties---
+Description = Firetop Mountain
+FloorTile = 1
+Level = 33
+MonsterType = IsDragon
+WallTile = 10
+WanderingRate = 100
+---Properties---
+
+---Things---
+2x2 red dragon
+9x2 red dragon
+5x3 black dragon
+12x4 golden portcullis
+   KeyName = brass key
+2x6 secret door
+12x6 black dragon
+1x7 frost dragon
+4x7 red dragon
+5x7 black dragon
+6x7 artifact point
+10x7 trapped black door
+   KeyName = dull key
+14x7 red dragon
+1x8 artifact point
+2x8 blue dragon
+3x8 blue dragon
+4x8 frost dragon
+5x8 red dragon
+6x8 black dragon
+3x12 trapped black door
+   KeyName = copper key
+7x12 trapped black door
+   KeyName = copper key
+10x12 enchanted door
+   KeyName = iron key
+2x13 trapped black door
+   KeyName = copper key
+15x13 enchanted door
+   KeyName = brass key
+1x14 frost dragon
+2x14 frost dragon
+1x15 frost dragon
+2x15 frost dragon
+4x15 red dragon
+1x16 frost dragon
+2x16 frost dragon
+5x16 invincible portcullis
+   KeyName = skull key
+1x17 frost dragon
+2x17 frost dragon
+8x17 trapped black door
+   KeyName = iron key
+9x17 trapped black door
+   KeyName = bronze key
+15x17 red dragon
+15x18 invincible portcullis
+   KeyName = golden key
+5x22 red dragon
+14x22 red dragon
+18x24 trapped black door
+   KeyName = golden key
+18x25 red dragon
+18x26 red dragon
+18x27 trapped black door
+   KeyName = ornate key
+13x28 red dragon
+4x29 red dragon
+14x39 trapped black door
+   KeyName = golden key
+11x40 red dragon
+17x40 frost dragon
+18x40 frost dragon
+17x41 blue dragon
+16x47 skeletal dragon
+17x47 fearsome skeleton
+18x47 fearsome skeleton
+14x48 secret door
+15x48 skeleton hero
+16x48 skeletal dragon
+17x48 fearsome skeleton
+18x48 artifact point
+15x49 skeleton hero
+16x49 skeletal dragon
+17x49 skeleton lord
+18x49 fearsome skeleton
+15x50 skeleton hero
+16x50 horrendous zombie
+17x50 skeleton lord
+18x50 fearsome skeleton
+15x51 horrendous zombie
+16x51 horrendous zombie
+12x53 blue dragon
+13x58 blue dragon
+9x60 green dragon
+11x61 blue dragon
+12x69 green dragon
+10x79 entrance point
+---Things---

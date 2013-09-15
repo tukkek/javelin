@@ -1,0 +1,293 @@
+---Tiles---
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaabbbbaaaaaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaabbbcbbaaaaaaaaaaaaaaaaaaaaaa
+aaaaaaabbbbaabbccccbbabbbbaaaaaaaaaaaaaaaa
+aaaaaabbccbbbbccccccbbbccbbaaaabbbbbaaaaaa
+aaaaabbcccccbbccccccbbccccbbabbbaaabbbaaaa
+aaaaabccccccbbbcccbbbccccccbbbaaaaaaabbaaa
+aaaabbccccccbabbcbbccccccccbaaaaaaaaaabbaa
+aaaabcccccccbaabcccccccccccbaaaaaaaaaaabaa
+aaaabcccccccbbbbcccccccccccbbbaadddaaaabaa
+aaaabbccccccccccccccccccccbbcbbaddddaaabaa
+aaaabbbccccbbccbbbbbbbcbbbbcccbaaaaaaaabaa
+aaaaaabbbbcbcccbcccccbccccccccbaaaaaaaabaa
+aaaaaaabcccccbbbcccccbbbbbccccbaaaaaaaabaa
+aaaaabbbbcccbbcccccccccbbbcccbbabbbbbbbbaa
+aaabbbccbccbbcccccccccccbbccbbaaaaaeeeebaa
+aabbbcccbccbcccccccccccccbbbbaaaaaaeffebaa
+abbbbcccbccccccccccccccccbccbbaaaaaeffebaa
+abccbcbbbccbcccccccccccccbcccbbaaaaeffebaa
+abcccccccccbccccccccccccccccccbaaaaeffebaa
+abccbcbbbcbbbcccccccccccbbccccbaaaafffebaa
+abbbbcccbcccbcccccccccccbccccccaaaaeffebaa
+aabbbcccbcccbcccccccccccbcccccbaaaaeeeebaa
+aaabbbccbcccbbcccccccccbbcccccbaaaaaaaabaa
+aaaaabbbbbbcbbcccccccccbcccccbbaaaaaaaabaa
+aaaaaaaaaabccbbcccccccbbccccbbaaaaaaaaabaa
+aaaaaaaaggbgccbbcccccbbcccbbbaaaaaaaaaabaa
+aaaaaaggggbgccbbbbcbbbbcccbgggfgaaaaaaabaa
+gggafgggbbbbccbbbcccbbbbbcbbbgfggaaaaabbaa
+ggggfgabbccbbcbbbcccbbbbccccbbaaggaaabbaaa
+aaaaaaabccccccbbbbcbbbbccccccbbbbgbbbbaaaa
+aaaaaaabccccccbbcccccbbccccccbaaagggaaaaaa
+aaaaaaabbccccbbacccccabbccccbbaaaaaggggggg
+aaaaaaaabbccbbaaacccaaabbccbbaaaaaaaaagggg
+aaaaaaaaabbbbaaaaaaaaaaabbbbaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+---Tiles---
+
+---Legend---
+a = grass
+b = stone wall
+c = stone floor
+d = pool
+e = wooden wall
+f = wooden floor
+g = stream
+---Legend---
+
+---Properties---
+Description = Temple of Yanthrall
+FloorTile = 1
+Level = 20
+MonsterType = IsHostile
+WallTile = 10
+WanderingRate = 0
+---Properties---
+
+---Things---
+1x2 thorny bush
+5x2 blueberry bush
+8x2 blueberry bush
+12x2 blueberry bush
+23x2 thorny bush
+26x2 thorny bush
+5x3 thorny bush
+11x3 thorny bush
+31x3 thorny bush
+0x4 thick bush
+2x4 blueberry bush
+3x4 thick bush
+24x6 stool
+0x7 blueberry bush
+3x7 thick bush
+23x7 stool
+24x7 table
+25x7 stool
+16x8 strong door
+22x8 stool
+24x8 stool
+32x8 bush
+34x8 bush
+2x9 thorny bush
+18x9 stool
+20x9 stool
+22x9 table
+23x9 stool
+24x9 stool
+30x9 bush
+36x9 bush
+17x10 stool
+18x10 table
+19x10 stool
+20x10 table
+21x10 stool
+23x10 stool
+24x10 table
+25x10 stool
+1x11 blueberry bush
+12x11 strong door
+15x11 warning point
+15x11 strong door
+20x11 stool
+24x11 stool
+37x11 bush
+3x12 blueberry bush
+22x12 strong door
+10x13 strong door
+16x13 fire
+17x13 fire
+18x13 golden altar
+19x13 fire
+20x13 fire
+32x13 bush
+34x13 bush
+36x13 bush
+16x14 stone altar
+20x14 stone altar
+14x15 stone altar
+22x15 stone altar
+31x15 invincible portcullis
+0x16 blueberry bush
+20x16 blood guard
+10x17 guard point
+10x17 blood guard
+12x17 guard point
+12x17 blood guard
+11x18 warning point
+11x18 strong door
+15x18 guard point
+15x18 stool
+15x18 village girl
+16x18 guard point
+16x18 stool
+16x18 townie
+17x18 guard point
+17x18 stool
+17x18 townie
+19x18 guard point
+19x18 stool
+19x18 village girl
+20x18 guard point
+20x18 stool
+20x18 townie
+21x18 guard point
+21x18 stool
+21x18 townswoman
+33x18 ranger
+5x19 strong door
+10x19 guard point
+10x19 blood guard
+12x19 guard point
+12x19 blood guard
+15x19 guard point
+15x19 stool
+15x19 village girl
+16x19 guard point
+16x19 stool
+16x19 townswoman
+17x19 guard point
+17x19 stool
+17x19 townie
+19x19 guard point
+19x19 stool
+19x19 townie
+20x19 guard point
+20x19 stool
+20x19 townswoman
+21x19 guard point
+21x19 stool
+21x19 village girl
+24x19 guard point
+24x19 blood guard
+26x19 guard point
+26x19 blood guard
+31x19 potted flower
+4x20 strong door
+14x20 blood guard
+15x20 stool
+15x20 ranger
+16x20 guard point
+16x20 stool
+16x20 village girl
+17x20 guard point
+17x20 stool
+17x20 village girl
+19x20 guard point
+19x20 stool
+19x20 village girl
+20x20 guard point
+20x20 stool
+20x20 village girl
+21x20 stool
+25x20 warning point
+25x20 strong door
+31x20 potted flower
+34x20 potted flower
+5x21 strong door
+9x21 strong door
+16x21 stool
+17x21 guard point
+17x21 stool
+17x21 ranger
+19x21 stool
+20x21 stool
+22x21 blood guard
+26x21 guard point
+26x21 blood guard
+35x21 unbreakable door
+16x22 stool
+17x22 stool
+19x22 stool
+20x22 stool
+30x22 warning point
+30x22 strong door
+34x22 potted flower
+21x23 guard
+20x24 dwarf
+31x24 potted flower
+11x25 strong door
+31x25 potted flower
+0x26 blueberry bush
+35x26 ranger
+37x26 blueberry bush
+30x27 blueberry bush
+36x27 blueberry bush
+2x28 blueberry bush
+5x28 blueberry bush
+18x28 warning point
+37x28 blueberry bush
+3x29 blueberry bush
+17x29 guard point
+17x29 blood guard
+19x29 guard point
+19x29 blood guard
+25x29 strong door
+36x29 blueberry bush
+9x30 [IsFood]
+10x30 [IsFood]
+13x30 strong door
+31x30 blueberry bush
+35x30 blueberry bush
+8x31 [IsFood]
+9x31 [IsFood]
+10x31 [IsFood]
+11x31 [IsFood]
+12x31 [IsFood]
+13x31 [IsFood]
+18x31 warning point
+24x31 blood guard
+26x31 blood guard
+33x31 invincible portcullis
+1x32 blueberry bush
+4x32 blueberry bush
+8x32 [IsFood]
+9x32 [IsFood]
+10x32 [IsFood]
+11x32 [IsFood]
+12x32 [IsFood]
+13x32 [IsFood]
+17x32 guard point
+17x32 blood guard
+19x32 guard point
+19x32 blood guard
+25x32 guard point
+25x32 blood guard
+9x33 [IsFood]
+10x33 [IsFood]
+11x33 [IsFood]
+12x33 [IsFood]
+24x33 blood guard
+26x33 blood guard
+10x34 [IsFood]
+11x34 [IsFood]
+15x34 menhir
+21x34 menhir
+26x34 blood guard
+2x35 blueberry bush
+15x36 menhir
+21x36 menhir
+1x37 blueberry bush
+15x38 menhir
+21x38 menhir
+15x40 menhir
+21x40 menhir
+18x41 entrance point
+---Things---

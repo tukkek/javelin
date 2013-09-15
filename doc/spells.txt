@@ -1,0 +1,18 @@
+SPELL GUIDE
+
+Bear's endurance: +2 constitution bonus.
+Bull's strength: +2 strength bonus. 
+Cat's grace: +2 dexterity bonus.
+Cure moderate wounds: cures 13 hit points. 
+Cure serious wounds: cures 20 hit points. 
+Cure critical wounds: cures 26 hit points. 
+Daylight: lights up environment.
+Deeper darkness: darkens environment.
+Dominate monster: brings an enemy to your team for the duration of the battle.
+Heroism: target gains a +2 morale bonus on attack rolls, saves, and skill checks
+Hold monster: target temporarily cannot move and loses all dexterity.
+Inflict moderate wounds: causes 13 points of damage. 
+Inflict serious wounds: causes 20 points of damage. 
+Inflict critical wounds: causes 26 points of damage. 
+Slay living: kills target.
+Vampiric ray: steals up to 6d6+10 hit points from a target.

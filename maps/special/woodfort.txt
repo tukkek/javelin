@@ -1,0 +1,113 @@
+---Tiles---
+aaaaaaaaaaaaaaaabbbbaaaaaaaaaa
+aaaaaaaaaaaaaaabbbbaaaaaaaaaaa
+aaaaaaaaaaaaaaabbbaaaaaaaaaaaa
+aaaaaaaaacaaabbbbbaaaaaaaacaaa
+acaaaaaaaaaaabbbbbcaaaaaaaaaaa
+aaaaaaaaaaaaabbbbbbaaaaaaaaaaa
+aaaaaaaaaaaddddbbbbaaaaaaaaaaa
+aaaaaacaaaddaaddbbbaaaddddaaaa
+aaaaaaaaaadaaaadbbbaacdaadaaaa
+aaaaaaaaaadaaaddddddaadaadaaaa
+aaaaaaaaaaddaadaaaadaadaddcaaa
+aaaaaaaaacaddddaaaadaaaaadaaaa
+aaaaaaaaaccaaaddaaddaaaaadddda
+aaaaaacaaaaaaaaaaaaaaaaaaaaada
+aacaaaaaaaaaaaaaaaaaaaaaadaada
+aaaaaaaaaaaaaaddddddacaaadddda
+aaaaaaacaaaaaadabbaaaaaaaaaaaa
+aaaaaaaaaaaacadabbadaaaaaacaaa
+aaaaaaaaaaaddddabbadaaaaaaddda
+aacaaaaaaaddaaaabbadaaaaaaaada
+aaaaaacaaadaaadddddddddddddada
+aaaaaaaaaadaaaadbbaaadaaaaddda
+aaaaaaaaaaddaaddbbaaaaaaaaadaa
+aacaaaaaaaaddddabbaaadaaaaadaa
+caaaaaaaaaaaaaaabaaaadaaaaadaa
+aaaaaaaaaaaaaaabbbaaadddddddaa
+aaaaaaaaaaaaaaabbbaaaaaaaaaaaa
+aaaaaaaaaaaaaabbbbaaaaaaaaaaaa
+aaaaaaaaaaaaaabbbaaaaaaaaaaaaa
+aaaaaaaaaaaaaabbbaaaaaaaaaaaaa
+---Tiles---
+
+---Legend---
+a = forest floor
+b = river
+c = tree wall
+d = cave wall
+---Legend---
+
+---Properties---
+Description = Unknown Area
+FloorTile = 1
+HashName = unknown
+Level = 1
+MonsterType = IsHostile
+WallTile = 10
+WanderingRate = 100
+---Properties---
+
+---Things---
+12x7 [IsBandit]
+13x7 [IsBandit]
+11x8 [IsBandit]
+12x8 [IsBandit]
+14x8 [IsBandit]
+23x8 [IsBandit]
+11x9 [IsBandit]
+13x9 [IsBandit]
+20x9 barricade
+21x9 barricade
+24x9 [IsBandit]
+12x10 [IsBandit]
+14x10 secret door
+16x10 [IsBandit]
+18x10 [IsBandit]
+20x10 bandit archer
+21x10 bandit archer
+23x10 locked door
+   KeyName = copper key
+15x11 [IsBandit]
+17x11 [IsBandit]
+19x11 secret door
+16x12 invincible portcullis
+   KeyName = iron key
+17x12 invincible portcullis
+   KeyName = ornate key
+14x13 barricade
+15x13 bandit archer
+25x13 locked door
+   KeyName = iron key
+14x14 barricade
+15x14 bandit archer
+29x15 barricade
+0x16 entrance point
+15x16 [IsBandit]
+19x16 locked door
+   KeyName = bronze key
+28x16 barricade
+29x16 bandit archer
+15x17 [IsBandit]
+28x17 barricade
+29x17 bandit archer
+15x18 [IsBandit]
+29x18 barricade
+14x19 locked door
+   KeyName = brass key
+15x19 [IsBandit]
+26x19 locked door
+   KeyName = copper key
+12x20 demon snake
+11x21 warning point
+11x21 potion of literacy
+12x21 lesser demon
+13x21 demon snake
+12x22 demon vortex
+13x22 lesser demon
+21x22 strong door
+   KeyName = iron key
+18x24 bandit archer
+19x26 bandit archer
+18x28 bandit archer
+---Things---

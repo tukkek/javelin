@@ -93,6 +93,8 @@ public class HaxorScreen extends SelectScreen {
 
 	static {
 		QUOTES.add("Keep up with updates at http://javelinrl.wordpress.com :)");
+		QUOTES.add(
+				"Come discuss the game at http://reddit.com/r/javelinrl/ :)");
 		QUOTES.add("Haxor's pet exclaims \"Kupo!\"");
 		QUOTES.add("Haxor's pet exclaims \"Pika-pika!\"");
 		QUOTES.add(

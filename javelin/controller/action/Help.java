@@ -47,7 +47,7 @@ public class Help extends Action {
 			}
 			text += ": " + a.getDescriptiveName() + "\n";
 		}
-		text += "\nKeep up-to-date with new releases at http://javelinrl.wordpress.com!";
+		text += "\nKeep up-to-date with new releases at javelinrl.wordpress.com\nor come discuss the game at reddit.com/r/javelinrl !";
 		Javelin.app.switchScreen(new InfoScreen(Game.getQuestapp(), text));
 		Game.getInput();
 		Javelin.app.switchScreen(BattleScreen.active);

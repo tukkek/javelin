@@ -8,11 +8,16 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
+/**
+ * A ranged touch attack spell.
+ * 
+ * @author alex
+ */
 public abstract class Ray extends Spell {
 
 	public Ray(String name, float incrementcost, boolean ispeacefulp,
-			boolean friendlyp, int casterlevelp) {
-		super(name, incrementcost, ispeacefulp, casterlevelp, friendlyp);
+			boolean friendlyp, int level) {
+		super(name, incrementcost, ispeacefulp, level, friendlyp);
 	}
 
 	@Override
@@ -37,9 +42,7 @@ public abstract class Ray extends Spell {
 			bonus += AbstractAttack.waterpenalty(state, target)
 					- RangedAttack.penalize(active, target, state);
 		}
-		return new Long(
-				ac
-						- (bonus + Monster.getbonus(active.source.dexterity) - RangedAttack
-								.penalize(active, target, state))).intValue();
+		return new Long(ac - (bonus + Monster.getbonus(active.source.dexterity)
+				- RangedAttack.penalize(active, target, state))).intValue();
 	}
 }

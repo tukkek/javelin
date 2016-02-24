@@ -1,8 +1,8 @@
 package tyrant.mikera.tyrant;
 
+import javelin.controller.Point;
 import javelin.model.BattleMap;
 import tyrant.mikera.engine.Lib;
-import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
 
@@ -106,7 +106,7 @@ class DeepForest {
 			m.fillArea(x - 0, y - 2, x + 0, y + 2, m.floor());
 			Thing t = Lib.create("wood temple guard");
 			m.addThing(t, x, y);
-			AI.setGuard(t, m, x - 4, y - 4, x + 4, y + 4);
+			// AI.setGuard(t, m, x - 4, y - 4, x + 4, y + 4);
 			break;
 		}
 		case 2: {
@@ -115,7 +115,7 @@ class DeepForest {
 			m.fillArea(x - 2, y - 1, x + 2, y + 1, m.wall());
 			Thing t = Lib.create("wood temple archer");
 			m.addThing(t, x - 2, y - 2);
-			AI.setGuard(t, m, x - 4, y - 4, x + 4, y + 4);
+			// AI.setGuard(t, m, x - 4, y - 4, x + 4, y + 4);
 			break;
 		}
 		default: {
@@ -124,13 +124,14 @@ class DeepForest {
 			m.setTile(x + RPG.r(3) - 1, y - 2, m.floor());
 			Thing t = Lib.create("woodsman");
 			m.addThing(t, x, y);
-			AI.setGuard(t, m, x - 5, y - 5, x + 5, y + 5);
+			// AI.setGuard(t, m, x - 5, y - 5, x + 5, y + 5);
 			break;
 		}
 		}
 	}
 
-	public static void makeTreeHouse(BattleMap m, int x1, int y1, int x2, int y2) {
+	public static void makeTreeHouse(BattleMap m, int x1, int y1, int x2,
+			int y2) {
 		m.fillArea(x1 + 1, y1, x2 - 1, y2, m.wall());
 		m.fillArea(x1, y1 + 1, x2, y2 - 1, m.wall());
 		m.fillArea(x1 + 2, y1 + 1, x2 - 2, y2 - 1, m.floor());
@@ -156,15 +157,12 @@ class DeepForest {
 
 		t = Lib.create("wood priestess");
 		m.addThing(t, x, y);
-		AI.setGuard(t, m, x - 3, y - 3, x + 3, y + 3);
 
 		t = Lib.create("wood priest");
 		m.addThing(t, x, y);
-		AI.setGuard(t, m, x - 7, y - 6, x - 1, y + 6);
 
 		t = Lib.create("wood priest");
 		m.addThing(t, x, y);
-		AI.setGuard(t, m, x + 1, y - 6, x + 7, y + 6);
 	}
 
 	public static void makeTreeBlock(BattleMap m, int x, int y) {
@@ -326,8 +324,8 @@ class DeepForest {
 
 		for (int lx = x1; lx <= x1 + w * 2; lx++) {
 			for (int ly = y1; ly < y1 + h * 2; ly++) {
-				if ((lx - cx) * (lx - cx) * 100 / (w * w) + (ly - cy)
-						* (ly - cy) * 100 / (h * h) < 100) {
+				if ((lx - cx) * (lx - cx) * 100 / (w * w)
+						+ (ly - cy) * (ly - cy) * 100 / (h * h) < 100) {
 					if (m.getTile(lx, ly) == 0) {
 						m.setTile(lx, ly, m.floor());
 					}
@@ -401,7 +399,8 @@ class DeepForest {
 				RPG.rspread(y1 + 2, y2 - 2));
 	}
 
-	public static void decorateForest(BattleMap m, int x1, int y1, int x2, int y2) {
+	public static void decorateForest(BattleMap m, int x1, int y1, int x2,
+			int y2) {
 		for (int x = x1; x <= x2; x++) {
 			for (int y = y1; y <= y2; y++) {
 				if (m.isBlocked(x, y)) {

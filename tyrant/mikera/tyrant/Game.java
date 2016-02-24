@@ -23,7 +23,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import javelin.controller.db.Preferences;
+import javelin.controller.db.Properties;
 import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
 import javelin.view.MapPanel;
@@ -37,8 +37,8 @@ import tyrant.mikera.tyrant.author.MapMaker;
 import tyrant.mikera.tyrant.util.Text;
 
 public final class Game extends BaseObject {
-	private static final int MESSAGEWAIT = Math.round(1000 * Float
-			.parseFloat(Preferences.getString("ui.messagedelay")));
+	private static final int MESSAGEWAIT = Math.round(
+			1000 * Float.parseFloat(Properties.getString("ui.messagedelay")));
 
 	private static final long serialVersionUID = 3544670698288460592L;
 
@@ -86,8 +86,8 @@ public final class Game extends BaseObject {
 
 		// load version number
 		try {
-			final InputStream fis = Game.class
-					.getResourceAsStream("/version.txt");
+			final InputStream fis =
+					Game.class.getResourceAsStream("/version.txt");
 			props = new java.util.Properties();
 			props.load(fis);
 			Game.VERSION = props.getProperty("version");
@@ -141,15 +141,13 @@ public final class Game extends BaseObject {
 	 * Print a general game message All messages should be routed through here
 	 * or quotedMessage()
 	 */
-	public static void message(final String in, final Combatant t, final Delay d) {
-		// final Game game = instance();
+	public static void message(final String in, final Combatant t,
+			final Delay d) {
 		final String out = t == null ? in : t + ":" + " " + in + ".";
 		messagepanel.add(out);
-		// redraw();
 		switch (d) {
 		case WAIT:
 			try {
-				// System.gc();
 				redraw();
 				Thread.sleep(MESSAGEWAIT);
 			} catch (final InterruptedException e) {
@@ -243,7 +241,8 @@ public final class Game extends BaseObject {
 	/**
 	 * TODO parametrize
 	 */
-	public Stack<ArrayList<Object>> messageStack = new Stack<ArrayList<Object>>();
+	public Stack<ArrayList<Object>> messageStack =
+			new Stack<ArrayList<Object>>();
 	private boolean isDesigner = false;
 
 	private void displayMessage(String s) {
@@ -252,13 +251,7 @@ public final class Game extends BaseObject {
 			return;
 		}
 		s = Text.capitalise(s);
-		if (s.equals("")) {
-			// messagepanel.clear();
-		} else {
-			// mappanel.repaint();
-			// if (messagepanel != null) {
-			// messagepanel.add(Text.capitalise(s + "\n"));
-			// }
+		if (!s.equals("")) {
 			int number = 1;
 			if (messageList.size() > 0) {
 				final String last = messageList.get(messageList.size() - 1);
@@ -281,11 +274,6 @@ public final class Game extends BaseObject {
 			} else {
 				messageList.add(s);
 			}
-
-			// // remove old messages if list is too long
-			// while (messageList.size() > 100) {
-			// messageList.remove(0);
-			// }
 		}
 	}
 
@@ -443,15 +431,11 @@ public final class Game extends BaseObject {
 	// transport to location of particular map
 	public static void enterMap(final BattleMap m, final int tx, final int ty) {
 		viewMap(m);
-		// m.addThing(Game.hero(), tx, ty);
 		Game.messageTyrant("jTacticalRpg");
-
 		// update highest reached level if necessary
 		if (hero().getStat(RPG.ST_SCORE_BESTLEVEL) < m.getLevel()) {
 			hero().set(RPG.ST_SCORE_BESTLEVEL, m.getLevel());
 		}
-
-		// Game.hero.set("APS",0);
 	}
 
 	/**
@@ -469,8 +453,9 @@ public final class Game extends BaseObject {
 	}
 
 	private HashMap<String, ArrayList<Thing>> getMapObjectStore() {
-		HashMap<String, ArrayList<Thing>> h = (HashMap<String, ArrayList<Thing>>) Game
-				.instance().get("MapObjectStore");
+		HashMap<String, ArrayList<Thing>> h =
+				(HashMap<String, ArrayList<Thing>>) Game.instance()
+						.get("MapObjectStore");
 		if (h == null) {
 			h = new HashMap<String, ArrayList<Thing>>();
 			Game.instance().set("MapObjectStore", h);
@@ -525,7 +510,8 @@ public final class Game extends BaseObject {
 	}
 
 	public void addMapObjects(final BattleMap map) {
-		final ArrayList<Thing> obs = getMapObjectList(map.getString("HashName"));
+		final ArrayList<Thing> obs =
+				getMapObjectList(map.getString("HashName"));
 		for (final Thing t : obs) {
 			addMapObject(t, map);
 		}
@@ -682,8 +668,6 @@ public final class Game extends BaseObject {
 	 * @return Difficulty level
 	 */
 	public static int level() {
-		// Map m=hero.getMap();
-		// if (m!=null) return m.getLevel();
 		return hero() == null ? 1 : hero().getLevel();
 	}
 
@@ -770,141 +754,91 @@ public final class Game extends BaseObject {
 	 * Gets player to select an item from given list
 	 */
 	public static Thing selectItem(final String message, final Thing[] things) {
-		return selectItem(message, things, false);
+		return null;
+		// return selectItem(message, things, false);
 	}
 
-	/**
-	 * Gets player to select an item from given list
-	 */
-	public static Thing selectItem(final String message, final Thing[] things,
-			final boolean rememberFilter) {
-		Item.tryIdentify(Game.hero(), things);
-		final Screen old = getQuestapp().getScreen();
-		final InventoryScreen is = getQuestapp().getScreen()
-				.getInventoryScreen();
-		is.setUp(message, null, things);
-		if (!rememberFilter) {
-			is.inventoryPanel.clearFilter();
-		}
-		getQuestapp().switchScreen(is);
-		final Thing ret = is.getObject();
-		getQuestapp().switchScreen(old);
-		return ret;
-	}
-
-	/**
-	 * Allow player to select an item to sell
-	 * 
-	 * Used by shopkeeper (chat)
-	 * 
-	 * @param message
-	 *            Message to display at top of inventory
-	 * @param seller
-	 *            Seller of the items, i.e. the hero
-	 * @param buyer
-	 *            Buyer of the items, i.e. the shopkeeper
-	 * @return
-	 */
-	public static Thing selectSaleItem(final String message,
-			final Thing seller, final Thing buyer) {
-		final Thing[] things = seller.getItems();
-		Item.tryIdentify(seller, things);
-		final Screen old = getQuestapp().getScreen();
-		final InventoryScreen is = getQuestapp().getScreen()
-				.getInventoryScreen();
-		is.setUp(message, buyer, things);
-		getQuestapp().switchScreen(is);
-		final Thing ret = is.getObject();
-		// System.out.println( ret );
-		getQuestapp().switchScreen(old);
-		return ret;
-	}
-
-	public static int selectSaleNumber(final String message,
-			final Thing seller, final Thing buyer, final int max) {
-		final Thing[] things = seller.getItems();
-		Item.tryIdentify(seller, things);
-		final InventoryScreen is = Game.getQuestapp().getScreen()
-				.getInventoryScreen();
-		is.setUp(message, buyer, things);
-		Game.getQuestapp().switchScreen(is);
-		final String line = is.getLine();
-		try {
-			if (line.equals("ESC")) {
-				return 0;
-			}
-			if (line.equals("") || line.equals("all")) {
-				return max;
-			}
-			int r = Integer.parseInt(line);
-			r = RPG.middle(0, r, max);
-			return r;
-		} catch (final Exception e) {
-			Game.warn("Invalid number in Game.getNumber(...)");
-		}
-		return 0;
-	}
+	// /**
+	// * Gets player to select an item from given list
+	// */
+	// public static Thing selectItem(final String message, final Thing[]
+	// things,
+	// final boolean rememberFilter) {
+	// Item.tryIdentify(Game.hero(), things);
+	// final Screen old = getQuestapp().getScreen();
+	// final InventoryScreen is = getQuestapp().getScreen()
+	// .getInventoryScreen();
+	// is.setUp(message, null, things);
+	// if (!rememberFilter) {
+	// is.inventoryPanel.clearFilter();
+	// }
+	// getQuestapp().switchScreen(is);
+	// final Thing ret = is.getObject();
+	// getQuestapp().switchScreen(old);
+	// return ret;
+	// }
+	//
+	// /**
+	// * Allow player to select an item to sell
+	// *
+	// * Used by shopkeeper (chat)
+	// *
+	// * @param message
+	// * Message to display at top of inventory
+	// * @param seller
+	// * Seller of the items, i.e. the hero
+	// * @param buyer
+	// * Buyer of the items, i.e. the shopkeeper
+	// * @return
+	// */
+	// public static Thing selectSaleItem(final String message,
+	// final Thing seller, final Thing buyer) {
+	// final Thing[] things = seller.getItems();
+	// Item.tryIdentify(seller, things);
+	// final Screen old = getQuestapp().getScreen();
+	// final InventoryScreen is = getQuestapp().getScreen()
+	// .getInventoryScreen();
+	// is.setUp(message, buyer, things);
+	// getQuestapp().switchScreen(is);
+	// final Thing ret = is.getObject();
+	// getQuestapp().switchScreen(old);
+	// return ret;
+	// }
+	//
+	// public static int selectSaleNumber(final String message,
+	// final Thing seller, final Thing buyer, final int max) {
+	// final Thing[] things = seller.getItems();
+	// Item.tryIdentify(seller, things);
+	// final InventoryScreen is = Game.getQuestapp().getScreen()
+	// .getInventoryScreen();
+	// is.setUp(message, buyer, things);
+	// Game.getQuestapp().switchScreen(is);
+	// final String line = is.getLine();
+	// try {
+	// if (line.equals("ESC")) {
+	// return 0;
+	// }
+	// if (line.equals("") || line.equals("all")) {
+	// return max;
+	// }
+	// int r = Integer.parseInt(line);
+	// r = RPG.middle(0, r, max);
+	// return r;
+	// } catch (final Exception e) {
+	// Game.warn("Invalid number in Game.getNumber(...)");
+	// }
+	// return 0;
+	// }
 
 	public static Thing selectItem(final String message, final Thing owner) {
 		return selectItem(message, owner.getItems());
 	}
 
-	// animates a shot from (x1,y1) to (x2,y2)
-	public void doShot(final int x1, final int y1, final int x2, final int y2,
-			final int c, final double speed) {
-		getMappanel().addAnimation(
-				Animation.sequence(Animation.shot(x1, y1, x2, y2, c, speed),
-						Animation.spark(x2, y2, c)));
-		getMappanel().repaint();
-	}
-
-	// animates a shot from (x1,y1) to (x2,y2)
-	public void doBreath(final int x1, final int y1, final int x2,
-			final int y2, final int c, final double speed) {
-		for (int i = 0; i < 20; i++) {
-			final Animation a0 = Animation.delay(i * 50);
-			final Animation a1 = Animation.spray(x1, y1, x2, y2, c, speed);
-			getMappanel().addAnimation(Animation.sequence(a0, a1));
-		}
-		getMappanel().repaint();
-	}
-
-	// animates a shot from (x1,y1) to (x2,y2)
-	public void doSpellShot(final int x1, final int y1, final int x2,
-			final int y2, final int c, final double speed, final int r) {
-		final Animation a1 = Animation.shot(x1, y1, x2, y2, c, speed);
-		Animation a2;
-		if (r == 0) {
-			a2 = Animation.spark(x2, y2, c);
-		} else {
-			a2 = Animation.explosion(x2, y2, c, r);
-		}
-		getMappanel().addAnimation(Animation.sequence(a1, a2));
-		getMappanel().repaint();
-	}
-
-	public void doDamageMark(final int tx, final int ty, final int c) {
-		getMappanel().addAnimation(Animation.hit(tx, ty, c));
-	}
-
-	// makes an explosion of the specified style and radius
-	public void doExplosion(final int x, final int y, final int c, final int r) {
-		if (r <= 0) {
-			doSpark(x, y, c);
-			return;
-		}
-		getMappanel().addAnimation(Animation.explosion(x, y, c, r));
-	}
-
-	public void doSpark(final int x, final int y, final int c) {
-		getMappanel().addAnimation(Animation.spark(x, y, c));
-	}
-
 	public static boolean saveMap(final BattleMap m) {
 		try {
 			String filename = "map.xml";
-			final FileDialog fd = new FileDialog(new Frame(), "Save Map",
-					FileDialog.SAVE);
+			final FileDialog fd =
+					new FileDialog(new Frame(), "Save Map", FileDialog.SAVE);
 			fd.setFile(filename);
 			fd.setVisible(true);
 
@@ -929,8 +863,10 @@ public final class Game extends BaseObject {
 		} catch (final Exception e) {
 			Game.messageTyrant("Error encountered while saving the map");
 			if (QuestApp.isapplet) {
-				Game.messageTyrant("This may be due to your browser security restrictions");
-				Game.messageTyrant("If so, run the web start or downloaded application version instead");
+				Game.messageTyrant(
+						"This may be due to your browser security restrictions");
+				Game.messageTyrant(
+						"If so, run the web start or downloaded application version instead");
 			}
 			e.printStackTrace();
 			return false;
@@ -938,7 +874,6 @@ public final class Game extends BaseObject {
 
 	}
 
-	// save game to local ZIP file
 	/**
 	 * Save game to local ZIP file&#1102;
 	 * 
@@ -949,8 +884,8 @@ public final class Game extends BaseObject {
 	public static int save() {
 		try {
 			String filename = "tyrant.sav";
-			final FileDialog fd = new FileDialog(new Frame(), "Save Game",
-					FileDialog.SAVE);
+			final FileDialog fd =
+					new FileDialog(new Frame(), "Save Game", FileDialog.SAVE);
 			fd.setFile(filename);
 			fd.setVisible(true);
 
@@ -975,17 +910,19 @@ public final class Game extends BaseObject {
 			z.close();
 
 			if (saveHasBeenCalledAlready) {
-				Game.messageTyrant("Please note that you can only restore the game with the same version of Tyrant (v"
-						+ VERSION + ").");
+				Game.messageTyrant(
+						"Please note that you can only restore the game with the same version of Tyrant (v"
+								+ VERSION + ").");
 			}
 			saveHasBeenCalledAlready = false;
 		} catch (final Exception e) {
 			Game.messageTyrant("Error while saving: " + e.toString());
 			if (QuestApp.isapplet) {
-				Game.messageTyrant("This may be due to your browser security restrictions");
-				Game.messageTyrant("If so, run the web start or downloaded application version instead");
+				Game.messageTyrant(
+						"This may be due to your browser security restrictions");
+				Game.messageTyrant(
+						"If so, run the web start or downloaded application version instead");
 			}
-			// System.out.println(e);
 			e.printStackTrace();
 			return -1;
 		}
@@ -998,8 +935,8 @@ public final class Game extends BaseObject {
 
 			final StringBuffer contents = new StringBuffer();
 			String line = null;
-			final BufferedReader reader = new BufferedReader(
-					new InputStreamReader(inStream));
+			final BufferedReader reader =
+					new BufferedReader(new InputStreamReader(inStream));
 			while ((line = reader.readLine()) != null) {
 				contents.append(line);
 				contents.append(MapMaker.NL);
@@ -1049,8 +986,8 @@ public final class Game extends BaseObject {
 		String ret;
 		try {
 			String filename = "tyrant.sav";
-			final FileDialog fd = new FileDialog(new Frame(), "Load Game",
-					FileDialog.LOAD);
+			final FileDialog fd =
+					new FileDialog(new Frame(), "Load Game", FileDialog.LOAD);
 			fd.setFile(filename);
 			fd.setVisible(true);
 
@@ -1067,13 +1004,14 @@ public final class Game extends BaseObject {
 			}
 		} catch (final Exception e) {
 			ret = e.toString();
-			// System.out.println(e);
 			e.printStackTrace();
 		}
 		Game.messageTyrant("Load game failed: " + ret);
 		if (QuestApp.isapplet) {
-			Game.messageTyrant("This may be due to browser security restrictions");
-			Game.messageTyrant("If so, run the downloaded application version instead");
+			Game.messageTyrant(
+					"This may be due to browser security restrictions");
+			Game.messageTyrant(
+					"If so, run the downloaded application version instead");
 		}
 		return false;
 	}
@@ -1251,10 +1189,5 @@ public final class Game extends BaseObject {
 				Lib.instance();
 			}
 		}).start();
-	}
-
-	static {
-		// loadVersionNumber();
-
 	}
 }

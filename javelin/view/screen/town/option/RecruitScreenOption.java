@@ -4,6 +4,10 @@ import javelin.model.world.Town;
 import javelin.view.screen.town.RecruitScreen;
 import javelin.view.screen.town.SelectScreen;
 
+/**
+ * @see RecruitScreen
+ * @author alex
+ */
 public class RecruitScreenOption extends ScreenOption {
 
 	public RecruitScreenOption(String name, Town t) {
@@ -12,7 +16,7 @@ public class RecruitScreenOption extends ScreenOption {
 
 	@Override
 	public SelectScreen show() {
-		return new RecruitScreen("Recruit", t);
+		return new RecruitScreen("Recruit:", t);
 	}
 
 }

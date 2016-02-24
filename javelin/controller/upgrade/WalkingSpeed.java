@@ -4,6 +4,9 @@ import javelin.controller.challenge.factor.SpeedFactor;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
+/**
+ * See the d20 SRD for more info.
+ */
 public class WalkingSpeed extends Upgrade {
 	protected final int target;
 

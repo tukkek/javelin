@@ -4,6 +4,9 @@ import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.classes.ClassAdvancement;
 import javelin.model.unit.Monster;
 
+/**
+ * @see CrFactor
+ */
 public class ClassLevelFactor extends CrFactor {
 
 	@Override
@@ -14,8 +17,9 @@ public class ClassLevelFactor extends CrFactor {
 
 	@Override
 	public void listupgrades(UpgradeHandler handler) {
-		for (ClassAdvancement c : ClassAdvancement.CLASSES) {
-			handler.defensive.add(c);
-		}
+		handler.wind.add(ClassAdvancement.EXPERT);
+		handler.earth.add(ClassAdvancement.COMMONER);
+		handler.water.add(ClassAdvancement.ARISTOCRAT);
+		handler.fire.add(ClassAdvancement.WARRIOR);
 	}
 }

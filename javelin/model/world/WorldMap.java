@@ -7,11 +7,14 @@ import java.util.Collections;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import javelin.view.screen.world.WorldScreen;
 import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.tyrant.Tile;
 
 /**
+ * Overworld view of the game world.
+ * 
  * 2/16 Easy (el-5 to el-8) - plains
  * 
  * 10/16 Moderate (el-4) - forest
@@ -23,12 +26,20 @@ import tyrant.mikera.tyrant.Tile;
  * forest is the background. have 2 plain areas (1 is player start), 3 mountain
  * areas and 1 swamp.
  * 
+ * TODO would be nice to have tiles reflect the official d20 terrains (add
+ * desert and hill)
+ * 
  * @author alex
  */
 public class WorldMap implements Serializable {
 	public enum Region {
 		EASYA, EASYB, NORMALA, HARDA, HARDB, HARDC, VERYHARDA
 	}
+
+	public static final int EASY = Tile.PLAINS;
+	public static final int MEDIUM = Tile.FORESTS;
+	public static final int HARD = Tile.HILLS;
+	public static final int VERYHARD = Tile.GUNK;
 
 	public static final int TOWNBUFFER = 1;
 	private static final int[] NOISE = new int[] { 0, 2, 3 };
@@ -57,7 +68,8 @@ public class WorldMap implements Serializable {
 				}
 			}
 		}
-		final TreeMap<Region, Integer> regionsizes = new TreeMap<Region, Integer>();
+		final TreeMap<Region, Integer> regionsizes =
+				new TreeMap<Region, Integer>();
 		for (final Region r : Region.values()) {
 			if (r == Region.NORMALA) {
 				continue;
@@ -76,7 +88,8 @@ public class WorldMap implements Serializable {
 			if (r == Region.NORMALA) {
 				continue;
 			}
-			if (expand == null || regionsizes.get(r) < regionsizes.get(expand)) {
+			if (expand == null
+					|| regionsizes.get(r) < regionsizes.get(expand)) {
 				expand = r;
 			}
 		}
@@ -185,7 +198,7 @@ public class WorldMap implements Serializable {
 				if (a == b) {
 					continue;
 				}
-				if (triangledistace(a, b) < TOWNBUFFER) {
+				if (triangledistance(a, b) < TOWNBUFFER) {
 					return false;
 				}
 			}
@@ -193,7 +206,7 @@ public class WorldMap implements Serializable {
 		return true;
 	}
 
-	static public double triangledistace(final Point a, final Point b) {
+	static public double triangledistance(final Point a, final Point b) {
 		return Math.sqrt(calcdist(a.x - b.x) + calcdist(a.y - b.y));
 	}
 
@@ -214,7 +227,8 @@ public class WorldMap implements Serializable {
 			placement: while (proposal == null) {
 				proposal = new Point(randomaxispoint(), randomaxispoint());
 				for (final Point town : towns.values()) {
-					for (int x = town.x - TOWNBUFFER; x <= town.x + TOWNBUFFER; x++) {
+					for (int x = town.x - TOWNBUFFER; x <= town.x
+							+ TOWNBUFFER; x++) {
 						for (int y = town.y - TOWNBUFFER; y <= town.y
 								+ TOWNBUFFER; y++) {
 							if (proposal.x == x && proposal.y == y) {
@@ -295,19 +309,13 @@ public class WorldMap implements Serializable {
 
 	static public boolean isoccupied(final int x, final int y,
 			boolean townbufferenabled) {
-		for (final Dungeon t : Dungeon.dungeons) {
-			if (t.x == x && t.y == y) {
-				return true;
-			}
-		}
-		for (final Squad s : Squad.squads) {
-			if (s.x == x && s.y == y) {
-				return true;
-			}
+		if (WorldScreen.getactor(x, y) != null) {
+			return true;
 		}
 		if (townbufferenabled) {
 			for (final Point p : seed.towns.values()) {
-				for (int townx = p.x - TOWNBUFFER; townx <= p.x + TOWNBUFFER; townx++) {
+				for (int townx = p.x - TOWNBUFFER; townx <= p.x
+						+ TOWNBUFFER; townx++) {
 					for (int towny = p.y - TOWNBUFFER; towny <= p.y
 							+ TOWNBUFFER; towny++) {
 						if (townx == x && towny == y) {

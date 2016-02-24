@@ -2,6 +2,9 @@ package javelin.controller.upgrade;
 
 import javelin.model.unit.Combatant;
 
+/**
+ * See the d20 SRD for more info.
+ */
 public class FastHealing extends Upgrade {
 	public FastHealing() {
 		super("Fast healing");
@@ -15,6 +18,10 @@ public class FastHealing extends Upgrade {
 
 	@Override
 	public boolean apply(final Combatant m) {
+		if (m.source.fasthealing >= m.source.hd.count()) {
+			// design parameter (fast healing + regeneration)
+			return false;
+		}
 		m.source.fasthealing += 1;
 		return true;
 	}

@@ -8,6 +8,7 @@ import javelin.Javelin;
 import javelin.controller.action.Action;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.walker.Walker;
+import javelin.model.condition.Prone;
 import javelin.model.feat.PointBlankShot;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Attack;
@@ -16,21 +17,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.CurrentAttack;
 import tyrant.mikera.tyrant.Game.Delay;
 
-public abstract class AbstractAttack extends Action {
-
-	private class DamageChance {
-		final float chance;
-		int damage;
-		private boolean critical;
-
-		public DamageChance(final float chance, final int damage,
-				boolean criticalp) {
-			super();
-			this.chance = chance;
-			this.damage = damage;
-			critical = criticalp;
-		}
-	}
+public abstract class AbstractAttack extends Action implements AiAction {
 
 	public AbstractAttack(final String name) {
 		super(name);
@@ -42,30 +29,24 @@ public abstract class AbstractAttack extends Action {
 			final Combatant current, final Combatant target,
 			CurrentAttack attacks, int bonus) {
 		final boolean pointblank = attacks == current.currentranged
-				&& current.source.hasfeat(PointBlankShot.SINGLETON) > 0
+				&& current.source.hasfeat(PointBlankShot.SINGLETON)
 				&& Walker.distance(current, target) <= 6;
 		if (pointblank) {
 			bonus += 1;
 		}
-		return attack(gameState, current, target, attacks, bonus,
-				pointblank ? 1 : 0,
-				calculateattackap(getattacks(current)
-						.get(attacks.sequenceindex)));
-	}
-
-	public List<ChanceNode> attack(final BattleState gameState,
-			final Combatant current, final Combatant target,
-			CurrentAttack attacks, int bonus, int damagebonus, float ap) {
+		if (target.hascondition(Prone.class)) {
+			bonus += 2;
+		}
 		return attack(gameState, current, target, attacks.getnext(), bonus,
-				damagebonus, ap);
+				pointblank ? 1 : 0, AbstractAttack.calculateattackap(
+						getattacks(current).get(attacks.sequenceindex)));
 	}
 
 	public List<ChanceNode> attack(final BattleState gameState,
-			final Combatant current, final Combatant target,
-			final Attack attack, final int bonus, int damagebonus,
-			final float ap) {
-		final Combatant sameCombatant = gameState.translatecombatant(current);
-		sameCombatant.ap += ap;
+			Combatant current, final Combatant target, final Attack attack,
+			final int bonus, int damagebonus, final float ap) {
+		current = gameState.clone(current);
+		current.ap += ap;
 		final ArrayList<ChanceNode> nodes = new ArrayList<ChanceNode>();
 		for (final DamageChance dc : dealattack(gameState, current, target,
 				bonus, attack)) {
@@ -75,7 +56,7 @@ public abstract class AbstractAttack extends Action {
 			if (dc.damage < 0) {
 				dc.damage = 0;
 			}
-			nodes.add(createchancenode(dc, target, gameState, current, attack));
+			nodes.add(createnode(dc, target, gameState, current, attack, ap));
 		}
 		return nodes;
 	}
@@ -85,46 +66,53 @@ public abstract class AbstractAttack extends Action {
 	 * This would penalize creatures with only one attack so max AP cost is .5
 	 * per attack.
 	 */
-	public float calculateattackap(AttackSequence attacks) {
-		int nattacks = attacks.size();
-		switch (nattacks) {
-		case 1:
+	static float calculateattackap(final AttackSequence attacks) {
+		final int nattacks = attacks.size();
+		if (nattacks == 1) {
 			return .5f;
-		case 2:
+		}
+		if (nattacks == 2) {
 			/**
 			 * if we let ap=.5 in this case it means that a combatant with a
 			 * 2-attack sequence is identical to one with 1 attack
 			 */
 			return .4f;
-		default:
-			return 1f / nattacks;
 		}
+		return 1f / nattacks;
 	}
 
-	public List<DamageChance> dealattack(final BattleState gameState,
+	List<DamageChance> dealattack(final BattleState gameState,
 			final Combatant current, final Combatant target, final int bonus,
 			final Attack a) {
-		final List<DamageChance> chances = new ArrayList<AbstractAttack.DamageChance>();
-		final float threatchance = (21 - a.threat) / 20f;
-		final float misschance = bind((target.ac() - a.bonus
-				+ getpenalty(current, target, gameState) - (bonus
-				- waterpenalty(gameState, current) + waterpenalty(gameState,
-				target))) / 20f);
+		final List<DamageChance> chances = new ArrayList<DamageChance>();
+		final float threatchance;
+		threatchance = (21 - a.threat) / 20f;
+		final float misschance = misschance(gameState, current, target, bonus,
+				a, getpenalty(current, target, gameState));
 		final float hitchance = 1 - misschance;
 		final float confirmchance = threatchance * hitchance;
 		chances.add(new DamageChance(misschance, 0, false));
-		hit(a, chances, hitchance - confirmchance, 1);
-		hit(a, chances, confirmchance, a.multiplier);
+		AbstractAttack.hit(a, chances, hitchance - confirmchance, 1);
+		AbstractAttack.hit(a, chances, confirmchance, a.multiplier);
 		if (Javelin.DEBUG) {
-			validate(chances);
+			AbstractAttack.validate(chances);
 		}
 		return chances;
 	}
 
-	public void hit(final Attack a, final List<DamageChance> chances,
+	static public float misschance(final BattleState gameState,
+			final Combatant current, final Combatant target, final int bonus,
+			final Attack a, final int penalty) {
+		return AbstractAttack.bind((target.ac() + penalty
+				+ AbstractAttack.waterpenalty(gameState, current) - a.bonus
+				- bonus - AbstractAttack.waterpenalty(gameState, target))
+				/ 20f);
+	}
+
+	static public void hit(final Attack a, final List<DamageChance> chances,
 			final float hitchance, final int multiplier) {
-		for (final Entry<Integer, Float> roll : distributeRoll(a.damage[0],
-				a.damage[1]).entrySet()) {
+		for (final Entry<Integer, Float> roll : Action
+				.distributeRoll(a.damage[0], a.damage[1]).entrySet()) {
 			int damage = (roll.getKey() + a.damage[2]) * multiplier;
 			if (damage < 1) {
 				damage = 1;
@@ -145,21 +133,11 @@ public abstract class AbstractAttack extends Action {
 		}
 	}
 
-	static public float bind(float misschance) {
-		if (misschance > .95f) {
-			return .95f;
-		}
-		if (misschance < 0.05f) {
-			return .05f;
-		}
-		return misschance;
-	}
-
 	public static int waterpenalty(final BattleState gameState,
 			final Combatant current) {
 		return current.source.swim()
-				&& gameState.map[current.location[0]][current.location[1]].flooded ? 2
-				: 0;
+				&& gameState.map[current.location[0]][current.location[1]].flooded
+						? 2 : 0;
 	}
 
 	/**
@@ -176,55 +154,63 @@ public abstract class AbstractAttack extends Action {
 		return penalty;
 	}
 
-	private ChanceNode createchancenode(DamageChance dc, Combatant target,
-			final BattleState gameState, Combatant attacker, final Attack attack) {
-		final BattleState attackstate = gameState.clone();
-		attacker = attackstate.translatecombatant(attacker);
-		target = attackstate.translatecombatant(target);
-		final String message;
-		Delay delay;
+	ChanceNode createnode(final DamageChance dc, Combatant target,
+			final BattleState gameState, Combatant attacker,
+			final Attack attack, float ap) {
+		String chance =
+				" (" + Javelin.translatetochance(target.ac() - attack.bonus)
+						+ " to hit)...";
 		if (dc.damage == 0) {
-			delay = Delay.WAIT;
-			message = attacker + " misses " + target + "...";
-		} else {
-			delay = Delay.BLOCK;
-			String messageAdd = "\n";
-			if (dc.critical) {
-				messageAdd += "Critical hit!\n";
-			}
-			// TODO apply DR
-			if (dc.damage == 0) {
-				messageAdd += "Damage absorbed!";
-			} else {
-				target.damage(dc.damage, attackstate, target.source.dr);
-				messageAdd += status(target, target.getStatus());
-			}
-			message = attacker + " attacks " + target + " with "
-					+ attack.toString().toLowerCase() + messageAdd;
+			return new ChanceNode(gameState, dc.chance,
+					attacker + " misses " + target + chance, Delay.WAIT);
 		}
-		return new ChanceNode(attackstate, dc.chance, message, delay);
+		final BattleState attackstate = gameState.clone();
+		attacker = attackstate.clone(attacker);
+		target = attackstate.clone(target);
+		StringBuilder messageAdd = new StringBuilder().append(attacker)
+				.append(" attacks ").append(target).append(" with ")
+				.append(attack.name).append(chance).append("\n");
+		if (dc.critical) {
+			messageAdd.append("Critical hit!\n");
+		}
+		if (dc.damage == 0) {
+			messageAdd.append("Damage absorbed!\n");
+		} else {
+			target.damage(dc.damage, attackstate, target.source.dr);
+			if (target.source.customName == null) {
+				messageAdd.append("The ").append(target.source.name);
+			} else {
+				messageAdd.append(target.source.customName);
+			}
+			messageAdd.append(" is ").append(target.getStatus());
+			if (target.hp <= 0 && cleave()) {
+				attacker.cleave(ap);
+			}
+		}
+		return new ChanceNode(attackstate, dc.chance, messageAdd.toString(),
+				Delay.BLOCK);
 	}
 
-	private String status(final Combatant target, final String status) {
-		return (target.source.customName == null ? "The " + target.source.name
-				: target.source.customName) + " is " + status;
-	}
+	public abstract boolean cleave();
 
 	abstract List<AttackSequence> getattacks(Combatant active);
 
-	List<Integer> getcurrentattack(Combatant active) {
+	List<Integer> getcurrentattack(final Combatant active) {
 		final List<AttackSequence> attacktype = getattacks(active);
-		final ArrayList<Integer> attacks = new ArrayList<Integer>();
 		if (attacktype.isEmpty()) {
-			return attacks;
+			// TODO return Collections.EMPTY_LIST ?
+			return new ArrayList<Integer>(0);
 		}
 		final CurrentAttack current = active.getcurrentattack(attacktype);
 		if (current.continueattack()) {
+			final ArrayList<Integer> attacks = new ArrayList<Integer>(1);
 			attacks.add(current.sequenceindex);
-		} else {
-			for (int i = 0; i < attacktype.size(); i++) {
-				attacks.add(i);
-			}
+			return attacks;
+		}
+		final int nattacks = attacktype.size();
+		final ArrayList<Integer> attacks = new ArrayList<Integer>(nattacks);
+		for (int i = 0; i < nattacks; i++) {
+			attacks.add(i);
 		}
 		return attacks;
 	}

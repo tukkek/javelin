@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import tyrant.mikera.tyrant.AI;
 import tyrant.mikera.tyrant.Animal;
 import tyrant.mikera.tyrant.Artifact;
 import tyrant.mikera.tyrant.Aura;
@@ -510,7 +509,7 @@ public class Lib extends Object implements Serializable, Cloneable {
 
 	public static Thing extendNamed(final String newName, final String baseName) {
 		final Thing t = Lib.extend("newthing", baseName);
-		AI.name(t, newName);
+		// AI.name(t, newName);
 		return t;
 	}
 
@@ -899,7 +898,7 @@ public class Lib extends Object implements Serializable, Cloneable {
 		Quest.init();
 
 		// init people and monsters
-		AI.init();
+		// AI.init();
 		Animal.init();
 		Monster.init();
 		Person.init();

@@ -5,4 +5,3 @@ This program is free software; you can redistribute it and/or modify it under th
 A copy of the full license text is available under the ‘doc’ directory.
 
 For more information and to keep updated visit https://javelinrl.wordpress.com/
-

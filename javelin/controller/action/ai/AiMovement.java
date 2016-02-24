@@ -2,35 +2,36 @@ package javelin.controller.action.ai;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 
+import javelin.Javelin;
 import javelin.controller.action.Action;
 import javelin.controller.action.Movement;
+import javelin.controller.action.Wait;
+import javelin.controller.ai.ActionProvider;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
+import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
 import tyrant.mikera.tyrant.Game.Delay;
 
-public class AiMovement extends Action {
+/**
+ * @author alex
+ * @see Movement
+ */
+public class AiMovement extends Action implements AiAction {
 	public static final AiMovement SINGLETON = new AiMovement();
-	static final TreeMap<Integer, TreeMap<Integer, Movement>> movementgridbyy = new TreeMap<Integer, TreeMap<Integer, Movement>>();
+	static final Movement[][] movementgridbyy = new Movement[3][3];
 
 	static {
-		final TreeMap<Integer, Movement> toprow = new TreeMap<Integer, Movement>();
-		final TreeMap<Integer, Movement> midrow = new TreeMap<Integer, Movement>();
-		final TreeMap<Integer, Movement> bottomrow = new TreeMap<Integer, Movement>();
 		/* Tyrant vertical axis is inverted :P */
-		toprow.put(-1, Action.MOVE_NW);
-		toprow.put(0, Action.MOVE_N);
-		toprow.put(+1, Action.MOVE_NE);
-		midrow.put(-1, Action.MOVE_W);
-		midrow.put(+1, Action.MOVE_E);
-		bottomrow.put(-1, Action.MOVE_SW);
-		bottomrow.put(0, Action.MOVE_S);
-		bottomrow.put(+1, Action.MOVE_SE);
-		movementgridbyy.put(-1, toprow);
-		movementgridbyy.put(0, midrow);
-		movementgridbyy.put(+1, bottomrow);
+		movementgridbyy[0][0] = Action.MOVE_NW;
+		movementgridbyy[0][1] = Action.MOVE_N;
+		movementgridbyy[0][2] = Action.MOVE_NE;
+		movementgridbyy[1][0] = Action.MOVE_W;
+		movementgridbyy[1][2] = Action.MOVE_E;
+		movementgridbyy[2][0] = Action.MOVE_SW;
+		movementgridbyy[2][1] = Action.MOVE_S;
+		movementgridbyy[2][2] = Action.MOVE_SE;
 	}
 
 	private AiMovement() {
@@ -38,47 +39,74 @@ public class AiMovement extends Action {
 	}
 
 	@Override
-	public List<List<ChanceNode>> getSucessors(final BattleState gameState,
+	public List<List<ChanceNode>> getoutcomes(final BattleState gameStatep,
 			final Combatant active) {
-		final ArrayList<List<ChanceNode>> successors = new ArrayList<List<ChanceNode>>();
-		for (int x = active.location[0] - 1, deltax = -1; x <= active.location[0] + 1; x++, deltax++) {
-			for (int y = active.location[1] - 1, deltay = -1; y <= active.location[1] + 1; y++, deltay++) {
+		final ArrayList<List<ChanceNode>> successors =
+				new ArrayList<List<ChanceNode>>();
+		for (int x = active.location[0] - 1, deltax =
+				-1; deltax <= +1; x++, deltax++) {
+			movement: for (int y = active.location[1] - 1, deltay =
+					-1; deltay <= +1; y++, deltay++) {
 				if (deltax == 0 && deltay == 0) {
 					continue;
 				}
+				final BattleState gameState = gameStatep;
 				if (x < 0 || y < 0 || x >= gameState.map.length
 						|| y >= gameState.map[0].length) {
 					continue;
 				}
 				if (gameState.getCombatant(x, y) != null
 						|| gameState.map[x][y].blocked
-						&& active.source.fly == 0) {
+								&& active.source.fly == 0) {
 					continue;
 				}
+				Meld meld = null;
+				for (Meld m : gameState.meld) {
+					if (m.x == x && m.y == y) {
+						if (!m.crystalize(gameState)) {
+							continue movement;
+						}
+						meld = m;
+						break;
+					}
+				}
 				successors.add(registermove(deltax, deltay, active, gameState,
-						x, y));
+						x, y, meld));
 			}
 		}
-		if (successors.isEmpty()) {
-			successors.add(wait(gameState, active));
+		if (!Wait.ALLOWAI && successors.isEmpty()) {
+			successors.add(wait(gameStatep, active));
 		}
 		return successors;
 	}
 
 	static private ArrayList<ChanceNode> registermove(final int deltax,
-			final int deltay, final Combatant active,
-			final BattleState gameState, final int x, final int y) {
-		final BattleState battleState = gameState.clone();
-		final Combatant active2 = battleState.translatecombatant(active);
-		final Movement moveaction = movementgridbyy.get(deltay).get(deltax);
-		final boolean disengaging = moveaction.isDisengaging(active2,
-				battleState);
-		active2.ap += moveaction.cost(active2, battleState, x, y);
-		active2.location[0] = x;
-		active2.location[1] = y;
-		final ArrayList<ChanceNode> list = new ArrayList<ChanceNode>();
-		list.add(new ChanceNode(battleState, 1f, active
-				+ (disengaging ? " disengages..." : " moves..."), Delay.WAIT));
+			final int deltay, Combatant active, BattleState gameState,
+			final int x, final int y, Meld meld) {
+		gameState = gameState.clone();
+		active = gameState.clone(active);
+		final Movement moveaction = movementgridbyy[deltay + 1][deltax + 1];
+		final boolean disengaging = moveaction.isDisengaging(active, gameState);
+		active.ap += moveaction.cost(active, gameState, x, y);
+		active.location[0] = x;
+		active.location[1] = y;
+		final ArrayList<ChanceNode> list = new ArrayList<ChanceNode>(1);
+		String action;
+		Delay delay;
+		if (meld == null) {
+			action = active + (disengaging ? " disengages..." : " moves...");
+			delay = Delay.WAIT;
+		} else {
+			action = active + " powers up!";
+			delay = Delay.BLOCK;
+			active.meld();
+			gameState.meld.remove(meld);
+		}
+		list.add(new ChanceNode(gameState, 1f, action, delay));
+		if (Javelin.DEBUG) {
+			// TODO debug
+			ActionProvider.checkstacking(gameState);
+		}
 		return list;
 	}
 
@@ -86,8 +114,8 @@ public class AiMovement extends Action {
 			final Combatant active) {
 		final ArrayList<ChanceNode> wait = new ArrayList<ChanceNode>();
 		final BattleState state = gameState.clone();
-		state.translatecombatant(active).await();
-		wait.add(new ChanceNode(state, 1f, active.toString() + " waits...",
+		state.clone(active).await();
+		wait.add(new ChanceNode(state, 1f, active.toString() + " defends...",
 				Delay.WAIT));
 		return wait;
 	}

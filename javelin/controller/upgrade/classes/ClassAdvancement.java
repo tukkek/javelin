@@ -1,5 +1,6 @@
 package javelin.controller.upgrade.classes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.upgrade.Upgrade;
@@ -9,10 +10,18 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import tyrant.mikera.engine.RPG;
 
+/**
+ * Levels up in an NPC class.
+ * 
+ * @author alex
+ */
 public abstract class ClassAdvancement extends Upgrade {
-	public static final ClassAdvancement[] CLASSES = new ClassAdvancement[] {
-			new Commoner("Commoner"), new Aristocrat("Aristocrat"),
-			new Warrior("Warrior"), new Expert("Expert") };
+	public static final Warrior WARRIOR = new Warrior("Warrior");
+	public static final Expert EXPERT = new Expert("Expert");
+	public static final Aristocrat ARISTOCRAT = new Aristocrat("Aristocrat");
+	public static final Commoner COMMONER = new Commoner("Commoner");
+	public static final ClassAdvancement[] CLASSES =
+			new ClassAdvancement[] { COMMONER, ARISTOCRAT, WARRIOR, EXPERT };
 	public final String descriptivename;
 
 	public ClassAdvancement(String name) {
@@ -54,11 +63,8 @@ public abstract class ClassAdvancement extends Upgrade {
 		Level next = table[level];
 		Level last = table[level - 1];
 		int bab = next.bab - last.bab;
-		for (List<Attack> attacks : m.melee) {
-			for (Attack a : attacks) {
-				a.bonus += bab;
-			}
-		}
+		advanceattack(bab, m.melee);
+		advanceattack(bab, m.ranged);
 		int newattackbonusdelta = checkfornewattack(m, bab);
 		if (newattackbonusdelta != 0) {
 			upgradeattack(m.melee, newattackbonusdelta);
@@ -66,8 +72,16 @@ public abstract class ClassAdvancement extends Upgrade {
 		}
 		m.fort += next.fort - last.fort;
 		m.ref += next.ref - last.ref;
-		m.will += next.will - last.will;
+		m.addwill(next.will - last.will);
 		return true;
+	}
+
+	public void advanceattack(int bab, ArrayList<AttackSequence> melee) {
+		for (List<Attack> attacks : melee) {
+			for (Attack a : attacks) {
+				a.bonus += bab;
+			}
+		}
 	}
 
 	private void upgradeattack(List<AttackSequence> sequences,

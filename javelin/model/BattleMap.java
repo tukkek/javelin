@@ -7,19 +7,23 @@ import java.util.List;
 import java.util.TreeMap;
 
 import javelin.Javelin;
+import javelin.controller.BattleSetup;
+import javelin.controller.Point;
+import javelin.controller.ai.ActionProvider;
 import javelin.controller.ai.Node;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
+import javelin.model.state.Meld;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
+import javelin.view.MapPanel;
+import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.BaseObject;
 import tyrant.mikera.engine.Lib;
-import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Script;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.engine.ThingOwner;
-import tyrant.mikera.tyrant.AI;
 import tyrant.mikera.tyrant.Being;
 import tyrant.mikera.tyrant.Damage;
 import tyrant.mikera.tyrant.Event;
@@ -53,6 +57,43 @@ import tyrant.mikera.tyrant.util.Text;
  */
 
 public class BattleMap extends BaseObject implements ThingOwner {
+	static class VisionCache {
+		public static ArrayList<Point> positions = new ArrayList<Point>();
+
+		public String period;
+		final public int vision;
+		public ArrayList<Point> seen = new ArrayList<Point>();
+
+		public VisionCache(final String perception, final Thing h) {
+			period = perception;
+			vision = h.combatant.source.vision;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			final VisionCache that = (VisionCache) obj;
+			return that.period.equals(that.period) && vision == that.vision;
+		}
+
+		static ArrayList<Point> pointsfromcombatents() {
+			ArrayList<Point> points =
+					new ArrayList<Point>(BattleMap.combatants.size());
+			for (Combatant c : BattleMap.combatants) {
+				points.add(new Point(c.location[0], c.location[1]));
+			}
+			return points;
+		}
+
+		static boolean valid() {
+			ArrayList<Point> points = pointsfromcombatents();
+			if (positions.equals(points)) {
+				return true;
+			}
+			positions = points;
+			return false;
+		}
+	}
+
 	private static final long serialVersionUID = 2476911722567644463L;
 	// Map storage
 	private int[] tiles;
@@ -66,10 +107,20 @@ public class BattleMap extends BaseObject implements ThingOwner {
 	// low byte = dist to hero
 	public transient int[] path;
 	public String period;
+	public ArrayList<Meld> meld = new ArrayList<Meld>();
+	/**
+	 * Mapping of vision cache data by {@link Combatant#id}.
+	 * 
+	 * TODO would be much more interesting to create a new UI with different
+	 * windows and a {@link MapPanel} that doesn't have to be fully redrawn at
+	 * each move.
+	 */
+	public static final TreeMap<Integer, VisionCache> visioncache =
+			new TreeMap<Integer, VisionCache>();
 
 	// Internal constants
 	private static final int LOS_DETAIL = 26;
-	private static final double DLOS_DETAIL = LOS_DETAIL;
+	private static final double DLOS_DETAIL = BattleMap.LOS_DETAIL;
 
 	// Direction stuff
 	public static final int DIR_NONE = 0;
@@ -213,8 +264,8 @@ public class BattleMap extends BaseObject implements ThingOwner {
 									|| path[pos - width + 1] == i
 									|| path[pos - 1] == i || path[pos + 1] == i
 									|| path[pos + width - 1] == i
-									|| path[pos + width] == i || path[pos
-									+ width + 1] == i)) {
+									|| path[pos + width] == i
+									|| path[pos + width + 1] == i)) {
 						path[pos] = i + 1;
 					}
 				}
@@ -233,10 +284,10 @@ public class BattleMap extends BaseObject implements ThingOwner {
 				final int v = path[pos];
 				if (v > 0) {
 					for (int i = 1; i <= 8; i++) {
-						if (path[pos + DX[i] + width * DY[i]] == v - 1) {
-							setTile(x, y, getTileFull(x, y)
-									& ~Tile.TF_DIRECTION | i
-									* Tile.TF_DIRECTIONBASE);
+						if (path[pos + BattleMap.DX[i]
+								+ width * BattleMap.DY[i]] == v - 1) {
+							setTile(x, y, getTileFull(x, y) & ~Tile.TF_DIRECTION
+									| i * Tile.TF_DIRECTIONBASE);
 							continue;
 						}
 					}
@@ -368,8 +419,8 @@ public class BattleMap extends BaseObject implements ThingOwner {
 									|| path[x + 1 + (y + 1) * width] == pass
 									|| path[x + (y + 1) * width] == pass
 									|| path[x - 1 + (y + 1) * width] == pass
-									|| path[x - 1 + y * width] == pass || path[x
-									- 1 + (y - 1) * width] == pass)) {
+									|| path[x - 1 + y * width] == pass
+									|| path[x - 1 + (y - 1) * width] == pass)) {
 						path[x + y * width] = pass;
 						found = true;
 					}
@@ -512,16 +563,16 @@ public class BattleMap extends BaseObject implements ThingOwner {
 		final double ch = (cy - y1) * 1.005;
 		for (int x = x1; x <= x2; x++) {
 			for (int y = y1; y <= y2; y++) {
-				if ((x - cx) * (x - cx) / (cw * cw) + (y - cy) * (y - cy)
-						/ (ch * ch) < 1) {
+				if ((x - cx) * (x - cx) / (cw * cw)
+						+ (y - cy) * (y - cy) / (ch * ch) < 1) {
 					setTile(x, y, c);
 				}
 			}
 		}
 	}
 
-	public void fillRoom(final int x1, final int y1, final int x2,
-			final int y2, final int wall, final int floor) {
+	public void fillRoom(final int x1, final int y1, final int x2, final int y2,
+			final int wall, final int floor) {
 		fillArea(x1 + 1, y1 + 1, x2 - 1, y2 - 1, floor);
 		fillBorder(x1, y1, x2, y2, wall);
 	}
@@ -530,7 +581,8 @@ public class BattleMap extends BaseObject implements ThingOwner {
 	 * clears all objects from area use with EXTREME caution don't kill portals,
 	 * secret doors, artifacts etc!!!
 	 */
-	public void clearArea(final int x1, final int y1, final int x2, final int y2) {
+	public void clearArea(final int x1, final int y1, final int x2,
+			final int y2) {
 		final Thing[] things = getThings(x1, y1, x2, y2);
 		for (final Thing thing : things) {
 			thing.remove();
@@ -569,7 +621,8 @@ public class BattleMap extends BaseObject implements ThingOwner {
 	 * randomly shakes tiles in area to blur outlines useful to create irregular
 	 * patterns
 	 */
-	public void blurArea(final int x1, final int y1, final int x2, final int y2) {
+	public void blurArea(final int x1, final int y1, final int x2,
+			final int y2) {
 		for (int i = 0; i < (x2 - x1 + 1) * (y2 - y1 + 1) / 4; i++) {
 			final int sx = RPG.rspread(x1 + 1, x2 - 1);
 			final int sy = RPG.rspread(y1 + 1, y2 - 1);
@@ -585,7 +638,8 @@ public class BattleMap extends BaseObject implements ThingOwner {
 	 * rotates a square map region by <count> right angles rotates in a
 	 * clockwize direction
 	 */
-	public void rotateArea(final int x, final int y, final int size, int count) {
+	public void rotateArea(final int x, final int y, final int size,
+			int count) {
 		// make rotation in range 0-3
 		count &= 3;
 
@@ -665,7 +719,8 @@ public class BattleMap extends BaseObject implements ThingOwner {
 	}
 
 	/** fill all blank squares in area with specified tile */
-	public void completeArea(int x1, final int y1, int x2, int y2, final int c) {
+	public void completeArea(int x1, final int y1, int x2, int y2,
+			final int c) {
 		if (x1 > x2) {
 			final int t = x1;
 			x1 = x2;
@@ -699,8 +754,8 @@ public class BattleMap extends BaseObject implements ThingOwner {
 	 * (x3,y3,x4,y4)
 	 */
 	public void makeRandomPath(int x1, int y1, final int x2, final int y2,
-			final int x3, final int y3, final int x4, final int y4,
-			final int c, final boolean diagonals) {
+			final int x3, final int y3, final int x4, final int y4, final int c,
+			final boolean diagonals) {
 		int dx;
 		int dy;
 		while (x1 != x2 || y1 != y2) {
@@ -837,7 +892,9 @@ public class BattleMap extends BaseObject implements ThingOwner {
 		return findFreeSquare(0, 0, width - 1, height - 1);
 	}
 
-	/** find unblocked square with tile type c adjacent in specified direction */
+	/**
+	 * find unblocked square with tile type c adjacent in specified direction
+	 */
 	public Point findEdgeSquare(final int dx, final int dy, final int c) {
 		int x;
 		int y;
@@ -905,16 +962,16 @@ public class BattleMap extends BaseObject implements ThingOwner {
 		mob = getMobileChecked(i);
 		thing = getFlaggedObject(i, "ValueBase");
 
-		if ((filter & FILTER_MONSTER) == FILTER_MONSTER) {
+		if ((filter & BattleMap.FILTER_MONSTER) == BattleMap.FILTER_MONSTER) {
 
 			if (mob != null && b.canSee(mob)) {
-				l.add(new Point(mob));
+				l.add(new tyrant.mikera.engine.Point(mob));
 				return l;
 			}
 		}
-		if ((filter & FILTER_ITEM) == FILTER_ITEM) {
+		if ((filter & BattleMap.FILTER_ITEM) == BattleMap.FILTER_ITEM) {
 			if (thing != null && b.canSee(thing)) {
-				l.add(new Point(thing));
+				l.add(new tyrant.mikera.engine.Point(thing));
 				return l;
 			}
 		}
@@ -1184,20 +1241,42 @@ public class BattleMap extends BaseObject implements ThingOwner {
 
 	/** calculates all the visible squares for the hero at given position */
 	public void calcVisible(final Thing h) {
-		BattleState s = getState();
-		String perception = h.combatant.perceive(period);
-		int r = h.combatant.view(period);
+		final int combatantid = h.combatant.id;
+		VisionCache cache = visioncache.get(combatantid);
+		final String perception = h.combatant.perceive(period);
+		if (cache != null) {
+			if (VisionCache.valid()
+					&& cache.equals(new VisionCache(perception, h))) {
+				for (Point p : cache.seen) {
+					seeTile(p.x, p.y);
+				}
+				return;
+			} else {
+				visioncache.clear();
+			}
+		}
+		final BattleState s = getState();
+		final int range = h.combatant.view(period);
 		final boolean forcevision = perception == Javelin.PERIOD_NOON
 				|| perception == Javelin.PERIOD_MORNING;
-		for (int x = h.x - r; x <= h.x + r; x++) {
-			for (int y = h.y - r; y <= h.y + r; y++) {
-				final Vision v = s.hasLineOfSight(new java.awt.Point(h.x, h.y),
-						new java.awt.Point(x, y), r, perception);
-				if (forcevision || v != Vision.BLOCKED) {
-					setTileFull(x, y, getTileFull(x, y) | Tile.TF_VISIBLE);
+		cache = new VisionCache(perception, h);
+		for (int x = h.x - range; x <= h.x + range && x < this.width; x++) {
+			if (x < 0) {
+				x = 0;
+			}
+			for (int y = h.y - range; y <= h.y + range; y++) {
+				if (forcevision || s.hasLineOfSight(new Point(h.x, h.y),
+						new Point(x, y), range, perception) != Vision.BLOCKED) {
+					cache.seen.add(new Point(x, y));
+					seeTile(x, y);
 				}
 			}
 		}
+		visioncache.put(combatantid, cache);
+	}
+
+	void seeTile(int x, int y) {
+		setTileFull(x, y, getTileFull(x, y) | Tile.TF_VISIBLE);
 	}
 
 	public void makeAllInvisible() {
@@ -1226,7 +1305,6 @@ public class BattleMap extends BaseObject implements ThingOwner {
 			;
 			final Thing m = getMobile(x, y);
 			if (m != null) {
-				m.notify(AI.EVENT_VISIBLE, 0, null);
 				if (m.isHostile(Game.hero())) {
 					Game.hero().isRunning(false);
 				}
@@ -1236,8 +1314,10 @@ public class BattleMap extends BaseObject implements ThingOwner {
 
 	/** an the square currently be seen by the hero */
 	public boolean isVisible(final int x, final int y) {
-		// return (getTileFlags(x, y) & Tile.TF_VISIBLE) > 0;
-		return isHeroLOS(x, y);
+		final Thing h = Game.hero();
+		final boolean yes = h.x == x && h.y == y || isHeroLOS(x, y);
+		// System.out.println("[BattleMap] visible? " + yes);
+		return yes;
 	}
 
 	/** is the square currently in LOS for the hero */
@@ -1252,13 +1332,6 @@ public class BattleMap extends BaseObject implements ThingOwner {
 	public boolean isVisibleChecked(final int i) {
 		return (tiles[i] & Tile.TF_VISIBLE) > 0;
 		// return isVisible(x, y);
-	}
-
-	/** has the square been viewed at some point? */
-	public boolean isDiscovered(final int x, final int y) {
-		// final Thing hero = Game.hero();
-		// return isLOS(x, y, hero.x, hero.y);
-		return true;
 	}
 
 	public boolean isEmpty(final int x, final int y) {
@@ -1345,7 +1418,8 @@ public class BattleMap extends BaseObject implements ThingOwner {
 		return false;
 	}
 
-	public final boolean isTileAdjacent(final int x, final int y, final int tile) {
+	public final boolean isTileAdjacent(final int x, final int y,
+			final int tile) {
 		if (getTile(x - 1, y) == tile) {
 			return true;
 		}
@@ -1622,19 +1696,6 @@ public class BattleMap extends BaseObject implements ThingOwner {
 		}
 	}
 
-	/** notify mobiles in an area */
-	public void areaNotify(final int x, final int y, final int r,
-			final int eventtype, final int ext, final Object o) {
-		for (int px = x - r; px <= x + r; px++) {
-			for (int py = y - r; py <= y + r; py++) {
-				final Thing m = getMobile(px, py);
-				if (m != null) {
-					m.notify(eventtype, ext, o);
-				}
-			}
-		}
-	}
-
 	/**
 	 * Sorts objects in square into correct Z order returns head item (lowest Z
 	 * value)
@@ -1676,7 +1737,8 @@ public class BattleMap extends BaseObject implements ThingOwner {
 	}
 
 	/** return all objects with given flag in rectangular area */
-	public Thing[] getObjects(int x1, int y1, int x2, int y2, final String flag) {
+	public Thing[] getObjects(int x1, int y1, int x2, int y2,
+			final String flag) {
 		if (x1 < 0) {
 			x1 = 0;
 		}
@@ -1703,7 +1765,7 @@ public class BattleMap extends BaseObject implements ThingOwner {
 		}
 
 		if (count == 0) {
-			return emptyThings;
+			return BattleMap.emptyThings;
 		}
 		final Thing[] things = new Thing[count];
 
@@ -1751,7 +1813,7 @@ public class BattleMap extends BaseObject implements ThingOwner {
 		}
 
 		if (count == 0) {
-			return emptyThings;
+			return BattleMap.emptyThings;
 		}
 		final Thing[] things = new Thing[count];
 
@@ -1865,8 +1927,9 @@ public class BattleMap extends BaseObject implements ThingOwner {
 						// abs
 						disty = disty < 0 ? disty * -1 : disty;
 						if (distx < 5 || disty < 5) {
-							Game.messageTyrant("The portal crumbles in the presence of the angry "
-									+ being);
+							Game.messageTyrant(
+									"The portal crumbles in the presence of the angry "
+											+ being);
 							p.die();
 							return;
 						}
@@ -1965,8 +2028,8 @@ public class BattleMap extends BaseObject implements ThingOwner {
 		for (int y = 0; y < height; y++) {
 			s.append("<row>");
 			for (int x = 0; x < width; x++) {
-				final String ns = Text.leftPad(
-						Integer.toString(getTile(x, y) & 65535), 4);
+				final String ns = Text
+						.leftPad(Integer.toString(getTile(x, y) & 65535), 4);
 				s.append(ns + " ");
 			}
 			s.append("</row>\n");
@@ -2018,7 +2081,7 @@ public class BattleMap extends BaseObject implements ThingOwner {
 
 	public BattleState getState() {
 		final Square[][] map = new Square[width][height];
-		for (final Combatant c : combatants) {
+		for (final Combatant c : BattleMap.combatants) {
 			final int[] location = c.determineLocation();
 			if (isBlocked(location[0], location[1])) {
 				removeThing(c.visual);
@@ -2035,10 +2098,16 @@ public class BattleMap extends BaseObject implements ThingOwner {
 		}
 		final ArrayList<Combatant> blueTeam = new ArrayList<Combatant>();
 		final ArrayList<Combatant> redTeam = new ArrayList<Combatant>();
-		for (final Combatant c : combatants) {
+		for (final Combatant c : BattleMap.combatants) {
 			(BattleMap.blueTeam.contains(c) ? blueTeam : redTeam).add(c);
 		}
-		return new BattleState(blueTeam, redTeam, dead, map, period);
+		final BattleState s = new BattleState(blueTeam, redTeam,
+				(ArrayList<Combatant>) BattleMap.dead.clone(), map, period,
+				meld);
+		if (Javelin.DEBUG) {// TODO debug
+			ActionProvider.checkstacking(s);
+		}
+		return s;
 	}
 
 	private void newSquare(final Square[][] map, final int x, final int y) {
@@ -2048,22 +2117,27 @@ public class BattleMap extends BaseObject implements ThingOwner {
 
 	public void setState(final Node node) {
 		final TreeMap<Integer, Thing> temp = new TreeMap<Integer, Thing>();
-		for (final Combatant c : combatants) {
+		for (final Combatant c : BattleMap.combatants) {
 			c.visual.remove();
 			temp.put(c.id, c.visual);
 		}
 		final BattleState state = (BattleState) node;
-		combatants = state.getCombatants();
-		blueTeam = new ArrayList<Combatant>(state.getBlueTeam());
-		redTeam = new ArrayList<Combatant>(state.getRedTeam());
-		for (final Combatant c : combatants) {
-			final Thing t = temp.get(c.id);
+		BattleMap.combatants = state.getCombatants();
+		BattleMap.blueTeam = new ArrayList<Combatant>(state.getBlueTeam());
+		BattleMap.redTeam = new ArrayList<Combatant>(state.getRedTeam());
+		for (final Combatant c : BattleMap.combatants) {
+			Thing t = temp.get(c.id);
+			if (t == null) {
+				t = BattleSetup.addThing(this,
+						new Point(c.location[0], c.location[1]), "dog");
+			}
 			addThing(t, c.location[0], c.location[1]);
 			c.visual = t;
 			t.combatant = c;
 		}
-		dead = state.dead;
+		BattleMap.dead = state.dead;
 		period = state.period;
+		meld = state.meld;
 	}
 
 	public void flood(BattleState state) {
@@ -2076,5 +2150,16 @@ public class BattleMap extends BaseObject implements ThingOwner {
 				}
 			}
 		}
+	}
+
+	static public Meld checkformeld(int x, int y) {
+		Meld meld = null;
+		for (Meld m : BattleScreen.active.map.meld) {
+			if (m.x == x && m.y == y) {
+				meld = m;
+				break;
+			}
+		}
+		return meld;
 	}
 }

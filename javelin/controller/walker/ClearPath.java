@@ -1,10 +1,14 @@
 package javelin.controller.walker;
 
-import java.awt.Point;
-
+import javelin.controller.Point;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 
+/**
+ * Finds an unobstructed path.
+ * 
+ * @author alex
+ */
 public class ClearPath extends Walker {
 	public ClearPath(Point me, Point target, BattleState state) {
 		super(me, target, state);

@@ -7,6 +7,7 @@ import javelin.controller.action.Action;
 import javelin.controller.action.ActionDescription;
 import javelin.controller.action.ActionMapping;
 import javelin.model.BattleMap;
+import javelin.model.state.BattleState;
 import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.Thing;
 
@@ -19,18 +20,18 @@ public class GameHandler {
 		// actionMapping.addRougeLikeMappings();
 	}
 
-	public Point doDirection(final Thing thing, final ActionDescription action) {
+	public Point doDirection(final Thing thing, final ActionDescription action,
+			final BattleState state) {
 		final BattleMap map = thing.getMap();
 		final Point direction = convertActionToDirection(action);
-		int tox = thing.x + direction.x;
-		int toy = thing.y + direction.y;
+		final int tox = thing.x + direction.x;
+		final int toy = thing.y + direction.y;
 		if (map != null && map.getTile(tox, toy) != 0) {
-			if (!Movement.tryMove(thing, map, tox, toy)) {
-				System.out.println("Running?");
-				thing.isRunning(false);
-			} else {
+			if (Movement.tryMove(thing, map, tox, toy, state)) {
 				return new Point(tox, toy);
 			}
+			System.out.println("Running?");
+			thing.isRunning(false);
 		}
 		return null;
 	}
@@ -48,7 +49,8 @@ public class GameHandler {
 		return convertActionToDirection(action);
 	}
 
-	public static Point convertActionToDirection(final ActionDescription action) {
+	public static Point
+			convertActionToDirection(final ActionDescription action) {
 		final Point direction = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
 		if (action == Action.MOVE_N) {
 			direction.x = 0;

@@ -1,5 +1,8 @@
 package tyrant.mikera.tyrant;
 
+import javelin.Javelin;
+import javelin.view.screen.IntroScreen;
+
 public class Screen extends TPanel {
 
 	/**
@@ -17,5 +20,13 @@ public class Screen extends TPanel {
 
 	public void update() {
 		// override
+	}
+
+	public void refresh() {
+		Javelin.app.switchScreen(this);
+	}
+
+	public Character getInput() {
+		return IntroScreen.feedback();
 	}
 }

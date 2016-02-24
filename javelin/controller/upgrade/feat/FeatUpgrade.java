@@ -4,10 +4,15 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.model.feat.Feat;
 import javelin.model.unit.Combatant;
 
-abstract class FeatUpgrade extends Upgrade {
+/**
+ * Adds a feat as an upgrade.
+ * 
+ * @author alex
+ */
+public abstract class FeatUpgrade extends Upgrade {
 	protected final Feat feat;
 	Feat prerequisite = null;
-	boolean stack;
+	boolean stack = false;
 
 	@Deprecated
 	FeatUpgrade(final String name, final Feat featp) {
@@ -16,24 +21,23 @@ abstract class FeatUpgrade extends Upgrade {
 	}
 
 	public FeatUpgrade(Feat featp) {
-		this(
-				featp.name.substring(0, 1).toUpperCase()
-						+ featp.name.substring(1), featp);
+		this(featp.name.substring(0, 1).toUpperCase() + featp.name.substring(1),
+				featp);
 	}
 
 	@Override
-	public boolean apply(final Combatant m) {
-		if (!stack && check(m, feat)) {
+	public boolean apply(final Combatant c) {
+		if (!stack && check(c, feat)) {
 			return false;
 		}
-		if (prerequisite != null && !check(m, prerequisite)) {
+		if (prerequisite != null && !check(c, prerequisite)) {
 			return false;
 		}
-		m.source.addfeat(feat);
+		c.source.addfeat(feat);
 		return true;
 	}
 
-	public boolean check(final Combatant m, Feat feat2) {
-		return m.source.hasfeat(feat2) > 0;
+	public boolean check(final Combatant c, Feat f) {
+		return c.source.hasfeat(f);
 	}
 }

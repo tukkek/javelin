@@ -2,6 +2,10 @@ package javelin.controller.upgrade.feat;
 
 import javelin.model.unit.Monster;
 
+/**
+ * @see javelin.model.feat.LightningReflexes
+ * @author alex
+ */
 public class LightningReflexes extends IronWill {
 	public LightningReflexes() {
 		super("Lightning reflexes",

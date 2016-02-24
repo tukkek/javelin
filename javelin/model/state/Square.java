@@ -1,5 +1,12 @@
 package javelin.model.state;
 
+import javelin.controller.map.Map;
+
+/**
+ * A singular area of a {@link Map}.
+ * 
+ * @author alex
+ */
 public class Square {
 	public final boolean blocked;
 	public final boolean obstructed;

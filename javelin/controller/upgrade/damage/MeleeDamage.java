@@ -5,6 +5,11 @@ import java.util.List;
 import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Monster;
 
+/**
+ * Upgrades mêlée damage.
+ * 
+ * @author alex
+ */
 public class MeleeDamage extends Damage {
 	public MeleeDamage(final String name) {
 		super(name);

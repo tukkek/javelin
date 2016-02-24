@@ -1,27 +1,17 @@
 package javelin.controller.walker;
 
-import java.awt.Point;
 import java.util.ArrayList;
 
+import javelin.controller.Point;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 
+/**
+ * Extensible path-finding algorithm.
+ * 
+ * @author alex
+ */
 public class Walker {
-	public class Step {
-		public int x, y;
-
-		public Step(int x, int y) {
-			super();
-			this.x = x;
-			this.y = y;
-		}
-
-		@Override
-		public String toString() {
-			return x + "," + y;
-		}
-	}
-
 	public static final int[] DELTAS = new int[] { 0, +1, -1 };
 	int targetx;
 	int targety;
@@ -39,7 +29,7 @@ public class Walker {
 	}
 
 	public ArrayList<Step> walk() {
-		walk(sourcex, sourcey, new ArrayList<Walker.Step>());
+		walk(sourcex, sourcey, new ArrayList<Step>());
 		return solution;
 	}
 
@@ -54,33 +44,49 @@ public class Walker {
 		if (!steps.isEmpty() && !valid(x, y, state)) {
 			return;
 		}
-		Step beststep = null;
-		for (int deltax : DELTAS) {
-			for (int deltay : DELTAS) {
-				final Step step = new Step(x + deltax, y + deltay);
-				if (beststep == null
-						|| distance(step.x, step.y, targetx, targety) < distance(
-								beststep.x, beststep.y, targetx, targety)) {
-					beststep = step;
-				}
+		ArrayList<Step> nextsteps = takebeststep(x, y);
+		for (Step step : nextsteps) {
+			final ArrayList<Step> stepinto = (ArrayList<Step>) steps.clone();
+			if (step.x != targetx || step.y != targety) {
+				stepinto.add(step);
+			}
+			walk(step.x, step.y, stepinto);
+		}
+	}
+
+	ArrayList<Step> takebeststep(final int x, final int y) {
+		final ArrayList<Step> steps = new NextMove(targetx, targety);
+		final int stepx = x + (targetx > x ? +1 : -1);
+		final int stepy = y + (targety > y ? +1 : -1);
+		if (y != targety) {
+			steps.add(new Step(x, stepy));
+		}
+		if (x != targetx) {
+			steps.add(new Step(stepx, y));
+			if (y != targety) {
+				steps.add(new Step(stepx, stepy));
 			}
 		}
-		final ArrayList<Step> stepinto = (ArrayList<Step>) steps.clone();
-		if (beststep.x != targetx || beststep.y != targety) {
-			stepinto.add(beststep);
-		}
-		walk(beststep.x, beststep.y, stepinto);
+
+		// final int deltax=x-targetx;
+		// final int deltay=y-targety;
+		// if(deltax==0){
+		//
+		// }
+		return steps;
 	}
 
 	protected boolean valid(int x, int y, BattleState state2) {
 		return true;
 	}
 
-	public static double distance(Combatant c1, Combatant c2) {
-		return distance(c1.location[0], c1.location[1], c2.location[0], c2.location[1]);
+	public static double distance(final Combatant c1, final Combatant c2) {
+		return distance(c1.location[0], c1.location[1], c2.location[0],
+				c2.location[1]);
 	}
 
-	public static double distance(int ax, int ay, int bx, int by) {
+	public static double distance(final int ax, final int ay, final int bx,
+			final int by) {
 		final int deltax = Math.abs(ax - bx);
 		final int deltay = Math.abs(ay - by);
 		return Math.sqrt(deltax * deltax + deltay * deltay);

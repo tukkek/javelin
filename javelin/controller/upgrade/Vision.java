@@ -2,6 +2,9 @@ package javelin.controller.upgrade;
 
 import javelin.model.unit.Combatant;
 
+/**
+ * See the d20 SRD for more info.
+ */
 public class Vision extends Upgrade {
 
 	final private int target;

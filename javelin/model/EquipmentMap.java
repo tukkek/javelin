@@ -6,21 +6,47 @@ import java.util.HashMap;
 import java.util.List;
 
 import javelin.model.item.Item;
+import javelin.model.unit.Combatant;
+import javelin.model.world.Squad;
+import tyrant.mikera.engine.RPG;
 
 /**
- * Map of m.toString() and a list of Items.
+ * Map of {@link Combatant#toString()} and a list of {@link Item}s.
  * 
  * TODO change key to int (combatant id)
  * 
  * @author alex
  */
-public class EquipmentMap extends HashMap<String, List<Item>> implements
-		Serializable {
+public class EquipmentMap extends HashMap<Integer, ArrayList<Item>>
+		implements Serializable {
+
 	@Override
-	public java.util.List<Item> get(final Object key) {
+	public java.util.ArrayList<Item> get(final Object key) {
 		if (!containsKey(key)) {
-			put((String) key, new ArrayList<Item>());
+			put((Integer) key, new ArrayList<Item>());
 		}
 		return super.get(key);
+	}
+
+	static public Item pop(Class<? extends Item> type, Squad s) {
+		for (final List<Item> items : s.equipment.values()) {
+			for (final Item i : items) {
+				if (type.isInstance(i)) {
+					items.remove(i);
+					return i;
+				}
+			}
+		}
+		return null;
+	}
+
+	public void fill(Squad active) {
+		for (Combatant c : active.members) {
+			get(c.id);
+		}
+	}
+
+	public void add(Item i, Squad s) {
+		get(RPG.pick(s.members).id).add(i);
 	}
 }

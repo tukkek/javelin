@@ -1,9 +1,14 @@
 package javelin.controller.walker;
 
-import java.awt.Point;
-
+import javelin.controller.Point;
+import javelin.controller.action.Charge;
 import javelin.model.state.BattleState;
 
+/**
+ * @see Charge
+ * 
+ * @author alex
+ */
 public class ChargePath extends ClearPath {
 	private final boolean swimmer;
 

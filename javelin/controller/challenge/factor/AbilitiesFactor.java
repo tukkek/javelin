@@ -4,8 +4,10 @@
 package javelin.controller.challenge.factor;
 
 import javelin.controller.upgrade.UpgradeHandler;
+import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.controller.upgrade.ability.RaiseConsitution;
 import javelin.controller.upgrade.ability.RaiseDexterity;
+import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.model.unit.Monster;
@@ -14,6 +16,8 @@ import javelin.model.unit.Monster;
  * TODO leaving charisma and intelligence for now because they are useless with
  * the current game content. Probably both will be needed once skills are
  * implemented.
+ * 
+ * @see CrFactor
  */
 public class AbilitiesFactor extends CrFactor {
 	@Override
@@ -39,9 +43,11 @@ public class AbilitiesFactor extends CrFactor {
 
 	@Override
 	public void listupgrades(UpgradeHandler handler) {
-		handler.defensive.add(new RaiseConsitution());
-		handler.misc.add(new RaiseStrength());
-		handler.misc.add(new RaiseDexterity());
-		handler.misc.add(new RaiseWisdom());
+		handler.earth.add(new RaiseConsitution());
+		handler.fire.add(new RaiseStrength());
+		handler.wind.add(new RaiseDexterity());
+		handler.water.add(new RaiseWisdom());
+		handler.good.add(new RaiseIntelligence());
+		handler.magic.add(new RaiseCharisma());
 	}
 }

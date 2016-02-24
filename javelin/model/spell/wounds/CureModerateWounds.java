@@ -5,6 +5,9 @@ import javelin.model.spell.Ray;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 
+/**
+ * See the d20 SRD for more info.
+ */
 public class CureModerateWounds extends Ray {
 	/**
 	 * @XdY+Z
@@ -12,15 +15,14 @@ public class CureModerateWounds extends Ray {
 	final int[] rolldata;
 
 	public CureModerateWounds(final String name, final float incrementcost,
-			int[] rolldatap, int casterlevelp) {
-		super(name, incrementcost, true, true, casterlevelp);
+			int[] rolldatap, int levelp) {
+		super(name, incrementcost, true, true, levelp);
 		rolldata = rolldatap;
 	}
 
-	public CureModerateWounds(final String string) {
-		this(string + "cure moderate wounds", SpellsFactor
-				.calculatechallengefortouchspellconvertedtoray(2), new int[] {
-				2, 8, 4 }, 3);
+	public CureModerateWounds() {
+		this("Cure moderate wounds", SpellsFactor.ratetouchconvertedtoray(2),
+				new int[] { 2, 8, 4 }, 2);
 	}
 
 	@Override

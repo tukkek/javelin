@@ -3,14 +3,15 @@ package javelin.controller.action.world;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.exception.NotPeaceful;
 import javelin.controller.upgrade.Spell;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Squad;
-import javelin.view.screen.IntroScreen;
 import javelin.view.screen.world.WorldScreen;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
+import tyrant.mikera.tyrant.InfoScreen;
 
 public class CastSpells extends WorldAction {
 	public CastSpells() {
@@ -21,7 +22,10 @@ public class CastSpells extends WorldAction {
 	public void perform(WorldScreen screen) {
 		List<String> names = new ArrayList<String>();
 		ArrayList<Combatant> casters = filtercasters(names);
-		int choice = choose("Who?", names);
+		if (casters.isEmpty()) {
+			return;
+		}
+		int choice = choose("Who?", names, false, false);
 		if (choice == -1) {
 			Game.messagepanel.clear();
 			return;
@@ -41,8 +45,8 @@ public class CastSpells extends WorldAction {
 		try {
 			Game.message(
 					s.castpeacefully(caster,
-							Squad.active.members.get(targetindex)), null,
-					Delay.BLOCK);
+							Squad.active.members.get(targetindex)),
+					null, Delay.BLOCK);
 		} catch (NotPeaceful e) {
 			throw new RuntimeException(
 					"Should have been caught in CastSpells#listspells. See Spell#ispeaceful");
@@ -55,7 +59,7 @@ public class CastSpells extends WorldAction {
 		for (Combatant m : Squad.active.members) {
 			targets.add(m.source.customName);
 		}
-		int targetindex = choose("Cast on...", targets);
+		int targetindex = choose("Cast on...", targets, false, false);
 		return targetindex;
 	}
 
@@ -67,7 +71,7 @@ public class CastSpells extends WorldAction {
 					Delay.BLOCK);
 			return null;
 		}
-		int input = choose("Which spell?", spellnames);
+		int input = choose("Which spell?", spellnames, false, false);
 		if (input == -1) {
 			return null;
 		}
@@ -81,8 +85,8 @@ public class CastSpells extends WorldAction {
 	}
 
 	public ArrayList<Combatant> filtercasters(List<String> names) {
-		ArrayList<Combatant> casters = new ArrayList<Combatant>(
-				Squad.active.members);
+		ArrayList<Combatant> casters =
+				new ArrayList<Combatant>(Squad.active.members);
 		for (Combatant m : new ArrayList<Combatant>(casters)) {
 			if (listspells(new ArrayList<Spell>(m.spells)).size() == 0) {
 				casters.remove(m);
@@ -103,8 +107,12 @@ public class CastSpells extends WorldAction {
 		return spellnames;
 	}
 
-	static public int choose(String query, List<?> names) {
-		String output = query + " (q to quit)\n\n";
+	static public int choose(String output, List<?> names, boolean fullscreen,
+			boolean forceselection) {
+		if (!forceselection) {
+			output += " (q to quit)";
+		}
+		output += " \n\n";
 		ArrayList<Object> options = new ArrayList<Object>();
 		int i = 1;
 		for (Object o : names) {
@@ -113,12 +121,16 @@ public class CastSpells extends WorldAction {
 			output += "[" + i + "] " + name + "\n";
 			i += 1;
 		}
-		Game.messagepanel.clear();
-		Game.message(output, null, Delay.NONE);
+		if (fullscreen) {
+			Javelin.app.switchScreen(new InfoScreen(output));
+		} else {
+			Game.messagepanel.clear();
+			Game.message(output, null, Delay.NONE);
+		}
 		while (true) {
 			try {
-				Character feedback = IntroScreen.feedback();
-				if (feedback == 'q') {
+				Character feedback = InfoScreen.feedback();
+				if (!forceselection && feedback == 'q') {
 					return -1;
 				}
 				int selected = Integer.parseInt(feedback.toString()) - 1;

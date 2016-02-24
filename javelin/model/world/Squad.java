@@ -1,22 +1,32 @@
 package javelin.model.world;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.EquipmentMap;
+import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.view.screen.town.TransportScreen;
 import javelin.view.screen.world.WorldScreen;
 import tyrant.mikera.engine.Lib;
-import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.Game;
 
+/**
+ * A group of units that the player controls as a overworld game unit. If a
+ * player loses all his squads the game ends.
+ * 
+ * @author alex
+ */
 public class Squad implements WorldActor {
-	static public List<Squad> squads = new ArrayList<Squad>();
+	public enum Transport {
+		NONE, CARRIAGE, AIRSHIP
+	}
+
+	static public ArrayList<Squad> squads = new ArrayList<Squad>();
 	/**
 	 * See {@link Javelin#act()}.
 	 */
@@ -35,25 +45,31 @@ public class Squad implements WorldActor {
 	 * Start at morning.
 	 */
 	public long hourselapsed;
-	public Town lasttown = null;
+	public Transport transport = Transport.NONE;
 
 	public Squad(final int xp, final int yp, final long hourselapsedp) {
 		super();
-		squads.add(this);
+		Squad.squads.add(this);
 		x = xp;
 		y = yp;
 		hourselapsed = hourselapsedp;
+		if (Squad.active == null) {
+			Squad.active = this;
+		}
 	}
 
 	public void disband() {
-		squads.remove(this);
-		if (squads.isEmpty()) {
+		Squad.squads.remove(this);
+		if (Squad.squads.isEmpty() && Town.train() == null) {
 			Javelin.lose();
 		}
-		if (active == this) {
-			active = null;
+		if (Squad.active == this) {
+			Squad.active = Javelin.nexttoact();
 		}
 		visual.remove();
+		if (Dungeon.active != null) {
+			Dungeon.active.leave();
+		}
 	}
 
 	public float size() {
@@ -97,25 +113,36 @@ public class Squad implements WorldActor {
 
 	@Override
 	public void place() {
-		final Thing avatar = Lib.create("mercenary captain");
-		visual = avatar;
-		declareleader();
+		final Thing avatar = createThing();
 		JavelinApp.overviewmap.addThing(avatar, x, y);
+		visual = avatar;
+		updateavatar();
 		if (Game.hero() == null) {
 			Game.instance().hero = avatar;
 		}
 	}
 
-	public void declareleader() {
+	public Thing createThing() {
+		return Lib.create("mercenary captain");
+	}
+
+	public void updateavatar() {
 		Combatant leader = members.get(0);
 		for (int i = 1; i < members.size(); i++) {
 			Combatant m = members.get(i);
-			if (ChallengeRatingCalculator.calculateCr(m.source) > ChallengeRatingCalculator
-					.calculateCr(leader.source)) {
+			if (ChallengeRatingCalculator
+					.calculateCr(m.source) > ChallengeRatingCalculator
+							.calculateCr(leader.source)) {
 				leader = m;
 			}
 		}
-		visual.combatant = new Combatant(visual, leader.source, false);
+		Monster dummy = leader.source;
+		if (transport != Transport.NONE && Dungeon.active == null) {
+			dummy = dummy.clone();
+			dummy.avatarfile =
+					transport == Transport.CARRIAGE ? "carriage" : "airship";
+		}
+		visual.combatant = new Combatant(visual, dummy, false);
 	}
 
 	public void join(final Squad squad) {
@@ -123,7 +150,7 @@ public class Squad implements WorldActor {
 		gold += squad.gold;
 		hourselapsed = Math.max(hourselapsed, squad.hourselapsed);
 		for (final Combatant m : squad.members) {
-			equipment.put(m.toString(), squad.equipment.get(m.toString()));
+			equipment.put(m.id, squad.equipment.get(m.id));
 		}
 		squad.disband();
 	}
@@ -141,7 +168,7 @@ public class Squad implements WorldActor {
 	@Override
 	public void remove() {
 		visual.remove();
-		squads.remove(this);
+		Squad.squads.remove(this);
 	}
 
 	@Override
@@ -150,28 +177,50 @@ public class Squad implements WorldActor {
 	}
 
 	public void displace() {
-		int deltax = 0, deltay = 0;
-		int[] nudges = new int[] { -1, 0, +1 };
-		while (deltax == 0 && deltay == 0) {
-			deltax = RPG.pick(nudges);
-			deltay = RPG.pick(nudges);
-		}
-		int tox = x + deltax;
-		int toy = y + deltay;
-		ArrayList<WorldActor> actors = WorldScreen.getactors();
-		actors.remove(Squad.active);
-		if (WorldScreen.getactor(tox, toy, actors) == null) {
-			x = tox;
-			y = toy;
-		} else {
-			displace();
-		}
+		WorldScreen.displace(this);
 	}
 
 	public void eat() {
 		gold -= size() / 2;
+		if (transport == Transport.CARRIAGE) {
+			gold -= TransportScreen.CARRIAGEMAINTENANCE;
+		} else if (transport == Transport.AIRSHIP) {
+			gold -= TransportScreen.AIRSHIPMAINTENANCE;
+		}
 		if (gold < 0) {
 			gold = 0;
+			transport = Transport.NONE;
 		}
+	}
+
+	public void add(Combatant member, ArrayList<Item> equipmentp) {
+		members.add(member);
+		equipment.put(member.id, equipmentp);
+	}
+
+	public void remove(Combatant c) {
+		members.remove(c);
+		if (members.isEmpty()) {
+			disband();
+		}
+	}
+
+	@Override
+	public void move(int tox, int toy) {
+		x = tox;
+		y = toy;
+		if (visual != null) {
+			visual.x = tox;
+			visual.y = tox;
+		}
+	}
+
+	@Override
+	public String toString() {
+		return members.toString();
+	}
+
+	public void receiveitem(Item key) {
+		equipment.add(key, this);
 	}
 }

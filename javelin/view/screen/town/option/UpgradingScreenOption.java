@@ -4,6 +4,10 @@ import javelin.model.world.Town;
 import javelin.view.screen.town.SelectScreen;
 import javelin.view.screen.town.UpgradingScreen;
 
+/**
+ * @see UpgradeOption
+ * @author alex
+ */
 public class UpgradingScreenOption extends ScreenOption {
 
 	public UpgradingScreenOption(String name, Town t) {

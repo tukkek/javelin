@@ -1,24 +1,36 @@
 package javelin.model.state;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.Point;
+import javelin.controller.ai.ActionProvider;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.Node;
-import javelin.controller.ai.StateSucessorProvider;
 import javelin.controller.walker.ClearPath;
 import javelin.controller.walker.ObstructedPath;
+import javelin.controller.walker.Step;
 import javelin.controller.walker.Walker;
-import javelin.controller.walker.Walker.Step;
 import javelin.model.TeamContainer;
 import javelin.model.unit.Combatant;
 
+/**
+ * Javelin's implementation of {@link Node}.
+ * 
+ * {@link #clone()} is used for cloning the state but it does not clone the
+ * {@link Combatant} instances! You need to use {@link #clone(Combatant))}
+ * afterwards to do so.
+ * 
+ * @see #cloneifdifferent(Combatant, Combatant)
+ * 
+ * @author alex
+ */
 public class BattleState implements Node, TeamContainer {
-	public ArrayList<Combatant> blueTeam = new ArrayList<Combatant>();
-	public ArrayList<Combatant> redTeam = new ArrayList<Combatant>();
+	public ArrayList<Combatant> blueTeam;
+	public ArrayList<Combatant> redTeam;
 	public ArrayList<Combatant> dead;
+	public ArrayList<Meld> meld;
 	/**
 	 * Since it's immutable no need to clone it.
 	 */
@@ -26,45 +38,31 @@ public class BattleState implements Node, TeamContainer {
 	public Combatant next;
 	public String period;
 
-	public BattleState(final List<Combatant> blueTeam,
-			final List<Combatant> redTeam, ArrayList<Combatant> dead,
-			final Square[][] map, String period) {
+	public BattleState(final ArrayList<Combatant> blueTeam,
+			final ArrayList<Combatant> redTeam, ArrayList<Combatant> dead,
+			final Square[][] map, String period, ArrayList<Meld> meld) {
 		this.map = map;
 		this.period = period;
 		this.dead = (ArrayList<Combatant>) dead.clone();
-		setupstate(blueTeam, redTeam);
+		this.blueTeam = (ArrayList<Combatant>) blueTeam.clone();
+		this.redTeam = (ArrayList<Combatant>) redTeam.clone();
+		this.meld = (ArrayList<Meld>) meld.clone();
+		checkwhoisnext();
 	}
 
 	@Override
 	public BattleState clone() {
 		try {
 			final BattleState clone = (BattleState) super.clone();
-			clone.blueTeam = new ArrayList<Combatant>();
-			clone.redTeam = new ArrayList<Combatant>();
 			clone.dead = (ArrayList<Combatant>) clone.dead.clone();
-			clone.map = map;
-			clone.setupstate(blueTeam, redTeam);
+			clone.blueTeam = (ArrayList<Combatant>) blueTeam.clone();
+			clone.redTeam = (ArrayList<Combatant>) redTeam.clone();
+			clone.meld = (ArrayList<Meld>) meld.clone();
+			checkwhoisnext();
 			return clone;
 		} catch (CloneNotSupportedException e) {
 			throw new RuntimeException();
 		}
-	}
-
-	public void setupstate(final List<Combatant> blueTeam,
-			final List<Combatant> redTeam) {
-		for (final Combatant c : blueTeam) {
-			this.blueTeam.add(updateclone(c));
-		}
-		for (final Combatant c : redTeam) {
-			this.redTeam.add(updateclone(c));
-		}
-		checkwhoisnext();
-	}
-
-	public Combatant updateclone(Combatant c) {
-		c = c.clone();
-		c.refresh();
-		return c;
 	}
 
 	public void checkwhoisnext() {
@@ -74,7 +72,8 @@ public class BattleState implements Node, TeamContainer {
 			return;
 		}
 		next = combatants.get(0);
-		for (int i = 1; i < combatants.size(); i++) {
+		final int ncombatants = combatants.size();
+		for (int i = 1; i < ncombatants; i++) {
 			final Combatant c = combatants.get(i);
 			if (c.ap < next.ap) {
 				next = c;
@@ -82,34 +81,20 @@ public class BattleState implements Node, TeamContainer {
 		}
 	}
 
-	/**
-	 * TODO could instead increment a turn at each {@link BattleState} instance.
-	 * Is it possible? Would need soem revision of places where a new instance
-	 * is created just in case.
-	 */
-	public BattleState(final BattleState state, final int newturn) {
-		this(state.blueTeam, state.redTeam, state.dead, state.map, state.period);
-	}
-
 	@Override
 	public Iterable<List<ChanceNode>> getSucessors() {
-		return new StateSucessorProvider(this);
-	}
-
-	@Override
-	public void changePlayer() {
-		// not needed? TODO
+		return new ActionProvider(this);
 	}
 
 	@Override
 	public ArrayList<Combatant> getCombatants() {
-		final ArrayList<Combatant> list = new ArrayList<Combatant>();
+		final ArrayList<Combatant> list =
+				(ArrayList<Combatant>) blueTeam.clone();
 		list.addAll(redTeam);
-		list.addAll(blueTeam);
 		return list;
 	}
 
-	public ArrayList<Combatant> getSurroudings(final Combatant surrounded) {
+	public ArrayList<Combatant> getSurroundings(final Combatant surrounded) {
 		final ArrayList<Combatant> surroundings = new ArrayList<Combatant>();
 		final int[] location = surrounded.location;
 		final ArrayList<Combatant> combatents = new ArrayList<Combatant>();
@@ -137,34 +122,27 @@ public class BattleState implements Node, TeamContainer {
 		return blueTeam;
 	}
 
-	// /**
-	// * TODO needs to go after combatant/monster separation
-	// */
-	// private ArrayList<Monster> convertlist(final List<Combatant> team) {
-	// final ArrayList<Monster> list = new ArrayList<Monster>() {
-	// @Override
-	// public boolean remove(final Object arg0) {
-	// throw new RuntimeException("Remove directly from state list");
-	// }
-	// };
-	// for (final Combatant c : team) {
-	// list.add(c.monster);
-	// }
-	// return list;
-	// }
-
 	@Override
 	public List<Combatant> getRedTeam() {
 		return redTeam;
 	}
 
-	public Combatant translatecombatant(final Combatant target) {
-		for (final Combatant c : getCombatants()) {
-			if (c.id == target.id) {
-				return c;
-			}
+	/**
+	 * @see BattleState#clone(Combatant)
+	 */
+	public Combatant clone(Combatant c) {
+		final ArrayList<Combatant> team = getTeam(c);
+		final int index = team.indexOf(c);
+		if (index == -1) {
+			return null;
 		}
-		throw new RuntimeException("Unknown combatant!");
+		c = team.get(index).clone();
+		c.refresh();
+		team.set(index, c);
+		if (next.equals(c)) {
+			next = c;
+		}
+		return c;
 	}
 
 	public Combatant getCombatant(final int x, final int y) {
@@ -177,7 +155,7 @@ public class BattleState implements Node, TeamContainer {
 	}
 
 	public void remove(Combatant c) {
-		c = translatecombatant(c);
+		c = clone(c);
 		if (!blueTeam.remove(c)) {
 			redTeam.remove(c);
 		}
@@ -187,7 +165,7 @@ public class BattleState implements Node, TeamContainer {
 	}
 
 	public boolean isEngaged(final Combatant c) {
-		for (final Combatant nearby : getSurroudings(c)) {
+		for (final Combatant nearby : getSurroundings(c)) {
 			if (!c.isAlly(nearby, this)) {
 				return true;
 			}
@@ -211,9 +189,10 @@ public class BattleState implements Node, TeamContainer {
 	public Vision hasLineOfSight(final Point me, final Point target, int range,
 			String periodperception) {
 		final ArrayList<Step> clear = new ClearPath(me, target, this).walk();
-		final ArrayList<Step> covered = periodperception == Javelin.PERIOD_EVENING
-				|| periodperception == Javelin.PERIOD_NIGHT ? null
-				: new ObstructedPath(me, target, this).walk();
+		final ArrayList<Step> covered =
+				periodperception == Javelin.PERIOD_EVENING
+						|| periodperception == Javelin.PERIOD_NIGHT ? null
+								: new ObstructedPath(me, target, this).walk();
 		if (clear == null && covered == null) {
 			return Vision.BLOCKED;
 		}
@@ -234,9 +213,9 @@ public class BattleState implements Node, TeamContainer {
 	}
 
 	public List<Combatant> getTargets(Combatant combatant) {
-		combatant = translatecombatant(combatant);
-		return getAllTargets(combatant, blueTeam.contains(combatant) ? redTeam
-				: blueTeam);
+		// combatant = translatecombatant(combatant);
+		return getAllTargets(combatant,
+				getTeam(combatant) == blueTeam ? redTeam : blueTeam);
 	}
 
 	public List<Combatant> getAllTargets(Combatant combatant,
@@ -260,10 +239,10 @@ public class BattleState implements Node, TeamContainer {
 		if (Walker.distance(target, attacker) >= 1.5) {
 			return false;
 		}
-		final ArrayList<Combatant> attackerteam = blueTeam.contains(attacker) ? blueTeam
-				: redTeam;
-		final ArrayList<Combatant> defenderteam = blueTeam.contains(target) ? blueTeam
-				: redTeam;
+		final ArrayList<Combatant> attackerteam =
+				blueTeam.contains(attacker) ? blueTeam : redTeam;
+		final ArrayList<Combatant> defenderteam =
+				blueTeam.contains(target) ? blueTeam : redTeam;
 		if (attackerteam == defenderteam) {
 			return false;
 		}
@@ -276,8 +255,8 @@ public class BattleState implements Node, TeamContainer {
 				: attackerteam.contains(flank);
 	}
 
-	public int delta(final Combatant surroundinga,
-			final Combatant surroundingb, final int l) {
+	public int delta(final Combatant surroundinga, final Combatant surroundingb,
+			final int l) {
 		return surroundinga.location[l] - surroundingb.location[l];
 	}
 
@@ -295,7 +274,7 @@ public class BattleState implements Node, TeamContainer {
 
 	@Override
 	public String toString() {
-		String out = "";
+		String out = blueTeam + "\n" + redTeam + "\n\n";
 		for (Square[] line : map) {
 			for (Square s : line) {
 				out += s;
@@ -303,5 +282,36 @@ public class BattleState implements Node, TeamContainer {
 			out += "\n";
 		}
 		return out;
+	}
+
+	public Combatant cloneifdifferent(Combatant c, Combatant same) {
+		return c.equals(same) ? same : clone(c);
+	}
+
+	public Meld findmeld(int x, int y) {
+		for (Meld m : meld) {
+			if (m.x == x && m.y == y) {
+				return m;
+			}
+		}
+		return null;
+	}
+
+	public void addmeld(int x, int y) {
+		meld.add(new Meld(x, y, next.ap + 1));
+	}
+
+	@Override
+	public BattleState deepclone() {
+		BattleState cl = clone();
+		cl.blueTeam.clear();
+		cl.redTeam.clear();
+		for (Combatant c : blueTeam) {
+			cl.blueTeam.add(c.clone());
+		}
+		for (Combatant c : redTeam) {
+			cl.redTeam.add(c.clone());
+		}
+		return cl;
 	}
 }

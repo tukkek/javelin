@@ -5,9 +5,12 @@ package javelin.controller.ai;
 
 import java.util.List;
 
+import javelin.controller.action.Action;
+import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
+
 /**
- * Esta interface representa um estado de jogo poss�vel, possibilitando o alto
- * desacoplamento de {@link AbstractAlphaBetaSearch}.
+ * Describes the game state.
  * 
  * @author Alex Henry
  */
@@ -21,17 +24,23 @@ public interface Node extends Cloneable {
 	 *         artificial.
 	 * @author Alex Henry
 	 */
+
 	Iterable<List<ChanceNode>> getSucessors();
 
 	@Override
-	int hashCode();
+			int hashCode();
 
 	/**
-	 * Ao ser invocado, o turno dever� passar para o pr�ximo jogador.
+	 * Fast version, used inside {@link Action}.
 	 * 
-	 * @see #getSucessors()
-	 * 
-	 * @author Alex Henry
+	 * @see BattleState#clone(Combatant)
 	 */
-	void changePlayer();
+	Node clone();
+
+	/**
+	 * Slow, complete cloning, used elsewwhere.
+	 * 
+	 * @see Node#clone()
+	 */
+	Node deepclone();
 }

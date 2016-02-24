@@ -1,11 +1,22 @@
 package javelin.controller.challenge;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javelin.model.dungeon.Treasure;
+import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
+import tyrant.mikera.engine.RPG;
 
+/**
+ * Determines experience points and treasure to be awarded after winning a
+ * battle. Rules for this are found in the core d20 rules and also on Upper
+ * Krust's work which is repackaged with permition on the 'doc' directory.
+ * 
+ * @author alex
+ */
 public class RewardCalculator {
 	private static class TableLine {
 		final double a, b, c, d, e, f, g, h;
@@ -53,21 +64,24 @@ public class RewardCalculator {
 		}
 	}
 
-	static public Map<Integer, TableLine> table = new TreeMap<Integer, TableLine>();
+	static public Map<Integer, TableLine> table =
+			new TreeMap<Integer, TableLine>();
+
 	static {
-		table.put(-12, new TableLine(18.75, 9.375, 6.25, 4.6875, 3.125,
-				2.34375, 1.5625, 1.171875));
+		table.put(-12, new TableLine(18.75, 9.375, 6.25, 4.6875, 3.125, 2.34375,
+				1.5625, 1.171875));
 		table.put(-11, new TableLine(25, 12.5, 9.375, 6.25, 4.6875, 3.125,
 				2.34375, 1.5625));
 		table.put(-10, new TableLine(37.5, 18.75, 12.5, 9.375, 6.250, 4.6875,
 				3.125, 2.34375));
 		table.put(-9, new TableLine(50, 25, 18.75, 12.5, 9.375, 6.250, 4.6875,
 				3.125));
-		table.put(-8, new TableLine(75, 37.5, 25, 18.75, 12.5, 9.375, 6.250,
-				4.6875));
-		table.put(-7, new TableLine(100, 50, 37.5, 25, 18.75, 12.5, 9.3750,
-				6.25));
-		table.put(-6, new TableLine(150, 75, 50, 37.5, 25, 18.75, 12.50, 9.375));
+		table.put(-8,
+				new TableLine(75, 37.5, 25, 18.75, 12.5, 9.375, 6.250, 4.6875));
+		table.put(-7,
+				new TableLine(100, 50, 37.5, 25, 18.75, 12.5, 9.3750, 6.25));
+		table.put(-6,
+				new TableLine(150, 75, 50, 37.5, 25, 18.75, 12.50, 9.375));
 		table.put(-5, new TableLine(200, 100, 75, 50, 37.5, 25, 18.75, 12.5));
 		table.put(-4, new TableLine(300, 150, 100, 75, 50, 37.5, 25, 18.75));
 		table.put(-3, new TableLine(400, 200, 150, 100, 75, 50, 37.5, 25));
@@ -90,7 +104,8 @@ public class RewardCalculator {
 		return table.get(eldifference).getValue(nsurvivors);
 	}
 
-	static public double getpartycr(final int eldifference, final int nsurvivors) {
+	static public double getpartycr(final int eldifference,
+			final int nsurvivors) {
 		return nsurvivors * .8
 				* getexperiencepercharacter(eldifference, nsurvivors) / 1000.0;
 	}
@@ -102,5 +117,22 @@ public class RewardCalculator {
 			sum += cr * cr * cr * 7.5f;
 		}
 		return Math.round(sum);
+	}
+
+	public static Treasure createchest(int gold, int x, int y) {
+		ArrayList<Item> items = new ArrayList<Item>();
+		if (RPG.r(1, 2) == 1) {
+			int quantity = RPG.r(1, 2);
+			for (Integer price : Item.BYPRICE.descendingKeySet()) {
+				if (price * quantity <= gold) {
+					for (int j = 0; j < quantity; j++) {
+						items.add(RPG.pick(Item.BYPRICE.get(price)));
+					}
+					gold = 0;
+					break;
+				}
+			}
+		}
+		return new Treasure("chest", x, y, gold, items);
 	}
 }

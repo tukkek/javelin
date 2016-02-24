@@ -4,25 +4,29 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.JavelinApp;
+import javelin.controller.map.Map;
 import javelin.model.BattleMap;
-import javelin.model.unit.Monster;
+import javelin.model.unit.Combatant;
+import javelin.model.world.Dungeon;
 import javelin.view.screen.BattleScreen;
-import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Tile;
 
+/**
+ * Fight that happens on the overworld map.
+ * 
+ * @author alex
+ */
 public class RandomEncounter implements Fight {
 	@Override
 	public BattleScreen getscreen(final JavelinApp javelinApp,
 			final BattleMap battlemap) {
-		return new BattleScreen(javelinApp, battlemap);
+		return new BattleScreen(javelinApp, battlemap, true);
 	}
 
 	@Override
 	public int getel(final JavelinApp app, final int teamel) {
-		int tile = JavelinApp.overviewmap.getTile(Game.hero().x, Game.hero().y);
-		int difficulty = JavelinApp.randomdifficulty()
-				+ Javelin.difficulty(tile);
-		return teamel + cap(difficulty, tile);
+		int difficulty = JavelinApp.randomdifficulty() + Javelin.difficulty();
+		return teamel + cap(difficulty, JavelinApp.worldtile());
 	}
 
 	private int cap(int difficulty, int tile) {
@@ -42,7 +46,22 @@ public class RandomEncounter implements Fight {
 	}
 
 	@Override
-	public List<Monster> getmonsters(int teamel) {
+	public List<Combatant> getmonsters(int teamel) {
 		return null;
+	}
+
+	@Override
+	public boolean meld() {
+		return Dungeon.active != null;
+	}
+
+	@Override
+	public Map getmap() {
+		return null;
+	}
+
+	@Override
+	public boolean friendly() {
+		return false;
 	}
 }

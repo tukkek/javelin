@@ -7,6 +7,11 @@ import javelin.model.world.Squad;
 import javelin.view.screen.StatisticsScreen;
 import javelin.view.screen.world.WorldScreen;
 
+/**
+ * Show unit information.
+ * 
+ * @author alex
+ */
 public class ShowStatistics extends WorldAction {
 
 	public ShowStatistics() {
@@ -19,7 +24,8 @@ public class ShowStatistics extends WorldAction {
 		for (Combatant m : Squad.active.members) {
 			names.add(m.toString());
 		}
-		int answer = CastSpells.choose("Choose a character:", names);
+		int answer =
+				CastSpells.choose("Choose a character:", names, true, false);
 		if (answer != -1) {
 			new StatisticsScreen(Squad.active.members.get(answer));
 		}

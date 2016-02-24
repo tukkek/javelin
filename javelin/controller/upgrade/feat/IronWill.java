@@ -4,6 +4,10 @@ import javelin.model.feat.Feat;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
+/**
+ * @see javelin.model.feat.IronWill
+ * @author alex
+ */
 public class IronWill extends FeatUpgrade {
 	public IronWill() {
 		super("Iron will", javelin.model.feat.IronWill.singleton);
@@ -24,7 +28,7 @@ public class IronWill extends FeatUpgrade {
 
 	@Override
 	public boolean apply(final Combatant m) {
-		if (m.source.hasfeat(feat) > 0) {
+		if (m.source.hasfeat(feat)) {
 			return false;
 		}
 		super.apply(m);
@@ -33,11 +37,11 @@ public class IronWill extends FeatUpgrade {
 	}
 
 	public void setBonus(final Monster m, int value) {
-		m.will = value;
+		m.setWill(value);
 	}
 
 	public Integer getBonus(final Monster m) {
-		return m.will;
+		return m.willraw();
 	}
 
 	@Override

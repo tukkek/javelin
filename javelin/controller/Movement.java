@@ -8,7 +8,8 @@ package javelin.controller;
 
 import javelin.controller.exception.RepeatTurnException;
 import javelin.model.BattleMap;
-import javelin.view.screen.BattleScreen;
+import javelin.model.state.BattleState;
+import javelin.model.state.Meld;
 import tyrant.mikera.engine.Describer;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
@@ -21,6 +22,8 @@ import tyrant.mikera.tyrant.Tile;
 import tyrant.mikera.tyrant.Weapon;
 
 /**
+ * Player movement, taken from Mike's Tyrant.
+ * 
  * @author Mike
  * 
  *         To change the template for this generated type comment go to Window -
@@ -30,10 +33,12 @@ public class Movement {
 	/**
 	 * try to move
 	 * 
+	 * @param state
+	 * 
 	 * @return <code>true</code> if some action taken
 	 */
 	public static boolean tryMove(final Thing thing, final BattleMap map,
-			int tx, int ty) {
+			int tx, int ty, BattleState state) {
 		map.visitPath(thing.x, thing.y);
 		int dx = thing.getStatIfAbsent("RunDirectionX", Integer.MIN_VALUE);
 		int dy = thing.getStatIfAbsent("RunDirectionY", Integer.MIN_VALUE);
@@ -51,28 +56,31 @@ public class Movement {
 		if (dx == 0 && dy == 0) {
 			throw new RepeatTurnException();
 		}
+		Meld m = BattleMap.checkformeld(tx, ty);
+		if (m != null && !m.crystalize(state)) {
+			throw new RepeatTurnException();
+		}
 		final Thing mob = map.getMobile(tx, ty);
 		if (mob == null) {
 			if (thing.getFlag("IsIntelligent") && tryBump(thing, map, tx, ty)) {
 				throw new RepeatTurnException();
 			}
 		} else {
-			if (!thing.combatant.isAlly(mob.combatant,
-					BattleScreen.active.map.getState())) {
-				BattleScreen.lastmovewasattack = true;
-				thing.combatant.meleeAttacks(thing.combatant, mob.combatant);
+			if (!thing.combatant.isAlly(mob.combatant, state)) {
+				javelin.controller.action.Movement.lastmovewasattack = true;
+				thing.combatant.meleeAttacks(thing.combatant, mob.combatant,
+						state);
 				return true;
 			}
-
 			throw new RepeatTurnException();
 		}
 		final Thing hero = Game.hero();
-		if (thing == hero || map.getFlaggedObject(tx, ty, "IsWarning") == null) {
+		if (thing == hero
+				|| map.getFlaggedObject(tx, ty, "IsWarning") == null) {
 			if (canMove(thing, map, tx, ty)) {
 				return acceptMove(thing, map, tx, ty);
 			}
 		}
-
 		throw new RepeatTurnException();
 	}
 
@@ -294,11 +302,6 @@ public class Movement {
 		if (t.place != m) {
 			throw new Error("Thing not added!");
 		}
-		Movement.enterTrigger(t, m, tx, ty, !t.getFlag("IsFlying"));
-
-		if (t.isHero()) {
-			locationMessage();
-		}
 	}
 
 	/**
@@ -315,7 +318,6 @@ public class Movement {
 	 */
 	public static void flyTo(final Thing t, final BattleMap m, final int tx,
 			final int ty) {
-
 		m.addThing(t, tx, ty);
 		Movement.enterTrigger(t, m, tx, ty, false);
 		if (t.isHero()) {
@@ -377,9 +379,9 @@ public class Movement {
 					s = s + "  " + Armour.statString(t);
 				}
 
-				Game.messageTyrant("There "
-						+ (Describer.isPlural(t) ? "are " : "is ") + s
-						+ " here");
+				Game.messageTyrant(
+						"There " + (Describer.isPlural(t) ? "are " : "is ") + s
+								+ " here");
 				h.isRunning(false);
 			}
 			t = t.next;
@@ -390,7 +392,7 @@ public class Movement {
 			final int tx, final int ty) {
 		map.visitPath(tx, ty);
 		moveTo(thing, map, tx, ty);
-		thing.incStat("APS", -moveCost(map, thing, tx, ty));
+		// thing.incStat("APS", -moveCost(map, thing, tx, ty));
 		return true;
 	}
 

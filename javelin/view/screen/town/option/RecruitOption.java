@@ -1,7 +1,12 @@
 package javelin.view.screen.town.option;
 
 import javelin.model.unit.Monster;
+import javelin.view.screen.town.RecruitScreen;
 
+/**
+ * @see RecruitScreen
+ * @author alex
+ */
 public class RecruitOption extends Option {
 	public Monster m;
 

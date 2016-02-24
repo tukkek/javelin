@@ -2,6 +2,9 @@ package javelin.controller.upgrade.classes;
 
 import javelin.model.unit.Monster;
 
+/**
+ * @see ClassAdvancement
+ */
 public class Aristocrat extends ClassAdvancement {
 	public Aristocrat(String name) {
 		super(name);

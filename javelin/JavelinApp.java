@@ -4,50 +4,65 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import javelin.controller.BattlePlacement;
+import javelin.controller.BattleSetup;
 import javelin.controller.TextReader;
-import javelin.controller.Weather;
 import javelin.controller.ai.ThreadManager;
+import javelin.controller.ai.cache.AiCache;
 import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.controller.db.StateManager;
 import javelin.controller.encounter.EncounterGenerator;
-import javelin.controller.encounter.GeneretadFight;
-import javelin.controller.exception.EndBattle;
+import javelin.controller.encounter.GeneratedFight;
 import javelin.controller.exception.GaveUpException;
-import javelin.controller.exception.StartBattle;
+import javelin.controller.exception.battle.EndBattle;
+import javelin.controller.exception.battle.StartBattle;
+import javelin.controller.fight.Fight;
+import javelin.controller.fight.IncursionFight;
+import javelin.controller.fight.LairFight;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.BattleMap;
 import javelin.model.item.Item;
-import javelin.model.item.RaiseScroll;
+import javelin.model.item.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.world.Dungeon;
+import javelin.model.world.Haxor;
+import javelin.model.world.Incursion;
 import javelin.model.world.Squad;
+import javelin.model.world.Town;
 import javelin.view.SquadScreen;
 import javelin.view.screen.BattleScreen;
-import javelin.view.screen.IntroScreen;
 import javelin.view.screen.world.WorldScreen;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
+import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.QuestApp;
 
+/**
+ * Application and game life-cycle.
+ * 
+ * @author alex
+ */
 public class JavelinApp extends QuestApp {
 	private static final long serialVersionUID = 1L;
-	public static final boolean OVERWORLD = true;
 
 	/**
 	 * Keeps track of monster status before combat so we can restore any
 	 * temporary effects.
 	 */
-	private ArrayList<Combatant> originalteam;
+	ArrayList<Combatant> originalteam;
 	public ArrayList<Combatant> originalfoes;
 
 	private BattleMap battlemap;
 
+	public Fight fight;
+
 	public static BattleMap overviewmap;
+
+	static public WorldScreen context;
 
 	@Override
 	public void run() {
@@ -60,12 +75,19 @@ public class JavelinApp extends QuestApp {
 		}
 		placesquads();
 		preparedebug();
+		if (Dungeon.active != null) {
+			Dungeon.active.activate();
+		}
 		while (true) {
 			try {
-				final WorldScreen overworld = new WorldScreen(this, overviewmap);
+				if (Dungeon.active == null) {
+					JavelinApp.context =
+							new WorldScreen(JavelinApp.overviewmap);
+				}
 				while (true) {
+					switchScreen(JavelinApp.context);
 					StateManager.save();
-					overworld.step();
+					JavelinApp.context.step();
 				}
 			} catch (final StartBattle e) {
 				battle(e);
@@ -83,36 +105,58 @@ public class JavelinApp extends QuestApp {
 	}
 
 	private void initialize() {
-		System.out
-				.println("Copyright (C) 2015 Alex Henry\n\n"
-						+ "This program is free software; you can redistribute it and/or modify it under\n"
-						+ "the terms of the GNU General Public License version 2 as published by the Free\n"
-						+ "Software Foundation.\n"
-						+ "A copy of the full license text is available inside the 'doc' directory.\n"
-						+ "See our website for information on how to contact the developers:\n"
-						+ "http://javelinrl.wordpress.com or http://github.com/tukkek/javelin\n");
+		System.out.println("Copyright (C) 2015 Alex Henry\n\n"
+				+ "This program is free software; you can redistribute it and/or modify it under\n"
+				+ "the terms of the GNU General Public License version 2 as published by the Free\n"
+				+ "Software Foundation.\n"
+				+ "A copy of the full license text is available inside the 'doc' directory.\n"
+				+ "See our website for information on how to contact the developers:\n"
+				+ "http://javelinrl.wordpress.com or http://github.com/tukkek/javelin\n");
 		ThreadManager.determineprocessors();
 	}
 
-	public void battle(final StartBattle e) {
-		GeneretadFight f;
-		int teamel = ChallengeRatingCalculator
-				.calculateSafe(ChallengeRatingCalculator
-						.convertlist(BattleMap.blueTeam));
-		List<Monster> foes = e.fight.getmonsters(teamel);
+	public void battle(final StartBattle start) {
+		fight = start.fight;
+		BattleMap.blueTeam = Squad.active.members;
+		int teamel =
+				ChallengeRatingCalculator.calculateElSafe(BattleMap.blueTeam);
+		List<Combatant> foes = start.fight.getmonsters(teamel);
 		if (foes == null) {
-			foes = generatefight(e.fight.getel(this, teamel)).opponents;
+			foes = JavelinApp
+					.generatefight(start.fight.getel(this, teamel)).opponents;
+			/* TODO enhance Fight hierarchy with these: */
+			while (foes.size() == 1 && start.fight instanceof LairFight) {
+				foes = JavelinApp.generatefight(
+						start.fight.getel(this, teamel)).opponents;
+			}
+			if (fight instanceof IncursionFight) {
+				((IncursionFight) fight).incursion.squad =
+						Incursion.getsafeincursion(foes);
+			}
 		}
-		preparebattle(new GeneretadFight(foes));
-		final BattleScreen battleScreen = e.fight.getscreen(this, battlemap);
+		JavelinApp.preparebattle(new GeneratedFight(foes));
+		final BattleScreen battleScreen =
+				start.fight.getscreen(this, battlemap);
 		try {
 			battleScreen.mainLoop();
-		} catch (final EndBattle e2) {
+		} catch (final EndBattle end) {
+			int nsquads = Squad.squads.size();
 			battleScreen.onEnd();
 			BattleMap.combatants.clear();
-			battleScreen.afterend();
-			if (Squad.active != null) {
+			AiCache.reset();
+			/* TODO probably size comparison is enough */
+			if (Squad.active != null && nsquads == Squad.squads.size()) {
+				while (WorldScreen.getactor(Squad.active.x, Squad.active.y,
+						Incursion.squads) != null) {
+					Squad.active.visual.remove();
+					Squad.active.displace();
+					Squad.active.visual.remove();
+					Squad.active.place();
+				}
 				endbattle();
+				if (Dungeon.active != null) {
+					Dungeon.active.activate();
+				}
 			}
 		}
 	}
@@ -123,15 +167,43 @@ public class JavelinApp extends QuestApp {
 			hero.x = s.x;
 			hero.y = s.y;
 			if (hero.place == null) {
-				overviewmap.addThing(hero, hero.x, hero.y);
+				JavelinApp.overviewmap.addThing(hero, hero.x, hero.y);
 			}
 		}
 	}
 
 	public void startcampaign() {
-		selectsquad();
+		SquadScreen.open();
 		WorldScreen.makemap();
 		new UpgradeHandler().distribute();
+		Item.distribute();
+		if (Javelin.DEBUG) {
+			JavelinApp.debugoptions();
+		}
+	}
+
+	static void debugoptions() {
+		int totalupgrades = 0;
+		for (Town t : Town.towns) {
+			System.out.println();
+			System.out.println(t);
+			int noptions = 1;
+			for (int i = 0; i < t.items.size(); i++, noptions++) {
+				Item it = t.items.get(i);
+				System.out.println(
+						"    " + noptions + " - " + it + " $" + it.price);
+			}
+			System.out.println();
+			for (int i = 0; i < t.upgrades.size(); i++, noptions++) {
+				System.out
+						.println("    " + noptions + " - " + t.upgrades.get(i));
+			}
+			totalupgrades += t.upgrades.size();
+		}
+		System.out.println();
+		System.out.println(Item.ALL.size() + " items");
+		System.out.println(totalupgrades + " upgrades (" + SpellsFactor.spells
+				+ " spells)");
 	}
 
 	public void preparedebug() {
@@ -143,160 +215,82 @@ public class JavelinApp extends QuestApp {
 				m.xp = new BigDecimal(Javelin.DEBUGSTARTINGXP / 100f);
 			}
 		}
+		if (Javelin.DEBUGSTARTINGHAX != null) {
+			Haxor.singleton.tickets = Javelin.DEBUGSTARTINGHAX;
+		}
+		// TODO used for debug
+		if (Javelin.DEBUGSTARTINGKEY != null) {
+			Squad.active.receiveitem(Key.generate(Javelin.DEBUGSTARTINGKEY));
+		}
 	}
 
-	public void endbattle() {
-		for (final Combatant inbattle : BattleMap.blueTeam) {
-			for (final Combatant original : originalteam) {
-				if (original.source.customName == inbattle.source.customName) {
-					original.hp = inbattle.hp;
-					if (original.hp > original.maxhp) {
-						original.hp = original.maxhp;
-					}
-					original.xp = inbattle.xp;
-					copyspells(inbattle, original);
-					break;
-				}
+	private void endbattle() {
+		for (Combatant c : new ArrayList<Combatant>(BattleMap.combatants)) {
+			if (c.summoned) {
+				BattleMap.combatants.remove(c);
+				BattleMap.blueTeam.remove(c);
+				BattleMap.redTeam.remove(c);
 			}
 		}
-		for (final Combatant dead : BattleMap.dead) {
-			for (final Combatant original : originalteam) {
-				if (dead.id == original.id) {
-					original.hp = dead.hp;
-					break;
-				}
-			}
-		}
-		BattleMap.dead.clear();
-		for (final Combatant original : new ArrayList<Combatant>(originalteam)) {
-			checkfordead(original);
-		}
+		EndBattle.updateoriginal(originalteam);
+		EndBattle.bury(originalteam);
 		if (Javelin.captured != null) {
 			originalteam.add(Javelin.captured);
 			Javelin.captured = null;
 		}
-		BattleMap.blueTeam = originalteam;
 		Squad.active.members = originalteam;
 		for (Combatant member : Squad.active.members) {
 			member.currentmelee.sequenceindex = -1;
 			member.currentranged.sequenceindex = -1;
 		}
-	}
-
-	public void copyspells(final Combatant from, final Combatant to) {
-		for (int i = 0; i < from.spells.size(); i++) {
-			to.spells.get(i).used = from.spells.get(i).used;
-		}
-	}
-
-	private void checkfordead(Combatant original) {
-		for (final Combatant m : BattleMap.blueTeam) {
-			if (m.id == original.id) {
-				return;
-			}
-		}
-		if (Combatant.DEADATHP < original.hp && original.hp <= 0) {
-			original.hp = 1;
-		} else if (!revive(original)) {
-			originalteam.remove(original);
-			Squad.active.equipment.remove(original.toString());
-		}
-
-	}
-
-	public boolean revive(Combatant original) {
-		final List<Item> items = new ArrayList<Item>();
-		for (final List<Item> i : Squad.active.equipment.values()) {
-			items.addAll(i);
-		}
-		Item revive = null;
-		for (final Item i : items) {
-			if (i instanceof RaiseScroll) {
-				revive = i;
-				break;
-			}
-		}
-		if (revive != null
-				&& revive.use(new Combatant(null, original.source, false))) {
-			for (final List<Item> i : Squad.active.equipment.values()) {
-				if (i.remove(revive)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		ThreadManager.printbattlerecord();
 	}
 
 	static ArrayList<Monster> lastenemies = new ArrayList<Monster>();
 
-	public static void preparebattle(GeneretadFight generated) {
+	public static void preparebattle(GeneratedFight generated) {
 		BattleMap.redTeam = new ArrayList<Combatant>();
-		for (Monster m : generated.opponents) {
-			BattleMap.redTeam.add(new Combatant(null, m, true));
-		}
-		Javelin.mapType = Javelin.DEBUGMAPTYPE == null ? RPG.pick(MAPTYPES)
-				: Javelin.DEBUGMAPTYPE;
-		lastenemies.clear();
+		BattleMap.redTeam.addAll(generated.opponents);
+		JavelinApp.lastenemies.clear();
 		for (final Combatant m : BattleMap.redTeam) {
-			lastenemies.add(m.source.clone());
+			JavelinApp.lastenemies.add(m.source.clone());
 		}
-		copyoriginal();
-		Javelin.app.battlemap = BattlePlacement.place();
-		Weather.flood(Javelin.app.battlemap);
-		for (final Combatant c : BattleMap.combatants) {
-			c.rollinitiative();
-			c.lastrefresh = Float.MIN_VALUE;
-		}
-
+		Javelin.app.originalteam = JavelinApp.cloneteam(BattleMap.blueTeam);
+		Javelin.app.originalfoes = JavelinApp.cloneteam(BattleMap.redTeam);
+		Javelin.app.battlemap = BattleSetup.place();
 	}
 
-	public static GeneretadFight generatefight(final int el) {
+	private static ArrayList<Combatant> cloneteam(ArrayList<Combatant> team) {
+		ArrayList<Combatant> clone = new ArrayList<Combatant>(team.size());
+		for (Combatant c : team) {
+			clone.add(c.clone());
+		}
+		return clone;
+	}
+
+	public static GeneratedFight generatefight(final int el) {
 		int delta = 0;
-		GeneretadFight generated = null;
+		GeneratedFight generated = null;
 		while (generated == null) {
-			generated = chooseopponents(el - delta);
+			generated = JavelinApp.chooseopponents(el - delta);
 			if (generated != null) {
 				break;
 			}
 			if (delta != 0) {
-				generated = chooseopponents(el + delta);
+				generated = JavelinApp.chooseopponents(el + delta);
 			}
 			delta += 1;
 		}
 		return generated;
 	}
 
-	public static void copyoriginal() {
-		Javelin.app.originalteam = new ArrayList<Combatant>();
-		for (final Combatant m : BattleMap.blueTeam) {
-			Javelin.app.originalteam.add(m.clone());
-		}
-		Javelin.app.originalfoes = new ArrayList<Combatant>();
-		for (final Combatant m : BattleMap.redTeam) {
-			Javelin.app.originalfoes.add(m.clone());
-		}
-	}
-
-	static public GeneretadFight chooseopponents(final int el) {
-		final HashSet<Monster> monsters = new HashSet<Monster>();
-		for (final Combatant m : BattleMap.blueTeam) {
-			monsters.add(m.source);
-		}
-		final ArrayList<Monster> opponents;
+	static public GeneratedFight chooseopponents(final int el) {
 		try {
-			opponents = EncounterGenerator.generate(el, Weather.now == 2);
+			return new GeneratedFight(EncounterGenerator.generate(el));
 		} catch (final GaveUpException e) {
 			return null;
 		}
-		for (final Monster m : opponents) {
-			monsters.add(m);
-		}
-		return new GeneretadFight(opponents);
 	}
-
-	/** TODO "dark tower" doesn't work - try to fix it? */
-	static final String[] MAPTYPES = new String[] { "ruin", "graveyard",
-			"goblin village", "dark forest", "caves" };
 
 	/**
 	 * 2 chances of an easy encounter, 10 chances of a moderate encounter, 4
@@ -318,57 +312,8 @@ public class JavelinApp extends QuestApp {
 		return RPG.pick(elchoices);
 	}
 
-	public static void selectsquad() {
-		/* Start first squad in the morning */
-		Squad.active = new Squad(0, 0, 8);
-		Squad.active.members = BattleMap.blueTeam;
-		ArrayList<Monster> candidates = new ArrayList<Monster>();
-		// candidates.addAll(Javelin.MONSTERS.get(1f));
-		candidates.addAll(Javelin.MONSTERS.get(1.25f));
-		for (Monster m : new SquadScreen(candidates).select()) {
-			Combatant c = Javelin.recruit(m);
-			c.hp = c.source.hd.maximize();
-			c.maxhp = c.hp;
-		}
-	}
-
-	/**
-	 * TODO refactor into class
-	 */
-	static public void namingscreen(final Monster m) {
-		final String nametext = "Give a name to your " + m.name
-				+ "! Press BACKSPACE to erase\n\n";
-		final IntroScreen namescreen = new IntroScreen(nametext);
-		String name = "";
-		char f;
-		naming: while (true) {
-			f = IntroScreen.feedback();
-			if (f == '\n') {
-				if (!name.isEmpty()) {
-					for (final Squad s : Squad.squads) {
-						for (final Combatant namesake : s.members) {
-							if (namesake.toString().equals(name)) {
-								continue naming;
-							}
-						}
-					}
-					break;
-				}
-			}
-			if (!(f == '\b' || f == ' ' || Character.isLetterOrDigit(f))) {
-				continue;
-			}
-			if (f == '\b') {
-				if (!name.isEmpty()) {
-					name = name.substring(0, name.length() - 1);
-				}
-			} else {
-				name = name + f;
-			}
-			namescreen.text = nametext + name;
-			namescreen.repaint();
-		}
-		m.customName = name;
+	static public int worldtile() {
+		return JavelinApp.overviewmap.getTile(Game.hero().x, Game.hero().y);
 	}
 
 	@Override
@@ -378,16 +323,5 @@ public class JavelinApp extends QuestApp {
 
 	@Override
 	public void setupScreen() {
-		// if (getScreen() == null) {
-		// setScreen(OVERWORLD ? new WorldScreen(this)
-		// : new BattleScreen(this));
-		// } else {
-		// // only need to reset the messages,
-		// // otherwise we will start to
-		// // leak memory/threads
-		// Game.messagepanel = getScreen().messagepanel;
-		// Game.messagepanel.clear();
-		// }
-		// switchScreen(getScreen());
 	}
 }

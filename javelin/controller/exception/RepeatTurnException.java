@@ -1,6 +1,14 @@
 package javelin.controller.exception;
 
-// TODO change into compile time exception
+import javelin.controller.action.Action;
+import javelin.model.unit.Combatant;
+
+/**
+ * Let's an {@link Action} finish execution at any point without causing the
+ * game to advance with the current {@link Combatant} turn.
+ * 
+ * @author alex
+ */
 public class RepeatTurnException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 

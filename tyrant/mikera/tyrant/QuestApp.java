@@ -3,18 +3,22 @@ package tyrant.mikera.tyrant;
 // This is the main Applet class for Tyrant
 
 import java.applet.Applet;
+import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
+import java.awt.Transparency;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.awt.image.RGBImageFilter;
@@ -26,7 +30,7 @@ import java.util.Hashtable;
 import javelin.controller.fight.IncursionFight;
 import javelin.model.BattleMap;
 import javelin.view.screen.BattleScreen;
-import javelin.view.screen.DungeonScreen;
+import javelin.view.screen.LairScreen;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
@@ -40,22 +44,22 @@ import tyrant.mikera.engine.Thing;
 public class QuestApp extends Applet implements Runnable {
 	private static final long serialVersionUID = 3257569503247284020L;
 
-	public static final Image DEFAULTTEXTURE = getImage("/images/texture3.png");
-	// Images
+	public static final Image DEFAULTTEXTURE =
+			QuestApp.getImage("/images/texture3.png");
+
 	public static Image tiles;
-
 	public static Image greytiles;
-
 	public static Image scenery;
-
 	public static Image creatures;
-
 	public static Image items;
-
 	public static Image effects;
-
 	public static Image title;
-
+	public static Image penalized;
+	public static Image crafting;
+	public static Image upgrading;
+	public static Image banner;
+	public static Image dead;
+	public static Image crystal;
 	public static Image paneltexture = QuestApp.DEFAULTTEXTURE;
 
 	public static Hashtable images = new Hashtable();
@@ -105,7 +109,7 @@ public class QuestApp extends Applet implements Runnable {
 	@Override
 	public void stop() {
 		super.stop();
-		setInstance(null);
+		QuestApp.setInstance(null);
 		Game.messagepanel = null;
 		Game.thread = null;
 	}
@@ -118,23 +122,21 @@ public class QuestApp extends Applet implements Runnable {
 
 		@Override
 		public int filterRGB(final int x, final int y, final int rgb) {
-			return rgb
-					& 0xff000000
-					| 0x10101
-					* (((rgb & 0xff0000) >> 18) + ((rgb & 0xff00) >> 10) + ((rgb & 0xff) >> 2));
+			return rgb & 0xff000000 | 0x10101 * (((rgb & 0xff0000) >> 18)
+					+ ((rgb & 0xff00) >> 10) + ((rgb & 0xff) >> 2));
 		}
 	}
 
 	public void init(final Runnable runnable) {
 		// recreate lib in background
 
-		setInstance(this);
+		QuestApp.setInstance(this);
 		Game.setQuestapp(this);
 
 		super.init();
 		setLayout(new BorderLayout());
 		setBackground(Color.black);
-		setFont(mainfont);
+		setFont(QuestApp.mainfont);
 
 		// Game.warn("Focus owned by:
 		// "+KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner());
@@ -180,7 +182,6 @@ public class QuestApp extends Applet implements Runnable {
 			switchScreen(ls);
 			while (true) {
 				race = (String) ls.getObject();
-				// Game.warn(race);
 				if (race != null || Game.isDebug()) {
 					break;
 				}
@@ -197,13 +198,13 @@ public class QuestApp extends Applet implements Runnable {
 
 		// get list of possible prfessions
 		final String[] professionstrings = Hero.heroProfessions(race);
-		final String[] professiondescriptions = Hero
-				.heroProfessionDescriptions(race);
+		final String[] professiondescriptions =
+				Hero.heroProfessionDescriptions(race);
 		if (profession == null) {
 
-			final DetailedListScreen ls = new DetailedListScreen(
-					"What is your profession?", professionstrings,
-					professiondescriptions);
+			final DetailedListScreen ls =
+					new DetailedListScreen("What is your profession?",
+							professionstrings, professiondescriptions);
 			ls.bottomString = "Press a letter key to select your profession";
 			ls.setForeground(new Color(128, 128, 128));
 			ls.setBackground(new Color(0, 0, 0));
@@ -225,8 +226,8 @@ public class QuestApp extends Applet implements Runnable {
 			ss.setBackground(new Color(0, 0, 0));
 			ss.setLayout(new BorderLayout());
 			{
-				final InfoScreen ts = new InfoScreen(this,
-						h.getString("HeroHistory"));
+				final InfoScreen ts =
+						new InfoScreen(this, h.getString("HeroHistory"));
 				ts.setBackground(new Color(0, 0, 0));
 				ss.add("Center", ts);
 			}
@@ -264,22 +265,16 @@ public class QuestApp extends Applet implements Runnable {
 			s.repaint();
 			return;
 		}
-
 		setVisible(false);
 		removeAll();
 		add(s);
-		if (s instanceof BattleScreen) {
-			((BattleScreen) s).setposition();
-		}
 		invalidate();
 		validate();
-
 		setVisible(true);
 		/*
 		 * CBG This is needed to give the focus to the contained screen.
 		 * RequestFocusInWindow is preferable to requestFocus.
 		 */
-
 		s.requestFocus();
 		mainComponent = s;
 	}
@@ -328,10 +323,12 @@ public class QuestApp extends Applet implements Runnable {
 
 			repaint();
 
-			if (!isapplet && gameFileFromCommandLine != null) {
-				Game.messageTyrant("Loading " + gameFileFromCommandLine
+			if (!QuestApp.isapplet
+					&& QuestApp.gameFileFromCommandLine != null) {
+				Game.messageTyrant("Loading " + QuestApp.gameFileFromCommandLine
 						+ " game file...");
-				final String ret = Game.tryToRestore(gameFileFromCommandLine);
+				final String ret =
+						Game.tryToRestore(QuestApp.gameFileFromCommandLine);
 				if (ret == null) {
 					setupScreen();
 					getScreen().mainLoop();
@@ -383,12 +380,12 @@ public class QuestApp extends Applet implements Runnable {
 				preparebattlemap();
 
 			} else if (c == 'e') {
-				// Designer
-				Game.messageTyrant("");
-				Game.messageTyrant("Launching Designer...");
-				tyrant.mikera.tyrant.author.Designer
-						.main(new String[] { "embedded" });
-				continue;
+				// // Designer
+				// Game.messageTyrant("");
+				// Game.messageTyrant("Launching Designer...");
+				// tyrant.mikera.tyrant.author.Designer
+				// .main(new String[] { "embedded" });
+				// continue;
 
 			} else {
 
@@ -400,10 +397,8 @@ public class QuestApp extends Applet implements Runnable {
 				}
 
 				// first display starting info....
-				final InfoScreen l = new InfoScreen(
-						this,
-						"                                 Introduction\n"
-								+ "\n"
+				final InfoScreen l = new InfoScreen(this,
+						"                                 Introduction\n" + "\n"
 								+ "Times are hard for the humble adventurer. Lawlessness has ravaged the land, and few can afford to pay for your services.\n"
 								+ "\n"
 								+ "After many weeks of travel, you find yourself in the valley of North Karrain. This region has suffered less badly from the incursions of evil, and you hear that some small towns are still prosperous. Perhaps here you can find a way to make your fortune.\n"
@@ -528,18 +523,22 @@ public class QuestApp extends Applet implements Runnable {
 		final String race = h.getString("Race");
 
 		try {
-			final String urldeath = URLEncoder.encode(outcome, fileEncoding);
-			final String urlname = URLEncoder.encode(name, fileEncoding);
+			final String urldeath =
+					URLEncoder.encode(outcome, QuestApp.fileEncoding);
+			final String urlname =
+					URLEncoder.encode(name, QuestApp.fileEncoding);
 
-			final String check = Integer.toString(sc + name.length()
-					* profession.length() * race.length() ^ 12345678);
+			final String check = Integer.toString(
+					sc + name.length() * profession.length() * race.length()
+							^ 12345678);
 			final String st = "&name=" + urlname + "&race=" + race
 					+ "&profession=" + profession + "&level=" + level
 					+ "&score=" + score + "&check=" + check + "&version="
 					+ Game.VERSION + "&seed=" + seed + "&death=" + urldeath;
 
-			final String url = "http://tyrant.sourceforge.net/logscore.php?client=tyrant"
-					+ st;
+			final String url =
+					"http://tyrant.sourceforge.net/logscore.php?client=tyrant"
+							+ st;
 
 			Game.warn((Game.isDebug() ? "NOT " : "") + "Sending data:");
 			Game.warn(st);
@@ -571,8 +570,7 @@ public class QuestApp extends Applet implements Runnable {
 		}
 
 		if (!h.isDead()) {
-			story = "You have defeated The Tyrant!\n"
-					+ "\n"
+			story = "You have defeated The Tyrant!\n" + "\n"
 					+ "Having saved the world from such malevolent evil, you are crowned as the new Emperor of Daedor, greatly beloved by all the people of the Earth.\n"
 					+ "\n"
 					+ "You rule an Empire of peace and prosperity, and enjoy a long and happy life.\n"
@@ -585,11 +583,7 @@ public class QuestApp extends Applet implements Runnable {
 			}
 
 		} else {
-			story = "\n"
-					+ "It's all over...... "
-					+ outcome
-					+ "\n"
-					+ "\n"
+			story = "\n" + "It's all over...... " + outcome + "\n" + "\n"
 					+ "You have failed in your adventures and died a hideous death.\n"
 					+ "\n" + "You reached level " + level + "\n"
 					+ "Your score is " + score + "\n" + "\n" + hresult + "\n";
@@ -597,7 +591,8 @@ public class QuestApp extends Applet implements Runnable {
 
 		Game.messageTyrant("GAME OVER - " + outcome);
 
-		Game.messageTyrant("Would you like to see your final posessions? (y/n)");
+		Game.messageTyrant(
+				"Would you like to see your final posessions? (y/n)");
 
 		final char c = Game.getOption("yn");
 
@@ -653,13 +648,24 @@ public class QuestApp extends Applet implements Runnable {
 		if (imageURL == null) {
 			return null;
 		}
-		Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
-		return image;
+		return Toolkit.getDefaultToolkit().getImage(imageURL);
+
 	}
 
-	static final GraphicsConfiguration configuration = GraphicsEnvironment
-			.getLocalGraphicsEnvironment().getDefaultScreenDevice()
-			.getDefaultConfiguration();
+	public static Image maketransparent(float alpha, Image image) {
+		BufferedImage transparent =
+				new BufferedImage(32, 32, Transparency.TRANSLUCENT);
+		Graphics2D g = transparent.createGraphics();
+		g.setComposite(
+				AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+		g.drawImage(image, 0, 0, null);
+		g.dispose();
+		return transparent;
+	}
+
+	static final GraphicsConfiguration configuration =
+			GraphicsEnvironment.getLocalGraphicsEnvironment()
+					.getDefaultScreenDevice().getDefaultConfiguration();
 
 	/**
 	 * @param screen
@@ -669,9 +675,6 @@ public class QuestApp extends Applet implements Runnable {
 		this.screen = screen;
 	}
 
-	/**
-	 * @return Returns the screen.
-	 */
 	public BattleScreen getScreen() {
 		return screen;
 	}
@@ -681,54 +684,68 @@ public class QuestApp extends Applet implements Runnable {
 	}
 
 	public static QuestApp getInstance() {
-		if (instance == null) {
-			instance = new QuestApp();
+		if (QuestApp.instance == null) {
+			QuestApp.instance = new QuestApp();
 		}
-		return instance;
+		return QuestApp.instance;
 	}
 
 	static {
 		final Applet applet = new Applet();
 
-		tiles = getImage("/images/tiles32.png");
-		scenery = getImage("/images/scenery32.png");
-		creatures = getImage("/images/creature32.png");
-		items = getImage("/images/items32.png");
-		effects = getImage("/images/effects32.png");
-
-		title = getImage("/images/title.png");
+		QuestApp.tiles = QuestApp.getImage("/images/tiles32.png");
+		QuestApp.scenery = QuestApp.getImage("/images/scenery32.png");
+		QuestApp.creatures = QuestApp.getImage("/images/creature32.png");
+		QuestApp.items = QuestApp.getImage("/images/items32.png");
+		QuestApp.effects = QuestApp.getImage("/images/effects32.png");
+		QuestApp.title = QuestApp.getImage("/images/title.png");
+		QuestApp.penalized = QuestApp.getImage("/images/spiralbig.png");
+		QuestApp.crafting = QuestApp.getImage("/images/crafting.png");
+		QuestApp.upgrading = QuestApp.getImage("/images/upgrading.png");
+		QuestApp.banner = QuestApp.getImage("/images/banner.png");
+		QuestApp.dead = QuestApp.getImage("/images/dead.png");
+		QuestApp.crystal = QuestApp.getImage("/images/meld.png");
 
 		// store images in source hashtable
-		images.put("Tiles", tiles);
-		images.put("Scenery", scenery);
-		images.put("Creatures", creatures);
-		images.put("Items", items);
-		images.put("Effects", effects);
+		QuestApp.images.put("Tiles", QuestApp.tiles);
+		QuestApp.images.put("Scenery", QuestApp.scenery);
+		QuestApp.images.put("Creatures", QuestApp.creatures);
+		QuestApp.images.put("Items", QuestApp.items);
+		QuestApp.images.put("Effects", QuestApp.effects);
 
 		// Create mediatracker for the images
 		final MediaTracker mediaTracker = new MediaTracker(applet);
-		mediaTracker.addImage(tiles, 1);
-		mediaTracker.addImage(scenery, 1);
-		mediaTracker.addImage(creatures, 1);
-		mediaTracker.addImage(items, 1);
-		mediaTracker.addImage(effects, 1);
-		mediaTracker.addImage(title, 1);
-		// mediaTracker.addImage(paneltexture, 1);
-		mediaTracker.addImage(DEFAULTTEXTURE, 1);
-		mediaTracker.addImage(DungeonScreen.DUNGEONTEXTURE, 1);
+		mediaTracker.addImage(QuestApp.tiles, 1);
+		mediaTracker.addImage(QuestApp.scenery, 1);
+		mediaTracker.addImage(QuestApp.creatures, 1);
+		mediaTracker.addImage(QuestApp.items, 1);
+		mediaTracker.addImage(QuestApp.effects, 1);
+		mediaTracker.addImage(QuestApp.title, 1);
+		mediaTracker.addImage(QuestApp.penalized, 1);
+		mediaTracker.addImage(QuestApp.crafting, 1);
+		mediaTracker.addImage(QuestApp.upgrading, 1);
+		mediaTracker.addImage(QuestApp.banner, 1);
+		mediaTracker.addImage(QuestApp.dead, 1);
+		mediaTracker.addImage(QuestApp.crystal, 1);
+		mediaTracker.addImage(QuestApp.DEFAULTTEXTURE, 1);
+		mediaTracker.addImage(LairScreen.DUNGEONTEXTURE, 1);
 		mediaTracker.addImage(IncursionFight.INCURSIONTEXTURE, 1);
 
 		// create grey-filtered background tiles
 		final ImageFilter imf = new GreyFilter();
-		greytiles = applet.createImage(new FilteredImageSource(tiles
-				.getSource(), imf));
+		QuestApp.greytiles = applet.createImage(
+				new FilteredImageSource(QuestApp.tiles.getSource(), imf));
 
 		// Wait for images to load
 		try {
 			mediaTracker.waitForID(1);
+			QuestApp.penalized =
+					QuestApp.maketransparent(2 / 3f, QuestApp.penalized);
 		} catch (final Exception e) {
 			System.out.println("Error loading images.");
 			e.printStackTrace();
 		}
+
 	}
+
 }

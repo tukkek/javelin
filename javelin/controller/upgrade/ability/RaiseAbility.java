@@ -6,6 +6,11 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
+/**
+ * Raises one of the six attributes.
+ * 
+ * @author alex
+ */
 public abstract class RaiseAbility extends Upgrade {
 	private final String abilityname;
 

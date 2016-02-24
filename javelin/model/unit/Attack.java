@@ -2,11 +2,20 @@ package javelin.model.unit;
 
 import java.io.Serializable;
 
-import javelin.controller.Roller;
+import javelin.Javelin;
+import javelin.model.Cloneable;
 
+/**
+ * A single attack in an {@link AttackSequence}.
+ * 
+ * @author alex
+ */
 public class Attack implements Serializable, Cloneable {
 	public final String name;
 	public int bonus;
+	/**
+	 * Format by index: 0d1+2
+	 */
 	public int[] damage;
 	public int threat = -1;
 	public int multiplier = -1;
@@ -18,10 +27,19 @@ public class Attack implements Serializable, Cloneable {
 
 	@Override
 	public String toString() {
-		final String sign = bonus >= 0 ? "+" : "";
-		final String threatrange = threat == 20 ? "20" : threat + "-20";
-		return name + " " + sign + bonus + " (" + formatDamage() + ", "
-				+ threatrange + "x" + multiplier + ")";
+		return toString(null);
+	}
+
+	public String toString(Combatant target) {
+		String chance;
+		if (target == null) {
+			chance = (bonus >= 0 ? "+" : "") + bonus;
+		} else {
+			chance = Javelin.translatetochance(target.ac() - bonus) + " to hit";
+		}
+		return name + " (" + chance + ", " + formatDamage() + ", "
+				+ (threat == 20 ? "20" : threat + "-20") + "x" + multiplier
+				+ ")";
 	}
 
 	public String formatDamage() {
@@ -29,16 +47,20 @@ public class Attack implements Serializable, Cloneable {
 				+ damage[2];
 	}
 
-	public int rollDamage() {
-		int sum = 0;
-		for (int i = 0; i < damage[0]; i++) {
-			sum += Roller.rollDie(damage[1]) + damage[2];
-		}
-		return sum;
-	}
+	// public int rollDamage() {
+	// int sum = 0;
+	// for (int i = 0; i < damage[0]; i++) {
+	// sum += Roller.rollDie(damage[1]) + damage[2];
+	// }
+	// return sum;
+	// }
 
 	public float getAverageDamageNoBonus() {
 		return damage[0] * damage[1] / 2f;
+	}
+
+	public int getaveragedamage() {
+		return damage[0] * damage[1] / 2 + damage[2];
 	}
 
 	@Override

@@ -7,27 +7,42 @@ import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.model.world.Squad;
 import javelin.model.world.Town;
 import javelin.view.screen.IntroScreen;
 import javelin.view.screen.town.option.Option;
 import tyrant.mikera.tyrant.InfoScreen;
 
+/**
+ * Any screen with multiple choices.
+ * 
+ * @author alex
+ */
 public abstract class SelectScreen extends InfoScreen {
 
-	private static final DecimalFormat COSTFORMAT = new DecimalFormat(
-			"####,###,##0");
+	private static final DecimalFormat COSTFORMAT =
+			new DecimalFormat("####,###,##0");
 	static final char PROCEED = 'q';
-	final Town town;
-	private final boolean printpriceinfo;
+	public static final char[] SELECTIONKEYS = new char[] { '1', '2', '3', '4',
+			'5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f', 'g',
+			'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u',
+			'v', 'x', 'w', 'y', 'z', };
+	protected final Town town;
 	public boolean showtitle = true;
 	private final String title;
+	protected boolean sortoptions = true;
+	/**
+	 * TODO probably unecessary at this point
+	 */
+	boolean stayopen = true;
 
-	public SelectScreen(final String name, final boolean printpriceinfo,
-			final Town t) {
+	/**
+	 * TODO Town could be WorldPlace
+	 */
+	public SelectScreen(final String name, final Town t) {
 		super(Javelin.app, "");
-		this.printpriceinfo = printpriceinfo;
 		town = t;
-		title = name + ":\n\n";
+		title = name + "\n\n";
 	}
 
 	@Override
@@ -38,15 +53,13 @@ public abstract class SelectScreen extends InfoScreen {
 		for (final Option o : options) {
 			roundcost(o);
 		}
-		Collections.sort(options, sort());
-		int i = 1;
-		for (final Option o : options) {
-			String priceinfo = "";
-			if (printpriceinfo && !o.hidepricatag) {
-				priceinfo = " " + getCurrency() + formatcost(o.price);
-			}
-			text += "[" + (i == 10 ? 0 : i) + "] " + o.name + priceinfo + "\n";
-			i += 1;
+		if (sortoptions) {
+			Collections.sort(options, sort());
+		}
+		for (int i = 0; i < options.size(); i++) {
+			final Option o = options.get(i);
+			text += "[" + SELECTIONKEYS[i] + "] " + o.name + printpriceinfo(o)
+					+ "\n";
 		}
 		final String extrainfo = printInfo();
 		if (!extrainfo.isEmpty()) {
@@ -55,7 +68,21 @@ public abstract class SelectScreen extends InfoScreen {
 		text += "\nPress " + PROCEED + " to quit this screen\n";
 		IntroScreen.configurescreen(this);
 		processinput(options);
-		onexit();
+		if (stayopen && !Squad.squads.isEmpty()) {
+			show();
+		} else {
+			onexit();
+		}
+	}
+
+	public void onexit() {
+		// if (!(this instanceof TownScreen)) {
+		// new TownScreen(town).show();
+		// }
+	}
+
+	public String printpriceinfo(Option o) {
+		return " " + getCurrency() + formatcost(o.price);
 	}
 
 	protected Comparator<Option> sort() {
@@ -67,33 +94,35 @@ public abstract class SelectScreen extends InfoScreen {
 		};
 	}
 
-	protected void onexit() {
-		return;
-	}
-
 	public void processinput(final List<Option> options) {
-		Character feedback = ' ';
+		char feedback = ' ';
 		while (feedback != PROCEED) {
 			Javelin.app.switchScreen(this);
-			feedback = IntroScreen.feedback();
-			int selected;
-			try {
-				selected = Integer.parseInt(feedback.toString()) - 1;
-				if (selected == -1) {
-					selected = 9;
-				}
-			} catch (final NumberFormatException e) {
-				continue;
+			feedback = InfoScreen.feedback();
+			int selected = convertselectionkey(feedback);
+			if (0 <= selected && selected < options.size()
+					&& select(options.get(selected))) {
+				return;
 			}
-			if (0 <= selected && selected < options.size()) {
-				if (select(options.get(selected))) {
-					return;
-				}
-			}
+		}
+		if (feedback == PROCEED) {
+			stayopen = false;
 		}
 	}
 
-	void roundcost(final Option o) {
+	/**
+	 * @return selection index or -1 if not chosen.
+	 */
+	static public int convertselectionkey(char feedback) {
+		for (int i = 0; i < SELECTIONKEYS.length; i++) {
+			if (SELECTIONKEYS[i] == feedback) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	public void roundcost(final Option o) {
 		return;
 	}
 
@@ -105,15 +134,19 @@ public abstract class SelectScreen extends InfoScreen {
 		return new ArrayList<Option>();
 	}
 
-	public SelectScreen(final String t, final Town town) {
-		this(t, true, town);
-	}
-
 	public abstract String getCurrency();
 
-	abstract String printInfo();
+	public abstract String printInfo();
 
-	abstract boolean select(Option o);
+	/**
+	 * Called after an Option is selected.
+	 * 
+	 * @param o
+	 *            Selection.
+	 * @return <code>true</code> to exit the screen, <code>false</code> to
+	 *         continue with selection.
+	 */
+	public abstract boolean select(Option o);
 
-	abstract List<Option> getOptions();
+	public abstract List<Option> getOptions();
 }

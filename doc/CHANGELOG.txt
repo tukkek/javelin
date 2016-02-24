@@ -1,0 +1,17 @@
+1.1
+
+ * Dungeons!
+ * Vehicles!
+ * Portals!
+ * Tournaments!
+ * The Tower of Haxor!
+ * Many new, randomly-generated battle maps!
+ * Lots of UI and AI improvements!
+ * Each town now has a unique selection of items and upgrades
+ * Towns now take a certain amount of time to craft items and train heroes
+ * In-battle power-ups for special battles
+ * A total of 136 monsters, 27 items, 57 upgrades and 25 spells
+ 
+1.0 (2015-09-01)
+
+ * Javelin launched!

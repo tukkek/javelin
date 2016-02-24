@@ -4,8 +4,18 @@ Cover: to determine whether your target has cover from your ranged attack, choos
 
 Charge: charging is a special full-round action that allows you to move up to twice your speed and attack. You must move at least 10 feet (2 squares) and may move up to double your speed directly toward the designated opponent. You must have a clear path toward the opponent. After moving, you may make a single melee attack. You get a +2 bonus on the attack roll and take a -2 penalty to your AC until the start of your next turn.
 
+Feigned: a creature who suffered a feint loses any dexterity bonus to it's armor class. 
+
 Flanking: when making a melee attack, you get a +2 flanking bonus if your opponent is threatened by a character or creature friendly to you on the opponent’s opposite border or opposite corner. 
 
 Flat-footed: a character who has not yet acted during a combat is flat-footed, not yet reacting normally to the situation. A flat-footed character loses his Dexterity bonus to AC (if any).
 
-Flooded: a character standing on water has a -2 penalty to attack rolls and armor class. Entering a flooded square takes twice longer than normal terrain. A monster that can swim has no penalties and uses it's swim speed to walk through flooded squares.
+Grappled: two grappling units are immobilized and suffer a -2 penalty to armor class.  
+
+Knee-deep: a character standing on water has a -2 penalty to attack rolls and armor class. Entering a flooded square takes twice longer than normal terrain. A hero that can swim or fly acts normally.
+
+Meld: in some battles if an unit is killed a crystal will form in it's position. This crystal grants a +2 bonus to AC and attacks and heals 20% hit points to whoever grabs it. Additional crystals will improve the bonuses.
+
+Prone: a prone creature has -2 or +2 armor class against mêlée or ranged attacks and has to spend a move action to get up.  
+
+Shaken: receives -2 to attack rolls and saving throws.

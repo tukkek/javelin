@@ -1,11 +1,27 @@
 ITEM GUIDE
 
+Airship: avoids combat, costs $16/day.
+Carriage: reduces chance of battle, costs $2/day.
 Potion of barkskin: raises armor class. 
+Potion of bear's endurance: +2 constitution bonus.
+Potion of bull's strength: +2 strength bonus.
+Potion of cat's grace: +2 dexterity bonus.
+Potion of cure critical wounds: cures 4d8+7 hit points. 
 Potion of cure light wounds: cures 1d8+1 hit points. 
 Potion of cure moderate wounds: cures 2d8+3 hit points. 
 Potion of cure serious wounds: cures 3d8+5 hit points. 
-Potion of cure critical wounds: cures 4d8+7 hit points. 
-Scroll of secure shelter: use it to rest for 8 hours on the world screen.
-Scroll of word of recall: returns party to last visited town.
+Potion of dark vision: enhances vision in the dark. 
+Potion of eagle's splendor: +2 charisma bonus.
+Potion of fox's cunning: +2 intelligence bonus.
+Potion of flight: gives flight similar to that of a hawk.
+Potion of heroism: +2 to attack and save rolls.
+Potion of owl's wisdom: +2 wisdom bonus.
+Potion of resist energy: reduces a certain amount of damage from most non-physical attacks. 
+Scroll of discern location: Reveals location of a dungeon's most valuable treasure.
+Scroll of greater teleport: teleports you to any town.
+Scroll of locate object: Locates nearest treasure chest in a dungeon.
+Scroll of prying eyes: Reveals dungeon map.
 Scroll of raise dead & restoration: after battle, ressurects a killed ally.
 Scroll of ressurect & restoration: after battle, ressurects a killed ally with full hit points.
+Scroll of secure shelter: use it to rest for 8 hours on the world screen.
+Scroll of word of recall: returns party to last visited town.

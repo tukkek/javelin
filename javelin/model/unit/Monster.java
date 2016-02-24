@@ -9,10 +9,17 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.controller.SpellbookGenerator;
+import javelin.controller.action.Breath;
+import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.classes.ClassAdvancement;
 import javelin.controller.upgrade.feat.MeleeFocus;
+import javelin.model.Cloneable;
 import javelin.model.feat.Feat;
-import javelin.model.feat.WeaponFinesse;
+import javelin.model.unit.abilities.BreathWeapon;
+import javelin.model.unit.abilities.TouchAttack;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -60,7 +67,7 @@ public class Monster implements Cloneable, Serializable {
 	 * @deprecated See #will()
 	 */
 	@Deprecated
-	public int will;
+	private int will;
 
 	public int walk = 0;
 	public int fly = 0;
@@ -76,6 +83,26 @@ public class Monster implements Cloneable, Serializable {
 	public ArrayList<AttackSequence> ranged = new ArrayList<AttackSequence>();
 
 	public List<Feat> feats = new ArrayList<Feat>();
+	public HD hd = new HD();
+	/**
+	 * @see Breath
+	 */
+	public CloneableList<BreathWeapon> breaths =
+			new CloneableList<BreathWeapon>();
+	/**
+	 * This is the spells that this source has by default. Learned spells go to
+	 * {@link Combatant#spells}.
+	 * 
+	 * TOOD this could be removed and better designed.
+	 * 
+	 * @see Monster#spellcr
+	 * @see Spell
+	 */
+	public ArrayList<Spell> spells = new ArrayList<Spell>();
+	/**
+	 * @see TouchAttack
+	 */
+	public TouchAttack touch = null;
 
 	public int initiative = Integer.MIN_VALUE;
 	public String name = null;
@@ -84,8 +111,7 @@ public class Monster implements Cloneable, Serializable {
 	 * TODO use
 	 */
 	public String group;
-	public float challengeRating;
-	public HD hd = new HD();
+	public Float challengeRating = null;
 	public String monsterType;
 	/**
 	 * TODO use only {@link #avatarfile}
@@ -100,10 +126,25 @@ public class Monster implements Cloneable, Serializable {
 	public int expert = 0;
 	public int commoner = 0;
 	public String avatarfile = null;
+	/**
+	 * What type of vision perception the monster has.
+	 * 
+	 * @see #VISION_LOWLIGHT
+	 * @see #VISION_DARK
+	 */
 	public int vision = 0;
 	public float originalhd;
+	/**
+	 * Used to distribute random spells to a new {@link Combatant}.
+	 * 
+	 * TODO {@link ChallengeRatingCalculator} is using this for
+	 * {@link SpellsFactor} instead ot taking the {@link Combatant} into
+	 * consideration. Maintain?
+	 * 
+	 * @see SpellbookGenerator
+	 * 
+	 */
 	public float spellcr = 0;
-	public ArrayList<BreathWeapon> breaths = new ArrayList<BreathWeapon>();
 	/**
 	 * Damage reduction.
 	 */
@@ -115,8 +156,13 @@ public class Monster implements Cloneable, Serializable {
 	public int resistance = 0;
 	/**
 	 * Spell resistance.
+	 * 
+	 * "To affect a creature that has spell resistance, a spellcaster must make
+	 * a caster level check (1d20 + caster level) at least equal to the
+	 * creature’s spell resistance."
 	 */
 	public int sr = 0;
+	public boolean immunetomindeffects = false;
 
 	@Override
 	public Monster clone() {
@@ -126,17 +172,20 @@ public class Monster implements Cloneable, Serializable {
 			m.ranged = copyattacks(ranged);
 			m.feats = new ArrayList<Feat>(m.feats);
 			m.hd = hd.clone();
-			m.breaths = (ArrayList<BreathWeapon>) breaths.clone();
+			m.breaths = breaths.clone();
+			if (m.touch != null) {
+				m.touch = touch.clone();
+			}
 			return m;
 		} catch (final CloneNotSupportedException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	static private ArrayList<AttackSequence> copyattacks(
-			final List<AttackSequence> original) {
-		final ArrayList<AttackSequence> copy = new ArrayList<AttackSequence>(
-				original.size());
+	static private ArrayList<AttackSequence>
+			copyattacks(final List<AttackSequence> original) {
+		final ArrayList<AttackSequence> copy =
+				new ArrayList<AttackSequence>(original.size());
 		for (final AttackSequence sequence : original) {
 			copy.add(sequence.clone());
 		}
@@ -147,7 +196,7 @@ public class Monster implements Cloneable, Serializable {
 		feats.add(feat);
 	}
 
-	public int hasfeat(final Feat f) {
+	public int countfeat(final Feat f) {
 		int i = 0;
 		for (final Feat existing : feats) {
 			if (existing.name.equals(f.name)) {
@@ -155,6 +204,15 @@ public class Monster implements Cloneable, Serializable {
 			}
 		}
 		return i;
+	}
+
+	public boolean hasfeat(final Feat f) {
+		for (final Feat existing : feats) {
+			if (existing.name.equals(f.name)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public long countfeats() {
@@ -172,22 +230,18 @@ public class Monster implements Cloneable, Serializable {
 		return roll + bonus >= dc;
 	}
 
+	/**
+	 * @return 0 or higher value.
+	 */
 	public int getbaseattackbonus() {
 		int classesbab = 0;
 		for (ClassAdvancement classdata : ClassAdvancement.CLASSES) {
 			classesbab += classdata.gettable()[classdata.getlevel(this)].bab;
 		}
-		return classesbab
-				+ new Long(Math.round(originalhd
-						* MeleeFocus.bab.get(monsterType))).intValue();
+		return classesbab + new Long(
+				Math.round(originalhd * MeleeFocus.bab.get(monsterType)))
+						.intValue();
 	}
-
-	// public boolean savewill(int dc) {
-	// if (intelligence == 0) {
-	// return true;
-	// }
-	// return save(will, dc);
-	// }
 
 	public void raisedexterity(int x) {
 		ac += 1 * x;
@@ -201,9 +255,6 @@ public class Monster implements Cloneable, Serializable {
 	}
 
 	public boolean raisestrength() {
-		if (hasfeat(WeaponFinesse.singleton) != 0) {
-			return false;
-		}
 		for (AttackSequence sequence : melee) {
 			for (Attack a : sequence) {
 				a.bonus += 1;
@@ -215,7 +266,7 @@ public class Monster implements Cloneable, Serializable {
 
 	public void raiseconstitution(Combatant c) {
 		fort += 1;
-		int bonushp = hd.countdice();
+		int bonushp = hd.count();
 		hd.extrahp += bonushp;
 		c.hp += bonushp;
 		c.maxhp += bonushp;
@@ -247,6 +298,24 @@ public class Monster implements Cloneable, Serializable {
 	}
 
 	public int will() {
-		return intelligence == 0 ? Integer.MAX_VALUE : will;
+		return intelligence == 0 || immunetomindeffects ? Integer.MAX_VALUE
+				: will;
+	}
+
+	public static String getsignedbonus(int score) {
+		int bonus = Monster.getbonus(score);
+		return bonus >= 0 ? "+" + bonus : Integer.toString(bonus);
+	}
+
+	public void setWill(int willp) {
+		will = willp;
+	}
+
+	public void addwill(int delta) {
+		will += delta;
+	}
+
+	public Integer willraw() {
+		return will;
 	}
 }

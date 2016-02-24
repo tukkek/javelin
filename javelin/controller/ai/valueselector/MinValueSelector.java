@@ -3,22 +3,23 @@
  */
 package javelin.controller.ai.valueselector;
 
+import java.util.ArrayList;
+
 import javelin.controller.ai.AbstractAlphaBetaSearch;
 import javelin.controller.ai.Entry;
 
 /**
- * Extens�o concreta de {@link AbstractValueSelector} que prev� as melhores
- * jogadas poss�veis pelo jogador humano.
+ * Represents the human player.
  * 
  * @author Alex Henry
  */
-public final class MinValueSelector extends AbstractValueSelector {
+public final class MinValueSelector extends ValueSelector {
 	/**
 	 * @see #MinValueSelector(AbstractAlphaBetaSearch)
 	 * 
 	 * @author Alex Henry
 	 */
-	private final AbstractAlphaBetaSearch<?> search;
+	private final AbstractAlphaBetaSearch search;
 
 	/**
 	 * Constutor.
@@ -28,16 +29,18 @@ public final class MinValueSelector extends AbstractValueSelector {
 	 * 
 	 * @author Alex Henry
 	 */
-	public MinValueSelector(final AbstractAlphaBetaSearch<?> search) {
+	public MinValueSelector(final AbstractAlphaBetaSearch search) {
 		super();
 		this.search = search;
 	}
 
 	@Override
 	protected Entry processCurrent(final Entry node, final int depth,
-			final float alpha, final float beta) throws InterruptedException {
-		return search.maxValueSelector.getValue(new Entry(node.node,
-				Integer.MIN_VALUE, node.cns), search, depth, alpha, beta);
+			final float alpha, final float beta,
+			final ArrayList<Integer> index) {
+		return search.maxValueSelector.getValue(
+				new Entry(node.node, -Float.MAX_VALUE, node.cns), search, depth,
+				alpha, beta, index);
 	}
 
 	@Override
@@ -51,7 +54,8 @@ public final class MinValueSelector extends AbstractValueSelector {
 	}
 
 	@Override
-	protected boolean testPod(final float current, final float a, final float b) {
+	protected boolean testPod(final float current, final float a,
+			final float b) {
 		return current <= a;
 	}
 }

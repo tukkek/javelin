@@ -611,7 +611,7 @@ weapons also conduct this heat.</p>
 </Monster>
 <Monster id="srd:Basilisk">
 <Name>Basilisk</Name>
-<Avatar Name="dog" Image="basilisk"></Avatar>
+<Avatar  Image="basilisk"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="magical beast" Subtypes="reptilian">Medium-Size Magical Beast (Reptilian)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="45">6d10+12 (45)</HitDice>
@@ -621,7 +621,8 @@ weapons also conduct this heat.</p>
   <Attacks>Bite +8 melee</Attacks>
   <Damage>Bite 1d8+3 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
-  <SpecialAttacks>Petrifying gaze</SpecialAttacks>
+  <!--SpecialAttacks>Petrifying gaze</SpecialAttacks-->
+  <Spells known="hold monster,hold monster,hold monster,hold monster,hold monster,"></Spells>
   <Saves Fort="9" Ref="4" Will="3">Fort +9, Ref +4, Will +3</Saves>
   <Abilities Str="15" Dex="8" Con="15" Int="2" Wis="12" Cha="10">Str 15, Dex 8, Con 15, Int 2, Wis 12, Cha 10</Abilities>
   <Skills>Hide +0*, Listen +7, Spot +7</Skills>
@@ -892,7 +893,7 @@ similar to a gaseous form spell cast by a 7th-level sorcerer.</p>
 </Monster>
 <Monster id="srd:BlinkDog">
 <Name>Blink Dog</Name>
-<Avatar Name="dog" Image="blinkdog"></Avatar>
+<Avatar  Image="blinkdog"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="magical beast">Medium-Size Magical Beast</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="22">4d10 (22)</HitDice>
@@ -903,7 +904,8 @@ similar to a gaseous form spell cast by a 7th-level sorcerer.</p>
   <Damage>Bite 1d6 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialQualities>Blink, dimension door, scent</SpecialQualities>
-  <Spells cr="0.28" casterlevel="8">5 blink, 5 dimension door</Spells>
+  <!--Spells cr="0.28" casterlevel="8">5 blink, 5 dimension door</Spells-->
+  <Spells known="blink,blink,blink,blink,blink,"></Spells>
   <Saves Fort="4" Ref="7" Will="4">Fort +4, Ref +7, Will +4</Saves>
   <Abilities Str="10" Dex="17" Con="10" Int="10" Wis="13" Cha="11">Str 10, Dex 17, Con 10, Int 10, Wis 13, Cha 11</Abilities>
   <Skills>Hide +8, Listen +8, Sense Motive +5, Spot +8</Skills>
@@ -999,7 +1001,7 @@ morale penalty to all attacks directed at that opponent.</p>
 </Monster>
 <Monster id="srd:Bugbear">
 <Name>Bugbear</Name>
-<Avatar Name="dog" Image="bugbear"></Avatar>
+<Avatar  Image="bugbear"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="goblinoid">Medium-Size Humanoid (Goblinoid)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="16">3d8+3 (16)</HitDice>
@@ -1525,7 +1527,7 @@ by a 6th-level sorcerer.</li>
 </Monster>
 <Monster id="srd:Cockatrice">
 <Name>Cockatrice</Name>
-<Avatar Name="dog" Image="cockatrice"></Avatar>
+<Avatar  Image="cockatrice"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="magical beast">Small Magical Beast</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="27">5d10 (27)</HitDice>
@@ -1536,7 +1538,9 @@ by a 6th-level sorcerer.</li>
   <Damage>Bite 1d4-2 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialAttacks>Petrification</SpecialAttacks>
-  <SpecialQualities>Petrification immunity</SpecialQualities>
+  <!--SpecialQualities>Petrification immunity</SpecialQualities-->
+  <SpecialQualities>SR 12</SpecialQualities>
+  <Spells known="hold monster,hold monster,hold monster,hold monster,hold monster,"></Spells>
   <Saves Fort="4" Ref="7" Will="2">Fort +4, Ref +7, Will +2</Saves>
   <Abilities Str="6" Dex="17" Con="11" Int="2" Wis="13" Cha="9">Str 6, Dex 17, Con 11, Int 2, Wis 13, Cha 9</Abilities>
   <Skills>Listen +7, Spot +7</Skills>
@@ -1655,7 +1659,7 @@ skills among couatls.</p>
 </Monster>
 <Monster id="srd:Darkmantle">
 <Name>Darkmantle</Name>
-<Avatar Name="dog" Image="darkmantle"></Avatar>
+<Avatar  Image="darkmantle"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="magical beast">Small Magical Beast</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="6">1d10+1 (6)</HitDice>
@@ -1666,12 +1670,13 @@ skills among couatls.</p>
   <Damage>Slam 1d4+4 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialAttacks>Darkness, improved grab, constrict 1d4+4</SpecialAttacks>
-  <Spells>1 darkness (caster level 5)</Spells>
+  <Spells known="deeper darkness,"></Spells>
+  <!-- Spells>1 darkness (caster level 5)</Spells-->
   <SpecialQualities>Blindsight</SpecialQualities>
   <Saves Fort="3" Ref="2" Will="0">Fort +3, Ref +2, Will +0</Saves>
   <Abilities Str="16" Dex="10" Con="13" Int="2" Wis="10" Cha="10">Str 16, Dex 10, Con 13, Int 2, Wis 10, Cha 10</Abilities>
   <Skills>Hide +11, Listen +5*</Skills>
-  <Feats>Improved Initiative</Feats>
+  <Feats>Improved Initiative, improved grapple,</Feats>
   <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="underground">Any underground</ClimateAndTerrain>
   <Organization>1-15</Organization>
   <ChallengeRating Value="1">1</ChallengeRating>
@@ -1967,7 +1972,7 @@ another.</p>
 </Monster>
 <Monster id="srd:Digester">
 <Name>Digester</Name>
-<Avatar Name="dog" Image="digester"></Avatar>
+<Avatar  Image="digester"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="magical beast">Medium-Size Magical Beast</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="68">8d10+24 (68)</HitDice>
@@ -1977,7 +1982,8 @@ another.</p>
   <Attacks>Rake +11 melee</Attacks>
   <Damage>Rake 1d8+4 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
-  <SpecialAttacks>Acid spray</SpecialAttacks>
+  <SpecialAttacks>Acid spray (burst and single)</SpecialAttacks>
+  <Touch name="Acid spray" damage="8d8" save="17"></Touch>
   <Breath name="acid" format="cone 20" damage="4d8" save="no" delay="yes"/>
   <SpecialQualities>Scent, acid immunity</SpecialQualities>
   <Saves Fort="9" Ref="8" Will="3">Fort +9, Ref +8, Will +3</Saves>
@@ -2072,7 +2078,7 @@ checks, thanks to its displacement power.</p>
 </Monster>
 <Monster id="srd:Doppelganger">
 <Name>Doppelganger</Name>
-<Avatar Name="dog" Image="doppelganger"></Avatar>
+<Avatar  Image="doppelganger"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="monstrous humanoid" Subtypes="shapechanger">Medium-Size Monstrous Humanoid (Shapechanger)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="22">4d8+4 (22)</HitDice>
@@ -2083,7 +2089,7 @@ checks, thanks to its displacement power.</p>
   <Damage>Slam 1d6+1 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialAttacks>Detect thoughts</SpecialAttacks>
-  <SpecialQualities>Alter self, immunities</SpecialQualities>
+  <SpecialQualities>Alter self, immunities, mind immunity</SpecialQualities>
   <Spells cr="0.22">5 detect thoughts (caster level 18, Will DC 13)</Spells>
   <Saves Fort="5" Ref="5" Will="6">Fort +5, Ref +5, Will +6</Saves>
   <Abilities Str="12" Dex="13" Con="12" Int="13" Wis="14" Cha="13">Str 12, Dex 13, Con 12, Int 13, Wis 14, Cha 13</Abilities>
@@ -2304,7 +2310,7 @@ Silently checks.</p>
 </Monster>
 <Monster id="srd:Dryad">
 <Name>Dryad</Name>
-<Avatar Name="dog" Image="dryad"></Avatar>
+<Avatar  Image="dryad"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="fey">Medium-Size Fey</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="7">2d6 (7)</HitDice>
@@ -2353,7 +2359,7 @@ dryad's oak does not radiate magic.</p>
 </Monster>
 <Monster id="srd:EtherealFilcher">
 <Name>Ethereal Filcher</Name>
-<Avatar Name="dog" Image="etherealfilcher"></Avatar>
+<Avatar  Image="etherealfilcher"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="aberration">Medium-Size Aberration</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="22">5d8 (22)</HitDice>
@@ -2364,7 +2370,7 @@ dryad's oak does not radiate magic.</p>
   <Damage>Bite 1d4 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialQualities>Ethereal jaunt, detect magic</SpecialQualities>
-  <Spells cr="0.55"></Spells>
+  <Spells known="blink,blink,blink,blink,blink,"></Spells>
   <Saves Fort="1" Ref="5" Will="5">Fort +1, Ref +5, Will +5</Saves>
   <Abilities Str="10" Dex="18" Con="11" Int="7" Wis="12" Cha="10">Str 10, Dex 18, Con 11, Int 7, Wis 12, Cha 10</Abilities>
   <Skills>Listen +8, Pick Pocket +12, Spot +8</Skills>
@@ -2407,7 +2413,7 @@ or restart the ability once per round as a free action.</p>
 </Monster>
 <Monster id="srd:EtherealMarauder">
 <Name>Ethereal Marauder</Name>
-<Avatar Name="dog" Image="etherealmarauder"></Avatar>
+<Avatar  Image="etherealmarauder"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="magical beast">Medium-Size Magical Beast</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="11">2d10 (11)</HitDice>
@@ -2418,7 +2424,7 @@ or restart the ability once per round as a free action.</p>
   <Damage>Bite 1d6+3 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialQualities>Ethereal jaunt</SpecialQualities>
-  <Spells cr="0.53"></Spells>
+  <Spells known="blink,blink,blink,blink,blink,"></Spells>
   <Saves Fort="3" Ref="4" Will="1">Fort +3, Ref +4, Will +1</Saves>
   <Abilities Str="14" Dex="12" Con="11" Int="7" Wis="12" Cha="10">Str 14, Dex 12, Con 11, Int 7, Wis 12, Cha 10</Abilities>
   <Skills>Listen +6, Move Silently +6, Spot +6</Skills>
@@ -2645,7 +2651,7 @@ Hide checks in its native environment.</p>
 </Monster>
 <Monster id="srd:Gargoyle">
 <Name>Gargoyle</Name>
-<Avatar Name="dog" Image="gargoyle"></Avatar>
+<Avatar  Image="gargoyle"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="magical beast" Subtypes="earth">Medium-Size Magical Beast (Earth)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="38">4d10+16 (38)</HitDice>
@@ -2808,7 +2814,7 @@ pounds.</p>
 </Monster>
 <Monster id="srd:GibberingMouther">
 <Name>Gibbering Mouther</Name>
-<Avatar Name="dog" Image="gibberingmouther"></Avatar>
+<Avatar  Image="gibberingmouther"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="aberration">Medium-Size Aberration</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="22">4d8+4 (22)</HitDice>
@@ -2823,7 +2829,7 @@ pounds.</p>
   <Saves Fort="2" Ref="2" Will="5">Fort +2, Ref +2, Will +5</Saves>
   <Abilities Str="10" Dex="13" Con="12" Int="4" Wis="13" Cha="13">Str 10, Dex 13, Con 12, Int 4, Wis 13, Cha 13</Abilities>
   <Skills>Listen +8, Spot +12</Skills>
-  <Feats>Weapon Finesse (bite)</Feats>
+  <Feats>Weapon Finesse (bite), improved grapple</Feats>
   <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="aquatic,desert,forest,hill,marsh,mountains,plains,underground">Any land, aquatic, and underground</ClimateAndTerrain>
   <Organization>1</Organization>
   <ChallengeRating Value="5">5</ChallengeRating>
@@ -2956,7 +2962,7 @@ automatically deals an additional 2d4+12 points of damage.</p>
 </Monster>
 <Monster id="srd:Gnoll">
 <Name>Gnoll</Name>
-<Avatar Name="dog" Image="gnoll"></Avatar>
+<Avatar  Image="gnoll"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="gnoll">Medium-Size Humanoid (Gnoll)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="11">2d8+2 (11)</HitDice>
@@ -2996,7 +3002,7 @@ or some other form of concealment).</p>
 </Monster>
 <Monster id="srd:Goblin">
 <Name>Goblin</Name>
-<Avatar Name="dog" Image="goblin"></Avatar>
+<Avatar  Image="goblin"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="humanoid" Subtypes="goblinoid">Small Humanoid (Goblinoid)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="4">1d8 (4)</HitDice>
@@ -3134,7 +3140,7 @@ due to their six keen eyes.</p>
 </Monster>
 <Monster id="srd:Grick">
 <Name>Grick</Name>
-<Avatar Name="dog" Image="grick"></Avatar>
+<Avatar  Image="grick"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="aberration">Medium-Size Aberration</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="9">2d8 (9)</HitDice>
@@ -3243,7 +3249,7 @@ pounds.</p>
 </Monster>
 <Monster id="srd:Grimlock">
 <Name>Grimlock</Name>
-<Avatar Name="dog" Image="grimlock"></Avatar>
+<Avatar  Image="grimlock"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="monstrous humanoid">Medium-Size Monstrous Humanoid</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="11">2d8+2 (11)</HitDice>
@@ -3299,7 +3305,7 @@ in mountains or underground.</p>
 </Monster>
 <Monster id="srd:Harpy">
 <Name>Harpy</Name>
-<Avatar Name="dog" Image="harpy"></Avatar>
+<Avatar  Image="harpy"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="monstrous humanoid">Medium-Size Monstrous Humanoid</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="31">7d8 (31)</HitDice>
@@ -3309,7 +3315,8 @@ in mountains or underground.</p>
   <Attacks>Club +7/+2 melee, or 2 claws +2 melee</Attacks>
   <Damage>Club 1d4 (20/x2), or claw 1d3 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
-  <SpecialAttacks>Captivating song</SpecialAttacks>
+  <!--SpecialAttacks>Captivating song</SpecialAttacks-->
+  <Spells known="hold monster,"></Spells> 
   <Saves Fort="2" Ref="7" Will="5">Fort +2, Ref +7, Will +5</Saves>
   <Abilities Str="10" Dex="15" Con="10" Int="7" Wis="10" Cha="15">Str 10, Dex 15, Con 10, Int 7, Wis 10, Cha 15</Abilities>
   <Skills>Bluff +8, Listen +7, Perform +9, Spot +6</Skills>
@@ -3349,7 +3356,7 @@ captivated creature to attempt a new Will save.</p>
 </Monster>
 <Monster id="srd:HellHound">
 <Name>Hell Hound</Name>
-<Avatar Name="dog" Image="hellhound"></Avatar>
+<Avatar  Image="hellhound"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="outsider" Subtypes="evil,fire,lawful">Medium-Size Outsider (Evil, Fire, Lawful)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="22">4d8+4 (22)</HitDice>
@@ -3460,7 +3467,7 @@ pounds.</p>
 </Monster>
 <Monster id="srd:Hobgoblin">
 <Name>Hobgoblin</Name>
-<Avatar Name="dog" Image="hobgoblin"></Avatar>
+<Avatar  Image="hobgoblin"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="goblinoid">Medium-Size Humanoid (Goblinoid)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="5">1d8+1 (5)</HitDice>
@@ -3709,7 +3716,7 @@ Lore checks to trace a creature's passage.</p>
 </Monster>
 <Monster id="srd:Kobold">
 <Name>Kobold</Name>
-<Avatar Name="dog" Image="kobold"></Avatar>
+<Avatar  Image="kobold"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="humanoid" Subtypes="reptilian">Small Humanoid (Reptilian)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="2">1/2d8 (2)</HitDice>
@@ -3831,7 +3838,7 @@ spells cast by a 9th-level druid (save DC 15 + spell level).</p>
 </Monster>
 <Monster id="srd:Krenshar">
 <Name>Krenshar</Name>
-<Avatar Name="dog" Image="krenshar"></Avatar>
+<Avatar  Image="krenshar"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="magical beast">Medium-Size Magical Beast</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="11">2d10 (11)</HitDice>
@@ -3842,6 +3849,7 @@ spells cast by a 9th-level druid (save DC 15 + spell level).</p>
   <Damage>Bite 1d6 (20/x2), claw 1d4 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialAttacks>Scare</SpecialAttacks>
+  <Spells known="doom,"></Spells>
   <SpecialQualities>Scent</SpecialQualities>
   <Saves Fort="3" Ref="5" Will="1">Fort +3, Ref +5, Will +1</Saves>
   <Abilities Str="11" Dex="14" Con="11" Int="6" Wis="12" Cha="13">Str 11, Dex 14, Con 11, Int 6, Wis 12, Cha 13</Abilities>
@@ -3875,7 +3883,7 @@ for one day. The shriek does not affect other krenshars.</p>
 </Monster>
 <Monster id="srd:KuoToa">
 <Name>Kuo-Toa</Name>
-<Avatar Name="dog" Image="kuotoa"></Avatar>
+<Avatar  Image="kuotoa"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="monstrous humanoid" Subtypes="aquatic">Medium-Size Monstrous Humanoid (Aquatic)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="11">2d8+2 (11)</HitDice>
@@ -4168,7 +4176,7 @@ Wilderness Lore checks.</p>
 </Monster>
 <Monster id="srd:Lizardfolk">
 <Name>Lizardfolk</Name>
-<Avatar Name="dog" Image="lizardfolk"></Avatar>
+<Avatar  Image="lizardfolk"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="aquatic,reptilian">Medium-Size Humanoid (Aquatic, Reptilian)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="11">2d8+2 (11)</HitDice>
@@ -4209,7 +4217,7 @@ domains: Animal, Plant, and Water.</p>
 </Monster>
 <Monster id="srd:Locathah">
 <Name>Locathah</Name>
-<Avatar Name="dog" Image="locathah"></Avatar>
+<Avatar  Image="locathah"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="aquatic">Medium-Size Humanoid (Aquatic)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="9">2d8 (9)</HitDice>
@@ -4385,7 +4393,7 @@ Fortitude save (DC 15).</p>
 </Monster>
 <Monster id="srd:Merfolk">
 <Name>Merfolk</Name>
-<Avatar Name="dog" Image="merfolk"></Avatar>
+<Avatar  Image="merfolk"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="aquatic">Medium-Size Humanoid (Aquatic)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="5">1d8+1 (5)</HitDice>
@@ -4492,7 +4500,7 @@ generally far too late.</p>
 </Monster>
 <Monster id="srd:MindFlayer">
 <Name>Mind Flayer</Name>
-<Avatar Name="dog" Image="mindflayer"></Avatar>
+<Avatar  Image="mindflayer"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="aberration">Medium-Size Aberration</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="44">8d8+8 (44)</HitDice>
@@ -4503,12 +4511,12 @@ generally far too late.</p>
   <Damage>Tentacle 1d4+1 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialAttacks>Mind blast, psionics, improved grab, extract</SpecialAttacks>
-  <Spells cr="1.0" casterlevel="8">5 astral projection, 5 charm monster, 5 detect thoughts, 5 levitate, 5 plane shift, 5 suggestion</Spells>
+  <Spells known="hold monster,hold monster," casterlevel="8">5 astral projection, 5 charm monster, 5 detect thoughts, 5 levitate, 5 plane shift, 5 suggestion</Spells>
   <SpecialQualities>SR 25, telepathy</SpecialQualities>
   <Saves Fort="3" Ref="4" Will="9">Fort +3, Ref +4, Will +9</Saves>
   <Abilities Str="12" Dex="14" Con="12" Int="19" Wis="17" Cha="17">Str 12, Dex 14, Con 12, Int 19, Wis 17, Cha 17</Abilities>
   <Skills>Bluff +8, Concentration +12, Hide +8, Intimidate +10,Knowledge (any two) +9, Listen +10, Move Silently +7, Spot +10</Skills>
-  <Feats>Alertness, Combat Casting, Dodge, Improved Initiative,</Feats>
+  <Feats>Alertness, Combat Casting, Dodge, Improved Initiative, improved grapple,</Feats>
   <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="underground">Any underground</ClimateAndTerrain>
   <Organization>1-5, 3-5 plus 6-10 grimlock</Organization>
   <ChallengeRating Value="8">8</ChallengeRating>
@@ -4880,7 +4888,7 @@ pounds.</p>
 </Monster>
 <Monster id="srd:Nymph">
 <Name>Nymph</Name>
-<Avatar Name="dog" Image="nymph"></Avatar>
+<Avatar  Image="nymph"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="fey">Medium-Size Fey</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="10">3d6 (10)</HitDice>
@@ -4932,7 +4940,7 @@ druid spells as 7th-level casters (save DC 13+ spell level).</p>
 </Description>
 </Monster>
 <Monster id="srd:Orc">
-<Avatar Name="dog" Image="orc"></Avatar>
+<Avatar  Image="orc"></Avatar>
 <Name>Orc</Name>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="orc">Medium-Size Humanoid (Orc)</SizeAndType>
@@ -5131,7 +5139,7 @@ pounds.</p>
 </Monster>
 <Monster id="srd:PhantomFungus">
 <Name>Phantom Fungus</Name>
-<Avatar Name="dog" Image="phantomfungus"></Avatar>
+<Avatar  Image="phantomfungus"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="plant">Medium-Size Plant</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="15">2d8+6 (15)</HitDice>
@@ -5141,7 +5149,8 @@ pounds.</p>
   <Attacks>Bite +3 melee</Attacks>
   <Damage>Bite 1d6+3 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
-  <SpecialQualities>Plant, Improved invisibility</SpecialQualities>
+  <SpecialQualities>Plant, Improved invisibility, mind immunity</SpecialQualities>
+  <Spells known="blink,"></Spells>
   <Saves Fort="6" Ref="0" Will="0">Fort +6, Ref +0, Will +0</Saves>
   <Abilities Str="14" Dex="10" Con="16" Int="2" Wis="11" Cha="9">Str 14, Dex 10, Con 16, Int 2, Wis 11, Cha 9</Abilities>
   <Skills>Move Silently +5</Skills>
@@ -5226,7 +5235,7 @@ secondary damage 2d6 temporary Constitution.</p>
 </Monster>
 <Monster id="srd:Phasm">
 <Name>Phasm</Name>
-<Avatar Name="dog" Image="phasm"></Avatar>
+<Avatar  Image="phasm"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="monstrous humanoid" Subtypes="shapechanger">Medium-Size Monstrous Humanoid (Shapechanger)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="97">15d8+30 (97)</HitDice>
@@ -5416,7 +5425,7 @@ ground.</p>
 </Monster>
 <Monster id="srd:Rakshasa">
 <Name>Rakshasa</Name>
-<Avatar Name="dog" Image="rakshasa"></Avatar>
+<Avatar  Image="rakshasa"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="outsider" Subtypes="evil,lawful">Medium-Size Outsider (Evil, Lawful)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="52">7d8+21 (52)</HitDice>
@@ -5485,7 +5494,7 @@ Disguise checks increases by a further +4.</p>
 </Monster>
 <Monster id="srd:Rast">
 <Name>Rast</Name>
-<Avatar Name="dog" Image="rast"></Avatar>
+<Avatar  Image="rast"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="outsider" Subtypes="fire">Medium-Size Outsider (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="22">4d8+4 (22)</HitDice>
@@ -5496,11 +5505,12 @@ Disguise checks increases by a further +4.</p>
   <Damage>Claw 1d4+2 (20/x2); or bite 1d8+3 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialAttacks>Paralyzing gaze, improved grab, blood drain</SpecialAttacks>
+  <Spells known="hold monster,hold monster,hold monster,hold monster,hold monster,"></Spells>
   <SpecialQualities>Fire subtype, flight</SpecialQualities>
   <Saves Fort="5" Ref="5" Will="5">Fort +5, Ref +5, Will +5</Saves>
   <Abilities Str="14" Dex="12" Con="13" Int="3" Wis="13" Cha="12">Str 14, Dex 12, Con 13, Int 3, Wis 13, Cha 12</Abilities>
   <Skills>Hide +5, Listen +7, Move Silently +7</Skills>
-  <Feats>Dodge, Improved Initiative</Feats>
+  <Feats>Dodge, Improved Initiative, improved grapple</Feats>
   <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="desert,forest,hill,marsh,mountains,plains,underground">Any land and underground</ClimateAndTerrain>
   <Organization>1-6</Organization>
   <ChallengeRating Value="5">5</ChallengeRating>
@@ -5857,7 +5867,7 @@ unaffected.</p>
 </Monster>
 <Monster id="srd:Sahuagin">
 <Name>Sahuagin</Name>
-<Avatar Name="dog" Image="sahuagin"></Avatar>
+<Avatar  Image="sahuagin"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="aquatic">Medium-Size Humanoid (Aquatic)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="11">2d8+2 (11)</HitDice>
@@ -5951,7 +5961,7 @@ two of the following domains: Evil, Law, Strength, and War.</p>
 </Monster>
 <Monster id="srd:SahuaginMalenti">
 <Name>Sahuagin:Malenti</Name>
-<Avatar Name="dog" Image="malenti"></Avatar>
+<Avatar  Image="malenti"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="aquatic">Medium-Size Humanoid (Aquatic)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="11">2d8+2 (11)</HitDice>
@@ -6048,7 +6058,7 @@ two of the following domains: Evil, Law, Strength, and War.</p>
 </Monster>
 <Monster id="srd:SahuaginSahuaginMutant">
 <Name>Sahuagin:Sahuagin Mutant</Name>
-<Avatar Name="dog" Image="sahuaginmutant"></Avatar>
+<Avatar  Image="sahuaginmutant"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="aquatic">Medium-Size Humanoid (Aquatic)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="11">2d8+2 (11)</HitDice>
@@ -6143,7 +6153,7 @@ two of the following domains: Evil, Law, Strength, and War.</p>
 </Monster>
 <Monster id="srd:OrcHalfOrc">
 <Name>Orc:Half Orc</Name>
-<Avatar Name="dog" Image="halforc"></Avatar>
+<Avatar  Image="halforc"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="orc">Medium-Size Humanoid (Orc)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="4">1d8 (4)</HitDice>
@@ -6175,7 +6185,7 @@ two of the following domains: Evil, Law, Strength, and War.</p>
 </Monster>
 <Monster id="srd:Satyr">
 <Name>Satyr</Name>
-<Avatar Name="dog" Image="satyr"></Avatar>
+<Avatar  Image="satyr"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="fey">Medium-Size Fey</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="22">5d6+5 (22)</HitDice>
@@ -6212,7 +6222,7 @@ Silently, Perform, and Spot checks.</p>
 </Monster>
 <Monster id="srd:Satyrwithpipes">
 <Name>Satyr with pipes</Name>
-<Avatar Name="dog" Image="satyrwithpipes"></Avatar>
+<Avatar  Image="satyrwithpipes"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="fey">Medium-Size Fey</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="22">5d6+5 (22)</HitDice>
@@ -6223,6 +6233,7 @@ Silently, Perform, and Spot checks.</p>
   <Damage>Gore 1d6 (20/x2), dagger 1d4 (19/x2); or shortbow 1d6 (20/x3)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialAttacks>Pipes</SpecialAttacks>
+  <Spells known="doom,doom,doom,doom,doom,"></Spells>
   <Saves Fort="2" Ref="5" Will="5">Fort +2, Ref +5, Will +5</Saves>
   <Abilities Str="10" Dex="13" Con="12" Int="12" Wis="13" Cha="13">Str 10, Dex 13, Con 12, Int 12, Wis 13, Cha 13</Abilities>
   <Skills>Bluff +9, Hide +13, Listen +15, Move Silently +13,Perform +9, Spot +15</Skills>
@@ -6355,7 +6366,7 @@ armor. Always moves silently.</p>
 </Monster>
 <Monster id="srd:ShadowMastiff">
 <Name>Shadow Mastiff</Name>
-<Avatar Name="dog" Image="shadowmastiff"></Avatar>
+<Avatar  Image="shadowmastiff"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="outsider" Subtypes="evil">Medium-Size Outsider (Evil)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="30">4d8+12 (30)</HitDice>
@@ -6366,11 +6377,12 @@ armor. Always moves silently.</p>
   <Damage>Bite 1d6+4 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialAttacks>Bay, trip</SpecialAttacks>
+  <Spells known="doom,doom,doom,doom,doom,"></Spells>
   <SpecialQualities>Shadow blend, scent</SpecialQualities>
   <Saves Fort="7" Ref="5" Will="5">Fort +7, Ref +5, Will +5</Saves>
   <Abilities Str="17" Dex="13" Con="17" Int="4" Wis="12" Cha="13">Str 17, Dex 13, Con 17, Int 4, Wis 12, Cha 13</Abilities>
   <Skills>Listen +8, Spot +8, Wilderness Lore +7*</Skills>
-  <Feats>Dodge, Improved Initiative</Feats>
+  <Feats>Dodge, Improved Initiative, improved trip</Feats>
   <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="desert,forest,hill,marsh,mountains,plains,underground">Any land and underground</ClimateAndTerrain>
   <Organization>1-2, 5-12</Organization>
   <ChallengeRating Value="5">5</ChallengeRating>
@@ -6588,7 +6600,7 @@ command given.</p>
 </Monster>
 <Monster id="srd:ShockerLizard">
 <Name>Shocker Lizard</Name>
-<Avatar Name="dog" Image="shockerlizard"></Avatar>
+<Avatar  Image="shockerlizard"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="magical beast">Small Magical Beast</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="13">2d10+2 (13)</HitDice>
@@ -6599,6 +6611,7 @@ command given.</p>
   <Damage>Bite 1d4 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialAttacks>Stunning shock, lethal shock</SpecialAttacks>
+  <Touch name="Stunning shock" damage="2d8" save="12"></Touch>
   <SpecialQualities>Electricity sense, electricity immunity</SpecialQualities>
   <Saves Fort="3" Ref="5" Will="1">Fort +3, Ref +5, Will +1</Saves>
   <Abilities Str="10" Dex="15" Con="13" Int="5" Wis="12" Cha="6">Str 10, Dex 15, Con 13, Int 5, Wis 12, Cha 6</Abilities>
@@ -6651,7 +6664,7 @@ checks due to their coloration.</p>
 </Monster>
 <Monster id="srd:Skum">
 <Name>Skum</Name>
-<Avatar Name="dog" Image="skum"></Avatar>
+<Avatar  Image="skum"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="aberration" Subtypes="aquatic">Medium-Size Aberration (Aquatic)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="11">2d8+2 (11)</HitDice>
@@ -7833,7 +7846,7 @@ tracking by scent.</p>
 </Monster>
 <Monster id="srd:Worg">
 <Name>Worg</Name>
-<Avatar Name="dog" Image="worg"></Avatar>
+<Avatar  Image="worg"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="magical beast">Medium-Size Magical Beast</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="30">4d10+8 (30)</HitDice>
@@ -7848,7 +7861,7 @@ tracking by scent.</p>
   <Saves Fort="6" Ref="6" Will="3">Fort +6, Ref +6, Will +3</Saves>
   <Abilities Str="17" Dex="15" Con="15" Int="6" Wis="14" Cha="10">Str 17, Dex 15, Con 15, Int 6, Wis 14, Cha 10</Abilities>
   <Skills>Hide +7, Listen +9, Move Silently +7, Spot +9, WildernessLore +2*</Skills>
-  <Feats>Alertness</Feats>
+  <Feats>Alertness,improved trip</Feats>
   <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="forest,hill,mountains,plains">Any forest, hill, plains, and mountains</ClimateAndTerrain>
   <Organization>1-2, 6-11</Organization>
   <ChallengeRating Value="2">2</ChallengeRating>
@@ -8021,7 +8034,7 @@ flying during daylight hours.</p>
 </Monster>
 <Monster id="srd:Xill">
 <Name>Xill</Name>
-<Avatar Name="dog" Image="xill"></Avatar>
+<Avatar  Image="xill"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="outsider" Subtypes="evil,lawful">Medium-Size Outsider (Evil, Lawful)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="32">5d8+10 (32)</HitDice>
@@ -8032,11 +8045,12 @@ flying during daylight hours.</p>
   <Damage>a short sword 1d6+2 (19/x2), another short sword 1d6+1 (19/x2), a claw 1d4+1 (20/x2); another claw 1d4+2 (20/x2), longbow 1d8 (20/x3)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialAttacks>Improved grab, paralysis, implant</SpecialAttacks>
+  <Spells known="hold monster,"></Spells>
   <SpecialQualities>SR 21, planewalk</SpecialQualities>
   <Saves Fort="6" Ref="7" Will="5">Fort +6, Ref +7, Will +5</Saves>
   <Abilities Str="15" Dex="16" Con="15" Int="12" Wis="12" Cha="11">Str 15, Dex 16, Con 15, Int 12, Wis 12, Cha 11</Abilities>
   <Skills>Escape Artist +11, Intuit Direction +6, Listen +9, MoveSilently +11, Spot +9, Tumble +11</Skills>
-  <Feats>Improved Initiative, Multiweapon Fighting</Feats>
+  <Feats>Improved Initiative, Multiweapon Fighting,improved grapple,</Feats>
   <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="desert,forest,hill,marsh,mountains,plains,underground">Any land and underground</ClimateAndTerrain>
   <Organization>1-5</Organization>
   <ChallengeRating Value="6">6</ChallengeRating>
@@ -8099,12 +8113,12 @@ attempt (successful or not) deals 1d4 points of damage to the
 patient.</p>
 </SpecialAbility>
 </SpecialAbilities>
-<Feats>
+<!--Feats>
 <p>Feats: A xill receives the Multiweapon Fighting feat as a
 bonus feat. With its Multidexterity [removed, not srd] and Multiweapon Fighting
 feats, it can attack with all its arms at no penalty as a racial
 ability.</p>
-</Feats>
+</Feats-->
 <Characters>
 <p>Xill clerics can choose any two of the following domains:
 Evil, Law, Strength, and Travel.</p>
@@ -8113,7 +8127,7 @@ Evil, Law, Strength, and Travel.</p>
 </Monster>
 <Monster id="srd:YethHound">
 <Name>Yeth Hound</Name>
-<Avatar Name="dog" Image="yethhound"></Avatar>
+<Avatar  Image="yethhound"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="outsider" Subtypes="evil">Medium-Size Outsider (Evil)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="19">3d8+6 (19)</HitDice>
@@ -8128,7 +8142,7 @@ Evil, Law, Strength, and Travel.</p>
   <Saves Fort="5" Ref="5" Will="5">Fort +5, Ref +5, Will +5</Saves>
   <Abilities Str="17" Dex="15" Con="15" Int="6" Wis="14" Cha="10">Str 17, Dex 15, Con 15, Int 6, Wis 14, Cha 10</Abilities>
   <Skills>Listen +8, Spot +8, Wilderness Lore +8*</Skills>
-  <Feats>Improved Initiative</Feats>
+  <Feats>Improved Initiative,improved trip,</Feats>
   <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="desert,forest,hill,marsh,mountains,plains,underground">Any land and underground</ClimateAndTerrain>
   <Organization>1-2, 6-11</Organization>
   <ChallengeRating Value="3">3</ChallengeRating>
@@ -8250,7 +8264,7 @@ to all saves.</p>
 </Monster>
 <Monster id="srd:AnimalApe">
 <Name>Animal:Ape</Name>
-<Avatar Name="dog" Image="ape"></Avatar>
+<Avatar  Image="ape"></Avatar>
 <StatBlock>
   <SizeAndType Size="large" Type="animal">Large Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="26">4d8+8 (26)</HitDice>
@@ -8277,7 +8291,7 @@ to all saves.</p>
 </Monster>
 <Monster id="srd:AnimalBaboon">
 <Name>Animal:Baboon</Name>
-<Avatar Name="dog" Image="baboon"></Avatar>
+<Avatar  Image="baboon"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="animal">Medium-Size Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="5">1d8+1 (5)</HitDice>
@@ -8377,7 +8391,7 @@ checks. These bonuses are lost if Blindsight is negated.</p>
 </Monster>
 <Monster id="srd:AnimalBearBlack">
 <Name>Animal:Black bear</Name>
-<Avatar Name="dog" Image="blackbear"></Avatar>
+<Avatar  Image="blackbear"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="animal">Medium-Size Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="19">3d8+6 (19)</HitDice>
@@ -8501,7 +8515,7 @@ halves the damage.</p>
 </Monster>
 <Monster id="srd:AnimalBoar">
 <Name>Animal:Boar</Name>
-<Avatar Name="dog" Image="boar"></Avatar>
+<Avatar  Image="boar"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="animal">Medium-Size Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="22">3d8+9 (22)</HitDice>
@@ -8600,7 +8614,7 @@ grass or heavy undergrowth, the Hide bonus rises to +8.</p>
 </Monster>
 <Monster id="srd:AnimalCheetah">
 <Name>Animal:Cheetah</Name>
-<Avatar Name="dog" Image="cheetah"></Avatar>
+<Avatar  Image="cheetah"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="animal">Medium-Size Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="19">3d8+6 (19)</HitDice>
@@ -8615,7 +8629,7 @@ grass or heavy undergrowth, the Hide bonus rises to +8.</p>
   <Saves Fort="5" Ref="7" Will="2">Fort +5, Ref +7, Will +2</Saves>
   <Abilities Str="16" Dex="19" Con="15" Int="2" Wis="12" Cha="6">Str 16, Dex 19, Con 15, Int 2, Wis 12, Cha 6</Abilities>
   <Skills>Hide +7, Listen +5, Move Silently +8, Spot +5</Skills>
-  <Feats>Weapon Finesse (bite), Weapon Finesse (claw)</Feats>
+  <Feats>Weapon Finesse (bite), Weapon Finesse (claw),improved trip,</Feats>
   <ClimateAndTerrain Climate="warm" Terrain="plains">Warm plains</ClimateAndTerrain>
   <Organization>1-5</Organization>
   <ChallengeRating Value="2">2</ChallengeRating>
@@ -8642,7 +8656,7 @@ to move ten times its normal speed (500 feet).</p>
 </Monster>
 <Monster id="srd:AnimalCrocodile">
 <Name>Animal:Crocodile</Name>
-<Avatar Name="dog" Image="crocodile"></Avatar>
+<Avatar  Image="crocodile"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="animal">Medium-Size Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="22">3d8+9 (22)</HitDice>
@@ -8713,7 +8727,7 @@ cousins.</p>
 </Monster>
 <Monster id="srd:AnimalDog">
 <Name>Animal:Dog</Name>
-<Avatar Name="dog" Image="dog"></Avatar>
+<Avatar  Image="dog"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="animal">Small Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="6">1d8+2 (6)</HitDice>
@@ -8743,7 +8757,7 @@ checks when tracking by scent.</p>
 </Monster>
 <Monster id="srd:AnimalDogRiding">
 <Name>Animal:Riding dog</Name>
-<Avatar Name="dog" Image="ridingdog"></Avatar>
+<Avatar  Image="ridingdog"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="animal">Medium-Size Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="13">2d8+4 (13)</HitDice>
@@ -8783,7 +8797,7 @@ pounds. A riding dog can drag 1,500 pounds.</p>
 </Monster>
 <Monster id="srd:AnimalDonkey">
 <Name>Animal:Donkey</Name>
-<Avatar Name="dog" Image="donkey"></Avatar>
+<Avatar  Image="donkey"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="animal">Medium-Size Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="11">2d8+2 (11)</HitDice>
@@ -8817,7 +8831,7 @@ pounds. A donkey can drag 750 pounds.</p>
 </Monster>
 <Monster id="srd:AnimalEagle">
 <Name>Animal:Eagle</Name>
-<Avatar Name="dog" Image="eagle"></Avatar>
+<Avatar  Image="eagle"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="animal">Small Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="5">1d8+1 (5)</HitDice>
@@ -9048,7 +9062,7 @@ pounds. A light warhorse can drag 3,450 pounds.</p>
 </Monster>
 <Monster id="srd:AnimalLeopard">
 <Name>Animal:Leopard</Name>
-<Avatar Name="dog" Image="leopard"></Avatar>
+<Avatar  Image="leopard"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="animal">Medium-Size Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="19">3d8+6 (19)</HitDice>
@@ -9063,7 +9077,7 @@ pounds. A light warhorse can drag 3,450 pounds.</p>
   <Saves Fort="5" Ref="7" Will="2">Fort +5, Ref +7, Will +2</Saves>
   <Abilities Str="16" Dex="19" Con="15" Int="2" Wis="12" Cha="6">Str 16, Dex 19, Con 15,  Int 2, Wis 12, Cha 6</Abilities>
   <Skills>Balance +12, Climb +11, Hide +9*, Listen +6, Move Silently +9, Spot +6</Skills>
-  <Feats>Weapon Finesse (bite), Weapon Finesse (claw)</Feats>
+  <Feats>Weapon Finesse (bite), Weapon Finesse (claw),improved grapple</Feats>
   <ClimateAndTerrain Climate="warm" Terrain="forest,plains">Warm forest and plains</ClimateAndTerrain>
   <Organization>1-2</Organization>
   <ChallengeRating Value="2">2</ChallengeRating>
@@ -9181,7 +9195,7 @@ and receive a +8 bonus to Balance checks.</p>
 </Monster>
 <Monster id="srd:AnimalLizardGiant">
 <Name>Animal:Giant lizard</Name>
-<Avatar Name="dog" Image="giantlizard"></Avatar>
+<Avatar  Image="giantlizard"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="animal">Medium-Size Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="22">3d8+9 (22)</HitDice>
@@ -9275,7 +9289,7 @@ pounds. A mule can drag 3,450 pounds.</p>
 </Monster>
 <Monster id="srd:AnimalOctopus">
 <Name>Animal:Octopus</Name>
-<Avatar Name="dog" Image="octopus"></Avatar>
+<Avatar  Image="octopus"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="animal">Small Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="9">2d8 (9)</HitDice>
@@ -9290,7 +9304,7 @@ pounds. A mule can drag 3,450 pounds.</p>
   <Saves Fort="3" Ref="6" Will="1">Fort +3, Ref +6, Will +1</Saves>
   <Abilities Str="12" Dex="17" Con="11" Int="2" Wis="12" Cha="3">Str 12, Dex 17, Con 11,  Int 2, Wis 12, Cha 3</Abilities>
   <Skills>Hide +15, Listen +5, Spot +5</Skills>
-  <Feats>Weapon Finesse (arms), Weapon Finesse (bite)</Feats>
+  <Feats>Weapon Finesse (arms), Weapon Finesse (bite),improved grapple,</Feats>
   <ClimateAndTerrain Climate="temperate,warm" Terrain="aquatic">Temperate and warm aquatic</ClimateAndTerrain>
   <Organization>1</Organization>
   <ChallengeRating Value="1">1</ChallengeRating>
@@ -9416,7 +9430,7 @@ Spot checks in dusk and darkness.</p>
 </Monster>
 <Monster id="srd:AnimalPony">
 <Name>Animal:Pony</Name>
-<Avatar Name="dog" Image="pony"></Avatar>
+<Avatar  Image="pony"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="animal">Medium-Size Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="11">2d8+2 (11)</HitDice>
@@ -9447,7 +9461,7 @@ pony can drag 1,125 pounds.</p>
 </Monster>
 <Monster id="srd:AnimalPonyWar">
 <Name>Animal:War Pony</Name>
-<Avatar Name="dog" Image="warpony"></Avatar>
+<Avatar  Image="warpony"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="animal">Medium-Size Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="13">2d8+4 (13)</HitDice>
@@ -10329,7 +10343,7 @@ checks. *These bonuses are lost if Blindsight is negated.</p>
 </Monster>
 <Monster id="srd:AnimalWolf">
 <Name>Animal:Wolf</Name>
-<Avatar Name="dog" Image="wolf"></Avatar>
+<Avatar  Image="wolf"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="animal">Medium-Size Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="13">2d8+4 (13)</HitDice>
@@ -10344,7 +10358,7 @@ checks. *These bonuses are lost if Blindsight is negated.</p>
   <Saves Fort="5" Ref="5" Will="1">Fort +5, Ref +5, Will +1</Saves>
   <Abilities Str="13" Dex="15" Con="15" Int="2" Wis="12" Cha="6">Str 13, Dex 15, Con 15, Int 2, Wis 12, Cha 6</Abilities>
   <Skills>Hide +3, Listen +6, Move Silently +4, Spot +4, Wilderness Lore +1*</Skills>
-  <Feats>Weapon Finesse (bite)</Feats>
+  <Feats>Weapon Finesse (bite),improved trip,</Feats>
   <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="forest,hill,mountains,plains">Any forest, hill, plains, and mountains</ClimateAndTerrain>
   <Organization>1-2, 7-16</Organization>
   <ChallengeRating Value="1">1</ChallengeRating>
@@ -10370,7 +10384,7 @@ checks when tracking by scent.</p>
 </Monster>
 <Monster id="srd:AnimalWolverine">
 <Name>Animal:Wolverine</Name>
-<Avatar Name="dog" Image="wolverine"></Avatar>
+<Avatar  Image="wolverine"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="animal">Medium-Size Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="25">3d8+12 (25)</HitDice>
@@ -10407,7 +10421,7 @@ cannot end its rage voluntarily.</p>
 </Monster>
 <Monster id="srd:VerminGiantAntWorker">
 <Name>Vermin:Giant Ant Worker</Name>
-<Avatar Name="dog" Image="giantantworker"></Avatar>
+<Avatar  Image="giantantworker"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="vermin">Medium-Size Vermin</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="9">2d8 (9)</HitDice>
@@ -10454,7 +10468,7 @@ piercing damage and 1d4 points of acid damage.</p>
 </Monster>
 <Monster id="srd:VerminGiantAntSoldier">
 <Name>Vermin:Giant Ant Soldier</Name>
-<Avatar Name="dog" Image="giantantsoldier"></Avatar>
+<Avatar  Image="giantantsoldier"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="vermin">Medium-Size Vermin</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="11">2d8+2 (11)</HitDice>
@@ -10587,7 +10601,7 @@ stinger in the creature. The bee then dies.</p>
 </Monster>
 <Monster id="srd:VerminGiantBeetleBombardier">
 <Name>Vermin:Giant Bombardier Beetle</Name>
-<Avatar Name="dog" Image="giantbombardierbeetle"></Avatar>
+<Avatar  Image="giantbombardierbeetle"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="vermin">Medium-Size Vermin</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="13">2d8+4 (13)</HitDice>
@@ -12834,7 +12848,7 @@ to Fortitude saves against poison.</p>
 </Monster>
 <Monster id="srd:CelestialHoundArchon">
 <Name>Celestial:Hound Archon</Name>
-<Avatar Name="dog" Image="houndarchon"></Avatar>
+<Avatar  Image="houndarchon"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="outsider" Subtypes="good,lawful">Medium-Size Outsider (Good, Lawful)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="33">6d8+6 (33)</HitDice>
@@ -12845,7 +12859,7 @@ to Fortitude saves against poison.</p>
   <Damage>Bite 1d8+2 (20/x2), slam 1d4+1 (20/x2); greatsword 2d6+2 (19/x2), bite 1d8+1 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialAttacks>Spell-like abilities, aura of menace</SpecialAttacks>
-  <Spells cr="0.9" casterlevel="6">5 aid, 5 continual flame, 5 detect evil, 5 message</Spells>
+  <Spells cr="0.9" casterlevel="6" known="doom,doom,doom,doom,doom,">5 aid, 5 continual flame, 5 detect evil, 5 message</Spells>
   <SpecialQualities>Damage reduction 10/+1, SR 16, scent, alternate form, magic circle against evil, electricity and petrification immunity, teleport, tongues, poison saves, keen vision</SpecialQualities>
   <Saves Fort="6" Ref="5" Will="6">Fort +6, Ref +5, Will +6</Saves>
   <Abilities Str="15" Dex="10" Con="13" Int="10" Wis="13" Cha="12">Str 15, Dex 10, Con 13, Int 10, Wis 13, Cha 12</Abilities>
@@ -12923,7 +12937,7 @@ to Fortitude saves against poison.</p>
 </Monster>
 <Monster id="srd:CelestialAvoralGuardinal">
 <Name>Celestial:Avoral (Guardinal)</Name>
-<Avatar Name="dog" Image="avoral"></Avatar>
+<Avatar  Image="avoral"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="outsider" Subtypes="good">Medium-Size Outsider (Good)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="38">7d8+7 (38)</HitDice>
@@ -12934,7 +12948,7 @@ to Fortitude saves against poison.</p>
   <Damage>Claw 2d6+2 (20/x2); wing 2d8+2 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialAttacks>Spell-like abilities, fear aura</SpecialAttacks>
-  <Spells cr="1.85" casterlevel="8">5 aid, 5 blur (self only), 5 command (DC 14), 5 detect magic, 5 dimension door, 5 dispel magic, 5 gust of wind (DC 15), 5 hold person (DC 16), 5 light, 5 magic circle against evil (self only), 5 magic missile, 5 see invisibility, 5 lightning bolt (DC 16)</Spells>
+  <Spells known="doom,doom,doom,doom,doom,cure serious wounds,cure serious wounds," cr="0.6" casterlevel="8">5 aid, 5 blur (self only), 5 command (DC 14), 5 detect magic, 5 dimension door, 5 dispel magic, 5 gust of wind (DC 15), 5 hold person (DC 16), 5 light, 5 magic circle against evil (self only), 5 magic missile, 5 see invisibility, 5 lightning bolt (DC 16)</Spells>
   <SpecialQualities>Damage reduction 10/+1, SR 25, lay on hands, animal telepathy, true seeing, electricity and petrification immunity, cold and acid resistance 20, tongues, poison saves, keen vision</SpecialQualities>
   <Saves Fort="6" Ref="8" Will="8">Fort +6, Ref +8, Will +8</Saves>
   <Abilities Str="15" Dex="17" Con="12" Int="15" Wis="16" Cha="16">Str 15, Dex 17, Con 12, Int 15, Wis 16, Cha 16</Abilities>
@@ -13123,7 +13137,7 @@ to Fortitude saves against poison.</p>
 </Monster>
 <Monster id="srd:CelestialTrumpetArchon">
 <Name>Celestial:Trumpet Archon</Name>
-<Avatar Name="dog" Image="trumpetarchon"></Avatar>
+<Avatar  Image="trumpetarchon"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="outsider" Subtypes="good,lawful">Medium-Size Outsider (Good, Lawful)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="66">12d8+12 (66)</HitDice>
@@ -13134,7 +13148,7 @@ to Fortitude saves against poison.</p>
   <Damage>+4 greatsword 2d6+11 (19/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialAttacks>Spell-like abilities, spells, trumpet, aura of menace</SpecialAttacks>
-  <Spells cr="6.2" casterlevel="12">5 detect evil, 5 continual flame, 5 message</Spells>
+  <Spells cr="4" casterlevel="12" known="hold monster,hold monster,hold monster,hold monster,hold monster,doom,doom,doom,doom,doom,">5 detect evil, 5 continual flame, 5 message</Spells>
   <SpecialQualities>Damage reduction 10/+1, SR 29, magic circle against evil, electricity and petrification immunity, teleport, tongues, poison saves, keen vision</SpecialQualities>
   <Saves Fort="9" Ref="11" Will="11">Fort +9, Ref +11, Will +11</Saves>
   <Abilities Str="20" Dex="17" Con="13" Int="16" Wis="16" Cha="16">Str 20, Dex 17, Con 13, Int 16, Wis 16, Cha 16</Abilities>
@@ -13477,7 +13491,7 @@ to Fortitude saves against poison.</p>
 </Monster>
 <Monster id="srd:DemonDretchTanaraposri">
 <Name>Demon (Tanar'ri):Dretch</Name>
-<Avatar Name="dog" Image="dretch"></Avatar>
+<Avatar  Image="dretch"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="outsider" Subtypes="chaotic,evil">Small Outsider (Chaotic, Evil)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="9">2d8 (9)</HitDice>
@@ -13488,9 +13502,8 @@ to Fortitude saves against poison.</p>
   <Damage>Claw 1d4 (20/x2), bite 1d4 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialAttacks>Spell-like abilities, summon tanar'ri</SpecialAttacks>
-  <Spells casterlevel="2">1 scare (DC 12), 1 stinking cloud (DC 13)</Spells>
-  <SpecialQualities>Damage reduction 5/silver, SR 5, tanar'ri qualities, cold fire and acid
-resistance 20</SpecialQualities>
+  <Spells casterlevel="2" known="deeper darkness,deeper darkness,deeper darkness,deeper darkness,deeper darkness,doom,doom,doom,doom,doom,summon dretch,">1 scare (DC 12), 1 stinking cloud (DC 13)</Spells>
+  <SpecialQualities>Damage reduction 5/silver, SR 5, tanar'ri qualities, cold fire and acid resistance 20</SpecialQualities>
   <Saves Fort="3" Ref="3" Will="3">Fort +3, Ref +3, Will +3</Saves>
   <Abilities Str="10" Dex="10" Con="10" Int="5" Wis="11" Cha="11">Str 10, Dex 10, Con 10, Int 5, Wis 11, Cha 11</Abilities>
   <Feats>Multiattack</Feats>
@@ -13594,7 +13607,7 @@ from holy and blessed weapons.</p>
 </Monster>
 <Monster id="srd:DemonSuccubusTanaraposri">
 <Name>Demon (Tanar'ri):Succubus</Name>
-<Avatar Name="dog" Image="succubus"></Avatar>
+<Avatar  Image="succubus"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="outsider" Subtypes="chaotic,evil">Medium-Size Outsider (Chaotic, Evil)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="33">6d8+6 (33)</HitDice>
@@ -13605,12 +13618,12 @@ from holy and blessed weapons.</p>
   <Damage>Claw 1d3+1 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialAttacks>Spell-like abilities, energy drain, summon tanar'ri</SpecialAttacks>
-  <Spells cr="1.4">5 charm monster (DC 22), 5 detect good, 5 detect thoughts (DC 20), 5 ethereal jaunt, 5 suggestion (DC 21), 5 greater teleport</Spells>
+  <Spells known="deeper darkness,deeper darkness,deeper darkness,deeper darkness,deeper darkness,doom,doom,doom,doom,doom,blink,blink,blink,blink,blink,summon dretch,">5 charm monster (DC 22), 5 detect good, 5 detect thoughts (DC 20), 5 ethereal jaunt, 5 suggestion (DC 21), 5 greater teleport</Spells>
   <SpecialQualities>Damage reduction 20/+2, SR 12, tanar'ri qualities, alternate form, tongues, cold fire and acid resistance 20</SpecialQualities>
   <Saves Fort="6" Ref="6" Will="7">Fort +6, Ref +6, Will +7</Saves>
   <Abilities Str="13" Dex="13" Con="13" Int="16" Wis="14" Cha="20">Str 13, Dex 13, Con 13, Int 16, Wis 14, Cha 20</Abilities>
   <Skills>Bluff +11, Concentration +7, Disguise +11*, Escape Artist +7, Hide +7, Knowledge (any one) +9, Listen +16, Move Silently +7, Ride +7, Search +9, Spot +16</Skills>
-  <Feats>Dodge, Mobility</Feats>
+  <Feats>Dodge, Mobility,improved grapple,</Feats>
   <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="desert,forest,hill,marsh,mountains,plains,underground">Any land and underground</ClimateAndTerrain>
   <Organization>1</Organization>
   <ChallengeRating Value="9">9</ChallengeRating>
@@ -14392,7 +14405,7 @@ checks.</p>
 </Monster>
 <Monster id="srd:DevilLemureBaatezu">
 <Name>Devil:Lemure (Baatezu)</Name>
-<Avatar Name="dog" Image="lemure"></Avatar>
+<Avatar  Image="lemure"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="outsider" Subtypes="evil,lawful">Medium-Size Outsider (Evil, Lawful)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="9">2d8 (9)</HitDice>
@@ -15429,7 +15442,7 @@ Diminutive, or thirty-two Fine or smaller opponents.</p>
 </Monster>
 <Monster id="srd:DireAnimalRat">
 <Name>Dire Animal:Dire rat</Name>
-<Avatar Name="dog" Image="direrat"></Avatar>
+<Avatar  Image="direrat"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="animal">Small Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="5">1d8+1 (5)</HitDice>
@@ -15465,7 +15478,7 @@ incubation period 1d3 days; damage 1d3 temporary Dexterity and
 </Monster>
 <Monster id="srd:DireAnimalWeasel">
 <Name>Dire Animal:Dire weasel</Name>
-<Avatar Name="dog" Image="direweasel"></Avatar>
+<Avatar  Image="direweasel"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="animal">Medium-Size Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="13">3d8 (13)</HitDice>
@@ -15480,7 +15493,7 @@ incubation period 1d3 days; damage 1d3 temporary Dexterity and
   <Saves Fort="3" Ref="7" Will="4">Fort +3, Ref +7, Will +4</Saves>
   <Abilities Str="14" Dex="19" Con="10" Int="2" Wis="12" Cha="11">Str 14, Dex 19, Con 10, Int 2, Wis 12, Cha 11</Abilities>
   <Skills>Hide +9, Move Silently +10, Spot +5</Skills>
-  <Feats>Weapon Finesse (bite)</Feats>
+  <Feats>Weapon Finesse (bite),improved grapple,</Feats>
   <ClimateAndTerrain Climate="temperate" Terrain="forest,hill,mountains,plains,underground">Temperate forest, hill, mountains, plains, and underground</ClimateAndTerrain>
   <Organization>1-2</Organization>
   <ChallengeRating Value="2">2</ChallengeRating>
@@ -15507,7 +15520,7 @@ temporary Constitution damage each round it remains attached.</p>
 </Monster>
 <Monster id="srd:DireAnimalBadger">
 <Name>Dire Animal:Dire badger</Name>
-<Avatar Name="dog" Image="direbadger"></Avatar>
+<Avatar  Image="direbadger"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="animal">Medium-Size Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="25">3d8+12 (25)</HitDice>
@@ -15580,7 +15593,7 @@ checks. *These bonuses are lost if blindsight is negated.</p>
 </Monster>
 <Monster id="srd:DireAnimalApe">
 <Name>Dire Animal:Dire ape</Name>
-<Avatar Name="dog" Image="ape"></Avatar>
+<Avatar  Image="ape"></Avatar>
 <StatBlock>
   <SizeAndType Size="large" Type="animal">Large Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="32">5d8+10 (32)</HitDice>
@@ -15615,7 +15628,7 @@ automatically deals an additional 2d6+12 points of damage.</p>
 </Monster>
 <Monster id="srd:DireAnimalWolverine">
 <Name>Dire Animal:Dire wolverine</Name>
-<Avatar Name="dog" Image="wolverine"></Avatar>
+<Avatar  Image="wolverine"></Avatar>
 <StatBlock>
   <SizeAndType Size="large" Type="animal">Large Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="42">5d8+20 (42)</HitDice>
@@ -15917,7 +15930,7 @@ to a mile.</p>
 </Monster>
 <Monster id="srd:DwarfHillDwarf">
 <Name>Dwarf:Hill dwarf</Name>
-<Avatar Name="dog" Image="hilldwarf"></Avatar>
+<Avatar  Image="hilldwarf"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="dwarf">Medium-Size Humanoid (Dwarf)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="5">1d8+1 (5)</HitDice>
@@ -15985,7 +15998,7 @@ metal.</p>
 </Monster>
 <Monster id="srd:DwarfDeepDwarf">
 <Name>Dwarf:Deep Dwarf</Name>
-<Avatar Name="dog" Image="deepdwarf"></Avatar>
+<Avatar  Image="deepdwarf"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="dwarf">Medium-Size Humanoid (Dwarf)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="5">1d8+1 (5)</HitDice>
@@ -16136,7 +16149,7 @@ metal.</p>
 </Monster>
 <Monster id="srd:DwarfDuergar">
 <Name>Dwarf:Duergar</Name>
-<Avatar Name="dog" Image="duergar"></Avatar>
+<Avatar  Image="duergar"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="dwarf">Medium-Size Humanoid (Dwarf)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="5">1d8+1 (5)</HitDice>
@@ -16220,7 +16233,7 @@ metal.</p>
 </Monster>
 <Monster id="srd:DwarfMountainDwarf">
 <Name>Dwarf:Mountain Dwarf</Name>
-<Avatar Name="dog" Image="mountaindwarf"></Avatar>
+<Avatar  Image="mountaindwarf"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="dwarf">Medium-Size Humanoid (Dwarf)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="5">1d8+1 (5)</HitDice>
@@ -16284,7 +16297,7 @@ metal.</p>
 </Monster>
 <Monster id="srd:ElementalAirElementalSmall">
 <Name>Elemental:Air Elemental, Small</Name>
-<Avatar Name="dog" Image="airelemental"></Avatar>
+<Avatar  Image="airelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="elemental" Subtypes="air">Small Elemental (Air)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="9">2d8 (9)</HitDice>
@@ -16369,7 +16382,7 @@ to the Reflex save DC).</p>
 </Monster>
 <Monster id="srd:ElementalAirElementalMedium">
 <Name>Elemental:Air Elemental, Medium</Name>
-<Avatar Name="dog" Image="airelemental"></Avatar>
+<Avatar  Image="airelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="elemental" Subtypes="air">Medium-Size Elemental (Air)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="26">4d8+8 (26)</HitDice>
@@ -16454,7 +16467,7 @@ to the Reflex save DC).</p>
 </Monster>
 <Monster id="srd:ElementalAirElementalLarge">
 <Name>Elemental:Air Elemental, Large</Name>
-<Avatar Name="dog" Image="airelemental"></Avatar>
+<Avatar  Image="airelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="large" Type="elemental" Subtypes="air">Large Elemental (Air)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="60">8d8+24 (60)</HitDice>
@@ -16539,7 +16552,7 @@ to the Reflex save DC).</p>
 </Monster>
 <Monster id="srd:ElementalAirElementalHuge">
 <Name>Elemental:Air Elemental, Huge</Name>
-<Avatar Name="dog" Image="airelemental"></Avatar>
+<Avatar  Image="airelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="huge" Type="elemental" Subtypes="air">Huge Elemental (Air)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="136">16d8+64 (136)</HitDice>
@@ -16625,7 +16638,7 @@ to the Reflex save DC).</p>
 </Monster>
 <Monster id="srd:ElementalAirElementalGreater">
 <Name>Elemental:Air Elemental, Greater</Name>
-<Avatar Name="dog" Image="airelemental"></Avatar>
+<Avatar  Image="airelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="huge" Type="elemental" Subtypes="air">Huge Elemental (Air)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="178">21d8+84 (178)</HitDice>
@@ -16710,7 +16723,7 @@ to the Reflex save DC).</p>
 </Monster>
 <Monster id="srd:ElementalAirElementalElder">
 <Name>Elemental:Air Elemental, Elder</Name>
-<Avatar Name="dog" Image="airelemental"></Avatar>
+<Avatar  Image="airelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="huge" Type="elemental" Subtypes="air">Huge Elemental (Air)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="204">24d8+96 (204)</HitDice>
@@ -16795,7 +16808,7 @@ to the Reflex save DC).</p>
 </Monster>
 <Monster id="srd:ElementalEarthElementalSmall">
 <Name>Elemental:Earth Elemental, Small</Name>
-<Avatar Name="dog" Image="earthelemental"></Avatar>
+<Avatar  Image="earthelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="elemental" Subtypes="earth">Small Elemental (Earth)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="11">2d8+2 (11)</HitDice>
@@ -16849,7 +16862,7 @@ opposed Strength checks.</p>
 </Monster>
 <Monster id="srd:ElementalEarthElementalMedium">
 <Name>Elemental:Earth Elemental, Medium</Name>
-<Avatar Name="dog" Image="earthelemental"></Avatar>
+<Avatar  Image="earthelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="elemental" Subtypes="earth">Medium-Size Elemental (Earth)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="30">4d8+12 (30)</HitDice>
@@ -16904,7 +16917,7 @@ opposed Strength checks.</p>
 </Monster>
 <Monster id="srd:ElementalEarthElementalLarge">
 <Name>Elemental:Earth Elemental, Large</Name>
-<Avatar Name="dog" Image="earthelemental"></Avatar>
+<Avatar  Image="earthelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="large" Type="elemental" Subtypes="earth">Large Elemental (Earth)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="68">8d8+32 (68)</HitDice>
@@ -16959,7 +16972,7 @@ opposed Strength checks.</p>
 </Monster>
 <Monster id="srd:ElementalEarthElementalHuge">
 <Name>Elemental:Earth Elemental, Huge</Name>
-<Avatar Name="dog" Image="earthelemental"></Avatar>
+<Avatar  Image="earthelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="huge" Type="elemental" Subtypes="earth">Huge Elemental (Earth)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="152">16d8+80 (152)</HitDice>
@@ -17013,7 +17026,7 @@ opposed Strength checks.</p>
 </Monster>
 <Monster id="srd:ElementalEarthElementalGreater">
 <Name>Elemental:Earth Elemental, Greater</Name>
-<Avatar Name="dog" Image="earthelemental"></Avatar>
+<Avatar  Image="earthelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="huge" Type="elemental" Subtypes="earth">Huge Elemental (Earth)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="199">21d8+105 (199)</HitDice>
@@ -17068,7 +17081,7 @@ opposed Strength checks.</p>
 </Monster>
 <Monster id="srd:ElementalEarthElementalElder">
 <Name>Elemental:Earth Elemental, Elder</Name>
-<Avatar Name="dog" Image="earthelemental"></Avatar>
+<Avatar  Image="earthelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="huge" Type="elemental" Subtypes="earth">Huge Elemental (Earth)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="228">24d8+120 (228)</HitDice>
@@ -17123,7 +17136,7 @@ opposed Strength checks.</p>
 </Monster>
 <Monster id="srd:ElementalFireElementalSmall">
 <Name>Elemental:Fire Elemental, Small</Name>
-<Avatar Name="dog" Image="fireelemental"></Avatar>
+<Avatar  Image="fireelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="elemental" Subtypes="fire">Small Elemental (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="9">2d8 (9)</HitDice>
@@ -17177,7 +17190,7 @@ except on a successful save.</p>
 </Monster>
 <Monster id="srd:ElementalFireElementalMedium">
 <Name>Elemental:Fire Elemental, Medium</Name>
-<Avatar Name="dog" Image="fireelemental"></Avatar>
+<Avatar  Image="fireelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="elemental" Subtypes="fire">Medium-Size Elemental (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="26">4d8+8 (26)</HitDice>
@@ -17236,7 +17249,7 @@ except on a successful save.</p>
 </Monster>
 <Monster id="srd:ElementalFireElementalLarge">
 <Name>Elemental:Fire Elemental, Large</Name>
-<Avatar Name="dog" Image="fireelemental"></Avatar>
+<Avatar  Image="fireelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="large" Type="elemental" Subtypes="fire">Large Elemental (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="60">8d8+24 (60)</HitDice>
@@ -17294,7 +17307,7 @@ except on a successful save.</p>
 </Monster>
 <Monster id="srd:ElementalFireElementalHuge">
 <Name>Elemental:Fire Elemental, Huge</Name>
-<Avatar Name="dog" Image="fireelemental"></Avatar>
+<Avatar  Image="fireelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="huge" Type="elemental" Subtypes="fire">Huge Elemental (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="136">16d8+64 (136)</HitDice>
@@ -17352,7 +17365,7 @@ except on a successful save.</p>
 </Monster>
 <Monster id="srd:ElementalFireElementalGreater">
 <Name>Elemental:Fire Elemental, Greater</Name>
-<Avatar Name="dog" Image="fireelemental"></Avatar>
+<Avatar  Image="fireelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="huge" Type="elemental" Subtypes="fire">Huge Elemental (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="178">21d8+84 (178)</HitDice>
@@ -17410,7 +17423,7 @@ except on a successful save.</p>
 </Monster>
 <Monster id="srd:ElementalFireElementalElder">
 <Name>Elemental:Fire Elemental, Elder</Name>
-<Avatar Name="dog" Image="fireelemental"></Avatar>
+<Avatar  Image="fireelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="huge" Type="elemental" Subtypes="fire">Huge Elemental (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="204">24d8+96 (204)</HitDice>
@@ -17468,7 +17481,7 @@ except on a successful save.</p>
 </Monster>
 <Monster id="srd:ElementalWaterElementalSmall">
 <Name>Elemental:Water Elemental, Small</Name>
-<Avatar Name="dog" Image="waterelemental"></Avatar>
+<Avatar  Image="waterelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="elemental" Subtypes="water">Small Elemental (Water)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="11">2d8+2 (11)</HitDice>
@@ -17567,7 +17580,7 @@ to the Reflex save DC).</p>
 </Monster>
 <Monster id="srd:ElementalWaterElementalMedium">
 <Name>Elemental:Water Elemental, Medium</Name>
-<Avatar Name="dog" Image="waterelemental"></Avatar>
+<Avatar  Image="waterelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="elemental" Subtypes="water">Medium-Size Elemental (Water)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="30">4d8+12 (30)</HitDice>
@@ -17667,7 +17680,7 @@ to the Reflex save DC).</p>
 </Monster>
 <Monster id="srd:ElementalWaterElementalLarge">
 <Name>Elemental:Water Elemental, Large</Name>
-<Avatar Name="dog" Image="waterelemental"></Avatar>
+<Avatar  Image="waterelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="large" Type="elemental" Subtypes="water">Large Elemental (Water)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="68">8d8+32 (68)</HitDice>
@@ -17767,7 +17780,7 @@ to the Reflex save DC).</p>
 </Monster>
 <Monster id="srd:ElementalWaterElementalHuge">
 <Name>Elemental:Water Elemental, Huge</Name>
-<Avatar Name="dog" Image="waterelemental"></Avatar>
+<Avatar  Image="waterelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="huge" Type="elemental" Subtypes="water">Huge Elemental (Water)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="152">16d8+80 (152)</HitDice>
@@ -17867,7 +17880,7 @@ to the Reflex save DC).</p>
 </Monster>
 <Monster id="srd:ElementalWaterElementalGreater">
 <Name>Elemental:Water Elemental, Greater</Name>
-<Avatar Name="dog" Image="waterelemental"></Avatar>
+<Avatar  Image="waterelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="huge" Type="elemental" Subtypes="water">Huge Elemental (Water)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="199">21d8+105 (199)</HitDice>
@@ -17967,7 +17980,7 @@ to the Reflex save DC).</p>
 </Monster>
 <Monster id="srd:ElementalWaterElementalElder">
 <Name>Elemental:Water Elemental, Elder</Name>
-<Avatar Name="dog" Image="waterelemental"></Avatar>
+<Avatar  Image="waterelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="huge" Type="elemental" Subtypes="water">Huge Elemental (Water)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="228">24d8+120 (228)</HitDice>
@@ -18067,7 +18080,7 @@ to the Reflex save DC).</p>
 </Monster>
 <Monster id="srd:ElfHighElf">
 <Name>Elf:High Elf</Name>
-<Avatar Name="dog" Image="highelf"></Avatar>
+<Avatar  Image="highelf"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="elf">Medium-Size Humanoid (Elf)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="3">1d8-1 (3)</HitDice>
@@ -18130,7 +18143,7 @@ actively looking for it.</li>
 </Monster>
 <Monster id="srd:ElfHalfElf">
 <Name>Elf:Half Elf</Name>
-<Avatar Name="dog" Image="halfelf"></Avatar>
+<Avatar  Image="halfelf"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="elf">Medium-Size Humanoid (Elf)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="3">1d8-1 (3)</HitDice>
@@ -18192,7 +18205,7 @@ favored class.</p>
 </Monster>
 <Monster id="srd:ElfAquaticElf">
 <Name>Elf:Aquatic Elf</Name>
-<Avatar Name="dog" Image="aquaticelf"></Avatar>
+<Avatar  Image="aquaticelf"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="elf">Medium-Size Humanoid (Elf)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="3">1d8-1 (3)</HitDice>
@@ -18259,7 +18272,7 @@ actively looking for it.</li>
 </Monster>
 <Monster id="srd:ElfDrow">
 <Name>Elf:Drow</Name>
-<Avatar Name="dog" Image="drow"></Avatar>
+<Avatar  Image="drow"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="elf">Medium-Size Humanoid (Elf)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="3">1d8-1 (3)</HitDice>
@@ -18269,7 +18282,8 @@ actively looking for it.</li>
   <Attacks>Longsword +1 melee; or longbow +2 ranged</Attacks>
   <Damage>Longsword 1d8 (18/x2); or longbow 1d8 (19/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
-  <SpecialAttacks>Spell-like abilities</SpecialAttacks><Spells  casterlevel="1">1 dancing lights, 1 darkness, 1 faerie fire</Spells>
+  <SpecialAttacks>Spell-like abilities</SpecialAttacks>
+  <Spells casterlevel="1" known="deeper darkness,">1 dancing lights, 1 darkness, 1 faerie fire</Spells>
   <SpecialQualities>Darkvision, SR 11, elven traits, light blindness</SpecialQualities>
   <Saves Fort="1" Ref="1" Will="0">Fort +1, Ref +1, Will +0</Saves>
   <Abilities Str="10" Dex="13" Con="8" Int="13" Wis="11" Cha="9">Str 10, Dex 13, Con 8,  Int 13, Wis 11, Cha 9</Abilities>
@@ -18338,7 +18352,7 @@ the following domains: Chaos, Destruction, Evil, and Trickery.</p>
 </Monster>
 <Monster id="srd:ElfGrayElf">
 <Name>Elf:Gray Elf</Name>
-<Avatar Name="dog" Image="grayelf"></Avatar>
+<Avatar  Image="grayelf"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="elf">Medium-Size Humanoid (Elf)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="3">1d8-1 (3)</HitDice>
@@ -18403,7 +18417,7 @@ actively looking for it.</li>
 </Monster>
 <Monster id="srd:ElfWildElf">
 <Name>Elf:Wild Elf</Name>
-<Avatar Name="dog" Image="wildelf"></Avatar>
+<Avatar  Image="wildelf"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="elf">Medium-Size Humanoid (Elf)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="3">1d8-1 (3)</HitDice>
@@ -18468,7 +18482,7 @@ many are barbarians as well.</p>
 </Monster>
 <Monster id="srd:ElfWoodElf">
 <Name>Elf:Wood Elf</Name>
-<Avatar Name="dog" Image="woodelf"></Avatar>
+<Avatar  Image="woodelf"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid" Subtypes="elf">Medium-Size Humanoid (Elf)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="3">1d8-1 (3)</HitDice>
@@ -18532,7 +18546,7 @@ actively looking for it.</li>
 </Monster>
 <Monster id="srd:FormianWorker">
 <Name>Formian:Formian worker</Name>
-<Avatar Name="dog" Image="formianworker"></Avatar>
+<Avatar  Image="formianworker"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="outsider" Subtypes="lawful">Small Outsider (Lawful)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="5">1d8+1 (5)</HitDice>
@@ -18588,7 +18602,7 @@ immunity.</p>
 </Monster>
 <Monster id="srd:FormianWarrior">
 <Name>Formian:Formian Warrior</Name>
-<Avatar Name="dog" Image="formianwarrior"></Avatar>
+<Avatar  Image="formianwarrior"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="outsider" Subtypes="lawful">Medium-Size Outsider (Lawful)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="26">4d8+8 (26)</HitDice>
@@ -18637,7 +18651,7 @@ immunity.</p>
 </Monster>
 <Monster id="srd:FormianTaskmaster">
 <Name>Formian:Formian taskmaster</Name>
-<Avatar Name="dog" Image="formiantaskmaster"></Avatar>
+<Avatar  Image="formiantaskmaster"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="outsider" Subtypes="lawful">Medium-Size Outsider (Lawful)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="39">6d8+12 (39)</HitDice>
@@ -18648,7 +18662,7 @@ immunity.</p>
   <Damage>Sting 2d4+4 (20/x2), claw 1d6+2 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialAttacks>Hive mind, poison, dominate person, dominated creature</SpecialAttacks>
-  <Spells cr="0.27">3 dominate monster (caster level 10, Will DC 17)</Spells>
+  <Spells known="dominate monster,dominate monster,dominate monster,">3 dominate monster (caster level 10, Will DC 17)</Spells>
   <SpecialQualities>Poison petrification and cold immunity, fire electricity and sonic resistance 20, telepathy, SR 21</SpecialQualities>
   <Saves Fort="7" Ref="8" Will="8">Fort +7, Ref +8, Will +8</Saves>
   <Abilities Str="18" Dex="16" Con="14" Int="14" Wis="16" Cha="19">Str 18, Dex 16, Con 14, Int 14, Wis 16, Cha 19</Abilities>
@@ -18905,7 +18919,7 @@ Constitution.</p>
 </Monster>
 <Monster id="srd:GenieJanni">
 <Name>Genie:Janni</Name>
-<Avatar Name="dog" Image="janni"></Avatar>
+<Avatar  Image="janni"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="outsider">Medium-Size Outsider</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="33">6d8+6 (33)</HitDice>
@@ -19849,7 +19863,7 @@ Chaos, Good, Protection, and War.</p>
 </Monster>
 <Monster id="srd:GnomeRockGnome">
 <Name>Gnome:Rock Gnome</Name>
-<Avatar Name="dog" Image="rockgnome"></Avatar>
+<Avatar  Image="rockgnome"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="humanoid" Subtypes="gnome">Small Humanoid (Gnome)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="5">1d8+1 (5)</HitDice>
@@ -19931,7 +19945,7 @@ smell.</p>
 </Monster>
 <Monster id="srd:GnomeSvirfneblin">
 <Name>Gnome:Svirfneblin</Name>
-<Avatar Name="dog" Image="svirfneblin"></Avatar>
+<Avatar  Image="svirfneblin"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="humanoid" Subtypes="gnome">Small Humanoid (Gnome)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="5">1d8+1 (5)</HitDice>
@@ -20029,7 +20043,7 @@ which improves to +4 in darkened areas underground.</p>
 </Monster>
 <Monster id="srd:GnomeForestGnome">
 <Name>Gnome:Forest Gnome</Name>
-<Avatar Name="dog" Image="forestgnome"></Avatar>
+<Avatar  Image="forestgnome"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="humanoid" Subtypes="gnome">Small Humanoid (Gnome)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="5">1d8+1 (5)</HitDice>
@@ -20640,7 +20654,7 @@ weapons such as morningstars as bludgeoning weapons.)</p>
 </Monster>
 <Monster id="srd:HagGreenHag">
 <Name>Hag:Green Hag</Name>
-<Avatar Name="dog" Image="greenhag"></Avatar>
+<Avatar  Image="greenhag"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="monstrous humanoid">Medium-Size Monstrous Humanoid</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="49">9d8+9 (49)</HitDice>
@@ -20693,7 +20707,7 @@ animal found near their lairs.</p>
 </Monster>
 <Monster id="srd:HalflingLightfoot">
 <Name>Halfling:Lightfoot</Name>
-<Avatar Name="dog" Image="lightfoot"></Avatar>
+<Avatar  Image="lightfoot"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="humanoid" Subtypes="halfling">Small Humanoid (Halfling)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="4">1d8 (4)</HitDice>
@@ -20756,7 +20770,7 @@ checks.</p>
 </Monster>
 <Monster id="srd:HalflingTallfellow">
 <Name>Halfling:Tallfellow</Name>
-<Avatar Name="dog" Image="tallfellow"></Avatar>
+<Avatar  Image="tallfellow"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="humanoid" Subtypes="halfling">Small Humanoid (Halfling)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="4">1d8 (4)</HitDice>
@@ -20822,7 +20836,7 @@ bonus to Listen checks.</p>
 </Monster>
 <Monster id="srd:HalflingDeepHalfling">
 <Name>Halfling:Deep Halfling</Name>
-<Avatar Name="dog" Image="deephalfling"></Avatar>
+<Avatar  Image="deephalfling"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="humanoid" Subtypes="halfling">Small Humanoid (Halfling)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="4">1d8 (4)</HitDice>
@@ -24175,7 +24189,7 @@ all its heads for attacks of opportunity each round.</p>
 </Monster>
 <Monster id="srd:MephitAirMephit">
 <Name>Mephit:Air Mephit</Name>
-<Avatar Name="dog" Image="airmephit"></Avatar>
+<Avatar  Image="airmephit"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="outsider" Subtypes="air">Small Outsider (Air)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="13">3d8 (13)</HitDice>
@@ -24237,7 +24251,7 @@ itself.</p>
 </Monster>
 <Monster id="srd:MephitDustMephit">
 <Name>Mephit:Dust Mephit</Name>
-<Avatar Name="dog" Image="dustmephit"></Avatar>
+<Avatar  Image="dustmephit"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="outsider" Subtypes="air">Small Outsider (Air)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="13">3d8 (13)</HitDice>
@@ -24301,7 +24315,7 @@ environment.</p>
 </Monster>
 <Monster id="srd:MephitEarthMephit">
 <Name>Mephit:Earth Mephit</Name>
-<Avatar Name="dog" Image="earthmephit"></Avatar>
+<Avatar  Image="earthmephit"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="outsider" Subtypes="earth">Small Outsider (Earth)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="16">3d8+3 (16)</HitDice>
@@ -24562,7 +24576,7 @@ lava, or a flame at least as large as a torch.</p>
 </Monster>
 <Monster id="srd:MephitOozeMephit">
 <Name>Mephit:Ooze Mephit</Name>
-<Avatar Name="dog" Image="oozemephit"></Avatar>
+<Avatar  Image="oozemephit"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="outsider" Subtypes="water">Small Outsider (Water)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="16">3d8+3 (16)</HitDice>
@@ -24626,7 +24640,7 @@ muddy environment.</p>
 </Monster>
 <Monster id="srd:MephitSaltMephit">
 <Name>Mephit:Salt Mephit</Name>
-<Avatar Name="dog" Image="saltmephit"></Avatar>
+<Avatar  Image="saltmephit"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="outsider" Subtypes="earth">Small Outsider (Earth)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="16">3d8+3 (16)</HitDice>
@@ -24758,7 +24772,7 @@ is in a hot, humid area.</p>
 </Monster>
 <Monster id="srd:MephitWaterMephit">
 <Name>Mephit:Water Mephit</Name>
-<Avatar Name="dog" Image="watermephit"></Avatar>
+<Avatar  Image="watermephit"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="outsider" Subtypes="water">Small Outsider (Water)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="16">3d8+3 (16)</HitDice>
@@ -25773,7 +25787,7 @@ the original's hit points (round down). A pudding with only
 </Monster>
 <Monster id="srd:PlanetouchedAasimar">
 <Name>Planetouched:Aasimar</Name>
-<Avatar Name="dog" Image="aasimar"></Avatar>
+<Avatar  Image="aasimar"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="outsider">Medium-Size Outsider</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="4">1d8 (4)</HitDice>
@@ -25785,7 +25799,7 @@ the original's hit points (round down). A pudding with only
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialAttacks>Light</SpecialAttacks>
   <SpecialQualities>Acid cold and electricity resistance 5</SpecialQualities>
-  <Spells casterlevel="1">1 daylight</Spells>
+  <Spells casterlevel="1" known="daylight,">1 daylight</Spells>
   <Saves Fort="2" Ref="2" Will="3">Fort +2, Ref +2, Will +3</Saves>
   <Abilities Str="10" Dex="10" Con="10" Int="10" Wis="13" Cha="13">Str 10, Dex 10, Con 10, Int 10, Wis 13, Cha 13</Abilities>
   <Skills>Heal +5, Knowledge (religion) +1, Listen +4, Ride +1, Spot +4</Skills>
@@ -25817,7 +25831,7 @@ checks.</p>
 </Monster>
 <Monster id="srd:PlanetouchedTiefling">
 <Name>Planetouched:Tiefling</Name>
-<Avatar Name="dog" Image="tiefling"></Avatar>
+<Avatar  Image="tiefling"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="outsider">Medium-Size Outsider</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="4">1d8 (4)</HitDice>
@@ -25828,7 +25842,7 @@ checks.</p>
   <Damage>Rapier 1d6 (18/x2); or light crossbow 1d8 (19/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialAttacks>Darkness</SpecialAttacks>
-  <Spells>1 darkness</Spells>
+  <Spells known="deeper darkness,">1 darkness</Spells>
   <SpecialQualities>Fire cold and electricity resistance 5</SpecialQualities>
   <Saves Fort="2" Ref="3" Will="2">Fort +2, Ref +3, Will +2</Saves>
   <Abilities Str="10" Dex="13" Con="10" Int="13" Wis="11" Cha="8">Str 10, Dex 13, Con 10, Int 13, Wis 11, Cha 8</Abilities>
@@ -26519,7 +26533,7 @@ character class. </p>
 </Monster>
 <Monster id="srd:SlaadGraySlaad">
 <Name>Slaad:Gray Slaad</Name>
-<Avatar Name="dog" Image="grayslaad"></Avatar>
+<Avatar  Image="grayslaad"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="outsider" Subtypes="chaotic">Medium-Size Outsider (Chaotic)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="75">10d8+30 (75)</HitDice>
@@ -26530,7 +26544,7 @@ character class. </p>
   <Damage>Claw 2d4+4 (20/x2), bite 2d8+2 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialAttacks>Spell-like abilities, summon slaad</SpecialAttacks>
-  <Spells cr="3.4" casterlevel="15">5 animate objects, 5 chaos hammer, 5 deeper darkness, 5 detect magic, 5 dispel law, 5 fly, 5 identify, 5 invisibility, 5 lightning bolt, 5 magic circle against law, 5 see invisibility, 5 shatter, 5 power word blind</Spells>
+  <Spells cr="2.65" casterlevel="15" known="deeper darkness,deeper darkness,deeper darkness,deeper darkness,deeper darkness,summon gray slaad,">5 animate objects, 5 chaos hammer, 5 deeper darkness, 5 detect magic, 5 dispel law, 5 fly, 5 identify, 5 invisibility, 5 lightning bolt, 5 magic circle against law, 5 see invisibility, 5 shatter, 5 power word blind</Spells>
   <SpecialQualities>Fast healing 5, damage reduction 10/+1,  acid cold electricity fire and sonic resistance 5, alternate form</SpecialQualities>
   <Saves Fort="10" Ref="8" Will="9">Fort +10, Ref +8, Will +9</Saves>
   <Abilities Str="19" Dex="13" Con="17" Int="14" Wis="14" Cha="14">Str 19, Dex 13, Con 17, Int 14, Wis 14, Cha 14</Abilities>
@@ -26906,7 +26920,7 @@ forest setting.</p>
 </Monster>
 <Monster id="srd:SpriteNixie">
 <Name>Sprite:Nixie</Name>
-<Avatar Name="dog" Image="nixie"></Avatar>
+<Avatar  Image="nixie"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="fey">Small Fey</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="3">1d6 (3)</HitDice>
@@ -26957,7 +26971,7 @@ when in the water.</p>
 </Monster>
 <Monster id="srd:SpritePixie">
 <Name>Sprite:Pixie</Name>
-<Avatar Name="dog" Image="pixie"></Avatar>
+<Avatar  Image="pixie"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="fey">Small Fey</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="3">1d6 (3)</HitDice>
@@ -27026,7 +27040,7 @@ and Listen checks.</p>
 </Monster>
 <Monster id="srd:XornMinorXorn">
 <Name>Xorn:Minor Xorn</Name>
-<Avatar Name="dog" Image="xorn"></Avatar>
+<Avatar  Image="xorn"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="outsider" Subtypes="earth">Small Outsider (Earth)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="19">3d8+6 (19)</HitDice>
@@ -27087,7 +27101,7 @@ with the ground.</p>
 </Monster>
 <Monster id="srd:XornAverageXorn">
 <Name>Xorn:Average Xorn</Name>
-<Avatar Name="dog" Image="xorn"></Avatar>
+<Avatar  Image="xorn"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="outsider" Subtypes="earth">Medium-Size Outsider (Earth)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="45">7d8+14 (45)</HitDice>
@@ -27148,7 +27162,7 @@ with the ground.</p>
 </Monster>
 <Monster id="srd:XornElderXorn">
 <Name>Xorn:Elder Xorn</Name>
-<Avatar Name="dog" Image="xorn"></Avatar>
+<Avatar  Image="xorn"></Avatar>
 <StatBlock>
   <SizeAndType Size="large" Type="outsider" Subtypes="earth">Large Outsider (Earth)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="127">15d8+60 (127)</HitDice>
@@ -27209,7 +27223,7 @@ with the ground.</p>
 </Monster>
 <Monster id="srd:YuantiPureblood">
 <Name>Yuan-ti:Pureblood Yuan-ti</Name>
-<Avatar Name="dog" Image="yuantipureblood"></Avatar>
+<Avatar  Image="yuantipureblood"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="monstrous humanoid">Medium-Size Monstrous Humanoid</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="27">6d8 (27)</HitDice>
@@ -27220,7 +27234,7 @@ with the ground.</p>
   <Damage>Masterwork scimitar 1d6 (18/x2); or masterwork longbow with masterwork arrows 1d8 (20/x3)</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
   <SpecialAttacks>Spell-like abilities, psionics</SpecialAttacks>
-  <Spells cr="1.1" casterlevel="8">1 animal trance, 1 cause fear, 1 deeper darkness, 1 entangle, 1 neutralize poison, 1 suggestion, 1 polymorph other, 5 detect poison (caster level 6), 5 shapechange (caster level 19)</Spells>
+  <Spells cr="0.5" casterlevel="8" known="deeper darkness,hold monster,doom,">1 animal trance, 1 cause fear, 1 deeper darkness, 1 entangle, 1 neutralize poison, 1 suggestion, 1 polymorph other, 5 detect poison (caster level 6), 5 shapechange (caster level 19)</Spells>
   <SpecialQualities>SR 16</SpecialQualities>
   <Saves Fort="2" Ref="6" Will="9">Fort +2, Ref +6, Will +9</Saves>
   <Abilities Str="11" Dex="13" Con="11" Int="18" Wis="18" Cha="16">Str 11, Dex 13, Con 11, Int 18, Wis 18, Cha 16</Abilities>
@@ -27995,7 +28009,7 @@ can only do both if they charge (a partial charge).</p>
 </Monster>
 <Monster id="srd:DragonBlackDragonWyrmling">
 <Name>Dragon:Black Dragon, Wyrmling</Name>
-<Avatar Name="dog" Image="blackdragon015"></Avatar>
+<Avatar  Image="blackdragon015"></Avatar>
 <StatBlock>
   <SizeAndType Size="tiny" Type="dragon">Tiny Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="30">4d12+4 (30)</HitDice>
@@ -28055,7 +28069,7 @@ with a range of 100 feet. </p>
 </Monster>
 <Monster id="srd:DragonBlackDragonVeryyoung">
 <Name>Dragon:Black Dragon, Very young</Name>
-<Avatar Name="dog" Image="blackdragon015"></Avatar>
+<Avatar  Image="blackdragon015"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="dragon">Small Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="52">7d12+7 (52)</HitDice>
@@ -28116,7 +28130,7 @@ with a range of 200 feet. </p>
 </Monster>
 <Monster id="srd:DragonBlackDragonYoung">
 <Name>Dragon:Black Dragon, Young</Name>
-<Avatar Name="dog" Image="blackdragon1650"></Avatar>
+<Avatar  Image="blackdragon1650"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="dragon">Medium-size Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="85">10d12+20 (85)</HitDice>
@@ -28177,7 +28191,7 @@ with a range of 300 feet. </p>
 </Monster>
 <Monster id="srd:DragonBlackDragonJuvenile">
 <Name>Dragon:Black Dragon, Juvenile</Name>
-<Avatar Name="dog" Image="blackdragon1650"></Avatar>
+<Avatar  Image="blackdragon1650"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="dragon">Medium-size Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="110">13d12+26 (110)</HitDice>
@@ -28188,6 +28202,7 @@ with a range of 300 feet. </p>
   <Damage>Bite 1d8+3 (20/x2), claw 1d6+1 (20/x2), wing 1d4+1 (20/x2)</Damage>
   <FaceAndReach>5 ft. by 5 ft. / 5 ft.</FaceAndReach>
   <SpecialAttacks>Breath weapon, spell-like abilities</SpecialAttacks>
+  <Spells known="deeper darkness,deeper darkness,deeper darkness,"></Spells>
   <Breath name="acid" format="line 60" damage="8d4" save="18 reflex half" delay="yes"/>
   <SpecialQualities>Immunities, water breathing, blindsight, keen senses</SpecialQualities>
   <Saves Fort="10" Ref="8" Will="8">Fort +10,Ref +8,Will +8</Saves>
@@ -28959,7 +28974,7 @@ with a range of 1200 feet. </p>
 </Monster>
 <Monster id="srd:DragonBlueDragonWyrmling">
 <Name>Dragon:Blue Dragon, Wyrmling</Name>
-<Avatar Name="dog" Image="bluedragon015"></Avatar>
+<Avatar  Image="bluedragon015"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="dragon">Small Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="45">6d12+6 (45)</HitDice>
@@ -29024,7 +29039,7 @@ with a range of 100 feet. </p>
 </Monster>
 <Monster id="srd:DragonBlueDragonVeryyoung">
 <Name>Dragon:Blue Dragon, Very young</Name>
-<Avatar Name="dog" Image="bluedragon015"></Avatar>
+<Avatar  Image="bluedragon015"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="dragon">Medium-size Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="76">9d12+18 (76)</HitDice>
@@ -29089,7 +29104,7 @@ with a range of 200 feet. </p>
 </Monster>
 <Monster id="srd:DragonBlueDragonYoung">
 <Name>Dragon:Blue Dragon, Young</Name>
-<Avatar Name="dog" Image="bluedragon1650"></Avatar>
+<Avatar  Image="bluedragon1650"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="dragon">Medium-size Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="102">12d12+24 (102)</HitDice>
@@ -29154,7 +29169,7 @@ with a range of 300 feet. </p>
 </Monster>
 <Monster id="srd:DragonBlueDragonJuvenile">
 <Name>Dragon:Blue Dragon, Juvenile</Name>
-<Avatar Name="dog" Image="bluedragon1650"></Avatar>
+<Avatar  Image="bluedragon1650"></Avatar>
 <StatBlock>
   <SizeAndType Size="large" Type="dragon">Large Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="142">15d12+45 (142)</HitDice>
@@ -29969,7 +29984,7 @@ with a range of 1200 feet. </p>
 </Monster>
 <Monster id="srd:DragonBrassDragonWyrmling">
 <Name>Dragon:Brass Dragon, Wyrmling</Name>
-<Avatar Name="dog" Image="brassdragon015"></Avatar>
+<Avatar  Image="brassdragon015"></Avatar>
 <StatBlock>
   <SizeAndType Size="tiny" Type="dragon" Subtypes="fire">Tiny Dragon (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="30">4d12+4 (30)</HitDice>
@@ -30035,7 +30050,7 @@ with a range of 100 feet. </p>
 </Monster>
 <Monster id="srd:DragonBrassDragonVeryyoung">
 <Name>Dragon:Brass Dragon, Very young</Name>
-<Avatar Name="dog" Image="brassdragon015"></Avatar>
+<Avatar  Image="brassdragon015"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="dragon" Subtypes="fire">Small Dragon (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="52">7d12+7 (52)</HitDice>
@@ -30101,7 +30116,7 @@ with a range of 200 feet. </p>
 </Monster>
 <Monster id="srd:DragonBrassDragonYoung">
 <Name>Dragon:Brass Dragon, Young</Name>
-<Avatar Name="dog" Image="brassdragon1650"></Avatar>
+<Avatar  Image="brassdragon1650"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="dragon" Subtypes="fire">Medium-size Dragon (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="85">10d12+20 (85)</HitDice>
@@ -30174,7 +30189,7 @@ with a range of 300 feet. </p>
 </Monster>
 <Monster id="srd:DragonBrassDragonJuvenile">
 <Name>Dragon:Brass Dragon, Juvenile</Name>
-<Avatar Name="dog" Image="brassdragon1650"></Avatar>
+<Avatar  Image="brassdragon1650"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="dragon" Subtypes="fire">Medium-size Dragon (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="110">13d12+26 (110)</HitDice>
@@ -30924,7 +30939,7 @@ with a range of 1200 feet. </p>
 </Monster>
 <Monster id="srd:DragonBronzeDragonWyrmling">
 <Name>Dragon:Bronze Dragon, Wyrmling</Name>
-<Avatar Name="dog" Image="bronzedragon015"></Avatar>
+<Avatar  Image="bronzedragon015"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="dragon">Small Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="45">6d12+6 (45)</HitDice>
@@ -30995,7 +31010,7 @@ with a range of 100 feet. </p>
 </Monster>
 <Monster id="srd:DragonBronzeDragonVeryyoung">
 <Name>Dragon:Bronze Dragon, Very young</Name>
-<Avatar Name="dog" Image="bronzedragon015"></Avatar>
+<Avatar  Image="bronzedragon015"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="dragon">Medium-size Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="76">9d12+18 (76)</HitDice>
@@ -31066,7 +31081,7 @@ with a range of 200 feet. </p>
 </Monster>
 <Monster id="srd:DragonBronzeDragonYoung">
 <Name>Dragon:Bronze Dragon, Young</Name>
-<Avatar Name="dog" Image="bronzedragon1650"></Avatar>
+<Avatar  Image="bronzedragon1650"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="dragon">Medium-size Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="102">12d12+24 (102)</HitDice>
@@ -31149,7 +31164,7 @@ with a range of 300 feet. </p>
 </Monster>
 <Monster id="srd:DragonBronzeDragonJuvenile">
 <Name>Dragon:Bronze Dragon, Juvenile</Name>
-<Avatar Name="dog" Image="bronzedragon1650"></Avatar>
+<Avatar  Image="bronzedragon1650"></Avatar>
 <StatBlock>
   <SizeAndType Size="large" Type="dragon">Large Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="142">15d12+45 (142)</HitDice>
@@ -31957,7 +31972,7 @@ with a range of 1200 feet. </p>
 </Monster>
 <Monster id="srd:DragonCopperDragonWyrmling">
 <Name>Dragon:Copper Dragon, Wyrmling</Name>
-<Avatar Name="dog" Image="copperdragon015"></Avatar>
+<Avatar  Image="copperdragon015"></Avatar>
 <StatBlock>
   <SizeAndType Size="tiny" Type="dragon">Tiny Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="37">5d12+5 (37)</HitDice>
@@ -32018,7 +32033,7 @@ with a range of 100 feet. </p>
 </Monster>
 <Monster id="srd:DragonCopperDragonVeryyoung">
 <Name>Dragon:Copper Dragon, Very young</Name>
-<Avatar Name="dog" Image="copperdragon015"></Avatar>
+<Avatar  Image="copperdragon015"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="dragon">Small Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="60">8d12+8 (60)</HitDice>
@@ -32081,7 +32096,7 @@ with a range of 200 feet. </p>
 </Monster>
 <Monster id="srd:DragonCopperDragonYoung">
 <Name>Dragon:Copper Dragon, Young</Name>
-<Avatar Name="dog" Image="copperdragon1650"></Avatar>
+<Avatar  Image="copperdragon1650"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="dragon">Medium-size Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="93">11d12+22 (93)</HitDice>
@@ -32152,7 +32167,7 @@ with a range of 300 feet. </p>
 </Monster>
 <Monster id="srd:DragonCopperDragonJuvenile">
 <Name>Dragon:Copper Dragon, Juvenile</Name>
-<Avatar Name="dog" Image="copperdragon1650"></Avatar>
+<Avatar  Image="copperdragon1650"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="dragon">Medium-size Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="119">14d12+28 (119)</HitDice>
@@ -32890,7 +32905,7 @@ with a range of 1200 feet. </p>
 </Monster>
 <Monster id="srd:DragonGoldDragonWyrmling">
 <Name>Dragon:Gold Dragon, Wyrmling</Name>
-<Avatar Name="dog" Image="golddragon015"></Avatar>
+<Avatar  Image="golddragon015"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="dragon" Subtypes="fire">Medium-size Dragon (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="68">8d12+16 (68)</HitDice>
@@ -32969,7 +32984,7 @@ with a range of 100 feet. </p>
 </Monster>
 <Monster id="srd:DragonGoldDragonVeryyoung">
 <Name>Dragon:Gold Dragon, Very young</Name>
-<Avatar Name="dog" Image="golddragon015"></Avatar>
+<Avatar  Image="golddragon015"></Avatar>
 <StatBlock>
   <SizeAndType Size="large" Type="dragon" Subtypes="fire">Large Dragon (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="104">11d12+33 (104)</HitDice>
@@ -34092,7 +34107,7 @@ with a range of 1200 feet. </p>
 </Monster>
 <Monster id="srd:DragonGreenDragonWyrmling">
 <Name>Dragon:Green Dragon, Wyrmling</Name>
-<Avatar Name="dog" Image="greendragon015"></Avatar>
+<Avatar  Image="greendragon015"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="dragon">Small Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="37">5d12+5 (37)</HitDice>
@@ -34151,7 +34166,7 @@ with a range of 100 feet. </p>
 </Monster>
 <Monster id="srd:DragonGreenDragonVeryyoung">
 <Name>Dragon:Green Dragon, Very young</Name>
-<Avatar Name="dog" Image="greendragon015"></Avatar>
+<Avatar  Image="greendragon015"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="dragon">Medium-size Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="68">8d12+16 (68)</HitDice>
@@ -34210,7 +34225,7 @@ with a range of 200 feet. </p>
 </Monster>
 <Monster id="srd:DragonGreenDragonYoung">
 <Name>Dragon:Green Dragon, Young</Name>
-<Avatar Name="dog" Image="greendragon1650"></Avatar>
+<Avatar  Image="greendragon1650"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="dragon">Medium-size Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="93">11d12+22 (93)</HitDice>
@@ -34269,7 +34284,7 @@ with a range of 300 feet. </p>
 </Monster>
 <Monster id="srd:DragonGreenDragonJuvenile">
 <Name>Dragon:Green Dragon, Juvenile</Name>
-<Avatar Name="dog" Image="greendragon1650"></Avatar>
+<Avatar  Image="greendragon1650"></Avatar>
 <StatBlock>
   <SizeAndType Size="large" Type="dragon">Large Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="133">14d12+42 (133)</HitDice>
@@ -34959,7 +34974,7 @@ with a range of 1200 feet. </p>
 </Monster>
 <Monster id="srd:DragonRedDragonWyrmling">
 <Name>Dragon:Red Dragon, Wyrmling</Name>
-<Avatar Name="dog" Image="reddragon015"></Avatar>
+<Avatar  Image="reddragon015"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="dragon" Subtypes="fire">Medium-size Dragon (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="59">7d12+14 (59)</HitDice>
@@ -35017,7 +35032,7 @@ with a range of 100 feet. </p>
 </Monster>
 <Monster id="srd:DragonRedDragonVeryyoung">
 <Name>Dragon:Red Dragon, Very young</Name>
-<Avatar Name="dog" Image="reddragon015"></Avatar>
+<Avatar  Image="reddragon015"></Avatar>
 <StatBlock>
   <SizeAndType Size="large" Type="dragon" Subtypes="fire">Large Dragon (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="95">10d12+30 (95)</HitDice>
@@ -35846,7 +35861,7 @@ with a range of 1200 feet. </p>
 </Monster>
 <Monster id="srd:DragonSilverDragonWyrmling">
 <Name>Dragon:Silver Dragon, Wyrmling</Name>
-<Avatar Name="dog" Image="silverdragon015"></Avatar>
+<Avatar  Image="silverdragon015"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="dragon">Small Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="52">7d12+7 (52)</HitDice>
@@ -35918,7 +35933,7 @@ with a range of 100 feet. </p>
 </Monster>
 <Monster id="srd:DragonSilverDragonVeryyoung">
 <Name>Dragon:Silver Dragon, Very young</Name>
-<Avatar Name="dog" Image="silverdragon015"></Avatar>
+<Avatar  Image="silverdragon015"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="dragon">Medium-size Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="85">10d12+20 (85)</HitDice>
@@ -35990,7 +36005,7 @@ with a range of 200 feet. </p>
 </Monster>
 <Monster id="srd:DragonSilverDragonYoung">
 <Name>Dragon:Silver Dragon, Young</Name>
-<Avatar Name="dog" Image="silverdragon1650"></Avatar>
+<Avatar  Image="silverdragon1650"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="dragon">Medium-size Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="110">13d12+26 (110)</HitDice>
@@ -36070,7 +36085,7 @@ with a range of 300 feet. </p>
 </Monster>
 <Monster id="srd:DragonSilverDragonJuvenile">
 <Name>Dragon:Silver Dragon, Juvenile</Name>
-<Avatar Name="dog" Image="silverdragon1650"></Avatar>
+<Avatar  Image="silverdragon1650"></Avatar>
 <StatBlock>
   <SizeAndType Size="large" Type="dragon">Large Dragon</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="152">16d12+48 (152)</HitDice>
@@ -36851,7 +36866,7 @@ with a range of 1200 feet. </p>
 </Monster>
 <Monster id="srd:DragonWhiteDragonWyrmling">
 <Name>Dragon:White Dragon, Wyrmling</Name>
-<Avatar Name="dog" Image="whitedragon015"></Avatar>
+<Avatar  Image="whitedragon015"></Avatar>
 <StatBlock>
   <SizeAndType Size="tiny" Type="dragon" Subtypes="cold">Tiny Dragon (Cold)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="22">3d12+3 (22)</HitDice>
@@ -36914,7 +36929,7 @@ with a range of 100 feet. </p>
 </Monster>
 <Monster id="srd:DragonWhiteDragonVeryyoung">
 <Name>Dragon:White Dragon, Very young</Name>
-<Avatar Name="dog" Image="whitedragon015"></Avatar>
+<Avatar  Image="whitedragon015"></Avatar>
 <StatBlock>
   <SizeAndType Size="small" Type="dragon" Subtypes="cold">Small Dragon (Cold)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="45">6d12+6 (45)</HitDice>
@@ -36978,7 +36993,7 @@ with a range of 200 feet. </p>
 </Monster>
 <Monster id="srd:DragonWhiteDragonYoung">
 <Name>Dragon:White Dragon, Young</Name>
-<Avatar Name="dog" Image="whitedragon1650"></Avatar>
+<Avatar  Image="whitedragon1650"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="dragon" Subtypes="cold">Medium-size Dragon (Cold)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="76">9d12+18 (76)</HitDice>
@@ -37042,7 +37057,7 @@ with a range of 300 feet. </p>
 </Monster>
 <Monster id="srd:DragonWhiteDragonJuvenile">
 <Name>Dragon:White Dragon, Juvenile</Name>
-<Avatar Name="dog" Image="whitedragon1650"></Avatar>
+<Avatar  Image="whitedragon1650"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="dragon" Subtypes="cold">Medium-size Dragon (Cold)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="102">12d12+24 (102)</HitDice>

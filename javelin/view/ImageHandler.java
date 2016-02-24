@@ -8,7 +8,13 @@ import java.util.TreeMap;
 import javax.imageio.ImageIO;
 
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
 
+/**
+ * Cache for {@link Monster#avatar}
+ * 
+ * @author alex
+ */
 public class ImageHandler {
 	static TreeMap<String, Image> cache = new TreeMap<String, Image>();
 
@@ -19,8 +25,8 @@ public class ImageHandler {
 			return i;
 		}
 		try {
-			i = ImageIO.read(new File("avatars" + File.separator + file
-					+ ".png"));
+			i = ImageIO
+					.read(new File("avatars" + File.separator + file + ".png"));
 			cache.put(file, i);
 			return i;
 		} catch (IOException e) {

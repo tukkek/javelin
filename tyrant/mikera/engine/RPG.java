@@ -11,7 +11,6 @@ import java.util.Random;
 
 import tyrant.mikera.tyrant.Game;
 
-
 public class RPG {
 
 	// RPG CONSTANTS
@@ -588,15 +587,8 @@ public class RPG {
 	 * allowed to have to n1 > n2, or n1 < n2, or n1 == n2.
 	 */
 	public static final int r(final int n1, final int n2) {
-		int min, max;
-		min = Math.min(n1, n2);
-		max = Math.max(n1, n2);
-
-		final int diff = max - min;
-		Game.assertTrue(diff >= 0);
-		final int ret = min + rand.nextInt(diff + 1);
-		Game.assertTrue(ret <= max);
-		return ret;
+		return Math.min(n1, n2)
+				+ rand.nextInt(Math.max(n1, n2) - Math.min(n1, n2) + 1);
 	}
 
 	/**

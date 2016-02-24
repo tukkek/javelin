@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
 
 import javelin.Javelin;
 import tyrant.mikera.tyrant.util.Text;
@@ -28,8 +29,8 @@ public class InfoScreen extends Screen {
 		this(Javelin.app, text);
 	}
 
-	public void activate() {
-	}
+	// public void activate() {
+	// }
 
 	@Override
 	public void paint(final Graphics g) {
@@ -47,5 +48,35 @@ public class InfoScreen extends Screen {
 				y += lineinc;
 			}
 		}
+	}
+
+	static public int numberfeedback() {
+		while (true) {
+			try {
+				return Integer.parseInt(feedback().toString());
+			} catch (final NumberFormatException e2) {
+				continue;
+			}
+		}
+	}
+
+	static public Character feedback() {
+		KeyEvent input = Game.getInput();
+		switch (input.getKeyCode()) {
+		case KeyEvent.VK_RIGHT:
+			return '→';
+		case KeyEvent.VK_LEFT:
+			return '←';
+		case KeyEvent.VK_BACK_SPACE:
+			return '\b';
+		case KeyEvent.VK_SHIFT:
+			return feedback();
+		}
+		return Character.valueOf(input.getKeyChar());
+	}
+
+	public void print(String string) {
+		text = string;
+		Javelin.app.switchScreen(this);
 	}
 }

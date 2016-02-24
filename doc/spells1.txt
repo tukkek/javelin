@@ -1,0 +1,22 @@
+SPELL GUIDE (1/2)
+
+To learn each spell you need to have a certain minimum amount of class levels.
+Every hero starts at class level 1 and receives an extra class level when upgrading in a class.
+You can cast as many spells as you have class levels before resting.
+
+Caster level 1
+  Cure light wounds: cures 5 hit points. 
+  Doom: shakens an enemy.
+  Inflict light wounds: causes 5 points of damage.
+  
+Caster level 3
+  Bear's endurance: +2 constitution bonus.
+  Bull's strength: +2 strength bonus. 
+  Cat's grace: +2 dexterity bonus.
+  Cure moderate wounds: cures 13 hit points.
+  Eagle's splendor: +2 charisma bonus.
+  Fox's cunning: +2 intelligence bonus.
+  Inflict moderate wounds: causes 13 points of damage.
+  Owl's wisdom: +2 wisdom bonus.
+  Summon Dretch: summons a Dretch to your team. 
+  

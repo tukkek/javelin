@@ -10,6 +10,11 @@ import javelin.Javelin;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.InfoScreen;
 
+/**
+ * Outputs the content of a text file to the screen.
+ * 
+ * @author alex
+ */
 public class TextReader {
 	static public String read(File text) {
 		try {

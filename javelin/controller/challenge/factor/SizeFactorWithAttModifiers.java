@@ -5,6 +5,9 @@ package javelin.controller.challenge.factor;
 
 import javelin.model.unit.Monster;
 
+/**
+ * @see CrFactor
+ */
 public class SizeFactorWithAttModifiers extends CrFactor {
 	@Override
 	public float calculate(final Monster monster) {

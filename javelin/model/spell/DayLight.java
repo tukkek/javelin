@@ -8,10 +8,13 @@ import javelin.controller.upgrade.Spell;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 
+/**
+ * See the d20 SRD for more info.
+ */
 public class DayLight extends Spell {
 
-	public DayLight(String name) {
-		super(name + "daylight", .15f, false, 5, false);
+	public DayLight() {
+		super("Daylight", .15f, false, 3, false);
 	}
 
 	@Override
@@ -47,6 +50,6 @@ public class DayLight extends Spell {
 	@Override
 	public void filtertargets(final Combatant combatant,
 			final List<Combatant> targets, final BattleState s) {
-		self(combatant, targets);
+		targetself(combatant, targets);
 	}
 }

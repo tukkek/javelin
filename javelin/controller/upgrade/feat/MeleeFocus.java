@@ -4,13 +4,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.TreeMap;
 
+import javelin.model.feat.WeaponFocus;
 import javelin.model.unit.Attack;
 import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
+/**
+ * @see WeaponFocus
+ * @author alex
+ */
 public class MeleeFocus extends FeatUpgrade {
 	public static TreeMap<String, Double> bab = new TreeMap<String, Double>();
+
 	static {
 		bab.put("aberration", 3.0 / 4.0);
 		bab.put("animal", 3.0 / 4.0);
@@ -66,7 +72,7 @@ public class MeleeFocus extends FeatUpgrade {
 	@Override
 	public boolean apply(final Combatant c) {
 		Monster m = c.source;
-		if (m.hasfeat(javelin.model.feat.WeaponFocus.singleton) > 0
+		if (m.hasfeat(javelin.model.feat.WeaponFocus.singleton)
 				|| getattacks(m).isEmpty() || m.getbaseattackbonus() < 1) {
 			return false;
 		}

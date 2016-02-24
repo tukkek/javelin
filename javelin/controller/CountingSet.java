@@ -4,6 +4,14 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+/**
+ * Counts how many times an element is added to the set.
+ * 
+ * TODO check if the order of {@link #getCount()} is being taken into
+ * consideration - I don't think any ordering is guaranteed.
+ * 
+ * @author alex
+ */
 public class CountingSet {
 	private static final long serialVersionUID = 1L;
 
@@ -16,14 +24,5 @@ public class CountingSet {
 
 	public Set<Entry<String, Integer>> getCount() {
 		return tree.entrySet();
-		/*
-		 * final TreeMap<Integer, String> orderedErrors = new TreeMap<Integer,
-		 * String>();
-		 * 
-		 * for (final Entry<String, Integer> e : tree.entrySet()) {
-		 * orderedErrors.put(e.getValue(), e.getKey()); }
-		 * 
-		 * return orderedErrors.descendingMap().entrySet();
-		 */
 	}
 }

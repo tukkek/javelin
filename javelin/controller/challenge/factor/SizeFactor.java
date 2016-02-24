@@ -3,7 +3,7 @@ package javelin.controller.challenge.factor;
 import javelin.model.unit.Monster;
 
 /**
- * @author Alex
+ * @see CrFactor
  */
 public class SizeFactor extends CrFactor {
 	@Override

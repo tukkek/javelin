@@ -1,9 +1,8 @@
 package javelin.model.spell;
 
-import java.util.ArrayList;
-
 import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.controller.exception.NotPeaceful;
+import javelin.model.condition.Dominated;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 
@@ -15,14 +14,12 @@ import javelin.model.unit.Combatant;
  * It's not really a ray but we're abusing the existing logic here because it's
  * a lot easier.
  */
-/**
- * @author alex
- * 
- */
 public class DominateMonster extends Ray {
-	public DominateMonster(String name) {
-		super(name + "dominate monster", SpellsFactor
-				.calculatechallengeforspelllikeability(18, 9), false, false, 18);
+	public static DominateMonster singleton = new DominateMonster();
+
+	public DominateMonster() {
+		super("Dominate monster", SpellsFactor.ratespelllikeability(9), false,
+				false, 9);
 	}
 
 	@Override
@@ -31,12 +28,8 @@ public class DominateMonster extends Ray {
 		if (saved) {
 			return target + " resists!";
 		}
-		final ArrayList<Combatant> targetteam = s.redTeam.contains(target) ? s.redTeam
-				: s.blueTeam;
-		final ArrayList<Combatant> myteam = targetteam == s.redTeam ? s.blueTeam
-				: s.redTeam;
-		targetteam.remove(target);
-		myteam.add(target);
+		Dominated.switchteams(target, s);
+		target.conditions.add(new Dominated(Float.MAX_VALUE, target));
 		return "Dominated " + target + "!";
 	}
 
@@ -60,8 +53,7 @@ public class DominateMonster extends Ray {
 	@Override
 	public int calculatesavetarget(final Combatant caster,
 			final Combatant target) {
-		final int will = target.source.will();
-		return will == Integer.MAX_VALUE ? will : save(9, will);
+		return save(9, target.source.will(), caster);
 	}
 
 	@Override

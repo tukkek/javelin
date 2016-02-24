@@ -4,12 +4,20 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
+import javelin.model.Cloneable;
+
+/**
+ * The current {@link AttackSequence} being used as a full-attack by a
+ * {@link Combatant}.
+ * 
+ * @author alex
+ */
 public class CurrentAttack implements Serializable, Cloneable {
 	public int sequenceindex = -1;
 	public LinkedList<Attack> next = new LinkedList<Attack>();
 
 	@Override
-	protected CurrentAttack clone() {
+	public CurrentAttack clone() {
 		try {
 			final CurrentAttack c = (CurrentAttack) super.clone();
 			c.next = (LinkedList<Attack>) c.next.clone();
@@ -27,7 +35,8 @@ public class CurrentAttack implements Serializable, Cloneable {
 		return sequenceindex != -1 && !next.isEmpty();
 	}
 
-	public void setcurrent(final int current, final List<AttackSequence> attacks) {
+	public void setcurrent(final int current,
+			final List<AttackSequence> attacks) {
 		if (current == sequenceindex) {
 			if (next.isEmpty()) {
 				repopulate(attacks);
@@ -46,9 +55,6 @@ public class CurrentAttack implements Serializable, Cloneable {
 	}
 
 	public void repopulate(final List<AttackSequence> attacks) {
-		// if (sequenceindex == -1) {
-		// System.out.println("#errora");
-		// }
 		next.addAll(attacks.get(sequenceindex));
 	}
 

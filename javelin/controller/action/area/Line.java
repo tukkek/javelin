@@ -21,13 +21,14 @@ public class Line extends Area {
 		final HashSet<Point> area = new HashSet<Point>();
 		final Point sourcepoint = pointsource(m);
 		if (!checkclear(state, sourcepoint)) {
+			area.add(sourcepoint);
 			return area;
 		}
 		range = (range - 5) / 5;
 		Point p = sourcepoint;
 		while (Walker.distance(p.x, p.y, sourcepoint.x, sourcepoint.y) <= range
-				&& state.hasLineOfSight(new java.awt.Point(sourcepoint.x,
-						sourcepoint.y), new java.awt.Point(p.x, p.y), range,
+				&& state.hasLineOfSight(new Point(sourcepoint.x, sourcepoint.y),
+						new Point(p.x, p.y), range,
 						Javelin.PERIOD_NOON) == Vision.CLEAR) {
 			area.add(p);
 			p = new Point(p.x + source.x, p.y + source.y);

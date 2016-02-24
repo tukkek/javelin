@@ -4,22 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.db.Preferences;
-import javelin.controller.db.reader.Organization;
+import javelin.controller.db.Properties;
+import javelin.controller.db.reader.factor.Organization;
 import javelin.controller.exception.GaveUpException;
-import javelin.model.unit.Monster;
+import javelin.model.unit.Combatant;
 import tyrant.mikera.engine.RPG;
 
+/**
+ * Generates an {@link Encounter}.
+ * 
+ * @author alex
+ */
 public class EncounterGenerator {
-	public static final int MAXGROUPSIZE = Integer.parseInt(Preferences
-			.getString("el.maxfoes"));
+	public static final int MAXGROUPSIZE =
+			Integer.parseInt(Properties.getString("el.maxfoes"));
 	static final int MAXTRIES = 1000;
 
-	public static ArrayList<Monster> generate(int el, boolean aquatic)
-			throws GaveUpException {
-		ArrayList<Monster> encounter = null;
+	public static ArrayList<Combatant> generate(int el) throws GaveUpException {
+		ArrayList<Combatant> encounter = null;
 		for (int i = 0; i < MAXTRIES; i++) {
-			encounter = select(el, aquatic);
+			encounter = select(el);
 			if (encounter != null) {
 				return encounter;
 			}
@@ -27,7 +31,7 @@ public class EncounterGenerator {
 		throw new GaveUpException();
 	}
 
-	public static ArrayList<Monster> select(int elp, boolean aquatic) {
+	public static ArrayList<Combatant> select(int elp) {
 		ArrayList<Integer> popper = new ArrayList<Integer>();
 		popper.add(elp);
 		while (RPG.r(0, 1) == 1) {
@@ -37,24 +41,24 @@ public class EncounterGenerator {
 			popper.add(pop);
 			popper.add(pop);
 		}
-		final ArrayList<Monster> foes = new ArrayList<Monster>();
+		final ArrayList<Combatant> foes = new ArrayList<Combatant>();
 		for (final int el : popper) {
-			List<Monster> group = Organization.makeencounter(el, aquatic);
+			List<Combatant> group = Organization.makeencounter(el);
 			if (group == null) {
 				return null;
 			}
-			for (Monster invitee : group) {
+			for (Combatant invitee : group) {
 				if (foes.indexOf(invitee) >= 0) {
 					/* prevent joining groups of same creatures */
 					return null;
 				}
 			}
-			for (Monster invitee : group) {
+			for (Combatant invitee : group) {
 				foes.add(invitee);
 			}
 		}
 		if (Javelin.DEBUGMINIMUMFOES != null
-				&& foes.size() < Javelin.DEBUGMINIMUMFOES) {
+				&& foes.size() != Javelin.DEBUGMINIMUMFOES) {
 			return null;
 		}
 		return foes.size() > MAXGROUPSIZE ? null : foes;

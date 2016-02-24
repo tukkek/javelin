@@ -1,26 +1,24 @@
 package javelin.view.screen.town;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.Javelin;
 import javelin.model.item.Item;
+import javelin.model.item.potion.Potion;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Squad;
 import javelin.model.world.Town;
-import javelin.view.screen.IntroScreen;
 import javelin.view.screen.town.option.Option;
 
 /**
- * Scrolls only out of combat.
+ * Screen in which the player buys items.
+ * 
+ * TODO items takes 1day/1000gp to make (min:1, potion=1)
  * 
  * @author alex
  */
 public class ShoppingScreen extends PurchaseScreen {
-
-	// private static final Option REEQUIP = new Option("Reorganize equipment",
-	// 0);
-
 	public class PurchaseOption extends Option {
 		private final Item i;
 
@@ -32,58 +30,32 @@ public class ShoppingScreen extends PurchaseScreen {
 	}
 
 	public ShoppingScreen(final Town town) {
-		super("Buy", town);
+		super("Buy:", town);
 	}
 
-	/* TODO items takes 1day/1000gp to make (min:1) */
 	@Override
-	List<Option> getOptions() {
+	public List<Option> getOptions() {
 		final ArrayList<Option> list = new ArrayList<Option>();
-		for (final Item i : Item.all) {
+		for (final Item i : town.items) {
 			list.add(new PurchaseOption(i));
 		}
 		return list;
 	}
 
 	@Override
-	boolean select(final Option op) {
+	public boolean select(final Option op) {
 		if (op.price > Squad.active.gold) {
 			text += "Not enough $!\n";
 			return false;
 		}
-		final String originaltext = text;
-		String s = "\n";
-		s += listactivemembers();
+		// final String originaltext = text;
+		// String s = "\n";
+		// s += listactivemembers();
 		final PurchaseOption o = (PurchaseOption) op;
-		text += "\n"
-				+ o.i.name
-				// + ": "
-				// + o.i.description
-				+ s
-				+ "\nWhich squad member will carry it? Press r to cancel purchase.";
-		Combatant m = null;
-		while (m == null) {
-			Javelin.app.switchScreen(this);
-			try {
-				final Character input = IntroScreen.feedback();
-				if (input == 'r') {
-					text = originaltext;
-					return false;
-				}
-				if (input == PROCEED) {
-					return true;
-				}
-				m = Squad.active.members
-						.get(Integer.parseInt(input.toString()) - 1);
-			} catch (final NumberFormatException e) {
-				continue;
-			} catch (final IndexOutOfBoundsException e) {
-				continue;
-			}
-		}
-		Squad.active.equipment.get(m.toString()).add((Item) o.i.clone());
 		Squad.active.gold -= o.i.price;
-		new ShoppingScreen(town).show();
+		town.crafting.add(new Serializable[] { (Item) o.i.clone() },
+				o.i instanceof Potion ? 24
+						: Math.max(24, 24 * Math.round(o.i.price / 1000f)));
 		return true;
 	}
 
@@ -94,5 +66,10 @@ public class ShoppingScreen extends PurchaseScreen {
 			s += "[" + i++ + "] " + m.toString() + "\n";
 		}
 		return s;
+	}
+
+	@Override
+	public String printpriceinfo(Option o) {
+		return " (" + super.printpriceinfo(o).substring(1) + ")";
 	}
 }

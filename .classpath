@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding=".git/|TODO/|build-tests/|build/|doc/" kind="src" path=""/>
+	<classpathentry including="*.*|images/|javelin/|maps/|tyrant/" kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/junit.jar" sourcepath="lib/junitSrc.zip"/>
 	<classpathentry kind="lib" path="lib/forms-1.0.5.jar" sourcepath="lib/forms-1.0.5-src.zip"/>

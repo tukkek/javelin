@@ -1,12 +1,35 @@
 package javelin.model.condition;
 
+import javelin.model.Cloneable;
+import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 
-public abstract class Condition {
-	final float expireat;
+/**
+ * A condition is a temporary effect on a {@link Combatant}.
+ * 
+ * @see Combatant#conditions
+ * 
+ * @author alex
+ */
+public abstract class Condition implements Cloneable {
+	/**
+	 * Buff means an effect is benefitial while debuff means it's a penalty.
+	 * 
+	 * @author alex
+	 */
+	public enum Effect {
+		POSITIVE, NEUTRAL, NEGATIVE
+	}
 
-	public Condition(float expireatp, final Combatant c) {
+	final float expireat;
+	final public Effect effect;
+	final public String description;
+
+	public Condition(float expireatp, final Combatant c, final Effect effectp,
+			String description) {
 		expireat = expireatp;
+		effect = effectp;
+		this.description = description;
 		start(c);
 	}
 
@@ -22,10 +45,21 @@ public abstract class Condition {
 
 	abstract void end(Combatant c);
 
-	public abstract String describe();
-
 	@Override
 	public boolean equals(final Object obj) {
 		return getClass().equals(obj.getClass());
+	}
+
+	public void finish(BattleState s) {
+		// does nothing by default
+	}
+
+	@Override
+	public Cloneable clone() {
+		try {
+			return (Cloneable) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

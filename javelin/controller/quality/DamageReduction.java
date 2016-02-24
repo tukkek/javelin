@@ -2,6 +2,9 @@ package javelin.controller.quality;
 
 import javelin.model.unit.Monster;
 
+/**
+ * See more info on the d20 SRD.
+ */
 public class DamageReduction extends Quality {
 
 	public DamageReduction() {
@@ -16,5 +19,15 @@ public class DamageReduction extends Quality {
 		}
 		m.dr = Integer.parseInt(declaration.substring(
 				declaration.lastIndexOf(' ') + 1, declaration.length()));
+	}
+
+	@Override
+	public boolean has(Monster monster) {
+		return monster.dr >= 0;
+	}
+
+	@Override
+	public float rate(Monster monster) {
+		return monster.dr * .2f;
 	}
 }

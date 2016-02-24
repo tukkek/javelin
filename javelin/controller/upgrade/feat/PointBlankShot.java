@@ -2,6 +2,10 @@ package javelin.controller.upgrade.feat;
 
 import javelin.model.unit.Combatant;
 
+/**
+ * @se {@link PointBlankShot}
+ * @author alex
+ */
 public class PointBlankShot extends FeatUpgrade {
 	public PointBlankShot() {
 		super(javelin.model.feat.PointBlankShot.SINGLETON);
@@ -17,4 +21,8 @@ public class PointBlankShot extends FeatUpgrade {
 		return false;
 	}
 
+	@Override
+	public boolean apply(Combatant m) {
+		return !m.source.ranged.isEmpty() && super.apply(m);
+	}
 }

@@ -1,5 +1,10 @@
 *~
 *.log
-javelin.save
+*.save*
 bin
 TODO
+avatars/more
+javelin.zip
+javelin.jar
+.directory
+.metadata

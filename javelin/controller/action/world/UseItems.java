@@ -6,11 +6,11 @@ import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.db.StateManager;
+import javelin.JavelinApp;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Squad;
-import javelin.view.screen.IntroScreen;
+import javelin.view.screen.town.SelectScreen;
 import javelin.view.screen.town.ShoppingScreen;
 import javelin.view.screen.world.WorldScreen;
 import tyrant.mikera.tyrant.InfoScreen;
@@ -23,89 +23,91 @@ public class UseItems extends WorldAction {
 	@Override
 	public void perform(final WorldScreen worldscreen) {
 		final ArrayList<Item> allitems = new ArrayList<Item>();
-		final String list = listitems(allitems);
+		final String list = listitems(allitems, true);
 		final InfoScreen infoscreen = new InfoScreen(list);
-		String actions = "";
+		String actions = "\n";
 		actions += "\nPress number to use an item";
 		actions += "\nPress d to distribute items";
 		actions += "\nPress q to quit the inventory";
-		final String string = list + actions;
-		print(infoscreen, string);
+		infoscreen.print(list + actions);
+		command(allitems, list, infoscreen);
+	}
+
+	public void command(final ArrayList<Item> allitems, final String list,
+			final InfoScreen infoscreen) {
 		while (true) {
 			Javelin.app.switchScreen(infoscreen);
-			final Character input = IntroScreen.feedback();
+			final Character input = InfoScreen.feedback();
 			if (input == 'd') {
 				redistributeinventory(allitems, list, infoscreen);
 			} else if (input == 'q') {
 				// leaves screen
-			} else if (Character.isDigit(input)) {
-				ShoppingScreen.listactivemembers();
-				int index = Integer.parseInt(Character.toString(input)) - 1;
-				final Item selected = allitems.get(index);
-				final Combatant m = inputmember(infoscreen, infoscreen.text
-						+ "\n\nWhich member will use this item?");
-				if (selected.usepeacefully(m)) {
-					List<Item> items = null;
-					spend: for (final Combatant owner : Squad.active.members) {
-						items = Squad.active.equipment.get(owner.toString());
-						/*
-						 * needs extra loop to catch actual instance not just
-						 * any item of the same type
-						 */
-						for (Item used : new ArrayList<Item>(items)) {
-							if (used == selected) {
-								items.remove(used);
-								break spend;
-							}
-						}
-					}
-					StateManager.save();
-				} else {
-					print(infoscreen, infoscreen.text
-							+ "\n\nCan only be used in battle.");
-					IntroScreen.feedback();
-				}
 			} else {
-				continue;
+				ShoppingScreen.listactivemembers();
+				int index = SelectScreen.convertselectionkey(input);
+				if (index >= allitems.size() || index == -1) {
+					continue;
+				}
+				final Item selected = allitems.get(index);
+				if (selected
+						.usepeacefully(inputmember(infoscreen, infoscreen.text
+								+ "\n\nWhich member will use this item?"))) {
+					selected.expend();
+				} else {
+					infoscreen.print(infoscreen.text + "\n\n"
+							+ selected.describefailure());
+					InfoScreen.feedback();
+				}
 			}
-			Javelin.app.switchScreen(worldscreen);
+			Javelin.app.switchScreen(JavelinApp.context);
 			break;
 		}
-	}
-
-	public void print(final InfoScreen infoscreen, final String string) {
-		infoscreen.text = string;
-		Javelin.app.switchScreen(infoscreen);
 	}
 
 	public void redistributeinventory(final ArrayList<Item> allitems,
 			final String reequiptext, final InfoScreen infoscreen) {
 		Squad.active.equipment.clear();
 		final String original = infoscreen.text;
-		int i = 1;
 		Collections.sort(allitems, new Comparator<Item>() {
 			@Override
 			public int compare(Item o1, Item o2) {
-				return o1.price - o2.price;
+				int delta = o2.price - o1.price;
+				if (delta == 0) {
+					return o1.name.compareTo(o2.name);
+				}
+				return delta;
 			}
 		});
-		for (final Item it : allitems) {
+		final int nitems = allitems.size();
+		for (int i = 0; i < nitems; i++) {
+			final Item it = allitems.get(i);
 			final Combatant member = inputmember(infoscreen,
 					original + "\n\nWhich squad member will carry the "
-							+ it.name.toLowerCase() + " [" + i + "]?");
-			Squad.active.equipment.get(member.toString()).add(it);
-			i += 1;
+							+ it.name.toLowerCase() + " ("
+							+ count(it, allitems.subList(i, nitems)) + ")?");
+			Squad.active.equipment.get(member.id).add(it);
+			// i += 1;
 		}
-		print(infoscreen, original);
+		infoscreen.print(original);
+	}
+
+	private int count(Item it, List<Item> allitems) {
+		int count = 0;
+		for (Item i : allitems) {
+			if (i.equals(it)) {
+				count += 1;
+			}
+		}
+		return count;
 	}
 
 	public Combatant inputmember(final InfoScreen infoscreen,
 			final String message) {
-		print(infoscreen, message + "\n\n" + ShoppingScreen.listactivemembers());
+		infoscreen.print(message + "\n\n" + ShoppingScreen.listactivemembers());
 		while (true) {
 			try {
-				return Squad.active.members.get(Integer.parseInt(IntroScreen
-						.feedback().toString()) - 1);
+				return Squad.active.members.get(
+						Integer.parseInt(InfoScreen.feedback().toString()) - 1);
 			} catch (final NumberFormatException e) {
 				continue;
 			} catch (final IndexOutOfBoundsException e) {
@@ -114,18 +116,29 @@ public class UseItems extends WorldAction {
 		}
 	}
 
-	public String listitems(final ArrayList<Item> allitems) {
-		String reequiptext = "Your items:\n\n";
-		int i = 1;
+	static public String listitems(final ArrayList<Item> allitems,
+			boolean showkeys) {
+		String s = "";
+		int i = 0;
 		for (final Combatant c : Squad.active.members) {
 			String monster = c.toString();
-			for (final Item it : Squad.active.equipment.get(monster)) {
-				allitems.add(it);
-				reequiptext += "[" + i + "] " + it.name + " (with " + monster
-						+ ")\n";
+			s += "\n" + monster + ":\n";
+			boolean none = true;
+			for (final Item it : Squad.active.equipment.get(c.id)) {
+				if (allitems != null) {
+					allitems.add(it);
+				}
+				if (showkeys) {
+					s += "  [" + SelectScreen.SELECTIONKEYS[i] + "]";
+				}
+				s += " " + it.name + "\n";
 				i += 1;
+				none = false;
+			}
+			if (none) {
+				s += "   carrying no items.\n";
 			}
 		}
-		return reequiptext;
+		return s;
 	}
 }

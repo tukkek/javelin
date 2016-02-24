@@ -292,7 +292,8 @@ public class Tile {
 		}
 	}
 
-	public static boolean isDiggable(final BattleMap m, final int x, final int y) {
+	public static boolean isDiggable(final BattleMap m, final int x,
+			final int y) {
 		if (x == 0 || y == 0 || x == m.width - 1 || y == m.height - 1) {
 			return false;
 		}
@@ -309,8 +310,8 @@ public class Tile {
 		return ispassable[tile];
 	}
 
-	public static boolean isPassable(final Thing b, final BattleMap m, final int x,
-			final int y) {
+	public static boolean isPassable(final Thing b, final BattleMap m,
+			final int x, final int y) {
 		if (x < 0 || y < 0 || x >= m.width || y >= m.height) {
 			return false;
 		}
@@ -321,10 +322,10 @@ public class Tile {
 			return true;
 		}
 
-		// can't move to unpassable edge tile
-		if (x == 0 || y == 0 || x == m.width - 1 || y == m.height - 1) {
-			return false;
-		}
+		// // can't move to unpassable edge tile
+		// if (x == 0 || y == 0 || x == m.width - 1 || y == m.height - 1) {
+		// return false;
+		// }
 
 		if (issolid[tile]) {
 			if (b.getFlag("IsEthereal")) {
@@ -417,14 +418,16 @@ public class Tile {
 		return 0;
 	}
 
-	public static void kick(final Thing b, final BattleMap m, final int x, final int y) {
+	public static void kick(final Thing b, final BattleMap m, final int x,
+			final int y) {
 		final int tile = m.getTile(x, y);
 		final Thing t = get(tile);
 
 		if (t.getFlag("IsWall")) {
 			b.message("You kick the wall - ouch!");
 		} else if (t.getFlag("IsWaterTile")) {
-			b.message("Your attempt to kick the water only succeeds in getting you wet!");
+			b.message(
+					"Your attempt to kick the water only succeeds in getting you wet!");
 		} else {
 			b.message("You kick thin air");
 		}
@@ -477,7 +480,8 @@ public class Tile {
 			al.add(null);
 		}
 		if (al.get(tile) != null) {
-			throw new Error("Tile arraylist already filled at position " + tile);
+			throw new Error(
+					"Tile arraylist already filled at position " + tile);
 		}
 		al.set(tile, t);
 
@@ -582,8 +586,8 @@ public class Tile {
 		return mapColours[tile];
 	}
 
-	public static void enterTrigger(final Thing t, final BattleMap m, final int tx,
-			final int ty, final boolean touchFloor) {
+	public static void enterTrigger(final Thing t, final BattleMap m,
+			final int tx, final int ty, final boolean touchFloor) {
 		final int type = m.getTile(tx, ty);
 
 		if (t.x != tx || t.y != ty) {

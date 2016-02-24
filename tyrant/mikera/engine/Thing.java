@@ -15,7 +15,6 @@ import java.util.List;
 import javelin.controller.Movement;
 import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
-import tyrant.mikera.tyrant.AI;
 import tyrant.mikera.tyrant.Being;
 import tyrant.mikera.tyrant.Combat;
 import tyrant.mikera.tyrant.Event;
@@ -1428,9 +1427,9 @@ public class Thing extends BaseObject implements Description, ThingOwner {
 		return Lib.create(getString("Name"));
 	}
 
-	public int notify(final int eventtype, final int ext, final Object o) {
-		return AI.notify(this, eventtype, ext, o);
-	}
+	// public int notify(final int eventtype, final int ext, final Object o) {
+	// return AI.notify(this, eventtype, ext, o);
+	// }
 
 	public void give(final Thing giver, final Thing gift) {
 		if (handles("OnGift")) {

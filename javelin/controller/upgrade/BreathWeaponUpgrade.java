@@ -1,11 +1,16 @@
 package javelin.controller.upgrade;
 
-import javelin.model.unit.BreathWeapon;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.BreathWeapon.BreathArea;
-import javelin.model.unit.BreathWeapon.SavingThrow;
+import javelin.model.unit.abilities.BreathWeapon;
+import javelin.model.unit.abilities.BreathWeapon.BreathArea;
+import javelin.model.unit.abilities.BreathWeapon.SavingThrow;
 
+/**
+ * See {@link Monster#breaths}
+ * 
+ * @author alex
+ */
 public class BreathWeaponUpgrade extends Upgrade {
 	final private BreathWeapon breath;
 

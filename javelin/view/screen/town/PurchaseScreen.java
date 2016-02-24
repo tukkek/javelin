@@ -5,6 +5,11 @@ import javelin.model.world.Squad;
 import javelin.model.world.Town;
 import javelin.view.screen.town.option.Option;
 
+/**
+ * Any screen in which the player can spend money tu buy something.
+ * 
+ * @author alex
+ */
 public abstract class PurchaseScreen extends SelectScreen {
 
 	protected boolean bought;
@@ -14,19 +19,19 @@ public abstract class PurchaseScreen extends SelectScreen {
 	}
 
 	@Override
-	boolean select(final Option o) {
+	public boolean select(final Option o) {
 		bought = Squad.active.gold >= o.price;
 		if (bought) {
 			Squad.active.gold -= o.price;
-		} else {
-			text += "\nNot enough gold.";
-			Javelin.app.switchScreen(this);
+			return true;
 		}
-		return bought;
+		text += "\nNot enough gold.";
+		Javelin.app.switchScreen(this);
+		return false;
 	}
 
 	@Override
-	String printInfo() {
+	public String printInfo() {
 		return "Your squad has $" + formatcost(Squad.active.gold);
 	}
 
@@ -36,7 +41,7 @@ public abstract class PurchaseScreen extends SelectScreen {
 	}
 
 	@Override
-	void roundcost(final Option o) {
+	public void roundcost(final Option o) {
 		o.price = Math.round(o.price);
 	}
 }

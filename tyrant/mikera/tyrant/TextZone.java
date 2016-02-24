@@ -11,7 +11,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
-import javelin.controller.db.Preferences;
+import javelin.controller.db.Properties;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.tyrant.util.Text;
 
@@ -26,7 +26,7 @@ public class TextZone extends Component {
 
 	public TextZone() {
 		this("");
-		String color = Preferences.getString("ui.textcolor").toUpperCase();
+		String color = Properties.getString("ui.textcolor").toUpperCase();
 		try {
 			fontcolor = (Color) Color.class.getField(color).get(null);
 		} catch (Exception e) {

@@ -3,27 +3,33 @@ package javelin.controller.ai;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.controller.ai.valueselector.AbstractValueSelector;
+import javelin.controller.ai.cache.AiCache;
 import javelin.controller.ai.valueselector.MaxValueSelector;
 import javelin.controller.ai.valueselector.MinValueSelector;
+import javelin.controller.ai.valueselector.ValueSelector;
 
 /**
- * Essa � uma implementa��o abstrata e de baixo acoplamente do algoritmo
- * "busca minimax" usando poda alfabeta. Tudo aquilo que � pertinente ao jogo
- * espec�fico sendo jogado pela IA � delegado � implementa��o concreta dessa
- * classe.<br>
- * <br>
+ * Abstract implementation of a minimax decision tree with alpha-beta prunning.
+ * Uses {@link ChanceNode}s to represent actions to which the outcome is decided
+ * randomly. This is the workhorse of the AI engine and uses
+ * {@link ValueSelector}s to represent the players.
+ * 
+ * This started as a generic AI engine (actually it was taken from a checkers
+ * game I did for college, originally) but grew more and more coupled especially
+ * as efficiency issues started piling up. It could still probably be used for
+ * generic games but probably not without some mild refactoring.
  * 
  * @author Alex Henry
  * 
  * @see #alphaBetaSearch(Node)
- * @see AbstractValueSelector
+ * @see ValueSelector
+ * @see AiCache
  * 
  * @param <K>
  *            Implementa��o de {@link Node} que define os poss�veis estados de
  *            jogo.
  */
-public abstract class AbstractAlphaBetaSearch<K extends Node> {
+public abstract class AbstractAlphaBetaSearch {
 	/**
 	 * Construto de IA que age como o jogador artifical.
 	 * 
@@ -62,17 +68,15 @@ public abstract class AbstractAlphaBetaSearch<K extends Node> {
 	 *            Um {@link Node estado de jogo}, para o qual uma jogada precisa
 	 *            ser escolhida.
 	 * @return A jogada escolhida.
-	 * @throws InterruptedException
-	 *             If thread is interrupted.
 	 * @author Alex Henry
 	 */
-	public List<ChanceNode> alphaBetaSearch(final K node)
-			throws InterruptedException {
+	public List<ChanceNode> alphaBetaSearch(final Node node) {
 		try {
-			final Entry move = maxValueSelector.getValue(new Entry(node,
-					Integer.MIN_VALUE, new ArrayList<ChanceNode>()), this, 0,
-					Integer.MIN_VALUE, Integer.MAX_VALUE);
-			return move.cns;
+			return maxValueSelector.getValue(
+					new Entry(node, -Float.MAX_VALUE,
+							new ArrayList<ChanceNode>()),
+					this, 0, -Float.MAX_VALUE, Float.MAX_VALUE,
+					new ArrayList<Integer>(10)).cns;
 		} catch (final OutOfMemoryError e) {
 			catchMemoryIssue(e);
 			throw e;
@@ -93,7 +97,7 @@ public abstract class AbstractAlphaBetaSearch<K extends Node> {
 	 * @return Nada. Ao inv�s disso lan�a uma {@link RuntimeException}.
 	 * @author Alex Henry
 	 */
-	abstract protected K catchMemoryIssue(final Error e);
+	abstract protected Node catchMemoryIssue(final Error e);
 
 	/**
 	 * Essa fun��o mede o valor de utilidade de um determinado estado quando
@@ -109,7 +113,7 @@ public abstract class AbstractAlphaBetaSearch<K extends Node> {
 	 *         extremos em ambos os casos ser�o aqueles almejados pela IA, e
 	 *         geralmente devem ser os valores que indicam fim do jogo.
 	 */
-	public abstract float utility(final K node);
+	public abstract float utility(final Node node);
 
 	/**
 	 * Delega � subclasse a fun��o de verificar se o dado estado de jogo
@@ -121,7 +125,7 @@ public abstract class AbstractAlphaBetaSearch<K extends Node> {
 	 *         (vit�ria de algum dos jogadores, ou empate).
 	 * @author Alex Henry
 	 */
-	public abstract boolean terminalTest(final K node);
+	public abstract boolean terminalTest(final Node node);
 
 	/**
 	 * @param depth
@@ -137,7 +141,7 @@ public abstract class AbstractAlphaBetaSearch<K extends Node> {
 	public float utility(final List<ChanceNode> node) {
 		float sum = 0;
 		for (final ChanceNode cn : node) {
-			sum += cn.chance * utility((K) cn.n);
+			sum += cn.chance * utility(cn.n);
 		}
 		return sum;
 	}

@@ -2,7 +2,6 @@ package javelin.controller.challenge;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -17,97 +16,41 @@ import javelin.controller.challenge.factor.HdFactor;
 import javelin.controller.challenge.factor.SizeFactor;
 import javelin.controller.challenge.factor.SpeedFactor;
 import javelin.controller.challenge.factor.SpellsFactor;
-import javelin.controller.challenge.factor.quality.BreathWeapons;
-import javelin.controller.challenge.factor.quality.DamageReduction;
-import javelin.controller.challenge.factor.quality.EnergyResistance;
-import javelin.controller.challenge.factor.quality.HealingFactor;
+import javelin.controller.challenge.factor.quality.BreathFactor;
 import javelin.controller.challenge.factor.quality.QualitiesFactor;
-import javelin.controller.challenge.factor.quality.SpellResistance;
 import javelin.controller.exception.UnbalancedTeamsException;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
 /**
- * Some of the factors, as "2. Templates", "4. Traits (Type/Subtype/Race)" and
- * "3. Size", are packages of individual factors, they are not implemented.
+ * Determines a {@link Monster#challengeRating} according to the rules of Upper
+ * Krust's work, which is repackaged with permission on the 'doc' directory.
  * 
- * TODO Implement whole "Challenging challenge rating*. What hasn't been done
- * yet:
+ * His reference is used to the best of my abilities but has been adapted in a
+ * few cases due to programming complexity and artificial intelligence
+ * efficiency. Such cases should be documented in Javadoc.
  * 
- * 1. Character Levels (Prestige Classes and NPC Classes)
- * 
- * 6. Speed
- * 
- * 7. Armor Class
- * 
- * 8. Full Attack
- * 
- * 9. Special Abilities/Qualities
- * 
- * 9.01 Ability Score Loss
- * 
- * 9.02 Breath Weapons
- * 
- * 9.03 Create Spawn
- * 
- * 9.04 Damage Reduction
- * 
- * 9.05 Disease
- * 
- * 9.06 Energy Drain
- * 
- * 9.07 Energy Resistance
- * 
- * 9.08 Fast Healing
- * 
- * 9.09 Gaze Weapons
- * 
- * 9.10 Generic Abilities
- * 
- * 9.11 Immunities
- * 
- * 9.12 Insight/Luck/Profane/Sacred Bonuses
- * 
- * 9.13 Poison
- * 
- * 9.14 Ray Attacks
- * 
- * 9.15 Regeneration
- * 
- * 9.16 Spell-like Abilities
- * 
- * 9.17 Spell Resistance
- * 
- * 9.18 Spells (Integrated Spell Levels)
- * 
- * 9.19 Summon
- * 
- * 9.20 Touch Attacks
- * 
- * 9.21 Turn Resistance
- * 
- * 9.22 Unusual Abilities
+ * #see CrFactor
  */
 public class ChallengeRatingCalculator {
 	private static final int MAXIMUM_EL = 50;
 	private static final int MINIMUM_EL = -7;
-	public static final float[] CR_FRACTIONS = new float[] { 3.5f, 3f, 2.5f,
-			2f, 1.75f, 1.5f, 1.25f, 1f, .5f, 0f, -.5f, -1f, -1.5f, -2f, -2.5f,
-			-3 };
+	public static final float[] CR_FRACTIONS = new float[] { 3.5f, 3f, 2.5f, 2f,
+			1.75f, 1.5f, 1.25f, 1f, .5f, 0f, -.5f, -1f, -1.5f, -2f, -2.5f, -3 };
 	public static final HdFactor HIT_DICE_FACTOR = new HdFactor();
 	private static final CrFactor CLASS_LEVEL_FACTOR = new ClassLevelFactor();
 	/**
 	 * TODO reinclude AbilitiesFactor. right now it's making a huge difference
 	 * at very low el (game very start)
 	 */
-	public static final CrFactor[] CR_FACTORS = new CrFactor[] {
-			new AbilitiesFactor(), new ArmorClassFactor(), new FeatsFactor(),
-			new FullAttackFactor(), HIT_DICE_FACTOR, new HealingFactor(),
-			new SizeFactor(), new SpeedFactor(), new SpellsFactor(),
-			CLASS_LEVEL_FACTOR, new QualitiesFactor(), new BreathWeapons(),
-			new DamageReduction(), new EnergyResistance(),
-			new SpellResistance() };
+	public static final CrFactor[] CR_FACTORS =
+			new CrFactor[] { new AbilitiesFactor(), new ArmorClassFactor(),
+					new FeatsFactor(), new FullAttackFactor(), HIT_DICE_FACTOR,
+					new SizeFactor(), new SpeedFactor(), new SpellsFactor(),
+					CLASS_LEVEL_FACTOR, new QualitiesFactor(),
+					new BreathFactor(), new TouchAttackFactor() };
 	private static final FileWriter LOGFILE;
+
 	static {
 		if (Javelin.DEBUG) {
 			try {
@@ -119,14 +62,20 @@ public class ChallengeRatingCalculator {
 			LOGFILE = null;
 		}
 	}
+
 	static public boolean appliedgoldrenrule = false;
 
 	/**
-	 * See "challenging challenge ratings" source document (@ 'doc' folder), pg
-	 * 1: "HOW DO FACTORS WORK?". The silver rule isn't computed for at this
-	 * stage the plan is not to use the PHB classes - may change though TODO
+	 * See "challenging challenge ratings" source document (@ 'doc' folder),
+	 * page 1: "HOW DO FACTORS WORK?". The silver rule isn't computed for at
+	 * this stage the plan is not to use the PHB classes - may change though
+	 * TODO
+	 * 
+	 * This is intended more for human-readable CR, if you need to make
+	 * calculation you might prefer {@link #calculaterawcr(Monster)}.
 	 * 
 	 * @param monster
+	 *            Unit to rate.
 	 * @return The calculated CR.
 	 */
 	static public float calculateCr(final Monster monster) {
@@ -140,20 +89,36 @@ public class ChallengeRatingCalculator {
 		return cr;
 	}
 
+	/**
+	 * Unlike {@link #calculateCr(Monster)} this method doesn't
+	 * {@link #roundfraction(float)} or {@link #translatecr(float)}, making it
+	 * more suitable for more precise calculations.
+	 * 
+	 * @param monster
+	 *            Unit whose CR is to be calculated.
+	 * @return An array where index 0 is the sum of all {@link #CR_FACTORS} and
+	 *         1 is the same after the golden rule has been aplied.
+	 */
 	public static float[] calculaterawcr(final Monster monster) {
 		log(monster.toString());
-		final TreeMap<CrFactor, Float> factorHistory = new TreeMap<CrFactor, Float>();
-		float crp = 0;
+		final TreeMap<CrFactor, Float> factorHistory =
+				new TreeMap<CrFactor, Float>();
+		float cr = 0;
 		for (final CrFactor f : CR_FACTORS) {
 			final float result = f.calculate(monster);
 			log(" " + f + ": " + result);
 			factorHistory.put(f, result);
-			crp += result;
+			cr += result;
 		}
-		return new float[] { crp, goldenRule(factorHistory, crp) };
+		return new float[] { cr, goldenRule(factorHistory, cr) };
 	}
 
-	public static float roundfraction(float cr) {
+	/**
+	 * @param cr
+	 *            Decimal CR.
+	 * @return Similar result from allowed {@link #CR_FRACTIONS}.
+	 */
+	static float roundfraction(float cr) {
 		for (final float limit : CR_FRACTIONS) {
 			if (cr >= limit) {
 				return limit;
@@ -162,7 +127,12 @@ public class ChallengeRatingCalculator {
 		throw new RuntimeException("CR not correctly rounded: " + cr);
 	}
 
-	public static float translatecr(float cr) {
+	/**
+	 * @param cr
+	 *            Decimal CR (ex: -3).
+	 * @return D&D-style cr (ex: 1/16).
+	 */
+	static float translatecr(float cr) {
 		if (cr == .5) {
 			cr = 2 / 3f;
 		} else if (cr == 0) {
@@ -208,38 +178,40 @@ public class ChallengeRatingCalculator {
 		return cr;
 	}
 
-	public static int calculateEl(final List<Monster> team)
+	public static int calculateEl(final List<Combatant> team)
 			throws UnbalancedTeamsException {
 		return calculateEl(team, true);
 	}
 
-	public static int calculateSafe(final List<Monster> team) {
+	public static int calculateElSafe(final List<Combatant> group) {
 		try {
-			return calculateEl(team, false);
+			return calculateEl(group, false);
 		} catch (final UnbalancedTeamsException e) {
 			throw new RuntimeException("shouldn't happen!");
 		}
 	}
 
-	private static int calculateEl(final List<Monster> team, final boolean check)
-			throws UnbalancedTeamsException {
+	private static int calculateEl(final List<Combatant> group,
+			final boolean check) throws UnbalancedTeamsException {
 		float highestCr = Float.MIN_VALUE;
 		float sum = 0;
-		for (final Monster mg : team) {
+		for (final Combatant mgc : group) {
+			Monster mg = mgc.source;
 			sum += mg.challengeRating;
 			if (mg.challengeRating > highestCr) {
 				highestCr = mg.challengeRating;
 			}
 		}
 		if (check) {
-			for (final Monster mg : team) {
+			for (final Combatant mgc : group) {
+				Monster mg = mgc.source;
 				if (highestCr - mg.challengeRating > 18) {
 					throw new UnbalancedTeamsException();
 				}
 			}
 		}
-		final int groupCr = elFromCr(sum)
-				+ multipleOpponentsElModifier(team.size());
+		final int groupCr =
+				elFromCr(sum) + multipleOpponentsElModifier(group.size());
 		final int highestCrEl = elFromCr(highestCr);
 		return groupCr <= highestCrEl ? highestCrEl : groupCr;
 	}
@@ -296,8 +268,8 @@ public class ChallengeRatingCalculator {
 		if (teamSize <= 511) {
 			return -17;
 		}
-		throw new RuntimeException("Expand multiple opponents EL table: "
-				+ teamSize);
+		throw new RuntimeException(
+				"Expand multiple opponents EL table: " + teamSize);
 	}
 
 	public static int elFromCr(final float cr) {
@@ -478,17 +450,8 @@ public class ChallengeRatingCalculator {
 		throw new RuntimeException("Expand EL conversion: " + cr);
 	}
 
-	public static float calculatepositive(final List<Monster> group) {
-		return calculateSafe(group) + Math.abs(MINIMUM_EL) + 1;
-	}
-
-	public static List<Monster> convertlist(List<Combatant> team) {
-		final ArrayList<Monster> monsterlist = new ArrayList<Monster>(
-				team.size());
-		for (Combatant c : team) {
-			monsterlist.add(c.source);
-		}
-		return monsterlist;
+	public static float calculatepositive(final List<Combatant> group) {
+		return calculateElSafe(group) + Math.abs(MINIMUM_EL) + 1;
 	}
 
 	public static float[] eltocr(int teamel) {

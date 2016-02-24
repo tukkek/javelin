@@ -1,5 +1,10 @@
 package javelin.controller.upgrade.classes;
 
+/**
+ * Represent a line on the level table for a class.
+ * 
+ * @author alex
+ */
 public class Level {
 	public int bab;
 	int fort;

@@ -3,6 +3,10 @@ package javelin.controller.upgrade.feat;
 import javelin.model.feat.PreciseShot;
 import javelin.model.unit.Combatant;
 
+/**
+ * @see javelin.model.feat.ImprovedPreciseShot
+ * @author alex
+ */
 public class ImprovedPreciseShot extends FeatUpgrade {
 	public ImprovedPreciseShot() {
 		super(javelin.model.feat.ImprovedPreciseShot.SINGLETON);

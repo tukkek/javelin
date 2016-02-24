@@ -1,0 +1,7 @@
+The build tool Ant can be used to create a JAR from build.xml or the root folder can be imported as a Java project in Eclipse. Some source folders may show errors but as long as the folder 'javelin' doesn't you should be able to hack, compile and play the game.
+
+The package.sh BASH script will let you create a javelin.zip file intended for releasing the game. You will need to create javelin.jar first, either using ANT or Eclipse's export project dialog - again you may experience some errors/warnings but everything should work fine as long as the 'javelin' folder compiles.
+
+If you plan on using build.xml you will need to update the destfile, dir and src attributes to reflect your directory path. On Windows destfile would become something like "c:\your\directory\javelin.jar".
+
+Read the doc/javadoc/index.html for useful information if you're planning on hacking Javelin. It's far from complete but reading the introduction and field and method listing of each class will help you understand the game's architecture and a few critical points that are noted.

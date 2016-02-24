@@ -13,14 +13,14 @@ import javelin.model.unit.Combatant;
  * 
  * @author alex
  */
-public class ForceWait extends Action {
+public class ForceWait extends Action implements AiAction {
 
 	public ForceWait() {
 		super("Wait", new String[0]);
 	}
 
 	@Override
-	public List<List<ChanceNode>> getSucessors(BattleState gameState,
+	public List<List<ChanceNode>> getoutcomes(BattleState gameState,
 			Combatant combatant) {
 		ArrayList<List<ChanceNode>> list = new ArrayList<List<ChanceNode>>();
 		list.add(AiMovement.wait(gameState, combatant));

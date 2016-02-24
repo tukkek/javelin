@@ -1,7 +1,6 @@
 package javelin;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Image;
 import java.awt.event.WindowAdapter;
@@ -13,39 +12,60 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.prefs.Preferences;
 
-import javelin.controller.db.StateManager;
-import javelin.controller.db.reader.MonsterReader;
-import javelin.controller.db.reader.Organization;
-import javelin.model.BattleMap;
-import javelin.model.unit.Combatant;
-import javelin.model.unit.Monster;
-import javelin.model.world.Squad;
-import javelin.view.screen.BattleScreen;
-import javelin.view.screen.IntroScreen;
-import javelin.view.screen.world.WorldScreen;
-
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import javelin.controller.Weather;
+import javelin.controller.db.StateManager;
+import javelin.controller.db.reader.MonsterReader;
+import javelin.controller.db.reader.factor.Organization;
+import javelin.controller.map.Map;
+import javelin.model.BattleMap;
+import javelin.model.item.Key.Color;
+import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
+import javelin.model.world.Dungeon;
+import javelin.model.world.Squad;
+import javelin.model.world.WorldMap;
+import javelin.view.screen.BattleScreen;
+import javelin.view.screen.town.RecruitScreen;
+import javelin.view.screen.world.WorldScreen;
+import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
+import tyrant.mikera.tyrant.InfoScreen;
 import tyrant.mikera.tyrant.QuestApp;
-import tyrant.mikera.tyrant.Tile;
 
+/**
+ * Utility class for broad-level rules and game-behavior.
+ * 
+ * @author alex
+ */
 public class Javelin {
-	public static final boolean DEBUGDISABLECOMBAT = javelin.controller.db.Preferences
-			.getString("cheat.combat") != null;
-	public static final Integer DEBUGSTARTINGXP = javelin.controller.db.Preferences
-			.getInteger("cheat.xp", null);
-	public static final Integer DEBUGSTARTINGGOLD = javelin.controller.db.Preferences
-			.getInteger("cheat.gold", null);
+	/**
+	 * Add -Ddebug=true to the java VM command line for easier debugging and
+	 * logging.
+	 */
+	public static final boolean DEBUG = System.getProperty("debug") != null;
+	public static final boolean DEBUGDISABLECOMBAT =
+			javelin.controller.db.Properties.getString("cheat.combat") != null;
+	public static final Integer DEBUGSTARTINGXP =
+			javelin.controller.db.Properties.getInteger("cheat.xp", null);
+	public static final Integer DEBUGSTARTINGGOLD =
+			javelin.controller.db.Properties.getInteger("cheat.gold", null);
+	public static final Integer DEBUGSTARTINGHAX =
+			javelin.controller.db.Properties.getInteger("cheat.haxor", null);
 	public static final Integer DEBUGMINIMUMFOES = null;
 	public static final Integer DEBUGWEATHER = null;
-	public static final String DEBUGMAPTYPE = null;
+	public static final Map DEBUGMAPTYPE = null;
+	public static final boolean DEBUG_SPAWNINCURSION = false;
+	public static final Float DEBUGSTARTINGCR = null;
+	public static final Color DEBUGSTARTINGKEY = null;
+	public static final String DEBUGALLOWMONSTER = null;
 	public static final String DEBUGPERIOD = null;
 
 	public static final String PERIOD_MORNING = "Morning";
@@ -55,18 +75,13 @@ public class Javelin {
 
 	private static final String TITLE = "Javelin";
 
-	/**
-	 * Add -Ddebug=true to the java VM command line for easier debugging and
-	 * logging. TODO
-	 */
-	public static final boolean DEBUG = System.getProperty("debug") != null;
-	private static final Preferences RECORD = Preferences
-			.userNodeForPackage(Javelin.class);
-	public static TreeMap<String, String> DESCRIPTIONS = new TreeMap<String, String>();
-	public static TreeMap<Float, List<Monster>> MONSTERS = new TreeMap<Float, List<Monster>>();
+	private static final Preferences RECORD =
+			Preferences.userNodeForPackage(Javelin.class);
+	public static TreeMap<String, String> DESCRIPTIONS =
+			new TreeMap<String, String>();
+	public static TreeMap<Float, List<Monster>> MONSTERSBYCR =
+			new TreeMap<Float, List<Monster>>();
 	public static List<Monster> ALLMONSTERS = new ArrayList<Monster>();
-
-	public static String mapType;
 	public static JavelinApp app;
 	public static Combatant captured = null;
 
@@ -86,8 +101,9 @@ public class Javelin {
 	}
 
 	public static void main(final String[] args) {
+		Thread.currentThread().setName("Javelin");
 		final Frame f = new Frame(TITLE);
-		f.setBackground(Color.black);
+		f.setBackground(java.awt.Color.black);
 		f.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(final WindowEvent e) {
@@ -126,13 +142,11 @@ public class Javelin {
 				return c;
 			}
 		}
-
 		return null;
 	}
 
 	public static Combatant getLowestAp() {
 		return BattleScreen.active.map.getState().next;
-		//
 	}
 
 	public static String getDayPeriod() {
@@ -154,25 +168,31 @@ public class Javelin {
 	}
 
 	/**
-	 * This is also the only funcntion that should write to {@link Squad#active}
+	 * This is also the only function that should write to {@link Squad#active}
 	 * so it should be called with extreme caution to avoid changing it in the
 	 * middle of an action.
 	 * 
 	 * @return Next squad to act.
 	 */
 	public static Squad act() {
+		Squad next = nexttoact();
+		Squad.active = next;
+		if (WorldScreen.lastday == -1) {
+			WorldScreen.lastday = Math.ceil(Squad.active.hourselapsed / 24.0);
+		}
+		if (next != null) {
+			Game.instance().hero = next.visual;
+		}
+		return next;
+	}
+
+	public static Squad nexttoact() {
 		Squad next = null;
 		for (final Squad s : Squad.squads) {
 			if (next == null || s.hourselapsed < next.hourselapsed) {
 				next = s;
 			}
 		}
-		Squad.active = next;
-		if (WorldScreen.lastday == -1) {
-			WorldScreen.lastday = Math.ceil(Squad.active.hourselapsed / 24.0);
-		}
-		Game.instance().hero = next.visual;
-		BattleMap.blueTeam = next.members;
 		return next;
 	}
 
@@ -197,9 +217,10 @@ public class Javelin {
 	public static void lose() {
 		StateManager.clear();
 		BattleScreen.active.messagepanel.clear();
-		Game.message("You have lost all your monsters! Game over T_T\n\n"
-				+ record(), null, Delay.NONE);
-		while (IntroScreen.feedback() != '\n') {
+		Game.message(
+				"You have lost all your monsters! Game over T_T\n\n" + record(),
+				null, Delay.NONE);
+		while (InfoScreen.feedback() != '\n') {
 			continue;
 		}
 		System.exit(0);
@@ -228,30 +249,20 @@ public class Javelin {
 
 	public static Combatant recruit(Monster pick) {
 		Combatant c = new Combatant(null, pick.clone(), true);
+		RecruitScreen.namingscreen(c.source);
 		Squad.active.members.add(c);
 		return c;
 	}
 
-	public static boolean namerecruits() {
-		boolean renamed = false;
-		for (final Combatant m : BattleMap.blueTeam) {
-			if (m.source.customName == null) {
-				JavelinApp.namingscreen(m.source);
-				renamed = true;
-			}
-		}
-		return renamed;
-	}
-
-	public static int difficulty(final int tile) {
-		switch (tile) {
-		case Tile.PLAINS:
+	public static int difficulty() {
+		switch (JavelinApp.worldtile()) {
+		case WorldMap.EASY:
 			return -1;
-		case Tile.FORESTS:
+		case WorldMap.MEDIUM:
 			return 0;
-		case Tile.HILLS:
+		case WorldMap.HARD:
 			return +1;
-		case Tile.GUNK:
+		case WorldMap.VERYHARD:
 			return +2;
 		default:
 			throw new RuntimeException("Unknown tile difficulty!");
@@ -260,5 +271,54 @@ public class Javelin {
 
 	public static void settexture(Image file) {
 		QuestApp.paneltexture = file;
+	}
+
+	public static Combatant getCombatant(int id) {
+		for (Combatant c : BattleMap.combatants) {
+			if (c.id == id) {
+				return c;
+			}
+		}
+		return null;
+	}
+
+	public static ArrayList<String> getTerrain() {
+		ArrayList<String> terrains = new ArrayList<String>();
+		if (Dungeon.active != null) {
+			terrains.add("underground");
+			return terrains;
+		}
+		int tile = JavelinApp.worldtile();
+		if (tile == WorldMap.EASY) {
+			terrains.add(RPG.pick(new String[] { "plains", "plains", "hill" }));
+		} else if (tile == WorldMap.MEDIUM) {
+			terrains.add(RPG.pick(new String[] { "forest", "forest", "hill" }));
+		} else if (tile == WorldMap.HARD) {
+			terrains.add(RPG.pick(new String[] { "mountains", "desert" }));
+		} else if (tile == WorldMap.VERYHARD) {
+			terrains.add("marsh");
+		} else {
+			throw new RuntimeException("Unknown tile difficulty!");
+		}
+		if (Weather.now == 2) {
+			terrains.add("aquatic");
+		}
+		return terrains;
+	}
+
+	static public String translatetochance(int rolltohit) {
+		if (rolltohit <= 4) {
+			return "effortless";
+		}
+		if (rolltohit <= 8) {
+			return "easy";
+		}
+		if (rolltohit <= 12) {
+			return "fair";
+		}
+		if (rolltohit <= 16) {
+			return "hard";
+		}
+		return "unlikely";
 	}
 }

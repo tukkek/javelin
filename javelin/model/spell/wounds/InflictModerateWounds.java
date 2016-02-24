@@ -6,6 +6,9 @@ import javelin.model.spell.Ray;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 
+/**
+ * See the d20 SRD for more info.
+ */
 public class InflictModerateWounds extends Ray {
 
 	public InflictModerateWounds(final String name, final float incrementcost,
@@ -15,12 +18,12 @@ public class InflictModerateWounds extends Ray {
 	}
 
 	public InflictModerateWounds(final String name, final float incrementcost) {
-		this(name, incrementcost, new int[] { 1, 1, 10 + 2 + 1 }, 3);
+		this(name, incrementcost, new int[] { 2, 8, 3 }, 2);
 	}
 
-	public InflictModerateWounds(final String string) {
-		this(string + "inflict moderate wounds", SpellsFactor
-				.calculatechallengefortouchspellconvertedtoray(2));
+	public InflictModerateWounds() {
+		this("Inflict moderate wounds",
+				SpellsFactor.ratetouchconvertedtoray(2));
 	}
 
 	@Override
@@ -44,8 +47,7 @@ public class InflictModerateWounds extends Ray {
 	@Override
 	public int calculatesavetarget(final Combatant caster,
 			final Combatant target) {
-		final int will = target.source.will();
-		return will == Integer.MAX_VALUE ? will : save(spelldata[2], will);
+		return save(spelldata[2], target.source.will(), caster);
 	}
 
 	@Override

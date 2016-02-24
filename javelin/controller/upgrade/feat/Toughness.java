@@ -1,11 +1,14 @@
 package javelin.controller.upgrade.feat;
 
-import javelin.model.feat.Feat;
 import javelin.model.unit.Combatant;
 
+/**
+ * @see javelin.model.feat.Toughness
+ * @author alex
+ */
 public class Toughness extends FeatUpgrade {
-	public Toughness(final String name, final Feat featp) {
-		super(name, featp);
+	public Toughness() {
+		super("Toughness", javelin.model.feat.Toughness.singleton);
 		stack = true;
 	}
 
@@ -16,7 +19,9 @@ public class Toughness extends FeatUpgrade {
 
 	@Override
 	public boolean apply(final Combatant m) {
-		super.apply(m);
+		if (!super.apply(m)) {
+			return false;
+		}
 		m.maxhp += 3;
 		m.hp += 3;
 		m.source.hd.extrahp += 3;

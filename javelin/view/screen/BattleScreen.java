@@ -12,89 +12,96 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.prefs.BackingStoreException;
-import java.util.prefs.Preferences;
 
 import javax.swing.JOptionPane;
 
 import javelin.Javelin;
 import javelin.controller.Movement;
 import javelin.controller.action.Action;
-import javelin.controller.action.ActionDescription;
-import javelin.controller.action.ActionMapping;
-import javelin.controller.action.GiveItem;
+import javelin.controller.action.PassItem;
 import javelin.controller.action.UseItem;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.exception.BattleEvent;
-import javelin.controller.exception.EndBattle;
 import javelin.controller.exception.RepeatTurnException;
 import javelin.controller.exception.UnbalancedTeamsException;
+import javelin.controller.exception.battle.BattleEvent;
+import javelin.controller.exception.battle.EndBattle;
+import javelin.controller.fight.Fight;
 import javelin.model.BattleMap;
 import javelin.model.condition.Condition;
+import javelin.model.condition.Dominated;
 import javelin.model.state.BattleState;
-import javelin.model.state.BattleState.Vision;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Squad;
+import javelin.model.world.Squad.Transport;
 import javelin.view.MapPanel;
 import javelin.view.StatusPanel;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Being;
-import tyrant.mikera.tyrant.Door;
-import tyrant.mikera.tyrant.Event;
-import tyrant.mikera.tyrant.Food;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
 import tyrant.mikera.tyrant.GameHandler;
 import tyrant.mikera.tyrant.IActionHandler;
 import tyrant.mikera.tyrant.InfoScreen;
-import tyrant.mikera.tyrant.InventoryScreen;
 import tyrant.mikera.tyrant.LevelMapPanel;
 import tyrant.mikera.tyrant.MessagePanel;
 import tyrant.mikera.tyrant.QuestApp;
 import tyrant.mikera.tyrant.Screen;
-import tyrant.mikera.tyrant.Spell;
 import tyrant.mikera.tyrant.Tile;
 
+/**
+ * Screen context during battle.
+ * 
+ * TODO it has become a hierarchy that behaves how different types of
+ * {@link Fight}s should behave. The ideal would be for all this type of
+ * controller behavior to move to {@link Fight}. For example: {@link LairScreen}
+ * .
+ * 
+ * @author alex
+ */
 public class BattleScreen extends Screen {
-	class DescendingLevelComparator implements Comparator<Combatant> {
+	public class DescendingLevelComparator implements Comparator<Combatant> {
 		@Override
 		public int compare(Combatant arg0, Combatant arg1) {
 			return new Integer(sumcrandxp(arg0)).compareTo(sumcrandxp(arg1));
 		}
 
 		public int sumcrandxp(Combatant arg0) {
-			return -Math
-					.round(100 * (arg0.xp.floatValue() + ChallengeRatingCalculator
-							.calculateCr(arg0.source)));
+			return -Math.round(100 * (arg0.xp.floatValue()
+					+ ChallengeRatingCalculator.calculateCr(arg0.source)));
 		}
 	}
 
-	private static final Preferences PREFERENCES = Preferences
-			.userNodeForPackage(BattleScreen.class);
 	String[] ERRORQUOTES = new String[] { "A wild error appears!",
 			"You were eaten by a grue.", "So again it has come to pass..." };
 	private static final long serialVersionUID = 3907207143852421428L;
+
+	public static List<Combatant> originalredteam;
+	public static List<Combatant> originalblueteam;
 
 	public MapPanel mappanel;
 	public MessagePanel messagepanel;
 	public StatusPanel statuspanel;
 	public GameHandler gameHandler = new GameHandler();
 	public BattleMap map;
-	private InventoryScreen inventoryScreen;
-	private List<IActionHandler> actionHandlers;
-	private ArrayList<String> lastMessages = new ArrayList<String>();
-	private boolean shownLastMessages = false;
-	private boolean overridefeedback;
-	private Combatant lastcomputermove;
 
-	public static List<Combatant> originalredteam;
-	public static List<Combatant> originalblueteam;
+	List<IActionHandler> actionHandlers;
+	ArrayList<String> lastMessages = new ArrayList<String>();
+	boolean shownLastMessages = false;
+	boolean overridefeedback;
+	Combatant lastwascomputermove;
+	boolean firstvision;
+	boolean allvisible;
+	/**
+	 * Allows the human player to use up to .5AP of movement before ending turn.
+	 */
+	public float spentap = 0;
+	public LevelMapPanel levelMap = null;
+	static public Combatant lastlooked = null;
 
 	public BattleScreen() {
 		super(Javelin.app);
@@ -118,6 +125,47 @@ public class BattleScreen extends Screen {
 
 	public static BattleScreen active;
 
+	public BattleScreen(final QuestApp q, final BattleMap mapp,
+			boolean addsidebar) {
+		super(q);
+		map = mapp;
+		if (q == null) {
+			return;
+		}
+		BattleScreen.active = this;
+		q.setScreen(this);
+		setForeground(Color.white);
+		setBackground(Color.black);
+		setLayout(new BorderLayout());
+		messagepanel = new MessagePanel(q);
+		add(messagepanel, "South");
+		mappanel = new MapPanel(this);
+		add(mappanel, "Center");
+		final Panel cp = new Panel();
+		cp.setLayout(new BorderLayout());
+		add("East", cp);
+		statuspanel = new StatusPanel();
+		if (addsidebar) {
+			cp.add("Center", statuspanel);
+			if (addminimap()) {
+				levelMap = new LevelMapPanel();
+				cp.add(levelMap, "South");
+			}
+		}
+		setFont(QuestApp.mainfont);
+		Game.enterMap(map, Game.hero().x, Game.hero().y);
+		q.switchScreen(this);
+		BattleScreen.active = this;
+		// endTurn();
+		BattleScreen.originalblueteam =
+				new ArrayList<Combatant>(BattleMap.blueTeam);
+		BattleScreen.originalredteam =
+				new ArrayList<Combatant>(BattleMap.redTeam);
+		Game.delayblock = false;
+		map.makeAllInvisible();
+		mappanel.repaint();
+	}
+
 	/**
 	 * this is the main game loop. it catches any exceptions for stability and
 	 * lets the game continue <br>
@@ -125,6 +173,12 @@ public class BattleScreen extends Screen {
 	 * ensures that the rest of the map stays up to date <br>
 	 */
 	public void mainLoop() {
+		mappanel.setVisible(false);
+		Thing hero = map.getState().next.visual;
+		mappanel.setPosition(map, hero.x, hero.y);
+		Game.redraw();
+		mappanel.autozoom(BattleMap.combatants, hero.x, hero.y);
+		mappanel.setVisible(true);
 		while (true) {
 			step();
 		}
@@ -139,22 +193,19 @@ public class BattleScreen extends Screen {
 		}
 		if (Javelin.DEBUG) {
 			humanTurn();
-		} else {
-			try {
-				humanTurn();
-			} catch (BattleEvent e) {
-				throw e;
-			} catch (RuntimeException e) {
-				e.printStackTrace();
-				JOptionPane
-						.showMessageDialog(
-								this,
-								RPG.pick(ERRORQUOTES)
-										+ "\n\n"
-										+ "Please forward us a screenshot of the console output so we\n"
-										+ "can get this error fixed as soon as possible.");
-				System.exit(1);
-			}
+			return;
+		}
+		try {
+			humanTurn();
+		} catch (BattleEvent e) {
+			throw e;
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(Javelin.app,
+					RPG.pick(ERRORQUOTES) + "\n\n"
+							+ "Please forward us a screenshot of the console output so we\n"
+							+ "can get this error fixed as soon as possible.");
+			System.exit(1);
 		}
 	}
 
@@ -177,9 +228,11 @@ public class BattleScreen extends Screen {
 			try {
 				updatescreen(h);
 				Game.messagepanel.clear();
+				endturn();
 				final KeyEvent updatableUserAction = getUserInput();
 				tryTick(h, convertEventToAction(updatableUserAction),
 						updatableUserAction.isShiftDown());
+				// endturn();
 				break;
 			} catch (final RepeatTurnException e) {
 				updateMessages(lastMessages);
@@ -207,13 +260,7 @@ public class BattleScreen extends Screen {
 
 	protected void updatescreen(final Thing h) {
 		centerscreen(h.x, h.y);
-		if (map.period == Javelin.PERIOD_EVENING
-				|| map.period == Javelin.PERIOD_NIGHT) {
-			map.makeAllInvisible();
-			h.calculateVision();
-		} else {
-			map.setAllVisible();
-		}
+		view(h);
 		if (shownLastMessages) {
 			shownLastMessages = false;
 		} else {
@@ -225,7 +272,33 @@ public class BattleScreen extends Screen {
 	}
 
 	public void centerscreen(int x, int y) {
-		mappanel.viewPosition(map, x, y);
+		centerscreen(x, y, false);
+	}
+
+	public void view(final Thing h) {
+		if (map.period == Javelin.PERIOD_EVENING
+				|| map.period == Javelin.PERIOD_NIGHT) {
+			if (firstvision) {
+				firstvision = false;
+				return;
+			}
+			map.makeAllInvisible();
+			h.calculateVision();
+		} else if (!allvisible) {
+			map.setAllVisible();
+			allvisible = true;
+		}
+	}
+
+	public void centerscreen(int x, int y, boolean force) {
+		if (force || center(x, y)) {
+			mappanel.viewPosition(map, x, y);
+		}
+	}
+
+	protected boolean center(int x, int y) {
+		return !(2 + mappanel.startx <= x && x <= mappanel.endx - 2
+				&& 2 + mappanel.starty <= y && y <= mappanel.endy - 2);
 	}
 
 	private void updateMessages() {
@@ -236,29 +309,54 @@ public class BattleScreen extends Screen {
 		if (BattleMap.redTeam.isEmpty() || BattleMap.blueTeam.isEmpty()) {
 			throw new EndBattle();
 		}
+		if (!checkforenemies()) {
+			throw new EndBattle();
+		}
+	}
+
+	public boolean checkforenemies() {
+		for (Combatant c : BattleMap.redTeam) {
+			if (!c.hascondition(Dominated.class)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
 	 * First thing to happen after an {@link EndBattle}
 	 */
 	public void onEnd() {
+		boolean victory = BattleMap.redTeam.isEmpty() || !checkforenemies();
+		BattleState s = map.getState();
+		terminateconditions(s);
+		map.setState(s);
 		for (Combatant c : fleeing) {
 			BattleMap.blueTeam.add(c);
 			BattleMap.combatants.add(c);
 		}
 		Game.messagepanel.clear();
 		String combatresult;
-		if (BattleMap.redTeam.isEmpty()) {
+		if (victory) {
 			combatresult = dealreward();
 		} else if (fleeing.isEmpty()) {
 			combatresult = "You lost!";
 			Squad.active.disband();
 			return;
+		} else if (Javelin.app.fight.friendly()) {
+			combatresult = "You lost!";
 		} else {
 			combatresult = "Fled from combat. No awards received.";
-			if (!BattleMap.redTeam.isEmpty() && !BattleMap.dead.isEmpty()) {
+			if (!victory && fleeing.size() != originalblueteam.size()) {
 				combatresult += "\nFallen allies left behind are lost!";
-				BattleMap.dead.clear();
+				for (Combatant abandoned : BattleMap.dead) {
+					abandoned.hp = Combatant.DEADATHP;
+				}
+			}
+			if (Squad.active.transport != Transport.NONE) {
+				combatresult += " Vehicle lost!";
+				Squad.active.transport = Transport.NONE;
+				Squad.active.updateavatar();
 			}
 		}
 		singleMessage(combatresult + "\nPress any key to continue...",
@@ -266,16 +364,33 @@ public class BattleScreen extends Screen {
 		getUserInput();
 	}
 
+	public void terminateconditions(BattleState s) {
+		checkblock();
+		for (Combatant c : BattleMap.combatants) {
+			for (Condition co : c.conditions) {
+				co.finish(s);
+				updateMessages();
+				checkblock();
+			}
+		}
+	}
+
 	public void afterend() {
 		return;
 	}
 
+	/**
+	 * Only called on victory.
+	 * 
+	 * @return Reward description.
+	 */
 	public String dealreward() {
-		final int bonus = RewardCalculator.receivegold(originalredteam);
+		final int bonus =
+				RewardCalculator.receivegold(BattleScreen.originalredteam);
 		Squad.active.gold += bonus;
 		Squad.active.members = BattleMap.blueTeam;
-		final String gold = " Party receives $"
-				+ SelectScreen.formatcost(bonus) + "!\n";
+		final String gold =
+				" Party receives $" + SelectScreen.formatcost(bonus) + "!\n";
 		return "Congratulations! " + rewardxp() + gold;
 	}
 
@@ -283,18 +398,16 @@ public class BattleScreen extends Screen {
 		int eldifference;
 		try {
 			eldifference = Math.round(ChallengeRatingCalculator
-					.calculateEl(ChallengeRatingCalculator
-							.convertlist(originalredteam))
+					.calculateEl(BattleScreen.originalredteam)
 					- ChallengeRatingCalculator
-							.calculateEl(ChallengeRatingCalculator
-									.convertlist(originalblueteam)));
+							.calculateEl(BattleScreen.originalblueteam));
 		} catch (final UnbalancedTeamsException e) {
 			throw new RuntimeException(e);
 		}
 		double partycr = RewardCalculator.getpartycr(eldifference,
 				BattleMap.blueTeam.size());
-		List<Combatant> survivors = (List<Combatant>) BattleMap.blueTeam
-				.clone();
+		List<Combatant> survivors =
+				(List<Combatant>) BattleMap.blueTeam.clone();
 		Collections.sort(survivors, new DescendingLevelComparator());
 		float segments = 0;
 		for (int i = 1; i <= survivors.size(); i++) {
@@ -302,9 +415,8 @@ public class BattleScreen extends Screen {
 		}
 		for (int i = 1; i <= survivors.size(); i++) {
 			final Combatant survivor = survivors.get(i - 1);
-			survivor.xp = survivor.xp
-					.add(new BigDecimal(partycr * i / segments).setScale(2,
-							RoundingMode.HALF_UP));
+			survivor.xp = survivor.xp.add(new BigDecimal(partycr * i / segments)
+					.setScale(2, RoundingMode.HALF_UP));
 		}
 		return "Party wins "
 				+ new BigDecimal(100 * partycr).setScale(0, RoundingMode.UP)
@@ -312,7 +424,6 @@ public class BattleScreen extends Screen {
 	}
 
 	private void updateMessages(final ArrayList<String> messageList) {
-		// Game.messagepanel.clear();
 		for (final String s : messageList) {
 			Game.messagepanel.add(s + "\n");
 		}
@@ -323,44 +434,61 @@ public class BattleScreen extends Screen {
 
 	private void computerTurn() {
 		overridefeedback = false;
+		spentap = 0;
 		while (!BattleMap.blueTeam.isEmpty()) {
 			checkblock();
+			endturn();
+			checkEndBattle();
 			final BattleState state = map.getState();
 			final Combatant active = state.next;
 			if (state.blueTeam.contains(active)) {
-				lastcomputermove = null;
+				lastwascomputermove = null;
 				return;
 			}
-			lastcomputermove = active;
+			lastwascomputermove = active;
 			if (overridefeedback) {
 				overridefeedback = false;
 			} else {
 				computerfeedback("Thinking...\n", Delay.NONE);
 			}
-			try {
+			if (Javelin.DEBUG) {
 				Action.outcome(ThreadManager.think(state), true);
-			} catch (final RuntimeException e) {
-				singleMessage("Fatal error: " + e.getMessage(), Delay.NONE);
-				messagepanel.repaint();
-				throw e;
+			} else {
+				try {
+					Action.outcome(ThreadManager.think(state), true);
+				} catch (final RuntimeException e) {
+					singleMessage("Fatal error: " + e.getMessage(), Delay.NONE);
+					messagepanel.repaint();
+					throw e;
+				}
 			}
 		}
 	}
 
+	/**
+	 * Called after a computer or human move.
+	 */
+	protected void endturn() {
+		// do nothing
+	}
+
 	public void computerfeedback(String s, Delay delay) {
 		messagepanel.clear();
-		if (lastcomputermove != null) {
-			updatescreen(setHero(lastcomputermove));
+		if (lastwascomputermove != null) {
+			updatescreen(setHero(lastwascomputermove));
 		}
 		singleMessage(s, delay);
 	}
 
 	public void updatescreen(final ChanceNode state, boolean enableoverrun) {
 		BattleScreen.active.map.setState(state.n);
-		Game.redraw();
+		if (lastwascomputermove == null) {
+			Game.redraw();
+		}
 		final BattleState s = (BattleState) state.n;
 		Delay delay = state.delay;
-		if (enableoverrun && delay == Delay.WAIT && s.redTeam.contains(s.next)) {
+		if (enableoverrun && delay == Delay.WAIT
+				&& s.redTeam.contains(s.next)) {
 			delay = Delay.NONE;
 			overridefeedback = true;
 		}
@@ -386,7 +514,6 @@ public class BattleScreen extends Screen {
 			return;
 		}
 		performAction(thing, action, isShiftDown);
-		endTurn();
 	}
 
 	public Action convertEventToAction(final KeyEvent keyEvent) {
@@ -399,58 +526,6 @@ public class BattleScreen extends Screen {
 	protected KeyEvent getUserInput() {
 		Game.instance().clearMessageList();
 		return Game.getInput();
-	}
-
-	public BattleScreen(final QuestApp q, final BattleMap mapp) {
-		super(q);
-		map = mapp;
-		if (q == null) {
-			return;
-		}
-		BattleScreen.active = this;
-		q.setScreen(this);
-		setForeground(Color.white);
-		setBackground(Color.black);
-		setLayout(new BorderLayout());
-		messagepanel = new MessagePanel(q);
-		add(messagepanel, "South");
-		mappanel = new MapPanel(this);
-		add(mappanel, "Center");
-		final Panel cp = new Panel();
-		cp.setLayout(new BorderLayout());
-		add("East", cp);
-		statuspanel = new StatusPanel();
-		if (addsidebar()) {
-			cp.add("Center", statuspanel);
-
-			if (addminimap()) {
-				levelMap = new LevelMapPanel();
-				cp.add(levelMap, "South");
-			}
-		}
-		setFont(QuestApp.mainfont);
-		q.switchScreen(this);
-		Game.enterMap(map, Game.hero().x, Game.hero().y);
-		endTurn();
-		originalblueteam = new ArrayList<Combatant>(BattleMap.blueTeam);
-		originalredteam = new ArrayList<Combatant>(BattleMap.redTeam);
-		Game.delayblock = false;
-		map.setAllVisible();
-		mappanel.zoomfactor = PREFERENCES.getInt("zoom", 130);
-		mappanel.repaint();
-	}
-
-	public void debugclearpreferences() {
-		try {
-			PREFERENCES.clear();
-		} catch (BackingStoreException e) {
-			e.printStackTrace();
-		}
-		System.exit(0);
-	}
-
-	protected boolean addsidebar() {
-		return true;
 	}
 
 	protected boolean addminimap() {
@@ -468,70 +543,64 @@ public class BattleScreen extends Screen {
 			}
 		}
 		Combatant combatant = Game.hero().combatant;
-		if (action.perform(combatant, map)) {
-			return;
-		}
-		if (action == Action.WAIT) {
-			thing.combatant.await();
-		} else if (action.isMovementKey()) {
-			move(thing, action);
-		} else if (action == Action.HELP) {
-			help(ActionMapping.actions);
-		} else if (action == Action.MESSAGES) {
-			doMessages();
-		} else if (action == Action.ZOOM_OUT) {
-			doZoom(25);
-			throw new RepeatTurnException();
-		} else if (action == Action.ZOOM_IN) {
-			doZoom(-25);
-			throw new RepeatTurnException();
-		} else if (action == Action.FLEE) {
-			flee(combatant);
-		} else if (action == Action.LOOK) {
-			doLook();
-		} else if (action == UseItem.SINGLETON) {
-			UseItem.use();
-		} else if (action == GiveItem.SINGLETON) {
-			GiveItem.give();
-		} else {
-			throw new RepeatTurnException();
-		}
-	}
-
-	public void move(final Thing thing, final Action action) {
-		final javelin.controller.action.Movement moveaction = (javelin.controller.action.Movement) action;
-		final Combatant c = Javelin.getCombatant(thing);
-		final BattleState state = map.getState();
 		try {
-			Point to = gameHandler.doDirection(thing, action);
-			if (to != null && !lastmovewasattack) {
-				c.ap += moveaction.cost(c, state, to.x, to.y);
-				String description;
-				Delay d;
-				if (moveaction.isDisengaging(c, state)) {
-					description = "disengages";
-					d = Delay.WAIT;
-				} else if (Javelin.getLowestAp().equals(c)) {
-					description = null;
-					d = Delay.NONE;
-				} else {
-					description = "moves";
-					d = Delay.WAIT;
-				}
-				if (d != Delay.NONE) {
-					Game.message(thing.combatant + " " + description + "...",
-							null, d);
-				}
+			if (action.perform(combatant, map, thing)) {
+				return;
 			}
+			if (action == Action.WAIT) {
+				thing.combatant.await();
+			} else if (action == Action.ZOOM_OUT) {
+				mappanel.zoom(-1, true, thing.x, thing.y);
+				throw new RepeatTurnException();
+			} else if (action == Action.ZOOM_IN) {
+				mappanel.zoom(+1, true, thing.x, thing.y);
+				throw new RepeatTurnException();
+			} else if (action == Action.WITHDRAW) {
+				withdraw(combatant);
+			} else if (action == Action.LOOK) {
+				doLook();
+			} else if (action == UseItem.SINGLETON) {
+				UseItem.use();
+			} else if (action == PassItem.SINGLETON) {
+				PassItem.give();
+			} else {
+				throw new RepeatTurnException();
+			}
+		} catch (EndBattle e) {
+			throw e;
+		} catch (Exception e) {
+			// TODO throw on debug?
+			if (!(e instanceof RepeatTurnException)) {
+				e.printStackTrace();
+			}
+			throw new RepeatTurnException();
 		} finally {
-			lastmovewasattack = false;
+			if (!(action instanceof javelin.controller.action.Movement)) {
+				spendap(combatant);
+			}
 		}
 	}
 
-	protected void flee(Combatant combatant) {
+	public void spendap(Combatant combatant) {
+		for (Combatant c : BattleMap.combatants) {
+			if (c.id == combatant.id) {
+				c.ap += spentap;
+				break;
+			}
+		}
+		spentap = 0;
+	}
+
+	protected void withdraw(Combatant combatant) {
 		if (map.getState().isEngaged(combatant)) {
 			Game.message("Disengage first!", null, Delay.BLOCK);
-			IntroScreen.feedback();
+			InfoScreen.feedback();
+			throw new RepeatTurnException();
+		}
+		Game.message(
+				"Are you sure you want to escape? Press ENTER to confirm...\n",
+				null, Delay.NONE);
+		if (Game.getInput().getKeyChar() != '\n') {
 			throw new RepeatTurnException();
 		}
 		fleeing.add(combatant);
@@ -555,33 +624,6 @@ public class BattleScreen extends Screen {
 				&& keyEvent.getKeyCode() == 18;
 	}
 
-	public InventoryScreen getInventoryScreen() {
-		if (inventoryScreen == null) {
-			inventoryScreen = new InventoryScreen();
-		}
-		return inventoryScreen;
-	}
-
-	public Point getSpellTargetLocation(final Thing h, final Thing s) {
-		final BattleMap map = h.getMap();
-		Thing f = s.getStat("SpellUsage") == Spell.SPELL_OFFENCE ? map
-				.findNearestFoe(h) : null;
-		if (f != null && !map.isVisible(f.x, f.y)) {
-			f = null;
-		}
-
-		if (f == null) {
-			if (s.getStat("SpellUsage") == Spell.SPELL_OFFENCE) {
-				// aim at square in front of caster
-				final Point sp = new Point(h.x + h.getStat("DirectionX"), h.y
-						+ h.getStat("DirectionY"));
-				return getTargetLocation(map, sp);
-			}
-			return getTargetLocation(h);
-		}
-		return getTargetLocation(f);
-	}
-
 	public Point getTargetLocation() {
 		return getTargetLocation(Game.hero());
 	}
@@ -598,210 +640,120 @@ public class BattleScreen extends Screen {
 		if (start == null) {
 			return getTargetLocation();
 		}
-
-		getMappanel().setCursor(start.x, start.y);
-		getMappanel().viewPosition(m, start.x, start.y);
-
+		mappanel.setCursor(start.x, start.y);
+		mappanel.viewPosition(m, start.x, start.y);
 		// initial look
-		doLookPoint(new Point(getMappanel().curx, getMappanel().cury));
-
+		doLookPoint(new Point(mappanel.curx, mappanel.cury));
 		// get interesting stuff to see
 		// Note that the hero is incidentally also seen
 		// So there should be no worries of an empty list
-		final List stuff = map.findStuff(Game.hero(), BattleMap.FILTER_ITEM
-				+ BattleMap.FILTER_MONSTER);
-		int stuffIndex = 0;
+		// final List stuff = map.findStuff(Game.hero(), BattleMap.FILTER_ITEM
+		// + BattleMap.FILTER_MONSTER);
+		// int stuffIndex = 0;
 
 		// repaint the status panel
 		statuspanel.repaint();
 		// TODO : get 'x' and 'l' working
-		while (true) {
-			// looking = true;
-			final KeyEvent e = Game.getInput();
-			if (e == null) {
-				continue;
-			}
-
-			char k = Character.toLowerCase(e.getKeyChar());
-
-			final int i = e.getKeyCode();
-
-			// handle key conversions
-			switch (i) {
-			case KeyEvent.VK_UP:
-				k = '8';
-				break;
-			case KeyEvent.VK_DOWN:
-				k = '2';
-				break;
-			case KeyEvent.VK_LEFT:
-				k = '4';
-				break;
-			case KeyEvent.VK_RIGHT:
-				k = '6';
-				break;
-			case KeyEvent.VK_HOME:
-				k = '7';
-				break;
-			case KeyEvent.VK_END:
-				k = '1';
-				break;
-			case KeyEvent.VK_PAGE_UP:
-				k = '9';
-				break;
-			case KeyEvent.VK_PAGE_DOWN:
-				k = '3';
-				break;
-			case KeyEvent.VK_ESCAPE:
-				k = 'q';
-				break;
-			}
-
-			int dx = 0;
-			int dy = 0;
-			switch (k) {
-			case '*':
-				// case 'x':
-			case 'l':
-				if (stuffIndex >= stuff.size()) {
-					stuffIndex = 0;
+		try {
+			while (true) {
+				final KeyEvent e = Game.getInput();
+				if (e == null) {
+					continue;
 				}
-				Point p = (Point) stuff.get(stuffIndex);
-				stuffIndex++;
-				if (p == null) {
-					p = start;
-				}
-				dx = p.x - getMappanel().curx;
-				dy = p.y - getMappanel().cury;
-				break;
-			case '8':
-				dx = 0;
-				dy = -1;
-				break;
-			case '2':
-				dx = 0;
-				dy = 1;
-				break;
-			case '4':
-				dx = -1;
-				dy = 0;
-				break;
-			case '6':
-				dx = 1;
-				dy = 0;
-				break;
-			case '7':
-				dx = -1;
-				dy = -1;
-				break;
-			case '9':
-				dx = 1;
-				dy = -1;
-				break;
-			case '1':
-				dx = -1;
-				dy = 1;
-				break;
-			case '3':
-				dx = 1;
-				dy = 1;
-				break;
-			case 'v':
-				for (Combatant c : BattleMap.combatants) {
-					if (c.location[0] == getMappanel().curx
-							&& c.location[1] == getMappanel().cury) {
-						new StatisticsScreen(c);
-						break;
+				int dx = 0;
+				int dy = 0;
+				switch (BattleScreen.convertkey(e)) {
+				case '8':
+					dx = 0;
+					dy = -1;
+					break;
+				case '2':
+					dx = 0;
+					dy = 1;
+					break;
+				case '4':
+					dx = -1;
+					dy = 0;
+					break;
+				case '6':
+					dx = 1;
+					dy = 0;
+					break;
+				case '7':
+					dx = -1;
+					dy = -1;
+					break;
+				case '9':
+					dx = 1;
+					dy = -1;
+					break;
+				case '1':
+					dx = -1;
+					dy = 1;
+					break;
+				case '3':
+					dx = 1;
+					dy = 1;
+					break;
+				case 'v':
+					for (Combatant c : BattleMap.combatants) {
+						if (c.location[0] == mappanel.curx
+								&& c.location[1] == mappanel.cury) {
+							new StatisticsScreen(c);
+							break;
+						}
 					}
+					break;
+				case 'q':
+					mappanel.clearCursor();
+					return null;
+				default:
+					mappanel.clearCursor();
+					return new Point(mappanel.curx, mappanel.cury);
 				}
-				break;
-			case 'q':
-				getMappanel().clearCursor();
-				return null;
-			default:
-				getMappanel().clearCursor();
-				return new Point(getMappanel().curx, getMappanel().cury);
+				mappanel.setCursor(
+						BattleScreen.checkbounds(mappanel.curx + dx, map.width),
+						BattleScreen.checkbounds(mappanel.cury + dy,
+								map.height));
+				mappanel.viewPosition(m, mappanel.curx, mappanel.cury);
+				doLookPoint(new Point(mappanel.curx, mappanel.cury));
 			}
-			int x = checkbounds(getMappanel().curx + dx, map.width);
-			int y = checkbounds(getMappanel().cury + dy, map.height);
-			getMappanel().setCursor(x, y);
-			getMappanel().viewPosition(m, getMappanel().curx,
-					getMappanel().cury);
-			doLookPoint(new Point(getMappanel().curx, getMappanel().cury));
+		} finally {
+			lastlooked = null;
 		}
 	}
 
-	private int checkbounds(int i, int upperbound) {
+	static private char convertkey(final KeyEvent e) {
+		// handle key conversions
+		switch (e.getKeyCode()) {
+		case KeyEvent.VK_UP:
+			return '8';
+		case KeyEvent.VK_DOWN:
+			return '2';
+		case KeyEvent.VK_LEFT:
+			return '4';
+		case KeyEvent.VK_RIGHT:
+			return '6';
+		case KeyEvent.VK_HOME:
+			return '7';
+		case KeyEvent.VK_END:
+			return '1';
+		case KeyEvent.VK_PAGE_UP:
+			return '9';
+		case KeyEvent.VK_PAGE_DOWN:
+			return '3';
+		case KeyEvent.VK_ESCAPE:
+			return 'q';
+		default:
+			return Character.toLowerCase(e.getKeyChar());
+		}
+	}
+
+	static private int checkbounds(int i, int upperbound) {
 		if (i < 0) {
 			return 0;
 		}
-		if (i >= upperbound) {
-			return upperbound - 1;
-		}
-		return i;
-	}
-
-	public void castSpell(final Thing h, final Thing s) {
-		if (s == null) {
-			return;
-		}
-
-		final BattleMap map = h.getMap();
-
-		switch (s.getStat("SpellTarget")) {
-		case Spell.TARGET_SELF:
-			Spell.castAtSelf(s, h);
-			break;
-		case Spell.TARGET_DIRECTION: {
-			Game.messageTyrant("Select Direction:");
-			final Point p = Game.getDirection();
-			if (p != null) {
-				Spell.castInDirection(s, h, p.x, p.y);
-			}
-			break;
-		}
-		case Spell.TARGET_LOCATION:
-			Thing f = s.getStat("SpellUsage") == Spell.SPELL_OFFENCE ? map
-					.findNearestFoe(h) : null;
-			if (f != null && !map.isVisible(f.x, f.y)) {
-				f = null;
-			}
-			final Point p = getSpellTargetLocation(h, s);
-			// Do not confuse player with possible false info
-			Game.messageTyrant("");
-			if (p != null) {
-				// don't fire offensive spell at self by accident
-				if (p.x == h.x && p.y == h.y
-						&& s.getStat("SpellUsage") == Spell.SPELL_OFFENCE) {
-					Game.messageTyrant("Are you sure you want to target yourself? (y/n)");
-					final char opt = Game.getOption("yn");
-					if (opt == 'n') {
-						break;
-					}
-				}
-
-				if (map.isVisible(p.x, p.y)) {
-					Spell.castAtLocation(s, h, map, p.x, p.y);
-				} else {
-					Game.messageTyrant("You cannot see to focus your power");
-				}
-			}
-			break;
-		case Spell.TARGET_ITEM:
-			final Thing t = Game.selectItem("Select an item:", h.getItems());
-			questapp.switchScreen(this);
-			if (t != null) {
-				Spell.castAtObject(s, h, t);
-			}
-			break;
-		}
-	}
-
-	public void endTurn() {
-		// make sure hero is not responsible for these actions
-		Game.actor = null;
-		final Thing h = Game.hero();
-		h.set("IsFrozen", 0);
+		return i < upperbound ? i : upperbound - 1;
 	}
 
 	public static char getKey(final KeyEvent e) {
@@ -858,99 +810,6 @@ public class BattleScreen extends Screen {
 		return Character.toLowerCase(e.getKeyChar());
 	}
 
-	public void doZoom(final int factor) {
-		getMappanel().zoomfactor += factor;
-		if (getMappanel().zoomfactor < 25) {
-			getMappanel().zoomfactor = 25;
-		}
-		if (getMappanel().zoomfactor > 800) {
-			getMappanel().zoomfactor = 800;
-		}
-		Game.warn("Zooming.... (" + getMappanel().zoomfactor + "%)");
-		getMappanel().repaint();
-		PREFERENCES.putInt("zoom", getMappanel().zoomfactor);
-	}
-
-	public LevelMapPanel levelMap = null;
-
-	public void doIntroduction(final Thing person) {
-		final String intro = (String) person.get("Introduction");
-		if (intro != null) {
-			Game.messageTyrant(intro);
-			person.set("Introduction", null);
-		}
-	}
-
-	public void doChat(final Thing h) {
-		Thing person = null;
-		if (map.countNearby("IsIntelligent", h.x, h.y, 1) > 2) {
-			Game.messageTyrant("Chat: select direction");
-			final Point p = Game.getDirection();
-			person = map
-					.getFlaggedObject(h.x + p.x, h.y + p.y, "IsIntelligent");
-		} else {
-			try {
-				person = map.getNearby("IsIntelligent", h.x, h.y, 1);
-			} catch (final Exception anyex) {
-				anyex.printStackTrace();
-			}
-		}
-
-		if (person == null || person.equals(Game.hero())) {
-			if (!doOpen(h)) {
-				Game.messageTyrant("You mumble to yourself");
-			}
-			return;
-		}
-
-		if (person.handles("OnChat")) {
-			doIntroduction(person);
-			final Event e = new Event("Chat");
-			e.set("Target", h);
-			person.handle(e);
-		} else if (person.equals(Game.hero())) {
-			Game.messageTyrant("You mumble to yourself");
-		} else if (person.getFlag("IsIntelligent")) {
-			doIntroduction(person);
-			Game.messageTyrant("You chat with " + person.getTheName()
-					+ " for some time");
-
-		} else {
-			Game.messageTyrant("You can't talk to " + person.getTheName());
-		}
-		h.incStat("APS", -200);
-
-	}
-
-	public void doDrop(final Thing h, final boolean ext) {
-		if (ext) {
-			Thing o = Game.selectItem("Select item to drop:", h.getItems());
-			while (o != null) {
-				Being.tryDrop(h, o);
-				final Thing[] its = h.getItems();
-				if (its.length == 0) {
-					break;
-				}
-				o = Game.selectItem("Select item to drop:", its, true);
-			}
-		} else {
-			final Thing o = Game.selectItem("Select item to drop:",
-					h.getItems());
-			if (o != null) {
-				Being.tryDrop(h, o);
-			}
-		}
-	}
-
-	public void doEat(final Thing h) {
-		final Thing o = Game.selectItem("Select item to eat:",
-				h.getFlaggedContents("IsEdible"));
-		questapp.switchScreen(this);
-		if (o != null) {
-			Food.eat(h, o);
-		}
-	}
-
 	private void doLook() {
 		doLookPoint(getTargetLocation());
 		throw new RepeatTurnException();
@@ -965,11 +824,13 @@ public class BattleScreen extends Screen {
 			return;
 		}
 		lookmessage("");
+		lastlooked = null;
 		for (Thing t = map.getObjects(p.x, p.y); t != null
 				&& t.isVisible(Game.hero()); t = t.next) {
 			final Combatant combatant = Javelin.getCombatant(t);
 			if (combatant != null) {
-				lookmessage(describestatus(t, combatant, map));
+				lookmessage(describestatus(combatant, map.getState()));
+				lastlooked = combatant;
 			} else if (!Movement.canMove(t, map, p.x, p.y)) {
 				lookmessage("Blocked");
 			} else if (map.getTile(p.x, p.y) == Tile.POOL) {
@@ -979,42 +840,18 @@ public class BattleScreen extends Screen {
 		if (Tile.isSolid(map, p.x, p.y)) {
 			lookmessage("Blocked");
 		}
+		BattleScreen.active.statuspanel.repaint();
 	}
 
-	static public String describestatus(final Thing t,
-			final Combatant combatant, BattleMap map) {
+	public String describestatus(final Combatant combatant,
+			final BattleState state) {
 		String description = combatant + " (" + combatant.getStatus();
-		final ArrayList<String> statuslist = new ArrayList<String>();
-		BattleState state = map.getState();
-		if (state.isEngaged(combatant)) {
-			statuslist.add("engaged");
-			for (Combatant c : BattleMap.blueTeam.contains(combatant) ? BattleMap.redTeam
-					: BattleMap.blueTeam) {
-				if (state.isflanked(state.translatecombatant(combatant),
-						state.translatecombatant(c))) {
-					statuslist.add("flanked");
-					break;
-				}
-			}
-		}
-		if (combatant.surprise() != 0) {
-			statuslist.add("flat-footed");
-		}
-		Vision v = state.hasLineOfSight(state.next, combatant);
-		if (v == Vision.COVERED) {
-			statuslist.add("covered");
-		} else if (v == Vision.BLOCKED) {
-			statuslist.add("blocked");
-		}
-		if (combatant.source.fly == 0
-				&& state.map[combatant.location[0]][combatant.location[1]].flooded) {
-			statuslist.add("knee-deep");
-		}
-		for (Condition c : combatant.conditions) {
-			statuslist.add(c.describe());
-		}
+		final ArrayList<String> statuslist = combatant.liststatus(state);
 		for (final String status : statuslist) {
 			description += ", " + status;
+		}
+		if (Javelin.DEBUG) {
+			description += ", " + (combatant.ap) + "ap";
 		}
 		return description + ")\n";
 	}
@@ -1022,78 +859,14 @@ public class BattleScreen extends Screen {
 	private void lookmessage(final String string) {
 		messagepanel.clear();
 		Game.message(
-				"Examine: move the cursor over another combatent, press v to view character sheet\n\n"
-						+ string, null, Delay.NONE);
+				"Examine: move the cursor over another combatent, press v to view character sheet.\n\n"
+						+ string,
+				null, Delay.NONE);
 		updateMessages();
 		Game.redraw();
 	}
 
-	private void doMessages() {
-		String text = "";
-		for (final String s : lastMessages) {
-			text += s + "\n";
-		}
-		switchText(text);
-	}
-
-	private boolean doOpen(final Thing h) {
-		Thing t = null;
-		if (map.countNearby("IsOpenable", h.x, h.y, 1) > 2) {
-			Game.messageTyrant("Select direction");
-			final Point p = Game.getDirection();
-			if (p != null && (p.x != 0 || p.y != 0)) {
-				messagepanel.clear();
-				t = map.getFlaggedObject(h.x + p.x, h.y + p.y, "IsOpenable");
-			}
-		} else {
-			try {
-				t = map.getNearby("IsOpenable", h.x, h.y, 1);
-			} catch (final Exception anyex) {
-				anyex.printStackTrace();
-			}
-		}
-		if (t != null) {
-			Door.useDoor(h, t);
-			h.incStat("APS", -Being.actionCost(h));
-			return true;
-		}
-		return false;
-	}
-
-	public static boolean lastmovewasattack = false;
-
-	private ArrayList<Combatant> fleeing = new ArrayList<Combatant>();
-
-	public void help(final ActionDescription[] actions) {
-		String text = "Movement is also used to attack adjacent enemies.\n\nExample:\nKey or keys: command name.\n\n";
-		for (final ActionDescription a : actions) {
-			final String[] keys = a.getDescriptiveKeys();
-			if (keys.length == 0) {
-				continue;
-			}
-			boolean first = true;
-			for (final String key : keys) {
-				if (key.contains("arrow")) {
-					continue;
-				}
-				if (first) {
-					first = false;
-				} else {
-					text += " or ";
-				}
-				text += key;
-			}
-			text += ": " + a.getDescriptiveName() + "\n";
-		}
-		switchText(text);
-
-	}
-
-	private void switchText(final String text) {
-		questapp.switchScreen(new InfoScreen(Game.getQuestapp(), text));
-		Game.getInput();
-		questapp.switchScreen(this);
-	}
+	public ArrayList<Combatant> fleeing = new ArrayList<Combatant>();
 
 	/**
 	 * @param mappanel
@@ -1120,6 +893,10 @@ public class BattleScreen extends Screen {
 	}
 
 	public boolean drawbackground() {
+		return true;
+	}
+
+	public boolean scale() {
 		return true;
 	}
 

@@ -11,13 +11,25 @@ import java.util.List;
 
 import javelin.controller.upgrade.Spell;
 import javelin.model.condition.Breathless;
+import javelin.model.feat.CombatExpertise;
+import javelin.model.feat.ImprovedFeint;
+import javelin.model.feat.ImprovedGrapple;
+import javelin.model.feat.ImprovedTrip;
 import javelin.model.item.Item;
+import javelin.model.spell.Summon;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Squad;
+import javelin.view.screen.BattleScreen;
+import javelin.view.screen.world.WorldScreen;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.QuestApp;
 import tyrant.mikera.tyrant.TPanel;
 
+/**
+ * Bottom panel for the {@link WorldScreen}.
+ * 
+ * @author alex
+ */
 public class StatusPanel extends TPanel {
 	private static final long serialVersionUID = 3905800885761095223L;
 	public static final int boxborder = 1;
@@ -41,14 +53,17 @@ public class StatusPanel extends TPanel {
 	public void paint(final Graphics g) {
 		super.paint(g);
 		nextLine = 0;
-		final Combatant hero = Game.hero().combatant;
+		Combatant hero = Game.hero().combatant;
 		if (hero == null || hero.source == null) {
 			return;
 		}
+		if (BattleScreen.lastlooked != null) {
+			hero = BattleScreen.lastlooked;
+		}
 		String helper = "";
 		for (final char c : (maininfo(hero) + movementdata(hero)
-				+ attackdata(hero) + passivedata(hero) + spelldata(hero) + itemdata(hero))
-				.toCharArray()) {
+				+ attackdata(hero) + passivedata(hero) + spelldata(hero)
+				+ itemdata(hero)).toCharArray()) {
 			helper += c;
 			if (Character.valueOf('\n').equals(c) || helper.length() == 26) {
 				paintLabel(g, helper, 10, getNextLine());
@@ -59,7 +74,7 @@ public class StatusPanel extends TPanel {
 	}
 
 	private String itemdata(Combatant combatant) {
-		List<Item> equipment = Squad.active.equipment.get(combatant.toString());
+		List<Item> equipment = Squad.active.equipment.get(combatant.id);
 		ArrayList<String> listing = new ArrayList<String>();
 		for (Item i : equipment) {
 			listing.add(i.name.replaceAll("Potion of", ""));
@@ -70,6 +85,9 @@ public class StatusPanel extends TPanel {
 	private String spelldata(Combatant combatant) {
 		ArrayList<String> listing = new ArrayList<String>();
 		for (Spell s : combatant.spells) {
+			if (s instanceof Summon && combatant.summoned) {
+				continue;
+			}
 			// if (!s.exhausted()) {
 			String spellname = s.name;
 			if (spellname.length() >= 14) {
@@ -111,9 +129,25 @@ public class StatusPanel extends TPanel {
 		if (combatant.hasAttackType(false)) {
 			status += "Ranged\n";
 		}
-		if (!combatant.source.breaths.isEmpty()
-				&& !combatant.hascondition(Breathless.class)) {
-			status += "Breath\n";
+		status += "\n";
+		if (!combatant.source.breaths.isEmpty()) {
+			status += combatant.hascondition(Breathless.class) ? "Breathless\n"
+					: "Breath\n";
+		}
+		if (combatant.source.touch != null) {
+			status += combatant.source.touch + "\n";
+		}
+		if (combatant.source.hasfeat(CombatExpertise.singleton)) {
+			status += "Defensive\n";
+		}
+		if (combatant.source.hasfeat(ImprovedFeint.singleton)) {
+			status += "Feint\n";
+		}
+		if (combatant.source.hasfeat(ImprovedGrapple.singleton)) {
+			status += "Grapple\n";
+		}
+		if (combatant.source.hasfeat(ImprovedTrip.singleton)) {
+			status += "Trip\n";
 		}
 		return status;
 	}
@@ -121,23 +155,22 @@ public class StatusPanel extends TPanel {
 	public String maininfo(Combatant combatant) {
 		final String customname = combatant.source.customName;
 		String status = combatant.getStatus();
-		return (customname != null ? customname : combatant.source.name)
-				+ "\n"
-				+ Character.toUpperCase(status.charAt(0))
-				+ status.substring(1)
+		return (customname != null ? customname : combatant.source.name) + "\n"
+				+ Character.toUpperCase(status.charAt(0)) + status.substring(1)
 				+ "\nAP: "
-				+ new BigDecimal(combatant.ap)
-						.setScale(1, RoundingMode.HALF_UP) + "\n\n";
+				+ new BigDecimal(combatant.ap + BattleScreen.active.spentap)
+						.setScale(1, RoundingMode.HALF_UP)
+				+ "\n\n";
 	}
 
 	public String passivedata(final Combatant combatant) {
 		String status = "";
 		if (combatant.source.fasthealing > 0) {
-			status += "Fast healing "
-					+ new BigDecimal(100.0
-							* new Double(combatant.source.fasthealing)
+			status += "Fast healing " + new BigDecimal(
+					100.0 * new Double(combatant.source.fasthealing)
 							/ new Double(combatant.maxhp)).setScale(0,
-							RoundingMode.HALF_UP) + "%\n";
+									RoundingMode.HALF_UP)
+					+ "%\n";
 		}
 		return status.isEmpty() ? "" : "\n" + status;
 	}
@@ -152,7 +185,8 @@ public class StatusPanel extends TPanel {
 	}
 
 	public static void paintBar(final Graphics g, final int x, final int y,
-			final int w, final int h, final Color f, final Color b, float amount) {
+			final int w, final int h, final Color f, final Color b,
+			float amount) {
 		if (amount > 1) {
 			amount = 1;
 		}

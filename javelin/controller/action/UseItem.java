@@ -1,17 +1,18 @@
 package javelin.controller.action;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
 
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Monster;
 import javelin.model.world.Squad;
 import javelin.view.screen.BattleScreen;
-import javelin.view.screen.IntroScreen;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
+import tyrant.mikera.tyrant.InfoScreen;
 
 public class UseItem extends Action {
 
@@ -28,7 +29,7 @@ public class UseItem extends Action {
 
 	public static void use() {
 		final Combatant c = Game.hero().combatant;
-		final Monster m = c.source;
+		// final Monster m = c.source;
 		final Item item = queryforitemselection(c);
 		if (item == null) {
 			return;
@@ -36,7 +37,7 @@ public class UseItem extends Action {
 		c.ap += .5f;
 		c.source = c.source.clone();
 		if (item.use(c)) {
-			Squad.active.equipment.get(m.toString()).remove(item);
+			Squad.active.equipment.get(c.id).remove(item);
 		}
 	}
 
@@ -47,19 +48,25 @@ public class UseItem extends Action {
 	 *         right now, canceled... Otherwise the selected item.
 	 */
 	public static Item queryforitemselection(final Combatant c) {
-		final List<Item> items = Squad.active.equipment
-				.get(c.source.toString());
+		final List<Item> items =
+				(List<Item>) Squad.active.equipment.get(c.id).clone();
 		for (final Item i : new ArrayList<Item>(items)) {
 			if (!i.isusedinbattle()) {
 				items.remove(i);
 			}
 		}
 		if (items.isEmpty()) {
-			Game.message("Isn't carrying items!", null, Delay.WAIT);
+			Game.message("Isn't carrying battle items!", null, Delay.WAIT);
 			return null;
 		}
-		final boolean threatened = BattleScreen.active.map.getState()
-				.isEngaged(c);
+		Collections.sort(items, new Comparator<Item>() {
+			@Override
+			public int compare(Item o1, Item o2) {
+				return o1.name.compareTo(o2.name);
+			}
+		});
+		final boolean threatened =
+				BattleScreen.active.map.getState().isEngaged(c);
 		int i = 1;
 		final TreeMap<Integer, Item> options = new TreeMap<Integer, Item>();
 		String prompt = "Which item? (press q to quit)\n";
@@ -77,7 +84,7 @@ public class UseItem extends Action {
 		}
 		Game.message(prompt, null, Delay.NONE);
 		try {
-			final String string = IntroScreen.feedback().toString();
+			final String string = InfoScreen.feedback().toString();
 			final Item item = options.get(Integer.parseInt(string));
 			Game.messagepanel.clear();
 			return item;

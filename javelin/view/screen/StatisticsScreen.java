@@ -9,11 +9,17 @@ import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.classes.ClassAdvancement;
 import javelin.model.unit.AttackSequence;
-import javelin.model.unit.BreathWeapon;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.abilities.BreathWeapon;
+import javelin.model.world.Squad;
 import tyrant.mikera.tyrant.InfoScreen;
 
+/**
+ * Shows ally or enemy info.
+ * 
+ * @author alex
+ */
 public class StatisticsScreen extends InfoScreen {
 	public StatisticsScreen(Combatant c) {
 		super("");
@@ -47,10 +53,12 @@ public class StatisticsScreen extends InfoScreen {
 			speedtext += ", swim " + m.swim + " feet";
 		}
 		lines.add("");
-		lines.add("Hit dice     " + m.hd.toString());
+		String maxhp =
+				Squad.active.members.contains(c) ? " (" + c.maxhp + "hp)" : "";
+		lines.add("Hit dice     " + m.hd + maxhp);
 		lines.add("Initiative   " + alignnumber(m.initiative));
-		lines.add("Speed        " + speedtext);
-		lines.add("Armor class  " + alignnumber(m.ac));
+		lines.add("Speed        " + speedtext + " (" + speed / 5 + " squares)");
+		lines.add("Armor class  " + alignnumber(m.ac + c.acmodifier));
 		lines.add("");
 		lines.add("Mêlée attacks");
 		listattacks(lines, m.melee);
@@ -63,7 +71,7 @@ public class StatisticsScreen extends InfoScreen {
 		lines.add("Saving throwns");
 		lines.add(" Fortitude   " + save(m.fort));
 		lines.add(" Reflex      " + save(m.ref));
-		lines.add(" Will        " + save(m.will));
+		lines.add(" Will        " + save(m.willraw()));
 		lines.add("");
 		lines.add(printability(m.strength, "Strength"));
 		lines.add(printability(m.dexterity, "Dexterity"));
@@ -83,7 +91,8 @@ public class StatisticsScreen extends InfoScreen {
 		}
 		lines.add(feats);
 		lines.add("");
-		lines.add("Press v to see the monster description, any other key to exit");
+		lines.add(
+				"Press v to see the monster description, any other key to exit");
 		for (String line : lines) {
 			text += line + "\n";
 		}
@@ -108,8 +117,7 @@ public class StatisticsScreen extends InfoScreen {
 		while (abilityname.length() < 13) {
 			abilityname += " ";
 		}
-		int bonus = Monster.getbonus(score);
-		return abilityname + (bonus >= 0 ? "+" : "") + bonus;
+		return abilityname + Monster.getsignedbonus(score);
 	}
 
 	private String describequalities(Monster m, Combatant c) {
@@ -145,6 +153,12 @@ public class StatisticsScreen extends InfoScreen {
 		} else if (m.sr != 0) {
 			qualities.add("spell resistance " + m.sr);
 		}
+		if (m.immunetomindeffects) {
+			qualities.add("immune to mind effects");
+		}
+		if (m.touch != null) {
+			qualities.add(m.touch.toString());
+		}
 		if (qualities.isEmpty()) {
 			qualities.add("none");
 		}
@@ -154,7 +168,8 @@ public class StatisticsScreen extends InfoScreen {
 		return string.substring(0, string.length() - 2);
 	}
 
-	public void listattacks(ArrayList<String> lines, List<AttackSequence> melee) {
+	public void listattacks(ArrayList<String> lines,
+			List<AttackSequence> melee) {
 		if (melee.isEmpty()) {
 			lines.add(" None");
 			return;
@@ -175,6 +190,6 @@ public class StatisticsScreen extends InfoScreen {
 
 	public Character updatescreens() {
 		Javelin.app.switchScreen(this);
-		return IntroScreen.feedback();
+		return InfoScreen.feedback();
 	}
 }

@@ -5,9 +5,14 @@ package javelin.controller;
 
 import java.io.Serializable;
 
+/**
+ * X Y coordinate.
+ * 
+ * @author alex
+ */
 public class Point implements Cloneable, Serializable {
-	public final int x;
-	public final int y;
+	public int x;
+	public int y;
 
 	public Point(final int i, final int j) {
 		x = i;
@@ -16,11 +21,8 @@ public class Point implements Cloneable, Serializable {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj instanceof Point) {
-			final Point p = (Point) obj;
-			return p.x == x && p.y == y;
-		}
-		return false;
+		final Point p = (Point) obj;
+		return p.x == x && p.y == y;
 	}
 
 	@Override

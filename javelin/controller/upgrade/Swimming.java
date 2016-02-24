@@ -3,6 +3,9 @@ package javelin.controller.upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
+/**
+ * See the d20 SRD for more info.
+ */
 public class Swimming extends WalkingSpeed {
 	public Swimming(String name, int target) {
 		super(name, target);

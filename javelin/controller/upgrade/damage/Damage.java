@@ -9,6 +9,9 @@ import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
+/**
+ * Upgrades damage.
+ */
 public abstract class Damage extends Upgrade {
 	public Damage(final String name) {
 		super(name);
@@ -37,8 +40,8 @@ public abstract class Damage extends Upgrade {
 
 	@Override
 	public boolean apply(final Combatant m) {
-		final List<List<Attack>> all = new ArrayList<List<Attack>>(
-				getattacktype(m.source));
+		final List<List<Attack>> all =
+				new ArrayList<List<Attack>>(getattacktype(m.source));
 		if (all.isEmpty()) {
 			return false;
 		}

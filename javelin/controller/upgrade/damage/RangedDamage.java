@@ -5,6 +5,11 @@ import java.util.List;
 import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Monster;
 
+/**
+ * Upgrades ranged damage.
+ * 
+ * @author alex
+ */
 public class RangedDamage extends Damage {
 	public RangedDamage(final String name) {
 		super(name);

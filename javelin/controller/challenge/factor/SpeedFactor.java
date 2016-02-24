@@ -1,10 +1,7 @@
 package javelin.controller.challenge.factor;
 
-import java.util.List;
-
 import javelin.controller.upgrade.Flying;
 import javelin.controller.upgrade.Swimming;
-import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.WalkingSpeed;
 import javelin.model.unit.Monster;
@@ -25,13 +22,15 @@ import javelin.model.unit.Monster;
  * flight maneuverabilty as deficits from poor/clumsy the CR value is
  * approximated to the average: .6 for flight.
  * 
+ * @see CrFactor
+ * 
  * @author alex
  */
 public class SpeedFactor extends CrFactor {
-	public static final int[] TYPICAL_SPEED = new int[] { 5, 10, 15, 20, 30,
-			40, 50, 60, 70 };
-	private static final int[] TYPICAL_FLIGHT_SPEED = new int[] { 10, 20, 30,
-			40, 60, 80, 100, 120, 140 };
+	public static final int[] TYPICAL_SPEED =
+			new int[] { 5, 10, 15, 20, 30, 40, 50, 60, 70 };
+	private static final int[] TYPICAL_FLIGHT_SPEED =
+			new int[] { 10, 20, 30, 40, 60, 80, 100, 120, 140 };
 
 	@Override
 	public float calculate(Monster m) {
@@ -67,14 +66,10 @@ public class SpeedFactor extends CrFactor {
 
 	@Override
 	public void listupgrades(UpgradeHandler handler) {
-		final List<Upgrade> walk = handler.addset();
-		walk.add(new WalkingSpeed("Walking speed: human", 30));
-		walk.add(new WalkingSpeed("Walking speed: cheetah", 50));
-		walk.add(new Flying("Flying: hawk", 60));
-		walk.add(new Flying("Flying: pegasus", 100));
-		walk.add(new Flying("Flying: dragon", 150));
-		walk.add(new Swimming("Swimming: snake", 20));
-		walk.add(new Swimming("Swimming: sea lion", 40));
-		walk.add(new Swimming("Swimming: shark", 60));
+		handler.earth.add(new WalkingSpeed("Walking speed: human", 30));
+		handler.earth.add(new WalkingSpeed("Walking speed: cheetah", 50));
+		handler.wind.add(new Flying("Flying: raven", 40));
+		handler.water.add(new Swimming("Swimming: snake", 20));
+		handler.water.add(new Swimming("Swimming: sea lion", 40));
 	}
 }

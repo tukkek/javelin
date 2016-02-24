@@ -2,12 +2,26 @@ package javelin.controller.ai;
 
 import java.util.List;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.walker.Walker;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 
-public class BattleAi extends AbstractAlphaBetaSearch<Node> {
+/**
+ * Javelin's implementation of {@link AbstractAlphaBetaSearch}.
+ * 
+ * @author alex
+ */
+public class BattleAi extends AbstractAlphaBetaSearch {
+	/**
+	 * Using {@link Integer#MAX_VALUE} (over 2 billion) could have been making
+	 * the AI think taking extremely unlikely actions would be good to win the
+	 * game.
+	 * 
+	 * Ideally should use something that will never be reached by the
+	 * {@link #ratechallenge(List)} but not any higher.
+	 */
+	private static final float LIMIT = 1000;
+
 	public BattleAi(final int aiDepth) {
 		super(aiDepth);
 	}
@@ -17,38 +31,28 @@ public class BattleAi extends AbstractAlphaBetaSearch<Node> {
 		throw e;
 	}
 
-	// private class UtilityFactor {
-	// final public float value;
-	// final public float priority;
-	//
-	// public UtilityFactor(final float value, final float priority) {
-	// super();
-	// this.value = value;
-	// this.priority = priority;
-	// }
-	// }
-
 	@Override
 	public float utility(final Node node) {
 		final BattleState state = (BattleState) node;
-		final List<Combatant> redTeam = state.getRedTeam();
-		if (redTeam.isEmpty()) {
-			return Integer.MIN_VALUE;
+		final float redTeam = BattleAi.ratechallenge(state.getRedTeam());
+		if (redTeam == 0) {
+			return -LIMIT;
 		}
-		final List<Combatant> blueTeam = state.getBlueTeam();
-		if (blueTeam.isEmpty()) {
-			return Integer.MAX_VALUE;
+		final float blueTeam = BattleAi.ratechallenge(state.getBlueTeam());
+		if (blueTeam == 0) {
+			return LIMIT;
 		}
-		return ChallengeRatingCalculator
-				.calculatepositive(ChallengeRatingCalculator
-						.convertlist(redTeam))
-				/ ChallengeRatingCalculator
-						.calculatepositive(ChallengeRatingCalculator
-								.convertlist(blueTeam))
-				/* ***************************************** */
-				+ rateunits(redTeam) / rateunits(blueTeam) / 10f
-				/* ***************************************** */
-				- calculatecloseness(state) / 1000f;
+		return redTeam - blueTeam - state.next.ap / 10
+				- BattleAi.summinimumdistances(state) / 10;
+	}
+
+	static private float ratechallenge(final List<Combatant> team) {
+		float challenge = 0f;
+		for (final Combatant c : team) {
+			challenge += c.source.challengeRating + //
+					c.source.challengeRating * (c.hp / (float) c.maxhp) / 100f;
+		}
+		return challenge;
 	}
 
 	/**
@@ -57,12 +61,14 @@ public class BattleAi extends AbstractAlphaBetaSearch<Node> {
 	 * logic that the AI always wants to get close and the player always wants
 	 * to get away.
 	 */
-	static private int calculatecloseness(final BattleState state) {
-		int sum = 0;
+	static private float summinimumdistances(final BattleState state) {
+		final int bluesize = state.blueTeam.size();
+		float sum = 0;
 		for (final Combatant c1 : state.redTeam) {
-			double minimum = Integer.MAX_VALUE;
-			for (final Combatant c2 : state.blueTeam) {
-				final double distance = Walker.distance(c1, c2);
+			float minimum = (float) Walker.distance(c1, state.blueTeam.get(0));
+			for (int i = 1; i < bluesize; i += 1) {
+				final float distance =
+						(float) Walker.distance(c1, state.blueTeam.get(i));
 				if (distance < minimum) {
 					minimum = distance;
 				}
@@ -70,14 +76,6 @@ public class BattleAi extends AbstractAlphaBetaSearch<Node> {
 			sum += minimum;
 		}
 		return sum;
-	}
-
-	private float rateunits(final List<Combatant> redTeam) {
-		float hp = 0;
-		for (final Combatant m : redTeam) {
-			hp += m.source.challengeRating * m.hp / m.maxhp;
-		}
-		return hp;
 	}
 
 	@Override

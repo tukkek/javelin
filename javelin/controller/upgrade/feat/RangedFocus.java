@@ -2,9 +2,14 @@ package javelin.controller.upgrade.feat;
 
 import java.util.List;
 
+import javelin.model.feat.WeaponFocus;
 import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Monster;
 
+/**
+ * @see WeaponFocus
+ * @author alex
+ */
 public class RangedFocus extends MeleeFocus {
 	public RangedFocus(final String name) {
 		super(name);

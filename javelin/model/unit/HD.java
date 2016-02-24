@@ -3,8 +3,14 @@ package javelin.model.unit;
 import java.io.Serializable;
 import java.util.TreeMap;
 
+import javelin.model.Cloneable;
 import tyrant.mikera.engine.RPG;
 
+/**
+ * Represent the total hit dice of a {@link Monster}.
+ * 
+ * @author alex
+ */
 public class HD implements Serializable, Cloneable {
 	private static final String SEPARATOR = " + ";
 	TreeMap<Integer, Float> hitdice = new TreeMap<Integer, Float>();
@@ -32,8 +38,8 @@ public class HD implements Serializable, Cloneable {
 	}
 
 	private String translate(Float hd) {
-		return hd >= 1 ? Long.toString(Math.round(hd)) : "1/"
-				+ Math.round(1 / (1 - hd));
+		return hd >= 1 ? Long.toString(Math.round(hd))
+				: "1/" + Math.round(1 / (1 - hd));
 	}
 
 	public int roll(Monster m) {
@@ -42,14 +48,14 @@ public class HD implements Serializable, Cloneable {
 			Float dice = hitdice.get(hd);
 			if (dice >= 1) {
 				for (int i = 0; i < dice; i++) {
-					hp += ensureminimum(RPG.r(1, hd)
-							+ Monster.getbonus(m.constitution));
+					hp += ensureminimum(
+							RPG.r(1, hd) + Monster.getbonus(m.constitution));
 				}
 			} else {
 				hp += ensureminimum(Math.round(RPG.r(1, hd) * dice));
 			}
 		}
-		return hp;
+		return hp >= 1 ? hp : 1;
 	}
 
 	public long ensureminimum(long roll) {
@@ -75,7 +81,7 @@ public class HD implements Serializable, Cloneable {
 		}
 	}
 
-	public int countdice() {
+	public int count() {
 		double dice = 0.0;
 		for (double ndice : hitdice.values()) {
 			dice += ndice;

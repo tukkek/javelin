@@ -1,12 +1,15 @@
 package javelin.controller.upgrade.feat;
 
-import javelin.model.feat.Feat;
 import javelin.model.feat.ImprovedInitiative;
 import javelin.model.unit.Combatant;
 
+/**
+ * @see ImprovedInitiative
+ * @author alex
+ */
 public class ImprovedInititative extends FeatUpgrade {
-	public ImprovedInititative(final String name, final Feat featp) {
-		super(name, featp);
+	public ImprovedInititative() {
+		super("Improved initiative", ImprovedInitiative.singleton);
 	}
 
 	@Override
@@ -16,13 +19,11 @@ public class ImprovedInititative extends FeatUpgrade {
 
 	@Override
 	public boolean apply(final Combatant m) {
-		if (m.source.hasfeat(ImprovedInitiative.singleton) > 0) {
-			return false;
+		if (super.apply(m)) {
+			m.source.initiative += 4;
+			return true;
 		}
-		super.apply(m);
-		m.source.initiative += 4;
-		m.source.addfeat(ImprovedInitiative.singleton);
-		return true;
+		return false;
 	}
 
 	@Override

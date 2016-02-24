@@ -1,8 +1,10 @@
 package javelin.controller.action;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.ai.AiMovement;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.condition.Defending;
@@ -19,17 +21,23 @@ import javelin.model.unit.Combatant;
  * 
  * @author alex
  */
-public class Wait extends Action {
+public class Wait extends Action implements AiAction {
 	public static final double APCOST = .5;
 	public static final Action SINGLETON = new Wait();
+	public static final boolean ALLOWAI = true;
 
 	private Wait() {
 		super("Wait");
 	}
 
 	@Override
-	public List<List<ChanceNode>> getSucessors(final BattleState gameState,
+	public List<List<ChanceNode>> getoutcomes(final BattleState gameState,
 			final Combatant active) {
-		return Collections.emptyList();
+		if (!ALLOWAI) {
+			return Collections.emptyList();
+		}
+		ArrayList<List<ChanceNode>> list = new ArrayList<List<ChanceNode>>();
+		list.add(AiMovement.wait(gameState, active));
+		return list;
 	}
 }

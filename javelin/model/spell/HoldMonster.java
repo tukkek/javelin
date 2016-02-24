@@ -6,10 +6,13 @@ import javelin.model.condition.Paralyzed;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 
+/**
+ * See the d20 SRD for more info.
+ */
 public class HoldMonster extends Spell {
 
-	public HoldMonster(String name) {
-		super(name + "hold monster", .45f, false, 9, false);
+	public HoldMonster() {
+		super("Hold monster", .45f, false, 5, false);
 	}
 
 	@Override
@@ -24,7 +27,7 @@ public class HoldMonster extends Spell {
 		if (saved) {
 			return target + " resists.";
 		}
-		int turns = save(5, 0) - 10 - target.source.will();
+		int turns = save(5, 0, caster) - 10 - target.source.will();
 		if (turns > 9) {
 			turns = 9;
 		} else if (turns < 1) {
@@ -42,8 +45,7 @@ public class HoldMonster extends Spell {
 
 	@Override
 	public int calculatesavetarget(Combatant caster, Combatant target) {
-		final int will = target.source.will();
-		return will == Integer.MAX_VALUE ? will : save(5, will);
+		return save(5, target.source.will(), caster);
 	}
 
 	@Override

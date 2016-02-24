@@ -6,24 +6,41 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Panel;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.prefs.Preferences;
+
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
 
 import javelin.controller.Point;
 import javelin.model.BattleMap;
+import javelin.model.state.BattleState;
+import javelin.model.state.Meld;
+import javelin.model.unit.Combatant;
+import javelin.model.world.Portal;
+import javelin.model.world.Town;
+import javelin.model.world.WorldActor;
 import javelin.view.screen.BattleScreen;
-import tyrant.mikera.engine.RPG;
+import javelin.view.screen.world.WorldScreen;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Animation;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.QuestApp;
 import tyrant.mikera.tyrant.Tile;
 
-// Panel descendant used to display a Map
-// contains most of graphics redraw logic
-// also some animation/explosion handling
-public class MapPanel extends Panel implements Runnable {
+/**
+ * Panel descendant used to display a Map contains most of graphics redraw logic
+ * also some animation/explosion handling
+ * 
+ * @author Tyrant
+ */
+public class MapPanel extends Panel {
+	private static final Border BUFF =
+			BorderFactory.createLineBorder(Color.WHITE);
+	private static final Border INVASIONPORTAL =
+			BorderFactory.createLineBorder(Color.RED);
 	private static final Color[][] STATUS_COLORS = {
 			{ new Color(0, 0, 127), new Color(0, 0, 153), new Color(0, 0, 178),
 					new Color(0, 0, 204), new Color(0, 0, 229),
@@ -41,23 +58,18 @@ public class MapPanel extends Panel implements Runnable {
 	private final boolean slant = false;
 
 	// size of viewable area
-	protected int width = TILEWIDTH == 32 ? 15 : 25;
-	protected int height = TILEWIDTH == 32 ? 15 : 25;
+	protected int width = MapPanel.TILEWIDTH == 32 ? 15 : 25;
+	protected int height = MapPanel.TILEWIDTH == 32 ? 15 : 25;
 
 	// zoom factor
-	public int zoomfactor = 100;
-	private int lastzoomfactor = 100;
+	public int tilesize = 32;
 
 	// back buffer
 	private Graphics buffergraphics;
 	private Image buffer;
 
-	// animation buffer
-	private Graphics animationgraphics;
-	private Image animationbuffer;
-
 	// which map to draw
-	public BattleMap map = new BattleMap(5, 5);
+	public BattleMap map;
 
 	// viewing state
 	protected int scrollx = 0;
@@ -69,70 +81,63 @@ public class MapPanel extends Panel implements Runnable {
 	// drawing fields
 	public int currentTile = Tile.CAVEWALL;
 
-	private boolean animating = false;
 	private Set<Point> overlay = null;
-
-	// private boolean animationdone = false;
-
-	@Override
-	public void run() {
-		while (true) {
-			try {
-				if (animating) {
-					// animationdone = false;
-					repaint();
-				}
-				Thread.sleep(50);
-			} catch (final InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	public void addAnimation(final Animation a) {
-		synchronized (animationElements) {
-			if (!animating) {
-				animating = true;
-				// Game.warn("Animation start");
-			}
-			animationElements.add(a);
-		}
-	}
+	public HashSet<Point> discovered = new HashSet<Point>();
+	public int startx = -1;
+	public int starty = -1;
+	public int endx = -1;
+	public int endy = -1;
+	/**
+	 * Internal buffer that can be reused if the background didn't change (if we
+	 * didn't have to change the {@link #viewPosition(BattleMap, int, int)}).
+	 */
+	private Image background;
+	private BattleState state;
+	public static final Preferences PREFERENCES =
+			Preferences.userNodeForPackage(BattleScreen.class);
+	private boolean isworldscreen;
 
 	public MapPanel(final BattleScreen owner) {
 		super();
-
-		final Thread animloop = new Thread(this);
-		animloop.start();
-
 		addKeyListener(owner.questapp.keyadapter);
-
 		setBackground(Color.black);
-		// if (!Game.instance().isDesigner()) {
-		// addMouseListener(new MyMouseListener());
-		// }
 	}
 
 	// sets current scroll position and repaints map
 	public void viewPosition(final BattleMap m, final int x, final int y) {
 		setPosition(m, x, y);
-		// repaint();
 	}
 
 	public void scroll(final int xDelta, final int yDelta) {
-		scrollx = Math
-				.min(Math.max(0, xDelta + scrollx), map.width - width / 2);
-		scrolly = Math.min(Math.max(0, yDelta + scrolly), map.height - height
-				/ 2);
+		scrollx =
+				Math.min(Math.max(0, xDelta + scrollx), map.width - width / 2);
+		scrolly = Math.min(Math.max(0, yDelta + scrolly),
+				map.height - height / 2);
 		render();
 		repaint();
 	}
 
 	public void setPosition(final BattleMap m, final int x, final int y) {
+		if (buffer == null) {
+			render();
+		}
+		background = null;
 		map = m;
-		if (map != null) {
-			scrollx = RPG.middle(0, x - width / 2, map.getWidth() - width);
-			scrolly = RPG.middle(0, y - height / 2, map.getHeight() - height);
+		int width = endx - startx;
+		int height = endy - starty;
+		int halfwidth = (int) Math.ceil(width / 2f);
+		int halfheight = (int) Math.ceil(height / 2f);
+		scrollx = x - halfwidth;
+		scrolly = y - halfheight;
+		if (scrollx < 0) {
+			scrollx = 0;
+		} else if (x + halfwidth > map.width) {
+			scrollx = map.width - width;
+		}
+		if (scrolly < 0) {
+			scrolly = 0;
+		} else if (y + halfheight > map.height) {
+			scrolly = map.height - height;
 		}
 	}
 
@@ -144,149 +149,197 @@ public class MapPanel extends Panel implements Runnable {
 
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(width * TILEWIDTH, height * TILEHEIGHT);
+		return getParent().getBounds().getSize();
 	}
 
-	// draws tiles in box (x1,y1)-->(x2,y2) to back buffer
+	/**
+	 * draws tiles in box (x1,y1)-->(x2,y2) to back buffer
+	 * 
+	 * make sure we draw only once to {@link #buffergraphics} to avoid
+	 * flickering
+	 */
 	private void drawTiles(final int startx, final int starty, final int endx,
 			final int endy) {
+		if (background == null) {
+			drawbackground(startx, starty, endx, endy);
+		}
+		final Image tempimage = createImage(background.getWidth(null),
+				background.getHeight(null));
+		final Graphics temp = tempimage.getGraphics();
+		temp.drawImage(background, 0, 0, null);
 		for (int y = starty; y <= endy; y++) {
 			for (int x = startx; x <= endx; x++) {
-				int m = !map.isHeroLOS(x, y) ? 0 : map.getTile(x, y);
-				final int tile = m & 65535;
-				if (tile == 0) { // blank
-					buffergraphics.setColor(Color.black);
-					buffergraphics.fillRect((x - scrollx) * TILEWIDTH,
-							(y - scrolly) * TILEHEIGHT, TILEWIDTH, TILEHEIGHT);
-				} else if (overlay != null
-						&& overlay.contains(new javelin.controller.Point(x, y))) {
-					buffergraphics.setColor(Color.CYAN);
-					buffergraphics.fillRect((x - scrollx) * TILEWIDTH,
-							(y - scrolly) * TILEHEIGHT, TILEWIDTH, TILEHEIGHT);
-				} else {
-					final int image = map.isDiscovered(x, y + 1)
-							&& Tile.filling[map.getTile(x, y + 1) & 65535] ? Tile.imagefill[tile]
-							: Tile.images[tile];
-					final int px = (x - scrollx) * TILEWIDTH;
-					final int py = slant ? py * 3 / 4 : (y - scrolly)
-							* TILEHEIGHT;
-					final int sx = image % 20 * TILEWIDTH;
-					final int sy = image / 20 * TILEHEIGHT;
-					final Image source = map.isVisible(x, y) ? QuestApp.tiles
-							: QuestApp.greytiles;
-					buffergraphics.drawImage(source, px, py, px + TILEWIDTH, py
-							+ TILEHEIGHT, sx, sy, sx + TILEWIDTH, sy
-							+ TILEHEIGHT, null);
-					// draw in coastlines
-					if (Tile.borders[tile] > 0 && source == QuestApp.tiles) {
-						drawcoastline(y, x, m, px, py);
+				final int px = (x - scrollx) * MapPanel.TILEWIDTH;
+				final int py = (y - scrolly) * MapPanel.TILEHEIGHT;
+				for (Thing head = map.sortZ(x, y); head != null; head =
+						head.next) {
+					if (head.combatant != null) {
+						drawThing(head, px, py, temp, x, y);
 					}
 				}
-				final Thing h = Game.hero();
-				if (map.isVisible(x, y)) {
-					drawThings(x, y);
-				} else if (x == h.x && y == h.y) {
-					drawThing(x, y, h);
+				for (final Meld m : state.meld) {
+					if (m.x == x && m.y == y) {
+						temp.drawImage(state.next.ap >= m.meldsat
+								? QuestApp.crystal : QuestApp.dead, px, py,
+								null);
+						break;
+					}
 				}
-
+				final Point p = new Point(x, y);
+				if (overlay != null && overlay
+						.contains(new javelin.controller.Point(x, y))) {
+					temp.setColor(Color.CYAN);
+					temp.fillRect((x - scrollx) * MapPanel.TILEWIDTH,
+							(y - scrolly) * MapPanel.TILEHEIGHT,
+							MapPanel.TILEWIDTH, MapPanel.TILEHEIGHT);
+				}
+				if (map.isVisible(x, y)) {
+					discovered.add(p);
+				} else {
+					temp.setColor(new Color(0, 0, 0,
+							discovered.contains(p) ? 0.8f : 1.0f));
+					temp.fillRect(px, py, MapPanel.TILEWIDTH,
+							MapPanel.TILEHEIGHT);
+				}
 			}
 		}
+		buffergraphics.drawImage(tempimage, 0, 0, null);
+		temp.dispose();
 	}
 
-	public void drawcoastline(int y, int x, int m, final int px, final int py) {
+	public void drawbackground(final int startx, final int starty,
+			final int endx, final int endy) {
+		background = createImage((endx - startx) * MapPanel.TILEWIDTH,
+				(endy - starty) * MapPanel.TILEHEIGHT);
+		final Graphics backgroungfx = background.getGraphics();
+		for (int y = starty; y <= endy; y++) {
+			for (int x = startx; x <= endx; x++) {
+				final int px = (x - scrollx) * MapPanel.TILEWIDTH;
+				final int py = (y - scrolly) * MapPanel.TILEHEIGHT;
+				final int m = map.getTile(x, y);
+				final int tile = m & 65535;
+				final int image = Tile.filling[map.getTile(x, y + 1) & 65535]
+						? Tile.imagefill[tile] : Tile.images[tile];
+				final int sx = image % 20 * MapPanel.TILEWIDTH;
+				final int sy = image / 20 * MapPanel.TILEHEIGHT;
+				backgroungfx.drawImage(QuestApp.tiles, px, py,
+						px + MapPanel.TILEWIDTH, py + MapPanel.TILEHEIGHT, sx,
+						sy, sx + MapPanel.TILEWIDTH, sy + MapPanel.TILEHEIGHT,
+						null);
+				if (Tile.borders[tile] > 0) {
+					MapPanel.drawcoastline(y, x, m, px, py, backgroungfx, map);
+				}
+				for (Thing head = map.sortZ(x, y); head != null; head =
+						head.next) {
+					if (head.combatant == null
+							|| head.combatant.source == null) {
+						drawThing(head, px, py, backgroungfx, x, y);
+					}
+				}
+			}
+		}
+		backgroungfx.dispose();
+	}
+
+	static public void drawcoastline(int y, int x, int m, final int px,
+			final int py, Graphics gfx, BattleMap map) {
 		if (x > 0 && map.getTile(x - 1, y) != m) {
-			buffergraphics.drawImage(QuestApp.scenery, px, py, px + TILEWIDTH,
-					py + TILEHEIGHT, 0, 16 * TILEHEIGHT, TILEWIDTH,
-					17 * TILEHEIGHT, null);
+			gfx.drawImage(QuestApp.scenery, px, py, px + MapPanel.TILEWIDTH,
+					py + MapPanel.TILEHEIGHT, 0, 16 * MapPanel.TILEHEIGHT,
+					MapPanel.TILEWIDTH, 17 * MapPanel.TILEHEIGHT, null);
 		}
 		if (x < map.width - 1 && map.getTile(x + 1, y) != m) {
-			buffergraphics.drawImage(QuestApp.scenery, px, py, px + TILEWIDTH,
-					py + TILEHEIGHT, TILEWIDTH, 16 * TILEHEIGHT, 2 * TILEWIDTH,
-					17 * TILEHEIGHT, null);
+			gfx.drawImage(QuestApp.scenery, px, py, px + MapPanel.TILEWIDTH,
+					py + MapPanel.TILEHEIGHT, MapPanel.TILEWIDTH,
+					16 * MapPanel.TILEHEIGHT, 2 * MapPanel.TILEWIDTH,
+					17 * MapPanel.TILEHEIGHT, null);
 		}
 		if (y > 0 && map.getTile(x, y - 1) != m) {
-			buffergraphics.drawImage(QuestApp.scenery, px, py, px + TILEWIDTH,
-					py + TILEHEIGHT, 2 * TILEWIDTH, 16 * TILEHEIGHT,
-					3 * TILEWIDTH, 17 * TILEHEIGHT, null);
+			gfx.drawImage(QuestApp.scenery, px, py, px + MapPanel.TILEWIDTH,
+					py + MapPanel.TILEHEIGHT, 2 * MapPanel.TILEWIDTH,
+					16 * MapPanel.TILEHEIGHT, 3 * MapPanel.TILEWIDTH,
+					17 * MapPanel.TILEHEIGHT, null);
 		}
 		if (y < map.height - 1 && map.getTile(x, y + 1) != m) {
-			buffergraphics.drawImage(QuestApp.scenery, px, py, px + TILEWIDTH,
-					py + TILEHEIGHT, 3 * TILEWIDTH, 16 * TILEHEIGHT,
-					4 * TILEWIDTH, 17 * TILEHEIGHT, null);
+			gfx.drawImage(QuestApp.scenery, px, py, px + MapPanel.TILEWIDTH,
+					py + MapPanel.TILEHEIGHT, 3 * MapPanel.TILEWIDTH,
+					16 * MapPanel.TILEHEIGHT, 4 * MapPanel.TILEWIDTH,
+					17 * MapPanel.TILEHEIGHT, null);
 		}
 	}
 
-	private void drawThing(final int x, final int y, final Thing t) {
-		final Color color;
+	private void drawThing(final Thing t, int x, int y, Graphics gfx,
+			final int mapx, final int mapy) {
 		if (t == Game.hero()) {
-			color = t.combatant != null
+			gfx.setColor(t.combatant != null
 					&& BattleMap.redTeam.contains(t.combatant) ? Color.ORANGE
-					: Color.GREEN;
+							: Color.GREEN);
+			gfx.fillRect(x, y, MapPanel.TILEWIDTH, MapPanel.TILEHEIGHT);
 		} else if (overlay == null && t.combatant != null
 				&& BattleScreen.active.drawbackground()) {
-			color = STATUS_COLORS[BattleMap.blueTeam.indexOf(t.combatant) >= 0 ? 0
-					: 1][t.combatant.getNumericStatus()];
-		} else {
-			color = null;
-		}
-		final int px = (x - scrollx) * TILEWIDTH;
-		int py = slant ? py * 3 / 4 : (y - scrolly) * TILEHEIGHT;
-		if (color != null) {
-			buffergraphics.setColor(color);
-			buffergraphics.fillRect(px, py, TILEWIDTH * 2, TILEHEIGHT * 2);
+			gfx.setColor(MapPanel.STATUS_COLORS[BattleMap.blueTeam
+					.indexOf(t.combatant) >= 0 ? 0 : 1][t.combatant
+							.getNumericStatus()]);
+			gfx.fillRect(x, y, MapPanel.TILEWIDTH, MapPanel.TILEHEIGHT);
 		}
 		if (t.combatant == null || t.combatant.source.avatarfile == null) {
 			final int image = t.getImage();
-			final int sx = image % 20 * TILEWIDTH;
-			final int sy = image / 20 * TILEHEIGHT;
+			final int sx = image % 20 * MapPanel.TILEWIDTH;
+			final int sy = image / 20 * MapPanel.TILEHEIGHT;
 			final Object source = t.get("ImageSource");
-			buffergraphics.drawImage(source == null ? QuestApp.items
-					: (Image) QuestApp.images.get(source), px, py, px
-					+ TILEWIDTH, py + TILEHEIGHT, sx, sy, sx + TILEWIDTH, sy
-					+ TILEHEIGHT, null);
+			gfx.drawImage(
+					source == null ? QuestApp.items
+							: (Image) QuestApp.images.get(source),
+					x, y, x + MapPanel.TILEWIDTH, y + MapPanel.TILEHEIGHT, sx,
+					sy, sx + MapPanel.TILEWIDTH, sy + MapPanel.TILEHEIGHT,
+					null);
+			if (isworldscreen) {
+				if (!enhancetown(mapx, mapy, x, y, gfx)) {
+					final WorldActor portal =
+							WorldScreen.getactor(mapx, mapy, Portal.portals);
+					if (portal != null && ((Portal) portal).invasion) {
+						INVASIONPORTAL.paintBorder(this, gfx, x, y,
+								MapPanel.TILEWIDTH, MapPanel.TILEHEIGHT);
+					}
+				}
+			}
 		} else {
-			try {
-				buffergraphics.drawImage(ImageHandler.getImage(t.combatant),
-						px, py, null);
-			} catch (Exception e) {
-				System.out.println("Error drawing " + t.combatant.toString());
-				throw new RuntimeException(e);
+			gfx.drawImage(ImageHandler.getImage(t.combatant), x, y, null);
+			if (!isworldscreen) {
+				if (t.combatant.ispenalized(state)) {
+					gfx.drawImage(QuestApp.penalized, x, y, null);
+				}
+				if (t.combatant.isbuffed()) {
+					BUFF.paintBorder(this, gfx, x, y, TILEWIDTH, TILEHEIGHT);
+				}
 			}
 		}
 	}
 
-	private int getBiggerTileCoordinate(final int px2) {
-		final int i = px2;
-		return i < 0 ? 0 : i;
-	}
-
-	// Draw all visible objects on map to back buffer
-	// side effect: sorts map objects in increasing z-order
-	private void drawThings(final int x, final int y) {
-		Thing head = map.sortZ(x, y);
-		if (head == null) {
-			return;
+	public boolean enhancetown(final int mapx, final int mapy, final int x,
+			final int y, final Graphics gfx) {
+		final Town t = (Town) WorldScreen.getactor(mapx, mapy,
+				javelin.model.world.Town.towns);
+		if (t == null) {
+			return false;
 		}
-		boolean numberOfThings = false;
-		do {
-			drawThing(x, y, head);
-			head = head.next;
-			numberOfThings = true;
-		} while (head != null);
-
-		// // draw plus icon for designer
-		// if (numberOfThings) {
-		// final Image plus = Designer.getPlusImage();
-		// if (plus != null) {
-		// final int px = (x - scrollx) * TILEWIDTH;
-		// final int py = (y - scrolly) * TILEHEIGHT;
-		// final int plusWidth = plus.getWidth(null);
-		// final int plusHeight = plus.getHeight(null);
-		// buffergraphics.drawImage(plus, px + TILEWIDTH - plusWidth, py,
-		// px + TILEWIDTH, py + plusHeight, 0, 0, plusWidth,
-		// plusHeight, null);
-		// }
-		// }
+		if (t.color != null) {
+			gfx.setColor(t.color);
+			gfx.drawLine(x, y + TILEHEIGHT - 1, x + TILEWIDTH,
+					y + TILEHEIGHT - 1);
+			gfx.drawLine(x, y + TILEHEIGHT - 2, x + TILEWIDTH,
+					y + TILEHEIGHT - 2);
+		}
+		if (t.iscrafting()) {
+			gfx.drawImage(QuestApp.crafting, x, y, null);
+		}
+		if (t.isupgrading()) {
+			gfx.drawImage(QuestApp.upgrading, x, y, null);
+		}
+		if (t.ishosting()) {
+			gfx.drawImage(QuestApp.banner, x, y, null);
+		}
+		return true;
 	}
 
 	// place cursor at specified position
@@ -303,76 +356,91 @@ public class MapPanel extends Panel implements Runnable {
 		repaint();
 	}
 
-	public void drawImage(final Graphics g, final double x, final double y,
-			final int image) {
-		if (!map.isVisible((int) Math.round(x), (int) Math.round(y))) {
-			return;
-		}
-		final int px = (int) ((x - scrollx) * TILEWIDTH);
-		final int py = (int) ((y - scrolly) * TILEHEIGHT);
-		final int sx = image % 20 * TILEWIDTH;
-		final int sy = TILEHEIGHT * (image / 20);
-		g.drawImage(QuestApp.effects, px, py, px + TILEWIDTH, py + TILEHEIGHT,
-				sx, sy, sx + TILEWIDTH, sy + TILEHEIGHT, null);
-	}
-
-	// simple explosion
-	public void doExplosion(final int x, final int y, final int c,
-			final int dam, final String damtype) {
-		Game.instance().doExplosion(x, y, c, 1);
-		map.areaDamage(x, y, 2, dam, damtype);
-	}
-
 	// draws cursor at given location to buffer
 	public void drawCursor(final int x, final int y) {
-		final int px = (x - scrollx) * TILEWIDTH;
-		final int py = (y - scrolly) * TILEHEIGHT;
-		final int sx = 6 * TILEWIDTH;
-		final int sy = 0 * TILEHEIGHT;
-		buffergraphics.drawImage(QuestApp.effects, px, py, px + TILEWIDTH, py
-				+ TILEHEIGHT, sx, sy, sx + TILEWIDTH, sy + TILEHEIGHT, null);
+		final int px = (x - scrollx) * MapPanel.TILEWIDTH;
+		final int py = (y - scrolly) * MapPanel.TILEHEIGHT;
+		final int sx = 6 * MapPanel.TILEWIDTH;
+		final int sy = 0 * MapPanel.TILEHEIGHT;
+		buffergraphics.drawImage(QuestApp.effects, px, py,
+				px + MapPanel.TILEWIDTH, py + MapPanel.TILEHEIGHT, sx, sy,
+				sx + MapPanel.TILEWIDTH, sy + MapPanel.TILEHEIGHT, null);
 	}
 
 	// draw buffer to screen in correct location
 	final public void drawMap(final Graphics g) {
 		final Rectangle rect = getBounds();
-		final int w = rect.width;
-		final int h = rect.height;
-		g.drawImage(!animating || animationbuffer == null ? buffer
-				: animationbuffer,
-				(w - width * TILEWIDTH * zoomfactor / 100) / 2, (h - height
-						* TILEHEIGHT * zoomfactor / 100) / 2, width * TILEWIDTH
-						* zoomfactor / 100, height * TILEHEIGHT * zoomfactor
-						/ 100, null);
+		if (BattleScreen.active.scale()) {
+			g.drawImage(buffer.getScaledInstance(rect.width, rect.height,
+					Image.SCALE_FAST), 0, 0, null);
+		} else {
+			int size = rect.height;
+			int offset = (rect.width - size) / 2;
+			g.drawImage(buffer.getScaledInstance(size, size, Image.SCALE_FAST),
+					offset, 0, null);
+		}
 	}
 
+	// draw area to back buffer
 	public void render() {
-		// create back buffer if needed
+		if (map == null) {
+			return;
+		}
+		final Rectangle b = getBounds();
+		if (BattleScreen.active.scale()) {
+			updateposition(scrollx, scrolly,
+					scrollx + (int) Math.floor(b.width / tilesize),
+					scrolly + (int) Math.floor(b.height / tilesize));
+		} else {
+			startx = 0;
+			starty = 0;
+			endx = map.width - 1;
+			endy = map.height - 1;
+		}
 		if (buffer == null) {
-			buffer = createImage(width * TILEWIDTH, height * TILEHEIGHT);
+			buffer = new BufferedImage((endx - startx) * MapPanel.TILEWIDTH,
+					(endy - starty) * MapPanel.TILEHEIGHT,
+					BufferedImage.TYPE_INT_RGB);
 			if (buffer == null) {
 				return;
 			}
 			buffergraphics = buffer.getGraphics();
-			animationbuffer = createImage(width * TILEWIDTH, height
-					* TILEHEIGHT);
-			animationgraphics = animationbuffer.getGraphics();
 		}
-		if (map == null) {
-			return;
-		}
-		// draw area to back buffer
-		drawTiles(scrollx, scrolly, scrollx + width - 1, scrolly + height - 1);
+		state = map.getState();
+		isworldscreen = BattleScreen.active instanceof WorldScreen;
+		drawTiles(startx, starty, endx, endy);
 		if (cursor) {
 			drawCursor(curx, cury);
 		}
 	}
 
-	public void renderAnimation() {
-		if (buffer != null) {
-			animationgraphics.drawImage(buffer, 0, 0, null);
-			drawAnimationFrame(animationgraphics);
+	private void updateposition(int startx, int starty, int endx, int endy) {
+		if (startx < 0) {
+			endx += -startx;
+			startx = 0;
 		}
+		if (starty < 0) {
+			endy += -starty;
+			starty = 0;
+		}
+		if (endx >= map.width) {
+			startx = map.width - (endx - startx) - 1;
+			if (startx < 0) {
+				startx = 0;
+			}
+			endx = map.width - 1;
+		}
+		if (endy >= map.height) {
+			starty = map.height - (endy - starty) - 1;
+			if (starty < 0) {
+				starty = 0;
+			}
+			endy = map.height - 1;
+		}
+		this.startx = startx;
+		this.starty = starty;
+		this.endx = endx;
+		this.endy = endy;
 	}
 
 	/**
@@ -381,37 +449,8 @@ public class MapPanel extends Panel implements Runnable {
 	 */
 	@Override
 	public void paint(final Graphics g) {
-		final Rectangle rect = getBounds();
-		if (zoomfactor != lastzoomfactor) {
-			final int w = rect.width;
-			final int h = rect.height;
-			g.setColor(Color.black);
-			g.fillRect(0, 0, w, h);
-			lastzoomfactor = zoomfactor;
-		}
 		if (buffer != null) {
 			drawMap(g);
-		}
-	}
-
-	private final ArrayList animationElements = new ArrayList();
-
-	public void drawAnimationFrame(final Graphics g) {
-		synchronized (animationElements) {
-			final Iterator it = animationElements.iterator();
-			while (it.hasNext()) {
-				final Animation ae = (Animation) it.next();
-				ae.draw(this, g);
-
-				// remove finished animation parts
-				if (ae.isExpired()) {
-					it.remove();
-				}
-			}
-			if (animationElements.size() == 0) {
-				// Game.warn("Animation stop");
-				animating = false;
-			}
 		}
 	}
 
@@ -419,5 +458,44 @@ public class MapPanel extends Panel implements Runnable {
 		overlay = area;
 		render();
 		repaint();
+	}
+
+	public void zoom(int factor, boolean save, int x, int y) {
+		tilesize += factor;
+		buffer = null;
+		render();
+		viewPosition(map, x, y);
+		if (save) {
+			MapPanel.PREFERENCES.putInt("zoom", tilesize);
+		}
+	}
+
+	public void autozoom(ArrayList<Combatant> combatants, int x, int y) {
+		if (checkallonscreen(combatants)) {// zoom in
+			while (tilesize <= 32 * 1.5) {
+				zoom(+1, false, x, y);
+				if (!checkallonscreen(combatants)) {
+					zoom(-1, false, x, y);
+					return;
+				}
+			}
+		} else {// zoom out
+			while (tilesize >= 32 / 1.5) {
+				zoom(-1, false, x, y);
+				if (checkallonscreen(combatants)) {
+					return;
+				}
+			}
+		}
+	}
+
+	private boolean checkallonscreen(ArrayList<Combatant> combatants) {
+		for (Combatant c : combatants) {
+			if (!(startx <= c.location[0] && c.location[0] <= endx
+					&& starty <= c.location[1] && c.location[1] <= endy)) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

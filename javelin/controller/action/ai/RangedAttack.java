@@ -1,9 +1,11 @@
 package javelin.controller.action.ai;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javelin.controller.ai.ChanceNode;
+import javelin.model.condition.Prone;
 import javelin.model.feat.ImprovedPreciseShot;
 import javelin.model.feat.PreciseShot;
 import javelin.model.state.BattleState;
@@ -34,48 +36,57 @@ public class RangedAttack extends AbstractAttack {
 	}
 
 	@Override
-	List<AttackSequence> getattacks(final Combatant active) {
+			List<AttackSequence> getattacks(final Combatant active) {
 		return active.source.ranged;
 	}
 
 	@Override
-	int getpenalty(final Combatant attacker, final Combatant target,
-			final BattleState s) {
+			int getpenalty(final Combatant attacker, final Combatant target,
+					final BattleState s) {
 		return penalize(attacker, target, s);
 	}
 
-	static public int penalize(final Combatant attacker,
-			final Combatant target, final BattleState s) {
+	static public int penalize(final Combatant attacker, final Combatant target,
+			final BattleState s) {
 		int penalty = target.surprise();
-		if (attacker.source.hasfeat(PreciseShot.SINGLETON) == 0
+		if (!attacker.source.hasfeat(PreciseShot.SINGLETON)
 				&& s.isEngaged(target)) {
 			penalty += 4;
 		}
-		if (attacker.source.hasfeat(ImprovedPreciseShot.SINGLETON) == 0
-				&& s.hasLineOfSight(attacker, target) == javelin.model.state.BattleState.Vision.COVERED) {
+		if (!attacker.source.hasfeat(ImprovedPreciseShot.SINGLETON)
+				&& s.hasLineOfSight(attacker,
+						target) == javelin.model.state.BattleState.Vision.COVERED) {
 			penalty += 4;
+		}
+		if (target.hascondition(Prone.class)) {
+			penalty += 2;
 		}
 		return penalty;
 	}
 
 	@Override
-	public List<List<ChanceNode>> getSucessors(final BattleState gameState,
+	public List<List<ChanceNode>> getoutcomes(final BattleState gameState,
 			final Combatant active) {
-		final ArrayList<List<ChanceNode>> successors = new ArrayList<List<ChanceNode>>();
 		if (gameState.isEngaged(active)) {
-			return successors;
+			return Collections.EMPTY_LIST;
 		}
+		final ArrayList<List<ChanceNode>> successors =
+				new ArrayList<List<ChanceNode>>();
 		for (final Combatant target : gameState.getTargets(active)) {
 			for (final Integer attack : getcurrentattack(active)) {
 				final BattleState newstate = gameState.clone();
-				final Combatant newactive = newstate.translatecombatant(active);
+				final Combatant newactive = newstate.clone(active);
 				newactive.currentranged.setcurrent(attack,
 						newactive.source.ranged);
-				successors.add(attack(newstate, newactive,
-						newstate.translatecombatant(target),
+				successors.add(attack(newstate, newactive, target,
 						newactive.currentranged, 0));
 			}
 		}
 		return successors;
+	}
+
+	@Override
+	public boolean cleave() {
+		return false;
 	}
 }

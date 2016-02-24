@@ -5,41 +5,39 @@ import java.util.HashMap;
 import java.util.List;
 
 import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.controller.db.reader.MonsterReader;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
+/**
+ * A group of monsters to be fought against.
+ * 
+ * @author alex
+ */
 public class Encounter {
-	private final List<Monster> group;
-	public boolean aquatic = false;
+	public final List<Combatant> group;
 
-	public Encounter(List<Monster> groupp) {
+	public Encounter(List<Combatant> groupp) {
 		group = groupp;
-		for (Monster m : group) {
-			if (MonsterReader.AQUATICMONSTERS.contains(m)) {
-				aquatic = true;
-				break;
-			}
-		}
 	}
 
-	public ArrayList<Monster> generate() {
-		final ArrayList<Monster> encounter = new ArrayList<Monster>();
-		for (final Monster m : group) {
+	public ArrayList<Combatant> generate() {
+		final ArrayList<Combatant> encounter = new ArrayList<Combatant>();
+		for (final Combatant m : group) {
 			encounter.add(m);
 		}
 		return encounter;
 	}
 
 	public int rate() {
-		return ChallengeRatingCalculator.calculateSafe(group);
+		return ChallengeRatingCalculator.calculateElSafe(group);
 	}
 
 	@Override
 	public String toString() {
 		final HashMap<Monster, Integer> count = new HashMap<Monster, Integer>();
-		for (final Monster m : group) {
-			final Integer n = count.get(m);
-			count.put(m, n == null ? 1 : n + 1);
+		for (final Combatant m : group) {
+			final Integer n = count.get(m.source);
+			count.put(m.source, n == null ? 1 : n + 1);
 		}
 		return count.toString();
 	}

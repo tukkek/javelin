@@ -1,5 +1,8 @@
-package javelin.controller.exception;
-
-public class TooDeepException extends Exception {
-
-}
+// package javelin.controller.exception;
+//
+/// **
+// * @see MonsterGroup
+// */
+// public class TooDeepException extends Exception {
+//
+// }

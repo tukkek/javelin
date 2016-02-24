@@ -1,7 +1,0 @@
-This folder can be imported as a Java project in Eclipse.
-
-Some source folders may show errors but as long as the folder 'javelin' doesn't you should be able to hack, compile and play the game.
-
-The source code has been developed under Java 6. Bringing it to Java 8 would be the next step in the project's development.
-
-On Linux, the package.sh script will let you create a javelin.zip file intended for releasing the game. You will need to export a JAR under Eclipse with the name javelin.jar to this folder first - again you might experience some errors/warnings but everything should work fine as long as the 'javelin' folder compiles.

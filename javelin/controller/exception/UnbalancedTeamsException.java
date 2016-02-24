@@ -3,6 +3,12 @@
  */
 package javelin.controller.exception;
 
+/**
+ * Thrown when the Ai generates an unfair battle, generally because it was the
+ * best possible effort.
+ * 
+ * @author alex
+ */
 public class UnbalancedTeamsException extends Exception {
 
 }

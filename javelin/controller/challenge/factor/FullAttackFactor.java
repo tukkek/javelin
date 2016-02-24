@@ -6,7 +6,6 @@ package javelin.controller.challenge.factor;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.damage.MeleeDamage;
 import javelin.controller.upgrade.damage.RangedDamage;
@@ -30,18 +29,23 @@ import javelin.model.unit.Monster;
  * 
  * UPPER KRUST'S ANSWER: In this situation you need to factor both.
  * 
+ * See {@link CrFactor}.
+ * 
  * @author alex
  */
 public class FullAttackFactor extends CrFactor {
 	@Override
 	public float calculate(final Monster monster) {
 		final List<Attack> attks = new ArrayList<Attack>();
-		final ArrayList<List<AttackSequence>> attacktypes = new ArrayList<List<AttackSequence>>();
+		final ArrayList<List<AttackSequence>> attacktypes =
+				new ArrayList<List<AttackSequence>>();
 		attacktypes.add(monster.melee);
 		attacktypes.add(monster.ranged);
 		for (final List<AttackSequence> attacktype : attacktypes) {
-			for (final List<Attack> a : attacktype) {
-				attks.addAll(a);
+			for (final AttackSequence a : attacktype) {
+				if (!a.rapid && !a.powerful) {
+					attks.addAll(a);
+				}
 			}
 		}
 		if (attks.size() == 0) {
@@ -59,8 +63,7 @@ public class FullAttackFactor extends CrFactor {
 
 	@Override
 	public void listupgrades(UpgradeHandler handler) {
-		final List<Upgrade> list = handler.addset();
-		list.add(new MeleeDamage("More mêlée damage"));
-		list.add(new RangedDamage("More ranged damage"));
+		handler.fire.add(new MeleeDamage("More mêlée damage"));
+		handler.wind.add(new RangedDamage("More ranged damage"));
 	}
 }

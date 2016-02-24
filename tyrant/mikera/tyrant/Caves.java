@@ -1,8 +1,8 @@
 package tyrant.mikera.tyrant;
 
+import javelin.controller.Point;
 import javelin.model.BattleMap;
 import tyrant.mikera.engine.Lib;
-import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
 
@@ -110,7 +110,7 @@ public class Caves {
 			// wayhey!
 
 			Thing bandit = Lib.create("swordsman");
-			AI.name(bandit, "Graam the Terrible");
+			// AI.name(bandit, "Graam the Terrible");
 			bandit.addThing(Lib.createArtifact(10));
 			m.addThing(bandit, 27, 27, 35, 35);
 
@@ -208,8 +208,8 @@ public class Caves {
 	// makes a thin passage
 	// put a wall around first half of passage
 	// this should prevent early branching
-	public static boolean makeThinPassage(BattleMap m, int x, int y, int dx, int dy,
-			boolean diagonals) {
+	public static boolean makeThinPassage(BattleMap m, int x, int y, int dx,
+			int dy, boolean diagonals) {
 		int len = RPG.d(2, 12);
 		int size = RPG.d(4);
 
@@ -234,7 +234,8 @@ public class Caves {
 	}
 
 	// nooks and crannies
-	private static boolean makeCrevice(BattleMap m, int x, int y, int dx, int dy) {
+	private static boolean makeCrevice(BattleMap m, int x, int y, int dx,
+			int dy) {
 		if (!m.isBlank(x + dy, y - dx, x - dy, y + dx)) {
 			return false;
 		}
@@ -260,8 +261,8 @@ public class Caves {
 
 		case 3: // recurse!
 			m.setTile(x, y, m.floor());
-			makeCrevice(m, x + dx + (RPG.r(3) - 1) * dy, y + dy
-					- (RPG.r(3) - 1) * dx, dx, dy);
+			makeCrevice(m, x + dx + (RPG.r(3) - 1) * dy,
+					y + dy - (RPG.r(3) - 1) * dx, dx, dy);
 			break;
 
 		case 4: // secret route
@@ -286,7 +287,8 @@ public class Caves {
 	}
 
 	// make a random twisty tunnel
-	public static boolean makeTunnel(BattleMap m, int x, int y, int dx, int dy) {
+	public static boolean makeTunnel(BattleMap m, int x, int y, int dx,
+			int dy) {
 		if (m.getTile(x, y) == 0) {
 			int ndx = dx;
 			int ndy = dy;

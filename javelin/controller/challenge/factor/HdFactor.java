@@ -11,8 +11,9 @@ import javelin.model.unit.Monster;
  * Can't simply upgrade HD since it gives more base attack bonus, abilities...
  * (feats are taken into consideration by FeatsFactor)
  * 
- * @author alex
+ * @see CrFactor
  * 
+ * @author alex
  */
 public class HdFactor extends CrFactor {
 	@Override
@@ -36,9 +37,9 @@ public class HdFactor extends CrFactor {
 			crByDie = .55f;
 		} else if (type.contains("fey")) {
 			crByDie = .5f;
-		} else if (andIntelligent("construct", monster)
-				|| type.contains("ooze") || type.contains("plant")
-				|| andIntelligent("undead", monster) || type.contains("vermin")) {
+		} else if (andIntelligent("construct", monster) || type.contains("ooze")
+				|| type.contains("plant") || andIntelligent("undead", monster)
+				|| type.contains("vermin")) {
 			crByDie = .45f;
 		} else if (type.contains("construct") || type.contains("undead")) {
 			crByDie = .35f;

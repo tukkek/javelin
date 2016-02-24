@@ -3,22 +3,23 @@
  */
 package javelin.controller.ai.valueselector;
 
+import java.util.ArrayList;
+
 import javelin.controller.ai.AbstractAlphaBetaSearch;
 import javelin.controller.ai.Entry;
 
 /**
- * Implementa��o de {@link AbstractValueSelector} que representa o oponente
- * virtual (IA).
+ * Represents the artificial intelligence player.
  * 
  * @author Alex Henry
  */
-public class MaxValueSelector extends AbstractValueSelector {
+public class MaxValueSelector extends ValueSelector {
 	/**
 	 * @see MaxValueSelector#MaxValueSelector(AbstractAlphaBetaSearch)
 	 * 
 	 * @author Alex Henry
 	 */
-	private final AbstractAlphaBetaSearch<?> search;
+	private final AbstractAlphaBetaSearch search;
 
 	/**
 	 * Construtor.
@@ -27,16 +28,18 @@ public class MaxValueSelector extends AbstractValueSelector {
 	 *            Busca atual sendo realizada.
 	 * @author Alex Henry
 	 */
-	public MaxValueSelector(final AbstractAlphaBetaSearch<?> search) {
+	public MaxValueSelector(final AbstractAlphaBetaSearch search) {
 		super();
 		this.search = search;
 	}
 
 	@Override
 	protected Entry processCurrent(final Entry node, final int depth,
-			final float alpha, final float beta) throws InterruptedException {
-		return search.minValueSelector.getValue(new Entry(node.node,
-				Integer.MAX_VALUE, node.cns), search, depth, alpha, beta);
+			final float alpha, final float beta,
+			final ArrayList<Integer> index) {
+		return search.minValueSelector.getValue(
+				new Entry(node.node, Float.MAX_VALUE, node.cns), search, depth,
+				alpha, beta, index);
 	}
 
 	@Override

@@ -1,0 +1,27 @@
+UPGRADE GUIDE (simple upgrades)
+
+Breath weapon: special area attack, press b during battle to activate.
+Classes: raises hit dice, base attack bonus and saving throws.
+Damage reduction: reduces damage from physical attacks.
+Darkvision: greatly improved vision when dark.
+Energy resistance/immunity: reduces or ignores damage from non-physical attacks.
+Fast healing: heals a certain number of hit points per turn (1AP).
+Flying: allows character to fly over terrain and water.
+Great fortitude: +2 fortitude.
+Improved initiative: +4 initiative.
+Iron will: +2 will.
+Lightning reflexes: +2 reflexes.
+Low-light vision: improved vision when dark.
+Mêlée damage: raises damage of all mêlée attacks.
+Mêlée focus: +1 to all mêlee attack bonuses (requires +1 Base Attack Bonus).
+Natural armor: raises armor class.
+Raise constitution: raises fortitude, hit points and breath weapon saving throw difficulty.
+Raise dexterity: raises armor class, reflexes, ranged attack bonuses and initiative.
+Raise strength: raises mêlée attack bonuses and damage.
+Raise wisdom: raises will saving throw bonus.
+Ranged damage: raises damage of all ranged attacks.
+Ranged focus: +1 to all ranged attack bonuses (requires +1 BAB).
+Spell resistance: the more powerful your resistance, the less likely you'll be affected by harmful spells.
+Spell immunity:  cannot be the target of harmful spells.
+Swimming: swims over water faster, ignores penalties for being on water. 
+Toughness: +3 hit points.

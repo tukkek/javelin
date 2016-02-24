@@ -8,10 +8,20 @@ import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 import tyrant.mikera.engine.RPG;
 
+/**
+ * Manages game weather. Current types of weather are {@link #DRY},
+ * {@link #RAIN} and {@link #STORM}.
+ * 
+ * @author alex
+ */
 public class Weather {
 	static private Integer[] DISTRIBUTION = new Integer[] { 0, 0, 1, 2 };
 	static private double[] RATIO = new double[] { 0.0, .1, .5 };
+	static public int DRY = 0;
+	static public int RAIN = 1;
+	static public int STORM = 2;
 	public static int now;
+
 	static {
 		read(0);
 	}
@@ -29,8 +39,8 @@ public class Weather {
 		}
 	}
 
-	public static void flood(BattleMap m) {
-		final double r = RATIO[now];
+	public static void flood(BattleMap m, int maxflooding) {
+		final double r = RATIO[Math.min(now, maxflooding)];
 		if (r == 0.0) {
 			return;
 		}

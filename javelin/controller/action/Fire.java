@@ -27,6 +27,9 @@ import tyrant.mikera.tyrant.InfoScreen;
 /**
  * Ranged attack.
  * 
+ * TODO this is being used by an awful lot of subclasses, extract a generic
+ * TargetedAction.
+ * 
  * @author alex
  */
 public class Fire extends Action {

@@ -32,7 +32,7 @@ public class ThreadManager {
 			maxthreads = limit;
 		}
 		String message =
-				"The AI will use " + maxthreads + " of " + cores + " cores";
+				"\n\nThe AI will use " + maxthreads + " of " + cores + " cores";
 		if (AiCache.ENABLED) {
 			message += " (cache enabled)";
 		}

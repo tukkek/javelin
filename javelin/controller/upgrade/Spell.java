@@ -93,7 +93,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	@Override
 	public boolean apply(Combatant m) {
 		int hitdice = m.source.hd.count();
-		if (casterlevel > hitdice || m.spells.size() >= hitdice) {
+		if (casterlevel > hitdice || m.spells.count() >= hitdice) {
 			// design parameters
 			return false;
 		}

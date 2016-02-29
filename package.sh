@@ -12,6 +12,7 @@ cp preferences.properties package/javelin
 cp README.txt package/javelin
 rm javelin.zip
 cd package
+rm -r javelin/doc/javadoc
 zip ../javelin.zip javelin -r > /dev/null
 cd ..
 rm -r package

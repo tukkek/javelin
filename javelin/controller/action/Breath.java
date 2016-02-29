@@ -56,7 +56,7 @@ public class Breath extends Action implements AiAction {
 		for (final BreathWeapon breath : combatant.source.breaths) {
 			for (final Area a : (breath.type == BreathArea.CONE ? BURSTS
 					: LINES).values()) {
-				Point source = a.pointsource(combatant);
+				Point source = a.initiate(combatant);
 				if (source.x >= 0 && source.y >= 0
 						&& source.x < gameState.map.length
 						&& source.y < gameState.map[0].length) {

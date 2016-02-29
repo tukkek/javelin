@@ -15,19 +15,18 @@ import tyrant.mikera.tyrant.InfoScreen;
 public class Abandon extends WorldAction {
 	public Abandon() {
 		super("Start a completely new game (clears saved data and closes game)",
-				new int[] {}, new String[] { "S" });
+				new int[] {}, new String[] { "Q" });
 	}
 
 	@Override
 	public void perform(final WorldScreen screen) {
 		screen.messagepanel.clear();
 		Game.message(
-				"Are you sure you want to abandon the current game forever? Press c to continue.",
+				"Are you sure you want to abandon the current game forever? Press c to confirm.",
 				null, Delay.NONE);
 		if (InfoScreen.feedback() == 'c') {
 			StateManager.abandoned = true;
 			StateManager.save();
-			// StateManager.clearsaves();
 			System.exit(0);
 		}
 	}

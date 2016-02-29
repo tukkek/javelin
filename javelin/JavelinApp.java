@@ -1,7 +1,10 @@
 package javelin;
 
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -105,13 +108,19 @@ public class JavelinApp extends QuestApp {
 	}
 
 	private void initialize() {
-		System.out.println("Copyright (C) 2015 Alex Henry\n\n"
-				+ "This program is free software; you can redistribute it and/or modify it under\n"
-				+ "the terms of the GNU General Public License version 2 as published by the Free\n"
-				+ "Software Foundation.\n"
-				+ "A copy of the full license text is available inside the 'doc' directory.\n"
-				+ "See our website for information on how to contact the developers:\n"
-				+ "http://javelinrl.wordpress.com or http://github.com/tukkek/javelin\n");
+		try {
+			BufferedReader reader =
+					new BufferedReader(new FileReader(new File("README.txt")));
+			String line = reader.readLine();
+			while (line != null) {
+				if (!line.trim().isEmpty()) {
+					System.out.println(line);
+				}
+				line = reader.readLine();
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 		ThreadManager.determineprocessors();
 	}
 

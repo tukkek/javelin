@@ -18,4 +18,12 @@ public class Spells extends CloneableList<Spell> {
 		}
 		return null;
 	}
+
+	public int count() {
+		int sum = 0;
+		for (Spell s : this) {
+			sum += s.perday;
+		}
+		return sum;
+	}
 }

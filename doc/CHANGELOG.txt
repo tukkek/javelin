@@ -1,10 +1,18 @@
-1.1
+Version 1.2 (2016-02-29)
+
+ * Minor release in response to community feedback on 1.1
+ * Improved documentation
+ * Minor bugfixes
+ * Breath area now ignores cover
+ * AI cache is now disabled by default (can slow-down some systems)
+
+Version 1.1 (2016-02-26)
 
  * Dungeons!
  * Vehicles!
  * Portals!
  * Tournaments!
- * The Tower of Haxor!
+ * The Temple of Haxor!
  * Many new, randomly-generated battle maps!
  * Lots of UI and AI improvements!
  * Each town now has a unique selection of items and upgrades

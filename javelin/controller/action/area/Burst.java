@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.ai.AiThread;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.walker.Walker;
 import javelin.model.state.BattleState;
-import javelin.model.state.BattleState.Vision;
 import javelin.model.unit.Combatant;
 
 public class Burst extends Area {
@@ -30,7 +28,7 @@ public class Burst extends Area {
 			final BattleState state) {
 		range -= 5;
 		final HashSet<Point> area = new HashSet<Point>();
-		final Point p = pointsource(c);
+		final Point p = initiate(c);
 		if (checkclear(state, p)) {
 			recursivefill(p, p, range, area, state);
 		}
@@ -43,14 +41,17 @@ public class Burst extends Area {
 			AiThread.checkinterrupted();
 		}
 		if (Walker.distance(source.x, source.y, current.x, current.y) > range
-				/ 5) {
+				/ 5 || !checkclear(s, current)) {
 			return;
 		}
-		if (s.hasLineOfSight(new Point(source.x, source.y),
-				new Point(current.x, current.y), range / 5,
-				Javelin.PERIOD_NOON) != Vision.CLEAR) {
-			return;
-		}
+		// if (s.hasLineOfSight(new Point(source.x, source.y),
+		// new Point(current.x, current.y), range / 5,
+		// Javelin.PERIOD_NOON) != Vision.CLEAR) {
+		// return;
+		// }
+		// if(){
+		// return;
+		// }
 		area.add(current);
 		for (final Point direction : directions) {
 			recursivefill(source,

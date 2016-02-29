@@ -2,6 +2,8 @@ package javelin.model.unit.abilities;
 
 import java.io.Serializable;
 
+import com.sun.javafx.geom.Area;
+
 import javelin.controller.action.Breath;
 import javelin.model.Cloneable;
 import javelin.model.unit.Combatant;
@@ -11,6 +13,9 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class BreathWeapon implements Serializable, Cloneable {
+	/**
+	 * @see Area
+	 */
 	public enum BreathArea {
 		CONE, LINE
 	}

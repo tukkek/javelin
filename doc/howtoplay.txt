@@ -6,12 +6,14 @@ You control a squad and do battle around the world. Towns have shops, let you re
 
 There are several types of terrain in the game: plains (offer easy battles), forest (moderate), mountains (hard) and swamp (very hard). When the game starts you will probably want to stay very close to the nearest city and level up your party once or twice before adventuring farther.
 
-Every time you start a new game a new world is generated! If you don't like the world you're in you can press S to quit and start a new game. If you want to keep your current progress  and continue later just close the game.
+Every time you start a new game a new world is generated! If you don't like the world you're in you can press SHIFT+q to quit and start a new game. If you want to keep your current progress and continue later just close the game.
 
-Don't forget that fleeing is an option if a situation ever seems less than favorable! 
+Don't forget that fleeing is an option if a situation ever seems less than favorable! Press h during battle for a list of all possible actions.
 
 Your objective is to beat your own highscore, which is recorded when the game ends. Good luck and have fun!
 
 Check out these websites for more information:
- * javelinrl.wordpress.com - news and updates
- * d20srd.org - game rules
+
+ * javelinrl.wordpress.com  (news and updates)
+ * reddit.com/r/javelinrl   (official game forum)
+ * d20srd.org               (game rules)

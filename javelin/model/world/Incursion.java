@@ -184,6 +184,7 @@ public class Incursion implements WorldActor {
 					}
 				}
 				create(x, y);
+				p.remove();
 				return true;
 			}
 		}

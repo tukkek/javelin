@@ -5,7 +5,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.world.Dungeon;
 import javelin.model.world.Squad;
 import javelin.model.world.Squad.Transport;
-import javelin.model.world.Town;
+import javelin.model.world.town.Town;
 
 /**
  * See the d20 SRD for more info.

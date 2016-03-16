@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.Weather;
 import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.encounter.Encounter;
@@ -14,6 +15,7 @@ import javelin.controller.encounter.EncounterGenerator;
 import javelin.controller.encounter.EncounterPossibilities;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.world.Dungeon;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -28,11 +30,9 @@ public class Organization extends FieldReader {
 	/**
 	 * Possible encounters by terrain type.
 	 */
-	final static HashMap<String, EncounterIndex> ENCOUNTERS =
+	public final static HashMap<String, EncounterIndex> ENCOUNTERS =
 			new HashMap<String, EncounterIndex>();
 	static ArrayList<EncounterData> data = new ArrayList<EncounterData>();
-	public static HashMap<String, String[]> TERRAINDATA =
-			new HashMap<String, String[]>();
 
 	public Organization(final MonsterReader reader, final String fieldname) {
 		super(reader, fieldname);
@@ -51,6 +51,19 @@ public class Organization extends FieldReader {
 			}
 			data.add(group);
 		}
+	}
+
+	static ArrayList<String> terrain() {
+		ArrayList<String> terrains = new ArrayList<String>();
+		if (Dungeon.active != null) {
+			terrains.add("underground");
+			return terrains;
+		}
+		terrains.add(Javelin.terrain(Javelin.terrain()));
+		if (Weather.now == 2) {
+			terrains.add("aquatic");
+		}
+		return terrains;
 	}
 
 	/**
@@ -106,8 +119,7 @@ public class Organization extends FieldReader {
 	public static void jointerrains(List<Combatant> group,
 			final HashSet<String> terrains) {
 		for (final Combatant c : group) {
-			for (final String terrain : TERRAINDATA
-					.get(c.source.toString().toLowerCase())) {
+			for (final String terrain : c.source.terrains) {
 				terrains.add(terrain);
 			}
 		}
@@ -175,7 +187,7 @@ public class Organization extends FieldReader {
 
 	static public List<Combatant> makeencounter(final int el) {
 		List<Encounter> possibilities = new ArrayList<Encounter>();
-		for (String terrain : Javelin.getTerrain()) {
+		for (String terrain : Organization.terrain()) {
 			EncounterIndex index = ENCOUNTERS.get(terrain);
 			if (index != null) {
 				List<Encounter> tier = index.get(el);

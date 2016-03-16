@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import javelin.model.world.Incursion;
-import javelin.model.world.Town;
+import javelin.model.world.town.Town;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -37,7 +37,7 @@ public abstract class Exhibition implements Serializable {
 			return;
 		}
 		if (RPG.r(1, 7) == 1 || DEBUG) {
-			RPG.pick(javelin.model.world.Town.towns).host();
+			RPG.pick(javelin.model.world.town.Town.towns).host();
 		}
 	}
 

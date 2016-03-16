@@ -1,14 +1,17 @@
 package javelin.controller.upgrade;
 
-import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.factor.CrFactor;
-import javelin.model.world.Town;
+import javelin.controller.upgrade.classes.ClassAdvancement;
+import javelin.model.Realm;
+import javelin.model.world.town.Town;
 import javelin.view.screen.town.option.UpgradeOption;
+import tyrant.mikera.engine.RPG;
 
 /**
  * Collects and distributes {@link Upgrade}s from different subsystems.
@@ -29,27 +32,55 @@ public class UpgradeHandler {
 	public void distribute() {
 		gather();
 		for (Town t : Town.towns) {
-			final List<Upgrade> upgrades;
-			if (t.color == null) {
-				upgrades = wind;
-			} else if (t.color == Color.red) {
-				upgrades = fire;
-			} else if (t.color == Color.blue) {
-				upgrades = water;
-			} else if (t.color == Color.green) {
-				upgrades = earth;
-			} else if (t.color == Color.white) {
-				upgrades = good;
-			} else if (t.color == Color.black) {
-				upgrades = evil;
-			} else if (t.color == Color.magenta) {
-				upgrades = magic;
-			} else {
-				throw new RuntimeException("Uknown town!");
+			Realm r = t.realm;
+			t.upgrades.add(new UpgradeOption(getclass(r)));
+			final List<Upgrade> upgrades = getupgrades(r);
+			Collections.shuffle(upgrades);
+			int i = 0;
+			while (t.upgrades.size() < RPG.r(3, 5) && i < upgrades.size()) {
+				t.upgrades.add(new UpgradeOption(upgrades.get(i)));
+				i += 1;
 			}
-			for (Upgrade u : upgrades) {
-				t.upgrades.add(new UpgradeOption(u));
-			}
+		}
+	}
+
+	private ClassAdvancement getclass(Realm r) {
+		if (r == javelin.model.Realm.WIND) {
+			return ClassAdvancement.EXPERT;
+		} else if (r == Realm.FIRE) {
+			return ClassAdvancement.WARRIOR;
+		} else if (r == Realm.WATER) {
+			return ClassAdvancement.ARISTOCRAT;
+		} else if (r == Realm.EARTH) {
+			return ClassAdvancement.COMMONER;
+		} else if (r == Realm.GOOD) {
+			return ClassAdvancement.ARISTOCRAT;
+		} else if (r == Realm.EVIL) {
+			return ClassAdvancement.COMMONER;
+		} else if (r == Realm.MAGIC) {
+			return ClassAdvancement.ARISTOCRAT;
+		} else {
+			throw new RuntimeException("Uknown town!");
+		}
+	}
+
+	List<Upgrade> getupgrades(Realm r) {
+		if (r == javelin.model.Realm.WIND) {
+			return wind;
+		} else if (r == Realm.FIRE) {
+			return fire;
+		} else if (r == Realm.WATER) {
+			return water;
+		} else if (r == Realm.EARTH) {
+			return earth;
+		} else if (r == Realm.GOOD) {
+			return good;
+		} else if (r == Realm.EVIL) {
+			return evil;
+		} else if (r == Realm.MAGIC) {
+			return magic;
+		} else {
+			throw new RuntimeException("Uknown town!");
 		}
 	}
 

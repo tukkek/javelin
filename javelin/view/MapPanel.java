@@ -21,8 +21,8 @@ import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Portal;
-import javelin.model.world.Town;
 import javelin.model.world.WorldActor;
+import javelin.model.world.town.Town;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.world.WorldScreen;
 import tyrant.mikera.engine.Thing;
@@ -319,12 +319,12 @@ public class MapPanel extends Panel {
 	public boolean enhancetown(final int mapx, final int mapy, final int x,
 			final int y, final Graphics gfx) {
 		final Town t = (Town) WorldScreen.getactor(mapx, mapy,
-				javelin.model.world.Town.towns);
+				javelin.model.world.town.Town.towns);
 		if (t == null) {
 			return false;
 		}
-		if (t.color != null) {
-			gfx.setColor(t.color);
+		if (t.realm != javelin.model.Realm.WIND) {
+			gfx.setColor(t.realm.getawtcolor());
 			gfx.drawLine(x, y + TILEHEIGHT - 1, x + TILEWIDTH,
 					y + TILEHEIGHT - 1);
 			gfx.drawLine(x, y + TILEHEIGHT - 2, x + TILEWIDTH,

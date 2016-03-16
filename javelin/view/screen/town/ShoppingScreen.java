@@ -8,7 +8,7 @@ import javelin.model.item.Item;
 import javelin.model.item.potion.Potion;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Squad;
-import javelin.model.world.Town;
+import javelin.model.world.town.Town;
 import javelin.view.screen.town.option.Option;
 
 /**

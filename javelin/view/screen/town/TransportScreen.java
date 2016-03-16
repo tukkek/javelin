@@ -5,7 +5,7 @@ import java.util.List;
 
 import javelin.model.world.Squad;
 import javelin.model.world.Squad.Transport;
-import javelin.model.world.Town;
+import javelin.model.world.town.Town;
 import javelin.view.screen.town.option.Option;
 
 /**

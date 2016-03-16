@@ -9,6 +9,7 @@ import javelin.model.EquipmentMap;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.world.town.Town;
 import javelin.view.screen.town.TransportScreen;
 import javelin.view.screen.world.WorldScreen;
 import tyrant.mikera.engine.Lib;

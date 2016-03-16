@@ -163,6 +163,7 @@ public class Monster implements Cloneable, Serializable {
 	 */
 	public int sr = 0;
 	public boolean immunetomindeffects = false;
+	public ArrayList<String> terrains = new ArrayList<String>();
 
 	@Override
 	public Monster clone() {
@@ -176,6 +177,7 @@ public class Monster implements Cloneable, Serializable {
 			if (m.touch != null) {
 				m.touch = touch.clone();
 			}
+			terrains = (ArrayList<String>) terrains.clone();
 			return m;
 		} catch (final CloneNotSupportedException e) {
 			throw new RuntimeException(e);

@@ -1,6 +1,6 @@
 package javelin.view.screen.town.option;
 
-import javelin.model.world.Town;
+import javelin.model.world.town.Town;
 import javelin.view.screen.town.RecruitScreen;
 import javelin.view.screen.town.SelectScreen;
 

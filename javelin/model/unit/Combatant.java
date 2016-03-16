@@ -71,7 +71,7 @@ public class Combatant implements Serializable, Cloneable {
 	 */
 	public Spells spells = new Spells();
 	/**
-	 * TODO should be in {@link Combatant}
+	 * XP in CR, you'll want to multiply by 100 and round to show the player.
 	 */
 	public BigDecimal xp = new BigDecimal(0);
 	public boolean summoned = false;

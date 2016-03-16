@@ -1,12 +1,10 @@
 package javelin.view.screen.world;
 
-import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 
 import javelin.Javelin;
 import javelin.JavelinApp;
@@ -20,21 +18,23 @@ import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.RandomEncounter;
 import javelin.controller.tournament.Exhibition;
 import javelin.controller.upgrade.Spell;
+import javelin.controller.walker.Walker;
 import javelin.model.BattleMap;
+import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Dungeon;
 import javelin.model.world.Haxor;
 import javelin.model.world.Incursion;
 import javelin.model.world.Lair;
 import javelin.model.world.Portal;
-import javelin.model.world.QueueItem;
 import javelin.model.world.Squad;
 import javelin.model.world.Squad.Transport;
-import javelin.model.world.Town;
 import javelin.model.world.WorldActor;
 import javelin.model.world.WorldMap;
 import javelin.model.world.WorldMap.Region;
 import javelin.model.world.WorldPlace;
+import javelin.model.world.town.QueueItem;
+import javelin.model.world.town.Town;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.Point;
@@ -55,17 +55,16 @@ public class WorldScreen extends BattleScreen {
 	public static final String SPACER =
 			"                                               ";
 
-	private static final TreeMap<String, Color> TOWNINFO =
-			new TreeMap<String, Color>();
+	private static final ArrayList<Realm> TOWNINFO = new ArrayList<Realm>();
 
 	static {
-		TOWNINFO.put("Mount Fiery", Color.red);
-		TOWNINFO.put("Water tribe", Color.blue);
-		TOWNINFO.put("Gale Heights", null);
-		TOWNINFO.put("Rife Grounds", Color.green);
-		TOWNINFO.put("Octarinum", Color.MAGENTA);
-		TOWNINFO.put("Benedita", Color.white);
-		TOWNINFO.put("Plaga", Color.black);
+		TOWNINFO.add(Realm.FIRE);
+		TOWNINFO.add(Realm.WATER);
+		TOWNINFO.add(Realm.WIND);
+		TOWNINFO.add(Realm.EARTH);
+		TOWNINFO.add(Realm.MAGIC);
+		TOWNINFO.add(Realm.GOOD);
+		TOWNINFO.add(Realm.EVIL);
 	}
 
 	public static BattleMap worldmap;
@@ -132,12 +131,20 @@ public class WorldScreen extends BattleScreen {
 		final WorldMap seed = WorldMap.seed;
 		JavelinApp.overviewmap = WorldScreen.makemap(seed);
 		for (final Point town : seed.towns.values()) {
-			String name = RPG.pick(new ArrayList<String>(TOWNINFO.keySet()));
-			Color color = TOWNINFO.get(name);
-			TOWNINFO.remove(name);
-			final Town town2 = new Town(town.x, town.y, name, color);
-			Town.towns.add(town2);
-			town2.place();
+			Realm r = RPG.pick(TOWNINFO);
+			TOWNINFO.remove(r);
+			placetown(town, r);
+		}
+		int more = RPG.r(5, 7);
+		for (int i = 0; i < more; i++) {
+			int x = RPG.r(0, WorldMap.MAPDIMENSION - 1);
+			int y = RPG.r(0, WorldMap.MAPDIMENSION - 1);
+			if (getactor(x, y) != null) {
+				i -= 1;
+				continue;
+			}
+			Point p = new Point(x, y);
+			placetown(p, determinecolor(p).realm);
 		}
 		Point easya = seed.towns.get(Region.EASYA);
 		Point easyb = seed.towns.get(Region.EASYB);
@@ -145,12 +152,34 @@ public class WorldScreen extends BattleScreen {
 				WorldScreen.getactor(easyb.x, easyb.y, Town.towns), false,
 				false, true, true, null, false).place();
 		Haxor.spawn(easya);
+		int features = WorldMap.MAPDIMENSION * WorldMap.MAPDIMENSION / 9;
+		for (int i = 0; i < features; i++) {
+			spawnfeature(1f);
+		}
 		final Point start = easya;
 		Squad.active.x = start.x;
 		Squad.active.y = start.y;
 		Squad.active.displace();
 		Squad.active.place();
 		Squad.active.equipment.fill(Squad.active);
+	}
+
+	private static Town determinecolor(Point p) {
+		Town closest = Town.towns.get(0);
+		for (int i = 1; i < Town.towns.size(); i++) {
+			Town t = Town.towns.get(i);
+			if (Walker.distance(t.x, t.y, p.x, p.y) < Walker.distance(closest.x,
+					closest.y, p.x, p.y)) {
+				closest = t;
+			}
+		}
+		return closest;
+	}
+
+	protected static void placetown(final Point town, Realm color) {
+		final Town town2 = new Town(town.x, town.y, color);
+		Town.towns.add(town2);
+		town2.place();
 	}
 
 	public static BattleMap makemap(final WorldMap seed) {
@@ -209,10 +238,8 @@ public class WorldScreen extends BattleScreen {
 			for (final Squad s : Squad.squads) {
 				s.eat();
 			}
-			float onefeatureperweek = 1 / 7f;
-			Lair.spawn(onefeatureperweek / 4f);
-			Dungeon.spawn(onefeatureperweek / 2f);
-			Portal.open(onefeatureperweek / 4f);
+			final float onefeatureperweek = 1 / 7f;
+			spawnfeature(onefeatureperweek);
 			Weather.weather();
 			Town tournament = null;
 			for (Town t : Town.towns) {
@@ -235,6 +262,12 @@ public class WorldScreen extends BattleScreen {
 			}
 		}
 		StateManager.save();
+	}
+
+	protected static void spawnfeature(float onefeatureperweek) {
+		Lair.spawn(onefeatureperweek / 4f);
+		Dungeon.spawn(onefeatureperweek / 2f);
+		Portal.open(onefeatureperweek / 4f);
 	}
 
 	public void updateplayerinformation() {

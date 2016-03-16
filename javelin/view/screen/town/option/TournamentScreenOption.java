@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.tournament.Exhibition;
-import javelin.model.world.Town;
+import javelin.model.world.town.Town;
 import javelin.view.screen.town.SelectScreen;
 
 /**

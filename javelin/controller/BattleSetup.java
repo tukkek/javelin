@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.JavelinApp;
 import javelin.controller.ai.ActionProvider;
 import javelin.controller.exception.GaveUpException;
 import javelin.controller.fight.Fight;
@@ -33,7 +32,7 @@ public class BattleSetup {
 		rollinitiative();
 		Map sourcemap = Javelin.app.fight.getmap();
 		if (sourcemap == null) {
-			sourcemap = MapGenerator.generatebattlemap(JavelinApp.worldtile(),
+			sourcemap = MapGenerator.generatebattlemap(Javelin.terrain(),
 					Dungeon.active != null);
 		}
 		sourcemap.generate();

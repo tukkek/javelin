@@ -1,6 +1,9 @@
 package javelin.view.screen.town;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -8,9 +11,9 @@ import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.world.QueueItem;
 import javelin.model.world.Squad;
-import javelin.model.world.Town;
+import javelin.model.world.town.QueueItem;
+import javelin.model.world.town.Town;
 import javelin.view.screen.IntroScreen;
 import javelin.view.screen.town.option.Option;
 import javelin.view.screen.town.option.RecruitOption;
@@ -31,20 +34,7 @@ public class RecruitScreen extends PurchaseScreen {
 
 	@Override
 	public List<Option> getOptions() {
-		newrecruit: while (town.recruits.size() < RECRUITSPERTOWN) {
-			RecruitOption recruit = getmonster();
-			for (Town t : Town.towns) {
-				if (t.recruits.contains(recruit)) {
-					continue newrecruit;
-				}
-			}
-			town.recruits.add(recruit);
-		}
-		ArrayList<Option> options = new ArrayList<Option>();
-		for (int i = 0; i < RECRUITSPERTOWN; i++) {
-			options.add(town.recruits.get(i));
-		}
-		return options;
+		return new ArrayList<Option>(town.lairs);
 	}
 
 	@Override
@@ -53,7 +43,7 @@ public class RecruitScreen extends PurchaseScreen {
 			return false;
 		}
 		final RecruitOption rop = (RecruitOption) o;
-		town.recruits.remove(rop);
+		town.lairs.remove(rop);
 		rop.m.hd.roll(rop.m);
 		Javelin.recruit(rop.m);
 		return true;
@@ -81,7 +71,11 @@ public class RecruitScreen extends PurchaseScreen {
 	 * TODO refactor into class
 	 */
 	static public void namingscreen(final Monster m) {
-		final String nametext = "Give a name to your " + m.name
+		m.customName = namingscreen(m.name);
+	}
+
+	public static String namingscreen(String nametext) {
+		nametext = "Give a name to your " + nametext
 				+ "! Press BACKSPACE to erase.\n\n";
 		final IntroScreen namescreen = new IntroScreen(nametext);
 		String name = "";
@@ -110,7 +104,7 @@ public class RecruitScreen extends PurchaseScreen {
 			namescreen.text = nametext + name;
 			namescreen.repaint();
 		}
-		m.customName = name;
+		return name;
 	}
 
 	static final Random random = new Random();
@@ -125,5 +119,63 @@ public class RecruitScreen extends PurchaseScreen {
 				(ChallengeRatingCalculator.calculateCr(candidate) - 1) / .2f;
 		return new RecruitOption(candidate.name,
 				Math.round(100f * Math.pow(basecost, 3f)), candidate);
+	}
+
+	@Override
+	public String printpriceinfo(Option o) {
+		return " " + Math.round(Math.ceil(o.price)) + "XP";
+	}
+
+	@Override
+	public String printInfo() {
+		return "Your squad has " + sumxp() + "XP";
+	}
+
+	private int sumxp() {
+		BigDecimal sum = new BigDecimal(0);
+		for (Combatant c : Squad.active.members) {
+			sum = sum.add(c.xp);
+		}
+		return Math.round(sum.floatValue() * 100);
+	}
+
+	@Override
+	protected boolean canbuy(Option o) {
+		return o.price <= sumxp();
+	}
+
+	@Override
+	protected void spend(Option o) {
+		double cost = o.price / 100;
+		double percapita = cost / new Float(Squad.active.size());
+		boolean buyfromall = true;
+		for (Combatant c : Squad.active.members) {
+			if (c.xp.doubleValue() < percapita) {
+				buyfromall = false;
+				break;
+			}
+		}
+		if (buyfromall) {
+			for (Combatant c : Squad.active.members) {
+				c.xp = c.xp.subtract(new BigDecimal(percapita));
+			}
+		} else {
+			ArrayList<Combatant> squad =
+					new ArrayList<Combatant>(Squad.active.members);
+			Collections.sort(squad, new Comparator<Combatant>() {
+				@Override
+				public int compare(Combatant o1, Combatant o2) {
+					return o2.xp.compareTo(o1.xp);
+				}
+			});
+			for (Combatant c : squad) {
+				if (c.xp.doubleValue() >= cost) {
+					c.xp = c.xp.subtract(new BigDecimal(cost));
+					return;
+				}
+				cost -= c.xp.doubleValue();
+				c.xp = new BigDecimal(0);
+			}
+		}
 	}
 }

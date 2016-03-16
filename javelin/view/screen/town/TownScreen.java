@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.model.world.QueueItem;
 import javelin.model.world.Squad;
-import javelin.model.world.Town;
-import javelin.model.world.TownQueue;
+import javelin.model.world.town.QueueItem;
+import javelin.model.world.town.Town;
+import javelin.model.world.town.TownQueue;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.town.option.Option;
 import javelin.view.screen.town.option.RecruitScreenOption;

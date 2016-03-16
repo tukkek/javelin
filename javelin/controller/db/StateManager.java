@@ -21,9 +21,9 @@ import javelin.model.world.Incursion;
 import javelin.model.world.Lair;
 import javelin.model.world.Portal;
 import javelin.model.world.Squad;
-import javelin.model.world.Town;
 import javelin.model.world.WorldMap;
 import javelin.model.world.WorldPlace;
+import javelin.model.world.town.Town;
 import javelin.view.screen.world.WorldScreen;
 
 /**

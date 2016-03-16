@@ -5,7 +5,7 @@ import java.io.Serializable;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.world.Town;
+import javelin.model.world.town.Town;
 
 /**
  * A improvement to a {@link Combatant}'s {@link Monster} which has to be

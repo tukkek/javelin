@@ -35,13 +35,12 @@ import javelin.model.world.Dungeon;
 import javelin.model.world.Haxor;
 import javelin.model.world.Incursion;
 import javelin.model.world.Squad;
-import javelin.model.world.Town;
+import javelin.model.world.town.Town;
 import javelin.view.SquadScreen;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.world.WorldScreen;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.QuestApp;
 
 /**
@@ -319,10 +318,6 @@ public class JavelinApp extends QuestApp {
 		}
 		elchoices.add(1);
 		return RPG.pick(elchoices);
-	}
-
-	static public int worldtile() {
-		return JavelinApp.overviewmap.getTile(Game.hero().x, Game.hero().y);
 	}
 
 	@Override

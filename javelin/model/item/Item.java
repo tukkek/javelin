@@ -1,6 +1,5 @@
 package javelin.model.item;
 
-import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,6 +8,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 import javelin.controller.db.StateManager;
+import javelin.model.Realm;
 import javelin.model.item.potion.Darkvision;
 import javelin.model.item.potion.Fly;
 import javelin.model.item.potion.Heroism;
@@ -36,8 +36,8 @@ import javelin.model.item.scroll.dungeon.LocateObject;
 import javelin.model.item.scroll.dungeon.PryingEyes;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Squad;
-import javelin.model.world.Town;
 import javelin.model.world.WorldPlace;
+import javelin.model.world.town.Town;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -181,65 +181,38 @@ public abstract class Item implements Serializable, Cloneable {
 	 */
 	public static void distribute() {
 		CureLightWounds curelightwounds = new CureLightWounds();
-		int maxoptions = 0;
 		for (Town t : Town.towns) {
-			final ItemSelection inventory;
-			if (t.color == null) {
-				inventory = WIND;
-			} else if (t.color == Color.red) {
-				inventory = FIRE;
-			} else if (t.color == Color.green) {
-				inventory = EARTH;
-			} else if (t.color == Color.BLUE) {
-				inventory = WATER;
-			} else if (t.color == Color.white) {
-				inventory = GOOD;
-			} else if (t.color == Color.BLACK) {
-				inventory = EVIL;
-			} else if (t.color == Color.MAGENTA) {
-				inventory = MAGIC;
-			} else {
-				throw new RuntimeException("Unknown town!");
+			t.items.add(curelightwounds);
+			int nitems = RPG.r(3 - 1, 5 - 1);
+			ItemSelection selection = new ItemSelection(getselection(t.realm));
+			selection.remove(curelightwounds);
+			if (nitems > selection.size()) {
+				nitems = selection.size();
 			}
-			t.items.addAll(inventory);
-			if (!t.items.contains(curelightwounds)) {
-				t.items.add(curelightwounds);
-			}
-			maxoptions =
-					Math.max(maxoptions, t.items.size() + t.upgrades.size());
-		}
-		for (Town t : Town.towns) {
-			int minorcount = 0;
-			int mediumcount = 0;
-			int majorcount = 0;
-			for (Item i : t.items) {
-				if (MINOR.contains(i)) {
-					minorcount += 1;
-				} else if (MEDIUM.contains(i)) {
-					mediumcount += 1;
-				} else if (MAJOR.contains(i)) {
-					majorcount += 1;
-				} else {
-					throw new RuntimeException("Item not tiered");
-				}
-			}
-			while (t.items.size() + t.upgrades.size() < maxoptions) {
-				ItemSelection addfrom = null;
-				if (minorcount < mediumcount || minorcount < majorcount) {
-					minorcount += 1;
-					addfrom = MINOR;
-				} else if (mediumcount < majorcount) {
-					mediumcount += 1;
-					addfrom = MEDIUM;
-				} else {
-					majorcount += 1;
-					addfrom = MAJOR;
-				}
-				while (!t.items.add(RPG.pick(addfrom))) {
-					continue;// already has this item
-				}
+			while (t.items.size() - 1 < nitems) {
+				t.items.add(selection.random());
 			}
 			Collections.sort(t.items, Item.PRICECOMPARATOR);
+		}
+	}
+
+	private static ItemSelection getselection(Realm r) {
+		if (r == Realm.WIND) {
+			return WIND;
+		} else if (r == Realm.FIRE) {
+			return FIRE;
+		} else if (r == Realm.EARTH) {
+			return EARTH;
+		} else if (r == Realm.WATER) {
+			return WATER;
+		} else if (r == Realm.GOOD) {
+			return GOOD;
+		} else if (r == Realm.EVIL) {
+			return EVIL;
+		} else if (r == Realm.MAGIC) {
+			return MAGIC;
+		} else {
+			throw new RuntimeException("Unknown town!");
 		}
 	}
 

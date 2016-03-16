@@ -18,16 +18,14 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import javelin.controller.Weather;
 import javelin.controller.db.StateManager;
 import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.db.reader.factor.Organization;
 import javelin.controller.map.Map;
 import javelin.model.BattleMap;
-import javelin.model.item.Key.Color;
+import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.world.Dungeon;
 import javelin.model.world.Squad;
 import javelin.model.world.WorldMap;
 import javelin.view.screen.BattleScreen;
@@ -64,7 +62,7 @@ public class Javelin {
 	public static final Map DEBUGMAPTYPE = null;
 	public static final boolean DEBUG_SPAWNINCURSION = false;
 	public static final Float DEBUGSTARTINGCR = null;
-	public static final Color DEBUGSTARTINGKEY = null;
+	public static final Realm DEBUGSTARTINGKEY = null;
 	public static final String DEBUGALLOWMONSTER = null;
 	public static final String DEBUGPERIOD = null;
 
@@ -255,7 +253,7 @@ public class Javelin {
 	}
 
 	public static int difficulty() {
-		switch (JavelinApp.worldtile()) {
+		switch (Javelin.terrain()) {
 		case WorldMap.EASY:
 			return -1;
 		case WorldMap.MEDIUM:
@@ -282,30 +280,6 @@ public class Javelin {
 		return null;
 	}
 
-	public static ArrayList<String> getTerrain() {
-		ArrayList<String> terrains = new ArrayList<String>();
-		if (Dungeon.active != null) {
-			terrains.add("underground");
-			return terrains;
-		}
-		int tile = JavelinApp.worldtile();
-		if (tile == WorldMap.EASY) {
-			terrains.add(RPG.pick(new String[] { "plains", "plains", "hill" }));
-		} else if (tile == WorldMap.MEDIUM) {
-			terrains.add(RPG.pick(new String[] { "forest", "forest", "hill" }));
-		} else if (tile == WorldMap.HARD) {
-			terrains.add(RPG.pick(new String[] { "mountains", "desert" }));
-		} else if (tile == WorldMap.VERYHARD) {
-			terrains.add("marsh");
-		} else {
-			throw new RuntimeException("Unknown tile difficulty!");
-		}
-		if (Weather.now == 2) {
-			terrains.add("aquatic");
-		}
-		return terrains;
-	}
-
 	static public String translatetochance(int rolltohit) {
 		if (rolltohit <= 4) {
 			return "effortless";
@@ -321,4 +295,52 @@ public class Javelin {
 		}
 		return "unlikely";
 	}
+
+	/**
+	 * @return Current terrain difficulty. For example: {@link WorldMap#EASY}.
+	 */
+	static public int terrain() {
+		Thing h = Game.hero();
+		return Javelin.terrain(h.x, h.y);
+	}
+
+	/**
+	 * @param x
+	 *            {@link WorldMap} coordinate.
+	 * @param y
+	 *            {@link WorldMap} coordinate.
+	 * @return Terrain difficulty. For example: {@link WorldMap#EASY}.
+	 */
+	public static int terrain(int x, int y) {
+		return JavelinApp.overviewmap.getTile(x, y);
+	}
+
+	/**
+	 * @param difficulty
+	 *            Terrain difficulty. For example: {@link WorldMap#EASY}.
+	 * @return Name of a d20 terrain.
+	 */
+	public static String terrain(int difficulty) {
+		return RPG.pick(terrains(difficulty));
+	}
+
+	/**
+	 * @param difficulty
+	 *            Terrain difficulty. For example: {@link WorldMap#EASY}.
+	 * @return All the names of d20 terrains this difficulty encompasses.
+	 */
+	public static String[] terrains(int difficulty) {
+		if (difficulty == WorldMap.EASY) {
+			return new String[] { "plains", "plains", "hill" };
+		} else if (difficulty == WorldMap.MEDIUM) {
+			return new String[] { "forest", "forest", "hill" };
+		} else if (difficulty == WorldMap.HARD) {
+			return new String[] { "mountains", "desert" };
+		} else if (difficulty == WorldMap.VERYHARD) {
+			return new String[] { "marsh" };
+		} else {
+			throw new RuntimeException("Unknown tile difficulty!");
+		}
+	}
+
 }

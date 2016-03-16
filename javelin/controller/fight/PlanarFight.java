@@ -14,11 +14,12 @@ import javelin.controller.tournament.CrIterator;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.BattleMap;
+import javelin.model.Realm;
 import javelin.model.item.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.Haxor;
-import javelin.model.world.Town;
+import javelin.model.world.town.Town;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.tyrant.Game;
@@ -66,25 +67,25 @@ public class PlanarFight implements Fight {
 		UpgradeHandler upgrades = new UpgradeHandler();
 		upgrades.gather();
 		switch (key.color) {
-		case BLUE:
+		case WATER:
 			path = upgrades.water;
 			break;
-		case BLACK:
+		case EVIL:
 			path = upgrades.evil;
 			break;
-		case GREEN:
+		case EARTH:
 			path = upgrades.earth;
 			break;
-		case MAGENTA:
+		case MAGIC:
 			path = upgrades.magic;
 			break;
-		case RED:
+		case FIRE:
 			path = upgrades.fire;
 			break;
-		case TRANSPARENT:
+		case WIND:
 			path = upgrades.wind;
 			break;
-		case WHITE:
+		case GOOD:
 			path = upgrades.good;
 			break;
 		default:
@@ -122,7 +123,7 @@ public class PlanarFight implements Fight {
 		// opponents = organizeopponents(opponents);
 		for (int i = 0; i < size; i++) {
 			Combatant opponent = opponents.get(i);
-			opponent.source.customName = Key.REALMS.get(key.color) + " "
+			opponent.source.customName = Realm.REALMS.get(key.color) + " "
 					+ opponent.source.name.toLowerCase();
 			opponent.source.customName = Character
 					.toUpperCase(opponent.source.customName.charAt(0))

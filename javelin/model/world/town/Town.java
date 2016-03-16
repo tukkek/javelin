@@ -1,9 +1,10 @@
-package javelin.model.world;
+package javelin.model.world.town;
 
-import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.action.world.CastSpells;
@@ -12,9 +13,13 @@ import javelin.controller.db.StateManager;
 import javelin.controller.tournament.Exhibition;
 import javelin.controller.tournament.Match;
 import javelin.controller.upgrade.Spell;
+import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
+import javelin.model.world.Squad;
+import javelin.model.world.WorldActor;
 import javelin.view.screen.town.RecruitScreen;
 import javelin.view.screen.town.TownScreen;
 import javelin.view.screen.town.option.Option;
@@ -36,7 +41,7 @@ public class Town implements WorldActor {
 
 	public int x;
 	public int y;
-	public List<RecruitOption> recruits =
+	public List<RecruitOption> lairs =
 			new ArrayList<RecruitOption>(RecruitScreen.RECRUITSPERTOWN);
 	public List<Option> upgrades = new ArrayList<Option>();
 	public ItemSelection items = new ItemSelection();
@@ -48,16 +53,52 @@ public class Town implements WorldActor {
 	public int stash = 0;
 	public ArrayList<Exhibition> events = new ArrayList<Exhibition>();
 	public String name;
-	public Color color;
+	public Realm realm;
+	/**
+	 * Represent a list of units positioned inside a town.
+	 */
+	public List<Combatant> garrison = new ArrayList<Combatant>();
 
-	public Town(final int x, final int y, String namep, Color colorp) {
+	public Town(final int x, final int y, Realm colorp) {
 		this.x = x;
 		this.y = y;
-		name = namep;
-		color = colorp;
+		realm = colorp == null ? javelin.model.Realm.WIND : colorp;
+		int nrecruits = RPG.r(3, 5);
+		ArrayList<Monster> recruits = possiblerecruits(x, y);
+		for (int i = 0; i < nrecruits; i++) {
+			Monster recruit = recruits.get(i);
+			lairs.add(new RecruitOption(recruit.name,
+					100 * recruit.challengeRating, recruit));
+		}
+	}
+
+	public ArrayList<Monster> possiblerecruits(final int x, final int y) {
+		ArrayList<Monster> recruits = new ArrayList<Monster>();
+		String[] terrains = Javelin.terrains(Javelin.terrain(x, y));
+		for (Monster m : Javelin.ALLMONSTERS) {
+			for (String terrain : terrains) {
+				if (m.terrains.contains(terrain)) {
+					recruits.add(m);
+					break;
+				}
+			}
+		}
+		Collections.shuffle(recruits);
+		// Collections.sort(recruits, new Comparator<Monster>() {
+		// @Override
+		// public int compare(Monster o1, Monster o2) {
+		// return new Float(o1.challengeRating)
+		// .compareTo(o2.challengeRating);
+		// }
+		// });
+		return recruits;
 	}
 
 	public void enter(final Squad s) {
+		if (name == null) {
+			name = RecruitScreen
+					.namingscreen(realm.toString().toLowerCase() + " town");
+		}
 		reclaim();
 		new TownScreen(this);
 		if (!Squad.squads.isEmpty()) {

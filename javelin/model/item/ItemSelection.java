@@ -2,6 +2,8 @@ package javelin.model.item;
 
 import java.util.ArrayList;
 
+import tyrant.mikera.engine.RPG;
+
 /**
  * Collection for {@link Item}. Does not aloow for more than one item of the
  * same type.
@@ -10,12 +12,24 @@ import java.util.ArrayList;
  */
 public class ItemSelection extends ArrayList<Item> {
 
+	public ItemSelection(ItemSelection getselection) {
+		super(getselection);
+	}
+
+	public ItemSelection() {
+		super();
+	}
+
 	@Override
 	public boolean add(Item element) {
 		if (contains(element)) {
 			return false;
 		}
 		return super.add(element);
+	}
+
+	public Item random() {
+		return get(RPG.r(0, size() - 1));
 	}
 
 }

@@ -1,4 +1,4 @@
-package javelin.model.world;
+package javelin.model.world.town;
 
 import java.io.Serializable;
 

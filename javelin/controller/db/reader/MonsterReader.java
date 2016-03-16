@@ -139,18 +139,43 @@ public class MonsterReader extends DefaultHandler {
 		} else if (localName.equalsIgnoreCase("Organization")) {
 			section = "Organization";
 		} else if (localName.equalsIgnoreCase("Climateandterrain")) {
-			terrains = attributes.getValue("Terrain").toLowerCase().split(",");
-		} else if (localName.equalsIgnoreCase("Breath")) {
+			for (String terrain : attributes.getValue("Terrain").toLowerCase()
+					.split(",")) {
+				// if (terrain == null) {
+				// continue; // TODO
+				// }
+				terrain = terrain.trim();
+				if (terrain.isEmpty()) {
+					continue;// TODO
+				}
+				if (terrain.equals("plains") || terrain.equals("hill")
+						|| terrain.equals("forest") || terrain.equals("marsh")
+						|| terrain.equals("mountains")
+						|| terrain.equals("desert")
+						|| terrain.equals("underground")
+						|| terrain.equals("aquatic")) {
+					monster.terrains.add(terrain);
+				} else {
+					throw new RuntimeException("#unknownterrain " + terrain);
+				}
+			}
+		} else if (localName.equalsIgnoreCase("Breath"))
+
+		{
 			/* TODO */
 			if (attributes.getValue("effect") == null) {
 				parsebreath(attributes, monster);
 			}
-		} else if (localName.equalsIgnoreCase("Touch")) {
+		} else if (localName.equalsIgnoreCase("Touch"))
+
+		{
 			String[] damage = attributes.getValue("damage").split("d");
 			monster.touch = new TouchAttack(attributes.getValue("name"),
 					Integer.parseInt(damage[0]), Integer.parseInt(damage[1]),
 					Integer.parseInt(attributes.getValue("save")));
-		} else if (localName.equalsIgnoreCase("Spells")) {
+		} else if (localName.equalsIgnoreCase("Spells"))
+
+		{
 			String known = attributes.getValue("known");
 			if (known != null) {
 				registerspells(known, monster);
@@ -161,7 +186,9 @@ public class MonsterReader extends DefaultHandler {
 				monster.spellcr = Float.parseFloat(spellcr);
 				SpecialtiesLog.log("    Spell cr: " + monster.spellcr);
 			}
-		} else if (monster != null && !localName.equals("StatBlock")) {
+		} else if (monster != null && !localName.equals("StatBlock"))
+
+		{
 			for (final String tagName : new String[] { "description", "General",
 					"Terrain", "Treasure", "Alignment", "Advancement",
 					"specialabilities", "specialability", "p", "combat",
@@ -173,6 +200,7 @@ public class MonsterReader extends DefaultHandler {
 			}
 			errorhandler.setInvalid(name);
 		}
+
 	}
 
 	void registerspells(String known, Monster monster) {
@@ -413,6 +441,7 @@ public class MonsterReader extends DefaultHandler {
 		readers.add(new HitDice(this, "HitDice"));
 		readers.add(new Paragraph(this, "Paragraph"));
 		readers.add(new Organization(this, "Organization"));
+
 	}
 
 	@Override
@@ -460,8 +489,8 @@ public class MonsterReader extends DefaultHandler {
 					SpecialtiesLog.log("    Breaths: " + monster.breaths);
 				}
 				SpecialtiesLog.log();
-				Organization.TERRAINDATA.put(monster.toString().toLowerCase(),
-						terrains);
+				// Organization.TERRAINDATA.put(monster.toString().toLowerCase(),
+				// terrains);
 			}
 			SpecialtiesLog.clear();
 		}
@@ -497,7 +526,6 @@ public class MonsterReader extends DefaultHandler {
 	}
 
 	private static PrintWriter log = null;
-	private String[] terrains;
 
 	public static void log(final String string) {
 		if (!Javelin.DEBUG) {

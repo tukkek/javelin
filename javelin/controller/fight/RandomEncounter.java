@@ -26,7 +26,7 @@ public class RandomEncounter implements Fight {
 	@Override
 	public int getel(final JavelinApp app, final int teamel) {
 		int difficulty = JavelinApp.randomdifficulty() + Javelin.difficulty();
-		return teamel + cap(difficulty, JavelinApp.worldtile());
+		return teamel + cap(difficulty, Javelin.terrain());
 	}
 
 	private int cap(int difficulty, int tile) {

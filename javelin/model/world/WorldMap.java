@@ -223,25 +223,30 @@ public class WorldMap implements Serializable {
 		}
 		Collections.shuffle(regions);
 		for (final Region r : regions) {
-			Point proposal = null;
-			placement: while (proposal == null) {
-				proposal = new Point(randomaxispoint(), randomaxispoint());
-				for (final Point town : towns.values()) {
-					for (int x = town.x - TOWNBUFFER; x <= town.x
-							+ TOWNBUFFER; x++) {
-						for (int y = town.y - TOWNBUFFER; y <= town.y
-								+ TOWNBUFFER; y++) {
-							if (proposal.x == x && proposal.y == y) {
-								proposal = null;
-								continue placement;
-							}
+			placetown(towns, r);
+		}
+		return towns;
+	}
+
+	protected void placetown(final TreeMap<Region, Point> towns,
+			final Region r) {
+		Point proposal = null;
+		placement: while (proposal == null) {
+			proposal = new Point(randomaxispoint(), randomaxispoint());
+			for (final Point town : towns.values()) {
+				for (int x = town.x - TOWNBUFFER; x <= town.x
+						+ TOWNBUFFER; x++) {
+					for (int y = town.y - TOWNBUFFER; y <= town.y
+							+ TOWNBUFFER; y++) {
+						if (proposal.x == x && proposal.y == y) {
+							proposal = null;
+							continue placement;
 						}
 					}
 				}
 			}
-			towns.put(r, proposal);
 		}
-		return towns;
+		towns.put(r, proposal);
 	}
 
 	private int randomaxispoint() {

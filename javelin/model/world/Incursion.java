@@ -10,6 +10,7 @@ import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.IncursionFight;
 import javelin.model.unit.Combatant;
+import javelin.model.world.town.Town;
 import javelin.view.screen.world.WorldScreen;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.Point;

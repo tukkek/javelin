@@ -8,6 +8,7 @@ import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.PlanarFight;
 import javelin.model.item.Key;
 import javelin.model.unit.Combatant;
+import javelin.model.world.town.Town;
 import javelin.view.screen.IntroScreen;
 import javelin.view.screen.world.WorldScreen;
 import tyrant.mikera.engine.RPG;
@@ -58,7 +59,7 @@ public class Portal extends WorldPlace {
 		instantaneous = instantaneousp;
 		expiresat = expiresatp;
 		safe = safep;
-		this.invasion = invasion;
+		this.invasion = false; // TODO
 	}
 
 	public Portal(WorldActor from, WorldActor to) {

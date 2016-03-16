@@ -1,8 +1,10 @@
-package javelin.model.world;
+package javelin.model.world.town;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javelin.model.world.Squad;
 
 /**
  * A container of {@link QueueItem} for a {@link Town}.

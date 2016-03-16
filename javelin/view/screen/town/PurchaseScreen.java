@@ -2,7 +2,7 @@ package javelin.view.screen.town;
 
 import javelin.Javelin;
 import javelin.model.world.Squad;
-import javelin.model.world.Town;
+import javelin.model.world.town.Town;
 import javelin.view.screen.town.option.Option;
 
 /**
@@ -20,14 +20,22 @@ public abstract class PurchaseScreen extends SelectScreen {
 
 	@Override
 	public boolean select(final Option o) {
-		bought = Squad.active.gold >= o.price;
+		bought = canbuy(o);
 		if (bought) {
-			Squad.active.gold -= o.price;
+			spend(o);
 			return true;
 		}
-		text += "\nNot enough gold.";
+		text += "\nToo expensive!";
 		Javelin.app.switchScreen(this);
 		return false;
+	}
+
+	protected void spend(final Option o) {
+		Squad.active.gold -= o.price;
+	}
+
+	protected boolean canbuy(final Option o) {
+		return Squad.active.gold >= o.price;
 	}
 
 	@Override

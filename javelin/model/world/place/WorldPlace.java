@@ -1,8 +1,10 @@
-package javelin.model.world;
+package javelin.model.world.place;
 
 import java.util.List;
 
 import javelin.JavelinApp;
+import javelin.model.world.WorldActor;
+import javelin.model.world.WorldMap;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
@@ -58,11 +60,6 @@ public abstract class WorldPlace implements WorldActor {
 	public void place() {
 		visual = Lib.create(visualname);
 		JavelinApp.overviewmap.addThing(visual, x, y);
-	}
-
-	@Override
-	public String describe() {
-		return description;
 	}
 
 	public void enter() {

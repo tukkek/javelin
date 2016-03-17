@@ -4,7 +4,7 @@ import javelin.model.dungeon.Feature;
 import javelin.model.dungeon.Fountain;
 import javelin.model.dungeon.Treasure;
 import javelin.model.item.Item;
-import javelin.model.world.Dungeon;
+import javelin.model.world.place.Dungeon;
 import javelin.view.screen.world.DungeonScreen;
 
 /**

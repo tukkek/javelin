@@ -15,7 +15,7 @@ import javelin.controller.encounter.EncounterGenerator;
 import javelin.controller.encounter.EncounterPossibilities;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.world.Dungeon;
+import javelin.model.world.place.Dungeon;
 import tyrant.mikera.engine.RPG;
 
 /**

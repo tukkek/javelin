@@ -7,7 +7,7 @@ import javelin.controller.action.world.WorldMove;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.model.BattleMap;
 import javelin.model.dungeon.Feature;
-import javelin.model.world.Dungeon;
+import javelin.model.world.place.Dungeon;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
@@ -121,4 +121,5 @@ public class DungeonScreen extends WorldScreen {
 	public boolean scale() {
 		return false;
 	}
+
 }

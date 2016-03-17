@@ -8,6 +8,7 @@ import java.awt.event.WindowEvent;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.prefs.Preferences;
@@ -63,6 +64,7 @@ public class Javelin {
 	public static final Integer DEBUGWEATHER = null;
 	public static final Map DEBUGMAPTYPE = null;
 	public static final boolean DEBUG_SPAWNINCURSION = false;
+	public static final boolean DEBUGEXPLORED = false;
 	public static final Float DEBUGSTARTINGCR = null;
 	public static final Realm DEBUGSTARTINGKEY = null;
 	public static final String DEBUGALLOWMONSTER = null;
@@ -343,6 +345,26 @@ public class Javelin {
 		} else {
 			throw new RuntimeException("Unknown tile difficulty!");
 		}
+	}
+
+	/**
+	 * 2 chances of an easy encounter, 10 chances of a moderate encounter, 4
+	 * chances of a difficult encounter and 1 chance of an overwhelming
+	 * encounter
+	 */
+	public static Integer randomdifficulty() {
+		final LinkedList<Integer> elchoices = new LinkedList<Integer>();
+		for (int j = 0; j < 2; j++) {
+			elchoices.add(RPG.r(-5, -8));
+		}
+		for (int j = 0; j < 10; j++) {
+			elchoices.add(-4);
+		}
+		for (int j = -3; j <= 0; j++) {
+			elchoices.add(j);
+		}
+		elchoices.add(1);
+		return RPG.pick(elchoices);
 	}
 
 }

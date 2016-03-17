@@ -36,7 +36,7 @@ import javelin.model.item.scroll.dungeon.LocateObject;
 import javelin.model.item.scroll.dungeon.PryingEyes;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Squad;
-import javelin.model.world.WorldPlace;
+import javelin.model.world.place.WorldPlace;
 import javelin.model.world.town.Town;
 import tyrant.mikera.engine.RPG;
 

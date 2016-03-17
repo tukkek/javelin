@@ -6,7 +6,7 @@ import javelin.JavelinApp;
 import javelin.controller.map.Map;
 import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Lair;
+import javelin.model.world.place.Lair;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.LairScreen;
 

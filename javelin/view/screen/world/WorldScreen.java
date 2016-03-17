@@ -17,6 +17,7 @@ import javelin.controller.action.world.WorldMove;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.db.StateManager;
 import javelin.controller.exception.battle.StartBattle;
+import javelin.controller.fight.RandomDungeonEncounter;
 import javelin.controller.fight.RandomEncounter;
 import javelin.controller.tournament.Exhibition;
 import javelin.controller.upgrade.Spell;
@@ -24,17 +25,17 @@ import javelin.controller.walker.Walker;
 import javelin.model.BattleMap;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Dungeon;
-import javelin.model.world.Haxor;
 import javelin.model.world.Incursion;
-import javelin.model.world.Lair;
-import javelin.model.world.Portal;
 import javelin.model.world.Squad;
 import javelin.model.world.Squad.Transport;
 import javelin.model.world.WorldActor;
 import javelin.model.world.WorldMap;
 import javelin.model.world.WorldMap.Region;
-import javelin.model.world.WorldPlace;
+import javelin.model.world.place.Dungeon;
+import javelin.model.world.place.Haxor;
+import javelin.model.world.place.Lair;
+import javelin.model.world.place.Portal;
+import javelin.model.world.place.WorldPlace;
 import javelin.model.world.town.Order;
 import javelin.model.world.town.Town;
 import javelin.view.screen.BattleScreen;
@@ -87,6 +88,9 @@ public class WorldScreen extends BattleScreen {
 		WorldScreen.current = this;
 		Javelin.settexture(QuestApp.DEFAULTTEXTURE);
 		mappanel.tilesize = 48;
+		if (Javelin.DEBUGEXPLORED) {
+			mapp.setAllVisible();
+		}
 	}
 
 	@Override
@@ -194,8 +198,6 @@ public class WorldScreen extends BattleScreen {
 
 	protected static void placetown(final Point town, Realm color) {
 		final Town town2 = new Town(town.x, town.y, color);
-		Town.towns.add(town2);
-		town2.place();
 	}
 
 	public static BattleMap makemap(final WorldMap seed) {
@@ -303,11 +305,9 @@ public class WorldScreen extends BattleScreen {
 			} else {
 				tournament.events.remove(0);
 			}
+			Incursion.invade(this);
 			Town.work();
 			WorldScreen.lastday += 1;
-			if (Incursion.invade(this) && !Squad.squads.isEmpty()) {
-				break;
-			}
 		}
 		StateManager.save();
 	}
@@ -461,7 +461,8 @@ public class WorldScreen extends BattleScreen {
 
 	static public void encounter(double d) {
 		if (RPG.random() < d && !Javelin.DEBUGDISABLECOMBAT) {
-			throw new StartBattle(new RandomEncounter());
+			throw new StartBattle(Dungeon.active == null ? new RandomEncounter()
+					: new RandomDungeonEncounter());
 		}
 	}
 
@@ -526,7 +527,9 @@ public class WorldScreen extends BattleScreen {
 		int toy = actor.gety() + deltay;
 		ArrayList<WorldActor> actors = WorldScreen.getactors();
 		actors.remove(actor);
-		if (WorldScreen.getactor(tox, toy, actors) == null) {
+		if (tox >= 0 && toy >= 0 && tox < WorldMap.MAPDIMENSION
+				&& toy < WorldMap.MAPDIMENSION
+				&& WorldScreen.getactor(tox, toy, actors) == null) {
 			actor.move(tox, toy);
 		} else {
 			WorldScreen.displace(actor);

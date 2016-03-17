@@ -5,16 +5,20 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.exception.battle.StartBattle;
+import javelin.controller.fight.IncursionFight;
 import javelin.model.EquipmentMap;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.world.place.Dungeon;
 import javelin.model.world.town.Town;
 import javelin.view.screen.town.TransportScreen;
 import javelin.view.screen.world.WorldScreen;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.Game;
+import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * A group of units that the player controls as a overworld game unit. If a
@@ -172,11 +176,6 @@ public class Squad implements WorldActor {
 		Squad.squads.remove(this);
 	}
 
-	@Override
-	public String describe() {
-		return "one of your squads";
-	}
-
 	public void displace() {
 		WorldScreen.displace(this);
 	}
@@ -223,5 +222,18 @@ public class Squad implements WorldActor {
 
 	public void receiveitem(Item key) {
 		equipment.add(key, this);
+	}
+
+	@Override
+	public Boolean destroy(Incursion incursion) {
+		Game.message("An incursion reaches one of your squads!", null,
+				Delay.NONE);
+		Incursion.waitforenter();
+		throw new StartBattle(new IncursionFight(incursion));
+	}
+
+	@Override
+	public boolean ignore(Incursion attacker) {
+		return false;
 	}
 }

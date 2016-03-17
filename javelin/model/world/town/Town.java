@@ -10,7 +10,10 @@ import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.action.world.CastSpells;
 import javelin.controller.action.world.UseItems;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.db.StateManager;
+import javelin.controller.exception.battle.StartBattle;
+import javelin.controller.fight.Siege;
 import javelin.controller.tournament.Exhibition;
 import javelin.controller.tournament.Match;
 import javelin.controller.upgrade.Spell;
@@ -20,6 +23,7 @@ import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.world.Incursion;
 import javelin.model.world.Squad;
 import javelin.model.world.WorldActor;
 import javelin.model.world.town.research.Grow;
@@ -43,6 +47,30 @@ import tyrant.mikera.engine.Thing;
  * @author alex
  */
 public class Town implements WorldActor {
+	private static final ArrayList<String> NAMES = new ArrayList<String>();
+	public static ArrayList<Town> towns = new ArrayList<Town>();
+	static boolean startingtown = true;
+
+	static {
+		NAMES.add("Alexandria"); // my name :)
+		NAMES.add("Lindblum"); // final fantasy 9
+		NAMES.add("Sigil"); // planescape: torment
+		NAMES.add("Reno");// fallout 2
+		NAMES.add("Marrymore");// super mario rpg
+		NAMES.add("Kakariko"); // zelda
+		NAMES.add("the Citadel"); // mass effect
+		NAMES.add("Tristam");// diablo
+		NAMES.add("Midgar"); // final fantasy 7
+		NAMES.add("Medina");// chrono trigger
+		NAMES.add("Figaro"); // final fantasy 6
+		NAMES.add("Balamb"); // final fantasy 8
+		NAMES.add("Zanarkand"); // final fantasy 10
+		NAMES.add("Cornelia"); // final fantasy 1
+		NAMES.add("Vivec");// morrowind
+		NAMES.add("Termina");// chrono cross
+		NAMES.add("Tarant");// arcanum
+		Collections.shuffle(NAMES);
+	}
 
 	public int x;
 	public int y;
@@ -50,7 +78,6 @@ public class Town implements WorldActor {
 			new ArrayList<RecruitOption>(RecruitScreen.RECRUITSPERTOWN);
 	public List<Option> upgrades = new ArrayList<Option>();
 	public ItemSelection items = new ItemSelection();
-	public static ArrayList<Town> towns = new ArrayList<Town>();
 	transient private Thing visual;
 	public OrderQueue crafting = new OrderQueue();
 	public OrderQueue training = new OrderQueue();
@@ -102,9 +129,6 @@ public class Town implements WorldActor {
 	 * 5 - {@link Monster} lair, see {@link #lairs}
 	 * 
 	 * 6 - Special card
-	 * 
-	 * It's supposed to represent a card-game mini-game so each town draws 4
-	 * cards (plus Grow) and has to use one before drawing another.
 	 */
 	public Research[] researchhand = new Research[7];
 	public ResearchQueue researching = new ResearchQueue();
@@ -124,8 +148,17 @@ public class Town implements WorldActor {
 			lairs.add(new RecruitOption(recruit.name,
 					100 * recruit.challengeRating, recruit));
 		}
+		if (startingtown) {
+			startingtown = false;
+		} else {
+			garrison.add(new Combatant(null, RPG.pick(lairs).m.clone(), true));
+		}
 		researchhand[0] = new Grow(this);
-		Research.draw(this);
+		draw();
+		towns.add(this);
+		place();
+		name = NAMES.get(0);
+		NAMES.remove(0);
 	}
 
 	public ArrayList<Monster> possiblerecruits(final int x, final int y) {
@@ -144,8 +177,8 @@ public class Town implements WorldActor {
 	}
 
 	public void enter(final Squad s) {
-		if (name == null) {
-			rename();
+		if (ishostile()) {
+			throw new StartBattle(new Siege(this));
 		}
 		reclaim();
 		new TownScreen(this);
@@ -242,11 +275,6 @@ public class Town implements WorldActor {
 		Town.towns.remove(this);
 	}
 
-	@Override
-	public String describe() {
-		return name;
-	}
-
 	public boolean isupgrading() {
 		return !training.done();
 	}
@@ -307,7 +335,7 @@ public class Town implements WorldActor {
 	 * Possibly starts a tournament in this town.
 	 */
 	public void host() {
-		if (!garrison.isEmpty()) {
+		if (ishostile()) {
 			return;
 		}
 		int nevents = RPG.r(3, 7);
@@ -340,35 +368,77 @@ public class Town implements WorldActor {
 
 	void manage() {
 		if (nexttask == null) {
-			int totalprice = 0;
-			ArrayList<Research> hand = new ArrayList<Research>();
-			for (Research r : researchhand) {
-				if (r == null || !r.aiable) {
-					continue;
+			if (size < 3) {
+				nexttask = researchhand[0];
+			} else {
+				int totalprice = 0;
+				ArrayList<Research> hand = new ArrayList<Research>();
+				for (Research r : researchhand) {
+					if (r == null || !r.aiable) {
+						continue;
+					}
+					totalprice += r.price;
+					hand.add(r);
 				}
-				totalprice += r.price;
-				hand.add(r);
-			}
-			Collections.sort(hand, new Comparator<Research>() {
-				@Override
-				public int compare(Research o1, Research o2) {
-					return Math.round(Math.round(o1.price - o2.price));
+				Collections.sort(hand, new Comparator<Research>() {
+					@Override
+					public int compare(Research o1, Research o2) {
+						return Math.round(Math.round(o1.price - o2.price));
+					}
+				});
+				double roll = RPG.r(0, totalprice);
+				int forward = 0;
+				for (int i = hand.size() - 1; i >= 0; i--) {
+					roll -= hand.get(i).price;
+					if (roll <= 0) {
+						nexttask = hand.get(forward);
+						break;
+					}
+					forward += 1;
 				}
-			});
-			double roll = RPG.r(0, totalprice);
-			int forward = 0;
-			for (int i = hand.size() - 1; i >= 0; i--) {
-				roll -= hand.get(i).price;
-				if (roll <= 0) {
-					nexttask = hand.get(forward);
-					break;
-				}
-				forward += 1;
 			}
 		}
 		if (nexttask.price <= labor) {
 			nexttask.finish(this, null);
 			nexttask = null;
 		}
+	}
+
+	public boolean ishostile() {
+		return !garrison.isEmpty();
+	}
+
+	/**
+	 * When a player captures a hostile town.
+	 * 
+	 * @see #ishostile()
+	 */
+	public void capture() {
+		nexttask = null;
+		for (int i = 0; i < researchhand.length; i++) {
+			researchhand[i] = null;
+		}
+		draw();
+	}
+
+	void draw() {
+		Research.draw(this);
+	}
+
+	@Override
+	public Boolean destroy(Incursion attacker) {
+		if (!ishostile()) {
+			return true;
+		}
+		if (attacker.realm == realm) {
+			return Incursion.ignoreincursion(attacker);
+		}
+		return Incursion.fight(attacker.determineel(),
+				ChallengeRatingCalculator.calculateElSafe(garrison));
+	}
+
+	@Override
+	public boolean ignore(Incursion attacker) {
+		return ishostile() && realm == attacker.realm;
 	}
 }

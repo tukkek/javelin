@@ -7,7 +7,7 @@ import javelin.controller.action.world.WorldMove;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Lair;
+import javelin.model.world.place.Lair;
 import tyrant.mikera.tyrant.Game.Delay;
 import tyrant.mikera.tyrant.QuestApp;
 

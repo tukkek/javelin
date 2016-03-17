@@ -1,7 +1,7 @@
 package javelin.model.dungeon;
 
 import javelin.controller.Point;
-import javelin.model.world.Dungeon;
+import javelin.model.world.place.Dungeon;
 
 /**
  * Leaves dungeon.

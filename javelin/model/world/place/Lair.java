@@ -1,10 +1,13 @@
-package javelin.model.world;
+package javelin.model.world.place;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.LairFight;
+import javelin.model.world.Incursion;
+import javelin.model.world.Squad;
+import javelin.model.world.WorldActor;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -39,5 +42,16 @@ public class Lair extends WorldPlace implements WorldActor {
 		if (RPG.random() < chance) {
 			new Lair().place();
 		}
+	}
+
+	@Override
+	public Boolean destroy(Incursion attacker) {
+		int el = attacker.determineel();
+		return Incursion.fight(el, el - 2);
+	}
+
+	@Override
+	public boolean ignore(Incursion attacker) {
+		return false;
 	}
 }

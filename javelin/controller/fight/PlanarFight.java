@@ -18,7 +18,7 @@ import javelin.model.Realm;
 import javelin.model.item.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.world.Haxor;
+import javelin.model.world.place.Haxor;
 import javelin.model.world.town.Town;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;

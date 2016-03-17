@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import javelin.controller.action.world.CastSpells;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Haxor;
 import javelin.model.world.Squad;
 import javelin.model.world.WorldActor;
-import javelin.model.world.WorldPlace;
+import javelin.model.world.place.Haxor;
+import javelin.model.world.place.WorldPlace;
 import javelin.model.world.town.Town;
 import javelin.view.screen.world.WorldScreen;
 
@@ -37,7 +37,7 @@ public class Teleport extends Scroll {
 		for (WorldActor a : WorldScreen.getactors()) {
 			if (a instanceof Town || a instanceof Haxor) {
 				places.add(a);
-				names.add(a.describe());
+				names.add(a.toString());
 			}
 		}
 		WorldActor to =

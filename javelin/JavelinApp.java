@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import javelin.controller.BattleSetup;
@@ -31,15 +30,14 @@ import javelin.model.item.Item;
 import javelin.model.item.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.world.Dungeon;
-import javelin.model.world.Haxor;
 import javelin.model.world.Incursion;
 import javelin.model.world.Squad;
+import javelin.model.world.place.Dungeon;
+import javelin.model.world.place.Haxor;
 import javelin.model.world.town.Town;
 import javelin.view.SquadScreen;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.world.WorldScreen;
-import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.QuestApp;
 
@@ -303,26 +301,6 @@ public class JavelinApp extends QuestApp {
 		} catch (final GaveUpException e) {
 			return null;
 		}
-	}
-
-	/**
-	 * 2 chances of an easy encounter, 10 chances of a moderate encounter, 4
-	 * chances of a difficult encounter and 1 chance of an overwhelming
-	 * encounter
-	 */
-	public static Integer randomdifficulty() {
-		final LinkedList<Integer> elchoices = new LinkedList<Integer>();
-		for (int j = 0; j < 2; j++) {
-			elchoices.add(RPG.r(-5, -8));
-		}
-		for (int j = 0; j < 10; j++) {
-			elchoices.add(-4);
-		}
-		for (int j = -3; j <= 0; j++) {
-			elchoices.add(j);
-		}
-		elchoices.add(1);
-		return RPG.pick(elchoices);
 	}
 
 	@Override

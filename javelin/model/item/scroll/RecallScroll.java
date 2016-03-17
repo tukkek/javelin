@@ -2,9 +2,9 @@ package javelin.model.item.scroll;
 
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Dungeon;
 import javelin.model.world.Squad;
 import javelin.model.world.Squad.Transport;
+import javelin.model.world.place.Dungeon;
 import javelin.model.world.town.Town;
 
 /**

@@ -1,4 +1,4 @@
-package javelin.model.world;
+package javelin.model.world.place;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,10 @@ import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.PlanarFight;
 import javelin.model.item.Key;
 import javelin.model.unit.Combatant;
+import javelin.model.world.Incursion;
+import javelin.model.world.Squad;
+import javelin.model.world.WorldActor;
+import javelin.model.world.WorldMap;
 import javelin.model.world.town.Town;
 import javelin.view.screen.IntroScreen;
 import javelin.view.screen.world.WorldScreen;
@@ -59,7 +63,7 @@ public class Portal extends WorldPlace {
 		instantaneous = instantaneousp;
 		expiresat = expiresatp;
 		safe = safep;
-		this.invasion = false; // TODO
+		this.invasion = invasion;
 	}
 
 	public Portal(WorldActor from, WorldActor to) {
@@ -82,12 +86,12 @@ public class Portal extends WorldPlace {
 	private Point spawn(WorldActor t) {
 		Point p = new Point(t.getx(), t.gety());
 		while (WorldScreen.getactor(p.x, p.y) != null) {
+			p = new Point(determinedistance(t.getx()),
+					determinedistance(t.gety()));
 			if (p.x < 0 || p.x >= WorldMap.MAPDIMENSION || p.y < 0
 					|| p.y >= WorldMap.MAPDIMENSION) {
 				return spawn(t);
 			}
-			p = new Point(determinedistance(t.getx()),
-					determinedistance(t.gety()));
 		}
 		return p;
 	}
@@ -175,5 +179,19 @@ public class Portal extends WorldPlace {
 			WorldScreen.displace(this);
 			place();
 		}
+	}
+
+	@Override
+	public Boolean destroy(Incursion attacker) {
+		if (invasion) {
+			return Incursion.ignoreincursion(attacker);
+		}
+		int el = attacker.determineel();
+		return Incursion.fight(el, el - 4);
+	}
+
+	@Override
+	public boolean ignore(Incursion attacker) {
+		return invasion;
 	}
 }

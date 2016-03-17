@@ -1,7 +1,7 @@
 package javelin.model.item.scroll.dungeon;
 
 import javelin.model.item.Item;
-import javelin.model.world.Dungeon;
+import javelin.model.world.place.Dungeon;
 
 /**
  * Revelas {@link Dungeon} map.

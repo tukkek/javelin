@@ -20,8 +20,8 @@ import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Portal;
 import javelin.model.world.WorldActor;
+import javelin.model.world.place.Portal;
 import javelin.model.world.town.Town;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.world.WorldScreen;
@@ -323,13 +323,6 @@ public class MapPanel extends Panel {
 		if (t == null) {
 			return false;
 		}
-		if (t.realm != javelin.model.Realm.WIND) {
-			gfx.setColor(t.realm.getawtcolor());
-			gfx.drawLine(x, y + TILEHEIGHT - 1, x + TILEWIDTH,
-					y + TILEHEIGHT - 1);
-			gfx.drawLine(x, y + TILEHEIGHT - 2, x + TILEWIDTH,
-					y + TILEHEIGHT - 2);
-		}
 		if (t.iscrafting()) {
 			gfx.drawImage(QuestApp.crafting, x, y - 2, null);
 		}
@@ -338,6 +331,19 @@ public class MapPanel extends Panel {
 		}
 		if (t.ishosting()) {
 			gfx.drawImage(QuestApp.banner, x, y, null);
+		}
+		if (t.ishosting()) {
+			gfx.drawImage(QuestApp.banner, x, y, null);
+		}
+		if (t.ishostile()) {
+			gfx.drawImage(QuestApp.hostile, x, y, null);
+		}
+		if (t.realm != javelin.model.Realm.WIND) {
+			gfx.setColor(t.realm.getawtcolor());
+			gfx.drawLine(x, y + TILEHEIGHT - 1, x + TILEWIDTH,
+					y + TILEHEIGHT - 1);
+			gfx.drawLine(x, y + TILEHEIGHT - 2, x + TILEWIDTH,
+					y + TILEHEIGHT - 2);
 		}
 		return true;
 	}

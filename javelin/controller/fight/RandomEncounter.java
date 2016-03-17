@@ -7,7 +7,7 @@ import javelin.JavelinApp;
 import javelin.controller.map.Map;
 import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Dungeon;
+import javelin.model.world.place.Dungeon;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.tyrant.Tile;
 
@@ -24,8 +24,8 @@ public class RandomEncounter implements Fight {
 	}
 
 	@Override
-	public int getel(final JavelinApp app, final int teamel) {
-		int difficulty = JavelinApp.randomdifficulty() + Javelin.difficulty();
+	public int getel(final JavelinApp app, int teamel) {
+		int difficulty = Javelin.randomdifficulty() + Javelin.difficulty();
 		return teamel + cap(difficulty, Javelin.terrain());
 	}
 

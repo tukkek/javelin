@@ -13,18 +13,22 @@ import javelin.model.item.ItemSelection;
 import javelin.model.unit.Monster;
 import javelin.model.world.town.Town;
 import javelin.view.screen.town.option.Option;
+import javelin.view.screen.town.option.RecruitOption;
 import javelin.view.screen.town.option.ResearchScreenOption.ResearchScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
  * Represents a way in which a {@link Town} can be improved.
  * 
+ * It's a "card-game" mini-game so each town {@link #draw(Town)} cards and has
+ * to use one before drawing another.
+ * 
  * @see Town#researchhand
  * @author alex
  */
 public abstract class Research extends Option {
 	private static final Research[] SPECIALCARDS =
-			new Research[] { new Discard() };
+			new Research[] { new Redraw(), new Discard() };
 
 	/**
 	 * <code>false</code> if the AI (opponent automanager) should not use this
@@ -75,22 +79,36 @@ public abstract class Research extends Option {
 	 * @see Town#researchhand
 	 */
 	public static void draw(Town t) {
-		UpgradeHandler.singleton.gather();
+		if (t.ishostile()) {
+			computerdraw(t);
+		} else {
+			humandraw(t);
+		}
+	}
+
+	private static void computerdraw(Town t) {
+		if (t.researchhand[0] == null) {
+			t.researchhand[0] = new Grow(t);
+		}
+		for (int i = 1; i <= 1; i++) {
+			if (t.researchhand[i] == null) {
+				t.researchhand[i] = pick(getrealmmonsters(t), t, 1);
+			}
+		}
+		ArrayList<RecruitOption> lairs = new ArrayList<RecruitOption>(t.lairs);
+		for (int i = 2; i <= 6; i++) {
+			if (t.researchhand[i] == null) {
+				t.researchhand[i] = pick(lairs, t, 1);
+			}
+		}
+	}
+
+	protected static void humandraw(Town t) {
 		List<Upgrade> otherupgrades = new ArrayList<Upgrade>();
 		List<Upgrade> myupgrades = new ArrayList<Upgrade>();
 		List<Item> myitems = new ArrayList<Item>();
 		List<Item> otheritems = new ArrayList<Item>();
-		for (Realm r : Realm.values()) {
-			List<Upgrade> upgrades = UpgradeHandler.singleton.getupgrades(r);
-			ItemSelection items = Item.getselection(r);
-			if (r == t.realm) {
-				myupgrades.addAll(upgrades);
-				myitems.addAll(items);
-			} else {
-				otherupgrades.addAll(upgrades);
-				otheritems.addAll(items);
-			}
-		}
+		gatherupgrades(t, otherupgrades, myupgrades, myitems, otheritems);
 		if (t.researchhand[0] == null) {
 			t.researchhand[0] = new Grow(t);
 		}
@@ -107,20 +125,41 @@ public abstract class Research extends Option {
 			t.researchhand[4] = pick(otheritems, t, 2);
 		}
 		if (t.researchhand[5] == null) {
-			String[] terrains = Javelin.terrains(Javelin.terrain(t.x, t.y));
-			ArrayList<Monster> monster = new ArrayList<Monster>();
-			for (Monster m : Javelin.ALLMONSTERS) {
-				for (String terrain : terrains) {
-					if (m.terrains.contains(terrain)) {
-						monster.add(m);
-						break;
-					}
-				}
-			}
-			t.researchhand[5] = pick(monster, t, 1);
+			t.researchhand[5] = pick(getrealmmonsters(t), t, 1);
 		}
 		if (t.researchhand[6] == null) {
 			t.researchhand[6] = SPECIALCARDS[RPG.r(0, SPECIALCARDS.length - 1)];
+		}
+	}
+
+	protected static ArrayList<Monster> getrealmmonsters(Town t) {
+		ArrayList<Monster> monsters = new ArrayList<Monster>();
+		String[] terrains = Javelin.terrains(Javelin.terrain(t.x, t.y));
+		for (Monster m : Javelin.ALLMONSTERS) {
+			for (String terrain : terrains) {
+				if (m.terrains.contains(terrain)) {
+					monsters.add(m);
+					break;
+				}
+			}
+		}
+		return monsters;
+	}
+
+	protected static void gatherupgrades(Town t, List<Upgrade> otherupgrades,
+			List<Upgrade> myupgrades, List<Item> myitems,
+			List<Item> otheritems) {
+		UpgradeHandler.singleton.gather();
+		for (Realm r : Realm.values()) {
+			List<Upgrade> upgrades = UpgradeHandler.singleton.getupgrades(r);
+			ItemSelection items = Item.getselection(r);
+			if (r == t.realm) {
+				myupgrades.addAll(upgrades);
+				myitems.addAll(items);
+			} else {
+				otherupgrades.addAll(upgrades);
+				otheritems.addAll(items);
+			}
 		}
 	}
 
@@ -133,14 +172,37 @@ public abstract class Research extends Option {
 				b = new UpgradeResearch((Upgrade) o, costfactor);
 			} else if (o instanceof Item) {
 				b = new ItemResearch((Item) o, costfactor);
-			} else {
+			} else if (o instanceof Monster) {
 				b = new LairResearch((Monster) o);
+			} else if (o instanceof RecruitOption) {
+				RecruitOption ro = (RecruitOption) o;
+				b = new Recruit(ro.m);
+			} else {
+				throw new RuntimeException("#unknownCardType " + o);
 			}
-			if (!b.isrepeated(t)) {
+			if (!b.isrepeated(t) && !hasinhand(b, t)) {
 				return b;
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Needed so the computer draw won't draw the same lair twice.
+	 */
+	private static boolean hasinhand(Research b, Town t) {
+		for (Research r : t.researchhand) {
+			if (r != null && b.equals(r)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		Research r = (Research) obj;
+		return name.equals(r.name);
 	}
 
 	protected abstract boolean isrepeated(Town t);

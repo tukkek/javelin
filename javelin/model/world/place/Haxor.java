@@ -1,9 +1,11 @@
-package javelin.model.world;
+package javelin.model.world.place;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.fight.PlanarFight;
+import javelin.model.world.Incursion;
+import javelin.model.world.WorldMap;
 import javelin.view.screen.HaxorScreen;
 import javelin.view.screen.town.option.Option;
 import javelin.view.screen.world.WorldScreen;
@@ -92,4 +94,18 @@ public class Haxor extends WorldPlace {
 		singleton.place();
 	}
 
+	@Override
+	public String toString() {
+		return "Tower of Haxor";
+	}
+
+	@Override
+	public Boolean destroy(Incursion attacker) {
+		return Incursion.ignoreincursion(attacker);
+	}
+
+	@Override
+	public boolean ignore(Incursion attacker) {
+		return true;
+	}
 }

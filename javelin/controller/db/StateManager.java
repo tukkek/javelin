@@ -16,14 +16,14 @@ import javelin.JavelinApp;
 import javelin.controller.Weather;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Dungeon;
-import javelin.model.world.Haxor;
 import javelin.model.world.Incursion;
-import javelin.model.world.Lair;
-import javelin.model.world.Portal;
 import javelin.model.world.Squad;
 import javelin.model.world.WorldMap;
-import javelin.model.world.WorldPlace;
+import javelin.model.world.place.Dungeon;
+import javelin.model.world.place.Haxor;
+import javelin.model.world.place.Lair;
+import javelin.model.world.place.Portal;
+import javelin.model.world.place.WorldPlace;
 import javelin.model.world.town.Town;
 import javelin.view.screen.world.WorldScreen;
 import tyrant.mikera.engine.Point;
@@ -38,37 +38,54 @@ public class StateManager {
 	private static final File SAVEFILE =
 			new File(System.getProperty("user.dir"), "javelin.save");
 	public static boolean abandoned = false;
+	static public boolean nofile = false;
+
+	static {
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (!SAVEFILE.canWrite()) {
+					System.out.println("Waiting for save to finish...");
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// should not happen
+					}
+				}
+				save();
+			}
+		}));
+
+	}
 
 	public static void save() {
 		try {
-			final ObjectOutputStream stream =
+			ObjectOutputStream writer =
 					new ObjectOutputStream(new FileOutputStream(SAVEFILE));
-			stream.writeBoolean(abandoned);
+			writer.writeBoolean(abandoned);
 			for (final Squad s : Squad.squads) {
 				s.x = s.visual.x;
 				s.y = s.visual.y;
 			}
-			stream.writeObject(Squad.squads);
-			stream.writeObject(WorldMap.seed);
-			stream.writeObject(Lair.lairs);
-			stream.writeObject(Dungeon.dungeons);
-			stream.writeObject(Dungeon.active);
-			stream.writeObject(Town.towns);
-			stream.writeObject(Portal.portals);
-			stream.writeObject(Incursion.squads);
-			stream.writeObject(Incursion.currentel);
-			stream.writeObject(Weather.now);
-			stream.writeObject(Haxor.singleton);
-			stream.writeObject(EndBattle.lastkilled);
-			stream.writeObject(WorldScreen.discovered);
-			stream.flush();
-			stream.close();
+			writer.writeObject(Squad.squads);
+			writer.writeObject(WorldMap.seed);
+			writer.writeObject(Lair.lairs);
+			writer.writeObject(Dungeon.dungeons);
+			writer.writeObject(Dungeon.active);
+			writer.writeObject(Town.towns);
+			writer.writeObject(Portal.portals);
+			writer.writeObject(Incursion.squads);
+			writer.writeObject(Incursion.currentel);
+			writer.writeObject(Weather.now);
+			writer.writeObject(Haxor.singleton);
+			writer.writeObject(EndBattle.lastkilled);
+			writer.writeObject(WorldScreen.discovered);
+			writer.flush();
+			writer.close();
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
-
-	static public boolean nofile = false;
 
 	public static boolean load() {
 		if (!SAVEFILE.exists()) {

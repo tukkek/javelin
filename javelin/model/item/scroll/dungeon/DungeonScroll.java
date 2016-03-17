@@ -3,7 +3,7 @@ package javelin.model.item.scroll.dungeon;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.scroll.Scroll;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Dungeon;
+import javelin.model.world.place.Dungeon;
 
 /**
  * A scroll that can only be actived in a {@link Dungeon}. Override

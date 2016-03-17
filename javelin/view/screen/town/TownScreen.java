@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.world.Squad;
 import javelin.model.world.town.Order;
 import javelin.model.world.town.OrderQueue;
@@ -151,11 +152,18 @@ public class TownScreen extends PurchaseScreen {
 		if (!town.training.done()) {
 			output += "\n\n" + showqueue(town.training, "Training");
 		}
-		if (!town.automanage) {
+		if (!town.automanage || Javelin.DEBUG) {
 			output += "\n\nManagement:\n\n";
 			output += "    Size: " + town.size + "\n";
 			output += "    Labor: " + Math.round(Math.floor(town.labor)) + "\n";
-			output += "    Queue: " + town.researching;
+			if (Javelin.DEBUG && town.ishostile()) {
+				output += "    Queue: " + town.nexttask + "\n";
+				output += "    Garrison: " + town.garrison + "\n";
+				output += "    EL: " + ChallengeRatingCalculator
+						.calculateElSafe(town.garrison);
+			} else {
+				output += "    Queue: " + town.researching;
+			}
 		}
 		return output;
 	}

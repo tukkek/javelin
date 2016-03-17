@@ -60,6 +60,7 @@ public class QuestApp extends Applet implements Runnable {
 	public static Image banner;
 	public static Image dead;
 	public static Image crystal;
+	public static Image hostile;
 	public static Image paneltexture = QuestApp.DEFAULTTEXTURE;
 
 	public static Hashtable images = new Hashtable();
@@ -705,6 +706,7 @@ public class QuestApp extends Applet implements Runnable {
 		QuestApp.banner = QuestApp.getImage("/images/banner.png");
 		QuestApp.dead = QuestApp.getImage("/images/dead.png");
 		QuestApp.crystal = QuestApp.getImage("/images/meld.png");
+		QuestApp.hostile = QuestApp.getImage("/images/hostile.png");
 
 		// store images in source hashtable
 		QuestApp.images.put("Tiles", QuestApp.tiles);
@@ -727,6 +729,7 @@ public class QuestApp extends Applet implements Runnable {
 		mediaTracker.addImage(QuestApp.banner, 1);
 		mediaTracker.addImage(QuestApp.dead, 1);
 		mediaTracker.addImage(QuestApp.crystal, 1);
+		mediaTracker.addImage(QuestApp.hostile, 1);
 		mediaTracker.addImage(QuestApp.DEFAULTTEXTURE, 1);
 		mediaTracker.addImage(LairScreen.DUNGEONTEXTURE, 1);
 		mediaTracker.addImage(IncursionFight.INCURSIONTEXTURE, 1);

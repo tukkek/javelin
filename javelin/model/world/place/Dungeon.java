@@ -1,4 +1,4 @@
-package javelin.model.world;
+package javelin.model.world.place;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,6 +16,8 @@ import javelin.model.dungeon.StairsUp;
 import javelin.model.dungeon.Treasure;
 import javelin.model.item.Item;
 import javelin.model.item.Key;
+import javelin.model.world.Incursion;
+import javelin.model.world.Squad;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.world.DungeonScreen;
 import javelin.view.screen.world.WorldScreen;
@@ -25,7 +27,7 @@ import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Tile;
 
 /**
- * A dungoen is an underground area of the world where the combats are harder
+ * A dungeon is an underground area of the world where the combats are harder
  * but have extra treasure laying around.
  * 
  * @author alex
@@ -197,9 +199,6 @@ public class Dungeon extends WorldPlace {
 		JavelinApp.context = new WorldScreen(JavelinApp.overviewmap);
 		BattleScreen.active = JavelinApp.context;
 		hero.remove();
-		// if (Squad.squads.isEmpty()) {
-		// Squad.active.updateavatar();
-		// }
 	}
 
 	protected void regenerate() {
@@ -221,5 +220,16 @@ public class Dungeon extends WorldPlace {
 			}
 			generated = true;
 		}
+	}
+
+	@Override
+	public Boolean destroy(Incursion attacker) {
+		int el = attacker.determineel();
+		return Incursion.fight(el, el - 3);
+	}
+
+	@Override
+	public boolean ignore(Incursion attacker) {
+		return false;
 	}
 }

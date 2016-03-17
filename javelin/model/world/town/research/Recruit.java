@@ -30,7 +30,7 @@ public class Recruit extends Research {
 	@Override
 	public void apply(Town t, ResearchScreen s) {
 		t.garrison.add(new Combatant(null, m.clone(), true));
-		if (t.garrison.size() > t.size) {
+		if (t.garrison.size() < t.size) {
 			return;
 		}
 		Collections.shuffle(t.garrison);
@@ -46,7 +46,7 @@ public class Recruit extends Research {
 		for (int i = 0; i < nmembers; i++) {
 			incursion.add(t.garrison.get(0));
 		}
-		if (incursion.size() < 3) {
+		if (incursion.size() < t.size) {
 			return;
 		}
 		for (int i = 0; i < nmembers; i++) {

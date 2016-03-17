@@ -44,6 +44,10 @@ public class StateManager {
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			@Override
 			public void run() {
+				if (WorldScreen.active == null) {
+					// quit before stating a game
+					return;
+				}
 				while (!SAVEFILE.canWrite()) {
 					System.out.println("Waiting for save to finish...");
 					try {

@@ -16,7 +16,7 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.model.feat.Feat;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Squad;
-import javelin.model.world.town.QueueItem;
+import javelin.model.world.town.Order;
 import javelin.model.world.town.Town;
 import javelin.view.screen.town.option.Option;
 import javelin.view.screen.town.option.UpgradeOption;
@@ -176,11 +176,11 @@ public class UpgradingScreen extends SelectScreen {
 
 	@Override
 	public void onexit() {
-		ArrayList<QueueItem> trainees = new ArrayList<QueueItem>();
+		ArrayList<Order> trainees = new ArrayList<Order>();
 		Squad s = Squad.active;
 		for (Combatant c : upgraded) {
 			Combatant original = this.original.get(c.id);
-			trainees.add(new QueueItem(
+			trainees.add(new Order(
 					Math.round((ChallengeRatingCalculator
 							.calculaterawcr(c.source)[1]
 							- ChallengeRatingCalculator
@@ -188,15 +188,15 @@ public class UpgradingScreen extends SelectScreen {
 							* 24 * 7 + Squad.active.hourselapsed),
 					new Serializable[] { c, s.equipment.get(c.id), original }));
 		}
-		for (QueueItem trainee : trainees) {
+		for (Order trainee : trainees) {
 			town.training.add(trainee);
 			Combatant c = (Combatant) trainee.payload[2];
 			s.equipment.remove(c.toString());
 			s.remove(c);
 		}
-		Collections.sort(town.training.queue, new Comparator<QueueItem>() {
+		Collections.sort(town.training.queue, new Comparator<Order>() {
 			@Override
-			public int compare(QueueItem o1, QueueItem o2) {
+			public int compare(Order o1, Order o2) {
 				return Math.round(o1.completionat - o2.completionat);
 			}
 		});

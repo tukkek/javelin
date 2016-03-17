@@ -35,4 +35,14 @@ public abstract class Upgrade implements Serializable {
 	public boolean isstackable() {
 		return false;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return name.equals(((Upgrade) obj).name);
+	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
 }

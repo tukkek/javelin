@@ -44,7 +44,7 @@ public class UseItems extends WorldAction {
 				// leaves screen
 			} else {
 				ShoppingScreen.listactivemembers();
-				int index = SelectScreen.convertselectionkey(input);
+				int index = SelectScreen.convertnumericselection(input);
 				if (index >= allitems.size() || index == -1) {
 					continue;
 				}

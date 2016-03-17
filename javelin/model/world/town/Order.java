@@ -10,11 +10,11 @@ import javelin.model.unit.Combatant;
  * 
  * @author alex
  */
-public class QueueItem implements Serializable {
+public class Order implements Serializable {
 	public long completionat;
 	public Serializable[] payload;
 
-	public QueueItem(long completionat, Serializable[] payload) {
+	public Order(long completionat, Serializable[] payload) {
 		this.completionat = completionat;
 		this.payload = payload;
 	}

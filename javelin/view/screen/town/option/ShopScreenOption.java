@@ -10,8 +10,8 @@ import javelin.view.screen.town.ShoppingScreen;
  */
 public class ShopScreenOption extends ScreenOption {
 
-	public ShopScreenOption(String name, Town t) {
-		super(name, t);
+	public ShopScreenOption(String name, Town t, char c) {
+		super(name, t, c);
 	}
 
 	@Override

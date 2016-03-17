@@ -57,6 +57,8 @@ public class Javelin {
 			javelin.controller.db.Properties.getInteger("cheat.gold", null);
 	public static final Integer DEBUGSTARTINGHAX =
 			javelin.controller.db.Properties.getInteger("cheat.haxor", null);
+	public static final Integer DEBUGSTARTINGLABOR =
+			javelin.controller.db.Properties.getInteger("cheat.labor", null);
 	public static final Integer DEBUGMINIMUMFOES = null;
 	public static final Integer DEBUGWEATHER = null;
 	public static final Map DEBUGMAPTYPE = null;

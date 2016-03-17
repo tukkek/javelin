@@ -7,23 +7,23 @@ import java.util.List;
 import javelin.model.world.Squad;
 
 /**
- * A container of {@link QueueItem} for a {@link Town}.
+ * A container of {@link Order} for a {@link Town}.
  * 
  * @author alex
  */
-public class TownQueue implements Serializable {
+public class OrderQueue implements Serializable {
 
 	/**
 	 * Items being processed or done yet not reclaimed, from those that are
 	 * going to finish first to those that will finish later.
 	 */
-	public ArrayList<QueueItem> queue = new ArrayList<QueueItem>(0);
+	public ArrayList<Order> queue = new ArrayList<Order>(0);
 
 	public boolean done() {
 		return queue.isEmpty() || last().completed(Squad.active.hourselapsed);
 	}
 
-	public QueueItem last() {
+	public Order last() {
 		return queue.get(queue.size() - 1);
 	}
 
@@ -37,9 +37,9 @@ public class TownQueue implements Serializable {
 	 * @return Item which is in queue and should be removed manually upon
 	 *         confirmation.
 	 */
-	public List<QueueItem> reclaim(long force) {
-		ArrayList<QueueItem> reclaimed = new ArrayList<QueueItem>();
-		for (QueueItem i : (List<QueueItem>) queue.clone()) {
+	public List<Order> reclaim(long force) {
+		ArrayList<Order> reclaimed = new ArrayList<Order>();
+		for (Order i : (List<Order>) queue.clone()) {
 			if (i.completed(force)) {
 				reclaimed.add(i);
 				queue.remove(i);
@@ -48,13 +48,13 @@ public class TownQueue implements Serializable {
 		return reclaimed;
 	}
 
-	public QueueItem add(Serializable[] payload, int hoursofwork) {
-		QueueItem i = new QueueItem(getnextslot() + hoursofwork, payload);
+	public Order add(Serializable[] payload, int hoursofwork) {
+		Order i = new Order(getnextslot() + hoursofwork, payload);
 		queue.add(i);
 		return i;
 	}
 
-	public void add(QueueItem item) {
+	public void add(Order item) {
 		// item.completionat += getnextslot();
 		queue.add(item);
 	}

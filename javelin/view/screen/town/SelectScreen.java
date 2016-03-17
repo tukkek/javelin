@@ -29,8 +29,7 @@ public abstract class SelectScreen extends InfoScreen {
 			'v', 'x', 'w', 'y', 'z', };
 	protected final Town town;
 	public boolean showtitle = true;
-	private final String title;
-	protected boolean sortoptions = true;
+	protected String title;
 	/**
 	 * TODO probably unecessary at this point
 	 */
@@ -53,13 +52,11 @@ public abstract class SelectScreen extends InfoScreen {
 		for (final Option o : options) {
 			roundcost(o);
 		}
-		if (sortoptions) {
-			Collections.sort(options, sort());
-		}
+		sort(options);
 		for (int i = 0; i < options.size(); i++) {
 			final Option o = options.get(i);
-			text += "[" + SELECTIONKEYS[i] + "] " + o.name + printpriceinfo(o)
-					+ "\n";
+			text += (o.key == null ? SELECTIONKEYS[i] : o.key) + " - " + o.name
+					+ printpriceinfo(o) + "\n";
 		}
 		final String extrainfo = printInfo();
 		if (!extrainfo.isEmpty()) {
@@ -75,16 +72,25 @@ public abstract class SelectScreen extends InfoScreen {
 		}
 	}
 
+	/**
+	 * @param options
+	 *            All options to be sorted.
+	 */
+	protected void sort(final List<Option> options) {
+		Collections.sort(options, sort());
+	}
+
 	public void onexit() {
-		// if (!(this instanceof TownScreen)) {
-		// new TownScreen(town).show();
-		// }
 	}
 
 	public String printpriceinfo(Option o) {
 		return " " + getCurrency() + formatcost(o.price);
 	}
 
+	/**
+	 * @return A comparator for the default implementation of
+	 *         {@link #sort(List)}.
+	 */
 	protected Comparator<Option> sort() {
 		return new Comparator<Option>() {
 			@Override
@@ -99,9 +105,7 @@ public abstract class SelectScreen extends InfoScreen {
 		while (feedback != PROCEED) {
 			Javelin.app.switchScreen(this);
 			feedback = InfoScreen.feedback();
-			int selected = convertselectionkey(feedback);
-			if (0 <= selected && selected < options.size()
-					&& select(options.get(selected))) {
+			if (select(feedback, options)) {
 				return;
 			}
 		}
@@ -110,10 +114,32 @@ public abstract class SelectScreen extends InfoScreen {
 		}
 	}
 
+	protected boolean select(char feedback, final List<Option> options) {
+		Option o = convertselectionkey(feedback, options);
+		if (o == null) {
+			int selected = convertnumericselection(feedback);
+			if (selected < 0 || selected >= options.size()) {
+				return false;
+			}
+			o = options.get(selected);
+		}
+		return select(o);
+	}
+
+	Option convertselectionkey(Character feedback, List<Option> options) {
+		for (Option o : options) {
+			if (o.key == feedback) {
+				return o;
+			}
+		}
+		return null;
+	}
+
 	/**
+	 * @param options
 	 * @return selection index or -1 if not chosen.
 	 */
-	static public int convertselectionkey(char feedback) {
+	static public int convertnumericselection(char feedback) {
 		for (int i = 0; i < SELECTIONKEYS.length; i++) {
 			if (SELECTIONKEYS[i] == feedback) {
 				return i;

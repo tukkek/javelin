@@ -183,7 +183,7 @@ public class JavelinApp extends QuestApp {
 	public void startcampaign() {
 		SquadScreen.open();
 		WorldScreen.makemap();
-		new UpgradeHandler().distribute();
+		UpgradeHandler.singleton.distribute();
 		Item.distribute();
 		if (Javelin.DEBUG) {
 			JavelinApp.debugoptions();
@@ -229,6 +229,11 @@ public class JavelinApp extends QuestApp {
 		// TODO used for debug
 		if (Javelin.DEBUGSTARTINGKEY != null) {
 			Squad.active.receiveitem(Key.generate(Javelin.DEBUGSTARTINGKEY));
+		}
+		if (Javelin.DEBUGSTARTINGLABOR != null) {
+			for (Town t : Town.towns) {
+				t.labor = Javelin.DEBUGSTARTINGLABOR;
+			}
 		}
 	}
 

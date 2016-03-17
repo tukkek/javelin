@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
@@ -25,6 +26,7 @@ import javelin.model.world.WorldMap;
 import javelin.model.world.WorldPlace;
 import javelin.model.world.town.Town;
 import javelin.view.screen.world.WorldScreen;
+import tyrant.mikera.engine.Point;
 
 /**
  * Saves and loads game progress to a file.
@@ -58,6 +60,7 @@ public class StateManager {
 			stream.writeObject(Weather.now);
 			stream.writeObject(Haxor.singleton);
 			stream.writeObject(EndBattle.lastkilled);
+			stream.writeObject(WorldScreen.discovered);
 			stream.flush();
 			stream.close();
 		} catch (final IOException e) {
@@ -114,6 +117,7 @@ public class StateManager {
 			Haxor.singleton = (Haxor) stream.readObject();
 			Haxor.singleton.place();
 			EndBattle.lastkilled = (Combatant) stream.readObject();
+			WorldScreen.discovered = (HashSet<Point>) stream.readObject();
 			stream.close();
 			return true;
 		} catch (final Throwable e1) {

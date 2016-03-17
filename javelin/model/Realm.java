@@ -10,7 +10,7 @@ import java.util.TreeMap;
  * @author alex
  */
 public enum Realm {
-	WIND, FIRE, EARTH, WATER, GOOD, EVIL, MAGIC;
+	WIND, FIRE, EARTH, WATER, GOOD, EVIL, MAGICAL;
 
 	public static TreeMap<Realm, String> REALMS = new TreeMap<Realm, String>();
 
@@ -22,7 +22,7 @@ public enum Realm {
 		switch (this) {
 		case WATER:
 			return java.awt.Color.BLUE;
-		case MAGIC:
+		case MAGICAL:
 			return java.awt.Color.MAGENTA;
 		case GOOD:
 			return java.awt.Color.WHITE;

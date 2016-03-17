@@ -81,9 +81,11 @@ public class Portal extends WorldPlace {
 
 	private Point spawn(WorldActor t) {
 		Point p = new Point(t.getx(), t.gety());
-		while (WorldScreen.getactor(p.x, p.y) != null || p.x < 0
-				|| p.x >= WorldMap.MAPDIMENSION - 1 || p.y < 0
-				|| p.y >= WorldMap.MAPDIMENSION - 1) {
+		while (WorldScreen.getactor(p.x, p.y) != null) {
+			if (p.x < 0 || p.x >= WorldMap.MAPDIMENSION || p.y < 0
+					|| p.y >= WorldMap.MAPDIMENSION) {
+				return spawn(t);
+			}
 			p = new Point(determinedistance(t.getx()),
 					determinedistance(t.gety()));
 		}
@@ -118,10 +120,9 @@ public class Portal extends WorldPlace {
 			throw new StartBattle(new PlanarFight(haskey));
 		}
 		Point p = spawn(to);
-		Squad.active.x = p.x;
+		Squad.active.visual.remove();
 		Squad.active.y = p.y;
 		Squad.active.displace();
-		Squad.active.visual.remove();
 		Squad.active.place();
 		String description = "";
 		if (!instantaneous) {

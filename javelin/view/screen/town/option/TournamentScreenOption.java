@@ -3,8 +3,11 @@ package javelin.view.screen.town.option;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.tournament.Exhibition;
+import javelin.model.world.Squad;
 import javelin.model.world.town.Town;
+import javelin.view.screen.town.PurchaseScreen;
 import javelin.view.screen.town.SelectScreen;
 
 /**
@@ -22,15 +25,22 @@ public class TournamentScreenOption extends ScreenOption {
 		}
 	}
 
-	public TournamentScreenOption(String name, Town town) {
-		super(name, town);
+	/**
+	 * Prices the match at half the reward.
+	 */
+	public TournamentScreenOption(String name, Town town, char c) {
+		super(name, town, c);
+		price = RewardCalculator.receivegold(Squad.active.members) / 2;
 	}
 
 	@Override
 	public SelectScreen show() {
-		return new SelectScreen("Join: ", t) {
+		return new PurchaseScreen("Join: ", t) {
 			@Override
 			public boolean select(Option o) {
+				if (!super.select(o)) {
+					return false;
+				}
 				Exhibition e = ((EventOption) o).event;
 				town.events.remove(e);
 				e.start();
@@ -46,19 +56,9 @@ public class TournamentScreenOption extends ScreenOption {
 			public List<Option> getOptions() {
 				ArrayList<Option> options = new ArrayList<Option>();
 				for (Exhibition e : town.events) {
-					options.add(new EventOption(e.name, 0, e));
+					options.add(new EventOption(e.name, price, e));
 				}
 				return options;
-			}
-
-			@Override
-			public String getCurrency() {
-				return "";
-			}
-
-			@Override
-			public String printpriceinfo(Option o) {
-				return "";
 			}
 		};
 

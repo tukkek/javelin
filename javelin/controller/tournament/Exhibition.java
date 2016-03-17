@@ -10,6 +10,9 @@ import tyrant.mikera.engine.RPG;
 /**
  * One of the events in a tournament.
  * 
+ * The EL of any tournament fight should be roughly equal to that of the active
+ * squad. Fights are not supposed to be fatal though accidents can happen.
+ * 
  * @see Town#ishosting()
  * 
  * @author alex

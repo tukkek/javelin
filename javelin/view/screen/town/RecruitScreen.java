@@ -12,7 +12,7 @@ import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.Squad;
-import javelin.model.world.town.QueueItem;
+import javelin.model.world.town.Order;
 import javelin.model.world.town.Town;
 import javelin.view.screen.IntroScreen;
 import javelin.view.screen.town.option.Option;
@@ -58,7 +58,7 @@ public class RecruitScreen extends PurchaseScreen {
 			}
 		}
 		for (Town t : Town.towns) {
-			for (QueueItem upgrading : t.training.queue) {
+			for (Order upgrading : t.training.queue) {
 				if (upgrading.payload.toString().equals(name)) {
 					return true;
 				}

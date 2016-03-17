@@ -331,10 +331,10 @@ public class MapPanel extends Panel {
 					y + TILEHEIGHT - 2);
 		}
 		if (t.iscrafting()) {
-			gfx.drawImage(QuestApp.crafting, x, y, null);
+			gfx.drawImage(QuestApp.crafting, x, y - 2, null);
 		}
 		if (t.isupgrading()) {
-			gfx.drawImage(QuestApp.upgrading, x, y, null);
+			gfx.drawImage(QuestApp.upgrading, x, y - 1, null);
 		}
 		if (t.ishosting()) {
 			gfx.drawImage(QuestApp.banner, x, y, null);

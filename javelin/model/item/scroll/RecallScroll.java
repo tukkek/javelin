@@ -33,12 +33,6 @@ public class RecallScroll extends Scroll {
 		Squad.active.x = town.x;
 		Squad.active.y = town.y;
 		Squad.active.displace();
-		/*
-		 * Squad.active.visual.x = Squad.active.x; Squad.active.visual.y =
-		 * Squad.active.y; WorldScreen.worldmap.addThing(Squad.active.visual,
-		 * Squad.active.visual.x, Squad.active.visual.y);
-		 * WorldScreen.current.update();
-		 */
 		Squad.active.place();
 		return true;
 	}

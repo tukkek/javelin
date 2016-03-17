@@ -10,8 +10,8 @@ import javelin.view.screen.town.UpgradingScreen;
  */
 public class UpgradingScreenOption extends ScreenOption {
 
-	public UpgradingScreenOption(String name, Town t) {
-		super(name, t);
+	public UpgradingScreenOption(String string, Town town, char c) {
+		super(string, town, c);
 	}
 
 	@Override

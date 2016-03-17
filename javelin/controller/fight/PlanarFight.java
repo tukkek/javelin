@@ -64,29 +64,28 @@ public class PlanarFight implements Fight {
 
 	public PlanarFight(Key k) {
 		this.key = k;
-		UpgradeHandler upgrades = new UpgradeHandler();
-		upgrades.gather();
+		UpgradeHandler.singleton.gather();
 		switch (key.color) {
 		case WATER:
-			path = upgrades.water;
+			path = UpgradeHandler.singleton.water;
 			break;
 		case EVIL:
-			path = upgrades.evil;
+			path = UpgradeHandler.singleton.evil;
 			break;
 		case EARTH:
-			path = upgrades.earth;
+			path = UpgradeHandler.singleton.earth;
 			break;
-		case MAGIC:
-			path = upgrades.magic;
+		case MAGICAL:
+			path = UpgradeHandler.singleton.magic;
 			break;
 		case FIRE:
-			path = upgrades.fire;
+			path = UpgradeHandler.singleton.fire;
 			break;
 		case WIND:
-			path = upgrades.wind;
+			path = UpgradeHandler.singleton.wind;
 			break;
 		case GOOD:
-			path = upgrades.good;
+			path = UpgradeHandler.singleton.good;
 			break;
 		default:
 			throw new RuntimeException("Unknown key type " + key);

@@ -196,7 +196,7 @@ public abstract class Item implements Serializable, Cloneable {
 		}
 	}
 
-	private static ItemSelection getselection(Realm r) {
+	public static ItemSelection getselection(Realm r) {
 		if (r == Realm.WIND) {
 			return WIND;
 		} else if (r == Realm.FIRE) {
@@ -209,7 +209,7 @@ public abstract class Item implements Serializable, Cloneable {
 			return GOOD;
 		} else if (r == Realm.EVIL) {
 			return EVIL;
-		} else if (r == Realm.MAGIC) {
+		} else if (r == Realm.MAGICAL) {
 			return MAGIC;
 		} else {
 			throw new RuntimeException("Unknown town!");

@@ -2,6 +2,7 @@ package javelin.model.world.town;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
@@ -13,6 +14,7 @@ import javelin.controller.db.StateManager;
 import javelin.controller.tournament.Exhibition;
 import javelin.controller.tournament.Match;
 import javelin.controller.upgrade.Spell;
+import javelin.controller.upgrade.Upgrade;
 import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
@@ -20,6 +22,8 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.Squad;
 import javelin.model.world.WorldActor;
+import javelin.model.world.town.research.Grow;
+import javelin.model.world.town.research.Research;
 import javelin.view.screen.town.RecruitScreen;
 import javelin.view.screen.town.TownScreen;
 import javelin.view.screen.town.option.Option;
@@ -35,6 +39,7 @@ import tyrant.mikera.engine.Thing;
  * 
  * Each town has it's own profile which is predetermined.
  * 
+ * 
  * @author alex
  */
 public class Town implements WorldActor {
@@ -47,8 +52,8 @@ public class Town implements WorldActor {
 	public ItemSelection items = new ItemSelection();
 	public static ArrayList<Town> towns = new ArrayList<Town>();
 	transient private Thing visual;
-	public TownQueue crafting = new TownQueue();
-	public TownQueue training = new TownQueue();
+	public OrderQueue crafting = new OrderQueue();
+	public OrderQueue training = new OrderQueue();
 	/** gold in bank when all members of a squad are training */
 	public int stash = 0;
 	public ArrayList<Exhibition> events = new ArrayList<Exhibition>();
@@ -58,6 +63,55 @@ public class Town implements WorldActor {
 	 * Represent a list of units positioned inside a town.
 	 */
 	public List<Combatant> garrison = new ArrayList<Combatant>();
+	/**
+	 * Represent 10 working citizens that will produce 1 {@link #labor} every 10
+	 * days.
+	 * 
+	 * An arbitrary decision is to try to fit the game-span of a normal game
+	 * into a 1-year period, which puts a town max size roughly at 10 if it does
+	 * nothing but grow TODO link
+	 */
+	public int size = 1;
+	/**
+	 * Can be used to improve a town. 1 unit represents 10 days of work by a
+	 * 10-men crew.
+	 */
+	public float labor = 0.1f;
+	public boolean automanage = true;
+	/**
+	 * Represents a few {@link Research} options that the player or
+	 * {@link #automanage}r can use to advance a town. Grow should always be
+	 * first option. TODO link
+	 * 
+	 * A value of <code>null</code> means that the hand is initially empty, that
+	 * it's card has been spent or that there are no more valid cards of that
+	 * type.
+	 * 
+	 * These are the card types by index:
+	 * 
+	 * 0 - {@link Grow}
+	 * 
+	 * 1 - Native (from {@link #realm}) {@link Upgrade}.
+	 * 
+	 * 2 - Foreign {@link Upgrade}
+	 * 
+	 * 3 - Native {@link Item}.
+	 * 
+	 * 4 - Foreign {@link Item}
+	 * 
+	 * 5 - {@link Monster} lair, see {@link #lairs}
+	 * 
+	 * 6 - Special card
+	 * 
+	 * It's supposed to represent a card-game mini-game so each town draws 4
+	 * cards (plus Grow) and has to use one before drawing another.
+	 */
+	public Research[] researchhand = new Research[7];
+	public ResearchQueue researching = new ResearchQueue();
+	/**
+	 * Next task for the {@link #automanage}r.
+	 */
+	public Research nexttask;
 
 	public Town(final int x, final int y, Realm colorp) {
 		this.x = x;
@@ -70,6 +124,8 @@ public class Town implements WorldActor {
 			lairs.add(new RecruitOption(recruit.name,
 					100 * recruit.challengeRating, recruit));
 		}
+		researchhand[0] = new Grow(this);
+		Research.draw(this);
 	}
 
 	public ArrayList<Monster> possiblerecruits(final int x, final int y) {
@@ -84,20 +140,12 @@ public class Town implements WorldActor {
 			}
 		}
 		Collections.shuffle(recruits);
-		// Collections.sort(recruits, new Comparator<Monster>() {
-		// @Override
-		// public int compare(Monster o1, Monster o2) {
-		// return new Float(o1.challengeRating)
-		// .compareTo(o2.challengeRating);
-		// }
-		// });
 		return recruits;
 	}
 
 	public void enter(final Squad s) {
 		if (name == null) {
-			name = RecruitScreen
-					.namingscreen(realm.toString().toLowerCase() + " town");
+			rename();
 		}
 		reclaim();
 		new TownScreen(this);
@@ -115,11 +163,19 @@ public class Town implements WorldActor {
 		StateManager.save();
 	}
 
+	/**
+	 * Receives a {@link #name} from the user for this town.
+	 */
+	public void rename() {
+		name = RecruitScreen
+				.namingscreen(realm.toString().toLowerCase() + " town");
+	}
+
 	public void reclaim() {
-		for (QueueItem member : training.reclaim(Squad.active.hourselapsed)) {
+		for (Order member : training.reclaim(Squad.active.hourselapsed)) {
 			completetraining(member);
 		}
-		for (QueueItem item : crafting.reclaim(Squad.active.hourselapsed)) {
+		for (Order item : crafting.reclaim(Squad.active.hourselapsed)) {
 			Item i = (Item) item.payload[0];
 			i.produce(this);
 			Town.grab(i);
@@ -133,7 +189,7 @@ public class Town implements WorldActor {
 				Squad.active.members, true, true)).id).add(item);
 	}
 
-	public void completetraining(QueueItem memberp) {
+	public void completetraining(Order memberp) {
 		Combatant member = (Combatant) memberp.payload[0];
 		ArrayList<Item> equipment = (ArrayList<Item>) memberp.payload[1];
 		ArrayList<Point> empty = new ArrayList<Point>();
@@ -248,9 +304,12 @@ public class Town implements WorldActor {
 	}
 
 	/**
-	 * Possibily starts a torunament in this town.
+	 * Possibly starts a tournament in this town.
 	 */
 	public void host() {
+		if (!garrison.isEmpty()) {
+			return;
+		}
 		int nevents = RPG.r(3, 7);
 		for (int i = 0; i < nevents; i++) {
 			events.add(RPG.r(1, 2) == 1 ? RPG.pick(Exhibition.SPECIALEVENTS)
@@ -261,5 +320,55 @@ public class Town implements WorldActor {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	/**
+	 * Produces {@link #labor} and {@link #automanage}s spending.
+	 */
+	public static void work() {
+		for (Town t : towns) {
+			t.labor += t.size / 10f;
+			if (!t.researching.isEmpty() && Math
+					.ceil(t.researching.get(0).price) <= Math.floor(t.labor)) {
+				t.researching.get(0).finish(t, null);
+				t.researching.remove(0);
+			} else if (t.automanage) {
+				t.manage();
+			}
+		}
+	}
+
+	void manage() {
+		if (nexttask == null) {
+			int totalprice = 0;
+			ArrayList<Research> hand = new ArrayList<Research>();
+			for (Research r : researchhand) {
+				if (r == null || !r.aiable) {
+					continue;
+				}
+				totalprice += r.price;
+				hand.add(r);
+			}
+			Collections.sort(hand, new Comparator<Research>() {
+				@Override
+				public int compare(Research o1, Research o2) {
+					return Math.round(Math.round(o1.price - o2.price));
+				}
+			});
+			double roll = RPG.r(0, totalprice);
+			int forward = 0;
+			for (int i = hand.size() - 1; i >= 0; i--) {
+				roll -= hand.get(i).price;
+				if (roll <= 0) {
+					nexttask = hand.get(forward);
+					break;
+				}
+				forward += 1;
+			}
+		}
+		if (nexttask.price <= labor) {
+			nexttask.finish(this, null);
+			nexttask = null;
+		}
 	}
 }

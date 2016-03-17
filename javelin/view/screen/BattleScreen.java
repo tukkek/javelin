@@ -162,8 +162,15 @@ public class BattleScreen extends Screen {
 		BattleScreen.originalredteam =
 				new ArrayList<Combatant>(BattleMap.redTeam);
 		Game.delayblock = false;
-		map.makeAllInvisible();
+		initmap();
 		mappanel.repaint();
+	}
+
+	/**
+	 * TODO
+	 */
+	protected void initmap() {
+		map.makeAllInvisible();
 	}
 
 	/**
@@ -282,7 +289,7 @@ public class BattleScreen extends Screen {
 				firstvision = false;
 				return;
 			}
-			map.makeAllInvisible();
+			initmap();
 			h.calculateVision();
 		} else if (!allvisible) {
 			map.setAllVisible();

@@ -19,6 +19,12 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class UpgradeHandler {
+	public final static UpgradeHandler singleton = new UpgradeHandler();
+
+	private UpgradeHandler() {
+		// prevents instantiation
+	}
+
 	LinkedList<Town> townqueue = new LinkedList<Town>();
 
 	public ArrayList<Upgrade> fire = new ArrayList<Upgrade>();
@@ -57,14 +63,14 @@ public class UpgradeHandler {
 			return ClassAdvancement.ARISTOCRAT;
 		} else if (r == Realm.EVIL) {
 			return ClassAdvancement.COMMONER;
-		} else if (r == Realm.MAGIC) {
+		} else if (r == Realm.MAGICAL) {
 			return ClassAdvancement.ARISTOCRAT;
 		} else {
 			throw new RuntimeException("Uknown town!");
 		}
 	}
 
-	List<Upgrade> getupgrades(Realm r) {
+	public List<Upgrade> getupgrades(Realm r) {
 		if (r == javelin.model.Realm.WIND) {
 			return wind;
 		} else if (r == Realm.FIRE) {
@@ -77,7 +83,7 @@ public class UpgradeHandler {
 			return good;
 		} else if (r == Realm.EVIL) {
 			return evil;
-		} else if (r == Realm.MAGIC) {
+		} else if (r == Realm.MAGICAL) {
 			return magic;
 		} else {
 			throw new RuntimeException("Uknown town!");
@@ -85,8 +91,10 @@ public class UpgradeHandler {
 	}
 
 	public void gather() {
-		for (final CrFactor factor : ChallengeRatingCalculator.CR_FACTORS) {
-			factor.listupgrades(this);
+		if (fire.isEmpty()) {
+			for (final CrFactor factor : ChallengeRatingCalculator.CR_FACTORS) {
+				factor.listupgrades(this);
+			}
 		}
 	}
 
@@ -98,4 +106,5 @@ public class UpgradeHandler {
 		return fire.size() + earth.size() + water.size() + wind.size()
 				+ good.size() + evil.size() + magic.size();
 	}
+
 }

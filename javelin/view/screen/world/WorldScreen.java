@@ -4,6 +4,8 @@ import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
@@ -33,7 +35,7 @@ import javelin.model.world.WorldActor;
 import javelin.model.world.WorldMap;
 import javelin.model.world.WorldMap.Region;
 import javelin.model.world.WorldPlace;
-import javelin.model.world.town.QueueItem;
+import javelin.model.world.town.Order;
 import javelin.model.world.town.Town;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.town.SelectScreen;
@@ -56,15 +58,21 @@ public class WorldScreen extends BattleScreen {
 			"                                               ";
 
 	private static final ArrayList<Realm> TOWNINFO = new ArrayList<Realm>();
+	static final HashMap<Class<? extends WorldActor>, Float> FEATURECHANCE =
+			new HashMap<Class<? extends WorldActor>, Float>();
 
 	static {
 		TOWNINFO.add(Realm.FIRE);
 		TOWNINFO.add(Realm.WATER);
 		TOWNINFO.add(Realm.WIND);
 		TOWNINFO.add(Realm.EARTH);
-		TOWNINFO.add(Realm.MAGIC);
+		TOWNINFO.add(Realm.MAGICAL);
 		TOWNINFO.add(Realm.GOOD);
 		TOWNINFO.add(Realm.EVIL);
+
+		FEATURECHANCE.put(Dungeon.class, .5f);
+		FEATURECHANCE.put(Lair.class, .25f);
+		FEATURECHANCE.put(Portal.class, .25f);
 	}
 
 	public static BattleMap worldmap;
@@ -152,9 +160,17 @@ public class WorldScreen extends BattleScreen {
 				WorldScreen.getactor(easyb.x, easyb.y, Town.towns), false,
 				false, true, true, null, false).place();
 		Haxor.spawn(easya);
-		int features = WorldMap.MAPDIMENSION * WorldMap.MAPDIMENSION / 9;
-		for (int i = 0; i < features; i++) {
-			spawnfeature(1f);
+		int features = (WorldMap.MAPDIMENSION * WorldMap.MAPDIMENSION) / 9;
+		while (Dungeon.dungeons.size() < features
+				* FEATURECHANCE.get(Dungeon.class)) {
+			Dungeon.spawn(1);
+		}
+		while (Lair.lairs.size() < features * FEATURECHANCE.get(Lair.class)) {
+			Lair.spawn(1);
+		}
+		while (Portal.portals.size() < features
+				* FEATURECHANCE.get(Portal.class)) {
+			Portal.open(1);
 		}
 		final Point start = easya;
 		Squad.active.x = start.x;
@@ -190,8 +206,18 @@ public class WorldScreen extends BattleScreen {
 				WorldScreen.worldmap.setTile(i, j, seed.getTile(i, j));
 			}
 		}
-		WorldScreen.worldmap.setAllVisible();
-		return WorldScreen.worldmap;
+		WorldScreen.worldmap.makeAllInvisible();
+		Point t = seed.towns.get(Region.EASYA);
+		for (int x = t.x - 2; x <= t.x + 2; x++) {
+			for (int y = t.y - 2; y <= t.y + 2; y++) {
+				if (x < 0 || x >= WorldMap.MAPDIMENSION || y < 0
+						|| y >= WorldMap.MAPDIMENSION) {
+					continue;
+				}
+				setVisible(x, y);
+			}
+		}
+		return worldmap;
 	}
 
 	@Override
@@ -199,6 +225,25 @@ public class WorldScreen extends BattleScreen {
 		centerscreen(h.x, h.y);
 		view(h);
 		Game.redraw();
+	}
+
+	@Override
+	public void view(Thing h) {
+		for (int x = h.x - 1; x <= h.x + 1; x++) {
+			for (int y = h.y - 1; y <= h.y + 1; y++) {
+				setVisible(x, y);
+			}
+		}
+		for (Point p : discovered) {
+			setVisible(p.x, p.y);
+		}
+	}
+
+	public static HashSet<Point> discovered = new HashSet<Point>();
+
+	static private void setVisible(int x, int y) {
+		worldmap.setVisible(x, y);
+		discovered.add(new Point(x, y));
 	}
 
 	@Override
@@ -239,11 +284,13 @@ public class WorldScreen extends BattleScreen {
 				s.eat();
 			}
 			final float onefeatureperweek = 1 / 7f;
-			spawnfeature(onefeatureperweek);
+			Lair.spawn(onefeatureperweek * FEATURECHANCE.get(Lair.class));
+			Dungeon.spawn(onefeatureperweek * FEATURECHANCE.get(Dungeon.class));
+			Portal.open(onefeatureperweek * FEATURECHANCE.get(Portal.class));
 			Weather.weather();
 			Town tournament = null;
 			for (Town t : Town.towns) {
-				for (QueueItem item : t.training.reclaim(time)) {
+				for (Order item : t.training.reclaim(time)) {
 					t.completetraining(item);
 				}
 				if (t.ishosting()) {
@@ -256,6 +303,7 @@ public class WorldScreen extends BattleScreen {
 			} else {
 				tournament.events.remove(0);
 			}
+			Town.work();
 			WorldScreen.lastday += 1;
 			if (Incursion.invade(this) && !Squad.squads.isEmpty()) {
 				break;
@@ -264,10 +312,9 @@ public class WorldScreen extends BattleScreen {
 		StateManager.save();
 	}
 
-	protected static void spawnfeature(float onefeatureperweek) {
-		Lair.spawn(onefeatureperweek / 4f);
-		Dungeon.spawn(onefeatureperweek / 2f);
-		Portal.open(onefeatureperweek / 4f);
+	static int countfeatures() {
+		return Lair.lairs.size() + Dungeon.dungeons.size()
+				+ Portal.portals.size();
 	}
 
 	public void updateplayerinformation() {
@@ -484,5 +531,10 @@ public class WorldScreen extends BattleScreen {
 		} else {
 			WorldScreen.displace(actor);
 		}
+	}
+
+	@Override
+	protected void initmap() {
+		return;
 	}
 }

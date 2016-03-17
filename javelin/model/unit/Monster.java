@@ -320,4 +320,10 @@ public class Monster implements Cloneable, Serializable {
 	public Integer willraw() {
 		return will;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		Monster m = (Monster) obj;
+		return name.equals(m.name);
+	}
 }

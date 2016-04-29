@@ -3,7 +3,6 @@ package javelin.view.screen;
 import java.awt.Color;
 
 import javelin.Javelin;
-import tyrant.mikera.tyrant.InfoScreen;
 import tyrant.mikera.tyrant.Screen;
 
 /**

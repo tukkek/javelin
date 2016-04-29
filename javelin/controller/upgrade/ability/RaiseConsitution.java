@@ -20,10 +20,9 @@ public class RaiseConsitution extends RaiseAbility {
 	}
 
 	@Override
-			boolean setattribute(Combatant m, int l)
+			boolean setattribute(Combatant c, int l)
 					throws PropertyVetoException {
-		m.source.constitution = l;
-		m.source.raiseconstitution(m);
+		c.source.raiseconstitution(c, 1);
 		return true;
 	}
 

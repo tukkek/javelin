@@ -17,9 +17,7 @@ public class OwlsWisdom extends TotemsSpell {
 	public String cast(Combatant caster, Combatant target, BattleState s,
 			boolean saved) {
 		target.source = target.source.clone();
-		target.source.raisewisdom();
-		target.source.raisewisdom();
-		target.source.wisdom += 4;
+		target.source.raisewisdom(+4);
 		return target + "'s wisdom is now "
 				+ Monster.getsignedbonus(target.source.wisdom);
 	}

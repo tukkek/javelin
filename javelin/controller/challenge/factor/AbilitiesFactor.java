@@ -20,6 +20,8 @@ import javelin.model.unit.Monster;
  * @see CrFactor
  */
 public class AbilitiesFactor extends CrFactor {
+	public static final float COST = .1f;
+
 	@Override
 	public float calculate(final Monster monster) {
 		final int[] abilites = new int[] { monster.strength, monster.dexterity,
@@ -31,7 +33,7 @@ public class AbilitiesFactor extends CrFactor {
 				sum += a - 10.5;
 			}
 		}
-		sum = sum / 10;
+		sum = sum * COST;
 		if (monster.intelligence == 0) {
 			/**
 			 * Immune to mind-affecting effects. Should be .5 but right now is
@@ -49,6 +51,6 @@ public class AbilitiesFactor extends CrFactor {
 		handler.wind.add(new RaiseDexterity());
 		handler.water.add(new RaiseWisdom());
 		handler.good.add(new RaiseIntelligence());
-		handler.magic.add(new RaiseCharisma());
+		handler.fire.add(new RaiseCharisma());
 	}
 }

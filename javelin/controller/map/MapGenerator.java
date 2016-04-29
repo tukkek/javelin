@@ -12,13 +12,12 @@ import javelin.controller.map.hill.GentleHiill;
 import javelin.controller.map.hill.RuggedHill;
 import javelin.controller.map.marsh.Moor;
 import javelin.controller.map.marsh.Swamp;
-import javelin.controller.map.mountain.ForbiddingMountain;
 import javelin.controller.map.mountain.Meadow;
 import javelin.controller.map.mountain.RuggedMountain;
 import javelin.controller.map.plain.Battlefield;
 import javelin.controller.map.plain.Farm;
 import javelin.controller.map.plain.Grasslands;
-import javelin.model.world.WorldMap;
+import javelin.model.world.World;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -36,15 +35,15 @@ public class MapGenerator {
 		Map[] selection;
 		if (dungeon) {
 			selection = new Map[] { new TyrantMap("caves", Weather.DRY) };
-		} else if (tile == WorldMap.EASY) {
+		} else if (tile == World.EASY) {
 			selection = new Map[] { wanderplain(), wanderplain(), wanderhill(),
 					new TyrantMap("graveyard") };
-		} else if (tile == WorldMap.MEDIUM) {
+		} else if (tile == World.MEDIUM) {
 			selection = new Map[] { wanderforest(), wanderforest(),
 					wanderhill(), new TyrantMap("dark forest") };
-		} else if (tile == WorldMap.HARD) {
+		} else if (tile == World.HARD) {
 			selection = new Map[] { wandermoutain(), wanderdesert() };
-		} else if (tile == WorldMap.VERYHARD) {
+		} else if (tile == World.VERYHARD) {
 			selection = new Map[] { new TyrantMap("goblin village", 1),
 					new TyrantMap("ruin"), wandermarsh(), wandermarsh(), };
 		} else {
@@ -95,7 +94,7 @@ public class MapGenerator {
 		Maps m = new Maps();
 		m.add(new Meadow());
 		m.add(new RuggedMountain());
-		m.add(new ForbiddingMountain());
+		// m.add(new ForbiddingMountain()); //TODO too closed
 		return m.pick();
 	}
 }

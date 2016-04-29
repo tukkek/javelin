@@ -6,7 +6,7 @@ import javelin.Javelin;
 import javelin.controller.TextReader;
 import javelin.controller.action.SimpleAction;
 import javelin.view.screen.BattleScreen;
-import javelin.view.screen.world.WorldScreen;
+import javelin.view.screen.WorldScreen;
 
 /**
  * In-game help.

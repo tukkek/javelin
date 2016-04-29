@@ -30,6 +30,7 @@ import javelin.model.spell.wounds.InflictSeriousWounds;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Skills;
 
 /**
  * Represents a spell-like ability.
@@ -63,6 +64,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	 */
 	public float cr;
 	public final boolean ispeaceful;
+	public boolean aggressive = true;
 	public int casterlevel;
 	public final boolean friendly;
 
@@ -91,22 +93,32 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	}
 
 	@Override
-	public boolean apply(Combatant m) {
-		int hitdice = m.source.hd.count();
-		if (casterlevel > hitdice || m.spells.count() >= hitdice) {
+	public boolean apply(Combatant c) {
+		int hitdice = c.source.hd.count();
+		if (!checkcasterlevel(hitdice, c.source)
+				|| c.spells.count() >= hitdice) {
 			// design parameters
 			return false;
 		}
-		Spell s = m.spells.has(this);
+		Spell s = c.spells.has(this);
 		if (s == null) {
 			s = clone();
 			s.name = s.name.replaceAll("Spell: ", "");
-			m.spells.add(s);
+			c.spells.add(s);
 		} else {
 			s.perday += 1;
 		}
-		m.source.spellcr += s.cr;
+		c.source.spellcr += s.cr;
 		return s.perday <= 5;
+	}
+
+	private boolean checkcasterlevel(int hitdice, Monster source) {
+		return hitdice >= casterlevel || Skills.take10(source.skills.spellcraft,
+				source.intelligence) >= 10 + getspelllevel();
+	}
+
+	private int getspelllevel() {
+		return (casterlevel + 1) / 2;
 	}
 
 	private int count(Combatant source) {
@@ -207,6 +219,8 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	public abstract int calculatesavetarget(Combatant caster, Combatant target);
 
 	/**
+	 * @return A message to be displayed or <code>null</code> if feedback is
+	 *         handled internally.
 	 * @throws NotPeaceful
 	 *             if should not be used out of combat.
 	 */
@@ -215,7 +229,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 
 	@Override
 	public boolean equals(Object obj) {
-		return obj instanceof Spell && ((Spell) obj).name.equals(name);
+		return obj != null && obj.getClass().equals(getClass());
 	}
 
 	static public void targetself(final Combatant combatant,

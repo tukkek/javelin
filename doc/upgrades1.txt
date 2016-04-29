@@ -1,5 +1,6 @@
 UPGRADE GUIDE (simple upgrades)
 
+Acid spray: touch attack, deals 8d8 damage (reflex save DC 17 for half).
 Breath weapon: special area attack, press b during battle to activate.
 Classes: raises hit dice, base attack bonus and saving throws.
 Damage reduction: reduces damage from physical attacks.
@@ -23,5 +24,6 @@ Ranged damage: raises damage of all ranged attacks.
 Ranged focus: +1 to all ranged attack bonuses (requires +1 BAB).
 Spell resistance: the more powerful your resistance, the less likely you'll be affected by harmful spells.
 Spell immunity:  cannot be the target of harmful spells.
+Stunning shock: touch attack, deals 2d8 damage (reflex save DC 12 for half) .
 Swimming: swims over water faster, ignores penalties for being on water. 
 Toughness: +3 hit points.

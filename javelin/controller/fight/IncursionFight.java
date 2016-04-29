@@ -22,7 +22,6 @@ public class IncursionFight implements Fight {
 			QuestApp.getImage("/images/texture2.png");
 
 	private final class IncursionScreen extends BattleScreen {
-
 		final private Incursion i;
 
 		private IncursionScreen(QuestApp q, BattleMap mapp,
@@ -31,11 +30,6 @@ public class IncursionFight implements Fight {
 			i = incursion;
 			Javelin.settexture(IncursionFight.INCURSIONTEXTURE);
 		}
-
-		// @Override
-		// protected void withdraw(Combatant c) {
-		// dontflee(this);
-		// }
 
 		@Override
 		public void onEnd() {
@@ -67,7 +61,6 @@ public class IncursionFight implements Fight {
 	 */
 	public IncursionFight(final Incursion incursion) {
 		this.incursion = incursion;
-		// incursion.remove();
 	}
 
 	@Override
@@ -78,13 +71,13 @@ public class IncursionFight implements Fight {
 
 	@Override
 	public int getel(final JavelinApp javelinApp, final int teamel) {
-		return incursion.el;
+		throw new RuntimeException(
+				"Shouldn't have to generate an incursion fight.");
 	}
 
 	@Override
 	public List<Combatant> getmonsters(int teamel) {
-		return incursion.squad == null ? null
-				: Incursion.getsafeincursion(incursion.squad);
+		return Incursion.getsafeincursion(incursion.squad);
 	}
 
 	@Override
@@ -100,5 +93,26 @@ public class IncursionFight implements Fight {
 	@Override
 	public boolean friendly() {
 		return false;
+	}
+
+	@Override
+	public boolean rewardgold() {
+		return true;
+	}
+
+	@Override
+	public boolean hide() {
+		/* let player flee it he wants to but don't hide */
+		return false;
+	}
+
+	@Override
+	public boolean canbribe() {
+		return true;
+	}
+
+	@Override
+	public void bribe() {
+		incursion.remove();
 	}
 }

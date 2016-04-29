@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.model.world.Squad;
-import javelin.model.world.Squad.Transport;
-import javelin.model.world.Town;
-import javelin.view.screen.town.option.Option;
+import javelin.model.world.place.town.Town;
+import javelin.model.world.place.town.Transport;
+import javelin.view.screen.Option;
 
 /**
  * Lets a {@link Squad} rent a mode of transportation.
@@ -14,24 +14,40 @@ import javelin.view.screen.town.option.Option;
  * @author alex
  */
 public class TransportScreen extends PurchaseScreen {
-	private static final Option RETURN = new Option("Return (refund)", 0);
-	private static final Option AIRSHIP = new Option("Airship", 5000);
-	private static final Option CARRIAGE = new Option("Carriage", 100);
-	public static final int CARRIAGEMAINTENANCE = 2;
-	public static final int AIRSHIPMAINTENANCE = 16;
+	public static final int COSTAIRSHIP = 5000;
+	public static final int COSTCARRIAGE = 100;
+	public static final int MAINTENANCECARRIAGE = 2;
+	public static final int MAINTENANCEAIRSHIP = 16;
 
-	public TransportScreen(String name, Town t) {
-		super(name, t);
+	private static final Option RETURN = new Option("Return (refund)", 0, 'r');
+	private static final Option AIRSHIP =
+			new Option("Airship", COSTAIRSHIP, 'a');
+	private static final Option CARRIAGE =
+			new Option("Carriage", COSTCARRIAGE, 'c');
+
+	/**
+	 * @param description
+	 *            Title.
+	 * @param t
+	 *            Town the active {@link Squad} is in.
+	 */
+	public TransportScreen(String description, Town t) {
+		super(description, t);
 	}
 
 	@Override
-	public List<Option> getOptions() {
+	public List<Option> getoptions() {
 		ArrayList<Option> list = new ArrayList<Option>();
 		list.add(RETURN);
-		if (Squad.active.transport == Transport.NONE) {
-			list.add(CARRIAGE);
-			list.add(AIRSHIP);
+		if (Squad.active.transport != Transport.NONE) {
+			return list;
 		}
+		if (town.transport.equals(Transport.CARRIAGE)) {
+			list.add(CARRIAGE);
+			return list;
+		}
+		list.add(CARRIAGE);
+		list.add(AIRSHIP);
 		return list;
 	}
 
@@ -42,9 +58,9 @@ public class TransportScreen extends PurchaseScreen {
 		}
 		if (o == RETURN) {
 			if (Squad.active.transport == Transport.CARRIAGE) {
-				Squad.active.gold += CARRIAGE.price - CARRIAGEMAINTENANCE;
+				Squad.active.gold += CARRIAGE.price / 2;
 			} else if (Squad.active.transport == Transport.AIRSHIP) {
-				Squad.active.gold += AIRSHIP.price - AIRSHIPMAINTENANCE;
+				Squad.active.gold += AIRSHIP.price / 2;
 			}
 			Squad.active.transport = Transport.NONE;
 			Squad.active.updateavatar();

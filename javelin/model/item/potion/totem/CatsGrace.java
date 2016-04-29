@@ -19,14 +19,13 @@ public class CatsGrace extends Potion {
 
 	@Override
 	public boolean use(Combatant user) {
-		user.source.raisedexterity(2);
-		user.source.dexterity += 4;
+		user.source.raisedexterity(+2);
 		user.conditions.add(new Buff("graceful", user));
 		Game.message(
 				"Dexterity is now "
 						+ Monster.getsignedbonus(user.source.dexterity),
 				null, Delay.BLOCK);
-		return false;
+		return true;
 	}
 
 	@Override

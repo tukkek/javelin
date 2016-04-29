@@ -1,21 +1,29 @@
 package javelin.view.screen.town;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.model.world.QueueItem;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.world.Squad;
-import javelin.model.world.Town;
-import javelin.model.world.TownQueue;
+import javelin.model.world.WorldActor;
+import javelin.model.world.place.town.Accommodations.RestOption;
+import javelin.model.world.place.town.Order;
+import javelin.model.world.place.town.OrderQueue;
+import javelin.model.world.place.town.Town;
+import javelin.model.world.place.town.TrainingOrder;
+import javelin.model.world.place.town.Transport;
 import javelin.view.screen.BattleScreen;
-import javelin.view.screen.town.option.Option;
+import javelin.view.screen.Option;
 import javelin.view.screen.town.option.RecruitScreenOption;
+import javelin.view.screen.town.option.ResearchScreenOption;
 import javelin.view.screen.town.option.ScreenOption;
 import javelin.view.screen.town.option.ShopScreenOption;
 import javelin.view.screen.town.option.TournamentScreenOption;
 import javelin.view.screen.town.option.TransportScreenOption;
 import javelin.view.screen.town.option.UpgradingScreenOption;
+import javelin.view.screen.upgrading.TownUpgradingScreen;
 
 /**
  * Shown when a {@link Squad} enters a {@link Town}.
@@ -23,19 +31,24 @@ import javelin.view.screen.town.option.UpgradingScreenOption;
  * @author alex
  */
 public class TownScreen extends PurchaseScreen {
-	static final Option INN = new Option("Sleep at lodge", 0);
-	static final Option WAIT = new Option("Await next order", 0);
-	static final Option CANCELUPGRADES = new Option("Cancel upgrades", 0);
+	final static boolean DEBUGMANAGEMENT = false;
 
-	private Option week =
-			new Option("Sleep at lodge (1 week)", 7 * .5 * Squad.active.size());
-	private final Option hospital =
-			new Option("Recover in hospital", Squad.active.size() * .7);
+	static final Option AWAIT = new Option("Await next order", 0, 'a');
+	static final Option CANCELUPGRADES = new Option("Cancel upgrades", 0, 'c');
+	private static final Option RENAME = new Option("Rename town", 0, 'N');
+
+	private static final Option MANAGE = new Option("", 0, 'M');
+
+	private Squad entering;
 
 	public TownScreen(final Town t) {
-		super("Welcome to " + t.name + "!", t);
-		sortoptions = false;
+		super(title(t), t);
+		entering = Squad.active;
 		show();
+	}
+
+	protected static String title(final WorldActor t) {
+		return "Welcome to " + t + "!";
 	}
 
 	@Override
@@ -49,64 +62,84 @@ public class TownScreen extends PurchaseScreen {
 			return false;
 		}
 		if (o == CANCELUPGRADES) {
-			for (QueueItem member : town.training.queue) {
-				town.completetraining(member);
+			for (Order member : town.training.queue) {
+				TrainingOrder to = (TrainingOrder) member;
+				TownUpgradingScreen.completetraining(to, town, to.untrained);
 			}
 			town.training.queue.clear();
 			return true;
 		}
-		rest(o);
-		stayopen = false;
-		return true;
-	}
-
-	public void rest(final Option o) {
-		if (o == INN) {
-			Town.rest(1, 8);
-		} else if (o == hospital) {
-			Town.rest(2, 8);
-		} else if (o == week) {
-			Town.rest(14, 7 * 24);
-		} else if (o == WAIT) {
+		if (o == RENAME) {
+			town.rename();
+			title = title(town) + "\n\n";
+			return true;
+		}
+		if (o == MANAGE) {
+			town.automanage = !town.automanage;
+			if (town.automanage) {
+				town.research.queue.clear();
+			} else {
+				town.nexttask = null;
+			}
+			return true;
+		}
+		if (o instanceof RestOption) {
+			rest((RestOption) o);
+		}
+		if (o == AWAIT) {
 			Long training = town.training.next();
 			Long crafting = town.crafting.next();
 			long hours =
 					Math.min(training == null ? Integer.MAX_VALUE : training,
 							crafting == null ? Integer.MAX_VALUE : crafting)
-					- Squad.active.hourselapsed;
+							- Squad.active.hourselapsed;
 			Town.rest((int) Math.floor(hours / 8f), hours);
 		}
+		stayopen = false;
+		return true;
+	}
+
+	public void rest(final RestOption o) {
+		Town.rest(o.periods, o.hours);
 	}
 
 	@Override
-	public List<Option> getOptions() {
+	public List<Option> getoptions() {
 		final ArrayList<Option> list = new ArrayList<Option>();
-		list.add(new RecruitScreenOption("Recruit", town));
-		list.add(new ShopScreenOption("Shop", town));
-		list.add(new TransportScreenOption("Transport", town));
-		list.add(INN);
-		list.add(hospital);
-		list.add(week);
-		if (hospital.price < 1) {
-			hospital.price = 1;
+		if (Squad.active != entering) {
+			return list;
 		}
-		list.add(new UpgradingScreenOption("Upgrade", town));
+		list.add(new RecruitScreenOption("Draft", town, 'd'));
+		list.add(new ShopScreenOption("Shop", town, 's'));
+		if (!town.transport.equals(Transport.NONE)) {
+			list.add(new TransportScreenOption("Rent transport", town, 't'));
+		}
+		list.add(town.lodging.getrestoption());
+		list.add(town.lodging.getweekrestoption());
+		list.add(new UpgradingScreenOption("Upgrade", town, 'u'));
 		boolean istraining = !town.training.queue.isEmpty();
 		if (istraining || !town.crafting.queue.isEmpty()) {
-			list.add(WAIT);
+			list.add(AWAIT);
 			if (istraining) {
 				list.add(CANCELUPGRADES);
 			}
 		}
 		if (town.ishosting()) {
-			list.add(new TournamentScreenOption("Tournament", town));
+			list.add(new TournamentScreenOption("Enter tournament", town, 'T'));
+		}
+		list.add(RENAME);
+		MANAGE.name = "Manage town ("
+				+ (town.automanage ? "automatic" : "manual") + ")";
+		list.add(MANAGE);
+		if (!town.automanage) {
+			list.add(new ResearchScreenOption(town));
 		}
 		return list;
 	}
 
 	@Override
 	public String printpriceinfo(Option o) {
-		return o == INN || o.price > 0 ? super.printpriceinfo(o) : "";
+		return o.price > 0 ? super.printpriceinfo(o) : "";
 	}
 
 	@Override
@@ -123,21 +156,62 @@ public class TownScreen extends PurchaseScreen {
 		if (!town.training.done()) {
 			output += "\n\n" + showqueue(town.training, "Training");
 		}
+		if (!town.automanage || DEBUGMANAGEMENT) {
+			output += "\n\nManagement:\n\n";
+			output += "    Size: " + town.size + "\n";
+			output += "    Labor: " + Math.round(Math.floor(town.labor)) + "\n";
+			if (Javelin.DEBUG && town.ishostile()) {
+				output += "    Queue: " + town.nexttask + "\n";
+				output += "    Garrison: " + town.garrison + "\n";
+				output += "    EL: " + ChallengeRatingCalculator
+						.calculateElSafe(town.garrison);
+			} else {
+				final boolean debugcomputerai =
+						DEBUGMANAGEMENT && town.research.queue.isEmpty();
+				output += "    Queue: " + (debugcomputerai ? town.nexttask
+						: town.research.queue);
+			}
+		}
 		return output;
 	}
 
-	private String showqueue(TownQueue queue, String output) {
+	private String showqueue(OrderQueue queue, String output) {
 		if (queue.done()) {
 			return "";
 		}
 		output += ":\n";
-		for (QueueItem i : queue.queue) {
-			output += "  - " + i.payload[0] + ", time left: ";
+		for (Order i : queue.queue) {
+			output += "  - " + i.name + ", time left: ";
 			long hoursleft = i.completionat - Squad.active.hourselapsed;
 			output += hoursleft < 24 ? hoursleft + " hour(s)"
 					: Math.round(Math.round(hoursleft / 24f)) + " day(s)";
 			output += "\n";
 		}
 		return output.substring(0, output.length() - 1);
+	}
+
+	@Override
+	protected Comparator<Option> sort() {
+		return new Comparator<Option>() {
+			@Override
+			public int compare(Option o1, Option o2) {
+				return o1.name.compareTo(o2.name);
+			}
+		};
+	}
+
+	@Override
+	protected void sort(List<Option> options) {
+		super.sort(options);
+		ArrayList<Option> uppercase = new ArrayList<Option>();
+		for (Option o : new ArrayList<Option>(options)) {
+			if (Character.isUpperCase(o.key)) {
+				options.remove(o);
+				uppercase.add(o);
+			}
+		}
+		for (Option o : uppercase) {
+			options.add(o);
+		}
 	}
 }

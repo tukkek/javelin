@@ -57,7 +57,7 @@ import tyrant.mikera.tyrant.util.Text;
  */
 
 public class BattleMap extends BaseObject implements ThingOwner {
-	static class VisionCache {
+	public static class VisionCache {
 		public static ArrayList<Point> positions = new ArrayList<Point>();
 
 		public String period;
@@ -140,6 +140,7 @@ public class BattleMap extends BaseObject implements ThingOwner {
 	public static ArrayList<Combatant> redTeam = new ArrayList<Combatant>();
 	public static ArrayList<Combatant> blueTeam = new ArrayList<Combatant>();
 	public static ArrayList<Combatant> dead = new ArrayList<Combatant>();
+	public static Boolean victory = null;
 
 	public BattleMap(final int w, final int h) {
 		// game=Game.instance();
@@ -1242,6 +1243,7 @@ public class BattleMap extends BaseObject implements ThingOwner {
 	/** calculates all the visible squares for the hero at given position */
 	public void calcVisible(final Thing h) {
 		final int combatantid = h.combatant.id;
+		final BattleState s = getState();
 		VisionCache cache = visioncache.get(combatantid);
 		final String perception = h.combatant.perceive(period);
 		if (cache != null) {
@@ -1255,7 +1257,6 @@ public class BattleMap extends BaseObject implements ThingOwner {
 				visioncache.clear();
 			}
 		}
-		final BattleState s = getState();
 		final int range = h.combatant.view(period);
 		final boolean forcevision = perception == Javelin.PERIOD_NOON
 				|| perception == Javelin.PERIOD_MORNING;
@@ -1275,7 +1276,7 @@ public class BattleMap extends BaseObject implements ThingOwner {
 		visioncache.put(combatantid, cache);
 	}
 
-	void seeTile(int x, int y) {
+	public void seeTile(int x, int y) {
 		setTileFull(x, y, getTileFull(x, y) | Tile.TF_VISIBLE);
 	}
 

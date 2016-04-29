@@ -8,12 +8,13 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.model.item.Item;
+import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Squad;
+import javelin.view.screen.InfoScreen;
+import javelin.view.screen.WorldScreen;
+import javelin.view.screen.shopping.TownShopScreen;
 import javelin.view.screen.town.SelectScreen;
-import javelin.view.screen.town.ShoppingScreen;
-import javelin.view.screen.world.WorldScreen;
-import tyrant.mikera.tyrant.InfoScreen;
 
 public class UseItems extends WorldAction {
 	public UseItems() {
@@ -22,73 +23,91 @@ public class UseItems extends WorldAction {
 
 	@Override
 	public void perform(final WorldScreen worldscreen) {
-		final ArrayList<Item> allitems = new ArrayList<Item>();
-		final String list = listitems(allitems, true);
-		final InfoScreen infoscreen = new InfoScreen(list);
-		String actions = "\n";
-		actions += "\nPress number to use an item";
-		actions += "\nPress d to distribute items";
-		actions += "\nPress q to quit the inventory";
-		infoscreen.print(list + actions);
-		command(allitems, list, infoscreen);
-	}
-
-	public void command(final ArrayList<Item> allitems, final String list,
-			final InfoScreen infoscreen) {
 		while (true) {
-			Javelin.app.switchScreen(infoscreen);
-			final Character input = InfoScreen.feedback();
-			if (input == 'd') {
-				redistributeinventory(allitems, list, infoscreen);
-			} else if (input == 'q') {
-				// leaves screen
-			} else {
-				ShoppingScreen.listactivemembers();
-				int index = SelectScreen.convertselectionkey(input);
-				if (index >= allitems.size() || index == -1) {
-					continue;
-				}
-				final Item selected = allitems.get(index);
-				if (selected
-						.usepeacefully(inputmember(infoscreen, infoscreen.text
-								+ "\n\nWhich member will use this item?"))) {
-					selected.expend();
-				} else {
-					infoscreen.print(infoscreen.text + "\n\n"
-							+ selected.describefailure());
-					InfoScreen.feedback();
-				}
+			final ArrayList<Item> allitems = new ArrayList<Item>();
+			final InfoScreen infoscreen = new InfoScreen("");
+			String actions = "";
+			actions += "Press number to use an item";
+			actions += "\nPress E to exchange an item";
+			actions += "\nPress ENTER to quit the inventory";
+			actions += "\n";
+			final String list = listitems(allitems, true);
+			infoscreen.print(actions + list);
+			if (command(allitems, list, infoscreen)) {
+				break;
 			}
-			Javelin.app.switchScreen(JavelinApp.context);
-			break;
 		}
+		Javelin.app.switchScreen(JavelinApp.context);
 	}
 
-	public void redistributeinventory(final ArrayList<Item> allitems,
-			final String reequiptext, final InfoScreen infoscreen) {
-		Squad.active.equipment.clear();
-		final String original = infoscreen.text;
-		Collections.sort(allitems, new Comparator<Item>() {
-			@Override
-			public int compare(Item o1, Item o2) {
-				int delta = o2.price - o1.price;
-				if (delta == 0) {
-					return o1.name.compareTo(o2.name);
-				}
-				return delta;
-			}
-		});
-		final int nitems = allitems.size();
-		for (int i = 0; i < nitems; i++) {
-			final Item it = allitems.get(i);
-			final Combatant member = inputmember(infoscreen,
-					original + "\n\nWhich squad member will carry the "
-							+ it.name.toLowerCase() + " ("
-							+ count(it, allitems.subList(i, nitems)) + ")?");
-			Squad.active.equipment.get(member.id).add(it);
-			// i += 1;
+	boolean command(final ArrayList<Item> allitems, final String list,
+			final InfoScreen infoscreen) {
+		Javelin.app.switchScreen(infoscreen);
+		final Character input = InfoScreen.feedback();
+		if (input == '\n') {
+			return true;// leaves screen
 		}
-		infoscreen.print(original);
+		if (input == 'E') {
+			exchange(allitems, list, infoscreen);
+			return false;
+		}
+		Item selected = select(allitems, input);
+		if (selected == null) {
+			return false;
+		}
+		Combatant target = selected instanceof Artifact ? findowner(selected)
+				: inputmember(infoscreen, infoscreen.text
+						+ "\n\nWhich member will use this item?");
+		if (!selected.usepeacefully(target)) {
+			infoscreen.print(
+					infoscreen.text + "\n\n" + selected.describefailure());
+			InfoScreen.feedback();
+		} else if (selected.consumable) {
+			selected.expend();
+		}
+		return selected.consumable;
+	}
+
+	protected Item select(final ArrayList<Item> allitems,
+			final Character input) {
+		Item selected = null;
+		int index = SelectScreen.convertnumericselection(input);
+		if (0 <= index && index < allitems.size()) {
+			selected = allitems.get(index);
+		}
+		return selected;
+	}
+
+	public void exchange(final ArrayList<Item> allitems,
+			final String reequiptext, final InfoScreen infoscreen) {
+		infoscreen.print(infoscreen.text + "\n\nSelect an item.");
+		Item selected = select(allitems, InfoScreen.feedback());
+		if (selected == null) {
+			return;
+		}
+		Combatant owner = findowner(selected);
+		if (owner.equipped.contains(selected)) {
+			owner.equipped.remove(selected);
+			if (selected instanceof Artifact) {
+				Artifact a = (Artifact) selected;
+				a.remove(owner);
+			}
+		}
+		Squad.active.equipment.get(owner.id).remove(selected);
+		Squad.active.equipment.get(
+				inputmember(infoscreen, "Transfer " + selected + " to who?").id)
+				.add(selected);
+	}
+
+	protected Combatant findowner(Item selected) {
+		searchwho: for (Combatant bag : Squad.active.members) {
+			for (Item i : Squad.active.equipment.get(bag.id)) {
+				if (i == selected) {
+					return bag;
+				}
+			}
+		}
+		throw new RuntimeException("Item owner not found #useitems");
 	}
 
 	private int count(Item it, List<Item> allitems) {
@@ -103,7 +122,7 @@ public class UseItems extends WorldAction {
 
 	public Combatant inputmember(final InfoScreen infoscreen,
 			final String message) {
-		infoscreen.print(message + "\n\n" + ShoppingScreen.listactivemembers());
+		infoscreen.print(message + "\n\n" + TownShopScreen.listactivemembers());
 		while (true) {
 			try {
 				return Squad.active.members.get(
@@ -120,23 +139,42 @@ public class UseItems extends WorldAction {
 			boolean showkeys) {
 		String s = "";
 		int i = 0;
-		for (final Combatant c : Squad.active.members) {
-			String monster = c.toString();
-			s += "\n" + monster + ":\n";
+		ArrayList<Combatant> members = Squad.active.members;
+		for (int j = 0; j < members.size(); j++) {
+			final Combatant c = members.get(j);
+			String output = "";
+			if (!showkeys) {
+				output += SelectScreen.SELECTIONKEYS[j] + " - ";
+			}
+			output = c.toString();
+			s += "\n";
+			s += output + ":\n";
 			boolean none = true;
-			for (final Item it : Squad.active.equipment.get(c.id)) {
+			ArrayList<Item> bag =
+					new ArrayList<Item>(Squad.active.equipment.get(c.id));
+			Collections.sort(bag, new Comparator<Item>() {
+				@Override
+				public int compare(Item o1, Item o2) {
+					return o1.toString().compareTo(o2.toString());
+				}
+			});
+			for (final Item it : bag) {
 				if (allitems != null) {
 					allitems.add(it);
 				}
 				if (showkeys) {
 					s += "  [" + SelectScreen.SELECTIONKEYS[i] + "]";
 				}
-				s += " " + it.name + "\n";
+				s += " " + it.name;
+				if (c.equipped.contains(it)) {
+					s += " (equipped)";
+				}
+				s += "\n";
 				i += 1;
 				none = false;
 			}
 			if (none) {
-				s += "   carrying no items.\n";
+				s += "  carrying no items.\n";
 			}
 		}
 		return s;

@@ -8,10 +8,10 @@ import javelin.controller.exception.NotPeaceful;
 import javelin.controller.upgrade.Spell;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Squad;
-import javelin.view.screen.world.WorldScreen;
+import javelin.view.screen.InfoScreen;
+import javelin.view.screen.WorldScreen;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
-import tyrant.mikera.tyrant.InfoScreen;
 
 public class CastSpells extends WorldAction {
 	public CastSpells() {
@@ -43,10 +43,11 @@ public class CastSpells extends WorldAction {
 			return;
 		}
 		try {
-			Game.message(
-					s.castpeacefully(caster,
-							Squad.active.members.get(targetindex)),
-					null, Delay.BLOCK);
+			String message = s.castpeacefully(caster,
+					Squad.active.members.get(targetindex));
+			if (message != null) {
+				Game.message(message, null, Delay.BLOCK);
+			}
 		} catch (NotPeaceful e) {
 			throw new RuntimeException(
 					"Should have been caught in CastSpells#listspells. See Spell#ispeaceful");
@@ -107,6 +108,21 @@ public class CastSpells extends WorldAction {
 		return spellnames;
 	}
 
+	/**
+	 * Utility function for user-input selection.
+	 * 
+	 * @param output
+	 *            Text to show the user.
+	 * @param names
+	 *            Will show each's {@link Object#toString()} as an option.
+	 * @param fullscreen
+	 *            <code>true</code> to open in a new screen. Otherwise uses the
+	 *            message panel.
+	 * @param forceselection
+	 *            If <code>false</code> will allow the user to abort the
+	 *            operation.
+	 * @return The index of the selected element or -1 if aborted.
+	 */
 	static public int choose(String output, List<?> names, boolean fullscreen,
 			boolean forceselection) {
 		if (!forceselection) {

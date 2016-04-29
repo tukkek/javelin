@@ -1,13 +1,13 @@
 package javelin.controller.challenge;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javelin.model.dungeon.Treasure;
 import javelin.model.item.Item;
+import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;
+import javelin.model.world.place.dungeon.Treasure;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -110,29 +110,50 @@ public class RewardCalculator {
 				* getexperiencepercharacter(eldifference, nsurvivors) / 1000.0;
 	}
 
-	public static int receivegold(final List<Combatant> originalredteam) {
-		float sum = 0;
-		for (final Combatant m : originalredteam) {
-			final float cr = ChallengeRatingCalculator.calculateCr(m.source);
-			sum += cr * cr * cr * 7.5f;
+	/**
+	 * @return sum of gold this battle should reward.
+	 * @see #getgold(float)
+	 */
+	public static int receivegold(final List<Combatant> team) {
+		int sum = 0;
+		for (final Combatant m : team) {
+			sum += getgold(ChallengeRatingCalculator.calculateCr(m.source));
 		}
-		return Math.round(sum);
+		return sum;
+	}
+
+	/**
+	 * @param cr
+	 *            Given a challenge rating...
+	 * @return gold treasure reward for such an opponent.
+	 */
+	public static int getgold(final float cr) {
+		return Math.round(cr * cr * cr * 7.5f);
+	}
+
+	/**
+	 * @param gold
+	 *            Given a certain amount of gold...
+	 * @return the challenge rating that would warrant this treasure.
+	 */
+	public static int getcr(final float gold) {
+		return Math.round(Math.round(Math.cbrt(gold / 7.5f)));
 	}
 
 	public static Treasure createchest(int gold, int x, int y) {
-		ArrayList<Item> items = new ArrayList<Item>();
-		if (RPG.r(1, 2) == 1) {
-			int quantity = RPG.r(1, 2);
-			for (Integer price : Item.BYPRICE.descendingKeySet()) {
-				if (price * quantity <= gold) {
-					for (int j = 0; j < quantity; j++) {
-						items.add(RPG.pick(Item.BYPRICE.get(price)));
-					}
-					gold = 0;
+		ItemSelection chest = new ItemSelection();
+		if (RPG.r(1, 2) == 1) {// 50% are gold and 50% are item
+			int limit = gold / 10;
+			for (Integer price : Item.BYPRICE.descendingMap().keySet()) {
+				if (price <= limit) {
 					break;
+				}
+				if (gold > price) {
+					gold -= price;
+					chest.add(RPG.pick(Item.BYPRICE.get(price)));
 				}
 			}
 		}
-		return new Treasure("chest", x, y, gold, items);
+		return new Treasure("chest", x, y, gold, chest);
 	}
 }

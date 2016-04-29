@@ -31,7 +31,8 @@ public class Horde extends Exhibition {
 				for (Monster m : new CrIterator(
 						Javelin.MONSTERSBYCR.descendingMap())) {
 					List<Combatant> opponents = new ArrayList<Combatant>();
-					for (int i = 0; i < EncounterGenerator.MAXGROUPSIZE; i++) {
+					for (int i = 0; i < EncounterGenerator
+							.getmaxenemynumber(); i++) {
 						opponents.add(new Combatant(null, m.clone(), true));
 					}
 					try {

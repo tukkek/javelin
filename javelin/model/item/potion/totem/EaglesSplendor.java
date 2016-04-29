@@ -14,7 +14,7 @@ import tyrant.mikera.tyrant.Game.Delay;
 public class EaglesSplendor extends Potion {
 
 	public EaglesSplendor() {
-		super("Potion of eagle's splendor", 300, Item.WIND);
+		super("Potion of eagle's splendor", 300, Item.FIRE);
 	}
 
 	@Override
@@ -25,7 +25,7 @@ public class EaglesSplendor extends Potion {
 				"Charisma is now "
 						+ Monster.getsignedbonus(user.source.charisma),
 				null, Delay.BLOCK);
-		return false;
+		return true;
 	}
 
 	@Override

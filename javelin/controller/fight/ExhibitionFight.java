@@ -49,4 +49,24 @@ public class ExhibitionFight implements Fight {
 	public boolean friendly() {
 		return true;
 	}
+
+	@Override
+	public boolean rewardgold() {
+		return true;
+	}
+
+	@Override
+	public boolean hide() {
+		return false;
+	}
+
+	@Override
+	public void bribe() {
+		throw new RuntimeException("Cannot bribe an Exhibition! #exhibitionf");
+	}
+
+	@Override
+	public boolean canbribe() {
+		return false;
+	}
 }

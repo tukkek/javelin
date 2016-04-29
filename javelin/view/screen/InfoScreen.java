@@ -1,0 +1,110 @@
+package javelin.view.screen;
+
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
+
+import javelin.Javelin;
+import tyrant.mikera.tyrant.Game;
+import tyrant.mikera.tyrant.Game.Delay;
+import tyrant.mikera.tyrant.QuestApp;
+import tyrant.mikera.tyrant.Screen;
+import tyrant.mikera.tyrant.util.Text;
+
+/**
+ * Fullscreen text display. For hiding the current {@link BattleScreen} or
+ * {@link WorldScreen} and interacting textually with the user.
+ * 
+ * TODO modernize UI
+ * 
+ * @author Tyrant
+ * @author alex
+ */
+public class InfoScreen extends Screen {
+	private static final long serialVersionUID = 3256727281736168249L;
+	public String text;
+	public Font font;
+
+	private final int border = 20;
+
+	public InfoScreen(final QuestApp q, final String textp) {
+		super(q);
+		text = textp;
+		font = QuestApp.mainfont;
+		setForeground(QuestApp.INFOTEXTCOLOUR);
+		setBackground(QuestApp.INFOSCREENCOLOUR);
+		setFont(font);
+	}
+
+	public InfoScreen(final String text) {
+		this(Javelin.app, text);
+	}
+
+	@Override
+	public void paint(final Graphics g) {
+		super.paint(g);
+		final FontMetrics met = g.getFontMetrics(g.getFont());
+		final Rectangle r = getBounds();
+		final int charsize = met.charWidth(' ');
+		final int linelength = (r.width - border * 2) / charsize;
+		int y = border + met.getMaxAscent();
+		final int lineinc = met.getMaxAscent() + met.getMaxDescent();
+		for (final String s : Text.separateString(text, '\n')) {
+			for (final String line : Text.wrapString(s, linelength)) {
+				g.setColor(QuestApp.INFOTEXTCOLOUR);
+				g.drawString(line, border, y);
+				y += lineinc;
+			}
+		}
+	}
+
+	/**
+	 * @return A non-negative integer.
+	 */
+	static public int numberfeedback() {
+		while (true) {
+			try {
+				return Integer.parseInt(feedback().toString());
+			} catch (final NumberFormatException e2) {
+				continue;
+			}
+		}
+	}
+
+	static public Character feedback() {
+		KeyEvent input = Game.getInput();
+		switch (input.getKeyCode()) {
+		case KeyEvent.VK_RIGHT:
+			return '→';
+		case KeyEvent.VK_LEFT:
+			return '←';
+		case KeyEvent.VK_BACK_SPACE:
+			return '\b';
+		case KeyEvent.VK_SHIFT:
+			return feedback();
+		}
+		return Character.valueOf(input.getKeyChar());
+	}
+
+	public void print(String string) {
+		text = string;
+		Javelin.app.switchScreen(this);
+	}
+
+	/**
+	 * Prompts a message in the {@link WorldScreen}.
+	 * 
+	 * TODO move to WorldScreen?
+	 * 
+	 * @param prompt
+	 *            Text to show.
+	 * @return Any {@link #feedback()}.
+	 */
+	static public Character prompt(final String prompt) {
+		Game.messagepanel.clear();
+		Game.message(prompt, null, Delay.NONE);
+		return feedback();
+	}
+}

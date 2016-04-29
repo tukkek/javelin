@@ -22,10 +22,13 @@ import javelin.model.condition.Condition.Effect;
 import javelin.model.condition.Defending;
 import javelin.model.feat.Cleave;
 import javelin.model.feat.GreatCleave;
+import javelin.model.item.artifact.Artifact;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.unit.abilities.Spells;
 import javelin.model.world.Squad;
+import javelin.model.world.WorldActor;
+import javelin.model.world.place.unique.MercenariesGuild;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
@@ -42,9 +45,7 @@ import tyrant.mikera.tyrant.Game.Delay;
  * @author alex
  */
 public class Combatant implements Serializable, Cloneable {
-	/**
-	 * TODO
-	 */
+	/** TODO proper dying process + healing phase at the end of combat */
 	public static final int DEADATHP = -8;
 	/**
 	 * Should probably be external, like a mapping in {@link BattleScreen}.
@@ -71,10 +72,13 @@ public class Combatant implements Serializable, Cloneable {
 	 */
 	public Spells spells = new Spells();
 	/**
-	 * TODO should be in {@link Combatant}
+	 * XP in CR, you'll want to multiply by 100 and round to show the player.
 	 */
 	public BigDecimal xp = new BigDecimal(0);
 	public boolean summoned = false;
+	public ArrayList<Artifact> equipped = new ArrayList<Artifact>(0);
+	/** See {@link MercenariesGuild} */
+	public boolean mercenary = false;
 
 	/**
 	 * @param generatespells
@@ -112,7 +116,8 @@ public class Combatant implements Serializable, Cloneable {
 	}
 
 	private boolean checkidcollision() {
-		for (Squad s : Squad.squads) {
+		for (WorldActor a : Squad.getall(Squad.class)) {
+			Squad s = (Squad) a;
 			for (Combatant c : s.members) {
 				if (Combatant.ids == c.id) {
 					return true;
@@ -132,6 +137,9 @@ public class Combatant implements Serializable, Cloneable {
 			c.conditions = conditions.clone();
 			c.spells = (Spells) spells.clone();
 			c.xp = c.xp.add(new BigDecimal(0));
+			if (c.equipped != null) {
+				c.equipped = (ArrayList<Artifact>) c.equipped.clone();
+			}
 			return c;
 		} catch (CloneNotSupportedException e) {
 			throw new RuntimeException(e);
@@ -189,10 +197,7 @@ public class Combatant implements Serializable, Cloneable {
 
 	@Override
 	public String toString() {
-		// TODO location:
-		return source.toString()
-		// + Arrays.toString(location)
-		;
+		return source.toString();
 	}
 
 	public boolean hasAttackType(final boolean meleeOnly) {
@@ -405,6 +410,12 @@ public class Combatant implements Serializable, Cloneable {
 		return Integer.MAX_VALUE;
 	}
 
+	/**
+	 * Note that this isn't supposed to be used for creating new
+	 * {@link Combatant}s since the {@link #id} is kept the same.
+	 * 
+	 * @return A clone with a cloned {@link #source}.
+	 */
 	public Combatant clonedeeply() {
 		final Combatant c = clone();
 		c.source = c.source.clone();
@@ -506,5 +517,19 @@ public class Combatant implements Serializable, Cloneable {
 				a.bonus += 2;
 			}
 		}
+	}
+
+	/**
+	 * @return a roll of {@link Skills#listen}.
+	 */
+	public int listen() {
+		return Skills.take10(source.skills.listen, source.wisdom);
+	}
+
+	/**
+	 * @return a roll of {@link Skills#movesilently}.
+	 */
+	public int movesilently() {
+		return Skills.take10(source.skills.movesilently, source.dexterity);
 	}
 }

@@ -1,11 +1,8 @@
 package javelin.controller.action.world;
 
-import java.util.ArrayList;
-
-import javelin.model.unit.Combatant;
 import javelin.model.world.Squad;
 import javelin.view.screen.StatisticsScreen;
-import javelin.view.screen.world.WorldScreen;
+import javelin.view.screen.WorldScreen;
 
 /**
  * Show unit information.
@@ -15,17 +12,18 @@ import javelin.view.screen.world.WorldScreen;
 public class ShowStatistics extends WorldAction {
 
 	public ShowStatistics() {
-		super("View character sheet", new int[0], new String[] { "v" });
+		super("View character sheet / show all squad members", new int[0],
+				new String[] { "v" });
 	}
 
 	@Override
 	public void perform(WorldScreen screen) {
-		ArrayList<String> names = new ArrayList<String>();
-		for (Combatant m : Squad.active.members) {
-			names.add(m.toString());
-		}
-		int answer =
-				CastSpells.choose("Choose a character:", names, true, false);
+		// ArrayList<String> names = new ArrayList<String>();
+		// for (Combatant m : Squad.active.members) {
+		// names.add(m.toString() + " (" + m.getStatus() + ")");
+		// }
+		int answer = CastSpells.choose("Choose a character:",
+				WorldScreen.showstatusinformation(), true, false);
 		if (answer != -1) {
 			new StatisticsScreen(Squad.active.members.get(answer));
 		}

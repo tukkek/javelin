@@ -8,6 +8,7 @@ import java.awt.event.WindowEvent;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.prefs.Preferences;
@@ -18,26 +19,26 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import javelin.controller.Weather;
 import javelin.controller.db.StateManager;
 import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.db.reader.factor.Organization;
 import javelin.controller.map.Map;
 import javelin.model.BattleMap;
-import javelin.model.item.Key.Color;
+import javelin.model.item.Item;
+import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.world.Dungeon;
 import javelin.model.world.Squad;
-import javelin.model.world.WorldMap;
+import javelin.model.world.World;
+import javelin.model.world.WorldActor;
 import javelin.view.screen.BattleScreen;
+import javelin.view.screen.InfoScreen;
+import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.RecruitScreen;
-import javelin.view.screen.world.WorldScreen;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
-import tyrant.mikera.tyrant.InfoScreen;
 import tyrant.mikera.tyrant.QuestApp;
 
 /**
@@ -53,18 +54,22 @@ public class Javelin {
 	public static final boolean DEBUG = System.getProperty("debug") != null;
 	public static final boolean DEBUGDISABLECOMBAT =
 			javelin.controller.db.Properties.getString("cheat.combat") != null;
+	public static final boolean DEBUGEXPLORED =
+			javelin.controller.db.Properties.getString("cheat.map") != null;;
 	public static final Integer DEBUGSTARTINGXP =
 			javelin.controller.db.Properties.getInteger("cheat.xp", null);
 	public static final Integer DEBUGSTARTINGGOLD =
 			javelin.controller.db.Properties.getInteger("cheat.gold", null);
 	public static final Integer DEBUGSTARTINGHAX =
 			javelin.controller.db.Properties.getInteger("cheat.haxor", null);
+	public static final Integer DEBUGSTARTINGLABOR =
+			javelin.controller.db.Properties.getInteger("cheat.labor", null);
 	public static final Integer DEBUGMINIMUMFOES = null;
 	public static final Integer DEBUGWEATHER = null;
 	public static final Map DEBUGMAPTYPE = null;
 	public static final boolean DEBUG_SPAWNINCURSION = false;
 	public static final Float DEBUGSTARTINGCR = null;
-	public static final Color DEBUGSTARTINGKEY = null;
+	public static final Item DEBUGSTARTINGITEM = null;
 	public static final String DEBUGALLOWMONSTER = null;
 	public static final String DEBUGPERIOD = null;
 
@@ -93,6 +98,8 @@ public class Javelin {
 			reader.setErrorHandler(defaultHandler);
 			reader.parse(new InputSource(new FileReader("monsters.xml")));
 			Organization.process();
+			Artifact.init();
+			Item.init();
 		} catch (final IOException e) {
 			e.printStackTrace();
 		} catch (final SAXException e) {
@@ -188,7 +195,8 @@ public class Javelin {
 
 	public static Squad nexttoact() {
 		Squad next = null;
-		for (final Squad s : Squad.squads) {
+		for (final WorldActor a : Squad.getall(Squad.class)) {
+			Squad s = (Squad) a;
 			if (next == null || s.hourselapsed < next.hourselapsed) {
 				next = s;
 			}
@@ -249,20 +257,20 @@ public class Javelin {
 
 	public static Combatant recruit(Monster pick) {
 		Combatant c = new Combatant(null, pick.clone(), true);
-		RecruitScreen.namingscreen(c.source);
+		c.source.customName = RecruitScreen.namingscreen(c.toString());
 		Squad.active.members.add(c);
 		return c;
 	}
 
 	public static int difficulty() {
-		switch (JavelinApp.worldtile()) {
-		case WorldMap.EASY:
+		switch (Javelin.terrain()) {
+		case World.EASY:
 			return -1;
-		case WorldMap.MEDIUM:
+		case World.MEDIUM:
 			return 0;
-		case WorldMap.HARD:
+		case World.HARD:
 			return +1;
-		case WorldMap.VERYHARD:
+		case World.VERYHARD:
 			return +2;
 		default:
 			throw new RuntimeException("Unknown tile difficulty!");
@@ -282,30 +290,6 @@ public class Javelin {
 		return null;
 	}
 
-	public static ArrayList<String> getTerrain() {
-		ArrayList<String> terrains = new ArrayList<String>();
-		if (Dungeon.active != null) {
-			terrains.add("underground");
-			return terrains;
-		}
-		int tile = JavelinApp.worldtile();
-		if (tile == WorldMap.EASY) {
-			terrains.add(RPG.pick(new String[] { "plains", "plains", "hill" }));
-		} else if (tile == WorldMap.MEDIUM) {
-			terrains.add(RPG.pick(new String[] { "forest", "forest", "hill" }));
-		} else if (tile == WorldMap.HARD) {
-			terrains.add(RPG.pick(new String[] { "mountains", "desert" }));
-		} else if (tile == WorldMap.VERYHARD) {
-			terrains.add("marsh");
-		} else {
-			throw new RuntimeException("Unknown tile difficulty!");
-		}
-		if (Weather.now == 2) {
-			terrains.add("aquatic");
-		}
-		return terrains;
-	}
-
 	static public String translatetochance(int rolltohit) {
 		if (rolltohit <= 4) {
 			return "effortless";
@@ -320,5 +304,72 @@ public class Javelin {
 			return "hard";
 		}
 		return "unlikely";
+	}
+
+	/**
+	 * @return Current terrain difficulty. For example: {@link World#EASY}.
+	 */
+	static public int terrain() {
+		Thing h = Game.hero();
+		return Javelin.terrain(h.x, h.y);
+	}
+
+	/**
+	 * @param x
+	 *            {@link World} coordinate.
+	 * @param y
+	 *            {@link World} coordinate.
+	 * @return Terrain difficulty. For example: {@link World#EASY}.
+	 */
+	public static int terrain(int x, int y) {
+		return JavelinApp.overviewmap.getTile(x, y);
+	}
+
+	/**
+	 * @param difficulty
+	 *            Terrain difficulty. For example: {@link World#EASY}.
+	 * @return Name of a d20 terrain.
+	 */
+	public static String terrain(int difficulty) {
+		return RPG.pick(terrains(difficulty));
+	}
+
+	/**
+	 * @param difficulty
+	 *            Terrain difficulty. For example: {@link World#EASY}.
+	 * @return All the names of d20 terrains this difficulty encompasses.
+	 */
+	public static String[] terrains(int difficulty) {
+		if (difficulty == World.EASY) {
+			return new String[] { "plains", "plains", "hill" };
+		} else if (difficulty == World.MEDIUM) {
+			return new String[] { "forest", "forest", "hill" };
+		} else if (difficulty == World.HARD) {
+			return new String[] { "mountains", "desert" };
+		} else if (difficulty == World.VERYHARD) {
+			return new String[] { "marsh" };
+		} else {
+			throw new RuntimeException("Unknown tile difficulty!");
+		}
+	}
+
+	/**
+	 * 2 chances of an easy encounter, 10 chances of a moderate encounter, 4
+	 * chances of a difficult encounter and 1 chance of an overwhelming
+	 * encounter
+	 */
+	public static Integer randomdifficulty() {
+		final LinkedList<Integer> elchoices = new LinkedList<Integer>();
+		for (int j = 0; j < 2; j++) {
+			elchoices.add(RPG.r(-5, -8));
+		}
+		for (int j = 0; j < 10; j++) {
+			elchoices.add(-4);
+		}
+		for (int j = -3; j <= 0; j++) {
+			elchoices.add(j);
+		}
+		elchoices.add(1);
+		return RPG.pick(elchoices);
 	}
 }

@@ -18,38 +18,43 @@ import javelin.model.unit.Monster;
 public class HdFactor extends CrFactor {
 	@Override
 	public float calculate(final Monster monster) {
-		final String type = monster.monsterType.toLowerCase();
-		final float crByDie;
+		final String type = monster.type.toLowerCase();
+		float crByDie;
 		if (type.contains("dragon")) {
-			crByDie = .75f;
+			crByDie = .75f - SkillsFactor.levelup(6, monster);
 		} else if (type.contains("outsider")) {
-			crByDie = .7f;
+			crByDie = .7f - SkillsFactor.levelup(8, monster);
 		} else if (type.contains("magical beast") || type.contains("beast")) {
 			/* beast is a typo */
-			crByDie = .65f;
+			crByDie = .65f - SkillsFactor.levelup(2, monster);
 		} else if (type.contains("mounstrous humanoid")) {
-			crByDie = .6f;
+			crByDie = .6f - SkillsFactor.levelup(2, monster);
 		} else if (type.contains("aberration") || type.contains("animal")
 				|| type.contains("elemental") || type.contains("giant")
-				|| type.contains("humanoid") || andIntelligent("ooze", monster)
-				|| andIntelligent("plant", monster)
+				|| type.contains("humanoid") || andIntelligent("plant", monster)
 				|| andIntelligent("vermin", monster)) {
-			crByDie = .55f;
+			crByDie = .55f - SkillsFactor.levelup(2, monster);
 		} else if (type.contains("fey")) {
-			crByDie = .5f;
-		} else if (andIntelligent("construct", monster) || type.contains("ooze")
-				|| type.contains("plant") || andIntelligent("undead", monster)
+			crByDie = .5f - SkillsFactor.levelup(6, monster);
+		} else if (andIntelligent("construct", monster)) {
+			crByDie = .35f - SkillsFactor.levelup(2, monster);
+		} else if (andIntelligent("undead", monster)) {
+			crByDie = .35f - SkillsFactor.levelup(4, monster);
+		} else if (type.contains("undead") || type.contains("construct")) {
+			crByDie = .35f;
+		} else if (andIntelligent("ooze", monster)) {
+			crByDie = .55f - SkillsFactor.levelup(2, monster);
+		} else if (type.contains("ooze") || type.contains("plant")
 				|| type.contains("vermin")) {
 			crByDie = .45f;
-		} else if (type.contains("construct") || type.contains("undead")) {
-			crByDie = .35f;
 		} else {
 			throw new RuntimeException("Unknown type " + type);
 		}
+		crByDie -= Monster.getbonus(monster.intelligence) * SkillsFactor.COST;
 		return new Double(monster.originalhd * crByDie).floatValue();
 	}
 
 	private boolean andIntelligent(final String type, final Monster monster) {
-		return monster.monsterType.contains(type) && monster.intelligence != 0;
+		return monster.type.contains(type) && monster.intelligence != 0;
 	}
 }

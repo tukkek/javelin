@@ -37,28 +37,29 @@ public class FeatsFactor extends CrFactor {
 	@Override
 	public void listupgrades(UpgradeHandler handler) {
 		handler.earth.add(new Toughness());
-
-		handler.water.add(new IronWill());
-		handler.wind.add(new LightningReflexes());
 		handler.earth.add(new GreatFortitude());
 
-		handler.wind.add(new PointBlankShot());
-		handler.wind.add(new PreciseShot());
-		handler.wind.add(new ImprovedPreciseShot());
-		handler.wind.add(new RapidShot());
 		handler.wind.add(new RangedFocus("Ranged focus"));
-
-		handler.fire.add(new MeleeFocus("Mêlée focus"));
-		handler.fire.add(new PowerAttackUpgrade());
-		handler.fire.add(new CleaveUpgrade());
-		handler.fire.add(new GreatCleaveUpgrade());
-		handler.fire.add(new BullRushUpgrade());
-
-		handler.fire.add(new CombatExpertiseUpgrade());
-		handler.wind.add(new ImprovedFeintUpgrade());
-		handler.earth.add(new ImprovedGrappleUpgrade());
-		handler.water.add(new ImprovedTripUpgrade());
-
+		handler.wind.add(new LightningReflexes());
 		handler.wind.add(new ImprovedInititative());
+
+		handler.fire.add(new IronWill());
+		handler.fire.add(new MeleeFocus("Mêlée focus"));
+
+		handler.shots.add(new PointBlankShot());
+		handler.shots.add(new PreciseShot());
+		handler.shots.add(new ImprovedPreciseShot());
+		handler.shots.add(new RapidShot());
+
+		handler.power.add(new PowerAttackUpgrade());
+		handler.power.add(new BullRushUpgrade());
+		handler.power.add(new CleaveUpgrade());
+		handler.power.add(new GreatCleaveUpgrade());
+
+		handler.expertise.add(new CombatExpertiseUpgrade());
+		handler.expertise.add(new ImprovedFeintUpgrade());
+		handler.expertise.add(new ImprovedGrappleUpgrade());
+		handler.expertise.add(new ImprovedTripUpgrade());
+
 	}
 }

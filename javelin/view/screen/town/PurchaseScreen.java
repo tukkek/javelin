@@ -2,8 +2,8 @@ package javelin.view.screen.town;
 
 import javelin.Javelin;
 import javelin.model.world.Squad;
-import javelin.model.world.Town;
-import javelin.view.screen.town.option.Option;
+import javelin.model.world.place.town.Town;
+import javelin.view.screen.Option;
 
 /**
  * Any screen in which the player can spend money tu buy something.
@@ -14,20 +14,36 @@ public abstract class PurchaseScreen extends SelectScreen {
 
 	protected boolean bought;
 
+	/** Constructor. See {@link SelectScreen#SelectScreen(String, Town)}. */
 	public PurchaseScreen(final String s, final Town t) {
 		super(s, t);
 	}
 
 	@Override
 	public boolean select(final Option o) {
-		bought = Squad.active.gold >= o.price;
+		bought = canbuy(o);
 		if (bought) {
-			Squad.active.gold -= o.price;
+			spend(o);
 			return true;
 		}
-		text += "\nNot enough gold.";
+		text += "\nToo expensive!";
 		Javelin.app.switchScreen(this);
 		return false;
+	}
+
+	/**
+	 * @param o
+	 *            Make the payment for this selection.
+	 */
+	protected void spend(final Option o) {
+		Squad.active.gold -= o.price;
+	}
+
+	/**
+	 * @return <code>true</code> if can pay for the current {@link Option}.
+	 */
+	protected boolean canbuy(final Option o) {
+		return Squad.active.gold >= o.price;
 	}
 
 	@Override

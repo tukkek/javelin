@@ -14,7 +14,7 @@ import tyrant.mikera.tyrant.Game.Delay;
 public class FoxsCunning extends Potion {
 
 	public FoxsCunning() {
-		super("Potion of fox's cunning", 300, Item.MAGIC);
+		super("Potion of fox's cunning", 300, Item.WIND);
 	}
 
 	@Override
@@ -25,7 +25,7 @@ public class FoxsCunning extends Potion {
 				"Intelligence is now "
 						+ Monster.getsignedbonus(user.source.intelligence),
 				null, Delay.BLOCK);
-		return false;
+		return true;
 	}
 
 	@Override

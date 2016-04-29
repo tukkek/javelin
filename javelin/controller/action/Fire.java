@@ -18,11 +18,11 @@ import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.CurrentAttack;
 import javelin.view.screen.BattleScreen;
+import javelin.view.screen.InfoScreen;
 import javelin.view.screen.StatisticsScreen;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
-import tyrant.mikera.tyrant.InfoScreen;
 
 /**
  * Ranged attack.

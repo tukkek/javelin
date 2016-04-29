@@ -1,16 +1,16 @@
 package javelin.model.item;
 
 import java.util.ArrayList;
-import java.util.TreeMap;
 
 import javelin.controller.fight.PlanarFight;
+import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Squad;
+import javelin.view.screen.InfoScreen;
 import javelin.view.screen.IntroScreen;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
-import tyrant.mikera.tyrant.InfoScreen;
 
 /**
  * Keys are found in dungeon treasure chests and allow the player to initiate a
@@ -19,40 +19,19 @@ import tyrant.mikera.tyrant.InfoScreen;
  * @author alex
  */
 public class Key extends Item {
-	public enum Color {
-		BLUE, MAGENTA, WHITE, RED, GREEN, BLACK, TRANSPARENT
-	}
-
-	public static TreeMap<Color, String> REALMS = new TreeMap<Color, String>();
-
-	static {
-		REALMS.put(Color.MAGENTA, "Magical");
-		REALMS.put(Color.BLACK, "Twisted");
-		REALMS.put(Color.WHITE, "Holy");
-		REALMS.put(Color.RED, "Fire");
-		REALMS.put(Color.GREEN, "Earth");
-		REALMS.put(Color.TRANSPARENT, "Wind");
-		REALMS.put(Color.BLUE, "Water");
-	}
-
-	public Color color;
+	public Realm color;
 
 	/**
 	 * @see #generate()
 	 */
-	private Key(Color color) {
-		super(color.name().substring(0, 1).toUpperCase()
-				+ color.name().substring(1).toLowerCase() + " key", 0, null);
+	private Key(Realm color) {
+		super(color.toString() + " key", 0, null);
 		this.color = color;
+		usedinbattle = false;
 	}
 
 	@Override
 	public boolean use(Combatant user) {
-		return false;
-	}
-
-	@Override
-	public boolean isusedinbattle() {
 		return false;
 	}
 
@@ -64,12 +43,12 @@ public class Key extends Item {
 	}
 
 	/**
-	 * @param color
+	 * @param realm
 	 *            if <code>null</code> generates a key of random color.
 	 */
-	public static Key generate(Color c) {
+	public static Key generate(Realm c) {
 		if (c == null) {
-			Color[] colors = Color.values();
+			Realm[] colors = Realm.values();
 			c = colors[RPG.r(0, colors.length - 1)];
 		}
 		return new Key(c);

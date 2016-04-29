@@ -6,13 +6,12 @@ import java.util.List;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Squad;
-import javelin.model.world.Town;
-import javelin.model.world.WorldMap;
+import javelin.model.world.World;
+import javelin.model.world.WorldActor;
+import javelin.model.world.place.town.Town;
 import javelin.view.screen.BattleScreen;
-import javelin.view.screen.world.WorldScreen;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
-import tyrant.mikera.tyrant.InfoScreen;
+import javelin.view.screen.InfoScreen;
+import javelin.view.screen.WorldScreen;
 
 /**
  * Split squad into two.
@@ -34,7 +33,7 @@ public class Divide extends WorldAction {
 						+ "Press c to cancel or ENTER when done.\n"
 						+ "The left column is your current squad, the right one is the new squad.\n"
 						+ "To join two squads later just place them in the same square.\n";
-		input(in);
+		InfoScreen.prompt(in);
 		char input = ' ';
 		final ArrayList<Combatant> indexreference =
 				new ArrayList<Combatant>(Squad.active.members);
@@ -48,8 +47,9 @@ public class Divide extends WorldAction {
 			log(indexreference, oldsquad, oldcolumn);
 			log(indexreference, newsquad, newcolumn);
 			String text = "";
-			for (int i = 0; i < Math.max(oldcolumn.size(),
-					newcolumn.size()); i++) {
+			int nlines = Math.max(oldcolumn.size(), newcolumn.size());
+			nlines = Math.min(6, nlines);
+			for (int i = 0; i < nlines; i++) {
 				String oldtd = i < oldcolumn.size() ? oldcolumn.get(i) : "";
 				while (oldtd.length() < WorldScreen.SPACER.length()) {
 					oldtd += " ";
@@ -58,7 +58,7 @@ public class Divide extends WorldAction {
 						i < newcolumn.size() ? newcolumn.get(i) : "";
 				text += oldtd + newtd + "\n";
 			}
-			input = input(text);
+			input = InfoScreen.prompt(text);
 			if (input == 'c') {
 				return;
 			}
@@ -92,8 +92,8 @@ public class Divide extends WorldAction {
 		final int increment = Squad.active.gold / 10;
 		while (input != '\n') {
 			clear();
-			input = input(
-					"How much gold do you want to transfer to the new squad? Use the + and - keys to change and ENTER to confirm.\n"
+			input = InfoScreen
+					.prompt("How much gold do you want to transfer to the new squad? Use the + and - keys to change and ENTER to confirm.\n"
 							+ gold);
 			if (input == '+') {
 				gold += increment;
@@ -107,15 +107,16 @@ public class Divide extends WorldAction {
 				}
 			}
 		}
-		Town nearto = findtown(Squad.active.x, Squad.active.y);
+		WorldActor nearto = findtown(Squad.active.x, Squad.active.y);
 		int x, y;
 		Squad s = null;
 		placement: for (x = Squad.active.x - 1; x <= Squad.active.x + 1; x++) {
 			for (y = Squad.active.y - 1; y <= Squad.active.y + 1; y++) {
-				if (!WorldMap.isoccupied(x, y, false)
+				if (!World.istown(x, y, false)
 						&& (nearto == null || findtown(x, y) instanceof Town)) {
 					s = new Squad(x, y,
-							Squad.active.hourselapsed + WorldMove.TIMECOST);
+							Squad.active.hourselapsed + WorldMove.TIMECOST,
+							Squad.active.lasttown);
 					break placement;
 				}
 			}
@@ -134,25 +135,15 @@ public class Divide extends WorldAction {
 		Squad.active.updateavatar();
 	}
 
-	public Town findtown(int xp, int yp) {
+	public WorldActor findtown(int xp, int yp) {
 		for (int x = xp - 1; x <= xp + 1; x++) {
 			for (int y = yp - 1; y <= yp + 1; y++) {
-
-				// if (Javelin.DEBUG && WorldScreen.getactor(x, y) != null) {
-				// System.out.println(WorldScreen.getactor(x, y));
-				// }
-
 				if (WorldScreen.getactor(x, y) instanceof Town) {
-					return (Town) WorldScreen.getactor(x, y);
+					return WorldScreen.getactor(x, y);
 				}
 			}
 		}
 		return null;
-	}
-
-	public Character input(final String prompt) {
-		Game.message(prompt, null, Delay.NONE);
-		return InfoScreen.feedback();
 	}
 
 	public void clear() {

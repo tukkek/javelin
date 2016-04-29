@@ -14,19 +14,17 @@ import tyrant.mikera.tyrant.Game.Delay;
 public class OwlsWisdom extends Potion {
 
 	public OwlsWisdom() {
-		super("Potion of owl's wisdom", 300, Item.WIND);
+		super("Potion of owl's wisdom", 300, Item.WATER);
 	}
 
 	@Override
 	public boolean use(Combatant user) {
-		user.source.raisewisdom();
-		user.source.raisewisdom();
-		user.source.wisdom += 4;
+		user.source.raisewisdom(+4);
 		user.conditions.add(new Buff("wise", user));
 		Game.message(
 				"Wisdom is now " + Monster.getsignedbonus(user.source.wisdom),
 				null, Delay.BLOCK);
-		return false;
+		return true;
 	}
 
 	@Override

@@ -5,26 +5,27 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import javelin.Javelin;
 import javelin.JavelinApp;
+import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Dungeon;
-import javelin.model.world.Haxor;
 import javelin.model.world.Incursion;
-import javelin.model.world.Lair;
-import javelin.model.world.Portal;
 import javelin.model.world.Squad;
-import javelin.model.world.Town;
-import javelin.model.world.WorldMap;
-import javelin.model.world.WorldPlace;
-import javelin.view.screen.world.WorldScreen;
+import javelin.model.world.World;
+import javelin.model.world.WorldActor;
+import javelin.model.world.place.dungeon.Dungeon;
+import javelin.model.world.place.unique.Haxor;
+import javelin.view.screen.BattleScreen;
+import javelin.view.screen.WorldScreen;
 
 /**
  * Saves and loads game progress to a file.
@@ -35,37 +36,65 @@ public class StateManager {
 
 	private static final File SAVEFILE =
 			new File(System.getProperty("user.dir"), "javelin.save");
+	private static final Thread SAVEONEXIT = new Thread(new Runnable() {
+		@Override
+		public void run() {
+			if (WorldScreen.active == null) {
+				// quit before stating a game
+				return;
+			}
+			if (BattleScreen.active != null) {
+				// don't save during battle
+				return;
+			}
+			while (!SAVEFILE.canWrite()) {
+				System.out.println("Waiting for save to finish...");
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// should not happen
+				}
+			}
+			save();
+		}
+	});
 	public static boolean abandoned = false;
+	static public boolean nofile = false;
 
-	public static void save() {
+	static {
+		Runtime.getRuntime().addShutdownHook(SAVEONEXIT);
+
+	}
+
+	public static synchronized void save() {
 		try {
-			final ObjectOutputStream stream =
+			ObjectOutputStream writer =
 					new ObjectOutputStream(new FileOutputStream(SAVEFILE));
-			stream.writeBoolean(abandoned);
-			for (final Squad s : Squad.squads) {
+			writer.writeBoolean(abandoned);
+			for (final WorldActor a : Squad.getall(Squad.class)) {
+				Squad s = (Squad) a;
 				s.x = s.visual.x;
 				s.y = s.visual.y;
 			}
-			stream.writeObject(Squad.squads);
-			stream.writeObject(WorldMap.seed);
-			stream.writeObject(Lair.lairs);
-			stream.writeObject(Dungeon.dungeons);
-			stream.writeObject(Dungeon.active);
-			stream.writeObject(Town.towns);
-			stream.writeObject(Portal.portals);
-			stream.writeObject(Incursion.squads);
-			stream.writeObject(Incursion.currentel);
-			stream.writeObject(Weather.now);
-			stream.writeObject(Haxor.singleton);
-			stream.writeObject(EndBattle.lastkilled);
-			stream.flush();
-			stream.close();
+			writer.writeObject(WorldActor.INSTANCES);
+			writer.writeObject(World.seed);
+			writer.writeObject(Dungeon.active);
+			writer.writeObject(Incursion.currentel);
+			writer.writeObject(Weather.now);
+			writer.writeObject(EndBattle.lastkilled);
+			writer.writeObject(WorldScreen.discovered);
+			writer.flush();
+			writer.close();
+		} catch (final NotSerializableException e) {
+			if (Javelin.DEBUG) {
+				/* fail when it's debug */
+				throw new RuntimeException(e);
+			}
+			/* fail gracefully, hopefully the next invocation will work fine */
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
-
-	static public boolean nofile = false;
 
 	public static boolean load() {
 		if (!SAVEFILE.exists()) {
@@ -81,39 +110,26 @@ public class StateManager {
 				stream.close();
 				return false;
 			}
-			Squad.squads = (ArrayList<Squad>) stream.readObject();
+			WorldActor.INSTANCES =
+					(HashMap<Class<? extends WorldActor>, ArrayList<WorldActor>>) stream
+							.readObject();
 			Javelin.act();
-			WorldMap.seed = (WorldMap) stream.readObject();
-			JavelinApp.overviewmap = WorldScreen.makemap(WorldMap.seed);
-			Lair.lairs = (List<WorldPlace>) stream.readObject();
-			for (final WorldPlace l : Lair.lairs) {
-				l.place();
+			World.seed = (World) stream.readObject();
+			JavelinApp.overviewmap = World.makemap(World.seed);
+			for (ArrayList<WorldActor> instances : WorldActor.INSTANCES
+					.values()) {
+				for (WorldActor p : instances) {
+					p.place();
+				}
 			}
-			Dungeon.dungeons = (List<WorldPlace>) stream.readObject();
+			Haxor.singleton =
+					(Haxor) WorldActor.INSTANCES.get(Haxor.class).get(0);
+			Haxor.singleton.place();
 			Dungeon.active = (Dungeon) stream.readObject();
-			for (final WorldPlace d : Dungeon.dungeons) {
-				d.place();
-			}
-			for (final Squad s : Squad.squads) {
-				s.place();
-			}
-			Town.towns = (ArrayList<Town>) stream.readObject();
-			for (final Town t : Town.towns) {
-				t.place();
-			}
-			Portal.portals = (ArrayList<WorldPlace>) stream.readObject();
-			for (final WorldPlace p : Portal.portals) {
-				p.place();
-			}
-			Incursion.squads = (List<Incursion>) stream.readObject();
-			for (final Incursion t : Incursion.squads) {
-				t.place();
-			}
 			Incursion.currentel = (Integer) stream.readObject();
 			Weather.read((Integer) stream.readObject());
-			Haxor.singleton = (Haxor) stream.readObject();
-			Haxor.singleton.place();
 			EndBattle.lastkilled = (Combatant) stream.readObject();
+			WorldScreen.discovered = (HashSet<Point>) stream.readObject();
 			stream.close();
 			return true;
 		} catch (final Throwable e1) {
@@ -132,6 +148,7 @@ public class StateManager {
 					// die gracefully
 				}
 			}
+			Runtime.getRuntime().removeShutdownHook(StateManager.SAVEONEXIT);
 			System.exit(20140406);
 			return false;
 		}

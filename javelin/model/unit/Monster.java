@@ -18,6 +18,8 @@ import javelin.controller.upgrade.classes.ClassAdvancement;
 import javelin.controller.upgrade.feat.MeleeFocus;
 import javelin.model.Cloneable;
 import javelin.model.feat.Feat;
+import javelin.model.item.artifact.Artifact;
+import javelin.model.item.artifact.Slot;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.TouchAttack;
 import tyrant.mikera.engine.RPG;
@@ -37,7 +39,9 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Monster implements Cloneable, Serializable {
+	/** TODO make enumeration */
 	public static final int VISION_LOWLIGHT = 1;
+	/** TODO make enumeration */
 	public static final int VISION_DARK = 2;
 
 	public static final int FINE = 0;
@@ -70,6 +74,7 @@ public class Monster implements Cloneable, Serializable {
 	private int will;
 
 	public int walk = 0;
+	/** TODO also offer perfect flight */
 	public int fly = 0;
 	public int swim = 0;
 
@@ -112,11 +117,12 @@ public class Monster implements Cloneable, Serializable {
 	 */
 	public String group;
 	public Float challengeRating = null;
-	public String monsterType;
+	public String type;
 	/**
 	 * TODO use only {@link #avatarfile}
 	 */
 	public String avatar = null;
+	/** TODO should probably be a Combatant#name */
 	public String customName = null;
 	public int meleedamageupgrades = 0;
 	public int fasthealing = 0;
@@ -163,6 +169,30 @@ public class Monster implements Cloneable, Serializable {
 	 */
 	public int sr = 0;
 	public boolean immunetomindeffects = false;
+	public ArrayList<String> terrains = new ArrayList<String>();
+	/**
+	 * Alignment. <code>true</code> if lawful, <code>null</code> if neutral,
+	 * <code>false</code> if chaotic.
+	 */
+	public Boolean lawful = null;
+	/**
+	 * Alignment. <code>true</code> if good, <code>null</code> if neutral,
+	 * <code>false</code> if evil.
+	 */
+	public Boolean good = null;
+	/**
+	 * A monster is humanoid if it can use most of it's {@link Slot}s to wear
+	 * {@link Artifact}s. Humanoid and monstrous humanoid monster types are
+	 * humanoid by default, other types have to manually marked as
+	 * Humanoid="yes" in monster.xml to be marked as such.
+	 * 
+	 * Ideally this would be defined in a slot-by-slot and monster-by-monster
+	 * basis but for now a creature tagged as humanoid is eligible to use any
+	 * and all {@link Slot}s.
+	 */
+	public boolean humanoid = false;
+	/** See {@link Skills}. */
+	public Skills skills = new Skills();
 
 	@Override
 	public Monster clone() {
@@ -176,6 +206,8 @@ public class Monster implements Cloneable, Serializable {
 			if (m.touch != null) {
 				m.touch = touch.clone();
 			}
+			terrains = (ArrayList<String>) terrains.clone();
+			skills = skills.clone();
 			return m;
 		} catch (final CloneNotSupportedException e) {
 			throw new RuntimeException(e);
@@ -238,40 +270,58 @@ public class Monster implements Cloneable, Serializable {
 		for (ClassAdvancement classdata : ClassAdvancement.CLASSES) {
 			classesbab += classdata.gettable()[classdata.getlevel(this)].bab;
 		}
-		return classesbab + new Long(
-				Math.round(originalhd * MeleeFocus.bab.get(monsterType)))
+		return classesbab
+				+ new Long(Math.round(originalhd * MeleeFocus.bab.get(type)))
 						.intValue();
 	}
 
-	public void raisedexterity(int x) {
-		ac += 1 * x;
-		ref += 1 * x;
+	/**
+	 * @param bonus
+	 *            Raises {@link #dexterity} bonus by +1 this many times (+1
+	 *            bonus = +2 ability score points).
+	 */
+	public void raisedexterity(int bonus) {
+		dexterity += 2 * bonus;
+		ac += bonus;
+		ref += bonus;
 		for (List<Attack> attacks : ranged) {
 			for (Attack a : attacks) {
-				a.bonus += 1 * x;
+				a.bonus += bonus;
 			}
 		}
-		initiative += 1 * x;
+		initiative += bonus;
 	}
 
-	public boolean raisestrength() {
+	/**
+	 * @param bonus
+	 *            Raises {@link #strength} bonus by this many steps (+1 bonus =
+	 *            +2 score points)
+	 */
+	public void raisestrength(int bonus) {
+		strength += 2 * bonus;
 		for (AttackSequence sequence : melee) {
 			for (Attack a : sequence) {
-				a.bonus += 1;
-				a.damage[2] += 1;
+				a.bonus += bonus;
+				a.damage[2] += bonus;
 			}
 		}
-		return true;
 	}
 
-	public void raiseconstitution(Combatant c) {
-		fort += 1;
-		int bonushp = hd.count();
+	/**
+	 * @param c
+	 *            Raises {@link #constitution} by +2...
+	 * @param bonus
+	 *            multiplied by this magnitude. Negative values allowed.
+	 */
+	public void raiseconstitution(Combatant c, int bonus) {
+		c.source.constitution += bonus * 2;
+		fort += bonus;
+		int bonushp = hd.count() * bonus;
 		hd.extrahp += bonushp;
 		c.hp += bonushp;
 		c.maxhp += bonushp;
 		for (BreathWeapon breath : breaths) {
-			breath.savedc += 1;
+			breath.savedc += bonus;
 		}
 	}
 
@@ -293,8 +343,14 @@ public class Monster implements Cloneable, Serializable {
 		return swim > 0 || fly > 0;
 	}
 
-	public void raisewisdom() {
-		will += 1;
+	/**
+	 * @param score
+	 *            Raises {@link #wisdom} by this many ability score points (+2
+	 *            point=+1 bonus modifier).
+	 */
+	public void raisewisdom(int score) {
+		wisdom += score;
+		will += score / 2;
 	}
 
 	public int will() {
@@ -317,5 +373,58 @@ public class Monster implements Cloneable, Serializable {
 
 	public Integer willraw() {
 		return will;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		Monster m = (Monster) obj;
+		return name.equals(m.name);
+	}
+
+	/**
+	 * @param bonus
+	 *            Raises {@link #charisma} by this many points (+2 points = +1
+	 *            bonus modifier)
+	 */
+	public void raisecharisma(int bonus) {
+		charisma += bonus * 2;
+	}
+
+	/**
+	 * @param points
+	 *            Raises {@link #intelligence} by this many ability score points
+	 *            (+2 point = +1 bonus modifier).
+	 */
+	public void raiseintelligence(int points) {
+		intelligence += points;
+	}
+
+	/**
+	 * @return Each unit hers is equivalent to 5 silver pieces daily upkeep
+	 *         ($0.5, or half a gold piece).
+	 */
+	public float eat() {
+		switch (size) {
+		case Monster.FINE:
+			return 1 / 16f;
+		case Monster.DIMINUTIVE:
+			return 1 / 8f;
+		case Monster.TINY:
+			return 1 / 4f;
+		case Monster.SMALL:
+			return 1 / 2f;
+		case Monster.MEDIUM:
+			return 1;
+		case Monster.LARGE:
+			return 2;
+		case Monster.HUGE:
+			return 4;
+		case Monster.GARGANTUAN:
+			return 8;
+		case Monster.COLOSSAL:
+			return 16;
+		default:
+			throw new RuntimeException("Unknown size " + size);
+		}
 	}
 }

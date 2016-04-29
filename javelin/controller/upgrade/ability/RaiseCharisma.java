@@ -22,7 +22,7 @@ public class RaiseCharisma extends RaiseAbility {
 	@Override
 			boolean setattribute(Combatant m, int l)
 					throws PropertyVetoException {
-		m.source.charisma = l;
+		m.source.raisecharisma(+1);
 		return true;
 	}
 

@@ -7,7 +7,8 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
 /**
- * Raises one of the six attributes.
+ * Raises one of the six attributes by +2 score points (equivalent of +1 ability
+ * score modifier bonus).
  * 
  * @author alex
  */

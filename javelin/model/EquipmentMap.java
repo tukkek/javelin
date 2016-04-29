@@ -28,11 +28,22 @@ public class EquipmentMap extends HashMap<Integer, ArrayList<Item>>
 		return super.get(key);
 	}
 
-	static public Item pop(Class<? extends Item> type, Squad s) {
-		for (final List<Item> items : s.equipment.values()) {
+	public Item pop(Class<? extends Item> type) {
+		for (final List<Item> items : values()) {
 			for (final Item i : items) {
 				if (type.isInstance(i)) {
 					items.remove(i);
+					return i;
+				}
+			}
+		}
+		return null;
+	}
+
+	public Item contains(Class<? extends Item> type) {
+		for (final List<Item> items : values()) {
+			for (final Item i : items) {
+				if (type.isInstance(i)) {
 					return i;
 				}
 			}

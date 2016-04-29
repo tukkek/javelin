@@ -10,9 +10,9 @@ import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Squad;
 import javelin.view.screen.BattleScreen;
+import javelin.view.screen.InfoScreen;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
-import tyrant.mikera.tyrant.InfoScreen;
 
 public class UseItem extends Action {
 
@@ -51,7 +51,7 @@ public class UseItem extends Action {
 		final List<Item> items =
 				(List<Item>) Squad.active.equipment.get(c.id).clone();
 		for (final Item i : new ArrayList<Item>(items)) {
-			if (!i.isusedinbattle()) {
+			if (!i.usedinbattle) {
 				items.remove(i);
 			}
 		}
@@ -71,7 +71,7 @@ public class UseItem extends Action {
 		final TreeMap<Integer, Item> options = new TreeMap<Integer, Item>();
 		String prompt = "Which item? (press q to quit)\n";
 		for (final Item it : items) {
-			if (threatened && !it.canuseneganged()) {
+			if (threatened) {
 				continue;
 			}
 			options.put(i, it);

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.JavelinApp;
 import javelin.controller.ai.ActionProvider;
 import javelin.controller.exception.GaveUpException;
 import javelin.controller.fight.Fight;
@@ -14,8 +13,8 @@ import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Dungeon;
 import javelin.model.world.Squad;
+import javelin.model.world.place.dungeon.Dungeon;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
@@ -33,7 +32,7 @@ public class BattleSetup {
 		rollinitiative();
 		Map sourcemap = Javelin.app.fight.getmap();
 		if (sourcemap == null) {
-			sourcemap = MapGenerator.generatebattlemap(JavelinApp.worldtile(),
+			sourcemap = MapGenerator.generatebattlemap(Javelin.terrain(),
 					Dungeon.active != null);
 		}
 		sourcemap.generate();
@@ -129,7 +128,7 @@ public class BattleSetup {
 			}
 			Vision path = s.hasLineOfSight(placing, reference);
 			if (path == Vision.CLEAR
-					|| placing.source.fly > 0 && path == Vision.BLOCKED) {
+			/* || placing.source.fly > 0 && path == Vision.BLOCKED */) {
 				add(m, placing, p, s);
 				break;
 			}

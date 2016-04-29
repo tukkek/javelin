@@ -8,6 +8,7 @@ import java.awt.Panel;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.prefs.Preferences;
@@ -20,11 +21,12 @@ import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Portal;
-import javelin.model.world.Town;
 import javelin.model.world.WorldActor;
+import javelin.model.world.place.WorldPlace;
+import javelin.model.world.place.dungeon.Dungeon;
+import javelin.model.world.place.town.Town;
 import javelin.view.screen.BattleScreen;
-import javelin.view.screen.world.WorldScreen;
+import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.QuestApp;
@@ -34,7 +36,12 @@ import tyrant.mikera.tyrant.Tile;
  * Panel descendant used to display a Map contains most of graphics redraw logic
  * also some animation/explosion handling
  * 
+ * TODO this redraws the entire screen all the time (besides my background
+ * hack), this needs to be totally redesign into a modern UI like that from
+ * MegaMek.
+ * 
  * @author Tyrant
+ * @author alex
  */
 public class MapPanel extends Panel {
 	private static final Border BUFF =
@@ -96,6 +103,12 @@ public class MapPanel extends Panel {
 	public static final Preferences PREFERENCES =
 			Preferences.userNodeForPackage(BattleScreen.class);
 	private boolean isworldscreen;
+	/**
+	 * Buffer of "x:y" string to prevent from iterating over all
+	 * {@link WorldActor}s for every square drawing.
+	 */
+	static HashMap<String, WorldActor> actors =
+			new HashMap<String, WorldActor>();
 
 	public MapPanel(final BattleScreen owner) {
 		super();
@@ -180,8 +193,7 @@ public class MapPanel extends Panel {
 				for (final Meld m : state.meld) {
 					if (m.x == x && m.y == y) {
 						temp.drawImage(state.next.ap >= m.meldsat
-								? QuestApp.crystal : QuestApp.dead, px, py,
-								null);
+								? Images.crystal : Images.dead, px, py, null);
 						break;
 					}
 				}
@@ -207,8 +219,8 @@ public class MapPanel extends Panel {
 		temp.dispose();
 	}
 
-	public void drawbackground(final int startx, final int starty,
-			final int endx, final int endy) {
+	void drawbackground(final int startx, final int starty, final int endx,
+			final int endy) {
 		background = createImage((endx - startx) * MapPanel.TILEWIDTH,
 				(endy - starty) * MapPanel.TILEHEIGHT);
 		final Graphics backgroungfx = background.getGraphics();
@@ -241,8 +253,8 @@ public class MapPanel extends Panel {
 		backgroungfx.dispose();
 	}
 
-	static public void drawcoastline(int y, int x, int m, final int px,
-			final int py, Graphics gfx, BattleMap map) {
+	static void drawcoastline(int y, int x, int m, final int px, final int py,
+			Graphics gfx, BattleMap map) {
 		if (x > 0 && map.getTile(x - 1, y) != m) {
 			gfx.drawImage(QuestApp.scenery, px, py, px + MapPanel.TILEWIDTH,
 					py + MapPanel.TILEHEIGHT, 0, 16 * MapPanel.TILEHEIGHT,
@@ -270,6 +282,61 @@ public class MapPanel extends Panel {
 
 	private void drawThing(final Thing t, int x, int y, Graphics gfx,
 			final int mapx, final int mapy) {
+		drawbackground(t, x, y, gfx);
+		if (t.combatant == null || t.combatant.source.avatarfile == null) {
+			WorldActor a = actors.get(mapx + ":" + mapy);
+			WorldPlace p = isworldscreen && Dungeon.active == null
+					&& a instanceof WorldPlace ? (WorldPlace) a : null;
+			if (p == null) {
+				final int image = t.getImage();
+				final int sx = image % 20 * MapPanel.TILEWIDTH;
+				final int sy = image / 20 * MapPanel.TILEHEIGHT;
+				final Object source = t.get("ImageSource");
+				gfx.drawImage(
+						source == null ? QuestApp.items
+								: (Image) QuestApp.images.get(source),
+						x, y, x + MapPanel.TILEWIDTH, y + MapPanel.TILEHEIGHT,
+						sx, sy, sx + MapPanel.TILEWIDTH,
+						sy + MapPanel.TILEHEIGHT, null);
+			} else {
+				gfx.drawImage(p.getimage(), x, y, null);
+			}
+			if (isworldscreen && Dungeon.active == null) {
+				if (a != null) {
+					Town town = a instanceof Town ? (Town) a : null;
+					if (town != null && town.garrison.isEmpty()) {
+						// don't draw border for human towns
+					} else if (a.realm != null) {
+						drawborder(x, y, gfx, a.realm.getawtcolor());
+					}
+					if (p != null) {
+						if (p.ishostile()) {
+							gfx.drawImage(Images.hostile, x, y - 2, null);
+						} else {
+							enhanceplace(mapx, mapy, x, y, gfx, p);
+						}
+					}
+				}
+			}
+		} else {
+			gfx.drawImage(ImageHandler.getImage(t.combatant), x, y, null);
+			if (!isworldscreen) {
+				if (t.combatant.ispenalized(state)) {
+					gfx.drawImage(Images.penalized, x, y, null);
+				}
+				if (t.combatant.isbuffed()) {
+					BUFF.paintBorder(this, gfx, x, y, TILEWIDTH, TILEHEIGHT);
+				}
+			} else {
+				WorldActor a = actors.get(mapx + ":" + mapy);
+				if (a != null && a.realm != null) {
+					drawborder(x, y, gfx, a.realm.getawtcolor());
+				}
+			}
+		}
+	}
+
+	void drawbackground(final Thing t, int x, int y, Graphics gfx) {
 		if (t == Game.hero()) {
 			gfx.setColor(t.combatant != null
 					&& BattleMap.redTeam.contains(t.combatant) ? Color.ORANGE
@@ -282,62 +349,31 @@ public class MapPanel extends Panel {
 							.getNumericStatus()]);
 			gfx.fillRect(x, y, MapPanel.TILEWIDTH, MapPanel.TILEHEIGHT);
 		}
-		if (t.combatant == null || t.combatant.source.avatarfile == null) {
-			final int image = t.getImage();
-			final int sx = image % 20 * MapPanel.TILEWIDTH;
-			final int sy = image / 20 * MapPanel.TILEHEIGHT;
-			final Object source = t.get("ImageSource");
-			gfx.drawImage(
-					source == null ? QuestApp.items
-							: (Image) QuestApp.images.get(source),
-					x, y, x + MapPanel.TILEWIDTH, y + MapPanel.TILEHEIGHT, sx,
-					sy, sx + MapPanel.TILEWIDTH, sy + MapPanel.TILEHEIGHT,
-					null);
-			if (isworldscreen) {
-				if (!enhancetown(mapx, mapy, x, y, gfx)) {
-					final WorldActor portal =
-							WorldScreen.getactor(mapx, mapy, Portal.portals);
-					if (portal != null && ((Portal) portal).invasion) {
-						INVASIONPORTAL.paintBorder(this, gfx, x, y,
-								MapPanel.TILEWIDTH, MapPanel.TILEHEIGHT);
-					}
-				}
-			}
-		} else {
-			gfx.drawImage(ImageHandler.getImage(t.combatant), x, y, null);
-			if (!isworldscreen) {
-				if (t.combatant.ispenalized(state)) {
-					gfx.drawImage(QuestApp.penalized, x, y, null);
-				}
-				if (t.combatant.isbuffed()) {
-					BUFF.paintBorder(this, gfx, x, y, TILEWIDTH, TILEHEIGHT);
-				}
-			}
+	}
+
+	static void drawborder(int x, int y, Graphics gfx, Color getawtcolor) {
+		gfx.setColor(getawtcolor);
+		gfx.drawLine(x, y + TILEHEIGHT - 1, x + TILEWIDTH, y + TILEHEIGHT - 1);
+		gfx.drawLine(x, y + TILEHEIGHT - 2, x + TILEWIDTH, y + TILEHEIGHT - 2);
+	}
+
+	void updateplaces() {
+		actors.clear();
+		for (WorldActor a : WorldScreen.getactors()) {
+			actors.put(a.x + ":" + a.y, a);
 		}
 	}
 
-	public boolean enhancetown(final int mapx, final int mapy, final int x,
-			final int y, final Graphics gfx) {
-		final Town t = (Town) WorldScreen.getactor(mapx, mapy,
-				javelin.model.world.Town.towns);
-		if (t == null) {
-			return false;
-		}
-		if (t.color != null) {
-			gfx.setColor(t.color);
-			gfx.drawLine(x, y + TILEHEIGHT - 1, x + TILEWIDTH,
-					y + TILEHEIGHT - 1);
-			gfx.drawLine(x, y + TILEHEIGHT - 2, x + TILEWIDTH,
-					y + TILEHEIGHT - 2);
+	static private boolean enhanceplace(final int mapx, final int mapy,
+			final int x, final int y, final Graphics gfx, WorldPlace t) {
+		if (t.ishosting()) {
+			gfx.drawImage(Images.banner, x, y, null);
 		}
 		if (t.iscrafting()) {
-			gfx.drawImage(QuestApp.crafting, x, y, null);
+			gfx.drawImage(Images.crafting, x, y, null);
 		}
 		if (t.isupgrading()) {
-			gfx.drawImage(QuestApp.upgrading, x, y, null);
-		}
-		if (t.ishosting()) {
-			gfx.drawImage(QuestApp.banner, x, y, null);
+			gfx.drawImage(Images.upgrading, x, y, null);
 		}
 		return true;
 	}
@@ -408,6 +444,7 @@ public class MapPanel extends Panel {
 		}
 		state = map.getState();
 		isworldscreen = BattleScreen.active instanceof WorldScreen;
+		updateplaces();
 		drawTiles(startx, starty, endx, endy);
 		if (cursor) {
 			drawCursor(curx, cury);

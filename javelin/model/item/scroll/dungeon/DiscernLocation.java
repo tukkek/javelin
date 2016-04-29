@@ -1,11 +1,12 @@
 package javelin.model.item.scroll.dungeon;
 
-import javelin.model.dungeon.Feature;
-import javelin.model.dungeon.Fountain;
-import javelin.model.dungeon.Treasure;
+import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.model.item.Item;
-import javelin.model.world.Dungeon;
-import javelin.view.screen.world.DungeonScreen;
+import javelin.model.world.place.dungeon.Dungeon;
+import javelin.model.world.place.dungeon.Feature;
+import javelin.model.world.place.dungeon.Fountain;
+import javelin.model.world.place.dungeon.Treasure;
+import javelin.view.screen.DungeonScreen;
 
 /**
  * Reveals a {@link Dungeon}'s most powerful feature.
@@ -15,7 +16,8 @@ import javelin.view.screen.world.DungeonScreen;
 public class DiscernLocation extends DungeonScroll {
 
 	public DiscernLocation() {
-		super("Scroll of discern location", 3000, Item.MAGIC);
+		super("Scroll of discern location", 3000, Item.MAGIC, 8,
+				SpellsFactor.ratespelllikeability(8));
 	}
 
 	@Override

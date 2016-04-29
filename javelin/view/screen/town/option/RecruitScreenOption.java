@@ -1,6 +1,6 @@
 package javelin.view.screen.town.option;
 
-import javelin.model.world.Town;
+import javelin.model.world.place.town.Town;
 import javelin.view.screen.town.RecruitScreen;
 import javelin.view.screen.town.SelectScreen;
 
@@ -10,8 +10,8 @@ import javelin.view.screen.town.SelectScreen;
  */
 public class RecruitScreenOption extends ScreenOption {
 
-	public RecruitScreenOption(String name, Town t) {
-		super(name, t);
+	public RecruitScreenOption(String name, Town t, char c) {
+		super(name, t, c);
 	}
 
 	@Override

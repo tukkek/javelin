@@ -39,28 +39,29 @@ public class TouchAttack extends Fire implements AiAction {
 		return outcomes;
 	}
 
-	private List<ChanceNode> attack(Combatant combatant, Combatant target,
+	private List<ChanceNode> attack(Combatant active, Combatant target,
 			BattleState gameState) {
-		javelin.model.unit.abilities.TouchAttack attack =
-				combatant.source.touch;
+		javelin.model.unit.abilities.TouchAttack attack = active.source.touch;
 		int damage = attack.damage[0] * attack.damage[1] / 2;
 		List<ChanceNode> nodes = new ArrayList<ChanceNode>();
 		String action =
-				combatant + " uses " + attack.toString().toLowerCase() + "!\n";
+				active + " uses " + attack.toString().toLowerCase() + "!\n";
 		float savechance = CastSpell
-				.convertsavedctochance(attack.savedc - combatant.source.ref);
+				.convertsavedctochance(attack.savedc - active.source.ref);
 		nodes.add(registerdamage(gameState, action + target + " resists, is ",
-				savechance, target, damage / 2));
+				savechance, target, damage / 2, active));
 		nodes.add(registerdamage(gameState, action + target + " is ",
-				1 - savechance, target, damage));
+				1 - savechance, target, damage, active));
 		return nodes;
 	}
 
 	ChanceNode registerdamage(BattleState gameState, String action,
-			float savechance, Combatant target, int damage) {
+			float savechance, Combatant target, int damage, Combatant active) {
 		gameState = gameState.clone();
 		target = gameState.clone(target);
 		target.damage(damage, gameState, target.source.resistance);
+		active = gameState.clone(active);
+		active.ap += .5f;
 		return new ChanceNode(gameState, savechance,
 				action + target.getStatus() + "!", Delay.BLOCK);
 	}

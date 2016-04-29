@@ -12,10 +12,11 @@ import javelin.controller.upgrade.Spell;
 import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
+import javelin.view.screen.InfoScreen;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
-import tyrant.mikera.tyrant.InfoScreen;
 
 /**
  * Spells with attack rolls are supposed to have critical hits too but for the
@@ -35,8 +36,12 @@ public class CastSpell extends Fire implements AiAction {
 		Game.messagepanel.clear();
 		casting = null;
 		ArrayList<Spell> castable = new ArrayList<Spell>();
+		boolean engagned = map.getState().isEngaged(c);
 		for (Spell s : c.spells) {
-			if (s.canbecast(c)) {
+			if (engagned && !concentrate(c, s)) {
+				continue;
+			}
+			if (s.canbecast(c) && s.aggressive) {
 				castable.add(s);
 			}
 		}
@@ -160,16 +165,30 @@ public class CastSpell extends Fire implements AiAction {
 	}
 
 	@Override
+	public void checkengaged(BattleState state, Combatant c) {
+		if (!concentrate(c, casting)) {
+			super.checkengaged(state, c);
+		}
+	}
+
+	boolean concentrate(Combatant c, Spell s) {
+		final int concentration = c.source.skills.concentration
+				+ Monster.getbonus(c.source.constitution);
+		return concentration >= s.casterlevel;
+	}
+
+	@Override
 	public List<List<ChanceNode>> getoutcomes(final BattleState gameState,
 			final Combatant combatant) {
 		final ArrayList<List<ChanceNode>> chances =
 				new ArrayList<List<ChanceNode>>();
-		if (gameState.isEngaged(combatant)) {
-			return chances;
-		}
+		boolean engaged = gameState.isEngaged(combatant);
 		final ArrayList<Spell> spells = combatant.spells;
 		for (int i = 0; i < spells.size(); i++) {
 			final Spell spell = spells.get(i);
+			if (engaged && !concentrate(combatant, spell)) {
+				continue;
+			}
 			if (!spell.canbecast(combatant)) {
 				continue;
 			}

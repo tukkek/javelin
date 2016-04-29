@@ -1,6 +1,7 @@
 package javelin.view.screen.town.option;
 
 import javelin.model.unit.Monster;
+import javelin.view.screen.Option;
 import javelin.view.screen.town.RecruitScreen;
 
 /**

@@ -29,7 +29,9 @@ import java.util.Hashtable;
 
 import javelin.controller.fight.IncursionFight;
 import javelin.model.BattleMap;
+import javelin.view.Images;
 import javelin.view.screen.BattleScreen;
+import javelin.view.screen.InfoScreen;
 import javelin.view.screen.LairScreen;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.RPG;
@@ -54,13 +56,11 @@ public class QuestApp extends Applet implements Runnable {
 	public static Image items;
 	public static Image effects;
 	public static Image title;
-	public static Image penalized;
-	public static Image crafting;
-	public static Image upgrading;
-	public static Image banner;
-	public static Image dead;
-	public static Image crystal;
 	public static Image paneltexture = QuestApp.DEFAULTTEXTURE;
+
+	static final GraphicsConfiguration configuration =
+			GraphicsEnvironment.getLocalGraphicsEnvironment()
+					.getDefaultScreenDevice().getDefaultConfiguration();
 
 	public static Hashtable images = new Hashtable();
 
@@ -71,10 +71,6 @@ public class QuestApp extends Applet implements Runnable {
 	public static final Color TEXTCOLOUR = new Color(192, 192, 192);
 
 	public static final Color BACKCOLOUR = new Color(0, 0, 0);
-
-	// public static final Color panelcolor = new Color(64, 64, 64);
-	// public static final Color panelhighlight = new Color(96, 96, 96);
-	// public static final Color panelshadow = new Color(32, 32, 32);
 
 	public static final Color PANELCOLOUR = new Color(64, 64, 64);
 
@@ -137,8 +133,6 @@ public class QuestApp extends Applet implements Runnable {
 		setLayout(new BorderLayout());
 		setBackground(Color.black);
 		setFont(QuestApp.mainfont);
-
-		// Game.warn("Focus owned by:
 		// "+KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner());
 
 		// set game in action
@@ -243,11 +237,6 @@ public class QuestApp extends Applet implements Runnable {
 			}
 		}
 		Hero.setHeroName(h, name);
-
-		/*
-		 * System.out.println(System.currentTimeMillis() - start +
-		 * "ms to createHero");
-		 */
 		return h;
 	}
 
@@ -280,11 +269,6 @@ public class QuestApp extends Applet implements Runnable {
 	}
 
 	public String getHeroName(final boolean notNull) {
-
-		// ss.invalidate();
-		// ss.validate();
-		// ss.repaint();
-
 		// get hero name
 		String hname = null;
 
@@ -380,13 +364,6 @@ public class QuestApp extends Applet implements Runnable {
 				preparebattlemap();
 
 			} else if (c == 'e') {
-				// // Designer
-				// Game.messageTyrant("");
-				// Game.messageTyrant("Launching Designer...");
-				// tyrant.mikera.tyrant.author.Designer
-				// .main(new String[] { "embedded" });
-				// continue;
-
 			} else {
 
 				Game.create();
@@ -414,51 +391,15 @@ public class QuestApp extends Applet implements Runnable {
 				Game.getInput();
 				setupScreen();
 				preparebattlemap();
-
-				// Debug mode should not start when pressing Enter!!
-				// Game.create();
-				// Game.setDebug(true);
-				// createHero(false);
-				// setupScreen();
-				// gameStart();
 			}
 		}
 	}
 
 	public void setupScreen() {
-		// if (getScreen() == null) {
-		// setScreen(new BattleScreen(this));
-		// } else {
-		// // only need to reset the messages,
-		// // otherwise we will start to
-		// // leak memory/threads
-		// Game.messagepanel = getScreen().messagepanel;
-		// Game.messagepanel.clear();
-		// }
-		// switchScreen(getScreen());
 	}
 
 	protected void gameStart(final BattleMap map, final int entranceX,
 			final int entranceY) {
-		// while (true) {
-		// Thing hero = Game.hero();
-		// Game.enterMap(map, hero.x, hero.y);
-		//
-		// // run the game
-		// try {
-		// getScreen().mainLoop();
-		// } catch (final EndBattleException e) {
-		// /*
-		// * TODO not working. might as well kill the game and reload the
-		// * whole state
-		// */
-		// final WorldScreen s = new WorldScreen(Javelin.app);
-		// switchScreen(s);
-		// hero = WorldScreen.worldhero;
-		// Game.instance().hero = hero;
-		// hero.place = map;
-		// }
-		// }
 	}
 
 	public void preparebattlemap() {
@@ -621,10 +562,6 @@ public class QuestApp extends Applet implements Runnable {
 	public final KeyAdapter keyadapter = new KeyAdapter() {
 		@Override
 		public void keyPressed(final KeyEvent e) {
-			// Game.warn("Focus owned by:
-			// "+KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner());
-			// Game.warn(""+e.getKeyChar());
-
 			// call the currently registered keyhandler
 			if (keyhandler != null) {
 				keyhandler.keyPressed(e);
@@ -663,10 +600,6 @@ public class QuestApp extends Applet implements Runnable {
 		return transparent;
 	}
 
-	static final GraphicsConfiguration configuration =
-			GraphicsEnvironment.getLocalGraphicsEnvironment()
-					.getDefaultScreenDevice().getDefaultConfiguration();
-
 	/**
 	 * @param screen
 	 *            The screen to set.
@@ -699,12 +632,7 @@ public class QuestApp extends Applet implements Runnable {
 		QuestApp.items = QuestApp.getImage("/images/items32.png");
 		QuestApp.effects = QuestApp.getImage("/images/effects32.png");
 		QuestApp.title = QuestApp.getImage("/images/title.png");
-		QuestApp.penalized = QuestApp.getImage("/images/spiralbig.png");
-		QuestApp.crafting = QuestApp.getImage("/images/crafting.png");
-		QuestApp.upgrading = QuestApp.getImage("/images/upgrading.png");
-		QuestApp.banner = QuestApp.getImage("/images/banner.png");
-		QuestApp.dead = QuestApp.getImage("/images/dead.png");
-		QuestApp.crystal = QuestApp.getImage("/images/meld.png");
+		Images.initimages();
 
 		// store images in source hashtable
 		QuestApp.images.put("Tiles", QuestApp.tiles);
@@ -721,12 +649,7 @@ public class QuestApp extends Applet implements Runnable {
 		mediaTracker.addImage(QuestApp.items, 1);
 		mediaTracker.addImage(QuestApp.effects, 1);
 		mediaTracker.addImage(QuestApp.title, 1);
-		mediaTracker.addImage(QuestApp.penalized, 1);
-		mediaTracker.addImage(QuestApp.crafting, 1);
-		mediaTracker.addImage(QuestApp.upgrading, 1);
-		mediaTracker.addImage(QuestApp.banner, 1);
-		mediaTracker.addImage(QuestApp.dead, 1);
-		mediaTracker.addImage(QuestApp.crystal, 1);
+		Images.addimages(mediaTracker);
 		mediaTracker.addImage(QuestApp.DEFAULTTEXTURE, 1);
 		mediaTracker.addImage(LairScreen.DUNGEONTEXTURE, 1);
 		mediaTracker.addImage(IncursionFight.INCURSIONTEXTURE, 1);
@@ -739,8 +662,8 @@ public class QuestApp extends Applet implements Runnable {
 		// Wait for images to load
 		try {
 			mediaTracker.waitForID(1);
-			QuestApp.penalized =
-					QuestApp.maketransparent(2 / 3f, QuestApp.penalized);
+			Images.penalized =
+					QuestApp.maketransparent(2 / 3f, Images.penalized);
 		} catch (final Exception e) {
 			System.out.println("Error loading images.");
 			e.printStackTrace();

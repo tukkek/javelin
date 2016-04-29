@@ -17,11 +17,11 @@ Potion of flight: gives flight similar to that of a hawk.
 Potion of heroism: +2 to attack and save rolls.
 Potion of owl's wisdom: +2 wisdom bonus.
 Potion of resist energy: reduces a certain amount of damage from most non-physical attacks. 
-Scroll of discern location: Reveals location of a dungeon's most valuable treasure.
+Scroll of discern location: reveals location of a dungeon's most valuable treasure.
 Scroll of greater teleport: teleports you to any town.
-Scroll of locate object: Locates nearest treasure chest in a dungeon.
-Scroll of prying eyes: Reveals dungeon map.
+Scroll of locate object: locates nearest treasure chest in a dungeon.
+Scroll of prying eyes: reveals dungeon or nearby area on world map.
 Scroll of raise dead & restoration: after battle, ressurects a killed ally.
-Scroll of ressurect & restoration: after battle, ressurects a killed ally with full hit points.
-Scroll of secure shelter: use it to rest for 8 hours on the world screen.
+Scroll of ressurect & restoration: after battle, ressurects a killed ally to full hit points.
+Scroll of secure shelter: lets you rest in the wilderness.
 Scroll of word of recall: returns party to last visited town.

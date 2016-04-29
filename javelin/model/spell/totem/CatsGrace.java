@@ -18,7 +18,6 @@ public class CatsGrace extends TotemsSpell {
 			final BattleState s, final boolean saved) {
 		target.source = target.source.clone();
 		target.source.raisedexterity(+2);
-		target.source.dexterity += 4;
 		return target + "'s dexterity is now "
 				+ Monster.getsignedbonus(target.source.dexterity);
 	}

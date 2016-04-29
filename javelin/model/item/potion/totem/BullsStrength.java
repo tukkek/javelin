@@ -19,15 +19,13 @@ public class BullsStrength extends Potion {
 
 	@Override
 	public boolean use(Combatant user) {
-		user.source.raisestrength();
-		user.source.raisestrength();
-		user.source.strength += 4;
+		user.source.raisestrength(+2);
 		user.conditions.add(new Buff("strong", user));
 		Game.message(
 				"Strength is now "
 						+ Monster.getsignedbonus(user.source.strength),
 				null, Delay.BLOCK);
-		return false;
+		return true;
 	}
 
 	@Override

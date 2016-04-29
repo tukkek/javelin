@@ -18,11 +18,12 @@ public class FastHealing extends Upgrade {
 
 	@Override
 	public boolean apply(final Combatant m) {
-		if (m.source.fasthealing >= m.source.hd.count()) {
+		int heal = m.source.hd.count();
+		if (m.source.fasthealing >= heal) {
 			// design parameter (fast healing + regeneration)
 			return false;
 		}
-		m.source.fasthealing += 1;
+		m.source.fasthealing = heal;
 		return true;
 	}
 

@@ -25,8 +25,7 @@ public class RaiseStrength extends RaiseAbility {
 		if (m.source.hasfeat(WeaponFinesse.singleton)) {
 			return false;
 		}
-		m.source.raisestrength();
-		m.source.strength = i;
+		m.source.raisestrength(+1);
 		return true;
 	}
 

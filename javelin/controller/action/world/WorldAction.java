@@ -3,7 +3,7 @@ package javelin.controller.action.world;
 import java.awt.event.KeyEvent;
 
 import javelin.controller.action.ActionDescription;
-import javelin.view.screen.world.WorldScreen;
+import javelin.view.screen.WorldScreen;
 
 /**
  * An action to be performed by the human player while on the overworld view.
@@ -20,18 +20,23 @@ public abstract class WorldAction implements ActionDescription {
 			new Guide(KeyEvent.VK_F4, "Upgrades 1", "F4");
 	public static final Guide UGRADES2 =
 			new Guide(KeyEvent.VK_F5, "Upgrades 2", "F5");
+	public static final Guide SKILLS =
+			new Guide(KeyEvent.VK_F6, "Skills", "F6");
 	public static final Guide SPELLS1 =
-			new Guide(KeyEvent.VK_F6, "Spells 1", "F6");
+			new Guide(KeyEvent.VK_F7, "Spells 1", "F7");
 	public static final Guide SPELLS2 =
-			new Guide(KeyEvent.VK_F7, "Spells 2", "F7");
+			new Guide(KeyEvent.VK_F8, "Spells 2", "F8");
+	public static final Guide ARTIFACTS =
+			new Guide(KeyEvent.VK_F9, "Artifacts", "F9");
 
 	String name;
 	public final int[] keys;
 	public final String[] morekeys;
 	public static final WorldAction[] ACTIONS = new WorldAction[] {
 			new UseItems(), new CastSpells(), new Divide(), new Rename(),
-			new ResetScore(), new ShowStatistics(), new Abandon(), HOWTO,
-			COMBAT, ITEMS, UGRADES1, UGRADES2, SPELLS1, SPELLS2,
+			new ResetScore(), new ShowStatistics(), new Abandon(),
+			new Dismiss(), HOWTO, COMBAT, ITEMS, UGRADES1, UGRADES2, SKILLS,
+			SPELLS1, SPELLS2, ARTIFACTS,
 			new WorldMove(new int[] { KeyEvent.VK_NUMPAD7, }, -1, -1,
 					new String[] { "↖ or 7 or U", "U" }),
 			new WorldMove(new int[] { KeyEvent.VK_UP, KeyEvent.VK_NUMPAD8 }, 0,

@@ -20,7 +20,7 @@ import javelin.model.spell.Summon;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Squad;
 import javelin.view.screen.BattleScreen;
-import javelin.view.screen.world.WorldScreen;
+import javelin.view.screen.WorldScreen;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.QuestApp;
 import tyrant.mikera.tyrant.TPanel;

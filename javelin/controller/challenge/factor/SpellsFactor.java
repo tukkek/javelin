@@ -35,6 +35,7 @@ import javelin.model.unit.Monster;
  */
 public class SpellsFactor extends CrFactor {
 
+	/** Number of different spells in-game. */
 	public static int spells;
 
 	@Override
@@ -59,9 +60,9 @@ public class SpellsFactor extends CrFactor {
 		handler.water.add(new CatsGrace());
 		handler.fire.add(new BullsStrength());
 		handler.earth.add(new BearsEndurance());
-		handler.wind.add(new OwlsWisdom());
-		handler.wind.add(new EaglesSplendor());
-		handler.magic.add(new FoxsCunning());
+		handler.water.add(new OwlsWisdom());
+		handler.fire.add(new EaglesSplendor());
+		handler.wind.add(new FoxsCunning());
 
 		handler.fire.add(new Heroism());
 		handler.magic.add(new HoldMonster());

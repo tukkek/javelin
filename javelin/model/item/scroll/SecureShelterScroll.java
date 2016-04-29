@@ -1,29 +1,21 @@
 package javelin.model.item.scroll;
 
+import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Dungeon;
-import javelin.model.world.Town;
+import javelin.model.world.place.dungeon.Dungeon;
+import javelin.model.world.place.town.Town;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * See the d20 SRD for more info.
  */
-public class SecureShelterScroll extends Item {
+public class SecureShelterScroll extends Scroll {
 
 	public SecureShelterScroll() {
-		super("Scroll of secure shelter", 800, Item.GOOD);
-	}
-
-	@Override
-	public boolean use(Combatant c) {
-		return true;
-	}
-
-	@Override
-	public boolean isusedinbattle() {
-		return false;
+		super("Scroll of secure shelter", 800, Item.GOOD, 4,
+				SpellsFactor.ratespelllikeability(4));
 	}
 
 	@Override

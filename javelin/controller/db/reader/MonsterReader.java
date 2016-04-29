@@ -20,6 +20,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import javelin.Javelin;
 import javelin.controller.CountingSet;
 import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.db.reader.factor.Alignment;
 import javelin.controller.db.reader.factor.ArmorClass;
 import javelin.controller.db.reader.factor.Attacks;
 import javelin.controller.db.reader.factor.Damage;
@@ -31,6 +32,7 @@ import javelin.controller.db.reader.factor.Initiative;
 import javelin.controller.db.reader.factor.Name;
 import javelin.controller.db.reader.factor.Organization;
 import javelin.controller.db.reader.factor.Paragraph;
+import javelin.controller.db.reader.factor.Skills;
 import javelin.controller.db.reader.factor.SpecialAttacks;
 import javelin.controller.db.reader.factor.SpecialQualities;
 import javelin.controller.db.reader.factor.Speed;
@@ -54,18 +56,6 @@ import javelin.model.unit.abilities.TouchAttack;
  */
 public class MonsterReader extends DefaultHandler {
 
-	public void describe(String value) {
-		if (monster == null) {
-			return;
-		}
-		final String monstername = monster.name;
-		String previous = Javelin.DESCRIPTIONS.get(monstername);
-		if (previous == null) {
-			previous = "";
-		}
-		Javelin.DESCRIPTIONS.put(monstername, previous + value);
-	}
-
 	public Monster monster;
 	private String section = null;
 	public final ErrorHandler errorhandler = new ErrorHandler();
@@ -74,14 +64,22 @@ public class MonsterReader extends DefaultHandler {
 	public final CountingSet sAtks = new CountingSet();
 	public final CountingSet debugfeats = new CountingSet();
 	HashMap<Monster, String> spelldata = new HashMap<Monster, String>();
+	boolean description = false;
 
 	@Override
 	public void startElement(final String uri, final String localName,
 			final String name, final Attributes attributes)
-					throws SAXException {
-		super.startElement(uri, localName, name, attributes);
+			throws SAXException {
+		// super.startElement(uri, localName, name, attributes);
 		if (!Javelin.DEBUG && errorhandler.isinvalid()) {
 			return;
+		}
+		if (description) {
+			if (localName.equals("p")) {
+				section = "Paragraph";
+			} else {
+				return;
+			}
 		}
 		if (localName.equals("Monster")) {
 			monster = new Monster();
@@ -110,8 +108,10 @@ public class MonsterReader extends DefaultHandler {
 			section = "Initiative";
 		} else if (localName.equals("HitDice")) {
 			section = "HitDice";
-		} else if (localName.equals("p")) {
-			section = "Paragraph";
+		} else if (localName.equalsIgnoreCase("Organization")) {
+			section = "Organization";
+		} else if (localName.equalsIgnoreCase("Alignment")) {
+			section = "Alignment";
 		} else if (localName.equals("Saves")) {
 			monster.fort = getIntAttributeValue(attributes, "Fort");
 			monster.ref = getIntAttributeValue(attributes, "Ref");
@@ -125,21 +125,34 @@ public class MonsterReader extends DefaultHandler {
 			monster.charisma = parseability(attributes, "Cha");
 		} else if (localName.equals("SizeAndType")) {
 			final int size = getSize(attributes.getValue("Size"));
-
 			if (size == -1) {
 				errorhandler.setInvalid("Size");
 			}
-
 			monster.size = size;
-
-			monster.monsterType = attributes.getValue("Type").toLowerCase();
+			monster.type = attributes.getValue("Type").toLowerCase();
+			monster.humanoid = monster.type.contains("humanoid")
+					|| "yes".equals(attributes.getValue("Humanoid"));
 		} else if (localName.equalsIgnoreCase("avatar")) {
 			monster.avatar = attributes.getValue("Name");
 			monster.avatarfile = attributes.getValue("Image");
-		} else if (localName.equalsIgnoreCase("Organization")) {
-			section = "Organization";
 		} else if (localName.equalsIgnoreCase("Climateandterrain")) {
-			terrains = attributes.getValue("Terrain").toLowerCase().split(",");
+			for (String terrain : attributes.getValue("Terrain").toLowerCase()
+					.split(",")) {
+				terrain = terrain.trim();
+				if (terrain.isEmpty()) {
+					continue;// TODO
+				}
+				if (terrain.equals("plains") || terrain.equals("hill")
+						|| terrain.equals("forest") || terrain.equals("marsh")
+						|| terrain.equals("mountains")
+						|| terrain.equals("desert")
+						|| terrain.equals("underground")
+						|| terrain.equals("aquatic")) {
+					monster.terrains.add(terrain);
+				} else {
+					throw new RuntimeException("#unknownterrain " + terrain);
+				}
+			}
 		} else if (localName.equalsIgnoreCase("Breath")) {
 			/* TODO */
 			if (attributes.getValue("effect") == null) {
@@ -161,18 +174,31 @@ public class MonsterReader extends DefaultHandler {
 				monster.spellcr = Float.parseFloat(spellcr);
 				SpecialtiesLog.log("    Spell cr: " + monster.spellcr);
 			}
+		} else if (localName.equalsIgnoreCase("description")) {
+			description = true;
 		} else if (monster != null && !localName.equals("StatBlock")) {
-			for (final String tagName : new String[] { "description", "General",
-					"Terrain", "Treasure", "Alignment", "Advancement",
-					"specialabilities", "specialability", "p", "combat",
-					"characters", "li", "ul", "CarryingCapacity",
-					"ChallengeRating" }) {
+			for (final String tagName : new String[] { "General", "Terrain",
+					"Treasure", "Alignment", "Advancement", "specialabilities",
+					"specialability", "p", "combat", "characters", "li", "ul",
+					"CarryingCapacity", "ChallengeRating" }) {
 				if (localName.equalsIgnoreCase(tagName)) {
 					return;
 				}
 			}
 			errorhandler.setInvalid(name);
 		}
+	}
+
+	public void describe(String value) {
+		if (monster == null) {
+			return;
+		}
+		final String monstername = monster.name;
+		String previous = Javelin.DESCRIPTIONS.get(monstername);
+		if (previous == null) {
+			previous = "";
+		}
+		Javelin.DESCRIPTIONS.put(monstername, previous + value);
 	}
 
 	void registerspells(String known, Monster monster) {
@@ -320,7 +346,6 @@ public class MonsterReader extends DefaultHandler {
 			String listing = "";
 			for (final Monster m : value) {
 				listing += m.toString() + " (" + m.group + "), ";
-				// Javelin.ALLMONSTERS.add(m);
 			}
 			log("CR " + key + " (" + value.size() + "): " + listing);
 		}
@@ -400,7 +425,7 @@ public class MonsterReader extends DefaultHandler {
 
 	{
 		readers.add(new Name(this, "Name"));
-		// readers.add(new Skills(this, "Skills"));
+		readers.add(new Skills(this, "Skills"));
 		readers.add(new Feats(this, "Feats"));
 		readers.add(new SpecialQualities(this, "SpecialQualities"));
 		readers.add(new FaceAndReach(this, "FaceAndReach"));
@@ -413,6 +438,8 @@ public class MonsterReader extends DefaultHandler {
 		readers.add(new HitDice(this, "HitDice"));
 		readers.add(new Paragraph(this, "Paragraph"));
 		readers.add(new Organization(this, "Organization"));
+		readers.add(new Alignment(this, "Alignment"));
+
 	}
 
 	@Override
@@ -447,6 +474,10 @@ public class MonsterReader extends DefaultHandler {
 	@Override
 	public void endElement(final String uri, final String localName,
 			final String name) throws SAXException {
+		if (description && localName.equals("Description")) {
+			description = false;
+			return;
+		}
 		if (localName.equals("Monster")) {
 			if (errorhandler.isinvalid()) {
 				errorhandler.informInvalid(this);
@@ -460,8 +491,8 @@ public class MonsterReader extends DefaultHandler {
 					SpecialtiesLog.log("    Breaths: " + monster.breaths);
 				}
 				SpecialtiesLog.log();
-				Organization.TERRAINDATA.put(monster.toString().toLowerCase(),
-						terrains);
+				// Organization.TERRAINDATA.put(monster.toString().toLowerCase(),
+				// terrains);
 			}
 			SpecialtiesLog.clear();
 		}
@@ -484,20 +515,9 @@ public class MonsterReader extends DefaultHandler {
 					e);
 		}
 		Javelin.ALLMONSTERS.add(monster);
-		// final List<Monster> mapList = Javelin.MONSTERSBYCR.get(cr);
-		// final List<Monster> addList;
-		// if (mapList == null) {
-		// addList = new ArrayList<Monster>();
-		// Javelin.MONSTERSBYCR.put(cr, addList);
-		// } else {
-		// addList = mapList;
-		// }
-		// addList.add(monster);
-
 	}
 
 	private static PrintWriter log = null;
-	private String[] terrains;
 
 	public static void log(final String string) {
 		if (!Javelin.DEBUG) {

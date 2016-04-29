@@ -14,6 +14,7 @@ import javelin.controller.challenge.factor.FeatsFactor;
 import javelin.controller.challenge.factor.FullAttackFactor;
 import javelin.controller.challenge.factor.HdFactor;
 import javelin.controller.challenge.factor.SizeFactor;
+import javelin.controller.challenge.factor.SkillsFactor;
 import javelin.controller.challenge.factor.SpeedFactor;
 import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.controller.challenge.factor.quality.BreathFactor;
@@ -43,12 +44,12 @@ public class ChallengeRatingCalculator {
 	 * TODO reinclude AbilitiesFactor. right now it's making a huge difference
 	 * at very low el (game very start)
 	 */
-	public static final CrFactor[] CR_FACTORS =
-			new CrFactor[] { new AbilitiesFactor(), new ArmorClassFactor(),
-					new FeatsFactor(), new FullAttackFactor(), HIT_DICE_FACTOR,
-					new SizeFactor(), new SpeedFactor(), new SpellsFactor(),
-					CLASS_LEVEL_FACTOR, new QualitiesFactor(),
-					new BreathFactor(), new TouchAttackFactor() };
+	public static final CrFactor[] CR_FACTORS = new CrFactor[] {
+			new AbilitiesFactor(), new ArmorClassFactor(), new FeatsFactor(),
+			new FullAttackFactor(), HIT_DICE_FACTOR, new SizeFactor(),
+			new SpeedFactor(), new SpellsFactor(), CLASS_LEVEL_FACTOR,
+			new QualitiesFactor(), new BreathFactor(), new TouchAttackFactor(),
+			new SkillsFactor() };
 	private static final FileWriter LOGFILE;
 
 	static {
@@ -236,7 +237,7 @@ public class ChallengeRatingCalculator {
 			return -6;
 		}
 		if (teamSize <= 15) {
-			return MINIMUM_EL;
+			return -7;
 		}
 		if (teamSize <= 23) {
 			return -8;
@@ -509,11 +510,67 @@ public class ChallengeRatingCalculator {
 		case 16:
 			return new float[] { 14, 15 };
 		case 17:
-			return new float[] { 16, 17, 18, 19 };
+			return range(16, 19);
 		case 18:
-			return new float[] { 20, 21, 22, 23 };
+			return range(20, 23);
+		case 19:
+			return range(24, 27);
+		case 20:
+			return range(28, 31);
+		case 21:
+			return range(32, 39);
+		case 22:
+			return range(40, 47);
+		case 23:
+			return range(48, 55);
+		case 24:
+			return range(56, 63);
+		case 25:
+			return range(64, 79);
+		case 26:
+			return range(80, 95);
+		case 27:
+			return range(96, 111);
+		case 28:
+			return range(112, 127);
+		case 29:
+			return range(128, 159);
+		case 30:
+			return range(160, 191);
 		default:
 			throw new RuntimeException("Unknown EL " + teamel);
 		}
+	}
+
+	private static float[] range(int from, int to) {
+		float[] range = new float[to - from + 1];
+		int i = 0;
+		for (; from <= to; from++) {
+			range[i] = from;
+			i += 1;
+		}
+		return range;
+	}
+
+	public static String describedifficulty(int delta) {
+		if (delta <= -13) {
+			return "irrelevant";
+		}
+		if (delta <= -9) {
+			return "very easy";
+		}
+		if (delta <= -5) {
+			return "easy";
+		}
+		if (delta == -4) {
+			return "moderate";
+		}
+		if (delta <= 0) {
+			return "difficult";
+		}
+		if (delta <= +4) {
+			return "very difficult";
+		}
+		return "impossible";
 	}
 }

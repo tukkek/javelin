@@ -1,22 +1,22 @@
 package javelin.view.screen.town.option;
 
-import javelin.model.world.Town;
+import javelin.model.world.place.town.Town;
+import javelin.view.screen.shopping.TownShopScreen;
 import javelin.view.screen.town.SelectScreen;
-import javelin.view.screen.town.ShoppingScreen;
 
 /**
- * @see ShoppingScreen
+ * @see TownShopScreen
  * @author alex
  */
 public class ShopScreenOption extends ScreenOption {
 
-	public ShopScreenOption(String name, Town t) {
-		super(name, t);
+	public ShopScreenOption(String name, Town t, char c) {
+		super(name, t, c);
 	}
 
 	@Override
 	public SelectScreen show() {
-		return new ShoppingScreen(t);
+		return new TownShopScreen(t);
 	}
 
 }

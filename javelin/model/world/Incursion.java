@@ -1,23 +1,27 @@
 package javelin.model.world;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.JavelinApp;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.db.StateManager;
 import javelin.controller.exception.battle.StartBattle;
-import javelin.controller.fight.Fight;
 import javelin.controller.fight.IncursionFight;
+import javelin.model.Realm;
 import javelin.model.unit.Combatant;
-import javelin.view.screen.world.WorldScreen;
-import tyrant.mikera.engine.Lib;
+import javelin.model.world.place.Portal;
+import javelin.model.world.place.WorldPlace;
+import javelin.model.world.place.town.Town;
+import javelin.view.screen.InfoScreen;
+import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.RPG;
-import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
-import tyrant.mikera.tyrant.InfoScreen;
 
 /**
  * An attacking {@link Squad}, trying to destroy a {@link Town} or other
@@ -30,83 +34,94 @@ import tyrant.mikera.tyrant.InfoScreen;
  * 
  * @author alex
  */
-public class Incursion implements WorldActor {
-	public static List<Incursion> squads = new ArrayList<Incursion>();
-	public int x;
-	public int y;
-	transient Thing visual;
-	public final int el;
-	public List<Combatant> squad = null;
+public class Incursion extends WorldActor {
+	/** Move even if {@link Javelin#DEBUGDISABLECOMBAT} is enabled. */
+	private static final boolean FORCEMOVEMENT = false;
 	public static Integer currentel = 1;
 
-	public Incursion(final int x, final int y) {
-		super();
+	/** @see #getel() */
+	public List<Combatant> squad = new ArrayList<Combatant>();
+
+	public Incursion(final int x, final int y, ArrayList<Combatant> squadp,
+			Realm r) {
 		this.x = x;
 		this.y = y;
-		Incursion.squads.add(this);
-		el = Incursion.currentel;
-		Incursion.currentel += 1;
-		double alarm = WorldScreen.lastday * 24;
-		for (Squad s : Squad.squads) {
-			if (s.hourselapsed > alarm) {
-				s.hourselapsed = (long) alarm;
-			}
+		if (squadp == null) {
+			squad.addAll(JavelinApp.generatefight(Incursion.currentel,
+					Javelin.terrain(x, y)).opponents);
+			currentel += 1;
+		} else {
+			squad = squadp;
 		}
-		Game.message("An enemy incursion arrives!", null, Delay.NONE);
+		realm = r;
 		StateManager.save();
-		waitforenter();
 	}
 
 	@Override
 	public void place() {
-		visual = Lib.create("lesser demon");
-		WorldScreen.worldmap.addThing(visual, x, y);
+		super.place();
+		updateavatar();
 	}
 
 	public void move(final WorldScreen s) {
-		final WorldActor target = findtarget(s);
-		final int targetx = target.getx();
-		final int targety = target.gety();
-		x += decideaxismove(x, targetx);
-		y += decideaxismove(y, targety);
+		updateavatar();
+		WorldActor target = findtarget(s);
+		final int targetx = target.x;
+		final int targety = target.y;
+		int newx = x + decideaxismove(x, targetx);
+		int newy = y + decideaxismove(y, targety);
+		target = WorldScreen.getactor(newx, newy);
+		x = newx;
+		y = newy;
 		visual.remove();
 		place();
-		if (x == targetx && y == targety) {
-			attack(target);
+		if (target == null) {
+			return;
+		}
+		Boolean status = target.destroy(this);
+		if (status == null) {
+			return;
+		}
+		if (status == true) {
+			target.remove();
+		} else if (status == false) {
+			remove();
 		}
 	}
 
-	public void attack(final WorldActor target) {
-		Game.message("An incursion reaches " + target.describe() + "!", null,
-				Delay.NONE);
-		waitforenter();
-		if (target instanceof Squad) {
-			throw new StartBattle(new IncursionFight(this));
+	private void updateavatar() {
+		if (squad == null) {
+			return;
 		}
-		target.remove();
-		remove();
+		Combatant leader = null;
+		for (Combatant c : squad) {
+			if (leader == null
+					|| c.source.challengeRating > leader.source.challengeRating) {
+				leader = c;
+			}
+		}
+		visual.combatant = new Combatant(visual, leader.source, false);
 	}
 
 	public WorldActor findtarget(final WorldScreen s) {
-		WorldActor target = null;
 		final List<WorldActor> targets = WorldScreen.getallmapactors();
 		for (final WorldActor a : new ArrayList<WorldActor>(targets)) {
-			if (a instanceof Incursion) {
+			if (a.impermeable || a.realm == realm) {
 				targets.remove(a);
 			}
 		}
+		WorldActor target = null;
 		for (final WorldActor a : targets) {
-			if (target == null || WorldMap.triangledistance(new Point(x, y),
-					new Point(a.getx(), a.gety())) < WorldMap.triangledistance(
-							new Point(x, y),
-							new Point(target.getx(), target.gety()))) {
+			if (target == null || World.triangledistance(new Point(x, y),
+					new Point(a.x, a.y)) < World.triangledistance(
+							new Point(x, y), new Point(target.x, target.y))) {
 				target = a;
 			}
 		}
 		return target;
 	}
 
-	public void waitforenter() {
+	public static void waitforenter() {
 		Game.message(" Press ENTER to continue...", null, Delay.NONE);
 		Character feedback = ' ';
 		while (feedback != '\n') {
@@ -126,38 +141,11 @@ public class Incursion implements WorldActor {
 	}
 
 	@Override
-	public int getx() {
-		return x;
-	}
-
-	@Override
-	public int gety() {
-		return y;
-	}
-
-	@Override
-	public void remove() {
-		visual.remove();
-		Incursion.squads.remove(this);
-	}
-
-	@Override
-	public String describe() {
-		return "an incursion";
-	}
-
-	public Fight getfight() {
-		return new IncursionFight(this);
-	}
-
-	public static boolean invade(WorldScreen world) {
-		if (Javelin.DEBUGDISABLECOMBAT) {
-			return false;
+	public void turn(long time, WorldScreen world) {
+		if (Javelin.DEBUGDISABLECOMBAT && !FORCEMOVEMENT) {
+			return;
 		}
-		for (final Incursion i : new ArrayList<Incursion>(Incursion.squads)) {
-			i.move(world);
-		}
-		return Incursion.spawn();
+		move(world);
 	}
 
 	/**
@@ -168,69 +156,44 @@ public class Incursion implements WorldActor {
 		if (RPG.r(1, 18) != 1 && !Javelin.DEBUG_SPAWNINCURSION) {
 			return false;
 		}
-		ArrayList<WorldPlace> portals =
-				new ArrayList<WorldPlace>(Portal.portals);
+		ArrayList<WorldActor> portals = WorldPlace.getall(Portal.class);
 		Collections.shuffle(portals);
-		for (WorldPlace p : portals) {
+		for (WorldActor p : portals) {
 			if (((Portal) p).invasion) {
-				int x = p.x;
-				int y = p.y;
-				while (WorldScreen.getactor(x, y) != null) {
-					int delta = RPG.pick(new int[] { -1, 0, +1 });
-					if (RPG.r(1, 2) == 1) {
-						x += delta;
-					} else {
-						y += delta;
-					}
-				}
-				create(x, y);
-				p.remove();
+				place(p.realm, p.x, p.y, null);
 				return true;
 			}
 		}
-		placeatedge();
-		return true;
+		return false;
 	}
 
-	static void placeatedge() {
-		while (true) {
-			int x = RPG.r(0, WorldMap.MAPDIMENSION - 1);
-			int y = RPG.r(0, WorldMap.MAPDIMENSION - 1);
-			switch (RPG.pick(new int[] { 1, 2, 3, 4 })) {
-			case 1:
-				/* top */
-				y = WorldMap.MAPDIMENSION - 1;
-				break;
-			case 2:
-				/* right */
-				x = WorldMap.MAPDIMENSION - 1;
-				break;
-			case 3:
-				/* bottom */
-				y = 0;
-				break;
-			case 4:
-				/* left */
-				x = 0;
-				break;
+	public static void place(Realm r, int x, int y,
+			ArrayList<Combatant> squadp) {
+		while (WorldScreen.getactor(x, y) != null) {
+			int delta = RPG.pick(new int[] { -1, 0, +1 });
+			if (RPG.r(1, 2) == 1) {
+				x += delta;
+			} else {
+				y += delta;
 			}
-			if (WorldScreen.getmapactor(x, y) == null) {
-				create(x, y);
-				return;
+			if (x < 0) {
+				x = 0;
+			} else if (y < 0) {
+				y = 0;
+			} else if (x >= World.MAPDIMENSION) {
+				x = World.MAPDIMENSION - 1;
+			} else if (y >= World.MAPDIMENSION) {
+				y = World.MAPDIMENSION - 1;
 			}
 		}
+		create(x, y, squadp, r);
 	}
 
-	public static Incursion create(int x, int y) {
-		Incursion incursion = new Incursion(x, y);
+	public static WorldActor create(int x, int y, ArrayList<Combatant> squadp,
+			Realm r) {
+		WorldActor incursion = new Incursion(x, y, squadp, r);
 		incursion.place();
 		return incursion;
-	}
-
-	@Override
-	public void move(int tox, int toy) {
-		x = tox;
-		y = toy;
 	}
 
 	static public ArrayList<Combatant> getsafeincursion(List<Combatant> from) {
@@ -240,5 +203,85 @@ public class Incursion implements WorldActor {
 			to.add(from.get(i).clonedeeply());
 		}
 		return to;
+	}
+
+	@Override
+	public Boolean destroy(Incursion attacker) {
+		/* don't inline the return statement, null bug */
+		if (attacker.realm == realm) {
+			return ignoreincursion(attacker);
+		} else {
+			return Incursion.fight(attacker.getel(), getel());
+		}
+	}
+
+	/**
+	 * Helper method for {@link #destroy(Incursion)}
+	 * 
+	 * @return <code>null</code>.
+	 */
+	static public Boolean ignoreincursion(WorldActor attacker) {
+		attacker.displace();
+		return null;
+	}
+
+	public int getel() {
+		return ChallengeRatingCalculator.calculateElSafe(squad);
+	}
+
+	/**
+	 * Helper method for {@link #destroy(Incursion)}. Uses a percentage to
+	 * decide which combatant wins (adapted from CCR).
+	 * 
+	 * @param attacker
+	 *            Encounter level.
+	 * @param defender
+	 *            Encounter level. {@link Integer#MIN_VALUE} means an automatic
+	 *            victory for the attacker.
+	 * @return <code>true</code> if attacker wins.
+	 */
+	public static boolean fight(int attacker, int defender) {
+		if (defender == Integer.MIN_VALUE) {
+			return true;
+		}
+		int gap = defender - attacker;
+		final int chance;
+		if (gap <= -4) {
+			chance = 9;
+		} else if (gap == -3) {
+			chance = 8;
+		} else if (gap == -2) {
+			chance = 7;
+		} else if (gap == -1) {
+			chance = 6;
+		} else if (gap == 0) {
+			chance = 5;
+		} else if (gap == 1) {
+			chance = 4;
+		} else if (gap == 2) {
+			chance = 3;
+		} else if (gap == 3) {
+			chance = 2;
+		} else {
+			chance = 1;
+		}
+		return RPG.r(1, 10) <= chance;
+	}
+
+	public Collection<? extends Combatant> getsquad() {
+		return null;
+	}
+
+	@Override
+	public String toString() {
+		return "An incursion";
+	}
+
+	@Override
+	public boolean interact() {
+		if (!WorldPlace.headsup(squad, toString())) {
+			return false;
+		}
+		throw new StartBattle(new IncursionFight(this));
 	}
 }

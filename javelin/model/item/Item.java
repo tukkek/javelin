@@ -1,17 +1,20 @@
 package javelin.model.item;
 
-import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
 import javelin.controller.db.StateManager;
+import javelin.model.Realm;
+import javelin.model.item.artifact.Artifact;
 import javelin.model.item.potion.Darkvision;
 import javelin.model.item.potion.Fly;
 import javelin.model.item.potion.Heroism;
+import javelin.model.item.potion.Potion;
 import javelin.model.item.potion.barkskin.Barkskin2;
 import javelin.model.item.potion.barkskin.Barkskin3;
 import javelin.model.item.potion.barkskin.Barkskin4;
@@ -25,7 +28,9 @@ import javelin.model.item.potion.resistenergy.ResistEnergy4;
 import javelin.model.item.potion.resistenergy.ResistEnergy6;
 import javelin.model.item.potion.totem.BearsEndurance;
 import javelin.model.item.potion.totem.EaglesSplendor;
+import javelin.model.item.potion.totem.FoxsCunning;
 import javelin.model.item.potion.totem.OwlsWisdom;
+import javelin.model.item.scroll.PryingEyes;
 import javelin.model.item.scroll.RaiseScroll;
 import javelin.model.item.scroll.RecallScroll;
 import javelin.model.item.scroll.RessurectScroll;
@@ -33,16 +38,20 @@ import javelin.model.item.scroll.SecureShelterScroll;
 import javelin.model.item.scroll.Teleport;
 import javelin.model.item.scroll.dungeon.DiscernLocation;
 import javelin.model.item.scroll.dungeon.LocateObject;
-import javelin.model.item.scroll.dungeon.PryingEyes;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Squad;
-import javelin.model.world.Town;
-import javelin.model.world.WorldPlace;
+import javelin.model.world.WorldActor;
+import javelin.model.world.place.WorldPlace;
+import javelin.model.world.place.town.Town;
+import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
  * Represents an item carried by a {@link Combatant}. Most often items are
  * consumable. Currently only human players use items.
+ * 
+ * When crafting new items, it takes a day per $1000 for the process to
+ * complete. Exceptions are {@link Potion}s, which always take 1 day.
  * 
  * @author alex
  */
@@ -60,29 +69,27 @@ public abstract class Item implements Serializable, Cloneable {
 	public static final ItemSelection ALL = new ItemSelection();
 	public static final TreeMap<Integer, ItemSelection> BYPRICE =
 			new TreeMap<Integer, ItemSelection>();
-	public static final ItemSelection MINOR = new ItemSelection();
-	public static final ItemSelection MEDIUM = new ItemSelection();
-	public static final ItemSelection MAJOR = new ItemSelection();
+	/** @see Item#getselection(Realm) */
 	public static final ItemSelection FIRE = new ItemSelection();
+	/** @see Item#getselection(Realm) */
 	public static final ItemSelection WIND = new ItemSelection();
+	/** @see Item#getselection(Realm) */
 	public static final ItemSelection EARTH = new ItemSelection();
+	/** @see Item#getselection(Realm) */
 	public static final ItemSelection WATER = new ItemSelection();
+	/** @see Item#getselection(Realm) */
 	public static final ItemSelection GOOD = new ItemSelection();
+	/** @see Item#getselection(Realm) */
 	public static final ItemSelection EVIL = new ItemSelection();
 	public static final ItemSelection MAGIC = new ItemSelection();
+	/** @see Artifact */
+	public static final ItemSelection ARTIFACT = new ItemSelection();
 
-	public String name;
-	public int price;
-
-	static {
+	public static void init() {
 		new CureLightWounds();
 		new CureModerateWounds();
 		new CureSeriousWounds();
 		new CureCriticalWounds();
-		new RaiseScroll();
-		new RessurectScroll();
-		new SecureShelterScroll();
-		new RecallScroll();
 		new Barkskin2();
 		new Barkskin3();
 		new Barkskin4();
@@ -91,19 +98,30 @@ public abstract class Item implements Serializable, Cloneable {
 		new ResistEnergy4();
 		new ResistEnergy6();
 		new Darkvision();
-		new Heroism();//
 		new Fly();
+		new Heroism();//
 		new BearsEndurance();
 		new javelin.model.item.potion.totem.BullsStrength();
 		new javelin.model.item.potion.totem.CatsGrace();
-		new OwlsWisdom();
 		new EaglesSplendor();
+		new FoxsCunning();
+		new OwlsWisdom();
+
+		new DiscernLocation();
 		new LocateObject();
 		new PryingEyes();
-		new DiscernLocation();
+		new RaiseScroll();
+		new RecallScroll();
+		new RessurectScroll();
+		new SecureShelterScroll();
 		new Teleport();
 		mapbyprice();
 	}
+
+	public String name;
+	public int price;
+	public boolean usedinbattle = true;
+	public boolean consumable = true;
 
 	public Item(final String name, final int price, final ItemSelection town) {
 		super();
@@ -115,28 +133,9 @@ public abstract class Item implements Serializable, Cloneable {
 		}
 	}
 
-	private static void mapbyprice() {
+	public static void mapbyprice() {
 		Collections.shuffle(ALL);
 		Collections.sort(ALL, PRICECOMPARATOR);
-		int pertier = ALL.size() / 3;
-		int i = 0;
-		for (; i <= pertier; i++) {
-			MINOR.add(ALL.get(i));
-		}
-		for (; i <= 2 * pertier; i++) {
-			MEDIUM.add(ALL.get(i));
-		}
-		for (; i < ALL.size(); i++) {
-			MAJOR.add(ALL.get(i));
-		}
-		for (Item it : Item.ALL) {
-			ItemSelection l = BYPRICE.get(it.price);
-			if (l == null) {
-				l = new ItemSelection();
-				BYPRICE.put(it.price, l);
-			}
-			l.add(it);
-		}
 	}
 
 	@Override
@@ -149,21 +148,25 @@ public abstract class Item implements Serializable, Cloneable {
 	 */
 	public abstract boolean use(Combatant user);
 
-	public boolean canuseneganged() {
-		return false;
-	}
-
-	public abstract boolean isusedinbattle();
-
-	public abstract boolean usepeacefully(Combatant m);
+	/**
+	 * Uses an item while on the {@link WorldScreen}.
+	 * 
+	 * @param m
+	 *            Unit using the item.
+	 * @return <code>true</code> if item is to be expended.
+	 */
+	public abstract boolean usepeacefully(Combatant c);
 
 	@Override
 	public boolean equals(final Object obj) {
-		try {
-			return ((Item) obj).name.equals(name);
-		} catch (final ClassCastException e) {
-			return false;
-		}
+		/**
+		 * TODO this is probably a bad idea, better to have a #contains(Class<?
+		 * extends Item>) on ItemSelection or something like this.
+		 * 
+		 * See the need for Artifact#equals for example and silly classes like
+		 * new Barkskin3()
+		 */
+		return getClass().equals(obj.getClass());
 	}
 
 	@Override
@@ -181,65 +184,48 @@ public abstract class Item implements Serializable, Cloneable {
 	 */
 	public static void distribute() {
 		CureLightWounds curelightwounds = new CureLightWounds();
-		int maxoptions = 0;
-		for (Town t : Town.towns) {
-			final ItemSelection inventory;
-			if (t.color == null) {
-				inventory = WIND;
-			} else if (t.color == Color.red) {
-				inventory = FIRE;
-			} else if (t.color == Color.green) {
-				inventory = EARTH;
-			} else if (t.color == Color.BLUE) {
-				inventory = WATER;
-			} else if (t.color == Color.white) {
-				inventory = GOOD;
-			} else if (t.color == Color.BLACK) {
-				inventory = EVIL;
-			} else if (t.color == Color.MAGENTA) {
-				inventory = MAGIC;
-			} else {
-				throw new RuntimeException("Unknown town!");
+		for (WorldActor p : WorldPlace.getall(Town.class)) {
+			Town t = (Town) p;
+			t.items.add(curelightwounds);
+			int nitems = RPG.r(3 - 1, 5 - 1);
+			ItemSelection selection = new ItemSelection(getselection(t.realm));
+			selection.remove(curelightwounds);
+			if (nitems > selection.size()) {
+				nitems = selection.size();
 			}
-			t.items.addAll(inventory);
-			if (!t.items.contains(curelightwounds)) {
-				t.items.add(curelightwounds);
-			}
-			maxoptions =
-					Math.max(maxoptions, t.items.size() + t.upgrades.size());
-		}
-		for (Town t : Town.towns) {
-			int minorcount = 0;
-			int mediumcount = 0;
-			int majorcount = 0;
-			for (Item i : t.items) {
-				if (MINOR.contains(i)) {
-					minorcount += 1;
-				} else if (MEDIUM.contains(i)) {
-					mediumcount += 1;
-				} else if (MAJOR.contains(i)) {
-					majorcount += 1;
-				} else {
-					throw new RuntimeException("Item not tiered");
-				}
-			}
-			while (t.items.size() + t.upgrades.size() < maxoptions) {
-				ItemSelection addfrom = null;
-				if (minorcount < mediumcount || minorcount < majorcount) {
-					minorcount += 1;
-					addfrom = MINOR;
-				} else if (mediumcount < majorcount) {
-					mediumcount += 1;
-					addfrom = MEDIUM;
-				} else {
-					majorcount += 1;
-					addfrom = MAJOR;
-				}
-				while (!t.items.add(RPG.pick(addfrom))) {
-					continue;// already has this item
-				}
+			while (t.items.size() - 1 < nitems) {
+				t.items.add(selection.random());
 			}
 			Collections.sort(t.items, Item.PRICECOMPARATOR);
+		}
+	}
+
+	/**
+	 * Each {@link Item} is assigned a {@link Realm} on creation. This
+	 * determines what type of item each {@link Town} can produce.
+	 * 
+	 * @see Item#Item(String, int, ItemSelection)
+	 * @param r
+	 *            Given a realm...
+	 * @return all {@link Item}s assigned to that realm.
+	 */
+	public static ItemSelection getselection(Realm r) {
+		if (r == Realm.WIND) {
+			return WIND;
+		} else if (r == Realm.FIRE) {
+			return FIRE;
+		} else if (r == Realm.EARTH) {
+			return EARTH;
+		} else if (r == Realm.WATER) {
+			return WATER;
+		} else if (r == Realm.GOOD) {
+			return GOOD;
+		} else if (r == Realm.EVIL) {
+			return EVIL;
+		} else if (r == Realm.MAGICAL) {
+			return MAGIC;
+		} else {
+			throw new RuntimeException("Unknown town!");
 		}
 	}
 
@@ -266,13 +252,24 @@ public abstract class Item implements Serializable, Cloneable {
 		return "Can only be used in battle.";
 	}
 
-	/**
-	 * Called when a item has finished crafting.
-	 * 
-	 * @param town
-	 *            {@link WorldPlace} this item is being completed on.
-	 */
-	public void produce(Town town) {
-		// your order is ready, m'lord
+	public static HashMap<String, ItemSelection> getall() {
+		HashMap<String, ItemSelection> all =
+				new HashMap<String, ItemSelection>();
+		addall(FIRE, all, "fire");
+		addall(EARTH, all, "earth");
+		addall(WATER, all, "water");
+		addall(WIND, all, "wind");
+
+		addall(GOOD, all, "good");
+		addall(EVIL, all, "evil");
+		addall(MAGIC, all, "magic");
+
+		addall(ARTIFACT, all, "artifact");
+		return all;
+	}
+
+	static private void addall(ItemSelection fire2,
+			HashMap<String, ItemSelection> all, String string) {
+		all.put(string, fire2);
 	}
 }

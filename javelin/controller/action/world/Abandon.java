@@ -1,10 +1,10 @@
 package javelin.controller.action.world;
 
 import javelin.controller.db.StateManager;
-import javelin.view.screen.world.WorldScreen;
+import javelin.view.screen.InfoScreen;
+import javelin.view.screen.WorldScreen;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
-import tyrant.mikera.tyrant.InfoScreen;
 
 /**
  * Quit the current game forever, delete the save game so the player can start a

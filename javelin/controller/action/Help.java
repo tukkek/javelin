@@ -4,9 +4,9 @@ import javelin.Javelin;
 import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
 import javelin.view.screen.BattleScreen;
+import javelin.view.screen.InfoScreen;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.InfoScreen;
 
 /**
  * Shows keyboard commands.

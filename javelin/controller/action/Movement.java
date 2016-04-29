@@ -29,7 +29,8 @@ public class Movement extends Action {
 
 	public float cost(final Combatant c, final BattleState state, int x,
 			int y) {
-		return isDisengaging(c, state) ? .25f
+		return isDisengaging(c, state)
+				? Math.max(.1f, .25f - (.01f * c.source.skills.acrobatics))
 				: (.5f / Movement.move(c, state, x, y));
 	}
 

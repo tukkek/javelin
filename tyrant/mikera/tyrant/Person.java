@@ -76,7 +76,8 @@ public class Person {
 						Game.messageTyrant(t.getTheName()
 								+ " could teach you the " + sk + " skill for "
 								+ Coin.valueString(price) + "");
-						Game.messageTyrant("Unfortunately, you do not have enough money to pay for this");
+						Game.messageTyrant(
+								"Unfortunately, you do not have enough money to pay for this");
 					} else {
 						// can learn skill
 						Game.messageTyrant(t.getTheName()
@@ -99,7 +100,8 @@ public class Person {
 					// not enough experience
 					Game.messageTyrant(t.getTheName() + " can teach the " + sk
 							+ " skill for " + Coin.valueString(price) + "");
-					Game.messageTyrant("However, you must gain more experience first");
+					Game.messageTyrant(
+							"However, you must gain more experience first");
 				}
 			}
 
@@ -121,9 +123,9 @@ public class Person {
 			}
 
 			if (!gift.getFlag(getString("WantedFlag"))) {
-				giver.message(t.getTheName()
-						+ " doesn't want to swap anything for "
-						+ gift.getYourName());
+				giver.message(
+						t.getTheName() + " doesn't want to swap anything for "
+								+ gift.getYourName());
 				return false;
 			}
 			int value = Item.value(gift);
@@ -136,8 +138,8 @@ public class Person {
 					if (getFlag("IdentifyFlag")) {
 						Item.identify(st);
 					}
-					giver.message(t.getTheName() + " gives you "
-							+ st.getAName() + " in return");
+					giver.message(t.getTheName() + " gives you " + st.getAName()
+							+ " in return");
 					gift.remove();
 					giver.addThingWithStacking(st);
 					incStat("SwapCount", -1);
@@ -169,12 +171,12 @@ public class Person {
 		public boolean handle(Thing t, Event e) {
 			Thing h = e.getThing("Target");
 
-			for (Thing gift = Game.selectSaleItem("Select an item to sell:", h,
-					t); // Declaration
-						// part
-						// of
-						// for
-						// loop
+			for (Thing gift =
+					Game.selectSaleItem("Select an item to sell:", h, t); // Declaration
+																			// part
+																			// of
+																			// for
+																			// loop
 			gift != null; // Stop once gift is null
 			gift = Game.selectSaleItem("Select an item to sell:", h, t)) { // Updater
 																			// :
@@ -185,7 +187,7 @@ public class Person {
 																			// part
 				if (gift == null) {
 					return true;
-				}// Sanity check for elusive bug
+				} // Sanity check for elusive bug
 				if (gift.getFlag("IsMoney")) {
 					continue;
 				}
@@ -195,8 +197,8 @@ public class Person {
 				if (total > 1) {
 					// count =
 					// Game.getNumber("Sell how many (Enter=all)?",total);
-					count = Game.selectSaleNumber(
-							"Sell how many (Enter=All)? ", h, t, total);
+					count = Game.selectSaleNumber("Sell how many (Enter=All)? ",
+							h, t, total);
 				}
 				int value = Item.shopValue(gift, h, t, count);
 
@@ -204,9 +206,9 @@ public class Person {
 					continue;
 				}
 
-				Game.messageTyrant("You sell your "
-						+ gift.getName(Game.hero(), count) + " to "
-						+ t.getTheName());
+				Game.messageTyrant(
+						"You sell your " + gift.getName(Game.hero(), count)
+								+ " to " + t.getTheName());
 				if (count > 0) {
 					gift.remove(count);
 				}
@@ -238,9 +240,9 @@ public class Person {
 					giver.message("Do you accept? (y/n)");
 					char k = Game.getOption("ynq");
 					if (k == 'y') {
-						Game.messageTyrant("You sell your "
-								+ gift.getName(Game.hero()) + " to "
-								+ t.getTheName());
+						Game.messageTyrant(
+								"You sell your " + gift.getName(Game.hero())
+										+ " to " + t.getTheName());
 						gift.remove();
 						Coin.addMoney(giver, value);
 					}
@@ -273,14 +275,14 @@ public class Person {
 			Thing giver = e.getThing("Giver");
 			// maybe I should not trust the isDamaged()
 			// boolean damagedFlag = gift.isDamaged();
-			boolean damagedFlag = gift.getStat("HPS") < gift.getStat("HPSMAX") ? true
-					: false;
+			boolean damagedFlag =
+					gift.getStat("HPS") < gift.getStat("HPSMAX") ? true : false;
 			/*
 			 * // Debugging System.out.println("Current HPS = "+
 			 * gift.getStat("HPS")); System.out.println("Max HPS = "+
-			 * gift.getStat("HPSMAX")); if (damagedFlag) {
-			 * System.out.println("True [ppirrip]"); } else {
-			 * System.out.println("False [ppirrip]"); }
+			 * gift.getStat("HPSMAX")); if (damagedFlag) { System.out.println(
+			 * "True [ppirrip]"); } else { System.out.println("False [ppirrip]"
+			 * ); }
 			 */
 			// the item to be fixed has to be damage-able
 			if (gift != null && damagedFlag) {
@@ -290,8 +292,8 @@ public class Person {
 				int hskill = giver.getStat("CH") * giver.getStat(Skill.TRADING);
 				int sskill = t.getStat("CH");
 				// for debugging
-				value = (int) (0.3 * (value * 0.3 + 0.7 * value
-						* (hskill / (hskill + sskill))));
+				value = (int) (0.3 * (value * 0.3
+						+ 0.7 * value * (hskill / (hskill + sskill))));
 
 				if (value > 0) {
 					giver.message(t.getTheName() + " asks for "
@@ -300,10 +302,10 @@ public class Person {
 					giver.message("Do you accept? (y/n)");
 					char k = Game.getOption("ynq");
 					if (k == 'y') {
-						Game.messageTyrant("You gave "
-								+ gift.getName(Game.hero()) + " and "
-								+ Coin.valueString(value)
-								+ " to the smith for repair.");
+						Game.messageTyrant(
+								"You gave " + gift.getName(Game.hero())
+										+ " and " + Coin.valueString(value)
+										+ " to the smith for repair.");
 
 						Coin.removeMoney(giver, value);
 
@@ -344,7 +346,8 @@ public class Person {
 
 			if (t.toString().equals("jeweller")) {
 				if (!gift.getFlag("IsRing") && !gift.getFlag("IsNecklace")) {
-					Game.messageTyrant("I am sorry, I only know about rings and necklaces.");
+					Game.messageTyrant(
+							"I am sorry, I only know about rings and necklaces.");
 					return false;
 				}
 			}
@@ -360,9 +363,9 @@ public class Person {
 			// value=(int)(0.3*(value*0.3+0.7*value*(hskill/(hskill+sskill))));
 			value = 200;
 
-			giver.message(t.getTheName() + " asks for "
-					+ Coin.valueString(value) + " to identify your "
-					+ gift.getName(Game.hero()));
+			giver.message(
+					t.getTheName() + " asks for " + Coin.valueString(value)
+							+ " to identify your " + gift.getName(Game.hero()));
 			giver.message("Do you accept? (y/n)");
 			char k = Game.getOption("ynq");
 			if (k == 'y') {
@@ -443,21 +446,21 @@ public class Person {
 			}
 
 			// Oh, the obscenity, the work from String[] to ArrayList
-			ArrayList sks = new ArrayList(Arrays.asList(Skill
-					.getTrainableSkills(giver, true))); // Skill.getList(giver);
-			ArrayList sksr = new ArrayList(Arrays.asList(Skill
-					.getTrainableSkills(giver, false))); // Skill.getUnmarkedList(giver);
+			ArrayList sks = new ArrayList(
+					Arrays.asList(Skill.getTrainableSkills(giver, true))); // Skill.getList(giver);
+			ArrayList sksr = new ArrayList(
+					Arrays.asList(Skill.getTrainableSkills(giver, false))); // Skill.getUnmarkedList(giver);
 			// String test[] = Skill.getTrainableSkills( giver , true );
-			String s = Game.selectString("Select a skill to improve:", sks,
-					sksr);
+			String s =
+					Game.selectString("Select a skill to improve:", sks, sksr);
 
 			if (s != null) {
 				Skill.train(giver, s);
 				Coin.removeMoney(giver, cost);
 			} else {
-				final String laterThen[] = { "Maybe later then!",
-						"Well, maybe later then.",
-						"Anyway, you can come back later." };
+				final String laterThen[] =
+						{ "Maybe later then!", "Well, maybe later then.",
+								"Anyway, you can come back later." };
 				Game.messageTyrant("\"" + RPG.pick(laterThen) + "\"");
 			}
 			return true;
@@ -475,17 +478,22 @@ public class Person {
 		private static void setupRiddles() {
 			riddles = new ArrayList();
 			answers = new ArrayList();
-			riddles.add("What walks on four legs in the morning, two in the afternoon and three in the evening?");
+			riddles.add(
+					"What walks on four legs in the morning, two in the afternoon and three in the evening?");
 			answers.add("man");
-			riddles.add("What starts with 'e', ends with 'e' and contains one letter?");
+			riddles.add(
+					"What starts with 'e', ends with 'e' and contains one letter?");
 			answers.add("envelope");
 			riddles.add("What has eyes but cannot see?");
 			answers.add("potato");
-			riddles.add("Born at the same time as the world, destined to live as long as the world, and yet never five weeks old.  What is it?");
+			riddles.add(
+					"Born at the same time as the world, destined to live as long as the world, and yet never five weeks old.  What is it?");
 			answers.add("moon");
-			riddles.add("It wasn't my sister, nor my brother, but still was the child of my father and mother.  Who was it?");
+			riddles.add(
+					"It wasn't my sister, nor my brother, but still was the child of my father and mother.  Who was it?");
 			answers.add("you");
-			riddles.add("What can be measured, but has no length, width or height?");
+			riddles.add(
+					"What can be measured, but has no length, width or height?");
 			answers.add("temperature");
 			riddles.add("What do all living things do at the same time?");
 			answers.add("age");
@@ -493,7 +501,8 @@ public class Person {
 			answers.add("silence");
 			riddles.add("What can't you see that is always before you?");
 			answers.add("future");
-			riddles.add("Which room has no door, no windows, no floor and no roof?");
+			riddles.add(
+					"Which room has no door, no windows, no floor and no roof?");
 			answers.add("mushroom");
 			riddles.add("What is always coming, but never arrives?");
 			answers.add("tomorrow");
@@ -503,25 +512,32 @@ public class Person {
 			answers.add("carpeting");
 			riddles.add("What is full of holes and yet holds water?");
 			answers.add("sponge");
-			riddles.add("What lives on its own substance and dies when it devours itself?");
+			riddles.add(
+					"What lives on its own substance and dies when it devours itself?");
 			answers.add("candle");
-			riddles.add("What 5 letter word can have its last 4 letters removed and still sound the same?");
+			riddles.add(
+					"What 5 letter word can have its last 4 letters removed and still sound the same?");
 			answers.add("queue");
 			riddles.add("What gets harder to catch the faster you run?");
 			answers.add("breath");
 			riddles.add("What doesn't exist, but has a name?");
 			answers.add("nothing");
-			riddles.add("The more there is of this, the less you see of it. What is it?");
+			riddles.add(
+					"The more there is of this, the less you see of it. What is it?");
 			answers.add("darkness");
-			riddles.add("What is black when you buy it, red as you use it, and grey when you throw it out?");
+			riddles.add(
+					"What is black when you buy it, red as you use it, and grey when you throw it out?");
 			answers.add("coal");
-			riddles.add("The more you take, the more you leave behind. What are they?");
+			riddles.add(
+					"The more you take, the more you leave behind. What are they?");
 			answers.add("footsteps");
-			riddles.add("What occurs once in a minute, twice in a moment, but never in an hour?");
+			riddles.add(
+					"What occurs once in a minute, twice in a moment, but never in an hour?");
 			answers.add("m");
 			riddles.add("What grows bigger the more you take from it?");
 			answers.add("hole");
-			riddles.add("What five-letter word becomes shorter when you add two letters to it?");
+			riddles.add(
+					"What five-letter word becomes shorter when you add two letters to it?");
 			answers.add("short");
 			riddles.add("What do you lose every time you stand up?");
 			answers.add("lap");
@@ -535,10 +551,10 @@ public class Person {
 		public boolean handle(Thing t, Event e) {
 			Thing responder = e.getThing("Target");
 
-			String missedStat = Text.camelizeString(t.getName())
-					+ "RiddleMissed";
-			String solvedStat = Text.camelizeString(t.getName())
-					+ "RiddleSolved";
+			String missedStat =
+					Text.camelizeString(t.getName()) + "RiddleMissed";
+			String solvedStat =
+					Text.camelizeString(t.getName()) + "RiddleSolved";
 			Game.messageTyrant("Camel:  " + solvedStat);
 			int failures = responder.getStat(missedStat);
 			if (failures > 2) {
@@ -547,8 +563,8 @@ public class Person {
 						+ " is no longer willing to talk with you.");
 				return true;
 			} else if (failures > 0) {
-				Game.messageTyrant(t.getTheName()
-						+ " has another question for you.");
+				Game.messageTyrant(
+						t.getTheName() + " has another question for you.");
 			} else {
 				Game.messageTyrant(t.getTheName() + " has a question for you.");
 			}
@@ -565,7 +581,8 @@ public class Person {
 					responder.incStat(solvedStat, 1);
 					return true;
 				}
-				Game.messageTyrant("\"Thinking must not be your strong suit.\"");
+				Game.messageTyrant(
+						"\"Thinking must not be your strong suit.\"");
 				responder.incStat(missedStat, 1);
 				return true;
 			}
@@ -776,7 +793,7 @@ public class Person {
 		t = Lib.extend("merchant", "human");
 		Monster.strengthen(t, 8);
 		t.set("IsWanderer", 1);
-		t.set("Image", 36);
+		t.set("Image", 54);
 		t.set("LevelMin", 5);
 		t.set("Frequency", 50);
 		Lib.add(t);
@@ -958,8 +975,8 @@ public class Person {
 		t.set("RES:poison", 50);
 		t.set("Introduction",
 				"I'm collecting funds for the wood temple, so I am selling some old scrolls.");
-		t.set("OnGift", SwapScript.create("IsCoin", RPG.d(2) == 1 ? "IsScroll"
-				: "IsIdentifyScroll", 6));
+		t.set("OnGift", SwapScript.create("IsCoin",
+				RPG.d(2) == 1 ? "IsScroll" : "IsIdentifyScroll", 6));
 		Lib.add(t);
 
 		t = Lib.extend("wood priestess", "wood priest");
@@ -1065,8 +1082,8 @@ public class Person {
 		Lib.add(t);
 
 		t = Lib.extend("wizard", "base townie");
-		t.setPersonality(new Personality(Personality.CHATTER,
-				Personality.CHATTER_WISE));
+		t.setPersonality(
+				new Personality(Personality.CHATTER, Personality.CHATTER_WISE));
 		Monster.strengthen(t, 4);
 		t.set("Image", 121);
 		t.set(Skill.CASTING, 3);

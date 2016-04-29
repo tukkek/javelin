@@ -1,9 +1,10 @@
 package javelin.controller.action.world;
 
+import javelin.controller.exception.RepeatTurnException;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Squad;
+import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.RecruitScreen;
-import javelin.view.screen.world.WorldScreen;
 
 /**
  * Rename combatant.
@@ -11,18 +12,19 @@ import javelin.view.screen.world.WorldScreen;
  * @author alex
  */
 public class Rename extends WorldAction {
+	/** Constructor. */
 	public Rename() {
 		super("Rename squad members", new int[] {}, new String[] { "r" });
 	}
 
 	@Override
 	public void perform(WorldScreen screen) {
-		for (Combatant m : Squad.active.members) {
-			RecruitScreen.namingscreen(m.source);
+		int i = CastSpells.choose("Rename which unit?", Squad.active.members,
+				false, false);
+		if (i == -1) {
+			throw new RepeatTurnException();
 		}
-		/**
-		 * TODO This way loses Squad#equipment key. better make Combatant
-		 * hashable by id?
-		 */
+		Combatant m = Squad.active.members.get(i);
+		m.source.customName = RecruitScreen.namingscreen(m.source.toString());
 	}
 }

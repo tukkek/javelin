@@ -21,8 +21,7 @@ public class RaiseWisdom extends RaiseAbility {
 	@Override
 			boolean setattribute(Combatant m, int l)
 					throws PropertyVetoException {
-		m.source.wisdom = l;
-		m.source.raisewisdom();
+		m.source.raisewisdom(+2);
 		return true;
 	}
 

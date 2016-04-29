@@ -1,18 +1,20 @@
 package javelin.model.item.scroll.dungeon;
 
+import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.controller.walker.Walker;
-import javelin.model.dungeon.Feature;
-import javelin.model.dungeon.Treasure;
 import javelin.model.item.Item;
-import javelin.model.world.Dungeon;
-import javelin.view.screen.world.DungeonScreen;
+import javelin.model.world.place.dungeon.Dungeon;
+import javelin.model.world.place.dungeon.Feature;
+import javelin.model.world.place.dungeon.Treasure;
+import javelin.view.screen.DungeonScreen;
 
 /**
  * Allows player to find nearest treasure chest in a {@link Dungeon}.
  */
 public class LocateObject extends DungeonScroll {
 	public LocateObject() {
-		super("Scroll of locate object", 150, Item.MAGIC);
+		super("Scroll of locate object", 150, Item.MAGIC, 2,
+				SpellsFactor.ratespelllikeability(2));
 	}
 
 	@Override

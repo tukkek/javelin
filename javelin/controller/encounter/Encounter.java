@@ -21,9 +21,10 @@ public class Encounter {
 	}
 
 	public ArrayList<Combatant> generate() {
-		final ArrayList<Combatant> encounter = new ArrayList<Combatant>();
+		final ArrayList<Combatant> encounter =
+				new ArrayList<Combatant>(group.size());
 		for (final Combatant m : group) {
-			encounter.add(m);
+			encounter.add(new Combatant(null, m.source.clone(), true));
 		}
 		return encounter;
 	}

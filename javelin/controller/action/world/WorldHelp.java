@@ -1,7 +1,7 @@
 package javelin.controller.action.world;
 
 import javelin.controller.action.Help;
-import javelin.view.screen.world.WorldScreen;
+import javelin.view.screen.WorldScreen;
 
 /**
  * In-game help.

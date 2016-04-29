@@ -101,8 +101,8 @@ public class Portal {
 			if (curmap != null) {
 
 				// see if there are any critters going to try to follow
-				final Thing[] things = curmap.getThings(cx - 10, cy - 10,
-						cx + 10, cy + 10);
+				final Thing[] things =
+						curmap.getThings(cx - 10, cy - 10, cx + 10, cy + 10);
 				// System.out.println(things.length);
 				for (final Thing t : things) {
 					if (t.getFlag("IsHostile")) {
@@ -119,8 +119,8 @@ public class Portal {
 			}
 
 			// reverse direction of critters in transit
-			for (Thing cr = Portal.getCritter(portal); cr != null; cr = Portal
-					.getCritter(portal)) {
+			for (Thing cr = Portal.getCritter(portal); cr != null; cr =
+					Portal.getCritter(portal)) {
 				thing.addThing(cr);
 			}
 		}
@@ -180,8 +180,8 @@ public class Portal {
 			Movement.moveTo(t, map, tx, ty);
 
 			if (!map.getFlag("IsWorldMap")) {
-				final Thing[] followers = Game.hero().getFlaggedContents(
-						"IsBeing");
+				final Thing[] followers =
+						Game.hero().getFlaggedContents("IsBeing");
 				for (final Thing f : followers) {
 					portal.addThing(f);
 				}
@@ -317,7 +317,7 @@ public class Portal {
 		if (name.equals("karrain")) {
 			map = WorldMap.createWorld();
 		} else if (name.equals("town")) {
-			map = Town.createTown(80, 48);
+			// map = Town.createTown(80, 48);
 		} else if (name.equals("caves")) {
 			map = Caves.createCaves(65, 65, dlevel);
 		} else if (name.equals("ruin")) {
@@ -333,7 +333,7 @@ public class Portal {
 			map = new BattleMap(71, 71);
 			Graveyard.makeGraveyard(map);
 		} else if (name.equals("Old Nyck's hut")) {
-			map = Town.buildNyckMap();
+			// map = Town.buildNyckMap();
 
 		} else if (name.equals("dark forest")) {
 			map = DeepForest.makeDarkForest(dlevel);
@@ -505,8 +505,8 @@ public class Portal {
 						+ "] in makeLink");
 			}
 			/*
-			 * Game.warn("No entrance for map!");
-			 * Game.warn("Creating temporary stairs");
+			 * Game.warn("No entrance for map!"); Game.warn(
+			 * "Creating temporary stairs");
 			 * 
 			 * Thing ent=Lib.create("stairs up"); map.addThing(ent);
 			 * map.setEntrance(ent);
@@ -527,8 +527,8 @@ public class Portal {
 	 * m.addThing(critters, cx, cy); } } }
 	 */
 
-	public static void setDestination(final Thing p, final BattleMap m, final int tx,
-			final int ty) {
+	public static void setDestination(final Thing p, final BattleMap m,
+			final int tx, final int ty) {
 		p.set("PortalTargetMap", m);
 		p.set("PortalTargetX", tx);
 		p.set("PortalTargetY", ty);

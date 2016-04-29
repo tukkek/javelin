@@ -8,9 +8,9 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Squad;
 import javelin.view.screen.BattleScreen;
+import javelin.view.screen.InfoScreen;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
-import tyrant.mikera.tyrant.InfoScreen;
 
 /**
  * Hands item over to a friendly unit.

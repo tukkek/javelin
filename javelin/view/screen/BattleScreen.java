@@ -29,13 +29,14 @@ import javelin.controller.exception.UnbalancedTeamsException;
 import javelin.controller.exception.battle.BattleEvent;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.Fight;
+import javelin.controller.walker.Walker;
 import javelin.model.BattleMap;
 import javelin.model.condition.Condition;
 import javelin.model.condition.Dominated;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Squad;
-import javelin.model.world.Squad.Transport;
+import javelin.model.world.place.town.Transport;
 import javelin.view.MapPanel;
 import javelin.view.StatusPanel;
 import javelin.view.screen.town.SelectScreen;
@@ -46,7 +47,6 @@ import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
 import tyrant.mikera.tyrant.GameHandler;
 import tyrant.mikera.tyrant.IActionHandler;
-import tyrant.mikera.tyrant.InfoScreen;
 import tyrant.mikera.tyrant.LevelMapPanel;
 import tyrant.mikera.tyrant.MessagePanel;
 import tyrant.mikera.tyrant.QuestApp;
@@ -162,8 +162,15 @@ public class BattleScreen extends Screen {
 		BattleScreen.originalredteam =
 				new ArrayList<Combatant>(BattleMap.redTeam);
 		Game.delayblock = false;
-		map.makeAllInvisible();
+		initmap();
 		mappanel.repaint();
+	}
+
+	/**
+	 * TODO
+	 */
+	protected void initmap() {
+		map.makeAllInvisible();
 	}
 
 	/**
@@ -244,6 +251,20 @@ public class BattleScreen extends Screen {
 		computerTurn();
 	}
 
+	void listen(final Combatant next) {
+		if (map.redTeam.contains(next)) {
+			return;
+		}
+		int listen = next.listen();
+		for (Combatant c : BattleMap.redTeam) {
+			/* TODO currently the AI always has full map info */
+			if (listen >= c.movesilently() + (Walker.distance(next, c) - 1)) {
+				map.seeTile(c.location[0], c.location[1]);
+				map.setVisible(c.location[0], c.location[1]);
+			}
+		}
+	}
+
 	public void checkblock() {
 		if (Game.delayblock) {
 			Game.delayblock = false;
@@ -282,8 +303,9 @@ public class BattleScreen extends Screen {
 				firstvision = false;
 				return;
 			}
-			map.makeAllInvisible();
+			initmap();
 			h.calculateVision();
+			listen(h.combatant);
 		} else if (!allvisible) {
 			map.setAllVisible();
 			allvisible = true;
@@ -327,7 +349,7 @@ public class BattleScreen extends Screen {
 	 * First thing to happen after an {@link EndBattle}
 	 */
 	public void onEnd() {
-		boolean victory = BattleMap.redTeam.isEmpty() || !checkforenemies();
+		BattleMap.victory = BattleMap.redTeam.isEmpty() || !checkforenemies();
 		BattleState s = map.getState();
 		terminateconditions(s);
 		map.setState(s);
@@ -337,7 +359,7 @@ public class BattleScreen extends Screen {
 		}
 		Game.messagepanel.clear();
 		String combatresult;
-		if (victory) {
+		if (BattleMap.victory) {
 			combatresult = dealreward();
 		} else if (fleeing.isEmpty()) {
 			combatresult = "You lost!";
@@ -347,7 +369,8 @@ public class BattleScreen extends Screen {
 			combatresult = "You lost!";
 		} else {
 			combatresult = "Fled from combat. No awards received.";
-			if (!victory && fleeing.size() != originalblueteam.size()) {
+			if (!BattleMap.victory
+					&& fleeing.size() != originalblueteam.size()) {
 				combatresult += "\nFallen allies left behind are lost!";
 				for (Combatant abandoned : BattleMap.dead) {
 					abandoned.hp = Combatant.DEADATHP;
@@ -385,12 +408,15 @@ public class BattleScreen extends Screen {
 	 * @return Reward description.
 	 */
 	public String dealreward() {
-		final int bonus =
-				RewardCalculator.receivegold(BattleScreen.originalredteam);
-		Squad.active.gold += bonus;
+		/* should at least serve as food for 1 day */
+		final int bonus = Math.round(Math.max(Squad.active.size() / 2,
+				RewardCalculator.receivegold(BattleScreen.originalredteam)));
 		Squad.active.members = BattleMap.blueTeam;
-		final String gold =
-				" Party receives $" + SelectScreen.formatcost(bonus) + "!\n";
+		String gold = "";
+		if (Javelin.app.fight.rewardgold()) {
+			Squad.active.gold += bonus;
+			gold = " Party receives $" + SelectScreen.formatcost(bonus) + "!\n";
+		}
 		return "Congratulations! " + rewardxp() + gold;
 	}
 
@@ -543,6 +569,7 @@ public class BattleScreen extends Screen {
 			}
 		}
 		Combatant combatant = Game.hero().combatant;
+		float originalap = combatant.ap;
 		try {
 			if (action.perform(combatant, map, thing)) {
 				return;
@@ -575,7 +602,7 @@ public class BattleScreen extends Screen {
 			}
 			throw new RepeatTurnException();
 		} finally {
-			if (!(action instanceof javelin.controller.action.Movement)) {
+			if (originalap != combatant.ap) {
 				spendap(combatant);
 			}
 		}
@@ -593,6 +620,17 @@ public class BattleScreen extends Screen {
 
 	protected void withdraw(Combatant combatant) {
 		if (map.getState().isEngaged(combatant)) {
+			if (Javelin.DEBUG) {
+				Game.message("Press w to cancel battle (debug feature)", null,
+						Delay.NONE);
+				if (Game.getInput().getKeyChar() == 'w') {
+					for (Combatant c : new ArrayList<Combatant>(
+							BattleMap.blueTeam)) {
+						escape(c);
+					}
+					throw new EndBattle();
+				}
+			}
 			Game.message("Disengage first!", null, Delay.BLOCK);
 			InfoScreen.feedback();
 			throw new RepeatTurnException();
@@ -603,14 +641,18 @@ public class BattleScreen extends Screen {
 		if (Game.getInput().getKeyChar() != '\n') {
 			throw new RepeatTurnException();
 		}
-		fleeing.add(combatant);
-		BattleMap.blueTeam.remove(combatant);
-		BattleMap.combatants.remove(combatant);
-		combatant.visual.remove();
+		escape(combatant);
 		Game.message("Escapes!", null, Delay.WAIT);
 		if (BattleMap.blueTeam.isEmpty()) {
 			throw new EndBattle();
 		}
+	}
+
+	void escape(Combatant combatant) {
+		fleeing.add(combatant);
+		BattleMap.blueTeam.remove(combatant);
+		BattleMap.combatants.remove(combatant);
+		combatant.visual.remove();
 	}
 
 	/*

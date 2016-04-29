@@ -2,10 +2,11 @@ package javelin.view.screen.town.option;
 
 import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.Upgrade;
-import javelin.view.screen.town.UpgradingScreen;
+import javelin.view.screen.Option;
+import javelin.view.screen.upgrading.TownUpgradingScreen;
 
 /**
- * @see UpgradingScreen
+ * @see TownUpgradingScreen
  * @author alex
  */
 public class UpgradeOption extends Option {

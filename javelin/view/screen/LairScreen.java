@@ -3,11 +3,10 @@ package javelin.view.screen;
 import java.awt.Image;
 
 import javelin.Javelin;
-import javelin.controller.action.world.WorldMove;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Lair;
+import javelin.model.world.place.Lair;
 import tyrant.mikera.tyrant.Game.Delay;
 import tyrant.mikera.tyrant.QuestApp;
 
@@ -44,7 +43,7 @@ public class LairScreen extends BattleScreen {
 
 	@Override
 	public void afterend() {
-		WorldMove.isleavingplace = true;
+		// WorldMove.isleavingplace = true;
 	}
 
 	@Override

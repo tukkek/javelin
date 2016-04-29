@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Set;
 
 import tyrant.mikera.tyrant.Animal;
-import tyrant.mikera.tyrant.Artifact;
 import tyrant.mikera.tyrant.Aura;
 import tyrant.mikera.tyrant.Being;
 import tyrant.mikera.tyrant.Chest;
@@ -169,8 +168,8 @@ public class Lib extends Object implements Serializable, Cloneable {
 				// this is an error, so send warning
 				Game.warn("Lib: Can't create " + name);
 
-				return !name.equals("strange rock") ? Lib
-						.create("strange rock") : null;
+				return !name.equals("strange rock") ? Lib.create("strange rock")
+						: null;
 			}
 			t = createThing(aThing);
 
@@ -298,8 +297,8 @@ public class Lib extends Object implements Serializable, Cloneable {
 		}
 
 		if (things.isEmpty()) {
-			throw new Error("Can't create type [" + type + "] at level "
-					+ level);
+			throw new Error(
+					"Can't create type [" + type + "] at level " + level);
 		}
 		BaseObject aThing = null;
 		for (int i = 0; i < 100; i++) {
@@ -497,7 +496,8 @@ public class Lib extends Object implements Serializable, Cloneable {
 	 * @param baseName
 	 * @return
 	 */
-	public static Thing extendCopy(final String newName, final String baseName) {
+	public static Thing extendCopy(final String newName,
+			final String baseName) {
 		final BaseObject baseObject = get(baseName);
 		if (baseObject == null) {
 			throw new Error("Can't find base properties [" + baseName + "]");
@@ -507,7 +507,8 @@ public class Lib extends Object implements Serializable, Cloneable {
 		return newThing;
 	}
 
-	public static Thing extendNamed(final String newName, final String baseName) {
+	public static Thing extendNamed(final String newName,
+			final String baseName) {
 		final Thing t = Lib.extend("newthing", baseName);
 		// AI.name(t, newName);
 		return t;
@@ -613,20 +614,19 @@ public class Lib extends Object implements Serializable, Cloneable {
 	// PLEASE keep alphabetical by type!!!
 
 	// artifacts
-	public static final Description DESC_IMPERIALCROWN = new Describer(
-			"The Crown of Daedor",
-			"",
-			"The priceless crown of the Daedorian Empire. This artifact is rumoured to bestow remarkable powers on the wearer.",
-			Description.NAMETYPE_PROPER, Description.GENDER_NEUTER);
+	public static final Description DESC_IMPERIALCROWN =
+			new Describer("The Crown of Daedor", "",
+					"The priceless crown of the Daedorian Empire. This artifact is rumoured to bestow remarkable powers on the wearer.",
+					Description.NAMETYPE_PROPER, Description.GENDER_NEUTER);
 
 	// Clothing
-	public static final Description DESC_HAT = new Describer("hat",
-			"A hat of fine quality.");
+	public static final Description DESC_HAT =
+			new Describer("hat", "A hat of fine quality.");
 	public static final Description DESC_TROUSERS = new Describer("trousers",
 			"pairs of trousers", "A pair of serviceable trousers.",
 			Description.NAMETYPE_QUANTITY, Description.GENDER_NEUTER);
-	public static final Description DESC_ROBE = new Describer("robe",
-			"A well-made robe.");
+	public static final Description DESC_ROBE =
+			new Describer("robe", "A well-made robe.");
 	public static final Description DESC_MAGICROBE = new Describer("robe",
 			"A robe covered with runes and mystic sigils.");
 	public static final Description DESC_GLOVES = new Describer("gloves",
@@ -634,15 +634,15 @@ public class Lib extends Object implements Serializable, Cloneable {
 			Description.NAMETYPE_QUANTITY, Description.GENDER_NEUTER);
 
 	// treasure
-	public static final Description DESC_TREASURE = new Describer("treasure",
-			"treasure", "Valuable treasure.", Description.NAMETYPE_QUANTITY,
-			Description.GENDER_NEUTER);
+	public static final Description DESC_TREASURE =
+			new Describer("treasure", "treasure", "Valuable treasure.",
+					Description.NAMETYPE_QUANTITY, Description.GENDER_NEUTER);
 
 	// quality descriptions
-	public static final String[] qualitystrings = { "useless", "pathetic",
-			"very poor", "poor", "mediocre", "average", "fair", "good",
-			"very good", "excellent", "superb", "brilliant", "divine",
-			"perfect" };
+	public static final String[] qualitystrings =
+			{ "useless", "pathetic", "very poor", "poor", "mediocre", "average",
+					"fair", "good", "very good", "excellent", "superb",
+					"brilliant", "divine", "perfect" };
 
 	public static final int[] qualityvalues = { 0, 20, 40, 60, 80, 100, 150,
 			200, 400, 800, 1800, 5000, 20000, 100000 };
@@ -832,8 +832,8 @@ public class Lib extends Object implements Serializable, Cloneable {
 		case 12:
 			return Missile.createMissile(level);
 		case 13:
-			return Coin.createMoney(RPG.d(10 + level * 5)
-					* RPG.d(3 + level * 5));
+			return Coin
+					.createMoney(RPG.d(10 + level * 5) * RPG.d(3 + level * 5));
 		case 14:
 			return RangedWeapon.createRangedWeapon(level);
 		case 15:
@@ -902,7 +902,7 @@ public class Lib extends Object implements Serializable, Cloneable {
 		Animal.init();
 		Monster.init();
 		Person.init();
-		Artifact.init();
+		// Artifact.init();
 		EndGame.init();
 		Tutorial.init();
 		GoblinVillage.init();

@@ -4,26 +4,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.db.Properties;
 import javelin.controller.db.reader.factor.Organization;
 import javelin.controller.exception.GaveUpException;
 import javelin.model.unit.Combatant;
+import javelin.model.world.Squad;
 import tyrant.mikera.engine.RPG;
 
 /**
  * Generates an {@link Encounter}.
  * 
+ * If I'm not mistaken when manually converting {@link Organization} data on
+ * monster.xml to a parseable format I only included monster groups up to 16
+ * strong - anything other than that for generated encounters will need to be
+ * worked upon or done through other means than only this class.
+ * 
  * @author alex
  */
 public class EncounterGenerator {
-	public static final int MAXGROUPSIZE =
-			Integer.parseInt(Properties.getString("el.maxfoes"));
 	static final int MAXTRIES = 1000;
 
-	public static ArrayList<Combatant> generate(int el) throws GaveUpException {
+	public static ArrayList<Combatant> generate(int el, int terrainp)
+			throws GaveUpException {
 		ArrayList<Combatant> encounter = null;
 		for (int i = 0; i < MAXTRIES; i++) {
-			encounter = select(el);
+			encounter = select(el, terrainp);
 			if (encounter != null) {
 				return encounter;
 			}
@@ -31,7 +35,7 @@ public class EncounterGenerator {
 		throw new GaveUpException();
 	}
 
-	public static ArrayList<Combatant> select(int elp) {
+	public static ArrayList<Combatant> select(int elp, int terrainp) {
 		ArrayList<Integer> popper = new ArrayList<Integer>();
 		popper.add(elp);
 		while (RPG.r(0, 1) == 1) {
@@ -43,7 +47,7 @@ public class EncounterGenerator {
 		}
 		final ArrayList<Combatant> foes = new ArrayList<Combatant>();
 		for (final int el : popper) {
-			List<Combatant> group = Organization.makeencounter(el);
+			List<Combatant> group = Organization.makeencounter(el, terrainp);
 			if (group == null) {
 				return null;
 			}
@@ -57,10 +61,27 @@ public class EncounterGenerator {
 				foes.add(invitee);
 			}
 		}
+		if (!new MisalignmentDetector(foes).check()) {
+			return null;
+		}
 		if (Javelin.DEBUGMINIMUMFOES != null
 				&& foes.size() != Javelin.DEBUGMINIMUMFOES) {
 			return null;
 		}
-		return foes.size() > MAXGROUPSIZE ? null : foes;
+		return foes.size() > getmaxenemynumber() ? null : foes;
+	}
+
+	/**
+	 * See {@link EncounterGenerator}'s main javadoc description for mote info
+	 * on enemy group size.
+	 * 
+	 * @return The recommended number of enemies to face at most in one battle.
+	 *         Other modules may differ from this but this is a suggestion to
+	 *         avoid the computer player taking a long time to act while the
+	 *         human player has to wait (for example: 1 human unit against 20
+	 *         enemies).
+	 */
+	public static int getmaxenemynumber() {
+		return Squad.active.members.size() + 5;
 	}
 }

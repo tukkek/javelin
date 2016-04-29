@@ -20,7 +20,6 @@ public class Paralyzed extends Condition {
 			void start(Combatant c) {
 		c.source = c.source.clone();
 		dex = c.source.dexterity;
-		c.source.dexterity -= dex;
 		delta = (int) Math.round(Math.floor(dex / 2f));
 		c.source.raisedexterity(-delta);
 		c.ap = expireat;
@@ -29,7 +28,6 @@ public class Paralyzed extends Condition {
 	@Override
 			void end(Combatant c) {
 		c.source = c.source.clone();
-		c.source.dexterity += dex;
 		c.source.raisedexterity(+delta);
 	}
 }

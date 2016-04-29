@@ -11,9 +11,11 @@ import javelin.controller.upgrade.classes.ClassAdvancement;
 import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Skills;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.world.Squad;
-import tyrant.mikera.tyrant.InfoScreen;
+import javelin.model.world.place.unique.MercenariesGuild;
+import javelin.view.screen.town.PurchaseScreen;
 
 /**
  * Shows ally or enemy info.
@@ -29,8 +31,14 @@ public class StatisticsScreen extends InfoScreen {
 		if (!m.group.isEmpty()) {
 			monstername += " (" + m.group + ")";
 		}
-		lines.add(monstername + "\n");
-		lines.add(capitalize(Monster.SIZES[m.size]) + " " + m.monsterType);
+		lines.add(monstername);
+		lines.add(capitalize(Monster.SIZES[m.size]) + " " + m.type);
+		lines.add("");
+		if (c.mercenary) {
+			lines.add("Mercenary ($"
+					+ PurchaseScreen.formatcost(MercenariesGuild.getfee(c))
+					+ "/day)");
+		}
 		lines.add("Challenge rating "
 				+ Math.round(ChallengeRatingCalculator.calculateCr(m)));
 		for (ClassAdvancement classlevels : ClassAdvancement.CLASSES) {
@@ -39,6 +47,7 @@ public class StatisticsScreen extends InfoScreen {
 				lines.add(classlevels.descriptivename + " level " + level);
 			}
 		}
+		lines.add(describealignment(m));
 		long speed = m.fly;
 		boolean fly = true;
 		if (speed == 0) {
@@ -53,10 +62,11 @@ public class StatisticsScreen extends InfoScreen {
 			speedtext += ", swim " + m.swim + " feet";
 		}
 		lines.add("");
-		String maxhp =
+		final String maxhp =
 				Squad.active.members.contains(c) ? " (" + c.maxhp + "hp)" : "";
 		lines.add("Hit dice     " + m.hd + maxhp);
-		lines.add("Initiative   " + alignnumber(m.initiative));
+		lines.add("Initiative   " + (m.initiative >= 0 ? "+" : "")
+				+ m.initiative);
 		lines.add("Speed        " + speedtext + " (" + speed / 5 + " squares)");
 		lines.add("Armor class  " + alignnumber(m.ac + c.acmodifier));
 		lines.add("");
@@ -91,6 +101,7 @@ public class StatisticsScreen extends InfoScreen {
 		}
 		lines.add(feats);
 		lines.add("");
+		lines.add(showskills(m));
 		lines.add(
 				"Press v to see the monster description, any other key to exit");
 		for (String line : lines) {
@@ -102,6 +113,67 @@ public class StatisticsScreen extends InfoScreen {
 			updatescreens();
 		}
 		Javelin.app.switchScreen(BattleScreen.active);
+	}
+
+	String formatskill(String name, int ranks, int ability) {
+		if (ranks == 0) {
+			return "";
+		}
+		ranks += Monster.getbonus(ability);
+		String bonus;
+		if (ranks > 0) {
+			bonus = "+" + ranks;
+		} else {
+			bonus = "-" + -ranks;
+		}
+		return name + " " + bonus + ", ";
+	}
+
+	String showskills(Monster m) {
+		Skills skills = m.skills;
+		String output = "";
+		output += formatskill("acrobatics", skills.acrobatics, m.dexterity);
+		output += formatskill("concentration", skills.concentration,
+				m.constitution);
+		output += formatskill("diplomacy", skills.diplomacy, m.charisma);
+		output += formatskill("disable device", skills.disabledevice,
+				m.intelligence);
+		output += formatskill("gather information", skills.gatherinformation,
+				m.charisma);
+		output += formatskill("hide", skills.hide, m.dexterity);
+		output += formatskill("knowledge", skills.knowledge, m.intelligence);
+		output += formatskill("listen", skills.listen, m.wisdom);
+		output +=
+				formatskill("move silently", skills.movesilently, m.dexterity);
+		output += formatskill("search", skills.search, m.intelligence);
+		output += formatskill("spellcraft", skills.spellcraft, m.intelligence);
+		output += formatskill("spot", skills.spot, m.wisdom);
+		output += formatskill("survival", skills.survival, m.wisdom);
+		if (output.isEmpty()) {
+			return "";
+		}
+		return "Skills: " + output.substring(0, output.length() - 2) + "\n";
+	}
+
+	String describealignment(Monster m) {
+		String alignment;
+		if (m.lawful == null) {
+			if (m.good == null) {
+				return "True neutral";
+			}
+			alignment = "Neutral";
+		} else if (m.lawful) {
+			alignment = "Lawful";
+		} else {
+			alignment = "Chaotic";
+		}
+		if (m.good == null) {
+			return alignment += " neutral";
+		} else if (m.good) {
+			return alignment + " good";
+		} else {
+			return alignment + " evil";
+		}
 	}
 
 	private String save(int x) {
@@ -117,7 +189,8 @@ public class StatisticsScreen extends InfoScreen {
 		while (abilityname.length() < 13) {
 			abilityname += " ";
 		}
-		return abilityname + Monster.getsignedbonus(score);
+		return abilityname + alignnumber(score) + " ("
+				+ Monster.getsignedbonus(score) + ")";
 	}
 
 	private String describequalities(Monster m, Combatant c) {

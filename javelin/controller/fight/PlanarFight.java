@@ -17,8 +17,8 @@ import javelin.model.BattleMap;
 import javelin.model.item.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.world.Haxor;
-import javelin.model.world.Town;
+import javelin.model.world.place.town.Town;
+import javelin.model.world.place.unique.Haxor;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.tyrant.Game;
@@ -63,29 +63,28 @@ public class PlanarFight implements Fight {
 
 	public PlanarFight(Key k) {
 		this.key = k;
-		UpgradeHandler upgrades = new UpgradeHandler();
-		upgrades.gather();
+		UpgradeHandler.singleton.gather();
 		switch (key.color) {
-		case BLUE:
-			path = upgrades.water;
+		case WATER:
+			path = UpgradeHandler.singleton.water;
 			break;
-		case BLACK:
-			path = upgrades.evil;
+		case EVIL:
+			path = UpgradeHandler.singleton.evil;
 			break;
-		case GREEN:
-			path = upgrades.earth;
+		case EARTH:
+			path = UpgradeHandler.singleton.earth;
 			break;
-		case MAGENTA:
-			path = upgrades.magic;
+		case MAGICAL:
+			path = UpgradeHandler.singleton.magic;
 			break;
-		case RED:
-			path = upgrades.fire;
+		case FIRE:
+			path = UpgradeHandler.singleton.fire;
 			break;
-		case TRANSPARENT:
-			path = upgrades.wind;
+		case WIND:
+			path = UpgradeHandler.singleton.wind;
 			break;
-		case WHITE:
-			path = upgrades.good;
+		case GOOD:
+			path = UpgradeHandler.singleton.good;
 			break;
 		default:
 			throw new RuntimeException("Unknown key type " + key);
@@ -117,17 +116,12 @@ public class PlanarFight implements Fight {
 					.add(new Combatant(null,
 							RPG.pick(Javelin.MONSTERSBYCR
 									.get(determinecr(teamel, size))).clone(),
-					true));
+							true));
 		}
 		// opponents = organizeopponents(opponents);
 		for (int i = 0; i < size; i++) {
 			Combatant opponent = opponents.get(i);
-			opponent.source.customName = Key.REALMS.get(key.color) + " "
-					+ opponent.source.name.toLowerCase();
-			opponent.source.customName = Character
-					.toUpperCase(opponent.source.customName.charAt(0))
-					+ opponent.source.customName.substring(1).toLowerCase();
-
+			key.color.baptize(opponent);
 		}
 		int i = 0;
 		while (ChallengeRatingCalculator.calculateElSafe(opponents) < teamel) {
@@ -135,8 +129,8 @@ public class PlanarFight implements Fight {
 			int j = 0;
 			while (true) {
 				Upgrade u = RPG.pick(path);
-				if (u.apply(weakest.clonedeeply())) {
-					u.apply(weakest);
+				if (u.upgrade(weakest.clonedeeply())) {
+					u.upgrade(weakest);
 					break;
 				}
 				j += 1;
@@ -236,4 +230,23 @@ public class PlanarFight implements Fight {
 		return false;
 	}
 
+	@Override
+	public boolean rewardgold() {
+		return true;
+	}
+
+	@Override
+	public boolean hide() {
+		return false;
+	}
+
+	@Override
+	public boolean canbribe() {
+		return false;
+	}
+
+	@Override
+	public void bribe() {
+		throw new RuntimeException("Cannot bribe a #planarfight");
+	}
 }

@@ -19,15 +19,13 @@ public class BearsEndurance extends Potion {
 
 	@Override
 	public boolean use(Combatant user) {
-		user.source.raiseconstitution(user);
-		user.source.raiseconstitution(user);
-		user.source.constitution += 4;
+		user.source.raiseconstitution(user, 2);
 		user.conditions.add(new Buff("enduring", user));
 		Game.message(
 				"Constitution is now "
 						+ Monster.getsignedbonus(user.source.constitution),
 				null, Delay.BLOCK);
-		return false;
+		return true;
 	}
 
 	@Override

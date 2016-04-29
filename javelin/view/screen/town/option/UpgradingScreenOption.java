@@ -1,8 +1,8 @@
 package javelin.view.screen.town.option;
 
-import javelin.model.world.Town;
+import javelin.model.world.place.town.Town;
 import javelin.view.screen.town.SelectScreen;
-import javelin.view.screen.town.UpgradingScreen;
+import javelin.view.screen.upgrading.TownUpgradingScreen;
 
 /**
  * @see UpgradeOption
@@ -10,13 +10,13 @@ import javelin.view.screen.town.UpgradingScreen;
  */
 public class UpgradingScreenOption extends ScreenOption {
 
-	public UpgradingScreenOption(String name, Town t) {
-		super(name, t);
+	public UpgradingScreenOption(String string, Town town, char c) {
+		super(string, town, c);
 	}
 
 	@Override
 	public SelectScreen show() {
-		return new UpgradingScreen(t);
+		return new TownUpgradingScreen(t);
 	}
 
 }

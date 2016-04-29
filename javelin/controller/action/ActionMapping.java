@@ -45,8 +45,10 @@ public class ActionMapping {
 			new ActionAdapter(Guide.ITEMS), // F3
 			new ActionAdapter(Guide.UGRADES1), // F4
 			new ActionAdapter(Guide.UGRADES2), // F5
-			new ActionAdapter(Guide.SPELLS1), // F6
-			new ActionAdapter(Guide.SPELLS2), // F7
+			new ActionAdapter(Guide.SKILLS), // F6
+			new ActionAdapter(Guide.SPELLS1), // F7
+			new ActionAdapter(Guide.SPELLS2), // F8
+			new ActionAdapter(Guide.ARTIFACTS), // F9
 			Action.HELP, // h
 
 			Action.MOVE_N, Action.MOVE_NE, Action.MOVE_E, Action.MOVE_SE,

@@ -17,9 +17,7 @@ public class BearsEndurance extends TotemsSpell {
 	public String cast(final Combatant caster, final Combatant target,
 			final BattleState s, final boolean saved) {
 		target.source = target.source.clone();
-		target.source.raiseconstitution(target);
-		target.source.raiseconstitution(target);
-		target.source.constitution += 4;
+		target.source.raiseconstitution(target, 2);
 		return target + "'s constitution is now "
 				+ Monster.getsignedbonus(target.source.constitution);
 	}

@@ -1,5 +1,6 @@
 package javelin.model.item.scroll;
 
+import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 
@@ -9,7 +10,9 @@ import javelin.model.unit.Combatant;
 public class RessurectScroll extends RaiseScroll {
 
 	public RessurectScroll() {
-		super("Scroll of ressurect & restoration", 13000, Item.GOOD);
+		super("Scroll of ressurection & restoration", 13000, Item.GOOD, 7,
+				SpellsFactor.ratespelllikeability(7)
+						+ RaiseScroll.RESTORATIONCOST);
 	}
 
 	@Override

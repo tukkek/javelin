@@ -7,8 +7,8 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import javelin.Javelin;
+import javelin.view.screen.InfoScreen;
 import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.InfoScreen;
 
 /**
  * Outputs the content of a text file to the screen.

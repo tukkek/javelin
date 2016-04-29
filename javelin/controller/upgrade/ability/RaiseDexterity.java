@@ -21,7 +21,6 @@ public class RaiseDexterity extends RaiseAbility {
 	@Override
 			boolean setattribute(Combatant m, int l)
 					throws PropertyVetoException {
-		m.source.dexterity = l;
 		m.source.raisedexterity(+1);
 		return true;
 	}

@@ -14,8 +14,4 @@ public abstract class Potion extends Item {
 		super(name, price, town);
 	}
 
-	@Override
-	public boolean isusedinbattle() {
-		return true;
-	}
 }

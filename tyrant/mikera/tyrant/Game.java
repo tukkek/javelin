@@ -28,6 +28,7 @@ import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
 import javelin.view.MapPanel;
 import javelin.view.screen.BattleScreen;
+import javelin.view.screen.InfoScreen;
 import tyrant.mikera.engine.BaseObject;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.Point;

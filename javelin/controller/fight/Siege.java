@@ -36,7 +36,7 @@ public class Siege implements Fight {
 	public List<Combatant> getmonsters(int teamel) {
 		ArrayList<Combatant> clones = new ArrayList<Combatant>(place.garrison);
 		for (int i = 0; i < clones.size(); i++) {
-			clones.set(0, clones.get(0).clonedeeply());
+			clones.set(i, clones.get(i).clonedeeply());
 		}
 		return clones;
 	}

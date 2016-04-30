@@ -145,14 +145,15 @@ public class JavelinApp extends QuestApp {
 						Incursion.getsafeincursion(foes);
 			}
 		}
-		if (fight.hide() && Squad.active.hide(foes)) {
-			return;
-		}
 		/* TODO enable in Dungeon as well, debug */
-		if (Dungeon.active == null && fight.canbribe()
-				&& Squad.active.bribe(foes)) {
-			fight.bribe();
-			return;
+		if (Dungeon.active == null) {
+			if (fight.hide() && Squad.active.hide(foes)) {
+				return;
+			}
+			if (fight.canbribe() && Squad.active.bribe(foes)) {
+				fight.bribe();
+				return;
+			}
 		}
 		JavelinApp.preparebattle(new GeneratedFight(foes));
 		final BattleScreen battleScreen =

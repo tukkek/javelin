@@ -43,7 +43,7 @@ public class EndBattle extends BattleEvent {
 		}
 		for (final Combatant dead : BattleMap.dead) {
 			for (final Combatant original : originalteam) {
-				if (dead.id == original.id) {
+				if (dead.equals(original)) {
 					updatehp(dead, original);
 					break;
 				}
@@ -73,10 +73,10 @@ public class EndBattle extends BattleEvent {
 		for (Combatant active : BattleMap.dead) {
 			for (final Combatant original : new ArrayList<Combatant>(
 					originalteam)) {
-				if (active.toString().equals(original.toString())) {
+				if (active.equals(original)) {
 					if (Combatant.DEADATHP < active.hp && active.hp <= 0) {
 						original.hp = 1;
-					} else if (BattleMap.victory && !revive(original)) {
+					} else if (!BattleMap.victory || !revive(original)) {
 						lastkilled = original;
 						originalteam.remove(original);
 						Squad.active.equipment.remove(original.toString());

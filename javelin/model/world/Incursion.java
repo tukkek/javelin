@@ -37,6 +37,8 @@ import tyrant.mikera.tyrant.Game.Delay;
 public class Incursion extends WorldActor {
 	/** Move even if {@link Javelin#DEBUGDISABLECOMBAT} is enabled. */
 	private static final boolean FORCEMOVEMENT = false;
+	private static final boolean DONTSPAWN = false;
+
 	public static Integer currentel = 1;
 
 	/** @see #getel() */
@@ -153,6 +155,9 @@ public class Incursion extends WorldActor {
 	 * level 20 incursion to appear.
 	 */
 	public static boolean spawn() {
+		if (DONTSPAWN) {
+			return false;
+		}
 		if (RPG.r(1, 18) != 1 && !Javelin.DEBUG_SPAWNINCURSION) {
 			return false;
 		}

@@ -8,7 +8,8 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class WingsOfFlying extends Artifact {
-	private int without;
+	int originalfly;
+	int originalwalk;
 
 	/** Constructor. */
 	public WingsOfFlying(int price) {
@@ -17,13 +18,16 @@ public class WingsOfFlying extends Artifact {
 
 	@Override
 	protected void apply(Combatant c) {
-		without = c.source.fly;
+		originalfly = c.source.fly;
+		originalwalk = c.source.walk;
 		c.source.fly = 60;
+		c.source.walk = 0;
 	}
 
 	@Override
 	protected void negate(Combatant c) {
-		c.source.fly = without;
+		c.source.fly = originalfly;
+		c.source.walk = originalwalk;
 	}
 
 }

@@ -15,6 +15,10 @@ import javelin.controller.ai.BattleAi;
  * See doc/skills.txt guide for more information.
  * 
  * Synergy bonuses are not being used for now.
+ * 
+ * TODO it would probably be better to have this as an Enum,Integer Map. This
+ * way would allow more programmatic freedom on stuff like
+ * {@link javelin.controller.db.reader.factor.Skills}.
  *
  * @author alex
  */

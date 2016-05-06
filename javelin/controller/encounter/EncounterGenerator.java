@@ -7,6 +7,7 @@ import javelin.Javelin;
 import javelin.controller.db.reader.factor.Organization;
 import javelin.controller.exception.GaveUpException;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
 import javelin.model.world.Squad;
 import tyrant.mikera.engine.RPG;
 
@@ -25,6 +26,9 @@ public class EncounterGenerator {
 
 	public static ArrayList<Combatant> generate(int el, int terrainp)
 			throws GaveUpException {
+		if (Javelin.DEBUGFOE != null) {
+			return debugmonster();
+		}
 		ArrayList<Combatant> encounter = null;
 		for (int i = 0; i < MAXTRIES; i++) {
 			encounter = select(el, terrainp);
@@ -33,6 +37,23 @@ public class EncounterGenerator {
 			}
 		}
 		throw new GaveUpException();
+	}
+
+	private static ArrayList<Combatant> debugmonster() {
+		ArrayList<Combatant> opponents = new ArrayList<Combatant>();
+		for (Monster m : Javelin.ALLMONSTERS) {
+			if (m.name.equalsIgnoreCase(Javelin.DEBUGFOE)) {
+				Integer n = Javelin.DEBUGMINIMUMFOES;
+				if (n == null) {
+					n = 1;
+				}
+				for (int i = 0; i < n; i++) {
+					opponents.add(new Combatant(null, m.clone(), true));
+				}
+				break;
+			}
+		}
+		return opponents;
 	}
 
 	public static ArrayList<Combatant> select(int elp, int terrainp) {

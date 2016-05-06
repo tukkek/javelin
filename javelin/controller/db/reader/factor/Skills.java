@@ -31,41 +31,45 @@ public class Skills extends FieldReader {
 			String[] split = skill.split(" ");
 			int value =
 					Integer.parseInt(split[split.length - 1].replace("*", ""));
-			if (skill.contains("tumble")) {
-				m.skills.acrobatics = value - Monster.getbonus(m.dexterity);
-			} else if (skill.contains("concentration")) {
-				m.skills.concentration =
-						value - Monster.getbonus(m.constitution);
-			} else if (skill.contains("diplomacy")) {
-				m.skills.diplomacy = value - Monster.getbonus(m.charisma);
-			} else if (skill.contains("disable device")) {
-				m.skills.disabledevice =
-						value - Monster.getbonus(m.intelligence);
-			} else if (skill.contains("gather information")) {
-				m.skills.gatherinformation =
-						value - Monster.getbonus(m.charisma);
-			} else if (skill.contains("hide")) {
-				m.skills.hide = value - Monster.getbonus(m.dexterity);
-			} else if (skill.contains("knowledge")) {
-				int knowledge = value - Monster.getbonus(m.intelligence);
-				if (knowledge > m.skills.knowledge) {
-					m.skills.knowledge = knowledge;
-				}
-			} else if (skill.contains("listen")) {
-				m.skills.listen = value - Monster.getbonus(m.wisdom);
-			} else if (skill.contains("move silently")) {
-				m.skills.movesilently = value - Monster.getbonus(m.dexterity);
-			} else if (skill.contains("search")) {
-				m.skills.search = value - Monster.getbonus(m.intelligence);
-			} else if (skill.contains("spellcraft")) {
-				m.skills.spellcraft = value - Monster.getbonus(m.intelligence);
-			} else if (skill.contains("spot")) {
-				m.skills.spot = value - Monster.getbonus(m.wisdom);
-			} else if (skill.contains("survival")) {
-				m.skills.survival = value - Monster.getbonus(m.wisdom);
-			} else if (Javelin.DEBUG) {
-				UNKNOWN.add(skill.replace('-', '+').split("\\+")[0].trim());
-			}
+			apply(m, skill, value);
+		}
+	}
+
+	static void apply(Monster m, String skill, int value) {
+		final int dexbased = value - Monster.getbonus(m.dexterity);
+		final int conbased = value - Monster.getbonus(m.constitution);
+		final int chabased = value - Monster.getbonus(m.charisma);
+		final int intbased = value - Monster.getbonus(m.intelligence);
+		final int wisbased = value - Monster.getbonus(m.wisdom);
+		javelin.model.unit.Skills s = m.skills;
+		if (skill.contains("tumble")) {
+			s.acrobatics = Math.max(s.acrobatics, dexbased);
+		} else if (skill.contains("concentration")) {
+			s.concentration = Math.max(s.concentration, conbased);
+		} else if (skill.contains("diplomacy")) {
+			s.diplomacy = Math.max(s.diplomacy, chabased);
+		} else if (skill.contains("disable device")) {
+			s.disabledevice = Math.max(s.disabledevice, intbased);
+		} else if (skill.contains("gather information")) {
+			s.gatherinformation = Math.max(s.gatherinformation, chabased);
+		} else if (skill.contains("hide")) {
+			s.hide = Math.max(s.hide, dexbased);
+		} else if (skill.contains("knowledge")) {
+			s.knowledge = Math.max(s.knowledge, intbased);
+		} else if (skill.contains("listen")) {
+			s.listen = Math.max(s.listen, wisbased);
+		} else if (skill.contains("move silently")) {
+			s.movesilently = Math.max(s.movesilently, dexbased);
+		} else if (skill.contains("search")) {
+			s.search = Math.max(s.search, intbased);
+		} else if (skill.contains("spellcraft")) {
+			s.spellcraft = Math.max(s.spellcraft, intbased);
+		} else if (skill.contains("spot")) {
+			s.spot = Math.max(s.spot, wisbased);
+		} else if (skill.contains("survival")) {
+			s.survival = Math.max(s.survival, wisbased);
+		} else if (Javelin.DEBUG) {
+			UNKNOWN.add(skill.replace('-', '+').split("\\+")[0].trim());
 		}
 	}
 }

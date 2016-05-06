@@ -29,7 +29,7 @@ public class LairResearch extends Research {
 	}
 
 	@Override
-	protected boolean isrepeated(Town t) {
+	public boolean isrepeated(Town t) {
 		for (RecruitOption r : t.lairs) {
 			if (r.m.equals(m)) {
 				return true;

@@ -29,7 +29,6 @@ public class QualitiesFactor extends CrFactor {
 	@Override
 	public void listupgrades(UpgradeHandler handler) {
 		handler.water.add(new FastHealing());
-		handler.good.add(new javelin.controller.upgrade.DamageReduction());
 
 		handler.evil.add(new Vision("Low-light vision", 1));
 		handler.evil.add(new Vision("Darkvision", 2));
@@ -37,6 +36,7 @@ public class QualitiesFactor extends CrFactor {
 		handler.magic.add(new javelin.controller.upgrade.SpellResistance());
 		handler.magic.add(new javelin.controller.upgrade.EnergyResistance());
 
+		handler.good.add(new javelin.controller.upgrade.DamageReduction());
 		handler.good.add(new javelin.controller.upgrade.SpellImmunity());
 		handler.good.add(new javelin.controller.upgrade.EnergyImmunity());
 	}

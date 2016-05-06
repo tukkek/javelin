@@ -14,6 +14,10 @@ import javelin.view.screen.town.option.RecruitOption;
  * @author alex
  */
 public class ResearchData implements Serializable {
+	public static final int NATIVEUPGRADE = 1;
+
+	public static final int MONSTERLAIR = 5;
+
 	/**
 	 * Represents a few {@link Research} options that the player or
 	 * {@link #automanage}r can use to advance a town. Grow should always be the

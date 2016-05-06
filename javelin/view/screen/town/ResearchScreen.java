@@ -9,7 +9,7 @@ import javelin.view.screen.Option;
 import tyrant.mikera.tyrant.Game;
 
 /**
- * Manually manages {@link Town#research.researching} and {@link Town#research.researchhand}.
+ * Manually manages {@link Town#research}.
  * 
  * @see Town#automanage
  * @author alex
@@ -21,6 +21,18 @@ public class ResearchScreen extends PurchaseScreen {
 	public ResearchScreen(String name, Town t) {
 		super("Reseach new options:", t);
 		this.t = t;
+		/*
+		 * TODO initial towns are drawing upgrades before stashing other options
+		 * so some isrepeated options are being added nonetheless. This
+		 * mitigates by checking again on Screen opening.
+		 */
+		for (int i = 0; i < t.research.hand.length; i++) {
+			Research o = t.research.hand[i];
+			if (o != null && o.isrepeated(t)) {
+				t.research.hand[i] = null;
+			}
+		}
+		Research.draw(t);
 	}
 
 	@Override
@@ -51,9 +63,6 @@ public class ResearchScreen extends PurchaseScreen {
 			r.finish(town, null);
 		} else if (!town.research.queue.contains(r)) {
 			town.research.queue.add(r);
-			// print(text + "\nAdded to queue, press any key to
-			// continue...");
-			// Game.getInput();
 		}
 		return true;
 	}

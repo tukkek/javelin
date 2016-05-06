@@ -106,6 +106,7 @@ public class Merchant extends WorldActor {
 			}
 			remove();
 		} else if (here != null) {
+			ignoreturn = false;
 			turn(0, null);// jump over other Actors
 		}
 	}

@@ -35,7 +35,7 @@ public class ItemResearch extends Research {
 	}
 
 	@Override
-	protected boolean isrepeated(Town t) {
+	public boolean isrepeated(Town t) {
 		return t.items.contains(i);
 	}
 

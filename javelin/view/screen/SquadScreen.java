@@ -128,13 +128,13 @@ public class SquadScreen extends InfoScreen {
 
 	public static ArrayList<Monster> getcandidates() {
 		ArrayList<Monster> candidates = new ArrayList<Monster>();
-		if (Javelin.DEBUGSTARTINGCR == null) {
-			for (float cr : SELECTABLE) {
-				candidates.addAll(Javelin.MONSTERSBYCR.get(cr));
-			}
-		} else {
+		if (Javelin.DEBUGSTARTINGCR != null) {
 			candidates
 					.addAll(Javelin.MONSTERSBYCR.get(Javelin.DEBUGSTARTINGCR));
+			return candidates;
+		}
+		for (float cr : SELECTABLE) {
+			candidates.addAll(Javelin.MONSTERSBYCR.get(cr));
 		}
 		return candidates;
 	}

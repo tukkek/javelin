@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.prefs.Preferences;
 
+import javax.swing.JOptionPane;
+
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -70,7 +72,7 @@ public class Javelin {
 	public static final boolean DEBUG_SPAWNINCURSION = false;
 	public static final Float DEBUGSTARTINGCR = null;
 	public static final Item DEBUGSTARTINGITEM = null;
-	public static final String DEBUGALLOWMONSTER = null;
+	public static final String DEBUGFOE = null;
 	public static final String DEBUGPERIOD = null;
 
 	public static final String PERIOD_MORNING = "Morning";
@@ -91,6 +93,7 @@ public class Javelin {
 	public static Combatant captured = null;
 
 	static {
+		checkjava();
 		try {
 			final DefaultHandler defaultHandler = new MonsterReader();
 			final XMLReader reader = XMLReaderFactory.createXMLReader();
@@ -141,6 +144,25 @@ public class Javelin {
 		f.setVisible(true);
 
 		app.init();
+	}
+
+	private static void checkjava() {
+		String[] version = System.getProperty("java.version").split("\\.");
+		if (Integer.parseInt(version[0]) != 1) {
+			/* java 2.x? Don't even try to guess what to do... */
+			return;
+		}
+		int major = Integer.parseInt(version[1]);
+		if (major < 8) {
+			String error;
+			error = "Javelin needs Java 8 or newer to run properly.";
+			error += "\nYou currently have Java " + major + " installed.";
+			error += "\nPlease update Java in order play Javelin and to install the newest security updates.";
+			error += "\n\nThe following webpage has further information on updating Java on all major operating systems:";
+			error += "\nwww.techhelpkb.com/how-to-update-java-on-your-computer";
+			JOptionPane.showMessageDialog(null, error);
+			System.exit(1);
+		}
 	}
 
 	public static Combatant getCombatant(final Thing t) {

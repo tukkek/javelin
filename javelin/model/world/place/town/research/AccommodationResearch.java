@@ -28,7 +28,7 @@ public class AccommodationResearch extends Research {
 	}
 
 	@Override
-	protected boolean isrepeated(Town t) {
+	public boolean isrepeated(Town t) {
 		return false;
 	}
 }

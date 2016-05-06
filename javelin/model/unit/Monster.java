@@ -73,9 +73,29 @@ public class Monster implements Cloneable, Serializable {
 	@Deprecated
 	private int will;
 
+	/**
+	 * 5 units = 1 square. A unit is able to move this number of squares as a
+	 * move-equivalent action (.5 action points).
+	 * 
+	 * @see #fly
+	 */
 	public int walk = 0;
-	/** TODO also offer perfect flight */
+	/**
+	 * Flying allows an unit to ignore water and obstacles. A flying unit should
+	 * have {@link #walk} 0.
+	 * 
+	 * TODO also offer perfect flight, which could at least charge through
+	 * obstacles.
+	 * 
+	 * @see #walk
+	 */
 	public int fly = 0;
+	/**
+	 * A swimming creature is able to ignore water penalties and charge through
+	 * flooded squares.
+	 * 
+	 * @see #walk
+	 */
 	public int swim = 0;
 
 	/**

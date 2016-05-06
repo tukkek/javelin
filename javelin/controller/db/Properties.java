@@ -27,6 +27,7 @@ public class Properties {
 
 	static public Integer getInteger(String key, Integer fallback) {
 		String value = getString(key);
+		/* Don't inline. */
 		if (value == null) {
 			return fallback;
 		} else {

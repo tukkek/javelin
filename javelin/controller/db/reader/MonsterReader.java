@@ -491,8 +491,6 @@ public class MonsterReader extends DefaultHandler {
 					SpecialtiesLog.log("    Breaths: " + monster.breaths);
 				}
 				SpecialtiesLog.log();
-				// Organization.TERRAINDATA.put(monster.toString().toLowerCase(),
-				// terrains);
 			}
 			SpecialtiesLog.clear();
 		}
@@ -503,18 +501,13 @@ public class MonsterReader extends DefaultHandler {
 	}
 
 	public void registermonster() {
-		if (Javelin.DEBUGALLOWMONSTER != null
-				&& !monster.name.contains(Javelin.DEBUGALLOWMONSTER)) {
-			return;
-		}
-		final float cr;
 		try {
-			cr = ChallengeRatingCalculator.calculateCr(monster);
+			ChallengeRatingCalculator.calculateCr(monster);
+			Javelin.ALLMONSTERS.add(monster);
 		} catch (final Exception e) {
 			throw new RuntimeException("Challenge rating issue " + monster.name,
 					e);
 		}
-		Javelin.ALLMONSTERS.add(monster);
 	}
 
 	private static PrintWriter log = null;

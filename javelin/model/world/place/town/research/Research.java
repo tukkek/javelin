@@ -221,7 +221,7 @@ public abstract class Research extends Option {
 		return name.equals(r.name);
 	}
 
-	protected abstract boolean isrepeated(Town t);
+	public abstract boolean isrepeated(Town t);
 
 	public void finish(Town town, ResearchScreen s) {
 		town.labor -= price;

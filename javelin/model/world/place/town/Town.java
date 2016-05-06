@@ -9,6 +9,8 @@ import javelin.controller.action.world.CastSpells;
 import javelin.controller.action.world.UseItems;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.db.StateManager;
+import javelin.controller.fight.Siege;
+import javelin.controller.fight.TownSiege;
 import javelin.controller.tournament.Exhibition;
 import javelin.controller.tournament.Match;
 import javelin.controller.upgrade.Spell;
@@ -386,5 +388,10 @@ public class Town extends WorldPlace {
 	public Transport upgradetransport() {
 		return transport.equals(Transport.NONE) ? Transport.CARRIAGE
 				: Transport.AIRSHIP;
+	}
+
+	@Override
+	protected Siege fight() {
+		return new TownSiege(this);
 	}
 }

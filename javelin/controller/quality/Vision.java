@@ -7,10 +7,10 @@ import javelin.model.unit.Monster;
  * 
  * @author alex
  */
-public class SpecialPerception extends Quality {
+public class Vision extends Quality {
 	final int target;
 
-	public SpecialPerception(String name, int target) {
+	public Vision(String name, int target) {
 		super(name);
 		this.target = target;
 	}

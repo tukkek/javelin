@@ -15,7 +15,7 @@ import javelin.model.unit.Monster;
 public abstract class Quality {
 
 	/**
-	 * should always be lowercase
+	 * Should always be lowercase.
 	 */
 	public final String name;
 
@@ -27,25 +27,14 @@ public abstract class Quality {
 
 	static {
 		for (final Quality q : new Quality[] { new FastHealing("fast healing"),
-				new SpecialPerception("low-light vision",
-						Monster.VISION_LOWLIGHT),
-				new SpecialPerception("blindsight", Monster.VISION_LOWLIGHT),
-				new SpecialPerception("darkvision", Monster.VISION_DARK),
-				new SpecialPerception("keen vision", Monster.VISION_DARK),
-				new SpecialPerception("keen senses", Monster.VISION_DARK),
+				new Vision("low-light vision", Monster.VISION_LOWLIGHT),
+				new Vision("blindsight", Monster.VISION_LOWLIGHT),
+				new Vision("darkvision", Monster.VISION_DARK),
+				new Vision("keen vision", Monster.VISION_DARK),
+				new Vision("keen senses", Monster.VISION_DARK),
 				new DamageReduction(), new EnergyResistance(),
 				new SpellResistance(), new SpellImmunity(),
-				new EnergyImmunity(), new MindImmunity() }) {
-			qualities.add(q);
-		}
-	}
-
-	public static final ArrayList<Quality> attacks = new ArrayList<Quality>();
-
-	static {
-		for (final Quality q : new Quality[] {
-
-		}) {
+				new EnergyImmunity(), new MindImmunity(), new Tremorsense() }) {
 			qualities.add(q);
 		}
 	}
@@ -54,5 +43,8 @@ public abstract class Quality {
 
 	abstract public boolean has(Monster m);
 
+	/**
+	 * @return Challenge rating factor fot the given {@link Monster}.
+	 */
 	abstract public float rate(Monster m);
 }

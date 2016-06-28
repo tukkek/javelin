@@ -3,13 +3,14 @@ package javelin.view.screen;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.upgrade.classes.ClassAdvancement;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.world.Squad;
+import javelin.model.unit.Squad;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -19,9 +20,9 @@ import tyrant.mikera.engine.RPG;
  */
 public class SquadScreen extends InfoScreen {
 	private static final float INITIALELTARGET = 5f;
-	private static final int MONSTERPERPAGE = 20;
 	static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
-	static final float[] SELECTABLE = { 1 };
+	private static final int MONSTERPERPAGE = ALPHABET.indexOf('y');
+	static final float[] SELECTABLE = { 1f, 1.25f };
 	private final ArrayList<Monster> candidates;
 	ArrayList<Combatant> squad = new ArrayList<Combatant>();
 
@@ -50,15 +51,21 @@ public class SquadScreen extends InfoScreen {
 		if (input.equals(' ')) {
 			page(next < candidates.size() ? next : 0);
 		} else if (input == 'z') {
-			while (!checkifsquadfull()) {
-				recruit(RPG.pick(candidates));
+			fillwithrandom: while (!checkifsquadfull()) {
+				Monster candidate = RPG.pick(candidates);
+				for (Combatant m : squad) {
+					if (m.source.name.equals(candidate.name)) {
+						continue fillwithrandom;
+					}
+				}
+				recruit(candidate);
 			}
 		} else if (input == '\n') {
 			if (squad.isEmpty()) {
 				page(index);
 			}
 			while (ChallengeRatingCalculator
-					.calculateElSafe(squad) < INITIALELTARGET) {
+					.calculateel(squad) < INITIALELTARGET) {
 				Combatant weakest = squad.get(0);
 				for (int i = 1; i < squad.size(); i++) {
 					Combatant c = squad.get(i);
@@ -68,7 +75,6 @@ public class SquadScreen extends InfoScreen {
 				}
 				ClassAdvancement.COMMONER.apply(weakest);
 				ChallengeRatingCalculator.calculateCr(weakest.source);
-
 			}
 		} else {
 			int selection = ALPHABET.indexOf(input);
@@ -90,11 +96,8 @@ public class SquadScreen extends InfoScreen {
 	}
 
 	public boolean checkifsquadfull() {
-		if (Javelin.DEBUGSTARTINGCR != null) {
-			return squad.size() == 4;
-		}
 		return ChallengeRatingCalculator
-				.calculateElSafe(squad) >= INITIALELTARGET;
+				.calculateel(squad) >= INITIALELTARGET;
 	}
 
 	public int printpage(int index, int next) {
@@ -128,13 +131,11 @@ public class SquadScreen extends InfoScreen {
 
 	public static ArrayList<Monster> getcandidates() {
 		ArrayList<Monster> candidates = new ArrayList<Monster>();
-		if (Javelin.DEBUGSTARTINGCR != null) {
-			candidates
-					.addAll(Javelin.MONSTERSBYCR.get(Javelin.DEBUGSTARTINGCR));
-			return candidates;
-		}
 		for (float cr : SELECTABLE) {
-			candidates.addAll(Javelin.MONSTERSBYCR.get(cr));
+			List<Monster> tier = Javelin.MONSTERSBYCR.get(cr);
+			if (tier != null) {
+				candidates.addAll(tier);
+			}
 		}
 		return candidates;
 	}

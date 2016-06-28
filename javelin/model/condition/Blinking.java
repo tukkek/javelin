@@ -1,33 +1,39 @@
 package javelin.model.condition;
 
-import javelin.model.spell.Blink;
+import javelin.model.spell.abjuration.Blink;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
 
 /**
- * TODO walk through objects
- * 
- * TODO half area damage?
+ * Provides {@link Monster#fly} as a menas of allowing units to pass through
+ * solid objects.
  * 
  * @see Blink
- * 
  * @author alex
  */
 public class Blinking extends Condition {
-	public Blinking(float expireatp, Combatant c) {
-		super(expireatp, c, Effect.POSITIVE, "blinking");
+	int originalflight;
+
+	public Blinking(float expireatp, Combatant c, Integer casterlevelp) {
+		super(expireatp, c, Effect.POSITIVE, "blinking", casterlevelp);
 	}
 
 	@Override
-			void start(Combatant c) {
+	public void start(Combatant c) {
 		c.acmodifier += 10;
-		c.source = c.source.clone();
-		c.source.sr += 10;
+		Monster m = c.source.clone();
+		c.source = m;
+		m.sr += 10;
+		originalflight = m.fly;
+		m.fly = Math.max(m.fly, m.walk);
 	}
 
 	@Override
-			void end(Combatant c) {
+	public void end(Combatant c) {
 		c.acmodifier -= 10;
-		c.source = c.source.clone();
-		c.source.sr -= 10;
+		Monster m = c.source.clone();
+		c.source = m;
+		m.sr -= 10;
+		m.fly = Math.min(originalflight, m.fly);
 	}
 }

@@ -11,15 +11,15 @@ import javelin.model.unit.Monster;
 public class Breathless extends Condition {
 
 	public Breathless(float expireatp, Combatant c) {
-		super(expireatp, c, Effect.NEUTRAL, "breathless");
+		super(expireatp, c, Effect.NEUTRAL, "breathless", null);
 	}
 
 	@Override
-			void start(Combatant c) {
+	public void start(Combatant c) {
 	}
 
 	@Override
-			void end(Combatant c) {
+	public void end(Combatant c) {
 	}
 
 }

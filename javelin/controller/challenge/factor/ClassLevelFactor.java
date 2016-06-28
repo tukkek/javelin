@@ -4,6 +4,9 @@ import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
 
 /**
+ * Feats (which are not given by class advancemente) are discounted on
+ * {@link FeatsFactor}.
+ * 
  * @see CrFactor
  */
 public class ClassLevelFactor extends CrFactor {
@@ -18,11 +21,11 @@ public class ClassLevelFactor extends CrFactor {
 	public float calculate(Monster monster) {
 		int level = monster.commoner + monster.expert + monster.aristocrat
 				+ monster.warrior;
-		return level * ABILITY + monster.commoner * .45f
-				- SkillsFactor.levelup(2, monster) + monster.expert * .65f
-				- SkillsFactor.levelup(6, monster) + monster.aristocrat * .65f
-				- SkillsFactor.levelup(4, monster) + monster.warrior * .7f
-				- SkillsFactor.levelup(2, monster);
+		return level * ABILITY
+				+ monster.commoner * (.45f - SkillsFactor.levelup(2, monster))
+				+ monster.expert * (.65f - SkillsFactor.levelup(6, monster))
+				+ monster.aristocrat * (.65f - SkillsFactor.levelup(4, monster))
+				+ monster.warrior * (.7f - SkillsFactor.levelup(2, monster));
 	}
 
 	@Override

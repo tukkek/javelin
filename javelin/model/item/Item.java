@@ -8,42 +8,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
+import javelin.Javelin;
+import javelin.controller.action.UseItem;
+import javelin.controller.action.world.UseItems;
 import javelin.controller.db.StateManager;
+import javelin.controller.upgrade.Spell;
 import javelin.model.Realm;
 import javelin.model.item.artifact.Artifact;
-import javelin.model.item.potion.Darkvision;
-import javelin.model.item.potion.Fly;
-import javelin.model.item.potion.Heroism;
-import javelin.model.item.potion.Potion;
-import javelin.model.item.potion.barkskin.Barkskin2;
-import javelin.model.item.potion.barkskin.Barkskin3;
-import javelin.model.item.potion.barkskin.Barkskin4;
-import javelin.model.item.potion.barkskin.Barkskin5;
-import javelin.model.item.potion.cure.CureCriticalWounds;
-import javelin.model.item.potion.cure.CureLightWounds;
-import javelin.model.item.potion.cure.CureModerateWounds;
-import javelin.model.item.potion.cure.CureSeriousWounds;
-import javelin.model.item.potion.resistenergy.ResistEnergy2;
-import javelin.model.item.potion.resistenergy.ResistEnergy4;
-import javelin.model.item.potion.resistenergy.ResistEnergy6;
-import javelin.model.item.potion.totem.BearsEndurance;
-import javelin.model.item.potion.totem.EaglesSplendor;
-import javelin.model.item.potion.totem.FoxsCunning;
-import javelin.model.item.potion.totem.OwlsWisdom;
-import javelin.model.item.scroll.PryingEyes;
-import javelin.model.item.scroll.RaiseScroll;
-import javelin.model.item.scroll.RecallScroll;
-import javelin.model.item.scroll.RessurectScroll;
-import javelin.model.item.scroll.SecureShelterScroll;
-import javelin.model.item.scroll.Teleport;
-import javelin.model.item.scroll.dungeon.DiscernLocation;
-import javelin.model.item.scroll.dungeon.LocateObject;
+import javelin.model.spell.conjuration.healing.wounds.CureLightWounds;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Squad;
+import javelin.model.unit.Squad;
 import javelin.model.world.WorldActor;
-import javelin.model.world.place.WorldPlace;
-import javelin.model.world.place.town.Town;
+import javelin.model.world.location.Location;
+import javelin.model.world.location.town.Town;
 import javelin.view.screen.WorldScreen;
+import javelin.view.screen.shopping.ShoppingScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -85,51 +64,51 @@ public abstract class Item implements Serializable, Cloneable {
 	/** @see Artifact */
 	public static final ItemSelection ARTIFACT = new ItemSelection();
 
+	/** Creates {@link Item}s from {@link Spell}s. */
 	public static void init() {
-		new CureLightWounds();
-		new CureModerateWounds();
-		new CureSeriousWounds();
-		new CureCriticalWounds();
-		new Barkskin2();
-		new Barkskin3();
-		new Barkskin4();
-		new Barkskin5();
-		new ResistEnergy2();
-		new ResistEnergy4();
-		new ResistEnergy6();
-		new Darkvision();
-		new Fly();
-		new Heroism();//
-		new BearsEndurance();
-		new javelin.model.item.potion.totem.BullsStrength();
-		new javelin.model.item.potion.totem.CatsGrace();
-		new EaglesSplendor();
-		new FoxsCunning();
-		new OwlsWisdom();
+		for (Spell s : Spell.SPELLS.values()) {
+			if (s.isscroll) {
+				new Scroll(s);
+			}
+			if (s.iswand) {
+				new Wand(s);
+			}
+			if (s.ispotion) {
+				new Potion(s);
+			}
+		}
 
-		new DiscernLocation();
-		new LocateObject();
-		new PryingEyes();
-		new RaiseScroll();
-		new RecallScroll();
-		new RessurectScroll();
-		new SecureShelterScroll();
-		new Teleport();
 		mapbyprice();
 	}
 
+	/** Name to be shown the player. */
 	public String name;
+	/** Cost in gold pieces. */
 	public int price;
+	/**
+	 * <code>true</code> if can be used during battle . <code>true</code> by
+	 * default (default: true).
+	 */
 	public boolean usedinbattle = true;
+	/**
+	 * <code>true</code> if can be used while in the world map (default: true).
+	 */
+	public boolean usedoutofbattle = true;
+	/** <code>true</code> if should be expended after use (default: true). */
 	public boolean consumable = true;
 
-	public Item(final String name, final int price, final ItemSelection town) {
-		super();
+	/** If not <code>null</code> will be used for {@link #describefailure()}. */
+	volatile protected String failure = null;
+	/** How many action points to spend during {@link UseItem}. */
+	public float apcost = .5f;
+
+	public Item(final String name, final int price,
+			final ItemSelection upgradeset) {
 		this.name = name;
 		this.price = price;
 		ALL.add(this);
-		if (town != null) {
-			town.add(this);
+		if (upgradeset != null) {
+			upgradeset.add(this);
 		}
 	}
 
@@ -144,9 +123,11 @@ public abstract class Item implements Serializable, Cloneable {
 	}
 
 	/**
-	 * @return <code>true</code> if item was used.
+	 * @return <code>true</code> if item was spent.
 	 */
-	public abstract boolean use(Combatant user);
+	public boolean use(Combatant user) {
+		throw new RuntimeException("Not used in combat: " + this);
+	}
 
 	/**
 	 * Uses an item while on the {@link WorldScreen}.
@@ -155,24 +136,19 @@ public abstract class Item implements Serializable, Cloneable {
 	 *            Unit using the item.
 	 * @return <code>true</code> if item is to be expended.
 	 */
-	public abstract boolean usepeacefully(Combatant c);
-
-	@Override
-	public boolean equals(final Object obj) {
-		/**
-		 * TODO this is probably a bad idea, better to have a #contains(Class<?
-		 * extends Item>) on ItemSelection or something like this.
-		 * 
-		 * See the need for Artifact#equals for example and silly classes like
-		 * new Barkskin3()
-		 */
-		return getClass().equals(obj.getClass());
+	public boolean usepeacefully(Combatant user) {
+		throw new RuntimeException("Not used peacefully: " + this);
 	}
 
 	@Override
-	public Object clone() {
+	public boolean equals(final Object obj) {
+		return obj instanceof Item ? name.equals(((Item) obj).name) : false;
+	}
+
+	@Override
+	public Item clone() {
 		try {
-			return super.clone();
+			return (Item) super.clone();
 		} catch (CloneNotSupportedException e) {
 			throw new RuntimeException(e);
 		}
@@ -184,17 +160,21 @@ public abstract class Item implements Serializable, Cloneable {
 	 */
 	public static void distribute() {
 		CureLightWounds curelightwounds = new CureLightWounds();
-		for (WorldActor p : WorldPlace.getall(Town.class)) {
+		for (WorldActor p : Location.getall(Town.class)) {
 			Town t = (Town) p;
-			t.items.add(curelightwounds);
+			t.items.add(new Potion(new CureLightWounds()));
 			int nitems = RPG.r(3 - 1, 5 - 1);
 			ItemSelection selection = new ItemSelection(getselection(t.realm));
 			selection.remove(curelightwounds);
 			if (nitems > selection.size()) {
 				nitems = selection.size();
 			}
-			while (t.items.size() - 1 < nitems) {
+			while (t.items.size() - 1 < nitems
+					&& t.items.size() != selection.size()) {
 				t.items.add(selection.random());
+			}
+			for (Item i : t.items) {
+				i.shop();
 			}
 			Collections.sort(t.items, Item.PRICECOMPARATOR);
 		}
@@ -248,6 +228,9 @@ public abstract class Item implements Serializable, Cloneable {
 		StateManager.save();
 	}
 
+	/**
+	 * Use this to customize the error message if the item is not expended.
+	 */
 	public String describefailure() {
 		return "Can only be used in battle.";
 	}
@@ -271,5 +254,33 @@ public abstract class Item implements Serializable, Cloneable {
 	static private void addall(ItemSelection fire2,
 			HashMap<String, ItemSelection> all, String string) {
 		all.put(string, fire2);
+	}
+
+	/**
+	 * @return <code>null</code> if can use this, or an error message otherwise.
+	 */
+	public String canuse(Combatant c) {
+		return null;
+	}
+
+	/**
+	 * Called if this is instance is going to be sold and cloned by a town's
+	 * {@link ShoppingScreen}.
+	 * 
+	 * @see #clone()
+	 */
+	public void shop() {
+		// does nothing
+	}
+
+	/**
+	 * Prompts user to select one of the active {@link Squad} members to keep
+	 * this item and updates {@link Squad#equipment}.
+	 */
+	public void grab() {
+		Squad.active.equipment.get(Squad.active.members.get(Javelin.choose(
+				UseItems.listitems(null, false) + "\nWho will take the "
+						+ toString().toLowerCase() + "?",
+				Squad.active.members, true, true)).id).add(this);
 	}
 }

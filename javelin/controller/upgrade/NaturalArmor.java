@@ -30,9 +30,4 @@ public class NaturalArmor extends Upgrade {
 		m.ac += delta;
 		return true;
 	}
-
-	@Override
-	public boolean isstackable() {
-		return false;
-	}
 }

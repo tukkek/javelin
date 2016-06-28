@@ -8,7 +8,6 @@ import java.awt.event.KeyEvent;
 
 import javelin.Javelin;
 import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 import tyrant.mikera.tyrant.QuestApp;
 import tyrant.mikera.tyrant.Screen;
 import tyrant.mikera.tyrant.util.Text;
@@ -16,8 +15,6 @@ import tyrant.mikera.tyrant.util.Text;
 /**
  * Fullscreen text display. For hiding the current {@link BattleScreen} or
  * {@link WorldScreen} and interacting textually with the user.
- * 
- * TODO modernize UI
  * 
  * @author Tyrant
  * @author alex
@@ -91,20 +88,5 @@ public class InfoScreen extends Screen {
 	public void print(String string) {
 		text = string;
 		Javelin.app.switchScreen(this);
-	}
-
-	/**
-	 * Prompts a message in the {@link WorldScreen}.
-	 * 
-	 * TODO move to WorldScreen?
-	 * 
-	 * @param prompt
-	 *            Text to show.
-	 * @return Any {@link #feedback()}.
-	 */
-	static public Character prompt(final String prompt) {
-		Game.messagepanel.clear();
-		Game.message(prompt, null, Delay.NONE);
-		return feedback();
 	}
 }

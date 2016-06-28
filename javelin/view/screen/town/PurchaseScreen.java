@@ -1,8 +1,8 @@
 package javelin.view.screen.town;
 
 import javelin.Javelin;
-import javelin.model.world.Squad;
-import javelin.model.world.place.town.Town;
+import javelin.model.unit.Squad;
+import javelin.model.world.location.town.Town;
 import javelin.view.screen.Option;
 
 /**

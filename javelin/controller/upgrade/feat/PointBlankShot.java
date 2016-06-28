@@ -7,6 +7,7 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class PointBlankShot extends FeatUpgrade {
+	/** Constructor. */
 	public PointBlankShot() {
 		super(javelin.model.feat.PointBlankShot.SINGLETON);
 	}
@@ -14,11 +15,6 @@ public class PointBlankShot extends FeatUpgrade {
 	@Override
 	public String info(Combatant m) {
 		return "";
-	}
-
-	@Override
-	public boolean isstackable() {
-		return false;
 	}
 
 	@Override

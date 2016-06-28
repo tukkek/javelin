@@ -1,27 +1,29 @@
 package javelin.view.screen.upgrading;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.upgrade.Upgrade;
-import javelin.model.world.Squad;
-import javelin.model.world.place.guarded.Academy;
-import javelin.model.world.place.town.Order;
-import javelin.model.world.place.town.Town;
-import javelin.model.world.place.town.TrainingOrder;
+import javelin.model.unit.Squad;
+import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.fortification.MartialAcademy;
+import javelin.model.world.location.town.Order;
+import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.TrainingOrder;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.PurchaseScreen;
 
 /**
- * @see Academy
+ * @see MartialAcademy
  * @author alex
  */
 public class AcademyScreen extends UpgradingScreen {
 	final Academy academy;
-	Option pillage;
+	Option pillage = null;
 
 	/** Constructor. */
-	public AcademyScreen(Academy academy, String name, Town t) {
-		super(name, t);
+	public AcademyScreen(Academy academy, Town t) {
+		super(academy.descriptionknown, t);
 		this.academy = academy;
 		stayopen = false;
 		pillage = new Option("Pillage ($"
@@ -41,14 +43,16 @@ public class AcademyScreen extends UpgradingScreen {
 	}
 
 	@Override
-	protected List<Upgrade> getupgrades() {
+	protected ArrayList<Upgrade> getupgrades() {
 		return academy.upgrades;
 	}
 
 	@Override
 	public List<Option> getoptions() {
 		List<Option> options = super.getoptions();
-		options.add(pillage);
+		if (academy.pillage) {
+			options.add(pillage);
+		}
 		return options;
 	}
 
@@ -59,7 +63,7 @@ public class AcademyScreen extends UpgradingScreen {
 
 	@Override
 	protected boolean select(char feedback, List<Option> options) {
-		if (feedback == pillage.key) {
+		if (academy.pillage && feedback == pillage.key) {
 			academy.pillage();
 			return true;
 		}

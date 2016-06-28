@@ -6,8 +6,6 @@ package javelin.controller.challenge.factor;
 import javelin.model.unit.Monster;
 
 /**
- * TODO subtypes arent being taken into consideration
- * 
  * Can't simply upgrade HD since it gives more base attack bonus, abilities...
  * (feats are taken into consideration by FeatsFactor)
  * 
@@ -24,10 +22,11 @@ public class HdFactor extends CrFactor {
 			crByDie = .75f - SkillsFactor.levelup(6, monster);
 		} else if (type.contains("outsider")) {
 			crByDie = .7f - SkillsFactor.levelup(8, monster);
-		} else if (type.contains("magical beast") || type.contains("beast")) {
+		} else if (type.contains("magical beast") || type.contains("beast")
+				|| type.contains("shapechanger")) {
 			/* beast is a typo */
 			crByDie = .65f - SkillsFactor.levelup(2, monster);
-		} else if (type.contains("mounstrous humanoid")) {
+		} else if (type.contains("monstrous humanoid")) {
 			crByDie = .6f - SkillsFactor.levelup(2, monster);
 		} else if (type.contains("aberration") || type.contains("animal")
 				|| type.contains("elemental") || type.contains("giant")
@@ -50,7 +49,8 @@ public class HdFactor extends CrFactor {
 		} else {
 			throw new RuntimeException("Unknown type " + type);
 		}
-		crByDie -= Monster.getbonus(monster.intelligence) * SkillsFactor.COST;
+		// crByDie -= Monster.getbonus(monster.intelligence) *
+		// SkillsFactor.COST;
 		return new Double(monster.originalhd * crByDie).floatValue();
 	}
 

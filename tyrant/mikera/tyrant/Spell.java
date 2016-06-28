@@ -130,22 +130,22 @@ public class Spell {
 
 		if (s.getStat("SpellUsage") == SPELL_OFFENCE) {
 
-			if (map == null)
+			if (battlemap == null)
 				return false;
 
 			// find enemy to shoot at
-			Thing p = map.findNearestFoe(caster);
+			Thing p = battlemap.findNearestFoe(caster);
 
 			if ((p!=null)) {
 				// check if friend is too close!!
 				// if not, then cast at target as planned
-				Thing f = map.findNearestFoe( p);
+				Thing f = battlemap.findNearestFoe( p);
 				if ((f == null) || (RPG.distSquared(f.x, f.y, p.x, p.y) > s.getStat("Radius"))) {
 					if (p.isVisible(Game.hero())||caster.isVisible(Game.hero())) {
 						Game.messageTyrant(caster.getTheName()+ " casts "+s.name()+" at "+p.getTheName());
 					}
 							
-					castAtLocation(s,caster, map, p.x, p.y);
+					castAtLocation(s,caster, battlemap, p.x, p.y);
 					Spell.castCost(caster,s);
 					return true;
 				}
@@ -165,16 +165,16 @@ public class Spell {
 		} else if ((s.getStat("SpellUsage") == SPELL_SUMMON) && caster.isVisible(Game.hero())) {
 
 			// cast summon spell between caster and nearest foe
-			Thing f = map.findNearestFoe(caster);
+			Thing f = battlemap.findNearestFoe(caster);
 			if (f != null) {
 
 				int tx = (caster.x + f.x) / 2;
 				int ty = (caster.y + f.y) / 2;
 
-				if (!map.isBlocked(tx, ty)) {
+				if (!battlemap.isBlocked(tx, ty)) {
 					Game.messageTyrant(caster.getTheName()
 							+ " shouts words of summoning!");
-					Spell.castAtLocation(s,caster, map, tx, ty);
+					Spell.castAtLocation(s,caster, battlemap, tx, ty);
 					Spell.castCost(caster,s);
 					return true;
 				}
@@ -213,7 +213,7 @@ public class Spell {
 	}
 
 	public static void castAtLocation(Thing s, Thing caster, BattleMap map, int tx, int ty) {
-		if ((map==null)||(s.getStat("SpellTarget") != TARGET_LOCATION)) {
+		if ((battlemap==null)||(s.getStat("SpellTarget") != TARGET_LOCATION)) {
 			return;
 		}
 
@@ -221,7 +221,7 @@ public class Spell {
 		int bolt=s.getStat("BoltImage");
 
 		// special effects for location targetted spells
-		if (map.isVisible(tx, ty)) {
+		if (battlemap.isVisible(tx, ty)) {
 			if (caster != null) {
 				Game.instance().doSpellShot(caster.x, caster.y, tx, ty, s.getStat("BoltImage"),
 						100,radius);
@@ -247,7 +247,7 @@ public class Spell {
 				
 				if (s.handles("OnPathEffect")) {
 					Event e=new Event("PathEffect");
-					e.set("TargetMap",map);
+					e.set("TargetMap",battlemap);
 					e.set("TargetX",px);
 					e.set("TargetY",py);
 					if (s.handle(e)) return;			
@@ -258,11 +258,11 @@ public class Spell {
 		// ball spell damage effects
 		// rr contains squared radius
 		if (radius > 0) {
-			Spell.affectArea(s, caster, map, tx, ty, radius);
+			Spell.affectArea(s, caster, battlemap, tx, ty, radius);
 			return;
 		}
 
-		Spell.affectLocation(s, caster, map, tx, ty);
+		Spell.affectLocation(s, caster, battlemap, tx, ty);
 	}
 
 	public static void castAtObject(Thing s, Thing caster, Thing target) {
@@ -292,7 +292,7 @@ public class Spell {
 		for (int dx = -d; dx <= d; dx++) {
 			for (int dy = -d; dy <= d; dy++) {
 				if ((d*d+1)<(dx*dx+dy*dy)) continue;
-				affectLocation(s, caster, map, tx + dx, ty + dy);
+				affectLocation(s, caster, battlemap, tx + dx, ty + dy);
 			}
 		}
 	}
@@ -458,13 +458,13 @@ public class Spell {
 		if (s.handles("OnLocationEffect")) {
 			//Game.warn("loc effect!");
 			Event e=new Event("LocationEffect");
-			e.set("TargetMap",map);
+			e.set("TargetMap",battlemap);
 			e.set("TargetX",tx);
 			e.set("TargetY",ty);
 			if (s.handle(e)) return;
 		}
 		
-		Thing[] things=map.getThings(tx,ty);
+		Thing[] things=battlemap.getThings(tx,ty);
 		for (int i=0; i<things.length; i++) {
 			doEffect(caster,s,things[i]);
 		}
@@ -594,9 +594,9 @@ public class Spell {
         public boolean handle(Thing spell, Event e) {
 			Thing target=e.getThing("Target");
 			BattleMap map=target.getMap();
-			if (map==null) return false;
+			if (battlemap==null) return false;
 			
-			Point p=map.findFreeSquare();
+			Point p=battlemap.findFreeSquare();
 			
 			if (p==null) return false;
 				
@@ -605,7 +605,7 @@ public class Spell {
 			} else {
 				target.visibleMessage(target.getTheName()+" teleports");
 			}
-			Movement.teleport(target,map,p.x,p.y);
+			Movement.teleport(target,battlemap,p.x,p.y);
 			
 			return false;
 		}		
@@ -625,12 +625,12 @@ public class Spell {
 			int x=summoner.getMapX();
 			int y=summoner.getMapY();
 			for (int i=0; i<n; i++) {
-				Point p=map.findFreeSquare(x-1,y-1,x+1,y+1);
-				if ((p==null)||!map.isVisible(p.x,p.y)) {
-					p=map.findFreeSquare(x-2,y-2,x+2,y+2);
+				Point p=battlemap.findFreeSquare(x-1,y-1,x+1,y+1);
+				if ((p==null)||!battlemap.isVisible(p.x,p.y)) {
+					p=battlemap.findFreeSquare(x-2,y-2,x+2,y+2);
 				}
-				if ((p==null)||!map.isVisible(p.x,p.y)) {
-					p=map.findFreeSquare(x-3,y-3,x+3,y+3);
+				if ((p==null)||!battlemap.isVisible(p.x,p.y)) {
+					p=battlemap.findFreeSquare(x-3,y-3,x+3,y+3);
 				}
 				if (p==null) continue;
 				
@@ -640,7 +640,7 @@ public class Spell {
 					AI.setFollower(t,summoner);
 				}
 				Game.instance().doSpark(p.x,p.y,spell.getStat("BoltImage"));
-				map.addThing(t,p.x,p.y);
+				battlemap.addThing(t,p.x,p.y);
 				t.set("APS",-200);
 			}
 			

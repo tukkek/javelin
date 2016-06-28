@@ -1,7 +1,5 @@
 package javelin.controller.upgrade.ability;
 
-import java.beans.PropertyVetoException;
-
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -9,19 +7,20 @@ import javelin.model.unit.Monster;
  * @see RaiseAbility
  */
 public class RaiseCharisma extends RaiseAbility {
+	/** Singleton instance. */
+	public static final RaiseAbility INSTANCE = new RaiseCharisma();
 
-	public RaiseCharisma() {
+	RaiseCharisma() {
 		super("charisma");
 	}
 
 	@Override
-			int getabilityvalue(Monster m) {
+	int getabilityvalue(Monster m) {
 		return m.charisma;
 	}
 
 	@Override
-			boolean setattribute(Combatant m, int l)
-					throws PropertyVetoException {
+	boolean setattribute(Combatant m, int l) {
 		m.source.raisecharisma(+1);
 		return true;
 	}

@@ -1,7 +1,5 @@
 package javelin.controller.upgrade.ability;
 
-import java.beans.PropertyVetoException;
-
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -34,19 +32,10 @@ public abstract class RaiseAbility extends Upgrade {
 
 	@Override
 	public boolean apply(Combatant m) {
-		try {
-			return setattribute(m, getabilityvalue(m.source) + 2);
-		} catch (PropertyVetoException e) {
-			throw new RuntimeException(e);
-		}
+		int score = getabilityvalue(m.source);
+		return score > 0 && setattribute(m, score + 2);
 	}
 
-	abstract boolean setattribute(Combatant m, int l)
-			throws PropertyVetoException;
-
-	@Override
-	public boolean isstackable() {
-		return false;
-	}
+	abstract boolean setattribute(Combatant m, int l);
 
 }

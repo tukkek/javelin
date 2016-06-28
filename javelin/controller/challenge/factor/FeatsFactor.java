@@ -4,6 +4,7 @@ import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.feat.BullRushUpgrade;
 import javelin.controller.upgrade.feat.CleaveUpgrade;
 import javelin.controller.upgrade.feat.CombatExpertiseUpgrade;
+import javelin.controller.upgrade.feat.FeatUpgrade;
 import javelin.controller.upgrade.feat.GreatCleaveUpgrade;
 import javelin.controller.upgrade.feat.GreatFortitude;
 import javelin.controller.upgrade.feat.ImprovedFeintUpgrade;
@@ -20,6 +21,7 @@ import javelin.controller.upgrade.feat.PreciseShot;
 import javelin.controller.upgrade.feat.RangedFocus;
 import javelin.controller.upgrade.feat.RapidShot;
 import javelin.controller.upgrade.feat.Toughness;
+import javelin.model.feat.Alertness;
 import javelin.model.unit.Monster;
 
 /**
@@ -61,5 +63,6 @@ public class FeatsFactor extends CrFactor {
 		handler.expertise.add(new ImprovedGrappleUpgrade());
 		handler.expertise.add(new ImprovedTripUpgrade());
 
+		handler.good.add(new FeatUpgrade(Alertness.INSTANCE));
 	}
 }

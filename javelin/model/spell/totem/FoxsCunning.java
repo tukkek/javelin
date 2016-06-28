@@ -1,5 +1,7 @@
 package javelin.model.spell.totem;
 
+import javelin.model.Realm;
+import javelin.model.condition.totem.Cunning;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -10,14 +12,13 @@ import javelin.model.unit.Monster;
 public class FoxsCunning extends TotemsSpell {
 
 	public FoxsCunning() {
-		super("Fox's cunning");
+		super("Fox's cunning", Realm.EVIL);
 	}
 
 	@Override
 	public String cast(final Combatant caster, final Combatant target,
 			final BattleState s, final boolean saved) {
-		target.source = target.source.clone();
-		target.source.intelligence += 4;
+		target.addcondition(new Cunning(target, casterlevel));
 		return target + "'s intelligence is now "
 				+ Monster.getsignedbonus(target.source.intelligence);
 	}

@@ -11,6 +11,7 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public class RangedFocus extends MeleeFocus {
+	/** Constructor. */
 	public RangedFocus(final String name) {
 		super(name);
 	}

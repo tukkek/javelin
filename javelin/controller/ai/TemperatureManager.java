@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import javelin.controller.db.Properties;
+import javelin.controller.db.Preferences;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.MessagePanel;
 
@@ -14,7 +14,7 @@ import tyrant.mikera.tyrant.MessagePanel;
  * Uses {@value #LINUXTEMPARATUREFILE} on Linux to wait for cooldown if an
  * option is set on preferences.properties.
  * 
- * @see Properties
+ * @see Preferences
  * 
  * @author alex
  */
@@ -22,12 +22,11 @@ public class TemperatureManager {
 
 	private static final String LINUXTEMPARATUREFILE =
 			"/sys/class/thermal/thermal_zone0/temp";
-	public static final int CPU_COOLING;
+	static int CPU_COOLING = 0;
 
-	static {
-		int maxtemperature = Properties.getInteger("ai.maxtemperature", 0);
-		CPU_COOLING =
-				new File(LINUXTEMPARATUREFILE).exists() ? maxtemperature : 0;
+	public static void init() {
+		CPU_COOLING = new File(LINUXTEMPARATUREFILE).exists()
+				? Preferences.MAXTEMPERATURE : 0;
 	}
 
 	public static void cooldown() {

@@ -1,7 +1,5 @@
 package javelin.controller.upgrade.ability;
 
-import java.beans.PropertyVetoException;
-
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -14,13 +12,12 @@ public class RaiseDexterity extends RaiseAbility {
 	}
 
 	@Override
-			int getabilityvalue(Monster m) {
+	int getabilityvalue(Monster m) {
 		return m.dexterity;
 	}
 
 	@Override
-			boolean setattribute(Combatant m, int l)
-					throws PropertyVetoException {
+	boolean setattribute(Combatant m, int l) {
 		m.source.raisedexterity(+1);
 		return true;
 	}

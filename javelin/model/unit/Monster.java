@@ -9,18 +9,27 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.SpellbookGenerator;
+import javelin.controller.Weather;
 import javelin.controller.action.Breath;
+import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.classes.ClassAdvancement;
 import javelin.controller.upgrade.feat.MeleeFocus;
 import javelin.model.Cloneable;
+import javelin.model.feat.Alertness;
 import javelin.model.feat.Feat;
+import javelin.model.item.Scroll;
+import javelin.model.item.Wand;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.item.artifact.Slot;
+import javelin.model.spell.enchantment.compulsion.HoldMonster;
+import javelin.model.spell.necromancy.Poison;
 import javelin.model.unit.abilities.BreathWeapon;
+import javelin.model.unit.abilities.Spells;
 import javelin.model.unit.abilities.TouchAttack;
 import tyrant.mikera.engine.RPG;
 
@@ -60,18 +69,24 @@ public class Monster implements Cloneable, Serializable {
 
 	public int strength = -1;
 	public int dexterity = -1;
+	/** May be 0. */
 	public int constitution = -1;
+	/** Maybe be 0. */
 	public int intelligence = -1;
 	public int wisdom = -1;
 	public int charisma = -1;
 
+	/**
+	 * See {@link #fortitude()}
+	 */
+	@Deprecated
 	public int fort;
 	public int ref;
 	/**
-	 * @deprecated See #will()
+	 * @deprecated See {@link #will()})
 	 */
 	@Deprecated
-	private int will;
+	public int will;
 
 	/**
 	 * 5 units = 1 square. A unit is able to move this number of squares as a
@@ -91,6 +106,16 @@ public class Monster implements Cloneable, Serializable {
 	 */
 	public int fly = 0;
 	/**
+	 * Burrow allows a creature to submerge into the earth. Normally they would
+	 * be able to descend to any depth but due to AI and complexity concerns
+	 * burrowing right is more restrict. Read "combatmodifiers.txt".
+	 * 
+	 * Burrowing and surfacing cost the equivalent of a single square movement
+	 * unless engaged.
+	 */
+	public int burrow = 0;
+
+	/**
 	 * A swimming creature is able to ignore water penalties and charge through
 	 * flooded squares.
 	 * 
@@ -102,6 +127,7 @@ public class Monster implements Cloneable, Serializable {
 	 * Use {@link Combatant#ac() instead.}
 	 */
 	public int ac;
+	/** The portion of {@link #ac} due to armor protection. */
 	public int armor;
 
 	public ArrayList<AttackSequence> melee = new ArrayList<AttackSequence>();
@@ -123,25 +149,18 @@ public class Monster implements Cloneable, Serializable {
 	 * @see Monster#spellcr
 	 * @see Spell
 	 */
-	public ArrayList<Spell> spells = new ArrayList<Spell>();
-	/**
-	 * @see TouchAttack
-	 */
+	public Spells spells = new Spells();
+	/** @see TouchAttack */
 	public TouchAttack touch = null;
 
 	public int initiative = Integer.MIN_VALUE;
 	public String name = null;
 	public int size = -1;
-	/**
-	 * TODO use
-	 */
+	/** Subgroup of {@link #type}, merely descriptive. */
 	public String group;
+	/** Cache for {@link ChallengeRatingCalculator}. */
 	public Float challengeRating = null;
 	public String type;
-	/**
-	 * TODO use only {@link #avatarfile}
-	 */
-	public String avatar = null;
 	/** TODO should probably be a Combatant#name */
 	public String customName = null;
 	public int meleedamageupgrades = 0;
@@ -164,7 +183,7 @@ public class Monster implements Cloneable, Serializable {
 	 * Used to distribute random spells to a new {@link Combatant}.
 	 * 
 	 * TODO {@link ChallengeRatingCalculator} is using this for
-	 * {@link SpellsFactor} instead ot taking the {@link Combatant} into
+	 * {@link SpellsFactor} instead of taking the {@link Combatant} into
 	 * consideration. Maintain?
 	 * 
 	 * @see SpellbookGenerator
@@ -177,9 +196,10 @@ public class Monster implements Cloneable, Serializable {
 	public int dr = 0;
 	/**
 	 * Energy resistance. Currently applied to everything that is not a physical
-	 * attacks like melee, ranged and charge.
+	 * attacks like melee, ranged and charge. A value of
+	 * {@link Integer#MAX_VALUE} means energy immunity.
 	 */
-	public int resistance = 0;
+	public int energyresistance = 0;
 	/**
 	 * Spell resistance.
 	 * 
@@ -188,7 +208,6 @@ public class Monster implements Cloneable, Serializable {
 	 * creature’s spell resistance."
 	 */
 	public int sr = 0;
-	public boolean immunetomindeffects = false;
 	public ArrayList<String> terrains = new ArrayList<String>();
 	/**
 	 * Alignment. <code>true</code> if lawful, <code>null</code> if neutral,
@@ -213,6 +232,22 @@ public class Monster implements Cloneable, Serializable {
 	public boolean humanoid = false;
 	/** See {@link Skills}. */
 	public Skills skills = new Skills();
+	/** Creatures that should only be spawned at night or underground. */
+	public boolean nightonly = false;
+	/** Immunity to critical hits. */
+	public boolean immunitytocritical = false;
+	/** Immune to the effects of {@link Poison}. */
+	public boolean immunitytopoison = false;
+	/** If <code>true</code> cannot be affected by {@link HoldMonster}. */
+	public boolean immunitytoparalysis = false;
+	/** Immune to mind-affecting effects. */
+	public boolean immunitytomind = false;
+
+	/**
+	 * Temporary {@link Monster#constitution} damage. 1 poison = -2 temporary
+	 * constitution score.
+	 */
+	public int poison = 0;
 
 	@Override
 	public Monster clone() {
@@ -271,7 +306,22 @@ public class Monster implements Cloneable, Serializable {
 		return feats.size();
 	}
 
+	/**
+	 * Rolls a d20 to determine a saving throw result. Note that for being
+	 * random this can only be used outside of {@link BattleAi} thinking.
+	 * 
+	 * @param bonus
+	 *            {@link #fortitude()}, {@link #will()} or {@link #ref} bonus. A
+	 *            value of {@link Integer#MAX_VALUE} represents automatic
+	 *            success.
+	 * @param dc
+	 *            Difficulty class target for the saving roll.
+	 * @return <code>true</code> on save success.
+	 */
 	public boolean save(int bonus, int dc) {
+		if (bonus == Integer.MAX_VALUE) {
+			return true;
+		}
 		int roll = RPG.r(1, 20);
 		if (roll == 1) {
 			return false;
@@ -332,23 +382,49 @@ public class Monster implements Cloneable, Serializable {
 	 *            Raises {@link #constitution} by +2...
 	 * @param bonus
 	 *            multiplied by this magnitude. Negative values allowed.
+	 * @return
+	 * @throws Death
+	 *             In case of zero or negative constitution.
+	 * @return <code>false</code> if this combatant has been killed during this
+	 *         operation.
 	 */
-	public void raiseconstitution(Combatant c, int bonus) {
-		c.source.constitution += bonus * 2;
+	public boolean raiseconstitution(Combatant c, int bonus) {
+		if (constitution == 0 || bonus == 0) {
+			return true;
+		}
+		constitution += bonus * 2;
+		while (constitution <= 0) {
+			constitution += 2;
+			bonus += 2;
+		}
 		fort += bonus;
-		int bonushp = hd.count() * bonus;
+		final int hds = hd.count();
+		int bonushp = hds * bonus;
+		if (c.maxhp + bonushp < hds) {
+			bonushp = -(c.maxhp - hds);
+		}
 		hd.extrahp += bonushp;
 		c.hp += bonushp;
+		if (c.hp < 1) {
+			c.hp = 1;
+		}
 		c.maxhp += bonushp;
+		if (c.hp > c.maxhp) {
+			c.hp = c.maxhp;
+		}
 		for (BreathWeapon breath : breaths) {
 			breath.savedc += bonus;
 		}
+		return true;
 	}
 
 	public int gettopspeed() {
 		return walk == 0 ? fly : walk;
 	}
 
+	/**
+	 * TODO turn attributes into {@link Enum}.
+	 */
 	static public int getbonus(int attribute) {
 		return new Long(Math.round(Math.floor(attribute / 2.0 - 5.0)))
 				.intValue();
@@ -359,6 +435,10 @@ public class Monster implements Cloneable, Serializable {
 		return customName == null ? name : customName;
 	}
 
+	/**
+	 * @return <code>true</code> if the monster can swim on (or fly above)
+	 *         water.
+	 */
 	public boolean swim() {
 		return swim > 0 || fly > 0;
 	}
@@ -373,9 +453,12 @@ public class Monster implements Cloneable, Serializable {
 		will += score / 2;
 	}
 
+	/**
+	 * @return {@link Integer#MAX_VALUE} if immune, will saving throw bonus
+	 *         otherwise.
+	 */
 	public int will() {
-		return intelligence == 0 || immunetomindeffects ? Integer.MAX_VALUE
-				: will;
+		return immunitytomind ? Integer.MAX_VALUE : will;
 	}
 
 	public static String getsignedbonus(int score) {
@@ -416,12 +499,15 @@ public class Monster implements Cloneable, Serializable {
 	 *            (+2 point = +1 bonus modifier).
 	 */
 	public void raiseintelligence(int points) {
-		intelligence += points;
+		if (intelligence > 0) {
+			intelligence += points;
+		}
 	}
 
 	/**
-	 * @return Each unit hers is equivalent to 5 silver pieces daily upkeep
-	 *         ($0.5, or half a gold piece).
+	 * @return A scale in which 1 unit equals to half a gold piece (1
+	 *         medium-size monster).
+	 * @see Squad#eat()
 	 */
 	public float eat() {
 		switch (size) {
@@ -446,5 +532,120 @@ public class Monster implements Cloneable, Serializable {
 		default:
 			throw new RuntimeException("Unknown size " + size);
 		}
+	}
+
+	/**
+	 * @return {@link Integer#MAX_VALUE} if immune or the fortitude saving throw
+	 *         bonus.
+	 */
+	public int fortitude() {
+		return constitution == 0 ? Integer.MAX_VALUE : fort;
+	}
+
+	/**
+	 * @return <code>true</code> if can read a {@link Spell} from a
+	 *         {@link Scroll}.
+	 */
+	public boolean read(Scroll s) {
+		if (usemagicdevice() >= 10 + s.spell.casterlevel) {
+			return true;
+		}
+		return decipher(s.spell) && 10 + hd.count()
+				+ skills.spellcraft / 2 >= s.spell.casterlevel + 1;
+	}
+
+	/**
+	 * @return <code>true</code> if can decioher a {@link Spell} from a
+	 *         {@link Scroll} or {@link Wand}.
+	 */
+	public boolean decipher(Spell s) {
+		if (usemagicdevice() >= 15 + s.level) {
+			return true;
+		}
+		return Math.max(Math.max(intelligence, wisdom), charisma)
+				+ skills.spellcraft / 2 > 10 + s.level;
+	}
+
+	/**
+	 * @return A take 10 of {@link Skills#usemagicdevice}.
+	 */
+	public int usemagicdevice() {
+		return Skills.take10(skills.usemagicdevice, charisma);
+	}
+
+	/**
+	 * @return A take 10 of {@link Skills#survival}.
+	 */
+	public int survive() {
+		return Skills.take10(skills.survival, wisdom) - view();
+	}
+
+	/**
+	 * Vision penalties here cut in half because they apply only to vision, not
+	 * listening.
+	 * 
+	 * @param skills
+	 *            TODO
+	 * @param flyingbonus
+	 *            <code>true</code> if flying creatures get a bonus for seeing
+	 *            farther.
+	 * @return Modified spot rank for given {@link Monster}.
+	 */
+	public int perceive(boolean flyingbonus) {
+		int p = skills.perception;
+		if (flyingbonus && fly > 0) {
+			p += 1;
+		}
+		if (hasfeat(Alertness.INSTANCE)) {
+			p += Alertness.BONUS;
+		}
+		if (Weather.current != Weather.DRY) {
+			p -= 4;
+		}
+		return p + view() / 2;
+	}
+
+	/**
+	 * @param minimum
+	 *            Minimum intelligence bonus required. If <code>null</code> will
+	 *            assume -1 or higher is fine (primitive intelligence).
+	 * @return <code>true</code> if able to communicate and think reasonably
+	 *         well. Being able to understand and follow simple, general tasks
+	 *         should do (which is not the case for animals that can only follow
+	 *         a few specific, well-trained tasks).
+	 */
+	public boolean think(Integer minimum) {
+		return Monster
+				.getbonus(intelligence) >= (minimum == null ? -1 : minimum);
+	}
+
+	/**
+	 * @return a -0, -2 or -4 skill check penalty depending on time of day and
+	 *         {@link Monster} vision.
+	 * 
+	 * @see Javelin#getDayPeriod()
+	 * @see Monster#vision
+	 */
+	public int view() {
+		if (vision == VISION_DARK) {
+			return 0;
+		}
+		String period = Javelin.getDayPeriod();
+		boolean verydark = period == Javelin.PERIODNIGHT
+				|| Weather.current == Weather.STORM;
+		if (vision == VISION_LOWLIGHT) {
+			if (verydark) {
+				return -2;
+			}
+		} else { // normal vision
+			if (period == Javelin.PERIODEVENING
+					|| Weather.current == Weather.RAIN) {
+				return -2;
+			}
+			if (verydark) {
+				return -4;
+			}
+		}
+		return 0;
 	}
 }

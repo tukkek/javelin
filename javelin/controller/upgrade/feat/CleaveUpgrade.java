@@ -10,6 +10,7 @@ import javelin.model.unit.Combatant;
  */
 public class CleaveUpgrade extends FeatUpgrade {
 
+	/** Constructor. */
 	public CleaveUpgrade() {
 		super(Cleave.SINGLETON);
 		prerequisite = PowerAttack.SINGLETON;

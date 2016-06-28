@@ -2,8 +2,8 @@ package javelin.view.screen.haxor;
 
 import java.math.BigDecimal;
 
+import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.model.spell.Summon;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -14,8 +14,9 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public class Rebirth extends Hax {
-	public Rebirth(String name, double price, boolean requirestargetp) {
-		super(name, price, requirestargetp);
+	public Rebirth(String name, Character keyp, double price,
+			boolean requirestargetp) {
+		super(name, keyp, price, requirestargetp);
 	}
 
 	@Override
@@ -24,7 +25,7 @@ public class Rebirth extends Hax {
 		Float originalcr = target.source.challengeRating;
 		target.spells.clear();
 		String customname = target.source.customName;
-		target.source = Summon.findmonster(target.source.name);
+		target.source = Javelin.getmonster(target.source.name);
 		target.source.customName = customname;
 		ChallengeRatingCalculator.calculateCr(target.source);
 		target.xp = target.xp.add(

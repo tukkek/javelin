@@ -1,18 +1,19 @@
 package javelin.controller.action;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ActionProvider;
 import javelin.controller.ai.ChanceNode;
-import javelin.controller.exception.RepeatTurnException;
+import javelin.controller.exception.RepeatTurn;
 import javelin.controller.upgrade.Spell;
 import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.Game;
@@ -24,24 +25,27 @@ import tyrant.mikera.tyrant.Game.Delay;
  * 
  * @author alex
  */
-public class CastSpell extends Fire implements AiAction {
-	private Spell casting;
+public class CastSpell extends Fire {
+	/** Only instance of CastSpell to exist. */
+	public static final CastSpell singleton = new CastSpell();
+	/** Spell for {@link Fire} to perform. */
+	public Spell casting;
 
-	public CastSpell(String name, String key) {
-		super(name, key, 's');
+	CastSpell() {
+		super("Cast spells", "s", 's');
 	}
 
 	@Override
 	public boolean perform(Combatant c, BattleMap map, Thing thing) {
 		Game.messagepanel.clear();
 		casting = null;
-		ArrayList<Spell> castable = new ArrayList<Spell>();
-		boolean engagned = map.getState().isEngaged(c);
+		final ArrayList<Spell> castable = new ArrayList<Spell>();
+		final boolean engaged = map.getState().isengaged(c);
 		for (Spell s : c.spells) {
-			if (engagned && !concentrate(c, s)) {
+			if (s.provokeaoo && !concentrate(c, s) && engaged) {
 				continue;
 			}
-			if (s.canbecast(c) && s.aggressive) {
+			if (s.canbecast(c)) {
 				castable.add(s);
 			}
 		}
@@ -49,6 +53,12 @@ public class CastSpell extends Fire implements AiAction {
 			Game.message("No spells to cast right now.", null, Delay.WAIT);
 			return false;
 		}
+		castable.sort(new Comparator<Spell>() {
+			@Override
+			public int compare(Spell o1, Spell o2) {
+				return o1.name.compareTo(o2.name);
+			}
+		});
 		String list = "Choose a spell:\n";
 		for (int i = 0; i < castable.size(); i++) {
 			list += "[" + (i + 1) + "] " + castable.get(i) + "\n";
@@ -59,11 +69,18 @@ public class CastSpell extends Fire implements AiAction {
 			if (i > c.spells.size()) {
 				return perform(c, map, thing);
 			}
-			casting = castable.get(i - 1);
+			return cast(castable.get(i - 1), c, map, thing);
 		} catch (NumberFormatException e) {
-			throw new RepeatTurnException();
-			// continue
+			throw new RepeatTurn();
 		}
+	}
+
+	/**
+	 * Like {@link #perform(Combatant, BattleMap, Thing)} except skips the
+	 * selection UI step.
+	 */
+	public boolean cast(Spell spell, Combatant c, BattleMap map, Thing thing) {
+		casting = spell;
 		return super.perform(c, map, thing);
 	}
 
@@ -74,32 +91,40 @@ public class CastSpell extends Fire implements AiAction {
 				combatant.spells.indexOf(casting), s));
 	}
 
-	public static List<ChanceNode> cast(Combatant active, Combatant target,
-			final int spellindex, BattleState state) {
+	List<ChanceNode> cast(Combatant active, Combatant target, int spellindex,
+			BattleState state) {
 		state = state.clone();
 		active = state.clone(active);
 		target = state.cloneifdifferent(target, active);
-		final Spell spell = active.spells.get(spellindex);
-		active.ap += spell.apcost();
+		Spell spell = null;
+		if (casting == null) {
+			spell = active.spells.get(spellindex);
+		} else {
+			int i = active.spells.indexOf(casting);
+			spell = i >= 0 ? active.spells.get(i) : casting;
+		}
+		// try {
+		active.ap += spell.apcost;
+		// } catch (NullPointerException e) {
+		// System.out.println("#nullspell");
+		// }
 		spell.used += 1;
 		final List<ChanceNode> chances = new ArrayList<ChanceNode>();
 		final String prefix =
 				active + " casts " + spell.name.toLowerCase() + "!\n";
-		final int touchtarget = spell.calculatetouchdc(active, target, state);
+		final int touchtarget = spell.hit(active, target, state);
 		float misschance;
 		if (touchtarget == -Integer.MAX_VALUE) {
 			misschance = 0;
 		} else {
 			misschance = bind(touchtarget / 20f);
 			chances.add(new ChanceNode(state, misschance,
-					prefix + active + " misses ranged touch attack.",
-					Delay.BLOCK));
+					prefix + active + " misses touch attack.", Delay.BLOCK));
 		}
 		final float hitc = 1 - misschance;
 		final float affectchance =
 				affect(target, state, spell, chances, prefix, hitc);
-		final float savec = convertsavedctochance(
-				spell.calculatesavetarget(active, target));
+		final float savec = savechance(active, target, spell);
 		if (savec != 0) {
 			chances.add(hit(active, target, state, spell, savec * affectchance,
 					true, prefix));
@@ -114,10 +139,21 @@ public class CastSpell extends Fire implements AiAction {
 		return chances;
 	}
 
+	/**
+	 * @param active
+	 *            Caster.
+	 * @return The chance the target {@link Combatant} has of rolling a saving
+	 *         throw for resisting the current {@link Spell}.
+	 */
+	public static float savechance(Combatant active, Combatant target,
+			final Spell spell) {
+		return convertsavedctochance(spell.save(active, target));
+	}
+
 	public static float affect(Combatant target, BattleState state,
 			final Spell spell, final List<ChanceNode> chances,
 			final String prefix, float hitchance) {
-		if (spell.friendly || target.source.sr == 0) {
+		if (spell.castonallies || target.source.sr == 0) {
 			return hitchance;
 		}
 		final float resistchance =
@@ -153,9 +189,9 @@ public class CastSpell extends Fire implements AiAction {
 	}
 
 	@Override
-	protected int calculatehitchance(Combatant target, Combatant active,
+	protected int calculatehitdc(Combatant target, Combatant active,
 			BattleState state) {
-		return casting.calculatehitdc(active, target, state);
+		return casting.hit(active, target, state);
 	}
 
 	@Override
@@ -165,13 +201,12 @@ public class CastSpell extends Fire implements AiAction {
 	}
 
 	@Override
-	public void checkengaged(BattleState state, Combatant c) {
-		if (!concentrate(c, casting)) {
-			super.checkengaged(state, c);
-		}
+	protected boolean checkengaged(BattleState state, Combatant c) {
+		return casting.provokeaoo && !concentrate(c, casting)
+				&& state.isengaged(c);
 	}
 
-	boolean concentrate(Combatant c, Spell s) {
+	static boolean concentrate(Combatant c, Spell s) {
 		final int concentration = c.source.skills.concentration
 				+ Monster.getbonus(c.source.constitution);
 		return concentration >= s.casterlevel;
@@ -179,26 +214,36 @@ public class CastSpell extends Fire implements AiAction {
 
 	@Override
 	public List<List<ChanceNode>> getoutcomes(final BattleState gameState,
-			final Combatant combatant) {
+			final Combatant active) {
+		casting = null;
 		final ArrayList<List<ChanceNode>> chances =
 				new ArrayList<List<ChanceNode>>();
-		boolean engaged = gameState.isEngaged(combatant);
-		final ArrayList<Spell> spells = combatant.spells;
+		boolean engaged = gameState.isengaged(active);
+		final ArrayList<Spell> spells = active.spells;
 		for (int i = 0; i < spells.size(); i++) {
-			final Spell spell = spells.get(i);
-			if (engaged && !concentrate(combatant, spell)) {
+			final Spell s = spells.get(i);
+			if (s.provokeaoo && !concentrate(active, s) && engaged) {
 				continue;
 			}
-			if (!spell.canbecast(combatant)) {
+			if (!s.castinbattle || !s.canbecast(active)) {
 				continue;
 			}
-			final List<Combatant> targets = gameState.getAllTargets(combatant,
-					gameState.getCombatants());
-			spell.filtertargets(combatant, targets, gameState);
+			final List<Combatant> targets =
+					gameState.getAllTargets(active, gameState.getCombatants());
+			s.filtertargets(active, targets, gameState);
 			for (Combatant target : targets) {
-				chances.add(cast(combatant, target, i, gameState));
+				chances.add(cast(active, target, i, gameState));
 			}
 		}
 		return chances;
+	}
+
+	/**
+	 * Cast a combat spell.
+	 * 
+	 * @see #cast(Spell, Combatant, BattleMap, Thing)}
+	 */
+	public void cast(Spell s, Combatant user) {
+		cast(s, user, BattleScreen.active.map, Game.actor);
 	}
 }

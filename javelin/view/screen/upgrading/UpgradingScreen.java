@@ -3,6 +3,7 @@ package javelin.view.screen.upgrading;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,15 +16,13 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.model.feat.Feat;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Squad;
+import javelin.model.unit.Squad;
 import javelin.model.world.WorldActor;
-import javelin.model.world.place.WorldPlace;
-import javelin.model.world.place.town.Order;
-import javelin.model.world.place.town.Town;
-import javelin.model.world.place.town.TrainingOrder;
+import javelin.model.world.location.town.Order;
+import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.TrainingOrder;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.Option;
-import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
 import javelin.view.screen.town.option.UpgradeOption;
 import tyrant.mikera.engine.RPG;
@@ -66,7 +65,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 	protected abstract void onexit(Squad s);
 
 	/** Available {@link UpgradeOption}s. */
-	protected abstract List<Upgrade> getupgrades();
+	protected abstract Collection<Upgrade> getupgrades();
 
 	@Override
 	public boolean select(final Option op) {
@@ -181,7 +180,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 
 	@Override
 	public List<Option> getoptions() {
-		List<Upgrade> upgrades = getupgrades();
+		Collection<Upgrade> upgrades = getupgrades();
 		ArrayList<Option> ups = new ArrayList<Option>(upgrades.size());
 		for (Upgrade u : upgrades) {
 			ups.add(new UpgradeOption(u));
@@ -238,7 +237,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 	 *            Member to be returned (upgraded or not, in case of cancel).
 	 * @return The Squad the trainee is now into.
 	 */
-	static public Squad completetraining(TrainingOrder memberp, WorldPlace p,
+	static public Squad completetraining(TrainingOrder memberp, WorldActor p,
 			Combatant member) {
 		ArrayList<Item> equipment = memberp.equipment;
 		ArrayList<Point> empty = new ArrayList<Point>();
@@ -249,18 +248,18 @@ public abstract class UpgradingScreen extends SelectScreen {
 				}
 				int x = p.x + deltax;
 				int y = p.y + deltay;
-				WorldActor stationed = WorldScreen.getactor(x, y, Squad.class);
+				WorldActor stationed = WorldActor.get(x, y, Squad.class);
 				if (stationed != null) {
 					Squad.active.add(member, equipment);
 					return Squad.active;
-				} else if (WorldScreen.getactor(x, y) == null) {
+				} else if (WorldActor.get(x, y) == null) {
 					empty.add(new Point(x, y));
 				}
 			}
 		}
 		Point destination = RPG.pick(empty);
 		Squad s = new Squad(destination.x, destination.y,
-				Math.round(Math.ceil(memberp.completionat / 24f) * 24), p);
+				Math.round(Math.ceil(memberp.completionat / 24f) * 24), null);
 		s.add(member, equipment);
 		s.place();
 		return s;

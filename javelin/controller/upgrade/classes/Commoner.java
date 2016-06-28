@@ -6,8 +6,8 @@ import javelin.model.unit.Monster;
  * @see ClassAdvancement
  */
 public class Commoner extends ClassAdvancement {
-	public Commoner(String name) {
-		super(name);
+	public Commoner() {
+		super("Commoner");
 	}
 
 	@Override

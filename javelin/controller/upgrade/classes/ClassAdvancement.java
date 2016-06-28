@@ -16,10 +16,10 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public abstract class ClassAdvancement extends Upgrade {
-	public static final Warrior WARRIOR = new Warrior("Warrior");
-	public static final Expert EXPERT = new Expert("Expert");
-	public static final Aristocrat ARISTOCRAT = new Aristocrat("Aristocrat");
-	public static final Commoner COMMONER = new Commoner("Commoner");
+	public static final Warrior WARRIOR = new Warrior();
+	public static final Expert EXPERT = new Expert();
+	public static final Aristocrat ARISTOCRAT = new Aristocrat();
+	public static final Commoner COMMONER = new Commoner();
 	public static final ClassAdvancement[] CLASSES =
 			new ClassAdvancement[] { COMMONER, ARISTOCRAT, WARRIOR, EXPERT };
 	public final String descriptivename;
@@ -52,7 +52,7 @@ public abstract class ClassAdvancement extends Upgrade {
 		}
 		setlevel(level, m);
 		int hd = gethd();
-		int bonus = new Long(Monster.getbonus(m.constitution)).intValue();
+		int bonus = m.constitution > 0 ? Monster.getbonus(m.constitution) : 0;
 		m.hd.add(1.0f, hd, bonus);
 		int hp = RPG.r(1, hd) + bonus;
 		if (hp < 1) {
@@ -110,10 +110,4 @@ public abstract class ClassAdvancement extends Upgrade {
 			return 0;
 		}
 	}
-
-	@Override
-	public boolean isstackable() {
-		return true;
-	}
-
 }

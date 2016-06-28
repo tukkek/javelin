@@ -10,16 +10,16 @@ import javelin.model.unit.Combatant;
 public class Grappling extends Condition {
 
 	public Grappling(float expireatp, Combatant c) {
-		super(expireatp, c, Effect.NEGATIVE, "grappling");
+		super(expireatp, c, Effect.NEGATIVE, "grappling", null);
 	}
 
 	@Override
-			void start(Combatant c) {
+	public void start(Combatant c) {
 		c.acmodifier -= 2;
 	}
 
 	@Override
-			void end(Combatant c) {
+	public void end(Combatant c) {
 		c.acmodifier += 2;
 	}
 

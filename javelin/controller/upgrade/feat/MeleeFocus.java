@@ -35,6 +35,7 @@ public class MeleeFocus extends FeatUpgrade {
 		bab.put("vermin", 3.0 / 4.0);
 	}
 
+	/** Constructor. */
 	public MeleeFocus(final String name) {
 		super(name, javelin.model.feat.WeaponFocus.singleton);
 	}
@@ -43,17 +44,6 @@ public class MeleeFocus extends FeatUpgrade {
 	public String info(final Combatant m) {
 		return "Base attack bonus: " + m.source.getbaseattackbonus();
 	}
-
-	@Override
-	public boolean isstackable() {
-		return false;
-	}
-
-	// @Override
-	// public Double crcost(final Monster m) {
-	// return ? null : super
-	// .crcost(m) * countattacks(m);
-	// }
 
 	private int countattacks(final Monster m) {
 		final HashSet<String> attacks = new HashSet<String>();

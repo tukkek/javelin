@@ -3,7 +3,7 @@ package javelin.controller.ai.cache;
 import java.util.List;
 
 import javelin.controller.ai.AiThread;
-import javelin.controller.ai.ThreadManager;
+import javelin.controller.db.Preferences;
 
 /**
  * Efficient data-structe based on an array of {@link Link}.
@@ -63,9 +63,9 @@ public class Cache {
 			used += 1;
 		}
 		final int perthread = (int) Math
-				.round(Math.ceil(used / (float) ThreadManager.maxthreads));
-		final Thread[] pool = new Thread[ThreadManager.maxthreads];
-		for (int i = 0; i < ThreadManager.maxthreads; i++) {
+				.round(Math.ceil(used / (float) Preferences.MAXTHREADS));
+		final Thread[] pool = new Thread[Preferences.MAXTHREADS];
+		for (int i = 0; i < Preferences.MAXTHREADS; i++) {
 			final int start = i * perthread;
 			final int end = start + perthread - 1;
 			pool[i] =

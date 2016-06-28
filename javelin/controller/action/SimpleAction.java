@@ -10,7 +10,9 @@ package javelin.controller.action;
 public interface SimpleAction {
 	void perform();
 
-	int[] getkeys();
+	int[] getcodes();
 
 	String getname();
+
+	String[] getkeys();
 }

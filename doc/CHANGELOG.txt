@@ -1,3 +1,28 @@
+Version 1.6 
+
+ * Around 50 new monsters!
+ * New locations: troves, mines and 11 mage guilds!
+ * New starting locations: Training Hall and Adventurers Guild!
+ * New unique locations: Summoning Circle and Pillar of Skulls!
+ * All game images can now be easily modified! (mod/skin support)
+ * New damage effects: poison, paralysis, fear
+ * Burrow movement
+ * New item type: wands
+ * New skills: use magic device and heal
+ * New transport: sailing ship
+ * More realistic, dynamic land movement
+ * Seasons, new terrains and terrain features
+ * Workers from towns let you build roads, settlements and more
+ * Player units can now be set to automatic (controlled by AI)
+ * New party option: strategic combat (skips random encounters)
+ * Preferences and command keys can now be edited in-game
+ * In-game journal for taking notes
+ * More information on errors, for easier bug reporting
+ * 183 monsters
+ * 47 items, 12 artifacts
+ * 63 upgrades, 49 spells, 13 skills
+ * 22 battle maps
+
 Version 1.5 (2016-05-06)
 
  * Bug-fix release

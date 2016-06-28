@@ -8,8 +8,8 @@ import javelin.model.unit.Skills;
  * @author alex
  */
 public class Spellcraft extends SkillUpgrade {
-	public Spellcraft(String name) {
-		super(name);
+	public Spellcraft() {
+		super("Spellcraft");
 	}
 
 	@Override

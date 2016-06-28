@@ -1,7 +1,11 @@
 package javelin.model;
 
-import java.util.TreeMap;
+import java.util.HashSet;
 
+import javelin.controller.upgrade.Upgrade;
+import javelin.controller.upgrade.UpgradeHandler;
+import javelin.model.item.Item;
+import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;
 import tyrant.mikera.engine.RPG;
 
@@ -14,8 +18,6 @@ import tyrant.mikera.engine.RPG;
  */
 public enum Realm {
 	WIND, FIRE, EARTH, WATER, GOOD, EVIL, MAGICAL;
-
-	public static TreeMap<Realm, String> REALMS = new TreeMap<Realm, String>();
 
 	/**
 	 * @return Equivalent color for the view package or <code>null</code> for
@@ -59,6 +61,57 @@ public enum Realm {
 			return "Black";
 		case WIND:
 			return "Translucid";
+		default:
+			throw new RuntimeException("#unknownColor");
+		}
+	}
+
+	/**
+	 * @param handler2
+	 * @return the proper upgrade set in this {@link UpgradeHandler}.
+	 */
+	public HashSet<Upgrade> getupgrades(UpgradeHandler handler2) {
+		final UpgradeHandler handler = UpgradeHandler.singleton;
+		// handler.gather();
+		switch (this) {
+		case WATER:
+			return handler.water;
+		case MAGICAL:
+			return handler.magic;
+		case GOOD:
+			return handler.good;
+		case FIRE:
+			return handler.fire;
+		case EARTH:
+			return handler.earth;
+		case EVIL:
+			return handler.evil;
+		case WIND:
+			return handler.wind;
+		default:
+			throw new RuntimeException("#unknownColor");
+		}
+	}
+
+	/**
+	 * @return The canonical list of items for this realm.
+	 */
+	public ItemSelection getitems() {
+		switch (this) {
+		case WATER:
+			return Item.WATER;
+		case MAGICAL:
+			return Item.MAGIC;
+		case GOOD:
+			return Item.GOOD;
+		case FIRE:
+			return Item.FIRE;
+		case EARTH:
+			return Item.EARTH;
+		case EVIL:
+			return Item.EVIL;
+		case WIND:
+			return Item.WIND;
 		default:
 			throw new RuntimeException("#unknownColor");
 		}

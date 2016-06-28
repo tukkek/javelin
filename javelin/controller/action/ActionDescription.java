@@ -7,8 +7,12 @@ package javelin.controller.action;
  */
 public interface ActionDescription {
 
-	public abstract String[] getDescriptiveKeys();
+	abstract String[] getDescriptiveKeys();
 
-	public abstract String getDescriptiveName();
+	abstract String getDescriptiveName();
+
+	abstract String getMainKey();
+
+	void setMainKey(String key);
 
 }

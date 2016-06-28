@@ -14,35 +14,35 @@ public class Feint extends Maneuver {
 	}
 
 	@Override
-			boolean validatetarget(Combatant target) {
+	boolean validatetarget(Combatant target) {
 		return Monster.getbonus(target.source.dexterity) >= +1
-				&& !target.hascondition(Feigned.class);
+				&& target.hascondition(Feigned.class) == null;
 	}
 
 	@Override
-			ChanceNode hit(Combatant combatant, Combatant targetCombatant,
-					BattleState battleState, float chance) {
+	ChanceNode hit(Combatant combatant, Combatant targetCombatant,
+			BattleState battleState, float chance) {
 		battleState = battleState.clone();
 		targetCombatant = battleState.clone(targetCombatant);
-		targetCombatant.conditions
-				.add(new Feigned(targetCombatant.ap + .1f, targetCombatant));
+		targetCombatant.addcondition(
+				new Feigned(targetCombatant.ap + .1f, targetCombatant));
 		return new ChanceNode(battleState, chance, "Feint succesfull!",
 				Delay.BLOCK);
 	}
 
 	@Override
-			int getsavebonus(Combatant targetCombatant) {
+	int getsavebonus(Combatant targetCombatant) {
 		return targetCombatant.source.will();
 	}
 
 	@Override
-			int getattackerbonus(Combatant combatant) {
+	int getattackerbonus(Combatant combatant) {
 		return Monster.getbonus(combatant.source.intelligence);
 	}
 
 	@Override
-			ChanceNode miss(Combatant combatant, Combatant target,
-					BattleState battleState, float chance) {
+	ChanceNode miss(Combatant combatant, Combatant target,
+			BattleState battleState, float chance) {
 		return new ChanceNode(battleState, chance, "Feint attemp fails...",
 				Delay.WAIT);
 	}

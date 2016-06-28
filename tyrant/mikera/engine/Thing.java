@@ -4,6 +4,7 @@
 
 package tyrant.mikera.engine;
 
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -40,6 +41,13 @@ import tyrant.org.newdawn.slick.util.pathfinding.TileBasedMap;
  * @author Mike
  */
 public class Thing extends BaseObject implements Description, ThingOwner {
+
+	/**
+	 * Hack to enable visual elements to set an override image.
+	 * 
+	 * TODO 2.0 visual overhaul
+	 */
+	public Image javelinimage = null;
 
 	private static final long serialVersionUID = 2056412474365358346L;
 
@@ -591,14 +599,14 @@ public class Thing extends BaseObject implements Description, ThingOwner {
 	}
 
 	public void action(final Event ae) {
-		inventoryAction(ae);
+		// inventoryAction(ae);
 
 		// set thing as actor
 		Game.actor = this;
 
-		if (handle(ae)) {
-			return;
-		}
+		// if (handle(ae)) {
+		// return;
+		// }
 	}
 
 	public void multiplyStat(final String s, final double v) {
@@ -900,8 +908,8 @@ public class Thing extends BaseObject implements Description, ThingOwner {
 		}
 		final int number = getNumber();
 		if (number <= 0) {
-			throw new Error("Thing.remove(): stack contains " + number
-					+ " objects");
+			throw new Error(
+					"Thing.remove(): stack contains " + number + " objects");
 		}
 		if (n == number) {
 			remove();
@@ -954,7 +962,8 @@ public class Thing extends BaseObject implements Description, ThingOwner {
 					ny = y;
 				}
 			}
-			if (!m.isTileBlocked(nx, ny) && !(blocking && m.isBlocked(nx, ny))) {
+			if (!m.isTileBlocked(nx, ny)
+					&& !(blocking && m.isBlocked(nx, ny))) {
 				moveTo(m, nx, ny);
 				return true;
 			}
@@ -1774,8 +1783,8 @@ public class Thing extends BaseObject implements Description, ThingOwner {
 		final StringBuffer inHandMessage = new StringBuffer();
 		final Thing inHand = getWielded(RPG.WT_MAINHAND);
 		final Thing otherHand = getWielded(RPG.WT_SECONDHAND);
-		inHandMessage.append(inHand == null ? "" : " " + inHand.getName()
-				+ " in right hand");
+		inHandMessage.append(inHand == null ? ""
+				: " " + inHand.getName() + " in right hand");
 		if (otherHand != null) {
 			if (inHandMessage.length() > 0) {
 				inHandMessage.append(", ");
@@ -1817,7 +1826,8 @@ public class Thing extends BaseObject implements Description, ThingOwner {
 			}
 
 			@Override
-			public boolean blocked(final Mover mover, final int x, final int y) {
+			public boolean blocked(final Mover mover, final int x,
+					final int y) {
 				return getMap().isTileBlocked(x, y);
 			}
 		}, maxDistance, true).findPath(null, x, y, target.x, target.y) != null;

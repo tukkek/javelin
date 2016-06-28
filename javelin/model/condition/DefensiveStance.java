@@ -12,17 +12,17 @@ public class DefensiveStance extends Condition {
 	private int acbonus;
 
 	public DefensiveStance(float expireatp, Combatant c, int acbonus) {
-		super(expireatp, c, Effect.POSITIVE, "defensive stance");
+		super(expireatp, c, Effect.POSITIVE, "defensive stance", null);
 		this.acbonus = acbonus;
 	}
 
 	@Override
-			void start(Combatant c) {
+	public void start(Combatant c) {
 		c.acmodifier += acbonus;
 	}
 
 	@Override
-			void end(Combatant c) {
+	public void end(Combatant c) {
 		c.acmodifier += acbonus;
 	}
 }

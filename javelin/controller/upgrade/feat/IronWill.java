@@ -9,10 +9,12 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public class IronWill extends FeatUpgrade {
+	/** Constructor. */
 	public IronWill() {
 		super("Iron will", javelin.model.feat.IronWill.singleton);
 	}
 
+	/** Constructor. */
 	public IronWill(String string, Feat singleton) {
 		super(string, singleton);
 	}
@@ -44,8 +46,4 @@ public class IronWill extends FeatUpgrade {
 		return m.willraw();
 	}
 
-	@Override
-	public boolean isstackable() {
-		return false;
-	}
 }

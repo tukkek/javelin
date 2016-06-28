@@ -11,8 +11,8 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public class MeleeDamage extends Damage {
-	public MeleeDamage(final String name) {
-		super(name);
+	public MeleeDamage() {
+		super("More mêlée damage");
 	}
 
 	@Override

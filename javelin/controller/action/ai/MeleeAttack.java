@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.ai.ChanceNode;
+import javelin.model.condition.Prone;
 import javelin.model.state.BattleState;
 import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Combatant;
@@ -21,7 +22,7 @@ public class MeleeAttack extends AbstractAttack {
 	}
 
 	@Override
-			List<AttackSequence> getattacks(final Combatant active) {
+	List<AttackSequence> getattacks(final Combatant active) {
 		return active.source.melee;
 	}
 
@@ -48,5 +49,17 @@ public class MeleeAttack extends AbstractAttack {
 	@Override
 	public boolean cleave() {
 		return true;
+	}
+
+	@Override
+	public int getpenalty(Combatant attacker, Combatant target, BattleState s) {
+		int penalty = super.getpenalty(attacker, target, s);
+		if (s.isflanked(target, attacker)) {
+			penalty -= 2;
+		}
+		if (target.hascondition(Prone.class) != null) {
+			penalty -= 2;
+		}
+		return penalty;
 	}
 }

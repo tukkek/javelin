@@ -1,5 +1,6 @@
 package javelin.controller.upgrade;
 
+import javelin.controller.upgrade.movement.WalkingSpeed;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 

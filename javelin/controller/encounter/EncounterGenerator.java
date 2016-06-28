@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.db.reader.factor.Organization;
+import javelin.controller.db.Preferences;
+import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.exception.GaveUpException;
+import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.world.Squad;
+import javelin.model.unit.Squad;
+import javelin.model.world.location.dungeon.Dungeon;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -24,14 +27,14 @@ import tyrant.mikera.engine.RPG;
 public class EncounterGenerator {
 	static final int MAXTRIES = 1000;
 
-	public static ArrayList<Combatant> generate(int el, int terrainp)
+	public static ArrayList<Combatant> generate(int el, Terrain terrain)
 			throws GaveUpException {
-		if (Javelin.DEBUGFOE != null) {
+		if (javelin.controller.db.Preferences.DEBUGFOE != null) {
 			return debugmonster();
 		}
 		ArrayList<Combatant> encounter = null;
 		for (int i = 0; i < MAXTRIES; i++) {
-			encounter = select(el, terrainp);
+			encounter = select(el, terrain);
 			if (encounter != null) {
 				return encounter;
 			}
@@ -41,22 +44,20 @@ public class EncounterGenerator {
 
 	private static ArrayList<Combatant> debugmonster() {
 		ArrayList<Combatant> opponents = new ArrayList<Combatant>();
-		for (Monster m : Javelin.ALLMONSTERS) {
-			if (m.name.equalsIgnoreCase(Javelin.DEBUGFOE)) {
-				Integer n = Javelin.DEBUGMINIMUMFOES;
-				if (n == null) {
-					n = 1;
-				}
-				for (int i = 0; i < n; i++) {
-					opponents.add(new Combatant(null, m.clone(), true));
-				}
-				break;
+		if (Preferences.DEBUGFOE != null) {
+			Monster m = Javelin.getmonster(Preferences.DEBUGFOE);
+			Integer n = Preferences.DEBUGMINIMUMFOES;
+			if (n == null) {
+				n = 1;
+			}
+			for (int i = 0; i < n; i++) {
+				opponents.add(new Combatant(null, m.clone(), true));
 			}
 		}
 		return opponents;
 	}
 
-	public static ArrayList<Combatant> select(int elp, int terrainp) {
+	static ArrayList<Combatant> select(int elp, Terrain terrain) {
 		ArrayList<Integer> popper = new ArrayList<Integer>();
 		popper.add(elp);
 		while (RPG.r(0, 1) == 1) {
@@ -68,13 +69,12 @@ public class EncounterGenerator {
 		}
 		final ArrayList<Combatant> foes = new ArrayList<Combatant>();
 		for (final int el : popper) {
-			List<Combatant> group = Organization.makeencounter(el, terrainp);
+			List<Combatant> group = Organization.makeencounter(el, terrain);
 			if (group == null) {
 				return null;
 			}
 			for (Combatant invitee : group) {
-				if (foes.indexOf(invitee) >= 0) {
-					/* prevent joining groups of same creatures */
+				if (!validatecreature(invitee, foes)) {
 					return null;
 				}
 			}
@@ -85,11 +85,26 @@ public class EncounterGenerator {
 		if (!new MisalignmentDetector(foes).check()) {
 			return null;
 		}
-		if (Javelin.DEBUGMINIMUMFOES != null
-				&& foes.size() != Javelin.DEBUGMINIMUMFOES) {
+		if (Preferences.DEBUGMINIMUMFOES != null
+				&& foes.size() != Preferences.DEBUGMINIMUMFOES) {
 			return null;
 		}
 		return foes.size() > getmaxenemynumber() ? null : foes;
+	}
+
+	private static boolean validatecreature(Combatant invitee,
+			ArrayList<Combatant> foes) {
+		if (foes.indexOf(invitee) >= 0) {
+			return false;
+		}
+		final String period = Javelin.getDayPeriod();
+		final boolean underground = Dungeon.active != null;
+		if (invitee.source.nightonly && !underground
+				&& (period == Javelin.PERIODMORNING
+						|| period == Javelin.PERIODNOON)) {
+			return false;
+		}
+		return true;
 	}
 
 	/**

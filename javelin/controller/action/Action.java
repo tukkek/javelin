@@ -4,86 +4,57 @@ import java.awt.event.KeyEvent;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.TreeMap;
 
 import javelin.controller.action.ai.AiAction;
-import javelin.controller.action.world.WorldAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.Node;
 import javelin.model.unit.Combatant;
 import javelin.view.screen.BattleScreen;
+import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
 
 /**
  * One of the game moves, to be used during battle.
  * 
  * @see AiAction
- * @see WorldAction
+ * @see ActionMapping
  * @author alex
  */
-public class Action implements Serializable, ActionDescription {
+public abstract class Action implements Serializable, ActionDescription {
 	private static final long serialVersionUID = 1L;
 
 	// Movement
-	public static final ActionDescription UNKNOWN =
-			new Action("Unknown", new String[] {});
-	public static final Movement MOVE_NW =
-			new DiagonalMovement("Move up and left",
-					new String[] { "7", "KeyEvent" + KeyEvent.VK_HOME, "U" },
-					"↖ (7 on numpad, or U)");
-	public static final Movement MOVE_N = new Movement("Move up",
+	public static final Movement MOVE_NW = new Movement("Move (↖)",
+			new String[] { "7", "KeyEvent" + KeyEvent.VK_HOME, "U" },
+			"↖ (7 on numpad, or U)");
+	public static final Movement MOVE_N = new Movement("Move (↑)",
 			new String[] { "8", "KeyEvent" + KeyEvent.VK_UP, "I" },
 			"↑ (8 on numpad, or I)");
-	public static final Movement MOVE_NE =
-			new DiagonalMovement("Move up and right",
-					new String[] { "9", "KeyEvent" + KeyEvent.VK_PAGE_UP, "O" },
-					"↗ (9 on numpad, or O)");
-	public static final Movement MOVE_W = new Movement("Move left",
+	public static final Movement MOVE_NE = new Movement("Move (↗)",
+			new String[] { "9", "KeyEvent" + KeyEvent.VK_PAGE_UP, "O" },
+			"↗ (9 on numpad, or O)");
+	public static final Movement MOVE_W = new Movement("Move (←)",
 			new String[] { "4", "KeyEvent" + KeyEvent.VK_LEFT, "J", "←" },
 			"← (4 on numpad, or J)");
-	public static final Movement MOVE_E = new Movement("Move right",
+	public static final Movement MOVE_E = new Movement("Move (→)",
 			new String[] { "6", "KeyEvent" + KeyEvent.VK_RIGHT, "L", "→" },
 			"→ (6 on numpad, or L)");
-	public static final DiagonalMovement MOVE_SW =
-			new DiagonalMovement("Move down and left",
-					new String[] { "1", "KeyEvent" + KeyEvent.VK_END, "M" },
-					"↙ (1 in numpad, or M)");
-	public static final Movement MOVE_S = new Movement("Move down",
+	public static final Movement MOVE_SW = new Movement("Move (↙)",
+			new String[] { "1", "KeyEvent" + KeyEvent.VK_END, "M" },
+			"↙ (1 in numpad, or M)");
+	public static final Movement MOVE_S = new Movement("Move (↓)",
 			new String[] { "2", "KeyEvent" + KeyEvent.VK_DOWN, "<" },
 			"↓ (2 in numpad, or <)");
-	public static final Movement MOVE_SE =
-			new DiagonalMovement(
-					"Move down and right", new String[] { "3",
-							"KeyEvent" + KeyEvent.VK_PAGE_DOWN, ">" },
-					"↘ (3 on numpad, or >)");
-
-	// Actions
-	public static final Fire FIRE = new Fire(
-			"Fire or throw ranged weapon (-4 penalty for shooting at an opponent who is engaged in close combat)",
-			"f", 'f');
-	public static final Action LOOK =
-			new Action("look", new String[] { "l", "x" });
-	public static final Action WAIT =
-			new Action("wait (+4 armor class until next turn)",
-					new String[] { "w", ".", "5" });
-	public static final Action HELP =
-			new Help("help", new String[] { "?", "h" });
-	public static final Action ZOOM_OUT =
-			new Action("zoom", new String[] { "-", "_" });
-	public static final Action ZOOM_IN =
-			new Action("zoom", new String[] { "+", "=" });
-	public static final Action WITHDRAW =
-			new Action("Withdraw (flee from combat)", "W");
-	public static final Action CHARGE = new Charge("Charge", "c");
-	public static final Action SPELL = new CastSpell("Cast spells", "s");
-
-	private static final Random RANDOM = new Random();
+	public static final Movement MOVE_SE = new Movement("Move (↘)",
+			new String[] { "3", "KeyEvent" + KeyEvent.VK_PAGE_DOWN, ">" },
+			"↘ (3 on numpad, or >)");
 
 	public final String name;
 
 	public String[] keys = new String[0];
 	public int[] keycodes = new int[0];
+	public boolean allowwhileburrowed = false;
 
 	public Action(final String name, final String key) {
 		this(name, new String[] { key });
@@ -156,7 +127,7 @@ public class Action implements Serializable, ActionDescription {
 	 */
 	public static Node outcome(final List<ChanceNode> list,
 			boolean enableoverrun) {
-		float roll = RANDOM.nextFloat();
+		float roll = RPG.random();
 		for (final ChanceNode cn : list) {
 			roll -= cn.chance;
 			if (roll <= 0) {
@@ -189,10 +160,19 @@ public class Action implements Serializable, ActionDescription {
 		return false;
 	}
 
-	public boolean perform(Combatant hero, javelin.model.BattleMap m,
-			Thing thing) {
-		return false;
-	}
+	/**
+	 * Performs an action as the human player.
+	 * 
+	 * @param active
+	 *            Current unit.
+	 * @param m
+	 *            Current map.
+	 * @param thing
+	 *            Unit's visual representation.
+	 * @return <code>true</code> if executed an action (successfully or not).
+	 */
+	public abstract boolean perform(Combatant active, javelin.model.BattleMap m,
+			Thing thing);
 
 	public static Node outcome(List<ChanceNode> list) {
 		return outcome(list, false);
@@ -208,4 +188,15 @@ public class Action implements Serializable, ActionDescription {
 		return misschance;
 	}
 
+	@Override
+	public String getMainKey() {
+		return keys.length == 0 ? null : keys[0];
+	}
+
+	@Override
+	public void setMainKey(String key) {
+		if (keys.length > 0) {
+			keys[0] = key;
+		}
+	}
 }

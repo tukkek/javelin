@@ -89,7 +89,8 @@ public class LevelMap implements java.io.Serializable {
 		int r = Being.calcViewRange(he);
 
 		for (int y = RPG.max(0, he.y - r); y < RPG.min(he.y + r + 1, h); y++) {
-			for (int x = RPG.max(0, he.x - r); x < RPG.min(he.x + r + 1, w); x++) {
+			for (int x = RPG.max(0, he.x - r); x < RPG.min(he.x + r + 1,
+					w); x++) {
 				if (map.isVisibleChecked(x + y * w)) {
 					setMapColor(map, mem, x, y);
 				}
@@ -103,7 +104,8 @@ public class LevelMap implements java.io.Serializable {
 		System.arraycopy(mem, 0, pixels, 0, mem.length);
 
 		for (int y = RPG.max(0, he.y - r); y < RPG.min(he.y + r + 1, h); y++) {
-			for (int x = RPG.max(0, he.x - r); x < RPG.min(he.x + r + 1, w); x++) {
+			for (int x = RPG.max(0, he.x - r); x < RPG.min(he.x + r + 1,
+					w); x++) {
 				updateMapColor(map, pixels, x, y);
 			}
 		}
@@ -120,7 +122,8 @@ public class LevelMap implements java.io.Serializable {
 	 * @param x
 	 * @param y
 	 */
-	private static void updateMapColor(BattleMap map, int[] pixels, int x, int y) {
+	private static void updateMapColor(BattleMap map, int[] pixels, int x,
+			int y) {
 		int i = x + map.width * y;
 		if (map.isVisibleChecked(i)) {
 			int c = pixels[i] + 0x00101010;
@@ -151,19 +154,19 @@ public class LevelMap implements java.io.Serializable {
 	 */
 	private static void setMapColor(BattleMap map, int[] pixels, int x, int y) {
 
-		int tile = map.getTile(x, y);
-		int c = Tile.getMapColour(tile);
-
-		Thing t = map.getObjects(x, y);
-		while (t != null) {
-			int mc = t.getStat("MapColour");
-			if (mc > 0) {
-				c = mc;
-			}
-			t = t.next;
-		}
-
-		pixels[x + map.width * y] = c;
+		// int tile = BattleScreen.active.gettile(x, y);
+		// int c = Tile.getMapColour(tile);
+		//
+		// Thing t = map.getObjects(x, y);
+		// while (t != null) {
+		// int mc = t.getStat("MapColour");
+		// if (mc > 0) {
+		// c = mc;
+		// }
+		// t = t.next;
+		// }
+		//
+		// pixels[x + map.width * y] = c;
 	}
 
 }

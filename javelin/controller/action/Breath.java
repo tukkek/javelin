@@ -8,14 +8,14 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.area.Area;
 import javelin.controller.action.area.Burst;
 import javelin.controller.action.area.Line;
-import javelin.controller.action.world.CastSpells;
 import javelin.controller.ai.ChanceNode;
-import javelin.controller.exception.RepeatTurnException;
+import javelin.controller.exception.RepeatTurn;
 import javelin.model.BattleMap;
 import javelin.model.condition.Breathless;
 import javelin.model.state.BattleState;
@@ -33,7 +33,7 @@ import tyrant.mikera.tyrant.Game.Delay;
  * 
  * @author alex
  */
-public class Breath extends Action implements AiAction {
+public class Breath extends AiAction {
 
 	private static final HashMap<Integer, Area> BURSTS =
 			new HashMap<Integer, Area>();
@@ -50,7 +50,7 @@ public class Breath extends Action implements AiAction {
 			final Combatant combatant) {
 		final ArrayList<List<ChanceNode>> chances =
 				new ArrayList<List<ChanceNode>>();
-		if (combatant.hascondition(Breathless.class)) {
+		if (combatant.hascondition(Breathless.class) != null) {
 			return chances;
 		}
 		for (final BreathWeapon breath : combatant.source.breaths) {
@@ -70,9 +70,9 @@ public class Breath extends Action implements AiAction {
 
 	@Override
 	public boolean perform(Combatant hero, BattleMap m, Thing thing) {
-		if (hero.hascondition(Breathless.class)) {
+		if (hero.hascondition(Breathless.class) != null) {
 			Game.message("Temporarily breathless...", hero, Delay.WAIT);
-			throw new RepeatTurnException();
+			throw new RepeatTurn();
 		}
 		BreathWeapon breath = null;
 		while (breath == null) {
@@ -83,7 +83,7 @@ public class Breath extends Action implements AiAction {
 		BattleState state = m.getState();
 		Set<Point> area = a.fill(breath.range, hero, state);
 		if (area.isEmpty()) {
-			throw new RepeatTurnException();
+			throw new RepeatTurn();
 		}
 		try {
 			BattleScreen.active.mappanel.setoverlay(area);
@@ -157,8 +157,8 @@ public class Breath extends Action implements AiAction {
 			final int breathless = delay.getKey();
 			final Combatant active2 = s2.clone(active);
 			if (breathless > 0) {
-				active2.conditions
-						.add(new Breathless(active.ap + breathless, active2));
+				active2.addcondition(
+						new Breathless(active.ap + breathless, active2));
 			}
 			active2.ap += .5f;
 			for (final Entry<Integer, Float> roll : Action
@@ -227,7 +227,7 @@ public class Breath extends Action implements AiAction {
 		target = s2.clone(target);
 		final int damagetotarget = Math.round(damage * unsafeeffet);
 		if (damagetotarget > 0) {
-			target.damage(damagetotarget, s2, target.source.resistance);
+			target.damage(damagetotarget, s2, target.source.energyresistance);
 			affected += " is " + target.getStatus() + ". ";
 		}
 		hit(targets, updatechances(chances, unsafechance), damagechance, damage,
@@ -271,18 +271,18 @@ public class Breath extends Action implements AiAction {
 		if (size == 0) {
 			Game.message("Monster doesn't have breath attacks...", null,
 					Delay.WAIT);
-			throw new RepeatTurnException();
+			throw new RepeatTurn();
 		}
 		if (size == 1) {
 			return m.breaths.get(0);
 		}
 		int index =
-				CastSpells.choose("Select a breath attack or press q to quit",
+				Javelin.choose("Select a breath attack or press q to quit",
 						m.breaths, false, false);
 		if (index >= 0) {
 			return m.breaths.get(index);
 		}
-		throw new RepeatTurnException();
+		throw new RepeatTurn();
 	}
 
 	static {
@@ -351,7 +351,7 @@ public class Breath extends Action implements AiAction {
 
 	public void quit(char key) {
 		if (key == 'q') {
-			throw new RepeatTurnException();
+			throw new RepeatTurn();
 		}
 	}
 }

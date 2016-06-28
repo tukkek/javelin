@@ -2,28 +2,25 @@ package javelin.controller.fight;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.JavelinApp;
 import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.controller.exception.RepeatTurnException;
-import javelin.controller.exception.UnbalancedTeamsException;
-import javelin.controller.map.Map;
-import javelin.controller.tournament.CrIterator;
+import javelin.controller.exception.RepeatTurn;
+import javelin.controller.exception.UnbalancedTeams;
+import javelin.controller.fight.tournament.CrIterator;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.model.BattleMap;
 import javelin.model.item.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.world.place.town.Town;
-import javelin.model.world.place.unique.Haxor;
+import javelin.model.world.location.town.Town;
+import javelin.model.world.location.unique.Haxor;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
-import tyrant.mikera.tyrant.QuestApp;
 
 /**
  * Ultimate game challenge, in which a player is challenged by a team of their
@@ -35,33 +32,20 @@ import tyrant.mikera.tyrant.QuestApp;
  * 
  * @author alex
  */
-public class PlanarFight implements Fight {
-
-	public class PlanarFightScreen extends BattleScreen {
-		public PlanarFightScreen(QuestApp q, BattleMap mapp) {
-			super(q, mapp, true);
-			Javelin.settexture(IncursionFight.INCURSIONTEXTURE);
-		}
-
-		@Override
-		protected void withdraw(Combatant combatant) {
-			dontflee(this);
-		}
-
-		@Override
-		public String dealreward() {
-			Haxor.singleton.tickets += 2;
-			return "You have won the planar fight, you receive 2 Haxor tickets!\n"
-					+ super.dealreward();
-		}
-	}
+public class PlanarFight extends Fight {
+	/** See {@link Haxor#rubies}. */
+	public static final int RUPEES = 4;
 
 	private static final int MAXTRIES = 1000;
 
 	final Key key;
-	private ArrayList<Upgrade> path;
+	private HashSet<Upgrade> path;
 
 	public PlanarFight(Key k) {
+		texture = IncursionFight.INCURSIONTEXTURE;
+		meld = true;
+		hide = false;
+		bribe = false;
 		this.key = k;
 		UpgradeHandler.singleton.gather();
 		switch (key.color) {
@@ -94,17 +78,12 @@ public class PlanarFight implements Fight {
 	static public void dontflee(BattleScreen s) {
 		Game.message("Cannot flee!", null, Delay.BLOCK);
 		s.checkblock();
-		throw new RepeatTurnException();
+		throw new RepeatTurn();
 	}
 
 	@Override
-	public int getel(JavelinApp javelinApp, int teamel) {
+	public int getel(int teamel) {
 		return teamel;
-	}
-
-	@Override
-	public BattleScreen getscreen(JavelinApp javelinApp, BattleMap battlemap) {
-		return new PlanarFightScreen(javelinApp, battlemap);
 	}
 
 	@Override
@@ -124,11 +103,11 @@ public class PlanarFight implements Fight {
 			key.color.baptize(opponent);
 		}
 		int i = 0;
-		while (ChallengeRatingCalculator.calculateElSafe(opponents) < teamel) {
+		while (ChallengeRatingCalculator.calculateel(opponents) < teamel) {
 			Combatant weakest = findweakest(opponents);
 			int j = 0;
 			while (true) {
-				Upgrade u = RPG.pick(path);
+				Upgrade u = RPG.pick(new ArrayList<Upgrade>(path));
 				if (u.upgrade(weakest.clonedeeply())) {
 					u.upgrade(weakest);
 					break;
@@ -148,38 +127,12 @@ public class PlanarFight implements Fight {
 		return opponents;
 	}
 
-	// ArrayList<Combatant> organizeopponents(ArrayList<Combatant> input) {
-	// ArrayList<Combatant> output = new ArrayList<Combatant>(input.size());
-	// Combatant chosen = input.get(0);
-	// for (int i = 1; i < input.size(); i++) {
-	// Combatant c = input.get(i);
-	// if (c.source.strength > chosen.source.strength) {
-	// chosen = c;
-	// }
-	// }
-	// output.add(chosen);
-	// input.remove(chosen);
-	// chosen = input.get(0);
-	// for (int i = 1; i < input.size(); i++) {
-	// Combatant c = input.get(i);
-	// if (c.source.dexterity > chosen.source.dexterity) {
-	// chosen = c;
-	// }
-	// }
-	// output.add(chosen);
-	// input.remove(chosen);
-	// chosen = input.get(0);
-	// for (int i = 1; i < input.size(); i++) {
-	// Combatant c = input.get(i);
-	// if (c.source.wisdom > chosen.source.wisdom) {
-	// chosen = c;
-	// }
-	// }
-	// output.add(chosen);
-	// input.remove(chosen);
-	// output.add(input.get(0));
-	// return output;
-	// }
+	@Override
+	public String dealreward() {
+		Haxor.singleton.rubies += RUPEES;
+		return "You have won the planar fight, you receive 4 Haxor rubies!\n"
+				+ super.dealreward();
+	}
 
 	Combatant findweakest(ArrayList<Combatant> opponents) {
 		opponents.sort(new Comparator<Combatant>() {
@@ -205,10 +158,10 @@ public class PlanarFight implements Fight {
 				opponents.add(new Combatant(null, m, true));
 			}
 			try {
-				if (ChallengeRatingCalculator.calculateEl(opponents) < teamel) {
+				if (ChallengeRatingCalculator.calculateelsafe(opponents) < teamel) {
 					possiblecrs.add(m.challengeRating);
 				}
-			} catch (UnbalancedTeamsException e) {
+			} catch (UnbalancedTeams e) {
 				continue;
 			}
 		}
@@ -216,37 +169,7 @@ public class PlanarFight implements Fight {
 	}
 
 	@Override
-	public boolean meld() {
-		return true;
-	}
-
-	@Override
-	public Map getmap() {
-		return null;
-	}
-
-	@Override
-	public boolean friendly() {
-		return false;
-	}
-
-	@Override
-	public boolean rewardgold() {
-		return true;
-	}
-
-	@Override
-	public boolean hide() {
-		return false;
-	}
-
-	@Override
-	public boolean canbribe() {
-		return false;
-	}
-
-	@Override
-	public void bribe() {
-		throw new RuntimeException("Cannot bribe a #planarfight");
+	public void withdraw(Combatant combatant, BattleScreen screen) {
+		PlanarFight.dontflee(screen);
 	}
 }

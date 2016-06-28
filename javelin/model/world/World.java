@@ -4,32 +4,45 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.TreeMap;
+import java.util.LinkedList;
 
+import javelin.Javelin;
 import javelin.JavelinApp;
+import javelin.controller.exception.RestartWorldGeneration;
+import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.UpgradeHandler;
+import javelin.controller.upgrade.ability.RaiseCharisma;
+import javelin.controller.upgrade.ability.RaiseIntelligence;
+import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.controller.walker.Walker;
 import javelin.model.BattleMap;
 import javelin.model.Realm;
-import javelin.model.world.place.Lair;
-import javelin.model.world.place.Outpost;
-import javelin.model.world.place.Portal;
-import javelin.model.world.place.WorldPlace;
-import javelin.model.world.place.dungeon.Dungeon;
-import javelin.model.world.place.guarded.Academy;
-import javelin.model.world.place.guarded.Dwelling;
-import javelin.model.world.place.guarded.Guardian;
-import javelin.model.world.place.guarded.Inn;
-import javelin.model.world.place.guarded.Shrine;
-import javelin.model.world.place.town.Town;
-import javelin.model.world.place.unique.MercenariesGuild;
-import javelin.model.world.place.unique.Artificer;
-import javelin.model.world.place.unique.Haxor;
+import javelin.model.unit.Squad;
+import javelin.model.world.location.Lair;
+import javelin.model.world.location.Location;
+import javelin.model.world.location.Outpost;
+import javelin.model.world.location.Portal;
+import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.fortification.Dwelling;
+import javelin.model.world.location.fortification.Guardian;
+import javelin.model.world.location.fortification.Inn;
+import javelin.model.world.location.fortification.MagesGuild;
+import javelin.model.world.location.fortification.MartialAcademy;
+import javelin.model.world.location.fortification.Mine;
+import javelin.model.world.location.fortification.Shrine;
+import javelin.model.world.location.fortification.Trove;
+import javelin.model.world.location.town.Town;
+import javelin.model.world.location.unique.AdventurersGuild;
+import javelin.model.world.location.unique.Artificer;
+import javelin.model.world.location.unique.Haxor;
+import javelin.model.world.location.unique.MercenariesGuild;
+import javelin.model.world.location.unique.PillarOfSkulls;
+import javelin.model.world.location.unique.SummoningCircle;
+import javelin.model.world.location.unique.TrainingHall;
+import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.RPG;
-import tyrant.mikera.tyrant.Tile;
 
 /**
  * Game world overview. This is focused on generating the initial game state.
@@ -42,34 +55,6 @@ import tyrant.mikera.tyrant.Tile;
  */
 public class World implements Serializable {
 	/**
-	 * A region is a sector of the world with a certain game difficulty
-	 * associated to it. Forests are the background. have 2 plain areas (1 is
-	 * player start), 3 mountain areas and 1 swamp.
-	 * 
-	 * @author alex
-	 */
-	public enum Region {
-		EASYA, EASYB, NORMALA, HARDA, HARDB, HARDC, VERYHARDA
-	}
-
-	/**
-	 * 2/16 Easy (el-5 to el-8) - plains
-	 */
-	public static final int EASY = Tile.PLAINS;
-	/**
-	 * 10/16 Moderate (el-4) - forest
-	 */
-	public static final int MEDIUM = Tile.FORESTS;
-	/**
-	 * 3/16 Difficult (el-3 to el) - mountains
-	 */
-	public static final int HARD = Tile.HILLS;
-	/**
-	 * 1/16 Very difficult (el+1) - swamp
-	 */
-	public static final int VERYHARD = Tile.GUNK;
-
-	/**
 	 * Map size in squares.
 	 */
 	static public int MAPDIMENSION = 30;
@@ -77,15 +62,23 @@ public class World implements Serializable {
 	 * Randomly generated world map.
 	 */
 	public static World seed;
-
+	/** Facilitate movement. */
+	public static boolean[][] roads = new boolean[MAPDIMENSION][MAPDIMENSION];
+	/** Upgraded {@link #roads}. */
+	public static boolean[][] highways =
+			new boolean[MAPDIMENSION][MAPDIMENSION];
+	private static int retries = 0;
+	private static int lastretries = 0;
 	static final int TOWNBUFFER = 1;
-	static final int[] NOISE = new int[] { 0, 2, 3 };
+	static final Terrain[] NOISE = new Terrain[] { Terrain.PLAIN, Terrain.HILL,
+			Terrain.FOREST, Terrain.MOUNTAINS };
 	static final int NOISEAMOUNT = MAPDIMENSION * MAPDIMENSION / 10;
 
-	Region[][] map = new Region[MAPDIMENSION][MAPDIMENSION];
-	TreeMap<Region, Point> towns;
+	/** Map of terrain tiles by [x][y] coordinates. */
+	public Terrain[][] map = new Terrain[MAPDIMENSION][MAPDIMENSION];
+	/** If <code>false</code> means the world is still being generated. */
+	public boolean done = false;
 
-	static final ArrayList<Realm> TOWNINFO = new ArrayList<Realm>();
 	/**
 	 * The sum total of the values of this map should be 1 (100%).
 	 * 
@@ -94,249 +87,87 @@ public class World implements Serializable {
 	public static final HashMap<Class<? extends WorldActor>, Float> FEATURECHANCE =
 			new HashMap<Class<? extends WorldActor>, Float>();
 	private static final int NUMBEROFSTARTINGFEATURES =
-			(MAPDIMENSION * MAPDIMENSION) / 5;;
+			(MAPDIMENSION * MAPDIMENSION) / 5;
+	public static final int NREGIONS = 16;
 
 	static {
-		TOWNINFO.add(Realm.FIRE);
-		TOWNINFO.add(Realm.WATER);
-		TOWNINFO.add(Realm.WIND);
-		TOWNINFO.add(Realm.EARTH);
-		TOWNINFO.add(Realm.MAGICAL);
-		TOWNINFO.add(Realm.GOOD);
-		TOWNINFO.add(Realm.EVIL);
-
-		FEATURECHANCE.put(Dungeon.class, 1f / 5f);
-		FEATURECHANCE.put(Portal.class, 1f / 5f);
-		FEATURECHANCE.put(Lair.class, 1f / 5f);
-		float special = 2 / (5f * 5f);
-		FEATURECHANCE.put(Outpost.class, special);
-		FEATURECHANCE.put(Inn.class, special);
-		FEATURECHANCE.put(Shrine.class, Shrine.DEBUG ? 10 : special);
-		FEATURECHANCE.put(Guardian.class, Guardian.DEBUG ? 10 : special);
-		FEATURECHANCE.put(Dwelling.class, Dwelling.DEBUG ? 10 : special);
+		Float chance = 1 / 13f;
+		FEATURECHANCE.put(Dungeon.class, 3 * chance);
+		FEATURECHANCE.put(Trove.class, 2 * chance);
+		FEATURECHANCE.put(Portal.class, chance);
+		FEATURECHANCE.put(Lair.class, chance);
+		FEATURECHANCE.put(Outpost.class, chance);
+		FEATURECHANCE.put(Inn.class, chance);
+		FEATURECHANCE.put(Shrine.class, chance);
+		FEATURECHANCE.put(Guardian.class, chance);
+		FEATURECHANCE.put(Dwelling.class, chance);
+		FEATURECHANCE.put(Mine.class, chance);
 	}
 
-	World() {
+	void generate() {
 		for (int i = 0; i < MAPDIMENSION; i++) {
 			for (int j = 0; j < MAPDIMENSION; j++) {
-				map[i][j] = Region.NORMALA;
+				map[i][j] = Terrain.FOREST;
 			}
 		}
-
-		while (towns == null || !validatetowns()) {
-			towns = placetowns();
+		initroads();
+		LinkedList<Realm> realms = new LinkedList<Realm>();
+		for (Realm r : Realm.values()) {
+			realms.add(r);
 		}
-		for (final Entry<Region, Point> town : towns.entrySet()) {
-			final Point p = town.getValue();
-			for (int x = p.x - 1; x <= p.x + 1; x++) {
-				for (int y = p.y - 1; y <= p.y + 1; y++) {
-					map[x][y] = town.getKey();
-				}
-			}
-		}
-		final TreeMap<Region, Integer> regionsizes =
-				new TreeMap<Region, Integer>();
-		for (final Region r : Region.values()) {
-			if (r == Region.NORMALA) {
-				continue;
-			}
-			regionsizes.put(r, 9);
-		}
-		while (isbuilding(regionsizes)) {
-			buildregions(regionsizes);
-		}
-		addnoise();
+		Collections.shuffle(realms);
+		Terrain.MOUNTAINS.generate(this, realms.pop());
+		Terrain.MOUNTAINS.generate(this, realms.pop());
+		Terrain.DESERT.generate(this, realms.pop());
+		Terrain.PLAIN.generate(this, realms.pop());
+		Terrain.HILL.generate(this, realms.pop());
+		Terrain.WATER.generate(this, null);
+		Terrain.WATER.generate(this, null);
+		Terrain.MARSH.generate(this, realms.pop());
+		Terrain.FOREST.generate(this, realms.pop());
 	}
 
-	void buildregions(final TreeMap<Region, Integer> regionsizes) {
-		Region expand = null;
-		for (final Region r : Region.values()) {
-			if (r == Region.NORMALA) {
-				continue;
+	void initroads() {
+		for (int x = 0; x < MAPDIMENSION; x++) {
+			for (int y = 0; y < MAPDIMENSION; y++) {
+				roads[x][y] = false;
+				highways[x][y] = false;
 			}
-			if (expand == null
-					|| regionsizes.get(r) < regionsizes.get(expand)) {
-				expand = r;
-			}
-		}
-		final Region square = expand(expand, towns.get(expand), 0);
-		updatesize(expand, 1, regionsizes);
-		if (square != Region.NORMALA) {
-			updatesize(square, -1, regionsizes);
-		}
-	}
-
-	Region expand(Region r, Point p, int maxtries) {
-		int x = p.x;
-		int y = p.y;
-		Integer lastx;
-		Integer lasty;
-		int tries = 0;
-		while (map[x][y] == r) {
-			tries += 1;
-			if (maxtries != 0 && tries >= maxtries) {
-				return null;
-			}
-			lastx = x;
-			lasty = y;
-			x += randomstep();
-			y += randomstep();
-			if (outside(x) || outside(y)) {
-				x = lastx;
-				y = lasty;
-				continue;
-			}
-			/* collision with other town */
-			for (final Point neighbor : towns.values()) {
-				if (p == neighbor) {
-					continue;
-				}
-				for (int nx = neighbor.x - TOWNBUFFER; nx <= neighbor.x
-						+ TOWNBUFFER; nx++) {
-					for (int ny = neighbor.y - TOWNBUFFER; ny <= neighbor.y
-							+ TOWNBUFFER; ny++) {
-						if (x == nx && y == ny) {
-							x = lastx;
-							y = lasty;
-							continue;
-						}
-					}
-				}
-			}
-		}
-		final Region square = map[x][y];
-		map[x][y] = r;
-		return square;
-	}
-
-	void addnoise() {
-		int noiseleft = NOISEAMOUNT;
-		while (noiseleft > 0) {
-			int chunk = RPG.r(4, 10);
-			if (chunk < 1) {
-				chunk = 1;
-			} else if (chunk > noiseleft) {
-				chunk = noiseleft;
-			}
-			int x = RPG.r(0, MAPDIMENSION - 1), y = RPG.r(0, MAPDIMENSION - 1);
-			Region r = null;
-			while (r == null || r == map[x][y]) {
-
-				r = Region.values()[RPG.pick(NOISE)];
-			}
-			for (int i = 0; i < chunk; i++) {
-				if (expand(r, new Point(x, y), 1000) == null) {
-					break;
-				}
-				noiseleft -= 1;
-			}
-		}
-	}
-
-	Integer updatesize(final Region expand, final int i,
-			final TreeMap<Region, Integer> regionsizes) {
-		return regionsizes.put(expand, regionsizes.get(expand) + i);
-	}
-
-	boolean outside(final int y) {
-		return y < 0 || y >= MAPDIMENSION;
-	}
-
-	int randomstep() {
-		return RPG.pick(new int[] { -1, 0, +1 });
-	}
-
-	boolean isbuilding(final TreeMap<Region, Integer> regionsizes) {
-		for (final Entry<Region, Integer> size : regionsizes.entrySet()) {
-			if (size.getKey() == Region.NORMALA) {
-				continue;
-			}
-			if (size.getValue() < MAPDIMENSION * MAPDIMENSION / 16) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	boolean validatetowns() {
-		for (final Point a : towns.values()) {
-			for (final Point b : towns.values()) {
-				if (a == b) {
-					continue;
-				}
-				if (triangledistance(a, b) < TOWNBUFFER) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-
-	static double triangledistance(final Point a, final Point b) {
-		return Math.sqrt(calcdist(a.x - b.x) + calcdist(a.y - b.y));
-	}
-
-	static int calcdist(final int deltax) {
-		final int abs = Math.abs(deltax);
-		return abs * abs;
-	}
-
-	TreeMap<Region, Point> placetowns() {
-		final TreeMap<Region, Point> towns = new TreeMap<Region, Point>();
-		final ArrayList<Region> regions = new ArrayList<Region>();
-		for (final Region r : Region.values()) {
-			regions.add(r);
-		}
-		Collections.shuffle(regions);
-		for (final Region r : regions) {
-			placetown(towns, r);
-		}
-		return towns;
-	}
-
-	void placetown(final TreeMap<Region, Point> towns, final Region r) {
-		Point proposal = null;
-		placement: while (proposal == null) {
-			proposal = new Point(randomaxispoint(), randomaxispoint());
-			for (final Point town : towns.values()) {
-				for (int x = town.x - TOWNBUFFER; x <= town.x
-						+ TOWNBUFFER; x++) {
-					for (int y = town.y - TOWNBUFFER; y <= town.y
-							+ TOWNBUFFER; y++) {
-						if (proposal.x == x && proposal.y == y) {
-							proposal = null;
-							continue placement;
-						}
-					}
-				}
-			}
-		}
-		towns.put(r, proposal);
-	}
-
-	int randomaxispoint() {
-		return RPG.r(1, MAPDIMENSION - 2);
-	}
-
-	int getTile(final int i, final int j) {
-		switch (map[i][j]) {
-		case EASYA:
-		case EASYB:
-			return Tile.PLAINS;
-		default:
-		case NORMALA:
-			return Tile.FORESTS;
-		case HARDA:
-		case HARDB:
-		case HARDC:
-			return Tile.HILLS;
-		case VERYHARDA:
-			return Tile.GUNK;
 		}
 	}
 
 	/**
-	 * Spawns {@link WorldActor}s into the game world.
+	 * @return <code>true</code> if given coordinates are within the world map.
+	 */
+	public static boolean validatecoordinate(int x, int y) {
+		return 0 <= x && x < MAPDIMENSION && 0 <= y && y < MAPDIMENSION;
+	}
+
+	static void spawnnear(Town t, WorldActor l, World w) {
+		int[] haxor = null;
+		while (haxor == null
+				|| WorldActor.get(t.x + haxor[0], t.y + haxor[1]) != null
+				|| t.x + haxor[0] < 0 || t.y + haxor[1] < 0
+				|| t.x + haxor[0] >= MAPDIMENSION
+				|| t.y + haxor[1] >= MAPDIMENSION
+				|| w.map[t.x + haxor[0]][t.y + haxor[1]]
+						.equals(Terrain.WATER)) {
+			haxor = new int[] { RPG.r(2, 3), RPG.r(2, 3) };
+			if (RPG.r(1, 2) == 1) {
+				haxor[0] = -haxor[0];
+			}
+			if (RPG.r(1, 2) == 1) {
+				haxor[1] = -haxor[1];
+			}
+		}
+		l.x = haxor[0] + t.x;
+		l.y = haxor[1] + t.y;
+		l.place();
+	}
+
+	/**
+	 * Spawns {@link WorldActor}s into the game world. Used both during world
+	 * generation and during a game's progress.
 	 * 
 	 * @param chance
 	 *            Used to modify the default spawning chances. For example: if
@@ -374,10 +205,17 @@ public class World implements Serializable {
 		if (RPG.random() < getfeaturechance(chance, Dwelling.class)) {
 			new Dwelling().place();
 		}
+		if (RPG.random() < getfeaturechance(chance, Trove.class)) {
+			new Trove().place();
+		}
+		if (WorldActor.getall(Mine.class).size() < 2
+				&& RPG.random() < getfeaturechance(chance, Mine.class)) {
+			new Mine().place();
+		}
 		Portal.open(chance * FEATURECHANCE.get(Portal.class));
 		if (!generatingworld) {
 			if (RPG.random() < chance / 4f) {
-				new Merchant().place();
+				new Caravan().place();
 			}
 		}
 	}
@@ -386,70 +224,119 @@ public class World implements Serializable {
 		return onefeatureperweek * FEATURECHANCE.get(type);
 	}
 
-	static WorldActor determinecolor(Point p) {
-		ArrayList<WorldActor> towns = WorldPlace.getall(Town.class);
+	/**
+	 * @param p
+	 *            Given a location...
+	 * @return the {@link Realm} of the closest {@link Town}.
+	 */
+	public static WorldActor determinecolor(Point p) {
+		ArrayList<WorldActor> towns = Location.getall(Town.class);
 		WorldActor closest = towns.get(0);
 		for (int i = 1; i < towns.size(); i++) {
-			WorldActor t = towns.get(i);
-			if (Walker.distance(t.x, t.y, p.x, p.y) < Walker.distance(closest.x,
-					closest.y, p.x, p.y)) {
+			Town t = (Town) towns.get(i);
+			if (t.realm != null && Walker.distance(t.x, t.y, p.x, p.y) < Walker
+					.distance(closest.x, closest.y, p.x, p.y)) {
 				closest = t;
 			}
 		}
 		return closest;
 	}
 
-	/**
-	 * @param seed
-	 *            Given an already generated seed...
-	 * @return creates a view component that reflects it.
-	 */
-	public static BattleMap makemap(final World seed) {
-		WorldScreen.worldmap = new BattleMap(MAPDIMENSION, MAPDIMENSION);
-		for (int i = 0; i < WorldScreen.worldmap.width; i++) {
-			for (int j = 0; j < WorldScreen.worldmap.height; j++) {
-				WorldScreen.worldmap.setTile(i, j, seed.getTile(i, j));
-			}
-		}
-		WorldScreen.worldmap.makeAllInvisible();
-		Point t = seed.towns.get(Region.EASYA);
-		for (int x = t.x - 2; x <= t.x + 2; x++) {
-			for (int y = t.y - 2; y <= t.y + 2; y++) {
-				if (x < 0 || x >= MAPDIMENSION || y < 0 || y >= MAPDIMENSION) {
-					continue;
-				}
-				WorldScreen.setVisible(x, y);
-			}
-		}
-		return WorldScreen.worldmap;
-	}
-
 	static Town placefeatures(final World seed) {
-		Point easya = seed.towns.get(Region.EASYA);
-		Point easyb = seed.towns.get(Region.EASYB);
-		ArrayList<WorldActor> towns = WorldPlace.getall(Town.class);
-		WorldActor startingtown = WorldScreen.getactor(easya.x, easya.y, towns);
-		new Portal(startingtown, WorldScreen.getactor(easyb.x, easyb.y, towns),
-				false, false, true, true, null, false).place();
-		Haxor.spawn(easya);
+		Terrain starton = RPG.r(1, 2) == 1 ? Terrain.PLAIN : Terrain.HILL;
+		// starton = Terrain.PLAIN;// TODO
+		Town easya = gettown(starton, seed);
+		Town easyb = gettown(
+				starton == Terrain.PLAIN ? Terrain.HILL : Terrain.PLAIN, seed);
+		ArrayList<WorldActor> towns = Location.getall(Town.class);
+		WorldActor startingtown = WorldActor.get(easya.x, easya.y, towns);
+		new Portal(startingtown, WorldActor.get(easyb.x, easyb.y, towns), false,
+				false, true, true, null, false).place();
+		Haxor.singleton = new Haxor();
+		spawnnear(easya, Haxor.singleton, seed);
+		spawnnear(easya, new TrainingHall(), seed);
+		spawnnear(easya, new AdventurersGuild(), seed);
 		new MercenariesGuild().place();
 		new Artificer().place();
+		new SummoningCircle().place();
+		new PillarOfSkulls().place();
 		UpgradeHandler.singleton.gather();
-		new Academy(UpgradeHandler.singleton.shots).place();
-		new Academy(UpgradeHandler.singleton.expertise).place();
-		new Academy(UpgradeHandler.singleton.power).place();
-		int target = NUMBEROFSTARTINGFEATURES - WorldPlace.count();
+		generatemageguilds();
+		generatemartialacademies();
+		int target = NUMBEROFSTARTINGFEATURES - Location.count();
 		while (countplaces() < target) {
 			spawnfeatures(1, true);
 		}
 		return (Town) startingtown;
 	}
 
+	static Town gettown(Terrain terrain, World seed) {
+		ArrayList<WorldActor> towns =
+				new ArrayList<WorldActor>(Location.getall(Town.class));
+		Collections.shuffle(towns);
+		for (WorldActor town : towns) {
+			if (seed.map[town.x][town.y] == terrain) {
+				return (Town) town;
+			}
+		}
+		if (Javelin.DEBUG) {
+			throw new RuntimeException("No town in terrain " + terrain);
+		} else {
+			throw new RestartWorldGeneration();
+		}
+	}
+
+	static void generatemageguilds() {
+		new MagesGuild("Compulsion guild",
+				UpgradeHandler.singleton.schoolcompulsion,
+				RaiseCharisma.INSTANCE).place();
+		new MagesGuild("Conjuration guild",
+				UpgradeHandler.singleton.schoolconjuration,
+				RaiseCharisma.INSTANCE).place();
+		new MagesGuild("Abjuration guild",
+				UpgradeHandler.singleton.schoolabjuration,
+				RaiseCharisma.INSTANCE).place();
+
+		new MagesGuild("Healing guild", UpgradeHandler.singleton.schoolhealing,
+				new RaiseWisdom()).place();
+		new MagesGuild("Totem guild", UpgradeHandler.singleton.schooltotem,
+				new RaiseWisdom()).place();
+		new MagesGuild("Healing wounds guild",
+				UpgradeHandler.singleton.schoolhealwounds, new RaiseWisdom())
+						.place();
+		new MagesGuild("Divination guild",
+				UpgradeHandler.singleton.schooldivination, new RaiseWisdom())
+						.place();
+
+		new MagesGuild("Necromancy guild",
+				UpgradeHandler.singleton.schoolnecromancy,
+				RaiseIntelligence.INSTANCE).place();
+		new MagesGuild("Wounding guild",
+				UpgradeHandler.singleton.schoolwounding,
+				RaiseIntelligence.INSTANCE).place();
+		new MagesGuild("Evocation guild",
+				UpgradeHandler.singleton.schoolevocation,
+				RaiseIntelligence.INSTANCE).place();
+		new MagesGuild("Transmutation guild",
+				UpgradeHandler.singleton.schooltransmutation,
+				RaiseIntelligence.INSTANCE).place();
+
+	}
+
+	static void generatemartialacademies() {
+		new MartialAcademy(UpgradeHandler.singleton.shots,
+				"Academy (shooting range)").place();
+		new MartialAcademy(UpgradeHandler.singleton.expertise,
+				"Academy (combat expertise)").place();
+		new MartialAcademy(UpgradeHandler.singleton.power,
+				"Academy (power attack)").place();
+	}
+
 	static int countplaces() {
 		int count = 0;
 		for (ArrayList<WorldActor> instances : WorldActor.INSTANCES.values()) {
 			if (instances.isEmpty()
-					|| !(instances.get(0) instanceof WorldPlace)) {
+					|| !(instances.get(0) instanceof Location)) {
 				continue;
 			}
 			count += instances.size();
@@ -463,21 +350,61 @@ public class World implements Serializable {
 	 * @return Starting point (Town)
 	 */
 	public static void makemap() {
-		seed = new World();
-		JavelinApp.overviewmap = World.makemap(seed);
-		for (final Point town : seed.towns.values()) {
-			Realm r = RPG.pick(TOWNINFO);
-			TOWNINFO.remove(r);
-			new Town(town.x, town.y, r).place();
+		Town start = null;
+		while (seed == null) {
+			try {
+				WorldScreen.worldmap =
+						new BattleMap(MAPDIMENSION, MAPDIMENSION);
+				seed = new World();
+				seed.generate();
+				JavelinApp.overviewmap = WorldScreen.worldmap;
+				placemoretowns();
+				start = placefeatures(seed);
+				if (Terrain.checkadjacent(new Point(start.x, start.y),
+						Terrain.WATER, seed, 2) != 0) {
+					throw new RestartWorldGeneration();
+				}
+			} catch (RestartWorldGeneration e) {
+				seed = null;
+				JavelinApp.overviewmap = null;
+				Town.initnames();
+				ArrayList<WorldActor> squad =
+						WorldActor.INSTANCES.get(Squad.class);
+				WorldActor.INSTANCES.clear();
+				WorldActor.INSTANCES.put(Squad.class, squad);
+			}
 		}
+		finish(start);
+	}
+
+	static void finish(Town start) {
+		start.garrison.clear();
+		start.capture(true);
+		placenearbywoods(start);
+		Squad.active.x = start.x;
+		Squad.active.y = start.y;
+		Squad.active.displace();
+		Squad.active.place();
+		Squad.active.equipment.fill(Squad.active);
+		Squad.active.lasttown = start;
+		WorldScreen.worldmap.makeAllInvisible();
+		Outpost.discover(start.x, start.y, Outpost.VISIONRANGE);
+		seed.done = true;
+	}
+
+	static void placemoretowns() {
 		int more = RPG.r(5, 7);
-		for (int i = 0; i < more; i++) {
+		while (more > 0) {
 			int x = RPG.r(0, MAPDIMENSION - 1);
 			int y = RPG.r(0, MAPDIMENSION - 1);
-			if (WorldScreen.getactor(x, y) != null) {
-				i -= 1;
+			// if (seed.map[x][y] != Terrain.PLAIN) {
+			// continue;// TODO
+			// }
+			if (WorldActor.get(x, y) != null
+					|| !seed.map[x][y].generatetown(new Point(x, y), seed)) {
 				continue;
 			}
+			more -= 1;
 			Point p = new Point(x, y);
 			Town t = new Town(p.x, p.y, World.determinecolor(p).realm);
 			while (t.iscloseto(Town.class)) {
@@ -485,14 +412,32 @@ public class World implements Serializable {
 			}
 			t.place();
 		}
-		final Town start = World.placefeatures(seed);
-		Squad.active.x = start.x;
-		Squad.active.y = start.y;
-		Squad.active.displace();
-		Squad.active.place();
-		Squad.active.equipment.fill(Squad.active);
-		Squad.active.lasttown = start;
-		Outpost.discover(start.x, start.y, Outpost.VISIONRANGE);
+	}
+
+	static void placenearbywoods(Town start) {
+		int x, y;
+		int minx = start.x - Outpost.VISIONRANGE;
+		int maxx = start.x + Outpost.VISIONRANGE;
+		int miny = start.y - Outpost.VISIONRANGE;
+		int maxy = start.y + Outpost.VISIONRANGE;
+		for (x = minx; x <= maxx; x++) {
+			for (y = miny; y <= maxy; y++) {
+				if (validatecoordinate(x, y)
+						&& seed.map[x][y].equals(Terrain.FOREST)) {
+					return; // already has nearby woods
+				}
+			}
+		}
+		x = -1;
+		y = -1;
+		while (!validatecoordinate(x, y) || !validatecoordinate(x + 1, y)
+				|| WorldActor.get(x, y) != null
+				|| WorldActor.get(x + 1, y) != null) {
+			x = RPG.r(minx, maxx);
+			y = RPG.r(miny, maxy);
+		}
+		seed.map[x][y] = Terrain.FOREST;
+		seed.map[x + 1][y] = Terrain.FOREST;
 	}
 
 	/**
@@ -504,11 +449,12 @@ public class World implements Serializable {
 	 */
 	static public boolean istown(final int x, final int y,
 			boolean townbufferenabled) {
-		if (WorldScreen.getactor(x, y) != null) {
+		if (WorldActor.get(x, y) != null) {
 			return true;
 		}
+		ArrayList<WorldActor> towns = WorldActor.getall(Town.class);
 		if (townbufferenabled) {
-			for (final Point p : seed.towns.values()) {
+			for (final WorldActor p : towns) {
 				for (int townx = p.x - TOWNBUFFER; townx <= p.x
 						+ TOWNBUFFER; townx++) {
 					for (int towny = p.y - TOWNBUFFER; towny <= p.y
@@ -520,12 +466,46 @@ public class World implements Serializable {
 				}
 			}
 		} else {
-			for (final Point p : seed.towns.values()) {
+			for (final WorldActor p : towns) {
 				if (p.x == x && p.y == y) {
 					return true;
 				}
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Handles when {@link World} generation is taking too long.
+	 * 
+	 * @throws RestartWorldGeneration
+	 */
+	public static void retry() {
+		if (World.seed != null && World.seed.done) {
+			return;
+		}
+		retries += 1;
+		if (retries > 100000 * 10) {
+			retries = 0;
+			lastretries = 0;
+			throw new RestartWorldGeneration();
+		}
+		if (retries - lastretries >= 100000 * 2) {
+			new InfoScreen("")
+					.print("Generating world... Terrain retries: " + retries);
+			lastretries = retries;
+		}
+	}
+
+	@Override
+	public String toString() {
+		String s = "";
+		for (int y = 0; y < MAPDIMENSION; y++) {
+			for (int x = 0; x < MAPDIMENSION; x++) {
+				s += map[x][y].representation;
+			}
+			s += "\n";
+		}
+		return s;
 	}
 }

@@ -10,7 +10,7 @@ import javelin.model.unit.Combatant;
  *
  */
 public class ImprovedFeintUpgrade extends FeatUpgrade {
-
+	/** Constructor. */
 	public ImprovedFeintUpgrade() {
 		super(ImprovedFeint.singleton);
 		prerequisite = CombatExpertise.singleton;

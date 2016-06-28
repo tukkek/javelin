@@ -26,7 +26,7 @@ public class GameHandler {
 		final Point direction = convertActionToDirection(action);
 		final int tox = thing.x + direction.x;
 		final int toy = thing.y + direction.y;
-		if (map != null && map.getTile(tox, toy) != 0) {
+		if (map != null /* && map.getTile(tox, toy) != 0 */) {
 			if (Movement.tryMove(thing, map, tox, toy, state)) {
 				return new Point(tox, toy);
 			}

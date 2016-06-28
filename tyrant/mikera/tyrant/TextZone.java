@@ -11,7 +11,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
-import javelin.controller.db.Properties;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.tyrant.util.Text;
 
@@ -22,18 +21,11 @@ public class TextZone extends Component {
 	public String text;
 	public Font font;
 	public static int linelength;
-	Color fontcolor;
+	static public Color fontcolor;
+	// static public Color color;
 
 	public TextZone() {
 		this("");
-		String color = Properties.getString("ui.textcolor").toUpperCase();
-		try {
-			fontcolor = (Color) Color.class.getField(color).get(null);
-		} catch (Exception e) {
-			System.err.println("Could not load the color " + color
-					+ ", please review your preferences file.");
-			System.exit(0);
-		}
 	}
 
 	public TextZone(final String t) {
@@ -80,11 +72,11 @@ public class TextZone extends Component {
 
 		final int scroll = RPG.max(0, height - getHeight());
 
+		g.setColor(fontcolor);
 		for (final String s : st) {
 			final String[] lines = Text.wrapString(s, linelength);
 
 			for (String line : lines) {
-				g.setColor(fontcolor);
 				g.getFont().deriveFont(Font.BOLD, g.getFont().getSize());
 				if (line.startsWith(BLACK)) {
 					line = line.replace(BLACK, "");

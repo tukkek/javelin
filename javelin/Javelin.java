@@ -3,6 +3,7 @@ package javelin;
 import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.Image;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileReader;
@@ -21,22 +22,30 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import javelin.controller.ai.BattleAi;
+import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.controller.db.StateManager;
 import javelin.controller.db.reader.MonsterReader;
-import javelin.controller.db.reader.factor.Organization;
-import javelin.controller.map.Map;
+import javelin.controller.db.reader.fields.Organization;
+import javelin.controller.fight.LairFight;
+import javelin.controller.terrain.Terrain;
+import javelin.controller.terrain.hazard.PartyHazard;
+import javelin.controller.upgrade.Spell;
+import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.BattleMap;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.world.Squad;
-import javelin.model.world.World;
+import javelin.model.unit.Squad;
 import javelin.model.world.WorldActor;
+import javelin.model.world.location.fortification.Fortification;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.RecruitScreen;
+import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.Game;
@@ -44,63 +53,56 @@ import tyrant.mikera.tyrant.Game.Delay;
 import tyrant.mikera.tyrant.QuestApp;
 
 /**
- * Utility class for broad-level rules and game-behavior.
+ * Utility class for broad-level rules and game-behavior. Add -Ddebug=true to
+ * the java command line for easier debugging and logging.
  * 
+ * @see #DEBUG
  * @author alex
  */
 public class Javelin {
-	/**
-	 * Add -Ddebug=true to the java VM command line for easier debugging and
-	 * logging.
-	 */
 	public static final boolean DEBUG = System.getProperty("debug") != null;
-	public static final boolean DEBUGDISABLECOMBAT =
-			javelin.controller.db.Properties.getString("cheat.combat") != null;
-	public static final boolean DEBUGEXPLORED =
-			javelin.controller.db.Properties.getString("cheat.map") != null;;
-	public static final Integer DEBUGSTARTINGXP =
-			javelin.controller.db.Properties.getInteger("cheat.xp", null);
-	public static final Integer DEBUGSTARTINGGOLD =
-			javelin.controller.db.Properties.getInteger("cheat.gold", null);
-	public static final Integer DEBUGSTARTINGHAX =
-			javelin.controller.db.Properties.getInteger("cheat.haxor", null);
-	public static final Integer DEBUGSTARTINGLABOR =
-			javelin.controller.db.Properties.getInteger("cheat.labor", null);
-	public static final Integer DEBUGMINIMUMFOES = null;
-	public static final Integer DEBUGWEATHER = null;
-	public static final Map DEBUGMAPTYPE = null;
-	public static final boolean DEBUG_SPAWNINCURSION = false;
-	public static final Float DEBUGSTARTINGCR = null;
-	public static final Item DEBUGSTARTINGITEM = null;
-	public static final String DEBUGFOE = null;
-	public static final String DEBUGPERIOD = null;
 
-	public static final String PERIOD_MORNING = "Morning";
-	public static final String PERIOD_NOON = "Noon";
-	public static final String PERIOD_EVENING = "Evening";
-	public static final String PERIOD_NIGHT = "Night";
+	public static final String PERIODMORNING = "Morning";
+	public static final String PERIODNOON = "Noon";
+	public static final String PERIODEVENING = "Evening";
+	public static final String PERIODNIGHT = "Night";
 
 	private static final String TITLE = "Javelin";
 
 	private static final Preferences RECORD =
 			Preferences.userNodeForPackage(Javelin.class);
+
+	/**
+	 * Monster descriptions, separate from {@link Monster} data to avoid
+	 * duplication in memory when using {@link Monster#clone()}.
+	 * 
+	 * @see Combatant#clonedeeply()
+	 */
 	public static TreeMap<String, String> DESCRIPTIONS =
 			new TreeMap<String, String>();
+	/** All loaded monster mapped by challenge rating. */
 	public static TreeMap<Float, List<Monster>> MONSTERSBYCR =
 			new TreeMap<Float, List<Monster>>();
+	/** All loaded XML {@link Monster}s. See {@link MonsterReader}. */
 	public static List<Monster> ALLMONSTERS = new ArrayList<Monster>();
+	/** Singleton. */
 	public static JavelinApp app;
+	/** Monster captured on a {@link LairFight}. */
 	public static Combatant captured = null;
 
 	static {
-		checkjava();
 		try {
+			checkjava();
+			UpgradeHandler.singleton.gather();
+			Spell.init();
 			final DefaultHandler defaultHandler = new MonsterReader();
 			final XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(defaultHandler);
 			reader.setErrorHandler(defaultHandler);
 			reader.parse(new InputSource(new FileReader("monsters.xml")));
 			Organization.process();
+			SpellsFactor.init();
+			Spell.init();
 			Artifact.init();
 			Item.init();
 		} catch (final IOException e) {
@@ -181,15 +183,15 @@ public class Javelin {
 	public static String getDayPeriod() {
 		final long hourofday = getHour();
 		if (hourofday < 6) {
-			return PERIOD_NIGHT;
+			return PERIODNIGHT;
 		}
 		if (hourofday < 12) {
-			return PERIOD_MORNING;
+			return PERIODMORNING;
 		}
 		if (hourofday < 18) {
-			return PERIOD_NOON;
+			return PERIODNOON;
 		}
-		return PERIOD_EVENING;
+		return PERIODEVENING;
 	}
 
 	public static long getHour() {
@@ -229,13 +231,13 @@ public class Javelin {
 	public static String sayWelcome() {
 		final String period = getDayPeriod();
 		String flavor;
-		if (period == PERIOD_MORNING) {
+		if (period == PERIODMORNING) {
 			flavor = "What dangers lie ahead..?";
-		} else if (period == PERIOD_NOON) {
+		} else if (period == PERIODNOON) {
 			flavor = "Onwards to victory!";
-		} else if (period == PERIOD_EVENING) {
+		} else if (period == PERIODEVENING) {
 			flavor = "Cheers!";
-		} else if (period == PERIOD_NIGHT) {
+		} else if (period == PERIODNIGHT) {
 			flavor = "What a horrible night to suffer an invasion...";
 		} else {
 			throw new RuntimeException("No welcome message");
@@ -245,6 +247,7 @@ public class Javelin {
 	}
 
 	public static void lose() {
+		Javelin.app.switchScreen(BattleScreen.active);
 		StateManager.clear();
 		BattleScreen.active.messagepanel.clear();
 		Game.message(
@@ -281,22 +284,15 @@ public class Javelin {
 		Combatant c = new Combatant(null, pick.clone(), true);
 		c.source.customName = RecruitScreen.namingscreen(c.toString());
 		Squad.active.members.add(c);
+		/*
+		 * night-only is largely cosmetic so just don't appear for player units
+		 */
+		c.source.nightonly = false;
 		return c;
 	}
 
 	public static int difficulty() {
-		switch (Javelin.terrain()) {
-		case World.EASY:
-			return -1;
-		case World.MEDIUM:
-			return 0;
-		case World.HARD:
-			return +1;
-		case World.VERYHARD:
-			return +2;
-		default:
-			throw new RuntimeException("Unknown tile difficulty!");
-		}
+		return Terrain.current().difficulty;
 	}
 
 	public static void settexture(Image file) {
@@ -312,6 +308,13 @@ public class Javelin {
 		return null;
 	}
 
+	/**
+	 * @param rolltohit
+	 *            The number that needs to be rolled on a d20 for this action to
+	 *            succeed.
+	 * @return A textual representation of how easy or hard this action is to
+	 *         achieve.
+	 */
 	static public String translatetochance(int rolltohit) {
 		if (rolltohit <= 4) {
 			return "effortless";
@@ -326,53 +329,6 @@ public class Javelin {
 			return "hard";
 		}
 		return "unlikely";
-	}
-
-	/**
-	 * @return Current terrain difficulty. For example: {@link World#EASY}.
-	 */
-	static public int terrain() {
-		Thing h = Game.hero();
-		return Javelin.terrain(h.x, h.y);
-	}
-
-	/**
-	 * @param x
-	 *            {@link World} coordinate.
-	 * @param y
-	 *            {@link World} coordinate.
-	 * @return Terrain difficulty. For example: {@link World#EASY}.
-	 */
-	public static int terrain(int x, int y) {
-		return JavelinApp.overviewmap.getTile(x, y);
-	}
-
-	/**
-	 * @param difficulty
-	 *            Terrain difficulty. For example: {@link World#EASY}.
-	 * @return Name of a d20 terrain.
-	 */
-	public static String terrain(int difficulty) {
-		return RPG.pick(terrains(difficulty));
-	}
-
-	/**
-	 * @param difficulty
-	 *            Terrain difficulty. For example: {@link World#EASY}.
-	 * @return All the names of d20 terrains this difficulty encompasses.
-	 */
-	public static String[] terrains(int difficulty) {
-		if (difficulty == World.EASY) {
-			return new String[] { "plains", "plains", "hill" };
-		} else if (difficulty == World.MEDIUM) {
-			return new String[] { "forest", "forest", "hill" };
-		} else if (difficulty == World.HARD) {
-			return new String[] { "mountains", "desert" };
-		} else if (difficulty == World.VERYHARD) {
-			return new String[] { "marsh" };
-		} else {
-			throw new RuntimeException("Unknown tile difficulty!");
-		}
 	}
 
 	/**
@@ -393,5 +349,134 @@ public class Javelin {
 		}
 		elchoices.add(1);
 		return RPG.pick(elchoices);
+	}
+
+	/**
+	 * Utility function for user-input selection.
+	 * 
+	 * @param output
+	 *            Text to show the user.
+	 * @param names
+	 *            Will show each's {@link Object#toString()} as an option.
+	 * @param fullscreen
+	 *            <code>true</code> to open in a new screen. Otherwise uses the
+	 *            message panel.
+	 * @param forceselection
+	 *            If <code>false</code> will allow the user to abort the
+	 *            operation.
+	 * @return The index of the selected element or -1 if aborted.
+	 */
+	static public int choose(String output, List<?> names, boolean fullscreen,
+			boolean forceselection) {
+		if (!forceselection) {
+			output += " (q to quit)";
+		}
+		output += " \n\n";
+		ArrayList<Object> options = new ArrayList<Object>();
+		int i = 0;
+		for (Object o : names) {
+			String name = o.toString();
+			options.add(name);
+			output += "[" + SelectScreen.KEYS[i] + "] " + name + "\n";
+			i += 1;
+		}
+		if (fullscreen) {
+			app.switchScreen(new InfoScreen(output));
+		} else {
+			Game.messagepanel.clear();
+			Game.message(output, null, Delay.NONE);
+		}
+		while (true) {
+			try {
+				Character feedback = InfoScreen.feedback();
+				if (!forceselection && feedback == 'q') {
+					return -1;
+				}
+				int selected = SelectScreen.convertkeytoindex(feedback);
+				if (0 <= selected && selected < names.size()) {
+					return selected;
+				}
+			} catch (Exception e) {
+				continue;
+			}
+		}
+	}
+
+	/**
+	 * Waits for user input for confirmation.
+	 * 
+	 * @param text
+	 *            Prints this message in the status panel.
+	 * @param requireenter
+	 *            If <code>true</code> will wait for the player to press ENTER,
+	 *            otherwise any key will do.
+	 * @return the key pressed by the user as confirmation for seeing the
+	 *         message.
+	 */
+	public static KeyEvent message(String text, boolean requireenter) {
+		Game.messagepanel.clear();
+		Game.message(text + "\nPress " + (requireenter ? "ENTER" : "any key")
+				+ " to coninue...", null, Delay.NONE);
+		KeyEvent input = Game.getInput();
+		while (requireenter && input.getKeyChar() != '\n') {
+			input = Game.getInput();
+		}
+		return input;
+	}
+
+	/**
+	 * Prompts a message in the {@link WorldScreen}.
+	 * 
+	 * @param prompt
+	 *            Text to show.
+	 * @return Any {@link InfoScreen#feedback()}.
+	 */
+	static public Character prompt(final String prompt) {
+		Game.messagepanel.clear();
+		Game.message(prompt, null, Delay.NONE);
+		return InfoScreen.feedback();
+	}
+
+	/**
+	 * @param name
+	 *            Monster type. Example: orc, kobold, young white dragon... Case
+	 *            insensitive.
+	 * @return A clone.
+	 * @see Monster#clone()
+	 */
+	public static Monster getmonster(String name) {
+		Monster monster = null;
+		for (Monster m : ALLMONSTERS) {
+			if (m.name.equalsIgnoreCase(name)) {
+				monster = m.clone();
+				break;
+			}
+		}
+		if (monster == null) {
+			return null;
+		}
+		ChallengeRatingCalculator.calculateCr(monster);
+		return monster;
+	}
+
+	/**
+	 * Most of the time take-10 rules are used to prevent players from boring
+	 * themselves. For example: trying repeatedly to use
+	 * {@link Skills#perception} to see what's inside a {@link Fortification}.
+	 * That's no fun. On other scenarios though it's more interesting to make
+	 * these rolls random - for example, if always using take-10 rolls
+	 * {@link PartyHazard}s would become obsolete when a character with enough
+	 * {@link Skills#survival} is in the party.
+	 * 
+	 * Note also that randomization can't be used without proper treatment
+	 * inside {@link BattleAi} computing, which is why take-10 rolls makes
+	 * things easier while in-battle.
+	 * 
+	 * @param take10
+	 *            A take-10 result.
+	 * @return result of the same roll, but rolling a d20 instead.
+	 */
+	public static int roll(int take10) {
+		return take10 - 10 + RPG.r(1, 20);
 	}
 }

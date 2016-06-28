@@ -8,6 +8,7 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class PowerAttackUpgrade extends FeatUpgrade {
+	/** Constructor. */
 	public PowerAttackUpgrade() {
 		super(PowerAttack.SINGLETON);
 	}

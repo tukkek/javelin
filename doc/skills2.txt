@@ -1,0 +1,21 @@
+SKILL GUIDE (2/2)
+
+Knowledge: DC 10 + encounter level to reveal contents of a location.
+	
+Perception: shows you the location of hidden creatures in battle (individual 
+roll). Allows opponent and defending army units to be revealed. Allows you to
+notice and hide from enemy groups. Lets you see farther in the world map. 
+	 
+Search: allows you to find a nearby trap. DC depends on trap in question.
+	
+Spellcraft: DC 10 + necessary spell caster level to learn a spell without 
+having enough levels to learn it normally. Also provides half the number of
+ranks as a bonus to scroll reading checks. Individual roll.
+
+Stealth: used as a resistance skill to Perception. Individual roll.
+
+Survival: for each 4 ranks finds daily food to sustain one of your units. 
+Allows a squad to evade some terrain hazards.
+
+Use magic device: DC 20 to use a wand, DC 10 + caster level to read a scroll 
+or DC 15 + spell level to help decipher either instead. Individual roll.

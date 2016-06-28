@@ -1,15 +1,23 @@
 package javelin.controller.upgrade.feat;
 
+import javelin.controller.ai.BattleAi;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.feat.Feat;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
 
 /**
- * Adds a feat as an upgrade.
+ * Adds a feat as an upgrade. It can be used by just giving a {@link Feat} to
+ * the constructor but most feats usually need more setup, be it due to
+ * prerequisites (other feats, ability scores, base attack bonus...),
+ * modifications to be introduced during {@link #apply(Combatant)}, etc.
+ * 
+ * Probably better to keep this separate from {@link Feat} to ensure minimum
+ * weitght for {@link Monster}s when being processed by the {@link BattleAi}.
  * 
  * @author alex
  */
-public abstract class FeatUpgrade extends Upgrade {
+public class FeatUpgrade extends Upgrade {
 	protected final Feat feat;
 	Feat prerequisite = null;
 	boolean stack = false;
@@ -39,5 +47,16 @@ public abstract class FeatUpgrade extends Upgrade {
 
 	public boolean check(final Combatant c, Feat f) {
 		return c.source.hasfeat(f);
+	}
+
+	@Override
+	public String info(Combatant c) {
+		int count = c.source.countfeat(feat);
+		String name = feat.toString().toLowerCase();
+		if (count == 0) {
+			return c + " doesn't have " + name;
+		} else {
+			return c + " has bought " + name + " " + count + " times";
+		}
 	}
 }

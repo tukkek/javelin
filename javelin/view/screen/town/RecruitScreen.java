@@ -11,8 +11,8 @@ import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.world.Squad;
-import javelin.model.world.place.town.Town;
+import javelin.model.unit.Squad;
+import javelin.model.world.location.town.Town;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.IntroScreen;
 import javelin.view.screen.Option;
@@ -130,8 +130,7 @@ public class RecruitScreen extends PurchaseScreen {
 
 	@Override
 	protected void spend(Option o) {
-		double cost = o.price / 100;
-		spend(cost);
+		spend(o.price / 100);
 	}
 
 	/**
@@ -139,7 +138,7 @@ public class RecruitScreen extends PurchaseScreen {
 	 *            spend this much in recruiting a rookie.
 	 */
 	static public void spend(double cr) {
-		double percapita = cr / new Float(Squad.active.size());
+		double percapita = cr / new Float(Squad.active.eat());
 		boolean buyfromall = true;
 		for (Combatant c : Squad.active.members) {
 			if (c.xp.doubleValue() < percapita) {

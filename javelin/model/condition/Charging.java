@@ -11,16 +11,16 @@ import javelin.model.unit.Combatant;
 public class Charging extends Condition {
 
 	public Charging(float expireat, Combatant c) {
-		super(expireat, c, Effect.NEGATIVE, "charging");
+		super(expireat, c, Effect.NEGATIVE, "charging", null);
 	}
 
 	@Override
-			void start(Combatant c) {
+	public void start(Combatant c) {
 		c.acmodifier -= 2;
 	}
 
 	@Override
-			void end(Combatant c) {
+	public void end(Combatant c) {
 		c.acmodifier += 2;
 	}
 

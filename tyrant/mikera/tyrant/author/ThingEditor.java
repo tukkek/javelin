@@ -158,7 +158,7 @@ public class ThingEditor implements Runnable {
 				"fill:pref:grow");
 		final DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 		builder.setDefaultDialogBorder();
-		mapText = new MapMaker().store(designer.map);
+		mapText = new MapMaker().store(designer.battlemap);
 
 		sourceTextArea = new TextArea(mapText, 10, 20);
 		builder.append(sourceTextArea);
@@ -299,7 +299,7 @@ public class ThingEditor implements Runnable {
 	}
 
 	private void updateSourceTab() {
-		mapText = new MapMaker().store(designer.map);
+		mapText = new MapMaker().store(designer.battlemap);
 		sourceTextArea.setText(mapText);
 	}
 

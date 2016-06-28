@@ -5,8 +5,10 @@ import java.util.Collections;
 import java.util.List;
 
 import javelin.controller.ai.ChanceNode;
+import javelin.controller.walker.Walker;
 import javelin.model.condition.Prone;
 import javelin.model.feat.ImprovedPreciseShot;
+import javelin.model.feat.PointBlankShot;
 import javelin.model.feat.PreciseShot;
 import javelin.model.state.BattleState;
 import javelin.model.unit.AttackSequence;
@@ -36,21 +38,16 @@ public class RangedAttack extends AbstractAttack {
 	}
 
 	@Override
-			List<AttackSequence> getattacks(final Combatant active) {
+	List<AttackSequence> getattacks(final Combatant active) {
 		return active.source.ranged;
 	}
 
 	@Override
-			int getpenalty(final Combatant attacker, final Combatant target,
-					final BattleState s) {
-		return penalize(attacker, target, s);
-	}
-
-	static public int penalize(final Combatant attacker, final Combatant target,
+	public int getpenalty(final Combatant attacker, final Combatant target,
 			final BattleState s) {
-		int penalty = target.surprise();
+		int penalty = super.getpenalty(attacker, target, s);
 		if (!attacker.source.hasfeat(PreciseShot.SINGLETON)
-				&& s.isEngaged(target)) {
+				&& s.isengaged(target)) {
 			penalty += 4;
 		}
 		if (!attacker.source.hasfeat(ImprovedPreciseShot.SINGLETON)
@@ -58,16 +55,25 @@ public class RangedAttack extends AbstractAttack {
 						target) == javelin.model.state.BattleState.Vision.COVERED) {
 			penalty += 4;
 		}
-		if (target.hascondition(Prone.class)) {
+		if (target.hascondition(Prone.class) != null) {
 			penalty += 2;
 		}
+		if (ispointblankshot(attacker, target)) {
+			penalty -= 1;
+		}
 		return penalty;
+	}
+
+	static boolean ispointblankshot(final Combatant attacker,
+			final Combatant target) {
+		return attacker.source.hasfeat(PointBlankShot.SINGLETON)
+				&& Walker.distance(attacker, target) <= 6;
 	}
 
 	@Override
 	public List<List<ChanceNode>> getoutcomes(final BattleState gameState,
 			final Combatant active) {
-		if (gameState.isEngaged(active)) {
+		if (gameState.isengaged(active)) {
 			return Collections.EMPTY_LIST;
 		}
 		final ArrayList<List<ChanceNode>> successors =
@@ -88,5 +94,10 @@ public class RangedAttack extends AbstractAttack {
 	@Override
 	public boolean cleave() {
 		return false;
+	}
+
+	@Override
+	int getdamagebonus(Combatant attacker, Combatant target) {
+		return ispointblankshot(attacker, target) ? 1 : 0;
 	}
 }

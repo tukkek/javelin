@@ -8,10 +8,10 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.SpellbookGenerator;
 import javelin.controller.action.Action;
-import javelin.controller.action.Wait;
+import javelin.controller.action.Defend;
 import javelin.controller.action.ai.MeleeAttack;
-import javelin.controller.action.world.CastSpells;
-import javelin.controller.exception.RepeatTurnException;
+import javelin.controller.ai.BattleAi;
+import javelin.controller.exception.RepeatTurn;
 import javelin.controller.upgrade.Spell;
 import javelin.model.BattleMap;
 import javelin.model.Cloneable;
@@ -26,9 +26,8 @@ import javelin.model.item.artifact.Artifact;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.unit.abilities.Spells;
-import javelin.model.world.Squad;
 import javelin.model.world.WorldActor;
-import javelin.model.world.place.unique.MercenariesGuild;
+import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
@@ -45,25 +44,59 @@ import tyrant.mikera.tyrant.Game.Delay;
  * @author alex
  */
 public class Combatant implements Serializable, Cloneable {
+	/** TODO turn into {@link Enum}. */
+	public static final int STATUSDEAD = -2;
+	public static final int STATUSUNCONSCIOUS = -1;
+	public static final int STATUSDYING = 0;
+	public static final int STATUSINJURED = 1;
+	public static final int STATUSWOUNDED = 2;
+	public static final int STATUSHURT = 3;
+	public static final int STATUSSCRATCHED = 4;
+	public static final int STATUSUNHARMED = 5;
 	/** TODO proper dying process + healing phase at the end of combat */
 	public static final int DEADATHP = -8;
 	/**
-	 * Should probably be external, like a mapping in {@link BattleScreen}.
+	 * TODO Should probably be external, like a mapping in {@link BattleScreen}.
 	 */
-	public Thing visual;
+	transient public Thing visual;
+	/** The statistics for this monster. */
 	public Monster source;
+	/**
+	 * Action points. 1 represent a full-round action, .5 a move-equivalent or
+	 * attack action and so on.
+	 */
 	public float ap = 0;
+	/**
+	 * XY coordenates. Better used as an array since this enables more
+	 * programmatic way of handling directions, like deltas.
+	 */
 	public int[] location = new int[2];
 	static private int ids = 1;
+	/** Last time {@link #refresh()} was invoked. */
 	public float lastrefresh = -Float.MAX_VALUE;
+	/** TODO implement this as a {@link Condition} instead. */
 	public float initialap;
+	/** Current hit points. */
 	public int hp;
+	/** Maxium hitpoints. */
 	public int maxhp;
-	public int id = -1;
+	/**
+	 * Unique identifier of unit. Several different units (with unique ids) can
+	 * share a same {@link #source} with a same id.
+	 */
+	public int id = STATUSUNCONSCIOUS;
+	/**
+	 * Which of the current melee attack sequences is being used and how far it
+	 * is in this sequence.
+	 */
 	public CurrentAttack currentmelee = new CurrentAttack();
+	/** See {@link #currentmelee}. */
 	public CurrentAttack currentranged = new CurrentAttack();
+	/** Temporary modifier to {@link Monster#ac}. */
 	public int acmodifier = 0;
-	public CloneableList<Condition> conditions = new CloneableList<Condition>();
+	/** List of current active {@link Condition}s on this unit. */
+	private CloneableList<Condition> conditions =
+			new CloneableList<Condition>();
 	/**
 	 * Canonical representation of the spells this unit has.
 	 * 
@@ -79,6 +112,10 @@ public class Combatant implements Serializable, Cloneable {
 	public ArrayList<Artifact> equipped = new ArrayList<Artifact>(0);
 	/** See {@link MercenariesGuild} */
 	public boolean mercenary = false;
+	/** See {@link Monster#burrow}. */
+	public boolean burrowed = false;
+	/** Is a player unit that should be controlled by {@link BattleAi}. */
+	public boolean automatic = false;
 
 	/**
 	 * @param generatespells
@@ -149,23 +186,11 @@ public class Combatant implements Serializable, Cloneable {
 	/**
 	 * Rolls for hit and applies damage.
 	 * 
-	 * TODO :
-	 * 
-	 * implement ranged and 'melee and ranged' attack sequences
-	 * 
-	 * describe missed attacks better based on AC segments?
-	 * 
-	 * implement criticals?
-	 * 
 	 * @param targetCombatant
 	 *            The monster being attacked.
-	 * @param combatant
-	 * @param state2
-	 * @param attack
 	 */
 	public void meleeAttacks(Combatant combatant, Combatant targetCombatant,
 			BattleState state) {
-		final BattleMap map = visual.getMap();
 		combatant = state.clone(combatant);
 		targetCombatant = state.clone(targetCombatant);
 		Action.outcome(MeleeAttack.SINGLETON.attack(state, this,
@@ -181,10 +206,6 @@ public class Combatant implements Serializable, Cloneable {
 	public int getHp() {
 		return hp;
 	}
-
-	// public boolean isAlly(final Combatant c) {
-	// return isAlly(c, TeamContainer.DEFAULT);
-	// }
 
 	public boolean isAlly(final Combatant c, final TeamContainer tc) {
 		return getTeam(tc) == c.getTeam(tc);
@@ -208,7 +229,7 @@ public class Combatant implements Serializable, Cloneable {
 		if (!hasAttackType(meleeOnly)) {
 			Game.message("No " + (meleeOnly ? "mẽlée" : "ranged") + " attacks.",
 					null, Delay.WAIT);
-			throw new RepeatTurnException();
+			throw new RepeatTurn();
 		}
 	}
 
@@ -231,25 +252,19 @@ public class Combatant implements Serializable, Cloneable {
 				}
 			}
 			for (Condition c : (List<Condition>) conditions.clone()) {
-				if (c.expire(this)) {
-					conditions.remove(c);
-				}
+				c.expire(this);
 			}
 			lastrefresh = ap;
 		}
 	}
 
-	public boolean ischarging() {
-		return hascondition(Charging.class);
-	}
-
-	public boolean hascondition(Class<? extends Condition> clazz) {
+	public Condition hascondition(Class<? extends Condition> clazz) {
 		for (Condition c : conditions) {
 			if (c.getClass().equals(clazz)) {
-				return true;
+				return c;
 			}
 		}
-		return false;
+		return null;
 	}
 
 	public void charge() {
@@ -277,11 +292,15 @@ public class Combatant implements Serializable, Cloneable {
 		}
 		hp -= damage;
 		if (hp <= 0) {
-			s.remove(this);
-			s.dead.add(this);
-			if (hp <= DEADATHP && Javelin.app.fight.meld()) {
-				s.addmeld(location[0], location[1]);
-			}
+			die(s);
+		}
+	}
+
+	public void die(BattleState s) {
+		s.remove(this);
+		s.dead.add(this);
+		if (hp <= DEADATHP && Javelin.app.fight.meld) {
+			s.addmeld(location[0], location[1]);
 		}
 	}
 
@@ -304,12 +323,12 @@ public class Combatant implements Serializable, Cloneable {
 			for (AttackSequence sequence : attacktype) {
 				attacks.add(sequence.toString(target));
 			}
-			attackindex = CastSpells.choose("Start which attack sequence?",
+			attackindex = Javelin.choose("Start which attack sequence?",
 					attacks, false, false);
-			if (attackindex == -1) {
+			if (attackindex == STATUSUNCONSCIOUS) {
 				Game.messagepanel.clear();
 				Game.instance().setHero(visual);
-				throw new RepeatTurnException();
+				throw new RepeatTurn();
 			}
 		}
 		currentattack.setcurrent(attackindex, attacktype);
@@ -334,6 +353,7 @@ public class Combatant implements Serializable, Cloneable {
 	}
 
 	public int getNumericStatus() {
+		int maxhp = this.maxhp + source.poison * source.hd.count();
 		if (hp == maxhp) {
 			return 5;
 		}
@@ -341,28 +361,28 @@ public class Combatant implements Serializable, Cloneable {
 			return 0;
 		}
 		if (hp <= 0) {
-			return hp > Combatant.DEADATHP ? -1 : -2;
+			return hp > Combatant.DEADATHP ? STATUSUNCONSCIOUS : STATUSDEAD;
 		}
 		return Math.round(4.0f * hp / maxhp);
 	}
 
 	public String getStatus() {
 		switch (getNumericStatus()) {
-		case 5:
+		case STATUSUNHARMED:
 			return "unharmed";
-		case 4:
+		case STATUSSCRATCHED:
 			return "scratched";
-		case 3:
+		case STATUSHURT:
 			return "hurt";
-		case 2:
+		case STATUSWOUNDED:
 			return "wounded";
-		case 1:
+		case STATUSINJURED:
 			return "injured";
-		case 0:
+		case STATUSDYING:
 			return "dying";
-		case -1:
+		case STATUSUNCONSCIOUS:
 			return "unconscious";
-		case -2:
+		case STATUSDEAD:
 			return "killed";
 		default:
 			throw new RuntimeException(
@@ -380,12 +400,12 @@ public class Combatant implements Serializable, Cloneable {
 		case 0:
 			return period;
 		case 2:
-			return Javelin.PERIOD_NOON;
+			return Javelin.PERIODNOON;
 		case 1:
-			if (period == Javelin.PERIOD_NIGHT) {
-				return Javelin.PERIOD_EVENING;
-			} else if (period == Javelin.PERIOD_EVENING) {
-				return Javelin.PERIOD_NOON;
+			if (period == Javelin.PERIODNIGHT) {
+				return Javelin.PERIODEVENING;
+			} else if (period == Javelin.PERIODEVENING) {
+				return Javelin.PERIODNOON;
 			}
 		}
 		return period;
@@ -398,13 +418,13 @@ public class Combatant implements Serializable, Cloneable {
 	 */
 	public int view(String period) {
 		if (source.vision == 2
-				|| source.vision == 1 && period == Javelin.PERIOD_EVENING) {
+				|| source.vision == 1 && period == Javelin.PERIODEVENING) {
 			return 12;
 		}
-		if (period == Javelin.PERIOD_EVENING || source.vision == 1) {
+		if (period == Javelin.PERIODEVENING || source.vision == 1) {
 			return 8;
 		}
-		if (period == Javelin.PERIOD_NIGHT) {
+		if (period == Javelin.PERIODNIGHT) {
 			return 4;
 		}
 		return Integer.MAX_VALUE;
@@ -414,7 +434,11 @@ public class Combatant implements Serializable, Cloneable {
 	 * Note that this isn't supposed to be used for creating new
 	 * {@link Combatant}s since the {@link #id} is kept the same.
 	 * 
+	 * {@link #clone()} is used for a faster clone sharing the same
+	 * {@link #source}.
+	 * 
 	 * @return A clone with a cloned {@link #source}.
+	 * @see BattleState#deepclone()
 	 */
 	public Combatant clonedeeply() {
 		final Combatant c = clone();
@@ -432,8 +456,11 @@ public class Combatant implements Serializable, Cloneable {
 	}
 
 	public void await() {
-		ap += Wait.APCOST;
-		conditions.add(new Defending(ap + BattleScreen.active.spentap, this));
+		ap += Defend.APCOST;
+		if (!burrowed) {
+			conditions
+					.add(new Defending(ap + BattleScreen.active.spentap, this));
+		}
 	}
 
 	public void cleave(float ap) {
@@ -446,7 +473,7 @@ public class Combatant implements Serializable, Cloneable {
 
 	public ArrayList<String> liststatus(final BattleState state) {
 		final ArrayList<String> statuslist = new ArrayList<String>();
-		if (state.isEngaged(this)) {
+		if (state.isengaged(this)) {
 			statuslist.add("engaged");
 			for (Combatant c : BattleMap.blueTeam.contains(this)
 					? BattleMap.redTeam : BattleMap.blueTeam) {
@@ -520,16 +547,100 @@ public class Combatant implements Serializable, Cloneable {
 	}
 
 	/**
-	 * @return a roll of {@link Skills#listen}.
-	 */
-	public int listen() {
-		return Skills.take10(source.skills.listen, source.wisdom);
-	}
-
-	/**
 	 * @return a roll of {@link Skills#movesilently}.
 	 */
 	public int movesilently() {
-		return Skills.take10(source.skills.movesilently, source.dexterity);
+		return Skills.take10(source.skills.stealth, source.dexterity);
+	}
+
+	public void escape(BattleScreen screen) {
+		screen.fleeing.add(this);
+		BattleMap.blueTeam.remove(this);
+		BattleMap.combatants.remove(this);
+		visual.remove();
+	}
+
+	public void addcondition(Condition c) {
+		if (c.stacks || hascondition(c.getClass()) == null) {
+			c.start(this);
+			conditions.add(c);
+		}
+	}
+
+	public void terminateconditions(int timecost) {
+		for (Condition co : new ArrayList<Condition>(conditions)) {
+			co.terminate(timecost, this);
+			if (hp <= DEADATHP) {
+				Javelin.message(
+						this + " dies from being " + co.description + "!",
+						true);
+				Squad.active.remove(this);
+				return;
+			}
+		}
+		if (hp <= 0) {
+			hp = 1;
+		}
+	}
+
+	public void removecondition(Condition c) {
+		c.end(this);
+		conditions.remove(c);
+	}
+
+	public void finishconditions(BattleState s, BattleScreen screen) {
+		for (Condition co : conditions) {
+			co.finish(s);
+			screen.updateMessages();
+			screen.checkblock();
+		}
+	}
+
+	public void transferconditions(Combatant to) {
+		for (Condition c : conditions) {
+			if (c.longterm == null) {
+				continue;
+			}
+			c.transfer(this, to);
+			if (c.longterm == 0) {
+				c.end(to);
+			} else {
+				to.addcondition(c);
+			}
+		}
+	}
+
+	/**
+	 * @return The highest take 10 roll of the current {@link Squad} that isn't
+	 *         this combatant. If this is the only member of the squad will
+	 *         return {@link Integer#MIN_VALUE}.
+	 */
+	public int heal() {
+		int heal = Integer.MIN_VALUE;
+		for (Combatant medic : Squad.active.members) {
+			if (!equals(medic)) {
+				heal = Math.max(heal, Skills.take10(medic.source.skills.heal,
+						medic.source.wisdom));
+			}
+		}
+		return heal;
+	}
+
+	/**
+	 * @return a copy of the current conditions in effect.
+	 */
+	public ArrayList<Condition> getconditions() {
+		return new ArrayList<Condition>(conditions);
+	}
+
+	/**
+	 * @param detox
+	 *            Remove this many points of {@link #poison} damage.
+	 */
+	public void detox(int detox) {
+		if (detox > 0) {
+			source.poison -= detox;
+			source.raiseconstitution(this, detox);
+		}
 	}
 }

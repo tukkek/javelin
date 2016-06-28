@@ -31,7 +31,7 @@ public class Guide extends WorldAction implements SimpleAction {
 	}
 
 	@Override
-	public int[] getkeys() {
+	public int[] getcodes() {
 		return keys;
 	}
 
@@ -40,4 +40,8 @@ public class Guide extends WorldAction implements SimpleAction {
 		return name;
 	}
 
+	@Override
+	public String[] getkeys() {
+		return morekeys;
+	}
 }

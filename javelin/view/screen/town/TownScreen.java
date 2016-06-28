@@ -6,14 +6,13 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.model.world.Squad;
+import javelin.model.unit.Squad;
 import javelin.model.world.WorldActor;
-import javelin.model.world.place.town.Accommodations.RestOption;
-import javelin.model.world.place.town.Order;
-import javelin.model.world.place.town.OrderQueue;
-import javelin.model.world.place.town.Town;
-import javelin.model.world.place.town.TrainingOrder;
-import javelin.model.world.place.town.Transport;
+import javelin.model.world.location.town.Accommodations.RestOption;
+import javelin.model.world.location.town.Order;
+import javelin.model.world.location.town.OrderQueue;
+import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.TrainingOrder;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.option.RecruitScreenOption;
@@ -35,7 +34,8 @@ public class TownScreen extends PurchaseScreen {
 
 	static final Option AWAIT = new Option("Await next order", 0, 'a');
 	static final Option CANCELUPGRADES = new Option("Cancel upgrades", 0, 'c');
-	private static final Option RENAME = new Option("Rename town", 0, 'N');
+	static final Option RENAME = new Option("Rename town", 0, 'N');
+	static final Option DETACHWORKER = new Option("Detach worker", 0, 'W');
 
 	private static final Option MANAGE = new Option("", 0, 'M');
 
@@ -83,8 +83,12 @@ public class TownScreen extends PurchaseScreen {
 			}
 			return true;
 		}
+		if (o instanceof SettleOption) {
+			return SettleOption.retire(town);
+		}
 		if (o instanceof RestOption) {
-			rest((RestOption) o);
+			RestOption ro = (RestOption) o;
+			Town.rest(ro.periods, ro.hours, town.lodging);
 		}
 		if (o == AWAIT) {
 			Long training = town.training.next();
@@ -93,14 +97,13 @@ public class TownScreen extends PurchaseScreen {
 					Math.min(training == null ? Integer.MAX_VALUE : training,
 							crafting == null ? Integer.MAX_VALUE : crafting)
 							- Squad.active.hourselapsed;
-			Town.rest((int) Math.floor(hours / 8f), hours);
+			Town.rest((int) Math.floor(hours / 8f), hours, town.lodging);
+		}
+		if (o == DETACHWORKER) {
+			Town.getworker(town);
 		}
 		stayopen = false;
 		return true;
-	}
-
-	public void rest(final RestOption o) {
-		Town.rest(o.periods, o.hours);
 	}
 
 	@Override
@@ -111,7 +114,7 @@ public class TownScreen extends PurchaseScreen {
 		}
 		list.add(new RecruitScreenOption("Draft", town, 'd'));
 		list.add(new ShopScreenOption("Shop", town, 's'));
-		if (!town.transport.equals(Transport.NONE)) {
+		if (town.transport != null) {
 			list.add(new TransportScreenOption("Rent transport", town, 't'));
 		}
 		list.add(town.lodging.getrestoption());
@@ -127,12 +130,16 @@ public class TownScreen extends PurchaseScreen {
 		if (town.ishosting()) {
 			list.add(new TournamentScreenOption("Enter tournament", town, 'T'));
 		}
-		list.add(RENAME);
 		MANAGE.name = "Manage town ("
 				+ (town.automanage ? "automatic" : "manual") + ")";
 		list.add(MANAGE);
 		if (!town.automanage) {
 			list.add(new ResearchScreenOption(town));
+			list.add(new SettleOption());
+			list.add(RENAME);
+			if (town.size > 1) {
+				list.add(DETACHWORKER);
+			}
 		}
 		return list;
 	}
@@ -149,7 +156,8 @@ public class TownScreen extends PurchaseScreen {
 
 	@Override
 	public String printInfo() {
-		String output = "Your squad has $" + Squad.active.gold;
+		String output = "Your squad has $"
+				+ PurchaseScreen.formatcost(Squad.active.gold);
 		if (!town.crafting.done()) {
 			output += "\n\n" + showqueue(town.crafting, "Crafting");
 		}
@@ -163,8 +171,8 @@ public class TownScreen extends PurchaseScreen {
 			if (Javelin.DEBUG && town.ishostile()) {
 				output += "    Queue: " + town.nexttask + "\n";
 				output += "    Garrison: " + town.garrison + "\n";
-				output += "    EL: " + ChallengeRatingCalculator
-						.calculateElSafe(town.garrison);
+				output += "    EL: "
+						+ ChallengeRatingCalculator.calculateel(town.garrison);
 			} else {
 				final boolean debugcomputerai =
 						DEBUGMANAGEMENT && town.research.queue.isEmpty();

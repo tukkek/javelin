@@ -2,7 +2,7 @@ package javelin.model.condition;
 
 import java.util.ArrayList;
 
-import javelin.model.spell.Doom;
+import javelin.model.spell.necromancy.Doom;
 import javelin.model.unit.Attack;
 import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Combatant;
@@ -13,15 +13,12 @@ import javelin.model.unit.Combatant;
  */
 public class Shaken extends Condition {
 
-	public Shaken(float expireatp, Combatant c) {
-		super(expireatp, c, Effect.NEGATIVE, "shaken");
+	public Shaken(float expireatp, Combatant c, Integer casterlevel) {
+		super(expireatp, c, Effect.NEGATIVE, "shaken", casterlevel, 1);
 	}
 
 	@Override
-			void start(Combatant c) {
-		if (c.hascondition(Shaken.class)) {
-			return;
-		}
+	public void start(Combatant c) {
 		c.source = c.source.clone();
 		penalizeattacks(c.source.melee);
 		penalizeattacks(c.source.ranged);
@@ -39,7 +36,7 @@ public class Shaken extends Condition {
 	}
 
 	@Override
-			void end(Combatant c) {
+	public void end(Combatant c) {
 		// lasts at least one minute
 	}
 

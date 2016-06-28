@@ -10,16 +10,16 @@ import javelin.model.unit.Monster;
 public class Feigned extends Condition {
 
 	public Feigned(float expireatp, Combatant c) {
-		super(expireatp, c, Effect.NEGATIVE, "feigned");
+		super(expireatp, c, Effect.NEGATIVE, "feigned", null);
 	}
 
 	@Override
-			void start(Combatant c) {
+	public void start(Combatant c) {
 		c.acmodifier -= Monster.getbonus(c.source.dexterity);
 	}
 
 	@Override
-			void end(Combatant c) {
+	public void end(Combatant c) {
 		c.acmodifier += Monster.getbonus(c.source.dexterity);
 	}
 }

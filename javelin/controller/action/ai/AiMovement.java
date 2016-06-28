@@ -3,11 +3,9 @@ package javelin.controller.action.ai;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.Javelin;
 import javelin.controller.action.Action;
+import javelin.controller.action.Defend;
 import javelin.controller.action.Movement;
-import javelin.controller.action.Wait;
-import javelin.controller.ai.ActionProvider;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
@@ -18,7 +16,7 @@ import tyrant.mikera.tyrant.Game.Delay;
  * @author alex
  * @see Movement
  */
-public class AiMovement extends Action implements AiAction {
+public class AiMovement extends AiAction {
 	public static final AiMovement SINGLETON = new AiMovement();
 	static final Movement[][] movementgridbyy = new Movement[3][3];
 
@@ -36,6 +34,7 @@ public class AiMovement extends Action implements AiAction {
 
 	private AiMovement() {
 		super("Move");
+		allowwhileburrowed = true;
 	}
 
 	@Override
@@ -74,7 +73,7 @@ public class AiMovement extends Action implements AiAction {
 						x, y, meld));
 			}
 		}
-		if (!Wait.ALLOWAI && successors.isEmpty()) {
+		if (!Defend.ALLOWAI && successors.isEmpty()) {
 			successors.add(wait(gameStatep, active));
 		}
 		return successors;
@@ -86,7 +85,7 @@ public class AiMovement extends Action implements AiAction {
 		gameState = gameState.clone();
 		active = gameState.clone(active);
 		final Movement moveaction = movementgridbyy[deltay + 1][deltax + 1];
-		final boolean disengaging = moveaction.isDisengaging(active, gameState);
+		final boolean disengaging = gameState.isengaged(active);
 		active.ap += moveaction.cost(active, gameState, x, y);
 		active.location[0] = x;
 		active.location[1] = y;
@@ -103,10 +102,6 @@ public class AiMovement extends Action implements AiAction {
 			gameState.meld.remove(meld);
 		}
 		list.add(new ChanceNode(gameState, 1f, action, delay));
-		if (Javelin.DEBUG) {
-			// TODO debug
-			ActionProvider.checkstacking(gameState);
-		}
 		return list;
 	}
 

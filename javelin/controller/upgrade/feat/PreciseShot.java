@@ -8,6 +8,7 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class PreciseShot extends FeatUpgrade {
+	/** Constructor. */
 	public PreciseShot() {
 		super(javelin.model.feat.PreciseShot.SINGLETON);
 		prerequisite = PointBlankShot.SINGLETON;
@@ -18,8 +19,4 @@ public class PreciseShot extends FeatUpgrade {
 		return "";
 	}
 
-	@Override
-	public boolean isstackable() {
-		return false;
-	}
 }

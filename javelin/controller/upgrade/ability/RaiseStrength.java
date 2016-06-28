@@ -1,7 +1,5 @@
 package javelin.controller.upgrade.ability;
 
-import java.beans.PropertyVetoException;
-
 import javelin.model.feat.WeaponFinesse;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -15,13 +13,12 @@ public class RaiseStrength extends RaiseAbility {
 	}
 
 	@Override
-			int getabilityvalue(Monster m) {
+	int getabilityvalue(Monster m) {
 		return m.strength;
 	}
 
 	@Override
-			boolean setattribute(Combatant m, int i)
-					throws PropertyVetoException {
+	boolean setattribute(Combatant m, int i) {
 		if (m.source.hasfeat(WeaponFinesse.singleton)) {
 			return false;
 		}

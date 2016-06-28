@@ -1,31 +1,57 @@
 package javelin.controller.challenge.factor;
 
+import javelin.Javelin;
 import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.model.spell.Blink;
-import javelin.model.spell.DayLight;
-import javelin.model.spell.DeeperDarkness;
-import javelin.model.spell.DominateMonster;
-import javelin.model.spell.Doom;
-import javelin.model.spell.Heroism;
-import javelin.model.spell.HoldMonster;
-import javelin.model.spell.SlayLiving;
 import javelin.model.spell.Summon;
-import javelin.model.spell.VampiricRay;
+import javelin.model.spell.abjuration.Barkskin;
+import javelin.model.spell.abjuration.Blink;
+import javelin.model.spell.abjuration.DispelMagic;
+import javelin.model.spell.abjuration.ResistEnergy;
+import javelin.model.spell.conjuration.healing.NeutralizePoison;
+import javelin.model.spell.conjuration.healing.RaiseDead;
+import javelin.model.spell.conjuration.healing.Ressurect;
+import javelin.model.spell.conjuration.healing.Restoration;
+import javelin.model.spell.conjuration.healing.wounds.CureCriticalWounds;
+import javelin.model.spell.conjuration.healing.wounds.CureLightWounds;
+import javelin.model.spell.conjuration.healing.wounds.CureModerateWounds;
+import javelin.model.spell.conjuration.healing.wounds.CureSeriousWounds;
+import javelin.model.spell.conjuration.teleportation.GreaterTeleport;
+import javelin.model.spell.conjuration.teleportation.SecureShelter;
+import javelin.model.spell.conjuration.teleportation.WordOfRecall;
+import javelin.model.spell.divination.DiscernLocation;
+import javelin.model.spell.divination.FindTraps;
+import javelin.model.spell.divination.LocateObject;
+import javelin.model.spell.divination.PryingEyes;
+import javelin.model.spell.enchantment.compulsion.DominateMonster;
+import javelin.model.spell.enchantment.compulsion.Heroism;
+import javelin.model.spell.enchantment.compulsion.HoldMonster;
+import javelin.model.spell.evocation.DayLight;
+import javelin.model.spell.evocation.DeeperDarkness;
+import javelin.model.spell.evocation.FlameStrike;
+import javelin.model.spell.evocation.MagicMissile;
+import javelin.model.spell.evocation.PolarRay;
+import javelin.model.spell.evocation.ScorchingRay;
+import javelin.model.spell.evocation.SoundBurst;
+import javelin.model.spell.necromancy.Doom;
+import javelin.model.spell.necromancy.Poison;
+import javelin.model.spell.necromancy.RayOfExhaustion;
+import javelin.model.spell.necromancy.SlayLiving;
+import javelin.model.spell.necromancy.VampiricTouch;
+import javelin.model.spell.necromancy.wounds.InflictCriticalWounds;
+import javelin.model.spell.necromancy.wounds.InflictLightWounds;
+import javelin.model.spell.necromancy.wounds.InflictModerateWounds;
+import javelin.model.spell.necromancy.wounds.InflictSeriousWounds;
 import javelin.model.spell.totem.BearsEndurance;
 import javelin.model.spell.totem.BullsStrength;
 import javelin.model.spell.totem.CatsGrace;
 import javelin.model.spell.totem.EaglesSplendor;
 import javelin.model.spell.totem.FoxsCunning;
 import javelin.model.spell.totem.OwlsWisdom;
-import javelin.model.spell.wounds.CureCriticalWounds;
-import javelin.model.spell.wounds.CureLightWounds;
-import javelin.model.spell.wounds.CureModerateWounds;
-import javelin.model.spell.wounds.CureSeriousWounds;
-import javelin.model.spell.wounds.InflictCriticalWounds;
-import javelin.model.spell.wounds.InflictLightWounds;
-import javelin.model.spell.wounds.InflictModerateWounds;
-import javelin.model.spell.wounds.InflictSeriousWounds;
+import javelin.model.spell.transmutation.ControlWeather;
+import javelin.model.spell.transmutation.Darkvision;
+import javelin.model.spell.transmutation.Fly;
+import javelin.model.spell.transmutation.Longstrider;
 import javelin.model.unit.Monster;
 
 /**
@@ -34,69 +60,106 @@ import javelin.model.unit.Monster;
  * @see CrFactor
  */
 public class SpellsFactor extends CrFactor {
-
-	/** Number of different spells in-game. */
-	public static int spells;
-
 	@Override
 	public float calculate(Monster monster) {
-		/**
-		 * TODO the correct way for this would be to have spell lists on the XML
-		 * and keep them on a container like Javelin#descriptions and
-		 * instantiate the spell at Combatant#generatespells
-		 */
 		return monster.spellcr;
 	}
 
 	@Override
 	public void listupgrades(UpgradeHandler handler) {
-		/* TODO could make it a constructor parameter for Spell */
-		int before = handler.count();
-		handler.water.add(new CureLightWounds());
-		handler.good.add(new CureModerateWounds());
-		handler.water.add(new CureSeriousWounds());
-		handler.good.add(new CureCriticalWounds());
+		handler.schoolhealwounds.add(new CureLightWounds());// conjuration
+		handler.schoolhealwounds.add(new CureModerateWounds());
+		handler.schoolhealwounds.add(new CureSeriousWounds());
+		handler.schoolhealwounds.add(new CureCriticalWounds());
 
-		handler.water.add(new CatsGrace());
-		handler.fire.add(new BullsStrength());
-		handler.earth.add(new BearsEndurance());
-		handler.water.add(new OwlsWisdom());
-		handler.fire.add(new EaglesSplendor());
-		handler.wind.add(new FoxsCunning());
+		handler.schoolhealing.add(new NeutralizePoison()); // conjuration
+		handler.schoolhealing.add(new RaiseDead());
+		handler.schoolhealing.add(new Ressurect());
+		handler.schoolhealing.add(new Restoration());
 
-		handler.fire.add(new Heroism());
-		handler.magic.add(new HoldMonster());
-		handler.magic.add(new DominateMonster());
-		handler.magic.add(new Blink());
+		// TODO separate body+mind when mass* comes
+		handler.schooltotem.add(new BearsEndurance()); // transmutation
+		handler.schooltotem.add(new BullsStrength());
+		handler.schooltotem.add(new CatsGrace());
+		handler.schooltotem.add(new EaglesSplendor());
+		handler.schooltotem.add(new FoxsCunning());
+		handler.schooltotem.add(new OwlsWisdom());
 
-		handler.good.add(new DayLight());
-		handler.evil.add(new DeeperDarkness());
+		handler.schoolabjuration.add(new Blink());
+		handler.schoolabjuration.add(new Barkskin());
+		handler.schoolabjuration.add(new ResistEnergy());
+		handler.schoolabjuration.add(new DispelMagic());
 
-		handler.evil.add(new InflictLightWounds());
-		handler.evil.add(new InflictModerateWounds());
-		handler.evil.add(new InflictSeriousWounds());
-		handler.evil.add(new InflictCriticalWounds());
-		handler.evil.add(new SlayLiving());
-		handler.evil.add(new VampiricRay());
-		handler.evil.add(new Doom());
-		handler.evil.add(new Summon("Dretch", 1));
-		handler.evil.add(new Summon("Gray slaad", 1));
-		spells = handler.count() - before;
+		handler.schooltransmutation.add(new Darkvision()); // transmutation
+		handler.schooltransmutation.add(new ControlWeather());
+		handler.schooltransmutation.add(new Fly()); // movement
+		handler.schooltransmutation.add(new Longstrider());// movement
+
+		handler.schooldivination.add(new LocateObject());
+		handler.schooldivination.add(new PryingEyes());
+		handler.schooldivination.add(new DiscernLocation());
+		handler.schooldivination.add(new FindTraps());
+
+		handler.schoolcompulsion.add(new Heroism());// enchantment
+		handler.schoolcompulsion.add(new HoldMonster());
+		handler.schoolcompulsion.add(new DominateMonster());
+
+		handler.schoolwounding.add(new InflictLightWounds()); // necromancy
+		handler.schoolwounding.add(new InflictModerateWounds());
+		handler.schoolwounding.add(new InflictSeriousWounds());
+		handler.schoolwounding.add(new InflictCriticalWounds());
+
+		handler.schoolnecromancy.add(new SlayLiving());
+		handler.schoolnecromancy.add(new VampiricTouch());
+		handler.schoolnecromancy.add(new Doom());
+		handler.schoolnecromancy.add(new Poison());
+		handler.schoolnecromancy.add(new RayOfExhaustion());
+
+		handler.schoolconjuration.add(new WordOfRecall()); // teleportation
+		handler.schoolconjuration.add(new GreaterTeleport()); // teleportation
+		handler.schoolconjuration.add(new SecureShelter()); // teleportation
+		handler.schoolconjuration.add(new DayLight());// evocation, light
+		handler.schoolconjuration.add(new DeeperDarkness());// evocation, dark
+
+		handler.schoolevocation.add(new ScorchingRay());
+		handler.schoolevocation.add(new MagicMissile());
+		handler.schoolevocation.add(new PolarRay());
+		handler.schoolevocation.add(new SoundBurst());
+		handler.schoolevocation.add(new FlameStrike());
+	}
+
+	/**
+	 * To be called post monster initialization.
+	 * {@link #listupgrades(UpgradeHandler)} is called before monster are
+	 * loaded.
+	 */
+	static public void init() {
+		for (Monster m : Javelin.ALLMONSTERS) {
+			UpgradeHandler.singleton.schoolsummoning.add(new Summon(m.name, 1));
+		}
 	}
 
 	/**
 	 * I'm not sure if it's a typo or proposital but .001 seems to be too low a
 	 * factor, I'm using .01
 	 */
-	public static float ratespelllikeability(int casterlevel, int spelllevel) {
+	public static float ratespelllikeability(int spelllevel, int casterlevel) {
 		return casterlevel * spelllevel * .01f;
 	}
 
+	/**
+	 * @return challenge rating factor for the given spell level cast at the
+	 *         minimum possible caster level.
+	 */
 	public static float ratespelllikeability(int spelllevel) {
-		return ratespelllikeability(Spell.calculatecasterlevel(spelllevel),
-				spelllevel);
+		return ratespelllikeability(spelllevel,
+				Spell.calculatecasterlevel(spelllevel));
 	}
 
+	/**
+	 * Same as {@link #ratespelllikeability(int)} but to be used in case a touch
+	 * spell is being used as a ray spell instead.
+	 */
 	public static float ratetouchconvertedtoray(int spelllevel) {
 		return .4f * spelllevel;
 	}

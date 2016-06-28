@@ -1,8 +1,8 @@
 package javelin.view.screen.haxor;
 
 import javelin.model.unit.Combatant;
-import javelin.model.world.Squad;
-import javelin.model.world.place.unique.Haxor;
+import javelin.model.unit.Squad;
+import javelin.model.world.location.unique.Haxor;
 
 /**
  * Will lend money to a {@link Squad} once but will get it back on a future
@@ -12,9 +12,14 @@ import javelin.model.world.place.unique.Haxor;
  * @author alex
  */
 public class BorrowMoney extends Hax {
-	/** See {@link Hax#Hax(String, double, boolean)}. */
-	public BorrowMoney(String name, double price, boolean requirestargetp) {
-		super(name, price, requirestargetp);
+	/**
+	 * See {@link Hax#Hax(String, double, boolean)}.
+	 * 
+	 * @param keyp
+	 */
+	public BorrowMoney(String name, Character keyp, double price,
+			boolean requirestargetp) {
+		super(name, keyp, price, requirestargetp);
 	}
 
 	@Override

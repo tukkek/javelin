@@ -37,3 +37,4 @@ System Reference Document Copyright 2000-2003, Wizards of the Coast, Inc.
 Conversion of System Rules Document monster information to XML format Copyright 2001 John Hanju Kim.
 The Hypertext d20 SRD Copyright 2004, Jans W Carton.
 Pathfinder OGC (http://www.d20pfsrd.com/), Copyright 2016 John Reyst.
+A Dozen Wilderness Hazards Copyright 2005 Philip Reed, published by Ronin Arts www.roninarts.com.

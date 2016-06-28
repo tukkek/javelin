@@ -6,6 +6,7 @@ import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.BreathWeapon.BreathArea;
+import javelin.model.unit.abilities.BreathWeapon.SavingThrow;
 
 /**
  * @see CrFactor
@@ -43,15 +44,27 @@ public class BreathFactor extends CrFactor {
 
 	@Override
 	public void listupgrades(UpgradeHandler handler) {
-		handler.evil.add(new BreathWeaponUpgrade("Black dragon", "acid", 40,
-				BreathArea.CONE, 10, 4));
-		handler.wind.add(new BreathWeaponUpgrade("Blue dragon", "lightning",
-				100, BreathArea.LINE, 12, 8));
-		handler.fire.add(new BreathWeaponUpgrade("Red dragon", "fire", 50,
-				BreathArea.CONE, 12, 10));
-		handler.earth.add(new BreathWeaponUpgrade("Green dragon",
-				"corrosive gas", 60, BreathArea.CONE, 12, 6));
-		handler.wind.add(new BreathWeaponUpgrade("White dragon", "cold", 80,
-				BreathArea.LINE, 6, 6));
+		handler.fire.add(new BreathWeaponUpgrade(
+				new BreathWeapon("Cone of magma", BreathArea.CONE, 10, 1, 4, 0,
+						SavingThrow.REFLEXES, 13, .5f, true)));
+		handler.water.add(new BreathWeaponUpgrade(
+				new BreathWeapon("Caustic liquid", BreathArea.CONE, 15, 1, 8, 0,
+						SavingThrow.REFLEXES, 12, .5f, true)));
+
+		handler.evil.add(new BreathWeaponUpgrade(
+				new BreathWeapon("acid", BreathArea.LINE, 80, 12, 4, 0,
+						SavingThrow.REFLEXES, 23, .5f, true)));
+		handler.wind.add(new BreathWeaponUpgrade(
+				new BreathWeapon("lightning", BreathArea.LINE, 100, 12, 8, 0,
+						SavingThrow.REFLEXES, 25, .5f, true)));
+		handler.fire.add(new BreathWeaponUpgrade(
+				new BreathWeapon("fire", BreathArea.CONE, 50, 12, 10, 0,
+						SavingThrow.REFLEXES, 25, .5f, true)));
+		handler.earth.add(new BreathWeaponUpgrade(
+				new BreathWeapon("corrosive gas", BreathArea.CONE, 50, 12, 6, 0,
+						SavingThrow.REFLEXES, 25, .5f, true)));
+		handler.wind.add(new BreathWeaponUpgrade(
+				new BreathWeapon("cold", BreathArea.CONE, 40, 6, 6, 0,
+						SavingThrow.REFLEXES, 23, .5f, true)));
 	}
 }

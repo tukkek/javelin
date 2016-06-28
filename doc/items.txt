@@ -1,27 +1,18 @@
 ITEM GUIDE
 
-Airship: avoids combat, costs $16/day.
-Carriage: reduces chance of battle, costs $2/day.
-Potion of barkskin: raises armor class. 
-Potion of bear's endurance: +2 constitution bonus.
-Potion of bull's strength: +2 strength bonus.
-Potion of cat's grace: +2 dexterity bonus.
-Potion of cure critical wounds: cures 4d8+7 hit points. 
-Potion of cure light wounds: cures 1d8+1 hit points. 
-Potion of cure moderate wounds: cures 2d8+3 hit points. 
-Potion of cure serious wounds: cures 3d8+5 hit points. 
-Potion of dark vision: enhances vision in the dark. 
-Potion of eagle's splendor: +2 charisma bonus.
-Potion of fox's cunning: +2 intelligence bonus.
-Potion of flight: gives flight similar to that of a hawk.
-Potion of heroism: +2 to attack and save rolls.
-Potion of owl's wisdom: +2 wisdom bonus.
-Potion of resist energy: reduces a certain amount of damage from most non-physical attacks. 
-Scroll of discern location: reveals location of a dungeon's most valuable treasure.
-Scroll of greater teleport: teleports you to any town.
-Scroll of locate object: locates nearest treasure chest in a dungeon.
-Scroll of prying eyes: reveals dungeon or nearby area on world map.
-Scroll of raise dead & restoration: after battle, ressurects a killed ally.
-Scroll of ressurect & restoration: after battle, ressurects a killed ally to full hit points.
-Scroll of secure shelter: lets you rest in the wilderness.
-Scroll of word of recall: returns party to last visited town.
+Potions
+  Potions are one-use items that produces a spell-like effect on the user.
+  Their effect is automatic - no prerequisites or rolls are needed. 
+
+Scrolls
+  A scroll is a one-use item that works like a magic spell but requires
+  its reader to have at least one mental attribute score (Intelligence, Wisdom
+  or Charisma) equal or higher to 10 + spell level. The reader's caster level 
+  must also be higher than the spell's caster level (see the spell guide for 
+  more information). The Spellcraft skill grants bonuses to these calculations.  
+
+Transport
+  Airship: avoids combat, costs $16/day.
+  Carriage: reduces chance of battle, costs $2/day.
+  Ship: avoids combat on water, very slow on land while being transported.
+

@@ -7,9 +7,21 @@ import javelin.model.Cloneable;
 import javelin.model.unit.Combatant;
 
 public class TouchAttack extends Upgrade implements Cloneable, Serializable {
+	/** See {@link #TouchAttack(String, int, int, Integer, Integer)}. */
 	public final int[] damage;
+	/** See {@link #TouchAttack(String, int, int, Integer, Integer)}. */
 	public final int savedc;
 
+	/**
+	 * Either savedcp or attackbonus must be <code>null</code>.
+	 * 
+	 * @param die
+	 *            Number of die to roll for damage.
+	 * @param sides
+	 *            Type of die to roll for damage.
+	 * @param savedcp
+	 *            Will roll against this save DC.
+	 */
 	public TouchAttack(String namep, int die, int sides, int savedcp) {
 		super(namep);
 		damage = new int[] { die, sides };

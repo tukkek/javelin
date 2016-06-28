@@ -368,10 +368,10 @@ public class Scripts {
 		@Override
 		public boolean handle(Thing t, Event e) {
 			BattleMap map = t.getMap();
-			if (map == null) {
+			if (battlemap == null) {
 				return false;
 			}
-			if (map.getFlag("IsWorldMap")) {
+			if (battlemap.getFlag("IsWorldMap")) {
 				return false;
 			}
 
@@ -395,9 +395,9 @@ public class Scripts {
 					}
 					boolean added = false;
 					if (inPlace > 0) {
-						map.addThing(nt, t.getMapX(), t.getMapY());
+						battlemap.addThing(nt, t.getMapX(), t.getMapY());
 					} else {
-						added = map.addBlockingThing(nt, t.getMapX() - 1,
+						added = battlemap.addBlockingThing(nt, t.getMapX() - 1,
 								t.getMapY() - 1, t.getMapX() + 1,
 								t.getMapY() + 1);
 					}
@@ -423,7 +423,7 @@ public class Scripts {
 			int y = t.getMapY();
 
 			boolean whileCarried = getFlag("WhileCarried");
-			if (!whileCarried && map != t.place) {
+			if (!whileCarried && battlemap != t.place) {
 				return false;
 			}
 
@@ -437,10 +437,10 @@ public class Scripts {
 					}
 
 					if (s != null) {
-						boolean blocked = map.isBlocked(x, y);
+						boolean blocked = battlemap.isBlocked(x, y);
 
 						Thing nt = Lib.create(s);
-						map.addThing(nt, x, y);
+						battlemap.addThing(nt, x, y);
 						if (blocked) {
 							nt.displace();
 						}

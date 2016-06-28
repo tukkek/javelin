@@ -10,6 +10,7 @@ import javelin.model.unit.Combatant;
  */
 public class CombatExpertiseUpgrade extends FeatUpgrade {
 
+	/** Constructor. */
 	public CombatExpertiseUpgrade() {
 		super(CombatExpertise.singleton);
 	}

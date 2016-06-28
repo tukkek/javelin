@@ -4,9 +4,12 @@
 package javelin.controller.challenge.factor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
+import javelin.controller.effect.DamageEffect;
 import javelin.controller.upgrade.UpgradeHandler;
+import javelin.controller.upgrade.damage.EffectUpgrade;
 import javelin.controller.upgrade.damage.MeleeDamage;
 import javelin.controller.upgrade.damage.RangedDamage;
 import javelin.model.unit.Attack;
@@ -51,19 +54,30 @@ public class FullAttackFactor extends CrFactor {
 		if (attks.size() == 0) {
 			return -1;
 		}
+		final HashSet<String> effects = new HashSet<String>();
 		float sum = 0;
 		Attack last = null;
 		for (final Attack a : attks) {
 			sum += a.getAverageDamageNoBonus()
 					* (last != null && last.name.equals(a.name) ? .05f : .1f);
 			last = a;
+			if (a.effect != null && effects.add(a.effect.name)) {
+				sum += .1 * a.effect.level;
+			}
 		}
 		return sum;
 	}
 
 	@Override
 	public void listupgrades(UpgradeHandler handler) {
-		handler.fire.add(new MeleeDamage("More mêlée damage"));
-		handler.wind.add(new RangedDamage("More ranged damage"));
+		handler.fire.add(new MeleeDamage());
+		handler.wind.add(new RangedDamage());
+
+		DamageEffect.init();
+
+		for (DamageEffect e : DamageEffect.EFFECTS) {
+			e.realm.getupgrades(handler)
+					.add(new EffectUpgrade(e.name, e.spell.clone()));
+		}
 	}
 }

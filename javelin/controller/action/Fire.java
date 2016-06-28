@@ -6,11 +6,13 @@ import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.action.ai.AbstractAttack;
+import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.ai.RangedAttack;
-import javelin.controller.exception.RepeatTurnException;
+import javelin.controller.ai.ChanceNode;
+import javelin.controller.exception.RepeatTurn;
 import javelin.controller.walker.Walker;
 import javelin.model.BattleMap;
+import javelin.model.condition.Charging;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.unit.Attack;
@@ -27,18 +29,28 @@ import tyrant.mikera.tyrant.Game.Delay;
 /**
  * Ranged attack.
  * 
- * TODO this is being used by an awful lot of subclasses, extract a generic
- * TargetedAction.
+ * TODO call this Target and make Fire a subclass. This will allow to create
+ * reach attacks as well.
  * 
  * @author alex
  */
-public class Fire extends Action {
+public class Fire extends AiAction {
 
 	private char confirmkey;
 
+	/**
+	 * @param confirm
+	 *            Usually the same as the action key so as to make pressing the
+	 *            same key twice a "invoke action" + "confirm targeting".
+	 * @see Action#Action(String, String).
+	 */
 	public Fire(final String name, final String key, char confirm) {
 		super(name, key);
 		this.confirmkey = confirm;
+	}
+
+	public Fire() {
+		this("Fire or throw ranged weapon", "f", 'f');
 	}
 
 	@Override
@@ -46,14 +58,17 @@ public class Fire extends Action {
 		final Thing hero = Game.hero();
 		checkhero(hero);
 		final BattleState state = map.getState();
-		checkengaged(state, state.clone(hero.combatant));
+		if (checkengaged(state, state.clone(hero.combatant))) {
+			Game.message("Disengage first!", null, Delay.WAIT);
+			throw new RepeatTurn();
+		}
 		final Combatant combatant = state.clone(Game.hero().combatant);
 		final List<Combatant> targets =
 				state.getAllTargets(combatant, state.getCombatants());
 		filtertargets(combatant, targets, state);
 		if (targets.isEmpty()) {
 			Game.message("No valid targets.", null, Delay.WAIT);
-			throw new RepeatTurnException();
+			throw new RepeatTurn();
 		}
 		Collections.sort(targets, new Comparator<Combatant>() {
 			@Override
@@ -71,22 +86,20 @@ public class Fire extends Action {
 		return true;
 	}
 
+	/**
+	 * TODO turn into dynamic instead?
+	 */
 	public int prioritize(final Combatant c, final BattleState state,
 			final Combatant target) {
 		int priority = -target.surprise();
-		/*
-		 * TODO Use a new class hierarchy Conditions to encapsulate this and
-		 * guide descriptions for different conditions as well as a general
-		 * listen to use in the current UI code
-		 */
 		if (state.hasLineOfSight(c, target) == Vision.COVERED) {
 			priority -= 4;
 		}
 		/* TODO take into account relevant feats */
-		if (state.isEngaged(target)) {
+		if (state.isengaged(target)) {
 			priority -= 4;
 		}
-		if (target.ischarging()) {
+		if (target.hascondition(Charging.class) != null) {
 			priority += 2;
 		}
 		return priority;
@@ -116,7 +129,7 @@ public class Fire extends Action {
 			} else {
 				Game.messagepanel.clear();
 				Game.instance().hero = combatant.visual;
-				throw new RepeatTurnException();
+				throw new RepeatTurn();
 			}
 			final int max = targets.size() - 1;
 			if (targeti > max) {
@@ -128,11 +141,8 @@ public class Fire extends Action {
 		}
 	}
 
-	public void checkengaged(final BattleState state, Combatant c) {
-		if (state.isEngaged(c)) {
-			Game.message("Disengage first!", null, Delay.WAIT);
-			throw new RepeatTurnException();
-		}
+	protected boolean checkengaged(final BattleState state, Combatant c) {
+		return state.isengaged(c);
 	}
 
 	protected void checkhero(final Thing hero) {
@@ -170,7 +180,7 @@ public class Fire extends Action {
 				null, Delay.NONE);
 		Game.message(target + " (" + target.getStatus() + ", "
 				+ Javelin.translatetochance(
-						calculatehitchance(target, active, state))
+						calculatehitdc(target, active, state))
 				+ " to hit)", null, Delay.NONE);
 		BattleScreen.active.centerscreen(target.location[0],
 				target.location[1]);
@@ -180,14 +190,13 @@ public class Fire extends Action {
 	 * @return Minimum number the active combatant has to roll on a d20 to hit
 	 *         the target.
 	 */
-	protected int calculatehitchance(final Combatant target, Combatant active,
+	protected int calculatehitdc(final Combatant target, Combatant active,
 			BattleState state) {
-		return target.ac() + AbstractAttack.waterpenalty(state, active)
+		return target.ac()
 				- predictattack(active.currentranged,
 						active.source.ranged).bonus
 				- prioritize(active, state, target)
-				- AbstractAttack.waterpenalty(state, target)
-				+ RangedAttack.penalize(active, target, state);
+				+ RangedAttack.SINGLETON.getpenalty(active, target, state);
 	}
 
 	Attack predictattack(CurrentAttack hint, List<AttackSequence> fallback) {
@@ -198,5 +207,11 @@ public class Fire extends Action {
 			a = fallback.get(0).get(0);
 		}
 		return a;
+	}
+
+	@Override
+	public List<List<ChanceNode>> getoutcomes(BattleState s, Combatant active) {
+		/* Handled by RangedAttack. */
+		return new ArrayList<List<ChanceNode>>();
 	}
 }

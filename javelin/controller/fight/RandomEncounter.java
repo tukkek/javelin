@@ -3,46 +3,23 @@ package javelin.controller.fight;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.JavelinApp;
-import javelin.controller.map.Map;
-import javelin.model.BattleMap;
+import javelin.controller.db.Preferences;
+import javelin.controller.exception.battle.StartBattle;
+import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
-import javelin.model.world.place.dungeon.Dungeon;
-import javelin.view.screen.BattleScreen;
-import tyrant.mikera.tyrant.Tile;
+import javelin.model.world.location.dungeon.Dungeon;
+import tyrant.mikera.engine.RPG;
 
 /**
  * Fight that happens on the overworld map.
  * 
  * @author alex
  */
-public class RandomEncounter implements Fight {
+public class RandomEncounter extends Fight {
 	@Override
-	public BattleScreen getscreen(final JavelinApp javelinApp,
-			final BattleMap battlemap) {
-		return new BattleScreen(javelinApp, battlemap, true);
-	}
-
-	@Override
-	public int getel(final JavelinApp app, int teamel) {
+	public int getel(int teamel) {
 		int difficulty = Javelin.randomdifficulty() + Javelin.difficulty();
-		return teamel + cap(difficulty, Javelin.terrain());
-	}
-
-	private int cap(int difficulty, int tile) {
-		if (tile == Tile.PLAINS && difficulty > -4) {
-			return -4;
-		}
-		if (tile == Tile.FORESTS && difficulty > -3) {
-			return -3;
-		}
-		if (tile == Tile.HILLS && difficulty > -2) {
-			return -2;
-		}
-		if (tile == Tile.GUNK && difficulty > -1) {
-			return -1;
-		}
-		return difficulty;
+		return teamel + Terrain.current().cap(difficulty);
 	}
 
 	@Override
@@ -50,38 +27,15 @@ public class RandomEncounter implements Fight {
 		return null;
 	}
 
-	@Override
-	public boolean meld() {
-		return Dungeon.active != null;
-	}
-
-	@Override
-	public Map getmap() {
-		return null;
-	}
-
-	@Override
-	public boolean friendly() {
-		return false;
-	}
-
-	@Override
-	public boolean rewardgold() {
-		return true;
-	}
-
-	@Override
-	public boolean hide() {
-		return true;
-	}
-
-	@Override
-	public boolean canbribe() {
-		return true;
-	}
-
-	@Override
-	public void bribe() {
-		// just avoid the fight
+	/**
+	 * @param d
+	 *            % chance of starting a battle.
+	 * @throws StartBattle
+	 */
+	static public void encounter(double d) {
+		if (RPG.random() < d && !Preferences.DEBUGDISABLECOMBAT) {
+			throw new StartBattle(Dungeon.active == null ? new RandomEncounter()
+					: new RandomDungeonEncounter());
+		}
 	}
 }

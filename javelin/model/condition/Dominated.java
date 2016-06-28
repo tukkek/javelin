@@ -2,7 +2,7 @@ package javelin.model.condition;
 
 import java.util.ArrayList;
 
-import javelin.model.spell.DominateMonster;
+import javelin.model.spell.enchantment.compulsion.DominateMonster;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 
@@ -14,20 +14,19 @@ public class Dominated extends Condition {
 
 	private Combatant target;
 
-	public Dominated(float expireatp, Combatant c) {
-		super(expireatp, c, Effect.NEUTRAL, "dominated");
+	public Dominated(float expireatp, Combatant c, Integer casterlevelp) {
+		super(expireatp, c, Effect.NEUTRAL, "dominated", casterlevelp);
 		this.target = c;
 	}
 
 	@Override
-			void start(Combatant c) {
+	public void start(Combatant c) {
 		/* can't access here so use #switchteams */
 	}
 
 	@Override
-			void end(Combatant c) {
-		// TODO Auto-generated method stub
-
+	public void end(Combatant c) {
+		// see #finish
 	}
 
 	public static void switchteams(Combatant target, BattleState s) {

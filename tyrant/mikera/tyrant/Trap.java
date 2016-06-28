@@ -129,9 +129,9 @@ public class Trap {
 			rt.remove();
 			Thing temp = Game.actor;
 
-			if (map != null) {
+			if (battlemap != null) {
 				Thing sp = Spell.create(rt.getString("TrapSpell"));
-				Spell.castAtLocation(sp, null, map, tx, ty);
+				Spell.castAtLocation(sp, null, battlemap, tx, ty);
 				Thing actor = (Thing) rt.get("Actor");
 				if (actor != null) {
 					actor.message("Your power is drained by the runes");
@@ -155,7 +155,7 @@ public class Trap {
 
 			Thing pit = Lib.create("pit");
 			pit.set("DestinationLevel",
-					RPG.middle(1, map.getLevel() + RPG.d(3) - RPG.d(3), 50));
+					RPG.middle(1, battlemap.getLevel() + RPG.d(3) - RPG.d(3), 50));
 
 			// replave the trap object with the pit portal
 			trap.replaceWith(pit);
@@ -189,14 +189,14 @@ public class Trap {
 		@Override
 		public boolean handle(Thing t, Event e) {
 			BattleMap map = t.getMap();
-			int level = map.getLevel();
+			int level = battlemap.getLevel();
 			Thing a = Lib.createType("IsMonster", level);
 
 			Thing tt = e.getThing("Target");
 
 			boolean ambush = false;
 			for (int i = RPG.d(6); i > 0; i--) {
-				ambush |= map.addBlockingThing(Lib.create(a.name()), t.x - 1,
+				ambush |= battlemap.addBlockingThing(Lib.create(a.name()), t.x - 1,
 						t.y - 1, t.x + 1, t.y + 1);
 			}
 			if (tt != null) {
@@ -232,8 +232,8 @@ public class Trap {
 				Damage.inflict(tt, RPG.d(20), "impact");
 			}
 
-			map.addThing(Lib.create("rock"), tx, ty);
-			map.addThing(Lib.create("stone"), tx, ty);
+			battlemap.addThing(Lib.create("rock"), tx, ty);
+			battlemap.addThing(Lib.create("stone"), tx, ty);
 
 			return false;
 		}

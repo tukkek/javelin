@@ -8,8 +8,8 @@ import javelin.model.unit.Skills;
  * @author alex
  */
 public class Concentration extends SkillUpgrade {
-	public Concentration(String name) {
-		super(name);
+	public Concentration() {
+		super("Concentration");
 	}
 
 	@Override

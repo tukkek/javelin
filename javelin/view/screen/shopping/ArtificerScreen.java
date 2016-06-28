@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import javelin.controller.action.world.CastSpells;
+import javelin.Javelin;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Squad;
-import javelin.model.world.place.unique.Artificer;
+import javelin.model.unit.Squad;
+import javelin.model.world.location.unique.Artificer;
 import javelin.view.screen.Option;
 import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.PurchaseOption;
@@ -83,7 +83,7 @@ public class ArtificerScreen extends ShoppingScreen {
 			if (squad.isEmpty()) {
 				return false;
 			}
-			int selleri = CastSpells.choose("Who will sell an item?", squad,
+			int selleri = Javelin.choose("Who will sell an item?", squad,
 					true, false);
 			if (selleri < 0) {
 				return false;
@@ -94,7 +94,7 @@ public class ArtificerScreen extends ShoppingScreen {
 			for (Item i : bag) {
 				sellingprices.add(i + " ($" + i.price / 2 + ")");
 			}
-			int bagi = CastSpells.choose("Sell which item?", sellingprices,
+			int bagi = Javelin.choose("Sell which item?", sellingprices,
 					true, false);
 			if (bagi >= 0) {
 				sell(seller, bag, bag.get(bagi));

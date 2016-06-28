@@ -2,11 +2,12 @@ package javelin.controller.action;
 
 import javelin.Javelin;
 import javelin.controller.action.ai.AiMovement;
-import javelin.controller.exception.RepeatTurnException;
+import javelin.controller.exception.RepeatTurn;
 import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Skills;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.Thing;
@@ -18,50 +19,61 @@ import tyrant.mikera.tyrant.Game.Delay;
  * @author alex
  */
 public class Movement extends Action {
+	public static final float DISENGAGE = .25f;
 	private final String descriptivekeys;
 	public static boolean lastmovewasattack = false;
 
+	/**
+	 * @see Action#Action(String, String[]).
+	 * @param descriptivekeys
+	 *            Used in printed description to user.
+	 */
 	public Movement(final String name, final String[] keys,
 			final String descriptivekeys) {
 		super(name, keys);
 		this.descriptivekeys = descriptivekeys;
+		this.allowwhileburrowed = true;
 	}
 
+	/**
+	 * @param x
+	 *            Location.
+	 * @param y
+	 *            Location.
+	 * @return How much it costs to move to the specified square.
+	 */
 	public float cost(final Combatant c, final BattleState state, int x,
 			int y) {
-		return isDisengaging(c, state)
-				? Math.max(.1f, .25f - (.01f * c.source.skills.acrobatics))
-				: (.5f / Movement.move(c, state, x, y));
-	}
-
-	/**
-	 * @return The number of squares the {@link Combatant} can move in a move
-	 *         action in this type of terrain.
-	 */
-	static float move(final Combatant c, final BattleState state, final int x,
-			final int y) {
-		float speed = c.source.gettopspeed();
-		if (state.map[x][y].flooded && c.source.fly == 0) {
-			speed = c.source.swim() ? c.source.swim : speed / 2f;
-		}
-		return speed / 5f;
-	}
-
-	/**
-	 * To avoid having to implement attacks-of-opporutnity gonna simply prohibit
-	 * that anything that would cause an aoo is simply prohibited. since the
-	 * game is more fluid with movement/turns now this shouldn't be a problem.
-	 * 
-	 * Disengaging is simply forcing a 5-foot step to avoid aoo as per the core
-	 * rules.
-	 */
-	public boolean isDisengaging(final Combatant c, final BattleState s) {
-		for (final Combatant nearby : s.getSurroundings(c)) {
-			if (!c.isAlly(nearby, s)) {
-				return true;
+		float speed;
+		if (c.burrowed) {
+			speed = c.source.burrow;
+		} else if (state.isengaged(c)) {
+			return disengage(c);
+		} else {
+			speed = c.source.gettopspeed();
+			if (state.map[x][y].flooded && c.source.fly == 0) {
+				speed = c.source.swim() ? c.source.swim : speed / 2f;
 			}
 		}
-		return false;
+		return converttoap(speed);
+	}
+
+	/**
+	 * @param speed
+	 *            Speed in feet (5 feet = 1 square).
+	 * @return Cost of 1 square of movement in action points.
+	 */
+	public static float converttoap(float speed) {
+		return .5f / (speed / 5f);
+	}
+
+	/**
+	 * @param c
+	 *            Checks {@link Skills#acrobatics}.
+	 * @return Action points to disengage.
+	 */
+	static public float disengage(Combatant c) {
+		return Math.max(.1f, DISENGAGE - (.01f * c.source.skills.acrobatics));
 	}
 
 	@Override
@@ -78,7 +90,7 @@ public class Movement extends Action {
 			if (to == null) {
 				return false;
 			}
-			boolean disengaging = isDisengaging(thing.combatant, state);
+			boolean disengaging = state.isengaged(thing.combatant);
 			Meld meld = BattleMap.checkformeld(to.x, to.y);
 			if (!Movement.lastmovewasattack) {
 				BattleScreen.active.spentap +=
@@ -90,7 +102,7 @@ public class Movement extends Action {
 			if (!finishmove) {
 				BattleMap.visioncache.remove(thing.combatant.id);
 				thing.calculateVision();
-				throw new RepeatTurnException();
+				throw new RepeatTurn();
 			}
 			if (!Movement.lastmovewasattack) {
 				if (meld == null) {

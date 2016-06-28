@@ -21,10 +21,11 @@ import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
+import javelin.model.world.World;
 import javelin.model.world.WorldActor;
-import javelin.model.world.place.WorldPlace;
-import javelin.model.world.place.dungeon.Dungeon;
-import javelin.model.world.place.town.Town;
+import javelin.model.world.location.Location;
+import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.town.Town;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.Thing;
@@ -109,6 +110,8 @@ public class MapPanel extends Panel {
 	 */
 	static HashMap<String, WorldActor> actors =
 			new HashMap<String, WorldActor>();
+	private Graphics backgroungfx;
+	private boolean isoutside;
 
 	public MapPanel(final BattleScreen owner) {
 		super();
@@ -190,11 +193,14 @@ public class MapPanel extends Panel {
 						drawThing(head, px, py, temp, x, y);
 					}
 				}
-				for (final Meld m : state.meld) {
-					if (m.x == x && m.y == y) {
-						temp.drawImage(state.next.ap >= m.meldsat
-								? Images.crystal : Images.dead, px, py, null);
-						break;
+				if (!isworldscreen) {
+					for (final Meld m : state.meld) {
+						if (m.x == x && m.y == y) {
+							temp.drawImage(state.next.ap >= m.meldsat
+									? Images.crystal : Images.dead, px, py,
+									null);
+							break;
+						}
 					}
 				}
 				final Point p = new Point(x, y);
@@ -223,23 +229,19 @@ public class MapPanel extends Panel {
 			final int endy) {
 		background = createImage((endx - startx) * MapPanel.TILEWIDTH,
 				(endy - starty) * MapPanel.TILEHEIGHT);
-		final Graphics backgroungfx = background.getGraphics();
+		backgroungfx = background.getGraphics();
 		for (int y = starty; y <= endy; y++) {
 			for (int x = startx; x <= endx; x++) {
 				final int px = (x - scrollx) * MapPanel.TILEWIDTH;
 				final int py = (y - scrolly) * MapPanel.TILEHEIGHT;
-				final int m = map.getTile(x, y);
-				final int tile = m & 65535;
-				final int image = Tile.filling[map.getTile(x, y + 1) & 65535]
-						? Tile.imagefill[tile] : Tile.images[tile];
-				final int sx = image % 20 * MapPanel.TILEWIDTH;
-				final int sy = image / 20 * MapPanel.TILEHEIGHT;
-				backgroungfx.drawImage(QuestApp.tiles, px, py,
-						px + MapPanel.TILEWIDTH, py + MapPanel.TILEHEIGHT, sx,
-						sy, sx + MapPanel.TILEWIDTH, sy + MapPanel.TILEHEIGHT,
-						null);
-				if (Tile.borders[tile] > 0) {
-					MapPanel.drawcoastline(y, x, m, px, py, backgroungfx, map);
+				backgroungfx.drawImage(BattleScreen.active.gettile(x, y), px,
+						py, null);
+				if (isoutside) {
+					if (World.highways[x][y]) {
+						paintroad(x, y, px, py, Color.WHITE);
+					} else if (World.roads[x][y]) {
+						paintroad(x, y, px, py, Color.ORANGE);
+					}
 				}
 				for (Thing head = map.sortZ(x, y); head != null; head =
 						head.next) {
@@ -253,6 +255,44 @@ public class MapPanel extends Panel {
 		backgroungfx.dispose();
 	}
 
+	void paintroad(int x, int y, int px, int py, Color c) {
+		if (px < 0 || py < 0) {
+			return;
+		}
+		backgroungfx.setColor(c);
+		boolean any = false;
+		final int centerx = px + TILEWIDTH / 2;
+		final int centery = py + TILEHEIGHT / 2;
+		for (int deltax = -1; deltax <= +1; deltax++) {
+			for (int deltay = -1; deltay <= +1; deltay++) {
+				if (deltax == 0 && deltay == 0) {
+					continue;
+				}
+				int tox = x + deltax;
+				int toy = y + deltay;
+				if (!(0 <= tox && tox < World.MAPDIMENSION)//
+						|| !(0 <= toy && toy < World.MAPDIMENSION)) {
+					continue;
+				}
+				if (World.roads[tox][toy] || World.highways[tox][toy]) {
+					any = true;
+					backgroungfx.drawLine(centerx, centery,
+							centerx + deltax * TILEWIDTH / 2,
+							centery + deltay * TILEHEIGHT / 2);
+				}
+			}
+		}
+		if (!any) {
+			backgroungfx.drawLine(centerx, py, centerx, py + TILEWIDTH);
+			backgroungfx.drawLine(px, centery, px + TILEWIDTH, centery);
+		}
+	}
+
+	/**
+	 * TODO would be nice to implement something similar.
+	 * 
+	 * TODO remove old implementation
+	 */
 	static void drawcoastline(int y, int x, int m, final int px, final int py,
 			Graphics gfx, BattleMap map) {
 		if (x > 0 && map.getTile(x - 1, y) != m) {
@@ -283,25 +323,30 @@ public class MapPanel extends Panel {
 	private void drawThing(final Thing t, int x, int y, Graphics gfx,
 			final int mapx, final int mapy) {
 		drawbackground(t, x, y, gfx);
-		if (t.combatant == null || t.combatant.source.avatarfile == null) {
+		final Combatant c = t.combatant;
+		if (c == null || c.source.avatarfile == null) {
 			WorldActor a = actors.get(mapx + ":" + mapy);
-			WorldPlace p = isworldscreen && Dungeon.active == null
-					&& a instanceof WorldPlace ? (WorldPlace) a : null;
-			if (p == null) {
-				final int image = t.getImage();
-				final int sx = image % 20 * MapPanel.TILEWIDTH;
-				final int sy = image / 20 * MapPanel.TILEHEIGHT;
-				final Object source = t.get("ImageSource");
-				gfx.drawImage(
-						source == null ? QuestApp.items
-								: (Image) QuestApp.images.get(source),
-						x, y, x + MapPanel.TILEWIDTH, y + MapPanel.TILEHEIGHT,
-						sx, sy, sx + MapPanel.TILEWIDTH,
-						sy + MapPanel.TILEHEIGHT, null);
+			Location l =
+					isoutside && a instanceof Location ? (Location) a : null;
+			if (l == null) {
+				if (t.javelinimage == null) {
+					final int image = t.getImage();
+					final int sx = image % 20 * MapPanel.TILEWIDTH;
+					final int sy = image / 20 * MapPanel.TILEHEIGHT;
+					final Object source = t.get("ImageSource");
+					Image image2 = source == null ? QuestApp.items
+							: (Image) QuestApp.images.get(source);
+					gfx.drawImage(image2, x, y, x + MapPanel.TILEWIDTH,
+							y + MapPanel.TILEHEIGHT, sx, sy,
+							sx + MapPanel.TILEWIDTH, sy + MapPanel.TILEHEIGHT,
+							null);
+				} else {
+					gfx.drawImage(t.javelinimage, x, y, null);
+				}
 			} else {
-				gfx.drawImage(p.getimage(), x, y, null);
+				gfx.drawImage(l.getimage(), x, y, null);
 			}
-			if (isworldscreen && Dungeon.active == null) {
+			if (isoutside) {
 				if (a != null) {
 					Town town = a instanceof Town ? (Town) a : null;
 					if (town != null && town.garrison.isEmpty()) {
@@ -309,28 +354,32 @@ public class MapPanel extends Panel {
 					} else if (a.realm != null) {
 						drawborder(x, y, gfx, a.realm.getawtcolor());
 					}
-					if (p != null) {
-						if (p.ishostile()) {
+					if (l != null) {
+						if (l.drawgarisson()) {
 							gfx.drawImage(Images.hostile, x, y - 2, null);
 						} else {
-							enhanceplace(mapx, mapy, x, y, gfx, p);
+							enhanceplace(mapx, mapy, x, y, gfx, l);
 						}
 					}
 				}
 			}
 		} else {
-			gfx.drawImage(ImageHandler.getImage(t.combatant), x, y, null);
-			if (!isworldscreen) {
-				if (t.combatant.ispenalized(state)) {
-					gfx.drawImage(Images.penalized, x, y, null);
-				}
-				if (t.combatant.isbuffed()) {
-					BUFF.paintBorder(this, gfx, x, y, TILEWIDTH, TILEHEIGHT);
-				}
-			} else {
+			Image combatant = Images.getImage(c);
+			if (c.burrowed) {
+				combatant = QuestApp.maketransparent(.5f, combatant);
+			}
+			gfx.drawImage(combatant, x, y, null);
+			if (isworldscreen) {
 				WorldActor a = actors.get(mapx + ":" + mapy);
 				if (a != null && a.realm != null) {
 					drawborder(x, y, gfx, a.realm.getawtcolor());
+				}
+			} else {
+				if (c.ispenalized(state)) {
+					gfx.drawImage(Images.penalized, x, y, null);
+				}
+				if (c.isbuffed()) {
+					BUFF.paintBorder(this, gfx, x, y, TILEWIDTH, TILEHEIGHT);
 				}
 			}
 		}
@@ -359,20 +408,20 @@ public class MapPanel extends Panel {
 
 	void updateplaces() {
 		actors.clear();
-		for (WorldActor a : WorldScreen.getactors()) {
+		for (WorldActor a : WorldActor.getall()) {
 			actors.put(a.x + ":" + a.y, a);
 		}
 	}
 
 	static private boolean enhanceplace(final int mapx, final int mapy,
-			final int x, final int y, final Graphics gfx, WorldPlace t) {
+			final int x, final int y, final Graphics gfx, Location t) {
 		if (t.ishosting()) {
-			gfx.drawImage(Images.banner, x, y, null);
+			gfx.drawImage(Images.tournament, x, y, null);
 		}
-		if (t.iscrafting()) {
+		if (t.hascrafted()) {
 			gfx.drawImage(Images.crafting, x, y, null);
 		}
-		if (t.isupgrading()) {
+		if (t.hasupgraded()) {
 			gfx.drawImage(Images.upgrading, x, y, null);
 		}
 		return true;
@@ -442,8 +491,11 @@ public class MapPanel extends Panel {
 			}
 			buffergraphics = buffer.getGraphics();
 		}
-		state = map.getState();
 		isworldscreen = BattleScreen.active instanceof WorldScreen;
+		isoutside = isworldscreen && Dungeon.active == null;
+		if (!isworldscreen) {
+			state = map.getState();
+		}
 		updateplaces();
 		drawTiles(startx, starty, endx, endy);
 		if (cursor) {

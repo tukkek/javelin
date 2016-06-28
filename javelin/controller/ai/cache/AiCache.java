@@ -3,15 +3,13 @@ package javelin.controller.ai.cache;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.Javelin;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.AbstractAlphaBetaSearch;
-import javelin.controller.ai.ActionProvider;
 import javelin.controller.ai.AiThread;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.Node;
-import javelin.controller.db.Properties;
+import javelin.controller.db.Preferences;
 
 /**
  * Prevents utility ({@link BattleAi#utility(Node)}) and successors (
@@ -21,15 +19,13 @@ import javelin.controller.db.Properties;
  * @author alex
  */
 public class AiCache {
-	public static final boolean ENABLED =
-			Properties.getString("ai.cache").equals("true");
 	static final boolean DEBUG = false;
 
 	public static Cache nodecache = new Cache();
 	public static Cache utilitycache = new Cache();
 
 	public static void clear() {
-		if (!ENABLED) {
+		if (!Preferences.AICACHEENABLED) {
 			return;
 		}
 		if (DEBUG) {
@@ -42,7 +38,7 @@ public class AiCache {
 
 	public static Iterable<List<ChanceNode>> getcache(final Node previousState,
 			List<Integer> index) {
-		if (!ENABLED) {
+		if (!Preferences.AICACHEENABLED) {
 			return previousState.getSucessors();
 		}
 		List<List<ChanceNode>> sucessors =
@@ -50,18 +46,9 @@ public class AiCache {
 		if (sucessors == null) {
 			sucessors = new ArrayList<List<ChanceNode>>();
 			for (final List<ChanceNode> cns : previousState.getSucessors()) {
-				if (Javelin.DEBUG) {
-					// TODO debug
-					ActionProvider.checkstacking(cns);
-				}
 				sucessors.add(cns);
 			}
 			addcache(index, sucessors);
-		} else if (Javelin.DEBUG) {
-			// TODO debug
-			for (List<ChanceNode> c : sucessors) {
-				ActionProvider.checkstacking(c);
-			}
 		}
 		return sucessors;
 	}
@@ -82,7 +69,7 @@ public class AiCache {
 
 	public static Float getutility(ArrayList<Integer> index,
 			final AbstractAlphaBetaSearch ai, final List<ChanceNode> cns) {
-		if (!ENABLED) {
+		if (!Preferences.AICACHEENABLED) {
 			return ai.utility(cns);
 		}
 		Float utility = (Float) utilitycache.get(index);

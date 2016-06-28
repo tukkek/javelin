@@ -1,13 +1,18 @@
 package javelin.controller.challenge;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javelin.controller.DescendingLevelComparator;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;
-import javelin.model.world.place.dungeon.Treasure;
+import javelin.model.world.location.dungeon.Chest;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -111,6 +116,8 @@ public class RewardCalculator {
 	}
 
 	/**
+	 * @param team
+	 *            Opponent force defeated.
 	 * @return sum of gold this battle should reward.
 	 * @see #getgold(float)
 	 */
@@ -128,6 +135,9 @@ public class RewardCalculator {
 	 * @return gold treasure reward for such an opponent.
 	 */
 	public static int getgold(final float cr) {
+		if (cr <= 0) {
+			return 0;
+		}
 		return Math.round(cr * cr * cr * 7.5f);
 	}
 
@@ -140,7 +150,7 @@ public class RewardCalculator {
 		return Math.round(Math.round(Math.cbrt(gold / 7.5f)));
 	}
 
-	public static Treasure createchest(int gold, int x, int y) {
+	public static Chest createchest(int gold, int x, int y) {
 		ItemSelection chest = new ItemSelection();
 		if (RPG.r(1, 2) == 1) {// 50% are gold and 50% are item
 			int limit = gold / 10;
@@ -154,6 +164,61 @@ public class RewardCalculator {
 				}
 			}
 		}
-		return new Treasure("chest", x, y, gold, chest);
+		return new Chest("chest", x, y, gold, chest);
+	}
+
+	/**
+	 * Calculates proper experience reward for a given battle and distributes in
+	 * a non-uniform manner. d20 level caps are exponential but since Javelin
+	 * uses challenge rating as XP it becomes more linear - to circumvent that
+	 * this method distributes 1 xp part to the strongest unit (including it's
+	 * xp bank), 2 to the second strongest, etc. This may look random at first
+	 * but in the long run ensures {@link Combatant}s will level up in a
+	 * balanced manner, with lower level units gaining levels faster than
+	 * already strong units - which is what the d20 system is designed to do.
+	 * 
+	 * @param winners
+	 *            {@link Combatant}s to award XP to.
+	 * @param originalblue
+	 *            Allied team that started the battle.
+	 * @param originalred
+	 *            Battle opponent.
+	 * @param bonus
+	 *            Multiplier bonus.
+	 * @return A string representing how much XP was gained by the party.
+	 * @see Combatant#xp
+	 */
+	public static String rewardxp(ArrayList<Combatant> winners,
+			List<Combatant> originalblue, List<Combatant> originalred,
+			int bonus) {
+		int eldifference =
+				Math.round(ChallengeRatingCalculator.calculateel(originalred)
+						- ChallengeRatingCalculator.calculateel(originalblue));
+		double partycr = getpartycr(eldifference, winners.size()) * bonus;
+		distributexp(winners, partycr);
+		return "Party wins "
+				+ new BigDecimal(100 * partycr).setScale(0, RoundingMode.UP)
+				+ "XP!";
+	}
+
+	/**
+	 * @param units
+	 *            {@link Combatant}s to receive experience.
+	 * @param xp
+	 *            Total amount of experience to be distributed.
+	 * @see #rewardxp(ArrayList, List, List, int)
+	 */
+	public static void distributexp(ArrayList<Combatant> units, double xp) {
+		List<Combatant> survivors = (List<Combatant>) units.clone();
+		Collections.sort(survivors, new DescendingLevelComparator());
+		float segments = 0;
+		for (int i = 1; i <= survivors.size(); i++) {
+			segments += i;
+		}
+		for (int i = 1; i <= survivors.size(); i++) {
+			final Combatant survivor = survivors.get(i - 1);
+			survivor.xp = survivor.xp.add(new BigDecimal(xp * i / segments)
+					.setScale(2, RoundingMode.HALF_UP));
+		}
 	}
 }

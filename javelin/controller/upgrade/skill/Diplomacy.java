@@ -8,8 +8,9 @@ import javelin.model.unit.Skills;
  * @author alex
  */
 public class Diplomacy extends SkillUpgrade {
-	public Diplomacy(String name) {
-		super(name);
+	/** Constructor. */
+	public Diplomacy() {
+		super("Diplomacy");
 	}
 
 	@Override

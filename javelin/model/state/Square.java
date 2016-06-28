@@ -1,6 +1,6 @@
 package javelin.model.state;
 
-import javelin.controller.map.Map;
+import javelin.controller.terrain.map.Map;
 
 /**
  * A singular area of a {@link Map}.
@@ -8,8 +8,8 @@ import javelin.controller.map.Map;
  * @author alex
  */
 public class Square {
-	public final boolean blocked;
-	public final boolean obstructed;
+	public boolean blocked;
+	public boolean obstructed;
 	public boolean flooded;
 
 	public Square(final boolean blocked, final boolean obstructed,

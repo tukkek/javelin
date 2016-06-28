@@ -2,46 +2,34 @@ package javelin.view.screen;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.Panel;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 import javelin.Javelin;
+import javelin.JavelinApp;
 import javelin.controller.Movement;
 import javelin.controller.action.Action;
-import javelin.controller.action.PassItem;
-import javelin.controller.action.UseItem;
+import javelin.controller.action.Dig;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.ThreadManager;
-import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.exception.RepeatTurnException;
-import javelin.controller.exception.UnbalancedTeamsException;
-import javelin.controller.exception.battle.BattleEvent;
+import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.Fight;
+import javelin.controller.terrain.map.Map;
 import javelin.controller.walker.Walker;
 import javelin.model.BattleMap;
-import javelin.model.condition.Condition;
 import javelin.model.condition.Dominated;
 import javelin.model.state.BattleState;
+import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Squad;
-import javelin.model.world.place.town.Transport;
 import javelin.view.MapPanel;
 import javelin.view.StatusPanel;
-import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.Point;
-import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
@@ -61,23 +49,17 @@ import tyrant.mikera.tyrant.Tile;
  * controller behavior to move to {@link Fight}. For example: {@link LairScreen}
  * .
  * 
+ * TODO the 2.0 interface should absolutely not be redrawn every time, only when
+ * an update is needed and even then the redraw should be on a tile-by-tile
+ * basis, not the entire screen.
+ * 
+ * TODO many things this is actually handling should be moved to {@link Fight}
+ * controllers instead.
+ * 
  * @author alex
  */
 public class BattleScreen extends Screen {
-	public class DescendingLevelComparator implements Comparator<Combatant> {
-		@Override
-		public int compare(Combatant arg0, Combatant arg1) {
-			return new Integer(sumcrandxp(arg0)).compareTo(sumcrandxp(arg1));
-		}
 
-		public int sumcrandxp(Combatant arg0) {
-			return -Math.round(100 * (arg0.xp.floatValue()
-					+ ChallengeRatingCalculator.calculateCr(arg0.source)));
-		}
-	}
-
-	String[] ERRORQUOTES = new String[] { "A wild error appears!",
-			"You were eaten by a grue.", "So again it has come to pass..." };
 	private static final long serialVersionUID = 3907207143852421428L;
 
 	public static List<Combatant> originalredteam;
@@ -103,9 +85,10 @@ public class BattleScreen extends Screen {
 	public LevelMapPanel levelMap = null;
 	static public Combatant lastlooked = null;
 
-	public BattleScreen() {
+	public BattleScreen(JavelinApp javelinApp, BattleMap battlemap,
+			Image texture) {
 		super(Javelin.app);
-		Javelin.settexture(QuestApp.DEFAULTTEXTURE);
+		Javelin.settexture(texture);
 	}
 
 	public void addActionHandler(final IActionHandler actionHandler) {
@@ -156,19 +139,12 @@ public class BattleScreen extends Screen {
 		Game.enterMap(map, Game.hero().x, Game.hero().y);
 		q.switchScreen(this);
 		BattleScreen.active = this;
-		// endTurn();
-		BattleScreen.originalblueteam =
-				new ArrayList<Combatant>(BattleMap.blueTeam);
-		BattleScreen.originalredteam =
-				new ArrayList<Combatant>(BattleMap.redTeam);
 		Game.delayblock = false;
 		initmap();
 		mappanel.repaint();
 	}
 
-	/**
-	 * TODO
-	 */
+	/** Initializes this screen instance. */
 	protected void initmap() {
 		map.makeAllInvisible();
 	}
@@ -198,22 +174,11 @@ public class BattleScreen extends Screen {
 			checkblock();
 			throw e;
 		}
-		if (Javelin.DEBUG) {
-			humanTurn();
-			return;
-		}
-		try {
-			humanTurn();
-		} catch (BattleEvent e) {
-			throw e;
-		} catch (RuntimeException e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(Javelin.app,
-					RPG.pick(ERRORQUOTES) + "\n\n"
-							+ "Please forward us a screenshot of the console output so we\n"
-							+ "can get this error fixed as soon as possible.");
-			System.exit(1);
-		}
+		// if (Javelin.DEBUG) {
+		// humanTurn();
+		// return;
+		// }
+		humanTurn();
 	}
 
 	protected void removehero() {
@@ -224,7 +189,7 @@ public class BattleScreen extends Screen {
 		checkblock();
 		final Combatant next = map.getState().next;
 		final Thing h = setHero(next);
-		if (BattleMap.redTeam.contains(next)) {
+		if (BattleMap.redTeam.contains(next) || next.automatic) {
 			computerTurn();
 			return;
 		}
@@ -241,10 +206,14 @@ public class BattleScreen extends Screen {
 						updatableUserAction.isShiftDown());
 				// endturn();
 				break;
-			} catch (final RepeatTurnException e) {
+			} catch (final RepeatTurn e) {
 				updateMessages(lastMessages);
 				shownLastMessages = true;
-				continue;
+				if (next.automatic) {
+					return;// set by Automate
+				} else {
+					continue;
+				}
 			}
 		}
 		checkEndBattle();
@@ -255,9 +224,8 @@ public class BattleScreen extends Screen {
 		if (map.redTeam.contains(next)) {
 			return;
 		}
-		int listen = next.listen();
+		int listen = next.source.perceive(false);
 		for (Combatant c : BattleMap.redTeam) {
-			/* TODO currently the AI always has full map info */
 			if (listen >= c.movesilently() + (Walker.distance(next, c) - 1)) {
 				map.seeTile(c.location[0], c.location[1]);
 				map.setVisible(c.location[0], c.location[1]);
@@ -297,8 +265,8 @@ public class BattleScreen extends Screen {
 	}
 
 	public void view(final Thing h) {
-		if (map.period == Javelin.PERIOD_EVENING
-				|| map.period == Javelin.PERIOD_NIGHT) {
+		if (map.period == Javelin.PERIODEVENING
+				|| map.period == Javelin.PERIODNIGHT) {
 			if (firstvision) {
 				firstvision = false;
 				return;
@@ -323,130 +291,28 @@ public class BattleScreen extends Screen {
 				&& 2 + mappanel.starty <= y && y <= mappanel.endy - 2);
 	}
 
-	private void updateMessages() {
+	/**
+	 * Updates screen with messages from the current message list.
+	 */
+	public void updateMessages() {
 		updateMessages(Game.instance().getMessageList());
 	}
 
 	public void checkEndBattle() {
-		if (BattleMap.redTeam.isEmpty() || BattleMap.blueTeam.isEmpty()) {
-			throw new EndBattle();
-		}
-		if (!checkforenemies()) {
-			throw new EndBattle();
-		}
+		Javelin.app.fight.checkEndBattle(this);
 	}
 
 	public boolean checkforenemies() {
 		for (Combatant c : BattleMap.redTeam) {
-			if (!c.hascondition(Dominated.class)) {
+			if (c.hascondition(Dominated.class) == null) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	/**
-	 * First thing to happen after an {@link EndBattle}
-	 */
-	public void onEnd() {
-		BattleMap.victory = BattleMap.redTeam.isEmpty() || !checkforenemies();
-		BattleState s = map.getState();
-		terminateconditions(s);
-		map.setState(s);
-		for (Combatant c : fleeing) {
-			BattleMap.blueTeam.add(c);
-			BattleMap.combatants.add(c);
-		}
-		Game.messagepanel.clear();
-		String combatresult;
-		if (BattleMap.victory) {
-			combatresult = dealreward();
-		} else if (fleeing.isEmpty()) {
-			combatresult = "You lost!";
-			Squad.active.disband();
-			return;
-		} else if (Javelin.app.fight.friendly()) {
-			combatresult = "You lost!";
-		} else {
-			combatresult = "Fled from combat. No awards received.";
-			if (!BattleMap.victory
-					&& fleeing.size() != originalblueteam.size()) {
-				combatresult += "\nFallen allies left behind are lost!";
-				for (Combatant abandoned : BattleMap.dead) {
-					abandoned.hp = Combatant.DEADATHP;
-				}
-			}
-			if (Squad.active.transport != Transport.NONE) {
-				combatresult += " Vehicle lost!";
-				Squad.active.transport = Transport.NONE;
-				Squad.active.updateavatar();
-			}
-		}
-		singleMessage(combatresult + "\nPress any key to continue...",
-				Delay.BLOCK);
-		getUserInput();
-	}
-
-	public void terminateconditions(BattleState s) {
-		checkblock();
-		for (Combatant c : BattleMap.combatants) {
-			for (Condition co : c.conditions) {
-				co.finish(s);
-				updateMessages();
-				checkblock();
-			}
-		}
-	}
-
 	public void afterend() {
 		return;
-	}
-
-	/**
-	 * Only called on victory.
-	 * 
-	 * @return Reward description.
-	 */
-	public String dealreward() {
-		/* should at least serve as food for 1 day */
-		final int bonus = Math.round(Math.max(Squad.active.size() / 2,
-				RewardCalculator.receivegold(BattleScreen.originalredteam)));
-		Squad.active.members = BattleMap.blueTeam;
-		String gold = "";
-		if (Javelin.app.fight.rewardgold()) {
-			Squad.active.gold += bonus;
-			gold = " Party receives $" + SelectScreen.formatcost(bonus) + "!\n";
-		}
-		return "Congratulations! " + rewardxp() + gold;
-	}
-
-	public String rewardxp() {
-		int eldifference;
-		try {
-			eldifference = Math.round(ChallengeRatingCalculator
-					.calculateEl(BattleScreen.originalredteam)
-					- ChallengeRatingCalculator
-							.calculateEl(BattleScreen.originalblueteam));
-		} catch (final UnbalancedTeamsException e) {
-			throw new RuntimeException(e);
-		}
-		double partycr = RewardCalculator.getpartycr(eldifference,
-				BattleMap.blueTeam.size());
-		List<Combatant> survivors =
-				(List<Combatant>) BattleMap.blueTeam.clone();
-		Collections.sort(survivors, new DescendingLevelComparator());
-		float segments = 0;
-		for (int i = 1; i <= survivors.size(); i++) {
-			segments += i;
-		}
-		for (int i = 1; i <= survivors.size(); i++) {
-			final Combatant survivor = survivors.get(i - 1);
-			survivor.xp = survivor.xp.add(new BigDecimal(partycr * i / segments)
-					.setScale(2, RoundingMode.HALF_UP));
-		}
-		return "Party wins "
-				+ new BigDecimal(100 * partycr).setScale(0, RoundingMode.UP)
-				+ "XP!";
 	}
 
 	private void updateMessages(final ArrayList<String> messageList) {
@@ -467,7 +333,7 @@ public class BattleScreen extends Screen {
 			checkEndBattle();
 			final BattleState state = map.getState();
 			final Combatant active = state.next;
-			if (state.blueTeam.contains(active)) {
+			if (state.blueTeam.contains(active) && !active.automatic) {
 				lastwascomputermove = null;
 				return;
 			}
@@ -495,7 +361,39 @@ public class BattleScreen extends Screen {
 	 * Called after a computer or human move.
 	 */
 	protected void endturn() {
-		// do nothing
+		if (Javelin.app.fight.friendly) {
+			BattleState s = map.getState();
+			int blue = s.blueTeam.size();
+			int red = s.redTeam.size();
+			cleanwounded(s.blueTeam, s);
+			cleanwounded(s.redTeam, s);
+			if (s.blueTeam.size() != blue || s.redTeam.size() != red) {
+				map.setState(s);
+				Game.redraw();
+			}
+		}
+	}
+
+	static void cleanwounded(ArrayList<Combatant> team, BattleState s) {
+		for (Combatant c : (List<Combatant>) team.clone()) {
+			if (c.getNumericStatus() <= 2) {
+				if (team == s.blueTeam) {
+					BattleScreen.active.fleeing.add(c);
+				}
+				team.remove(c);
+				if (s.next == c) {
+					s.checkwhoisnext();
+				}
+				s.addmeld(c.location[0], c.location[1]);
+				Game.message(
+						c + " is removed from the arena!\nPress ENTER to continue...",
+						null, Delay.NONE);
+				while (Game.getInput().getKeyChar() != '\n') {
+					// wait for enter
+				}
+				Game.messagepanel.clear();
+			}
+		}
 	}
 
 	public void computerfeedback(String s, Delay delay) {
@@ -521,7 +419,13 @@ public class BattleScreen extends Screen {
 		computerfeedback(state.action, delay);
 	}
 
-	protected void singleMessage(final String s, final Delay d) {
+	/**
+	 * @param s
+	 *            String to be printed.
+	 * @param d
+	 *            See {@link Delay}.
+	 */
+	public void singleMessage(final String s, final Delay d) {
 		Game.message(s, null, d);
 	}
 
@@ -544,12 +448,15 @@ public class BattleScreen extends Screen {
 
 	public Action convertEventToAction(final KeyEvent keyEvent) {
 		if (rejectEvent(keyEvent)) {
-			throw new RepeatTurnException();
+			throw new RepeatTurn();
 		}
 		return gameHandler.actionFor(keyEvent);
 	}
 
-	protected KeyEvent getUserInput() {
+	/**
+	 * @return User-input.
+	 */
+	public KeyEvent getUserInput() {
 		Game.instance().clearMessageList();
 		return Game.getInput();
 	}
@@ -558,6 +465,14 @@ public class BattleScreen extends Screen {
 		return true;
 	}
 
+	/**
+	 * @param thing
+	 *            Visual representation of current unit.
+	 * @param action
+	 *            What is being performed.
+	 * @param isShiftDown
+	 *            Ignored.
+	 */
 	public void performAction(final Thing thing, final Action action,
 			final boolean isShiftDown) {
 		Game.actor = thing;
@@ -571,36 +486,20 @@ public class BattleScreen extends Screen {
 		Combatant combatant = Game.hero().combatant;
 		float originalap = combatant.ap;
 		try {
-			if (action.perform(combatant, map, thing)) {
-				return;
+			if (combatant.burrowed && !action.allowwhileburrowed) {
+				Dig.refuse();
 			}
-			if (action == Action.WAIT) {
-				thing.combatant.await();
-			} else if (action == Action.ZOOM_OUT) {
-				mappanel.zoom(-1, true, thing.x, thing.y);
-				throw new RepeatTurnException();
-			} else if (action == Action.ZOOM_IN) {
-				mappanel.zoom(+1, true, thing.x, thing.y);
-				throw new RepeatTurnException();
-			} else if (action == Action.WITHDRAW) {
-				withdraw(combatant);
-			} else if (action == Action.LOOK) {
-				doLook();
-			} else if (action == UseItem.SINGLETON) {
-				UseItem.use();
-			} else if (action == PassItem.SINGLETON) {
-				PassItem.give();
-			} else {
-				throw new RepeatTurnException();
+			if (!action.perform(combatant, map, thing)) {
+				throw new RepeatTurn();
 			}
 		} catch (EndBattle e) {
 			throw e;
 		} catch (Exception e) {
 			// TODO throw on debug?
-			if (!(e instanceof RepeatTurnException)) {
+			if (!(e instanceof RepeatTurn)) {
 				e.printStackTrace();
 			}
-			throw new RepeatTurnException();
+			throw new RepeatTurn();
 		} finally {
 			if (originalap != combatant.ap) {
 				spendap(combatant);
@@ -616,43 +515,6 @@ public class BattleScreen extends Screen {
 			}
 		}
 		spentap = 0;
-	}
-
-	protected void withdraw(Combatant combatant) {
-		if (map.getState().isEngaged(combatant)) {
-			if (Javelin.DEBUG) {
-				Game.message("Press w to cancel battle (debug feature)", null,
-						Delay.NONE);
-				if (Game.getInput().getKeyChar() == 'w') {
-					for (Combatant c : new ArrayList<Combatant>(
-							BattleMap.blueTeam)) {
-						escape(c);
-					}
-					throw new EndBattle();
-				}
-			}
-			Game.message("Disengage first!", null, Delay.BLOCK);
-			InfoScreen.feedback();
-			throw new RepeatTurnException();
-		}
-		Game.message(
-				"Are you sure you want to escape? Press ENTER to confirm...\n",
-				null, Delay.NONE);
-		if (Game.getInput().getKeyChar() != '\n') {
-			throw new RepeatTurnException();
-		}
-		escape(combatant);
-		Game.message("Escapes!", null, Delay.WAIT);
-		if (BattleMap.blueTeam.isEmpty()) {
-			throw new EndBattle();
-		}
-	}
-
-	void escape(Combatant combatant) {
-		fleeing.add(combatant);
-		BattleMap.blueTeam.remove(combatant);
-		BattleMap.combatants.remove(combatant);
-		combatant.visual.remove();
 	}
 
 	/*
@@ -852,9 +714,8 @@ public class BattleScreen extends Screen {
 		return Character.toLowerCase(e.getKeyChar());
 	}
 
-	private void doLook() {
+	public void doLook() {
 		doLookPoint(getTargetLocation());
-		throw new RepeatTurnException();
 	}
 
 	private void doLookPoint(final Point p) {
@@ -867,15 +728,16 @@ public class BattleScreen extends Screen {
 		}
 		lookmessage("");
 		lastlooked = null;
+		final BattleState state = map.getState();
 		for (Thing t = map.getObjects(p.x, p.y); t != null
 				&& t.isVisible(Game.hero()); t = t.next) {
 			final Combatant combatant = Javelin.getCombatant(t);
 			if (combatant != null) {
-				lookmessage(describestatus(combatant, map.getState()));
+				lookmessage(describestatus(combatant, state));
 				lastlooked = combatant;
 			} else if (!Movement.canMove(t, map, p.x, p.y)) {
 				lookmessage("Blocked");
-			} else if (map.getTile(p.x, p.y) == Tile.POOL) {
+			} else if (state.map[p.x][p.y].flooded) {
 				lookmessage("Flooded");
 			}
 		}
@@ -940,6 +802,22 @@ public class BattleScreen extends Screen {
 
 	public boolean scale() {
 		return true;
+	}
+
+	public Square getsquare(int x, int y) {
+		return Javelin.app.fight.map.map[x][y];
+	}
+
+	public Image gettile(int x, int y) {
+		Map m = Javelin.app.fight.map;
+		Square s = m.map[x][y];
+		if (s.blocked) {
+			return m.getblockedtile(x, y);
+		}
+		// if (s.flooded) {
+		// return Map.flooded;
+		// }
+		return m.floor;
 	}
 
 }

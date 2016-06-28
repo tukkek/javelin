@@ -32,32 +32,32 @@ public class AStarPathFinder implements PathFinder {
 	/**
 	 * Create a path finder with the default heuristic - closest to target.
 	 * 
-	 * @param map The map to be searched
+	 * @param battlemap The map to be searched
 	 * @param maxSearchDistance The maximum depth we'll search before giving up
 	 * @param allowDiagMovement True if the search should try diaganol movement
 	 */
 	public AStarPathFinder(TileBasedMap map, int maxSearchDistance, boolean allowDiagMovement) {
-		this(map, maxSearchDistance, allowDiagMovement, new ClosestHeuristic());
+		this(battlemap, maxSearchDistance, allowDiagMovement, new ClosestHeuristic());
 	}
 
 	/**
 	 * Create a path finder 
 	 * 
 	 * @param heuristic The heuristic used to determine the search order of the map
-	 * @param map The map to be searched
+	 * @param battlemap The map to be searched
 	 * @param maxSearchDistance The maximum depth we'll search before giving up
 	 * @param allowDiagMovement True if the search should try diaganol movement
 	 */
 	public AStarPathFinder(TileBasedMap map, int maxSearchDistance, 
 						   boolean allowDiagMovement, AStarHeuristic heuristic) {
 		this.heuristic = heuristic;
-		this.map = map;
+		this.battlemap = battlemap;
 		this.maxSearchDistance = maxSearchDistance;
 		this.allowDiagMovement = allowDiagMovement;
 		
-		nodes = new Node[map.getWidthInTiles()][map.getHeightInTiles()];
-		for (int x=0;x<map.getWidthInTiles();x++) {
-			for (int y=0;y<map.getHeightInTiles();y++) {
+		nodes = new Node[battlemap.getWidthInTiles()][battlemap.getHeightInTiles()];
+		for (int x=0;x<battlemap.getWidthInTiles();x++) {
+			for (int y=0;y<battlemap.getHeightInTiles();y++) {
 				nodes[x][y] = new Node(x,y);
 			}
 		}
@@ -68,7 +68,7 @@ public class AStarPathFinder implements PathFinder {
 	 */
 	public Path findPath(Mover mover, int sx, int sy, int tx, int ty) {
 		// easy first check, if the destination is blocked, we can't get there
-		if (map.blocked(mover, tx, ty)) {
+		if (battlemap.blocked(mover, tx, ty)) {
 			return null;
 		}
 		
@@ -122,7 +122,7 @@ public class AStarPathFinder implements PathFinder {
 						// in the sorted open list
 						float nextStepCost = current.cost + getMovementCost(mover, current.x, current.y, xp, yp);
 						Node neighbour = nodes[xp][yp];
-						map.pathFinderVisited(xp, yp);
+						battlemap.pathFinderVisited(xp, yp);
 						
 						// if the new cost we've determined for this node is lower than 
 						// it has been previously makes sure the node hasn't been discarded. We've
@@ -249,10 +249,10 @@ public class AStarPathFinder implements PathFinder {
 	 * @return True if the location is valid for the given mover
 	 */
 	protected boolean isValidLocation(Mover mover, int sx, int sy, int x, int y) {
-		boolean invalid = (x < 0) || (y < 0) || (x >= map.getWidthInTiles()) || (y >= map.getHeightInTiles());
+		boolean invalid = (x < 0) || (y < 0) || (x >= battlemap.getWidthInTiles()) || (y >= battlemap.getHeightInTiles());
 		
 		if ((!invalid) && ((sx != x) || (sy != y))) {
-			invalid = map.blocked(mover, x, y);
+			invalid = battlemap.blocked(mover, x, y);
 		}
 		
 		return !invalid;
@@ -269,7 +269,7 @@ public class AStarPathFinder implements PathFinder {
 	 * @return The cost of movement through the given tile
 	 */
 	public float getMovementCost(Mover mover, int sx, int sy, int tx, int ty) {
-		return map.getCost(mover, sx, sy, tx, ty);
+		return battlemap.getCost(mover, sx, sy, tx, ty);
 	}
 
 	/**
@@ -284,7 +284,7 @@ public class AStarPathFinder implements PathFinder {
 	 * @return The heuristic cost assigned to the tile
 	 */
 	public float getHeuristicCost(Mover mover, int x, int y, int tx, int ty) {
-		return heuristic.getCost(map, mover, x, y, tx, ty);
+		return heuristic.getCost(battlemap, mover, x, y, tx, ty);
 	}
 	
 	/**

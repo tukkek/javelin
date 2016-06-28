@@ -6,8 +6,8 @@ import javelin.model.unit.Monster;
  * @see ClassAdvancement
  */
 public class Expert extends ClassAdvancement {
-	public Expert(String name) {
-		super(name);
+	public Expert() {
+		super("Expert");
 	}
 
 	@Override

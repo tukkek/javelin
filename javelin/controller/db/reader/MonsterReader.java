@@ -1,6 +1,3 @@
-/**
- * 
- */
 package javelin.controller.db.reader;
 
 import java.io.FileNotFoundException;
@@ -20,25 +17,27 @@ import org.xml.sax.helpers.DefaultHandler;
 import javelin.Javelin;
 import javelin.controller.CountingSet;
 import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.controller.db.reader.factor.Alignment;
-import javelin.controller.db.reader.factor.ArmorClass;
-import javelin.controller.db.reader.factor.Attacks;
-import javelin.controller.db.reader.factor.Damage;
-import javelin.controller.db.reader.factor.FaceAndReach;
-import javelin.controller.db.reader.factor.Feats;
-import javelin.controller.db.reader.factor.FieldReader;
-import javelin.controller.db.reader.factor.HitDice;
-import javelin.controller.db.reader.factor.Initiative;
-import javelin.controller.db.reader.factor.Name;
-import javelin.controller.db.reader.factor.Organization;
-import javelin.controller.db.reader.factor.Paragraph;
-import javelin.controller.db.reader.factor.Skills;
-import javelin.controller.db.reader.factor.SpecialAttacks;
-import javelin.controller.db.reader.factor.SpecialQualities;
-import javelin.controller.db.reader.factor.Speed;
+import javelin.controller.db.reader.fields.Alignment;
+import javelin.controller.db.reader.fields.ArmorClass;
+import javelin.controller.db.reader.fields.Attacks;
+import javelin.controller.db.reader.fields.Damage;
+import javelin.controller.db.reader.fields.FaceAndReach;
+import javelin.controller.db.reader.fields.Feats;
+import javelin.controller.db.reader.fields.FieldReader;
+import javelin.controller.db.reader.fields.HitDice;
+import javelin.controller.db.reader.fields.Initiative;
+import javelin.controller.db.reader.fields.Name;
+import javelin.controller.db.reader.fields.Organization;
+import javelin.controller.db.reader.fields.Paragraph;
+import javelin.controller.db.reader.fields.Skills;
+import javelin.controller.db.reader.fields.SpecialAttacks;
+import javelin.controller.db.reader.fields.SpecialQualities;
+import javelin.controller.db.reader.fields.Speed;
 import javelin.controller.upgrade.Spell;
 import javelin.model.feat.Feat;
 import javelin.model.spell.Summon;
+import javelin.model.unit.Attack;
+import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.BreathWeapon.BreathArea;
@@ -47,10 +46,6 @@ import javelin.model.unit.abilities.TouchAttack;
 
 /**
  * Reads the monster.xml file at startup.
- * 
- * TODO even though it's fast we could add the monster database to the save file
- * instead of calculating it again. It would of course have to be overridden
- * while {@link Javelin#DEBUG} is on.
  * 
  * @author alex
  */
@@ -84,6 +79,10 @@ public class MonsterReader extends DefaultHandler {
 		if (localName.equals("Monster")) {
 			monster = new Monster();
 			total++;
+			String disabled = attributes.getValue("disabled");
+			if (disabled != null && disabled.equals("true")) {
+				errorhandler.setInvalid("disabled");
+			}
 		} else if ("feats".equals(localName.toLowerCase())) {
 			section = "Feats";
 		} else if (localName.equals("Skills")) {
@@ -117,12 +116,18 @@ public class MonsterReader extends DefaultHandler {
 			monster.ref = getIntAttributeValue(attributes, "Ref");
 			monster.setWill(getIntAttributeValue(attributes, "Will"));
 		} else if (localName.equals("Abilities")) {
-			monster.strength = parseability(attributes, "Str");
-			monster.dexterity = parseability(attributes, "Dex");
-			monster.constitution = parseability(attributes, "Con");
-			monster.intelligence = parseability(attributes, "Int");
-			monster.wisdom = parseability(attributes, "Wis");
-			monster.charisma = parseability(attributes, "Cha");
+			monster.strength = parseability(attributes, "Str", false);
+			monster.dexterity = parseability(attributes, "Dex", false);
+			monster.constitution = parseability(attributes, "Con", true);
+			monster.intelligence = parseability(attributes, "Int", true);
+			monster.wisdom = parseability(attributes, "Wis", false);
+			monster.charisma = parseability(attributes, "Cha", false);
+			if (monster.intelligence == 0) {
+				monster.immunitytomind = true;
+			}
+			if (monster.constitution == 0) {
+				monster.immunitytopoison = true;
+			}
 		} else if (localName.equals("SizeAndType")) {
 			final int size = getSize(attributes.getValue("Size"));
 			if (size == -1) {
@@ -133,7 +138,6 @@ public class MonsterReader extends DefaultHandler {
 			monster.humanoid = monster.type.contains("humanoid")
 					|| "yes".equals(attributes.getValue("Humanoid"));
 		} else if (localName.equalsIgnoreCase("avatar")) {
-			monster.avatar = attributes.getValue("Name");
 			monster.avatarfile = attributes.getValue("Image");
 		} else if (localName.equalsIgnoreCase("Climateandterrain")) {
 			for (String terrain : attributes.getValue("Terrain").toLowerCase()
@@ -155,9 +159,9 @@ public class MonsterReader extends DefaultHandler {
 			}
 		} else if (localName.equalsIgnoreCase("Breath")) {
 			/* TODO */
-			if (attributes.getValue("effect") == null) {
-				parsebreath(attributes, monster);
-			}
+			// if (attributes.getValue("effect") == null) {
+			parsebreath(attributes, monster);
+			// }
 		} else if (localName.equalsIgnoreCase("Touch")) {
 			String[] damage = attributes.getValue("damage").split("d");
 			monster.touch = new TouchAttack(attributes.getValue("name"),
@@ -213,12 +217,23 @@ public class MonsterReader extends DefaultHandler {
 			spellset.add(spell);
 		}
 		for (String spellname : spellset) {
-			Spell s = Spell.SPELLS.get(spellname);
-			if (s == null) {
-				throw new RuntimeException("Uknown spell: " + spellname);
+			Spell s = null;
+			if (spellname.contains("summon")) {
+				s = new Summon(spellname.replace("summon ", ""), 1);
+			} else {
+				s = Spell.SPELLS.get(spellname);
+				if (s == null) {
+					throw new RuntimeException("Uknown spell: " + spellname);
+				}
 			}
-			s = s.clone();
-			s.perday = Math.min(5, Collections.frequency(spelllist, spellname));
+			if (monster.spells.has(s) != null) {
+				s = monster.spells.has(s);
+			} else {
+				s = s.clone();
+				s.perday = 0;
+			}
+			s.perday = Math.min(5,
+					s.perday + Collections.frequency(spelllist, spellname));
 			monster.spells.add(s);
 		}
 	}
@@ -296,9 +311,10 @@ public class MonsterReader extends DefaultHandler {
 		return result;
 	}
 
-	private int parseability(Attributes attributes, String ability) {
+	private int parseability(Attributes attributes, String ability,
+			boolean allowunrated) {
 		final int score = getIntAttributeValue(attributes, ability);
-		if (score == 0) {
+		if (score == 0 && !allowunrated) {
 			errorhandler.setInvalid("Unrated attribute: " + ability);
 		}
 		return score;
@@ -312,12 +328,7 @@ public class MonsterReader extends DefaultHandler {
 	private String getNumericalValue(final Attributes attributes,
 			final String string) {
 		final String value2 = attributes.getValue(string);
-		if (value2 == null) {
-			log("Monster '" + monster + "' is missing attribute for '" + string
-					+ "'");
-			return "0";
-		}
-		return value2.trim();
+		return value2 == null ? "0" : value2.trim();
 	}
 
 	@Override
@@ -345,7 +356,7 @@ public class MonsterReader extends DefaultHandler {
 			final Float key = e.getKey();
 			String listing = "";
 			for (final Monster m : value) {
-				listing += m.toString() + " (" + m.group + "), ";
+				listing += m.toString() + ", ";
 			}
 			log("CR " + key + " (" + value.size() + "): " + listing);
 		}
@@ -479,6 +490,7 @@ public class MonsterReader extends DefaultHandler {
 			return;
 		}
 		if (localName.equals("Monster")) {
+			validate();
 			if (errorhandler.isinvalid()) {
 				errorhandler.informInvalid(this);
 				errorhandler.setInvalid(null);
@@ -500,7 +512,29 @@ public class MonsterReader extends DefaultHandler {
 		section = null;
 	}
 
-	public void registermonster() {
+	/** Make final validations once a monster is fully loaded. */
+	void validate() {
+		if (errorhandler.isinvalid()) {
+			return;
+		}
+		if (monster.avatarfile == null) {
+			errorhandler.setInvalid("No avatar");
+		}
+		validateattack(monster.melee);
+		validateattack(monster.ranged);
+	}
+
+	void validateattack(ArrayList<AttackSequence> melee) {
+		for (AttackSequence sequence : melee) {
+			for (Attack a : sequence) {
+				if (a.damage == null) {
+					errorhandler.setInvalid("Invalid damage: " + a);
+				}
+			}
+		}
+	}
+
+	void registermonster() {
 		try {
 			ChallengeRatingCalculator.calculateCr(monster);
 			Javelin.ALLMONSTERS.add(monster);

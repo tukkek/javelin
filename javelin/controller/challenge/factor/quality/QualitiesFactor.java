@@ -4,9 +4,7 @@ import java.util.HashSet;
 
 import javelin.controller.challenge.factor.CrFactor;
 import javelin.controller.quality.Quality;
-import javelin.controller.upgrade.FastHealing;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.controller.upgrade.Vision;
 import javelin.model.unit.Monster;
 
 /**
@@ -28,16 +26,8 @@ public class QualitiesFactor extends CrFactor {
 
 	@Override
 	public void listupgrades(UpgradeHandler handler) {
-		handler.water.add(new FastHealing());
-
-		handler.evil.add(new Vision("Low-light vision", 1));
-		handler.evil.add(new Vision("Darkvision", 2));
-
-		handler.magic.add(new javelin.controller.upgrade.SpellResistance());
-		handler.magic.add(new javelin.controller.upgrade.EnergyResistance());
-
-		handler.good.add(new javelin.controller.upgrade.DamageReduction());
-		handler.good.add(new javelin.controller.upgrade.SpellImmunity());
-		handler.good.add(new javelin.controller.upgrade.EnergyImmunity());
+		for (Quality q : Quality.qualities) {
+			q.listupgrades(handler);
+		}
 	}
 }

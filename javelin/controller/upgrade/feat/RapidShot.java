@@ -11,7 +11,7 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public class RapidShot extends FeatUpgrade {
-
+	/** Constructor. */
 	public RapidShot() {
 		super(javelin.model.feat.RapidShot.SINGLETON);
 		prerequisite = PreciseShot.SINGLETON;
@@ -20,11 +20,6 @@ public class RapidShot extends FeatUpgrade {
 	@Override
 	public String info(Combatant m) {
 		return "";
-	}
-
-	@Override
-	public boolean isstackable() {
-		return false;
 	}
 
 	@Override

@@ -6,11 +6,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
 
+import javelin.model.BattleMap;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Squad;
+import javelin.model.unit.Squad;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
+import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
 
@@ -24,21 +26,23 @@ public class UseItem extends Action {
 
 	@Override
 	public String getDescriptiveName() {
-		return "Use an item. Note that some items cannot be used when next to an opponent.";
+		return "Use battle items";
 	}
 
-	public static void use() {
+	@Override
+	public boolean perform(Combatant active, BattleMap m, Thing thing) {
 		final Combatant c = Game.hero().combatant;
 		// final Monster m = c.source;
-		final Item item = queryforitemselection(c);
+		final Item item = queryforitemselection(c, true);
 		if (item == null) {
-			return;
+			return false;
 		}
-		c.ap += .5f;
+		c.ap += item.apcost;
 		c.source = c.source.clone();
 		if (item.use(c)) {
 			Squad.active.equipment.get(c.id).remove(item);
 		}
+		return true;
 	}
 
 	/**
@@ -47,16 +51,23 @@ public class UseItem extends Action {
 	 * @return null if for any reason the player has no items, cannot use any
 	 *         right now, canceled... Otherwise the selected item.
 	 */
-	public static Item queryforitemselection(final Combatant c) {
+	public static Item queryforitemselection(final Combatant c,
+			boolean validate) {
 		final List<Item> items =
 				(List<Item>) Squad.active.equipment.get(c.id).clone();
-		for (final Item i : new ArrayList<Item>(items)) {
-			if (!i.usedinbattle) {
-				items.remove(i);
+		if (items.isEmpty()) {
+			Game.message("Isn't carrying battle items!", null, Delay.WAIT);
+			return null;
+		}
+		if (validate) {
+			for (final Item i : new ArrayList<Item>(items)) {
+				if (!i.usedinbattle || i.canuse(c) != null) {
+					items.remove(i);
+				}
 			}
 		}
 		if (items.isEmpty()) {
-			Game.message("Isn't carrying battle items!", null, Delay.WAIT);
+			Game.message("Can't use any of these items!", null, Delay.WAIT);
 			return null;
 		}
 		Collections.sort(items, new Comparator<Item>() {
@@ -66,7 +77,7 @@ public class UseItem extends Action {
 			}
 		});
 		final boolean threatened =
-				BattleScreen.active.map.getState().isEngaged(c);
+				BattleScreen.active.map.getState().isengaged(c);
 		int i = 1;
 		final TreeMap<Integer, Item> options = new TreeMap<Integer, Item>();
 		String prompt = "Which item? (press q to quit)\n";
@@ -75,10 +86,10 @@ public class UseItem extends Action {
 				continue;
 			}
 			options.put(i, it);
-			prompt += "[" + i++ + "] " + it.name + "\n";
+			prompt += "[" + i++ + "] " + it + "\n";
 		}
 		if (i == 1) {
-			Game.message("Can't use any of these while threatened!!", null,
+			Game.message("Can't use any of these while threatened!", null,
 					Delay.WAIT);
 			return null;
 		}

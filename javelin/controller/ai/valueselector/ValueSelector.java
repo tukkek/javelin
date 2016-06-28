@@ -10,7 +10,6 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.ai.AbstractAlphaBetaSearch;
-import javelin.controller.ai.ActionProvider;
 import javelin.controller.ai.AiThread;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.Entry;
@@ -21,15 +20,7 @@ import javelin.model.state.BattleState;
 /**
  * A step in the minimax tree, using alpha-beta prunning.
  * 
- * Sorry about the portuguese comments and encoding issues on them. I'm leaving
- * that in for future translation.
- * 
- * Essa � uma classe abstrata que fatora o c�digo que � comum �s fun��es min e
- * maxValue. O m�todo
- * {@link #getValue(Entry, AbstractAlphaBetaSearch, int, int, int)} cont�m o
- * n�cleo do algoritmo cl�ssico de poda alfabeta. <br>
- * <br>
- * � usado um cache para os valores utilit�rios j� calculados.
+ * Base class for min and max selectors.
  * 
  * @author Alex Henry
  * 
@@ -50,56 +41,33 @@ public abstract class ValueSelector {
 	}
 
 	/**
-	 * Este m�todo � o cora��o da busca minimax e poda alfabeta. � dif�cil
-	 * documento-lo, devido a sua complexidade original (por ser um algoritmo
-	 * recursivo, para come�ar) e aquela adicionada em prol de um baixo
-	 * acoplamento e alta reutiliza��o dessa classe. � sugerido recorrer �
-	 * literatura did�tica especializada para maiores detalhes.<br>
-	 * <br>
-	 * Por�m, o log escrito por essa classe � altamente verboso e detalhado, e
-	 * pode e deve ser usado para acompanhar o racioc�nio do oponente
-	 * artificial. Ele � gravado no diret�rio de execu��o do JAR do jogo, sob o
-	 * nome <code>damIAs.log</code>. O caminho exato do log � escrito na
-	 * {@link System#out sa�da padr�o do sistema operacional}: para v�-lo, basta
-	 * executar o JAR atrav�s de uma linha de comando (por exemplo, executando o
-	 * comando <code>java -jar damIAs.jar</code> no diret�rio aonde o JAR se
-	 * encontra). Outra possibilidade � redirecionar essa sa�da para um arquivo
-	 * - como fazer isso varia dependendo do SO utilizado.<br>
-	 * <br>
-	 * No log, cada linha indica uma jogada considerada e seu respectivo valor
-	 * utilit�rio, sendo estas identadas de acordo com a profundidade da busca
-	 * no momento da escrita da linha. Vale lembrar que os jogadores (min e max)
-	 * se revezam a cada vez que a identa��o aumenta. Linhas contendo
-	 * <code>X</code> s�o aquelas onde ocorreu poda alfabeta (e os valores de
-	 * alfa e beta na ocasi�o s�o exibidos). Linhas contendo asteriscos s�o
-	 * aquelas que foram consideradas melhores do que as anteriores de mesma
-	 * profundidade pela implementa��o concreta dessa classe � qual a
-	 * {@link #returnBest(Entry, Entry) decis�o foi delegada}. Quando alfa ou
-	 * beta s�o atualizados, os novos valores s�o impressos nas linhas
-	 * correspondentes. Como nota final, vale lembrar que a �rvore contraria um
-	 * pouco o senso comum, uma vez que a busca em profundidade resulta na
-	 * escrita das folhas antes dos n�s pais - aconselha-se diminuir a
-	 * dificuldade do jogo para auxiliar na visualiza��o.
+	 * Heart of the minimax search and alpha-beta pod. It's highly recommended
+	 * to read the online literature to get a better grasp of what this does.
+	 * 
+	 * A log can be written when executing this, just mind it that due to the
+	 * nature of the search the log is written in reverse order of what it would
+	 * be expected to be normally. The identation represents search depth. Each
+	 * line is given with the utility value. Where X is shown a pod has been
+	 * done, and the alpha/beta value shown as well. Those marked with * were
+	 * chosen as the best option.
+	 * 
+	 * Reducing the thinking time will usually produce less log output, which is
+	 * easier for debugging.
 	 * 
 	 * @param previous
-	 *            Essa � a �ltima jogada feita, ela � usada para verificar todas
-	 *            as poss�veis jogadas a partir dela, dessa maneira expandindo a
-	 *            profundidade da �rvore de busca.
+	 *            Last game state, so we can think of what to do now.
 	 * @param ai
-	 *            Implementa��o de busca minimax sendo utilizada.
+	 *            Used to encapsulate AI behavior, like utility computation.
+	 *            TODO make static
 	 * @param depthP
-	 *            Profunidade atual da busca (n�vel de recurs�o).
+	 *            Current depth (recursion depth).
 	 * @param alpha
-	 *            Valor alfa para essa caminho na �rvore de busca.
+	 *            Current alpha for this path.
 	 * @param beta
-	 *            Valor beta para essa caminho na �rvore de busca.
-	 * @return A jogada escolhida pela implementa��o concreta dessa classe como
-	 *         melhor jogada a realizar, a �ltima jogada antes de uma poda, ou a
-	 *         jogada dada no par�metro <code>previousState</code> por�m com o
-	 *         valor de utilidade tenha sido calculado (caso tenhamos atingido o
-	 *         fim a recurs�o).
-	 * @author Alex Henry
-	 * @param id
+	 *            Current beta for this path.
+	 * @return The AI's choice of action, the last state before a pod, or the
+	 *         given previous state but with it's utility value defined if we
+	 *         reached end of recursion.
 	 */
 	public Entry getValue(final Entry previous,
 			@SuppressWarnings("rawtypes") final AbstractAlphaBetaSearch ai,
@@ -124,15 +92,7 @@ public abstract class ValueSelector {
 			newindex.add(i);
 			final Float utility = AiCache.getutility(newindex, ai, cns);
 			for (final ChanceNode cn : cns) {
-				if (Javelin.DEBUG) {
-					// TODO debug
-					ActionProvider.checkstacking((BattleState) cn.n);
-				}
 				final BattleState state = (BattleState) cn.n;
-				if (Javelin.DEBUG) {
-					// TODO debug
-					ActionProvider.checkstacking((BattleState) cn.n);
-				}
 				final ValueSelector selector =
 						state.getBlueTeam().contains(state.next)
 								? ai.minValueSelector : ai.maxValueSelector;
@@ -179,11 +139,10 @@ public abstract class ValueSelector {
 
 	/**
 	 * @param depth
-	 *            Profundidade atual.
-	 * @return A identa��o a ser usada no log para esse n�vel da busca.
-	 * @author Alex Henry
+	 *            Current depth.
+	 * @return Identing.
 	 */
-	private String calcIdent(final int depth) {
+	String calcIdent(final int depth) {
 		if (!Javelin.DEBUG) {
 			return "";
 		}
@@ -197,22 +156,18 @@ public abstract class ValueSelector {
 	}
 
 	/**
-	 * M�todo utilit�rio.
-	 * 
 	 * @param previousState
-	 *            Estado de jogo a ser usado para a verifica��o.
+	 *            State to be check.
 	 * @param ai
-	 *            A busca sendo efetuada.
+	 *            TODO make static
 	 * @param depth
-	 *            Profundidade atual.
+	 *            Current depth.
 	 * 
-	 * @return <code>true</code>verifica se
-	 *         {@link AbstractAlphaBetaSearch#cutoffTest(int) � necess�rio
-	 *         realizar poda} ou se foi encontrada um
-	 *         {@link AbstractAlphaBetaSearch#terminalTest(Node) t�rmino para o
-	 *         jogo}.
-	 * 
-	 * @author Alex Henry
+	 * @return <code>true</code> if
+	 *         {@link AbstractAlphaBetaSearch#cutoffTest(int)} is necessary or
+	 *         if {@link AbstractAlphaBetaSearch#terminalTest(Node)} has been
+	 *         reached.
+	 * @see
 	 */
 	private boolean endOfRecursion(final Entry previousState,
 			@SuppressWarnings("rawtypes") final AbstractAlphaBetaSearch ai,
@@ -221,15 +176,13 @@ public abstract class ValueSelector {
 	}
 
 	/**
-	 * Permite que as subclasses atualizem o valor alfa da poda alfabeta.
+	 * Lets subclasses use the alpha value.
 	 * 
 	 * @param current
-	 *            O valor utilit�rio da �ltima jogada processada.
+	 *            Last utility.
 	 * @param alpha
-	 *            O alpha antes da �ltima jogada ser processada.
-	 * @return O valor retornado ser� considerado o valor de alpha ap�s esse
-	 *         m�todo ter sido invocado.
-	 * @author Alex Henry
+	 *            Last alpha.
+	 * @return new alpha
 	 */
 	protected float newAlpha(@SuppressWarnings("unused") final float current,
 			final float alpha) {
@@ -238,15 +191,13 @@ public abstract class ValueSelector {
 	}
 
 	/**
-	 * Permite que as subclasses atualizem o valor beta da poda alfabeta.
+	 * Lets subclasses use the beta value.
 	 * 
 	 * @param current
-	 *            O valor utilit�rio da �ltima jogada processada.
-	 * @param beta
-	 *            O beta antes da �ltima jogada ser processada.
-	 * @return O valor retornado ser� considerado o valor de beta ap�s esse
-	 *         m�todo ter sido invocado.
-	 * @author Alex Henry
+	 *            Last utility.
+	 * @param alpha
+	 *            Last beta.
+	 * @return new beta
 	 */
 	protected float newBeta(@SuppressWarnings("unused") final float current,
 			final float beta) {
@@ -255,48 +206,24 @@ public abstract class ValueSelector {
 	}
 
 	/**
-	 * Delega � subclasse a decis�o de podar ou n�o a busca.
+	 * Should perform a pod or not.
 	 * 
-	 * @param current
-	 *            Valor utilit�rio da �ltima jogada analisada.
-	 * @param alpha
-	 *            Alpha atual.
-	 * @param beta
-	 *            Beta atual.
-	 * @return Caso a subclasse retorne <code>true</code>, a busca atual ser�
-	 *         podada.
+	 * @return <code>false</code> if shot not be prunned.
 	 * @author Alex Henry
 	 */
-	protected abstract boolean testPod(final float current, final float alpha,
+	protected abstract boolean testPod(final float utility, final float alpha,
 			final float beta);
 
 	/**
-	 * Dada uma jogada, a subclasse deve decider qual ser� a rea��o do oponente.
-	 * 
 	 * @param node
-	 *            Jogada anterior.
-	 * @param depth
-	 *            Profundidade atual da busca.
-	 * @param alpha
-	 *            Valor alpha atual da busca.
-	 * @param beta
-	 *            Valor beta atual da busca.
-	 * @return A rea��o do oponente.
-	 * @author Alex Henry
-	 * @param string
+	 *            Given this state, decide what to do next.
+	 * @return Player action.
 	 */
 	abstract protected Entry processCurrent(final Entry node, int depth,
 			float alpha, final float beta, ArrayList<Integer> newindex);
 
 	/**
-	 * A subclasse deve decidir qual das duas jogadas � melhor para ela.
-	 * 
-	 * @param currentBest
-	 *            Jogada.
-	 * @param processed
-	 *            Jogada.
-	 * @return A jogada que n�o foi retornada ser� descartada das poss�veis
-	 *         jogadas a serem feitas.
+	 * @return The best entry to use of the two given.
 	 * @author Alex Henry
 	 */
 	abstract protected Entry returnBest(final Entry currentBest,

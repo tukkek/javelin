@@ -3,7 +3,6 @@ package javelin.controller.action.ai;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.controller.action.Action;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
@@ -13,7 +12,7 @@ import javelin.model.unit.Combatant;
  * 
  * @author alex
  */
-public class ForceWait extends Action implements AiAction {
+public class ForceWait extends AiAction {
 
 	public ForceWait() {
 		super("Wait", new String[0]);

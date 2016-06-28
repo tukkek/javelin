@@ -3,14 +3,15 @@ package javelin.view.screen.haxor;
 import javelin.Javelin;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Squad;
+import javelin.model.unit.Squad;
 
 /**
  * One-time offer to ressurect a fallen friendly {@link Combatant}.
  */
 public class Ressurect extends Hax {
-	public Ressurect(String name, double price, boolean requirestargetp) {
-		super(name, price, requirestargetp);
+	public Ressurect(String name, Character keyp, double price,
+			boolean requirestargetp) {
+		super(name, keyp, price, requirestargetp);
 	}
 
 	@Override

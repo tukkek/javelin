@@ -14,8 +14,7 @@ import tyrant.mikera.tyrant.Game.Delay;
  */
 public class Abandon extends WorldAction {
 	public Abandon() {
-		super("Start a completely new game (clears saved data and closes game)",
-				new int[] {}, new String[] { "Q" });
+		super("Abandon current game", new int[] {}, new String[] { "Q" });
 	}
 
 	@Override

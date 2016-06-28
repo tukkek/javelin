@@ -46,20 +46,20 @@ public class HD implements Serializable, Cloneable {
 		int hp = extrahp;
 		for (int hd : hitdice.keySet()) {
 			Float dice = hitdice.get(hd);
-			if (dice >= 1) {
-				for (int i = 0; i < dice; i++) {
-					hp += ensureminimum(
-							RPG.r(1, hd) + Monster.getbonus(m.constitution));
+			if (dice < 1) {
+				hp += Math.max(1, Math.round(RPG.r(1, hd) * dice));
+				continue;
+			}
+			for (int i = 0; i < dice; i++) {
+				int roll = RPG.r(1, hd);
+				if (m.constitution > 0) {
+					roll += Monster.getbonus(m.constitution);
 				}
-			} else {
-				hp += ensureminimum(Math.round(RPG.r(1, hd) * dice));
+				hp += Math.max(1, roll);
 			}
 		}
-		return hp >= 1 ? hp : 1;
-	}
+		return Math.max(1, hp);
 
-	public long ensureminimum(long roll) {
-		return roll >= 1 ? roll : 1;
 	}
 
 	public int maximize() {

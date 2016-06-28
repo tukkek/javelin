@@ -9,20 +9,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 public class MessagePanel extends TPanel implements IMessageHandler {
-	// private String text="";
-
-	// public MessagePanel() {
-	// super("",0,0,SCROLLBARS_VERTICAL_ONLY);
-	// setEditable(false);
-	// setForeground(QuestApp.textcolor);
-	// setBackground(QuestApp.backcolor);
-	// setFont(QuestApp.mainfont);
-	// Game.messagepanel=this;
-	// }
-
 	private static final long serialVersionUID = 3258416114332807730L;
-	// private TextArea textzone = new
-	// TTextArea("",0,0,TextArea.SCROLLBARS_VERTICAL_ONLY);
 	public final TextZone textzone = new TextZone();
 
 	public MessagePanel(final QuestApp q) {

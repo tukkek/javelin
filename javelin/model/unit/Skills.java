@@ -12,25 +12,21 @@ import javelin.controller.ai.BattleAi;
  * the same action many times until you get a high roll) and having to use the
  * random number generator inside {@link BattleAi}.
  * 
- * See doc/skills.txt guide for more information.
- * 
- * Synergy bonuses are not being used for now.
+ * Synergy bonuses are not being used for now. See doc/skills.txt guide for more
+ * information.
  * 
  * TODO it would probably be better to have this as an Enum,Integer Map. This
  * way would allow more programmatic freedom on stuff like
- * {@link javelin.controller.db.reader.factor.Skills}.
- *
+ * {@link javelin.controller.db.reader.fields.Skills}.
+ * 
  * @author alex
  */
 public class Skills implements Serializable, Cloneable {
-	/** {@link Monster#intelligence}-based. */
+	/**
+	 * {@link Monster#intelligence}-based. Represents the d20 skill Area
+	 * Knowledge.
+	 */
 	public int knowledge = 0;
-	/** {@link Monster#wisdom}-based. */
-	public int spot = 0;
-	/** {@link Monster#dexterity}-based. */
-	public int hide = 0;
-	/** {@link Monster#dexterity}-based. */
-	public int movesilently = 0;
 	/** {@link Monster#charisma}-based. */
 	public int diplomacy = 0;
 	/** {@link Monster#intelligence}-based. */
@@ -41,14 +37,25 @@ public class Skills implements Serializable, Cloneable {
 	public int gatherinformation = 0;
 	/** {@link Monster#wisdom}-based. */
 	public int survival = 0;
-	/** {@link Monster#wisdom}-based. */
-	public int listen = 0;
 	/** {@link Monster#constitution}-based. */
 	public int concentration = 0;
 	/** {@link Monster#dexterity}-based. */
 	public int acrobatics = 0;
 	/** {@link Monster#intelligence}-based. */
 	public int spellcraft = 0;
+	/** {@link Monster#dexterity}-based. */
+	public int stealth = 0;
+	/** {@link Monster#charisma}-based. */
+	public int usemagicdevice = 0;
+	/**
+	 * {@link Monster#wisdom}-based.
+	 * 
+	 * @see #perceive(Monster)
+	 */
+	@Deprecated
+	public int perception = 0;
+	/** {@link Monster#wisdom} based. */
+	public int heal = 0;
 
 	@Override
 	protected Skills clone() throws CloneNotSupportedException {

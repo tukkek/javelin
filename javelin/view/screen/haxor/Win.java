@@ -4,7 +4,7 @@ import javelin.Javelin;
 import javelin.controller.db.StateManager;
 import javelin.model.item.Key;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Squad;
+import javelin.model.unit.Squad;
 import javelin.model.world.WorldActor;
 import javelin.view.screen.WorldScreen;
 
@@ -16,8 +16,9 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class Win extends Hax {
-	public Win(String name, double price, boolean requirestargetp) {
-		super(name, price, requirestargetp);
+	public Win(String name, Character keyp, double price,
+			boolean requirestargetp) {
+		super(name, keyp, price, requirestargetp);
 	}
 
 	@Override
@@ -31,7 +32,10 @@ public class Win extends Hax {
 			s.text += "\nPress any key to continue...";
 			s.print();
 		}
-		s.text = "Do you want to finish the current game? Press y for yes, n for no.";
+		s.text += "Your highscore record is " + Javelin.gethighscore() + "\n";
+		s.text += "Your current score now is " + WorldScreen.lastday + "\n";
+		s.text +=
+				"\nDo you want to finish the current game? Press y for yes, n for no.";
 		Character input = s.print();
 		while (input != 'y' && input != 'n') {
 			input = s.print();

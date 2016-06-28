@@ -10,13 +10,15 @@ import javelin.JavelinApp;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Squad;
+import javelin.model.unit.Squad;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.shopping.TownShopScreen;
 import javelin.view.screen.town.SelectScreen;
 
 public class UseItems extends WorldAction {
+	static final String KEYS = "1234567890abcdfghijklmnoprstuvxwyz";
+
 	public UseItems() {
 		super("Inventory", new int[] {}, new String[] { "i" });
 	}
@@ -28,8 +30,8 @@ public class UseItems extends WorldAction {
 			final InfoScreen infoscreen = new InfoScreen("");
 			String actions = "";
 			actions += "Press number to use an item";
-			actions += "\nPress E to exchange an item";
-			actions += "\nPress ENTER to quit the inventory";
+			actions += "\nPress e to exchange an item";
+			actions += "\nPress q to quit the inventory";
 			actions += "\n";
 			final String list = listitems(allitems, true);
 			infoscreen.print(actions + list);
@@ -44,15 +46,15 @@ public class UseItems extends WorldAction {
 			final InfoScreen infoscreen) {
 		Javelin.app.switchScreen(infoscreen);
 		final Character input = InfoScreen.feedback();
-		if (input == '\n') {
+		if (input == 'q') {
 			return true;// leaves screen
 		}
-		if (input == 'E') {
+		if (input == 'e') {
 			exchange(allitems, list, infoscreen);
 			return false;
 		}
 		Item selected = select(allitems, input);
-		if (selected == null) {
+		if (selected == null || !selected.usedoutofbattle) {
 			return false;
 		}
 		Combatant target = selected instanceof Artifact ? findowner(selected)
@@ -71,7 +73,8 @@ public class UseItems extends WorldAction {
 	protected Item select(final ArrayList<Item> allitems,
 			final Character input) {
 		Item selected = null;
-		int index = SelectScreen.convertnumericselection(input);
+		int index =
+				SelectScreen.convertnumericselection(input, KEYS.toCharArray());
 		if (0 <= index && index < allitems.size()) {
 			selected = allitems.get(index);
 		}
@@ -144,7 +147,7 @@ public class UseItems extends WorldAction {
 			final Combatant c = members.get(j);
 			String output = "";
 			if (!showkeys) {
-				output += SelectScreen.SELECTIONKEYS[j] + " - ";
+				output += SelectScreen.KEYS[j] + " - ";
 			}
 			output = c.toString();
 			s += "\n";
@@ -163,10 +166,13 @@ public class UseItems extends WorldAction {
 					allitems.add(it);
 				}
 				if (showkeys) {
-					s += "  [" + SelectScreen.SELECTIONKEYS[i] + "]";
+					s += "  [" + SelectScreen.KEYS[i] + "]";
 				}
 				s += " " + it.name;
-				if (c.equipped.contains(it)) {
+				String useerror = it.canuse(c);
+				if (useerror != null) {
+					s += " (" + useerror + ")";
+				} else if (c.equipped.contains(it)) {
 					s += " (equipped)";
 				}
 				s += "\n";

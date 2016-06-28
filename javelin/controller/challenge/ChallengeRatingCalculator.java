@@ -19,7 +19,7 @@ import javelin.controller.challenge.factor.SpeedFactor;
 import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.controller.challenge.factor.quality.BreathFactor;
 import javelin.controller.challenge.factor.quality.QualitiesFactor;
-import javelin.controller.exception.UnbalancedTeamsException;
+import javelin.controller.exception.UnbalancedTeams;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -40,10 +40,6 @@ public class ChallengeRatingCalculator {
 			1.75f, 1.5f, 1.25f, 1f, .5f, 0f, -.5f, -1f, -1.5f, -2f, -2.5f, -3 };
 	public static final HdFactor HIT_DICE_FACTOR = new HdFactor();
 	private static final CrFactor CLASS_LEVEL_FACTOR = new ClassLevelFactor();
-	/**
-	 * TODO reinclude AbilitiesFactor. right now it's making a huge difference
-	 * at very low el (game very start)
-	 */
 	public static final CrFactor[] CR_FACTORS = new CrFactor[] {
 			new AbilitiesFactor(), new ArmorClassFactor(), new FeatsFactor(),
 			new FullAttackFactor(), HIT_DICE_FACTOR, new SizeFactor(),
@@ -69,11 +65,12 @@ public class ChallengeRatingCalculator {
 	/**
 	 * See "challenging challenge ratings" source document (@ 'doc' folder),
 	 * page 1: "HOW DO FACTORS WORK?". The silver rule isn't computed for at
-	 * this stage the plan is not to use the PHB classes - may change though
-	 * TODO
+	 * this stage the plan is not to use the PHB classes.
 	 * 
 	 * This is intended more for human-readable CR, if you need to make
 	 * calculation you might prefer {@link #calculaterawcr(Monster)}.
+	 * 
+	 * Will also update {@link Monster#challengeRating}.
 	 * 
 	 * @param monster
 	 *            Unit to rate.
@@ -82,8 +79,9 @@ public class ChallengeRatingCalculator {
 	static public float calculateCr(final Monster monster) {
 		float[] r = calculaterawcr(monster);
 		float goldenrule = r[1];
-		float cr = translatecr(goldenrule >= 4 ? Math.round(goldenrule)
-				: roundfraction(goldenrule));
+		float base = goldenrule >= 4 ? Math.round(goldenrule)
+				: roundfraction(goldenrule);
+		float cr = translatecr(base);
 		monster.challengeRating = cr;
 		log(" total: " + r[0] + " golden rule: " + goldenrule + " final: " + cr
 				+ "\n");
@@ -135,21 +133,28 @@ public class ChallengeRatingCalculator {
 	 */
 	static float translatecr(float cr) {
 		if (cr == .5) {
-			cr = 2 / 3f;
-		} else if (cr == 0) {
-			cr = 1 / 2f;
-		} else if (cr == -.5) {
-			cr = 1 / 3f;
-		} else if (cr == -1) {
-			cr = 1 / 4f;
-		} else if (cr == -1.5) {
-			cr = 1 / 6f;
-		} else if (cr == -2) {
-			cr = 1 / 8f;
-		} else if (cr == -2.5) {
-			cr = 1 / 12f;
-		} else if (cr == -3) {
-			cr = 1 / 16f;
+			return 2 / 3f;
+		}
+		if (cr == 0) {
+			return 1 / 2f;
+		}
+		if (cr == -.5) {
+			return 1 / 3f;
+		}
+		if (cr == -1) {
+			return 1 / 4f;
+		}
+		if (cr == -1.5) {
+			return 1 / 6f;
+		}
+		if (cr == -2) {
+			return 1 / 8f;
+		}
+		if (cr == -2.5) {
+			return 1 / 12f;
+		}
+		if (cr == -3) {
+			return 1 / 16f;
 		}
 		return cr;
 	}
@@ -179,21 +184,30 @@ public class ChallengeRatingCalculator {
 		return cr;
 	}
 
-	public static int calculateEl(final List<Combatant> team)
-			throws UnbalancedTeamsException {
+	/**
+	 * Same as {@link #calculateel(List)} but throws {@link UnbalancedTeams} as
+	 * needed.
+	 */
+	public static int calculateelsafe(final List<Combatant> team)
+			throws UnbalancedTeams {
 		return calculateEl(team, true);
 	}
 
-	public static int calculateElSafe(final List<Combatant> group) {
+	/**
+	 * @param group
+	 *            Given a group of units...
+	 * @return the calculated encounter level.
+	 */
+	public static int calculateel(final List<Combatant> group) {
 		try {
 			return calculateEl(group, false);
-		} catch (final UnbalancedTeamsException e) {
+		} catch (final UnbalancedTeams e) {
 			throw new RuntimeException("shouldn't happen!");
 		}
 	}
 
 	private static int calculateEl(final List<Combatant> group,
-			final boolean check) throws UnbalancedTeamsException {
+			final boolean check) throws UnbalancedTeams {
 		float highestCr = Float.MIN_VALUE;
 		float sum = 0;
 		for (final Combatant mgc : group) {
@@ -207,7 +221,7 @@ public class ChallengeRatingCalculator {
 			for (final Combatant mgc : group) {
 				Monster mg = mgc.source;
 				if (highestCr - mg.challengeRating > 18) {
-					throw new UnbalancedTeamsException();
+					throw new UnbalancedTeams();
 				}
 			}
 		}
@@ -452,7 +466,7 @@ public class ChallengeRatingCalculator {
 	}
 
 	public static float calculatepositive(final List<Combatant> group) {
-		return calculateElSafe(group) + Math.abs(MINIMUM_EL) + 1;
+		return calculateel(group) + Math.abs(MINIMUM_EL) + 1;
 	}
 
 	public static float[] eltocr(int teamel) {
@@ -572,5 +586,53 @@ public class ChallengeRatingCalculator {
 			return "very difficult";
 		}
 		return "impossible";
+	}
+
+	/**
+	 * @param teamel
+	 *            Active group encounter level.
+	 * @param el
+	 *            Opponent encounter level.
+	 * @return % of resources used on battle.
+	 */
+	public static float useresources(int teamel, int el) {
+		int difference = el - teamel;
+		if (difference <= -12) {
+			return .015f;
+		}
+		if (difference <= -11) {
+			return .022f;
+		}
+		if (difference <= -10) {
+			return .031f;
+		}
+		if (difference <= -9) {
+			return .045f;
+		}
+		if (difference <= -8) {
+			return .062f;
+		}
+		if (difference <= -7) {
+			return .1f;
+		}
+		if (difference <= -6) {
+			return .125f;
+		}
+		if (difference <= -5) {
+			return .2f;
+		}
+		if (difference <= -4) {
+			return .25f;
+		}
+		if (difference <= -3) {
+			return .34f;
+		}
+		if (difference <= -2) {
+			return .5f;
+		}
+		if (difference <= -1) {
+			return .75f;
+		}
+		return 1;
 	}
 }

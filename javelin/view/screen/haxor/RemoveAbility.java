@@ -2,7 +2,7 @@ package javelin.view.screen.haxor;
 
 import java.util.ArrayList;
 
-import javelin.controller.action.world.CastSpells;
+import javelin.Javelin;
 import javelin.model.unit.Combatant;
 
 /**
@@ -11,8 +11,9 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class RemoveAbility extends Hax {
-	public RemoveAbility(String name, double price, boolean requirestargetp) {
-		super(name, price, requirestargetp);
+	public RemoveAbility(String name, Character keyp, double price,
+			boolean requirestargetp) {
+		super(name, keyp, price, requirestargetp);
 	}
 
 	@Override
@@ -27,17 +28,17 @@ public class RemoveAbility extends Hax {
 			s.getInput();
 			return false;// abort
 		}
-		int i = CastSpells.choose("Which type of ability? Press q to quit.",
-				types, true, false);
+		int i = Javelin.choose("Which type of ability? Press q to quit.", types,
+				true, false);
 		if (i < 0 || i >= types.size()) {
 			return false;// abort
 		}
 		String type = types.get(i);
 		if (type == "Breath") {
-			target.source.breaths.remove(CastSpells.choose("Select a breath:",
+			target.source.breaths.remove(Javelin.choose("Select a breath:",
 					target.source.breaths, true, true));
 		} else if (type == "Spell") {
-			target.spells.remove(CastSpells.choose("Select a spell:",
+			target.spells.remove(Javelin.choose("Select a spell:",
 					target.spells, true, true));
 		} else if (type == "Mêléé attack") {
 			s.removeaattack(target.source.melee);

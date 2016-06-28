@@ -3,6 +3,7 @@
  */
 package javelin.controller.challenge.factor;
 
+import javelin.controller.quality.resistance.MindImmunity;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.controller.upgrade.ability.RaiseConsitution;
@@ -13,20 +14,21 @@ import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.model.unit.Monster;
 
 /**
- * TODO leaving charisma and intelligence for now because they are useless with
- * the current game content. Probably both will be needed once skills are
- * implemented.
+ * Calculates ability score challenge rating, and unrated attributes (value
+ * equal to zero).
  * 
+ * @see MindImmunity
  * @see CrFactor
  */
 public class AbilitiesFactor extends CrFactor {
+	/** General cost for 1 ability score above or below 10. */
 	public static final float COST = .1f;
 
 	@Override
 	public float calculate(final Monster monster) {
 		final int[] abilites = new int[] { monster.strength, monster.dexterity,
-				monster.constitution, monster.wisdom, monster.intelligence,
-				monster.charisma };
+				monster.constitution + monster.poison * 2, monster.wisdom,
+				monster.intelligence, monster.charisma };
 		float sum = 0;
 		for (final int a : abilites) {
 			if (a != 0) {
@@ -34,12 +36,14 @@ public class AbilitiesFactor extends CrFactor {
 			}
 		}
 		sum = sum * COST;
-		if (monster.intelligence == 0) {
-			/**
-			 * Immune to mind-affecting effects. Should be .5 but right now is
-			 * only making automatic will saves.
-			 */
-			sum += .5;
+		if (monster.constitution <= 0) {
+			sum += 1;// immune to fortitude saves
+			sum += .2;// destroyed at 0hp
+			if (!monster.type.equals("undead")
+					&& !monster.type.equals("construct")) {
+				// no hd bonus
+				sum -= 0.1 * monster.hd.count();
+			}
 		}
 		return sum;
 	}
@@ -50,7 +54,7 @@ public class AbilitiesFactor extends CrFactor {
 		handler.fire.add(new RaiseStrength());
 		handler.wind.add(new RaiseDexterity());
 		handler.water.add(new RaiseWisdom());
-		handler.good.add(new RaiseIntelligence());
-		handler.fire.add(new RaiseCharisma());
+		handler.magic.add(RaiseIntelligence.INSTANCE);
+		handler.good.add(RaiseCharisma.INSTANCE);
 	}
 }

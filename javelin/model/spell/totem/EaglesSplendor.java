@@ -1,5 +1,7 @@
 package javelin.model.spell.totem;
 
+import javelin.model.Realm;
+import javelin.model.condition.totem.Splendid;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -10,14 +12,13 @@ import javelin.model.unit.Monster;
 public class EaglesSplendor extends TotemsSpell {
 
 	public EaglesSplendor() {
-		super("Eagle's splendor");
+		super("Eagle's splendor", Realm.WIND);
 	}
 
 	@Override
 	public String cast(final Combatant caster, final Combatant target,
 			final BattleState s, final boolean saved) {
-		target.source = target.source.clone();
-		target.source.charisma += 4;
+		target.addcondition(new Splendid(target, casterlevel));
 		return target + "'s charisma is now "
 				+ Monster.getsignedbonus(target.source.charisma);
 	}

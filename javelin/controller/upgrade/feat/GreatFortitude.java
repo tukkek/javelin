@@ -1,5 +1,6 @@
 package javelin.controller.upgrade.feat;
 
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
 /**
@@ -7,6 +8,7 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public class GreatFortitude extends IronWill {
+	/** Constructor. */
 	public GreatFortitude() {
 		super("Great fortitude", javelin.model.feat.GreatFortitude.singleton);
 	}
@@ -24,5 +26,10 @@ public class GreatFortitude extends IronWill {
 	@Override
 	protected String getname() {
 		return "fortitude";
+	}
+
+	@Override
+	public boolean apply(Combatant m) {
+		return m.source.constitution > 0 && super.apply(m);
 	}
 }

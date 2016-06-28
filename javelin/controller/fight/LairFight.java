@@ -1,14 +1,18 @@
 package javelin.controller.fight;
 
+import java.awt.Image;
+import java.util.ArrayList;
 import java.util.List;
 
-import javelin.JavelinApp;
-import javelin.controller.map.Map;
+import javelin.Javelin;
+import javelin.controller.exception.battle.EndBattle;
 import javelin.model.BattleMap;
+import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.model.world.place.Lair;
+import javelin.model.world.location.Lair;
 import javelin.view.screen.BattleScreen;
-import javelin.view.screen.LairScreen;
+import tyrant.mikera.tyrant.Game.Delay;
+import tyrant.mikera.tyrant.QuestApp;
 
 /**
  * A moderate fight is teamel-4, a difficult fight teamel-2 (double the
@@ -19,16 +23,19 @@ import javelin.view.screen.LairScreen;
  * 
  * @author alex
  */
-public class LairFight implements Fight {
-	@Override
-	public BattleScreen getscreen(final JavelinApp javelinApp,
-			final BattleMap battlemap) {
-		LairScreen dungeonScreen = new LairScreen(javelinApp, battlemap);
-		return dungeonScreen;
+public class LairFight extends Fight {
+	public static final Image DUNGEONTEXTURE =
+			QuestApp.getImage("/images/texture1.png");
+
+	public LairFight() {
+		texture = DUNGEONTEXTURE;
+		meld = true;
+		hide = false;
+		bribe = false;
 	}
 
 	@Override
-	public int getel(final JavelinApp javelinApp, final int teamel) {
+	public int getel(final int teamel) {
 		return teamel - 1;
 	}
 
@@ -38,38 +45,40 @@ public class LairFight implements Fight {
 	}
 
 	@Override
-	public boolean meld() {
-		return true;
+	public String dealreward() {
+		Combatant capture = findmonster();
+		if (capture == null) {
+			return "You have killed the monster, cannot capture it!";
+		}
+		Javelin.captured = Javelin.recruit(capture.source.clone());
+		Javelin.captured.hp = capture.hp;
+		return "You have captured the " + capture + "!";
 	}
 
 	@Override
-	public Map getmap() {
-		// TODO Auto-generated method stub
-		return null;
+	public void checkEndBattle(BattleScreen screen) {
+		super.checkEndBattle(screen);
+		if (BattleMap.redTeam.size() >= 2) {
+			return;
+		}
+		Combatant target = findmonster();
+		if (target == null || target.hp <= target.maxhp / 2) {
+			throw new EndBattle();
+		}
+	}
+
+	static Combatant findmonster() {
+		return BattleMap.redTeam.size() == 1 ? BattleMap.redTeam.get(0) : null;
 	}
 
 	@Override
-	public boolean friendly() {
-		return false;
-	}
-
-	@Override
-	public boolean rewardgold() {
-		return true;
-	}
-
-	@Override
-	public boolean hide() {
-		return false;
-	}
-
-	@Override
-	public boolean canbribe() {
-		return false;
-	}
-
-	@Override
-	public void bribe() {
-		throw new RuntimeException("Cannot bribe a #lairfight");
+	public void onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
+			BattleState s) {
+		if (!BattleMap.blueTeam.isEmpty()) {
+			screen.messagepanel.clear();
+			screen.singleMessage(Javelin.app.fight.dealreward(), Delay.BLOCK);
+			screen.getUserInput();
+			return;
+		}
 	}
 }

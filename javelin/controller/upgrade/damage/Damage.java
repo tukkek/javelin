@@ -55,9 +55,4 @@ public abstract class Damage extends Upgrade {
 	}
 
 	public abstract void incrementupgradecount(Monster m);
-
-	@Override
-	public boolean isstackable() {
-		return false;
-	}
 }

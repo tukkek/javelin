@@ -3,16 +3,14 @@ package javelin.controller.action;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.ai.MeleeAttack;
-import javelin.controller.ai.ActionProvider;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.walker.ChargePath;
 import javelin.controller.walker.Step;
 import javelin.controller.walker.Walker;
 import javelin.model.BattleMap;
+import javelin.model.condition.Fatigued;
 import javelin.model.feat.BullRush;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Attack;
@@ -21,13 +19,16 @@ import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.Game.Delay;
 
 /**
- * TODO still needs to add prerequisites such as 10feet minimum and 2x speed
- * maximum. Plus computer part.
- * 
+ * Charging is a special full-round action that allows you to move up to twice
+ * your speed and attack. You must move at least 10 feet (2 squares) and may
+ * move up to double your speed directly toward the designated opponent. You
+ * must have a clear path toward the opponent. After moving, you may make a
+ * single melee attack. You get a +2 bonus on the attack roll and take a -2
+ * penalty to your AC until the start of your next turn.
  */
-public class Charge extends Fire implements AiAction {
-	public Charge(String name, String key) {
-		super(name, key, 'c');
+public class Charge extends Fire {
+	public Charge() {
+		super("Charge", "c", 'c');
 	}
 
 	@Override
@@ -40,6 +41,11 @@ public class Charge extends Fire implements AiAction {
 
 	ArrayList<List<ChanceNode>> charge(BattleState state, Combatant me,
 			Combatant target) {
+		final ArrayList<List<ChanceNode>> chances =
+				new ArrayList<List<ChanceNode>>();
+		if (me.hascondition(Fatigued.class) != null) {
+			return chances;
+		}
 		state = state.clone();
 		me = state.clone(me);
 		target = state.clone(target);
@@ -50,10 +56,6 @@ public class Charge extends Fire implements AiAction {
 		}
 		me.location[0] = destination.x;
 		me.location[1] = destination.y;
-		if (Javelin.DEBUG) {
-			// TODO debug
-			ActionProvider.checkstacking(state);
-		}
 		me.charge();
 		final List<ChanceNode> move = MeleeAttack.SINGLETON.attack(state, me,
 				target, usedefaultattack(me), 2, 0, 1);
@@ -76,8 +78,6 @@ public class Charge extends Fire implements AiAction {
 				}
 			}
 		}
-		final ArrayList<List<ChanceNode>> chances =
-				new ArrayList<List<ChanceNode>>();
 		chances.add(move);
 		return chances;
 	}
@@ -95,7 +95,7 @@ public class Charge extends Fire implements AiAction {
 	}
 
 	@Override
-	protected int calculatehitchance(Combatant target, Combatant active,
+	protected int calculatehitdc(Combatant target, Combatant active,
 			BattleState state) {
 		return target.ac() - (2 + usedefaultattack(active).bonus);
 	}
@@ -131,17 +131,6 @@ public class Charge extends Fire implements AiAction {
 		}
 		final ArrayList<Step> threatened =
 				(ArrayList<Step>) walk.solution.clone();
-		if (threatened.isEmpty()) {
-			if (Javelin.DEBUG) {
-				throw new RuntimeException("Empty charge solution");
-			} else {
-				/*
-				 * TODO this will tell the game no charge is possible instead of
-				 * raising bug
-				 */
-				return null;
-			}
-		}
 		threatened.remove(threatened.size() - 1);
 		final ArrayList<Combatant> opponents =
 				state.blueTeam == state.getTeam(me) ? state.redTeam
@@ -166,7 +155,7 @@ public class Charge extends Fire implements AiAction {
 			Combatant combatant) {
 		ArrayList<List<ChanceNode>> outcomes =
 				new ArrayList<List<ChanceNode>>();
-		if (gameState.isEngaged(combatant)) {
+		if (gameState.isengaged(combatant)) {
 			return outcomes;
 		}
 		List<Combatant> targets = gameState.getTargets(combatant);

@@ -5,6 +5,7 @@ package tyrant.mikera.tyrant;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javelin.Javelin;
 import javelin.model.BattleMap;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.RPG;
@@ -294,16 +295,18 @@ public class Tile {
 
 	public static boolean isDiggable(final BattleMap m, final int x,
 			final int y) {
-		if (x == 0 || y == 0 || x == m.width - 1 || y == m.height - 1) {
-			return false;
-		}
-		final int tile = m.getTile(x, y) & 65535;
-		return isDiggable(get(tile));
+		// if (x == 0 || y == 0 || x == m.width - 1 || y == m.height - 1) {
+		// return false;
+		// }
+		// final int tile = m.getTile(x, y) & 65535;
+		// return isDiggable(get(tile));
+		return false;
 	}
 
 	public static boolean isSolid(final BattleMap m, final int x, final int y) {
-		final int tile = m.getTile(x, y);
-		return issolid[tile];
+		// final int tile = m.getTile(x, y);
+		// return issolid[tile];
+		return Javelin.app.fight.map.map[x][y].blocked;
 	}
 
 	public static boolean isPassable(final int tile) {
@@ -312,48 +315,49 @@ public class Tile {
 
 	public static boolean isPassable(final Thing b, final BattleMap m,
 			final int x, final int y) {
-		if (x < 0 || y < 0 || x >= m.width || y >= m.height) {
-			return false;
-		}
-		final int tile = m.getTile(x, y);
-		final Thing t = get(tile);
-
-		if (t.getFlag("IsPassable")) {
-			return true;
-		}
-
-		// // can't move to unpassable edge tile
-		// if (x == 0 || y == 0 || x == m.width - 1 || y == m.height - 1) {
+		// if (x < 0 || y < 0 || x >= m.width || y >= m.height) {
 		// return false;
 		// }
-
-		if (issolid[tile]) {
-			if (b.getFlag("IsEthereal")) {
-				return true;
-			}
-			if (b.getFlag("IsFlying")) {
-				// Game.warn("flying isPassable check");
-				if (t.getFlag("IsJumpable")) {
-					return true;
-				}
-			}
-			return false;
-		}
-
-		if (b.getFlag("IsFlying")) {
-			return true;
-		}
-
-		// special tile cases
-		switch (tile) {
-		case Tile.SEA:
-			final Thing[] bs = b.getFlaggedContents("IsBoat");
-			return bs != null && bs.length > 0;
-		case Tile.MOUNTAINS:
-			return b.getFlag(Skill.CLIMBING);
-		}
-
-		return true;
+		// final int tile = m.getTile(x, y);
+		// final Thing t = get(tile);
+		//
+		// if (t.getFlag("IsPassable")) {
+		// return true;
+		// }
+		//
+		// // // can't move to unpassable edge tile
+		// // if (x == 0 || y == 0 || x == m.width - 1 || y == m.height - 1) {
+		// // return false;
+		// // }
+		//
+		// if (issolid[tile]) {
+		// if (b.getFlag("IsEthereal")) {
+		// return true;
+		// }
+		// if (b.getFlag("IsFlying")) {
+		// // Game.warn("flying isPassable check");
+		// if (t.getFlag("IsJumpable")) {
+		// return true;
+		// }
+		// }
+		// return false;
+		// }
+		//
+		// if (b.getFlag("IsFlying")) {
+		// return true;
+		// }
+		//
+		// // special tile cases
+		// switch (tile) {
+		// case Tile.SEA:
+		// final Thing[] bs = b.getFlaggedContents("IsBoat");
+		// return bs != null && bs.length > 0;
+		// case Tile.MOUNTAINS:
+		// return b.getFlag(Skill.CLIMBING);
+		// }
+		//
+		// return true;
+		return !Javelin.app.fight.map.map[x][y].blocked;
 	}
 
 	public static boolean isSensibleMove(final Thing b, final BattleMap m,

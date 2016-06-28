@@ -6,14 +6,14 @@ import javelin.controller.upgrade.skill.Concentration;
 import javelin.controller.upgrade.skill.Diplomacy;
 import javelin.controller.upgrade.skill.DisableDevice;
 import javelin.controller.upgrade.skill.GatherInformation;
-import javelin.controller.upgrade.skill.Hide;
+import javelin.controller.upgrade.skill.Heal;
 import javelin.controller.upgrade.skill.Knowledge;
-import javelin.controller.upgrade.skill.Listen;
-import javelin.controller.upgrade.skill.MoveSilently;
+import javelin.controller.upgrade.skill.Perception;
 import javelin.controller.upgrade.skill.Search;
 import javelin.controller.upgrade.skill.Spellcraft;
-import javelin.controller.upgrade.skill.Spot;
+import javelin.controller.upgrade.skill.Stealth;
 import javelin.controller.upgrade.skill.Survival;
+import javelin.controller.upgrade.skill.UseMagicDevice;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
 
@@ -36,34 +36,34 @@ public class SkillsFactor extends CrFactor {
 	public float calculate(Monster m) {
 		Skills skills = m.skills;
 		int ranks = skills.concentration + skills.diplomacy
-				+ skills.disabledevice + skills.gatherinformation + skills.hide
-				+ skills.knowledge + skills.listen + skills.movesilently
-				+ skills.search + skills.spellcraft + skills.spot
-				+ skills.acrobatics + skills.survival;
+				+ skills.disabledevice + skills.gatherinformation
+				+ skills.stealth + skills.knowledge + +skills.search
+				+ skills.spellcraft + skills.perception + skills.acrobatics
+				+ skills.survival + skills.usemagicdevice;
 		return ranks * COST;
 	}
 
 	@Override
 	public void listupgrades(UpgradeHandler handler) {
-		handler.evil.add(new Hide("Hide"));
 
-		handler.good.add(new Diplomacy("Diplomacy"));
+		handler.good.add(new Diplomacy());
+		handler.good.add(new GatherInformation());
 
-		handler.water.add(new Knowledge("Knowledge"));
+		handler.evil.add(new Stealth());
 
-		handler.wind.add(new Spot("Spot"));
-		handler.wind.add(new Listen("Listen"));
+		handler.water.add(new Knowledge());
+		handler.water.add(new Concentration());
+		handler.water.add(new Heal());
 
-		handler.earth.add(new GatherInformation("Gather information"));
-		handler.earth.add(new Survival("Survival"));
-		handler.earth.add(new Concentration("Concentration"));
+		handler.wind.add(new Perception());
+		handler.wind.add(new Acrobatics());
+		handler.wind.add(new DisableDevice());
 
-		handler.wind.add(new MoveSilently("Move silently"));
-		handler.wind.add(new Search("Search"));
-		handler.wind.add(new DisableDevice("Disable device"));
-		handler.wind.add(new Acrobatics("Acrobatics"));
+		handler.earth.add(new Survival());
 
-		handler.magic.add(new Spellcraft("Spellcraft"));
+		handler.magic.add(new Search());
+		handler.magic.add(new Spellcraft());
+		handler.magic.add(new UseMagicDevice());
 	}
 
 	/**

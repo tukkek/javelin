@@ -8,6 +8,7 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class ImprovedInititative extends FeatUpgrade {
+	/** Constructor. */
 	public ImprovedInititative() {
 		super("Improved initiative", ImprovedInitiative.singleton);
 	}
@@ -26,8 +27,4 @@ public class ImprovedInititative extends FeatUpgrade {
 		return false;
 	}
 
-	@Override
-	public boolean isstackable() {
-		return false;
-	}
 }

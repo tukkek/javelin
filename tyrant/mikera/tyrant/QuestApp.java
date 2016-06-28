@@ -28,11 +28,10 @@ import java.net.URLEncoder;
 import java.util.Hashtable;
 
 import javelin.controller.fight.IncursionFight;
+import javelin.controller.fight.LairFight;
 import javelin.model.BattleMap;
-import javelin.view.Images;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
-import javelin.view.screen.LairScreen;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
@@ -632,7 +631,6 @@ public class QuestApp extends Applet implements Runnable {
 		QuestApp.items = QuestApp.getImage("/images/items32.png");
 		QuestApp.effects = QuestApp.getImage("/images/effects32.png");
 		QuestApp.title = QuestApp.getImage("/images/title.png");
-		Images.initimages();
 
 		// store images in source hashtable
 		QuestApp.images.put("Tiles", QuestApp.tiles);
@@ -649,9 +647,8 @@ public class QuestApp extends Applet implements Runnable {
 		mediaTracker.addImage(QuestApp.items, 1);
 		mediaTracker.addImage(QuestApp.effects, 1);
 		mediaTracker.addImage(QuestApp.title, 1);
-		Images.addimages(mediaTracker);
 		mediaTracker.addImage(QuestApp.DEFAULTTEXTURE, 1);
-		mediaTracker.addImage(LairScreen.DUNGEONTEXTURE, 1);
+		mediaTracker.addImage(LairFight.DUNGEONTEXTURE, 1);
 		mediaTracker.addImage(IncursionFight.INCURSIONTEXTURE, 1);
 
 		// create grey-filtered background tiles
@@ -662,8 +659,6 @@ public class QuestApp extends Applet implements Runnable {
 		// Wait for images to load
 		try {
 			mediaTracker.waitForID(1);
-			Images.penalized =
-					QuestApp.maketransparent(2 / 3f, Images.penalized);
 		} catch (final Exception e) {
 			System.out.println("Error loading images.");
 			e.printStackTrace();

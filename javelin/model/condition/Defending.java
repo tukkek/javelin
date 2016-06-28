@@ -1,26 +1,26 @@
 package javelin.model.condition;
 
-import javelin.controller.action.Wait;
+import javelin.controller.action.Defend;
 import javelin.model.unit.Combatant;
 
 /**
- * @see Wait
+ * @see Defend
  * 
  * @author alex
  */
 public class Defending extends Condition {
 
 	public Defending(float expireatp, Combatant c) {
-		super(expireatp, c, Effect.POSITIVE, "defending");
+		super(expireatp, c, Effect.POSITIVE, "defending", null);
 	}
 
 	@Override
-			void start(Combatant c) {
+	public void start(Combatant c) {
 		c.acmodifier += 4;
 	}
 
 	@Override
-			void end(Combatant c) {
+	public void end(Combatant c) {
 		c.acmodifier -= 4;
 	}
 }

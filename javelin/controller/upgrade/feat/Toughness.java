@@ -7,6 +7,7 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class Toughness extends FeatUpgrade {
+	/** Constructor. */
 	public Toughness() {
 		super("Toughness", javelin.model.feat.Toughness.singleton);
 		stack = true;

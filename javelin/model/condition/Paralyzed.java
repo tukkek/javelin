@@ -1,6 +1,6 @@
 package javelin.model.condition;
 
-import javelin.model.spell.HoldMonster;
+import javelin.model.spell.enchantment.compulsion.HoldMonster;
 import javelin.model.unit.Combatant;
 
 /**
@@ -12,12 +12,12 @@ public class Paralyzed extends Condition {
 	private int dex;
 	private int delta;
 
-	public Paralyzed(float expireatp, Combatant c) {
-		super(expireatp, c, Effect.NEGATIVE, "paralyzed");
+	public Paralyzed(float expireatp, Combatant c, Integer casterlevelp) {
+		super(expireatp, c, Effect.NEGATIVE, "paralyzed", casterlevelp);
 	}
 
 	@Override
-			void start(Combatant c) {
+	public void start(Combatant c) {
 		c.source = c.source.clone();
 		dex = c.source.dexterity;
 		delta = (int) Math.round(Math.floor(dex / 2f));
@@ -26,7 +26,7 @@ public class Paralyzed extends Condition {
 	}
 
 	@Override
-			void end(Combatant c) {
+	public void end(Combatant c) {
 		c.source = c.source.clone();
 		c.source.raisedexterity(+delta);
 	}

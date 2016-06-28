@@ -11,45 +11,52 @@ import javelin.controller.action.maneuver.DefensiveAttack;
 import javelin.controller.action.maneuver.Feint;
 import javelin.controller.action.maneuver.Grapple;
 import javelin.controller.action.maneuver.Trip;
+import javelin.controller.action.world.Automate;
 import javelin.controller.action.world.Guide;
-import javelin.controller.exception.RepeatTurnException;
+import javelin.controller.action.world.WorldAction;
+import javelin.controller.exception.RepeatTurn;
 
 /**
  * Basic listing of in-game {@link Action}s.
  * 
  * @author alex
+ * @see WorldAction
  */
 public class ActionMapping {
 	private final Map<String, Action> mappings = new HashMap<String, Action>();
+	/** If true will reload keys. */
+	public static boolean reset = false;
+	/** Canonical array of possible battle actions. */
 	public static Action[] actions = new Action[] { //
 			Breath.SINGLETON, // b
-			Action.CHARGE, // c
-			new DefensiveAttack(), // d
-			new Feint(), // F
-			Action.FIRE, // f
-			new Grapple(), // G
-			Action.SPELL, // s
-			Action.WAIT, // w
+			new Charge(), // c
+			Dig.SINGLETON, // d
+			new Fire(), // f
+			new CastSpell(), // s
 			UseItem.SINGLETON, // i
 			PassItem.SINGLETON, // p
-			new TouchAttack(), new Trip(), // T
-			Wait.SINGLETON, // w
-			Action.WITHDRAW, // W
+			new TouchAttack(), // t
+			Defend.SINGLETON, // w
+			new Examine(), // x
 
-			Action.LOOK, // x
-			Action.ZOOM_OUT, // -
-			Action.ZOOM_IN, // +
+			new ActionAdapter(new Automate()), // A
+			new DefensiveAttack(), // D
+			new Feint(), // F
+			new Grapple(), // G
+			new ConfigureBattleKeys(), // K
+			new Trip(), // T
+			new Withdraw(), // W
 
-			new ActionAdapter(Guide.HOWTO), // F1
-			new ActionAdapter(Guide.COMBAT), // F2
-			new ActionAdapter(Guide.ITEMS), // F3
-			new ActionAdapter(Guide.UGRADES1), // F4
-			new ActionAdapter(Guide.UGRADES2), // F5
-			new ActionAdapter(Guide.SKILLS), // F6
-			new ActionAdapter(Guide.SPELLS1), // F7
-			new ActionAdapter(Guide.SPELLS2), // F8
-			new ActionAdapter(Guide.ARTIFACTS), // F9
-			Action.HELP, // h
+			new ZoomOut(), // -
+			new ZoomIn(), // +
+
+			new ActionAdapter(Guide.HOWTO), new ActionAdapter(Guide.ARTIFACTS),
+			new ActionAdapter(Guide.CONDITIONS1),
+			new ActionAdapter(Guide.CONDITIONS2),
+			new ActionAdapter(Guide.ITEMS), new ActionAdapter(Guide.SKILLS1),
+			new ActionAdapter(Guide.SKILLS2), new ActionAdapter(Guide.SPELLS1),
+			new ActionAdapter(Guide.SPELLS2), new ActionAdapter(Guide.UGRADES1),
+			new ActionAdapter(Guide.UGRADES2), new Help(), // h
 
 			Action.MOVE_N, Action.MOVE_NE, Action.MOVE_E, Action.MOVE_SE,
 			Action.MOVE_S, Action.MOVE_SW, Action.MOVE_W, Action.MOVE_NW,
@@ -57,8 +64,7 @@ public class ActionMapping {
 			RangedAttack.SINGLETON };
 
 	public ActionDescription convertKeyToAction(final char key) {
-		final ActionDescription action = mappings.get(new Character(key));
-		return action == null ? Action.UNKNOWN : action;
+		return mappings.get(new Character(key));
 	}
 
 	public void clear() {
@@ -70,33 +76,34 @@ public class ActionMapping {
 	}
 
 	public void addDefaultMappings() {
+		mappings.clear();
 		for (final Action a : ActionMapping.actions) {
-			boolean overwrite = false;
 			for (final String key : a.keys) {
 				if (mappings.put(key, a) != null) {
-					overwrite = true;
+					throw new RuntimeException("Key conflict (" + key
+							+ ") registering action " + a.name);
 				}
 			}
 			for (int code : a.keycodes) {
 				if (mappings.put("KeyEvent" + code, a) != null) {
-					overwrite = true;
+					throw new RuntimeException("Key conflict (" + code
+							+ ") registering action " + a.name);
 				}
-			}
-			if (overwrite) {
-				throw new RuntimeException(
-						"Key conflict registering action " + a.name);
 			}
 		}
 	}
 
 	public Action actionFor(final KeyEvent keyEvent) {
+		if (ActionMapping.reset) {
+			addDefaultMappings();
+		}
 		final char keyChar = keyEvent.getKeyChar();
 		if (keyChar == KeyEvent.CHAR_UNDEFINED) {
 			final Action action =
 					mappings.get("KeyEvent" + keyEvent.getKeyCode());
 
 			if (action == null) {
-				throw new RepeatTurnException();
+				throw new RepeatTurn();
 			}
 
 			return action;
@@ -109,7 +116,7 @@ public class ActionMapping {
 		}
 		final Action action = mappings.get(Character.toString(keyChar));
 		if (action == null) {
-			throw new RepeatTurnException();
+			throw new RepeatTurn();
 		}
 		return action;
 	}

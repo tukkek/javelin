@@ -3,20 +3,37 @@ SPELL GUIDE (1/2)
 To learn each spell you need to have a certain minimum amount of class levels.
 Every hero starts at class level 1 and receives an extra class level when upgrading in a class.
 You can cast as many spells as you have class levels before resting.
+Touch spells can only be targeted at those immediately adjacent to the spellcaster.
 
-Caster level 1
-  Cure light wounds: cures 5 hit points. 
+Level 1 (caster level 1)
+  Cure light wounds: cures 5 hit points. Touch.
   Doom: shakens an enemy.
-  Inflict light wounds: causes 5 points of damage.
+  Inflict light wounds: causes 5 points of damage. Touch.
+  Longstrider: increases caster's walking speed by 10 feet per round.
+  Magic missile: deals 1d4+1 of force damage, always hits.
   
-Caster level 3
-  Bear's endurance: +2 constitution bonus.
-  Bull's strength: +2 strength bonus. 
-  Cat's grace: +2 dexterity bonus.
-  Cure moderate wounds: cures 13 hit points.
-  Eagle's splendor: +2 charisma bonus.
-  Fox's cunning: +2 intelligence bonus.
-  Inflict moderate wounds: causes 13 points of damage.
-  Owl's wisdom: +2 wisdom bonus.
-  Summon Dretch: summons a Dretch to your team. 
+Level 2 (caster level 3)
+  Bear's endurance: +2 constitution bonus. Touch.
+  Bull's strength: +2 strength bonus. Touch.
+  Cat's grace: +2 dexterity bonus. Touch.
+  Cure moderate wounds: cures 13 hit points. Touch.
+  Eagle's splendor: +2 charisma bonus. Touch.
+  Fox's cunning: +2 intelligence bonus. Touch.
+  Inflict moderate wounds: causes 13 points of damage. Touch.
+  Locate object: locates nearest treasure chest in a dungeon.
+  Owl's wisdom: +2 wisdom bonus. Touch.
+  Ray of exhaustion: makes a creature fatigued or exhausted.
+  Restoration: dispels effects reducing abilities or cures 1d4 ability damage.
+  Scorching ray: deals 4d6 points of energy damage.
+  Sound burst: blasts a 10-foot radius with a tremendous cacophony.
+
+Level 3 (caster level 5)
+  Blink: caster gains +10 to AC and spell resistance for 5 turns.
+  Cure serious wounds: cures 20 hit points. Touch.
+  Daylight: lights up environment.
+  Deeper darkness: darkens environment.
+  Find traps: caster gains +3 bonus to Search.
+  Heroism: For 1 hour target gains a +2 morale bonus on attack rolls, saves, and skill checks. Touch.
+  Inflict serious wounds: causes 20 points of damage. Touch.
+  Vampiric touch: steals 21 temporary hit points from an enemy. Touch. Lasts for 1 hour.
   

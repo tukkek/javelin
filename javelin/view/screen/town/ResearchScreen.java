@@ -3,8 +3,8 @@ package javelin.view.screen.town;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.model.world.place.town.Town;
-import javelin.model.world.place.town.research.Research;
+import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.research.Research;
 import javelin.view.screen.Option;
 import tyrant.mikera.tyrant.Game;
 

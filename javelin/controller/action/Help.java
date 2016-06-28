@@ -15,8 +15,9 @@ import tyrant.mikera.tyrant.Game;
  */
 public class Help extends Action {
 
-	public Help(String name, String[] keys) {
-		super(name, keys);
+	public Help() {
+		super("help", new String[] { "h", "?" });
+		allowwhileburrowed = true;
 	}
 
 	@Override
@@ -27,7 +28,7 @@ public class Help extends Action {
 
 	static public void help(ActionDescription[] actions) {
 		String text =
-				"Movement is also used to attack adjacent enemies.\n\nExample:\nKey or keys: command name.\n\n";
+				"These are all the available commands on this screen. Movement is also used to attack adjacent enemies.\n\n";
 		for (final ActionDescription a : actions) {
 			final String[] keys = a.getDescriptiveKeys();
 			if (keys.length == 0) {

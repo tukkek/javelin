@@ -4,7 +4,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
 /**
- * Adds to {@link Monster#resistance}.
+ * Adds to {@link Monster#energyresistance}.
  * 
  * @author alex
  */
@@ -34,12 +34,12 @@ public class RingOfEnergyResistance extends Artifact {
 
 	@Override
 	protected void apply(Combatant c) {
-		c.source.resistance += bonus;
+		c.source.energyresistance += bonus;
 	}
 
 	@Override
 	protected void negate(Combatant c) {
-		c.source.resistance -= bonus;
+		c.source.energyresistance -= bonus;
 	}
 
 }

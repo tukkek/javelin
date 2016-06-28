@@ -6,9 +6,10 @@ import javelin.model.BattleMap;
 import javelin.model.item.Item;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Squad;
+import javelin.model.unit.Squad;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
+import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
 
@@ -21,31 +22,32 @@ public class PassItem extends Action {
 	public static final Action SINGLETON = new PassItem();
 
 	public PassItem() {
-		super("Pass item to nearby ally (counts as action for both)", "p");
+		super("Pass item to nearby ally", "p");
 	}
 
-	public static void give() {
+	@Override
+	public boolean perform(Combatant active, BattleMap m, Thing thing) {
 		final BattleMap map = BattleScreen.active.map;
 		final BattleState state = map.getState();
 		final Combatant me = Game.hero().combatant;
 		final Combatant sameme = state.clone(me);
-		if (state.isEngaged(sameme)) {
+		if (state.isengaged(sameme)) {
 			Game.message("You are engaged in combat!", null, Delay.NONE);
-			return;
+			return false;
 		}
 		final ArrayList<Combatant> surroudings = state.getSurroundings(sameme);
 		for (final Combatant c : new ArrayList<Combatant>(surroudings)) {
-			if (!c.isAlly(sameme, state) || state.isEngaged(c)) {
+			if (!c.isAlly(sameme, state) || state.isengaged(c)) {
 				surroudings.remove(c);
 			}
 		}
 		if (surroudings.isEmpty()) {
 			Game.message("No unthreatened allies nearby.", null, Delay.NONE);
-			return;
+			return false;
 		}
-		final Item item = UseItem.queryforitemselection(me);
+		final Item item = UseItem.queryforitemselection(me, false);
 		if (item == null) {
-			return;
+			return false;
 		}
 		String prompt = "Give this item to whom?\n";
 		for (int i = 0; i < surroudings.size(); i++) {
@@ -64,6 +66,7 @@ public class PassItem extends Action {
 		} catch (final IndexOutOfBoundsException e) {
 		}
 		Game.messagepanel.clear();
+		return true;
 	}
 
 	public static Combatant getmonster(final Combatant receiverc) {

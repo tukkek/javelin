@@ -1,22 +1,20 @@
 package javelin.view.screen.shopping;
 
-import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
-import javelin.model.world.Merchant;
-import javelin.model.world.Squad;
-import javelin.model.world.place.town.Town;
+import javelin.model.unit.Squad;
+import javelin.model.world.Caravan;
 import javelin.view.screen.town.PurchaseOption;
 
 /**
- * Used when a {@link Squad} meets a {@link Merchant}.
+ * Used when a {@link Squad} meets a {@link Caravan}.
  * 
  * @author alex
  */
 public class MerchantScreen extends ShoppingScreen {
 
-	final Merchant m;
+	final Caravan m;
 
-	public MerchantScreen(Merchant m) {
+	public MerchantScreen(Caravan m) {
 		super("You reach a trading caravan:", null);
 		this.m = m;
 	}
@@ -24,7 +22,7 @@ public class MerchantScreen extends ShoppingScreen {
 	@Override
 	protected void afterpurchase(PurchaseOption o) {
 		m.inventory.remove(o.i);
-		Town.grab((Item) o.i.clone());
+		o.i.clone().grab();
 	}
 
 	@Override

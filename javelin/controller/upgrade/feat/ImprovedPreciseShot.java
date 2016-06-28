@@ -8,6 +8,7 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class ImprovedPreciseShot extends FeatUpgrade {
+	/** Constructor. */
 	public ImprovedPreciseShot() {
 		super(javelin.model.feat.ImprovedPreciseShot.SINGLETON);
 		prerequisite = PreciseShot.SINGLETON;
@@ -16,11 +17,6 @@ public class ImprovedPreciseShot extends FeatUpgrade {
 	@Override
 	public String info(Combatant m) {
 		return "";
-	}
-
-	@Override
-	public boolean isstackable() {
-		return false;
 	}
 
 	@Override

@@ -8,8 +8,8 @@ import javelin.model.unit.Skills;
  * @author alex
  */
 public class DisableDevice extends SkillUpgrade {
-	public DisableDevice(String name) {
-		super(name);
+	public DisableDevice() {
+		super("Disable device");
 	}
 
 	@Override

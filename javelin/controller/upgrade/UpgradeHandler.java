@@ -3,17 +3,21 @@ package javelin.controller.upgrade;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.factor.CrFactor;
 import javelin.controller.upgrade.classes.ClassAdvancement;
+import javelin.controller.upgrade.feat.FeatUpgrade;
 import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.model.Realm;
+import javelin.model.spell.Summon;
 import javelin.model.world.WorldActor;
-import javelin.model.world.place.guarded.Academy;
-import javelin.model.world.place.town.Town;
+import javelin.model.world.location.fortification.MartialAcademy;
+import javelin.model.world.location.town.Town;
+import javelin.model.world.location.unique.SummoningCircle;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -32,26 +36,54 @@ public class UpgradeHandler {
 	LinkedList<Town> townqueue = new LinkedList<Town>();
 
 	/** Linked to a {@link Town}'s realm. */
-	public ArrayList<Upgrade> fire = new ArrayList<Upgrade>();
+	public HashSet<Upgrade> fire = new HashSet<Upgrade>();
 	/** Linked to a {@link Town}'s realm. */
-	public ArrayList<Upgrade> earth = new ArrayList<Upgrade>();
+	public HashSet<Upgrade> earth = new HashSet<Upgrade>();
 	/** Linked to a {@link Town}'s realm. */
-	public ArrayList<Upgrade> water = new ArrayList<Upgrade>();
+	public HashSet<Upgrade> water = new HashSet<Upgrade>();
 	/** Linked to a {@link Town}'s realm. */
-	public ArrayList<Upgrade> wind = new ArrayList<Upgrade>();
+	public HashSet<Upgrade> wind = new HashSet<Upgrade>();
 	/** Linked to a {@link Town}'s realm. */
-	public ArrayList<Upgrade> good = new ArrayList<Upgrade>();
+	public HashSet<Upgrade> good = new HashSet<Upgrade>();
 	/** Linked to a {@link Town}'s realm. */
-	public ArrayList<Upgrade> evil = new ArrayList<Upgrade>();
-	/** Linked to a {@link Town}'s realm. */
-	public ArrayList<Upgrade> magic = new ArrayList<Upgrade>();
+	public HashSet<Upgrade> evil = new HashSet<Upgrade>();
+	/** Linked HashSet a {@link Town}'s realm. */
+	public HashSet<Upgrade> magic = new HashSet<Upgrade>();
 
-	/** Linked to an {@link Academy}. */
-	public ArrayList<Upgrade> expertise = new ArrayList<Upgrade>();
-	/** Linked to an {@link Academy}. */
-	public ArrayList<Upgrade> power = new ArrayList<Upgrade>();
-	/** Linked to an {@link Academy}. */
-	public ArrayList<Upgrade> shots = new ArrayList<Upgrade>();
+	/** Linked to an {@link MartialAcademy}. */
+	public HashSet<Upgrade> expertise = new HashSet<Upgrade>();
+	/** Linked to an {@link MartialAcademy}. */
+	public HashSet<Upgrade> power = new HashSet<Upgrade>();
+	/** Linked to an {@link MartialAcademy}. */
+	public HashSet<Upgrade> shots = new HashSet<Upgrade>();
+
+	/** Spell school. */
+	public HashSet<Upgrade> schooltotem = new HashSet<Upgrade>();
+	/** Spell school. */
+	public HashSet<Upgrade> schoolcompulsion = new HashSet<Upgrade>();
+	/** Spell school. */
+	public HashSet<Upgrade> schoolnecromancy = new HashSet<Upgrade>();
+	/** Spell school. */
+	public HashSet<Upgrade> schoolconjuration = new HashSet<Upgrade>();
+	/** Spell school. */
+	public HashSet<Upgrade> schoolevocation = new HashSet<Upgrade>();
+	/** Subdomain of conjuration. */
+	public HashSet<Upgrade> schoolhealing = new HashSet<Upgrade>();
+	/** Subdomain of necromancy. */
+	public HashSet<Upgrade> schoolwounding = new HashSet<Upgrade>();
+	/** Spell school; */
+	public HashSet<Upgrade> schoolabjuration = new HashSet<Upgrade>();
+	/** Spell school; */
+	public HashSet<Upgrade> schoolhealwounds = new HashSet<Upgrade>();
+	/** Spell school; */
+	public HashSet<Upgrade> schooltransmutation = new HashSet<Upgrade>();
+	/** Spell school; */
+	public HashSet<Upgrade> schooldivination = new HashSet<Upgrade>();
+	/**
+	 * Used internally for summon spells. For learning {@link Summon}s see
+	 * {@link SummoningCircle}.
+	 */
+	public HashSet<Upgrade> schoolsummoning = new HashSet<Upgrade>();
 
 	/**
 	 * Gives a starting selection of upgrades to each {@link Town}.
@@ -62,7 +94,8 @@ public class UpgradeHandler {
 			Town t = (Town) p;
 			Realm r = t.realm;
 			t.upgrades.add(getclass(r));
-			final List<Upgrade> upgrades = getupgrades(r);
+			final List<Upgrade> upgrades =
+					new ArrayList<Upgrade>(getupgrades(r));
 			Collections.shuffle(upgrades);
 			int i = 0;
 			int limit = RPG.r(3, 5);
@@ -98,7 +131,7 @@ public class UpgradeHandler {
 	 *            Given a realm...
 	 * @return the upgrades that belong to it.
 	 */
-	public List<Upgrade> getupgrades(Realm r) {
+	public HashSet<Upgrade> getupgrades(Realm r) {
 		if (r == javelin.model.Realm.WIND) {
 			return wind;
 		} else if (r == Realm.FIRE) {
@@ -120,6 +153,9 @@ public class UpgradeHandler {
 
 	/** Initializes class, if needed. */
 	public void gather() {
+		/*
+		 * TODO could initialize #getall map here instead of #isempty
+		 */
 		if (fire.isEmpty()) {
 			for (final CrFactor factor : ChallengeRatingCalculator.CR_FACTORS) {
 				factor.listupgrades(this);
@@ -130,9 +166,9 @@ public class UpgradeHandler {
 	/**
 	 * @return all upgrades.
 	 */
-	public HashMap<String, List<Upgrade>> getall() {
-		HashMap<String, List<Upgrade>> all =
-				new HashMap<String, List<Upgrade>>();
+	public HashMap<String, HashSet<Upgrade>> getall() {
+		HashMap<String, HashSet<Upgrade>> all =
+				new HashMap<String, HashSet<Upgrade>>();
 		addall(fire, all, "fire");
 		addall(earth, all, "earth");
 		addall(water, all, "water");
@@ -146,11 +182,23 @@ public class UpgradeHandler {
 		addall(expertise, all, "expertise");
 		addall(shots, all, "shots");
 
+		addall(schoolcompulsion, all, "schoolcompulsion");
+		addall(schoolhealing, all, "schoolhealing");
+		addall(schoolnecromancy, all, "schoolnecromancy");
+		addall(schooltotem, all, "schooltotem");
+		addall(schoolwounding, all, "schoolwounding");
+		addall(schoolconjuration, all, "schoolconjuration");
+		addall(schoolabjuration, all, "schoolabjuration");
+		addall(schoolevocation, all, "schoolevocation");
+		addall(schoolhealwounds, all, "schoolhealwounds");
+		addall(schooltransmutation, all, "schooltransmutation");
+		addall(schooldivination, all, "schooldivination");
+
 		return all;
 	}
 
-	private void addall(ArrayList<Upgrade> fire2,
-			HashMap<String, List<Upgrade>> all, String string) {
+	static void addall(HashSet<Upgrade> fire2,
+			HashMap<String, HashSet<Upgrade>> all, String string) {
 		all.put(string, fire2);
 	}
 
@@ -161,7 +209,7 @@ public class UpgradeHandler {
 	 */
 	public int count() {
 		int i = 0;
-		for (List<Upgrade> l : getall().values()) {
+		for (HashSet<Upgrade> l : getall().values()) {
 			i += l.size();
 		}
 		return i - countskills();
@@ -172,7 +220,7 @@ public class UpgradeHandler {
 	 */
 	public int countskills() {
 		int i = 0;
-		for (List<Upgrade> l : getall().values()) {
+		for (HashSet<Upgrade> l : getall().values()) {
 			for (Upgrade u : l) {
 				if (u instanceof SkillUpgrade) {
 					i += 1;
@@ -180,6 +228,38 @@ public class UpgradeHandler {
 			}
 		}
 		return i;
+	}
+
+	/**
+	 * @return All {@link FeatUpgrade}.
+	 */
+	public ArrayList<FeatUpgrade> getfeats() {
+		ArrayList<FeatUpgrade> feats = new ArrayList<FeatUpgrade>();
+		ArrayList<Upgrade> all = new ArrayList<Upgrade>();
+		for (HashSet<Upgrade> realm : getall().values()) {
+			all.addAll(realm);
+		}
+		for (Upgrade u : all) {
+			if (u instanceof FeatUpgrade) {
+				feats.add((FeatUpgrade) u);
+			}
+		}
+		return feats;
+	}
+
+	/**
+	 * @return All spells available in the game.
+	 */
+	public List<Spell> getspells() {
+		ArrayList<Spell> spells = new ArrayList<Spell>();
+		for (HashSet<Upgrade> category : getall().values()) {
+			for (Upgrade u : category) {
+				if (u instanceof Spell) {
+					spells.add((Spell) u);
+				}
+			}
+		}
+		return spells;
 	}
 
 }

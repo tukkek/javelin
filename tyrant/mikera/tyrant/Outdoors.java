@@ -59,13 +59,13 @@ public class Outdoors {
 				int r = 7;
 				int px = RPG.rspread(x1, x2 - r);
 				int py = RPG.rspread(y1, y2 - r);
-				for (int x = px; x < px + r; x++) {
-					for (int y = py; y < py + r; y++) {
-						if ((RPG.d(5) == 1) && (m.getTile(x, y) == m.floor())) {
-							m.addThing(herb.cloneType(), x, y);
-						}
-					}
-				}
+				// for (int x = px; x < px + r; x++) {
+				// for (int y = py; y < py + r; y++) {
+				// if ((RPG.d(5) == 1) && (m.getTile(x, y) == m.floor())) {
+				// m.addThing(herb.cloneType(), x, y);
+				// }
+				// }
+				// }
 			}
 
 			break;

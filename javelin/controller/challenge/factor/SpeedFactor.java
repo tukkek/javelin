@@ -1,9 +1,10 @@
 package javelin.controller.challenge.factor;
 
-import javelin.controller.upgrade.Flying;
 import javelin.controller.upgrade.Swimming;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.controller.upgrade.WalkingSpeed;
+import javelin.controller.upgrade.movement.Burrow;
+import javelin.controller.upgrade.movement.Flying;
+import javelin.controller.upgrade.movement.WalkingSpeed;
 import javelin.model.unit.Monster;
 
 /**
@@ -34,42 +35,47 @@ public class SpeedFactor extends CrFactor {
 
 	@Override
 	public float calculate(Monster m) {
-		long speed = m.fly;
-		boolean isflying = speed > 0;
-		float cr = 0;
-		if (isflying) {
-			cr += .6f;
+		long speed;
+		float cr;
+		if (m.fly > 0) {
+			/*
+			 * flying has the same benefits of swimming and more so it
+			 * supersedes it
+			 */
+			cr = .6f;
+			speed = m.fly;
+		} else if (m.swim > 0) {
+			speed = Math.max(m.swim, m.walk);
+			cr = .2f;
 		} else {
-			if (m.swim > 0) {
-				/*
-				 * flying has the same benefits of swimming and more so it
-				 * superseeds it
-				 */
-				cr += .2f;
-			}
-			speed = m.walk > m.swim ? m.walk : m.swim;
+			cr = 0;
+			speed = m.walk;
+		}
+		if (m.burrow > 0) {
+			cr += .2f;
+			speed = Math.max(speed, m.burrow);
 		}
 		if (speed == 0) {
 			throw new RuntimeException("No speed for " + m);
 		}
-		int typical = (isflying ? TYPICAL_FLIGHT_SPEED : TYPICAL_SPEED)[m.size];
+		int typical =
+				(m.fly > 0 ? TYPICAL_FLIGHT_SPEED : TYPICAL_SPEED)[m.size];
 		if (speed == typical) {
 			return cr;
 		}
 		if (speed > typical) {
-			cr += .2 * (speed / typical) / 2;
+			return cr + (.2f * (speed / typical) / 2f);
 		} else {
-			cr -= .2 * (typical / speed) / 2;
+			return cr - (.2f * (typical / speed) / 2f);
 		}
-		return cr;
 	}
 
 	@Override
 	public void listupgrades(UpgradeHandler handler) {
-		handler.earth.add(new WalkingSpeed("Walking speed: human", 30));
-		handler.earth.add(new WalkingSpeed("Walking speed: cheetah", 50));
+		handler.good.add(new WalkingSpeed("Speed: human", 30));
+		handler.earth.add(new WalkingSpeed("Speed: cheetah", 50));
 		handler.wind.add(new Flying("Flying: raven", 40));
 		handler.water.add(new Swimming("Swimming: snake", 20));
-		handler.water.add(new Swimming("Swimming: sea lion", 40));
+		handler.earth.add(new Burrow("Burrow: badger", 10));
 	}
 }

@@ -8,6 +8,8 @@ import tyrant.mikera.engine.Thing;
 
 public class Caves {
 
+	static final int[] DELTAS = new int[] { -1, 0, +1 };
+
 	public static BattleMap createCaves(int w, int h, int l) {
 		BattleMap m = new BattleMap(w, h);
 		initCaves(m, l, l);
@@ -79,7 +81,7 @@ public class Caves {
 			break;
 		}
 
-			// deeper caves level
+		// deeper caves level
 		case 2: {
 			m.set("MonsterType", "IsBeast");
 			m.fillArea(0, 0, 64, 64, m.wall());
@@ -97,7 +99,7 @@ public class Caves {
 			break;
 		}
 
-			// bandit's lair level
+		// bandit's lair level
 		case 3: {
 			m.set("MonsterType", "IsBandit");
 			m.fillArea(0, 0, 64, 64, m.wall());
@@ -222,7 +224,11 @@ public class Caves {
 				y + size * dx + len * dy / 2, m.wall());
 		int p = 0;
 		for (int i = 0; i <= len; i++) {
-			m.setTile(x + i * dx + p * dy, y + i * dy - p * dx, m.floor());
+			int passagex = x + i * dx + p * dy;
+			int passagey = y + i * dy - p * dx;
+			m.setTile(passagex, passagey, m.floor());
+			m.setTile(passagex + RPG.pick(DELTAS), passagey + RPG.pick(DELTAS),
+					m.floor());
 			if (RPG.d(2) == 1) {
 				p = RPG.middle(-size, p + RPG.r(2) - RPG.r(2), size);
 			}

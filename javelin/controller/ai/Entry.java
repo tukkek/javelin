@@ -12,26 +12,19 @@ import java.util.List;
  */
 public class Entry {
 	/**
-	 * Estado de jogo presente nesse n�.
-	 * 
-	 * @author Alex Henry
+	 * Game state.
 	 */
 	final public Node node;
 	/**
-	 * Valor utilit�rio desse n�.
-	 * 
-	 * TODO change to 'utility'?
-	 * 
-	 * @author Alex Henry
+	 * Utility value.
 	 */
 	final public float value;
+	/**
+	 * Outcome probabilities by chance.
+	 */
 	public final List<ChanceNode> cns;
 
-	/**
-	 * TODO if
-	 * {@link ActionProvider#checkstacking(javelin.model.state.BattleState)}
-	 * errors don't stop try {@link Node#deepclone()} here instead.
-	 */
+	/** Constructor. */
 	public Entry(final Node state, final float value2,
 			final List<ChanceNode> cns) {
 		super();

@@ -2,10 +2,10 @@ package javelin.view.screen.shopping;
 
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
-import javelin.model.item.potion.Potion;
-import javelin.model.world.Squad;
-import javelin.model.world.place.town.CraftingOrder;
-import javelin.model.world.place.town.Town;
+import javelin.model.item.Potion;
+import javelin.model.unit.Squad;
+import javelin.model.world.location.town.CraftingOrder;
+import javelin.model.world.location.town.Town;
 import javelin.view.screen.town.PurchaseOption;
 
 /**

@@ -15,20 +15,20 @@ public class Grapple extends Maneuver {
 	}
 
 	@Override
-			boolean validatetarget(Combatant target) {
-		return !target.hascondition(Grappling.class);
+	boolean validatetarget(Combatant target) {
+		return target.hascondition(Grappling.class) == null;
 	}
 
 	@Override
-			ChanceNode miss(Combatant combatant, Combatant target,
-					BattleState battleState, float chance) {
+	ChanceNode miss(Combatant combatant, Combatant target,
+			BattleState battleState, float chance) {
 		return new ChanceNode(battleState, chance, "Grapple attempt fails...",
 				Delay.WAIT);
 	}
 
 	@Override
-			ChanceNode hit(Combatant current, Combatant target, BattleState s,
-					float chance) {
+	ChanceNode hit(Combatant current, Combatant target, BattleState s,
+			float chance) {
 		s = s.clone();
 		current = s.clone(current);
 		target = s.clone(target);
@@ -39,19 +39,19 @@ public class Grapple extends Maneuver {
 		}
 		current.ap += duration;
 		target.ap += duration;
-		current.conditions.add(new Grappling(current.ap + .1f, current));
-		target.conditions.add(new Grappling(target.ap + .1f, target));
+		current.addcondition(new Grappling(current.ap + .1f, current));
+		target.addcondition(new Grappling(target.ap + .1f, target));
 		return new ChanceNode(s, chance, current + " and " + target
 				+ " are grappling for " + duration + " turn(s)!", Delay.BLOCK);
 	}
 
 	@Override
-			int getsavebonus(Combatant targetCombatant) {
+	int getsavebonus(Combatant targetCombatant) {
 		return targetCombatant.source.fort;
 	}
 
 	@Override
-			int getattackerbonus(Combatant combatant) {
+	int getattackerbonus(Combatant combatant) {
 		return Monster.getbonus(combatant.source.strength);
 	}
 }

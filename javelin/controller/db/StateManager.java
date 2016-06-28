@@ -11,19 +11,24 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.Weather;
+import javelin.controller.action.world.Journal;
 import javelin.controller.exception.battle.EndBattle;
+import javelin.model.Realm;
+import javelin.model.item.Key;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Squad;
 import javelin.model.world.Incursion;
-import javelin.model.world.Squad;
+import javelin.model.world.Season;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
-import javelin.model.world.place.dungeon.Dungeon;
-import javelin.model.world.place.unique.Haxor;
+import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.unique.Haxor;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 
@@ -80,9 +85,15 @@ public class StateManager {
 			writer.writeObject(World.seed);
 			writer.writeObject(Dungeon.active);
 			writer.writeObject(Incursion.currentel);
-			writer.writeObject(Weather.now);
+			writer.writeObject(Weather.current);
 			writer.writeObject(EndBattle.lastkilled);
 			writer.writeObject(WorldScreen.discovered);
+			writer.writeObject(World.roads);
+			writer.writeObject(World.highways);
+			writer.writeObject(Season.current);
+			writer.writeObject(Season.endsat);
+			writer.writeObject(Key.queue);
+			writer.writeObject(Journal.content);
 			writer.flush();
 			writer.close();
 		} catch (final NotSerializableException e) {
@@ -115,7 +126,7 @@ public class StateManager {
 							.readObject();
 			Javelin.act();
 			World.seed = (World) stream.readObject();
-			JavelinApp.overviewmap = World.makemap(World.seed);
+			JavelinApp.overviewmap = WorldScreen.worldmap;
 			for (ArrayList<WorldActor> instances : WorldActor.INSTANCES
 					.values()) {
 				for (WorldActor p : instances) {
@@ -130,6 +141,12 @@ public class StateManager {
 			Weather.read((Integer) stream.readObject());
 			EndBattle.lastkilled = (Combatant) stream.readObject();
 			WorldScreen.discovered = (HashSet<Point>) stream.readObject();
+			World.roads = (boolean[][]) stream.readObject();
+			World.highways = (boolean[][]) stream.readObject();
+			Season.current = (Season) stream.readObject();
+			Season.endsat = (Integer) stream.readObject();
+			Key.queue = (LinkedList<Realm>) stream.readObject();
+			Journal.content = (String) stream.readObject();
 			stream.close();
 			return true;
 		} catch (final Throwable e1) {

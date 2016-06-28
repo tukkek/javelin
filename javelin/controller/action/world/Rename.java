@@ -1,8 +1,9 @@
 package javelin.controller.action.world;
 
-import javelin.controller.exception.RepeatTurnException;
+import javelin.Javelin;
+import javelin.controller.exception.RepeatTurn;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Squad;
+import javelin.model.unit.Squad;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.RecruitScreen;
 
@@ -19,10 +20,10 @@ public class Rename extends WorldAction {
 
 	@Override
 	public void perform(WorldScreen screen) {
-		int i = CastSpells.choose("Rename which unit?", Squad.active.members,
-				false, false);
+		int i = Javelin.choose("Rename which unit?", Squad.active.members, true,
+				false);
 		if (i == -1) {
-			throw new RepeatTurnException();
+			throw new RepeatTurn();
 		}
 		Combatant m = Squad.active.members.get(i);
 		m.source.customName = RecruitScreen.namingscreen(m.source.toString());

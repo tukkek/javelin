@@ -29,6 +29,7 @@ public abstract class Feat implements Serializable {
 	public boolean update = false;
 
 	static {
+		new Alertness();
 		new BullRush();
 		new Cleave();
 		new ExoticWeaponProficiency();

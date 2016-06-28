@@ -16,4 +16,14 @@ public class PurchaseOption extends Option {
 		super(i.name, i.price);
 		this.i = i;
 	}
+
+	@Override
+	public String toString() {
+		return i.toString();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return i.equals(obj);
+	}
 }

@@ -2,7 +2,7 @@ package javelin.controller;
 
 import java.util.ArrayList;
 
-import javelin.Javelin;
+import javelin.controller.db.Preferences;
 import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
@@ -20,27 +20,27 @@ public class Weather {
 	static public int DRY = 0;
 	static public int RAIN = 1;
 	static public int STORM = 2;
-	public static int now;
+	public static int current;
 
 	static {
 		read(0);
 	}
 
 	public static void weather() {
-		if (Javelin.DEBUGWEATHER != null) {
-			now = Javelin.DEBUGWEATHER;
+		if (Preferences.DEBUGWEATHER != null) {
+			current = read(0);
 			return;
 		}
 		int roll = RPG.pick(DISTRIBUTION);
-		if (roll > now) {
-			now += 1;
-		} else if (roll < now) {
-			now -= 1;
+		if (roll > current) {
+			current += 1;
+		} else if (roll < current) {
+			current -= 1;
 		}
 	}
 
 	public static void flood(BattleMap m, int maxflooding) {
-		final double r = RATIO[Math.min(now, maxflooding)];
+		final double r = RATIO[Math.min(current, maxflooding)];
 		if (r == 0.0) {
 			return;
 		}
@@ -63,7 +63,20 @@ public class Weather {
 		m.flood(state);
 	}
 
-	public static void read(int nowp) {
-		now = Javelin.DEBUGWEATHER == null ? nowp : Javelin.DEBUGWEATHER;
+	public static int read(int nowp) {
+		if (Preferences.DEBUGWEATHER == null) {
+			return nowp;
+		}
+		if (Preferences.DEBUGWEATHER.equals("dry")) {
+			return DRY;
+		}
+		if (Preferences.DEBUGWEATHER.equals("rain")) {
+			return RAIN;
+		}
+		if (Preferences.DEBUGWEATHER.equals("storm")) {
+			return STORM;
+		}
+		throw new RuntimeException(
+				"Unknown weather: " + Preferences.DEBUGWEATHER);
 	}
 }

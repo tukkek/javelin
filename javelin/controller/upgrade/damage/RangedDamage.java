@@ -11,8 +11,8 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public class RangedDamage extends Damage {
-	public RangedDamage(final String name) {
-		super(name);
+	public RangedDamage() {
+		super("More ranged damage");
 	}
 
 	@Override

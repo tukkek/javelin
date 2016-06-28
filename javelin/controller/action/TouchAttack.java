@@ -3,9 +3,8 @@ package javelin.controller.action;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
-import javelin.controller.exception.RepeatTurnException;
+import javelin.controller.exception.RepeatTurn;
 import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
@@ -18,7 +17,7 @@ import tyrant.mikera.tyrant.Game.Delay;
  * 
  * @author alex
  */
-public class TouchAttack extends Fire implements AiAction {
+public class TouchAttack extends Fire {
 
 	public TouchAttack() {
 		super("Touch attack", "t", 't');
@@ -39,8 +38,11 @@ public class TouchAttack extends Fire implements AiAction {
 		return outcomes;
 	}
 
-	private List<ChanceNode> attack(Combatant active, Combatant target,
+	private List<ChanceNode> attack(Combatant active, final Combatant target,
 			BattleState gameState) {
+		gameState = gameState.clone();
+		active = gameState.clone(active);
+		active.ap += .5;
 		javelin.model.unit.abilities.TouchAttack attack = active.source.touch;
 		int damage = attack.damage[0] * attack.damage[1] / 2;
 		List<ChanceNode> nodes = new ArrayList<ChanceNode>();
@@ -56,14 +58,12 @@ public class TouchAttack extends Fire implements AiAction {
 	}
 
 	ChanceNode registerdamage(BattleState gameState, String action,
-			float savechance, Combatant target, int damage, Combatant active) {
+			float chance, Combatant target, int damage, Combatant active) {
 		gameState = gameState.clone();
 		target = gameState.clone(target);
-		target.damage(damage, gameState, target.source.resistance);
-		active = gameState.clone(active);
-		active.ap += .5f;
-		return new ChanceNode(gameState, savechance,
-				action + target.getStatus() + "!", Delay.BLOCK);
+		target.damage(damage, gameState, target.source.energyresistance);
+		return new ChanceNode(gameState, chance,
+				action + target.getStatus() + ".", Delay.BLOCK);
 	}
 
 	@Override
@@ -90,18 +90,19 @@ public class TouchAttack extends Fire implements AiAction {
 	@Override
 	protected void checkhero(Thing hero) {
 		if (hero.combatant.source.touch == null) {
-			throw new RepeatTurnException();
+			throw new RepeatTurn();
 		}
 	}
 
 	@Override
-	public void checkengaged(BattleState state, Combatant c) {
-		return;// engaged is fine
+	protected boolean checkengaged(BattleState state, Combatant c) {
+		return false;// engaged is fine
 	}
 
 	@Override
-	protected int calculatehitchance(Combatant target, Combatant active,
+	protected int calculatehitdc(Combatant target, Combatant active,
 			BattleState state) {
+		/* should be ignored */
 		return 1;
 	}
 }

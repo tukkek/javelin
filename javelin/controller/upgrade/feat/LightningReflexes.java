@@ -7,6 +7,7 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public class LightningReflexes extends IronWill {
+	/** Constructor. */
 	public LightningReflexes() {
 		super("Lightning reflexes",
 				javelin.model.feat.LightningReflexes.singleton);

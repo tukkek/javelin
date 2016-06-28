@@ -23,7 +23,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import javelin.controller.db.Properties;
+import javelin.controller.db.Preferences;
 import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
 import javelin.view.MapPanel;
@@ -38,9 +38,6 @@ import tyrant.mikera.tyrant.author.MapMaker;
 import tyrant.mikera.tyrant.util.Text;
 
 public final class Game extends BaseObject {
-	private static final int MESSAGEWAIT = Math.round(
-			1000 * Float.parseFloat(Properties.getString("ui.messagedelay")));
-
 	private static final long serialVersionUID = 3544670698288460592L;
 
 	// temp: static game instance
@@ -150,7 +147,7 @@ public final class Game extends BaseObject {
 		case WAIT:
 			try {
 				redraw();
-				Thread.sleep(MESSAGEWAIT);
+				Thread.sleep(Preferences.MESSAGEWAIT);
 			} catch (final InterruptedException e) {
 				e.printStackTrace();
 			}

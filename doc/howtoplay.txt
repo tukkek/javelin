@@ -1,19 +1,38 @@
 HOW TO PLAY
 
-Javelin is a complex game with simple rules. You can learn everything just by playing so go ahead and try! Don't be upset if something unexpected happens or you die, since it can be a difficult game, especially on the early levels.
+Javelin is a complex game with simple rules. You can learn everything just by 
+playing so go ahead and try! Don't be upset if something unexpected happens or 
+you die, since it can be a difficult game, especially on the early levels and 
+when you're just starting. This guide leaves a lot unexplained on purpose. 
 
-You control a squad and do battle around the world. Towns have shops, let you rest to recover health and upgrade your units when they have enough experience points (XP).
+You control a squad and do battle around the world. Towns have shops, let you 
+rest to recover health and upgrade your units when they have enough experience 
+points (XP). You can manage how towns grow or let the game do that for you.
 
-There are several types of terrain in the game: plains (offer easy battles), forest (moderate), mountains (hard) and swamp (very hard). When the game starts you will probably want to stay very close to the nearest city and level up your party once or twice before adventuring farther.
+Every time you start a new game a new world is generated! If you don't like the
+world you're in you can press SHIFT+q to quit and start a new game. If you want
+to keep your current progress and continue later on just close the game window.
 
-Every time you start a new game a new world is generated! If you don't like the world you're in you can press SHIFT+q to quit and start a new game. If you want to keep your current progress and continue later just close the game.
+There are several types of terrain in the game: plains and hills (easy), forest
+(moderate), mountains and desert (hard) and marsh (very hard). When the game
+starts you will probably want to stay very close to the nearest city and level
+up your party once or twice before adventuring farther. If you're having 
+trouble getting far on the map select faster starting units or bring workers
+from towns to build roads and inns on your path.
 
-Don't forget that fleeing is an option if a situation ever seems less than favorable! Press h during battle for a list of all possible actions.
+Don't forget that fleeing is an option if a situation ever seems less than 
+favorable! Press h in and out of battle for a list of all possible actions.
+You can also press K to configure your command keys in and out of battle.   
 
-Your objective is to beat your own highscore, which is recorded when the game ends. Good luck and have fun!
+A few nearby locations can help you at the start of the game:
+ * Adventurers Guild: trade experience for starting character kits
+ * Training Hall: lets you earn experience and feats in a safer environment
+ * Temple of Haxor: allows you to do a variety of things during the entire game
+
+Your objective is to beat your own highscore, which is recorded when the game 
+ends. Good luck and have fun!
 
 Check out these websites for more information:
-
  * javelinrl.wordpress.com  (news and updates)
  * reddit.com/r/javelinrl   (official game forum)
  * d20srd.org               (game rules)

@@ -4,17 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.ai.ActionProvider;
+import javelin.controller.db.Preferences;
 import javelin.controller.exception.GaveUpException;
 import javelin.controller.fight.Fight;
-import javelin.controller.map.Map;
-import javelin.controller.map.MapGenerator;
+import javelin.controller.terrain.Terrain;
+import javelin.controller.terrain.map.Map;
+import javelin.controller.terrain.map.MapGenerator;
 import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Squad;
-import javelin.model.world.place.dungeon.Dungeon;
+import javelin.model.unit.Squad;
+import javelin.model.world.location.dungeon.Dungeon;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
@@ -30,19 +31,20 @@ public class BattleSetup {
 
 	public static BattleMap place() {
 		rollinitiative();
-		Map sourcemap = Javelin.app.fight.getmap();
-		if (sourcemap == null) {
-			sourcemap = MapGenerator.generatebattlemap(Javelin.terrain(),
+		Fight f = Javelin.app.fight;
+		if (f.map == null) {
+			f.map = MapGenerator.generatebattlemap(
+					f.terrain == null ? Terrain.current() : f.terrain,
 					Dungeon.active != null);
 		}
-		sourcemap.generate();
-		BattleMap m = sourcemap.map;
-		m.period = Javelin.DEBUGPERIOD == null ? Javelin.getDayPeriod()
-				: Javelin.DEBUGPERIOD;
+		f.map.generate();
+		BattleMap m = f.map.battlemap;
+		m.period = Preferences.DEBUGPERIOD == null ? Javelin.getDayPeriod()
+				: Preferences.DEBUGPERIOD;
 		for (int i = 0; i < 1000; i++) {
 			try {
 				placecombatants(m);
-				Weather.flood(m, sourcemap.maxflooding);
+				Weather.flood(m, f.map.maxflooding);
 				return m;
 			} catch (GaveUpException e) {
 				ArrayList<Combatant> all =
@@ -111,7 +113,7 @@ public class BattleSetup {
 
 	public static void placecombatant(final Combatant placing,
 			final Combatant reference, final BattleMap m, final BattleState s)
-					throws GaveUpException {
+			throws GaveUpException {
 		int vision = placing.view(s.period);
 		if (vision > 8 || vision > MAXDISTANCE) {
 			vision = MAXDISTANCE;
@@ -122,13 +124,8 @@ public class BattleSetup {
 			Point p = RPG.pick(possibilities);
 			placing.location[0] = p.x;
 			placing.location[1] = p.y;
-			if (Javelin.DEBUG) {
-				// TODO debug
-				ActionProvider.checkstacking(s);
-			}
 			Vision path = s.hasLineOfSight(placing, reference);
-			if (path == Vision.CLEAR
-			/* || placing.source.fly > 0 && path == Vision.BLOCKED */) {
+			if (path == Vision.CLEAR) {
 				add(m, placing, p, s);
 				break;
 			}
@@ -168,10 +165,6 @@ public class BattleSetup {
 		(BattleMap.blueTeam.contains(c) ? s.blueTeam : s.redTeam).add(c);
 		c.location[0] = p.x;
 		c.location[1] = p.y;
-		if (Javelin.DEBUG) {
-			// TODO debug
-			ActionProvider.checkstacking(s);
-		}
 	}
 
 	public static Thing addThing(final BattleMap tm, final Point p,

@@ -4,14 +4,14 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.world.Merchant;
-import javelin.model.world.place.dungeon.Treasure;
-import javelin.model.world.place.town.Town;
+import javelin.model.world.Caravan;
+import javelin.model.world.location.dungeon.Chest;
+import javelin.model.world.location.town.Town;
 
 /**
  * A special kind of item that is equipabble and is not allowed to be crafted on
  * {@link Town}s but can be found on other occasions such as in a
- * {@link Merchant}s' possession, {@link Treasure} chests and at the Arcane
+ * {@link Caravan}s' possession, {@link Chest} chests and at the Arcane
  * University.
  * 
  * The name of this class is a big misnomer from d20 standards. Technically
@@ -95,7 +95,7 @@ public abstract class Artifact extends Item {
 	 *         the operation is aborted.
 	 */
 	public boolean equip(Combatant c) {
-		if (!c.source.humanoid) {
+		if (canuse(c) != null) {
 			return false;
 		}
 		if (c.equipped.contains(this)) {// unequip
@@ -131,11 +131,19 @@ public abstract class Artifact extends Item {
 
 	@Override
 	public boolean equals(Object obj) {
-		return obj == this;
+		return getClass().equals(obj.getClass());
 	}
 
 	@Override
 	public String describefailure() {
 		return "Only humanoids can equip artifacts!";
+	}
+
+	@Override
+	public String canuse(Combatant c) {
+		if (c.source.humanoid) {
+			return null;
+		}
+		return "can't equip";
 	}
 }

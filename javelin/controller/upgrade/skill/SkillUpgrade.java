@@ -28,12 +28,19 @@ public abstract class SkillUpgrade extends Upgrade {
 
 	@Override
 	protected boolean apply(Combatant c) {
-		int ranks = c.source.hd.count() + 3;
+		int ranks = maximize(c);
 		if (getranks(c.source.skills) >= ranks) {
 			return false;
 		}
 		setranks(c.source.skills, ranks);
 		return true;
+	}
+
+	/**
+	 * @return The maximum number of ranks this creature can have in any skill.
+	 */
+	public int maximize(Combatant c) {
+		return c.source.hd.count() + 3;
 	}
 
 	/**

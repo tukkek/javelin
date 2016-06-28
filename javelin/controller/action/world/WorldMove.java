@@ -3,13 +3,19 @@ package javelin.controller.action.world;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.JavelinApp;
+import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.StartBattle;
+import javelin.controller.terrain.Terrain;
+import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Squad;
+import javelin.model.unit.Monster;
+import javelin.model.unit.Squad;
+import javelin.model.world.World;
 import javelin.model.world.WorldActor;
-import javelin.model.world.place.WorldPlace;
-import javelin.model.world.place.dungeon.Dungeon;
+import javelin.model.world.location.Location;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.view.screen.DungeonScreen;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.Thing;
@@ -20,72 +26,124 @@ import tyrant.mikera.engine.Thing;
  * TODO {@link WorldScreen} hierarchy should be refactored into proper Battle /
  * Dungeon / World screens.
  * 
+ * TODO {@link #perform(WorldScreen)} needs refactoring after 2.0
+ * 
+ * @see Javelin#getDayPeriod()
  * @author alex
  */
 public class WorldMove extends WorldAction {
-	public static final int TIMECOST = 4;
-	public static boolean isleavingplace = false;// TODO remove
+	/**
+	 * Represents time spent on resting, eating, sleeping, etc.
+	 * 
+	 * TODO forced march
+	 */
+	public static final float NORMALMARCH = 4f / 5f;
+	/**
+	 * Ideally a move should always be 6 hours in a worst-case scenario (the
+	 * time of a period), so as to avoid a move taking longer than a period,
+	 * which could confuse {@link Hazard}s.
+	 * 
+	 * @see #TIMECOST
+	 */
+	public static final float MOVETARGET = 6f;
+	/**
+	 * How much time it takes to walk a single square with speed 30 (~30mph,
+	 * normal human speed).
+	 * 
+	 * Calculation of worst case scenario (which should take 6 hours): 6 *
+	 * 15/30ft (slow races) * .5 (bad terrain)
+	 * 
+	 * @see Monster#gettopspeed()
+	 * @see #MOVETARGET
+	 * @see #NORMALMARCH
+	 */
+	public static final float TIMECOST =
+			NORMALMARCH * (MOVETARGET * 15f / 30f) / 2f;
+	/** TODO remove, hack */
+	public static boolean isleavingplace = false;//
 	private final int deltax;
 	private final int deltay;
 
-	public WorldMove(final int[] is, final int deltax, final int deltay,
-			final String[] s) {
-		super("Move, enter places of interest, fight incursions", is, s);
+	/**
+	 * Constructor
+	 * 
+	 * @param keycodes
+	 *            Integer/char keys.
+	 * @param deltax
+	 *            Direction of x movement.
+	 * @param deltay
+	 *            Direction of y movement.
+	 * @param keys
+	 *            Text keys.
+	 */
+	public WorldMove(final int[] keycodes, final int deltax, final int deltay,
+			final String[] keys) {
+		super("Move (" + keys[1].charAt(0) + ")", keycodes, keys);
 		this.deltax = deltax;
 		this.deltay = deltay;
 	}
 
 	@Override
 	public void perform(final WorldScreen s) {
-		JavelinApp.context.ellapse(TIMECOST);
-		final Thing t = JavelinApp.context.updatehero();
+		Squad.active.lastterrain = Terrain.current();
+		final Thing t = JavelinApp.context.gethero();
 		int tox = t.x + deltax;
 		int toy = t.y + deltay;
-		WorldActor actor =
-				Dungeon.active == null ? WorldScreen.getactor(tox, toy) : null;
-		WorldPlace place =
-				actor instanceof WorldPlace ? (WorldPlace) actor : null;
+		if (!World.validatecoordinate(tox, toy) || (Dungeon.active == null
+				&& !World.seed.map[tox][toy].enter(tox, toy))) {
+			throw new RepeatTurn();
+		}
+		float hours = Dungeon.active == null ? Squad.active.move(false) : 0;
 		try {
-			if (JavelinApp.context.react(actor, tox, toy)) {
-				if (Dungeon.active != null) {
-					if (DungeonScreen.dontmove) {
-						DungeonScreen.dontmove = false;
-						return;
-					}
-					place(t, deltax, deltay);
-				} else if (place != null) {
-					if (place.allowentry && place.garrison.isEmpty()) {
+			WorldActor actor =
+					Dungeon.active == null ? WorldActor.get(tox, toy) : null;
+			Location place =
+					actor instanceof Location ? (Location) actor : null;
+			try {
+				if (JavelinApp.context.react(actor, tox, toy)) {
+					if (Dungeon.active != null) {
+						if (DungeonScreen.dontmove) {
+							DungeonScreen.dontmove = false;
+							return;
+						}
 						place(t, deltax, deltay);
+					} else if (place != null) {
+						if (place.allowentry && place.garrison.isEmpty()) {
+							place(t, deltax, deltay);
+						}
+						if (place instanceof Dungeon) {
+							((Dungeon) place).activate();
+						}
 					}
-					if (place instanceof Dungeon) {
-						((Dungeon) place).activate();
-					}
+					return;
 				}
+				if (place != null && !place.allowentry) {
+					return;
+				}
+			} catch (StartBattle e) {
+				if (place != null && place.allowentry) {
+					place(t, deltax, deltay);
+				}
+				throw e;
+			}
+			if (s instanceof DungeonScreen && Dungeon.active == null) {
+				return;// TODO hack
+			}
+			if (!place(t, deltax, deltay)) {
 				return;
 			}
-			if (place != null && !place.allowentry) {
-				return;
+			if (WorldMove.walk(t)) {
+				JavelinApp.context.explore(hours);
 			}
-		} catch (StartBattle e) {
-			if (place != null && place.allowentry) {
-				place(t, deltax, deltay);
+			heal();
+		} finally {
+			if (Squad.active != null) {
+				Squad.active.ellapse(Math.round(hours));
 			}
-			throw e;
 		}
-		if (s instanceof DungeonScreen && Dungeon.active == null) {
-			return;// TODO hack
-		}
-		if (!place(t, deltax, deltay)) {
-			return;
-		}
-		if (WorldMove.walk(t)) {
-			JavelinApp.context.encounter();
-		}
-		heal();
 	}
 
-	public static boolean place(final Thing t, final int deltax,
-			final int deltay) {
+	static boolean place(final Thing t, final int deltax, final int deltay) {
 		JavelinApp.context.map.removeThing(t);
 		t.x += deltax;
 		t.y += deltay;
@@ -105,7 +163,7 @@ public class WorldMove extends WorldAction {
 		return true;
 	}
 
-	public static void heal() {
+	static void heal() {
 		for (final Combatant m : Squad.active.members) {
 			if (m.source.fasthealing != 0) {
 				m.hp = m.maxhp;
@@ -113,7 +171,7 @@ public class WorldMove extends WorldAction {
 		}
 	}
 
-	public static boolean walk(final Thing t) {
+	static boolean walk(final Thing t) {
 		final List<Squad> here = new ArrayList<Squad>();
 		for (final WorldActor p : Squad.getall(Squad.class)) {
 			Squad s = (Squad) p;

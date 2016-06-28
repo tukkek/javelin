@@ -1,12 +1,14 @@
 UPGRADE GUIDE (simple upgrades)
 
 Acid spray: touch attack, deals 8d8 damage (reflex save DC 17 for half).
+Alertness: +2 to spot and listen checks.
 Breath weapon: special area attack, press b during battle to activate.
 Classes: raises hit dice, base attack bonus and saving throws.
 Damage reduction: reduces damage from physical attacks.
 Darkvision: greatly improved vision when dark.
 Energy resistance/immunity: reduces or ignores damage from non-physical attacks.
 Fast healing: heals a certain number of hit points per turn (1AP).
+Fear damage: adds the fear effect to mêlée attacks.
 Flying: allows character to fly over terrain and water.
 Great fortitude: +2 fortitude.
 Improved initiative: +4 initiative.
@@ -16,6 +18,8 @@ Low-light vision: improved vision when dark.
 Mêlée damage: raises damage of all mêlée attacks.
 Mêlée focus: +1 to all mêlee attack bonuses (requires +1 Base Attack Bonus).
 Natural armor: raises armor class.
+Paralysis damage: adds the paralysis effect to mêlée attacks.
+Poison damage: adds the poison effect to mêlée attacks.
 Raise constitution: raises fortitude, hit points and breath weapon saving throw difficulty.
 Raise dexterity: raises armor class, reflexes, ranged attack bonuses and initiative.
 Raise strength: raises mêlée attack bonuses and damage.

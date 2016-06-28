@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import javelin.controller.ai.cache.AiCache;
-import javelin.controller.db.Properties;
+import javelin.controller.db.Preferences;
 import javelin.model.state.BattleState;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
@@ -19,21 +19,12 @@ import tyrant.mikera.tyrant.Game.Delay;
 public class ThreadManager {
 
 	private static final ArrayList<Integer> BATTLERECORD =
-			new ArrayList<Integer>();
-	private static final int THINKINGPERIOD = Math.round(1000
-			* Float.parseFloat(Properties.getString("ai.maxsecondsthinking")));
-	public static int maxthreads;
+			new ArrayList<Integer>();;
 
 	static public void determineprocessors() {
-		int limit = Integer.parseInt(Properties.getString("ai.maxthreads"));
-		int cores = Runtime.getRuntime().availableProcessors();
-		maxthreads = cores;
-		if (limit < maxthreads) {
-			maxthreads = limit;
-		}
 		String message =
-				"\n\nThe AI will use " + maxthreads + " of " + cores + " cores";
-		if (AiCache.ENABLED) {
+				"\n\nThe AI will use " + Preferences.MAXTHREADS + " cores";
+		if (Preferences.AICACHEENABLED) {
 			message += " (cache enabled)";
 		}
 		System.out.println(message);
@@ -54,19 +45,12 @@ public class ThreadManager {
 			AiCache.clear();
 			AiThread.depthincremeneter = 1;
 			AiThread.reset();
-			for (int i = 0; i < maxthreads; i++) {
+			for (int i = 0; i < Preferences.MAXTHREADS; i++) {
 				AiThread.STARTED.add(new AiThread(state));
 			}
-			long sleepfor = THINKINGPERIOD - (now() - start);
+			long sleepfor =
+					Preferences.MAXMILISECONDSTHINKING - (now() - start);
 			Thread.sleep(sleepfor >= 0 ? sleepfor : 0);
-			// for (int i = 1; i < AiThread.STARTED.size(); i++) {
-			// /*
-			// * TODO would be nice to do this more properly so hanging threads
-			// can be
-			// * garbage-collected
-			// */
-			// AiThread.STARTED.get(i).interrupt();
-			// }
 			while (AiThread.FINISHED.isEmpty()) {
 				if (ThreadManager.ERROR != null) {
 					throw ThreadManager.ERROR;

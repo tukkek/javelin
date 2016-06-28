@@ -1,19 +1,21 @@
 package javelin.view.screen;
 
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 import javelin.controller.Point;
 import javelin.controller.exception.battle.StartBattle;
+import javelin.controller.fight.RandomEncounter;
 import javelin.model.BattleMap;
-import javelin.model.world.Squad;
+import javelin.model.unit.Squad;
 import javelin.model.world.WorldActor;
-import javelin.model.world.place.dungeon.Dungeon;
-import javelin.model.world.place.dungeon.Feature;
-import javelin.model.world.place.dungeon.Trap;
+import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.Feature;
+import javelin.model.world.location.dungeon.Trap;
+import javelin.view.Images;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * Shows the inside of a {@link Dungeon}.
@@ -21,11 +23,14 @@ import tyrant.mikera.tyrant.Game.Delay;
  * @author alex
  */
 public class DungeonScreen extends WorldScreen {
+	private static final Image FLOOR = Images.getImage("dungeonfloor");
+	private static final Image WALL = Images.getImage("dungeonwall");
 	/** TODO hack */
 	public static boolean dontmove;
 
-	public DungeonScreen(BattleMap mapp) {
-		super(mapp);
+	/** Exhibits a dungeon. */
+	public DungeonScreen(BattleMap map) {
+		super(map);
 		mappanel.tilesize = 32;
 		mappanel.discovered = new HashSet<Point>() {
 			@Override
@@ -42,13 +47,13 @@ public class DungeonScreen extends WorldScreen {
 
 	@Override
 	public void turn() {
-		Dungeon.active.herop = new Point(Game.hero().x, Game.hero().y);
+		Dungeon.active.herolocation = new Point(Game.hero().x, Game.hero().y);
 	}
 
 	@Override
-	public void encounter() {
+	public void explore(float hoursellapsed) {
 		try {
-			WorldScreen.encounter(Dungeon.ENCOUNTERRATIO);
+			RandomEncounter.encounter(Dungeon.ENCOUNTERRATIO);
 		} catch (StartBattle e) {
 			map.removeThing(Dungeon.active.hero);
 			throw e;
@@ -77,17 +82,6 @@ public class DungeonScreen extends WorldScreen {
 			}
 		}
 		return false;
-	}
-
-	@Override
-	public void ellapse(int suggested) {
-		// time stands still
-	}
-
-	public static void message(String in) {
-		Game.messagepanel.clear();
-		Game.message(in, null, Delay.BLOCK);
-		Game.getInput();
 	}
 
 	@Override
@@ -123,7 +117,7 @@ public class DungeonScreen extends WorldScreen {
 	}
 
 	@Override
-	public Thing updatehero() {
+	public Thing gethero() {
 		return Dungeon.active.hero;
 	}
 
@@ -132,4 +126,8 @@ public class DungeonScreen extends WorldScreen {
 		return false;
 	}
 
+	@Override
+	public Image gettile(int x, int y) {
+		return Dungeon.active.walls.contains(new Point(x, y)) ? WALL : FLOOR;
+	}
 }

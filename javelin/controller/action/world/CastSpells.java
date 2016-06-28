@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.exception.NotPeaceful;
 import javelin.controller.upgrade.Spell;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Squad;
-import javelin.view.screen.InfoScreen;
+import javelin.model.unit.Squad;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
@@ -23,9 +21,12 @@ public class CastSpells extends WorldAction {
 		List<String> names = new ArrayList<String>();
 		ArrayList<Combatant> casters = filtercasters(names);
 		if (casters.isEmpty()) {
+			Game.messagepanel.clear();
+			Game.message("No peaceful spells to cast right now...", null,
+					Delay.WAIT);
 			return;
 		}
-		int choice = choose("Who?", names, false, false);
+		int choice = Javelin.choose("Who?", names, false, false);
 		if (choice == -1) {
 			Game.messagepanel.clear();
 			return;
@@ -37,20 +38,22 @@ public class CastSpells extends WorldAction {
 			Game.messagepanel.clear();
 			return;
 		}
-		int targetindex = selecttarget();
-		if (targetindex < 0) {
-			Game.messagepanel.clear();
+		Combatant target = null;
+		if (s.castonallies) {
+			int targetindex = selecttarget();
+			if (targetindex < 0) {
+				Game.messagepanel.clear();
+				return;
+			}
+			target = Squad.active.members.get(targetindex);
+		}
+		if (!s.validate(caster, target)) {
+			Game.message("Can't cast this spell right now.", null, Delay.BLOCK);
 			return;
 		}
-		try {
-			String message = s.castpeacefully(caster,
-					Squad.active.members.get(targetindex));
-			if (message != null) {
-				Game.message(message, null, Delay.BLOCK);
-			}
-		} catch (NotPeaceful e) {
-			throw new RuntimeException(
-					"Should have been caught in CastSpells#listspells. See Spell#ispeaceful");
+		String message = s.castpeacefully(caster, target);
+		if (message != null) {
+			Javelin.message(message, false);
 		}
 		s.used += 1;
 	}
@@ -60,7 +63,7 @@ public class CastSpells extends WorldAction {
 		for (Combatant m : Squad.active.members) {
 			targets.add(m.source.customName);
 		}
-		int targetindex = choose("Cast on...", targets, false, false);
+		int targetindex = Javelin.choose("Cast on...", targets, false, false);
 		return targetindex;
 	}
 
@@ -72,7 +75,7 @@ public class CastSpells extends WorldAction {
 					Delay.BLOCK);
 			return null;
 		}
-		int input = choose("Which spell?", spellnames, false, false);
+		int input = Javelin.choose("Which spell?", spellnames, false, false);
 		if (input == -1) {
 			return null;
 		}
@@ -101,61 +104,10 @@ public class CastSpells extends WorldAction {
 	public ArrayList<String> listspells(List<Spell> spells) {
 		ArrayList<String> spellnames = new ArrayList<String>();
 		for (Spell s : spells) {
-			if (!s.exhausted() && s.ispeaceful) {
+			if (!s.exhausted() && s.castoutofbattle) {
 				spellnames.add(s.toString());
 			}
 		}
 		return spellnames;
-	}
-
-	/**
-	 * Utility function for user-input selection.
-	 * 
-	 * @param output
-	 *            Text to show the user.
-	 * @param names
-	 *            Will show each's {@link Object#toString()} as an option.
-	 * @param fullscreen
-	 *            <code>true</code> to open in a new screen. Otherwise uses the
-	 *            message panel.
-	 * @param forceselection
-	 *            If <code>false</code> will allow the user to abort the
-	 *            operation.
-	 * @return The index of the selected element or -1 if aborted.
-	 */
-	static public int choose(String output, List<?> names, boolean fullscreen,
-			boolean forceselection) {
-		if (!forceselection) {
-			output += " (q to quit)";
-		}
-		output += " \n\n";
-		ArrayList<Object> options = new ArrayList<Object>();
-		int i = 1;
-		for (Object o : names) {
-			String name = o.toString();
-			options.add(name);
-			output += "[" + i + "] " + name + "\n";
-			i += 1;
-		}
-		if (fullscreen) {
-			Javelin.app.switchScreen(new InfoScreen(output));
-		} else {
-			Game.messagepanel.clear();
-			Game.message(output, null, Delay.NONE);
-		}
-		while (true) {
-			try {
-				Character feedback = InfoScreen.feedback();
-				if (!forceselection && feedback == 'q') {
-					return -1;
-				}
-				int selected = Integer.parseInt(feedback.toString()) - 1;
-				if (selected < names.size()) {
-					return selected;
-				}
-			} catch (Exception e) {
-				continue;
-			}
-		}
 	}
 }

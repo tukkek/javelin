@@ -2,12 +2,12 @@ package javelin.view.screen.upgrading;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
+import java.util.HashSet;
 
 import javelin.controller.upgrade.Upgrade;
-import javelin.model.world.Squad;
-import javelin.model.world.place.town.Order;
-import javelin.model.world.place.town.Town;
+import javelin.model.unit.Squad;
+import javelin.model.world.location.town.Order;
+import javelin.model.world.location.town.Town;
 
 /** {@link Town} version of an upgrading screen. */
 public class TownUpgradingScreen extends UpgradingScreen {
@@ -36,7 +36,7 @@ public class TownUpgradingScreen extends UpgradingScreen {
 	}
 
 	@Override
-	protected List<Upgrade> getupgrades() {
+	protected HashSet<Upgrade> getupgrades() {
 		return town.upgrades;
 	}
 

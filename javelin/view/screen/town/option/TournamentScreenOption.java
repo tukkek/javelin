@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.tournament.Exhibition;
-import javelin.model.world.Squad;
-import javelin.model.world.place.town.Town;
+import javelin.controller.fight.tournament.Exhibition;
+import javelin.model.unit.Squad;
+import javelin.model.world.location.town.Town;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.PurchaseScreen;
 import javelin.view.screen.town.SelectScreen;

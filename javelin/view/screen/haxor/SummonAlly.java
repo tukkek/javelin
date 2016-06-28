@@ -2,11 +2,14 @@ package javelin.view.screen.haxor;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.world.Squad;
+import javelin.model.unit.Squad;
 import javelin.view.screen.SquadScreen;
 
 /**
@@ -21,27 +24,75 @@ import javelin.view.screen.SquadScreen;
  * @see SquadScreen
  */
 public class SummonAlly extends Hax {
-	public SummonAlly(String name, double price, boolean requirestargetp) {
-		super(name, price, requirestargetp);
+	public Float fixed = null;
+
+	public SummonAlly(String name, Character keyp, double price,
+			boolean requirestargetp) {
+		super(name, keyp, price, requirestargetp);
 	}
 
 	@Override
 	protected boolean hack(Combatant target, HaxorScreen s) {
-		ArrayList<Monster> candidates = SquadScreen.getcandidates();
-		Collections.shuffle(candidates);
-		float before = Squad.active.members.size();
-		candidateloop: for (Monster candidate : candidates) {
-			for (Combatant c : Squad.active.members) {
-				if (candidate.name.equals(c.source.name)) {
-					continue candidateloop;
-				}
+		Float cr = getstartingcr();
+		Monster ally = null;
+		while (ally == null) {
+			List<Monster> candidates = Javelin.MONSTERSBYCR.get(cr);
+			if (candidates == null) {
+				candidates = Collections.emptyList();
 			}
-			Javelin.recruit(candidate);
-			break;
+			Collections.shuffle(candidates);
+			candidateloop: for (Monster candidate : candidates) {
+				for (Combatant c : Squad.active.members) {
+					if (candidate.name.equals(c.source.name)) {
+						continue candidateloop;
+					}
+				}
+				ally = candidate;
+				break;
+			}
+			Float newcr = findnextlowercr(cr);
+			if (newcr == -Float.MAX_VALUE) {
+				return false;
+			}
+			cr = newcr;
 		}
-		if (before == Squad.active.members.size()) {
-			return false;
-		}
+		Javelin.recruit(ally);
 		return true;
+	}
+
+	/**
+	 * @return The challenge rating to start selecting new members from. If none
+	 *         is found will go down on {@link Javelin#MONSTERSBYCR} from here.
+	 */
+	protected Float getstartingcr() {
+		if (fixed != null) {
+			return fixed;
+		}
+		ArrayList<Combatant> current =
+				new ArrayList<Combatant>(Squad.active.members);
+		current.addAll(Squad.active.members);
+		for (Combatant c : current) {
+			/* update challenge rating */
+			ChallengeRatingCalculator.calculateCr(c.source);
+		}
+		current.sort(new Comparator<Combatant>() {
+			@Override
+			public int compare(Combatant o1, Combatant o2) {
+				return o1.source.challengeRating
+						.compareTo(o2.source.challengeRating);
+			}
+		});
+		return current.get(Math.round(Math.round(
+				Math.floor(current.size() / 2.0)))).source.challengeRating;
+	}
+
+	Float findnextlowercr(Float cr) {
+		Float newcr = -Float.MAX_VALUE;
+		for (Float c : Javelin.MONSTERSBYCR.keySet()) {
+			if (c < cr) {
+				newcr = c;
+			}
+		}
+		return newcr;
 	}
 }

@@ -7,8 +7,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.model.world.Squad;
-import javelin.model.world.place.town.Town;
+import javelin.model.unit.Squad;
+import javelin.model.world.location.town.Town;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.IntroScreen;
 import javelin.view.screen.Option;
@@ -23,22 +23,21 @@ public abstract class SelectScreen extends InfoScreen {
 	private static final DecimalFormat COSTFORMAT =
 			new DecimalFormat("####,###,##0");
 	public static final char PROCEED = 'q';
-	public static final char[] SELECTIONKEYS = new char[] { '1', '2', '3', '4',
-			'5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f', 'g',
-			'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u',
-			'v', 'x', 'w', 'y', 'z', };
+	/** List of keys except q. */
+	public static final char[] KEYS = new char[] { '1', '2', '3', '4', '5', '6',
+			'7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
+			'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u', 'v', 'x',
+			'w', 'y', 'z', };
 	protected final Town town;
 	public boolean showtitle = true;
 	protected String title;
 	/**
-	 * TODO probably unecessary at this point
+	 * TODO remove on 2.0
 	 */
 	protected boolean stayopen = true;
 	private boolean closeafterselect = false;
 
-	/**
-	 * TODO Town could be WorldPlace
-	 */
+	/** Constructor. */
 	public SelectScreen(final String name, final Town t) {
 		super(Javelin.app, "");
 		town = t;
@@ -56,7 +55,7 @@ public abstract class SelectScreen extends InfoScreen {
 		sort(options);
 		for (int i = 0; i < options.size(); i++) {
 			final Option o = options.get(i);
-			text += (o.key == null ? SELECTIONKEYS[i] : o.key) + " - " + o.name
+			text += (o.key == null ? KEYS[i] : o.key) + " - " + o.toString()
 					+ printpriceinfo(o) + "\n";
 		}
 		final String extrainfo = printInfo();
@@ -118,7 +117,7 @@ public abstract class SelectScreen extends InfoScreen {
 	protected boolean select(char feedback, final List<Option> options) {
 		Option o = convertselectionkey(feedback, options);
 		if (o == null) {
-			int selected = convertnumericselection(feedback);
+			int selected = convertnumericselection(feedback, KEYS);
 			if (selected < 0 || selected >= options.size()) {
 				return false;
 			}
@@ -140,9 +139,9 @@ public abstract class SelectScreen extends InfoScreen {
 	 * @param options
 	 * @return selection index or -1 if not chosen.
 	 */
-	static public int convertnumericselection(char feedback) {
-		for (int i = 0; i < SELECTIONKEYS.length; i++) {
-			if (SELECTIONKEYS[i] == feedback) {
+	static public int convertnumericselection(char feedback, char[] keys) {
+		for (int i = 0; i < keys.length; i++) {
+			if (keys[i] == feedback) {
 				return i;
 			}
 		}
@@ -172,8 +171,24 @@ public abstract class SelectScreen extends InfoScreen {
 	 *            Selection.
 	 * @return <code>true</code> to exit the screen, <code>false</code> to
 	 *         continue with selection.
+	 * @see #stayopen
 	 */
 	public abstract boolean select(Option o);
 
 	public abstract List<Option> getoptions();
+
+	/**
+	 * @param feedback
+	 *            Given the user-input key
+	 * @return the index of that key in {@link #KEYS}.
+	 */
+	public static int convertkeytoindex(char feedback) {
+		for (int i = 0; i < KEYS.length; i++) {
+			char c = KEYS[i];
+			if (c == feedback) {
+				return i;
+			}
+		}
+		return -1;
+	}
 }

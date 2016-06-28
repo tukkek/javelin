@@ -4,10 +4,8 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.Javelin;
-import javelin.JavelinApp;
-import javelin.controller.map.Map;
 import javelin.model.BattleMap;
+import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Incursion;
 import javelin.view.screen.BattleScreen;
@@ -17,42 +15,9 @@ import tyrant.mikera.tyrant.QuestApp;
  * @see Incursion
  * @author alex
  */
-public class IncursionFight implements Fight {
+public class IncursionFight extends Fight {
 	public static final Image INCURSIONTEXTURE =
 			QuestApp.getImage("/images/texture2.png");
-
-	private final class IncursionScreen extends BattleScreen {
-		final private Incursion i;
-
-		private IncursionScreen(QuestApp q, BattleMap mapp,
-				Incursion incursion) {
-			super(q, mapp, true);
-			i = incursion;
-			Javelin.settexture(IncursionFight.INCURSIONTEXTURE);
-		}
-
-		@Override
-		public void onEnd() {
-			if (BattleMap.redTeam.isEmpty()) {
-				i.remove();
-			} else {
-				for (Combatant incursant : new ArrayList<Combatant>(i.squad)) {
-					Combatant alive = null;
-					for (Combatant inbattle : BattleMap.combatants) {
-						if (inbattle.id == incursant.id) {
-							alive = inbattle;
-							break;
-						}
-					}
-					if (alive == null) {
-						i.squad.remove(incursant);
-					}
-				}
-			}
-			super.onEnd();
-		}
-
-	}
 
 	public final Incursion incursion;
 
@@ -61,16 +26,13 @@ public class IncursionFight implements Fight {
 	 */
 	public IncursionFight(final Incursion incursion) {
 		this.incursion = incursion;
+		texture = IncursionFight.INCURSIONTEXTURE;
+		meld = true;
+		hide = false;
 	}
 
 	@Override
-	public BattleScreen getscreen(final JavelinApp javelinApp,
-			final BattleMap battlemap) {
-		return new IncursionScreen(javelinApp, battlemap, incursion);
-	}
-
-	@Override
-	public int getel(final JavelinApp javelinApp, final int teamel) {
+	public int getel(final int teamel) {
 		throw new RuntimeException(
 				"Shouldn't have to generate an incursion fight.");
 	}
@@ -81,38 +43,30 @@ public class IncursionFight implements Fight {
 	}
 
 	@Override
-	public boolean meld() {
-		return true;
-	}
-
-	@Override
-	public Map getmap() {
-		return null;
-	}
-
-	@Override
-	public boolean friendly() {
-		return false;
-	}
-
-	@Override
-	public boolean rewardgold() {
-		return true;
-	}
-
-	@Override
-	public boolean hide() {
-		/* let player flee it he wants to but don't hide */
-		return false;
-	}
-
-	@Override
-	public boolean canbribe() {
-		return true;
-	}
-
-	@Override
 	public void bribe() {
 		incursion.remove();
+	}
+
+	@Override
+	public void onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
+			BattleState s) {
+		super.onEnd(screen, originalTeam, s);
+		if (BattleMap.redTeam.isEmpty()) {
+			incursion.remove();
+		} else {
+			for (Combatant incursant : new ArrayList<Combatant>(
+					incursion.squad)) {
+				Combatant alive = null;
+				for (Combatant inbattle : BattleMap.combatants) {
+					if (inbattle.id == incursant.id) {
+						alive = inbattle;
+						break;
+					}
+				}
+				if (alive == null) {
+					incursion.squad.remove(incursant);
+				}
+			}
+		}
 	}
 }

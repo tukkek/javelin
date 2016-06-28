@@ -1,7 +1,5 @@
 package javelin.controller.upgrade.ability;
 
-import java.beans.PropertyVetoException;
-
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -15,13 +13,12 @@ public class RaiseConsitution extends RaiseAbility {
 	}
 
 	@Override
-			int getabilityvalue(Monster m) {
+	int getabilityvalue(Monster m) {
 		return m.constitution;
 	}
 
 	@Override
-			boolean setattribute(Combatant c, int l)
-					throws PropertyVetoException {
+	boolean setattribute(Combatant c, int l) {
 		c.source.raiseconstitution(c, 1);
 		return true;
 	}

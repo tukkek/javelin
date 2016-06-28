@@ -2,7 +2,6 @@ package javelin.controller.ai;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
@@ -50,10 +49,16 @@ public final class ActionProvider
 
 	public ActionProvider(BattleState battleState) {
 		this.battleState = battleState;
-		if (Javelin.DEBUG) {// TODO debug
-			checkstacking(battleState);
+		battleState.checkwhoisnext();
+		if (battleState.next.burrowed) {
+			for (AiAction a : ACTIONS) {
+				if (a.allowwhileburrowed) {
+					actions.add(a);
+				}
+			}
+		} else {
+			actions.addAll(ActionProvider.ACTIONS);
 		}
-		actions.addAll((List<AiAction>) ActionProvider.ACTIONS.clone());
 	}
 
 	@Override
@@ -77,9 +82,6 @@ public final class ActionProvider
 		if (actions.isEmpty()) {
 			return Collections.emptyList();
 		}
-		if (Javelin.DEBUG) {
-			checkstacking(battleState);// TODO debug
-		}
 		final BattleState stateclone = battleState.deepclone();
 		final List<List<ChanceNode>> outcomes =
 				actions.pop().getoutcomes(stateclone, stateclone.next);
@@ -87,33 +89,11 @@ public final class ActionProvider
 			if (!sucessors.isEmpty()) {
 				if (Javelin.DEBUG) {
 					ActionProvider.validate(sucessors);
-					checkstacking(sucessors);// TODO debug
 				}
 				queue.add(sucessors);
 			}
 		}
 		return next();
-	}
-
-	/**
-	 * TODO debug
-	 */
-	static public void checkstacking(List<ChanceNode> n) {
-		for (ChanceNode cn : n) {// TODO debug
-			checkstacking((BattleState) cn.n);
-		}
-	}
-
-	/**
-	 * TODO debug
-	 */
-	public static void checkstacking(BattleState s) {
-		HashSet<String> locations = new HashSet<String>();
-		for (Combatant c : s.getCombatants()) {
-			if (!locations.add(c.location[0] + ":" + c.location[1])) {
-				System.out.println("Stacked combatants!");
-			}
-		}
 	}
 
 	@Override

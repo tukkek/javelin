@@ -2,12 +2,9 @@ package javelin.controller.fight;
 
 import java.util.List;
 
-import javelin.JavelinApp;
-import javelin.controller.map.Arena;
-import javelin.controller.map.DndMap;
-import javelin.controller.map.Map;
-import javelin.controller.tournament.Exhibition;
-import javelin.controller.tournament.ExhibitionScreen;
+import javelin.controller.exception.battle.EndBattle;
+import javelin.controller.fight.tournament.Exhibition;
+import javelin.controller.terrain.map.Arena;
 import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
 import javelin.view.screen.BattleScreen;
@@ -19,15 +16,13 @@ import javelin.view.screen.BattleScreen;
  * 
  * @author alex
  */
-public class ExhibitionFight implements Fight {
-	@Override
-	public boolean meld() {
-		return true;
-	}
-
-	@Override
-	public BattleScreen getscreen(JavelinApp javelinApp, BattleMap battlemap) {
-		return new ExhibitionScreen(javelinApp, battlemap, true);
+public class ExhibitionFight extends Fight {
+	public ExhibitionFight() {
+		map = new Arena();
+		meld = true;
+		friendly = true;
+		hide = false;
+		bribe = false;
 	}
 
 	@Override
@@ -36,37 +31,20 @@ public class ExhibitionFight implements Fight {
 	}
 
 	@Override
-	public int getel(JavelinApp javelinApp, int teamel) {
+	public int getel(int teamel) {
 		return teamel;
 	}
 
 	@Override
-	public Map getmap() {
-		return new Arena(DndMap.SIZE, DndMap.SIZE);
+	public void checkEndBattle(BattleScreen screen) {
+		super.checkEndBattle(screen);
+		if (BattleMap.blueTeam.isEmpty()) {
+			throw new EndBattle();
+		}
 	}
 
 	@Override
-	public boolean friendly() {
-		return true;
-	}
-
-	@Override
-	public boolean rewardgold() {
-		return true;
-	}
-
-	@Override
-	public boolean hide() {
-		return false;
-	}
-
-	@Override
-	public void bribe() {
-		throw new RuntimeException("Cannot bribe an Exhibition! #exhibitionf");
-	}
-
-	@Override
-	public boolean canbribe() {
-		return false;
+	public void withdraw(Combatant combatant, BattleScreen screen) {
+		PlanarFight.dontflee(screen);
 	}
 }

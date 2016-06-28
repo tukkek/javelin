@@ -6,11 +6,11 @@ import java.util.List;
 import javelin.controller.action.Action;
 import javelin.controller.action.CastSpell;
 import javelin.controller.action.Fire;
-import javelin.controller.action.ai.AbstractAttack;
-import javelin.controller.action.ai.AiAction;
+import javelin.controller.action.ai.MeleeAttack;
 import javelin.controller.ai.ChanceNode;
-import javelin.controller.exception.RepeatTurnException;
+import javelin.controller.exception.RepeatTurn;
 import javelin.model.BattleMap;
+import javelin.model.condition.Condition;
 import javelin.model.feat.Feat;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
@@ -26,9 +26,12 @@ import tyrant.mikera.tyrant.Game.Delay;
  * http://www.dnd-wiki.org/wiki/Simplified_Special_Attacks_%283.
  * 5e_Variant_Rule%29#Trip
  * 
+ * TODO this will probably be better handled in a spell-like fashion, together
+ * with martial disciplines
+ * 
  * @author alex
  */
-public abstract class Maneuver extends Fire implements AiAction {
+public abstract class Maneuver extends Fire {
 	private final Feat prerequisite;
 	private int featbonus;
 
@@ -40,8 +43,8 @@ public abstract class Maneuver extends Fire implements AiAction {
 	}
 
 	@Override
-	public void checkengaged(BattleState state, Combatant c) {
-		// engaged is fine
+	protected boolean checkengaged(BattleState state, Combatant c) {
+		return false;// engaged is fine
 	}
 
 	@Override
@@ -55,7 +58,7 @@ public abstract class Maneuver extends Fire implements AiAction {
 		if (!checkhero(hero.combatant)) {
 			Game.message("Needs the " + prerequisite + " feat...", null,
 					Delay.WAIT);
-			throw new RepeatTurnException();
+			throw new RepeatTurn();
 		}
 	}
 
@@ -79,6 +82,11 @@ public abstract class Maneuver extends Fire implements AiAction {
 		}
 	}
 
+	/**
+	 * TODO now that {@link Condition#stacks} is implemented should adding the
+	 * same maneuver condition be allowed? the effect would be to transparently
+	 * extend {@link Condition#expireat}.
+	 */
 	abstract boolean validatetarget(Combatant target);
 
 	@Override
@@ -103,14 +111,11 @@ public abstract class Maneuver extends Fire implements AiAction {
 		combatant = battleState.clone(combatant);
 		target = battleState.clone(target);
 		combatant.ap += .5f;
-		final int savebonus = calculatesavebonus(target);
-		final float savechance = calculatesavechance(combatant, savebonus);
-		int touchattackbonus = Monster.getbonus(target.source.dexterity);
-		if (touchattackbonus < 0) {
-			touchattackbonus = 0;
-		}
-		final float misschance = calculatemisschance(combatant, target,
-				battleState, touchattackbonus);
+		final float savechance =
+				calculatesavechance(combatant, calculatesavebonus(target));
+		final float misschance =
+				calculatemisschance(combatant, target, battleState,
+						Math.max(0, Monster.getbonus(target.source.dexterity)));
 		final ArrayList<ChanceNode> chances = new ArrayList<ChanceNode>();
 		final float failurechance = savechance + (1 - savechance) * misschance;
 		chances.add(miss(combatant, target, battleState, failurechance));
@@ -142,9 +147,9 @@ public abstract class Maneuver extends Fire implements AiAction {
 	float calculatemisschance(final Combatant combatant,
 			final Combatant targetCombatant, final BattleState battleState,
 			final int touchattackbonus) {
-		return AbstractAttack.misschance(battleState, combatant,
-				targetCombatant, touchattackbonus,
-				combatant.source.melee.get(0).get(0), 0);
+		return MeleeAttack.SINGLETON.misschance(battleState, combatant,
+				targetCombatant,
+				touchattackbonus + combatant.source.melee.get(0).get(0).bonus);
 	}
 
 	static int size(final Combatant combatant) {
@@ -156,7 +161,7 @@ public abstract class Maneuver extends Fire implements AiAction {
 	abstract int getattackerbonus(Combatant combatant);
 
 	@Override
-	protected int calculatehitchance(Combatant target, Combatant active,
+	protected int calculatehitdc(Combatant target, Combatant active,
 			BattleState state) {
 		return Math.round(
 				20 - (1 - calculatemisschance(target, active, state, 0)) * 20);

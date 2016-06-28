@@ -2,42 +2,52 @@ package javelin.model.condition;
 
 import java.util.ArrayList;
 
-import javelin.model.item.potion.Heroism;
+import javelin.model.spell.enchantment.compulsion.Heroism;
 import javelin.model.unit.Attack;
 import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Combatant;
 
 /**
- * @see javelin.model.spell.Heroism
+ * @see javelin.model.spell.enchantment.compulsion.Heroism
  * @see Heroism
  * @author alex
  */
 public class Heroic extends Condition {
-	public Heroic(final Combatant c) {
-		super(Float.MAX_VALUE, c, Effect.POSITIVE, "heroic");
+	public Heroic(final Combatant c, Integer casterlevelp, Integer longtermp) {
+		super(Float.MAX_VALUE, c, Effect.POSITIVE, "heroic", casterlevelp,
+				longtermp);
+	}
+
+	public Heroic(Combatant c, Integer casterlevelp) {
+		this(c, casterlevelp, 1);
 	}
 
 	@Override
-			void start(final Combatant c) {
+	public void start(final Combatant c) {
 		c.source = c.source.clone();
-		raiseattacks(c.source.melee);
-		raiseattacks(c.source.ranged);
+		raiseattacks(c.source.melee, +2);
+		raiseattacks(c.source.ranged, +2);
 		c.source.fort += 2;
 		c.source.ref += 2;
 		c.source.addwill(2);
 	}
 
-	public void raiseattacks(ArrayList<AttackSequence> melee) {
+	public void raiseattacks(ArrayList<AttackSequence> melee, int bonus) {
 		for (final AttackSequence sequence : melee) {
 			for (final Attack a : sequence) {
-				a.bonus += 2;
+				a.bonus += bonus;
 			}
 		}
 	}
 
 	@Override
-			void end(final Combatant c) {
-		// expires at the end of combat
+	public void end(final Combatant c) {
+		c.source = c.source.clone();
+		raiseattacks(c.source.melee, -2);
+		raiseattacks(c.source.ranged, -2);
+		c.source.fort -= 2;
+		c.source.ref -= 2;
+		c.source.addwill(-2);
 	}
 
 }

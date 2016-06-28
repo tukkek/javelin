@@ -2,9 +2,10 @@ package javelin.controller.action.world;
 
 import java.util.ArrayList;
 
+import javelin.Javelin;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Squad;
-import javelin.model.world.place.unique.MercenariesGuild;
+import javelin.model.unit.Squad;
+import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -21,7 +22,7 @@ public class Dismiss extends WorldAction {
 	@Override
 	public void perform(WorldScreen screen) {
 		int choice =
-				CastSpells.choose("Which squad member do you want to dismiss?",
+				Javelin.choose("Which squad member do you want to dismiss?",
 						Squad.active.members, true, false);
 		if (choice == -1) {
 			return;
@@ -34,7 +35,7 @@ public class Dismiss extends WorldAction {
 		ArrayList<String> confirm = new ArrayList<String>(2);
 		confirm.add("Yes, I am sure.");
 		confirm.add("Not really, keep unit.");
-		if (CastSpells.choose("Are you sure you want to dismiss " + chosen
+		if (Javelin.choose("Are you sure you want to dismiss " + chosen
 				+ ", with a daily cost of $" + Math.round(dailyupkeep) + "?",
 				confirm, true, true) == 0) {
 			Squad.active.dismiss(chosen);

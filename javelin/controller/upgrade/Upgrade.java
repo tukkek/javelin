@@ -7,7 +7,7 @@ import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.world.place.town.Town;
+import javelin.model.world.location.town.Town;
 
 /**
  * A improvement to a {@link Combatant}'s {@link Monster} which has to be
@@ -47,18 +47,14 @@ public abstract class Upgrade implements Serializable {
 	 */
 	abstract protected boolean apply(final Combatant c);
 
-	/**
-	 * Has a lot of drawbacks currently, namely spending too much xp on a single
-	 * choice TODO interface overhaul
-	 */
-	@Deprecated
-	public boolean isstackable() {
-		return false;
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		return name.equals(((Upgrade) obj).name);
+	}
+
+	@Override
+	public int hashCode() {
+		return name.hashCode();
 	}
 
 	@Override

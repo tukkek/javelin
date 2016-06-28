@@ -7,13 +7,12 @@ import java.util.List;
 
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Squad;
+import javelin.model.unit.Squad;
 import tyrant.mikera.engine.RPG;
 
 /**
- * Map of {@link Combatant#toString()} and a list of {@link Item}s.
- * 
- * TODO change key to int (combatant id)
+ * Map of {@link Combatant#id} and a list of {@link Item}s. Also referred to as
+ * a unit's "bag" in other parts of the code.
  * 
  * @author alex
  */

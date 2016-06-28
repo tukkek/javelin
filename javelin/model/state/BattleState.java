@@ -164,7 +164,18 @@ public class BattleState implements Node, TeamContainer {
 		}
 	}
 
-	public boolean isEngaged(final Combatant c) {
+	/**
+	 * To avoid having to implement attacks-of-opporutnity gonna simply prohibit
+	 * that anything that would cause an aoo is simply prohibited. since the
+	 * game is more fluid with movement/turns now this shouldn't be a problem.
+	 * 
+	 * Disengaging is simply forcing a 5-foot step to avoid aoo as per the core
+	 * rules.
+	 */
+	public boolean isengaged(final Combatant c) {
+		if (c.burrowed) {
+			return false;
+		}
 		for (final Combatant nearby : getSurroundings(c)) {
 			if (!c.isAlly(nearby, this)) {
 				return true;
@@ -190,8 +201,8 @@ public class BattleState implements Node, TeamContainer {
 			String periodperception) {
 		final ArrayList<Step> clear = new ClearPath(me, target, this).walk();
 		final ArrayList<Step> covered =
-				periodperception == Javelin.PERIOD_EVENING
-						|| periodperception == Javelin.PERIOD_NIGHT ? null
+				periodperception == Javelin.PERIODEVENING
+						|| periodperception == Javelin.PERIODNIGHT ? null
 								: new ObstructedPath(me, target, this).walk();
 		if (clear == null && covered == null) {
 			return Vision.BLOCKED;
@@ -236,7 +247,7 @@ public class BattleState implements Node, TeamContainer {
 	}
 
 	public boolean isflanked(final Combatant target, final Combatant attacker) {
-		if (Walker.distance(target, attacker) >= 1.5) {
+		if (attacker.burrowed || Walker.distance(target, attacker) >= 1.5) {
 			return false;
 		}
 		final ArrayList<Combatant> attackerteam =
@@ -251,8 +262,9 @@ public class BattleState implements Node, TeamContainer {
 		final int flankingx = target.location[0] + deltax;
 		final int flankingy = target.location[1] + deltay;
 		final Combatant flank = getCombatant(flankingx, flankingy);
-		return flank == null || Walker.distance(target, flank) >= 1.5 ? false
-				: attackerteam.contains(flank);
+		return flank != null && !flank.burrowed
+				&& Walker.distance(target, flank) < 1.5
+				&& attackerteam.contains(flank);
 	}
 
 	public int delta(final Combatant surroundinga, final Combatant surroundingb,

@@ -18,7 +18,7 @@ import javelin.model.feat.ImprovedTrip;
 import javelin.model.item.Item;
 import javelin.model.spell.Summon;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Squad;
+import javelin.model.unit.Squad;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.tyrant.Game;
@@ -111,17 +111,28 @@ public class StatusPanel extends TPanel {
 		return "\n" + text;
 	}
 
-	public String movementdata(final Combatant combatant) {
+	String movementdata(final Combatant combatant) {
+		ArrayList<String> data = new ArrayList<String>(2);
 		if (combatant.source.fly > 0) {
-			return "Flight\n\n";
+			data.add("Fly");
+		} else if (combatant.source.swim > 0) {
+			data.add("Swim");
 		}
-		if (combatant.source.swim > 0) {
-			return "Swim\n\n";
+		if (combatant.source.burrow > 0) {
+			data.add(combatant.burrowed ? "Burrowed" : "Burrow");
 		}
-		return "";
+		if (data.isEmpty()) {
+			return "";
+		}
+		String output = data.get(0);
+		data.remove(0);
+		for (String s : data) {
+			output += ", " + s.toLowerCase();
+		}
+		return output + "\n\n";
 	}
 
-	public String attackdata(final Combatant combatant) {
+	String attackdata(final Combatant combatant) {
 		String status = "";
 		if (combatant.hasAttackType(true)) {
 			status += "Mêlée\n";
@@ -131,8 +142,8 @@ public class StatusPanel extends TPanel {
 		}
 		status += "\n";
 		if (!combatant.source.breaths.isEmpty()) {
-			status += combatant.hascondition(Breathless.class) ? "Breathless\n"
-					: "Breath\n";
+			status += combatant.hascondition(Breathless.class) == null
+					? "Breath\n" : "Breathless\n";
 		}
 		if (combatant.source.touch != null) {
 			status += combatant.source.touch + "\n";
@@ -166,11 +177,13 @@ public class StatusPanel extends TPanel {
 	public String passivedata(final Combatant combatant) {
 		String status = "";
 		if (combatant.source.fasthealing > 0) {
-			status += "Fast healing " + new BigDecimal(
-					100.0 * new Double(combatant.source.fasthealing)
-							/ new Double(combatant.maxhp)).setScale(0,
-									RoundingMode.HALF_UP)
-					+ "%\n";
+			status +=
+					"Fast healing "
+							+ new BigDecimal(100.0
+									* new Double(combatant.source.fasthealing)
+									/ new Double(combatant.maxhp)).setScale(0,
+											RoundingMode.HALF_UP)
+							+ "%\n";
 		}
 		return status.isEmpty() ? "" : "\n" + status;
 	}

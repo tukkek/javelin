@@ -9,7 +9,7 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class ImprovedTripUpgrade extends FeatUpgrade {
-
+	/** Constructor. */
 	public ImprovedTripUpgrade() {
 		super(ImprovedTrip.singleton);
 		prerequisite = CombatExpertise.singleton;

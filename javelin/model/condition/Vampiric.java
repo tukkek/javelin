@@ -1,41 +1,40 @@
 package javelin.model.condition;
 
-import javelin.model.spell.VampiricRay;
+import javelin.model.spell.necromancy.VampiricTouch;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
- * @see VampiricRay
+ * @see VampiricTouch
  * @author alex
  */
 public class Vampiric extends Condition {
 	final private int steal;
-	private Combatant caster;
 
-	public Vampiric(float expireat, Combatant caster, int steal) {
-		super(expireat, caster, Effect.NEUTRAL, "vampiric");
-		this.caster = caster;
+	public Vampiric(float expireat, Combatant caster, int steal,
+			Integer casterlevelp) {
+		super(expireat, caster, Effect.POSITIVE, "vampiric", casterlevelp, 1);
 		this.steal = steal;
+		stacks = true;
 	}
 
 	@Override
-			void start(Combatant c) {
-		// see VampiricRay
+	public void start(Combatant c) {
+		// see VampiricTouch
 
 	}
 
 	@Override
-			void end(Combatant c) {
-		// doesn't expire
+	public void end(Combatant c) {
+		c.hp -= steal;
+		if (c.hp < 1) {
+			c.hp = 1;
+		}
 	}
 
 	@Override
 	public void finish(BattleState s) {
-		caster = s.clone(caster);
-		caster.damage(steal, s, 0);
-		Game.message(caster + " loses temporary hit points, is now "
-				+ caster.getStatus() + ".", null, Delay.BLOCK);
+		// Game.message(caster + " loses temporary hit points, is now "
+		// + caster.getStatus() + ".", null, Delay.BLOCK);
 	}
 }

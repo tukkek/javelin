@@ -8,17 +8,20 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.db.Preferences;
 import javelin.controller.db.StateManager;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.IncursionFight;
+import javelin.controller.terrain.Terrain;
+import javelin.controller.walker.Walker;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
-import javelin.model.world.place.Portal;
-import javelin.model.world.place.WorldPlace;
-import javelin.model.world.place.town.Town;
+import javelin.model.unit.Squad;
+import javelin.model.world.location.Location;
+import javelin.model.world.location.Portal;
+import javelin.model.world.location.town.Town;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Game.Delay;
@@ -50,7 +53,7 @@ public class Incursion extends WorldActor {
 		this.y = y;
 		if (squadp == null) {
 			squad.addAll(JavelinApp.generatefight(Incursion.currentel,
-					Javelin.terrain(x, y)).opponents);
+					Terrain.get(x, y)).opponents);
 			currentel += 1;
 		} else {
 			squad = squadp;
@@ -63,16 +66,25 @@ public class Incursion extends WorldActor {
 	public void place() {
 		super.place();
 		updateavatar();
+
 	}
 
 	public void move(final WorldScreen s) {
 		updateavatar();
 		WorldActor target = findtarget(s);
+		if (target == null) {
+			displace();
+			return;
+		}
 		final int targetx = target.x;
 		final int targety = target.y;
 		int newx = x + decideaxismove(x, targetx);
 		int newy = y + decideaxismove(y, targety);
-		target = WorldScreen.getactor(newx, newy);
+		if (Terrain.get(newx, newy).equals(Terrain.WATER)) {
+			displace();
+			return;
+		}
+		target = WorldActor.get(newx, newy);
 		x = newx;
 		y = newy;
 		visual.remove();
@@ -106,21 +118,42 @@ public class Incursion extends WorldActor {
 	}
 
 	public WorldActor findtarget(final WorldScreen s) {
-		final List<WorldActor> targets = WorldScreen.getallmapactors();
+		final List<WorldActor> targets = WorldActor.getall();
 		for (final WorldActor a : new ArrayList<WorldActor>(targets)) {
-			if (a.impermeable || a.realm == realm) {
+			if (a.impermeable || a.realm == realm
+					|| crosseswater(this, a.x, a.y)) {
 				targets.remove(a);
 			}
 		}
+		if (targets.isEmpty()) {
+			return null;
+		}
 		WorldActor target = null;
 		for (final WorldActor a : targets) {
-			if (target == null || World.triangledistance(new Point(x, y),
-					new Point(a.x, a.y)) < World.triangledistance(
-							new Point(x, y), new Point(target.x, target.y))) {
+			if (target == null || Walker.distance(x, y, a.x, a.y) < Walker
+					.distance(x, y, target.x, target.y)) {
 				target = a;
 			}
 		}
 		return target;
+	}
+
+	/**
+	 * @param tox
+	 * @param toy
+	 * @return Checks if there is any body of water between these two actors.
+	 */
+	public static boolean crosseswater(WorldActor from, int tox, int toy) {
+		int x = from.x;
+		int y = from.y;
+		while (x != tox && y != toy) {
+			x += decideaxismove(x, tox);
+			y += decideaxismove(y, toy);
+			if (Terrain.get(x, y).equals(Terrain.WATER)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static void waitforenter() {
@@ -132,19 +165,16 @@ public class Incursion extends WorldActor {
 		Game.messagepanel.clear();
 	}
 
-	private int decideaxismove(final int me, final int target) {
-		if (target > me) {
-			return +1;
-		}
+	static int decideaxismove(final int me, final int target) {
 		if (target == me) {
 			return 0;
 		}
-		return -1;
+		return target > me ? +1 : -1;
 	}
 
 	@Override
 	public void turn(long time, WorldScreen world) {
-		if (Javelin.DEBUGDISABLECOMBAT && !FORCEMOVEMENT) {
+		if (Preferences.DEBUGDISABLECOMBAT && !FORCEMOVEMENT) {
 			return;
 		}
 		move(world);
@@ -158,10 +188,10 @@ public class Incursion extends WorldActor {
 		if (DONTSPAWN) {
 			return false;
 		}
-		if (RPG.r(1, 18) != 1 && !Javelin.DEBUG_SPAWNINCURSION) {
+		if (RPG.r(1, 18) != 1) {
 			return false;
 		}
-		ArrayList<WorldActor> portals = WorldPlace.getall(Portal.class);
+		ArrayList<WorldActor> portals = Location.getall(Portal.class);
 		Collections.shuffle(portals);
 		for (WorldActor p : portals) {
 			if (((Portal) p).invasion) {
@@ -174,7 +204,7 @@ public class Incursion extends WorldActor {
 
 	public static void place(Realm r, int x, int y,
 			ArrayList<Combatant> squadp) {
-		while (WorldScreen.getactor(x, y) != null) {
+		while (WorldActor.get(x, y) != null) {
 			int delta = RPG.pick(new int[] { -1, 0, +1 });
 			if (RPG.r(1, 2) == 1) {
 				x += delta;
@@ -231,7 +261,7 @@ public class Incursion extends WorldActor {
 	}
 
 	public int getel() {
-		return ChallengeRatingCalculator.calculateElSafe(squad);
+		return ChallengeRatingCalculator.calculateel(squad);
 	}
 
 	/**
@@ -284,7 +314,7 @@ public class Incursion extends WorldActor {
 
 	@Override
 	public boolean interact() {
-		if (!WorldPlace.headsup(squad, toString())) {
+		if (!Location.headsup(squad, toString())) {
 			return false;
 		}
 		throw new StartBattle(new IncursionFight(this));

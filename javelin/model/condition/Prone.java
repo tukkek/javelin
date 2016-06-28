@@ -10,17 +10,17 @@ import javelin.model.unit.Combatant;
 public class Prone extends Condition {
 
 	public Prone(float expireatp, Combatant c) {
-		super(expireatp, c, Effect.NEGATIVE, "prone");
+		super(expireatp, c, Effect.NEGATIVE, "prone", null);
 	}
 
 	@Override
-			void start(Combatant c) {
+	public void start(Combatant c) {
 		// -2 to AC against melee
 		// +2 to AC against ranged
 	}
 
 	@Override
-			void end(Combatant c) {
+	public void end(Combatant c) {
 		// gets up (move action)
 		c.ap += .5f;
 	}

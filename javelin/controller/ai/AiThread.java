@@ -68,9 +68,6 @@ public class AiThread extends Thread {
 		assert result != null;
 		AiThread.FINISHED.put(depth, result);
 		if (!ThreadManager.interrupting && ThreadManager.working) {
-			/*
-			 * TODO would be better to reuse this thread, see activeCount above
-			 */
 			setdepth();
 			run();
 		}

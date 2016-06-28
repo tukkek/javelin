@@ -2,7 +2,6 @@ package javelin.controller.ai;
 
 import java.util.List;
 
-import javelin.controller.walker.Walker;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 
@@ -35,15 +34,17 @@ public class BattleAi extends AbstractAlphaBetaSearch {
 	public float utility(final Node node) {
 		final BattleState state = (BattleState) node;
 		final float redTeam = BattleAi.ratechallenge(state.getRedTeam());
-		if (redTeam == 0) {
+		if (redTeam == 0f) {
 			return -LIMIT;
 		}
 		final float blueTeam = BattleAi.ratechallenge(state.getBlueTeam());
-		if (blueTeam == 0) {
+		if (blueTeam == 0f) {
 			return LIMIT;
 		}
-		return redTeam - blueTeam - state.next.ap / 10
-				- BattleAi.summinimumdistances(state) / 10;
+		final float base = redTeam - blueTeam;
+		final float distances = +measuredistances(state.redTeam, state.blueTeam)
+				- measuredistances(state.blueTeam, state.redTeam);
+		return base - distances / 1000f;
 	}
 
 	static private float ratechallenge(final List<Combatant> team) {
@@ -55,27 +56,21 @@ public class BattleAi extends AbstractAlphaBetaSearch {
 		return challenge;
 	}
 
-	/**
-	 * this shouldn't be done because it causes assymetry in the calculation but
-	 * it is needed to make the AI player approach. It introduces the false
-	 * logic that the AI always wants to get close and the player always wants
-	 * to get away.
-	 */
-	static private float summinimumdistances(final BattleState state) {
-		final int bluesize = state.blueTeam.size();
-		float sum = 0;
-		for (final Combatant c1 : state.redTeam) {
-			float minimum = (float) Walker.distance(c1, state.blueTeam.get(0));
-			for (int i = 1; i < bluesize; i += 1) {
-				final float distance =
-						(float) Walker.distance(c1, state.blueTeam.get(i));
-				if (distance < minimum) {
-					minimum = distance;
-				}
+	/** TODO round to float, really? */
+	static private float measuredistances(List<Combatant> us,
+			List<Combatant> them) {
+		double score = 0;
+		for (Combatant me : us) {
+			double minimum = Integer.MAX_VALUE;
+			for (Combatant he : them) {
+				final int distance =
+						Math.max(Math.abs(me.location[0] - he.location[0]),
+								Math.abs(me.location[1] - he.location[1]));
+				minimum = Math.min(minimum, distance);
 			}
-			sum += minimum;
+			score += minimum;
 		}
-		return sum;
+		return Math.round(score);
 	}
 
 	@Override

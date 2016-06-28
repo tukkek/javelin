@@ -1,20 +1,19 @@
 package javelin.view.screen;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.controller.upgrade.Spell;
+import javelin.controller.quality.Quality;
 import javelin.controller.upgrade.classes.ClassAdvancement;
 import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
+import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.BreathWeapon;
-import javelin.model.world.Squad;
-import javelin.model.world.place.unique.MercenariesGuild;
+import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.town.PurchaseScreen;
 
 /**
@@ -48,26 +47,13 @@ public class StatisticsScreen extends InfoScreen {
 			}
 		}
 		lines.add(describealignment(m));
-		long speed = m.fly;
-		boolean fly = true;
-		if (speed == 0) {
-			fly = false;
-			speed = m.walk;
-		}
-		String speedtext = alignnumber(speed) + " feet";
-		if (fly) {
-			speedtext += " (flying)";
-		}
-		if (m.swim > 0) {
-			speedtext += ", swim " + m.swim + " feet";
-		}
 		lines.add("");
 		final String maxhp =
 				Squad.active.members.contains(c) ? " (" + c.maxhp + "hp)" : "";
 		lines.add("Hit dice     " + m.hd + maxhp);
 		lines.add("Initiative   " + (m.initiative >= 0 ? "+" : "")
 				+ m.initiative);
-		lines.add("Speed        " + speedtext + " (" + speed / 5 + " squares)");
+		lines.add("Speed        " + showspeed(m));
 		lines.add("Armor class  " + alignnumber(m.ac + c.acmodifier));
 		lines.add("");
 		lines.add("Mêlée attacks");
@@ -76,12 +62,14 @@ public class StatisticsScreen extends InfoScreen {
 		lines.add("Ranged attacks");
 		listattacks(lines, m.ranged);
 		lines.add("");
-		lines.add(describequalities(m, c));
-		lines.add("");
+		String qualities = describequalities(m, c);
+		if (!qualities.isEmpty()) {
+			lines.add(qualities);
+		}
 		lines.add("Saving throwns");
 		lines.add(" Fortitude   " + save(m.fort));
 		lines.add(" Reflex      " + save(m.ref));
-		lines.add(" Will        " + save(m.willraw()));
+		lines.add(" Will        " + save(m.will));
 		lines.add("");
 		lines.add(printability(m.strength, "Strength"));
 		lines.add(printability(m.dexterity, "Dexterity"));
@@ -90,18 +78,18 @@ public class StatisticsScreen extends InfoScreen {
 		lines.add(printability(m.wisdom, "Wisdom"));
 		lines.add(printability(m.charisma, "Charisma"));
 		lines.add("");
-		String feats = "Feats: ";
-		if (m.feats.isEmpty()) {
-			feats += "none";
-		} else {
+		if (!m.feats.isEmpty()) {
+			String feats = "Feats: ";
 			for (javelin.model.feat.Feat f : m.feats) {
 				feats += f.name + ", ";
 			}
-			feats = feats.substring(0, feats.length() - 2);
+			lines.add(feats.substring(0, feats.length() - 2));
+			lines.add("");
 		}
-		lines.add(feats);
-		lines.add("");
-		lines.add(showskills(m));
+		final String skills = showskills(m);
+		if (skills != null) {
+			lines.add(skills);
+		}
 		lines.add(
 				"Press v to see the monster description, any other key to exit");
 		for (String line : lines) {
@@ -113,6 +101,27 @@ public class StatisticsScreen extends InfoScreen {
 			updatescreens();
 		}
 		Javelin.app.switchScreen(BattleScreen.active);
+	}
+
+	String showspeed(Monster m) {
+		long speed = m.fly;
+		boolean fly = true;
+		if (speed == 0) {
+			fly = false;
+			speed = m.walk;
+		}
+		String speedtext = alignnumber(speed) + " feet";
+		if (fly) {
+			speedtext += " flying";
+		}
+		speedtext += " (" + speed / 5 + " squares)";
+		if (m.swim > 0) {
+			speedtext += ", swim " + m.swim + " feet";
+		}
+		if (m.burrow > 0) {
+			speedtext += ", burrow " + m.burrow + " feet";
+		}
+		return speedtext;
 	}
 
 	String formatskill(String name, int ranks, int ability) {
@@ -130,29 +139,24 @@ public class StatisticsScreen extends InfoScreen {
 	}
 
 	String showskills(Monster m) {
-		Skills skills = m.skills;
+		Skills s = m.skills;
 		String output = "";
-		output += formatskill("acrobatics", skills.acrobatics, m.dexterity);
-		output += formatskill("concentration", skills.concentration,
-				m.constitution);
-		output += formatskill("diplomacy", skills.diplomacy, m.charisma);
-		output += formatskill("disable device", skills.disabledevice,
-				m.intelligence);
-		output += formatskill("gather information", skills.gatherinformation,
-				m.charisma);
-		output += formatskill("hide", skills.hide, m.dexterity);
-		output += formatskill("knowledge", skills.knowledge, m.intelligence);
-		output += formatskill("listen", skills.listen, m.wisdom);
+		output += formatskill("acrobatics", s.acrobatics, m.dexterity);
+		output += formatskill("concentration", s.concentration, m.constitution);
+		output += formatskill("diplomacy", s.diplomacy, m.charisma);
 		output +=
-				formatskill("move silently", skills.movesilently, m.dexterity);
-		output += formatskill("search", skills.search, m.intelligence);
-		output += formatskill("spellcraft", skills.spellcraft, m.intelligence);
-		output += formatskill("spot", skills.spot, m.wisdom);
-		output += formatskill("survival", skills.survival, m.wisdom);
-		if (output.isEmpty()) {
-			return "";
-		}
-		return "Skills: " + output.substring(0, output.length() - 2) + "\n";
+				formatskill("disable device", s.disabledevice, m.intelligence);
+		output += formatskill("gather information", s.gatherinformation,
+				m.charisma);
+		output += formatskill("knowledge", s.knowledge, m.intelligence);
+		output += formatskill("perception", s.perception, m.wisdom);
+		output += formatskill("search", s.search, m.intelligence);
+		output += formatskill("spellcraft", s.spellcraft, m.intelligence);
+		output += formatskill("stealth", s.stealth, m.dexterity);
+		output += formatskill("survival", s.survival, m.wisdom);
+		output += formatskill("use magic device", s.usemagicdevice, m.charisma);
+		return output.isEmpty() ? null
+				: "Skills: " + output.substring(0, output.length() - 2) + "\n";
 	}
 
 	String describealignment(Monster m) {
@@ -194,51 +198,41 @@ public class StatisticsScreen extends InfoScreen {
 	}
 
 	private String describequalities(Monster m, Combatant c) {
-		String string = "Special qualitites: ";
-		ArrayList<String> qualities = new ArrayList<String>();
-		if (m.fasthealing > 0) {
-			qualities.add("fast healing " + m.fasthealing);
+		ArrayList spells = new ArrayList(c.spells.size());
+		for (javelin.controller.upgrade.Spell s : c.spells) {
+			spells.add(s.toString());
 		}
-		HashSet<String> spells = new HashSet<String>();
-		for (Spell s : c.spells) {
-			if (spells.add(s.name)) {
-				qualities.add(s.toString());
-			}
-		}
-		if (m.vision == 1) {
-			qualities.add("low-light vision");
-		} else if (m.vision == 2) {
-			qualities.add("darkvision");
-		}
+		String string = printqualities("Spells", spells);
+		ArrayList<String> attacks = new ArrayList<String>();
 		for (BreathWeapon breath : m.breaths) {
-			qualities.add(breath.toString());
-		}
-		if (m.dr > 0) {
-			qualities.add("damage reduction " + m.dr);
-		}
-		if (m.resistance == Integer.MAX_VALUE) {
-			qualities.add("energy immunity");
-		} else if (m.resistance != 0) {
-			qualities.add("energy resistance " + m.resistance);
-		}
-		if (m.sr == Integer.MAX_VALUE) {
-			qualities.add("spell immunity");
-		} else if (m.sr != 0) {
-			qualities.add("spell resistance " + m.sr);
-		}
-		if (m.immunetomindeffects) {
-			qualities.add("immune to mind effects");
+			attacks.add(breath.toString());
 		}
 		if (m.touch != null) {
-			qualities.add(m.touch.toString());
+			attacks.add(m.touch.toString());
 		}
+		string += printqualities("Special attacks", attacks);
+		ArrayList<String> qualities = new ArrayList<String>();
+		for (Quality q : Quality.qualities) {
+			if (q.has(m)) {
+				String description = q.describe(m);
+				if (description != null) {
+					qualities.add(description);
+				}
+			}
+		}
+		return string + printqualities("Special qualities", qualities);
+	}
+
+	String printqualities(String header, ArrayList<?> qualities) {
 		if (qualities.isEmpty()) {
-			qualities.add("none");
+			return "";
 		}
-		for (String quality : qualities) {
-			string += quality.toLowerCase() + ", ";
+		header += ": ";
+		qualities.sort(null);
+		for (Object quality : qualities) {
+			header += quality.toString().toLowerCase() + ", ";
 		}
-		return string.substring(0, string.length() - 2);
+		return header.substring(0, header.length() - 2) + "\n";
 	}
 
 	public void listattacks(ArrayList<String> lines,

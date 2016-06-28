@@ -236,8 +236,8 @@ public class RPG {
 	public static final int MISSILE_STONE = 3;
 
 	// some standard description for internal use
-	public static final Description DESC_GENERIC = new Describer("thing",
-			"A generic thing. Don't ask.");
+	public static final Description DESC_GENERIC =
+			new Describer("thing", "A generic thing. Don't ask.");
 
 	// stat power series
 	public static final int[] POWER = { 2, 2, 3, 3, 3, 3, 4, 4, 5, 5, 6, 7, 8,
@@ -248,7 +248,7 @@ public class RPG {
 
 	// KULT RPG FUNCTIONS
 
-	// U[0,1] distribution
+	/** U[0,1] distribution. */
 	public static float random() {
 		return rand.nextFloat();
 	}
@@ -383,8 +383,8 @@ public class RPG {
 	// Z ordering constanrs
 	public static final int Z_ELSEWHERE = -10;
 
-	public static final String[] stats = { "SK", "ST", "AG", "TG", "IN", "WP",
-			"CH", "CR" };
+	public static final String[] stats =
+			{ "SK", "ST", "AG", "TG", "IN", "WP", "CH", "CR" };
 
 	public static void setRandSeed(final long n) {
 		rand.setSeed(n);

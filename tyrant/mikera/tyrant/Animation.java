@@ -8,7 +8,8 @@ package tyrant.mikera.tyrant;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import javelin.view.MapPanel;
+import javelin.controller.old.Game;
+import javelin.view.mappanel.MapPanel;
 import tyrant.mikera.engine.BaseObject;
 import tyrant.mikera.engine.RPG;
 

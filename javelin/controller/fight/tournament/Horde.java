@@ -5,10 +5,10 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.controller.encounter.EncounterGenerator;
 import javelin.controller.exception.UnbalancedTeams;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.ExhibitionFight;
+import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 

@@ -32,7 +32,7 @@ public class SpellbookGenerator {
 				Spell s = RPG.pick(SPELLS.get(cost));
 				if (s.castinbattle && s.cr <= crremaining
 						&& combatant.source.hd.count() >= s.casterlevel
-						&& s.apply(combatant.clonedeeply())) {
+						&& s.apply(combatant.clone().clonesource())) {
 					Spell learned = combatant.spells.has(s);
 					if (learned == null) {
 						combatant.spells.add(s.clone());

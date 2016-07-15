@@ -3,13 +3,12 @@ package tyrant.mikera.tyrant.test;
 import java.awt.Button;
 import java.awt.event.KeyEvent;
 
+import javelin.controller.old.Game;
+import javelin.controller.old.Interface;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Hero;
-import tyrant.mikera.tyrant.Interface;
-
 import junit.framework.TestCase;
 
 /**

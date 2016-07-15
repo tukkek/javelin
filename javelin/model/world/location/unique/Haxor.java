@@ -1,12 +1,13 @@
 package javelin.model.world.location.unique;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import java.util.List;
+
+import javelin.Javelin;
 import javelin.controller.db.StateManager;
-import javelin.controller.fight.PlanarFight;
 import javelin.model.item.Key;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Portal;
-import javelin.model.world.location.fortification.Fortification;
 import javelin.view.screen.haxor.BorrowMoney;
 import javelin.view.screen.haxor.HaxorScreen;
 
@@ -47,17 +48,7 @@ public class Haxor extends UniqueLocation {
 	 * Fills {@link #options} initially.
 	 */
 	public Haxor() {
-		super("Temple of Haxor", "Temple of Haxor", 0, 0);
-	}
-
-	/**
-	 * See {@link BorrowMoney}.
-	 * 
-	 * @return A certain amount of gold to be borrowed.
-	 */
-	static public int borrow() {
-		return Fortification.getspoils(
-				ChallengeRatingCalculator.calculateel(Squad.active.members));
+		super("Tower of Haxor", "Tower of Haxor", 0, 0);
 	}
 
 	@Override
@@ -67,9 +58,16 @@ public class Haxor extends UniqueLocation {
 
 	@Override
 	public boolean interact() {
-		if (borrowed > 0 && Squad.active.gold >= borrowed) {
-			Squad.active.gold -= borrowed;
-			borrowed = 0;
+		if (borrowed > 0) {
+			if (Squad.active.gold >= borrowed) {
+				Javelin.message("\"Our debt of $" + borrowed + " is settled.\"",
+						true);
+				Squad.active.gold -= borrowed;
+				borrowed = 0;
+			} else {
+				Javelin.message(BorrowMoney.charge(), true);
+				return true;
+			}
 		}
 		new HaxorScreen().show();
 		return true;
@@ -78,5 +76,10 @@ public class Haxor extends UniqueLocation {
 	@Override
 	public void remove() {
 		// never remove
+	}
+
+	@Override
+	public List<Combatant> getcombatants() {
+		return null;
 	}
 }

@@ -7,6 +7,7 @@ package javelin.model.unit;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javelin.Javelin;
@@ -16,7 +17,10 @@ import javelin.controller.action.Breath;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Spell;
+import javelin.controller.upgrade.Upgrade;
+import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.classes.ClassAdvancement;
 import javelin.controller.upgrade.feat.MeleeFocus;
 import javelin.model.Cloneable;
@@ -31,6 +35,8 @@ import javelin.model.spell.necromancy.Poison;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.Spells;
 import javelin.model.unit.abilities.TouchAttack;
+import javelin.model.world.location.town.Town;
+import javelin.view.screen.upgrading.SkillSelectionScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -64,8 +70,18 @@ public class Monster implements Cloneable, Serializable {
 	public static final int COLOSSAL = 8;
 
 	/** An array of all sizes valid in this class. */
-	public static String SIZES[] = { "fine", "diminutive", "tiny", "small",
+	public static String[] SIZES = { "fine", "diminutive", "tiny", "small",
 			"medium-size", "large", "huge", "gargantuan", "colossal" };
+
+	/**
+	 * Map of {@link Terrain} types, mapped by {@link Monster#name}.
+	 * 
+	 * @deprecated
+	 * @see #getterrains()
+	 */
+	@Deprecated
+	public static final HashMap<String, List<String>> TERRAINDATA =
+			new HashMap<String, List<String>>();
 
 	public int strength = -1;
 	public int dexterity = -1;
@@ -154,6 +170,7 @@ public class Monster implements Cloneable, Serializable {
 	public TouchAttack touch = null;
 
 	public int initiative = Integer.MIN_VALUE;
+	/** Monster name as found in the d20 SRD. */
 	public String name = null;
 	public int size = -1;
 	/** Subgroup of {@link #type}, merely descriptive. */
@@ -208,7 +225,6 @@ public class Monster implements Cloneable, Serializable {
 	 * creature’s spell resistance."
 	 */
 	public int sr = 0;
-	public ArrayList<String> terrains = new ArrayList<String>();
 	/**
 	 * Alignment. <code>true</code> if lawful, <code>null</code> if neutral,
 	 * <code>false</code> if chaotic.
@@ -248,6 +264,8 @@ public class Monster implements Cloneable, Serializable {
 	 * constitution score.
 	 */
 	public int poison = 0;
+	/** Unspent skill points. */
+	public int skillpool = 0;
 
 	@Override
 	public Monster clone() {
@@ -261,7 +279,6 @@ public class Monster implements Cloneable, Serializable {
 			if (m.touch != null) {
 				m.touch = touch.clone();
 			}
-			terrains = (ArrayList<String>) terrains.clone();
 			skills = skills.clone();
 			return m;
 		} catch (final CloneNotSupportedException e) {
@@ -338,7 +355,7 @@ public class Monster implements Cloneable, Serializable {
 	public int getbaseattackbonus() {
 		int classesbab = 0;
 		for (ClassAdvancement classdata : ClassAdvancement.CLASSES) {
-			classesbab += classdata.gettable()[classdata.getlevel(this)].bab;
+			classesbab += classdata.table[classdata.getlevel(this)].bab;
 		}
 		return classesbab
 				+ new Long(Math.round(originalhd * MeleeFocus.bab.get(type)))
@@ -647,5 +664,40 @@ public class Monster implements Cloneable, Serializable {
 			}
 		}
 		return 0;
+	}
+
+	/**
+	 * Call this to spend {@link #skillpool}.
+	 * 
+	 * @param u
+	 *            If <code>null</code> will use all available classes to
+	 *            determine class skills.
+	 * @return You can either call {@link SkillSelectionScreen#show()} for user
+	 *         input or {@link SkillSelectionScreen#upgradeautomatically()} for
+	 *         no user input.
+	 * 
+	 * @see ClassAdvancement
+	 * @see RaiseIntelligence
+	 * @see #skills
+	 */
+	public SkillSelectionScreen purchaseskills(Upgrade u) {
+		return new SkillSelectionScreen(this, u);
+	}
+
+	/**
+	 * @return Take-10 roll of {@link Skills#disabledevice}.
+	 * @see Skills#take10(int, int)
+	 */
+	public int disarm() {
+		return Skills.take10(skills.disabledevice, intelligence);
+	}
+
+	/**
+	 * @return All terrain types this monster can be found in. May be empty if
+	 *         this is an internal Javelin monster (like {@link Town} Workers).
+	 * @see Terrain#toString()
+	 */
+	public List<String> getterrains() {
+		return Monster.TERRAINDATA.get(name);
 	}
 }

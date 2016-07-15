@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 
+import javelin.controller.old.Game;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.util.Text;

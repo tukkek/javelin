@@ -60,10 +60,7 @@ public class TransportScreen extends PurchaseScreen {
 			return false;
 		}
 		if (o == REFUND) {
-			Squad.active.gold += Squad.active.transport.price * .9;
-			Squad.active.transport = null;
-			Squad.active.updateavatar();
-			return true;
+			return refund(Squad.active);
 		}
 		if (o == CARRIAGE) {
 			Squad.active.transport = Transport.CARRIAGE;
@@ -75,6 +72,21 @@ public class TransportScreen extends PurchaseScreen {
 			throw new RuntimeException("[TransportScreen] Unknown option");
 		}
 		Squad.active.updateavatar();
+		return true;
+	}
+
+	/**
+	 * @return Forces the {@link Squad} to abandon its {@link Transport} but
+	 *         pays a refund for it.
+	 * @see Squad#transport
+	 */
+	static public boolean refund(Squad s) {
+		if (s.transport == null) {
+			return false;
+		}
+		s.gold += s.transport.price * .9;
+		s.transport = null;
+		s.updateavatar();
 		return true;
 	}
 

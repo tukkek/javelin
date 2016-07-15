@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.action.ai.AiAction;
-import javelin.controller.ai.AbstractAlphaBetaSearch;
+import javelin.controller.ai.AlphaBetaSearch;
 import javelin.controller.ai.AiThread;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.ai.ChanceNode;
@@ -68,7 +68,7 @@ public class AiCache {
 	}
 
 	public static Float getutility(ArrayList<Integer> index,
-			final AbstractAlphaBetaSearch ai, final List<ChanceNode> cns) {
+			final AlphaBetaSearch ai, final List<ChanceNode> cns) {
 		if (!Preferences.AICACHEENABLED) {
 			return ai.utility(cns);
 		}

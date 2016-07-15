@@ -8,6 +8,7 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Order;
 import javelin.model.world.location.town.Town;
+import javelin.view.screen.town.TransportScreen;
 
 /** {@link Town} version of an upgrading screen. */
 public class TownUpgradingScreen extends UpgradingScreen {
@@ -25,8 +26,11 @@ public class TownUpgradingScreen extends UpgradingScreen {
 				return Math.round(o1.completionat - o2.completionat);
 			}
 		});
-		if (Squad.getall(Squad.class).isEmpty()) {
-			town.stash = s.gold;
+		if (s.members.isEmpty()) {
+			if (s.transport != null) {
+				TransportScreen.refund(s);
+			}
+			town.stash += s.gold;
 		}
 	}
 

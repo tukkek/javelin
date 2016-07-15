@@ -5,11 +5,11 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.fight.PlanarFight;
 import javelin.controller.fight.Siege;
 import javelin.model.item.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.location.dungeon.Chest;
 import javelin.model.world.location.town.Town;
 import tyrant.mikera.engine.RPG;
 
@@ -21,13 +21,11 @@ import tyrant.mikera.engine.RPG;
  * Since the actual fight gives no xp or gold these results are doubled as
  * treasure.
  * 
- * TODO add rubies once {@link PlanarFight}s have been replaced with temples
- * 
  * @author alex
  */
 public class Trove extends Fortification {
 	enum Reward {
-		GOLD, EXPERIENCE, KEY, WORKER;
+		GOLD, EXPERIENCE, KEY, WORKER, RUBY;
 
 		static Reward getrandom() {
 			Reward[] all = values();
@@ -116,6 +114,9 @@ public class Trove extends Fortification {
 			key.grab();
 			return null;
 		}
+		if (reward == Reward.RUBY) {
+			return Chest.takeruby(1);
+		}
 		throw new RuntimeException(reward + " #unknownreward");
 	}
 
@@ -125,5 +126,10 @@ public class Trove extends Fortification {
 		} catch (NumberFormatException e) {
 			return -1;
 		}
+	}
+
+	@Override
+	public List<Combatant> getcombatants() {
+		return garrison;
 	}
 }

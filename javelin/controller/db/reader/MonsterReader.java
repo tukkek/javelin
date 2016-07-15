@@ -140,6 +140,7 @@ public class MonsterReader extends DefaultHandler {
 		} else if (localName.equalsIgnoreCase("avatar")) {
 			monster.avatarfile = attributes.getValue("Image");
 		} else if (localName.equalsIgnoreCase("Climateandterrain")) {
+			ArrayList<String> terrains = new ArrayList<String>();
 			for (String terrain : attributes.getValue("Terrain").toLowerCase()
 					.split(",")) {
 				terrain = terrain.trim();
@@ -152,11 +153,12 @@ public class MonsterReader extends DefaultHandler {
 						|| terrain.equals("desert")
 						|| terrain.equals("underground")
 						|| terrain.equals("aquatic")) {
-					monster.terrains.add(terrain);
+					terrains.add(terrain);
 				} else {
 					throw new RuntimeException("#unknownterrain " + terrain);
 				}
 			}
+			Monster.TERRAINDATA.put(monster.name, terrains);
 		} else if (localName.equalsIgnoreCase("Breath")) {
 			/* TODO */
 			// if (attributes.getValue("effect") == null) {

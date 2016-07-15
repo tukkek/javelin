@@ -5,6 +5,7 @@
  */
 package tyrant.mikera.tyrant.test;
 
+import javelin.controller.old.Game;
 import javelin.model.BattleMap;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.RPG;

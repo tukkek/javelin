@@ -24,12 +24,12 @@ import javelin.model.unit.Combatant;
  */
 public final class ActionProvider
 		implements Iterable<List<ChanceNode>>, Iterator<List<ChanceNode>> {
-	static final ArrayList<AiAction> ACTIONS = new ArrayList<AiAction>();
+	static final ArrayList<Action> AIACTIONS = new ArrayList<Action>();
 
 	static {
 		for (Action a : ActionMapping.actions) {
 			if (a instanceof AiAction) {
-				ActionProvider.ACTIONS.add((AiAction) a);
+				ActionProvider.AIACTIONS.add(a);
 			}
 		}
 	}
@@ -45,19 +45,19 @@ public final class ActionProvider
 	}
 
 	final BattleState battleState;
-	final Stack<AiAction> actions = new Stack<AiAction>();
+	final Stack<Action> actions = new Stack<Action>();
 
 	public ActionProvider(BattleState battleState) {
 		this.battleState = battleState;
 		battleState.checkwhoisnext();
 		if (battleState.next.burrowed) {
-			for (AiAction a : ACTIONS) {
+			for (Action a : AIACTIONS) {
 				if (a.allowwhileburrowed) {
 					actions.add(a);
 				}
 			}
 		} else {
-			actions.addAll(ActionProvider.ACTIONS);
+			actions.addAll(ActionProvider.AIACTIONS);
 		}
 	}
 
@@ -83,8 +83,8 @@ public final class ActionProvider
 			return Collections.emptyList();
 		}
 		final BattleState stateclone = battleState.deepclone();
-		final List<List<ChanceNode>> outcomes =
-				actions.pop().getoutcomes(stateclone, stateclone.next);
+		final List<List<ChanceNode>> outcomes = ((AiAction) actions.pop())
+				.getoutcomes(stateclone, stateclone.next);
 		for (final List<ChanceNode> sucessors : outcomes) {
 			if (!sucessors.isEmpty()) {
 				if (Javelin.DEBUG) {

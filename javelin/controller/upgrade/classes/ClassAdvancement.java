@@ -3,7 +3,11 @@ package javelin.controller.upgrade.classes;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Javelin;
+import javelin.controller.challenge.factor.ClassLevelFactor;
+import javelin.controller.challenge.factor.SkillsFactor;
 import javelin.controller.upgrade.Upgrade;
+import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.model.unit.Attack;
 import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Combatant;
@@ -16,17 +20,42 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public abstract class ClassAdvancement extends Upgrade {
-	public static final Warrior WARRIOR = new Warrior();
-	public static final Expert EXPERT = new Expert();
-	public static final Aristocrat ARISTOCRAT = new Aristocrat();
-	public static final Commoner COMMONER = new Commoner();
 	public static final ClassAdvancement[] CLASSES =
-			new ClassAdvancement[] { COMMONER, ARISTOCRAT, WARRIOR, EXPERT };
-	public final String descriptivename;
+			new ClassAdvancement[] { Commoner.SINGLETON, Aristocrat.SINGLETON,
+					Warrior.SINGLETON, Expert.SINGLETON };
 
-	public ClassAdvancement(String name) {
+	/** Table of improvements per level as per the SRD. */
+	public final Level[] table;
+	/**
+	 * How many skills points are gained at each level.
+	 * 
+	 * @see SkillsFactor
+	 */
+	public final int skillrate;
+	/** Name of the skill. */
+	public final String descriptivename;
+	final int hd;
+	/**
+	 * All skills this class can use normally. Other skills cost twice the
+	 * points to increase.
+	 */
+	public SkillUpgrade[] classskills;
+	/** @see ClassLevelFactor */
+	public float crperlevel;
+
+	public ClassAdvancement(String name, Level[] tablep, int hdp,
+			int skillratep, SkillUpgrade[] classskillsp, float crperlevelp) {
 		super("Class: " + name.toLowerCase());
 		descriptivename = name;
+		table = tablep;
+		if (Javelin.DEBUG && table.length != 21) {
+			System.out.println("#>20levels");
+		}
+		hd = hdp;
+		skillrate = skillratep;
+		classskills = classskillsp;
+		crperlevel = crperlevelp;
+		purchaseskills = true;
 	}
 
 	@Override
@@ -36,22 +65,16 @@ public abstract class ClassAdvancement extends Upgrade {
 
 	public abstract int getlevel(Monster m);
 
-	abstract int gethd();
-
-	public abstract Level[] gettable();
-
 	abstract void setlevel(int level, Monster m);
 
 	@Override
 	public boolean apply(Combatant c) {
 		Monster m = c.source;
 		int level = getlevel(m) + 1;
-		Level[] table = gettable();
 		if (level >= table.length) {
 			return false;
 		}
 		setlevel(level, m);
-		int hd = gethd();
 		int bonus = m.constitution > 0 ? Monster.getbonus(m.constitution) : 0;
 		m.hd.add(1.0f, hd, bonus);
 		int hp = RPG.r(1, hd) + bonus;
@@ -73,6 +96,7 @@ public abstract class ClassAdvancement extends Upgrade {
 		m.fort += next.fort - last.fort;
 		m.ref += next.ref - last.ref;
 		m.addwill(next.will - last.will);
+		m.skillpool += SkillsFactor.levelup(skillrate, m);
 		return true;
 	}
 

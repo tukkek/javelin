@@ -1,17 +1,15 @@
 package javelin.model.world;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.JavelinApp;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.db.Preferences;
-import javelin.controller.db.StateManager;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.IncursionFight;
+import javelin.controller.fight.RandomEncounter;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
 import javelin.model.Realm;
@@ -20,11 +18,8 @@ import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Portal;
 import javelin.model.world.location.town.Town;
-import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * An attacking {@link Squad}, trying to destroy a {@link Town} or other
@@ -42,24 +37,34 @@ public class Incursion extends WorldActor {
 	private static final boolean FORCEMOVEMENT = false;
 	private static final boolean DONTSPAWN = false;
 
+	/** Should probably move this to {@link Portal}? */
 	public static Integer currentel = 1;
 
 	/** @see #getel() */
 	public List<Combatant> squad = new ArrayList<Combatant>();
 
+	/**
+	 * @param x
+	 *            {@link World} coordinate.
+	 * @param y
+	 *            {@link World} coordinate.
+	 * @param squadp
+	 *            See {@link #currentel}.
+	 * @param r
+	 *            See {@link WorldActor#realm}.
+	 */
 	public Incursion(final int x, final int y, ArrayList<Combatant> squadp,
 			Realm r) {
 		this.x = x;
 		this.y = y;
 		if (squadp == null) {
-			squad.addAll(JavelinApp.generatefight(Incursion.currentel,
-					Terrain.get(x, y)).opponents);
+			squad.addAll(new RandomEncounter().generate(Incursion.currentel,
+					Terrain.get(x, y)));
 			currentel += 1;
 		} else {
 			squad = squadp;
 		}
 		realm = r;
-		StateManager.save();
 	}
 
 	@Override
@@ -69,6 +74,15 @@ public class Incursion extends WorldActor {
 
 	}
 
+	/**
+	 * Incursions only move once a day but this is balanced by several implicit
+	 * benefits like canonical {@link #squad} HP not decreasing after a battle
+	 * that has been won, jumping over certain {@link Location}s, not having to
+	 * deal with {@link RandomEncounter}...
+	 * 
+	 * @param s
+	 *            TODO use {@link WorldScreen#current}
+	 */
 	public void move(final WorldScreen s) {
 		updateavatar();
 		WorldActor target = findtarget(s);
@@ -117,7 +131,7 @@ public class Incursion extends WorldActor {
 		visual.combatant = new Combatant(visual, leader.source, false);
 	}
 
-	public WorldActor findtarget(final WorldScreen s) {
+	WorldActor findtarget(final WorldScreen s) {
 		final List<WorldActor> targets = WorldActor.getall();
 		for (final WorldActor a : new ArrayList<WorldActor>(targets)) {
 			if (a.impermeable || a.realm == realm
@@ -154,15 +168,6 @@ public class Incursion extends WorldActor {
 			}
 		}
 		return false;
-	}
-
-	public static void waitforenter() {
-		Game.message(" Press ENTER to continue...", null, Delay.NONE);
-		Character feedback = ' ';
-		while (feedback != '\n') {
-			feedback = InfoScreen.feedback();
-		}
-		Game.messagepanel.clear();
 	}
 
 	static int decideaxismove(final int me, final int target) {
@@ -202,6 +207,20 @@ public class Incursion extends WorldActor {
 		return false;
 	}
 
+	/**
+	 * Creates and places a new incursion. Finds an empty spot close to the
+	 * given coordinates.
+	 * 
+	 * @param r
+	 *            See {@link WorldActor#realm}.
+	 * @param x
+	 *            Starting {@link World} coordinate.
+	 * @param y
+	 *            Starting {@link World} coordinate.
+	 * @param squadp
+	 *            See {@link Incursion#squad}.
+	 * @see WorldActor#place()
+	 */
 	public static void place(Realm r, int x, int y,
 			ArrayList<Combatant> squadp) {
 		while (WorldActor.get(x, y) != null) {
@@ -221,21 +240,21 @@ public class Incursion extends WorldActor {
 				y = World.MAPDIMENSION - 1;
 			}
 		}
-		create(x, y, squadp, r);
+		new Incursion(x, y, squadp, r).place();
 	}
 
-	public static WorldActor create(int x, int y, ArrayList<Combatant> squadp,
-			Realm r) {
-		WorldActor incursion = new Incursion(x, y, squadp, r);
-		incursion.place();
-		return incursion;
-	}
-
+	/**
+	 * @param from
+	 *            Clones the {@link Combatant}s here into...
+	 * @return a new list.
+	 * @see Combatant#clone()
+	 * @see Combatant#clonesource()
+	 */
 	static public ArrayList<Combatant> getsafeincursion(List<Combatant> from) {
 		int size = from.size();
 		ArrayList<Combatant> to = new ArrayList<Combatant>(size);
 		for (int i = 0; i < size; i++) {
-			to.add(from.get(i).clonedeeply());
+			to.add(from.get(i).clone().clonesource());
 		}
 		return to;
 	}
@@ -260,6 +279,10 @@ public class Incursion extends WorldActor {
 		return null;
 	}
 
+	/**
+	 * @return Encounter level for {@link #squad}.
+	 * @see ChallengeRatingCalculator#calculateel(List)
+	 */
 	public int getel() {
 		return ChallengeRatingCalculator.calculateel(squad);
 	}
@@ -303,10 +326,6 @@ public class Incursion extends WorldActor {
 		return RPG.r(1, 10) <= chance;
 	}
 
-	public Collection<? extends Combatant> getsquad() {
-		return null;
-	}
-
 	@Override
 	public String toString() {
 		return "An incursion";
@@ -318,5 +337,10 @@ public class Incursion extends WorldActor {
 			return false;
 		}
 		throw new StartBattle(new IncursionFight(this));
+	}
+
+	@Override
+	public List<Combatant> getcombatants() {
+		return squad;
 	}
 }

@@ -129,4 +129,8 @@ public class Shrine extends Fortification {
 		screen.feedback();
 	}
 
+	@Override
+	public List<Combatant> getcombatants() {
+		return garrison;
+	}
 }

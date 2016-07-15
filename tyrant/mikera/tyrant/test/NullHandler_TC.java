@@ -5,7 +5,7 @@
  */
 package tyrant.mikera.tyrant.test;
 
-import tyrant.mikera.tyrant.Game;
+import javelin.controller.old.Game;
 
 /**
  * @author Mike

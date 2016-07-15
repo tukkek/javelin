@@ -296,6 +296,17 @@ public class BattleState implements Node, TeamContainer {
 		return out;
 	}
 
+	/**
+	 * This is necessary because sometimes you don't want to clone a unit twice
+	 * (which would result in 2 different clones). For example: if you have a
+	 * Caster and a Target it just could be they are both the same unit
+	 * (self-targetting) and in this case you don't want to clone them twice.
+	 * 
+	 * @param c
+	 *            If not equal, will clone and return this unit.
+	 * @param same
+	 *            If equal will return this unit.
+	 */
 	public Combatant cloneifdifferent(Combatant c, Combatant same) {
 		return c.equals(same) ? same : clone(c);
 	}

@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import tyrant.mikera.tyrant.Game;
+import javelin.controller.old.Game;
 import tyrant.mikera.tyrant.IMessageHandler;
 import tyrant.mikera.tyrant.TPanel;
 

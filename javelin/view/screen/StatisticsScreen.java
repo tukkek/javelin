@@ -148,6 +148,7 @@ public class StatisticsScreen extends InfoScreen {
 				formatskill("disable device", s.disabledevice, m.intelligence);
 		output += formatskill("gather information", s.gatherinformation,
 				m.charisma);
+		output += formatskill("heal", s.heal, m.wisdom);
 		output += formatskill("knowledge", s.knowledge, m.intelligence);
 		output += formatskill("perception", s.perception, m.wisdom);
 		output += formatskill("search", s.search, m.intelligence);

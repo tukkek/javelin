@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.controller.upgrade.Spell;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 public class CastSpells extends WorldAction {
 	public CastSpells() {

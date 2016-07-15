@@ -50,6 +50,18 @@ public class EquipmentMap extends HashMap<Integer, ArrayList<Item>>
 		return null;
 	}
 
+	public Item pop(Item type) {
+		for (final List<Item> items : values()) {
+			for (final Item i : items) {
+				if (type.equals(i)) {
+					items.remove(i);
+					return i;
+				}
+			}
+		}
+		return null;
+	}
+
 	public void fill(Squad active) {
 		for (Combatant c : active.members) {
 			get(c.id);
@@ -58,5 +70,21 @@ public class EquipmentMap extends HashMap<Integer, ArrayList<Item>>
 
 	public void add(Item i, Squad s) {
 		get(RPG.pick(s.members).id).add(i);
+	}
+
+	/**
+	 * TODO ideally should never to a "dirty" state
+	 * 
+	 * @param squad
+	 */
+	public void clean(Squad squad) {
+		keyloop: for (Integer key : new ArrayList<Integer>(keySet())) {
+			for (Combatant c : squad.members) {
+				if (c.id == key) {
+					continue keyloop;
+				}
+			}
+			remove(key);
+		}
 	}
 }

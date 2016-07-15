@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import javelin.controller.old.Game;
 import javelin.model.BattleMap;
 
 import tyrant.mikera.engine.BaseObject;

@@ -65,9 +65,6 @@ public class Scroll extends Item {
 
 	@Override
 	public String canuse(Combatant c) {
-		if (c.source.read(this)) {
-			return null;
-		}
-		return "can't read";
+		return c.source.read(this) ? null : "can't read";
 	}
 }

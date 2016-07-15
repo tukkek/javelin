@@ -18,7 +18,7 @@ public class SoundBurst extends Spell {
 	/** Constructor. */
 	public SoundBurst() {
 		super("Sound burst", 2, SpellsFactor.ratespelllikeability(2),
-				Realm.MAGICAL);
+				Realm.MAGIC);
 		castinbattle = true;
 		isscroll = true;
 	}

@@ -1,7 +1,9 @@
 package javelin.view.screen.haxor;
 
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.unique.Haxor;
 
 /**
@@ -24,12 +26,19 @@ public class BorrowMoney extends Hax {
 
 	@Override
 	protected boolean hack(Combatant target, HaxorScreen s) {
-		Haxor.singleton.borrowed = Haxor.borrow();
+		Haxor.singleton.borrowed = Fortification.getspoils(
+				ChallengeRatingCalculator.calculateel(Squad.active.members));
 		Squad.active.gold += Haxor.singleton.borrowed;
-		s.print("Don't come back until you can pay me these $"
-				+ Haxor.singleton.borrowed + "!");
+		s.print(charge());
 		s.feedback();
 		return true;
 	}
 
+	/**
+	 * @return Textual description of owned money.
+	 */
+	public static String charge() {
+		return "Don't come back until you can pay the $"
+				+ Haxor.singleton.borrowed + " you own me!";
+	}
 }

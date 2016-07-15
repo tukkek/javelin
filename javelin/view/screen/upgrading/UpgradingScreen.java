@@ -12,11 +12,12 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.feat.Feat;
-import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.World;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.town.Order;
 import javelin.model.world.location.town.Town;
@@ -50,7 +51,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 	public UpgradingScreen(String name, Town t) {
 		super(name, t);
 		for (Combatant c : Squad.active.members) {
-			original.put(c.id, c.clonedeeply());
+			original.put(c.id, c.clone().clonesource());
 		}
 	}
 
@@ -102,6 +103,9 @@ public abstract class UpgradingScreen extends SelectScreen {
 		if (buy(o, c, false) != null) {
 			update(c);
 			upgraded.add(c);
+			if (o.u.purchaseskills) {
+				c.source.purchaseskills(o.u).show();
+			}
 		}
 	}
 
@@ -123,7 +127,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 			while (name.length() <= 10) {
 				name += " ";
 			}
-			final BigDecimal cost = buy(o, m.clonedeeply(), true);
+			final BigDecimal cost = buy(o, m.clone().clonesource(), true);
 			if (cost != null && cost.compareTo(new BigDecimal(0)) > 0
 					&& m.xp.compareTo(cost) >= 0) {
 				eligible.add(m);
@@ -146,7 +150,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 			boolean listing) {
 		float originalcr =
 				ChallengeRatingCalculator.calculaterawcr(c.source)[1];
-		final Combatant clone = c.clonedeeply();
+		final Combatant clone = c.clone().clonesource();
 		if (!o.u.upgrade(clone)) {
 			return null;
 		}
@@ -239,7 +243,6 @@ public abstract class UpgradingScreen extends SelectScreen {
 	 */
 	static public Squad completetraining(TrainingOrder memberp, WorldActor p,
 			Combatant member) {
-		ArrayList<Item> equipment = memberp.equipment;
 		ArrayList<Point> empty = new ArrayList<Point>();
 		for (int deltax = -1; deltax <= +1; deltax++) {
 			for (int deltay = -1; deltay <= +1; deltay++) {
@@ -248,9 +251,13 @@ public abstract class UpgradingScreen extends SelectScreen {
 				}
 				int x = p.x + deltax;
 				int y = p.y + deltay;
+				if (!World.validatecoordinate(x, y)
+						|| Terrain.get(x, y).equals(Terrain.WATER)) {
+					continue;
+				}
 				WorldActor stationed = WorldActor.get(x, y, Squad.class);
 				if (stationed != null) {
-					Squad.active.add(member, equipment);
+					Squad.active.add(member, memberp.equipment);
 					return Squad.active;
 				} else if (WorldActor.get(x, y) == null) {
 					empty.add(new Point(x, y));
@@ -260,7 +267,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 		Point destination = RPG.pick(empty);
 		Squad s = new Squad(destination.x, destination.y,
 				Math.round(Math.ceil(memberp.completionat / 24f) * 24), null);
-		s.add(member, equipment);
+		s.add(member, memberp.equipment);
 		s.place();
 		return s;
 	}

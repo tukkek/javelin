@@ -28,12 +28,12 @@ public class SpellResistance extends Quality {
 			if (m.source.sr == Integer.MAX_VALUE) {
 				return false;
 			}
-			m.source.sr += 1;
+			// design parameter
+			m.source.sr = m.source.hd.count() + 12;
 			if (m.source.sr < 11) {
 				m.source.sr = 11;
 			}
-			// design parameter
-			return m.source.sr <= m.source.hd.count() + 12;
+			return true;
 		}
 
 	}

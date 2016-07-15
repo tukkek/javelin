@@ -26,7 +26,7 @@ public class DiscernLocation extends Spell {
 	/** Constructor. */
 	public DiscernLocation() {
 		super("Discern location", 8, SpellsFactor.ratespelllikeability(8),
-				Realm.MAGICAL);
+				Realm.MAGIC);
 		castoutofbattle = true;
 		isritual = true;
 		isscroll = true;
@@ -34,7 +34,7 @@ public class DiscernLocation extends Spell {
 
 	@Override
 	public boolean validate(Combatant caster, Combatant target) {
-		return Dungeon.active != null;
+		return Dungeon.active == null;
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class DiscernLocation extends Spell {
 		ArrayList<WorldActor> towns = Location.getall(Town.class);
 		Town closest = null;
 		for (WorldActor p : towns) {
-			if (WorldScreen.discovered.contains(new Point(p.x, p.y))) {
+			if (WorldScreen.see(new Point(p.x, p.y))) {
 				continue;
 			}
 			if (closest == null || Walker.distance(Squad.active.x,
@@ -73,7 +73,7 @@ public class DiscernLocation extends Spell {
 						.distance(x, y, closest.x, closest.y)) {
 					x = p.x;
 					y = p.y;
-					WorldScreen.discovered.add(p);
+					WorldScreen.setVisible(x, y);
 					continue walk;
 				}
 			}

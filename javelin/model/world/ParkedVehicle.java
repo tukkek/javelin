@@ -1,8 +1,11 @@
 package javelin.model.world;
 
+import java.util.List;
+
 import javelin.Javelin;
 import javelin.controller.action.world.Park;
 import javelin.controller.exception.RepeatTurn;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.transport.Transport;
 import javelin.view.Images;
@@ -12,11 +15,20 @@ import tyrant.mikera.engine.Thing;
  * Represents a {@link Park}ed {@link Transport}.
  *
  * @see Squad#transport
+ * @see Transport#parkeable
  * @author alex
  */
 public class ParkedVehicle extends WorldActor {
 	Transport transport;
 
+	/**
+	 * @param x
+	 *            {@link World} coordinate.
+	 * @param y
+	 *            {@link World} coordinate.
+	 * @param transport
+	 *            Vehicle to be parked.
+	 */
 	public ParkedVehicle(int x, int y, Transport transport) {
 		this.x = x;
 		this.y = y;
@@ -50,5 +62,10 @@ public class ParkedVehicle extends WorldActor {
 		Thing t = super.createvisual();
 		t.javelinimage = Images.getImage(transport.name.toLowerCase());
 		return t;
+	}
+
+	@Override
+	public List<Combatant> getcombatants() {
+		return null;
 	}
 }

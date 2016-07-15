@@ -13,6 +13,7 @@ import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.dungeon.Chest;
+import javelin.model.world.location.dungeon.Dungeon;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -69,8 +70,7 @@ public class RewardCalculator {
 		}
 	}
 
-	static public Map<Integer, TableLine> table =
-			new TreeMap<Integer, TableLine>();
+	static Map<Integer, TableLine> table = new TreeMap<Integer, TableLine>();
 
 	static {
 		table.put(-12, new TableLine(18.75, 9.375, 6.25, 4.6875, 3.125, 2.34375,
@@ -109,8 +109,7 @@ public class RewardCalculator {
 		return table.get(eldifference).getValue(nsurvivors);
 	}
 
-	static public double getpartycr(final int eldifference,
-			final int nsurvivors) {
+	static double getpartycr(final int eldifference, final int nsurvivors) {
 		return nsurvivors * .8
 				* getexperiencepercharacter(eldifference, nsurvivors) / 1000.0;
 	}
@@ -135,10 +134,7 @@ public class RewardCalculator {
 	 * @return gold treasure reward for such an opponent.
 	 */
 	public static int getgold(final float cr) {
-		if (cr <= 0) {
-			return 0;
-		}
-		return Math.round(cr * cr * cr * 7.5f);
+		return cr > 0 ? Math.round(cr * cr * cr * 7.5f) : 0;
 	}
 
 	/**
@@ -150,6 +146,15 @@ public class RewardCalculator {
 		return Math.round(Math.round(Math.cbrt(gold / 7.5f)));
 	}
 
+	/**
+	 * @param gold
+	 *            Value to be added in gold or {@link Item}s.
+	 * @param x
+	 *            {@link Dungeon} coordinate.
+	 * @param y
+	 *            {@link Dungeon} coordinate.
+	 * @return A {@link Dungeon} chest.
+	 */
 	public static Chest createchest(int gold, int x, int y) {
 		ItemSelection chest = new ItemSelection();
 		if (RPG.r(1, 2) == 1) {// 50% are gold and 50% are item

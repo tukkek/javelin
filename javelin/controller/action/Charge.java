@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.Point;
+import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.ai.MeleeAttack;
 import javelin.controller.ai.ChanceNode;
+import javelin.controller.old.Game.Delay;
 import javelin.controller.walker.ChargePath;
 import javelin.controller.walker.Step;
 import javelin.controller.walker.Walker;
@@ -16,7 +18,6 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Attack;
 import javelin.model.unit.Combatant;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * Charging is a special full-round action that allows you to move up to twice
@@ -26,7 +27,7 @@ import tyrant.mikera.tyrant.Game.Delay;
  * single melee attack. You get a +2 bonus on the attack roll and take a -2
  * penalty to your AC until the start of your next turn.
  */
-public class Charge extends Fire {
+public class Charge extends Fire implements AiAction {
 	public Charge() {
 		super("Charge", "c", 'c');
 	}

@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+import javelin.controller.old.Game;
 import javelin.model.BattleMap;
 
 

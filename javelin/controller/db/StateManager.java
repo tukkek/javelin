@@ -1,6 +1,8 @@
 package javelin.controller.db;
 
 import java.awt.Window;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -9,18 +11,18 @@ import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
+
+import javax.swing.JOptionPane;
 
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.Weather;
-import javelin.controller.action.world.Journal;
+import javelin.controller.action.world.OpenJournal;
 import javelin.controller.exception.battle.EndBattle;
-import javelin.model.Realm;
-import javelin.model.item.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Incursion;
@@ -38,43 +40,65 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class StateManager {
+	static final String SAVEFOLDER = System.getProperty("user.dir");
+	/** Normal save file. */
+	public static final File SAVEFILE = new File(SAVEFOLDER, "javelin.save");
 
-	private static final File SAVEFILE =
-			new File(System.getProperty("user.dir"), "javelin.save");
-	private static final Thread SAVEONEXIT = new Thread(new Runnable() {
+	/**
+	 * Always called on normal exit.
+	 */
+	public static final WindowAdapter SAVEONCLOSE = new WindowAdapter() {
 		@Override
-		public void run() {
-			if (WorldScreen.active == null) {
-				// quit before stating a game
-				return;
-			}
-			if (BattleScreen.active != null) {
-				// don't save during battle
-				return;
-			}
-			while (!SAVEFILE.canWrite()) {
-				System.out.println("Waiting for save to finish...");
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// should not happen
+		public void windowClosing(WindowEvent e) {
+			Window w = e.getWindow();
+			try {
+				boolean inbattle = BattleScreen.active != null
+						&& !(BattleScreen.active instanceof WorldScreen);
+				if (inbattle && JOptionPane.showConfirmDialog(w,
+						"Exiting during battle will not save your progress.\n"
+								+ "Leave the game anyway?",
+						"Warning!",
+						JOptionPane.OK_CANCEL_OPTION) != JOptionPane.OK_OPTION) {
+					return;
 				}
+				w.dispose();
+				if (WorldScreen.active != null
+						&& BattleScreen.active == WorldScreen.current) {
+					save(true, SAVEFILE);
+				}
+				System.exit(0);
+			} catch (RuntimeException exception) {
+				w.dispose();
+				JavelinApp.handlefatalexception(exception);
+				System.exit(0);
 			}
-			save();
-		}
-	});
+		};
+	};
 	public static boolean abandoned = false;
 	static public boolean nofile = false;
+	private static int attempts = 0;
 
-	static {
-		Runtime.getRuntime().addShutdownHook(SAVEONEXIT);
-
-	}
-
-	public static synchronized void save() {
+	/**
+	 * This should only be called from one place during normal execution of the
+	 * game! Saving can be a slow process, especially on late game and very
+	 * error-prone if not done carefully! Any error could potentially represent
+	 * the loss of dozens of hours of gameplay so don't call this method unless
+	 * absolutely necessary!
+	 * 
+	 * @param force
+	 *            If <code>false</code> will only save once upon a certain
+	 *            number of calls.
+	 * @param to
+	 */
+	public static synchronized void save(boolean force, File to) {
+		if (!force && attempts < Preferences.SAVEINTERVAL) {
+			attempts += 1;
+			return;
+		}
+		attempts = 0;
 		try {
 			ObjectOutputStream writer =
-					new ObjectOutputStream(new FileOutputStream(SAVEFILE));
+					new ObjectOutputStream(new FileOutputStream(to));
 			writer.writeBoolean(abandoned);
 			for (final WorldActor a : Squad.getall(Squad.class)) {
 				Squad s = (Squad) a;
@@ -92,8 +116,7 @@ public class StateManager {
 			writer.writeObject(World.highways);
 			writer.writeObject(Season.current);
 			writer.writeObject(Season.endsat);
-			writer.writeObject(Key.queue);
-			writer.writeObject(Journal.content);
+			writer.writeObject(OpenJournal.content);
 			writer.flush();
 			writer.close();
 		} catch (final NotSerializableException e) {
@@ -107,6 +130,11 @@ public class StateManager {
 		}
 	}
 
+	/**
+	 * Loads {@link #SAVEFILE} and saves a backup of it.
+	 * 
+	 * @return <code>false</code> if starting a new game (no previous save).
+	 */
 	public static boolean load() {
 		if (!SAVEFILE.exists()) {
 			nofile = true;
@@ -145,9 +173,10 @@ public class StateManager {
 			World.highways = (boolean[][]) stream.readObject();
 			Season.current = (Season) stream.readObject();
 			Season.endsat = (Integer) stream.readObject();
-			Key.queue = (LinkedList<Realm>) stream.readObject();
-			Journal.content = (String) stream.readObject();
+			OpenJournal.content = (String) stream.readObject();
 			stream.close();
+			filestream.close();
+			backup();
 			return true;
 		} catch (final Throwable e1) {
 			e1.printStackTrace(System.out);
@@ -165,10 +194,31 @@ public class StateManager {
 					// die gracefully
 				}
 			}
-			Runtime.getRuntime().removeShutdownHook(StateManager.SAVEONEXIT);
 			System.exit(20140406);
 			return false;
 		}
+	}
+
+	private static void backup() {
+		if (!Preferences.BACKUP) {
+			return;
+		}
+		Calendar now = Calendar.getInstance();
+		String timestamp = "";
+		timestamp += now.get(Calendar.YEAR) + "-";
+		timestamp += format(now.get(Calendar.MONTH) + 1) + "-";
+		timestamp += format(now.get(Calendar.DAY_OF_MONTH)) + "-";
+		timestamp += format(now.get(Calendar.HOUR_OF_DAY)) + ".";
+		timestamp += format(now.get(Calendar.MINUTE)) + ".";
+		timestamp += format(now.get(Calendar.SECOND));
+		File folder = new File(SAVEFOLDER, "backup");
+		folder.mkdir();
+		File backup = new File(folder, timestamp + ".save");
+		save(true, backup);
+	}
+
+	private static String format(int i) {
+		return i >= 10 ? String.valueOf(i) : "0" + i;
 	}
 
 	/**
@@ -177,7 +227,7 @@ public class StateManager {
 	 */
 	public static void clear() {
 		abandoned = true;
-		save();
+		save(true, StateManager.SAVEFILE);
 	}
 
 }

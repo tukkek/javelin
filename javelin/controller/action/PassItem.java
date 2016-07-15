@@ -2,6 +2,8 @@ package javelin.controller.action;
 
 import java.util.ArrayList;
 
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.model.BattleMap;
 import javelin.model.item.Item;
 import javelin.model.state.BattleState;
@@ -10,8 +12,6 @@ import javelin.model.unit.Squad;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * Hands item over to a friendly unit.

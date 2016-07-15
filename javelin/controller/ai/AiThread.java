@@ -8,9 +8,9 @@ import javelin.controller.exception.StopThinking;
 import javelin.model.state.BattleState;
 
 /**
- * Efficiently uses a CPU core to run an {@link AbstractAlphaBetaSearch}. When
- * the search is done it starts a new one using the same thread, to avoid
- * creating more than threads than there are CPUs available.
+ * Efficiently uses a CPU core to run an {@link AlphaBetaSearch}. When the
+ * search is done it starts a new one using the same thread, to avoid creating
+ * more than threads than there are CPUs available.
  * 
  * @author alex
  */
@@ -48,7 +48,6 @@ public class AiThread extends Thread {
 			// abort
 		} catch (Exception e) {
 			ThreadManager.ERROR = e;
-			// ThreadManager.MAIN.interrupt();
 		}
 	}
 
@@ -65,7 +64,6 @@ public class AiThread extends Thread {
 		if (Thread.interrupted()) {
 			return;
 		}
-		assert result != null;
 		AiThread.FINISHED.put(depth, result);
 		if (!ThreadManager.interrupting && ThreadManager.working) {
 			setdepth();
@@ -76,7 +74,9 @@ public class AiThread extends Thread {
 	static public void checkinterrupted() {
 		if (Thread.interrupted() || !ThreadManager.working
 				|| ThreadManager.interrupting) {
-			throw new StopThinking();
+			if (((AiThread) Thread.currentThread()).depth != 1) {
+				throw new StopThinking();
+			}
 		}
 	}
 

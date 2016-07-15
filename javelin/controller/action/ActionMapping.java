@@ -13,6 +13,8 @@ import javelin.controller.action.maneuver.Grapple;
 import javelin.controller.action.maneuver.Trip;
 import javelin.controller.action.world.Automate;
 import javelin.controller.action.world.Guide;
+import javelin.controller.action.world.OpenJournal;
+import javelin.controller.action.world.ShowOptions;
 import javelin.controller.action.world.WorldAction;
 import javelin.controller.exception.RepeatTurn;
 
@@ -34,6 +36,8 @@ public class ActionMapping {
 			new Fire(), // f
 			new CastSpell(), // s
 			UseItem.SINGLETON, // i
+			new ActionAdapter(OpenJournal.getsingleton()), // o
+			new ActionAdapter(ShowOptions.getsingleton()), // o
 			PassItem.SINGLETON, // p
 			new TouchAttack(), // t
 			Defend.SINGLETON, // w

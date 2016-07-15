@@ -7,7 +7,6 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.UnbalancedTeams;
 import javelin.controller.fight.tournament.CrIterator;
 import javelin.controller.upgrade.Upgrade;
@@ -19,20 +18,21 @@ import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.Haxor;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * Ultimate game challenge, in which a player is challenged by a team of their
  * own encounter level. Enemies are upgraded following the {@link Upgrade} list
  * of a single {@link Town} to present a thematic fluff.
  * 
+ * TODO throw this away when temples are made, create TempleFight. Try to share
+ * stuff with MercenariesGuild
+ * 
  * @see Key
  * @see Haxor
  * 
  * @author alex
  */
-public class PlanarFight extends Fight {
+class PlanarFight extends Fight {
 	/** See {@link Haxor#rubies}. */
 	public static final int RUPEES = 4;
 
@@ -48,37 +48,8 @@ public class PlanarFight extends Fight {
 		bribe = false;
 		this.key = k;
 		UpgradeHandler.singleton.gather();
-		switch (key.color) {
-		case WATER:
-			path = UpgradeHandler.singleton.water;
-			break;
-		case EVIL:
-			path = UpgradeHandler.singleton.evil;
-			break;
-		case EARTH:
-			path = UpgradeHandler.singleton.earth;
-			break;
-		case MAGICAL:
-			path = UpgradeHandler.singleton.magic;
-			break;
-		case FIRE:
-			path = UpgradeHandler.singleton.fire;
-			break;
-		case WIND:
-			path = UpgradeHandler.singleton.wind;
-			break;
-		case GOOD:
-			path = UpgradeHandler.singleton.good;
-			break;
-		default:
-			throw new RuntimeException("Unknown key type " + key);
-		}
-	}
-
-	static public void dontflee(BattleScreen s) {
-		Game.message("Cannot flee!", null, Delay.BLOCK);
-		s.checkblock();
-		throw new RepeatTurn();
+		path = new HashSet<Upgrade>(
+				UpgradeHandler.singleton.getfullupgrades(key.color));
 	}
 
 	@Override
@@ -97,7 +68,6 @@ public class PlanarFight extends Fight {
 									.get(determinecr(teamel, size))).clone(),
 							true));
 		}
-		// opponents = organizeopponents(opponents);
 		for (int i = 0; i < size; i++) {
 			Combatant opponent = opponents.get(i);
 			key.color.baptize(opponent);
@@ -108,8 +78,11 @@ public class PlanarFight extends Fight {
 			int j = 0;
 			while (true) {
 				Upgrade u = RPG.pick(new ArrayList<Upgrade>(path));
-				if (u.upgrade(weakest.clonedeeply())) {
+				if (u.upgrade(weakest.clone().clonesource())) {
 					u.upgrade(weakest);
+					if (u.purchaseskills) {
+						weakest.source.purchaseskills(u).upgradeautomatically();
+					}
 					break;
 				}
 				j += 1;
@@ -158,7 +131,8 @@ public class PlanarFight extends Fight {
 				opponents.add(new Combatant(null, m, true));
 			}
 			try {
-				if (ChallengeRatingCalculator.calculateelsafe(opponents) < teamel) {
+				if (ChallengeRatingCalculator
+						.calculateelsafe(opponents) < teamel) {
 					possiblecrs.add(m.challengeRating);
 				}
 			} catch (UnbalancedTeams e) {

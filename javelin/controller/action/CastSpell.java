@@ -5,9 +5,12 @@ import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ActionProvider;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.controller.upgrade.Spell;
 import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
@@ -16,8 +19,6 @@ import javelin.model.unit.Monster;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * Spells with attack rolls are supposed to have critical hits too but for the
@@ -25,7 +26,7 @@ import tyrant.mikera.tyrant.Game.Delay;
  * 
  * @author alex
  */
-public class CastSpell extends Fire {
+public class CastSpell extends Fire implements AiAction {
 	/** Only instance of CastSpell to exist. */
 	public static final CastSpell singleton = new CastSpell();
 	/** Spell for {@link Fire} to perform. */
@@ -50,7 +51,7 @@ public class CastSpell extends Fire {
 			}
 		}
 		if (castable.isEmpty()) {
-			Game.message("No spells to cast right now.", null, Delay.WAIT);
+			Game.message("No spells can be cast right now.", null, Delay.WAIT);
 			return false;
 		}
 		castable.sort(new Comparator<Spell>() {
@@ -91,46 +92,46 @@ public class CastSpell extends Fire {
 				combatant.spells.indexOf(casting), s));
 	}
 
-	List<ChanceNode> cast(Combatant active, Combatant target, int spellindex,
+	List<ChanceNode> cast(Combatant caster, Combatant target, int spellindex,
 			BattleState state) {
 		state = state.clone();
-		active = state.clone(active);
-		target = state.cloneifdifferent(target, active);
+		caster = state.clone(caster);
+		caster.clonesource();
+		target = state.cloneifdifferent(target, caster);
+		if (target != caster) {
+			target.clonesource();
+		}
 		Spell spell = null;
 		if (casting == null) {
-			spell = active.spells.get(spellindex);
+			spell = caster.spells.get(spellindex);
 		} else {
-			int i = active.spells.indexOf(casting);
-			spell = i >= 0 ? active.spells.get(i) : casting;
+			int i = caster.spells.indexOf(casting);
+			spell = i >= 0 ? caster.spells.get(i) : casting;
 		}
-		// try {
-		active.ap += spell.apcost;
-		// } catch (NullPointerException e) {
-		// System.out.println("#nullspell");
-		// }
+		caster.ap += spell.apcost;
 		spell.used += 1;
 		final List<ChanceNode> chances = new ArrayList<ChanceNode>();
 		final String prefix =
-				active + " casts " + spell.name.toLowerCase() + "!\n";
-		final int touchtarget = spell.hit(active, target, state);
+				caster + " casts " + spell.name.toLowerCase() + "!\n";
+		final int touchtarget = spell.hit(caster, target, state);
 		float misschance;
 		if (touchtarget == -Integer.MAX_VALUE) {
 			misschance = 0;
 		} else {
 			misschance = bind(touchtarget / 20f);
 			chances.add(new ChanceNode(state, misschance,
-					prefix + active + " misses touch attack.", Delay.BLOCK));
+					prefix + caster + " misses touch attack.", Delay.BLOCK));
 		}
 		final float hitc = 1 - misschance;
 		final float affectchance =
-				affect(target, state, spell, chances, prefix, hitc);
-		final float savec = savechance(active, target, spell);
+				affect(caster, target, state, spell, chances, prefix, hitc);
+		final float savec = savechance(caster, target, spell);
 		if (savec != 0) {
-			chances.add(hit(active, target, state, spell, savec * affectchance,
+			chances.add(hit(caster, target, state, spell, savec * affectchance,
 					true, prefix));
 		}
 		if (savec != 1) {
-			chances.add(hit(active, target, state, spell,
+			chances.add(hit(caster, target, state, spell,
 					(1 - savec) * affectchance, false, prefix));
 		}
 		if (Javelin.DEBUG) {
@@ -150,10 +151,11 @@ public class CastSpell extends Fire {
 		return convertsavedctochance(spell.save(active, target));
 	}
 
-	public static float affect(Combatant target, BattleState state,
+	static float affect(Combatant caster, Combatant target, BattleState state,
 			final Spell spell, final List<ChanceNode> chances,
 			final String prefix, float hitchance) {
-		if (spell.castonallies || target.source.sr == 0) {
+		if (spell.castonallies || target.source.sr == 0
+				|| caster.equals(target)) {
 			return hitchance;
 		}
 		final float resistchance =

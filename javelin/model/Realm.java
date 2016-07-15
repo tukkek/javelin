@@ -17,17 +17,17 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public enum Realm {
-	WIND, FIRE, EARTH, WATER, GOOD, EVIL, MAGICAL;
+	AIR, FIRE, EARTH, WATER, GOOD, EVIL, MAGIC;
 
 	/**
 	 * @return Equivalent color for the view package or <code>null</code> for
-	 *         {@link #WIND}.
+	 *         {@link #AIR}.
 	 */
 	public java.awt.Color getawtcolor() {
 		switch (this) {
 		case WATER:
 			return java.awt.Color.BLUE;
-		case MAGICAL:
+		case MAGIC:
 			return java.awt.Color.MAGENTA;
 		case GOOD:
 			return java.awt.Color.WHITE;
@@ -37,7 +37,7 @@ public enum Realm {
 			return java.awt.Color.GREEN;
 		case EVIL:
 			return java.awt.Color.BLACK;
-		case WIND:
+		case AIR:
 			return java.awt.Color.GRAY;
 		default:
 			throw new RuntimeException("#unknownColor");
@@ -49,7 +49,7 @@ public enum Realm {
 		switch (this) {
 		case WATER:
 			return "Blue";
-		case MAGICAL:
+		case MAGIC:
 			return "Octarine";
 		case GOOD:
 			return "White";
@@ -59,7 +59,7 @@ public enum Realm {
 			return "Green";
 		case EVIL:
 			return "Black";
-		case WIND:
+		case AIR:
 			return "Translucid";
 		default:
 			throw new RuntimeException("#unknownColor");
@@ -76,7 +76,7 @@ public enum Realm {
 		switch (this) {
 		case WATER:
 			return handler.water;
-		case MAGICAL:
+		case MAGIC:
 			return handler.magic;
 		case GOOD:
 			return handler.good;
@@ -86,7 +86,7 @@ public enum Realm {
 			return handler.earth;
 		case EVIL:
 			return handler.evil;
-		case WIND:
+		case AIR:
 			return handler.wind;
 		default:
 			throw new RuntimeException("#unknownColor");
@@ -100,7 +100,7 @@ public enum Realm {
 		switch (this) {
 		case WATER:
 			return Item.WATER;
-		case MAGICAL:
+		case MAGIC:
 			return Item.MAGIC;
 		case GOOD:
 			return Item.GOOD;
@@ -110,7 +110,7 @@ public enum Realm {
 			return Item.EARTH;
 		case EVIL:
 			return Item.EVIL;
-		case WIND:
+		case AIR:
 			return Item.WIND;
 		default:
 			throw new RuntimeException("#unknownColor");
@@ -147,5 +147,13 @@ public enum Realm {
 		}
 		String prefix = name();
 		return prefix.charAt(0) + prefix.substring(1).toLowerCase();
+	}
+
+	/**
+	 * @return Names in the following format: Water, Earth, Good...
+	 */
+	public String getname() {
+		String name = name();
+		return name.charAt(0) + name().substring(1).toLowerCase();
 	}
 }

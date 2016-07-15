@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import javelin.controller.effect.DamageEffect;
+import javelin.controller.DamageEffect;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.damage.EffectUpgrade;
 import javelin.controller.upgrade.damage.MeleeDamage;

@@ -9,9 +9,8 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.view.MapPanel;
-
-
+import javelin.controller.old.Game;
+import javelin.view.mappanel.MapPanelOld;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.util.Text;
@@ -270,13 +269,13 @@ public class InventoryPanel extends Screen implements ItemSelectable {
 //			if (t.getFlag("IsItem") || t.getFlag("IsTile")) {
 			if (t.containsKey("Image")) {
 				int image = t.getStat("Image");
-				int sx = (image % 20) * MapPanel.TILEWIDTH;
-				int sy = (image / 20) * MapPanel.TILEHEIGHT;
+				int sx = (image % 20) * MapPanelOld.TILEWIDTH;
+				int sy = (image / 20) * MapPanelOld.TILEHEIGHT;
 				int px = 30;
 				int py = ypos;
-				g.drawImage((Image)QuestApp.images.get(t.get("ImageSource")), px, py, px + MapPanel.TILEWIDTH, py
-						+ MapPanel.TILEHEIGHT, sx, sy, sx + MapPanel.TILEWIDTH,
-						sy + MapPanel.TILEHEIGHT, null);
+				g.drawImage((Image)QuestApp.images.get(t.get("ImageSource")), px, py, px + MapPanelOld.TILEWIDTH, py
+						+ MapPanelOld.TILEHEIGHT, sx, sy, sx + MapPanelOld.TILEWIDTH,
+						sy + MapPanelOld.TILEHEIGHT, null);
 			}
 		}
 		

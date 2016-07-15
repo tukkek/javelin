@@ -1,13 +1,13 @@
 package tyrant.mikera.tyrant.perf;
 
 import javelin.controller.action.Action;
+import javelin.controller.old.Game;
 import javelin.model.BattleMap;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.BaseObject;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Hero;
 import tyrant.mikera.tyrant.QuestApp;
 import tyrant.mikera.tyrant.test.MapHelper;

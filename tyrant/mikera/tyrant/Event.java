@@ -6,6 +6,7 @@
  */
 package tyrant.mikera.tyrant;
 
+import javelin.controller.old.Game;
 import tyrant.mikera.engine.BaseObject;
 
 /**

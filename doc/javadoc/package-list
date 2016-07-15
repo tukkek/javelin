@@ -15,12 +15,13 @@ javelin.controller.challenge.factor.quality
 javelin.controller.db
 javelin.controller.db.reader
 javelin.controller.db.reader.fields
-javelin.controller.effect
-javelin.controller.encounter
 javelin.controller.exception
 javelin.controller.exception.battle
 javelin.controller.fight
 javelin.controller.fight.tournament
+javelin.controller.generator.encounter
+javelin.controller.generator.feature
+javelin.controller.old
 javelin.controller.quality
 javelin.controller.quality.perception
 javelin.controller.quality.resistance
@@ -49,6 +50,7 @@ javelin.model.condition.totem
 javelin.model.feat
 javelin.model.item
 javelin.model.item.artifact
+javelin.model.item.relic
 javelin.model.spell
 javelin.model.spell.abjuration
 javelin.model.spell.conjuration.healing
@@ -68,6 +70,9 @@ javelin.model.unit.transport
 javelin.model.world
 javelin.model.world.location
 javelin.model.world.location.dungeon
+javelin.model.world.location.dungeon.crawler
+javelin.model.world.location.dungeon.temple
+javelin.model.world.location.dungeon.temple.features
 javelin.model.world.location.fortification
 javelin.model.world.location.town
 javelin.model.world.location.town.manager
@@ -76,6 +81,7 @@ javelin.model.world.location.unique
 javelin.view
 javelin.view.frame
 javelin.view.frame.keys
+javelin.view.mappanel
 javelin.view.screen
 javelin.view.screen.haxor
 javelin.view.screen.shopping

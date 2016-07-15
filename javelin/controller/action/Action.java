@@ -2,6 +2,7 @@ package javelin.controller.action;
 
 import java.awt.event.KeyEvent;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -9,6 +10,7 @@ import java.util.TreeMap;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.Node;
+import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
@@ -138,7 +140,17 @@ public abstract class Action implements Serializable, ActionDescription {
 		for (final ChanceNode cn : list) {
 			System.err.println("Outcome error! " + cn.action + " " + cn.chance);
 		}
-		throw new RuntimeException("Couldn't determine outcome: " + roll);
+		throw new RuntimeException("Couldn't determine outcome: " + roll
+				+ debugteam(BattleMap.blueTeam, "player team")
+				+ debugteam(BattleMap.redTeam, "ai team"));
+	}
+
+	static String debugteam(ArrayList<Combatant> team, String label) {
+		String out = "\n" + label + ": ";
+		for (Combatant c : team) {
+			out += c.source.toString() + ", ";
+		}
+		return out;
 	}
 
 	@Override
@@ -170,6 +182,8 @@ public abstract class Action implements Serializable, ActionDescription {
 	 * @param thing
 	 *            Unit's visual representation.
 	 * @return <code>true</code> if executed an action (successfully or not).
+	 *         Just return <code>false</code> if the player cannot use this
+	 *         action (AI-only).
 	 */
 	public abstract boolean perform(Combatant active, javelin.model.BattleMap m,
 			Thing thing);

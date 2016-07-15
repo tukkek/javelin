@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.MissingResourceException;
 import java.util.Properties;
 
-import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.action.ActionDescription;
+import javelin.controller.ai.ThreadManager;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -39,6 +39,10 @@ import tyrant.mikera.tyrant.TextZone;
  * @author alex
  */
 public class Preferences {
+	/** Configuration file key for {@link #MONITORPERFORMANCE}. */
+	public static final String KEYCHECKPERFORMANCE = "ai.checkperformance";
+	/** Configuration file key for {@link #MAXTHREADS}. */
+	public static final String KEYMAXTHREADS = "ai.maxthreads";
 	static final String FILE = "preferences.properties";
 	static Properties PROPERTIES = new Properties();
 
@@ -46,14 +50,17 @@ public class Preferences {
 	public static Integer MAXTEMPERATURE;
 	public static int MAXMILISECONDSTHINKING;
 	public static int MAXTHREADS;
+	public static boolean MONITORPERFORMANCE;
 	public static int MESSAGEWAIT;
 	public static String TEXTCOLOR;
+	public static boolean BACKUP;
+	public static int SAVEINTERVAL;
 
 	public static boolean DEBUGDISABLECOMBAT;
 	public static boolean DEBUGESHOWMAP;
 	public static Integer DEBUGSXP;
 	public static Integer DEBUGSGOLD;
-	public static Integer DEBUGHAX;
+	public static Integer DEBUGRUBIES;
 	public static Integer DEBUGLABOR;
 	public static boolean DEBUGCLEARGARRISON;
 	public static String DEBUGFOE;
@@ -62,6 +69,8 @@ public class Preferences {
 	public static Integer DEBUGMINIMUMFOES;
 	public static String DEBUGWEATHER;
 	public static String DEBUGSEASON;
+	public static boolean DEBUGUNLOCKTEMPLES;
+
 	/**
 	 * TODO make this take a {@link String} from the properties file.
 	 */
@@ -117,20 +126,36 @@ public class Preferences {
 	}
 
 	/**
+	 * TODO would be better to have an option #setpreference(String key,String
+	 * value) that would read the file, replace a line with the given key and
+	 * save it in the proper order instead of forever appending to the file. It
+	 * could be used in a few places this is being used instead.
+	 * 
 	 * @param content
 	 *            Overwrite the properties file with this content and reloads
 	 *            all options.
 	 */
 	public static void savefile(String content) {
 		try {
-			FileWriter writer = new FileWriter(FILE);
-			writer.write(content);
-			writer.close();
+			write(content, FILE);
 			load();
 			init();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	/**
+	 * @param content
+	 *            Write content...
+	 * @param f
+	 *            to this file.
+	 * @throws IOException
+	 */
+	public static void write(String content, String f) throws IOException {
+		FileWriter writer = new FileWriter(f);
+		writer.write(content);
+		writer.close();
 	}
 
 	/**
@@ -141,8 +166,24 @@ public class Preferences {
 		MAXTEMPERATURE = getInteger("ai.maxtemperature", 0);
 		MAXMILISECONDSTHINKING =
 				Math.round(1000 * getFloat("ai.maxsecondsthinking"));
-		MAXTHREADS = Preferences.getInteger("ai.maxthreads",
-				Runtime.getRuntime().availableProcessors());
+		int cpus = Runtime.getRuntime().availableProcessors();
+		MAXTHREADS = Preferences.getInteger(KEYMAXTHREADS, cpus);
+		if (MAXTHREADS > cpus) {
+			MAXTHREADS = cpus;
+		}
+		MONITORPERFORMANCE =
+				Preferences.getString(KEYCHECKPERFORMANCE).equals("true");
+		if (MONITORPERFORMANCE) {
+			if (ThreadManager.performance == Integer.MIN_VALUE) {
+				ThreadManager.performance = 0;
+			}
+		} else {
+			ThreadManager.performance = Integer.MIN_VALUE;
+		}
+
+		BACKUP = getString("fs.backup").equals("true");
+		SAVEINTERVAL = getInteger("fs.saveinterval", 9);
+
 		MESSAGEWAIT = Math.round(1000 * getFloat("ui.messagedelay"));
 		TEXTCOLOR = getString("ui.textcolor").toUpperCase();
 		try {
@@ -151,8 +192,10 @@ public class Preferences {
 		} catch (Exception e) {
 			TextZone.fontcolor = Color.BLACK;
 		}
+
 		initkeys("keys.world", new WorldKeysScreen());
 		initkeys("keys.battle", new BattleKeysScreen());
+
 		readdebug();
 	}
 
@@ -177,8 +220,8 @@ public class Preferences {
 				javelin.controller.db.Preferences.getInteger("cheat.xp", null);
 		DEBUGSGOLD = javelin.controller.db.Preferences.getInteger("cheat.gold",
 				null);
-		DEBUGHAX = javelin.controller.db.Preferences.getInteger("cheat.haxor",
-				null);
+		DEBUGRUBIES = javelin.controller.db.Preferences
+				.getInteger("cheat.rubies", null);
 		DEBUGLABOR = javelin.controller.db.Preferences.getInteger("cheat.labor",
 				null);
 		DEBUGCLEARGARRISON = javelin.controller.db.Preferences
@@ -189,6 +232,7 @@ public class Preferences {
 		DEBUGMINIMUMFOES = getInteger("cheat.foes", null);
 		DEBUGWEATHER = getString("cheat.weather");
 		DEBUGSEASON = getString("cheat.season");
+		DEBUGUNLOCKTEMPLES = getString("cheat.temples") != null;
 		initdebug();
 	}
 
@@ -196,15 +240,15 @@ public class Preferences {
 		if (DEBUGESHOWMAP) {
 			for (int x = 0; x < World.MAPDIMENSION; x++) {
 				for (int y = 0; y < World.MAPDIMENSION; y++) {
-					WorldScreen.discovered.add(new Point(x, y));
+					WorldScreen.setVisible(x, y);
 				}
 			}
 		}
 		for (WorldActor a : Squad.getall(Squad.class)) {
 			initsquaddebug((Squad) a);
 		}
-		if (DEBUGHAX != null && Haxor.singleton != null) {
-			Haxor.singleton.rubies = DEBUGHAX;
+		if (DEBUGRUBIES != null && Haxor.singleton != null) {
+			Haxor.singleton.rubies = DEBUGRUBIES;
 		}
 		if (DEBUGLABOR != null) {
 			for (WorldActor a : Town.getall(Town.class)) {

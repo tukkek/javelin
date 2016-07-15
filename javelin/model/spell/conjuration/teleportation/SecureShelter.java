@@ -14,7 +14,7 @@ import javelin.model.world.location.town.Town;
 public class SecureShelter extends Spell {
 	public SecureShelter() {
 		super("Secure shelter", 4, SpellsFactor.ratespelllikeability(4),
-				Realm.MAGICAL);
+				Realm.MAGIC);
 		castoutofbattle = true;
 		isscroll = true;
 	}

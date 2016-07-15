@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.controller.db.StateManager;
 import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
+import javelin.view.screen.DungeonScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -105,13 +105,15 @@ public class Trap extends Feature {
 			super.remove();
 			return true;
 		}
-		if (!found || disarm <= -5 || Javelin
+		if (!found || /* disarm <= -5 || */ Javelin
 				.prompt("Are you sure you want to step in to this trap?\n"
-						+ "Press c to confirm or any other key to quit...") == 'c') {
+						+ "Press ENTER to confirm or any other key to quit...")
+				.equals('\n')) {
 			fallinto();
 			return true;
 		}
-		return false;
+		DungeonScreen.dontmove = true;
+		return true;
 	}
 
 	void fallinto() {
@@ -139,8 +141,7 @@ public class Trap extends Feature {
 			target.hp = Math.max(1, target.hp - damage);
 			status += target + " is " + target.getStatus() + ".";
 		}
-		StateManager.save();
-		Javelin.message(status, false);
+		Javelin.message(status, true);
 	}
 
 	@Override
@@ -155,5 +156,11 @@ public class Trap extends Feature {
 	@Override
 	public void remove() {
 		// don't
+	}
+
+	/** Shows this trap to the player. */
+	public void discover() {
+		found = true;
+		generate(map);
 	}
 }

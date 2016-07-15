@@ -36,6 +36,11 @@ public abstract class SelectScreen extends InfoScreen {
 	 */
 	protected boolean stayopen = true;
 	private boolean closeafterselect = false;
+	/**
+	 * If <code>true</code> will display a message about using {@link #PROCEED}
+	 * to quit the screen.
+	 */
+	protected boolean showquit = true;
 
 	/** Constructor. */
 	public SelectScreen(final String name, final Town t) {
@@ -62,7 +67,9 @@ public abstract class SelectScreen extends InfoScreen {
 		if (!extrainfo.isEmpty()) {
 			text += "\n" + extrainfo + "\n";
 		}
-		text += "\nPress " + PROCEED + " to quit this screen\n";
+		if (showquit) {
+			text += "\nPress " + PROCEED + " to quit this screen\n";
+		}
 		IntroScreen.configurescreen(this);
 		processinput(options);
 		if (stayopen && !Squad.getall(Squad.class).isEmpty()) {

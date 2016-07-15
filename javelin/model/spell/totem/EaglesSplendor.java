@@ -12,7 +12,7 @@ import javelin.model.unit.Monster;
 public class EaglesSplendor extends TotemsSpell {
 
 	public EaglesSplendor() {
-		super("Eagle's splendor", Realm.WIND);
+		super("Eagle's splendor", Realm.AIR);
 	}
 
 	@Override

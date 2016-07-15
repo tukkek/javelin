@@ -33,12 +33,13 @@ import javax.swing.SwingUtilities;
 
 import tyrant.mikera.engine.BaseObject;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.QuestApp;
 import tyrant.mikera.tyrant.TPanel;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
+
+import javelin.controller.old.Game;
 
 public class ThingEditor implements Runnable {
 	private final class SourceRevertPressed implements ActionListener {

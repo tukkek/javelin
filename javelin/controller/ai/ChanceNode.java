@@ -1,6 +1,6 @@
 package javelin.controller.ai;
 
-import tyrant.mikera.tyrant.Game.Delay;
+import javelin.controller.old.Game.Delay;
 
 /**
  * Some action results are determined by chance, like if an attack succeeds at

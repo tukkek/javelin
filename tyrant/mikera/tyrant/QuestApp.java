@@ -29,6 +29,8 @@ import java.util.Hashtable;
 
 import javelin.controller.fight.IncursionFight;
 import javelin.controller.fight.LairFight;
+import javelin.controller.old.Game;
+import javelin.controller.old.Interface;
 import javelin.model.BattleMap;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;

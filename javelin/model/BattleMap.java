@@ -9,6 +9,7 @@ import javelin.Javelin;
 import javelin.controller.BattleSetup;
 import javelin.controller.Point;
 import javelin.controller.ai.Node;
+import javelin.controller.old.Game;
 import javelin.controller.terrain.map.Map;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
@@ -25,7 +26,6 @@ import tyrant.mikera.engine.ThingOwner;
 import tyrant.mikera.tyrant.Being;
 import tyrant.mikera.tyrant.Damage;
 import tyrant.mikera.tyrant.Event;
-import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Portal;
 import tyrant.mikera.tyrant.Spell;
 import tyrant.mikera.tyrant.Theme;
@@ -2135,7 +2135,6 @@ public class BattleMap extends BaseObject implements ThingOwner {
 			for (int y = 0; y < squares.length; y++) {
 				Square s = squares[y];
 				if (s.flooded) {
-					// setTile(x, y, Tile.POOL);
 					Map.addthing(x, y, Javelin.app.fight.map.flooded, this);
 				}
 			}

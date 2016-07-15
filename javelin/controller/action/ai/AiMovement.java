@@ -7,16 +7,18 @@ import javelin.controller.action.Action;
 import javelin.controller.action.Defend;
 import javelin.controller.action.Movement;
 import javelin.controller.ai.ChanceNode;
+import javelin.controller.old.Game.Delay;
+import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
-import tyrant.mikera.tyrant.Game.Delay;
+import tyrant.mikera.engine.Thing;
 
 /**
  * @author alex
  * @see Movement
  */
-public class AiMovement extends AiAction {
+public class AiMovement extends Action implements AiAction {
 	public static final AiMovement SINGLETON = new AiMovement();
 	static final Movement[][] movementgridbyy = new Movement[3][3];
 
@@ -113,5 +115,10 @@ public class AiMovement extends AiAction {
 		wait.add(new ChanceNode(state, 1f, active.toString() + " defends...",
 				Delay.WAIT));
 		return wait;
+	}
+
+	@Override
+	public boolean perform(Combatant active, BattleMap m, Thing thing) {
+		return false;
 	}
 }

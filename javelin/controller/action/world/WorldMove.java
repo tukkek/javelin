@@ -16,6 +16,7 @@ import javelin.model.world.World;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.view.screen.DungeonScreen;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.Thing;
@@ -111,8 +112,14 @@ public class WorldMove extends WorldAction {
 						if (place.allowentry && place.garrison.isEmpty()) {
 							place(t, deltax, deltay);
 						}
+						/* TODO */
 						if (place instanceof Dungeon) {
-							((Dungeon) place).activate();
+							((Dungeon) place).activate(false);
+						} else if (place instanceof Temple) {
+							Temple temple = (Temple) place;
+							if (temple.open) {
+								temple.floors.get(0).activate(false);
+							}
 						}
 					}
 					return;
@@ -126,7 +133,9 @@ public class WorldMove extends WorldAction {
 				}
 				throw e;
 			}
-			if (s instanceof DungeonScreen && Dungeon.active == null) {
+			if (s instanceof DungeonScreen && (DungeonScreen.dontmove
+					|| t.getMap() != Javelin.app.context.map)) {
+				DungeonScreen.dontmove = false;
 				return;// TODO hack
 			}
 			if (!place(t, deltax, deltay)) {

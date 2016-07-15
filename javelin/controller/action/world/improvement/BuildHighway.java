@@ -14,9 +14,11 @@ import javelin.model.world.location.Location;
  * @author alex
  */
 public class BuildHighway extends Improvement {
-	/** Constructor. */
-	public BuildHighway(String name, double price, Character key) {
-		super(name, price, key);
+	/**
+	 * Constructor.
+	 */
+	public BuildHighway(String name, double price, Character key, boolean b) {
+		super(name, price, key, b);
 	}
 
 	@Override

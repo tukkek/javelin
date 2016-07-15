@@ -172,7 +172,7 @@ public class PillarOfSkulls extends UniqueLocation {
 			if (closest == null) {
 				print(text + "\nWe have nothing more to show you!");
 			} else {
-				WorldScreen.discovered.add(new Point(closest.x, closest.y));
+				WorldScreen.setVisible(closest.x, closest.y);
 			}
 			return true;
 		}
@@ -230,8 +230,7 @@ public class PillarOfSkulls extends UniqueLocation {
 	WorldActor find(Class<? extends Location> class1) {
 		Location closest = null;
 		for (WorldActor a : WorldActor.getall()) {
-			if (class1.isInstance(a)
-					&& !WorldScreen.discovered.contains(new Point(a.x, a.y))) {
+			if (class1.isInstance(a) && !WorldScreen.see(new Point(a.x, a.y))) {
 				if (closest == null
 						|| a.distance(x, y) < closest.distance(x, y)) {
 					closest = (Location) a;
@@ -270,5 +269,10 @@ public class PillarOfSkulls extends UniqueLocation {
 		}
 		new Screen().show();
 		return true;
+	}
+
+	@Override
+	public List<Combatant> getcombatants() {
+		return null;
 	}
 }

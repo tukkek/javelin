@@ -34,4 +34,12 @@ public abstract class Hax extends Option {
 	 * @see Haxor#rubies
 	 */
 	protected abstract boolean hack(Combatant target, HaxorScreen s);
+
+	/**
+	 * @return A String indicating why this can't be chosen, <code>null</code>
+	 *         to proceed normally.
+	 */
+	public String validate() {
+		return null;
+	}
 }

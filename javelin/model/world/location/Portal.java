@@ -1,10 +1,11 @@
 package javelin.model.world.location;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javelin.controller.Point;
-import javelin.controller.exception.battle.StartBattle;
-import javelin.controller.fight.PlanarFight;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.Key;
@@ -17,8 +18,6 @@ import javelin.model.world.location.town.Town;
 import javelin.view.screen.IntroScreen;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * Portals take a {@link Squad} from a place to another. They can also be used
@@ -167,11 +166,11 @@ public class Portal extends Location {
 			super.interact();
 			return true;
 		}
-		Key haskey = Key.use(Squad.active);
-		if (haskey != null) {
-			super.interact();
-			throw new StartBattle(new PlanarFight(haskey));
-		}
+		// Key haskey = Key.use(Squad.active);
+		// if (haskey != null) {
+		// super.interact();
+		// throw new StartBattle(new PlanarFight(haskey));
+		// }
 		travel();
 		if (expiresat == null) {
 			super.interact();// remove
@@ -205,24 +204,16 @@ public class Portal extends Location {
 	}
 
 	/**
-	 * @param f
-	 *            1 represents 100% chance of opening a new portal in the game
-	 *            {@link World}.
 	 * @return
 	 */
-	public static Portal open(float f) {
-		if (RPG.random() > f) {
-			return null;
-		}
+	public static Portal open() {
 		ArrayList<WorldActor> towns = Location.getall(Town.class);
 		WorldActor from = RPG.pick(towns);
 		WorldActor to = RPG.pick(towns);
 		while (to == from) {
 			to = RPG.pick(towns);
 		}
-		Portal p = new Portal(from, to);
-		p.place();
-		return p;
+		return new Portal(from, to);
 	}
 
 	@Override
@@ -249,8 +240,14 @@ public class Portal extends Location {
 	 * Opens a portal that a {@link Key} can be safely used upon.
 	 */
 	public static void opensafe() {
-		Portal p = Portal.open(1);
+		Portal p = Portal.open();
 		p.setinvasion(false);
 		p.expiresat = null;
+		p.place();
+	}
+
+	@Override
+	public List<Combatant> getcombatants() {
+		return null;
 	}
 }

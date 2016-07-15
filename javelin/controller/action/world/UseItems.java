@@ -13,7 +13,6 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.shopping.TownShopScreen;
 import javelin.view.screen.town.SelectScreen;
 
 public class UseItems extends WorldAction {
@@ -58,8 +57,8 @@ public class UseItems extends WorldAction {
 			return false;
 		}
 		Combatant target = selected instanceof Artifact ? findowner(selected)
-				: inputmember(infoscreen, infoscreen.text
-						+ "\n\nWhich member will use this item?");
+				: inputmember(infoscreen, "Which member will use the "
+						+ selected.toString().toLowerCase() + "?");
 		if (!selected.usepeacefully(target)) {
 			infoscreen.print(
 					infoscreen.text + "\n\n" + selected.describefailure());
@@ -103,7 +102,7 @@ public class UseItems extends WorldAction {
 	}
 
 	protected Combatant findowner(Item selected) {
-		searchwho: for (Combatant bag : Squad.active.members) {
+		for (Combatant bag : Squad.active.members) {
 			for (Item i : Squad.active.equipment.get(bag.id)) {
 				if (i == selected) {
 					return bag;
@@ -125,17 +124,20 @@ public class UseItems extends WorldAction {
 
 	public Combatant inputmember(final InfoScreen infoscreen,
 			final String message) {
-		infoscreen.print(message + "\n\n" + TownShopScreen.listactivemembers());
-		while (true) {
-			try {
-				return Squad.active.members.get(
-						Integer.parseInt(InfoScreen.feedback().toString()) - 1);
-			} catch (final NumberFormatException e) {
-				continue;
-			} catch (final IndexOutOfBoundsException e) {
-				continue;
-			}
-		}
+		return Squad.active.members
+				.get(Javelin.choose(message, Squad.active.members, true, true));
+		// infoscreen.print(message + "\n\n" +
+		// TownShopScreen.listactivemembers());
+		// while (true) {
+		// try {
+		// return Squad.active.members.get(
+		// Integer.parseInt(InfoScreen.feedback().toString()) - 1);
+		// } catch (final NumberFormatException e) {
+		// continue;
+		// } catch (final IndexOutOfBoundsException e) {
+		// continue;
+		// }
+		// }
 	}
 
 	static public String listitems(final ArrayList<Item> allitems,

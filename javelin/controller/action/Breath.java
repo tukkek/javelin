@@ -16,6 +16,8 @@ import javelin.controller.action.area.Burst;
 import javelin.controller.action.area.Line;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.model.BattleMap;
 import javelin.model.condition.Breathless;
 import javelin.model.state.BattleState;
@@ -25,15 +27,13 @@ import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.BreathWeapon.BreathArea;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * Use breath attack.
  * 
  * @author alex
  */
-public class Breath extends AiAction {
+public class Breath extends Action implements AiAction {
 
 	private static final HashMap<Integer, Area> BURSTS =
 			new HashMap<Integer, Area>();
@@ -276,9 +276,8 @@ public class Breath extends AiAction {
 		if (size == 1) {
 			return m.breaths.get(0);
 		}
-		int index =
-				Javelin.choose("Select a breath attack or press q to quit",
-						m.breaths, false, false);
+		int index = Javelin.choose("Select a breath attack or press q to quit",
+				m.breaths, false, false);
 		if (index >= 0) {
 			return m.breaths.get(index);
 		}

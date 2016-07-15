@@ -3,8 +3,7 @@ package javelin.controller.fight;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.Weather;
-import javelin.controller.terrain.map.TyrantMap;
+import javelin.controller.terrain.map.tyrant.Caves;
 import javelin.model.unit.Combatant;
 
 /**
@@ -15,7 +14,7 @@ import javelin.model.unit.Combatant;
 public class RandomDungeonEncounter extends RandomEncounter {
 	public RandomDungeonEncounter() {
 		meld = true;
-		map = new TyrantMap("caves", Weather.DRY);
+		map = new Caves();
 		/* TODO enable in Dungeon as well on 2.0 */
 		bribe = false;
 		hide = false;

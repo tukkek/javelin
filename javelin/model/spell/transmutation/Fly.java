@@ -12,7 +12,7 @@ import javelin.model.unit.Combatant;
 public class Fly extends Touch {
 	/** Constructor. */
 	public Fly() {
-		super("Fly", 3, SpellsFactor.ratespelllikeability(3), Realm.WIND);
+		super("Fly", 3, SpellsFactor.ratespelllikeability(3), Realm.AIR);
 		castinbattle = true;
 		castonallies = true;
 		ispotion = true;

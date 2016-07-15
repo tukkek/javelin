@@ -8421,7 +8421,7 @@ checks. These bonuses are lost if Blindsight is negated.</p>
 </Monster>
 <Monster id="srd:AnimalBearBlack">
 <Name>Animal:Black bear</Name>
-<Avatar Image="blackbear"></Avatar>
+<Avatar Image="bearblack"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="animal">Medium-Size Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="19">3d8+6 (19)</HitDice>
@@ -37979,7 +37979,7 @@ second. After that, will try to flank the enemy with the aid of others.</p>
   <Abilities Str="11" Dex="10" Con="11" Int="10" Wis="11" Cha="10">Str 11, Dex 10, Con 11, Int 10, Wis 11, Cha 10</Abilities>
   <Skills>profession (farmer) +4, handle animal +4, use rope +4</Skills>
   <Feats>endurance, toughness</Feats>
-  <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="desert,forest,hill,marsh,mountains,plains">Any land</ClimateAndTerrain>
+  <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="">Usually found in towns</ClimateAndTerrain>
   <Organization>0</Organization> <!-- internal -->
   <ChallengeRating Value="0.33">1/3</ChallengeRating>
   <Treasure>Standard</Treasure>

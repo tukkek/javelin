@@ -1,11 +1,8 @@
 package javelin;
 
 import java.awt.BorderLayout;
-import java.awt.Frame;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,6 +11,7 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.prefs.Preferences;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.xml.sax.InputSource;
@@ -29,7 +27,8 @@ import javelin.controller.db.StateManager;
 import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.fight.LairFight;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.hazard.PartyHazard;
 import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.UpgradeHandler;
@@ -48,8 +47,6 @@ import javelin.view.screen.town.RecruitScreen;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 import tyrant.mikera.tyrant.QuestApp;
 
 /**
@@ -60,11 +57,19 @@ import tyrant.mikera.tyrant.QuestApp;
  * @author alex
  */
 public class Javelin {
+	/**
+	 * Add -Ddebug=true to the java VM command line for easier debugging and
+	 * logging.
+	 */
 	public static final boolean DEBUG = System.getProperty("debug") != null;
 
+	/** TODO turn into {@link Enum} */
 	public static final String PERIODMORNING = "Morning";
+	/** TODO turn into {@link Enum} */
 	public static final String PERIODNOON = "Noon";
+	/** TODO turn into {@link Enum} */
 	public static final String PERIODEVENING = "Evening";
+	/** TODO turn into {@link Enum} */
 	public static final String PERIODNIGHT = "Night";
 
 	private static final String TITLE = "Javelin";
@@ -112,16 +117,18 @@ public class Javelin {
 		}
 	}
 
+	/**
+	 * First method to be called.
+	 * 
+	 * @param args
+	 *            See {@link #DEBUG}.
+	 */
 	public static void main(final String[] args) {
 		Thread.currentThread().setName("Javelin");
-		final Frame f = new Frame(TITLE);
+		final JFrame f = new JFrame(TITLE);
 		f.setBackground(java.awt.Color.black);
-		f.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(final WindowEvent e) {
-				System.exit(0);
-			}
-		});
+		f.addWindowListener(StateManager.SAVEONCLOSE);
+		f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		f.setLayout(new BorderLayout());
 		app = new JavelinApp();
 		QuestApp.isapplet = false;
@@ -167,6 +174,7 @@ public class Javelin {
 		}
 	}
 
+	/** TODO remove on 2.0+ */
 	public static Combatant getCombatant(final Thing t) {
 		for (final Combatant c : BattleMap.combatants) {
 			if (c.visual == t) {
@@ -176,10 +184,10 @@ public class Javelin {
 		return null;
 	}
 
-	public static Combatant getLowestAp() {
-		return BattleScreen.active.map.getState().next;
-	}
-
+	/**
+	 * @return {@link #PERIODEVENING}, {@link #PERIODMORNING},
+	 *         {@link #PERIODNIGHT} or {@value #PERIODNOON}.
+	 */
 	public static String getDayPeriod() {
 		final long hourofday = getHour();
 		if (hourofday < 6) {
@@ -194,6 +202,9 @@ public class Javelin {
 		return PERIODEVENING;
 	}
 
+	/**
+	 * @return Hour of the day, from 0 to 23.
+	 */
 	public static long getHour() {
 		return Squad.active.hourselapsed % 24;
 	}
@@ -217,6 +228,10 @@ public class Javelin {
 		return next;
 	}
 
+	/**
+	 * @return Next squad to act.
+	 * @see Squad#hourselapsed
+	 */
 	public static Squad nexttoact() {
 		Squad next = null;
 		for (final WorldActor a : Squad.getall(Squad.class)) {
@@ -228,6 +243,12 @@ public class Javelin {
 		return next;
 	}
 
+	/**
+	 * Pure fluff/flavor.
+	 * 
+	 * @return Welcomes the playet to the game based on the current time of the
+	 *         day.
+	 */
 	public static String sayWelcome() {
 		final String period = getDayPeriod();
 		String flavor;
@@ -246,6 +267,11 @@ public class Javelin {
 				+ "\n\n(press h at the overworld or battle screens for help)";
 	}
 
+	/**
+	 * Once the player has no more {@link Squad}s and {@link Combatant}s under
+	 * his control call this to stop the current game, invalidate the save file,
+	 * record the highscore and exit the application.
+	 */
 	public static void lose() {
 		Javelin.app.switchScreen(BattleScreen.active);
 		StateManager.clear();
@@ -259,9 +285,14 @@ public class Javelin {
 		System.exit(0);
 	}
 
+	/**
+	 * Sets the highscore and...
+	 * 
+	 * @return a message with previous and current score.
+	 */
 	public static String record() {
 		final long stored = gethighscore();
-		final long current = WorldScreen.current.currentday();
+		final long current = WorldScreen.currentday();
 		String message = "Previous record: " + stored;
 		if (stored < current) {
 			message += "\nNew record: " + current + "!";
@@ -272,14 +303,28 @@ public class Javelin {
 		return message;
 	}
 
+	/**
+	 * @param score
+	 *            Updates the highscore record with this value.
+	 */
 	public static void sethighscore(final long score) {
 		RECORD.putLong("record", score);
 	}
 
+	/**
+	 * @return The current highscore value.
+	 */
 	public static long gethighscore() {
 		return RECORD.getLong("record", 0);
 	}
 
+	/**
+	 * @param pick
+	 *            Source statistics to make an unit from.
+	 * @return An actual unit with said statistics.
+	 * @see Combatant#clone()
+	 * @see RecruitScreen#namingscreen(String)
+	 */
 	public static Combatant recruit(Monster pick) {
 		Combatant c = new Combatant(null, pick.clone(), true);
 		c.source.customName = RecruitScreen.namingscreen(c.toString());
@@ -291,14 +336,15 @@ public class Javelin {
 		return c;
 	}
 
-	public static int difficulty() {
-		return Terrain.current().difficulty;
-	}
-
+	/**
+	 * @param file
+	 *            Uses the given image as background.
+	 */
 	public static void settexture(Image file) {
 		QuestApp.paneltexture = file;
 	}
 
+	/** TODO remove? */
 	public static Combatant getCombatant(int id) {
 		for (Combatant c : BattleMap.combatants) {
 			if (c.id == id) {
@@ -403,7 +449,8 @@ public class Javelin {
 	}
 
 	/**
-	 * Waits for user input for confirmation.
+	 * Main output function for {@link WorldScreen}. Waits for user input for
+	 * confirmation.
 	 * 
 	 * @param text
 	 *            Prints this message in the status panel.
@@ -412,6 +459,7 @@ public class Javelin {
 	 *            otherwise any key will do.
 	 * @return the key pressed by the user as confirmation for seeing the
 	 *         message.
+	 * @see Game#message(String, Combatant, Delay)
 	 */
 	public static KeyEvent message(String text, boolean requireenter) {
 		Game.messagepanel.clear();

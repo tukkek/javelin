@@ -12,6 +12,8 @@ import javelin.controller.action.Defend;
 import javelin.controller.action.ai.MeleeAttack;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.controller.upgrade.Spell;
 import javelin.model.BattleMap;
 import javelin.model.Cloneable;
@@ -31,8 +33,6 @@ import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * A Combatant is an in-game unit, like the enemies in the battlefield or the
@@ -144,20 +144,30 @@ public class Combatant implements Serializable, Cloneable {
 		}
 	}
 
+	/**
+	 * Generates an unique identity number for this Combatant.
+	 * 
+	 * @see WorldActor#getcombatants()
+	 */
 	public void newid() {
-		Combatant.ids += 1;
+		ids += 1;
 		while (checkidcollision()) {
-			Combatant.ids += 1;
+			ids += 1;
 		}
-		id = Combatant.ids;
+		id = ids;
 	}
 
+	/**
+	 * TODO add WorldActor#getcombatants to do this
+	 */
 	private boolean checkidcollision() {
-		for (WorldActor a : Squad.getall(Squad.class)) {
-			Squad s = (Squad) a;
-			for (Combatant c : s.members) {
-				if (Combatant.ids == c.id) {
-					return true;
+		for (WorldActor a : Squad.getall()) {
+			List<Combatant> combatants = a.getcombatants();
+			if (combatants != null) {
+				for (Combatant c : combatants) {
+					if (c.id == ids) {
+						return true;
+					}
 				}
 			}
 		}
@@ -354,7 +364,7 @@ public class Combatant implements Serializable, Cloneable {
 
 	public int getNumericStatus() {
 		int maxhp = this.maxhp + source.poison * source.hd.count();
-		if (hp == maxhp) {
+		if (hp >= maxhp) {
 			return 5;
 		}
 		if (hp == 1) {
@@ -428,22 +438,6 @@ public class Combatant implements Serializable, Cloneable {
 			return 4;
 		}
 		return Integer.MAX_VALUE;
-	}
-
-	/**
-	 * Note that this isn't supposed to be used for creating new
-	 * {@link Combatant}s since the {@link #id} is kept the same.
-	 * 
-	 * {@link #clone()} is used for a faster clone sharing the same
-	 * {@link #source}.
-	 * 
-	 * @return A clone with a cloned {@link #source}.
-	 * @see BattleState#deepclone()
-	 */
-	public Combatant clonedeeply() {
-		final Combatant c = clone();
-		c.source = c.source.clone();
-		return c;
 	}
 
 	public int ac() {
@@ -642,5 +636,18 @@ public class Combatant implements Serializable, Cloneable {
 			source.poison -= detox;
 			source.raiseconstitution(this, detox);
 		}
+	}
+
+	/**
+	 * Internally clones {@link #source}.
+	 * 
+	 * @return this instance. To allow the following syntax:
+	 *         combatant.clone().clonesource()
+	 * 
+	 * @see #clone()
+	 */
+	public Combatant clonesource() {
+		source = source.clone();
+		return this;
 	}
 }

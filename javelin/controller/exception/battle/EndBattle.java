@@ -6,6 +6,8 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.ai.cache.AiCache;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.controller.upgrade.Spell;
 import javelin.model.BattleMap;
 import javelin.model.item.Item;
@@ -17,10 +19,9 @@ import javelin.model.unit.Squad;
 import javelin.model.world.Incursion;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.haxor.HaxorScreen;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * A victory or defeat condition has been achieved.
@@ -46,8 +47,7 @@ public class EndBattle extends BattleEvent {
 	public static void end(BattleScreen screen,
 			ArrayList<Combatant> originalTeam) {
 		int nsquads = Squad.getall(Squad.class).size();
-		BattleMap.victory =
-				BattleMap.redTeam.isEmpty() || !screen.checkforenemies();
+		BattleMap.victory = Javelin.app.fight.win(screen);
 		BattleState s = screen.map.getState();
 		terminateconditions(s, screen);
 		Javelin.app.fight.onEnd(screen, originalTeam, s);
@@ -64,7 +64,8 @@ public class EndBattle extends BattleEvent {
 			}
 			end(originalTeam);
 			if (Dungeon.active != null) {
-				Dungeon.active.activate();
+				Temple.climbing = false;
+				Dungeon.active.activate(false);
 			}
 		}
 	}
@@ -162,7 +163,7 @@ public class EndBattle extends BattleEvent {
 			for (final Combatant original : new ArrayList<Combatant>(
 					originalteam)) {
 				if (active.equals(original)) {
-					if (Combatant.DEADATHP < active.hp && active.hp <= 0
+					if (active.hp > Combatant.DEADATHP && active.hp <= 0
 							&& active.source.constitution > 0) {
 						original.hp = 1;
 					} else if (!BattleMap.victory || !revive(original)) {

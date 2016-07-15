@@ -1,5 +1,6 @@
 package javelin.controller.upgrade.skill;
 
+import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
 
 /**
@@ -10,17 +11,24 @@ import javelin.model.unit.Skills;
  * @author alex
  */
 public class Stealth extends SkillUpgrade {
-	public Stealth() {
+	public final static SkillUpgrade SINGLETON = new Stealth();
+
+	Stealth() {
 		super("Stealth");
 	}
 
 	@Override
-	protected int getranks(Skills s) {
+	public int getranks(Skills s) {
 		return s.stealth;
 	}
 
 	@Override
-	protected void setranks(Skills s, int ranks) {
+	public void setranks(Skills s, int ranks) {
 		s.stealth = ranks;
+	}
+
+	@Override
+	protected int getattribute(Monster m) {
+		return m.dexterity;
 	}
 }

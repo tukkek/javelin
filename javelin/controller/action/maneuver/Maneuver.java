@@ -6,9 +6,12 @@ import java.util.List;
 import javelin.controller.action.Action;
 import javelin.controller.action.CastSpell;
 import javelin.controller.action.Fire;
+import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.ai.MeleeAttack;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.model.BattleMap;
 import javelin.model.condition.Condition;
 import javelin.model.feat.Feat;
@@ -16,8 +19,6 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * This greatly helps feature maneuvers in Javelin - it was adopted with some
@@ -31,7 +32,7 @@ import tyrant.mikera.tyrant.Game.Delay;
  * 
  * @author alex
  */
-public abstract class Maneuver extends Fire {
+public abstract class Maneuver extends Fire implements AiAction {
 	private final Feat prerequisite;
 	private int featbonus;
 
@@ -62,6 +63,10 @@ public abstract class Maneuver extends Fire {
 		}
 	}
 
+	/**
+	 * TODO refactor this to "check" and rename make {@link #checkhero(Thing)}
+	 * into Combatant
+	 */
 	public boolean checkhero(Combatant combatant) {
 		return combatant.source.hasfeat(prerequisite);
 	}

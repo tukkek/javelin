@@ -3,10 +3,10 @@ package javelin.view.screen.town;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.controller.old.Game;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.research.Research;
 import javelin.view.screen.Option;
-import tyrant.mikera.tyrant.Game;
 
 /**
  * Manually manages {@link Town#research}.

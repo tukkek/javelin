@@ -4,6 +4,8 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Javelin;
+import javelin.controller.terrain.Terrain;
 import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
@@ -16,9 +18,11 @@ import tyrant.mikera.tyrant.QuestApp;
  * @author alex
  */
 public class IncursionFight extends Fight {
+	/** See {@link Javelin#settexture(Image)}. */
 	public static final Image INCURSIONTEXTURE =
 			QuestApp.getImage("/images/texture2.png");
 
+	/** Incursion being fought. */
 	public final Incursion incursion;
 
 	/**
@@ -68,5 +72,12 @@ public class IncursionFight extends Fight {
 				}
 			}
 		}
+	}
+
+	@Override
+	public List<Combatant> generate(int teamel, Terrain terrain) {
+		List<Combatant> foes = super.generate(teamel, terrain);
+		incursion.squad = Incursion.getsafeincursion(foes);
+		return foes;
 	}
 }

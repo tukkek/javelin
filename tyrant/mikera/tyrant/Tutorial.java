@@ -7,6 +7,7 @@ package tyrant.mikera.tyrant;
 
 import java.util.Date;
 
+import javelin.controller.old.Game;
 import javelin.model.BattleMap;
 
 import tyrant.mikera.engine.Lib;

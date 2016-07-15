@@ -19,7 +19,7 @@ public class FindTraps extends Spell {
 	/** Constructor. */
 	public FindTraps() {
 		super("Find traps", 3, SpellsFactor.ratespelllikeability(3),
-				Realm.WIND);
+				Realm.AIR);
 		ispotion = true;
 		castinbattle = false;
 		castonallies = false;

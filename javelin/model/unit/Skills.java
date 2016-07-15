@@ -22,31 +22,23 @@ import javelin.controller.ai.BattleAi;
  * @author alex
  */
 public class Skills implements Serializable, Cloneable {
+	/** {@link Monster#dexterity}-based. */
+	public int acrobatics = 0;
+	/** {@link Monster#constitution}-based. */
+	public int concentration = 0;
+	/** {@link Monster#charisma}-based. */
+	public int diplomacy = 0;
+	/** {@link Monster#intelligence}-based. */
+	public int disabledevice = 0;
+	/** {@link Monster#charisma}-based. */
+	public int gatherinformation = 0;
+	/** {@link Monster#wisdom} based. */
+	public int heal = 0;
 	/**
 	 * {@link Monster#intelligence}-based. Represents the d20 skill Area
 	 * Knowledge.
 	 */
 	public int knowledge = 0;
-	/** {@link Monster#charisma}-based. */
-	public int diplomacy = 0;
-	/** {@link Monster#intelligence}-based. */
-	public int search = 0;
-	/** {@link Monster#intelligence}-based. */
-	public int disabledevice = 0;
-	/** {@link Monster#charisma}-based. */
-	public int gatherinformation = 0;
-	/** {@link Monster#wisdom}-based. */
-	public int survival = 0;
-	/** {@link Monster#constitution}-based. */
-	public int concentration = 0;
-	/** {@link Monster#dexterity}-based. */
-	public int acrobatics = 0;
-	/** {@link Monster#intelligence}-based. */
-	public int spellcraft = 0;
-	/** {@link Monster#dexterity}-based. */
-	public int stealth = 0;
-	/** {@link Monster#charisma}-based. */
-	public int usemagicdevice = 0;
 	/**
 	 * {@link Monster#wisdom}-based.
 	 * 
@@ -54,8 +46,16 @@ public class Skills implements Serializable, Cloneable {
 	 */
 	@Deprecated
 	public int perception = 0;
-	/** {@link Monster#wisdom} based. */
-	public int heal = 0;
+	/** {@link Monster#intelligence}-based. */
+	public int search = 0;
+	/** {@link Monster#intelligence}-based. */
+	public int spellcraft = 0;
+	/** {@link Monster#dexterity}-based. */
+	public int stealth = 0;
+	/** {@link Monster#wisdom}-based. */
+	public int survival = 0;
+	/** {@link Monster#charisma}-based. */
+	public int usemagicdevice = 0;
 
 	@Override
 	protected Skills clone() throws CloneNotSupportedException {

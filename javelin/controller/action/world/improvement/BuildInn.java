@@ -14,9 +14,11 @@ import javelin.model.world.location.fortification.Inn;
  * @author alex
  */
 public class BuildInn extends Improvement {
-	/** Constructor. */
-	public BuildInn(String name, double price, Character key) {
-		super(name, price, key);
+	/**
+	 * Constructor.
+	 */
+	public BuildInn(String name, double price, Character key, boolean b) {
+		super(name, price, key, b);
 	}
 
 	@Override

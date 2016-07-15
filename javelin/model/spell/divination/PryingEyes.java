@@ -17,7 +17,7 @@ public class PryingEyes extends Spell {
 	/** Constructor. */
 	public PryingEyes() {
 		super("Prying eyes", 5, SpellsFactor.ratespelllikeability(5),
-				Realm.MAGICAL);
+				Realm.MAGIC);
 		castoutofbattle = true;
 		isscroll = true;
 	}

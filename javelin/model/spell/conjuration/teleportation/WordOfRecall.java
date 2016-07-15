@@ -14,7 +14,7 @@ public class WordOfRecall extends Spell {
 	/** Constructor. */
 	public WordOfRecall() {
 		super("Word of recall", 6, SpellsFactor.ratespelllikeability(6),
-				Realm.MAGICAL);
+				Realm.MAGIC);
 		castoutofbattle = true;
 		isritual = true;
 		isscroll = true;

@@ -8,7 +8,6 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.db.Preferences;
-import javelin.controller.db.StateManager;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.fight.Siege;
 import javelin.controller.fight.tournament.Exhibition;
@@ -179,7 +178,7 @@ public class Town extends Location {
 		ArrayList<Monster> recruits = new ArrayList<Monster>();
 		String terrain = Terrain.get(x, y).toString();
 		for (Monster m : Javelin.ALLMONSTERS) {
-			if (m.terrains.contains(terrain)) {
+			if (m.getterrains().contains(terrain)) {
 				recruits.add(m);
 			}
 		}
@@ -197,9 +196,7 @@ public class Town extends Location {
 	public void reclaim() {
 		for (Order o : training.reclaim(Squad.active.hourselapsed)) {
 			TrainingOrder t = (TrainingOrder) o;
-			TownUpgradingScreen.completetraining(t, this, t.trained).gold +=
-					stash;
-			stash = 0;
+			pickstash(TownUpgradingScreen.completetraining(t, this, t.trained));
 		}
 		for (Order item : crafting.reclaim(Squad.active.hourselapsed)) {
 			CraftingOrder o = (CraftingOrder) item;
@@ -223,7 +220,7 @@ public class Town extends Location {
 	 *            Normally 1 rest period equals to 8 hours of rest in normal
 	 *            conditions.
 	 * @param hours
-	 *            Number of hours ellapsed.
+	 *            Number of hours elapsed.
 	 * @param accomodation
 	 *            Level of the resting environment.
 	 */
@@ -247,6 +244,7 @@ public class Town extends Location {
 				int detox = restperiods == 1 ? RPG.r(0, 1) : restperiods / 2;
 				c.detox(Math.min(c.source.poison, detox));
 			}
+			c.terminateconditions((int) hours);
 		}
 		Squad.active.hourselapsed += hours;
 	}
@@ -271,9 +269,9 @@ public class Town extends Location {
 	}
 
 	/**
-	 * @see #host()
+	 * @return <code>true</code> if a flag icon is to be displayed.
+	 * @see #events
 	 */
-	@Override
 	public boolean ishosting() {
 		return !events.isEmpty();
 	}
@@ -297,7 +295,8 @@ public class Town extends Location {
 		/** Produces {@link #labor} and {@link #automanage}s spending. */
 		for (Order item : training.reclaim(time)) {
 			TrainingOrder to = (TrainingOrder) item;
-			TownUpgradingScreen.completetraining(to, this, to.trained);
+			pickstash(
+					TownUpgradingScreen.completetraining(to, this, to.trained));
 		}
 		labor += size / LABORPERIOD;
 		if (!research.queue.isEmpty() && Math
@@ -309,6 +308,11 @@ public class Town extends Location {
 					ishostile() ? new MonsterManager() : new HumanManager();
 			m.manage(this);
 		}
+	}
+
+	void pickstash(Squad s) {
+		s.gold += stash;
+		stash = 0;
 	}
 
 	/**
@@ -405,7 +409,6 @@ public class Town extends Location {
 				Squad.active.updateavatar();
 			}
 		}
-		StateManager.save();
 		Javelin.app.switchScreen(BattleScreen.active);
 		return true;
 	}
@@ -431,10 +434,8 @@ public class Town extends Location {
 		if (transport == null) {
 			return Transport.CARRIAGE;
 		}
-		if (transport == Transport.CARRIAGE) {
-			return Transport.SHIP;
-		}
-		return Transport.AIRSHIP;
+		return transport.equals(Transport.CARRIAGE) ? Transport.SHIP
+				: Transport.AIRSHIP;
 	}
 
 	@Override
@@ -460,5 +461,29 @@ public class Town extends Location {
 		}
 		Squad.active.members
 				.add(new Combatant(null, Javelin.getmonster("Worker"), false));
+	}
+
+	@Override
+	public List<Combatant> getcombatants() {
+		if (ishostile()) {
+			return garrison;
+		}
+		ArrayList<Combatant> combatants =
+				new ArrayList<Combatant>(training.queue.size());
+		for (Order o : training.queue) {
+			combatants.add(((TrainingOrder) o).untrained);
+		}
+		return combatants;
+	}
+
+	/**
+	 * @return <code>true</code> if it's probably a good idea for a player to
+	 *         return here and manager this town.
+	 * @see #automanage
+	 * @see #labor
+	 * @see TownManager
+	 */
+	public boolean haslabor() {
+		return !ishostile() && !automanage && labor >= size;
 	}
 }

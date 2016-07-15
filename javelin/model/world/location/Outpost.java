@@ -1,8 +1,11 @@
 package javelin.model.world.location;
 
+import java.util.List;
+
+import javelin.model.unit.Combatant;
+import javelin.model.unit.Squad;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -26,13 +29,13 @@ public class Outpost extends Location {
 	}
 
 	public static void build() {
-		WorldActor o = new Outpost();
-		o.place();
+		new Outpost().place();
 	}
 
 	@Override
 	public boolean interact() {
-		discover(this.x, this.y, VISIONRANGE);
+		// discover(this.x, this.y, VISIONRANGE);
+		Squad.active.view(Squad.active.perceive(false) + 10);
 		return super.interact();
 	}
 
@@ -62,5 +65,10 @@ public class Outpost extends Location {
 		while (x == -1 || iscloseto(Outpost.class)) {
 			generateawayfromtown();
 		}
+	}
+
+	@Override
+	public List<Combatant> getcombatants() {
+		return null;
 	}
 }

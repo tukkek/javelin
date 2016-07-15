@@ -26,7 +26,8 @@ public class MirrorMatch extends Match {
 			public List<Combatant> getmonsters(int teamel) {
 				ArrayList<Combatant> monsters = new ArrayList<Combatant>();
 				for (Combatant c : Squad.active.members) {
-					c = c.clonedeeply();
+					c = c.clone();
+					c.clonesource();
 					c.source.customName = null;
 					c.newid();
 					monsters.add(c);

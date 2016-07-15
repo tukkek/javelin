@@ -8,19 +8,21 @@ import javelin.Javelin;
 import javelin.controller.action.Action;
 import javelin.controller.action.CastSpell;
 import javelin.controller.ai.ChanceNode;
+import javelin.controller.old.Game.Delay;
+import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Attack;
 import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.CurrentAttack;
-import tyrant.mikera.tyrant.Game.Delay;
+import tyrant.mikera.engine.Thing;
 
 /**
  * Base class for {@link MeleeAttack} and {@link RangedAttack}.
  * 
  * @author alex
  */
-public abstract class AbstractAttack extends AiAction {
+public abstract class AbstractAttack extends Action implements AiAction {
 
 	public AbstractAttack(final String name) {
 		super(name);
@@ -205,7 +207,7 @@ public abstract class AbstractAttack extends AiAction {
 			} else {
 				messageAdd.append(target.source.customName);
 			}
-			messageAdd.append(" is ").append(target.getStatus());
+			messageAdd.append(" is ").append(target.getStatus()).append(".");
 			posthit(dc, target, attacker, attack, ap, attackstate, messageAdd);
 		}
 		return new ChanceNode(attackstate, dc.chance, messageAdd.toString(),
@@ -248,5 +250,10 @@ public abstract class AbstractAttack extends AiAction {
 			attacks.add(i);
 		}
 		return attacks;
+	}
+
+	@Override
+	public boolean perform(Combatant active, BattleMap m, Thing thing) {
+		return false;
 	}
 }

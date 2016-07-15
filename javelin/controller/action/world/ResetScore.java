@@ -1,10 +1,10 @@
 package javelin.controller.action.world;
 
 import javelin.Javelin;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * Clear highscore.

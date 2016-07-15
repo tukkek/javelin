@@ -38,7 +38,8 @@ public class AcademyScreen extends UpgradingScreen {
 	@Override
 	protected void onexit(Squad s) {
 		if (s.members.isEmpty()) {
-			this.academy.stash = s.gold;
+			academy.stash += s.gold;
+			academy.parking = s.transport;
 		}
 	}
 

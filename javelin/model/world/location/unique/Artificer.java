@@ -1,15 +1,18 @@
 package javelin.model.world.location.unique;
 
+import java.util.List;
+
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.artifact.Artifact;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.shopping.ArtificerScreen;
 import javelin.view.screen.town.PurchaseOption;
 import tyrant.mikera.engine.RPG;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * Allows a player to forge and sell artifacts.
@@ -98,5 +101,10 @@ public class Artificer extends UniqueLocation {
 		completeat =
 				Math.round(24 * o.price / 1000 + Squad.active.hourselapsed);
 		additem();
+	}
+
+	@Override
+	public List<Combatant> getcombatants() {
+		return garrison;
 	}
 }

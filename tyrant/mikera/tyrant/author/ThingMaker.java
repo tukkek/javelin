@@ -5,11 +5,11 @@ import java.io.StringReader;
 import java.util.Iterator;
 import java.util.TreeMap;
 
+import javelin.controller.old.Game;
 import javelin.model.BattleMap;
 
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Game;
 
 
 

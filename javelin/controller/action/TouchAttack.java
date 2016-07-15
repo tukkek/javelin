@@ -3,13 +3,14 @@ package javelin.controller.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.old.Game.Delay;
 import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * An attack that reaches out only 5 feet, like from the Digester or Shocker
@@ -17,7 +18,7 @@ import tyrant.mikera.tyrant.Game.Delay;
  * 
  * @author alex
  */
-public class TouchAttack extends Fire {
+public class TouchAttack extends Fire implements AiAction {
 
 	public TouchAttack() {
 		super("Touch attack", "t", 't');

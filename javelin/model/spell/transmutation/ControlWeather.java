@@ -22,7 +22,7 @@ public class ControlWeather extends Spell {
 	/** Constructor. */
 	public ControlWeather() {
 		super("Control weather", 7, SpellsFactor.ratespelllikeability(7),
-				Realm.WIND);
+				Realm.AIR);
 		isscroll = true;
 		isritual = true;
 		castinbattle = false;

@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.exception.RepeatTurn;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
@@ -28,6 +30,9 @@ public class Divide extends WorldAction {
 
 	@Override
 	public void perform(final WorldScreen screen) {
+		if (Dungeon.active != null) {
+			throw new RepeatTurn();
+		}
 		clear();
 		final String in =
 				"Press each member's number to switch his destination squad.\n"
@@ -132,9 +137,8 @@ public class Divide extends WorldAction {
 		Squad.active.gold -= gold;
 		s.place();
 		for (final Combatant m : newsquad) {
-			final String name = m.toString();
 			final ArrayList<Item> items = Squad.active.equipment.get(m.id);
-			Squad.active.equipment.remove(name);
+			Squad.active.equipment.remove(m.id);
 			s.equipment.put(m.id, items);
 		}
 		Squad.active.updateavatar();

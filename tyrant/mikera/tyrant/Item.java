@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javelin.controller.Movement;
+import javelin.controller.old.Game;
 import javelin.model.BattleMap;
 
 import tyrant.mikera.engine.Description;

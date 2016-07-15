@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
 
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.model.BattleMap;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
@@ -13,8 +15,6 @@ import javelin.model.unit.Squad;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 public class UseItem extends Action {
 

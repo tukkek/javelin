@@ -20,6 +20,8 @@ import javelin.controller.ai.ThreadManager;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.Fight;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.map.Map;
 import javelin.controller.walker.Walker;
 import javelin.model.BattleMap;
@@ -27,12 +29,11 @@ import javelin.model.condition.Dominated;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
-import javelin.view.MapPanel;
 import javelin.view.StatusPanel;
+import javelin.view.mappanel.MapPanel;
+import javelin.view.mappanel.MapPanelOld;
 import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 import tyrant.mikera.tyrant.GameHandler;
 import tyrant.mikera.tyrant.IActionHandler;
 import tyrant.mikera.tyrant.LevelMapPanel;
@@ -64,6 +65,7 @@ public class BattleScreen extends Screen {
 
 	public static List<Combatant> originalredteam;
 	public static List<Combatant> originalblueteam;
+	static public Combatant lastlooked = null;
 
 	public MapPanel mappanel;
 	public MessagePanel messagepanel;
@@ -83,7 +85,10 @@ public class BattleScreen extends Screen {
 	 */
 	public float spentap = 0;
 	public LevelMapPanel levelMap = null;
-	static public Combatant lastlooked = null;
+
+	public boolean cursor = false;
+	public int curx = -1;
+	public int cury = -1;
 
 	public BattleScreen(JavelinApp javelinApp, BattleMap battlemap,
 			Image texture) {
@@ -122,7 +127,7 @@ public class BattleScreen extends Screen {
 		setLayout(new BorderLayout());
 		messagepanel = new MessagePanel(q);
 		add(messagepanel, "South");
-		mappanel = new MapPanel(this);
+		mappanel = getmappanel();
 		add(mappanel, "Center");
 		final Panel cp = new Panel();
 		cp.setLayout(new BorderLayout());
@@ -142,6 +147,10 @@ public class BattleScreen extends Screen {
 		Game.delayblock = false;
 		initmap();
 		mappanel.repaint();
+	}
+
+	protected MapPanel getmappanel() {
+		return new MapPanelOld();
 	}
 
 	/** Initializes this screen instance. */
@@ -174,10 +183,6 @@ public class BattleScreen extends Screen {
 			checkblock();
 			throw e;
 		}
-		// if (Javelin.DEBUG) {
-		// humanTurn();
-		// return;
-		// }
 		humanTurn();
 	}
 
@@ -221,7 +226,7 @@ public class BattleScreen extends Screen {
 	}
 
 	void listen(final Combatant next) {
-		if (map.redTeam.contains(next)) {
+		if (BattleMap.redTeam.contains(next)) {
 			return;
 		}
 		int listen = next.source.perceive(false);
@@ -281,14 +286,10 @@ public class BattleScreen extends Screen {
 	}
 
 	public void centerscreen(int x, int y, boolean force) {
-		if (force || center(x, y)) {
+		if (force || mappanel.center(x, y)) {
 			mappanel.viewPosition(map, x, y);
+			return;
 		}
-	}
-
-	protected boolean center(int x, int y) {
-		return !(2 + mappanel.startx <= x && x <= mappanel.endx - 2
-				&& 2 + mappanel.starty <= y && y <= mappanel.endy - 2);
 	}
 
 	/**
@@ -386,7 +387,7 @@ public class BattleScreen extends Screen {
 				}
 				s.addmeld(c.location[0], c.location[1]);
 				Game.message(
-						c + " is removed from the arena!\nPress ENTER to continue...",
+						c + " is removed from the battlefield!\nPress ENTER to continue...",
 						null, Delay.NONE);
 				while (Game.getInput().getKeyChar() != '\n') {
 					// wait for enter
@@ -405,11 +406,11 @@ public class BattleScreen extends Screen {
 	}
 
 	public void updatescreen(final ChanceNode state, boolean enableoverrun) {
-		BattleScreen.active.map.setState(state.n);
+		final BattleState s = (BattleState) state.n;
+		BattleScreen.active.map.setState(s);
 		if (lastwascomputermove == null) {
 			Game.redraw();
 		}
-		final BattleState s = (BattleState) state.n;
 		Delay delay = state.delay;
 		if (enableoverrun && delay == Delay.WAIT
 				&& s.redTeam.contains(s.next)) {
@@ -544,10 +545,10 @@ public class BattleScreen extends Screen {
 		if (start == null) {
 			return getTargetLocation();
 		}
-		mappanel.setCursor(start.x, start.y);
+		setCursor(start.x, start.y);
 		mappanel.viewPosition(m, start.x, start.y);
 		// initial look
-		doLookPoint(new Point(mappanel.curx, mappanel.cury));
+		doLookPoint(new Point(curx, cury));
 		// get interesting stuff to see
 		// Note that the hero is incidentally also seen
 		// So there should be no worries of an empty list
@@ -601,30 +602,39 @@ public class BattleScreen extends Screen {
 					break;
 				case 'v':
 					for (Combatant c : BattleMap.combatants) {
-						if (c.location[0] == mappanel.curx
-								&& c.location[1] == mappanel.cury) {
+						if (c.location[0] == curx && c.location[1] == cury) {
 							new StatisticsScreen(c);
 							break;
 						}
 					}
 					break;
 				case 'q':
-					mappanel.clearCursor();
+					clearCursor();
 					return null;
 				default:
-					mappanel.clearCursor();
-					return new Point(mappanel.curx, mappanel.cury);
+					clearCursor();
+					return new Point(curx, cury);
 				}
-				mappanel.setCursor(
-						BattleScreen.checkbounds(mappanel.curx + dx, map.width),
-						BattleScreen.checkbounds(mappanel.cury + dy,
-								map.height));
-				mappanel.viewPosition(m, mappanel.curx, mappanel.cury);
-				doLookPoint(new Point(mappanel.curx, mappanel.cury));
+				setCursor(BattleScreen.checkbounds(curx + dx, map.width),
+						BattleScreen.checkbounds(cury + dy, map.height));
+				mappanel.viewPosition(m, curx, cury);
+				doLookPoint(new Point(curx, cury));
 			}
 		} finally {
 			lastlooked = null;
 		}
+	}
+
+	private void clearCursor() {
+		cursor = false;
+		mappanel.repaint();
+	}
+
+	private void setCursor(int x, int y) {
+		cursor = true;
+		curx = x;
+		cury = y;
+		mappanel.repaint();
 	}
 
 	static private char convertkey(final KeyEvent e) {
@@ -749,15 +759,15 @@ public class BattleScreen extends Screen {
 
 	public String describestatus(final Combatant combatant,
 			final BattleState state) {
-		String description = combatant + " (" + combatant.getStatus();
 		final ArrayList<String> statuslist = combatant.liststatus(state);
+		if (statuslist.isEmpty()) {
+			return combatant.toString();
+		}
+		String description = combatant + " (";
 		for (final String status : statuslist) {
-			description += ", " + status;
+			description += status + ", ";
 		}
-		if (Javelin.DEBUG) {
-			description += ", " + (combatant.ap) + "ap";
-		}
-		return description + ")\n";
+		return description.substring(0, description.length() - 2) + ")\n";
 	}
 
 	private void lookmessage(final String string) {
@@ -814,9 +824,6 @@ public class BattleScreen extends Screen {
 		if (s.blocked) {
 			return m.getblockedtile(x, y);
 		}
-		// if (s.flooded) {
-		// return Map.flooded;
-		// }
 		return m.floor;
 	}
 

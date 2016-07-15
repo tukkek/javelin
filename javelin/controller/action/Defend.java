@@ -17,7 +17,7 @@ import tyrant.mikera.engine.Thing;
  * 
  * @author alex
  */
-public class Defend extends AiAction {
+public class Defend extends Action implements AiAction {
 	public static final double APCOST = .5;
 	public static final Action SINGLETON = new Defend();
 	public static final boolean ALLOWAI = true;

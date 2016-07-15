@@ -6,11 +6,19 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.JavelinApp;
+import javelin.controller.Weather;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.exception.GaveUpException;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;
+import javelin.controller.generator.encounter.EncounterGenerator;
+import javelin.controller.generator.encounter.GeneratedFight;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
+import javelin.controller.terrain.Underground;
+import javelin.controller.terrain.Water;
 import javelin.controller.terrain.map.Map;
 import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
@@ -18,11 +26,10 @@ import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.town.SelectScreen;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 import tyrant.mikera.tyrant.QuestApp;
 
 /**
@@ -78,6 +85,14 @@ public abstract class Fight {
 
 	/** If not <code>null</code> will use this terrain when generating a map. */
 	public Terrain terrain = null;
+
+	/**
+	 * If not <code>null</code> will override any other flooding level.
+	 * 
+	 * @see Weather#current
+	 * @see Map#maxflooding
+	 */
+	public Integer floodlevel = null;
 
 	/**
 	 * @return an encounter level for which an appropriate challenge should be
@@ -205,5 +220,111 @@ public abstract class Fight {
 			return true;
 		}
 		return false;
+	}
+
+	static public void dontflee(BattleScreen s) {
+		Game.message("Cannot flee!", null, Delay.BLOCK);
+		s.checkblock();
+		throw new RepeatTurn();
+	}
+
+	/**
+	 * @param foes
+	 *            Gives an opportunity to alter the generated enemies.
+	 */
+	public void enhance(List<Combatant> foes) {
+		// nothing by default
+	}
+
+	/**
+	 * @param el
+	 *            Target encounter level for the fight. Taken as a guideline
+	 *            because given {@link Terrain} and such a fight cannot be
+	 *            generated for this exact level.
+	 * @param terrain
+	 *            Terrain this fight takes place on.
+	 * @return The resulting opponents.
+	 */
+	public List<Combatant> generate(final int teamel, Terrain terrain) {
+		List<Combatant> foes = getmonsters(teamel);
+		if (foes != null) {
+			enhance(foes);
+			return foes;
+		}
+
+		int delta = 0;
+		GeneratedFight generated = null;
+		while (generated == null) {
+			generated = chooseopponents(teamel - delta, terrain);
+			if (generated != null) {
+				break;
+			}
+			if (delta != 0) {
+				generated = chooseopponents(teamel + delta, terrain);
+			}
+			delta += 1;
+		}
+		foes = generated.opponents;
+		enhance(foes);
+		return foes;
+	}
+
+	GeneratedFight chooseopponents(final int el, Terrain terrain) {
+		try {
+			return new GeneratedFight(EncounterGenerator.generate(el, terrain));
+		} catch (final GaveUpException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * @return <code>false</code> if any of these {@link Combatant}s are not
+	 *         supposed to be in this fight.
+	 * @see TempleEncounter
+	 */
+	public boolean validate(ArrayList<Combatant> encounter) {
+		return true;
+	}
+
+	/**
+	 * @param t
+	 *            Terrain hint. Usually {@link Terrain#current()}.
+	 * @return A list of {@link Terrain}s which players in this fight can
+	 *         inhabit.
+	 */
+	public ArrayList<Terrain> getterrains(Terrain t) {
+		return getdefaultterrains(t);
+	}
+
+	/**
+	 * Default implementation of {@link #getterrains(Terrain)}.
+	 * 
+	 * @param t
+	 *            Will return this (alongside {@link Water} if enough flood
+	 *            level)...
+	 * @return or {@link Underground} if there is inside a {@link Dungeon}.
+	 * 
+	 * @see Weather#flood(BattleMap, int)
+	 * @see Map#maxflooding
+	 * @see Dungeon#active
+	 */
+	static public ArrayList<Terrain> getdefaultterrains(Terrain t) {
+		ArrayList<Terrain> terrains = new ArrayList<Terrain>();
+		if (Dungeon.active != null) {
+			terrains.add(Terrain.UNDERGROUND);
+			return terrains;
+		}
+		terrains.add(t);
+		if (Weather.current == Weather.STORM) {
+			terrains.add(Terrain.WATER);
+		}
+		return terrains;
+	}
+
+	/**
+	 * @return <code>true</code> if battle has been won.
+	 */
+	public Boolean win(BattleScreen screen) {
+		return BattleMap.redTeam.isEmpty() || !screen.checkforenemies();
 	}
 }

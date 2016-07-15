@@ -5,7 +5,7 @@ package javelin.controller.ai.valueselector;
 
 import java.util.ArrayList;
 
-import javelin.controller.ai.AbstractAlphaBetaSearch;
+import javelin.controller.ai.AlphaBetaSearch;
 import javelin.controller.ai.Entry;
 
 /**
@@ -15,11 +15,11 @@ import javelin.controller.ai.Entry;
  */
 public class MaxValueSelector extends ValueSelector {
 	/**
-	 * @see MaxValueSelector#MaxValueSelector(AbstractAlphaBetaSearch)
+	 * @see MaxValueSelector#MaxValueSelector(AlphaBetaSearch)
 	 * 
 	 * @author Alex Henry
 	 */
-	private final AbstractAlphaBetaSearch search;
+	private final AlphaBetaSearch search;
 
 	/**
 	 * Construtor.
@@ -28,8 +28,8 @@ public class MaxValueSelector extends ValueSelector {
 	 *            Busca atual sendo realizada.
 	 * @author Alex Henry
 	 */
-	public MaxValueSelector(final AbstractAlphaBetaSearch search) {
-		super();
+	public MaxValueSelector(final AlphaBetaSearch search) {
+		super(-Float.MAX_VALUE);
 		this.search = search;
 	}
 

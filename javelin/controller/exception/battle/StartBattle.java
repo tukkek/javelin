@@ -3,19 +3,14 @@ package javelin.controller.exception.battle;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.JavelinApp;
 import javelin.controller.BattleSetup;
 import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.controller.db.Preferences;
-import javelin.controller.encounter.GeneratedFight;
 import javelin.controller.fight.Fight;
-import javelin.controller.fight.IncursionFight;
-import javelin.controller.fight.LairFight;
+import javelin.controller.generator.encounter.GeneratedFight;
 import javelin.controller.terrain.Terrain;
 import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.Incursion;
 import javelin.view.screen.BattleScreen;
 
 /**
@@ -25,35 +20,20 @@ import javelin.view.screen.BattleScreen;
  * @author alex
  */
 public class StartBattle extends BattleEvent {
-
+	/** Controller for the battle. */
 	public final Fight fight;
 
+	/** Constructor. */
 	public StartBattle(final Fight d) {
 		fight = d;
 	}
 
+	/** Prepares and switches to a {@link BattleScreen}. */
 	public void battle() {
-		Javelin.app.fight = fight;
 		BattleMap.blueTeam = Squad.active.members;
-		int teamel = ChallengeRatingCalculator.calculateel(BattleMap.blueTeam);
-		List<Combatant> foes = fight.getmonsters(teamel);
-		if (foes == null) {
-			Terrain currentterrain = Terrain.current();
-			foes = JavelinApp.generatefight(fight.getel(teamel),
-					currentterrain).opponents;
-			/* TODO enhance Fight hierarchy with these: */
-			while (foes.size() == 1 && fight instanceof LairFight) {
-				foes = JavelinApp.generatefight(fight.getel(teamel),
-						currentterrain).opponents;
-				if (Preferences.DEBUGFOE != null) {
-					break;
-				}
-			}
-			if (fight instanceof IncursionFight) {
-				((IncursionFight) fight).incursion.squad =
-						Incursion.getsafeincursion(foes);
-			}
-		}
+		Terrain t = Terrain.current();
+		List<Combatant> foes = fight.generate(t.getel(
+				ChallengeRatingCalculator.calculateel(BattleMap.blueTeam)), t);
 		if (fight.avoid(foes)) {
 			return;
 		}
@@ -65,6 +45,7 @@ public class StartBattle extends BattleEvent {
 			battleScreen.mainLoop();
 		} catch (final EndBattle end) {
 			EndBattle.end(battleScreen, Javelin.app.originalteam);
+			Javelin.app.fight = null;
 		}
 	}
 }

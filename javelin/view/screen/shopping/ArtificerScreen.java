@@ -12,8 +12,8 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.unique.Artificer;
 import javelin.view.screen.Option;
-import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.PurchaseOption;
+import javelin.view.screen.town.PurchaseScreen;
 
 /**
  * See {@link Artificer}.
@@ -76,28 +76,34 @@ public class ArtificerScreen extends ShoppingScreen {
 			ArrayList<Combatant> squad =
 					new ArrayList<Combatant>(Squad.active.members);
 			for (Combatant c : Squad.active.members) {
-				if (Squad.active.equipment.get(c.id).isEmpty()) {
+				if (getbag(c).isEmpty()) {
 					squad.remove(c);
 				}
 			}
 			if (squad.isEmpty()) {
 				return false;
 			}
-			int selleri = Javelin.choose("Who will sell an item?", squad,
-					true, false);
+			int selleri = Javelin.choose("Who will sell an item?", squad, true,
+					false);
 			if (selleri < 0) {
 				return false;
 			}
 			Combatant seller = squad.get(selleri);
-			ArrayList<Item> bag = Squad.active.equipment.get(seller.id);
+			ArrayList<Item> bag = new ArrayList<Item>(getbag(seller));
+			for (Item i : new ArrayList<Item>(bag)) {
+				if (i.price == 0) {
+					bag.remove(i);
+				}
+			}
 			ArrayList<String> sellingprices = new ArrayList<String>(bag.size());
 			for (Item i : bag) {
-				sellingprices.add(i + " ($" + i.price / 2 + ")");
+				sellingprices.add(i + " ($"
+						+ PurchaseScreen.formatcost(i.price / 2) + ")");
 			}
-			int bagi = Javelin.choose("Sell which item?", sellingprices,
-					true, false);
+			int bagi = Javelin.choose("Sell which item?", sellingprices, true,
+					false);
 			if (bagi >= 0) {
-				sell(seller, bag, bag.get(bagi));
+				sell(seller, bag.get(bagi));
 				/* hack so the gold will update TODO */
 				show();
 				return true;
@@ -107,12 +113,16 @@ public class ArtificerScreen extends ShoppingScreen {
 		return super.select(op);
 	}
 
-	void sell(Combatant seller, ArrayList<Item> bag, Item sold) {
+	ArrayList<Item> getbag(Combatant seller) {
+		return Squad.active.equipment.get(seller.id);
+	}
+
+	void sell(Combatant seller, Item sold) {
 		Artifact a = sold instanceof Artifact ? (Artifact) sold : null;
 		if (a != null && seller.equipped.contains(a)) {
 			a.remove(seller);
 		}
-		bag.remove(sold);
+		getbag(seller).remove(sold);
 		Squad.active.gold += sold.price / 2;
 	}
 

@@ -31,7 +31,7 @@ public class GreaterTeleport extends Spell {
 	/** Constructor. */
 	public GreaterTeleport() {
 		super("Greater teleport", 7, SpellsFactor.ratespelllikeability(7),
-				Realm.MAGICAL);
+				Realm.MAGIC);
 		castinbattle = false;
 		castonallies = false;
 		castoutofbattle = true;

@@ -1,6 +1,7 @@
 package javelin.controller.upgrade;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,7 +10,11 @@ import java.util.List;
 
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.factor.CrFactor;
+import javelin.controller.upgrade.classes.Aristocrat;
 import javelin.controller.upgrade.classes.ClassAdvancement;
+import javelin.controller.upgrade.classes.Commoner;
+import javelin.controller.upgrade.classes.Expert;
+import javelin.controller.upgrade.classes.Warrior;
 import javelin.controller.upgrade.feat.FeatUpgrade;
 import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.model.Realm;
@@ -107,20 +112,20 @@ public class UpgradeHandler {
 	}
 
 	ClassAdvancement getclass(Realm r) {
-		if (r == javelin.model.Realm.WIND) {
-			return ClassAdvancement.EXPERT;
+		if (r == javelin.model.Realm.AIR) {
+			return Expert.SINGLETON;
 		} else if (r == Realm.FIRE) {
-			return ClassAdvancement.WARRIOR;
+			return Warrior.SINGLETON;
 		} else if (r == Realm.WATER) {
-			return ClassAdvancement.ARISTOCRAT;
+			return Aristocrat.SINGLETON;
 		} else if (r == Realm.EARTH) {
-			return ClassAdvancement.COMMONER;
+			return Commoner.SINGLETON;
 		} else if (r == Realm.GOOD) {
-			return ClassAdvancement.ARISTOCRAT;
+			return Aristocrat.SINGLETON;
 		} else if (r == Realm.EVIL) {
-			return ClassAdvancement.COMMONER;
-		} else if (r == Realm.MAGICAL) {
-			return ClassAdvancement.ARISTOCRAT;
+			return Commoner.SINGLETON;
+		} else if (r == Realm.MAGIC) {
+			return Aristocrat.SINGLETON;
 		} else {
 			throw new RuntimeException("Uknown town!");
 		}
@@ -132,7 +137,7 @@ public class UpgradeHandler {
 	 * @return the upgrades that belong to it.
 	 */
 	public HashSet<Upgrade> getupgrades(Realm r) {
-		if (r == javelin.model.Realm.WIND) {
+		if (r == javelin.model.Realm.AIR) {
 			return wind;
 		} else if (r == Realm.FIRE) {
 			return fire;
@@ -144,7 +149,7 @@ public class UpgradeHandler {
 			return good;
 		} else if (r == Realm.EVIL) {
 			return evil;
-		} else if (r == Realm.MAGICAL) {
+		} else if (r == Realm.MAGIC) {
 			return magic;
 		} else {
 			throw new RuntimeException("Uknown town!");
@@ -260,6 +265,17 @@ public class UpgradeHandler {
 			}
 		}
 		return spells;
+	}
+
+	/**
+	 * @return Like {@link #getupgrades(Realm)} except also adds the proper
+	 *         class.
+	 * @see #getclass(Realm)
+	 */
+	public Collection<? extends Upgrade> getfullupgrades(Realm r) {
+		ArrayList<Upgrade> fullset = new ArrayList<Upgrade>(getupgrades(r));
+		fullset.add(getclass(r));
+		return fullset;
 	}
 
 }

@@ -1,10 +1,10 @@
 package javelin.controller.action.world;
 
 import javelin.controller.db.StateManager;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * Quit the current game forever, delete the save game so the player can start a
@@ -25,7 +25,7 @@ public class Abandon extends WorldAction {
 				null, Delay.NONE);
 		if (InfoScreen.feedback() == 'c') {
 			StateManager.abandoned = true;
-			StateManager.save();
+			StateManager.save(true, StateManager.SAVEFILE);
 			System.exit(0);
 		}
 	}

@@ -2,19 +2,22 @@ package javelin.model.world;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
+import javelin.model.item.Key;
 import javelin.model.item.artifact.Artifact;
+import javelin.model.unit.Combatant;
 import javelin.model.world.location.town.Town;
 import javelin.view.Images;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.shopping.MerchantScreen;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * A figure that travels from one city to a human (neutral) city. It can be
@@ -61,6 +64,10 @@ public class Caravan extends WorldActor {
 		while (inventory.size() < withartifacts) {
 			Item i = RPG.pick(Item.ARTIFACT);
 			inventory.add(i);
+		}
+		Key k = Key.generate();
+		if (k.price > 0) {
+			inventory.add(k);
 		}
 	}
 
@@ -155,5 +162,10 @@ public class Caravan extends WorldActor {
 		Thing t = super.createvisual();
 		t.javelinimage = Images.getImage("caravan");
 		return t;
+	}
+
+	@Override
+	public List<Combatant> getcombatants() {
+		return null;
 	}
 }

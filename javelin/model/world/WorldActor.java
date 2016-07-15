@@ -9,6 +9,7 @@ import javelin.controller.exception.RepeatTurn;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
 import javelin.model.Realm;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.Lib;
@@ -87,7 +88,8 @@ public abstract class WorldActor implements Serializable {
 	 */
 	abstract public Boolean destroy(Incursion attacker);
 
-	void registerinstance() {
+	/** Called during construction to setup {@link #INSTANCES}. */
+	protected void registerinstance() {
 		ArrayList<WorldActor> list = INSTANCES.get(getClass());
 		if (list == null) {
 			list = new ArrayList<WorldActor>(1);
@@ -96,7 +98,8 @@ public abstract class WorldActor implements Serializable {
 		list.add(this);
 	}
 
-	void deregisterinstance() {
+	/** Removes this instance from {@link #INSTANCES}. */
+	protected void deregisterinstance() {
 		List<WorldActor> list = INSTANCES.get(getClass());
 		if (list != null) {
 			list.remove(this);
@@ -231,4 +234,23 @@ public abstract class WorldActor implements Serializable {
 		}
 		return all;
 	}
+
+	/**
+	 * @return The given realm color will be drawn on the {@link WorldScreen}.
+	 *         <code>null</code> means no overlay.
+	 * @see Realm#getawtcolor()
+	 */
+	public Realm getrealmoverlay() {
+		return realm;
+	}
+
+	/**
+	 * @return Any combatants that are situated in this actor, may return
+	 *         <code>null</code> if this is not a valid request for this type of
+	 *         actor. For performance if a {@link List} is returned it should be
+	 *         the canonical one, and thus should not be directly modified by
+	 *         the receiver.
+	 * @see Combatant#newid()
+	 */
+	abstract public List<Combatant> getcombatants();
 }

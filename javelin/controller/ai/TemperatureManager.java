@@ -7,7 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import javelin.controller.db.Preferences;
-import tyrant.mikera.tyrant.Game;
+import javelin.controller.old.Game;
 import tyrant.mikera.tyrant.MessagePanel;
 
 /**

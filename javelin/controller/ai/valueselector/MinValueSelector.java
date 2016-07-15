@@ -5,7 +5,7 @@ package javelin.controller.ai.valueselector;
 
 import java.util.ArrayList;
 
-import javelin.controller.ai.AbstractAlphaBetaSearch;
+import javelin.controller.ai.AlphaBetaSearch;
 import javelin.controller.ai.Entry;
 
 /**
@@ -15,11 +15,11 @@ import javelin.controller.ai.Entry;
  */
 public final class MinValueSelector extends ValueSelector {
 	/**
-	 * @see #MinValueSelector(AbstractAlphaBetaSearch)
+	 * @see #MinValueSelector(AlphaBetaSearch)
 	 * 
 	 * @author Alex Henry
 	 */
-	private final AbstractAlphaBetaSearch search;
+	private final AlphaBetaSearch search;
 
 	/**
 	 * Constutor.
@@ -29,8 +29,8 @@ public final class MinValueSelector extends ValueSelector {
 	 * 
 	 * @author Alex Henry
 	 */
-	public MinValueSelector(final AbstractAlphaBetaSearch search) {
-		super();
+	public MinValueSelector(final AlphaBetaSearch search) {
+		super(Float.MAX_VALUE);
 		this.search = search;
 	}
 

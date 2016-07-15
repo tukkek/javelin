@@ -10,12 +10,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import javelin.controller.old.Game;
 import javelin.model.BattleMap;
 
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.Event;
-import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Portal;
 
 

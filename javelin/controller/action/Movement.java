@@ -3,6 +3,8 @@ package javelin.controller.action;
 import javelin.Javelin;
 import javelin.controller.action.ai.AiMovement;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
@@ -11,16 +13,16 @@ import javelin.model.unit.Skills;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * @see AiMovement
  * @author alex
  */
 public class Movement extends Action {
+	/** Cost to disengage. */
 	public static final float DISENGAGE = .25f;
 	private final String descriptivekeys;
+	/** TODO hack */
 	public static boolean lastmovewasattack = false;
 
 	/**

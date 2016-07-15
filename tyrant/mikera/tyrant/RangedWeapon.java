@@ -1,5 +1,6 @@
 package tyrant.mikera.tyrant;
 
+import javelin.controller.old.Game;
 import javelin.model.BattleMap;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.Lib;

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javelin.controller.old.Game;
 import tyrant.mikera.tyrant.Animal;
 import tyrant.mikera.tyrant.Aura;
 import tyrant.mikera.tyrant.Being;
@@ -22,7 +23,6 @@ import tyrant.mikera.tyrant.Effect;
 import tyrant.mikera.tyrant.EndGame;
 import tyrant.mikera.tyrant.Event;
 import tyrant.mikera.tyrant.Food;
-import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.GoblinVillage;
 import tyrant.mikera.tyrant.Gods;
 import tyrant.mikera.tyrant.Item;

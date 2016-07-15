@@ -1,5 +1,6 @@
 package javelin.controller.upgrade.skill;
 
+import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
 
 /**
@@ -8,18 +9,25 @@ import javelin.model.unit.Skills;
  * @author alex
  */
 public class Diplomacy extends SkillUpgrade {
+	public final static SkillUpgrade SINGLETON = new Diplomacy();
+
 	/** Constructor. */
-	public Diplomacy() {
+	Diplomacy() {
 		super("Diplomacy");
 	}
 
 	@Override
-	protected int getranks(Skills s) {
+	public int getranks(Skills s) {
 		return s.diplomacy;
 	}
 
 	@Override
-	protected void setranks(Skills s, int ranks) {
+	public void setranks(Skills s, int ranks) {
 		s.diplomacy = ranks;
+	}
+
+	@Override
+	protected int getattribute(Monster m) {
+		return m.charisma;
 	}
 }

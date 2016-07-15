@@ -45,6 +45,6 @@ public class ExhibitionFight extends Fight {
 
 	@Override
 	public void withdraw(Combatant combatant, BattleScreen screen) {
-		PlanarFight.dontflee(screen);
+		dontflee(screen);
 	}
 }

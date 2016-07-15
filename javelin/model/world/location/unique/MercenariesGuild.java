@@ -8,6 +8,8 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.old.Game;
+import javelin.controller.upgrade.BreathWeaponUpgrade;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.Realm;
@@ -17,7 +19,6 @@ import javelin.model.unit.Squad;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.town.PurchaseScreen;
 import tyrant.mikera.engine.RPG;
-import tyrant.mikera.tyrant.Game;
 
 /**
  * The **Mercenaries guild** allows a player to hire mercenaries, which are paid
@@ -66,9 +67,8 @@ public class MercenariesGuild extends UniqueLocation {
 			}
 		}
 		int tries = 0;
-		while (ChallengeRatingCalculator.calculateCr(c.source) < cr) {
-			RPG.pick(new ArrayList<Upgrade>(
-					UpgradeHandler.singleton.getupgrades(r))).upgrade(c);
+		while (c.source.challengeRating < cr) {
+			upgradeunit(c, r);
 			tries += 1;
 			if (tries >= 100) {
 				return;
@@ -76,6 +76,29 @@ public class MercenariesGuild extends UniqueLocation {
 		}
 		mercenaries.add(c);
 		all.add(c);
+	}
+
+	/**
+	 * Updates {@link Monster#challengeRating} internally.
+	 * 
+	 * @param r
+	 *            Applies one {@link Upgrade} from this set to the given
+	 *            {@link Combatant}.
+	 */
+	static public void upgradeunit(Combatant c, Realm r) {
+		Upgrade upgrade = RPG.pick(new ArrayList<Upgrade>(
+				UpgradeHandler.singleton.getfullupgrades(r)));
+		if (upgrade instanceof BreathWeaponUpgrade) {
+			/* TODO Breaths are pretty CPU intensive right now so avoid them */
+			return;
+		}
+		if (!upgrade.upgrade(c)) {
+			return;
+		}
+		if (upgrade.purchaseskills) {
+			c.source.purchaseskills(upgrade).upgradeautomatically();
+		}
+		ChallengeRatingCalculator.calculateCr(c.source);
 	}
 
 	@Override
@@ -97,7 +120,8 @@ public class MercenariesGuild extends UniqueLocation {
 			prices.add(c + " ($" + PurchaseScreen.formatcost(getfee(c)) + ")");
 		}
 		int index = Javelin.choose(
-				"\"Welcome to the guild! Do you want to hire one of our mercenaries for a modest daily fee?\"",
+				"\"Welcome to the guild! Do you want to hire one of our mercenaries for a modest daily fee?\"\n\nYou have $"
+						+ PurchaseScreen.formatcost(Squad.active.gold),
 				prices, true, false);
 		if (index == -1) {
 			return true;
@@ -162,5 +186,12 @@ public class MercenariesGuild extends UniqueLocation {
 		if (all.contains(c)) {
 			mercenaries.add(c);
 		}
+	}
+
+	@Override
+	public List<Combatant> getcombatants() {
+		ArrayList<Combatant> combatants = new ArrayList<Combatant>(garrison);
+		combatants.addAll(all);
+		return combatants;
 	}
 }

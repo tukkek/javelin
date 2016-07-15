@@ -7,7 +7,7 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
 import javelin.Javelin;
-import tyrant.mikera.tyrant.Game;
+import javelin.controller.old.Game;
 import tyrant.mikera.tyrant.QuestApp;
 import tyrant.mikera.tyrant.Screen;
 import tyrant.mikera.tyrant.util.Text;

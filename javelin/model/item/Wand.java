@@ -13,7 +13,7 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Wand extends Item {
-	int charges;
+	public int charges;
 	int baseprice;
 	Spell spell;
 	boolean shop = false;
@@ -41,7 +41,7 @@ public class Wand extends Item {
 		recharge();
 		usedinbattle = s.castinbattle;
 		usedoutofbattle = s.castoutofbattle;
-		apcost = 0;
+		apcost = s.apcost;
 	}
 
 	/**
@@ -103,10 +103,7 @@ public class Wand extends Item {
 
 	@Override
 	public String canuse(Combatant c) {
-		if (c.source.decipher(spell)) {
-			return null;
-		}
-		return "can't decipher";
+		return c.source.decipher(spell) ? null : "can't decipher";
 	}
 
 	@Override

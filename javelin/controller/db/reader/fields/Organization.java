@@ -7,16 +7,12 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.Weather;
 import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.reader.MonsterReader;
-import javelin.controller.encounter.Encounter;
-import javelin.controller.encounter.EncounterPossibilities;
-import javelin.controller.terrain.Terrain;
+import javelin.controller.generator.encounter.Encounter;
+import javelin.controller.generator.encounter.EncounterPossibilities;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.world.location.dungeon.Dungeon;
-import tyrant.mikera.engine.RPG;
 
 /**
  * @see FieldReader
@@ -66,19 +62,6 @@ public class Organization extends FieldReader {
 			}
 			data.add(group);
 		}
-	}
-
-	static ArrayList<String> terrain(Terrain terrain2) {
-		ArrayList<String> terrains = new ArrayList<String>();
-		if (Dungeon.active != null) {
-			terrains.add("underground");
-			return terrains;
-		}
-		terrains.add(Terrain.bydifficulty(terrain2));
-		if (Weather.current == 2) {
-			terrains.add("aquatic");
-		}
-		return terrains;
 	}
 
 	/**
@@ -131,7 +114,7 @@ public class Organization extends FieldReader {
 	static void jointerrains(List<Combatant> group,
 			final HashSet<String> terrains) {
 		for (final Combatant c : group) {
-			for (final String terrain : c.source.terrains) {
+			for (final String terrain : c.source.getterrains()) {
 				terrains.add(terrain);
 			}
 		}
@@ -199,33 +182,5 @@ public class Organization extends FieldReader {
 			}
 			expand(result, possibilites, depth + 1, monsters);
 		}
-	}
-
-	/**
-	 * @param el
-	 *            Given an encounter level target...
-	 * @param terrain2
-	 * @return a predefined creature group found on monster.xml from any of the
-	 *         local terrains.
-	 */
-	static public List<Combatant> makeencounter(final int el,
-			Terrain terrain2) {
-		List<Encounter> possibilities = new ArrayList<Encounter>();
-		int maxel = Integer.MIN_VALUE;
-		for (String terrain : Organization.terrain(terrain2)) {
-			EncounterIndex index = ENCOUNTERS.get(terrain);
-			if (index != null) {
-				maxel = Math.max(maxel, index.lastKey());
-				List<Encounter> tier = index.get(el);
-				if (tier != null) {
-					possibilities.addAll(tier);
-				}
-			}
-		}
-		if (el > maxel) {
-			return makeencounter(maxel, terrain2);
-		}
-		return possibilities.isEmpty() ? null
-				: RPG.pick(possibilities).generate();
 	}
 }

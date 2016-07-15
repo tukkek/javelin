@@ -39,7 +39,7 @@ public class CureModerateWounds extends Touch {
 		if (targetCombatant.hp >= targetCombatant.maxhp) {
 			targetCombatant.hp = targetCombatant.maxhp;
 		}
-		return targetCombatant + " is now " + targetCombatant.getStatus();
+		return targetCombatant + " is now " + targetCombatant.getStatus() + ".";
 	}
 
 	@Override

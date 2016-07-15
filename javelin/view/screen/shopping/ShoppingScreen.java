@@ -5,6 +5,8 @@ import java.util.List;
 
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
+import javelin.model.item.Scroll;
+import javelin.model.item.Wand;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Town;
@@ -50,7 +52,27 @@ public abstract class ShoppingScreen extends PurchaseScreen {
 
 	@Override
 	public String printpriceinfo(Option o) {
-		return " (" + super.printpriceinfo(o).substring(1) + ")";
+		Item i = ((PurchaseOption) o).i;
+		String useinfo = "";
+		if (i instanceof Wand || i instanceof Scroll) {
+			ArrayList<Combatant> members =
+					new ArrayList<Combatant>(Squad.active.members);
+			for (Combatant c : Squad.active.members) {
+				if (i.canuse(c) != null) {
+					members.remove(c);
+				}
+			}
+			if (members.isEmpty()) {
+				useinfo = " - can't use";
+			} else {
+				useinfo = " - can use: ";
+				for (Combatant c : members) {
+					useinfo += c + ", ";
+				}
+				useinfo = useinfo.substring(0, useinfo.length() - 2);
+			}
+		}
+		return " (" + super.printpriceinfo(o).substring(1) + ")" + useinfo;
 	}
 
 	public static String listactivemembers() {

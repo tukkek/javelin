@@ -1,11 +1,13 @@
 package javelin.controller.upgrade.classes;
 
+import java.io.Serializable;
+
 /**
  * Represent a line on the level table for a class.
  * 
  * @author alex
  */
-public class Level {
+public class Level implements Serializable {
 	public int bab;
 	int fort;
 	int ref;

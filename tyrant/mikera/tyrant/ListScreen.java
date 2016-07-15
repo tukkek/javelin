@@ -7,6 +7,8 @@ import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javelin.controller.old.Game;
+
 public class ListScreen extends Screen {
 	private static final long serialVersionUID = 3257003267744478006L;
     String title = "List";

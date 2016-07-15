@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javelin.controller.old.Game;
 import javelin.controller.upgrade.Spell;
 import javelin.model.condition.Breathless;
 import javelin.model.feat.CombatExpertise;
@@ -21,7 +22,6 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.QuestApp;
 import tyrant.mikera.tyrant.TPanel;
 
@@ -77,7 +77,9 @@ public class StatusPanel extends TPanel {
 		List<Item> equipment = Squad.active.equipment.get(combatant.id);
 		ArrayList<String> listing = new ArrayList<String>();
 		for (Item i : equipment) {
-			listing.add(i.name.replaceAll("Potion of", ""));
+			String extra = i.canuse(combatant);
+			listing.add(i.name.replaceAll("Potion of", "")
+					+ (extra == null ? "" : "*"));
 		}
 		return listlist("Items", listing);
 	}

@@ -19,7 +19,7 @@ public class DispelMagic extends Spell {
 	/** Constructor. */
 	public DispelMagic() {
 		super("Greater dispel magic", 6, SpellsFactor.ratespelllikeability(6),
-				Realm.MAGICAL);
+				Realm.MAGIC);
 		isscroll = true;
 		castoutofbattle = true;
 		castinbattle = true;

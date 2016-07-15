@@ -20,8 +20,12 @@ import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.db.Preferences;
 import javelin.controller.db.StateManager;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomEncounter;
 import javelin.controller.fight.tournament.Exhibition;
+import javelin.controller.generator.feature.FeatureGenerator;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.upgrade.Spell;
@@ -35,15 +39,14 @@ import javelin.model.world.Season;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.Outpost;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.Town;
 import javelin.view.Images;
+import javelin.view.mappanel.MapPanelOld;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 import tyrant.mikera.tyrant.QuestApp;
 
 /**
@@ -54,6 +57,7 @@ import tyrant.mikera.tyrant.QuestApp;
  * @author alex
  */
 public class WorldScreen extends BattleScreen {
+
 	/**
 	 * Every {@link WorldMove} should be carefully considered - both to provide
 	 * interesting strategic situation and also to help the {@link World} fit in
@@ -79,13 +83,19 @@ public class WorldScreen extends BattleScreen {
 	 * the fact that current {@link Monster} selection allows a novice player to
 	 * select a 15-feet moving unit makes this hard to circumvent.
 	 */
-	static final float HOURSPERENCOUNTER = WorldMove.MOVETARGET * 1.85f;
+	public static final float HOURSPERENCOUNTER = WorldMove.MOVETARGET * 1.85f;
 	private static final int STATUSSPACE = 28;
 	/** TODO used for tabulation, shouldn't be needed with a more modern UI */
 	public static final String SPACER =
 			"                                               ";
 
-	/** Represents explored {@link World} tiles. */
+	/**
+	 * Represents explored {@link World} tiles.
+	 * 
+	 * @deprecated Use {@link WorldScreen#see(Point)} and
+	 *             {@link #setVisible(boolean)} instead.
+	 */
+	@Deprecated
 	public static HashSet<Point> discovered = new HashSet<Point>();
 	/**
 	 * TODO We shouldn't need a {@link BattleMap} to represent the {@link World}
@@ -99,16 +109,19 @@ public class WorldScreen extends BattleScreen {
 	/** Current active world screen. */
 	public static WorldScreen current;
 	static boolean welcome = true;
-	int savecounter = 0;
 
 	/** Constructor. */
 	public WorldScreen(BattleMap mapp) {
 		super(Javelin.app, mapp, false);
 		WorldScreen.current = this;
 		Javelin.settexture(QuestApp.DEFAULTTEXTURE);
-		mappanel.tilesize = 48;
+		mappanel.settilesize(48);
 		if (Preferences.DEBUGESHOWMAP) {
 			mapp.setAllVisible();
+		} else {
+			for (Point p : discovered) {
+				mapp.setVisible(p.x, p.y);
+			}
 		}
 	}
 
@@ -183,11 +196,7 @@ public class WorldScreen extends BattleScreen {
 		int vision = Squad.active.perceive(true)
 				+ (Squad.active.transport == Transport.AIRSHIP ? +4
 						: Terrain.current().visionbonus);
-		Outpost.discover(h.x, h.y,
-				Math.round(Math.round(Math.floor(vision / 5f))));
-		for (Point p : discovered) {
-			setVisible(p.x, p.y);
-		}
+		Squad.active.view(vision);
 	}
 
 	/**
@@ -214,6 +223,7 @@ public class WorldScreen extends BattleScreen {
 		if (WorldScreen.welcome) {
 			saywelcome();
 		}
+		StateManager.save(false, StateManager.SAVEFILE);
 		turn();
 		if (Squad.getall(Squad.class).isEmpty()) {
 			return;
@@ -239,7 +249,7 @@ public class WorldScreen extends BattleScreen {
 		List<WorldActor> squads = Squad.getall(Squad.class);
 		while (day > WorldScreen.lastday || squads.isEmpty()) {
 			Season.change(day);
-			World.spawnfeatures(1 / 7f, false);
+			FeatureGenerator.SINGLETON.spawn(1 / 7f, false);
 			for (WorldActor p : WorldActor.getall()) {
 				if (!(p instanceof Incursion)) {
 					p.turn(time, this);
@@ -264,11 +274,6 @@ public class WorldScreen extends BattleScreen {
 			}
 			WorldScreen.lastday += 1;
 		}
-		savecounter += 1;// no need to save every turn
-		if (savecounter >= 5) {
-			savecounter = 0;
-			StateManager.save();
-		}
 	}
 
 	/** Show party/world status. */
@@ -283,9 +288,12 @@ public class WorldScreen extends BattleScreen {
 		infos.add(date);
 		infos.add(Season.current.toString());
 		infos.add("");
-		infos.add(
-				Squad.active.speed() + " mph" + (Squad.active.transport == null
-						? "" : Squad.active.transport.load()));
+		if (Dungeon.active == null) {
+			infos.add(Squad.active.speed() + " mph"
+					+ (Squad.active.transport == null ? ""
+							: Squad.active.transport
+									.load(Squad.active.members)));
+		}
 		infos.add("$" + SelectScreen.formatcost(Squad.active.gold));
 		final ArrayList<String> hps = showstatusinformation();
 		while (hps.size() > 6) {
@@ -436,8 +444,8 @@ public class WorldScreen extends BattleScreen {
 	}
 
 	@Override
-	protected boolean center(int x, int y) {
-		return true;
+	public void centerscreen(int x, int y, boolean force) {
+		mappanel.viewPosition(map, x, y);
 	}
 
 	@Override
@@ -448,5 +456,21 @@ public class WorldScreen extends BattleScreen {
 	@Override
 	public Image gettile(int x, int y) {
 		return Images.getImage("terrain" + Terrain.get(x, y).toString());
+	}
+
+	public static boolean see(Point point) {
+		return discovered.contains(point);
+	}
+
+	/**
+	 * @return A random encounter fight.
+	 */
+	public Fight encounter() {
+		return new RandomEncounter();
+	}
+
+	@Override
+	protected MapPanelOld getmappanel() {
+		return new MapPanelOld();
 	}
 }

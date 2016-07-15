@@ -8,6 +8,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 
+import javelin.controller.old.Game;
+
 public class MessagePanel extends TPanel implements IMessageHandler {
 	private static final long serialVersionUID = 3258416114332807730L;
 	public final TextZone textzone = new TextZone();

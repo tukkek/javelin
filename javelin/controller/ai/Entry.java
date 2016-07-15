@@ -31,10 +31,13 @@ public class Entry {
 		node = state;
 		value = value2;
 		this.cns = cns;
+		// if (Javelin.DEBUG && cns.isEmpty()) {
+		// System.out.println("empty");
+		// }
 	}
 
 	@Override
 	public String toString() {
-		return value + "\n" + node.toString();
+		return value + "\n" + cns + "\n" + node.toString();
 	}
 }

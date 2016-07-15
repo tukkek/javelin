@@ -2,6 +2,8 @@ package tyrant.mikera.tyrant;
 
 import java.awt.event.KeyEvent;
 
+import javelin.controller.old.Game;
+
 public class InputHandler {
 	public char getCharacter() {
 		return getKeyEvent().getKeyChar();

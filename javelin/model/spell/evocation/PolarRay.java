@@ -15,7 +15,7 @@ import javelin.model.unit.Combatant;
 public class PolarRay extends Ray {
 	/** Constructor. */
 	public PolarRay() {
-		super("Polar ray", 8, SpellsFactor.ratespelllikeability(8), Realm.WIND);
+		super("Polar ray", 8, SpellsFactor.ratespelllikeability(8), Realm.AIR);
 		castinbattle = true;
 		isscroll = true;
 	}

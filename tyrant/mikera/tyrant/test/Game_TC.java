@@ -2,6 +2,9 @@ package tyrant.mikera.tyrant.test;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+
+import javelin.controller.old.Game;
+
 import java.io.*;
 
 import tyrant.mikera.engine.Thing;

@@ -60,8 +60,6 @@ public class ChallengeRatingCalculator {
 		}
 	}
 
-	static public boolean appliedgoldrenrule = false;
-
 	/**
 	 * See "challenging challenge ratings" source document (@ 'doc' folder),
 	 * page 1: "HOW DO FACTORS WORK?". The silver rule isn't computed for at
@@ -177,10 +175,8 @@ public class ChallengeRatingCalculator {
 				+ factorHistory.get(CLASS_LEVEL_FACTOR);
 		if (hpCheck < cr / 2) {
 			final float twicehp = hpCheck * 2;
-			// appliedgoldrenrule = true;
 			return twicehp + (cr - twicehp) / 2;
 		}
-		appliedgoldrenrule = false;
 		return cr;
 	}
 

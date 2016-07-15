@@ -10,6 +10,8 @@ import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Siege;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
 import javelin.model.unit.Combatant;
@@ -23,8 +25,6 @@ import javelin.view.Images;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * A {@link WorldActor} that is actually a place that represent a location to be
@@ -139,7 +139,7 @@ public abstract class Location extends WorldActor {
 			WorldActor closest = null;
 			for (int x = p.x - 5; x <= p.x + 5; x++) {
 				for (int y = p.y - 5; y <= p.y + 5; y++) {
-					if (!WorldScreen.discovered.contains(new Point(x, y))) {
+					if (!WorldScreen.see(new Point(x, y))) {
 						WorldActor a = WorldActor.get(x, y);
 						if (a == null) {
 							continue;
@@ -156,7 +156,7 @@ public abstract class Location extends WorldActor {
 				final double distance =
 						Walker.distance(p.x, p.y, closest.x, closest.y);
 				if (Squad.active.gossip() >= 10 + distance) {
-					WorldScreen.discovered.add(new Point(closest.x, closest.y));
+					WorldScreen.setVisible(closest.x, closest.y);
 				}
 			}
 		}
@@ -297,13 +297,6 @@ public abstract class Location extends WorldActor {
 			sum += places.size();
 		}
 		return sum;
-	}
-
-	/**
-	 * @return <code>true</code> if a flag icon is to be displayed.
-	 */
-	public boolean ishosting() {
-		return false;
 	}
 
 	/**

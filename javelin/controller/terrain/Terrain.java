@@ -9,6 +9,7 @@ import java.util.Set;
 import javelin.Javelin;
 import javelin.controller.Weather;
 import javelin.controller.action.world.WorldMove;
+import javelin.controller.old.Game;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.terrain.map.Map;
 import javelin.controller.terrain.map.Maps;
@@ -24,7 +25,6 @@ import javelin.model.world.location.town.Town;
 import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Game;
 
 /**
  * Represent different types of {@link World} terrain.
@@ -70,10 +70,20 @@ public abstract class Terrain implements Serializable {
 	/** Represent {@link Dungeon}s and {@link Mine}s. */
 	public static final Terrain UNDERGROUND = new Underground();
 	/** All terrain types except {@link #UNDERGROUND}. */
-	public static Terrain[] all = new Terrain[] { PLAIN, HILL, FOREST, WATER,
-			MOUNTAINS, DESERT, MARSH, WATER };
+	public static final Terrain[] ALL = new Terrain[] { PLAIN, HILL, FOREST,
+			WATER, MOUNTAINS, DESERT, MARSH, WATER };
 
-	/** Encounter level adjustment. */
+	/**
+	 * Encounter level adjustment.
+	 * 
+	 * @deprecated This is being ignored for positive values. Currently the
+	 *             terrains are already more difficult due to travel speed
+	 *             variations. Besides that {@link #difficultycap} should be
+	 *             enough to also make certain terrains more frightening - and
+	 *             is a rarer ocurrance instead of a fixed adjustment, which can
+	 *             be veryunforgiving and hence no fun.
+	 */
+	@Deprecated
 	public Integer difficulty = null;
 
 	/** No road. */
@@ -132,6 +142,8 @@ public abstract class Terrain implements Serializable {
 	}
 
 	/**
+	 * TODO this probably should return {@link Underground} as well.
+	 * 
 	 * @return Current terrain difficulty. For example: {@link PLAIN}.
 	 */
 	static public Terrain current() {
@@ -150,39 +162,9 @@ public abstract class Terrain implements Serializable {
 		return World.seed.map[x][y];
 	}
 
-	/**
-	 * @param terrain2
-	 *            Terrain difficulty. For example: {@link PLAIN}.
-	 * @return Name of a d20 terrain.
-	 */
-	public static String bydifficulty(Terrain terrain2) {
-		return Terrain.difficultytomapname(terrain2);
-	}
-
-	/**
-	 * TODO remove this. when the full terrain set is implemented should be 1-1
-	 * 
-	 * @param terrain2
-	 *            Terrain difficulty. For example: {@link PLAIN}.
-	 * @return All the names of d20 terrains this difficulty encompasses.
-	 */
-	public static String difficultytomapname(Terrain terrain2) {
-		return terrain2.toString();
-	}
-
 	@Override
 	public String toString() {
 		return name;
-	}
-
-	/**
-	 * @param d
-	 *            Given this difficulty.
-	 * @return the given difficulty or {@link #difficultycap} if the given one
-	 *         is too high for this terrain.
-	 */
-	public int cap(int d) {
-		return Math.min(d, difficultycap);
 	}
 
 	@Override
@@ -393,7 +375,8 @@ public abstract class Terrain implements Serializable {
 	 *         for this terrain.
 	 */
 	public boolean generatetown(Point p, World w) {
-		if (checkadjacent(p, WATER, w, 1) > 0) {
+		if (checkadjacent(p, WATER, w, 1) > 0
+				|| get(p.x, p.y).equals(Terrain.WATER)) {
 			return false;
 		}
 		for (WorldActor town : WorldActor.getall(Town.class)) {
@@ -459,5 +442,15 @@ public abstract class Terrain implements Serializable {
 			return Season.current == Season.WINTER ? SNOWING : "storm";
 		}
 		return "";
+	}
+
+	/**
+	 * @param teame
+	 *            Added to the encounter level delta.l
+	 * @return Encounter level for a fight taking place in this type of terrain.
+	 */
+	public Integer getel(int teamel) {
+		final int delta = Javelin.randomdifficulty() + Math.min(0, difficulty);
+		return teamel + Math.min(delta, difficultycap);
 	}
 }

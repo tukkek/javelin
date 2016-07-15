@@ -24,6 +24,7 @@ public class Images {
 			Images.getImage("overlaypenalized"));
 	public static final Image crafting = Images.getImage("overlaycrafting");
 	public static final Image upgrading = Images.getImage("overlayupgrading");
+	public static Image labor = Images.getImage("overlaylabor");
 	public static final Image dead = Images.getImage("overlaydead");
 	public static final Image crystal = Images.getImage("overlaycrystal");
 	public static final Image hostile = Images.getImage("overlayhostile");

@@ -6,19 +6,19 @@ import java.util.List;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * @see Monster#burrow
  * @author alex
  */
-public class Dig extends AiAction {
+public class Dig extends Action implements AiAction {
 	/** Unique Dig instance to be created. */
 	public static final Action SINGLETON = new Dig();
 

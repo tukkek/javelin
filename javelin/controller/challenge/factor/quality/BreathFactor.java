@@ -45,10 +45,10 @@ public class BreathFactor extends CrFactor {
 	@Override
 	public void listupgrades(UpgradeHandler handler) {
 		handler.fire.add(new BreathWeaponUpgrade(
-				new BreathWeapon("Cone of magma", BreathArea.CONE, 10, 1, 4, 0,
+				new BreathWeapon("cone of magma", BreathArea.CONE, 10, 1, 4, 0,
 						SavingThrow.REFLEXES, 13, .5f, true)));
 		handler.water.add(new BreathWeaponUpgrade(
-				new BreathWeapon("Caustic liquid", BreathArea.CONE, 15, 1, 8, 0,
+				new BreathWeapon("caustic liquid", BreathArea.CONE, 15, 1, 8, 0,
 						SavingThrow.REFLEXES, 12, .5f, true)));
 
 		handler.evil.add(new BreathWeaponUpgrade(

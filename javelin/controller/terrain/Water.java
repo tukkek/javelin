@@ -11,6 +11,7 @@ import javelin.model.unit.Squad;
 import javelin.model.world.ParkedVehicle;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
+import javelin.model.world.location.town.Town;
 import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.RPG;
 
@@ -62,7 +63,7 @@ public class Water extends Terrain {
 	@Override
 	protected Point expand(HashSet<Point> area, World world, Point p) {
 		Point to = null;
-		while (to == null) {
+		expansion: while (to == null) {
 			to = new Point(p.x, p.y);
 			if (RPG.r(1, 2) == 1) {
 				to.x += RPG.pick(DELTAS);
@@ -73,6 +74,14 @@ public class Water extends Terrain {
 					|| checkadjacent(to, DESERT, world, DESERTRADIUS) > 0) {
 				to = null;
 				World.retry();
+				continue expansion;
+			}
+			for (WorldActor t : WorldActor.getall(Town.class)) {
+				if (t.distance(to.x, to.y) <= 2) {
+					to = null;
+					World.retry();
+					continue expansion;
+				}
 			}
 		}
 		currentheight = to;

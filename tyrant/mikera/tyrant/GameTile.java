@@ -2,7 +2,7 @@ package tyrant.mikera.tyrant;
 
 import java.awt.*;
 
-import javelin.view.MapPanel;
+import javelin.view.mappanel.MapPanelOld;
 
 
 public class GameTile extends Tile {
@@ -29,8 +29,8 @@ public class GameTile extends Tile {
 	}
 
 	public void draw(Graphics g, int x, int y) {
-		int w = MapPanel.TILEWIDTH;
-		int h = MapPanel.TILEHEIGHT;
+		int w = MapPanelOld.TILEWIDTH;
+		int h = MapPanelOld.TILEHEIGHT;
 		int sx = (image % 20) * w;
 		int sy = (image / 20) * h;
 		g.drawImage(QuestApp.tiles, x, y, x + w, y + h, sx, sy, sx + w, sy + h,

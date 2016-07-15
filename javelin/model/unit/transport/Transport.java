@@ -3,8 +3,10 @@ package javelin.model.unit.transport;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.function.Predicate;
 
+import javelin.Javelin;
+import javelin.controller.action.world.WorldMove;
+import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 
@@ -56,9 +58,11 @@ public class Transport implements Serializable {
 	/**
 	 * @return Description of current capacity load.
 	 */
-	public String load() {
-		return " (" + Math.round(Squad.active.members.size() * 100 / capacity)
-				+ "% load)";
+	public String load(ArrayList<Combatant> tripulation) {
+		ArrayList<Combatant> trailing = gettrailing(tripulation);
+		return checkload(trailing) ? " ("
+				+ Math.round(trailing.size() * 100 / capacity) + "% load)"
+				: " (overloaded)";
 	}
 
 	/**
@@ -69,21 +73,36 @@ public class Transport implements Serializable {
 		if (tripulation.size() <= capacity) {
 			return speed;
 		}
-		Combatant[] trailing = (Combatant[]) tripulation.stream()
-				.filter(new Predicate<Combatant>() {
-					@Override
-					public boolean test(Combatant c) {
-						return c.source.gettopspeed() < speed;
-					}
-				}).sorted(new Comparator<Combatant>() {
-					@Override
-					public int compare(Combatant o1, Combatant o2) {
-						return o1.source.gettopspeed()
-								- o2.source.gettopspeed();
-					}
-				}).toArray();
-		return trailing.length > capacity
-				? trailing[capacity].source.gettopspeed() : speed;
+		ArrayList<Combatant> trailing = gettrailing(tripulation);
+		return trailing.size() > capacity
+				? Math.round(trailing.get(capacity).source.gettopspeed()
+						* WorldMove.NORMALMARCH)
+				: speed;
+	}
+
+	ArrayList<Combatant> gettrailing(ArrayList<Combatant> tripulation) {
+		ArrayList<Combatant> trailing = new ArrayList<Combatant>(tripulation);
+		for (Combatant c : tripulation) {
+			if (c.source.gettopspeed() * WorldMove.NORMALMARCH >= speed) {
+				trailing.remove(c);
+			}
+		}
+		trailing.sort(new Comparator<Combatant>() {
+			@Override
+			public int compare(Combatant o1, Combatant o2) {
+				return o1.source.gettopspeed() - o2.source.gettopspeed();
+			}
+		});
+		return trailing;
+	}
+
+	/**
+	 * @return <code>false</code> if overloaded (transport cannot carry all
+	 *         units).
+	 * @see #getspeed(ArrayList)
+	 */
+	public boolean checkload(ArrayList<Combatant> tripulation) {
+		return getspeed(tripulation) == speed;
 	}
 
 	@Override
@@ -102,5 +121,30 @@ public class Transport implements Serializable {
 	@Override
 	public boolean equals(Object obj) {
 		return obj != null && name.equals(((Transport) obj).name);
+	}
+
+	/**
+	 * Pays the {@link #maintenance} upkeep and destroys the transport
+	 * otherwise. Will also sink with tripulation that can't swim.
+	 * 
+	 * @see Squad#transport
+	 */
+	public void keep(Squad s) {
+		s.gold -= maintenance;
+		if (s.gold < 0) {
+			s.gold = 0;
+			s.transport = null;
+			s.updateavatar();
+			if (Terrain.get(s.x, s.y).equals(Terrain.WATER)) {
+				String message = "The " + toString()
+						+ " sinks, taking all non-swimmers with it!";
+				Javelin.message(message, true);
+				for (Combatant c : s.members) {
+					if (!c.source.swim()) {
+						s.remove(c);
+					}
+				}
+			}
+		}
 	}
 }

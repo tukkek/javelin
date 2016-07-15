@@ -66,6 +66,7 @@ public class OrderQueue implements Serializable {
 	 * @see #reclaim(long)
 	 */
 	public boolean ready() {
-		return !queue.isEmpty() && last().completed(Squad.active.hourselapsed);
+		return !queue.isEmpty()
+				&& queue.get(0).completed(Squad.active.hourselapsed);
 	}
 }

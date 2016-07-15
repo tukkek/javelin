@@ -9,7 +9,7 @@ package tyrant.mikera.engine;
 import java.util.List;
 import java.util.Random;
 
-import tyrant.mikera.tyrant.Game;
+import javelin.controller.old.Game;
 
 public class RPG {
 

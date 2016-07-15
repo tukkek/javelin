@@ -1,5 +1,6 @@
 package javelin.controller.upgrade.skill;
 
+import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
 
 /**
@@ -10,18 +11,25 @@ import javelin.model.unit.Skills;
  * @author alex
  */
 public class Perception extends SkillUpgrade {
+	public final static SkillUpgrade SINGLETON = new Perception();
+
 	/** Constructor. */
-	public Perception() {
+	Perception() {
 		super("Perception");
 	}
 
 	@Override
-	protected int getranks(Skills s) {
+	public int getranks(Skills s) {
 		return s.perception;
 	}
 
 	@Override
-	protected void setranks(Skills s, int ranks) {
+	public void setranks(Skills s, int ranks) {
 		s.perception = ranks;
+	}
+
+	@Override
+	protected int getattribute(Monster m) {
+		return m.wisdom;
 	}
 }

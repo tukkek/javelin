@@ -3,6 +3,7 @@ package tyrant.mikera.tyrant;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javelin.controller.old.Game;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Script;

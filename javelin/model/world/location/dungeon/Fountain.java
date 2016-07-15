@@ -11,7 +11,7 @@ import javelin.model.unit.Squad;
  * @author alex
  */
 public class Fountain extends Feature {
-
+	/** Constructor. */
 	public Fountain(String thing, int i, int j) {
 		super(thing, i, j, "dungeonfountain");
 	}

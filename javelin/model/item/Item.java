@@ -11,7 +11,6 @@ import java.util.TreeMap;
 import javelin.Javelin;
 import javelin.controller.action.UseItem;
 import javelin.controller.action.world.UseItems;
-import javelin.controller.db.StateManager;
 import javelin.controller.upgrade.Spell;
 import javelin.model.Realm;
 import javelin.model.item.artifact.Artifact;
@@ -20,7 +19,10 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.town.Order;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.TrainingOrder;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.shopping.ShoppingScreen;
 import tyrant.mikera.engine.RPG;
@@ -106,8 +108,8 @@ public abstract class Item implements Serializable, Cloneable {
 			final ItemSelection upgradeset) {
 		this.name = name;
 		this.price = price;
-		ALL.add(this);
 		if (upgradeset != null) {
+			ALL.add(this);
 			upgradeset.add(this);
 		}
 	}
@@ -190,7 +192,7 @@ public abstract class Item implements Serializable, Cloneable {
 	 * @return all {@link Item}s assigned to that realm.
 	 */
 	public static ItemSelection getselection(Realm r) {
-		if (r == Realm.WIND) {
+		if (r == Realm.AIR) {
 			return WIND;
 		} else if (r == Realm.FIRE) {
 			return FIRE;
@@ -202,7 +204,7 @@ public abstract class Item implements Serializable, Cloneable {
 			return GOOD;
 		} else if (r == Realm.EVIL) {
 			return EVIL;
-		} else if (r == Realm.MAGICAL) {
+		} else if (r == Realm.MAGIC) {
 			return MAGIC;
 		} else {
 			throw new RuntimeException("Unknown town!");
@@ -225,7 +227,6 @@ public abstract class Item implements Serializable, Cloneable {
 				}
 			}
 		}
-		StateManager.save();
 	}
 
 	/**
@@ -282,5 +283,38 @@ public abstract class Item implements Serializable, Cloneable {
 				UseItems.listitems(null, false) + "\nWho will take the "
 						+ toString().toLowerCase() + "?",
 				Squad.active.members, true, true)).id).add(this);
+	}
+
+	/**
+	 * @return A list of all {@link Item}s in any {@link Squad}, {@link Town}
+	 *         trainees and {@link Academy} trainees (inluding subclasses).
+	 */
+	public static List<Item> getplayeritems() {
+		ArrayList<Item> items = new ArrayList<Item>();
+		for (WorldActor a : WorldActor.getall()) {
+			Town town = a instanceof Town ? (Town) a : null;
+			if (town != null) {
+				for (Order o : town.training.queue) {
+					items.addAll(((TrainingOrder) o).equipment);
+				}
+				continue;
+			}
+			Academy academy = a instanceof Academy ? (Academy) a : null;
+			if (academy != null) {
+				if (academy.training != null) {
+					items.addAll(academy.training.equipment);
+				}
+				continue;
+			}
+			Squad squad = a instanceof Squad ? (Squad) a : null;
+			if (squad != null) {
+				squad.equipment.clean(squad);
+				for (List<Item> bag : squad.equipment.values()) {
+					items.addAll(bag);
+				}
+				continue;
+			}
+		}
+		return items;
 	}
 }

@@ -44,7 +44,7 @@ public class BattleSetup {
 		for (int i = 0; i < 1000; i++) {
 			try {
 				placecombatants(m);
-				Weather.flood(m, f.map.maxflooding);
+				Weather.flood(m);
 				return m;
 			} catch (GaveUpException e) {
 				ArrayList<Combatant> all =

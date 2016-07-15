@@ -109,6 +109,11 @@ public abstract class Research extends Option {
 		}
 	}
 
+	/**
+	 * Draws cards for non-hostile town.
+	 * 
+	 * @see Town#ishostile()
+	 */
 	protected static void humandraw(Town t) {
 		List<Upgrade> otherupgrades = new ArrayList<Upgrade>();
 		List<Upgrade> myupgrades = new ArrayList<Upgrade>();
@@ -151,21 +156,20 @@ public abstract class Research extends Option {
 		}
 	}
 
-	protected static ArrayList<Monster> getrealmmonsters(WorldActor t) {
+	static ArrayList<Monster> getrealmmonsters(WorldActor t) {
 		ArrayList<Monster> monsters = new ArrayList<Monster>();
-		String terrain = Terrain.difficultytomapname(Terrain.get(t.x, t.y));
+		String terrain = Terrain.get(t.x, t.y).toString();
 		for (Monster m : Javelin.ALLMONSTERS) {
-			if (m.terrains.contains(terrain)) {
+			if (m.getterrains().contains(terrain)) {
 				monsters.add(m);
-				break;
 			}
 		}
 		return monsters;
 	}
 
-	protected static void gatherupgrades(WorldActor t,
-			List<Upgrade> otherupgrades, List<Upgrade> myupgrades,
-			List<Item> myitems, List<Item> otheritems) {
+	static void gatherupgrades(WorldActor t, List<Upgrade> otherupgrades,
+			List<Upgrade> myupgrades, List<Item> myitems,
+			List<Item> otheritems) {
 		UpgradeHandler.singleton.gather();
 		for (Realm r : Realm.values()) {
 			HashSet<Upgrade> upgrades = UpgradeHandler.singleton.getupgrades(r);

@@ -8,6 +8,7 @@ package javelin.controller;
 
 import javelin.controller.action.Dig;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.old.Game;
 import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
@@ -17,7 +18,6 @@ import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.Armour;
 import tyrant.mikera.tyrant.Event;
-import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Item;
 import tyrant.mikera.tyrant.Tile;
 import tyrant.mikera.tyrant.Weapon;

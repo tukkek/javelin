@@ -2,12 +2,11 @@ package javelin.controller.fight;
 
 import java.util.List;
 
-import javelin.Javelin;
+import javelin.JavelinApp;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
-import javelin.model.world.location.dungeon.Dungeon;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -18,8 +17,7 @@ import tyrant.mikera.engine.RPG;
 public class RandomEncounter extends Fight {
 	@Override
 	public int getel(int teamel) {
-		int difficulty = Javelin.randomdifficulty() + Javelin.difficulty();
-		return teamel + Terrain.current().cap(difficulty);
+		return Terrain.current().getel(teamel);
 	}
 
 	@Override
@@ -34,8 +32,7 @@ public class RandomEncounter extends Fight {
 	 */
 	static public void encounter(double d) {
 		if (RPG.random() < d && !Preferences.DEBUGDISABLECOMBAT) {
-			throw new StartBattle(Dungeon.active == null ? new RandomEncounter()
-					: new RandomDungeonEncounter());
+			throw new StartBattle(JavelinApp.context.encounter());
 		}
 	}
 }

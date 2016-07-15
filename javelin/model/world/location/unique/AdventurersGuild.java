@@ -69,43 +69,43 @@ public class AdventurersGuild extends UniqueLocation {
 		}
 		ArrayList<Upgrade> list = new ArrayList<Upgrade>();
 		UPGRADETREE.put(FIGHTER, list);
-		list.add(new Warrior());
+		list.add(Warrior.SINGLETON);
 		list.add(new MeleeDamage());
 		list.add(new RaiseStrength());
 		list = new ArrayList<Upgrade>();
 		UPGRADETREE.put(ROGUE, list);
-		list.add(new Expert());
+		list.add(Expert.SINGLETON);
 		list.add(new RaiseDexterity());
-		list.add(new Acrobatics());
-		list.add(new DisableDevice());
-		list.add(new Stealth());
+		list.add(Acrobatics.SINGLETON);
+		list.add(DisableDevice.SINGLETON);
+		list.add(Stealth.SINGLETON);
 		list = new ArrayList<Upgrade>();
 		UPGRADETREE.put(WIZARD, list);
-		list.add(new Aristocrat());
+		list.add(Aristocrat.SINGLETON);
 		list.add(new MagicMissile());
-		list.add(new Concentration());
-		list.add(new Spellcraft());
+		list.add(Concentration.SINGLETON);
+		list.add(Spellcraft.SINGLETON);
 		list = new ArrayList<Upgrade>();
 		UPGRADETREE.put(CLERIC, list);
-		list.add(new Aristocrat());
+		list.add(Aristocrat.SINGLETON);
 		list.add(new CureModerateWounds());
 		list.add(new RaiseWisdom());
-		list.add(new Knowledge());
-		list.add(new Heal());
+		list.add(Knowledge.SINGLETON);
+		list.add(Heal.SINGLETON);
 		list = new ArrayList<Upgrade>();
 		UPGRADETREE.put(DRUID, list);
-		list.add(new Commoner());
+		list.add(Commoner.SINGLETON);
 		list.add(new Summon("Small monstrous centipede", 1));
 		list.add(new Summon("Dire rat", 1));
 		list.add(new Summon("Eagle", 1));
-		list.add(new Survival());
+		list.add(Survival.SINGLETON);
 		list = new ArrayList<Upgrade>();
 		UPGRADETREE.put(BARD, list);
-		list.add(new Commoner());
-		list.add(new Diplomacy());
-		list.add(new GatherInformation());
-		list.add(new Knowledge());
-		list.add(new UseMagicDevice());
+		list.add(Commoner.SINGLETON);
+		list.add(Diplomacy.SINGLETON);
+		list.add(GatherInformation.SINGLETON);
+		list.add(Knowledge.SINGLETON);
+		list.add(UseMagicDevice.SINGLETON);
 	}
 
 	List<String> courses = null;
@@ -130,7 +130,7 @@ public class AdventurersGuild extends UniqueLocation {
 				break;
 			}
 			float cr = ChallengeRatingCalculator.calculateCr(c.source);
-			if (cr < TARGETLEVEL) {
+			if (cr < TARGETLEVEL && c.xp.floatValue() >= 0) {
 				students.add(c);
 			}
 			mostpowerful = Math.max(mostpowerful, cr);
@@ -242,12 +242,16 @@ public class AdventurersGuild extends UniqueLocation {
 			String training = student + " learns:\n\n";
 			float cr = ChallengeRatingCalculator.calculateCr(student.source);
 			float original = cr;
+			Upgrade purchaseskills = null;
 			while (cr < TARGETLEVEL) {
 				Upgrade u = RPG.pick(UPGRADETREE.get(kit));
 				if (u.upgrade(student)) {
 					training += u.name + "\n";
 				}
 				cr = ChallengeRatingCalculator.calculateCr(student.source);
+				if (u.purchaseskills) {
+					purchaseskills = u;
+				}
 			}
 			student.xp = student.xp.subtract(new BigDecimal(cr - original));
 			training += "\nPress ENTER to continue...";
@@ -255,6 +259,9 @@ public class AdventurersGuild extends UniqueLocation {
 			Javelin.app.switchScreen(screen);
 			while (screen.getInput() != '\n') {
 				// wait
+			}
+			if (purchaseskills != null) {
+				student.source.purchaseskills(purchaseskills).show();
 			}
 		}
 	}
@@ -289,5 +296,10 @@ public class AdventurersGuild extends UniqueLocation {
 			return 2;
 		}
 		return 3;
+	}
+
+	@Override
+	public List<Combatant> getcombatants() {
+		return null;
 	}
 }

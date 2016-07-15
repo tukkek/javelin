@@ -2,6 +2,7 @@ package tyrant.mikera.tyrant;
 
 import java.util.*;
 
+import javelin.controller.old.Game;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.Modifier;
 import tyrant.mikera.engine.RPG;

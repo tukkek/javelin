@@ -3,9 +3,9 @@ package javelin.model.world.location.fortification;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.db.Preferences;
-import javelin.controller.encounter.EncounterGenerator;
 import javelin.controller.exception.GaveUpException;
 import javelin.controller.fight.RandomEncounter;
+import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
 import javelin.model.unit.Skills;
@@ -126,7 +126,7 @@ public abstract class Fortification extends Location {
 	/**
 	 * @return the given level (typically from 1 to 20) to a encounter level.
 	 */
-	static int leveltoel(int level) {
+	public static int leveltoel(int level) {
 		return ChallengeRatingCalculator.elFromCr(level * 4) - 4;
 	}
 

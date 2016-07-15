@@ -1,6 +1,9 @@
 package javelin.model.world.location.fortification;
 
+import java.util.List;
+
 import javelin.Javelin;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Accommodations;
 import javelin.model.world.location.town.Town;
@@ -12,6 +15,8 @@ import javelin.view.screen.town.PurchaseScreen;
  * @author alex
  */
 public class Inn extends Fortification {
+	private static final int RESTPERIOD = 8;
+
 	public Inn() {
 		super("A traveller's lodge", "A traveller's lodge", 1, 5);
 		gossip = true;
@@ -22,22 +27,21 @@ public class Inn extends Fortification {
 		if (!super.interact()) {
 			return false;
 		}
-		long price = Math.round(Math.ceil(Squad.active.eat()));
-		if (Squad.active.gold < price) {
-			Javelin.prompt("You can't pay the $" + price + " fee!");
-			return false;
-		}
-		String prompt = "Do you want to rest at the traveller's inn for $"
-				+ price + "?" + "\n";
-		prompt += "\nENTER to stay";
+		int price = Math.round(Math.round(Math.ceil(Squad.active.eat())));
+		int weekperiods = 24 * 7 / RESTPERIOD;
+		int weekprice = weekperiods * price;
+		String prompt = "Do you want to rest at the traveller's inn?\n";
+		prompt += "\nENTER to stay ($" + price + "), w to stay for a week ($"
+				+ weekprice + ")";
 		prompt += "\np to pillage ($" + PurchaseScreen.formatcost(getspoils())
 				+ ")";
-		prompt += "\nAny other key to leave";
+		prompt += "\nany other key to leave";
 		Character input = Javelin.prompt(prompt);
 		if (input == '\n') {
-			Squad.active.gold -= price;
-			Town.rest(1, 8, Accommodations.LODGE);
-			return true;
+			return rest(price, 1);
+		}
+		if (input == 'w') {
+			return rest(weekprice, weekperiods);
 		}
 		if (input == 'p') {
 			pillage();
@@ -46,11 +50,26 @@ public class Inn extends Fortification {
 		return false;
 	}
 
+	boolean rest(long price, int periods) {
+		if (Squad.active.gold < price) {
+			Javelin.message("You can't pay the $" + price + " fee!", false);
+			return false;
+		}
+		Squad.active.gold -= price;
+		Town.rest(periods, RESTPERIOD * periods, Accommodations.LODGE);
+		return true;
+	}
+
 	@Override
 	protected void generate() {
 		x = -1;
 		while (x == -1 || iscloseto(Inn.class)) {
 			generateawayfromtown();
 		}
+	}
+
+	@Override
+	public List<Combatant> getcombatants() {
+		return garrison;
 	}
 }

@@ -32,6 +32,7 @@ public class TrainingSession extends Siege {
 		rewardgold = false;
 		bribe = false;
 		hide = false;
+		cleargarrison = false;
 		map = new Arena();
 		map.maxflooding = Weather.DRY;
 	}
@@ -39,6 +40,7 @@ public class TrainingSession extends Siege {
 	@Override
 	public void onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
 			BattleState s) {
+		super.onEnd(screen, originalTeam, s);
 		if (!BattleMap.victory) {
 			return;
 		}
@@ -58,7 +60,8 @@ public class TrainingSession extends Siege {
 		while (options.size() < 3 && !feats.isEmpty()) {
 			FeatUpgrade f = RPG.pick(feats);
 			feats.remove(f);
-			if (!options.contains(f) && f.upgrade(student.clonedeeply())) {
+			if (!options.contains(f)
+					&& f.upgrade(student.clone().clonesource())) {
 				options.add(f);
 			}
 		}

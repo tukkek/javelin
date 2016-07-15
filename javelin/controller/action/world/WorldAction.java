@@ -38,11 +38,12 @@ public abstract class WorldAction implements ActionDescription {
 	String name;
 	public final int[] keys;
 	public final String[] morekeys;
-	public static final WorldAction[] ACTIONS = new WorldAction[] {
+	public static final WorldAction[] ACTIONS = new WorldAction[] { //
+			new Camp(), // c
 			new Divide(), // d
 			new UseItems(), // i
-			new Journal(), // i
-			new Options(), // o
+			OpenJournal.getsingleton(), // j
+			ShowOptions.getsingleton(), // o
 			new Park(), // p
 			new Rename(), // r
 			new CastSpells(), // s

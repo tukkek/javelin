@@ -54,8 +54,7 @@ public class Guardian extends Fortification {
 	 *         <code>null</code> if couldn't find one.
 	 */
 	static public Combatant findnativemonster(float cr, WorldActor spot) {
-		String terrain =
-				Terrain.difficultytomapname(Terrain.get(spot.x, spot.y));
+		String terrain = Terrain.get(spot.x, spot.y).toString();
 		while (true) {
 			if (Javelin.MONSTERSBYCR.descendingKeySet().first() < cr) {
 				return null;
@@ -64,7 +63,7 @@ public class Guardian extends Fortification {
 			if (candidates != null) {
 				Collections.shuffle(candidates);
 				for (Monster m : candidates) {
-					if (m.terrains.contains(terrain)) {
+					if (m.getterrains().contains(terrain)) {
 						return new Combatant(null, m.clone(), true);
 					}
 				}
@@ -87,5 +86,10 @@ public class Guardian extends Fortification {
 		}
 		loot.grab();
 		return true;
+	}
+
+	@Override
+	public List<Combatant> getcombatants() {
+		return garrison;
 	}
 }

@@ -35,35 +35,33 @@ public class SkillsFactor extends CrFactor {
 	@Override
 	public float calculate(Monster m) {
 		Skills skills = m.skills;
-		int ranks = skills.concentration + skills.diplomacy
+		return COST * (m.skillpool + skills.concentration + skills.diplomacy
 				+ skills.disabledevice + skills.gatherinformation
 				+ skills.stealth + skills.knowledge + +skills.search
 				+ skills.spellcraft + skills.perception + skills.acrobatics
-				+ skills.survival + skills.usemagicdevice;
-		return ranks * COST;
+				+ skills.survival + skills.usemagicdevice);
 	}
 
 	@Override
 	public void listupgrades(UpgradeHandler handler) {
+		handler.good.add(Diplomacy.SINGLETON);
+		handler.good.add(GatherInformation.SINGLETON);
 
-		handler.good.add(new Diplomacy());
-		handler.good.add(new GatherInformation());
+		handler.evil.add(Stealth.SINGLETON);
 
-		handler.evil.add(new Stealth());
+		handler.water.add(Knowledge.SINGLETON);
+		handler.water.add(Concentration.SINGLETON);
+		handler.water.add(Heal.SINGLETON);
 
-		handler.water.add(new Knowledge());
-		handler.water.add(new Concentration());
-		handler.water.add(new Heal());
+		handler.wind.add(Perception.SINGLETON);
+		handler.wind.add(Acrobatics.SINGLETON);
+		handler.wind.add(DisableDevice.SINGLETON);
 
-		handler.wind.add(new Perception());
-		handler.wind.add(new Acrobatics());
-		handler.wind.add(new DisableDevice());
+		handler.earth.add(Survival.SINGLETON);
 
-		handler.earth.add(new Survival());
-
-		handler.magic.add(new Search());
-		handler.magic.add(new Spellcraft());
-		handler.magic.add(new UseMagicDevice());
+		handler.magic.add(Search.SINGLETON);
+		handler.magic.add(Spellcraft.SINGLETON);
+		handler.magic.add(UseMagicDevice.SINGLETON);
 	}
 
 	/**
@@ -74,8 +72,15 @@ public class SkillsFactor extends CrFactor {
 	 * @return the challenge rating value for how much should be gained in
 	 *         skills each level.
 	 */
-	public static float levelup(int progression, Monster m) {
-		return Math.max(1, progression + Monster.getbonus(m.intelligence))
-				* COST;
+	public static float levelupcost(int progression, Monster m) {
+		return levelup(progression, m) * COST;
+	}
+
+	/**
+	 * Same as {@link #levelupcost(int, Monster)} but returns skill points
+	 * instead of challenge rating.
+	 */
+	public static int levelup(int progression, Monster m) {
+		return Math.max(1, progression + Monster.getbonus(m.intelligence));
 	}
 }

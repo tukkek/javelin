@@ -14,9 +14,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javelin.controller.old.Game;
 import tyrant.mikera.engine.BaseObject;
 import tyrant.mikera.engine.Lib;
-import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Hero;
 
 /**

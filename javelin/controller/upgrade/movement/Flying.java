@@ -18,6 +18,7 @@ public class Flying extends WalkingSpeed {
 
 	@Override
 	protected void setSpeed(Monster m) {
+		m.walk = 0;
 		m.fly = target;
 	}
 }

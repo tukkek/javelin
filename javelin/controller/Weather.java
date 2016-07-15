@@ -2,6 +2,7 @@ package javelin.controller;
 
 import java.util.ArrayList;
 
+import javelin.Javelin;
 import javelin.controller.db.Preferences;
 import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
@@ -39,8 +40,12 @@ public class Weather {
 		}
 	}
 
-	public static void flood(BattleMap m, int maxflooding) {
-		final double r = RATIO[Math.min(current, maxflooding)];
+	public static void flood(BattleMap m) {
+		Integer level = Javelin.app.fight.floodlevel;
+		if (level == null) {
+			level = Math.min(current, Javelin.app.fight.map.maxflooding);
+		}
+		final double r = RATIO[level];
 		if (r == 0.0) {
 			return;
 		}

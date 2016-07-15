@@ -1,12 +1,12 @@
 package javelin.model.spell.conjuration.healing;
 
 import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.controller.upgrade.Spell;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.view.screen.InfoScreen;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * Also features "restoration", implicitly. See the d20 SRD for more info.

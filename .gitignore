@@ -9,4 +9,5 @@ javelin.jar
 .directory
 .metadata
 nohup.out
-
+backup
+error.txt

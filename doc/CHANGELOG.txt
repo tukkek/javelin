@@ -1,9 +1,10 @@
 Version 1.6 
 
- * Around 50 new monsters!
- * New locations: troves, mines and 11 mage guilds!
+ * New locations: 7 Temples, 11 mage guilds, troves and mines!
  * New starting locations: Training Hall and Adventurers Guild!
  * New unique locations: Summoning Circle and Pillar of Skulls!
+ * Around 50 new monsters!
+ * New eng-game goal!
  * All game images can now be easily modified! (mod/skin support)
  * New damage effects: poison, paralysis, fear
  * Burrow movement
@@ -18,6 +19,8 @@ Version 1.6
  * Preferences and command keys can now be edited in-game
  * In-game journal for taking notes
  * More information on errors, for easier bug reporting
+ * Improved save system, also creates automatic backups
+ * AI system now monitors thinking speed and corrects itself if slow
  * 183 monsters
  * 47 items, 12 artifacts
  * 63 upgrades, 49 spells, 13 skills

@@ -12,9 +12,11 @@ import javelin.model.world.location.fortification.Mine;
  * @author alex
  */
 public class BuildMine extends Improvement {
-	/** Constructor. */
-	public BuildMine(String name, double price, Character key) {
-		super(name, price, key);
+	/**
+	 * Constructor.
+	 */
+	public BuildMine(String name, double price, Character key, boolean b) {
+		super(name, price, key, b);
 	}
 
 	@Override

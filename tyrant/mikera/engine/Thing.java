@@ -14,13 +14,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import javelin.controller.Movement;
+import javelin.controller.old.Game;
 import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
 import tyrant.mikera.tyrant.Being;
 import tyrant.mikera.tyrant.Combat;
 import tyrant.mikera.tyrant.Event;
 import tyrant.mikera.tyrant.EventHandler;
-import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Item;
 import tyrant.mikera.tyrant.util.Text;
 import tyrant.org.newdawn.slick.util.pathfinding.AStarPathFinder;

@@ -10,19 +10,20 @@ import javelin.model.unit.Skills;
  * @author alex
  */
 public class UseMagicDevice extends SkillUpgrade {
+	public final static SkillUpgrade SINGLETON = new UseMagicDevice();
 
 	/** Constructor. */
-	public UseMagicDevice() {
+	UseMagicDevice() {
 		super("Use magic device");
 	}
 
 	@Override
-	protected int getranks(Skills s) {
+	public int getranks(Skills s) {
 		return s.usemagicdevice;
 	}
 
 	@Override
-	protected void setranks(Skills s, int ranks) {
+	public void setranks(Skills s, int ranks) {
 		s.usemagicdevice = ranks;
 	}
 
@@ -33,5 +34,10 @@ public class UseMagicDevice extends SkillUpgrade {
 			return false;
 		}
 		return super.apply(c);
+	}
+
+	@Override
+	protected int getattribute(Monster m) {
+		return m.charisma;
 	}
 }

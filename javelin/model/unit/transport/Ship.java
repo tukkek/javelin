@@ -10,6 +10,7 @@ public class Ship extends Transport {
 	/** Cost in gold pieces. */
 	public static final int PRICE = 10000;
 
+	/** Constructor. */
 	public Ship() {
 		super("Ship", 100, 100, 16, 10000, PRICE / Carriage.PRICE);
 		sails = true;

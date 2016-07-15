@@ -30,7 +30,8 @@ A few nearby locations can help you at the start of the game:
  * Temple of Haxor: allows you to do a variety of things during the entire game
 
 Your objective is to beat your own highscore, which is recorded when the game 
-ends. Good luck and have fun!
+ends. The end-goal is to vanquish all Temples and reap your reward with Haxor.
+Good luck and have fun!
 
 Check out these websites for more information:
  * javelinrl.wordpress.com  (news and updates)

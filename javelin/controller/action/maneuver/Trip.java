@@ -1,12 +1,12 @@
 package javelin.controller.action.maneuver;
 
 import javelin.controller.ai.ChanceNode;
+import javelin.controller.old.Game.Delay;
 import javelin.model.condition.Prone;
 import javelin.model.feat.ImprovedTrip;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import tyrant.mikera.tyrant.Game.Delay;
 
 public class Trip extends Maneuver {
 

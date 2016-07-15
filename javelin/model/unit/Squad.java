@@ -11,22 +11,25 @@ import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.IncursionFight;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.model.EquipmentMap;
 import javelin.model.item.Item;
 import javelin.model.unit.transport.Transport;
 import javelin.model.world.Improvement;
 import javelin.model.world.Incursion;
+import javelin.model.world.World;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.Outpost;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.BribingScreen;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * A group of units that the player controls as a overworld game unit. If a
@@ -97,10 +100,14 @@ public class Squad extends WorldActor {
 		lasttown = lasttownp;
 	}
 
+	/**
+	 * Removes this squad from the game, likely triggering
+	 * {@link Javelin#lose()}.
+	 */
 	public void disband() {
 		ArrayList<WorldActor> squads = getall(Squad.class);
 		squads.remove(this);
-		if (squads.isEmpty() && Town.train() == null) {
+		if (squads.isEmpty() && Town.train() == null && !Academy.train()) {
 			Javelin.lose();
 		}
 		if (Squad.active == this) {
@@ -132,7 +139,14 @@ public class Squad extends WorldActor {
 		}
 	}
 
+	/**
+	 * Updates {@link WorldActor#visual}, taking {@link #transport} into
+	 * account.
+	 */
 	public void updateavatar() {
+		if (members.isEmpty()) {
+			return;
+		}
 		Combatant leader = members.get(0);
 		for (int i = 1; i < members.size(); i++) {
 			Combatant m = members.get(i);
@@ -145,7 +159,7 @@ public class Squad extends WorldActor {
 		Monster dummy = leader.source;
 		if (transport != null && Dungeon.active == null) {
 			dummy = dummy.clone();
-			dummy.avatarfile = transport.name.toLowerCase();
+			dummy.avatarfile = transport.name.replaceAll(" ", "").toLowerCase();
 		}
 		visual.combatant = new Combatant(visual, dummy, false);
 	}
@@ -180,12 +194,11 @@ public class Squad extends WorldActor {
 			foodfound = 0;
 		}
 		gold -= Math.round(Math.ceil(eat() / 2f * (1 - foodfound)));
-		if (transport != null) {
-			gold -= transport.maintenance;
-		}
 		if (gold < 0) {
 			gold = 0;
-			transport = null;
+		}
+		if (transport != null) {
+			transport.keep(this);
 		}
 	}
 
@@ -216,19 +229,34 @@ public class Squad extends WorldActor {
 	 * a mercenary.
 	 */
 	public void dismiss(Combatant c) {
+		members.remove(c);
+		for (Item i : equipment.get(c.id)) {
+			i.grab();
+		}
 		remove(c);
 		MercenariesGuild guild = (MercenariesGuild) Location
 				.getall(MercenariesGuild.class).get(0);
 		guild.receive(c);
 	}
 
+	/**
+	 * @param member
+	 *            Adds this unit to {@link #members}.
+	 * @param equipmentp
+	 *            Unit's equipment to be added to {@link #equipment}.
+	 */
 	public void add(Combatant member, ArrayList<Item> equipmentp) {
 		members.add(member);
 		equipment.put(member.id, equipmentp);
 	}
 
+	/**
+	 * @param c
+	 *            Removes this unit and {@link #disband()} if necessary.
+	 */
 	public void remove(Combatant c) {
 		members.remove(c);
+		equipment.clean(this);
 		if (members.isEmpty()) {
 			disband();
 		}
@@ -261,9 +289,7 @@ public class Squad extends WorldActor {
 
 	@Override
 	public Boolean destroy(Incursion incursion) {
-		Game.message("An incursion reaches one of your squads!", null,
-				Delay.NONE);
-		Incursion.waitforenter();
+		Javelin.message("An incursion reaches one of your squads!", true);
 		Squad.active = this;
 		throw new StartBattle(new IncursionFight(incursion));
 	}
@@ -358,7 +384,8 @@ public class Squad extends WorldActor {
 	 */
 	public boolean hide(List<Combatant> foes) {
 		// needs to pass on a listen check to notice enemy
-		int listenroll = Squad.active.perceive(true);
+		int listenroll = Squad.active.perceive(Dungeon.active == null
+				&& !Terrain.current().equals(Terrain.FOREST));
 		boolean listen = false;
 		for (Combatant foe : foes) {
 			if (listenroll >= Skills.take10(foe.source.skills.stealth,
@@ -459,7 +486,7 @@ public class Squad extends WorldActor {
 		int best = Integer.MIN_VALUE;
 		for (int i = 1; i < members.size(); i++) {
 			Monster m = members.get(i).source;
-			int roll = Skills.take10(m.skills.disabledevice, m.intelligence);
+			int roll = m.disarm();
 			if (roll > best) {
 				best = roll;
 			}
@@ -499,6 +526,10 @@ public class Squad extends WorldActor {
 		return best;
 	}
 
+	/**
+	 * @param timecost
+	 *            Updates {@link #hourselapsed} and any side-effects.
+	 */
 	public void ellapse(int timecost) {
 		if (timecost == 0) {
 			return;
@@ -546,7 +577,8 @@ public class Squad extends WorldActor {
 				allfly = false;
 			}
 		}
-		return ((allfly ? speed : t.speed(speed)) * 4 / 5) / snow;
+		return Math.round(WorldMove.NORMALMARCH
+				* ((allfly ? speed : t.speed(speed))) / snow);
 	}
 
 	/**
@@ -595,5 +627,23 @@ public class Squad extends WorldActor {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Discover a {@link World} area in a radius around current position.
+	 * 
+	 * @param vision
+	 *            Perceive roll with circumstance bonuses.
+	 * @see WorldScreen#discovered
+	 * @see Squad#perceive(boolean)
+	 */
+	public void view(int vision) {
+		Outpost.discover(Squad.active.x, Squad.active.y,
+				Math.round(Math.round(Math.floor(vision / 5f))));
+	}
+
+	@Override
+	public List<Combatant> getcombatants() {
+		return members;
 	}
 }

@@ -1,6 +1,7 @@
 package javelin.model.world;
 
 import javelin.controller.action.world.Work;
+import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.view.screen.Option;
@@ -13,12 +14,23 @@ import javelin.view.screen.Option;
  */
 public abstract class Improvement extends Option {
 	/**
+	 * If <code>true</code> will not modify the price by {@link Terrain}
+	 * condition.
+	 * 
+	 * @see Option#price
+	 * @see Terrain#getspeed()
+	 */
+	public boolean absolute;
+
+	/**
 	 * See {@link Option#Option(String, double, Character)}.
 	 * 
 	 * @param
 	 */
-	public Improvement(String name, double price, Character key) {
+	public Improvement(String name, double price, Character key,
+			boolean absolute) {
 		super(name, price, key);
+		this.absolute = absolute;
 	}
 
 	/**

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
-import javelin.controller.encounter.Encounter;
+import javelin.controller.generator.encounter.Encounter;
 
 /**
  * Mapping of {@link Encounter}s by encounter level.

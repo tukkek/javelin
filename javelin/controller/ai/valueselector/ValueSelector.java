@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.ai.AbstractAlphaBetaSearch;
 import javelin.controller.ai.AiThread;
+import javelin.controller.ai.AlphaBetaSearch;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.Entry;
 import javelin.controller.ai.Node;
@@ -26,7 +26,7 @@ import javelin.model.state.BattleState;
  * 
  * @see MaxValueSelector
  * @see MinValueSelector
- * @see AbstractAlphaBetaSearch
+ * @see AlphaBetaSearch
  */
 public abstract class ValueSelector {
 	private static final PrintStream LOG;
@@ -38,6 +38,17 @@ public abstract class ValueSelector {
 		} catch (final FileNotFoundException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	/**
+	 * This is the worst possible utility value for this player. Used to seed
+	 * {@link Entry#value} to force the dummy entry to be replaced with any
+	 * valid game state.
+	 */
+	public final float failure;
+
+	ValueSelector(float failurep) {
+		failure = failurep;
 	}
 
 	/**
@@ -70,7 +81,7 @@ public abstract class ValueSelector {
 	 *         reached end of recursion.
 	 */
 	public Entry getValue(final Entry previous,
-			@SuppressWarnings("rawtypes") final AbstractAlphaBetaSearch ai,
+			@SuppressWarnings("rawtypes") final AlphaBetaSearch ai,
 			final int depthP, final float alpha, final float beta,
 			ArrayList<Integer> index) {
 		AiThread.checkinterrupted();
@@ -90,14 +101,13 @@ public abstract class ValueSelector {
 			i += 1;
 			ArrayList<Integer> newindex = (ArrayList<Integer>) index.clone();
 			newindex.add(i);
-			final Float utility = AiCache.getutility(newindex, ai, cns);
+			// final Float utility = AiCache.getutility(newindex, ai, cns);
 			for (final ChanceNode cn : cns) {
 				final BattleState state = (BattleState) cn.n;
-				final ValueSelector selector =
-						state.getBlueTeam().contains(state.next)
-								? ai.minValueSelector : ai.maxValueSelector;
-				Entry outcomeState = selector.processCurrent(
-						new Entry(state, utility, cns), depth, a, b, newindex);
+				final ValueSelector selector = ai.getplayer(state);
+				Entry outcomeState = selector.getValue(
+						new Entry(state, selector.failure, cns), ai, depth, a,
+						b, newindex);
 				if (ValueSelector.DEBUGLOG) {
 					ValueSelector.LOG
 							.append("\n" + ident
@@ -163,14 +173,13 @@ public abstract class ValueSelector {
 	 * @param depth
 	 *            Current depth.
 	 * 
-	 * @return <code>true</code> if
-	 *         {@link AbstractAlphaBetaSearch#cutoffTest(int)} is necessary or
-	 *         if {@link AbstractAlphaBetaSearch#terminalTest(Node)} has been
-	 *         reached.
+	 * @return <code>true</code> if {@link AlphaBetaSearch#cutoffTest(int)} is
+	 *         necessary or if {@link AlphaBetaSearch#terminalTest(Node)} has
+	 *         been reached.
 	 * @see
 	 */
 	private boolean endOfRecursion(final Entry previousState,
-			@SuppressWarnings("rawtypes") final AbstractAlphaBetaSearch ai,
+			@SuppressWarnings("rawtypes") final AlphaBetaSearch ai,
 			final int depth) {
 		return ai.cutoffTest(depth) || ai.terminalTest(previousState.node);
 	}

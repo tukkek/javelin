@@ -19,6 +19,7 @@ package tyrant.mikera.tyrant;
 import java.util.HashMap;
 
 import javelin.controller.Movement;
+import javelin.controller.old.Game;
 import javelin.model.BattleMap;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.RPG;

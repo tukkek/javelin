@@ -2,10 +2,10 @@ package javelin.controller.terrain.map;
 
 import java.awt.Image;
 
+import javelin.controller.old.Game;
 import javelin.model.state.Square;
 import tyrant.mikera.engine.BaseObject;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Game;
 import tyrant.mikera.tyrant.Portal;
 import tyrant.mikera.tyrant.Tile;
 

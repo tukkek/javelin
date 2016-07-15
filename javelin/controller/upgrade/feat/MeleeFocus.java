@@ -27,6 +27,7 @@ public class MeleeFocus extends FeatUpgrade {
 		bab.put("giant", 3.0 / 4.0);
 		bab.put("humanoid", 3.0 / 4.0);
 		bab.put("magical beast", 1.0);
+		bab.put("shapechanger", 1.0);
 		bab.put("monstrous humanoid", 1.0);
 		bab.put("ooze", 3.0 / 4.0);
 		bab.put("outsider", 1.0);

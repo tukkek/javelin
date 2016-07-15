@@ -5,6 +5,7 @@
  */
 package tyrant.mikera.tyrant;
 
+import javelin.controller.old.Game;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;

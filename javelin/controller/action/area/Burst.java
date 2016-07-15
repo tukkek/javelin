@@ -44,14 +44,6 @@ public class Burst extends Area {
 				/ 5 || !checkclear(s, current)) {
 			return;
 		}
-		// if (s.hasLineOfSight(new Point(source.x, source.y),
-		// new Point(current.x, current.y), range / 5,
-		// Javelin.PERIOD_NOON) != Vision.CLEAR) {
-		// return;
-		// }
-		// if(){
-		// return;
-		// }
 		area.add(current);
 		for (final Point direction : directions) {
 			recursivefill(source,

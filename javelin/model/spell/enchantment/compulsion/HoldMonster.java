@@ -12,7 +12,7 @@ import javelin.model.unit.Combatant;
 public class HoldMonster extends Spell {
 
 	public HoldMonster() {
-		super("Hold monster", 5, .45f, Realm.MAGICAL);
+		super("Hold monster", 5, .45f, Realm.MAGIC);
 		castinbattle = true;
 		isscroll = true;
 	}

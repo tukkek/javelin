@@ -217,4 +217,11 @@ public class Mine extends Fortification {
 		s.terrain = Terrain.UNDERGROUND;
 		return s;
 	}
+
+	@Override
+	public List<Combatant> getcombatants() {
+		ArrayList<Combatant> combatants = new ArrayList<Combatant>(garrison);
+		combatants.addAll(miners);
+		return combatants;
+	}
 }

@@ -7,10 +7,12 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.controller.upgrade.classes.ClassAdvancement;
+import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.upgrade.classes.Commoner;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.view.screen.upgrading.SkillSelectionScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -23,12 +25,11 @@ public class SquadScreen extends InfoScreen {
 	static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
 	private static final int MONSTERPERPAGE = ALPHABET.indexOf('y');
 	static final float[] SELECTABLE = { 1f, 1.25f };
-	private final ArrayList<Monster> candidates;
+	private final ArrayList<Monster> candidates = getcandidates();
 	ArrayList<Combatant> squad = new ArrayList<Combatant>();
 
-	public SquadScreen(ArrayList<Monster> candidates) {
+	SquadScreen() {
 		super("");
-		this.candidates = candidates;
 		Collections.sort(candidates, new Comparator<Monster>() {
 			@Override
 			public int compare(Monster o1, Monster o2) {
@@ -37,7 +38,7 @@ public class SquadScreen extends InfoScreen {
 		});
 	}
 
-	public ArrayList<Combatant> select() {
+	ArrayList<Combatant> select() {
 		page(0);
 		return squad;
 	}
@@ -64,18 +65,7 @@ public class SquadScreen extends InfoScreen {
 			if (squad.isEmpty()) {
 				page(index);
 			}
-			while (ChallengeRatingCalculator
-					.calculateel(squad) < INITIALELTARGET) {
-				Combatant weakest = squad.get(0);
-				for (int i = 1; i < squad.size(); i++) {
-					Combatant c = squad.get(i);
-					if (c.source.challengeRating < weakest.source.challengeRating) {
-						weakest = c;
-					}
-				}
-				ClassAdvancement.COMMONER.apply(weakest);
-				ChallengeRatingCalculator.calculateCr(weakest.source);
-			}
+			upgrade();
 		} else {
 			int selection = ALPHABET.indexOf(input);
 			if (selection >= 0 && selection < letter) {
@@ -88,6 +78,35 @@ public class SquadScreen extends InfoScreen {
 		}
 	}
 
+	void upgrade() {
+		float startingcr = totalcr();
+		while (ChallengeRatingCalculator.calculateel(squad) < INITIALELTARGET) {
+			Combatant weakest = squad.get(0);
+			for (int i = 1; i < squad.size(); i++) {
+				Combatant c = squad.get(i);
+				if (c.source.challengeRating < weakest.source.challengeRating) {
+					weakest = c;
+				}
+			}
+			Commoner.SINGLETON.apply(weakest);
+			ChallengeRatingCalculator.calculateCr(weakest.source);
+		}
+		for (Combatant c : squad) {
+			if (SkillSelectionScreen.canspend(c.source)) {
+				c.source.purchaseskills(Commoner.SINGLETON).show();
+			}
+		}
+		Squad.active.gold = RewardCalculator.getgold(totalcr() - startingcr);
+	}
+
+	private float totalcr() {
+		int cr = 0;
+		for (Combatant c : squad) {
+			cr += ChallengeRatingCalculator.calculateCr(c.source);
+		}
+		return cr;
+	}
+
 	private void recruit(Monster m) {
 		Combatant c = Javelin.recruit(m);
 		c.hp = c.source.hd.maximize();
@@ -95,12 +114,11 @@ public class SquadScreen extends InfoScreen {
 		squad.add(c);
 	}
 
-	public boolean checkifsquadfull() {
-		return ChallengeRatingCalculator
-				.calculateel(squad) >= INITIALELTARGET;
+	boolean checkifsquadfull() {
+		return ChallengeRatingCalculator.calculateel(squad) >= INITIALELTARGET;
 	}
 
-	public int printpage(int index, int next) {
+	int printpage(int index, int next) {
 		int letter = 0;
 		for (int i = index; i < next && i < candidates.size(); i++) {
 			text += "\n" + ALPHABET.charAt(letter) + " - "
@@ -126,9 +144,13 @@ public class SquadScreen extends InfoScreen {
 	/** Start first squad in the morning */
 	public static void open() {
 		Squad.active = new Squad(0, 0, 8, null);
-		new SquadScreen(getcandidates()).select();
+		new SquadScreen().select();
 	}
 
+	/**
+	 * @return All possible monster types that can be used as starting party
+	 *         members.
+	 */
 	public static ArrayList<Monster> getcandidates() {
 		ArrayList<Monster> candidates = new ArrayList<Monster>();
 		for (float cr : SELECTABLE) {

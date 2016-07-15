@@ -6,6 +6,7 @@ import javelin.model.item.ItemSelection;
 import javelin.model.item.Key;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Portal;
+import javelin.model.world.location.unique.Haxor;
 import javelin.view.screen.town.PurchaseScreen;
 import tyrant.mikera.engine.Thing;
 
@@ -21,6 +22,8 @@ public class Chest extends Feature {
 	 * <code>null</code> if no key.
 	 */
 	public Key key = null;
+	/** See {@link Haxor#rubies}. */
+	public int rubies = 0;
 
 	/**
 	 * @param visual
@@ -43,16 +46,12 @@ public class Chest extends Feature {
 	@Override
 	public boolean activate() {
 		if (key != null) {
-			Javelin.message("You have found a " + key.toString().toLowerCase()
-					+ ". Cross a portal to activate it!", true);
+			Javelin.message(
+					"You have found a " + key.toString().toLowerCase() + "!",
+					true);
 			key.grab();
 			Portal.opensafe();
-		} else if (items.isEmpty()) {
-			Javelin.message(
-					"Party receives $" + PurchaseScreen.formatcost(gold) + "!",
-					false);
-			Squad.active.gold += gold;
-		} else {
+		} else if (!items.isEmpty()) {
 			String message = "Party receives " + items + "!";
 			int quantity = items.size();
 			if (quantity != 1) {
@@ -62,7 +61,27 @@ public class Chest extends Feature {
 			for (Item i : items) {
 				i.grab();
 			}
+		} else if (rubies > 0) {
+			Javelin.message(takeruby(rubies), false);
+		} else {
+			Javelin.message(
+					"Party receives $" + PurchaseScreen.formatcost(gold) + "!",
+					false);
+			Squad.active.gold += gold;
 		}
 		return true;
+	}
+
+	/**
+	 * @param rubies
+	 *            quantity of rubies to add.
+	 * @return
+	 * @return a message about getting a ruby. Note that the message assumes
+	 *         only 1 is gained.
+	 * @see Haxor#rubies
+	 */
+	public static String takeruby(int rubies) {
+		Haxor.singleton.rubies += rubies;
+		return "You find a ruby! Haxor might appreciate these...";
 	}
 }

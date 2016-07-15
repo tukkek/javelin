@@ -1,18 +1,21 @@
 package javelin.model.world.location.unique;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Siege;
 import javelin.controller.fight.TrainingSession;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.fortification.Fortification;
-import javelin.view.screen.SquadScreen;
 import tyrant.mikera.engine.RPG;
-import tyrant.mikera.tyrant.Game;
-import tyrant.mikera.tyrant.Game.Delay;
 
 /**
  * Designed as a manner of making the lower levels faster, this receives the
@@ -59,13 +62,24 @@ public class TrainingHall extends Fortification {
 			currentlevel = 1;
 		}
 		garrison.clear();
+		ArrayList<Monster> candidates = new ArrayList<Monster>();
+		for (float cr : Javelin.MONSTERSBYCR.descendingKeySet()) {
+			if (1 <= cr && cr <= Math.max(currentlevel, 2)) {
+				candidates.clear();
+				for (Monster m : Javelin.MONSTERSBYCR.get(cr)) {
+					if (m.think(0)) {
+						candidates.add(m);
+					}
+				}
+				if (!candidates.isEmpty()) {
+					break;
+				}
+			}
+		}
 		while (ChallengeRatingCalculator
 				.calculateel(garrison) < EL[currentlevel - 1]) {
-			Monster sensei = null;
-			while (sensei == null || !sensei.think(0)) {
-				sensei = RPG.pick(SquadScreen.getcandidates());
-			}
-			garrison.add(new Combatant(null, sensei.clone(), true));
+			garrison.add(
+					new Combatant(null, RPG.pick(candidates).clone(), true));
 			if (DEBUG) {
 				break;
 			}
@@ -96,5 +110,10 @@ public class TrainingHall extends Fortification {
 	@Override
 	public boolean drawgarisson() {
 		return false;
+	}
+
+	@Override
+	public List<Combatant> getcombatants() {
+		return garrison;
 	}
 }

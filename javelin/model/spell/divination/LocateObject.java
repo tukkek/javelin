@@ -16,7 +16,7 @@ public class LocateObject extends Spell {
 	/** Constructor. */
 	public LocateObject() {
 		super("Locate object", 2, SpellsFactor.ratespelllikeability(2),
-				Realm.MAGICAL);
+				Realm.MAGIC);
 		castinbattle = false;
 		castoutofbattle = true;
 		isscroll = true;

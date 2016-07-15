@@ -15,7 +15,7 @@ import javelin.model.unit.Combatant;
 public class Blink extends Spell {
 
 	public Blink() {
-		super("Blink", 3, SpellsFactor.ratespelllikeability(3), Realm.MAGICAL);
+		super("Blink", 3, SpellsFactor.ratespelllikeability(3), Realm.MAGIC);
 		castinbattle = true;
 		super.ispotion = true;
 	}

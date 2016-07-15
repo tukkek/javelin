@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javelin.controller.old.Game;
 import tyrant.mikera.engine.BaseObject;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.Modifier;

@@ -6,6 +6,9 @@ import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.Iterator;
+
+import javelin.controller.old.Game;
+
 import java.awt.Color;
 
 import tyrant.mikera.tyrant.util.Text;

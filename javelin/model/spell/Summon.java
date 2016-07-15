@@ -29,7 +29,7 @@ public class Summon extends Spell {
 	private float chance;
 
 	public Summon(String monstername, float chance) {
-		super("Summon " + monstername, 0, 0, Realm.MAGICAL);
+		super("Summon " + monstername, 0, 0, Realm.MAGIC);
 		assert chance == 1;// TODO cannot be a Spell
 		this.monstername = monstername;
 		this.chance = chance;

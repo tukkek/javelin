@@ -19,9 +19,6 @@ import javelin.controller.ai.ThreadManager;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.db.Preferences;
 import javelin.controller.db.StateManager;
-import javelin.controller.encounter.EncounterGenerator;
-import javelin.controller.encounter.GeneratedFight;
-import javelin.controller.exception.GaveUpException;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
@@ -33,6 +30,7 @@ import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.BattleMap;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
+import javelin.model.item.Wand;
 import javelin.model.spell.Summon;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -63,7 +61,9 @@ public class JavelinApp extends QuestApp {
 			new String[] { "A wild error appears!", "You were eaten by a grue.",
 					"So again it has come to pass...", "Mamma mia!", };
 
+	/** View for the {@link World}. */
 	public static BattleMap overviewmap;
+	/** Controller. */
 	static public WorldScreen context;
 	static ArrayList<Monster> lastenemies = new ArrayList<Monster>();
 
@@ -72,14 +72,21 @@ public class JavelinApp extends QuestApp {
 	 * temporary effects.
 	 */
 	public ArrayList<Combatant> originalteam;
+	/**
+	 * TODO see {@link BattleScreen#originalredteam} }
+	 */
 	public ArrayList<Combatant> originalfoes;
+	/**
+	 * Active battle map;
+	 */
 	public BattleMap battlemap;
+	/** Controller for active battle. */
 	public Fight fight;
 
 	@Override
 	public void run() {
-		initialize();
 		javelin.controller.db.Preferences.init();// pre
+		initialize();
 		if (!StateManager.load()) {
 			if (StateManager.nofile) {
 				disclaimer();
@@ -90,8 +97,9 @@ public class JavelinApp extends QuestApp {
 		placesquads();
 		preparedebug();
 		if (Dungeon.active != null) {
-			Dungeon.active.activate();
+			Dungeon.active.activate(true);
 		}
+		StateManager.save(true, StateManager.SAVEFILE);
 		if (Javelin.DEBUG) {
 			while (true) {
 				loop();
@@ -114,32 +122,31 @@ public class JavelinApp extends QuestApp {
 			}
 			while (true) {
 				switchScreen(JavelinApp.context);
-				StateManager.save();
 				JavelinApp.context.step();
 			}
 		} catch (final StartBattle e) {
-			if (Squad.active.strategic && e.fight instanceof RandomEncounter) {
+			fight = e.fight;
+			if (Squad.active.strategic && fight instanceof RandomEncounter) {
 				/*
 				 * TODO support all types of strategic battles (Lair, Incursion,
 				 * Siege...)
 				 */
-				quickbattle(e);
+				quickbattle();
 			} else {
 				e.battle();
 			}
 		}
 	}
 
-	private void quickbattle(StartBattle e) {
+	private void quickbattle() {
 		int teamel =
 				ChallengeRatingCalculator.calculateel(Squad.active.members);
-		List<Combatant> opponents = e.fight.getmonsters(teamel);
+		List<Combatant> opponents = fight.getmonsters(teamel);
 		int el = opponents != null
 				? ChallengeRatingCalculator.calculateel(opponents)
-				: e.fight.getel(teamel);
-		fight = e.fight;
+				: fight.getel(teamel);
 		if (opponents == null) {
-			opponents = generatefight(el, Terrain.current()).opponents;
+			opponents = fight.generate(teamel, Terrain.current());
 		}
 		if (fight.avoid(opponents)) {
 			return;
@@ -183,33 +190,53 @@ public class JavelinApp extends QuestApp {
 		}
 		ArrayList<Item> bag = Squad.active.equipment.get(c.id);
 		for (Item i : new ArrayList<Item>(bag)) {
-			if (i.usedinbattle && RPG.random() < resourcesused) {
-				bag.remove(i);
+			if (i.usedinbattle) {
+				if (i instanceof Wand) {
+					Wand w = (Wand) i;
+					w.charges -= w.charges * resourcesused;
+					if (w.charges <= 0) {
+						bag.remove(w);
+					}
+				} else if (RPG.random() < resourcesused) {
+					bag.remove(i);
+				}
 			}
 		}
 	}
 
-	void handlefatalexception(RuntimeException e) {
+	/**
+	 * @param e
+	 *            Show this error to the user and log it.
+	 */
+	static public void handlefatalexception(RuntimeException e) {
 		e.printStackTrace();
-		JOptionPane.showMessageDialog(Javelin.app, RPG.pick(ERRORQUOTES)
-				+ "\n\n" + "Unfortunately an error ocurred.\n"
-				+ "Please send the text or a screenshot of the next message to one of the following,\n"
-				+ "so we can get this fixed on future releases:\n\n"
-				+ "javelinrl@gmail.com (e-mail)\n"
-				+ "http://javelinrl.wordpress.com (leave a comment on our website)\n"
-				+ "http://www.reddit.com/r/javelinrl (or post to our community at reddit)");
+		JOptionPane.showMessageDialog(Javelin.app,
+				RPG.pick(ERRORQUOTES) + "\n\nUnfortunately an error ocurred.\n"
+						+ "Please send a screenshot of the next message or the log file (error.txt)\n"
+						+ "to one of the channels below, so we can get this fixed on future releases.\n\n"
+						+ "If for any reason your current game fails to load when you restart Javelin\n"
+						+ "you can find backups on the \"backup\" folder. Just move one of them to the\n"
+						+ "main folder and rename it to \"javelin.save\" to restore your progress.\n\n"
+						+ "Post to our reddit forum -- http://www.reddit.com/r/javelinrl\n"
+						+ "Leave a comment on our website -- http://javelinrl.wordpress.com\n"
+						+ "Or write us an e-mail -- javelinrl@gmail.com\n");
 		String error = printstack(e);
 		Throwable t = e;
 		HashSet<Throwable> errors = new HashSet<Throwable>(2);
 		while (t.getCause() != null && errors.add(t)) {
 			t = t.getCause();
-			error += "\n" + printstack(t);
+			error += System.lineSeparator() + printstack(t);
+		}
+		try {
+			Preferences.write(error, "error.txt");
+		} catch (IOException e1) {
+			// ignore
 		}
 		JOptionPane.showMessageDialog(Javelin.app, error);
 		System.exit(1);
 	}
 
-	String printstack(Throwable e) {
+	static String printstack(Throwable e) {
 		String error = e.getMessage() + " (" + e.getClass() + ")";
 		error += "\n";
 		for (StackTraceElement stack : e.getStackTrace()) {
@@ -218,7 +245,7 @@ public class JavelinApp extends QuestApp {
 		return error;
 	}
 
-	public void disclaimer() {
+	void disclaimer() {
 		while (TextReader
 				.show(new File("README.txt"),
 						"This message will only be shown once, press ENTER to continue.")
@@ -238,13 +265,14 @@ public class JavelinApp extends QuestApp {
 				}
 				line = reader.readLine();
 			}
+			reader.close();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 		ThreadManager.determineprocessors();
 	}
 
-	public void placesquads() {
+	void placesquads() {
 		for (final WorldActor a : Squad.getall(Squad.class)) {
 			Squad s = (Squad) a;
 			final Thing hero = s.visual;
@@ -256,7 +284,7 @@ public class JavelinApp extends QuestApp {
 		}
 	}
 
-	public void startcampaign() {
+	void startcampaign() {
 		SquadScreen.open();
 		World.makemap();
 		UpgradeHandler.singleton.distribute();
@@ -274,14 +302,14 @@ public class JavelinApp extends QuestApp {
 		gatherstatistics(allupgrades, allitems);
 		System.out.println(Javelin.ALLMONSTERS.size() + " monsters");
 		System.out.println((Item.ALL.size() - Item.ARTIFACT.size()) + " items, "
-				+ Item.ARTIFACT.size() + " artifacts");
+				+ Item.ARTIFACT.size() + " artifacts, 7 relics");
 		Collection<Spell> spells = Spell.SPELLS.values();
 		int summon = countsummon(spells);
 		System.out.println((UpgradeHandler.singleton.count() - spells.size())
 				+ " upgrades, " + (spells.size() - summon + 1) + " spells, "
 				+ UpgradeHandler.singleton.countskills() + " skills");
 		int maps = Dungeon.getmaps().size();
-		for (Terrain t : Terrain.all) {
+		for (Terrain t : Terrain.ALL) {
 			maps += t.getmaps().size();
 		}
 		System.out.println(maps + " battle maps");
@@ -314,7 +342,7 @@ public class JavelinApp extends QuestApp {
 		}
 	}
 
-	public static int countsummon(Collection<Spell> spells) {
+	static int countsummon(Collection<Spell> spells) {
 		int summon = 0;
 		for (Spell s : spells) {
 			if (s instanceof Summon) {
@@ -333,8 +361,8 @@ public class JavelinApp extends QuestApp {
 				m.xp = new BigDecimal(Preferences.DEBUGSXP / 100f);
 			}
 		}
-		if (Preferences.DEBUGHAX != null) {
-			Haxor.singleton.rubies = Preferences.DEBUGHAX;
+		if (Preferences.DEBUGRUBIES != null) {
+			Haxor.singleton.rubies = Preferences.DEBUGRUBIES;
 		}
 		if (Preferences.DEBUGSTARTINGITEM != null) {
 			Squad.active.receiveitem(Preferences.DEBUGSTARTINGITEM);
@@ -371,31 +399,6 @@ public class JavelinApp extends QuestApp {
 			clone.add(c.clone());
 		}
 		return clone;
-	}
-
-	public static GeneratedFight generatefight(final int el, Terrain terrain) {
-		int delta = 0;
-		GeneratedFight generated = null;
-		while (generated == null) {
-			generated = JavelinApp.chooseopponents(el - delta, terrain);
-			if (generated != null) {
-				break;
-			}
-			if (delta != 0) {
-				generated = JavelinApp.chooseopponents(el + delta, terrain);
-			}
-			delta += 1;
-		}
-		return generated;
-	}
-
-	static public GeneratedFight chooseopponents(final int el,
-			Terrain terrain) {
-		try {
-			return new GeneratedFight(EncounterGenerator.generate(el, terrain));
-		} catch (final GaveUpException e) {
-			return null;
-		}
 	}
 
 	@Override

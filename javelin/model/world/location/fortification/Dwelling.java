@@ -6,6 +6,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.old.Game;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -16,7 +17,6 @@ import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.PurchaseScreen;
 import javelin.view.screen.town.RecruitScreen;
 import tyrant.mikera.engine.RPG;
-import tyrant.mikera.tyrant.Game;
 
 /**
  * Allows a player to recruit one type of unit.
@@ -41,8 +41,8 @@ public class Dwelling extends Fortification {
 	protected void generategarrison(int minel, int maxel) {
 		ArrayList<Monster> candidates = new ArrayList<Monster>();
 		monsters: for (Monster m : Javelin.ALLMONSTERS) {
-			String terrain = Terrain.difficultytomapname(Terrain.get(x, y));
-			if (m.terrains.contains(terrain)) {
+			String terrain = Terrain.get(x, y).toString();
+			if (m.getterrains().contains(terrain)) {
 				candidates.add(m);
 				continue monsters;
 			}
@@ -54,6 +54,7 @@ public class Dwelling extends Fortification {
 		for (int i = 0; i < 4; i++) {
 			garrison.add(new Combatant(null, dweller.source.clone(), true));
 		}
+		generategarrison = false;
 	}
 
 	@Override
@@ -108,8 +109,9 @@ public class Dwelling extends Fortification {
 		}
 		text += "What do you want to do?\n\n";
 		if (volunteer) {
-			text += "d - draft a volunteer for "
-					+ Math.round(100 * dweller.source.challengeRating) + "XP\n";
+			text += "d - draft a volunteer ("
+					+ Math.round(100 * dweller.source.challengeRating)
+					+ "XP)\n";
 		}
 		text += "h - hire a " + monstertype + " mercenary ($"
 				+ PurchaseScreen.formatcost(MercenariesGuild.getfee(dweller))
@@ -133,5 +135,10 @@ public class Dwelling extends Fortification {
 	@Override
 	public boolean hasupgraded() {
 		return volunteer;
+	}
+
+	@Override
+	public List<Combatant> getcombatants() {
+		return garrison;
 	}
 }

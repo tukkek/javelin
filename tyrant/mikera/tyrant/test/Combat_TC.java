@@ -1,7 +1,7 @@
 package tyrant.mikera.tyrant.test;
 
+import javelin.controller.old.Game;
 import tyrant.mikera.tyrant.Combat;
-import tyrant.mikera.tyrant.Game;
 
 
 public class Combat_TC extends TyrantTestCase {

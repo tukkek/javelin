@@ -16,6 +16,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Improvement;
 import javelin.model.world.World;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
@@ -34,14 +35,14 @@ import javelin.view.screen.town.SelectScreen;
  * @author alex
  */
 public class Work extends WorldAction {
-	static final Improvement ROAD = new BuildRoad("Build road", 7, 'r');
-	static final Improvement HIGHWAY = new BuildHighway("Upgrade road", 7, 'r');
-	static final Improvement INN = new BuildInn("Build inn", 7, 'i');
-	static final Improvement TOWN = new BuildTown("Build town", 30, 't');
-	static final Improvement DEFORESTATE = new Deforestate("Deforestate",
-			14 * Terrain.FOREST.speedtrackless, 'd');
-	static final Improvement MINE = new BuildMine("Build mine",
-			30 * Terrain.MOUNTAINS.speedtrackless, 'm');
+	static final Improvement ROAD = new BuildRoad("Build road", 7, 'r', false);
+	static final Improvement HIGHWAY =
+			new BuildHighway("Upgrade road", 7, 'r', false);
+	static final Improvement INN = new BuildInn("Build inn", 7, 'i', false);
+	static final Improvement TOWN = new BuildTown("Build town", 30, 't', false);
+	static final Improvement DEFORESTATE =
+			new Deforestate("Deforestate", 15, 'd', true);
+	static final Improvement MINE = new BuildMine("Build mine", 30, 'm', true);
 
 	class WorkScreen extends SelectScreen {
 		public WorkScreen() {
@@ -93,9 +94,11 @@ public class Work extends WorldAction {
 					+ " days)";
 		}
 
-		double build(Improvement o) {
-			return o.price / countworkers() / Terrain.current().getspeed();
-		}
+	}
+
+	double build(Improvement o) {
+		double days = o.price / countworkers();
+		return o.absolute ? days : days / Terrain.current().getspeed();
 	}
 
 	/** Constructor. */
@@ -105,11 +108,19 @@ public class Work extends WorldAction {
 
 	@Override
 	public void perform(WorldScreen screen) {
+		if (Dungeon.active != null) {
+			Javelin.message("Can't build improvements inside dungeons...",
+					false);
+			return;
+		}
 		int workers = countworkers();
 		if (workers == 0 && !Javelin.DEBUG) {
-			Javelin.message(
-					"You need to take some workers from out of a town first...",
+			Javelin.message("Take some workers from out of a town first...",
 					false);
+			return;
+		}
+		if (Terrain.current().equals(Terrain.WATER)) {
+			Javelin.message("Can't build improvements on water...", false);
 			return;
 		}
 		new WorkScreen().show();

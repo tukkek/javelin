@@ -1,7 +1,10 @@
 package javelin.model.world.location;
 
+import java.util.List;
+
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.LairFight;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 
 /**
@@ -26,6 +29,11 @@ public class Lair extends Location {
 
 	@Override
 	protected Integer getel(int attackerel) {
+		return null;
+	}
+
+	@Override
+	public List<Combatant> getcombatants() {
 		return null;
 	}
 }

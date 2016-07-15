@@ -5,6 +5,8 @@ import java.awt.Image;
 import java.awt.Panel;
 import java.awt.Rectangle;
 
+import javelin.controller.old.Game;
+
 public class TPanel extends Panel {
     public QuestApp questapp;
 	

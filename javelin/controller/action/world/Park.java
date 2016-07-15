@@ -1,5 +1,7 @@
 package javelin.controller.action.world;
 
+import com.sun.glass.events.KeyEvent;
+
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.exception.RepeatTurn;
@@ -18,7 +20,8 @@ import javelin.view.screen.WorldScreen;
 public class Park extends WorldAction {
 
 	public Park() {
-		super("Park your vehicle", new int[] { 'p' }, new String[] { "p" });
+		super("Park your vehicle", new int[] { KeyEvent.VK_P },
+				new String[] { "p" });
 	}
 
 	@Override

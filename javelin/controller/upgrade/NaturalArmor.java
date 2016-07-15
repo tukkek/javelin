@@ -22,12 +22,13 @@ public class NaturalArmor extends Upgrade {
 	@Override
 	public boolean apply(final Combatant c) {
 		Monster m = c.source;
-		if (m.armor >= target || m.ac + 10 < target) {
+		int newac = m.ac + target - m.armor;
+		if (target < m.armor || newac > m.ac + 10
+				|| newac > m.dexterity + m.constitution) {
 			return false;
 		}
-		int delta = target - m.armor;
 		m.armor = target;
-		m.ac += delta;
+		m.ac = newac;
 		return true;
 	}
 }

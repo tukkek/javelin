@@ -11,10 +11,14 @@ import javelin.controller.fight.Siege;
 import javelin.controller.fight.TrainingSession;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
+import javelin.controller.upgrade.UpgradeHandler;
+import javelin.controller.upgrade.feat.FeatUpgrade;
+import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.fortification.Fortification;
+import javelin.view.screen.SquadScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -32,9 +36,10 @@ public class TrainingHall extends Fortification {
 	private static final String DESCRIPTION = "The Training Hall";
 	/**
 	 * Actual encounter level for each {@link TrainingSession}, by using the
-	 * shifted-to-zero index.
+	 * shifted-to-zero index. Supposed to be difficult (EL-1) encounter party of
+	 * levels 1 to 4.
 	 */
-	public static int[] EL = new int[] { 2, 7, 10, 17 };
+	public static int[] EL = new int[] { 4, 8, 10, 12 };
 	/**
 	 * From 1 upwards, the current training session difficulty, supposed to
 	 * represent different floors.
@@ -61,29 +66,26 @@ public class TrainingHall extends Fortification {
 		if (currentlevel == null) {
 			currentlevel = 1;
 		}
-		garrison.clear();
-		ArrayList<Monster> candidates = new ArrayList<Monster>();
-		for (float cr : Javelin.MONSTERSBYCR.descendingKeySet()) {
-			if (1 <= cr && cr <= Math.max(currentlevel, 2)) {
-				candidates.clear();
-				for (Monster m : Javelin.MONSTERSBYCR.get(cr)) {
-					if (m.think(0)) {
-						candidates.add(m);
-					}
-				}
-				if (!candidates.isEmpty()) {
-					break;
-				}
+		// garrison.clear();
+		ArrayList<Monster> senseis = SquadScreen.getcandidates();
+		for (Monster sensei : new ArrayList<Monster>(senseis)) {
+			if (!sensei.think(0)) {
+				senseis.remove(sensei);
 			}
 		}
-		while (ChallengeRatingCalculator
-				.calculateel(garrison) < EL[currentlevel - 1]) {
-			garrison.add(
-					new Combatant(null, RPG.pick(candidates).clone(), true));
-			if (DEBUG) {
-				break;
-			}
+		int nstudents = Squad.active.members.size();
+		int nsenseis = RPG.r(Math.min(3, nstudents), RPG.max(nstudents, 5));
+		while (isweak() && garrison.size() < nsenseis) {
+			garrison.add(new Combatant(null, RPG.pick(senseis).clone(), true));
 		}
+		while (isweak()) {
+			Combatant.upgradeweakest(garrison, Realm.random());
+		}
+	}
+
+	boolean isweak() {
+		return ChallengeRatingCalculator
+				.calculateel(garrison) < EL[currentlevel - 1];
 	}
 
 	@Override
@@ -115,5 +117,36 @@ public class TrainingHall extends Fortification {
 	@Override
 	public List<Combatant> getcombatants() {
 		return garrison;
+	}
+
+	public void level() {
+		currentlevel += 1;
+		boolean done = currentlevel - 1 >= EL.length;
+		String prefix;
+		if (done) {
+			prefix = "This has been the final lesson.\n\n";
+		} else {
+			prefix = "Congratulations, you've graduated this level!\n\n";
+		}
+		Combatant student = Squad.active.members
+				.get(Javelin.choose(prefix + "Which student will learn a feat?",
+						Squad.active.members, true, true));
+		ArrayList<FeatUpgrade> feats = UpgradeHandler.singleton.getfeats();
+		ArrayList<FeatUpgrade> options = new ArrayList<FeatUpgrade>();
+		while (options.size() < 3 && !feats.isEmpty()) {
+			FeatUpgrade f = RPG.pick(feats);
+			feats.remove(f);
+			if (!options.contains(f)
+					&& f.upgrade(student.clone().clonesource())) {
+				options.add(f);
+			}
+		}
+		options.get(Javelin.choose("Learn which feat?", options, true, true))
+				.upgrade(student);
+		if (done) {
+			remove();
+		} else {
+			generategarrison();
+		}
 	}
 }

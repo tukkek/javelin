@@ -9,9 +9,6 @@ import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.old.Game;
-import javelin.controller.upgrade.BreathWeaponUpgrade;
-import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -68,7 +65,7 @@ public class MercenariesGuild extends UniqueLocation {
 		}
 		int tries = 0;
 		while (c.source.challengeRating < cr) {
-			upgradeunit(c, r);
+			c.upgrade(r);
 			tries += 1;
 			if (tries >= 100) {
 				return;
@@ -76,29 +73,6 @@ public class MercenariesGuild extends UniqueLocation {
 		}
 		mercenaries.add(c);
 		all.add(c);
-	}
-
-	/**
-	 * Updates {@link Monster#challengeRating} internally.
-	 * 
-	 * @param r
-	 *            Applies one {@link Upgrade} from this set to the given
-	 *            {@link Combatant}.
-	 */
-	static public void upgradeunit(Combatant c, Realm r) {
-		Upgrade upgrade = RPG.pick(new ArrayList<Upgrade>(
-				UpgradeHandler.singleton.getfullupgrades(r)));
-		if (upgrade instanceof BreathWeaponUpgrade) {
-			/* TODO Breaths are pretty CPU intensive right now so avoid them */
-			return;
-		}
-		if (!upgrade.upgrade(c)) {
-			return;
-		}
-		if (upgrade.purchaseskills) {
-			c.source.purchaseskills(upgrade).upgradeautomatically();
-		}
-		ChallengeRatingCalculator.calculateCr(c.source);
 	}
 
 	@Override

@@ -9,10 +9,14 @@ import javelin.model.unit.abilities.BreathWeapon;
  * 
  * @author alex
  */
-public class BreathWeaponUpgrade extends Upgrade {
+public class BreathUpgrade extends Upgrade {
 	final private BreathWeapon breath;
 
-	public BreathWeaponUpgrade(BreathWeapon breathp) {
+	/**
+	 * @param breathp
+	 *            Breath to apply.
+	 */
+	public BreathUpgrade(BreathWeapon breathp) {
 		super("Breath weapon: " + breathp.description);
 		breath = breathp;
 	}
@@ -24,6 +28,9 @@ public class BreathWeaponUpgrade extends Upgrade {
 
 	@Override
 	public boolean apply(Combatant m) {
+		if (breath.damage[0] > m.source.hd.count()) {
+			return false;
+		}
 		for (BreathWeapon b : m.source.breaths) {
 			if (b.description.equals(breath.description)) {
 				return false;

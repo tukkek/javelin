@@ -11,7 +11,6 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
-import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -37,8 +36,7 @@ public class TempleEncounter extends RandomDungeonEncounter {
 	@Override
 	public void enhance(List<Combatant> foes) {
 		while (ChallengeRatingCalculator.calculateel(foes) < temple.el) {
-			Combatant foe = RPG.pick(foes);
-			MercenariesGuild.upgradeunit(foe, temple.realm);
+			Combatant.upgradeweakest(foes, temple.realm);
 		}
 	}
 

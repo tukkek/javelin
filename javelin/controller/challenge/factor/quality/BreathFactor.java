@@ -1,7 +1,7 @@
 package javelin.controller.challenge.factor.quality;
 
 import javelin.controller.challenge.factor.CrFactor;
-import javelin.controller.upgrade.BreathWeaponUpgrade;
+import javelin.controller.upgrade.BreathUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.BreathWeapon;
@@ -44,27 +44,28 @@ public class BreathFactor extends CrFactor {
 
 	@Override
 	public void listupgrades(UpgradeHandler handler) {
-		handler.fire.add(new BreathWeaponUpgrade(
-				new BreathWeapon("cone of magma", BreathArea.CONE, 10, 1, 4, 0,
-						SavingThrow.REFLEXES, 13, .5f, true)));
-		handler.water.add(new BreathWeaponUpgrade(
+		/* Too weak, doesnt resolve to positive CR */
+		// handler.fire.add(new BreathUpgrade(
+		// new BreathWeapon("cone of magma", BreathArea.CONE, 10, 1, 4, 0,
+		// SavingThrow.REFLEXES, 13, .5f, true)));
+		handler.water.add(new BreathUpgrade(
 				new BreathWeapon("caustic liquid", BreathArea.CONE, 15, 1, 8, 0,
 						SavingThrow.REFLEXES, 12, .5f, true)));
 
-		handler.evil.add(new BreathWeaponUpgrade(
-				new BreathWeapon("acid", BreathArea.LINE, 80, 12, 4, 0,
-						SavingThrow.REFLEXES, 23, .5f, true)));
-		handler.wind.add(new BreathWeaponUpgrade(
-				new BreathWeapon("lightning", BreathArea.LINE, 100, 12, 8, 0,
-						SavingThrow.REFLEXES, 25, .5f, true)));
-		handler.fire.add(new BreathWeaponUpgrade(
-				new BreathWeapon("fire", BreathArea.CONE, 50, 12, 10, 0,
-						SavingThrow.REFLEXES, 25, .5f, true)));
-		handler.earth.add(new BreathWeaponUpgrade(
+		handler.evil
+				.add(new BreathUpgrade(new BreathWeapon("acid", BreathArea.LINE,
+						80, 12, 4, 0, SavingThrow.REFLEXES, 23, .5f, true)));
+		handler.wind.add(
+				new BreathUpgrade(new BreathWeapon("lightning", BreathArea.LINE,
+						100, 12, 8, 0, SavingThrow.REFLEXES, 25, .5f, true)));
+		handler.fire
+				.add(new BreathUpgrade(new BreathWeapon("fire", BreathArea.CONE,
+						50, 12, 10, 0, SavingThrow.REFLEXES, 25, .5f, true)));
+		handler.earth.add(new BreathUpgrade(
 				new BreathWeapon("corrosive gas", BreathArea.CONE, 50, 12, 6, 0,
 						SavingThrow.REFLEXES, 25, .5f, true)));
-		handler.wind.add(new BreathWeaponUpgrade(
-				new BreathWeapon("cold", BreathArea.CONE, 40, 6, 6, 0,
-						SavingThrow.REFLEXES, 23, .5f, true)));
+		handler.wind
+				.add(new BreathUpgrade(new BreathWeapon("cold", BreathArea.CONE,
+						40, 6, 6, 0, SavingThrow.REFLEXES, 23, .5f, true)));
 	}
 }

@@ -47,6 +47,13 @@ public abstract class Damage extends Upgrade {
 		}
 		for (final List<Attack> sequence : all) {
 			for (final Attack a : sequence) {
+				if (a.damage[0] + 1 > m.source.hd.count()) {
+					return false;
+				}
+			}
+		}
+		for (final List<Attack> sequence : all) {
+			for (final Attack a : sequence) {
 				a.damage[0] += 1;
 			}
 		}

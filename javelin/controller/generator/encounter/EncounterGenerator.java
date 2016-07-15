@@ -137,6 +137,10 @@ public class EncounterGenerator {
 	 *         enemies).
 	 */
 	public static int getmaxenemynumber() {
+		if (Squad.active == null) {
+			/* all training */
+			return 4 + 5;
+		}
 		return Squad.active.members.size() + 5;
 	}
 

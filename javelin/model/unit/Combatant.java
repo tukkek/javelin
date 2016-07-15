@@ -11,12 +11,17 @@ import javelin.controller.action.Action;
 import javelin.controller.action.Defend;
 import javelin.controller.action.ai.MeleeAttack;
 import javelin.controller.ai.BattleAi;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
+import javelin.controller.upgrade.BreathUpgrade;
 import javelin.controller.upgrade.Spell;
+import javelin.controller.upgrade.Upgrade;
+import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.BattleMap;
 import javelin.model.Cloneable;
+import javelin.model.Realm;
 import javelin.model.TeamContainer;
 import javelin.model.condition.Charging;
 import javelin.model.condition.Condition;
@@ -649,5 +654,49 @@ public class Combatant implements Serializable, Cloneable {
 	public Combatant clonesource() {
 		source = source.clone();
 		return this;
+	}
+
+	/**
+	 * Updates {@link Monster#challengeRating} internally.
+	 * 
+	 * @param r
+	 *            Applies one {@link Upgrade} from this set to the given
+	 *            {@link Combatant}.
+	 * @return
+	 * @return <code>true</code> if an upgrade has been successfully applied.
+	 * @see Upgrade#upgrade(Combatant)
+	 */
+	public boolean upgrade(Realm r) {
+		Upgrade upgrade = RPG.pick(new ArrayList<Upgrade>(
+				UpgradeHandler.singleton.getfullupgrades(r)));
+		if (upgrade instanceof BreathUpgrade) {
+			/* TODO Breaths are pretty CPU intensive right now so avoid them */
+			return false;
+		}
+		if (!upgrade.upgrade(this)) {
+			return false;
+		}
+		if (upgrade.purchaseskills) {
+			source.purchaseskills(upgrade).upgradeautomatically();
+		}
+		ChallengeRatingCalculator.calculateCr(source);
+		return true;
+	}
+
+	/**
+	 * @param garrison
+	 *            Upgrades the weakest member of this group.
+	 * @see #upgrade(Realm)
+	 */
+	public static void upgradeweakest(List<Combatant> garrison, Realm r) {
+		Combatant weakest = null;
+		for (Combatant sensei : garrison) {
+			ChallengeRatingCalculator.calculateCr(sensei.source);
+			if (weakest == null
+					|| sensei.source.challengeRating < weakest.source.challengeRating) {
+				weakest = sensei;
+			}
+		}
+		weakest.upgrade(r);
 	}
 }

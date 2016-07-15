@@ -206,6 +206,10 @@ public class Javelin {
 	 * @return Hour of the day, from 0 to 23.
 	 */
 	public static long getHour() {
+		if (Squad.active == null) {
+			/* all training */
+			return 0;
+		}
 		return Squad.active.hourselapsed % 24;
 	}
 

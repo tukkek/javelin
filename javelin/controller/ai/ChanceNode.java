@@ -44,7 +44,7 @@ public class ChanceNode implements Cloneable {
 	public ChanceNode clone() {
 		try {
 			ChanceNode clone = (ChanceNode) super.clone();
-			clone.n = n.deepclone();
+			clone.n = n.clonedeeply();
 			return clone;
 		} catch (CloneNotSupportedException e) {
 			throw new RuntimeException(e);

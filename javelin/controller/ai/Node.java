@@ -42,5 +42,5 @@ public interface Node extends Cloneable {
 	 * 
 	 * @see Node#clone()
 	 */
-	Node deepclone();
+	Node clonedeeply();
 }

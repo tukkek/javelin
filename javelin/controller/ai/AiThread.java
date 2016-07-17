@@ -30,7 +30,7 @@ public class AiThread extends Thread {
 
 	public AiThread(BattleState state) {
 		super(group, (Runnable) null);
-		this.state = state.deepclone();
+		this.state = state.clonedeeply();
 		setdepth();
 		start();
 	}

@@ -82,7 +82,7 @@ public final class ActionProvider
 		if (actions.isEmpty()) {
 			return Collections.emptyList();
 		}
-		final BattleState stateclone = battleState.deepclone();
+		final BattleState stateclone = battleState.clonedeeply();
 		final List<List<ChanceNode>> outcomes = ((AiAction) actions.pop())
 				.getoutcomes(stateclone, stateclone.next);
 		for (final List<ChanceNode> sucessors : outcomes) {

@@ -26,7 +26,7 @@ import java.util.zip.ZipOutputStream;
 import javelin.controller.db.Preferences;
 import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
-import javelin.view.mappanel.MapPanel;
+import javelin.view.mappanel.MapPanelCommon;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import tyrant.mikera.engine.BaseObject;
@@ -330,8 +330,7 @@ public final class Game extends BaseObject {
 	}
 
 	public static void redraw() {
-		getMappanel().render();
-		getMappanel().repaint();
+		getMappanel().refresh();
 		messagepanel.getPanel().repaint();
 	}
 
@@ -1130,7 +1129,7 @@ public final class Game extends BaseObject {
 	/**
 	 * @return Returns the current mappanel.
 	 */
-	public static MapPanel getMappanel() {
+	public static MapPanelCommon getMappanel() {
 		final QuestApp q = Game.getQuestapp();
 		if (q == null) {
 			return null;

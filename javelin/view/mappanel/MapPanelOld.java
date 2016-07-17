@@ -44,11 +44,9 @@ import tyrant.mikera.tyrant.Tile;
  * @author Tyrant
  * @author alex
  */
-public class MapPanelOld extends MapPanel {
+public class MapPanelOld extends MapPanelCommon {
 	private static final Border BUFF =
 			BorderFactory.createLineBorder(Color.WHITE);
-	private static final Border INVASIONPORTAL =
-			BorderFactory.createLineBorder(Color.RED);
 	private static final Color[][] STATUS_COLORS = {
 			{ new Color(0, 0, 127), new Color(0, 0, 153), new Color(0, 0, 178),
 					new Color(0, 0, 204), new Color(0, 0, 229),
@@ -625,7 +623,10 @@ public class MapPanelOld extends MapPanel {
 	}
 
 	@Override
-	public boolean center(int x, int y) {
+	public boolean center(int x, int y, boolean force) {
+		if (force) {
+			return true;
+		}
 		return !(2 + startx <= x && x <= endx - 2 && 2 + starty <= y
 				&& y <= endy - 2);
 	}
@@ -638,5 +639,11 @@ public class MapPanelOld extends MapPanel {
 	@Override
 	public void setdiscovered(HashSet<Point> hashSet) {
 		discovered = hashSet;
+	}
+
+	@Override
+	public void refresh() {
+		render();
+		repaint();
 	}
 }

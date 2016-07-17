@@ -325,7 +325,7 @@ public class BattleState implements Node, TeamContainer {
 	}
 
 	@Override
-	public BattleState deepclone() {
+	public BattleState clonedeeply() {
 		BattleState cl = clone();
 		cl.blueTeam.clear();
 		cl.redTeam.clear();

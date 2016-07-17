@@ -30,8 +30,8 @@ import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.view.StatusPanel;
-import javelin.view.mappanel.MapPanel;
-import javelin.view.mappanel.MapPanelOld;
+import javelin.view.mappanel.BattlePanel;
+import javelin.view.mappanel.MapPanelCommon;
 import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.GameHandler;
@@ -67,7 +67,7 @@ public class BattleScreen extends Screen {
 	public static List<Combatant> originalblueteam;
 	static public Combatant lastlooked = null;
 
-	public MapPanel mappanel;
+	public MapPanelCommon mappanel;
 	public MessagePanel messagepanel;
 	public StatusPanel statuspanel;
 	public GameHandler gameHandler = new GameHandler();
@@ -149,8 +149,8 @@ public class BattleScreen extends Screen {
 		mappanel.repaint();
 	}
 
-	protected MapPanel getmappanel() {
-		return new MapPanelOld();
+	protected MapPanelCommon getmappanel() {
+		return new BattlePanel(map.getState());
 	}
 
 	/** Initializes this screen instance. */
@@ -286,7 +286,7 @@ public class BattleScreen extends Screen {
 	}
 
 	public void centerscreen(int x, int y, boolean force) {
-		if (force || mappanel.center(x, y)) {
+		if (mappanel.center(x, y, force)) {
 			mappanel.viewPosition(map, x, y);
 			return;
 		}
@@ -786,14 +786,14 @@ public class BattleScreen extends Screen {
 	 * @param mappanel
 	 *            The mappanel to set.
 	 */
-	public void setMappanel(final MapPanel mappanel) {
+	public void setMappanel(final MapPanelCommon mappanel) {
 		this.mappanel = mappanel;
 	}
 
 	/**
 	 * @return Returns the mappanel.
 	 */
-	public MapPanel getMappanel() {
+	public MapPanelCommon getMappanel() {
 		return mappanel;
 	}
 

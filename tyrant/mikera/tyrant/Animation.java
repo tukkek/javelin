@@ -9,7 +9,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import javelin.controller.old.Game;
-import javelin.view.mappanel.MapPanel;
+import javelin.view.mappanel.MapPanelCommon;
 import tyrant.mikera.engine.BaseObject;
 import tyrant.mikera.engine.RPG;
 
@@ -121,7 +121,7 @@ public class Animation extends BaseObject {
 		return a;
 	}
 
-	public void draw(final MapPanel mp, final Graphics g) {
+	public void draw(final MapPanelCommon mp, final Graphics g) {
 		final double start = getDouble("StartTime");
 		final double now = System.currentTimeMillis();
 		final double step = now - start;

@@ -1,6 +1,9 @@
 package javelin.model.state;
 
+import java.awt.Image;
+
 import javelin.model.unit.Combatant;
+import javelin.view.Images;
 
 /**
  * A crystal that is evolved after a {@link Combatant} leaves the battle-field
@@ -21,5 +24,9 @@ public class Meld {
 
 	public boolean crystalize(BattleState state) {
 		return state.next.ap >= meldsat;
+	}
+
+	public Image getimage(BattleState state) {
+		return state.next.ap >= meldsat ? Images.crystal : Images.dead;
 	}
 }

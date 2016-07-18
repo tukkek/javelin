@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javelin.controller.Point;
 import javelin.view.mappanel.BattlePanel;
 import javelin.view.mappanel.BattleTile;
+import javelin.view.mappanel.Tile;
 import javelin.view.screen.BattleScreen;
 
 public abstract class Overlay {
@@ -14,10 +15,11 @@ public abstract class Overlay {
 	abstract public void overlay(BattleTile t, Graphics g);
 
 	public void clear() {
-		for (Point p : affected) {
-			((BattlePanel) BattleScreen.active.mappanel).tiles[p.x][p.y]
-					.repaint();
-		}
 		BattlePanel.overlay = null;
+		final Tile[][] tiles =
+				((BattlePanel) BattleScreen.active.mappanel).tiles;
+		for (Point p : affected) {
+			tiles[p.x][p.y].repaint();
+		}
 	}
 }

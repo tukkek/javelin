@@ -9,6 +9,7 @@ import javelin.controller.db.Preferences;
 import javelin.controller.old.Game;
 import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
+import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
 import javelin.view.mappanel.overlay.Overlay;
 import javelin.view.screen.BattleScreen;
@@ -58,6 +59,11 @@ public class BattlePanel extends MapPanel {
 		}
 		if (overlay != null) {
 			update.addAll(overlay.affected);
+		}
+		if (Javelin.app.fight.meld) {
+			for (Meld m : state.meld) {
+				update.add(new Point(m.x, m.y));
+			}
 		}
 		for (Point p : update) {
 			tiles[p.x][p.y].repaint();

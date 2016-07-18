@@ -22,6 +22,8 @@ import javelin.model.unit.Monster;
 public class Images {
 
 	static final TreeMap<String, Image> cache = new TreeMap<String, Image>();
+	static final TreeMap<String, Image> buriedcache =
+			new TreeMap<String, Image>();
 
 	public static final Image penalized =
 			Images.maketransparent(3 / 4f, Images.getImage("overlaypenalized"));
@@ -40,7 +42,16 @@ public class Images {
 	 * @return image resource.
 	 */
 	public static Image getImage(Combatant combatant) {
-		return getImage(combatant.source.avatarfile);
+		if (!combatant.burrowed) {
+			return getImage(combatant.source.avatarfile);
+		}
+		final String avatar = combatant.source.avatarfile;
+		Image buried = buriedcache.get(avatar);
+		if (buried == null) {
+			buried = maketransparent(1 / 3f, getImage(avatar));
+			buriedcache.put(avatar, buried);
+		}
+		return buried;
 	}
 
 	/**

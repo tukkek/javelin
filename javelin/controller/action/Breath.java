@@ -25,6 +25,8 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.BreathWeapon.BreathArea;
+import javelin.view.mappanel.BattlePanel;
+import javelin.view.mappanel.overlay.BreathOverlay;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.Thing;
 
@@ -86,18 +88,27 @@ public class Breath extends Action implements AiAction {
 			throw new RepeatTurn();
 		}
 		try {
-			BattleScreen.active.mappanel.setoverlay(area);
+			BreathOverlay overlay = new BreathOverlay(area);
+			((BattlePanel) BattleScreen.active.mappanel).overlay = overlay;
+			// BattleScreen.active.mappanel.setoverlay(area);
 			clear();
+			Game.redraw();
 			Game.message(
 					targetinfo(state, area)
 							+ "Press ENTER or b to confirm, q to quit.",
 					null, Delay.NONE);
 			char confirm = Game.getInput().getKeyChar();
-			quit(confirm);
+			try {
+				quit(confirm);
+			} catch (RepeatTurn e) {
+				overlay.clear();
+				throw e;
+			}
 			if (confirm == '\n' || confirm == 'b') {
 				state = state.clone();
 				Action.outcome(breath(breath, a, state.clone(hero), state));
 			}
+			overlay.clear();
 			return true;
 		} finally {
 			BattleScreen.active.mappanel.setoverlay(null);

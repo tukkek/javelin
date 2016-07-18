@@ -7,6 +7,7 @@ import java.awt.Image;
 import javelin.Javelin;
 import javelin.controller.old.Game;
 import javelin.controller.terrain.map.Map;
+import javelin.model.state.Meld;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.view.Images;
@@ -54,6 +55,12 @@ public class BattleTile extends Tile {
 		final Combatant c = BattlePanel.state.getCombatant(x, y);
 		if (c != null) {
 			drawcombatant(g, c, this);
+		} else if (Javelin.app.fight.meld) {
+			for (Meld meld : BattlePanel.state.meld) {
+				if (meld.x == x && meld.y == y) {
+					draw(g, meld.getimage(BattlePanel.state));
+				}
+			}
 		}
 		if (shrouded) {
 			g.setColor(new Color(0, 0, 0, 0.8f));

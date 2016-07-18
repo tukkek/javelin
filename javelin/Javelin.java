@@ -131,6 +131,7 @@ public class Javelin {
 		f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		f.setLayout(new BorderLayout());
 		app = new JavelinApp();
+		app.frame = f;
 		QuestApp.isapplet = false;
 		if (args.length > 0) {
 			QuestApp.gameFileFromCommandLine = args[0];

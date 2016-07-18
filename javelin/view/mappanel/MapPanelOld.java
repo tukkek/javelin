@@ -45,9 +45,8 @@ import tyrant.mikera.tyrant.Tile;
  * @author alex
  */
 public class MapPanelOld extends MapPanelCommon {
-	private static final Border BUFF =
-			BorderFactory.createLineBorder(Color.WHITE);
-	private static final Color[][] STATUS_COLORS = {
+	static final Border BUFF = BorderFactory.createLineBorder(Color.WHITE);
+	public static final Color[][] STATUS_COLORS = {
 			{ new Color(0, 0, 127), new Color(0, 0, 153), new Color(0, 0, 178),
 					new Color(0, 0, 204), new Color(0, 0, 229),
 					new Color(0, 0, 255), },
@@ -385,7 +384,7 @@ public class MapPanelOld extends MapPanelCommon {
 		} else {
 			Image combatant = Images.getImage(c);
 			if (c.burrowed) {
-				combatant = QuestApp.maketransparent(.5f, combatant);
+				combatant = Images.maketransparent(.5f, combatant);
 			}
 			gfx.drawImage(combatant, x, y, null);
 			if (isoutside) {

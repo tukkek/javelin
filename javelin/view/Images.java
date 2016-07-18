@@ -1,6 +1,10 @@
 package javelin.view;
 
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Transparency;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.TreeMap;
@@ -9,7 +13,6 @@ import javax.imageio.ImageIO;
 
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import tyrant.mikera.tyrant.QuestApp;
 
 /**
  * Cache for {@link Monster#avatar}
@@ -20,8 +23,8 @@ public class Images {
 
 	static final TreeMap<String, Image> cache = new TreeMap<String, Image>();
 
-	public static final Image penalized = QuestApp.maketransparent(2 / 3f,
-			Images.getImage("overlaypenalized"));
+	public static final Image penalized =
+			Images.maketransparent(3 / 4f, Images.getImage("overlaypenalized"));
 	public static final Image crafting = Images.getImage("overlaycrafting");
 	public static final Image upgrading = Images.getImage("overlayupgrading");
 	public static Image labor = Images.getImage("overlaylabor");
@@ -61,6 +64,21 @@ public class Images {
 		} catch (IOException e) {
 			throw new RuntimeException(file, e);
 		}
+	}
+
+	/**
+	 * @param alpha
+	 *            Alpha level. 1 is 100% opaque, 0 is 100% transparent.
+	 */
+	public static Image maketransparent(float alpha, Image image) {
+		BufferedImage transparent =
+				new BufferedImage(32, 32, Transparency.TRANSLUCENT);
+		Graphics2D g = transparent.createGraphics();
+		g.setComposite(
+				AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+		g.drawImage(image, 0, 0, null);
+		g.dispose();
+		return transparent;
 	}
 
 }

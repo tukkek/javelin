@@ -21,6 +21,11 @@ public class BattlePanel extends MapPanel {
 	}
 
 	@Override
+	protected Mouse getmouselistener() {
+		return new BattleMouse(this);
+	}
+
+	@Override
 	protected Tile newtile(int x, int y) {
 		return new BattleTile(x, y, this);
 	}

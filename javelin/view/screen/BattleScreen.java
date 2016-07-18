@@ -137,7 +137,7 @@ public class BattleScreen extends Screen {
 			cp.add("Center", statuspanel);
 			if (addminimap()) {
 				levelMap = new LevelMapPanel();
-				cp.add(levelMap, "South");
+				// cp.add(levelMap, "South");
 			}
 		}
 		setFont(QuestApp.mainfont);
@@ -207,6 +207,9 @@ public class BattleScreen extends Screen {
 				Game.messagepanel.clear();
 				endturn();
 				final KeyEvent updatableUserAction = getUserInput();
+				if (updatableUserAction == null) {
+					continue;
+				}
 				tryTick(h, convertEventToAction(updatableUserAction),
 						updatableUserAction.isShiftDown());
 				// endturn();
@@ -412,8 +415,8 @@ public class BattleScreen extends Screen {
 			Game.redraw();
 		}
 		Delay delay = state.delay;
-		if (enableoverrun && delay == Delay.WAIT
-				&& s.redTeam.contains(s.next)) {
+		if (enableoverrun && delay == Delay.WAIT && s.redTeam.contains(s.next)
+				|| s.next.automatic) {
 			delay = Delay.NONE;
 			overridefeedback = true;
 		}

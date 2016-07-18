@@ -24,6 +24,16 @@ import javelin.view.screen.town.PurchaseScreen;
 public class StatisticsScreen extends InfoScreen {
 	public StatisticsScreen(Combatant c) {
 		super("");
+		text = gettext(c, true);
+		if (updatescreens().equals('v')) {
+			text = "(The text below is taken from the d20 SRD and doesn't necessarily reflect the in-game enemy)\n\n"
+					+ Javelin.DESCRIPTIONS.get(c.source.name);
+			updatescreens();
+		}
+		Javelin.app.switchScreen(BattleScreen.active);
+	}
+
+	static public String gettext(Combatant c, boolean toggle) {
 		Monster m = c.source;
 		ArrayList<String> lines = new ArrayList<String>();
 		String monstername = m.name;
@@ -90,20 +100,18 @@ public class StatisticsScreen extends InfoScreen {
 		if (skills != null) {
 			lines.add(skills);
 		}
-		lines.add(
-				"Press v to see the monster description, any other key to exit");
+		if (toggle) {
+			lines.add(
+					"Press v to see the monster description, any other key to exit");
+		}
+		String text = "";
 		for (String line : lines) {
 			text += line + "\n";
 		}
-		if (updatescreens().equals('v')) {
-			text = "(The text below is taken from the d20 SRD and doesn't necessarily reflect the in-game enemy)\n\n"
-					+ Javelin.DESCRIPTIONS.get(m.name);
-			updatescreens();
-		}
-		Javelin.app.switchScreen(BattleScreen.active);
+		return text;
 	}
 
-	String showspeed(Monster m) {
+	static String showspeed(Monster m) {
 		long speed = m.fly;
 		boolean fly = true;
 		if (speed == 0) {
@@ -124,7 +132,7 @@ public class StatisticsScreen extends InfoScreen {
 		return speedtext;
 	}
 
-	String formatskill(String name, int ranks, int ability) {
+	static String formatskill(String name, int ranks, int ability) {
 		if (ranks == 0) {
 			return "";
 		}
@@ -138,7 +146,7 @@ public class StatisticsScreen extends InfoScreen {
 		return name + " " + bonus + ", ";
 	}
 
-	String showskills(Monster m) {
+	static String showskills(Monster m) {
 		Skills s = m.skills;
 		String output = "";
 		output += formatskill("acrobatics", s.acrobatics, m.dexterity);
@@ -160,7 +168,7 @@ public class StatisticsScreen extends InfoScreen {
 				: "Skills: " + output.substring(0, output.length() - 2) + "\n";
 	}
 
-	String describealignment(Monster m) {
+	static String describealignment(Monster m) {
 		String alignment;
 		if (m.lawful == null) {
 			if (m.good == null) {
@@ -181,7 +189,7 @@ public class StatisticsScreen extends InfoScreen {
 		}
 	}
 
-	private String save(int x) {
+	private static String save(int x) {
 		String sign = "";
 		if (x >= 0) {
 			sign = "+";
@@ -189,7 +197,7 @@ public class StatisticsScreen extends InfoScreen {
 		return sign + x;
 	}
 
-	private String printability(int score, String abilityname) {
+	static private String printability(int score, String abilityname) {
 		abilityname += " ";
 		while (abilityname.length() < 13) {
 			abilityname += " ";
@@ -198,7 +206,7 @@ public class StatisticsScreen extends InfoScreen {
 				+ Monster.getsignedbonus(score) + ")";
 	}
 
-	private String describequalities(Monster m, Combatant c) {
+	private static String describequalities(Monster m, Combatant c) {
 		ArrayList spells = new ArrayList(c.spells.size());
 		for (javelin.controller.upgrade.Spell s : c.spells) {
 			spells.add(s.toString());
@@ -224,7 +232,7 @@ public class StatisticsScreen extends InfoScreen {
 		return string + printqualities("Special qualities", qualities);
 	}
 
-	String printqualities(String header, ArrayList<?> qualities) {
+	static String printqualities(String header, ArrayList<?> qualities) {
 		if (qualities.isEmpty()) {
 			return "";
 		}
@@ -236,7 +244,7 @@ public class StatisticsScreen extends InfoScreen {
 		return header.substring(0, header.length() - 2) + "\n";
 	}
 
-	public void listattacks(ArrayList<String> lines,
+	public static void listattacks(ArrayList<String> lines,
 			List<AttackSequence> melee) {
 		if (melee.isEmpty()) {
 			lines.add(" None");
@@ -252,7 +260,7 @@ public class StatisticsScreen extends InfoScreen {
 				+ size.substring(1).toLowerCase();
 	}
 
-	private String alignnumber(long score) {
+	private static String alignnumber(long score) {
 		return score < 10 ? " " + score : Long.toString(score);
 	}
 

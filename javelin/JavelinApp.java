@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import javelin.controller.TextReader;
@@ -82,6 +83,7 @@ public class JavelinApp extends QuestApp {
 	public BattleMap battlemap;
 	/** Controller for active battle. */
 	public Fight fight;
+	public JFrame frame;
 
 	@Override
 	public void run() {

@@ -3,22 +3,18 @@ package tyrant.mikera.tyrant;
 // This is the main Applet class for Tyrant
 
 import java.applet.Applet;
-import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
-import java.awt.Transparency;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.awt.image.RGBImageFilter;
@@ -588,17 +584,6 @@ public class QuestApp extends Applet implements Runnable {
 		}
 		return Toolkit.getDefaultToolkit().getImage(imageURL);
 
-	}
-
-	public static Image maketransparent(float alpha, Image image) {
-		BufferedImage transparent =
-				new BufferedImage(32, 32, Transparency.TRANSLUCENT);
-		Graphics2D g = transparent.createGraphics();
-		g.setComposite(
-				AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-		g.drawImage(image, 0, 0, null);
-		g.dispose();
-		return transparent;
 	}
 
 	/**

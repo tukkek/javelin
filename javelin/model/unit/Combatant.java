@@ -368,7 +368,7 @@ public class Combatant implements Serializable, Cloneable {
 	}
 
 	public int getNumericStatus() {
-		int maxhp = this.maxhp + source.poison * source.hd.count();
+		int maxhp = getmaxhp();
 		if (hp >= maxhp) {
 			return 5;
 		}
@@ -379,6 +379,13 @@ public class Combatant implements Serializable, Cloneable {
 			return hp > Combatant.DEADATHP ? STATUSUNCONSCIOUS : STATUSDEAD;
 		}
 		return Math.round(4.0f * hp / maxhp);
+	}
+
+	/**
+	 * @return {@link #maxhp}, taking into consideration {@link Monster#poison}.
+	 */
+	public int getmaxhp() {
+		return this.maxhp + source.poison * source.hd.count();
 	}
 
 	public String getStatus() {

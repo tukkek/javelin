@@ -48,11 +48,7 @@ public abstract class MapPanel extends MapPanelCommon {
 		init();
 	}
 
-	/**
-	 * TODO this is very likely going to have to be overriden and BattleMouse
-	 * created
-	 */
-	private Mouse getmouselistener() {
+	protected Mouse getmouselistener() {
 		return new Mouse(this);
 	}
 
@@ -136,7 +132,7 @@ public abstract class MapPanel extends MapPanelCommon {
 
 	@Override
 	public void autozoom(ArrayList<Combatant> combatants, int x, int y) {
-		// TODO Auto-generated method stub
+		center(x, y, true);
 	}
 
 	@Override
@@ -146,14 +142,17 @@ public abstract class MapPanel extends MapPanelCommon {
 		java.awt.Point current = scroll.getScrollPosition();
 		x *= tilesize;
 		y *= tilesize;
-		if (!force && isinside(current.getX(), x, width)
-				&& isinside(current.getY(), y, height)) {
+		if (!force && isinside(current.getX(), x, width - tilesize * 2)
+				&& isinside(current.getY(), y, height - tilesize * 2)) {
+			scroll.setScrollPosition(current);
 			return false;
 		}
 		x -= width / 2;
 		y -= height / 2;
-		x = Math.min(x, parent.getWidth() - width);
-		y = Math.min(y, parent.getHeight() - height);
+		x = Math.min(x,
+				parent.getWidth() - width + scroll.getHScrollbarHeight());
+		y = Math.min(y,
+				parent.getHeight() - height + scroll.getVScrollbarWidth());
 		x = Math.max(0, x);
 		y = Math.max(0, y);
 		scroll.setScrollPosition(x, y);
@@ -161,7 +160,7 @@ public abstract class MapPanel extends MapPanelCommon {
 	}
 
 	static private boolean isinside(double from, int value, int offset) {
-		return 1.05f * from <= value && value <= (from + offset) * .95;
+		return from <= value && value <= from + offset;
 	}
 
 	@Override

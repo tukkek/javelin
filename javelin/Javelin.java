@@ -190,6 +190,9 @@ public class Javelin {
 	 *         {@link #PERIODNIGHT} or {@value #PERIODNOON}.
 	 */
 	public static String getDayPeriod() {
+		if (Javelin.app.fight != null) {
+			return Javelin.app.fight.period;
+		}
 		final long hourofday = getHour();
 		if (hourofday < 6) {
 			return PERIODNIGHT;

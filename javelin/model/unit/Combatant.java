@@ -3,9 +3,11 @@ package javelin.model.unit;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.Point;
 import javelin.controller.SpellbookGenerator;
 import javelin.controller.action.Action;
 import javelin.controller.action.Defend;
@@ -13,6 +15,7 @@ import javelin.controller.action.ai.MeleeAttack;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.upgrade.BreathUpgrade;
@@ -705,5 +708,29 @@ public class Combatant implements Serializable, Cloneable {
 			}
 		}
 		weakest.upgrade(r);
+	}
+
+	/**
+	 * @return All squares that are clearly visible by this unit.
+	 */
+	public HashSet<Point> calculatevision(BattleState s) {
+		final HashSet<Point> seen = new HashSet<Point>();
+		final Fight f = Javelin.app.fight;
+		final String perception = perceive(f.period);
+		final int range = view(f.period);
+		final boolean forcevision = perception == Javelin.PERIODNOON
+				|| perception == Javelin.PERIODMORNING;
+		final Point here = new Point(location[0], location[1]);
+		for (int x = Math.max(0, here.x - range); x <= here.x + range
+				&& x < f.map.map.length; x++) {
+			for (int y = Math.max(0, here.y - range); y <= here.y + range
+					&& y < f.map.map[0].length; y++) {
+				if (forcevision || s.hasLineOfSight(here, new Point(x, y),
+						range, perception) != Vision.BLOCKED) {
+					seen.add(new Point(x, y));
+				}
+			}
+		}
+		return seen;
 	}
 }

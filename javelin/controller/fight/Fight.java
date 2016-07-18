@@ -7,6 +7,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Weather;
+import javelin.controller.action.world.WorldMove;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.GaveUpException;
@@ -93,6 +94,17 @@ public abstract class Fight {
 	 * @see Map#maxflooding
 	 */
 	public Integer floodlevel = null;
+
+	/**
+	 * Since {@link Squad#hourselapsed} is always ticking and needs to be
+	 * updated even when fights do happen this by default holds the period at
+	 * the moment of instantiation, so we can be more faithful to what appears
+	 * on screen instead of the period after the {@link WorldMove} or similar
+	 * has been completed.
+	 * 
+	 * @see Javelin#getDayPeriod()
+	 */
+	public String period = Javelin.getDayPeriod();
 
 	/**
 	 * @return an encounter level for which an appropriate challenge should be

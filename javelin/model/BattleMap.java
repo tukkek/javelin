@@ -12,7 +12,6 @@ import javelin.controller.ai.Node;
 import javelin.controller.old.Game;
 import javelin.controller.terrain.map.Map;
 import javelin.model.state.BattleState;
-import javelin.model.state.BattleState.Vision;
 import javelin.model.state.Meld;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
@@ -1238,10 +1237,10 @@ public class BattleMap extends BaseObject implements ThingOwner {
 		final int combatantid = h.combatant.id;
 		final BattleState s = getState();
 		VisionCache cache = visioncache.get(combatantid);
-		final String perception = h.combatant.perceive(period);
+		final String perceptiona = h.combatant.perceive(period);
 		if (cache != null) {
 			if (VisionCache.valid()
-					&& cache.equals(new VisionCache(perception, h))) {
+					&& cache.equals(new VisionCache(perceptiona, h))) {
 				for (Point p : cache.seen) {
 					seeTile(p.x, p.y);
 				}
@@ -1250,21 +1249,10 @@ public class BattleMap extends BaseObject implements ThingOwner {
 				visioncache.clear();
 			}
 		}
-		final int range = h.combatant.view(period);
-		final boolean forcevision = perception == Javelin.PERIODNOON
-				|| perception == Javelin.PERIODMORNING;
-		cache = new VisionCache(perception, h);
-		for (int x = h.x - range; x <= h.x + range && x < this.width; x++) {
-			if (x < 0) {
-				x = 0;
-			}
-			for (int y = h.y - range; y <= h.y + range; y++) {
-				if (forcevision || s.hasLineOfSight(new Point(h.x, h.y),
-						new Point(x, y), range, perception) != Vision.BLOCKED) {
-					cache.seen.add(new Point(x, y));
-					seeTile(x, y);
-				}
-			}
+		cache = new VisionCache(perceptiona, h);
+		for (Point p : h.combatant.calculatevision(s)) {
+			cache.seen.add(p);
+			seeTile(p.x, p.y);
 		}
 		visioncache.put(combatantid, cache);
 	}

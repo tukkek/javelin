@@ -4,6 +4,7 @@
 package javelin.controller;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * X Y coordinate.
@@ -45,6 +46,6 @@ public class Point implements Cloneable, Serializable {
 
 	@Override
 	public int hashCode() {
-		return toString().hashCode();
+		return Objects.hash(x, y);
 	}
 }

@@ -32,6 +32,7 @@ import javelin.model.unit.Combatant;
 import javelin.view.StatusPanel;
 import javelin.view.mappanel.BattlePanel;
 import javelin.view.mappanel.MapPanelCommon;
+import javelin.view.mappanel.overlay.TargetOverlay;
 import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.GameHandler;
@@ -86,10 +87,6 @@ public class BattleScreen extends Screen {
 	public float spentap = 0;
 	public LevelMapPanel levelMap = null;
 
-	public boolean cursor = false;
-	public int curx = -1;
-	public int cury = -1;
-
 	public BattleScreen(JavelinApp javelinApp, BattleMap battlemap,
 			Image texture) {
 		super(Javelin.app);
@@ -128,6 +125,7 @@ public class BattleScreen extends Screen {
 		messagepanel = new MessagePanel(q);
 		add(messagepanel, "South");
 		mappanel = getmappanel();
+		mappanel.init();
 		add(mappanel, "Center");
 		final Panel cp = new Panel();
 		cp.setLayout(new BorderLayout());
@@ -551,7 +549,7 @@ public class BattleScreen extends Screen {
 		setCursor(start.x, start.y);
 		mappanel.viewPosition(m, start.x, start.y);
 		// initial look
-		doLookPoint(new Point(curx, cury));
+		doLookPoint(getcursor());
 		// get interesting stuff to see
 		// Note that the hero is incidentally also seen
 		// So there should be no worries of an empty list
@@ -604,8 +602,10 @@ public class BattleScreen extends Screen {
 					dy = 1;
 					break;
 				case 'v':
+					Point cursor = getcursor();
 					for (Combatant c : BattleMap.combatants) {
-						if (c.location[0] == curx && c.location[1] == cury) {
+						if (c.location[0] == cursor.x
+								&& c.location[1] == cursor.y) {
 							new StatisticsScreen(c);
 							break;
 						}
@@ -615,13 +615,16 @@ public class BattleScreen extends Screen {
 					clearCursor();
 					return null;
 				default:
+					Point getcursor = getcursor();
 					clearCursor();
-					return new Point(curx, cury);
+					return getcursor;
 				}
-				setCursor(BattleScreen.checkbounds(curx + dx, map.width),
-						BattleScreen.checkbounds(cury + dy, map.height));
-				mappanel.viewPosition(m, curx, cury);
-				doLookPoint(new Point(curx, cury));
+				Point cursor = getcursor();
+				int x = BattleScreen.checkbounds(cursor.x + dx, map.width);
+				int y = BattleScreen.checkbounds(cursor.y + dy, map.height);
+				setCursor(x, y);
+				mappanel.viewPosition(m, x, y);
+				doLookPoint(getcursor());
 			}
 		} finally {
 			lastlooked = null;
@@ -629,15 +632,26 @@ public class BattleScreen extends Screen {
 	}
 
 	private void clearCursor() {
-		cursor = false;
-		mappanel.repaint();
+		// cursor = false;
+		// mappanel.repaint();
+		if (BattlePanel.overlay != null) {
+			BattlePanel.overlay.clear();
+		}
+	}
+
+	private Point getcursor() {
+		TargetOverlay cursor = (TargetOverlay) BattlePanel.overlay;
+		return new Point(cursor.x, cursor.y);
 	}
 
 	private void setCursor(int x, int y) {
-		cursor = true;
-		curx = x;
-		cury = y;
-		mappanel.repaint();
+		// cursor = true;
+		// curx = x;
+		// cury = y;
+		// mappanel.repaint();
+		clearCursor();
+		BattlePanel.overlay = new TargetOverlay(x, y);
+		mappanel.refresh();
 	}
 
 	static private char convertkey(final KeyEvent e) {

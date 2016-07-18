@@ -81,7 +81,10 @@ public class JavelinApp extends QuestApp {
 	 * Active battle map;
 	 */
 	public BattleMap battlemap;
-	/** Controller for active battle. */
+	/**
+	 * Controller for active battle. Should be <code>null</code> at any point a
+	 * battle is not occurring.
+	 */
 	public Fight fight;
 	public JFrame frame;
 

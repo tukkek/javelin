@@ -22,7 +22,7 @@ import javelin.model.unit.Combatant;
 public abstract class MapPanel extends MapPanelCommon {
 	public static int tilesize = 32;
 
-	Tile[][] tiles = null;
+	public Tile[][] tiles = null;
 	ScrollPane scroll = new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS);
 	Panel parent = new Panel();
 	int mapwidth;
@@ -45,7 +45,6 @@ public abstract class MapPanel extends MapPanelCommon {
 		scroll.addMouseWheelListener(mouse);
 		add(scroll);
 		parent.setFocusable(false);
-		init();
 	}
 
 	protected Mouse getmouselistener() {
@@ -66,7 +65,8 @@ public abstract class MapPanel extends MapPanelCommon {
 		scroll.validate();
 	}
 
-	protected void init() {
+	@Override
+	public void init() {
 		scroll.setVisible(false);
 		updatesize();
 		parent.setLayout(new GridLayout(mapwidth, mapheight));

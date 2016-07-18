@@ -12,13 +12,15 @@ import javelin.model.state.Square;
  * @author alex
  */
 public abstract class Tile extends Canvas {
-	final int x;
-	final int y;
+	public final int x;
+	public final int y;
+	boolean discovered;
 
-	public Tile(int xp, int yp) {
+	public Tile(final int xp, final int yp, final boolean discoveredp) {
 		super();
 		x = xp;
 		y = yp;
+		discovered = discoveredp;
 		setFocusable(false);
 	}
 

@@ -39,7 +39,7 @@ public class BattleSetup {
 		}
 		f.map.generate();
 		BattleMap m = f.map.battlemap;
-		m.period = Preferences.DEBUGPERIOD == null ? Javelin.getDayPeriod()
+		m.period = Preferences.DEBUGPERIOD == null ? f.period
 				: Preferences.DEBUGPERIOD;
 		for (int i = 0; i < 1000; i++) {
 			try {

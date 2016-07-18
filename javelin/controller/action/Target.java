@@ -16,6 +16,8 @@ import javelin.model.condition.Charging;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.unit.Combatant;
+import javelin.view.mappanel.BattlePanel;
+import javelin.view.mappanel.overlay.TargetOverlay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.StatisticsScreen;
@@ -126,14 +128,16 @@ public abstract class Target extends Action {
 			} else if (Action.MOVE_E.isPressed(key)) {
 				targeti += 1;
 			} else if (key == '\n' || key == confirmkey) {
+				BattlePanel.overlay.clear();
 				Game.messagepanel.clear();
 				attack(combatant, targets.get(targeti), state, map);
 				break;
 			} else if (key == 'v') {
 				new StatisticsScreen(targets.get(targeti));
 			} else {
+				BattlePanel.overlay.clear();
 				Game.messagepanel.clear();
-				Game.instance().hero = combatant.visual;
+				// Game.instance().hero = combatant.visual;
 				throw new RepeatTurn();
 			}
 			final int max = targets.size() - 1;
@@ -186,7 +190,9 @@ public abstract class Target extends Action {
 
 	private void lockTarget(final Combatant target, BattleMap map,
 			Combatant active, BattleState state) {
-		Game.instance().hero = target.visual;
+		// Game.instance().hero = target.visual;
+		BattlePanel.overlay =
+				new TargetOverlay(target.location[0], target.location[1]);
 		Game.messagepanel.clear();
 		Game.message(
 				"Use ← and → to select target, ENTER or " + confirmkey

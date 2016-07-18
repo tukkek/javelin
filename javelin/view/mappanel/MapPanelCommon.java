@@ -48,4 +48,6 @@ public abstract class MapPanelCommon extends Panel {
 
 	public abstract void refresh();
 
+	public abstract void init();
+
 }

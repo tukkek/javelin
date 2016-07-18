@@ -512,9 +512,9 @@ public class MapPanelOld extends MapPanelCommon {
 		}
 		updateplaces();
 		drawTiles(startx, starty, endx, endy);
-		if (BattleScreen.active.cursor) {
-			drawCursor(BattleScreen.active.curx, BattleScreen.active.cury);
-		}
+		// if (BattleScreen.active.cursor) {
+		// drawCursor(BattleScreen.active.curx, BattleScreen.active.cury);
+		// }
 	}
 
 	private void updateposition(int startx, int starty, int endx, int endy) {
@@ -644,5 +644,11 @@ public class MapPanelOld extends MapPanelCommon {
 	public void refresh() {
 		render();
 		repaint();
+	}
+
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+
 	}
 }

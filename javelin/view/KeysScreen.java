@@ -44,8 +44,7 @@ public abstract class KeysScreen extends Frame {
 				configure += key;
 				textarea.setBackground(null);
 			}
-			Preferences.savefile(Preferences.getfile() + "\n" + optionname + "="
-					+ configure);
+			Preferences.setoption(optionname, configure);
 			frame.dispose();
 		}
 	}

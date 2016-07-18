@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javelin.controller.Point;
+import javelin.controller.db.Preferences;
 import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
 
@@ -20,7 +21,7 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public abstract class MapPanel extends MapPanelCommon {
-	public static int tilesize = 32;
+	public static int tilesize = Preferences.TILESIZEWORLD;
 
 	public Tile[][] tiles = null;
 	ScrollPane scroll = new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS);
@@ -36,7 +37,9 @@ public abstract class MapPanel extends MapPanelCommon {
 	 */
 	public Mouse mouse = getmouselistener();
 
-	public MapPanel(int widthp, int heightp) {
+	final private String configurationkey;
+
+	public MapPanel(int widthp, int heightp, String configurationkeyp) {
 		mapwidth = widthp;
 		mapheight = heightp;
 		setFocusable(false);
@@ -45,6 +48,7 @@ public abstract class MapPanel extends MapPanelCommon {
 		scroll.addMouseWheelListener(mouse);
 		add(scroll);
 		parent.setFocusable(false);
+		configurationkey = configurationkeyp;
 	}
 
 	protected Mouse getmouselistener() {
@@ -67,6 +71,7 @@ public abstract class MapPanel extends MapPanelCommon {
 
 	@Override
 	public void init() {
+		tilesize = gettilesize();
 		scroll.setVisible(false);
 		updatesize();
 		parent.setLayout(new GridLayout(mapwidth, mapheight));
@@ -81,6 +86,8 @@ public abstract class MapPanel extends MapPanelCommon {
 		scroll.add(parent);
 		scroll.setVisible(true);
 	}
+
+	abstract protected int gettilesize();
 
 	protected abstract Tile newtile(int x, int y);
 
@@ -128,6 +135,7 @@ public abstract class MapPanel extends MapPanelCommon {
 		ensureminimumsize();
 		updatetilesize();
 		center(x, y, false);
+		Preferences.setoption(configurationkey, tilesize);
 	}
 
 	@Override

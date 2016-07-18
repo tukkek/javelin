@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.db.Preferences;
 import javelin.controller.old.Game;
 import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
@@ -23,7 +24,7 @@ public class BattlePanel extends MapPanel {
 	private boolean daylight;
 
 	public BattlePanel(BattleState s) {
-		super(s.map.length, s.map[0].length);
+		super(s.map.length, s.map[0].length, Preferences.KEYTILEBATTLE);
 		state = s.clonedeeply();
 		String period = Javelin.app.fight.period;
 		daylight = period.equals(Javelin.PERIODMORNING)
@@ -103,5 +104,10 @@ public class BattlePanel extends MapPanel {
 	void updatestate() {
 		state = BattleScreen.active.map.getState().clonedeeply();
 		BattleTile.panel = this;
+	}
+
+	@Override
+	protected int gettilesize() {
+		return Preferences.TILESIZEWORLD;
 	}
 }

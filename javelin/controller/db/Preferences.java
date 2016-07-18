@@ -39,6 +39,7 @@ import tyrant.mikera.tyrant.TextZone;
  * @author alex
  */
 public class Preferences {
+	public static final String KEYTILEBATTLE = "ui.battletile";
 	/** Configuration file key for {@link #MONITORPERFORMANCE}. */
 	public static final String KEYCHECKPERFORMANCE = "ai.checkperformance";
 	/** Configuration file key for {@link #MAXTHREADS}. */
@@ -55,6 +56,11 @@ public class Preferences {
 	public static String TEXTCOLOR;
 	public static boolean BACKUP;
 	public static int SAVEINTERVAL;
+	public static int TILESIZEBATTLE;
+	/** TODO */
+	public static int TILESIZEWORLD;
+	/** TODO */
+	public static int TILESIZEDUNGEON;
 
 	public static boolean DEBUGDISABLECOMBAT;
 	public static boolean DEBUGESHOWMAP;
@@ -80,7 +86,7 @@ public class Preferences {
 		load();
 	}
 
-	static void load() {
+	synchronized static void load() {
 		try {
 			PROPERTIES.clear();
 			PROPERTIES.load(new FileReader(FILE));
@@ -109,7 +115,7 @@ public class Preferences {
 	/**
 	 * @return the entire text of the properties file.
 	 */
-	public static String getfile() {
+	synchronized public static String getfile() {
 		try {
 			String s = "";
 			BufferedReader reader = new BufferedReader(new FileReader(FILE));
@@ -135,7 +141,7 @@ public class Preferences {
 	 *            Overwrite the properties file with this content and reloads
 	 *            all options.
 	 */
-	public static void savefile(String content) {
+	synchronized public static void savefile(String content) {
 		try {
 			write(content, FILE);
 			load();
@@ -184,6 +190,7 @@ public class Preferences {
 		BACKUP = getString("fs.backup").equals("true");
 		SAVEINTERVAL = getInteger("fs.saveinterval", 9);
 
+		TILESIZEBATTLE = getInteger(KEYTILEBATTLE, 32);
 		MESSAGEWAIT = Math.round(1000 * getFloat("ui.messagedelay"));
 		TEXTCOLOR = getString("ui.textcolor").toUpperCase();
 		try {
@@ -280,5 +287,23 @@ public class Preferences {
 
 	private static float getFloat(String key) {
 		return Float.parseFloat(getString(key));
+	}
+
+	synchronized static public void setoption(String key, Object value) {
+		String from = getfile();
+		String to = "";
+		boolean replaced = false;
+		for (String line : from.split("\n")) {
+			if (line.startsWith(key)) {
+				to += key + "=" + value + "\n";
+				replaced = true;
+			} else {
+				to += line + "\n";
+			}
+		}
+		if (replaced) {
+			to += "\n" + key + "=" + value + "\n";
+		}
+		savefile(to);
 	}
 }

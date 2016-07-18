@@ -120,8 +120,7 @@ public class ThreadManager {
 		if (choice == JOptionPane.YES_OPTION) {
 			performance = 0;
 			int to = Preferences.MAXTHREADS - 1;
-			Preferences.savefile(Preferences.getfile() + "\n"
-					+ Preferences.KEYMAXTHREADS + "=" + to);
+			Preferences.setoption(Preferences.KEYMAXTHREADS, to);
 			JOptionPane.showMessageDialog(BattleScreen.active,
 					String.format(PERFORMANCESOLUTION, to));
 		} else if (choice == JOptionPane.NO_OPTION) {

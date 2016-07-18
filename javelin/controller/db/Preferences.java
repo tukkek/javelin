@@ -301,7 +301,7 @@ public class Preferences {
 				to += line + "\n";
 			}
 		}
-		if (replaced) {
+		if (!replaced) {
 			to += "\n" + key + "=" + value + "\n";
 		}
 		savefile(to);

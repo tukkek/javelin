@@ -114,8 +114,11 @@ public abstract class AbstractAttack extends Action implements AiAction {
 	}
 
 	/**
-	 * @return A bound chance of an attack completely missing it's target with
-	 *         water penalties included.
+	 * @param attackbonus
+	 *            Bonus of the given any extraordinary bonuses (such as +2 from
+	 *            charge). Most common chances are calculated here or by the
+	 *            concrete class.
+	 * @return A bound % chance of an attack completely missing it's target.
 	 * @see #bind(float)
 	 */
 	public float misschance(final BattleState gameState,
@@ -181,9 +184,8 @@ public abstract class AbstractAttack extends Action implements AiAction {
 	ChanceNode createnode(final DamageChance dc, Combatant target,
 			final BattleState gameState, Combatant attacker,
 			final Attack attack, float ap) {
-		String chance =
-				" (" + Javelin.translatetochance(target.ac() - attack.bonus)
-						+ " to hit)...";
+		String chance = " (" + getchance(attacker, target, attack, gameState)
+				+ " to hit)...";
 		if (dc.damage == 0) {
 			return new ChanceNode(gameState, dc.chance,
 					attacker + " misses " + target + chance, Delay.WAIT);
@@ -233,6 +235,10 @@ public abstract class AbstractAttack extends Action implements AiAction {
 
 	abstract List<AttackSequence> getattacks(Combatant active);
 
+	/**
+	 * @return An ongoing attack or all the possible {@link AttackSequence}s
+	 *         that can be initiated.
+	 */
 	List<Integer> getcurrentattack(final Combatant active) {
 		final List<AttackSequence> attacktype = getattacks(active);
 		if (attacktype.isEmpty()) {
@@ -255,5 +261,11 @@ public abstract class AbstractAttack extends Action implements AiAction {
 	@Override
 	public boolean perform(Combatant active, BattleMap m, Thing thing) {
 		return false;
+	}
+
+	public String getchance(Combatant current, Combatant target, Attack attack,
+			BattleState s) {
+		return Javelin.translatetochance(
+				Math.round(20 * misschance(s, current, target, attack.bonus)));
 	}
 }

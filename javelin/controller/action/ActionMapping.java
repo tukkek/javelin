@@ -33,7 +33,7 @@ public class ActionMapping {
 			Breath.SINGLETON, // b
 			new Charge(), // c
 			Dig.SINGLETON, // d
-			new Fire(), // f
+			Fire.SINGLETON, // f
 			new CastSpell(), // s
 			UseItem.SINGLETON, // i
 			new ActionAdapter(OpenJournal.getsingleton()), // o

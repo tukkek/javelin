@@ -72,9 +72,8 @@ public class Movement {
 				if (c.burrowed) {
 					Dig.refuse();
 				}
-				javelin.controller.action.Movement.lastmovewasattack =
-						true;
-				c.meleeAttacks(c, mob.combatant, state);
+				javelin.controller.action.Movement.lastmovewasattack = true;
+				c.meleeAttacks(mob.combatant, state);
 				return true;
 			}
 			throw new RepeatTurn();

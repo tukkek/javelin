@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Panel;
 import java.awt.ScrollPane;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -51,9 +52,7 @@ public abstract class MapPanel extends MapPanelCommon {
 		configurationkey = configurationkeyp;
 	}
 
-	protected Mouse getmouselistener() {
-		return new Mouse(this);
-	}
+	abstract protected Mouse getmouselistener();
 
 	void updatesize() {
 		parent.setSize(tilesize * mapwidth, tilesize * mapheight);
@@ -202,5 +201,10 @@ public abstract class MapPanel extends MapPanelCommon {
 				t.repaint();
 			}
 		}
+	}
+
+	@Override
+	public synchronized void addMouseListener(MouseListener l) {
+		parent.addMouseListener(l);
 	}
 }

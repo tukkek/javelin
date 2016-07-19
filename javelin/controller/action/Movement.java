@@ -118,7 +118,7 @@ public class Movement extends Action {
 					BattleScreen.active.map.meld.remove(meld);
 				}
 			}
-			BattleScreen.active.spendap(hero);
+			BattleScreen.active.spendap(hero, true);
 			return true;
 		} catch (RuntimeException e) {
 			throw e;

@@ -7,7 +7,7 @@ import java.awt.event.MouseWheelEvent;
 import javelin.controller.old.Game;
 import javelin.view.screen.BattleScreen;
 
-public class Mouse extends MouseAdapter {
+public abstract class Mouse extends MouseAdapter {
 	MapPanel panel;
 
 	public Mouse(MapPanel panel) {
@@ -25,5 +25,18 @@ public class Mouse extends MouseAdapter {
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		panel.zoom(-e.getWheelRotation(), false, Game.hero().x, Game.hero().y);
+	}
+
+	/**
+	 * @return Subclasses should call this at the beggining of
+	 *         {@link #mouseClicked(MouseEvent)} and return without further
+	 *         action if <code>true</code>.
+	 */
+	public boolean overrideinput() {
+		if (Game.getUserinterface().waiting) {
+			return false;
+		}
+		Game.simulateKey('\n');
+		return true;
 	}
 }

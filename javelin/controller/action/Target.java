@@ -198,11 +198,16 @@ public abstract class Target extends Action {
 				"Use ← and → to select target, ENTER or " + confirmkey
 						+ " to confirm, v to view target's sheet, q to quit.\n",
 				null, Delay.NONE);
-		Game.message(target + " (" + target.getStatus() + ", "
-				+ Javelin.translatetochance(
-						calculatehitdc(target, active, state))
-				+ " to hit)", null, Delay.NONE);
+		Game.message(describehitchance(active, target, state), null,
+				Delay.NONE);
 		BattleScreen.active.centerscreen(target.location[0],
 				target.location[1]);
+	}
+
+	public String describehitchance(Combatant active, final Combatant target,
+			BattleState state) {
+		return target + " (" + target.getStatus() + ", " + Javelin
+				.translatetochance(calculatehitdc(target, active, state))
+				+ " to hit)";
 	}
 }

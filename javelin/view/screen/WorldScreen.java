@@ -142,6 +142,7 @@ public class WorldScreen extends BattleScreen {
 		while (true) {
 			try {
 				updatescreen(h);
+				Game.getUserinterface().waiting = true;
 				performAction(h, convertEventToAction(getUserInput()), false);
 				break;
 			} catch (RepeatTurn e) {

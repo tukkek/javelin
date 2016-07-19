@@ -12,6 +12,7 @@ import javelin.controller.SpellbookGenerator;
 import javelin.controller.action.Action;
 import javelin.controller.action.Defend;
 import javelin.controller.action.ai.MeleeAttack;
+import javelin.controller.action.ai.RangedAttack;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.exception.RepeatTurn;
@@ -207,13 +208,21 @@ public class Combatant implements Serializable, Cloneable {
 	 * @param targetCombatant
 	 *            The monster being attacked.
 	 */
-	public void meleeAttacks(Combatant combatant, Combatant targetCombatant,
-			BattleState state) {
-		combatant = state.clone(combatant);
+	public void meleeAttacks(Combatant targetCombatant, BattleState state) {
+		Combatant current = state.clone(this);
 		targetCombatant = state.clone(targetCombatant);
 		Action.outcome(MeleeAttack.SINGLETON.attack(state, this,
 				targetCombatant,
-				combatant.chooseattack(combatant.source.melee, targetCombatant),
+				current.chooseattack(current.source.melee, targetCombatant),
+				0));
+	}
+
+	public void rangedattacks(Combatant targetCombatant, BattleState state) {
+		Combatant current = state.clone(this);
+		targetCombatant = state.clone(targetCombatant);
+		Action.outcome(RangedAttack.SINGLETON.attack(state, this,
+				targetCombatant,
+				current.chooseattack(current.source.melee, targetCombatant),
 				0));
 	}
 
@@ -732,5 +741,16 @@ public class Combatant implements Serializable, Cloneable {
 			}
 		}
 		return seen;
+	}
+
+	/**
+	 * TODO at some point update with reach attacks
+	 * 
+	 * @return <code>true</code> if can reach the target with a mêlée attack.
+	 * @see Monster#melee
+	 */
+	public boolean isadjacent(Combatant target) {
+		return Math.abs(location[0] - target.location[0]) <= 1
+				&& Math.abs(location[1] - target.location[1]) <= 1;
 	}
 }

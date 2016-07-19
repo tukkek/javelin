@@ -21,6 +21,8 @@ import tyrant.mikera.engine.Thing;
  */
 public class Fire extends Target {
 
+	public static final Fire SINGLETON = new Fire();
+
 	/**
 	 * @param confirm
 	 *            Usually the same as the action key so as to make pressing the
@@ -32,7 +34,7 @@ public class Fire extends Target {
 		this.confirmkey = confirm;
 	}
 
-	public Fire() {
+	private Fire() {
 		this("Fire or throw ranged weapon", "f", 'f');
 	}
 
@@ -51,11 +53,14 @@ public class Fire extends Target {
 	@Override
 	protected int calculatehitdc(final Combatant target, Combatant active,
 			BattleState state) {
-		return target.ac()
-				- predictattack(active.currentranged,
-						active.source.ranged).bonus
-				- prioritize(active, state, target)
-				+ RangedAttack.SINGLETON.getpenalty(active, target, state);
+		return Math.round(20 * RangedAttack.SINGLETON.misschance(state, active,
+				target, predictattack(active.currentranged,
+						active.source.ranged).bonus));
+		// return target.ac()
+		// - predictattack(active.currentranged,
+		// active.source.ranged).bonus
+		// - prioritize(active, state, target)
+		// + RangedAttack.SINGLETON.getpenalty(active, target, state);
 	}
 
 	protected Attack predictattack(CurrentAttack hint,

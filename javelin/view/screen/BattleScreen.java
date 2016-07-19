@@ -15,6 +15,7 @@ import javelin.JavelinApp;
 import javelin.controller.Movement;
 import javelin.controller.action.Action;
 import javelin.controller.action.Dig;
+import javelin.controller.action.world.WorldAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.exception.RepeatTurn;
@@ -32,6 +33,7 @@ import javelin.model.unit.Combatant;
 import javelin.view.StatusPanel;
 import javelin.view.mappanel.BattlePanel;
 import javelin.view.mappanel.MapPanelCommon;
+import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.overlay.TargetOverlay;
 import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.Thing;
@@ -86,6 +88,8 @@ public class BattleScreen extends Screen {
 	 */
 	public float spentap = 0;
 	public LevelMapPanel levelMap = null;
+
+	static Runnable callback = null;
 
 	public BattleScreen(JavelinApp javelinApp, BattleMap battlemap,
 			Image texture) {
@@ -204,13 +208,17 @@ public class BattleScreen extends Screen {
 				updatescreen(h);
 				Game.messagepanel.clear();
 				endturn();
+				Game.getUserinterface().waiting = true;
 				final KeyEvent updatableUserAction = getUserInput();
+				float originalap = next.ap;
 				if (updatableUserAction == null) {
-					continue;
+					callback.run();
+					callback = null;
+				} else {
+					tryTick(h, convertEventToAction(updatableUserAction),
+							updatableUserAction.isShiftDown());
 				}
-				tryTick(h, convertEventToAction(updatableUserAction),
-						updatableUserAction.isShiftDown());
-				// endturn();
+				spendap(next, false);
 				break;
 			} catch (final RepeatTurn e) {
 				updateMessages(lastMessages);
@@ -224,6 +232,19 @@ public class BattleScreen extends Screen {
 		}
 		checkEndBattle();
 		computerTurn();
+	}
+
+	/**
+	 * Use this to break the input loop.
+	 * 
+	 * @param r
+	 *            This will be run instead of an {@link Action} or
+	 *            {@link WorldAction}.
+	 * @see Mouse
+	 */
+	static public void perform(Runnable r) {
+		callback = r;
+		Game.getUserinterface().go(null);
 	}
 
 	void listen(final Combatant next) {
@@ -486,7 +507,6 @@ public class BattleScreen extends Screen {
 			}
 		}
 		Combatant combatant = Game.hero().combatant;
-		float originalap = combatant.ap;
 		try {
 			if (combatant.burrowed && !action.allowwhileburrowed) {
 				Dig.refuse();
@@ -502,16 +522,19 @@ public class BattleScreen extends Screen {
 				e.printStackTrace();
 			}
 			throw new RepeatTurn();
-		} finally {
-			if (originalap != combatant.ap) {
-				spendap(combatant);
-			}
 		}
 	}
 
-	public void spendap(Combatant combatant) {
+	/**
+	 * Normalize {@link #spentap} with the canonical {@link Combatant} instance.
+	 * 
+	 * @param force
+	 *            If <code>false</code> will check if an action has been
+	 *            performed first by comparing actual {@link Combatant#ap}.
+	 */
+	public void spendap(Combatant combatant, boolean force) {
 		for (Combatant c : BattleMap.combatants) {
-			if (c.id == combatant.id) {
+			if (c.id == combatant.id && (c.ap != combatant.ap || force)) {
 				c.ap += spentap;
 				break;
 			}
@@ -774,7 +797,7 @@ public class BattleScreen extends Screen {
 		BattleScreen.active.statuspanel.repaint();
 	}
 
-	public String describestatus(final Combatant combatant,
+	static public String describestatus(final Combatant combatant,
 			final BattleState state) {
 		final ArrayList<String> statuslist = combatant.liststatus(state);
 		if (statuslist.isEmpty()) {

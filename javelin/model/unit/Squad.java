@@ -622,7 +622,7 @@ public class Squad extends WorldActor {
 			return true;
 		}
 		for (Combatant c : members) {
-			if (!c.source.swim()) {
+			if (c.source.swim() == 0) {
 				return false;
 			}
 		}

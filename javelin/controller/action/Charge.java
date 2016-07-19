@@ -125,7 +125,7 @@ public class Charge extends Fire implements AiAction {
 		final Walker walk =
 				new ChargePath(new Point(me.location[0], me.location[1]),
 						new Point(target.location[0], target.location[1]),
-						state, me.source.swim());
+						state, me.source.swim() > 0);
 		walk.walk();
 		if (walk.solution == null) {
 			return null;

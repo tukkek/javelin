@@ -2,7 +2,10 @@ package javelin.view.mappanel;
 
 import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import javelin.controller.Point;
 import javelin.controller.action.Fire;
 import javelin.controller.action.ai.MeleeAttack;
 import javelin.controller.old.Game;
@@ -11,10 +14,13 @@ import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.unit.Attack;
 import javelin.model.unit.Combatant;
+import javelin.view.mappanel.overlay.MoveOverlay;
+import javelin.view.mappanel.overlay.MoveOverlay.Step;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.StatisticsScreen;
 
 public class BattleMouse extends Mouse {
+
 	enum Action {
 		MELEE, RANGED, MOVE
 	}
@@ -40,6 +46,8 @@ public class BattleMouse extends Mouse {
 						: Action.RANGED;
 	}
 
+	private Timer moveschedule;
+
 	public BattleMouse(MapPanel panel) {
 		super(panel);
 	}
@@ -64,35 +72,53 @@ public class BattleMouse extends Mouse {
 				}
 			});
 			return;
-		} else if (button == MouseEvent.BUTTON1) {
+		}
+		if (button == MouseEvent.BUTTON1) {
 			final Combatant current = Game.hero().combatant;
 			final Action a = getaction(current, target, s);
 			if (a == Action.MOVE) {
-				spend(current);
-				// move
+				if (BattlePanel.overlay instanceof MoveOverlay) {
+					final MoveOverlay walk = (MoveOverlay) BattlePanel.overlay;
+					if (!walk.path.steps.isEmpty()) {
+						walk.clear();
+						BattleScreen.perform(new Runnable() {
+							@Override
+							public void run() {
+								final Step to = walk.path.steps
+										.get(walk.path.steps.size() - 1);
+								BattleState move =
+										BattleScreen.active.map.getState();
+								Combatant c = move.clone(current);
+								c.location[0] = to.x;
+								c.location[1] = to.y;
+								c.ap += to.apcost;
+								BattleScreen.active.map.setState(move);
+							}
+						});
+					}
+				}
+				return;
 			} else if (a == Action.MELEE) {
 				BattleScreen.perform(new Runnable() {
 					@Override
 					public void run() {
-						spend(current).meleeAttacks(target, s);
+						current.meleeAttacks(target, s);
 					}
 				});
 			} else if (a == Action.RANGED) {
 				BattleScreen.perform(new Runnable() {
 					@Override
 					public void run() {
-						spend(current).rangedattacks(target, s);
+						current.rangedattacks(target, s);
 					}
 				});
+			}
+			if (BattlePanel.overlay != null) {
+				BattlePanel.overlay.clear();
 			}
 			return;
 		}
 		super.mouseClicked(e);
-	}
-
-	static Combatant spend(final Combatant c) {
-		// BattleScreen.active.spendap(c);
-		return c;
 	}
 
 	@Override
@@ -104,33 +130,49 @@ public class BattleMouse extends Mouse {
 		if (!Game.getUserinterface().waiting) {
 			return;
 		}
-		BattleScreen.active.messagepanel.clear();
-		final Combatant current = Game.hero().combatant;
-		final Tile t = (Tile) e.getSource();
-		final BattleState s = BattlePanel.state;
-		final Combatant target = s.getCombatant(t.x, t.y);
-		final Action a = getaction(current, target, s);
-		if (a == Action.MOVE) {
-			// move
-			return;
-		} else if (a == Action.MELEE) {
-			final List<Attack> attack = current.currentmelee.next == null
-					|| current.currentmelee.next.isEmpty()
-							? current.source.melee.get(0)
-							: current.currentmelee.next;
-			final String chance = MeleeAttack.SINGLETON.getchance(current,
-					target, attack.get(0), s);
-			status(target + " (" + target.getStatus() + ", " + chance
-					+ " to hit)");
-		} else if (a == Action.RANGED) {
-			status(Fire.SINGLETON.describehitchance(current, target, s));
-		} else if (target != null) {
-			BattleScreen.lastlooked = target;
-			BattleScreen.active.statuspanel.repaint();
-		} else {
-			return;
+		if (BattlePanel.overlay != null) {
+			BattlePanel.overlay.clear();
 		}
-		Game.messagepanel.getPanel().repaint();
+		BattleScreen.active.messagepanel.clear();
+		try {
+			final Combatant current = Game.hero().combatant;
+			final Tile t = (Tile) e.getSource();
+			final BattleState s = BattlePanel.state;
+			final Combatant target = s.getCombatant(t.x, t.y);
+			final Action a = getaction(current, target, s);
+			if (a == Action.MOVE) {
+				if (moveschedule != null) {
+					moveschedule.cancel();
+				}
+				moveschedule = new Timer();
+				moveschedule.schedule(new TimerTask() {
+					@Override
+					public void run() {
+						BattlePanel.overlay = new MoveOverlay(current,
+								new Point(t.x, t.y), s);
+					}
+				}, 100);
+				return;
+			} else if (a == Action.MELEE) {
+				final List<Attack> attack = current.currentmelee.next == null
+						|| current.currentmelee.next.isEmpty()
+								? current.source.melee.get(0)
+								: current.currentmelee.next;
+				final String chance = MeleeAttack.SINGLETON.getchance(current,
+						target, attack.get(0), s);
+				status(target + " (" + target.getStatus() + ", " + chance
+						+ " to hit)");
+			} else if (a == Action.RANGED) {
+				status(Fire.SINGLETON.describehitchance(current, target, s));
+			} else if (target != null) {
+				BattleScreen.lastlooked = target;
+				BattleScreen.active.statuspanel.repaint();
+			} else {
+				return;
+			}
+		} finally {
+			Game.messagepanel.getPanel().repaint();
+		}
 	}
 
 	void status(String s) {

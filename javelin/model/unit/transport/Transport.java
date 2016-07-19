@@ -140,7 +140,7 @@ public class Transport implements Serializable {
 						+ " sinks, taking all non-swimmers with it!";
 				Javelin.message(message, true);
 				for (Combatant c : s.members) {
-					if (!c.source.swim()) {
+					if (c.source.swim() == 0) {
 						s.remove(c);
 					}
 				}

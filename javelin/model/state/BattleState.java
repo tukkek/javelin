@@ -241,9 +241,14 @@ public class BattleState implements Node, TeamContainer {
 	}
 
 	public Vision hasLineOfSight(Combatant me, Combatant target) {
+		return hasLineOfSight(me,
+				new Point(target.location[0], target.location[1]));
+	}
+
+	public Vision hasLineOfSight(Combatant me, Point target) {
 		return hasLineOfSight(new Point(me.location[0], me.location[1]),
-				new Point(target.location[0], target.location[1]),
-				me.view(period), me.perceive(period));
+				new Point(target.x, target.y), me.view(period),
+				me.perceive(period));
 	}
 
 	public boolean isflanked(final Combatant target, final Combatant attacker) {
@@ -336,5 +341,14 @@ public class BattleState implements Node, TeamContainer {
 			cl.redTeam.add(c.clone());
 		}
 		return cl;
+	}
+
+	public Meld getmeld(int x, int y) {
+		for (Meld m : meld) {
+			if (m.x == x && m.y == y) {
+				return m;
+			}
+		}
+		return null;
 	}
 }

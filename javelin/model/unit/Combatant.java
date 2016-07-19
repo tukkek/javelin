@@ -520,8 +520,8 @@ public class Combatant implements Serializable, Cloneable {
 	}
 
 	public boolean ispenalized(final BattleState s) {
-		if (surprise() != 0
-				|| s.map[location[0]][location[1]].flooded && !source.swim()) {
+		if (surprise() != 0 || s.map[location[0]][location[1]].flooded
+				&& source.swim() == 0) {
 			return true;
 		}
 		for (Condition c : conditions) {

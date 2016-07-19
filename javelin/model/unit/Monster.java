@@ -456,8 +456,8 @@ public class Monster implements Cloneable, Serializable {
 	 * @return <code>true</code> if the monster can swim on (or fly above)
 	 *         water.
 	 */
-	public boolean swim() {
-		return swim > 0 || fly > 0;
+	public int swim() {
+		return Math.max(swim, fly);
 	}
 
 	/**

@@ -22,7 +22,7 @@ import javelin.view.screen.BattleScreen;
 public class BattlePanel extends MapPanel {
 	public static BattleState state = null;
 	public static Overlay overlay = null;
-	private boolean daylight;
+	public boolean daylight;
 
 	public BattlePanel(BattleState s) {
 		super(s.map.length, s.map[0].length, Preferences.KEYTILEBATTLE);

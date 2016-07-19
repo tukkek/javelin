@@ -54,7 +54,7 @@ public class Movement extends Action {
 		} else {
 			speed = c.source.gettopspeed();
 			if (state.map[x][y].flooded && c.source.fly == 0) {
-				speed = c.source.swim() ? c.source.swim : speed / 2f;
+				speed = c.source.swim() > 0 ? c.source.swim : speed / 2f;
 			}
 		}
 		return converttoap(speed);
@@ -98,12 +98,12 @@ public class Movement extends Action {
 				BattleScreen.active.spentap +=
 						cost(thing.combatant, state, to.x, to.y);
 			}
-			boolean finishmove =
+			final boolean finishmove =
 					meld != null || disengaging || Movement.lastmovewasattack
 							|| BattleScreen.active.spentap >= .5f;
 			if (!finishmove) {
-				BattleMap.visioncache.remove(thing.combatant.id);
-				thing.calculateVision();
+				// BattleMap.visioncache.remove(thing.combatant.id);
+				// thing.calculateVision();
 				throw new RepeatTurn();
 			}
 			if (!Movement.lastmovewasattack) {

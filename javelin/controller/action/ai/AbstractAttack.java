@@ -164,7 +164,7 @@ public abstract class AbstractAttack extends Action implements AiAction {
 	 */
 	static int waterpenalty(final BattleState gameState,
 			final Combatant current) {
-		return current.source.swim()
+		return current.source.swim() > 0
 				&& gameState.map[current.location[0]][current.location[1]].flooded
 						? 2 : 0;
 	}

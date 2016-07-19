@@ -13,12 +13,13 @@ import javelin.model.unit.Combatant;
  */
 public class Walker {
 	public static final int[] DELTAS = new int[] { 0, +1, -1 };
-	int targetx;
-	int targety;
+	protected int targetx;
+	protected int targety;
 	public ArrayList<Step> solution = null;
-	private final BattleState state;
+	protected final BattleState state;
 	private int sourcex;
 	private int sourcey;
+	public ArrayList<Step> partial;
 
 	public Walker(Point me, Point target, BattleState state) {
 		this.state = state;
@@ -42,6 +43,10 @@ public class Walker {
 			return;
 		}
 		if (!steps.isEmpty() && !valid(x, y, state)) {
+			if (!steps.isEmpty()) {
+				steps.remove(steps.size() - 1);
+			}
+			partial = steps;
 			return;
 		}
 		ArrayList<Step> nextsteps = takebeststep(x, y);
@@ -67,12 +72,6 @@ public class Walker {
 				steps.add(new Step(stepx, stepy));
 			}
 		}
-
-		// final int deltax=x-targetx;
-		// final int deltay=y-targety;
-		// if(deltax==0){
-		//
-		// }
 		return steps;
 	}
 

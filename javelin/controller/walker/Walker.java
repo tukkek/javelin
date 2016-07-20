@@ -69,7 +69,7 @@ public class Walker {
 	 * it goes ↘__
 	 */
 	protected ArrayList<Step> takebeststep(final int x, final int y) {
-		final ArrayList<Step> steps = new NextMove(targetx, targety);
+		final ArrayList<Step> steps = getsteplist();
 		final int stepx = x + (targetx > x ? +1 : -1);
 		final int stepy = y + (targety > y ? +1 : -1);
 		if (y != targety) {
@@ -82,6 +82,10 @@ public class Walker {
 			}
 		}
 		return steps;
+	}
+
+	protected ArrayList<Step> getsteplist() {
+		return new NextMove(targetx, targety);
 	}
 
 	protected boolean valid(int x, int y, BattleState state2) {

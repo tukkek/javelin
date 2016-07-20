@@ -347,6 +347,14 @@ public abstract class Terrain implements Serializable {
 		return area;
 	}
 
+	static ArrayList<Point> adjacent = new ArrayList<Point>(4);
+	static {
+		adjacent.add(new Point(-1, 0));
+		adjacent.add(new Point(0, -1));
+		adjacent.add(new Point(+1, 0));
+		adjacent.add(new Point(0, +1));
+	}
+
 	/**
 	 * Generate terrain area and...
 	 * 
@@ -355,6 +363,17 @@ public abstract class Terrain implements Serializable {
 	 */
 	public void generate(World w, Realm r) {
 		List<Point> area = new ArrayList<Point>(generate(w));
+		if (flooded()) {
+			isolated: for (Point p : new ArrayList<Point>(area)) {
+				for (Point adjacent : adjacent) {
+					if (area.contains(
+							new Point(p.x + adjacent.x, p.y + adjacent.y))) {
+						continue isolated;
+					}
+				}
+				area.remove(p);
+			}
+		}
 		for (Point p : area) {
 			w.map[p.x][p.y] = this;
 		}
@@ -452,5 +471,9 @@ public abstract class Terrain implements Serializable {
 	public Integer getel(int teamel) {
 		final int delta = Javelin.randomdifficulty() + Math.min(0, difficulty);
 		return teamel + Math.min(delta, difficultycap);
+	}
+
+	public boolean flooded() {
+		return equals(MARSH) || equals(WATER) || equals(DESERT);
 	}
 }

@@ -115,6 +115,12 @@ public class MoveOverlay extends Overlay {
 			}
 			return false;
 		}
+
+		@Override
+		protected ArrayList<javelin.controller.walker.Step> getsteplist() {
+			// return new NextMove(targetx, targety);
+			return new ArrayList<javelin.controller.walker.Step>();
+		}
 	}
 
 	public Walk path;

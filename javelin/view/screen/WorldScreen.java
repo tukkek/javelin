@@ -474,10 +474,13 @@ public class WorldScreen extends BattleScreen {
 		return Images.getImage("terrain" + Terrain.get(x, y).toString());
 	}
 
-	public static boolean see(Point point) {
+	public static boolean see(Point p) {
+		if (!World.validatecoordinate(p.x, p.y)) {
+			return false;
+		}
 		WorldScreen s = getcurrentscreen();
-		return s == null ? StateManager.DISCOVERED.contains(point)
-				: s.gettiles()[point.x][point.y].discovered;
+		return s == null ? StateManager.DISCOVERED.contains(p)
+				: s.gettiles()[p.x][p.y].discovered;
 	}
 
 	static WorldScreen getcurrentscreen() {

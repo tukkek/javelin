@@ -1,11 +1,14 @@
 package javelin.view.mappanel.world;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.model.unit.Squad;
+import javelin.model.world.World;
 import javelin.model.world.WorldActor;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.battle.BattlePanel;
@@ -22,6 +25,11 @@ public class WorldTile extends Tile {
 			return;
 		}
 		draw(g, JavelinApp.context.gettile(x, y));
+		if (World.highways[x][y]) {
+			paintroad(Color.LIGHT_GRAY, (Graphics2D) g);
+		} else if (World.roads[x][y]) {
+			paintroad(new Color(170, 130, 40), (Graphics2D) g);
+		}
 		final WorldActor a = WorldPanel.ACTORS.get(new Point(x, y));
 		if (a != null) {
 			if (a == Squad.active) {
@@ -29,6 +37,36 @@ public class WorldTile extends Tile {
 				g.fillRect(0, 0, BattlePanel.tilesize, BattlePanel.tilesize);
 			}
 			draw(g, a.getimage());
+		}
+	}
+
+	void paintroad(Color c, Graphics2D g) {
+		g.setColor(c);
+		g.setStroke(new BasicStroke(4));
+		boolean any = false;
+		final int center = WorldPanel.tilesize / 2;
+		for (int deltax = -1; deltax <= +1; deltax++) {
+			for (int deltay = -1; deltay <= +1; deltay++) {
+				if (deltax == 0 && deltay == 0) {
+					continue;
+				}
+				final int tox = x + deltax;
+				final int toy = y + deltay;
+				if (!World.validatecoordinate(tox, toy)) {
+					continue;
+				}
+				if (World.roads[tox][toy] || World.highways[tox][toy]
+						|| WorldPanel.DESTINATIONS
+								.get(new Point(tox, toy)) != null) {
+					any = true;
+					g.drawLine(center, center, deltax * center + center,
+							deltay * center + center);
+				}
+			}
+		}
+		if (!any) {
+			g.drawLine(center, 0, center, WorldPanel.tilesize);
+			g.drawLine(0, center, WorldPanel.tilesize, center);
 		}
 	}
 }

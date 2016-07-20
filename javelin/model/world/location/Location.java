@@ -56,7 +56,7 @@ public abstract class Location extends WorldActor {
 	/**
 	 * If this feature should be {@link #remove()}d after {@link #interact()}.
 	 */
-	protected boolean discard = true;
+	public boolean discard = true;
 	/**
 	 * Used for {@link #toString()}.
 	 */
@@ -266,6 +266,7 @@ public abstract class Location extends WorldActor {
 		return description;
 	}
 
+	@Override
 	public Image getimage() {
 		return Images.getImage(
 				"location" + getClass().getSimpleName().toLowerCase());

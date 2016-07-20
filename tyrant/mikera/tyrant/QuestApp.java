@@ -28,8 +28,10 @@ import javelin.controller.fight.LairFight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Interface;
 import javelin.model.BattleMap;
+import javelin.model.unit.Squad;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
+import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
@@ -256,6 +258,10 @@ public class QuestApp extends Applet implements Runnable {
 		add(s);
 		invalidate();
 		validate();
+		if (s instanceof WorldScreen && Squad.active != null) {
+			((WorldScreen) s).mappanel.center(Squad.active.x, Squad.active.y,
+					false);
+		}
 		setVisible(true);
 		/*
 		 * CBG This is needed to give the focus to the contained screen.

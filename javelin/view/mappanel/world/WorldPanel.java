@@ -8,6 +8,7 @@ import javelin.controller.db.Preferences;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
+import javelin.model.world.location.Location;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.Tile;
@@ -16,6 +17,8 @@ public class WorldPanel extends MapPanel {
 
 	static final HashMap<Point, WorldActor> ACTORS =
 			new HashMap<Point, WorldActor>();
+	public static final HashMap<Point, Location> DESTINATIONS =
+			new HashMap<Point, Location>();
 
 	public WorldPanel() {
 		super(World.seed.map.length, World.seed.map[0].length,
@@ -44,9 +47,17 @@ public class WorldPanel extends MapPanel {
 	}
 
 	void updateactors() {
+		DESTINATIONS.clear();
 		ACTORS.clear();
 		for (WorldActor a : WorldActor.getall()) {
 			ACTORS.put(new Point(a.x, a.y), a);
+			if (!(a instanceof Location)) {
+				continue;
+			}
+			Location l = (Location) a;
+			if (!l.discard) {
+				DESTINATIONS.put(new Point(l.x, l.y), l);
+			}
 		}
 	}
 

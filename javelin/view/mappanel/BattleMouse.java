@@ -16,6 +16,7 @@ import javelin.model.unit.Attack;
 import javelin.model.unit.Combatant;
 import javelin.view.mappanel.overlay.MoveOverlay;
 import javelin.view.mappanel.overlay.MoveOverlay.Step;
+import javelin.view.mappanel.overlay.TargetOverlay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.StatisticsScreen;
 
@@ -41,7 +42,7 @@ public class BattleMouse extends Mouse {
 		if (current.isadjacent(target)) {
 			return current.source.melee.isEmpty() ? null : Action.MELEE;
 		}
-		return current.source.ranged.isEmpty()
+		return current.source.ranged.isEmpty() || s.isengaged(current)
 				|| s.hasLineOfSight(current, target) == Vision.BLOCKED ? null
 						: Action.RANGED;
 	}
@@ -123,6 +124,9 @@ public class BattleMouse extends Mouse {
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
+		if (moveschedule != null) {
+			moveschedule.cancel();
+		}
 		if (BattleScreen.lastlooked != null) {
 			BattleScreen.lastlooked = null;
 			BattleScreen.active.statuspanel.repaint();
@@ -141,9 +145,6 @@ public class BattleMouse extends Mouse {
 			final Combatant target = s.getCombatant(t.x, t.y);
 			final Action a = getaction(current, target, s);
 			if (a == Action.MOVE) {
-				if (moveschedule != null) {
-					moveschedule.cancel();
-				}
 				moveschedule = new Timer();
 				moveschedule.schedule(new TimerTask() {
 					@Override
@@ -161,9 +162,10 @@ public class BattleMouse extends Mouse {
 				final String chance = MeleeAttack.SINGLETON.getchance(current,
 						target, attack.get(0), s);
 				status(target + " (" + target.getStatus() + ", " + chance
-						+ " to hit)");
+						+ " to hit)", target);
 			} else if (a == Action.RANGED) {
-				status(Fire.SINGLETON.describehitchance(current, target, s));
+				status(Fire.SINGLETON.describehitchance(current, target, s),
+						target);
 			} else if (target != null) {
 				BattleScreen.lastlooked = target;
 				BattleScreen.active.statuspanel.repaint();
@@ -175,7 +177,9 @@ public class BattleMouse extends Mouse {
 		}
 	}
 
-	void status(String s) {
+	void status(String s, Combatant target) {
+		BattlePanel.overlay =
+				new TargetOverlay(target.location[0], target.location[1]);
 		Game.message(s, null, Delay.NONE);
 		BattleScreen.active.updateMessages();
 	}

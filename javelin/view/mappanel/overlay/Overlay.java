@@ -21,5 +21,6 @@ public abstract class Overlay {
 		for (Point p : affected) {
 			tiles[p.x][p.y].repaint();
 		}
+		BattleScreen.active.mappanel.refresh();
 	}
 }

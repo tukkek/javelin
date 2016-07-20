@@ -21,6 +21,7 @@ public class TargetOverlay extends Overlay {
 		this.x = x;
 		this.y = y;
 		affected.add(new Point(x, y));
+		((BattlePanel) BattleScreen.active.mappanel).tiles[x][y].repaint();
 	}
 
 	@Override

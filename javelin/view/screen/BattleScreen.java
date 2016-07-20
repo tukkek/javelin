@@ -210,7 +210,9 @@ public class BattleScreen extends Screen {
 				endturn();
 				Game.getUserinterface().waiting = true;
 				final KeyEvent updatableUserAction = getUserInput();
-				float originalap = next.ap;
+				if (BattlePanel.overlay != null) {
+					BattlePanel.overlay.clear();
+				}
 				if (updatableUserAction == null) {
 					callback.run();
 					callback = null;

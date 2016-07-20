@@ -3,8 +3,10 @@ package javelin.controller.walker;
 import java.util.ArrayList;
 
 import javelin.controller.Point;
+import javelin.controller.action.Target;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
+import javelin.view.mappanel.overlay.MoveOverlay;
 
 /**
  * Extensible path-finding algorithm.
@@ -59,7 +61,14 @@ public class Walker {
 		}
 	}
 
-	ArrayList<Step> takebeststep(final int x, final int y) {
+	/**
+	 * TODO This probably can be overloaded by {@link MoveOverlay} to take more
+	 * steps and try to find the best solution instead of the fastest one.
+	 * 
+	 * TODO this produces weird, almost curved angles for {@link Target} since
+	 * it goes ↘__
+	 */
+	protected ArrayList<Step> takebeststep(final int x, final int y) {
 		final ArrayList<Step> steps = new NextMove(targetx, targety);
 		final int stepx = x + (targetx > x ? +1 : -1);
 		final int stepy = y + (targety > y ? +1 : -1);

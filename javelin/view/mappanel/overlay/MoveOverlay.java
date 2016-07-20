@@ -99,6 +99,9 @@ public class MoveOverlay extends Overlay {
 		}
 
 		boolean engaged(final int xp, final int yp) {
+			if (current.burrowed) {
+				return false;
+			}
 			final int maxx = Math.min(xp + 1, state.map.length);
 			final int maxy = Math.min(yp + 1, state.map[0].length);
 			for (int x = Math.max(xp - 1, 0); x <= maxx; x++) {

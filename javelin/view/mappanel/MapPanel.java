@@ -25,12 +25,12 @@ public abstract class MapPanel extends MapPanelCommon {
 	public static int tilesize = Preferences.TILESIZEWORLD;
 
 	public Tile[][] tiles = null;
-	ScrollPane scroll = new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS);
+	protected ScrollPane scroll = new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS);
 	Panel parent = new Panel();
 	int mapwidth;
 	int mapheight;
 
-	boolean initial = true;
+	protected boolean initial = true;
 
 	/**
 	 * Make sure we have a field for this to ensure we're going to instantiate
@@ -43,7 +43,6 @@ public abstract class MapPanel extends MapPanelCommon {
 	public MapPanel(int widthp, int heightp, String configurationkeyp) {
 		mapwidth = widthp;
 		mapheight = heightp;
-		setFocusable(false);
 		scroll.setFocusable(false);
 		scroll.setWheelScrollingEnabled(false);
 		scroll.addMouseWheelListener(mouse);
@@ -58,7 +57,7 @@ public abstract class MapPanel extends MapPanelCommon {
 		parent.setSize(tilesize * mapwidth, tilesize * mapheight);
 	}
 
-	void updatetilesize() {
+	protected void updatetilesize() {
 		for (Tile[] ts : tiles) {
 			for (Tile t : ts) {
 				t.setSize(tilesize, tilesize);

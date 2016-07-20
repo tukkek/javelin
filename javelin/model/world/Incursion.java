@@ -1,5 +1,6 @@
 package javelin.model.world;
 
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,6 +19,7 @@ import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Portal;
 import javelin.model.world.location.town.Town;
+import javelin.view.Images;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -342,5 +344,10 @@ public class Incursion extends WorldActor {
 	@Override
 	public List<Combatant> getcombatants() {
 		return squad;
+	}
+
+	@Override
+	public Image getimage() {
+		return Images.getImage(visual.combatant.source.avatarfile);
 	}
 }

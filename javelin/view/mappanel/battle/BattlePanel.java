@@ -1,4 +1,4 @@
-package javelin.view.mappanel;
+package javelin.view.mappanel.battle;
 
 import java.awt.Graphics;
 import java.util.HashSet;
@@ -11,7 +11,10 @@ import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
-import javelin.view.mappanel.overlay.Overlay;
+import javelin.view.mappanel.MapPanel;
+import javelin.view.mappanel.Mouse;
+import javelin.view.mappanel.Overlay;
+import javelin.view.mappanel.Tile;
 import javelin.view.screen.BattleScreen;
 
 /**

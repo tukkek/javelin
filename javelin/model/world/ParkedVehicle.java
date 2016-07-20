@@ -1,5 +1,6 @@
 package javelin.model.world;
 
+import java.awt.Image;
 import java.util.List;
 
 import javelin.Javelin;
@@ -60,8 +61,13 @@ public class ParkedVehicle extends WorldActor {
 	@Override
 	public Thing createvisual() {
 		Thing t = super.createvisual();
-		t.javelinimage = Images.getImage(transport.name.toLowerCase());
+		t.javelinimage = getimage();
 		return t;
+	}
+
+	@Override
+	public Image getimage() {
+		return Images.getImage(transport.name.toLowerCase());
 	}
 
 	@Override

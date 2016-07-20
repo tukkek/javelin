@@ -6,7 +6,7 @@ import javelin.controller.Point;
 import javelin.controller.action.Target;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.view.mappanel.overlay.MoveOverlay;
+import javelin.view.mappanel.battle.overlay.MoveOverlay;
 
 /**
  * Extensible path-finding algorithm.

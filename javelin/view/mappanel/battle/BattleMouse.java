@@ -1,4 +1,4 @@
-package javelin.view.mappanel;
+package javelin.view.mappanel.battle;
 
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -14,9 +14,12 @@ import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.unit.Attack;
 import javelin.model.unit.Combatant;
-import javelin.view.mappanel.overlay.MoveOverlay;
-import javelin.view.mappanel.overlay.MoveOverlay.Step;
-import javelin.view.mappanel.overlay.TargetOverlay;
+import javelin.view.mappanel.MapPanel;
+import javelin.view.mappanel.Mouse;
+import javelin.view.mappanel.Tile;
+import javelin.view.mappanel.battle.overlay.MoveOverlay;
+import javelin.view.mappanel.battle.overlay.MoveOverlay.Step;
+import javelin.view.mappanel.battle.overlay.TargetOverlay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.StatisticsScreen;
 

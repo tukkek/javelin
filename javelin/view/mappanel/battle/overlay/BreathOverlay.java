@@ -1,4 +1,4 @@
-package javelin.view.mappanel.overlay;
+package javelin.view.mappanel.battle.overlay;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -8,8 +8,9 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
 import javelin.controller.Point;
-import javelin.view.mappanel.BattlePanel;
-import javelin.view.mappanel.BattleTile;
+import javelin.view.mappanel.Overlay;
+import javelin.view.mappanel.battle.BattlePanel;
+import javelin.view.mappanel.battle.BattleTile;
 
 public class BreathOverlay extends Overlay {
 	private static final Border BORDER = BorderFactory

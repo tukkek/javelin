@@ -1,5 +1,6 @@
 package javelin.model.world;
 
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -160,8 +161,13 @@ public class Caravan extends WorldActor {
 	@Override
 	public Thing createvisual() {
 		Thing t = super.createvisual();
-		t.javelinimage = Images.getImage("caravan");
+		t.javelinimage = getimage();
 		return t;
+	}
+
+	@Override
+	public Image getimage() {
+		return Images.getImage("caravan");
 	}
 
 	@Override

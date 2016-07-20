@@ -1,5 +1,6 @@
 package javelin.model.world;
 
+import java.awt.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -253,4 +254,6 @@ public abstract class WorldActor implements Serializable {
 	 * @see Combatant#newid()
 	 */
 	abstract public List<Combatant> getcombatants();
+
+	abstract public Image getimage();
 }

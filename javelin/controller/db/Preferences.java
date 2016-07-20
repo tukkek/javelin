@@ -39,12 +39,13 @@ import tyrant.mikera.tyrant.TextZone;
  * @author alex
  */
 public class Preferences {
-	public static final String KEYTILEBATTLE = "ui.battletile";
 	/** Configuration file key for {@link #MONITORPERFORMANCE}. */
 	public static final String KEYCHECKPERFORMANCE = "ai.checkperformance";
 	/** Configuration file key for {@link #MAXTHREADS}. */
 	public static final String KEYMAXTHREADS = "ai.maxthreads";
 	static final String FILE = "preferences.properties";
+	public static final String KEYTILEBATTLE = "ui.battletile";
+	public static final String KEYTILEWORLD = "ui.worldtile";
 	static Properties PROPERTIES = new Properties();
 
 	public static boolean AICACHEENABLED;
@@ -191,6 +192,7 @@ public class Preferences {
 		SAVEINTERVAL = getInteger("fs.saveinterval", 9);
 
 		TILESIZEBATTLE = getInteger(KEYTILEBATTLE, 32);
+		TILESIZEWORLD = getInteger(KEYTILEWORLD, 32);
 		MESSAGEWAIT = Math.round(1000 * getFloat("ui.messagedelay"));
 		TEXTCOLOR = getString("ui.textcolor").toUpperCase();
 		try {

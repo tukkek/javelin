@@ -1,5 +1,6 @@
 package javelin.model.unit;
 
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,7 @@ import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.MercenariesGuild;
+import javelin.view.Images;
 import javelin.view.screen.BribingScreen;
 import javelin.view.screen.WorldScreen;
 
@@ -162,6 +164,11 @@ public class Squad extends WorldActor {
 			dummy.avatarfile = transport.name.replaceAll(" ", "").toLowerCase();
 		}
 		visual.combatant = new Combatant(visual, dummy, false);
+	}
+
+	@Override
+	public Image getimage() {
+		return Images.getImage(visual.combatant.source.avatarfile);
 	}
 
 	/**
@@ -634,7 +641,7 @@ public class Squad extends WorldActor {
 	 * 
 	 * @param vision
 	 *            Perceive roll with circumstance bonuses.
-	 * @see WorldScreen#discovered
+	 * @see WorldScreen#DISCOVERED
 	 * @see Squad#perceive(boolean)
 	 */
 	public void view(int vision) {

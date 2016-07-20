@@ -1,12 +1,13 @@
-package javelin.view.mappanel.overlay;
+package javelin.view.mappanel.battle.overlay;
 
 import java.awt.Graphics;
 import java.awt.Image;
 
 import javelin.controller.Point;
 import javelin.view.Images;
-import javelin.view.mappanel.BattlePanel;
-import javelin.view.mappanel.BattleTile;
+import javelin.view.mappanel.Overlay;
+import javelin.view.mappanel.battle.BattlePanel;
+import javelin.view.mappanel.battle.BattleTile;
 import javelin.view.screen.BattleScreen;
 
 public class TargetOverlay extends Overlay {

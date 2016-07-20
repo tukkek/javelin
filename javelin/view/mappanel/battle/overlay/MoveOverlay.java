@@ -1,4 +1,4 @@
-package javelin.view.mappanel.overlay;
+package javelin.view.mappanel.battle.overlay;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -12,8 +12,9 @@ import javelin.controller.walker.Walker;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.unit.Combatant;
-import javelin.view.mappanel.BattlePanel;
-import javelin.view.mappanel.BattleTile;
+import javelin.view.mappanel.Overlay;
+import javelin.view.mappanel.battle.BattlePanel;
+import javelin.view.mappanel.battle.BattleTile;
 import javelin.view.screen.BattleScreen;
 
 public class MoveOverlay extends Overlay {

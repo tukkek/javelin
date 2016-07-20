@@ -5,7 +5,6 @@ import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -43,7 +42,10 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.Town;
 import javelin.view.Images;
-import javelin.view.mappanel.MapPanelOld;
+import javelin.view.mappanel.MapPanel;
+import javelin.view.mappanel.MapPanelCommon;
+import javelin.view.mappanel.Tile;
+import javelin.view.mappanel.world.WorldPanel;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
@@ -89,14 +91,14 @@ public class WorldScreen extends BattleScreen {
 	public static final String SPACER =
 			"                                               ";
 
-	/**
-	 * Represents explored {@link World} tiles.
-	 * 
-	 * @deprecated Use {@link WorldScreen#see(Point)} and
-	 *             {@link #setVisible(boolean)} instead.
-	 */
-	@Deprecated
-	public static HashSet<Point> discovered = new HashSet<Point>();
+	// /**
+	// * Represents explored {@link World} tiles.
+	// *
+	// * @deprecated Use {@link WorldScreen#see(Point)} and
+	// * {@link #setVisible(boolean)} instead.
+	// */
+	// @Deprecated
+	// public static HashSet<Point> discovered = new HashSet<Point>();
 	/**
 	 * TODO We shouldn't need a {@link BattleMap} to represent the {@link World}
 	 * from 2.0 onwards.
@@ -116,13 +118,22 @@ public class WorldScreen extends BattleScreen {
 		WorldScreen.current = this;
 		Javelin.settexture(QuestApp.DEFAULTTEXTURE);
 		mappanel.settilesize(48);
+		Tile[][] tiles = gettiles();
 		if (Preferences.DEBUGESHOWMAP) {
-			mapp.setAllVisible();
+			for (Tile[] ts : tiles) {
+				for (Tile t : ts) {
+					t.discovered = true;
+				}
+			}
 		} else {
-			for (Point p : discovered) {
-				mapp.setVisible(p.x, p.y);
+			for (Point p : StateManager.DISCOVERED) {
+				tiles[p.x][p.y].discovered = true;
 			}
 		}
+	}
+
+	Tile[][] gettiles() {
+		return ((MapPanel) mappanel).tiles;
 	}
 
 	@Override
@@ -204,9 +215,13 @@ public class WorldScreen extends BattleScreen {
 	 * Marks coordinate as permanently visible.
 	 */
 	static public void setVisible(int x, int y) {
-		if (World.validatecoordinate(x, y)) {
-			worldmap.setVisible(x, y);
-			discovered.add(new Point(x, y));
+		if (!World.validatecoordinate(x, y)) {
+			return;
+		}
+		StateManager.DISCOVERED.add(new Point(x, y));
+		WorldScreen s = getcurrentscreen();
+		if (s != null) {
+			s.gettiles()[x][y].discovered = true;
 		}
 	}
 
@@ -460,7 +475,14 @@ public class WorldScreen extends BattleScreen {
 	}
 
 	public static boolean see(Point point) {
-		return discovered.contains(point);
+		WorldScreen s = getcurrentscreen();
+		return s == null ? StateManager.DISCOVERED.contains(point)
+				: s.gettiles()[point.x][point.y].discovered;
+	}
+
+	static WorldScreen getcurrentscreen() {
+		return BattleScreen.active instanceof WorldScreen
+				? (WorldScreen) BattleScreen.active : null;
 	}
 
 	/**
@@ -471,7 +493,7 @@ public class WorldScreen extends BattleScreen {
 	}
 
 	@Override
-	protected MapPanelOld getmappanel() {
-		return new MapPanelOld();
+	protected MapPanelCommon getmappanel() {
+		return new WorldPanel();
 	}
 }

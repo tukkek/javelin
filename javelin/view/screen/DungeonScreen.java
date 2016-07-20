@@ -16,6 +16,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.Trap;
 import javelin.view.Images;
+import javelin.view.mappanel.MapPanelOld;
 import tyrant.mikera.engine.Thing;
 
 /**
@@ -139,5 +140,10 @@ public class DungeonScreen extends WorldScreen {
 	@Override
 	public Fight encounter() {
 		return Dungeon.active.encounter();
+	}
+
+	@Override
+	protected MapPanelOld getmappanel() {
+		return new MapPanelOld();
 	}
 }

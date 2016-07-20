@@ -31,10 +31,10 @@ import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.view.StatusPanel;
-import javelin.view.mappanel.BattlePanel;
 import javelin.view.mappanel.MapPanelCommon;
 import javelin.view.mappanel.Mouse;
-import javelin.view.mappanel.overlay.TargetOverlay;
+import javelin.view.mappanel.battle.BattlePanel;
+import javelin.view.mappanel.battle.overlay.TargetOverlay;
 import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.GameHandler;
@@ -657,8 +657,6 @@ public class BattleScreen extends Screen {
 	}
 
 	private void clearCursor() {
-		// cursor = false;
-		// mappanel.repaint();
 		if (BattlePanel.overlay != null) {
 			BattlePanel.overlay.clear();
 		}
@@ -670,10 +668,6 @@ public class BattleScreen extends Screen {
 	}
 
 	private void setCursor(int x, int y) {
-		// cursor = true;
-		// curx = x;
-		// cury = y;
-		// mappanel.repaint();
 		clearCursor();
 		BattlePanel.overlay = new TargetOverlay(x, y);
 		mappanel.refresh();

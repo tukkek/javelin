@@ -1,8 +1,11 @@
-package javelin.view.mappanel;
+package javelin.view.mappanel.battle;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
 
 import javelin.Javelin;
 import javelin.controller.old.Game;
@@ -11,9 +14,12 @@ import javelin.model.state.Meld;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.view.Images;
+import javelin.view.mappanel.MapPanel;
+import javelin.view.mappanel.Tile;
 
 public class BattleTile extends Tile {
 	public static final float MAXLIFE = new Float(Combatant.STATUSUNHARMED);
+	static final Border BUFF = BorderFactory.createLineBorder(Color.WHITE);
 
 	public static MapPanel panel = null;
 	private Image obstacle;
@@ -90,12 +96,8 @@ public class BattleTile extends Tile {
 					0, 0, null);
 		}
 		if (c.isbuffed()) {
-			MapPanelOld.BUFF.paintBorder(t, g, 0, 0, BattlePanel.tilesize,
+			BUFF.paintBorder(t, g, 0, 0, BattlePanel.tilesize,
 					BattlePanel.tilesize);
 		}
-	}
-
-	private static void draw(final Graphics g, final Image gettile) {
-		g.drawImage(gettile, 0, 0, MapPanel.tilesize, MapPanel.tilesize, null);
 	}
 }

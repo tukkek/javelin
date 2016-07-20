@@ -12,9 +12,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.prefs.Preferences;
 
-import javax.swing.BorderFactory;
-import javax.swing.border.Border;
-
 import javelin.controller.Point;
 import javelin.controller.old.Game;
 import javelin.model.BattleMap;
@@ -45,7 +42,6 @@ import tyrant.mikera.tyrant.Tile;
  * @author alex
  */
 public class MapPanelOld extends MapPanelCommon {
-	static final Border BUFF = BorderFactory.createLineBorder(Color.WHITE);
 	public static final Color[][] STATUS_COLORS = {
 			{ new Color(0, 0, 127), new Color(0, 0, 153), new Color(0, 0, 178),
 					new Color(0, 0, 204), new Color(0, 0, 229),
@@ -396,9 +392,9 @@ public class MapPanelOld extends MapPanelCommon {
 				if (c.ispenalized(state)) {
 					gfx.drawImage(Images.penalized, x, y, null);
 				}
-				if (c.isbuffed()) {
-					BUFF.paintBorder(this, gfx, x, y, TILEWIDTH, TILEHEIGHT);
-				}
+				// if (c.isbuffed()) {
+				// BUFF.paintBorder(this, gfx, x, y, TILEWIDTH, TILEHEIGHT);
+				// }
 			}
 		}
 	}

@@ -25,8 +25,8 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.BreathWeapon.BreathArea;
-import javelin.view.mappanel.BattlePanel;
-import javelin.view.mappanel.overlay.BreathOverlay;
+import javelin.view.mappanel.battle.BattlePanel;
+import javelin.view.mappanel.battle.overlay.BreathOverlay;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.Thing;
 

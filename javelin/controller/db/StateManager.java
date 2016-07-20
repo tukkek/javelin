@@ -31,6 +31,8 @@ import javelin.model.world.World;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.unique.Haxor;
+import javelin.view.mappanel.Tile;
+import javelin.view.mappanel.world.WorldTile;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 
@@ -77,6 +79,12 @@ public class StateManager {
 	public static boolean abandoned = false;
 	static public boolean nofile = false;
 	private static int attempts = 0;
+	/**
+	 * Intermediary for {@link WorldTile}.
+	 * 
+	 * @see Tile#discovered
+	 */
+	public static final HashSet<Point> DISCOVERED = new HashSet<Point>();
 
 	/**
 	 * This should only be called from one place during normal execution of the
@@ -111,7 +119,7 @@ public class StateManager {
 			writer.writeObject(Incursion.currentel);
 			writer.writeObject(Weather.current);
 			writer.writeObject(EndBattle.lastkilled);
-			writer.writeObject(WorldScreen.discovered);
+			writer.writeObject(DISCOVERED);
 			writer.writeObject(World.roads);
 			writer.writeObject(World.highways);
 			writer.writeObject(Season.current);
@@ -168,7 +176,7 @@ public class StateManager {
 			Incursion.currentel = (Integer) stream.readObject();
 			Weather.read((Integer) stream.readObject());
 			EndBattle.lastkilled = (Combatant) stream.readObject();
-			WorldScreen.discovered = (HashSet<Point>) stream.readObject();
+			DISCOVERED.addAll((HashSet<Point>) stream.readObject());
 			World.roads = (boolean[][]) stream.readObject();
 			World.highways = (boolean[][]) stream.readObject();
 			Season.current = (Season) stream.readObject();

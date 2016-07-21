@@ -42,6 +42,9 @@ public abstract class WorldActor implements Serializable {
 	public int y = -1;
 	/**
 	 * Which team this actor belongs to or <code>null</code> if neutral.
+	 * 
+	 * Nota that it can be set to null during construction, in which case it
+	 * won't be updated by {@link #place()}.
 	 */
 	public Realm realm = null;
 	/**

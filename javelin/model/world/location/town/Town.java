@@ -486,4 +486,9 @@ public class Town extends Location {
 	public boolean haslabor() {
 		return !ishostile() && !automanage && labor >= size;
 	}
+
+	@Override
+	public Realm getrealmoverlay() {
+		return ishostile() ? super.getrealmoverlay() : null;
+	}
 }

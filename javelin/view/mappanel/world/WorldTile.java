@@ -13,6 +13,8 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
+import javelin.model.world.location.Location;
+import javelin.model.world.location.town.Town;
 import javelin.view.Images;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.battle.BattlePanel;
@@ -60,12 +62,40 @@ public class WorldTile extends Tile {
 			paintroad(new Color(170, 130, 40), (Graphics2D) g);
 		}
 		final WorldActor a = WorldPanel.ACTORS.get(new Point(x, y));
-		if (a != null) {
-			if (a == Squad.active) {
-				g.setColor(Color.GREEN);
-				g.fillRect(0, 0, BattlePanel.tilesize, BattlePanel.tilesize);
-			}
-			draw(g, a.getimage());
+		if (a == null) {
+			return;
+		}
+		if (a == Squad.active) {
+			g.setColor(Color.GREEN);
+			g.fillRect(0, 0, BattlePanel.tilesize, BattlePanel.tilesize);
+		}
+		draw(g, a.getimage());
+		if (a.getrealmoverlay() != null) {
+			g.setColor(a.getrealmoverlay().getawtcolor());
+			g.fillRect(0, WorldPanel.tilesize - 5, WorldPanel.tilesize, 5);
+		}
+		Location l = a instanceof Location ? (Location) a : null;
+		if (l == null) {
+			return;
+		}
+		if (l.drawgarisson()) {
+			draw(g, Images.hostile);
+		}
+		if (l.hascrafted()) {
+			draw(g, Images.crafting);
+		}
+		if (l.hasupgraded()) {
+			draw(g, Images.upgrading);
+		}
+		Town t = l instanceof Town ? (Town) l : null;
+		if (t == null || t.ishostile()) {
+			return;
+		}
+		if (t.ishosting() || true) {
+			draw(g, Images.tournament);
+		}
+		if (t.haslabor() || true) {
+			draw(g, Images.labor);
 		}
 	}
 

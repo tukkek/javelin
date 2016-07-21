@@ -45,5 +45,4 @@ public abstract class UniqueLocation extends Fortification {
 	protected Integer getel(int attackel) {
 		return null;
 	}
-
 }

@@ -8,6 +8,7 @@ import javelin.controller.fight.RandomEncounter;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
+import javelin.model.Realm;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
 import javelin.model.world.WorldActor;
@@ -78,8 +79,7 @@ public abstract class Fortification extends Location {
 		super(null);
 		this.minlevel = minlevel;
 		this.maxlevel = maxlevel;
-		WorldActor town = findclosest(Town.class);
-		realm = town == null ? null : ((Town) town).realm;
+		realm = Realm.AIR;// see #place()
 		discard = false;
 		allowentry = false;
 		this.descriptionknown = descriptionknown;
@@ -178,6 +178,10 @@ public abstract class Fortification extends Location {
 	@Override
 	public void place() {
 		super.place();
+		if (realm != null) {
+			WorldActor town = findclosest(Town.class);
+			realm = town == null ? null : ((Town) town).realm;
+		}
 		if (generategarrison && garrison.isEmpty()) {
 			generategarrison(minlevel, maxlevel);
 			generategarrison = false;

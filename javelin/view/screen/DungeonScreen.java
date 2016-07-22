@@ -2,7 +2,6 @@ package javelin.view.screen;
 
 import java.awt.Image;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import javelin.controller.Point;
 import javelin.controller.exception.battle.StartBattle;
@@ -29,22 +28,11 @@ public class DungeonScreen extends WorldScreen {
 	/** TODO hack */
 	public static boolean dontenter = false;
 	public static boolean stopmovesequence = false;
+	public static boolean updatelocation = true;
 
 	/** Exhibits a dungeon. */
 	public DungeonScreen(BattleMap map) {
 		super(map);
-		mappanel.settilesize(32);
-		mappanel.setdiscovered(new HashSet<Point>() {
-			@Override
-			public boolean add(Point e) {
-				return false;
-			};
-
-			@Override
-			public boolean contains(Object o) {
-				return false;
-			};
-		});
 	}
 
 	@Override
@@ -97,6 +85,7 @@ public class DungeonScreen extends WorldScreen {
 	@Override
 	public void updatelocation(int x, int y) {
 		// don't
+		Dungeon.active.herolocation = new Point(x, y);
 	}
 
 	@Override
@@ -104,20 +93,21 @@ public class DungeonScreen extends WorldScreen {
 		for (int x = -1; x <= +1; x++) {
 			for (int y = -1; y <= +1; y++) {
 				try {
-					Dungeon.active.setvisible(h.x + x, h.y + y);
+					Dungeon.active.setvisible(Dungeon.active.herolocation.x + x,
+							Dungeon.active.herolocation.y + y);
 				} catch (ArrayIndexOutOfBoundsException e) {
 					continue;
 				}
 			}
 		}
-		map.makeAllInvisible();
-		for (int x = 0; x < Dungeon.SIZE; x++) {
-			for (int y = 0; y < Dungeon.SIZE; y++) {
-				if (Dungeon.active.visible[x][y]) {
-					map.setVisible(x, y);
-				}
-			}
-		}
+		// map.makeAllInvisible();
+		// for (int x = 0; x < Dungeon.SIZE; x++) {
+		// for (int y = 0; y < Dungeon.SIZE; y++) {
+		// if (Dungeon.active.visible[x][y]) {
+		// map.setVisible(x, y);
+		// }
+		// }
+		// }
 	}
 
 	@Override
@@ -125,11 +115,6 @@ public class DungeonScreen extends WorldScreen {
 		Squad.active.updateavatar();
 		Game.hero().combatant = Squad.active.visual.combatant;
 		return Game.hero();
-	}
-
-	@Override
-	public boolean scale() {
-		return false;
 	}
 
 	@Override
@@ -152,9 +137,14 @@ public class DungeonScreen extends WorldScreen {
 	protected void humanTurn() {
 		super.humanTurn();
 		if (Dungeon.active != null) {
-			Dungeon.active.herolocation =
-					new Point(Game.hero().x, Game.hero().y);
+			// Dungeon.active.herolocation =
+			// new Point(Game.hero().x, Game.hero().y);
 			// mappanel.refresh();
 		}
+	}
+
+	@Override
+	public boolean validatepoint(int tox, int toy) {
+		return 0 <= tox && tox < Dungeon.SIZE && 0 <= toy && toy < Dungeon.SIZE;
 	}
 }

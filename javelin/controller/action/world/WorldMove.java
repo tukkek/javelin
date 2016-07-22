@@ -104,8 +104,7 @@ public class WorldMove extends WorldAction {
 		try {
 			WorldActor actor =
 					Dungeon.active == null ? WorldActor.get(tox, toy) : null;
-			Location place =
-					actor instanceof Location ? (Location) actor : null;
+			Location l = actor instanceof Location ? (Location) actor : null;
 			try {
 				if (JavelinApp.context.react(actor, tox, toy)) {
 					if (BattleScreen.active.map != t.getMap()) {
@@ -115,20 +114,24 @@ public class WorldMove extends WorldAction {
 						if (DungeonScreen.dontenter) {
 							DungeonScreen.dontenter = false;
 						}
-						place(t, tox, toy);
+						if (DungeonScreen.updatelocation) {
+							place(t, tox, toy);
+						} else {
+							DungeonScreen.updatelocation = true;
+						}
 						return !DungeonScreen.stopmovesequence;
-					} else if (place != null) {
-						if (place.allowentry && place.garrison.isEmpty()) {
+					} else if (l != null) {
+						if (l.allowentry && l.garrison.isEmpty()) {
 							place(t, tox, toy);
 						}
 					}
 					return true;
 				}
-				if (place != null && !place.allowentry) {
+				if (l != null && !l.allowentry) {
 					return false;
 				}
 			} catch (StartBattle e) {
-				if (place != null && place.allowentry) {
+				if (l != null && l.allowentry) {
 					place(t, tox, toy);
 				}
 				throw e;
@@ -158,16 +161,15 @@ public class WorldMove extends WorldAction {
 			// JavelinApp.context.map.addThing(t, t.x, t.y);
 			return false;
 		}
-		if (tox < 0 || tox >= JavelinApp.context.map.width || toy < 0
-				|| toy >= JavelinApp.context.map.height) {
-			//
-		} else {
-			t.getMap().removeThing(t);
+		if (JavelinApp.context.validatepoint(tox, toy)) {
+			t.remove();
+			// t.getMap().removeThing(t);
 			t.x = tox;
 			t.y = toy;
 		}
 		JavelinApp.context.updatelocation(t.x, t.y);
-		JavelinApp.context.map.addThing(t, t.x, t.y);
+		// JavelinApp.context.map.addThing(t, t.x, t.y);
+		JavelinApp.context.view(t);
 		return true;
 	}
 

@@ -116,7 +116,6 @@ public class WorldScreen extends BattleScreen {
 		super(Javelin.app, mapp, false);
 		WorldScreen.current = this;
 		Javelin.settexture(QuestApp.DEFAULTTEXTURE);
-		mappanel.settilesize(48);
 		Tile[][] tiles = gettiles();
 		if (Preferences.DEBUGESHOWMAP) {
 			for (Tile[] ts : tiles) {
@@ -147,10 +146,11 @@ public class WorldScreen extends BattleScreen {
 
 	@Override
 	protected void humanTurn() {
-		Thing h = JavelinApp.context.gethero();
-		Game.instance().hero = h;
+		// Thing h = JavelinApp.context.gethero();
+		// Game.instance().hero = h;
 		while (true) {
 			try {
+				Thing h = Game.hero();
 				updatescreen(h);
 				Game.getUserinterface().waiting = true;
 				final KeyEvent updatableUserAction = getUserInput();
@@ -512,5 +512,9 @@ public class WorldScreen extends BattleScreen {
 	@Override
 	protected MapPanel getmappanel() {
 		return new WorldPanel();
+	}
+
+	public boolean validatepoint(int tox, int toy) {
+		return World.validatecoordinate(tox, toy);
 	}
 }

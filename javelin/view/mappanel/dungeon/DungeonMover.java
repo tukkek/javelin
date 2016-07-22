@@ -6,6 +6,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.Trap;
 import javelin.view.mappanel.world.WorldMover;
+import javelin.view.screen.DungeonScreen;
 
 public class DungeonMover extends WorldMover {
 	private static final float ENCOUNTERCHANCE = 1 / Dungeon.ENCOUNTERRATIO;
@@ -28,7 +29,8 @@ public class DungeonMover extends WorldMover {
 
 	@Override
 	protected boolean valid(int x, int y, BattleState state2) {
-		if (Dungeon.active.walls.contains(new Point(x, y))) {
+		if (!DungeonScreen.active.mappanel.tiles[x][y].discovered
+				|| Dungeon.active.walls.contains(new Point(x, y))) {
 			return false;
 		}
 		final Feature f = Dungeon.active.getfeature(x, y);

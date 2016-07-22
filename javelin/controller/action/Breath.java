@@ -25,7 +25,6 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.BreathWeapon.BreathArea;
-import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.battle.overlay.BreathOverlay;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.Thing;
@@ -87,32 +86,27 @@ public class Breath extends Action implements AiAction {
 		if (area.isEmpty()) {
 			throw new RepeatTurn();
 		}
+		BreathOverlay overlay = new BreathOverlay(area);
+		BattleScreen.active.mappanel.overlay = overlay;
+		clear();
+		Game.redraw();
+		Game.message(
+				targetinfo(state, area)
+						+ "Press ENTER or b to confirm, q to quit.",
+				null, Delay.NONE);
+		char confirm = Game.getInput().getKeyChar();
 		try {
-			BreathOverlay overlay = new BreathOverlay(area);
-			((MapPanel) BattleScreen.active.mappanel).overlay = overlay;
-			// BattleScreen.active.mappanel.setoverlay(area);
-			clear();
-			Game.redraw();
-			Game.message(
-					targetinfo(state, area)
-							+ "Press ENTER or b to confirm, q to quit.",
-					null, Delay.NONE);
-			char confirm = Game.getInput().getKeyChar();
-			try {
-				quit(confirm);
-			} catch (RepeatTurn e) {
-				overlay.clear();
-				throw e;
-			}
-			if (confirm == '\n' || confirm == 'b') {
-				state = state.clone();
-				Action.outcome(breath(breath, a, state.clone(hero), state));
-			}
+			quit(confirm);
+		} catch (RepeatTurn e) {
 			overlay.clear();
-			return true;
-		} finally {
-			BattleScreen.active.mappanel.setoverlay(null);
+			throw e;
 		}
+		if (confirm == '\n' || confirm == 'b') {
+			state = state.clone();
+			Action.outcome(breath(breath, a, state.clone(hero), state));
+		}
+		overlay.clear();
+		return true;
 	}
 
 	public Area selectarea(Combatant hero, BreathWeapon breath) {

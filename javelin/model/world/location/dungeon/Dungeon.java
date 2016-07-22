@@ -18,7 +18,6 @@ import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.terrain.map.Maps;
 import javelin.controller.terrain.map.tyrant.Caves;
-import javelin.model.BattleMap;
 import javelin.model.Realm;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.Key;
@@ -43,7 +42,6 @@ import javelin.view.screen.WorldScreen;
 import javelin.view.screen.haxor.Win;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.engine.Thing;
-import tyrant.mikera.tyrant.Tile;
 
 /**
  * A dungeon is an underground area of the world where the combats are harder
@@ -103,7 +101,7 @@ public class Dungeon extends Location {
 	 */
 	public Point herolocation;
 
-	public transient BattleMap map = null;
+	// public transient BattleMap map = null;
 	/** TODO remove from 2.0+ */
 	// transient public Thing hero;
 	transient boolean generated = false;
@@ -127,26 +125,25 @@ public class Dungeon extends Location {
 
 	/** Create or recreate dungeon. */
 	public void activate(boolean loading) {
-		while (map == null) {
-			map = new BattleMap(SIZE, SIZE);
-			if (features.isEmpty()) {
-				/* not loading a game */
-				try {
-					map();
-				} catch (GaveUpException e) {
-					map = null;
-					features.clear();
-					walls.clear();
-					herolocation = null;
-				}
+		while (features.isEmpty()) {
+			// map = new BattleMap(SIZE, SIZE);
+			/* not loading a game */
+			try {
+				map();
+			} catch (GaveUpException e) {
+				// map = null;
+				features.clear();
+				walls.clear();
+				herolocation = null;
 			}
 		}
 		regenerate(loading);
-		// Game.instance().setHero(hero);
 		active = this;
-		JavelinApp.context = new DungeonScreen(map);
+		JavelinApp.context = new DungeonScreen(null);
 		BattleScreen.active = JavelinApp.context;
 		Squad.active.updateavatar();
+		BattleScreen.active.mappanel.center(herolocation.x, herolocation.y,
+				true);
 	}
 
 	void map() throws GaveUpException {
@@ -297,21 +294,21 @@ public class Dungeon extends Location {
 	}
 
 	void regenerate(boolean loading) {
-		for (int x = 0; x < SIZE; x++) {
-			for (int y = 0; y < SIZE; y++) {
-				map.setTile(x, y, Tile.METALFLOOR);
-			}
-		}
-		for (Point wall : walls) {
-			map.setTile(wall.x, wall.y, Tile.STONEWALL);
-		}
+		// for (int x = 0; x < SIZE; x++) {
+		// for (int y = 0; y < SIZE; y++) {
+		// map.setTile(x, y, Tile.METALFLOOR);
+		// }
+		// }
+		// for (Point wall : walls) {
+		// map.setTile(wall.x, wall.y, Tile.STONEWALL);
+		// }
 		Thing hero = Squad.active.createvisual();
 		Game.instance().setHero(hero);
 		setlocation(loading);
-		map.addThing(hero, hero.x, hero.y);
+		// map.addThing(hero, hero.x, hero.y);
 		if (!generated) {
 			for (Feature f : features) {
-				f.generate(map);
+				f.generate();
 			}
 			generated = true;
 		}

@@ -32,7 +32,6 @@ import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.view.StatusPanel;
 import javelin.view.mappanel.MapPanel;
-import javelin.view.mappanel.MapPanelCommon;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.mappanel.battle.overlay.TargetOverlay;
@@ -84,6 +83,8 @@ public class BattleScreen extends Screen {
 	Combatant lastwascomputermove;
 	boolean firstvision;
 	boolean allvisible;
+
+	public ArrayList<Combatant> fleeing = new ArrayList<Combatant>();
 	/**
 	 * Allows the human player to use up to .5AP of movement before ending turn.
 	 */
@@ -140,11 +141,10 @@ public class BattleScreen extends Screen {
 			cp.add("Center", statuspanel);
 			if (addminimap()) {
 				levelMap = new LevelMapPanel();
-				// cp.add(levelMap, "South");
 			}
 		}
 		setFont(QuestApp.mainfont);
-		Game.enterMap(map, Game.hero().x, Game.hero().y);
+		// Game.enterMap(map, Game.hero().x, Game.hero().y);
 		q.switchScreen(this);
 		BattleScreen.active = this;
 		Game.delayblock = false;
@@ -172,7 +172,7 @@ public class BattleScreen extends Screen {
 		Thing hero = map.getState().next.visual;
 		mappanel.setPosition(map, hero.x, hero.y);
 		Game.redraw();
-		mappanel.autozoom(BattleMap.combatants, hero.x, hero.y);
+		mappanel.center(hero.x, hero.y, true);
 		mappanel.setVisible(true);
 		while (true) {
 			step();
@@ -810,14 +810,12 @@ public class BattleScreen extends Screen {
 	private void lookmessage(final String string) {
 		messagepanel.clear();
 		Game.message(
-				"Examine: move the cursor over another combatent, press v to view character sheet.\n\n"
+				"Examine: move the cursor over another combatant, press v to view character sheet.\n\n"
 						+ string,
 				null, Delay.NONE);
 		updateMessages();
 		Game.redraw();
 	}
-
-	public ArrayList<Combatant> fleeing = new ArrayList<Combatant>();
 
 	/**
 	 * @param mappanel
@@ -827,27 +825,16 @@ public class BattleScreen extends Screen {
 		this.mappanel = mappanel;
 	}
 
-	/**
-	 * @return Returns the mappanel.
-	 */
-	public MapPanelCommon getMappanel() {
-		return mappanel;
-	}
-
 	public LevelMapPanel getLevelMap() {
 		return levelMap;
 	}
 
 	public void setposition() {
-		getMappanel().setPosition(Game.hero().getMap(), Game.hero().x,
+		mappanel.setPosition(Game.hero().getMap(), Game.hero().x,
 				Game.hero().y);
 	}
 
 	public boolean drawbackground() {
-		return true;
-	}
-
-	public boolean scale() {
 		return true;
 	}
 

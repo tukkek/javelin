@@ -6,16 +6,11 @@ import java.awt.GridLayout;
 import java.awt.Panel;
 import java.awt.ScrollPane;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
-import javelin.controller.Point;
 import javelin.controller.db.Preferences;
 import javelin.model.BattleMap;
-import javelin.model.unit.Combatant;
 
-public abstract class MapPanel extends MapPanelCommon {
+public abstract class MapPanel extends Panel {
 	public static int tilesize = Preferences.TILESIZEWORLD;
 
 	public static Overlay overlay = null;
@@ -63,7 +58,6 @@ public abstract class MapPanel extends MapPanelCommon {
 		scroll.validate();
 	}
 
-	@Override
 	public void init() {
 		tilesize = gettilesize();
 		scroll.setVisible(false);
@@ -85,12 +79,10 @@ public abstract class MapPanel extends MapPanelCommon {
 
 	protected abstract Tile newtile(int x, int y);
 
-	@Override
 	public void viewPosition(BattleMap m, int x, int y) {
 		center(x, y, false);
 	}
 
-	@Override
 	public void setPosition(BattleMap m, int x, int y) {
 		center(x, y, true);
 	}
@@ -105,11 +97,6 @@ public abstract class MapPanel extends MapPanelCommon {
 		return getParent().getBounds().getSize();
 	}
 
-	@Override
-	public void render() {
-
-	}
-
 	protected void ensureminimumsize() {
 		Dimension preferredSize = getPreferredSize();
 		while (tilesize * mapwidth < preferredSize.getWidth()
@@ -118,12 +105,6 @@ public abstract class MapPanel extends MapPanelCommon {
 		}
 	}
 
-	@Override
-	public void setoverlay(Set<Point> area) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
 	public void zoom(int factor, boolean save, int x, int y) {
 		tilesize += factor * 4;
 		ensureminimumsize();
@@ -132,12 +113,6 @@ public abstract class MapPanel extends MapPanelCommon {
 		Preferences.setoption(configurationkey, tilesize);
 	}
 
-	@Override
-	public void autozoom(ArrayList<Combatant> combatants, int x, int y) {
-		center(x, y, true);
-	}
-
-	@Override
 	public boolean center(int x, int y, boolean force) {
 		int width = scroll.getWidth();
 		int height = scroll.getHeight();
@@ -165,17 +140,6 @@ public abstract class MapPanel extends MapPanelCommon {
 		return from <= value && value <= from + offset;
 	}
 
-	@Override
-	public void settilesize(int i) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void setdiscovered(HashSet<Point> hashSet) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
 	public void refresh() {
 		if (initial) {
 			initial = false;

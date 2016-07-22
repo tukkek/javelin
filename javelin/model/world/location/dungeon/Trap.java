@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
@@ -32,7 +31,7 @@ import tyrant.mikera.engine.RPG;
  */
 public class Trap extends Feature {
 
-	transient private BattleMap map;
+	// transient private BattleMap map;
 	/** Challenge rating. */
 	public final int cr;
 	/** Difficulty class to save against. */
@@ -91,11 +90,11 @@ public class Trap extends Feature {
 	@Override
 	public boolean activate() {
 		if (!draw) {
-			if (map != null) {
-				draw = true;
-				super.addvisual(map);
-				map = null;
-			}
+			// if (map != null) {
+			draw = true;
+			// super.addvisual(map);
+			// map = null;
+			// }
 			fallinto();
 			return true;
 		}
@@ -145,15 +144,6 @@ public class Trap extends Feature {
 	}
 
 	@Override
-	protected void addvisual(BattleMap map) {
-		if (draw) {
-			super.addvisual(map);
-		} else { // delay
-			this.map = map;
-		}
-	}
-
-	@Override
 	public void remove() {
 		// don't
 	}
@@ -161,6 +151,6 @@ public class Trap extends Feature {
 	/** Shows this trap to the player. */
 	public void discover() {
 		draw = true;
-		generate(map);
+		generate();
 	}
 }

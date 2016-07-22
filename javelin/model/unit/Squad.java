@@ -139,7 +139,7 @@ public class Squad extends WorldActor {
 		super.place();
 		updateavatar();
 		if (Game.hero() == null) {
-			Game.instance().hero = visual;
+			Game.instance().setHero(visual);
 		}
 	}
 

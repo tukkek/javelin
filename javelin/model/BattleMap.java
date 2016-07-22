@@ -33,64 +33,47 @@ import tyrant.mikera.tyrant.WorldMap;
 import tyrant.mikera.tyrant.test.MapHelper;
 
 /**
- * The root class for all maps in the tyrant universe
- * 
- * Map contains a wide variety of functions for creating and drawing map
- * elements, and also for managing the set of all objects placed on the map
- * 
- * All specific types of map (dungeons, towns etc) should extend Map
- * 
- * Some particularly useful Map creation functions: setTile copyArea fillArea
- * fillBorder rotateArea
- * 
- * Particularly useful object management functions: addThing getThings
- * 
- * Some useful AI helper functions getMobile getNearbyMobile countNearbyMobiles
- * findNearestFoe
- * 
- * Note: Map is final for performance reasons
- * 
+ * TODO remove from 2.0+, use {@link BattleState} directly.
  */
-
 public class BattleMap extends BaseObject implements ThingOwner {
 	private static final int[] DELTAS = new int[] { -1, 0, +1 };
 
-	public static class VisionCache {
-		public static ArrayList<Point> positions = new ArrayList<Point>();
-
-		public String period;
-		final public int vision;
-		public ArrayList<Point> seen = new ArrayList<Point>();
-
-		public VisionCache(final String perception, final Thing h) {
-			period = perception;
-			vision = h.combatant.source.vision;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			final VisionCache that = (VisionCache) obj;
-			return that.period.equals(that.period) && vision == that.vision;
-		}
-
-		static ArrayList<Point> pointsfromcombatents() {
-			ArrayList<Point> points =
-					new ArrayList<Point>(BattleMap.combatants.size());
-			for (Combatant c : BattleMap.combatants) {
-				points.add(new Point(c.location[0], c.location[1]));
-			}
-			return points;
-		}
-
-		static boolean valid() {
-			ArrayList<Point> points = pointsfromcombatents();
-			if (positions.equals(points)) {
-				return true;
-			}
-			positions = points;
-			return false;
-		}
-	}
+	// public static class VisionCache {
+	// public static ArrayList<Point> positions = new ArrayList<Point>();
+	//
+	// public String period;
+	// final public int vision;
+	// public ArrayList<Point> seen = new ArrayList<Point>();
+	//
+	// public VisionCache(final String perception, final Thing h) {
+	// period = perception;
+	// vision = h.combatant.source.vision;
+	// }
+	//
+	// @Override
+	// public boolean equals(Object obj) {
+	// final VisionCache that = (VisionCache) obj;
+	// return that.period.equals(that.period) && vision == that.vision;
+	// }
+	//
+	// static ArrayList<Point> pointsfromcombatents() {
+	// ArrayList<Point> points =
+	// new ArrayList<Point>(BattleMap.combatants.size());
+	// for (Combatant c : BattleMap.combatants) {
+	// points.add(new Point(c.location[0], c.location[1]));
+	// }
+	// return points;
+	// }
+	//
+	// static boolean valid() {
+	// ArrayList<Point> points = pointsfromcombatents();
+	// if (positions.equals(points)) {
+	// return true;
+	// }
+	// positions = points;
+	// return false;
+	// }
+	// }
 
 	private static final long serialVersionUID = 2476911722567644463L;
 	// Map storage
@@ -106,9 +89,9 @@ public class BattleMap extends BaseObject implements ThingOwner {
 	public transient int[] path;
 	public String period;
 	public ArrayList<Meld> meld = new ArrayList<Meld>();
-	/** Mapping of vision cache data by {@link Combatant#id}. */
-	public static final TreeMap<Integer, VisionCache> visioncache =
-			new TreeMap<Integer, VisionCache>();
+	// /** Mapping of vision cache data by {@link Combatant#id}. */
+	// public static final TreeMap<Integer, VisionCache> visioncache =
+	// new TreeMap<Integer, VisionCache>();
 
 	// Internal constants
 	private static final int LOS_DETAIL = 26;
@@ -911,38 +894,6 @@ public class BattleMap extends BaseObject implements ThingOwner {
 	public static final int FILTER_MONSTER = 1;
 	public static final int FILTER_ITEM = 2;
 
-	// public List findStuff(final Thing b, final int filter) {
-	// if (b.place != this) {
-	// return null;
-	// }
-	// final int sx = b.x;
-	// final int sy = b.y;
-	// final int viewRange = Being.calcViewRange(b);
-	// List l = new LinkedList();
-	//
-	// for (int i = 1; i <= viewRange; i++) {
-	// final int x1 = sx - i;
-	// final int x2 = sx + i;
-	// final int y1 = sy - i;
-	// final int y2 = sy + i;
-	// for (int p = -i; p < i; p++) {
-	// if (y2 < height && sx + p < width && sx + p >= 0) {
-	// l = findStuffPoint(sx + p + y2 * width, b, filter, l);
-	// }
-	// if (y1 >= 0 && sx - p < width && sx - p >= 0) {
-	// l = findStuffPoint(sx - p + y1 * width, b, filter, l);
-	// }
-	// if (x2 < width && sy + p < height && sy + p >= 0) {
-	// l = findStuffPoint(x2 + (sy + p) * width, b, filter, l);
-	// }
-	// if (x1 >= 0 && sy - p < height && sy - p >= 0) {
-	// l = findStuffPoint(x1 + (sy - p) * width, b, filter, l);
-	// }
-	// }
-	// }
-	// return l;
-	// }
-
 	/**
 	 * i = location b = being ( for LOS purposes ) filter = what to look for
 	 * LinkedList = list of interesting points
@@ -1234,27 +1185,27 @@ public class BattleMap extends BaseObject implements ThingOwner {
 
 	/** calculates all the visible squares for the hero at given position */
 	public void calcVisible(final Thing h) {
-		final int combatantid = h.combatant.id;
-		final BattleState s = getState();
-		VisionCache cache = visioncache.get(combatantid);
-		final String perceptiona = h.combatant.perceive(period);
-		if (cache != null) {
-			if (VisionCache.valid()
-					&& cache.equals(new VisionCache(perceptiona, h))) {
-				for (Point p : cache.seen) {
-					seeTile(p.x, p.y);
-				}
-				return;
-			} else {
-				visioncache.clear();
-			}
-		}
-		cache = new VisionCache(perceptiona, h);
-		for (Point p : h.combatant.calculatevision(s)) {
-			cache.seen.add(p);
-			seeTile(p.x, p.y);
-		}
-		visioncache.put(combatantid, cache);
+		// final int combatantid = h.combatant.id;
+		// final BattleState s = getState();
+		//// VisionCache cache = visioncache.get(combatantid);
+		// final String perceptiona = h.combatant.perceive(period);
+		// if (cache != null) {
+		// if (VisionCache.valid()
+		// && cache.equals(new VisionCache(perceptiona, h))) {
+		// for (Point p : cache.seen) {
+		// seeTile(p.x, p.y);
+		// }
+		// return;
+		// } else {
+		// visioncache.clear();
+		// }
+		// }
+		// cache = new VisionCache(perceptiona, h);
+		// for (Point p : h.combatant.calculatevision(s)) {
+		// cache.seen.add(p);
+		// seeTile(p.x, p.y);
+		// }
+		// visioncache.put(combatantid, cache);
 	}
 
 	public void seeTile(int x, int y) {
@@ -1277,21 +1228,21 @@ public class BattleMap extends BaseObject implements ThingOwner {
 
 	/** Make a square visible */
 	public void setVisible(final int x, final int y) {
-		final int i = x + y * width;
-		if (x < 0 || y < 0 || x >= width || y >= height) {
-			return;
-		}
-		if ((tiles[i] & Tile.TF_VISIBLE) == 0) {
-			tiles[i] |= Tile.TF_VISIBLE
-			// | Tile.TF_DISCOVERED
-			;
-			final Thing m = getMobile(x, y);
-			if (m != null) {
-				if (m.isHostile(Game.hero())) {
-					Game.hero().isRunning(false);
-				}
-			}
-		}
+		// final int i = x + y * width;
+		// if (x < 0 || y < 0 || x >= width || y >= height) {
+		// return;
+		// }
+		// if ((tiles[i] & Tile.TF_VISIBLE) == 0) {
+		// tiles[i] |= Tile.TF_VISIBLE
+		// // | Tile.TF_DISCOVERED
+		// ;
+		// final Thing m = getMobile(x, y);
+		// if (m != null) {
+		// if (m.isHostile(Game.hero())) {
+		// Game.hero().isRunning(false);
+		// }
+		// }
+		// }
 	}
 
 	/** an the square currently be seen by the hero */

@@ -2,7 +2,6 @@ package javelin.model.world.location.dungeon;
 
 import java.io.Serializable;
 
-import javelin.model.BattleMap;
 import javelin.model.unit.Squad;
 import javelin.view.Images;
 import javelin.view.mappanel.dungeon.DungeonMover;
@@ -67,18 +66,9 @@ public abstract class Feature implements Serializable {
 	 * @param map
 	 *            Adds itself to this map.
 	 */
-	public void generate(BattleMap map) {
+	public void generate() {
 		visual = Lib.create(thing);
 		visual.javelinimage = Images.getImage(avatarfile);
-		addvisual(map);
-	}
-
-	/**
-	 * @param map
-	 *            See {@link BattleMap#addThing(Thing, int, int)}.
-	 */
-	protected void addvisual(BattleMap map) {
-		map.addThing(visual, x, y);
 	}
 
 	/**

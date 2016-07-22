@@ -264,7 +264,6 @@ public abstract class Temple extends UniqueLocation {
 	 * @return <code>true</code> if a hazard happens.
 	 */
 	public boolean hazard(TempleDungeon templeDungeon) {
-		// some dungoen have Features instead of Hazards
 		return false;
 	}
 

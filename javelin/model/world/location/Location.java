@@ -247,18 +247,28 @@ public abstract class Location extends WorldActor {
 		});
 		Game.messagepanel.clear();
 		Game.message(
-				description + ". Forces: ("
-						+ ChallengeRatingCalculator.describedifficulty(
-								ChallengeRatingCalculator.calculateel(opponents)
-										- ChallengeRatingCalculator.calculateel(
-												Squad.active.members))
-						+ " fight)\n\n" + Squad.active.spot(opponents)
-						+ "\n\nPress s to storm or any other key to retreat.",
+				describe(opponents, description) + "\n\n"
+						+ "Press s to storm or any other key to retreat.",
 				null, Delay.NONE);
 		if (InfoScreen.feedback() == 's') {
 			return true;
 		}
 		throw new RepeatTurn();
+	}
+
+	private static String describe(List<Combatant> opponents,
+			String description) {
+		return description + ". Forces: ("
+				+ ChallengeRatingCalculator.describedifficulty(
+						ChallengeRatingCalculator.calculateel(opponents)
+								- ChallengeRatingCalculator
+										.calculateel(Squad.active.members))
+				+ " fight)\n\n" + Squad.active.spot(opponents);
+	}
+
+	public String describe() {
+		return garrison.isEmpty() ? toString() + "."
+				: describe(garrison, toString());
 	}
 
 	@Override

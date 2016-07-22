@@ -24,6 +24,8 @@ import javelin.model.unit.Combatant;
 public abstract class MapPanel extends MapPanelCommon {
 	public static int tilesize = Preferences.TILESIZEWORLD;
 
+	public static Overlay overlay = null;
+
 	public Tile[][] tiles = null;
 	protected ScrollPane scroll = new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS);
 	Panel parent = new Panel();

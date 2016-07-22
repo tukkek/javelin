@@ -472,7 +472,7 @@ public class Javelin {
 	public static KeyEvent message(String text, boolean requireenter) {
 		Game.messagepanel.clear();
 		Game.message(text + "\nPress " + (requireenter ? "ENTER" : "any key")
-				+ " to coninue...", null, Delay.NONE);
+				+ " to continue...", null, Delay.NONE);
 		KeyEvent input = Game.getInput();
 		while (requireenter && input.getKeyChar() != '\n') {
 			input = Game.getInput();

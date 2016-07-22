@@ -13,7 +13,6 @@ import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
-import javelin.view.mappanel.Overlay;
 import javelin.view.mappanel.Tile;
 import javelin.view.screen.BattleScreen;
 
@@ -24,7 +23,6 @@ import javelin.view.screen.BattleScreen;
  */
 public class BattlePanel extends MapPanel {
 	public static BattleState state = null;
-	public static Overlay overlay = null;
 	public boolean daylight;
 
 	public BattlePanel(BattleState s) {

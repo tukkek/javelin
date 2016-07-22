@@ -259,4 +259,10 @@ public abstract class WorldActor implements Serializable {
 	abstract public List<Combatant> getcombatants();
 
 	abstract public Image getimage();
+
+	abstract public String describe();
+
+	public boolean isadjacent(Squad active) {
+		return Math.abs(x - active.x) <= 1 && Math.abs(y - active.y) <= 1;
+	}
 }

@@ -121,6 +121,7 @@ public class Dungeon extends Location {
 	@Override
 	public boolean interact() {
 		super.interact();
+		activate(false);
 		return true;
 	}
 
@@ -359,9 +360,12 @@ public class Dungeon extends Location {
 
 	/**
 	 * Akin to terrain {@link Hazard}s.
+	 * 
+	 * @return <code>true</code> if a hazard happens.
 	 */
-	public void hazard() {
+	public boolean hazard() {
 		// no hazards in normal dungeons
+		return false;
 	}
 
 	/**

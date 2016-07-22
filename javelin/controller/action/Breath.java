@@ -25,7 +25,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.BreathWeapon.BreathArea;
-import javelin.view.mappanel.battle.BattlePanel;
+import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.battle.overlay.BreathOverlay;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.Thing;
@@ -89,7 +89,7 @@ public class Breath extends Action implements AiAction {
 		}
 		try {
 			BreathOverlay overlay = new BreathOverlay(area);
-			((BattlePanel) BattleScreen.active.mappanel).overlay = overlay;
+			((MapPanel) BattleScreen.active.mappanel).overlay = overlay;
 			// BattleScreen.active.mappanel.setoverlay(area);
 			clear();
 			Game.redraw();

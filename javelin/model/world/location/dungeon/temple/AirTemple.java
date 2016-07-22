@@ -37,9 +37,9 @@ public class AirTemple extends Temple {
 	}
 
 	@Override
-	public void hazard(TempleDungeon d) {
+	public boolean hazard(TempleDungeon d) {
 		if (RPG.r(1, Dungeon.STEPSPERENCOUNTER) != 1) {
-			return;
+			return false;
 		}
 		ArrayList<Point> steps = new ArrayList<Point>();
 		steps.add(new Point(d.hero.x, d.hero.y));
@@ -47,7 +47,7 @@ public class AirTemple extends Temple {
 		for (int i = 0; i < nsteps; i++) {
 			Point p = push(steps, d);
 			if (p == null) {
-				return;
+				return false;
 			}
 			steps.add(p);
 		}
@@ -57,6 +57,7 @@ public class AirTemple extends Temple {
 		map.removeThing(d.hero);
 		map.addThing(d.hero, to.x, to.y);
 		JavelinApp.context.view(d.hero);
+		return true;
 	}
 
 	private Point push(ArrayList<Point> steps, TempleDungeon d) {

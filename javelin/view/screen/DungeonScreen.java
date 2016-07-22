@@ -51,14 +51,16 @@ public class DungeonScreen extends WorldScreen {
 	}
 
 	@Override
-	public void explore(float hoursellapsed) {
+	public boolean explore(float hoursellapsed, boolean encounter) {
 		try {
-			RandomEncounter.encounter(Dungeon.ENCOUNTERRATIO);
+			if (encounter) {
+				RandomEncounter.encounter(Dungeon.ENCOUNTERRATIO);
+			}
 		} catch (StartBattle e) {
 			map.removeThing(Dungeon.active.hero);
 			throw e;
 		}
-		Dungeon.active.hazard();
+		return Dungeon.active.hazard();
 	}
 
 	@Override

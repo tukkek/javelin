@@ -17,6 +17,7 @@ import javelin.model.world.WorldActor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
+import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.Thing;
@@ -86,15 +87,20 @@ public class WorldMove extends WorldAction {
 
 	@Override
 	public void perform(final WorldScreen s) {
-		Squad.active.lastterrain = Terrain.current();
 		final Thing t = JavelinApp.context.gethero();
-		int tox = t.x + deltax;
-		int toy = t.y + deltay;
+		move(t.x + deltax, t.y + deltay, true);
+	}
+
+	public static boolean move(int tox, int toy, boolean encounter) {
+		final Thing t = JavelinApp.context.gethero();
+		final WorldScreen s = (WorldScreen) BattleScreen.active;
+		Squad.active.lastterrain = Terrain.current();
 		if (!World.validatecoordinate(tox, toy) || (Dungeon.active == null
 				&& !World.seed.map[tox][toy].enter(tox, toy))) {
 			throw new RepeatTurn();
 		}
-		float hours = Dungeon.active == null ? Squad.active.move(false) : 0;
+		float hours = Dungeon.active == null
+				? Squad.active.move(false, Terrain.current()) : 0;
 		try {
 			WorldActor actor =
 					Dungeon.active == null ? WorldActor.get(tox, toy) : null;
@@ -102,49 +108,54 @@ public class WorldMove extends WorldAction {
 					actor instanceof Location ? (Location) actor : null;
 			try {
 				if (JavelinApp.context.react(actor, tox, toy)) {
+					if (BattleScreen.active.map != t.getMap()) {
+						return true;
+					}
 					if (Dungeon.active != null) {
 						if (DungeonScreen.dontmove) {
 							DungeonScreen.dontmove = false;
-							return;
+							return false;
 						}
-						place(t, deltax, deltay);
+						place(t, tox, toy);
 					} else if (place != null) {
 						if (place.allowentry && place.garrison.isEmpty()) {
-							place(t, deltax, deltay);
+							place(t, tox, toy);
 						}
 						/* TODO */
 						if (place instanceof Dungeon) {
-							((Dungeon) place).activate(false);
+							// ((Dungeon) place).activate(false);
 						} else if (place instanceof Temple) {
-							Temple temple = (Temple) place;
-							if (temple.open) {
-								temple.floors.get(0).activate(false);
-							}
+							// Temple temple = (Temple) place;
+							// if (temple.open) {
+							// temple.floors.get(0).activate(false);
+							// }
 						}
 					}
-					return;
+					return true;
 				}
 				if (place != null && !place.allowentry) {
-					return;
+					return false;
 				}
 			} catch (StartBattle e) {
 				if (place != null && place.allowentry) {
-					place(t, deltax, deltay);
+					place(t, tox, toy);
 				}
 				throw e;
 			}
 			if (s instanceof DungeonScreen && (DungeonScreen.dontmove
-					|| t.getMap() != Javelin.app.context.map)) {
+					|| t.getMap() != JavelinApp.context.map)) {
 				DungeonScreen.dontmove = false;
-				return;// TODO hack
+				return false;// TODO hack
 			}
-			if (!place(t, deltax, deltay)) {
-				return;
+			if (!place(t, tox, toy)) {
+				return false;
 			}
+			boolean stop = false;
 			if (WorldMove.walk(t)) {
-				JavelinApp.context.explore(hours);
+				stop = JavelinApp.context.explore(hours, encounter);
 			}
 			heal();
+			return stop;
 		} finally {
 			if (Squad.active != null) {
 				Squad.active.ellapse(Math.round(hours));
@@ -152,20 +163,18 @@ public class WorldMove extends WorldAction {
 		}
 	}
 
-	static boolean place(final Thing t, final int deltax, final int deltay) {
-		JavelinApp.context.map.removeThing(t);
-		t.x += deltax;
-		t.y += deltay;
-		if (!JavelinApp.context.allowmove(t.x, t.y)) {
-			t.x -= deltax;
-			t.y -= deltay;
-			JavelinApp.context.map.addThing(t, t.x, t.y);
+	static boolean place(final Thing t, final int tox, final int toy) {
+		if (!JavelinApp.context.allowmove(tox, toy)) {
+			// JavelinApp.context.map.addThing(t, t.x, t.y);
 			return false;
 		}
-		if (t.x < 0 || t.x >= JavelinApp.context.map.width || t.y < 0
-				|| t.y >= JavelinApp.context.map.height) {
-			t.x -= deltax;
-			t.y -= deltay;
+		if (tox < 0 || tox >= JavelinApp.context.map.width || toy < 0
+				|| toy >= JavelinApp.context.map.height) {
+			//
+		} else {
+			JavelinApp.context.map.removeThing(t);
+			t.x = tox;
+			t.y = toy;
 		}
 		JavelinApp.context.updatelocation(t.x, t.y);
 		JavelinApp.context.map.addThing(t, t.x, t.y);

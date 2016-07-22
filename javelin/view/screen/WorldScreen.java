@@ -118,16 +118,18 @@ public class WorldScreen extends BattleScreen {
 		WorldScreen.current = this;
 		Javelin.settexture(QuestApp.DEFAULTTEXTURE);
 		mappanel.settilesize(48);
-		Tile[][] tiles = gettiles();
-		if (Preferences.DEBUGESHOWMAP) {
-			for (Tile[] ts : tiles) {
-				for (Tile t : ts) {
-					t.discovered = true;
+		if (mappanel instanceof MapPanel) {
+			Tile[][] tiles = gettiles();
+			if (Preferences.DEBUGESHOWMAP) {
+				for (Tile[] ts : tiles) {
+					for (Tile t : ts) {
+						t.discovered = true;
+					}
 				}
-			}
-		} else {
-			for (Point p : StateManager.DISCOVERED) {
-				tiles[p.x][p.y].discovered = true;
+			} else {
+				for (Point p : StateManager.DISCOVERED) {
+					tiles[p.x][p.y].discovered = true;
+				}
 			}
 		}
 	}
@@ -154,7 +156,18 @@ public class WorldScreen extends BattleScreen {
 			try {
 				updatescreen(h);
 				Game.getUserinterface().waiting = true;
-				performAction(h, convertEventToAction(getUserInput()), false);
+				Game.getUserinterface().waiting = true;
+				final KeyEvent updatableUserAction = getUserInput();
+				if (MapPanel.overlay != null) {
+					MapPanel.overlay.clear();
+				}
+				if (updatableUserAction == null) {
+					callback.run();
+					callback = null;
+				} else {
+					performAction(h, convertEventToAction(updatableUserAction),
+							false);
+				}
 				break;
 			} catch (RepeatTurn e) {
 				Game.messagepanel.clear();
@@ -305,7 +318,7 @@ public class WorldScreen extends BattleScreen {
 		infos.add(Season.current.toString());
 		infos.add("");
 		if (Dungeon.active == null) {
-			infos.add(Squad.active.speed() + " mph"
+			infos.add(Squad.active.speed(Terrain.current()) + " mph"
 					+ (Squad.active.transport == null ? ""
 							: Squad.active.transport
 									.load(Squad.active.members)));
@@ -401,9 +414,12 @@ public class WorldScreen extends BattleScreen {
 	 * the world scre en smal enough to fit in just a few screens worth of size.
 	 * 
 	 * @param hoursellapsed
+	 * @return
 	 */
-	public void explore(float hoursellapsed) {
-		if (Squad.active.transport == null || Squad.active.transport.battle()) {
+	public boolean explore(float hoursellapsed, boolean encounter) {
+		if (encounter && //
+				(Squad.active.transport == null
+						|| Squad.active.transport.battle())) {
 			RandomEncounter.encounter(hoursellapsed / HOURSPERENCOUNTER);
 		}
 		Set<Hazard> hazards = Terrain.current()
@@ -413,10 +429,12 @@ public class WorldScreen extends BattleScreen {
 				hazards.remove(h);
 			}
 		}
-		if (!hazards.isEmpty()) {
-			RPG.pick(new ArrayList<Hazard>(hazards))
-					.hazard(Math.round(hoursellapsed));
+		if (hazards.isEmpty()) {
+			return true;
 		}
+		RPG.pick(new ArrayList<Hazard>(hazards))
+				.hazard(Math.round(hoursellapsed));
+		return false;
 	}
 
 	/**

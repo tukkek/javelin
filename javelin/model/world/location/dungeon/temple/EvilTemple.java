@@ -53,9 +53,9 @@ public class EvilTemple extends Temple {
 	}
 
 	@Override
-	public void hazard(TempleDungeon dungeon) {
+	public boolean hazard(TempleDungeon dungeon) {
 		if (RPG.r(1, Dungeon.STEPSPERENCOUNTER * 10) != 1) {
-			return;
+			return false;
 		}
 		Class<? extends Feature> targettype;
 		if (Squad.active.equipment.contains(Skull.class) == null) {
@@ -74,5 +74,6 @@ public class EvilTemple extends Temple {
 		BattleMap m = dungeon.hero.getMap();
 		m.removeThing(dungeon.hero);
 		m.addThing(dungeon.hero, target.x, target.y);
+		return true;
 	}
 }

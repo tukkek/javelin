@@ -74,4 +74,9 @@ public class ParkedVehicle extends WorldActor {
 	public List<Combatant> getcombatants() {
 		return null;
 	}
+
+	@Override
+	public String describe() {
+		return "Parked " + transport.name.toLowerCase() + ".";
+	}
 }

@@ -31,6 +31,7 @@ import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.view.StatusPanel;
+import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.MapPanelCommon;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.battle.BattlePanel;
@@ -210,8 +211,8 @@ public class BattleScreen extends Screen {
 				endturn();
 				Game.getUserinterface().waiting = true;
 				final KeyEvent updatableUserAction = getUserInput();
-				if (BattlePanel.overlay != null) {
-					BattlePanel.overlay.clear();
+				if (MapPanel.overlay != null) {
+					MapPanel.overlay.clear();
 				}
 				if (updatableUserAction == null) {
 					callback.run();
@@ -657,19 +658,19 @@ public class BattleScreen extends Screen {
 	}
 
 	private void clearCursor() {
-		if (BattlePanel.overlay != null) {
-			BattlePanel.overlay.clear();
+		if (MapPanel.overlay != null) {
+			MapPanel.overlay.clear();
 		}
 	}
 
 	private Point getcursor() {
-		TargetOverlay cursor = (TargetOverlay) BattlePanel.overlay;
+		TargetOverlay cursor = (TargetOverlay) MapPanel.overlay;
 		return new Point(cursor.x, cursor.y);
 	}
 
 	private void setCursor(int x, int y) {
 		clearCursor();
-		BattlePanel.overlay = new TargetOverlay(x, y);
+		MapPanel.overlay = new TargetOverlay(x, y);
 		mappanel.refresh();
 	}
 

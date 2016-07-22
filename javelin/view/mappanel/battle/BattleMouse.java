@@ -2,8 +2,6 @@ package javelin.view.mappanel.battle;
 
 import java.awt.event.MouseEvent;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javelin.controller.Point;
 import javelin.controller.action.Fire;
@@ -18,7 +16,8 @@ import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.battle.overlay.MoveOverlay;
-import javelin.view.mappanel.battle.overlay.MoveOverlay.Step;
+import javelin.view.mappanel.battle.overlay.Mover;
+import javelin.view.mappanel.battle.overlay.Mover.Step;
 import javelin.view.mappanel.battle.overlay.TargetOverlay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.StatisticsScreen;
@@ -50,8 +49,6 @@ public class BattleMouse extends Mouse {
 						: Action.RANGED;
 	}
 
-	private Timer moveschedule;
-
 	public BattleMouse(MapPanel panel) {
 		super(panel);
 	}
@@ -81,8 +78,8 @@ public class BattleMouse extends Mouse {
 			final Combatant current = Game.hero().combatant;
 			final Action a = getaction(current, target, s);
 			if (a == Action.MOVE) {
-				if (BattlePanel.overlay instanceof MoveOverlay) {
-					final MoveOverlay walk = (MoveOverlay) BattlePanel.overlay;
+				if (MapPanel.overlay instanceof MoveOverlay) {
+					final MoveOverlay walk = (MoveOverlay) MapPanel.overlay;
 					if (!walk.path.steps.isEmpty()) {
 						walk.clear();
 						BattleScreen.perform(new Runnable() {
@@ -117,8 +114,8 @@ public class BattleMouse extends Mouse {
 					}
 				});
 			}
-			if (BattlePanel.overlay != null) {
-				BattlePanel.overlay.clear();
+			if (MapPanel.overlay != null) {
+				MapPanel.overlay.clear();
 			}
 			return;
 		}
@@ -127,9 +124,7 @@ public class BattleMouse extends Mouse {
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		if (moveschedule != null) {
-			moveschedule.cancel();
-		}
+		MoveOverlay.cancel();
 		if (BattleScreen.lastlooked != null) {
 			BattleScreen.lastlooked = null;
 			BattleScreen.active.statuspanel.repaint();
@@ -137,8 +132,8 @@ public class BattleMouse extends Mouse {
 		if (!Game.getUserinterface().waiting) {
 			return;
 		}
-		if (BattlePanel.overlay != null) {
-			BattlePanel.overlay.clear();
+		if (MapPanel.overlay != null) {
+			MapPanel.overlay.clear();
 		}
 		BattleScreen.active.messagepanel.clear();
 		try {
@@ -148,14 +143,11 @@ public class BattleMouse extends Mouse {
 			final Combatant target = s.getCombatant(t.x, t.y);
 			final Action a = getaction(current, target, s);
 			if (a == Action.MOVE) {
-				moveschedule = new Timer();
-				moveschedule.schedule(new TimerTask() {
-					@Override
-					public void run() {
-						BattlePanel.overlay = new MoveOverlay(current,
-								new Point(t.x, t.y), s);
-					}
-				}, 100);
+				MoveOverlay
+						.schedule(new MoveOverlay(new Mover(
+								new Point(current.location[0],
+										current.location[1]),
+								new Point(t.x, t.y), current, s)));
 				return;
 			} else if (a == Action.MELEE) {
 				final List<Attack> attack = current.currentmelee.next == null
@@ -181,7 +173,7 @@ public class BattleMouse extends Mouse {
 	}
 
 	void status(String s, Combatant target) {
-		BattlePanel.overlay =
+		MapPanel.overlay =
 				new TargetOverlay(target.location[0], target.location[1]);
 		Game.message(s, null, Delay.NONE);
 		BattleScreen.active.updateMessages();

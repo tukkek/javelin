@@ -350,4 +350,9 @@ public class Incursion extends WorldActor {
 	public Image getimage() {
 		return Images.getImage(visual.combatant.source.avatarfile);
 	}
+
+	@Override
+	public String describe() {
+		return "Enemy incursion (" + Squad.active.spot(squad) + ")";
+	}
 }

@@ -70,10 +70,10 @@ public class BattleTile extends Tile {
 		}
 		if (shrouded) {
 			g.setColor(new Color(0, 0, 0, 0.8f));
-			g.fillRect(0, 0, BattlePanel.tilesize, BattlePanel.tilesize);
+			g.fillRect(0, 0, MapPanel.tilesize, MapPanel.tilesize);
 		}
-		if (BattlePanel.overlay != null) {
-			BattlePanel.overlay.overlay(this, g);
+		if (MapPanel.overlay != null) {
+			MapPanel.overlay.overlay(this, g);
 		}
 	}
 
@@ -82,22 +82,22 @@ public class BattleTile extends Tile {
 		final boolean blueteam = BattlePanel.state.blueTeam.contains(c);
 		if (Game.hero().combatant.equals(c)) {
 			g.setColor(blueteam ? Color.GREEN : Color.ORANGE);
-			g.fillRect(0, 0, BattlePanel.tilesize, BattlePanel.tilesize);
+			g.fillRect(0, 0, MapPanel.tilesize, MapPanel.tilesize);
 		}
 		draw(g, Images.getImage(c));
 		g.setColor(blueteam ? Color.BLUE : Color.RED);
-		final int hp = BattlePanel.tilesize
-				- BattlePanel.tilesize * c.hp / c.getmaxhp();
-		g.fillRect(0, hp, BattlePanel.tilesize / 10, BattlePanel.tilesize - hp);
+		final int hp = MapPanel.tilesize
+				- MapPanel.tilesize * c.hp / c.getmaxhp();
+		g.fillRect(0, hp, MapPanel.tilesize / 10, MapPanel.tilesize - hp);
 		if (c.ispenalized(BattlePanel.state)) {
 			g.drawImage(
-					Images.penalized.getScaledInstance(BattlePanel.tilesize,
-							BattlePanel.tilesize, Image.SCALE_DEFAULT),
+					Images.penalized.getScaledInstance(MapPanel.tilesize,
+							MapPanel.tilesize, Image.SCALE_DEFAULT),
 					0, 0, null);
 		}
 		if (c.isbuffed()) {
-			BUFF.paintBorder(t, g, 0, 0, BattlePanel.tilesize,
-					BattlePanel.tilesize);
+			BUFF.paintBorder(t, g, 0, 0, MapPanel.tilesize,
+					MapPanel.tilesize);
 		}
 	}
 }

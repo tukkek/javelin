@@ -130,6 +130,13 @@ public abstract class Temple extends UniqueLocation {
 	}
 
 	@Override
+	public void place() {
+		Realm r = realm;
+		super.place();
+		realm = r;
+	}
+
+	@Override
 	public Image getimage() {
 		return Images
 				.getImage("locationtemple" + realm.getname().toLowerCase());
@@ -137,7 +144,9 @@ public abstract class Temple extends UniqueLocation {
 
 	@Override
 	public boolean interact() {
-		if (!open) {
+		if (open) {
+			floors.get(0).activate(false);
+		} else {
 			if (!javelin.controller.db.Preferences.DEBUGUNLOCKTEMPLES
 					&& !open()) {
 				return true;
@@ -252,10 +261,11 @@ public abstract class Temple extends UniqueLocation {
 	/**
 	 * See {@link Dungeon#hazard()}.
 	 * 
-	 * @param templeDungeon
+	 * @return <code>true</code> if a hazard happens.
 	 */
-	public void hazard(TempleDungeon templeDungeon) {
+	public boolean hazard(TempleDungeon templeDungeon) {
 		// some dungoen have Features instead of Hazards
+		return false;
 	}
 
 	@Override

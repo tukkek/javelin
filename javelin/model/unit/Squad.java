@@ -81,6 +81,8 @@ public class Squad extends WorldActor {
 	/** Terrain type this squad is coming from after movement. */
 	public Terrain lastterrain = null;
 
+	transient private Image image = null;
+
 	/**
 	 * @param xp
 	 *            Starting location (x).
@@ -168,7 +170,12 @@ public class Squad extends WorldActor {
 
 	@Override
 	public Image getimage() {
-		return Images.getImage(visual.combatant.source.avatarfile);
+		try {
+			image = Images.getImage(visual.combatant.source.avatarfile);
+		} catch (NullPointerException e) {
+			// TODO fix ^
+		}
+		return image;
 	}
 
 	/**
@@ -550,9 +557,9 @@ public class Squad extends WorldActor {
 	/**
 	 * @return Like {@link #speed()} but return time in hours.
 	 */
-	public float move(boolean ellapse) {
+	public float move(boolean ellapse, Terrain t) {
 		float hours =
-				WorldMove.TIMECOST * (30f * WorldMove.NORMALMARCH) / speed();
+				WorldMove.TIMECOST * (30f * WorldMove.NORMALMARCH) / speed(t);
 		if (hours < 1) {
 			hours = 1;
 		}
@@ -567,8 +574,7 @@ public class Squad extends WorldActor {
 	 *         amount covered in an hour but the correspoinding movement per day
 	 *         is less since it has to account for sleep, resting, etc.
 	 */
-	public int speed() {
-		Terrain t = Terrain.current();
+	public int speed(Terrain t) {
 		int snow = t.getweather() == Terrain.SNOWING ? 2 : 1;
 		if (transport != null) {
 			int transportspeed = transport.getspeed(members) / snow;
@@ -652,5 +658,14 @@ public class Squad extends WorldActor {
 	@Override
 	public List<Combatant> getcombatants() {
 		return members;
+	}
+
+	@Override
+	public String describe() {
+		String members = "";
+		for (Combatant c : this.members) {
+			members += c + ", ";
+		}
+		return "Squad (" + members.substring(0, members.length() - 2) + ")";
 	}
 }

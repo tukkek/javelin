@@ -1,4 +1,4 @@
-package javelin.view.mappanel.battle.overlay;
+package javelin.view.mappanel;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -8,10 +8,8 @@ import java.util.TimerTask;
 import javax.swing.BorderFactory;
 
 import javelin.controller.Point;
-import javelin.view.mappanel.MapPanel;
-import javelin.view.mappanel.Overlay;
-import javelin.view.mappanel.Tile;
-import javelin.view.mappanel.battle.overlay.Mover.Step;
+import javelin.view.mappanel.battle.overlay.BattleMover;
+import javelin.view.mappanel.battle.overlay.BattleMover.Step;
 import javelin.view.screen.BattleScreen;
 
 public class MoveOverlay extends Overlay {
@@ -20,18 +18,17 @@ public class MoveOverlay extends Overlay {
 	static final javax.swing.border.Border REDBORDER =
 			BorderFactory.createLineBorder(Color.RED, 3);
 
-	public Mover path;
+	public BattleMover path;
 
-	public MoveOverlay(Mover mover) {
+	public MoveOverlay(BattleMover mover) {
 		path = mover;
 	}
 
-	void walk() {
+	public void walk() {
 		path.walk();
 		for (Step step : path.steps) {
 			affected.add(new Point(step.x, step.y));
-			((MapPanel) BattleScreen.active.mappanel).tiles[step.x][step.y]
-					.repaint();
+			BattleScreen.active.mappanel.tiles[step.x][step.y].repaint();
 		}
 	}
 
@@ -58,7 +55,7 @@ public class MoveOverlay extends Overlay {
 				MapPanel.overlay = overlay;
 				overlay.walk();
 				moveschedule.cancel();
-				((MapPanel) BattleScreen.active.mappanel).refresh();
+				BattleScreen.active.mappanel.refresh();
 			}
 		}, 100);
 	}
@@ -67,5 +64,10 @@ public class MoveOverlay extends Overlay {
 		if (moveschedule != null) {
 			moveschedule.cancel();
 		}
+	}
+
+	public void reset() {
+		path.reset();
+		affected.clear();
 	}
 }

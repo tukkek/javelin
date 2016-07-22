@@ -3,6 +3,7 @@ package javelin.model.world.location.dungeon.temple;
 import java.util.ArrayList;
 
 import javelin.Javelin;
+import javelin.controller.old.Game;
 import javelin.controller.terrain.Marsh;
 import javelin.controller.terrain.Terrain;
 import javelin.model.BattleMap;
@@ -17,6 +18,7 @@ import javelin.model.world.location.dungeon.StairsUp;
 import javelin.model.world.location.dungeon.temple.features.Altar;
 import javelin.model.world.location.dungeon.temple.features.StairsDown;
 import tyrant.mikera.engine.RPG;
+import tyrant.mikera.engine.Thing;
 
 /**
  * Found drowning in the {@link Marsh}. Good creatures are never found in the
@@ -71,9 +73,10 @@ public class EvilTemple extends Temple {
 			}
 		}
 		Javelin.message("A macabre force draws upon you...", true);
-		BattleMap m = dungeon.hero.getMap();
-		m.removeThing(dungeon.hero);
-		m.addThing(dungeon.hero, target.x, target.y);
+		Thing hero = Game.hero();
+		BattleMap m = hero.getMap();
+		m.removeThing(hero);
+		m.addThing(hero, target.x, target.y);
 		return true;
 	}
 }

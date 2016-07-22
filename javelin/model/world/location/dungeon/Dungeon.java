@@ -58,7 +58,7 @@ import tyrant.mikera.tyrant.Tile;
  */
 public class Dungeon extends Location {
 	/** Screen dimensions. */
-	public final static int SIZE = 7 + 1 + 7;
+	public final static int SIZE = 30;
 	final static float WALLRATIO = 1 / 4f;
 	final static int WALKABLEAREA = Math.round(SIZE * SIZE * WALLRATIO);
 	/**
@@ -103,9 +103,9 @@ public class Dungeon extends Location {
 	 */
 	public Point herolocation;
 
-	transient BattleMap map = null;
+	public transient BattleMap map = null;
 	/** TODO remove from 2.0+ */
-	transient public Thing hero;
+	// transient public Thing hero;
 	transient boolean generated = false;
 	/** File to use under 'avatar' folder. */
 	public String floor = "dungeonfloor";
@@ -137,13 +137,14 @@ public class Dungeon extends Location {
 					map = null;
 					features.clear();
 					walls.clear();
+					herolocation = null;
 				}
 			}
 		}
 		regenerate(loading);
-		Game.instance().setHero(hero);
-		JavelinApp.context = new DungeonScreen(map);
+		// Game.instance().setHero(hero);
 		active = this;
+		JavelinApp.context = new DungeonScreen(map);
 		BattleScreen.active = JavelinApp.context;
 		Squad.active.updateavatar();
 	}
@@ -168,10 +169,11 @@ public class Dungeon extends Location {
 				used.add(p);
 			}
 		}
-		herolocation =
-				new Point(root.x + RPG.pick(DELTAS), root.y + RPG.pick(DELTAS));
+		while (herolocation == null || herolocation.equals(root)) {
+			herolocation = new Point(root.x + RPG.pick(DELTAS),
+					root.y + RPG.pick(DELTAS));
+		}
 		carve(free, used);
-
 		placefeatures(free, used);
 		visible = new boolean[SIZE][SIZE];
 		for (int x = 0; x < Dungeon.SIZE; x++) {
@@ -203,11 +205,13 @@ public class Dungeon extends Location {
 	}
 
 	void carve(final Set<Point> free, Set<Point> used) {
+		boolean horizontal = RPG.r(1, 2) == 1;
 		while (free.size() < WALKABLEAREA) {
 			Point start = new Point(RPG.pick(new ArrayList<Point>(free)));
 			int length = RPG.r(5, 7);
 			int step = RPG.r(1, 2) == 1 ? -1 : +1;
-			if (RPG.r(1, 2) == 1) {
+			horizontal = !horizontal;
+			if (horizontal) {
 				new HorizontalCorridor(start, used, step).fill(length, free);
 			} else {
 				new VerticalCorridor(start, used, step).fill(length, free);
@@ -288,7 +292,8 @@ public class Dungeon extends Location {
 		Dungeon.active = null;
 		JavelinApp.context = new WorldScreen(JavelinApp.overviewmap);
 		BattleScreen.active = JavelinApp.context;
-		hero.remove();
+		Game.instance().hero.remove();
+		Squad.active.place();
 	}
 
 	void regenerate(boolean loading) {
@@ -300,7 +305,8 @@ public class Dungeon extends Location {
 		for (Point wall : walls) {
 			map.setTile(wall.x, wall.y, Tile.STONEWALL);
 		}
-		hero = Squad.active.createvisual();
+		Thing hero = Squad.active.createvisual();
+		Game.instance().setHero(hero);
 		setlocation(loading);
 		map.addThing(hero, hero.x, hero.y);
 		if (!generated) {
@@ -320,8 +326,10 @@ public class Dungeon extends Location {
 	 *            active dungeon).
 	 */
 	protected void setlocation(boolean loading) {
+		Thing hero = Game.instance().hero;
 		hero.x = herolocation.x;
 		hero.y = herolocation.y;
+		// Game.instance().setHero(hero);
 	}
 
 	@Override
@@ -406,5 +414,19 @@ public class Dungeon extends Location {
 	@Override
 	public List<Combatant> getcombatants() {
 		return null;
+	}
+
+	public Feature getfeature(int x, int y) {
+		for (Feature f : features) {
+			if (f.x == x && f.y == y) {
+				return f;
+			}
+		}
+		return null;
+	}
+
+	public void setvisible(int x, int y) {
+		visible[x][y] = true;
+		BattleScreen.active.mappanel.tiles[x][y].discovered = true;
 	}
 }

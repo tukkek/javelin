@@ -15,19 +15,13 @@ import javelin.controller.db.Preferences;
 import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
 
-/**
- * TODO needs an explicit method for incremenetal updates TODO make sure the
- * screen isn't fully repainting at every turn when done
- * 
- * @author alex
- */
 public abstract class MapPanel extends MapPanelCommon {
 	public static int tilesize = Preferences.TILESIZEWORLD;
 
 	public static Overlay overlay = null;
 
 	public Tile[][] tiles = null;
-	protected ScrollPane scroll = new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS);
+	public ScrollPane scroll = new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS);
 	Panel parent = new Panel();
 	int mapwidth;
 	int mapheight;
@@ -116,7 +110,7 @@ public abstract class MapPanel extends MapPanelCommon {
 
 	}
 
-	void ensureminimumsize() {
+	protected void ensureminimumsize() {
 		Dimension preferredSize = getPreferredSize();
 		while (tilesize * mapwidth < preferredSize.getWidth()
 				|| tilesize * mapheight < preferredSize.getHeight()) {

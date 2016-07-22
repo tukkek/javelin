@@ -71,7 +71,7 @@ public class BattleScreen extends Screen {
 	public static List<Combatant> originalblueteam;
 	static public Combatant lastlooked = null;
 
-	public MapPanelCommon mappanel;
+	public MapPanel mappanel;
 	public MessagePanel messagepanel;
 	public StatusPanel statuspanel;
 	public GameHandler gameHandler = new GameHandler();
@@ -152,7 +152,7 @@ public class BattleScreen extends Screen {
 		mappanel.repaint();
 	}
 
-	protected MapPanelCommon getmappanel() {
+	protected MapPanel getmappanel() {
 		return new BattlePanel(map.getState());
 	}
 
@@ -823,7 +823,7 @@ public class BattleScreen extends Screen {
 	 * @param mappanel
 	 *            The mappanel to set.
 	 */
-	public void setMappanel(final MapPanelCommon mappanel) {
+	public void setMappanel(final MapPanel mappanel) {
 		this.mappanel = mappanel;
 	}
 
@@ -855,6 +855,10 @@ public class BattleScreen extends Screen {
 		return Javelin.app.fight.map.map[x][y];
 	}
 
+	/**
+	 * TODO with the {@link MapPanel} hierarchy now this is probably not needed
+	 * anymore
+	 */
 	public Image gettile(int x, int y) {
 		Map m = Javelin.app.fight.map;
 		Square s = m.map[x][y];

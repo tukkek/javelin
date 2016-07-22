@@ -25,6 +25,7 @@ import javelin.view.KeysScreen;
 import javelin.view.frame.keys.BattleKeysScreen;
 import javelin.view.frame.keys.PreferencesScreen;
 import javelin.view.frame.keys.WorldKeysScreen;
+import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.tyrant.TextZone;
 
@@ -46,6 +47,7 @@ public class Preferences {
 	static final String FILE = "preferences.properties";
 	public static final String KEYTILEBATTLE = "ui.battletile";
 	public static final String KEYTILEWORLD = "ui.worldtile";
+	public static final String KEYTILEDUNGEON = "ui.dungeontile";
 	static Properties PROPERTIES = new Properties();
 
 	public static boolean AICACHEENABLED;
@@ -58,9 +60,7 @@ public class Preferences {
 	public static boolean BACKUP;
 	public static int SAVEINTERVAL;
 	public static int TILESIZEBATTLE;
-	/** TODO */
 	public static int TILESIZEWORLD;
-	/** TODO */
 	public static int TILESIZEDUNGEON;
 
 	public static boolean DEBUGDISABLECOMBAT;
@@ -191,8 +191,9 @@ public class Preferences {
 		BACKUP = getString("fs.backup").equals("true");
 		SAVEINTERVAL = getInteger("fs.saveinterval", 9);
 
-		TILESIZEBATTLE = getInteger(KEYTILEBATTLE, 32);
 		TILESIZEWORLD = getInteger(KEYTILEWORLD, 32);
+		TILESIZEBATTLE = getInteger(KEYTILEBATTLE, 32);
+		TILESIZEDUNGEON = getInteger(KEYTILEDUNGEON, 32);
 		MESSAGEWAIT = Math.round(1000 * getFloat("ui.messagedelay"));
 		TEXTCOLOR = getString("ui.textcolor").toUpperCase();
 		try {
@@ -246,7 +247,8 @@ public class Preferences {
 	}
 
 	static void initdebug() {
-		if (DEBUGESHOWMAP) {
+		if (DEBUGESHOWMAP && BattleScreen.active != null
+				&& BattleScreen.active.getClass().equals(WorldScreen.class)) {
 			for (int x = 0; x < World.MAPDIMENSION; x++) {
 				for (int y = 0; y < World.MAPDIMENSION; y++) {
 					WorldScreen.setVisible(x, y);

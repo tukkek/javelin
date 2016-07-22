@@ -14,10 +14,10 @@ import javelin.model.unit.Attack;
 import javelin.model.unit.Combatant;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
+import javelin.view.mappanel.MoveOverlay;
 import javelin.view.mappanel.Tile;
-import javelin.view.mappanel.battle.overlay.MoveOverlay;
-import javelin.view.mappanel.battle.overlay.Mover;
-import javelin.view.mappanel.battle.overlay.Mover.Step;
+import javelin.view.mappanel.battle.overlay.BattleMover;
+import javelin.view.mappanel.battle.overlay.BattleMover.Step;
 import javelin.view.mappanel.battle.overlay.TargetOverlay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.StatisticsScreen;
@@ -144,7 +144,7 @@ public class BattleMouse extends Mouse {
 			final Action a = getaction(current, target, s);
 			if (a == Action.MOVE) {
 				MoveOverlay
-						.schedule(new MoveOverlay(new Mover(
+						.schedule(new MoveOverlay(new BattleMover(
 								new Point(current.location[0],
 										current.location[1]),
 								new Point(t.x, t.y), current, s)));

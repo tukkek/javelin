@@ -11,11 +11,11 @@ import javelin.model.unit.Combatant;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.screen.BattleScreen;
 
-public class Mover extends Walker {
+public class BattleMover extends Walker {
 	public class Step {
 		public final int x, y;
 		public final float apcost;
-		boolean engaged;
+		public boolean engaged;
 
 		public Step(final int x2, final int y2, final float apcost2,
 				final boolean engaged) {
@@ -29,7 +29,8 @@ public class Mover extends Walker {
 	Combatant current;
 	public ArrayList<Step> steps = new ArrayList<Step>(1);
 
-	public Mover(Point from, Point to, Combatant current, BattleState state) {
+	public BattleMover(Point from, Point to, Combatant current,
+			BattleState state) {
 		super(from, to, state);
 		this.current = current;
 	}
@@ -127,5 +128,15 @@ public class Mover extends Walker {
 
 	public String drawtext(float apcost) {
 		return Float.toString(apcost).substring(0, 3);
+	}
+
+	@Override
+	public void reset() {
+		super.reset();
+		steps.clear();
+	}
+
+	public Point resetlocation() {
+		return null;
 	}
 }

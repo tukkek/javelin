@@ -4,10 +4,10 @@ import javelin.controller.Point;
 import javelin.controller.terrain.Terrain;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Squad;
-import javelin.view.mappanel.battle.overlay.Mover;
+import javelin.view.mappanel.battle.overlay.BattleMover;
 import javelin.view.screen.WorldScreen;
 
-public class WorldMover extends Mover {
+public class WorldMover extends BattleMover {
 
 	public WorldMover(Point from, Point to) {
 		super(from, to, null, null);
@@ -50,5 +50,10 @@ public class WorldMover extends Mover {
 	@Override
 	public String drawtext(float apcost) {
 		return apcost > 1 ? "100%" : Math.round(apcost * 100) + "%";
+	}
+
+	@Override
+	public Point resetlocation() {
+		return new Point(Squad.active.x, Squad.active.y);
 	}
 }

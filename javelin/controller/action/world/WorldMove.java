@@ -7,6 +7,7 @@ import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.StartBattle;
+import javelin.controller.old.Game;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.unit.Combatant;
@@ -16,7 +17,6 @@ import javelin.model.world.World;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
 import javelin.view.screen.WorldScreen;
@@ -92,7 +92,7 @@ public class WorldMove extends WorldAction {
 	}
 
 	public static boolean move(int tox, int toy, boolean encounter) {
-		final Thing t = JavelinApp.context.gethero();
+		final Thing t = Game.hero();
 		final WorldScreen s = (WorldScreen) BattleScreen.active;
 		Squad.active.lastterrain = Terrain.current();
 		if (!World.validatecoordinate(tox, toy) || (Dungeon.active == null
@@ -112,23 +112,14 @@ public class WorldMove extends WorldAction {
 						return true;
 					}
 					if (Dungeon.active != null) {
-						if (DungeonScreen.dontmove) {
-							DungeonScreen.dontmove = false;
-							return false;
+						if (DungeonScreen.dontenter) {
+							DungeonScreen.dontenter = false;
 						}
 						place(t, tox, toy);
+						return !DungeonScreen.stopmovesequence;
 					} else if (place != null) {
 						if (place.allowentry && place.garrison.isEmpty()) {
 							place(t, tox, toy);
-						}
-						/* TODO */
-						if (place instanceof Dungeon) {
-							// ((Dungeon) place).activate(false);
-						} else if (place instanceof Temple) {
-							// Temple temple = (Temple) place;
-							// if (temple.open) {
-							// temple.floors.get(0).activate(false);
-							// }
 						}
 					}
 					return true;
@@ -142,9 +133,8 @@ public class WorldMove extends WorldAction {
 				}
 				throw e;
 			}
-			if (s instanceof DungeonScreen && (DungeonScreen.dontmove
-					|| t.getMap() != JavelinApp.context.map)) {
-				DungeonScreen.dontmove = false;
+			if (s instanceof DungeonScreen && (DungeonScreen.dontenter)) {
+				DungeonScreen.dontenter = false;
 				return false;// TODO hack
 			}
 			if (!place(t, tox, toy)) {
@@ -163,7 +153,7 @@ public class WorldMove extends WorldAction {
 		}
 	}
 
-	static boolean place(final Thing t, final int tox, final int toy) {
+	public static boolean place(final Thing t, final int tox, final int toy) {
 		if (!JavelinApp.context.allowmove(tox, toy)) {
 			// JavelinApp.context.map.addThing(t, t.x, t.y);
 			return false;
@@ -172,7 +162,7 @@ public class WorldMove extends WorldAction {
 				|| toy >= JavelinApp.context.map.height) {
 			//
 		} else {
-			JavelinApp.context.map.removeThing(t);
+			t.getMap().removeThing(t);
 			t.x = tox;
 			t.y = toy;
 		}

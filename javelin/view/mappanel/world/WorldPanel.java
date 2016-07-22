@@ -64,16 +64,17 @@ public class WorldPanel extends MapPanel {
 	@Override
 	public void refresh() {
 		if (initial) {
-			// setLocation(0, 0);
-			scroll.setSize(getBounds().getSize());
-			// scroll.setLocation(0, 0);
-			WorldActor s = Squad.active;
-			zoom(0, true, s.x, s.y);
-			center(s.x, s.y, true);
-			scroll.setVisible(true);
+			resize(this, Squad.active.x, Squad.active.y);
 		}
 		super.refresh();
 		repaint();
+	}
+
+	static public void resize(MapPanel p, int x, int y) {
+		p.scroll.setSize(p.getBounds().getSize());
+		p.zoom(0, true, x, y);
+		p.center(x, y, true);
+		p.scroll.setVisible(true);
 	}
 
 	@Override

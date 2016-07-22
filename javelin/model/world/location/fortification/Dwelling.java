@@ -134,7 +134,7 @@ public class Dwelling extends Fortification {
 
 	@Override
 	public boolean hasupgraded() {
-		return volunteer;
+		return volunteer && !ishostile();
 	}
 
 	@Override

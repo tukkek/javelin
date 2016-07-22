@@ -5,6 +5,8 @@ import java.io.Serializable;
 import javelin.model.BattleMap;
 import javelin.model.unit.Squad;
 import javelin.view.Images;
+import javelin.view.mappanel.dungeon.DungeonMover;
+import javelin.view.mappanel.dungeon.DungeonTile;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.Thing;
 
@@ -27,6 +29,20 @@ public abstract class Feature implements Serializable {
 	 * return <code>true</code>.
 	 */
 	public boolean remove = true;
+	/** <code>false</code> if this should be hidden from the player. */
+	public boolean draw = true;
+	/**
+	 * If <code>true</code> lets the {@link Squad} stay in the same
+	 * {@link DungeonTile} as a feature.
+	 */
+	public boolean enter = true;
+	/**
+	 * If <code>true</code>, once {@link #activate()} is called will not allow a
+	 * movement sequence to carry through.
+	 * 
+	 * @see DungeonMover
+	 */
+	public boolean stop = false;
 
 	/**
 	 * @param thing

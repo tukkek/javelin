@@ -33,8 +33,6 @@ import tyrant.mikera.engine.RPG;
 public class Trap extends Feature {
 
 	transient private BattleMap map;
-	/** See {@link #searchdc}. */
-	public boolean found = false;
 	/** Challenge rating. */
 	public final int cr;
 	/** Difficulty class to save against. */
@@ -58,6 +56,8 @@ public class Trap extends Feature {
 		}
 		cr = Math.round(
 				Math.max(1, sum / Squad.active.members.size() - RPG.r(8, 5)));
+		draw = false;
+		stop = true;
 		int currentcr = -1;// doesn't kill ("subdual damage")
 		while (currentcr != cr || damagedie < 1) {
 			reflexdc = RPG.r(10, 35);
@@ -90,9 +90,9 @@ public class Trap extends Feature {
 
 	@Override
 	public boolean activate() {
-		if (!found) {
+		if (!draw) {
 			if (map != null) {
-				found = true;
+				draw = true;
 				super.addvisual(map);
 				map = null;
 			}
@@ -100,19 +100,19 @@ public class Trap extends Feature {
 			return true;
 		}
 		int disarm = Squad.active.disarm() - disarmdc;
-		if (found && disarm >= 0) {
+		if (draw && disarm >= 0) {
 			Javelin.prompt("You disarm the trap!");
 			super.remove();
 			return true;
 		}
-		if (!found || /* disarm <= -5 || */ Javelin
+		if (!draw || /* disarm <= -5 || */ Javelin
 				.prompt("Are you sure you want to step in to this trap?\n"
 						+ "Press ENTER to confirm or any other key to quit...")
 				.equals('\n')) {
 			fallinto();
 			return true;
 		}
-		DungeonScreen.dontmove = true;
+		DungeonScreen.dontenter = true;
 		return true;
 	}
 
@@ -146,7 +146,7 @@ public class Trap extends Feature {
 
 	@Override
 	protected void addvisual(BattleMap map) {
-		if (found) {
+		if (draw) {
 			super.addvisual(map);
 		} else { // delay
 			this.map = map;
@@ -160,7 +160,7 @@ public class Trap extends Feature {
 
 	/** Shows this trap to the player. */
 	public void discover() {
-		found = true;
+		draw = true;
 		generate(map);
 	}
 }

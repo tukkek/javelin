@@ -6,7 +6,7 @@ import javelin.controller.Point;
 import javelin.controller.action.Target;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.view.mappanel.battle.overlay.MoveOverlay;
+import javelin.view.mappanel.MoveOverlay;
 
 /**
  * Extensible path-finding algorithm.
@@ -19,9 +19,9 @@ public class Walker {
 	protected int targety;
 	public ArrayList<Step> solution = null;
 	protected final BattleState state;
-	private int sourcex;
-	private int sourcey;
-	public ArrayList<Step> partial;
+	public int sourcex;
+	public int sourcey;
+	public ArrayList<Step> partial = null;
 
 	public Walker(Point me, Point target, BattleState state) {
 		this.state = state;
@@ -90,6 +90,11 @@ public class Walker {
 
 	protected boolean valid(int x, int y, BattleState state2) {
 		return true;
+	}
+
+	public void reset() {
+		solution = null;
+		partial = null;
 	}
 
 	public static double distance(final Combatant c1, final Combatant c2) {

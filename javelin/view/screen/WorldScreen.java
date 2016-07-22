@@ -43,7 +43,6 @@ import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.Town;
 import javelin.view.Images;
 import javelin.view.mappanel.MapPanel;
-import javelin.view.mappanel.MapPanelCommon;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.world.WorldPanel;
 import javelin.view.screen.town.SelectScreen;
@@ -118,24 +117,22 @@ public class WorldScreen extends BattleScreen {
 		WorldScreen.current = this;
 		Javelin.settexture(QuestApp.DEFAULTTEXTURE);
 		mappanel.settilesize(48);
-		if (mappanel instanceof MapPanel) {
-			Tile[][] tiles = gettiles();
-			if (Preferences.DEBUGESHOWMAP) {
-				for (Tile[] ts : tiles) {
-					for (Tile t : ts) {
-						t.discovered = true;
-					}
+		Tile[][] tiles = gettiles();
+		if (Preferences.DEBUGESHOWMAP) {
+			for (Tile[] ts : tiles) {
+				for (Tile t : ts) {
+					t.discovered = true;
 				}
-			} else {
-				for (Point p : StateManager.DISCOVERED) {
-					tiles[p.x][p.y].discovered = true;
-				}
+			}
+		} else if (getClass().equals(WorldScreen.class)) {
+			for (Point p : StateManager.DISCOVERED) {
+				tiles[p.x][p.y].discovered = true;
 			}
 		}
 	}
 
 	Tile[][] gettiles() {
-		return ((MapPanel) mappanel).tiles;
+		return mappanel.tiles;
 	}
 
 	@Override
@@ -155,7 +152,6 @@ public class WorldScreen extends BattleScreen {
 		while (true) {
 			try {
 				updatescreen(h);
-				Game.getUserinterface().waiting = true;
 				Game.getUserinterface().waiting = true;
 				final KeyEvent updatableUserAction = getUserInput();
 				if (MapPanel.overlay != null) {
@@ -514,7 +510,7 @@ public class WorldScreen extends BattleScreen {
 	}
 
 	@Override
-	protected MapPanelCommon getmappanel() {
+	protected MapPanel getmappanel() {
 		return new WorldPanel();
 	}
 }

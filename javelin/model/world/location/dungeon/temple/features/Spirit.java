@@ -5,6 +5,7 @@ import java.util.Collections;
 
 import javelin.Javelin;
 import javelin.JavelinApp;
+import javelin.controller.old.Game;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.Trap;
@@ -32,7 +33,7 @@ public class Spirit extends Feature {
 				show = f;
 				break;
 			}
-			if (f instanceof Trap && !((Trap) f).found) {
+			if (f instanceof Feature && !f.draw) {
 				show = f;
 				break;
 			}
@@ -45,11 +46,11 @@ public class Spirit extends Feature {
 		Javelin.message(
 				"This nice spirit tells you the location of something important!",
 				false);
-		Dungeon.active.visible[show.x][show.y] = true;
-		if (show instanceof Trap) {
+		Dungeon.active.setvisible(show.x, show.y);
+		if (show instanceof Feature) {
 			((Trap) show).discover();
 		}
-		JavelinApp.context.view(Dungeon.active.hero);
+		JavelinApp.context.view(Game.hero());
 		return true;
 	}
 }

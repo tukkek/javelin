@@ -31,7 +31,7 @@ public class PryingEyes extends Spell {
 		}
 		for (int x = 0; x < Dungeon.active.visible.length; x++) {
 			for (int y = 0; y < Dungeon.active.visible[x].length; y++) {
-				Dungeon.active.visible[x][y] = true;
+				Dungeon.active.setvisible(x, y);
 			}
 		}
 		return null;

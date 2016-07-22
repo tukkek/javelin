@@ -146,6 +146,8 @@ public class Squad extends WorldActor {
 	/**
 	 * Updates {@link WorldActor#visual}, taking {@link #transport} into
 	 * account.
+	 * 
+	 * @return
 	 */
 	public void updateavatar() {
 		if (members.isEmpty()) {

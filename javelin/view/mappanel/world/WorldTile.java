@@ -66,9 +66,6 @@ public class WorldTile extends Tile {
 			drawactor(g, a);
 		}
 		if (WorldPanel.overlay != null) {
-			// for (Point s : overlay.affected) {
-			// tiles[s.x][s.y].repaint();
-			// }
 			WorldPanel.overlay.overlay(this, g);
 		}
 	}

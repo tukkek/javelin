@@ -16,7 +16,8 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.Trap;
 import javelin.view.Images;
-import javelin.view.mappanel.MapPanelOld;
+import javelin.view.mappanel.MapPanel;
+import javelin.view.mappanel.dungeon.DungeonPanel;
 import tyrant.mikera.engine.Thing;
 
 /**
@@ -26,7 +27,8 @@ import tyrant.mikera.engine.Thing;
  */
 public class DungeonScreen extends WorldScreen {
 	/** TODO hack */
-	public static boolean dontmove;
+	public static boolean dontenter = false;
+	public static boolean stopmovesequence = false;
 
 	/** Exhibits a dungeon. */
 	public DungeonScreen(BattleMap map) {
@@ -46,21 +48,16 @@ public class DungeonScreen extends WorldScreen {
 	}
 
 	@Override
-	public void turn() {
-		Dungeon.active.herolocation = new Point(Game.hero().x, Game.hero().y);
-	}
-
-	@Override
 	public boolean explore(float hoursellapsed, boolean encounter) {
 		try {
 			if (encounter) {
 				RandomEncounter.encounter(Dungeon.ENCOUNTERRATIO);
 			}
 		} catch (StartBattle e) {
-			map.removeThing(Dungeon.active.hero);
+			map.removeThing(Game.hero());
 			throw e;
 		}
-		return Dungeon.active.hazard();
+		return !Dungeon.active.hazard();
 	}
 
 	@Override
@@ -71,15 +68,17 @@ public class DungeonScreen extends WorldScreen {
 				boolean activated = f.activate();
 				if (activated && f.remove) {
 					f.remove();
+					DungeonScreen.dontenter = !f.enter;
+					DungeonScreen.stopmovesequence = f.stop;
 				}
-				if (!activated) {
-					DungeonScreen.dontmove = true;
-				}
-				return activated;
+				// if (!activated) {
+				// DungeonScreen.dontmove = true;
+				// }
+				return true;
 			}
 			if (x - 1 <= f.x && f.x <= x + 1 && y - 1 <= f.y && f.y <= y + 1) {
 				Trap t = f instanceof Trap ? (Trap) f : null;
-				if (t != null && !t.found) {
+				if (t != null && !t.draw) {
 					if (searchroll >= t.searchdc) {
 						t.discover();
 					}
@@ -105,7 +104,7 @@ public class DungeonScreen extends WorldScreen {
 		for (int x = -1; x <= +1; x++) {
 			for (int y = -1; y <= +1; y++) {
 				try {
-					Dungeon.active.visible[h.x + x][h.y + y] = true;
+					Dungeon.active.setvisible(h.x + x, h.y + y);
 				} catch (ArrayIndexOutOfBoundsException e) {
 					continue;
 				}
@@ -124,8 +123,8 @@ public class DungeonScreen extends WorldScreen {
 	@Override
 	public Thing gethero() {
 		Squad.active.updateavatar();
-		Dungeon.active.hero.combatant = Squad.active.visual.combatant;
-		return Dungeon.active.hero;
+		Game.hero().combatant = Squad.active.visual.combatant;
+		return Game.hero();
 	}
 
 	@Override
@@ -145,7 +144,17 @@ public class DungeonScreen extends WorldScreen {
 	}
 
 	@Override
-	protected MapPanelOld getmappanel() {
-		return new MapPanelOld();
+	protected MapPanel getmappanel() {
+		return new DungeonPanel();
+	}
+
+	@Override
+	protected void humanTurn() {
+		super.humanTurn();
+		if (Dungeon.active != null) {
+			Dungeon.active.herolocation =
+					new Point(Game.hero().x, Game.hero().y);
+			// mappanel.refresh();
+		}
 	}
 }

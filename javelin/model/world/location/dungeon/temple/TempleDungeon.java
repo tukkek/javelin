@@ -7,6 +7,7 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.fight.Fight;
+import javelin.controller.old.Game;
 import javelin.model.item.ItemSelection;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Chest;
@@ -105,7 +106,7 @@ public class TempleDungeon extends Dungeon {
 
 	@Override
 	public void goup() {
-		hero.remove();
+		Game.hero().remove();
 		int level = temple.floors.indexOf(this);
 		if (level == 0) {
 			super.goup();
@@ -119,7 +120,7 @@ public class TempleDungeon extends Dungeon {
 	@Override
 	public void godown() {
 		Squad.active.ellapse(1);
-		hero.remove();
+		Game.hero().remove();
 		temple.floors.get(temple.floors.indexOf(this) + 1).activate(false);
 	}
 
@@ -143,7 +144,11 @@ public class TempleDungeon extends Dungeon {
 
 	@Override
 	public boolean hazard() {
-		return temple.hazard(this);
+		if (!temple.hazard(this)) {
+			return false;
+		}
+		Dungeon.active.herolocation = new Point(Game.hero().x, Game.hero().y);
+		return true;
 	}
 
 	@Override

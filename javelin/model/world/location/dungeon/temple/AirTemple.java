@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
+import javelin.controller.old.Game;
 import javelin.controller.terrain.Mountains;
 import javelin.controller.terrain.Terrain;
 import javelin.model.BattleMap;
@@ -13,6 +14,7 @@ import javelin.model.item.relic.Flute;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import tyrant.mikera.engine.RPG;
+import tyrant.mikera.engine.Thing;
 
 /**
  * Found high on the {@link Mountains}. The wind can push you up to three
@@ -42,7 +44,8 @@ public class AirTemple extends Temple {
 			return false;
 		}
 		ArrayList<Point> steps = new ArrayList<Point>();
-		steps.add(new Point(d.hero.x, d.hero.y));
+		Thing hero = Game.hero();
+		steps.add(new Point(hero.x, hero.y));
 		int nsteps = RPG.r(3, 7);
 		for (int i = 0; i < nsteps; i++) {
 			Point p = push(steps, d);
@@ -53,10 +56,10 @@ public class AirTemple extends Temple {
 		}
 		Javelin.message("A strong wind pushes you around!", true);
 		Point to = steps.get(steps.size() - 1);
-		BattleMap map = d.hero.getMap();
-		map.removeThing(d.hero);
-		map.addThing(d.hero, to.x, to.y);
-		JavelinApp.context.view(d.hero);
+		BattleMap map = hero.getMap();
+		map.removeThing(hero);
+		map.addThing(hero, to.x, to.y);
+		JavelinApp.context.view(hero);
 		return true;
 	}
 

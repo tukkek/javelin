@@ -3,6 +3,7 @@ package javelin.model.world.location.dungeon.crawler;
 import java.util.Set;
 
 import javelin.controller.Point;
+import tyrant.mikera.engine.RPG;
 
 /**
  * Carves a corridor along the x ais.
@@ -10,16 +11,15 @@ import javelin.controller.Point;
  * @author alex
  */
 public class HorizontalCorridor extends Crawler {
-	int step;
+	protected int step = RPG.r(1, 2) == 1 ? -1 : +1;
 
 	/**
 	 * @param step
 	 *            Size of each {@link #step()}.
 	 * @see Crawler#Crawler(Point, Set)
 	 */
-	public HorizontalCorridor(Point start, Set<Point> used, int step) {
-		super(start, used);
-		this.step = step;
+	public HorizontalCorridor(Point start, Set<Point> used) {
+		super(start, used, RPG.r(5, 7));
 	}
 
 	@Override

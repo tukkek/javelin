@@ -9,17 +9,14 @@ import javelin.controller.Point;
  * 
  * @author alex
  */
-public class VerticalCorridor extends Crawler {
-	int step;
-
+public class VerticalCorridor extends HorizontalCorridor {
 	/**
 	 * @param step
 	 *            Size of each step.
 	 * @see Crawler#Crawler(Point, Set)
 	 */
-	public VerticalCorridor(Point start, Set<Point> used, int step) {
+	public VerticalCorridor(Point start, Set<Point> used) {
 		super(start, used);
-		this.step = step;
 	}
 
 	@Override

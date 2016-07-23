@@ -32,7 +32,7 @@ public class DungeonScreen extends WorldScreen {
 
 	/** Exhibits a dungeon. */
 	public DungeonScreen(BattleMap map) {
-		super(map);
+		super(null);
 	}
 
 	@Override
@@ -59,9 +59,6 @@ public class DungeonScreen extends WorldScreen {
 					DungeonScreen.dontenter = !f.enter;
 					DungeonScreen.stopmovesequence = f.stop;
 				}
-				// if (!activated) {
-				// DungeonScreen.dontmove = true;
-				// }
 				return true;
 			}
 			if (x - 1 <= f.x && f.x <= x + 1 && y - 1 <= f.y && f.y <= y + 1) {
@@ -84,7 +81,6 @@ public class DungeonScreen extends WorldScreen {
 
 	@Override
 	public void updatelocation(int x, int y) {
-		// don't
 		Dungeon.active.herolocation = new Point(x, y);
 	}
 
@@ -100,20 +96,15 @@ public class DungeonScreen extends WorldScreen {
 				}
 			}
 		}
-		// map.makeAllInvisible();
-		// for (int x = 0; x < Dungeon.SIZE; x++) {
-		// for (int y = 0; y < Dungeon.SIZE; y++) {
-		// if (Dungeon.active.visible[x][y]) {
-		// map.setVisible(x, y);
-		// }
-		// }
-		// }
 	}
 
 	@Override
 	public Thing gethero() {
 		Squad.active.updateavatar();
-		Game.hero().combatant = Squad.active.visual.combatant;
+		Thing hero = Game.hero();
+		hero.combatant = Squad.active.visual.combatant;
+		hero.x = Dungeon.active.herolocation.x;
+		hero.y = Dungeon.active.herolocation.y;
 		return Game.hero();
 	}
 
@@ -136,11 +127,6 @@ public class DungeonScreen extends WorldScreen {
 	@Override
 	protected void humanTurn() {
 		super.humanTurn();
-		if (Dungeon.active != null) {
-			// Dungeon.active.herolocation =
-			// new Point(Game.hero().x, Game.hero().y);
-			// mappanel.refresh();
-		}
 	}
 
 	@Override

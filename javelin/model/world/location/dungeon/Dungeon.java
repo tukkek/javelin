@@ -28,8 +28,7 @@ import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.dungeon.crawler.HorizontalCorridor;
-import javelin.model.world.location.dungeon.crawler.VerticalCorridor;
+import javelin.model.world.location.dungeon.crawler.Crawler;
 import javelin.model.world.location.dungeon.temple.TempleDungeon;
 import javelin.model.world.location.dungeon.temple.features.Brazier;
 import javelin.model.world.location.dungeon.temple.features.FruitTree;
@@ -58,7 +57,7 @@ public class Dungeon extends Location {
 	/** Screen dimensions. */
 	public final static int SIZE = 30;
 	final static float WALLRATIO = 1 / 4f;
-	final static int WALKABLEAREA = Math.round(SIZE * SIZE * WALLRATIO);
+	public final static int WALKABLEAREA = Math.round(SIZE * SIZE * WALLRATIO);
 	/**
 	 * Assumes you will explore all the dungeon, being able to rest at the
 	 * fountain mid-way for a total of 8 moderate encounters. This ignores the
@@ -126,12 +125,10 @@ public class Dungeon extends Location {
 	/** Create or recreate dungeon. */
 	public void activate(boolean loading) {
 		while (features.isEmpty()) {
-			// map = new BattleMap(SIZE, SIZE);
 			/* not loading a game */
 			try {
 				map();
 			} catch (GaveUpException e) {
-				// map = null;
 				features.clear();
 				walls.clear();
 				herolocation = null;
@@ -156,21 +153,21 @@ public class Dungeon extends Location {
 			used.add(new Point(SIZE - 1, i));
 		}
 		Point root = new Point(RPG.r(2, SIZE - 3), RPG.r(2, SIZE - 3));
-		free.add(root);
+		// free.add(root);
 		used.add(root);
 		build(new StairsUp("stairs up", root), used);
 		for (int x = root.x - 1; x <= root.x + 1; x++) {
 			for (int y = root.y - 1; y <= root.y + 1; y++) {
 				Point p = new Point(x, y);
 				free.add(p);
-				used.add(p);
+				// used.add(p);
 			}
 		}
 		while (herolocation == null || herolocation.equals(root)) {
 			herolocation = new Point(root.x + RPG.pick(DELTAS),
 					root.y + RPG.pick(DELTAS));
 		}
-		carve(free, used);
+		Crawler.carve(root, free, used);
 		placefeatures(free, used);
 		visible = new boolean[SIZE][SIZE];
 		for (int x = 0; x < Dungeon.SIZE; x++) {
@@ -198,21 +195,6 @@ public class Dungeon extends Location {
 		createchests(free, used);
 		for (Feature f : getextrafeatures(free, used)) {
 			build(f, used);
-		}
-	}
-
-	void carve(final Set<Point> free, Set<Point> used) {
-		boolean horizontal = RPG.r(1, 2) == 1;
-		while (free.size() < WALKABLEAREA) {
-			Point start = new Point(RPG.pick(new ArrayList<Point>(free)));
-			int length = RPG.r(5, 7);
-			int step = RPG.r(1, 2) == 1 ? -1 : +1;
-			horizontal = !horizontal;
-			if (horizontal) {
-				new HorizontalCorridor(start, used, step).fill(length, free);
-			} else {
-				new VerticalCorridor(start, used, step).fill(length, free);
-			}
 		}
 	}
 
@@ -294,18 +276,9 @@ public class Dungeon extends Location {
 	}
 
 	void regenerate(boolean loading) {
-		// for (int x = 0; x < SIZE; x++) {
-		// for (int y = 0; y < SIZE; y++) {
-		// map.setTile(x, y, Tile.METALFLOOR);
-		// }
-		// }
-		// for (Point wall : walls) {
-		// map.setTile(wall.x, wall.y, Tile.STONEWALL);
-		// }
 		Thing hero = Squad.active.createvisual();
 		Game.instance().setHero(hero);
 		setlocation(loading);
-		// map.addThing(hero, hero.x, hero.y);
 		if (!generated) {
 			for (Feature f : features) {
 				f.generate();
@@ -326,7 +299,6 @@ public class Dungeon extends Location {
 		Thing hero = Game.instance().hero;
 		hero.x = herolocation.x;
 		hero.y = herolocation.y;
-		// Game.instance().setHero(hero);
 	}
 
 	@Override
@@ -355,7 +327,7 @@ public class Dungeon extends Location {
 	 * Called when reaching {@link StairsDown}.
 	 */
 	public void godown() {
-		// typical dungeon have 1 level only
+		// typical dungeons have 1 level only
 	}
 
 	/** See {@link WorldScreen#encounter()}. */

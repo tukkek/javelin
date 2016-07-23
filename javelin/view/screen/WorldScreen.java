@@ -146,11 +146,9 @@ public class WorldScreen extends BattleScreen {
 
 	@Override
 	protected void humanTurn() {
-		// Thing h = JavelinApp.context.gethero();
-		// Game.instance().hero = h;
 		while (true) {
 			try {
-				Thing h = Game.hero();
+				Thing h = JavelinApp.context.gethero();
 				updatescreen(h);
 				Game.getUserinterface().waiting = true;
 				final KeyEvent updatableUserAction = getUserInput();
@@ -175,6 +173,8 @@ public class WorldScreen extends BattleScreen {
 
 	/** TODO remove on 2.0+ */
 	public Thing gethero() {
+		Squad.active.visual.x = Squad.active.x;
+		Squad.active.visual.y = Squad.active.y;
 		return Squad.active.visual;
 	}
 

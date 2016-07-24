@@ -1,5 +1,6 @@
 package javelin.controller.action.world.improvement;
 
+import javelin.controller.Point;
 import javelin.controller.action.world.Work;
 import javelin.controller.terrain.Forest;
 import javelin.controller.terrain.Hill;
@@ -11,7 +12,6 @@ import javelin.model.world.World;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
-import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.RPG;
 
 /**

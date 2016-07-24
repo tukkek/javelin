@@ -1,9 +1,9 @@
 package javelin.controller.fight;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.controller.terrain.map.tyrant.Caves;
+import javelin.controller.terrain.map.Caves;
 import javelin.model.unit.Combatant;
 
 /**
@@ -26,7 +26,7 @@ public class RandomDungeonEncounter extends RandomEncounter {
 	}
 
 	@Override
-	public List<Combatant> getmonsters(int teamel) {
+	public ArrayList<Combatant> getmonsters(int teamel) {
 		return null;
 	}
 }

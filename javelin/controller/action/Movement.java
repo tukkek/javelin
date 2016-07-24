@@ -3,16 +3,15 @@ package javelin.controller.action;
 import javelin.Javelin;
 import javelin.controller.action.ai.AiMovement;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
-import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Skills;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.Point;
-import tyrant.mikera.engine.Thing;
 
 /**
  * @see AiMovement
@@ -84,38 +83,34 @@ public class Movement extends Action {
 	}
 
 	@Override
-	public boolean perform(Combatant hero, BattleMap map, Thing thing) {
+	public boolean perform(Combatant hero) {
 		try {
-			final BattleState state = map.getState();
-			final Point to = BattleScreen.active.gameHandler.doDirection(thing,
-					this, state);
+			final BattleState state = Fight.state;
+			boolean disengaging = state.isengaged(hero);
+			final Point to =
+					BattleScreen.active.gameHandler.doDirection(this, state);
 			if (to == null) {
 				return false;
 			}
-			boolean disengaging = state.isengaged(thing.combatant);
-			Meld meld = BattleMap.checkformeld(to.x, to.y);
+			Meld meld = Fight.state.getmeld(to.x, to.y);
 			if (!Movement.lastmovewasattack) {
-				BattleScreen.active.spentap +=
-						cost(thing.combatant, state, to.x, to.y);
+				BattleScreen.active.spentap += cost(hero, state, to.x, to.y);
 			}
 			final boolean finishmove =
 					meld != null || disengaging || Movement.lastmovewasattack
 							|| BattleScreen.active.spentap >= .5f;
 			if (!finishmove) {
-				// BattleMap.visioncache.remove(thing.combatant.id);
-				// thing.calculateVision();
 				throw new RepeatTurn();
 			}
 			if (!Movement.lastmovewasattack) {
 				if (meld == null) {
-					Game.message(thing.combatant + " "
+					Game.message(hero + " "
 							+ (disengaging ? "disengages" : "moves") + "...",
-							null, Delay.WAIT);
+							Delay.WAIT);
 				} else {
-					Game.message(thing.combatant + " powers up!", null,
-							Delay.BLOCK);
-					Javelin.getCombatant(thing.combatant.id).meld();
-					BattleScreen.active.map.meld.remove(meld);
+					Game.message(hero + " powers up!", Delay.BLOCK);
+					Javelin.getCombatant(hero.id).meld();
+					Fight.state.meld.remove(meld);
 				}
 			}
 			BattleScreen.active.spendap(hero, true);

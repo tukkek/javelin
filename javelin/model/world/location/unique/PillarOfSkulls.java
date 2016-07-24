@@ -128,7 +128,7 @@ public class PillarOfSkulls extends UniqueLocation {
 					}
 					continue;
 				}
-				mock.add(new Combatant(null, RPG.pick(tier), false));
+				mock.add(new Combatant(RPG.pick(tier), false));
 			}
 			RewardCalculator.rewardxp(Squad.active.members,
 					Squad.active.members, mock, 1);

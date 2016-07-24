@@ -6,8 +6,6 @@ import javelin.model.unit.Squad;
 import javelin.view.Images;
 import javelin.view.mappanel.dungeon.DungeonMover;
 import javelin.view.mappanel.dungeon.DungeonTile;
-import tyrant.mikera.engine.Lib;
-import tyrant.mikera.engine.Thing;
 
 /**
  * An interactive dungeon tile.
@@ -19,10 +17,7 @@ public abstract class Feature implements Serializable {
 	final public int x;
 	/** Y coordinate. */
 	final public int y;
-	/** TODO remove from 2.0 */
-	transient public Thing visual = null;
-	private final String thing;
-	private String avatarfile;
+	public String avatarfile;
 	/**
 	 * If <code>true</code> will {@link #remove()} this if {@link #activate()}
 	 * return <code>true</code>.
@@ -54,7 +49,6 @@ public abstract class Feature implements Serializable {
 	 *            File name for {@link Images#getImage(String)}.
 	 */
 	public Feature(String thing, int xp, int yp, String avatarfilep) {
-		this.thing = thing;
 		x = xp;
 		y = yp;
 		avatarfile = avatarfilep;
@@ -67,8 +61,6 @@ public abstract class Feature implements Serializable {
 	 *            Adds itself to this map.
 	 */
 	public void generate() {
-		visual = Lib.create(thing);
-		visual.javelinimage = Images.getImage(avatarfile);
 	}
 
 	/**
@@ -77,7 +69,6 @@ public abstract class Feature implements Serializable {
 	 */
 	public void remove() {
 		if (Dungeon.active != null) {
-			visual.remove();
 			Dungeon.active.features.remove(this);
 		}
 	}

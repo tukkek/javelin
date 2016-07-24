@@ -6,6 +6,7 @@ import java.util.List;
 import javelin.controller.Point;
 import javelin.controller.action.Fire;
 import javelin.controller.action.ai.MeleeAttack;
+import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
@@ -58,11 +59,11 @@ public class BattleMouse extends Mouse {
 		if (overrideinput()) {
 			return;
 		}
-		if (!Game.getUserinterface().waiting) {
+		if (!Game.userinterface.waiting) {
 			return;
 		}
 		final Tile t = (Tile) e.getSource();
-		final BattleState s = BattlePanel.state;
+		final BattleState s = Fight.state;
 		final Combatant target = s.getCombatant(t.x, t.y);
 		final int button = e.getButton();
 		if (button == MouseEvent.BUTTON3 && target != null) {
@@ -75,7 +76,7 @@ public class BattleMouse extends Mouse {
 			return;
 		}
 		if (button == MouseEvent.BUTTON1) {
-			final Combatant current = Game.hero().combatant;
+			final Combatant current = Fight.state.next;
 			final Action a = getaction(current, target, s);
 			if (a == Action.MOVE) {
 				if (MapPanel.overlay instanceof MoveOverlay) {
@@ -87,13 +88,12 @@ public class BattleMouse extends Mouse {
 							public void run() {
 								final Step to = walk.path.steps
 										.get(walk.path.steps.size() - 1);
-								BattleState move =
-										BattleScreen.active.map.getState();
+								BattleState move = Fight.state;
 								Combatant c = move.clone(current);
 								c.location[0] = to.x;
 								c.location[1] = to.y;
 								c.ap += to.apcost;
-								BattleScreen.active.map.setState(move);
+								Fight.state = move;
 							}
 						});
 					}
@@ -129,7 +129,7 @@ public class BattleMouse extends Mouse {
 			BattleScreen.lastlooked = null;
 			BattleScreen.active.statuspanel.repaint();
 		}
-		if (!Game.getUserinterface().waiting) {
+		if (!Game.userinterface.waiting) {
 			return;
 		}
 		if (MapPanel.overlay != null) {
@@ -137,9 +137,9 @@ public class BattleMouse extends Mouse {
 		}
 		BattleScreen.active.messagepanel.clear();
 		try {
-			final Combatant current = Game.hero().combatant;
+			final Combatant current = Fight.state.next;
 			final Tile t = (Tile) e.getSource();
-			final BattleState s = BattlePanel.state;
+			final BattleState s = Fight.state;
 			final Combatant target = s.getCombatant(t.x, t.y);
 			final Action a = getaction(current, target, s);
 			if (a == Action.MOVE) {
@@ -175,7 +175,6 @@ public class BattleMouse extends Mouse {
 	void status(String s, Combatant target) {
 		MapPanel.overlay =
 				new TargetOverlay(target.location[0], target.location[1]);
-		Game.message(s, null, Delay.NONE);
-		BattleScreen.active.updateMessages();
+		Game.message(s, Delay.NONE);
 	}
 }

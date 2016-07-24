@@ -2,16 +2,14 @@ package javelin.controller.action;
 
 import java.util.ArrayList;
 
+import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
-import javelin.model.BattleMap;
 import javelin.model.item.Item;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
-import tyrant.mikera.engine.Thing;
 
 /**
  * Hands item over to a friendly unit.
@@ -26,13 +24,11 @@ public class PassItem extends Action {
 	}
 
 	@Override
-	public boolean perform(Combatant active, BattleMap m, Thing thing) {
-		final BattleMap map = BattleScreen.active.map;
-		final BattleState state = map.getState();
-		final Combatant me = Game.hero().combatant;
+	public boolean perform(Combatant me) {
+		final BattleState state = Fight.state;
 		final Combatant sameme = state.clone(me);
 		if (state.isengaged(sameme)) {
-			Game.message("You are engaged in combat!", null, Delay.NONE);
+			Game.message("You are engaged in combat!", Delay.NONE);
 			return false;
 		}
 		final ArrayList<Combatant> surroudings = state.getSurroundings(sameme);
@@ -42,7 +38,7 @@ public class PassItem extends Action {
 			}
 		}
 		if (surroudings.isEmpty()) {
-			Game.message("No unthreatened allies nearby.", null, Delay.NONE);
+			Game.message("No unthreatened allies nearby.", Delay.NONE);
 			return false;
 		}
 		final Item item = UseItem.queryforitemselection(me, false);
@@ -53,7 +49,7 @@ public class PassItem extends Action {
 		for (int i = 0; i < surroudings.size(); i++) {
 			prompt += "[" + (i + 1) + "] " + surroudings.get(i) + "\n";
 		}
-		Game.message(prompt, null, Delay.NONE);
+		Game.message(prompt, Delay.NONE);
 		try {
 			final Combatant receiver = getmonster(surroudings.get(
 					Integer.parseInt(InfoScreen.feedback().toString()) - 1));
@@ -70,7 +66,7 @@ public class PassItem extends Action {
 	}
 
 	public static Combatant getmonster(final Combatant receiverc) {
-		for (final Combatant c : BattleMap.combatants) {
+		for (final Combatant c : Fight.state.getCombatants()) {
 			if (c.toString() == receiverc.toString()) {
 				return c;
 			}

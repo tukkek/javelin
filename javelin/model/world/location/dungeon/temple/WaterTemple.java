@@ -1,5 +1,6 @@
 package javelin.model.world.location.dungeon.temple;
 
+import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.fight.Fight;
 import javelin.controller.terrain.Terrain;
@@ -7,7 +8,6 @@ import javelin.controller.terrain.Water;
 import javelin.model.Realm;
 import javelin.model.item.relic.Crown;
 import javelin.model.world.World;
-import tyrant.mikera.engine.Point;
 
 /**
  * Found next to {@link Water}. Always flooded.

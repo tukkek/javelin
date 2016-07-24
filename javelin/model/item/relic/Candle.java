@@ -3,11 +3,9 @@ package javelin.model.item.relic;
 import javelin.controller.action.Target;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
-import javelin.model.BattleMap;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.view.screen.BattleScreen;
 
 /** Brings a single creature to 1hp. */
 public class Candle extends Relic {
@@ -29,13 +27,13 @@ public class Candle extends Relic {
 
 			@Override
 			protected void attack(Combatant active, Combatant target,
-					BattleState s, BattleMap map) {
+					BattleState s) {
 				target.hp = 1;
 				Game.message(
 						"A roaring column of flame engulfs " + target + "!",
-						null, Delay.BLOCK);
+						Delay.BLOCK);
 			}
-		}.perform(user, BattleScreen.active.map, Game.hero());
+		}.perform(user);
 		return true;
 	}
 

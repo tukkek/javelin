@@ -8,7 +8,6 @@ import java.awt.ScrollPane;
 import java.awt.event.MouseListener;
 
 import javelin.controller.db.Preferences;
-import javelin.model.BattleMap;
 
 public abstract class MapPanel extends Panel {
 	public static int tilesize = Preferences.TILESIZEWORLD;
@@ -79,11 +78,11 @@ public abstract class MapPanel extends Panel {
 
 	protected abstract Tile newtile(int x, int y);
 
-	public void viewPosition(BattleMap m, int x, int y) {
+	public void viewPosition(int x, int y) {
 		center(x, y, false);
 	}
 
-	public void setPosition(BattleMap m, int x, int y) {
+	public void setPosition(int x, int y) {
 		center(x, y, true);
 	}
 

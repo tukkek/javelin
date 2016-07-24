@@ -47,7 +47,7 @@ public class MoveOverlay extends Overlay {
 
 	static Timer moveschedule;
 
-	public static void schedule(final MoveOverlay overlay) {
+	synchronized public static void schedule(final MoveOverlay overlay) {
 		moveschedule = new Timer();
 		moveschedule.schedule(new TimerTask() {
 			@Override
@@ -60,7 +60,7 @@ public class MoveOverlay extends Overlay {
 		}, 100);
 	}
 
-	public static void cancel() {
+	synchronized public static void cancel() {
 		if (moveschedule != null) {
 			moveschedule.cancel();
 		}

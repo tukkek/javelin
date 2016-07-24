@@ -13,11 +13,9 @@ import javelin.controller.exception.GaveUpException;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
 import javelin.controller.generator.feature.FeatureGenerator;
-import javelin.controller.old.Game;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.terrain.map.Maps;
-import javelin.controller.terrain.map.tyrant.Caves;
 import javelin.model.Realm;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.Key;
@@ -40,7 +38,6 @@ import javelin.view.screen.DungeonScreen;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.haxor.Win;
 import tyrant.mikera.engine.RPG;
-import tyrant.mikera.engine.Thing;
 
 /**
  * A dungeon is an underground area of the world where the combats are harder
@@ -136,7 +133,7 @@ public class Dungeon extends Location {
 		}
 		regenerate(loading);
 		active = this;
-		JavelinApp.context = new DungeonScreen(null);
+		JavelinApp.context = new DungeonScreen();
 		BattleScreen.active = JavelinApp.context;
 		Squad.active.updateavatar();
 		BattleScreen.active.mappanel.center(herolocation.x, herolocation.y,
@@ -269,15 +266,12 @@ public class Dungeon extends Location {
 	/** Exit and destroy this dungeon. */
 	public void leave() {
 		Dungeon.active = null;
-		JavelinApp.context = new WorldScreen(JavelinApp.overviewmap);
+		JavelinApp.context = new WorldScreen();
 		BattleScreen.active = JavelinApp.context;
-		Game.instance().hero.remove();
 		Squad.active.place();
 	}
 
 	void regenerate(boolean loading) {
-		Thing hero = Squad.active.createvisual();
-		Game.instance().setHero(hero);
 		setlocation(loading);
 		if (!generated) {
 			for (Feature f : features) {
@@ -296,9 +290,6 @@ public class Dungeon extends Location {
 	 *            active dungeon).
 	 */
 	protected void setlocation(boolean loading) {
-		Thing hero = Game.instance().hero;
-		hero.x = herolocation.x;
-		hero.y = herolocation.y;
 	}
 
 	@Override
@@ -312,7 +303,7 @@ public class Dungeon extends Location {
 	 */
 	public static Maps getmaps() {
 		Maps m = new Maps();
-		m.add(new Caves());
+		m.add(new javelin.controller.terrain.map.Caves());
 		return m;
 	}
 

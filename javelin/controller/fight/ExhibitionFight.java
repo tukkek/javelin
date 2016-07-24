@@ -1,11 +1,10 @@
 package javelin.controller.fight;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.tournament.Exhibition;
 import javelin.controller.terrain.map.Arena;
-import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
 import javelin.view.screen.BattleScreen;
 
@@ -26,7 +25,7 @@ public class ExhibitionFight extends Fight {
 	}
 
 	@Override
-	public List<Combatant> getmonsters(int teamel) {
+	public ArrayList<Combatant> getmonsters(int teamel) {
 		return null;
 	}
 
@@ -38,7 +37,7 @@ public class ExhibitionFight extends Fight {
 	@Override
 	public void checkEndBattle(BattleScreen screen) {
 		super.checkEndBattle(screen);
-		if (BattleMap.blueTeam.isEmpty()) {
+		if (Fight.state.blueTeam.isEmpty()) {
 			throw new EndBattle();
 		}
 	}

@@ -3,6 +3,7 @@ package javelin.controller.terrain;
 import java.util.List;
 import java.util.Set;
 
+import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.terrain.hazard.Break;
 import javelin.controller.terrain.hazard.Cold;
@@ -14,9 +15,7 @@ import javelin.controller.terrain.map.Maps;
 import javelin.controller.terrain.map.desert.Rocky;
 import javelin.controller.terrain.map.desert.Sandy;
 import javelin.controller.terrain.map.desert.Tundra;
-import javelin.controller.terrain.map.tyrant.Ruin;
 import javelin.model.world.World;
-import tyrant.mikera.engine.Point;
 
 /**
  * Sandy desert, becomes {@link Tundra} in winter.
@@ -49,7 +48,6 @@ public class Desert extends Terrain {
 		m.add(new Tundra());
 		m.add(new Rocky());
 		m.add(new Sandy());
-		m.add(new Ruin());
 		return m;
 	}
 

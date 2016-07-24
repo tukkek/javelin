@@ -69,13 +69,6 @@ public class Incursion extends WorldActor {
 		realm = r;
 	}
 
-	@Override
-	public void place() {
-		super.place();
-		updateavatar();
-
-	}
-
 	/**
 	 * Incursions only move once a day but this is balanced by several implicit
 	 * benefits like canonical {@link #squad} HP not decreasing after a battle
@@ -86,7 +79,6 @@ public class Incursion extends WorldActor {
 	 *            TODO use {@link WorldScreen#current}
 	 */
 	public void move(final WorldScreen s) {
-		updateavatar();
 		WorldActor target = findtarget(s);
 		if (target == null) {
 			displace();
@@ -103,7 +95,6 @@ public class Incursion extends WorldActor {
 		target = WorldActor.get(newx, newy);
 		x = newx;
 		y = newy;
-		visual.remove();
 		place();
 		if (target == null) {
 			return;
@@ -117,20 +108,6 @@ public class Incursion extends WorldActor {
 		} else if (status == false) {
 			remove();
 		}
-	}
-
-	private void updateavatar() {
-		if (squad == null) {
-			return;
-		}
-		Combatant leader = null;
-		for (Combatant c : squad) {
-			if (leader == null
-					|| c.source.challengeRating > leader.source.challengeRating) {
-				leader = c;
-			}
-		}
-		visual.combatant = new Combatant(visual, leader.source, false);
 	}
 
 	WorldActor findtarget(final WorldScreen s) {
@@ -348,7 +325,17 @@ public class Incursion extends WorldActor {
 
 	@Override
 	public Image getimage() {
-		return Images.getImage(visual.combatant.source.avatarfile);
+		if (squad == null) {
+			return null;
+		}
+		Combatant leader = null;
+		for (Combatant c : squad) {
+			if (leader == null
+					|| c.source.challengeRating > leader.source.challengeRating) {
+				leader = c;
+			}
+		}
+		return Images.getImage(leader.source.avatarfile);
 	}
 
 	@Override

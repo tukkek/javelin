@@ -70,7 +70,7 @@ public class EncounterGenerator {
 				n = 1;
 			}
 			for (int i = 0; i < n; i++) {
-				opponents.add(new Combatant(null, m.clone(), true));
+				opponents.add(new Combatant(m.clone(), true));
 			}
 		}
 		return opponents;

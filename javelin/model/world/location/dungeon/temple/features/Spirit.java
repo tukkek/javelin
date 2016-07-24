@@ -5,7 +5,7 @@ import java.util.Collections;
 
 import javelin.Javelin;
 import javelin.JavelinApp;
-import javelin.controller.old.Game;
+import javelin.controller.Point;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.Trap;
@@ -50,7 +50,8 @@ public class Spirit extends Feature {
 		if (show instanceof Feature) {
 			((Trap) show).discover();
 		}
-		JavelinApp.context.view(Game.hero());
+		Point p = JavelinApp.context.getherolocation();
+		JavelinApp.context.view(p.x, p.y);
 		return true;
 	}
 }

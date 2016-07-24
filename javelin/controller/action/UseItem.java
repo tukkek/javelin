@@ -6,15 +6,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
 
+import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
-import javelin.model.BattleMap;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
-import tyrant.mikera.engine.Thing;
 
 public class UseItem extends Action {
 
@@ -30,8 +28,8 @@ public class UseItem extends Action {
 	}
 
 	@Override
-	public boolean perform(Combatant active, BattleMap m, Thing thing) {
-		final Combatant c = Game.hero().combatant;
+	public boolean perform(Combatant active) {
+		final Combatant c = active;
 		// final Monster m = c.source;
 		final Item item = queryforitemselection(c, true);
 		if (item == null) {
@@ -56,7 +54,7 @@ public class UseItem extends Action {
 		final List<Item> items =
 				(List<Item>) Squad.active.equipment.get(c.id).clone();
 		if (items.isEmpty()) {
-			Game.message("Isn't carrying battle items!", null, Delay.WAIT);
+			Game.message("Isn't carrying battle items!", Delay.WAIT);
 			return null;
 		}
 		if (validate) {
@@ -67,7 +65,7 @@ public class UseItem extends Action {
 			}
 		}
 		if (items.isEmpty()) {
-			Game.message("Can't use any of these items!", null, Delay.WAIT);
+			Game.message("Can't use any of these items!", Delay.WAIT);
 			return null;
 		}
 		Collections.sort(items, new Comparator<Item>() {
@@ -76,8 +74,7 @@ public class UseItem extends Action {
 				return o1.name.compareTo(o2.name);
 			}
 		});
-		final boolean threatened =
-				BattleScreen.active.map.getState().isengaged(c);
+		final boolean threatened = Fight.state.isengaged(c);
 		int i = 1;
 		final TreeMap<Integer, Item> options = new TreeMap<Integer, Item>();
 		String prompt = "Which item? (press q to quit)\n";
@@ -89,11 +86,11 @@ public class UseItem extends Action {
 			prompt += "[" + i++ + "] " + it + "\n";
 		}
 		if (i == 1) {
-			Game.message("Can't use any of these while threatened!", null,
+			Game.message("Can't use any of these while threatened!",
 					Delay.WAIT);
 			return null;
 		}
-		Game.message(prompt, null, Delay.NONE);
+		Game.message(prompt, Delay.NONE);
 		try {
 			final String string = InfoScreen.feedback().toString();
 			final Item item = options.get(Integer.parseInt(string));

@@ -23,7 +23,7 @@ public class Encounter {
 		final ArrayList<Combatant> encounter =
 				new ArrayList<Combatant>(group.size());
 		for (final Combatant m : group) {
-			encounter.add(new Combatant(null, m.source.clone(), true));
+			encounter.add(new Combatant(m.source, true));
 		}
 		return encounter;
 	}

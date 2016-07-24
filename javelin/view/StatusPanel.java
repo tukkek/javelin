@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javelin.controller.old.Game;
+import javelin.controller.fight.Fight;
 import javelin.controller.upgrade.Spell;
 import javelin.model.condition.Breathless;
 import javelin.model.feat.CombatExpertise;
@@ -40,7 +40,7 @@ public class StatusPanel extends TPanel {
 	private int nextLine;
 
 	public StatusPanel() {
-		super(Game.getQuestapp());
+		super();
 		setBackground(QuestApp.PANELCOLOUR);
 	}
 
@@ -53,7 +53,7 @@ public class StatusPanel extends TPanel {
 	public void paint(final Graphics g) {
 		super.paint(g);
 		nextLine = 0;
-		Combatant hero = Game.hero().combatant;
+		Combatant hero = Fight.state.next;
 		if (hero == null || hero.source == null) {
 			return;
 		}
@@ -192,11 +192,6 @@ public class StatusPanel extends TPanel {
 
 	private int getNextLine() {
 		return nextLine += 15;
-	}
-
-	public void paintStat(final Graphics g, final String s, final int x,
-			final int y) {
-		paintLabel(g, s + ": " + Game.hero().getStat(s), x, y);
 	}
 
 	public static void paintBar(final Graphics g, final int x, final int y,

@@ -12,7 +12,7 @@ import tyrant.mikera.tyrant.Screen;
  */
 public class IntroScreen extends InfoScreen {
 	public IntroScreen(final String text) {
-		super(Javelin.app, text);
+		super(text);
 		configurescreen(this);
 		Javelin.app.switchScreen(this);
 	}

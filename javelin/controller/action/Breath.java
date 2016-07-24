@@ -16,9 +16,9 @@ import javelin.controller.action.area.Burst;
 import javelin.controller.action.area.Line;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
-import javelin.model.BattleMap;
 import javelin.model.condition.Breathless;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
@@ -27,7 +27,6 @@ import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.BreathWeapon.BreathArea;
 import javelin.view.mappanel.battle.overlay.BreathOverlay;
 import javelin.view.screen.BattleScreen;
-import tyrant.mikera.engine.Thing;
 
 /**
  * Use breath attack.
@@ -70,9 +69,9 @@ public class Breath extends Action implements AiAction {
 	}
 
 	@Override
-	public boolean perform(Combatant hero, BattleMap m, Thing thing) {
+	public boolean perform(Combatant hero) {
 		if (hero.hascondition(Breathless.class) != null) {
-			Game.message("Temporarily breathless...", hero, Delay.WAIT);
+			Game.message(hero + ": temporarily breathless...", Delay.WAIT);
 			throw new RepeatTurn();
 		}
 		BreathWeapon breath = null;
@@ -81,7 +80,7 @@ public class Breath extends Action implements AiAction {
 		}
 		clear();
 		Area a = selectarea(hero, breath);
-		BattleState state = m.getState();
+		BattleState state = Fight.state;
 		Set<Point> area = a.fill(breath.range, hero, state);
 		if (area.isEmpty()) {
 			throw new RepeatTurn();
@@ -93,7 +92,7 @@ public class Breath extends Action implements AiAction {
 		Game.message(
 				targetinfo(state, area)
 						+ "Press ENTER or b to confirm, q to quit.",
-				null, Delay.NONE);
+				Delay.NONE);
 		char confirm = Game.getInput().getKeyChar();
 		try {
 			quit(confirm);
@@ -110,8 +109,7 @@ public class Breath extends Action implements AiAction {
 	}
 
 	public Area selectarea(Combatant hero, BreathWeapon breath) {
-		Game.message("Select a direction or press q to quit.", null,
-				Delay.NONE);
+		Game.message("Select a direction or press q to quit.", Delay.NONE);
 		Area a = null;
 		while (a == null) {
 			a = (breath.type == BreathWeapon.BreathArea.CONE ? BURSTS : LINES)
@@ -274,8 +272,7 @@ public class Breath extends Action implements AiAction {
 	private BreathWeapon selectbreath(Monster m) {
 		int size = m.breaths.size();
 		if (size == 0) {
-			Game.message("Monster doesn't have breath attacks...", null,
-					Delay.WAIT);
+			Game.message("Monster doesn't have breath attacks...", Delay.WAIT);
 			throw new RepeatTurn();
 		}
 		if (size == 1) {

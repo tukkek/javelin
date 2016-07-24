@@ -178,7 +178,7 @@ public class Organization extends FieldReader {
 			final ArrayList<Combatant> monsters =
 					(ArrayList<Combatant>) monstersp.clone();
 			for (int j = 0; j < i; j++) {
-				monsters.add(new Combatant(null, p.getmonster(), true));
+				monsters.add(new Combatant(p.getmonster(), true));
 			}
 			expand(result, possibilites, depth + 1, monsters);
 		}

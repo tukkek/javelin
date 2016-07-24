@@ -70,7 +70,7 @@ public abstract class Academy extends Fortification {
 								/ 24f));
 				Game.messagepanel.clear();
 				Game.message(training.trained + "will complete training in "
-						+ daysleft + " day(s)...", null, Delay.NONE);
+						+ daysleft + " day(s)...", Delay.NONE);
 				Game.getInput();
 			} else {
 				completetraining();

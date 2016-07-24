@@ -8,10 +8,10 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.walker.Walker;
-import javelin.model.BattleMap;
 import javelin.model.condition.Charging;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
@@ -21,7 +21,6 @@ import javelin.view.mappanel.battle.overlay.TargetOverlay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.StatisticsScreen;
-import tyrant.mikera.engine.Thing;
 
 /**
  * Base class for all actions involving selecting an unit as target.
@@ -62,23 +61,22 @@ public abstract class Target extends Action {
 
 	/** Called once a target is confirmed. */
 	protected abstract void attack(Combatant active, Combatant target,
-			BattleState s, final BattleMap map);
+			BattleState s);
 
 	@Override
-	public boolean perform(final Combatant c, BattleMap map, Thing thing) {
-		final Thing hero = Game.hero();
-		checkhero(hero);
-		final BattleState state = map.getState();
-		if (checkengaged(state, state.clone(hero.combatant))) {
-			Game.message("Disengage first!", null, Delay.WAIT);
+	public boolean perform(final Combatant c) {
+		checkhero(c);
+		final BattleState state = Fight.state;
+		if (checkengaged(state, state.clone(c))) {
+			Game.message("Disengage first!", Delay.WAIT);
 			throw new RepeatTurn();
 		}
-		final Combatant combatant = state.clone(Game.hero().combatant);
+		final Combatant combatant = state.clone(c);
 		final List<Combatant> targets =
 				state.getAllTargets(combatant, state.getCombatants());
 		filtertargets(combatant, targets, state);
 		if (targets.isEmpty()) {
-			Game.message("No valid targets.", null, Delay.WAIT);
+			Game.message("No valid targets.", Delay.WAIT);
 			throw new RepeatTurn();
 		}
 		Collections.sort(targets, new Comparator<Combatant>() {
@@ -93,7 +91,7 @@ public abstract class Target extends Action {
 				return priority1 > priority2 ? -1 : 1;
 			}
 		});
-		selecttarget(map, combatant, targets, state);
+		selecttarget(combatant, targets, state);
 		return true;
 	}
 
@@ -116,10 +114,10 @@ public abstract class Target extends Action {
 		return priority;
 	}
 
-	private void selecttarget(BattleMap map, final Combatant combatant,
+	private void selecttarget(final Combatant combatant,
 			final List<Combatant> targets, BattleState state) {
 		int targeti = 0;
-		lockTarget(targets.get(0), map, combatant, state);
+		lockTarget(targets.get(0), combatant, state);
 		while (true) {
 			Game.redraw();
 			final Character key = InfoScreen.feedback();
@@ -130,7 +128,7 @@ public abstract class Target extends Action {
 			} else if (key == '\n' || key == confirmkey) {
 				MapPanel.overlay.clear();
 				Game.messagepanel.clear();
-				attack(combatant, targets.get(targeti), state, map);
+				attack(combatant, targets.get(targeti), state);
 				break;
 			} else if (key == 'v') {
 				new StatisticsScreen(targets.get(targeti));
@@ -146,7 +144,7 @@ public abstract class Target extends Action {
 			} else if (targeti < 0) {
 				targeti = max;
 			}
-			lockTarget(targets.get(targeti), map, combatant, state);
+			lockTarget(targets.get(targeti), combatant, state);
 		}
 	}
 
@@ -167,7 +165,7 @@ public abstract class Target extends Action {
 	 *            Active unit.
 	 * @throws RepeatTurn
 	 */
-	protected void checkhero(final Thing hero) {
+	protected void checkhero(final Combatant hero) {
 
 	}
 
@@ -188,8 +186,8 @@ public abstract class Target extends Action {
 		}
 	}
 
-	private void lockTarget(final Combatant target, BattleMap map,
-			Combatant active, BattleState state) {
+	private void lockTarget(final Combatant target, Combatant active,
+			BattleState state) {
 		// Game.instance().hero = target.visual;
 		MapPanel.overlay =
 				new TargetOverlay(target.location[0], target.location[1]);
@@ -197,9 +195,8 @@ public abstract class Target extends Action {
 		Game.message(
 				"Use ← and → to select target, ENTER or " + confirmkey
 						+ " to confirm, v to view target's sheet, q to quit.\n",
-				null, Delay.NONE);
-		Game.message(describehitchance(active, target, state), null,
 				Delay.NONE);
+		Game.message(describehitchance(active, target, state), Delay.NONE);
 		BattleScreen.active.centerscreen(target.location[0],
 				target.location[1]);
 	}

@@ -1,7 +1,8 @@
 package javelin.model.spell.divination;
 
+import javelin.JavelinApp;
+import javelin.controller.Point;
 import javelin.controller.challenge.factor.SpellsFactor;
-import javelin.controller.old.Game;
 import javelin.controller.upgrade.Spell;
 import javelin.controller.walker.Walker;
 import javelin.model.Realm;
@@ -9,7 +10,6 @@ import javelin.model.unit.Combatant;
 import javelin.model.world.location.dungeon.Chest;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
-import tyrant.mikera.engine.Thing;
 
 /**
  * Allows player to find nearest treasure chest in a {@link Dungeon}.
@@ -44,7 +44,7 @@ public class LocateObject extends Spell {
 	 */
 	public static Chest findtreasure() {
 		Chest closest = null;
-		Thing hero = Game.hero();
+		Point hero = JavelinApp.context.getherolocation();
 		for (Feature f : Dungeon.active.features) {
 			if (f instanceof Chest) {
 				Chest t = (Chest) f;

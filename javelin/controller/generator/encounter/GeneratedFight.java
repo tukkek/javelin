@@ -1,6 +1,6 @@
 package javelin.controller.generator.encounter;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import javelin.model.unit.Combatant;
 
@@ -9,9 +9,9 @@ import javelin.model.unit.Combatant;
  * are being used for different purposes.
  */
 public class GeneratedFight {
-	public List<Combatant> opponents;
+	public ArrayList<Combatant> opponents;
 
-	public GeneratedFight(final List<Combatant> opponenets) {
+	public GeneratedFight(final ArrayList<Combatant> opponenets) {
 		opponents = opponenets;
 	}
 }

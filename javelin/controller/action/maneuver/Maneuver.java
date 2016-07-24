@@ -12,13 +12,11 @@ import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
-import javelin.model.BattleMap;
 import javelin.model.condition.Condition;
 import javelin.model.feat.Feat;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import tyrant.mikera.engine.Thing;
 
 /**
  * This greatly helps feature maneuvers in Javelin - it was adopted with some
@@ -50,25 +48,16 @@ public abstract class Maneuver extends Fire implements AiAction {
 
 	@Override
 	protected void attack(Combatant combatant, Combatant targetCombatant,
-			BattleState battleState, BattleMap map) {
+			BattleState battleState) {
 		Action.outcome(maneuver(combatant, targetCombatant, battleState));
 	}
 
 	@Override
-	protected void checkhero(Thing hero) {
-		if (!checkhero(hero.combatant)) {
-			Game.message("Needs the " + prerequisite + " feat...", null,
-					Delay.WAIT);
+	protected void checkhero(Combatant hero) {
+		if (!hero.source.hasfeat(prerequisite)) {
+			Game.message("Needs the " + prerequisite + " feat...", Delay.WAIT);
 			throw new RepeatTurn();
 		}
-	}
-
-	/**
-	 * TODO refactor this to "check" and rename make {@link #checkhero(Thing)}
-	 * into Combatant
-	 */
-	public boolean checkhero(Combatant combatant) {
-		return combatant.source.hasfeat(prerequisite);
 	}
 
 	@Override
@@ -99,7 +88,7 @@ public abstract class Maneuver extends Fire implements AiAction {
 			final Combatant combatant) {
 		final ArrayList<List<ChanceNode>> outcomes =
 				new ArrayList<List<ChanceNode>>();
-		if (!checkhero(combatant)) {
+		if (!combatant.source.hasfeat(prerequisite)) {
 			return outcomes;
 		}
 		final ArrayList<Combatant> targets = gameState.getCombatants();

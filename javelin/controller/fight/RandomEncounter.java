@@ -1,6 +1,6 @@
 package javelin.controller.fight;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import javelin.JavelinApp;
 import javelin.controller.db.Preferences;
@@ -21,7 +21,7 @@ public class RandomEncounter extends Fight {
 	}
 
 	@Override
-	public List<Combatant> getmonsters(int teamel) {
+	public ArrayList<Combatant> getmonsters(int teamel) {
 		return null;
 	}
 

@@ -1,7 +1,6 @@
 package javelin.controller.fight.tournament;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
@@ -27,13 +26,13 @@ public class Horde extends Exhibition {
 	public void start() {
 		throw new StartBattle(new ExhibitionFight() {
 			@Override
-			public List<Combatant> getmonsters(int teamel) {
+			public ArrayList<Combatant> getmonsters(int teamel) {
 				for (Monster m : new CrIterator(
 						Javelin.MONSTERSBYCR.descendingMap())) {
-					List<Combatant> opponents = new ArrayList<Combatant>();
+					ArrayList<Combatant> opponents = new ArrayList<Combatant>();
 					for (int i = 0; i < EncounterGenerator
 							.getmaxenemynumber(); i++) {
-						opponents.add(new Combatant(null, m.clone(), true));
+						opponents.add(new Combatant(m.clone(), true));
 					}
 					try {
 						if (ChallengeRatingCalculator

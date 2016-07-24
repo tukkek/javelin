@@ -64,7 +64,7 @@ public class Guardian extends Fortification {
 				Collections.shuffle(candidates);
 				for (Monster m : candidates) {
 					if (m.getterrains().contains(terrain)) {
-						return new Combatant(null, m.clone(), true);
+						return new Combatant(m.clone(), true);
 					}
 				}
 			}

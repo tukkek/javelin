@@ -7,8 +7,6 @@ import javelin.controller.Point;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomEncounter;
-import javelin.controller.old.Game;
-import javelin.model.BattleMap;
 import javelin.model.unit.Squad;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -17,7 +15,6 @@ import javelin.model.world.location.dungeon.Trap;
 import javelin.view.Images;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.dungeon.DungeonPanel;
-import tyrant.mikera.engine.Thing;
 
 /**
  * Shows the inside of a {@link Dungeon}.
@@ -30,11 +27,6 @@ public class DungeonScreen extends WorldScreen {
 	public static boolean stopmovesequence = false;
 	public static boolean updatelocation = true;
 
-	/** Exhibits a dungeon. */
-	public DungeonScreen(BattleMap map) {
-		super(null);
-	}
-
 	@Override
 	public boolean explore(float hoursellapsed, boolean encounter) {
 		try {
@@ -42,7 +34,6 @@ public class DungeonScreen extends WorldScreen {
 				RandomEncounter.encounter(Dungeon.ENCOUNTERRATIO);
 			}
 		} catch (StartBattle e) {
-			map.removeThing(Game.hero());
 			throw e;
 		}
 		return !Dungeon.active.hazard();
@@ -85,7 +76,7 @@ public class DungeonScreen extends WorldScreen {
 	}
 
 	@Override
-	public void view(Thing h) {
+	public void view(int xp, int yp) {
 		for (int x = -1; x <= +1; x++) {
 			for (int y = -1; y <= +1; y++) {
 				try {
@@ -96,16 +87,6 @@ public class DungeonScreen extends WorldScreen {
 				}
 			}
 		}
-	}
-
-	@Override
-	public Thing gethero() {
-		Squad.active.updateavatar();
-		Thing hero = Game.hero();
-		hero.combatant = Squad.active.visual.combatant;
-		hero.x = Dungeon.active.herolocation.x;
-		hero.y = Dungeon.active.herolocation.y;
-		return Game.hero();
 	}
 
 	@Override
@@ -132,5 +113,10 @@ public class DungeonScreen extends WorldScreen {
 	@Override
 	public boolean validatepoint(int tox, int toy) {
 		return 0 <= tox && tox < Dungeon.SIZE && 0 <= toy && toy < Dungeon.SIZE;
+	}
+
+	@Override
+	public Point getherolocation() {
+		return Dungeon.active.herolocation;
 	}
 }

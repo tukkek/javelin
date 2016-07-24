@@ -23,7 +23,6 @@ import javelin.controller.upgrade.BreathUpgrade;
 import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.model.BattleMap;
 import javelin.model.Cloneable;
 import javelin.model.Realm;
 import javelin.model.TeamContainer;
@@ -41,7 +40,6 @@ import javelin.model.world.WorldActor;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
-import tyrant.mikera.engine.Thing;
 
 /**
  * A Combatant is an in-game unit, like the enemies in the battlefield or the
@@ -64,10 +62,6 @@ public class Combatant implements Serializable, Cloneable {
 	public static final int STATUSUNHARMED = 5;
 	/** TODO proper dying process + healing phase at the end of combat */
 	public static final int DEADATHP = -8;
-	/**
-	 * TODO Should probably be external, like a mapping in {@link BattleScreen}.
-	 */
-	transient public Thing visual;
 	/** The statistics for this monster. */
 	public Monster source;
 	/**
@@ -133,14 +127,9 @@ public class Combatant implements Serializable, Cloneable {
 	 *            measure to allow 1.0 monster who would have spell powers to
 	 *            use the currently implemented spells TODO
 	 */
-	public Combatant(final Thing visual, final Monster sourcep,
-			boolean generatespells) {
+	public Combatant(final Monster sourcep, boolean generatespells) {
 		super();
-		this.visual = visual;
 		source = sourcep;
-		if (visual != null) {
-			visual.combatant = this;
-		}
 		newid();
 		ap = 0;
 		hp = source.hd.roll(source);
@@ -255,15 +244,9 @@ public class Combatant implements Serializable, Cloneable {
 	public void checkAttackType(final boolean meleeOnly) {
 		if (!hasAttackType(meleeOnly)) {
 			Game.message("No " + (meleeOnly ? "mẽlée" : "ranged") + " attacks.",
-					null, Delay.WAIT);
+					Delay.WAIT);
 			throw new RepeatTurn();
 		}
-	}
-
-	public int[] determineLocation() {
-		location[0] = visual.x;
-		location[1] = visual.y;
-		return location;
 	}
 
 	public void refresh() {
@@ -354,7 +337,6 @@ public class Combatant implements Serializable, Cloneable {
 					attacks, false, false);
 			if (attackindex == STATUSUNCONSCIOUS) {
 				Game.messagepanel.clear();
-				Game.instance().setHero(visual);
 				throw new RepeatTurn();
 			}
 		}
@@ -493,8 +475,8 @@ public class Combatant implements Serializable, Cloneable {
 		final ArrayList<String> statuslist = new ArrayList<String>();
 		if (state.isengaged(this)) {
 			statuslist.add("engaged");
-			for (Combatant c : BattleMap.blueTeam.contains(this)
-					? BattleMap.redTeam : BattleMap.blueTeam) {
+			for (Combatant c : Fight.state.blueTeam.contains(this)
+					? Fight.state.redTeam : Fight.state.blueTeam) {
 				if (state.isflanked(state.clone(this), state.clone(c))) {
 					statuslist.add("flanked");
 					break;
@@ -573,9 +555,7 @@ public class Combatant implements Serializable, Cloneable {
 
 	public void escape(BattleScreen screen) {
 		screen.fleeing.add(this);
-		BattleMap.blueTeam.remove(this);
-		BattleMap.combatants.remove(this);
-		visual.remove();
+		Fight.state.blueTeam.remove(this);
 	}
 
 	public void addcondition(Condition c) {
@@ -609,7 +589,6 @@ public class Combatant implements Serializable, Cloneable {
 	public void finishconditions(BattleState s, BattleScreen screen) {
 		for (Condition co : conditions) {
 			co.finish(s);
-			screen.updateMessages();
 			screen.checkblock();
 		}
 	}

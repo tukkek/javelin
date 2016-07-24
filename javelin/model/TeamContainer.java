@@ -10,23 +10,6 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public interface TeamContainer {
-	TeamContainer DEFAULT = new TeamContainer() {
-		@Override
-		public List<Combatant> getRedTeam() {
-			return BattleMap.redTeam;
-		}
-
-		@Override
-		public List<Combatant> getBlueTeam() {
-			return BattleMap.blueTeam;
-		}
-
-		@Override
-		public List<Combatant> getCombatants() {
-			return BattleMap.combatants;
-		}
-	};
-
 	List<Combatant> getBlueTeam();
 
 	List<Combatant> getRedTeam();

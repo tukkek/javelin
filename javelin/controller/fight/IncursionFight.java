@@ -2,11 +2,9 @@ package javelin.controller.fight;
 
 import java.awt.Image;
 import java.util.ArrayList;
-import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.terrain.Terrain;
-import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Incursion;
@@ -42,7 +40,7 @@ public class IncursionFight extends Fight {
 	}
 
 	@Override
-	public List<Combatant> getmonsters(int teamel) {
+	public ArrayList<Combatant> getmonsters(int teamel) {
 		return Incursion.getsafeincursion(incursion.squad);
 	}
 
@@ -55,13 +53,13 @@ public class IncursionFight extends Fight {
 	public void onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
 			BattleState s) {
 		super.onEnd(screen, originalTeam, s);
-		if (BattleMap.redTeam.isEmpty()) {
+		if (Fight.state.redTeam.isEmpty()) {
 			incursion.remove();
 		} else {
 			for (Combatant incursant : new ArrayList<Combatant>(
 					incursion.squad)) {
 				Combatant alive = null;
-				for (Combatant inbattle : BattleMap.combatants) {
+				for (Combatant inbattle : Fight.state.getCombatants()) {
 					if (inbattle.id == incursant.id) {
 						alive = inbattle;
 						break;
@@ -75,8 +73,8 @@ public class IncursionFight extends Fight {
 	}
 
 	@Override
-	public List<Combatant> generate(int teamel, Terrain terrain) {
-		List<Combatant> foes = super.generate(teamel, terrain);
+	public ArrayList<Combatant> generate(int teamel, Terrain terrain) {
+		ArrayList<Combatant> foes = super.generate(teamel, terrain);
 		incursion.squad = Incursion.getsafeincursion(foes);
 		return foes;
 	}

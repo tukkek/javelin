@@ -28,8 +28,10 @@ public class RaiseDead extends Spell {
 	@Override
 	public boolean validate(Combatant caster, Combatant target) {
 		Game.messagepanel.clear();
-		Game.message("Revive? Press y to confirm or n to let go of this unit.",
-				target, Delay.NONE);
+		Game.message(
+				"Revive " + target
+						+ "? Press y to confirm or n to let go of this unit.",
+				Delay.NONE);
 		while (true) {
 			final Character feedback = InfoScreen.feedback();
 			if (feedback == 'y') {

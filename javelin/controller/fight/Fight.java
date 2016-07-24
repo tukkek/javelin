@@ -21,7 +21,6 @@ import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.Underground;
 import javelin.controller.terrain.Water;
 import javelin.controller.terrain.map.Map;
-import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
@@ -37,6 +36,10 @@ import tyrant.mikera.tyrant.QuestApp;
  * A battle scenario.
  */
 public abstract class Fight {
+	public static BattleState state = null;
+
+	public static Boolean victory;
+
 	Image texture = QuestApp.DEFAULTTEXTURE;
 
 	/**
@@ -114,9 +117,8 @@ public abstract class Fight {
 	 */
 	public abstract int getel(int teamel);
 
-	final public BattleScreen getscreen(JavelinApp javelinApp,
-			BattleMap battlemap) {
-		return new BattleScreen(javelinApp, battlemap, true);
+	final public BattleScreen getscreen() {
+		return new BattleScreen(true);
 	}
 
 	/**
@@ -124,7 +126,7 @@ public abstract class Fight {
 	 *         If <code>null</code>, will then use
 	 *         {@link #getel(JavelinApp, int)}.
 	 */
-	public abstract List<Combatant> getmonsters(int teamel);
+	public abstract ArrayList<Combatant> getmonsters(int teamel);
 
 	/**
 	 * Called in case of a successful bribe.
@@ -146,10 +148,10 @@ public abstract class Fight {
 		/* should at least serve as food for 1 day */
 		final int bonus = Math.round(Math.max(Squad.active.eat() / 2,
 				RewardCalculator.receivegold(BattleScreen.originalredteam)));
-		Squad.active.members = BattleMap.blueTeam;
+		Squad.active.members = Fight.state.blueTeam;
 		String rewards = "";
 		if (Javelin.app.fight.rewardxp) {
-			rewards += RewardCalculator.rewardxp(BattleMap.blueTeam,
+			rewards += RewardCalculator.rewardxp(Fight.state.blueTeam,
 					BattleScreen.originalblueteam, BattleScreen.originalredteam,
 					1);
 		}
@@ -176,16 +178,15 @@ public abstract class Fight {
 	 */
 	public void onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
 			BattleState s) {
-		screen.map.setState(s);
+		Fight.state = s;
 		for (Combatant c : screen.fleeing) {
-			BattleMap.blueTeam.add(c);
-			BattleMap.combatants.add(c);
+			Fight.state.blueTeam.add(c);
 		}
 		EndBattle.showcombatresult(screen, originalTeam, "Congratulations! ");
 	}
 
 	public void checkEndBattle(BattleScreen screen) {
-		if (BattleMap.redTeam.isEmpty() || BattleMap.blueTeam.isEmpty()) {
+		if (Fight.state.redTeam.isEmpty() || Fight.state.blueTeam.isEmpty()) {
 			throw new EndBattle();
 		}
 		if (!screen.checkforenemies()) {
@@ -194,31 +195,31 @@ public abstract class Fight {
 	}
 
 	public void withdraw(Combatant combatant, BattleScreen screen) {
-		if (screen.map.getState().isengaged(combatant)) {
+		if (Fight.state.isengaged(combatant)) {
 			if (Javelin.DEBUG) {
-				Game.message("Press w to cancel battle (debug feature)", null,
+				Game.message("Press w to cancel battle (debug feature)",
 						Delay.NONE);
 				if (Game.getInput().getKeyChar() == 'w') {
 					for (Combatant c : new ArrayList<Combatant>(
-							BattleMap.blueTeam)) {
+							Fight.state.blueTeam)) {
 						c.escape(screen);
 					}
 					throw new EndBattle();
 				}
 			}
-			Game.message("Disengage first!", null, Delay.BLOCK);
+			Game.message("Disengage first!", Delay.BLOCK);
 			InfoScreen.feedback();
 			throw new RepeatTurn();
 		}
 		Game.message(
 				"Are you sure you want to escape? Press ENTER to confirm...\n",
-				null, Delay.NONE);
+				Delay.NONE);
 		if (Game.getInput().getKeyChar() != '\n') {
 			throw new RepeatTurn();
 		}
 		combatant.escape(screen);
-		Game.message("Escapes!", null, Delay.WAIT);
-		if (BattleMap.blueTeam.isEmpty()) {
+		Game.message("Escapes!", Delay.WAIT);
+		if (Fight.state.blueTeam.isEmpty()) {
 			throw new EndBattle();
 		}
 	}
@@ -235,7 +236,7 @@ public abstract class Fight {
 	}
 
 	static public void dontflee(BattleScreen s) {
-		Game.message("Cannot flee!", null, Delay.BLOCK);
+		Game.message("Cannot flee!", Delay.BLOCK);
 		s.checkblock();
 		throw new RepeatTurn();
 	}
@@ -257,13 +258,12 @@ public abstract class Fight {
 	 *            Terrain this fight takes place on.
 	 * @return The resulting opponents.
 	 */
-	public List<Combatant> generate(final int teamel, Terrain terrain) {
-		List<Combatant> foes = getmonsters(teamel);
+	public ArrayList<Combatant> generate(final int teamel, Terrain terrain) {
+		ArrayList<Combatant> foes = getmonsters(teamel);
 		if (foes != null) {
 			enhance(foes);
 			return foes;
 		}
-
 		int delta = 0;
 		GeneratedFight generated = null;
 		while (generated == null) {
@@ -337,6 +337,6 @@ public abstract class Fight {
 	 * @return <code>true</code> if battle has been won.
 	 */
 	public Boolean win(BattleScreen screen) {
-		return BattleMap.redTeam.isEmpty() || !screen.checkforenemies();
+		return Fight.state.redTeam.isEmpty() || !screen.checkforenemies();
 	}
 }

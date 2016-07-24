@@ -28,7 +28,6 @@ import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.upgrade.Spell;
-import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -47,7 +46,6 @@ import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.world.WorldPanel;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
-import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.QuestApp;
 
 /**
@@ -90,21 +88,6 @@ public class WorldScreen extends BattleScreen {
 	public static final String SPACER =
 			"                                               ";
 
-	// /**
-	// * Represents explored {@link World} tiles.
-	// *
-	// * @deprecated Use {@link WorldScreen#see(Point)} and
-	// * {@link #setVisible(boolean)} instead.
-	// */
-	// @Deprecated
-	// public static HashSet<Point> discovered = new HashSet<Point>();
-	/**
-	 * TODO We shouldn't need a {@link BattleMap} to represent the {@link World}
-	 * from 2.0 onwards.
-	 */
-	public static BattleMap worldmap =
-			new BattleMap(World.MAPDIMENSION, World.MAPDIMENSION);
-	static Thing worldhero;
 	/** Last day that was taken into account by {@link World} computations. */
 	public static double lastday = -1;
 	/** Current active world screen. */
@@ -112,8 +95,8 @@ public class WorldScreen extends BattleScreen {
 	static boolean welcome = true;
 
 	/** Constructor. */
-	public WorldScreen(BattleMap mapp) {
-		super(Javelin.app, mapp, false);
+	public WorldScreen() {
+		super(false);
 		WorldScreen.current = this;
 		Javelin.settexture(QuestApp.DEFAULTTEXTURE);
 		Tile[][] tiles = gettiles();
@@ -148,9 +131,8 @@ public class WorldScreen extends BattleScreen {
 	protected void humanTurn() {
 		while (true) {
 			try {
-				Thing h = JavelinApp.context.gethero();
-				updatescreen(h);
-				Game.getUserinterface().waiting = true;
+				updatescreen();
+				Game.userinterface.waiting = true;
 				final KeyEvent updatableUserAction = getUserInput();
 				if (MapPanel.overlay != null) {
 					MapPanel.overlay.clear();
@@ -159,7 +141,7 @@ public class WorldScreen extends BattleScreen {
 					callback.run();
 					callback = null;
 				} else {
-					performAction(h, convertEventToAction(updatableUserAction),
+					performAction(convertEventToAction(updatableUserAction),
 							false);
 				}
 				break;
@@ -172,10 +154,8 @@ public class WorldScreen extends BattleScreen {
 	}
 
 	/** TODO remove on 2.0+ */
-	public Thing gethero() {
-		Squad.active.visual.x = Squad.active.x;
-		Squad.active.visual.y = Squad.active.y;
-		return Squad.active.visual;
+	public Point getherolocation() {
+		return new Point(Squad.active.x, Squad.active.y);
 	}
 
 	@Override
@@ -200,20 +180,20 @@ public class WorldScreen extends BattleScreen {
 	}
 
 	@Override
-	public void performAction(final Thing thing, final Action action,
-			final boolean isShiftDown) {
+	public void performAction(final Action action, final boolean isShiftDown) {
 	}
 
 	@Override
-	protected void updatescreen(final Thing h) {
+	protected void updatescreen() {
 		Javelin.app.switchScreen(this);
+		Point h = JavelinApp.context.getherolocation();
 		centerscreen(h.x, h.y);
-		view(h);
+		view(h.x, h.y);
 		Game.redraw();
 	}
 
 	@Override
-	public void view(Thing h) {
+	public void view(int x, int y) {
 		int vision = Squad.active.perceive(true)
 				+ (Squad.active.transport == Transport.AIRSHIP ? +4
 						: Terrain.current().visionbonus);
@@ -338,7 +318,7 @@ public class WorldScreen extends BattleScreen {
 			}
 			panel += hp + info + "\n";
 		}
-		Game.message(panel, null, Delay.NONE);
+		Game.message(panel, Delay.NONE);
 	}
 
 	/**
@@ -387,7 +367,7 @@ public class WorldScreen extends BattleScreen {
 	}
 
 	private void saywelcome() {
-		Game.message(Javelin.sayWelcome(), null, Delay.NONE);
+		Game.message(Javelin.sayWelcome(), Delay.NONE);
 		InfoScreen.feedback();
 		messagepanel.clear();
 		WorldScreen.welcome = false;
@@ -475,7 +455,7 @@ public class WorldScreen extends BattleScreen {
 
 	@Override
 	public void centerscreen(int x, int y, boolean force) {
-		mappanel.viewPosition(map, x, y);
+		mappanel.viewPosition(x, y);
 	}
 
 	@Override

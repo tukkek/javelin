@@ -10,7 +10,6 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.transport.Transport;
 import javelin.view.Images;
-import tyrant.mikera.engine.Thing;
 
 /**
  * Represents a {@link Park}ed {@link Transport}.
@@ -46,7 +45,6 @@ public class ParkedVehicle extends WorldActor {
 		}
 		Squad.active.transport = transport;
 		remove();
-		Squad.active.visual.remove();
 		Squad.active.move(x, y);
 		Squad.active.place();
 		Squad.active.updateavatar();
@@ -56,13 +54,6 @@ public class ParkedVehicle extends WorldActor {
 	@Override
 	public Boolean destroy(Incursion attacker) {
 		return true;
-	}
-
-	@Override
-	public Thing createvisual() {
-		Thing t = super.createvisual();
-		t.javelinimage = getimage();
-		return t;
 	}
 
 	@Override

@@ -1,9 +1,7 @@
 package javelin.controller.action;
 
 import javelin.controller.action.world.WorldAction;
-import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
-import tyrant.mikera.engine.Thing;
 
 /**
  * Used to create an in-battle {@link Action} from a {@link WorldAction}.
@@ -28,7 +26,7 @@ public class ActionAdapter extends Action {
 	}
 
 	@Override
-	public boolean perform(Combatant hero, BattleMap m, Thing thing) {
+	public boolean perform(Combatant hero) {
 		action.perform();
 		return false;
 	}

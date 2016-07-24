@@ -76,7 +76,7 @@ public class TrainingHall extends Fortification {
 		int nstudents = Squad.active.members.size();
 		int nsenseis = RPG.r(Math.min(3, nstudents), RPG.max(nstudents, 5));
 		while (isweak() && garrison.size() < nsenseis) {
-			garrison.add(new Combatant(null, RPG.pick(senseis).clone(), true));
+			garrison.add(new Combatant(RPG.pick(senseis).clone(), true));
 		}
 		while (isweak()) {
 			Combatant.upgradeweakest(garrison, Realm.random());
@@ -94,14 +94,14 @@ public class TrainingHall extends Fortification {
 		Game.messagepanel.clear();
 		if (price > Squad.active.gold) {
 			Game.message("Not enough money to pay the training fee of $" + price
-					+ "!", null, Delay.NONE);
+					+ "!", Delay.NONE);
 			Game.getInput();
 			throw new RepeatTurn();
 		}
 		Game.message(
 				"Do you want to pay a free of $" + price
 						+ " for a lesson?\nPress s to study or any other key to leave",
-				null, Delay.NONE);
+				Delay.NONE);
 		if (Game.getInput().getKeyChar() == 's') {
 			Squad.active.gold -= price;
 			return new TrainingSession(this);

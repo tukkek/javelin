@@ -8,7 +8,6 @@ import javelin.model.unit.Squad;
 import javelin.model.world.location.Portal;
 import javelin.model.world.location.unique.Haxor;
 import javelin.view.screen.town.PurchaseScreen;
-import tyrant.mikera.engine.Thing;
 
 /**
  * Loot!

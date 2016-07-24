@@ -55,7 +55,6 @@ public class Park extends WorldAction {
 		}
 		int parkingx = Squad.active.x;
 		int parkingy = Squad.active.y;
-		Squad.active.visual.remove();
 		Squad.active.move(exit.x, exit.y);
 		Squad.active.place();
 		new ParkedVehicle(parkingx, parkingy, Squad.active.transport).place();

@@ -2,6 +2,7 @@ package javelin.controller.terrain;
 
 import java.util.Set;
 
+import javelin.controller.Point;
 import javelin.controller.terrain.hazard.Break;
 import javelin.controller.terrain.hazard.Cold;
 import javelin.controller.terrain.hazard.Hazard;
@@ -11,7 +12,6 @@ import javelin.controller.terrain.map.hill.Rugged;
 import javelin.controller.terrain.map.mountain.Forbidding;
 import javelin.controller.terrain.map.mountain.Meadow;
 import javelin.model.world.World;
-import tyrant.mikera.engine.Point;
 
 /**
  * High altitude, snowy on winter.

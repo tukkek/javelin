@@ -27,13 +27,12 @@ public class ResetScore extends WorldAction {
 		Game.message(
 				"Are you sure you want to reset your highscore ("
 						+ Javelin.gethighscore() + ")? Press y to proceed.\n",
-				null, Delay.NONE);
+				Delay.NONE);
 		boolean ok = InfoScreen.feedback() == 'y';
 		if (ok) {
 			Javelin.sethighscore(0);
 		}
-		Game.message((ok ? "Score reset" : "Aborted") + "...", null,
-				Delay.WAIT);
+		Game.message((ok ? "Score reset" : "Aborted") + "...", Delay.WAIT);
 		name = name();
 	}
 

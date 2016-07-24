@@ -18,7 +18,6 @@ import javelin.view.Images;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.shopping.MerchantScreen;
 import tyrant.mikera.engine.RPG;
-import tyrant.mikera.engine.Thing;
 
 /**
  * A figure that travels from one city to a human (neutral) city. It can be
@@ -112,7 +111,6 @@ public class Caravan extends WorldActor {
 		WorldActor here = WorldActor.get(x, y);
 		this.x = x;
 		this.y = y;
-		visual.remove();
 		place();
 		if (x == tox && y == toy) {
 			if (here instanceof Town) {
@@ -123,7 +121,7 @@ public class Caravan extends WorldActor {
 					Game.message(
 							"A merchant arrives at " + town
 									+ ", city grows! Press ENTER to continue...",
-							null, Delay.NONE);
+							Delay.NONE);
 					while (Game.getInput().getKeyChar() != '\n') {
 						// wait for ENTER
 					}
@@ -156,13 +154,6 @@ public class Caravan extends WorldActor {
 	public boolean interact() {
 		new MerchantScreen(this).show();
 		return true;
-	}
-
-	@Override
-	public Thing createvisual() {
-		Thing t = super.createvisual();
-		t.javelinimage = getimage();
-		return t;
 	}
 
 	@Override

@@ -8,7 +8,7 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
 import javelin.Javelin;
-import javelin.controller.old.Game;
+import javelin.controller.fight.Fight;
 import javelin.controller.terrain.map.Map;
 import javelin.model.state.Meld;
 import javelin.model.state.Square;
@@ -39,7 +39,7 @@ public class BattleTile extends Tile {
 			return;
 		}
 		final Map m = Javelin.app.fight.map;
-		final Square s = BattlePanel.state.map[x][y];
+		final Square s = Fight.state.map[x][y];
 		if (!s.blocked) {
 			draw(g, m.floor);
 			if (s.obstructed) {
@@ -58,13 +58,13 @@ public class BattleTile extends Tile {
 		if (s.flooded) {
 			draw(g, m.flooded);
 		}
-		final Combatant c = BattlePanel.state.getCombatant(x, y);
+		final Combatant c = Fight.state.getCombatant(x, y);
 		if (c != null) {
 			drawcombatant(g, c, this);
 		} else if (Javelin.app.fight.meld) {
-			for (Meld meld : BattlePanel.state.meld) {
+			for (Meld meld : Fight.state.meld) {
 				if (meld.x == x && meld.y == y) {
-					draw(g, meld.getimage(BattlePanel.state));
+					draw(g, meld.getimage(Fight.state));
 				}
 			}
 		}
@@ -79,25 +79,24 @@ public class BattleTile extends Tile {
 
 	static private void drawcombatant(final Graphics g, final Combatant c,
 			final Tile t) {
-		final boolean blueteam = BattlePanel.state.blueTeam.contains(c);
-		if (Game.hero().combatant.equals(c)) {
+		final boolean blueteam = Fight.state.blueTeam.contains(c);
+		if (BattlePanel.current.equals(c)) {
 			g.setColor(blueteam ? Color.GREEN : Color.ORANGE);
 			g.fillRect(0, 0, MapPanel.tilesize, MapPanel.tilesize);
 		}
 		draw(g, Images.getImage(c));
 		g.setColor(blueteam ? Color.BLUE : Color.RED);
-		final int hp = MapPanel.tilesize
-				- MapPanel.tilesize * c.hp / c.getmaxhp();
+		final int hp =
+				MapPanel.tilesize - MapPanel.tilesize * c.hp / c.getmaxhp();
 		g.fillRect(0, hp, MapPanel.tilesize / 10, MapPanel.tilesize - hp);
-		if (c.ispenalized(BattlePanel.state)) {
+		if (c.ispenalized(Fight.state)) {
 			g.drawImage(
 					Images.penalized.getScaledInstance(MapPanel.tilesize,
 							MapPanel.tilesize, Image.SCALE_DEFAULT),
 					0, 0, null);
 		}
 		if (c.isbuffed()) {
-			BUFF.paintBorder(t, g, 0, 0, MapPanel.tilesize,
-					MapPanel.tilesize);
+			BUFF.paintBorder(t, g, 0, 0, MapPanel.tilesize, MapPanel.tilesize);
 		}
 	}
 }

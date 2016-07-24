@@ -47,12 +47,12 @@ public class Dwelling extends Fortification {
 				continue monsters;
 			}
 		}
-		dweller = new Combatant(null, RPG.pick(candidates).clone(), true);
+		dweller = new Combatant(RPG.pick(candidates).clone(), true);
 		targetel = ChallengeRatingCalculator.elFromCr(
 				ChallengeRatingCalculator.calculateCr(dweller.source));
 		gossip = dweller.source.intelligence > 8;
 		for (int i = 0; i < 4; i++) {
-			garrison.add(new Combatant(null, dweller.source.clone(), true));
+			garrison.add(new Combatant(dweller.source.clone(), true));
 		}
 		generategarrison = false;
 	}
@@ -74,8 +74,7 @@ public class Dwelling extends Fortification {
 			return true;
 		}
 		if (choice == 'h') {
-			Combatant mercenary =
-					new Combatant(null, dweller.source.clone(), true);
+			Combatant mercenary = new Combatant(dweller.source.clone(), true);
 			mercenary.mercenary = true;
 			MercenariesGuild.recruit(mercenary, true);
 			return true;

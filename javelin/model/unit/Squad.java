@@ -117,7 +117,6 @@ public class Squad extends WorldActor {
 		if (Squad.active == this) {
 			Squad.active = Javelin.nexttoact();
 		}
-		visual.remove();
 		if (Dungeon.active != null) {
 			Dungeon.active.leave();
 		}
@@ -138,9 +137,6 @@ public class Squad extends WorldActor {
 	public void place() {
 		super.place();
 		updateavatar();
-		if (Game.hero() == null) {
-			Game.instance().setHero(visual);
-		}
 	}
 
 	/**
@@ -153,6 +149,10 @@ public class Squad extends WorldActor {
 		if (members.isEmpty()) {
 			return;
 		}
+		if (transport != null && Dungeon.active == null) {
+			image = Images
+					.getImage(transport.name.replaceAll(" ", "").toLowerCase());
+		}
 		Combatant leader = members.get(0);
 		for (int i = 1; i < members.size(); i++) {
 			Combatant m = members.get(i);
@@ -162,21 +162,12 @@ public class Squad extends WorldActor {
 				leader = m;
 			}
 		}
-		Monster dummy = leader.source;
-		if (transport != null && Dungeon.active == null) {
-			dummy = dummy.clone();
-			dummy.avatarfile = transport.name.replaceAll(" ", "").toLowerCase();
-		}
-		visual.combatant = new Combatant(visual, dummy, false);
+		image = Images.getImage(leader.source.avatarfile);
 	}
 
 	@Override
 	public Image getimage() {
-		try {
-			image = Images.getImage(visual.combatant.source.avatarfile);
-		} catch (NullPointerException e) {
-			// TODO fix ^
-		}
+		updateavatar();
 		return image;
 	}
 
@@ -230,7 +221,7 @@ public class Squad extends WorldActor {
 				Game.messagepanel.clear();
 				Game.message(
 						c + " is not paid, abandons your ranks!\n\nPress ENTER to coninue...",
-						null, Delay.NONE);
+						Delay.NONE);
 				while (Game.getInput().getKeyChar() != '\n') {
 					// wait for enter
 				}
@@ -281,10 +272,6 @@ public class Squad extends WorldActor {
 	@Override
 	public void move(int tox, int toy) {
 		super.move(tox, toy);
-		if (visual != null) {
-			visual.x = tox;
-			visual.y = tox;
-		}
 	}
 
 	@Override
@@ -611,7 +598,6 @@ public class Squad extends WorldActor {
 			}
 		}
 		if (members.size() > 0 && WorldActor.get(x, y) != this) {
-			visual.remove();
 			displace();
 			place();
 		}

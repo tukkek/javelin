@@ -7,10 +7,8 @@ import java.util.List;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.ai.AiMovement;
 import javelin.controller.ai.ChanceNode;
-import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import tyrant.mikera.engine.Thing;
 
 /**
  * Full Defense action. w is a better keyboard shortcut for it though.
@@ -39,8 +37,8 @@ public class Defend extends Action implements AiAction {
 	}
 
 	@Override
-	public boolean perform(Combatant active, BattleMap m, Thing thing) {
-		thing.combatant.await();
+	public boolean perform(Combatant active) {
+		active.await();
 		return true;
 	}
 }

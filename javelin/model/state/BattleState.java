@@ -8,6 +8,7 @@ import javelin.controller.Point;
 import javelin.controller.ai.ActionProvider;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.Node;
+import javelin.controller.fight.Fight;
 import javelin.controller.walker.ClearPath;
 import javelin.controller.walker.ObstructedPath;
 import javelin.controller.walker.Step;
@@ -48,6 +49,17 @@ public class BattleState implements Node, TeamContainer {
 		this.redTeam = (ArrayList<Combatant>) redTeam.clone();
 		this.meld = (ArrayList<Meld>) meld.clone();
 		checkwhoisnext();
+	}
+
+	public BattleState(Fight f) {
+		map = f.map == null ? null : f.map.map;
+		period = f.period;
+		dead = new ArrayList<Combatant>();
+		this.blueTeam = new ArrayList<Combatant>();
+		this.redTeam = new ArrayList<Combatant>();
+		this.meld = new ArrayList<Meld>();
+		checkwhoisnext();
+
 	}
 
 	@Override

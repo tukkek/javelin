@@ -28,12 +28,12 @@ public class DungeonTile extends Tile {
 		}
 		final Feature f = Dungeon.active.getfeature(x, y);
 		if (f != null && f.draw) {
-			draw(g, f.visual.javelinimage);
+			draw(g, Images.getImage(f.avatarfile));
 		}
 		if (Dungeon.active.herolocation.x == x
 				&& Dungeon.active.herolocation.y == y) {
 			Squad.active.updateavatar();
-			draw(g, Images.getImage(Squad.active.visual.combatant));
+			draw(g, Squad.active.getimage());
 		}
 		if (WorldPanel.overlay != null) {
 			WorldPanel.overlay.overlay(this, g);

@@ -1,4 +1,8 @@
-Version 1.6 
+Version 1.7
+
+ * Basic mouse support (world, battle and dungeon screens)!
+
+Version 1.6 (2016-07-15) 
 
  * New locations: 7 temples, 11 mage guilds, troves and mines!
  * New starting locations: Training Hall and Adventurers Guild!

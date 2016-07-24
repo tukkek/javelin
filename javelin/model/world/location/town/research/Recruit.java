@@ -35,7 +35,7 @@ public class Recruit extends Research {
 
 	@Override
 	public void apply(Town t, ResearchScreen s) {
-		t.garrison.add(new Combatant(null, m.clone(), true));
+		t.garrison.add(new Combatant(m.clone(), true));
 		if (t.garrison.size() < t.size) {
 			return;
 		}

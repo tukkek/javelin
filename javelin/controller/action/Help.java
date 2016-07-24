@@ -4,11 +4,9 @@ import java.util.LinkedList;
 
 import javelin.Javelin;
 import javelin.controller.old.Game;
-import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
-import tyrant.mikera.engine.Thing;
 
 /**
  * Shows keyboard commands.
@@ -23,7 +21,7 @@ public class Help extends Action {
 	}
 
 	@Override
-	public boolean perform(Combatant hero, BattleMap m, Thing thing) {
+	public boolean perform(Combatant hero) {
 		help(ActionMapping.actions);
 		return false;
 	}
@@ -62,7 +60,7 @@ public class Help extends Action {
 		}
 		text += "\nKeep up-to-date with new releases at javelinrl.wordpress.com\n"
 				+ "or come discuss the game at reddit.com/r/javelinrl :)";
-		Javelin.app.switchScreen(new InfoScreen(Game.getQuestapp(), text));
+		Javelin.app.switchScreen(new InfoScreen(text));
 		Game.getInput();
 		Javelin.app.switchScreen(BattleScreen.active);
 	}

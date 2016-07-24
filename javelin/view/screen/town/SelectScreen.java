@@ -44,7 +44,7 @@ public abstract class SelectScreen extends InfoScreen {
 
 	/** Constructor. */
 	public SelectScreen(final String name, final Town t) {
-		super(Javelin.app, "");
+		super("");
 		town = t;
 		title = name + "\n\n";
 	}

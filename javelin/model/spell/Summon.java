@@ -61,7 +61,7 @@ public class Summon extends Spell {
 		List<Combatant> team = target.getTeam(s);
 		Monster m = Javelin.getmonster(monstername);
 		m.name = "Summoned " + m.name.toLowerCase();
-		Combatant summoned = new Combatant(null, m, true);
+		Combatant summoned = new Combatant(m, true);
 		team.add(summoned);
 		summoned.summoned = true;
 		/*

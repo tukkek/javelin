@@ -2,9 +2,9 @@ package javelin.model.item.relic;
 
 import java.util.ArrayList;
 
+import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
-import javelin.model.BattleMap;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -26,14 +26,14 @@ public class Skull extends Relic {
 	@Override
 	protected boolean activate(Combatant user) {
 		ArrayList<Combatant> good = new ArrayList<Combatant>();
-		for (Combatant c : BattleMap.combatants) {
+		for (Combatant c : Fight.state.getCombatants()) {
 			Monster m = c.source;
 			if (Boolean.TRUE.equals(m.good)) {
 				good.add(c);
 			}
 		}
 		if (good.isEmpty()) {
-			Game.message("Nothing seems to happen...", null, Delay.BLOCK);
+			Game.message("Nothing seems to happen...", Delay.BLOCK);
 			return true;
 		}
 		float dc = 0;
@@ -52,7 +52,7 @@ public class Skull extends Relic {
 				c.hp -= 1;
 			}
 		}
-		Game.message("Good creatures convulse in agony!", null, Delay.BLOCK);
+		Game.message("Good creatures convulse in agony!", Delay.BLOCK);
 		return true;
 	}
 }

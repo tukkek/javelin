@@ -9,16 +9,14 @@ import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ActionProvider;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.upgrade.Spell;
-import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
-import tyrant.mikera.engine.Thing;
 
 /**
  * Spells with attack rolls are supposed to have critical hits too but for the
@@ -37,11 +35,11 @@ public class CastSpell extends Fire implements AiAction {
 	}
 
 	@Override
-	public boolean perform(Combatant c, BattleMap map, Thing thing) {
+	public boolean perform(Combatant c) {
 		Game.messagepanel.clear();
 		casting = null;
 		final ArrayList<Spell> castable = new ArrayList<Spell>();
-		final boolean engaged = map.getState().isengaged(c);
+		final boolean engaged = Fight.state.isengaged(c);
 		for (Spell s : c.spells) {
 			if (s.provokeaoo && !concentrate(c, s) && engaged) {
 				continue;
@@ -51,7 +49,7 @@ public class CastSpell extends Fire implements AiAction {
 			}
 		}
 		if (castable.isEmpty()) {
-			Game.message("No spells can be cast right now.", null, Delay.WAIT);
+			Game.message("No spells can be cast right now.", Delay.WAIT);
 			return false;
 		}
 		castable.sort(new Comparator<Spell>() {
@@ -64,13 +62,13 @@ public class CastSpell extends Fire implements AiAction {
 		for (int i = 0; i < castable.size(); i++) {
 			list += "[" + (i + 1) + "] " + castable.get(i) + "\n";
 		}
-		Game.message(list, null, Delay.NONE);
+		Game.message(list, Delay.NONE);
 		try {
 			final int i = Integer.parseInt(InfoScreen.feedback().toString());
 			if (i > c.spells.size()) {
-				return perform(c, map, thing);
+				return perform(c);
 			}
-			return cast(castable.get(i - 1), c, map, thing);
+			return cast(castable.get(i - 1), c);
 		} catch (NumberFormatException e) {
 			throw new RepeatTurn();
 		}
@@ -80,14 +78,14 @@ public class CastSpell extends Fire implements AiAction {
 	 * Like {@link #perform(Combatant, BattleMap, Thing)} except skips the
 	 * selection UI step.
 	 */
-	public boolean cast(Spell spell, Combatant c, BattleMap map, Thing thing) {
+	public boolean cast(Spell spell, Combatant c) {
 		casting = spell;
-		return super.perform(c, map, thing);
+		return super.perform(c);
 	}
 
 	@Override
 	protected void attack(Combatant combatant, Combatant targetCombatant,
-			BattleState s, BattleMap m) {
+			BattleState s) {
 		Action.outcome(cast(combatant, targetCombatant,
 				combatant.spells.indexOf(casting), s));
 	}
@@ -186,7 +184,7 @@ public class CastSpell extends Fire implements AiAction {
 	}
 
 	@Override
-	protected void checkhero(Thing hero) {
+	protected void checkhero(Combatant hero) {
 		// no check
 	}
 
@@ -238,14 +236,5 @@ public class CastSpell extends Fire implements AiAction {
 			}
 		}
 		return chances;
-	}
-
-	/**
-	 * Cast a combat spell.
-	 * 
-	 * @see #cast(Spell, Combatant, BattleMap, Thing)}
-	 */
-	public void cast(Spell s, Combatant user) {
-		cast(s, user, BattleScreen.active.map, Game.actor);
 	}
 }

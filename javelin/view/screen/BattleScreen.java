@@ -12,7 +12,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.JavelinApp;
-import javelin.controller.Movement;
+import javelin.controller.Point;
 import javelin.controller.action.Action;
 import javelin.controller.action.Dig;
 import javelin.controller.action.world.WorldAction;
@@ -23,9 +23,9 @@ import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
+import javelin.controller.old.MessagePanel;
 import javelin.controller.terrain.map.Map;
 import javelin.controller.walker.Walker;
-import javelin.model.BattleMap;
 import javelin.model.condition.Dominated;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
@@ -35,15 +35,11 @@ import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.mappanel.battle.overlay.TargetOverlay;
-import tyrant.mikera.engine.Point;
-import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.GameHandler;
 import tyrant.mikera.tyrant.IActionHandler;
 import tyrant.mikera.tyrant.LevelMapPanel;
-import tyrant.mikera.tyrant.MessagePanel;
 import tyrant.mikera.tyrant.QuestApp;
 import tyrant.mikera.tyrant.Screen;
-import tyrant.mikera.tyrant.Tile;
 
 /**
  * Screen context during battle.
@@ -74,7 +70,6 @@ public class BattleScreen extends Screen {
 	public MessagePanel messagepanel;
 	public StatusPanel statuspanel;
 	public GameHandler gameHandler = new GameHandler();
-	public BattleMap map;
 
 	List<IActionHandler> actionHandlers;
 	ArrayList<String> lastMessages = new ArrayList<String>();
@@ -93,9 +88,8 @@ public class BattleScreen extends Screen {
 
 	static Runnable callback = null;
 
-	public BattleScreen(JavelinApp javelinApp, BattleMap battlemap,
-			Image texture) {
-		super(Javelin.app);
+	public BattleScreen(Image texture) {
+		super();
 		Javelin.settexture(texture);
 	}
 
@@ -116,19 +110,12 @@ public class BattleScreen extends Screen {
 
 	public static BattleScreen active;
 
-	public BattleScreen(final QuestApp q, final BattleMap mapp,
-			boolean addsidebar) {
-		super(q);
-		map = mapp;
-		if (q == null) {
-			return;
-		}
+	public BattleScreen(boolean addsidebar) {
 		BattleScreen.active = this;
-		q.setScreen(this);
 		setForeground(Color.white);
 		setBackground(Color.black);
 		setLayout(new BorderLayout());
-		messagepanel = new MessagePanel(q);
+		messagepanel = new MessagePanel();
 		add(messagepanel, "South");
 		mappanel = getmappanel();
 		mappanel.init();
@@ -139,13 +126,13 @@ public class BattleScreen extends Screen {
 		statuspanel = new StatusPanel();
 		if (addsidebar) {
 			cp.add("Center", statuspanel);
-			if (addminimap()) {
-				levelMap = new LevelMapPanel();
-			}
+			// if (addminimap()) {
+			// levelMap = new LevelMapPanel();
+			// }
 		}
 		setFont(QuestApp.mainfont);
 		// Game.enterMap(map, Game.hero().x, Game.hero().y);
-		q.switchScreen(this);
+		Javelin.app.switchScreen(this);
 		BattleScreen.active = this;
 		Game.delayblock = false;
 		initmap();
@@ -153,12 +140,12 @@ public class BattleScreen extends Screen {
 	}
 
 	protected MapPanel getmappanel() {
-		return new BattlePanel(map.getState());
+		return new BattlePanel(Fight.state);
 	}
 
 	/** Initializes this screen instance. */
 	protected void initmap() {
-		map.makeAllInvisible();
+		// map.makeAllInvisible();
 	}
 
 	/**
@@ -169,10 +156,10 @@ public class BattleScreen extends Screen {
 	 */
 	public void mainLoop() {
 		mappanel.setVisible(false);
-		Thing hero = map.getState().next.visual;
-		mappanel.setPosition(map, hero.x, hero.y);
+		javelin.controller.Point t = Javelin.app.context.getherolocation();
+		mappanel.setPosition(t.x, t.y);
 		Game.redraw();
-		mappanel.center(hero.x, hero.y, true);
+		mappanel.center(t.x, t.y, true);
 		mappanel.setVisible(true);
 		while (true) {
 			step();
@@ -190,26 +177,28 @@ public class BattleScreen extends Screen {
 	}
 
 	protected void removehero() {
-		Game.hero().remove();
+		// Game.hero().remove();
 	}
 
 	protected void humanTurn() {
 		checkblock();
-		final Combatant next = map.getState().next;
-		final Thing h = setHero(next);
-		if (BattleMap.redTeam.contains(next) || next.automatic) {
+		Fight.state.checkwhoisnext();
+		final Combatant next = Fight.state.next;
+		// final Thing h = setHero(next);
+		if (Fight.state.redTeam.contains(next) || next.automatic) {
 			computerTurn();
 			return;
 		}
-		for (Combatant c : BattleMap.combatants) {
+		for (Combatant c : Fight.state.getCombatants()) {
 			c.refresh();
 		}
 		while (true) {
 			try {
-				updatescreen(h);
+				updatescreen();
 				Game.messagepanel.clear();
 				endturn();
-				Game.getUserinterface().waiting = true;
+				BattlePanel.current = next;
+				Game.userinterface.waiting = true;
 				final KeyEvent updatableUserAction = getUserInput();
 				if (MapPanel.overlay != null) {
 					MapPanel.overlay.clear();
@@ -218,7 +207,7 @@ public class BattleScreen extends Screen {
 					callback.run();
 					callback = null;
 				} else {
-					tryTick(h, convertEventToAction(updatableUserAction),
+					tryTick(convertEventToAction(updatableUserAction),
 							updatableUserAction.isShiftDown());
 				}
 				spendap(next, false);
@@ -247,18 +236,19 @@ public class BattleScreen extends Screen {
 	 */
 	static public void perform(Runnable r) {
 		callback = r;
-		Game.getUserinterface().go(null);
+		Game.userinterface.go(null);
 	}
 
 	void listen(final Combatant next) {
-		if (BattleMap.redTeam.contains(next)) {
+		if (Fight.state.redTeam.contains(next)) {
 			return;
 		}
 		int listen = next.source.perceive(false);
-		for (Combatant c : BattleMap.redTeam) {
+		for (Combatant c : Fight.state.redTeam) {
 			if (listen >= c.movesilently() + (Walker.distance(next, c) - 1)) {
-				map.seeTile(c.location[0], c.location[1]);
-				map.setVisible(c.location[0], c.location[1]);
+				// map.seeTile(c.location[0], c.location[1]);
+				// map.setVisible(c.location[0], c.location[1]);
+				mappanel.tiles[c.location[0]][c.location[1]].discovered = true;
 			}
 		}
 	}
@@ -271,57 +261,51 @@ public class BattleScreen extends Screen {
 		}
 	}
 
-	private Thing setHero(final Combatant lowestAp) {
-		final Thing hero = lowestAp.visual;
-		Game.instance().hero = hero;
-		return hero;
-	}
-
-	protected void updatescreen(final Thing h) {
-		centerscreen(h.x, h.y);
-		view(h);
+	protected void updatescreen() {
+		int x = Fight.state.next.location[0];
+		int y = Fight.state.next.location[1];
+		centerscreen(x, y);
+		view(x, y);
 		if (shownLastMessages) {
 			shownLastMessages = false;
 		} else {
-			updateMessages();
 		}
 		statuspanel.repaint();
 		Game.redraw();
-		levelMap.repaint();
+		if (levelMap != null) {
+			levelMap.repaint();
+		}
 	}
 
 	public void centerscreen(int x, int y) {
 		centerscreen(x, y, false);
 	}
 
-	public void view(final Thing h) {
-		if (map.period == Javelin.PERIODEVENING
-				|| map.period == Javelin.PERIODNIGHT) {
+	public void view(int x, int y) {
+		if (Javelin.app.fight.period == Javelin.PERIODEVENING
+				|| Javelin.app.fight.period == Javelin.PERIODNIGHT) {
 			if (firstvision) {
 				firstvision = false;
 				return;
 			}
 			initmap();
-			h.calculateVision();
-			listen(h.combatant);
+			// h.calculateVision();
+			listen(Fight.state.next);
 		} else if (!allvisible) {
-			map.setAllVisible();
+			for (javelin.view.mappanel.Tile[] ts : mappanel.tiles) {
+				for (javelin.view.mappanel.Tile t : ts) {
+					t.discovered = true;
+				}
+			}
 			allvisible = true;
 		}
 	}
 
 	public void centerscreen(int x, int y, boolean force) {
 		if (mappanel.center(x, y, force)) {
-			mappanel.viewPosition(map, x, y);
+			mappanel.viewPosition(x, y);
 			return;
 		}
-	}
-
-	/**
-	 * Updates screen with messages from the current message list.
-	 */
-	public void updateMessages() {
-		updateMessages(Game.instance().getMessageList());
 	}
 
 	public void checkEndBattle() {
@@ -329,7 +313,7 @@ public class BattleScreen extends Screen {
 	}
 
 	public boolean checkforenemies() {
-		for (Combatant c : BattleMap.redTeam) {
+		for (Combatant c : Fight.state.redTeam) {
 			if (c.hascondition(Dominated.class) == null) {
 				return true;
 			}
@@ -353,13 +337,14 @@ public class BattleScreen extends Screen {
 	private void computerTurn() {
 		overridefeedback = false;
 		spentap = 0;
-		while (!BattleMap.blueTeam.isEmpty()) {
+		while (!Fight.state.blueTeam.isEmpty()) {
 			checkblock();
 			endturn();
 			checkEndBattle();
-			final BattleState state = map.getState();
-			final Combatant active = state.next;
-			if (state.blueTeam.contains(active) && !active.automatic) {
+			Fight.state.checkwhoisnext();
+			final Combatant active = Fight.state.next;
+			BattlePanel.current = active;
+			if (Fight.state.blueTeam.contains(active) && !active.automatic) {
 				lastwascomputermove = null;
 				return;
 			}
@@ -370,12 +355,12 @@ public class BattleScreen extends Screen {
 				computerfeedback("Thinking...\n", Delay.NONE);
 			}
 			if (Javelin.DEBUG) {
-				Action.outcome(ThreadManager.think(state), true);
+				Action.outcome(ThreadManager.think(Fight.state), true);
 			} else {
 				try {
-					Action.outcome(ThreadManager.think(state), true);
+					Action.outcome(ThreadManager.think(Fight.state), true);
 				} catch (final RuntimeException e) {
-					singleMessage("Fatal error: " + e.getMessage(), Delay.NONE);
+					Game.message("Fatal error: " + e.getMessage(), Delay.NONE);
 					messagepanel.repaint();
 					throw e;
 				}
@@ -388,13 +373,13 @@ public class BattleScreen extends Screen {
 	 */
 	protected void endturn() {
 		if (Javelin.app.fight.friendly) {
-			BattleState s = map.getState();
+			BattleState s = Fight.state;
 			int blue = s.blueTeam.size();
 			int red = s.redTeam.size();
 			cleanwounded(s.blueTeam, s);
 			cleanwounded(s.redTeam, s);
 			if (s.blueTeam.size() != blue || s.redTeam.size() != red) {
-				map.setState(s);
+				Fight.state = s;
 				Game.redraw();
 			}
 		}
@@ -413,7 +398,7 @@ public class BattleScreen extends Screen {
 				s.addmeld(c.location[0], c.location[1]);
 				Game.message(
 						c + " is removed from the battlefield!\nPress ENTER to continue...",
-						null, Delay.NONE);
+						Delay.NONE);
 				while (Game.getInput().getKeyChar() != '\n') {
 					// wait for enter
 				}
@@ -425,14 +410,14 @@ public class BattleScreen extends Screen {
 	public void computerfeedback(String s, Delay delay) {
 		messagepanel.clear();
 		if (lastwascomputermove != null) {
-			updatescreen(setHero(lastwascomputermove));
+			updatescreen();
 		}
-		singleMessage(s, delay);
+		Game.message(s, delay);
 	}
 
 	public void updatescreen(final ChanceNode state, boolean enableoverrun) {
 		final BattleState s = (BattleState) state.n;
-		BattleScreen.active.map.setState(s);
+		Fight.state = s;
 		if (lastwascomputermove == null) {
 			Game.redraw();
 		}
@@ -446,16 +431,6 @@ public class BattleScreen extends Screen {
 	}
 
 	/**
-	 * @param s
-	 *            String to be printed.
-	 * @param d
-	 *            See {@link Delay}.
-	 */
-	public void singleMessage(final String s, final Delay d) {
-		Game.message(s, null, d);
-	}
-
-	/**
 	 * @param thing
 	 *            See {@link #performAction(Thing, Action, boolean)}.
 	 * @param action
@@ -463,13 +438,12 @@ public class BattleScreen extends Screen {
 	 * @param isShiftDown
 	 *            See {@link #performAction(Thing, Action, boolean)}.
 	 */
-	public void tryTick(final Thing thing, final Action action,
-			final boolean isShiftDown) {
+	public void tryTick(final Action action, final boolean isShiftDown) {
 		if (action == null) {
 			System.out.println("Null action");
 			return;
 		}
-		performAction(thing, action, isShiftDown);
+		performAction(action, isShiftDown);
 	}
 
 	public Action convertEventToAction(final KeyEvent keyEvent) {
@@ -499,22 +473,20 @@ public class BattleScreen extends Screen {
 	 * @param isShiftDown
 	 *            Ignored.
 	 */
-	public void performAction(final Thing thing, final Action action,
-			final boolean isShiftDown) {
-		Game.actor = thing;
+	public void performAction(final Action action, final boolean isShiftDown) {
 		if (actionHandlers != null) {
 			for (final IActionHandler iActionHandler : actionHandlers) {
-				if (iActionHandler.handleAction(thing, action, isShiftDown)) {
+				if (iActionHandler.handleAction(action, isShiftDown)) {
 					return;
 				}
 			}
 		}
-		Combatant combatant = Game.hero().combatant;
+		Combatant combatant = Fight.state.next;
 		try {
 			if (combatant.burrowed && !action.allowwhileburrowed) {
 				Dig.refuse();
 			}
-			if (!action.perform(combatant, map, thing)) {
+			if (!action.perform(combatant)) {
 				throw new RepeatTurn();
 			}
 		} catch (EndBattle e) {
@@ -536,7 +508,7 @@ public class BattleScreen extends Screen {
 	 *            performed first by comparing actual {@link Combatant#ap}.
 	 */
 	public void spendap(Combatant combatant, boolean force) {
-		for (Combatant c : BattleMap.combatants) {
+		for (Combatant c : Fight.state.getCombatants()) {
 			if (c.id == combatant.id && (c.ap != combatant.ap || force)) {
 				c.ap += spentap;
 				break;
@@ -556,24 +528,13 @@ public class BattleScreen extends Screen {
 				&& keyEvent.getKeyCode() == 18;
 	}
 
-	public Point getTargetLocation() {
-		return getTargetLocation(Game.hero());
-	}
-
-	public Point getTargetLocation(Thing a) {
-		if (a == null) {
-			a = Game.hero();
-		}
-		return getTargetLocation(a.getMap(), new Point(a.x, a.y));
-	}
-
 	// get location, initially place crosshairs at start
-	public Point getTargetLocation(final BattleMap m, final Point start) {
+	public Point getTargetLocation(Point start) {
 		if (start == null) {
-			return getTargetLocation();
+			start = JavelinApp.context.getherolocation();
 		}
 		setCursor(start.x, start.y);
-		mappanel.viewPosition(m, start.x, start.y);
+		mappanel.viewPosition(start.x, start.y);
 		// initial look
 		doLookPoint(getcursor());
 		// get interesting stuff to see
@@ -629,7 +590,7 @@ public class BattleScreen extends Screen {
 					break;
 				case 'v':
 					Point cursor = getcursor();
-					for (Combatant c : BattleMap.combatants) {
+					for (Combatant c : Fight.state.getCombatants()) {
 						if (c.location[0] == cursor.x
 								&& c.location[1] == cursor.y) {
 							new StatisticsScreen(c);
@@ -646,10 +607,12 @@ public class BattleScreen extends Screen {
 					return getcursor;
 				}
 				Point cursor = getcursor();
-				int x = BattleScreen.checkbounds(cursor.x + dx, map.width);
-				int y = BattleScreen.checkbounds(cursor.y + dy, map.height);
+				int x = BattleScreen.checkbounds(cursor.x + dx,
+						Fight.state.map.length);
+				int y = BattleScreen.checkbounds(cursor.y + dy,
+						Fight.state.map[0].length);
 				setCursor(x, y);
-				mappanel.viewPosition(m, x, y);
+				mappanel.viewPosition(x, y);
 				doLookPoint(getcursor());
 			}
 		} finally {
@@ -762,33 +725,27 @@ public class BattleScreen extends Screen {
 	}
 
 	public void doLook() {
-		doLookPoint(getTargetLocation());
+		doLookPoint(getTargetLocation(null));
 	}
 
 	private void doLookPoint(final Point p) {
 		if (p == null) {
 			return;
 		}
-		if (!map.isVisible(p.x, p.y)) {
+		if (!mappanel.tiles[p.x][p.y].discovered) {
 			lookmessage("Can't see");
 			return;
 		}
 		lookmessage("");
 		lastlooked = null;
-		final BattleState state = map.getState();
-		for (Thing t = map.getObjects(p.x, p.y); t != null
-				&& t.isVisible(Game.hero()); t = t.next) {
-			final Combatant combatant = Javelin.getCombatant(t);
-			if (combatant != null) {
-				lookmessage(describestatus(combatant, state));
-				lastlooked = combatant;
-			} else if (!Movement.canMove(t, map, p.x, p.y)) {
-				lookmessage("Blocked");
-			} else if (state.map[p.x][p.y].flooded) {
-				lookmessage("Flooded");
-			}
-		}
-		if (Tile.isSolid(map, p.x, p.y)) {
+		final BattleState state = Fight.state;
+		final Combatant combatant = Fight.state.getCombatant(p.x, p.y);
+		if (combatant != null) {
+			lookmessage(describestatus(combatant, state));
+			lastlooked = combatant;
+		} else if (state.map[p.x][p.y].flooded) {
+			lookmessage("Flooded");
+		} else if (Javelin.app.fight.map.map[p.x][p.y].blocked) {
 			lookmessage("Blocked");
 		}
 		BattleScreen.active.statuspanel.repaint();
@@ -812,8 +769,7 @@ public class BattleScreen extends Screen {
 		Game.message(
 				"Examine: move the cursor over another combatant, press v to view character sheet.\n\n"
 						+ string,
-				null, Delay.NONE);
-		updateMessages();
+				Delay.NONE);
 		Game.redraw();
 	}
 
@@ -830,8 +786,10 @@ public class BattleScreen extends Screen {
 	}
 
 	public void setposition() {
-		mappanel.setPosition(Game.hero().getMap(), Game.hero().x,
-				Game.hero().y);
+		// Point hero = JavelinApp.context.getherolocation();
+
+		mappanel.setPosition(Fight.state.next.location[0],
+				Fight.state.next.location[1]);
 	}
 
 	public boolean drawbackground() {

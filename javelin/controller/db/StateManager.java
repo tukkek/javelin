@@ -24,7 +24,6 @@ import javelin.controller.Weather;
 import javelin.controller.action.world.OpenJournal;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Squad;
 import javelin.model.world.Incursion;
 import javelin.model.world.Season;
 import javelin.model.world.World;
@@ -108,11 +107,6 @@ public class StateManager {
 			ObjectOutputStream writer =
 					new ObjectOutputStream(new FileOutputStream(to));
 			writer.writeBoolean(abandoned);
-			for (final WorldActor a : Squad.getall(Squad.class)) {
-				Squad s = (Squad) a;
-				s.x = s.visual.x;
-				s.y = s.visual.y;
-			}
 			writer.writeObject(WorldActor.INSTANCES);
 			writer.writeObject(World.seed);
 			writer.writeObject(Dungeon.active);
@@ -162,7 +156,6 @@ public class StateManager {
 							.readObject();
 			Javelin.act();
 			World.seed = (World) stream.readObject();
-			JavelinApp.overviewmap = WorldScreen.worldmap;
 			for (ArrayList<WorldActor> instances : WorldActor.INSTANCES
 					.values()) {
 				for (WorldActor p : instances) {

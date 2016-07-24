@@ -6,15 +6,13 @@ import java.util.HashSet;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.db.Preferences;
-import javelin.controller.old.Game;
-import javelin.model.BattleMap;
+import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.Tile;
-import javelin.view.screen.BattleScreen;
 
 /**
  * TODO remove {@link BattleMap} and rename this hierarchy
@@ -22,12 +20,13 @@ import javelin.view.screen.BattleScreen;
  * @author alex
  */
 public class BattlePanel extends MapPanel {
-	public static BattleState state = null;
 	public boolean daylight;
+	static public Combatant current = null;
+	static public BattleState previousstate = null;
+	static public BattleState state = null;
 
 	public BattlePanel(BattleState s) {
 		super(s.map.length, s.map[0].length, Preferences.KEYTILEBATTLE);
-		state = s.clonedeeply();
 		String period = Javelin.app.fight.period;
 		daylight = period.equals(Javelin.PERIODMORNING)
 				|| period.equals(Javelin.PERIODNOON);
@@ -45,14 +44,18 @@ public class BattlePanel extends MapPanel {
 
 	@Override
 	public void refresh() {
+		updatestate();
 		super.refresh();
 		final HashSet<Point> update = new HashSet<Point>(
-				state.redTeam.size() + state.blueTeam.size());
-		for (Combatant c : state.getCombatants()) {
+				Fight.state.redTeam.size() + Fight.state.blueTeam.size());
+		for (Combatant c : Fight.state.getCombatants()) {
+			update.add(new Point(c.location[0], c.location[1]));
+		}
+		for (Combatant c : previousstate.getCombatants()) {
 			update.add(new Point(c.location[0], c.location[1]));
 		}
 		updatestate();
-		for (Combatant c : state.getCombatants()) {
+		for (Combatant c : Fight.state.getCombatants()) {
 			update.add(new Point(c.location[0], c.location[1]));
 		}
 		if (!daylight) {
@@ -62,7 +65,7 @@ public class BattlePanel extends MapPanel {
 			update.addAll(overlay.affected);
 		}
 		if (Javelin.app.fight.meld) {
-			for (Meld m : state.meld) {
+			for (Meld m : Fight.state.meld) {
 				update.add(new Point(m.x, m.y));
 			}
 		}
@@ -81,8 +84,7 @@ public class BattlePanel extends MapPanel {
 	}
 
 	private void calculatevision(final HashSet<Point> update) {
-		final HashSet<Point> seen =
-				Game.hero().combatant.calculatevision(state);
+		final HashSet<Point> seen = current.calculatevision(Fight.state);
 		for (Point p : seen) { // seen
 			BattleTile t = (BattleTile) tiles[p.x][p.y];
 			if (update != null && (!t.discovered || t.shrouded)) {
@@ -109,7 +111,11 @@ public class BattlePanel extends MapPanel {
 	}
 
 	void updatestate() {
-		state = BattleScreen.active.map.getState().clonedeeply();
+		previousstate = state;
+		state = Fight.state.clonedeeply();
+		if (previousstate == null) {
+			previousstate = state;
+		}
 		BattleTile.panel = this;
 	}
 

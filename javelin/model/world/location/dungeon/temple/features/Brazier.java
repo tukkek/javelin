@@ -3,7 +3,6 @@ package javelin.model.world.location.dungeon.temple.features;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
-import javelin.controller.old.Game;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.Trap;
@@ -23,7 +22,8 @@ public class Brazier extends Feature {
 	public boolean activate() {
 		Javelin.message("You light up the brazier!", false);
 		brighten(x, y, 0);
-		JavelinApp.context.view(Game.hero());
+		Point p = JavelinApp.context.getherolocation();
+		JavelinApp.context.view(p.x, p.y);
 		return true;
 	}
 

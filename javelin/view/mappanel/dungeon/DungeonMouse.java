@@ -21,7 +21,7 @@ public class DungeonMouse extends Mouse {
 		if (overrideinput()) {
 			return;
 		}
-		if (!Game.getUserinterface().waiting) {
+		if (!Game.userinterface.waiting) {
 			return;
 		}
 		final Tile t = (Tile) e.getSource();
@@ -36,7 +36,7 @@ public class DungeonMouse extends Mouse {
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		if (!Game.getUserinterface().waiting) {
+		if (!Game.userinterface.waiting) {
 			return;
 		}
 		if (MapPanel.overlay != null) {

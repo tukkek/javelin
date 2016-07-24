@@ -9,13 +9,11 @@ import javelin.controller.action.Action;
 import javelin.controller.action.CastSpell;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.old.Game.Delay;
-import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Attack;
 import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.CurrentAttack;
-import tyrant.mikera.engine.Thing;
 
 /**
  * Base class for {@link MeleeAttack} and {@link RangedAttack}.
@@ -259,7 +257,7 @@ public abstract class AbstractAttack extends Action implements AiAction {
 	}
 
 	@Override
-	public boolean perform(Combatant active, BattleMap m, Thing thing) {
+	public boolean perform(Combatant active) {
 		return false;
 	}
 

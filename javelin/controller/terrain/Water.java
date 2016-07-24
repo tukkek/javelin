@@ -3,6 +3,7 @@ package javelin.controller.terrain;
 import java.util.HashSet;
 import java.util.Set;
 
+import javelin.controller.Point;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.terrain.hazard.Ice;
 import javelin.controller.terrain.hazard.Storm;
@@ -12,7 +13,6 @@ import javelin.model.world.ParkedVehicle;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.town.Town;
-import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.RPG;
 
 /**

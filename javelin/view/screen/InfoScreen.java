@@ -26,17 +26,12 @@ public class InfoScreen extends Screen {
 
 	private final int border = 20;
 
-	public InfoScreen(final QuestApp q, final String textp) {
-		super(q);
+	public InfoScreen(final String textp) {
 		text = textp;
 		font = QuestApp.mainfont;
 		setForeground(QuestApp.INFOTEXTCOLOUR);
 		setBackground(QuestApp.INFOSCREENCOLOUR);
 		setFont(font);
-	}
-
-	public InfoScreen(final String text) {
-		this(Javelin.app, text);
 	}
 
 	@Override

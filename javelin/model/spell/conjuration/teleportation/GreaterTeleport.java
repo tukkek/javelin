@@ -55,9 +55,6 @@ public class GreaterTeleport extends Spell {
 		}
 		WorldActor to =
 				places.get(Javelin.choose("Where to?", names, true, true));
-		Squad.active.visual.remove();
-		Squad.active.x = to.x;
-		Squad.active.y = to.y;
 		while (WorldActor.get(Squad.active.x, Squad.active.y) != Squad.active) {
 			Squad.active.displace();
 		}

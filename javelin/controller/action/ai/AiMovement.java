@@ -8,11 +8,9 @@ import javelin.controller.action.Defend;
 import javelin.controller.action.Movement;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.old.Game.Delay;
-import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
-import tyrant.mikera.engine.Thing;
 
 /**
  * @author alex
@@ -118,7 +116,7 @@ public class AiMovement extends Action implements AiAction {
 	}
 
 	@Override
-	public boolean perform(Combatant active, BattleMap m, Thing thing) {
+	public boolean perform(Combatant active) {
 		return false;
 	}
 }

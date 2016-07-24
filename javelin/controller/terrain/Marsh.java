@@ -2,6 +2,7 @@ package javelin.controller.terrain;
 
 import java.util.Set;
 
+import javelin.controller.Point;
 import javelin.controller.terrain.hazard.Break;
 import javelin.controller.terrain.hazard.Cold;
 import javelin.controller.terrain.hazard.Flood;
@@ -11,7 +12,6 @@ import javelin.controller.terrain.map.Maps;
 import javelin.controller.terrain.map.marsh.Moor;
 import javelin.controller.terrain.map.marsh.Swamp;
 import javelin.model.world.World;
-import tyrant.mikera.engine.Point;
 
 /**
  * Bog, swamp.

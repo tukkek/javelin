@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import javelin.controller.Weather;
 import javelin.controller.terrain.map.Arena;
-import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.Location;
@@ -36,7 +35,7 @@ public class TrainingSession extends Siege {
 	public void onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
 			BattleState s) {
 		super.onEnd(screen, originalTeam, s);
-		if (!BattleMap.victory) {
+		if (!Fight.victory) {
 			return;
 		}
 		hall.level();

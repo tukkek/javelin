@@ -3,13 +3,12 @@ package javelin.controller.action;
 import java.util.List;
 
 import javelin.controller.action.ai.RangedAttack;
-import javelin.model.BattleMap;
+import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Attack;
 import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.CurrentAttack;
-import tyrant.mikera.engine.Thing;
 
 /**
  * Ranged attack.
@@ -40,8 +39,8 @@ public class Fire extends Target {
 
 	@Override
 	protected void attack(Combatant combatant, Combatant targetCombatant,
-			BattleState battleState, final BattleMap map) {
-		BattleState state = map.getState();
+			BattleState battleState) {
+		BattleState state = Fight.state;
 		combatant = state.clone(combatant);
 		targetCombatant = state.clone(targetCombatant);
 		Action.outcome(RangedAttack.SINGLETON.attack(state, combatant,
@@ -56,11 +55,6 @@ public class Fire extends Target {
 		return Math.round(20 * RangedAttack.SINGLETON.misschance(state, active,
 				target, predictattack(active.currentranged,
 						active.source.ranged).bonus));
-		// return target.ac()
-		// - predictattack(active.currentranged,
-		// active.source.ranged).bonus
-		// - prioritize(active, state, target)
-		// + RangedAttack.SINGLETON.getpenalty(active, target, state);
 	}
 
 	protected Attack predictattack(CurrentAttack hint,
@@ -75,7 +69,7 @@ public class Fire extends Target {
 	}
 
 	@Override
-	protected void checkhero(Thing hero) {
-		hero.combatant.checkAttackType(false);
+	protected void checkhero(Combatant hero) {
+		hero.checkAttackType(false);
 	}
 }

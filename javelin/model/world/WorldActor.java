@@ -13,9 +13,7 @@ import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.RPG;
-import tyrant.mikera.engine.Thing;
 
 /**
  * An independent overworld feature.
@@ -51,25 +49,15 @@ public abstract class WorldActor implements Serializable {
 	 * If <code>true</code> this actor will be ignored by {@link Incursion}s.
 	 */
 	public boolean impermeable = false;
-	/** TODO shouldn't need {@link Thing}s on 2.0+ */
-	public transient Thing visual;
 	String visualname = "dog";
 
 	/** Definitely removes this actor from the game. */
 	public void remove() {
-		visual.remove();
 		deregisterinstance();
 	}
 
 	/** Adds this actor to the game. Should only be used once in theory. */
 	public void place() {
-		visual = createvisual();
-		WorldScreen.worldmap.addThing(visual, x, y);
-	}
-
-	/** TODO remove on 2.0+ */
-	public Thing createvisual() {
-		return Lib.create(visualname);
 	}
 
 	/** Move actor to the given coordinates. */

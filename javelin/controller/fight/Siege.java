@@ -1,9 +1,7 @@
 package javelin.controller.fight;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.Location;
@@ -44,7 +42,7 @@ public class Siege extends Fight {
 	}
 
 	@Override
-	public List<Combatant> getmonsters(int teamel) {
+	public ArrayList<Combatant> getmonsters(int teamel) {
 		ArrayList<Combatant> clones = new ArrayList<Combatant>(place.garrison);
 		for (int i = 0; i < clones.size(); i++) {
 			clones.set(i, clones.get(i).clone().clonesource());
@@ -64,7 +62,7 @@ public class Siege extends Fight {
 		if (cleargarrison) {
 			garrison: for (Combatant garrison : new ArrayList<Combatant>(
 					place.garrison)) {
-				for (Combatant active : BattleMap.combatants) {
+				for (Combatant active : Fight.state.getCombatants()) {
 					if (garrison.equals(active)) {
 						continue garrison; // is alive
 					}

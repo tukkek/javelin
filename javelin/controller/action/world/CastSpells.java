@@ -22,8 +22,7 @@ public class CastSpells extends WorldAction {
 		ArrayList<Combatant> casters = filtercasters(names);
 		if (casters.isEmpty()) {
 			Game.messagepanel.clear();
-			Game.message("No peaceful spells to cast right now...", null,
-					Delay.WAIT);
+			Game.message("No peaceful spells to cast right now...", Delay.WAIT);
 			return;
 		}
 		int choice = Javelin.choose("Who?", names, false, false);
@@ -48,7 +47,7 @@ public class CastSpells extends WorldAction {
 			target = Squad.active.members.get(targetindex);
 		}
 		if (!s.validate(caster, target)) {
-			Game.message("Can't cast this spell right now.", null, Delay.BLOCK);
+			Game.message("Can't cast this spell right now.", Delay.BLOCK);
 			return;
 		}
 		String message = s.castpeacefully(caster, target);
@@ -71,7 +70,7 @@ public class CastSpells extends WorldAction {
 		ArrayList<String> spellnames = listspells(spells);
 		if (spellnames.size() == 0) {
 			Game.messagepanel.clear();
-			Game.message("All spells already cast! Rest to regain them.", null,
+			Game.message("All spells already cast! Rest to regain them.",
 					Delay.BLOCK);
 			return null;
 		}

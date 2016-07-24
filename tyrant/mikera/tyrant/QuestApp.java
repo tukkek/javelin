@@ -18,23 +18,16 @@ import java.awt.event.KeyEvent;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.awt.image.RGBImageFilter;
-import java.io.InputStream;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Hashtable;
 
 import javelin.controller.fight.IncursionFight;
 import javelin.controller.fight.LairFight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Interface;
-import javelin.model.BattleMap;
 import javelin.model.unit.Squad;
 import javelin.view.screen.BattleScreen;
-import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.engine.Lib;
-import tyrant.mikera.engine.RPG;
-import tyrant.mikera.engine.Thing;
 
 /**
  * The main Tyrant applet class, also used as the root UI component when run as
@@ -42,7 +35,7 @@ import tyrant.mikera.engine.Thing;
  * 
  * TODO: move game-related code out of QuestApp.
  */
-public class QuestApp extends Applet implements Runnable {
+public abstract class QuestApp extends Applet implements Runnable {
 	private static final long serialVersionUID = 3257569503247284020L;
 
 	public static final Image DEFAULTTEXTURE =
@@ -126,7 +119,6 @@ public class QuestApp extends Applet implements Runnable {
 		// recreate lib in background
 
 		QuestApp.setInstance(this);
-		Game.setQuestapp(this);
 
 		super.init();
 		setLayout(new BorderLayout());
@@ -135,7 +127,7 @@ public class QuestApp extends Applet implements Runnable {
 		// "+KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner());
 
 		// set game in action
-		Game.setUserinterface(new Interface());
+		Game.userinterface = new Interface();
 		Game.thread = new Thread(runnable);
 		Game.thread.start();
 	}
@@ -149,94 +141,6 @@ public class QuestApp extends Applet implements Runnable {
 
 	public QuestApp() {
 		super();
-	}
-
-	// creates a hero according to specified parameters
-	public Thing createHero(final boolean prompts) {
-		final long start = System.currentTimeMillis();
-		String race = null;
-		String profession = null;
-
-		if (!prompts) {
-			race = "human";
-			profession = "fighter";
-			Game.setDebug(true);
-		}
-
-		// get list of races
-		final String[] raceherostrings = Hero.heroRaces();
-		final String[] racedescriptions = Hero.heroRaceDescriptions();
-		if (race == null) {
-			final DetailedListScreen ls = new DetailedListScreen(
-					"What race are you?", raceherostrings, racedescriptions);
-			ls.setForeground(new Color(128, 128, 128));
-			ls.setBackground(new Color(0, 0, 0));
-			ls.bottomString = "Press a letter key to select your race";
-			switchScreen(ls);
-			while (true) {
-				race = (String) ls.getObject();
-				if (race != null || Game.isDebug()) {
-					break;
-				}
-			}
-		}
-
-		if (race == null) {
-			// Debug mode only
-			// have escaped, so choose randomly
-			race = raceherostrings[RPG.r(raceherostrings.length)];
-			final String[] herostrings = Hero.heroProfessions(race);
-			profession = herostrings[RPG.r(herostrings.length)];
-		}
-
-		// get list of possible prfessions
-		final String[] professionstrings = Hero.heroProfessions(race);
-		final String[] professiondescriptions =
-				Hero.heroProfessionDescriptions(race);
-		if (profession == null) {
-
-			final DetailedListScreen ls =
-					new DetailedListScreen("What is your profession?",
-							professionstrings, professiondescriptions);
-			ls.bottomString = "Press a letter key to select your profession";
-			ls.setForeground(new Color(128, 128, 128));
-			ls.setBackground(new Color(0, 0, 0));
-			switchScreen(ls);
-
-			while (profession == null) {
-				profession = (String) ls.getObject();
-			}
-		}
-
-		final Thing h = Hero.createHero(prompts ? null : "QuickTester", race,
-				profession);
-
-		// hero name and history display
-		String name = "QuickTester";
-		if (prompts) {
-			// setup screen to get name
-			final Screen ss = new Screen(this);
-			ss.setBackground(new Color(0, 0, 0));
-			ss.setLayout(new BorderLayout());
-			{
-				final InfoScreen ts =
-						new InfoScreen(this, h.getString("HeroHistory"));
-				ts.setBackground(new Color(0, 0, 0));
-				ss.add("Center", ts);
-			}
-			final MessagePanel mp = new MessagePanel(this);
-			Game.messagepanel = mp;
-			ss.add("South", mp);
-
-			switchScreen(ss);
-
-			name = getHeroName(true);
-			if (name == null) {
-				return null;
-			}
-		}
-		Hero.setHeroName(h, name);
-		return h;
 	}
 
 	public boolean isGameScreen() {
@@ -271,292 +175,7 @@ public class QuestApp extends Applet implements Runnable {
 		mainComponent = s;
 	}
 
-	public String getHeroName(final boolean notNull) {
-		// get hero name
-		String hname = null;
-
-		Game.messageTyrant("");
-		while (hname == null || hname.equals("")) {
-			hname = Game.getLine("Enter your name: ");
-			if ("ESC".equals(hname)) {
-				return null;
-			}
-			if (!notNull && (hname == null || hname.equals(""))) {
-				return null;
-			}
-		}
-		return hname;
-	}
-
-	// this is the actual game thread start
-	// it loops for each complete game played
-	@Override
-	public void run() {
-		while (true) {
-
-			final Screen ss = new Screen(this);
-			ss.setBackground(new Color(0, 0, 0));
-			ss.setLayout(new BorderLayout());
-			{
-				final TitleScreen ts = new TitleScreen(this);
-				ts.setBackground(new Color(0, 0, 0));
-				ss.add("Center", ts);
-			}
-			final MessagePanel mp = new MessagePanel(this);
-			Game.messagepanel = mp;
-			ss.add("South", mp);
-
-			switchScreen(ss);
-
-			repaint();
-
-			if (!QuestApp.isapplet
-					&& QuestApp.gameFileFromCommandLine != null) {
-				Game.messageTyrant("Loading " + QuestApp.gameFileFromCommandLine
-						+ " game file...");
-				final String ret =
-						Game.tryToRestore(QuestApp.gameFileFromCommandLine);
-				if (ret == null) {
-					setupScreen();
-					getScreen().mainLoop();
-					continue;
-				}
-
-				Game.messageTyrant("Load game failed: " + ret);
-				Game.messageTyrant("Press any key (except Tab) to continue");
-				Game.getInput(false); // !!! not very good - this does not
-				// recognize Tab key, for instance
-
-			}
-
-			Game.messageTyrant("");
-			Game.messageTyrant("Welcome to Tyrant. You are playing version "
-					+ Game.VERSION + ". Would you like to:");
-			Game.messageTyrant(" [a] Create a new character");
-			Game.messageTyrant(" [b] Load a previously saved game");
-			Game.messageTyrant(" [c] Play in debug mode");
-			Game.messageTyrant(" [d] QuickStart debug mode");
-			Game.messageTyrant(" [e] Edit a map");
-			mp.repaint();
-
-			// create lib in background
-			Game.asynchronousCreateLib();
-
-			final char c = Game.getOption("abcdeQ");
-
-			Game.setDebug(false);
-			Game.visuals = true;
-
-			if (c == 'b') {
-				if (Game.restore()) {
-					setupScreen();
-					getScreen().mainLoop();
-
-				}
-
-			} else if (c == 'c') {
-				// do hero creation
-				Game.create();
-				final Thing h = createHero(true);
-				if (h == null) {
-					continue;
-				}
-
-				Game.setDebug(true);
-				setupScreen();
-				preparebattlemap();
-
-			} else if (c == 'e') {
-			} else {
-
-				Game.create();
-				final Thing h = createHero(true);
-
-				if (h == null) {
-					continue;
-				}
-
-				// first display starting info....
-				final InfoScreen l = new InfoScreen(this,
-						"                                 Introduction\n" + "\n"
-								+ "Times are hard for the humble adventurer. Lawlessness has ravaged the land, and few can afford to pay for your services.\n"
-								+ "\n"
-								+ "After many weeks of travel, you find yourself in the valley of North Karrain. This region has suffered less badly from the incursions of evil, and you hear that some small towns are still prosperous. Perhaps here you can find a way to make your fortune.\n"
-								+ "\n"
-								+ "After a long day of travel, you see a small inn to the west. Perhaps this would be a good place to meet some and learn some more about these strange lands.\n"
-								+ "\n"
-								+ "                           [ Press a key to continue ]\n"
-								+ "\n" + "\n" + "\n" + "\n" + "\n");
-
-				l.setForeground(new Color(192, 160, 64));
-				l.setBackground(new Color(0, 0, 0));
-				switchScreen(l);
-				Game.getInput();
-				setupScreen();
-				preparebattlemap();
-			}
-		}
-	}
-
 	public void setupScreen() {
-	}
-
-	protected void gameStart(final BattleMap map, final int entranceX,
-			final int entranceY) {
-	}
-
-	public void preparebattlemap() {
-		Game.setQuestapp(this);
-		final Thing h = Game.hero();
-		if (h == null) {
-			throw new Error("Hero not created");
-		}
-		Game.instance().initialize(h);
-
-		final BattleMap world = Game.instance().createWorld();
-
-		Quest.addQuest(h, Quest.createVisitMapQuest("Vist a town", "town"));
-
-		final Thing port = world.find("tutorial inn");
-		final BattleMap tm = Portal.getTargetMap(port);
-		gameStart(tm, tm.getEntrance().x, tm.getEntrance().y);
-	}
-
-	private String getDeathString(final Thing h) {
-		if (h.getStat("HPS") <= 0) {
-			final Thing t = h.getThing("Killer");
-			if (t == null) {
-				return "Killed by divine power";
-			}
-			t.remove();
-
-			String killer = t.getAName();
-			if (t.getFlag("IsEffect")) {
-				killer = t.name();
-			}
-
-			if (killer.equals("you")) {
-				killer = "stupidity";
-			}
-			return "Killed by " + killer;
-		}
-
-		return "Defeated The Tyrant";
-	}
-
-	public void gameOver() {
-		Wish.makeWish("identification", 100);
-		Game.messageTyrant("");
-
-		final Thing h = Game.hero();
-
-		final String outcome = getDeathString(h);
-
-		String story = null;
-
-		getScreen().getMappanel().repaint();
-
-		String hresult = "No high score available in debug mode";
-
-		final int sc = h.getStat("Score");
-		final String score = Integer.toString(sc);
-		final String level = Integer.toString(h.getLevel());
-		final String seed = Integer.toString(h.getStat("Seed"));
-		final String name = h.getString("HeroName");
-		final String profession = h.getString("Profession");
-		final String race = h.getString("Race");
-
-		try {
-			final String urldeath =
-					URLEncoder.encode(outcome, QuestApp.fileEncoding);
-			final String urlname =
-					URLEncoder.encode(name, QuestApp.fileEncoding);
-
-			final String check = Integer.toString(
-					sc + name.length() * profession.length() * race.length()
-							^ 12345678);
-			final String st = "&name=" + urlname + "&race=" + race
-					+ "&profession=" + profession + "&level=" + level
-					+ "&score=" + score + "&check=" + check + "&version="
-					+ Game.VERSION + "&seed=" + seed + "&death=" + urldeath;
-
-			final String url =
-					"http://tyrant.sourceforge.net/logscore.php?client=tyrant"
-							+ st;
-
-			Game.warn((Game.isDebug() ? "NOT " : "") + "Sending data:");
-			Game.warn(st);
-
-			if (!Game.isDebug()) {
-				final URL u = new URL(url);
-				final InputStream s = u.openStream();
-
-				String returnstring = "";
-				int b = s.read();
-				while (b >= 0) {
-					returnstring = returnstring + (char) b;
-					b = s.read();
-				}
-
-				final int ok = returnstring.indexOf("OK:");
-				if (ok >= 0) {
-					hresult = "High score logged.\n";
-					hresult += "You are in position "
-							+ returnstring.substring(ok + 3).trim();
-				} else {
-					hresult = "Failed to log high score";
-					Game.warn(returnstring);
-				}
-			}
-		} catch (final Exception e) {
-			Game.warn(e.getMessage());
-			hresult = "High score feature not available";
-		}
-
-		if (!h.isDead()) {
-			story = "You have defeated The Tyrant!\n" + "\n"
-					+ "Having saved the world from such malevolent evil, you are crowned as the new Emperor of Daedor, greatly beloved by all the people of the Earth.\n"
-					+ "\n"
-					+ "You rule an Empire of peace and prosperity, and enjoy a long and happy life.\n"
-					+ "\n" + "Hurrah for Emperor " + h.getString("HeroName")
-					+ "!!\n";
-
-			if (Game.isDebug()) {
-				story = "You have defeated The Tyrant in Debug Mode.\n" + "\n"
-						+ "Now go and do it the hard way....\n";
-			}
-
-		} else {
-			story = "\n" + "It's all over...... " + outcome + "\n" + "\n"
-					+ "You have failed in your adventures and died a hideous death.\n"
-					+ "\n" + "You reached level " + level + "\n"
-					+ "Your score is " + score + "\n" + "\n" + hresult + "\n";
-		}
-
-		Game.messageTyrant("GAME OVER - " + outcome);
-
-		Game.messageTyrant(
-				"Would you like to see your final posessions? (y/n)");
-
-		final char c = Game.getOption("yn");
-
-		if (c == 'y') {
-			Game.selectItem("Your final posessions:", h);
-		}
-
-		// display the final story
-		Game.scrollTextScreen(story);
-
-		// display the final story
-		final String killData = Hero.reportKillData();
-		Game.scrollTextScreen(killData);
-
-		Game.over = true;
-
-		Lib.clear();
-
-		// recreate lib in background
-		Game.asynchronousCreateLib();
 	}
 
 	public KeyAdapter keyhandler = null;
@@ -569,7 +188,7 @@ public class QuestApp extends Applet implements Runnable {
 			if (keyhandler != null) {
 				keyhandler.keyPressed(e);
 			} else {
-				Game.getUserinterface().go(e);
+				Game.userinterface.go(e);
 			}
 		}
 	};
@@ -606,13 +225,6 @@ public class QuestApp extends Applet implements Runnable {
 
 	public static void setInstance(final QuestApp instance) {
 		QuestApp.instance = instance;
-	}
-
-	public static QuestApp getInstance() {
-		if (QuestApp.instance == null) {
-			QuestApp.instance = new QuestApp();
-		}
-		return QuestApp.instance;
 	}
 
 	static {

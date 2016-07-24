@@ -87,8 +87,7 @@ public class ThreadManager {
 		} catch (Exception e) {
 			interrupt();
 			working = false;
-			Game.message("Fatal error: " + ERROR.getMessage(), null,
-					Delay.NONE);
+			Game.message("Fatal error: " + ERROR.getMessage(), Delay.NONE);
 			ERROR.printStackTrace();
 			throw new RuntimeException(ERROR);
 		}

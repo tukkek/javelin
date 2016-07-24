@@ -1,13 +1,11 @@
 package javelin.controller.fight;
 
 import java.awt.Image;
-import java.util.List;
+import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.controller.db.Preferences;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.terrain.Terrain;
-import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.Lair;
 import javelin.view.screen.BattleScreen;
@@ -27,7 +25,6 @@ public class LairFight extends Fight {
 			QuestApp.getImage("/images/texture1.png");
 
 	public LairFight() {
-
 		texture = DUNGEONTEXTURE;
 		meld = true;
 		hide = false;
@@ -40,7 +37,7 @@ public class LairFight extends Fight {
 	}
 
 	@Override
-	public List<Combatant> getmonsters(int teamel) {
+	public ArrayList<Combatant> getmonsters(int teamel) {
 		return null;
 	}
 
@@ -65,7 +62,7 @@ public class LairFight extends Fight {
 	}
 
 	boolean checkend() {
-		if (BattleMap.redTeam.size() >= 2) {
+		if (Fight.state.redTeam.size() >= 2) {
 			return false;
 		}
 		Combatant target = findmonster();
@@ -73,12 +70,12 @@ public class LairFight extends Fight {
 	}
 
 	static Combatant findmonster() {
-		int nfoes = BattleMap.redTeam.size();
+		int nfoes = Fight.state.redTeam.size();
 		if (nfoes == 1) {
-			return BattleMap.redTeam.get(0);
+			return Fight.state.redTeam.get(0);
 		}
 		if (nfoes == 0) {
-			for (Combatant c : BattleMap.dead) {
+			for (Combatant c : Fight.state.dead) {
 				if (BattleScreen.originalredteam.contains(c)
 						&& c.getNumericStatus() != Combatant.STATUSDEAD) {
 					return c;
@@ -89,11 +86,12 @@ public class LairFight extends Fight {
 	}
 
 	@Override
-	public List<Combatant> generate(int teamel, Terrain terrain) {
-		List<Combatant> foes = super.generate(teamel, terrain);
-		while (foes.size() == 1 && Preferences.DEBUGFOE == null) {
-			foes = super.generate(teamel, terrain);
-		}
+	public ArrayList<Combatant> generate(int teamel, Terrain terrain) {
+		ArrayList<Combatant> foes = super.generate(teamel - 2, terrain);
+		foes.addAll(super.generate(teamel - 2, terrain));
+		// while (foes.size() == 1 && Preferences.DEBUGFOE == null) {
+		// foes = super.generate(teamel, terrain);
+		// }
 		return foes;
 	}
 

@@ -69,11 +69,9 @@ public class Artificer extends UniqueLocation {
 			return true;
 		}
 		Game.messagepanel.clear();
-		Game.message(
-				"\"Come back in " + Math.round(Math.ceil(eta / 24f))
-						+ " days for your " + crafting.toString().toLowerCase()
-						+ ".\"\n\nPress any key to coninue...",
-				null, Delay.NONE);
+		Game.message("\"Come back in " + Math.round(Math.ceil(eta / 24f))
+				+ " days for your " + crafting.toString().toLowerCase()
+				+ ".\"\n\nPress any key to coninue...", Delay.NONE);
 		Game.getInput();
 		return true;
 	}

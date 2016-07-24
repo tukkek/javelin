@@ -30,7 +30,6 @@ public class WordOfRecall extends Spell {
 		if (Dungeon.active != null) {
 			Dungeon.active.leave();
 		}
-		Squad.active.visual.remove();
 		Squad.active.transport = null;
 		Squad.active.x = Squad.active.lasttown.x;
 		Squad.active.y = Squad.active.lasttown.y;

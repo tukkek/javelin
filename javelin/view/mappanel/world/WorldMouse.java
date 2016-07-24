@@ -29,7 +29,7 @@ public class WorldMouse extends Mouse {
 		if (overrideinput()) {
 			return;
 		}
-		if (!Game.getUserinterface().waiting) {
+		if (!Game.userinterface.waiting) {
 			return;
 		}
 		final WorldTile t = (WorldTile) e.getSource();
@@ -50,12 +50,12 @@ public class WorldMouse extends Mouse {
 					BattleScreen.perform(new Runnable() {
 						@Override
 						public void run() {
-							target.interact();
-							Location l = target instanceof Location
-									? (Location) target : null;
-							if (l.allowentry && l.garrison.isEmpty()) {
-								WorldMove.place(Game.hero(), l.x, l.y);
+							Location l = (Location) target;
+							if (l.allowentry && l.discard
+									&& l.garrison.isEmpty()) {
+								WorldMove.place(l.x, l.y);
 							}
+							target.interact();
 						}
 					});
 				} else {
@@ -63,7 +63,7 @@ public class WorldMouse extends Mouse {
 						@Override
 						public void run() {
 							Game.messagepanel.clear();
-							Game.message("Too far...", null, Delay.WAIT);
+							Game.message("Too far...", Delay.WAIT);
 						}
 					});
 				}
@@ -118,7 +118,7 @@ public class WorldMouse extends Mouse {
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		if (!Game.getUserinterface().waiting) {
+		if (!Game.userinterface.waiting) {
 			return;
 		}
 		if (MapPanel.overlay != null) {
@@ -142,7 +142,7 @@ public class WorldMouse extends Mouse {
 							new Point(t.x, t.y))));
 		} else {
 			Game.messagepanel.clear();
-			Game.message(target.describe(), null, Delay.NONE);
+			Game.message(target.describe(), Delay.NONE);
 			Game.messagepanel.getPanel().repaint();
 			showingdescription = true;
 		}

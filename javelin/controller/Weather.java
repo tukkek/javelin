@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javelin.Javelin;
 import javelin.controller.db.Preferences;
-import javelin.model.BattleMap;
+import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 import tyrant.mikera.engine.RPG;
@@ -40,7 +40,7 @@ public class Weather {
 		}
 	}
 
-	public static void flood(BattleMap m) {
+	public static void flood() {
 		Integer level = Javelin.app.fight.floodlevel;
 		if (level == null) {
 			level = Math.min(current, Javelin.app.fight.map.maxflooding);
@@ -50,7 +50,7 @@ public class Weather {
 			return;
 		}
 		final ArrayList<Square> clear = new ArrayList<Square>();
-		final BattleState state = m.getState();
+		final BattleState state = Fight.state;
 		for (Square[] line : state.map) {
 			for (Square s : line) {
 				if (!s.obstructed && !s.blocked) {
@@ -65,7 +65,6 @@ public class Weather {
 			clear.remove(index);
 			s.flooded = true;
 		}
-		m.flood(state);
 	}
 
 	public static int read(int nowp) {

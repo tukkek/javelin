@@ -5,10 +5,8 @@ import java.util.List;
 
 import javelin.controller.action.Action;
 import javelin.controller.ai.ChanceNode;
-import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import tyrant.mikera.engine.Thing;
 
 /**
  * To be used for debugging purposes.
@@ -30,7 +28,7 @@ public class ForceWait extends Action implements AiAction {
 	}
 
 	@Override
-	public boolean perform(Combatant active, BattleMap m, Thing thing) {
+	public boolean perform(Combatant active) {
 		return false;
 	}
 }

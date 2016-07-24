@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import javelin.Javelin;
+import javelin.controller.Point;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.UpgradeHandler;
@@ -38,7 +39,6 @@ import javelin.model.world.location.unique.PillarOfSkulls;
 import javelin.model.world.location.unique.SummoningCircle;
 import javelin.model.world.location.unique.TrainingHall;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.RPG;
 
 /**

@@ -1,12 +1,12 @@
 package javelin.controller.action.world.improvement;
 
+import javelin.controller.Point;
 import javelin.controller.action.world.Work;
 import javelin.model.world.Improvement;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.research.Research;
-import tyrant.mikera.engine.Point;
 
 /**
  * Builds an empty {@link Town}.

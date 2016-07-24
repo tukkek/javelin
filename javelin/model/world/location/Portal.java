@@ -161,7 +161,7 @@ public class Portal extends Location {
 	public boolean interact() {
 		if (invasion) {
 			Game.messagepanel.clear();
-			Game.message("You close the invasion portal!", null, Delay.NONE);
+			Game.message("You close the invasion portal!", Delay.NONE);
 			IntroScreen.feedback();
 			super.interact();
 			return true;
@@ -180,7 +180,6 @@ public class Portal extends Location {
 
 	void travel() {
 		Point p = spawn(to);
-		Squad.active.visual.remove();
 		Squad.active.x = p.x;
 		Squad.active.y = p.y;
 		Squad.active.displace();
@@ -198,7 +197,7 @@ public class Portal extends Location {
 		}
 		if (!description.isEmpty()) {
 			Game.messagepanel.clear();
-			Game.message(description, null, Delay.BLOCK);
+			Game.message(description, Delay.BLOCK);
 			Game.getInput();
 		}
 	}
@@ -224,7 +223,6 @@ public class Portal extends Location {
 			return;
 		}
 		if (wandering) {
-			visual.remove();
 			displace();
 			place();
 		}

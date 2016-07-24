@@ -58,12 +58,12 @@ class PlanarFight extends Fight {
 	}
 
 	@Override
-	public List<Combatant> getmonsters(int teamel) {
+	public ArrayList<Combatant> getmonsters(int teamel) {
 		int size = RPG.r(5 - 2, 5 + 2);
 		ArrayList<Combatant> opponents = new ArrayList<Combatant>();
 		for (int i = 0; i < size; i++) {
 			opponents
-					.add(new Combatant(null,
+					.add(new Combatant(
 							RPG.pick(Javelin.MONSTERSBYCR
 									.get(determinecr(teamel, size))).clone(),
 							true));
@@ -128,7 +128,7 @@ class PlanarFight extends Fight {
 		for (Monster m : new CrIterator(Javelin.MONSTERSBYCR)) {
 			ArrayList<Combatant> opponents = new ArrayList<Combatant>();
 			for (int i = 0; i < size; i++) {
-				opponents.add(new Combatant(null, m, true));
+				opponents.add(new Combatant(m, true));
 			}
 			try {
 				if (ChallengeRatingCalculator

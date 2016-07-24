@@ -6,13 +6,12 @@ import java.util.List;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
-import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import tyrant.mikera.engine.Thing;
 
 /**
  * @see Monster#burrow
@@ -28,16 +27,16 @@ public class Dig extends Action implements AiAction {
 	}
 
 	@Override
-	public boolean perform(Combatant hero, BattleMap m, Thing thing) {
+	public boolean perform(Combatant hero) {
 		if (hero.source.burrow == 0) {
-			Game.message("Cannot burrow!", null, Delay.WAIT);
+			Game.message("Cannot burrow!", Delay.WAIT);
 			return false;
 		}
-		BattleState s = m.getState();
+		BattleState s = Fight.state;
 		if (flooded(hero, s)) {
 			return false;
 		}
-		Game.message(dig(hero, s), null, Delay.WAIT);
+		Game.message(dig(hero, s), Delay.WAIT);
 		return true;
 	}
 
@@ -84,7 +83,7 @@ public class Dig extends Action implements AiAction {
 	 * @throws RepeatTurn
 	 */
 	public static void refuse() {
-		Game.message("Cannot do this while burrowed...", null, Delay.WAIT);
+		Game.message("Cannot do this while burrowed...", Delay.WAIT);
 		throw new RepeatTurn();
 	}
 }

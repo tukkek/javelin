@@ -128,7 +128,7 @@ public class Town extends Location {
 		if (startingtown) {
 			startingtown = false;
 		} else if (!Preferences.DEBUGCLEARGARRISON) {
-			garrison.add(new Combatant(null, RPG.pick(lairs).m.clone(), true));
+			garrison.add(new Combatant(RPG.pick(lairs).m.clone(), true));
 		}
 		draw();
 	}
@@ -460,7 +460,7 @@ public class Town extends Location {
 			t.size -= 1;
 		}
 		Squad.active.members
-				.add(new Combatant(null, Javelin.getmonster("Worker"), false));
+				.add(new Combatant(Javelin.getmonster("Worker"), false));
 	}
 
 	@Override

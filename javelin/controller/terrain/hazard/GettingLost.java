@@ -51,7 +51,6 @@ public class GettingLost extends Hazard {
 	 *            This many more hours will be spent.
 	 */
 	public static void getlost(String message, int hoursellapsed) {
-		Squad.active.visual.remove();
 		Squad.active.displace();
 		Squad.active.place();
 		Squad.active.hourselapsed += hoursellapsed;

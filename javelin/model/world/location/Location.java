@@ -249,7 +249,7 @@ public abstract class Location extends WorldActor {
 		Game.message(
 				describe(opponents, description) + "\n\n"
 						+ "Press s to storm or any other key to retreat.",
-				null, Delay.NONE);
+				Delay.NONE);
 		if (InfoScreen.feedback() == 's') {
 			return true;
 		}
@@ -266,6 +266,7 @@ public abstract class Location extends WorldActor {
 				+ " fight)\n\n" + Squad.active.spot(opponents);
 	}
 
+	@Override
 	public String describe() {
 		return garrison.isEmpty() ? toString() + "."
 				: describe(garrison, toString());

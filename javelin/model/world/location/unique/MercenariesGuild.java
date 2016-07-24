@@ -53,7 +53,7 @@ public class MercenariesGuild extends UniqueLocation {
 				if (!m.humanoid) {
 					return;
 				}
-				c = new Combatant(null, m.clone(), true);
+				c = new Combatant(m.clone(), true);
 				c.mercenary = true;
 				r.baptize(c);
 				for (Combatant c2 : mercenaries) {

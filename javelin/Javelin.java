@@ -26,13 +26,13 @@ import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.controller.db.StateManager;
 import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.db.reader.fields.Organization;
+import javelin.controller.fight.Fight;
 import javelin.controller.fight.LairFight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.hazard.PartyHazard;
 import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.model.BattleMap;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
@@ -46,7 +46,6 @@ import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.RecruitScreen;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
-import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.QuestApp;
 
 /**
@@ -140,9 +139,6 @@ public class Javelin {
 		// activate debug mode if we do....
 		final java.io.File script = new java.io.File("mikeradebug");
 
-		// old method to activate debug cheat
-		Game.setDebug(script.exists());
-
 		app.setVisible(false);
 		f.add(app);
 
@@ -173,16 +169,6 @@ public class Javelin {
 			JOptionPane.showMessageDialog(null, error);
 			System.exit(1);
 		}
-	}
-
-	/** TODO remove on 2.0+ */
-	public static Combatant getCombatant(final Thing t) {
-		for (final Combatant c : BattleMap.combatants) {
-			if (c.visual == t) {
-				return c;
-			}
-		}
-		return null;
 	}
 
 	/**
@@ -229,9 +215,6 @@ public class Javelin {
 		Squad.active = next;
 		if (WorldScreen.lastday == -1) {
 			WorldScreen.lastday = Math.ceil(Squad.active.hourselapsed / 24.0);
-		}
-		if (next != null) {
-			Game.instance().hero = next.visual;
 		}
 		return next;
 	}
@@ -286,7 +269,7 @@ public class Javelin {
 		BattleScreen.active.messagepanel.clear();
 		Game.message(
 				"You have lost all your monsters! Game over T_T\n\n" + record(),
-				null, Delay.NONE);
+				Delay.NONE);
 		while (InfoScreen.feedback() != '\n') {
 			continue;
 		}
@@ -334,7 +317,7 @@ public class Javelin {
 	 * @see RecruitScreen#namingscreen(String)
 	 */
 	public static Combatant recruit(Monster pick) {
-		Combatant c = new Combatant(null, pick.clone(), true);
+		Combatant c = new Combatant(pick.clone(), true);
 		c.source.customName = RecruitScreen.namingscreen(c.toString());
 		Squad.active.members.add(c);
 		/*
@@ -354,7 +337,7 @@ public class Javelin {
 
 	/** TODO remove? */
 	public static Combatant getCombatant(int id) {
-		for (Combatant c : BattleMap.combatants) {
+		for (Combatant c : Fight.state.getCombatants()) {
 			if (c.id == id) {
 				return c;
 			}
@@ -438,7 +421,7 @@ public class Javelin {
 			app.switchScreen(new InfoScreen(output));
 		} else {
 			Game.messagepanel.clear();
-			Game.message(output, null, Delay.NONE);
+			Game.message(output, Delay.NONE);
 		}
 		while (true) {
 			try {
@@ -472,7 +455,7 @@ public class Javelin {
 	public static KeyEvent message(String text, boolean requireenter) {
 		Game.messagepanel.clear();
 		Game.message(text + "\nPress " + (requireenter ? "ENTER" : "any key")
-				+ " to continue...", null, Delay.NONE);
+				+ " to continue...", Delay.NONE);
 		KeyEvent input = Game.getInput();
 		while (requireenter && input.getKeyChar() != '\n') {
 			input = Game.getInput();
@@ -489,7 +472,7 @@ public class Javelin {
 	 */
 	static public Character prompt(final String prompt) {
 		Game.messagepanel.clear();
-		Game.message(prompt, null, Delay.NONE);
+		Game.message(prompt, Delay.NONE);
 		return InfoScreen.feedback();
 	}
 

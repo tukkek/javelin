@@ -7,9 +7,10 @@ import java.util.List;
 import java.util.Set;
 
 import javelin.Javelin;
+import javelin.JavelinApp;
+import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.action.world.WorldMove;
-import javelin.controller.old.Game;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.terrain.map.Map;
 import javelin.controller.terrain.map.Maps;
@@ -22,9 +23,7 @@ import javelin.model.world.WorldActor;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.fortification.Mine;
 import javelin.model.world.location.town.Town;
-import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.RPG;
-import tyrant.mikera.engine.Thing;
 
 /**
  * Represent different types of {@link World} terrain.
@@ -147,7 +146,10 @@ public abstract class Terrain implements Serializable {
 	 * @return Current terrain difficulty. For example: {@link PLAIN}.
 	 */
 	static public Terrain current() {
-		Thing h = Game.hero();
+		if (JavelinApp.context == null) {
+			return null;
+		}
+		Point h = JavelinApp.context.getherolocation();
 		return h == null ? null : Terrain.get(h.x, h.y);
 	}
 

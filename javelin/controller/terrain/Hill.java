@@ -2,14 +2,13 @@ package javelin.controller.terrain;
 
 import java.util.Set;
 
+import javelin.controller.Point;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.terrain.hazard.Rockslide;
 import javelin.controller.terrain.map.Maps;
 import javelin.controller.terrain.map.hill.Gentle;
 import javelin.controller.terrain.map.hill.Rugged;
-import javelin.controller.terrain.map.tyrant.Graveyard;
 import javelin.model.world.World;
-import tyrant.mikera.engine.Point;
 
 /**
  * Similar to {@link Plains}.
@@ -34,7 +33,6 @@ public class Hill extends Terrain {
 		Maps m = new Maps();
 		m.add(new Gentle());
 		m.add(new Rugged());
-		m.add(new Graveyard());
 		return m;
 	}
 

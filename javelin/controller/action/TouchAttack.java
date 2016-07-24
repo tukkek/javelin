@@ -7,10 +7,8 @@ import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.old.Game.Delay;
-import javelin.model.BattleMap;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import tyrant.mikera.engine.Thing;
 
 /**
  * An attack that reaches out only 5 feet, like from the Digester or Shocker
@@ -34,13 +32,13 @@ public class TouchAttack extends Fire implements AiAction {
 		ArrayList<Combatant> opponents = gameState.getCombatants();
 		filtertargets(combatant, opponents, gameState);
 		for (Combatant target : opponents) {
-			outcomes.add(attack(combatant, target, gameState));
+			outcomes.add(touchattack(combatant, target, gameState));
 		}
 		return outcomes;
 	}
 
-	private List<ChanceNode> attack(Combatant active, final Combatant target,
-			BattleState gameState) {
+	private List<ChanceNode> touchattack(Combatant active,
+			final Combatant target, BattleState gameState) {
 		gameState = gameState.clone();
 		active = gameState.clone(active);
 		active.ap += .5;
@@ -69,8 +67,8 @@ public class TouchAttack extends Fire implements AiAction {
 
 	@Override
 	protected void attack(Combatant combatant, Combatant targetCombatant,
-			BattleState battleState, BattleMap map) {
-		Action.outcome(attack(combatant, targetCombatant, battleState));
+			BattleState battleState) {
+		Action.outcome(touchattack(combatant, targetCombatant, battleState));
 	}
 
 	@Override
@@ -89,8 +87,8 @@ public class TouchAttack extends Fire implements AiAction {
 	}
 
 	@Override
-	protected void checkhero(Thing hero) {
-		if (hero.combatant.source.touch == null) {
+	protected void checkhero(Combatant hero) {
+		if (hero.source.touch == null) {
 			throw new RepeatTurn();
 		}
 	}

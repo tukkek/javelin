@@ -4,6 +4,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
+import javelin.JavelinApp;
+import javelin.controller.Point;
 import javelin.controller.old.Game;
 import javelin.view.screen.BattleScreen;
 
@@ -24,7 +26,8 @@ public abstract class Mouse extends MouseAdapter {
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		panel.zoom(-e.getWheelRotation(), false, Game.hero().x, Game.hero().y);
+		Point p = JavelinApp.context.getherolocation();
+		panel.zoom(-e.getWheelRotation(), false, p.x, p.y);
 	}
 
 	/**
@@ -33,7 +36,7 @@ public abstract class Mouse extends MouseAdapter {
 	 *         action if <code>true</code>.
 	 */
 	public boolean overrideinput() {
-		if (Game.getUserinterface().waiting) {
+		if (Game.userinterface.waiting) {
 			return false;
 		}
 		Game.simulateKey('\n');

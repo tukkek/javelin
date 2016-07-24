@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import javelin.controller.db.Preferences;
 import javelin.controller.old.Game;
-import tyrant.mikera.tyrant.MessagePanel;
+import javelin.controller.old.MessagePanel;
 
 /**
  * Uses {@value #LINUXTEMPARATUREFILE} on Linux to wait for cooldown if an

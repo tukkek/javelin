@@ -7,10 +7,8 @@ import java.util.HashMap;
 
 import javelin.Javelin;
 import javelin.controller.old.Game;
-import javelin.model.BattleMap;
 import tyrant.mikera.engine.Lib;
 import tyrant.mikera.engine.RPG;
-import tyrant.mikera.engine.Thing;
 
 public class Tile {
 
@@ -299,9 +297,10 @@ public class Tile {
 		return false;
 	}
 
-	public static boolean isSolid(final BattleMap m, final int x, final int y) {
-		return Javelin.app.fight.map.map[x][y].blocked;
-	}
+	// public static boolean isSolid(final BattleMap m, final int x, final int
+	// y) {
+	// return ;
+	// }
 
 	public static boolean isPassable(final int tile) {
 		return ispassable[tile];

@@ -22,7 +22,7 @@ public class Abandon extends WorldAction {
 		screen.messagepanel.clear();
 		Game.message(
 				"Are you sure you want to abandon the current game forever? Press c to confirm.",
-				null, Delay.NONE);
+				Delay.NONE);
 		if (InfoScreen.feedback() == 'c') {
 			StateManager.abandoned = true;
 			StateManager.save(true, StateManager.SAVEFILE);

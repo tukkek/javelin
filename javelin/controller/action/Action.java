@@ -9,12 +9,10 @@ import java.util.TreeMap;
 
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
-import javelin.controller.ai.Node;
-import javelin.model.BattleMap;
+import javelin.controller.fight.Fight;
 import javelin.model.unit.Combatant;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
-import tyrant.mikera.engine.Thing;
 
 /**
  * One of the game moves, to be used during battle.
@@ -127,22 +125,23 @@ public abstract class Action implements Serializable, ActionDescription {
 	 * @param b
 	 * @return The actual outcome of the action made by the AI.
 	 */
-	public static Node outcome(final List<ChanceNode> list,
+	public static void outcome(final List<ChanceNode> list,
 			boolean enableoverrun) {
 		float roll = RPG.random();
 		for (final ChanceNode cn : list) {
 			roll -= cn.chance;
 			if (roll <= 0) {
 				BattleScreen.active.updatescreen(cn, enableoverrun);
-				return cn.n;
+				// Fight.state = (BattleState) cn.n;
+				return;
 			}
 		}
 		for (final ChanceNode cn : list) {
 			System.err.println("Outcome error! " + cn.action + " " + cn.chance);
 		}
 		throw new RuntimeException("Couldn't determine outcome: " + roll
-				+ debugteam(BattleMap.blueTeam, "player team")
-				+ debugteam(BattleMap.redTeam, "ai team"));
+				+ debugteam(Fight.state.blueTeam, "player team")
+				+ debugteam(Fight.state.redTeam, "ai team"));
 	}
 
 	static String debugteam(ArrayList<Combatant> team, String label) {
@@ -185,11 +184,10 @@ public abstract class Action implements Serializable, ActionDescription {
 	 *         Just return <code>false</code> if the player cannot use this
 	 *         action (AI-only).
 	 */
-	public abstract boolean perform(Combatant active, javelin.model.BattleMap m,
-			Thing thing);
+	public abstract boolean perform(Combatant active);
 
-	public static Node outcome(List<ChanceNode> list) {
-		return outcome(list, false);
+	public static void outcome(List<ChanceNode> list) {
+		outcome(list, false);
 	}
 
 	public static float bind(float misschance) {

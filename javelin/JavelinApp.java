@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -28,7 +27,6 @@ import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.model.BattleMap;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.Wand;
@@ -45,7 +43,6 @@ import javelin.view.screen.BattleScreen;
 import javelin.view.screen.SquadScreen;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
-import tyrant.mikera.engine.Thing;
 import tyrant.mikera.tyrant.QuestApp;
 
 /**
@@ -62,8 +59,6 @@ public class JavelinApp extends QuestApp {
 			new String[] { "A wild error appears!", "You were eaten by a grue.",
 					"So again it has come to pass...", "Mamma mia!", };
 
-	/** View for the {@link World}. */
-	public static BattleMap overviewmap;
 	/** Controller. */
 	static public WorldScreen context;
 	static ArrayList<Monster> lastenemies = new ArrayList<Monster>();
@@ -77,10 +72,6 @@ public class JavelinApp extends QuestApp {
 	 * TODO see {@link BattleScreen#originalredteam} }
 	 */
 	public ArrayList<Combatant> originalfoes;
-	/**
-	 * Active battle map;
-	 */
-	public BattleMap battlemap;
 	/**
 	 * Controller for active battle. Should be <code>null</code> at any point a
 	 * battle is not occurring.
@@ -123,7 +114,7 @@ public class JavelinApp extends QuestApp {
 	void loop() {
 		try {
 			if (Dungeon.active == null) {
-				JavelinApp.context = new WorldScreen(JavelinApp.overviewmap);
+				JavelinApp.context = new WorldScreen();
 			}
 			while (true) {
 				switchScreen(JavelinApp.context);
@@ -146,7 +137,7 @@ public class JavelinApp extends QuestApp {
 	private void quickbattle() {
 		int teamel =
 				ChallengeRatingCalculator.calculateel(Squad.active.members);
-		List<Combatant> opponents = fight.getmonsters(teamel);
+		ArrayList<Combatant> opponents = fight.getmonsters(teamel);
 		int el = opponents != null
 				? ChallengeRatingCalculator.calculateel(opponents)
 				: fight.getel(teamel);
@@ -168,7 +159,7 @@ public class JavelinApp extends QuestApp {
 			Squad.active.disband();
 			return;
 		}
-		BattleMap.victory = true;
+		Fight.victory = true;
 		preparebattle(opponents);
 		switchScreen(WorldScreen.current);
 		EndBattle.showcombatresult(WorldScreen.active, original,
@@ -280,12 +271,6 @@ public class JavelinApp extends QuestApp {
 	void placesquads() {
 		for (final WorldActor a : Squad.getall(Squad.class)) {
 			Squad s = (Squad) a;
-			final Thing hero = s.visual;
-			hero.x = s.x;
-			hero.y = s.y;
-			if (hero.place == null) {
-				JavelinApp.overviewmap.addThing(hero, hero.x, hero.y);
-			}
 		}
 	}
 
@@ -383,19 +368,18 @@ public class JavelinApp extends QuestApp {
 	}
 
 	/** TODO deduplicate originals */
-	public void preparebattle(Collection<Combatant> opponents) {
-		BattleMap.blueTeam = new ArrayList<Combatant>(Squad.active.members);
-		BattleMap.redTeam = new ArrayList<Combatant>(opponents);
+	public void preparebattle(ArrayList<Combatant> opponents) {
 		JavelinApp.lastenemies.clear();
-		for (final Combatant m : BattleMap.redTeam) {
+		Fight.state.redTeam = opponents;
+		for (final Combatant m : Fight.state.redTeam) {
 			JavelinApp.lastenemies.add(m.source.clone());
 		}
-		originalteam = JavelinApp.cloneteam(BattleMap.blueTeam);
-		originalfoes = JavelinApp.cloneteam(BattleMap.redTeam);
+		originalteam = JavelinApp.cloneteam(Fight.state.blueTeam);
+		originalfoes = JavelinApp.cloneteam(Fight.state.redTeam);
 		BattleScreen.originalblueteam =
-				new ArrayList<Combatant>(BattleMap.blueTeam);
+				new ArrayList<Combatant>(Fight.state.blueTeam);
 		BattleScreen.originalredteam =
-				new ArrayList<Combatant>(BattleMap.redTeam);
+				new ArrayList<Combatant>(Fight.state.redTeam);
 	}
 
 	private static ArrayList<Combatant> cloneteam(ArrayList<Combatant> team) {
@@ -404,11 +388,6 @@ public class JavelinApp extends QuestApp {
 			clone.add(c.clone());
 		}
 		return clone;
-	}
-
-	@Override
-	public void preparebattlemap() {
-
 	}
 
 	@Override

@@ -11,9 +11,9 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javelin.controller.action.SimpleAction;
+import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
-import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.view.screen.BattleScreen;
@@ -71,7 +71,7 @@ public class Automate extends WorldAction implements SimpleAction {
 
 		ArrayList<Combatant> getunits() {
 			return BattleScreen.active instanceof WorldScreen
-					? Squad.active.members : BattleMap.blueTeam;
+					? Squad.active.members : Fight.state.blueTeam;
 		}
 	}
 
@@ -102,7 +102,7 @@ public class Automate extends WorldAction implements SimpleAction {
 	@Override
 	public void perform() {
 		if (BattleScreen.active.spentap != 0) {
-			Game.message("Finish your turn first...", null, Delay.WAIT);
+			Game.message("Finish your turn first...", Delay.WAIT);
 			return;
 		}
 		AutomateWindow w = new AutomateWindow();

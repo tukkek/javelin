@@ -1,10 +1,8 @@
 package javelin.controller.action;
 
 import javelin.Javelin;
-import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
 import javelin.view.screen.BattleScreen;
-import tyrant.mikera.engine.Thing;
 
 /**
  * Fless from battle at any time if not engaged.
@@ -18,7 +16,7 @@ public class Withdraw extends Action {
 	}
 
 	@Override
-	public boolean perform(Combatant active, BattleMap m, Thing thing) {
+	public boolean perform(Combatant active) {
 		Javelin.app.fight.withdraw(active, BattleScreen.active);
 		return true;
 	}

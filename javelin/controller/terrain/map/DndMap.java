@@ -25,13 +25,13 @@ public abstract class DndMap extends Map {
 	@Override
 	public void generate() {
 		final HashSet<Point> occupied = new HashSet<Point>();
-		int area = battlemap.width * battlemap.height;
+		int area = map.length * map[0].length;
 		int walls = (int) (this.walls * area);
 		int obstacles = (int) (this.obstacles * area);
 		int water = (int) (this.water * area);
 		while (walls > 0 || obstacles > 0 || water > 0) {
-			Point p = new Point(RPG.r(0, battlemap.width - 1),
-					RPG.r(0, battlemap.height - 1));
+			Point p = new Point(RPG.r(0, map.length - 1),
+					RPG.r(0, map[0].length - 1));
 			if (occupied.contains(p)) {
 				continue;
 			}

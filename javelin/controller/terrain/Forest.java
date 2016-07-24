@@ -3,6 +3,7 @@ package javelin.controller.terrain;
 import java.util.HashSet;
 import java.util.Set;
 
+import javelin.controller.Point;
 import javelin.controller.terrain.hazard.Break;
 import javelin.controller.terrain.hazard.FallingTrees;
 import javelin.controller.terrain.hazard.GettingLost;
@@ -11,9 +12,7 @@ import javelin.controller.terrain.map.Maps;
 import javelin.controller.terrain.map.forest.Dense;
 import javelin.controller.terrain.map.forest.Medium;
 import javelin.controller.terrain.map.forest.Sparse;
-import javelin.controller.terrain.map.tyrant.DarkForest;
 import javelin.model.world.World;
-import tyrant.mikera.engine.Point;
 
 /**
  * Dense forest but not quite a jungle.
@@ -39,7 +38,6 @@ public class Forest extends Terrain {
 		m.add(new Sparse());
 		m.add(new Medium());
 		m.add(new Dense());
-		m.add(new DarkForest());
 		return m;
 	}
 

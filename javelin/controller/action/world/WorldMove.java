@@ -5,9 +5,9 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.JavelinApp;
+import javelin.controller.Point;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.StartBattle;
-import javelin.controller.old.Game;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.unit.Combatant;
@@ -20,7 +20,6 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.engine.Thing;
 
 /**
  * Makes a movement on the overworld or {@link Dungeon}.
@@ -87,12 +86,11 @@ public class WorldMove extends WorldAction {
 
 	@Override
 	public void perform(final WorldScreen s) {
-		final Thing t = JavelinApp.context.gethero();
+		final Point t = JavelinApp.context.getherolocation();
 		move(t.x + deltax, t.y + deltay, true);
 	}
 
 	public static boolean move(int tox, int toy, boolean encounter) {
-		final Thing t = Game.hero();
 		final WorldScreen s = (WorldScreen) BattleScreen.active;
 		Squad.active.lastterrain = Terrain.current();
 		if (!World.validatecoordinate(tox, toy) || (Dungeon.active == null
@@ -107,22 +105,19 @@ public class WorldMove extends WorldAction {
 			Location l = actor instanceof Location ? (Location) actor : null;
 			try {
 				if (JavelinApp.context.react(actor, tox, toy)) {
-					if (BattleScreen.active.map != t.getMap()) {
-						return true;
-					}
 					if (Dungeon.active != null) {
 						if (DungeonScreen.dontenter) {
 							DungeonScreen.dontenter = false;
 						}
 						if (DungeonScreen.updatelocation) {
-							place(t, tox, toy);
+							place(tox, toy);
 						} else {
 							DungeonScreen.updatelocation = true;
 						}
 						return !DungeonScreen.stopmovesequence;
 					} else if (l != null) {
 						if (l.allowentry && l.garrison.isEmpty()) {
-							place(t, tox, toy);
+							place(tox, toy);
 						}
 					}
 					return true;
@@ -132,7 +127,7 @@ public class WorldMove extends WorldAction {
 				}
 			} catch (StartBattle e) {
 				if (l != null && l.allowentry) {
-					place(t, tox, toy);
+					place(tox, toy);
 				}
 				throw e;
 			}
@@ -140,11 +135,11 @@ public class WorldMove extends WorldAction {
 				DungeonScreen.dontenter = false;
 				return false;// TODO hack
 			}
-			if (!place(t, tox, toy)) {
+			if (!place(tox, toy)) {
 				return false;
 			}
 			boolean stop = false;
-			if (WorldMove.walk(t)) {
+			if (WorldMove.walk(JavelinApp.context.getherolocation())) {
 				stop = JavelinApp.context.explore(hours, encounter);
 			}
 			heal();
@@ -156,20 +151,15 @@ public class WorldMove extends WorldAction {
 		}
 	}
 
-	public static boolean place(final Thing t, final int tox, final int toy) {
+	public static boolean place(final int tox, final int toy) {
 		if (!JavelinApp.context.allowmove(tox, toy)) {
-			// JavelinApp.context.map.addThing(t, t.x, t.y);
 			return false;
 		}
-		if (JavelinApp.context.validatepoint(tox, toy)) {
-			t.remove();
-			// t.getMap().removeThing(t);
-			t.x = tox;
-			t.y = toy;
+		if (!JavelinApp.context.validatepoint(tox, toy)) {
+			return false;
 		}
-		JavelinApp.context.updatelocation(t.x, t.y);
-		// JavelinApp.context.map.addThing(t, t.x, t.y);
-		JavelinApp.context.view(t);
+		JavelinApp.context.updatelocation(tox, toy);
+		JavelinApp.context.view(tox, toy);
 		return true;
 	}
 
@@ -181,7 +171,10 @@ public class WorldMove extends WorldAction {
 		}
 	}
 
-	static boolean walk(final Thing t) {
+	static boolean walk(final Point t) {
+		if (Dungeon.active != null) {
+			return true;
+		}
 		final List<Squad> here = new ArrayList<Squad>();
 		for (final WorldActor p : Squad.getall(Squad.class)) {
 			Squad s = (Squad) p;

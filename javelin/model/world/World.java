@@ -5,12 +5,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 
-import javelin.JavelinApp;
+import javelin.controller.Point;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
-import javelin.model.BattleMap;
 import javelin.model.Realm;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
@@ -18,7 +17,6 @@ import javelin.model.world.location.Outpost;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.engine.Point;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -127,16 +125,12 @@ public class World implements Serializable {
 		Town start = null;
 		while (seed == null) {
 			try {
-				WorldScreen.worldmap =
-						new BattleMap(MAPDIMENSION, MAPDIMENSION);
 				seed = new World();
 				seed.generate();
-				JavelinApp.overviewmap = WorldScreen.worldmap;
 				placemoretowns();
 				start = FeatureGenerator.SINGLETON.placestartingfeatures();
 			} catch (RestartWorldGeneration e) {
 				seed = null;
-				JavelinApp.overviewmap = null;
 				Town.initnames();
 				ArrayList<WorldActor> squad =
 						WorldActor.INSTANCES.get(Squad.class);
@@ -157,7 +151,6 @@ public class World implements Serializable {
 		Squad.active.place();
 		Squad.active.equipment.fill(Squad.active);
 		Squad.active.lasttown = start;
-		WorldScreen.worldmap.makeAllInvisible();
 		Outpost.discover(start.x, start.y, Outpost.VISIONRANGE);
 		seed.done = true;
 	}

@@ -1,9 +1,7 @@
 package javelin.controller.action;
 
-import javelin.model.BattleMap;
 import javelin.model.unit.Combatant;
 import javelin.view.frame.keys.BattleKeysScreen;
-import tyrant.mikera.engine.Thing;
 
 public class ConfigureBattleKeys extends Action {
 
@@ -12,7 +10,7 @@ public class ConfigureBattleKeys extends Action {
 	}
 
 	@Override
-	public boolean perform(Combatant active, BattleMap m, Thing thing) {
+	public boolean perform(Combatant active) {
 		new BattleKeysScreen().show();
 		ActionMapping.reset = true;
 		return false;

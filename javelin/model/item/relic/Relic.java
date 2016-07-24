@@ -50,7 +50,7 @@ public abstract class Relic extends Item {
 				Javelin.app.switchScreen(BattleScreen.active);
 				Javelin.message(text, false);
 			} else {
-				Game.message(text, null, Delay.BLOCK);
+				Game.message(text, Delay.BLOCK);
 			}
 			return true;
 		}

@@ -7,17 +7,16 @@ import javelin.controller.Point;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.ai.MeleeAttack;
 import javelin.controller.ai.ChanceNode;
+import javelin.controller.fight.Fight;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.walker.ChargePath;
 import javelin.controller.walker.Step;
 import javelin.controller.walker.Walker;
-import javelin.model.BattleMap;
 import javelin.model.condition.Fatigued;
 import javelin.model.feat.BullRush;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Attack;
 import javelin.model.unit.Combatant;
-import tyrant.mikera.engine.Thing;
 
 /**
  * Charging is a special full-round action that allows you to move up to twice
@@ -34,10 +33,8 @@ public class Charge extends Fire implements AiAction {
 
 	@Override
 	protected void attack(final Combatant combatant,
-			final Combatant targetCombatant, final BattleState s,
-			final BattleMap map) {
-		Action.outcome(
-				charge(map.getState(), combatant, targetCombatant).get(0));
+			final Combatant targetCombatant, final BattleState s) {
+		Action.outcome(charge(Fight.state, combatant, targetCombatant).get(0));
 	}
 
 	ArrayList<List<ChanceNode>> charge(BattleState state, Combatant me,
@@ -168,7 +165,7 @@ public class Charge extends Fire implements AiAction {
 	}
 
 	@Override
-	protected void checkhero(Thing hero) {
+	protected void checkhero(Combatant hero) {
 		return;
 	}
 }

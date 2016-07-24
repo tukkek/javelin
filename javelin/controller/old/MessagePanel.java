@@ -2,20 +2,21 @@
 // Panel for displaying game status messages at the botton of the screen
 //
 
-package tyrant.mikera.tyrant;
+package javelin.controller.old;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 
-import javelin.controller.old.Game;
+import tyrant.mikera.tyrant.IMessageHandler;
+import tyrant.mikera.tyrant.QuestApp;
+import tyrant.mikera.tyrant.TPanel;
+import tyrant.mikera.tyrant.TextZone;
 
 public class MessagePanel extends TPanel implements IMessageHandler {
-	private static final long serialVersionUID = 3258416114332807730L;
 	public final TextZone textzone = new TextZone();
 
-	public MessagePanel(final QuestApp q) {
-		super(q);
+	public MessagePanel() {
 		setLayout(new BorderLayout());
 		textzone.setBackground(QuestApp.PANELCOLOUR);
 		textzone.setForeground(QuestApp.INFOTEXTCOLOUR);

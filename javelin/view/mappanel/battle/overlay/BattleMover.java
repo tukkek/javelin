@@ -97,10 +97,16 @@ public class BattleMover extends Walker {
 		if (current.source.fly == 0 && state.map[x][y].blocked) {
 			return false;
 		}
-		return state.getCombatant(x, y) == null
-				&& (((BattlePanel) BattleScreen.active.mappanel).daylight
-						|| state.hasLineOfSight(current,
-								new Point(x, y)) != Vision.BLOCKED);
+		try {
+			return state.getCombatant(x, y) == null
+					&& (((BattlePanel) BattleScreen.active.mappanel).daylight
+							|| state.hasLineOfSight(current,
+									new Point(x, y)) != Vision.BLOCKED);
+		} catch (NullPointerException e) {
+			return false;
+		} catch (ClassCastException e) {
+			return false;
+		}
 	}
 
 	boolean engaged(final int xp, final int yp) {

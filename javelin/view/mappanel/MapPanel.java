@@ -48,13 +48,17 @@ public abstract class MapPanel extends Panel {
 	}
 
 	protected void updatetilesize() {
-		for (Tile[] ts : tiles) {
-			for (Tile t : ts) {
-				t.setSize(tilesize, tilesize);
+		try {
+			for (Tile[] ts : tiles) {
+				for (Tile t : ts) {
+					t.setSize(tilesize, tilesize);
+				}
 			}
+			updatesize();
+			scroll.validate();
+		} catch (NullPointerException e) {
+			return;
 		}
-		updatesize();
-		scroll.validate();
 	}
 
 	public void init() {
@@ -93,7 +97,11 @@ public abstract class MapPanel extends Panel {
 
 	@Override
 	public Dimension getPreferredSize() {
-		return getParent().getBounds().getSize();
+		try {
+			return getParent().getBounds().getSize();
+		} catch (NullPointerException e) {
+			return new Dimension(0, 0);
+		}
 	}
 
 	protected void ensureminimumsize() {

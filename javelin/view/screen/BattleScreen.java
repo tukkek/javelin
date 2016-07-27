@@ -198,6 +198,7 @@ public class BattleScreen extends Screen {
 				Game.messagepanel.clear();
 				endturn();
 				BattlePanel.current = next;
+				mappanel.refresh();
 				Game.userinterface.waiting = true;
 				final KeyEvent updatableUserAction = getUserInput();
 				if (MapPanel.overlay != null) {
@@ -343,10 +344,13 @@ public class BattleScreen extends Screen {
 			checkEndBattle();
 			Fight.state.checkwhoisnext();
 			final Combatant active = Fight.state.next;
-			BattlePanel.current = active;
 			if (Fight.state.blueTeam.contains(active) && !active.automatic) {
 				lastwascomputermove = null;
 				return;
+			}
+			if (lastwascomputermove == null
+					|| !lastwascomputermove.equals(active)) {
+				BattlePanel.current = active;
 			}
 			lastwascomputermove = active;
 			if (overridefeedback) {

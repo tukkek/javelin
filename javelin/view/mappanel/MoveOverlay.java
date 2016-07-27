@@ -26,9 +26,13 @@ public class MoveOverlay extends Overlay {
 
 	public void walk() {
 		path.walk();
-		for (Step step : path.steps) {
-			affected.add(new Point(step.x, step.y));
-			BattleScreen.active.mappanel.tiles[step.x][step.y].repaint();
+		try {
+			for (Step step : path.steps) {
+				affected.add(new Point(step.x, step.y));
+				BattleScreen.active.mappanel.tiles[step.x][step.y].repaint();
+			}
+		} catch (IndexOutOfBoundsException e) {
+			affected.clear();
 		}
 	}
 

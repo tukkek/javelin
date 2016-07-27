@@ -2,7 +2,6 @@ package javelin.controller.terrain.map;
 
 import javelin.controller.db.Preferences;
 import javelin.controller.terrain.Terrain;
-import javelin.model.world.location.dungeon.Dungeon;
 
 /**
  * Selects and generates a map for a battle.
@@ -25,6 +24,9 @@ public class MapGenerator {
 						"Cannot load map: " + Preferences.DEBUGMAPTYPE);
 			}
 		}
-		return (dungeon ? Dungeon.getmaps() : t.getmaps()).pick();
+		if (dungeon) {
+			t = Terrain.UNDERGROUND;
+		}
+		return t.getmaps().pick();
 	}
 }

@@ -84,7 +84,8 @@ public class BattlePanel extends MapPanel {
 	}
 
 	private void calculatevision(final HashSet<Point> update) {
-		final HashSet<Point> seen = current.calculatevision(Fight.state);
+		final HashSet<Point> seen =
+				Fight.state.clone(current).calculatevision(Fight.state);
 		for (Point p : seen) { // seen
 			BattleTile t = (BattleTile) tiles[p.x][p.y];
 			if (update != null && (!t.discovered || t.shrouded)) {

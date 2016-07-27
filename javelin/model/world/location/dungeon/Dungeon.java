@@ -13,9 +13,7 @@ import javelin.controller.exception.GaveUpException;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
 import javelin.controller.generator.feature.FeatureGenerator;
-import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
-import javelin.controller.terrain.map.Maps;
 import javelin.model.Realm;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.Key;
@@ -295,16 +293,6 @@ public class Dungeon extends Location {
 	@Override
 	protected Integer getel(int attackel) {
 		return attackel - 3;
-	}
-
-	/**
-	 * @return Possible battle maps.
-	 * @see Terrain#getmaps()
-	 */
-	public static Maps getmaps() {
-		Maps m = new Maps();
-		m.add(new javelin.controller.terrain.map.Caves());
-		return m;
 	}
 
 	/**

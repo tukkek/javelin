@@ -1,7 +1,11 @@
 package javelin.controller.terrain;
 
 import javelin.controller.terrain.map.Maps;
-import javelin.model.world.location.dungeon.Dungeon;
+import javelin.controller.terrain.map.underground.BigCave;
+import javelin.controller.terrain.map.underground.Caves;
+import javelin.controller.terrain.map.underground.Floor;
+import javelin.controller.terrain.map.underground.Maze;
+import javelin.controller.terrain.map.underground.Pit;
 
 /**
  * See {@link Terrain#UNDERGROUND}.
@@ -16,6 +20,12 @@ public class Underground extends Terrain {
 
 	@Override
 	public Maps getmaps() {
-		return Dungeon.getmaps();
+		Maps m = new Maps();
+		m.add(new Caves());
+		m.add(new BigCave());
+		m.add(new Maze());
+		m.add(new Pit());
+		m.add(new Floor());
+		return m;
 	}
 }

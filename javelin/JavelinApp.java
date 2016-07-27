@@ -298,7 +298,7 @@ public class JavelinApp extends QuestApp {
 		System.out.println((UpgradeHandler.singleton.count() - spells.size())
 				+ " upgrades, " + (spells.size() - summon + 1) + " spells, "
 				+ UpgradeHandler.singleton.countskills() + " skills");
-		int maps = Dungeon.getmaps().size();
+		int maps = Terrain.UNDERGROUND.getmaps().size();
 		for (Terrain t : Terrain.ALL) {
 			maps += t.getmaps().size();
 		}

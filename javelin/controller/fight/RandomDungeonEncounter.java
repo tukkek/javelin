@@ -3,7 +3,7 @@ package javelin.controller.fight;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.controller.terrain.map.Caves;
+import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 
 /**
@@ -14,7 +14,7 @@ import javelin.model.unit.Combatant;
 public class RandomDungeonEncounter extends RandomEncounter {
 	public RandomDungeonEncounter() {
 		meld = true;
-		map = new Caves();
+		map = Terrain.UNDERGROUND.getmaps().pick();
 		/* TODO enable in Dungeon as well on 2.0 */
 		bribe = false;
 		hide = false;

@@ -76,7 +76,7 @@ public class BattleMouse extends Mouse {
 			return;
 		}
 		if (button == MouseEvent.BUTTON1) {
-			final Combatant current = Fight.state.next;
+			final Combatant current = BattlePanel.current;
 			final Action a = getaction(current, target, s);
 			if (a == Action.MOVE) {
 				if (MapPanel.overlay instanceof MoveOverlay) {
@@ -137,7 +137,7 @@ public class BattleMouse extends Mouse {
 		}
 		BattleScreen.active.messagepanel.clear();
 		try {
-			final Combatant current = Fight.state.next;
+			final Combatant current = BattlePanel.current;
 			final Tile t = (Tile) e.getSource();
 			final BattleState s = Fight.state;
 			final Combatant target = s.getCombatant(t.x, t.y);

@@ -47,7 +47,7 @@ public class Spirit extends Feature {
 				"This nice spirit tells you the location of something important!",
 				false);
 		Dungeon.active.setvisible(show.x, show.y);
-		if (show instanceof Feature) {
+		if (show instanceof Trap) {
 			((Trap) show).discover();
 		}
 		Point p = JavelinApp.context.getherolocation();

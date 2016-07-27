@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javelin.controller.fight.Fight;
 import javelin.controller.upgrade.Spell;
 import javelin.model.condition.Breathless;
 import javelin.model.feat.CombatExpertise;
@@ -20,6 +19,7 @@ import javelin.model.item.Item;
 import javelin.model.spell.Summon;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.tyrant.QuestApp;
@@ -53,7 +53,7 @@ public class StatusPanel extends TPanel {
 	public void paint(final Graphics g) {
 		super.paint(g);
 		nextLine = 0;
-		Combatant hero = Fight.state.next;
+		Combatant hero = BattlePanel.current;
 		if (hero == null || hero.source == null) {
 			return;
 		}

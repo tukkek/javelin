@@ -69,7 +69,7 @@ public class BattleTile extends Tile {
 			}
 		}
 		if (shrouded) {
-			g.setColor(new Color(0, 0, 0, 0.8f));
+			g.setColor(new Color(0, 0, 0, 0.5f));
 			g.fillRect(0, 0, MapPanel.tilesize, MapPanel.tilesize);
 		}
 		if (MapPanel.overlay != null) {

@@ -87,8 +87,7 @@ public class Movement extends Action {
 		try {
 			final BattleState state = Fight.state;
 			boolean disengaging = state.isengaged(hero);
-			final Point to =
-					BattleScreen.active.gameHandler.doDirection(this, state);
+			final Point to = doDirection(this, state);
 			if (to == null) {
 				return false;
 			}
@@ -121,4 +120,82 @@ public class Movement extends Action {
 			Movement.lastmovewasattack = false;
 		}
 	}
+
+	public Point doDirection(final ActionDescription action,
+			final BattleState state) {
+		final Point direction = convertActionToDirection(action);
+		final int tox = state.next.location[0] + direction.x;
+		final int toy = state.next.location[1] + direction.y;
+		return Movement.tryMove(tox, toy, state) ? new Point(tox, toy) : null;
+	}
+
+	public static Point
+			convertActionToDirection(final ActionDescription action) {
+		final Point direction = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
+		if (action == Action.MOVE_N) {
+			direction.x = 0;
+			direction.y = -1;
+		}
+		if (action == Action.MOVE_S) {
+			direction.x = 0;
+			direction.y = 1;
+		}
+		if (action == Action.MOVE_W) {
+			direction.x = -1;
+			direction.y = 0;
+		}
+		if (action == Action.MOVE_E) {
+			direction.x = 1;
+			direction.y = 0;
+		}
+		if (action == Action.MOVE_NW) {
+			direction.x = -1;
+			direction.y = -1;
+		}
+		if (action == Action.MOVE_NE) {
+			direction.x = 1;
+			direction.y = -1;
+		}
+		if (action == Action.MOVE_SW) {
+			direction.x = -1;
+			direction.y = 1;
+		}
+		if (action == Action.MOVE_SE) {
+			direction.x = 1;
+			direction.y = 1;
+		}
+		return direction.x == Integer.MIN_VALUE ? null : direction;
+	}
+
+	/**
+	 * try to move
+	 * 
+	 * @param state
+	 *            TODO use {@link Fight#state} directly.
+	 * 
+	 * @return <code>true</code> if some action taken
+	 */
+	public static boolean tryMove(int tx, int ty, BattleState state) {
+		Meld m = state.getmeld(tx, ty);
+		if (m != null && !m.crystalize(state)) {
+			throw new RepeatTurn();
+		}
+		Combatant c = state.getCombatant(tx, ty);
+		Combatant hero = state.next;
+		if (c != null) {
+			if (!c.isAlly(hero, state)) {
+				if (c.burrowed) {
+					Dig.refuse();
+				}
+				javelin.controller.action.Movement.lastmovewasattack = true;
+				hero.meleeAttacks(c, state);
+				return true;
+			}
+			throw new RepeatTurn();
+		}
+		hero.location[0] = tx;
+		hero.location[1] = ty;
+		return true;
+	}
+
 }

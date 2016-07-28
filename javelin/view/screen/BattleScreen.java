@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.action.Action;
 import javelin.controller.action.Dig;
@@ -535,7 +534,8 @@ public class BattleScreen extends Screen {
 	// get location, initially place crosshairs at start
 	public Point getTargetLocation(Point start) {
 		if (start == null) {
-			start = JavelinApp.context.getherolocation();
+			Combatant active = Fight.state.next;
+			start = new Point(active.location[0], active.location[1]);
 		}
 		setCursor(start.x, start.y);
 		mappanel.viewPosition(start.x, start.y);

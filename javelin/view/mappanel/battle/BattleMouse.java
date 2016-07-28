@@ -137,9 +137,9 @@ public class BattleMouse extends Mouse {
 		}
 		BattleScreen.active.messagepanel.clear();
 		try {
-			final Combatant current = BattlePanel.current;
 			final Tile t = (Tile) e.getSource();
 			final BattleState s = Fight.state;
+			final Combatant current = s.clone(BattlePanel.current);
 			final Combatant target = s.getCombatant(t.x, t.y);
 			final Action a = getaction(current, target, s);
 			if (a == Action.MOVE) {

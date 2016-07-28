@@ -7,6 +7,7 @@ import javelin.view.Images;
  * @see DndMap
  */
 public class Farm extends DndMap {
+	/** Constructor. */
 	public Farm() {
 		super(.1, .4, 0);
 		floor = Images.getImage("terrainforestfloor");

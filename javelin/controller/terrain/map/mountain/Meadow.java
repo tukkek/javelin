@@ -10,6 +10,7 @@ import tyrant.mikera.engine.RPG;
  * @see DndMap
  */
 public class Meadow extends DndMap {
+	/** Constructor. */
 	public Meadow() {
 		super(.2, .3, 0);
 		wallfloor = floor;

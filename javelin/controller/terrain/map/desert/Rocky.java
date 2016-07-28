@@ -12,6 +12,7 @@ import tyrant.mikera.engine.RPG;
  * @see DndMap
  */
 public class Rocky extends DndMap {
+	/** Constructor. */
 	public Rocky() {
 		super(0, .6, 0);
 		floor = Images.getImage("terraindesert");

@@ -10,6 +10,7 @@ import javelin.view.Images;
  * @see DndMap
  */
 public class Forbidding extends DndMap {
+	/** Constructor. */
 	public Forbidding() {
 		super(.4, 0, 0);
 		floor = Images.getImage("terrainplains");

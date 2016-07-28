@@ -7,6 +7,7 @@ import javelin.view.Images;
  * @see DndMap
  */
 public class Sparse extends DndMap {
+	/** Constructor. */
 	public Sparse() {
 		super(.3, 0, 0);
 		wallfloor = floor;

@@ -11,10 +11,21 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public abstract class DndMap extends Map {
+	/** Width and height. */
 	public static final int SIZE = 35;
 
 	double walls, obstacles, water;
 
+	/**
+	 * Percentages in 0-1 (0%-100%).
+	 * 
+	 * @param wallsp
+	 *            Percentage of {@link #walls}.
+	 * @param obstaclesp
+	 *            Percentage of {@link #obstacles}.
+	 * @param waterp
+	 *            Percentage of {@link #water}.
+	 */
 	public DndMap(double wallsp, double obstaclesp, double waterp) {
 		super(SIZE, SIZE);
 		walls = wallsp;

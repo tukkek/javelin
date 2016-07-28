@@ -8,6 +8,7 @@ import javelin.view.Images;
  * @see DndMap
  */
 public class Swamp extends DndMap {
+	/** Constructor. */
 	public Swamp() {
 		super(.2, .2, .6);
 		floor = Images.getImage("terrainmarsh");

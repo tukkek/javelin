@@ -7,6 +7,7 @@ import javelin.view.Images;
  * @see DndMap
  */
 public class Battlefield extends DndMap {
+	/** Constructor. */
 	public Battlefield() {
 		super(.1, .2, 0);
 		floor = Images.getImage("terrainforestfloor");

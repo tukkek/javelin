@@ -10,6 +10,7 @@ import tyrant.mikera.engine.RPG;
  * @see DndMap
  */
 public class Gentle extends DndMap {
+	/** Constructor. */
 	public Gentle() {
 		super(.1, .4, 0);
 		floor = Images.getImage("terrainforestfloor");

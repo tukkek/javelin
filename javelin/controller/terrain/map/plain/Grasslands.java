@@ -7,6 +7,7 @@ import javelin.view.Images;
  * @see DndMap
  */
 public class Grasslands extends DndMap {
+	/** Constructor. */
 	public Grasslands() {
 		super(.1, .2, 0);
 		floor = Images.getImage("terrainplains");

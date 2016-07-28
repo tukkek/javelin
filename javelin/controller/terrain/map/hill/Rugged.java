@@ -10,6 +10,7 @@ import tyrant.mikera.engine.RPG;
  * @see DndMap
  */
 public class Rugged extends DndMap {
+	/** Constructor. */
 	public Rugged() {
 		super(.1, .7, 0);
 		floor = Images.getImage("terrainforestfloor");

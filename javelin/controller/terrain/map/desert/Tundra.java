@@ -12,6 +12,7 @@ import tyrant.mikera.engine.RPG;
  * @see DndMap
  */
 public class Tundra extends DndMap {
+	/** Constructor. */
 	public Tundra() {
 		super(0, .4, 0);
 		floor = Images.getImage("terrainice");

@@ -11,6 +11,7 @@ import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
+import javelin.model.state.Meld;
 import javelin.model.unit.Attack;
 import javelin.model.unit.Combatant;
 import javelin.view.mappanel.MapPanel;
@@ -93,7 +94,11 @@ public class BattleMouse extends Mouse {
 								c.location[0] = to.x;
 								c.location[1] = to.y;
 								c.ap += to.apcost;
-								Fight.state = move;
+								Meld m = move.getmeld(to.x, to.y);
+								if (m != null) {
+									m.activate(c);
+								}
+								// Fight.state = move;
 							}
 						});
 					}

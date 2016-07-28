@@ -61,7 +61,7 @@ public class BattleTile extends Tile {
 		final Combatant c = Fight.state.getCombatant(x, y);
 		if (c != null) {
 			drawcombatant(g, c, this);
-		} else if (Javelin.app.fight.meld) {
+		} else {
 			for (Meld meld : Fight.state.meld) {
 				if (meld.x == x && meld.y == y) {
 					draw(g, meld.getimage(Fight.state));

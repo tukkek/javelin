@@ -7,6 +7,7 @@ import javelin.controller.action.Movement;
 import javelin.controller.walker.Walker;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
+import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.screen.BattleScreen;
@@ -88,6 +89,10 @@ public class BattleMover extends Walker {
 	}
 
 	protected boolean validatefinal() {
+		Meld m = state.getmeld(targetx, targety);
+		if (m != null && current.ap >= m.meldsat) {
+			return true;
+		}
 		return valid(targetx, targety, state);
 	}
 
@@ -97,11 +102,13 @@ public class BattleMover extends Walker {
 		if (current.source.fly == 0 && state.map[x][y].blocked) {
 			return false;
 		}
+		if (state.getCombatant(x, y) != null || state.getmeld(x, y) != null) {
+			return false;
+		}
 		try {
-			return state.getCombatant(x, y) == null
-					&& (((BattlePanel) BattleScreen.active.mappanel).daylight
-							|| state.hasLineOfSight(current,
-									new Point(x, y)) != Vision.BLOCKED);
+			return (((BattlePanel) BattleScreen.active.mappanel).daylight
+					|| state.hasLineOfSight(current,
+							new Point(x, y)) != Vision.BLOCKED);
 		} catch (NullPointerException e) {
 			return false;
 		} catch (ClassCastException e) {

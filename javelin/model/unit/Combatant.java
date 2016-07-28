@@ -35,6 +35,7 @@ import javelin.model.feat.GreatCleave;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
+import javelin.model.state.Meld;
 import javelin.model.unit.abilities.Spells;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.unique.MercenariesGuild;
@@ -309,7 +310,7 @@ public class Combatant implements Serializable, Cloneable {
 	public void die(BattleState s) {
 		s.remove(this);
 		s.dead.add(this);
-		if (hp <= DEADATHP && Javelin.app.fight.meld) {
+		if ((hp <= DEADATHP && Javelin.app.fight.meld) || Meld.DEBUG) {
 			s.addmeld(location[0], location[1]);
 		}
 	}

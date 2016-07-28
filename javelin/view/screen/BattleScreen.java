@@ -85,6 +85,8 @@ public class BattleScreen extends Screen {
 	public float spentap = 0;
 	public LevelMapPanel levelMap = null;
 
+	private Combatant current;
+
 	static Runnable callback = null;
 
 	public BattleScreen(Image texture) {
@@ -155,7 +157,9 @@ public class BattleScreen extends Screen {
 	 */
 	public void mainLoop() {
 		mappanel.setVisible(false);
-		javelin.controller.Point t = Javelin.app.context.getherolocation();
+		Combatant hero = Fight.state.next;
+		javelin.controller.Point t =
+				new Point(hero.location[0], hero.location[1]);
 		mappanel.setPosition(t.x, t.y);
 		Game.redraw();
 		mappanel.center(t.x, t.y, true);
@@ -183,6 +187,7 @@ public class BattleScreen extends Screen {
 		checkblock();
 		Fight.state.checkwhoisnext();
 		final Combatant next = Fight.state.next;
+		current = next;
 		// final Thing h = setHero(next);
 		if (Fight.state.redTeam.contains(next) || next.automatic) {
 			computerTurn();
@@ -262,8 +267,9 @@ public class BattleScreen extends Screen {
 	}
 
 	protected void updatescreen() {
-		int x = Fight.state.next.location[0];
-		int y = Fight.state.next.location[1];
+		Combatant current = Fight.state.clone(this.current);
+		int x = current.location[0];
+		int y = current.location[1];
 		centerscreen(x, y);
 		view(x, y);
 		if (shownLastMessages) {
@@ -343,18 +349,16 @@ public class BattleScreen extends Screen {
 			checkEndBattle();
 			Fight.state.checkwhoisnext();
 			final Combatant active = Fight.state.next;
+			current = active;
 			if (Fight.state.blueTeam.contains(active) && !active.automatic) {
 				lastwascomputermove = null;
 				return;
-			}
-			if (lastwascomputermove == null
-					|| !lastwascomputermove.equals(active)) {
-				BattlePanel.current = active;
 			}
 			lastwascomputermove = active;
 			if (overridefeedback) {
 				overridefeedback = false;
 			} else {
+				BattlePanel.current = Fight.state.next;
 				computerfeedback("Thinking...\n", Delay.NONE);
 			}
 			if (Javelin.DEBUG) {
@@ -419,6 +423,7 @@ public class BattleScreen extends Screen {
 	}
 
 	public void updatescreen(final ChanceNode state, boolean enableoverrun) {
+		BattlePanel.current = current;
 		final BattleState s = (BattleState) state.n;
 		Fight.state = s;
 		if (lastwascomputermove == null) {
@@ -484,12 +489,12 @@ public class BattleScreen extends Screen {
 				}
 			}
 		}
-		Combatant combatant = Fight.state.next;
 		try {
-			if (combatant.burrowed && !action.allowwhileburrowed) {
+			Combatant current = Fight.state.clone(this.current);
+			if (current.burrowed && !action.allowwhileburrowed) {
 				Dig.refuse();
 			}
-			if (!action.perform(combatant)) {
+			if (!action.perform(current)) {
 				throw new RepeatTurn();
 			}
 		} catch (EndBattle e) {

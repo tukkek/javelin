@@ -2,6 +2,10 @@ package javelin.model.state;
 
 import java.awt.Image;
 
+import javelin.Javelin;
+import javelin.controller.fight.Fight;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.model.unit.Combatant;
 import javelin.view.Images;
 
@@ -12,6 +16,7 @@ import javelin.view.Images;
  * @author alex
  */
 public class Meld {
+	public static final boolean DEBUG = false;
 	public final int x;
 	public final int y;
 	public final float meldsat;
@@ -28,5 +33,11 @@ public class Meld {
 
 	public Image getimage(BattleState state) {
 		return state.next.ap >= meldsat ? Images.crystal : Images.dead;
+	}
+
+	public void activate(Combatant hero) {
+		Game.message(hero + " powers up!", Delay.BLOCK);
+		Javelin.getCombatant(hero.id).meld();
+		Fight.state.meld.remove(this);
 	}
 }

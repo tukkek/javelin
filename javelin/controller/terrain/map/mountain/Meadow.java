@@ -12,7 +12,7 @@ import tyrant.mikera.engine.RPG;
 public class Meadow extends DndMap {
 	/** Constructor. */
 	public Meadow() {
-		super(.2, .3, 0);
+		super("Meadow", .2, .3, 0);
 		wallfloor = floor;
 		wall = Images.getImage("terraintree");
 		rock = Images.getImage("terrainrock2");

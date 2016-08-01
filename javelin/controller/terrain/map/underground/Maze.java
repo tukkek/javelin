@@ -16,6 +16,7 @@ public class Maze extends Caves {
 
 	/** Constructor. */
 	public Maze() {
+		super("Maze");
 		coresize = 0;
 	}
 

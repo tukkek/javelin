@@ -11,7 +11,7 @@ import javelin.view.Images;
 public class Sandy extends DndMap {
 	/** Constructor. */
 	public Sandy() {
-		super(0, .1, 0);
+		super("Sandy desert", 0, .1, 0);
 		floor = Images.getImage("terraindesert");
 		maxflooding = Weather.DRY;
 		obstacle = rock;

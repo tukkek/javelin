@@ -12,7 +12,7 @@ import tyrant.mikera.engine.RPG;
 public class Rugged extends DndMap {
 	/** Constructor. */
 	public Rugged() {
-		super(.3, .2, 0);
+		super("Rugged mountain", .3, .2, 0);
 		rock = Images.getImage("terrainrock2");
 	}
 

@@ -10,7 +10,7 @@ import javelin.view.Images;
 public class Swamp extends DndMap {
 	/** Constructor. */
 	public Swamp() {
-		super(.2, .2, .6);
+		super("Swamp", .2, .2, .6);
 		floor = Images.getImage("terrainmarsh");
 		wallfloor = floor;
 		maxflooding = Weather.DRY;

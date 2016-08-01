@@ -32,6 +32,7 @@ import javelin.model.world.location.fortification.Shrine;
 import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.AdventurersGuild;
+import javelin.model.world.location.unique.Arena;
 import javelin.model.world.location.unique.Artificer;
 import javelin.model.world.location.unique.Haxor;
 import javelin.model.world.location.unique.MercenariesGuild;
@@ -209,6 +210,7 @@ public class FeatureGenerator {
 		spawnnear(easya, Haxor.singleton, seed);
 		spawnnear(easya, new TrainingHall(), seed);
 		spawnnear(easya, new AdventurersGuild(), seed);
+		spawnnear(easya, new Arena(), seed);
 		new MercenariesGuild().place();
 		new Artificer().place();
 		new SummoningCircle().place();

@@ -12,6 +12,7 @@ import tyrant.mikera.engine.RPG;
 public class BigCave extends Caves {
 	/** Constructor. */
 	public BigCave() {
+		super("Big cave");
 		coresize = 3;
 	}
 

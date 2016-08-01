@@ -2,8 +2,6 @@ package javelin.view.screen;
 
 import java.awt.Image;
 import java.awt.event.KeyEvent;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -343,9 +341,7 @@ public class WorldScreen extends BattleScreen {
 			hps.add(vital + " Level "
 					+ Math.round(Math.floor(
 							ChallengeRatingCalculator.calculateCr(c.source)))
-					+ " " + c.xp.multiply(new BigDecimal(100)).setScale(0,
-							RoundingMode.HALF_UP)
-					+ "XP");
+					+ " " + c.gethumanxp());
 		}
 		return hps;
 	}

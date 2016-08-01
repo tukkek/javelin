@@ -14,7 +14,7 @@ import tyrant.mikera.engine.RPG;
 public class Tundra extends DndMap {
 	/** Constructor. */
 	public Tundra() {
-		super(0, .4, 0);
+		super("Tundra", 0, .4, 0);
 		floor = Images.getImage("terrainice");
 		maxflooding = Weather.DRY;
 	}

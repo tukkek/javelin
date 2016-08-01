@@ -21,8 +21,8 @@ public class Caves extends Map {
 	int coresize = 1;
 
 	/** Constructor. */
-	public Caves() {
-		super(SIZE, SIZE);
+	public Caves(String namep) {
+		super(namep, SIZE, SIZE);
 		maxflooding = Weather.DRY;
 		if (Dungeon.active instanceof TempleDungeon) {
 			floor = Images.getImage(Dungeon.active.floor);
@@ -32,6 +32,10 @@ public class Caves extends Map {
 			wall = Images.getImage("terraindungeonwall");
 		}
 		obstacle = rock;
+	}
+
+	public Caves() {
+		this("Caves");
 	}
 
 	@Override

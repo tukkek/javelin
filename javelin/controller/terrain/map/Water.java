@@ -10,7 +10,7 @@ import javelin.view.Images;
 public class Water extends DndMap {
 	/** Constructor. */
 	public Water() {
-		super(0, 0, 1);
+		super("Water", 0, 0, 1);
 		flooded = Images.getImage("terrainaquatic");
 	}
 }

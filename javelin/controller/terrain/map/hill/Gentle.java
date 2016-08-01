@@ -12,7 +12,7 @@ import tyrant.mikera.engine.RPG;
 public class Gentle extends DndMap {
 	/** Constructor. */
 	public Gentle() {
-		super(.1, .4, 0);
+		super("Gentle hill", .1, .4, 0);
 		floor = Images.getImage("terrainforestfloor");
 		wallfloor = floor;
 		wall = Images.getImage("terraintree");

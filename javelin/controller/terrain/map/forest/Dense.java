@@ -9,7 +9,7 @@ import javelin.view.Images;
 public class Dense extends DndMap {
 	/** Constructor. */
 	public Dense() {
-		super(.4, .3, 0);
+		super("Dense forest", .4, .3, 0);
 		wallfloor = floor;
 		wall = Images.getImage("terraintreeforest");
 	}

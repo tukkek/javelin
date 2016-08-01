@@ -9,7 +9,7 @@ import javelin.view.Images;
 public class Grasslands extends DndMap {
 	/** Constructor. */
 	public Grasslands() {
-		super(.1, .2, 0);
+		super("Grasslands", .1, .2, 0);
 		floor = Images.getImage("terrainplains");
 		wallfloor = floor;
 		wall = Images.getImage("terraintree");

@@ -2,6 +2,7 @@ package javelin.model.unit;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -732,5 +733,13 @@ public class Combatant implements Serializable, Cloneable {
 	public boolean isadjacent(Combatant target) {
 		return Math.abs(location[0] - target.location[0]) <= 1
 				&& Math.abs(location[1] - target.location[1]) <= 1;
+	}
+
+	/**
+	 * @return XP in human readeable format (ex: 150XP).
+	 */
+	public String gethumanxp() {
+		return xp.multiply(new BigDecimal(100)).setScale(0,
+				RoundingMode.HALF_UP) + "XP";
 	}
 }

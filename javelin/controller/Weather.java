@@ -7,6 +7,7 @@ import javelin.controller.db.Preferences;
 import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
+import javelin.model.world.Season;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -16,23 +17,36 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Weather {
-	static private Integer[] DISTRIBUTION = new Integer[] { 0, 0, 1, 2 };
-	static private double[] RATIO = new double[] { 0.0, .1, .5 };
 	static public int DRY = 0;
 	static public int RAIN = 1;
 	static public int STORM = 2;
+	static private Integer[] DISTRIBUTION =
+			new Integer[] { DRY, DRY, RAIN, STORM };
+	static private double[] RATIO = new double[] { 0.0, .1, .5 };
 	public static int current;
 
 	static {
 		read(0);
 	}
 
+	/**
+	 * Changes the weather, possibly.
+	 * 
+	 * @see Season#getweather()
+	 */
 	public static void weather() {
 		if (Preferences.DEBUGWEATHER != null) {
 			current = read(0);
 			return;
 		}
-		int roll = RPG.pick(DISTRIBUTION);
+		int roll =
+				RPG.r(0, DISTRIBUTION.length - 1) + Season.current.getweather();
+		if (roll < 0) {
+			roll = 0;
+		} else if (roll >= DISTRIBUTION.length) {
+			roll = DISTRIBUTION.length - 1;
+		}
+		roll = DISTRIBUTION[roll];
 		if (roll > current) {
 			current += 1;
 		} else if (roll < current) {

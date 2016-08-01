@@ -9,6 +9,10 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Pit extends Caves {
+	public Pit() {
+		super("Pit");
+	}
+
 	@Override
 	public void generate() {
 		int seeds = SIZE * SIZE / 4;

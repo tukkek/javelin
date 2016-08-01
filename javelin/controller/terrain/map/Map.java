@@ -35,11 +35,14 @@ public abstract class Map {
 	/** See {@link Weather}. By default allows any extent of flooding. */
 	public int maxflooding = Weather.STORM;
 
+	public String name;
+
 	/**
 	 * Construcor based on map size. By default all {@link Square}s are
 	 * completely free.
 	 */
-	public Map(int width, int height) {
+	public Map(String namep, int width, int height) {
+		name = namep;
 		map = new Square[width][height];
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -92,5 +95,10 @@ public abstract class Map {
 	 */
 	public boolean validate() {
 		return true;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return name.equals(((Map) obj).name);
 	}
 }

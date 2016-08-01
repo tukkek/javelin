@@ -9,7 +9,7 @@ import javelin.view.Images;
 public class Sparse extends DndMap {
 	/** Constructor. */
 	public Sparse() {
-		super(.3, 0, 0);
+		super("Sparse forest", .3, 0, 0);
 		wallfloor = floor;
 		wall = Images.getImage("terraintreeforest");
 	}

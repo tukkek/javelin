@@ -1,6 +1,7 @@
 package javelin.model.world;
 
 import javelin.Javelin;
+import javelin.controller.Weather;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
 import tyrant.mikera.engine.RPG;
@@ -53,5 +54,19 @@ public enum Season {
 	public String toString() {
 		String name = super.toString();
 		return name.charAt(0) + name.substring(1).toLowerCase();
+	}
+
+	/**
+	 * @return Wetness bonus or penalty.
+	 * @see Weather
+	 */
+	public int getweather() {
+		if (equals(SUMMER)) {
+			return +1;
+		}
+		if (equals(AUTUMN)) {
+			return -1;
+		}
+		return 0;
 	}
 }

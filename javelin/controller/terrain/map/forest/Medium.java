@@ -9,7 +9,7 @@ import javelin.view.Images;
 public class Medium extends DndMap {
 	/** Constructor. */
 	public Medium() {
-		super(.3, .2, 0);
+		super("Forest", .3, .2, 0);
 		wallfloor = floor;
 		wall = Images.getImage("terraintreeforest");
 	}

@@ -321,7 +321,7 @@ public class JavelinApp extends QuestApp {
 			}
 			System.out.println();
 			ItemSelection inventory = allitems.get(realm);
-			for (int i = 0; i < inventory.size(); i++) {
+			for (int i = 0; inventory != null && i < inventory.size(); i++) {
 				Item item = inventory.get(i).clone();
 				item.shop();
 				System.out.println(

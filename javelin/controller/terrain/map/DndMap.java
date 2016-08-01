@@ -26,8 +26,9 @@ public abstract class DndMap extends Map {
 	 * @param waterp
 	 *            Percentage of {@link #water}.
 	 */
-	public DndMap(double wallsp, double obstaclesp, double waterp) {
-		super(SIZE, SIZE);
+	public DndMap(String namep, double wallsp, double obstaclesp,
+			double waterp) {
+		super(namep, SIZE, SIZE);
 		walls = wallsp;
 		obstacles = obstaclesp;
 		water = waterp;

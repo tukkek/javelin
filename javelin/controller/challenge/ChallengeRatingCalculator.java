@@ -94,7 +94,7 @@ public class ChallengeRatingCalculator {
 	 * @param monster
 	 *            Unit whose CR is to be calculated.
 	 * @return An array where index 0 is the sum of all {@link #CR_FACTORS} and
-	 *         1 is the same after the golden rule has been aplied.
+	 *         1 is the same after the golden rule has been applied.
 	 */
 	public static float[] calculaterawcr(final Monster monster) {
 		log(monster.toString());

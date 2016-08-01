@@ -13,6 +13,7 @@ public class Floor extends Caves {
 
 	/** Constructor. */
 	public Floor() {
+		super("Dungeon floor");
 		coresize = 0;
 	}
 

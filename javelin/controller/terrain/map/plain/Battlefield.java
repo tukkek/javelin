@@ -9,7 +9,7 @@ import javelin.view.Images;
 public class Battlefield extends DndMap {
 	/** Constructor. */
 	public Battlefield() {
-		super(.1, .2, 0);
+		super("Battlefield", .1, .2, 0);
 		floor = Images.getImage("terrainforestfloor");
 		wallfloor = floor;
 		obstacle = rock;

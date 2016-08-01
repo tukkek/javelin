@@ -199,6 +199,12 @@ public class UpgradeHandler {
 		addall(schooltransmutation, all, "schooltransmutation");
 		addall(schooldivination, all, "schooldivination");
 
+		HashSet<Upgrade> classes = new HashSet<Upgrade>();
+		for (ClassAdvancement ca : ClassAdvancement.CLASSES) {
+			classes.add(ca);
+		}
+		addall(classes, all, "classlevels");
+
 		return all;
 	}
 

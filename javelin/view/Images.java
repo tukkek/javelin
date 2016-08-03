@@ -23,6 +23,10 @@ import javelin.model.world.location.town.Town;
  * @author alex
  */
 public class Images {
+	static final TreeMap<String, Image> CACHE = new TreeMap<String, Image>();
+	static final TreeMap<String, Image> BURIEDCACHE =
+			new TreeMap<String, Image>();
+
 	/** @see {@link Combatant#ispenalized(javelin.model.state.BattleState)} */
 	public static final Image PENALIZED =
 			Images.maketransparent(3 / 4f, Images.getImage("overlaypenalized"));
@@ -35,16 +39,12 @@ public class Images {
 	/** Show while a {@link Meld} is being generated. */
 	public static final Image DEAD = Images.getImage("overlaydead");
 	/** Show when a {@link Meld} is generated. */
-	public static final Image MELD = Images.getImage("overlaycrystal");
+	public static final Image MELD = Images.getImage("overlaymeld");
 	/** @see Location#ishostile() */
 	public static final Image HOSTILE = Images.getImage("overlayhostile");
 	/** @see Town#ishosting() */
 	public static final Image TOURNAMENT =
 			Images.getImage("locationtournament");
-
-	static final TreeMap<String, Image> CACHE = new TreeMap<String, Image>();
-	static final TreeMap<String, Image> BURIEDCACHE =
-			new TreeMap<String, Image>();
 
 	/**
 	 * @param combatant

@@ -27,7 +27,9 @@ import tyrant.mikera.engine.RPG;
 public class MercenariesGuild extends UniqueLocation {
 	private static final int STARTINGMERCENARIES = 9;
 	static boolean DEBUG = false;
+	/** Available mercenaries. */
 	public ArrayList<Combatant> mercenaries = new ArrayList<Combatant>();
+	/** All mercenaries. */
 	public ArrayList<Combatant> all = new ArrayList<Combatant>();
 
 	/** Constructor. */
@@ -156,9 +158,13 @@ public class MercenariesGuild extends UniqueLocation {
 		return fee * roundto;
 	}
 
-	public void receive(Combatant c) {
-		if (all.contains(c)) {
-			mercenaries.add(c);
+	/**
+	 * @param returning
+	 *            Returns a mercenary to {@link #mercenaries}.
+	 */
+	public void receive(Combatant returning) {
+		if (all.contains(returning)) {
+			mercenaries.add(returning);
 		}
 	}
 

@@ -11,7 +11,7 @@ import javelin.view.screen.Option;
  * @author alex
  */
 public abstract class PurchaseScreen extends SelectScreen {
-
+	/** <code>true</code> if transaction was finalized. */
 	protected boolean bought;
 
 	/** Constructor. See {@link SelectScreen#SelectScreen(String, Town)}. */

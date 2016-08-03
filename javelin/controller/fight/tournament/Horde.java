@@ -17,7 +17,7 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public class Horde extends Exhibition {
-
+	/** Constructor. */
 	public Horde() {
 		super("Horde");
 	}

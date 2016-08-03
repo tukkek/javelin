@@ -11,6 +11,7 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class RemoveAbility extends Hax {
+	/** Constructor. */
 	public RemoveAbility(String name, Character keyp, double price,
 			boolean requirestargetp) {
 		super(name, keyp, price, requirestargetp);

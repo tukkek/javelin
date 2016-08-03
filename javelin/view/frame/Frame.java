@@ -3,15 +3,19 @@ package javelin.view.frame;
 import java.awt.Button;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Panel;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.AbstractAction;
 import javax.swing.JFrame;
+import javax.swing.JRootPane;
+import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 
 /**
@@ -21,7 +25,7 @@ import javax.swing.WindowConstants;
  */
 public abstract class Frame {
 
-	public class UpdateFrame extends ComponentAdapter {
+	class UpdateFrame extends ComponentAdapter {
 		boolean first = true;
 
 		@Override
@@ -35,6 +39,7 @@ public abstract class Frame {
 	}
 
 	private static final int BLOCKINTERVAL = 500;
+	/** Actual visual component. */
 	public JFrame frame;
 	boolean hidden = false;
 
@@ -46,6 +51,45 @@ public abstract class Frame {
 		frame = new JFrame(title);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		frame.addComponentListener(new UpdateFrame());
+		addaction(KeyEvent.VK_ESCAPE, new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				escape();
+			}
+		});
+		addaction(KeyEvent.VK_ENTER, new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				enter();
+			}
+		});
+	}
+
+	/**
+	 * @param key
+	 *            Key to be associated with this event. For example:
+	 *            {@link KeyEvent#VK_ENTER}.
+	 * @param action
+	 *            Action to perform.
+	 */
+	protected void addaction(int key, AbstractAction action) {
+		JRootPane root = frame.getRootPane();
+		root.getInputMap().put(KeyStroke.getKeyStroke(key, 0), key);
+		root.getActionMap().put(key, action);
+	}
+
+	/**
+	 * Called when ENTER is pressed. By default closes the frame;
+	 */
+	protected void enter() {
+		frame.dispose();
+	}
+
+	/**
+	 * Called when ESCAPE is pressed. By default closes the frame;
+	 */
+	protected void escape() {
+		frame.dispose();
 	}
 
 	/**
@@ -135,11 +179,14 @@ public abstract class Frame {
 		parent.block(this);
 	}
 
-	protected static Button newbutton(String label, ActionListener action,
-			Panel parent) {
+	/** Adds a button with the given action to the parent. */
+	protected static Button newbutton(String label, Container parent,
+			ActionListener action) {
 		Button b = new Button(label);
 		b.addActionListener(action);
-		parent.add(b);
+		if (parent != null) {
+			parent.add(b);
+		}
 		return b;
 	}
 

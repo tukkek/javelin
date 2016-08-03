@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javelin.Javelin;
+import javelin.controller.action.Examine;
 import javelin.controller.upgrade.Spell;
 import javelin.model.condition.Breathless;
 import javelin.model.feat.CombatExpertise;
@@ -18,7 +20,6 @@ import javelin.model.feat.ImprovedTrip;
 import javelin.model.item.Item;
 import javelin.model.spell.Summon;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Squad;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
@@ -32,13 +33,14 @@ import tyrant.mikera.tyrant.TPanel;
  */
 public class StatusPanel extends TPanel {
 	private static final long serialVersionUID = 3905800885761095223L;
-	public static final int boxborder = 1;
-	public static final Color powercolor = new Color(0, 128, 60);
-	public static int charwidth = 0;
-	public static int charheight = 0;
-	public static int charmaxascent = 0;
-	private int nextLine;
+	static final int boxborder = 1;
+	static final Color powercolor = new Color(0, 128, 60);
+	static int charwidth = 0;
+	static int charheight = 0;
+	static int charmaxascent = 0;
+	int nextLine;
 
+	/** Constructor. */
 	public StatusPanel() {
 		super();
 		setBackground(QuestApp.PANELCOLOUR);
@@ -57,8 +59,8 @@ public class StatusPanel extends TPanel {
 		if (hero == null || hero.source == null) {
 			return;
 		}
-		if (BattleScreen.lastlooked != null) {
-			hero = BattleScreen.lastlooked;
+		if (Examine.lastlooked != null) {
+			hero = Examine.lastlooked;
 		}
 		String helper = "";
 		for (final char c : (maininfo(hero) + movementdata(hero)
@@ -74,7 +76,7 @@ public class StatusPanel extends TPanel {
 	}
 
 	private String itemdata(Combatant combatant) {
-		List<Item> equipment = Squad.active.equipment.get(combatant.id);
+		List<Item> equipment = Javelin.app.fight.getbag(combatant);
 		ArrayList<String> listing = new ArrayList<String>();
 		for (Item i : equipment) {
 			String extra = i.canuse(combatant);
@@ -101,7 +103,7 @@ public class StatusPanel extends TPanel {
 		return listlist("Spells", listing);
 	}
 
-	public String listlist(String title, List<String> listing) {
+	String listlist(String title, List<String> listing) {
 		if (listing.isEmpty()) {
 			return "";
 		}
@@ -165,7 +167,7 @@ public class StatusPanel extends TPanel {
 		return status;
 	}
 
-	public String maininfo(Combatant combatant) {
+	String maininfo(Combatant combatant) {
 		final String customname = combatant.source.customName;
 		String status = combatant.getStatus();
 		return (customname != null ? customname : combatant.source.name) + "\n"
@@ -176,7 +178,7 @@ public class StatusPanel extends TPanel {
 				+ "\n\n";
 	}
 
-	public String passivedata(final Combatant combatant) {
+	String passivedata(final Combatant combatant) {
 		String status = "";
 		if (combatant.source.fasthealing > 0) {
 			status +=
@@ -194,7 +196,7 @@ public class StatusPanel extends TPanel {
 		return nextLine += 15;
 	}
 
-	public static void paintBar(final Graphics g, final int x, final int y,
+	static void paintBar(final Graphics g, final int x, final int y,
 			final int w, final int h, final Color f, final Color b,
 			float amount) {
 		if (amount > 1) {
@@ -212,7 +214,7 @@ public class StatusPanel extends TPanel {
 		paintBox(g, x, y, w, h, false);
 	}
 
-	public static int paintLabel(final Graphics g, final String s, final int x,
+	static int paintLabel(final Graphics g, final String s, final int x,
 			final int y) {
 		g.setColor(QuestApp.INFOTEXTCOLOUR);
 
@@ -222,7 +224,7 @@ public class StatusPanel extends TPanel {
 	}
 
 	// paint a boxed area, raised or lowered
-	public static void paintBox(final Graphics g, final int x, final int y,
+	static void paintBox(final Graphics g, final int x, final int y,
 			final int w, final int h, final boolean raised) {
 		if (raised) {
 			g.setColor(QuestApp.PANELHIGHLIGHT);

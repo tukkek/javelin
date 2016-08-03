@@ -50,7 +50,9 @@ public class EndBattle extends BattleEvent {
 		Fight.victory = Javelin.app.fight.win(screen);
 		BattleState s = Fight.state;
 		terminateconditions(s, screen);
-		Javelin.app.fight.onEnd(screen, originalTeam, s);
+		if (!Javelin.app.fight.onEnd(screen, originalTeam, s)) {
+			return;
+		}
 		AiCache.reset();
 		if (Squad.active != null
 				&& nsquads == Squad.getall(Squad.class).size()) {
@@ -131,7 +133,7 @@ public class EndBattle extends BattleEvent {
 		}
 	}
 
-	public static void update(final Combatant from, final Combatant to) {
+	static void update(final Combatant from, final Combatant to) {
 		to.hp = from.hp;
 		if (to.hp > to.maxhp) {
 			to.hp = to.maxhp;
@@ -139,7 +141,6 @@ public class EndBattle extends BattleEvent {
 			to.hp = 1;
 		}
 		copyspells(from, to);
-		// to.automatic = from.automatic;
 	}
 
 	static void copyspells(final Combatant from, final Combatant to) {

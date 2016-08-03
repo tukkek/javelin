@@ -226,7 +226,7 @@ public abstract class Temple extends UniqueLocation {
 	}
 
 	/** See {@link Fight#getterrains(Terrain)}; */
-	public ArrayList<Terrain> getterrains(Terrain t) {
+	public ArrayList<Terrain> getterrains() {
 		ArrayList<Terrain> terrains = new ArrayList<Terrain>();
 		terrains.add(Terrain.UNDERGROUND);
 		terrains.add(terrain);

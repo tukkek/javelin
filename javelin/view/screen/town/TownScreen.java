@@ -41,13 +41,14 @@ public class TownScreen extends PurchaseScreen {
 
 	private Squad entering;
 
+	/** Constructor. */
 	public TownScreen(final Town t) {
 		super(title(t), t);
 		entering = Squad.active;
 		show();
 	}
 
-	protected static String title(final WorldActor t) {
+	static String title(final WorldActor t) {
 		return "Welcome to " + t + "!";
 	}
 
@@ -175,7 +176,7 @@ public class TownScreen extends PurchaseScreen {
 						+ ChallengeRatingCalculator.calculateel(town.garrison);
 			} else {
 				final boolean debugcomputerai =
-						DEBUGMANAGEMENT && town.research.queue.isEmpty();
+						town.research.queue.isEmpty() && DEBUGMANAGEMENT;
 				output += "    Queue: " + (debugcomputerai ? town.nexttask
 						: town.research.queue);
 			}

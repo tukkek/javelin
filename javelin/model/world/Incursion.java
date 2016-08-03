@@ -9,6 +9,7 @@ import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.battle.StartBattle;
+import javelin.controller.fight.Fight;
 import javelin.controller.fight.IncursionFight;
 import javelin.controller.fight.RandomEncounter;
 import javelin.controller.terrain.Terrain;
@@ -60,8 +61,9 @@ public class Incursion extends WorldActor {
 		this.x = x;
 		this.y = y;
 		if (squadp == null) {
-			squad.addAll(new RandomEncounter().generate(Incursion.currentel,
-					Terrain.get(x, y)));
+			ArrayList<Terrain> terrains = new ArrayList<Terrain>(1);
+			terrains.add(Terrain.get(x, y));
+			squad.addAll(Fight.generate(Incursion.currentel, terrains));
 			currentel += 1;
 		} else {
 			squad = squadp;

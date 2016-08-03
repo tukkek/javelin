@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 import javelin.Javelin;
 import javelin.controller.exception.battle.EndBattle;
-import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.Lair;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.tyrant.QuestApp;
 
@@ -21,9 +21,11 @@ import tyrant.mikera.tyrant.QuestApp;
  * @author alex
  */
 public class LairFight extends Fight {
+	/** Texture for {@link Dungeon} fights. */
 	public static final Image DUNGEONTEXTURE =
 			QuestApp.getImage("/images/texture1.png");
 
+	/** Constructor. */
 	public LairFight() {
 		texture = DUNGEONTEXTURE;
 		meld = true;
@@ -86,12 +88,9 @@ public class LairFight extends Fight {
 	}
 
 	@Override
-	public ArrayList<Combatant> generate(int teamel, Terrain terrain) {
-		ArrayList<Combatant> foes = super.generate(teamel - 2, terrain);
-		foes.addAll(super.generate(teamel - 2, terrain));
-		// while (foes.size() == 1 && Preferences.DEBUGFOE == null) {
-		// foes = super.generate(teamel, terrain);
-		// }
+	public ArrayList<Combatant> generate(int teamel) {
+		ArrayList<Combatant> foes = super.generate(teamel - 2);
+		foes.addAll(super.generate(teamel - 2));
 		return foes;
 	}
 

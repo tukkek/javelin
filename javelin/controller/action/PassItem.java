@@ -2,13 +2,13 @@ package javelin.controller.action;
 
 import java.util.ArrayList;
 
+import javelin.Javelin;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.item.Item;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Squad;
 import javelin.view.screen.InfoScreen;
 
 /**
@@ -17,9 +17,11 @@ import javelin.view.screen.InfoScreen;
  * @author alex
  */
 public class PassItem extends Action {
+	/** Unique instance for this class. */
 	public static final Action SINGLETON = new PassItem();
 
-	public PassItem() {
+	/** Constructor. */
+	private PassItem() {
 		super("Pass item to nearby ally", "p");
 	}
 
@@ -56,8 +58,8 @@ public class PassItem extends Action {
 			final Combatant giver = getmonster(me);
 			receiver.ap += .5f;
 			giver.ap += .5f;
-			Squad.active.equipment.get(giver.id).remove(item);
-			Squad.active.equipment.get(receiver.id).add(item);
+			Javelin.app.fight.getbag(giver).remove(item);
+			Javelin.app.fight.getbag(receiver).add(item);
 		} catch (final NumberFormatException e) {
 		} catch (final IndexOutOfBoundsException e) {
 		}
@@ -65,7 +67,7 @@ public class PassItem extends Action {
 		return true;
 	}
 
-	public static Combatant getmonster(final Combatant receiverc) {
+	static Combatant getmonster(final Combatant receiverc) {
 		for (final Combatant c : Fight.state.getCombatants()) {
 			if (c.toString() == receiverc.toString()) {
 				return c;

@@ -14,7 +14,7 @@ import javelin.view.screen.InfoScreen;
  * @author alex
  */
 public class Help extends Action {
-
+	/** Constructor. */
 	public Help() {
 		super("help", new String[] { "h", "?" });
 		allowwhileburrowed = true;
@@ -26,6 +26,10 @@ public class Help extends Action {
 		return false;
 	}
 
+	/**
+	 * @param actions
+	 *            Show a help screen for these given actions.
+	 */
 	static public void help(ActionDescription[] actions) {
 		String text = "These are all the available commands on this screen.\n"
 				+ "Movement is also used to attack adjacent enemies, enter locations, interact with objects, etc.\n\n";

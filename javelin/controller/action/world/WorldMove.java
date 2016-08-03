@@ -90,6 +90,11 @@ public class WorldMove extends WorldAction {
 		move(t.x + deltax, t.y + deltay, true);
 	}
 
+	/**
+	 * TODO needs to be refactored
+	 * 
+	 * @see BattleScreen
+	 */
 	public static boolean move(int tox, int toy, boolean encounter) {
 		final WorldScreen s = (WorldScreen) BattleScreen.active;
 		Squad.active.lastterrain = Terrain.current();
@@ -151,6 +156,9 @@ public class WorldMove extends WorldAction {
 		}
 	}
 
+	/**
+	 * @return <code>true</code> if moved current actor to the given location.
+	 */
 	public static boolean place(final int tox, final int toy) {
 		if (!JavelinApp.context.allowmove(tox, toy)) {
 			return false;

@@ -19,6 +19,7 @@ import javelin.view.screen.WorldScreen;
  */
 public class Park extends WorldAction {
 
+	/** Constructor. */
 	public Park() {
 		super("Park your vehicle", new int[] { KeyEvent.VK_P },
 				new String[] { "p" });

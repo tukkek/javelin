@@ -9,6 +9,7 @@ import javelin.view.screen.BattleScreen;
  */
 public class ZoomIn extends Action {
 
+	/** Constructor. */
 	public ZoomIn() {
 		super("Zoom in", new String[] { "+", "=" });
 		allowwhileburrowed = true;

@@ -51,6 +51,7 @@ public class Win extends Hax {
 			"An earthquake, squirting fire, bursting ground\nSatan's screaming, and earth swallowing him away!\n",
 			"You're the Keeper of the Seven Keys\nYou locked up the seven seas\nAnd the Seer of Visions can now rest in peace\nThere ain't no more demons and no more disease\nAnd, mankind, live up, you're free again\nYes the tyrant is dead, he is gone, overthrown\nYou have given our souls back to light\n\n    \"Keeper of the seven keys\", by the german power metal band Helloween\n", };
 
+	/** Constructor. */
 	public Win(String name, Character keyp, double price,
 			boolean requirestargetp) {
 		super(name, keyp, price, requirestargetp);

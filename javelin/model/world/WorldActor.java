@@ -246,11 +246,21 @@ public abstract class WorldActor implements Serializable {
 	 */
 	abstract public List<Combatant> getcombatants();
 
+	/**
+	 * @return Visual representation of this actor.
+	 */
 	abstract public Image getimage();
 
+	/**
+	 * @return Textual representation of this actor.
+	 */
 	abstract public String describe();
 
-	public boolean isadjacent(Squad active) {
+	/**
+	 * @return <code>true</code> if both these actors are touching each other in
+	 *         the {@link WorldScreen}.
+	 */
+	public boolean isadjacent(WorldActor active) {
 		return Math.abs(x - active.x) <= 1 && Math.abs(y - active.y) <= 1;
 	}
 }

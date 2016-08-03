@@ -8,7 +8,6 @@ import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.Preferences;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.exception.GaveUpException;
-import javelin.controller.fight.Fight;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -41,14 +40,14 @@ public class EncounterGenerator {
 	 * @return Enemy units for an encounter.
 	 * @throws GaveUpException
 	 */
-	public static ArrayList<Combatant> generate(int el, Terrain terrain)
-			throws GaveUpException {
+	public static ArrayList<Combatant> generate(int el,
+			ArrayList<Terrain> terrains) throws GaveUpException {
 		if (javelin.controller.db.Preferences.DEBUGFOE != null) {
 			return debugmonster();
 		}
 		ArrayList<Combatant> encounter = null;
 		for (int i = 0; i < MAXTRIES; i++) {
-			encounter = select(el, terrain);
+			encounter = select(el, terrains);
 			if (encounter == null) {
 				continue;
 			}
@@ -76,7 +75,7 @@ public class EncounterGenerator {
 		return opponents;
 	}
 
-	static ArrayList<Combatant> select(int elp, Terrain terrain) {
+	static ArrayList<Combatant> select(int elp, ArrayList<Terrain> terrains) {
 		ArrayList<Integer> popper = new ArrayList<Integer>();
 		popper.add(elp);
 		while (RPG.r(0, 1) == 1) {
@@ -88,7 +87,7 @@ public class EncounterGenerator {
 		}
 		final ArrayList<Combatant> foes = new ArrayList<Combatant>();
 		for (final int el : popper) {
-			List<Combatant> group = makeencounter(el, terrain);
+			List<Combatant> group = makeencounter(el, terrains);
 			if (group == null) {
 				return null;
 			}
@@ -144,12 +143,10 @@ public class EncounterGenerator {
 		return Squad.active.members.size() + 5;
 	}
 
-	static List<Combatant> makeencounter(final int el, Terrain hint) {
+	static List<Combatant> makeencounter(final int el,
+			ArrayList<Terrain> terrains) {
 		List<Encounter> possibilities = new ArrayList<Encounter>();
 		int maxel = Integer.MIN_VALUE;
-		ArrayList<Terrain> terrains =
-				Javelin.app.fight == null ? Fight.getdefaultterrains(hint)
-						: Javelin.app.fight.getterrains(hint);
 		for (Terrain t : terrains) {
 			EncounterIndex index = Organization.ENCOUNTERS.get(t.toString());
 			if (index != null) {
@@ -161,7 +158,7 @@ public class EncounterGenerator {
 			}
 		}
 		if (el > maxel) {
-			return makeencounter(maxel, hint);
+			return makeencounter(maxel, terrains);
 		}
 		return possibilities.isEmpty() ? null
 				: RPG.pick(possibilities).generate();

@@ -7,13 +7,14 @@ import java.awt.Panel;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.action.Action;
+import javelin.controller.action.ActionMapping;
 import javelin.controller.action.Dig;
+import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.world.WorldAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.ThreadManager;
@@ -33,10 +34,7 @@ import javelin.view.StatusPanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.battle.BattlePanel;
-import javelin.view.mappanel.battle.overlay.TargetOverlay;
-import tyrant.mikera.tyrant.GameHandler;
 import tyrant.mikera.tyrant.IActionHandler;
-import tyrant.mikera.tyrant.LevelMapPanel;
 import tyrant.mikera.tyrant.QuestApp;
 import tyrant.mikera.tyrant.Screen;
 
@@ -55,20 +53,34 @@ import tyrant.mikera.tyrant.Screen;
  * TODO many things this is actually handling should be moved to {@link Fight}
  * controllers instead.
  * 
+ * TODO {@link BattleScreen} should not be the supertype for {@link WorldScreen}
+ * and such. Extract a proper super type or move everything to a proper context
+ * controller. Would probably be better to make this a unified ContextScreen and
+ * delegate all differences to the context objects.
+ * 
  * @author alex
  */
 public class BattleScreen extends Screen {
 
-	private static final long serialVersionUID = 3907207143852421428L;
-
-	public static List<Combatant> originalredteam;
+	/** Blue team at the moment the {@link Fight} begins. */
 	public static List<Combatant> originalblueteam;
-	static public Combatant lastlooked = null;
+	/** Red team at the moment the {@link Fight} begins. */
+	public static List<Combatant> originalredteam;
+	/**
+	 * Active {@link BattleScreen} implementation.
+	 * 
+	 * @see WorldScreen
+	 * @see DungeonScreen
+	 */
+	public static BattleScreen active;
+	static Runnable callback = null;
 
+	/** Visual representation of a {@link BattleState}. */
 	public MapPanel mappanel;
+	/** Text output component. */
 	public MessagePanel messagepanel;
+	/** Unit info component. */
 	public StatusPanel statuspanel;
-	public GameHandler gameHandler = new GameHandler();
 
 	List<IActionHandler> actionHandlers;
 	ArrayList<String> lastMessages = new ArrayList<String>();
@@ -77,40 +89,28 @@ public class BattleScreen extends Screen {
 	Combatant lastwascomputermove;
 	boolean firstvision;
 	boolean allvisible;
-
+	/** Units that ran away from the fight. */
 	public ArrayList<Combatant> fleeing = new ArrayList<Combatant>();
 	/**
 	 * Allows the human player to use up to .5AP of movement before ending turn.
 	 */
 	public float spentap = 0;
-	public LevelMapPanel levelMap = null;
+	Combatant current;
 
-	private Combatant current;
-
-	static Runnable callback = null;
-
+	/**
+	 * @param texture
+	 *            Background texture.
+	 */
 	public BattleScreen(Image texture) {
 		super();
 		Javelin.settexture(texture);
 	}
 
-	public void addActionHandler(final IActionHandler actionHandler) {
-		if (actionHandlers == null) {
-			actionHandlers = new LinkedList<IActionHandler>();
-		}
-		actionHandlers.add(actionHandler);
-	}
-
-	public void setGameHandler(final GameHandler gameHandler) {
-		this.gameHandler = gameHandler;
-	}
-
-	public GameHandler getGameHandler() {
-		return gameHandler;
-	}
-
-	public static BattleScreen active;
-
+	/**
+	 * @param addsidebar
+	 *            If <code>true</code> will add a {@link StatusPanel} to this
+	 *            screen.
+	 */
 	public BattleScreen(boolean addsidebar) {
 		BattleScreen.active = this;
 		setForeground(Color.white);
@@ -127,26 +127,19 @@ public class BattleScreen extends Screen {
 		statuspanel = new StatusPanel();
 		if (addsidebar) {
 			cp.add("Center", statuspanel);
-			// if (addminimap()) {
-			// levelMap = new LevelMapPanel();
-			// }
 		}
 		setFont(QuestApp.mainfont);
-		// Game.enterMap(map, Game.hero().x, Game.hero().y);
 		Javelin.app.switchScreen(this);
 		BattleScreen.active = this;
 		Game.delayblock = false;
-		initmap();
 		mappanel.repaint();
 	}
 
+	/**
+	 * @return Map panel implementation for this screen.
+	 */
 	protected MapPanel getmappanel() {
 		return new BattlePanel(Fight.state);
-	}
-
-	/** Initializes this screen instance. */
-	protected void initmap() {
-		// map.makeAllInvisible();
 	}
 
 	/**
@@ -169,6 +162,7 @@ public class BattleScreen extends Screen {
 		}
 	}
 
+	/** An iteration of the {@link #mainLoop()}. */
 	public void step() {
 		try {
 			checkEndBattle();
@@ -179,16 +173,12 @@ public class BattleScreen extends Screen {
 		humanTurn();
 	}
 
-	protected void removehero() {
-		// Game.hero().remove();
-	}
-
+	/** Routine for human interaction. */
 	protected void humanTurn() {
 		checkblock();
 		Fight.state.checkwhoisnext();
 		final Combatant next = Fight.state.next;
 		current = next;
-		// final Thing h = setHero(next);
 		if (Fight.state.redTeam.contains(next) || next.automatic) {
 			computerTurn();
 			return;
@@ -251,13 +241,12 @@ public class BattleScreen extends Screen {
 		int listen = next.source.perceive(false);
 		for (Combatant c : Fight.state.redTeam) {
 			if (listen >= c.movesilently() + (Walker.distance(next, c) - 1)) {
-				// map.seeTile(c.location[0], c.location[1]);
-				// map.setVisible(c.location[0], c.location[1]);
 				mappanel.tiles[c.location[0]][c.location[1]].discovered = true;
 			}
 		}
 	}
 
+	/** Processes {@link Game#delayblock}. */
 	public void checkblock() {
 		if (Game.delayblock) {
 			Game.delayblock = false;
@@ -266,6 +255,7 @@ public class BattleScreen extends Screen {
 		}
 	}
 
+	/** Redraws screen. */
 	protected void updatescreen() {
 		Combatant current = Fight.state.clone(this.current);
 		int x = current.location[0];
@@ -278,15 +268,14 @@ public class BattleScreen extends Screen {
 		}
 		statuspanel.repaint();
 		Game.redraw();
-		if (levelMap != null) {
-			levelMap.repaint();
-		}
 	}
 
+	/** Like {@link #centerscreen(int, int, boolean)} but without forcing. */
 	public void centerscreen(int x, int y) {
 		centerscreen(x, y, false);
 	}
 
+	/** TODO */
 	public void view(int x, int y) {
 		if (Javelin.app.fight.period == Javelin.PERIODEVENING
 				|| Javelin.app.fight.period == Javelin.PERIODNIGHT) {
@@ -294,8 +283,6 @@ public class BattleScreen extends Screen {
 				firstvision = false;
 				return;
 			}
-			initmap();
-			// h.calculateVision();
 			listen(Fight.state.next);
 		} else if (!allvisible) {
 			for (javelin.view.mappanel.Tile[] ts : mappanel.tiles) {
@@ -307,17 +294,23 @@ public class BattleScreen extends Screen {
 		}
 	}
 
+	/** TODO clean this flow. */
 	public void centerscreen(int x, int y, boolean force) {
 		if (mappanel.center(x, y, force)) {
 			mappanel.viewPosition(x, y);
-			return;
 		}
 	}
 
+	/**
+	 * @throws EndBattle
+	 */
 	public void checkEndBattle() {
 		Javelin.app.fight.checkEndBattle(this);
 	}
 
+	/**
+	 * @return <code>true</code> if there are any active enemies here.
+	 */
 	public boolean checkforenemies() {
 		for (Combatant c : Fight.state.redTeam) {
 			if (c.hascondition(Dominated.class) == null) {
@@ -327,11 +320,7 @@ public class BattleScreen extends Screen {
 		return false;
 	}
 
-	public void afterend() {
-		return;
-	}
-
-	private void updateMessages(final ArrayList<String> messageList) {
+	void updateMessages(final ArrayList<String> messageList) {
 		for (final String s : messageList) {
 			Game.messagepanel.add(s + "\n");
 		}
@@ -340,7 +329,7 @@ public class BattleScreen extends Screen {
 		Game.messagepanel.getPanel().repaint();
 	}
 
-	private void computerTurn() {
+	void computerTurn() {
 		overridefeedback = false;
 		spentap = 0;
 		while (!Fight.state.blueTeam.isEmpty()) {
@@ -394,7 +383,7 @@ public class BattleScreen extends Screen {
 
 	static void cleanwounded(ArrayList<Combatant> team, BattleState s) {
 		for (Combatant c : (List<Combatant>) team.clone()) {
-			if (c.getNumericStatus() <= 2) {
+			if (c.getNumericStatus() <= Javelin.app.fight.friendlylevel) {
 				if (team == s.blueTeam) {
 					BattleScreen.active.fleeing.add(c);
 				}
@@ -414,6 +403,11 @@ public class BattleScreen extends Screen {
 		}
 	}
 
+	/**
+	 * Shows the result of an {@link AiAction}.
+	 * 
+	 * @see Game#message(String, Delay)
+	 */
 	public void computerfeedback(String s, Delay delay) {
 		messagepanel.clear();
 		if (lastwascomputermove != null) {
@@ -422,6 +416,15 @@ public class BattleScreen extends Screen {
 		Game.message(s, delay);
 	}
 
+	/**
+	 * Redraws screen.
+	 * 
+	 * @param state
+	 *            New state is {@link ChanceNode#n}.
+	 * @param enableoverrun
+	 *            If <code>true</code> may ignore {@link Delay#WAIT} and let the
+	 *            next automaric unit think instead.
+	 */
 	public void updatescreen(final ChanceNode state, boolean enableoverrun) {
 		BattlePanel.current = current;
 		final BattleState s = (BattleState) state.n;
@@ -454,11 +457,15 @@ public class BattleScreen extends Screen {
 		performAction(action, isShiftDown);
 	}
 
+	/**
+	 * @return Gets action for this event
+	 * @throws RepeatTurn
+	 */
 	public Action convertEventToAction(final KeyEvent keyEvent) {
 		if (rejectEvent(keyEvent)) {
 			throw new RepeatTurn();
 		}
-		return gameHandler.actionFor(keyEvent);
+		return ActionMapping.SINGLETON.getaction(keyEvent);
 	}
 
 	/**
@@ -467,10 +474,6 @@ public class BattleScreen extends Screen {
 	public KeyEvent getUserInput() {
 		Game.instance().clearMessageList();
 		return Game.getInput();
-	}
-
-	protected boolean addminimap() {
-		return true;
 	}
 
 	/**
@@ -525,7 +528,7 @@ public class BattleScreen extends Screen {
 		spentap = 0;
 	}
 
-	/*
+	/**
 	 * BUG Fix for
 	 * http://sourceforge.net/tracker/index.php?func=detail&aid=1088187
 	 * &group_id=16696&atid=116696 Ignore Alt keypresses, we may need to add
@@ -534,279 +537,6 @@ public class BattleScreen extends Screen {
 	protected boolean rejectEvent(final KeyEvent keyEvent) {
 		return (keyEvent.getModifiers() | InputEvent.ALT_DOWN_MASK) > 0
 				&& keyEvent.getKeyCode() == 18;
-	}
-
-	// get location, initially place crosshairs at start
-	public Point getTargetLocation(Point start) {
-		if (start == null) {
-			Combatant active = Fight.state.next;
-			start = new Point(active.location[0], active.location[1]);
-		}
-		setCursor(start.x, start.y);
-		mappanel.viewPosition(start.x, start.y);
-		// initial look
-		doLookPoint(getcursor());
-		// get interesting stuff to see
-		// Note that the hero is incidentally also seen
-		// So there should be no worries of an empty list
-		// final List stuff = map.findStuff(Game.hero(), BattleMap.FILTER_ITEM
-		// + BattleMap.FILTER_MONSTER);
-		// int stuffIndex = 0;
-
-		// repaint the status panel
-		statuspanel.repaint();
-		// TODO : get 'x' and 'l' working
-		try {
-			while (true) {
-				final KeyEvent e = Game.getInput();
-				if (e == null) {
-					continue;
-				}
-				int dx = 0;
-				int dy = 0;
-				switch (BattleScreen.convertkey(e)) {
-				case '8':
-					dx = 0;
-					dy = -1;
-					break;
-				case '2':
-					dx = 0;
-					dy = 1;
-					break;
-				case '4':
-					dx = -1;
-					dy = 0;
-					break;
-				case '6':
-					dx = 1;
-					dy = 0;
-					break;
-				case '7':
-					dx = -1;
-					dy = -1;
-					break;
-				case '9':
-					dx = 1;
-					dy = -1;
-					break;
-				case '1':
-					dx = -1;
-					dy = 1;
-					break;
-				case '3':
-					dx = 1;
-					dy = 1;
-					break;
-				case 'v':
-					Point cursor = getcursor();
-					for (Combatant c : Fight.state.getCombatants()) {
-						if (c.location[0] == cursor.x
-								&& c.location[1] == cursor.y) {
-							new StatisticsScreen(c);
-							break;
-						}
-					}
-					break;
-				case 'q':
-					clearCursor();
-					return null;
-				default:
-					Point getcursor = getcursor();
-					clearCursor();
-					return getcursor;
-				}
-				Point cursor = getcursor();
-				int x = BattleScreen.checkbounds(cursor.x + dx,
-						Fight.state.map.length);
-				int y = BattleScreen.checkbounds(cursor.y + dy,
-						Fight.state.map[0].length);
-				setCursor(x, y);
-				mappanel.viewPosition(x, y);
-				doLookPoint(getcursor());
-			}
-		} finally {
-			lastlooked = null;
-		}
-	}
-
-	private void clearCursor() {
-		if (MapPanel.overlay != null) {
-			MapPanel.overlay.clear();
-		}
-	}
-
-	private Point getcursor() {
-		TargetOverlay cursor = (TargetOverlay) MapPanel.overlay;
-		return new Point(cursor.x, cursor.y);
-	}
-
-	private void setCursor(int x, int y) {
-		clearCursor();
-		MapPanel.overlay = new TargetOverlay(x, y);
-		mappanel.refresh();
-	}
-
-	static private char convertkey(final KeyEvent e) {
-		// handle key conversions
-		switch (e.getKeyCode()) {
-		case KeyEvent.VK_UP:
-			return '8';
-		case KeyEvent.VK_DOWN:
-			return '2';
-		case KeyEvent.VK_LEFT:
-			return '4';
-		case KeyEvent.VK_RIGHT:
-			return '6';
-		case KeyEvent.VK_HOME:
-			return '7';
-		case KeyEvent.VK_END:
-			return '1';
-		case KeyEvent.VK_PAGE_UP:
-			return '9';
-		case KeyEvent.VK_PAGE_DOWN:
-			return '3';
-		case KeyEvent.VK_ESCAPE:
-			return 'q';
-		default:
-			return Character.toLowerCase(e.getKeyChar());
-		}
-	}
-
-	static private int checkbounds(int i, int upperbound) {
-		if (i < 0) {
-			return 0;
-		}
-		return i < upperbound ? i : upperbound - 1;
-	}
-
-	public static char getKey(final KeyEvent e) {
-		// handle key conversions
-		int keyCode = e.getKeyCode();
-		if (keyCode == KeyEvent.VK_UP) {
-			return '8';
-		}
-		if (keyCode == KeyEvent.VK_DOWN) {
-			return '2';
-		}
-		if (keyCode == KeyEvent.VK_LEFT) {
-			return '4';
-		}
-		if (keyCode == KeyEvent.VK_RIGHT) {
-			return '6';
-		}
-		if (keyCode == KeyEvent.VK_HOME) {
-			return '7';
-		}
-		if (keyCode == KeyEvent.VK_END) {
-			return '1';
-		}
-		if (keyCode == KeyEvent.VK_PAGE_UP) {
-			return '9';
-		}
-		if (keyCode == KeyEvent.VK_PAGE_DOWN) {
-			return '3';
-		}
-		if (keyCode == KeyEvent.VK_ESCAPE) {
-			return 'Q';
-		}
-		if (keyCode == KeyEvent.VK_ENTER) {
-			return 'Q';
-		}
-		if (keyCode == KeyEvent.VK_F1) {
-			return '?';
-		}
-		if (keyCode == KeyEvent.VK_F2) {
-			return '(';
-		}
-		if (keyCode == KeyEvent.VK_F3) {
-			return ')';
-		}
-		if (keyCode == KeyEvent.VK_F4) {
-			return '*';
-		}
-		if (keyCode == KeyEvent.VK_F5) {
-			return ':';
-		}
-		if (keyCode == KeyEvent.VK_TAB) {
-			return '\t';
-		}
-		return Character.toLowerCase(e.getKeyChar());
-	}
-
-	public void doLook() {
-		doLookPoint(getTargetLocation(null));
-	}
-
-	private void doLookPoint(final Point p) {
-		if (p == null) {
-			return;
-		}
-		if (!mappanel.tiles[p.x][p.y].discovered) {
-			lookmessage("Can't see");
-			return;
-		}
-		lookmessage("");
-		lastlooked = null;
-		final BattleState state = Fight.state;
-		final Combatant combatant = Fight.state.getCombatant(p.x, p.y);
-		if (combatant != null) {
-			lookmessage(describestatus(combatant, state));
-			lastlooked = combatant;
-		} else if (state.map[p.x][p.y].flooded) {
-			lookmessage("Flooded");
-		} else if (Javelin.app.fight.map.map[p.x][p.y].blocked) {
-			lookmessage("Blocked");
-		}
-		BattleScreen.active.statuspanel.repaint();
-	}
-
-	static public String describestatus(final Combatant combatant,
-			final BattleState state) {
-		final ArrayList<String> statuslist = combatant.liststatus(state);
-		if (statuslist.isEmpty()) {
-			return combatant.toString();
-		}
-		String description = combatant + " (";
-		for (final String status : statuslist) {
-			description += status + ", ";
-		}
-		return description.substring(0, description.length() - 2) + ")\n";
-	}
-
-	private void lookmessage(final String string) {
-		messagepanel.clear();
-		Game.message(
-				"Examine: move the cursor over another combatant, press v to view character sheet.\n\n"
-						+ string,
-				Delay.NONE);
-		Game.redraw();
-	}
-
-	/**
-	 * @param mappanel
-	 *            The mappanel to set.
-	 */
-	public void setMappanel(final MapPanel mappanel) {
-		this.mappanel = mappanel;
-	}
-
-	public LevelMapPanel getLevelMap() {
-		return levelMap;
-	}
-
-	public void setposition() {
-		// Point hero = JavelinApp.context.getherolocation();
-
-		mappanel.setPosition(Fight.state.next.location[0],
-				Fight.state.next.location[1]);
-	}
-
-	public boolean drawbackground() {
-		return true;
-	}
-
-	public Square getsquare(int x, int y) {
-		return Javelin.app.fight.map.map[x][y];
 	}
 
 	/**

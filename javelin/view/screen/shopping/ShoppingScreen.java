@@ -20,13 +20,20 @@ import javelin.view.screen.town.PurchaseScreen;
  * @author alex
  */
 public abstract class ShoppingScreen extends PurchaseScreen {
-
+	/** Constructor. */
 	public ShoppingScreen(String s, Town t) {
 		super(s, t);
 	}
 
+	/**
+	 * @param o
+	 *            Called after an option has been acquired.
+	 */
 	protected abstract void afterpurchase(final PurchaseOption o);
 
+	/**
+	 * @return Available items.
+	 */
 	protected abstract ItemSelection getitems();
 
 	@Override
@@ -75,7 +82,7 @@ public abstract class ShoppingScreen extends PurchaseScreen {
 		return " (" + super.printpriceinfo(o).substring(1) + ")" + useinfo;
 	}
 
-	public static String listactivemembers() {
+	static String listactivemembers() {
 		int i = 1;
 		String s = "";
 		for (final Combatant m : Squad.active.members) {

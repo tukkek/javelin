@@ -13,32 +13,29 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public abstract class WorldAction implements ActionDescription {
+	/** Guide. */
 	public static final Guide HOWTO =
 			new Guide(KeyEvent.VK_F1, "How to play", "F1");
+	/** Guide. */
 	public static final Guide ARTIFACTS =
 			new Guide(KeyEvent.VK_F2, "Artifacts", "F2");
-	public static final Guide CONDITIONS1 =
-			new Guide(KeyEvent.VK_F3, "Conditions 1", "F3");
-	public static final Guide CONDITIONS2 =
-			new Guide(KeyEvent.VK_F4, "Conditions 2", "F4");
-	public static final Guide ITEMS = new Guide(KeyEvent.VK_F5, "Items", "F5");
-	public static final Guide SKILLS1 =
-			new Guide(KeyEvent.VK_F6, "Skills 1", "F6");
-	public static final Guide SKILLS2 =
-			new Guide(KeyEvent.VK_F7, "Skills 2", "F7");
-	public static final Guide SPELLS1 =
-			new Guide(KeyEvent.VK_F8, "Spells 1", "F8");
-	public static final Guide SPELLS2 =
-			new Guide(KeyEvent.VK_F9, "Spells 2", "F9");
-	public static final Guide UGRADES1 =
-			new Guide(KeyEvent.VK_F10, "Upgrades 1", "F10");
-	public static final Guide UGRADES2 =
-			new Guide(KeyEvent.VK_F11, "Upgrades 2", "F11");
-
-	String name;
-	public final int[] keys;
-	public final String[] morekeys;
+	/** Guide. */
+	public static final Guide CONDITIONS =
+			new Guide(KeyEvent.VK_F3, "Conditions", "F3");
+	/** Guide. */
+	public static final Guide ITEMS = new Guide(KeyEvent.VK_F4, "Items", "F4");
+	/** Guide. */
+	public static final Guide SKILLS =
+			new Guide(KeyEvent.VK_F5, "Skills", "F5");
+	/** Guide. */
+	public static final Guide SPELLS =
+			new Guide(KeyEvent.VK_F6, "Spells", "F6");
+	/** Guide. */
+	public static final Guide UGRADES =
+			new Guide(KeyEvent.VK_F7, "Upgrades", "F7");
+	/** All world actions. */
 	public static final WorldAction[] ACTIONS = new WorldAction[] { //
+			new OpenArena(), // a
 			new Camp(), // c
 			new Divide(), // d
 			new UseItems(), // i
@@ -54,8 +51,7 @@ public abstract class WorldAction implements ActionDescription {
 			new ConfigureWorldKeys(), // K
 			new Abandon(), // Q
 			new ResetScore(), // R
-			HOWTO, ARTIFACTS, CONDITIONS1, CONDITIONS2, ITEMS, SKILLS1, SKILLS2,
-			SPELLS1, SPELLS2, UGRADES1, UGRADES2,
+			HOWTO, ARTIFACTS, CONDITIONS, ITEMS, SKILLS, SPELLS, UGRADES,
 			new WorldMove(new int[] { KeyEvent.VK_NUMPAD7, }, -1, -1,
 					new String[] { "U", "↖ or 7 or U" }),
 			new WorldMove(new int[] { KeyEvent.VK_UP, KeyEvent.VK_NUMPAD8 }, 0,
@@ -74,18 +70,27 @@ public abstract class WorldAction implements ActionDescription {
 					new String[] { ">", "↘ or 3 or >" }),
 			new WorldHelp(), };
 
-	public WorldAction(final String name, final int[] is,
+	/** Action name. */
+	public String name;
+	/** {@link Integer} key cods. */
+	public final int[] keys;
+	/** Text keys. Useful for showing the player. */
+	public final String[] morekeys;
+
+	/** Constructor. */
+	public WorldAction(final String name, final int[] keysp,
 			final String[] morekeysp) {
 		this.name = name;
-		keys = is;
+		keys = keysp;
 		morekeys = morekeysp;
 	}
 
-	@Deprecated
-	public WorldAction(final String name2, final int[] is) {
-		this(name2, is, new String[] {});
-	}
-
+	/**
+	 * Executes action.
+	 * 
+	 * @param screen
+	 *            Current screen.
+	 */
 	abstract public void perform(WorldScreen screen);
 
 	@Override

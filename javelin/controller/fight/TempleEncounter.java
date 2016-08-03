@@ -24,6 +24,7 @@ import tyrant.mikera.engine.RPG;
 public class TempleEncounter extends RandomDungeonEncounter {
 	Temple temple;
 
+	/** Constructor. */
 	public TempleEncounter(Temple temple) {
 		this.temple = temple;
 	}
@@ -41,10 +42,11 @@ public class TempleEncounter extends RandomDungeonEncounter {
 	}
 
 	@Override
-	public void onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
+	public boolean onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
 			BattleState s) {
 		super.onEnd(screen, originalTeam, s);
 		Temple.leavingfight = true;
+		return true;
 	}
 
 	@Override
@@ -53,7 +55,7 @@ public class TempleEncounter extends RandomDungeonEncounter {
 	}
 
 	@Override
-	public ArrayList<Terrain> getterrains(Terrain t) {
-		return temple.getterrains(t);
+	public ArrayList<Terrain> getterrains() {
+		return temple.getterrains();
 	}
 }

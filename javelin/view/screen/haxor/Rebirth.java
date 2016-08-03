@@ -14,6 +14,7 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public class Rebirth extends Hax {
+	/** Constructor. */
 	public Rebirth(String name, Character keyp, double price,
 			boolean requirestargetp) {
 		super(name, keyp, price, requirestargetp);

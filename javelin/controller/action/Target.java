@@ -201,6 +201,9 @@ public abstract class Target extends Action {
 				target.location[1]);
 	}
 
+	/**
+	 * @return Text with the name of the target and chance to hit.
+	 */
 	public String describehitchance(Combatant active, final Combatant target,
 			BattleState state) {
 		return target + " (" + target.getStatus() + ", " + Javelin

@@ -6,11 +6,9 @@ import javelin.Javelin;
 import javelin.controller.BattleSetup;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.fight.Fight;
-import javelin.controller.generator.encounter.GeneratedFight;
 import javelin.controller.terrain.Terrain;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Squad;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.screen.BattleScreen;
 
@@ -32,19 +30,18 @@ public class StartBattle extends BattleEvent {
 	/** Prepares and switches to a {@link BattleScreen}. */
 	public void battle() {
 		Fight.state = new BattleState(fight);
-		Fight.state.blueTeam = Squad.active.members;
-		Terrain t = Terrain.current();
-		ArrayList<Combatant> foes = fight.generate(t.getel(
-				ChallengeRatingCalculator.calculateel(Fight.state.blueTeam)),
-				t);
+		Fight.state.blueTeam = fight.getblueteam();
+		ArrayList<Combatant> foes = fight.generate(Terrain.current().getel(
+				ChallengeRatingCalculator.calculateel(Fight.state.blueTeam)));
 		if (fight.avoid(foes)) {
 			return;
 		}
-		Javelin.app.preparebattle(new GeneratedFight(foes).opponents);
+		Javelin.app.preparebattle(foes);
 		BattleSetup.place();
 		Fight.state.checkwhoisnext();
+		fight.ready();
 		BattlePanel.current = Fight.state.next;
-		final BattleScreen battleScreen = fight.getscreen();
+		BattleScreen battleScreen = new BattleScreen(true);
 		try {
 			battleScreen.mainLoop();
 		} catch (final EndBattle end) {

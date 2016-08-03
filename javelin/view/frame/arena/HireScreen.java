@@ -18,17 +18,29 @@ import javax.swing.event.ChangeListener;
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.world.location.unique.Arena;
 import javelin.view.frame.Frame;
 
+/**
+ * Allows one to acquire {@link Arena#gladiators}.
+ * 
+ * @author alex
+ */
 public class HireScreen extends Frame {
+	/**
+	 * How much a hireling costs per challenge rating ({@value #COSTPERCR}
+	 * coins).
+	 */
+	public static final int COSTPERCR = 5;
 
 	static final int MAXCR = Math.round(Javelin.MONSTERSBYCR.lastKey());
 
 	List list = new List(20, false);
 	JSlider slider;
 	ArrayList<Monster> candidates = new ArrayList<Monster>();
-	int costmultiplier = 10;
+	int costmultiplier = COSTPERCR;
 
+	/** Constructor. */
 	public HireScreen() {
 		super("Hire a gladiator");
 		frame.setMinimumSize(getdialogsize());
@@ -42,9 +54,7 @@ public class HireScreen extends Frame {
 				Math.round(Math.round(Math.floor(
 						ArenaWindow.arena.coins / new Float(costmultiplier)))),
 				MAXCR);
-		slider = new JSlider(1, max, max);
-		slider.setMajorTickSpacing(1);
-		slider.setPaintLabels(true);
+		slider = newslider(1, max, max);
 		slider.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
@@ -62,17 +72,21 @@ public class HireScreen extends Frame {
 		hire.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int selection = list.getSelectedIndex();
-				if (selection < 0) {
-					return;
-				}
-				Monster gladiator = candidates.get(selection);
-				ArenaWindow.arena.coins -= getcoins(gladiator);
-				select(new Combatant(gladiator.clone(), true));
-				frame.dispose();
+				enter();
 			}
 		});
 		return parent;
+	}
+
+	/**
+	 * @return New slider with common configuration.
+	 * @see JSlider#JSlider(int, int, int)
+	 */
+	static public JSlider newslider(int min, int max, int current) {
+		JSlider slider = new JSlider(min, max, current);
+		slider.setMajorTickSpacing(1);
+		slider.setPaintLabels(true);
+		return slider;
 	}
 
 	private void update() {
@@ -89,7 +103,7 @@ public class HireScreen extends Frame {
 		}
 	}
 
-	public int getcoins(Monster m) {
+	int getcoins(Monster m) {
 		return costmultiplier
 				* Math.round(Math.round(Math.ceil(m.challengeRating)));
 	}
@@ -111,7 +125,23 @@ public class HireScreen extends Frame {
 		return s;
 	}
 
+	/**
+	 * @param c
+	 *            Selected unit.
+	 */
 	protected void select(Combatant c) {
 		ArenaWindow.arena.gladiators.add(c);
+	}
+
+	@Override
+	protected void enter() {
+		int selection = list.getSelectedIndex();
+		if (selection < 0) {
+			return;
+		}
+		Monster gladiator = candidates.get(selection);
+		ArenaWindow.arena.coins -= getcoins(gladiator);
+		select(new Combatant(gladiator.clone(), true));
+		frame.dispose();
 	}
 }

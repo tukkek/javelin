@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Checkbox;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.GridLayout;
 import java.awt.Label;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
@@ -12,41 +13,84 @@ import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
+import javelin.controller.Weather;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.exception.battle.StartBattle;
-import javelin.controller.fight.RandomEncounter;
-import javelin.controller.terrain.Terrain;
-import javelin.controller.terrain.map.Map;
+import javelin.controller.fight.ArenaFight;
 import javelin.model.unit.Combatant;
+import javelin.model.world.location.unique.Arena;
 import javelin.view.screen.SquadScreen;
 import tyrant.mikera.engine.RPG;
 
+/**
+ * Configures parameters for a {@link ArenaFight} in exchange for
+ * {@link Arena#coins}.
+ * 
+ * @author alex
+ */
 public class ArenaSetup extends javelin.view.frame.Frame {
 	ActionListener dochangemap = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			drawmap();
+			fight.drawmap();
 			ArenaWindow.arena.coins -= 1;
 			show();
 		}
 	};
-	ActionListener dofight = new ActionListener() {
-
+	ActionListener dochangeperiod = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (map == null) {
-				drawmap();
+			fight.drawperiod();
+			ArenaWindow.arena.coins -= 1;
+			show();
+		}
+	};
+	ActionListener dochangeweather = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			fight.drawweather();
+			ArenaWindow.arena.coins -= 1;
+			show();
+		}
+	};
+	ActionListener doaddmeld = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			fight.nmeld += 1;
+			ArenaWindow.arena.coins -= 1;
+			show();
+		}
+	};
+	ActionListener dobet = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (getroster().isEmpty() && allies.isEmpty()) {
+				JOptionPane.showMessageDialog(frame,
+						"Select some gladiators first!");
+				return;
 			}
+			fight.addgladiators(getroster());
+			fight.addgladiators(allies);
+			fight.generate();
+			frame.setContentPane(drawbetpanel());
+			frame.setLocationRelativeTo(null);
+			frame.pack();
+		}
+	};
+	ActionListener dofight = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
 			parent.action = new Runnable() {
 				@Override
 				public void run() {
-					RandomEncounter fight = new RandomEncounter();
-					fight.map = map;
 					throw new StartBattle(fight);
 				}
 			};
 			frame.dispose();
-			parent.frame.dispose();
 		}
 	};
 	ActionListener doreturn = new ActionListener() {
@@ -68,12 +112,16 @@ public class ArenaSetup extends javelin.view.frame.Frame {
 	};
 
 	ArenaWindow parent;
-	Map map = null;
 	ArrayList<Combatant> allies = new ArrayList<Combatant>();
+	ArrayList<Checkbox> roster =
+			new ArrayList<Checkbox>(ArenaWindow.arena.gladiators.size());
+	final ArenaFight fight;
 
-	public ArenaSetup(ArenaWindow parent) {
+	/** Constructor. */
+	public ArenaSetup(ArenaWindow parent, ArenaFight f) {
 		super("Arena battle setup");
 		this.parent = parent;
+		fight = f;
 		int nallies = RPG.r(3, 5) - ArenaWindow.arena.gladiators.size();
 		while (nallies > 0) {
 			Combatant ally = new Combatant(
@@ -82,22 +130,6 @@ public class ArenaSetup extends javelin.view.frame.Frame {
 			allies.add(ally);
 			nallies -= 1;
 		}
-	}
-
-	void drawmap() {
-		ArrayList<Terrain> terrains =
-				new ArrayList<Terrain>(Terrain.ALL.length);
-		for (Terrain t : Terrain.ALL) {
-			if (!Terrain.WATER.equals(t)) {
-				terrains.add(t);
-			}
-		}
-		terrains.add(Terrain.UNDERGROUND);
-		Map map = null;
-		while (map == null || (this.map != null && map.equals(this.map))) {
-			map = RPG.pick(terrains).getmaps().pick();
-		}
-		this.map = map;
 	}
 
 	@Override
@@ -120,29 +152,61 @@ public class ArenaSetup extends javelin.view.frame.Frame {
 
 	Component drawactions() {
 		Panel parent = new Panel();
-		newbutton("Start battle!", dofight, parent);
-		newbutton("Return", doreturn, parent);
+		newbutton("Bet", parent, dobet);
+		newbutton("Return", parent, doreturn);
 		return parent;
 	}
 
 	Component drawoptions() {
 		Panel parent = new Panel();
 		parent.setLayout(new BoxLayout(parent, BoxLayout.Y_AXIS));
-		newbutton("Add temporary ally", doaddally, parent);
-		newbutton("Buy item", null, parent);
-		newbutton("Change map (1 coin)", dochangemap, parent)
-				.setEnabled(ArenaWindow.arena.coins >= 1);
-		parent.add(new Label("Current map: "
-				+ (map == null ? "?" : map.name.toLowerCase())));
+		newbutton("Add temporary ally", parent, doaddally);
+		boolean hascoins = ArenaWindow.arena.coins >= 1;
+		newbutton("Add meld (1 coin)", parent, doaddmeld).setEnabled(hascoins);
+		newbutton("Change map (1 coin)", parent, dochangemap)
+				.setEnabled(hascoins);
+		newbutton("Change period (1 coin)", parent, dochangeperiod)
+				.setEnabled(hascoins);
+		newbutton("Change weather (1 coin)", parent, dochangeweather)
+				.setEnabled(hascoins);
+		parent.add(new Label());
+		parent.add(new Label("Meld count: " + fight.nmeld, Label.CENTER));
+		parent.add(new Label("Map: "
+				+ (fight.map == null ? "?" : fight.map.name.toLowerCase()),
+				Label.CENTER));
+		parent.add(new Label("Period: "
+				+ (fight.period == null ? "?" : fight.period.toLowerCase()),
+				Label.CENTER));
+		parent.add(new Label("Weather: " + describeflood(fight.weather),
+				Label.CENTER));
 		return parent;
 	}
 
+	private String describeflood(Integer weather) {
+		if (weather == null) {
+			return "?";
+		}
+		if (weather == Weather.DRY) {
+			return "dry";
+		}
+		if (weather == Weather.RAIN) {
+			return "rain";
+		}
+		if (weather == Weather.STORM) {
+			return "storm";
+		}
+		throw new RuntimeException("Unknown weather #arenasetup");
+	}
+
 	Component drawroster() {
+		roster.clear();
 		Panel parent = new Panel();
 		parent.setLayout(new BoxLayout(parent, BoxLayout.Y_AXIS));
 		parent.add(new Label("Who will participate in this fight?"));
 		for (Combatant c : ArenaWindow.arena.gladiators) {
-			parent.add(new Checkbox(c.toString(), true));
+			Checkbox checkbox = new Checkbox(c.toString(), true);
+			parent.add(checkbox);
+			roster.add(checkbox);
 		}
 		if (!allies.isEmpty()) {
 			parent.add(new Label());
@@ -153,6 +217,54 @@ public class ArenaSetup extends javelin.view.frame.Frame {
 				parent.add(checkbox);
 			}
 		}
+		return parent;
+	}
+
+	@Override
+	protected void escape() {
+		doreturn.actionPerformed(null);
+	}
+
+	ArrayList<Combatant> getroster() {
+		ArrayList<Combatant> roster = new ArrayList<Combatant>();
+		for (int i = 0; i < this.roster.size(); i++) {
+			if (this.roster.get(i).getState()) {
+				roster.add(ArenaWindow.arena.gladiators.get(i));
+			}
+		}
+		return roster;
+	}
+
+	Container drawbetpanel() {
+		int el = ChallengeRatingCalculator.calculateel(fight.redteam);
+		final JSlider slider = HireScreen.newslider(0,
+				Math.min(ArenaWindow.arena.coins, Math.max(1, el / 2)), 0);
+		slider.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				fight.bet = slider.getValue();
+			}
+		});
+		Panel teams = new Panel(new GridLayout(0, 2));
+		teams.add(new Label("Your team:", Label.CENTER));
+		teams.add(new Label("Opponent team:", Label.CENTER));
+		teams.add(new Label());
+		teams.add(new Label());
+		for (int i = 0; i < Math.max(fight.blueteam.size(),
+				fight.redteam.size()); i++) {
+			teams.add(new Label(i < fight.blueteam.size()
+					? fight.blueteam.get(i).toString() : ""));
+			teams.add(new Label(i < fight.redteam.size()
+					? fight.redteam.get(i).toString() : ""));
+		}
+		Panel parent = new Panel();
+		parent.setLayout(new BoxLayout(parent, BoxLayout.Y_AXIS));
+		parent.add(new Label("How many coins will you bet?", Label.CENTER));
+		parent.add(slider);
+		parent.add(new Label());
+		parent.add(teams);
+		parent.add(new Label());
+		parent.add(newbutton("Start fight!", null, dofight));
 		return parent;
 	}
 }

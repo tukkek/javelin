@@ -16,8 +16,11 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class Defend extends Action implements AiAction {
-	public static final double APCOST = .5;
+	/** Unique instance of this class. */
 	public static final Action SINGLETON = new Defend();
+	/** Defense cost in action points: {@value #APCOST}. */
+	public static final double APCOST = .5;
+	/** Toggle for wheter the CPU player should use defense. */
 	public static final boolean ALLOWAI = true;
 
 	private Defend() {

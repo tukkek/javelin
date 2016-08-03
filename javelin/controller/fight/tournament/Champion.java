@@ -15,6 +15,7 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public class Champion extends Exhibition {
+	/** Constructor. */
 	public Champion() {
 		super("Champion");
 	}

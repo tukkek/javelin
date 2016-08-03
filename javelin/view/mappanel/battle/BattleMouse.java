@@ -1,9 +1,11 @@
 package javelin.view.mappanel.battle;
 
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.util.List;
 
 import javelin.controller.Point;
+import javelin.controller.action.Examine;
 import javelin.controller.action.Fire;
 import javelin.controller.action.ai.MeleeAttack;
 import javelin.controller.fight.Fight;
@@ -130,8 +132,8 @@ public class BattleMouse extends Mouse {
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		MoveOverlay.cancel();
-		if (BattleScreen.lastlooked != null) {
-			BattleScreen.lastlooked = null;
+		if (Examine.lastlooked != null) {
+			Examine.lastlooked = null;
 			BattleScreen.active.statuspanel.repaint();
 		}
 		if (!Game.userinterface.waiting) {
@@ -167,7 +169,7 @@ public class BattleMouse extends Mouse {
 				status(Fire.SINGLETON.describehitchance(current, target, s),
 						target);
 			} else if (target != null) {
-				BattleScreen.lastlooked = target;
+				Examine.lastlooked = target;
 				BattleScreen.active.statuspanel.repaint();
 			} else {
 				return;
@@ -181,5 +183,15 @@ public class BattleMouse extends Mouse {
 		MapPanel.overlay =
 				new TargetOverlay(target.location[0], target.location[1]);
 		Game.message(s, Delay.NONE);
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		if (!Game.userinterface.waiting) {
+			return;
+		}
+		super.mouseWheelMoved(e);
+		BattleScreen.active.mappanel.center(BattlePanel.current.location[0],
+				BattlePanel.current.location[1], true);
 	}
 }

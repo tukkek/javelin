@@ -12,8 +12,9 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class CrIterator implements Iterable<Monster>, Iterator<Monster> {
-	private Iterator<List<Monster>> i;
+	Iterator<List<Monster>> i;
 
+	/** Constructor. */
 	public CrIterator(java.util.Map<Float, List<Monster>> m) {
 		i = m.values().iterator();
 	}

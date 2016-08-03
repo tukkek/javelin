@@ -21,11 +21,14 @@ import tyrant.mikera.tyrant.util.Text;
  */
 public class InfoScreen extends Screen {
 	private static final long serialVersionUID = 3256727281736168249L;
+	/** Screen content. */
 	public String text;
+	/** {@link #text} rendering style.t */
 	public Font font;
 
 	private final int border = 20;
 
+	/** Constructor. */
 	public InfoScreen(final String textp) {
 		text = textp;
 		font = QuestApp.mainfont;
@@ -65,6 +68,9 @@ public class InfoScreen extends Screen {
 		}
 	}
 
+	/**
+	 * @return Player input.
+	 */
 	static public Character feedback() {
 		KeyEvent input = Game.getInput();
 		switch (input.getKeyCode()) {
@@ -80,6 +86,10 @@ public class InfoScreen extends Screen {
 		return Character.valueOf(input.getKeyChar());
 	}
 
+	/**
+	 * @param string
+	 *            Replace {@link #text} and update screen.
+	 */
 	public void print(String string) {
 		text = string;
 		Javelin.app.switchScreen(this);

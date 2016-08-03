@@ -13,12 +13,17 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class Encounter {
+	/** Units encountered. */
 	public final List<Combatant> group;
 
+	/** Constructor. */
 	public Encounter(List<Combatant> groupp) {
 		group = groupp;
 	}
 
+	/**
+	 * @return Copy of {@link #group}.
+	 */
 	public ArrayList<Combatant> generate() {
 		final ArrayList<Combatant> encounter =
 				new ArrayList<Combatant>(group.size());
@@ -28,6 +33,10 @@ public class Encounter {
 		return encounter;
 	}
 
+	/**
+	 * @return Encounter level for this group.
+	 * @see ChallengeRatingCalculator#calculateel(List)
+	 */
 	public int rate() {
 		return ChallengeRatingCalculator.calculateel(group);
 	}
@@ -42,6 +51,9 @@ public class Encounter {
 		return count.toString();
 	}
 
+	/**
+	 * @return {@link #group} size.
+	 */
 	public int size() {
 		return group.size();
 	}

@@ -22,20 +22,25 @@ public abstract class SelectScreen extends InfoScreen {
 
 	private static final DecimalFormat COSTFORMAT =
 			new DecimalFormat("####,###,##0");
+	/** Default key to proceed ({@value #PROCEED}). */
 	public static final char PROCEED = 'q';
 	/** List of keys except q. */
 	public static final char[] KEYS = new char[] { '1', '2', '3', '4', '5', '6',
 			'7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
 			'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u', 'v', 'x',
 			'w', 'y', 'z', };
+	/** Current town or <code>null</code>. */
 	protected final Town town;
+	/** If <code>true</code> will show {@link #title}. */
 	public boolean showtitle = true;
+	/** Header. */
 	protected String title;
 	/**
 	 * TODO remove on 2.0
 	 */
 	protected boolean stayopen = true;
-	private boolean closeafterselect = false;
+	/** If <code>false</code> wills stay open after selection. */
+	boolean closeafterselect = false;
 	/**
 	 * If <code>true</code> will display a message about using {@link #PROCEED}
 	 * to quit the screen.
@@ -87,9 +92,14 @@ public abstract class SelectScreen extends InfoScreen {
 		Collections.sort(options, sort());
 	}
 
+	/** Called when closing this screen. */
 	public void onexit() {
+		// delegate
 	}
 
+	/**
+	 * @return Textual representation of {@link Option#price}.
+	 */
 	public String printpriceinfo(Option o) {
 		return " " + getCurrency() + formatcost(o.price);
 	}
@@ -107,6 +117,11 @@ public abstract class SelectScreen extends InfoScreen {
 		};
 	}
 
+	/**
+	 * @param options
+	 *            Read player input until a selection is made or the screen is
+	 *            closed.
+	 */
 	public void processinput(final List<Option> options) {
 		char feedback = ' ';
 		while (feedback != PROCEED) {
@@ -121,6 +136,12 @@ public abstract class SelectScreen extends InfoScreen {
 		}
 	}
 
+	/**
+	 * @param feedback
+	 *            Player input.
+	 * @return <code>false</code> if no {@link Option} was chosen by the given
+	 *         input, otherwise the return value of {@link #select(Option)}.
+	 */
 	protected boolean select(char feedback, final List<Option> options) {
 		Option o = convertselectionkey(feedback, options);
 		if (o == null) {
@@ -129,6 +150,13 @@ public abstract class SelectScreen extends InfoScreen {
 				return false;
 			}
 			o = options.get(selected);
+			if (o.key != null) {
+				/*
+				 * Don't allow options with explicit keys to be select by
+				 * numbers.
+				 */
+				return false;
+			}
 		}
 		return select(o);
 	}
@@ -155,20 +183,33 @@ public abstract class SelectScreen extends InfoScreen {
 		return -1;
 	}
 
+	/** Allows subclasses to round {@link Option#price}s. */
 	public void roundcost(final Option o) {
 		return;
 	}
 
+	/**
+	 * @return Textual representation of the givne {@link Option#price}.
+	 */
 	static public String formatcost(double price) {
 		return COSTFORMAT.format(price);
 	}
 
+	/**
+	 * @return Static options.
+	 */
 	protected List<Option> getfixedoptions() {
 		return new ArrayList<Option>();
 	}
 
+	/**
+	 * @return How to address currency (ex: $).
+	 */
 	public abstract String getCurrency();
 
+	/**
+	 * @return Footer note.
+	 */
 	public abstract String printInfo();
 
 	/**
@@ -182,6 +223,10 @@ public abstract class SelectScreen extends InfoScreen {
 	 */
 	public abstract boolean select(Option o);
 
+	/**
+	 * @return Dynamic options.
+	 * @see #getfixedoptions()
+	 */
 	public abstract List<Option> getoptions();
 
 	/**

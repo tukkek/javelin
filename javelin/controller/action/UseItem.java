@@ -6,19 +6,24 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
 
+import javelin.Javelin;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Squad;
 import javelin.view.screen.InfoScreen;
 
+/**
+ * Activates an {@link Item} in battle.
+ * 
+ * @author alex
+ */
 public class UseItem extends Action {
-
+	/** Unique instance of this class. */
 	public static final Action SINGLETON = new UseItem();
 
-	public UseItem() {
+	private UseItem() {
 		super("Use item", "i");
 	}
 
@@ -30,7 +35,6 @@ public class UseItem extends Action {
 	@Override
 	public boolean perform(Combatant active) {
 		final Combatant c = active;
-		// final Monster m = c.source;
 		final Item item = queryforitemselection(c, true);
 		if (item == null) {
 			return false;
@@ -38,7 +42,7 @@ public class UseItem extends Action {
 		c.ap += item.apcost;
 		c.source = c.source.clone();
 		if (item.use(c)) {
-			Squad.active.equipment.get(c.id).remove(item);
+			Javelin.app.fight.getbag(c).remove(item);
 		}
 		return true;
 	}
@@ -52,7 +56,7 @@ public class UseItem extends Action {
 	public static Item queryforitemselection(final Combatant c,
 			boolean validate) {
 		final List<Item> items =
-				(List<Item>) Squad.active.equipment.get(c.id).clone();
+				(List<Item>) Javelin.app.fight.getbag(c).clone();
 		if (items.isEmpty()) {
 			Game.message("Isn't carrying battle items!", Delay.WAIT);
 			return null;

@@ -24,51 +24,69 @@ import tyrant.mikera.engine.RPG;
 public abstract class Action implements Serializable, ActionDescription {
 	private static final long serialVersionUID = 1L;
 
-	// Movement
+	/** Movement */
 	public static final Movement MOVE_NW = new Movement("Move (↖)",
 			new String[] { "7", "KeyEvent" + KeyEvent.VK_HOME, "U" },
 			"↖ (7 on numpad, or U)");
+	/** Movement */
 	public static final Movement MOVE_N = new Movement("Move (↑)",
 			new String[] { "8", "KeyEvent" + KeyEvent.VK_UP, "I" },
 			"↑ (8 on numpad, or I)");
+	/** Movement */
 	public static final Movement MOVE_NE = new Movement("Move (↗)",
 			new String[] { "9", "KeyEvent" + KeyEvent.VK_PAGE_UP, "O" },
 			"↗ (9 on numpad, or O)");
+	/** Movement */
 	public static final Movement MOVE_W = new Movement("Move (←)",
 			new String[] { "4", "KeyEvent" + KeyEvent.VK_LEFT, "J", "←" },
 			"← (4 on numpad, or J)");
+	/** Movement */
 	public static final Movement MOVE_E = new Movement("Move (→)",
 			new String[] { "6", "KeyEvent" + KeyEvent.VK_RIGHT, "L", "→" },
 			"→ (6 on numpad, or L)");
+	/** Movement */
 	public static final Movement MOVE_SW = new Movement("Move (↙)",
 			new String[] { "1", "KeyEvent" + KeyEvent.VK_END, "M" },
 			"↙ (1 in numpad, or M)");
+	/** Movement */
 	public static final Movement MOVE_S = new Movement("Move (↓)",
 			new String[] { "2", "KeyEvent" + KeyEvent.VK_DOWN, "<" },
 			"↓ (2 in numpad, or <)");
+	/** Movement */
 	public static final Movement MOVE_SE = new Movement("Move (↘)",
 			new String[] { "3", "KeyEvent" + KeyEvent.VK_PAGE_DOWN, ">" },
 			"↘ (3 on numpad, or >)");
 
+	/** How to present an action to the player. */
 	public final String name;
 
+	/** Action keys as strings. Useful for displaying to player too. */
 	public String[] keys = new String[0];
+	/** See {@link KeyEvent} constants. */
 	public int[] keycodes = new int[0];
+	/** Most actions cannot be performed while burrowed. */
 	public boolean allowwhileburrowed = false;
 
+	/**
+	 * @param key
+	 *            Transforms this to an array.
+	 */
 	public Action(final String name, final String key) {
 		this(name, new String[] { key });
 	}
 
+	/** Constructor. */
 	public Action(final String name, final String[] keys) {
 		this(name);
 		this.keys = keys;
 	}
 
+	/** Used for {@link AiAction}s with no keys. */
 	public Action(final String name2) {
 		name = name2;
 	}
 
+	/** Constructor. */
 	public Action(String namep, int[] keys) {
 		name = namep;
 		keycodes = keys;
@@ -79,13 +97,13 @@ public abstract class Action implements Serializable, ActionDescription {
 		return name;
 	}
 
-	public boolean isMovementKey() {
-		return this == Action.MOVE_E || this == Action.MOVE_N
-				|| this == Action.MOVE_NE || this == Action.MOVE_NW
-				|| this == Action.MOVE_S || this == Action.MOVE_SE
-				|| this == Action.MOVE_SW || this == Action.MOVE_W;
-	}
-
+	/**
+	 * @param dices
+	 *            Quantity of dice.
+	 * @param sides
+	 *            Type of dice.
+	 * @return Map of percentual chances mapped by total result (sum).
+	 */
 	static protected TreeMap<Integer, Float> distributeRoll(final int dices,
 			final int sides) {
 		final int nCombinations = dices * sides;
@@ -122,7 +140,8 @@ public abstract class Action implements Serializable, ActionDescription {
 	/**
 	 * @param list
 	 *            The possible outcomes of the action decided by the AI.
-	 * @param b
+	 * @param enableoverrun
+	 *            See {@link BattleScreen#updatescreen(ChanceNode, boolean)}
 	 * @return The actual outcome of the action made by the AI.
 	 */
 	public static void outcome(final List<ChanceNode> list,
@@ -162,6 +181,9 @@ public abstract class Action implements Serializable, ActionDescription {
 		return name;
 	}
 
+	/**
+	 * @return <code>true</code> if given character is listed in {@link #keys}.
+	 */
 	public boolean isPressed(final Character key) {
 		for (final String k : keys) {
 			if (k.equals(key.toString())) {
@@ -186,18 +208,24 @@ public abstract class Action implements Serializable, ActionDescription {
 	 */
 	public abstract boolean perform(Combatant active);
 
+	/**
+	 * Same as {@link #outcome(List, boolean)} but without overrun.
+	 */
 	public static void outcome(List<ChanceNode> list) {
 		outcome(list, false);
 	}
 
-	public static float bind(float misschance) {
-		if (misschance > .95f) {
+	/**
+	 * @return The given chance, bound to a 5%-95% range.
+	 */
+	public static float bind(float chance) {
+		if (chance > .95f) {
 			return .95f;
 		}
-		if (misschance < .05f) {
+		if (chance < .05f) {
 			return .05f;
 		}
-		return misschance;
+		return chance;
 	}
 
 	@Override

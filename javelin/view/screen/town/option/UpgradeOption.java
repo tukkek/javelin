@@ -10,8 +10,10 @@ import javelin.view.screen.upgrading.TownUpgradingScreen;
  * @author alex
  */
 public class UpgradeOption extends Option {
+	/** Upgrade in question. */
 	public final Upgrade u;
 
+	/** Constructor. */
 	public UpgradeOption(final Upgrade u) {
 		super(u.name, 0);
 		this.u = u;

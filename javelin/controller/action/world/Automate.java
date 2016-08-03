@@ -27,6 +27,7 @@ import javelin.view.screen.WorldScreen;
 public class Automate extends WorldAction implements SimpleAction {
 	class AutomateWindow extends javelin.view.frame.Frame {
 		ArrayList<Checkbox> boxes = new ArrayList<Checkbox>();
+		Checkbox strategic;
 
 		public AutomateWindow() {
 			super("Automatic units");
@@ -42,7 +43,6 @@ public class Automate extends WorldAction implements SimpleAction {
 				boxes.add(box);
 			}
 			container.add(new Label());
-			final Checkbox strategic;
 			if (BattleScreen.active instanceof WorldScreen) {
 				strategic =
 						new Checkbox("Enable strategic combat for this squad",
@@ -57,17 +57,22 @@ public class Automate extends WorldAction implements SimpleAction {
 			confirm.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					for (int i = 0; i < boxes.size(); i++) {
-						getunits().get(i).automatic = boxes.get(i).getState();
-					}
-					if (strategic != null) {
-						Squad.active.strategic = strategic.getState();
-					}
-					frame.dispose();
+					enter();
 				}
 			});
 			return container;
 		}
+
+		@Override
+		protected void enter() {
+			for (int i = 0; i < boxes.size(); i++) {
+				getunits().get(i).automatic = boxes.get(i).getState();
+			}
+			if (strategic != null) {
+				Squad.active.strategic = strategic.getState();
+			}
+			frame.dispose();
+		};
 
 		ArrayList<Combatant> getunits() {
 			return BattleScreen.active instanceof WorldScreen
@@ -75,6 +80,7 @@ public class Automate extends WorldAction implements SimpleAction {
 		}
 	}
 
+	/** Constructor. */
 	public Automate() {
 		super("Set automatic units", new int[] { 'A' }, new String[] { "A" });
 	}

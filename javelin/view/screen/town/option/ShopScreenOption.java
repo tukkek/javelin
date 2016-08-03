@@ -9,7 +9,7 @@ import javelin.view.screen.town.SelectScreen;
  * @author alex
  */
 public class ShopScreenOption extends ScreenOption {
-
+	/** Constructor. */
 	public ShopScreenOption(String name, Town t, char c) {
 		super(name, t, c);
 	}

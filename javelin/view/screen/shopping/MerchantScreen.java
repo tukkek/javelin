@@ -14,6 +14,7 @@ public class MerchantScreen extends ShoppingScreen {
 
 	final Caravan m;
 
+	/** Constructor. */
 	public MerchantScreen(Caravan m) {
 		super("You reach a trading caravan:", null);
 		this.m = m;

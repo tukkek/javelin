@@ -14,6 +14,10 @@ import javelin.model.unit.Combatant;
 public class ActionAdapter extends Action {
 	SimpleAction action;
 
+	/**
+	 * @param a
+	 *            Converts this to an action.
+	 */
 	public ActionAdapter(SimpleAction a) {
 		super(a.getname());
 		action = a;

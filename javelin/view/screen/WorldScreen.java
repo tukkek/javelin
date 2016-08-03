@@ -213,15 +213,6 @@ public class WorldScreen extends BattleScreen {
 	}
 
 	@Override
-	protected void removehero() {
-		return;
-	}
-
-	@Override
-	public void setposition() {
-	}
-
-	@Override
 	public void step() {
 		if (WorldScreen.welcome) {
 			saywelcome();
@@ -369,11 +360,6 @@ public class WorldScreen extends BattleScreen {
 		WorldScreen.welcome = false;
 	}
 
-	@Override
-	public boolean drawbackground() {
-		return false;
-	}
-
 	/**
 	 * The arbitrary rule is 1 encounter per day in the wild.
 	 * 
@@ -455,15 +441,13 @@ public class WorldScreen extends BattleScreen {
 	}
 
 	@Override
-	protected void initmap() {
-		return;
-	}
-
-	@Override
 	public Image gettile(int x, int y) {
 		return Images.getImage("terrain" + Terrain.get(x, y).toString());
 	}
 
+	/**
+	 * @return <code>true</code> if this {@link World} coordinate can be seen.
+	 */
 	public static boolean see(Point p) {
 		if (!World.validatecoordinate(p.x, p.y)) {
 			return false;
@@ -490,6 +474,9 @@ public class WorldScreen extends BattleScreen {
 		return new WorldPanel();
 	}
 
+	/**
+	 * @return <code>true</code> if this coordinate is valid in this context.
+	 */
 	public boolean validatepoint(int tox, int toy) {
 		return World.validatecoordinate(tox, toy);
 	}

@@ -18,7 +18,11 @@ public class ResearchScreen extends PurchaseScreen {
 
 	private Town t;
 
-	public ResearchScreen(String name, Town t) {
+	/**
+	 * @param t
+	 *            Current town.
+	 */
+	public ResearchScreen(Town t) {
 		super("Reseach new options:", t);
 		this.t = t;
 		/*

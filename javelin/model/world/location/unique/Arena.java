@@ -1,18 +1,47 @@
 package javelin.model.world.location.unique;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import javelin.controller.challenge.RewardCalculator;
+import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
+import javelin.model.world.WorldActor;
 import javelin.view.frame.arena.ArenaWindow;
+import javelin.view.frame.arena.HireScreen;
 
+/**
+ * The Arena can be seen as a mini-game or a separate game mode for Javelin.
+ * Players who are not looking for long-term strategy or a complete RPG campaign
+ * experience are probably going to feel more at home in the Arena, where they
+ * can focus on combat and growing in power much faster than in the main game
+ * world - even players who enjoy Javelin's campaign mode will probably feel
+ * tempted to just spend some time in the Arena now and again, which is a more
+ * light-hearted game experience. If you think you'd enjoy it the Arena can be
+ * accessed at any point in time (unless in battle), just press h to see the
+ * corresponding key to it. Once you get used to the coin and betting system
+ * you'll be able to ascend in power very fast!
+ * 
+ * The design parameters for the arena is: {@value HireScreen#COSTPERCR}
+ * {@link #coins} per CR. Each coin value in gold is defined by
+ * {@link #getcoins(int)}.
+ * 
+ * @author alex
+ */
 public class Arena extends UniqueLocation {
-
 	static final String DESCRIPTION = "The arena";
+	/** Roster of permanent player units. */
 	public ArrayList<Combatant> gladiators = new ArrayList<Combatant>();
+	/** <code>true</code> on player's first visit. */
 	public boolean welcome = true;
-	public int coins = 100;
+	/** Arena's currency. */
+	public int coins = HireScreen.COSTPERCR;
+	/** {@link Item} bag for {@link #gladiators}. */
+	HashMap<Integer, ArrayList<Item>> equipment =
+			new HashMap<Integer, ArrayList<Item>>();
 
+	/** Constructor. */
 	public Arena() {
 		super(DESCRIPTION, DESCRIPTION, 0, 0);
 	}
@@ -32,6 +61,7 @@ public class Arena extends UniqueLocation {
 		if (!super.interact()) {
 			return false;
 		}
+		clearequipment();
 		ArenaWindow w = new ArenaWindow(this);
 		w.show();
 		w.defer();
@@ -40,5 +70,62 @@ public class Arena extends UniqueLocation {
 		}
 		return true;
 
+	}
+
+	void clearequipment() {
+		cleaning: for (Integer id : new ArrayList<Integer>(
+				equipment.keySet())) {
+			for (Combatant c : gladiators) {
+				if (c.id == id) {
+					continue cleaning;
+				}
+			}
+			equipment.remove(id);
+		}
+	}
+
+	/**
+	 * @return The Arena. A <code>null</code> result could indicate the game
+	 *         hasn't yet been loaded or the world isn't generated.
+	 */
+	public static Arena get() {
+		ArrayList<WorldActor> actors = WorldActor.getall(Arena.class);
+		return actors.isEmpty() ? null : (Arena) actors.get(0);
+	}
+
+	/**
+	 * @param gold
+	 *            Given a value in gold.
+	 * @return a value in {@link #coins}.
+	 */
+	public static int getcoins(int gold) {
+		return RewardCalculator.getcr(gold);
+	}
+
+	/**
+	 * @param i
+	 *            Adds items...
+	 * @param gladiator
+	 *            to this gladitor's bag.
+	 */
+	public void additem(Item i, Combatant gladiator) {
+		ArrayList<Item> bag = equipment.get(gladiator.id);
+		if (bag == null) {
+			bag = new ArrayList<Item>();
+			equipment.put(gladiator.id, bag);
+		}
+		bag.add(i.clone());
+	}
+
+	/**
+	 * @return The {@link Combatant}'s bag.
+	 */
+	public ArrayList<Item> getitems(Combatant c) {
+		ArrayList<Item> bag = equipment.get(c.id);
+		if (bag == null) {
+			bag = new ArrayList<Item>();
+			equipment.put(c.id, bag);
+		}
+		return bag;
 	}
 }

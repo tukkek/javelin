@@ -15,11 +15,17 @@ import javelin.model.world.location.unique.Arena;
 import javelin.view.frame.Frame;
 import javelin.view.screen.StatisticsScreen;
 
+/**
+ * Shows one of the {@link Arena#gladiators} and allows access to other
+ * functions such as renaming and upgrading.
+ * 
+ * @author alex
+ */
 public class ViewGladiator extends Frame {
 	private ActionListener doupgrade = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			UpgradeWindow.boost(c);
+			UpgradeWindow.boost(c, 1);
 			new UpgradeWindow(c).show(ViewGladiator.this);
 		}
 	};
@@ -43,6 +49,7 @@ public class ViewGladiator extends Frame {
 
 	Combatant c;
 
+	/** Constructor. */
 	public ViewGladiator(Combatant c, Arena arena) {
 		super(c.toString());
 		this.c = c;
@@ -56,10 +63,10 @@ public class ViewGladiator extends Frame {
 		statistics.setPreferredSize(Frame.getdialogsize());
 
 		Panel actions = new Panel();
-		ArenaWindow.newbutton("Upgrade (1 coin)", doupgrade, actions)
+		ArenaWindow.newbutton("Upgrade (1 coin)", actions, doupgrade)
 				.setEnabled(ArenaWindow.arena.coins >= 1);
-		ArenaWindow.newbutton("Rename", dorename, actions);
-		ArenaWindow.newbutton("Return", doreturn, actions);
+		ArenaWindow.newbutton("Rename", actions, dorename);
+		ArenaWindow.newbutton("Return", actions, doreturn);
 
 		Panel panel = new Panel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));

@@ -11,8 +11,11 @@ import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 
+import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.world.location.Location;
+import javelin.model.world.location.town.Town;
 
 /**
  * Cache for {@link Monster#avatar}
@@ -20,21 +23,28 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public class Images {
-
-	static final TreeMap<String, Image> cache = new TreeMap<String, Image>();
-	static final TreeMap<String, Image> buriedcache =
-			new TreeMap<String, Image>();
-
-	public static final Image penalized =
+	/** @see {@link Combatant#ispenalized(javelin.model.state.BattleState)} */
+	public static final Image PENALIZED =
 			Images.maketransparent(3 / 4f, Images.getImage("overlaypenalized"));
-	public static final Image crafting = Images.getImage("overlaycrafting");
-	public static final Image upgrading = Images.getImage("overlayupgrading");
-	public static Image labor = Images.getImage("overlaylabor");
-	public static final Image dead = Images.getImage("overlaydead");
-	public static final Image crystal = Images.getImage("overlaycrystal");
-	public static final Image hostile = Images.getImage("overlayhostile");
-	public static final Image tournament =
+	/** @see Location#hascrafted() */
+	public static final Image CRAFTING = Images.getImage("overlaycrafting");
+	/** @see Location#hasupgraded() */
+	public static final Image UPGRADING = Images.getImage("overlayupgrading");
+	/** @see Town#haslabor() */
+	public static final Image LABOR = Images.getImage("overlaylabor");
+	/** Show while a {@link Meld} is being generated. */
+	public static final Image DEAD = Images.getImage("overlaydead");
+	/** Show when a {@link Meld} is generated. */
+	public static final Image MELD = Images.getImage("overlaycrystal");
+	/** @see Location#ishostile() */
+	public static final Image HOSTILE = Images.getImage("overlayhostile");
+	/** @see Town#ishosting() */
+	public static final Image TOURNAMENT =
 			Images.getImage("locationtournament");
+
+	static final TreeMap<String, Image> CACHE = new TreeMap<String, Image>();
+	static final TreeMap<String, Image> BURIEDCACHE =
+			new TreeMap<String, Image>();
 
 	/**
 	 * @param combatant
@@ -46,10 +56,10 @@ public class Images {
 			return getImage(combatant.source.avatarfile);
 		}
 		final String avatar = combatant.source.avatarfile;
-		Image buried = buriedcache.get(avatar);
+		Image buried = BURIEDCACHE.get(avatar);
 		if (buried == null) {
 			buried = maketransparent(1 / 3f, getImage(avatar));
-			buriedcache.put(avatar, buried);
+			BURIEDCACHE.put(avatar, buried);
 		}
 		return buried;
 	}
@@ -63,14 +73,14 @@ public class Images {
 	 * @return An image from the avatar folder.
 	 */
 	public static Image getImage(final String file) {
-		Image i = cache.get(file);
+		Image i = CACHE.get(file);
 		if (i != null) {
 			return i;
 		}
 		try {
 			i = ImageIO
 					.read(new File("avatars" + File.separator + file + ".png"));
-			cache.put(file, i);
+			CACHE.put(file, i);
 			return i;
 		} catch (IOException e) {
 			throw new RuntimeException(file, e);

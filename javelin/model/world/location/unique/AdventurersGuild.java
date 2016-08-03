@@ -110,6 +110,7 @@ public class AdventurersGuild extends UniqueLocation {
 
 	List<String> courses = null;
 
+	/** Constructor. */
 	public AdventurersGuild() {
 		super(TITLE, TITLE, 1, 1);
 	}

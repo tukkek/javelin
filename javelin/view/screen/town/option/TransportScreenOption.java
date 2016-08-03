@@ -9,6 +9,7 @@ import javelin.view.screen.town.TransportScreen;
  * @author alex
  */
 public class TransportScreenOption extends ScreenOption {
+	/** Constructor. */
 	public TransportScreenOption(String name, Town t, char c) {
 		super(name, t, c);
 	}

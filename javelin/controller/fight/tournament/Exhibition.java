@@ -18,7 +18,9 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public abstract class Exhibition implements Serializable {
+	/** If <code>true</code> tournaments happen more often. */
 	public static boolean DEBUG = false;
+	/** Holder for types other than {@link Match}. */
 	public static final ArrayList<Exhibition> SPECIALEVENTS =
 			new ArrayList<Exhibition>();
 
@@ -28,12 +30,19 @@ public abstract class Exhibition implements Serializable {
 		SPECIALEVENTS.add(new Horde());
 	}
 
+	/** Text description of this type of fight. */
 	public String name;
 
+	/** Constructor. */
 	public Exhibition(String namep) {
 		name = namep;
 	}
 
+	/**
+	 * A chance per week that a random {@link Town} will host a tournament.
+	 * 
+	 * @see Town#host()
+	 */
 	public static void opentournament() {
 		if (RPG.r(1, 7) == 1 || DEBUG) {
 			final Town t = (Town) RPG.pick(Location.getall(Town.class));
@@ -41,5 +50,6 @@ public abstract class Exhibition implements Serializable {
 		}
 	}
 
+	/** Deals with the specifics of this exhibition type. */
 	abstract public void start();
 }

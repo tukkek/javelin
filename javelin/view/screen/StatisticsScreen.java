@@ -17,11 +17,15 @@ import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.town.PurchaseScreen;
 
 /**
- * Shows ally or enemy info.
+ * Shows unit information.
  * 
  * @author alex
  */
 public class StatisticsScreen extends InfoScreen {
+	/**
+	 * @param c
+	 *            Shows statistic for this unit.
+	 */
 	public StatisticsScreen(Combatant c) {
 		super("");
 		text = gettext(c, true);
@@ -33,6 +37,13 @@ public class StatisticsScreen extends InfoScreen {
 		Javelin.app.switchScreen(BattleScreen.active);
 	}
 
+	/**
+	 * @param toggle
+	 *            If <code>true</code> shows instruction on how to toggle more
+	 *            information.
+	 * @return Information for the given {@link Combatant}.
+	 */
+	@SuppressWarnings("deprecation")
 	static public String gettext(Combatant c, boolean toggle) {
 		Monster m = c.source;
 		ArrayList<String> lines = new ArrayList<String>();
@@ -146,6 +157,7 @@ public class StatisticsScreen extends InfoScreen {
 		return name + " " + bonus + ", ";
 	}
 
+	@SuppressWarnings("deprecation")
 	static String showskills(Monster m) {
 		Skills s = m.skills;
 		String output = "";
@@ -207,7 +219,7 @@ public class StatisticsScreen extends InfoScreen {
 	}
 
 	private static String describequalities(Monster m, Combatant c) {
-		ArrayList spells = new ArrayList(c.spells.size());
+		ArrayList<String> spells = new ArrayList<String>(c.spells.size());
 		for (javelin.controller.upgrade.Spell s : c.spells) {
 			spells.add(s.toString());
 		}
@@ -244,7 +256,7 @@ public class StatisticsScreen extends InfoScreen {
 		return header.substring(0, header.length() - 2) + "\n";
 	}
 
-	public static void listattacks(ArrayList<String> lines,
+	static void listattacks(ArrayList<String> lines,
 			List<AttackSequence> melee) {
 		if (melee.isEmpty()) {
 			lines.add(" None");
@@ -255,6 +267,10 @@ public class StatisticsScreen extends InfoScreen {
 		}
 	}
 
+	/**
+	 * @return Given {@link String} with only first {@link Character} as
+	 *         uppercase.
+	 */
 	public static String capitalize(String size) {
 		return Character.toUpperCase(size.charAt(0))
 				+ size.substring(1).toLowerCase();
@@ -264,7 +280,7 @@ public class StatisticsScreen extends InfoScreen {
 		return score < 10 ? " " + score : Long.toString(score);
 	}
 
-	public Character updatescreens() {
+	Character updatescreens() {
 		Javelin.app.switchScreen(this);
 		return InfoScreen.feedback();
 	}

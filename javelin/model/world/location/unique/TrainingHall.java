@@ -59,14 +59,9 @@ public class TrainingHall extends Fortification {
 
 	@Override
 	protected void generategarrison(int minel, int maxel) {
-		generategarrison();
-	}
-
-	public void generategarrison() {
 		if (currentlevel == null) {
 			currentlevel = 1;
 		}
-		// garrison.clear();
 		ArrayList<Monster> senseis = SquadScreen.getcandidates();
 		for (Monster sensei : new ArrayList<Monster>(senseis)) {
 			if (!sensei.think(0)) {
@@ -119,6 +114,7 @@ public class TrainingHall extends Fortification {
 		return garrison;
 	}
 
+	/** Bumps the {@link #currentlevel}. */
 	public void level() {
 		currentlevel += 1;
 		boolean done = currentlevel - 1 >= EL.length;
@@ -146,7 +142,7 @@ public class TrainingHall extends Fortification {
 		if (done) {
 			remove();
 		} else {
-			generategarrison();
+			generategarrison(0, 0);
 		}
 	}
 }

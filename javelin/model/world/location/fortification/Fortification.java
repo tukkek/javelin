@@ -1,5 +1,7 @@
 package javelin.model.world.location.fortification;
 
+import java.util.ArrayList;
+
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.db.Preferences;
@@ -103,8 +105,9 @@ public abstract class Fortification extends Location {
 		while (garrison.isEmpty()) {
 			try {
 				int el = RPG.r(minel, maxel);
-				garrison.addAll(EncounterGenerator.generate(el,
-						terrain == null ? Terrain.get(x, y) : terrain));
+				ArrayList<Terrain> terrains = new ArrayList<Terrain>(1);
+				terrains.add(terrain == null ? Terrain.get(x, y) : terrain);
+				garrison.addAll(EncounterGenerator.generate(el, terrains));
 				targetel = new Integer(el);
 			} catch (GaveUpException e) {
 				continue;

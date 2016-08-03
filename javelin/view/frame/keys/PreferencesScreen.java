@@ -11,6 +11,7 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class PreferencesScreen extends TextScreen {
+	/** Constructor. */
 	public PreferencesScreen() {
 		super("Options");
 	}

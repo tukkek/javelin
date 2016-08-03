@@ -11,7 +11,7 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class ShowStatistics extends WorldAction {
-
+	/** Constructor. */
 	public ShowStatistics() {
 		super("View characters", new int[0], new String[] { "v" });
 	}

@@ -9,9 +9,15 @@ import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
 
+import javelin.controller.fight.ArenaFight;
 import javelin.model.world.location.unique.Arena;
 import javelin.view.frame.Frame;
 
+/**
+ * Main view for {@link Arena}.
+ * 
+ * @author alex
+ */
 public class ArenaWindow extends Frame {
 	static final String ABOUT = "Welcome to the arena!\n\n" + //
 			"Our services allow you to create a team and fight in battles and\n"
@@ -25,16 +31,21 @@ public class ArenaWindow extends Frame {
 			+ "gladiators, upgrading your current ones and acquiring items is done\n"
 			+ "through Arena Coins, which you will receive by winning fights and\n"
 			+ "betting on matches (even your own)! You will notice that once you\n"
-			+ "start earning coins you will be able to achieve great things fast!\n\n"
+			+ "start earning a few coins you will be able to achieve great things fast!\n\n"
 			+ "Note that your arena gladiators and outside world party are not\n"
 			+ "the same and shouldn't be confused - they are kept separate at all\n"
 			+ "times so you can play in the arena without worrying about losing\n"
-			+ "your party!";
+			+ "your main units.\n\n"
+			+ "Note that you don't have to actually visit the Arena to activate\n"
+			+ "it! You can open this screen from anywhere in the game world and\n"
+			+ "anytime - just check the help menu or key configuration screen to\n"
+			+ "find out what the proper key to do so is.";
 
 	ActionListener dofight = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			new ArenaSetup(ArenaWindow.this).show(ArenaWindow.this);
+			new ArenaSetup(ArenaWindow.this, new ArenaFight())
+					.show(ArenaWindow.this);
 		}
 	};
 	private ActionListener doabout = new ActionListener() {
@@ -56,10 +67,22 @@ public class ArenaWindow extends Frame {
 			new ViewGladiators(arena).show(ArenaWindow.this);
 		}
 	};
+	ActionListener dobuy = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			new BuyScreen(arena.gladiators).show(ArenaWindow.this);
+		}
+	};
 
+	/** Helper field, updated on {@link #show()}. */
 	public static Arena arena;
+	/**
+	 * If not <code>null</code> will close this {@link Frame} and run this in
+	 * the main game thread.
+	 */
 	public Runnable action;
 
+	/** Constructor. */
 	public ArenaWindow(Arena arenap) {
 		super("Arena");
 		arena = arenap;
@@ -69,18 +92,23 @@ public class ArenaWindow extends Frame {
 	protected Container generate() {
 		Panel parent = new Panel();
 		parent.setLayout(new BoxLayout(parent, BoxLayout.Y_AXIS));
-		newbutton("Fight!", dofight, parent);
+		newbutton("Fight!", parent, dofight);
 		parent.add(new Label());
-		newbutton("View gladiators", doview, parent);
-		newbutton("Hire gladiator", dohire, parent);
+		newbutton("Buy item", parent, dobuy);
+		newbutton("View gladiators", parent, doview);
+		newbutton("Hire gladiator", parent, dohire);
 		parent.add(new Label());
-		newbutton("About the Arena", doabout, parent);
+		newbutton("About the Arena", parent, doabout);
 		parent.add(new Label("You currently have " + arena.coins + " coins."));
 		return parent;
 	}
 
 	@Override
 	public void show() {
+		if (action != null) {
+			frame.dispose();
+			return;
+		}
 		if (arena.welcome) {
 			doabout.actionPerformed(null);
 			HireScreen.open().defer();
@@ -90,5 +118,10 @@ public class ArenaWindow extends Frame {
 			arena.welcome = false;
 		}
 		super.show();
+	}
+
+	@Override
+	protected void enter() {
+		dofight.actionPerformed(null);
 	}
 }

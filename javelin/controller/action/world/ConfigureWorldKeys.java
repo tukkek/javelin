@@ -8,6 +8,7 @@ import javelin.view.screen.WorldScreen;
  */
 public class ConfigureWorldKeys extends WorldAction {
 
+	/** Constructor. */
 	public ConfigureWorldKeys() {
 		super("Configure keys", new int[] { 'K' }, new String[] { "K" });
 	}

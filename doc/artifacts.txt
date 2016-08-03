@@ -1,11 +1,6 @@
-ARTIFACTS GUIDE
+These powerful items can be equipped to enhance a character in some way or another. 
 
-These powerful items can be equipped to enhance a character in some way or 
-another. 
-
-Each artifact occupies a certain body slot. For example: a character
-cannot wear more than one headpiece at the same time.  The exception are rings,
-which can be worn 2 at a time, one in each hand.
+Each artifact occupies a certain body slot. For example: a character cannot wear more than one headpiece at the same time.  The exception are rings, which can be worn 2 at a time, one in each hand.
 
 Amulet of health: raises constitution.
 Belt of giant strength: raises strength.

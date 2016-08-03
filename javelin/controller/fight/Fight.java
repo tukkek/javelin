@@ -6,6 +6,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.JavelinApp;
+import javelin.controller.BattleSetup;
 import javelin.controller.Weather;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.challenge.ChallengeRatingCalculator;
@@ -14,16 +15,17 @@ import javelin.controller.exception.GaveUpException;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.generator.encounter.EncounterGenerator;
-import javelin.controller.generator.encounter.GeneratedFight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.Underground;
 import javelin.controller.terrain.Water;
 import javelin.controller.terrain.map.Map;
+import javelin.model.item.Item;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -36,8 +38,9 @@ import tyrant.mikera.tyrant.QuestApp;
  * A battle scenario.
  */
 public abstract class Fight {
+	/** Global fight state. */
 	public static BattleState state = null;
-
+	/** See {@link #win(BattleScreen)}. */
 	public static Boolean victory;
 
 	Image texture = QuestApp.DEFAULTTEXTURE;
@@ -96,7 +99,7 @@ public abstract class Fight {
 	 * @see Weather#current
 	 * @see Map#maxflooding
 	 */
-	public Integer floodlevel = null;
+	public Integer weather = null;
 
 	/**
 	 * Since {@link Squad#hourselapsed} is always ticking and needs to be
@@ -109,6 +112,9 @@ public abstract class Fight {
 	 */
 	public String period = Javelin.getDayPeriod();
 
+	/** Status to remove {@link Combatant} from a {@link #friendly} battle. */
+	public int friendlylevel = Combatant.STATUSWOUNDED;
+
 	/**
 	 * @return an encounter level for which an appropriate challenge should be
 	 *         generated.
@@ -116,10 +122,6 @@ public abstract class Fight {
 	 * @see ChallengeRatingCalculator
 	 */
 	public abstract int getel(int teamel);
-
-	final public BattleScreen getscreen() {
-		return new BattleScreen(true);
-	}
 
 	/**
 	 * @return The list of monsters that are going to be featured in this fight.
@@ -176,15 +178,22 @@ public abstract class Fight {
 	 *            Description of rewards and other remarks such as
 	 *            vehicle/allies left behind...
 	 */
-	public void onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
+	public boolean onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
 			BattleState s) {
 		Fight.state = s;
 		for (Combatant c : screen.fleeing) {
 			Fight.state.blueTeam.add(c);
 		}
 		EndBattle.showcombatresult(screen, originalTeam, "Congratulations! ");
+		return true;
 	}
 
+	/**
+	 * @param screen
+	 *            Active screen.
+	 * @throws EndBattle
+	 *             If this battle is over.
+	 */
 	public void checkEndBattle(BattleScreen screen) {
 		if (Fight.state.redTeam.isEmpty() || Fight.state.blueTeam.isEmpty()) {
 			throw new EndBattle();
@@ -194,6 +203,12 @@ public abstract class Fight {
 		}
 	}
 
+	/**
+	 * @param combatant
+	 *            Fleeing unit.
+	 * @param screen
+	 *            Active screen.
+	 */
 	public void withdraw(Combatant combatant, BattleScreen screen) {
 		if (Fight.state.isengaged(combatant)) {
 			if (Javelin.DEBUG) {
@@ -224,6 +239,11 @@ public abstract class Fight {
 		}
 	}
 
+	/**
+	 * @param foes
+	 *            List of enemies.
+	 * @return <code>true</code> if this battle has been avoided.
+	 */
 	public boolean avoid(List<Combatant> foes) {
 		if (hide && Squad.active.hide(foes)) {
 			return true;
@@ -235,6 +255,7 @@ public abstract class Fight {
 		return false;
 	}
 
+	/** Helper method for {@link #withdraw(Combatant, BattleScreen)}. */
 	static public void dontflee(BattleScreen s) {
 		Game.message("Cannot flee!", Delay.BLOCK);
 		s.checkblock();
@@ -258,32 +279,47 @@ public abstract class Fight {
 	 *            Terrain this fight takes place on.
 	 * @return The resulting opponents.
 	 */
-	public ArrayList<Combatant> generate(final int teamel, Terrain terrain) {
+	public ArrayList<Combatant> generate(final int teamel) {
+		ArrayList<Terrain> terrains = getterrains();
 		ArrayList<Combatant> foes = getmonsters(teamel);
 		if (foes != null) {
 			enhance(foes);
 			return foes;
 		}
-		int delta = 0;
-		GeneratedFight generated = null;
-		while (generated == null) {
-			generated = chooseopponents(teamel - delta, terrain);
-			if (generated != null) {
-				break;
-			}
-			if (delta != 0) {
-				generated = chooseopponents(teamel + delta, terrain);
-			}
-			delta += 1;
-		}
-		foes = generated.opponents;
+		foes = generate(teamel, terrains);
 		enhance(foes);
 		return foes;
 	}
 
-	GeneratedFight chooseopponents(final int el, Terrain terrain) {
+	/**
+	 * @param el
+	 *            Encounter level.
+	 * @param terrains
+	 *            Possible {@link Monster} terrains.
+	 * @return A group of enemies that closely match the given EL, as far as
+	 *         possible.
+	 */
+	static public ArrayList<Combatant> generate(final int el,
+			ArrayList<Terrain> terrains) {
+		int delta = 0;
+		ArrayList<Combatant> generated = null;
+		while (generated == null) {
+			generated = chooseopponents(el - delta, terrains);
+			if (generated != null) {
+				break;
+			}
+			if (delta != 0) {
+				generated = chooseopponents(el + delta, terrains);
+			}
+			delta += 1;
+		}
+		return generated;
+	}
+
+	static ArrayList<Combatant> chooseopponents(final int el,
+			ArrayList<Terrain> terrains) {
 		try {
-			return new GeneratedFight(EncounterGenerator.generate(el, terrain));
+			return EncounterGenerator.generate(el, terrains);
 		} catch (final GaveUpException e) {
 			return null;
 		}
@@ -304,8 +340,8 @@ public abstract class Fight {
 	 * @return A list of {@link Terrain}s which players in this fight can
 	 *         inhabit.
 	 */
-	public ArrayList<Terrain> getterrains(Terrain t) {
-		return getdefaultterrains(t);
+	public ArrayList<Terrain> getterrains() {
+		return getdefaultterrains(Terrain.current(), flood());
 	}
 
 	/**
@@ -320,14 +356,15 @@ public abstract class Fight {
 	 * @see Map#maxflooding
 	 * @see Dungeon#active
 	 */
-	static public ArrayList<Terrain> getdefaultterrains(Terrain t) {
+	public static ArrayList<Terrain> getdefaultterrains(Terrain t,
+			int floodlevel) {
 		ArrayList<Terrain> terrains = new ArrayList<Terrain>();
 		if (Dungeon.active != null) {
 			terrains.add(Terrain.UNDERGROUND);
 			return terrains;
 		}
 		terrains.add(t);
-		if (Weather.current == Weather.STORM) {
+		if (floodlevel == Weather.STORM) {
 			terrains.add(Terrain.WATER);
 		}
 		return terrains;
@@ -338,5 +375,39 @@ public abstract class Fight {
 	 */
 	public Boolean win(BattleScreen screen) {
 		return Fight.state.redTeam.isEmpty() || !screen.checkforenemies();
+	}
+
+	/**
+	 * @return The {@link #weather} level for this fight, taking into account
+	 *         all factors.
+	 */
+	public int flood() {
+		return weather == null
+				? Math.min(Weather.current, Javelin.app.fight.map.maxflooding)
+				: weather;
+	}
+
+	/**
+	 * @return Team that the player will fight with.
+	 */
+	public ArrayList<Combatant> getblueteam() {
+		return Squad.active.members;
+	}
+
+	/**
+	 * @return Inventory for the given unit..
+	 */
+	public ArrayList<Item> getbag(Combatant combatant) {
+		return Squad.active.equipment.get(combatant.id);
+	}
+
+	/**
+	 * Last opportunity for changing this fight before battle begins. At this
+	 * point the entire stack should be setup.
+	 * 
+	 * @see BattleSetup
+	 */
+	public void ready() {
+		// see javadoc
 	}
 }

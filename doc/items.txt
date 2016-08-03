@@ -1,18 +1,16 @@
-ITEM GUIDE
+POTIONS
 
-Potions
-  Potions are one-use items that produces a spell-like effect on the user.
-  Their effect is automatic - no prerequisites or rolls are needed. 
+Potions are one-use items that produce a spell-like effect on the user. Their effect is automatic - no prerequisites or rolls are needed. 
 
-Scrolls
-  A scroll is a one-use item that works like a magic spell but requires
-  its reader to have at least one mental attribute score (Intelligence, Wisdom
-  or Charisma) equal or higher to 10 + spell level. The reader's caster level 
-  must also be higher than the spell's caster level (see the spell guide for 
-  more information). The Spellcraft skill grants bonuses to these calculations.  
+SCROLLS
 
-Transport
-  Airship: avoids combat, costs $16/day.
-  Carriage: reduces chance of battle, costs $2/day.
-  Ship: avoids combat on water, very slow on land while being transported.
+A scroll is a one-use item that works like a magic spell but requires its reader to have at least one mental attribute score (Intelligence, Wisdom or Charisma) equal or higher to 10 + spell level. The reader's caster level must also be higher than the spell's caster level (see the spell guide for more information). The Spellcraft skill grants bonuses to these calculations.  
+
+TRANSPORT
+
+Airship: avoids combat, costs $16/day.
+
+Carriage: reduces chance of battle, costs $2/day.
+
+Ship: avoids combat on water, very slow on land.
 

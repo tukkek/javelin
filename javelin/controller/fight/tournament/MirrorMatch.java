@@ -1,7 +1,6 @@
 package javelin.controller.fight.tournament;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.ExhibitionFight;
@@ -14,6 +13,7 @@ import javelin.model.unit.Squad;
  * @author alex
  */
 public class MirrorMatch extends Match {
+	/** Constructor. */
 	public MirrorMatch() {
 		super();
 		name = "Mirror match";

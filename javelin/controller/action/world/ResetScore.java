@@ -13,11 +13,12 @@ import javelin.view.screen.WorldScreen;
  */
 public class ResetScore extends WorldAction {
 
+	/** Constructor. */
 	public ResetScore() {
 		super(name(), new int[0], new String[] { "R" });
 	}
 
-	public static String name() {
+	static String name() {
 		return "Reset your highscore (" + Javelin.gethighscore() + ")";
 	}
 

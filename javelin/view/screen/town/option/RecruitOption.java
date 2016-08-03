@@ -9,8 +9,10 @@ import javelin.view.screen.town.RecruitScreen;
  * @author alex
  */
 public class RecruitOption extends Option {
+	/** Unit type to recruited. */
 	public Monster m;
 
+	/** Constructor. */
 	public RecruitOption(String name, double d, Monster m) {
 		super(name, d);
 		this.m = m;

@@ -4,7 +4,6 @@ import java.awt.Image;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.controller.terrain.Terrain;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Incursion;
@@ -23,9 +22,7 @@ public class IncursionFight extends Fight {
 	/** Incursion being fought. */
 	public final Incursion incursion;
 
-	/**
-	 * @param incursion
-	 */
+	/** Constructor. */
 	public IncursionFight(final Incursion incursion) {
 		this.incursion = incursion;
 		texture = IncursionFight.INCURSIONTEXTURE;
@@ -50,7 +47,7 @@ public class IncursionFight extends Fight {
 	}
 
 	@Override
-	public void onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
+	public boolean onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
 			BattleState s) {
 		super.onEnd(screen, originalTeam, s);
 		if (Fight.state.redTeam.isEmpty()) {
@@ -70,11 +67,12 @@ public class IncursionFight extends Fight {
 				}
 			}
 		}
+		return true;
 	}
 
 	@Override
-	public ArrayList<Combatant> generate(int teamel, Terrain terrain) {
-		ArrayList<Combatant> foes = super.generate(teamel, terrain);
+	public ArrayList<Combatant> generate(int teamel) {
+		ArrayList<Combatant> foes = super.generate(teamel);
 		incursion.squad = Incursion.getsafeincursion(foes);
 		return foes;
 	}

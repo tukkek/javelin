@@ -163,7 +163,7 @@ public class CastSpell extends Fire implements AiAction {
 		return hitchance - resistchance;
 	}
 
-	public static float convertsavedctochance(final int savedc) {
+	static float convertsavedctochance(final int savedc) {
 		if (savedc == Integer.MAX_VALUE) {
 			return 0;
 		}
@@ -173,9 +173,9 @@ public class CastSpell extends Fire implements AiAction {
 		return 1 - bind(savedc / 20f);
 	}
 
-	public static ChanceNode hit(Combatant active, Combatant target,
-			BattleState state, final Spell spell, final float chance,
-			final boolean saved, final String prefix) {
+	static ChanceNode hit(Combatant active, Combatant target, BattleState state,
+			final Spell spell, final float chance, final boolean saved,
+			final String prefix) {
 		state = state.clone();
 		active = state.clone(active);
 		target = state.cloneifdifferent(target, active);

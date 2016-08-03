@@ -10,10 +10,14 @@ import javelin.view.screen.town.SelectScreen;
  * @author alex
  */
 public class Option implements Serializable {
+	/** Cost. */
 	public double price;
+	/** Description. */
 	public String name;
+	/** Corresponding input. */
 	public Character key;
 
+	/** Constructor. */
 	public Option(final String name, final double d, Character keyp) {
 		super();
 		this.name = name;
@@ -21,6 +25,10 @@ public class Option implements Serializable {
 		key = keyp;
 	}
 
+	/**
+	 * Same as {@link #Option(String, double, Character)} but handles input
+	 * internally.
+	 */
 	public Option(String name, double price) {
 		this(name, price, null);
 	}

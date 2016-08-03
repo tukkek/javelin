@@ -17,7 +17,7 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class TouchAttack extends Fire implements AiAction {
-
+	/** Constructor. */
 	public TouchAttack() {
 		super("Touch attack", "t", 't');
 	}

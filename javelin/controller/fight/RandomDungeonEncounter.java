@@ -12,6 +12,7 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class RandomDungeonEncounter extends RandomEncounter {
+	/** Constructor. */
 	public RandomDungeonEncounter() {
 		meld = true;
 		map = Terrain.UNDERGROUND.getmaps().pick();

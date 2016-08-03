@@ -12,7 +12,10 @@ import java.util.Properties;
 
 import javelin.controller.Weather;
 import javelin.controller.action.ActionDescription;
+import javelin.controller.ai.BattleAi;
 import javelin.controller.ai.ThreadManager;
+import javelin.controller.ai.cache.AiCache;
+import javelin.controller.old.Game.Delay;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -20,12 +23,14 @@ import javelin.model.world.Season;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.unique.Arena;
 import javelin.model.world.location.unique.Haxor;
 import javelin.view.KeysScreen;
 import javelin.view.frame.keys.BattleKeysScreen;
 import javelin.view.frame.keys.PreferencesScreen;
 import javelin.view.frame.keys.WorldKeysScreen;
 import javelin.view.screen.BattleScreen;
+import javelin.view.screen.DungeonScreen;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.tyrant.TextZone;
 
@@ -45,37 +50,75 @@ public class Preferences {
 	/** Configuration file key for {@link #MAXTHREADS}. */
 	public static final String KEYMAXTHREADS = "ai.maxthreads";
 	static final String FILE = "preferences.properties";
+	/** Key for {@link #TILESIZEBATTLE}. */
 	public static final String KEYTILEBATTLE = "ui.battletile";
+	/** Key for {@link #TILESIZEWORLD}. */
 	public static final String KEYTILEWORLD = "ui.worldtile";
+	/** Key for {@link #TILESIZEDUNGEON}. */
 	public static final String KEYTILEDUNGEON = "ui.dungeontile";
 	static Properties PROPERTIES = new Properties();
 
+	/** If <code>true</code> will use {@link AiCache}. */
 	public static boolean AICACHEENABLED;
+	/**
+	 * In some system will prevent the CPU temperature from going above this
+	 * value.
+	 */
 	public static Integer MAXTEMPERATURE;
+	/** Max {@link BattleAi} thinking time. */
 	public static int MAXMILISECONDSTHINKING;
+	/** Thread limit for {@link ThreadManager}. */
 	public static int MAXTHREADS;
+	/** If <code>true</code> {@link ThreadManager} will be self-monitoring. */
 	public static boolean MONITORPERFORMANCE;
+	/** Time to wait for {@link Delay#WAIT}. */
 	public static int MESSAGEWAIT;
+	/** Font color. */
 	public static String TEXTCOLOR;
+	/**
+	 * If <code>true</code> backups the game on initialization.
+	 * 
+	 * @see StateManager
+	 */
 	public static boolean BACKUP;
+	/** How often to save the game. */
 	public static int SAVEINTERVAL;
+	/** Tile size for {@link BattleScreen}. */
 	public static int TILESIZEBATTLE;
+	/** Tile size for {@link WorldScreen}. */
 	public static int TILESIZEWORLD;
+	/** Tile size for {@link DungeonScreen}. */
 	public static int TILESIZEDUNGEON;
 
+	/** Debug option. */
 	public static boolean DEBUGDISABLECOMBAT;
+	/** Debug option. */
 	public static boolean DEBUGESHOWMAP;
+	/** Debug option. */
 	public static Integer DEBUGSXP;
+	/** Debug option. */
 	public static Integer DEBUGSGOLD;
+	/** Debug option. */
 	public static Integer DEBUGRUBIES;
+	/** Debug option. */
 	public static Integer DEBUGLABOR;
+	/** Debug option. */
+	public static Integer DEBUGCOINS;
+	/** Debug option. */
 	public static boolean DEBUGCLEARGARRISON;
+	/** Debug option. */
 	public static String DEBUGFOE;
+	/** Debug option. */
 	public static String DEBUGPERIOD;
+	/** Debug option. */
 	public static String DEBUGMAPTYPE;
+	/** Debug option. */
 	public static Integer DEBUGMINIMUMFOES;
+	/** Debug option. */
 	public static String DEBUGWEATHER;
+	/** Debug option. */
 	public static String DEBUGSEASON;
+	/** Debug option. */
 	public static boolean DEBUGUNLOCKTEMPLES;
 
 	/**
@@ -234,6 +277,8 @@ public class Preferences {
 				.getInteger("cheat.rubies", null);
 		DEBUGLABOR = javelin.controller.db.Preferences.getInteger("cheat.labor",
 				null);
+		DEBUGCOINS = javelin.controller.db.Preferences.getInteger("cheat.coins",
+				null);
 		DEBUGCLEARGARRISON = javelin.controller.db.Preferences
 				.getString("cheat.garrison") != null;
 		DEBUGFOE = getString("cheat.monster");
@@ -260,6 +305,9 @@ public class Preferences {
 		}
 		if (DEBUGRUBIES != null && Haxor.singleton != null) {
 			Haxor.singleton.rubies = DEBUGRUBIES;
+		}
+		if (DEBUGCOINS != null && Arena.get() != null) {
+			Arena.get().coins = DEBUGCOINS;
 		}
 		if (DEBUGLABOR != null) {
 			for (WorldActor a : Town.getall(Town.class)) {
@@ -293,6 +341,15 @@ public class Preferences {
 		return Float.parseFloat(getString(key));
 	}
 
+	/**
+	 * Reads and writes to actual file.
+	 * 
+	 * @param key
+	 *            Replaces the line with this option or creates a new line at
+	 *            the end of the properties file.
+	 * @param value
+	 *            Option value.
+	 */
 	synchronized static public void setoption(String key, Object value) {
 		String from = getfile();
 		String to = "";

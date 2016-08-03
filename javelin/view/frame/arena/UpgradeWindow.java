@@ -16,9 +16,15 @@ import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Combatant;
+import javelin.model.world.location.unique.Arena;
 import javelin.view.frame.Frame;
 import tyrant.mikera.engine.RPG;
 
+/**
+ * Allows {@link Arena#gladiators} to be {@link Upgrade}d.
+ * 
+ * @author alex
+ */
 public class UpgradeWindow extends Frame {
 	private static final int UPGRADESPERSESSION = 9;
 
@@ -45,8 +51,23 @@ public class UpgradeWindow extends Frame {
 	ActionListener buyxp = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			boost(gladiator);
+			boost(gladiator, 1);
 			show();
+		}
+	};
+	ActionListener buymorexp = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			boost(gladiator, 10);
+			show();
+		}
+	};
+	ActionListener redraw = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			upgrades.clear();
+			fill();
+			buyxp.actionPerformed(e);
 		}
 	};
 	ActionListener doreturn = new ActionListener() {
@@ -59,6 +80,10 @@ public class UpgradeWindow extends Frame {
 	ArrayList<Upgrade> upgrades = new ArrayList<Upgrade>(UPGRADESPERSESSION);
 	Combatant gladiator;
 
+	/**
+	 * @param c
+	 *            Unit to be upgraded.
+	 */
 	public UpgradeWindow(Combatant c) {
 		super("Upgrade " + c);
 		this.gladiator = c;
@@ -95,7 +120,11 @@ public class UpgradeWindow extends Frame {
 
 		parent.add(new Label("Current XP: " + gladiator.gethumanxp()));
 		parent.add(new Label("Coins: " + ArenaWindow.arena.coins));
-		newbutton("Buy more XP (1 coin = 10XP)", buyxp, parent)
+		newbutton("Buy more XP (1 coin = 10XP)", parent, buyxp)
+				.setEnabled(ArenaWindow.arena.coins >= 1);
+		newbutton("Buy more XP (10 coins = 100XP)", parent, buymorexp)
+				.setEnabled(ArenaWindow.arena.coins >= 10);
+		newbutton("Redraw upgrades (1 coin + 10XP bonus)", parent, redraw)
 				.setEnabled(ArenaWindow.arena.coins >= 1);
 		parent.add(new Label());
 
@@ -109,18 +138,29 @@ public class UpgradeWindow extends Frame {
 			if (cost < .1f) {
 				cost = .1f;
 			}
-			newbutton(u + " (" + Math.round(100 * cost) + "XP)",
-					new UpgradeButton(u, cost), parent)
+			newbutton(u + " (" + Math.round(100 * cost) + "XP)", parent,
+					new UpgradeButton(u, cost))
 							.setEnabled(gladiator.xp.floatValue() >= cost);
 		}
 
 		parent.add(new Label());
-		newbutton("Return", doreturn, parent);
+		newbutton("Return", parent, doreturn);
 		return parent;
 	}
 
-	public static void boost(Combatant c) {
-		c.xp = c.xp.add(new BigDecimal(.1f));
-		ArenaWindow.arena.coins -= 1;
+	/**
+	 * @param c
+	 *            Given 10XP...
+	 * @param multiplier
+	 *            times this. Spends this number of {@link Arena#coins}.
+	 */
+	public static void boost(Combatant c, int multiplier) {
+		c.xp = c.xp.add(new BigDecimal(multiplier * .1f));
+		ArenaWindow.arena.coins -= multiplier;
+	}
+
+	@Override
+	protected void enter() {
+		// nothing
 	}
 }

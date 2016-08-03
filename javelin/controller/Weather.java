@@ -55,10 +55,7 @@ public class Weather {
 	}
 
 	public static void flood() {
-		Integer level = Javelin.app.fight.floodlevel;
-		if (level == null) {
-			level = Math.min(current, Javelin.app.fight.map.maxflooding);
-		}
+		int level = Javelin.app.fight.flood();
 		final double r = RATIO[level];
 		if (r == 0.0) {
 			return;

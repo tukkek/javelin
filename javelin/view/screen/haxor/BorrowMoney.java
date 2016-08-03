@@ -5,6 +5,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.unique.Haxor;
+import javelin.view.screen.InfoScreen;
 
 /**
  * Will lend money to a {@link Squad} once but will get it back on a future
@@ -30,7 +31,7 @@ public class BorrowMoney extends Hax {
 				ChallengeRatingCalculator.calculateel(Squad.active.members));
 		Squad.active.gold += Haxor.singleton.borrowed;
 		s.print(charge());
-		s.feedback();
+		InfoScreen.feedback();
 		return true;
 	}
 

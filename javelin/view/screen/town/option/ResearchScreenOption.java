@@ -12,6 +12,7 @@ import javelin.view.screen.town.SelectScreen;
 public class ResearchScreenOption extends ScreenOption {
 	Town t;
 
+	/** Constructor. */
 	public ResearchScreenOption(Town town) {
 		super("Research", town, 'R');
 		t = town;
@@ -20,6 +21,6 @@ public class ResearchScreenOption extends ScreenOption {
 	@Override
 	public SelectScreen show() {
 		t.research.queue.clear();
-		return new ResearchScreen(name, t);
+		return new ResearchScreen(t);
 	}
 }

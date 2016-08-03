@@ -11,6 +11,7 @@ import javelin.controller.fight.RandomEncounter;
  * @author alex
  */
 public class Match extends Exhibition {
+	/** Constructor. */
 	public Match() {
 		super("Match");
 	}

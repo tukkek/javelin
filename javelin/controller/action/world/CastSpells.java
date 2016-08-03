@@ -11,7 +11,14 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.view.screen.WorldScreen;
 
+/**
+ * Cast {@link Spell}s out of battle.
+ * 
+ * @see Spell#castoutofbattle
+ * @author alex
+ */
 public class CastSpells extends WorldAction {
+	/** Constructor. */
 	public CastSpells() {
 		super("Cast spells", new int[0], new String[] { "s" });
 	}
@@ -57,7 +64,7 @@ public class CastSpells extends WorldAction {
 		s.used += 1;
 	}
 
-	public int selecttarget() {
+	int selecttarget() {
 		List<String> targets = new ArrayList<String>();
 		for (Combatant m : Squad.active.members) {
 			targets.add(m.source.customName);
@@ -87,7 +94,7 @@ public class CastSpells extends WorldAction {
 		throw new RuntimeException("Should have caught spell name");
 	}
 
-	public ArrayList<Combatant> filtercasters(List<String> names) {
+	ArrayList<Combatant> filtercasters(List<String> names) {
 		ArrayList<Combatant> casters =
 				new ArrayList<Combatant>(Squad.active.members);
 		for (Combatant m : new ArrayList<Combatant>(casters)) {
@@ -100,7 +107,7 @@ public class CastSpells extends WorldAction {
 		return casters;
 	}
 
-	public ArrayList<String> listspells(List<Spell> spells) {
+	ArrayList<String> listspells(List<Spell> spells) {
 		ArrayList<String> spellnames = new ArrayList<String>();
 		for (Spell s : spells) {
 			if (!s.exhausted() && s.castoutofbattle) {

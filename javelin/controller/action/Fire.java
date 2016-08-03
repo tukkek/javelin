@@ -19,7 +19,7 @@ import javelin.model.unit.CurrentAttack;
  * @author alex
  */
 public class Fire extends Target {
-
+	/** Unique instace of {@link Fire}. */
 	public static final Fire SINGLETON = new Fire();
 
 	/**
@@ -57,8 +57,7 @@ public class Fire extends Target {
 						active.source.ranged).bonus));
 	}
 
-	protected Attack predictattack(CurrentAttack hint,
-			List<AttackSequence> fallback) {
+	Attack predictattack(CurrentAttack hint, List<AttackSequence> fallback) {
 		AttackSequence currentranged = hint.sequenceindex == -1 ? null
 				: fallback.get(hint.sequenceindex);
 		Attack a = currentranged == null ? null : hint.peek();

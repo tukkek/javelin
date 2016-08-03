@@ -25,7 +25,8 @@ import javelin.controller.exception.RepeatTurn;
  * @see WorldAction
  */
 public class ActionMapping {
-	private final Map<String, Action> mappings = new HashMap<String, Action>();
+	/** Only instance of this class. */
+	public static final ActionMapping SINGLETON = new ActionMapping();
 	/** If true will reload keys. */
 	public static boolean reset = false;
 	/** Canonical array of possible battle actions. */
@@ -55,32 +56,27 @@ public class ActionMapping {
 			new ZoomIn(), // +
 
 			new ActionAdapter(Guide.HOWTO), new ActionAdapter(Guide.ARTIFACTS),
-			new ActionAdapter(Guide.CONDITIONS1),
-			new ActionAdapter(Guide.CONDITIONS2),
-			new ActionAdapter(Guide.ITEMS), new ActionAdapter(Guide.SKILLS1),
-			new ActionAdapter(Guide.SKILLS2), new ActionAdapter(Guide.SPELLS1),
-			new ActionAdapter(Guide.SPELLS2), new ActionAdapter(Guide.UGRADES1),
-			new ActionAdapter(Guide.UGRADES2), new Help(), // h
+			new ActionAdapter(Guide.CONDITIONS), new ActionAdapter(Guide.ITEMS),
+			new ActionAdapter(Guide.SKILLS), new ActionAdapter(Guide.SPELLS),
+			new ActionAdapter(Guide.UGRADES), //
+
+			new Help(), // h
 
 			Action.MOVE_N, Action.MOVE_NE, Action.MOVE_E, Action.MOVE_SE,
 			Action.MOVE_S, Action.MOVE_SW, Action.MOVE_W, Action.MOVE_NW,
 			AiMovement.SINGLETON, MeleeAttack.SINGLETON,
 			RangedAttack.SINGLETON };
 
-	public ActionDescription convertKeyToAction(final char key) {
-		return mappings.get(new Character(key));
+	final Map<String, Action> mappings = new HashMap<String, Action>();
+
+	private ActionMapping() {
+		init();
 	}
 
-	public void clear() {
-		mappings.clear();
-	}
-
-	public void map(final char aChar, final Action action) {
-		mappings.put(Character.toString(aChar), action);
-	}
-
-	public void addDefaultMappings() {
-		mappings.clear();
+	/**
+	 * Register {@link Action#keys} and {@link Action#keycodes}.
+	 */
+	public void init() {
 		for (final Action a : ActionMapping.actions) {
 			for (final String key : a.keys) {
 				if (mappings.put(key, a) != null) {
@@ -97,9 +93,13 @@ public class ActionMapping {
 		}
 	}
 
-	public Action actionFor(final KeyEvent keyEvent) {
+	/**
+	 * @return The appropriate acttion for the given {@link KeyEvent}.
+	 */
+	public Action getaction(final KeyEvent keyEvent) {
 		if (ActionMapping.reset) {
-			addDefaultMappings();
+			mappings.clear();
+			init();
 		}
 		final char keyChar = keyEvent.getKeyChar();
 		if (keyChar == KeyEvent.CHAR_UNDEFINED) {

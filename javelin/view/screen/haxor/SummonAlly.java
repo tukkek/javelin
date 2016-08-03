@@ -24,8 +24,12 @@ import javelin.view.screen.SquadScreen;
  * @see SquadScreen
  */
 public class SummonAlly extends Hax {
+	/**
+	 * If not <code>null</code> will use this as the challenge rating target.
+	 */
 	public Float fixed = null;
 
+	/** Constructor. */
 	public SummonAlly(String name, Character keyp, double price,
 			boolean requirestargetp) {
 		super(name, keyp, price, requirestargetp);

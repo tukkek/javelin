@@ -11,6 +11,7 @@ import javelin.view.screen.BattleScreen;
  */
 public class ZoomOut extends Action {
 
+	/** Constructor. */
 	public ZoomOut() {
 		super("Zoom out", new String[] { "-", "_" });
 		allowwhileburrowed = true;

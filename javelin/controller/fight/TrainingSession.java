@@ -32,12 +32,12 @@ public class TrainingSession extends Siege {
 	}
 
 	@Override
-	public void onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
+	public boolean onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
 			BattleState s) {
 		super.onEnd(screen, originalTeam, s);
-		if (!Fight.victory) {
-			return;
+		if (Fight.victory) {
+			hall.level();
 		}
-		hall.level();
+		return true;
 	}
 }

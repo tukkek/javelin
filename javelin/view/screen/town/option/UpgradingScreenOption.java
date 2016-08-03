@@ -9,7 +9,7 @@ import javelin.view.screen.upgrading.TownUpgradingScreen;
  * @author alex
  */
 public class UpgradingScreenOption extends ScreenOption {
-
+	/** Constructor. */
 	public UpgradingScreenOption(String string, Town town, char c) {
 		super(string, town, c);
 	}

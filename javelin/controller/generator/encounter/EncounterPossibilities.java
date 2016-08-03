@@ -8,11 +8,18 @@ import tyrant.mikera.engine.RPG;
  * @see Organization#process()
  */
 public class EncounterPossibilities {
+	/** Minimum quantity. */
 	public int min;
+	/** Maximum quantity. */
 	public int max;
+	/** Monster type. */
 	public Monster m;
+	/** Random monster group. */
 	public String random;
 
+	/**
+	 * @return {@link #m} or a random element from {@link #random}.
+	 */
 	public Monster getmonster() {
 		if (m != null) {
 			return m;

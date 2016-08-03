@@ -27,6 +27,7 @@ import javelin.model.unit.Combatant;
  * penalty to your AC until the start of your next turn.
  */
 public class Charge extends Fire implements AiAction {
+	/** Constructor. */
 	public Charge() {
 		super("Charge", "c", 'c');
 	}
@@ -88,7 +89,7 @@ public class Charge extends Fire implements AiAction {
 		return target.location[i] + target.location[i] - me.location[i];
 	}
 
-	public Attack usedefaultattack(Combatant me) {
+	Attack usedefaultattack(Combatant me) {
 		return me.source.melee.get(0).get(0);
 	}
 

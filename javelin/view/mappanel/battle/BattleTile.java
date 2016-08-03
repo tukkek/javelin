@@ -91,7 +91,7 @@ public class BattleTile extends Tile {
 		g.fillRect(0, hp, MapPanel.tilesize / 10, MapPanel.tilesize - hp);
 		if (c.ispenalized(Fight.state)) {
 			g.drawImage(
-					Images.penalized.getScaledInstance(MapPanel.tilesize,
+					Images.PENALIZED.getScaledInstance(MapPanel.tilesize,
 							MapPanel.tilesize, Image.SCALE_DEFAULT),
 					0, 0, null);
 		}

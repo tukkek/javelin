@@ -118,8 +118,8 @@ public class Movement extends Action {
 		}
 	}
 
-	public Point doDirection(final ActionDescription action,
-			final BattleState state, Combatant hero) {
+	Point doDirection(final ActionDescription action, final BattleState state,
+			Combatant hero) {
 		final Point direction = convertActionToDirection(action);
 		final int tox = hero.location[0] + direction.x;
 		final int toy = hero.location[1] + direction.y;
@@ -127,8 +127,7 @@ public class Movement extends Action {
 				: null;
 	}
 
-	public static Point
-			convertActionToDirection(final ActionDescription action) {
+	static Point convertActionToDirection(final ActionDescription action) {
 		final Point direction = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
 		if (action == Action.MOVE_N) {
 			direction.x = 0;

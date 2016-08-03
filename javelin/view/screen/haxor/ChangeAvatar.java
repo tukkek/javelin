@@ -17,6 +17,7 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public final class ChangeAvatar extends Hax {
+	/** Constructor. */
 	public ChangeAvatar(String name, Character keyp, double price,
 			boolean requirestargetp) {
 		super(name, keyp, price, requirestargetp);

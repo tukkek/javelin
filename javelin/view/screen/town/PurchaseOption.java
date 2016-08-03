@@ -10,8 +10,10 @@ import javelin.view.screen.shopping.ShoppingScreen;
  * @author alex
  */
 public class PurchaseOption extends Option {
+	/** Item to be acquired. */
 	public final Item i;
 
+	/** Constructor. */
 	public PurchaseOption(final Item i) {
 		super(i.name, i.price);
 		this.i = i;

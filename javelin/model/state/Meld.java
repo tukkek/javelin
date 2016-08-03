@@ -32,7 +32,7 @@ public class Meld {
 	}
 
 	public Image getimage(BattleState state) {
-		return state.next.ap >= meldsat ? Images.crystal : Images.dead;
+		return state.next.ap >= meldsat ? Images.MELD : Images.DEAD;
 	}
 
 	public void activate(Combatant hero) {

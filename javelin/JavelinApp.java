@@ -142,7 +142,7 @@ public class JavelinApp extends QuestApp {
 				? ChallengeRatingCalculator.calculateel(opponents)
 				: fight.getel(teamel);
 		if (opponents == null) {
-			opponents = fight.generate(teamel, Terrain.current());
+			opponents = fight.generate(teamel);
 		}
 		if (fight.avoid(opponents)) {
 			return;

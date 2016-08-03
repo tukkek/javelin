@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 
 import javelin.controller.action.ActionDescription;
 import javelin.controller.db.Preferences;
+import javelin.controller.db.StateManager;
 import javelin.view.frame.Frame;
 
 /**
@@ -24,41 +25,17 @@ import javelin.view.frame.Frame;
  * @author alex
  */
 public abstract class KeysScreen extends Frame {
-	class Save implements ActionListener {
-		private final ArrayList<ActionDescription> actions;
-
-		public Save(ArrayList<ActionDescription> actions) {
-			this.actions = actions;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			String configure = "";
-			for (int i = 0; i < actions.size(); i++) {
-				TextField textarea = keys.get(i);
-				String key = textarea.getText();
-				if (configure.contains(key) || key.length() != 1) {
-					textarea.setBackground(Color.RED);
-					return;
-				}
-				configure += key;
-				textarea.setBackground(null);
-			}
-			Preferences.setoption(optionname, configure);
-			frame.dispose();
-		}
-	}
-
 	class RestoreDefault implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String clean = "";
 			for (String s : Preferences.getfile().split("\n")) {
-				if (!s.contains(optionname) && !s.isEmpty()) {
+				if (!s.startsWith(optionname)) {
 					clean += s + "\n";
 				}
 			}
 			Preferences.savefile(clean);
+			StateManager.save(true, StateManager.SAVEFILE);
 			System.exit(0);
 		}
 	}
@@ -96,7 +73,8 @@ public abstract class KeysScreen extends Frame {
 
 	ArrayList<TextField> keys;
 	String optionname;
-	private JScrollPane scrollPane;
+	JScrollPane scrollPane;
+	ArrayList<ActionDescription> actions;
 
 	/** Constructor. */
 	public KeysScreen(String title, String optionname) {
@@ -107,7 +85,7 @@ public abstract class KeysScreen extends Frame {
 	@Override
 	protected Container generate() {
 		Panel content = new Panel();
-		final ArrayList<ActionDescription> actions = getactions();
+		actions = getactions();
 		content.setLayout(new GridLayout(0, COLUMNS));
 		this.keys = new ArrayList<TextField>(actions.size());
 		int column = 1;
@@ -136,7 +114,12 @@ public abstract class KeysScreen extends Frame {
 		restore.addActionListener(new RestoreDefault());
 		java.awt.Button button = new java.awt.Button("Save");
 		content.add(button);
-		button.addActionListener(new Save(actions));
+		button.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				enter();
+			}
+		});
 		scrollPane = new JScrollPane(content);
 		return scrollPane;
 	}
@@ -145,4 +128,21 @@ public abstract class KeysScreen extends Frame {
 	 * @return All actions that can be configured by this screen.
 	 */
 	public abstract ArrayList<ActionDescription> getactions();
+
+	@Override
+	protected void enter() {
+		String configure = "";
+		for (int i = 0; i < actions.size(); i++) {
+			TextField textarea = keys.get(i);
+			String key = textarea.getText();
+			if (configure.contains(key) || key.length() != 1) {
+				textarea.setBackground(Color.RED);
+				return;
+			}
+			configure += key;
+			textarea.setBackground(null);
+		}
+		Preferences.setoption(optionname, configure);
+		frame.dispose();
+	}
 }

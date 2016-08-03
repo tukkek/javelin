@@ -13,6 +13,7 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class Abandon extends WorldAction {
+	/** Constructor. */
 	public Abandon() {
 		super("Abandon current game", new int[] {}, new String[] { "Q" });
 	}

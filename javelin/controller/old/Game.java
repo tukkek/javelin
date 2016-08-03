@@ -267,17 +267,7 @@ public final class Game extends BaseObject {
 			if (k == 'q') {
 				return null;
 			}
-			final Point direction = Javelin.app.getScreen().gameHandler
-					.convertKeyToDirection(k);
-			if (direction != null) {
-				return direction;
-			}
 		}
-	}
-
-	public char getCharacter() {
-		final KeyEvent k = getInput();
-		return BattleScreen.getKey(k);
 	}
 
 	public void setInputHandler(final InputHandler inputHandler) {

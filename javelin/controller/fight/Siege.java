@@ -57,7 +57,7 @@ public class Siege extends Fight {
 	}
 
 	@Override
-	public void onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
+	public boolean onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
 			BattleState s) {
 		if (cleargarrison) {
 			garrison: for (Combatant garrison : new ArrayList<Combatant>(
@@ -77,6 +77,6 @@ public class Siege extends Fight {
 				}
 			}
 		}
-		super.onEnd(screen, originalTeam, s);
+		return super.onEnd(screen, originalTeam, s);
 	}
 }

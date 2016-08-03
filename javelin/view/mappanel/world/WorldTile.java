@@ -85,23 +85,23 @@ public class WorldTile extends Tile {
 			return;
 		}
 		if (l.drawgarisson()) {
-			draw(g, Images.hostile);
+			draw(g, Images.HOSTILE);
 		}
 		if (l.hascrafted()) {
-			draw(g, Images.crafting);
+			draw(g, Images.CRAFTING);
 		}
 		if (l.hasupgraded()) {
-			draw(g, Images.upgrading);
+			draw(g, Images.UPGRADING);
 		}
 		final Town t = l instanceof Town ? (Town) l : null;
 		if (t == null || t.ishostile()) {
 			return;
 		}
 		if (t.ishosting()) {
-			draw(g, Images.tournament);
+			draw(g, Images.TOURNAMENT);
 		}
 		if (t.haslabor()) {
-			draw(g, Images.labor);
+			draw(g, Images.LABOR);
 		}
 	}
 

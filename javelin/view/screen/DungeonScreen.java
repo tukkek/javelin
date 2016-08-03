@@ -24,7 +24,13 @@ import javelin.view.mappanel.dungeon.DungeonPanel;
 public class DungeonScreen extends WorldScreen {
 	/** TODO hack */
 	public static boolean dontenter = false;
+	/**
+	 * <code>true</code> indicates something happened to stop further movement.
+	 */
 	public static boolean stopmovesequence = false;
+	/**
+	 * If <code>false</code> skip updating the location this time. TODO is hack?
+	 */
 	public static boolean updatelocation = true;
 
 	@Override

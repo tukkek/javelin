@@ -8,11 +8,21 @@ package javelin.controller.action;
  * @author alex
  */
 public interface SimpleAction {
+	/** Executes action. */
 	void perform();
 
+	/**
+	 * @return {@link Integer} codes for keys.
+	 */
 	int[] getcodes();
 
+	/**
+	 * @return Action name.
+	 */
 	String getname();
 
+	/**
+	 * @return Text keys.
+	 */
 	String[] getkeys();
 }

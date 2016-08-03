@@ -13,7 +13,7 @@ import javelin.model.world.World;
  * Found next to {@link Water}. Always flooded.
  * 
  * @see Temple
- * @see Fight#floodlevel
+ * @see Fight#weather
  * @author alex
  */
 public class WaterTemple extends Temple {
@@ -34,7 +34,7 @@ public class WaterTemple extends Temple {
 	@Override
 	public Fight encounter() {
 		Fight f = super.encounter();
-		f.floodlevel = Weather.STORM;
+		f.weather = Weather.STORM;
 		return f;
 	}
 

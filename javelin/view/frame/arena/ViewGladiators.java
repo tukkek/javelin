@@ -14,7 +14,13 @@ import javelin.model.unit.Combatant;
 import javelin.model.world.location.unique.Arena;
 import javelin.view.frame.Frame;
 
+/**
+ * Select a unit and open a {@link ViewGladiator} scren.
+ * 
+ * @author alex
+ */
 public class ViewGladiators extends Frame {
+	/** Constructor. */
 	public ViewGladiators(Arena arena) {
 		super("View");
 	}

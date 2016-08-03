@@ -11,6 +11,7 @@ import javelin.view.screen.BattleScreen;
  */
 public class Withdraw extends Action {
 
+	/** Constructor. */
 	public Withdraw() {
 		super("Withdraw (flee from combat)", "W");
 	}

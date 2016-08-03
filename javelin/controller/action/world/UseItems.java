@@ -15,9 +15,16 @@ import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
 
+/**
+ * Use an {@link Item} out of battle.
+ *
+ * @see Item#usedoutofbattle
+ * @author alex
+ */
 public class UseItems extends WorldAction {
 	static final String KEYS = "1234567890abcdfghijklmnoprstuvxwyz";
 
+	/** Constructor. */
 	public UseItems() {
 		super("Inventory", new int[] {}, new String[] { "i" });
 	}
@@ -69,8 +76,7 @@ public class UseItems extends WorldAction {
 		return selected.consumable;
 	}
 
-	protected Item select(final ArrayList<Item> allitems,
-			final Character input) {
+	Item select(final ArrayList<Item> allitems, final Character input) {
 		Item selected = null;
 		int index =
 				SelectScreen.convertnumericselection(input, KEYS.toCharArray());
@@ -80,8 +86,8 @@ public class UseItems extends WorldAction {
 		return selected;
 	}
 
-	public void exchange(final ArrayList<Item> allitems,
-			final String reequiptext, final InfoScreen infoscreen) {
+	void exchange(final ArrayList<Item> allitems, final String reequiptext,
+			final InfoScreen infoscreen) {
 		infoscreen.print(infoscreen.text + "\n\nSelect an item.");
 		Item selected = select(allitems, InfoScreen.feedback());
 		if (selected == null) {
@@ -101,7 +107,7 @@ public class UseItems extends WorldAction {
 				.add(selected);
 	}
 
-	protected Combatant findowner(Item selected) {
+	Combatant findowner(Item selected) {
 		for (Combatant bag : Squad.active.members) {
 			for (Item i : Squad.active.equipment.get(bag.id)) {
 				if (i == selected) {
@@ -112,7 +118,7 @@ public class UseItems extends WorldAction {
 		throw new RuntimeException("Item owner not found #useitems");
 	}
 
-	private int count(Item it, List<Item> allitems) {
+	int count(Item it, List<Item> allitems) {
 		int count = 0;
 		for (Item i : allitems) {
 			if (i.equals(it)) {
@@ -122,24 +128,19 @@ public class UseItems extends WorldAction {
 		return count;
 	}
 
-	public Combatant inputmember(final InfoScreen infoscreen,
-			final String message) {
+	Combatant inputmember(final InfoScreen infoscreen, final String message) {
 		return Squad.active.members
 				.get(Javelin.choose(message, Squad.active.members, true, true));
-		// infoscreen.print(message + "\n\n" +
-		// TownShopScreen.listactivemembers());
-		// while (true) {
-		// try {
-		// return Squad.active.members.get(
-		// Integer.parseInt(InfoScreen.feedback().toString()) - 1);
-		// } catch (final NumberFormatException e) {
-		// continue;
-		// } catch (final IndexOutOfBoundsException e) {
-		// continue;
-		// }
-		// }
 	}
 
+	/**
+	 * @param allitems
+	 *            Items to be listed.
+	 * @param showkeys
+	 *            If <code>true</code> will prepend each item with a key from
+	 *            {@link SelectScreen#KEYS}.
+	 * @return A textual listing.
+	 */
 	static public String listitems(final ArrayList<Item> allitems,
 			boolean showkeys) {
 		String s = "";
@@ -170,14 +171,7 @@ public class UseItems extends WorldAction {
 				if (showkeys) {
 					s += "  [" + SelectScreen.KEYS[i] + "]";
 				}
-				s += " " + it.name;
-				String useerror = it.canuse(c);
-				if (useerror != null) {
-					s += " (" + useerror + ")";
-				} else if (c.equipped.contains(it)) {
-					s += " (equipped)";
-				}
-				s += "\n";
+				s += describeitem(it, c);
 				i += 1;
 				none = false;
 			}
@@ -186,5 +180,16 @@ public class UseItems extends WorldAction {
 			}
 		}
 		return s;
+	}
+
+	static String describeitem(final Item it, final Combatant c) {
+		String s = " " + it.name;
+		String useerror = it.canuse(c);
+		if (useerror != null) {
+			s += " (" + useerror + ")";
+		} else if (c.equipped.contains(it)) {
+			s += " (equipped)";
+		}
+		return s + "\n";
 	}
 }

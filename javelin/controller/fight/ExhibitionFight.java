@@ -16,6 +16,7 @@ import javelin.view.screen.BattleScreen;
  * @author alex
  */
 public class ExhibitionFight extends Fight {
+	/** Constructor. */
 	public ExhibitionFight() {
 		map = new Arena();
 		meld = true;

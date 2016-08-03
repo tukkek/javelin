@@ -10,6 +10,7 @@ import javelin.view.screen.WorldScreen;
  */
 public class WorldHelp extends WorldAction {
 
+	/** Constructor. */
 	public WorldHelp() {
 		super("Help", new int[] {}, new String[] { "h" });
 	}

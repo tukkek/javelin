@@ -1,0 +1,31 @@
+When you upgrade a skill it is set to its current maximum possible rank. 
+Once you gain a class level it can be upgraded again into a new higher rank.
+Unless noted only the highest skill rank in a group is taken into account.
+Skill roll: d20 + ranks + ability modifier, passes if equal or higher than DC. 
+Resistance skills are rolled in opposition, highest wins. 
+
+Acrobatics: allows you to disengage faster. Individual roll.
+
+Concentration: allows you to cast spells while engaged in combat. DC 15 + spell level to cast a spell of that level while engaged. Individual roll.
+
+Diplomacy: DC 10 + encounter level to bribe a group of creatures out of your way. DC 15 + encounter level to recruit them to your team.
+
+Disable device: disarms a trap. DC depends on the trap in question. A failure could result in the trap being activated.
+
+Gather information: DC 10 + number of squares away to learn about a nearby location. Rolled each time you enter certain locations.
+
+Heal: DC 15 to double natural healing rates and also helps prevent secondary damage from poison. A unit cannot heal itself.
+
+Knowledge: DC 10 + encounter level to reveal details of a location.
+
+Perception: shows you the location of hidden creatures in battle (individual roll). Allows opponent and defending army units to be revealed. Allows you to notice and hide from enemy groups. Lets you see farther in the world map. 
+ 
+Search: allows you to find a nearby trap. DC depends on trap in question.
+
+Spellcraft: DC 10 + necessary spell caster level to learn a spell without having enough levels to learn it normally. Also provides half the number of ranks as a bonus to scroll reading checks. Individual roll.
+
+Stealth: used as a resistance skill to Perception. Individual roll.
+
+Survival: for each 4 ranks finds daily food to sustain one of your units. Allows a squad to evade some terrain hazards.
+
+Use magic device: DC 20 to use a wand, DC 10 + caster level to read a scroll or DC 15 + spell level to help decipher either instead. Individual roll.

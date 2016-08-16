@@ -27,18 +27,12 @@ import javelin.view.frame.Frame;
  * @author alex
  */
 public class HireScreen extends Frame {
-	/**
-	 * How much a hireling costs per challenge rating ({@value #COSTPERCR}
-	 * coins).
-	 */
-	public static final int COSTPERCR = 5;
-
 	static final int MAXCR = Math.round(Javelin.MONSTERSBYCR.lastKey());
 
 	List list = new List(20, false);
 	JSlider slider;
 	ArrayList<Monster> candidates = new ArrayList<Monster>();
-	int costmultiplier = COSTPERCR;
+	int costmultiplier = Arena.COINSPERCR;
 
 	/** Constructor. */
 	public HireScreen() {

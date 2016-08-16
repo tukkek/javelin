@@ -22,7 +22,7 @@ public class Help extends Action {
 
 	@Override
 	public boolean perform(Combatant hero) {
-		help(ActionMapping.actions);
+		help(ActionMapping.ACTIONS);
 		return false;
 	}
 

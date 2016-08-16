@@ -15,7 +15,7 @@ import javelin.model.unit.Combatant;
 
 /**
  * An {@link Iterator} that uses {@link Action}s from
- * {@link ActionMapping#actions} and returns it's successors as
+ * {@link ActionMapping#ACTIONS} and returns it's successors as
  * {@link ChanceNode}.
  * 
  * @see AiAction#getoutcomes(BattleState, Combatant)
@@ -27,7 +27,7 @@ public final class ActionProvider
 	static final ArrayList<Action> AIACTIONS = new ArrayList<Action>();
 
 	static {
-		for (Action a : ActionMapping.actions) {
+		for (Action a : ActionMapping.ACTIONS) {
 			if (a instanceof AiAction) {
 				ActionProvider.AIACTIONS.add(a);
 			}

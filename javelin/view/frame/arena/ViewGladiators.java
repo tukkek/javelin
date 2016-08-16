@@ -2,6 +2,7 @@ package javelin.view.frame.arena;
 
 import java.awt.Button;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Label;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
@@ -10,6 +11,7 @@ import java.util.Comparator;
 
 import javax.swing.BoxLayout;
 
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.unique.Arena;
 import javelin.view.frame.Frame;
@@ -22,7 +24,8 @@ import javelin.view.frame.Frame;
 public class ViewGladiators extends Frame {
 	/** Constructor. */
 	public ViewGladiators(Arena arena) {
-		super("View");
+		super("Select a gladiator");
+		frame.setMinimumSize(new Dimension(getdialogsize().width / 2, 0));
 	}
 
 	@Override
@@ -36,7 +39,9 @@ public class ViewGladiators extends Frame {
 			}
 		});
 		for (final Combatant c : ArenaWindow.arena.gladiators) {
-			Button b = new Button(c.toString());
+			ChallengeRatingCalculator.calculateCr(c.source);
+			Button b = new Button(c.toString() + " (level "
+					+ Math.round(c.source.challengeRating) + ")");
 			b.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {

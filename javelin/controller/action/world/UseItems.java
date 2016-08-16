@@ -64,7 +64,7 @@ public class UseItems extends WorldAction {
 			return false;
 		}
 		Combatant target = selected instanceof Artifact ? findowner(selected)
-				: inputmember(infoscreen, "Which member will use the "
+				: inputmember("Which member will use the "
 						+ selected.toString().toLowerCase() + "?");
 		if (!selected.usepeacefully(target)) {
 			infoscreen.print(
@@ -102,9 +102,8 @@ public class UseItems extends WorldAction {
 			}
 		}
 		Squad.active.equipment.get(owner.id).remove(selected);
-		Squad.active.equipment.get(
-				inputmember(infoscreen, "Transfer " + selected + " to who?").id)
-				.add(selected);
+		Squad.active.equipment.get(selectmember(Squad.active.members, selected,
+				"Transfer " + selected + " to who?").id).add(selected);
 	}
 
 	Combatant findowner(Item selected) {
@@ -128,14 +127,14 @@ public class UseItems extends WorldAction {
 		return count;
 	}
 
-	Combatant inputmember(final InfoScreen infoscreen, final String message) {
+	Combatant inputmember(final String message) {
 		return Squad.active.members
 				.get(Javelin.choose(message, Squad.active.members, true, true));
 	}
 
 	/**
 	 * @param allitems
-	 *            Items to be listed.
+	 *            Adds items to this list if not <code>null</code>.
 	 * @param showkeys
 	 *            If <code>true</code> will prepend each item with a key from
 	 *            {@link SelectScreen#KEYS}.
@@ -191,5 +190,27 @@ public class UseItems extends WorldAction {
 			s += " (equipped)";
 		}
 		return s + "\n";
+	}
+
+	/**
+	 * @param members
+	 *            Eligible members.
+	 * @param i
+	 *            Item in question. See {@link Item#canuse(Combatant)}.
+	 * @return Selected member.
+	 */
+	public static Combatant selectmember(ArrayList<Combatant> members, Item i,
+			String text) {
+		ArrayList<String> options = new ArrayList<String>(members.size());
+		for (Combatant c : members) {
+			String option = c.toString();
+			String invalid = i.canuse(c);
+			if (invalid != null) {
+				option += " (" + invalid + ")";
+			}
+			options.add(option);
+		}
+
+		return members.get(Javelin.choose(text, options, true, true));
 	}
 }

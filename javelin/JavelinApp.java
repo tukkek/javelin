@@ -16,10 +16,8 @@ import javax.swing.JOptionPane;
 
 import javelin.controller.TextReader;
 import javelin.controller.ai.ThreadManager;
-import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.db.Preferences;
 import javelin.controller.db.StateManager;
-import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomEncounter;
@@ -29,7 +27,6 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
-import javelin.model.item.Wand;
 import javelin.model.spell.Summon;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -61,22 +58,24 @@ public class JavelinApp extends QuestApp {
 
 	/** Controller. */
 	static public WorldScreen context;
-	static ArrayList<Monster> lastenemies = new ArrayList<Monster>();
+	/** Last defeated enemies. */
+	public static ArrayList<Monster> lastenemies = new ArrayList<Monster>();
 
 	/**
 	 * Keeps track of monster status before combat so we can restore any
 	 * temporary effects.
 	 */
-	public ArrayList<Combatant> originalteam;
+	public static ArrayList<Combatant> originalteam;
 	/**
 	 * TODO see {@link BattleScreen#originalredteam} }
 	 */
-	public ArrayList<Combatant> originalfoes;
+	public static ArrayList<Combatant> originalfoes;
 	/**
 	 * Controller for active battle. Should be <code>null</code> at any point a
 	 * battle is not occurring.
 	 */
 	public Fight fight;
+	/** Root window. */
 	public JFrame frame;
 
 	@Override
@@ -90,7 +89,6 @@ public class JavelinApp extends QuestApp {
 			startcampaign();
 		}
 		javelin.controller.db.Preferences.init();// post
-		placesquads();
 		preparedebug();
 		if (Dungeon.active != null) {
 			Dungeon.active.activate(true);
@@ -127,75 +125,9 @@ public class JavelinApp extends QuestApp {
 				 * TODO support all types of strategic battles (Lair, Incursion,
 				 * Siege...)
 				 */
-				quickbattle();
+				StartBattle.quickbattle();
 			} else {
 				e.battle();
-			}
-		}
-	}
-
-	private void quickbattle() {
-		int teamel =
-				ChallengeRatingCalculator.calculateel(Squad.active.members);
-		ArrayList<Combatant> opponents = fight.getmonsters(teamel);
-		int el = opponents != null
-				? ChallengeRatingCalculator.calculateel(opponents)
-				: fight.getel(teamel);
-		if (opponents == null) {
-			opponents = fight.generate(teamel);
-		}
-		if (fight.avoid(opponents)) {
-			return;
-		}
-		float resourcesused =
-				ChallengeRatingCalculator.useresources(teamel, el);
-		ArrayList<Combatant> original =
-				new ArrayList<Combatant>(Squad.active.members);
-		for (Combatant c : original) {
-			strategicdamage(c, resourcesused);
-		}
-		if (Squad.active.members.isEmpty()) {
-			Javelin.message("Battle report: Squad lost in combat!", false);
-			Squad.active.disband();
-			return;
-		}
-		Fight.victory = true;
-		preparebattle(opponents);
-		switchScreen(WorldScreen.current);
-		EndBattle.showcombatresult(WorldScreen.active, original,
-				"Battle report: ");
-	}
-
-	void strategicdamage(Combatant c, float resourcesused) {
-		c.hp -= c.maxhp * resourcesused;
-		if (c.hp <= Combatant.DEADATHP || //
-				(c.hp <= 0 && RPG.random() < Math
-						.abs(c.hp / new Float(Combatant.DEADATHP)))) {
-			Squad.active.members.remove(c);
-			return;
-		}
-		if (c.hp <= 0) {
-			c.hp = 1;
-		}
-		for (Spell s : c.spells) {
-			for (int i = s.used; i < s.perday; i++) {
-				if (RPG.random() < resourcesused) {
-					s.used += 1;
-				}
-			}
-		}
-		ArrayList<Item> bag = Squad.active.equipment.get(c.id);
-		for (Item i : new ArrayList<Item>(bag)) {
-			if (i.usedinbattle) {
-				if (i instanceof Wand) {
-					Wand w = (Wand) i;
-					w.charges -= w.charges * resourcesused;
-					if (w.charges <= 0) {
-						bag.remove(w);
-					}
-				} else if (RPG.random() < resourcesused) {
-					bag.remove(i);
-				}
 			}
 		}
 	}
@@ -268,12 +200,6 @@ public class JavelinApp extends QuestApp {
 		ThreadManager.determineprocessors();
 	}
 
-	void placesquads() {
-		for (final WorldActor a : Squad.getall(Squad.class)) {
-			Squad s = (Squad) a;
-		}
-	}
-
 	void startcampaign() {
 		SquadScreen.open();
 		World.makemap();
@@ -342,6 +268,7 @@ public class JavelinApp extends QuestApp {
 		return summon;
 	}
 
+	@SuppressWarnings("deprecation")
 	void preparedebug() {
 		if (Preferences.DEBUGSGOLD != null) {
 			Squad.active.gold = Preferences.DEBUGSGOLD;
@@ -365,29 +292,6 @@ public class JavelinApp extends QuestApp {
 				}
 			}
 		}
-	}
-
-	/** TODO deduplicate originals */
-	public void preparebattle(ArrayList<Combatant> opponents) {
-		JavelinApp.lastenemies.clear();
-		Fight.state.redTeam = opponents;
-		for (final Combatant m : Fight.state.redTeam) {
-			JavelinApp.lastenemies.add(m.source.clone());
-		}
-		originalteam = JavelinApp.cloneteam(Fight.state.blueTeam);
-		originalfoes = JavelinApp.cloneteam(Fight.state.redTeam);
-		BattleScreen.originalblueteam =
-				new ArrayList<Combatant>(Fight.state.blueTeam);
-		BattleScreen.originalredteam =
-				new ArrayList<Combatant>(Fight.state.redTeam);
-	}
-
-	private static ArrayList<Combatant> cloneteam(ArrayList<Combatant> team) {
-		ArrayList<Combatant> clone = new ArrayList<Combatant>(team.size());
-		for (Combatant c : team) {
-			clone.add(c.clone());
-		}
-		return clone;
 	}
 
 	@Override

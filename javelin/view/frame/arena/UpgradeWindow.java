@@ -26,7 +26,8 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class UpgradeWindow extends Frame {
-	private static final int UPGRADESPERSESSION = 9;
+	static final int UPGRADESPERSESSION = 9;
+	static final float XPPERCOIN = 1 / new Float(Arena.COINSPERCR);
 
 	class UpgradeButton implements ActionListener {
 		private Upgrade u;
@@ -58,7 +59,7 @@ public class UpgradeWindow extends Frame {
 	ActionListener buymorexp = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			boost(gladiator, 10);
+			boost(gladiator, Arena.COINSPERCR);
 			show();
 		}
 	};
@@ -120,12 +121,14 @@ public class UpgradeWindow extends Frame {
 
 		parent.add(new Label("Current XP: " + gladiator.gethumanxp()));
 		parent.add(new Label("Coins: " + ArenaWindow.arena.coins));
-		newbutton("Buy more XP (1 coin = 10XP)", parent, buyxp)
+		int xppercoin = Math.round(100 * XPPERCOIN);
+		newbutton("Buy more XP (1 coin = " + xppercoin + "XP)", parent, buyxp)
 				.setEnabled(ArenaWindow.arena.coins >= 1);
-		newbutton("Buy more XP (10 coins = 100XP)", parent, buymorexp)
-				.setEnabled(ArenaWindow.arena.coins >= 10);
-		newbutton("Redraw upgrades (1 coin + 10XP bonus)", parent, redraw)
-				.setEnabled(ArenaWindow.arena.coins >= 1);
+		newbutton("Buy more XP (" + Arena.COINSPERCR + " coins = 100XP)",
+				parent, buymorexp).setEnabled(
+						ArenaWindow.arena.coins >= Arena.COINSPERCR);
+		newbutton("Redraw upgrades (1 coin + " + xppercoin + "XP bonus)",
+				parent, redraw).setEnabled(ArenaWindow.arena.coins >= 1);
 		parent.add(new Label());
 
 		for (Upgrade u : upgrades) {
@@ -150,12 +153,12 @@ public class UpgradeWindow extends Frame {
 
 	/**
 	 * @param c
-	 *            Given 10XP...
+	 *            Given {@value #XPPERCOIN} CR in XP...
 	 * @param multiplier
 	 *            times this. Spends this number of {@link Arena#coins}.
 	 */
 	public static void boost(Combatant c, int multiplier) {
-		c.xp = c.xp.add(new BigDecimal(multiplier * .1f));
+		c.xp = c.xp.add(new BigDecimal(multiplier * XPPERCOIN));
 		ArenaWindow.arena.coins -= multiplier;
 	}
 

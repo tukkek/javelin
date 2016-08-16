@@ -48,20 +48,20 @@ public class ArenaWindow extends Frame {
 					.show(ArenaWindow.this);
 		}
 	};
-	private ActionListener doabout = new ActionListener() {
+	ActionListener doabout = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			JOptionPane.showMessageDialog(frame, ABOUT, "About the arena",
 					JOptionPane.PLAIN_MESSAGE);
 		}
 	};
-	private ActionListener dohire = new ActionListener() {
+	ActionListener dohire = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			block(HireScreen.open());
 		}
 	};
-	private ActionListener doview = new ActionListener() {
+	ActionListener doview = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			new ViewGladiators(arena).show(ArenaWindow.this);
@@ -71,6 +71,12 @@ public class ArenaWindow extends Frame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			new BuyScreen(arena.gladiators).show(ArenaWindow.this);
+		}
+	};
+	ActionListener doredeemitem = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			new RedeemItem(ArenaWindow.this).show(ArenaWindow.this);
 		}
 	};
 
@@ -97,6 +103,8 @@ public class ArenaWindow extends Frame {
 		newbutton("Buy item", parent, dobuy);
 		newbutton("View gladiators", parent, doview);
 		newbutton("Hire gladiator", parent, dohire);
+		parent.add(new Label());
+		newbutton("Redeem item", parent, doredeemitem);
 		parent.add(new Label());
 		newbutton("About the Arena", parent, doabout);
 		parent.add(new Label("You currently have " + arena.coins + " coins."));

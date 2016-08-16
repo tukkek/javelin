@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
-import javelin.Javelin;
 import javelin.controller.action.UseItem;
 import javelin.controller.action.world.UseItems;
 import javelin.controller.upgrade.Spell;
@@ -37,6 +36,11 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public abstract class Item implements Serializable, Cloneable {
+	/**
+	 * Organizes a {@link List} from cheapest to most expensive Item.
+	 * 
+	 * @see List#sort(Comparator)
+	 */
 	public static Comparator<Item> PRICECOMPARATOR = new Comparator<Item>() {
 		@Override
 		public int compare(Item o1, Item o2) {
@@ -48,6 +52,7 @@ public abstract class Item implements Serializable, Cloneable {
 	 * All available item types from cheapest to most expensive.
 	 */
 	public static final ItemSelection ALL = new ItemSelection();
+	/** Map of items by price in gold coins ($). */
 	public static final TreeMap<Integer, ItemSelection> BYPRICE =
 			new TreeMap<Integer, ItemSelection>();
 	/** @see Item#getselection(Realm) */
@@ -62,6 +67,7 @@ public abstract class Item implements Serializable, Cloneable {
 	public static final ItemSelection GOOD = new ItemSelection();
 	/** @see Item#getselection(Realm) */
 	public static final ItemSelection EVIL = new ItemSelection();
+	/** @see Item#getselection(Realm) */
 	public static final ItemSelection MAGIC = new ItemSelection();
 	/** @see Artifact */
 	public static final ItemSelection ARTIFACT = new ItemSelection();
@@ -104,6 +110,10 @@ public abstract class Item implements Serializable, Cloneable {
 	/** How many action points to spend during {@link UseItem}. */
 	public float apcost = .5f;
 
+	/**
+	 * @param upgradeset
+	 *            One the static constants in this class, like {@link #MAGIC}.
+	 */
 	public Item(final String name, final int price,
 			final ItemSelection upgradeset) {
 		this.name = name;
@@ -114,6 +124,7 @@ public abstract class Item implements Serializable, Cloneable {
 		}
 	}
 
+	/** Sorts {@link #ALL} by price. */
 	public static void mapbyprice() {
 		Collections.shuffle(ALL);
 		Collections.sort(ALL, PRICECOMPARATOR);
@@ -236,6 +247,9 @@ public abstract class Item implements Serializable, Cloneable {
 		return "Can only be used in battle.";
 	}
 
+	/**
+	 * @return All items types mapped by realm.
+	 */
 	public static HashMap<String, ItemSelection> getall() {
 		HashMap<String, ItemSelection> all =
 				new HashMap<String, ItemSelection>();
@@ -278,11 +292,18 @@ public abstract class Item implements Serializable, Cloneable {
 	 * Prompts user to select one of the active {@link Squad} members to keep
 	 * this item and updates {@link Squad#equipment}.
 	 */
+	public void grab(Squad s) {
+		final String list = UseItems.listitems(null, false)
+				+ "\nWho will take the " + toString().toLowerCase() + "?";
+		s.equipment.get(UseItems.selectmember(s.members, this, list).id)
+				.add(this);
+	}
+
+	/**
+	 * Same as {@link #grab(Squad)} but uses {@link Squad#active}.
+	 */
 	public void grab() {
-		Squad.active.equipment.get(Squad.active.members.get(Javelin.choose(
-				UseItems.listitems(null, false) + "\nWho will take the "
-						+ toString().toLowerCase() + "?",
-				Squad.active.members, true, true)).id).add(this);
+		grab(Squad.active);
 	}
 
 	/**

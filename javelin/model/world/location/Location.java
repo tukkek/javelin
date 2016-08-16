@@ -256,8 +256,7 @@ public abstract class Location extends WorldActor {
 		throw new RepeatTurn();
 	}
 
-	private static String describe(List<Combatant> opponents,
-			String description) {
+	static String describe(List<Combatant> opponents, String description) {
 		return description + ". Forces: ("
 				+ ChallengeRatingCalculator.describedifficulty(
 						ChallengeRatingCalculator.calculateel(opponents)
@@ -268,8 +267,7 @@ public abstract class Location extends WorldActor {
 
 	@Override
 	public String describe() {
-		return garrison.isEmpty() ? toString() + "."
-				: describe(garrison, toString());
+		return garrison.isEmpty() ? toString() : describe(garrison, toString());
 	}
 
 	@Override

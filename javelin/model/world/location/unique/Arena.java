@@ -6,10 +6,10 @@ import java.util.List;
 
 import javelin.controller.challenge.RewardCalculator;
 import javelin.model.item.Item;
+import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;
 import javelin.model.world.WorldActor;
 import javelin.view.frame.arena.ArenaWindow;
-import javelin.view.frame.arena.HireScreen;
 
 /**
  * The Arena can be seen as a mini-game or a separate game mode for Javelin.
@@ -23,20 +23,28 @@ import javelin.view.frame.arena.HireScreen;
  * corresponding key to it. Once you get used to the coin and betting system
  * you'll be able to ascend in power very fast!
  * 
- * The design parameters for the arena is: {@value HireScreen#COSTPERCR}
+ * The design parameters for the arena is: {@value Arena#COINSPERCR}
  * {@link #coins} per CR. Each coin value in gold is defined by
  * {@link #getcoins(int)}.
  * 
  * @author alex
  */
 public class Arena extends UniqueLocation {
+	/**
+	 * How much a hireling costs per challenge rating ({@value #COINSPERCR}
+	 * coins).
+	 */
+	public static final int COINSPERCR = 5;
 	static final String DESCRIPTION = "The arena";
 	/** Roster of permanent player units. */
 	public ArrayList<Combatant> gladiators = new ArrayList<Combatant>();
 	/** <code>true</code> on player's first visit. */
 	public boolean welcome = true;
 	/** Arena's currency. */
-	public int coins = HireScreen.COSTPERCR;
+	public int coins = COINSPERCR;
+	/** Redeemable items. */
+	public ItemSelection items = new ItemSelection();
+
 	/** {@link Item} bag for {@link #gladiators}. */
 	HashMap<Integer, ArrayList<Item>> equipment =
 			new HashMap<Integer, ArrayList<Item>>();
@@ -44,6 +52,7 @@ public class Arena extends UniqueLocation {
 	/** Constructor. */
 	public Arena() {
 		super(DESCRIPTION, DESCRIPTION, 0, 0);
+		stock();
 	}
 
 	@Override
@@ -99,7 +108,7 @@ public class Arena extends UniqueLocation {
 	 * @return a value in {@link #coins}.
 	 */
 	public static int getcoins(int gold) {
-		return RewardCalculator.getcr(gold);
+		return Math.max(1, RewardCalculator.getcr(gold));
 	}
 
 	/**
@@ -127,5 +136,15 @@ public class Arena extends UniqueLocation {
 			equipment.put(c.id, bag);
 		}
 		return bag;
+	}
+
+	/**
+	 * Fills {@link #items} with random items.
+	 */
+	public void stock() {
+		while (items.size() < 9) {
+			items.add(Item.ALL.random().clone());
+		}
+		items.sort(Item.PRICECOMPARATOR);
 	}
 }

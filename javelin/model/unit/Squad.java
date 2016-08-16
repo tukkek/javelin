@@ -656,4 +656,11 @@ public class Squad extends WorldActor {
 		}
 		return "Squad (" + members.substring(0, members.length() - 2) + ")";
 	}
+
+	/**
+	 * @return All squads in the {@link World}.
+	 */
+	public static ArrayList<WorldActor> getsquads() {
+		return getall(Squad.class);
+	}
 }

@@ -160,7 +160,7 @@ public class Town extends Location {
 		NAMES.add("Reno");// fallout 2
 		NAMES.add("Marrymore");// super mario rpg
 		NAMES.add("Kakariko"); // zelda
-		NAMES.add("the Citadel"); // mass effect
+		NAMES.add("The Citadel"); // mass effect
 		NAMES.add("Tristam");// diablo
 		NAMES.add("Midgar"); // final fantasy 7
 		NAMES.add("Medina");// chrono trigger

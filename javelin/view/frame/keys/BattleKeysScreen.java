@@ -22,8 +22,8 @@ public class BattleKeysScreen extends KeysScreen {
 	@Override
 	public ArrayList<ActionDescription> getactions() {
 		ArrayList<ActionDescription> list =
-				new ArrayList<ActionDescription>(ActionMapping.actions.length);
-		for (Action c : ActionMapping.actions) {
+				new ArrayList<ActionDescription>(ActionMapping.ACTIONS.length);
+		for (Action c : ActionMapping.ACTIONS) {
 			if (!(c instanceof ActionAdapter) && c.getMainKey() != null) {
 				list.add(c);
 			}

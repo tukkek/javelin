@@ -25,12 +25,8 @@ import javelin.controller.exception.RepeatTurn;
  * @see WorldAction
  */
 public class ActionMapping {
-	/** Only instance of this class. */
-	public static final ActionMapping SINGLETON = new ActionMapping();
-	/** If true will reload keys. */
-	public static boolean reset = false;
 	/** Canonical array of possible battle actions. */
-	public static Action[] actions = new Action[] { //
+	public static final Action[] ACTIONS = new Action[] { //
 			Breath.SINGLETON, // b
 			new Charge(), // c
 			Dig.SINGLETON, // d
@@ -66,6 +62,10 @@ public class ActionMapping {
 			Action.MOVE_S, Action.MOVE_SW, Action.MOVE_W, Action.MOVE_NW,
 			AiMovement.SINGLETON, MeleeAttack.SINGLETON,
 			RangedAttack.SINGLETON };
+	/** Only instance of this class. */
+	public static final ActionMapping SINGLETON = new ActionMapping();
+	/** If true will reload keys. */
+	public static boolean reset = false;
 
 	final Map<String, Action> mappings = new HashMap<String, Action>();
 
@@ -77,7 +77,7 @@ public class ActionMapping {
 	 * Register {@link Action#keys} and {@link Action#keycodes}.
 	 */
 	public void init() {
-		for (final Action a : ActionMapping.actions) {
+		for (final Action a : ActionMapping.ACTIONS) {
 			for (final String key : a.keys) {
 				if (mappings.put(key, a) != null) {
 					throw new RuntimeException("Key conflict (" + key

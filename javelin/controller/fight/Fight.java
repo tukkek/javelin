@@ -150,7 +150,7 @@ public abstract class Fight {
 		/* should at least serve as food for 1 day */
 		final int bonus = Math.round(Math.max(Squad.active.eat() / 2,
 				RewardCalculator.receivegold(BattleScreen.originalredteam)));
-		Squad.active.members = Fight.state.blueTeam;
+		// Squad.active.members = Fight.state.blueTeam;
 		String rewards = "";
 		if (Javelin.app.fight.rewardxp) {
 			rewards += RewardCalculator.rewardxp(Fight.state.blueTeam,
@@ -279,14 +279,14 @@ public abstract class Fight {
 	 *            Terrain this fight takes place on.
 	 * @return The resulting opponents.
 	 */
-	public ArrayList<Combatant> generate(final int teamel) {
+	public ArrayList<Combatant> generate(final int el) {
 		ArrayList<Terrain> terrains = getterrains();
-		ArrayList<Combatant> foes = getmonsters(teamel);
+		ArrayList<Combatant> foes = getmonsters(el);
 		if (foes != null) {
 			enhance(foes);
 			return foes;
 		}
-		foes = generate(teamel, terrains);
+		foes = generate(el, terrains);
 		enhance(foes);
 		return foes;
 	}
@@ -382,9 +382,13 @@ public abstract class Fight {
 	 *         all factors.
 	 */
 	public int flood() {
-		return weather == null
-				? Math.min(Weather.current, Javelin.app.fight.map.maxflooding)
-				: weather;
+		if (weather != null) {
+			return weather;
+		}
+		if (map == null) {
+			return Weather.current;
+		}
+		return Math.min(Weather.current, map.maxflooding);
 	}
 
 	/**
@@ -409,5 +413,17 @@ public abstract class Fight {
 	 */
 	public void ready() {
 		// see javadoc
+	}
+
+	/**
+	 * Setups {@link #state} and {@link BattleState#blueTeam}.
+	 * 
+	 * @return Opponent units.
+	 */
+	public ArrayList<Combatant> setup() {
+		Fight.state = new BattleState(this);
+		Fight.state.blueTeam = getblueteam();
+		return generate(Terrain.current().getel(
+				ChallengeRatingCalculator.calculateel(Fight.state.blueTeam)));
 	}
 }

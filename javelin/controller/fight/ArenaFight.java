@@ -36,7 +36,7 @@ public class ArenaFight extends Fight {
 	 */
 	public ArrayList<Combatant> blueteam = new ArrayList<Combatant>();
 	/** Enemies. */
-	public ArrayList<Combatant> redteam = new ArrayList<Combatant>();
+	public ArrayList<Combatant> redteam = null;
 	/** Number of {@link Meld} to place at the start of battle. */
 	public int nmeld = 0;
 	/** Double or nothing bet. */
@@ -60,7 +60,7 @@ public class ArenaFight extends Fight {
 
 	@Override
 	public ArrayList<Combatant> getmonsters(int teamel) {
-		return null;
+		return redteam;
 	}
 
 	/**

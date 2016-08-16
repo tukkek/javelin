@@ -8,6 +8,7 @@ import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.BattleSetup;
 import javelin.controller.Weather;
+import javelin.controller.action.Action;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.RewardCalculator;
@@ -21,6 +22,7 @@ import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.Underground;
 import javelin.controller.terrain.Water;
 import javelin.controller.terrain.map.Map;
+import javelin.model.condition.Dominated;
 import javelin.model.item.Item;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
@@ -194,13 +196,25 @@ public abstract class Fight {
 	 * @throws EndBattle
 	 *             If this battle is over.
 	 */
-	public void checkEndBattle(BattleScreen screen) {
+	public void checkEndBattle() {
 		if (Fight.state.redTeam.isEmpty() || Fight.state.blueTeam.isEmpty()) {
 			throw new EndBattle();
 		}
-		if (!screen.checkforenemies()) {
+		if (!checkforenemies()) {
 			throw new EndBattle();
 		}
+	}
+
+	/**
+	 * @return <code>true</code> if there are any active enemies here.
+	 */
+	public boolean checkforenemies() {
+		for (Combatant c : Fight.state.redTeam) {
+			if (c.hascondition(Dominated.class) == null) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -373,8 +387,8 @@ public abstract class Fight {
 	/**
 	 * @return <code>true</code> if battle has been won.
 	 */
-	public Boolean win(BattleScreen screen) {
-		return Fight.state.redTeam.isEmpty() || !screen.checkforenemies();
+	public Boolean win() {
+		return Fight.state.redTeam.isEmpty() || !checkforenemies();
 	}
 
 	/**
@@ -425,5 +439,43 @@ public abstract class Fight {
 		Fight.state.blueTeam = getblueteam();
 		return generate(Terrain.current().getel(
 				ChallengeRatingCalculator.calculateel(Fight.state.blueTeam)));
+	}
+
+	/**
+	 * Called after a unit completes an {@link Action}.
+	 */
+	public void endturn() {
+		if (friendly) {
+			BattleState s = Fight.state;
+			int ncombatants = s.blueTeam.size() + s.redTeam.size();
+			cleanwounded(s.blueTeam, s);
+			cleanwounded(s.redTeam, s);
+			if (s.blueTeam.size() + s.redTeam.size() < ncombatants) {
+				Fight.state = s;
+				Game.redraw();
+			}
+		}
+	}
+
+	void cleanwounded(ArrayList<Combatant> team, BattleState s) {
+		for (Combatant c : (List<Combatant>) team.clone()) {
+			if (c.getNumericStatus() <= friendlylevel) {
+				if (team == s.blueTeam) {
+					BattleScreen.active.fleeing.add(c);
+				}
+				team.remove(c);
+				if (s.next == c) {
+					s.checkwhoisnext();
+				}
+				s.addmeld(c.location[0], c.location[1]);
+				Game.message(
+						c + " is removed from the battlefield!\nPress ENTER to continue...",
+						Delay.NONE);
+				while (Game.getInput().getKeyChar() != '\n') {
+					// wait for enter
+				}
+				Game.messagepanel.clear();
+			}
+		}
 	}
 }

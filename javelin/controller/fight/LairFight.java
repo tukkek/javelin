@@ -56,8 +56,8 @@ public class LairFight extends Fight {
 	}
 
 	@Override
-	public void checkEndBattle(BattleScreen screen) {
-		super.checkEndBattle(screen);
+	public void checkEndBattle() {
+		super.checkEndBattle();
 		if (checkend()) {
 			throw new EndBattle();
 		}
@@ -95,7 +95,7 @@ public class LairFight extends Fight {
 	}
 
 	@Override
-	public Boolean win(BattleScreen screen) {
-		return super.win(screen) || checkend();
+	public Boolean win() {
+		return super.win() || checkend();
 	}
 }

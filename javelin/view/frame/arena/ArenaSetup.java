@@ -122,7 +122,7 @@ public class ArenaSetup extends javelin.view.frame.Frame {
 		super("Arena battle setup");
 		this.parent = parent;
 		fight = f;
-		int nallies = RPG.r(3, 5) - ArenaWindow.arena.gladiators.size();
+		int nallies = 3 - ArenaWindow.arena.gladiators.size();
 		while (nallies > 0) {
 			Combatant ally = new Combatant(
 					RPG.pick(SquadScreen.getcandidates()).clone(), true);

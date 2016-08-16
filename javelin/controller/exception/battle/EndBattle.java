@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.JavelinApp;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.ai.cache.AiCache;
 import javelin.controller.fight.Fight;
@@ -44,13 +45,13 @@ public class EndBattle extends BattleEvent {
 	 * @param originalTeam
 	 *            Player team.
 	 */
-	public static void end(BattleScreen screen,
-			ArrayList<Combatant> originalTeam) {
+	public static void end() {
 		int nsquads = Squad.getall(Squad.class).size();
-		Fight.victory = Javelin.app.fight.win(screen);
+		Fight.victory = Javelin.app.fight.win();
 		BattleState s = Fight.state;
-		terminateconditions(s, screen);
-		if (!Javelin.app.fight.onEnd(screen, originalTeam, s)) {
+		terminateconditions(s, BattleScreen.active);
+		if (!Javelin.app.fight.onEnd(BattleScreen.active,
+				JavelinApp.originalteam, s)) {
 			return;
 		}
 		AiCache.reset();
@@ -61,7 +62,7 @@ public class EndBattle extends BattleEvent {
 				Squad.active.displace();
 				Squad.active.place();
 			}
-			end(originalTeam);
+			end(JavelinApp.originalteam);
 			if (Dungeon.active != null) {
 				Temple.climbing = false;
 				Dungeon.active.activate(false);

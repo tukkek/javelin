@@ -18,6 +18,7 @@ import javelin.controller.TextReader;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.db.Preferences;
 import javelin.controller.db.StateManager;
+import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomEncounter;
@@ -116,18 +117,23 @@ public class JavelinApp extends QuestApp {
 			}
 			while (true) {
 				switchScreen(JavelinApp.context);
-				JavelinApp.context.step();
+				JavelinApp.context.turn();
 			}
 		} catch (final StartBattle e) {
 			fight = e.fight;
 			if (Squad.active.strategic && fight instanceof RandomEncounter) {
 				/*
 				 * TODO support all types of strategic battles (Lair, Incursion,
-				 * Siege...)
+				 * Siege...) for hard fights up
 				 */
 				StartBattle.quickbattle();
 			} else {
-				e.battle();
+				try {
+					e.battle();
+				} catch (final EndBattle end) {
+					EndBattle.end();
+					Javelin.app.fight = null;
+				}
 			}
 		}
 	}

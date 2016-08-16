@@ -141,7 +141,7 @@ public abstract class Action implements Serializable, ActionDescription {
 	 * @param list
 	 *            The possible outcomes of the action decided by the AI.
 	 * @param enableoverrun
-	 *            See {@link BattleScreen#updatescreen(ChanceNode, boolean)}
+	 *            See {@link BattleScreen#setstate(ChanceNode, boolean)}
 	 * @return The actual outcome of the action made by the AI.
 	 */
 	public static void outcome(final List<ChanceNode> list,
@@ -150,7 +150,7 @@ public abstract class Action implements Serializable, ActionDescription {
 		for (final ChanceNode cn : list) {
 			roll -= cn.chance;
 			if (roll <= 0) {
-				BattleScreen.active.updatescreen(cn, enableoverrun);
+				BattleScreen.active.setstate(cn, enableoverrun);
 				// Fight.state = (BattleState) cn.n;
 				return;
 			}

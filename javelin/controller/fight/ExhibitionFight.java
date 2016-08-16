@@ -36,8 +36,8 @@ public class ExhibitionFight extends Fight {
 	}
 
 	@Override
-	public void checkEndBattle(BattleScreen screen) {
-		super.checkEndBattle(screen);
+	public void checkEndBattle() {
+		super.checkEndBattle();
 		if (Fight.state.blueTeam.isEmpty()) {
 			throw new EndBattle();
 		}

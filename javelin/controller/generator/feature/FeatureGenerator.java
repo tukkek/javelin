@@ -48,7 +48,7 @@ import tyrant.mikera.engine.RPG;
  * gameplay.
  * 
  * @author alex
- * @see WorldScreen#turn()
+ * @see WorldScreen#endturn()
  */
 public class FeatureGenerator {
 	/** Only access point to this class. */

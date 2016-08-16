@@ -44,12 +44,7 @@ public class StartBattle extends BattleEvent {
 		fight.ready();
 		BattlePanel.current = Fight.state.next;
 		BattleScreen battleScreen = new BattleScreen(true);
-		try {
-			battleScreen.mainLoop();
-		} catch (final EndBattle end) {
-			EndBattle.end(battleScreen, JavelinApp.originalteam);
-			Javelin.app.fight = null;
-		}
+		battleScreen.mainLoop();
 	}
 
 	/**

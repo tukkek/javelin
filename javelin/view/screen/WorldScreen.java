@@ -10,7 +10,6 @@ import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.Weather;
-import javelin.controller.action.Action;
 import javelin.controller.action.world.WorldAction;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.challenge.ChallengeRatingCalculator;
@@ -115,54 +114,33 @@ public class WorldScreen extends BattleScreen {
 		return mappanel.tiles;
 	}
 
-	@Override
-	public void checkEndBattle() {
-		return;
-	}
-
-	@Override
-	protected boolean rejectEvent(final KeyEvent keyEvent) {
-		return false;
-	}
-
-	@Override
-	protected void humanTurn() {
-		while (true) {
-			try {
-				updatescreen();
-				Game.userinterface.waiting = true;
-				final KeyEvent updatableUserAction = getUserInput();
-				if (MapPanel.overlay != null) {
-					MapPanel.overlay.clear();
-				}
-				if (updatableUserAction == null) {
-					callback.run();
-					callback = null;
-				} else {
-					performAction(convertEventToAction(updatableUserAction),
-							false);
-				}
-				break;
-			} catch (RepeatTurn e) {
-				Game.messagepanel.clear();
-				updateplayerinformation();
-				continue;
+	void move() {
+		try {
+			redraw();
+			Game.userinterface.waiting = true;
+			final KeyEvent updatableUserAction = getUserInput();
+			if (MapPanel.overlay != null) {
+				MapPanel.overlay.clear();
 			}
+			if (updatableUserAction == null) {
+				callback.run();
+				callback = null;
+			} else {
+				perform(updatableUserAction);
+			}
+		} catch (RepeatTurn e) {
+			Game.messagepanel.clear();
+			updateplayerinformation();
+			move();
 		}
 	}
 
-	/** TODO remove on 2.0+ */
-	public Point getherolocation() {
-		return new Point(Squad.active.x, Squad.active.y);
-	}
-
-	@Override
-	public Action convertEventToAction(final KeyEvent keyEvent) {
+	void perform(KeyEvent keyEvent) {
 		for (final WorldAction a : WorldAction.ACTIONS) {
 			for (final String s : a.morekeys) {
 				if (s.equals(Character.toString(keyEvent.getKeyChar()))) {
 					a.perform(this);
-					return null;
+					return;
 				}
 			}
 		}
@@ -170,19 +148,33 @@ public class WorldScreen extends BattleScreen {
 			for (final int s : a.keys) {
 				if (s == keyEvent.getKeyCode()) {
 					a.perform(this);
-					return null;
+					return;
 				}
 			}
 		}
-		return null;
 	}
 
 	@Override
-	public void performAction(final Action action, final boolean isShiftDown) {
+	public void turn() {
+		if (WorldScreen.welcome) {
+			saywelcome();
+		}
+		StateManager.save(false, StateManager.SAVEFILE);
+		endturn();
+		if (Squad.getall(Squad.class).isEmpty()) {
+			return;
+		}
+		updateplayerinformation();
+		move();
+		messagepanel.clear();
 	}
 
-	@Override
-	protected void updatescreen() {
+	/** TODO remove on 2.0+ */
+	public Point getherolocation() {
+		return new Point(Squad.active.x, Squad.active.y);
+	}
+
+	void redraw() {
 		Javelin.app.switchScreen(this);
 		Point h = JavelinApp.context.getherolocation();
 		centerscreen(h.x, h.y);
@@ -212,28 +204,13 @@ public class WorldScreen extends BattleScreen {
 		}
 	}
 
-	@Override
-	public void step() {
-		if (WorldScreen.welcome) {
-			saywelcome();
-		}
-		StateManager.save(false, StateManager.SAVEFILE);
-		turn();
-		if (Squad.getall(Squad.class).isEmpty()) {
-			return;
-		}
-		updateplayerinformation();
-		super.step();
-		messagepanel.clear();
-	}
-
 	/**
 	 * Player acts and ends turn, allowing time to pass.
 	 * 
 	 * @see Javelin#act()
 	 * @see Squad#hourselapsed
 	 */
-	public void turn() {
+	public void endturn() {
 		Squad act = Javelin.act();
 		if (act != null && act.work != null) {
 			act.build();
@@ -436,7 +413,7 @@ public class WorldScreen extends BattleScreen {
 	}
 
 	@Override
-	public void centerscreen(int x, int y, boolean force) {
+	public void centerscreen(int x, int y) {
 		mappanel.viewPosition(x, y);
 	}
 

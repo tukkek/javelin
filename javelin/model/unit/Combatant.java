@@ -24,6 +24,7 @@ import javelin.controller.upgrade.BreathUpgrade;
 import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
+import javelin.controller.walker.Walker;
 import javelin.model.Cloneable;
 import javelin.model.Realm;
 import javelin.model.TeamContainer;
@@ -741,5 +742,19 @@ public class Combatant implements Serializable, Cloneable {
 	public String gethumanxp() {
 		return xp.multiply(new BigDecimal(100)).setScale(0,
 				RoundingMode.HALF_UP) + "XP";
+	}
+
+	/** Locates an enemy by sound. */
+	public void listen() {
+		if (Fight.state.redTeam.contains(this)) {
+			return;
+		}
+		int listen = source.perceive(false);
+		for (Combatant c : Fight.state.redTeam) {
+			if (listen >= c.movesilently() + (Walker.distance(this, c) - 1)) {
+				BattleScreen.active.mappanel.tiles[c.location[0]][c.location[1]].discovered =
+						true;
+			}
+		}
 	}
 }

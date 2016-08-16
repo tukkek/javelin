@@ -112,11 +112,6 @@ public class DungeonScreen extends WorldScreen {
 	}
 
 	@Override
-	protected void humanTurn() {
-		super.humanTurn();
-	}
-
-	@Override
 	public boolean validatepoint(int tox, int toy) {
 		return 0 <= tox && tox < Dungeon.SIZE && 0 <= toy && toy < Dungeon.SIZE;
 	}

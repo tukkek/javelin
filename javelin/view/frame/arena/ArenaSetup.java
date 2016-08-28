@@ -107,7 +107,7 @@ public class ArenaSetup extends javelin.view.frame.Frame {
 	ActionListener doaddally = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			new AllyScreen(ArenaSetup.this).show(ArenaSetup.this);
+			new HireAllyScreen(ArenaSetup.this).show(ArenaSetup.this);
 		}
 	};
 
@@ -237,7 +237,7 @@ public class ArenaSetup extends javelin.view.frame.Frame {
 
 	Container drawbetpanel() {
 		int el = ChallengeRatingCalculator.calculateel(fight.redteam);
-		final JSlider slider = HireScreen.newslider(0,
+		final JSlider slider = HireGladiatorScreen.newslider(0,
 				Math.min(ArenaWindow.arena.coins, Math.max(1, el / 2)), 0);
 		slider.addChangeListener(new ChangeListener() {
 			@Override

@@ -183,6 +183,7 @@ public class BattleScreen extends Screen {
 	void humanmove() {
 		try {
 			BattlePanel.current = current;
+			centerscreen(current.location[0], current.location[1]);
 			mappanel.refresh();
 			Game.userinterface.waiting = true;
 			final KeyEvent updatableUserAction = getUserInput();
@@ -214,7 +215,7 @@ public class BattleScreen extends Screen {
 			BattlePanel.current = current;
 			Game.message("Thinking...\n", Delay.NONE);
 			messagepanel.repaint();
-			// updatescreen();
+			updatescreen();
 		}
 		if (Javelin.DEBUG) {
 			Action.outcome(ThreadManager.think(Fight.state), true);

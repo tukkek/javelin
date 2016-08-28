@@ -25,7 +25,7 @@ import tyrant.mikera.engine.RPG;
  * 
  * @author alex
  */
-public class UpgradeWindow extends Frame {
+public class UpgradeGladiatorWindow extends Frame {
 	static final int UPGRADESPERSESSION = 9;
 	static final float XPPERCOIN = 1 / new Float(Arena.COINSPERCR);
 
@@ -85,7 +85,7 @@ public class UpgradeWindow extends Frame {
 	 * @param c
 	 *            Unit to be upgraded.
 	 */
-	public UpgradeWindow(Combatant c) {
+	public UpgradeGladiatorWindow(Combatant c) {
 		super("Upgrade " + c);
 		this.gladiator = c;
 		fill();
@@ -120,7 +120,8 @@ public class UpgradeWindow extends Frame {
 		parent.setLayout(new BoxLayout(parent, BoxLayout.Y_AXIS));
 
 		parent.add(new Label("Current XP: " + gladiator.gethumanxp()));
-		parent.add(new Label("Coins: " + ArenaWindow.arena.coins));
+		parent.add(new Label(
+				"You currently have " + ArenaWindow.arena.coins + " coins."));
 		int xppercoin = Math.round(100 * XPPERCOIN);
 		newbutton("Buy more XP (1 coin = " + xppercoin + "XP)", parent, buyxp)
 				.setEnabled(ArenaWindow.arena.coins >= 1);

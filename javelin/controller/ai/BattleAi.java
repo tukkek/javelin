@@ -58,19 +58,20 @@ public class BattleAi extends AlphaBetaSearch {
 	/** TODO round to float, really? */
 	static private float measuredistances(List<Combatant> us,
 			List<Combatant> them) {
-		Combatant active = null;
+		int score = 0;
 		for (Combatant mate : us) {
-			if (active == null || mate.ap < active.ap) {
-				active = mate;
+			int minimum = Integer.MAX_VALUE;
+			for (Combatant foe : them) {
+				final int distance =
+						Math.max(Math.abs(mate.location[0] - foe.location[0]),
+								Math.abs(mate.location[1] - foe.location[1]));
+				if (minimum > distance) {
+					minimum = distance;
+				}
 			}
+			score += minimum;
 		}
-		int minimum = Integer.MAX_VALUE;
-		for (Combatant foe : them) {
-			minimum = Math.min(minimum,
-					Math.max(Math.abs(active.location[0] - foe.location[0]),
-							Math.abs(active.location[1] - foe.location[1])));
-		}
-		return minimum / 100f;
+		return score / 125f;
 	}
 
 	@Override

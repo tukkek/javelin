@@ -247,9 +247,10 @@ public abstract class Fight {
 			throw new RepeatTurn();
 		}
 		combatant.escape(screen);
-		Game.message("Escapes!", Delay.WAIT);
 		if (Fight.state.blueTeam.isEmpty()) {
 			throw new EndBattle();
+		} else {
+			Game.message("Escapes!", Delay.WAIT);
 		}
 	}
 

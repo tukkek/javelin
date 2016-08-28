@@ -134,7 +134,7 @@ public class ArenaFight extends Fight {
 		String result = "";
 		if (victory) {
 			result += "You won " + (bet + 1) + " coins!\n";
-			arena.coins += bet + 1;
+			arena.coins += (bet + 1);
 		} else if (bet > 0) {
 			result += "You lost " + bet + " coins...\n";
 			arena.coins -= bet;

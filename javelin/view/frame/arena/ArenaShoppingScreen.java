@@ -25,7 +25,7 @@ import javelin.view.frame.Frame;
  * 
  * @author alex
  */
-public class BuyScreen extends Frame {
+public class ArenaShoppingScreen extends Frame {
 	class Buy implements ActionListener {
 		Combatant c;
 
@@ -62,7 +62,7 @@ public class BuyScreen extends Frame {
 	 * @param rosterp
 	 *            See {@link Arena#gladiators}.
 	 */
-	public BuyScreen(ArrayList<Combatant> rosterp) {
+	public ArenaShoppingScreen(ArrayList<Combatant> rosterp) {
 		super("Buy item");
 		roster = rosterp;
 		frame.setMinimumSize(getdialogsize());

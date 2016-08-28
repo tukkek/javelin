@@ -70,6 +70,7 @@ public class CastSpell extends Fire implements AiAction {
 			}
 			return cast(castable.get(i - 1), c);
 		} catch (NumberFormatException e) {
+			Game.messagepanel.clear();
 			throw new RepeatTurn();
 		}
 	}

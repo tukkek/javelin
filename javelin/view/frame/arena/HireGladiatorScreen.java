@@ -8,6 +8,7 @@ import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
@@ -26,7 +27,7 @@ import javelin.view.frame.Frame;
  * 
  * @author alex
  */
-public class HireScreen extends Frame {
+public class HireGladiatorScreen extends Frame {
 	static final int MAXCR = Math.round(Javelin.MONSTERSBYCR.lastKey());
 
 	List list = new List(20, false);
@@ -35,7 +36,7 @@ public class HireScreen extends Frame {
 	int costmultiplier = Arena.COINSPERCR;
 
 	/** Constructor. */
-	public HireScreen() {
+	public HireGladiatorScreen() {
 		super("Hire a gladiator");
 		frame.setMinimumSize(getdialogsize());
 	}
@@ -91,6 +92,17 @@ public class HireScreen extends Frame {
 				candidates.addAll(Javelin.MONSTERSBYCR.get(cr));
 			}
 		}
+		candidates.sort(new Comparator<Monster>() {
+			@Override
+			public int compare(Monster o1, Monster o2) {
+				int coins1 = getcoins(o1);
+				int coins2 = getcoins(o2);
+				if (coins1 != coins2) {
+					return coins2 - coins1;
+				}
+				return o1.name.compareTo(o2.name);
+			}
+		});
 		list.removeAll();
 		for (Monster m : candidates) {
 			list.add(m.toString() + " (" + getcoins(m) + " coins)");
@@ -113,8 +125,8 @@ public class HireScreen extends Frame {
 		frame.setPreferredSize(getdialogsize());
 	}
 
-	static final HireScreen open() {
-		HireScreen s = new HireScreen();
+	static final HireGladiatorScreen open() {
+		HireGladiatorScreen s = new HireGladiatorScreen();
 		s.show();
 		return s;
 	}

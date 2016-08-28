@@ -58,7 +58,13 @@ public class ArenaWindow extends Frame {
 	ActionListener dohire = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			block(HireScreen.open());
+			block(HireGladiatorScreen.open());
+		}
+	};
+	ActionListener dosell = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			new SellGladiatorScreen().show(ArenaWindow.this);
 		}
 	};
 	ActionListener doview = new ActionListener() {
@@ -70,7 +76,7 @@ public class ArenaWindow extends Frame {
 	ActionListener dobuy = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			new BuyScreen(arena.gladiators).show(ArenaWindow.this);
+			new ArenaShoppingScreen(arena.gladiators).show(ArenaWindow.this);
 		}
 	};
 	ActionListener doredeemitem = new ActionListener() {
@@ -103,6 +109,7 @@ public class ArenaWindow extends Frame {
 		newbutton("Buy item", parent, dobuy);
 		newbutton("View gladiators", parent, doview);
 		newbutton("Hire gladiator", parent, dohire);
+		newbutton("Sell gladiator", parent, dosell);
 		parent.add(new Label());
 		newbutton("Redeem item", parent, doredeemitem);
 		parent.add(new Label());
@@ -117,13 +124,13 @@ public class ArenaWindow extends Frame {
 			frame.dispose();
 			return;
 		}
-		if (arena.welcome) {
+		if (arena.gladiators.isEmpty()) {
+			arena.coins = Arena.STARTINGCOINS;
 			doabout.actionPerformed(null);
-			HireScreen.open().defer();
+			HireGladiatorScreen.open().defer();
 			if (arena.gladiators.isEmpty()) {
 				return;
 			}
-			arena.welcome = false;
 		}
 		super.show();
 	}

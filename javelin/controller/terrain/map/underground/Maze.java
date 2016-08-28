@@ -12,7 +12,7 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Maze extends Caves {
-	private static final float POKERATIO = 1 / 5f;
+	private static final float POKERATIO = 1 / 4f;
 
 	/** Constructor. */
 	public Maze() {

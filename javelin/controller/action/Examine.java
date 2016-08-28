@@ -80,6 +80,7 @@ public class Examine extends Action {
 			}
 		} finally {
 			lastlooked = null;
+			Game.messagepanel.clear();
 		}
 	}
 

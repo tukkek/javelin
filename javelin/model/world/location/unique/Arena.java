@@ -35,13 +35,14 @@ public class Arena extends UniqueLocation {
 	 * coins).
 	 */
 	public static final int COINSPERCR = 5;
+	/** Number of {@link #coins} to start with. */
+	public static final int STARTINGCOINS = COINSPERCR * 2;
 	static final String DESCRIPTION = "The arena";
+
 	/** Roster of permanent player units. */
 	public ArrayList<Combatant> gladiators = new ArrayList<Combatant>();
-	/** <code>true</code> on player's first visit. */
-	public boolean welcome = true;
 	/** Arena's currency. */
-	public int coins = COINSPERCR;
+	public int coins = STARTINGCOINS;
 	/** Redeemable items. */
 	public ItemSelection items = new ItemSelection();
 

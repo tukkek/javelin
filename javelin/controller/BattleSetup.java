@@ -143,7 +143,7 @@ public class BattleSetup {
 	}
 
 	public static boolean isbound(final int y, final Object[] squares) {
-		return 0 < y && y < squares.length - 2;
+		return 0 < y && y <= squares.length - 1;
 	}
 
 	public static void add(final Combatant c, final Point p, BattleState s) {

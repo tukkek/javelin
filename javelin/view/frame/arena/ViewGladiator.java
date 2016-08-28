@@ -25,8 +25,8 @@ public class ViewGladiator extends Frame {
 	private ActionListener doupgrade = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			UpgradeWindow.boost(c, 1);
-			new UpgradeWindow(c).show(ViewGladiator.this);
+			UpgradeGladiatorWindow.boost(c, 1);
+			new UpgradeGladiatorWindow(c).show(ViewGladiator.this);
 		}
 	};
 	private ActionListener dorename = new ActionListener() {

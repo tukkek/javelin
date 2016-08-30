@@ -158,54 +158,50 @@ public class BattleScreen extends Screen {
 
 	/** Routine for human interaction. */
 	protected void turn() {
-		for (Combatant c : Fight.state.getCombatants()) {
-			c.refresh();
+		try {
+			for (Combatant c : Fight.state.getCombatants()) {
+				c.refresh();
+			}
+			Fight.state.checkwhoisnext();
+			current = Fight.state.next;
+			if (Fight.state.redTeam.contains(current) || current.automatic) {
+				spentap = 0;
+				lastwascomputermove = current;
+				computermove();
+			} else {
+				humanmove();
+				lastwascomputermove = null;
+				jointurns = false;
+			}
+			updatescreen();
+			checkblock();
+		} catch (RepeatTurn e) {
+			Game.messagepanel.clear();
+			return;
+		} finally {
+			Javelin.app.fight.endturn();
+			Javelin.app.fight.checkEndBattle();
 		}
-		Fight.state.checkwhoisnext();
-		current = Fight.state.next;
-		// Game.messagepanel.clear();
-		if (Fight.state.redTeam.contains(current) || current.automatic) {
-			// jointurns = false;
-			spentap = 0;
-			lastwascomputermove = current;
-			computermove();
-		} else {
-			humanmove();
-			lastwascomputermove = null;
-			jointurns = false;
-		}
-		updatescreen();
-		checkblock();
-		Javelin.app.fight.endturn();
-		Javelin.app.fight.checkEndBattle();
 	}
 
 	void humanmove() {
-		try {
-			BattlePanel.current = current;
-			centerscreen(current.location[0], current.location[1]);
-			mappanel.refresh();
-			Game.userinterface.waiting = true;
-			final KeyEvent updatableUserAction = getUserInput();
-			if (MapPanel.overlay != null) {
-				MapPanel.overlay.clear();
-			}
-			if (updatableUserAction == null) {
-				callback.run();
-				callback = null;
-			} else {
-				perform(convertEventToAction(updatableUserAction),
-						updatableUserAction.isShiftDown());
-			}
-			spendap(current, false);
-		} catch (final RepeatTurn e) {
-			// TODO needed?
-			Game.messagepanel.getPanel().repaint();
-			/* possibly set by Automate */
-			if (!current.automatic) {
-				humanmove();
-			}
+		// try {
+		BattlePanel.current = current;
+		centerscreen(current.location[0], current.location[1]);
+		mappanel.refresh();
+		Game.userinterface.waiting = true;
+		final KeyEvent updatableUserAction = getUserInput();
+		if (MapPanel.overlay != null) {
+			MapPanel.overlay.clear();
 		}
+		if (updatableUserAction == null) {
+			callback.run();
+			callback = null;
+		} else {
+			perform(convertEventToAction(updatableUserAction),
+					updatableUserAction.isShiftDown());
+		}
+		spendap(current, false);
 	}
 
 	void computermove() {
@@ -213,6 +209,7 @@ public class BattleScreen extends Screen {
 			jointurns = false;
 		} else {
 			BattlePanel.current = current;
+			Game.messagepanel.clear();
 			Game.message("Thinking...\n", Delay.NONE);
 			messagepanel.repaint();
 			updatescreen();

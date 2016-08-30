@@ -171,7 +171,8 @@ public class WorldScreen extends BattleScreen {
 
 	/** TODO remove on 2.0+ */
 	public Point getherolocation() {
-		return new Point(Squad.active.x, Squad.active.y);
+		return Squad.active == null ? null
+				: new Point(Squad.active.x, Squad.active.y);
 	}
 
 	void redraw() {

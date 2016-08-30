@@ -342,6 +342,8 @@ public class Incursion extends WorldActor {
 
 	@Override
 	public String describe() {
-		return "Enemy incursion (" + Squad.active.spot(squad) + ")";
+		return "Enemy incursion ("
+				+ ChallengeRatingCalculator.describedifficulty(squad)
+				+ " fight):\n\n" + Squad.active.spot(squad);
 	}
 }

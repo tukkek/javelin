@@ -22,6 +22,7 @@ import javelin.controller.challenge.factor.quality.QualitiesFactor;
 import javelin.controller.exception.UnbalancedTeams;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Squad;
 
 /**
  * Determines a {@link Monster#challengeRating} according to the rules of Upper
@@ -630,5 +631,14 @@ public class ChallengeRatingCalculator {
 			return .75f;
 		}
 		return 1;
+	}
+
+	/**
+	 * @return Same as {@link #describedifficulty(int)} except compares given
+	 *         {@link Combatant}s to {@link Squad#active}.
+	 */
+	public static String describedifficulty(List<Combatant> opponents) {
+		return describedifficulty(calculateel(opponents)
+				- ChallengeRatingCalculator.calculateel(Squad.active.members));
 	}
 }

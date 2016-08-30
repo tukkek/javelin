@@ -85,7 +85,7 @@ public class TrainingHall extends Fortification {
 
 	@Override
 	protected Siege fight() {
-		int price = RewardCalculator.receivegold(garrison);
+		int price = getfee();
 		Game.messagepanel.clear();
 		if (price > Squad.active.gold) {
 			Game.message("Not enough money to pay the training fee of $" + price
@@ -102,6 +102,10 @@ public class TrainingHall extends Fortification {
 			return new TrainingSession(this);
 		}
 		throw new RepeatTurn();
+	}
+
+	public int getfee() {
+		return RewardCalculator.receivegold(garrison);
 	}
 
 	@Override
@@ -144,5 +148,10 @@ public class TrainingHall extends Fortification {
 		} else {
 			generategarrison(0, 0);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + " ($" + getfee() + ")";
 	}
 }

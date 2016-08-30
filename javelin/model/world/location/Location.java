@@ -258,10 +258,7 @@ public abstract class Location extends WorldActor {
 
 	static String describe(List<Combatant> opponents, String description) {
 		return description + ". Forces: ("
-				+ ChallengeRatingCalculator.describedifficulty(
-						ChallengeRatingCalculator.calculateel(opponents)
-								- ChallengeRatingCalculator
-										.calculateel(Squad.active.members))
+				+ ChallengeRatingCalculator.describedifficulty(opponents)
 				+ " fight)\n\n" + Squad.active.spot(opponents);
 	}
 

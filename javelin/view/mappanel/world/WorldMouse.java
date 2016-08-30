@@ -50,8 +50,9 @@ public class WorldMouse extends Mouse {
 					BattleScreen.perform(new Runnable() {
 						@Override
 						public void run() {
-							Location l = (Location) target;
-							if (l.allowentry && l.discard
+							Location l = target instanceof Location
+									? (Location) target : null;
+							if (l != null && l.allowentry && l.discard
 									&& l.garrison.isEmpty()) {
 								WorldMove.place(l.x, l.y);
 							}

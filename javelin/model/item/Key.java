@@ -31,7 +31,7 @@ public class Key extends Item {
 	 */
 	@Deprecated
 	public Key(Realm color) {
-		super(color.toString() + " key", determineprice(color), null);
+		super(color.getname() + " key", determineprice(color), null);
 		this.color = color;
 		usedinbattle = false;
 	}

@@ -148,6 +148,11 @@ public class AdventurersGuild extends UniqueLocation {
 				continue;
 			}
 			if (input == 'w') {
+				Squad.active.hourselapsed += 24 * 5;
+				Squad.active.gold += pay / 7;
+				return true;
+			}
+			if (input == 'm') {
 				Squad.active.hourselapsed += 24 * 30;
 				Squad.active.gold += Math.round(pay);
 				return true;
@@ -197,10 +202,12 @@ public class AdventurersGuild extends UniqueLocation {
 			t += "\nPress the respective number to change careers.\n\n";
 			t += "t - begin training\n";
 		}
-		t += "w - work as " + TITLES[rank(mostpowerful)] + " for a month ($"
+		t += "w - work as " + TITLES[rank(mostpowerful)] + " for a week ($"
+				+ PurchaseScreen.formatcost(pay / 7) + " minus expenses)\n";
+		t += "m - work as " + TITLES[rank(mostpowerful)] + " for a month ($"
 				+ PurchaseScreen.formatcost(Math.round(pay))
-				+ " minus expenses)";
-		t += "\nq - quit";
+				+ " minus expenses)\n";
+		t += "q - quit";
 		return t;
 	}
 

@@ -145,14 +145,24 @@ public class Divide extends WorldAction {
 	}
 
 	WorldActor findtown(int xp, int yp) {
+		ArrayList<Town> towns = new ArrayList<Town>();
 		for (int x = xp - 1; x <= xp + 1; x++) {
 			for (int y = yp - 1; y <= yp + 1; y++) {
-				if (WorldActor.get(x, y) instanceof Town) {
-					return WorldActor.get(x, y);
+				WorldActor t = WorldActor.get(x, y);
+				if (t instanceof Town) {
+					towns.add((Town) t);
 				}
 			}
 		}
-		return null;
+		if (towns.isEmpty()) {
+			return null;
+		}
+		for (Town t : towns) {
+			if (!t.ishostile()) {
+				return t;
+			}
+		}
+		return towns.get(0);
 	}
 
 	static void clear() {

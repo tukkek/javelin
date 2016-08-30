@@ -461,8 +461,7 @@ public class Combatant implements Serializable, Cloneable {
 	public void await() {
 		ap += Defend.APCOST;
 		if (!burrowed) {
-			conditions
-					.add(new Defending(ap + BattleScreen.active.spentap, this));
+			addcondition(new Defending(ap + BattleScreen.active.spentap, this));
 		}
 	}
 

@@ -23,6 +23,6 @@ public class DefensiveStance extends Condition {
 
 	@Override
 	public void end(Combatant c) {
-		c.acmodifier += acbonus;
+		c.acmodifier -= acbonus;
 	}
 }

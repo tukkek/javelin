@@ -11,7 +11,7 @@ import javax.swing.BoxLayout;
 import javelin.model.item.Item;
 import javelin.model.unit.Squad;
 import javelin.model.world.WorldActor;
-import javelin.model.world.location.unique.Arena;
+import javelin.model.world.location.unique.minigame.Arena;
 import javelin.view.frame.Frame;
 
 /**

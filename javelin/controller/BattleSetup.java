@@ -27,7 +27,7 @@ import tyrant.mikera.engine.RPG;
 public class BattleSetup {
 	private static final int MAXDISTANCE = 9;
 
-	public static void place() {
+	public void setup() {
 		rollinitiative();
 		Fight f = Javelin.app.fight;
 		if (f.map == null) {
@@ -40,10 +40,36 @@ public class BattleSetup {
 		Fight.state.map = m;
 		f.period = Preferences.DEBUGPERIOD == null ? f.period
 				: Preferences.DEBUGPERIOD;
+		place();
+		Weather.flood();
+
+	}
+
+	/** Sets each combatant in a sensible location. */
+	public void place() {
 		for (int i = 0; i < 1000; i++) {
 			try {
-				placecombatants();
-				Weather.flood();
+				List<Combatant> queuea = RPG.r(1, 2) == 1 ? Fight.state.blueTeam
+						: Fight.state.redTeam;
+				List<Combatant> queueb = queuea == Fight.state.blueTeam
+						? Fight.state.redTeam : Fight.state.blueTeam;
+				queuea = new ArrayList<Combatant>(queuea);
+				queueb = new ArrayList<Combatant>(queueb);
+				final Combatant seeda = RPG.pick(queuea);
+				final Combatant seedb = RPG.pick(queueb);
+				final BattleState s = Fight.state;
+				add(seeda, getrandompoint(s, 0, Fight.state.map.length - 1, 0,
+						Fight.state.map[0].length - 1));
+				placecombatant(seedb, seeda, s);
+				final ArrayList<Combatant> placeda = new ArrayList<Combatant>();
+				final ArrayList<Combatant> placedb = new ArrayList<Combatant>();
+				markplaced(seeda, queuea, placeda);
+				markplaced(seedb, queueb, placedb);
+				while (!queuea.isEmpty() || !queueb.isEmpty()) {
+					placeteammate(queuea, placeda, s);
+					placeteammate(queueb, placedb, s);
+				}
+				Fight.state = s;
 				return;
 			} catch (GaveUpException e) {
 				continue;
@@ -52,38 +78,14 @@ public class BattleSetup {
 		throw new RuntimeException("Gave up on trying to place parties.");
 	}
 
-	public static void rollinitiative() {
+	/** Rolls initiative for each {@link Combatant}. */
+	public void rollinitiative() {
 		for (final Combatant c : Fight.state.getCombatants()) {
 			c.rollinitiative();
-			c.lastrefresh = -Float.MAX_VALUE;
 		}
 	}
 
-	public static void placecombatants() throws GaveUpException {
-		List<Combatant> queuea =
-				RPG.r(1, 2) == 1 ? Fight.state.blueTeam : Fight.state.redTeam;
-		List<Combatant> queueb = queuea == Fight.state.blueTeam
-				? Fight.state.redTeam : Fight.state.blueTeam;
-		queuea = new ArrayList<Combatant>(queuea);
-		queueb = new ArrayList<Combatant>(queueb);
-		final Combatant seeda = RPG.pick(queuea);
-		final Combatant seedb = RPG.pick(queueb);
-		final BattleState s = Fight.state;
-		add(seeda, randompoint(s, 0, Fight.state.map.length - 1, 0,
-				Fight.state.map[0].length - 1), s);
-		placecombatant(seedb, seeda, s);
-		final ArrayList<Combatant> placeda = new ArrayList<Combatant>();
-		final ArrayList<Combatant> placedb = new ArrayList<Combatant>();
-		markplaced(seeda, queuea, placeda);
-		markplaced(seedb, queueb, placedb);
-		while (!queuea.isEmpty() || !queueb.isEmpty()) {
-			placeteammate(queuea, placeda, s);
-			placeteammate(queueb, placedb, s);
-		}
-		Fight.state = s;
-	}
-
-	public static void placeteammate(final List<Combatant> queue,
+	void placeteammate(final List<Combatant> queue,
 			final ArrayList<Combatant> placed, final BattleState s)
 			throws GaveUpException {
 		if (!queue.isEmpty()) {
@@ -93,15 +95,14 @@ public class BattleSetup {
 		}
 	}
 
-	public static void markplaced(final Combatant seeda,
-			final List<Combatant> queue, final ArrayList<Combatant> placed) {
+	void markplaced(final Combatant seeda, final List<Combatant> queue,
+			final ArrayList<Combatant> placed) {
 		queue.remove(seeda);
 		placed.add(seeda);
 	}
 
-	public static void placecombatant(final Combatant placing,
-			final Combatant reference, final BattleState s)
-			throws GaveUpException {
+	void placecombatant(final Combatant placing, final Combatant reference,
+			final BattleState s) throws GaveUpException {
 		int vision = placing.view(s.period);
 		if (vision > 8 || vision > MAXDISTANCE) {
 			vision = MAXDISTANCE;
@@ -114,7 +115,7 @@ public class BattleSetup {
 			placing.location[1] = p.y;
 			Vision path = s.hasLineOfSight(placing, reference);
 			if (path == Vision.CLEAR) {
-				add(placing, p, s);
+				add(placing, p);
 				break;
 			}
 			possibilities.remove(p);
@@ -124,8 +125,8 @@ public class BattleSetup {
 		}
 	}
 
-	public static ArrayList<Point> mappossibilities(final Combatant reference,
-			int vision, final BattleState s) {
+	ArrayList<Point> mappossibilities(final Combatant reference, int vision,
+			final BattleState s) {
 		final ArrayList<Point> possibilities = new ArrayList<Point>();
 		for (int x = reference.location[0] - vision; x <= reference.location[0]
 				+ vision; x++) {
@@ -142,24 +143,45 @@ public class BattleSetup {
 		return possibilities;
 	}
 
+	/**
+	 * @return <code>true</code> if inside battle map.
+	 */
 	public static boolean isbound(final int y, final Object[] squares) {
 		return 0 < y && y <= squares.length - 1;
 	}
 
-	public static void add(final Combatant c, final Point p, BattleState s) {
-		// (Fight.state.blueTeam.contains(c) ? s.blueTeam : s.redTeam).add(c);
+	/**
+	 * @param c
+	 *            Sets location to given {@link Point}.
+	 */
+	public static void add(final Combatant c, final Point p) {
 		c.location[0] = p.x;
 		c.location[1] = p.y;
 	}
 
-	static public Point randompoint(final BattleState s, int minx, int maxx,
+	/**
+	 * @return A free spot inside the given coordinates. Will loop infinitely if
+	 *         given space is fully occupied.
+	 */
+	static public Point getrandompoint(final BattleState s, int minx, int maxx,
 			int miny, int maxy) {
-		while (true) {
-			final int x = RPG.r(minx, maxx);
-			final int y = RPG.r(miny, maxy);
-			if (!s.map[x][y].blocked && s.getCombatant(x, y) == null) {
-				return new Point(x, y);
-			}
+		minx = Math.max(minx, 0);
+		miny = Math.max(miny, 0);
+		maxx = Math.min(maxx, s.map.length - 1);
+		maxy = Math.min(maxy, s.map[0].length - 1);
+		Point p = null;
+		while (p == null || s.map[p.x][p.y].blocked
+				|| s.getCombatant(p.x, p.y) != null) {
+			p = new Point(RPG.r(minx, maxx), RPG.r(miny, maxy));
 		}
+		return p;
+	}
+
+	/**
+	 * @return Same as {@link #getrandompoint(BattleState, int, int, int, int)}
+	 *         but near to a given point.
+	 */
+	public static Point getrandompoint(BattleState state, Point p) {
+		return getrandompoint(state, p.x - 2, p.x + 2, p.y - 2, p.y + 2);
 	}
 }

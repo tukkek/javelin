@@ -4,6 +4,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.action.Examine;
 import javelin.controller.action.Fire;
@@ -98,9 +99,8 @@ public class BattleMouse extends Mouse {
 								c.ap += to.apcost;
 								Meld m = move.getmeld(to.x, to.y);
 								if (m != null) {
-									m.activate(c);
+									Javelin.app.fight.meld(c, m);
 								}
-								// Fight.state = move;
 							}
 						});
 					}

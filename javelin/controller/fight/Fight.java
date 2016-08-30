@@ -86,11 +86,6 @@ public abstract class Fight {
 	 * {@link Skills#diplomacy}.
 	 */
 	public boolean bribe = true;
-	/**
-	 * <code>true</code> if the game should reward experience points after this
-	 * fight.
-	 */
-	public boolean ewardxp = true;
 
 	/** If not <code>null</code> will use this terrain when generating a map. */
 	public Terrain terrain = null;
@@ -116,6 +111,9 @@ public abstract class Fight {
 
 	/** Status to remove {@link Combatant} from a {@link #friendly} battle. */
 	public int friendlylevel = Combatant.STATUSWOUNDED;
+
+	/** Delegates some setup details.TODO */
+	public BattleSetup setup = new BattleSetup();
 
 	/**
 	 * @return an encounter level for which an appropriate challenge should be
@@ -218,6 +216,8 @@ public abstract class Fight {
 	}
 
 	/**
+	 * TODO probablby better to just have flee=true/false in Fight.
+	 * 
 	 * @param combatant
 	 *            Fleeing unit.
 	 * @param screen
@@ -435,7 +435,7 @@ public abstract class Fight {
 	 * 
 	 * @return Opponent units.
 	 */
-	public ArrayList<Combatant> setup() {
+	public ArrayList<Combatant> init() {
 		Fight.state = new BattleState(this);
 		Fight.state.blueTeam = getblueteam();
 		return generate(Terrain.current().getel(
@@ -468,7 +468,7 @@ public abstract class Fight {
 				if (s.next == c) {
 					s.checkwhoisnext();
 				}
-				s.addmeld(c.location[0], c.location[1]);
+				s.addmeld(c.location[0], c.location[1], c.source);
 				Game.message(
 						c + " is removed from the battlefield!\nPress ENTER to continue...",
 						Delay.NONE);
@@ -478,5 +478,18 @@ public abstract class Fight {
 				Game.messagepanel.clear();
 			}
 		}
+	}
+
+	/**
+	 * Called when an unit reaches {@link Meld}.
+	 * 
+	 * @param hero
+	 *            Meld collector.
+	 * @param meld2
+	 */
+	public void meld(Combatant hero, Meld m) {
+		Game.message(hero + " powers up!", Delay.BLOCK);
+		Javelin.getCombatant(hero.id).meld();
+		Fight.state.meld.remove(this);
 	}
 }

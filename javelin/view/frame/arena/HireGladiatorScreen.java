@@ -19,7 +19,7 @@ import javax.swing.event.ChangeListener;
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.world.location.unique.Arena;
+import javelin.model.world.location.unique.minigame.Arena;
 import javelin.view.frame.Frame;
 
 /**

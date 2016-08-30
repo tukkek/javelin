@@ -15,6 +15,7 @@ import javelin.controller.walker.Step;
 import javelin.controller.walker.Walker;
 import javelin.model.TeamContainer;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
 
 /**
  * Javelin's implementation of {@link Node}.
@@ -337,8 +338,8 @@ public class BattleState implements Node, TeamContainer {
 		return null;
 	}
 
-	public void addmeld(int x, int y) {
-		meld.add(new Meld(x, y, next.ap + 1));
+	public void addmeld(int x, int y, Monster dead) {
+		meld.add(new Meld(x, y, next.ap + 1, dead));
 	}
 
 	@Override

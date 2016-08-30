@@ -1,7 +1,7 @@
 package javelin.view.frame.arena;
 
 import javelin.model.unit.Combatant;
-import javelin.model.world.location.unique.Arena;
+import javelin.model.world.location.unique.minigame.Arena;
 
 /**
  * Allows to recruit temporary allies for the {@link Arena}.

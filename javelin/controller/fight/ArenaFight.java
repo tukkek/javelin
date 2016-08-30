@@ -17,7 +17,7 @@ import javelin.model.state.BattleState.Vision;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.location.unique.Arena;
+import javelin.model.world.location.unique.minigame.Arena;
 import javelin.view.frame.arena.ArenaSetup;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
@@ -163,7 +163,8 @@ public class ArenaFight extends Fight {
 			}
 			for (Combatant c : Fight.state.getCombatants()) {
 				if (Fight.state.hasLineOfSight(c, p) == Vision.CLEAR) {
-					Fight.state.meld.add(new Meld(p.x, p.y, -Float.MAX_VALUE));
+					Fight.state.meld
+							.add(new Meld(p.x, p.y, -Float.MAX_VALUE, null));
 					nmeld -= 1;
 					continue meldplacement;
 				}
@@ -173,17 +174,9 @@ public class ArenaFight extends Fight {
 
 	/** Binds {@link Fight#map}. */
 	public void drawmap() {
-		ArrayList<Terrain> terrains =
-				new ArrayList<Terrain>(Terrain.ALL.length);
-		for (Terrain t : Terrain.ALL) {
-			if (!Terrain.WATER.equals(t)) {
-				terrains.add(t);
-			}
-		}
-		terrains.add(Terrain.UNDERGROUND);
 		Map map = null;
 		while (map == null || (this.map != null && map.equals(this.map))) {
-			map = RPG.pick(terrains).getmaps().pick();
+			map = Map.random();
 		}
 		this.map = map;
 	}

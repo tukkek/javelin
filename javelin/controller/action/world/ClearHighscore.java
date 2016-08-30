@@ -11,15 +11,15 @@ import javelin.view.screen.WorldScreen;
  * 
  * @author alex
  */
-public class ResetScore extends WorldAction {
+public class ClearHighscore extends WorldAction {
 
 	/** Constructor. */
-	public ResetScore() {
-		super(name(), new int[0], new String[] { "R" });
+	public ClearHighscore() {
+		super(name(), new int[0], new String[] { "C" });
 	}
 
 	static String name() {
-		return "Reset your highscore (" + Javelin.gethighscore() + ")";
+		return "Clear highscore (" + Javelin.gethighscore() + ")";
 	}
 
 	@Override

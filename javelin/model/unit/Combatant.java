@@ -32,6 +32,7 @@ import javelin.model.condition.Charging;
 import javelin.model.condition.Condition;
 import javelin.model.condition.Condition.Effect;
 import javelin.model.condition.Defending;
+import javelin.model.condition.Melding;
 import javelin.model.feat.Cleave;
 import javelin.model.feat.GreatCleave;
 import javelin.model.item.artifact.Artifact;
@@ -313,7 +314,7 @@ public class Combatant implements Serializable, Cloneable {
 		s.remove(this);
 		s.dead.add(this);
 		if ((hp <= DEADATHP && Javelin.app.fight.meld) || Meld.DEBUG) {
-			s.addmeld(location[0], location[1]);
+			s.addmeld(location[0], location[1], source);
 		}
 	}
 
@@ -362,6 +363,7 @@ public class Combatant implements Serializable, Cloneable {
 	public void rollinitiative() {
 		ap = -(RPG.r(1, 20) + source.initiative) / 20f;
 		initialap = ap;
+		lastrefresh = -Float.MAX_VALUE;
 	}
 
 	public int getNumericStatus() {
@@ -529,23 +531,7 @@ public class Combatant implements Serializable, Cloneable {
 	 * 1/5 HD to up one {@link #getStatus()}
 	 */
 	public void meld() {
-		hp += Math.ceil(maxhp / 5f);
-		if (hp > maxhp) {
-			hp = maxhp;
-		}
-		// ap -= .5;
-		source = source.clone();
-		source.ac += 2;
-		for (AttackSequence s : source.melee) {
-			for (Attack a : s) {
-				a.bonus += 2;
-			}
-		}
-		for (AttackSequence s : source.ranged) {
-			for (Attack a : s) {
-				a.bonus += 2;
-			}
-		}
+		addcondition(new Melding(this));
 	}
 
 	/**

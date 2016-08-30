@@ -17,12 +17,14 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Weather {
-	static public int DRY = 0;
-	static public int RAIN = 1;
-	static public int STORM = 2;
-	static private Integer[] DISTRIBUTION =
+	public static final int DRY = 0;
+	public static final int RAIN = 1;
+	public static final int STORM = 2;
+	public static final Integer[] DISTRIBUTION =
 			new Integer[] { DRY, DRY, RAIN, STORM };
-	static private double[] RATIO = new double[] { 0.0, .1, .5 };
+
+	static final double[] RATIO = new double[] { 0.0, .1, .5 };
+
 	public static int current;
 
 	static {

@@ -2,11 +2,8 @@ package javelin.model.state;
 
 import java.awt.Image;
 
-import javelin.Javelin;
-import javelin.controller.fight.Fight;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
 import javelin.view.Images;
 
 /**
@@ -20,11 +17,13 @@ public class Meld {
 	public final int x;
 	public final int y;
 	public final float meldsat;
+	public final float cr;
 
-	public Meld(final int x, final int y, final float meldsat) {
+	public Meld(final int x, final int y, final float meldsat, Monster dead) {
 		this.x = x;
 		this.y = y;
 		this.meldsat = meldsat;
+		cr = dead == null ? 0 : dead.challengeRating;
 	}
 
 	public boolean crystalize(BattleState state) {
@@ -33,11 +32,5 @@ public class Meld {
 
 	public Image getimage(BattleState state) {
 		return state.next.ap >= meldsat ? Images.MELD : Images.DEAD;
-	}
-
-	public void activate(Combatant hero) {
-		Game.message(hero + " powers up!", Delay.BLOCK);
-		Javelin.getCombatant(hero.id).meld();
-		Fight.state.meld.remove(this);
 	}
 }

@@ -1,4 +1,4 @@
-package javelin.model.world.location.unique;
+package javelin.model.world.location.unique.minigame;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +9,7 @@ import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;
 import javelin.model.world.WorldActor;
+import javelin.model.world.location.unique.UniqueLocation;
 import javelin.view.frame.arena.ArenaWindow;
 
 /**

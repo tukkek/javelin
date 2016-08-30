@@ -47,10 +47,11 @@ public abstract class WorldAction implements ActionDescription {
 			new ShowStatistics(), // v
 			new Work(), // v
 			new Automate(), // A
+			new ClearHighscore(), // C
+			new StartRush(), // R
 			new Dismiss(), // D
 			new ConfigureWorldKeys(), // K
 			new Abandon(), // Q
-			new ResetScore(), // R
 			HOWTO, ARTIFACTS, CONDITIONS, ITEMS, SKILLS, SPELLS, UGRADES,
 			new WorldMove(new int[] { KeyEvent.VK_NUMPAD7, }, -1, -1,
 					new String[] { "U", "↖ or 7 or U" }),

@@ -170,12 +170,17 @@ public class StatusPanel extends TPanel {
 	String maininfo(Combatant combatant) {
 		final String customname = combatant.source.customName;
 		String status = combatant.getStatus();
+		String ap = "";
+		if (combatant.ap < Float.MAX_VALUE) {
+			ap = "AP: "
+					+ new BigDecimal(combatant.ap + BattleScreen.active.spentap)
+							.setScale(1, RoundingMode.HALF_UP)
+					+ "\n";
+		}
+		;
 		return (customname != null ? customname : combatant.source.name) + "\n"
 				+ Character.toUpperCase(status.charAt(0)) + status.substring(1)
-				+ "\nAP: "
-				+ new BigDecimal(combatant.ap + BattleScreen.active.spentap)
-						.setScale(1, RoundingMode.HALF_UP)
-				+ "\n\n";
+				+ "\n" + ap + "\n";
 	}
 
 	String passivedata(final Combatant combatant) {

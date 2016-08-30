@@ -1,10 +1,13 @@
 package javelin.controller.terrain.map;
 
 import java.awt.Image;
+import java.util.ArrayList;
 
 import javelin.controller.Weather;
+import javelin.controller.terrain.Terrain;
 import javelin.model.state.Square;
 import javelin.view.Images;
+import tyrant.mikera.engine.RPG;
 
 /**
  * Representation of a battle area.
@@ -100,5 +103,21 @@ public abstract class Map {
 	@Override
 	public boolean equals(Object obj) {
 		return name.equals(((Map) obj).name);
+	}
+
+	/**
+	 * @return A random map, excluding ones that are usually not recommended for
+	 *         typical fights like {@link Water}.
+	 */
+	public static Map random() {
+		ArrayList<Terrain> terrains =
+				new ArrayList<Terrain>(Terrain.ALL.length);
+		for (Terrain t : Terrain.ALL) {
+			if (!Terrain.WATER.equals(t)) {
+				terrains.add(t);
+			}
+		}
+		terrains.add(Terrain.UNDERGROUND);
+		return RPG.pick(terrains).getmaps().pick();
 	}
 }

@@ -1,5 +1,6 @@
 package javelin.controller.action;
 
+import javelin.Javelin;
 import javelin.controller.action.ai.AiMovement;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
@@ -106,7 +107,7 @@ public class Movement extends Action {
 							+ (disengaging ? "disengages" : "moves") + "...",
 							Delay.WAIT);
 				} else {
-					meld.activate(hero);
+					Javelin.app.fight.meld(hero, meld);
 				}
 			}
 			BattleScreen.active.spendap(hero, true);

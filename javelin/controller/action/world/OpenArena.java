@@ -2,7 +2,7 @@ package javelin.controller.action.world;
 
 import com.sun.glass.events.KeyEvent;
 
-import javelin.model.world.location.unique.Arena;
+import javelin.model.world.location.unique.minigame.Arena;
 import javelin.view.screen.WorldScreen;
 
 /**

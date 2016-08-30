@@ -11,6 +11,7 @@ import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
+import javelin.model.unit.Spawner;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.world.location.unique.MercenariesGuild;
@@ -59,8 +60,10 @@ public class StatisticsScreen extends InfoScreen {
 					+ PurchaseScreen.formatcost(MercenariesGuild.getfee(c))
 					+ "/day)");
 		}
-		lines.add("Challenge rating "
-				+ Math.round(ChallengeRatingCalculator.calculateCr(m)));
+		if (!(c.source instanceof Spawner)) {
+			lines.add("Challenge rating "
+					+ Math.round(ChallengeRatingCalculator.calculateCr(m)));
+		}
 		for (ClassAdvancement classlevels : ClassAdvancement.CLASSES) {
 			int level = classlevels.getlevel(m);
 			if (level > 0) {

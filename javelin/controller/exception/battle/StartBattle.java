@@ -34,12 +34,12 @@ public class StartBattle extends BattleEvent {
 
 	/** Prepares and switches to a {@link BattleScreen}. */
 	public void battle() {
-		ArrayList<Combatant> foes = fight.setup();
+		ArrayList<Combatant> foes = fight.init();
 		if (fight.avoid(foes)) {
 			return;
 		}
 		StartBattle.preparebattle(foes);
-		BattleSetup.place();
+		fight.setup.setup();
 		Fight.state.checkwhoisnext();
 		fight.ready();
 		BattlePanel.current = Fight.state.next;
@@ -51,7 +51,7 @@ public class StartBattle extends BattleEvent {
 	 * Runs a strategic combat instead of opening a {@link BattleScreen}.
 	 */
 	public static void quickbattle() {
-		ArrayList<Combatant> opponents = Javelin.app.fight.setup();
+		ArrayList<Combatant> opponents = Javelin.app.fight.init();
 		if (Javelin.app.fight.avoid(opponents)) {
 			return;
 		}

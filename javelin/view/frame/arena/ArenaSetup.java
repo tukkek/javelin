@@ -22,7 +22,7 @@ import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.ArenaFight;
 import javelin.model.unit.Combatant;
-import javelin.model.world.location.unique.Arena;
+import javelin.model.world.location.unique.minigame.Arena;
 import javelin.view.screen.SquadScreen;
 import tyrant.mikera.engine.RPG;
 

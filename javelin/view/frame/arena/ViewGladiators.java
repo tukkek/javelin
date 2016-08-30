@@ -13,7 +13,7 @@ import javax.swing.BoxLayout;
 
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.unit.Combatant;
-import javelin.model.world.location.unique.Arena;
+import javelin.model.world.location.unique.minigame.Arena;
 import javelin.view.frame.Frame;
 
 /**

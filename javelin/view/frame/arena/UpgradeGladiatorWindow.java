@@ -16,7 +16,7 @@ import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Combatant;
-import javelin.model.world.location.unique.Arena;
+import javelin.model.world.location.unique.minigame.Arena;
 import javelin.view.frame.Frame;
 import tyrant.mikera.engine.RPG;
 

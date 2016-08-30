@@ -11,7 +11,9 @@ import javelin.controller.fight.Rush;
  * @author alex
  */
 public class Spawner extends Monster {
+	/** Type of unit to spawn. */
 	public Monster summon;
+	/** Counter used to spawn units for the computer player. */
 	public float mana = 0;
 
 	/**

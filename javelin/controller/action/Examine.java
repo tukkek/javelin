@@ -68,7 +68,7 @@ public class Examine extends Action {
 					delta = DIRECTIONS.get(key);
 				} else if (key == 'v') {
 					new StatisticsScreen(
-							Fight.state.getCombatant(cursor.x, cursor.y));
+							Fight.state.getcombatant(cursor.x, cursor.y));
 				} else if (key == 'q') {
 					clearCursor();
 					return null;
@@ -135,7 +135,7 @@ public class Examine extends Action {
 		lookmessage("", s);
 		lastlooked = null;
 		final BattleState state = Fight.state;
-		final Combatant combatant = Fight.state.getCombatant(p.x, p.y);
+		final Combatant combatant = Fight.state.getcombatant(p.x, p.y);
 		if (combatant != null) {
 			lookmessage(describestatus(combatant, state), s);
 			lastlooked = combatant;

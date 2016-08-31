@@ -158,11 +158,11 @@ public class ArenaFight extends Fight {
 			Point p = new Point(RPG.r(0, map.map.length - 1),
 					RPG.r(0, map.map[0].length - 1));
 			if (map.map[p.x][p.y].blocked
-					|| Fight.state.getCombatant(p.x, p.y) != null) {
+					|| Fight.state.getcombatant(p.x, p.y) != null) {
 				continue;
 			}
-			for (Combatant c : Fight.state.getCombatants()) {
-				if (Fight.state.hasLineOfSight(c, p) == Vision.CLEAR) {
+			for (Combatant c : Fight.state.getcombatants()) {
+				if (Fight.state.haslineoffight(c, p) == Vision.CLEAR) {
 					Fight.state.meld
 							.add(new Meld(p.x, p.y, -Float.MAX_VALUE, null));
 					nmeld -= 1;

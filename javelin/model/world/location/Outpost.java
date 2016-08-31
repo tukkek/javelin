@@ -11,13 +11,20 @@ import javelin.view.screen.WorldScreen;
 /**
  * An outpost allows for vision of a wide area around it.
  * 
+ * TODO fog of war: daily obscure all unseen squares. non-hostile locations
+ * become source of vision. outposts become hostile (easy) and
+ * non-sacrificeable. Probably better to make it progressive (like 1/7 chance a
+ * day of a unseen spot disappearing - as to not negate the benefire of Gather
+ * Information and such).
+ * 
  * @see World#makemap()
  * @author alex
  */
 public class Outpost extends Location {
-
+	/** How many squares away to help vision with. */
 	public static final int VISIONRANGE = 3;
 
+	/** Constructor. */
 	public Outpost() {
 		super("Outpost");
 		gossip = true;
@@ -28,13 +35,13 @@ public class Outpost extends Location {
 		return true;
 	}
 
+	/** Puts a new instance in the {@link World} map. */
 	public static void build() {
 		new Outpost().place();
 	}
 
 	@Override
 	public boolean interact() {
-		// discover(this.x, this.y, VISIONRANGE);
 		Squad.active.view(Squad.active.perceive(false) + 10);
 		return super.interact();
 	}

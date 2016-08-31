@@ -49,7 +49,7 @@ public final class ActionProvider
 
 	public ActionProvider(BattleState battleState) {
 		this.battleState = battleState;
-		battleState.checkwhoisnext();
+		battleState.next();
 		if (battleState.next.burrowed) {
 			for (Action a : AIACTIONS) {
 				if (a.allowwhileburrowed) {

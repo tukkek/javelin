@@ -33,7 +33,7 @@ public class PassItem extends Action {
 			Game.message("You are engaged in combat!", Delay.NONE);
 			return false;
 		}
-		final ArrayList<Combatant> surroudings = state.getSurroundings(sameme);
+		final ArrayList<Combatant> surroudings = state.getsurroundings(sameme);
 		for (final Combatant c : new ArrayList<Combatant>(surroudings)) {
 			if (!c.isAlly(sameme, state) || state.isengaged(c)) {
 				surroudings.remove(c);
@@ -68,7 +68,7 @@ public class PassItem extends Action {
 	}
 
 	static Combatant getmonster(final Combatant receiverc) {
-		for (final Combatant c : Fight.state.getCombatants()) {
+		for (final Combatant c : Fight.state.getcombatants()) {
 			if (c.toString() == receiverc.toString()) {
 				return c;
 			}

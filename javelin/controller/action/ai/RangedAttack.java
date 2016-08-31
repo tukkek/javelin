@@ -51,7 +51,7 @@ public class RangedAttack extends AbstractAttack {
 			penalty += 4;
 		}
 		if (!attacker.source.hasfeat(ImprovedPreciseShot.SINGLETON)
-				&& s.hasLineOfSight(attacker,
+				&& s.haslineofsight(attacker,
 						target) == javelin.model.state.BattleState.Vision.COVERED) {
 			penalty += 4;
 		}
@@ -78,7 +78,7 @@ public class RangedAttack extends AbstractAttack {
 		}
 		final ArrayList<List<ChanceNode>> successors =
 				new ArrayList<List<ChanceNode>>();
-		for (final Combatant target : gameState.getTargets(active)) {
+		for (final Combatant target : gameState.gettargets(active)) {
 			for (final Integer attack : getcurrentattack(active)) {
 				final BattleState newstate = gameState.clone();
 				final Combatant newactive = newstate.clone(active);

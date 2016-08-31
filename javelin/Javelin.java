@@ -172,6 +172,8 @@ public class Javelin {
 	}
 
 	/**
+	 * TODO move to a new class with proper enum?
+	 * 
 	 * @return {@link #PERIODEVENING}, {@link #PERIODMORNING},
 	 *         {@link #PERIODNIGHT} or {@value #PERIODNOON}.
 	 */
@@ -337,7 +339,7 @@ public class Javelin {
 
 	/** TODO remove? */
 	public static Combatant getCombatant(int id) {
-		for (Combatant c : Fight.state.getCombatants()) {
+		for (Combatant c : Fight.state.getcombatants()) {
 			if (c.id == id) {
 				return c;
 			}

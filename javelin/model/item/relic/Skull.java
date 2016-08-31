@@ -26,7 +26,7 @@ public class Skull extends Relic {
 	@Override
 	protected boolean activate(Combatant user) {
 		ArrayList<Combatant> good = new ArrayList<Combatant>();
-		for (Combatant c : Fight.state.getCombatants()) {
+		for (Combatant c : Fight.state.getcombatants()) {
 			Monster m = c.source;
 			if (Boolean.TRUE.equals(m.good)) {
 				good.add(c);

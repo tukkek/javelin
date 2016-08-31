@@ -15,7 +15,6 @@ import javelin.controller.walker.Step;
 import javelin.controller.walker.Walker;
 import javelin.model.TeamContainer;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Monster;
 
 /**
  * Javelin's implementation of {@link Node}.
@@ -29,17 +28,51 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public class BattleState implements Node, TeamContainer {
+
+	/**
+	 * @see BattleState#hasLineOfSight(Point, Point, int, String)
+	 * @author alex
+	 */
+	public enum Vision {
+		/** Full vision. */
+		CLEAR,
+		/** Partial vision. */
+		COVERED,
+		/** No vision */
+		BLOCKED,
+	}
+
+	/** Player units. */
 	public ArrayList<Combatant> blueTeam;
+	/** Computer units. */
 	public ArrayList<Combatant> redTeam;
+	/** Dead and unconscious units. */
 	public ArrayList<Combatant> dead;
+	/** @see Meld */
 	public ArrayList<Meld> meld;
 	/**
 	 * Since it's immutable no need to clone it.
 	 */
 	transient public Square[][] map;
+	/**
+	 * Next unit to act.
+	 * 
+	 * @see #next()
+	 */
 	public Combatant next;
+	/**
+	 * Period of the day, affecting visibility.
+	 * 
+	 * @see Fight#period
+	 * @see Javelin#getDayPeriod()
+	 */
 	public String period;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @see #clone()
+	 */
 	public BattleState(final ArrayList<Combatant> blueTeam,
 			final ArrayList<Combatant> redTeam, ArrayList<Combatant> dead,
 			final Square[][] map, String period, ArrayList<Meld> meld) {
@@ -49,9 +82,13 @@ public class BattleState implements Node, TeamContainer {
 		this.blueTeam = (ArrayList<Combatant>) blueTeam.clone();
 		this.redTeam = (ArrayList<Combatant>) redTeam.clone();
 		this.meld = (ArrayList<Meld>) meld.clone();
-		checkwhoisnext();
+		next();
 	}
 
+	/**
+	 * @param f
+	 *            Creates the initial state given a controller.
+	 */
 	public BattleState(Fight f) {
 		map = f.map == null ? null : f.map.map;
 		period = f.period;
@@ -59,7 +96,7 @@ public class BattleState implements Node, TeamContainer {
 		this.blueTeam = new ArrayList<Combatant>();
 		this.redTeam = new ArrayList<Combatant>();
 		this.meld = new ArrayList<Meld>();
-		checkwhoisnext();
+		next();
 
 	}
 
@@ -71,15 +108,16 @@ public class BattleState implements Node, TeamContainer {
 			clone.blueTeam = (ArrayList<Combatant>) blueTeam.clone();
 			clone.redTeam = (ArrayList<Combatant>) redTeam.clone();
 			clone.meld = (ArrayList<Meld>) meld.clone();
-			checkwhoisnext();
+			next();
 			return clone;
 		} catch (CloneNotSupportedException e) {
 			throw new RuntimeException();
 		}
 	}
 
-	public void checkwhoisnext() {
-		final List<Combatant> combatants = getCombatants();
+	/** Updates {@link #next}. */
+	public void next() {
+		final List<Combatant> combatants = getcombatants();
 		if (combatants.isEmpty()) {
 			next = null;
 			return;
@@ -100,20 +138,21 @@ public class BattleState implements Node, TeamContainer {
 	}
 
 	@Override
-	public ArrayList<Combatant> getCombatants() {
+	public ArrayList<Combatant> getcombatants() {
 		final ArrayList<Combatant> list =
 				(ArrayList<Combatant>) blueTeam.clone();
 		list.addAll(redTeam);
 		return list;
 	}
 
-	public ArrayList<Combatant> getSurroundings(final Combatant surrounded) {
+	/**
+	 * @return All units surrounding the given {@link Combatant}.
+	 */
+	public ArrayList<Combatant> getsurroundings(final Combatant surrounded) {
 		final ArrayList<Combatant> surroundings = new ArrayList<Combatant>();
 		final int[] location = surrounded.location;
-		final ArrayList<Combatant> combatents = new ArrayList<Combatant>();
-		combatents.addAll(blueTeam);
-		combatents.addAll(redTeam);
-		location: for (final Combatant c : combatents) {
+		final ArrayList<Combatant> combatants = getcombatants();
+		location: for (final Combatant c : combatants) {
 			for (int x = location[0] - 1; x <= location[0] + 1; x++) {
 				for (int y = location[1] - 1; y <= location[1] + 1; y++) {
 					if (x == location[0] && y == location[1]) {
@@ -144,7 +183,7 @@ public class BattleState implements Node, TeamContainer {
 	 * @see BattleState#clone(Combatant)
 	 */
 	public Combatant clone(Combatant c) {
-		final ArrayList<Combatant> team = getTeam(c);
+		final ArrayList<Combatant> team = getteam(c);
 		final int index = team.indexOf(c);
 		if (index == -1) {
 			return null;
@@ -158,8 +197,11 @@ public class BattleState implements Node, TeamContainer {
 		return c;
 	}
 
-	public Combatant getCombatant(final int x, final int y) {
-		for (final Combatant c : getCombatants()) {
+	/**
+	 * @return Unit at given coordinate or <code>null</code> if none.
+	 */
+	public Combatant getcombatant(final int x, final int y) {
+		for (final Combatant c : getcombatants()) {
 			if (c.location[0] == x && c.location[1] == y) {
 				return c;
 			}
@@ -167,13 +209,17 @@ public class BattleState implements Node, TeamContainer {
 		return null;
 	}
 
+	/**
+	 * @param c
+	 *            Removes this unit from battle.
+	 */
 	public void remove(Combatant c) {
 		c = clone(c);
 		if (!blueTeam.remove(c)) {
 			redTeam.remove(c);
 		}
 		if (c == next) {
-			checkwhoisnext();
+			next();
 		}
 	}
 
@@ -189,16 +235,12 @@ public class BattleState implements Node, TeamContainer {
 		if (c.burrowed) {
 			return false;
 		}
-		for (final Combatant nearby : getSurroundings(c)) {
+		for (final Combatant nearby : getsurroundings(c)) {
 			if (!c.isAlly(nearby, this)) {
 				return true;
 			}
 		}
 		return false;
-	}
-
-	public enum Vision {
-		CLEAR, COVERED, BLOCKED,
 	}
 
 	/**
@@ -236,34 +278,52 @@ public class BattleState implements Node, TeamContainer {
 		return steps == clear ? Vision.CLEAR : Vision.COVERED;
 	}
 
-	public List<Combatant> getTargets(Combatant combatant) {
-		// combatant = translatecombatant(combatant);
-		return getAllTargets(combatant,
-				getTeam(combatant) == blueTeam ? redTeam : blueTeam);
+	/**
+	 * @return As {@link #gettargets(Combatant, List)} but default to
+	 *         targetting only units in the opposite team.
+	 */
+	public List<Combatant> gettargets(Combatant combatant) {
+		return gettargets(combatant,
+				getteam(combatant) == blueTeam ? redTeam : blueTeam);
 	}
 
-	public List<Combatant> getAllTargets(Combatant combatant,
+	/**
+	 * @param team
+	 *            From the units in this team...
+	 * @return all that can be seen by the given {@link Combatant}.
+	 */
+	public List<Combatant> gettargets(Combatant combatant,
 			List<Combatant> team) {
 		final List<Combatant> targets = new ArrayList<Combatant>();
 		for (final Combatant targetc : team) {
-			if (hasLineOfSight(combatant, targetc) != Vision.BLOCKED) {
+			if (haslineofsight(combatant, targetc) != Vision.BLOCKED) {
 				targets.add(targetc);
 			}
 		}
 		return targets;
 	}
 
-	public Vision hasLineOfSight(Combatant me, Combatant target) {
-		return hasLineOfSight(me,
+	/**
+	 * @return <code>true</code> if the target {@link Combatant} can be seen.
+	 */
+	public Vision haslineofsight(Combatant me, Combatant target) {
+		return haslineoffight(me,
 				new Point(target.location[0], target.location[1]));
 	}
 
-	public Vision hasLineOfSight(Combatant me, Point target) {
+	/**
+	 * @return <code>true</code> if the target {@link Point} can be seen.
+	 */
+	public Vision haslineoffight(Combatant me, Point target) {
 		return hasLineOfSight(new Point(me.location[0], me.location[1]),
 				new Point(target.x, target.y), me.view(period),
 				me.perceive(period));
 	}
 
+	/**
+	 * @return <code>true</code> if there is another {@link Combatant} in the
+	 *         opposite side of the target (see d20 flanking rules).
+	 */
 	public boolean isflanked(final Combatant target, final Combatant attacker) {
 		if (attacker.burrowed || Walker.distance(target, attacker) >= 1.5) {
 			return false;
@@ -279,26 +339,18 @@ public class BattleState implements Node, TeamContainer {
 		final int deltay = target.location[1] - attacker.location[1];
 		final int flankingx = target.location[0] + deltax;
 		final int flankingy = target.location[1] + deltay;
-		final Combatant flank = getCombatant(flankingx, flankingy);
+		final Combatant flank = getcombatant(flankingx, flankingy);
 		return flank != null && !flank.burrowed
 				&& Walker.distance(target, flank) < 1.5
 				&& attackerteam.contains(flank);
 	}
 
-	public int delta(final Combatant surroundinga, final Combatant surroundingb,
-			final int l) {
-		return surroundinga.location[l] - surroundingb.location[l];
-	}
-
-	public boolean isaligned(final int deltax, final int deltay) {
-		return deltax == 2 && deltay == 0 || deltay == 2 && deltax == 0;
-	}
-
-	public boolean isdiagonal(final int deltax, final int deltay) {
-		return deltax == 2 && deltay == 2;
-	}
-
-	public ArrayList<Combatant> getTeam(Combatant c) {
+	/**
+	 * @return The team this unit is in. Assumes it is in one of them.
+	 * @see #blueTeam
+	 * @see #redTeam
+	 */
+	public ArrayList<Combatant> getteam(Combatant c) {
 		return blueTeam.contains(c) ? blueTeam : redTeam;
 	}
 
@@ -329,19 +381,6 @@ public class BattleState implements Node, TeamContainer {
 		return c.equals(same) ? same : clone(c);
 	}
 
-	public Meld findmeld(int x, int y) {
-		for (Meld m : meld) {
-			if (m.x == x && m.y == y) {
-				return m;
-			}
-		}
-		return null;
-	}
-
-	public void addmeld(int x, int y, Monster dead) {
-		meld.add(new Meld(x, y, next.ap + 1, dead));
-	}
-
 	@Override
 	public BattleState clonedeeply() {
 		BattleState cl = clone();
@@ -356,6 +395,9 @@ public class BattleState implements Node, TeamContainer {
 		return cl;
 	}
 
+	/**
+	 * @return Meld at the given coordinate or <code>null</code> if none.
+	 */
 	public Meld getmeld(int x, int y) {
 		for (Meld m : meld) {
 			if (m.x == x && m.y == y) {

@@ -142,7 +142,7 @@ public class Breath extends Action implements AiAction {
 	String targetinfo(BattleState state, Set<Point> area) {
 		String targets = "";
 		for (Point p : area) {
-			Combatant c = state.getCombatant(p.x, p.y);
+			Combatant c = state.getcombatant(p.x, p.y);
 			if (c != null) {
 				targets += c + ", ";
 			}
@@ -163,7 +163,7 @@ public class Breath extends Action implements AiAction {
 		final ArrayList<ChanceNode> chances = new ArrayList<ChanceNode>();
 		final ArrayList<Combatant> targets = new ArrayList<Combatant>();
 		for (final Point p : a.fill(breath.range, active, s)) {
-			final Combatant target = s.getCombatant(p.x, p.y);
+			final Combatant target = s.getcombatant(p.x, p.y);
 			if (target != null) {
 				targets.add(target);
 			}

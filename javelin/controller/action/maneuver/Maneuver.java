@@ -91,7 +91,7 @@ public abstract class Maneuver extends Fire implements AiAction {
 		if (!combatant.source.hasfeat(prerequisite)) {
 			return outcomes;
 		}
-		final ArrayList<Combatant> targets = gameState.getCombatants();
+		final ArrayList<Combatant> targets = gameState.getcombatants();
 		filtertargets(combatant, targets, gameState);
 		for (final Combatant target : targets) {
 			outcomes.add(maneuver(combatant, target, gameState));

@@ -102,7 +102,7 @@ public class Movement extends Action {
 				throw new RepeatTurn();
 			}
 			if (!Movement.lastmovewasattack) {
-				if (meld == null) {
+				if (meld == null || meld.meldsat > hero.ap) {
 					Game.message(hero + " "
 							+ (disengaging ? "disengages" : "moves") + "...",
 							Delay.WAIT);
@@ -183,7 +183,7 @@ public class Movement extends Action {
 		if (m != null && !m.crystalize(state)) {
 			throw new RepeatTurn();
 		}
-		Combatant c = state.getCombatant(x, y);
+		Combatant c = state.getcombatant(x, y);
 		if (c != null) {
 			if (!c.isAlly(hero, state)) {
 				if (c.burrowed) {

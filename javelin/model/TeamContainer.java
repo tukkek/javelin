@@ -14,5 +14,5 @@ public interface TeamContainer {
 
 	List<Combatant> getRedTeam();
 
-	List<Combatant> getCombatants();
+	List<Combatant> getcombatants();
 }

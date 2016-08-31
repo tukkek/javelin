@@ -71,7 +71,7 @@ public class Summon extends Spell {
 		summoned.ap = target.ap;
 		int x = target.location[0];
 		int y = target.location[1];
-		while (s.getCombatant(x, y) != null) {
+		while (s.getcombatant(x, y) != null) {
 			x += RPG.pick(new int[] { -1, 0, +1 });
 			y += RPG.pick(new int[] { -1, 0, +1 });
 			if (x < 0 || y < 0 || x >= s.map.length || y >= s.map.length) {

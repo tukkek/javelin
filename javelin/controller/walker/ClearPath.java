@@ -19,7 +19,7 @@ public class ClearPath extends Walker {
 		try {
 			final Square square = state.map[x][y];
 			return !square.blocked && !square.obstructed
-					&& state.getCombatant(x, y) == null;
+					&& state.getcombatant(x, y) == null;
 		} catch (ArrayIndexOutOfBoundsException e) {
 			return false;
 		}

@@ -48,14 +48,14 @@ public class BattlePanel extends MapPanel {
 		super.refresh();
 		final HashSet<Point> update = new HashSet<Point>(
 				Fight.state.redTeam.size() + Fight.state.blueTeam.size());
-		for (Combatant c : Fight.state.getCombatants()) {
+		for (Combatant c : Fight.state.getcombatants()) {
 			update.add(new Point(c.location[0], c.location[1]));
 		}
-		for (Combatant c : previousstate.getCombatants()) {
+		for (Combatant c : previousstate.getcombatants()) {
 			update.add(new Point(c.location[0], c.location[1]));
 		}
 		updatestate();
-		for (Combatant c : Fight.state.getCombatants()) {
+		for (Combatant c : Fight.state.getcombatants()) {
 			update.add(new Point(c.location[0], c.location[1]));
 		}
 		if (!daylight) {

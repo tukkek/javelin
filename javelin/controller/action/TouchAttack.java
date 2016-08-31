@@ -29,7 +29,7 @@ public class TouchAttack extends Fire implements AiAction {
 		if (combatant.source.touch == null) {
 			return outcomes;
 		}
-		ArrayList<Combatant> opponents = gameState.getCombatants();
+		ArrayList<Combatant> opponents = gameState.getcombatants();
 		filtertargets(combatant, opponents, gameState);
 		for (Combatant target : opponents) {
 			outcomes.add(touchattack(combatant, target, gameState));

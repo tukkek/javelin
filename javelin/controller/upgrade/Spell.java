@@ -312,7 +312,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	public static List<Combatant> getradius(Combatant target, int radius,
 			Spell spell, BattleState state) {
 		ArrayList<Combatant> targets = new ArrayList<Combatant>();
-		for (Combatant c : state.getCombatants()) {
+		for (Combatant c : state.getcombatants()) {
 			if (Walker.distance(c, target) <= radius
 					&& 10 + spell.casterlevel >= c.source.sr) {
 				targets.add(c);

@@ -6,6 +6,7 @@ import javelin.Javelin;
 import javelin.controller.BattleSetup;
 import javelin.controller.Point;
 import javelin.controller.Weather;
+import javelin.controller.action.Recruit;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
@@ -26,17 +27,14 @@ import tyrant.mikera.engine.RPG;
  */
 public class Rush extends Fight {
 	class RushSetup extends BattleSetup {
-		private static final int CLEARINGAREA = 5;
+		private static final int CLEARINGAREA = 9;
 
 		@Override
 		public void place() {
 			Point reda = new Point(1, 1);
-			Point redb = new Point(state.map.length - 2, CLEARINGAREA - 1);
+			Point redb = new Point(state.map.length - 2, CLEARINGAREA);
 			clear(reda, redb);
 			place(reda, redb, state.redTeam);
-			for (Combatant c : new ArrayList<Combatant>(state.redTeam)) {
-				state.redTeam.add(((Spawner) c.source).spawn(c, 0f));
-			}
 			Point bluea = new Point(1, state.map[0].length - 2 - CLEARINGAREA);
 			Point blueb =
 					new Point(state.map.length - 2, state.map[0].length - 2);
@@ -45,7 +43,8 @@ public class Rush extends Fight {
 			Combatant spawner = RPG.pick(state.blueTeam);
 			Combatant leader = ((Spawner) spawner.source).spawn(spawner, 0f);
 			state.blueTeam.add(leader);
-			mana -= leader.source.challengeRating;
+			mana -= leader.source.challengeRating
+					* DungeonRush.PLAYERMANAMULTIPLIER;
 		}
 
 		void place(Point reda, Point redb, ArrayList<Combatant> redTeam) {
@@ -69,18 +68,18 @@ public class Rush extends Fight {
 	}
 
 	/**
-	 * Since it would be awkward to show things like CR1.25 to the player better
-	 * multiply it by some factor.
+	 * Resources used by the human player to {@link Recruit} units.
+	 * 
+	 * @see DungeonRush#PLAYERMANAMULTIPLIER
 	 */
-	public static final int PLAYERMANAMULTIPLIER = 10;
+	public int mana;
 
-	float mana;
 	Float lastupdate = null;
 
 	/** Constructor.. */
 	public Rush(DungeonRush r) {
 		for (Monster spawner : r.spawners) {
-			mana += spawner.challengeRating * PLAYERMANAMULTIPLIER;
+			mana += spawner.challengeRating * DungeonRush.PLAYERMANAMULTIPLIER;
 		}
 		map = Map.random();
 		setup = new RushSetup();
@@ -128,7 +127,12 @@ public class Rush extends Fight {
 		if (Fight.victory) {
 			dr.upgrade();
 		} else {
-			dr.downgrade();
+			Monster removed = dr.downgrade();
+			String message = "You have lost...";
+			if (removed != null) {
+				message += "\nYour " + removed + " spawner has been destroyed.";
+			}
+			Javelin.message(message, true);
 		}
 		return false;
 	}
@@ -159,21 +163,17 @@ public class Rush extends Fight {
 
 	@Override
 	public void meld(Combatant hero, Meld m) {
-		if (state.redTeam.contains(hero)) {
-			super.meld(hero, m);
-		} else {
-			Game.message(
-					"You capture " + (m.cr * PLAYERMANAMULTIPLIER) + " mana!",
-					Delay.BLOCK);
-			mana += m.cr * PLAYERMANAMULTIPLIER;
-			Fight.state.meld.remove(this);
-		}
+		super.meld(hero, m);
+		Game.messagepanel.clear();
+		int manabonus = Math.round(m.cr * DungeonRush.PLAYERMANAMULTIPLIER);
+		Game.message("You capture " + manabonus + " mana!", Delay.BLOCK);
+		mana += manabonus;
 	}
 
 	@Override
 	public void endturn() {
 		super.endturn();
-		state.checkwhoisnext();
+		state.next();
 		if (lastupdate == null) {
 			lastupdate = state.next.ap;
 			return;
@@ -187,7 +187,9 @@ public class Rush extends Fight {
 					s.mana += ellapsed;
 					if (s.mana >= s.challengeRating) {
 						s.mana -= s.challengeRating;
-						state.redTeam.add(s.spawn(c, state.next.ap));
+						if (!DungeonRush.DEBUG) {
+							state.redTeam.add(s.spawn(c, state.next.ap));
+						}
 					}
 				}
 			}
@@ -197,5 +199,12 @@ public class Rush extends Fight {
 	@Override
 	public ArrayList<Item> getbag(Combatant combatant) {
 		return new ArrayList<Item>();
+	}
+
+	@Override
+	public Meld addmeld(int x, int y, Monster dead, BattleState s) {
+		Meld m = super.addmeld(x, y, dead, s);
+		m.meldsat = -Float.MAX_VALUE;
+		return m;
 	}
 }

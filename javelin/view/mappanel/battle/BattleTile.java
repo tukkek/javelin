@@ -58,7 +58,7 @@ public class BattleTile extends Tile {
 		if (s.flooded) {
 			draw(g, m.flooded);
 		}
-		final Combatant c = Fight.state.getCombatant(x, y);
+		final Combatant c = Fight.state.getcombatant(x, y);
 		if (c != null) {
 			drawcombatant(g, c, this);
 		} else {

@@ -62,7 +62,7 @@ public class Siege extends Fight {
 		if (cleargarrison) {
 			garrison: for (Combatant garrison : new ArrayList<Combatant>(
 					place.garrison)) {
-				for (Combatant active : Fight.state.getCombatants()) {
+				for (Combatant active : Fight.state.getcombatants()) {
 					if (garrison.equals(active)) {
 						continue garrison; // is alive
 					}

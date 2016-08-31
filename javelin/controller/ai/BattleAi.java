@@ -22,6 +22,7 @@ public class BattleAi extends AlphaBetaSearch {
 	 */
 	private static final float LIMIT = 1000;
 
+	/** Constructor. */
 	public BattleAi(final int aiDepth) {
 		super(aiDepth);
 	}
@@ -42,7 +43,8 @@ public class BattleAi extends AlphaBetaSearch {
 		if (blueTeam == 0f) {
 			return LIMIT;
 		}
-		return (redTeam - measuredistances(state.redTeam, state.blueTeam))
+		return (redTeam - measuredistances(state.redTeam, state.blueTeam)
+				- state.meld.size())
 				- (blueTeam - measuredistances(state.blueTeam, state.redTeam));
 	}
 
@@ -65,7 +67,7 @@ public class BattleAi extends AlphaBetaSearch {
 				final int distance =
 						Math.max(Math.abs(mate.location[0] - foe.location[0]),
 								Math.abs(mate.location[1] - foe.location[1]));
-				if (minimum > distance) {
+				if (distance < minimum) {
 					minimum = distance;
 				}
 			}

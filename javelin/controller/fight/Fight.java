@@ -466,9 +466,10 @@ public abstract class Fight {
 				}
 				team.remove(c);
 				if (s.next == c) {
-					s.checkwhoisnext();
+					s.next();
 				}
-				s.addmeld(c.location[0], c.location[1], c.source);
+				Javelin.app.fight.addmeld(c.location[0], c.location[1],
+						c.source, s);
 				Game.message(
 						c + " is removed from the battlefield!\nPress ENTER to continue...",
 						Delay.NONE);
@@ -481,7 +482,8 @@ public abstract class Fight {
 	}
 
 	/**
-	 * Called when an unit reaches {@link Meld}.
+	 * Called when an unit reaches {@link Meld}. Note that only human units use
+	 * this, computer units use {@link Combatant#meld()} directly.
 	 * 
 	 * @param hero
 	 *            Meld collector.
@@ -490,6 +492,23 @@ public abstract class Fight {
 	public void meld(Combatant hero, Meld m) {
 		Game.message(hero + " powers up!", Delay.BLOCK);
 		Javelin.getCombatant(hero.id).meld();
-		Fight.state.meld.remove(this);
+		Fight.state.meld.remove(m);
+	}
+
+	/**
+	 * @param x
+	 *            Meld location.
+	 * @param y
+	 *            Meld location.
+	 * @param dead
+	 *            Unit that died, triggering {@link Meld} creation.
+	 * @param s
+	 *            Current battle state.
+	 * @return Created meld.
+	 */
+	public Meld addmeld(int x, int y, Monster dead, BattleState s) {
+		Meld m = new Meld(x, y, s.next.ap + 1, dead);
+		s.meld.add(m);
+		return m;
 	}
 }

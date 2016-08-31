@@ -2,6 +2,7 @@ package javelin.model.state;
 
 import java.awt.Image;
 
+import javelin.controller.fight.Fight;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.view.Images;
@@ -13,12 +14,29 @@ import javelin.view.Images;
  * @author alex
  */
 public class Meld {
+	/**
+	 * If <code>true</code> will always generate meld.
+	 * 
+	 * @see Fight#meld
+	 */
 	public static final boolean DEBUG = false;
+	/** Meld location. */
 	public final int x;
+	/** Meld location. */
 	public final int y;
-	public final float meldsat;
+	/**
+	 * Will turn from melding crystal to formed (active) crystal when this
+	 * action point (turn) has been reached.
+	 */
+	public float meldsat;
+	/**
+	 * Challenge rating for the creature who died, generating this meld.
+	 * 
+	 * @see Monster#challengeRating
+	 */
 	public final float cr;
 
+	/** Constructor. */
 	public Meld(final int x, final int y, final float meldsat, Monster dead) {
 		this.x = x;
 		this.y = y;
@@ -26,10 +44,22 @@ public class Meld {
 		cr = dead == null ? 0 : dead.challengeRating;
 	}
 
+	/**
+	 * @param state
+	 *            Current state.
+	 * @return <code>true</code> if this meld has solidified.
+	 * @see #meldsat
+	 */
 	public boolean crystalize(BattleState state) {
 		return state.next.ap >= meldsat;
 	}
 
+	/**
+	 * @param state
+	 *            Current state.
+	 * @return Image representing this meld's state.
+	 * @see #crystalize(BattleState)
+	 */
 	public Image getimage(BattleState state) {
 		return state.next.ap >= meldsat ? Images.MELD : Images.DEAD;
 	}

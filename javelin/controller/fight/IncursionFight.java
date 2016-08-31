@@ -56,7 +56,7 @@ public class IncursionFight extends Fight {
 			for (Combatant incursant : new ArrayList<Combatant>(
 					incursion.squad)) {
 				Combatant alive = null;
-				for (Combatant inbattle : Fight.state.getCombatants()) {
+				for (Combatant inbattle : Fight.state.getcombatants()) {
 					if (inbattle.id == incursant.id) {
 						alive = inbattle;
 						break;

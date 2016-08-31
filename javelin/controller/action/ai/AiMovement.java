@@ -54,7 +54,7 @@ public class AiMovement extends Action implements AiAction {
 						|| y >= gameState.map[0].length) {
 					continue;
 				}
-				if (gameState.getCombatant(x, y) != null
+				if (gameState.getcombatant(x, y) != null
 						|| gameState.map[x][y].blocked
 								&& active.source.fly == 0) {
 					continue;

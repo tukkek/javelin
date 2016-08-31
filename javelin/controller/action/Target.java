@@ -73,7 +73,7 @@ public abstract class Target extends Action {
 		}
 		final Combatant combatant = state.clone(c);
 		final List<Combatant> targets =
-				state.getAllTargets(combatant, state.getCombatants());
+				state.gettargets(combatant, state.getcombatants());
 		filtertargets(combatant, targets, state);
 		if (targets.isEmpty()) {
 			Game.message("No valid targets.", Delay.WAIT);
@@ -101,7 +101,7 @@ public abstract class Target extends Action {
 	public int prioritize(final Combatant c, final BattleState state,
 			final Combatant target) {
 		int priority = -target.surprise();
-		if (state.hasLineOfSight(c, target) == Vision.COVERED) {
+		if (state.haslineofsight(c, target) == Vision.COVERED) {
 			priority -= 4;
 		}
 		/* TODO take into account relevant feats */
@@ -180,7 +180,7 @@ public abstract class Target extends Action {
 			BattleState s) {
 		for (Combatant target : new ArrayList<Combatant>(targets)) {
 			if (target.isAlly(active, s)
-					|| s.hasLineOfSight(active, target) == Vision.BLOCKED) {
+					|| s.haslineofsight(active, target) == Vision.BLOCKED) {
 				targets.remove(target);
 			}
 		}

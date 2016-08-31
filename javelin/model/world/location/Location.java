@@ -40,6 +40,10 @@ public abstract class Location extends WorldActor {
 	 */
 	static final int CLOSE = 4;
 
+	/**
+	 * If <code>false</code> will make sure no {@link Squad} occupies the same
+	 * {@link World} space as this.
+	 */
 	public boolean allowentry = true;
 
 	/**
@@ -199,6 +203,9 @@ public abstract class Location extends WorldActor {
 	 */
 	abstract protected Integer getel(int attackerel);
 
+	/**
+	 * @return <code>true</code> if this place needs to be conquered.
+	 */
 	public boolean ishostile() {
 		return !garrison.isEmpty();
 	}
@@ -264,7 +271,14 @@ public abstract class Location extends WorldActor {
 
 	@Override
 	public String describe() {
-		return garrison.isEmpty() ? toString() : describe(garrison, toString());
+		String description = toString();
+		if (!garrison.isEmpty()) {
+			return describe(garrison, description);
+		}
+		if (!description.endsWith(".")) {
+			description += ".";
+		}
+		return description;
 	}
 
 	@Override
@@ -289,6 +303,13 @@ public abstract class Location extends WorldActor {
 		}
 	}
 
+	/**
+	 * @param targets
+	 *            Class of other places to verify if nearby.
+	 * @return <code>true</code> if there is one of the given places under
+	 *         {@value #CLOSE} distance from here.
+	 * @see Walker#distance(int, int, int, int)
+	 */
 	public boolean iscloseto(Class<? extends Location> targets) {
 		for (WorldActor p : getall(targets)) {
 			if (p != this && Walker.distance(x, y, p.x, p.y) <= CLOSE) {
@@ -298,6 +319,9 @@ public abstract class Location extends WorldActor {
 		return false;
 	}
 
+	/**
+	 * @return Total number of places in the game {@link World}.
+	 */
 	public static int count() {
 		int sum = 0;
 		for (ArrayList<WorldActor> places : INSTANCES.values()) {
@@ -320,6 +344,10 @@ public abstract class Location extends WorldActor {
 		return false;
 	}
 
+	/**
+	 * @return <code>true</code> if should render the {@link Images#HOSTILE}
+	 *         overlay.
+	 */
 	public boolean drawgarisson() {
 		return ishostile();
 	}

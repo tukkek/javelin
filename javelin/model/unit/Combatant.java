@@ -311,11 +311,11 @@ public class Combatant implements Serializable, Cloneable {
 	}
 
 	public void die(BattleState s) {
+		if ((/* hp <= DEADATHP && */Javelin.app.fight.meld) || Meld.DEBUG) {
+			Javelin.app.fight.addmeld(location[0], location[1], source, s);
+		}
 		s.remove(this);
 		s.dead.add(this);
-		if ((hp <= DEADATHP && Javelin.app.fight.meld) || Meld.DEBUG) {
-			s.addmeld(location[0], location[1], source);
-		}
 	}
 
 	public CurrentAttack getcurrentattack(List<AttackSequence> attacktype) {
@@ -490,7 +490,7 @@ public class Combatant implements Serializable, Cloneable {
 		if (surprise() != 0) {
 			statuslist.add("flat-footed");
 		}
-		Vision v = state.hasLineOfSight(state.next, this);
+		Vision v = state.haslineofsight(state.next, this);
 		if (v == Vision.COVERED) {
 			statuslist.add("covered");
 		} else if (v == Vision.BLOCKED) {

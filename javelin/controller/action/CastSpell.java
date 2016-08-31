@@ -230,7 +230,7 @@ public class CastSpell extends Fire implements AiAction {
 				continue;
 			}
 			final List<Combatant> targets =
-					gameState.getAllTargets(active, gameState.getCombatants());
+					gameState.gettargets(active, gameState.getcombatants());
 			s.filtertargets(active, targets, gameState);
 			for (Combatant target : targets) {
 				chances.add(cast(active, target, i, gameState));

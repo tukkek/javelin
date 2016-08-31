@@ -80,7 +80,7 @@ public class BattleSetup {
 
 	/** Rolls initiative for each {@link Combatant}. */
 	public void rollinitiative() {
-		for (final Combatant c : Fight.state.getCombatants()) {
+		for (final Combatant c : Fight.state.getcombatants()) {
 			c.rollinitiative();
 		}
 	}
@@ -113,7 +113,7 @@ public class BattleSetup {
 			Point p = RPG.pick(possibilities);
 			placing.location[0] = p.x;
 			placing.location[1] = p.y;
-			Vision path = s.hasLineOfSight(placing, reference);
+			Vision path = s.haslineofsight(placing, reference);
 			if (path == Vision.CLEAR) {
 				add(placing, p);
 				break;
@@ -134,7 +134,7 @@ public class BattleSetup {
 				for (int y = reference.location[1]
 						- vision; y <= reference.location[1] + vision; y++) {
 					if (isbound(y, s.map[0]) && !s.map[x][y].blocked
-							&& s.getCombatant(x, y) == null) {
+							&& s.getcombatant(x, y) == null) {
 						possibilities.add(new Point(x, y));
 					}
 				}
@@ -171,7 +171,7 @@ public class BattleSetup {
 		maxy = Math.min(maxy, s.map[0].length - 1);
 		Point p = null;
 		while (p == null || s.map[p.x][p.y].blocked
-				|| s.getCombatant(p.x, p.y) != null) {
+				|| s.getcombatant(p.x, p.y) != null) {
 			p = new Point(RPG.r(minx, maxx), RPG.r(miny, maxy));
 		}
 		return p;

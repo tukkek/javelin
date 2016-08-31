@@ -135,7 +135,7 @@ public class RecruitScreen extends PurchaseScreen {
 
 	/**
 	 * @param cr
-	 *            spend this much in recruiting a rookie.
+	 *            Sspend this much CR in recruiting a rookie (1CR = 100XP).
 	 */
 	static public void spend(double cr) {
 		double percapita = cr / new Float(Squad.active.eat());

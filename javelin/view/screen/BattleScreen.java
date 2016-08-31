@@ -159,10 +159,10 @@ public class BattleScreen extends Screen {
 	/** Routine for human interaction. */
 	protected void turn() {
 		try {
-			for (Combatant c : Fight.state.getCombatants()) {
+			for (Combatant c : Fight.state.getcombatants()) {
 				c.refresh();
 			}
-			Fight.state.checkwhoisnext();
+			Fight.state.next();
 			current = Fight.state.next;
 			if (Fight.state.redTeam.contains(current) || current.automatic) {
 				spentap = 0;
@@ -361,7 +361,7 @@ public class BattleScreen extends Screen {
 	 *            performed first by comparing actual {@link Combatant#ap}.
 	 */
 	public void spendap(Combatant combatant, boolean force) {
-		for (Combatant c : Fight.state.getCombatants()) {
+		for (Combatant c : Fight.state.getcombatants()) {
 			if (c.id == combatant.id && (c.ap != combatant.ap || force)) {
 				c.ap += spentap;
 				break;

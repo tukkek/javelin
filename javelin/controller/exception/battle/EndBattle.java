@@ -72,7 +72,7 @@ public class EndBattle extends BattleEvent {
 
 	static void terminateconditions(BattleState s, BattleScreen screen) {
 		screen.checkblock();
-		for (Combatant c : Fight.state.getCombatants()) {
+		for (Combatant c : Fight.state.getcombatants()) {
 			c.finishconditions(s, screen);
 		}
 	}
@@ -221,7 +221,7 @@ public class EndBattle extends BattleEvent {
 	}
 
 	static void end(ArrayList<Combatant> originalteam) {
-		for (Combatant c : Fight.state.getCombatants()) {
+		for (Combatant c : Fight.state.getcombatants()) {
 			if (c.summoned) {
 				Fight.state.blueTeam.remove(c);
 				Fight.state.redTeam.remove(c);

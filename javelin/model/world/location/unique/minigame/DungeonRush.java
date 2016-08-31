@@ -4,30 +4,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.db.StateManager;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Rush;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.unique.UniqueLocation;
-import tyrant.mikera.engine.RPG;
+import javelin.view.screen.WorldScreen;
+import javelin.view.screen.town.RecruitScreen;
 
 /**
  * Mini-game that allows player to recruit units against a swarm of incoming
  * enemies.
  * 
- * TODO allow player to recruit
- * 
- * TODO allow player to decide which {@link #upgrade()} to advance to
- * 
- * TODO allow recruiting in-loco
- * 
  * @author alex
  */
 public class DungeonRush extends UniqueLocation {
-	private static final int MINIMUMSPAWNERS = 4;
-	private static final String DESCRITPION = "Dungeon rush";
+	/** If <code>true</code> will inhibit monster from being spawned. */
+	public static final boolean DEBUG = false;
+
+	static final int MINIMUMSPAWNERS = 4;
+	static final String DESCRITPION = "Dungeon rush";
 
 	/**
 	 * Units that can be created in battle. Winning battles allows you to spawn
@@ -35,6 +35,12 @@ public class DungeonRush extends UniqueLocation {
 	 */
 	public ArrayList<Monster> spawners =
 			new ArrayList<Monster>(MINIMUMSPAWNERS);
+
+	/**
+	 * Since it would be awkward to show things like CR1.25 to the player better
+	 * multiply it by some factor.
+	 */
+	public static final int PLAYERMANAMULTIPLIER = 10;
 
 	/** Constructor. */
 	public DungeonRush() {
@@ -58,16 +64,27 @@ public class DungeonRush extends UniqueLocation {
 			}
 		}
 		i += spawners.size();
-		spawners.add(RPG.pick(Javelin.MONSTERSBYCR.get(crs.get(i))));
+		List<Monster> tier = Javelin.MONSTERSBYCR.get(crs.get(i));
+		spawners.add(tier.get(Javelin.choose(
+				"Victory! Which new spawner do you want to acquire?", tier,
+				true, true)));
+		StateManager.save(true, StateManager.SAVEFILE);
 	}
 
 	/**
 	 * Removes most powerful of the {@link #spawners}.
+	 * 
+	 * @return
 	 */
-	public void downgrade() {
-		if (spawners.size() > MINIMUMSPAWNERS) {
-			spawners.remove(spawners.size() - 1);
+	public Monster downgrade() {
+		if (spawners.size() <= MINIMUMSPAWNERS) {
+			return null;
 		}
+		int last = spawners.size() - 1;
+		Monster removed = spawners.get(last);
+		spawners.remove(last);
+		StateManager.save(true, StateManager.SAVEFILE);
+		return removed;
 	}
 
 	@Override
@@ -85,13 +102,34 @@ public class DungeonRush extends UniqueLocation {
 		if (!super.interact()) {
 			return false;
 		}
+		ArrayList<String> choices = new ArrayList<String>(spawners.size());
+		for (Monster m : spawners) {
+			choices.add(m + " (" + Math.round(m.challengeRating * 100) + "XP)");
+		}
+		String prompt =
+				"Which creature do you wish to spawn?\n\nYou currently have "
+						+ RecruitScreen.sumxp() + " XP";
+		int choice = Javelin.choose(prompt, choices, true, false);
+		Javelin.app.switchScreen(WorldScreen.active);
+		if (choice == -1) {
+			return true;
+		}
+		Monster recruit = spawners.get(choice);
+		if (RecruitScreen.canbuy(recruit.challengeRating * 100)) {
+			RecruitScreen.spend(recruit.challengeRating);
+			Squad.active.members.add(new Combatant(recruit.clone(), true));
+		} else {
+			Javelin.message(
+					"You don't have enough experience to acquire this unit...",
+					true);
+		}
 		return true;
 	}
 
 	/** Starts a {@link Rush}. */
 	static public void start() {
 		if (Javelin.prompt(
-				"Start a dungeon rush game?\n\nPress ENTER start or any other key to cancel...") == '\n') {
+				"Start a dungeon rush match?\n\nPress ENTER start or any other key to cancel...") == '\n') {
 			throw new StartBattle(new Rush(get()));
 		}
 	}

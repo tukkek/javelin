@@ -35,7 +35,7 @@ public class PillarOfSkulls extends UniqueLocation {
 			"submerges deep into the pillar!",
 			"emerges from the pillar and looks at you with an intense stare...",
 			"asks \"Have you seen Morte?\"", "asks \"Who are you?\"",
-			"sings \"... it must be dream from below!\"", "bobs playfully." };
+			"sings \"... it must be a dream from below!\"", "bobs playfully." };
 
 	static Option SHOWLOCATION = new Option("Show location (50XP)", 0, 'l');
 	static Option OFFERITEM = new Option("Offer item (1 item)", 0, 'o');

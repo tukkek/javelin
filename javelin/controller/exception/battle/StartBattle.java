@@ -40,7 +40,7 @@ public class StartBattle extends BattleEvent {
 		}
 		StartBattle.preparebattle(foes);
 		fight.setup.setup();
-		Fight.state.checkwhoisnext();
+		Fight.state.next();
 		fight.ready();
 		BattlePanel.current = Fight.state.next;
 		BattleScreen battleScreen = new BattleScreen(true);

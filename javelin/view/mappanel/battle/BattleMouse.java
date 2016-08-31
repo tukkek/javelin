@@ -27,8 +27,12 @@ import javelin.view.mappanel.battle.overlay.TargetOverlay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.StatisticsScreen;
 
+/**
+ * Handles mouse events for {@link BattleScreen}.
+ * 
+ * @author alex
+ */
 public class BattleMouse extends Mouse {
-
 	enum Action {
 		MELEE, RANGED, MOVE
 	}
@@ -50,10 +54,11 @@ public class BattleMouse extends Mouse {
 			return current.source.melee.isEmpty() ? null : Action.MELEE;
 		}
 		return current.source.ranged.isEmpty() || s.isengaged(current)
-				|| s.hasLineOfSight(current, target) == Vision.BLOCKED ? null
+				|| s.haslineofsight(current, target) == Vision.BLOCKED ? null
 						: Action.RANGED;
 	}
 
+	/** Constructor. */
 	public BattleMouse(MapPanel panel) {
 		super(panel);
 	}
@@ -68,7 +73,7 @@ public class BattleMouse extends Mouse {
 		}
 		final Tile t = (Tile) e.getSource();
 		final BattleState s = Fight.state;
-		final Combatant target = s.getCombatant(t.x, t.y);
+		final Combatant target = s.getcombatant(t.x, t.y);
 		final int button = e.getButton();
 		if (button == MouseEvent.BUTTON3 && target != null) {
 			BattleScreen.perform(new Runnable() {
@@ -98,7 +103,7 @@ public class BattleMouse extends Mouse {
 								c.location[1] = to.y;
 								c.ap += to.apcost;
 								Meld m = move.getmeld(to.x, to.y);
-								if (m != null) {
+								if (m != null && c.ap >= m.meldsat) {
 									Javelin.app.fight.meld(c, m);
 								}
 							}
@@ -147,7 +152,7 @@ public class BattleMouse extends Mouse {
 			final Tile t = (Tile) e.getSource();
 			final BattleState s = Fight.state;
 			final Combatant current = s.clone(BattlePanel.current);
-			final Combatant target = s.getCombatant(t.x, t.y);
+			final Combatant target = s.getcombatant(t.x, t.y);
 			final Action a = getaction(current, target, s);
 			if (a == Action.MOVE) {
 				MoveOverlay

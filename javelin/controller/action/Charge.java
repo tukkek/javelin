@@ -50,7 +50,7 @@ public class Charge extends Fire implements AiAction {
 		target = state.clone(target);
 		final ArrayList<Step> walk = walk(me, target, state);
 		final Step destination = walk.get(walk.size() - 1);
-		if (state.findmeld(destination.x, destination.y) != null) {
+		if (state.getmeld(destination.x, destination.y) != null) {
 			return new ArrayList<List<ChanceNode>>();
 		}
 		me.location[0] = destination.x;
@@ -69,8 +69,8 @@ public class Charge extends Fire implements AiAction {
 					final int pushx = Charge.push(me, posttarget, 0);
 					final int pushy = Charge.push(me, posttarget, 1);
 					if (!Charge.outoufbounds(post, pushx, pushy)
-							&& state.getCombatant(pushx, pushy) == null
-							&& state.findmeld(pushx, pushy) == null) {
+							&& state.getcombatant(pushx, pushy) == null
+							&& state.getmeld(pushx, pushy) == null) {
 						posttarget.location[0] = pushx;
 						posttarget.location[1] = pushy;
 					}
@@ -132,7 +132,7 @@ public class Charge extends Fire implements AiAction {
 				(ArrayList<Step>) walk.solution.clone();
 		threatened.remove(threatened.size() - 1);
 		final ArrayList<Combatant> opponents =
-				state.blueTeam == state.getTeam(me) ? state.redTeam
+				state.blueTeam == state.getteam(me) ? state.redTeam
 						: state.blueTeam;
 		for (Step s : threatened) {
 			for (int deltax : Walker.DELTAS) {
@@ -157,7 +157,7 @@ public class Charge extends Fire implements AiAction {
 		if (gameState.isengaged(combatant)) {
 			return outcomes;
 		}
-		List<Combatant> targets = gameState.getTargets(combatant);
+		List<Combatant> targets = gameState.gettargets(combatant);
 		filtertargets(combatant, targets, gameState);
 		for (Combatant target : targets) {
 			outcomes.addAll(charge(gameState, combatant, target));

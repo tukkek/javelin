@@ -15,21 +15,93 @@ import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.MoveOverlay;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.screen.BattleScreen;
+import javelin.view.screen.DungeonScreen;
 import javelin.view.screen.WorldScreen;
 
+/**
+ * Handles mouse events for {@link WorldScreen}.
+ * 
+ * @author alex
+ */
 public class WorldMouse extends Mouse {
-	private boolean showingdescription = false;
+	static class Movement implements Runnable {
+		private final MoveOverlay overlay;
 
+		public Movement(MoveOverlay overlay) {
+			this.overlay = overlay;
+		}
+
+		@Override
+		public void run() {
+			int i = -1;
+			boolean interrupted = false;
+			for (Point p : overlay.affected) {
+				i += 1;
+				if (!WorldMove.move(p.x, p.y, false)) {
+					interrupted = true;
+					break;
+				}
+			}
+			RandomEncounter.encounter(overlay.path.steps.get(i).apcost);
+			BattleScreen.active.mappanel.refresh();
+			if (interrupted) {
+				Point p = overlay.path.resetlocation();
+				if (p != null) {
+					overlay.reset();
+					overlay.path.sourcex = p.x;
+					overlay.path.sourcey = p.y;
+					overlay.walk();
+					BattlePanel.overlay = overlay;
+				}
+			}
+		}
+	}
+
+	class Interact implements Runnable {
+		private final WorldActor target;
+
+		public Interact(WorldActor target) {
+			this.target = target;
+		}
+
+		@Override
+		public void run() {
+			Squad s = target instanceof Squad ? (Squad) target : null;
+			if (s != null) {
+				s.join(Squad.active);
+				return;
+			}
+			Location l = target instanceof Location ? (Location) target : null;
+			if (l != null && l.allowentry && l.discard
+					&& l.garrison.isEmpty()) {
+				WorldMove.place(l.x, l.y);
+			}
+			target.interact();
+		}
+	}
+
+	static final Runnable TOOFAR = new Runnable() {
+		@Override
+		public void run() {
+			Game.messagepanel.clear();
+			Game.message("Too far...", Delay.WAIT);
+		}
+	};
+
+	static boolean processing = false;
+	static Object LOCK = new Object();
+
+	boolean showingdescription = false;
+	long lastcall = -Integer.MIN_VALUE;
+
+	/** Constructor. */
 	public WorldMouse(MapPanel panel) {
 		super(panel);
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if (overrideinput()) {
-			return;
-		}
-		if (!Game.userinterface.waiting) {
+		if (overrideinput() || !Game.userinterface.waiting) {
 			return;
 		}
 		final WorldTile t = (WorldTile) e.getSource();
@@ -38,7 +110,7 @@ public class WorldMouse extends Mouse {
 		}
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			final WorldActor target = WorldActor.get(t.x, t.y);
-			if (target instanceof Squad) {
+			if (target == Squad.active) {
 				return;
 			}
 			if (target == null) {
@@ -46,76 +118,27 @@ public class WorldMouse extends Mouse {
 					return;
 				}
 			} else {
-				if (target.isadjacent(Squad.active)) {
-					BattleScreen.perform(new Runnable() {
-						@Override
-						public void run() {
-							Location l = target instanceof Location
-									? (Location) target : null;
-							if (l != null && l.allowentry && l.discard
-									&& l.garrison.isEmpty()) {
-								WorldMove.place(l.x, l.y);
-							}
-							target.interact();
-						}
-					});
-				} else {
-					BattleScreen.perform(new Runnable() {
-						@Override
-						public void run() {
-							Game.messagepanel.clear();
-							Game.message("Too far...", Delay.WAIT);
-						}
-					});
-				}
+				BattleScreen.perform(target.isadjacent(Squad.active)
+						? new Interact(target) : TOOFAR);
 				return;
 			}
 		}
 		super.mouseClicked(e);
 	}
 
+	/**
+	 * Handles movement for {@link WorldScreen} and {@link DungeonScreen}.
+	 * 
+	 * @return <code>true</code> if moved the current {@link Squad}.
+	 */
 	public static boolean move() {
-		if (BattlePanel.overlay == null) {
+		final MoveOverlay overlay = (MoveOverlay) BattlePanel.overlay;
+		if (BattlePanel.overlay == null || overlay.path.steps.isEmpty()) {
 			return false;
 		}
-		final MoveOverlay o = (MoveOverlay) BattlePanel.overlay;
-		if (o.path.steps.isEmpty()) {
-			return false;
-		}
-		BattleScreen.perform(new Runnable() {
-			@Override
-			public void run() {
-				int i = -1;
-				boolean interrupted = false;
-				for (Point p : o.affected) {
-					i += 1;
-					if (!WorldMove.move(p.x, p.y, false)) {
-						interrupted = true;
-						break;
-					}
-				}
-				RandomEncounter.encounter(o.path.steps.get(i).apcost);
-				BattleScreen.active.mappanel.refresh();
-				if (interrupted) {
-					Point p = o.path.resetlocation();
-					if (p != null) {
-						o.reset();
-						o.path.sourcex = p.x;
-						o.path.sourcey = p.y;
-						o.walk();
-						BattlePanel.overlay = o;
-					}
-				}
-			}
-		});
+		BattleScreen.perform(new Movement(overlay));
 		return true;
 	}
-
-	public static boolean processing = false;
-
-	public static Object LOCK = new Object();
-
-	long lastcall = -Integer.MIN_VALUE;
 
 	@Override
 	public void mouseEntered(MouseEvent e) {

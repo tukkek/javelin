@@ -97,9 +97,6 @@ public class WorldTile extends Tile {
 		if (t == null || t.ishostile()) {
 			return;
 		}
-		if (t.ishosting()) {
-			draw(g, Images.TOURNAMENT);
-		}
 		if (t.haslabor()) {
 			draw(g, Images.LABOR);
 		}

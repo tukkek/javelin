@@ -1,5 +1,6 @@
 package javelin.model.world.location.town;
 
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -32,6 +33,7 @@ import javelin.model.world.location.town.manager.MonsterManager;
 import javelin.model.world.location.town.manager.TownManager;
 import javelin.model.world.location.town.research.Grow;
 import javelin.model.world.location.town.research.Research;
+import javelin.view.Images;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.RecruitScreen;
@@ -490,5 +492,23 @@ public class Town extends Location {
 	@Override
 	public Realm getrealmoverlay() {
 		return ishostile() ? super.getrealmoverlay() : null;
+	}
+
+	@Override
+	public Image getimage() {
+		String image = "locationtown";
+		if (size <= 5) {
+			image += "hamlet";
+		} else if (size <= 10) {
+			image += "village";
+		} else if (size <= 15) {
+			image += "town";
+		} else {
+			image += "city";
+		}
+		if (!ishostile() && ishosting()) {
+			image += "festival";
+		}
+		return Images.getImage(image);
 	}
 }

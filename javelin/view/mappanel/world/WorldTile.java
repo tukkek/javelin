@@ -94,10 +94,7 @@ public class WorldTile extends Tile {
 			draw(g, Images.UPGRADING);
 		}
 		final Town t = l instanceof Town ? (Town) l : null;
-		if (t == null || t.ishostile()) {
-			return;
-		}
-		if (t.haslabor()) {
+		if (t != null && !t.ishostile() && t.haslabor()) {
 			draw(g, Images.LABOR);
 		}
 	}

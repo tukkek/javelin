@@ -112,29 +112,36 @@ public abstract class Terrain implements Serializable {
 	 * 
 	 * @param mph
 	 *            Applies terrain penalty to base Squad speed.
+	 * @param x
+	 *            {@link World} coordinate.
+	 * @param y
+	 *            {@link World} coordinate.
 	 * @return Speed in miles per hour to traverse this terrain.
 	 * 
 	 * @see Squad#move()
 	 * @see Terrain#current()
 	 */
-	public int speed(int mph) {
-		return Math.round(mph * getspeed());
+	public int speed(int mph, int x, int y) {
+		return Math.round(mph * getspeed(x, y));
 	}
 
 	/**
 	 * Uses {@link Squad#active}'s location.
 	 * 
+	 * @param x
+	 *            {@link World} coordinate.
+	 * @param y
+	 *            {@link World} coordinate.
 	 * @return A percentage value determining how fast it is to walk here, based
 	 *         on road status.
-	 * 
 	 * @see World#roads
 	 * @see World#highways
 	 */
-	public float getspeed() {
-		if (!World.roads[Squad.active.x][Squad.active.y]) {
+	public float getspeed(int x, int y) {
+		if (!World.roads[x][y]) {
 			return speedtrackless;
 		}
-		if (World.highways[Squad.active.x][Squad.active.y]) {
+		if (World.highways[x][y]) {
 			return speedhighway;
 		}
 		return speedroad;

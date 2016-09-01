@@ -45,7 +45,6 @@ public class Caravan extends WorldActor {
 
 	/** Creates a merchant in the world map but doesn't {@link #place()} it. */
 	public Caravan() {
-		visualname = "caravan";
 		ArrayList<WorldActor> towns = WorldActor.getall(Town.class);
 		Collections.shuffle(towns);
 		WorldActor from = towns.get(0);

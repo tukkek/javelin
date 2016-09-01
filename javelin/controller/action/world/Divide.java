@@ -120,7 +120,7 @@ public class Divide extends WorldAction {
 		s.members = newsquad;
 		s.gold = gold;
 		s.strategic = Squad.active.strategic;
-		s.move(true, Terrain.current());
+		s.move(true, Terrain.current(), Squad.active.x, Squad.active.y);
 		placement: for (x = Squad.active.x - 1; x <= Squad.active.x + 1; x++) {
 			for (y = Squad.active.y - 1; y <= Squad.active.y + 1; y++) {
 				if (!World.istown(x, y, false)

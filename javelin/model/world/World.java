@@ -168,7 +168,7 @@ public class World implements Serializable {
 			Point p = new Point(x, y);
 			Town t = new Town(p.x, p.y, World.determinecolor(p).realm);
 			while (t.iscloseto(Town.class)) {
-				Town.generate(t);
+				Location.generate(t, false);
 			}
 			t.place();
 		}

@@ -9,7 +9,6 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
 import javelin.model.world.Improvement;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
 import tyrant.mikera.engine.RPG;
@@ -44,28 +43,10 @@ public class Deforestate extends Improvement {
 
 	@Override
 	public String inform() {
-		Town t = getclosestalliedtown();
-		if (t == null) {
-			return null;
-		}
-		int labor = Math.round(Math.round(2 * price / Town.LABORPERIOD));
-		t.labor += labor;
-		return labor + " labor is transferred to " + t.toString() + ".";
-	}
-
-	Town getclosestalliedtown() {
-		Town closest = null;
-		for (WorldActor a : Town.getall(Town.class)) {
-			Town t = (Town) a;
-			if (t.ishostile()) {
-				continue;
-			}
-			if (closest == null
-					|| t.distance(Squad.active.x, Squad.active.y) < closest
-							.distance(Squad.active.x, Squad.active.y)) {
-				closest = t;
-			}
-		}
-		return closest;
+		int labor = Math.round(Math.round(price * Town.DAILYLABOR));
+		Squad.active.resources += labor;
+		return labor + " resources acquired.\n"
+				+ "It can be used to accelerate other Work actions\n"
+				+ "or can be converted into labor in a Town.";
 	}
 }

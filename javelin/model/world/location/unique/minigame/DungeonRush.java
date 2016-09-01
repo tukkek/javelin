@@ -15,6 +15,7 @@ import javelin.model.world.WorldActor;
 import javelin.model.world.location.unique.UniqueLocation;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.RecruitScreen;
+import tyrant.mikera.engine.RPG;
 
 /**
  * Mini-game that allows player to recruit units against a swarm of incoming
@@ -46,14 +47,18 @@ public class DungeonRush extends UniqueLocation {
 	public DungeonRush() {
 		super(DESCRITPION, DESCRITPION, 0, 0);
 		while (spawners.size() < MINIMUMSPAWNERS) {
-			upgrade();
+			upgrade(false);
 		}
 	}
 
 	/**
 	 * Adds a new option to {@link #spawners}.
+	 * 
+	 * @param humaninteraction
+	 *            If <code>true</code> let's the player decide which unit to
+	 *            upgrade to.
 	 */
-	public void upgrade() {
+	public void upgrade(boolean humaninteraction) {
 		ArrayList<Float> crs =
 				new ArrayList<Float>(Javelin.MONSTERSBYCR.keySet());
 		int i = 0;
@@ -65,9 +70,15 @@ public class DungeonRush extends UniqueLocation {
 		}
 		i += spawners.size();
 		List<Monster> tier = Javelin.MONSTERSBYCR.get(crs.get(i));
-		spawners.add(tier.get(Javelin.choose(
-				"Victory! Which new spawner do you want to acquire?", tier,
-				true, true)));
+		Monster spawner;
+		if (humaninteraction) {
+			spawner = tier.get(Javelin.choose(
+					"Victory! Which new spawner do you want to acquire?", tier,
+					true, true));
+		} else {
+			spawner = RPG.pick(tier);
+		}
+		spawners.add(spawner);
 		StateManager.save(true, StateManager.SAVEFILE);
 	}
 

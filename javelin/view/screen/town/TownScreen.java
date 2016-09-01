@@ -21,6 +21,7 @@ import javelin.view.screen.town.option.ScreenOption;
 import javelin.view.screen.town.option.ShopScreenOption;
 import javelin.view.screen.town.option.TournamentScreenOption;
 import javelin.view.screen.town.option.TransportScreenOption;
+import javelin.view.screen.town.option.UnloadScreenOption;
 import javelin.view.screen.town.option.UpgradingScreenOption;
 import javelin.view.screen.upgrading.TownUpgradingScreen;
 
@@ -87,11 +88,15 @@ public class TownScreen extends PurchaseScreen {
 		if (o instanceof SettleOption) {
 			return SettleOption.retire(town);
 		}
+		if (o instanceof UnloadScreenOption) {
+			town.labor += Squad.active.resources;
+			Squad.active.resources = 0;
+			return true;
+		}
 		if (o instanceof RestOption) {
 			RestOption ro = (RestOption) o;
 			Town.rest(ro.periods, ro.hours, town.lodging);
-		}
-		if (o == AWAIT) {
+		} else if (o == AWAIT) {
 			Long training = town.training.next();
 			Long crafting = town.crafting.next();
 			long hours =
@@ -99,8 +104,7 @@ public class TownScreen extends PurchaseScreen {
 							crafting == null ? Integer.MAX_VALUE : crafting)
 							- Squad.active.hourselapsed;
 			Town.rest((int) Math.floor(hours / 8f), hours, town.lodging);
-		}
-		if (o == DETACHWORKER) {
+		} else if (o == DETACHWORKER) {
 			Town.getworker(town);
 		}
 		stayopen = false;
@@ -112,6 +116,11 @@ public class TownScreen extends PurchaseScreen {
 		final ArrayList<Option> list = new ArrayList<Option>();
 		if (Squad.active != entering) {
 			return list;
+		}
+		if (Squad.active.resources > 0) {
+			list.add(new UnloadScreenOption(
+					"Unload " + Squad.active.resources + " resources into town",
+					0, 'U'));
 		}
 		list.add(new RecruitScreenOption("Draft", town, 'd'));
 		list.add(new ShopScreenOption("Shop", town, 's'));

@@ -28,28 +28,25 @@ public abstract class WorldActor implements Serializable {
 	public static HashMap<Class<? extends WorldActor>, ArrayList<WorldActor>> INSTANCES =
 			new HashMap<Class<? extends WorldActor>, ArrayList<WorldActor>>();
 	static final int[] NUDGES = new int[] { -1, 0, +1 };
-
-	/** Constructor. */
-	public WorldActor() {
-		registerinstance();
-	}
-
 	/** x coordinate. */
 	public int x = -1;
 	/** y coordinate. */
 	public int y = -1;
 	/**
-	 * Which team this actor belongs to or <code>null</code> if neutral.
-	 * 
-	 * Nota that it can be set to null during construction, in which case it
-	 * won't be updated by {@link #place()}.
+	 * Which team this actor belongs to or <code>null</code> if neutral. If
+	 * <code>null</code> during construction, in which case it won't be updated
+	 * by {@link #place()}.
 	 */
 	public Realm realm = null;
 	/**
 	 * If <code>true</code> this actor will be ignored by {@link Incursion}s.
 	 */
 	public boolean impermeable = false;
-	String visualname = "dog";
+
+	/** Constructor. */
+	public WorldActor() {
+		registerinstance();
+	}
 
 	/** Definitely removes this actor from the game. */
 	public void remove() {

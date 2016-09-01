@@ -125,7 +125,7 @@ public class Rush extends Fight {
 			BattleState s) {
 		DungeonRush dr = DungeonRush.get();
 		if (Fight.victory) {
-			dr.upgrade();
+			dr.upgrade(true);
 		} else {
 			Monster removed = dr.downgrade();
 			String message = "You have lost...";

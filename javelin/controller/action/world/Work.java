@@ -17,6 +17,7 @@ import javelin.model.unit.Squad;
 import javelin.model.world.Improvement;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.town.Town;
 import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
@@ -27,21 +28,21 @@ import javelin.view.screen.town.SelectScreen;
  * 
  * Having more workers with you reduces the time needed to complete tasks.
  * 
- * TODO build mine, see TODO
- * 
  * TODO how to handle random encounters during build time?
  * 
  * @see Squad#work
  * @author alex
  */
 public class Work extends WorldAction {
+	static final boolean DEBUG = false;
+
 	static final Improvement ROAD = new BuildRoad("Build road", 7, 'r', false);
 	static final Improvement HIGHWAY =
 			new BuildHighway("Upgrade road", 7, 'r', false);
 	static final Improvement INN = new BuildInn("Build inn", 7, 'i', false);
 	static final Improvement TOWN = new BuildTown("Build town", 30, 't', false);
 	static final Improvement DEFORESTATE =
-			new Deforestate("Deforestate", 15, 'd', true);
+			new Deforestate("Deforestate", 10, 'd', true);
 	static final Improvement MINE = new BuildMine("Build mine", 30, 'm', true);
 
 	class WorkScreen extends SelectScreen {
@@ -57,7 +58,8 @@ public class Work extends WorldAction {
 
 		@Override
 		public String printInfo() {
-			return "You have " + countworkers() + " worker(s).";
+			return "You have " + countworkers() + " worker(s).\n" + //
+					"You have " + Squad.active.resources + " resource(s).";
 		}
 
 		@Override
@@ -66,10 +68,12 @@ public class Work extends WorldAction {
 			options.add(INN);
 			options.add(TOWN);
 			Terrain t = Terrain.current();
-			if (t.getspeed() != t.speedhighway) {
-				if (!World.roads[Squad.active.x][Squad.active.y]) {
+			int x = Squad.active.x;
+			int y = Squad.active.y;
+			if (t.getspeed(x, y) != t.speedhighway) {
+				if (!World.roads[x][y]) {
 					options.add(ROAD);
-				} else if (!World.highways[Squad.active.x][Squad.active.y]) {
+				} else if (!World.highways[x][y]) {
 					options.add(HIGHWAY);
 				}
 			}
@@ -83,22 +87,40 @@ public class Work extends WorldAction {
 
 		@Override
 		public boolean select(Option o) {
-			Squad.active.hourselapsed += 24 * build((Improvement) o);
+			int[] cost = withresources(build((Improvement) o));
+			Squad.active.hourselapsed += 24 * cost[0];
+			Squad.active.resources -= cost[1];
 			Squad.active.work = (Improvement) o;
 			return true;
 		}
 
 		@Override
 		public String printpriceinfo(Option o) {
-			return " (" + Math.round(Math.round(build((Improvement) o)))
-					+ " days)";
+			int[] cost = withresources(build((Improvement) o));
+			String resources =
+					cost[1] == 0 ? "" : ", " + cost[1] + " resources";
+			return " (" + cost[0] + " days" + resources + ")";
 		}
 
+		int[] withresources(int days) {
+			if (Squad.active.resources == 0 || days == 1) {
+				return new int[] { days, 0 };
+			}
+			int resourcesindays =
+					Math.round(Squad.active.resources / Town.DAILYLABOR);
+			if (resourcesindays > days - 1) {
+				resourcesindays = days - 1;
+			}
+			return new int[] { days - resourcesindays,
+					Math.round(resourcesindays * Town.DAILYLABOR) };
+		}
 	}
 
-	double build(Improvement o) {
+	int build(Improvement o) {
 		double days = o.price / countworkers();
-		return o.absolute ? days : days / Terrain.current().getspeed();
+		days = o.absolute ? days : days
+				/ Terrain.current().getspeed(Squad.active.x, Squad.active.y);
+		return Math.max(1, Math.round(Math.round(days)));
 	}
 
 	/** Constructor. */
@@ -114,9 +136,8 @@ public class Work extends WorldAction {
 			return;
 		}
 		int workers = countworkers();
-		if (workers == 0 && !Javelin.DEBUG) {
-			Javelin.message("Take some workers from out of a town first...",
-					false);
+		if (workers == 0) {
+			Javelin.message("Take some workers from a Town first...", false);
 			return;
 		}
 		if (Terrain.current().equals(Terrain.WATER)) {
@@ -126,16 +147,16 @@ public class Work extends WorldAction {
 		new WorkScreen().show();
 	}
 
-	int countworkers() {
+	/**
+	 * @return Total of workers in {@link Squad#active}.
+	 */
+	static public int countworkers() {
 		int workers = 0;
 		for (Combatant c : Squad.active.members) {
 			if (c.source.name.equals("Worker")) {
 				workers += 1;
 			}
 		}
-		if (Javelin.DEBUG && workers == 0) {
-			return 1;
-		}
-		return workers;
+		return workers == 0 && DEBUG ? 1 : workers;
 	}
 }

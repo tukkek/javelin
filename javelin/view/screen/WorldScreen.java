@@ -261,10 +261,10 @@ public class WorldScreen extends BattleScreen {
 		infos.add(Season.current.toString());
 		infos.add("");
 		if (Dungeon.active == null) {
-			infos.add(Squad.active.speed(Terrain.current()) + " mph"
-					+ (Squad.active.transport == null ? ""
-							: Squad.active.transport
-									.load(Squad.active.members)));
+			final int mph = Squad.active.speed(Terrain.current(),
+					Squad.active.x, Squad.active.y);
+			infos.add(mph + " mph" + (Squad.active.transport == null ? ""
+					: Squad.active.transport.load(Squad.active.members)));
 		}
 		infos.add("$" + SelectScreen.formatcost(Squad.active.gold));
 		final ArrayList<String> hps = showstatusinformation();

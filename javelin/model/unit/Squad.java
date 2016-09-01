@@ -24,6 +24,7 @@ import javelin.model.world.World;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
+import javelin.model.world.location.Resource;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.fortification.Fortification;
@@ -82,6 +83,9 @@ public class Squad extends WorldActor {
 	public Terrain lastterrain = null;
 
 	transient private Image image = null;
+
+	/** @see Resource */
+	public int resources = 0;
 
 	/**
 	 * @param xp
@@ -179,6 +183,7 @@ public class Squad extends WorldActor {
 	public void join(final Squad s) {
 		members.addAll(s.members);
 		gold += s.gold;
+		resources += s.resources;
 		hourselapsed = Math.max(hourselapsed, s.hourselapsed);
 		for (final Combatant m : s.members) {
 			equipment.put(m.id, s.equipment.get(m.id));
@@ -544,11 +549,15 @@ public class Squad extends WorldActor {
 	}
 
 	/**
+	 * @param x
+	 *            {@link World} coordinate.
+	 * @param y
+	 *            {@link World} coordinate.
 	 * @return Like {@link #speed()} but return time in hours.
 	 */
-	public float move(boolean ellapse, Terrain t) {
-		float hours =
-				WorldMove.TIMECOST * (30f * WorldMove.NORMALMARCH) / speed(t);
+	public float move(boolean ellapse, Terrain t, int x, int y) {
+		float hours = WorldMove.TIMECOST * (30f * WorldMove.NORMALMARCH)
+				/ speed(t, x, y);
 		if (hours < 1) {
 			hours = 1;
 		}
@@ -559,15 +568,20 @@ public class Squad extends WorldActor {
 	}
 
 	/**
+	 * @param x
+	 *            {@link World} coordinate.
+	 * @param y
+	 *            {@link World} coordinate.
 	 * @return The land speed movement overland in miles per hour. This is the
 	 *         amount covered in an hour but the correspoinding movement per day
 	 *         is less since it has to account for sleep, resting, etc.
 	 */
-	public int speed(Terrain t) {
+	public int speed(Terrain t, int x, int y) {
 		int snow = t.getweather() == Terrain.SNOWING ? 2 : 1;
 		if (transport != null) {
 			int transportspeed = transport.getspeed(members) / snow;
-			return transport.flies ? transportspeed : t.speed(transportspeed);
+			return transport.flies ? transportspeed
+					: t.speed(transportspeed, x, y);
 		}
 		int speed = Integer.MAX_VALUE;
 		boolean allfly = true;
@@ -580,7 +594,7 @@ public class Squad extends WorldActor {
 			}
 		}
 		return Math.round(WorldMove.NORMALMARCH
-				* ((allfly ? speed : t.speed(speed))) / snow);
+				* ((allfly ? speed : t.speed(speed, x, y))) / snow);
 	}
 
 	/**

@@ -85,20 +85,24 @@ public abstract class Location extends WorldActor {
 	 * Determines {@link World} location for this.
 	 */
 	protected void generate() {
-		generate(this);
+		generate(this, false);
 	}
 
 	/**
 	 * Default implementation of {@link #generate()}, will try random
-	 * positioning until it lands on a free space.
+	 * positioning a {@link WorldActor} until it lands on a free space.
 	 * 
-	 * @param p
+	 * @param allowwater
+	 *            <code>true</code> if it is allowed to place the actor on
+	 *            {@link Terrain#WATER}.
 	 */
-	static public void generate(WorldActor p) {
+	static public void generate(WorldActor p, boolean allowwater) {
 		p.x = -1;
 		ArrayList<WorldActor> actors = WorldActor.getall();
 		actors.remove(p);
-		while (p.x == -1 || World.seed.map[p.x][p.y].equals(Terrain.WATER)
+		while (p.x == -1
+				|| (!allowwater
+						&& World.seed.map[p.x][p.y].equals(Terrain.WATER))
 				|| WorldActor.get(p.x, p.y, actors) != null || neartown(p)) {
 			p.x = RPG.r(0, World.MAPDIMENSION - 1);
 			p.y = RPG.r(0, World.MAPDIMENSION - 1);
@@ -299,7 +303,7 @@ public abstract class Location extends WorldActor {
 	protected void generateawayfromtown() {
 		x = -1;
 		while (x == -1 || neartown(this)) {
-			generate(this);
+			generate(this, false);
 		}
 	}
 

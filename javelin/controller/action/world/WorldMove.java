@@ -103,7 +103,7 @@ public class WorldMove extends WorldAction {
 			throw new RepeatTurn();
 		}
 		float hours = Dungeon.active == null
-				? Squad.active.move(false, Terrain.current()) : 0;
+				? Squad.active.move(false, Terrain.current(), tox, toy) : 0;
 		try {
 			WorldActor actor =
 					Dungeon.active == null ? WorldActor.get(tox, toy) : null;

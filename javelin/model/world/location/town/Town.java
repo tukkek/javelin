@@ -51,8 +51,11 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Town extends Location {
-	/** Number of days it will take a worker to produce 1 {@link #labor}. */
-	public static final float LABORPERIOD = 10f;
+	/**
+	 * How much {@link #labor} a single work produces in one day (
+	 * {@value #DAILYLABOR}).
+	 */
+	public static final float DAILYLABOR = .1f;
 	private static final ArrayList<String> NAMES = new ArrayList<String>();
 	private static final int STARTINGLAIRS = 3;
 	static boolean startingtown = true;
@@ -300,7 +303,7 @@ public class Town extends Location {
 			pickstash(
 					TownUpgradingScreen.completetraining(to, this, to.trained));
 		}
-		labor += size / LABORPERIOD;
+		labor += size * DAILYLABOR;
 		if (!research.queue.isEmpty() && Math
 				.ceil(research.queue.get(0).price) <= Math.floor(labor)) {
 			research.queue.get(0).finish(this, null);

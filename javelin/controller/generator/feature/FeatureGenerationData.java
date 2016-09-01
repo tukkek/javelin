@@ -9,7 +9,7 @@ import javelin.model.world.WorldActor;
  * @see FeatureGenerator#spawn(float, boolean)
  * @author alex
  */
-public class FeatureGeneration {
+public class FeatureGenerationData {
 	/**
 	 * When instantiated this is the relative chance of this feature being
 	 * spawned. This is later modified by
@@ -38,7 +38,7 @@ public class FeatureGeneration {
 	public Integer seeds = 0;
 
 	/** Construct with default values. */
-	public FeatureGeneration() {
+	public FeatureGenerationData() {
 		return;
 	}
 
@@ -46,7 +46,7 @@ public class FeatureGeneration {
 	 * @param chance
 	 *            Overrides default {@link #chance} value.
 	 */
-	public FeatureGeneration(float chance) {
+	public FeatureGenerationData(float chance) {
 		this.chance = chance;
 	}
 
@@ -58,7 +58,7 @@ public class FeatureGeneration {
 	 * @param startingp
 	 *            Overrides {@link #starting}.
 	 */
-	public FeatureGeneration(float chancep, boolean absolutep,
+	public FeatureGenerationData(float chancep, boolean absolutep,
 			boolean startingp) {
 		this(chancep);
 		absolute = absolutep;
@@ -73,7 +73,7 @@ public class FeatureGeneration {
 	 * @param seeds
 	 *            Overrides {@link #seeds}.
 	 */
-	public FeatureGeneration(float chance, Integer max, Integer seeds) {
+	public FeatureGenerationData(float chance, Integer max, Integer seeds) {
 		this(chance);
 		this.max = max;
 		this.seeds = seeds;

@@ -20,6 +20,7 @@ import javelin.model.world.location.Lair;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.Portal;
+import javelin.model.world.location.Resource;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.fortification.Dwelling;
@@ -58,8 +59,8 @@ public class FeatureGenerator {
 	static final int NUMBEROFSTARTINGFEATURES =
 			(World.MAPDIMENSION * World.MAPDIMENSION) / 5;
 
-	final HashMap<Class<? extends WorldActor>, FeatureGeneration> generators =
-			new HashMap<Class<? extends WorldActor>, FeatureGeneration>();
+	final HashMap<Class<? extends WorldActor>, FeatureGenerationData> generators =
+			new HashMap<Class<? extends WorldActor>, FeatureGenerationData>();
 
 	/**
 	 * The ultimate goal of this method is to try and make it so one feature
@@ -68,50 +69,52 @@ public class FeatureGenerator {
 	 * manually-written methods from becoming too large.
 	 */
 	private FeatureGenerator() {
-		register(Dungeon.class,
-				new FeatureGeneration(2f, Dungeon.STARTING, Dungeon.STARTING));
-		register(Trove.class, new FeatureGeneration(1.5f));
-		register(Lair.class, new FeatureGeneration());
-		register(Outpost.class, new FeatureGeneration());
-		register(Inn.class, new FeatureGeneration());
-		register(Shrine.class, new FeatureGeneration());
-		register(Guardian.class, new FeatureGeneration());
-		register(Dwelling.class, new FeatureGeneration());
-		register(Mine.class, new FeatureGeneration(1, 2, 2));
+		register(Dungeon.class, new FeatureGenerationData(2f, Dungeon.STARTING,
+				Dungeon.STARTING));
+		register(Trove.class, new FeatureGenerationData(1.5f));
+		register(Lair.class, new FeatureGenerationData());
+		register(Outpost.class, new FeatureGenerationData());
+		register(Inn.class, new FeatureGenerationData());
+		register(Shrine.class, new FeatureGenerationData());
+		register(Guardian.class, new FeatureGenerationData());
+		register(Dwelling.class, new FeatureGenerationData());
+		register(Resource.class, new FeatureGenerationData());
+		register(Mine.class, new FeatureGenerationData(1, 2, 2));
 
-		register(Portal.class, new FeatureGeneration() {
+		register(Portal.class, new FeatureGenerationData() {
 			@Override
 			public WorldActor generate(Class<? extends WorldActor> feature) {
 				return Portal.open();
 			}
 		});
 
-		register(Caravan.class, new FeatureGeneration(1 / 4f, true, false));
+		register(Caravan.class, new FeatureGenerationData(1 / 4f, true, false));
 		convertchances();
 	}
 
 	/**
-	 * Will convert all relative (non-absolute) {@link FeatureGeneration#chance}
-	 * to an absolute value so as to make them sum up to a 100%.
+	 * Will convert all relative (non-absolute)
+	 * {@link FeatureGenerationData#chance} to an absolute value so as to make
+	 * them sum up to a 100%.
 	 * 
-	 * @see FeatureGeneration#absolute
+	 * @see FeatureGenerationData#absolute
 	 */
 	protected void convertchances() {
 		float total = 0;
-		for (FeatureGeneration g : generators.values()) {
+		for (FeatureGenerationData g : generators.values()) {
 			if (!g.absolute) {
 				total += g.chance;
 			}
 		}
-		for (FeatureGeneration g : generators.values()) {
+		for (FeatureGenerationData g : generators.values()) {
 			if (!g.absolute) {
 				g.chance = g.chance / total;
 			}
 		}
 	}
 
-	FeatureGeneration register(Class<? extends WorldActor> class1,
-			FeatureGeneration generator) {
+	FeatureGenerationData register(Class<? extends WorldActor> class1,
+			FeatureGenerationData generator) {
 		generators.put(class1, generator);
 		return generator;
 	}
@@ -135,7 +138,7 @@ public class FeatureGenerator {
 	 */
 	public void spawn(final float chance, boolean generatingworld) {
 		for (Class<? extends WorldActor> feature : generators.keySet()) {
-			FeatureGeneration g = generators.get(feature);
+			FeatureGenerationData g = generators.get(feature);
 			if (generatingworld && !g.starting) {
 				continue;
 			}

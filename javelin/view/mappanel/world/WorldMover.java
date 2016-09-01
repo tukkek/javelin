@@ -21,7 +21,7 @@ public class WorldMover extends BattleMover {
 
 	@Override
 	protected float getcost(boolean engaged, javelin.controller.walker.Step s) {
-		return Squad.active.move(false, Terrain.get(s.x, s.y))
+		return Squad.active.move(false, Terrain.get(s.x, s.y), s.x, s.y)
 				/ WorldScreen.HOURSPERENCOUNTER;
 	}
 

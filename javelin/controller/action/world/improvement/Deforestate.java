@@ -22,9 +22,7 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Deforestate extends Improvement {
-	/**
-	 * Constructor.
-	 */
+	/** Constructor. */
 	public Deforestate(String name, double price, Character key, boolean b) {
 		super(name, price, key, b);
 	}
@@ -47,6 +45,6 @@ public class Deforestate extends Improvement {
 		Squad.active.resources += labor;
 		return labor + " resources acquired.\n"
 				+ "It can be used to accelerate other Work actions\n"
-				+ "or can be converted into labor in a Town.";
+				+ "or can be converted to labor in a Town.";
 	}
 }

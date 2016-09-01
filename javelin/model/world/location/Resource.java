@@ -44,8 +44,8 @@ public class Resource extends Location {
 			new HashMap<Terrain, ResourceType>();
 
 	static {
-		RESOURCES.put(Terrain.WATER, new ResourceType("Fish", 7, "fishing"));
-		RESOURCES.put(Terrain.FOREST, new ResourceType("Fruits", 7, "picking"));
+		RESOURCES.put(Terrain.WATER, new ResourceType("Fish", 5, "fishing"));
+		RESOURCES.put(Terrain.FOREST, new ResourceType("Fruits", 5, "picking"));
 		RESOURCES.put(Terrain.PLAIN,
 				new ResourceType("Grains", 15, "harvesting"));
 		RESOURCES.put(Terrain.MARSH,

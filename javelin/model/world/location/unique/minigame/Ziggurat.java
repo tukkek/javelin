@@ -1,9 +1,12 @@
 package javelin.model.world.location.unique.minigame;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.fight.minigame.Run;
 import javelin.model.item.Key;
+import javelin.model.spell.conjuration.teleportation.GreaterTeleport;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.dungeon.temple.Temple;
@@ -33,6 +36,8 @@ import javelin.model.world.location.unique.UniqueLocation;
 public class Ziggurat extends UniqueLocation {
 
 	private static final String DESCRIPTION = "Ziggurat";
+	/** Treasure for conquering the Ziggurat. */
+	public Key key = null;
 
 	/** Constructor. */
 	public Ziggurat() {
@@ -44,4 +49,36 @@ public class Ziggurat extends UniqueLocation {
 		return null;
 	}
 
+	@Override
+	public boolean interact() {
+		if (!super.interact()) {
+			return false;
+		}
+		String intro = "You climb to the top of the huge pyramid...\n\n";
+		if (key == null) {
+			intro += "It is empty... Try winning a Ziggurat match.\n";
+			Javelin.message(intro, false);
+		} else {
+			intro += "There is a " + key.toString().toLowerCase()
+					+ " upon the altar. Do you want to:";
+			ArrayList<String> choices = new ArrayList<String>();
+			choices.add("Take the key");
+			choices.add("Sacrifice the key and teleport to a location");
+			choices.add("Leave");
+			int choice = Javelin.choose(intro, choices, true, true);
+			if (choice == 0) {
+				key.grab();
+				key = null;
+			} else if (choice == 1) {
+				key = null;
+				new GreaterTeleport().castpeacefully(null, null);
+			}
+		}
+		return true;
+	}
+
+	@Override
+	protected void generategarrison(int minlevel, int maxlevel) {
+		// empty
+	}
 }

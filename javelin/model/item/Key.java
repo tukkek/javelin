@@ -61,8 +61,9 @@ public class Key extends Item {
 	}
 
 	/**
-	 * @param realm
-	 *            if <code>null</code> generates a key of random color.
+	 * @return A key to an unlocked {@link Temple}, that the player doesn't
+	 *         currently possess. If none fits the description, a random key,
+	 *         instead.
 	 */
 	public static Key generate() {
 		ArrayList<Realm> realms = new ArrayList<Realm>();

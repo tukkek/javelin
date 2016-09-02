@@ -131,24 +131,12 @@ public class Javelin {
 		f.setLayout(new BorderLayout());
 		app = new JavelinApp();
 		app.frame = f;
-		QuestApp.isapplet = false;
-		if (args.length > 0) {
-			QuestApp.gameFileFromCommandLine = args[0];
-		}
-		// do we have a script to execute?
-		// activate debug mode if we do....
-		final java.io.File script = new java.io.File("mikeradebug");
-
 		app.setVisible(false);
 		f.add(app);
-
 		f.setSize(app.getPreferredSize().width, app.getPreferredSize().height);
-
 		f.addKeyListener(app.keyadapter);
-
 		app.setVisible(true);
 		f.setVisible(true);
-
 		app.init();
 	}
 
@@ -411,13 +399,22 @@ public class Javelin {
 			output += " (q to quit)";
 		}
 		output += " \n\n";
+		boolean multicolumn = names.size() > 20;
 		ArrayList<Object> options = new ArrayList<Object>();
-		int i = 0;
-		for (Object o : names) {
-			String name = o.toString();
+		for (int i = 0; i < names.size(); i++) {
+			boolean leftcolumn = i % 2 == 0;
+			String name = names.get(i).toString();
 			options.add(name);
-			output += "[" + SelectScreen.KEYS[i] + "] " + name + "\n";
-			i += 1;
+			String item = "[" + SelectScreen.KEYS[i] + "] " + name;
+			if (multicolumn && leftcolumn) {
+				while (item.length() < 40) {
+					item += " ";
+				}
+			}
+			output += item;
+			if (!multicolumn || !leftcolumn) {
+				output += "\n";
+			}
 		}
 		if (fullscreen) {
 			app.switchScreen(new InfoScreen(output));

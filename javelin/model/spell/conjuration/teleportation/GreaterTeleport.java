@@ -1,6 +1,7 @@
 package javelin.model.spell.conjuration.teleportation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javelin.Javelin;
 import javelin.controller.challenge.factor.SpellsFactor;
@@ -11,13 +12,14 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.dungeon.temple.Temple;
+import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.unique.Haxor;
+import javelin.model.world.location.unique.UniqueLocation;
 
 /**
  * Teleports {@link Squad#active} to any named {@link Location}.
- * 
- * Currently supports {@link Town} and {@link Haxor}.
  * 
  * @author alex
  */
@@ -44,17 +46,23 @@ public class GreaterTeleport extends Spell {
 		ArrayList<WorldActor> places = new ArrayList<WorldActor>();
 		ArrayList<String> names = new ArrayList<String>();
 		for (WorldActor a : WorldActor.getall()) {
-			if (a instanceof Town || a instanceof Haxor) {
+			if (a instanceof Town || a instanceof UniqueLocation
+					|| a instanceof Temple || a instanceof Academy) {
 				places.add(a);
-				String town = a.toString();
+				Fortification f =
+						a instanceof Fortification ? (Fortification) a : null;
+				String choice = f == null ? a.toString() : f.descriptionknown;
 				if (showterrain) {
-					town += " (" + Terrain.get(a.x, a.y) + ")";
+					choice += " (" + Terrain.get(a.x, a.y) + ")";
 				}
-				names.add(town);
+				names.add(choice);
 			}
 		}
+		Collections.sort(names);
 		WorldActor to =
 				places.get(Javelin.choose("Where to?", names, true, true));
+		Squad.active.x = to.x;
+		Squad.active.y = to.y;
 		while (WorldActor.get(Squad.active.x, Squad.active.y) != Squad.active) {
 			Squad.active.displace();
 		}

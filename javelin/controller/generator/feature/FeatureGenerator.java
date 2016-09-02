@@ -41,6 +41,7 @@ import javelin.model.world.location.unique.SummoningCircle;
 import javelin.model.world.location.unique.TrainingHall;
 import javelin.model.world.location.unique.minigame.Arena;
 import javelin.model.world.location.unique.minigame.DungeonRush;
+import javelin.model.world.location.unique.minigame.Ziggurat;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -220,6 +221,7 @@ public class FeatureGenerator {
 		new SummoningCircle().place();
 		new PillarOfSkulls().place();
 		new DungeonRush().place();
+		new Ziggurat().place();
 		UpgradeHandler.singleton.gather();
 		generatemageguilds();
 		generatemartialacademies();

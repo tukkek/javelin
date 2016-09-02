@@ -1,6 +1,7 @@
 package javelin.controller.fight.minigame;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,9 +11,12 @@ import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.fight.Fight;
+import javelin.model.item.Key;
 import javelin.model.state.BattleState;
+import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.world.WorldActor;
 import javelin.model.world.location.unique.minigame.Ziggurat;
 import javelin.view.mappanel.Tile;
 import javelin.view.screen.BattleScreen;
@@ -24,6 +28,8 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Run extends Fight {
+	static final boolean DEBUG = false;
+
 	class Segment {
 		boolean captured = false;
 		Monster monster = null;
@@ -34,17 +40,13 @@ public class Run extends Fight {
 			x = xp;
 			y = yp;
 			cr = crp;
-			pick: while (monster == null) {
-				monster = RPG.pick(POOL.get(cr));
-				for (Segment[] ss : segments) {
-					for (Segment s : ss) {
-						if (s != null && s.monster.equals(monster)) {
-							monster = null;
-							continue pick;
-						}
-					}
-				}
+			List<Monster> tier = null;
+			while (tier == null || tier.isEmpty()) {
+				tier = pool.get(crp);
+				crp -= 1;
 			}
+			monster = RPG.pick(tier);
+			tier.remove(monster);
 		}
 
 		@Override
@@ -76,52 +78,43 @@ public class Run extends Fight {
 		}
 
 		void open() {
-			int delta = SEGMENTSIZE - 1;
-			int x = this.x * SEGMENTSIZE;
-			int y = this.y * SEGMENTSIZE;
-			state.map[x][y].blocked = true;
-			state.map[x + delta][y].blocked = true;
-			state.map[x][y + delta].blocked = true;
-			state.map[x + delta][y + delta].blocked = true;
-			for (int borderx = 0; borderx < SEGMENTSIZE; borderx++) {
-				for (int bordery = 0; bordery < SEGMENTSIZE; bordery++) {
-					if (borderx == 0 || bordery == 0
-							|| borderx == SEGMENTSIZE - 1
-							|| bordery == SEGMENTSIZE - 1) {
-						state.map[x + borderx][y + bordery].obstructed = true;
-					}
+			Point a = getpointa();
+			Point b = getpointb();
+			for (int x = a.x; x <= b.x; x++) {
+				for (int y = a.y; y <= b.y; y++) {
+					Square s = state.map[x][y];
+					s.obstructed = x == a.x || y == a.y || x == b.x || y == b.y;
+					s.blocked = false;
 				}
+			}
+			state.map[a.x][a.y].blocked = true;
+			state.map[b.x][a.y].blocked = true;
+			state.map[a.x][b.y].blocked = true;
+			state.map[b.x][b.y].blocked = true;
+			for (int x = a.x; x <= b.x; x++) {
+				for (int y = a.y; y <= b.y; y++) {
+					BattleScreen.active.mappanel.tiles[x][y].repaint();
+				}
+			}
+		}
+
+		public void capture() {
+			captured = true;
+			for (Segment s : getneighbors(this)) {
+				s.open();
 			}
 		}
 	}
 
 	/** Number of segments in each {@link javelin.controller.map.Ziggurat}. */
 	public static final int NSEGMENTS = 6;
+	/** Dimension of each segment. */
 	public static final int SEGMENTSIZE = 5;
 
-	static final HashMap<Integer, ArrayList<Monster>> POOL =
-			new HashMap<Integer, ArrayList<Monster>>();
 	static final float INITIALEL = 7;
 
-	static {
-		for (float cr : Javelin.MONSTERSBYCR.keySet()) {
-			List<Monster> tier =
-					new ArrayList<Monster>(Javelin.MONSTERSBYCR.get(cr));
-			// for (Monster m : new ArrayList<Monster>(tier)) {
-			// if (m.fly > 0) {
-			// tier.remove(m);
-			// }
-			// }
-			int round = Math.max(1, Math.round(cr));
-			ArrayList<Monster> pooltier = POOL.get(cr);
-			if (pooltier == null) {
-				pooltier = new ArrayList<Monster>(tier);
-				POOL.put(round, pooltier);
-			} else {
-				pooltier.addAll(tier);
-			}
-		}
-	}
+	final HashMap<Integer, ArrayList<Monster>> pool =
+			new HashMap<Integer, ArrayList<Monster>>();
 
 	/**
 	 * Organized with [0][0] being southwesternmost, which causes some funky
@@ -136,23 +129,49 @@ public class Run extends Fight {
 		period = Javelin.PERIODNIGHT;
 		weather = Weather.DRY;
 		denydarkvision = true;
+		pool();
 		createsegment(0, 0, 1);
-		segments[0][0].captured = true;
-		segments[1][0].captured = true;
-		segments[0][1].captured = true;
-		segments[0][0].open();
-		segments[1][0].open();
-		segments[0][1].open();
 		setup = new BattleSetup() {
 			@Override
 			public void place() {
+				segments[0][0].capture();
+				segments[1][0].capture();
+				segments[0][1].capture();
+				segments[0][0].open();
+				segments[1][0].open();
+				segments[0][1].open();
 				for (Combatant c : state.blueTeam) {
 					Segment s = segments[0][0];
 					c.setlocation(getrandompoint(state, s.getpointa(),
 							s.getpointb()));
 				}
 			}
+
+			@Override
+			public void rollinitiative() {
+				// dont
+			}
 		};
+	}
+
+	void pool() {
+		for (float cr : Javelin.MONSTERSBYCR.keySet()) {
+			List<Monster> tier =
+					new ArrayList<Monster>(Javelin.MONSTERSBYCR.get(cr));
+			for (Monster m : new ArrayList<Monster>(tier)) {
+				if (m.fly > 0) {
+					tier.remove(m);
+				}
+			}
+			int round = Math.max(1, Math.round(cr));
+			ArrayList<Monster> pooltier = pool.get(cr);
+			if (pooltier == null) {
+				pooltier = new ArrayList<Monster>(tier);
+				pool.put(round, pooltier);
+			} else {
+				pooltier.addAll(tier);
+			}
+		}
 	}
 
 	void createsegment(int x, int y, int cr) {
@@ -191,7 +210,7 @@ public class Run extends Fight {
 			return;
 		}
 		if (disputed != null) {
-			disputed.captured = true;
+			disputed.capture();
 			recruit(getel());
 			disputed = null;
 		}
@@ -206,30 +225,55 @@ public class Run extends Fight {
 		return Math.round(INITIALEL + disputed.cr);
 	}
 
+	enum Neighbor {
+		NORTH, EAST, SOUTH, WEST
+	}
+
 	void startbattle(Segment s) {
 		disputed = s;
-		while (state.redTeam.isEmpty() || ChallengeRatingCalculator
-				.calculateel(state.getRedTeam()) < ChallengeRatingCalculator
-						.calculateel(state.blueTeam) - 1) {
-			ArrayList<Monster> pool = new ArrayList<Monster>();
-			pool.add(s.monster);
-			for (Segment neighbor : getneighbors(s)) {
-				if (!neighbor.captured) {
-					pool.add(neighbor.monster);
+		if (!DEBUG) {
+			ArrayList<Segment> neighbors = getneighbors(s);
+			for (Segment neighbor : new ArrayList<Segment>(neighbors)) {
+				if (neighbor.captured) {
+					neighbors.remove(neighbor);
 				}
 			}
-			Combatant c = new Combatant(RPG.pick(pool).clone(), true);
-			state.redTeam.add(c);
-			Point a = s.getpointa();
-			Point b = s.getpointb();
-			c.setlocation(
-					BattleSetup.getrandompoint(state, a.x, b.x, a.y, b.y));
-			c.rollinitiative();
-			c.ap = state.next.ap;
-			c.initialap = state.next.ap;
-			// TODO place neighbors on border
+			neighbors.add(s);
+			while (state.redTeam.isEmpty() || ChallengeRatingCalculator
+					.calculateel(state.redTeam) < ChallengeRatingCalculator
+							.calculateel(state.blueTeam) - 1) {
+				Segment neighbor =
+						neighbors.isEmpty() ? s : RPG.pick(neighbors);
+				neighbors.remove(neighbor);
+				Combatant c = new Combatant(neighbor.monster.clone(), true);
+				state.redTeam.add(c);
+				c.setlocation(positionenemy(s, neighbor));
+				c.rollinitiative();
+				c.ap = state.next.ap;
+				c.initialap = state.next.ap;
+			}
 		}
 		s.discover();
+	}
+
+	Point positionenemy(Segment current, Segment neighbor) {
+		Point a = current.getpointa();
+		Point b = current.getpointb();
+		if (current == neighbor) {
+			a.x += 1;
+			a.y += 1;
+			b.x -= 1;
+			b.y -= 1;
+		} else if (neighbor.y > current.y) {// north
+			b.y = a.y;
+		} else if (neighbor.y < current.y) {// south
+			a.y = b.y;
+		} else if (neighbor.x > current.x) {// east
+			a.x = b.x;
+		} else {// west
+			b.x = a.x;
+		}
+		return BattleSetup.getrandompoint(state, a, b);
 	}
 
 	Segment disputesegment() {
@@ -252,10 +296,55 @@ public class Run extends Fight {
 	}
 
 	void recruit(int targetel) {
+		if (win()) {
+			return;
+		}
+		ArrayList<Monster> pool = getrecruits();
 		while (ChallengeRatingCalculator
 				.calculateel(state.blueTeam) < targetel) {
-			// TODO
+			String currentteam = "Current team:";
+			int perline = 0;
+			for (Combatant c : state.blueTeam) {
+				currentteam += c.toString() + ", ";
+				perline += 1;
+				if (perline >= 3) {
+					perline = 0;
+					currentteam += "\n";
+				}
+			}
+			currentteam = currentteam.substring(0, currentteam.length() - 2);
+			Monster m = pool.get(Javelin.choose(
+					"What unit do you want to recruit?\n\n" + currentteam, pool,
+					true, true));
+			Combatant c = new Combatant(m.clone(), true);
+			c.setlocation(BattleSetup.getrandompoint(state,
+					disputed.getpointa(), disputed.getpointb()));
+			c.ap = state.next.ap;
+			c.initialap = state.next.ap;
+			state.blueTeam.add(c);
+			Javelin.app.switchScreen(BattleScreen.active);
 		}
+	}
+
+	ArrayList<Monster> getrecruits() {
+		ArrayList<Monster> pool = new ArrayList<Monster>();
+		for (Segment[] ss : segments) {
+			for (Segment s : ss) {
+				if (s.captured) {
+					pool.add(s.monster);
+				}
+			}
+		}
+		pool.sort(new Comparator<Monster>() {
+			@Override
+			public int compare(Monster o1, Monster o2) {
+				return o2.challengeRating.compareTo(o1.challengeRating);
+			}
+		});
+		while (pool.size() > 5) {
+			pool.remove(5);
+		}
+		return pool;
 	}
 
 	ArrayList<Segment> getneighbors(Segment s) {
@@ -321,6 +410,16 @@ public class Run extends Fight {
 	@Override
 	public boolean onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
 			BattleState s) {
+		if (victory) {
+			Javelin.message(
+					"Congratulations, you have won!\n"
+							+ "You can now visit the Ziggurat on the world map to obtain a temple key.",
+					true);
+			Ziggurat z = (Ziggurat) WorldActor.getall(Ziggurat.class).get(0);
+			z.key = Key.generate();
+		} else {
+			Javelin.message("You lost...", true);
+		}
 		return false;
 	}
 }

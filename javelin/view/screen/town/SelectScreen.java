@@ -25,10 +25,13 @@ public abstract class SelectScreen extends InfoScreen {
 	/** Default key to proceed ({@value #PROCEED}). */
 	public static final char PROCEED = 'q';
 	/** List of keys except q. */
-	public static final char[] KEYS = new char[] { '1', '2', '3', '4', '5', '6',
-			'7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
-			'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u', 'v', 'x',
-			'w', 'y', 'z', };
+	public static final char[] KEYS = new char[] { //
+			'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', //
+			'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+			'n', 'o', 'p', 'r', 's', 't', 'u', 'v', 'x', 'w', 'y', 'z', //
+			'/', '*', '-', '+', '.', ',', '?', '!', '@', '#', '$', '%', '&',
+			'(', ')', '_', '=', '[', ']', '{', '}', '<', '>', ';', ':', '\'',
+			'"', '\\', '|', };
 	/** Current town or <code>null</code>. */
 	protected final Town town;
 	/** If <code>true</code> will show {@link #title}. */

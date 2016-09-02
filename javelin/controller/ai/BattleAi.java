@@ -3,6 +3,7 @@ package javelin.controller.ai;
 import java.util.List;
 
 import javelin.controller.ai.valueselector.ValueSelector;
+import javelin.model.condition.Defending;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 
@@ -44,8 +45,18 @@ public class BattleAi extends AlphaBetaSearch {
 			return LIMIT;
 		}
 		return (redTeam - measuredistances(state.redTeam, state.blueTeam)
-				- state.meld.size())
+				- state.meld.size() - defending(state))
 				- (blueTeam - measuredistances(state.blueTeam, state.redTeam));
+	}
+
+	static float defending(BattleState state) {
+		int ndefending = 0;
+		for (Combatant c : state.redTeam) {
+			if (c.hascondition(Defending.class) != null) {
+				ndefending += 1;
+			}
+		}
+		return ndefending;
 	}
 
 	static private float ratechallenge(final List<Combatant> team) {
@@ -57,9 +68,7 @@ public class BattleAi extends AlphaBetaSearch {
 		return challenge;
 	}
 
-	/** TODO round to float, really? */
-	static private float measuredistances(List<Combatant> us,
-			List<Combatant> them) {
+	static float measuredistances(List<Combatant> us, List<Combatant> them) {
 		int score = 0;
 		for (Combatant mate : us) {
 			int minimum = Integer.MAX_VALUE;

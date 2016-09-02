@@ -12,7 +12,6 @@ import javelin.controller.terrain.map.Map;
 import javelin.controller.terrain.map.MapGenerator;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
-import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -27,22 +26,27 @@ import tyrant.mikera.engine.RPG;
 public class BattleSetup {
 	private static final int MAXDISTANCE = 9;
 
+	/** Starts the setup steps. */
 	public void setup() {
 		rollinitiative();
 		Fight f = Javelin.app.fight;
+		generatemap(f);
+		f.period = Preferences.DEBUGPERIOD == null ? f.period
+				: Preferences.DEBUGPERIOD;
+		place();
+		Weather.flood();
+
+	}
+
+	/** Allows greater control of {@link Map} generation. */
+	public void generatemap(Fight f) {
 		if (f.map == null) {
 			f.map = MapGenerator.generatebattlemap(
 					f.terrain == null ? Terrain.current() : f.terrain,
 					Dungeon.active != null);
 		}
 		f.map.generate();
-		Square[][] m = f.map.map;
-		Fight.state.map = m;
-		f.period = Preferences.DEBUGPERIOD == null ? f.period
-				: Preferences.DEBUGPERIOD;
-		place();
-		Weather.flood();
-
+		Fight.state.map = f.map.map;
 	}
 
 	/** Sets each combatant in a sensible location. */
@@ -184,4 +188,14 @@ public class BattleSetup {
 	public static Point getrandompoint(BattleState state, Point p) {
 		return getrandompoint(state, p.x - 2, p.x + 2, p.y - 2, p.y + 2);
 	}
+
+	/**
+	 * @return Same as {@link #getrandompoint(BattleState, int, int, int, int)}
+	 *         but receives two Points as parameters, forming a square area.
+	 */
+	public static Point getrandompoint(BattleState state, Point min,
+			Point max) {
+		return getrandompoint(state, min.x, max.x, min.y, max.y);
+	}
+
 }

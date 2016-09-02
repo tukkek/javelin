@@ -4,7 +4,6 @@ import java.awt.Image;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.controller.exception.battle.EndBattle;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.Lair;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -55,22 +54,6 @@ public class LairFight extends Fight {
 		return "You have captured the " + capture + "!";
 	}
 
-	@Override
-	public void checkEndBattle() {
-		super.checkEndBattle();
-		if (checkend()) {
-			throw new EndBattle();
-		}
-	}
-
-	boolean checkend() {
-		if (Fight.state.redTeam.size() >= 2) {
-			return false;
-		}
-		Combatant target = findmonster();
-		return target == null || target.hp <= target.maxhp / 2;
-	}
-
 	static Combatant findmonster() {
 		int nfoes = Fight.state.redTeam.size();
 		if (nfoes == 1) {
@@ -96,6 +79,13 @@ public class LairFight extends Fight {
 
 	@Override
 	public Boolean win() {
-		return super.win() || checkend();
+		if (super.win()) {
+			return true;
+		}
+		if (Fight.state.redTeam.size() >= 2) {
+			return false;
+		}
+		Combatant target = findmonster();
+		return target == null || target.hp <= target.maxhp / 2;
 	}
 }

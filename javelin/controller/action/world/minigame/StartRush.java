@@ -1,5 +1,6 @@
-package javelin.controller.action.world;
+package javelin.controller.action.world.minigame;
 
+import javelin.controller.action.world.WorldAction;
 import javelin.model.world.location.unique.minigame.DungeonRush;
 import javelin.view.screen.WorldScreen;
 

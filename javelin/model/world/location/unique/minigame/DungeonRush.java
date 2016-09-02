@@ -6,7 +6,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.db.StateManager;
 import javelin.controller.exception.battle.StartBattle;
-import javelin.controller.fight.Rush;
+import javelin.controller.fight.minigame.Rush;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;

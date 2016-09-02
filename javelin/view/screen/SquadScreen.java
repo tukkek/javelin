@@ -21,11 +21,14 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class SquadScreen extends InfoScreen {
-	private static final float INITIALELTARGET = 5f;
+	/** Minimum starting party encounter level. */
+	public static final float INITIALEL = 5f;
+
 	static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
-	private static final int MONSTERPERPAGE = ALPHABET.indexOf('y');
+	static final int MONSTERPERPAGE = ALPHABET.indexOf('y');
 	static final float[] SELECTABLE = { 1f, 1.25f };
-	private final ArrayList<Monster> candidates = getcandidates();
+
+	final ArrayList<Monster> candidates = getcandidates();
 	ArrayList<Combatant> squad = new ArrayList<Combatant>();
 
 	SquadScreen() {
@@ -80,7 +83,7 @@ public class SquadScreen extends InfoScreen {
 
 	void upgrade() {
 		float startingcr = totalcr();
-		while (ChallengeRatingCalculator.calculateel(squad) < INITIALELTARGET) {
+		while (ChallengeRatingCalculator.calculateel(squad) < INITIALEL) {
 			Combatant weakest = squad.get(0);
 			for (int i = 1; i < squad.size(); i++) {
 				Combatant c = squad.get(i);
@@ -115,7 +118,7 @@ public class SquadScreen extends InfoScreen {
 	}
 
 	boolean checkifsquadfull() {
-		return ChallengeRatingCalculator.calculateel(squad) >= INITIALELTARGET;
+		return ChallengeRatingCalculator.calculateel(squad) >= INITIALEL;
 	}
 
 	int printpage(int index, int next) {

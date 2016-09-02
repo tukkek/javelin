@@ -421,12 +421,15 @@ public class Combatant implements Serializable, Cloneable {
 		case 0:
 			return period;
 		case 2:
-			return Javelin.PERIODNOON;
+			return Javelin.app.fight.denydarkvision ? Javelin.PERIODEVENING
+					: Javelin.PERIODNOON;
 		case 1:
 			if (period == Javelin.PERIODNIGHT) {
 				return Javelin.PERIODEVENING;
-			} else if (period == Javelin.PERIODEVENING) {
-				return Javelin.PERIODNOON;
+			}
+			if (period == Javelin.PERIODEVENING) {
+				return Javelin.app.fight.denydarkvision ? Javelin.PERIODEVENING
+						: Javelin.PERIODNOON;
 			}
 		}
 		return period;
@@ -741,5 +744,10 @@ public class Combatant implements Serializable, Cloneable {
 						true;
 			}
 		}
+	}
+
+	public void setlocation(Point p) {
+		location[0] = p.x;
+		location[1] = p.y;
 	}
 }

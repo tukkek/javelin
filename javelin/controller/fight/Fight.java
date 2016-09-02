@@ -114,6 +114,7 @@ public abstract class Fight {
 
 	/** Delegates some setup details.TODO */
 	public BattleSetup setup = new BattleSetup();
+	public boolean denydarkvision = false;
 
 	/**
 	 * @return an encounter level for which an appropriate challenge should be
@@ -194,11 +195,8 @@ public abstract class Fight {
 	 * @throws EndBattle
 	 *             If this battle is over.
 	 */
-	public void checkEndBattle() {
-		if (Fight.state.redTeam.isEmpty() || Fight.state.blueTeam.isEmpty()) {
-			throw new EndBattle();
-		}
-		if (!checkforenemies()) {
+	public void checkendbattle() {
+		if (win() || Fight.state.blueTeam.isEmpty()) {
 			throw new EndBattle();
 		}
 	}
@@ -510,5 +508,12 @@ public abstract class Fight {
 		Meld m = new Meld(x, y, s.next.ap + 1, dead);
 		s.meld.add(m);
 		return m;
+	}
+
+	/**
+	 * Called after painting the {@link BattleScreen} for the first time.
+	 */
+	public void draw() {
+		// nothing by default
 	}
 }

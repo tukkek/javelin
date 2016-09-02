@@ -307,14 +307,14 @@ public class BattleState implements Node, TeamContainer {
 	 * @return <code>true</code> if the target {@link Combatant} can be seen.
 	 */
 	public Vision haslineofsight(Combatant me, Combatant target) {
-		return haslineoffight(me,
+		return haslineofsight(me,
 				new Point(target.location[0], target.location[1]));
 	}
 
 	/**
 	 * @return <code>true</code> if the target {@link Point} can be seen.
 	 */
-	public Vision haslineoffight(Combatant me, Point target) {
+	public Vision haslineofsight(Combatant me, Point target) {
 		return hasLineOfSight(new Point(me.location[0], me.location[1]),
 				new Point(target.x, target.y), me.view(period),
 				me.perceive(period));

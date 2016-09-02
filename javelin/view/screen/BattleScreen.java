@@ -180,7 +180,7 @@ public class BattleScreen extends Screen {
 			return;
 		} finally {
 			Javelin.app.fight.endturn();
-			Javelin.app.fight.checkEndBattle();
+			Javelin.app.fight.checkendbattle();
 		}
 	}
 

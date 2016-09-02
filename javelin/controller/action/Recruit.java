@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javelin.Javelin;
 import javelin.controller.fight.Fight;
-import javelin.controller.fight.Rush;
+import javelin.controller.fight.minigame.Rush;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.unit.Combatant;

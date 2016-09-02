@@ -1,4 +1,4 @@
-package javelin.controller.fight;
+package javelin.controller.fight.minigame;
 
 import java.util.ArrayList;
 
@@ -7,6 +7,7 @@ import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.db.StateManager;
+import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
@@ -162,7 +163,7 @@ public class ArenaFight extends Fight {
 				continue;
 			}
 			for (Combatant c : Fight.state.getcombatants()) {
-				if (Fight.state.haslineoffight(c, p) == Vision.CLEAR) {
+				if (Fight.state.haslineofsight(c, p) == Vision.CLEAR) {
 					Fight.state.meld
 							.add(new Meld(p.x, p.y, -Float.MAX_VALUE, null));
 					nmeld -= 1;

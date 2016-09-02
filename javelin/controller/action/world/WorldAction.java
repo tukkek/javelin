@@ -4,6 +4,9 @@ import java.awt.event.KeyEvent;
 
 import javelin.controller.action.Action;
 import javelin.controller.action.ActionDescription;
+import javelin.controller.action.world.minigame.OpenArena;
+import javelin.controller.action.world.minigame.StartRush;
+import javelin.controller.action.world.minigame.StartZigguratRun;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -52,6 +55,7 @@ public abstract class WorldAction implements ActionDescription {
 			new Dismiss(), // D
 			new ConfigureWorldKeys(), // K
 			new Abandon(), // Q
+			new StartZigguratRun(), // Z
 			HOWTO, ARTIFACTS, CONDITIONS, ITEMS, SKILLS, SPELLS, UGRADES,
 			new WorldMove(new int[] { KeyEvent.VK_NUMPAD7, }, -1, -1,
 					new String[] { "U", "↖ or 7 or U" }),

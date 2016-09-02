@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
 
-import javelin.controller.fight.ArenaFight;
+import javelin.controller.fight.minigame.ArenaFight;
 import javelin.model.world.location.unique.minigame.Arena;
 import javelin.view.frame.Frame;
 

@@ -1,4 +1,4 @@
-package javelin.controller.fight;
+package javelin.controller.fight.minigame;
 
 import java.util.ArrayList;
 
@@ -8,6 +8,7 @@ import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.action.Recruit;
 import javelin.controller.exception.battle.EndBattle;
+import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.map.Map;
@@ -138,7 +139,7 @@ public class Rush extends Fight {
 	}
 
 	@Override
-	public void checkEndBattle() {
+	public void checkendbattle() {
 		if (Fight.state.redTeam.isEmpty()) {
 			throw new EndBattle();
 		}

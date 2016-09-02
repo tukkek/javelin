@@ -44,6 +44,7 @@ public class StartBattle extends BattleEvent {
 		fight.ready();
 		BattlePanel.current = Fight.state.next;
 		BattleScreen battleScreen = new BattleScreen(true);
+		fight.draw();
 		battleScreen.mainLoop();
 	}
 

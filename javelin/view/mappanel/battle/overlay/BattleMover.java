@@ -107,7 +107,7 @@ public class BattleMover extends Walker {
 		}
 		try {
 			return (((BattlePanel) BattleScreen.active.mappanel).daylight
-					|| state.haslineoffight(current,
+					|| state.haslineofsight(current,
 							new Point(x, y)) != Vision.BLOCKED);
 		} catch (NullPointerException e) {
 			return false;

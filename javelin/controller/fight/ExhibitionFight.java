@@ -2,7 +2,6 @@ package javelin.controller.fight;
 
 import java.util.ArrayList;
 
-import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.tournament.Exhibition;
 import javelin.controller.terrain.map.Arena;
 import javelin.model.unit.Combatant;
@@ -33,14 +32,6 @@ public class ExhibitionFight extends Fight {
 	@Override
 	public int getel(int teamel) {
 		return teamel;
-	}
-
-	@Override
-	public void checkEndBattle() {
-		super.checkEndBattle();
-		if (Fight.state.blueTeam.isEmpty()) {
-			throw new EndBattle();
-		}
 	}
 
 	@Override

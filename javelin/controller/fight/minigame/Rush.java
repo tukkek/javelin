@@ -11,8 +11,6 @@ import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
-import javelin.controller.terrain.map.Map;
-import javelin.model.item.Item;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
@@ -26,7 +24,7 @@ import tyrant.mikera.engine.RPG;
  * @see DungeonRush
  * @author alex
  */
-public class Rush extends Fight {
+public class Rush extends Minigame {
 	class RushSetup extends BattleSetup {
 		private static final int CLEARINGAREA = 9;
 
@@ -82,20 +80,12 @@ public class Rush extends Fight {
 		for (Monster spawner : r.spawners) {
 			mana += spawner.challengeRating * DungeonRush.PLAYERMANAMULTIPLIER;
 		}
-		map = Map.random();
 		setup = new RushSetup();
-		bribe = false;
-		hide = false;
 		meld = true;
 		period = RPG
 				.pick(new String[] { Javelin.PERIODMORNING, Javelin.PERIODNOON,
 						Javelin.PERIODEVENING, Javelin.PERIODNIGHT });
 		weather = Math.min(RPG.pick(Weather.DISTRIBUTION), map.maxflooding);
-	}
-
-	@Override
-	public int getel(int teamel) {
-		throw new RuntimeException("shouldn't be called #rush");
 	}
 
 	@Override
@@ -158,11 +148,6 @@ public class Rush extends Fight {
 	}
 
 	@Override
-	public void withdraw(Combatant combatant, BattleScreen screen) {
-		dontflee(screen);
-	}
-
-	@Override
 	public void meld(Combatant hero, Meld m) {
 		super.meld(hero, m);
 		Game.messagepanel.clear();
@@ -195,11 +180,6 @@ public class Rush extends Fight {
 				}
 			}
 		}
-	}
-
-	@Override
-	public ArrayList<Item> getbag(Combatant combatant) {
-		return new ArrayList<Item>();
 	}
 
 	@Override

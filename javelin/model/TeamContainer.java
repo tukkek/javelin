@@ -10,9 +10,9 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public interface TeamContainer {
-	List<Combatant> getBlueTeam();
+	List<Combatant> getblueTeam();
 
-	List<Combatant> getRedTeam();
+	List<Combatant> getredTeam();
 
 	List<Combatant> getcombatants();
 }

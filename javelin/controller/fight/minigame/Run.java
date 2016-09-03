@@ -10,7 +10,6 @@ import javelin.controller.BattleSetup;
 import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.controller.fight.Fight;
 import javelin.model.item.Key;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
@@ -27,7 +26,7 @@ import tyrant.mikera.engine.RPG;
  * 
  * @author alex
  */
-public class Run extends Fight {
+public class Run extends Minigame {
 	static final boolean DEBUG = false;
 
 	class Segment {
@@ -129,6 +128,7 @@ public class Run extends Fight {
 		period = Javelin.PERIODNIGHT;
 		weather = Weather.DRY;
 		denydarkvision = true;
+		meld = false;
 		pool();
 		createsegment(0, 0, 1);
 		setup = new BattleSetup() {
@@ -174,28 +174,18 @@ public class Run extends Fight {
 		}
 	}
 
-	void createsegment(int x, int y, int cr) {
+	void createsegment(int x, int y, float cr) {
 		if (0 <= x && x < NSEGMENTS && 0 <= y && y < NSEGMENTS
 				&& segments[x][y] == null) {
-			segments[x][y] = new Segment(x, y, cr);
-			createsegment(x + 1, y, cr + 1);
-			createsegment(x, y + 1, cr + 1);
+			segments[x][y] = new Segment(x, y, Math.round(cr));
+			createsegment(x + 1, y, cr + 1.25f);
+			createsegment(x, y + 1, cr + 1.25f);
 		}
-	}
-
-	@Override
-	public int getel(int teamel) {
-		throw new RuntimeException("don't generate #zigguratrun");
 	}
 
 	@Override
 	public ArrayList<Combatant> getmonsters(int teamel) {
 		return new ArrayList<Combatant>();
-	}
-
-	@Override
-	public void withdraw(Combatant combatant, BattleScreen screen) {
-		dontflee(screen);
 	}
 
 	@Override
@@ -302,7 +292,7 @@ public class Run extends Fight {
 		ArrayList<Monster> pool = getrecruits();
 		while (ChallengeRatingCalculator
 				.calculateel(state.blueTeam) < targetel) {
-			String currentteam = "Current team:";
+			String currentteam = "Current team: ";
 			int perline = 0;
 			for (Combatant c : state.blueTeam) {
 				currentteam += c.toString() + ", ";

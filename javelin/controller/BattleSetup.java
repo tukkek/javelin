@@ -61,19 +61,19 @@ public class BattleSetup {
 				queueb = new ArrayList<Combatant>(queueb);
 				final Combatant seeda = RPG.pick(queuea);
 				final Combatant seedb = RPG.pick(queueb);
-				final BattleState s = Fight.state;
-				add(seeda, getrandompoint(s, 0, Fight.state.map.length - 1, 0,
-						Fight.state.map[0].length - 1));
-				placecombatant(seedb, seeda, s);
+				add(seeda,
+						getrandompoint(Fight.state, 0,
+								Fight.state.map.length - 1, 0,
+								Fight.state.map[0].length - 1));
+				placecombatant(seedb, seeda, Fight.state);
 				final ArrayList<Combatant> placeda = new ArrayList<Combatant>();
 				final ArrayList<Combatant> placedb = new ArrayList<Combatant>();
 				markplaced(seeda, queuea, placeda);
 				markplaced(seedb, queueb, placedb);
 				while (!queuea.isEmpty() || !queueb.isEmpty()) {
-					placeteammate(queuea, placeda, s);
-					placeteammate(queueb, placedb, s);
+					placeteammate(queuea, placeda, Fight.state);
+					placeteammate(queueb, placedb, Fight.state);
 				}
-				Fight.state = s;
 				return;
 			} catch (GaveUpException e) {
 				continue;

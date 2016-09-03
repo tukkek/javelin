@@ -20,10 +20,12 @@ import javelin.view.mappanel.Tile;
  * @author alex
  */
 public class BattlePanel extends MapPanel {
-	public boolean daylight;
 	static public Combatant current = null;
-	static public BattleState previousstate = null;
-	static public BattleState state = null;
+
+	public boolean daylight;
+
+	BattleState previousstate = null;
+	BattleState state = null;
 
 	public BattlePanel(BattleState s) {
 		super(s.map.length, s.map[0].length, Preferences.KEYTILEBATTLE);

@@ -36,11 +36,11 @@ public class BattleAi extends AlphaBetaSearch {
 	@Override
 	public float utility(final Node node) {
 		final BattleState state = (BattleState) node;
-		final float redTeam = BattleAi.ratechallenge(state.getRedTeam());
+		final float redTeam = BattleAi.ratechallenge(state.getredTeam());
 		if (redTeam == 0f) {
 			return -LIMIT;
 		}
-		final float blueTeam = BattleAi.ratechallenge(state.getBlueTeam());
+		final float blueTeam = BattleAi.ratechallenge(state.getblueTeam());
 		if (blueTeam == 0f) {
 			return LIMIT;
 		}
@@ -88,7 +88,7 @@ public class BattleAi extends AlphaBetaSearch {
 	@Override
 	public boolean terminalTest(final Node node) {
 		final BattleState state = (BattleState) node;
-		return state.getRedTeam().isEmpty() || state.getBlueTeam().isEmpty();
+		return state.getredTeam().isEmpty() || state.getblueTeam().isEmpty();
 	}
 
 	@Override

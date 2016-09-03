@@ -232,8 +232,8 @@ public class Combatant implements Serializable, Cloneable {
 	}
 
 	public List<Combatant> getTeam(final TeamContainer tc) {
-		final List<Combatant> redTeam = tc.getRedTeam();
-		return redTeam.contains(this) ? redTeam : tc.getBlueTeam();
+		final List<Combatant> redTeam = tc.getredTeam();
+		return redTeam.contains(this) ? redTeam : tc.getblueTeam();
 	}
 
 	@Override
@@ -704,7 +704,7 @@ public class Combatant implements Serializable, Cloneable {
 				&& x < f.map.map.length; x++) {
 			for (int y = Math.max(0, here.y - range); y <= here.y + range
 					&& y < f.map.map[0].length; y++) {
-				if (forcevision || s.hasLineOfSight(here, new Point(x, y),
+				if (forcevision || s.haslineofsight(here, new Point(x, y),
 						range, perception) != Vision.BLOCKED) {
 					seen.add(new Point(x, y));
 				}

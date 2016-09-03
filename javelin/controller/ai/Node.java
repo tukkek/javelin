@@ -25,7 +25,7 @@ public interface Node extends Cloneable {
 	 * @author Alex Henry
 	 */
 
-	Iterable<List<ChanceNode>> getSucessors();
+	Iterable<List<ChanceNode>> getsucessors();
 
 	@Override
 	int hashCode();

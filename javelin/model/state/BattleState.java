@@ -30,7 +30,7 @@ import javelin.model.unit.Combatant;
 public class BattleState implements Node, TeamContainer {
 
 	/**
-	 * @see BattleState#hasLineOfSight(Point, Point, int, String)
+	 * @see BattleState#haslineofsight(Point, Point, int, String)
 	 * @author alex
 	 */
 	public enum Vision {
@@ -133,7 +133,7 @@ public class BattleState implements Node, TeamContainer {
 	}
 
 	@Override
-	public Iterable<List<ChanceNode>> getSucessors() {
+	public Iterable<List<ChanceNode>> getsucessors() {
 		return new ActionProvider(this);
 	}
 
@@ -170,12 +170,12 @@ public class BattleState implements Node, TeamContainer {
 	}
 
 	@Override
-	public List<Combatant> getBlueTeam() {
+	public List<Combatant> getblueTeam() {
 		return blueTeam;
 	}
 
 	@Override
-	public List<Combatant> getRedTeam() {
+	public List<Combatant> getredTeam() {
 		return redTeam;
 	}
 
@@ -252,7 +252,7 @@ public class BattleState implements Node, TeamContainer {
 	 *            night or evening the character will not able to see past
 	 *            obstacles in the map.
 	 */
-	public Vision hasLineOfSight(final Point me, final Point target, int range,
+	public Vision haslineofsight(final Point me, final Point target, int range,
 			String periodperception) {
 		final ArrayList<Step> clear = new ClearPath(me, target, this).walk();
 		final ArrayList<Step> covered =
@@ -279,8 +279,8 @@ public class BattleState implements Node, TeamContainer {
 	}
 
 	/**
-	 * @return As {@link #gettargets(Combatant, List)} but default to
-	 *         targetting only units in the opposite team.
+	 * @return As {@link #gettargets(Combatant, List)} but default to targetting
+	 *         only units in the opposite team.
 	 */
 	public List<Combatant> gettargets(Combatant combatant) {
 		return gettargets(combatant,
@@ -315,7 +315,7 @@ public class BattleState implements Node, TeamContainer {
 	 * @return <code>true</code> if the target {@link Point} can be seen.
 	 */
 	public Vision haslineofsight(Combatant me, Point target) {
-		return hasLineOfSight(new Point(me.location[0], me.location[1]),
+		return haslineofsight(new Point(me.location[0], me.location[1]),
 				new Point(target.x, target.y), me.view(period),
 				me.perceive(period));
 	}

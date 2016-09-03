@@ -173,11 +173,10 @@ public class BattleMouse extends Mouse {
 			} else if (a == Action.RANGED) {
 				status(Fire.SINGLETON.describehitchance(current, target, s),
 						target);
-			} else if (target != null) {
+			}
+			if (target != null) {
 				Examine.lastlooked = target;
 				BattleScreen.active.statuspanel.repaint();
-			} else {
-				return;
 			}
 		} finally {
 			Game.messagepanel.getPanel().repaint();

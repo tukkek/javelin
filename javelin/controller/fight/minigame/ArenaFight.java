@@ -29,7 +29,7 @@ import tyrant.mikera.engine.RPG;
  * 
  * @author alex
  */
-public class ArenaFight extends Fight {
+public class ArenaFight extends Minigame {
 	/**
 	 * {@link Arena#gladiators} and temporary allies.
 	 * 
@@ -47,16 +47,9 @@ public class ArenaFight extends Fight {
 	public ArenaFight() {
 		meld = true;
 		friendly = true;
-		hide = false;
-		bribe = false;
 		friendlylevel = Combatant.STATUSINJURED;
 		weather = null;
 		period = null;
-	}
-
-	@Override
-	public int getel(int teamel) {
-		throw new RuntimeException("Don't generate this way #arenafight");
 	}
 
 	@Override

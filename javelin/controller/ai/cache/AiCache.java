@@ -39,13 +39,13 @@ public class AiCache {
 	public static Iterable<List<ChanceNode>> getcache(final Node previousState,
 			List<Integer> index) {
 		if (!Preferences.AICACHEENABLED) {
-			return previousState.getSucessors();
+			return previousState.getsucessors();
 		}
 		List<List<ChanceNode>> sucessors =
 				(List<List<ChanceNode>>) nodecache.get(index);
 		if (sucessors == null) {
 			sucessors = new ArrayList<List<ChanceNode>>();
-			for (final List<ChanceNode> cns : previousState.getSucessors()) {
+			for (final List<ChanceNode> cns : previousState.getsucessors()) {
 				sucessors.add(cns);
 			}
 			addcache(index, sucessors);

@@ -4,9 +4,10 @@ import java.awt.event.KeyEvent;
 
 import javelin.controller.action.Action;
 import javelin.controller.action.ActionDescription;
-import javelin.controller.action.world.minigame.OpenArena;
-import javelin.controller.action.world.minigame.StartRush;
-import javelin.controller.action.world.minigame.StartZigguratRun;
+import javelin.controller.action.world.minigame.EnterBattlefield;
+import javelin.controller.action.world.minigame.EnterArena;
+import javelin.controller.action.world.minigame.EnterDungeonRush;
+import javelin.controller.action.world.minigame.EnterZiggurat;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -16,29 +17,10 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public abstract class WorldAction implements ActionDescription {
-	/** Guide. */
-	public static final Guide HOWTO =
-			new Guide(KeyEvent.VK_F1, "How to play", "F1");
-	/** Guide. */
-	public static final Guide ARTIFACTS =
-			new Guide(KeyEvent.VK_F2, "Artifacts", "F2");
-	/** Guide. */
-	public static final Guide CONDITIONS =
-			new Guide(KeyEvent.VK_F3, "Conditions", "F3");
-	/** Guide. */
-	public static final Guide ITEMS = new Guide(KeyEvent.VK_F4, "Items", "F4");
-	/** Guide. */
-	public static final Guide SKILLS =
-			new Guide(KeyEvent.VK_F5, "Skills", "F5");
-	/** Guide. */
-	public static final Guide SPELLS =
-			new Guide(KeyEvent.VK_F6, "Spells", "F6");
-	/** Guide. */
-	public static final Guide UGRADES =
-			new Guide(KeyEvent.VK_F7, "Upgrades", "F7");
 	/** All world actions. */
 	public static final WorldAction[] ACTIONS = new WorldAction[] { //
-			new OpenArena(), // a
+			new EnterArena(), // a
+			new EnterBattlefield(), // b
 			new Camp(), // c
 			new Divide(), // d
 			new UseItems(), // i
@@ -51,12 +33,13 @@ public abstract class WorldAction implements ActionDescription {
 			new Work(), // v
 			new Automate(), // A
 			new ClearHighscore(), // C
-			new StartRush(), // R
+			new EnterDungeonRush(), // R
 			new Dismiss(), // D
 			new ConfigureWorldKeys(), // K
 			new Abandon(), // Q
-			new StartZigguratRun(), // Z
-			HOWTO, ARTIFACTS, CONDITIONS, ITEMS, SKILLS, SPELLS, UGRADES,
+			new EnterZiggurat(), // Z
+			Guide.HOWTO, Guide.MINIGAMES, Guide.ARTIFACTS, Guide.CONDITIONS,
+			Guide.ITEMS, Guide.SKILLS, Guide.SPELLS, Guide.UGRADES,
 			new WorldMove(new int[] { KeyEvent.VK_NUMPAD7, }, -1, -1,
 					new String[] { "U", "↖ or 7 or U" }),
 			new WorldMove(new int[] { KeyEvent.VK_UP, KeyEvent.VK_NUMPAD8 }, 0,

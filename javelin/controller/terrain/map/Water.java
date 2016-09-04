@@ -12,5 +12,6 @@ public class Water extends DndMap {
 	public Water() {
 		super("Water", 0, 0, 1);
 		flooded = Images.getImage("terrainaquatic");
+		standard = false;
 	}
 }

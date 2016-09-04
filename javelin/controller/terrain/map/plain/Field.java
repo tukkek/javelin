@@ -1,14 +1,18 @@
 package javelin.controller.terrain.map.plain;
 
 import javelin.controller.terrain.map.DndMap;
+import javelin.model.world.location.unique.minigame.Battlefield;
 import javelin.view.Images;
 
 /**
+ * The proper term in the d20 SRF is "Battlefield" but renamed here to avoid
+ * collision with {@link Battlefield}.
+ * 
  * @see DndMap
  */
-public class Battlefield extends DndMap {
+public class Field extends DndMap {
 	/** Constructor. */
-	public Battlefield() {
+	public Field() {
 		super("Battlefield", .1, .2, 0);
 		floor = Images.getImage("terrainforestfloor");
 		wallfloor = floor;

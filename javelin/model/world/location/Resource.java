@@ -96,7 +96,7 @@ public class Resource extends Location {
 		int gold = getspoils();
 		if (nworkers == 0) {
 			Character input = Javelin
-					.prompt("To help gather this resource you must bring at least one Worker from a Town.\n"
+					.prompt("To gather this resource you must bring at least one worker from a town.\n"
 							+ "Do you want to plunder it instead for $" + gold
 							+ "?\n\n"
 							+ "Press p to plunder or any other key to cancel...");
@@ -136,7 +136,7 @@ public class Resource extends Location {
 	int getspoils() {
 		ResourceType type = gettype();
 		int el;
-		if (type.amount == 7) {
+		if (type.amount == 5) {
 			el = 1;
 		} else if (type.amount == 15) {
 			el = 2;

@@ -1,7 +1,7 @@
 Version 1.7
 
  * Basic mouse support!
- * 3 new mini-games: Arena, Dungeon Rush and Ziggurat!
+ * 4 mini-games: Arena, Battlefield, Dungeon Rush and Ziggurat!
  * New location type: natural resources
 
 Version 1.6 (2016-07-15) 

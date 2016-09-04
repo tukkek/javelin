@@ -51,7 +51,8 @@ public class ActionMapping {
 			new ZoomOut(), // -
 			new ZoomIn(), // +
 
-			new ActionAdapter(Guide.HOWTO), new ActionAdapter(Guide.ARTIFACTS),
+			new ActionAdapter(Guide.HOWTO), new ActionAdapter(Guide.MINIGAMES),
+			new ActionAdapter(Guide.ARTIFACTS),
 			new ActionAdapter(Guide.CONDITIONS), new ActionAdapter(Guide.ITEMS),
 			new ActionAdapter(Guide.SKILLS), new ActionAdapter(Guide.SPELLS),
 			new ActionAdapter(Guide.UGRADES), //

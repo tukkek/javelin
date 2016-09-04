@@ -7,6 +7,7 @@ import javelin.Javelin;
 import javelin.controller.db.StateManager;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.minigame.Rush;
+import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -150,5 +151,12 @@ public class DungeonRush extends UniqueLocation {
 	 */
 	public static DungeonRush get() {
 		return (DungeonRush) WorldActor.getall(DungeonRush.class).get(0);
+	}
+
+	@Override
+	protected void generate() {
+		while (x < 0 || !Terrain.get(x, y).equals(Terrain.MOUNTAINS)) {
+			super.generate();
+		}
 	}
 }

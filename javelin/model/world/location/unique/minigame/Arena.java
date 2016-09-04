@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;
@@ -148,5 +149,14 @@ public class Arena extends UniqueLocation {
 			items.add(Item.ALL.random().clone());
 		}
 		items.sort(Item.PRICECOMPARATOR);
+	}
+
+	@Override
+	protected void generate() {
+		while (x < 0 || Terrain.get(x, y).equals(Terrain.MARSH)
+				|| Terrain.get(x, y).equals(Terrain.MOUNTAINS)
+				|| Terrain.get(x, y).equals(Terrain.DESERT)) {
+			super.generate();
+		}
 	}
 }

@@ -8,7 +8,7 @@ import javelin.controller.Point;
 import javelin.controller.terrain.hazard.Flood;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.terrain.map.Maps;
-import javelin.controller.terrain.map.plain.Battlefield;
+import javelin.controller.terrain.map.plain.Field;
 import javelin.controller.terrain.map.plain.Farm;
 import javelin.controller.terrain.map.plain.Grasslands;
 import javelin.model.unit.Squad;
@@ -38,7 +38,7 @@ public class Plains extends Terrain {
 		Maps m = new Maps();
 		m.add(new Farm());
 		m.add(new Grasslands());
-		m.add(new Battlefield());
+		m.add(new Field());
 		return m;
 	}
 

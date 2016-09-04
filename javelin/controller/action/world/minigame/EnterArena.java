@@ -11,10 +11,10 @@ import javelin.view.screen.WorldScreen;
  * 
  * @author alex
  */
-public class OpenArena extends WorldAction {
+public class EnterArena extends WorldAction {
 	/** Constructor. */
-	public OpenArena() {
-		super("Open Arena screen", new int[] { KeyEvent.VK_A },
+	public EnterArena() {
+		super("Arena (mini-game)", new int[] { KeyEvent.VK_A },
 				new String[] { "a" });
 	}
 

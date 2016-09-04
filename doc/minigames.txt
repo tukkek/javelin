@@ -1,0 +1,25 @@
+Javelin is largely focused on the "campaign mode" - in which you explore and conquer the world map while growing in power and influence. The campaign can be a very long process though, spanning dozens of hours over multiple play sessions and sometimes you don't really want to put all the effort into all the strategic planning and risks involved. Luckily, Javelin offers a collection of mini-games as well!
+
+Each minigame is a different gameplay mode with different rules that can be initiated from anywhere in the world map (check the help screen to verify their respective keys). The combatants in these matches are not your normal units either so you don't have to worry about losing your carefully upgraded heroes. The minigames also take a more predictable amount of time, making them perfect for when you're taking a break or have a certain amount of time to waste but are not in the mood for progressing your campaign story. Despite all that, the minigames also offer rewards to your main quest, making them worthwhile to progress your overall game as well!
+
+So, in short: these games are featured as a more relaxed alternative to the Javelin campaign mode. Perhaps players who do not enjoy the long-term RPG/strategy gameplay as much will find the mini-games to hold their own as interesting tactical scenarios. Of course, as with the main campaign mode, all of these mini-games are randomized in order to enhance replayability as much as possible.
+
+THE ARENA
+This is the minigame more similar to the main game mode: you have a team of gladiators in the Arena which you can upgrade and expand. Winning and betting on battles allows you to earn coins, which are used for acquiring items, new gladiators, upgrades and configuring future battle conditions. These coins also allow visiting parties to redeem items to be used in the main campaign mode.
+
+Once you get past the first fights and start acquiring more coins, you will notice that the power progression in the arena is a lot faster than during normal play and the battles are also more difficult, which makes it ideal to experience Javelin without the game world features.
+
+BATTLEFIELD
+The purpose of the battlefield is to pit large armies against each other. You start by selecting a commander and different tiers of units, while the computer opponent does the same. Once the battle finishes you'll be able to visit the Battlefield to recruit any survivors to help you!
+
+DUNGEON RUSH
+A minigame which allows you to recruit units during battle (via the Recruit command, see the help screen to see the relevant key). You start at the bottom of the map and must destroy the enemy spawners at the top. Recruit an army of your liking and go forth quickly, since these spawners will start summoning enemies once every few turns! Losing all of your units will grant victory to the computer opponent.
+
+Defeating enemy units and taking their crystals will provide you with more mana to summon new allies as the battle progresses. As you win rushes you'll be able to summon more unit types during each match, while losing rushes will diminish your ability to summon units as well. Each of these units can also be recruited to your main quest by visiting the Dungeon Rush location in the world map!
+
+ZIGGURAT
+The Ziggurat map is divided into several segments, each representing a type of creature. You start at the bottom-left of the map with weaker units and must advance and conquer the segment in the very top-right in order to achieve victory. As you conquer new segments along the way you'll be able to recruit units from these and grow in power with each step!
+
+Every time you enter an unconquered segment a new battle will begin with opponents from all nearby unconquered segments (north, east, south and west) possibly joining in the fight. You'll be able to determine which monster came from which segment by their placement on the borders of the current disputed segment - with monsters from the current segment being placed in the center. This should help you decide how to move towards the final battle, acquiring the best possible army composition along the way!
+
+Winning a Ziggurat run will spawn a Key to be retrieved from it on the world map. The Ziggurat can also be used as a teleportation device.

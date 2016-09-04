@@ -5,6 +5,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.fight.minigame.Run;
+import javelin.controller.terrain.Terrain;
 import javelin.model.item.Key;
 import javelin.model.spell.conjuration.teleportation.GreaterTeleport;
 import javelin.model.unit.Combatant;
@@ -80,5 +81,12 @@ public class Ziggurat extends UniqueLocation {
 	@Override
 	protected void generategarrison(int minlevel, int maxlevel) {
 		// empty
+	}
+
+	@Override
+	protected void generate() {
+		while (x < 0 || !Terrain.get(x, y).equals(Terrain.FOREST)) {
+			super.generate();
+		}
 	}
 }

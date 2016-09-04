@@ -11,10 +11,10 @@ import javelin.view.screen.WorldScreen;
  * @see Ziggurat
  * @author alex
  */
-public class StartZigguratRun extends WorldAction {
+public class EnterZiggurat extends WorldAction {
 	/** Constructor. */
-	public StartZigguratRun() {
-		super("Start Ziggurat run", new int[] { 'Z' }, new String[] { "Z" });
+	public EnterZiggurat() {
+		super("Ziggurat (mini-game)", new int[] { 'Z' }, new String[] { "Z" });
 	}
 
 	@Override

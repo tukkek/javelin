@@ -135,13 +135,13 @@ public class RecruitScreen extends PurchaseScreen {
 
 	/**
 	 * @param cr
-	 *            Sspend this much CR in recruiting a rookie (1CR = 100XP).
+	 *            Spend this much CR in recruiting a rookie (1CR = 100XP).
 	 */
 	static public void spend(double cr) {
-		double percapita = cr / new Float(Squad.active.eat());
+		double percapita = cr / new Float(Squad.active.members.size());
 		boolean buyfromall = true;
 		for (Combatant c : Squad.active.members) {
-			if (c.xp.doubleValue() < percapita) {
+			if (percapita > c.xp.doubleValue()) {
 				buyfromall = false;
 				break;
 			}
@@ -153,10 +153,15 @@ public class RecruitScreen extends PurchaseScreen {
 		} else {
 			ArrayList<Combatant> squad =
 					new ArrayList<Combatant>(Squad.active.members);
+			ChallengeRatingCalculator.calculateel(squad);
 			Collections.sort(squad, new Comparator<Combatant>() {
 				@Override
 				public int compare(Combatant o1, Combatant o2) {
-					return o2.xp.compareTo(o1.xp);
+					final float cr1 =
+							o2.xp.floatValue() + o2.source.challengeRating;
+					final float cr2 =
+							o1.xp.floatValue() + o1.source.challengeRating;
+					return new Float(cr1).compareTo(cr2);
 				}
 			});
 			for (Combatant c : squad) {

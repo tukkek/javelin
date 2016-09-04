@@ -15,11 +15,6 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public abstract class Map {
-	/**
-	 * Two-dimensional array of squares. map[point.x][point.y]
-	 */
-	public Square[][] map;
-
 	/** Background image. */
 	public Image floor = Images.getImage("terraindirt");
 	/** Represents {@link Square#blocked}. */
@@ -32,13 +27,26 @@ public abstract class Map {
 	/** Represents an {@link Square#obstructed} item. */
 	public Image obstacle = Images.getImage("terrainbush");
 	/** Used often as an {@link #obstacle}. */
-	protected Image rock = Images.getImage("terrainrock");
+	public Image rock = Images.getImage("terrainrock");
 	/** Represents {@link Square#flooded}. */
 	public Image flooded = Images.getImage("terrainflooded");
+
+	/**
+	 * Two-dimensional array of squares. map[point.x][point.y]
+	 */
+	public Square[][] map;
 	/** See {@link Weather}. By default allows any extent of flooding. */
 	public int maxflooding = Weather.STORM;
 
+	/** Map title. */
 	public String name;
+
+	/**
+	 * Maps that are supposed to be good for any minigame or situation.
+	 * 
+	 * @see #random()
+	 */
+	public boolean standard = true;
 
 	/**
 	 * Construcor based on map size. By default all {@link Square}s are
@@ -112,12 +120,15 @@ public abstract class Map {
 	public static Map random() {
 		ArrayList<Terrain> terrains =
 				new ArrayList<Terrain>(Terrain.ALL.length);
+		terrains.add(Terrain.UNDERGROUND);
+		ArrayList<Map> maps = new ArrayList<Map>();
 		for (Terrain t : Terrain.ALL) {
-			if (!Terrain.WATER.equals(t)) {
-				terrains.add(t);
+			for (Map m : t.getmaps()) {
+				if (m.standard) {
+					maps.add(m);
+				}
 			}
 		}
-		terrains.add(Terrain.UNDERGROUND);
-		return RPG.pick(terrains).getmaps().pick();
+		return RPG.pick(maps);
 	}
 }

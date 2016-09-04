@@ -8,10 +8,10 @@ import javelin.view.screen.WorldScreen;
  * @see DungeonRush
  * @author alex
  */
-public class StartRush extends WorldAction {
+public class EnterDungeonRush extends WorldAction {
 	/** Constructor. */
-	public StartRush() {
-		super("Start a dungeon rush match", new int[] { 'R' },
+	public EnterDungeonRush() {
+		super("Dungeon rush (mini-game)", new int[] { 'R' },
 				new String[] { "R" });
 	}
 

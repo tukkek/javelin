@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.File;
 
 import javax.swing.BorderFactory;
@@ -55,6 +56,30 @@ public class Guide extends WorldAction implements SimpleAction {
 		}
 	}
 
+	/** Guide. */
+	public static final Guide HOWTO =
+			new Guide(KeyEvent.VK_F1, "How to play", "F1");
+	/** Guide. */
+	public static final Guide MINIGAMES =
+			new Guide(KeyEvent.VK_F2, "Minigames", "F2");
+	/** Guide. */
+	public static final Guide ARTIFACTS =
+			new Guide(KeyEvent.VK_F3, "Artifacts", "F3");
+	/** Guide. */
+	public static final Guide CONDITIONS =
+			new Guide(KeyEvent.VK_F4, "Conditions", "F4");
+	/** Guide. */
+	public static final Guide ITEMS = new Guide(KeyEvent.VK_F5, "Items", "F5");
+	/** Guide. */
+	public static final Guide SKILLS =
+			new Guide(KeyEvent.VK_F6, "Skills", "F6");
+	/** Guide. */
+	public static final Guide SPELLS =
+			new Guide(KeyEvent.VK_F7, "Spells", "F7");
+	/** Guide. */
+	public static final Guide UGRADES =
+			new Guide(KeyEvent.VK_F8, "Upgrades", "F8");
+
 	/** Constructor. */
 	public Guide(int vk, String name, String descriptive) {
 		super(name, new int[] { vk }, new String[] { descriptive });
@@ -70,9 +95,6 @@ public class Guide extends WorldAction implements SimpleAction {
 		GuideWindow window = new GuideWindow();
 		window.show();
 		window.defer();
-		// TextReader.show(, "");
-
-		// Javelin.app.switchScreen(BattleScreen.active);
 	}
 
 	@Override

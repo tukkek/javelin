@@ -418,8 +418,7 @@ public class MonsterReader extends DefaultHandler {
 		log("");
 		log(string);
 		final ArrayList<Entry<String, Integer>> count =
-				new ArrayList<Entry<String, Integer>>(atks.getCount());
-
+				new ArrayList<Entry<String, Integer>>(atks.getcount());
 		Collections.sort(count, new Comparator<Entry<String, Integer>>() {
 			@Override
 			public int compare(final Entry<String, Integer> o1,

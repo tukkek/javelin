@@ -11,6 +11,8 @@ import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
+import javelin.controller.terrain.map.Map;
+import javelin.controller.terrain.map.underground.Floor;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
@@ -66,6 +68,8 @@ public class Rush extends Minigame {
 		}
 	}
 
+	static final Map DUNGEON = new Floor();
+
 	/**
 	 * Resources used by the human player to {@link Recruit} units.
 	 * 
@@ -86,6 +90,12 @@ public class Rush extends Minigame {
 				.pick(new String[] { Javelin.PERIODMORNING, Javelin.PERIODNOON,
 						Javelin.PERIODEVENING, Javelin.PERIODNIGHT });
 		weather = Math.min(RPG.pick(Weather.DISTRIBUTION), map.maxflooding);
+		map.flooded = DUNGEON.flooded;
+		map.floor = DUNGEON.floor;
+		map.obstacle = DUNGEON.obstacle;
+		map.rock = DUNGEON.rock;
+		map.wall = DUNGEON.wall;
+		map.wallfloor = DUNGEON.wallfloor;
 	}
 
 	@Override

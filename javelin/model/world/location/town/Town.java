@@ -335,7 +335,6 @@ public class Town extends Location {
 		crafting.clear();
 		training.clear();
 		automanage = true;
-		// realm = null;// null in this case means human
 		redraw();
 		if (showsurroundings) {
 			Outpost.discover(x, y, Outpost.VISIONRANGE);

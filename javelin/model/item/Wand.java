@@ -4,6 +4,7 @@ import javelin.Javelin;
 import javelin.controller.action.CastSpell;
 import javelin.controller.upgrade.Spell;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -77,10 +78,11 @@ public class Wand extends Item {
 
 	boolean decipher(Combatant user) {
 		failure = null;
-		if (user.source.skills.usemagicdevice() >= 20) {
+		Monster m = user.source;
+		if (m.skills.usemagicdevice(m) >= 20) {
 			return true;
 		}
-		if (user.source.skills.decipher(spell)) {
+		if (m.skills.decipher(spell, m)) {
 			return true;
 		}
 		failure = "Cannot currently decipher this spell.";
@@ -103,7 +105,8 @@ public class Wand extends Item {
 
 	@Override
 	public String canuse(Combatant c) {
-		return c.source.skills.decipher(spell) ? null : "can't decipher";
+		return c.source.skills.decipher(spell, c.source) ? null
+				: "can't decipher";
 	}
 
 	@Override

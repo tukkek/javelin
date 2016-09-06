@@ -3,14 +3,14 @@ package javelin.controller.upgrade.feat;
 import javelin.model.unit.Monster;
 
 /**
- * @see javelin.model.feat.LightningReflexes
+ * @see javelin.model.feat.save.LightningReflexes
  * @author alex
  */
 public class LightningReflexes extends IronWill {
 	/** Constructor. */
 	public LightningReflexes() {
 		super("Lightning reflexes",
-				javelin.model.feat.LightningReflexes.singleton);
+				javelin.model.feat.save.LightningReflexes.singleton);
 	}
 
 	@Override

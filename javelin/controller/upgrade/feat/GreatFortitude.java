@@ -4,13 +4,13 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
 /**
- * @se {@link javelin.model.feat.GreatFortitude}
+ * @se {@link javelin.model.feat.save.GreatFortitude}
  * @author alex
  */
 public class GreatFortitude extends IronWill {
 	/** Constructor. */
 	public GreatFortitude() {
-		super("Great fortitude", javelin.model.feat.GreatFortitude.singleton);
+		super("Great fortitude", javelin.model.feat.save.GreatFortitude.singleton);
 	}
 
 	@Override

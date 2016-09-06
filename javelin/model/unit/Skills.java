@@ -5,7 +5,8 @@ import java.io.Serializable;
 import javelin.controller.Weather;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.upgrade.Spell;
-import javelin.model.feat.Alertness;
+import javelin.model.feat.skill.Alertness;
+import javelin.model.feat.skill.Deceitful;
 import javelin.model.item.Scroll;
 import javelin.model.item.Wand;
 
@@ -38,6 +39,7 @@ public class Skills implements Serializable, Cloneable {
 	 * Sense Motive checks, which would add a new skills largely useless for
 	 * player units.
 	 */
+	@Deprecated
 	public int disguise = 0;
 	/** {@link Monster#charisma}-based. */
 	public int diplomacy = 0;
@@ -70,40 +72,17 @@ public class Skills implements Serializable, Cloneable {
 	/** {@link Monster#charisma}-based. */
 	public int usemagicdevice = 0;
 
-	Monster monster;
-
-	/**
-	 * @param m
-	 *            Unit whose skills are being tracked.
-	 */
-	public Skills(Monster m) {
-		this.monster = m;
-	}
-
 	@Override
 	protected Skills clone() throws CloneNotSupportedException {
 		return (Skills) super.clone();
 	}
 
 	/**
-	 * @return Like {@link #clone()} but also updates {@link #monster}.
-	 */
-	protected Skills clone(Monster m) {
-		try {
-			Skills s = clone();
-			s.monster = m;
-			return s;
-		} catch (CloneNotSupportedException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	/**
 	 * @return <code>true</code> if can decioher a {@link Spell} from a
 	 *         {@link Scroll} or {@link Wand}.
 	 */
-	public boolean decipher(Spell s) {
-		if (monster.skills.usemagicdevice() >= 15 + s.level) {
+	public boolean decipher(Spell s, Monster monster) {
+		if (usemagicdevice(monster) >= 15 + s.level) {
 			return true;
 		}
 		return Math.max(Math.max(monster.intelligence, monster.wisdom),
@@ -114,14 +93,14 @@ public class Skills implements Serializable, Cloneable {
 	 * @return Take-10 roll of {@link Skills#disabledevice}.
 	 * @see Skills#take10(int, int)
 	 */
-	public int disable() {
+	public int disable(Monster monster) {
 		return Skills.take10(disabledevice, monster.intelligence);
 	}
 
 	/**
 	 * @return a roll of {@link Skills#movesilently}.
 	 */
-	public int movesilently() {
+	public int movesilently(Monster monster) {
 		return Skills.take10(stealth, monster.dexterity);
 	}
 
@@ -134,7 +113,8 @@ public class Skills implements Serializable, Cloneable {
 	 *            farther.
 	 * @return Modified spot rank for given {@link Monster}.
 	 */
-	public int perceive(boolean flyingbonus) {
+	public int perceive(boolean flyingbonus, boolean weatherpenalty,
+			Monster monster) {
 		int p = perception;
 		if (flyingbonus && monster.fly > 0) {
 			p += 1;
@@ -142,7 +122,7 @@ public class Skills implements Serializable, Cloneable {
 		if (monster.hasfeat(Alertness.INSTANCE)) {
 			p += Alertness.BONUS;
 		}
-		if (Weather.current != Weather.DRY) {
+		if (weatherpenalty && Weather.current != Weather.DRY) {
 			p -= 4;
 		}
 		return p + monster.view() / 2;
@@ -151,15 +131,29 @@ public class Skills implements Serializable, Cloneable {
 	/**
 	 * @return A take 10 of {@link Skills#survival}.
 	 */
-	public int survive() {
+	public int survive(Monster monster) {
 		return Skills.take10(survival, monster.wisdom) - monster.view();
 	}
 
 	/**
 	 * @return A take 10 of {@link Skills#usemagicdevice}.
 	 */
-	public int usemagicdevice() {
+	public int usemagicdevice(Monster monster) {
 		return Skills.take10(usemagicdevice, monster.charisma);
+	}
+
+	/**
+	 * Since we don't have bluff bump the base bonus from {@link Deceitful} to
+	 * +3.
+	 * 
+	 * @return {@link #disguise} take 10.
+	 */
+	public int disguise(Monster monster) {
+		int roll = Skills.take10(disguise, monster.charisma);
+		if (monster.hasfeat(Deceitful.SINGLETON)) {
+			roll += disguise >= 10 ? 4 : 3;
+		}
+		return roll;
 	}
 
 	/**
@@ -171,5 +165,12 @@ public class Skills implements Serializable, Cloneable {
 	 */
 	static public int take10(int skill, int attribute) {
 		return 10 + skill + Monster.getbonus(attribute);
+	}
+
+	/**
+	 * @return The given number of ranks with a proper + or - before.
+	 */
+	public static String signed(int ranks) {
+		return ranks >= 0 ? "+" + ranks : Integer.toString(ranks);
 	}
 }

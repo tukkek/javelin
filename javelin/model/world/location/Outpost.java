@@ -42,7 +42,7 @@ public class Outpost extends Location {
 
 	@Override
 	public boolean interact() {
-		Squad.active.view(Squad.active.perceive(false) + 10);
+		Squad.active.view(Squad.active.perceive(false, true) + 10);
 		return super.interact();
 	}
 

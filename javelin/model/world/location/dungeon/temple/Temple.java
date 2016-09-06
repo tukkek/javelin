@@ -197,11 +197,12 @@ public abstract class Temple extends UniqueLocation {
 	Combatant unlock() {
 		Combatant best = null;
 		for (Combatant c : Squad.active.members) {
-			int roll = c.source.skills.disable();
+			int roll = c.source.skills.disable(c.source);
 			if (roll - 10 < level) {
 				continue;
 			}
-			if (best == null || roll > best.source.skills.disable()) {
+			if (best == null
+					|| roll > best.source.skills.disable(best.source)) {
 				best = c;
 			}
 		}

@@ -33,8 +33,8 @@ import javelin.model.condition.Condition;
 import javelin.model.condition.Condition.Effect;
 import javelin.model.condition.Defending;
 import javelin.model.condition.Melding;
-import javelin.model.feat.Cleave;
-import javelin.model.feat.GreatCleave;
+import javelin.model.feat.attack.Cleave;
+import javelin.model.feat.attack.GreatCleave;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
@@ -739,9 +739,9 @@ public class Combatant implements Serializable, Cloneable {
 		if (Fight.state.redTeam.contains(this)) {
 			return;
 		}
-		int listen = source.skills.perceive(false);
+		int listen = source.skills.perceive(false, true, source);
 		for (Combatant c : Fight.state.redTeam) {
-			if (listen >= c.source.skills.movesilently()
+			if (listen >= c.source.skills.movesilently(source)
 					+ (Walker.distance(this, c) - 1)) {
 				BattleScreen.active.mappanel.tiles[c.location[0]][c.location[1]].discovered =
 						true;

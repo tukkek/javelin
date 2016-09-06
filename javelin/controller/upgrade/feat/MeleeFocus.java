@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.TreeMap;
 
-import javelin.model.feat.WeaponFocus;
+import javelin.model.feat.attack.WeaponFocus;
 import javelin.model.unit.Attack;
 import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Combatant;
@@ -38,7 +38,7 @@ public class MeleeFocus extends FeatUpgrade {
 
 	/** Constructor. */
 	public MeleeFocus(final String name) {
-		super(name, javelin.model.feat.WeaponFocus.singleton);
+		super(name, javelin.model.feat.attack.WeaponFocus.singleton);
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class MeleeFocus extends FeatUpgrade {
 	@Override
 	public boolean apply(final Combatant c) {
 		Monster m = c.source;
-		if (m.hasfeat(javelin.model.feat.WeaponFocus.singleton)
+		if (m.hasfeat(javelin.model.feat.attack.WeaponFocus.singleton)
 				|| getattacks(m).isEmpty() || m.getbaseattackbonus() < 1) {
 			return false;
 		}

@@ -80,7 +80,6 @@ public class DungeonRush extends UniqueLocation {
 			spawner = RPG.pick(tier);
 		}
 		spawners.add(spawner);
-		StateManager.save(true, StateManager.SAVEFILE);
 	}
 
 	/**

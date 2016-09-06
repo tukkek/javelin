@@ -1,6 +1,6 @@
 package javelin.controller.quality;
 
-import javelin.model.feat.ImprovedGrapple;
+import javelin.model.feat.attack.ImprovedGrapple;
 import javelin.model.unit.Monster;
 
 /**

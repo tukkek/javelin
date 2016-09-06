@@ -13,7 +13,7 @@ import javelin.controller.walker.ChargePath;
 import javelin.controller.walker.Step;
 import javelin.controller.walker.Walker;
 import javelin.model.condition.Fatigued;
-import javelin.model.feat.BullRush;
+import javelin.model.feat.attack.BullRush;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Attack;
 import javelin.model.unit.Combatant;

@@ -1,19 +1,19 @@
 package javelin.controller.upgrade.feat;
 
-import javelin.model.feat.PreciseShot;
+import javelin.model.feat.attack.PreciseShot;
 import javelin.model.unit.Attack;
 import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
 /**
- * @see javelin.model.feat.RapidShot
+ * @see javelin.model.feat.attack.RapidShot
  * @author alex
  */
 public class RapidShot extends FeatUpgrade {
 	/** Constructor. */
 	public RapidShot() {
-		super(javelin.model.feat.RapidShot.SINGLETON);
+		super(javelin.model.feat.attack.RapidShot.SINGLETON);
 		prerequisite = PreciseShot.SINGLETON;
 	}
 

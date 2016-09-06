@@ -7,6 +7,7 @@ package javelin.model.unit;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -245,7 +246,7 @@ public class Monster implements Cloneable, Serializable {
 	 */
 	public boolean humanoid = false;
 	/** See {@link Skills}. */
-	public Skills skills = new Skills(this);
+	public Skills skills = new Skills();
 	/** Creatures that should only be spawned at night or underground. */
 	public boolean nightonly = false;
 	/** Immunity to critical hits. */
@@ -277,7 +278,7 @@ public class Monster implements Cloneable, Serializable {
 			if (m.touch != null) {
 				m.touch = touch.clone();
 			}
-			skills = skills.clone(m);
+			skills = skills.clone();
 			return m;
 		} catch (final CloneNotSupportedException e) {
 			throw new RuntimeException(e);
@@ -296,6 +297,12 @@ public class Monster implements Cloneable, Serializable {
 
 	public void addfeat(final Feat feat) {
 		feats.add(feat);
+		feats.sort(new Comparator<Feat>() {
+			@Override
+			public int compare(Feat o1, Feat o2) {
+				return o1.name.compareTo(o2.name);
+			}
+		});
 	}
 
 	public int countfeat(final Feat f) {
@@ -550,10 +557,10 @@ public class Monster implements Cloneable, Serializable {
 	 *         {@link Scroll}.
 	 */
 	public boolean read(Scroll s) {
-		if (skills.usemagicdevice() >= 10 + s.spell.casterlevel) {
+		if (skills.usemagicdevice(this) >= 10 + s.spell.casterlevel) {
 			return true;
 		}
-		return skills.decipher(s.spell) && 10 + hd.count()
+		return skills.decipher(s.spell, this) && 10 + hd.count()
 				+ skills.spellcraft / 2 >= s.spell.casterlevel + 1;
 	}
 

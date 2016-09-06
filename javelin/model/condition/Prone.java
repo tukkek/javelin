@@ -1,6 +1,6 @@
 package javelin.model.condition;
 
-import javelin.model.feat.ImprovedTrip;
+import javelin.model.feat.attack.ImprovedTrip;
 import javelin.model.unit.Combatant;
 
 /**

@@ -1,6 +1,6 @@
 package javelin.controller.upgrade.ability;
 
-import javelin.model.feat.WeaponFinesse;
+import javelin.model.feat.attack.WeaponFinesse;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 

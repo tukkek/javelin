@@ -1,7 +1,7 @@
 package javelin.controller.upgrade.feat;
 
-import javelin.model.feat.Cleave;
-import javelin.model.feat.GreatCleave;
+import javelin.model.feat.attack.Cleave;
+import javelin.model.feat.attack.GreatCleave;
 import javelin.model.unit.Combatant;
 
 /**

@@ -1,8 +1,9 @@
 Acid spray: touch attack, deals 8d8 damage (reflex save DC 17 for half).
-Alertness: +2 to spot and listen checks.
+Alertness: +2 to perceive checks.
 Breath weapon: special area attack, press b during battle to activate.
 Classes: raises hit dice, base attack bonus and saving throws.
 Damage reduction: reduces damage from physical attacks.
+Deceitful: +3 to disguise skill checks (+4 if 10 or more ranks in disguise).
 Darkvision: greatly improved vision when dark.
 Energy resistance/immunity: reduces or ignores damage from non-physical attacks.
 Fast healing: heals a certain number of hit points per turn (1AP).

@@ -135,8 +135,12 @@ public abstract class SelectScreen extends InfoScreen {
 			}
 		}
 		if (feedback == PROCEED) {
-			stayopen = false;
+			proceed();
 		}
+	}
+
+	protected void proceed() {
+		stayopen = false;
 	}
 
 	/**
@@ -144,6 +148,7 @@ public abstract class SelectScreen extends InfoScreen {
 	 *            Player input.
 	 * @return <code>false</code> if no {@link Option} was chosen by the given
 	 *         input, otherwise the return value of {@link #select(Option)}.
+	 * @return <code>true</code> to exit this screen.
 	 */
 	protected boolean select(char feedback, final List<Option> options) {
 		Option o = convertselectionkey(feedback, options);

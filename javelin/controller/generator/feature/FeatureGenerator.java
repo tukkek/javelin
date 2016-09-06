@@ -34,6 +34,7 @@ import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.AdventurersGuild;
 import javelin.model.world.location.unique.Artificer;
+import javelin.model.world.location.unique.AssassinsGuild;
 import javelin.model.world.location.unique.Haxor;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.model.world.location.unique.PillarOfSkulls;
@@ -227,6 +228,7 @@ public class FeatureGenerator {
 		UpgradeHandler.singleton.gather();
 		generatemageguilds();
 		generatemartialacademies();
+		new AssassinsGuild().place();
 		for (Class<? extends WorldActor> feature : generators.keySet()) {
 			generators.get(feature).seed(feature);
 		}

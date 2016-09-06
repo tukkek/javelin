@@ -9,7 +9,7 @@ import javelin.model.unit.Combatant;
 public class PointBlankShot extends FeatUpgrade {
 	/** Constructor. */
 	public PointBlankShot() {
-		super(javelin.model.feat.PointBlankShot.SINGLETON);
+		super(javelin.model.feat.attack.PointBlankShot.SINGLETON);
 	}
 
 	@Override

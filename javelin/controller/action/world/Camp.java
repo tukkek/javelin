@@ -28,8 +28,8 @@ public class Camp extends WorldAction {
 			throw new RepeatTurn();
 		}
 		if (Javelin
-				.prompt("Are you sure you want to try to set up camp in this wild area?\n"
-						+ "Monsters may be around.\n"
+				.prompt("Are you sure you want to try to set up camp in this wild area?\n\n"
+						+ "Monsters may be around...\n\n"
 						+ "Press c to camp or any other key to cancel...") != 'c') {
 			return;
 		}

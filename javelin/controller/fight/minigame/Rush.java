@@ -7,6 +7,7 @@ import javelin.controller.BattleSetup;
 import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.action.Recruit;
+import javelin.controller.db.StateManager;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
@@ -135,6 +136,7 @@ public class Rush extends Minigame {
 			}
 			Javelin.message(message, true);
 		}
+		StateManager.save(true, StateManager.SAVEFILE);
 		return false;
 	}
 

@@ -75,7 +75,7 @@ public class AdventurersGuild extends UniqueLocation {
 		list = new ArrayList<Upgrade>();
 		UPGRADETREE.put(ROGUE, list);
 		list.add(Expert.SINGLETON);
-		list.add(new RaiseDexterity());
+		list.add(RaiseDexterity.SINGLETON);
 		list.add(Acrobatics.SINGLETON);
 		list.add(DisableDevice.SINGLETON);
 		list.add(Stealth.SINGLETON);

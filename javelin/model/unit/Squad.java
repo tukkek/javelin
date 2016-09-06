@@ -337,11 +337,13 @@ public class Squad extends WorldActor {
 	/**
 	 * @return a {@link Skills#perception} roll.
 	 */
-	public int perceive(boolean flyingbonus) {
+	public int perceive(boolean flyingbonus, boolean weatherpenalty) {
 		int best = Integer.MIN_VALUE;
 		for (int i = 0; i < members.size(); i++) {
 			Monster m = members.get(i).source;
-			int roll = Skills.take10(m.skills.perceive(flyingbonus), m.wisdom);
+			int roll = Skills.take10(
+					m.skills.perceive(flyingbonus, weatherpenalty, m),
+					m.wisdom);
 			if (roll > best) {
 				best = roll;
 			}
@@ -373,7 +375,7 @@ public class Squad extends WorldActor {
 	 */
 	public String spot(List<Combatant> opponent) {
 		String garrison = "";
-		int spot = perceive(false);
+		int spot = perceive(false, true);
 		for (int i = 0; i < opponent.size(); i++) {
 			Combatant c = opponent.get(i);
 			garrison += (Skills.take10(c.source.skills.stealth,
@@ -392,8 +394,9 @@ public class Squad extends WorldActor {
 	 */
 	public boolean hide(List<Combatant> foes) {
 		// needs to pass on a listen check to notice enemy
-		int listenroll = Squad.active.perceive(Dungeon.active == null
-				&& !Terrain.current().equals(Terrain.FOREST));
+		boolean outside = Dungeon.active == null;
+		int listenroll = Squad.active.perceive(
+				outside && !Terrain.current().equals(Terrain.FOREST), outside);
 		boolean listen = false;
 		for (Combatant foe : foes) {
 			if (listenroll >= Skills.take10(foe.source.skills.stealth,
@@ -407,8 +410,9 @@ public class Squad extends WorldActor {
 		}
 		int hideroll = Squad.active.hide();
 		for (Combatant foe : foes) {
-			if (Skills.take10(foe.source.skills.perceive(false),
-					foe.source.wisdom) >= hideroll) {
+			Monster m = foe.source;
+			if (Skills.take10(m.skills.perceive(false, outside, m),
+					m.wisdom) >= hideroll) {
 				return false; // spotted!
 			}
 		}
@@ -494,7 +498,7 @@ public class Squad extends WorldActor {
 		int best = Integer.MIN_VALUE;
 		for (int i = 1; i < members.size(); i++) {
 			Monster m = members.get(i).source;
-			int roll = m.skills.disable();
+			int roll = m.skills.disable(m);
 			if (roll > best) {
 				best = roll;
 			}
@@ -526,7 +530,7 @@ public class Squad extends WorldActor {
 		int best = Integer.MIN_VALUE;
 		for (int i = 1; i < members.size(); i++) {
 			Monster m = members.get(i).source;
-			int roll = m.skills.survive();
+			int roll = m.skills.survive(m);
 			if (roll > best) {
 				best = roll;
 			}

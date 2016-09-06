@@ -21,7 +21,8 @@ import javelin.controller.upgrade.feat.PreciseShot;
 import javelin.controller.upgrade.feat.RangedFocus;
 import javelin.controller.upgrade.feat.RapidShot;
 import javelin.controller.upgrade.feat.Toughness;
-import javelin.model.feat.Alertness;
+import javelin.model.feat.skill.Alertness;
+import javelin.model.feat.skill.Deceitful;
 import javelin.model.unit.Monster;
 
 /**
@@ -48,6 +49,10 @@ public class FeatsFactor extends CrFactor {
 		handler.fire.add(new IronWill());
 		handler.fire.add(new MeleeFocus("Mêlée focus"));
 
+		handler.good.add(new FeatUpgrade(Alertness.INSTANCE));
+
+		handler.evil.add(new FeatUpgrade(Deceitful.SINGLETON));
+
 		handler.shots.add(new PointBlankShot());
 		handler.shots.add(new PreciseShot());
 		handler.shots.add(new ImprovedPreciseShot());
@@ -62,7 +67,5 @@ public class FeatsFactor extends CrFactor {
 		handler.expertise.add(new ImprovedFeintUpgrade());
 		handler.expertise.add(new ImprovedGrappleUpgrade());
 		handler.expertise.add(new ImprovedTripUpgrade());
-
-		handler.good.add(new FeatUpgrade(Alertness.INSTANCE));
 	}
 }

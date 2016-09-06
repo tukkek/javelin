@@ -185,7 +185,7 @@ public class WorldScreen extends BattleScreen {
 
 	@Override
 	public void view(int x, int y) {
-		int vision = Squad.active.perceive(true)
+		int vision = Squad.active.perceive(true, true)
 				+ (Squad.active.transport == Transport.AIRSHIP ? +4
 						: Terrain.current().visionbonus);
 		Squad.active.view(vision);

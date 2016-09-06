@@ -12,6 +12,8 @@ Diplomacy: DC 10 + encounter level to bribe a group of creatures out of your way
 
 Disable device: disarms a trap. DC depends on the trap in question. A failure could result in the trap being activated.
 
+Disguise: allows you to infiltrate an enemy town. Individual roll, resisted by Perception. Note that assassination attempts use Stealth instead.
+
 Gather information: DC 10 + number of squares away to learn about a nearby location. Rolled each time you enter certain locations.
 
 Heal: DC 15 to double natural healing rates and also helps prevent secondary damage from poison. A unit cannot heal itself.

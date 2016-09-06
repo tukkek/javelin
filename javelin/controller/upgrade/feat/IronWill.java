@@ -5,13 +5,13 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
 /**
- * @see javelin.model.feat.IronWill
+ * @see javelin.model.feat.save.IronWill
  * @author alex
  */
 public class IronWill extends FeatUpgrade {
 	/** Constructor. */
 	public IronWill() {
-		super("Iron will", javelin.model.feat.IronWill.singleton);
+		super("Iron will", javelin.model.feat.save.IronWill.singleton);
 	}
 
 	/** Constructor. */

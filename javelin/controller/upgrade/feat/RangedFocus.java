@@ -2,7 +2,7 @@ package javelin.controller.upgrade.feat;
 
 import java.util.List;
 
-import javelin.model.feat.WeaponFocus;
+import javelin.model.feat.attack.WeaponFocus;
 import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Monster;
 

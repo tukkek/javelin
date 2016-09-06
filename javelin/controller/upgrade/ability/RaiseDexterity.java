@@ -1,5 +1,6 @@
 package javelin.controller.upgrade.ability;
 
+import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -7,7 +8,10 @@ import javelin.model.unit.Monster;
  * @see RaiseAbility
  */
 public class RaiseDexterity extends RaiseAbility {
-	public RaiseDexterity() {
+	/** Unique instance for this {@link Upgrade}. */
+	public static final RaiseDexterity SINGLETON = new RaiseDexterity();
+
+	private RaiseDexterity() {
 		super("dexterity");
 	}
 

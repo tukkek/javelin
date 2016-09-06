@@ -24,6 +24,7 @@ public class SummoningCircle extends Academy {
 	public SummoningCircle() {
 		super(DESCRIPTION, DESCRIPTION, 5, 15, new HashSet<Upgrade>());
 		UniqueLocation.init(this);
+		pillage = false;
 		populate();
 	}
 

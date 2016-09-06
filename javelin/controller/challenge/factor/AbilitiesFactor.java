@@ -52,7 +52,7 @@ public class AbilitiesFactor extends CrFactor {
 	public void listupgrades(UpgradeHandler handler) {
 		handler.earth.add(new RaiseConsitution());
 		handler.fire.add(new RaiseStrength());
-		handler.wind.add(new RaiseDexterity());
+		handler.wind.add(RaiseDexterity.SINGLETON);
 		handler.water.add(new RaiseWisdom());
 		handler.magic.add(RaiseIntelligence.INSTANCE);
 		handler.good.add(RaiseCharisma.INSTANCE);

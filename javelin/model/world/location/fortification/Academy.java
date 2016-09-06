@@ -5,8 +5,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
+import javelin.Javelin;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -29,6 +28,7 @@ public abstract class Academy extends Fortification {
 	public int stash;
 	/** Upgrades that can be learned here. */
 	public ArrayList<Upgrade> upgrades;
+	/** If <code>true</code> will allow a location to be pillaged for money. */
 	public boolean pillage = true;
 	/** If a single unit parks with a vehicle here it is parked. */
 	public Transport parking = null;
@@ -63,21 +63,19 @@ public abstract class Academy extends Fortification {
 		if (!super.interact()) {
 			return false;
 		}
-		if (training != null) {
-			if (Squad.active.hourselapsed < training.completionat) {
-				long daysleft = Math.round(Math.ceil(
-						(training.completionat - Squad.active.hourselapsed)
-								/ 24f));
-				Game.messagepanel.clear();
-				Game.message(training.trained + "will complete training in "
-						+ daysleft + " day(s)...", Delay.NONE);
-				Game.getInput();
-			} else {
-				completetraining();
-			}
+		if (training == null) {
+			new AcademyScreen(this, null).show();
 			return true;
 		}
-		new AcademyScreen(this, null).show();
+		if (Squad.active.hourselapsed >= training.completionat) {
+			completetraining();
+			return true;
+		}
+		long hoursleft = training.completionat - Squad.active.hourselapsed;
+		String eta = hoursleft > 24 ? Math.round(hoursleft / 24f) + " day(s)"
+				: hoursleft + " hour(s)";
+		eta = training.trained + " will complete training in " + eta + " ...";
+		Javelin.message(eta, false);
 		return true;
 	}
 

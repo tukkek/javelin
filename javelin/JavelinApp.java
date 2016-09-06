@@ -34,9 +34,11 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
+import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.Haxor;
+import javelin.model.world.location.unique.UniqueLocation;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.SquadScreen;
 import javelin.view.screen.WorldScreen;
@@ -218,10 +220,7 @@ public class JavelinApp extends QuestApp {
 
 	static void printstatistics() {
 		System.out.println();
-		HashMap<String, HashSet<Upgrade>> allupgrades =
-				UpgradeHandler.singleton.getall();
-		HashMap<String, ItemSelection> allitems = Item.getall();
-		gatherstatistics(allupgrades, allitems);
+		printoptions();
 		System.out.println(Javelin.ALLMONSTERS.size() + " monsters");
 		System.out.println((Item.ALL.size() - Item.ARTIFACT.size()) + " items, "
 				+ Item.ARTIFACT.size() + " artifacts, 7 relics");
@@ -230,6 +229,21 @@ public class JavelinApp extends QuestApp {
 		System.out.println((UpgradeHandler.singleton.count() - spells.size())
 				+ " upgrades, " + (spells.size() - summon + 1) + " spells, "
 				+ UpgradeHandler.singleton.countskills() + " skills");
+		HashSet<Class<? extends WorldActor>> locationtypes =
+				new HashSet<Class<? extends WorldActor>>();
+		int uniquelocations = 0;
+		for (WorldActor a : WorldActor.getall()) {
+			if (!(a instanceof Location)) {
+				continue;
+			}
+			locationtypes.add(a.getClass());
+			if (a instanceof UniqueLocation) {
+				uniquelocations += 1;
+			}
+		}
+		System.out.println((locationtypes.size() - uniquelocations)
+				+ " world location types, " + uniquelocations
+				+ " unique locations");
 		int maps = Terrain.UNDERGROUND.getmaps().size();
 		for (Terrain t : Terrain.ALL) {
 			maps += t.getmaps().size();
@@ -237,11 +251,13 @@ public class JavelinApp extends QuestApp {
 		System.out.println(maps + " battle maps");
 	}
 
-	static void gatherstatistics(HashMap<String, HashSet<Upgrade>> allupgrades,
-			HashMap<String, ItemSelection> allitems) {
+	static void printoptions() {
+		HashMap<String, HashSet<Upgrade>> allupgrades =
+				UpgradeHandler.singleton.getall();
+		HashMap<String, ItemSelection> allitems = Item.getall();
 		for (String realm : allupgrades.keySet()) {
 			if (realm == "expertise" || realm == "shots" || realm == "power"
-					|| realm.startsWith("school")) {
+					|| realm == "classlevels" || realm.startsWith("school")) {
 				continue;
 			}
 			System.out.println(realm);

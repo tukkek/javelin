@@ -1,6 +1,6 @@
 package javelin.controller.upgrade.feat;
 
-import javelin.model.feat.CombatExpertise;
+import javelin.model.feat.attack.CombatExpertise;
 import javelin.model.unit.Combatant;
 
 /**

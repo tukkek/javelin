@@ -24,7 +24,7 @@ public class SlayLiving extends Touch {
 		if (saved) {
 			target.damage(Math.round(3 * 3.5f + 9), s,
 					target.source.energyresistance);
-			return target + " resists, is now " + target.getStatus() + ".";
+			return target + " resists, is now " + target.getstatus() + ".";
 		}
 		target.damage(target.hp + 10, s, 0);
 		return target + " is killed!";

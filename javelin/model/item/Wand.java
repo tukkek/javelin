@@ -77,10 +77,10 @@ public class Wand extends Item {
 
 	boolean decipher(Combatant user) {
 		failure = null;
-		if (user.source.usemagicdevice() >= 20) {
+		if (user.source.skills.usemagicdevice() >= 20) {
 			return true;
 		}
-		if (user.source.decipher(spell)) {
+		if (user.source.skills.decipher(spell)) {
 			return true;
 		}
 		failure = "Cannot currently decipher this spell.";
@@ -103,7 +103,7 @@ public class Wand extends Item {
 
 	@Override
 	public String canuse(Combatant c) {
-		return c.source.decipher(spell) ? null : "can't decipher";
+		return c.source.skills.decipher(spell) ? null : "can't decipher";
 	}
 
 	@Override

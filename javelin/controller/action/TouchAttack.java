@@ -62,7 +62,7 @@ public class TouchAttack extends Fire implements AiAction {
 		target = gameState.clone(target);
 		target.damage(damage, gameState, target.source.energyresistance);
 		return new ChanceNode(gameState, chance,
-				action + target.getStatus() + ".", Delay.BLOCK);
+				action + target.getstatus() + ".", Delay.BLOCK);
 	}
 
 	@Override

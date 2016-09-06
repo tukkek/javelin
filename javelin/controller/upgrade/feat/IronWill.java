@@ -39,11 +39,11 @@ public class IronWill extends FeatUpgrade {
 	}
 
 	public void setBonus(final Monster m, int value) {
-		m.setWill(value);
+		m.setwill(value);
 	}
 
 	public Integer getBonus(final Monster m) {
-		return m.willraw();
+		return m.will;
 	}
 
 }

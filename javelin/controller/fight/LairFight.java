@@ -62,7 +62,7 @@ public class LairFight extends Fight {
 		if (nfoes == 0) {
 			for (Combatant c : Fight.state.dead) {
 				if (BattleScreen.originalredteam.contains(c)
-						&& c.getNumericStatus() != Combatant.STATUSDEAD) {
+						&& c.getnumericstatus() != Combatant.STATUSDEAD) {
 					return c;
 				}
 			}

@@ -29,7 +29,7 @@ public abstract class Touch extends Spell {
 
 	@Override
 	public int hit(Combatant active, Combatant target, BattleState s) {
-		if (castonallies && active.isAlly(target, s)) {
+		if (castonallies && active.isally(target, s)) {
 			return -Integer.MAX_VALUE;
 		}
 		return (target.ac() - target.source.armor)

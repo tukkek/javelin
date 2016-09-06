@@ -197,13 +197,13 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 		final ArrayList<Combatant> iterable = new ArrayList<Combatant>(targets);
 		if (castonallies) {
 			for (Combatant c : iterable) {
-				if (!c.isAlly(combatant, s)) {
+				if (!c.isally(combatant, s)) {
 					targets.remove(c);
 				}
 			}
 		} else {
 			for (Combatant c : iterable) {
-				if (c.isAlly(combatant, s)
+				if (c.isally(combatant, s)
 						|| c.source.sr == Integer.MAX_VALUE) {
 					targets.remove(c);
 				}

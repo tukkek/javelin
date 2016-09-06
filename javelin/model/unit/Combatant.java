@@ -201,7 +201,7 @@ public class Combatant implements Serializable, Cloneable {
 	 * @param targetCombatant
 	 *            The monster being attacked.
 	 */
-	public void meleeAttacks(Combatant targetCombatant, BattleState state) {
+	public void meleeattacks(Combatant targetCombatant, BattleState state) {
 		Combatant current = state.clone(this);
 		targetCombatant = state.clone(targetCombatant);
 		Action.outcome(MeleeAttack.SINGLETON.attack(state, this,
@@ -219,19 +219,19 @@ public class Combatant implements Serializable, Cloneable {
 				0));
 	}
 
-	public List<AttackSequence> getAttacks(final boolean melee) {
+	public List<AttackSequence> getattacks(final boolean melee) {
 		return melee ? source.melee : source.ranged;
 	}
 
-	public int getHp() {
+	public int gethp() {
 		return hp;
 	}
 
-	public boolean isAlly(final Combatant c, final TeamContainer tc) {
-		return getTeam(tc) == c.getTeam(tc);
+	public boolean isally(final Combatant c, final TeamContainer tc) {
+		return getteam(tc) == c.getteam(tc);
 	}
 
-	public List<Combatant> getTeam(final TeamContainer tc) {
+	public List<Combatant> getteam(final TeamContainer tc) {
 		final List<Combatant> redTeam = tc.getredTeam();
 		return redTeam.contains(this) ? redTeam : tc.getblueTeam();
 	}
@@ -241,12 +241,12 @@ public class Combatant implements Serializable, Cloneable {
 		return source.toString();
 	}
 
-	public boolean hasAttackType(final boolean meleeOnly) {
-		return !getAttacks(meleeOnly).isEmpty();
+	public boolean hasattacktype(final boolean meleeOnly) {
+		return !getattacks(meleeOnly).isEmpty();
 	}
 
 	public void checkAttackType(final boolean meleeOnly) {
-		if (!hasAttackType(meleeOnly)) {
+		if (!hasattacktype(meleeOnly)) {
 			Game.message("No " + (meleeOnly ? "mẽlée" : "ranged") + " attacks.",
 					Delay.WAIT);
 			throw new RepeatTurn();
@@ -366,7 +366,7 @@ public class Combatant implements Serializable, Cloneable {
 		lastrefresh = -Float.MAX_VALUE;
 	}
 
-	public int getNumericStatus() {
+	public int getnumericstatus() {
 		int maxhp = getmaxhp();
 		if (hp >= maxhp) {
 			return 5;
@@ -387,8 +387,8 @@ public class Combatant implements Serializable, Cloneable {
 		return this.maxhp + source.poison * source.hd.count();
 	}
 
-	public String getStatus() {
-		switch (getNumericStatus()) {
+	public String getstatus() {
+		switch (getnumericstatus()) {
 		case STATUSUNHARMED:
 			return "unharmed";
 		case STATUSSCRATCHED:
@@ -407,11 +407,13 @@ public class Combatant implements Serializable, Cloneable {
 			return "killed";
 		default:
 			throw new RuntimeException(
-					"Unknown possibility: " + getNumericStatus());
+					"Unknown possibility: " + getnumericstatus());
 		}
 	}
 
 	/**
+	 * Not to be confused with {@link Skills#perceive(Monster, boolean)}.
+	 * 
 	 * @param period
 	 *            objective period of the day
 	 * @return subjective period of the day
@@ -436,9 +438,12 @@ public class Combatant implements Serializable, Cloneable {
 	}
 
 	/**
+	 * Not to be confused with {@link Skills#perceive(Monster, boolean)}.
+	 * 
 	 * @param period
 	 *            Objective period
 	 * @return monster's vision in squares (5 feet)
+	 * @see #perceive(String)
 	 */
 	public int view(String period) {
 		if (source.vision == 2
@@ -531,17 +536,10 @@ public class Combatant implements Serializable, Cloneable {
 	}
 
 	/**
-	 * 1/5 HD to up one {@link #getStatus()}
+	 * 1/5 HD to up one {@link #getstatus()}
 	 */
 	public void meld() {
 		addcondition(new Melding(this));
-	}
-
-	/**
-	 * @return a roll of {@link Skills#movesilently}.
-	 */
-	public int movesilently() {
-		return Skills.take10(source.skills.stealth, source.dexterity);
 	}
 
 	public void escape(BattleScreen screen) {
@@ -732,14 +730,19 @@ public class Combatant implements Serializable, Cloneable {
 				RoundingMode.HALF_UP) + "XP";
 	}
 
-	/** Locates an enemy by sound. */
-	public void listen() {
+	/**
+	 * Locates an enemy by sound during battle.
+	 * 
+	 * @see Skills#perceive(Monster, boolean)
+	 */
+	public void detect() {
 		if (Fight.state.redTeam.contains(this)) {
 			return;
 		}
-		int listen = source.perceive(false);
+		int listen = source.skills.perceive(false);
 		for (Combatant c : Fight.state.redTeam) {
-			if (listen >= c.movesilently() + (Walker.distance(this, c) - 1)) {
+			if (listen >= c.source.skills.movesilently()
+					+ (Walker.distance(this, c) - 1)) {
 				BattleScreen.active.mappanel.tiles[c.location[0]][c.location[1]].discovered =
 						true;
 			}

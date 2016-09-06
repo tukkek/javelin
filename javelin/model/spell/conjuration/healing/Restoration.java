@@ -78,7 +78,7 @@ public class Restoration extends Touch {
 			BattleState s) {
 		super.filtertargets(combatant, targets, s);
 		for (Combatant c : new ArrayList<Combatant>(targets)) {
-			if (!combatant.isAlly(c, s)) {
+			if (!combatant.isally(c, s)) {
 				targets.remove(c);
 			}
 		}

@@ -121,7 +121,7 @@ public class ArenaFight extends Minigame {
 			BattleState s) {
 		Arena arena = Arena.get();
 		for (Combatant dead : s.dead) {
-			if (dead.getNumericStatus() == Combatant.STATUSDEAD) {
+			if (dead.getnumericstatus() == Combatant.STATUSDEAD) {
 				arena.gladiators.remove(dead);
 			}
 		}

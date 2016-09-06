@@ -138,10 +138,10 @@ public class StatusPanel extends TPanel {
 
 	String attackdata(final Combatant combatant) {
 		String status = "";
-		if (combatant.hasAttackType(true)) {
+		if (combatant.hasattacktype(true)) {
 			status += "Mêlée\n";
 		}
-		if (combatant.hasAttackType(false)) {
+		if (combatant.hasattacktype(false)) {
 			status += "Ranged\n";
 		}
 		status += "\n";
@@ -169,7 +169,7 @@ public class StatusPanel extends TPanel {
 
 	String maininfo(Combatant combatant) {
 		final String customname = combatant.source.customName;
-		String status = combatant.getStatus();
+		String status = combatant.getstatus();
 		String ap = "";
 		if (combatant.ap < Float.MAX_VALUE) {
 			ap = "AP: "

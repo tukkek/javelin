@@ -185,12 +185,12 @@ public class Movement extends Action {
 		}
 		Combatant c = state.getcombatant(x, y);
 		if (c != null) {
-			if (!c.isAlly(hero, state)) {
+			if (!c.isally(hero, state)) {
 				if (c.burrowed) {
 					Dig.refuse();
 				}
 				javelin.controller.action.Movement.lastmovewasattack = true;
-				hero.meleeAttacks(c, state);
+				hero.meleeattacks(c, state);
 				return true;
 			}
 			throw new RepeatTurn();

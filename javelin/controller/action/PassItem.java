@@ -35,7 +35,7 @@ public class PassItem extends Action {
 		}
 		final ArrayList<Combatant> surroudings = state.getsurroundings(sameme);
 		for (final Combatant c : new ArrayList<Combatant>(surroudings)) {
-			if (!c.isAlly(sameme, state) || state.isengaged(c)) {
+			if (!c.isally(sameme, state) || state.isengaged(c)) {
 				surroudings.remove(c);
 			}
 		}

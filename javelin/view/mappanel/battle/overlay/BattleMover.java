@@ -125,7 +125,7 @@ public class BattleMover extends Walker {
 		for (int x = Math.max(xp - 1, 0); x <= maxx; x++) {
 			for (int y = Math.max(yp - 1, 0); y <= maxy; y++) {
 				final Combatant c = state.getcombatant(x, y);
-				if (c != null && !c.isAlly(current, state)) {
+				if (c != null && !c.isally(current, state)) {
 					return true;
 				}
 			}

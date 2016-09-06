@@ -35,7 +35,7 @@ public class InflictModerateWounds extends Touch {
 			info += target + " resisted!\n";
 		}
 		target.damage(damage, s, target.source.energyresistance);
-		return info + target + " is now " + target.getStatus() + ".";
+		return info + target + " is now " + target.getstatus() + ".";
 	}
 
 	/**

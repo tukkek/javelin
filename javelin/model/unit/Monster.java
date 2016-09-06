@@ -24,10 +24,8 @@ import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.classes.ClassAdvancement;
 import javelin.controller.upgrade.feat.MeleeFocus;
 import javelin.model.Cloneable;
-import javelin.model.feat.Alertness;
 import javelin.model.feat.Feat;
 import javelin.model.item.Scroll;
-import javelin.model.item.Wand;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.item.artifact.Slot;
 import javelin.model.spell.enchantment.compulsion.HoldMonster;
@@ -247,7 +245,7 @@ public class Monster implements Cloneable, Serializable {
 	 */
 	public boolean humanoid = false;
 	/** See {@link Skills}. */
-	public Skills skills = new Skills();
+	public Skills skills = new Skills(this);
 	/** Creatures that should only be spawned at night or underground. */
 	public boolean nightonly = false;
 	/** Immunity to critical hits. */
@@ -279,7 +277,7 @@ public class Monster implements Cloneable, Serializable {
 			if (m.touch != null) {
 				m.touch = touch.clone();
 			}
-			skills = skills.clone();
+			skills = skills.clone(m);
 			return m;
 		} catch (final CloneNotSupportedException e) {
 			throw new RuntimeException(e);
@@ -453,14 +451,6 @@ public class Monster implements Cloneable, Serializable {
 	}
 
 	/**
-	 * @return <code>true</code> if the monster can swim on (or fly above)
-	 *         water.
-	 */
-	public int swim() {
-		return Math.max(swim, fly);
-	}
-
-	/**
 	 * @param score
 	 *            Raises {@link #wisdom} by this many ability score points (+2
 	 *            point=+1 bonus modifier).
@@ -483,16 +473,12 @@ public class Monster implements Cloneable, Serializable {
 		return bonus >= 0 ? "+" + bonus : Integer.toString(bonus);
 	}
 
-	public void setWill(int willp) {
+	public void setwill(int willp) {
 		will = willp;
 	}
 
 	public void addwill(int delta) {
 		will += delta;
-	}
-
-	public Integer willraw() {
-		return will;
 	}
 
 	@Override
@@ -564,62 +550,11 @@ public class Monster implements Cloneable, Serializable {
 	 *         {@link Scroll}.
 	 */
 	public boolean read(Scroll s) {
-		if (usemagicdevice() >= 10 + s.spell.casterlevel) {
+		if (skills.usemagicdevice() >= 10 + s.spell.casterlevel) {
 			return true;
 		}
-		return decipher(s.spell) && 10 + hd.count()
+		return skills.decipher(s.spell) && 10 + hd.count()
 				+ skills.spellcraft / 2 >= s.spell.casterlevel + 1;
-	}
-
-	/**
-	 * @return <code>true</code> if can decioher a {@link Spell} from a
-	 *         {@link Scroll} or {@link Wand}.
-	 */
-	public boolean decipher(Spell s) {
-		if (usemagicdevice() >= 15 + s.level) {
-			return true;
-		}
-		return Math.max(Math.max(intelligence, wisdom), charisma)
-				+ skills.spellcraft / 2 > 10 + s.level;
-	}
-
-	/**
-	 * @return A take 10 of {@link Skills#usemagicdevice}.
-	 */
-	public int usemagicdevice() {
-		return Skills.take10(skills.usemagicdevice, charisma);
-	}
-
-	/**
-	 * @return A take 10 of {@link Skills#survival}.
-	 */
-	public int survive() {
-		return Skills.take10(skills.survival, wisdom) - view();
-	}
-
-	/**
-	 * Vision penalties here cut in half because they apply only to vision, not
-	 * listening.
-	 * 
-	 * @param skills
-	 *            TODO
-	 * @param flyingbonus
-	 *            <code>true</code> if flying creatures get a bonus for seeing
-	 *            farther.
-	 * @return Modified spot rank for given {@link Monster}.
-	 */
-	public int perceive(boolean flyingbonus) {
-		int p = skills.perception;
-		if (flyingbonus && fly > 0) {
-			p += 1;
-		}
-		if (hasfeat(Alertness.INSTANCE)) {
-			p += Alertness.BONUS;
-		}
-		if (Weather.current != Weather.DRY) {
-			p -= 4;
-		}
-		return p + view() / 2;
 	}
 
 	/**
@@ -641,7 +576,10 @@ public class Monster implements Cloneable, Serializable {
 	 *         {@link Monster} vision.
 	 * 
 	 * @see Javelin#getDayPeriod()
-	 * @see Monster#vision
+	 * @see #vision
+	 * @see Combatant#perceive(String)
+	 * @see Combatant#view(String)
+	 * @see Skills#perceive(Monster, boolean)
 	 */
 	public int view() {
 		if (vision == VISION_DARK) {
@@ -685,19 +623,19 @@ public class Monster implements Cloneable, Serializable {
 	}
 
 	/**
-	 * @return Take-10 roll of {@link Skills#disabledevice}.
-	 * @see Skills#take10(int, int)
-	 */
-	public int disarm() {
-		return Skills.take10(skills.disabledevice, intelligence);
-	}
-
-	/**
 	 * @return All terrain types this monster can be found in. May be empty if
 	 *         this is an internal Javelin monster (like {@link Town} Workers).
 	 * @see Terrain#toString()
 	 */
 	public List<String> getterrains() {
 		return Monster.TERRAINDATA.get(name);
+	}
+
+	/**
+	 * @return <code>true</code> if the monster can swim on (or fly above)
+	 *         water.
+	 */
+	public int swim() {
+		return Math.max(swim, fly);
 	}
 }

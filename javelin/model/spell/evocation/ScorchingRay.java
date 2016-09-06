@@ -24,6 +24,6 @@ public class ScorchingRay extends Ray {
 	public String cast(Combatant caster, Combatant target, BattleState s,
 			boolean saved) {
 		target.damage(4 * 6 / 2, s, target.source.energyresistance);
-		return target + " is " + target.getStatus();
+		return target + " is " + target.getstatus();
 	}
 }

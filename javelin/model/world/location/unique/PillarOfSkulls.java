@@ -243,7 +243,7 @@ public class PillarOfSkulls extends UniqueLocation {
 	ArrayList<Combatant> getsacrifices(int status) {
 		ArrayList<Combatant> sacrifices = new ArrayList<Combatant>();
 		for (Combatant c : Squad.active.members) {
-			if (!c.mercenary && c.getNumericStatus() >= status) {
+			if (!c.mercenary && c.getnumericstatus() >= status) {
 				sacrifices.add(c);
 			}
 		}

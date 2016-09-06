@@ -40,7 +40,7 @@ public class VampiricTouch extends Touch {
 	}
 
 	public String describe(final Combatant c) {
-		return c + " is " + c.getStatus();
+		return c + " is " + c.getstatus();
 	}
 
 }

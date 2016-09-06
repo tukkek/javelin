@@ -22,7 +22,7 @@ public class Flood extends Hazard {
 	public void hazard(int hoursellapsed) {
 		for (Combatant c : Squad.active.members) {
 			if (RPG.r(1, 20) + Monster.getbonus(c.source.dexterity) < DC
-					&& Javelin.roll(c.source.survive()) < DC) {
+					&& Javelin.roll(c.source.skills.survive()) < DC) {
 				GettingLost.getlost("Squad is taken by a flash flood!", 0);
 				return;
 			}

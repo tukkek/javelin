@@ -341,7 +341,7 @@ public class Squad extends WorldActor {
 		int best = Integer.MIN_VALUE;
 		for (int i = 0; i < members.size(); i++) {
 			Monster m = members.get(i).source;
-			int roll = Skills.take10(m.perceive(flyingbonus), m.wisdom);
+			int roll = Skills.take10(m.skills.perceive(flyingbonus), m.wisdom);
 			if (roll > best) {
 				best = roll;
 			}
@@ -407,7 +407,7 @@ public class Squad extends WorldActor {
 		}
 		int hideroll = Squad.active.hide();
 		for (Combatant foe : foes) {
-			if (Skills.take10(foe.source.perceive(false),
+			if (Skills.take10(foe.source.skills.perceive(false),
 					foe.source.wisdom) >= hideroll) {
 				return false; // spotted!
 			}
@@ -494,7 +494,7 @@ public class Squad extends WorldActor {
 		int best = Integer.MIN_VALUE;
 		for (int i = 1; i < members.size(); i++) {
 			Monster m = members.get(i).source;
-			int roll = m.disarm();
+			int roll = m.skills.disable();
 			if (roll > best) {
 				best = roll;
 			}
@@ -526,7 +526,7 @@ public class Squad extends WorldActor {
 		int best = Integer.MIN_VALUE;
 		for (int i = 1; i < members.size(); i++) {
 			Monster m = members.get(i).source;
-			int roll = m.survive();
+			int roll = m.skills.survive();
 			if (roll > best) {
 				best = roll;
 			}
@@ -630,7 +630,7 @@ public class Squad extends WorldActor {
 	 * water.
 	 * 
 	 * @return <code>true</code> if this squad can move on water.
-	 * @see Monster#swim()
+	 * @see #MISSING()
 	 */
 	public boolean swim() {
 		if (transport != null && (transport.sails || transport.flies)) {

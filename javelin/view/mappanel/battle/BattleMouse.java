@@ -47,7 +47,7 @@ public class BattleMouse extends Mouse {
 		if (target == null) {
 			return Action.MOVE;
 		}
-		if (target.isAlly(current, s)) {
+		if (target.isally(current, s)) {
 			return null;
 		}
 		if (current.isadjacent(target)) {
@@ -115,7 +115,7 @@ public class BattleMouse extends Mouse {
 				BattleScreen.perform(new Runnable() {
 					@Override
 					public void run() {
-						current.meleeAttacks(target, s);
+						current.meleeattacks(target, s);
 					}
 				});
 			} else if (a == Action.RANGED) {
@@ -168,7 +168,7 @@ public class BattleMouse extends Mouse {
 								: current.currentmelee.next;
 				final String chance = MeleeAttack.SINGLETON.getchance(current,
 						target, attack.get(0), s);
-				status(target + " (" + target.getStatus() + ", " + chance
+				status(target + " (" + target.getstatus() + ", " + chance
 						+ " to hit)", target);
 			} else if (a == Action.RANGED) {
 				status(Fire.SINGLETON.describehitchance(current, target, s),

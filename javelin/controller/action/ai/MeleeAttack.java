@@ -33,7 +33,7 @@ public class MeleeAttack extends AbstractAttack {
 				new ArrayList<List<ChanceNode>>();
 		for (final Combatant target : gameState.getsurroundings(active)) {
 			for (final Integer attack : getcurrentattack(active)) {
-				if (!target.isAlly(active, gameState)) {
+				if (!target.isally(active, gameState)) {
 					final BattleState newstate = gameState.clone();
 					final Combatant newactive = newstate.clone(active);
 					newactive.currentmelee.setcurrent(attack,

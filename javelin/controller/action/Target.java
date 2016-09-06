@@ -179,7 +179,7 @@ public abstract class Target extends Action {
 	protected void filtertargets(Combatant active, List<Combatant> targets,
 			BattleState s) {
 		for (Combatant target : new ArrayList<Combatant>(targets)) {
-			if (target.isAlly(active, s)
+			if (target.isally(active, s)
 					|| s.haslineofsight(active, target) == Vision.BLOCKED) {
 				targets.remove(target);
 			}
@@ -206,7 +206,7 @@ public abstract class Target extends Action {
 	 */
 	public String describehitchance(Combatant active, final Combatant target,
 			BattleState state) {
-		return target + " (" + target.getStatus() + ", " + Javelin
+		return target + " (" + target.getstatus() + ", " + Javelin
 				.translatetochance(calculatehitdc(target, active, state))
 				+ " to hit)";
 	}

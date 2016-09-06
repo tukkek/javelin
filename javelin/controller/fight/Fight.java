@@ -458,7 +458,7 @@ public abstract class Fight {
 
 	void cleanwounded(ArrayList<Combatant> team, BattleState s) {
 		for (Combatant c : (List<Combatant>) team.clone()) {
-			if (c.getNumericStatus() <= friendlylevel) {
+			if (c.getnumericstatus() <= friendlylevel) {
 				if (team == s.blueTeam) {
 					BattleScreen.active.fleeing.add(c);
 				}

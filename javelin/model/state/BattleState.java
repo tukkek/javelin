@@ -236,7 +236,7 @@ public class BattleState implements Node, TeamContainer {
 			return false;
 		}
 		for (final Combatant nearby : getsurroundings(c)) {
-			if (!c.isAlly(nearby, this)) {
+			if (!c.isally(nearby, this)) {
 				return true;
 			}
 		}

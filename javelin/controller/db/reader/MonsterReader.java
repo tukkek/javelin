@@ -114,7 +114,7 @@ public class MonsterReader extends DefaultHandler {
 		} else if (localName.equals("Saves")) {
 			monster.fort = getIntAttributeValue(attributes, "Fort");
 			monster.ref = getIntAttributeValue(attributes, "Ref");
-			monster.setWill(getIntAttributeValue(attributes, "Will"));
+			monster.setwill(getIntAttributeValue(attributes, "Will"));
 		} else if (localName.equals("Abilities")) {
 			monster.strength = parseability(attributes, "Str", false);
 			monster.dexterity = parseability(attributes, "Dex", false);

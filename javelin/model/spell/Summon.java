@@ -58,7 +58,7 @@ public class Summon extends Spell {
 	@Override
 	public String cast(Combatant caster2, Combatant target, BattleState s,
 			boolean saved) {
-		List<Combatant> team = target.getTeam(s);
+		List<Combatant> team = target.getteam(s);
 		Monster m = Javelin.getmonster(monstername);
 		m.name = "Summoned " + m.name.toLowerCase();
 		Combatant summoned = new Combatant(m, true);

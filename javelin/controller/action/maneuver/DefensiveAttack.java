@@ -66,7 +66,7 @@ public class DefensiveAttack extends Maneuver {
 		target.damage(attack.getaveragedamage(), battleState, attack.energy
 				? target.source.energyresistance : target.source.dr);
 		return new ChanceNode(battleState, chance, "Defensive attack hits!\n"
-				+ target + " is " + target.getStatus() + ".", Delay.WAIT);
+				+ target + " is " + target.getstatus() + ".", Delay.WAIT);
 	}
 
 	static public int amount(final Combatant combatant, int fallback) {

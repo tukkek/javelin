@@ -138,7 +138,7 @@ public class Trap extends Feature {
 				damage = 0;
 			}
 			target.hp = Math.max(1, target.hp - damage);
-			status += target + " is " + target.getStatus() + ".";
+			status += target + " is " + target.getstatus() + ".";
 		}
 		Javelin.message(status, true);
 	}

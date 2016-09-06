@@ -13,7 +13,7 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public class Skills extends FieldReader {
-
+	/** Keeps track of unknown skills for debugging purposes. */
 	public static final HashSet<String> UNKNOWN =
 			Javelin.DEBUG ? new HashSet<String>() : null;
 
@@ -72,6 +72,8 @@ public class Skills extends FieldReader {
 			s.usemagicdevice = Math.max(s.usemagicdevice, chabased);
 		} else if (skill.contains("heal")) {
 			s.heal = Math.max(s.heal, wisbased);
+		} else if (skill.contains("disguise")) {
+			s.disguise = Math.max(s.disguise, chabased);
 		} else if (Javelin.DEBUG) {
 			UNKNOWN.add(skill.replace('-', '+').split("\\+")[0].trim());
 		}

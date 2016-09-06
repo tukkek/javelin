@@ -37,7 +37,7 @@ public class NeutralizePoison extends Touch {
 		boolean engaged = s.isengaged(combatant);
 		for (Combatant c : new ArrayList<Combatant>(targets)) {
 			if (!Touch.isfar(combatant, c)) {
-				final boolean ally = combatant.isAlly(c, s);
+				final boolean ally = combatant.isally(c, s);
 				final boolean poisonerenemy =
 						!ally && (checkpoisoner(c, c.source.melee)
 								|| checkpoisoner(c, c.source.ranged));
@@ -63,7 +63,7 @@ public class NeutralizePoison extends Touch {
 	@Override
 	public String cast(Combatant caster, Combatant target, BattleState s,
 			boolean saved) {
-		if (target.isAlly(caster, s)) {
+		if (target.isally(caster, s)) {
 			return castpeacefully(caster, target);
 		}
 		neutralize(target.source.melee);

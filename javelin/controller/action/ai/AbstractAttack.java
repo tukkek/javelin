@@ -207,7 +207,7 @@ public abstract class AbstractAttack extends Action implements AiAction {
 			} else {
 				messageAdd.append(target.source.customName);
 			}
-			messageAdd.append(" is ").append(target.getStatus()).append(".");
+			messageAdd.append(" is ").append(target.getstatus()).append(".");
 			posthit(dc, target, attacker, attack, ap, attackstate, messageAdd);
 		}
 		return new ChanceNode(attackstate, dc.chance, messageAdd.toString(),

@@ -5,6 +5,7 @@ import javelin.controller.upgrade.skill.Acrobatics;
 import javelin.controller.upgrade.skill.Concentration;
 import javelin.controller.upgrade.skill.Diplomacy;
 import javelin.controller.upgrade.skill.DisableDevice;
+import javelin.controller.upgrade.skill.Disguise;
 import javelin.controller.upgrade.skill.GatherInformation;
 import javelin.controller.upgrade.skill.Heal;
 import javelin.controller.upgrade.skill.Knowledge;
@@ -48,6 +49,7 @@ public class SkillsFactor extends CrFactor {
 		handler.good.add(GatherInformation.SINGLETON);
 
 		handler.evil.add(Stealth.SINGLETON);
+		handler.evil.add(Disguise.SINGLETON);
 
 		handler.water.add(Knowledge.SINGLETON);
 		handler.water.add(Concentration.SINGLETON);

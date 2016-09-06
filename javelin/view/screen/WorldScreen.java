@@ -295,7 +295,7 @@ public class WorldScreen extends BattleScreen {
 	static public ArrayList<String> showstatusinformation() {
 		final ArrayList<String> hps = new ArrayList<String>();
 		for (final Combatant c : Squad.active.members) {
-			String status = c.getStatus() + ", ";
+			String status = c.getstatus() + ", ";
 			if (c.source.poison > 0) {
 				status += "weak, ";
 			}

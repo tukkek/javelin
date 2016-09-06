@@ -151,7 +151,7 @@ public class Mine extends Fortification {
 	ArrayList<Combatant> geteligible() {
 		ArrayList<Combatant> eligible = new ArrayList<Combatant>();
 		for (Combatant c : Squad.active.members) {
-			if (!c.mercenary && c.getNumericStatus() >= Combatant.STATUSHURT
+			if (!c.mercenary && c.getnumericstatus() >= Combatant.STATUSHURT
 					&& c.source.think(null)) {
 				eligible.add(c);
 			}

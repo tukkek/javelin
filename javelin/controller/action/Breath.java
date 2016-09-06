@@ -247,7 +247,7 @@ public class Breath extends Action implements AiAction {
 		final int damagetotarget = Math.round(damage * unsafeeffet);
 		if (damagetotarget > 0) {
 			target.damage(damagetotarget, s2, target.source.energyresistance);
-			affected += " is " + target.getStatus() + ". ";
+			affected += " is " + target.getstatus() + ". ";
 		}
 		hit(targets, updatechances(chances, unsafechance), damagechance, damage,
 				s2, breath, nodes, action, affected);

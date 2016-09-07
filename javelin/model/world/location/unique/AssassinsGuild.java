@@ -1,7 +1,10 @@
 package javelin.model.world.location.unique;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.ability.RaiseCharisma;
@@ -11,7 +14,16 @@ import javelin.controller.upgrade.feat.FeatUpgrade;
 import javelin.controller.upgrade.skill.Disguise;
 import javelin.controller.upgrade.skill.Stealth;
 import javelin.model.feat.skill.Deceitful;
+import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
+import javelin.model.unit.Squad;
+import javelin.model.world.WorldActor;
 import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.town.Town;
+import javelin.view.screen.Option;
+import javelin.view.screen.town.RecruitScreen;
+import javelin.view.screen.town.option.RecruitOption;
+import javelin.view.screen.upgrading.AcademyScreen;
 
 /**
  * An academy dedicated to learning how to Infiltrate.
@@ -19,7 +31,78 @@ import javelin.model.world.location.fortification.Academy;
  * @author alex
  */
 public class AssassinsGuild extends Academy {
+	static final String[] RECRUITS = new String[] { "Small monstrous scorpion",
+			"Doppelganger", "Medusa", "Rakshasa", };
+	static final String[] LEVELS =
+			new String[] { "Cutthroat", "Footpad", "Ninja", "Shadow" };
+
+	class Screen extends AcademyScreen {
+		public Screen(Academy academy, Town t) {
+			super(academy, t);
+		}
+
+		@Override
+		public String printInfo() {
+			int rank = getrank(assassinations);
+			String s = "You are currently a " + LEVELS[rank] + ".\n";
+			if (rank < LEVELS.length - 1) {
+				float next = 0;
+				while (getrank(assassinations + next) == rank) {
+					next += .5f;
+				}
+				s += "Perform " + round(next) + " assassinations or "
+						+ round(next * 2)
+						+ " sabotages to proceed to the next rank.";
+			}
+			return s + "\n\nYou have " + RecruitScreen.sumxp() + "XP";
+		}
+
+		private int round(float f) {
+			return Math.round(Math.round(Math.ceil(f)));
+		}
+
+		@Override
+		public List<Option> getoptions() {
+			List<Option> options = super.getoptions();
+			Monster recruit =
+					Javelin.getmonster(RECRUITS[getrank(assassinations)]);
+			RecruitOption option =
+					new RecruitOption("Recruit: " + recruit, 0, recruit);
+			option.key = 'r';
+			options.add(option);
+			return options;
+		}
+
+		@Override
+		public String printpriceinfo(Option o) {
+			if (o instanceof RecruitOption) {
+				RecruitOption ro = (RecruitOption) o;
+				return " (" + Math.round(ro.m.challengeRating * 100) + "XP)";
+			}
+			return super.printpriceinfo(o);
+		}
+
+		@Override
+		public boolean select(Option op) {
+			if (op instanceof RecruitOption) {
+				RecruitOption ro = (RecruitOption) op;
+				if (RecruitScreen
+						.canbuy(Math.round(ro.m.challengeRating * 100))) {
+					RecruitScreen.spend(ro.m.challengeRating);
+					Squad.active.members.add(new Combatant(ro.m.clone(), true));
+					return true;
+				} else {
+					print(text + "\nNot enough XP...");
+					return false;
+				}
+			}
+			return super.select(op);
+		}
+	}
+
 	static final String DESCRITPION = "Assassins guild";
+
+	public float assassinations = 1;
 
 	/** Constructor. */
 	public AssassinsGuild() {
@@ -33,11 +116,42 @@ public class AssassinsGuild extends Academy {
 		sort(upgrades);
 	}
 
+	public int getrank(double a) {
+		a = Math.floor(a);
+		if (a <= 5) {
+			return 0;
+		}
+		if (a <= 10) {
+			return 1;
+		}
+		if (a <= 15) {
+			return 2;
+		}
+		return 3;
+	}
+
 	@Override
 	protected void generate() {
 		while (x < 0 || Terrain.get(x, y).equals(Terrain.PLAIN)
 				|| Terrain.get(x, y).equals(Terrain.HILL)) {
 			super.generate();
+		}
+	}
+
+	@Override
+	protected AcademyScreen getscreen() {
+		return new Screen(this, null);
+	}
+
+	public static AssassinsGuild get() {
+		ArrayList<WorldActor> guild = WorldActor.getall(AssassinsGuild.class);
+		return guild.isEmpty() ? null : (AssassinsGuild) guild.get(0);
+	}
+
+	public static void notify(float level) {
+		AssassinsGuild guild = get();
+		if (guild != null) {
+			guild.assassinations += level;
 		}
 	}
 }

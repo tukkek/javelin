@@ -7,12 +7,14 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.item.Item;
+import javelin.model.unit.Attack;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.unique.AssassinsGuild;
 import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
@@ -129,6 +131,7 @@ public class Infiltrate extends WorldAction {
 			}
 			town.lairs.remove(Javelin.choose("Sabotage which lair?", choices,
 					true, true));
+			AssassinsGuild.notify(.5f);
 			print("Sabotage succesful!");
 			getInput();
 			return true;
@@ -144,7 +147,14 @@ public class Infiltrate extends WorldAction {
 				die = true;
 				return true;
 			}
+			Attack blow = spy.source.melee.get(0).get(0);
+			if (RPG.r(1, 20) + target.source.fortitude() >= 10
+					+ blow.getaveragedamage() * blow.multiplier) {
+				die = true;
+				return true;
+			}
 			town.garrison.remove(target);
+			AssassinsGuild.notify(1f);
 			print("Assassination succesful!");
 			getInput();
 			if (town.garrison.isEmpty()) {
@@ -158,7 +168,8 @@ public class Infiltrate extends WorldAction {
 			ArrayList<Combatant> targets = new ArrayList<Combatant>();
 			for (Combatant c : town.garrison) {
 				if (!preventdouble.contains(c.source)
-						&& !c.source.immunitytocritical) {
+						&& !c.source.immunitytocritical
+						&& c.source.fortitude() != Integer.MAX_VALUE) {
 					targets.add(c);
 					preventdouble.add(c.source);
 				}

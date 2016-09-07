@@ -64,7 +64,7 @@ public abstract class Academy extends Fortification {
 			return false;
 		}
 		if (training == null) {
-			new AcademyScreen(this, null).show();
+			getscreen().show();
 			return true;
 		}
 		if (Squad.active.hourselapsed >= training.completionat) {
@@ -77,6 +77,10 @@ public abstract class Academy extends Fortification {
 		eta = training.trained + " will complete training in " + eta + " ...";
 		Javelin.message(eta, false);
 		return true;
+	}
+
+	protected AcademyScreen getscreen() {
+		return new AcademyScreen(this, null);
 	}
 
 	Squad completetraining() {

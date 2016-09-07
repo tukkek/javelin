@@ -86,6 +86,15 @@ public class StartBattle extends BattleEvent {
 		Javelin.app.fight = null;
 	}
 
+	/**
+	 * TODO this needs to be enhanced because currently fighting with full
+	 * health in a EL-1 battle will result in everyone surviving with 1% health
+	 * or something, making this very easy to abuse. A better option might be to
+	 * introduce some randomness on the difficulty used to calculate this or
+	 * think of a new system where the damage can be distributed randomly
+	 * between party members (instead of uniformly) or even "cancel" units of
+	 * same CR before doing calculations.
+	 */
 	static void strategicdamage(Combatant c, float resourcesused) {
 		c.hp -= c.maxhp * resourcesused;
 		if (c.hp <= Combatant.DEADATHP || //

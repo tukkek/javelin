@@ -151,8 +151,8 @@ public class HaxorScreen extends SelectScreen {
 				|| WorldActor.get(x, y) != null) {
 			x += RPG.pick(new int[] { -1, 0, +1 });
 			y += RPG.pick(new int[] { -1, 0, +1 });
-			if (x < 0 || x >= World.MAPDIMENSION || y < 0
-					|| y >= World.MAPDIMENSION) {
+			if (x < 0 || x >= World.SIZE || y < 0
+					|| y >= World.SIZE) {
 				generate(place);
 				return;
 			}

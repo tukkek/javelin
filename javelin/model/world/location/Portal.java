@@ -134,8 +134,8 @@ public class Portal extends Location {
 		Point p = new Point(t.x, t.y);
 		while (WorldActor.get(p.x, p.y) != null) {
 			p = new Point(determinedistance(t.x), determinedistance(t.y));
-			if (p.x < 0 || p.x >= World.MAPDIMENSION || p.y < 0
-					|| p.y >= World.MAPDIMENSION
+			if (p.x < 0 || p.x >= World.SIZE || p.y < 0
+					|| p.y >= World.SIZE
 					|| World.seed.map[p.x][p.y].equals(Terrain.WATER)) {
 				World.retry();
 				p = new Point(t.x, t.y);

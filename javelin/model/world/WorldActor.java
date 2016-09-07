@@ -114,8 +114,8 @@ public abstract class WorldActor implements Serializable {
 		}
 		ArrayList<WorldActor> actors = WorldActor.getall();
 		actors.remove(this);
-		if (tox >= 0 && toy >= 0 && tox < World.MAPDIMENSION
-				&& toy < World.MAPDIMENSION
+		if (tox >= 0 && toy >= 0 && tox < World.SIZE
+				&& toy < World.SIZE
 				&& WorldActor.get(tox, toy, actors) == null) {
 			move(tox, toy);
 		} else {

@@ -19,7 +19,7 @@ public class BuildTown extends Improvement {
 	 * Constructor.
 	 */
 	public BuildTown(String name, double price, Character key, boolean b) {
-		super(name, price, key, b);
+		super(name, price, key, b, true);
 	}
 
 	@Override

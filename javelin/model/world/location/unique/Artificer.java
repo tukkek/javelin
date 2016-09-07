@@ -38,6 +38,7 @@ public class Artificer extends UniqueLocation {
 	/** Constructor. */
 	public Artificer() {
 		super(DESCRIPTION, DESCRIPTION, 11, 15);
+		vision = 1;
 		while (selection.size() < 9) {
 			additem();
 		}

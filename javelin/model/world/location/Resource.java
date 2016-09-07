@@ -60,6 +60,7 @@ public class Resource extends Location {
 	/** Constructor. */
 	public Resource() {
 		super(null);
+		vision = 0;
 	}
 
 	@Override

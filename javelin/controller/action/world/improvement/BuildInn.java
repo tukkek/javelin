@@ -1,8 +1,6 @@
 package javelin.controller.action.world.improvement;
 
 import javelin.controller.action.world.Work;
-import javelin.model.unit.Combatant;
-import javelin.model.unit.Squad;
 import javelin.model.world.Improvement;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Inn;
@@ -18,28 +16,13 @@ public class BuildInn extends Improvement {
 	 * Constructor.
 	 */
 	public BuildInn(String name, double price, Character key, boolean b) {
-		super(name, price, key, b);
+		super(name, price, key, b, true);
 	}
 
 	@Override
 	public Location done(int x, int y) {
-		removeworker();
-		Squad.active.remove(null);
 		Location i = new Inn();
 		i.setlocation(x, y);
 		return i;
-	}
-
-	static void removeworker() {
-		Combatant worker = null;
-		for (Combatant c : Squad.active.members) {
-			if (c.source.name.equals("Worker")) {
-				worker = c;
-				break;
-			}
-		}
-		if (worker != null) {
-			Squad.active.remove(worker);
-		}
 	}
 }

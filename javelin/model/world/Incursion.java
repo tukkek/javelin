@@ -215,10 +215,10 @@ public class Incursion extends WorldActor {
 				x = 0;
 			} else if (y < 0) {
 				y = 0;
-			} else if (x >= World.MAPDIMENSION) {
-				x = World.MAPDIMENSION - 1;
-			} else if (y >= World.MAPDIMENSION) {
-				y = World.MAPDIMENSION - 1;
+			} else if (x >= World.SIZE) {
+				x = World.SIZE - 1;
+			} else if (y >= World.SIZE) {
+				y = World.SIZE - 1;
 			}
 		}
 		new Incursion(x, y, squadp, r).place();

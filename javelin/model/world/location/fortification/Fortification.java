@@ -86,6 +86,7 @@ public abstract class Fortification extends Location {
 		allowentry = false;
 		this.descriptionknown = descriptionknown;
 		this.descriptionunknown = descriptionunknown;
+		vision = 1;
 	}
 
 	/**

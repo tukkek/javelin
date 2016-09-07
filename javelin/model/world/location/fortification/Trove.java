@@ -48,6 +48,7 @@ public class Trove extends Fortification {
 		descriptionknown += " (" + describe(rewards[0]) + " or "
 				+ describe(rewards[1]) + ")";
 		discard = false;
+		vision = 0;
 	}
 
 	String describe(Reward reward) {

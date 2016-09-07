@@ -24,7 +24,7 @@ import tyrant.mikera.engine.RPG;
 public class Deforestate extends Improvement {
 	/** Constructor. */
 	public Deforestate(String name, double price, Character key, boolean b) {
-		super(name, price, key, b);
+		super(name, price, key, b, false);
 	}
 
 	@Override

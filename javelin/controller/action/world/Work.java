@@ -8,6 +8,7 @@ import javelin.Javelin;
 import javelin.controller.action.world.improvement.BuildHighway;
 import javelin.controller.action.world.improvement.BuildInn;
 import javelin.controller.action.world.improvement.BuildMine;
+import javelin.controller.action.world.improvement.BuildOutpost;
 import javelin.controller.action.world.improvement.BuildRoad;
 import javelin.controller.action.world.improvement.BuildTown;
 import javelin.controller.action.world.improvement.Deforestate;
@@ -40,6 +41,8 @@ public class Work extends WorldAction {
 	static final Improvement HIGHWAY =
 			new BuildHighway("Upgrade road", 7, 'r', false);
 	static final Improvement INN = new BuildInn("Build inn", 7, 'i', false);
+	static final Improvement OUTPOST =
+			new BuildOutpost("Build outpost", 15, 'o', false);
 	static final Improvement TOWN = new BuildTown("Build town", 30, 't', false);
 	static final Improvement DEFORESTATE =
 			new Deforestate("Deforestate", 10, 'd', true);
@@ -67,6 +70,7 @@ public class Work extends WorldAction {
 			ArrayList<Option> options = new ArrayList<Option>();
 			options.add(INN);
 			options.add(TOWN);
+			options.add(OUTPOST);
 			Terrain t = Terrain.current();
 			int x = Squad.active.x;
 			int y = Squad.active.y;

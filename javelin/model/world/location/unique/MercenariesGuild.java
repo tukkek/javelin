@@ -36,6 +36,7 @@ public class MercenariesGuild extends UniqueLocation {
 	public MercenariesGuild() {
 		super("Mercenaries' Guild", "Mercenaries' Guild", 11, 15);
 		gossip = true;
+		vision = 3;
 		while (mercenaries.size() < STARTINGMERCENARIES) {
 			generatemercenary();
 		}

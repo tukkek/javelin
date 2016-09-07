@@ -55,6 +55,7 @@ public class TrainingHall extends Fortification {
 		discard = false;
 		impermeable = false;
 		sacrificeable = true;
+		vision = 2;
 	}
 
 	@Override
@@ -153,5 +154,10 @@ public class TrainingHall extends Fortification {
 	@Override
 	public String toString() {
 		return super.toString() + " ($" + getfee() + ")";
+	}
+
+	@Override
+	public boolean view() {
+		return true;
 	}
 }

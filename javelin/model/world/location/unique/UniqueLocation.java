@@ -34,6 +34,7 @@ public abstract class UniqueLocation extends Fortification {
 		l.allowentry = false;
 		l.realm = null;
 		l.gossip = true;
+		l.vision = 0;
 	}
 
 	@Override

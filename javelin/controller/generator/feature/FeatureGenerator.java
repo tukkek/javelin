@@ -60,7 +60,7 @@ public class FeatureGenerator {
 	public static final FeatureGenerator SINGLETON = new FeatureGenerator();
 
 	static final int NUMBEROFSTARTINGFEATURES =
-			(World.MAPDIMENSION * World.MAPDIMENSION) / 5;
+			(World.SIZE * World.SIZE) / 5;
 
 	final HashMap<Class<? extends WorldActor>, FeatureGenerationData> generators =
 			new HashMap<Class<? extends WorldActor>, FeatureGenerationData>();
@@ -160,8 +160,8 @@ public class FeatureGenerator {
 		while (haxor == null
 				|| WorldActor.get(t.x + haxor[0], t.y + haxor[1]) != null
 				|| t.x + haxor[0] < 0 || t.y + haxor[1] < 0
-				|| t.x + haxor[0] >= World.MAPDIMENSION
-				|| t.y + haxor[1] >= World.MAPDIMENSION
+				|| t.x + haxor[0] >= World.SIZE
+				|| t.y + haxor[1] >= World.SIZE
 				|| w.map[t.x + haxor[0]][t.y + haxor[1]]
 						.equals(Terrain.WATER)) {
 			haxor = new int[] { RPG.r(2, 3), RPG.r(2, 3) };

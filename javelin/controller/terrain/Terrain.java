@@ -208,7 +208,7 @@ public abstract class Terrain implements Serializable {
 	 * @return Number of tiles the generated area for this terrain should have.
 	 */
 	protected int generateareasize() {
-		return World.MAPDIMENSION * World.MAPDIMENSION / World.NREGIONS;
+		return World.SIZE * World.SIZE / World.NREGIONS;
 	}
 
 	/**
@@ -346,8 +346,8 @@ public abstract class Terrain implements Serializable {
 	 */
 	protected HashSet<Point> gettiles(World world) {
 		HashSet<Point> area = new HashSet<Point>();
-		for (int x = 0; x < World.MAPDIMENSION; x++) {
-			for (int y = 0; y < World.MAPDIMENSION; y++) {
+		for (int x = 0; x < World.SIZE; x++) {
+			for (int y = 0; y < World.SIZE; y++) {
 				if (world.map[x][y] == this) {
 					area.add(new Point(x, y));
 				}
@@ -421,7 +421,7 @@ public abstract class Terrain implements Serializable {
 	}
 
 	static int randomaxispoint() {
-		return RPG.r(1, World.MAPDIMENSION - 2);
+		return RPG.r(1, World.SIZE - 2);
 	}
 
 	/**

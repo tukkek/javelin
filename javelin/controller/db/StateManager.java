@@ -79,7 +79,9 @@ public class StateManager {
 	static public boolean nofile = false;
 	private static int attempts = 0;
 	/**
-	 * Intermediary for {@link WorldTile}.
+	 * Intermediary for {@link WorldTile} while loading.
+	 * 
+	 * TODO clean?
 	 * 
 	 * @see Tile#discovered
 	 */
@@ -113,7 +115,7 @@ public class StateManager {
 			writer.writeObject(Incursion.currentel);
 			writer.writeObject(Weather.current);
 			writer.writeObject(EndBattle.lastkilled);
-			writer.writeObject(DISCOVERED);
+			writer.writeObject(getdiscovered());
 			writer.writeObject(World.roads);
 			writer.writeObject(World.highways);
 			writer.writeObject(Season.current);
@@ -130,6 +132,21 @@ public class StateManager {
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	static HashSet<Point> getdiscovered() {
+		if (WorldScreen.current == null) {
+			return DISCOVERED;
+		}
+		HashSet<Point> discovered = new HashSet<Point>();
+		for (Tile[] ts : WorldScreen.current.mappanel.tiles) {
+			for (Tile t : ts) {
+				if (t.discovered) {
+					discovered.add(new Point(t.x, t.y));
+				}
+			}
+		}
+		return discovered;
 	}
 
 	/**

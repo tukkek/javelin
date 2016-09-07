@@ -30,6 +30,7 @@ public class Guardian extends Fortification {
 		descriptionknown = "A guardian (" + loot.toString().toLowerCase() + ")";
 		descriptionunknown = "A guardian";
 		discard = true;
+		vision = 0;
 	}
 
 	@Override

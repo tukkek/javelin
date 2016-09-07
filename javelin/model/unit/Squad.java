@@ -619,6 +619,7 @@ public class Squad extends WorldActor {
 	 */
 	public void build() {
 		Location built = work.done(x, y);
+		work.removeworker();
 		if (built != null) {
 			built.place();
 			built.garrison.clear();
@@ -691,8 +692,13 @@ public class Squad extends WorldActor {
 	/**
 	 * @return All squads in the {@link World}.
 	 */
-	public static ArrayList<WorldActor> getsquads() {
-		return getall(Squad.class);
+	public static ArrayList<Squad> getsquads() {
+		ArrayList<WorldActor> actors = getall(Squad.class);
+		ArrayList<Squad> squads = new ArrayList<Squad>(actors.size());
+		for (WorldActor a : actors) {
+			squads.add((Squad) a);
+		}
+		return squads;
 	}
 
 	public boolean skipcombat(int diffifculty) {
@@ -713,10 +719,22 @@ public class Squad extends WorldActor {
 					ChallengeRatingCalculator.describedifficulty(diffifculty);
 			final String prompt = "Do you want to skip this " + difficulty
 					+ " battle?\n\n" //
-					+ "Press ENTER to join the battle\n"
+					+ "Press ENTER to open the battle screen\n"
 					+ "Press s to skip it and calculate results autoamatically";
 			input = Javelin.prompt(prompt);
 		}
 		return input == 's';
+	}
+
+	public void view() {
+		view(Squad.active.perceive(true, true)
+				+ (Squad.active.transport == Transport.AIRSHIP ? +4
+						: Terrain.current().visionbonus));
+	}
+
+	public static void updatevision() {
+		for (Squad s : Squad.getsquads()) {
+			s.view();
+		}
 	}
 }

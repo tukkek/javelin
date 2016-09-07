@@ -84,8 +84,8 @@ public class Caravan extends WorldActor {
 		}
 		if (to == null) {
 			while (tox == -1 || Incursion.crosseswater(this, tox, toy)) {
-				tox = RPG.r(0, World.MAPDIMENSION - 1);
-				toy = RPG.r(0, World.MAPDIMENSION - 1);
+				tox = RPG.r(0, World.SIZE - 1);
+				toy = RPG.r(0, World.SIZE - 1);
 			}
 		} else {
 			tox = to.x;

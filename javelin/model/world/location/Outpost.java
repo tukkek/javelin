@@ -4,8 +4,8 @@ import java.util.List;
 
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.Incursion;
 import javelin.model.world.World;
+import javelin.model.world.location.fortification.Fortification;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -20,19 +20,16 @@ import javelin.view.screen.WorldScreen;
  * @see World#makemap()
  * @author alex
  */
-public class Outpost extends Location {
+public class Outpost extends Fortification {
 	/** How many squares away to help vision with. */
 	public static final int VISIONRANGE = 3;
+	private static final String DESCRIPTION = "Outpost";
 
 	/** Constructor. */
 	public Outpost() {
-		super("Outpost");
+		super(DESCRIPTION, DESCRIPTION, 1, 5);
 		gossip = true;
-	}
-
-	@Override
-	public Boolean destroy(Incursion attacker) {
-		return true;
+		vision = VISIONRANGE;
 	}
 
 	/** Puts a new instance in the {@link World} map. */
@@ -62,20 +59,15 @@ public class Outpost extends Location {
 	}
 
 	@Override
-	protected Integer getel(int attackerel) {
-		return Integer.MIN_VALUE;
-	}
-
-	@Override
 	protected void generate() {
 		x = -1;
-		while (x == -1 || iscloseto(Outpost.class)) {
+		while (x == -1 || isnear(Outpost.class)) {
 			generateawayfromtown();
 		}
 	}
 
 	@Override
 	public List<Combatant> getcombatants() {
-		return null;
+		return garrison;
 	}
 }

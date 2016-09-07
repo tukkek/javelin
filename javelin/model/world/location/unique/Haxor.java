@@ -49,6 +49,7 @@ public class Haxor extends UniqueLocation {
 	 */
 	public Haxor() {
 		super("Tower of Haxor", "Tower of Haxor", 0, 0);
+		vision = 3;
 	}
 
 	@Override

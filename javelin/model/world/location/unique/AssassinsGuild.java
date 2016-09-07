@@ -107,6 +107,7 @@ public class AssassinsGuild extends Academy {
 	/** Constructor. */
 	public AssassinsGuild() {
 		super(DESCRITPION, DESCRITPION, 6, 10, new HashSet<Upgrade>());
+		vision = 3;
 		upgrades.add(Disguise.SINGLETON);
 		upgrades.add(Stealth.SINGLETON);
 		upgrades.add(RaiseCharisma.INSTANCE);

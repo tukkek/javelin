@@ -32,25 +32,25 @@ public class World implements Serializable {
 	/**
 	 * Map size in squares.
 	 */
-	static public int MAPDIMENSION = 30;
+	static public int SIZE = 30;
 	/**
 	 * Randomly generated world map.
 	 */
 	public static World seed;
 	/** Facilitate movement. */
-	public static boolean[][] roads = new boolean[MAPDIMENSION][MAPDIMENSION];
+	public static boolean[][] roads = new boolean[SIZE][SIZE];
 	/** Upgraded {@link #roads}. */
 	public static boolean[][] highways =
-			new boolean[MAPDIMENSION][MAPDIMENSION];
+			new boolean[SIZE][SIZE];
 	private static int retries = 0;
 	private static int lastretries = 0;
 	static final int TOWNBUFFER = 1;
 	static final Terrain[] NOISE = new Terrain[] { Terrain.PLAIN, Terrain.HILL,
 			Terrain.FOREST, Terrain.MOUNTAINS };
-	static final int NOISEAMOUNT = MAPDIMENSION * MAPDIMENSION / 10;
+	static final int NOISEAMOUNT = SIZE * SIZE / 10;
 
 	/** Map of terrain tiles by [x][y] coordinates. */
-	public Terrain[][] map = new Terrain[MAPDIMENSION][MAPDIMENSION];
+	public Terrain[][] map = new Terrain[SIZE][SIZE];
 	/** If <code>false</code> means the world is still being generated. */
 	public boolean done = false;
 
@@ -60,8 +60,8 @@ public class World implements Serializable {
 	public static final int NREGIONS = 16;
 
 	void generate() {
-		for (int i = 0; i < MAPDIMENSION; i++) {
-			for (int j = 0; j < MAPDIMENSION; j++) {
+		for (int i = 0; i < SIZE; i++) {
+			for (int j = 0; j < SIZE; j++) {
 				map[i][j] = Terrain.FOREST;
 			}
 		}
@@ -83,8 +83,8 @@ public class World implements Serializable {
 	}
 
 	void initroads() {
-		for (int x = 0; x < MAPDIMENSION; x++) {
-			for (int y = 0; y < MAPDIMENSION; y++) {
+		for (int x = 0; x < SIZE; x++) {
+			for (int y = 0; y < SIZE; y++) {
 				roads[x][y] = false;
 				highways[x][y] = false;
 			}
@@ -95,7 +95,7 @@ public class World implements Serializable {
 	 * @return <code>true</code> if given coordinates are within the world map.
 	 */
 	public static boolean validatecoordinate(int x, int y) {
-		return 0 <= x && x < MAPDIMENSION && 0 <= y && y < MAPDIMENSION;
+		return 0 <= x && x < SIZE && 0 <= y && y < SIZE;
 	}
 
 	/**
@@ -158,8 +158,8 @@ public class World implements Serializable {
 	static void placemoretowns() {
 		int more = RPG.r(5, 7);
 		while (more > 0) {
-			int x = RPG.r(0, MAPDIMENSION - 1);
-			int y = RPG.r(0, MAPDIMENSION - 1);
+			int x = RPG.r(0, SIZE - 1);
+			int y = RPG.r(0, SIZE - 1);
 			if (WorldActor.get(x, y) != null
 					|| !seed.map[x][y].generatetown(new Point(x, y), seed)) {
 				continue;
@@ -167,7 +167,7 @@ public class World implements Serializable {
 			more -= 1;
 			Point p = new Point(x, y);
 			Town t = new Town(p.x, p.y, World.determinecolor(p).realm);
-			while (t.iscloseto(Town.class)) {
+			while (t.isnear(Town.class)) {
 				Location.generate(t, false);
 			}
 			t.place();
@@ -260,8 +260,8 @@ public class World implements Serializable {
 	@Override
 	public String toString() {
 		String s = "";
-		for (int y = 0; y < MAPDIMENSION; y++) {
-			for (int x = 0; x < MAPDIMENSION; x++) {
+		for (int y = 0; y < SIZE; y++) {
+			for (int x = 0; x < SIZE; x++) {
 				s += map[x][y].representation;
 			}
 			s += "\n";

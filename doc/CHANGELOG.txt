@@ -5,6 +5,7 @@ Version 1.7
  * New locations: natural resources and Assassins Guild
  * Infiltrate enemy towns to sabotage them
  * New skill: disguise
+ * World map fog of war
 
 Version 1.6 (2016-07-15) 
 

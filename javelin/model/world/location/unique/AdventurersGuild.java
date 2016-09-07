@@ -113,6 +113,7 @@ public class AdventurersGuild extends UniqueLocation {
 	/** Constructor. */
 	public AdventurersGuild() {
 		super(TITLE, TITLE, 1, 1);
+		vision = 2;
 	}
 
 	@Override

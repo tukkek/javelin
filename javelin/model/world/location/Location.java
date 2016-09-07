@@ -20,7 +20,9 @@ import javelin.model.unit.Squad;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
+import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.unique.UniqueLocation;
 import javelin.view.Images;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
@@ -71,6 +73,14 @@ public abstract class Location extends WorldActor {
 	public boolean gossip = false;
 
 	/**
+	 * Used to calculate fog of war. Usually rangess from 1 (most
+	 * {@link Fortification}s, to 3 ({@link Outpost}s), with {@link Town}s being
+	 * the benchmark for 2. {@link UniqueLocation}s usually have none since
+	 * they're minding their own business.
+	 */
+	public int vision = 0;
+
+	/**
 	 * @param descriptionknown
 	 *            What to show a player on a succesfull {@link Skills#knowledge}
 	 *            check.
@@ -104,8 +114,8 @@ public abstract class Location extends WorldActor {
 				|| (!allowwater
 						&& World.seed.map[p.x][p.y].equals(Terrain.WATER))
 				|| WorldActor.get(p.x, p.y, actors) != null || neartown(p)) {
-			p.x = RPG.r(0, World.MAPDIMENSION - 1);
-			p.y = RPG.r(0, World.MAPDIMENSION - 1);
+			p.x = RPG.r(0, World.SIZE - 1);
+			p.y = RPG.r(0, World.SIZE - 1);
 			World.retry();
 		}
 	}
@@ -314,7 +324,7 @@ public abstract class Location extends WorldActor {
 	 *         {@value #CLOSE} distance from here.
 	 * @see Walker#distance(int, int, int, int)
 	 */
-	public boolean iscloseto(Class<? extends Location> targets) {
+	public boolean isnear(Class<? extends Location> targets) {
 		for (WorldActor p : getall(targets)) {
 			if (p != this && Walker.distance(x, y, p.x, p.y) <= CLOSE) {
 				return true;
@@ -362,5 +372,13 @@ public abstract class Location extends WorldActor {
 			generate();
 		}
 		super.place();
+	}
+
+	public int distanceinsteps(int xp, int yp) {
+		return Math.max(Math.abs(xp - x), Math.abs(yp - y));
+	}
+
+	public boolean view() {
+		return !ishostile() && vision > 0;
 	}
 }

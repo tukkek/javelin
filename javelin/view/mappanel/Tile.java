@@ -31,4 +31,9 @@ public abstract class Tile extends Canvas {
 	protected static void draw(final Graphics g, final Image gettile) {
 		g.drawImage(gettile, 0, 0, MapPanel.tilesize, MapPanel.tilesize, null);
 	}
+
+	public void cover() {
+		discovered = false;
+		repaint();
+	}
 }

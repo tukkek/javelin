@@ -63,7 +63,7 @@ public class Inn extends Fortification {
 	@Override
 	protected void generate() {
 		x = -1;
-		while (x == -1 || iscloseto(Inn.class)) {
+		while (x == -1 || isnear(Inn.class)) {
 			generateawayfromtown();
 		}
 	}

@@ -2,6 +2,7 @@ package javelin.model.world;
 
 import javelin.controller.action.world.Work;
 import javelin.controller.terrain.Terrain;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.view.screen.Option;
@@ -21,6 +22,7 @@ public abstract class Improvement extends Option {
 	 * @see Terrain#getspeed()
 	 */
 	public boolean absolute;
+	boolean removeworker;
 
 	/**
 	 * See {@link Option#Option(String, double, Character)}.
@@ -28,9 +30,26 @@ public abstract class Improvement extends Option {
 	 * @param
 	 */
 	public Improvement(String name, double price, Character key,
-			boolean absolute) {
+			boolean absolute, boolean removeworker) {
 		super(name, price, key);
 		this.absolute = absolute;
+		this.removeworker = removeworker;
+	}
+
+	public void removeworker() {
+		if (!removeworker) {
+			return;
+		}
+		Combatant worker = null;
+		for (Combatant c : Squad.active.members) {
+			if (c.source.name.equals("Worker")) {
+				worker = c;
+				break;
+			}
+		}
+		if (worker != null) {
+			Squad.active.remove(worker);
+		}
 	}
 
 	/**

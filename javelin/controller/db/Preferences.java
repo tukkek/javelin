@@ -294,8 +294,8 @@ public class Preferences {
 	static void initdebug() {
 		if (DEBUGESHOWMAP && BattleScreen.active != null
 				&& BattleScreen.active.getClass().equals(WorldScreen.class)) {
-			for (int x = 0; x < World.MAPDIMENSION; x++) {
-				for (int y = 0; y < World.MAPDIMENSION; y++) {
+			for (int x = 0; x < World.SIZE; x++) {
+				for (int y = 0; y < World.SIZE; y++) {
 					WorldScreen.setVisible(x, y);
 				}
 			}

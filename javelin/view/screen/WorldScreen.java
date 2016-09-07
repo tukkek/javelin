@@ -3,6 +3,8 @@ package javelin.view.screen;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -41,6 +43,7 @@ import javelin.view.Images;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.world.WorldPanel;
+import javelin.view.mappanel.world.WorldTile;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.tyrant.QuestApp;
@@ -185,10 +188,7 @@ public class WorldScreen extends BattleScreen {
 
 	@Override
 	public void view(int x, int y) {
-		int vision = Squad.active.perceive(true, true)
-				+ (Squad.active.transport == Transport.AIRSHIP ? +4
-						: Terrain.current().visionbonus);
-		Squad.active.view(vision);
+		Squad.active.view();
 	}
 
 	/**
@@ -198,7 +198,7 @@ public class WorldScreen extends BattleScreen {
 		if (!World.validatecoordinate(x, y)) {
 			return;
 		}
-		StateManager.DISCOVERED.add(new Point(x, y));
+		// StateManager.DISCOVERED.add(new Point(x, y));
 		WorldScreen s = getcurrentscreen();
 		if (s != null) {
 			s.gettiles()[x][y].discovered = true;
@@ -245,7 +245,52 @@ public class WorldScreen extends BattleScreen {
 				p.turn(time, this);// may throw battle exception
 			}
 			WorldScreen.lastday += 1;
+			cover();
 		}
+	}
+
+	/** Covers a {@link WorldTile} per day with fog of war. */
+	void cover() {
+		// if (Preferences.DEBUGESHOWMAP) {
+		// return;
+		// }
+		ArrayList<Location> locations = new ArrayList<Location>();
+		ArrayList<Location> friendlylocations = new ArrayList<Location>();
+		for (WorldActor a : WorldActor.getall()) {
+			if (a instanceof Location && mappanel.tiles[a.x][a.y].discovered) {
+				Location l = (Location) a;
+				locations.add(l);
+				if (l.view()) {
+					friendlylocations.add(l);
+				}
+			}
+		}
+		LinkedList<Tile> discovered = new LinkedList<Tile>();
+		for (int x = 0; x < World.SIZE; x++) {
+			for (int y = 0; y < World.SIZE; y++) {
+				Tile t = mappanel.tiles[x][y];
+				if (t.discovered && !World.roads[t.x][t.y]
+						&& WorldActor.get(t.x, t.y, locations) == null) {
+					discovered.add(t);
+				}
+			}
+		}
+		Collections.shuffle(discovered);
+		int hideperday = 2;// RPG.r(2, 3);
+		searching: while (!discovered.isEmpty()) {
+			Tile t = discovered.pop();
+			for (Location l : friendlylocations) {
+				if (l.vision >= l.distanceinsteps(t.x, t.y)) {
+					continue searching;
+				}
+			}
+			t.cover();
+			hideperday -= 1;
+			if (hideperday == 0) {
+				break;
+			}
+		}
+		Squad.updatevision();
 	}
 
 	/** Show party/world status. */

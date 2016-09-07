@@ -124,6 +124,7 @@ public class Town extends Location {
 		realm = r;
 		gossip = true;
 		discard = false;
+		vision = 2;
 		ArrayList<Monster> recruits = possiblerecruits(x, y);
 		for (int i = 0; i < STARTINGLAIRS; i++) {
 			Monster recruit = recruits.get(i);

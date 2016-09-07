@@ -13,7 +13,6 @@ import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.map.Map;
 import javelin.model.item.Item;
-import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
@@ -117,10 +116,9 @@ public class ArenaFight extends Minigame {
 	}
 
 	@Override
-	public boolean onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
-			BattleState s) {
+	public boolean onend() {
 		Arena arena = Arena.get();
-		for (Combatant dead : s.dead) {
+		for (Combatant dead : Fight.state.dead) {
 			if (dead.getnumericstatus() == Combatant.STATUSDEAD) {
 				arena.gladiators.remove(dead);
 			}
@@ -136,7 +134,7 @@ public class ArenaFight extends Minigame {
 		Game.messagepanel.clear();
 		Game.message("Your bet was " + bet + " coins.\n" + result
 				+ "Press any key to continue...", Delay.BLOCK);
-		screen.getUserInput();
+		BattleScreen.active.getUserInput();
 		StateManager.save(true, StateManager.SAVEFILE);
 		return false;
 	}

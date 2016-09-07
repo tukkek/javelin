@@ -2,6 +2,7 @@ package javelin.controller.action.world;
 
 import java.awt.Button;
 import java.awt.Checkbox;
+import java.awt.CheckboxGroup;
 import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.Label;
@@ -27,10 +28,11 @@ import javelin.view.screen.WorldScreen;
 public class Automate extends WorldAction implements SimpleAction {
 	class AutomateWindow extends javelin.view.frame.Frame {
 		ArrayList<Checkbox> boxes = new ArrayList<Checkbox>();
-		Checkbox strategic;
+		CheckboxGroup strategic = null;
+		Checkbox[] strategicboxes = null;
 
 		public AutomateWindow() {
-			super("Automatic units");
+			super("Automate units");
 		}
 
 		@Override
@@ -44,10 +46,23 @@ public class Automate extends WorldAction implements SimpleAction {
 			}
 			container.add(new Label());
 			if (BattleScreen.active instanceof WorldScreen) {
-				strategic =
-						new Checkbox("Enable strategic combat for this squad",
-								Squad.active.strategic);
-				container.add(strategic);
+				strategic = new CheckboxGroup();
+				strategicboxes =
+						new Checkbox[] {
+								new Checkbox("Never skip combat", strategic,
+										Boolean.FALSE
+												.equals(Squad.active.strategic)),
+								new Checkbox(
+										"Prompt to skip easy battles",
+										strategic,
+										Squad.active.strategic == null),
+								new Checkbox(
+										"Always skip, prompt for hard battles",
+										strategic, Boolean.TRUE.equals(
+												Squad.active.strategic)), };
+				for (Checkbox c : strategicboxes) {
+					container.add(c);
+				}
 			} else {
 				strategic = null;
 				container.add(new Label("Changes are reset after battle."));
@@ -69,7 +84,14 @@ public class Automate extends WorldAction implements SimpleAction {
 				getunits().get(i).automatic = boxes.get(i).getState();
 			}
 			if (strategic != null) {
-				Squad.active.strategic = strategic.getState();
+				Checkbox selected = strategic.getSelectedCheckbox();
+				if (selected == strategicboxes[0]) {
+					Squad.active.strategic = false;
+				} else if (selected == strategicboxes[1]) {
+					Squad.active.strategic = null;
+				} else {
+					Squad.active.strategic = true;
+				}
 			}
 			frame.dispose();
 		};

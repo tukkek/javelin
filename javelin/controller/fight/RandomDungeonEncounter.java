@@ -16,9 +16,6 @@ public class RandomDungeonEncounter extends RandomEncounter {
 	public RandomDungeonEncounter() {
 		meld = true;
 		map = Terrain.UNDERGROUND.getmaps().pick();
-		/* TODO enable in Dungeon as well on 2.0 */
-		bribe = false;
-		hide = false;
 	}
 
 	@Override

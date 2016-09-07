@@ -57,26 +57,29 @@ public class Siege extends Fight {
 	}
 
 	@Override
-	public boolean onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
-			BattleState s) {
+	public boolean onend() {
 		if (cleargarrison) {
-			garrison: for (Combatant garrison : new ArrayList<Combatant>(
-					place.garrison)) {
-				for (Combatant active : Fight.state.getcombatants()) {
-					if (garrison.equals(active)) {
-						continue garrison; // is alive
+			if (Fight.victory) {
+				place.garrison.clear();
+			} else {
+				garrison: for (Combatant garrison : new ArrayList<Combatant>(
+						place.garrison)) {
+					for (Combatant active : Fight.state.getcombatants()) {
+						if (garrison.equals(active)) {
+							continue garrison; // is alive
+						}
 					}
+					place.garrison.remove(garrison);
 				}
-				place.garrison.remove(garrison);
 			}
 			if (place.garrison.isEmpty()) {
-				place.realm = null;
+				place.realm = null; // TODO really?
 				Town t = place instanceof Town ? (Town) place : null;
 				if (t != null) {
 					t.capture(true);
 				}
 			}
 		}
-		return super.onEnd(screen, originalTeam, s);
+		return super.onend();
 	}
 }

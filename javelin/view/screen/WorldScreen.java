@@ -250,6 +250,7 @@ public class WorldScreen extends BattleScreen {
 
 	/** Show party/world status. */
 	public void updateplayerinformation() {
+		Game.messagepanel.clear();
 		final ArrayList<String> infos = new ArrayList<String>();
 		String period = Javelin.getDayPeriod();
 		String date = "Day " + currentday() + ", " + period.toLowerCase();

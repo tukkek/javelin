@@ -8,7 +8,6 @@ import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.terrain.map.Map;
 import javelin.model.item.Item;
-import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.view.screen.BattleScreen;
@@ -33,8 +32,7 @@ public abstract class Minigame extends Fight {
 	}
 
 	@Override
-	abstract public boolean onEnd(BattleScreen screen,
-			ArrayList<Combatant> originalTeam, BattleState s);
+	abstract public boolean onend();
 
 	@Override
 	public void withdraw(Combatant combatant, BattleScreen screen) {

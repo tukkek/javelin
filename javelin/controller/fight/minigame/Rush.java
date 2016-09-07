@@ -20,7 +20,6 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Spawner;
 import javelin.model.world.location.unique.minigame.DungeonRush;
-import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -123,8 +122,7 @@ public class Rush extends Minigame {
 	}
 
 	@Override
-	public boolean onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
-			BattleState s) {
+	public boolean onend() {
 		DungeonRush dr = DungeonRush.get();
 		if (Fight.victory) {
 			dr.upgrade(true);

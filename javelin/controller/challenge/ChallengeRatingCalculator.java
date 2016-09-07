@@ -35,6 +35,7 @@ import javelin.model.unit.Squad;
  * #see CrFactor
  */
 public class ChallengeRatingCalculator {
+	public static final int DIFFICULTYMODERATE = -4;
 	private static final int MAXIMUM_EL = 50;
 	private static final int MINIMUM_EL = -7;
 	public static final float[] CR_FRACTIONS = new float[] { 3.5f, 3f, 2.5f, 2f,
@@ -573,7 +574,7 @@ public class ChallengeRatingCalculator {
 		if (delta <= -5) {
 			return "easy";
 		}
-		if (delta == -4) {
+		if (delta == DIFFICULTYMODERATE) {
 			return "moderate";
 		}
 		if (delta <= 0) {
@@ -592,42 +593,41 @@ public class ChallengeRatingCalculator {
 	 *            Opponent encounter level.
 	 * @return % of resources used on battle.
 	 */
-	public static float useresources(int teamel, int el) {
-		int difference = el - teamel;
-		if (difference <= -12) {
+	public static float useresources(int delta) {
+		if (delta <= -12) {
 			return .015f;
 		}
-		if (difference <= -11) {
+		if (delta <= -11) {
 			return .022f;
 		}
-		if (difference <= -10) {
+		if (delta <= -10) {
 			return .031f;
 		}
-		if (difference <= -9) {
+		if (delta <= -9) {
 			return .045f;
 		}
-		if (difference <= -8) {
+		if (delta <= -8) {
 			return .062f;
 		}
-		if (difference <= -7) {
+		if (delta <= -7) {
 			return .1f;
 		}
-		if (difference <= -6) {
+		if (delta <= -6) {
 			return .125f;
 		}
-		if (difference <= -5) {
+		if (delta <= -5) {
 			return .2f;
 		}
-		if (difference <= -4) {
+		if (delta <= -4) {
 			return .25f;
 		}
-		if (difference <= -3) {
+		if (delta <= -3) {
 			return .34f;
 		}
-		if (difference <= -2) {
+		if (delta <= -2) {
 			return .5f;
 		}
-		if (difference <= -1) {
+		if (delta <= -1) {
 			return .75f;
 		}
 		return 1;

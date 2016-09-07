@@ -7,6 +7,7 @@ import javelin.JavelinApp;
 import javelin.controller.BattleSetup;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.fight.Fight;
+import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.upgrade.Spell;
 import javelin.model.item.Item;
 import javelin.model.item.Wand;
@@ -14,7 +15,6 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.screen.BattleScreen;
-import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -42,23 +42,32 @@ public class StartBattle extends BattleEvent {
 		fight.setup.setup();
 		Fight.state.next();
 		fight.ready();
-		BattlePanel.current = Fight.state.next;
-		BattleScreen battleScreen = new BattleScreen(true);
-		fight.draw();
-		battleScreen.mainLoop();
+		int diffifculty = ChallengeRatingCalculator
+				.calculateel(Fight.state.redTeam)
+				- ChallengeRatingCalculator.calculateel(Squad.active.members);
+		if (fight instanceof Minigame
+				|| !Squad.active.skipcombat(diffifculty)) {
+			BattlePanel.current = Fight.state.next;
+			BattleScreen battleScreen = new BattleScreen(true);
+			fight.draw();
+			battleScreen.mainLoop();
+		} else {
+			quickbattle(diffifculty);
+		}
 	}
 
 	/**
 	 * Runs a strategic combat instead of opening a {@link BattleScreen}.
+	 * 
+	 * @param difficulty
 	 */
-	public static void quickbattle() {
-		ArrayList<Combatant> opponents = Javelin.app.fight.init();
-		if (Javelin.app.fight.avoid(opponents)) {
-			return;
-		}
-		float resourcesused = ChallengeRatingCalculator.useresources(
-				ChallengeRatingCalculator.calculateel(Squad.active.members),
-				ChallengeRatingCalculator.calculateel(opponents));
+	public void quickbattle(int difficulty) {
+		// ArrayList<Combatant> opponents = Javelin.app.fight.init();
+		// if (Javelin.app.fight.avoid(opponents)) {
+		// return;
+		// }
+		float resourcesused =
+				ChallengeRatingCalculator.useresources(difficulty);
 		ArrayList<Combatant> original =
 				new ArrayList<Combatant>(Squad.active.members);
 		for (Combatant c : original) {
@@ -67,12 +76,14 @@ public class StartBattle extends BattleEvent {
 		if (Squad.active.members.isEmpty()) {
 			Javelin.message("Battle report: Squad lost in combat!", false);
 			Squad.active.disband();
-			return;
+		} else {
+			Fight.victory = true;
+			// preparebattle(Fight.state.redTeam);
+			fight.onend();
+			// EndBattle.showcombatresult(WorldScreen.active, original,
+			// "Battle report: ");
 		}
-		Fight.victory = true;
-		preparebattle(opponents);
-		EndBattle.showcombatresult(WorldScreen.active, original,
-				"Battle report: ");
+		Javelin.app.fight = null;
 	}
 
 	static void strategicdamage(Combatant c, float resourcesused) {

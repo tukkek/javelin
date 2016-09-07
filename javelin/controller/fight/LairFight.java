@@ -8,6 +8,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.world.location.Lair;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.view.screen.BattleScreen;
+import tyrant.mikera.engine.RPG;
 import tyrant.mikera.tyrant.QuestApp;
 
 /**
@@ -44,30 +45,31 @@ public class LairFight extends Fight {
 
 	@Override
 	public String dealreward() {
-		Combatant capture = findmonster();
-		if (capture == null) {
-			return "You have killed the monster, cannot capture it!";
+		try {
+			Combatant capture = findmonster();
+			if (capture == null) {
+				return "You have killed the monster, cannot capture it!";
+			}
+			Javelin.captured = Javelin.recruit(capture.source.clone());
+			Javelin.captured.hp = capture.hp;
+			Javelin.captured.maxhp = capture.maxhp;
+			return "You have captured the " + capture + "!";
+		} finally {
+			Javelin.app.switchScreen(BattleScreen.active);
 		}
-		Javelin.captured = Javelin.recruit(capture.source.clone());
-		Javelin.captured.hp = capture.hp;
-		Javelin.captured.maxhp = capture.maxhp;
-		return "You have captured the " + capture + "!";
 	}
 
 	static Combatant findmonster() {
-		int nfoes = Fight.state.redTeam.size();
-		if (nfoes == 1) {
-			return Fight.state.redTeam.get(0);
-		}
-		if (nfoes == 0) {
+		if (Fight.state.redTeam.isEmpty()) {
 			for (Combatant c : Fight.state.dead) {
 				if (BattleScreen.originalredteam.contains(c)
 						&& c.getnumericstatus() != Combatant.STATUSDEAD) {
 					return c;
 				}
 			}
+			return null;
 		}
-		return null;
+		return RPG.pick(Fight.state.redTeam);
 	}
 
 	@Override
@@ -82,7 +84,7 @@ public class LairFight extends Fight {
 		if (super.win()) {
 			return true;
 		}
-		if (Fight.state.redTeam.size() >= 2) {
+		if (Fight.state.redTeam.size() > 1) {
 			return false;
 		}
 		Combatant target = findmonster();

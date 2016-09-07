@@ -4,10 +4,8 @@ import java.awt.Image;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Incursion;
-import javelin.view.screen.BattleScreen;
 import tyrant.mikera.tyrant.QuestApp;
 
 /**
@@ -47,10 +45,9 @@ public class IncursionFight extends Fight {
 	}
 
 	@Override
-	public boolean onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
-			BattleState s) {
-		super.onEnd(screen, originalTeam, s);
-		if (Fight.state.redTeam.isEmpty()) {
+	public boolean onend() {
+		super.onend();
+		if (Fight.victory) {
 			incursion.remove();
 		} else {
 			for (Combatant incursant : new ArrayList<Combatant>(

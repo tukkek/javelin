@@ -5,11 +5,9 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.controller.CountingSet;
 import javelin.controller.fight.Fight;
-import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.unique.minigame.Battlefield;
-import javelin.view.screen.BattleScreen;
 
 /**
  * Not to be confused with the generic battle controller {@link Fight}.
@@ -34,8 +32,7 @@ public class Battle extends Minigame {
 	}
 
 	@Override
-	public boolean onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
-			BattleState s) {
+	public boolean onend() {
 		if (!victory) {
 			Javelin.message("You lost...", true);
 			return false;

@@ -72,13 +72,17 @@ public class Squad extends WorldActor {
 	public Improvement work = null;
 
 	/**
-	 * If <code>true</code> will skip all possible combats and resolve them
-	 * automatically.
+	 * <code>false</code> will never prompt to skip battles.
 	 * 
-	 * TODO make it and {@link Combatant#automatic} super easy to change in the
-	 * UI.
+	 * <code>null</code> will prompt to skip all easy combat and easier.
+	 * 
+	 * If <code>true</code> will skip all moderate and easier combats
+	 * automatically, prompt for others.
+	 * 
+	 * 
+	 * TODO make it and {@link Combatant#automatic} easier to change in the UI.
 	 */
-	public boolean strategic = false;
+	public Boolean strategic = false;
 	/** Terrain type this squad is coming from after movement. */
 	public Terrain lastterrain = null;
 
@@ -192,7 +196,14 @@ public class Squad extends WorldActor {
 				&& s.transport.speed > transport.speed)) {
 			transport = s.transport;
 		}
-		strategic = strategic && s.strategic;
+		if (s.strategic == true || strategic == true) {
+			strategic = true;
+		}
+		if (s.strategic == null || strategic == null) {
+			strategic = null;
+		} else {
+			strategic = false;
+		}
 		s.disband();
 	}
 
@@ -458,7 +469,9 @@ public class Squad extends WorldActor {
 		}
 		final int bribe = Math.max(1, RewardCalculator.receivegold(foes) / 2);
 		final boolean canhire = diplomacyroll - highest >= 5;
-		return new BribingScreen().bribe(foes, dailyfee, bribe, canhire);
+		boolean b = new BribingScreen().bribe(foes, dailyfee, bribe, canhire);
+		Javelin.app.switchScreen(WorldScreen.active);
+		return b;
 	}
 
 	/**
@@ -680,5 +693,30 @@ public class Squad extends WorldActor {
 	 */
 	public static ArrayList<WorldActor> getsquads() {
 		return getall(Squad.class);
+	}
+
+	public boolean skipcombat(int diffifculty) {
+		if (Boolean.FALSE.equals(strategic)) {
+			return false;
+		}
+		if (strategic == null
+				&& diffifculty >= ChallengeRatingCalculator.DIFFICULTYMODERATE) {
+			return false;
+		}
+		if (Boolean.TRUE.equals(strategic)
+				&& diffifculty <= ChallengeRatingCalculator.DIFFICULTYMODERATE) {
+			return true;
+		}
+		Character input = ' ';
+		while (input != '\n' && input != 's') {
+			final String difficulty =
+					ChallengeRatingCalculator.describedifficulty(diffifculty);
+			final String prompt = "Do you want to skip this " + difficulty
+					+ " battle?\n\n" //
+					+ "Press ENTER to join the battle\n"
+					+ "Press s to skip it and calculate results autoamatically";
+			input = Javelin.prompt(prompt);
+		}
+		return input == 's';
 	}
 }

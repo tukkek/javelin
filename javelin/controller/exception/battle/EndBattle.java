@@ -48,10 +48,8 @@ public class EndBattle extends BattleEvent {
 	public static void end() {
 		int nsquads = Squad.getall(Squad.class).size();
 		Fight.victory = Javelin.app.fight.win();
-		BattleState s = Fight.state;
-		terminateconditions(s, BattleScreen.active);
-		if (!Javelin.app.fight.onEnd(BattleScreen.active,
-				JavelinApp.originalteam, s)) {
+		terminateconditions(Fight.state, BattleScreen.active);
+		if (!Javelin.app.fight.onend()) {
 			return;
 		}
 		AiCache.reset();
@@ -82,21 +80,20 @@ public class EndBattle extends BattleEvent {
 	 * 
 	 * @param prefix
 	 */
-	public static void showcombatresult(BattleScreen screen,
-			List<Combatant> originalteam, String prefix) {
+	public static void showcombatresult(String prefix) {
 		Game.messagepanel.clear();
 		String combatresult;
 		if (Fight.victory) {
 			combatresult = prefix + Javelin.app.fight.dealreward();
-		} else if (screen.fleeing.isEmpty()) {
+		} else if (BattleScreen.active.fleeing.isEmpty()) {
 			Squad.active.disband();
 			combatresult = "You lost!";
 		} else if (Javelin.app.fight.friendly) {
 			combatresult = "You lost!";
 		} else {
 			combatresult = "Fled from combat. No awards received.";
-			if (!Fight.victory
-					&& screen.fleeing.size() != originalteam.size()) {
+			if (!Fight.victory && BattleScreen.active.fleeing
+					.size() != JavelinApp.originalteam.size()) {
 				combatresult += "\nFallen allies left behind are lost!";
 				for (Combatant abandoned : Fight.state.dead) {
 					abandoned.hp = Combatant.DEADATHP;
@@ -110,7 +107,7 @@ public class EndBattle extends BattleEvent {
 		}
 		Game.message(combatresult + "\nPress any key to continue...",
 				Delay.BLOCK);
-		screen.getUserInput();
+		BattleScreen.active.getUserInput();
 	}
 
 	static void updateoriginal(List<Combatant> originalteam) {

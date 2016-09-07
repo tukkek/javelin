@@ -7,11 +7,9 @@ import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.Realm;
-import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
-import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -42,9 +40,8 @@ public class TempleEncounter extends RandomDungeonEncounter {
 	}
 
 	@Override
-	public boolean onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
-			BattleState s) {
-		super.onEnd(screen, originalTeam, s);
+	public boolean onend() {
+		super.onend();
 		Temple.leavingfight = true;
 		return true;
 	}

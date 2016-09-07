@@ -1,14 +1,9 @@
 package javelin.controller.fight;
 
-import java.util.ArrayList;
-
 import javelin.controller.Weather;
 import javelin.controller.terrain.map.Arena;
-import javelin.model.state.BattleState;
-import javelin.model.unit.Combatant;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.unique.TrainingHall;
-import javelin.view.screen.BattleScreen;
 
 /**
  * A {@link Fight} that happens inside the {@link TrainingHall}.
@@ -32,9 +27,8 @@ public class TrainingSession extends Siege {
 	}
 
 	@Override
-	public boolean onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
-			BattleState s) {
-		super.onEnd(screen, originalTeam, s);
+	public boolean onend() {
+		super.onend();
 		if (Fight.victory) {
 			hall.level();
 		}

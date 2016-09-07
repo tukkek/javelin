@@ -11,7 +11,6 @@ import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.item.Key;
-import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -398,8 +397,7 @@ public class Run extends Minigame {
 	}
 
 	@Override
-	public boolean onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
-			BattleState s) {
+	public boolean onend() {
 		if (victory) {
 			Javelin.message(
 					"Congratulations, you have won!\n"

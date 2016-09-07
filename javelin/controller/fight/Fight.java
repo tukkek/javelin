@@ -179,13 +179,11 @@ public abstract class Fight {
 	 *            Description of rewards and other remarks such as
 	 *            vehicle/allies left behind...
 	 */
-	public boolean onEnd(BattleScreen screen, ArrayList<Combatant> originalTeam,
-			BattleState s) {
-		Fight.state = s;
-		for (Combatant c : screen.fleeing) {
+	public boolean onend() {
+		for (Combatant c : BattleScreen.active.fleeing) {
 			Fight.state.blueTeam.add(c);
 		}
-		EndBattle.showcombatresult(screen, originalTeam, "Congratulations! ");
+		EndBattle.showcombatresult("Congratulations! ");
 		return true;
 	}
 

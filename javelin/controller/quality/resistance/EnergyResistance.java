@@ -27,7 +27,7 @@ public class EnergyResistance extends Quality {
 		}
 
 		@Override
-		public String info(Combatant m) {
+		public String inform(Combatant m) {
 			return "Currently resists " + m.source.energyresistance
 					+ " points of energy damage";
 		}

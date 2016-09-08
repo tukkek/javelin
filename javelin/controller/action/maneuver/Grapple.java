@@ -3,7 +3,7 @@ package javelin.controller.action.maneuver;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.old.Game.Delay;
 import javelin.model.condition.Grappling;
-import javelin.model.feat.attack.ImprovedGrapple;
+import javelin.model.feat.attack.martial.ImprovedGrapple;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -11,7 +11,7 @@ import javelin.model.unit.Monster;
 public class Grapple extends Maneuver {
 
 	public Grapple() {
-		super("Grapple", "G", 'G', ImprovedGrapple.singleton, +2);
+		super("Grapple", "G", ImprovedGrapple.SINGLETON, +2);
 	}
 
 	@Override

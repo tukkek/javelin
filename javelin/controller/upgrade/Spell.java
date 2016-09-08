@@ -130,7 +130,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	}
 
 	@Override
-	public String info(Combatant m) {
+	public String inform(Combatant m) {
 		return "Currently can cast this " + count(m) + " times before resting";
 	}
 

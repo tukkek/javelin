@@ -6,11 +6,11 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.terrain.Terrain;
+import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.controller.upgrade.ability.RaiseDexterity;
 import javelin.controller.upgrade.classes.Expert;
-import javelin.controller.upgrade.feat.FeatUpgrade;
 import javelin.controller.upgrade.skill.Disguise;
 import javelin.controller.upgrade.skill.Stealth;
 import javelin.model.feat.skill.Deceitful;

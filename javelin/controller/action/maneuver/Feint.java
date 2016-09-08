@@ -3,14 +3,14 @@ package javelin.controller.action.maneuver;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.old.Game.Delay;
 import javelin.model.condition.Feigned;
-import javelin.model.feat.attack.ImprovedFeint;
+import javelin.model.feat.attack.martial.ImprovedFeint;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
 public class Feint extends Maneuver {
 	public Feint() {
-		super("Feint", "F", 'F', ImprovedFeint.singleton, 0);
+		super("Feint", "F", ImprovedFeint.SINGLETON, 0);
 	}
 
 	@Override

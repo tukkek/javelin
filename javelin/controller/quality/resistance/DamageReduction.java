@@ -21,7 +21,7 @@ public class DamageReduction extends Quality {
 		}
 
 		@Override
-		public String info(Combatant m) {
+		public String inform(Combatant m) {
 			return "Currently reducing " + m.source.dr + " points of damage";
 		}
 

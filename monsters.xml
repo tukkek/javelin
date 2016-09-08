@@ -3803,7 +3803,7 @@ Trickery.</p>
   <Saves Fort="21" Ref="12" Will="13">Fort +21, Ref +12, Will +13</Saves>
   <Abilities Str="34" Dex="10" Con="29" Int="21" Wis="20" Cha="10">Str 34, Dex 10, Con 29, Int 21, Wis 20, Cha 10</Abilities>
   <Skills>Concentration +19, Knowledge (geography) +10, Knowledge(nature) +10, Listen +15, Search +15, Spot +15</Skills>
-  <Feats>Alertness, Blind-Fight, Combat Expertise, ImprovedCritical (tentacle), Improved Initiative, Improved Trip, Iron Will</Feats>
+  <Feats>Alertness, Blind-Fight, Combat Expertise, Improved Critical (tentacle), Improved Initiative, Improved Trip, Iron Will</Feats>
   <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="aquatic">Any aquatic</ClimateAndTerrain>
   <Organization>1</Organization>
   <ChallengeRating Value="12">12</ChallengeRating>
@@ -25177,7 +25177,7 @@ the attack equal to the caster's level.</p>
   <Saves Fort="7" Ref="9" Will="17">Fort +7, Ref +9, Will +17</Saves>
   <Abilities Str="35" Dex="14" Int="20" Wis="20" Cha="18">Str 35, Dex 14, Con -, Int 20, Wis 20, Cha 18</Abilities>
   <Skills>Concentration +19, Hide +12*, Listen +22, Move Silently +19, Spellcraft +19, Spot +22</Skills>
-  <Feats>Alertness, Blind-Fight, Cleave, Combat Casting, Combat Reflexes, Great Cleave, Improved Critical Improved Initiative, Power Attack, Sunder</Feats>
+  <Feats>Alertness, Blind-Fight, Cleave, Combat Casting, Combat Reflexes, Great Cleave, Improved Critical, Improved Initiative, Power Attack, Sunder</Feats>
   <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="desert,forest,hill,marsh,mountains,plains,underground">Any land and underground</ClimateAndTerrain>
   <Organization>1-4</Organization>
   <ChallengeRating Value="16">16</ChallengeRating>

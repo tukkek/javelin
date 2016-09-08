@@ -19,7 +19,7 @@ public class SpellResistance extends Quality {
 		}
 
 		@Override
-		public String info(Combatant m) {
+		public String inform(Combatant m) {
 			return "Current spell resistance is " + m.source.sr;
 		}
 

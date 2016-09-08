@@ -25,7 +25,7 @@ public class Vision extends Quality {
 		}
 
 		@Override
-		public String info(Combatant m) {
+		public String inform(Combatant m) {
 			switch (m.source.vision) {
 			case 0:
 				return "Currently: mormal vision";

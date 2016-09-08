@@ -19,7 +19,7 @@ public abstract class RaiseAbility extends Upgrade {
 	}
 
 	@Override
-	public String info(Combatant m) {
+	public String inform(Combatant m) {
 		String out = "Current " + abilityname + ": ";
 		int bonus = Monster.getbonus(getabilityvalue(m.source));
 		if (bonus > 0) {

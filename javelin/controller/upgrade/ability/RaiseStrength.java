@@ -19,7 +19,7 @@ public class RaiseStrength extends RaiseAbility {
 
 	@Override
 	boolean setattribute(Combatant m, int i) {
-		if (m.source.hasfeat(WeaponFinesse.singleton)) {
+		if (m.source.hasfeat(WeaponFinesse.SINGLETON)) {
 			return false;
 		}
 		m.source.raisestrength(+1);

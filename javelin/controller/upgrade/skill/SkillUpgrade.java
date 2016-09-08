@@ -23,7 +23,7 @@ public abstract class SkillUpgrade extends Upgrade {
 	}
 
 	@Override
-	public String info(Combatant c) {
+	public String inform(Combatant c) {
 		return "Has " + getranks(c.source.skills) + " ranks in "
 				+ name.toLowerCase();
 	}

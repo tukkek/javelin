@@ -5,7 +5,7 @@ import java.util.List;
 
 import javelin.controller.action.Action;
 import javelin.controller.action.CastSpell;
-import javelin.controller.action.Fire;
+import javelin.controller.action.Target;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.ai.MeleeAttack;
 import javelin.controller.ai.ChanceNode;
@@ -30,13 +30,12 @@ import javelin.model.unit.Monster;
  * 
  * @author alex
  */
-public abstract class Maneuver extends Fire implements AiAction {
+public abstract class Maneuver extends Target implements AiAction {
 	private final Feat prerequisite;
 	private int featbonus;
 
-	public Maneuver(String name, String key, char confirm, Feat prerequisite,
-			int featbonus) {
-		super(name, key, confirm);
+	public Maneuver(String name, String key, Feat prerequisite, int featbonus) {
+		super(name, key);
 		this.prerequisite = prerequisite;
 		this.featbonus = featbonus;
 	}

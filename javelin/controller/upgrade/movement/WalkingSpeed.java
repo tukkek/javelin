@@ -17,7 +17,7 @@ public class WalkingSpeed extends Upgrade {
 	}
 
 	@Override
-	public String info(final Combatant m) {
+	public String inform(final Combatant m) {
 		return "Current velocity: " + getSpeed(m.source) + " feet";
 	}
 

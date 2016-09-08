@@ -1,16 +1,31 @@
 package javelin.model.feat.save;
 
 import javelin.model.feat.Feat;
+import javelin.model.unit.Monster;
 
 /**
  * See the d20 SRD for more info.
  */
-public class LightningReflexes extends Feat {
+public class LightningReflexes extends SaveFeat {
+	/** Unique instance of this {@link Feat}. */
+	public static final Feat singleton = new LightningReflexes();
 
-	public LightningReflexes() {
+	private LightningReflexes() {
 		super("lightning reflexes");
 	}
 
-	public static Feat singleton = new LightningReflexes();
+	@Override
+	public Integer getbonus(Monster m) {
+		return m.ref;
+	}
 
+	@Override
+	public void setbonus(Monster m, int value) {
+		m.ref = value;
+	}
+
+	@Override
+	protected String getname() {
+		return "reflex";
+	}
 }

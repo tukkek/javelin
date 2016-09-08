@@ -6,11 +6,11 @@ import javelin.model.feat.Feat;
  * See the d20 SRD for more info.
  */
 public class WeaponFinesse extends Feat {
-	static public WeaponFinesse singleton;
+	/** Unique instance of this {@link Feat}. */
+	static public final WeaponFinesse SINGLETON = new WeaponFinesse();
 
-	public WeaponFinesse() {
+	/** Constructor. */
+	private WeaponFinesse() {
 		super("weapon finesse");
-		singleton = this;
 	}
-
 }

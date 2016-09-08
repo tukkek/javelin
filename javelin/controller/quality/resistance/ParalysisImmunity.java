@@ -18,7 +18,7 @@ public class ParalysisImmunity extends Quality {
 		}
 
 		@Override
-		public String info(Combatant c) {
+		public String inform(Combatant c) {
 			return "";
 		}
 

@@ -1,6 +1,6 @@
 package javelin.model.condition;
 
-import javelin.model.feat.attack.ImprovedGrapple;
+import javelin.model.feat.attack.martial.ImprovedGrapple;
 import javelin.model.unit.Combatant;
 
 /**

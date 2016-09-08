@@ -2,7 +2,7 @@ package javelin.model.unit;
 
 import java.util.ArrayList;
 
-import javelin.controller.upgrade.feat.RapidShot;
+import javelin.model.feat.attack.shot.RapidShot;
 import javelin.view.screen.StatisticsScreen;
 
 /**

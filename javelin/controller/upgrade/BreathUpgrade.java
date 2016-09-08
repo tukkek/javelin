@@ -22,7 +22,7 @@ public class BreathUpgrade extends Upgrade {
 	}
 
 	@Override
-	public String info(Combatant m) {
+	public String inform(Combatant m) {
 		return breath.toString();
 	}
 

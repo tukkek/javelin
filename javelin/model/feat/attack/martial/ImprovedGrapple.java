@@ -1,7 +1,8 @@
-package javelin.model.feat.attack;
+package javelin.model.feat.attack.martial;
 
 import javelin.controller.action.maneuver.Maneuver;
 import javelin.model.feat.Feat;
+import javelin.model.unit.Combatant;
 
 /**
  * This and other special combat {@link Maneuver}s, instead of being an option
@@ -16,11 +17,23 @@ import javelin.model.feat.Feat;
  * @author alex
  */
 public class ImprovedGrapple extends Feat {
-	public static ImprovedGrapple singleton;
+	/** Unique instance of this {@link Feat}. */
+	public static final ImprovedGrapple SINGLETON = new ImprovedGrapple();
 
-	public ImprovedGrapple() {
+	/** Constructor. */
+	private ImprovedGrapple() {
 		super("Improved grapple");
-		ImprovedGrapple.singleton = this;
+		prerequisite = CombatExpertise.SINGLETON;
+	}
+
+	@Override
+	public String inform(Combatant c) {
+		return c.source.dexterity + " dexteriry";
+	}
+
+	@Override
+	public boolean apply(Combatant c) {
+		return c.source.dexterity >= 13 && super.apply(c);
 	}
 
 }

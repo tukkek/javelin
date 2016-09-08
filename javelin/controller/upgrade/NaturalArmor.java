@@ -15,7 +15,7 @@ public class NaturalArmor extends Upgrade {
 	}
 
 	@Override
-	public String info(final Combatant m) {
+	public String inform(final Combatant m) {
 		return "Current armor class: " + m.source.ac;
 	}
 

@@ -13,10 +13,10 @@ import javelin.Javelin;
 import javelin.controller.action.Examine;
 import javelin.controller.upgrade.Spell;
 import javelin.model.condition.Breathless;
-import javelin.model.feat.attack.CombatExpertise;
-import javelin.model.feat.attack.ImprovedFeint;
-import javelin.model.feat.attack.ImprovedGrapple;
-import javelin.model.feat.attack.ImprovedTrip;
+import javelin.model.feat.attack.martial.CombatExpertise;
+import javelin.model.feat.attack.martial.ImprovedFeint;
+import javelin.model.feat.attack.martial.ImprovedGrapple;
+import javelin.model.feat.attack.martial.ImprovedTrip;
 import javelin.model.item.Item;
 import javelin.model.spell.Summon;
 import javelin.model.unit.Combatant;
@@ -152,16 +152,16 @@ public class StatusPanel extends TPanel {
 		if (combatant.source.touch != null) {
 			status += combatant.source.touch + "\n";
 		}
-		if (combatant.source.hasfeat(CombatExpertise.singleton)) {
+		if (combatant.source.hasfeat(CombatExpertise.SINGLETON)) {
 			status += "Defensive\n";
 		}
-		if (combatant.source.hasfeat(ImprovedFeint.singleton)) {
+		if (combatant.source.hasfeat(ImprovedFeint.SINGLETON)) {
 			status += "Feint\n";
 		}
-		if (combatant.source.hasfeat(ImprovedGrapple.singleton)) {
+		if (combatant.source.hasfeat(ImprovedGrapple.SINGLETON)) {
 			status += "Grapple\n";
 		}
-		if (combatant.source.hasfeat(ImprovedTrip.singleton)) {
+		if (combatant.source.hasfeat(ImprovedTrip.SINGLETON)) {
 			status += "Trip\n";
 		}
 		return status;

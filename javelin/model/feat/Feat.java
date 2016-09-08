@@ -1,32 +1,10 @@
 package javelin.model.feat;
 
 import java.io.Serializable;
-import java.util.TreeMap;
 
 import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.Upgrade;
-import javelin.model.feat.attack.BullRush;
-import javelin.model.feat.attack.Cleave;
-import javelin.model.feat.attack.CombatExpertise;
-import javelin.model.feat.attack.ExoticWeaponProficiency;
-import javelin.model.feat.attack.GreatCleave;
-import javelin.model.feat.attack.ImprovedFeint;
-import javelin.model.feat.attack.ImprovedGrapple;
-import javelin.model.feat.attack.ImprovedPreciseShot;
-import javelin.model.feat.attack.ImprovedTrip;
-import javelin.model.feat.attack.Multiattack;
-import javelin.model.feat.attack.MultiweaponFighting;
-import javelin.model.feat.attack.PointBlankShot;
-import javelin.model.feat.attack.PowerAttack;
-import javelin.model.feat.attack.PreciseShot;
-import javelin.model.feat.attack.RapidShot;
-import javelin.model.feat.attack.WeaponFinesse;
-import javelin.model.feat.attack.WeaponFocus;
-import javelin.model.feat.save.GreatFortitude;
-import javelin.model.feat.save.IronWill;
-import javelin.model.feat.save.LightningReflexes;
-import javelin.model.feat.skill.Alertness;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -39,45 +17,25 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public abstract class Feat implements Serializable {
-	transient static public TreeMap<String, Feat> ALL =
-			new TreeMap<String, Feat>();
+	/** Feat name as per d20 rules. */
 	public final String name;
+
+	boolean stack = false;
 	/**
 	 * If a feat needs updating, every time a {@link Combatant} is upgraded
 	 * {@link #remove(Combatant)} and {@link #add(Combatant)} will be called so
 	 * that there is a chance to update any statistics.
 	 */
 	public boolean update = false;
+	/**
+	 * If not <code>null</code>, symbolizes a previous requirement before
+	 * acquiring this feat.
+	 */
+	public Feat prerequisite = null;
 
-	static {
-		new Alertness();
-		new BullRush();
-		new Cleave();
-		new ExoticWeaponProficiency();
-		new GreatCleave();
-		new GreatFortitude();
-		new ImprovedInitiative();
-		new ImprovedPreciseShot();
-		new IronWill();
-		new LightningReflexes();
-		new Multiattack();
-		new MultiweaponFighting();
-		new PointBlankShot();
-		new PowerAttack();
-		new PreciseShot();
-		new RapidShot();
-		new Toughness();
-		new WeaponFinesse();
-		new WeaponFocus();
-		new CombatExpertise();
-		new ImprovedFeint();
-		new ImprovedTrip();
-		new ImprovedGrapple();
-	}
-
+	/** Constructor. */
 	public Feat(String namep) {
 		name = namep.toLowerCase();
-		ALL.put(name.toLowerCase(), this);
 	}
 
 	@Override
@@ -117,5 +75,28 @@ public abstract class Feat implements Serializable {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	/** See {@link Upgrade#inform(Combatant) } */
+	public String inform(Combatant c) {
+		int count = c.source.countfeat(this);
+		String name = toString().toLowerCase();
+		if (count == 0) {
+			return c + " doesn't have " + name;
+		} else {
+			return c + " has bought " + name + " " + count + " times";
+		}
+	}
+
+	/** See {@link Upgrade} */
+	public boolean apply(Combatant c) {
+		if (!stack && c.source.hasfeat(this)) {
+			return false;
+		}
+		if (prerequisite != null && !c.source.hasfeat(prerequisite)) {
+			return false;
+		}
+		c.source.addfeat(this);
+		return true;
 	}
 }

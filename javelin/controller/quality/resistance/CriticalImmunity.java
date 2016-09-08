@@ -17,7 +17,7 @@ public class CriticalImmunity extends Quality {
 		}
 
 		@Override
-		public String info(Combatant c) {
+		public String inform(Combatant c) {
 			return "Not immune.";
 		}
 

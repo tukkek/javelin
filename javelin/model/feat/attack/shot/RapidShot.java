@@ -1,24 +1,26 @@
-package javelin.controller.upgrade.feat;
+package javelin.model.feat.attack.shot;
 
-import javelin.model.feat.attack.PreciseShot;
+import javelin.model.feat.Feat;
 import javelin.model.unit.Attack;
 import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
 /**
- * @see javelin.model.feat.attack.RapidShot
- * @author alex
+ * See the d20 SRD for more info.
  */
-public class RapidShot extends FeatUpgrade {
+public class RapidShot extends Feat {
+	/** Unique instance of this {@link Feat}. */
+	public static final Feat SINGLETON = new RapidShot();
+
 	/** Constructor. */
-	public RapidShot() {
-		super(javelin.model.feat.attack.RapidShot.SINGLETON);
-		prerequisite = PreciseShot.SINGLETON;
+	private RapidShot() {
+		super("Rapid shot");
+		prerequisite = javelin.model.feat.attack.shot.PreciseShot.SINGLETON;
 	}
 
 	@Override
-	public String info(Combatant m) {
+	public String inform(Combatant m) {
 		return "";
 	}
 
@@ -31,7 +33,8 @@ public class RapidShot extends FeatUpgrade {
 		return false;
 	}
 
-	static public void update(Monster m) {
+	@Override
+	public void update(Monster m) {
 		for (AttackSequence sequence : (Iterable<AttackSequence>) m.ranged
 				.clone()) {
 			AttackSequence rapid = sequence.clone();

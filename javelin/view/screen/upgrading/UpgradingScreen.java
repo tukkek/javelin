@@ -135,7 +135,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 						+ cost.multiply(new BigDecimal(100)).setScale(0,
 								RoundingMode.HALF_UP)
 						+ "XP, $" + price(cost.floatValue());
-				s += "[" + i++ + "] " + name + " " + o.u.info(m) + costinfo
+				s += "[" + i++ + "] " + name + " " + o.u.inform(m) + costinfo
 						+ ", " + Math.round(cost.floatValue() * 7) + " days\n";
 			}
 		}

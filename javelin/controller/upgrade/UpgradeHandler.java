@@ -15,7 +15,6 @@ import javelin.controller.upgrade.classes.ClassAdvancement;
 import javelin.controller.upgrade.classes.Commoner;
 import javelin.controller.upgrade.classes.Expert;
 import javelin.controller.upgrade.classes.Warrior;
-import javelin.controller.upgrade.feat.FeatUpgrade;
 import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.model.Realm;
 import javelin.model.spell.Summon;
@@ -89,6 +88,9 @@ public class UpgradeHandler {
 	 * {@link SummoningCircle}.
 	 */
 	public HashSet<Upgrade> schoolsummoning = new HashSet<Upgrade>();
+
+	/** Internal upgrades. */
+	public HashSet<Upgrade> internal = new HashSet<Upgrade>();
 
 	/**
 	 * Gives a starting selection of upgrades to each {@link Town}.
@@ -198,6 +200,7 @@ public class UpgradeHandler {
 		addall(schoolhealwounds, all, "schoolhealwounds");
 		addall(schooltransmutation, all, "schooltransmutation");
 		addall(schooldivination, all, "schooldivination");
+		addall(internal, all, "internal");
 
 		HashSet<Upgrade> classes = new HashSet<Upgrade>();
 		for (ClassAdvancement ca : ClassAdvancement.CLASSES) {

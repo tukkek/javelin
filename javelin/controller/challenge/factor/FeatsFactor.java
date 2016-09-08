@@ -1,26 +1,28 @@
 package javelin.controller.challenge.factor;
 
+import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.controller.upgrade.feat.BullRushUpgrade;
-import javelin.controller.upgrade.feat.CleaveUpgrade;
-import javelin.controller.upgrade.feat.CombatExpertiseUpgrade;
-import javelin.controller.upgrade.feat.FeatUpgrade;
-import javelin.controller.upgrade.feat.GreatCleaveUpgrade;
-import javelin.controller.upgrade.feat.GreatFortitude;
-import javelin.controller.upgrade.feat.ImprovedFeintUpgrade;
-import javelin.controller.upgrade.feat.ImprovedGrappleUpgrade;
-import javelin.controller.upgrade.feat.ImprovedInititative;
-import javelin.controller.upgrade.feat.ImprovedPreciseShot;
-import javelin.controller.upgrade.feat.ImprovedTripUpgrade;
-import javelin.controller.upgrade.feat.IronWill;
-import javelin.controller.upgrade.feat.LightningReflexes;
-import javelin.controller.upgrade.feat.MeleeFocus;
-import javelin.controller.upgrade.feat.PointBlankShot;
-import javelin.controller.upgrade.feat.PowerAttackUpgrade;
-import javelin.controller.upgrade.feat.PreciseShot;
-import javelin.controller.upgrade.feat.RangedFocus;
-import javelin.controller.upgrade.feat.RapidShot;
-import javelin.controller.upgrade.feat.Toughness;
+import javelin.model.feat.ImprovedInitiative;
+import javelin.model.feat.Toughness;
+import javelin.model.feat.attack.BullRush;
+import javelin.model.feat.attack.Cleave;
+import javelin.model.feat.attack.ExoticWeaponProficiency;
+import javelin.model.feat.attack.GreatCleave;
+import javelin.model.feat.attack.Multiattack;
+import javelin.model.feat.attack.MultiweaponFighting;
+import javelin.model.feat.attack.PowerAttack;
+import javelin.model.feat.attack.WeaponFinesse;
+import javelin.model.feat.attack.focus.WeaponFocus;
+import javelin.model.feat.attack.martial.CombatExpertise;
+import javelin.model.feat.attack.martial.ImprovedFeint;
+import javelin.model.feat.attack.martial.ImprovedGrapple;
+import javelin.model.feat.attack.martial.ImprovedTrip;
+import javelin.model.feat.attack.shot.ImprovedPreciseShot;
+import javelin.model.feat.attack.shot.PointBlankShot;
+import javelin.model.feat.attack.shot.PreciseShot;
+import javelin.model.feat.attack.shot.RapidShot;
+import javelin.model.feat.save.IronWill;
+import javelin.model.feat.save.LightningReflexes;
 import javelin.model.feat.skill.Alertness;
 import javelin.model.feat.skill.Deceitful;
 import javelin.model.unit.Monster;
@@ -39,33 +41,43 @@ public class FeatsFactor extends CrFactor {
 
 	@Override
 	public void listupgrades(UpgradeHandler handler) {
-		handler.earth.add(new Toughness());
-		handler.earth.add(new GreatFortitude());
+		handler.earth.add(new FeatUpgrade(Toughness.SINGLETON));
+		handler.earth.add(new FeatUpgrade(
+				javelin.model.feat.save.GreatFortitude.SINGLETON));
 
-		handler.wind.add(new RangedFocus("Ranged focus"));
-		handler.wind.add(new LightningReflexes());
-		handler.wind.add(new ImprovedInititative());
+		handler.wind.add(new FeatUpgrade(
+				javelin.model.feat.attack.focus.RangedFocus.SINGLETON));
+		handler.wind.add(new FeatUpgrade(LightningReflexes.singleton));
+		handler.wind.add(new FeatUpgrade(ImprovedInitiative.SINGLETON));
 
-		handler.fire.add(new IronWill());
-		handler.fire.add(new MeleeFocus("Mêlée focus"));
+		handler.fire.add(new FeatUpgrade(IronWill.SINGLETON));
+		handler.fire.add(new FeatUpgrade(
+				javelin.model.feat.attack.focus.MeleeFocus.SINGLETON));
 
-		handler.good.add(new FeatUpgrade(Alertness.INSTANCE));
+		handler.good.add(new FeatUpgrade(Alertness.SINGLETON));
 
 		handler.evil.add(new FeatUpgrade(Deceitful.SINGLETON));
 
-		handler.shots.add(new PointBlankShot());
-		handler.shots.add(new PreciseShot());
-		handler.shots.add(new ImprovedPreciseShot());
-		handler.shots.add(new RapidShot());
+		handler.shots.add(new FeatUpgrade(PointBlankShot.SINGLETON));
+		handler.shots.add(new FeatUpgrade(PreciseShot.SINGLETON));
+		handler.shots.add(new FeatUpgrade(ImprovedPreciseShot.SINGLETON));
+		handler.shots.add(new FeatUpgrade(RapidShot.SINGLETON));
 
-		handler.power.add(new PowerAttackUpgrade());
-		handler.power.add(new BullRushUpgrade());
-		handler.power.add(new CleaveUpgrade());
-		handler.power.add(new GreatCleaveUpgrade());
+		handler.power.add(new FeatUpgrade(PowerAttack.SINGLETON));
+		handler.power.add(new FeatUpgrade(BullRush.SINGLETON));
+		handler.power.add(new FeatUpgrade(Cleave.SINGLETON));
+		handler.power.add(new FeatUpgrade(GreatCleave.SINGLETON));
 
-		handler.expertise.add(new CombatExpertiseUpgrade());
-		handler.expertise.add(new ImprovedFeintUpgrade());
-		handler.expertise.add(new ImprovedGrappleUpgrade());
-		handler.expertise.add(new ImprovedTripUpgrade());
+		handler.expertise.add(new FeatUpgrade(CombatExpertise.SINGLETON));
+		handler.expertise.add(new FeatUpgrade(ImprovedFeint.SINGLETON));
+		handler.expertise.add(new FeatUpgrade(ImprovedGrapple.SINGLETON));
+		handler.expertise.add(new FeatUpgrade(ImprovedTrip.SINGLETON));
+
+		handler.internal.add(new FeatUpgrade(WeaponFocus.SINGLETON));
+		handler.internal
+				.add(new FeatUpgrade(ExoticWeaponProficiency.SINGLETON));
+		handler.internal.add(new FeatUpgrade(Multiattack.SINGLETON));
+		handler.internal.add(new FeatUpgrade(MultiweaponFighting.SINGLETON));
+		handler.internal.add(new FeatUpgrade(WeaponFinesse.SINGLETON));
 	}
 }

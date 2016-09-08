@@ -3,7 +3,7 @@ package javelin.controller.action.maneuver;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.old.Game.Delay;
 import javelin.model.condition.DefensiveStance;
-import javelin.model.feat.attack.CombatExpertise;
+import javelin.model.feat.attack.martial.CombatExpertise;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Attack;
 import javelin.model.unit.Combatant;
@@ -11,7 +11,7 @@ import javelin.model.unit.Combatant;
 public class DefensiveAttack extends Maneuver {
 
 	public DefensiveAttack() {
-		super("Defensive attack", "D", 'D', CombatExpertise.singleton, 0);
+		super("Defensive attack", "D", CombatExpertise.SINGLETON, 0);
 	}
 
 	@Override

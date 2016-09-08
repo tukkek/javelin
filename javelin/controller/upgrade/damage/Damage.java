@@ -20,7 +20,7 @@ public abstract class Damage extends Upgrade {
 	protected abstract List<AttackSequence> getattacktype(final Monster m);
 
 	@Override
-	public String info(final Combatant m) {
+	public String inform(final Combatant m) {
 		List<String> information = new ArrayList<String>();
 		information.add("Current: ");
 		for (final List<Attack> sequence : getattacktype(m.source)) {

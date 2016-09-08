@@ -38,7 +38,7 @@ public class TouchAttack extends Upgrade implements Cloneable, Serializable {
 	}
 
 	@Override
-	public String info(Combatant c) {
+	public String inform(Combatant c) {
 		return name + " (" + damage[0] + "d" + damage[1] + ", reflex save "
 				+ savedc + " half)";
 	}

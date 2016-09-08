@@ -15,9 +15,11 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public class PowerAttack extends Feat {
+	/** Unique instance of this {@link Feat}. */
 	public final static Feat SINGLETON = new PowerAttack();
 
-	public PowerAttack() {
+	/** Constructor. */
+	private PowerAttack() {
 		super("Power attack");
 		update = true;
 	}
@@ -67,5 +69,16 @@ public class PowerAttack extends Feat {
 				m.melee.add(createattack(attack, target));
 			}
 		}
+	}
+
+	@Override
+	public String inform(Combatant c) {
+		return "Current base attack bonus: +" + c.source.getbaseattackbonus();
+	}
+
+	@Override
+	public boolean apply(Combatant c) {
+		return c.source.strength >= 13 && c.source.getbaseattackbonus() >= 1
+				&& super.apply(c);
 	}
 }

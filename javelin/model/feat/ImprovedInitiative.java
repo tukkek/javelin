@@ -1,14 +1,29 @@
 package javelin.model.feat;
 
+import javelin.model.unit.Combatant;
+
 /**
  * See the d20 SRD for more info.
  */
 public class ImprovedInitiative extends Feat {
+	/** Unique instance of this {@link Feat}. */
+	public static final ImprovedInitiative SINGLETON = new ImprovedInitiative();
 
-	public static Feat singleton = null;
-
-	public ImprovedInitiative() {
+	private ImprovedInitiative() {
 		super("improved initiative");
-		singleton = this;
+	}
+
+	@Override
+	public String inform(final Combatant m) {
+		return "Current initiative: " + m.source.initiative;
+	}
+
+	@Override
+	public boolean apply(final Combatant m) {
+		if (super.apply(m)) {
+			m.source.initiative += 4;
+			return true;
+		}
+		return false;
 	}
 }

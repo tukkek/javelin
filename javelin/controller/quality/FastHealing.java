@@ -18,7 +18,7 @@ public class FastHealing extends Quality {
 		}
 
 		@Override
-		public String info(final Combatant m) {
+		public String inform(final Combatant m) {
 			return "Current: " + m.source.fasthealing + " ("
 					+ Math.round(100 * m.source.fasthealing / m.maxhp) + "%)";
 		}

@@ -43,7 +43,7 @@ public abstract class Upgrade implements Serializable {
 	 * 
 	 * @return one line of text.
 	 */
-	public abstract String info(final Combatant c);
+	public abstract String inform(final Combatant c);
 
 	/**
 	 * @param c

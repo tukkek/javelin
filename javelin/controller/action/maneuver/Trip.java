@@ -3,7 +3,7 @@ package javelin.controller.action.maneuver;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.old.Game.Delay;
 import javelin.model.condition.Prone;
-import javelin.model.feat.attack.ImprovedTrip;
+import javelin.model.feat.attack.martial.ImprovedTrip;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -11,7 +11,7 @@ import javelin.model.unit.Monster;
 public class Trip extends Maneuver {
 
 	public Trip() {
-		super("Trip", "T", 'T', ImprovedTrip.singleton, +2);
+		super("Trip", "T", ImprovedTrip.SINGLETON, +2);
 	}
 
 	@Override

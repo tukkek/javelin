@@ -23,9 +23,9 @@ import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.classes.ClassAdvancement;
-import javelin.controller.upgrade.feat.MeleeFocus;
 import javelin.model.Cloneable;
 import javelin.model.feat.Feat;
+import javelin.model.feat.attack.focus.WeaponFocus;
 import javelin.model.item.Scroll;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.item.artifact.Slot;
@@ -363,7 +363,7 @@ public class Monster implements Cloneable, Serializable {
 			classesbab += classdata.table[classdata.getlevel(this)].bab;
 		}
 		return classesbab
-				+ new Long(Math.round(originalhd * MeleeFocus.bab.get(type)))
+				+ new Long(Math.round(originalhd * WeaponFocus.BAB.get(type)))
 						.intValue();
 	}
 

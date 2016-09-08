@@ -119,7 +119,7 @@ public class Skills implements Serializable, Cloneable {
 		if (flyingbonus && monster.fly > 0) {
 			p += 1;
 		}
-		if (monster.hasfeat(Alertness.INSTANCE)) {
+		if (monster.hasfeat(Alertness.SINGLETON)) {
 			p += Alertness.BONUS;
 		}
 		if (weatherpenalty && Weather.current != Weather.DRY) {

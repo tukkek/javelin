@@ -29,7 +29,7 @@ public class EffectUpgrade extends Upgrade {
 	}
 
 	@Override
-	public String info(Combatant c) {
+	public String inform(Combatant c) {
 		HashSet<String> effects = new HashSet<String>();
 		for (AttackSequence as : c.source.melee) {
 			for (Attack a : as) {

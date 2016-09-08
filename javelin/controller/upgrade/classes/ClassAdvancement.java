@@ -59,7 +59,7 @@ public abstract class ClassAdvancement extends Upgrade {
 	}
 
 	@Override
-	public String info(Combatant m) {
+	public String inform(Combatant m) {
 		return "Current level: " + getlevel(m.source);
 	}
 

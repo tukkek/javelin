@@ -1,6 +1,6 @@
 package javelin.controller.quality;
 
-import javelin.model.feat.attack.ImprovedGrapple;
+import javelin.model.feat.attack.martial.ImprovedGrapple;
 import javelin.model.unit.Monster;
 
 /**
@@ -17,13 +17,13 @@ public class ImprovedGrab extends Quality {
 	@Override
 	public void add(String declaration, Monster m) {
 		if (!has(m)) {
-			m.feats.add(ImprovedGrapple.singleton);
+			m.feats.add(ImprovedGrapple.SINGLETON);
 		}
 	}
 
 	@Override
 	public boolean has(Monster m) {
-		return m.feats.contains(ImprovedGrapple.singleton);
+		return m.feats.contains(ImprovedGrapple.SINGLETON);
 	}
 
 	@Override

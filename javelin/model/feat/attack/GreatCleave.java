@@ -1,6 +1,7 @@
 package javelin.model.feat.attack;
 
 import javelin.model.feat.Feat;
+import javelin.model.unit.Combatant;
 
 /**
  * See the d20 SRD for more info.
@@ -8,9 +9,22 @@ import javelin.model.feat.Feat;
  * @see Cleave
  */
 public class GreatCleave extends Feat {
+	/** Unique instance of this {@link Feat}. */
 	public static final GreatCleave SINGLETON = new GreatCleave();
 
-	public GreatCleave() {
+	/** Constructor. */
+	private GreatCleave() {
 		super("Great cleave");
+		prerequisite = Cleave.SINGLETON;
+	}
+
+	@Override
+	public String inform(Combatant c) {
+		return "Base attack bonus: +" + c.source.getbaseattackbonus();
+	}
+
+	@Override
+	public boolean apply(Combatant m) {
+		return m.source.getbaseattackbonus() >= 4 && super.apply(m);
 	}
 }

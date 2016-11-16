@@ -4,8 +4,8 @@ import javelin.Javelin;
 import javelin.controller.exception.RepeatTurn;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.view.screen.NamingScreen;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.town.RecruitScreen;
 
 /**
  * Rename combatant.
@@ -26,6 +26,6 @@ public class Rename extends WorldAction {
 			throw new RepeatTurn();
 		}
 		Combatant m = Squad.active.members.get(i);
-		m.source.customName = RecruitScreen.namingscreen(m.source.toString());
+		m.source.customName = NamingScreen.getname(m.source.toString());
 	}
 }

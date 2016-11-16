@@ -10,9 +10,9 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.model.world.location.town.Dwelling;
 import javelin.model.world.location.unique.UniqueLocation;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.town.RecruitScreen;
 
 /**
  * Large-scale combat minigame.
@@ -65,7 +65,7 @@ public class Battlefield extends UniqueLocation {
 			choices.add(nsurvivors + " " + survivor + " (" + cost + "XP)");
 		}
 		int choice = Javelin.choose(
-				"You currently have " + RecruitScreen.sumxp()
+				"You currently have " + Dwelling.sumxp()
 						+ " XP.\n\nRecruit which group of survivors?",
 				choices, true, false);
 		Javelin.app.switchScreen(WorldScreen.active);
@@ -73,7 +73,7 @@ public class Battlefield extends UniqueLocation {
 			return true;
 		}
 		Integer cost = costs.get(choice);
-		if (!RecruitScreen.canbuy(cost)) {
+		if (!Dwelling.canbuy(cost)) {
 			Javelin.message("Not enough experience to recruit this group...",
 					false);
 			return true;
@@ -83,7 +83,7 @@ public class Battlefield extends UniqueLocation {
 	}
 
 	void recruit(String choice, Integer cost) {
-		RecruitScreen.spend(cost / 100);
+		Dwelling.spend(cost / 100);
 		Monster m = Javelin.getmonster(choice);
 		for (int i = 0; i < this.survivors.get(choice); i++) {
 			Squad.active.members.add(new Combatant(m, true));

@@ -46,7 +46,7 @@ public abstract class Fortification extends Location {
 	 */
 	protected Terrain terrain = null;
 	/** TODO There is certainly a better way to do this. */
-	boolean generategarrison = true;
+	public boolean generategarrison = true;
 
 	/**
 	 * Generates a guarded location based on a difficulty range. The difficulty

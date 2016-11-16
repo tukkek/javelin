@@ -1,11 +1,11 @@
 Version 1.7
 
- * Basic mouse support!
+ * Initial mouse support!
  * 4 mini-games: Arena, Battlefield, Dungeon Rush and Ziggurat!
  * New locations: natural resources and Assassins Guild
  * Infiltrate enemy towns to sabotage them
  * New skill: disguise
- * World map fog of war
+ * World map fog-of-war
 
 Version 1.6 (2016-07-15) 
 

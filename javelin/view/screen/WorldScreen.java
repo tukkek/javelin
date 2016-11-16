@@ -216,7 +216,7 @@ public class WorldScreen extends BattleScreen {
 		if (act != null && act.work != null) {
 			act.build();
 		}
-		long time = act == null ? Town.train() : act.hourselapsed;
+		long time = act.hourselapsed;
 		final int day = new Double(Math.ceil(time / 24.0)).intValue();
 		List<WorldActor> squads = Squad.getall(Squad.class);
 		while (day > WorldScreen.lastday || squads.isEmpty()) {

@@ -1,4 +1,4 @@
-package javelin.model.world.location.fortification;
+package javelin.model.world.location.town;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -11,7 +11,8 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.transport.Transport;
 import javelin.model.world.WorldActor;
-import javelin.model.world.location.town.TrainingOrder;
+import javelin.model.world.location.fortification.Fortification;
+import javelin.model.world.location.order.TrainingOrder;
 import javelin.view.screen.upgrading.AcademyScreen;
 import javelin.view.screen.upgrading.UpgradingScreen;
 
@@ -138,5 +139,12 @@ public abstract class Academy extends Fortification {
 			combatants.add(training.untrained);
 		}
 		return combatants;
+	}
+
+	/**
+	 * @return <code>true</code> if already has the maximum number of upgrades.
+	 */
+	public boolean full() {
+		return upgrades.size() >= 9;
 	}
 }

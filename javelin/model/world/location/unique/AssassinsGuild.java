@@ -18,10 +18,10 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.WorldActor;
-import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.town.Academy;
+import javelin.model.world.location.town.Dwelling;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.Option;
-import javelin.view.screen.town.RecruitScreen;
 import javelin.view.screen.town.option.RecruitOption;
 import javelin.view.screen.upgrading.AcademyScreen;
 
@@ -54,7 +54,7 @@ public class AssassinsGuild extends Academy {
 						+ round(next * 2)
 						+ " sabotages to proceed to the next rank.";
 			}
-			return s + "\n\nYou have " + RecruitScreen.sumxp() + "XP";
+			return s + "\n\nYou have " + Dwelling.sumxp() + "XP";
 		}
 
 		private int round(float f) {
@@ -86,9 +86,8 @@ public class AssassinsGuild extends Academy {
 		public boolean select(Option op) {
 			if (op instanceof RecruitOption) {
 				RecruitOption ro = (RecruitOption) op;
-				if (RecruitScreen
-						.canbuy(Math.round(ro.m.challengeRating * 100))) {
-					RecruitScreen.spend(ro.m.challengeRating);
+				if (Dwelling.canbuy(Math.round(ro.m.challengeRating * 100))) {
+					Dwelling.spend(ro.m.challengeRating);
 					Squad.active.members.add(new Combatant(ro.m.clone(), true));
 					return true;
 				} else {

@@ -1,4 +1,4 @@
-package javelin.model.world.location.town;
+package javelin.model.world.location.order;
 
 import java.util.ArrayList;
 

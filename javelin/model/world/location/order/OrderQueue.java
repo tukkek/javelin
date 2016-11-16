@@ -1,10 +1,11 @@
-package javelin.model.world.location.town;
+package javelin.model.world.location.order;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javelin.model.unit.Squad;
+import javelin.model.world.location.town.Town;
 
 /**
  * A container of {@link Order} for a {@link Town}.

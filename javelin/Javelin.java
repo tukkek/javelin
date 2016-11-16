@@ -42,8 +42,8 @@ import javelin.model.world.WorldActor;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
+import javelin.view.screen.NamingScreen;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.town.RecruitScreen;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.tyrant.QuestApp;
@@ -308,7 +308,7 @@ public class Javelin {
 	 */
 	public static Combatant recruit(Monster pick) {
 		Combatant c = new Combatant(pick.clone(), true);
-		c.source.customName = RecruitScreen.namingscreen(c.toString());
+		c.source.customName = NamingScreen.getname(c.toString());
 		Squad.active.members.add(c);
 		/*
 		 * night-only is largely cosmetic so just don't appear for player units

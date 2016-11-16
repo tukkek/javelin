@@ -3,6 +3,7 @@ package javelin.model.world.location.fortification;
 import java.util.HashSet;
 
 import javelin.controller.upgrade.Upgrade;
+import javelin.model.world.location.town.Academy;
 
 /**
  * Allows a player to learn one upgrade set.

@@ -16,11 +16,11 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.town.Dwelling;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.haxor.HaxorScreen;
-import javelin.view.screen.town.RecruitScreen;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -157,11 +157,11 @@ public class PillarOfSkulls extends UniqueLocation {
 		}
 
 		boolean showlocation() {
-			if (!RecruitScreen.canbuy(50)) {
+			if (!Dwelling.canbuy(50)) {
 				print(text + "\nReturn when you have more experience!");
 				return false;
 			}
-			RecruitScreen.spend(.5f);
+			Dwelling.spend(.5f);
 			WorldActor closest = find(UniqueLocation.class);
 			if (closest == null) {
 				closest = find(Town.class);

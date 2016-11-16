@@ -5,8 +5,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.upgrade.Upgrade;
-import javelin.model.item.Item;
 import javelin.model.unit.Attack;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -18,7 +16,6 @@ import javelin.model.world.location.unique.AssassinsGuild;
 import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
-import javelin.view.screen.town.option.RecruitOption;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -26,11 +23,14 @@ import tyrant.mikera.engine.RPG;
  * assassination. A failed attempt means death while successive attempts incur a
  * penalty.
  * 
+ * TODO after {@link Town} redesign SABOTAGE was removed. Does this make this
+ * entire action less interesting?
+ * 
  * @author alex
  */
 public class Infiltrate extends WorldAction {
 	static final boolean DEBUG = false;
-	static final Option SABOTAGE = new Option("Sabotage", 0, 's');
+	// static final Option SABOTAGE = new Option("Sabotage", 0, 's');
 	static final Option ASSASSINATION = new Option("Assassination", 0, 'a');
 
 	class SpyReport extends SelectScreen {
@@ -64,10 +64,10 @@ public class Infiltrate extends WorldAction {
 		public String printInfo() {
 			String info = "";
 
-			info += "Accomodation: " + town.lodging + "\n";
-			info += "Transportation: "
-					+ (town.transport == null ? "none" : town.transport)
-					+ "\n\n";
+			// info += "Accomodation: " + town.lodging + "\n";
+			// info += "Transportation: "
+			// + (town.transport == null ? "none" : town.transport)
+			// + "\n\n";
 
 			info += "Troops: ";
 			for (Combatant c : town.garrison) {
@@ -75,27 +75,27 @@ public class Infiltrate extends WorldAction {
 			}
 			info = info.substring(0, info.length() - 2) + "\n\n";
 
-			info += "Lairs: ";
-			for (RecruitOption c : town.lairs) {
-				info += c.m.toString().toLowerCase() + ", ";
-			}
-			info = info.substring(0, info.length() - 2) + "\n\n";
+			// info += "Lairs: ";
+			// for (RecruitOption c : town.lairs) {
+			// info += c.m.toString().toLowerCase() + ", ";
+			// }
+			// info = info.substring(0, info.length() - 2) + "\n\n";
 
-			if (!town.items.isEmpty()) {
-				info += "Shop: ";
-				for (Item i : town.items) {
-					info += i.toString().toLowerCase() + ", ";
-				}
-				info = info.substring(0, info.length() - 2) + "\n\n";
-			}
+			// if (!town.items.isEmpty()) {
+			// info += "Shop: ";
+			// for (Item i : town.items) {
+			// info += i.toString().toLowerCase() + ", ";
+			// }
+			// info = info.substring(0, info.length() - 2) + "\n\n";
+			// }
 
-			if (!town.upgrades.isEmpty()) {
-				info += "Upgrades: ";
-				for (Upgrade u : town.upgrades) {
-					info += u.toString().toLowerCase() + ", ";
-				}
-				info = info.substring(0, info.length() - 2) + "\n\n";
-			}
+			// if (!town.upgrades.isEmpty()) {
+			// info += "Upgrades: ";
+			// for (Upgrade u : town.upgrades) {
+			// info += u.toString().toLowerCase() + ", ";
+			// }
+			// info = info.substring(0, info.length() - 2) + "\n\n";
+			// }
 			return info;
 		}
 
@@ -104,9 +104,9 @@ public class Infiltrate extends WorldAction {
 			if (o == ASSASSINATION) {
 				return assassinate();
 			}
-			if (o == SABOTAGE) {
-				return sabotage();
-			}
+			// if (o == SABOTAGE) {
+			// return sabotage();
+			// }
 			return false;
 		}
 
@@ -116,26 +116,26 @@ public class Infiltrate extends WorldAction {
 			if (!getassassinationtargets().isEmpty()) {
 				list.add(ASSASSINATION);
 			}
-			if (town.lairs.size() > 1) {
-				list.add(SABOTAGE);
-			}
+			// if (town.lairs.size() > 1) {
+			// list.add(SABOTAGE);
+			// }
 			return list;
 		}
 
-		public boolean sabotage() {
-			ArrayList<String> choices =
-					new ArrayList<String>(town.lairs.size());
-			for (RecruitOption m : town.lairs) {
-				choices.add(m.m + " (level " + Math.round(m.m.challengeRating)
-						+ ")");
-			}
-			town.lairs.remove(Javelin.choose("Sabotage which lair?", choices,
-					true, true));
-			AssassinsGuild.notify(.5f);
-			print("Sabotage succesful!");
-			getInput();
-			return true;
-		}
+		// public boolean sabotage() {
+		// ArrayList<String> choices =
+		// new ArrayList<String>(town.lairs.size());
+		// for (RecruitOption m : town.lairs) {
+		// choices.add(m.m + " (level " + Math.round(m.m.challengeRating)
+		// + ")");
+		// }
+		// town.lairs.remove(Javelin.choose("Sabotage which lair?", choices,
+		// true, true));
+		// AssassinsGuild.notify(.5f);
+		// print("Sabotage succesful!");
+		// getInput();
+		// return true;
+		// }
 
 		public boolean assassinate() {
 			ArrayList<Combatant> targets = getassassinationtargets();
@@ -158,7 +158,7 @@ public class Infiltrate extends WorldAction {
 			print("Assassination succesful!");
 			getInput();
 			if (town.garrison.isEmpty()) {
-				town.capture(true);
+				town.captureforhuman(true);
 			}
 			return true;
 		}

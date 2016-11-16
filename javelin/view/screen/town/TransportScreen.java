@@ -15,12 +15,12 @@ import javelin.view.screen.Option;
  */
 public class TransportScreen extends PurchaseScreen {
 	private static final Option REFUND = new Option("Return (refund)", 0, 'r');
-	private static final Option CARRIAGE =
-			new Option("Carriage", Transport.CARRIAGE.price, 'c');
-	private static final Option SHIP =
-			new Option("Ship", Transport.SHIP.price, 's');
-	private static final Option AIRSHIP =
-			new Option("Airship", Transport.AIRSHIP.price, 'a');
+	private static final Option CARRIAGE = new Option("Carriage",
+			Transport.CARRIAGE.price, 'c');
+	private static final Option SHIP = new Option("Ship", Transport.SHIP.price,
+			's');
+	private static final Option AIRSHIP = new Option("Airship",
+			Transport.AIRSHIP.price, 'a');
 
 	/**
 	 * @param description
@@ -39,15 +39,15 @@ public class TransportScreen extends PurchaseScreen {
 		if (Squad.active.transport != null) {
 			return list;
 		}
-		if (Transport.CARRIAGE.equals(town.transport)) {
-			list.add(CARRIAGE);
-			return list;
-		}
-		if (Transport.SHIP.equals(town.transport)) {
-			list.add(CARRIAGE);
-			list.add(SHIP);
-			return list;
-		}
+		// if (Transport.CARRIAGE.equals(town.transport)) {
+		// list.add(CARRIAGE);
+		// return list;
+		// }
+		// if (Transport.SHIP.equals(town.transport)) {
+		// list.add(CARRIAGE);
+		// list.add(SHIP);
+		// return list;
+		// }
 		list.add(CARRIAGE);
 		list.add(SHIP);
 		list.add(AIRSHIP);

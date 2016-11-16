@@ -8,7 +8,7 @@ import javelin.Javelin;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.spell.Summon;
-import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.town.Academy;
 import tyrant.mikera.engine.RPG;
 
 /**

@@ -1,26 +1,23 @@
 package javelin.model.world.location.town.research;
 
 import javelin.model.world.location.town.Town;
-import javelin.view.screen.town.ResearchScreen;
 
-/**
- * Grows {@link Town#size} by 1.
- * 
- * @see Town#work()
- * @author alex
- */
 public class Grow extends Research {
-	public Grow(Town t) {
-		super("Grow", t.size);
+
+	public Grow(int size) {
+		super("Grow",
+				"Makes this town produce more labor and possibly grow in size",
+				size);
 	}
 
 	@Override
-	public void apply(Town t, ResearchScreen s) {
+	public void play(Town t) {
 		t.size += 1;
 	}
 
 	@Override
-	public boolean isrepeated(Town t) {
-		return false;
+	public boolean validate(Town t) {
+		cost = t.size;
+		return true;
 	}
 }

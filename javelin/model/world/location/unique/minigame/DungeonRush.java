@@ -13,9 +13,9 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
+import javelin.model.world.location.town.Dwelling;
 import javelin.model.world.location.unique.UniqueLocation;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.town.RecruitScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -119,15 +119,15 @@ public class DungeonRush extends UniqueLocation {
 		}
 		String prompt =
 				"Which creature do you wish to spawn?\n\nYou currently have "
-						+ RecruitScreen.sumxp() + " XP";
+						+ Dwelling.sumxp() + " XP";
 		int choice = Javelin.choose(prompt, choices, true, false);
 		Javelin.app.switchScreen(WorldScreen.active);
 		if (choice == -1) {
 			return true;
 		}
 		Monster recruit = spawners.get(choice);
-		if (RecruitScreen.canbuy(recruit.challengeRating * 100)) {
-			RecruitScreen.spend(recruit.challengeRating);
+		if (Dwelling.canbuy(recruit.challengeRating * 100)) {
+			Dwelling.spend(recruit.challengeRating);
 			Squad.active.members.add(new Combatant(recruit.clone(), true));
 		} else {
 			Javelin.message(

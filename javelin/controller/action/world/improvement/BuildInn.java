@@ -3,7 +3,7 @@ package javelin.controller.action.world.improvement;
 import javelin.controller.action.world.Work;
 import javelin.model.world.Improvement;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.fortification.Inn;
+import javelin.model.world.location.town.Inn;
 
 /**
  * Builds an {@link Inn}.

@@ -210,8 +210,8 @@ public class JavelinApp extends QuestApp {
 	void startcampaign() {
 		SquadScreen.open();
 		World.makemap();
-		UpgradeHandler.singleton.distribute();
-		Item.distribute();
+		UpgradeHandler.singleton.gather();
+		// Item.distribute();
 		if (Javelin.DEBUG) {
 			JavelinApp.printstatistics();
 		}

@@ -374,9 +374,8 @@ public abstract class Terrain implements Serializable {
 		List<Point> area = new ArrayList<Point>(generate(w));
 		if (flooded()) {
 			isolated: for (Point p : new ArrayList<Point>(area)) {
-				for (Point adjacent : adjacent) {
-					if (area.contains(
-							new Point(p.x + adjacent.x, p.y + adjacent.y))) {
+				for (Point a : adjacent) {
+					if (area.contains(new Point(p.x + a.x, p.y + a.y))) {
 						continue isolated;
 					}
 				}

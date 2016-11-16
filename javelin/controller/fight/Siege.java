@@ -76,7 +76,7 @@ public class Siege extends Fight {
 				place.realm = null; // TODO really?
 				Town t = place instanceof Town ? (Town) place : null;
 				if (t != null) {
-					t.capture(true);
+					t.captureforhuman(true);
 				}
 			}
 		}

@@ -2,7 +2,6 @@ package javelin.controller.upgrade;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -18,11 +17,9 @@ import javelin.controller.upgrade.classes.Warrior;
 import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.model.Realm;
 import javelin.model.spell.Summon;
-import javelin.model.world.WorldActor;
 import javelin.model.world.location.fortification.MartialAcademy;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.SummoningCircle;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Collects and distributes {@link Upgrade}s from different subsystems.
@@ -92,26 +89,26 @@ public class UpgradeHandler {
 	/** Internal upgrades. */
 	public HashSet<Upgrade> internal = new HashSet<Upgrade>();
 
-	/**
-	 * Gives a starting selection of upgrades to each {@link Town}.
-	 */
-	public void distribute() {
-		gather();
-		for (WorldActor p : Town.getall(Town.class)) {
-			Town t = (Town) p;
-			Realm r = t.realm;
-			t.upgrades.add(getclass(r));
-			final List<Upgrade> upgrades =
-					new ArrayList<Upgrade>(getupgrades(r));
-			Collections.shuffle(upgrades);
-			int i = 0;
-			int limit = RPG.r(3, 5);
-			while (t.upgrades.size() < limit && i < upgrades.size()) {
-				t.upgrades.add(upgrades.get(i));
-				i += 1;
-			}
-		}
-	}
+	// /**
+	// * Gives a starting selection of upgrades to each {@link Town}.
+	// */
+	// public void distribute() {
+	// gather();
+	// for (WorldActor p : Town.getall(Town.class)) {
+	// Town t = (Town) p;
+	// Realm r = t.realm;
+	// t.upgrades.add(getclass(r));
+	// final List<Upgrade> upgrades =
+	// new ArrayList<Upgrade>(getupgrades(r));
+	// Collections.shuffle(upgrades);
+	// int i = 0;
+	// int limit = RPG.r(3, 5);
+	// while (t.upgrades.size() < limit && i < upgrades.size()) {
+	// t.upgrades.add(upgrades.get(i));
+	// i += 1;
+	// }
+	// }
+	// }
 
 	ClassAdvancement getclass(Realm r) {
 		if (r == javelin.model.Realm.AIR) {

@@ -143,7 +143,7 @@ public class World implements Serializable {
 
 	static void finish(Town start) {
 		start.garrison.clear();
-		start.capture(true);
+		start.captureforhuman(true);
 		placenearbywoods(start);
 		Squad.active.x = start.x;
 		Squad.active.y = start.y;

@@ -3,43 +3,34 @@ package javelin.model.world.location.town;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.controller.db.Preferences;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.fight.Siege;
 import javelin.controller.fight.tournament.Exhibition;
 import javelin.controller.fight.tournament.Match;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Spell;
-import javelin.controller.upgrade.Upgrade;
 import javelin.model.Realm;
-import javelin.model.item.Item;
-import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
-import javelin.model.unit.transport.Transport;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
-import javelin.model.world.location.town.manager.HumanManager;
-import javelin.model.world.location.town.manager.MonsterManager;
-import javelin.model.world.location.town.manager.TownManager;
+import javelin.model.world.location.town.governor.Governor;
+import javelin.model.world.location.town.governor.HumanGovernor;
+import javelin.model.world.location.town.governor.MonsterGovernor;
 import javelin.model.world.location.town.research.Grow;
-import javelin.model.world.location.town.research.Research;
 import javelin.view.Images;
 import javelin.view.screen.BattleScreen;
+import javelin.view.screen.NamingScreen;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.town.RecruitScreen;
 import javelin.view.screen.town.TownScreen;
-import javelin.view.screen.town.option.RecruitOption;
-import javelin.view.screen.upgrading.TownUpgradingScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -56,22 +47,16 @@ public class Town extends Location {
 	 * {@value #DAILYLABOR}).
 	 */
 	public static final float DAILYLABOR = .1f;
-	private static final ArrayList<String> NAMES = new ArrayList<String>();
-	private static final int STARTINGLAIRS = 3;
+	static final ArrayList<String> NAMES = new ArrayList<String>();
+	static final String[] RANKS = new String[] { "hamlet", "village", "town",
+			"city" };
+
 	static boolean startingtown = true;
 
 	static {
 		initnames();
 	}
 
-	public List<RecruitOption> lairs =
-			new ArrayList<RecruitOption>(STARTINGLAIRS);
-	public HashSet<Upgrade> upgrades = new HashSet<Upgrade>();
-	public ItemSelection items = new ItemSelection();
-	public OrderQueue crafting = new OrderQueue();
-	public OrderQueue training = new OrderQueue();
-	/** gold in bank when all members of a squad are training */
-	public int stash = 0;
 	public ArrayList<Exhibition> events = new ArrayList<Exhibition>();
 	/**
 	 * Represent 10 working citizens that will produce 1 {@link #labor} every 10
@@ -86,21 +71,9 @@ public class Town extends Location {
 	 * Can be used to improve a town. 1 unit represents 10 days of work by a
 	 * 10-men crew.
 	 */
-	public float labor = 0.1f;
-	public boolean automanage = true;
-
-	/**
-	 * Contains {@link Research} data structures.
-	 */
-	public ResearchData research = new ResearchData();
-	/**
-	 * Next task for the {@link #automanage}r.
-	 */
-	public Research nexttask;
-	/** Higher levels allow better rest. */
-	public Accommodations lodging = Accommodations.LODGE;
-	/** Higher levels allow better travel methods. */
-	public Transport transport = null;
+	public float labor = 0f;
+	/** See {@link Governor}. */
+	public Governor governor;
 
 	/**
 	 * @param x
@@ -125,18 +98,21 @@ public class Town extends Location {
 		gossip = true;
 		discard = false;
 		vision = 2;
-		ArrayList<Monster> recruits = possiblerecruits(x, y);
-		for (int i = 0; i < STARTINGLAIRS; i++) {
-			Monster recruit = recruits.get(i);
-			lairs.add(new RecruitOption(recruit.name,
-					100 * recruit.challengeRating, recruit));
-		}
+		// ArrayList<Monster> recruits = possiblerecruits(x, y);
+		// for (int i = 0; i < STARTINGLAIRS; i++) {
+		// Monster recruit = recruits.get(i);
+		// lairs.add(new RecruitOption(recruit.name,
+		// 100 * recruit.challengeRating, recruit));
+		// }
 		if (startingtown) {
 			startingtown = false;
-		} else if (!Preferences.DEBUGCLEARGARRISON) {
-			garrison.add(new Combatant(RPG.pick(lairs).m.clone(), true));
+			governor = new MonsterGovernor(this);
+			// } else if (!Preferences.DEBUGCLEARGARRISON) {
+			// garrison.add(new Combatant(RPG.pick(lairs).m.clone(), true));
+		} else {
+			governor = new HumanGovernor(this);
 		}
-		draw();
+		governor.redraw();
 	}
 
 	void checktooclose() {
@@ -196,30 +172,20 @@ public class Town extends Location {
 	 * Receives a {@link #description} from the user for this town.
 	 */
 	public void rename() {
-		description = RecruitScreen.namingscreen(toString());
+		description = NamingScreen.getname(toString());
 	}
 
-	public void reclaim() {
-		for (Order o : training.reclaim(Squad.active.hourselapsed)) {
-			TrainingOrder t = (TrainingOrder) o;
-			pickstash(TownUpgradingScreen.completetraining(t, this, t.trained));
-		}
-		for (Order item : crafting.reclaim(Squad.active.hourselapsed)) {
-			CraftingOrder o = (CraftingOrder) item;
-			Item i = o.item;
-			i.grab();
-		}
-	}
-
-	@Override
-	public boolean hasupgraded() {
-		return training.ready();
-	}
-
-	@Override
-	public boolean hascrafted() {
-		return crafting.ready();
-	}
+	// public void reclaim() {
+	// for (Order o : training.reclaim(Squad.active.hourselapsed)) {
+	// TrainingOrder t = (TrainingOrder) o;
+	// pickstash(TownUpgradingScreen.completetraining(t, this, t.trained));
+	// }
+	// for (Order item : crafting.reclaim(Squad.active.hourselapsed)) {
+	// CraftingOrder o = (CraftingOrder) item;
+	// Item i = o.item;
+	// i.grab();
+	// }
+	// }
 
 	/**
 	 * @param restperiods
@@ -255,23 +221,8 @@ public class Town extends Location {
 		Squad.active.hourselapsed += hours;
 	}
 
-	/**
-	 * Finish the next training that is in-progress.
-	 * 
-	 * @return Time of completion.
-	 */
-	public static Long train() {
-		Long next = Long.MAX_VALUE;
-		for (WorldActor p : getall(Town.class)) {
-			Town t = (Town) p;
-			if (!t.training.queue.isEmpty()) {
-				Long candidate = t.training.next();
-				if (candidate < next) {
-					next = candidate;
-				}
-			}
-		}
-		return next == Long.MAX_VALUE ? null : next;
+	public District getdistrict() {
+		return new District(this);
 	}
 
 	/**
@@ -299,27 +250,31 @@ public class Town extends Location {
 	@Override
 	public void turn(long time, WorldScreen screen) {
 		/** Produces {@link #labor} and {@link #automanage}s spending. */
-		for (Order item : training.reclaim(time)) {
-			TrainingOrder to = (TrainingOrder) item;
-			pickstash(
-					TownUpgradingScreen.completetraining(to, this, to.trained));
-		}
+		// for (Order item : training.reclaim(time)) {
+		// TrainingOrder to = (TrainingOrder) item;
+		// pickstash(
+		// TownUpgradingScreen.completetraining(to, this, to.trained));
+		// }
 		labor += size * DAILYLABOR;
-		if (!research.queue.isEmpty() && Math
-				.ceil(research.queue.get(0).price) <= Math.floor(labor)) {
-			research.queue.get(0).finish(this, null);
-			research.queue.remove(0);
-		} else if (automanage) {
-			TownManager m =
-					ishostile() ? new MonsterManager() : new HumanManager();
-			m.manage(this);
+		if (governor.automanage) {
+			governor.manage();
 		}
+		governor.update();
+		// if (!research.queue.isEmpty() && Math
+		// .ceil(research.queue.get(0).price) <= Math.floor(labor)) {
+		// research.queue.get(0).finish(this, null);
+		// research.queue.remove(0);
+		// } else if (automanage) {
+		// TownManager m =
+		// ishostile() ? new MonsterManager() : new HumanManager();
+		// m.manage(this);
+		// }
 	}
 
-	void pickstash(Squad s) {
-		s.gold += stash;
-		stash = 0;
-	}
+	// void pickstash(Squad s) {
+	// s.gold += stash;
+	// stash = 0;
+	// }
 
 	/**
 	 * When a player captures a hostile town.
@@ -329,34 +284,37 @@ public class Town extends Location {
 	 *            squares.
 	 * @see #ishostile()
 	 */
-	public void capture(boolean showsurroundings) {
-		nexttask = null;
+	public void captureforhuman(boolean showsurroundings) {
 		labor = 0;
-		research.queue.clear();
-		crafting.clear();
-		training.clear();
-		automanage = true;
-		redraw();
+		// nexttask = null;
+		// research.queue.clear();
+		// crafting.clear();
+		// training.clear();
+		// automanage = true;
+		garrison.clear();
+		governor = new HumanGovernor(this);
+		governor.redraw();
+		// redraw();
 		if (showsurroundings) {
 			Outpost.discover(x, y, Outpost.VISIONRANGE);
 		}
 	}
 
-	/**
-	 * Draws empty {@link Research} cards.
-	 */
-	public void draw() {
-		research.hand[0] = new Grow(this);
-		Research.draw(this);
-	}
+	// /**
+	// * Draws empty {@link Research} cards.
+	// */
+	// public void draw() {
+	// research.hand[0] = new Grow(this);
+	// Research.draw(this);
+	// }
 
-	/** Discard all {@link Research} cards and {@link #draw()}. */
-	public void redraw() {
-		for (int i = 0; i < research.hand.length; i++) {
-			research.hand[i] = null;
-		}
-		draw();
-	}
+	// /** Discard all {@link Research} cards and {@link #draw()}. */
+	// public void redraw() {
+	// for (int i = 0; i < research.hand.length; i++) {
+	// research.hand[i] = null;
+	// }
+	// draw();
+	// }
 
 	@Override
 	public Boolean destroy(Incursion attacker) {
@@ -386,8 +344,10 @@ public class Town extends Location {
 		garrison.clear();
 		garrison.addAll(attacker.squad);
 		attacker.remove();
-		capture(false);
+		captureforhuman(false);
 		realm = attacker.realm;
+		governor = new MonsterGovernor(this);
+		governor.redraw();
 	}
 
 	@Override
@@ -401,47 +361,47 @@ public class Town extends Location {
 			return false;
 		}
 		Squad.active.lasttown = this;
-		reclaim();
+		// reclaim();
 		new TownScreen(this);
-		if (!Squad.getall(Squad.class).isEmpty()) {
-			for (final Combatant m : Squad.active.members) {
-				if (m.source.fasthealing > 0) {
-					m.hp = m.maxhp;
-				}
-			}
-			reclaim();
-			if (!Squad.active.members.isEmpty()) {
-				Squad.active.updateavatar();
+		// if (!Squad.getall(Squad.class).isEmpty()) {
+		for (final Combatant m : Squad.active.members) {
+			if (m.source.fasthealing > 0) {
+				m.hp = m.maxhp;
 			}
 		}
+		// reclaim();
+		// if (!Squad.active.members.isEmpty()) {
+		// Squad.active.updateavatar();
+		// }
+		// }
 		Javelin.app.switchScreen(BattleScreen.active);
 		return true;
 	}
 
-	/**
-	 * Note that this method doesn't actually change {@link #lodging}.
-	 * 
-	 * @return The next step on the {@link #lodging} tree, up to
-	 *         {@link Accommodations#HOSPITAL}.
-	 */
-	public Accommodations upgradeinn() {
-		return lodging.equals(Accommodations.LODGE) ? Accommodations.HOTEL
-				: Accommodations.HOSPITAL;
-	}
+	// /**
+	// * Note that this method doesn't actually change {@link #lodging}.
+	// *
+	// * @return The next step on the {@link #lodging} tree, up to
+	// * {@link Accommodations#HOSPITAL}.
+	// */
+	// public Accommodations upgradeinn() {
+	// return lodging.equals(Accommodations.LODGE) ? Accommodations.HOTEL
+	// : Accommodations.HOSPITAL;
+	// }
 
-	/**
-	 * Note that this method doesn't actually change {@link #transport}.
-	 * 
-	 * @return The next step on the {@link #transport} tree, up to
-	 *         {@link Transport#AIRSHIP}.
-	 */
-	public Transport upgradetransport() {
-		if (transport == null) {
-			return Transport.CARRIAGE;
-		}
-		return transport.equals(Transport.CARRIAGE) ? Transport.SHIP
-				: Transport.AIRSHIP;
-	}
+	// /**
+	// * Note that this method doesn't actually change {@link #transport}.
+	// *
+	// * @return The next step on the {@link #transport} tree, up to
+	// * {@link Transport#AIRSHIP}.
+	// */
+	// public Transport upgradetransport() {
+	// if (transport == null) {
+	// return Transport.CARRIAGE;
+	// }
+	// return transport.equals(Transport.CARRIAGE) ? Transport.SHIP
+	// : Transport.AIRSHIP;
+	// }
 
 	@Override
 	protected Siege fight() {
@@ -464,21 +424,13 @@ public class Town extends Location {
 			}
 			t.size -= 1;
 		}
-		Squad.active.members
-				.add(new Combatant(Javelin.getmonster("Worker"), false));
+		Squad.active.members.add(new Combatant(Javelin.getmonster("Worker"),
+				false));
 	}
 
 	@Override
 	public List<Combatant> getcombatants() {
-		if (ishostile()) {
-			return garrison;
-		}
-		ArrayList<Combatant> combatants =
-				new ArrayList<Combatant>(training.queue.size());
-		for (Order o : training.queue) {
-			combatants.add(((TrainingOrder) o).untrained);
-		}
-		return combatants;
+		return garrison;
 	}
 
 	/**
@@ -489,7 +441,7 @@ public class Town extends Location {
 	 * @see TownManager
 	 */
 	public boolean haslabor() {
-		return !ishostile() && !automanage && labor >= size;
+		return !ishostile() && !governor.automanage && labor >= size;
 	}
 
 	@Override
@@ -499,19 +451,31 @@ public class Town extends Location {
 
 	@Override
 	public Image getimage() {
-		String image = "locationtown";
-		if (size <= 5) {
-			image += "hamlet";
-		} else if (size <= 10) {
-			image += "village";
-		} else if (size <= 15) {
-			image += "town";
-		} else {
-			image += "city";
-		}
+		String image = "locationtown" + getranktitle();
 		if (!ishostile() && ishosting()) {
 			image += "festival";
 		}
 		return Images.getImage(image);
+	}
+
+	public String getranktitle() {
+		return RANKS[getrank() - 1];
+	}
+
+	/**
+	 * @return A rank between 1 and 4 based on current {@link #size}.
+	 * @see #RANKS
+	 */
+	public int getrank() {
+		if (size <= 5) {
+			return 1;
+		}
+		if (size <= 10) {
+			return 2;
+		}
+		if (size <= 15) {
+			return 3;
+		}
+		return 4;
 	}
 }

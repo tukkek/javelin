@@ -13,18 +13,13 @@ import javelin.controller.action.world.UseItems;
 import javelin.controller.upgrade.Spell;
 import javelin.model.Realm;
 import javelin.model.item.artifact.Artifact;
-import javelin.model.spell.conjuration.healing.wounds.CureLightWounds;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.WorldActor;
-import javelin.model.world.location.Location;
-import javelin.model.world.location.fortification.Academy;
-import javelin.model.world.location.town.Order;
+import javelin.model.world.location.town.Academy;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.TrainingOrder;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.shopping.ShoppingScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Represents an item carried by a {@link Combatant}. Most often items are
@@ -167,31 +162,31 @@ public abstract class Item implements Serializable, Cloneable {
 		}
 	}
 
-	/**
-	 * Fill the {@link Town} shops with {@link Item} at the start of the
-	 * campaign.
-	 */
-	public static void distribute() {
-		CureLightWounds curelightwounds = new CureLightWounds();
-		for (WorldActor p : Location.getall(Town.class)) {
-			Town t = (Town) p;
-			t.items.add(new Potion(new CureLightWounds()));
-			int nitems = RPG.r(3 - 1, 5 - 1);
-			ItemSelection selection = new ItemSelection(getselection(t.realm));
-			selection.remove(curelightwounds);
-			if (nitems > selection.size()) {
-				nitems = selection.size();
-			}
-			while (t.items.size() - 1 < nitems
-					&& t.items.size() != selection.size()) {
-				t.items.add(selection.random());
-			}
-			for (Item i : t.items) {
-				i.shop();
-			}
-			Collections.sort(t.items, Item.PRICECOMPARATOR);
-		}
-	}
+	// /**
+	// * Fill the {@link Town} shops with {@link Item} at the start of the
+	// * campaign.
+	// */
+	// public static void distribute() {
+	// CureLightWounds curelightwounds = new CureLightWounds();
+	// for (WorldActor p : Location.getall(Town.class)) {
+	// Town t = (Town) p;
+	// t.items.add(new Potion(new CureLightWounds()));
+	// int nitems = RPG.r(3 - 1, 5 - 1);
+	// ItemSelection selection = new ItemSelection(getselection(t.realm));
+	// selection.remove(curelightwounds);
+	// if (nitems > selection.size()) {
+	// nitems = selection.size();
+	// }
+	// while (t.items.size() - 1 < nitems
+	// && t.items.size() != selection.size()) {
+	// t.items.add(selection.random());
+	// }
+	// for (Item i : t.items) {
+	// i.shop();
+	// }
+	// Collections.sort(t.items, Item.PRICECOMPARATOR);
+	// }
+	// }
 
 	/**
 	 * Each {@link Item} is assigned a {@link Realm} on creation. This
@@ -308,18 +303,11 @@ public abstract class Item implements Serializable, Cloneable {
 
 	/**
 	 * @return A list of all {@link Item}s in any {@link Squad}, {@link Town}
-	 *         trainees and {@link Academy} trainees (inluding subclasses).
+	 *         trainees and {@link Academy} trainees (including subclasses).
 	 */
 	public static List<Item> getplayeritems() {
 		ArrayList<Item> items = new ArrayList<Item>();
 		for (WorldActor a : WorldActor.getall()) {
-			Town town = a instanceof Town ? (Town) a : null;
-			if (town != null) {
-				for (Order o : town.training.queue) {
-					items.addAll(((TrainingOrder) o).equipment);
-				}
-				continue;
-			}
 			Academy academy = a instanceof Academy ? (Academy) a : null;
 			if (academy != null) {
 				if (academy.training != null) {

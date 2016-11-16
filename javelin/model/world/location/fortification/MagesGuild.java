@@ -8,6 +8,7 @@ import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.model.unit.Combatant;
+import javelin.model.world.location.town.Academy;
 
 /**
  * The only place a {@link Combatant} can learn new spells.

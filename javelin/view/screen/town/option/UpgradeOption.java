@@ -3,9 +3,9 @@ package javelin.view.screen.town.option;
 import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.Upgrade;
 import javelin.view.screen.Option;
-import javelin.view.screen.upgrading.TownUpgradingScreen;
 
-/**
+/***
+ * 
  * @see TownUpgradingScreen
  * @author alex
  */

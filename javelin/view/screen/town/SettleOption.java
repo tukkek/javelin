@@ -18,7 +18,7 @@ import javelin.view.screen.Option;
 public class SettleOption extends Option {
 	/** Constructor. */
 	public SettleOption() {
-		super("Settle", 0, 'S');
+		super("Settle worker", 0, 's');
 	}
 
 	/** TODO make it hierarchy method */
@@ -32,9 +32,10 @@ public class SettleOption extends Option {
 		if (retirees.isEmpty()) {
 			return false;
 		}
-		int choice = Javelin.choose(
-				"Which member should retire and become local labor?", retirees,
-				true, false);
+		int choice =
+				Javelin.choose(
+						"Which member should retire and become local labor?",
+						retirees, true, false);
 		if (choice < 0) {
 			return false;
 		}

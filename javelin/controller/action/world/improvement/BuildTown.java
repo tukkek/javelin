@@ -6,7 +6,6 @@ import javelin.model.world.Improvement;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.research.Research;
 
 /**
  * Builds an empty {@link Town}.
@@ -27,9 +26,7 @@ public class BuildTown extends Improvement {
 		Town t = new Town(x, y, World.determinecolor(new Point(x, y)).realm);
 		t.description = "your new town";
 		t.rename();
-		t.lairs.clear();
 		t.garrison.clear();
-		Research.clear(t);
 		return t;
 	}
 }

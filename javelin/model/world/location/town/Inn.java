@@ -1,12 +1,11 @@
-package javelin.model.world.location.fortification;
+package javelin.model.world.location.town;
 
 import java.util.List;
 
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.location.town.Accommodations;
-import javelin.model.world.location.town.Town;
+import javelin.model.world.location.fortification.Fortification;
 import javelin.view.screen.town.PurchaseScreen;
 
 /***

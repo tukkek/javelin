@@ -1,7 +1,10 @@
-package javelin.model.world.location.fortification;
+package javelin.model.world.location.town;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
@@ -11,11 +14,11 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.PurchaseScreen;
-import javelin.view.screen.town.RecruitScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -87,13 +90,13 @@ public class Dwelling extends Fortification {
 			return true;
 		}
 		int xp = Math.round(dweller.source.challengeRating * 100);
-		if (!RecruitScreen.canbuy(xp)) {
+		if (!canbuy(xp)) {
 			screen.print(
 					"Cannot afford a " + monstertype + " (" + xp + "XP)...");
 			Game.getInput();
 			return true;
 		}
-		RecruitScreen.spend(dweller.source.challengeRating);
+		spend(dweller.source.challengeRating);
 		Javelin.recruit(dweller.source.clone());
 		volunteer = false;
 		return true;
@@ -121,7 +124,7 @@ public class Dwelling extends Fortification {
 		text += "\nCurrent gold: $"
 				+ PurchaseScreen.formatcost(Squad.active.gold) + "\n";
 		if (volunteer) {
-			text += "Current XP: " + RecruitScreen.sumxp() + "XP\n";
+			text += "Current XP: " + sumxp() + "XP\n";
 		}
 		return text;
 	}
@@ -139,5 +142,68 @@ public class Dwelling extends Fortification {
 	@Override
 	public List<Combatant> getcombatants() {
 		return garrison;
+	}
+
+	/**
+	 * @return Total of XP between all active {@link Squad} members.
+	 */
+	public static int sumxp() {
+		BigDecimal sum = new BigDecimal(0);
+		for (Combatant c : Squad.active.members) {
+			sum = sum.add(c.xp);
+		}
+		return Math.round(sum.floatValue() * 100);
+	}
+
+	/**
+	 * @param price
+	 *            Price in XP (100XP = 1CR).
+	 * @return <code>true</code> if currently active {@link Squad} can afford
+	 *         this much.
+	 */
+	static public boolean canbuy(double price) {
+		return price <= sumxp();
+	}
+
+	/**
+	 * @param cr
+	 *            Spend this much CR in recruiting a rookie (1CR = 100XP).
+	 */
+	static public void spend(double cr) {
+		double percapita = cr / new Float(Squad.active.members.size());
+		boolean buyfromall = true;
+		for (Combatant c : Squad.active.members) {
+			if (percapita > c.xp.doubleValue()) {
+				buyfromall = false;
+				break;
+			}
+		}
+		if (buyfromall) {
+			for (Combatant c : Squad.active.members) {
+				c.xp = c.xp.subtract(new BigDecimal(percapita));
+			}
+		} else {
+			ArrayList<Combatant> squad =
+					new ArrayList<Combatant>(Squad.active.members);
+			ChallengeRatingCalculator.calculateel(squad);
+			Collections.sort(squad, new Comparator<Combatant>() {
+				@Override
+				public int compare(Combatant o1, Combatant o2) {
+					final float cr1 =
+							o2.xp.floatValue() + o2.source.challengeRating;
+					final float cr2 =
+							o1.xp.floatValue() + o1.source.challengeRating;
+					return new Float(cr1).compareTo(cr2);
+				}
+			});
+			for (Combatant c : squad) {
+				if (c.xp.doubleValue() >= cr) {
+					c.xp = c.xp.subtract(new BigDecimal(cr));
+					return;
+				}
+				cr -= c.xp.doubleValue();
+				c.xp = new BigDecimal(0);
+			}
+		}
 	}
 }

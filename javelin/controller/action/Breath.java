@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
 
 import javelin.Javelin;
 import javelin.controller.Point;
@@ -16,6 +15,7 @@ import javelin.controller.action.area.Burst;
 import javelin.controller.action.area.Line;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.exception.StopThinking;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
@@ -33,6 +33,13 @@ import javelin.view.mappanel.battle.overlay.BreathOverlay;
  * 
  * TODO use visible {@link Combatant}s as targets instead of predefined bursts
  * and lines.
+ * 
+ * This class was causing problems so I streamlined it:
+ * 
+ * TODO removed d4 for delay and made it constatnt to streamline/quicken
+ * calculation
+ * 
+ * TODO currently decides if saved if save chance >=50% for the same reasons.
  * 
  * @author alex
  */
@@ -67,22 +74,16 @@ public class Breath extends Action implements AiAction {
 	}
 
 	@Override
-	public List<List<ChanceNode>> getoutcomes(final BattleState gameState,
-			final Combatant combatant) {
-		final ArrayList<List<ChanceNode>> chances =
-				new ArrayList<List<ChanceNode>>();
+	public List<List<ChanceNode>> getoutcomes(final BattleState s, final Combatant combatant) {
+		final ArrayList<List<ChanceNode>> chances = new ArrayList<List<ChanceNode>>();
 		if (combatant.hascondition(Breathless.class) != null) {
 			return chances;
 		}
 		for (final BreathWeapon breath : combatant.source.breaths) {
-			for (final Area a : (breath.type == BreathArea.CONE ? BURSTS
-					: LINES).values()) {
+			for (final Area a : (breath.type == BreathArea.CONE ? BURSTS : LINES).values()) {
 				Point source = a.initiate(combatant);
-				if (source.x >= 0 && source.y >= 0
-						&& source.x < gameState.map.length
-						&& source.y < gameState.map[0].length) {
-					final BattleState s2 = gameState.clone();
-					chances.add(breath(breath, a, s2.clone(combatant), s2));
+				if (source.x >= 0 && source.y >= 0 && source.x < s.map.length && source.y < s.map[0].length) {
+					chances.add(breath(breath, a, combatant, s));
 				}
 			}
 		}
@@ -110,10 +111,7 @@ public class Breath extends Action implements AiAction {
 		MapPanel.overlay = overlay;
 		clear();
 		Game.redraw();
-		Game.message(
-				targetinfo(state, area)
-						+ "Press ENTER or b to confirm, q to quit.",
-				Delay.NONE);
+		Game.message(targetinfo(state, area) + "Press ENTER or b to confirm, q to quit.", Delay.NONE);
 		char confirm = Game.getInput().getKeyChar();
 		try {
 			quit(confirm);
@@ -133,8 +131,7 @@ public class Breath extends Action implements AiAction {
 		Game.message("Select a direction or press q to quit.", Delay.NONE);
 		Area a = null;
 		while (a == null) {
-			a = (breath.type == BreathWeapon.BreathArea.CONE ? BURSTS : LINES)
-					.get(selectdirection(hero));
+			a = (breath.type == BreathWeapon.BreathArea.CONE ? BURSTS : LINES).get(selectdirection(hero));
 		}
 		return a;
 	}
@@ -148,8 +145,7 @@ public class Breath extends Action implements AiAction {
 			}
 		}
 		if (!targets.isEmpty()) {
-			targets = "Targetting: "
-					+ targets.substring(0, targets.length() - 2) + ".\n\n";
+			targets = "Targetting: " + targets.substring(0, targets.length() - 2) + ".\n\n";
 		}
 		return targets;
 	}
@@ -158,8 +154,7 @@ public class Breath extends Action implements AiAction {
 		Game.messagepanel.clear();
 	}
 
-	static ArrayList<ChanceNode> breath(final BreathWeapon breath, final Area a,
-			final Combatant active, final BattleState s) {
+	static ArrayList<ChanceNode> breath(final BreathWeapon breath, final Area a, Combatant active, BattleState s) {
 		final ArrayList<ChanceNode> chances = new ArrayList<ChanceNode>();
 		final ArrayList<Combatant> targets = new ArrayList<Combatant>();
 		for (final Point p : a.fill(breath.range, active, s)) {
@@ -171,53 +166,35 @@ public class Breath extends Action implements AiAction {
 		if (targets.isEmpty()) {
 			return chances;
 		}
-		for (final Entry<Integer, Float> delay : definedelays(breath)
-				.entrySet()) {
-			final BattleState s2 = s.clone();
-			final int breathless = delay.getKey();
-			final Combatant active2 = s2.clone(active);
-			if (breathless > 0) {
-				active2.addcondition(
-						new Breathless(active.ap + breathless, active2));
+		s = s.clone();
+		active = s.clone(active);
+		if (breath.delay) {
+			active.addcondition(new Breathless(active.ap + (1 + 4) / 2f, active));
+		}
+		active.ap += .5f;
+		for (final Entry<Integer, Float> roll : Action.distributeRoll(breath.damage[0], breath.damage[1]).entrySet()) {
+			BattleState s2 = s.clone();
+			final float damagechance = roll.getValue();
+			final int damage = roll.getKey() + breath.damage[2];
+			StringBuilder action = new StringBuilder(active + " breaths " + breath.description + "!");
+			StringBuilder affected = new StringBuilder();
+			for (Combatant target : targets) {
+				if (Thread.interrupted()) {
+					throw new StopThinking();
+				}
+				hit(s2.clone(target), damage, s2, breath, affected);
 			}
-			active2.ap += .5f;
-			for (final Entry<Integer, Float> roll : Action
-					.distributeRoll(breath.damage[0], breath.damage[1])
-					.entrySet()) {
-				final float damagechance = roll.getValue();
-				final int damage = roll.getKey() + breath.damage[2];
-				hit(targets, new ArrayList<Float>(),
-						damagechance * delay.getValue(), damage, s2, breath,
-						chances,
-						active + " breaths " + breath.description + "!", "");
-			}
+			chances.add(
+					new ChanceNode(s2, damagechance, compound(action.toString(), affected.toString()), Delay.BLOCK));
 		}
 		return chances;
 	}
 
-	static TreeMap<Integer, Float> definedelays(final BreathWeapon breath) {
-		final TreeMap<Integer, Float> delays;
-		if (breath.delay) {
-			delays = Action.distributeRoll(1, 4);
-		} else {
-			delays = new TreeMap<Integer, Float>();
-			delays.put(0, 1f);
+	static void hit(Combatant target, final int damage, final BattleState s, final BreathWeapon breath,
+			StringBuilder affected) {
+		if (target == null) {
+			System.out.println("#breath null target");
 		}
-		return delays;
-	}
-
-	static void hit(final ArrayList<Combatant> targets,
-			final ArrayList<Float> chances, final float damagechance,
-			final int damage, final BattleState s, final BreathWeapon breath,
-			final ArrayList<ChanceNode> nodes, final String action,
-			String affected) {
-		final int i = chances.size();
-		if (i == targets.size()) {
-			nodes.add(new ChanceNode(s, sumchance(chances, damagechance),
-					compound(action, affected), Delay.BLOCK));
-			return;
-		}
-		final Combatant target = targets.get(i);
 		Integer savedc = breath.save(target);
 		final float savechance;
 		if (savedc == null) {
@@ -226,54 +203,42 @@ public class Breath extends Action implements AiAction {
 			savedc = breath.savedc - savedc;
 			savechance = savedc == null ? 0 : bind(savedc / 20f);
 		}
-		affected += target;
-		if (savechance > 0) {
-			damage(targets, chances, damagechance, damage, s, breath, nodes,
-					action, affected + " resists,", target, savechance,
-					breath.saveeffect);
+		affected.append(target);
+		if (savechance >= 0.5f) {
+			affected.append(" resists,");
+			damage(target, Math.round(damage * breath.saveeffect), s, affected);
+		} else {
+			damage(target, damage, s, affected);
 		}
-		damage(targets, chances, damagechance, damage, s, breath, nodes, action,
-				affected, target, 1 - savechance, 1f);
 	}
 
-	static void damage(final ArrayList<Combatant> targets,
-			final ArrayList<Float> chances, final float damagechance,
-			final int damage, final BattleState s, final BreathWeapon breath,
-			final ArrayList<ChanceNode> nodes, final String action,
-			String affected, Combatant target, final float unsafechance,
-			final float unsafeeffet) {
-		final BattleState s2 = s.clone();
-		target = s2.clone(target);
-		final int damagetotarget = Math.round(damage * unsafeeffet);
-		if (damagetotarget > 0) {
-			target.damage(damagetotarget, s2, target.source.energyresistance);
-			affected += " is " + target.getstatus() + ". ";
+	static void damage(Combatant target, final int damage, final BattleState s, StringBuilder affected) {
+		if (damage > 0) {
+			target.damage(damage, s, target.source.energyresistance);
+			affected.append(" is " + target.getstatus() + ". ");
 		}
-		hit(targets, updatechances(chances, unsafechance), damagechance, damage,
-				s2, breath, nodes, action, affected);
 	}
 
 	static String compound(String action, String affected) {
-		return affected.isEmpty() ? action
-				: action + "\n" + affected.substring(0, affected.length() - 1);
+		return affected.isEmpty() ? action : action + "\n" + affected.substring(0, affected.length() - 1);
 	}
 
-	static ArrayList<Float> updatechances(final ArrayList<Float> chances,
-			float x) {
-		final ArrayList<Float> unsafechances =
-				(ArrayList<Float>) chances.clone();
-		unsafechances.add(x);
-		return unsafechances;
-	}
+	// static ArrayList<Float> updatechances(final ArrayList<Float> chances,
+	// float x) {
+	// final ArrayList<Float> unsafechances = (ArrayList<Float>)
+	// chances.clone();
+	// unsafechances.add(x);
+	// return unsafechances;
+	// }
 
-	static float sumchance(final ArrayList<Float> chances,
-			final float damagechance) {
-		float finalchance = damagechance;
-		for (final float chance : chances) {
-			finalchance = finalchance * chance;
-		}
-		return finalchance;
-	}
+	// static float sumchance(final ArrayList<Float> chances, final float
+	// damagechance) {
+	// float finalchance = damagechance;
+	// for (final float chance : chances) {
+	// finalchance = finalchance * chance;
+	// }
+	// return finalchance;
+	// }
 
 	BreathWeapon selectbreath(Monster m) {
 		int size = m.breaths.size();
@@ -284,8 +249,7 @@ public class Breath extends Action implements AiAction {
 		if (size == 1) {
 			return m.breaths.get(0);
 		}
-		int index = Javelin.choose("Select a breath attack or press q to quit",
-				m.breaths, false, false);
+		int index = Javelin.choose("Select a breath attack or press q to quit", m.breaths, false, false);
 		if (index >= 0) {
 			return m.breaths.get(index);
 		}

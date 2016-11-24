@@ -122,7 +122,9 @@ public abstract class Fight {
 	 * 
 	 * @see ChallengeRatingCalculator
 	 */
-	public abstract int getel(int teamel);
+	public int getel(int teamel) {
+		return Terrain.current().getel(teamel);
+	}
 
 	/**
 	 * @return The list of monsters that are going to be featured in this fight.
@@ -136,8 +138,7 @@ public abstract class Fight {
 	 */
 	public void bribe() {
 		if (Javelin.DEBUG && !bribe) {
-			throw new RuntimeException(
-					"Cannot bribe this fight! " + getClass());
+			throw new RuntimeException("Cannot bribe this fight! " + getClass());
 		}
 		// just avoid the fight
 	}
@@ -149,19 +150,17 @@ public abstract class Fight {
 	 */
 	public String dealreward() {
 		/* should at least serve as food for 1 day */
-		final int bonus = Math.round(Math.max(Squad.active.eat() / 2,
-				RewardCalculator.receivegold(BattleScreen.originalredteam)));
+		final int bonus = Math
+				.round(Math.max(Squad.active.eat() / 2, RewardCalculator.receivegold(BattleScreen.originalredteam)));
 		// Squad.active.members = Fight.state.blueTeam;
 		String rewards = "";
 		if (Javelin.app.fight.rewardxp) {
-			rewards += RewardCalculator.rewardxp(Fight.state.blueTeam,
-					BattleScreen.originalblueteam, BattleScreen.originalredteam,
-					1);
+			rewards += RewardCalculator.rewardxp(Fight.state.blueTeam, BattleScreen.originalblueteam,
+					BattleScreen.originalredteam, 1);
 		}
 		if (Javelin.app.fight.rewardgold) {
 			Squad.active.gold += bonus;
-			rewards += " Party receives $" + SelectScreen.formatcost(bonus)
-					+ "!\n";
+			rewards += " Party receives $" + SelectScreen.formatcost(bonus) + "!\n";
 		}
 		return rewards;
 	}
@@ -220,25 +219,22 @@ public abstract class Fight {
 	 *            Active screen.
 	 */
 	public void withdraw(Combatant combatant, BattleScreen screen) {
-		if (Fight.state.isengaged(combatant)) {
-			if (Javelin.DEBUG) {
-				Game.message("Press w to cancel battle (debug feature)",
-						Delay.NONE);
-				if (Game.getInput().getKeyChar() == 'w') {
-					for (Combatant c : new ArrayList<Combatant>(
-							Fight.state.blueTeam)) {
-						c.escape(screen);
-					}
-					throw new EndBattle();
+		if (Javelin.DEBUG) {
+			Game.message("Press w to cancel battle (debug feature)", Delay.NONE);
+			if (Game.getInput().getKeyChar() == 'w') {
+				for (Combatant c : new ArrayList<Combatant>(Fight.state.blueTeam)) {
+					c.escape(screen);
 				}
+				throw new EndBattle();
 			}
+			Game.messagepanel.clear();
+		}
+		if (Fight.state.isengaged(combatant)) {
 			Game.message("Disengage first!", Delay.BLOCK);
 			InfoScreen.feedback();
 			throw new RepeatTurn();
 		}
-		Game.message(
-				"Are you sure you want to escape? Press ENTER to confirm...\n",
-				Delay.NONE);
+		Game.message("Are you sure you want to escape? Press ENTER to confirm...\n", Delay.NONE);
 		if (Game.getInput().getKeyChar() != '\n') {
 			throw new RepeatTurn();
 		}
@@ -310,8 +306,7 @@ public abstract class Fight {
 	 * @return A group of enemies that closely match the given EL, as far as
 	 *         possible.
 	 */
-	static public ArrayList<Combatant> generate(final int el,
-			ArrayList<Terrain> terrains) {
+	static public ArrayList<Combatant> generate(final int el, ArrayList<Terrain> terrains) {
 		int delta = 0;
 		ArrayList<Combatant> generated = null;
 		while (generated == null) {
@@ -327,8 +322,7 @@ public abstract class Fight {
 		return generated;
 	}
 
-	static ArrayList<Combatant> chooseopponents(final int el,
-			ArrayList<Terrain> terrains) {
+	static ArrayList<Combatant> chooseopponents(final int el, ArrayList<Terrain> terrains) {
 		try {
 			return EncounterGenerator.generate(el, terrains);
 		} catch (final GaveUpException e) {
@@ -367,8 +361,7 @@ public abstract class Fight {
 	 * @see Map#maxflooding
 	 * @see Dungeon#active
 	 */
-	public static ArrayList<Terrain> getdefaultterrains(Terrain t,
-			int floodlevel) {
+	public static ArrayList<Terrain> getdefaultterrains(Terrain t, int floodlevel) {
 		ArrayList<Terrain> terrains = new ArrayList<Terrain>();
 		if (Dungeon.active != null) {
 			terrains.add(Terrain.UNDERGROUND);
@@ -434,8 +427,7 @@ public abstract class Fight {
 	public ArrayList<Combatant> init() {
 		Fight.state = new BattleState(this);
 		Fight.state.blueTeam = getblueteam();
-		return generate(Terrain.current().getel(
-				ChallengeRatingCalculator.calculateel(Fight.state.blueTeam)));
+		return generate(getel(ChallengeRatingCalculator.calculateel(Fight.state.blueTeam)));
 	}
 
 	/**
@@ -464,11 +456,8 @@ public abstract class Fight {
 				if (s.next == c) {
 					s.next();
 				}
-				Javelin.app.fight.addmeld(c.location[0], c.location[1],
-						c.source, s);
-				Game.message(
-						c + " is removed from the battlefield!\nPress ENTER to continue...",
-						Delay.NONE);
+				Javelin.app.fight.addmeld(c.location[0], c.location[1], c.source, s);
+				Game.message(c + " is removed from the battlefield!\nPress ENTER to continue...", Delay.NONE);
 				while (Game.getInput().getKeyChar() != '\n') {
 					// wait for enter
 				}

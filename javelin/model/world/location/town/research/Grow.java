@@ -1,5 +1,6 @@
 package javelin.model.world.location.town.research;
 
+import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 
 public class Grow extends Research {
@@ -16,7 +17,7 @@ public class Grow extends Research {
 	}
 
 	@Override
-	public boolean validate(Town t) {
+	public boolean validate(Town t, District d) {
 		cost = t.size;
 		return true;
 	}

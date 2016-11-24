@@ -2,6 +2,7 @@ package javelin.controller.generator.feature;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import javelin.Javelin;
@@ -12,6 +13,7 @@ import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.ability.RaiseWisdom;
+import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Caravan;
 import javelin.model.world.World;
@@ -59,8 +61,7 @@ public class FeatureGenerator {
 	/** Only access point to this class. */
 	public static final FeatureGenerator SINGLETON = new FeatureGenerator();
 
-	static final int NUMBEROFSTARTINGFEATURES =
-			(World.SIZE * World.SIZE) / 5;
+	static final int NUMBEROFSTARTINGFEATURES = (World.SIZE * World.SIZE) / 5;
 
 	final HashMap<Class<? extends WorldActor>, FeatureGenerationData> generators =
 			new HashMap<Class<? extends WorldActor>, FeatureGenerationData>();
@@ -145,8 +146,7 @@ public class FeatureGenerator {
 			if (generatingworld && !g.starting) {
 				continue;
 			}
-			if (g.max != null
-					&& WorldActor.getall(Mine.class).size() >= g.max) {
+			if (g.max != null && WorldActor.getall(Mine.class).size() >= g.max) {
 				continue;
 			}
 			if (RPG.random() <= chance * g.chance) {
@@ -155,26 +155,31 @@ public class FeatureGenerator {
 		}
 	}
 
-	static void spawnnear(Town t, WorldActor l, World w) {
-		int[] haxor = null;
-		while (haxor == null
-				|| WorldActor.get(t.x + haxor[0], t.y + haxor[1]) != null
-				|| t.x + haxor[0] < 0 || t.y + haxor[1] < 0
-				|| t.x + haxor[0] >= World.SIZE
-				|| t.y + haxor[1] >= World.SIZE
-				|| w.map[t.x + haxor[0]][t.y + haxor[1]]
+	static void spawnnear(Town t, WorldActor a, World w, int min, int max) {
+		int[] location = null;
+		while (location == null
+				|| WorldActor.get(t.x + location[0], t.y + location[1]) != null
+				|| t.x + location[0] < 0
+				|| t.y + location[1] < 0
+				|| t.x + location[0] >= World.SIZE
+				|| t.y + location[1] >= World.SIZE
+				|| w.map[t.x + location[0]][t.y + location[1]]
 						.equals(Terrain.WATER)) {
-			haxor = new int[] { RPG.r(2, 3), RPG.r(2, 3) };
+			location = new int[] { RPG.r(min, max), RPG.r(min, max) };
 			if (RPG.r(1, 2) == 1) {
-				haxor[0] = -haxor[0];
+				location[0] = -location[0];
 			}
 			if (RPG.r(1, 2) == 1) {
-				haxor[1] = -haxor[1];
+				location[1] = -location[1];
 			}
 		}
-		l.x = haxor[0] + t.x;
-		l.y = haxor[1] + t.y;
-		l.place();
+		a.x = location[0] + t.x;
+		a.y = location[1] + t.y;
+		Location l = a instanceof Location ? (Location) a : null;
+		a.place();
+		if (l != null) {
+			l.capture();
+		}
 	}
 
 	static Town gettown(Terrain terrain, World seed) {
@@ -203,28 +208,20 @@ public class FeatureGenerator {
 		Temple.generatetemples();
 		Terrain starton = RPG.r(1, 2) == 1 ? Terrain.PLAIN : Terrain.HILL;
 		Town easya = FeatureGenerator.gettown(starton, seed);
-		Town easyb = FeatureGenerator.gettown(
-				starton == Terrain.PLAIN ? Terrain.HILL : Terrain.PLAIN, seed);
+		Town easyb =
+				FeatureGenerator.gettown(starton == Terrain.PLAIN
+						? Terrain.HILL : Terrain.PLAIN, seed);
 		ArrayList<WorldActor> towns = Location.getall(Town.class);
 		WorldActor startingtown = WorldActor.get(easya.x, easya.y, towns);
 		if (Terrain.checkadjacent(new Point(startingtown.x, startingtown.y),
 				Terrain.WATER, seed, 2) != 0) {
 			throw new RestartWorldGeneration();
 		}
-		new Portal(startingtown, WorldActor.get(easyb.x, easyb.y, towns), false,
-				false, true, true, null, false).place();
+		new Portal(startingtown, WorldActor.get(easyb.x, easyb.y, towns),
+				false, false, true, true, null, false).place();
 		Haxor.singleton = new Haxor();
-		spawnnear(easya, Haxor.singleton, seed);
-		spawnnear(easya, new TrainingHall(), seed);
-		spawnnear(easya, new AdventurersGuild(), seed);
-		new MercenariesGuild().place();
-		new Artificer().place();
-		new SummoningCircle().place();
-		new PillarOfSkulls().place();
-		new Arena().place();
-		new Battlefield().place();
-		new DungeonRush().place();
-		new Ziggurat().place();
+		generatestartingarea(seed, easya);
+		generateuniquelocations();
 		UpgradeHandler.singleton.gather();
 		generatemageguilds();
 		generatemartialacademies();
@@ -239,6 +236,36 @@ public class FeatureGenerator {
 		return (Town) startingtown;
 	}
 
+	void generateuniquelocations() {
+		new MercenariesGuild().place();
+		new Artificer().place();
+		new SummoningCircle().place();
+		new PillarOfSkulls().place();
+		new Arena().place();
+		new Battlefield().place();
+		new DungeonRush().place();
+		new Ziggurat().place();
+	}
+
+	void generatestartingarea(World seed, Town t) {
+		spawnnear(t, new Inn(), seed, 1, 2);
+		ArrayList<Monster> recruits = t.getpossiblerecruits();
+		recruits.sort(new Comparator<Monster>() {
+			@Override
+			public int compare(Monster o1, Monster o2) {
+				float difference = o1.challengeRating - o2.challengeRating;
+				if (difference == 0) {
+					return 0;
+				}
+				return difference > 0 ? 1 : -1;
+			}
+		});
+		spawnnear(t, new Dwelling(recruits.get(RPG.r(1, 7))), seed, 1, 2);
+		spawnnear(t, Haxor.singleton, seed, 2, 3);
+		spawnnear(t, new TrainingHall(), seed, 2, 3);
+		spawnnear(t, new AdventurersGuild(), seed, 2, 3);
+	}
+
 	static void generatemartialacademies() {
 		new MartialAcademy(UpgradeHandler.singleton.shots,
 				"Academy (shooting range)").place();
@@ -251,8 +278,7 @@ public class FeatureGenerator {
 	static int countplaces() {
 		int count = 0;
 		for (ArrayList<WorldActor> instances : WorldActor.INSTANCES.values()) {
-			if (instances.isEmpty()
-					|| !(instances.get(0) instanceof Location)) {
+			if (instances.isEmpty() || !(instances.get(0) instanceof Location)) {
 				continue;
 			}
 			count += instances.size();
@@ -277,10 +303,10 @@ public class FeatureGenerator {
 				new RaiseWisdom()).place();
 		new MagesGuild("Healing wounds guild",
 				UpgradeHandler.singleton.schoolhealwounds, new RaiseWisdom())
-						.place();
+				.place();
 		new MagesGuild("Divination guild",
 				UpgradeHandler.singleton.schooldivination, new RaiseWisdom())
-						.place();
+				.place();
 
 		new MagesGuild("Necromancy guild",
 				UpgradeHandler.singleton.schoolnecromancy,

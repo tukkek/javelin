@@ -26,36 +26,28 @@ public abstract class Action implements Serializable, ActionDescription {
 
 	/** Movement */
 	public static final Movement MOVE_NW = new Movement("Move (↖)",
-			new String[] { "7", "KeyEvent" + KeyEvent.VK_HOME, "U" },
-			"↖ (7 on numpad, or U)");
+			new String[] { "7", "KeyEvent" + KeyEvent.VK_HOME, "U" }, "↖ (7 on numpad, or U)");
 	/** Movement */
 	public static final Movement MOVE_N = new Movement("Move (↑)",
-			new String[] { "8", "KeyEvent" + KeyEvent.VK_UP, "I" },
-			"↑ (8 on numpad, or I)");
+			new String[] { "8", "KeyEvent" + KeyEvent.VK_UP, "I" }, "↑ (8 on numpad, or I)");
 	/** Movement */
 	public static final Movement MOVE_NE = new Movement("Move (↗)",
-			new String[] { "9", "KeyEvent" + KeyEvent.VK_PAGE_UP, "O" },
-			"↗ (9 on numpad, or O)");
+			new String[] { "9", "KeyEvent" + KeyEvent.VK_PAGE_UP, "O" }, "↗ (9 on numpad, or O)");
 	/** Movement */
 	public static final Movement MOVE_W = new Movement("Move (←)",
-			new String[] { "4", "KeyEvent" + KeyEvent.VK_LEFT, "J", "←" },
-			"← (4 on numpad, or J)");
+			new String[] { "4", "KeyEvent" + KeyEvent.VK_LEFT, "J", "←" }, "← (4 on numpad, or J)");
 	/** Movement */
 	public static final Movement MOVE_E = new Movement("Move (→)",
-			new String[] { "6", "KeyEvent" + KeyEvent.VK_RIGHT, "L", "→" },
-			"→ (6 on numpad, or L)");
+			new String[] { "6", "KeyEvent" + KeyEvent.VK_RIGHT, "L", "→" }, "→ (6 on numpad, or L)");
 	/** Movement */
 	public static final Movement MOVE_SW = new Movement("Move (↙)",
-			new String[] { "1", "KeyEvent" + KeyEvent.VK_END, "M" },
-			"↙ (1 in numpad, or M)");
+			new String[] { "1", "KeyEvent" + KeyEvent.VK_END, "M" }, "↙ (1 in numpad, or M)");
 	/** Movement */
 	public static final Movement MOVE_S = new Movement("Move (↓)",
-			new String[] { "2", "KeyEvent" + KeyEvent.VK_DOWN, "<" },
-			"↓ (2 in numpad, or <)");
+			new String[] { "2", "KeyEvent" + KeyEvent.VK_DOWN, "<" }, "↓ (2 in numpad, or <)");
 	/** Movement */
 	public static final Movement MOVE_SE = new Movement("Move (↘)",
-			new String[] { "3", "KeyEvent" + KeyEvent.VK_PAGE_DOWN, ">" },
-			"↘ (3 on numpad, or >)");
+			new String[] { "3", "KeyEvent" + KeyEvent.VK_PAGE_DOWN, ">" }, "↘ (3 on numpad, or >)");
 
 	/** How to present an action to the player. */
 	public final String name;
@@ -104,8 +96,7 @@ public abstract class Action implements Serializable, ActionDescription {
 	 *            Type of dice.
 	 * @return Map of percentual chances mapped by total result (sum).
 	 */
-	static protected TreeMap<Integer, Float> distributeRoll(final int dices,
-			final int sides) {
+	static protected TreeMap<Integer, Float> distributeRoll(final int dices, final int sides) {
 		final int nCombinations = dices * sides;
 		final int[][] combinations = new int[nCombinations][dices];
 		for (int dice = 0; dice < dices; dice++) {
@@ -117,8 +108,7 @@ public abstract class Action implements Serializable, ActionDescription {
 				}
 			}
 		}
-		final TreeMap<Integer, Integer> results =
-				new TreeMap<Integer, Integer>();
+		final TreeMap<Integer, Integer> results = new TreeMap<Integer, Integer>();
 		for (final int[] combination : combinations) {
 			int sum = 0;
 			for (final int element : combination) {
@@ -128,11 +118,9 @@ public abstract class Action implements Serializable, ActionDescription {
 			results.put(sum, (ocurrences == null ? 0 : ocurrences) + 1);
 		}
 
-		final TreeMap<Integer, Float> distribution =
-				new TreeMap<Integer, Float>();
+		final TreeMap<Integer, Float> distribution = new TreeMap<Integer, Float>();
 		for (final Entry<Integer, Integer> result : results.entrySet()) {
-			distribution.put(result.getKey(),
-					result.getValue() / (float) nCombinations);
+			distribution.put(result.getKey(), result.getValue() / (float) nCombinations);
 		}
 		return distribution;
 	}
@@ -144,8 +132,7 @@ public abstract class Action implements Serializable, ActionDescription {
 	 *            See {@link BattleScreen#setstate(ChanceNode, boolean)}
 	 * @return The actual outcome of the action made by the AI.
 	 */
-	public static void outcome(final List<ChanceNode> list,
-			boolean enableoverrun) {
+	public static void outcome(final List<ChanceNode> list, boolean enableoverrun) {
 		float roll = RPG.random();
 		for (final ChanceNode cn : list) {
 			roll -= cn.chance;
@@ -159,8 +146,7 @@ public abstract class Action implements Serializable, ActionDescription {
 			System.err.println("Outcome error! " + cn.action + " " + cn.chance);
 		}
 		throw new RuntimeException("Couldn't determine outcome: " + roll
-				+ debugteam(Fight.state.blueTeam, "player team")
-				+ debugteam(Fight.state.redTeam, "ai team"));
+				+ debugteam(Fight.state.blueTeam, "player team") + debugteam(Fight.state.redTeam, "ai team"));
 	}
 
 	static String debugteam(ArrayList<Combatant> team, String label) {

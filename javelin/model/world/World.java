@@ -40,8 +40,7 @@ public class World implements Serializable {
 	/** Facilitate movement. */
 	public static boolean[][] roads = new boolean[SIZE][SIZE];
 	/** Upgraded {@link #roads}. */
-	public static boolean[][] highways =
-			new boolean[SIZE][SIZE];
+	public static boolean[][] highways = new boolean[SIZE][SIZE];
 	private static int retries = 0;
 	private static int lastretries = 0;
 	static final int TOWNBUFFER = 1;
@@ -129,6 +128,10 @@ public class World implements Serializable {
 				seed.generate();
 				placemoretowns();
 				start = FeatureGenerator.SINGLETON.placestartingfeatures();
+				for (WorldActor a : WorldActor.getall(Town.class)) {
+					Town t = (Town) a;
+					t.populategarisson();
+				}
 			} catch (RestartWorldGeneration e) {
 				seed = null;
 				Town.initnames();

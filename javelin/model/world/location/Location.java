@@ -111,8 +111,8 @@ public abstract class Location extends WorldActor {
 		ArrayList<WorldActor> actors = WorldActor.getall();
 		actors.remove(p);
 		while (p.x == -1
-				|| (!allowwater
-						&& World.seed.map[p.x][p.y].equals(Terrain.WATER))
+				|| (!allowwater && World.seed.map[p.x][p.y]
+						.equals(Terrain.WATER))
 				|| WorldActor.get(p.x, p.y, actors) != null || neartown(p)) {
 			p.x = RPG.r(0, World.SIZE - 1);
 			p.y = RPG.r(0, World.SIZE - 1);
@@ -144,7 +144,7 @@ public abstract class Location extends WorldActor {
 
 	/**
 	 * Called when this place is reached with the active Squad.
-	 *
+	 * 
 	 * @throws StartBattle
 	 * @return <code>true</code> if the {@link Squad} is able to interact with
 	 *         this place, <code>false</code> if a {@link #garrison} defends it.
@@ -162,9 +162,10 @@ public abstract class Location extends WorldActor {
 						if (a == null) {
 							continue;
 						}
-						if (closest == null || Walker.distance(p.x, p.y, a.x,
-								a.y) < Walker.distance(p.x, p.y, closest.x,
-										closest.y)) {
+						if (closest == null
+								|| Walker.distance(p.x, p.y, a.x, a.y) < Walker
+										.distance(p.x, p.y, closest.x,
+												closest.y)) {
 							closest = a;
 						}
 					}
@@ -258,8 +259,8 @@ public abstract class Location extends WorldActor {
 	 * @return <code>true</code> if player confirms engaging in battle.
 	 * @throws RepeatTurn
 	 */
-	public static boolean headsup(List<Combatant> opponents,
-			String description) {
+	public static boolean
+			headsup(List<Combatant> opponents, String description) {
 		opponents.sort(new Comparator<Combatant>() {
 			@Override
 			public int compare(Combatant o1, Combatant o2) {
@@ -267,10 +268,8 @@ public abstract class Location extends WorldActor {
 			}
 		});
 		Game.messagepanel.clear();
-		Game.message(
-				describe(opponents, description) + "\n\n"
-						+ "Press s to storm or any other key to retreat.",
-				Delay.NONE);
+		Game.message(describe(opponents, description) + "\n\n"
+				+ "Press s to storm or any other key to retreat.", Delay.NONE);
 		if (InfoScreen.feedback() == 's') {
 			return true;
 		}
@@ -302,8 +301,8 @@ public abstract class Location extends WorldActor {
 
 	@Override
 	public Image getimage() {
-		return Images.getImage(
-				"location" + getClass().getSimpleName().toLowerCase());
+		return Images.getImage("location"
+				+ getClass().getSimpleName().toLowerCase());
 	}
 
 	/**
@@ -380,5 +379,10 @@ public abstract class Location extends WorldActor {
 
 	public boolean view() {
 		return !ishostile() && vision > 0;
+	}
+
+	public void capture() {
+		garrison.clear();
+		realm = null; // TODO really?
 	}
 }

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import com.sun.glass.events.KeyEvent;
-
 import javelin.Javelin;
 import javelin.controller.action.world.WorldAction;
 import javelin.controller.challenge.ChallengeRatingCalculator;
@@ -34,8 +32,7 @@ public class EnterBattlefield extends WorldAction {
 	ArrayList<Monster> recruits = new ArrayList<Monster>(NELITE + NFOOTMEN);
 
 	public EnterBattlefield() {
-		super("Battlefield (mini-game)", new int[] { KeyEvent.VK_B },
-				new String[] { "b" });
+		super("Battlefield (mini-game)", new int[] {}, new String[] { "B" });
 	}
 
 	@Override
@@ -60,8 +57,7 @@ public class EnterBattlefield extends WorldAction {
 		int blueel = ChallengeRatingCalculator.calculateel(blueteam);
 		int redel = ChallengeRatingCalculator.calculateel(redteam);
 		if (blueel != redel) {
-			complete(blueel > redel ? redteam : blueteam,
-					Math.max(blueel, redel));
+			complete(blueel > redel ? redteam : blueteam, Math.max(blueel, redel));
 		}
 		throw new StartBattle(new Battle(blueteam, redteam));
 	}
@@ -81,9 +77,8 @@ public class EnterBattlefield extends WorldAction {
 		for (Monster m : commanders) {
 			commanderlist.add(m + level(m));
 		}
-		int choice = Javelin.choose(
-				"Welcome to the battlefield mini-game!\n\nSelect your commander:",
-				commanderlist, true, false);
+		int choice = Javelin.choose("Welcome to the battlefield mini-game!\n\nSelect your commander:", commanderlist,
+				true, false);
 		if (choice < 0) {
 			return false;
 		}
@@ -97,8 +92,7 @@ public class EnterBattlefield extends WorldAction {
 	void complete(ArrayList<Combatant> team, int el) {
 		Monster weakest = null;
 		for (Combatant c : team) {
-			if (weakest == null
-					|| c.source.challengeRating < weakest.challengeRating) {
+			if (weakest == null || c.source.challengeRating < weakest.challengeRating) {
 				weakest = c.source;
 			}
 		}
@@ -133,16 +127,13 @@ public class EnterBattlefield extends WorldAction {
 		}
 		boolean elite = recruit < NELITE;
 		recruit(recruits.get(recruit), blueteam, elite);
-		while (ChallengeRatingCalculator.calculateel(
-				redteam) < ChallengeRatingCalculator.calculateel(blueteam)) {
-			recruit(RPG.pick(elite ? getelite() : getfootmen()), redteam,
-					elite);
+		while (ChallengeRatingCalculator.calculateel(redteam) < ChallengeRatingCalculator.calculateel(blueteam)) {
+			recruit(RPG.pick(elite ? getelite() : getfootmen()), redteam, elite);
 		}
 		return true;
 	}
 
-	private void recruit(Monster monster, ArrayList<Combatant> team,
-			boolean elite) {
+	private void recruit(Monster monster, ArrayList<Combatant> team, boolean elite) {
 		int n = RPG.r(1, elite ? 4 : 8);
 		for (int i = 0; i < n; i++) {
 			if (count(team, monster) >= 50) {
@@ -153,9 +144,8 @@ public class EnterBattlefield extends WorldAction {
 	}
 
 	String list(ArrayList<Combatant> team, boolean shownumbers, String header) {
-		String list = header + " (encounter level "
-				+ ChallengeRatingCalculator.calculateel(team) + " of "
-				+ TARGETEL + "):\n\n";
+		String list = header + " (encounter level " + ChallengeRatingCalculator.calculateel(team) + " of " + TARGETEL
+				+ "):\n\n";
 		Combatant commander = team.get(0);
 		list += "Commander: " + commander + level(commander.source) + "\n\n";
 		list += "Elite soldiers:\n\n";
@@ -173,8 +163,7 @@ public class EnterBattlefield extends WorldAction {
 		return recruits.subList(0, NELITE);
 	}
 
-	String listtier(List<Monster> elite2, ArrayList<Combatant> team,
-			boolean shownumbers) {
+	String listtier(List<Monster> elite2, ArrayList<Combatant> team, boolean shownumbers) {
 		String tier = "";
 		for (int i = 0; i < elite2.size(); i++) {
 			Monster m = elite2.get(i);
@@ -182,8 +171,7 @@ public class EnterBattlefield extends WorldAction {
 			if (shownumbers) {
 				tier += KEYS.charAt(recruits.indexOf(m)) + " - ";
 			}
-			tier += count(team, m) + " " + m.toString().toLowerCase() + level(m)
-					+ "\n";
+			tier += count(team, m) + " " + m.toString().toLowerCase() + level(m) + "\n";
 		}
 		return tier + "\n";
 	}

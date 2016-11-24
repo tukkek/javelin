@@ -12,6 +12,7 @@ import javelin.controller.walker.Walker;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.location.Location;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -107,15 +108,14 @@ public abstract class WorldActor implements Serializable {
 		int tox = x + deltax;
 		int toy = y + deltay;
 		if (!World.validatecoordinate(tox, toy)
-				|| (!Terrain.WATER.equals(Terrain.current())
-						&& Terrain.WATER.equals(Terrain.get(tox, toy)))) {
+				|| (!Terrain.WATER.equals(Terrain.current()) && Terrain.WATER
+						.equals(Terrain.get(tox, toy)))) {
 			displace();
 			return;
 		}
 		ArrayList<WorldActor> actors = WorldActor.getall();
 		actors.remove(this);
-		if (tox >= 0 && toy >= 0 && tox < World.SIZE
-				&& toy < World.SIZE
+		if (tox >= 0 && toy >= 0 && tox < World.SIZE && toy < World.SIZE
 				&& WorldActor.get(tox, toy, actors) == null) {
 			move(tox, toy);
 		} else {
@@ -169,8 +169,8 @@ public abstract class WorldActor implements Serializable {
 	 * @return Actor of the given type that occupies the given coordinates, or
 	 *         <code>null</code>.
 	 */
-	public static WorldActor get(int x, int y,
-			Class<? extends WorldActor> type) {
+	public static WorldActor
+			get(int x, int y, Class<? extends WorldActor> type) {
 		return get(x, y, getall(type));
 	}
 
@@ -184,8 +184,8 @@ public abstract class WorldActor implements Serializable {
 	/**
 	 * @return Actor of the given set that occupies these coordinates.
 	 */
-	public static WorldActor get(int x, int y,
-			List<? extends WorldActor> actors) {
+	public static WorldActor
+			get(int x, int y, List<? extends WorldActor> actors) {
 		for (WorldActor actor : actors) {
 			if (actor.x == x && actor.y == y) {
 				return actor;
@@ -259,5 +259,19 @@ public abstract class WorldActor implements Serializable {
 	 */
 	public boolean isadjacent(WorldActor active) {
 		return Math.abs(x - active.x) <= 1 && Math.abs(y - active.y) <= 1;
+	}
+
+	public WorldActor findnearest(Class<? extends Location> targets) {
+		WorldActor nearest = null;
+		for (WorldActor p : getall(targets)) {
+			if (p == this) {
+				continue;
+			}
+			if (nearest == null
+					|| distance(p.x, p.y) < distance(nearest.x, nearest.y)) {
+				nearest = p;
+			}
+		}
+		return nearest;
 	}
 }

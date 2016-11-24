@@ -51,14 +51,14 @@ public class Help extends Action {
 				padding = a.length();
 			}
 			if (!commands.isEmpty()) {
-				columnb.add(0, commands.getLast());
+				// columnb.add(0, commands.getLast());
 				columnb.add(commands.removeLast());
 			}
 		}
 		while (!columna.isEmpty()) {
 			text += pad(columna.pop(), padding);
 			if (!columnb.isEmpty()) {
-				text += columnb.pop();
+				text += columnb.removeLast();
 			}
 			text += "\n";
 		}

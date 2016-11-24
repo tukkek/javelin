@@ -2,6 +2,7 @@ package javelin.controller.action;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -14,6 +15,7 @@ import javelin.controller.action.area.Area;
 import javelin.controller.action.area.Burst;
 import javelin.controller.action.area.Line;
 import javelin.controller.ai.ChanceNode;
+import javelin.controller.ai.Node;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.StopThinking;
 import javelin.controller.fight.Fight;
@@ -26,6 +28,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.BreathWeapon.BreathArea;
 import javelin.view.mappanel.MapPanel;
+import javelin.view.mappanel.battle.overlay.AiOverlay;
 import javelin.view.mappanel.battle.overlay.BreathOverlay;
 
 /**
@@ -44,6 +47,13 @@ import javelin.view.mappanel.battle.overlay.BreathOverlay;
  * @author alex
  */
 public class Breath extends Action implements AiAction {
+	static public class BreathNode extends ChanceNode {
+		public BreathNode(Node n, float chance, String action, Collection<Point> area) {
+			super(n, chance, action, Delay.BLOCK);
+			overlay = new AiOverlay(area);
+		}
+	}
+
 	/** Unique instance for this class. */
 	public static final Action SINGLETON = new Breath();
 
@@ -157,7 +167,8 @@ public class Breath extends Action implements AiAction {
 	static ArrayList<ChanceNode> breath(final BreathWeapon breath, final Area a, Combatant active, BattleState s) {
 		final ArrayList<ChanceNode> chances = new ArrayList<ChanceNode>();
 		final ArrayList<Combatant> targets = new ArrayList<Combatant>();
-		for (final Point p : a.fill(breath.range, active, s)) {
+		final Set<Point> area = a.fill(breath.range, active, s);
+		for (final Point p : area) {
 			final Combatant target = s.getcombatant(p.x, p.y);
 			if (target != null) {
 				targets.add(target);
@@ -184,8 +195,8 @@ public class Breath extends Action implements AiAction {
 				}
 				hit(s2.clone(target), damage, s2, breath, affected);
 			}
-			chances.add(
-					new ChanceNode(s2, damagechance, compound(action.toString(), affected.toString()), Delay.BLOCK));
+			ChanceNode n = new BreathNode(s2, damagechance, compound(action.toString(), affected.toString()), area);
+			chances.add(n);
 		}
 		return chances;
 	}

@@ -16408,7 +16408,7 @@ to the Reflex save DC).</p>
 </Description>
 </Monster>
 <Monster id="srd:ElementalAirElementalMedium">
-<Name>Elemental:Air Elemental, Medium</Name>
+<Name>Elemental:Medium Air Elemental</Name>
 <Avatar Image="airelemental"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="elemental" Subtypes="air">Medium-Size Elemental (Air)</SizeAndType>

@@ -73,11 +73,7 @@ public class Siege extends Fight {
 				}
 			}
 			if (place.garrison.isEmpty()) {
-				place.realm = null; // TODO really?
-				Town t = place instanceof Town ? (Town) place : null;
-				if (t != null) {
-					t.captureforhuman(true);
-				}
+				place.capture();
 			}
 		}
 		return super.onend();

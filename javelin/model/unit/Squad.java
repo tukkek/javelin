@@ -33,6 +33,7 @@ import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.Images;
 import javelin.view.screen.BribingScreen;
 import javelin.view.screen.WorldScreen;
+import javelin.view.screen.shopping.ShoppingScreen;
 
 /**
  * A group of units that the player controls as a overworld game unit. If a
@@ -73,14 +74,6 @@ public class Squad extends WorldActor {
 
 	/**
 	 * <code>false</code> will never prompt to skip battles.
-	 * 
-	 * <code>null</code> will prompt to skip all easy combat and easier.
-	 * 
-	 * If <code>true</code> will skip all moderate and easier combats
-	 * automatically, prompt for others.
-	 * 
-	 * 
-	 * TODO make it and {@link Combatant#automatic} easier to change in the UI.
 	 */
 	public Boolean strategic = false;
 	/** Terrain type this squad is coming from after movement. */
@@ -101,8 +94,7 @@ public class Squad extends WorldActor {
 	 * @param lasttownp
 	 *            See {@link #lasttown}.
 	 */
-	public Squad(final int xp, final int yp, final long hourselapsedp,
-			Town lasttownp) {
+	public Squad(final int xp, final int yp, final long hourselapsedp, Town lasttownp) {
 		x = xp;
 		y = yp;
 		hourselapsed = hourselapsedp;
@@ -158,15 +150,13 @@ public class Squad extends WorldActor {
 			return;
 		}
 		if (transport != null && Dungeon.active == null) {
-			image = Images
-					.getImage(transport.name.replaceAll(" ", "").toLowerCase());
+			image = Images.getImage(transport.name.replaceAll(" ", "").toLowerCase());
 		}
 		Combatant leader = members.get(0);
 		for (int i = 1; i < members.size(); i++) {
 			Combatant m = members.get(i);
-			if (ChallengeRatingCalculator
-					.calculateCr(m.source) > ChallengeRatingCalculator
-							.calculateCr(leader.source)) {
+			if (ChallengeRatingCalculator.calculateCr(m.source) > ChallengeRatingCalculator
+					.calculateCr(leader.source)) {
 				leader = m;
 			}
 		}
@@ -192,18 +182,10 @@ public class Squad extends WorldActor {
 		for (final Combatant m : s.members) {
 			equipment.put(m.id, s.equipment.get(m.id));
 		}
-		if (transport == null || (s.transport != null
-				&& s.transport.speed > transport.speed)) {
+		if (transport == null || (s.transport != null && s.transport.speed > transport.speed)) {
 			transport = s.transport;
 		}
-		if (s.strategic == true || strategic == true) {
-			strategic = true;
-		}
-		if (s.strategic == null || strategic == null) {
-			strategic = null;
-		} else {
-			strategic = false;
-		}
+		strategic = strategic && s.strategic;
 		s.disband();
 	}
 
@@ -235,9 +217,7 @@ public class Squad extends WorldActor {
 				gold -= fee;
 			} else {
 				Game.messagepanel.clear();
-				Game.message(
-						c + " is not paid, abandons your ranks!\n\nPress ENTER to coninue...",
-						Delay.NONE);
+				Game.message(c + " is not paid, abandons your ranks!\n\nPress ENTER to coninue...", Delay.NONE);
 				while (Game.getInput().getKeyChar() != '\n') {
 					// wait for enter
 				}
@@ -257,8 +237,7 @@ public class Squad extends WorldActor {
 			i.grab();
 		}
 		remove(c);
-		MercenariesGuild guild = (MercenariesGuild) Location
-				.getall(MercenariesGuild.class).get(0);
+		MercenariesGuild guild = (MercenariesGuild) Location.getall(MercenariesGuild.class).get(0);
 		guild.receive(c);
 	}
 
@@ -352,9 +331,7 @@ public class Squad extends WorldActor {
 		int best = Integer.MIN_VALUE;
 		for (int i = 0; i < members.size(); i++) {
 			Monster m = members.get(i).source;
-			int roll = Skills.take10(
-					m.skills.perceive(flyingbonus, weatherpenalty, m),
-					m.wisdom);
+			int roll = Skills.take10(m.skills.perceive(flyingbonus, weatherpenalty, m), m.wisdom);
 			if (roll > best) {
 				best = roll;
 			}
@@ -384,15 +361,24 @@ public class Squad extends WorldActor {
 	 * @return A list with the name of the given {@link Combatant}s, replaced
 	 *         with "?" when failed to {@link #perceive()} properly.
 	 */
-	public String spot(List<Combatant> opponent) {
+	public String spot(List<Combatant> opponents) {
 		String garrison = "";
 		int spot = perceive(false, true);
-		for (int i = 0; i < opponent.size(); i++) {
-			Combatant c = opponent.get(i);
-			garrison += (Skills.take10(c.source.skills.stealth,
-					c.source.dexterity) >= spot ? "?" : c) + ", ";
+		// boolean allseen = true;
+		for (int i = 0; i < opponents.size(); i++) {
+			Combatant c = opponents.get(i);
+			boolean spotted = spot >= Skills.take10(c.source.skills.stealth, c.source.dexterity);
+			garrison += (spotted ? c : "?") + ", ";
+			// if (allseen) {
+			// allseen = spotted;
+			// }
 		}
-		return garrison.substring(0, garrison.length() - 2);
+		garrison = garrison.substring(0, garrison.length() - 2);
+		// if (allseen) {
+		// garrison += " (" +
+		// ChallengeRatingCalculator.describedifficulty(opponents) + " battle)";
+		// }
+		return garrison;
 	}
 
 	/**
@@ -406,12 +392,10 @@ public class Squad extends WorldActor {
 	public boolean hide(List<Combatant> foes) {
 		// needs to pass on a listen check to notice enemy
 		boolean outside = Dungeon.active == null;
-		int listenroll = Squad.active.perceive(
-				outside && !Terrain.current().equals(Terrain.FOREST), outside);
+		int listenroll = Squad.active.perceive(outside && !Terrain.current().equals(Terrain.FOREST), outside);
 		boolean listen = false;
 		for (Combatant foe : foes) {
-			if (listenroll >= Skills.take10(foe.source.skills.stealth,
-					foe.source.dexterity)) {
+			if (listenroll >= Skills.take10(foe.source.skills.stealth, foe.source.dexterity)) {
 				listen = true;
 				break;
 			}
@@ -422,17 +406,17 @@ public class Squad extends WorldActor {
 		int hideroll = Squad.active.hide();
 		for (Combatant foe : foes) {
 			Monster m = foe.source;
-			if (Skills.take10(m.skills.perceive(false, outside, m),
-					m.wisdom) >= hideroll) {
+			if (Skills.take10(m.skills.perceive(false, outside, m), m.wisdom) >= hideroll) {
 				return false; // spotted!
 			}
 		}
 		// hidden
 		char input = ' ';
+		final String prompt = "You have hidden from a group of enemies!\n"
+				+ "Press s to storm them or w to wait for them to go away...\n\n" + "Enemies: "
+				+ Squad.active.spot(foes);
 		while (input != 'w' && input != 's') {
-			input = Javelin
-					.prompt("You have hidden from a group of enemies!\nPress s to storm them or w to wait for them to go away...\n\nEnemies: "
-							+ Squad.active.spot(foes));
+			input = Javelin.prompt(prompt);
 		}
 		return input == 'w';
 	}
@@ -573,8 +557,7 @@ public class Squad extends WorldActor {
 	 * @return Like {@link #speed()} but return time in hours.
 	 */
 	public float move(boolean ellapse, Terrain t, int x, int y) {
-		float hours = WorldMove.TIMECOST * (30f * WorldMove.NORMALMARCH)
-				/ speed(t, x, y);
+		float hours = WorldMove.TIMECOST * (30f * WorldMove.NORMALMARCH) / speed(t, x, y);
 		if (hours < 1) {
 			hours = 1;
 		}
@@ -597,21 +580,18 @@ public class Squad extends WorldActor {
 		int snow = t.getweather() == Terrain.SNOWING ? 2 : 1;
 		if (transport != null) {
 			int transportspeed = transport.getspeed(members) / snow;
-			return transport.flies ? transportspeed
-					: t.speed(transportspeed, x, y);
+			return transport.flies ? transportspeed : t.speed(transportspeed, x, y);
 		}
 		int speed = Integer.MAX_VALUE;
 		boolean allfly = true;
 		for (Combatant c : members) {
 			Monster m = c.source;
-			speed = Math.min(speed, Terrain.WATER.equals(t)
-					? Math.max(m.fly, m.swim) : m.gettopspeed());
+			speed = Math.min(speed, Terrain.WATER.equals(t) ? Math.max(m.fly, m.swim) : m.gettopspeed());
 			if (m.fly == 0) {
 				allfly = false;
 			}
 		}
-		return Math.round(WorldMove.NORMALMARCH
-				* ((allfly ? speed : t.speed(speed, x, y))) / snow);
+		return Math.round(WorldMove.NORMALMARCH * ((allfly ? speed : t.speed(speed, x, y))) / snow);
 	}
 
 	/**
@@ -635,9 +615,7 @@ public class Squad extends WorldActor {
 		}
 		String extra = work.inform();
 		extra = extra == null ? "" : "\n" + extra;
-		Javelin.message(
-				"Work finished: " + work.name.toLowerCase() + "!" + extra,
-				true);
+		Javelin.message("Work finished: " + work.name.toLowerCase() + "!" + extra, true);
 		Game.messagepanel.clear();
 		work = null;
 	}
@@ -671,8 +649,7 @@ public class Squad extends WorldActor {
 	 * @see Squad#perceive(boolean)
 	 */
 	public void view(int vision) {
-		Outpost.discover(Squad.active.x, Squad.active.y,
-				Math.round(Math.round(Math.floor(vision / 5f))));
+		Outpost.discover(Squad.active.x, Squad.active.y, Math.round(Math.round(Math.floor(vision / 5f))));
 	}
 
 	@Override
@@ -702,23 +679,14 @@ public class Squad extends WorldActor {
 	}
 
 	public boolean skipcombat(int diffifculty) {
-		if (Boolean.FALSE.equals(strategic)) {
+		if (!strategic) {
 			return false;
-		}
-		if (strategic == null
-				&& diffifculty >= ChallengeRatingCalculator.DIFFICULTYMODERATE) {
-			return false;
-		}
-		if (Boolean.TRUE.equals(strategic)
-				&& diffifculty <= ChallengeRatingCalculator.DIFFICULTYMODERATE) {
-			return true;
 		}
 		Character input = ' ';
 		while (input != '\n' && input != 's') {
-			final String difficulty =
-					ChallengeRatingCalculator.describedifficulty(diffifculty);
-			final String prompt = "Do you want to skip this " + difficulty
-					+ " battle?\n\n" //
+			Javelin.app.switchScreen(WorldScreen.active);
+			final String difficulty = ChallengeRatingCalculator.describedifficulty(diffifculty);
+			final String prompt = "Do you want to skip this " + difficulty + " battle?\n\n" //
 					+ "Press ENTER to open the battle screen\n"
 					+ "Press s to skip it and calculate results autoamatically";
 			input = Javelin.prompt(prompt);
@@ -728,13 +696,27 @@ public class Squad extends WorldActor {
 
 	public void view() {
 		view(Squad.active.perceive(true, true)
-				+ (Squad.active.transport == Transport.AIRSHIP ? +4
-						: Terrain.current().visionbonus));
+				+ (Squad.active.transport == Transport.AIRSHIP ? +4 : Terrain.current().visionbonus));
 	}
 
 	public static void updatevision() {
 		for (Squad s : Squad.getsquads()) {
 			s.view();
 		}
+	}
+
+	/**
+	 * prevents players from cheating the strategic combat system by never
+	 * buying items, which would have no effect in the outcome of battle.
+	 * 
+	 * @see StartBattle
+	 */
+	public String wastegold(float resourcesused) {
+		int spent = Math.round(Squad.active.gold * resourcesused);
+		if (spent <= 0) {
+			return "";
+		}
+		Squad.active.gold -= spent;
+		return "$" + ShoppingScreen.formatcost(spent) + " in resources lost.\n\n";
 	}
 }

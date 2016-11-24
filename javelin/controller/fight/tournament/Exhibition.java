@@ -21,8 +21,7 @@ public abstract class Exhibition implements Serializable {
 	/** If <code>true</code> tournaments happen more often. */
 	public static boolean DEBUG = false;
 	/** Holder for types other than {@link Match}. */
-	public static final ArrayList<Exhibition> SPECIALEVENTS =
-			new ArrayList<Exhibition>();
+	public static final ArrayList<Exhibition> SPECIALEVENTS = new ArrayList<Exhibition>();
 
 	static {
 		SPECIALEVENTS.add(new MirrorMatch());

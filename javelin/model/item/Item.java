@@ -10,6 +10,7 @@ import java.util.TreeMap;
 
 import javelin.controller.action.UseItem;
 import javelin.controller.action.world.UseItems;
+import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.upgrade.Spell;
 import javelin.model.Realm;
 import javelin.model.item.artifact.Artifact;
@@ -20,6 +21,7 @@ import javelin.model.world.location.town.Academy;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.shopping.ShoppingScreen;
+import tyrant.mikera.engine.RPG;
 
 /**
  * Represents an item carried by a {@link Combatant}. Most often items are
@@ -48,8 +50,7 @@ public abstract class Item implements Serializable, Cloneable {
 	 */
 	public static final ItemSelection ALL = new ItemSelection();
 	/** Map of items by price in gold coins ($). */
-	public static final TreeMap<Integer, ItemSelection> BYPRICE =
-			new TreeMap<Integer, ItemSelection>();
+	public static final TreeMap<Integer, ItemSelection> BYPRICE = new TreeMap<Integer, ItemSelection>();
 	/** @see Item#getselection(Realm) */
 	public static final ItemSelection FIRE = new ItemSelection();
 	/** @see Item#getselection(Realm) */
@@ -109,8 +110,7 @@ public abstract class Item implements Serializable, Cloneable {
 	 * @param upgradeset
 	 *            One the static constants in this class, like {@link #MAGIC}.
 	 */
-	public Item(final String name, final int price,
-			final ItemSelection upgradeset) {
+	public Item(final String name, final int price, final ItemSelection upgradeset) {
 		this.name = name;
 		this.price = price;
 		if (upgradeset != null) {
@@ -246,8 +246,7 @@ public abstract class Item implements Serializable, Cloneable {
 	 * @return All items types mapped by realm.
 	 */
 	public static HashMap<String, ItemSelection> getall() {
-		HashMap<String, ItemSelection> all =
-				new HashMap<String, ItemSelection>();
+		HashMap<String, ItemSelection> all = new HashMap<String, ItemSelection>();
 		addall(FIRE, all, "fire");
 		addall(EARTH, all, "earth");
 		addall(WATER, all, "water");
@@ -261,8 +260,7 @@ public abstract class Item implements Serializable, Cloneable {
 		return all;
 	}
 
-	static private void addall(ItemSelection fire2,
-			HashMap<String, ItemSelection> all, String string) {
+	static private void addall(ItemSelection fire2, HashMap<String, ItemSelection> all, String string) {
 		all.put(string, fire2);
 	}
 
@@ -288,10 +286,8 @@ public abstract class Item implements Serializable, Cloneable {
 	 * this item and updates {@link Squad#equipment}.
 	 */
 	public void grab(Squad s) {
-		final String list = UseItems.listitems(null, false)
-				+ "\nWho will take the " + toString().toLowerCase() + "?";
-		s.equipment.get(UseItems.selectmember(s.members, this, list).id)
-				.add(this);
+		final String list = UseItems.listitems(null, false) + "\nWho will take the " + toString().toLowerCase() + "?";
+		s.equipment.get(UseItems.selectmember(s.members, this, list).id).add(this);
 	}
 
 	/**
@@ -325,5 +321,19 @@ public abstract class Item implements Serializable, Cloneable {
 			}
 		}
 		return items;
+	}
+
+	/**
+	 * Used as strategic resource damage.
+	 * 
+	 * @return Lowercase description of used resources or empty string.
+	 * @see StartBattle
+	 */
+	public String waste(float resourcesused, ArrayList<Item> bag) {
+		if (RPG.random() < resourcesused) {
+			bag.remove(this);
+			return name;
+		}
+		return "";
 	}
 }

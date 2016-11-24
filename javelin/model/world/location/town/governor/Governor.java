@@ -37,8 +37,9 @@ public abstract class Governor implements Serializable {
 	}
 
 	public boolean draw() {
+		District d = town.getdistrict();
 		for (Research r : Research.get(town)) {
-			if (!hand.contains(r) && r.validate(town)) {
+			if (!hand.contains(r) && r.validate(town, d)) {
 				hand.add(r);
 				return true;
 			}

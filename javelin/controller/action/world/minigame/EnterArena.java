@@ -15,7 +15,7 @@ public class EnterArena extends WorldAction {
 	/** Constructor. */
 	public EnterArena() {
 		super("Arena (mini-game)", new int[] { KeyEvent.VK_A },
-				new String[] { "a" });
+				new String[] { "A" });
 	}
 
 	@Override

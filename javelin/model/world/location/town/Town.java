@@ -48,8 +48,8 @@ public class Town extends Location {
 	 */
 	public static final float DAILYLABOR = .1f;
 	static final ArrayList<String> NAMES = new ArrayList<String>();
-	static final String[] RANKS = new String[] { "hamlet", "village", "town",
-			"city" };
+	static final String[] RANKS =
+			new String[] { "hamlet", "village", "town", "city" };
 
 	static boolean startingtown = true;
 
@@ -98,17 +98,9 @@ public class Town extends Location {
 		gossip = true;
 		discard = false;
 		vision = 2;
-		// ArrayList<Monster> recruits = possiblerecruits(x, y);
-		// for (int i = 0; i < STARTINGLAIRS; i++) {
-		// Monster recruit = recruits.get(i);
-		// lairs.add(new RecruitOption(recruit.name,
-		// 100 * recruit.challengeRating, recruit));
-		// }
 		if (startingtown) {
 			startingtown = false;
 			governor = new MonsterGovernor(this);
-			// } else if (!Preferences.DEBUGCLEARGARRISON) {
-			// garrison.add(new Combatant(RPG.pick(lairs).m.clone(), true));
 		} else {
 			governor = new HumanGovernor(this);
 		}
@@ -156,7 +148,7 @@ public class Town extends Location {
 		Collections.shuffle(NAMES);
 	}
 
-	ArrayList<Monster> possiblerecruits(final int x, final int y) {
+	public ArrayList<Monster> getpossiblerecruits() {
 		ArrayList<Monster> recruits = new ArrayList<Monster>();
 		String terrain = Terrain.get(x, y).toString();
 		for (Monster m : Javelin.ALLMONSTERS) {
@@ -424,8 +416,8 @@ public class Town extends Location {
 			}
 			t.size -= 1;
 		}
-		Squad.active.members.add(new Combatant(Javelin.getmonster("Worker"),
-				false));
+		Squad.active.members
+				.add(new Combatant(Javelin.getmonster("Worker"), false));
 	}
 
 	@Override
@@ -477,5 +469,20 @@ public class Town extends Location {
 			return 3;
 		}
 		return 4;
+	}
+
+	@Override
+	public void capture() {
+		super.capture();
+		captureforhuman(true);
+	}
+
+	/**
+	 * Creates the initial {@link Location#garrison} for computer-controlled
+	 * towns.
+	 */
+	public void populategarisson() {
+		Dwelling d = (Dwelling) findnearest(Dwelling.class);
+		garrison.add(new Combatant(d.dweller.source.clone(), true));
 	}
 }

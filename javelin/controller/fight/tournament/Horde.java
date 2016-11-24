@@ -27,25 +27,24 @@ public class Horde extends Exhibition {
 		throw new StartBattle(new ExhibitionFight() {
 			@Override
 			public ArrayList<Combatant> getmonsters(int teamel) {
-				for (Monster m : new CrIterator(
-						Javelin.MONSTERSBYCR.descendingMap())) {
+				crloop: for (Monster m : new CrIterator(Javelin.MONSTERSBYCR.descendingMap())) {
 					ArrayList<Combatant> opponents = new ArrayList<Combatant>();
-					for (int i = 0; i < EncounterGenerator
-							.getmaxenemynumber(); i++) {
+					int el = 0;
+					for (int i = 0; i < EncounterGenerator.getmaxenemynumber(); i++) {
 						opponents.add(new Combatant(m.clone(), true));
-					}
-					try {
-						if (ChallengeRatingCalculator
-								.calculateelsafe(opponents) > teamel) {
-							continue;
+						try {
+							el = ChallengeRatingCalculator.calculateelsafe(opponents);
+						} catch (UnbalancedTeams e) {
+							continue crloop;
 						}
-					} catch (UnbalancedTeams e) {
-						continue;
+						if (el > teamel) {
+							continue crloop;
+						} else if (el == teamel) {
+							return opponents;
+						}
 					}
-					return opponents;
 				}
-				throw new RuntimeException(
-						"Couldn't generate Horde exhibition");
+				throw new RuntimeException("Couldn't generate Horde exhibition");
 			}
 		});
 	}

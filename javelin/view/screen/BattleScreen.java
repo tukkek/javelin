@@ -145,8 +145,7 @@ public class BattleScreen extends Screen {
 	public void mainLoop() {
 		mappanel.setVisible(false);
 		Combatant hero = Fight.state.next;
-		javelin.controller.Point t =
-				new Point(hero.location[0], hero.location[1]);
+		javelin.controller.Point t = new Point(hero.location[0], hero.location[1]);
 		mappanel.setPosition(t.x, t.y);
 		Game.redraw();
 		mappanel.center(t.x, t.y, true);
@@ -185,7 +184,9 @@ public class BattleScreen extends Screen {
 	}
 
 	void humanmove() {
-		// try {
+		if (MapPanel.overlay != null) {
+			MapPanel.overlay.clear();
+		}
 		BattlePanel.current = current;
 		centerscreen(current.location[0], current.location[1]);
 		mappanel.refresh();
@@ -198,8 +199,7 @@ public class BattleScreen extends Screen {
 			callback.run();
 			callback = null;
 		} else {
-			perform(convertEventToAction(updatableUserAction),
-					updatableUserAction.isShiftDown());
+			perform(convertEventToAction(updatableUserAction), updatableUserAction.isShiftDown());
 		}
 		spendap(current, false);
 	}
@@ -210,6 +210,9 @@ public class BattleScreen extends Screen {
 		} else {
 			BattlePanel.current = current;
 			Game.messagepanel.clear();
+			if (MapPanel.overlay != null) {
+				MapPanel.overlay.clear();
+			}
 			Game.message("Thinking...\n", Delay.NONE);
 			messagepanel.repaint();
 			updatescreen();
@@ -251,8 +254,7 @@ public class BattleScreen extends Screen {
 
 	/** TODO */
 	public void view(int x, int y) {
-		if (Javelin.app.fight.period == Javelin.PERIODEVENING
-				|| Javelin.app.fight.period == Javelin.PERIODNIGHT) {
+		if (Javelin.app.fight.period == Javelin.PERIODEVENING || Javelin.app.fight.period == Javelin.PERIODNIGHT) {
 			Fight.state.next.detect();
 		} else if (!maprevealed) {
 			for (javelin.view.mappanel.Tile[] ts : mappanel.tiles) {
@@ -288,6 +290,10 @@ public class BattleScreen extends Screen {
 	 *            next automaric unit think instead.
 	 */
 	public void setstate(final ChanceNode state, boolean enableoverrun) {
+		if (MapPanel.overlay != null) {
+			MapPanel.overlay.clear();
+		}
+		MapPanel.overlay = state.overlay;
 		BattlePanel.current = current;
 		final BattleState s = (BattleState) state.n;
 		Fight.state = s;
@@ -295,8 +301,7 @@ public class BattleScreen extends Screen {
 			Game.redraw();
 		}
 		Delay delay = state.delay;
-		if (enableoverrun && delay == Delay.WAIT
-				&& (s.redTeam.contains(s.next) || s.next.automatic)) {
+		if (enableoverrun && delay == Delay.WAIT && (s.redTeam.contains(s.next) || s.next.automatic)) {
 			delay = Delay.NONE;
 			jointurns = true;
 		}
@@ -379,8 +384,7 @@ public class BattleScreen extends Screen {
 	 * more of these for other platforms.
 	 */
 	protected boolean rejectEvent(final KeyEvent keyEvent) {
-		return (keyEvent.getModifiers() | InputEvent.ALT_DOWN_MASK) > 0
-				&& keyEvent.getKeyCode() == 18;
+		return (keyEvent.getModifiers() | InputEvent.ALT_DOWN_MASK) > 0 && keyEvent.getKeyCode() == 18;
 	}
 
 	/**

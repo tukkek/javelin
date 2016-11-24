@@ -1,22 +1,40 @@
 package javelin.controller.action.ai;
 
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.controller.Point;
 import javelin.controller.action.Action;
 import javelin.controller.action.Defend;
 import javelin.controller.action.Movement;
 import javelin.controller.ai.ChanceNode;
+import javelin.controller.ai.Node;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
+import javelin.view.Images;
+import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 /**
  * @author alex
  * @see Movement
  */
 public class AiMovement extends Action implements AiAction {
+	public static final Image MOVEOVERLAY = Images.getImage("overlaymove");
+
+	static public class MoveNode extends ChanceNode {
+
+		public MoveNode(Node n, float chance, String action, Delay delay, Point from) {
+			super(n, chance, action, delay);
+			AiOverlay o = new AiOverlay(from.x, from.y);
+			Images.getImage("overlaymove");
+			o.image = MOVEOVERLAY;
+			overlay = o;
+		}
+	}
+
 	public static final AiMovement SINGLETON = new AiMovement();
 	static final Movement[][] movementgridbyy = new Movement[3][3];
 
@@ -38,25 +56,18 @@ public class AiMovement extends Action implements AiAction {
 	}
 
 	@Override
-	public List<List<ChanceNode>> getoutcomes(final BattleState gameStatep,
-			final Combatant active) {
-		final ArrayList<List<ChanceNode>> successors =
-				new ArrayList<List<ChanceNode>>();
-		for (int x = active.location[0] - 1, deltax =
-				-1; deltax <= +1; x++, deltax++) {
-			movement: for (int y = active.location[1] - 1, deltay =
-					-1; deltay <= +1; y++, deltay++) {
+	public List<List<ChanceNode>> getoutcomes(final BattleState gameStatep, final Combatant active) {
+		final ArrayList<List<ChanceNode>> successors = new ArrayList<List<ChanceNode>>();
+		for (int x = active.location[0] - 1, deltax = -1; deltax <= +1; x++, deltax++) {
+			movement: for (int y = active.location[1] - 1, deltay = -1; deltay <= +1; y++, deltay++) {
 				if (deltax == 0 && deltay == 0) {
 					continue;
 				}
 				final BattleState gameState = gameStatep;
-				if (x < 0 || y < 0 || x >= gameState.map.length
-						|| y >= gameState.map[0].length) {
+				if (x < 0 || y < 0 || x >= gameState.map.length || y >= gameState.map[0].length) {
 					continue;
 				}
-				if (gameState.getcombatant(x, y) != null
-						|| gameState.map[x][y].blocked
-								&& active.source.fly == 0) {
+				if (gameState.getcombatant(x, y) != null || gameState.map[x][y].blocked && active.source.fly == 0) {
 					continue;
 				}
 				Meld meld = null;
@@ -69,8 +80,7 @@ public class AiMovement extends Action implements AiAction {
 						break;
 					}
 				}
-				successors.add(registermove(deltax, deltay, active, gameState,
-						x, y, meld));
+				successors.add(registermove(deltax, deltay, active, gameState, x, y, meld));
 			}
 		}
 		if (!Defend.ALLOWAI && successors.isEmpty()) {
@@ -79,9 +89,9 @@ public class AiMovement extends Action implements AiAction {
 		return successors;
 	}
 
-	static private ArrayList<ChanceNode> registermove(final int deltax,
-			final int deltay, Combatant active, BattleState gameState,
-			final int x, final int y, Meld meld) {
+	static private ArrayList<ChanceNode> registermove(final int deltax, final int deltay, Combatant active,
+			BattleState gameState, final int x, final int y, Meld meld) {
+		Point from = new Point(active.location[0], active.location[1]);
 		gameState = gameState.clone();
 		active = gameState.clone(active);
 		final Movement moveaction = movementgridbyy[deltay + 1][deltax + 1];
@@ -101,17 +111,15 @@ public class AiMovement extends Action implements AiAction {
 			active.meld();
 			gameState.meld.remove(meld);
 		}
-		list.add(new ChanceNode(gameState, 1f, action, delay));
+		list.add(new MoveNode(gameState, 1f, action, delay, from));
 		return list;
 	}
 
-	static public ArrayList<ChanceNode> wait(final BattleState gameState,
-			final Combatant active) {
+	static public ArrayList<ChanceNode> wait(final BattleState gameState, final Combatant active) {
 		final ArrayList<ChanceNode> wait = new ArrayList<ChanceNode>();
 		final BattleState state = gameState.clone();
 		state.clone(active).await();
-		wait.add(new ChanceNode(state, 1f, active.toString() + " defends...",
-				Delay.WAIT));
+		wait.add(new ChanceNode(state, 1f, active.toString() + " defends...", Delay.WAIT));
 		return wait;
 	}
 

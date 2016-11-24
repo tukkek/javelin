@@ -6,6 +6,8 @@ package javelin.controller;
 import java.io.Serializable;
 import java.util.Objects;
 
+import javelin.model.unit.Combatant;
+
 /**
  * X Y coordinate.
  * 
@@ -22,6 +24,11 @@ public class Point implements Cloneable, Serializable {
 
 	public Point(Point p) {
 		this(p.x, p.y);
+	}
+
+	public Point(Combatant c) {
+		x = c.location[0];
+		y = c.location[1];
 	}
 
 	@Override

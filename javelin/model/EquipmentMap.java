@@ -16,8 +16,7 @@ import tyrant.mikera.engine.RPG;
  * 
  * @author alex
  */
-public class EquipmentMap extends HashMap<Integer, ArrayList<Item>>
-		implements Serializable {
+public class EquipmentMap extends HashMap<Integer, ArrayList<Item>> implements Serializable {
 
 	@Override
 	public java.util.ArrayList<Item> get(final Object key) {
@@ -86,5 +85,13 @@ public class EquipmentMap extends HashMap<Integer, ArrayList<Item>>
 			}
 			remove(key);
 		}
+	}
+
+	public int count() {
+		int count = 0;
+		for (ArrayList<Item> bag : values()) {
+			count += bag.size();
+		}
+		return count;
 	}
 }

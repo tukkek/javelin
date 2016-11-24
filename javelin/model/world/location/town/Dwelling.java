@@ -27,13 +27,20 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Dwelling extends Fortification {
-	private Combatant dweller;
+	public Combatant dweller;
 	/** A volunteer is willing to join a {@link Squad} permanently. */
 	public boolean volunteer = false;
 
 	/** Constructor. */
 	public Dwelling() {
+		this(null);
+	}
+
+	public Dwelling(Monster m) {
 		super(null, null, 0, 0);
+		if (m != null) {
+			setdweller(m);
+		}
 		generate();
 		generategarrison(0, 0);
 		descriptionknown = dweller.toString() + " dwelling";
@@ -50,14 +57,21 @@ public class Dwelling extends Fortification {
 				continue monsters;
 			}
 		}
-		dweller = new Combatant(RPG.pick(candidates).clone(), true);
-		targetel = ChallengeRatingCalculator.elFromCr(
-				ChallengeRatingCalculator.calculateCr(dweller.source));
+		if (dweller == null) {
+			setdweller(RPG.pick(candidates));
+		}
+		targetel =
+				ChallengeRatingCalculator.elFromCr(ChallengeRatingCalculator
+						.calculateCr(dweller.source));
 		gossip = dweller.source.intelligence > 8;
 		for (int i = 0; i < 4; i++) {
 			garrison.add(new Combatant(dweller.source.clone(), true));
 		}
 		generategarrison = false;
+	}
+
+	void setdweller(Monster m) {
+		dweller = new Combatant(m.clone(), true);
 	}
 
 	@Override
@@ -91,8 +105,8 @@ public class Dwelling extends Fortification {
 		}
 		int xp = Math.round(dweller.source.challengeRating * 100);
 		if (!canbuy(xp)) {
-			screen.print(
-					"Cannot afford a " + monstertype + " (" + xp + "XP)...");
+			screen.print("Cannot afford a " + monstertype + " (" + xp
+					+ "XP)...");
 			Game.getInput();
 			return true;
 		}
@@ -107,22 +121,29 @@ public class Dwelling extends Fortification {
 		if (volunteer) {
 			text += "A volunteer is available to join you.\n\n";
 		} else {
-			text += "No volunteer is available right now but you can still hire mercenaries.\n\n";
+			text +=
+					"No volunteer is available right now but you can still hire mercenaries.\n\n";
 		}
 		text += "What do you want to do?\n\n";
 		if (volunteer) {
-			text += "d - draft a volunteer ("
-					+ Math.round(100 * dweller.source.challengeRating)
-					+ "XP)\n";
+			text +=
+					"d - draft a volunteer ("
+							+ Math.round(100 * dweller.source.challengeRating)
+							+ "XP)\n";
 		}
-		text += "h - hire a " + monstertype + " mercenary ($"
-				+ PurchaseScreen.formatcost(MercenariesGuild.getfee(dweller))
-				+ "/day)\n";
-		text += "p - pillage this dwelling ($"
-				+ PurchaseScreen.formatcost(getspoils()) + ")\n";
+		text +=
+				"h - hire a "
+						+ monstertype
+						+ " mercenary ($"
+						+ PurchaseScreen.formatcost(MercenariesGuild
+								.getfee(dweller)) + "/day)\n";
+		text +=
+				"p - pillage this dwelling ($"
+						+ PurchaseScreen.formatcost(getspoils()) + ")\n";
 		text += "q - quit\n";
-		text += "\nCurrent gold: $"
-				+ PurchaseScreen.formatcost(Squad.active.gold) + "\n";
+		text +=
+				"\nCurrent gold: $"
+						+ PurchaseScreen.formatcost(Squad.active.gold) + "\n";
 		if (volunteer) {
 			text += "Current XP: " + sumxp() + "XP\n";
 		}

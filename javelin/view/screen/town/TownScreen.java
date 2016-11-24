@@ -30,10 +30,10 @@ public class TownScreen extends PurchaseScreen {
 	// 'c');
 	static final Option RENAME = new Option("Rename town", 0, 'r');
 	static final Option DETACHWORKER = new Option("Detach worker", 0, 'd');
-	static final Option OPENCARD = new Option(
-			"Open one new labor option (1 labor)", 0, 'o');
-	static final Option REDRAWCARDS = new Option(
-			"Redraw all labor options (x labor)", 0, 'a');
+	static final Option OPENCARD =
+			new Option("Open one new labor option (1 labor)", 0, 'o');
+	static final Option REDRAWCARDS =
+			new Option("Redraw all labor options (x labor)", 0, 'a');
 
 	private static final Option MANAGE = new Option("", 0, 'm');
 
@@ -145,8 +145,9 @@ public class TownScreen extends PurchaseScreen {
 			return list;
 		}
 		if (Squad.active.resources > 0) {
-			list.add(new UnloadScreenOption("Unload " + Squad.active.resources
-					+ " resources into town", 0, 'U'));
+			list.add(new UnloadScreenOption(
+					"Unload " + Squad.active.resources + " resources into town",
+					0, 'U'));
 		}
 		// list.add(new RecruitScreenOption("Draft", town, 'd'));
 		// list.add(new ShopScreenOption("Shop", town, 's'));
@@ -164,12 +165,10 @@ public class TownScreen extends PurchaseScreen {
 		// }
 		// }
 		if (town.ishosting()) {
-			list.add(new TournamentScreenOption("Enter tournament", town, 'T'));
+			list.add(new TournamentScreenOption("Enter tournament", town, 't'));
 		}
-		MANAGE.name =
-				"Manage town ("
-						+ (town.governor.automanage ? "automatic" : "manual")
-						+ ")";
+		MANAGE.name = "Manage town ("
+				+ (town.governor.automanage ? "automatic" : "manual") + ")";
 		if (town.size > 1) {
 			list.add(DETACHWORKER);
 		}
@@ -181,9 +180,8 @@ public class TownScreen extends PurchaseScreen {
 				list.add(OPENCARD);
 			}
 			list.add(REDRAWCARDS);
-			REDRAWCARDS.name =
-					"Redraw all labor options (" + town.governor.gethandsize()
-							+ " labor)";
+			REDRAWCARDS.name = "Redraw all labor options ("
+					+ town.governor.gethandsize() + " labor)";
 			list.add(RENAME);
 		}
 		return list;
@@ -201,9 +199,8 @@ public class TownScreen extends PurchaseScreen {
 
 	@Override
 	public String printInfo() {
-		String output =
-				"Your squad has $"
-						+ PurchaseScreen.formatcost(Squad.active.gold);
+		String output = "Your squad has $"
+				+ PurchaseScreen.formatcost(Squad.active.gold);
 		// if (!town.crafting.done()) {
 		// output += "\n\n" + showqueue(town.crafting, "Crafting");
 		// }
@@ -211,17 +208,14 @@ public class TownScreen extends PurchaseScreen {
 		// output += "\n\n" + showqueue(town.training, "Training");
 		// }
 		if (!town.governor.automanage || DEBUGMANAGEMENT) {
-			output +=
-					"\n\nSize: " + town.getranktitle() + " (" + town.size
-							+ ")\n";
+			output += "\n\nSize: " + town.getranktitle() + " (" + town.size
+					+ ")\n";
 			output += "Labor: " + Math.round(Math.floor(town.labor));
 			if (town.ishostile() && Javelin.DEBUG) {
 				output += "    Queue: " + town.governor.queue + "\n";
 				output += "    Garrison: " + town.garrison + "\n";
-				output +=
-						"    EL: "
-								+ ChallengeRatingCalculator
-										.calculateel(town.garrison);
+				output += "    EL: "
+						+ ChallengeRatingCalculator.calculateel(town.garrison);
 			} else if (!town.governor.queue.isEmpty()) {
 				output += "\nLabor queue: ";
 				if (town.governor.queue.isEmpty() && DEBUGMANAGEMENT) {
@@ -243,9 +237,8 @@ public class TownScreen extends PurchaseScreen {
 		for (Order i : queue.queue) {
 			output += "  - " + i.name + ", time left: ";
 			long hoursleft = i.completionat - Squad.active.hourselapsed;
-			output +=
-					hoursleft < 24 ? hoursleft + " hour(s)" : Math.round(Math
-							.round(hoursleft / 24f)) + " day(s)";
+			output += hoursleft < 24 ? hoursleft + " hour(s)"
+					: Math.round(Math.round(hoursleft / 24f)) + " day(s)";
 			output += "\n";
 		}
 		return output.substring(0, output.length() - 1);
@@ -285,7 +278,8 @@ public class TownScreen extends PurchaseScreen {
 	@Override
 	protected boolean select(char feedback, List<Option> options) {
 		if (!town.governor.automanage && Character.isDigit(feedback)) {
-			return selectlabor(Integer.parseInt(Character.toString(feedback)) - 1);
+			return selectlabor(
+					Integer.parseInt(Character.toString(feedback)) - 1);
 		}
 		return super.select(feedback, options);
 	}

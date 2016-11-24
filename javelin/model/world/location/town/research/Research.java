@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 
 /**
@@ -36,10 +37,11 @@ public abstract class Research implements Serializable {
 	abstract public void play(Town t);
 
 	/**
+	 * @param d
 	 * @return <code>false</code> if the current card makes no sense for the
 	 *         given {@link Town}.
 	 */
-	abstract public boolean validate(Town t);
+	abstract public boolean validate(Town t, District d);
 
 	@Override
 	public String toString() {
@@ -60,7 +62,7 @@ public abstract class Research implements Serializable {
 	public static ArrayList<Research> get(Town t) {
 		ArrayList<Research> options = new ArrayList<Research>(0);
 		options.add(new Grow(t.size));
-		options.add(new ResearchUpgrade());
+		// options.add(new ResearchUpgrade());
 		Collections.shuffle(options);
 		return options;
 	}

@@ -22,13 +22,13 @@ public class Rebirth extends Hax {
 
 	@Override
 	protected boolean hack(Combatant target, HaxorScreen s) {
-		ChallengeRatingCalculator.calculateCr(target.source);
+		ChallengeRatingCalculator.calculatecr(target.source);
 		Float originalcr = target.source.challengeRating;
 		target.spells.clear();
 		String customname = target.source.customName;
 		target.source = Javelin.getmonster(target.source.name);
 		target.source.customName = customname;
-		ChallengeRatingCalculator.calculateCr(target.source);
+		ChallengeRatingCalculator.calculatecr(target.source);
 		target.xp = target.xp.add(
 				new BigDecimal(originalcr - target.source.challengeRating));
 		if (target.xp.intValue() < 0) {

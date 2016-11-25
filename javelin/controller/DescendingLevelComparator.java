@@ -18,6 +18,6 @@ public class DescendingLevelComparator implements Comparator<Combatant> {
 
 	int sumcrandxp(Combatant arg0) {
 		return -Math.round(100 * (arg0.xp.floatValue()
-				+ ChallengeRatingCalculator.calculateCr(arg0.source)));
+				+ ChallengeRatingCalculator.calculatecr(arg0.source)));
 	}
 }

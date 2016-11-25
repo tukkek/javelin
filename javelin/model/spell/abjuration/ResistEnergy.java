@@ -1,6 +1,6 @@
 package javelin.model.spell.abjuration;
 
-import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.Realm;
 import javelin.model.condition.Resistant;
 import javelin.model.spell.Touch;
@@ -18,7 +18,7 @@ public class ResistEnergy extends Touch {
 
 	/** Constructor. */
 	public ResistEnergy() {
-		super("Resist energy", 2, SpellsFactor.ratespelllikeability(2, 7),
+		super("Resist energy", 2, ChallengeRatingCalculator.ratespelllikeability(2, 7),
 				Realm.GOOD);
 		resistance = 20 / 5;
 		casterlevel = 7;

@@ -1,6 +1,6 @@
 package javelin.model.spell.necromancy;
 
-import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.Realm;
 import javelin.model.condition.Condition.Effect;
 import javelin.model.condition.Poisoned;
@@ -23,7 +23,7 @@ public class Poison extends Touch {
 
 	/** Constructor. */
 	public Poison() {
-		super("Poison", 4, SpellsFactor.ratespelllikeability(4), Realm.EVIL);
+		super("Poison", 4, ChallengeRatingCalculator.ratespelllikeability(4), Realm.EVIL);
 		castinbattle = true;
 	}
 

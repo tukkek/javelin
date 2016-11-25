@@ -1,6 +1,6 @@
 package javelin.model.spell.divination;
 
-import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.upgrade.Spell;
 import javelin.model.Realm;
 import javelin.model.condition.FindingTraps;
@@ -18,7 +18,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 public class FindTraps extends Spell {
 	/** Constructor. */
 	public FindTraps() {
-		super("Find traps", 3, SpellsFactor.ratespelllikeability(3),
+		super("Find traps", 3, ChallengeRatingCalculator.ratespelllikeability(3),
 				Realm.AIR);
 		ispotion = true;
 		castinbattle = false;

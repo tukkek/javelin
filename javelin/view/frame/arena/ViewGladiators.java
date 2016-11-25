@@ -39,7 +39,7 @@ public class ViewGladiators extends Frame {
 			}
 		});
 		for (final Combatant c : ArenaWindow.arena.gladiators) {
-			ChallengeRatingCalculator.calculateCr(c.source);
+			ChallengeRatingCalculator.calculatecr(c.source);
 			Button b = new Button(c.toString() + " (level "
 					+ Math.round(c.source.challengeRating) + ")");
 			b.addActionListener(new ActionListener() {

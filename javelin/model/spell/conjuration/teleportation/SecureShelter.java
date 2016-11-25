@@ -1,6 +1,6 @@
 package javelin.model.spell.conjuration.teleportation;
 
-import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.upgrade.Spell;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
@@ -13,7 +13,7 @@ import javelin.model.world.location.town.Town;
  */
 public class SecureShelter extends Spell {
 	public SecureShelter() {
-		super("Secure shelter", 4, SpellsFactor.ratespelllikeability(4),
+		super("Secure shelter", 4, ChallengeRatingCalculator.ratespelllikeability(4),
 				Realm.MAGIC);
 		castoutofbattle = true;
 		isscroll = true;

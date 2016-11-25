@@ -1,6 +1,6 @@
 package javelin.model.spell.evocation;
 
-import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.Realm;
 import javelin.model.spell.Ray;
 import javelin.model.state.BattleState;
@@ -15,7 +15,7 @@ import javelin.model.unit.Combatant;
 public class PolarRay extends Ray {
 	/** Constructor. */
 	public PolarRay() {
-		super("Polar ray", 8, SpellsFactor.ratespelllikeability(8), Realm.AIR);
+		super("Polar ray", 8, ChallengeRatingCalculator.ratespelllikeability(8), Realm.AIR);
 		castinbattle = true;
 		isscroll = true;
 	}

@@ -155,8 +155,8 @@ public class Squad extends WorldActor {
 		Combatant leader = members.get(0);
 		for (int i = 1; i < members.size(); i++) {
 			Combatant m = members.get(i);
-			if (ChallengeRatingCalculator.calculateCr(m.source) > ChallengeRatingCalculator
-					.calculateCr(leader.source)) {
+			if (ChallengeRatingCalculator.calculatecr(m.source) > ChallengeRatingCalculator
+					.calculatecr(leader.source)) {
 				leader = m;
 			}
 		}

@@ -2,7 +2,7 @@ package javelin.model.spell.divination;
 
 import javelin.JavelinApp;
 import javelin.controller.Point;
-import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.upgrade.Spell;
 import javelin.controller.walker.Walker;
 import javelin.model.Realm;
@@ -17,7 +17,7 @@ import javelin.model.world.location.dungeon.Feature;
 public class LocateObject extends Spell {
 	/** Constructor. */
 	public LocateObject() {
-		super("Locate object", 2, SpellsFactor.ratespelllikeability(2),
+		super("Locate object", 2, ChallengeRatingCalculator.ratespelllikeability(2),
 				Realm.MAGIC);
 		castinbattle = false;
 		castoutofbattle = true;

@@ -62,7 +62,7 @@ public class StatisticsScreen extends InfoScreen {
 		}
 		if (!(c.source instanceof Spawner)) {
 			lines.add("Challenge rating "
-					+ Math.round(ChallengeRatingCalculator.calculateCr(m)));
+					+ Math.round(ChallengeRatingCalculator.calculatecr(m)));
 		}
 		for (ClassAdvancement classlevels : ClassAdvancement.CLASSES) {
 			int level = classlevels.getlevel(m);

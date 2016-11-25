@@ -131,7 +131,7 @@ public abstract class Fortification extends Location {
 	 * @return the given level (typically from 1 to 20) to a encounter level.
 	 */
 	public static int leveltoel(int level) {
-		return ChallengeRatingCalculator.elFromCr(level * 4) - 4;
+		return ChallengeRatingCalculator.crtoel(level * 4) - 4;
 	}
 
 	@Override

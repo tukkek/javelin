@@ -61,8 +61,8 @@ public class Dwelling extends Fortification {
 			setdweller(RPG.pick(candidates));
 		}
 		targetel =
-				ChallengeRatingCalculator.elFromCr(ChallengeRatingCalculator
-						.calculateCr(dweller.source));
+				ChallengeRatingCalculator.crtoel(ChallengeRatingCalculator
+						.calculatecr(dweller.source));
 		gossip = dweller.source.intelligence > 8;
 		for (int i = 0; i < 4; i++) {
 			garrison.add(new Combatant(dweller.source.clone(), true));

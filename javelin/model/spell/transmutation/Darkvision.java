@@ -1,6 +1,6 @@
 package javelin.model.spell.transmutation;
 
-import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.Realm;
 import javelin.model.spell.Touch;
 import javelin.model.state.BattleState;
@@ -12,7 +12,7 @@ import javelin.model.unit.Combatant;
 public class Darkvision extends Touch {
 	/** Constructor. */
 	public Darkvision() {
-		super("Darkvision", 2, SpellsFactor.ratespelllikeability(2),
+		super("Darkvision", 2, ChallengeRatingCalculator.ratespelllikeability(2),
 				Realm.EVIL);
 		castinbattle = true;
 		castonallies = true;

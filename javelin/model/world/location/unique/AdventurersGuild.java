@@ -131,7 +131,7 @@ public class AdventurersGuild extends UniqueLocation {
 				students.clear();
 				break;
 			}
-			float cr = ChallengeRatingCalculator.calculateCr(c.source);
+			float cr = ChallengeRatingCalculator.calculatecr(c.source);
 			if (cr < TARGETLEVEL && c.xp.floatValue() >= 0) {
 				students.add(c);
 			}
@@ -249,7 +249,7 @@ public class AdventurersGuild extends UniqueLocation {
 			}
 			Combatant student = students.get(i);
 			String training = student + " learns:\n\n";
-			float cr = ChallengeRatingCalculator.calculateCr(student.source);
+			float cr = ChallengeRatingCalculator.calculatecr(student.source);
 			float original = cr;
 			Upgrade purchaseskills = null;
 			while (cr < TARGETLEVEL) {
@@ -257,7 +257,7 @@ public class AdventurersGuild extends UniqueLocation {
 				if (u.upgrade(student)) {
 					training += u.name + "\n";
 				}
-				cr = ChallengeRatingCalculator.calculateCr(student.source);
+				cr = ChallengeRatingCalculator.calculatecr(student.source);
 				if (u.purchaseskills) {
 					purchaseskills = u;
 				}

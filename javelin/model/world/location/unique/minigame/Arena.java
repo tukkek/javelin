@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
@@ -111,7 +111,7 @@ public class Arena extends UniqueLocation {
 	 * @return a value in {@link #coins}.
 	 */
 	public static int getcoins(int gold) {
-		return Math.max(1, RewardCalculator.getcr(gold));
+		return Math.max(1, ChallengeRatingCalculator.goldtocr(gold));
 	}
 
 	/**

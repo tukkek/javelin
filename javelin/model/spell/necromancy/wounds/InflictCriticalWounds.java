@@ -1,6 +1,6 @@
 package javelin.model.spell.necromancy.wounds;
 
-import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 
 /**
  * See the d20 SRD for more info.
@@ -12,7 +12,7 @@ public class InflictCriticalWounds extends InflictModerateWounds {
 	}
 
 	public InflictCriticalWounds() {
-		this("Inflict critical wounds", SpellsFactor.ratespelllikeability(4));
+		this("Inflict critical wounds", ChallengeRatingCalculator.ratespelllikeability(4));
 	}
 
 }

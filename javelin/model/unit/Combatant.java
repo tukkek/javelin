@@ -647,7 +647,7 @@ public class Combatant implements Serializable, Cloneable {
 		if (upgrade.purchaseskills) {
 			source.purchaseskills(upgrade).upgradeautomatically();
 		}
-		ChallengeRatingCalculator.calculateCr(source);
+		ChallengeRatingCalculator.calculatecr(source);
 		return true;
 	}
 
@@ -659,7 +659,7 @@ public class Combatant implements Serializable, Cloneable {
 	public static void upgradeweakest(List<Combatant> garrison, Realm r) {
 		Combatant weakest = null;
 		for (Combatant sensei : garrison) {
-			ChallengeRatingCalculator.calculateCr(sensei.source);
+			ChallengeRatingCalculator.calculatecr(sensei.source);
 			if (weakest == null || sensei.source.challengeRating < weakest.source.challengeRating) {
 				weakest = sensei;
 			}

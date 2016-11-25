@@ -51,7 +51,7 @@ public class Trap extends Feature {
 		super("poison trap", p.x, p.y, "dungeontrap");
 		float sum = 0;
 		for (Combatant c : Squad.active.members) {
-			sum += ChallengeRatingCalculator.calculateCr(c.source);
+			sum += ChallengeRatingCalculator.calculatecr(c.source);
 		}
 		cr = Math.round(
 				Math.max(1, sum / Squad.active.members.size() - RPG.r(8, 5)));

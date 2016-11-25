@@ -2,7 +2,7 @@ package javelin.model.spell.abjuration;
 
 import java.util.List;
 
-import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.upgrade.Spell;
 import javelin.model.Realm;
 import javelin.model.condition.Blinking;
@@ -15,7 +15,7 @@ import javelin.model.unit.Combatant;
 public class Blink extends Spell {
 
 	public Blink() {
-		super("Blink", 3, SpellsFactor.ratespelllikeability(3), Realm.MAGIC);
+		super("Blink", 3, ChallengeRatingCalculator.ratespelllikeability(3), Realm.MAGIC);
 		castinbattle = true;
 		super.ispotion = true;
 	}

@@ -1,6 +1,6 @@
 package javelin.model.spell.necromancy.wounds;
 
-import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.Realm;
 import javelin.model.spell.Touch;
 import javelin.model.state.BattleState;
@@ -20,7 +20,7 @@ public class InflictModerateWounds extends Touch {
 	}
 
 	public InflictModerateWounds() {
-		this("Inflict moderate wounds", SpellsFactor.ratespelllikeability(2),
+		this("Inflict moderate wounds", ChallengeRatingCalculator.ratespelllikeability(2),
 				new int[] { 2, 8, 3 }, 2);
 		castinbattle = true;
 	}

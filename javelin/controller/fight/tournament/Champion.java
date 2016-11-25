@@ -27,7 +27,7 @@ public class Champion extends Exhibition {
 			public ArrayList<Combatant> getmonsters(int teamel) {
 				for (Monster m : new CrIterator(Javelin.MONSTERSBYCR)) {
 					if (ChallengeRatingCalculator
-							.elFromCr(m.challengeRating) >= teamel) {
+							.crtoel(m.challengeRating) >= teamel) {
 						ArrayList<Combatant> opponents =
 								new ArrayList<Combatant>();
 						opponents.add(new Combatant(m, true));

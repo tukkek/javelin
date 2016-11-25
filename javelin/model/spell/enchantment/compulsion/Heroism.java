@@ -1,6 +1,6 @@
 package javelin.model.spell.enchantment.compulsion;
 
-import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.Realm;
 import javelin.model.condition.Heroic;
 import javelin.model.spell.Touch;
@@ -12,7 +12,7 @@ import javelin.model.unit.Combatant;
  */
 public class Heroism extends Touch {
 	public Heroism() {
-		super("Heroism", 3, SpellsFactor.ratespelllikeability(3), Realm.FIRE);
+		super("Heroism", 3, ChallengeRatingCalculator.ratespelllikeability(3), Realm.FIRE);
 		castonallies = true;
 		castinbattle = true;
 		ispotion = true;

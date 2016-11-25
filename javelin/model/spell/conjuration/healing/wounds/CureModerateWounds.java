@@ -1,6 +1,6 @@
 package javelin.model.spell.conjuration.healing.wounds;
 
-import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.Realm;
 import javelin.model.spell.Touch;
 import javelin.model.state.BattleState;
@@ -27,7 +27,7 @@ public class CureModerateWounds extends Touch {
 	}
 
 	public CureModerateWounds() {
-		this("Cure moderate wounds", SpellsFactor.ratespelllikeability(2),
+		this("Cure moderate wounds", ChallengeRatingCalculator.ratespelllikeability(2),
 				new int[] { 2, 8, 4 }, 2);
 	}
 

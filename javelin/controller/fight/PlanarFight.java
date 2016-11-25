@@ -91,7 +91,7 @@ class PlanarFight extends Fight {
 				}
 				continue;
 			}
-			ChallengeRatingCalculator.calculateCr(weakest.source);
+			ChallengeRatingCalculator.calculatecr(weakest.source);
 			i += 1;
 			if (i > MAXTRIES) {
 				return getmonsters(teamel);

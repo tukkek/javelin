@@ -1,7 +1,6 @@
 package javelin.controller.challenge.factor;
 
 import javelin.Javelin;
-import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.spell.Summon;
 import javelin.model.spell.abjuration.Barkskin;
@@ -137,30 +136,5 @@ public class SpellsFactor extends CrFactor {
 		for (Monster m : Javelin.ALLMONSTERS) {
 			UpgradeHandler.singleton.schoolsummoning.add(new Summon(m.name, 1));
 		}
-	}
-
-	/**
-	 * I'm not sure if it's a typo or proposital but .001 seems to be too low a
-	 * factor, I'm using .01
-	 */
-	public static float ratespelllikeability(int spelllevel, int casterlevel) {
-		return casterlevel * spelllevel * .01f;
-	}
-
-	/**
-	 * @return challenge rating factor for the given spell level cast at the
-	 *         minimum possible caster level.
-	 */
-	public static float ratespelllikeability(int spelllevel) {
-		return ratespelllikeability(spelllevel,
-				Spell.calculatecasterlevel(spelllevel));
-	}
-
-	/**
-	 * Same as {@link #ratespelllikeability(int)} but to be used in case a touch
-	 * spell is being used as a ray spell instead.
-	 */
-	public static float ratetouchconvertedtoray(int spelllevel) {
-		return .4f * spelllevel;
 	}
 }

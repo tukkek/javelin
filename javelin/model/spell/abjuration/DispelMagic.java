@@ -2,7 +2,7 @@ package javelin.model.spell.abjuration;
 
 import java.util.ArrayList;
 
-import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.upgrade.Spell;
 import javelin.model.Realm;
 import javelin.model.condition.Condition;
@@ -18,7 +18,7 @@ import javelin.model.unit.Combatant;
 public class DispelMagic extends Spell {
 	/** Constructor. */
 	public DispelMagic() {
-		super("Greater dispel magic", 6, SpellsFactor.ratespelllikeability(6),
+		super("Greater dispel magic", 6, ChallengeRatingCalculator.ratespelllikeability(6),
 				Realm.MAGIC);
 		isscroll = true;
 		castoutofbattle = true;

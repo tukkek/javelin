@@ -87,9 +87,9 @@ public class MercenariesGuild extends UniqueLocation {
 			@Override
 			public int compare(Combatant o1, Combatant o2) {
 				return new Float(
-						ChallengeRatingCalculator.calculateCr(o2.source))
+						ChallengeRatingCalculator.calculatecr(o2.source))
 								.compareTo(ChallengeRatingCalculator
-										.calculateCr(o1.source));
+										.calculatecr(o1.source));
 			}
 		});
 		ArrayList<String> prices = new ArrayList<String>(mercenaries.size());
@@ -144,7 +144,7 @@ public class MercenariesGuild extends UniqueLocation {
 	 */
 	public static int getfee(Combatant c) {
 		float value = RewardCalculator
-				.getgold(ChallengeRatingCalculator.calculateCr(c.source));
+				.getgold(ChallengeRatingCalculator.calculatecr(c.source));
 		int roundto;
 		if (value > 1000) {
 			roundto = 1000;

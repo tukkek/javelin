@@ -410,7 +410,7 @@ public class MonsterReader extends DefaultHandler {
 			summoncaster.get(summonspell.indexOf(s)).spellcr += s.cr * s.perday;
 		}
 		for (Monster m : updated) {
-			ChallengeRatingCalculator.calculateCr(m);
+			ChallengeRatingCalculator.calculatecr(m);
 		}
 	}
 
@@ -537,7 +537,7 @@ public class MonsterReader extends DefaultHandler {
 
 	void registermonster() {
 		try {
-			ChallengeRatingCalculator.calculateCr(monster);
+			ChallengeRatingCalculator.calculatecr(monster);
 			Javelin.ALLMONSTERS.add(monster);
 		} catch (final Exception e) {
 			throw new RuntimeException("Challenge rating issue " + monster.name,

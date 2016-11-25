@@ -20,6 +20,7 @@ import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.controller.challenge.factor.quality.BreathFactor;
 import javelin.controller.challenge.factor.quality.QualitiesFactor;
 import javelin.controller.exception.UnbalancedTeams;
+import javelin.controller.upgrade.Spell;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -35,20 +36,23 @@ import javelin.model.unit.Squad;
  * #see CrFactor
  */
 public class ChallengeRatingCalculator {
+	private static final float PCEQUIPMENTCRPERLEVEL = .2f;
 	public static final int DIFFICULTYMODERATE = -4;
 	private static final int MAXIMUM_EL = 50;
 	private static final int MINIMUM_EL = -7;
-	public static final float[] CR_FRACTIONS = new float[] { 3.5f, 3f, 2.5f, 2f,
-			1.75f, 1.5f, 1.25f, 1f, .5f, 0f, -.5f, -1f, -1.5f, -2f, -2.5f, -3 };
+	public static final float[] CR_FRACTIONS = new float[] { 3.5f, 3f, 2.5f, 2f, 1.75f, 1.5f, 1.25f, 1f, .5f, 0f, -.5f,
+			-1f, -1.5f, -2f, -2.5f, -3 };
 	public static final HdFactor HIT_DICE_FACTOR = new HdFactor();
 	private static final CrFactor CLASS_LEVEL_FACTOR = new ClassLevelFactor();
-	public static final CrFactor[] CR_FACTORS = new CrFactor[] {
-			new AbilitiesFactor(), new ArmorClassFactor(), new FeatsFactor(),
-			new FullAttackFactor(), HIT_DICE_FACTOR, new SizeFactor(),
-			new SpeedFactor(), new SpellsFactor(), CLASS_LEVEL_FACTOR,
-			new QualitiesFactor(), new BreathFactor(), new TouchAttackFactor(),
+	public static final CrFactor[] CR_FACTORS = new CrFactor[] { new AbilitiesFactor(), new ArmorClassFactor(),
+			new FeatsFactor(), new FullAttackFactor(), HIT_DICE_FACTOR, new SizeFactor(), new SpeedFactor(),
+			new SpellsFactor(), CLASS_LEVEL_FACTOR, new QualitiesFactor(), new BreathFactor(), new TouchAttackFactor(),
 			new SkillsFactor() };
 	private static final FileWriter LOGFILE;
+	static final int[] XPPERLEVEL = new int[] { 0, 1000, 3000, 6000, 10000, 15000, 21000, 28000, 36000, 45000, 55000,
+			66000, 78000, 91000, 105000, 12000, 136000, 153000, 171000, 190000, };
+	static final int[] GOLDPERLEVEL = new int[] { 0, 900, 2700, 5400, 9000, 13000, 19000, 27000, 36000, 49000, 66000,
+			88000, 110000, 150000, 200000, 260000, 340000, 440000, 580000, 760000, };
 
 	static {
 		if (Javelin.DEBUG) {
@@ -76,20 +80,18 @@ public class ChallengeRatingCalculator {
 	 *            Unit to rate.
 	 * @return The calculated CR.
 	 */
-	static public float calculateCr(final Monster monster) {
+	static public float calculatecr(final Monster monster) {
 		float[] r = calculaterawcr(monster);
 		float goldenrule = r[1];
-		float base = goldenrule >= 4 ? Math.round(goldenrule)
-				: roundfraction(goldenrule);
+		float base = goldenrule >= 4 ? Math.round(goldenrule) : roundfraction(goldenrule);
 		float cr = translatecr(base);
 		monster.challengeRating = cr;
-		log(" total: " + r[0] + " golden rule: " + goldenrule + " final: " + cr
-				+ "\n");
+		log(" total: " + r[0] + " golden rule: " + goldenrule + " final: " + cr + "\n");
 		return cr;
 	}
 
 	/**
-	 * Unlike {@link #calculateCr(Monster)} this method doesn't
+	 * Unlike {@link #calculatecr(Monster)} this method doesn't
 	 * {@link #roundfraction(float)} or {@link #translatecr(float)}, making it
 	 * more suitable for more precise calculations.
 	 * 
@@ -100,8 +102,7 @@ public class ChallengeRatingCalculator {
 	 */
 	public static float[] calculaterawcr(final Monster monster) {
 		log(monster.toString());
-		final TreeMap<CrFactor, Float> factorHistory =
-				new TreeMap<CrFactor, Float>();
+		final TreeMap<CrFactor, Float> factorHistory = new TreeMap<CrFactor, Float>();
 		float cr = 0;
 		for (final CrFactor f : CR_FACTORS) {
 			final float result = f.calculate(monster);
@@ -109,7 +110,7 @@ public class ChallengeRatingCalculator {
 			factorHistory.put(f, result);
 			cr += result;
 		}
-		return new float[] { cr, goldenRule(factorHistory, cr) };
+		return new float[] { cr, goldenrule(factorHistory, cr) };
 	}
 
 	/**
@@ -171,10 +172,8 @@ public class ChallengeRatingCalculator {
 		}
 	}
 
-	static private float goldenRule(
-			final TreeMap<CrFactor, Float> factorHistory, final float cr) {
-		final float hpCheck = factorHistory.get(HIT_DICE_FACTOR)
-				+ factorHistory.get(CLASS_LEVEL_FACTOR);
+	static private float goldenrule(final TreeMap<CrFactor, Float> factorHistory, final float cr) {
+		final float hpCheck = factorHistory.get(HIT_DICE_FACTOR) + factorHistory.get(CLASS_LEVEL_FACTOR);
 		if (hpCheck < cr / 2) {
 			final float twicehp = hpCheck * 2;
 			return twicehp + (cr - twicehp) / 2;
@@ -186,9 +185,8 @@ public class ChallengeRatingCalculator {
 	 * Same as {@link #calculateel(List)} but throws {@link UnbalancedTeams} as
 	 * needed.
 	 */
-	public static int calculateelsafe(final List<Combatant> team)
-			throws UnbalancedTeams {
-		return calculateEl(team, true);
+	public static int calculateelsafe(final List<Combatant> team) throws UnbalancedTeams {
+		return calculateel(team, true);
 	}
 
 	/**
@@ -198,14 +196,13 @@ public class ChallengeRatingCalculator {
 	 */
 	public static int calculateel(final List<Combatant> group) {
 		try {
-			return calculateEl(group, false);
+			return calculateel(group, false);
 		} catch (final UnbalancedTeams e) {
 			throw new RuntimeException("shouldn't happen!");
 		}
 	}
 
-	private static int calculateEl(final List<Combatant> group,
-			final boolean check) throws UnbalancedTeams {
+	private static int calculateel(final List<Combatant> group, final boolean check) throws UnbalancedTeams {
 		float highestCr = Float.MIN_VALUE;
 		float sum = 0;
 		for (final Combatant mgc : group) {
@@ -223,9 +220,8 @@ public class ChallengeRatingCalculator {
 				}
 			}
 		}
-		final int groupCr =
-				elFromCr(sum) + multipleOpponentsElModifier(group.size());
-		final int highestCrEl = elFromCr(highestCr);
+		final int groupCr = crtoel(sum) + multipleOpponentsElModifier(group.size());
+		final int highestCrEl = crtoel(highestCr);
 		return groupCr <= highestCrEl ? highestCrEl : groupCr;
 	}
 
@@ -281,11 +277,10 @@ public class ChallengeRatingCalculator {
 		if (teamSize <= 511) {
 			return -17;
 		}
-		throw new RuntimeException(
-				"Expand multiple opponents EL table: " + teamSize);
+		throw new RuntimeException("Expand multiple opponents EL table: " + teamSize);
 	}
 
-	public static int elFromCr(final float cr) {
+	public static int crtoel(final float cr) {
 		if (cr <= 1 / 16f) {
 			return MINIMUM_EL;
 		}
@@ -638,7 +633,120 @@ public class ChallengeRatingCalculator {
 	 *         {@link Combatant}s to {@link Squad#active}.
 	 */
 	public static String describedifficulty(List<Combatant> opponents) {
-		return describedifficulty(calculateel(opponents)
-				- ChallengeRatingCalculator.calculateel(Squad.active.members));
+		return describedifficulty(calculateel(opponents) - ChallengeRatingCalculator.calculateel(Squad.active.members));
+	}
+
+	/** To use with the Buy the Numbers system, */
+	static float xptocr(int xp) {
+		int xptolevel = -1;
+		int level = 1;
+		for (; level < 20; level++) {
+			if (XPPERLEVEL[level] >= xp) {
+				xptolevel = XPPERLEVEL[level];
+				break;
+			}
+		}
+		if (xptolevel == -1) {
+			throw new RuntimeException("Not enough levels #xptocr " + xp);
+		}
+		return level * (xp / new Float(xptolevel)) * (1 - PCEQUIPMENTCRPERLEVEL);
+	}
+
+	/**
+	 * @param gold
+	 *            Given a certain amount of gold...
+	 * @return the challenge rating that would warrant this treasure.
+	 */
+	public static int goldtocr(final float gold) {
+		return Math.round(Math.round(Math.cbrt(gold / 7.5f)));
+	}
+
+	/**
+	 * To use with the Buy the Numbers system. Covers passive abilities, for
+	 * others see {@link #rateability(int, int, int, int)}.
+	 * 
+	 * Note than when adding abilities to Javelin this way you should carefully
+	 * consider the prerequisite tree, like having Barbarian Rage before
+	 * Tireless Rage.
+	 * 
+	 * @param prerequisite
+	 *            Usually 0 but when converting an ability from a prestige class
+	 *            this should be the minimum level required to enter that class.
+	 * @param level
+	 *            Level this ability is being taken from.
+	 * @param adjustment
+	 *            Usually 50% to 200% depending on the ability's usefulness.
+	 * 
+	 * @return Challenge rating for this ability.
+	 */
+	public float ratesimpleability(int prerequisite, int level, float adjustment) {
+		return xptocr(Math.round(300 * (level + prerequisite) * adjustment));
+	}
+
+	/**
+	 * For use with the Buy the Numbers system. Encompasses activated,
+	 * level-dependent and abilities with a limit on use per day (usually one of
+	 * the two, at least).
+	 * 
+	 * Note than when adding abilities to Javelin this way you should carefully
+	 * consider the prerequisite tree, like having Barbarian Rage before
+	 * Tireless Rage.
+	 * 
+	 * @param minimumlevel
+	 *            The minimum level in which this ability can be accessed. If
+	 *            from a prestige class, add the prestige class level to the
+	 *            minimum level needed to enter that class.
+	 * @param usesperday
+	 *            How many times per day the ability can be used. 0 if the
+	 *            ability is not limited in uses per day.
+	 * @param startinglevel
+	 *            If the ability is enhanced by leveling up this is the starting
+	 *            levle it operates on. 0 otherwise. If the class is a prestige
+	 *            class this is the pure prestige class level (not added to
+	 *            minimumlevel).
+	 * @param casterlevel
+	 *            The current level this ability is operating on. 0 if not
+	 *            dependent upon level. If the class is a prestige class this is
+	 *            the pure prestige class level (not added to minimumlevel).
+	 * @param adjustment
+	 *            Usually 100 to 200% depending on the ability's usefulness.
+	 * 
+	 * @return Challenge rating.
+	 */
+	public float rateability(int minimumlevel, int usesperday, int startinglevel, int casterlevel, float adjustment) {
+		int access = minimumlevel * (startinglevel != 0 ? 100 : 150);
+		int basecost = access / 2;
+		int xp = access; // access cost
+		for (int useperday = 1; useperday <= usesperday; useperday++) {
+			xp += useperday * basecost;
+		}
+		for (int level = startinglevel + 1; level <= casterlevel; level++) {
+			xp += 50 * startinglevel;
+		}
+		return xptocr(Math.round(xp * adjustment));
+	}
+
+	/**
+	 * I'm not sure if it's a typo or on purpose but .001 seems to be too low a
+	 * factor, I'm using .01
+	 */
+	public static float ratespelllikeability(int spelllevel, int casterlevel) {
+		return casterlevel * spelllevel * .01f;
+	}
+
+	/**
+	 * @return challenge rating factor for the given spell level cast at the
+	 *         minimum possible caster level.
+	 */
+	public static float ratespelllikeability(int spelllevel) {
+		return ChallengeRatingCalculator.ratespelllikeability(spelllevel, Spell.calculatecasterlevel(spelllevel));
+	}
+
+	/**
+	 * Same as {@link ChallengeRatingCalculator#ratespelllikeability(int)} but to be used in case a touch
+	 * spell is being used as a ray spell instead.
+	 */
+	public static float ratetouchspellconvertedtoray(int spelllevel) {
+		return .4f * spelllevel;
 	}
 }

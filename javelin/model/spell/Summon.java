@@ -96,7 +96,7 @@ public class Summon extends Spell {
 			throw new RuntimeException("Unknown summon: " + monstername);
 		}
 		return ChallengeRatingCalculator
-				.calculateCr(c.source) >= m.challengeRating && super.apply(c);
+				.calculatecr(c.source) >= m.challengeRating && super.apply(c);
 	}
 
 	@Override

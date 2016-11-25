@@ -123,7 +123,7 @@ public class RewardCalculator {
 	public static int receivegold(final List<Combatant> team) {
 		int sum = 0;
 		for (final Combatant m : team) {
-			sum += getgold(ChallengeRatingCalculator.calculateCr(m.source));
+			sum += getgold(ChallengeRatingCalculator.calculatecr(m.source));
 		}
 		return sum;
 	}
@@ -135,15 +135,6 @@ public class RewardCalculator {
 	 */
 	public static int getgold(final float cr) {
 		return cr > 0 ? Math.round(cr * cr * cr * 7.5f) : 0;
-	}
-
-	/**
-	 * @param gold
-	 *            Given a certain amount of gold...
-	 * @return the challenge rating that would warrant this treasure.
-	 */
-	public static int getcr(final float gold) {
-		return Math.round(Math.round(Math.cbrt(gold / 7.5f)));
 	}
 
 	/**

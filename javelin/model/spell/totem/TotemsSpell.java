@@ -1,6 +1,6 @@
 package javelin.model.spell.totem;
 
-import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.Realm;
 import javelin.model.spell.Touch;
 
@@ -12,7 +12,7 @@ import javelin.model.spell.Touch;
 public abstract class TotemsSpell extends Touch {
 
 	public TotemsSpell(String name, Realm realmp) {
-		super(name, 2, SpellsFactor.ratespelllikeability(2), realmp);
+		super(name, 2, ChallengeRatingCalculator.ratespelllikeability(2), realmp);
 		castonallies = true;
 		castinbattle = true;
 		ispotion = true;

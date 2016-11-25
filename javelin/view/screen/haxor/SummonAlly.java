@@ -77,7 +77,7 @@ public class SummonAlly extends Hax {
 		current.addAll(Squad.active.members);
 		for (Combatant c : current) {
 			/* update challenge rating */
-			ChallengeRatingCalculator.calculateCr(c.source);
+			ChallengeRatingCalculator.calculatecr(c.source);
 		}
 		current.sort(new Comparator<Combatant>() {
 			@Override

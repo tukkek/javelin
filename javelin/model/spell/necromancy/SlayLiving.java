@@ -1,6 +1,6 @@
 package javelin.model.spell.necromancy;
 
-import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.Realm;
 import javelin.model.spell.Touch;
 import javelin.model.state.BattleState;
@@ -12,7 +12,7 @@ import javelin.model.unit.Combatant;
 public class SlayLiving extends Touch {
 
 	public SlayLiving() {
-		super("Slay living", 5, SpellsFactor.ratespelllikeability(5),
+		super("Slay living", 5, ChallengeRatingCalculator.ratespelllikeability(5),
 				Realm.EVIL);
 		castinbattle = true;
 		provokeaoo = false;

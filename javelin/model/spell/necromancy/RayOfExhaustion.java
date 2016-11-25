@@ -1,6 +1,6 @@
 package javelin.model.spell.necromancy;
 
-import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.Realm;
 import javelin.model.condition.Condition;
 import javelin.model.condition.Exhausted;
@@ -18,7 +18,7 @@ public class RayOfExhaustion extends Ray {
 
 	/** Constructor. */
 	public RayOfExhaustion() {
-		super("Ray of exhaustion", 3, SpellsFactor.ratespelllikeability(3),
+		super("Ray of exhaustion", 3, ChallengeRatingCalculator.ratespelllikeability(3),
 				Realm.EVIL);
 		castinbattle = true;
 		iswand = true;

@@ -158,7 +158,7 @@ public class SkillSelectionScreen extends SelectScreen {
 	@Override
 	public void onexit() {
 		m.skillpool = 0;
-		ChallengeRatingCalculator.calculateCr(m);
+		ChallengeRatingCalculator.calculatecr(m);
 	}
 
 	/**

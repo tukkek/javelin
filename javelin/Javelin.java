@@ -493,7 +493,7 @@ public class Javelin {
 		if (monster == null) {
 			return null;
 		}
-		ChallengeRatingCalculator.calculateCr(monster);
+		ChallengeRatingCalculator.calculatecr(monster);
 		return monster;
 	}
 

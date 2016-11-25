@@ -92,7 +92,7 @@ public class SquadScreen extends InfoScreen {
 				}
 			}
 			Commoner.SINGLETON.apply(weakest);
-			ChallengeRatingCalculator.calculateCr(weakest.source);
+			ChallengeRatingCalculator.calculatecr(weakest.source);
 		}
 		for (Combatant c : squad) {
 			if (SkillSelectionScreen.canspend(c.source)) {
@@ -105,7 +105,7 @@ public class SquadScreen extends InfoScreen {
 	private float totalcr() {
 		int cr = 0;
 		for (Combatant c : squad) {
-			cr += ChallengeRatingCalculator.calculateCr(c.source);
+			cr += ChallengeRatingCalculator.calculatecr(c.source);
 		}
 		return cr;
 	}

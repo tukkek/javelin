@@ -347,7 +347,7 @@ public class WorldScreen extends BattleScreen {
 			while (vital.length() < WorldScreen.STATUSSPACE) {
 				vital += " ";
 			}
-			hps.add(vital + " Level " + Math.round(Math.floor(ChallengeRatingCalculator.calculateCr(c.source))) + " "
+			hps.add(vital + " Level " + Math.round(Math.floor(ChallengeRatingCalculator.calculatecr(c.source))) + " "
 					+ c.gethumanxp());
 		}
 		return hps;

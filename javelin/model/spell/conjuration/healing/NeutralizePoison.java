@@ -3,7 +3,7 @@ package javelin.model.spell.conjuration.healing;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.Realm;
 import javelin.model.condition.Neutralized;
 import javelin.model.spell.Touch;
@@ -21,7 +21,7 @@ import javelin.model.unit.Combatant;
 public class NeutralizePoison extends Touch {
 	/** Constructor. */
 	public NeutralizePoison() {
-		super("Neutralize poison", 4, SpellsFactor.ratespelllikeability(4),
+		super("Neutralize poison", 4, ChallengeRatingCalculator.ratespelllikeability(4),
 				Realm.WATER);
 		ispotion = true;
 		isritual = true;

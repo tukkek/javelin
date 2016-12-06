@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 
 /**
@@ -12,7 +11,7 @@ import javelin.model.world.location.town.Town;
  * 
  * @author alex
  */
-public abstract class Research implements Serializable {
+public abstract class Labor implements Serializable {
 	/** Card's name. */
 	public String name;
 	/** Short description of what it does. */
@@ -23,25 +22,28 @@ public abstract class Research implements Serializable {
 	 * @see Town#labor
 	 */
 	public int cost;
+	public float progress;
+	Town town;
 
 	/** Constructor. */
-	public Research(String name, String description, int cost) {
+	public Labor(String name, String description, int cost, Town t) {
 		this.name = name;
 		this.description = description;
 		this.cost = cost;
+		this.town = t;
 	}
 
 	/**
 	 * Put the card into play (it is discarded afterwards).
 	 */
-	abstract public void play(Town t);
+	abstract public void done();
 
 	/**
 	 * @param d
 	 * @return <code>false</code> if the current card makes no sense for the
 	 *         given {@link Town}.
 	 */
-	abstract public boolean validate(Town t, District d);
+	abstract public boolean validate();
 
 	@Override
 	public String toString() {
@@ -55,15 +57,26 @@ public abstract class Research implements Serializable {
 
 	@Override
 	public boolean equals(Object obj) {
-		Research r2 = (Research) obj;
+		Labor r2 = (Labor) obj;
 		return name.equals(r2.name);
 	}
 
-	public static ArrayList<Research> get(Town t) {
-		ArrayList<Research> options = new ArrayList<Research>(0);
-		options.add(new Grow(t.size));
+	public static ArrayList<Labor> get(Town t) {
+		ArrayList<Labor> options = new ArrayList<Labor>(0);
+		options.add(new Grow(t));
 		// options.add(new ResearchUpgrade());
 		Collections.shuffle(options);
 		return options;
+	}
+
+	public void work(float step) {
+		progress += step;
+		if (progress > cost) {
+			done();
+		}
+	}
+
+	public String progress() {
+		return Math.round(100 * progress / cost) + "%";
 	}
 }

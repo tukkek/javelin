@@ -69,8 +69,8 @@ public class Monster implements Cloneable, Serializable {
 	public static final int COLOSSAL = 8;
 
 	/** An array of all sizes valid in this class. */
-	public static String[] SIZES = { "fine", "diminutive", "tiny", "small",
-			"medium-size", "large", "huge", "gargantuan", "colossal" };
+	public static String[] SIZES = { "fine", "diminutive", "tiny", "small", "medium-size", "large", "huge",
+			"gargantuan", "colossal" };
 
 	/**
 	 * Map of {@link Terrain} types, mapped by {@link Monster#name}.
@@ -79,8 +79,7 @@ public class Monster implements Cloneable, Serializable {
 	 * @see #getterrains()
 	 */
 	@Deprecated
-	public static final HashMap<String, List<String>> TERRAINDATA =
-			new HashMap<String, List<String>>();
+	public static final HashMap<String, List<String>> TERRAINDATA = new HashMap<String, List<String>>();
 
 	public int strength = -1;
 	public int dexterity = -1;
@@ -153,8 +152,7 @@ public class Monster implements Cloneable, Serializable {
 	/**
 	 * @see Breath
 	 */
-	public CloneableList<BreathWeapon> breaths =
-			new CloneableList<BreathWeapon>();
+	public CloneableList<BreathWeapon> breaths = new CloneableList<BreathWeapon>();
 	/**
 	 * This is the spells that this source has by default. Learned spells go to
 	 * {@link Combatant#spells}.
@@ -171,6 +169,11 @@ public class Monster implements Cloneable, Serializable {
 	public int initiative = Integer.MIN_VALUE;
 	/** Monster name as found in the d20 SRD. */
 	public String name = null;
+	/**
+	 * Index for {@link #SIZES}.
+	 * 
+	 * @see #size()
+	 */
 	public int size = -1;
 	/** Subgroup of {@link #type}, merely descriptive. */
 	public String group;
@@ -285,10 +288,8 @@ public class Monster implements Cloneable, Serializable {
 		}
 	}
 
-	static private ArrayList<AttackSequence>
-			copyattacks(final List<AttackSequence> original) {
-		final ArrayList<AttackSequence> copy =
-				new ArrayList<AttackSequence>(original.size());
+	static private ArrayList<AttackSequence> copyattacks(final List<AttackSequence> original) {
+		final ArrayList<AttackSequence> copy = new ArrayList<AttackSequence>(original.size());
 		for (final AttackSequence sequence : original) {
 			copy.add(sequence.clone());
 		}
@@ -362,9 +363,7 @@ public class Monster implements Cloneable, Serializable {
 		for (ClassAdvancement classdata : ClassAdvancement.CLASSES) {
 			classesbab += classdata.table[classdata.getlevel(this)].bab;
 		}
-		return classesbab
-				+ new Long(Math.round(originalhd * WeaponFocus.BAB.get(type)))
-						.intValue();
+		return classesbab + new Long(Math.round(originalhd * WeaponFocus.BAB.get(type))).intValue();
 	}
 
 	/**
@@ -448,8 +447,7 @@ public class Monster implements Cloneable, Serializable {
 	 * TODO turn attributes into {@link Enum}.
 	 */
 	static public int getbonus(int attribute) {
-		return new Long(Math.round(Math.floor(attribute / 2.0 - 5.0)))
-				.intValue();
+		return new Long(Math.round(Math.floor(attribute / 2.0 - 5.0))).intValue();
 	}
 
 	@Override
@@ -515,11 +513,11 @@ public class Monster implements Cloneable, Serializable {
 	}
 
 	/**
-	 * @return A scale in which 1 unit equals to half a gold piece (1
-	 *         medium-size monster).
+	 * @return A more computational-friendly version of {@link #size} where
+	 *         small is 1/2, medium is 1, large is 2...
 	 * @see Squad#eat()
 	 */
-	public float eat() {
+	public float size() {
 		switch (size) {
 		case Monster.FINE:
 			return 1 / 16f;
@@ -560,8 +558,7 @@ public class Monster implements Cloneable, Serializable {
 		if (skills.usemagicdevice(this) >= 10 + s.spell.casterlevel) {
 			return true;
 		}
-		return skills.decipher(s.spell, this) && 10 + hd.count()
-				+ skills.spellcraft / 2 >= s.spell.casterlevel + 1;
+		return skills.decipher(s.spell, this) && 10 + hd.count() + skills.spellcraft / 2 >= s.spell.casterlevel + 1;
 	}
 
 	/**
@@ -573,9 +570,8 @@ public class Monster implements Cloneable, Serializable {
 	 *         should do (which is not the case for animals that can only follow
 	 *         a few specific, well-trained tasks).
 	 */
-	public boolean think(Integer minimum) {
-		return Monster
-				.getbonus(intelligence) >= (minimum == null ? -1 : minimum);
+	public boolean think(int minimum) {
+		return Monster.getbonus(intelligence) >= minimum;
 	}
 
 	/**
@@ -593,15 +589,13 @@ public class Monster implements Cloneable, Serializable {
 			return 0;
 		}
 		String period = Javelin.getDayPeriod();
-		boolean verydark = period == Javelin.PERIODNIGHT
-				|| Weather.current == Weather.STORM;
+		boolean verydark = period == Javelin.PERIODNIGHT || Weather.current == Weather.STORM;
 		if (vision == VISION_LOWLIGHT) {
 			if (verydark) {
 				return -2;
 			}
 		} else { // normal vision
-			if (period == Javelin.PERIODEVENING
-					|| Weather.current == Weather.RAIN) {
+			if (period == Javelin.PERIODEVENING || Weather.current == Weather.RAIN) {
 				return -2;
 			}
 			if (verydark) {

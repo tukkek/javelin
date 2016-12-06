@@ -17,6 +17,7 @@ public class MonsterGovernor extends Governor {
 
 	@Override
 	public void manage() {
+		start(hand.get(0));
 		// TODO
 		System.out.println("implement mosnter manager!");
 	}

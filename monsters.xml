@@ -20154,7 +20154,7 @@ which improves to +8 in a wooded area.</p>
 </Description>
 </Monster>
 <Monster id="srd:GolemFlesh">
-<Name>Golem:Flesh</Name>
+<Name>Golem:Flesh golem</Name>
 <StatBlock>
   <SizeAndType Size="large" Type="construct">Large Construct</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="49">9d10 (49)</HitDice>
@@ -20255,7 +20255,7 @@ polymorph any object, and protection from arrows.</p>
 </Description>
 </Monster>
 <Monster id="srd:GolemClay">
-<Name>Golem:Clay</Name>
+<Name>Golem:Clay golem</Name>
 <StatBlock>
   <SizeAndType Size="large" Type="construct">Large Construct</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="60">11d10 (60)</HitDice>
@@ -20370,7 +20370,7 @@ prayer, and resurrection.</p>
 </Description>
 </Monster>
 <Monster id="srd:GolemStone">
-<Name>Golem:Stone</Name>
+<Name>Golem:Stone golem</Name>
 <StatBlock>
   <SizeAndType Size="large" Type="construct">Large Construct</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="77">14d10 (77)</HitDice>
@@ -20463,7 +20463,7 @@ wish, polymorph any object, and slow.</p>
 </Description>
 </Monster>
 <Monster id="srd:GolemIron">
-<Name>Golem:Iron</Name>
+<Name>Golem:Iron golem</Name>
 <StatBlock>
   <SizeAndType Size="large" Type="construct">Large Construct</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="99">18d10 (99)</HitDice>

@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.action.world.Work;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.fight.Siege;
 import javelin.controller.terrain.Mountains;
@@ -32,8 +31,7 @@ public class Mine extends Fortification {
 	static final String DESCRIPTION = "A gold mine";
 	static final Option MINEDAY = new Option("Mine for a day", 0, 'd');
 	static final Option MINEWEEK = new Option("Mine for a week", 0, 'w');
-	static final Option PLACEMINER =
-			new Option("Assign a unit to this mine", 0, 'a');
+	static final Option PLACEMINER = new Option("Assign a unit to this mine", 0, 'a');
 	static final Option RECALLMINER = new Option("Recall a miner", 0, 'r');
 
 	class MineScreen extends SelectScreen {
@@ -55,43 +53,37 @@ public class Mine extends Fortification {
 		@Override
 		public boolean select(Option o) {
 			if (o == MINEDAY) {
-				Squad.active.gold +=
-						AdventurersGuild.pay(0, 1, Squad.active.members);
+				Squad.active.gold += AdventurersGuild.pay(0, 1, Squad.active.members);
 				Squad.active.hourselapsed += 24;
 				return true;
 			}
 			if (o == MINEWEEK) {
-				Squad.active.gold +=
-						AdventurersGuild.pay(0, 7, Squad.active.members);
+				Squad.active.gold += AdventurersGuild.pay(0, 7, Squad.active.members);
 				Squad.active.hourselapsed += 7 * 24;
 				return true;
 			}
 			if (o == PLACEMINER) {
 				ArrayList<Combatant> eligible = geteligible();
-				int choice = Javelin.choose(
-						"Note that only rational, non-mercenary units in decent health can be stationed.\n\n"
-								+ "Which unit will stay mining?",
-						eligible, true, false);
+				int choice = Javelin
+						.choose("Note that only rational, non-mercenary units in decent health can be stationed.\n\n"
+								+ "Which unit will stay mining?", eligible, true, false);
 				if (choice >= 0) {
-					assign(eligible.get(choice), Squad.active.members, miners,
-							Squad.active.equipment, equipment);
+					assign(eligible.get(choice), Squad.active.members, miners, Squad.active.equipment, equipment);
 				}
 				return false;
 			}
 			if (o == RECALLMINER) {
-				int choice = Javelin.choose("Recall which miner?", miners, true,
-						false);
+				int choice = Javelin.choose("Recall which miner?", miners, true, false);
 				if (choice >= 0) {
-					assign(miners.get(choice), miners, Squad.active.members,
-							equipment, Squad.active.equipment);
+					assign(miners.get(choice), miners, Squad.active.members, equipment, Squad.active.equipment);
 				}
 				return false;
 			}
 			throw new RuntimeException(o.name + " #unknownmineoption");
 		}
 
-		void assign(Combatant recruit, List<Combatant> from, List<Combatant> to,
-				EquipmentMap fromequipment, EquipmentMap toequipment) {
+		void assign(Combatant recruit, List<Combatant> from, List<Combatant> to, EquipmentMap fromequipment,
+				EquipmentMap toequipment) {
 			toequipment.put(recruit.id, fromequipment.get(recruit.id));
 			fromequipment.remove(recruit.id);
 			from.remove(recruit);
@@ -151,8 +143,7 @@ public class Mine extends Fortification {
 	ArrayList<Combatant> geteligible() {
 		ArrayList<Combatant> eligible = new ArrayList<Combatant>();
 		for (Combatant c : Squad.active.members) {
-			if (!c.mercenary && c.getnumericstatus() >= Combatant.STATUSHURT
-					&& c.source.think(null)) {
+			if (!c.mercenary && c.getnumericstatus() >= Combatant.STATUSHURT && c.source.think(-1)) {
 				eligible.add(c);
 			}
 		}
@@ -161,8 +152,7 @@ public class Mine extends Fortification {
 
 	@Override
 	protected Integer getel(int attackerel) {
-		return miners.isEmpty() ? Integer.MIN_VALUE
-				: ChallengeRatingCalculator.calculateel(miners);
+		return miners.isEmpty() ? Integer.MIN_VALUE : ChallengeRatingCalculator.calculateel(miners);
 	}
 
 	@Override
@@ -195,16 +185,14 @@ public class Mine extends Fortification {
 		if (x != -1) {
 			return;
 		}
-		while (x == -1 || !Terrain.get(x, y).equals(Terrain.MOUNTAINS)
-				|| !validatedistance()) {
+		while (x == -1 || !Terrain.get(x, y).equals(Terrain.MOUNTAINS) || !validatedistance()) {
 			super.generate();
 		}
 	}
 
 	boolean validatedistance() {
 		for (WorldActor mine : WorldActor.getall(Mine.class)) {
-			if (mine != this
-					&& distance(mine.x, mine.y) < Outpost.VISIONRANGE * 2) {
+			if (mine != this && distance(mine.x, mine.y) < Outpost.VISIONRANGE * 2) {
 				return false;
 			}
 		}

@@ -35,7 +35,6 @@ import javelin.model.world.World;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.Haxor;
 import javelin.model.world.location.unique.UniqueLocation;
 import javelin.view.screen.BattleScreen;
@@ -54,9 +53,8 @@ import tyrant.mikera.tyrant.QuestApp;
  */
 public class JavelinApp extends QuestApp {
 	private static final long serialVersionUID = 1L;
-	static String[] ERRORQUOTES =
-			new String[] { "A wild error appears!", "You were eaten by a grue.",
-					"So again it has come to pass...", "Mamma mia!", };
+	static String[] ERRORQUOTES = new String[] { "A wild error appears!", "You were eaten by a grue.",
+			"So again it has come to pass...", "Mamma mia!", };
 
 	/** Controller. */
 	static public WorldScreen context;
@@ -181,9 +179,7 @@ public class JavelinApp extends QuestApp {
 	}
 
 	void disclaimer() {
-		while (TextReader
-				.show(new File("README.txt"),
-						"This message will only be shown once, press ENTER to continue.")
+		while (TextReader.show(new File("README.txt"), "This message will only be shown once, press ENTER to continue.")
 				.getKeyCode() != KeyEvent.VK_ENTER) {
 			// wait for enter
 		}
@@ -191,8 +187,7 @@ public class JavelinApp extends QuestApp {
 
 	private void initialize() {
 		try {
-			BufferedReader reader =
-					new BufferedReader(new FileReader(new File("README.txt")));
+			BufferedReader reader = new BufferedReader(new FileReader(new File("README.txt")));
 			String line = reader.readLine();
 			while (line != null) {
 				if (!line.trim().isEmpty()) {
@@ -221,15 +216,13 @@ public class JavelinApp extends QuestApp {
 		System.out.println();
 		printoptions();
 		System.out.println(Javelin.ALLMONSTERS.size() + " monsters");
-		System.out.println((Item.ALL.size() - Item.ARTIFACT.size()) + " items, "
-				+ Item.ARTIFACT.size() + " artifacts, 7 relics");
+		System.out.println(
+				(Item.ALL.size() - Item.ARTIFACT.size()) + " items, " + Item.ARTIFACT.size() + " artifacts, 7 relics");
 		Collection<Spell> spells = Spell.SPELLS.values();
 		int summon = countsummon(spells);
-		System.out.println((UpgradeHandler.singleton.count() - spells.size())
-				+ " upgrades, " + (spells.size() - summon + 1) + " spells, "
-				+ UpgradeHandler.singleton.countskills() + " skills");
-		HashSet<Class<? extends WorldActor>> locationtypes =
-				new HashSet<Class<? extends WorldActor>>();
+		System.out.println((UpgradeHandler.singleton.count() - spells.size()) + " upgrades, "
+				+ (spells.size() - summon + 1) + " spells, " + UpgradeHandler.singleton.countskills() + " skills");
+		HashSet<Class<? extends WorldActor>> locationtypes = new HashSet<Class<? extends WorldActor>>();
 		int uniquelocations = 0;
 		for (WorldActor a : WorldActor.getall()) {
 			if (!(a instanceof Location)) {
@@ -240,8 +233,7 @@ public class JavelinApp extends QuestApp {
 				uniquelocations += 1;
 			}
 		}
-		System.out.println((locationtypes.size() - uniquelocations)
-				+ " world location types, " + uniquelocations
+		System.out.println((locationtypes.size() - uniquelocations) + " world location types, " + uniquelocations
 				+ " unique locations");
 		int maps = Terrain.UNDERGROUND.getmaps().size();
 		for (Terrain t : Terrain.ALL) {
@@ -251,12 +243,11 @@ public class JavelinApp extends QuestApp {
 	}
 
 	static void printoptions() {
-		HashMap<String, HashSet<Upgrade>> allupgrades =
-				UpgradeHandler.singleton.getall();
+		HashMap<String, HashSet<Upgrade>> allupgrades = UpgradeHandler.singleton.getall();
 		HashMap<String, ItemSelection> allitems = Item.getall();
 		for (String realm : allupgrades.keySet()) {
-			if (realm == "expertise" || realm == "shots" || realm == "power"
-					|| realm == "classlevels" || realm.startsWith("school")) {
+			if (realm == "expertise" || realm == "shots" || realm == "power" || realm == "classlevels"
+					|| realm.startsWith("school")) {
 				continue;
 			}
 			System.out.println(realm);
@@ -271,8 +262,7 @@ public class JavelinApp extends QuestApp {
 			for (int i = 0; inventory != null && i < inventory.size(); i++) {
 				Item item = inventory.get(i).clone();
 				item.shop();
-				System.out.println(
-						"\t" + count + " - " + item + " ($" + item.price + ")");
+				System.out.println("\t" + count + " - " + item + " ($" + item.price + ")");
 				count += 1;
 			}
 			System.out.println();
@@ -305,14 +295,14 @@ public class JavelinApp extends QuestApp {
 		if (Preferences.DEBUGSTARTINGITEM != null) {
 			Squad.active.receiveitem(Preferences.DEBUGSTARTINGITEM);
 		}
-		if (Preferences.DEBUGLABOR != null) {
-			for (WorldActor p : Town.getall(Town.class)) {
-				Town t = (Town) p;
-				if (t.garrison.isEmpty()) {
-					t.labor = Preferences.DEBUGLABOR;
-				}
-			}
-		}
+		// if (Preferences.DEBUGLABOR != null) {
+		// for (WorldActor p : Town.getall(Town.class)) {
+		// Town t = (Town) p;
+		// if (t.garrison.isEmpty()) {
+		// t.labor = Preferences.DEBUGLABOR;
+		// }
+		// }
+		// }
 	}
 
 	@Override

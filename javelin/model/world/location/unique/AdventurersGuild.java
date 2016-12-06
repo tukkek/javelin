@@ -289,7 +289,7 @@ public class AdventurersGuild extends UniqueLocation {
 	public static float pay(int bonus, float days, List<Combatant> workers) {
 		float pay = 0;
 		for (Combatant c : workers) {
-			pay += c.source.eat() * (2 + bonus) * days;
+			pay += c.source.size() * (2 + bonus) * days;
 		}
 		return pay;
 	}

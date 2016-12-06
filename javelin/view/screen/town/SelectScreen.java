@@ -66,11 +66,7 @@ public abstract class SelectScreen extends InfoScreen {
 			roundcost(o);
 		}
 		sort(options);
-		for (int i = 0; i < options.size(); i++) {
-			final Option o = options.get(i);
-			text += (o.key == null ? KEYS[i] : o.key) + " - " + o.toString()
-					+ printpriceinfo(o) + "\n";
-		}
+		printoptions(options);
 		final String extrainfo = printInfo();
 		if (!extrainfo.isEmpty()) {
 			text += "\n" + extrainfo + "\n";
@@ -84,6 +80,14 @@ public abstract class SelectScreen extends InfoScreen {
 			show();
 		} else {
 			onexit();
+		}
+	}
+
+	public void printoptions(final List<Option> options) {
+		for (int i = 0; i < options.size(); i++) {
+			final Option o = options.get(i);
+			text += (o.key == null ? KEYS[i] : o.key) + " - " + o.toString()
+					+ printpriceinfo(o) + "\n";
 		}
 	}
 

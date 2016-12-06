@@ -7,6 +7,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.db.Preferences;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.fight.Siege;
 import javelin.controller.fight.tournament.Exhibition;
@@ -48,8 +49,7 @@ public class Town extends Location {
 	 */
 	public static final float DAILYLABOR = .1f;
 	static final ArrayList<String> NAMES = new ArrayList<String>();
-	static final String[] RANKS =
-			new String[] { "hamlet", "village", "town", "city" };
+	static final String[] RANKS = new String[] { "hamlet", "village", "town", "city" };
 
 	static boolean startingtown = true;
 
@@ -67,11 +67,11 @@ public class Town extends Location {
 	 * nothing but {@link Grow}.
 	 */
 	public int size = 1;
-	/**
-	 * Can be used to improve a town. 1 unit represents 10 days of work by a
-	 * 10-men crew.
-	 */
-	public float labor = 0f;
+	// /**
+	// * Can be used to improve a town. 1 unit represents 10 days of work by a
+	// * 10-men crew.
+	// */
+	// public float labor = 0f;
 	/** See {@link Governor}. */
 	public Governor governor;
 
@@ -104,7 +104,7 @@ public class Town extends Location {
 		} else {
 			governor = new HumanGovernor(this);
 		}
-		governor.redraw();
+		// governor.redraw();
 	}
 
 	void checktooclose() {
@@ -234,8 +234,7 @@ public class Town extends Location {
 		}
 		int nevents = RPG.r(3, 7);
 		for (int i = 0; i < nevents; i++) {
-			events.add(RPG.r(1, 2) == 1 ? RPG.pick(Exhibition.SPECIALEVENTS)
-					: new Match());
+			events.add(RPG.r(1, 2) == 1 ? RPG.pick(Exhibition.SPECIALEVENTS) : new Match());
 		}
 	}
 
@@ -247,11 +246,14 @@ public class Town extends Location {
 		// pickstash(
 		// TownUpgradingScreen.completetraining(to, this, to.trained));
 		// }
-		labor += size * DAILYLABOR;
-		if (governor.automanage) {
-			governor.manage();
+		// labor += ;
+		// if (governor.automanage) {
+		// governor.manage();
+		// }
+		governor.work(size * DAILYLABOR);
+		if (Preferences.DEBUGLABOR != null && !ishostile()) {
+			governor.work(Preferences.DEBUGLABOR);
 		}
-		governor.update();
 		// if (!research.queue.isEmpty() && Math
 		// .ceil(research.queue.get(0).price) <= Math.floor(labor)) {
 		// research.queue.get(0).finish(this, null);
@@ -277,7 +279,7 @@ public class Town extends Location {
 	 * @see #ishostile()
 	 */
 	public void captureforhuman(boolean showsurroundings) {
-		labor = 0;
+		// labor = 0;
 		// nexttask = null;
 		// research.queue.clear();
 		// crafting.clear();
@@ -285,7 +287,7 @@ public class Town extends Location {
 		// automanage = true;
 		garrison.clear();
 		governor = new HumanGovernor(this);
-		governor.redraw();
+		// governor.redraw();
 		// redraw();
 		if (showsurroundings) {
 			Outpost.discover(x, y, Outpost.VISIONRANGE);
@@ -314,8 +316,7 @@ public class Town extends Location {
 			return Incursion.ignoreincursion(attacker);
 		}
 		if (!garrison.isEmpty()) {
-			return Incursion.fight(attacker.getel(),
-					ChallengeRatingCalculator.calculateel(garrison));
+			return Incursion.fight(attacker.getel(), ChallengeRatingCalculator.calculateel(garrison));
 		}
 		// look for sleeping defense Squad
 		for (int x = this.x - 1; x <= this.x + 1; x++) {
@@ -323,8 +324,7 @@ public class Town extends Location {
 				Squad s = (Squad) WorldActor.get(x, y, Squad.class);
 				if (s != null) {
 					s.destroy(attacker);
-					throw new RuntimeException(
-							"destroy is supposed to throw exception #town");
+					throw new RuntimeException("destroy is supposed to throw exception #town");
 				}
 			}
 		}
@@ -339,7 +339,7 @@ public class Town extends Location {
 		captureforhuman(false);
 		realm = attacker.realm;
 		governor = new MonsterGovernor(this);
-		governor.redraw();
+		// governor.redraw();
 	}
 
 	@Override
@@ -416,8 +416,7 @@ public class Town extends Location {
 			}
 			t.size -= 1;
 		}
-		Squad.active.members
-				.add(new Combatant(Javelin.getmonster("Worker"), false));
+		Squad.active.members.add(new Combatant(Javelin.getmonster("Worker"), false));
 	}
 
 	@Override
@@ -433,7 +432,7 @@ public class Town extends Location {
 	 * @see TownManager
 	 */
 	public boolean haslabor() {
-		return !ishostile() && !governor.automanage && labor >= size;
+		return false;
 	}
 
 	@Override

@@ -29,7 +29,6 @@ public abstract class WorldAction implements ActionDescription {
 			new Rename(), // r
 			new CastSpells(), // s
 			new ShowStatistics(), // v
-			new Work(), // v
 			new EnterArena(), // A
 			new EnterBattlefield(), // B
 			new ClearHighscore(), // C

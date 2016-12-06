@@ -2,30 +2,39 @@ package javelin.model.world.location.town.governor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.research.Research;
+import javelin.model.world.location.town.research.Labor;
 
 /**
- * Holds the {@link Research} options for each {@link Town} and possibly
+ * Holds the {@link Labor} options for each {@link Town} and possibly
  * auto-manages it.
  * 
  * @author alex
  */
 public abstract class Governor implements Serializable {
 	static final int STARTINGHAND = 2 + 1;
+	static final Comparator<? super Labor> SORTYBYNAME = new Comparator<Labor>() {
+		@Override
+		public int compare(Labor o1, Labor o2) {
+			return o1.name.compareTo(o2.name);
+		}
+	};
 
-	/** <code>true</code> to draw and use cards automatically. */
-	public boolean automanage = true;
-	/** Next cards to be used. */
-	public ArrayList<Research> queue = new ArrayList<Research>(0);
-	public ArrayList<Research> hand = new ArrayList<Research>(STARTINGHAND);
+	// /** <code>true</code> to draw and use cards automatically. */
+	// public boolean automanage = true;
+	/** Current labor. */
+	protected ArrayList<Labor> queue = new ArrayList<Labor>(0);
 	final Town town;
+
+	protected ArrayList<Labor> hand = new ArrayList<Labor>(STARTINGHAND);
 
 	/** Constructor. */
 	public Governor(Town t) {
 		town = t;
+		validate();
 	}
 
 	public int redraw() {
@@ -38,8 +47,8 @@ public abstract class Governor implements Serializable {
 
 	public boolean draw() {
 		District d = town.getdistrict();
-		for (Research r : Research.get(town)) {
-			if (!hand.contains(r) && r.validate(town, d)) {
+		for (Labor r : Labor.get(town)) {
+			if (!hand.contains(r) && !queue.contains(r) && r.validate()) {
 				hand.add(r);
 				return true;
 			}
@@ -50,18 +59,17 @@ public abstract class Governor implements Serializable {
 	/**
 	 * Processes the current {@link #queue}.
 	 * 
+	 * @param labor
+	 *            Labor to be distributed among the {@link #queue}.
+	 * 
 	 * @return <code>false</code> if there is no item in the queue.
 	 */
-	public void update() {
-		if (queue.isEmpty()) {
-			return;
+	public void work(float labor) {
+		float step = labor / queue.size();
+		for (Labor l : queue) {
+			l.work(step);
 		}
-		Research next = queue.get(0);
-		if (town.labor >= next.cost) {
-			town.labor -= next.cost;
-			queue.remove(0);
-			next.play(town);
-		}
+		validate();
 	}
 
 	/**
@@ -84,32 +92,64 @@ public abstract class Governor implements Serializable {
 		return town.getrank() + 2;
 	}
 
-	public String printqueue() {
-		if (queue.isEmpty()) {
-			return "(empty)";
-		}
-		String q = "";
-		for (Research r : queue) {
-			q += r + ", ";
-		}
-		return q.substring(0, q.length() - 2);
-	}
+	// public String printqueue() {
+	// if (queue.isEmpty()) {
+	// return "(empty)";
+	// }
+	// String q = "";
+	// for (Labor r : queue) {
+	// q += r + ", ";
+	// }
+	// return q.substring(0, q.length() - 2);
+	// }
+	//
+	// public String printhand() {
+	// if (hand.isEmpty()) {
+	// return "(empty)";
+	// }
+	// District d = town.getdistrict();
+	// validate();
+	// String q = "";
+	// for (int i = 0; i < hand.size(); i++) {
+	// Labor r = hand.get(i);
+	// q += (i + 1) + " - " + r + " (" + r.cost + " labor)\n";
+	// }
+	// return q.substring(0, q.length() - 1);
+	// }
 
-	public String printhand() {
-		if (hand.isEmpty()) {
-			return "(empty)";
-		}
-		District d = town.getdistrict();
-		for (Research r : new ArrayList<Research>(hand)) {
-			if (!r.validate(town, d)) {
-				hand.remove(r);
+	public void validate() {
+		for (Labor l : new ArrayList<Labor>(hand)) {
+			if (!l.validate()) {
+				hand.remove(l);
 			}
 		}
-		String q = "";
-		for (int i = 0; i < hand.size(); i++) {
-			Research r = hand.get(i);
-			q += (i + 1) + " - " + r + " (" + r.cost + " labor)\n";
+		for (Labor l : new ArrayList<Labor>(queue)) {
+			if (l.progress >= l.cost || !l.validate()) {
+				queue.remove(l);
+			}
 		}
-		return q.substring(0, q.length() - 1);
+		redraw();
+		if (queue.size() < 2 && !hand.isEmpty()) {
+			manage();
+			if (queue.isEmpty()) {
+				throw new RuntimeException("empty queue!");
+			}
+		}
+	}
+
+	public ArrayList<Labor> gethand() {
+		validate();
+		hand.sort(SORTYBYNAME);
+		return hand;
+	}
+
+	public void start(Labor l) {
+		queue.add(l);
+		hand.remove(l);
+	}
+
+	public ArrayList<Labor> getqueue() {
+		queue.sort(SORTYBYNAME);
+		return queue;
 	}
 }

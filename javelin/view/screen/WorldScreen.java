@@ -211,9 +211,9 @@ public class WorldScreen extends BattleScreen {
 	 */
 	public void endturn() {
 		Squad act = Javelin.act();
-		if (act != null && act.work != null) {
-			act.build();
-		}
+		// if (act != null && act.work != null) {
+		// act.build();
+		// }
 		long time = act.hourselapsed;
 		final int day = new Double(Math.ceil(time / 24.0)).intValue();
 		List<WorldActor> squads = Squad.getall(Squad.class);

@@ -5,12 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.action.world.Work;
 import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.Improvement;
 import javelin.model.world.Season;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.Town;
@@ -40,21 +38,16 @@ public class Resource extends Location {
 		}
 	}
 
-	static final HashMap<Terrain, ResourceType> RESOURCES =
-			new HashMap<Terrain, ResourceType>();
+	static final HashMap<Terrain, ResourceType> RESOURCES = new HashMap<Terrain, ResourceType>();
 
 	static {
 		RESOURCES.put(Terrain.WATER, new ResourceType("Fish", 5, "fishing"));
 		RESOURCES.put(Terrain.FOREST, new ResourceType("Fruits", 5, "picking"));
-		RESOURCES.put(Terrain.PLAIN,
-				new ResourceType("Grains", 15, "harvesting"));
-		RESOURCES.put(Terrain.MARSH,
-				new ResourceType("Mercury", 15, "extracting"));
+		RESOURCES.put(Terrain.PLAIN, new ResourceType("Grains", 15, "harvesting"));
+		RESOURCES.put(Terrain.MARSH, new ResourceType("Mercury", 15, "extracting"));
 		RESOURCES.put(Terrain.HILL, new ResourceType("Stone", 15, "quarrying"));
-		RESOURCES.put(Terrain.DESERT,
-				new ResourceType("Gems", 30, "collecting"));
-		RESOURCES.put(Terrain.MOUNTAINS,
-				new ResourceType("Crystal", 30, "mining"));
+		RESOURCES.put(Terrain.DESERT, new ResourceType("Gems", 30, "collecting"));
+		RESOURCES.put(Terrain.MOUNTAINS, new ResourceType("Crystal", 30, "mining"));
 	}
 
 	/** Constructor. */
@@ -87,44 +80,44 @@ public class Resource extends Location {
 
 	@Override
 	public Image getimage() {
-		return Images
-				.getImage("locationresource" + gettype().name.toLowerCase());
+		return Images.getImage("locationresource" + gettype().name.toLowerCase());
 	}
 
 	@Override
 	public boolean interact() {
-		int nworkers = Work.countworkers();
+		float totalsize = 0;
+		for (Combatant c : Squad.active.members) {
+			if (c.source.think(-1)) {
+				totalsize = c.source.size();
+			}
+		}
 		int gold = getspoils();
-		if (nworkers == 0) {
-			Character input = Javelin
-					.prompt("To gather this resource you must bring at least one worker from a town.\n"
-							+ "Do you want to plunder it instead for $" + gold
-							+ "?\n\n"
-							+ "Press p to plunder or any other key to cancel...");
+		if (totalsize == 0) {
+			Character input = Javelin.prompt("Your current party members can't harvest this resource.\n"
+					+ "Do you want to plunder it instead for $" + gold + "?\n\n"
+					+ "Press p to plunder or any other key to cancel...");
 			if (input == 'p') {
 				plunder(gold);
 			}
 			return true;
 		}
 		ResourceType type = gettype();
-		int time = Math.max(1, type.amount / nworkers);
-		Character input = Javelin.prompt("With your current " + nworkers
-				+ " workers, gathering this resource will take " + time
-				+ " days.\n\n" //
-				+ "Press s to start " + type.action + "\n"
-				+ "Press p to immediately plunder resource for $" + gold + "\n"
-				+ "Press any other key to leave...");
+		float time = Math.round(type.amount / totalsize);
+		int rounded = Math.round(Math.round(Math.ceil(time)));
+		Character input = Javelin
+				.prompt("With your current party, gathering this resource will take " + rounded + " day(s).\n\n" //
+						+ "Press s to start " + type.action + "\n"//
+						+ "Press p to immediately plunder resource for $" + gold + "\n" + //
+						"Press any other key to leave...");
 		if (input == 'p') {
 			plunder(gold);
 		} else if (input == 's') {
 			String result = "Your team begins " + type.action + ".\n"//
-					+ "Once done you may bring the resources back to a Town\n"
-					+ "or use it to accelerate Work actions on the world map.";
+					+ "Once done you may bring the resources back to a town.";
 			Javelin.message(result, false);
-			Squad.active.hourselapsed += type.amount * 24 / nworkers;
+			Squad.active.hourselapsed += time * 24;
 			remove();
-			Squad.active.resources +=
-					Math.round(type.amount * 2 * Town.DAILYLABOR);
+			Squad.active.resources += Math.round(type.amount * 2 * Town.DAILYLABOR);
 		}
 		return true;
 	}

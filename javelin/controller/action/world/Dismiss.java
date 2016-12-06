@@ -34,7 +34,7 @@ public class Dismiss extends WorldAction {
 			return;
 		}
 		Combatant chosen = Squad.active.members.get(choice);
-		float dailyupkeep = chosen.source.eat() / 2f;
+		float dailyupkeep = chosen.source.size() / 2f;
 		if (chosen.mercenary) {
 			dailyupkeep += MercenariesGuild.getfee(chosen);
 		}

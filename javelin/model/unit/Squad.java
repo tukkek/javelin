@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.action.world.Work;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeRatingCalculator;
@@ -18,7 +17,6 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.EquipmentMap;
 import javelin.model.item.Item;
 import javelin.model.unit.transport.Transport;
-import javelin.model.world.Improvement;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
@@ -26,7 +24,6 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.Resource;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.Academy;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.MercenariesGuild;
@@ -69,8 +66,8 @@ public class Squad extends WorldActor {
 	 */
 	public Town lasttown = null;
 
-	/** See {@link Work}. */
-	public Improvement work = null;
+	// /** See {@link Work}. */
+	// public Improvement work = null;
 
 	/**
 	 * <code>false</code> will never prompt to skip battles.
@@ -123,12 +120,12 @@ public class Squad extends WorldActor {
 	}
 
 	/**
-	 * @return The sum of {@link Monster#eat()} for this squad.
+	 * @return The sum of {@link Monster#size()} for this squad.
 	 */
 	public float eat() {
 		float sum = 0;
 		for (final Combatant m : members) {
-			sum += m.source.eat();
+			sum += m.source.size();
 		}
 		return sum;
 	}
@@ -430,7 +427,7 @@ public class Squad extends WorldActor {
 	public boolean bribe(List<Combatant> foes) {
 		boolean intelligent = false;
 		for (Combatant c : foes) {
-			if (c.source.think(null)) {
+			if (c.source.think(-1)) {
 				intelligent = true;
 				break;
 			}
@@ -594,31 +591,32 @@ public class Squad extends WorldActor {
 		return Math.round(WorldMove.NORMALMARCH * ((allfly ? speed : t.speed(speed, x, y))) / snow);
 	}
 
-	/**
-	 * Finishes the current {@link #work}.
-	 */
-	public void build() {
-		Location built = work.done(x, y);
-		work.removeworker();
-		if (built != null) {
-			built.place();
-			built.garrison.clear();
-			built.realm = null;
-			if (built instanceof Fortification) {
-				Fortification f = (Fortification) built;
-				f.targetel = 1;
-			}
-		}
-		if (members.size() > 0 && WorldActor.get(x, y) != this) {
-			displace();
-			place();
-		}
-		String extra = work.inform();
-		extra = extra == null ? "" : "\n" + extra;
-		Javelin.message("Work finished: " + work.name.toLowerCase() + "!" + extra, true);
-		Game.messagepanel.clear();
-		work = null;
-	}
+	// /**
+	// * Finishes the current {@link #work}.
+	// */
+	// public void build() {
+	// Location built = work.done(x, y);
+	// work.removeworker();
+	// if (built != null) {
+	// built.place();
+	// built.garrison.clear();
+	// built.realm = null;
+	// if (built instanceof Fortification) {
+	// Fortification f = (Fortification) built;
+	// f.targetel = 1;
+	// }
+	// }
+	// if (members.size() > 0 && WorldActor.get(x, y) != this) {
+	// displace();
+	// place();
+	// }
+	// String extra = work.inform();
+	// extra = extra == null ? "" : "\n" + extra;
+	// Javelin.message("Work finished: " + work.name.toLowerCase() + "!" +
+	// extra, true);
+	// Game.messagepanel.clear();
+	// work = null;
+	// }
 
 	/**
 	 * A squad cannot move on water if any of the combatants can't swim.

@@ -340,7 +340,7 @@ public abstract class Fight {
 	}
 
 	/**
-	 * @param t
+	 * @param town
 	 *            Terrain hint. Usually {@link Terrain#current()}.
 	 * @return A list of {@link Terrain}s which players in this fight can
 	 *         inhabit.

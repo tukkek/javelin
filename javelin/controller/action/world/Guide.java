@@ -24,6 +24,25 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class Guide extends WorldAction implements SimpleAction {
+	/** Guide. */
+	public static final Guide HOWTO = new Guide(KeyEvent.VK_F1, "How to play", "F1");
+	/** Guide. */
+	public static final Guide MINIGAMES = new Guide(KeyEvent.VK_F2, "Minigames", "F2");
+	/** Guide. */
+	public static final Guide ARTIFACTS = new Guide(KeyEvent.VK_F3, "Artifacts", "F3");
+	/** Guide. */
+	public static final Guide CONDITIONS = new Guide(KeyEvent.VK_F4, "Conditions", "F4");
+	/** Guide. */
+	public static final Guide ITEMS = new Guide(KeyEvent.VK_F5, "Items", "F5");
+	/** Guide. */
+	public static final Guide SKILLS = new Guide(KeyEvent.VK_F6, "Skills", "F6");
+	/** Guide. */
+	public static final Guide SPELLS = new Guide(KeyEvent.VK_F7, "Spells", "F7");
+	/** Guide. */
+	public static final Guide UGRADES = new Guide(KeyEvent.VK_F8, "Upgrades", "F8");
+	/** Guide. */
+	public static final Guide DISTRICT = new Guide(KeyEvent.VK_F9, "District", "F9");
+
 	class GuideWindow extends Frame {
 		public GuideWindow() {
 			super(name);
@@ -33,18 +52,16 @@ public class Guide extends WorldAction implements SimpleAction {
 		protected Container generate() {
 			Container parent = new Panel();
 			parent.setLayout(new BoxLayout(parent, BoxLayout.Y_AXIS));
-			JTextArea text = new JTextArea(TextReader.read(new File("doc",
-					name.replaceAll(" ", "").toLowerCase() + ".txt")));
+			JTextArea text = new JTextArea(
+					TextReader.read(new File("doc", name.replaceAll(" ", "").toLowerCase() + ".txt")));
 			text.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 			text.setEditable(false);
 			text.setWrapStyleWord(true);
 			text.setLineWrap(true);
 			Dimension size = getscreensize();
-			parent.add(new JScrollPane(text,
-					JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+			parent.add(new JScrollPane(text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 					JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED))
-					.setPreferredSize(
-							new Dimension(size.width * 3 / 4, size.height / 2));
+					.setPreferredSize(new Dimension(size.width * 3 / 4, size.height / 2));
 			newbutton("Close", parent, new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -55,30 +72,6 @@ public class Guide extends WorldAction implements SimpleAction {
 			return parent;
 		}
 	}
-
-	/** Guide. */
-	public static final Guide HOWTO =
-			new Guide(KeyEvent.VK_F1, "How to play", "F1");
-	/** Guide. */
-	public static final Guide MINIGAMES =
-			new Guide(KeyEvent.VK_F2, "Minigames", "F2");
-	/** Guide. */
-	public static final Guide ARTIFACTS =
-			new Guide(KeyEvent.VK_F3, "Artifacts", "F3");
-	/** Guide. */
-	public static final Guide CONDITIONS =
-			new Guide(KeyEvent.VK_F4, "Conditions", "F4");
-	/** Guide. */
-	public static final Guide ITEMS = new Guide(KeyEvent.VK_F5, "Items", "F5");
-	/** Guide. */
-	public static final Guide SKILLS =
-			new Guide(KeyEvent.VK_F6, "Skills", "F6");
-	/** Guide. */
-	public static final Guide SPELLS =
-			new Guide(KeyEvent.VK_F7, "Spells", "F7");
-	/** Guide. */
-	public static final Guide UGRADES =
-			new Guide(KeyEvent.VK_F8, "Upgrades", "F8");
 
 	/** Constructor. */
 	public Guide(int vk, String name, String descriptive) {

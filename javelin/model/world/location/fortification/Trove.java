@@ -10,7 +10,7 @@ import javelin.model.item.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Chest;
-import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.Settler;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -45,8 +45,7 @@ public class Trove extends Fortification {
 		while (rewards[1] == null || rewards[0] == rewards[1]) {
 			rewards[1] = Reward.getrandom();
 		}
-		descriptionknown += " (" + describe(rewards[0]) + " or "
-				+ describe(rewards[1]) + ")";
+		descriptionknown += " (" + describe(rewards[0]) + " or " + describe(rewards[1]) + ")";
 		discard = false;
 		vision = 0;
 	}
@@ -82,10 +81,9 @@ public class Trove extends Fortification {
 		if (!super.interact()) {
 			return false;
 		}
-		int input = parse(Javelin
-				.prompt("What will you take as a spoil from the battle? (press any other key to leave)\n\n"
-						+ "1 - " + describe(rewards[0]) + "\n" + "2 - "
-						+ describe(rewards[1])))
+		int input = parse(
+				Javelin.prompt("What will you take as a spoil from the battle? (press any other key to leave)\n\n"
+						+ "1 - " + describe(rewards[0]) + "\n" + "2 - " + describe(rewards[1])))
 				- 1;
 		if (input == 0 || input == 1) {
 			String reward = reward(rewards[input]);
@@ -99,8 +97,7 @@ public class Trove extends Fortification {
 
 	String reward(Reward reward) {
 		if (reward == Reward.EXPERIENCE) {
-			return RewardCalculator.rewardxp(Squad.active.members,
-					Squad.active.members, originalgarrison, 2);
+			return RewardCalculator.rewardxp(Squad.active.members, Squad.active.members, originalgarrison, 2);
 		}
 		if (reward == Reward.GOLD) {
 			int gold = RewardCalculator.receivegold(originalgarrison) * 2;
@@ -108,7 +105,7 @@ public class Trove extends Fortification {
 			return "Party receives $" + gold;
 		}
 		if (reward == Reward.WORKER) {
-			Town.getworker(null);
+			Settler.produce(null, Squad.active);
 			return "A worker joins the party! It can be assigned to any friendly town.";
 		}
 		if (reward == Reward.KEY) {

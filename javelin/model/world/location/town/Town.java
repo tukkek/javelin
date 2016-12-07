@@ -26,7 +26,7 @@ import javelin.model.world.location.Outpost;
 import javelin.model.world.location.town.governor.Governor;
 import javelin.model.world.location.town.governor.HumanGovernor;
 import javelin.model.world.location.town.governor.MonsterGovernor;
-import javelin.model.world.location.town.research.Grow;
+import javelin.model.world.location.town.labor.Grow;
 import javelin.view.Images;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.NamingScreen;
@@ -66,7 +66,7 @@ public class Town extends Location {
 	 * into a 1-year period, which puts a town max size roughly at 10 if it does
 	 * nothing but {@link Grow}.
 	 */
-	public int size = 1;
+	public int population = 1;
 	// /**
 	// * Can be used to improve a town. 1 unit represents 10 days of work by a
 	// * 10-men crew.
@@ -250,7 +250,7 @@ public class Town extends Location {
 		// if (governor.automanage) {
 		// governor.manage();
 		// }
-		governor.work(size * DAILYLABOR);
+		governor.work(population * DAILYLABOR);
 		if (Preferences.DEBUGLABOR != null && !ishostile()) {
 			governor.work(Preferences.DEBUGLABOR);
 		}
@@ -402,23 +402,6 @@ public class Town extends Location {
 		return f;
 	}
 
-	/**
-	 * Adds a Worker units to the active {@link Squad}.
-	 * 
-	 * @param t
-	 *            If not <code>null</code> will reduce town {@link #size} by 1.
-	 *            If already at 1 (minimum) returns without any effect.
-	 */
-	static public void getworker(Town t) {
-		if (t != null) {
-			if (t.size == 1) {
-				return;
-			}
-			t.size -= 1;
-		}
-		Squad.active.members.add(new Combatant(Javelin.getmonster("Worker"), false));
-	}
-
 	@Override
 	public List<Combatant> getcombatants() {
 		return garrison;
@@ -454,17 +437,17 @@ public class Town extends Location {
 	}
 
 	/**
-	 * @return A rank between 1 and 4 based on current {@link #size}.
+	 * @return A rank between 1 and 4 based on current {@link #population}.
 	 * @see #RANKS
 	 */
 	public int getrank() {
-		if (size <= 5) {
+		if (population <= 5) {
 			return 1;
 		}
-		if (size <= 10) {
+		if (population <= 10) {
 			return 2;
 		}
-		if (size <= 15) {
+		if (population <= 15) {
 			return 3;
 		}
 		return 4;

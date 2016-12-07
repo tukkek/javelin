@@ -20,6 +20,7 @@ public abstract class WorldAction implements ActionDescription {
 	/** All world actions. */
 	public static final WorldAction[] ACTIONS = new WorldAction[] { //
 			new Automate(), // a
+			new BuildTown(), // b
 			new Camp(), // c
 			new Divide(), // d
 			new UseItems(), // i
@@ -38,7 +39,7 @@ public abstract class WorldAction implements ActionDescription {
 			new Abandon(), // Q
 			new EnterZiggurat(), // Z
 			Guide.HOWTO, Guide.MINIGAMES, Guide.ARTIFACTS, Guide.CONDITIONS, Guide.ITEMS, Guide.SKILLS, Guide.SPELLS,
-			Guide.UGRADES,
+			Guide.UGRADES, Guide.DISTRICT,
 			new WorldMove(new int[] { KeyEvent.VK_NUMPAD7, }, -1, -1, new String[] { "U", "↖ or 7 or U" }),
 			new WorldMove(new int[] { KeyEvent.VK_UP, KeyEvent.VK_NUMPAD8 }, 0, -1,
 					new String[] { "I", "↑ or 8 or I" }),

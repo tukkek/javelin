@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.research.Labor;
+import javelin.model.world.location.town.labor.Labor;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -30,26 +30,17 @@ public class HumanGovernor extends Governor {
 				return o1.cost - o2.cost;
 			}
 		});
-		int selected = 0;
-		while (RPG.r(1, 2) == 1 && selected < hand.size() - 1) {
-			selected += 1;
+		Labor selected = null;
+		for (Labor l : hand) {
+			if (l.automatic) {
+				selected = l;
+				if (RPG.r(1, 2) == 1) {
+					break;
+				}
+			}
 		}
-		start(hand.get(selected));
-		// if (!isfull() && town.labor >= 1) {
-		// if (draw()) {
-		// town.labor -= 1;
-		// return;
-		// }
-		// }
-		// if (hand.isEmpty()) {
-		// return;
-		// }
-		// hand.sort(new Comparator<Labor>() {
-		// @Override
-		// public int compare(Labor o1, Labor o2) {
-		// return o1.cost - o2.cost;
-		// }
-		// });
-		// queue.add(hand.get(0));
+		if (selected != null) {
+			start(selected);
+		}
 	}
 }

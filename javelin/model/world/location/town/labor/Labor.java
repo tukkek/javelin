@@ -1,9 +1,10 @@
-package javelin.model.world.location.town.research;
+package javelin.model.world.location.town.labor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 
 /**
@@ -12,10 +13,16 @@ import javelin.model.world.location.town.Town;
  * @author alex
  */
 public abstract class Labor implements Serializable {
+	public static ArrayList<Labor> get(Town t) {
+		ArrayList<Labor> options = new ArrayList<Labor>(0);
+		options.add(new Grow(t));
+		options.add(new Settler(t));
+		Collections.shuffle(options);
+		return options;
+	}
+
 	/** Card's name. */
 	public String name;
-	/** Short description of what it does. */
-	public String description;
 	/**
 	 * Cost in labor.
 	 * 
@@ -23,12 +30,12 @@ public abstract class Labor implements Serializable {
 	 */
 	public int cost;
 	public float progress;
+	public boolean automatic = true;
 	Town town;
 
 	/** Constructor. */
-	public Labor(String name, String description, int cost, Town t) {
+	public Labor(String name, int cost, Town t) {
 		this.name = name;
-		this.description = description;
 		this.cost = cost;
 		this.town = t;
 	}
@@ -40,10 +47,12 @@ public abstract class Labor implements Serializable {
 
 	/**
 	 * @param d
+	 *            This is used as a cache, see {@link District} for more
+	 *            details.
 	 * @return <code>false</code> if the current card makes no sense for the
 	 *         given {@link Town}.
 	 */
-	abstract public boolean validate();
+	abstract public boolean validate(District d);
 
 	@Override
 	public String toString() {
@@ -61,18 +70,11 @@ public abstract class Labor implements Serializable {
 		return name.equals(r2.name);
 	}
 
-	public static ArrayList<Labor> get(Town t) {
-		ArrayList<Labor> options = new ArrayList<Labor>(0);
-		options.add(new Grow(t));
-		// options.add(new ResearchUpgrade());
-		Collections.shuffle(options);
-		return options;
-	}
-
 	public void work(float step) {
 		progress += step;
-		if (progress > cost) {
+		if (progress >= cost) {
 			done();
+			town.governor.removefromqueue(this);
 		}
 	}
 

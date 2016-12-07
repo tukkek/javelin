@@ -6,7 +6,7 @@ import java.util.Comparator;
 
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.research.Labor;
+import javelin.model.world.location.town.labor.Labor;
 
 /**
  * Holds the {@link Labor} options for each {@link Town} and possibly
@@ -27,9 +27,9 @@ public abstract class Governor implements Serializable {
 	// public boolean automanage = true;
 	/** Current labor. */
 	protected ArrayList<Labor> queue = new ArrayList<Labor>(0);
-	final Town town;
-
 	protected ArrayList<Labor> hand = new ArrayList<Labor>(STARTINGHAND);
+
+	final Town town;
 
 	/** Constructor. */
 	public Governor(Town t) {
@@ -48,7 +48,7 @@ public abstract class Governor implements Serializable {
 	public boolean draw() {
 		District d = town.getdistrict();
 		for (Labor r : Labor.get(town)) {
-			if (!hand.contains(r) && !queue.contains(r) && r.validate()) {
+			if (!hand.contains(r) && !queue.contains(r) && r.validate(d)) {
 				hand.add(r);
 				return true;
 			}
@@ -66,7 +66,7 @@ public abstract class Governor implements Serializable {
 	 */
 	public void work(float labor) {
 		float step = labor / queue.size();
-		for (Labor l : queue) {
+		for (Labor l : new ArrayList<Labor>(queue)) {
 			l.work(step);
 		}
 		validate();
@@ -118,13 +118,14 @@ public abstract class Governor implements Serializable {
 	// }
 
 	public void validate() {
+		District d = town.getdistrict();
 		for (Labor l : new ArrayList<Labor>(hand)) {
-			if (!l.validate()) {
+			if (!l.validate(d)) {
 				hand.remove(l);
 			}
 		}
 		for (Labor l : new ArrayList<Labor>(queue)) {
-			if (l.progress >= l.cost || !l.validate()) {
+			if (l.progress >= l.cost || !l.validate(d)) {
 				queue.remove(l);
 			}
 		}
@@ -146,10 +147,15 @@ public abstract class Governor implements Serializable {
 	public void start(Labor l) {
 		queue.add(l);
 		hand.remove(l);
+		l.work(0);
 	}
 
 	public ArrayList<Labor> getqueue() {
 		queue.sort(SORTYBYNAME);
 		return queue;
+	}
+
+	public void removefromqueue(Labor labor) {
+		queue.remove(labor);
 	}
 }

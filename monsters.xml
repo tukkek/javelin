@@ -37963,9 +37963,9 @@ second. After that, will try to flank the enemy with the aid of others.</p>
 </Combat>
 </Description>
 </Monster>
-<Monster id="worker">
-<Name>Worker</Name>
-<Avatar Image="worker"></Avatar>
+<Monster id="settler">
+<Name>settler</Name>
+<Avatar Image="settler"></Avatar>
 <StatBlock>
   <SizeAndType Size="medium-size" Type="humanoid">Medium-size humanoid</SizeAndType>
   <HitDice D4="1" D6="0" D8="1" D10="0" D12="0" Modifier="0" HitPoints="5">1d4+3 (5)</HitDice>

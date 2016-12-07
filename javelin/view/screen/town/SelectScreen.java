@@ -20,18 +20,16 @@ import javelin.view.screen.Option;
  */
 public abstract class SelectScreen extends InfoScreen {
 
-	private static final DecimalFormat COSTFORMAT =
-			new DecimalFormat("####,###,##0");
+	private static final DecimalFormat COSTFORMAT = new DecimalFormat("####,###,##0");
 	/** Default key to proceed ({@value #PROCEED}). */
 	public static final char PROCEED = 'q';
 	/** List of keys except q. */
 	public static final char[] KEYS = new char[] { //
 			'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', //
-			'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-			'n', 'o', 'p', 'r', 's', 't', 'u', 'v', 'x', 'w', 'y', 'z', //
-			'/', '*', '-', '+', '.', ',', '?', '!', '@', '#', '$', '%', '&',
-			'(', ')', '_', '=', '[', ']', '{', '}', '<', '>', ';', ':', '\'',
-			'"', '\\', '|', };
+			'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u', 'v',
+			'x', 'w', 'y', 'z', //
+			'/', '*', '-', '+', '.', ',', '?', '!', '@', '#', '$', '%', '&', '(', ')', '_', '=', '[', ']', '{', '}',
+			'<', '>', ';', ':', '\'', '"', '\\', '|', };
 	/** Current town or <code>null</code>. */
 	protected final Town town;
 	/** If <code>true</code> will show {@link #title}. */
@@ -86,8 +84,7 @@ public abstract class SelectScreen extends InfoScreen {
 	public void printoptions(final List<Option> options) {
 		for (int i = 0; i < options.size(); i++) {
 			final Option o = options.get(i);
-			text += (o.key == null ? KEYS[i] : o.key) + " - " + o.toString()
-					+ printpriceinfo(o) + "\n";
+			text += (o.key == null ? KEYS[i] : o.key) + " - " + o.toString() + printpriceinfo(o) + "\n";
 		}
 	}
 
@@ -164,7 +161,7 @@ public abstract class SelectScreen extends InfoScreen {
 			o = options.get(selected);
 			if (o.key != null) {
 				/*
-				 * Don't allow options with explicit keys to be select by
+				 * Don't allow options with explicit keys to be selected by
 				 * numbers.
 				 */
 				return false;

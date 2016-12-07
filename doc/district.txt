@@ -1,0 +1,8 @@
+Each town has a certain area around it called a district. This space is used for building supporting structures around a town, which are listed below. Moving inside the district is usually safe. The actual size of a town's district is determined by that town's population and other factors and you can see it by hovering the mouse over the town in question.
+
+Once a structure starts building, it will be placed in the district's area as a construction site but won't be useful until enough work is put into it, which you can follow on the town management screen. If a building is located inside the districts of two towns at once, it will usually benefit both of them where applicable.
+
+Note that some of the labor options described below are not actual structures (like Grow and Produce settler) and hence have no "construction site" associated with them.
+
+Grow: grows the city population by 1, resulting in higher labor throughput and possibly increasing the district size, up to "city" size.
+Produce settler: reduces city population by 1 but adds a settler unit to a squad inside the district which is able to build a new town elsewhere in the world map.

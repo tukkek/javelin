@@ -22,7 +22,7 @@ import tyrant.mikera.engine.RPG;
 /**
  * A figure that travels from one city to a human (neutral) city. It can be
  * visited to buy {@link Item}s. If it reaches a human {@link Town} it grows by
- * 1 {@link Town#size} - this is an incentive for the player to protect
+ * 1 {@link Town#population} - this is an incentive for the player to protect
  * merchants.
  * 
  * Unlike {@link Town} {@link Item}s, these are not crafted but sold as-is, and
@@ -115,7 +115,7 @@ public class Caravan extends WorldActor {
 			if (here instanceof Town) {
 				Town town = (Town) here;
 				if (town.garrison.isEmpty()) {
-					town.size += 1;
+					town.population += 1;
 					Game.messagepanel.clear();
 					Game.message(
 							"A merchant arrives at " + town

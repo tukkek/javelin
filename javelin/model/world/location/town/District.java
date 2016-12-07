@@ -1,7 +1,11 @@
 package javelin.model.world.location.town;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
+import javelin.controller.Point;
+import javelin.model.unit.Squad;
+import javelin.model.world.World;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.Location;
 
@@ -17,8 +21,10 @@ import javelin.model.world.location.Location;
  * @author alex
  */
 public class District {
-	private Town town;
+	Town town;
 	ArrayList<Location> locations = null;
+	HashSet<Point> area = null;
+	ArrayList<Squad> squads = null;
 
 	public District(Town t) {
 		this.town = t;
@@ -29,16 +35,29 @@ public class District {
 			return locations;
 		}
 		locations = new ArrayList<Location>();
-		int rank = town.getrank();
-		for (int x = town.x - rank; x <= town.x + rank; x++) {
-			for (int y = town.y - rank; y <= town.y + rank; y++) {
-				WorldActor a = WorldActor.get(x, y);
-				if (a != null && a instanceof Location) {
-					locations.add((Location) a);
-				}
+		for (Point p : getarea()) {
+			WorldActor a = WorldActor.get(p.x, p.y);
+			if (a != null && a instanceof Location) {
+				locations.add((Location) a);
 			}
 		}
 		return locations;
+	}
+
+	public HashSet<Point> getarea() {
+		if (area != null) {
+			return area;
+		}
+		int rank = town.getrank();
+		area = new HashSet<Point>();
+		for (int x = town.x - rank; x <= town.x + rank; x++) {
+			for (int y = town.y - rank; y <= town.y + rank; y++) {
+				if (World.validatecoordinate(x, y)) {
+					area.add(new Point(x, y));
+				}
+			}
+		}
+		return area;
 	}
 
 	/**
@@ -65,5 +84,19 @@ public class District {
 			}
 		}
 		return result;
+	}
+
+	public ArrayList<Squad> getsquads() {
+		if (squads != null) {
+			return squads;
+		}
+		getarea();
+		squads = new ArrayList<Squad>();
+		for (Squad s : Squad.getsquads()) {
+			if (area.contains(new Point(s.x, s.y))) {
+				squads.add(s);
+			}
+		}
+		return squads;
 	}
 }

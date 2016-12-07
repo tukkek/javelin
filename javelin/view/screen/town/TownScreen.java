@@ -1,6 +1,7 @@
 package javelin.view.screen.town;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
@@ -43,8 +44,9 @@ public class TownScreen extends PurchaseScreen {
 	@Override
 	public boolean select(final Option o) {
 		if (o instanceof ScreenOption) {
-			ScreenOption screen = (ScreenOption) o;
-			screen.show().show();
+			SelectScreen screen = ((ScreenOption) o).show();
+			screen.show();
+			stayopen = screen.stayopen;
 			return true;
 		}
 		if (!super.select(o)) {
@@ -116,7 +118,7 @@ public class TownScreen extends PurchaseScreen {
 			return false;
 		}
 		Squad.active.remove(retirees.get(choice));
-		town.size += 1;
+		town.population += 1;
 		return true;
 	}
 
@@ -182,7 +184,7 @@ public class TownScreen extends PurchaseScreen {
 		// list.add(DETACHWORKER);
 		// }
 		list.add(SETTLE);
-		list.add(new TownManagementScreen(town));
+		list.add(new GovernorScreen(town));
 		// if (!town.governor.automanage) {
 		// // list.add(new ResearchScreenOption(town));
 		// if (!town.governor.isfull()) {
@@ -191,7 +193,7 @@ public class TownScreen extends PurchaseScreen {
 		// list.add(REDRAWCARDS);
 		// REDRAWCARDS.name = "Redraw all labor options (" +
 		// town.governor.gethandsize() + " labor)";
-		// list.add(RENAME);
+		list.add(RENAME);
 		// }
 		return list;
 	}
@@ -233,31 +235,30 @@ public class TownScreen extends PurchaseScreen {
 		return output.substring(0, output.length() - 1);
 	}
 
-	// @Override
-	// protected Comparator<Option> sort() {
-	// // return new Comparator<Option>() {
-	// // @Override
-	// // public int compare(Option o1, Option o2) {
-	// // return o1.key.compareTo(o2.key);
-	// // }
-	// // };
-	// return null;
-	// }
-
 	@Override
-	protected void sort(List<Option> options) {
-		// super.sort(options);
-		// ArrayList<Option> uppercase = new ArrayList<Option>();
-		// for (Option o : new ArrayList<Option>(options)) {
-		// if (Character.isUpperCase(o.key)) {
-		// options.remove(o);
-		// uppercase.add(o);
-		// }
-		// }
-		// for (Option o : uppercase) {
-		// options.add(o);
-		// }
+	protected Comparator<Option> sort() {
+		return new Comparator<Option>() {
+			@Override
+			public int compare(Option o1, Option o2) {
+				return o1.key.compareTo(o2.key);
+			}
+		};
 	}
+
+	// @Override
+	// protected void sort(List<Option> options) {
+	// // super.sort(options);
+	// // ArrayList<Option> uppercase = new ArrayList<Option>();
+	// // for (Option o : new ArrayList<Option>(options)) {
+	// // if (Character.isUpperCase(o.key)) {
+	// // options.remove(o);
+	// // uppercase.add(o);
+	// // }
+	// // }
+	// // for (Option o : uppercase) {
+	// // options.add(o);
+	// // }
+	// }
 
 	// @Override
 	// protected Comparator<Option> sort() {

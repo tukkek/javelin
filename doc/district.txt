@@ -4,5 +4,9 @@ Once a structure starts building, it will be placed in the district's area as a 
 
 Note that some of the labor options described below are not actual structures (like Grow and Produce settler) and hence have no "construction site" associated with them.
 
-Grow: grows the city population by 1, resulting in higher labor throughput and possibly increasing the district size, up to "city" size.
+Growth: grows the city population by 1, resulting in higher labor throughput and possibly increasing the district size, up to "city" size.
+Trait: adding a trait to a town will open up new project options, as seen below.
+
+EXPANSIVE PROJECTS
+
 Produce settler: reduces city population by 1 but adds a settler unit to a squad inside the district which is able to build a new town elsewhere in the world map.

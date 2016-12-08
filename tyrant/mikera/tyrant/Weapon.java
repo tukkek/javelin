@@ -444,7 +444,7 @@ public class Weapon {
      * Adds a weapon to the library
      * Use this method to do any final weapon modifications
      * 
-     * @param t The weapon to be added
+     * @param town The weapon to be added
      */
     private static void addWeapon(Thing w) {
     	w.set("LevelMax",w.getStat("LevelMin")*3/2+5);

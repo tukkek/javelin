@@ -58,7 +58,7 @@ public class PillarOfSkulls extends UniqueLocation {
 		}
 
 		@Override
-		public String printInfo() {
+		public String printinfo() {
 			return "One of the skulls "
 					+ HaxorScreen.getdailyquote(Arrays.asList(QUOTES)) + " ";
 		}

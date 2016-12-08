@@ -163,7 +163,7 @@ public class HaxorScreen extends SelectScreen {
 	}
 
 	@Override
-	public String printInfo() {
+	public String printinfo() {
 		return DAILYQUOTE + "\nYou have " + Haxor.singleton.rubies + " rubies.";
 	}
 

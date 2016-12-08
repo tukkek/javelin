@@ -146,7 +146,7 @@ public class BattleScreen extends Screen {
 		mappanel.setVisible(false);
 		Combatant hero = Fight.state.next;
 		javelin.controller.Point t = new Point(hero.location[0], hero.location[1]);
-		mappanel.setPosition(t.x, t.y);
+		mappanel.setposition(t.x, t.y);
 		Game.redraw();
 		mappanel.center(t.x, t.y, true);
 		mappanel.setVisible(true);

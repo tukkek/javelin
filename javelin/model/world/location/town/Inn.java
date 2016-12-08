@@ -19,6 +19,7 @@ public class Inn extends Fortification {
 	public Inn() {
 		super("A traveller's lodge", "A traveller's lodge", 1, 5);
 		gossip = true;
+		neutral = true;
 	}
 
 	@Override
@@ -30,10 +31,8 @@ public class Inn extends Fortification {
 		int weekperiods = 24 * 7 / RESTPERIOD;
 		int weekprice = weekperiods * price;
 		String prompt = "Do you want to rest at the traveller's inn?\n";
-		prompt += "\nENTER to stay ($" + price + "), w to stay for a week ($"
-				+ weekprice + ")";
-		prompt += "\np to pillage ($" + PurchaseScreen.formatcost(getspoils())
-				+ ")";
+		prompt += "\nENTER to stay ($" + price + "), w to stay for a week ($" + weekprice + ")";
+		prompt += "\np to pillage ($" + PurchaseScreen.formatcost(getspoils()) + ")";
 		prompt += "\nany other key to leave";
 		Character input = Javelin.prompt(prompt);
 		if (input == '\n') {

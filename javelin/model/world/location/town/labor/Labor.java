@@ -1,26 +1,20 @@
 package javelin.model.world.location.town.labor;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
 
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
+import javelin.view.screen.WorldScreen;
 
 /**
  * Represents a card that can be used to progress a {@link Town}'s district.
+ * Initially each labor is an empty placeholder inside a {@link Deck}. Upon
+ * drawing they are cloned and the clones defined as actual cards via
+ * {@link #define(Town)}.
  * 
  * @author alex
  */
-public abstract class Labor implements Serializable {
-	public static ArrayList<Labor> get(Town t) {
-		ArrayList<Labor> options = new ArrayList<Labor>(0);
-		options.add(new Grow(t));
-		options.add(new Settler(t));
-		Collections.shuffle(options);
-		return options;
-	}
-
+public abstract class Labor implements Serializable, Cloneable {
 	/** Card's name. */
 	public String name;
 	/**
@@ -31,13 +25,48 @@ public abstract class Labor implements Serializable {
 	public int cost;
 	public float progress;
 	public boolean automatic = true;
-	Town town;
+	protected Town town;
+	/** <code>true</code> to return to {@link WorldScreen} after selection. */
+	public boolean closescreen = false;
+	public boolean construction = false;
 
-	/** Constructor. */
-	public Labor(String name, int cost, Town t) {
+	/**
+	 * Define here all the data that isn't {@link Town}-dependent.
+	 * 
+	 * @param name
+	 *            For debug purposes a labor, even in its original abstract mode
+	 *            must define a name for {@link #toString()}. This can updated
+	 *            later on in {@link #define()}.
+	 */
+	public Labor(String name) {
+		this.name = name;
+	}
+
+	public Labor(String name, int cost) {
 		this.name = name;
 		this.cost = cost;
-		this.town = t;
+	}
+
+	public Labor generate(Town t) {
+		Labor clone = clone();
+		clone.town = t;
+		clone.define();
+		return clone;
+	}
+
+	/**
+	 * Redefines the card date now that this newly cloned instance has been
+	 * associated with a specific {@link #town}.
+	 */
+	abstract protected void define();
+
+	@Override
+	protected Labor clone() {
+		try {
+			return (Labor) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException();
+		}
 	}
 
 	/**
@@ -78,7 +107,17 @@ public abstract class Labor implements Serializable {
 		}
 	}
 
-	public String progress() {
+	public String getprogress() {
 		return Math.round(100 * progress / cost) + "%";
+	}
+
+	public void start() {
+		town.governor.addtoqueue(this);
+		town.governor.removefromhand(this);
+		work(0);
+	}
+
+	public void cancel() {
+		town.governor.removefromqueue(this);
 	}
 }

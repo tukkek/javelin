@@ -27,16 +27,32 @@ public class Camp extends WorldAction {
 		if (Dungeon.active != null) {
 			throw new RepeatTurn();
 		}
-		if (Javelin
-				.prompt("Are you sure you want to try to set up camp in this wild area?\n\n"
-						+ "Monsters may be around...\n\n"
-						+ "Press c to camp or any other key to cancel...") != 'c') {
+		Town t = (Town) Squad.active.findnearest(Town.class);
+		if (t != null && t.getdistrict().getarea().contains(Squad.active.getlocation())) {
+			Javelin.message("Cannot camp inside a town's district.\nTry moving further into the wilderness.\n", false);
 			return;
 		}
-		for (int i = 0; i < 8; i++) {
+		Character input = Javelin.prompt(
+				"Are you sure you want to try to set up camp in this wild area?\n" + "Monsters may interrupt you.\n\n"
+						+ "Press c to camp for a day, w to camp for a week or any other key to cancel...");
+		int hours;
+		int restat;
+		if (input == 'c') {
+			hours = 8;
+			restat = 8;
+		} else if (input == 'w') {
+			hours = 24 * 7;
+			restat = 12;
+		} else {
+			return;
+		}
+		for (int i = 0; i < hours; i++) {
 			Squad.active.hourselapsed += 1;
 			RandomEncounter.encounter(1 / WorldScreen.HOURSPERENCOUNTER);
+			if (i > 0 && (i + 1) % restat == 0) {
+				Town.rest(1, 0, Accommodations.LODGE);
+				// System.out.println("rest");
+			}
 		}
-		Town.rest(1, 0, Accommodations.LODGE);
 	}
 }

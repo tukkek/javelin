@@ -47,7 +47,7 @@ public abstract class PurchaseScreen extends SelectScreen {
 	}
 
 	@Override
-	public String printInfo() {
+	public String printinfo() {
 		return "Your squad has $" + formatcost(Squad.active.gold);
 	}
 

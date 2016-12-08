@@ -1,12 +1,11 @@
 package javelin.model.world.location.town.labor;
 
 import javelin.model.world.location.town.District;
-import javelin.model.world.location.town.Town;
 
-public class Grow extends Labor {
+public class Growth extends Labor {
 
-	public Grow(Town t) {
-		super("Grow", t.population, t);
+	public Growth() {
+		super("Growth");
 	}
 
 	@Override
@@ -16,7 +15,12 @@ public class Grow extends Labor {
 
 	@Override
 	public boolean validate(District d) {
-		cost = town.population;
+		define();
 		return true;
+	}
+
+	@Override
+	protected void define() {
+		cost = town.population;
 	}
 }

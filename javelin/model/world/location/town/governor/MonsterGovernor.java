@@ -1,6 +1,8 @@
 package javelin.model.world.location.town.governor;
 
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.Growth;
+import javelin.model.world.location.town.labor.Labor;
 
 /**
  * Governor for hostile towns. Auto-manage is always on.
@@ -17,7 +19,13 @@ public class MonsterGovernor extends Governor {
 
 	@Override
 	public void manage() {
-		start(hand.get(0));
+		// hand.get(0).start();
+		for (Labor l : hand) {
+			if (Growth.class.isInstance(l)) {
+				l.start();
+				return;
+			}
+		}
 		// TODO
 		System.out.println("implement mosnter manager!");
 	}

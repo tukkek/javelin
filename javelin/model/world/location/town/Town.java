@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.TreeSet;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
@@ -26,9 +27,9 @@ import javelin.model.world.location.Outpost;
 import javelin.model.world.location.town.governor.Governor;
 import javelin.model.world.location.town.governor.HumanGovernor;
 import javelin.model.world.location.town.governor.MonsterGovernor;
-import javelin.model.world.location.town.labor.Grow;
+import javelin.model.world.location.town.labor.Deck;
+import javelin.model.world.location.town.labor.Growth;
 import javelin.view.Images;
-import javelin.view.screen.BattleScreen;
 import javelin.view.screen.NamingScreen;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.TownScreen;
@@ -51,8 +52,6 @@ public class Town extends Location {
 	static final ArrayList<String> NAMES = new ArrayList<String>();
 	static final String[] RANKS = new String[] { "hamlet", "village", "town", "city" };
 
-	static boolean startingtown = true;
-
 	static {
 		initnames();
 	}
@@ -64,7 +63,7 @@ public class Town extends Location {
 	 * 
 	 * An arbitrary decision is to try to fit the game-span of a normal game
 	 * into a 1-year period, which puts a town max size roughly at 10 if it does
-	 * nothing but {@link Grow}.
+	 * nothing but {@link Growth}.
 	 */
 	public int population = 1;
 	// /**
@@ -73,7 +72,13 @@ public class Town extends Location {
 	// */
 	// public float labor = 0f;
 	/** See {@link Governor}. */
-	public Governor governor;
+	public Governor governor = new HumanGovernor(this);
+	/**
+	 * Alphabetically ordered set of urban traits.
+	 * 
+	 * @see Deck
+	 */
+	public TreeSet<String> traits = new TreeSet<String>();
 
 	/**
 	 * @param x
@@ -98,13 +103,6 @@ public class Town extends Location {
 		gossip = true;
 		discard = false;
 		vision = 2;
-		if (startingtown) {
-			startingtown = false;
-			governor = new MonsterGovernor(this);
-		} else {
-			governor = new HumanGovernor(this);
-		}
-		// governor.redraw();
 	}
 
 	void checktooclose() {
@@ -366,7 +364,7 @@ public class Town extends Location {
 		// Squad.active.updateavatar();
 		// }
 		// }
-		Javelin.app.switchScreen(BattleScreen.active);
+		// Javelin.app.switchScreen(BattleScreen.active);
 		return true;
 	}
 
@@ -466,5 +464,6 @@ public class Town extends Location {
 	public void populategarisson() {
 		Dwelling d = (Dwelling) findnearest(Dwelling.class);
 		garrison.add(new Combatant(d.dweller.source.clone(), true));
+		governor = new MonsterGovernor(this);
 	}
 }

@@ -47,6 +47,8 @@ public abstract class Fortification extends Location {
 	protected Terrain terrain = null;
 	/** TODO There is certainly a better way to do this. */
 	public boolean generategarrison = true;
+	/** Neutral location don't generate a garrison. */
+	protected boolean neutral = false;
 
 	/**
 	 * Generates a guarded location based on a difficulty range. The difficulty
@@ -76,8 +78,7 @@ public abstract class Fortification extends Location {
 	 *            Maximum difficulty. Will be converted into a proper Upper
 	 *            Krust EL.
 	 */
-	public Fortification(String descriptionknown, String descriptionunknown,
-			int minlevel, int maxlevel) {
+	public Fortification(String descriptionknown, String descriptionunknown, int minlevel, int maxlevel) {
 		super(null);
 		this.minlevel = minlevel;
 		this.maxlevel = maxlevel;
@@ -103,13 +104,18 @@ public abstract class Fortification extends Location {
 	protected void generategarrison(int minlevel, int maxlevel) {
 		int minel = leveltoel(minlevel);
 		int maxel = leveltoel(maxlevel);
+		if (neutral) {
+			targetel = RPG.r(minel, maxel);
+			capture();
+			return;
+		}
 		while (garrison.isEmpty()) {
 			try {
 				int el = RPG.r(minel, maxel);
 				ArrayList<Terrain> terrains = new ArrayList<Terrain>(1);
 				terrains.add(terrain == null ? Terrain.get(x, y) : terrain);
 				garrison.addAll(EncounterGenerator.generate(el, terrains));
-				targetel = new Integer(el);
+				targetel = el;
 			} catch (GaveUpException e) {
 				continue;
 			}
@@ -119,8 +125,7 @@ public abstract class Fortification extends Location {
 	private WorldActor findclosest(Class<? extends WorldActor> type) {
 		WorldActor closest = null;
 		for (WorldActor a : WorldActor.getall(type)) {
-			if (closest == null || Walker.distance(a.x, a.y, x, y) < Walker
-					.distance(closest.x, closest.y, x, y)) {
+			if (closest == null || Walker.distance(a.x, a.y, x, y) < Walker.distance(closest.x, closest.y, x, y)) {
 				closest = a;
 			}
 		}
@@ -144,8 +149,7 @@ public abstract class Fortification extends Location {
 		if (targetel == null) {
 			return descriptionknown;
 		}
-		return Squad.active.know() - 10 >= targetel ? descriptionknown
-				: descriptionunknown;
+		return Squad.active.know() - 10 >= targetel ? descriptionknown : descriptionunknown;
 	}
 
 	/**
@@ -162,8 +166,7 @@ public abstract class Fortification extends Location {
 	 * @return See {@link #getspoils()}.
 	 */
 	static public int getspoils(Integer el) {
-		return RewardCalculator
-				.getgold(ChallengeRatingCalculator.eltocr(el + 1)[0]);
+		return RewardCalculator.getgold(ChallengeRatingCalculator.eltocr(el + 1)[0]);
 	}
 
 	/**

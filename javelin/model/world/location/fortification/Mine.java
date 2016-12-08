@@ -46,7 +46,7 @@ public class Mine extends Fortification {
 		}
 
 		@Override
-		public String printInfo() {
+		public String printinfo() {
 			return "";
 		}
 

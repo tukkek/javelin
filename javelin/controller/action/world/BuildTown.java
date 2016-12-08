@@ -35,11 +35,16 @@ public class BuildTown extends WorldAction {
 			Javelin.message("You need a settler to build a town.", false);
 			return;
 		}
+		if (Javelin.prompt("Are you sure you want to build a new town here?\n\n"
+				+ "Press ENTER to confirm or any other key to cancel...") != '\n') {
+			return;
+		}
 		Squad.active.members.remove(settler);
 		Town t = new Town(Squad.active.x, Squad.active.y,
 				World.determinecolor(new Point(Squad.active.x, Squad.active.y)).realm);
 		t.description = "your new town";
 		t.rename();
 		t.garrison.clear();
+		Squad.active.displace();
 	}
 }

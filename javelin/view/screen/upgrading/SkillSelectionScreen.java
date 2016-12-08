@@ -85,7 +85,7 @@ public class SkillSelectionScreen extends SelectScreen {
 	}
 
 	@Override
-	public String printInfo() {
+	public String printinfo() {
 		return "You have " + m.skillpool + " points left to distribute\n"//
 				+ "Cross-class skills (X) cost 2 points to upgrade\n" //
 				+ "Press ENTER to spend your remaining points automatically\n"

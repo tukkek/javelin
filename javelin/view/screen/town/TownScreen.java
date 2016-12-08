@@ -28,7 +28,7 @@ public class TownScreen extends PurchaseScreen {
 	static final Option RENAME = new Option("Rename town", 0, 'r');
 	// private static final Option MANAGE = new ScreenOption("Manage town", 0,
 	// 'm');
-	private Squad entering;
+	private WorldActor entering;
 
 	/** Constructor. */
 	public TownScreen(final Town t) {
@@ -46,7 +46,9 @@ public class TownScreen extends PurchaseScreen {
 		if (o instanceof ScreenOption) {
 			SelectScreen screen = ((ScreenOption) o).show();
 			screen.show();
-			stayopen = screen.stayopen;
+			if (screen.forceclose) {
+				stayopen = false;
+			}
 			return true;
 		}
 		if (!super.select(o)) {
@@ -209,7 +211,7 @@ public class TownScreen extends PurchaseScreen {
 	}
 
 	@Override
-	public String printInfo() {
+	public String printinfo() {
 		// if (!town.crafting.done()) {
 		// output += "\n\n" + showqueue(town.crafting, "Crafting");
 		// }

@@ -49,7 +49,7 @@ public class TournamentScreenOption extends ScreenOption {
 			}
 
 			@Override
-			public String printInfo() {
+			public String printinfo() {
 				return "You currently have $"
 						+ PurchaseScreen.formatcost(Squad.active.gold);
 			}

@@ -61,7 +61,7 @@ public class Infiltrate extends WorldAction {
 		}
 
 		@Override
-		public String printInfo() {
+		public String printinfo() {
 			String info = "";
 
 			// info += "Accomodation: " + town.lodging + "\n";

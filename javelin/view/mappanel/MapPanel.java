@@ -82,11 +82,11 @@ public abstract class MapPanel extends Panel {
 
 	protected abstract Tile newtile(int x, int y);
 
-	public void viewPosition(int x, int y) {
+	public void viewposition(int x, int y) {
 		center(x, y, false);
 	}
 
-	public void setPosition(int x, int y) {
+	public void setposition(int x, int y) {
 		center(x, y, true);
 	}
 

@@ -10,7 +10,7 @@ import javelin.model.item.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Chest;
-import javelin.model.world.location.town.labor.Settler;
+import javelin.model.world.location.town.labor.expansive.Settler;
 import tyrant.mikera.engine.RPG;
 
 /**

@@ -47,6 +47,7 @@ public abstract class SelectScreen extends InfoScreen {
 	 * to quit the screen.
 	 */
 	protected boolean showquit = true;
+	public boolean forceclose = false;
 
 	/** Constructor. */
 	public SelectScreen(final String name, final Town t) {
@@ -65,7 +66,7 @@ public abstract class SelectScreen extends InfoScreen {
 		}
 		sort(options);
 		printoptions(options);
-		final String extrainfo = printInfo();
+		final String extrainfo = printinfo();
 		if (!extrainfo.isEmpty()) {
 			text += "\n" + extrainfo + "\n";
 		}
@@ -219,7 +220,7 @@ public abstract class SelectScreen extends InfoScreen {
 	/**
 	 * @return Footer note.
 	 */
-	public abstract String printInfo();
+	public abstract String printinfo();
 
 	/**
 	 * Called after an Option is selected.

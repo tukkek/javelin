@@ -63,8 +63,7 @@ public class FeatureGenerator {
 
 	static final int NUMBEROFSTARTINGFEATURES = (World.SIZE * World.SIZE) / 5;
 
-	final HashMap<Class<? extends WorldActor>, FeatureGenerationData> generators =
-			new HashMap<Class<? extends WorldActor>, FeatureGenerationData>();
+	final HashMap<Class<? extends WorldActor>, FeatureGenerationData> generators = new HashMap<Class<? extends WorldActor>, FeatureGenerationData>();
 
 	/**
 	 * The ultimate goal of this method is to try and make it so one feature
@@ -73,8 +72,7 @@ public class FeatureGenerator {
 	 * manually-written methods from becoming too large.
 	 */
 	private FeatureGenerator() {
-		register(Dungeon.class, new FeatureGenerationData(2f, Dungeon.STARTING,
-				Dungeon.STARTING));
+		register(Dungeon.class, new FeatureGenerationData(2f, Dungeon.STARTING, Dungeon.STARTING));
 		register(Trove.class, new FeatureGenerationData(1.5f));
 		register(Lair.class, new FeatureGenerationData());
 		register(Outpost.class, new FeatureGenerationData());
@@ -117,8 +115,7 @@ public class FeatureGenerator {
 		}
 	}
 
-	FeatureGenerationData register(Class<? extends WorldActor> class1,
-			FeatureGenerationData generator) {
+	FeatureGenerationData register(Class<? extends WorldActor> class1, FeatureGenerationData generator) {
 		generators.put(class1, generator);
 		return generator;
 	}
@@ -157,14 +154,9 @@ public class FeatureGenerator {
 
 	static void spawnnear(Town t, WorldActor a, World w, int min, int max) {
 		int[] location = null;
-		while (location == null
-				|| WorldActor.get(t.x + location[0], t.y + location[1]) != null
-				|| t.x + location[0] < 0
-				|| t.y + location[1] < 0
-				|| t.x + location[0] >= World.SIZE
-				|| t.y + location[1] >= World.SIZE
-				|| w.map[t.x + location[0]][t.y + location[1]]
-						.equals(Terrain.WATER)) {
+		while (location == null || WorldActor.get(t.x + location[0], t.y + location[1]) != null || t.x + location[0] < 0
+				|| t.y + location[1] < 0 || t.x + location[0] >= World.SIZE || t.y + location[1] >= World.SIZE
+				|| w.map[t.x + location[0]][t.y + location[1]].equals(Terrain.WATER)) {
 			location = new int[] { RPG.r(min, max), RPG.r(min, max) };
 			if (RPG.r(1, 2) == 1) {
 				location[0] = -location[0];
@@ -183,8 +175,7 @@ public class FeatureGenerator {
 	}
 
 	static Town gettown(Terrain terrain, World seed) {
-		ArrayList<WorldActor> towns =
-				new ArrayList<WorldActor>(Location.getall(Town.class));
+		ArrayList<WorldActor> towns = new ArrayList<WorldActor>(Location.getall(Town.class));
 		Collections.shuffle(towns);
 		for (WorldActor town : towns) {
 			if (seed.map[town.x][town.y] == terrain) {
@@ -208,17 +199,14 @@ public class FeatureGenerator {
 		Temple.generatetemples();
 		Terrain starton = RPG.r(1, 2) == 1 ? Terrain.PLAIN : Terrain.HILL;
 		Town easya = FeatureGenerator.gettown(starton, seed);
-		Town easyb =
-				FeatureGenerator.gettown(starton == Terrain.PLAIN
-						? Terrain.HILL : Terrain.PLAIN, seed);
+		Town easyb = FeatureGenerator.gettown(starton == Terrain.PLAIN ? Terrain.HILL : Terrain.PLAIN, seed);
 		ArrayList<WorldActor> towns = Location.getall(Town.class);
 		WorldActor startingtown = WorldActor.get(easya.x, easya.y, towns);
-		if (Terrain.checkadjacent(new Point(startingtown.x, startingtown.y),
-				Terrain.WATER, seed, 2) != 0) {
+		if (Terrain.checkadjacent(new Point(startingtown.x, startingtown.y), Terrain.WATER, seed, 2) != 0) {
 			throw new RestartWorldGeneration();
 		}
-		new Portal(startingtown, WorldActor.get(easyb.x, easyb.y, towns),
-				false, false, true, true, null, false).place();
+		new Portal(startingtown, WorldActor.get(easyb.x, easyb.y, towns), false, false, true, true, null, false)
+				.place();
 		Haxor.singleton = new Haxor();
 		generatestartingarea(seed, easya);
 		generateuniquelocations();
@@ -267,12 +255,9 @@ public class FeatureGenerator {
 	}
 
 	static void generatemartialacademies() {
-		new MartialAcademy(UpgradeHandler.singleton.shots,
-				"Academy (shooting range)").place();
-		new MartialAcademy(UpgradeHandler.singleton.expertise,
-				"Academy (combat expertise)").place();
-		new MartialAcademy(UpgradeHandler.singleton.power,
-				"Academy (power attack)").place();
+		new MartialAcademy(UpgradeHandler.singleton.shots, "Academy (shooting range)").place();
+		new MartialAcademy(UpgradeHandler.singleton.expertise, "Academy (combat expertise)").place();
+		new MartialAcademy(UpgradeHandler.singleton.power, "Academy (power attack)").place();
 	}
 
 	static int countplaces() {
@@ -287,39 +272,21 @@ public class FeatureGenerator {
 	}
 
 	static void generatemageguilds() {
-		new MagesGuild("Compulsion guild",
-				UpgradeHandler.singleton.schoolcompulsion,
-				RaiseCharisma.INSTANCE).place();
-		new MagesGuild("Conjuration guild",
-				UpgradeHandler.singleton.schoolconjuration,
-				RaiseCharisma.INSTANCE).place();
-		new MagesGuild("Abjuration guild",
-				UpgradeHandler.singleton.schoolabjuration,
-				RaiseCharisma.INSTANCE).place();
+		new MagesGuild("Compulsion guild", UpgradeHandler.singleton.schoolcompulsion, RaiseCharisma.INSTANCE).place();
+		new MagesGuild("Conjuration guild", UpgradeHandler.singleton.schoolconjuration, RaiseCharisma.INSTANCE).place();
+		new MagesGuild("Abjuration guild", UpgradeHandler.singleton.schoolabjuration, RaiseCharisma.INSTANCE).place();
 
-		new MagesGuild("Healing guild", UpgradeHandler.singleton.schoolhealing,
-				new RaiseWisdom()).place();
-		new MagesGuild("Totem guild", UpgradeHandler.singleton.schooltotem,
-				new RaiseWisdom()).place();
-		new MagesGuild("Healing wounds guild",
-				UpgradeHandler.singleton.schoolhealwounds, new RaiseWisdom())
-				.place();
-		new MagesGuild("Divination guild",
-				UpgradeHandler.singleton.schooldivination, new RaiseWisdom())
-				.place();
+		new MagesGuild("Healing guild", UpgradeHandler.singleton.schoolhealing, new RaiseWisdom()).place();
+		new MagesGuild("Totem guild", UpgradeHandler.singleton.schooltotem, new RaiseWisdom()).place();
+		new MagesGuild("Healing wounds guild", UpgradeHandler.singleton.schoolhealwounds, new RaiseWisdom()).place();
+		new MagesGuild("Divination guild", UpgradeHandler.singleton.schooldivination, new RaiseWisdom()).place();
 
-		new MagesGuild("Necromancy guild",
-				UpgradeHandler.singleton.schoolnecromancy,
-				RaiseIntelligence.INSTANCE).place();
-		new MagesGuild("Wounding guild",
-				UpgradeHandler.singleton.schoolwounding,
-				RaiseIntelligence.INSTANCE).place();
-		new MagesGuild("Evocation guild",
-				UpgradeHandler.singleton.schoolevocation,
-				RaiseIntelligence.INSTANCE).place();
-		new MagesGuild("Transmutation guild",
-				UpgradeHandler.singleton.schooltransmutation,
-				RaiseIntelligence.INSTANCE).place();
+		new MagesGuild("Necromancy guild", UpgradeHandler.singleton.schoolnecromancy, RaiseIntelligence.INSTANCE)
+				.place();
+		new MagesGuild("Wounding guild", UpgradeHandler.singleton.schoolwounding, RaiseIntelligence.INSTANCE).place();
+		new MagesGuild("Evocation guild", UpgradeHandler.singleton.schoolevocation, RaiseIntelligence.INSTANCE).place();
+		new MagesGuild("Transmutation guild", UpgradeHandler.singleton.schooltransmutation, RaiseIntelligence.INSTANCE)
+				.place();
 
 	}
 }

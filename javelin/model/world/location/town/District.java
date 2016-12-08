@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import javelin.controller.Point;
+import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
+import javelin.model.world.location.Construction;
 import javelin.model.world.location.Location;
 
 /**
@@ -21,6 +23,8 @@ import javelin.model.world.location.Location;
  * @author alex
  */
 public class District {
+	static final int MOSTNEIGHBORSALLOWED = 1;
+
 	Town town;
 	ArrayList<Location> locations = null;
 	HashSet<Point> area = null;
@@ -48,10 +52,10 @@ public class District {
 		if (area != null) {
 			return area;
 		}
-		int rank = town.getrank();
+		int radius = getradius();
 		area = new HashSet<Point>();
-		for (int x = town.x - rank; x <= town.x + rank; x++) {
-			for (int y = town.y - rank; y <= town.y + rank; y++) {
+		for (int x = town.x - radius; x <= town.x + radius; x++) {
+			for (int y = town.y - radius; y <= town.y + radius; y++) {
 				if (World.validatecoordinate(x, y)) {
 					area.add(new Point(x, y));
 				}
@@ -60,12 +64,15 @@ public class District {
 		return area;
 	}
 
+	public int getradius() {
+		return town.getrank() + 1;
+	}
+
 	/**
-	 * @param class1
+	 * @param type
 	 *            Will check for this exact class, not subclasses.
 	 * @return Location of the given type or <code>null</code> if none was
 	 *         found.
-	 * @see #getdistrict()
 	 */
 	public Location getlocation(Class<? extends Location> type) {
 		for (Location l : getlocations()) {
@@ -98,5 +105,51 @@ public class District {
 			}
 		}
 		return squads;
+	}
+
+	/**
+	 * @return All spots that can be built on and do not have too many neighbors
+	 *         (as to prevent the creation of "walls" {@link Squad}s will have
+	 *         trouble passing through).
+	 */
+	public ArrayList<Point> findbuildingarea() {
+		ArrayList<WorldActor> actors = WorldActor.getall();
+		ArrayList<WorldActor> locations = new ArrayList<WorldActor>();
+		for (WorldActor a : actors) {
+			if (a instanceof Location) {
+				locations.add(a);
+			}
+		}
+		ArrayList<Point> free = new ArrayList<Point>();
+		searching: for (Point p : getarea()) {
+			if (Terrain.get(p.x, p.y).equals(Terrain.WATER) || WorldActor.get(p.x, p.y, actors) != null) {
+				continue searching;
+			}
+			int neighbors = 0;
+			for (int x = p.x - 1; x <= p.x + 1; x++) {
+				for (int y = p.y - 1; y <= p.y + 1; y++) {
+					if ((x == p.x && y == p.y) || !World.validatecoordinate(x, y)
+							|| WorldActor.get(x, y, locations) == null) {
+						continue;
+					}
+					neighbors += 1;
+					if (neighbors > MOSTNEIGHBORSALLOWED) {
+						continue searching;
+					}
+				}
+			}
+			free.add(p);
+		}
+		return free;
+	}
+
+	public boolean isbuilding(Class<? extends Location> site) {
+		for (Location l : getlocationtype(Construction.class)) {
+			Construction c = (Construction) l;
+			if (site.isInstance(c.goal)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

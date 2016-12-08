@@ -40,7 +40,7 @@ public class HumanGovernor extends Governor {
 			}
 		}
 		if (selected != null) {
-			start(selected);
+			selected.start();
 		}
 	}
 }

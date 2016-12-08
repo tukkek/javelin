@@ -42,7 +42,7 @@ public class AssassinsGuild extends Academy {
 		}
 
 		@Override
-		public String printInfo() {
+		public String printinfo() {
 			int rank = getrank(assassinations);
 			String s = "You are currently a " + LEVELS[rank] + ".\n";
 			if (rank < LEVELS.length - 1) {

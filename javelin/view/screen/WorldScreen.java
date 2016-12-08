@@ -92,6 +92,7 @@ public class WorldScreen extends BattleScreen {
 	/** Current active world screen. */
 	public static WorldScreen current;
 	static boolean welcome = true;
+	public boolean firstdraw = true;
 
 	/** Constructor. */
 	public WorldScreen() {
@@ -450,7 +451,12 @@ public class WorldScreen extends BattleScreen {
 
 	@Override
 	public void centerscreen(int x, int y) {
-		mappanel.viewPosition(x, y);
+		if (firstdraw) {
+			mappanel.setposition(x, y);
+			firstdraw = false;
+		} else {
+			mappanel.viewposition(x, y);
+		}
 	}
 
 	@Override

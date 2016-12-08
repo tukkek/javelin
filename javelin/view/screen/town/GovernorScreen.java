@@ -3,9 +3,7 @@ package javelin.view.screen.town;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.Javelin;
 import javelin.controller.action.world.Guide;
-import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.view.screen.Option;
@@ -14,9 +12,10 @@ import javelin.view.screen.town.option.ScreenOption;
 public class GovernorScreen extends ScreenOption {
 	private static final String TEMPLATE = "Town management:\n\n"//
 			+ "A town will auto-manage itself but this screen enables you to control the process.\n"//
-			+ "Press h to see the description for each labor.\n" //
-			+ "%s"//
-			+ "\nAvailable projects:";
+			+ "Press h to see the description for each project." //
+			+ "%s\n"//
+			+ "%s\n"//
+			+ "Available projects:\n";
 
 	class LaborOption extends Option {
 		Labor l;
@@ -29,7 +28,8 @@ public class GovernorScreen extends ScreenOption {
 
 	class TownManagement extends SelectScreen {
 		public TownManagement(Town t) {
-			super(String.format(TEMPLATE, printcurrent(t.governor.getqueue())), t);
+			super("", t);
+			// title = ;
 		}
 
 		@Override
@@ -44,24 +44,12 @@ public class GovernorScreen extends ScreenOption {
 		}
 
 		@Override
-		public String printInfo() {
-			String output = "";
-			// output += "Labor: " + Math.round(Math.floor(town.labor));
-			if (town.ishostile() && Javelin.DEBUG) {
-				output += "    Queue: " + town.governor.getqueue() + "\n";
-				output += "    Garrison: " + town.garrison + "\n";
-				output += "    EL: " + ChallengeRatingCalculator.calculateel(town.garrison);
-			}
-			output += "\nSize: " + town.getranktitle() + " (" + town.population + ")";
-			return output;
-		}
-
-		@Override
 		public boolean select(Option o) {
 			LaborOption lo = (LaborOption) o;
-			town.governor.start(lo.l);
-			if (lo.l.cost == 0) {
+			lo.l.start();
+			if (lo.l.closescreen) {
 				stayopen = false;
+				forceclose = true;
 			}
 			return true;
 		}
@@ -81,8 +69,9 @@ public class GovernorScreen extends ScreenOption {
 
 		@Override
 		public void printoptions(List<Option> options) {
+			text = String.format(TEMPLATE, printcityinfo(t), printcurrent(t.governor.getqueue())) + "\n";
 			if (town.governor.gethand().isEmpty()) {
-				text += "  (no labor projects available right now)";
+				text += "  (no labor projects available right now)\n";
 			} else {
 				super.printoptions(options);
 			}
@@ -96,6 +85,11 @@ public class GovernorScreen extends ScreenOption {
 			}
 			return super.select(feedback, options);
 		}
+
+		@Override
+		public String printinfo() {
+			return "";
+		}
 	}
 
 	public GovernorScreen(Town town) {
@@ -108,10 +102,30 @@ public class GovernorScreen extends ScreenOption {
 	}
 
 	static public String printcurrent(ArrayList<Labor> queue) {
-		String output = "\nCurrent projects:\n\n";
-		for (Labor l : queue) {
-			output += "  " + l.name + " (" + l.progress() + ")\n";
+		String output = "\nCurrent projects:\n";
+		if (queue.isEmpty()) {
+			output += "  (no projects being worked on right now)\n";
+		} else {
+			for (Labor l : queue) {
+				output += "  " + l.name + " (" + l.getprogress() + ")\n";
+			}
 		}
 		return output;
+	}
+
+	public static String printcityinfo(Town t) {
+		String info = "\n\nCity information for " + t.description + ":";
+		info += "\n  Population: " + t.population + " (" + t.getranktitle() + ")";
+		info += "\n  Traits: ";
+		if (t.traits.isEmpty()) {
+			info += "none.";
+		} else {
+			String traits = "";
+			for (String trait : t.traits) {
+				traits += trait + ", ";
+			}
+			info += traits.substring(0, traits.length() - 2) + ".";
+		}
+		return info;
 	}
 }

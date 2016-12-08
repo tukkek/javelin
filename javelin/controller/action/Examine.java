@@ -88,7 +88,7 @@ public class Examine extends Action {
 		int x = checkbounds(cursor.x + delta.x, Fight.state.map.length);
 		int y = checkbounds(cursor.y + delta.y, Fight.state.map[0].length);
 		setCursor(x, y, s);
-		s.mappanel.viewPosition(x, y);
+		s.mappanel.viewposition(x, y);
 		doLookPoint(getcursor(), s);
 	}
 
@@ -98,7 +98,7 @@ public class Examine extends Action {
 			start = new Point(active.location[0], active.location[1]);
 		}
 		setCursor(start.x, start.y, s);
-		s.mappanel.viewPosition(start.x, start.y);
+		s.mappanel.viewposition(start.x, start.y);
 		doLookPoint(getcursor(), s);
 		s.statuspanel.repaint();
 	}

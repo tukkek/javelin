@@ -43,7 +43,7 @@ public class RedeemItem extends Frame {
 		}
 	}
 
-	Squad nearby = null;
+	WorldActor nearby = null;
 	Arena arena = ArenaWindow.arena;
 	ArenaWindow parent;
 
@@ -57,7 +57,7 @@ public class RedeemItem extends Frame {
 		this.parent = parent;
 		for (WorldActor s : Squad.getsquads()) {
 			if (s.isadjacent(arena)) {
-				nearby = (Squad) s;
+				nearby = (WorldActor) s;
 				break;
 			}
 		}

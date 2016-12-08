@@ -6,6 +6,7 @@ import java.util.Comparator;
 
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.Deck;
 import javelin.model.world.location.town.labor.Labor;
 
 /**
@@ -34,7 +35,7 @@ public abstract class Governor implements Serializable {
 	/** Constructor. */
 	public Governor(Town t) {
 		town = t;
-		validate();
+		// validate();
 	}
 
 	public int redraw() {
@@ -47,7 +48,8 @@ public abstract class Governor implements Serializable {
 
 	public boolean draw() {
 		District d = town.getdistrict();
-		for (Labor r : Labor.get(town)) {
+		for (Labor r : Deck.generate(town)) {
+			r = r.generate(town);
 			if (!hand.contains(r) && !queue.contains(r) && r.validate(d)) {
 				hand.add(r);
 				return true;
@@ -70,6 +72,12 @@ public abstract class Governor implements Serializable {
 			l.work(step);
 		}
 		validate();
+		if (queue.isEmpty() && !hand.isEmpty()) {
+			manage();
+			if (queue.isEmpty()) {
+				throw new RuntimeException("empty queue!");
+			}
+		}
 	}
 
 	/**
@@ -130,24 +138,12 @@ public abstract class Governor implements Serializable {
 			}
 		}
 		redraw();
-		if (queue.size() < 2 && !hand.isEmpty()) {
-			manage();
-			if (queue.isEmpty()) {
-				throw new RuntimeException("empty queue!");
-			}
-		}
 	}
 
 	public ArrayList<Labor> gethand() {
 		validate();
 		hand.sort(SORTYBYNAME);
 		return hand;
-	}
-
-	public void start(Labor l) {
-		queue.add(l);
-		hand.remove(l);
-		l.work(0);
 	}
 
 	public ArrayList<Labor> getqueue() {
@@ -157,5 +153,13 @@ public abstract class Governor implements Serializable {
 
 	public void removefromqueue(Labor labor) {
 		queue.remove(labor);
+	}
+
+	public void removefromhand(Labor l) {
+		hand.remove(l);
+	}
+
+	public void addtoqueue(Labor l) {
+		queue.add(l);
 	}
 }

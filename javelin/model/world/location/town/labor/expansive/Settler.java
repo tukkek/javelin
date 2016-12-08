@@ -1,4 +1,4 @@
-package javelin.model.world.location.town.labor;
+package javelin.model.world.location.town.labor.expansive;
 
 import java.util.ArrayList;
 
@@ -7,11 +7,14 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.Labor;
 
 public class Settler extends Labor {
-	public Settler(Town t) {
-		super("Produce settler", 0, t);
+	public Settler() {
+		super("Produce settler");
+		cost = 0;
 		automatic = false;
+		closescreen = true;
 	}
 
 	@Override
@@ -29,8 +32,8 @@ public class Settler extends Labor {
 	 * Adds a Worker units to the active {@link Squad}.
 	 * 
 	 * @param t
-	 *            If not <code>null</code> will reduce town {@link #population} by 1.
-	 *            If already at 1 (minimum) returns without any effect.
+	 *            If not <code>null</code> will reduce town {@link #population}
+	 *            by 1. If already at 1 (minimum) returns without any effect.
 	 */
 	static public void produce(Town t, Squad s) {
 		if (t != null) {
@@ -40,6 +43,11 @@ public class Settler extends Labor {
 			t.population -= 1;
 		}
 		s.members.add(new Combatant(Javelin.getmonster("Settler"), false));
+	}
+
+	@Override
+	protected void define() {
+		// nothing to update
 	}
 
 }

@@ -173,7 +173,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 	}
 
 	@Override
-	public String printInfo() {
+	public String printinfo() {
 		return "";
 	}
 

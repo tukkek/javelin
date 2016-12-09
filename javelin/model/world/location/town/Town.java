@@ -466,4 +466,13 @@ public class Town extends Location {
 		garrison.add(new Combatant(d.dweller.source.clone(), true));
 		governor = new MonsterGovernor(this);
 	}
+
+	public static ArrayList<Town> gettowns() {
+		ArrayList<WorldActor> actors = getall(Town.class);
+		ArrayList<Town> towns = new ArrayList<Town>(actors.size());
+		for (WorldActor a : actors) {
+			towns.add((Town) a);
+		}
+		return towns;
+	}
 }

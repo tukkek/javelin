@@ -56,6 +56,7 @@ public abstract class WorldActor implements Serializable {
 
 	/** Adds this actor to the game. Should only be used once in theory. */
 	public void place() {
+		registerinstance();
 	}
 
 	/** Move actor to the given coordinates. */
@@ -85,7 +86,9 @@ public abstract class WorldActor implements Serializable {
 			list = new ArrayList<WorldActor>(1);
 			INSTANCES.put(getClass(), list);
 		}
-		list.add(this);
+		if (!list.contains(this)) {
+			list.add(this);
+		}
 	}
 
 	/** Removes this instance from {@link #INSTANCES}. */
@@ -277,6 +280,6 @@ public abstract class WorldActor implements Serializable {
 	}
 
 	public Point getlocation() {
-		return new Point(x,y);
+		return new Point(x, y);
 	}
 }

@@ -21,7 +21,9 @@ import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.fortification.Fortification;
+import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.unique.UniqueLocation;
 import javelin.view.Images;
 import javelin.view.screen.InfoScreen;
@@ -110,9 +112,7 @@ public abstract class Location extends WorldActor {
 		p.x = -1;
 		ArrayList<WorldActor> actors = WorldActor.getall();
 		actors.remove(p);
-		while (p.x == -1
-				|| (!allowwater && World.seed.map[p.x][p.y]
-						.equals(Terrain.WATER))
+		while (p.x == -1 || (!allowwater && World.seed.map[p.x][p.y].equals(Terrain.WATER))
 				|| WorldActor.get(p.x, p.y, actors) != null || neartown(p)) {
 			p.x = RPG.r(0, World.SIZE - 1);
 			p.y = RPG.r(0, World.SIZE - 1);
@@ -129,8 +129,7 @@ public abstract class Location extends WorldActor {
 		}
 		for (WorldActor a : Location.getall(Town.class)) {
 			Town t = (Town) a;
-			if (t.x - 1 <= p.x && p.x <= t.x + 1 && t.y - 1 <= p.y
-					&& p.y <= t.y + 1) {
+			if (t.x - 1 <= p.x && p.x <= t.x + 1 && t.y - 1 <= p.y && p.y <= t.y + 1) {
 				return true;
 			}
 		}
@@ -162,18 +161,15 @@ public abstract class Location extends WorldActor {
 						if (a == null) {
 							continue;
 						}
-						if (closest == null
-								|| Walker.distance(p.x, p.y, a.x, a.y) < Walker
-										.distance(p.x, p.y, closest.x,
-												closest.y)) {
+						if (closest == null || Walker.distance(p.x, p.y, a.x, a.y) < Walker.distance(p.x, p.y,
+								closest.x, closest.y)) {
 							closest = a;
 						}
 					}
 				}
 			}
 			if (closest != null) {
-				final double distance =
-						Walker.distance(p.x, p.y, closest.x, closest.y);
+				final double distance = Walker.distance(p.x, p.y, closest.x, closest.y);
 				if (Squad.active.gossip() >= 10 + distance) {
 					WorldScreen.setVisible(closest.x, closest.y);
 				}
@@ -192,8 +188,7 @@ public abstract class Location extends WorldActor {
 		}
 		int el = attacker.getel();
 		if (!garrison.isEmpty()) {
-			return Incursion.fight(el,
-					ChallengeRatingCalculator.calculateel(garrison));
+			return Incursion.fight(el, ChallengeRatingCalculator.calculateel(garrison));
 		}
 		if (sacrificeable) {
 			return Incursion.fight(el, getel(el));
@@ -259,8 +254,7 @@ public abstract class Location extends WorldActor {
 	 * @return <code>true</code> if player confirms engaging in battle.
 	 * @throws RepeatTurn
 	 */
-	public static boolean
-			headsup(List<Combatant> opponents, String description) {
+	public static boolean headsup(List<Combatant> opponents, String description) {
 		opponents.sort(new Comparator<Combatant>() {
 			@Override
 			public int compare(Combatant o1, Combatant o2) {
@@ -268,8 +262,8 @@ public abstract class Location extends WorldActor {
 			}
 		});
 		Game.messagepanel.clear();
-		Game.message(describe(opponents, description) + "\n\n"
-				+ "Press s to storm or any other key to retreat.", Delay.NONE);
+		Game.message(describe(opponents, description) + "\n\n" + "Press s to storm or any other key to retreat.",
+				Delay.NONE);
 		if (InfoScreen.feedback() == 's') {
 			return true;
 		}
@@ -277,9 +271,8 @@ public abstract class Location extends WorldActor {
 	}
 
 	static String describe(List<Combatant> opponents, String description) {
-		return description + ". Forces: ("
-				+ ChallengeRatingCalculator.describedifficulty(opponents)
-				+ " fight)\n\n" + Squad.active.spot(opponents);
+		return description + ". Forces: (" + ChallengeRatingCalculator.describedifficulty(opponents) + " fight)\n\n"
+				+ Squad.active.spot(opponents);
 	}
 
 	@Override
@@ -301,8 +294,7 @@ public abstract class Location extends WorldActor {
 
 	@Override
 	public Image getimage() {
-		return Images.getImage("location"
-				+ getClass().getSimpleName().toLowerCase());
+		return Images.getImage("location" + getClass().getSimpleName().toLowerCase());
 	}
 
 	/**
@@ -384,5 +376,32 @@ public abstract class Location extends WorldActor {
 	public void capture() {
 		garrison.clear();
 		realm = null; // TODO really?
+	}
+
+	/**
+	 * @return A {@link Town} district this location is part of or
+	 *         <code>null</code> if it is not located inside one. If more than
+	 *         one district encompasses this location, the one with the highest
+	 *         {@link Town#population} will be returned.
+	 */
+	public District getdistrict() {
+		ArrayList<Town> towns = Town.gettowns();
+		District main = null;
+		for (Town t : towns) {
+			District d = t.getdistrict();
+			if (distanceinsteps(t.x, t.y) <= d.getradius() && (main == null || t.population > d.town.population)) {
+				main = d;
+			}
+		}
+		return main;
+	}
+
+	/**
+	 * Should only be called from a valid {@link District}.
+	 * 
+	 * @return Any upgrades this location may be improved with.
+	 */
+	public ArrayList<BuildingUpgrade> getupgrades() {
+		return new ArrayList<BuildingUpgrade>(0);
 	}
 }

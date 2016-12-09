@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Deck;
@@ -27,8 +28,8 @@ public abstract class Governor implements Serializable {
 	// /** <code>true</code> to draw and use cards automatically. */
 	// public boolean automanage = true;
 	/** Current labor. */
-	protected ArrayList<Labor> queue = new ArrayList<Labor>(0);
-	protected ArrayList<Labor> hand = new ArrayList<Labor>(STARTINGHAND);
+	private ArrayList<Labor> queue = new ArrayList<Labor>(0);
+	private ArrayList<Labor> hand = new ArrayList<Labor>(STARTINGHAND);
 
 	final Town town;
 
@@ -71,7 +72,7 @@ public abstract class Governor implements Serializable {
 		for (Labor l : new ArrayList<Labor>(queue)) {
 			l.work(step);
 		}
-		validate();
+		validate(town.getdistrict());
 		if (queue.isEmpty() && !hand.isEmpty()) {
 			manage();
 			if (queue.isEmpty()) {
@@ -125,8 +126,7 @@ public abstract class Governor implements Serializable {
 	// return q.substring(0, q.length() - 1);
 	// }
 
-	public void validate() {
-		District d = town.getdistrict();
+	public void validate(District d) {
 		for (Labor l : new ArrayList<Labor>(hand)) {
 			if (!l.validate(d)) {
 				hand.remove(l);
@@ -140,8 +140,24 @@ public abstract class Governor implements Serializable {
 		redraw();
 	}
 
+	/**
+	 * @return A hand of cards sorted by name, including any building upgrades
+	 *         in the {@link District}.
+	 * 
+	 * @see Location#getupgrades()
+	 */
 	public ArrayList<Labor> gethand() {
-		validate();
+		District d = town.getdistrict();
+		validate(d);
+		ArrayList<Labor> hand = new ArrayList<Labor>(this.hand);
+		for (Location l : d.getlocations()) {
+			for (Labor u : l.getupgrades()) {
+				u = u.generate(town);
+				if (u.validate(d)) {
+					hand.add(u);
+				}
+			}
+		}
 		hand.sort(SORTYBYNAME);
 		return hand;
 	}

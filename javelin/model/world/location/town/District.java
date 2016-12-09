@@ -25,7 +25,7 @@ import javelin.model.world.location.Location;
 public class District {
 	static final int MOSTNEIGHBORSALLOWED = 1;
 
-	Town town;
+	public Town town;
 	ArrayList<Location> locations = null;
 	HashSet<Point> area = null;
 	ArrayList<Squad> squads = null;

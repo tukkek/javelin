@@ -20,7 +20,7 @@ public class MonsterGovernor extends Governor {
 	@Override
 	public void manage() {
 		// hand.get(0).start();
-		for (Labor l : hand) {
+		for (Labor l : gethand()) {
 			if (Growth.class.isInstance(l)) {
 				l.start();
 				return;

@@ -111,6 +111,10 @@ public abstract class Labor implements Serializable, Cloneable {
 		return Math.round(100 * progress / cost) + "%";
 	}
 
+	/**
+	 * Starts work on this labor. Usually a upgrade doesn't have any effect
+	 * until {@link #done()} but this can overriden if necessary.
+	 */
 	public void start() {
 		town.governor.addtoqueue(this);
 		town.governor.removefromhand(this);

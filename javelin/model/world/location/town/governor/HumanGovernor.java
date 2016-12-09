@@ -22,7 +22,7 @@ public class HumanGovernor extends Governor {
 
 	@Override
 	public void manage() {
-		ArrayList<Labor> hand = new ArrayList<Labor>(this.hand);
+		ArrayList<Labor> hand = gethand();
 		Collections.shuffle(hand);
 		hand.sort(new Comparator<Labor>() {
 			@Override

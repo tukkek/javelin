@@ -102,13 +102,13 @@ public abstract class Fortification extends Location {
 	 *            See {@link #maxlevel}
 	 */
 	protected void generategarrison(int minlevel, int maxlevel) {
-		int minel = leveltoel(minlevel);
-		int maxel = leveltoel(maxlevel);
 		if (neutral) {
-			targetel = RPG.r(minel, maxel);
+			updatelevel();
 			capture();
 			return;
 		}
+		int minel = leveltoel(minlevel);
+		int maxel = leveltoel(maxlevel);
 		while (garrison.isEmpty()) {
 			try {
 				int el = RPG.r(minel, maxel);
@@ -120,6 +120,10 @@ public abstract class Fortification extends Location {
 				continue;
 			}
 		}
+	}
+
+	protected void updatelevel() {
+		targetel = RPG.r(leveltoel(minlevel), leveltoel(maxlevel));
 	}
 
 	private WorldActor findclosest(Class<? extends WorldActor> type) {

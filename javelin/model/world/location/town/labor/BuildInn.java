@@ -1,15 +1,16 @@
 package javelin.model.world.location.town.labor;
 
+import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Inn;
 
 public class BuildInn extends Build {
 	public BuildInn() {
-		super("Build inn", 5, null);
+		super("Build " + Inn.LEVELS[0].toLowerCase(), Inn.LABOR[0], null);
 	}
 
 	@Override
-	public Inn getgoal() {
+	public Location getgoal() {
 		return new Inn();
 	}
 

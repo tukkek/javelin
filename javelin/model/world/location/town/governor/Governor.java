@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+import javelin.Javelin;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
@@ -75,7 +76,7 @@ public abstract class Governor implements Serializable {
 		validate(town.getdistrict());
 		if (queue.isEmpty() && !hand.isEmpty()) {
 			manage();
-			if (queue.isEmpty()) {
+			if (Javelin.DEBUG && queue.isEmpty()) {
 				throw new RuntimeException("empty queue!");
 			}
 		}

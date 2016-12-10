@@ -46,9 +46,11 @@ import tyrant.mikera.engine.RPG;
 public class Town extends Location {
 	/**
 	 * How much {@link #labor} a single work produces in one day (
-	 * {@value #DAILYLABOR}).
+	 * {@value #DAILYLABOR}). The goal here is to have a {@link Town} controlled
+	 * by a {@link HumanGovernor} be around {@link #population} 20 by the end of
+	 * 1 year.
 	 */
-	public static final float DAILYLABOR = .1f;
+	public static final float DAILYLABOR = .05f;
 	static final ArrayList<String> NAMES = new ArrayList<String>();
 	static final String[] RANKS = new String[] { "hamlet", "village", "town", "city" };
 

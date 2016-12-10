@@ -41,6 +41,8 @@ public class BuildOutpost extends Build {
 	@Override
 	protected void done(Location goal) {
 		super.done(goal);
-		Outpost.discover(goal.x, goal.y, Outpost.VISIONRANGE);
+		if (!town.ishostile()) {
+			Outpost.discover(goal.x, goal.y, Outpost.VISIONRANGE);
+		}
 	}
 }

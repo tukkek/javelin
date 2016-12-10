@@ -102,7 +102,7 @@ public class Town extends Location {
 		realm = r;
 		gossip = true;
 		discard = false;
-		vision = 2;
+		vision = getdistrict().getradius();
 	}
 
 	void checktooclose() {
@@ -211,6 +211,7 @@ public class Town extends Location {
 		Squad.active.hourselapsed += hours;
 	}
 
+	@Override
 	public District getdistrict() {
 		return new District(this);
 	}
@@ -412,6 +413,7 @@ public class Town extends Location {
 	 * @see #labor
 	 * @see TownManager
 	 */
+	@Override
 	public boolean haslabor() {
 		return false;
 	}

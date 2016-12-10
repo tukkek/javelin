@@ -8,7 +8,7 @@ import tyrant.mikera.engine.RPG;
 
 public abstract class Build extends Labor {
 	Construction site;
-	Location previous;
+	protected Location previous;
 
 	public abstract Location getgoal();
 

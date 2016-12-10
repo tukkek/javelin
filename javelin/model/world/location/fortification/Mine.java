@@ -13,11 +13,16 @@ import javelin.model.EquipmentMap;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.WorldActor;
+import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
+import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.unique.AdventurersGuild;
+import javelin.model.world.location.unique.Haxor;
 import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
+import tyrant.mikera.engine.RPG;
 
 /**
  * Found only on {@link Mountains}, mines allow a {@link Squad} to mine gold
@@ -28,15 +33,39 @@ import javelin.view.screen.town.SelectScreen;
  * @author alex
  */
 public class Mine extends Fortification {
-	static final String DESCRIPTION = "A gold mine";
-	static final Option MINEDAY = new Option("Mine for a day", 0, 'd');
-	static final Option MINEWEEK = new Option("Mine for a week", 0, 'w');
-	static final Option PLACEMINER = new Option("Assign a unit to this mine", 0, 'a');
+	static final String DESCRIPTION = "Gold mine";
+	static final Option MINEDAY = new Option("", 0, 'd');
+	static final Option MINEWEEK = new Option("", 0, 'w');
+	static final Option PLACEMINER = new Option("Assign an unit to work on this mine", 0, 'a');
 	static final Option RECALLMINER = new Option("Recall a miner", 0, 'r');
+
+	public class UpgradeMine extends BuildingUpgrade {
+		public UpgradeMine(Mine mine) {
+			super("Ruby mine", Math.max(0, 10 - mine.miners.size()), 5, mine);
+		}
+
+		@Override
+		public Location getgoal() {
+			return previous;
+		}
+
+		@Override
+		public void done(Location l) {
+			super.done();
+			Mine m = (Mine) l;
+			m.rename("Ruby mine");
+			m.minesrubies = true;
+		}
+
+		@Override
+		public boolean validate(District d) {
+			return !((Mine) previous).minesrubies;
+		}
+	}
 
 	class MineScreen extends SelectScreen {
 		MineScreen() {
-			super("You find yourself at the entrance of a mine.", null);
+			super("You find yourself at the entrance of a " + descriptionknown.toLowerCase() + ".", null);
 			stayopen = false;
 		}
 
@@ -53,12 +82,12 @@ public class Mine extends Fortification {
 		@Override
 		public boolean select(Option o) {
 			if (o == MINEDAY) {
-				Squad.active.gold += AdventurersGuild.pay(0, 1, Squad.active.members);
+				Squad.active.gold += mine(1);
 				Squad.active.hourselapsed += 24;
 				return true;
 			}
 			if (o == MINEWEEK) {
-				Squad.active.gold += AdventurersGuild.pay(0, 7, Squad.active.members);
+				Squad.active.gold += mine(7);
 				Squad.active.hourselapsed += 7 * 24;
 				return true;
 			}
@@ -82,6 +111,10 @@ public class Mine extends Fortification {
 			throw new RuntimeException(o.name + " #unknownmineoption");
 		}
 
+		public int mine(int days) {
+			return Math.round(AdventurersGuild.pay(0, days, Squad.active.members));
+		}
+
 		void assign(Combatant recruit, List<Combatant> from, List<Combatant> to, EquipmentMap fromequipment,
 				EquipmentMap toequipment) {
 			toequipment.put(recruit.id, fromequipment.get(recruit.id));
@@ -93,6 +126,8 @@ public class Mine extends Fortification {
 		@Override
 		public List<Option> getoptions() {
 			ArrayList<Option> options = new ArrayList<Option>();
+			MINEDAY.name = "Mine for a day ($" + mine(1) + ")";
+			MINEWEEK.name = "Mine for a week ($" + mine(7) + ")";
 			options.add(MINEDAY);
 			options.add(MINEWEEK);
 			if (Squad.active.members.size() > 1) {
@@ -109,7 +144,7 @@ public class Mine extends Fortification {
 			return new Comparator<Option>() {
 				@Override
 				public int compare(Option o1, Option o2) {
-					return o1.key.compareTo(o2.key);
+					return o1.name.compareTo(o2.name);
 				}
 			};
 		}
@@ -121,8 +156,10 @@ public class Mine extends Fortification {
 	}
 
 	List<Combatant> miners = new ArrayList<Combatant>();
-	float stash = 0;
+	float gold = 0;
 	EquipmentMap equipment = new EquipmentMap();
+	boolean minesrubies = false;
+	int rubies = 0;
 
 	/** Constructor. */
 	public Mine() {
@@ -157,12 +194,25 @@ public class Mine extends Fortification {
 
 	@Override
 	public void turn(long time, WorldScreen world) {
-		stash += AdventurersGuild.pay(0, 1, miners);
+		gold += AdventurersGuild.pay(0, 1, miners);
+		if (minesrubies && RPG.random() < 1 / 30f) {
+			rubies += 1;
+		}
 	}
 
 	@Override
 	public boolean hasupgraded() {
-		return stash >= 1;
+		return gold >= 1;
+	}
+
+	@Override
+	public boolean hascrafted() {
+		return rubies > 0;
+	}
+
+	@Override
+	public boolean haslabor() {
+		return !miners.isEmpty();
 	}
 
 	@Override
@@ -170,11 +220,20 @@ public class Mine extends Fortification {
 		if (!super.interact()) {
 			return false;
 		}
-		if (stash >= 1) {
-			int gold = Math.round(Math.round(Math.ceil(stash)));
-			Javelin.message("You collect $" + gold + " from the mine!", false);
-			stash = 0;
-			Squad.active.gold += gold;
+		String collected = "";
+		if (gold >= 1) {
+			int g = Math.round(Math.round(Math.ceil(gold)));
+			Squad.active.gold += g;
+			gold = 0;
+			collected += "You collect $" + SelectScreen.formatcost(g) + " from the mine!\n";
+		}
+		if (rubies > 0) {
+			collected += "You collect " + rubies + " rubies from the mine!\n";
+			Haxor.singleton.rubies += rubies;
+			rubies = 0;
+		}
+		if (!collected.isEmpty()) {
+			Javelin.message(collected, false);
 		}
 		new MineScreen().show();
 		return true;
@@ -211,5 +270,12 @@ public class Mine extends Fortification {
 		ArrayList<Combatant> combatants = new ArrayList<Combatant>(garrison);
 		combatants.addAll(miners);
 		return combatants;
+	}
+
+	@Override
+	public ArrayList<BuildingUpgrade> getupgrades() {
+		ArrayList<BuildingUpgrade> upgrades = super.getupgrades();
+		upgrades.add(new UpgradeMine(this));
+		return upgrades;
 	}
 }

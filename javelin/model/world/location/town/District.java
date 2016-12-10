@@ -1,6 +1,7 @@
 package javelin.model.world.location.town;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 
 import javelin.controller.Point;
@@ -110,7 +111,7 @@ public class District {
 	/**
 	 * @return All spots that can be built on and do not have too many neighbors
 	 *         (as to prevent the creation of "walls" {@link Squad}s will have
-	 *         trouble passing through).
+	 *         trouble passing through). This list is shuffled by default.
 	 */
 	public ArrayList<Point> findbuildingarea() {
 		ArrayList<WorldActor> actors = WorldActor.getall();
@@ -140,6 +141,7 @@ public class District {
 			}
 			free.add(p);
 		}
+		Collections.shuffle(free);
 		return free;
 	}
 

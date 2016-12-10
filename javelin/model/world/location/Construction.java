@@ -43,7 +43,8 @@ public class Construction extends Location {
 
 	@Override
 	public boolean interact() {
-		if (Javelin.prompt("This is a construction site. Progress is currently at " + progress.getprogress() + ".\n\n"
+		if (Javelin.prompt("This is a construction site, building a " + goal.toString().toLowerCase() + ".\n"//
+				+ "Progress is currently at " + progress.getprogress() + ".\n\n"
 				+ "Press c to cancel this project or any other key to leave...") == 'c') {
 			remove();
 		}

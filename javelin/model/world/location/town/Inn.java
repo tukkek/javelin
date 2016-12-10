@@ -20,33 +20,27 @@ import javelin.view.screen.town.PurchaseScreen;
  */
 public class Inn extends Fortification {
 	class UpgradeInn extends BuildingUpgrade {
-		Inn inn;
-
 		public UpgradeInn(Inn i) {
-			super(i.level + 1 == LABOR.length ? Integer.MAX_VALUE : LABOR[i.level + 1], i);
-			this.inn = i;
+			super(LEVELS[i.level + 1], LABOR[i.level + 1], 5, i);
 		}
 
 		@Override
 		public Location getgoal() {
-			return inn;
+			return previous;
 		}
 
 		@Override
-		public void done() {
-			inn.level += 1;
-			inn.description = LEVELS[inn.level];
-			inn.descriptionknown = inn.description;
-			inn.descriptionunknown = inn.description;
-			inn.minlevel += 5;
-			inn.maxlevel += 5;
-			updatelevel();
+		public void done(Location l) {
+			Inn i = (Inn) l;
+			i.level += 1;
+			i.rename(LEVELS[i.level]);
 			super.done();
 		}
 
 		@Override
 		public boolean validate(District d) {
-			return d != null && inn.level + 1 < LEVELS.length && d.town.getrank() - 1 > inn.level && super.validate(d);
+			Inn i = (Inn) previous;
+			return d != null && i.level + 1 < LEVELS.length && d.town.getrank() - 1 > i.level && super.validate(d);
 		}
 	}
 
@@ -130,7 +124,9 @@ public class Inn extends Fortification {
 	@Override
 	public ArrayList<BuildingUpgrade> getupgrades() {
 		ArrayList<BuildingUpgrade> upgrades = super.getupgrades();
-		upgrades.add(new UpgradeInn(this));
+		if (level < 2) {
+			upgrades.add(new UpgradeInn(this));
+		}
 		return upgrades;
 	}
 

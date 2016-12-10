@@ -103,7 +103,6 @@ public abstract class Fortification extends Location {
 	 */
 	protected void generategarrison(int minlevel, int maxlevel) {
 		if (neutral) {
-			updatelevel();
 			capture();
 			return;
 		}
@@ -122,7 +121,9 @@ public abstract class Fortification extends Location {
 		}
 	}
 
-	protected void updatelevel() {
+	public void raiselevel(int bonus) {
+		minlevel += bonus;
+		maxlevel += bonus;
 		targetel = RPG.r(leveltoel(minlevel), leveltoel(maxlevel));
 	}
 
@@ -200,5 +201,12 @@ public abstract class Fortification extends Location {
 		if (Preferences.DEBUGCLEARGARRISON) {
 			garrison.clear();
 		}
+	}
+
+	@Override
+	public void rename(String name) {
+		super.rename(name);
+		descriptionknown = name;
+		descriptionunknown = name;
 	}
 }

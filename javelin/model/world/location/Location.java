@@ -7,6 +7,7 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.db.Preferences;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Siege;
@@ -230,6 +231,10 @@ public abstract class Location extends WorldActor {
 		if (!ishostile()) {
 			return false;
 		}
+		if (Preferences.DEBUGCLEARGARRISON) {
+			capture();
+			return false;
+		}
 		if (headsup(garrison, toString())) {
 			throw new StartBattle(fight());
 		}
@@ -403,5 +408,13 @@ public abstract class Location extends WorldActor {
 	 */
 	public ArrayList<BuildingUpgrade> getupgrades() {
 		return new ArrayList<BuildingUpgrade>(0);
+	}
+
+	public void rename(String name) {
+		description = name;
+	}
+
+	public boolean haslabor() {
+		return false;
 	}
 }

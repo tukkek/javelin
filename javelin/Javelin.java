@@ -27,7 +27,6 @@ import javelin.controller.db.StateManager;
 import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.fight.Fight;
-import javelin.controller.fight.LairFight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.hazard.PartyHazard;
@@ -73,8 +72,7 @@ public class Javelin {
 
 	private static final String TITLE = "Javelin";
 
-	private static final Preferences RECORD =
-			Preferences.userNodeForPackage(Javelin.class);
+	private static final Preferences RECORD = Preferences.userNodeForPackage(Javelin.class);
 
 	/**
 	 * Monster descriptions, separate from {@link Monster} data to avoid
@@ -82,11 +80,9 @@ public class Javelin {
 	 * 
 	 * @see Combatant#clonedeeply()
 	 */
-	public static TreeMap<String, String> DESCRIPTIONS =
-			new TreeMap<String, String>();
+	public static TreeMap<String, String> DESCRIPTIONS = new TreeMap<String, String>();
 	/** All loaded monster mapped by challenge rating. */
-	public static TreeMap<Float, List<Monster>> MONSTERSBYCR =
-			new TreeMap<Float, List<Monster>>();
+	public static TreeMap<Float, List<Monster>> MONSTERSBYCR = new TreeMap<Float, List<Monster>>();
 	/** All loaded XML {@link Monster}s. See {@link MonsterReader}. */
 	public static List<Monster> ALLMONSTERS = new ArrayList<Monster>();
 	/** Singleton. */
@@ -244,8 +240,7 @@ public class Javelin {
 		} else {
 			throw new RuntimeException("No welcome message");
 		}
-		return "Welcome! " + flavor
-				+ "\n\n(press h at the overworld or battle screens for help)";
+		return "Welcome! " + flavor + "\n\n(press h at the overworld or battle screens for help)";
 	}
 
 	/**
@@ -257,9 +252,7 @@ public class Javelin {
 		Javelin.app.switchScreen(BattleScreen.active);
 		StateManager.clear();
 		BattleScreen.active.messagepanel.clear();
-		Game.message(
-				"You have lost all your monsters! Game over T_T\n\n" + record(),
-				Delay.NONE);
+		Game.message("You have lost all your monsters! Game over T_T\n\n" + record(), Delay.NONE);
 		while (InfoScreen.feedback() != '\n') {
 			continue;
 		}
@@ -393,8 +386,7 @@ public class Javelin {
 	 *            operation.
 	 * @return The index of the selected element or -1 if aborted.
 	 */
-	static public int choose(String output, List<?> names, boolean fullscreen,
-			boolean forceselection) {
+	static public int choose(String output, List<?> names, boolean fullscreen, boolean forceselection) {
 		if (!forceselection) {
 			output += " (q to quit)";
 		}
@@ -453,8 +445,7 @@ public class Javelin {
 	 */
 	public static KeyEvent message(String text, boolean requireenter) {
 		Game.messagepanel.clear();
-		Game.message(text + "\nPress " + (requireenter ? "ENTER" : "any key")
-				+ " to continue...", Delay.NONE);
+		Game.message(text + "\nPress " + (requireenter ? "ENTER" : "any key") + " to continue...", Delay.NONE);
 		KeyEvent input = Game.getInput();
 		while (requireenter && input.getKeyChar() != '\n') {
 			input = Game.getInput();

@@ -103,6 +103,7 @@ public abstract class Fortification extends Location {
 	 */
 	protected void generategarrison(int minlevel, int maxlevel) {
 		if (neutral) {
+			raiselevel(0);
 			capture();
 			return;
 		}

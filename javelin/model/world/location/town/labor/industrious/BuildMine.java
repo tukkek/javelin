@@ -26,7 +26,7 @@ public class BuildMine extends Build {
 
 	@Override
 	protected Point getsitelocation() {
-		ArrayList<Point> free = town.getdistrict().findbuildingarea();
+		ArrayList<Point> free = town.getdistrict().getfreespaces();
 		for (Point p : free) {
 			if (Terrain.get(p.x, p.y).equals(Terrain.MOUNTAINS)) {
 				return p;

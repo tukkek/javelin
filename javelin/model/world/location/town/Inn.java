@@ -19,6 +19,14 @@ import javelin.view.screen.town.PurchaseScreen;
  * @author alex
  */
 public class Inn extends Fortification {
+	public static final String[] LEVELS = new String[] { "Traveller's lodge", "Hotel", "Hospital" };
+	public static final String[] IMAGES = new String[] { "locationinn", "locationinnhotel", "locationinnhospital" };
+	public static final int[] LABOR = new int[] { 5, 10, 15 };
+
+	static final int RESTPERIOD = 8;
+	static final int WEEKLONGREST = 24 * 7 / RESTPERIOD;
+	static final int MAXLEVEL = LEVELS.length - 1;
+
 	class UpgradeInn extends BuildingUpgrade {
 		public UpgradeInn(Inn i) {
 			super(LEVELS[i.level + 1], LABOR[i.level + 1], 5, i);
@@ -34,22 +42,15 @@ public class Inn extends Fortification {
 			Inn i = (Inn) l;
 			i.level += 1;
 			i.rename(LEVELS[i.level]);
-			super.done();
+			super.done(l);
 		}
 
 		@Override
 		public boolean validate(District d) {
 			Inn i = (Inn) previous;
-			return d != null && i.level + 1 < LEVELS.length && d.town.getrank() - 1 > i.level && super.validate(d);
+			return d != null && i.level < MAXLEVEL && d.town.getrank() - 1 > i.level && super.validate(d);
 		}
 	}
-
-	public static final String[] LEVELS = new String[] { "Traveller's lodge", "Hotel", "Hospital" };
-	public static final String[] IMAGES = new String[] { "locationinn", "locationinnhotel", "locationinnhospital" };
-	public static final int[] LABOR = new int[] { 5, 10, 15 };
-
-	static final int RESTPERIOD = 8;
-	static final int WEEKLONGREST = 24 * 7 / RESTPERIOD;
 
 	int level = 0;
 
@@ -124,7 +125,7 @@ public class Inn extends Fortification {
 	@Override
 	public ArrayList<BuildingUpgrade> getupgrades() {
 		ArrayList<BuildingUpgrade> upgrades = super.getupgrades();
-		if (level < 2) {
+		if (level < MAXLEVEL) {
 			upgrades.add(new UpgradeInn(this));
 		}
 		return upgrades;

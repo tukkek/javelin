@@ -7,7 +7,7 @@ import javelin.model.world.location.town.District;
 import tyrant.mikera.engine.RPG;
 
 public abstract class Build extends Labor {
-	Construction site;
+	protected Construction site;
 	protected Location previous;
 
 	public abstract Location getgoal();
@@ -28,11 +28,18 @@ public abstract class Build extends Labor {
 		site.remove();
 		site.goal.setlocation(site.getlocation());
 		site.goal.place();
-		site.goal.capture();
+		if (!town.ishostile()) {
+			site.goal.capture();
+		}
+		done(site.goal);
+	}
+
+	protected void done(Location goal) {
+
 	}
 
 	protected Point getsitelocation() {
-		return RPG.pick(town.getdistrict().findbuildingarea());
+		return RPG.pick(town.getdistrict().getfreespaces());
 	}
 
 	@Override
@@ -45,7 +52,7 @@ public abstract class Build extends Labor {
 
 	@Override
 	public boolean validate(District d) {
-		return site == null ? !d.findbuildingarea().isEmpty() : d.getlocations().contains(site);
+		return site == null ? !d.getfreespaces().isEmpty() : d.getlocations().contains(site);
 	}
 
 	@Override

@@ -18,7 +18,6 @@ import javelin.model.unit.Squad;
 import javelin.model.world.Caravan;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
-import javelin.model.world.location.Lair;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.Portal;
@@ -74,7 +73,7 @@ public class FeatureGenerator {
 	private FeatureGenerator() {
 		register(Dungeon.class, new FeatureGenerationData(2f, Dungeon.STARTING, Dungeon.STARTING));
 		register(Trove.class, new FeatureGenerationData(1.5f));
-		register(Lair.class, new FeatureGenerationData());
+		// register(Lair.class, new FeatureGenerationData());
 		register(Outpost.class, new FeatureGenerationData());
 		register(Inn.class, new FeatureGenerationData());
 		register(Shrine.class, new FeatureGenerationData());

@@ -51,7 +51,7 @@ public class Mine extends Fortification {
 
 		@Override
 		public void done(Location l) {
-			super.done();
+			super.done(l);
 			Mine m = (Mine) l;
 			m.rename("Ruby mine");
 			m.minesrubies = true;
@@ -59,7 +59,7 @@ public class Mine extends Fortification {
 
 		@Override
 		public boolean validate(District d) {
-			return !((Mine) previous).minesrubies;
+			return !((Mine) previous).minesrubies && super.validate(d);
 		}
 	}
 

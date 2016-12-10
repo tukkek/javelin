@@ -46,7 +46,7 @@ public abstract class WorldActor implements Serializable {
 
 	/** Constructor. */
 	public WorldActor() {
-		registerinstance();
+		// registerinstance();
 	}
 
 	/** Permanently removes this actor from the game. */
@@ -81,6 +81,9 @@ public abstract class WorldActor implements Serializable {
 
 	/** Called during construction to setup {@link #INSTANCES}. */
 	protected void registerinstance() {
+		// if (x == -1 && !(this instanceof Squad)) {
+		// throw new RuntimeException("Impossible #actor");
+		// }
 		ArrayList<WorldActor> list = INSTANCES.get(getClass());
 		if (list == null) {
 			list = new ArrayList<WorldActor>(1);

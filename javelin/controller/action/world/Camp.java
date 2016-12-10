@@ -29,7 +29,7 @@ public class Camp extends WorldAction {
 		}
 		Town t = (Town) Squad.active.findnearest(Town.class);
 		if (t != null && t.getdistrict().getarea().contains(Squad.active.getlocation())) {
-			Javelin.message("Cannot camp inside a town's district.\nTry moving further into the wilderness.\n", false);
+			Javelin.message("Cannot camp inside a town's district!\nTry moving further into the wilderness.\n", false);
 			return;
 		}
 		Character input = Javelin.prompt(

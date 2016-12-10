@@ -113,7 +113,7 @@ public class District {
 	 *         (as to prevent the creation of "walls" {@link Squad}s will have
 	 *         trouble passing through). This list is shuffled by default.
 	 */
-	public ArrayList<Point> findbuildingarea() {
+	public ArrayList<Point> getfreespaces() {
 		ArrayList<WorldActor> actors = WorldActor.getall();
 		ArrayList<WorldActor> locations = new ArrayList<WorldActor>();
 		for (WorldActor a : actors) {

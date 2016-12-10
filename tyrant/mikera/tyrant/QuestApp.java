@@ -22,7 +22,6 @@ import java.net.URL;
 import java.util.Hashtable;
 
 import javelin.controller.fight.IncursionFight;
-import javelin.controller.fight.LairFight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Interface;
 import javelin.model.unit.Squad;
@@ -252,7 +251,7 @@ public abstract class QuestApp extends Applet implements Runnable {
 		mediaTracker.addImage(QuestApp.effects, 1);
 		mediaTracker.addImage(QuestApp.title, 1);
 		mediaTracker.addImage(QuestApp.DEFAULTTEXTURE, 1);
-		mediaTracker.addImage(LairFight.DUNGEONTEXTURE, 1);
+		// mediaTracker.addImage(LairFight.DUNGEONTEXTURE, 1);
 		mediaTracker.addImage(IncursionFight.INCURSIONTEXTURE, 1);
 
 		// create grey-filtered background tiles

@@ -91,6 +91,7 @@ public abstract class Location extends WorldActor {
 	 *            What to show otherwise.
 	 */
 	public Location(String description) {
+		super();
 		this.description = description;
 	}
 
@@ -321,12 +322,14 @@ public abstract class Location extends WorldActor {
 	 * @see Walker#distance(int, int, int, int)
 	 */
 	public boolean isnear(Class<? extends Location> targets) {
-		for (WorldActor p : getall(targets)) {
-			if (p != this && Walker.distance(x, y, p.x, p.y) <= CLOSE) {
-				return true;
-			}
-		}
-		return false;
+		WorldActor nearest = findnearest(targets);
+		return nearest != null && distance(nearest.x, nearest.y) > CLOSE;
+		// for (WorldActor p : getall(targets)) {
+		// if (p != this && Walker.distance(x, y, p.x, p.y) <= CLOSE) {
+		// return true;
+		// }
+		// }
+		// return false;
 	}
 
 	/**
@@ -384,6 +387,8 @@ public abstract class Location extends WorldActor {
 	}
 
 	/**
+	 * Note that this could return a hostile town!
+	 * 
 	 * @return A {@link Town} district this location is part of or
 	 *         <code>null</code> if it is not located inside one. If more than
 	 *         one district encompasses this location, the one with the highest

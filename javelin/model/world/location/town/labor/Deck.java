@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.expansive.BuildOutpost;
 import javelin.model.world.location.town.labor.expansive.Settler;
 import javelin.model.world.location.town.labor.industrious.BuildMine;
 
@@ -24,7 +25,7 @@ public class Deck extends ArrayList<Labor> {
 
 	static {
 		populate(DEFAULT, null, new Labor[] { new Growth(), new BuildInn() });
-		populate(new Deck(), "expansive", new Labor[] { new Settler() });
+		populate(new Deck(), "expansive", new Labor[] { new Settler(), new BuildOutpost() });
 		populate(new Deck(), "industrious", new Labor[] { new BuildMine() });
 		populate(new Deck(), "military", new Labor[] {});
 		populate(new Deck(), "magical", new Labor[] {});

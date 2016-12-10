@@ -6,7 +6,6 @@ import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Caravan;
 import javelin.model.world.WorldActor;
-import javelin.model.world.location.Lair;
 import javelin.model.world.location.Portal;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.fortification.Guardian;
@@ -24,8 +23,7 @@ import tyrant.mikera.engine.RPG;
  */
 public class Materialize extends Hax {
 	/** See {@link Hax#Hax(String, double, boolean)}. */
-	public Materialize(String name, Character keyp, double price,
-			boolean requirestargetp) {
+	public Materialize(String name, Character keyp, double price, boolean requirestargetp) {
 		super(name, keyp, price, requirestargetp);
 	}
 
@@ -36,10 +34,10 @@ public class Materialize extends Hax {
 		summonable.add(1, "Dwelling");
 		summonable.add(2, "Guardian");
 		summonable.add(3, "Inn");
-		summonable.add(4, "Lair");
-		summonable.add(5, "Merchant");
-		summonable.add(6, "Portal");
-		summonable.add(7, "Shrine");
+		// summonable.add(4, "Lair");
+		summonable.add(4, "Merchant");
+		summonable.add(5, "Portal");
+		summonable.add(6, "Shrine");
 		int choice = Javelin.choose("Materialize what", summonable, true, true);
 		WorldActor materialize;
 		if (choice == 0) {
@@ -50,18 +48,16 @@ public class Materialize extends Hax {
 			materialize = new Guardian();
 		} else if (choice == 3) {
 			materialize = new Inn();
+			// } else if (choice == 4) {
+			// materialize = new Lair();
 		} else if (choice == 4) {
-			materialize = new Lair();
-		} else if (choice == 5) {
 			materialize = new Caravan();
+		} else if (choice == 5) {
+			materialize = new Portal(Haxor.singleton, RPG.pick(WorldActor.getall(Town.class)));
 		} else if (choice == 6) {
-			materialize = new Portal(Haxor.singleton,
-					RPG.pick(WorldActor.getall(Town.class)));
-		} else if (choice == 7) {
 			materialize = new Shrine();
 		} else {
-			throw new RuntimeException(
-					"don't know what to materialize #haxorscreen");
+			throw new RuntimeException("don't know what to materialize #haxorscreen");
 		}
 		s.generate(materialize);
 		return true;

@@ -273,7 +273,7 @@ public class WorldScreen extends BattleScreen {
 			}
 		}
 		Collections.shuffle(discovered);
-		int hideperday = 2;// RPG.r(2, 3);
+		int hideperday = 2;
 		searching: while (!discovered.isEmpty()) {
 			Tile t = discovered.pop();
 			for (Location l : friendlylocations) {

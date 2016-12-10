@@ -36,13 +36,9 @@ public abstract class BuildingUpgrade extends Build {
 	}
 
 	@Override
-	public void done() {
-		super.done();
-		if (site.goal instanceof Fortification) {
-			((Fortification) site.goal).raiselevel(upgradelevel);
+	protected void done(Location goal) {
+		if (goal instanceof Fortification) {
+			((Fortification) goal).raiselevel(upgradelevel);
 		}
-		done(site.goal);
 	}
-
-	abstract protected void done(Location goal);
 }

@@ -8,7 +8,9 @@ import javelin.model.world.location.town.labor.Labor;
 import tyrant.mikera.engine.RPG;
 
 /**
- * Governor for hostile towns. Auto-manage is always on.
+ * Governor for hostile towns.
+ * 
+ * TODO here should go all the code for generating monster garissons and squads
  * 
  * @see Town#ishostile()
  * @author alex

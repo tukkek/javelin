@@ -66,4 +66,13 @@ public class Deck extends ArrayList<Labor> {
 			DECKS.put(title, d);
 		}
 	}
+
+	public static boolean isbasic(Labor card) {
+		for (Labor l : DEFAULT) {
+			if (card.getClass().equals(l.getClass())) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

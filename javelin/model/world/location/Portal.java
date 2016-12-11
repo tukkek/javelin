@@ -23,6 +23,8 @@ import tyrant.mikera.engine.RPG;
  * Portals take a {@link Squad} from a place to another. They can also be used
  * to enter {@link PlanarFight}s.
  * 
+ * TODO a portal probably is more of an actor than a location...
+ * 
  * @author alex
  */
 public class Portal extends Location {
@@ -72,6 +74,7 @@ public class Portal extends Location {
 			boolean wanderingp, boolean safep, boolean instantaneousp,
 			Long expiresatp, boolean invasionp) {
 		super(DESCRIPTION);
+		link = false;
 		from = fromp;
 		to = top;
 		Point p = null;
@@ -134,8 +137,7 @@ public class Portal extends Location {
 		Point p = new Point(t.x, t.y);
 		while (WorldActor.get(p.x, p.y) != null) {
 			p = new Point(determinedistance(t.x), determinedistance(t.y));
-			if (p.x < 0 || p.x >= World.SIZE || p.y < 0
-					|| p.y >= World.SIZE
+			if (p.x < 0 || p.x >= World.SIZE || p.y < 0 || p.y >= World.SIZE
 					|| World.seed.map[p.x][p.y].equals(Terrain.WATER)) {
 				World.retry();
 				p = new Point(t.x, t.y);

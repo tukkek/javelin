@@ -8,6 +8,7 @@ import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.WorldActor;
+import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.OrderQueue;
 import javelin.model.world.location.town.Town;
@@ -26,6 +27,7 @@ public class TownScreen extends PurchaseScreen {
 	private static final Option SETTLE = new Option("Settle worker", 0, 's');
 	final static boolean DEBUGMANAGEMENT = false;
 	static final Option RENAME = new Option("Rename town", 0, 'r');
+	private static final Option PILLAGE = new Option("Pillage", 0, 'P');
 	// private static final Option MANAGE = new ScreenOption("Manage town", 0,
 	// 'm');
 	private WorldActor entering;
@@ -101,6 +103,12 @@ public class TownScreen extends PurchaseScreen {
 		// if (o == REDRAWCARDS) {
 		// return redrawall();
 		// }
+		if (o == PILLAGE) {
+			Squad.active.gold += Fortification.getspoils(town.population);
+			town.remove();
+			stayopen = false;
+			return true;
+		}
 		stayopen = false;
 		return true;
 	}
@@ -115,7 +123,9 @@ public class TownScreen extends PurchaseScreen {
 		if (retirees.isEmpty()) {
 			return false;
 		}
-		int choice = Javelin.choose("Which member should retire and become local labor?", retirees, true, false);
+		int choice = Javelin.choose(
+				"Which member should retire and become local labor?", retirees,
+				true, false);
 		if (choice < 0) {
 			return false;
 		}
@@ -159,7 +169,8 @@ public class TownScreen extends PurchaseScreen {
 			return list;
 		}
 		if (Squad.active.resources > 0) {
-			UNLOAD.name = "Unload " + Squad.active.resources + " resources into town";
+			UNLOAD.name = "Unload " + Squad.active.resources
+					+ " resources into town";
 			list.add(UNLOAD);
 		}
 		// list.add(new RecruitScreenOption("Draft", town, 'd'));
@@ -196,6 +207,9 @@ public class TownScreen extends PurchaseScreen {
 		// REDRAWCARDS.name = "Redraw all labor options (" +
 		// town.governor.gethandsize() + " labor)";
 		list.add(RENAME);
+		PILLAGE.name = "Pillage ($" + Fortification.getspoils(town.population)
+				+ ")";
+		list.add(PILLAGE);
 		// }
 		return list;
 	}
@@ -220,7 +234,8 @@ public class TownScreen extends PurchaseScreen {
 		// }
 		// if (!town.governor.automanage || DEBUGMANAGEMENT) {
 		// }
-		return "Your squad has $" + PurchaseScreen.formatcost(Squad.active.gold);
+		return "Your squad has $"
+				+ PurchaseScreen.formatcost(Squad.active.gold);
 	}
 
 	private String showqueue(OrderQueue queue, String output) {
@@ -231,7 +246,8 @@ public class TownScreen extends PurchaseScreen {
 		for (Order i : queue.queue) {
 			output += "  - " + i.name + ", time left: ";
 			long hoursleft = i.completionat - Squad.active.hourselapsed;
-			output += hoursleft < 24 ? hoursleft + " hour(s)" : Math.round(Math.round(hoursleft / 24f)) + " day(s)";
+			output += hoursleft < 24 ? hoursleft + " hour(s)"
+					: Math.round(Math.round(hoursleft / 24f)) + " day(s)";
 			output += "\n";
 		}
 		return output.substring(0, output.length() - 1);

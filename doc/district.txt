@@ -10,6 +10,9 @@ Trait: adding a trait to a town will open up new project options, as seen below.
 
 EXPANSIVE DISTRICTS
 
+Build outpost: outposts greatly increase the vision range of your city.
+Build highway: same as build road but with greater benefits and greater labor time, requires a town or city. 
+Build road: creates a roas between two towns, improving travel time and safety along the way.
 Produce settler: reduces city population by 1 but adds a settler unit to a squad inside the district which is able to build a new town elsewhere in the world map.
 
 INDUSTRIOUS DISTRICTS

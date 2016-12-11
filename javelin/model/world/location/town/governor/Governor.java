@@ -15,6 +15,8 @@ import javelin.model.world.location.town.labor.Labor;
  * Holds the {@link Labor} options for each {@link Town} and possibly
  * auto-manages it.
  * 
+ * TODO promote specializing in one trait at a time in subclasses
+ * 
  * @author alex
  */
 public abstract class Governor implements Serializable {
@@ -178,5 +180,9 @@ public abstract class Governor implements Serializable {
 
 	public void addtoqueue(Labor l) {
 		queue.add(l);
+	}
+
+	public int queuesize() {
+		return queue.size();
 	}
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 import javelin.Javelin;
+import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.RestartWorldGeneration;
@@ -52,7 +53,17 @@ public class Town extends Location {
 	 */
 	public static final float DAILYLABOR = .05f;
 	static final ArrayList<String> NAMES = new ArrayList<String>();
-	static final String[] RANKS = new String[] { "hamlet", "village", "town", "city" };
+	static final String[] RANKS = new String[] { "hamlet", "village", "town",
+			"city" };
+
+	/**
+	 * TODO could probably use only this instead of #RANKS and #getrank()
+	 * 
+	 * @author alex
+	 */
+	public enum Rank {
+		HAMLET, VILLAGE, TOWN, CITY
+	}
 
 	static {
 		initnames();
@@ -235,7 +246,8 @@ public class Town extends Location {
 		}
 		int nevents = RPG.r(3, 7);
 		for (int i = 0; i < nevents; i++) {
-			events.add(RPG.r(1, 2) == 1 ? RPG.pick(Exhibition.SPECIALEVENTS) : new Match());
+			events.add(RPG.r(1, 2) == 1 ? RPG.pick(Exhibition.SPECIALEVENTS)
+					: new Match());
 		}
 	}
 
@@ -317,7 +329,8 @@ public class Town extends Location {
 			return Incursion.ignoreincursion(attacker);
 		}
 		if (!garrison.isEmpty()) {
-			return Incursion.fight(attacker.getel(), ChallengeRatingCalculator.calculateel(garrison));
+			return Incursion.fight(attacker.getel(),
+					ChallengeRatingCalculator.calculateel(garrison));
 		}
 		// look for sleeping defense Squad
 		for (int x = this.x - 1; x <= this.x + 1; x++) {
@@ -325,7 +338,8 @@ public class Town extends Location {
 				Squad s = (Squad) WorldActor.get(x, y, Squad.class);
 				if (s != null) {
 					s.destroy(attacker);
-					throw new RuntimeException("destroy is supposed to throw exception #town");
+					throw new RuntimeException(
+							"destroy is supposed to throw exception #town");
 				}
 			}
 		}
@@ -417,7 +431,7 @@ public class Town extends Location {
 	 */
 	@Override
 	public boolean haslabor() {
-		return false;
+		return !ishostile() && governor.queuesize() > 1;
 	}
 
 	@Override
@@ -466,7 +480,7 @@ public class Town extends Location {
 	 * towns.
 	 */
 	public void populategarisson() {
-		Dwelling d = (Dwelling) findnearest(Dwelling.class);
+		Dwelling d = (Dwelling) getnearest(Dwelling.class);
 		garrison.add(new Combatant(d.dweller.source.clone(), true));
 		governor = new MonsterGovernor(this);
 	}
@@ -478,5 +492,9 @@ public class Town extends Location {
 			towns.add((Town) a);
 		}
 		return towns;
+	}
+
+	public int distanceinsteps(Point p) {
+		return distanceinsteps(p.x, p.y);
 	}
 }

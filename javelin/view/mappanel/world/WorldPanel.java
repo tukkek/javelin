@@ -15,10 +15,8 @@ import javelin.view.mappanel.Tile;
 
 public class WorldPanel extends MapPanel {
 
-	static final HashMap<Point, WorldActor> ACTORS =
-			new HashMap<Point, WorldActor>();
-	public static final HashMap<Point, Location> DESTINATIONS =
-			new HashMap<Point, Location>();
+	static final HashMap<Point, WorldActor> ACTORS = new HashMap<Point, WorldActor>();
+	public static final HashMap<Point, Location> DESTINATIONS = new HashMap<Point, Location>();
 
 	public WorldPanel() {
 		super(World.seed.map.length, World.seed.map[0].length,
@@ -55,7 +53,7 @@ public class WorldPanel extends MapPanel {
 				continue;
 			}
 			Location l = (Location) a;
-			if (!l.discard) {
+			if (l.link) {
 				DESTINATIONS.put(new Point(l.x, l.y), l);
 			}
 		}

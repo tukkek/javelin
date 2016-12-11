@@ -108,6 +108,7 @@ public class Dungeon extends Location {
 	public Dungeon() {
 		super("A dungeon");
 		sacrificeable = true;
+		link = false;
 	}
 
 	@Override

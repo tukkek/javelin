@@ -23,7 +23,15 @@ public class MonsterGovernor extends Governor {
 	@Override
 	public void manage() {
 		System.out.println("implement mosnter manager!"); // TODO
-		ArrayList<Labor> hand = gethand();
+		ArrayList<Labor> hand = new ArrayList<Labor>();
+		for (Labor l : gethand()) {
+			if (l.automatic) {
+				hand.add(l);
+			}
+		}
+		if (hand.isEmpty()) {
+			hand.add(new Growth().generate(town));
+		}
 		for (Labor l : hand) {
 			if (Growth.class.isInstance(l)) {
 				l.start();

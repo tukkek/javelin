@@ -90,25 +90,27 @@ public abstract class Labor implements Serializable, Cloneable {
 
 	@Override
 	public int hashCode() {
-		return name.hashCode();
+		return getClass().hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		Labor r2 = (Labor) obj;
-		return name.equals(r2.name);
+		return getClass().equals(obj.getClass());
 	}
 
 	public void work(float step) {
 		progress += step;
 		if (progress >= cost) {
 			done();
-			town.governor.removefromqueue(this);
+			cancel();
 		}
 	}
 
-	public String getprogress() {
-		return Math.round(100 * progress / cost) + "%";
+	/**
+	 * @return A percentage value from 0 to 100.
+	 */
+	public int getprogress() {
+		return Math.round(100 * progress / cost);
 	}
 
 	/**

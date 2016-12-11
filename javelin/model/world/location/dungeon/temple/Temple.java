@@ -119,6 +119,7 @@ public abstract class Temple extends UniqueLocation {
 		this.el = leveltoel(level);
 		relic = relicp;
 		fluff = fluffp;
+		link = true;
 		for (int i = 0; i < DEPTH; i++) {
 			floors.add(new TempleDungeon(this, i == DEPTH - 1));
 		}

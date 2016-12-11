@@ -43,17 +43,22 @@ public class Resource extends Location {
 	static {
 		RESOURCES.put(Terrain.WATER, new ResourceType("Fish", 5, "fishing"));
 		RESOURCES.put(Terrain.FOREST, new ResourceType("Fruits", 5, "picking"));
-		RESOURCES.put(Terrain.PLAIN, new ResourceType("Grains", 15, "harvesting"));
-		RESOURCES.put(Terrain.MARSH, new ResourceType("Mercury", 15, "extracting"));
+		RESOURCES.put(Terrain.PLAIN,
+				new ResourceType("Grains", 15, "harvesting"));
+		RESOURCES.put(Terrain.MARSH,
+				new ResourceType("Mercury", 15, "extracting"));
 		RESOURCES.put(Terrain.HILL, new ResourceType("Stone", 15, "quarrying"));
-		RESOURCES.put(Terrain.DESERT, new ResourceType("Gems", 30, "collecting"));
-		RESOURCES.put(Terrain.MOUNTAINS, new ResourceType("Crystal", 30, "mining"));
+		RESOURCES.put(Terrain.DESERT,
+				new ResourceType("Gems", 30, "collecting"));
+		RESOURCES.put(Terrain.MOUNTAINS,
+				new ResourceType("Crystal", 30, "mining"));
 	}
 
 	/** Constructor. */
 	public Resource() {
 		super(null);
 		vision = 0;
+		link = false;
 	}
 
 	@Override
@@ -80,7 +85,8 @@ public class Resource extends Location {
 
 	@Override
 	public Image getimage() {
-		return Images.getImage("locationresource" + gettype().name.toLowerCase());
+		return Images
+				.getImage("locationresource" + gettype().name.toLowerCase());
 	}
 
 	@Override
@@ -93,9 +99,11 @@ public class Resource extends Location {
 		}
 		int gold = getspoils();
 		if (totalsize == 0) {
-			Character input = Javelin.prompt("Your current party members can't harvest this resource.\n"
-					+ "Do you want to plunder it instead for $" + gold + "?\n\n"
-					+ "Press p to plunder or any other key to cancel...");
+			Character input = Javelin
+					.prompt("Your current party members can't harvest this resource.\n"
+							+ "Do you want to plunder it instead for $" + gold
+							+ "?\n\n"
+							+ "Press p to plunder or any other key to cancel...");
 			if (input == 'p') {
 				plunder(gold);
 			}
@@ -105,9 +113,11 @@ public class Resource extends Location {
 		float time = Math.round(type.amount / totalsize);
 		int rounded = Math.round(Math.round(Math.ceil(time)));
 		Character input = Javelin
-				.prompt("With your current party, gathering this resource will take " + rounded + " day(s).\n\n" //
+				.prompt("With your current party, gathering this resource will take "
+						+ rounded + " day(s).\n\n" //
 						+ "Press s to start " + type.action + "\n"//
-						+ "Press p to immediately plunder resource for $" + gold + "\n" + //
+						+ "Press p to immediately plunder resource for $" + gold
+						+ "\n" + //
 						"Press any other key to leave...");
 		if (input == 'p') {
 			plunder(gold);
@@ -117,7 +127,8 @@ public class Resource extends Location {
 			Javelin.message(result, false);
 			Squad.active.hourselapsed += time * 24;
 			remove();
-			Squad.active.resources += Math.round(type.amount * 2 * Town.DAILYLABOR);
+			Squad.active.resources += Math
+					.round(type.amount * 2 * Town.DAILYLABOR);
 		}
 		return true;
 	}

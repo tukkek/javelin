@@ -262,7 +262,7 @@ public abstract class WorldActor implements Serializable {
 		return Math.abs(x - active.x) <= 1 && Math.abs(y - active.y) <= 1;
 	}
 
-	public WorldActor findnearest(Class<? extends Location> targets) {
+	public WorldActor getnearest(Class<? extends Location> targets) {
 		WorldActor nearest = null;
 		for (WorldActor p : getall(targets)) {
 			if (p == this) {

@@ -27,7 +27,7 @@ public class Camp extends WorldAction {
 		if (Dungeon.active != null) {
 			throw new RepeatTurn();
 		}
-		Town t = (Town) Squad.active.findnearest(Town.class);
+		Town t = (Town) Squad.active.getnearest(Town.class);
 		if (t != null && t.getdistrict().getarea().contains(Squad.active.getlocation())) {
 			Javelin.message("Cannot camp inside a town's district!\nTry moving further into the wilderness.\n", false);
 			return;

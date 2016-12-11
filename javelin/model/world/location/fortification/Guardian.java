@@ -29,6 +29,7 @@ public class Guardian extends Fortification {
 		descriptionknown = "A guardian (" + loot.toString().toLowerCase() + ")";
 		descriptionunknown = "A guardian";
 		discard = true;
+		link = false;
 		vision = 0;
 	}
 

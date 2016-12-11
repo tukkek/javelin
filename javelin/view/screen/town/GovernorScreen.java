@@ -69,7 +69,8 @@ public class GovernorScreen extends ScreenOption {
 
 		@Override
 		public void printoptions(List<Option> options) {
-			text = String.format(TEMPLATE, printcityinfo(t), printcurrent(t.governor.getqueue())) + "\n";
+			text = String.format(TEMPLATE, printcityinfo(t),
+					printcurrent(t.governor.getqueue())) + "\n";
 			if (town.governor.gethand().isEmpty()) {
 				text += "  (no labor projects available right now)\n";
 			} else {
@@ -107,7 +108,7 @@ public class GovernorScreen extends ScreenOption {
 			output += "  (no projects being worked on right now)\n";
 		} else {
 			for (Labor l : queue) {
-				output += "  " + l.name + " (" + l.getprogress() + ")\n";
+				output += "  " + l.name + " (" + l.getprogress() + "%)\n";
 			}
 		}
 		return output;
@@ -115,7 +116,8 @@ public class GovernorScreen extends ScreenOption {
 
 	public static String printcityinfo(Town t) {
 		String info = "\n\nCity information for " + t.description + ":";
-		info += "\n  Population: " + t.population + " (" + t.getranktitle() + ")";
+		info += "\n  Population: " + t.population + " (" + t.getranktitle()
+				+ ")";
 		info += "\n  Traits: ";
 		if (t.traits.isEmpty()) {
 			info += "none.";

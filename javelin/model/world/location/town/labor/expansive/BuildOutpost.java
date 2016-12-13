@@ -20,7 +20,11 @@ public class BuildOutpost extends Build {
 
 	@Override
 	public boolean validate(District d) {
-		if (site == null && d.getlocationtype(Outpost.class).size() >= d.town.getrank()) {
+		if (site != null) {
+			return true;
+		}
+		if (site == null && d.getlocationtype(Outpost.class).size() >= d.town
+				.getrank()) {
 			return false;
 		}
 		return super.validate(d) && getsitelocation() != null;

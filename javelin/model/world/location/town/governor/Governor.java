@@ -10,6 +10,7 @@ import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Deck;
 import javelin.model.world.location.town.labor.Labor;
+import tyrant.mikera.engine.RPG;
 
 /**
  * Holds the {@link Labor} options for each {@link Town} and possibly
@@ -31,7 +32,7 @@ public abstract class Governor implements Serializable {
 	// /** <code>true</code> to draw and use cards automatically. */
 	// public boolean automanage = true;
 	/** Current labor. */
-	private ArrayList<Labor> queue = new ArrayList<Labor>(0);
+	private ArrayList<Labor> projects = new ArrayList<Labor>(0);
 	private ArrayList<Labor> hand = new ArrayList<Labor>(STARTINGHAND);
 
 	final Town town;
@@ -54,7 +55,7 @@ public abstract class Governor implements Serializable {
 		District d = town.getdistrict();
 		for (Labor r : Deck.generate(town)) {
 			r = r.generate(town);
-			if (!hand.contains(r) && !queue.contains(r) && r.validate(d)) {
+			if (!hand.contains(r) && !projects.contains(r) && r.validate(d)) {
 				hand.add(r);
 				return true;
 			}
@@ -63,29 +64,29 @@ public abstract class Governor implements Serializable {
 	}
 
 	/**
-	 * Processes the current {@link #queue}.
+	 * Processes the current {@link #projects}.
 	 * 
 	 * @param labor
-	 *            Labor to be distributed among the {@link #queue}.
+	 *            Labor to be distributed among the {@link #projects}.
 	 * 
-	 * @return <code>false</code> if there is no item in the queue.
+	 * @return <code>false</code> if there is no current project.
 	 */
 	public void work(float labor) {
-		float step = labor / queue.size();
-		for (Labor l : new ArrayList<Labor>(queue)) {
+		float step = labor / projects.size();
+		for (Labor l : new ArrayList<Labor>(projects)) {
 			l.work(step);
 		}
 		validate(town.getdistrict());
-		if (queue.isEmpty() && !hand.isEmpty()) {
+		if (projects.isEmpty() && !hand.isEmpty()) {
 			manage();
-			if (Javelin.DEBUG && queue.isEmpty()) {
-				throw new RuntimeException("empty queue!");
+			if (Javelin.DEBUG && projects.isEmpty()) {
+				throw new RuntimeException("empty project list!");
 			}
 		}
 	}
 
 	/**
-	 * Selects next task for {@link #queue}.
+	 * Selects next task for {@link #projects}.
 	 */
 	public abstract void manage();
 
@@ -101,7 +102,7 @@ public abstract class Governor implements Serializable {
 	}
 
 	public int gethandsize() {
-		return town.getrank() + 2;
+		return town.getrank() + (Javelin.DEBUG ? 3 : 2);
 	}
 
 	// public String printqueue() {
@@ -135,9 +136,9 @@ public abstract class Governor implements Serializable {
 				hand.remove(l);
 			}
 		}
-		for (Labor l : new ArrayList<Labor>(queue)) {
+		for (Labor l : new ArrayList<Labor>(projects)) {
 			if (l.progress >= l.cost || !l.validate(d)) {
-				queue.remove(l);
+				projects.remove(l);
 			}
 		}
 		redraw();
@@ -165,24 +166,61 @@ public abstract class Governor implements Serializable {
 		return hand;
 	}
 
-	public ArrayList<Labor> getqueue() {
-		queue.sort(SORTYBYNAME);
-		return queue;
+	public ArrayList<Labor> getprojects() {
+		projects.sort(SORTYBYNAME);
+		return projects;
 	}
 
-	public void removefromqueue(Labor labor) {
-		queue.remove(labor);
+	public void removeproject(Labor labor) {
+		projects.remove(labor);
 	}
 
 	public void removefromhand(Labor l) {
 		hand.remove(l);
 	}
 
-	public void addtoqueue(Labor l) {
-		queue.add(l);
+	public void addproject(Labor l) {
+		projects.add(l);
 	}
 
-	public int queuesize() {
-		return queue.size();
+	public int getprojectssize() {
+		return projects.size();
+	}
+
+	/**
+	 * Pretty weird, somewhat lazy but very random normal algorithm that allows
+	 * a computer player to select {@link Labor} with a higher chance if they
+	 * are cheaper.
+	 * 
+	 * @return <code>null</code> if there are no option, otherwise a labor card.
+	 */
+	static protected Labor pick(ArrayList<Labor> cards) {
+		if (cards.isEmpty()) {
+			return null;
+		}
+		if (cards.size() == 1) {
+			return cards.get(0);
+		}
+		float total = 0;
+		for (Labor l : cards) {
+			total += l.cost;
+		}
+		float[] chances = new float[cards.size()];
+		for (int i = 0; i < cards.size(); i++) {
+			/*
+			 * inverted cost-chance array: 0 cost means 100% chance, total cost
+			 * means 0% chance. Minimum of 10% to prevent potential infinite
+			 * loop edge cases.
+			 */
+			chances[i] = Math.max(.1f, (total - cards.get(i).cost) / total);
+		}
+		Labor selected = null;
+		while (selected == null) {
+			selected = RPG.pick(cards);// pick random card
+			if (RPG.random() > chances[cards.indexOf(selected)]) {
+				selected = null; // chance roll failed
+			}
+		}
+		return selected;
 	}
 }

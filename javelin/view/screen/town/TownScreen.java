@@ -12,8 +12,10 @@ import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.OrderQueue;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.Town.Rank;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.Option;
+import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.option.ScreenOption;
 import javelin.view.screen.town.option.TournamentScreenOption;
 
@@ -206,10 +208,12 @@ public class TownScreen extends PurchaseScreen {
 		// list.add(REDRAWCARDS);
 		// REDRAWCARDS.name = "Redraw all labor options (" +
 		// town.governor.gethandsize() + " labor)";
-		list.add(RENAME);
-		PILLAGE.name = "Pillage ($" + Fortification.getspoils(town.population)
-				+ ")";
-		list.add(PILLAGE);
+		if (town.getrank() - 1 < Rank.CITY.ordinal()) {
+			list.add(RENAME);
+			PILLAGE.name = "Pillage ($" + ShoppingScreen.formatcost(
+					Fortification.getspoils(town.population - 1)) + ")";
+			list.add(PILLAGE);
+		}
 		// }
 		return list;
 	}

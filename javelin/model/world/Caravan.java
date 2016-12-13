@@ -14,6 +14,7 @@ import javelin.model.item.Key;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.Growth;
 import javelin.view.Images;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.shopping.MerchantScreen;
@@ -58,8 +59,8 @@ public class Caravan extends WorldActor {
 				inventory.add(i);
 			}
 		}
-		int withartifacts =
-				inventory.size() + RPG.r(MINARTIFACTS, MAXARTIFACTS);
+		int withartifacts = inventory.size()
+				+ RPG.r(MINARTIFACTS, MAXARTIFACTS);
 		while (inventory.size() < withartifacts) {
 			Item i = RPG.pick(Item.ARTIFACT);
 			inventory.add(i);
@@ -114,7 +115,8 @@ public class Caravan extends WorldActor {
 		if (x == tox && y == toy) {
 			if (here instanceof Town) {
 				Town town = (Town) here;
-				if (town.garrison.isEmpty()) {
+				if (town.garrison.isEmpty()
+						&& town.population < Growth.MAXPOPULATION) {
 					town.population += 1;
 					Game.messagepanel.clear();
 					Game.message(

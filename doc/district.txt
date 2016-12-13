@@ -4,17 +4,28 @@ Once a structure starts building, it will be placed in the district's area as a 
 
 Note that some of the labor options described below are not actual structures (like Grow and Produce settler) and hence have no "construction site" associated with them.
 
+ALL DISTRICTS
+
 Build traveller's lodge: a place to rest and recover for a small fee, can be upgraded to hotel (requires village) and hospital (requires town).
+
 Growth: grows the city population by 1, resulting in higher labor throughput and possibly increasing the district size, up to "city" size.
+
+Redraw: discards all available projects and redraws new options (doesn't affect ongoing projects).
+
 Trait: adding a trait to a town will open up new project options, as seen below.
 
 EXPANSIVE DISTRICTS
 
 Build outpost: outposts greatly increase the vision range of your city.
+
 Build highway: same as build road but with greater benefits and greater labor time, requires a town or city. 
+
 Build road: creates a roas between two towns, improving travel time and safety along the way.
+
 Produce settler: reduces city population by 1 but adds a settler unit to a squad inside the district which is able to build a new town elsewhere in the world map.
 
 INDUSTRIOUS DISTRICTS
 
 Build mine: a mine allows you to mine gold and can be upgraded to automatically mine rubies.
+
+Deforestate: converts a forest tile in the district into 50% extra labor, automatically adds a Growth project if there isn't another project to benefit from this.

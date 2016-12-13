@@ -21,6 +21,14 @@ import javelin.model.world.location.town.labor.Labor;
  * @author alex
  */
 public class BuildRoad extends Labor {
+	/**
+	 * To prevent too lengthy searches since the algorhitm is currently
+	 * unoptimized.
+	 * 
+	 * TODO
+	 */
+	static final int MAXSEARCHDEPTH = 9;
+
 	public class PathSearch {
 		Point from;
 		Town to;
@@ -72,6 +80,9 @@ public class BuildRoad extends Labor {
 			}
 			if (p.equals(to.getlocation())) {
 				result = partialpath;
+				return;
+			}
+			if (partialpath.size() > MAXSEARCHDEPTH) {
 				return;
 			}
 			if (p != from) {
@@ -203,10 +214,10 @@ public class BuildRoad extends Labor {
 
 	@Override
 	public boolean validate(District d) {
-		// if (target != null) {
-		// return false;// TODO
-		// }
-		for (Labor l : d.town.governor.getqueue()) {
+		if (town.population * 100 < cost) {
+			return false;
+		}
+		for (Labor l : d.town.governor.getprojects()) {
 			BuildRoad road = l != this && l instanceof BuildRoad ? (BuildRoad) l
 					: null;
 			if (road != null && road.target == target) {

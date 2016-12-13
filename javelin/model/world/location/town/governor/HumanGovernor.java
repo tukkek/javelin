@@ -17,7 +17,7 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class HumanGovernor extends Governor {
-	Comparator<Labor> SORTBYCOST = new Comparator<Labor>() {
+	static final Comparator<Labor> SORTBYCOST = new Comparator<Labor>() {
 		@Override
 		public int compare(Labor o1, Labor o2) {
 			return o1.cost - o2.cost;
@@ -38,9 +38,8 @@ public class HumanGovernor extends Governor {
 			}
 		}
 		if (hand.isEmpty()) {
-			if (Javelin.DEBUG) {
-				throw new RuntimeException("Empty hand! #humangovernor");
-			}
+			hand.clear();
+			redraw();
 			return;
 		}
 		Labor selected = null;
@@ -48,7 +47,13 @@ public class HumanGovernor extends Governor {
 			selected = picktrait(hand);
 		}
 		if (selected == null) {
-			selected = normalpick(hand);
+			ArrayList<Labor> nontraits = new ArrayList<Labor>(hand);
+			for (Labor l : new ArrayList<Labor>(nontraits)) {
+				if (l instanceof Trait) {
+					nontraits.remove(l);
+				}
+			}
+			selected = pick(nontraits);
 		}
 		if (selected == null) {
 			/* no smart choice? then any choice! */
@@ -85,44 +90,5 @@ public class HumanGovernor extends Governor {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Pretty weird, somewhat lazy but very random normal pick algorithm.
-	 */
-	private Labor normalpick(ArrayList<Labor> hand) {
-		hand = new ArrayList<Labor>(hand);
-		for (Labor l : new ArrayList<Labor>(hand)) {
-			if (l instanceof Trait) {
-				hand.remove(l);
-			}
-		}
-		if (hand.isEmpty()) {
-			return null;
-		}
-		if (hand.size() == 1) {
-			return hand.get(0);
-		}
-		float total = 0;
-		for (Labor l : hand) {
-			total += l.cost;
-		}
-		float[] chances = new float[hand.size()];
-		for (int i = 0; i < hand.size(); i++) {
-			/*
-			 * inverted cost-chance array: 0 cost means 100% chance, total cost
-			 * means 0% chance. Minimum of 10% to prevent potential infinite
-			 * loop edge cases.
-			 */
-			chances[i] = Math.max(.1f, (total - hand.get(i).cost) / total);
-		}
-		Labor selected = null;
-		while (selected == null) {
-			selected = RPG.pick(hand);// pick random card
-			if (RPG.random() > chances[hand.indexOf(selected)]) {
-				selected = null; // chance roll failed
-			}
-		}
-		return selected;
 	}
 }

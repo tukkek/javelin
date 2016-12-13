@@ -118,12 +118,16 @@ public abstract class Labor implements Serializable, Cloneable {
 	 * until {@link #done()} but this can overriden if necessary.
 	 */
 	public void start() {
-		town.governor.addtoqueue(this);
+		town.governor.addproject(this);
 		town.governor.removefromhand(this);
 		work(0);
 	}
 
 	public void cancel() {
-		town.governor.removefromqueue(this);
+		town.governor.removeproject(this);
+	}
+
+	public void discard() {
+		town.governor.removefromhand(this);
 	}
 }

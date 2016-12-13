@@ -28,31 +28,51 @@ public class Camp extends WorldAction {
 			throw new RepeatTurn();
 		}
 		Town t = (Town) Squad.active.getnearest(Town.class);
-		if (t != null && t.getdistrict().getarea().contains(Squad.active.getlocation())) {
-			Javelin.message("Cannot camp inside a town's district!\nTry moving further into the wilderness.\n", false);
+		if (t != null && t.getdistrict().getarea()
+				.contains(Squad.active.getlocation())) {
+			Javelin.message(
+					"Cannot camp inside a town's district!\nTry moving further into the wilderness.\n",
+					false);
 			return;
 		}
-		Character input = Javelin.prompt(
-				"Are you sure you want to try to set up camp in this wild area?\n" + "Monsters may interrupt you.\n\n"
-						+ "Press c to camp for a day, w to camp for a week or any other key to cancel...");
-		int hours;
-		int restat;
-		if (input == 'c') {
-			hours = 8;
-			restat = 8;
-		} else if (input == 'w') {
-			hours = 24 * 7;
-			restat = 12;
-		} else {
+		String prompt = "Are you sure you want to try to set up camp in this wild area?\n"
+				+ "Monsters may interrupt you.\n\n"
+				+ "Press c to camp for a day, w to camp for a week or any other key to cancel...";
+		if (Javelin.DEBUG) {
+			prompt = "DEBUG CAMP\n" + "(d)ay (w)eek (m)onth (s)eason (y)ear?";
+		}
+		Character input = Javelin.prompt(prompt);
+		int[] restdata = processinput(input);
+		if (restdata == null) {
 			return;
 		}
+		final int hours = restdata[0];
+		final int restat = restdata[1];
 		for (int i = 0; i < hours; i++) {
 			Squad.active.hourselapsed += 1;
 			RandomEncounter.encounter(1 / WorldScreen.HOURSPERENCOUNTER);
 			if (i > 0 && (i + 1) % restat == 0) {
 				Town.rest(1, 0, Accommodations.LODGE);
-				// System.out.println("rest");
 			}
 		}
+	}
+
+	int[] processinput(Character input) {
+		if (input == 'c') {
+			return new int[] { 8, 2 };
+		}
+		if (input == 'w') {
+			return new int[] { 24 * 7, 12 };
+		}
+		if (input == 'm' && Javelin.DEBUG) {
+			return new int[] { 24 * 30, 12 };
+		}
+		if (input == 's' && Javelin.DEBUG) {
+			return new int[] { 24 * 100, 12 };
+		}
+		if (input == 'y' && Javelin.DEBUG) {
+			return new int[] { 24 * 400, 12 };
+		}
+		return null;
 	}
 }

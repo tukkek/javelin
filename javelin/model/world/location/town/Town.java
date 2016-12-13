@@ -30,6 +30,7 @@ import javelin.model.world.location.town.governor.HumanGovernor;
 import javelin.model.world.location.town.governor.MonsterGovernor;
 import javelin.model.world.location.town.labor.Deck;
 import javelin.model.world.location.town.labor.Growth;
+import javelin.model.world.location.town.labor.Labor;
 import javelin.view.Images;
 import javelin.view.screen.NamingScreen;
 import javelin.view.screen.WorldScreen;
@@ -51,10 +52,13 @@ public class Town extends Location {
 	 * by a {@link HumanGovernor} be around {@link #population} 20 by the end of
 	 * 1 year.
 	 */
-	public static final float DAILYLABOR = .05f;
+	public static final float DAILYLABOR = .075f;
+
 	static final ArrayList<String> NAMES = new ArrayList<String>();
 	static final String[] RANKS = new String[] { "hamlet", "village", "town",
 			"city" };
+	/** TODO */
+	public static final boolean DEBUGPROJECTS = false;
 
 	/**
 	 * TODO could probably use only this instead of #RANKS and #getrank()
@@ -267,6 +271,13 @@ public class Town extends Location {
 		if (Preferences.DEBUGLABOR != null && !ishostile()) {
 			governor.work(Preferences.DEBUGLABOR);
 		}
+		if (DEBUGPROJECTS) {
+			for (Labor l : governor.getprojects()) {
+				System.out.println(
+						toString() + " (day " + WorldScreen.currentday() + "): "
+								+ l.toString() + " " + l.getprogress() + "%");
+			}
+		}
 		// if (!research.queue.isEmpty() && Math
 		// .ceil(research.queue.get(0).price) <= Math.floor(labor)) {
 		// research.queue.get(0).finish(this, null);
@@ -431,7 +442,7 @@ public class Town extends Location {
 	 */
 	@Override
 	public boolean haslabor() {
-		return !ishostile() && governor.queuesize() > 1;
+		return !ishostile() && governor.getprojectssize() > 1;
 	}
 
 	@Override

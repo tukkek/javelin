@@ -126,7 +126,7 @@ public class World implements Serializable {
 			try {
 				seed = new World();
 				seed.generate();
-				placemoretowns();
+				// placemoretowns();
 				start = FeatureGenerator.SINGLETON.placestartingfeatures();
 				for (WorldActor a : WorldActor.getall(Town.class)) {
 					Town t = (Town) a;
@@ -135,8 +135,8 @@ public class World implements Serializable {
 			} catch (RestartWorldGeneration e) {
 				seed = null;
 				Town.initnames();
-				ArrayList<WorldActor> squad =
-						WorldActor.INSTANCES.get(Squad.class);
+				ArrayList<WorldActor> squad = WorldActor.INSTANCES
+						.get(Squad.class);
 				WorldActor.INSTANCES.clear();
 				WorldActor.INSTANCES.put(Squad.class, squad);
 			}

@@ -37,9 +37,10 @@ public class Camp extends WorldAction {
 		}
 		String prompt = "Are you sure you want to try to set up camp in this wild area?\n"
 				+ "Monsters may interrupt you.\n\n"
-				+ "Press c to camp for a day, w to camp for a week or any other key to cancel...";
+				+ "Press c to set camp, w to camp for a week or any other key to cancel...";
 		if (Javelin.DEBUG) {
-			prompt = "DEBUG CAMP\n" + "(d)ay (w)eek (m)onth (s)eason (y)ear?";
+			prompt = "DEBUG CAMP\n"
+					+ "(c)amp (d)ay (w)eek (m)onth (s)eason (y)ear?";
 		}
 		Character input = Javelin.prompt(prompt);
 		int[] restdata = processinput(input);
@@ -60,6 +61,9 @@ public class Camp extends WorldAction {
 	int[] processinput(Character input) {
 		if (input == 'c') {
 			return new int[] { 8, 2 };
+		}
+		if (input == 'd' && Javelin.DEBUG) {
+			return new int[] { 24, 12 };
 		}
 		if (input == 'w') {
 			return new int[] { 24 * 7, 12 };

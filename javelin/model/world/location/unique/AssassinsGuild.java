@@ -77,7 +77,7 @@ public class AssassinsGuild extends Academy {
 		public String printpriceinfo(Option o) {
 			if (o instanceof RecruitOption) {
 				RecruitOption ro = (RecruitOption) o;
-				return " (" + Math.round(ro.m.challengeRating * 100) + "XP)";
+				return " (" + Math.round(ro.m.challengerating * 100) + "XP)";
 			}
 			return super.printpriceinfo(o);
 		}
@@ -86,8 +86,8 @@ public class AssassinsGuild extends Academy {
 		public boolean select(Option op) {
 			if (op instanceof RecruitOption) {
 				RecruitOption ro = (RecruitOption) op;
-				if (Dwelling.canbuy(Math.round(ro.m.challengeRating * 100))) {
-					Dwelling.spend(ro.m.challengeRating);
+				if (Dwelling.canbuy(Math.round(ro.m.challengerating * 100))) {
+					Dwelling.spend(ro.m.challengerating);
 					Squad.active.members.add(new Combatant(ro.m.clone(), true));
 					return true;
 				} else {

@@ -87,7 +87,7 @@ public class SquadScreen extends InfoScreen {
 			Combatant weakest = squad.get(0);
 			for (int i = 1; i < squad.size(); i++) {
 				Combatant c = squad.get(i);
-				if (c.source.challengeRating < weakest.source.challengeRating) {
+				if (c.source.challengerating < weakest.source.challengerating) {
 					weakest = c;
 				}
 			}

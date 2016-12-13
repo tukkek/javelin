@@ -60,7 +60,7 @@ public class Battlefield extends UniqueLocation {
 		for (String survivor : survivors) {
 			Integer nsurvivors = this.survivors.get(survivor);
 			final Monster m = Javelin.getmonster(survivor);
-			int cost = Math.round(m.challengeRating * 100) * nsurvivors;
+			int cost = Math.round(m.challengerating * 100) * nsurvivors;
 			costs.add(cost);
 			choices.add(nsurvivors + " " + survivor + " (" + cost + "XP)");
 		}

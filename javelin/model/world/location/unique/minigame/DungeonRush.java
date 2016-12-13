@@ -115,7 +115,7 @@ public class DungeonRush extends UniqueLocation {
 		}
 		ArrayList<String> choices = new ArrayList<String>(spawners.size());
 		for (Monster m : spawners) {
-			choices.add(m + " (" + Math.round(m.challengeRating * 100) + "XP)");
+			choices.add(m + " (" + Math.round(m.challengerating * 100) + "XP)");
 		}
 		String prompt =
 				"Which creature do you wish to spawn?\n\nYou currently have "
@@ -126,8 +126,8 @@ public class DungeonRush extends UniqueLocation {
 			return true;
 		}
 		Monster recruit = spawners.get(choice);
-		if (Dwelling.canbuy(recruit.challengeRating * 100)) {
-			Dwelling.spend(recruit.challengeRating);
+		if (Dwelling.canbuy(recruit.challengerating * 100)) {
+			Dwelling.spend(recruit.challengerating);
 			Squad.active.members.add(new Combatant(recruit.clone(), true));
 		} else {
 			Javelin.message(

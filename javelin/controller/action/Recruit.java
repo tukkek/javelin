@@ -61,7 +61,7 @@ public class Recruit extends Action {
 	}
 
 	int getcost(Monster spawner) {
-		return Math.round(spawner.challengeRating * DungeonRush.PLAYERMANAMULTIPLIER);
+		return Math.round(spawner.challengerating * DungeonRush.PLAYERMANAMULTIPLIER);
 	}
 
 	Combatant hasspawner(Monster summon) {

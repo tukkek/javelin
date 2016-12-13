@@ -15,7 +15,9 @@ public class Redraw extends Labor {
 
 	@Override
 	public void done() {
-		town.governor.gethand().clear();
+		for (Labor l : town.governor.gethand()) {
+			l.discard();
+		}
 		town.governor.redraw();
 	}
 

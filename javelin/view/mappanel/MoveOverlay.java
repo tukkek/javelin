@@ -13,10 +13,10 @@ import javelin.view.mappanel.battle.overlay.BattleMover.Step;
 import javelin.view.screen.BattleScreen;
 
 public class MoveOverlay extends Overlay {
-	static final javax.swing.border.Border GREENBORDER =
-			BorderFactory.createLineBorder(Color.GREEN, 3);
-	static final javax.swing.border.Border REDBORDER =
-			BorderFactory.createLineBorder(Color.RED, 3);
+	static final javax.swing.border.Border GREENBORDER = BorderFactory
+			.createLineBorder(Color.GREEN, 3);
+	static final javax.swing.border.Border REDBORDER = BorderFactory
+			.createLineBorder(Color.RED, 3);
 
 	public BattleMover path;
 
@@ -52,6 +52,9 @@ public class MoveOverlay extends Overlay {
 	static Timer moveschedule;
 
 	synchronized public static void schedule(final MoveOverlay overlay) {
+		if (moveschedule != null) {
+			moveschedule.cancel();
+		}
 		moveschedule = new Timer();
 		moveschedule.schedule(new TimerTask() {
 			@Override

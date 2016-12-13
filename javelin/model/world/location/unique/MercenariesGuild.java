@@ -67,7 +67,7 @@ public class MercenariesGuild extends UniqueLocation {
 			}
 		}
 		int tries = 0;
-		while (c.source.challengeRating < cr) {
+		while (c.source.challengerating < cr) {
 			c.upgrade(r);
 			tries += 1;
 			if (tries >= 100) {

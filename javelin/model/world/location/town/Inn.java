@@ -10,6 +10,7 @@ import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
+import javelin.model.world.location.town.labor.Labor;
 import javelin.view.Images;
 import javelin.view.screen.town.PurchaseScreen;
 
@@ -19,8 +20,10 @@ import javelin.view.screen.town.PurchaseScreen;
  * @author alex
  */
 public class Inn extends Fortification {
-	public static final String[] LEVELS = new String[] { "Traveller's lodge", "Hotel", "Hospital" };
-	public static final String[] IMAGES = new String[] { "locationinn", "locationinnhotel", "locationinnhospital" };
+	public static final String[] LEVELS = new String[] { "Traveller's lodge",
+			"Hotel", "Hospital" };
+	public static final String[] IMAGES = new String[] { "locationinn",
+			"locationinnhotel", "locationinnhospital" };
 	public static final int[] LABOR = new int[] { 5, 10, 15 };
 
 	static final int RESTPERIOD = 8;
@@ -48,7 +51,8 @@ public class Inn extends Fortification {
 		@Override
 		public boolean validate(District d) {
 			Inn i = (Inn) previous;
-			return d != null && i.level < MAXLEVEL && d.town.getrank() - 1 > i.level && super.validate(d);
+			return d != null && i.level < MAXLEVEL
+					&& d.town.getrank() - 1 > i.level && super.validate(d);
 		}
 	}
 
@@ -72,9 +76,12 @@ public class Inn extends Fortification {
 		// if (!upgrade.validate(d)) {
 		// upgrade = null;
 		// }
-		String prompt = "Do you want to rest at the " + LEVELS[level].toLowerCase() + "?\n";
-		prompt += "\nENTER to stay ($" + price + "), w to stay for a week ($" + weekprice + ")";
-		prompt += "\np to pillage ($" + PurchaseScreen.formatcost(getspoils()) + ")";
+		String prompt = "Do you want to rest at the "
+				+ LEVELS[level].toLowerCase() + "?\n";
+		prompt += "\nENTER to stay ($" + price + "), w to stay for a week ($"
+				+ weekprice + ")";
+		prompt += "\np to pillage ($" + PurchaseScreen.formatcost(getspoils())
+				+ ")";
 		// if (upgrade != null) {
 		// int upgradeto = level + 1;
 		// prompt += " or u to upgrade to a " + LEVELS[upgradeto].toLowerCase()
@@ -123,8 +130,8 @@ public class Inn extends Fortification {
 	}
 
 	@Override
-	public ArrayList<BuildingUpgrade> getupgrades() {
-		ArrayList<BuildingUpgrade> upgrades = super.getupgrades();
+	public ArrayList<Labor> getupgrades(District d) {
+		ArrayList<Labor> upgrades = super.getupgrades(d);
 		if (level < MAXLEVEL) {
 			upgrades.add(new UpgradeInn(this));
 		}

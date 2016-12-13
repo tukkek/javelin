@@ -327,7 +327,7 @@ public class Run extends Minigame {
 		pool.sort(new Comparator<Monster>() {
 			@Override
 			public int compare(Monster o1, Monster o2) {
-				return o2.challengeRating.compareTo(o1.challengeRating);
+				return o2.challengerating.compareTo(o1.challengerating);
 			}
 		});
 		while (pool.size() > 5) {

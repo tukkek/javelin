@@ -178,7 +178,7 @@ public class Monster implements Cloneable, Serializable {
 	/** Subgroup of {@link #type}, merely descriptive. */
 	public String group;
 	/** Cache for {@link ChallengeRatingCalculator}. */
-	public Float challengeRating = null;
+	public Float challengerating = null;
 	public String type;
 	/** TODO should probably be a Combatant#name */
 	public String customName = null;

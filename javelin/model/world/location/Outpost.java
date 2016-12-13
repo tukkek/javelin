@@ -44,8 +44,10 @@ public class Outpost extends Fortification {
 		}
 		// Squad.active.view(Squad.active.perceive(false, true) + 10);
 		if (Javelin
-				.prompt("This outpost grants you vision of the surrounding area.\n" + "Do you want to pillage it for $"
-						+ getspoils() + "\n\n" + "Press p to pillage it and any other key to laave...") == 'p') {
+				.prompt("This outpost grants you vision of the surrounding area.\n"
+						+ "Do you want to pillage it for $" + getspoils()
+						+ "\n\n"
+						+ "Press p to pillage it and any other key to laave...") == 'p') {
 			pillage();
 			return true;
 		}
@@ -70,7 +72,9 @@ public class Outpost extends Fortification {
 	@Override
 	protected void generate() {
 		x = -1;
-		while (x == -1 || isnear(Outpost.class)) {
+		while (x == -1 || (getnearest(Outpost.class) != null
+				&& getnearest(Outpost.class).distance(x, y) <= VISIONRANGE
+						* 2)) {
 			generateawayfromtown();
 		}
 	}

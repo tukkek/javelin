@@ -8,7 +8,6 @@ import java.util.TreeSet;
 
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.fight.Siege;
@@ -52,7 +51,7 @@ public class Town extends Location {
 	 * by a {@link HumanGovernor} be around {@link #population} 20 by the end of
 	 * 1 year.
 	 */
-	public static final float DAILYLABOR = .075f;
+	public static final float DAILYLABOR = .2f;
 
 	static final ArrayList<String> NAMES = new ArrayList<String>();
 	static final String[] RANKS = new String[] { "hamlet", "village", "town",
@@ -340,8 +339,7 @@ public class Town extends Location {
 			return Incursion.ignoreincursion(attacker);
 		}
 		if (!garrison.isEmpty()) {
-			return Incursion.fight(attacker.getel(),
-					ChallengeRatingCalculator.calculateel(garrison));
+			return attacker.fight(garrison);
 		}
 		// look for sleeping defense Squad
 		for (int x = this.x - 1; x <= this.x + 1; x++) {
@@ -362,7 +360,7 @@ public class Town extends Location {
 		garrison.clear();
 		garrison.addAll(attacker.squad);
 		attacker.remove();
-		captureforhuman(false);
+		// captureforhuman(false);
 		realm = attacker.realm;
 		governor = new MonsterGovernor(this);
 		// governor.redraw();

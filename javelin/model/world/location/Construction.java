@@ -12,7 +12,7 @@ public class Construction extends Location {
 	private Location previous;
 
 	public Construction(Location project, Location previous, Labor progress) {
-		super("Construction site: " + project.describe().toLowerCase());
+		super("Construction site: " + project.toString().toLowerCase());
 		this.goal = project;
 		this.previous = previous;
 		this.progress = progress;

@@ -52,7 +52,7 @@ public class Summon extends Spell {
 	 */
 	static float ratechallenge(String monstername2, float chance2) {
 		Monster monster = Javelin.getmonster(monstername2);
-		return chance2 * monster.challengeRating / 5f;
+		return chance2 * monster.challengerating / 5f;
 	}
 
 	@Override
@@ -96,7 +96,7 @@ public class Summon extends Spell {
 			throw new RuntimeException("Unknown summon: " + monstername);
 		}
 		return ChallengeRatingCalculator
-				.calculatecr(c.source) >= m.challengeRating && super.apply(c);
+				.calculatecr(c.source) >= m.challengerating && super.apply(c);
 	}
 
 	@Override
@@ -107,7 +107,7 @@ public class Summon extends Spell {
 	@Override
 	public void postloadmonsters() {
 		cr = ratechallenge(monstername, chance);
-		level = Math.round(Javelin.getmonster(monstername).challengeRating / 2);
+		level = Math.round(Javelin.getmonster(monstername).challengerating / 2);
 		casterlevel = calculatecasterlevel(level);
 	}
 

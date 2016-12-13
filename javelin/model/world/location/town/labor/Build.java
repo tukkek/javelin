@@ -18,6 +18,10 @@ public abstract class Build extends Labor {
 		construction = true;
 	}
 
+	public Build(String name, int cost) {
+		this(name, cost, null);
+	}
+
 	@Override
 	protected void define() {
 		// nothing
@@ -46,13 +50,17 @@ public abstract class Build extends Labor {
 	public void start() {
 		super.start();
 		site = new Construction(getgoal(), previous, this);
+		if (town.ishostile()) {
+			site.realm = town.realm;
+		}
 		site.setlocation(getsitelocation());
 		site.place();
 	}
 
 	@Override
 	public boolean validate(District d) {
-		return site == null ? !d.getfreespaces().isEmpty() : d.getlocations().contains(site);
+		return site == null ? !d.getfreespaces().isEmpty()
+				: d.getlocations().contains(site);
 	}
 
 	@Override

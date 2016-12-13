@@ -626,7 +626,7 @@ public class Combatant implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Updates {@link Monster#challengeRating} internally.
+	 * Updates {@link Monster#challengerating} internally.
 	 * 
 	 * @param r
 	 *            Applies one {@link Upgrade} from this set to the given
@@ -660,7 +660,7 @@ public class Combatant implements Serializable, Cloneable {
 		Combatant weakest = null;
 		for (Combatant sensei : garrison) {
 			ChallengeRatingCalculator.calculatecr(sensei.source);
-			if (weakest == null || sensei.source.challengeRating < weakest.source.challengeRating) {
+			if (weakest == null || sensei.source.challengerating < weakest.source.challengerating) {
 				weakest = sensei;
 			}
 		}

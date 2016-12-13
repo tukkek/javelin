@@ -12,7 +12,7 @@ import javelin.model.world.WorldActor;
 public class FeatureGenerationData {
 	/**
 	 * When instantiated this is the relative chance of this feature being
-	 * spawned. This is later modified by
+	 * spawned. This is later modified.
 	 */
 	public float chance = 1;
 	/**

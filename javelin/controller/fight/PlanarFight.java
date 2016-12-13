@@ -111,10 +111,10 @@ class PlanarFight extends Fight {
 		opponents.sort(new Comparator<Combatant>() {
 			@Override
 			public int compare(Combatant o1, Combatant o2) {
-				if (o1.source.challengeRating == o2.source.challengeRating) {
+				if (o1.source.challengerating == o2.source.challengerating) {
 					return 0;
 				}
-				if (o1.source.challengeRating > o2.source.challengeRating) {
+				if (o1.source.challengerating > o2.source.challengerating) {
 					return 1;
 				}
 				return -1;
@@ -133,7 +133,7 @@ class PlanarFight extends Fight {
 			try {
 				if (ChallengeRatingCalculator
 						.calculateelsafe(opponents) < teamel) {
-					possiblecrs.add(m.challengeRating);
+					possiblecrs.add(m.challengerating);
 				}
 			} catch (UnbalancedTeams e) {
 				continue;

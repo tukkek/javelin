@@ -344,10 +344,10 @@ public class MonsterReader extends DefaultHandler {
 		postprocessspells();
 		int nMonsters = 0;
 		for (Monster m : Javelin.ALLMONSTERS) {
-			List<Monster> list = Javelin.MONSTERSBYCR.get(m.challengeRating);
+			List<Monster> list = Javelin.MONSTERSBYCR.get(m.challengerating);
 			if (list == null) {
 				list = new ArrayList<Monster>();
-				Javelin.MONSTERSBYCR.put(m.challengeRating, list);
+				Javelin.MONSTERSBYCR.put(m.challengerating, list);
 			}
 			list.add(m);
 		}

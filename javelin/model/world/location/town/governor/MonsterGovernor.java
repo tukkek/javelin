@@ -2,11 +2,15 @@ package javelin.model.world.location.town.governor;
 
 import java.util.ArrayList;
 
-import javelin.model.world.location.town.District;
+import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.model.unit.Combatant;
+import javelin.model.world.Incursion;
+import javelin.model.world.location.town.Dwelling.Draft;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Growth;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.Trait;
+import javelin.model.world.location.town.labor.military.BuildDwelling;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -19,36 +23,6 @@ import tyrant.mikera.engine.RPG;
  */
 public class MonsterGovernor extends Governor {
 
-	/**
-	 * TODO
-	 * 
-	 * @author alex
-	 */
-	class Draft extends Labor {
-		Draft(String name, int cost) {
-			super(name, cost);
-		}
-
-		@Override
-		protected void define() {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void done() {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public boolean validate(District d) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-	}
-
 	/** Constructor. */
 	public MonsterGovernor(Town t) {
 		super(t);
@@ -56,7 +30,6 @@ public class MonsterGovernor extends Governor {
 
 	@Override
 	public void manage() {
-		// System.out.println("implement mosnter manager!"); // TODO
 		ArrayList<Labor> hand = new ArrayList<Labor>();
 		for (Labor l : gethand()) {
 			if (l.automatic) {
@@ -80,7 +53,7 @@ public class MonsterGovernor extends Governor {
 		hand.removeAll(traits);
 		start(filter(Growth.class, hand));
 		if (!start(filter(Draft.class, hand))) {
-			// TODO// pick(filter(BuildDwelling.class, hand));
+			pick(filter(BuildDwelling.class, hand));
 		}
 		if (town.getrank() - 1 >= Town.Rank.TOWN.ordinal()
 				&& town.traits.isEmpty()) {
@@ -120,5 +93,22 @@ public class MonsterGovernor extends Governor {
 			}
 		}
 		return found;
+	}
+
+	public static void raid(Town town) {
+		// if (Preferences.DEBUGDISABLECOMBAT) {
+		// return;
+		// }
+		ArrayList<Combatant> incursion = new ArrayList<Combatant>();
+		while (town.garrison.size() > 1 && ChallengeRatingCalculator
+				.calculateel(incursion) < ChallengeRatingCalculator
+						.calculateel(town.garrison)) {
+			Combatant c = RPG.pick(town.garrison);
+			town.garrison.remove(c);
+			incursion.add(c);
+		}
+		if (!incursion.isEmpty()) {
+			Incursion.place(town.realm, town.x, town.y, incursion);
+		}
 	}
 }

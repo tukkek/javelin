@@ -103,8 +103,8 @@ public class Preferences {
 	public static Integer DEBUGLABOR;
 	/** Debug option. */
 	public static Integer DEBUGCOINS;
-	/** Debug option. */
-	public static boolean DEBUGCLEARGARRISON;
+	// /** Debug option. */
+	// public static boolean DEBUGCLEARGARRISON;
 	/** Debug option. */
 	public static String DEBUGFOE;
 	/** Debug option. */
@@ -213,13 +213,15 @@ public class Preferences {
 	public static void init() {
 		AICACHEENABLED = getString("ai.cache").equals("true");
 		MAXTEMPERATURE = getInteger("ai.maxtemperature", 0);
-		MAXMILISECONDSTHINKING = Math.round(1000 * getFloat("ai.maxsecondsthinking"));
+		MAXMILISECONDSTHINKING = Math
+				.round(1000 * getFloat("ai.maxsecondsthinking"));
 		int cpus = Runtime.getRuntime().availableProcessors();
 		MAXTHREADS = Preferences.getInteger(KEYMAXTHREADS, cpus);
 		if (MAXTHREADS > cpus) {
 			MAXTHREADS = cpus;
 		}
-		MONITORPERFORMANCE = Preferences.getString(KEYCHECKPERFORMANCE).equals("true");
+		MONITORPERFORMANCE = Preferences.getString(KEYCHECKPERFORMANCE)
+				.equals("true");
 		if (MONITORPERFORMANCE) {
 			if (ThreadManager.performance == Integer.MIN_VALUE) {
 				ThreadManager.performance = 0;
@@ -237,7 +239,8 @@ public class Preferences {
 		MESSAGEWAIT = Math.round(1000 * getFloat("ui.messagedelay"));
 		TEXTCOLOR = getString("ui.textcolor").toUpperCase();
 		try {
-			TextZone.fontcolor = (Color) Color.class.getField(Preferences.TEXTCOLOR).get(null);
+			TextZone.fontcolor = (Color) Color.class
+					.getField(Preferences.TEXTCOLOR).get(null);
 		} catch (Exception e) {
 			TextZone.fontcolor = Color.BLACK;
 		}
@@ -248,7 +251,8 @@ public class Preferences {
 		readdebug();
 	}
 
-	private static void initkeys(String propertyname, KeysScreen worldKeyScreen) {
+	private static void initkeys(String propertyname,
+			KeysScreen worldKeyScreen) {
 		String keys = getString(propertyname);
 		if (keys == null) {
 			return;
@@ -260,14 +264,22 @@ public class Preferences {
 	}
 
 	static void readdebug() {
-		DEBUGDISABLECOMBAT = getString("cheat.combat") != null && getString("cheat.combat").equals("false");
-		DEBUGESHOWMAP = javelin.controller.db.Preferences.getString("cheat.world") != null;
-		DEBUGSXP = javelin.controller.db.Preferences.getInteger("cheat.xp", null);
-		DEBUGSGOLD = javelin.controller.db.Preferences.getInteger("cheat.gold", null);
-		DEBUGRUBIES = javelin.controller.db.Preferences.getInteger("cheat.rubies", null);
-		DEBUGLABOR = javelin.controller.db.Preferences.getInteger("cheat.labor", null);
-		DEBUGCOINS = javelin.controller.db.Preferences.getInteger("cheat.coins", null);
-		DEBUGCLEARGARRISON = javelin.controller.db.Preferences.getString("cheat.garrison") != null;
+		DEBUGDISABLECOMBAT = getString("cheat.combat") != null
+				&& getString("cheat.combat").equals("false");
+		DEBUGESHOWMAP = javelin.controller.db.Preferences
+				.getString("cheat.world") != null;
+		DEBUGSXP = javelin.controller.db.Preferences.getInteger("cheat.xp",
+				null);
+		DEBUGSGOLD = javelin.controller.db.Preferences.getInteger("cheat.gold",
+				null);
+		DEBUGRUBIES = javelin.controller.db.Preferences
+				.getInteger("cheat.rubies", null);
+		DEBUGLABOR = javelin.controller.db.Preferences.getInteger("cheat.labor",
+				null);
+		DEBUGCOINS = javelin.controller.db.Preferences.getInteger("cheat.coins",
+				null);
+		// DEBUGCLEARGARRISON = javelin.controller.db.Preferences
+		// .getString("cheat.garrison") != null;
 		DEBUGFOE = getString("cheat.monster");
 		DEBUGPERIOD = getString("cheat.period");
 		DEBUGMAPTYPE = getString("cheat.map");
@@ -279,7 +291,8 @@ public class Preferences {
 	}
 
 	static void initdebug() {
-		if (DEBUGESHOWMAP && BattleScreen.active != null && BattleScreen.active.getClass().equals(WorldScreen.class)) {
+		if (DEBUGESHOWMAP && BattleScreen.active != null
+				&& BattleScreen.active.getClass().equals(WorldScreen.class)) {
 			for (int x = 0; x < World.SIZE; x++) {
 				for (int y = 0; y < World.SIZE; y++) {
 					WorldScreen.setVisible(x, y);

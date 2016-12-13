@@ -26,7 +26,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 
 /**
- * Determines a {@link Monster#challengeRating} according to the rules of Upper
+ * Determines a {@link Monster#challengerating} according to the rules of Upper
  * Krust's work, which is repackaged with permission on the 'doc' directory.
  * 
  * His reference is used to the best of my abilities but has been adapted in a
@@ -78,7 +78,7 @@ public class ChallengeRatingCalculator {
 	 * This is intended more for human-readable CR, if you need to make
 	 * calculation you might prefer {@link #calculaterawcr(Monster)}.
 	 * 
-	 * Will also update {@link Monster#challengeRating}.
+	 * Will also update {@link Monster#challengerating}.
 	 * 
 	 * @param monster
 	 *            Unit to rate.
@@ -90,7 +90,7 @@ public class ChallengeRatingCalculator {
 		float base = goldenrule >= 4 ? Math.round(goldenrule)
 				: roundfraction(goldenrule);
 		float cr = translatecr(base);
-		monster.challengeRating = cr;
+		monster.challengerating = cr;
 		log(" total: " + r[0] + " golden rule: " + goldenrule + " final: " + cr
 				+ "\n");
 		return cr;
@@ -217,15 +217,15 @@ public class ChallengeRatingCalculator {
 		float sum = 0;
 		for (final Combatant mgc : group) {
 			Monster mg = mgc.source;
-			sum += mg.challengeRating;
-			if (mg.challengeRating > highestCr) {
-				highestCr = mg.challengeRating;
+			sum += mg.challengerating;
+			if (mg.challengerating > highestCr) {
+				highestCr = mg.challengerating;
 			}
 		}
 		if (check) {
 			for (final Combatant mgc : group) {
 				Monster mg = mgc.source;
-				if (highestCr - mg.challengeRating > 18) {
+				if (highestCr - mg.challengerating > 18) {
 					throw new UnbalancedTeams();
 				}
 			}

@@ -41,7 +41,7 @@ public class ViewGladiators extends Frame {
 		for (final Combatant c : ArenaWindow.arena.gladiators) {
 			ChallengeRatingCalculator.calculatecr(c.source);
 			Button b = new Button(c.toString() + " (level "
-					+ Math.round(c.source.challengeRating) + ")");
+					+ Math.round(c.source.challengerating) + ")");
 			b.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {

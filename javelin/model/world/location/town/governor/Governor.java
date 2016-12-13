@@ -155,7 +155,7 @@ public abstract class Governor implements Serializable {
 		validate(d);
 		ArrayList<Labor> hand = new ArrayList<Labor>(this.hand);
 		for (Location l : d.getlocations()) {
-			for (Labor u : l.getupgrades()) {
+			for (Labor u : l.getupgrades(d)) {
 				u = u.generate(town);
 				if (u.validate(d)) {
 					hand.add(u);

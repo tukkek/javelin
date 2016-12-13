@@ -3,11 +3,12 @@ package javelin.model.world;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.controller.db.Preferences;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.IncursionFight;
@@ -37,8 +38,15 @@ import tyrant.mikera.engine.RPG;
  */
 public class Incursion extends WorldActor {
 	/** Move even if {@link Javelin#DEBUGDISABLECOMBAT} is enabled. */
-	private static final boolean FORCEMOVEMENT = false;
-	private static final boolean DONTSPAWN = false;
+	static final boolean FORCEMOVEMENT = false;
+	static final boolean DONTSPAWN = false;
+	static final Comparator<Combatant> SORTBYCR = new Comparator<Combatant>() {
+		@Override
+		public int compare(Combatant o1, Combatant o2) {
+			return new Float(o1.source.challengerating)
+					.compareTo(o2.source.challengerating);
+		}
+	};
 
 	/** Should probably move this to {@link Portal}? */
 	public static Integer currentel = 1;
@@ -113,12 +121,18 @@ public class Incursion extends WorldActor {
 	}
 
 	WorldActor findtarget(final WorldScreen s) {
-		final List<WorldActor> targets = WorldActor.getall();
-		for (final WorldActor a : new ArrayList<WorldActor>(targets)) {
+		ArrayList<WorldActor> targets = new ArrayList<WorldActor>();
+		for (final WorldActor a : WorldActor.getall()) {
 			if (a.impermeable || a.realm == realm
 					|| crosseswater(this, a.x, a.y)) {
-				targets.remove(a);
+				continue;
 			}
+			Location l = a instanceof Location ? (Location) a : null;
+			if (l != null && ChallengeRatingCalculator
+					.calculateel(l.garrison) > getel()) {
+				continue;
+			}
+			targets.add(a);
 		}
 		if (targets.isEmpty()) {
 			return null;
@@ -139,9 +153,12 @@ public class Incursion extends WorldActor {
 	 * @return Checks if there is any body of water between these two actors.
 	 */
 	public static boolean crosseswater(WorldActor from, int tox, int toy) {
+		if (Terrain.get(tox, toy).equals(Terrain.WATER)) {
+			return true;
+		}
 		int x = from.x;
 		int y = from.y;
-		while (x != tox && y != toy) {
+		while (x != tox || y != toy) {
 			x += decideaxismove(x, tox);
 			y += decideaxismove(y, toy);
 			if (Terrain.get(x, y).equals(Terrain.WATER)) {
@@ -160,9 +177,9 @@ public class Incursion extends WorldActor {
 
 	@Override
 	public void turn(long time, WorldScreen world) {
-		if (Preferences.DEBUGDISABLECOMBAT && !FORCEMOVEMENT) {
-			return;
-		}
+		// if (Preferences.DEBUGDISABLECOMBAT && !FORCEMOVEMENT) {
+		// return;
+		// }
 		move(world);
 	}
 
@@ -280,31 +297,45 @@ public class Incursion extends WorldActor {
 	 * @return <code>true</code> if attacker wins.
 	 */
 	public static boolean fight(int attacker, int defender) {
-		if (defender == Integer.MIN_VALUE) {
-			return true;
-		}
+		return defender == Integer.MIN_VALUE
+				|| RPG.r(1, 10) <= getchance(attacker, defender);
+	}
+
+	/**
+	 * @param defender
+	 *            Encounter level.
+	 * @param attacker
+	 *            Encounter level.
+	 * @return A chance from 1 to 9 that the attacker will win (meant to be used
+	 *         with a d10 roll).
+	 */
+	static int getchance(int attacker, int defender) {
 		int gap = defender - attacker;
-		final int chance;
 		if (gap <= -4) {
-			chance = 9;
-		} else if (gap == -3) {
-			chance = 8;
-		} else if (gap == -2) {
-			chance = 7;
-		} else if (gap == -1) {
-			chance = 6;
-		} else if (gap == 0) {
-			chance = 5;
-		} else if (gap == 1) {
-			chance = 4;
-		} else if (gap == 2) {
-			chance = 3;
-		} else if (gap == 3) {
-			chance = 2;
-		} else {
-			chance = 1;
+			return 9;
 		}
-		return RPG.r(1, 10) <= chance;
+		if (gap == -3) {
+			return 8;
+		}
+		if (gap == -2) {
+			return 7;
+		}
+		if (gap == -1) {
+			return 6;
+		}
+		if (gap == 0) {
+			return 5;
+		}
+		if (gap == 1) {
+			return 4;
+		}
+		if (gap == 2) {
+			return 3;
+		}
+		if (gap == 3) {
+			return 2;
+		}
+		return 1;
 	}
 
 	@Override
@@ -333,7 +364,7 @@ public class Incursion extends WorldActor {
 		Combatant leader = null;
 		for (Combatant c : squad) {
 			if (leader == null
-					|| c.source.challengeRating > leader.source.challengeRating) {
+					|| c.source.challengerating > leader.source.challengerating) {
 				leader = c;
 			}
 		}
@@ -345,5 +376,37 @@ public class Incursion extends WorldActor {
 		return "Enemy incursion ("
 				+ ChallengeRatingCalculator.describedifficulty(squad)
 				+ " fight):\n\n" + Squad.active.spot(squad);
+	}
+
+	/**
+	 * @return Like {@link #fight(int, int)} but also damage the survivor,
+	 *         killing off creatures according to the gravity of battle.
+	 */
+	public boolean fight(List<Combatant> defenders) {
+		int me = getel();
+		int them = ChallengeRatingCalculator.calculateel(defenders);
+		boolean win = fight(me, them);
+		if (win) {
+			damage(squad, getchance(me, them));
+		} else {
+			damage(defenders, getchance(them, me));
+		}
+		return win;
+	}
+
+	/** TODO this hasn't been properly tested yet */
+	void damage(List<Combatant> survivors, int chance) {
+		int totalcr = 0;
+		for (Combatant c : survivors) {
+			totalcr += c.source.challengerating;
+		}
+		float damage = totalcr * (1 - chance / 10f);
+		LinkedList<Combatant> wounded = new LinkedList<Combatant>(survivors);
+		Collections.sort(wounded, SORTBYCR);
+		while (damage > 0 && survivors.size() > 1) {
+			Combatant dead = wounded.pop();
+			survivors.remove(dead);
+			damage -= dead.source.challengerating;
+		}
 	}
 }

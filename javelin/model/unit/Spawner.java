@@ -27,12 +27,12 @@ public class Spawner extends Monster {
 		this.summon = summon;
 		name = "Summoner (" + summon + ")";
 		avatarfile = blueteam ? "spawnerblue" : "spawnerred";
-		challengeRating = summon.challengeRating;
+		challengerating = summon.challengerating;
 		size = Monster.HUGE;
 		group = "Spawner";
 		type = "Construct";
 		initiative = 0;
-		int cr = Math.max(1, Math.round(challengeRating) / 2);
+		int cr = Math.max(1, Math.round(challengerating) / 2);
 		ac = 10 + cr;
 		hd.add(cr, 10, 0);
 
@@ -55,7 +55,7 @@ public class Spawner extends Monster {
 		Combatant spawner = new Combatant(clone(), false);
 		spawner.ap = Float.MAX_VALUE;
 		spawner.initialap = 0;
-		spawner.hp = 10 * Math.round(challengeRating);
+		spawner.hp = 10 * Math.round(challengerating);
 		spawner.maxhp = spawner.hp;
 		return spawner;
 	}

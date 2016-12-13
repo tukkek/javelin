@@ -128,6 +128,10 @@ public class GovernorScreen extends ScreenOption {
 			}
 			info += traits.substring(0, traits.length() - 2) + ".";
 		}
+		float production = t.population * Town.DAILYLABOR;
+		info += "\n  Production: " + String
+				.format((production >= 1 ? "%1.0f" : "%.1f"), production)
+				+ " labor per day";
 		return info;
 	}
 }

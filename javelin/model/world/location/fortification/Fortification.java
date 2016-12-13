@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.db.Preferences;
 import javelin.controller.exception.GaveUpException;
 import javelin.controller.fight.RandomEncounter;
 import javelin.controller.generator.encounter.EncounterGenerator;
@@ -78,7 +77,8 @@ public abstract class Fortification extends Location {
 	 *            Maximum difficulty. Will be converted into a proper Upper
 	 *            Krust EL.
 	 */
-	public Fortification(String descriptionknown, String descriptionunknown, int minlevel, int maxlevel) {
+	public Fortification(String descriptionknown, String descriptionunknown,
+			int minlevel, int maxlevel) {
 		super(null);
 		this.minlevel = minlevel;
 		this.maxlevel = maxlevel;
@@ -131,7 +131,8 @@ public abstract class Fortification extends Location {
 	private WorldActor findclosest(Class<? extends WorldActor> type) {
 		WorldActor closest = null;
 		for (WorldActor a : WorldActor.getall(type)) {
-			if (closest == null || Walker.distance(a.x, a.y, x, y) < Walker.distance(closest.x, closest.y, x, y)) {
+			if (closest == null || Walker.distance(a.x, a.y, x, y) < Walker
+					.distance(closest.x, closest.y, x, y)) {
 				closest = a;
 			}
 		}
@@ -155,7 +156,8 @@ public abstract class Fortification extends Location {
 		if (targetel == null) {
 			return descriptionknown;
 		}
-		return Squad.active.know() - 10 >= targetel ? descriptionknown : descriptionunknown;
+		return Squad.active.know() - 10 >= targetel ? descriptionknown
+				: descriptionunknown;
 	}
 
 	/**
@@ -172,7 +174,8 @@ public abstract class Fortification extends Location {
 	 * @return See {@link #getspoils()}.
 	 */
 	static public int getspoils(Integer el) {
-		return RewardCalculator.getgold(ChallengeRatingCalculator.eltocr(el + 1)[0]);
+		return RewardCalculator
+				.getgold(ChallengeRatingCalculator.eltocr(el + 1)[0]);
 	}
 
 	/**
@@ -199,9 +202,9 @@ public abstract class Fortification extends Location {
 			generategarrison(minlevel, maxlevel);
 			generategarrison = false;
 		}
-		if (Preferences.DEBUGCLEARGARRISON) {
-			garrison.clear();
-		}
+		// if (Preferences.DEBUGCLEARGARRISON) {
+		// garrison.clear();
+		// }
 	}
 
 	@Override

@@ -92,7 +92,7 @@ public class EnterBattlefield extends WorldAction {
 	void complete(ArrayList<Combatant> team, int el) {
 		Monster weakest = null;
 		for (Combatant c : team) {
-			if (weakest == null || c.source.challengeRating < weakest.challengeRating) {
+			if (weakest == null || c.source.challengerating < weakest.challengerating) {
 				weakest = c.source;
 			}
 		}
@@ -187,7 +187,7 @@ public class EnterBattlefield extends WorldAction {
 	}
 
 	String level(Monster m) {
-		return " (level " + Math.round(m.challengeRating) + ")";
+		return " (level " + Math.round(m.challengerating) + ")";
 	}
 
 	ArrayList<Monster> getpool(int min, int max) {

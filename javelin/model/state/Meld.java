@@ -32,7 +32,7 @@ public class Meld {
 	/**
 	 * Challenge rating for the creature who died, generating this meld.
 	 * 
-	 * @see Monster#challengeRating
+	 * @see Monster#challengerating
 	 */
 	public final float cr;
 
@@ -41,7 +41,7 @@ public class Meld {
 		this.x = x;
 		this.y = y;
 		this.meldsat = meldsat;
-		cr = dead == null ? 0 : dead.challengeRating;
+		cr = dead == null ? 0 : dead.challengerating;
 	}
 
 	/**

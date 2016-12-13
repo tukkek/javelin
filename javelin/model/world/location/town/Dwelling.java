@@ -15,6 +15,8 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.fortification.Fortification;
+import javelin.model.world.location.town.governor.MonsterGovernor;
+import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
@@ -27,6 +29,47 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Dwelling extends Fortification {
+	/**
+	 * It would be cool to allow players to draft as well but this has a ton of
+	 * implications, including balance ones.
+	 * 
+	 * @author alex
+	 */
+	public class Draft extends Labor {
+		Monster recruit;
+
+		public Draft(Monster m) {
+			super("Draft " + m.toString().toLowerCase(),
+					Math.round(Math.max(1, m.challengerating)));
+			this.recruit = m.clone();
+		}
+
+		@Override
+		protected void define() {
+			// nothing
+		}
+
+		@Override
+		public void done() {
+			town.garrison.add(new Combatant(recruit, true));
+			if (ChallengeRatingCalculator
+					.calculateel(town.garrison) > town.population) {
+				MonsterGovernor.raid(town);
+			}
+		}
+
+		@Override
+		public boolean validate(District d) {
+			return true;
+		}
+
+		@Override
+		public void start() {
+			super.start();
+			volunteer = false;
+		}
+	}
+
 	public Combatant dweller;
 	/** A volunteer is willing to join a {@link Squad} permanently. */
 	public boolean volunteer = false;
@@ -49,6 +92,19 @@ public class Dwelling extends Fortification {
 
 	@Override
 	protected void generategarrison(int minel, int maxel) {
+		if (dweller == null) {
+			setdweller(RPG.pick(getcandidates(x, y)));
+		}
+		targetel = ChallengeRatingCalculator
+				.crtoel(ChallengeRatingCalculator.calculatecr(dweller.source));
+		gossip = dweller.source.intelligence > 8;
+		for (int i = 0; i < 4; i++) {
+			garrison.add(new Combatant(dweller.source.clone(), true));
+		}
+		generategarrison = false;
+	}
+
+	static public ArrayList<Monster> getcandidates(int x, int y) {
 		ArrayList<Monster> candidates = new ArrayList<Monster>();
 		monsters: for (Monster m : Javelin.ALLMONSTERS) {
 			String terrain = Terrain.get(x, y).toString();
@@ -57,17 +113,7 @@ public class Dwelling extends Fortification {
 				continue monsters;
 			}
 		}
-		if (dweller == null) {
-			setdweller(RPG.pick(candidates));
-		}
-		targetel =
-				ChallengeRatingCalculator.crtoel(ChallengeRatingCalculator
-						.calculatecr(dweller.source));
-		gossip = dweller.source.intelligence > 8;
-		for (int i = 0; i < 4; i++) {
-			garrison.add(new Combatant(dweller.source.clone(), true));
-		}
-		generategarrison = false;
+		return candidates;
 	}
 
 	void setdweller(Monster m) {
@@ -103,14 +149,14 @@ public class Dwelling extends Fortification {
 		if (!volunteer) {
 			return true;
 		}
-		int xp = Math.round(dweller.source.challengeRating * 100);
+		int xp = Math.round(dweller.source.challengerating * 100);
 		if (!canbuy(xp)) {
-			screen.print("Cannot afford a " + monstertype + " (" + xp
-					+ "XP)...");
+			screen.print(
+					"Cannot afford a " + monstertype + " (" + xp + "XP)...");
 			Game.getInput();
 			return true;
 		}
-		spend(dweller.source.challengeRating);
+		spend(dweller.source.challengerating);
 		Javelin.recruit(dweller.source.clone());
 		volunteer = false;
 		return true;
@@ -121,29 +167,22 @@ public class Dwelling extends Fortification {
 		if (volunteer) {
 			text += "A volunteer is available to join you.\n\n";
 		} else {
-			text +=
-					"No volunteer is available right now but you can still hire mercenaries.\n\n";
+			text += "No volunteer is available right now but you can still hire mercenaries.\n\n";
 		}
 		text += "What do you want to do?\n\n";
 		if (volunteer) {
-			text +=
-					"d - draft a volunteer ("
-							+ Math.round(100 * dweller.source.challengeRating)
-							+ "XP)\n";
+			text += "d - draft a volunteer ("
+					+ Math.round(100 * dweller.source.challengerating)
+					+ "XP)\n";
 		}
-		text +=
-				"h - hire a "
-						+ monstertype
-						+ " mercenary ($"
-						+ PurchaseScreen.formatcost(MercenariesGuild
-								.getfee(dweller)) + "/day)\n";
-		text +=
-				"p - pillage this dwelling ($"
-						+ PurchaseScreen.formatcost(getspoils()) + ")\n";
+		text += "h - hire a " + monstertype + " mercenary ($"
+				+ PurchaseScreen.formatcost(MercenariesGuild.getfee(dweller))
+				+ "/day)\n";
+		text += "p - pillage this dwelling ($"
+				+ PurchaseScreen.formatcost(getspoils()) + ")\n";
 		text += "q - quit\n";
-		text +=
-				"\nCurrent gold: $"
-						+ PurchaseScreen.formatcost(Squad.active.gold) + "\n";
+		text += "\nCurrent gold: $"
+				+ PurchaseScreen.formatcost(Squad.active.gold) + "\n";
 		if (volunteer) {
 			text += "Current XP: " + sumxp() + "XP\n";
 		}
@@ -204,16 +243,16 @@ public class Dwelling extends Fortification {
 				c.xp = c.xp.subtract(new BigDecimal(percapita));
 			}
 		} else {
-			ArrayList<Combatant> squad =
-					new ArrayList<Combatant>(Squad.active.members);
+			ArrayList<Combatant> squad = new ArrayList<Combatant>(
+					Squad.active.members);
 			ChallengeRatingCalculator.calculateel(squad);
 			Collections.sort(squad, new Comparator<Combatant>() {
 				@Override
 				public int compare(Combatant o1, Combatant o2) {
-					final float cr1 =
-							o2.xp.floatValue() + o2.source.challengeRating;
-					final float cr2 =
-							o1.xp.floatValue() + o1.source.challengeRating;
+					final float cr1 = o2.xp.floatValue()
+							+ o2.source.challengerating;
+					final float cr2 = o1.xp.floatValue()
+							+ o1.source.challengerating;
 					return new Float(cr1).compareTo(cr2);
 				}
 			});
@@ -226,5 +265,14 @@ public class Dwelling extends Fortification {
 				c.xp = new BigDecimal(0);
 			}
 		}
+	}
+
+	@Override
+	public ArrayList<Labor> getupgrades(District d) {
+		ArrayList<Labor> upgrades = super.getupgrades(d);
+		if (d.town.ishostile() && volunteer) {
+			upgrades.add(new Draft(dweller.source));
+		}
+		return upgrades;
 	}
 }

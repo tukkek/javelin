@@ -44,6 +44,7 @@ public abstract class Academy extends Fortification {
 		super(descriptionknown, descriptionunknown, minlevel, maxlevel);
 		upgrades = new ArrayList<Upgrade>(upgradesp);
 		sort(upgrades);
+		sacrificeable = false;
 	}
 
 	/**

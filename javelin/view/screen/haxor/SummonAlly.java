@@ -82,12 +82,12 @@ public class SummonAlly extends Hax {
 		current.sort(new Comparator<Combatant>() {
 			@Override
 			public int compare(Combatant o1, Combatant o2) {
-				return o1.source.challengeRating
-						.compareTo(o2.source.challengeRating);
+				return o1.source.challengerating
+						.compareTo(o2.source.challengerating);
 			}
 		});
 		return current.get(Math.round(Math.round(
-				Math.floor(current.size() / 2.0)))).source.challengeRating;
+				Math.floor(current.size() / 2.0)))).source.challengerating;
 	}
 
 	Float findnextlowercr(Float cr) {

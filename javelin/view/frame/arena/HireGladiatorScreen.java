@@ -111,7 +111,7 @@ public class HireGladiatorScreen extends Frame {
 
 	int getcoins(Monster m) {
 		return costmultiplier
-				* Math.round(Math.round(Math.ceil(m.challengeRating)));
+				* Math.round(Math.round(Math.ceil(m.challengerating)));
 	}
 
 	@Override

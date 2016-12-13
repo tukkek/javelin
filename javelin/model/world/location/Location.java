@@ -24,7 +24,7 @@ import javelin.model.world.WorldActor;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.labor.BuildingUpgrade;
+import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.unique.UniqueLocation;
 import javelin.view.Images;
 import javelin.view.screen.InfoScreen;
@@ -112,14 +112,15 @@ public abstract class Location extends WorldActor {
 	 *            <code>true</code> if it is allowed to place the actor on
 	 *            {@link Terrain#WATER}.
 	 */
-	static public void generate(WorldActor p, boolean allowwater) {
+	static public void generate(Location p, boolean allowwater) {
 		p.x = -1;
 		ArrayList<WorldActor> actors = WorldActor.getall();
 		actors.remove(p);
 		while (p.x == -1
 				|| (!allowwater
 						&& World.seed.map[p.x][p.y].equals(Terrain.WATER))
-				|| WorldActor.get(p.x, p.y, actors) != null || neartown(p)) {
+				|| WorldActor.get(p.x, p.y, actors) != null || neartown(p)
+				|| World.roads[p.x][p.y] || World.highways[p.x][p.y]) {
 			p.x = RPG.r(0, World.SIZE - 1);
 			p.y = RPG.r(0, World.SIZE - 1);
 			World.retry();
@@ -129,18 +130,19 @@ public abstract class Location extends WorldActor {
 	/**
 	 * @return <code>true</code> if given actor is too close to a town.
 	 */
-	static boolean neartown(WorldActor p) {
-		if (p instanceof Town) {
-			return false;
-		}
-		for (WorldActor a : Location.getall(Town.class)) {
-			Town t = (Town) a;
-			if (t.x - 1 <= p.x && p.x <= t.x + 1 && t.y - 1 <= p.y
-					&& p.y <= t.y + 1) {
-				return true;
-			}
-		}
-		return false;
+	static boolean neartown(Location p) {
+		// if (p instanceof Town) {
+		// return false;
+		// }
+		// for (WorldActor a : Location.getall(Town.class)) {
+		// Town t = (Town) a;
+		// if (t.x - 1 <= p.x && p.x <= t.x + 1 && t.y - 1 <= p.y
+		// && p.y <= t.y + 1) {
+		// return true;
+		// }
+		// }
+		// return false;
+		return p.getdistrict() != null;
 	}
 
 	@Override
@@ -195,12 +197,11 @@ public abstract class Location extends WorldActor {
 		if (impermeable || attacker.realm == realm) {
 			return Incursion.ignoreincursion(attacker);
 		}
-		int el = attacker.getel();
 		if (!garrison.isEmpty()) {
-			return Incursion.fight(el,
-					ChallengeRatingCalculator.calculateel(garrison));
+			return attacker.fight(garrison);
 		}
 		if (sacrificeable) {
+			int el = attacker.getel();
 			return Incursion.fight(el, getel(el));
 		}
 		garrison.addAll(attacker.squad);
@@ -240,7 +241,7 @@ public abstract class Location extends WorldActor {
 		if (!ishostile()) {
 			return false;
 		}
-		if (Preferences.DEBUGCLEARGARRISON) {
+		if (Preferences.DEBUGDISABLECOMBAT) {
 			capture();
 			return false;
 		}
@@ -423,10 +424,12 @@ public abstract class Location extends WorldActor {
 	/**
 	 * Should only be called from a valid {@link District}.
 	 * 
+	 * @param d
+	 * 
 	 * @return Any upgrades this location may be improved with.
 	 */
-	public ArrayList<BuildingUpgrade> getupgrades() {
-		return new ArrayList<BuildingUpgrade>(0);
+	public ArrayList<Labor> getupgrades(District d) {
+		return new ArrayList<Labor>(0);
 	}
 
 	public void rename(String name) {

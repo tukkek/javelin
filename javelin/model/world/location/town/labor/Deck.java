@@ -12,6 +12,7 @@ import javelin.model.world.location.town.labor.expansive.BuildRoad;
 import javelin.model.world.location.town.labor.expansive.Settler;
 import javelin.model.world.location.town.labor.industrious.BuildMine;
 import javelin.model.world.location.town.labor.industrious.Deforestate;
+import javelin.model.world.location.town.labor.military.BuildDwelling;
 
 /**
  * This class provides the deck-building mini-game logic for {@link Labor}
@@ -28,13 +29,13 @@ public class Deck extends ArrayList<Labor> {
 	static final Deck DEFAULT = new Deck();
 
 	static {
-		populate(DEFAULT, null,
-				new Labor[] { new Growth(), new BuildInn(), new Redraw() });
+		populate(DEFAULT, null, new Labor[] { new Growth(), new BuildInn(),
+				new Redraw(), new BuildDwelling(), });
 		populate(new Deck(), "territorial", new Labor[] { new Settler(),
 				new BuildOutpost(), new BuildRoad(), new BuildHighway() });
 		populate(new Deck(), "industrious",
 				new Labor[] { new BuildMine(), new Deforestate() });
-		populate(new Deck(), "military", new Labor[] {});
+		populate(new Deck(), "military", new Labor[] { new BuildDwelling(), });
 		populate(new Deck(), "magical", new Labor[] {});
 		populate(new Deck(), CRIMINAL, new Labor[] {});
 		populate(new Deck(), RELIGIOUS, new Labor[] {});

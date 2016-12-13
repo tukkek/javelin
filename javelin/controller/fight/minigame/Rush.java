@@ -44,7 +44,7 @@ public class Rush extends Minigame {
 			Combatant spawner = RPG.pick(state.blueTeam);
 			Combatant leader = ((Spawner) spawner.source).spawn(spawner, 0f);
 			state.blueTeam.add(leader);
-			mana -= leader.source.challengeRating
+			mana -= leader.source.challengerating
 					* DungeonRush.PLAYERMANAMULTIPLIER;
 		}
 
@@ -82,7 +82,7 @@ public class Rush extends Minigame {
 	/** Constructor.. */
 	public Rush(DungeonRush r) {
 		for (Monster spawner : r.spawners) {
-			mana += spawner.challengeRating * DungeonRush.PLAYERMANAMULTIPLIER;
+			mana += spawner.challengerating * DungeonRush.PLAYERMANAMULTIPLIER;
 		}
 		setup = new RushSetup();
 		meld = true;
@@ -104,7 +104,7 @@ public class Rush extends Minigame {
 		ArrayList<Combatant> monsters =
 				new ArrayList<Combatant>(dr.spawners.size());
 		for (Monster s : dr.spawners) {
-			s = RPG.pick(Javelin.MONSTERSBYCR.get(s.challengeRating));
+			s = RPG.pick(Javelin.MONSTERSBYCR.get(s.challengerating));
 			monsters.add(new Spawner(s, false).getcombatant());
 		}
 		return monsters;
@@ -181,8 +181,8 @@ public class Rush extends Minigame {
 				if (c.source instanceof Spawner) {
 					Spawner s = (Spawner) c.source;
 					s.mana += ellapsed;
-					if (s.mana >= s.challengeRating) {
-						s.mana -= s.challengeRating;
+					if (s.mana >= s.challengerating) {
+						s.mana -= s.challengerating;
 						if (!DungeonRush.DEBUG) {
 							state.redTeam.add(s.spawn(c, state.next.ap));
 						}

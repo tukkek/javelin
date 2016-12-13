@@ -35,7 +35,7 @@ public class SummoningCircle extends Academy {
 			float cr = RPG.pick(crs);
 			for (Upgrade u : upgrades) {
 				Summon s = (Summon) u;
-				if (Javelin.getmonster(s.monstername).challengeRating == cr) {
+				if (Javelin.getmonster(s.monstername).challengerating == cr) {
 					continue add;
 				}
 			}

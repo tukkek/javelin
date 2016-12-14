@@ -95,4 +95,12 @@ public class Deck extends ArrayList<Labor> {
 	public static int getntraits() {
 		return DECKS.size();
 	}
+
+	public static void printstats() {
+		System.out.println(Deck.getnprojects() + " district projects, "
+				+ Deck.getntraits() + " town traits");
+		if (Javelin.DEBUG) {
+			System.out.println(DECKS);
+		}
+	}
 }

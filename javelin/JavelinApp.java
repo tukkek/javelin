@@ -243,8 +243,7 @@ public class JavelinApp extends QuestApp {
 		System.out.println((locationtypes.size() - uniquelocations)
 				+ " world location types, " + uniquelocations
 				+ " unique locations");
-		System.out.println(Deck.getnprojects() + " district projects, "
-				+ Deck.getntraits() + " town traits");
+		Deck.printstats();
 		int maps = Terrain.UNDERGROUND.getmaps().size();
 		for (Terrain t : Terrain.ALL) {
 			maps += t.getmaps().size();

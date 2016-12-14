@@ -10,10 +10,12 @@ import javelin.controller.old.Game.Delay;
 import javelin.model.unit.Squad;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.town.Town;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.MoveOverlay;
 import javelin.view.mappanel.battle.BattlePanel;
+import javelin.view.mappanel.battle.overlay.BattleMover.Step;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
 import javelin.view.screen.WorldScreen;
@@ -41,8 +43,11 @@ public class WorldMouse extends Mouse {
 					interrupted = true;
 					break;
 				}
+				Step step = overlay.path.steps.get(i);
+				if (!step.safe) {
+					RandomEncounter.encounter(step.apcost);
+				}
 			}
-			RandomEncounter.encounter(overlay.path.steps.get(i).apcost);
 			BattleScreen.active.mappanel.refresh();
 			if (interrupted) {
 				Point p = overlay.path.resetlocation();
@@ -169,6 +174,10 @@ public class WorldMouse extends Mouse {
 			Game.message(target.describe(), Delay.NONE);
 			Game.messagepanel.getPanel().repaint();
 			showingdescription = true;
+			if (target instanceof Town) {
+				MapPanel.overlay = new DistrictOverlay((Town) target);
+				MapPanel.overlay.refresh(WorldScreen.active.mappanel);
+			}
 		}
 	}
 }

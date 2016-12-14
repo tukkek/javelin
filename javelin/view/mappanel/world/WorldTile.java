@@ -21,13 +21,17 @@ import javelin.view.mappanel.Tile;
 
 public class WorldTile extends Tile {
 
-	public static final HashMap<Point, Image> COASTLINES = new HashMap<Point, Image>(4);
+	public static final HashMap<Point, Image> COASTLINES = new HashMap<Point, Image>(
+			4);
 
 	static {
-		COASTLINES.put(new Point(-1, 0), Images.getImage("overlaycoastlineleft"));
-		COASTLINES.put(new Point(+1, 0), Images.getImage("overlaycoastlineright"));
+		COASTLINES.put(new Point(-1, 0),
+				Images.getImage("overlaycoastlineleft"));
+		COASTLINES.put(new Point(+1, 0),
+				Images.getImage("overlaycoastlineright"));
 		COASTLINES.put(new Point(0, -1), Images.getImage("overlaycoastlineup"));
-		COASTLINES.put(new Point(0, +1), Images.getImage("overlaycoastlinedown"));
+		COASTLINES.put(new Point(0, +1),
+				Images.getImage("overlaycoastlinedown"));
 	}
 
 	public WorldTile(int xp, int yp, WorldPanel p) {
@@ -46,7 +50,8 @@ public class WorldTile extends Tile {
 			for (final Point p : COASTLINES.keySet()) {
 				final int x = this.x + p.x;
 				final int y = this.y + p.y;
-				if (World.validatecoordinate(x, y) && !Terrain.get(x, y).equals(t)) {
+				if (World.validatecoordinate(x, y)
+						&& !Terrain.get(x, y).equals(t)) {
 					draw(g, COASTLINES.get(p));
 				}
 			}
@@ -65,10 +70,13 @@ public class WorldTile extends Tile {
 		}
 	}
 
-	static void drawactor(final Graphics g, final WorldActor a) {
+	void drawactor(final Graphics g, final WorldActor a) {
 		if (a == Squad.active) {
 			g.setColor(Color.GREEN);
 			g.fillRect(0, 0, MapPanel.tilesize, MapPanel.tilesize);
+			if (Squad.active.getdistrict() != null) {
+				DistrictOverlay.paint(this, g);
+			}
 		}
 		draw(g, a.getimage());
 		if (a.getrealmoverlay() != null) {
@@ -113,9 +121,11 @@ public class WorldTile extends Tile {
 					continue;
 				}
 				if (World.roads[tox][toy] || World.highways[tox][toy]
-						|| WorldPanel.DESTINATIONS.get(new Point(tox, toy)) != null) {
+						|| WorldPanel.DESTINATIONS
+								.get(new Point(tox, toy)) != null) {
 					any = true;
-					g.drawLine(center, center, deltax * center + center, deltay * center + center);
+					g.drawLine(center, center, deltax * center + center,
+							deltay * center + center);
 				}
 			}
 		}

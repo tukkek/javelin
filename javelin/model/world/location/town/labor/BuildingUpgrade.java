@@ -1,6 +1,7 @@
 package javelin.model.world.location.town.labor;
 
 import javelin.controller.Point;
+import javelin.model.world.WorldActor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.District;
@@ -36,7 +37,7 @@ public abstract class BuildingUpgrade extends Build {
 	}
 
 	@Override
-	protected void done(Location goal) {
+	protected void done(WorldActor goal) {
 		if (goal instanceof Fortification) {
 			((Fortification) goal).raiselevel(upgradelevel);
 		}

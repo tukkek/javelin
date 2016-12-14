@@ -13,6 +13,7 @@ public class DungeonMover extends WorldMover {
 
 	public DungeonMover(Point from, Point to) {
 		super(from, to);
+		checksafe = false;
 	}
 
 	@Override

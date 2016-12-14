@@ -14,7 +14,7 @@ public abstract class Overlay {
 
 	public void clear() {
 		MapPanel.overlay = null;
-		final Tile[][] tiles = ((MapPanel) BattleScreen.active.mappanel).tiles;
+		final Tile[][] tiles = BattleScreen.active.mappanel.tiles;
 		for (Point p : affected) {
 			tiles[p.x][p.y].repaint();
 		}
@@ -27,5 +27,11 @@ public abstract class Overlay {
 	protected void draw(Tile t, Graphics g, Image i) {
 		g.drawImage(i, 0, 0, MapPanel.tilesize, MapPanel.tilesize, null);
 		affected.add(new Point(t.x, t.y));
+	}
+
+	public void refresh(MapPanel mappanel) {
+		for (Point p : affected) {
+			mappanel.tiles[p.x][p.y].repaint();
+		}
 	}
 }

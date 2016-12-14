@@ -112,7 +112,7 @@ public abstract class Location extends WorldActor {
 	 *            <code>true</code> if it is allowed to place the actor on
 	 *            {@link Terrain#WATER}.
 	 */
-	static public void generate(Location p, boolean allowwater) {
+	static public void generate(WorldActor p, boolean allowwater) {
 		p.x = -1;
 		ArrayList<WorldActor> actors = WorldActor.getall();
 		actors.remove(p);
@@ -130,7 +130,7 @@ public abstract class Location extends WorldActor {
 	/**
 	 * @return <code>true</code> if given actor is too close to a town.
 	 */
-	static boolean neartown(Location p) {
+	static boolean neartown(WorldActor p) {
 		// if (p instanceof Town) {
 		// return false;
 		// }
@@ -387,10 +387,6 @@ public abstract class Location extends WorldActor {
 		super.place();
 	}
 
-	public int distanceinsteps(int xp, int yp) {
-		return Math.max(Math.abs(xp - x), Math.abs(yp - y));
-	}
-
 	public boolean view() {
 		return !ishostile() && vision > 0;
 	}
@@ -398,27 +394,6 @@ public abstract class Location extends WorldActor {
 	public void capture() {
 		garrison.clear();
 		realm = null; // TODO really?
-	}
-
-	/**
-	 * Note that this could return a hostile town!
-	 * 
-	 * @return A {@link Town} district this location is part of or
-	 *         <code>null</code> if it is not located inside one. If more than
-	 *         one district encompasses this location, the one with the highest
-	 *         {@link Town#population} will be returned.
-	 */
-	public District getdistrict() {
-		ArrayList<Town> towns = Town.gettowns();
-		District main = null;
-		for (Town t : towns) {
-			District d = t.getdistrict();
-			if (distanceinsteps(t.x, t.y) <= d.getradius()
-					&& (main == null || t.population > d.town.population)) {
-				main = d;
-			}
-		}
-		return main;
 	}
 
 	/**

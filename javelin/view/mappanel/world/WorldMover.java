@@ -1,13 +1,19 @@
 package javelin.view.mappanel.world;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
 import javelin.controller.Point;
 import javelin.controller.terrain.Terrain;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Squad;
+import javelin.model.world.location.town.Town;
 import javelin.view.mappanel.battle.overlay.BattleMover;
 import javelin.view.screen.WorldScreen;
 
 public class WorldMover extends BattleMover {
+	HashSet<Point> safe = Town.getdistricts();
+	protected boolean checksafe = true;
 
 	public WorldMover(Point from, Point to) {
 		super(from, to, null, null);
@@ -21,6 +27,9 @@ public class WorldMover extends BattleMover {
 
 	@Override
 	protected float getcost(boolean engaged, javelin.controller.walker.Step s) {
+		if (checksafe && safe.contains(new Point(s.x, s.y))) {
+			return 0;
+		}
 		return Squad.active.move(false, Terrain.get(s.x, s.y), s.x, s.y)
 				/ WorldScreen.HOURSPERENCOUNTER;
 	}
@@ -55,5 +64,18 @@ public class WorldMover extends BattleMover {
 	@Override
 	public Point resetlocation() {
 		return new Point(Squad.active.x, Squad.active.y);
+	}
+
+	@Override
+	public ArrayList<javelin.controller.walker.Step> walk() {
+		ArrayList<javelin.controller.walker.Step> walk = super.walk();
+		if (checksafe) {
+			for (Step s : steps) {
+				if (safe.contains(new Point(s.x, s.y))) {
+					s.safe = true;
+				}
+			}
+		}
+		return walk;
 	}
 }

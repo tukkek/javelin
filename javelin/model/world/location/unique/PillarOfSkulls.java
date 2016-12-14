@@ -229,12 +229,12 @@ public class PillarOfSkulls extends UniqueLocation {
 	}
 
 	WorldActor find(Class<? extends Location> class1) {
-		Location closest = null;
+		WorldActor closest = null;
 		for (WorldActor a : WorldActor.getall()) {
 			if (class1.isInstance(a) && !WorldScreen.see(new Point(a.x, a.y))) {
 				if (closest == null
 						|| a.distance(x, y) < closest.distance(x, y)) {
-					closest = (Location) a;
+					closest = (WorldActor) a;
 				}
 			}
 		}

@@ -35,4 +35,13 @@ public class RandomEncounter extends Fight {
 			throw new StartBattle(JavelinApp.context.encounter());
 		}
 	}
+
+	static public StartBattle encountersafe(double d) {
+		try {
+			encounter(d);
+			return null;
+		} catch (StartBattle e) {
+			return e;
+		}
+	}
 }

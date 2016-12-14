@@ -7,6 +7,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.WorldActor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
@@ -41,7 +42,7 @@ public class Inn extends Fortification {
 		}
 
 		@Override
-		public void done(Location l) {
+		public void done(WorldActor l) {
 			Inn i = (Inn) l;
 			i.level += 1;
 			i.rename(LEVELS[i.level]);

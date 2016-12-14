@@ -69,7 +69,8 @@ public abstract class Terrain implements Serializable {
 	/** Represent {@link Dungeon}s and {@link Mine}s. */
 	public static final Terrain UNDERGROUND = new Underground();
 	/** All terrain types except {@link #UNDERGROUND}. */
-	public static final Terrain[] ALL = new Terrain[] { PLAIN, HILL, FOREST, WATER, MOUNTAINS, DESERT, MARSH, WATER };
+	public static final Terrain[] ALL = new Terrain[] { PLAIN, HILL, FOREST,
+			WATER, MOUNTAINS, DESERT, MARSH, WATER };
 
 	/**
 	 * Encounter level adjustment.
@@ -266,7 +267,8 @@ public abstract class Terrain implements Serializable {
 	 *         shouldn't be added to this area.
 	 */
 	protected boolean checkinvalid(World world, int x, int y) {
-		return !World.validatecoordinate(x, y) || !generatetile(world.map[x][y], world) || checktown(x, y);
+		return !World.validatecoordinate(x, y)
+				|| !generatetile(world.map[x][y], world) || checktown(x, y);
 	}
 
 	boolean checktown(int x, int y) {
@@ -295,7 +297,8 @@ public abstract class Terrain implements Serializable {
 	 * @return <code>true</code> if there is such a terrain tile in the radius
 	 *         around the given point.
 	 */
-	public static int checkadjacent(Point source, Terrain neighbor, World w, int radius) {
+	public static int checkadjacent(Point source, Terrain neighbor, World w,
+			int radius) {
 		int found = 0;
 		for (int x = source.x - radius; x <= source.x + radius; x++) {
 			for (int y = source.y - radius; y <= source.y + radius; y++) {
@@ -394,11 +397,12 @@ public abstract class Terrain implements Serializable {
 	 *         for this terrain.
 	 */
 	public boolean generatetown(Point p, World w) {
-		if (checkadjacent(p, WATER, w, 1) > 0 || get(p.x, p.y).equals(Terrain.WATER)) {
+		if (checkadjacent(p, WATER, w, 1) > 0
+				|| get(p.x, p.y).equals(Terrain.WATER)) {
 			return false;
 		}
 		for (WorldActor town : WorldActor.getall(Town.class)) {
-			if (Walker.distance(p.x, p.y, town.x, town.y) <= 2) {
+			if (Walker.distance(p.x, p.y, town.x, town.y) <= 8) {
 				World.retry();
 				return false;
 			}

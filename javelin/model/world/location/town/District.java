@@ -75,8 +75,8 @@ public class District {
 	 * @return Location of the given type or <code>null</code> if none was
 	 *         found.
 	 */
-	public Location getlocation(Class<? extends Location> type) {
-		for (Location l : getlocations()) {
+	public WorldActor getlocation(Class<? extends Location> type) {
+		for (WorldActor l : getlocations()) {
 			if (l.getClass().equals(type)) {
 				return l;
 			}
@@ -149,7 +149,7 @@ public class District {
 	}
 
 	public boolean isbuilding(Class<? extends Location> site) {
-		for (Location l : getlocationtype(Construction.class)) {
+		for (WorldActor l : getlocationtype(Construction.class)) {
 			Construction c = (Construction) l;
 			if (site.isInstance(c.goal)) {
 				return true;

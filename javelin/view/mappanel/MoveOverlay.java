@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.BorderFactory;
+import javax.swing.border.Border;
 
 import javelin.controller.Point;
 import javelin.view.mappanel.battle.overlay.BattleMover;
@@ -13,6 +14,8 @@ import javelin.view.mappanel.battle.overlay.BattleMover.Step;
 import javelin.view.screen.BattleScreen;
 
 public class MoveOverlay extends Overlay {
+	static final javax.swing.border.Border WHITEBORDER = BorderFactory
+			.createLineBorder(Color.WHITE, 3);
 	static final javax.swing.border.Border GREENBORDER = BorderFactory
 			.createLineBorder(Color.GREEN, 3);
 	static final javax.swing.border.Border REDBORDER = BorderFactory
@@ -40,11 +43,20 @@ public class MoveOverlay extends Overlay {
 	public void overlay(Tile t, Graphics g) {
 		for (Step s : path.steps) {
 			if (t.x == s.x && t.y == s.y) {
-				final boolean partial = !s.engaged && s.apcost <= .5f;
-				(partial ? GREENBORDER : REDBORDER).paintBorder(t, g, 0, 0,
-						MapPanel.tilesize, MapPanel.tilesize);
-				g.setColor(partial ? Color.GREEN : Color.RED);
-				g.drawString(path.drawtext(s.apcost), 5, MapPanel.tilesize - 5);
+				final boolean partial = !s.engaged && s.totalcost <= .5f;
+				Border border;
+				if (s.safe) {
+					border = WHITEBORDER;
+				} else {
+					border = partial ? GREENBORDER : REDBORDER;
+				}
+				border.paintBorder(t, g, 0, 0, MapPanel.tilesize,
+						MapPanel.tilesize);
+				if (!s.safe) {
+					g.setColor(partial ? Color.GREEN : Color.RED);
+					g.drawString(path.drawtext(s.totalcost), 5,
+							MapPanel.tilesize - 5);
+				}
 			}
 		}
 	}

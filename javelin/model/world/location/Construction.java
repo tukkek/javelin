@@ -4,14 +4,15 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
+import javelin.model.world.WorldActor;
 import javelin.model.world.location.town.labor.Labor;
 
 public class Construction extends Location {
 	public Location goal;
 	private Labor progress;
-	private Location previous;
+	private WorldActor previous;
 
-	public Construction(Location project, Location previous, Labor progress) {
+	public Construction(Location project, WorldActor previous, Labor progress) {
 		super("Construction site: " + project.toString().toLowerCase());
 		this.goal = project;
 		this.previous = previous;

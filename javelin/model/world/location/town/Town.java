@@ -3,7 +3,9 @@ package javelin.model.world.location.town;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 import javelin.Javelin;
@@ -14,6 +16,7 @@ import javelin.controller.fight.Siege;
 import javelin.controller.fight.tournament.Exhibition;
 import javelin.controller.fight.tournament.Match;
 import javelin.controller.terrain.Terrain;
+import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.upgrade.Spell;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
@@ -505,5 +508,17 @@ public class Town extends Location {
 
 	public int distanceinsteps(Point p) {
 		return distanceinsteps(p.x, p.y);
+	}
+
+	public static HashSet<Point> getdistricts() {
+		HashSet<Point> districts = new HashSet<Point>();
+		for (Town t : Town.gettowns()) {
+			districts.addAll(t.getdistrict().getarea());
+		}
+		return districts;
+	}
+
+	public static Set<Hazard> gethazards(boolean special) {
+		return new HashSet<Hazard>();
 	}
 }

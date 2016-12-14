@@ -14,6 +14,8 @@ import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Town;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -114,13 +116,15 @@ public abstract class WorldActor implements Serializable {
 		int tox = x + deltax;
 		int toy = y + deltay;
 		if (!World.validatecoordinate(tox, toy)
-				|| (!Terrain.WATER.equals(Terrain.current()) && Terrain.WATER.equals(Terrain.get(tox, toy)))) {
+				|| (!Terrain.WATER.equals(Terrain.current())
+						&& Terrain.WATER.equals(Terrain.get(tox, toy)))) {
 			displace();
 			return;
 		}
 		ArrayList<WorldActor> actors = WorldActor.getall();
 		actors.remove(this);
-		if (tox >= 0 && toy >= 0 && tox < World.SIZE && toy < World.SIZE && WorldActor.get(tox, toy, actors) == null) {
+		if (tox >= 0 && toy >= 0 && tox < World.SIZE && toy < World.SIZE
+				&& WorldActor.get(tox, toy, actors) == null) {
 			move(tox, toy);
 		} else {
 			displace();
@@ -173,7 +177,8 @@ public abstract class WorldActor implements Serializable {
 	 * @return Actor of the given type that occupies the given coordinates, or
 	 *         <code>null</code>.
 	 */
-	public static WorldActor get(int x, int y, Class<? extends WorldActor> type) {
+	public static WorldActor get(int x, int y,
+			Class<? extends WorldActor> type) {
 		return get(x, y, getall(type));
 	}
 
@@ -187,7 +192,8 @@ public abstract class WorldActor implements Serializable {
 	/**
 	 * @return Actor of the given set that occupies these coordinates.
 	 */
-	public static WorldActor get(int x, int y, List<? extends WorldActor> actors) {
+	public static WorldActor get(int x, int y,
+			List<? extends WorldActor> actors) {
 		for (WorldActor actor : actors) {
 			if (actor.x == x && actor.y == y) {
 				return actor;
@@ -216,7 +222,8 @@ public abstract class WorldActor implements Serializable {
 	 * 
 	 * @return All actors of the given type.
 	 */
-	public static ArrayList<WorldActor> getall(Class<? extends WorldActor> type) {
+	public static ArrayList<WorldActor> getall(
+			Class<? extends WorldActor> type) {
 		ArrayList<WorldActor> all = INSTANCES.get(type);
 		if (all == null) {
 			all = new ArrayList<WorldActor>();
@@ -268,7 +275,8 @@ public abstract class WorldActor implements Serializable {
 			if (p == this) {
 				continue;
 			}
-			if (nearest == null || distance(p.x, p.y) < distance(nearest.x, nearest.y)) {
+			if (nearest == null
+					|| distance(p.x, p.y) < distance(nearest.x, nearest.y)) {
 				nearest = p;
 			}
 		}
@@ -284,5 +292,30 @@ public abstract class WorldActor implements Serializable {
 
 	public Point getlocation() {
 		return new Point(x, y);
+	}
+
+	public int distanceinsteps(int xp, int yp) {
+		return Math.max(Math.abs(xp - x), Math.abs(yp - y));
+	}
+
+	/**
+	 * Note that this could return a hostile town!
+	 * 
+	 * @return A {@link Town} district this location is part of or
+	 *         <code>null</code> if it is not located inside one. If more than
+	 *         one district encompasses this location, the one with the highest
+	 *         {@link Town#population} will be returned.
+	 */
+	public District getdistrict() {
+		ArrayList<Town> towns = Town.gettowns();
+		District main = null;
+		for (Town t : towns) {
+			District d = t.getdistrict();
+			if (distanceinsteps(t.x, t.y) <= d.getradius()
+					&& (main == null || t.population > d.town.population)) {
+				main = d;
+			}
+		}
+		return main;
 	}
 }

@@ -1,6 +1,7 @@
 package javelin.model.world.location.town.labor;
 
 import javelin.controller.Point;
+import javelin.model.world.WorldActor;
 import javelin.model.world.location.Construction;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
@@ -38,7 +39,7 @@ public abstract class Build extends Labor {
 		done(site.goal);
 	}
 
-	protected void done(Location goal) {
+	protected void done(WorldActor goal) {
 
 	}
 

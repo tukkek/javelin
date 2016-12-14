@@ -174,7 +174,8 @@ public class WorldScreen extends BattleScreen {
 
 	/** TODO remove on 2.0+ */
 	public Point getherolocation() {
-		return Squad.active == null ? null : new Point(Squad.active.x, Squad.active.y);
+		return Squad.active == null ? null
+				: new Point(Squad.active.x, Squad.active.y);
 	}
 
 	void redraw() {
@@ -239,7 +240,8 @@ public class WorldScreen extends BattleScreen {
 			if (tournament == null) {
 				Exhibition.opentournament();
 			}
-			for (WorldActor p : new ArrayList<WorldActor>(WorldActor.getall(Incursion.class))) {
+			for (WorldActor p : new ArrayList<WorldActor>(
+					WorldActor.getall(Incursion.class))) {
 				p.turn(time, this);// may throw battle exception
 			}
 			WorldScreen.lastday += 1;
@@ -267,7 +269,8 @@ public class WorldScreen extends BattleScreen {
 		for (int x = 0; x < World.SIZE; x++) {
 			for (int y = 0; y < World.SIZE; y++) {
 				Tile t = mappanel.tiles[x][y];
-				if (t.discovered && !World.roads[t.x][t.y] && WorldActor.get(t.x, t.y, locations) == null) {
+				if (t.discovered && !World.roads[t.x][t.y]
+						&& WorldActor.get(t.x, t.y, locations) == null) {
 					discovered.add(t);
 				}
 			}
@@ -304,9 +307,10 @@ public class WorldScreen extends BattleScreen {
 		infos.add(Season.current.toString());
 		infos.add("");
 		if (Dungeon.active == null) {
-			final int mph = Squad.active.speed(Terrain.current(), Squad.active.x, Squad.active.y);
-			infos.add(mph + " mph"
-					+ (Squad.active.transport == null ? "" : Squad.active.transport.load(Squad.active.members)));
+			final int mph = Squad.active.speed(Terrain.current(),
+					Squad.active.x, Squad.active.y);
+			infos.add(mph + " mph" + (Squad.active.transport == null ? ""
+					: Squad.active.transport.load(Squad.active.members)));
 		}
 		infos.add("$" + SelectScreen.formatcost(Squad.active.gold));
 		final ArrayList<String> hps = showstatusinformation();
@@ -344,12 +348,15 @@ public class WorldScreen extends BattleScreen {
 			if (c.spells.size() > 0 && checkexhaustion(c)) {
 				status += "spent, ";
 			}
-			String vital = c.toString() + " (" + status.substring(0, status.length() - 2) + ")";
+			String vital = c.toString() + " ("
+					+ status.substring(0, status.length() - 2) + ")";
 			while (vital.length() < WorldScreen.STATUSSPACE) {
 				vital += " ";
 			}
-			hps.add(vital + " Level " + Math.round(Math.floor(ChallengeRatingCalculator.calculatecr(c.source))) + " "
-					+ c.gethumanxp());
+			hps.add(vital + " Level "
+					+ Math.round(Math.floor(
+							ChallengeRatingCalculator.calculatecr(c.source)))
+					+ " " + c.gethumanxp());
 		}
 		return hps;
 	}
@@ -393,10 +400,14 @@ public class WorldScreen extends BattleScreen {
 	 */
 	public boolean explore(float hoursellapsed, boolean encounter) {
 		if (encounter && //
-				(Squad.active.transport == null || Squad.active.transport.battle())) {
+				(Squad.active.transport == null
+						|| Squad.active.transport.battle())) {
 			RandomEncounter.encounter(hoursellapsed / HOURSPERENCOUNTER);
 		}
-		Set<Hazard> hazards = Terrain.current().gethazards(RPG.r(1, Terrain.HAZARDCHANCE) == 1);
+		boolean special = RPG.r(1, Terrain.HAZARDCHANCE) == 1;
+		Set<Hazard> hazards = Squad.active.getdistrict() == null
+				? Terrain.current().gethazards(special)
+				: Town.gethazards(special);
 		for (Hazard h : new ArrayList<Hazard>(hazards)) {
 			if (!h.validate()) {
 				hazards.remove(h);
@@ -405,7 +416,8 @@ public class WorldScreen extends BattleScreen {
 		if (hazards.isEmpty()) {
 			return true;
 		}
-		RPG.pick(new ArrayList<Hazard>(hazards)).hazard(Math.round(hoursellapsed));
+		RPG.pick(new ArrayList<Hazard>(hazards))
+				.hazard(Math.round(hoursellapsed));
 		return false;
 	}
 
@@ -472,11 +484,13 @@ public class WorldScreen extends BattleScreen {
 			return false;
 		}
 		WorldScreen s = getcurrentscreen();
-		return s == null ? StateManager.DISCOVERED.contains(p) : s.gettiles()[p.x][p.y].discovered;
+		return s == null ? StateManager.DISCOVERED.contains(p)
+				: s.gettiles()[p.x][p.y].discovered;
 	}
 
 	static WorldScreen getcurrentscreen() {
-		return BattleScreen.active instanceof WorldScreen ? (WorldScreen) BattleScreen.active : null;
+		return BattleScreen.active instanceof WorldScreen
+				? (WorldScreen) BattleScreen.active : null;
 	}
 
 	/**

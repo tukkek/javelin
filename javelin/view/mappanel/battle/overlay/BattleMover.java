@@ -13,16 +13,28 @@ import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.screen.BattleScreen;
 
 public class BattleMover extends Walker {
+	/**
+	 * Note that AP cost has a different meaning depending on context. For
+	 * battle is literal AP, for world and dungeons is chance of encounter,
+	 * unrelated to time.
+	 * 
+	 * TODO better doc
+	 * 
+	 * @author alex
+	 */
 	public class Step {
 		public final int x, y;
 		public final float apcost;
 		public boolean engaged;
+		public boolean safe = false;
+		public float totalcost;
 
 		public Step(final int x2, final int y2, final float apcost2,
-				final boolean engaged) {
+				final float totalcost, final boolean engaged) {
 			x = x2;
 			y = y2;
 			apcost = apcost2;
+			this.totalcost = totalcost;
 			this.engaged = engaged;
 		}
 	}
@@ -47,11 +59,12 @@ public class BattleMover extends Walker {
 		} else if (validatefinal()) {
 			walk.add(new javelin.controller.walker.Step(targetx, targety));
 		}
-		float totalcost = 0;
 		final boolean engaged = isengaged();
+		float totalcost = 0;
 		for (final javelin.controller.walker.Step s : walk) {
-			totalcost += getcost(engaged, s);
-			steps.add(new Step(s.x, s.y, totalcost, engaged));
+			float stepcost = getcost(engaged, s);
+			totalcost += stepcost;
+			steps.add(new Step(s.x, s.y, stepcost, totalcost, engaged));
 			if (end(totalcost, engaged, s)) {
 				break;
 			}

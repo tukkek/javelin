@@ -31,12 +31,12 @@ public class Deck extends ArrayList<Labor> {
 	static {
 		populate(DEFAULT, null, new Labor[] { new Growth(), new BuildInn(),
 				new Redraw(), new BuildDwelling(), });
-		populate(new Deck(), "territorial", new Labor[] { new Settler(),
+		populate(new Deck(), "expansive", new Labor[] { new Settler(),
 				new BuildOutpost(), new BuildRoad(), new BuildHighway() });
-		populate(new Deck(), "industrious",
+		populate(new Deck(), "productive",
 				new Labor[] { new BuildMine(), new Deforestate() });
 		populate(new Deck(), "military", new Labor[] { new BuildDwelling(), });
-		populate(new Deck(), "magical", new Labor[] {});
+		populate(new Deck(), "cultural", new Labor[] {});
 		populate(new Deck(), CRIMINAL, new Labor[] {});
 		populate(new Deck(), RELIGIOUS, new Labor[] {});
 		populate(new Deck(), "ecological", new Labor[] {});

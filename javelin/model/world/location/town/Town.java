@@ -107,29 +107,44 @@ public class Town extends Location {
 	 * @param r
 	 *            Type of town.
 	 */
-	public Town(final int x, final int y, Realm r) {
+	public Town(Point location, Realm r) {
 		super(NAMES.isEmpty() ? null : NAMES.get(0));
 		if (!NAMES.isEmpty()) {
 			NAMES.remove(0);
 		}
 		allowentry = false;
-		this.x = x;
-		this.y = y;
-		if (!World.seed.done) {
-			checktooclose();
-		}
+		this.x = location.x;
+		this.y = location.y;
+		// if (!World.seed.done) {
+		// checktooclose();
+		// }
 		realm = r;
 		gossip = true;
 		discard = false;
 		vision = getdistrict().getradius();
 	}
 
-	void checktooclose() {
-		for (WorldActor town : WorldActor.getall(Town.class)) {
-			if (town != this && distance(town.x, town.y) <= 2) {
-				throw new RestartWorldGeneration();
+	public Town(List<Point> list, Realm r) {
+		this(getvalidlocation(list), r);
+	}
+
+	private static Point getvalidlocation(List<Point> list) {
+		Collections.shuffle(list);
+		for (Point p : list) {
+			if (Terrain.get(p.x, p.y) != Terrain.WATER && !checktooclose(p)) {
+				return p;
 			}
 		}
+		throw new RestartWorldGeneration();
+	}
+
+	static boolean checktooclose(Point p) {
+		for (WorldActor town : WorldActor.getall(Town.class)) {
+			if (town.distance(p.x, p.y) <= District.RADIUSMAX) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override

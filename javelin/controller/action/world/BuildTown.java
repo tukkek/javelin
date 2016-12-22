@@ -40,8 +40,8 @@ public class BuildTown extends WorldAction {
 			return;
 		}
 		Squad.active.members.remove(settler);
-		Town t = new Town(Squad.active.x, Squad.active.y,
-				World.determinecolor(new Point(Squad.active.x, Squad.active.y)).realm);
+		Point location = new Point(Squad.active.x, Squad.active.y);
+		Town t = new Town(location, World.determinecolor(location).realm);
 		t.description = "your new town";
 		t.rename();
 		t.garrison.clear();

@@ -120,7 +120,8 @@ public class Inn extends Fortification {
 	@Override
 	protected void generate() {
 		x = -1;
-		while (x == -1 || getdistrict() != null) {
+		while (x == -1 || getdistrict() != null
+				|| getnearest(Inn.class).distance(x, y) <= District.RADIUSMAX) {
 			generateawayfromtown();
 		}
 	}

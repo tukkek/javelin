@@ -15,7 +15,6 @@ import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.terrain.map.Map;
 import javelin.controller.terrain.map.Maps;
 import javelin.controller.walker.Walker;
-import javelin.model.Realm;
 import javelin.model.unit.Squad;
 import javelin.model.world.Season;
 import javelin.model.world.World;
@@ -187,7 +186,7 @@ public abstract class Terrain implements Serializable {
 	 */
 	abstract public Maps getmaps();
 
-	HashSet<Point> generate(World world) {
+	HashSet<Point> generatearea(World world) {
 		towns = WorldActor.getall(Town.class);
 		Point source = generatesource(world);
 		Point current = source;
@@ -210,8 +209,8 @@ public abstract class Terrain implements Serializable {
 	 * Usually returns an empty set.
 	 * 
 	 * @return a set of points which will be considered as already included in
-	 *         the generated area, before starting the {@link #generate(World)}
-	 *         process proper.
+	 *         the generated area, before starting the
+	 *         {@link #generatearea(World)} process proper.
 	 */
 	protected HashSet<Point> generatestartingarea(World world) {
 		return new HashSet<Point>();
@@ -317,7 +316,7 @@ public abstract class Terrain implements Serializable {
 	}
 
 	/**
-	 * Called at the end of the {@link #generate(World)} process.
+	 * Called at the end of the {@link #generatearea(World)} process.
 	 * 
 	 * @param area
 	 *            The generated area.
@@ -364,9 +363,10 @@ public abstract class Terrain implements Serializable {
 	 * 
 	 * @param r
 	 *            a {@link Town} of this realm, if not <code>null</code>.
+	 * @return
 	 */
-	public void generate(World w, Realm r) {
-		List<Point> area = new ArrayList<Point>(generate(w));
+	public List<Point> generate(World w) {
+		List<Point> area = new ArrayList<Point>(generatearea(w));
 		if (flooded()) {
 			isolated: for (Point p : new ArrayList<Point>(area)) {
 				for (Point a : adjacent) {
@@ -380,14 +380,15 @@ public abstract class Terrain implements Serializable {
 		for (Point p : area) {
 			w.map[p.x][p.y] = this;
 		}
-		if (r != null) {
-			Point town = null;
-			while (town == null || !generatetown(town, w)) {
-				town = RPG.pick(area);
-			}
-			new Town(town.x, town.y, r).place();
-		}
+		// if (r != null) {
+		// Point town = null;
+		// while (town == null || !generatetown(town, w)) {
+		// town = RPG.pick(area);
+		// }
+		// new Town(town.x, town.y, r).place();
+		// }
 		generatesurroundings(area, w);
+		return area;
 	}
 
 	/**

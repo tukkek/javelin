@@ -42,7 +42,7 @@ public class Forest extends Terrain {
 	}
 
 	@Override
-	public HashSet<Point> generate(World world) {
+	HashSet<Point> generatearea(World world) {
 		return gettiles(world);
 	}
 

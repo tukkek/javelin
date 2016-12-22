@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.exception.RestartWorldGeneration;
@@ -58,6 +59,10 @@ public class World implements Serializable {
 	 */
 	public static final int NREGIONS = 16;
 
+	static final Terrain[] GENERATIONORDER = new Terrain[] { Terrain.MOUNTAINS,
+			Terrain.MOUNTAINS, Terrain.DESERT, Terrain.PLAIN, Terrain.HILL,
+			Terrain.WATER, Terrain.WATER, Terrain.MARSH, Terrain.FOREST };
+
 	void generate() {
 		for (int i = 0; i < SIZE; i++) {
 			for (int j = 0; j < SIZE; j++) {
@@ -70,15 +75,57 @@ public class World implements Serializable {
 			realms.add(r);
 		}
 		Collections.shuffle(realms);
-		Terrain.MOUNTAINS.generate(this, realms.pop());
-		Terrain.MOUNTAINS.generate(this, realms.pop());
-		Terrain.DESERT.generate(this, realms.pop());
-		Terrain.PLAIN.generate(this, realms.pop());
-		Terrain.HILL.generate(this, realms.pop());
-		Terrain.WATER.generate(this, null);
-		Terrain.WATER.generate(this, null);
-		Terrain.MARSH.generate(this, realms.pop());
-		Terrain.FOREST.generate(this, realms.pop());
+		ArrayList<List<Point>> regions = new ArrayList<List<Point>>(
+				GENERATIONORDER.length);
+		for (Terrain t : GENERATIONORDER) {
+			regions.add(t.generate(this));
+		}
+		// Terrain.MOUNTAINS.generate(this, realms.pop());
+		// Terrain.MOUNTAINS.generate(this, realms.pop());
+		// Terrain.DESERT.generate(this, realms.pop());
+		// Terrain.PLAIN.generate(this, realms.pop());
+		// Terrain.HILL.generate(this, realms.pop());
+		// Terrain.WATER.generate(this, null);
+		// Terrain.WATER.generate(this, null);
+		// Terrain.MARSH.generate(this, realms.pop());
+		// Terrain.FOREST.generate(this, realms.pop());
+		Point nw = new Point(0, 0);
+		Point sw = new Point(0, SIZE - 1);
+		Point se = new Point(SIZE - 1, SIZE - 1);
+		Point ne = new Point(SIZE - 1, 0);
+		floodedge(nw, sw, +1, 0);
+		floodedge(sw, se, 0, -1);
+		floodedge(ne, se, -1, 0);
+		floodedge(nw, ne, 0, +1);
+		for (int i = 0; i < regions.size(); i++) {
+			if (GENERATIONORDER[i] != Terrain.WATER) {
+				new Town(regions.get(i), realms.pop()).place();
+			}
+		}
+	}
+
+	private void floodedge(Point from, Point to, int deltax, int deltay) {
+		ArrayList<Point> edge = new ArrayList<Point>(SIZE);
+		edge.add(from);
+		edge.add(to);
+		if (from.x != to.x) {
+			for (int x = from.x + 1; x != to.x; x++) {
+				edge.add(new Point(x, from.y));
+			}
+		} else {
+			for (int y = from.y + 1; y != to.y; y++) {
+				edge.add(new Point(from.x, y));
+			}
+		}
+		for (Point p : edge) {
+			map[p.x][p.y] = Terrain.WATER;
+			if (RPG.random() <= .5f) {
+				map[p.x + deltax][p.y + deltay] = Terrain.WATER;
+				if (RPG.random() <= .33f) {
+					map[p.x + deltax * 2][p.y + deltay * 2] = Terrain.WATER;
+				}
+			}
+		}
 	}
 
 	void initroads() {
@@ -169,7 +216,7 @@ public class World implements Serializable {
 			}
 			more -= 1;
 			Point p = new Point(x, y);
-			Town t = new Town(p.x, p.y, World.determinecolor(p).realm);
+			Town t = new Town(p, World.determinecolor(p).realm);
 			while (t.isnear(Town.class)) {
 				Location.generate(t, false);
 			}

@@ -83,8 +83,6 @@ public class Inn extends Fortification {
 		}
 	}
 
-	int level = 0;
-
 	public Inn() {
 		super(LEVELS[0], LEVELS[0], 1, 5);
 		gossip = true;

@@ -83,7 +83,11 @@ public abstract class Location extends WorldActor {
 	 */
 	public int vision = 0;
 
+	/** Link with a road if nearby. */
 	public boolean link = true;
+
+	/** For convenience of subclasses, with no external meaning. */
+	protected int level = 0;
 
 	/**
 	 * @param descriptionknown

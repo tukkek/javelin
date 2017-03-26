@@ -41,4 +41,15 @@ public class Order implements Serializable {
 	public boolean completed(long time) {
 		return completionat <= time;
 	}
+
+	@Override
+	public String toString() {
+		return name + " (" + geteta(Squad.active.hourselapsed) + ")";
+	}
+
+	public String geteta(long now) {
+		long hoursleft = Math.max(0, completionat - now);
+		return hoursleft >= 24 ? Math.round(hoursleft / 24f) + " days"
+				: hoursleft + " hours";
+	}
 }

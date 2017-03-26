@@ -159,7 +159,13 @@ public class SquadScreen extends InfoScreen {
 		for (float cr : SELECTABLE) {
 			List<Monster> tier = Javelin.MONSTERSBYCR.get(cr);
 			if (tier != null) {
-				candidates.addAll(tier);
+				for (Monster candidate : tier) {
+					String type = candidate.type.toLowerCase();
+					if (!type.contains("undead")
+							&& !type.contains("construct")) {
+						candidates.add(candidate);
+					}
+				}
 			}
 		}
 		return candidates;

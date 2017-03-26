@@ -20,8 +20,13 @@ public class OrderQueue implements Serializable {
 	 */
 	public ArrayList<Order> queue = new ArrayList<Order>(0);
 
-	public boolean done() {
+	public boolean reportalldone() {
 		return queue.isEmpty() || last().completed(Squad.active.hourselapsed);
+	}
+
+	public boolean reportanydone() {
+		return !queue.isEmpty()
+				&& Squad.active.hourselapsed >= next().completionat;
 	}
 
 	public Order last() {
@@ -34,14 +39,15 @@ public class OrderQueue implements Serializable {
 	}
 
 	/**
-	 * @param force
+	 * @param time
+	 *            Current game time.
 	 * @return Item which is in queue and should be removed manually upon
 	 *         confirmation.
 	 */
-	public List<Order> reclaim(long force) {
+	public List<Order> reclaim(long time) {
 		ArrayList<Order> reclaimed = new ArrayList<Order>();
 		for (Order i : (List<Order>) queue.clone()) {
-			if (i.completed(force)) {
+			if (i.completed(time)) {
 				reclaimed.add(i);
 				queue.remove(i);
 			}
@@ -53,8 +59,8 @@ public class OrderQueue implements Serializable {
 		queue.add(item);
 	}
 
-	public Long next() {
-		return queue.isEmpty() ? null : queue.get(0).completionat;
+	public Order next() {
+		return queue.isEmpty() ? null : queue.get(0);
 	}
 
 	public void clear() {
@@ -69,5 +75,14 @@ public class OrderQueue implements Serializable {
 	public boolean ready() {
 		return !queue.isEmpty()
 				&& queue.get(0).completed(Squad.active.hourselapsed);
+	}
+
+	@Override
+	public String toString() {
+		String s = "";
+		for (Order o : queue) {
+			s += o + ", ";
+		}
+		return s.substring(0, s.length() - 2);
 	}
 }

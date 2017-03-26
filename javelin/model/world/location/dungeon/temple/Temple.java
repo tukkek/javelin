@@ -38,6 +38,9 @@ import javelin.view.screen.haxor.Win;
  * 
  * Battles inside temples consist of upgraded units.
  * 
+ * The level field here is used to represent a target EL for invading parties
+ * (from 1 to 20).
+ * 
  * @see Win
  * @see Haxor#rubies
  * @see TempleEncounter
@@ -79,13 +82,6 @@ public abstract class Temple extends UniqueLocation {
 	 * @see #open()
 	 */
 	public boolean open = false;
-	/**
-	 * Level from 1 to 20 (typical d20 character level for a group of 4).
-	 * 
-	 * @see #el
-	 * @see #leveltoel(int)
-	 */
-	public int level;
 	/**
 	 * Each floor has a {@link Chest} with a ruby in it and there is also an
 	 * {@link Altar} on the deepest level.
@@ -272,5 +268,9 @@ public abstract class Temple extends UniqueLocation {
 	@Override
 	public List<Combatant> getcombatants() {
 		return null;
+	}
+
+	public int getlevel() {
+		return level;
 	}
 }

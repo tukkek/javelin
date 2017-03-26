@@ -7,10 +7,12 @@ import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.District;
 
 public abstract class BuildingUpgrade extends Build {
-	int upgradelevel;
+	protected int upgradelevel;
 
-	public BuildingUpgrade(String newname, int cost, int upgradelevel, Location previous) {
-		super("Upgrade " + previous.toString().toLowerCase() + " to " + newname.toLowerCase(), cost, previous);
+	public BuildingUpgrade(String newname, int cost, int upgradelevel,
+			Location previous) {
+		super("Upgrade " + previous.toString().toLowerCase() + " to "
+				+ newname.toLowerCase(), cost, previous);
 		this.upgradelevel = upgradelevel;
 	}
 
@@ -38,6 +40,7 @@ public abstract class BuildingUpgrade extends Build {
 
 	@Override
 	protected void done(WorldActor goal) {
+		/* TODO goal should be a Location and #raiselevel a Location method */
 		if (goal instanceof Fortification) {
 			((Fortification) goal).raiselevel(upgradelevel);
 		}

@@ -2,13 +2,14 @@ package javelin.model.world.location.unique;
 
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.location.order.CraftingOrder;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.shopping.ArtificerScreen;
 import javelin.view.screen.town.PurchaseOption;
@@ -32,24 +33,32 @@ public class Artificer extends UniqueLocation {
 	 * components, old ones spoiling, etc.
 	 */
 	public ItemSelection selection = new ItemSelection();
-	Item crafting = null;
-	long completeat = Integer.MIN_VALUE;
+	CraftingOrder crafting = null;
 
 	/** Constructor. */
 	public Artificer() {
 		super(DESCRIPTION, DESCRIPTION, 11, 15);
 		vision = 1;
 		while (selection.size() < 9) {
-			additem();
+			stock();
 		}
 		if (DEBUG) {
 			garrison.clear();
 		}
 	}
 
-	void additem() {
+	void stock() {
+		int i = 0;
 		while (!selection.add(RPG.pick(Item.ARTIFACT))) {
 			// wait until 1 item enters
+			i += 1;
+			if (i >= 10000) {
+				if (Javelin.DEBUG) {
+					throw new RuntimeException(
+							"Cannot generate artificer item!");
+				}
+				break; // tough luck :/
+			}
 		}
 	}
 
@@ -62,17 +71,17 @@ public class Artificer extends UniqueLocation {
 			new ArtificerScreen(this).show();
 			return true;
 		}
-		long eta = completeat - Squad.active.hourselapsed;
-		if (eta <= 0) {
-			crafting.grab();
+		if (crafting.completed(Squad.active.hourselapsed)) {
+			crafting.item.grab();
 			crafting = null;
-			completeat = Integer.MIN_VALUE;
 			return true;
 		}
 		Game.messagepanel.clear();
-		Game.message("\"Come back in " + Math.round(Math.ceil(eta / 24f))
-				+ " days for your " + crafting.toString().toLowerCase()
-				+ ".\"\n\nPress any key to coninue...", Delay.NONE);
+		Javelin.message(
+				"\"I still need " + crafting.geteta(Squad.active.hourselapsed)
+						+ " before your " + crafting.toString().toLowerCase()
+						+ "is finished.\"" + "\n\nPress any key to coninue...",
+				false);
 		Game.getInput();
 		return true;
 	}
@@ -81,13 +90,14 @@ public class Artificer extends UniqueLocation {
 	public void turn(long time, WorldScreen world) {
 		if (RPG.random() <= 1 / 30f) {
 			selection.remove(RPG.pick(selection));
-			additem();
+			stock();
 		}
 	}
 
 	@Override
 	public boolean hascrafted() {
-		return crafting != null && Squad.active.hourselapsed >= completeat;
+		return crafting != null
+				&& crafting.completed(Squad.active.hourselapsed);
 	}
 
 	/**
@@ -96,10 +106,8 @@ public class Artificer extends UniqueLocation {
 	 */
 	public void craft(PurchaseOption o) {
 		selection.remove(o.i);
-		crafting = o.i;
-		completeat =
-				Math.round(24 * o.price / 1000 + Squad.active.hourselapsed);
-		additem();
+		crafting = new CraftingOrder(o.i);
+		stock();
 	}
 
 	@Override

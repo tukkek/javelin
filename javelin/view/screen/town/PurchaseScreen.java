@@ -5,8 +5,8 @@ import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.Option;
 
-/**
- * Any screen in which the player can spend money tu buy something.
+/***
+ * Any screen in which the player can spend money tu buy something.**
  * 
  * @author alex
  */

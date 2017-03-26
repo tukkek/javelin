@@ -84,11 +84,6 @@ public class Town extends Location {
 	 * nothing but {@link Growth}.
 	 */
 	public int population = 1;
-	// /**
-	// * Can be used to improve a town. 1 unit represents 10 days of work by a
-	// * 10-men crew.
-	// */
-	// public float labor = 0f;
 	/** See {@link Governor}. */
 	public Governor governor = new HumanGovernor(this);
 	/**
@@ -300,22 +295,6 @@ public class Town extends Location {
 		}
 	}
 
-	// /**
-	// * Draws empty {@link Research} cards.
-	// */
-	// public void draw() {
-	// research.hand[0] = new Grow(this);
-	// Research.draw(this);
-	// }
-
-	// /** Discard all {@link Research} cards and {@link #draw()}. */
-	// public void redraw() {
-	// for (int i = 0; i < research.hand.length; i++) {
-	// research.hand[i] = null;
-	// }
-	// draw();
-	// }
-
 	@Override
 	public Boolean destroy(Incursion attacker) {
 		if (attacker.realm == realm) {
@@ -378,17 +357,6 @@ public class Town extends Location {
 	}
 
 	// /**
-	// * Note that this method doesn't actually change {@link #lodging}.
-	// *
-	// * @return The next step on the {@link #lodging} tree, up to
-	// * {@link Accommodations#HOSPITAL}.
-	// */
-	// public Accommodations upgradeinn() {
-	// return lodging.equals(Accommodations.LODGE) ? Accommodations.HOTEL
-	// : Accommodations.HOSPITAL;
-	// }
-
-	// /**
 	// * Note that this method doesn't actually change {@link #transport}.
 	// *
 	// * @return The next step on the {@link #transport} tree, up to
@@ -445,7 +413,7 @@ public class Town extends Location {
 	}
 
 	/**
-	 * @return A rank between 1 and 4 based on current {@link #population}.
+	 * @return A rank between [1,4] based on current {@link #population}.
 	 * @see #RANKS
 	 */
 	public int getrank() {

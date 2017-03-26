@@ -41,7 +41,7 @@ public class Key extends Item {
 			if (a instanceof Temple) {
 				Temple temple = (Temple) a;
 				if (temple.realm.equals(r)) {
-					return 4 * RewardCalculator.getgold(temple.level);
+					return 4 * RewardCalculator.getgold(temple.getlevel());
 				}
 			}
 		}

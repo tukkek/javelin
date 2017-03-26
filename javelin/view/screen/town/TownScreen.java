@@ -243,7 +243,7 @@ public class TownScreen extends PurchaseScreen {
 	}
 
 	private String showqueue(OrderQueue queue, String output) {
-		if (queue.done()) {
+		if (queue.reportalldone()) {
 			return "";
 		}
 		output += ":\n";

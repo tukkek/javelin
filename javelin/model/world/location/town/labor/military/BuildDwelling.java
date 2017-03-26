@@ -30,7 +30,7 @@ public class BuildDwelling extends Build {
 		for (Monster m : candidates) {
 			if (m.challengerating <= town.population) {
 				goal = new Dwelling(m);
-				name += " (" + m.toString().toLowerCase() + ")";
+				name += ": " + m.toString().toLowerCase();
 				cost = getcost(m);
 				return;
 			}

@@ -7,7 +7,7 @@ import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.RandomEncounter;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.town.Accommodations;
+import javelin.model.world.location.town.Inn;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.WorldScreen;
 
@@ -53,7 +53,7 @@ public class Camp extends WorldAction {
 			Squad.active.hourselapsed += 1;
 			RandomEncounter.encounter(1 / WorldScreen.HOURSPERENCOUNTER);
 			if (i > 0 && (i + 1) % restat == 0) {
-				Town.rest(1, 0, Accommodations.LODGE);
+				Inn.rest(1, 0, Inn.LODGE);
 			}
 		}
 	}

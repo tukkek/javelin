@@ -17,7 +17,6 @@ import javelin.controller.fight.tournament.Exhibition;
 import javelin.controller.fight.tournament.Match;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
-import javelin.controller.upgrade.Spell;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -210,40 +209,6 @@ public class Town extends Location {
 	// i.grab();
 	// }
 	// }
-
-	/**
-	 * @param restperiods
-	 *            Normally 1 rest period equals to 8 hours of rest in normal
-	 *            conditions.
-	 * @param hours
-	 *            Number of hours elapsed.
-	 * @param accomodation
-	 *            Level of the resting environment.
-	 */
-	public static void rest(int restperiods, long hours, Accommodations a) {
-		for (final Combatant c : Squad.active.members) {
-			int heal = c.source.hd.count() * restperiods;
-			if (a != Accommodations.HOSPITAL && c.heal() >= 15) {
-				heal *= 2;
-			}
-			if (heal < 1) {
-				heal = 1;
-			}
-			c.hp += heal;
-			if (c.hp > c.maxhp) {
-				c.hp = c.maxhp;
-			}
-			for (Spell p : c.spells) {
-				p.used = 0;
-			}
-			if (c.source.poison > 0) {
-				int detox = restperiods == 1 ? RPG.r(0, 1) : restperiods / 2;
-				c.detox(Math.min(c.source.poison, detox));
-			}
-			c.terminateconditions((int) hours);
-		}
-		Squad.active.hourselapsed += hours;
-	}
 
 	@Override
 	public District getdistrict() {

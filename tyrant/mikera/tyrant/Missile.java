@@ -171,11 +171,11 @@ public class Missile {
         rst = (int)Math.round(rst*Weapon.slayingModifier(m,target)*(1.0f-RPG.luckRandom(shooter,target)));
     	
         // work out type of damage
-        String dt=m.getString("MissileDamageType");
+        String dt=m.getstring("MissileDamageType");
     	if (dt==null) {
     		// TODO something more sophisticated?
     		if (RPG.test(shooter.getStat(Skill.THROWING),1)) {
-    			dt=m.getString("WeaponDamageType");
+    			dt=m.getstring("WeaponDamageType");
     		} 
     		if (dt==null) dt="impact";
     	}

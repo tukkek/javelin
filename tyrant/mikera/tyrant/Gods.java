@@ -38,7 +38,7 @@ public class Gods {
 	}
 	
 	public static String getGodName(Thing being) {
-		return being.getString("Religion");
+		return being.getstring("Religion");
 	}
 	
 	public static HashMap getGods() {
@@ -75,7 +75,7 @@ public class Gods {
 		
 		Thing god=getGod(hero);
 		int value=Item.value(sac);
-		Game.messageTyrant(sac.getTheName()+" "+sac.is()+" "+god.getString("SacrificeDescription"));
+		Game.messageTyrant(sac.getTheName()+" "+sac.is()+" "+god.getstring("SacrificeDescription"));
 		
 		// modify by level difference
 		// exact level=100% value
@@ -94,7 +94,7 @@ public class Gods {
 		if (relativeValue>10000.0) points++;
 		
 		// See whether god likes this particular sacrifice
-		String likes=god.getString("SacrificePreference");
+		String likes=god.getstring("SacrificePreference");
 		boolean like=false;
 		String[] ss=likes.split(",");
 		for (int i=0; i<ss.length; i++) {
@@ -121,8 +121,8 @@ public class Gods {
 		Thing g=get(god);
 		boolean accepts=true;
 		
-		String ar=g.getString("AcceptableRaces");
-		String r=h.getString("Race");
+		String ar=g.getstring("AcceptableRaces");
+		String r=h.getstring("Race");
 		if (ar.equals("any")||(ar.indexOf(r)>=0)) {
 			accepts&=true;
 		} else {
@@ -130,8 +130,8 @@ public class Gods {
 			//Game.warn(god+" rejects due to race ["+r+"]");
 		}
 		
-		String ap=g.getString("AcceptableProfessions");
-		String p=h.getString("Profession");
+		String ap=g.getstring("AcceptableProfessions");
+		String p=h.getstring("Profession");
 		if (ap.equals("any")||(ap.indexOf(p)>=0)) {
 			accepts&=true;
 		} else {
@@ -158,7 +158,7 @@ public class Gods {
 	/* Goodness is in the eye of divinity ;) */
 	/* This is code speak to mention that other classes use this method as well */
 	public static int getGoodness(Thing t) {
-		String al=t.getString("Alignment");
+		String al=t.getstring("Alignment");
 		if( al == null ){
 		  return 0;
 		}
@@ -239,7 +239,7 @@ public class Gods {
 			}
 			return true;
 		} else {
-			Game.messageTyrant(h.getString("Religion")+" does not seem interested in helping you");
+			Game.messageTyrant(h.getstring("Religion")+" does not seem interested in helping you");
 			return false;
 		}
 		
@@ -260,7 +260,7 @@ public class Gods {
 		if (prayer>0) {
 			if (peity>=cost) {				
 				if (Gods.doPray(h,level)) {
-					Game.messageTyrant("Praise be to "+h.getString("Religion")+"!");
+					Game.messageTyrant("Praise be to "+h.getstring("Religion")+"!");
 					
 					h.incStat(RPG.ST_PEITY,-cost);
 					
@@ -269,7 +269,7 @@ public class Gods {
 					}
 				}				
 			} else {
-				Game.messageTyrant(h.getString("Religion")+" ignores you");
+				Game.messageTyrant(h.getstring("Religion")+" ignores you");
 				h.addAttribute(Lib.create("hex"));
 			}
 		} else {

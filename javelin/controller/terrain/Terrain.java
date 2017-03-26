@@ -287,21 +287,22 @@ public abstract class Terrain implements Serializable {
 	}
 
 	/**
-	 * @param source
+	 * @param p
 	 *            Given a point...
 	 * @param neighbor
 	 *            will check if there is such a terrain tile...
 	 * @param radius
 	 *            in the given radius around it.
-	 * @return <code>true</code> if there is such a terrain tile in the radius
-	 *         around the given point.
+	 * @param World
+	 *            World instance.
+	 * @return Number of terrain tiles from the given type found in radius.
 	 */
-	public static int checkadjacent(Point source, Terrain neighbor, World w,
-			int radius) {
+	public static int search(Point p, Terrain neighbor, int radius,
+			World w) {
 		int found = 0;
-		for (int x = source.x - radius; x <= source.x + radius; x++) {
-			for (int y = source.y - radius; y <= source.y + radius; y++) {
-				if (x == source.x && y == source.y) {
+		for (int x = p.x - radius; x <= p.x + radius; x++) {
+			for (int y = p.y - radius; y <= p.y + radius; y++) {
+				if (x == p.x && y == p.y) {
 					continue;
 				}
 				if (!World.validatecoordinate(x, y)) {
@@ -398,7 +399,7 @@ public abstract class Terrain implements Serializable {
 	 *         for this terrain.
 	 */
 	public boolean generatetown(Point p, World w) {
-		if (checkadjacent(p, WATER, w, 1) > 0
+		if (search(p, WATER, 1, w) > 0
 				|| get(p.x, p.y).equals(Terrain.WATER)) {
 			return false;
 		}

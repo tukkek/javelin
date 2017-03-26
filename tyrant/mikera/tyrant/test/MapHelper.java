@@ -201,7 +201,7 @@ public class MapHelper {
                         thing = things[i];
                         if(thing.getFlag("IsMessagePoint")) continue;
                     }
-                    buffer.append(thing.getString("ASCII"));
+                    buffer.append(thing.getstring("ASCII"));
                 } else {
                     buffer.append(tileFor(map, x, y));
                 }

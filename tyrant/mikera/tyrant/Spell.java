@@ -91,7 +91,7 @@ public class Spell {
 	public static Thing randomSpell(String order,int level) {
 		for (int i=0; i<100; i++) {
 			Thing s=randomSpell(level);
-			if (order.equals(s.getString("Order"))) {
+			if (order.equals(s.getstring("Order"))) {
 				return s;
 			}
 		}
@@ -327,11 +327,11 @@ public class Spell {
 			return false;
 		}
 		
-		String order=s.getString("Order");
+		String order=s.getstring("Order");
 		if (order.equals(Skill.BLACKMAGIC)) {
 			int cost=s.getStat("SpellCost");
 			if (b.getStat(RPG.ST_MPS)<cost) return false;
-			int us=Recipe.checkIngredients(b,s.getString("Ingredients"));	
+			int us=Recipe.checkIngredients(b,s.getstring("Ingredients"));	
 			return (us>0);
 		} 
 		
@@ -352,7 +352,7 @@ public class Spell {
 	public static void castCost(Thing b, Thing s) {
 		b.incStat("APS",-castTime(b));
 		
-		String order=s.getString("Order");
+		String order=s.getstring("Order");
 		if (order.equals(Skill.TRUEMAGIC)||order.equals(Skill.HOLYMAGIC)) {
 			s.incStat("Charges",-1);
 		} else {
@@ -360,7 +360,7 @@ public class Spell {
 		}
 		
 		// remove ingredients
-		String ings=s.getString("Ingredients");
+		String ings=s.getstring("Ingredients");
 		if (ings!=null) {
 			if (!Recipe.removeIngredients(b,ings)) {
 				Game.warn("Bug: Not enough ingredients to cast!");
@@ -376,10 +376,10 @@ public class Spell {
 	}
 	
 	public static String chargeString(Thing b, Thing s) {
-		String order=s.getString("Order");
+		String order=s.getstring("Order");
 		
 		if (order.equals(Skill.BLACKMAGIC)) {
-			String ings=s.getString("Ingredients");
+			String ings=s.getstring("Ingredients");
 			int ch=Recipe.checkIngredients(b,ings);
 			int cost=s.getStat("SpellCost");
 			String cs=(cost>0)?("+ cost: "+cost):"";
@@ -395,7 +395,7 @@ public class Spell {
 	}
 	
 	private static String rechargeSkill(Thing s) {
-		String order=s.getString("Order");
+		String order=s.getstring("Order");
 		if (order.equals(Skill.HOLYMAGIC)) {
 			return Skill.PRAYER;
 		}
@@ -478,7 +478,7 @@ public class Spell {
 	}
 	
 	public static String selectionString(Thing b, Thing s,int l) {
-		return Text.centrePad(s.getString("Name"),Spell.powerString(b,s)+" "+Spell.chargeString(b,s),l);
+		return Text.centrePad(s.getstring("Name"),Spell.powerString(b,s)+" "+Spell.chargeString(b,s),l);
 	}
 	
 	public static Thing create(String spellName) {
@@ -510,7 +510,7 @@ public class Spell {
 		if (caster==null) {
 			return (int)(5*Math.pow(spellPowerMultiplier,spell.getLevel()));
 		}
-		int skill=caster.getStat(spell.getString("Order"));
+		int skill=caster.getStat(spell.getstring("Order"));
 		int st=(int)(caster.getStat("IN")
 				*(0.85+0.15*caster.getStat(Skill.CASTING))
 				*(0.85+0.15*skill)); 
@@ -668,10 +668,10 @@ public class Spell {
 				// Game.warn("dam="+dam);
 				boolean visible=target.isVisible(Game.hero());
 				
-				int damResult=Damage.inflict(target,dam,spell.getString("SpellDamageType"));
+				int damResult=Damage.inflict(target,dam,spell.getstring("SpellDamageType"));
 				if ((damResult>0)&&target.isDead()) {
 					String verbed=(target.getFlag("IsLiving"))?"killed":"destroyed";
-					if (visible) Game.messageTyrant(target.getTheName()+" is "+verbed+" by the "+spell.getString("HitName"));
+					if (visible) Game.messageTyrant(target.getTheName()+" is "+verbed+" by the "+spell.getstring("HitName"));
 				}
 			} else {
 				// spell has zero effect
@@ -758,7 +758,7 @@ public class Spell {
 			AI.notifyAttack(target,caster);
 		}
 		
-		String hitname=spell.getString("HitName");
+		String hitname=spell.getstring("HitName");
 		if (effective){
 			if (hitname!=null) target.message("You are hit by the "+hitname);
 			Event e=new Event("Effect");
@@ -780,7 +780,7 @@ public class Spell {
 	 * @param t Spell to add to library
 	 */ 
 	private static void addSpell(Thing t) {
-		String name=t.getString("Name");
+		String name=t.getstring("Name");
 		spellNames.add(name);
 		
 		Game.assertTrue(t.getFlag("IsSpell"));
@@ -811,11 +811,11 @@ public class Spell {
 	public static void updateIngredients(Thing t) {
 		int level=t.getStat("Level");
 		
-		String order=t.getString("Order");
+		String order=t.getstring("Order");
 		if (order.equals(Skill.BLACKMAGIC)) {
 			// black magic spells have zero cost
 			t.set("SpellCost",0);
-			String ings=t.getString("Ingredients");
+			String ings=t.getstring("Ingredients");
 			int count=t.getStat("RandomIngredientCount");
 			
 			if ((ings==null)&&(count<=0)) {
@@ -841,7 +841,7 @@ public class Spell {
 	 * Make final offensive spell modifications
 	 */ 
 	private static void addOffensiveSpell(Thing t) {
-		if (t.getString("HitName")==null) {
+		if (t.getstring("HitName")==null) {
 			t.set("HitName",t.name()+" spell");
 		}
 		t.set("IsOffensiveSpell",1);
@@ -1616,7 +1616,7 @@ public class Spell {
 			public int compare(Object aa, Object bb) {
 				Thing a=(Thing)aa;
 				Thing b=(Thing)bb;
-				int ord=a.getString("Order").compareTo(b.getString("Order"));
+				int ord=a.getstring("Order").compareTo(b.getstring("Order"));
 				if (ord!=0) return ord;
 				
 				int lev=-(a.getLevel()-b.getLevel());
@@ -1630,9 +1630,9 @@ public class Spell {
 			Thing s=(Thing)spells.get(i);
 			String name=s.name();
 			ss.append(Text.rightPad(name+": ",25));
-			ss.append(Text.rightPad(s.getString("Order"),20));
+			ss.append(Text.rightPad(s.getstring("Order"),20));
 		    ss.append(Text.rightPad("Lv. "+s.getLevel(),10));
-		    ss.append(Text.rightPad(s.getString("Ingredients"),40));
+		    ss.append(Text.rightPad(s.getstring("Ingredients"),40));
 				
 			ss.append("\n");
 		}

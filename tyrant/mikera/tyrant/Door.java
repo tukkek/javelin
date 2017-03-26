@@ -13,7 +13,7 @@ public class Door {
 		private static final long serialVersionUID = 3904958655442006583L;
 
         public boolean handle(Thing t, Event e) {
-			String keyName=t.getString("KeyName");
+			String keyName=t.getstring("KeyName");
 			if (keyName==null) {
 				t.set("KeyName",chooseKey(t.getLevel()));
 			}
@@ -50,7 +50,7 @@ public class Door {
     public static boolean useRiddleDoor(Thing user, Thing door) {
         if (!door.getFlag("IsOpen")) {
             if (user.isHero()) {
-                if (user.getFlag(door.getString("RiddleStatName"))) {
+                if (user.getFlag(door.getstring("RiddleStatName"))) {
                     setOpen(door,true);
                 } else {
                     if(door.getFlag("IsInvisible")) {
@@ -197,7 +197,7 @@ public class Door {
 	}
 	
 	public static boolean keyFits(Thing key, Thing door) {
-		String keyName=door.getString("KeyName");
+		String keyName=door.getstring("KeyName");
 		return key.name().equals(keyName);
 	}
 	
@@ -212,7 +212,7 @@ public class Door {
 	public static void lockedOptions(Thing user, Thing door) {
 		Game.messageTyrant(door.getTheName() + " is locked");
 		
-		String keyName=door.getString("KeyName");
+		String keyName=door.getstring("KeyName");
 		if ((keyName!=null)&&user.hasItem(keyName)) {
 			Thing key=user.getItem(keyName);
 			Game.messageTyrant(key.getYourName()+" fits the lock.");

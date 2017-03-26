@@ -44,7 +44,7 @@ public class Potion  {
         t.set("UName",potionstyles[style]+" "+potioncolours[colour]+" potion");
         
         // fix up plural name if needed
-        String name=t.getString("Name");
+        String name=t.getstring("Name");
         if (name.indexOf("potion")==0) {
             String s="potions"+name.substring(6);
             t.set("NamePlural",s);
@@ -245,7 +245,7 @@ public class Potion  {
         public boolean handle(Thing t, Event e) {
             Thing targ=(Thing)e.get("Target");
             int max=t.getStat("GainMax");
-            String stat=t.getString("GainStat");
+            String stat=t.getstring("GainStat");
             if ((max>0)&&(targ.getBaseStat(stat)>=max)) return false;
             
             targ.incStat(stat,t.getStat("GainAmount"));

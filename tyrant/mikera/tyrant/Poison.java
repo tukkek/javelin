@@ -30,10 +30,10 @@ public class Poison {
             int dam=0;
             int hits=RPG.po(time*t.getStat("Strength"),1000000);
             for (int i=0; i<hits; i++) {
-                dam+=Damage.inflict(h,t.getStat("Damage"),t.getString("DamageType"));
+                dam+=Damage.inflict(h,t.getStat("Damage"),t.getstring("DamageType"));
                 //Game.warn("**poison damage**");
             }
-            if (dam>0) h.message(t.getString("DamageMessage"));
+            if (dam>0) h.message(t.getstring("DamageMessage"));
             
             // might be other effects....
             return false;

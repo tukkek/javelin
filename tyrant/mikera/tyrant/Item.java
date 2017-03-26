@@ -50,9 +50,9 @@ public class Item {
 	private static final String wpstring="watery potion";
     
 	public static boolean isDisguisedName(Thing t) {
-		String uname=t.getString("UName");
+		String uname=t.getstring("UName");
 		if (uname==null) return false;
-		if (uname.equals(t.getString("Name"))) return false;
+		if (uname.equals(t.getstring("Name"))) return false;
 		return true;
 	}
 	
@@ -71,7 +71,7 @@ public class Item {
         }
         
         // water potion special case
-        if (wpstring.equals(toIdentify.getString("UName"))) {
+        if (wpstring.equals(toIdentify.getstring("UName"))) {
             //Game.warn("identified water: "+t.name());
             Lib.get(toIdentify.name()).set("IsStatusKnown",1);
         }
@@ -294,7 +294,7 @@ public class Item {
 		if (t.getFlag("IsArtifact")&&Item.isIdentified(t)) {
 			s=s+"This is the legendary artifact known as \""+t.name()+"\"\n";
 		} else {
-			String des=t.getString("Description");
+			String des=t.getstring("Description");
 			if (des==null) des="This looks like a normal "+t.getSingularName()+".";
 			des=des+"\n";
 			s=s+des;
@@ -331,10 +331,10 @@ public class Item {
 			String ws="It can be used as a "+handed+" weapon, with an attack skill of "+Weapon.getASK(t,h)+" and an attack strength of "+Weapon.getAST(t,h)+". ";
 			ws=ws+" It contributes "+Weapon.getDSK(t,h)+" to your defence skill.";
 			if (h.getFlag(Skill.WEAPONLORE)) {
-				ws=ws+" It inflicts "+t.getString("WeaponDamageType")+" damage. ";
+				ws=ws+" It inflicts "+t.getstring("WeaponDamageType")+" damage. ";
 				ws=ws+" It has a base attack cost of "+t.getStat("AttackCost")+". ";
 				int extra=Weapon.getExtraAST(t,h);
-				if (extra>0) ws=ws+"It inflicts an additional "+extra+" points of "+t.getString("ExtraDamageType")+" damage. ";
+				if (extra>0) ws=ws+"It inflicts an additional "+extra+" points of "+t.getstring("ExtraDamageType")+" damage. ";
 			}
 			s=s+ws+"\n";
 		}

@@ -151,7 +151,7 @@ public class DungeonTyrant {
 		
 		// map type
 		// String s="cooozzrrrrrtthhhnsskkk";
-		String s=m.getString("DungeonDNA");
+		String s=m.getstring("DungeonDNA");
 		if (s==null) {
 			s="tttkrrroozhs";
 			Game.warn("No DungeonDNA!");
@@ -515,7 +515,7 @@ public class DungeonTyrant {
 
 	public static void addBeasties(BattleMap m,int x, int y) {
 		Thing b = Lib.createCreature(m.getLevel());
-		m.addThing(Lib.create(b.getString("Name")), x, y);
+		m.addThing(Lib.create(b.getstring("Name")), x, y);
 	}
 
 	private static void addGuard(BattleMap m, int x, int y) {
@@ -538,7 +538,7 @@ public class DungeonTyrant {
 	}
 	
 	public static Thing createFoe(BattleMap m) {
-		String s=m.getString("MonsterType");
+		String s=m.getstring("MonsterType");
 		
 		if (s==null) s=("IsHostile");
 		String[] ss=s.split(",");

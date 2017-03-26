@@ -13,6 +13,7 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.terrain.Terrain;
+import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.feat.Feat;
 import javelin.model.unit.Combatant;
@@ -25,7 +26,6 @@ import javelin.model.world.location.town.Town;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.SelectScreen;
-import javelin.view.screen.town.option.UpgradeOption;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -36,9 +36,21 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public abstract class UpgradingScreen extends SelectScreen {
+	public class UpgradeOption extends Option {
+		/** Upgrade in question. */
+		public final Upgrade u;
 
-	final HashMap<Integer, Combatant> original =
-			new HashMap<Integer, Combatant>();
+		/** Constructor. */
+		public UpgradeOption(final Upgrade u) {
+			super(u.name, 0);
+			this.u = u;
+			if (u instanceof Spell) {
+				name = "Spell: " + name.toLowerCase();
+			}
+		}
+	}
+
+	final HashMap<Integer, Combatant> original = new HashMap<Integer, Combatant>();
 	final HashSet<Combatant> upgraded = new HashSet<Combatant>();
 
 	/**
@@ -148,8 +160,8 @@ public abstract class UpgradingScreen extends SelectScreen {
 
 	private BigDecimal buy(final UpgradeOption o, Combatant c,
 			boolean listing) {
-		float originalcr =
-				ChallengeRatingCalculator.calculaterawcr(c.source)[1];
+		float originalcr = ChallengeRatingCalculator
+				.calculaterawcr(c.source)[1];
 		final Combatant clone = c.clone().clonesource();
 		if (!o.u.upgrade(clone)) {
 			return null;

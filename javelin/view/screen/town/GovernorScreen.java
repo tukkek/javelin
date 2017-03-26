@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.action.world.Guide;
+import javelin.controller.db.Preferences;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.view.screen.Option;
@@ -29,7 +30,6 @@ public class GovernorScreen extends ScreenOption {
 	class TownManagement extends SelectScreen {
 		public TownManagement(Town t) {
 			super("", t);
-			// title = ;
 		}
 
 		@Override
@@ -45,9 +45,16 @@ public class GovernorScreen extends ScreenOption {
 
 		@Override
 		public boolean select(Option o) {
-			LaborOption lo = (LaborOption) o;
-			lo.l.start();
-			if (lo.l.closescreen) {
+			Labor l = ((LaborOption) o).l;
+			if (Preferences.DEBUGLABOR) {
+				l.start();
+				while (town.governor.getprojects().contains(l)) {
+					l.work(1);
+				}
+				return true;
+			}
+			l.start();
+			if (l.closescreen) {
 				stayopen = false;
 				forceclose = true;
 			}

@@ -103,10 +103,10 @@ public class RangedWeapon {
 	}
 
 	public static Thing createAmmo(final Thing s, final int level) {
-		final String atype = s.getString("RangedWeaponType");
+		final String atype = s.getstring("RangedWeaponType");
 		for (int i = 0; i < 20; i++) {
 			final Thing t = Lib.createType("IsMissile", level);
-			if (t.getString("MissileType").equals(atype)) {
+			if (t.getstring("MissileType").equals(atype)) {
 				return t;
 			}
 		}

@@ -53,7 +53,7 @@ public class Water extends Terrain {
 		Point source = super.generatesource(world);
 		while (!world.map[source.x][source.y].equals(Terrain.MOUNTAINS)
 				&& !world.map[source.x][source.y].equals(Terrain.HILL)
-				&& checkadjacent(source, DESERT, world, DESERTRADIUS) == 0) {
+				&& search(source, DESERT, DESERTRADIUS, world) == 0) {
 			source = super.generatesource(world);
 		}
 		currentheight = source;
@@ -71,7 +71,7 @@ public class Water extends Terrain {
 				to.y += RPG.pick(DELTAS);
 			}
 			if (checkinvalid(world, to.x, to.y)
-					|| checkadjacent(to, DESERT, world, DESERTRADIUS) > 0) {
+					|| search(to, DESERT, DESERTRADIUS, world) > 0) {
 				to = null;
 				World.retry();
 				continue expansion;

@@ -77,7 +77,7 @@ public class FeatureGenerator {
 		register(Trove.class, new FeatureGenerationData(1.5f));
 		// register(Lair.class, new FeatureGenerationData());
 		register(Outpost.class, new FeatureGenerationData());
-		register(Inn.class, new FeatureGenerationData());
+		register(Inn.class, new FeatureGenerationData(.75f));
 		register(Shrine.class, new FeatureGenerationData());
 		register(Guardian.class, new FeatureGenerationData());
 		register(Dwelling.class, new FeatureGenerationData());
@@ -211,8 +211,8 @@ public class FeatureGenerator {
 				starton == Terrain.PLAIN ? Terrain.HILL : Terrain.PLAIN, seed);
 		ArrayList<WorldActor> towns = Location.getall(Town.class);
 		WorldActor startingtown = WorldActor.get(easya.x, easya.y, towns);
-		if (Terrain.checkadjacent(new Point(startingtown.x, startingtown.y),
-				Terrain.WATER, seed, 2) != 0) {
+		if (Terrain.search(new Point(startingtown.x, startingtown.y),
+				Terrain.WATER, 2, seed) != 0) {
 			throw new RestartWorldGeneration();
 		}
 		new Portal(startingtown, WorldActor.get(easyb.x, easyb.y, towns), false,

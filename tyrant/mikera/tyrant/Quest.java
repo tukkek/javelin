@@ -40,7 +40,7 @@ public class Quest {
 	}
 	
 	private static void getQuestText(StringBuffer sb, String prefix, Thing q) {
-		String desc=q.getString("Description");
+		String desc=q.getstring("Description");
 		if (desc!=null) {
 			sb.append(prefix);
 			sb.append(Text.capitalise(desc));
@@ -202,7 +202,7 @@ public class Quest {
 		q.set("Frequency",50);
 		q.set("OnQuestComplete",new Script() {
 			public boolean handle(Thing q, Event e) {
-				String desc=q.getString("Description");
+				String desc=q.getstring("Description");
 				
 				if (desc!=null) {
 					Game.messageTyrant("Quest objective complete: "+desc);
@@ -234,7 +234,7 @@ public class Quest {
 				// get the thing that was killed
 				Thing killed=e.getThing("Target");
 				
-				String targetName=q.getString("TargetName");
+				String targetName=q.getstring("TargetName");
 				
 				boolean countKill=false;
 				
@@ -243,7 +243,7 @@ public class Quest {
 						countKill=true;
 					}
 				} else {
-					String targetType=q.getString("TargetType");
+					String targetType=q.getstring("TargetType");
 					if ((targetType!=null)&&killed.getFlag(targetType)) {
 						countKill=true;
 					}
@@ -275,7 +275,7 @@ public class Quest {
 					return false;
 				}
 				if (targetMap==null) {
-					String targetMapName=q.getString("TargetMapName");
+					String targetMapName=q.getstring("TargetMapName");
 					if (heroMap.name().startsWith(targetMapName)) {
 						setComplete(q);
 					}

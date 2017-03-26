@@ -44,7 +44,7 @@ public class Construction extends Location {
 
 	@Override
 	public boolean interact() {
-		if (Javelin.prompt("This is a construction site, building a "
+		if (Javelin.prompt("This is a construction site, building: "
 				+ goal.toString().toLowerCase() + ".\n"//
 				+ "Progress is currently at " + progress.getprogress()
 				+ "%.\n\n"

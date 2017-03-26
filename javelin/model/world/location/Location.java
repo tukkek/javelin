@@ -87,7 +87,7 @@ public abstract class Location extends WorldActor {
 	public boolean link = true;
 
 	/** For convenience of subclasses, with no external meaning. */
-	protected int level = 0;
+	public int level = 0;
 
 	/**
 	 * @param descriptionknown
@@ -397,7 +397,7 @@ public abstract class Location extends WorldActor {
 
 	public void capture() {
 		garrison.clear();
-		realm = null; // TODO really?
+		realm = null;
 	}
 
 	/**

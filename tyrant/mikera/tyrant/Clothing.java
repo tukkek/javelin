@@ -406,7 +406,7 @@ public class Clothing {
                     // if we are making multiple magic variants we don't
                     // want to do something like "of lifting of heavy lifting"
                     // so we leave a marker when something is created here
-                    name = candidates[i].getString("Name");
+                    name = candidates[i].getstring("Name");
                     newThing = (Thing)candidates[i].clone();
                     newThing.multiplyStat("Frequency",0.1); // 1 in 10 of these
                     newThing.add("WieldedModifiers",modifier);

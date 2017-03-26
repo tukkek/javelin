@@ -25,7 +25,7 @@ public class Ring  {
         }
         
         // fix up plural name if needed
-        String name=t.getString("Name");
+        String name=t.getstring("Name");
         if (name.indexOf("ring")==0) {
             String s="rings"+name.substring(4);
             t.set("NamePlural",s);

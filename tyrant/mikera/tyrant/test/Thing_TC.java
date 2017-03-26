@@ -364,16 +364,16 @@ public class Thing_TC extends TyrantTestCase {
         assertEquals(5, person.invCount());
         Thing[] moneyArray = person.getFlaggedItems("IsMoney");
         assertEquals(3,moneyArray.length);
-        assertEquals("copper coin",moneyArray[0].getString("Name"));
+        assertEquals("copper coin",moneyArray[0].getstring("Name"));
         assertEquals(21,moneyArray[0].getStat("Number"));
-        assertEquals("gold coin",moneyArray[1].getString("Name"));
+        assertEquals("gold coin",moneyArray[1].getstring("Name"));
         assertEquals(2,moneyArray[1].getStat("Number"));
-        assertEquals("silver coin",moneyArray[2].getString("Name"));
+        assertEquals("silver coin",moneyArray[2].getstring("Name"));
         assertEquals(6,moneyArray[2].getStat("Number"));
         Thing[] foodArray = person.getFlaggedItems("IsFood");
         assertEquals(2,foodArray.length);
-        assertEquals("chicken leg",foodArray[0].getString("Name"));
-        assertEquals("dead fly",foodArray[1].getString("Name"));
+        assertEquals("chicken leg",foodArray[0].getstring("Name"));
+        assertEquals("dead fly",foodArray[1].getstring("Name"));
         Thing[] emptyArray = person.getFlaggedItems("IsScroll");
         assertNull(emptyArray);
     }
@@ -392,16 +392,16 @@ public class Thing_TC extends TyrantTestCase {
         assertEquals(5, person.invCount());
         Thing[] moneyArray = person.getFlaggedContents("IsMoney");
         assertEquals(3,moneyArray.length);
-        assertEquals("copper coin",moneyArray[0].getString("Name"));
+        assertEquals("copper coin",moneyArray[0].getstring("Name"));
         assertEquals(21,moneyArray[0].getStat("Number"));
-        assertEquals("gold coin",moneyArray[1].getString("Name"));
+        assertEquals("gold coin",moneyArray[1].getstring("Name"));
         assertEquals(2,moneyArray[1].getStat("Number"));
-        assertEquals("silver coin",moneyArray[2].getString("Name"));
+        assertEquals("silver coin",moneyArray[2].getstring("Name"));
         assertEquals(6,moneyArray[2].getStat("Number"));
         Thing[] foodArray = person.getFlaggedContents("IsFood");
         assertEquals(2,foodArray.length);
-        assertEquals("chicken leg",foodArray[0].getString("Name"));
-        assertEquals("dead fly",foodArray[1].getString("Name"));
+        assertEquals("chicken leg",foodArray[0].getstring("Name"));
+        assertEquals("dead fly",foodArray[1].getstring("Name"));
         Thing[] emptyArray = person.getFlaggedContents("IsScroll");
         assertEquals(0,emptyArray.length);
     }

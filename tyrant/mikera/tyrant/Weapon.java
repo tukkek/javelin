@@ -49,7 +49,7 @@ public class Weapon {
     public static double slayingModifier(Thing w, Thing t) {
     	if (t==null) return 1.0;
     	double a=1.0;
-    	String mods=w.getString("SlayingStats");
+    	String mods=w.getstring("SlayingStats");
     	
     	if (mods!=null) {
     		String[] ms=mods.split(",");
@@ -108,7 +108,7 @@ public class Weapon {
         Game.instance().pushMessages();
         
         // inflict damage
-        String damageType=w.getString("WeaponDamageType");
+        String damageType=w.getstring("WeaponDamageType");
         if (damageType==null) {
         	throw new Error(w.name()+" has no WeaponDamageType!");
         }
@@ -128,7 +128,7 @@ public class Weapon {
         int extra=getExtraAST(w,wielder);
         if (extra>0) {
             //Game.warn("Extra AST "+extra);
-            extra= Damage.inflict(target, extra, w.getString("ExtraDamageType"));
+            extra= Damage.inflict(target, extra, w.getstring("ExtraDamageType"));
             //Game.warn("Extra damage "+extra);
             dam+=extra;
         }
@@ -195,7 +195,7 @@ public class Weapon {
     }
     
     private static String hitVerb(Thing b, Thing w) {
-    	String v=w.getString("HitVerb");
+    	String v=w.getstring("HitVerb");
     	if (v==null) {
     		Game.warn("no hit verb for "+w.name());
     		v=(b.isHero() ? "hit" : "hits");
@@ -421,7 +421,7 @@ public class Weapon {
         
         for (int i=0; i<wmat.length; i++) {
             Thing t=(Thing)w.clone();
-            String name=w.getString("Name");
+            String name=w.getstring("Name");
             t.set("Name",wmat[i]+" "+name);
             t.set("Material",wmat[i]);
             t.set("UName", (umat[i]==null) ? name : umat[i]+" "+name);

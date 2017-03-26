@@ -78,7 +78,7 @@ public class WorldMap_TC extends TyrantTestCase {
 		assertTrue("Map [" + m.name() + "] has Level<=0", m.getLevel() >= 1);
 		assertTrue("Map [" + m.name() + "] has Level>50", m.getLevel() <= 50);
 		assertTrue("Map [" + m.name() + "] has no Description!", m
-				.getString("Description") != null);
+				.getstring("Description") != null);
 	}
 
 	/**

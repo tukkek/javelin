@@ -205,7 +205,7 @@ public class Combat {
 				// drop all items
 				Thing[] stuff = t.getFlaggedContents("IsItem");
 				if (stuff != null) {
-					boolean impact="impact".equals(t.getString("KillingDamageType"));
+					boolean impact="impact".equals(t.getstring("KillingDamageType"));
 					for (int i = 0; i < stuff.length; i++) {
 						m.addThing(stuff[i], tx, ty);
 						if (impact) stuff[i].displace();
@@ -217,7 +217,7 @@ public class Combat {
 			}
 			
 			// add decorative touch
-			String s=t.getString("DeathDecoration");
+			String s=t.getstring("DeathDecoration");
 			if (s!=null) {
 				m.addThing(s,tx,ty);
 			}

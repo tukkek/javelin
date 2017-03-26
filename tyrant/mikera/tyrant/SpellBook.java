@@ -33,14 +33,14 @@ public class SpellBook {
 	public static Thing create(String order, int level) {
 		for (int i=0; i<30; i++) {
 			Thing t=Lib.createType("IsSpellBook", level);
-			if (t.getString("Order").equals(order)) return t;
+			if (t.getstring("Order").equals(order)) return t;
 		}
 		return Lib.createType("IsSpellBook", level);
 	}
 
 	public static String getOrder(Thing book) {
-		Thing spell=Lib.create(book.getString("BookSpell"));
-		return spell.getString("Order");
+		Thing spell=Lib.create(book.getstring("BookSpell"));
+		return spell.getstring("Order");
 	}
 	
 	private static class ReadSpellbookScript extends Script {
@@ -57,7 +57,7 @@ public class SpellBook {
 			if (!user.isHero())
 				return false;
 
-			String spellName=s.getString("BookSpell");
+			String spellName=s.getstring("BookSpell");
 			
 			// TODO implement difficulty
 			if (Spell.canLearn(user,spellName)) {
@@ -89,7 +89,7 @@ public class SpellBook {
 			if (!user.isHero())
 				return false;
 
-			String order=s.getString("Order");
+			String order=s.getstring("Order");
 			if (user.getStat(order)>0) {
 			
 				// TODO implement learning
@@ -106,7 +106,7 @@ public class SpellBook {
 
         public boolean handle(Thing s, Event e) {
 			Thing h = e.getThing("Reader");
-			String skill = s.getString("SkillName");
+			String skill = s.getstring("SkillName");
 			
 			if (!s.getFlag("IsManual")) {
 				System.out.println("Not a manual!");
@@ -263,7 +263,7 @@ public class SpellBook {
 			t.set("NamePlural", "spellbooks of " + spellName);
 			t.set("UName", title);
 			t.set("BookSpell", spellName);
-			t.set("Order",spell.getString("Order"));
+			t.set("Order",spell.getstring("Order"));
 			t.set("DeathDecoration",spellName);
 
 			t.set("LevelMin", spell.getLevel());
@@ -275,7 +275,7 @@ public class SpellBook {
 	}
 	
 	private static int spellBookImage(Thing s) {
-		String order=s.getString("Order");
+		String order=s.getstring("Order");
 		if (order.equals(Skill.HOLYMAGIC)) {
 			return 287;
 		} else if (order.equals(Skill.BLACKMAGIC)) {

@@ -126,7 +126,7 @@ public class Pit {
 				for (int x = 0; x < w; x += 1) {
 					for (int y = 0; y < h; y += 1) {
 						if ((RPG.d(3) == 1) && (!m.isBlocked(x, y)))
-							m.addThing(Lib.create(c.getString("Name")), x, y);
+							m.addThing(Lib.create(c.getstring("Name")), x, y);
 					}
 				}
 

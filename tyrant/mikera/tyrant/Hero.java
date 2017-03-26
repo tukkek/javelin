@@ -58,7 +58,7 @@ public class Hero {
 		h.set("IsImmortal",1);
 		h.set("IsDebugMode",1);
 		
-		if ("QuickTester".equals(h.getString("HeroName"))) {
+		if ("QuickTester".equals(h.getstring("HeroName"))) {
 			h.addThing(Spell.create("Annihilation"));
 			h.addThing(Spell.create("Blaze"));
 			h.addThing(Spell.create("Ultimate Destruction"));
@@ -808,7 +808,7 @@ public class Hero {
 		String[] races=heroRaces();
 		String[] descs=new String[races.length];
 		for (int i=0; i<descs.length; i++) {
-			String d=Lib.create(races[i]).getString("RaceDescription");
+			String d=Lib.create(races[i]).getstring("RaceDescription");
 			if (d==null) d="No description for "+races[i]+" yet...";
 			descs[i]=d;
 		}
@@ -976,7 +976,7 @@ public class Hero {
 		String monthString = months[month];
 
 		
-		String r=h.getString("Race");
+		String r=h.getstring("Race");
 		sb.append("You are born "+(Text.isVowel(r.charAt(0))?"an":"a")+" "+r+" on the "+dayString+" of "+monthString+". ");
 		
 		if (birthDay.equals("14/2")) {
@@ -1029,7 +1029,7 @@ public class Hero {
 		
 		/////////////
 		// religion
-		String god=h.getString("Religion");
+		String god=h.getstring("Religion");
 		sb.append("You were brough up to worship "+god+". ");
 		switch (RPG.d(5)) {
 		case 1:
@@ -1051,7 +1051,7 @@ public class Hero {
 			sb.append("You were not particularly devout, but still felt that "+god+" would protect you. ");
 			break;
 		}
-		sb.append(Gods.get(god).getString("UpbringingText")+" ");
+		sb.append(Gods.get(god).getstring("UpbringingText")+" ");
 		sb.append("\n\n");
 		
 		////////////////
@@ -1082,7 +1082,7 @@ public class Hero {
 		
 		/////////////
 		// training
-		String p=h.getString("Profession");
+		String p=h.getstring("Profession");
 		sb.append("Determined to make something of your life, you began your "+p+" training as soon as you were old enough. ");
 		switch (RPG.d(5)) {
 			default:

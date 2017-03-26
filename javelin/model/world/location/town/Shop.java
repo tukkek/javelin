@@ -30,7 +30,7 @@ public class Shop extends Location {
 		@Override
 		protected void define() {
 			super.define();
-			cost = Math.min(cost, Item.getselection(town.realm).size());
+			cost = Math.min(cost, Item.getselection(town.originalrealm).size());
 		}
 
 		@Override
@@ -111,7 +111,7 @@ public class Shop extends Location {
 	}
 
 	void stock() {
-		ItemSelection items = Item.getselection(selectiontype);
+		ItemSelection items = getselection();
 		if (items.size() > 20 && level > 10) {
 			items = new ItemSelection(items);
 			Collections.shuffle(items);
@@ -156,10 +156,14 @@ public class Shop extends Location {
 	public ArrayList<Labor> getupgrades(District d) {
 		int newlevel = level + 5;
 		newlevel = Math.min(newlevel, d.town.getrank() * 5);
-		newlevel = Math.min(newlevel, Item.getselection(selectiontype).size());
+		newlevel = Math.min(newlevel, getselection().size());
 		newlevel = Math.min(newlevel, 20);
 		ArrayList<Labor> upgrades = super.getupgrades(d);
 		upgrades.add(new UpgradeShop(this, newlevel));
 		return upgrades;
+	}
+
+	ItemSelection getselection() {
+		return Item.getselection(selectiontype);
 	}
 }

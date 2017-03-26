@@ -119,7 +119,7 @@ public class Scroll  {
 	        private static final long serialVersionUID = -8023348676467373601L;
 
             public boolean handle(Thing t, Event e) {
-                String spell=t.getString("ScrollSpell");
+                String spell=t.getstring("ScrollSpell");
                 if (spell==null) return false;
                 Thing s=Spell.create(spell);
                 Spell.castAtLocation(s,null,(BattleMap)e.get("DeathMap"),e.getStat("DeathX"),e.getStat("DeathY"));
@@ -143,7 +143,7 @@ public class Scroll  {
 	            
                 Item.identify(s);
                 
-                String spellName=s.getString("ScrollSpell");
+                String spellName=s.getstring("ScrollSpell");
                 if (spellName!=null) {
                 	Thing spell=Spell.create(spellName);
                 	// TODO: modify spell power for IN/literacy
@@ -201,7 +201,7 @@ public class Scroll  {
         			Game.warn("note read script:");
         			if (e.getThing("Reader")!=Game.hero()) return false;
         			
-        			String text=t.getString("Text");
+        			String text=t.getstring("Text");
         			Game.warn(text);
         			Game.infoScreen(text);
         		

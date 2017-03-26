@@ -7,6 +7,7 @@ import java.util.HashMap;
 import javelin.Javelin;
 import javelin.model.world.location.town.Shop.BuildShop;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.TransportHub.BuildTransportHub;
 import javelin.model.world.location.town.labor.expansive.BuildHighway;
 import javelin.model.world.location.town.labor.expansive.BuildOutpost;
 import javelin.model.world.location.town.labor.expansive.BuildRoad;
@@ -30,8 +31,10 @@ public class Deck extends ArrayList<Labor> {
 	static final Deck DEFAULT = new Deck();
 
 	static {
-		populate(DEFAULT, null, new Labor[] { new Growth(), new BuildInn(),
-				new Redraw(), new BuildDwelling(), new BuildShop() });
+		populate(DEFAULT, null,
+				new Labor[] { new Growth(), new BuildInn(), new Redraw(),
+						new BuildDwelling(), new BuildShop(),
+						new BuildTransportHub(), new BuildTransportHub() });
 		populate(new Deck(), "expansive", new Labor[] { new Settler(),
 				new BuildOutpost(), new BuildRoad(), new BuildHighway() });
 		populate(new Deck(), "productive",

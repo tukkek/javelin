@@ -232,7 +232,7 @@ public class Portal {
 	}
 
 	public static String destinationComplex(final Thing p) {
-		String complexName = p.getString("ComplexName");
+		String complexName = p.getstring("ComplexName");
 
 		if (complexName == null && p.getFlag("IsRoutePortal")) {
 			// route portals are named for their target complex
@@ -245,7 +245,7 @@ public class Portal {
 		}
 
 		if (complexName == null) {
-			complexName = p.getMap().getString("ComplexName");
+			complexName = p.getMap().getstring("ComplexName");
 		}
 
 		return complexName;
@@ -304,7 +304,7 @@ public class Portal {
 				"IsEntrancePoint");
 		if (eps.length > 0) {
 			final Thing ep = eps[RPG.r(eps.length)];
-			final Thing ent = Portal.create(ep.getString("PortalName"));
+			final Thing ent = Portal.create(ep.getstring("PortalName"));
 			map.addThing(ent, ep.x, ep.y);
 			map.setEntrance(ent);
 		} else {
@@ -421,7 +421,7 @@ public class Portal {
 				throw new Error("Unknown portal [" + name + "]");
 			}
 
-			final String mapName = p.getString("MapFileName");
+			final String mapName = p.getstring("MapFileName");
 			if (mapName == null) {
 				throw new Error("No portal destination [" + name + "]");
 			}
@@ -494,13 +494,13 @@ public class Portal {
 		if (target == null) {
 
 			// look up a corresponding portal
-			final String fromMapName = portal.getMap().getString("ComplexName");
+			final String fromMapName = portal.getMap().getstring("ComplexName");
 			if (fromMapName != null) {
 				target = map.find(fromMapName);
 			}
 
 			if (target == null) {
-				throw new Error("Target map [" + map.getString("Description")
+				throw new Error("Target map [" + map.getstring("Description")
 						+ "] of portal [" + portal.name()
 						+ "] has no entrance caled [" + fromMapName
 						+ "] in makeLink");

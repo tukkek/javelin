@@ -597,21 +597,21 @@ public class Food {
         addFood(t);   
 
         t = Lib.extend("tiny fish","base fish");
-        t.set("NamePlural",t.getString("Name"));
+        t.set("NamePlural",t.getstring("Name"));
         t.set("LevelMin",1);
         t.set("Nutrition", 100);
         t.set("ItemWeight",200);
         addFood(t);
         
         t = Lib.extend("small fish","base fish");
-        t.set("NamePlural",t.getString("Name"));
+        t.set("NamePlural",t.getstring("Name"));
         t.set("LevelMin",3);
         t.set("Nutrition", 120);
         t.set("ItemWeight",400);
         addFood(t);
         
         t = Lib.extend("fish","base fish");
-        t.set("NamePlural",t.getString("Name"));
+        t.set("NamePlural",t.getstring("Name"));
         t.set("LevelMin",6);
         t.set("Nutrition", 140);
         t.set("ItemWeight",800);
@@ -619,15 +619,15 @@ public class Food {
         
         t = Lib.extend("rotten fish","fish");
         t.set("UName","fish");
-        t.set("NamePlural",t.getString("Name"));
-        t.set("UNamePlural",t.getString("UName"));
+        t.set("NamePlural",t.getstring("Name"));
+        t.set("UNamePlural",t.getstring("UName"));
         t.set("LevelMin",5);
         t.set("Nutrition", 30);
         t.set("ItemWeight",760);
         addFood(t);
         
         t = Lib.extend("large fish","base fish");
-        t.set("NamePlural",t.getString("Name"));
+        t.set("NamePlural",t.getstring("Name"));
         t.set("LevelMin",9);
         t.set("Nutrition", 160);
         t.set("Image",238);
@@ -656,7 +656,7 @@ public class Food {
         addFood(t);
         
         t = Lib.extend("red snapper","base fish");
-        t.set("NamePlural",t.getString("Name"));
+        t.set("NamePlural",t.getstring("Name"));
         t.set("LevelMin",7);
         t.set("Nutrition", 230);
         t.set("Image",237);

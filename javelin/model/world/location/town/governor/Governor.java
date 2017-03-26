@@ -53,10 +53,10 @@ public abstract class Governor implements Serializable {
 
 	public boolean draw() {
 		District d = town.getdistrict();
-		for (Labor r : Deck.generate(town)) {
-			r = r.generate(town);
-			if (!hand.contains(r) && !projects.contains(r) && r.validate(d)) {
-				hand.add(r);
+		for (Labor l : Deck.generate(town)) {
+			l = l.generate(town);
+			if (!hand.contains(l) && !projects.contains(l) && l.validate(d)) {
+				hand.add(l);
 				return true;
 			}
 		}
@@ -155,10 +155,13 @@ public abstract class Governor implements Serializable {
 		validate(d);
 		ArrayList<Labor> hand = new ArrayList<Labor>(this.hand);
 		for (Location l : d.getlocations()) {
-			for (Labor u : l.getupgrades(d)) {
-				u = u.generate(town);
-				if (u.validate(d)) {
-					hand.add(u);
+			for (Labor upgrade : l.getupgrades(d)) {
+				if (hand.contains(upgrade)) {
+					continue;
+				}
+				upgrade = upgrade.generate(town);
+				if (upgrade.validate(d)) {
+					hand.add(upgrade);
 				}
 			}
 		}

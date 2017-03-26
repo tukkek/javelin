@@ -216,7 +216,7 @@ public class Lib extends Object implements Serializable, Cloneable {
 			newThing.handle(new Event("Create"));
 		}
 
-		final String s = newThing.getString("DefaultThings");
+		final String s = newThing.getstring("DefaultThings");
 		if (s != null) {
 			createDefaultThings(newThing, s);
 		}
@@ -453,7 +453,7 @@ public class Lib extends Object implements Serializable, Cloneable {
 	}
 
 	public static Object getDefault(final Thing t, final String s) {
-		final BaseObject baseObject = get(t.getString("Name"));
+		final BaseObject baseObject = get(t.getstring("Name"));
 		if (baseObject == null) {
 			return null;
 		}
@@ -550,14 +550,14 @@ public class Lib extends Object implements Serializable, Cloneable {
 	}
 
 	private static boolean isBaseClass(final Thing t) {
-		return t.getString("Name").indexOf("base ") == 0;
+		return t.getstring("Name").indexOf("base ") == 0;
 	}
 
 	// pre=processing before addition to library
 	private static void prepareAdd(final Thing t) {
 		// ensure LevelMin set if not a "base" item
 		// since this allows creation!
-		final String name = t.getString("Name");
+		final String name = t.getstring("Name");
 		if (!Lib.isBaseClass(t)) {
 			if (t.getStat("LevelMin") <= 0) {
 				t.set("LevelMin", 1);

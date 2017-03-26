@@ -22,7 +22,6 @@ import javelin.model.world.location.town.Academy;
 import javelin.model.world.location.town.Dwelling;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.Option;
-import javelin.view.screen.town.option.RecruitOption;
 import javelin.view.screen.upgrading.AcademyScreen;
 
 /**
@@ -31,10 +30,30 @@ import javelin.view.screen.upgrading.AcademyScreen;
  * @author alex
  */
 public class AssassinsGuild extends Academy {
+	public class RecruitOption extends Option {
+		/** Unit type to recruited. */
+		public Monster m;
+
+		/** Constructor. */
+		public RecruitOption(String name, double d, Monster m) {
+			super(name, d);
+			this.m = m;
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			if (obj instanceof RecruitOption) {
+				final RecruitOption ro = (RecruitOption) obj;
+				return m.name.equals(ro.m.name);
+			}
+			return false;
+		}
+	}
+
 	static final String[] RECRUITS = new String[] { "Small monstrous scorpion",
 			"Doppelganger", "Medusa", "Rakshasa", };
-	static final String[] LEVELS =
-			new String[] { "Cutthroat", "Footpad", "Ninja", "Shadow" };
+	static final String[] LEVELS = new String[] { "Cutthroat", "Footpad",
+			"Ninja", "Shadow" };
 
 	class Screen extends AcademyScreen {
 		public Screen(Academy academy, Town t) {
@@ -64,10 +83,10 @@ public class AssassinsGuild extends Academy {
 		@Override
 		public List<Option> getoptions() {
 			List<Option> options = super.getoptions();
-			Monster recruit =
-					Javelin.getmonster(RECRUITS[getrank(assassinations)]);
-			RecruitOption option =
-					new RecruitOption("Recruit: " + recruit, 0, recruit);
+			Monster recruit = Javelin
+					.getmonster(RECRUITS[getrank(assassinations)]);
+			RecruitOption option = new RecruitOption("Recruit: " + recruit, 0,
+					recruit);
 			option.key = 'r';
 			options.add(option);
 			return options;

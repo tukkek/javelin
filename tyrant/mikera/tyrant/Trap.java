@@ -131,7 +131,7 @@ public class Trap {
 			Thing temp = Game.actor;
 
 			if (battlemap != null) {
-				Thing sp = Spell.create(rt.getString("TrapSpell"));
+				Thing sp = Spell.create(rt.getstring("TrapSpell"));
 				Spell.castAtLocation(sp, null, battlemap, tx, ty);
 				Thing actor = (Thing) rt.get("Actor");
 				if (actor != null) {

@@ -5,7 +5,6 @@ import javelin.model.world.WorldActor;
 import javelin.model.world.location.Construction;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
-import tyrant.mikera.engine.RPG;
 
 public abstract class Build extends Labor {
 	protected Construction site;
@@ -44,7 +43,7 @@ public abstract class Build extends Labor {
 	}
 
 	protected Point getsitelocation() {
-		return RPG.pick(town.getdistrict().getfreespaces());
+		return town.getdistrict().getfreespaces().get(0);
 	}
 
 	@Override

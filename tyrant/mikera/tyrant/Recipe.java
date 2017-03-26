@@ -42,10 +42,10 @@ public class Recipe {
         public boolean handle(Thing s, Event e) {
             Thing user=e.getThing("Reader");
         	
-           	String rname=s.getString("RecipeName");
+           	String rname=s.getstring("RecipeName");
             Thing r=Lib.create(rname);
             
-            String order=r.getString("RecipeOrder");
+            String order=r.getstring("RecipeOrder");
             
             Item.identify(s);
             
@@ -145,11 +145,11 @@ public class Recipe {
 	private static void addRecipe(Thing t) {
 		Lib.add(t);
 		
-		String order=t.getString("RecipeOrder");
+		String order=t.getstring("RecipeOrder");
 		
 		Thing rs=Lib.extend("instructions for a "+recipeResult(t).get("Name"),"base recipe scroll");
 		rs.set("NamePlural",rs.get("Name"));
-		rs.set("UName","instructions for a strange "+recipeName(t.getString("RecipeOrder")));
+		rs.set("UName","instructions for a strange "+recipeName(t.getstring("RecipeOrder")));
 		rs.set("UNamePlural",rs.get("UName"));
 		rs.set("NameType",Thing.NAMETYPE_QUANTITY);
 		rs.set("RecipeName",t.name());
@@ -227,8 +227,8 @@ public class Recipe {
 		for (int i=0; i<n; i++) {
 			Thing tt=(Thing)recs.get(i);
 			
-			String order=tt.getString("RecipeOrder");
-			String ingredients=tt.getString("RecipeIngredients");
+			String order=tt.getstring("RecipeOrder");
+			String ingredients=tt.getstring("RecipeIngredients");
 			int level=tt.getStat("Level")+3;
 			
 			String rname=tt.name();
@@ -269,10 +269,10 @@ public class Recipe {
 		HashMap hm=new HashMap();
 		for (int i=0; i<ts.length; i++) {
 			Thing r=ts[i];
-			if (!r.getString("RecipeOrder").equals(s)) continue;
-			String ingredients=r.getString("Ingredients");
+			if (!r.getstring("RecipeOrder").equals(s)) continue;
+			String ingredients=r.getstring("Ingredients");
 			int ic=checkIngredients(h,ingredients);
-			String st=r.getString("RecipeName")+"  ("+ingredients+"  stock: " +ic+")";
+			String st=r.getstring("RecipeName")+"  ("+ingredients+"  stock: " +ic+")";
 			al.add(st);
 			hm.put(st,r);
 		}
@@ -284,7 +284,7 @@ public class Recipe {
 		QuestApp.getInstance().switchScreen(gs);
 		if (rec!=null) {
 			Thing r=(Thing)hm.get(rec);
-			String ingredients=r.getString("Ingredients");
+			String ingredients=r.getstring("Ingredients");
 			int ic=checkIngredients(h,ingredients);
 			if (ic<=0) {
 				Game.messageTyrant("You do not have the necessary ingredients!");
@@ -305,7 +305,7 @@ public class Recipe {
 	}
 	
 	protected static Thing recipeResult(Thing r) {
-		String name=r.getString("RecipeName");
+		String name=r.getstring("RecipeName");
 		Thing t=Lib.create(name);
 		return t;
 	}

@@ -27,10 +27,10 @@ public class Deforestate extends Labor {
 		if (forest == null) {
 			return;
 		}
-		final int adjacentmountains = Terrain.checkadjacent(forest,
-				Terrain.MOUNTAINS, World.seed, 1);
-		final int adjacenthills = Terrain.checkadjacent(forest, Terrain.HILL,
-				World.seed, 1);
+		final int adjacentmountains = Terrain.search(forest,
+				Terrain.MOUNTAINS, 1, World.seed);
+		final int adjacenthills = Terrain.search(forest, Terrain.HILL,
+				1, World.seed);
 		World.seed.map[forest.x][forest.y] = adjacentmountains > 0
 				|| RPG.r(1, 8) <= adjacenthills ? Terrain.HILL : Terrain.PLAIN;
 	}

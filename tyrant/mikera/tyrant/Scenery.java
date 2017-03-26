@@ -323,8 +323,8 @@ public class Scenery {
 
 			e.set("ActionTaken", 1);
 
-			final String heroReligion = h.getString("Religion");
-			final String altarReligion = t.getString("Religion");
+			final String heroReligion = h.getstring("Religion");
+			final String altarReligion = t.getstring("Religion");
 
 			if (altarReligion != null && !altarReligion.equals(heroReligion)) {
 				h.message("This altar is dedicated to " + altarReligion);

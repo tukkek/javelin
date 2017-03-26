@@ -141,7 +141,7 @@ public class Tile {
 	}
 
 	public static String getASCII(final int t) {
-		return get(t).getString("ASCII");
+		return get(t).getstring("ASCII");
 	}
 
 	public static int getFilledImage(final int t) {
@@ -280,7 +280,7 @@ public class Tile {
 			if (amount <= 0) {
 				return;
 			}
-			final String dt = t.getString("DamageType");
+			final String dt = t.getstring("DamageType");
 
 			for (final Thing thing : ts) {
 				if (!thing.getFlag("IsPhysical") || thing.getFlag("IsFlying")) {

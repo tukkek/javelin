@@ -81,7 +81,7 @@ public class Wand  {
     		Thing user=e.getThing("User");
     		if (charges>0) {
     			user.message("You wave "+t.getTheName());
-    			Thing s=Spell.create(t.getString("WandSpell"));
+    			Thing s=Spell.create(t.getstring("WandSpell"));
     			QuestApp.getInstance().getScreen().castSpell(user,s);
     			Item.identify(t);
     			t.set("Charges",charges-1);
@@ -96,7 +96,7 @@ public class Wand  {
         private static final long serialVersionUID = 6191533767727822085L;
 
         public boolean handle(Thing t, Event e) {
-            String spell=t.getString("WandSpell");
+            String spell=t.getstring("WandSpell");
             Thing s=Spell.create(spell);
             Spell.castAtLocation(s,null,(BattleMap)e.get("DeathMap"),e.getStat("DeathX"),e.getStat("DeathY"));
         	return false;

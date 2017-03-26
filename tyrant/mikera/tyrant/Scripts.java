@@ -32,11 +32,11 @@ public class Scripts {
 			Thing tt = (Thing) e.get(getString("TargetProperty"));
 
 			// check for effect resistance
-			String rstat = effect.getString("ResistStat");
+			String rstat = effect.getstring("ResistStat");
 			if (rstat != null) {
 				int res = tt.getStat(rstat);
 				if (RPG.test(res, effect.getStat("ResistDifficulty"))) {
-					tt.message(effect.getString("ResistMessage"));
+					tt.message(effect.getstring("ResistMessage"));
 					return false;
 				}
 			}
@@ -431,8 +431,8 @@ public class Scripts {
 			if (t.getFlag("DecayRate")) {
 				int dr = t.getStat("DecayRate");
 				if (RPG.r(1000000) < dr * time) {
-					String s = t.getString("DecayType");
-					String dmes = t.getString("DecayMessage");
+					String s = t.getstring("DecayType");
+					String dmes = t.getstring("DecayMessage");
 					if (dmes != null && t.isVisible(Game.hero())) {
 						Game.messageTyrant(t.getTheName() + " " + dmes);
 					}

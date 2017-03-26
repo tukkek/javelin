@@ -28,7 +28,7 @@ public class Amulet {
         t.set("UName",types[type]+" necklace");
         
         // fix up plural name if needed
-        String name=t.getString("Name");
+        String name=t.getstring("Name");
         if (name.indexOf("necklace")==0) {
             String s="necklaces"+name.substring(8);
             t.set("NamePlural",s);

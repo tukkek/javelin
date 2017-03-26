@@ -57,7 +57,7 @@ public class Secret {
         if (t.getFlag("IsSecretDoor")) {
             Game.messageTyrant("You have found a secret door!");
             map.setTile(t.x, t.y, map.floor());
-            String s=t.getString("SecretDoorType");
+            String s=t.getstring("SecretDoorType");
             Thing door;
             if (s==null) {
             	door=Door.createDoor(map.getLevel());
@@ -88,7 +88,7 @@ public class Secret {
         if (t.getFlag("IsHiddenItem")) {
             Thing it=(Thing)t.get("HiddenThing");
             if (it==null) {
-                String s=t.getString("HiddenItem");
+                String s=t.getstring("HiddenItem");
                 if (s==null) it=Lib.createItem(map.getLevel());
                 else it=Lib.create(s);
             }

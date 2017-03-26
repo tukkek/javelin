@@ -199,7 +199,7 @@ public class Rune {
     			it=it.separate(RPG.d(4));
     		}
     		
-    		String at=t.getString("AlterationType");
+    		String at=t.getstring("AlterationType");
     		
     		if (at==null) {
     			Game.messageTyrant("Nothing seems to happen");

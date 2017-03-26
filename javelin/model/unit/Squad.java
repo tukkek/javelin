@@ -150,6 +150,7 @@ public class Squad extends WorldActor {
 		if (transport != null && Dungeon.active == null) {
 			image = Images
 					.getImage(transport.name.replaceAll(" ", "").toLowerCase());
+			return;
 		}
 		Combatant leader = members.get(0);
 		for (int i = 1; i < members.size(); i++) {

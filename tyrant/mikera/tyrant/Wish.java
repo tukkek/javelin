@@ -136,7 +136,7 @@ public class Wish {
 		
 		if (c.getFlag("IsAlteration")) {
 			Game.warn("alteration: "+c.name());
-			Thing[] ws=h.getFlaggedContents(c.getString("AlterationType"));
+			Thing[] ws=h.getFlaggedContents(c.getstring("AlterationType"));
 			for (int i=0; i<ws.length; i++) {
 				ws[i].addThing(c.cloneType());
 			}
@@ -149,7 +149,7 @@ public class Wish {
 				Game.messageTyrant("You cannot comprehend what you have wished for!");
 				return false;
 			}
-            Spell.learn(h,c.getString("Name"));
+            Spell.learn(h,c.getstring("Name"));
             return true;
 		}  else {
 			if (map.addBlockingThing(c, h.x-1,h.y-1,h.x+1,h.y+1)) {

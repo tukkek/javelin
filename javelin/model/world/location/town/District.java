@@ -32,7 +32,7 @@ public class District {
 	 */
 	public static final double RADIUSMAX = RADIUSBASE + Town.RANKS.length;
 
-	static final int MOSTNEIGHBORSALLOWED = 1;
+	static final int MOSTNEIGHBORSALLOWED = 2;
 
 	public Town town;
 	ArrayList<Location> locations = null;
@@ -54,6 +54,7 @@ public class District {
 				locations.add((Location) a);
 			}
 		}
+		Collections.shuffle(locations);
 		return locations;
 	}
 

@@ -163,7 +163,7 @@ public class Tutorial {
                  And, eventually, greeting can be simple: "Welcome to my inn!"
                  -----*/
                 sayName(t);
-                final String race = Game.hero().getString("Race");
+                final String race = Game.hero().getstring("Race");
                 if (isExoticRace(race)) {
                     if (RPG.p(0.3)) {
                         sayHelloNeverSawYouHere(race);
@@ -1025,7 +1025,7 @@ public class Tutorial {
      */
     private static boolean sayHello(final Thing h, final double p1,
             final double p2, final double p3) {
-        final String race = h.getString("Race");
+        final String race = h.getstring("Race");
         if (!RPG.p(p1))
             return false;
         if (isUnpleasantRace(race) &&

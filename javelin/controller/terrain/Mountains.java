@@ -44,7 +44,7 @@ public class Mountains extends Terrain {
 	protected Point generatesource(World w) {
 		Point source = super.generatesource(w);
 		while (!w.map[source.x][source.y].equals(Terrain.FOREST)
-				&& checkadjacent(source, MOUNTAINS, w, 1) == 0) {
+				&& search(source, MOUNTAINS, 1, w) == 0) {
 			source = super.generatesource(w);
 		}
 		return source;

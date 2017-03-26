@@ -54,7 +54,7 @@ public class Plains extends Terrain {
 
 	@Override
 	public boolean generatetown(Point p, World w) {
-		return checkadjacent(p, DESERT, w, 1) == 0 && super.generatetown(p, w);
+		return search(p, DESERT, 1, w) == 0 && super.generatetown(p, w);
 	}
 
 	@Override
@@ -62,8 +62,8 @@ public class Plains extends Terrain {
 		Set<Hazard> hazards = super.gethazards(special);
 		if (special) {
 			Point location = new Point(Squad.active.x, Squad.active.y);
-			if (checkadjacent(location, WATER, World.seed, 1) > 0
-					|| checkadjacent(location, MARSH, World.seed, 1) > 0) {
+			if (search(location, WATER, 1, World.seed) > 0
+					|| search(location, MARSH, 1, World.seed) > 0) {
 				hazards.add(new Flood());
 			}
 		}

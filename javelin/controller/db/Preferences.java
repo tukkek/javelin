@@ -100,7 +100,7 @@ public class Preferences {
 	/** Debug option. */
 	public static Integer DEBUGRUBIES;
 	/** Debug option. */
-	public static Integer DEBUGLABOR;
+	public static boolean DEBUGLABOR;
 	/** Debug option. */
 	public static Integer DEBUGCOINS;
 	// /** Debug option. */
@@ -138,7 +138,7 @@ public class Preferences {
 		}
 	}
 
-	static String getString(String key) {
+	static String getstring(String key) {
 		try {
 			return PROPERTIES.getProperty(key);
 		} catch (MissingResourceException e) {
@@ -146,8 +146,8 @@ public class Preferences {
 		}
 	}
 
-	static Integer getInteger(String key, Integer fallback) {
-		String value = getString(key);
+	static Integer getinteger(String key, Integer fallback) {
+		String value = getstring(key);
 		/* Don't inline. */
 		if (value == null) {
 			return fallback;
@@ -211,16 +211,16 @@ public class Preferences {
 	 * Initializes or reloads all preferences.
 	 */
 	public static void init() {
-		AICACHEENABLED = getString("ai.cache").equals("true");
-		MAXTEMPERATURE = getInteger("ai.maxtemperature", 0);
+		AICACHEENABLED = getstring("ai.cache").equals("true");
+		MAXTEMPERATURE = getinteger("ai.maxtemperature", 0);
 		MAXMILISECONDSTHINKING = Math
 				.round(1000 * getFloat("ai.maxsecondsthinking"));
 		int cpus = Runtime.getRuntime().availableProcessors();
-		MAXTHREADS = Preferences.getInteger(KEYMAXTHREADS, cpus);
+		MAXTHREADS = Preferences.getinteger(KEYMAXTHREADS, cpus);
 		if (MAXTHREADS > cpus) {
 			MAXTHREADS = cpus;
 		}
-		MONITORPERFORMANCE = Preferences.getString(KEYCHECKPERFORMANCE)
+		MONITORPERFORMANCE = Preferences.getstring(KEYCHECKPERFORMANCE)
 				.equals("true");
 		if (MONITORPERFORMANCE) {
 			if (ThreadManager.performance == Integer.MIN_VALUE) {
@@ -230,14 +230,14 @@ public class Preferences {
 			ThreadManager.performance = Integer.MIN_VALUE;
 		}
 
-		BACKUP = getString("fs.backup").equals("true");
-		SAVEINTERVAL = getInteger("fs.saveinterval", 9);
+		BACKUP = getstring("fs.backup").equals("true");
+		SAVEINTERVAL = getinteger("fs.saveinterval", 9);
 
-		TILESIZEWORLD = getInteger(KEYTILEWORLD, 32);
-		TILESIZEBATTLE = getInteger(KEYTILEBATTLE, 32);
-		TILESIZEDUNGEON = getInteger(KEYTILEDUNGEON, 32);
+		TILESIZEWORLD = getinteger(KEYTILEWORLD, 32);
+		TILESIZEBATTLE = getinteger(KEYTILEBATTLE, 32);
+		TILESIZEDUNGEON = getinteger(KEYTILEDUNGEON, 32);
 		MESSAGEWAIT = Math.round(1000 * getFloat("ui.messagedelay"));
-		TEXTCOLOR = getString("ui.textcolor").toUpperCase();
+		TEXTCOLOR = getstring("ui.textcolor").toUpperCase();
 		try {
 			TextZone.fontcolor = (Color) Color.class
 					.getField(Preferences.TEXTCOLOR).get(null);
@@ -253,7 +253,7 @@ public class Preferences {
 
 	private static void initkeys(String propertyname,
 			KeysScreen worldKeyScreen) {
-		String keys = getString(propertyname);
+		String keys = getstring(propertyname);
 		if (keys == null) {
 			return;
 		}
@@ -264,30 +264,27 @@ public class Preferences {
 	}
 
 	static void readdebug() {
-		DEBUGDISABLECOMBAT = getString("cheat.combat") != null
-				&& getString("cheat.combat").equals("false");
-		DEBUGESHOWMAP = javelin.controller.db.Preferences
-				.getString("cheat.world") != null;
-		DEBUGSXP = javelin.controller.db.Preferences.getInteger("cheat.xp",
-				null);
-		DEBUGSGOLD = javelin.controller.db.Preferences.getInteger("cheat.gold",
-				null);
+		DEBUGDISABLECOMBAT = "false".equals(getstring("cheat.combat"));
+		DEBUGESHOWMAP = getboolean("cheat.world");
+		DEBUGSXP = getinteger("cheat.xp", null);
+		DEBUGSGOLD = getinteger("cheat.gold", null);
 		DEBUGRUBIES = javelin.controller.db.Preferences
-				.getInteger("cheat.rubies", null);
-		DEBUGLABOR = javelin.controller.db.Preferences.getInteger("cheat.labor",
-				null);
-		DEBUGCOINS = javelin.controller.db.Preferences.getInteger("cheat.coins",
-				null);
-		// DEBUGCLEARGARRISON = javelin.controller.db.Preferences
-		// .getString("cheat.garrison") != null;
-		DEBUGFOE = getString("cheat.monster");
-		DEBUGPERIOD = getString("cheat.period");
-		DEBUGMAPTYPE = getString("cheat.map");
-		DEBUGMINIMUMFOES = getInteger("cheat.foes", null);
-		DEBUGWEATHER = getString("cheat.weather");
-		DEBUGSEASON = getString("cheat.season");
-		DEBUGUNLOCKTEMPLES = getString("cheat.temples") != null;
+				.getinteger("cheat.rubies", null);
+		DEBUGLABOR = getboolean("cheat.labor");
+		DEBUGCOINS = getinteger("cheat.coins", null);
+		DEBUGFOE = getstring("cheat.monster");
+		DEBUGPERIOD = getstring("cheat.period");
+		DEBUGMAPTYPE = getstring("cheat.map");
+		DEBUGMINIMUMFOES = getinteger("cheat.foes", null);
+		DEBUGWEATHER = getstring("cheat.weather");
+		DEBUGSEASON = getstring("cheat.season");
+		DEBUGUNLOCKTEMPLES = getboolean("cheat.temples");
 		initdebug();
+	}
+
+	private static boolean getboolean(String key) {
+		String value = getstring(key);
+		return value != null && !value.equals("false");
 	}
 
 	static void initdebug() {
@@ -337,7 +334,7 @@ public class Preferences {
 	}
 
 	private static float getFloat(String key) {
-		return Float.parseFloat(getString(key));
+		return Float.parseFloat(getstring(key));
 	}
 
 	/**

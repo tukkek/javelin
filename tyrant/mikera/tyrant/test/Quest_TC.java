@@ -59,8 +59,8 @@ public class Quest_TC extends TyrantTestCase {
 		Thing q1=Quest.createKillNumberQuest("Kill the goblins","goblin",2);
 		Thing q2=Quest.createKillNumberQuest("Kill the goblinoids","[IsGoblinoid]",2);
 
-		assertEquals("IsGoblinoid",q2.getString("TargetType"));
-		assertEquals("goblin",q1.getString("TargetName"));
+		assertEquals("IsGoblinoid",q2.getstring("TargetType"));
+		assertEquals("goblin",q1.getstring("TargetName"));
 		
 		Thing h=Game.hero();
 		Quest.addQuest(h,q1);

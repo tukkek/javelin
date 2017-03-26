@@ -10,7 +10,6 @@ import java.util.TreeSet;
 
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.db.Preferences;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.fight.Siege;
 import javelin.controller.fight.tournament.Exhibition;
@@ -93,6 +92,9 @@ public class Town extends Location {
 	 */
 	public TreeSet<String> traits = new TreeSet<String>();
 
+	/** Remains the same even after capture. */
+	public Realm originalrealm;
+
 	/**
 	 * @param x
 	 *            Location.
@@ -113,6 +115,7 @@ public class Town extends Location {
 		// checktooclose();
 		// }
 		realm = r;
+		originalrealm = r;
 		gossip = true;
 		discard = false;
 		vision = getdistrict().getradius();
@@ -245,9 +248,9 @@ public class Town extends Location {
 		// governor.manage();
 		// }
 		governor.work(population * DAILYLABOR);
-		if (Preferences.DEBUGLABOR != null && !ishostile()) {
-			governor.work(Preferences.DEBUGLABOR);
-		}
+		// if (Preferences.DEBUGLABOR != null && !ishostile()) {
+		// governor.work(Preferences.DEBUGLABOR);
+		// }
 		if (DEBUGPROJECTS) {
 			for (Labor l : governor.getprojects()) {
 				System.out.println(
@@ -323,7 +326,9 @@ public class Town extends Location {
 		garrison.addAll(attacker.squad);
 		attacker.remove();
 		// captureforhuman(false);
-		realm = attacker.realm;
+		if (realm != null) {
+			realm = attacker.realm;
+		}
 		governor = new MonsterGovernor(this);
 		// governor.redraw();
 	}

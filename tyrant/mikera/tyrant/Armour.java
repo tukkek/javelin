@@ -411,8 +411,8 @@ public class Armour {
     }
     
     private static void addFootwear(Thing t) {
-        String n=t.getString("Name");
-        String un=t.getString("UName");
+        String n=t.getstring("Name");
+        String un=t.getstring("UName");
         if (n!=null) t.set("NamePlural","pairs of "+n);
         if (un!=null) t.set("UNamePlural","pairs of "+un);
         Lib.add(t);
@@ -520,8 +520,8 @@ public class Armour {
             
             // plural for boots
             if (name.indexOf("boots")>=0) {
-                String n=t.getString("Name");
-                String un=t.getString("UName");
+                String n=t.getstring("Name");
+                String un=t.getstring("UName");
                 if (n!=null) t.set("NamePlural","pairs of "+n);
                 if (un!=null) t.set("UNamePlural","pairs of "+un);
             }

@@ -40,8 +40,8 @@ public class WaterTemple extends Temple {
 
 	@Override
 	protected void generate() {
-		while (x == -1 || Terrain.checkadjacent(new Point(x, y), Terrain.WATER,
-				World.seed, 1) == 0) {
+		while (x == -1 || Terrain.search(new Point(x, y), Terrain.WATER,
+				1, World.seed) == 0) {
 			super.generate();
 		}
 	}

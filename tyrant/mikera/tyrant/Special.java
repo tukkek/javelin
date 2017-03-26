@@ -59,7 +59,7 @@ public class Special {
 			}
 
 			// Game.warn("Message point at "+t.x+","+t.y);
-			Game.messageTyrant(t.getString("Message"));
+			Game.messageTyrant(t.getstring("Message"));
 
 			if (!Game.isDebug()) {
 				Game.messageTyrant("[Press space to continue]");
@@ -154,7 +154,7 @@ public class Special {
 		 * @return True if cloud can affect the given target
 		 */
 		private boolean affects(Thing cloud, Thing target) {
-			String s = cloud.getString("AffectType");
+			String s = cloud.getstring("AffectType");
 			return target.getFlag(s);
 		}
 	}
@@ -174,8 +174,8 @@ public class Special {
 				if (m.isVisible(t.x, t.y)) {
 					return false;
 				}
-				String type = t.getString("StockingType");
-				String flag = t.getString("StockingFlag");
+				String type = t.getstring("StockingType");
+				String flag = t.getstring("StockingFlag");
 				int level = t.getStat("StockingLevel");
 				if (level <= 0) {
 					level = t.getMap().getLevel();

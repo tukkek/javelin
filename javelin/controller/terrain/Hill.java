@@ -40,8 +40,8 @@ public class Hill extends Terrain {
 	protected Point generatesource(World w) {
 		Point source = super.generatesource(w);
 		while (!w.map[source.x][source.y].equals(Terrain.FOREST)
-				|| (checkadjacent(source, Terrain.MOUNTAINS, w, 1) == 0
-						&& checkadjacent(source, Terrain.PLAIN, w, 1) == 0)) {
+				|| (search(source, Terrain.MOUNTAINS, 1, w) == 0
+						&& search(source, Terrain.PLAIN, 1, w) == 0)) {
 			source = super.generatesource(w);
 		}
 		return source;

@@ -26,4 +26,8 @@ public class RaiseDexterity extends RaiseAbility {
 		return true;
 	}
 
+	@Override
+	public int getattribute(Monster source) {
+		return source.dexterity;
+	}
 }

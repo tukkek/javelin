@@ -26,6 +26,7 @@ public class FlyingNimbus extends Airship {
 		super();
 		name = "Flying nimbus";
 		speed *= 10;
+		price *= 10;
 		maintenance = 0;
 		parkeable = false;
 		oldtransport = oldtransportp;

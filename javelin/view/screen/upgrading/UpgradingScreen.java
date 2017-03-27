@@ -10,23 +10,18 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.feat.Feat;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.World;
-import javelin.model.world.WorldActor;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.SelectScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Lets a plear {@link Upgrade} members from a {@link Squad}.
@@ -238,50 +233,6 @@ public abstract class UpgradingScreen extends SelectScreen {
 			s.remove(c);
 		}
 		onexit(s);
-	}
-
-	/**
-	 * Applies the upgrade and adjustments.
-	 * 
-	 * @param memberp
-	 *            Training information.
-	 * @param member
-	 *            Joins a nearby {@link Squad} or becomes a new one.
-	 * @param p
-	 *            Place the training was realized.
-	 * @param member
-	 *            Member to be returned (upgraded or not, in case of cancel).
-	 * @return The Squad the trainee is now into.
-	 */
-	static public Squad completetraining(TrainingOrder memberp, WorldActor p,
-			Combatant member) {
-		ArrayList<Point> empty = new ArrayList<Point>();
-		for (int deltax = -1; deltax <= +1; deltax++) {
-			for (int deltay = -1; deltay <= +1; deltay++) {
-				if (deltax == 0 && deltay == 0) {
-					continue;
-				}
-				int x = p.x + deltax;
-				int y = p.y + deltay;
-				if (!World.validatecoordinate(x, y)
-						|| Terrain.get(x, y).equals(Terrain.WATER)) {
-					continue;
-				}
-				WorldActor stationed = WorldActor.get(x, y, Squad.class);
-				if (stationed != null) {
-					Squad.active.add(member, memberp.equipment);
-					return Squad.active;
-				} else if (WorldActor.get(x, y) == null) {
-					empty.add(new Point(x, y));
-				}
-			}
-		}
-		Point destination = RPG.pick(empty);
-		Squad s = new Squad(destination.x, destination.y,
-				Math.round(Math.ceil(memberp.completionat / 24f) * 24), null);
-		s.add(member, memberp.equipment);
-		s.place();
-		return s;
 	}
 
 }

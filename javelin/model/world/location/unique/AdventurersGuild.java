@@ -3,34 +3,13 @@ package javelin.model.world.location.unique;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.kit.Kit;
 import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.ability.RaiseDexterity;
-import javelin.controller.upgrade.ability.RaiseStrength;
-import javelin.controller.upgrade.ability.RaiseWisdom;
-import javelin.controller.upgrade.classes.Aristocrat;
-import javelin.controller.upgrade.classes.Commoner;
-import javelin.controller.upgrade.classes.Expert;
-import javelin.controller.upgrade.classes.Warrior;
-import javelin.controller.upgrade.damage.MeleeDamage;
-import javelin.controller.upgrade.skill.Acrobatics;
-import javelin.controller.upgrade.skill.Concentration;
-import javelin.controller.upgrade.skill.Diplomacy;
-import javelin.controller.upgrade.skill.DisableDevice;
-import javelin.controller.upgrade.skill.GatherInformation;
-import javelin.controller.upgrade.skill.Heal;
-import javelin.controller.upgrade.skill.Knowledge;
-import javelin.controller.upgrade.skill.Spellcraft;
-import javelin.controller.upgrade.skill.Stealth;
-import javelin.controller.upgrade.skill.Survival;
-import javelin.controller.upgrade.skill.UseMagicDevice;
-import javelin.model.spell.Summon;
-import javelin.model.spell.conjuration.healing.wounds.CureModerateWounds;
-import javelin.model.spell.evocation.MagicMissile;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.town.PurchaseScreen;
@@ -47,68 +26,14 @@ public class AdventurersGuild extends UniqueLocation {
 
 	private static final String TITLE = "Adventurers guild";
 
-	static final String NONE = "don't study";
-	static final String FIGHTER = "fighter";
-	static final String ROGUE = "rogue";
-	static final String DRUID = "druid";
-	static final String WIZARD = "wizard";
-	static final String CLERIC = "cleric";
-	static final String BARD = "bard";
-
 	private static final float TARGETLEVEL = 2;
-	static final String[] TITLES =
-			new String[] { "underlings", "teachers", "masters", "legends" };
-	static final ArrayList<String> KITS = new ArrayList<String>();
-	static final TreeMap<String, List<Upgrade>> UPGRADETREE =
-			new TreeMap<String, List<Upgrade>>();
+	static final String[] TITLES = new String[] { "underlings", "teachers",
+			"masters", "legends" };
+	static final char[] KEYS = "1234567890abcdefghijklnoprsuvxyz/*-+.?!@#$%&()_=[]{}<>;:\"\\|"
+			.toCharArray();
 
-	static {
-		for (String kit : new String[] { BARD, CLERIC, DRUID, FIGHTER, ROGUE,
-				WIZARD, NONE }) {
-			KITS.add(kit);
-		}
-		ArrayList<Upgrade> list = new ArrayList<Upgrade>();
-		UPGRADETREE.put(FIGHTER, list);
-		list.add(Warrior.SINGLETON);
-		list.add(new MeleeDamage());
-		list.add(new RaiseStrength());
-		list = new ArrayList<Upgrade>();
-		UPGRADETREE.put(ROGUE, list);
-		list.add(Expert.SINGLETON);
-		list.add(RaiseDexterity.SINGLETON);
-		list.add(Acrobatics.SINGLETON);
-		list.add(DisableDevice.SINGLETON);
-		list.add(Stealth.SINGLETON);
-		list = new ArrayList<Upgrade>();
-		UPGRADETREE.put(WIZARD, list);
-		list.add(Aristocrat.SINGLETON);
-		list.add(new MagicMissile());
-		list.add(Concentration.SINGLETON);
-		list.add(Spellcraft.SINGLETON);
-		list = new ArrayList<Upgrade>();
-		UPGRADETREE.put(CLERIC, list);
-		list.add(Aristocrat.SINGLETON);
-		list.add(new CureModerateWounds());
-		list.add(new RaiseWisdom());
-		list.add(Knowledge.SINGLETON);
-		list.add(Heal.SINGLETON);
-		list = new ArrayList<Upgrade>();
-		UPGRADETREE.put(DRUID, list);
-		list.add(Commoner.SINGLETON);
-		list.add(new Summon("Small monstrous centipede", 1));
-		list.add(new Summon("Dire rat", 1));
-		list.add(new Summon("Eagle", 1));
-		list.add(Survival.SINGLETON);
-		list = new ArrayList<Upgrade>();
-		UPGRADETREE.put(BARD, list);
-		list.add(Commoner.SINGLETON);
-		list.add(Diplomacy.SINGLETON);
-		list.add(GatherInformation.SINGLETON);
-		list.add(Knowledge.SINGLETON);
-		list.add(UseMagicDevice.SINGLETON);
-	}
-
-	List<String> courses = null;
+	transient List<Kit> selection = null;
+	transient ArrayList<Combatant> students;
 
 	/** Constructor. */
 	public AdventurersGuild() {
@@ -123,39 +48,28 @@ public class AdventurersGuild extends UniqueLocation {
 
 	@Override
 	public boolean interact() {
-		courses = null;
-		ArrayList<Combatant> students = new ArrayList<Combatant>();
-		float mostpowerful = 0;
-		for (Combatant c : Squad.active.members) {
-			if (c.mercenary) {
-				students.clear();
-				break;
-			}
-			float cr = ChallengeRatingCalculator.calculatecr(c.source);
-			if (cr < TARGETLEVEL && c.xp.floatValue() >= 0) {
-				students.add(c);
-			}
-			mostpowerful = Math.max(mostpowerful, cr);
-		}
-		float pay = pay(rank(mostpowerful), 30, Squad.active.members);
+		selection = null;
+		students = new ArrayList<Combatant>();
+		float mostpowerful = filterstudents(students);
+		float salary = pay(rank(mostpowerful), 30, Squad.active.members);
 		InfoScreen screen = new InfoScreen("");
 		Character input = 'a';
 		while (input != 'q') {
-			screen.print(show(students, mostpowerful, pay));
+			screen.print(show(students, mostpowerful, salary));
 			input = screen.getInput();
-			int index = getindex(input, students);
+			int index = indexof(input);
 			if (0 <= index && index < students.size()) {
 				change(index);
 				continue;
 			}
 			if (input == 'w') {
 				Squad.active.hourselapsed += 24 * 5;
-				Squad.active.gold += pay / 7;
+				Squad.active.gold += salary / 7;
 				return true;
 			}
 			if (input == 'm') {
 				Squad.active.hourselapsed += 24 * 30;
-				Squad.active.gold += Math.round(pay);
+				Squad.active.gold += Math.round(salary);
 				return true;
 			}
 			if (input == 't') {
@@ -166,39 +80,73 @@ public class AdventurersGuild extends UniqueLocation {
 		return true;
 	}
 
-	void change(int index) {
-		final int from = KITS.indexOf(courses.get(index));
-		int to = from + 1;
-		if (to >= KITS.size()) {
-			to = 0;
+	private int indexof(Character input) {
+		for (int i = 0; i < KEYS.length; i++) {
+			if (input.equals(KEYS[i])) {
+				return i;
+			}
 		}
-		courses.set(index, KITS.get(to));
+		return -1;
 	}
 
-	private int getindex(Character input, ArrayList<Combatant> students) {
-		try {
-			return Integer.parseInt(input.toString()) - 1;
-		} catch (NumberFormatException e) {
-			return -1;
+	public float filterstudents(ArrayList<Combatant> students) {
+		float mostpowerful = 0;
+		for (Combatant c : Squad.active.members) {
+			if (c.mercenary) {
+				continue;
+			}
+			float cr = ChallengeRatingCalculator.calculatecr(c.source);
+			if (cr < TARGETLEVEL && c.xp.floatValue() >= 0) {
+				students.add(c);
+			}
+			mostpowerful = Math.max(mostpowerful, cr);
 		}
+		return mostpowerful;
+	}
+
+	void change(int index) {
+		Kit current = selection.get(index);
+		List<Kit> possible = getpossiblekits(students.get(index).source);
+		final int to = 1 + (current == null ? -1 : possible.indexOf(current));
+		selection.set(index, to >= possible.size() ? null : possible.get(to));
+	}
+
+	List<Kit> getpossiblekits(Monster source) {
+		ArrayList<Integer> attributes = new ArrayList<Integer>(6);
+		attributes.add(source.strength);
+		attributes.add(source.dexterity);
+		attributes.add(source.constitution);
+		attributes.add(source.intelligence);
+		attributes.add(source.wisdom);
+		attributes.add(source.charisma);
+		attributes.sort(null);
+		int[] best = new int[] { attributes.get(4), attributes.get(5) };
+		ArrayList<Kit> kits = new ArrayList<Kit>(1);
+		for (Kit k : Kit.KITS) {
+			int score = k.getpreferredability(source);
+			if (score == best[0] || score == best[1]) {
+				kits.add(k);
+			}
+		}
+		return kits;
 	}
 
 	String show(ArrayList<Combatant> students, float mostpowerful, float pay) {
-		String t =
-				"You enter a tall building where people are training and studying in several large rooms.\n\n";
+		String t = "You enter a tall building where people are training and studying in several large rooms.\n\n";
 		if (!students.isEmpty()) {
 			while (students.size() >= 10) {
 				students.remove(0);
 			}
-			if (courses == null) {
-				courses = new ArrayList<String>(students.size());
+			if (selection == null) {
+				selection = new ArrayList<Kit>(students.size());
 				for (int i = 0; i < students.size(); i++) {
-					courses.add(determinedefaultkit(students.get(i)));
+					selection.add(null);
 				}
 			}
 			for (int i = 0; i < students.size(); i++) {
-				t += (i + 1) + " - " + students.get(i) + " (" + courses.get(i)
-						+ ")\n";
+				Kit k = selection.get(i);
+				t += KEYS[i] + " - " + students.get(i) + " ("
+						+ (k == null ? "don't study" : k.toString()) + ")\n";
 			}
 			t += "\nPress the respective number to change careers.\n\n";
 			t += "t - begin training\n";
@@ -212,39 +160,14 @@ public class AdventurersGuild extends UniqueLocation {
 		return t;
 	}
 
-	String determinedefaultkit(Combatant combatant) {
-		int strength = combatant.source.strength;
-		int dexterity = combatant.source.dexterity;
-		int constitution = combatant.source.constitution;
-		int intelligence = combatant.source.intelligence;
-		int wisdom = combatant.source.wisdom;
-		int charisma = combatant.source.charisma;
-		int max = Math.max(strength, dexterity);
-		max = Math.max(max, constitution);
-		max = Math.max(max, intelligence);
-		max = Math.max(max, wisdom);
-		max = Math.max(max, charisma);
-		if (max == strength) {
-			return FIGHTER;
-		} else if (max == dexterity) {
-			return ROGUE;
-		} else if (max == intelligence) {
-			return WIZARD;
-		} else if (max == wisdom) {
-			return CLERIC;
-		} else if (max == constitution) {
-			return DRUID;
-		} else if (max == charisma) {
-			return BARD;
-		}
-		return FIGHTER;
-	}
-
 	void train(ArrayList<Combatant> students) {
+		if (!validateselection(students)) {
+			return;
+		}
 		Squad.active.hourselapsed += 24 * 7;
 		for (int i = 0; i < students.size(); i++) {
-			String kit = courses.get(i);
-			if (kit == NONE) {
+			Kit kit = selection.get(i);
+			if (kit == null) {
 				continue;
 			}
 			Combatant student = students.get(i);
@@ -253,7 +176,7 @@ public class AdventurersGuild extends UniqueLocation {
 			float original = cr;
 			Upgrade purchaseskills = null;
 			while (cr < TARGETLEVEL) {
-				Upgrade u = RPG.pick(UPGRADETREE.get(kit));
+				Upgrade u = RPG.pick(kit.upgrades);
 				if (u.upgrade(student)) {
 					training += u.name + "\n";
 				}
@@ -273,6 +196,15 @@ public class AdventurersGuild extends UniqueLocation {
 				student.source.purchaseskills(purchaseskills).show();
 			}
 		}
+	}
+
+	public boolean validateselection(ArrayList<Combatant> students) {
+		for (int i = 0; i < students.size(); i++) {
+			if (selection.get(i) != null) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

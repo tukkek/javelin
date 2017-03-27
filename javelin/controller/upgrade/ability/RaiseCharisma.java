@@ -8,7 +8,7 @@ import javelin.model.unit.Monster;
  */
 public class RaiseCharisma extends RaiseAbility {
 	/** Singleton instance. */
-	public static final RaiseAbility INSTANCE = new RaiseCharisma();
+	public static final RaiseAbility SINGLETON = new RaiseCharisma();
 
 	RaiseCharisma() {
 		super("charisma");
@@ -23,6 +23,11 @@ public class RaiseCharisma extends RaiseAbility {
 	boolean setattribute(Combatant m, int l) {
 		m.source.raisecharisma(+1);
 		return true;
+	}
+
+	@Override
+	public int getattribute(Monster source) {
+		return source.charisma;
 	}
 
 }

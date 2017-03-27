@@ -22,15 +22,16 @@ public class SummoningCircle extends Academy {
 
 	/** Constructor. */
 	public SummoningCircle() {
-		super(DESCRIPTION, DESCRIPTION, 5, 15, new HashSet<Upgrade>());
+		super(DESCRIPTION, DESCRIPTION, 5, 15, new HashSet<Upgrade>(), null,
+				null);
 		UniqueLocation.init(this);
 		pillage = false;
 		populate();
 	}
 
 	void populate() {
-		ArrayList<Float> crs =
-				new ArrayList<Float>(Javelin.MONSTERSBYCR.keySet());
+		ArrayList<Float> crs = new ArrayList<Float>(
+				Javelin.MONSTERSBYCR.keySet());
 		add: while (upgrades.size() < 5) {
 			float cr = RPG.pick(crs);
 			for (Upgrade u : upgrades) {

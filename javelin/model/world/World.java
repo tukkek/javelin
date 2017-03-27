@@ -301,8 +301,7 @@ public class World implements Serializable {
 			throw new RestartWorldGeneration();
 		}
 		if (retries - lastretries >= 100000 * 2) {
-			new InfoScreen("")
-					.print("Generating world... Terrain retries: " + retries);
+			new InfoScreen("").print("Generating world... Retries: " + retries);
 			lastretries = retries;
 		}
 	}

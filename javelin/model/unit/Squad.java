@@ -24,7 +24,6 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.Resource;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.town.Academy;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.Images;
@@ -109,7 +108,7 @@ public class Squad extends WorldActor {
 	public void disband() {
 		ArrayList<WorldActor> squads = getall(Squad.class);
 		squads.remove(this);
-		if (squads.isEmpty() && !Academy.train()) {
+		if (squads.isEmpty()) {
 			Javelin.lose();
 		}
 		if (Squad.active == this) {

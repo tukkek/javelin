@@ -7,7 +7,6 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.fortification.MartialAcademy;
 import javelin.model.world.location.order.Order;
-import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.Academy;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.Option;
@@ -25,21 +24,24 @@ public class AcademyScreen extends UpgradingScreen {
 	public AcademyScreen(Academy academy, Town t) {
 		super(academy.descriptionknown, t);
 		this.academy = academy;
-		stayopen = false;
+		stayopen = true;
 		pillage = new Option("Pillage ($"
 				+ PurchaseScreen.formatcost(academy.getspoils()) + ")", 0, 'p');
 	}
 
 	@Override
 	protected void registertrainee(Order trainee) {
-		this.academy.training = (TrainingOrder) trainee;
+		this.academy.training.add(trainee);
 	}
 
 	@Override
 	protected void onexit(Squad s) {
 		if (s.members.isEmpty()) {
 			academy.stash += s.gold;
-			academy.parking = s.transport;
+			if (academy.parking == null
+					|| s.transport.price > academy.parking.price) {
+				academy.parking = s.transport;
+			}
 		}
 	}
 
@@ -70,5 +72,11 @@ public class AcademyScreen extends UpgradingScreen {
 		}
 		options.remove(pillage);
 		return super.select(feedback, options);
+	}
+
+	@Override
+	public String printinfo() {
+		return academy.training.queue.isEmpty() ? ""
+				: "Currently training: " + academy.training;
 	}
 }

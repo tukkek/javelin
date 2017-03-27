@@ -7,7 +7,9 @@ import javelin.model.unit.Monster;
  * @see RaiseAbility
  */
 public class RaiseWisdom extends RaiseAbility {
-	public RaiseWisdom() {
+	public static final RaiseAbility SINGLETON = new RaiseWisdom();
+
+	private RaiseWisdom() {
 		super("wisdom");
 	}
 
@@ -22,4 +24,8 @@ public class RaiseWisdom extends RaiseAbility {
 		return true;
 	}
 
+	@Override
+	public int getattribute(Monster source) {
+		return source.wisdom;
+	}
 }

@@ -17,6 +17,8 @@ import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.WorldActor;
+import javelin.model.world.location.order.Order;
+import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.Academy;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.WorldScreen;
@@ -310,8 +312,9 @@ public abstract class Item implements Serializable, Cloneable {
 		for (WorldActor a : WorldActor.getall()) {
 			Academy academy = a instanceof Academy ? (Academy) a : null;
 			if (academy != null) {
-				if (academy.training != null) {
-					items.addAll(academy.training.equipment);
+				for (Order o : academy.training.queue) {
+					TrainingOrder training = (TrainingOrder) o;
+					items.addAll(training.equipment);
 				}
 				continue;
 			}

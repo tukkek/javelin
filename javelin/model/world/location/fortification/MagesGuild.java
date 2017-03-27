@@ -7,6 +7,7 @@ import java.util.HashSet;
 import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.ability.RaiseAbility;
+import javelin.controller.upgrade.classes.Aristocrat;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.town.Academy;
 
@@ -23,10 +24,13 @@ public class MagesGuild extends Academy {
 	 */
 	public MagesGuild(String knownnamep, HashSet<Upgrade> spells,
 			RaiseAbility raise) {
-		super(knownnamep, "Mages guild", 0, 0, spells);
+		super(knownnamep, "Mages guild", 0, 0, spells, raise,
+				Aristocrat.SINGLETON);
 		ArrayList<Spell> ascending = new ArrayList<Spell>(spells.size());
 		for (Upgrade u : spells) {
-			ascending.add((Spell) u);
+			if (u instanceof Spell) {
+				ascending.add((Spell) u);
+			}
 		}
 		ascending.sort(new Comparator<Spell>() {
 			@Override
@@ -39,7 +43,6 @@ public class MagesGuild extends Academy {
 		if (maxlevel > 10) {
 			maxlevel = 10;
 		}
-		upgrades.add(raise);
 	}
 
 	@Override
@@ -47,10 +50,10 @@ public class MagesGuild extends Academy {
 		upgrades.sort(new Comparator<Upgrade>() {
 			@Override
 			public int compare(Upgrade o1, Upgrade o2) {
-				if (o1 instanceof RaiseAbility) {
+				if (!(o1 instanceof Spell)) {
 					return 1;
 				}
-				if (o2 instanceof RaiseAbility) {
+				if (!(o2 instanceof Spell)) {
 					return -1;
 				}
 				Spell s1 = (Spell) o1;

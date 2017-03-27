@@ -55,8 +55,8 @@ public class AssassinsGuild extends Academy {
 	static final String[] LEVELS = new String[] { "Cutthroat", "Footpad",
 			"Ninja", "Shadow" };
 
-	class Screen extends AcademyScreen {
-		public Screen(Academy academy, Town t) {
+	class AssassinGuildScreen extends AcademyScreen {
+		public AssassinGuildScreen(Academy academy, Town t) {
 			super(academy, t);
 		}
 
@@ -124,11 +124,12 @@ public class AssassinsGuild extends Academy {
 
 	/** Constructor. */
 	public AssassinsGuild() {
-		super(DESCRITPION, DESCRITPION, 6, 10, new HashSet<Upgrade>());
+		super(DESCRITPION, DESCRITPION, 6, 10, new HashSet<Upgrade>(),
+				RaiseDexterity.SINGLETON, Expert.SINGLETON);
 		vision = 3;
 		upgrades.add(Disguise.SINGLETON);
 		upgrades.add(Stealth.SINGLETON);
-		upgrades.add(RaiseCharisma.INSTANCE);
+		upgrades.add(RaiseCharisma.SINGLETON);
 		upgrades.add(RaiseDexterity.SINGLETON);
 		upgrades.add(new FeatUpgrade(Deceitful.SINGLETON));
 		upgrades.add(Expert.SINGLETON);
@@ -159,7 +160,7 @@ public class AssassinsGuild extends Academy {
 
 	@Override
 	protected AcademyScreen getscreen() {
-		return new Screen(this, null);
+		return new AssassinGuildScreen(this, null);
 	}
 
 	public static AssassinsGuild get() {

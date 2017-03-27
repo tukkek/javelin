@@ -39,6 +39,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.fortification.Fortification;
+import javelin.model.world.location.town.Academy;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.NamingScreen;
@@ -72,7 +73,8 @@ public class Javelin {
 
 	private static final String TITLE = "Javelin";
 
-	private static final Preferences RECORD = Preferences.userNodeForPackage(Javelin.class);
+	private static final Preferences RECORD = Preferences
+			.userNodeForPackage(Javelin.class);
 
 	/**
 	 * Monster descriptions, separate from {@link Monster} data to avoid
@@ -240,7 +242,8 @@ public class Javelin {
 		} else {
 			throw new RuntimeException("No welcome message");
 		}
-		return "Welcome! " + flavor + "\n\n(press h at the overworld or battle screens for help)";
+		return "Welcome! " + flavor
+				+ "\n\n(press h at the overworld or battle screens for help)";
 	}
 
 	/**
@@ -249,10 +252,15 @@ public class Javelin {
 	 * record the highscore and exit the application.
 	 */
 	public static void lose() {
+		if (Academy.train()) {
+			return;
+		}
 		Javelin.app.switchScreen(BattleScreen.active);
 		StateManager.clear();
 		BattleScreen.active.messagepanel.clear();
-		Game.message("You have lost all your monsters! Game over T_T\n\n" + record(), Delay.NONE);
+		Game.message(
+				"You have lost all your monsters! Game over T_T\n\n" + record(),
+				Delay.NONE);
 		while (InfoScreen.feedback() != '\n') {
 			continue;
 		}
@@ -386,7 +394,8 @@ public class Javelin {
 	 *            operation.
 	 * @return The index of the selected element or -1 if aborted.
 	 */
-	static public int choose(String output, List<?> names, boolean fullscreen, boolean forceselection) {
+	static public int choose(String output, List<?> names, boolean fullscreen,
+			boolean forceselection) {
 		if (!forceselection) {
 			output += " (q to quit)";
 		}
@@ -445,7 +454,8 @@ public class Javelin {
 	 */
 	public static KeyEvent message(String text, boolean requireenter) {
 		Game.messagepanel.clear();
-		Game.message(text + "\nPress " + (requireenter ? "ENTER" : "any key") + " to continue...", Delay.NONE);
+		Game.message(text + "\nPress " + (requireenter ? "ENTER" : "any key")
+				+ " to continue...", Delay.NONE);
 		KeyEvent input = Game.getInput();
 		while (requireenter && input.getKeyChar() != '\n') {
 			input = Game.getInput();

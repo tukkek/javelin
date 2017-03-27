@@ -263,7 +263,7 @@ public class Incursion extends WorldActor {
 		if (attacker.realm == realm) {
 			return ignoreincursion(attacker);
 		} else {
-			return Incursion.fight(attacker.getel(), getel());
+			return fight(attacker.getel(), getel());
 		}
 	}
 

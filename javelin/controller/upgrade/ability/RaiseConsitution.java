@@ -1,5 +1,6 @@
 package javelin.controller.upgrade.ability;
 
+import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -8,7 +9,9 @@ import javelin.model.unit.Monster;
  */
 public class RaiseConsitution extends RaiseAbility {
 
-	public RaiseConsitution() {
+	public static final Upgrade SINGLETON = new RaiseConsitution();
+
+	private RaiseConsitution() {
 		super("constitution");
 	}
 
@@ -23,4 +26,8 @@ public class RaiseConsitution extends RaiseAbility {
 		return true;
 	}
 
+	@Override
+	public int getattribute(Monster source) {
+		return source.constitution;
+	}
 }

@@ -17,6 +17,8 @@ public class OrderQueue implements Serializable {
 	/**
 	 * Items being processed or done yet not reclaimed, from those that are
 	 * going to finish first to those that will finish later.
+	 * 
+	 * TODO this should be private
 	 */
 	public ArrayList<Order> queue = new ArrayList<Order>(0);
 
@@ -80,6 +82,9 @@ public class OrderQueue implements Serializable {
 	@Override
 	public String toString() {
 		String s = "";
+		if (queue.isEmpty()) {
+			return s;
+		}
 		for (Order o : queue) {
 			s += o + ", ";
 		}

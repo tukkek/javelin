@@ -11,7 +11,7 @@ import javelin.model.unit.Monster;
  */
 public class RaiseIntelligence extends RaiseAbility {
 	/** Singleton instance. */
-	public static final RaiseAbility INSTANCE = new RaiseIntelligence();
+	public static final RaiseAbility SINGLETON = new RaiseIntelligence();
 
 	RaiseIntelligence() {
 		super("intelligence");
@@ -51,5 +51,10 @@ public class RaiseIntelligence extends RaiseAbility {
 					* SkillsFactor.levelup(c.skillrate, source);
 		}
 		return total;
+	}
+
+	@Override
+	public int getattribute(Monster source) {
+		return source.intelligence;
 	}
 }

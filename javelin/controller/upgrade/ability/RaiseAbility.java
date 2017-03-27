@@ -38,4 +38,5 @@ public abstract class RaiseAbility extends Upgrade {
 
 	abstract boolean setattribute(Combatant m, int l);
 
+	abstract public int getattribute(Monster source);
 }

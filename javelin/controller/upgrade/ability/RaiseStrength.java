@@ -8,7 +8,9 @@ import javelin.model.unit.Monster;
  * @see RaiseAbility
  */
 public class RaiseStrength extends RaiseAbility {
-	public RaiseStrength() {
+	public static final RaiseAbility SINGLETON = new RaiseStrength();
+
+	private RaiseStrength() {
 		super("strength");
 	}
 
@@ -26,4 +28,8 @@ public class RaiseStrength extends RaiseAbility {
 		return true;
 	}
 
+	@Override
+	public int getattribute(Monster source) {
+		return source.strength;
+	}
 }

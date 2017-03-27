@@ -208,9 +208,14 @@ public abstract class Location extends WorldActor {
 			int el = attacker.getel();
 			return Incursion.fight(el, getel(el));
 		}
+		captureforai(attacker);
+		return false;
+	}
+
+	/** TODO could probably merge this and {@link #capture()}. */
+	protected void captureforai(Incursion attacker) {
 		garrison.addAll(attacker.squad);
 		realm = attacker.realm;
-		return false;
 	}
 
 	/**

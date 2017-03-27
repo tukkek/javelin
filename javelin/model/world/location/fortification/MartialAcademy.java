@@ -3,6 +3,8 @@ package javelin.model.world.location.fortification;
 import java.util.HashSet;
 
 import javelin.controller.upgrade.Upgrade;
+import javelin.controller.upgrade.ability.RaiseAbility;
+import javelin.controller.upgrade.classes.Warrior;
 import javelin.model.world.location.town.Academy;
 
 /**
@@ -11,8 +13,14 @@ import javelin.model.world.location.town.Academy;
  * @author alex
  */
 public class MartialAcademy extends Academy {
-	/** See {@link Academy#Academy(String, String, int, int, HashSet)}. */
-	public MartialAcademy(HashSet<Upgrade> upgrades, String descriptionknownp) {
-		super(descriptionknownp, "An academy", 6, 10, upgrades);
+	/**
+	 * See {@link Academy#Academy(String, String, int, int, HashSet)}.
+	 * 
+	 * @param raise
+	 */
+	public MartialAcademy(HashSet<Upgrade> upgrades, String descriptionknownp,
+			RaiseAbility raise) {
+		super(descriptionknownp, "An academy", 6, 10, upgrades, raise,
+				Warrior.SINGLETON);
 	}
 }

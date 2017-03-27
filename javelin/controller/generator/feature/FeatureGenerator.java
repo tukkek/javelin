@@ -34,6 +34,7 @@ import javelin.model.world.location.fortification.Shrine;
 import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.town.Dwelling;
 import javelin.model.world.location.town.Inn;
+import javelin.model.world.location.town.RealmAcademy;
 import javelin.model.world.location.town.Shop;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.AdventurersGuild;
@@ -250,6 +251,7 @@ public class FeatureGenerator {
 	void generatestartingarea(World seed, Town t) {
 		spawnnear(t, new Inn(), seed, 1, 2);
 		spawnnear(t, new Shop(true, t.realm), seed, 1, 2);
+		spawnnear(t, new RealmAcademy(t.realm), seed, 1, 2);
 		ArrayList<Monster> recruits = t.getpossiblerecruits();
 		recruits.sort(new Comparator<Monster>() {
 			@Override

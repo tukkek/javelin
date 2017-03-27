@@ -133,7 +133,7 @@ public class AssassinsGuild extends Academy {
 		upgrades.add(RaiseDexterity.SINGLETON);
 		upgrades.add(new FeatUpgrade(Deceitful.SINGLETON));
 		upgrades.add(Expert.SINGLETON);
-		sort(upgrades);
+		// sort(upgrades);
 	}
 
 	public int getrank(double a) {

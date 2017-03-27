@@ -47,7 +47,9 @@ public class AcademyScreen extends UpgradingScreen {
 
 	@Override
 	protected ArrayList<Upgrade> getupgrades() {
-		return academy.upgrades;
+		ArrayList<Upgrade> list = new ArrayList<Upgrade>(academy.upgrades);
+		academy.sort(list);
+		return list;
 	}
 
 	@Override

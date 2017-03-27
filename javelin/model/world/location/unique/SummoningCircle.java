@@ -46,7 +46,7 @@ public class SummoningCircle extends Academy {
 	}
 
 	@Override
-	protected void sort(ArrayList<Upgrade> upgrades) {
+	public void sort(ArrayList<Upgrade> upgrades) {
 		upgrades.sort(new Comparator<Upgrade>() {
 			@Override
 			public int compare(Upgrade o1, Upgrade o2) {

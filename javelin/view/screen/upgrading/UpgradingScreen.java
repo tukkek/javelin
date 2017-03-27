@@ -226,13 +226,13 @@ public abstract class UpgradingScreen extends SelectScreen {
 			trainees.add(new TrainingOrder(Math.round(xpcost * 24 * 7), c,
 					s.equipment.get(c.id), c.toString(), xpcost, original));
 		}
+		onexit(s);
 		for (TrainingOrder trainee : trainees) {
 			registertrainee(trainee);
 			Combatant c = trainee.trained;
 			s.equipment.remove(c.toString());
 			s.remove(c);
 		}
-		onexit(s);
 	}
 
 }

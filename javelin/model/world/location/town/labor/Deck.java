@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import javelin.Javelin;
+import javelin.model.world.location.town.RealmAcademy.BuildAcademy;
 import javelin.model.world.location.town.Shop.BuildShop;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.TransportHub.BuildTransportHub;
@@ -34,7 +35,8 @@ public class Deck extends ArrayList<Labor> {
 		populate(DEFAULT, null,
 				new Labor[] { new Growth(), new BuildInn(), new Redraw(),
 						new BuildDwelling(), new BuildShop(),
-						new BuildTransportHub(), new BuildTransportHub() });
+						new BuildTransportHub(), new BuildTransportHub(),
+						new BuildAcademy() });
 		populate(new Deck(), "expansive", new Labor[] { new Settler(),
 				new BuildOutpost(), new BuildRoad(), new BuildHighway() });
 		populate(new Deck(), "productive",

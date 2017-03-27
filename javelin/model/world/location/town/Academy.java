@@ -43,7 +43,7 @@ public abstract class Academy extends Fortification {
 	/** Money {@link #training} unit had before entering here (if alone). */
 	public int stash;
 	/** Upgrades that can be learned here. */
-	public ArrayList<Upgrade> upgrades;
+	public HashSet<Upgrade> upgrades;
 	/** If <code>true</code> will allow the academy to be pillaged for money. */
 	public boolean pillage = true;
 	/** If a single unit parks with a vehicle here it is stored. */
@@ -60,14 +60,14 @@ public abstract class Academy extends Fortification {
 			int minlevel, int maxlevel, HashSet<Upgrade> upgradesp,
 			RaiseAbility raiseability, ClassAdvancement classadvancement) {
 		super(descriptionknown, descriptionunknown, minlevel, maxlevel);
-		upgrades = new ArrayList<Upgrade>(upgradesp);
+		upgrades = new HashSet<Upgrade>(upgradesp);
 		if (raiseability != null) {
 			upgrades.add(raiseability);
 		}
 		if (classadvancement != null) {
 			upgrades.add(classadvancement);
 		}
-		sort(upgrades);
+		// sort(upgrades);
 		sacrificeable = false;
 	}
 
@@ -75,7 +75,7 @@ public abstract class Academy extends Fortification {
 	 * @param upgrades
 	 *            {@link #upgrades}, to be sorted.
 	 */
-	protected void sort(ArrayList<Upgrade> upgrades) {
+	public void sort(ArrayList<Upgrade> upgrades) {
 		upgrades.sort(ALPHABETICALSORT);
 	}
 

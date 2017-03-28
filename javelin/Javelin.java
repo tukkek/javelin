@@ -13,6 +13,7 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.WindowConstants;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -49,9 +50,9 @@ import tyrant.mikera.engine.RPG;
 import tyrant.mikera.tyrant.QuestApp;
 
 /**
- * Utility class for broad-level rules and game-behavior. Add -Ddebug=true to
- * the java command line for easier debugging and logging.
- * 
+ * Utility class for broad-level rules and game-behavior. Add the VM argument
+ * -Ddebug=true to the java command line for easier debugging and logging.
+ *
  * @see #DEBUG
  * @author alex
  */
@@ -79,7 +80,7 @@ public class Javelin {
 	/**
 	 * Monster descriptions, separate from {@link Monster} data to avoid
 	 * duplication in memory when using {@link Monster#clone()}.
-	 * 
+	 *
 	 * @see Combatant#clonedeeply()
 	 */
 	public static TreeMap<String, String> DESCRIPTIONS = new TreeMap<String, String>();
@@ -101,7 +102,9 @@ public class Javelin {
 			final XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(defaultHandler);
 			reader.setErrorHandler(defaultHandler);
-			reader.parse(new InputSource(new FileReader("monsters.xml")));
+			FileReader filereader = new FileReader("monsters.xml");
+			reader.parse(new InputSource(filereader));
+			filereader.close();
 			Organization.process();
 			SpellsFactor.init();
 			Spell.init();
@@ -116,7 +119,7 @@ public class Javelin {
 
 	/**
 	 * First method to be called.
-	 * 
+	 *
 	 * @param args
 	 *            See {@link #DEBUG}.
 	 */
@@ -125,7 +128,7 @@ public class Javelin {
 		final JFrame f = new JFrame(TITLE);
 		f.setBackground(java.awt.Color.black);
 		f.addWindowListener(StateManager.SAVEONCLOSE);
-		f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		f.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		f.setLayout(new BorderLayout());
 		app = new JavelinApp();
 		app.frame = f;
@@ -159,7 +162,7 @@ public class Javelin {
 
 	/**
 	 * TODO move to a new class with proper enum?
-	 * 
+	 *
 	 * @return {@link #PERIODEVENING}, {@link #PERIODMORNING},
 	 *         {@link #PERIODNIGHT} or {@value #PERIODNOON}.
 	 */
@@ -195,7 +198,7 @@ public class Javelin {
 	 * This is also the only function that should write to {@link Squad#active}
 	 * so it should be called with extreme caution to avoid changing it in the
 	 * middle of an action.
-	 * 
+	 *
 	 * @return Next squad to act.
 	 */
 	public static Squad act() {
@@ -213,7 +216,7 @@ public class Javelin {
 	 */
 	public static Squad nexttoact() {
 		Squad next = null;
-		for (final WorldActor a : Squad.getall(Squad.class)) {
+		for (final WorldActor a : WorldActor.getall(Squad.class)) {
 			Squad s = (Squad) a;
 			if (next == null || s.hourselapsed < next.hourselapsed) {
 				next = s;
@@ -224,7 +227,7 @@ public class Javelin {
 
 	/**
 	 * Pure fluff/flavor.
-	 * 
+	 *
 	 * @return Welcomes the playet to the game based on the current time of the
 	 *         day.
 	 */
@@ -269,7 +272,7 @@ public class Javelin {
 
 	/**
 	 * Sets the highscore and...
-	 * 
+	 *
 	 * @return a message with previous and current score.
 	 */
 	public static String record() {
@@ -381,7 +384,7 @@ public class Javelin {
 
 	/**
 	 * Utility function for user-input selection.
-	 * 
+	 *
 	 * @param output
 	 *            Text to show the user.
 	 * @param names
@@ -442,7 +445,7 @@ public class Javelin {
 	/**
 	 * Main output function for {@link WorldScreen}. Waits for user input for
 	 * confirmation.
-	 * 
+	 *
 	 * @param text
 	 *            Prints this message in the status panel.
 	 * @param requireenter
@@ -465,7 +468,7 @@ public class Javelin {
 
 	/**
 	 * Prompts a message in the {@link WorldScreen}.
-	 * 
+	 *
 	 * @param prompt
 	 *            Text to show.
 	 * @return Any {@link InfoScreen#feedback()}.
@@ -506,16 +509,53 @@ public class Javelin {
 	 * these rolls random - for example, if always using take-10 rolls
 	 * {@link PartyHazard}s would become obsolete when a character with enough
 	 * {@link Skills#survival} is in the party.
-	 * 
+	 *
 	 * Note also that randomization can't be used without proper treatment
 	 * inside {@link BattleAi} computing, which is why take-10 rolls makes
 	 * things easier while in-battle.
-	 * 
+	 *
 	 * @param take10
 	 *            A take-10 result.
 	 * @return result of the same roll, but rolling a d20 instead.
 	 */
 	public static int roll(int take10) {
 		return take10 - 10 + RPG.r(1, 20);
+	}
+
+	public static String describedifficulty(int dc) {
+		if (dc <= 0) {
+			return "very easy";
+		}
+		if (dc <= 5) {
+			return "easy";
+		}
+		if (dc <= 10) {
+			return "average";
+		}
+		if (dc <= 15) {
+			return "tough";
+		}
+		if (dc <= 20) {
+			return "challenging";
+		}
+		if (dc <= 25) {
+			return "formidable";
+		}
+		if (dc <= 30) {
+			return "heroic";
+		}
+		return "nearly impossible";
+	}
+
+	/**
+	 * @param message
+	 *            Shows this in a fullscreen, requires enter to leave.
+	 */
+	public static void show(String message) {
+		InfoScreen s = new InfoScreen("");
+		s.print(message);
+		while (s.getInput() != '\n') {
+			// wait for enter
+		}
 	}
 }

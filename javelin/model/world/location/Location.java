@@ -34,7 +34,12 @@ import tyrant.mikera.engine.RPG;
 /**
  * A {@link WorldActor} that is actually a place that represent a location to be
  * entered or explored.
- * 
+ *
+ * Im may be tempted to add a uniform #level here for subclass convenience, but
+ * having the same on each subclass that needs it bring more benefits, from code
+ * efficiency to ease of searching calls and assignments. The very small
+ * convenience added is not worth the trade-off.
+ *
  * @see WorldActor#getall()
  * @author alex
  */
@@ -58,7 +63,7 @@ public abstract class Location extends WorldActor {
 	/**
 	 * If <code>true</code>, the computer will destroy this instead of
 	 * positioning a {@link #garrison} here.
-	 * 
+	 *
 	 * @see #destroy(javelin.model.world.Incursion)
 	 */
 	public boolean sacrificeable = false;
@@ -86,9 +91,6 @@ public abstract class Location extends WorldActor {
 	/** Link with a road if nearby. */
 	public boolean link = true;
 
-	/** For convenience of subclasses, with no external meaning. */
-	public int level = 0;
-
 	/**
 	 * @param descriptionknown
 	 *            What to show a player on a succesfull {@link Skills#knowledge}
@@ -111,7 +113,7 @@ public abstract class Location extends WorldActor {
 	/**
 	 * Default implementation of {@link #generate()}, will try random
 	 * positioning a {@link WorldActor} until it lands on a free space.
-	 * 
+	 *
 	 * @param allowwater
 	 *            <code>true</code> if it is allowed to place the actor on
 	 *            {@link Terrain#WATER}.
@@ -121,8 +123,7 @@ public abstract class Location extends WorldActor {
 		ArrayList<WorldActor> actors = WorldActor.getall();
 		actors.remove(p);
 		while (p.x == -1
-				|| (!allowwater
-						&& World.seed.map[p.x][p.y].equals(Terrain.WATER))
+				|| !allowwater && World.seed.map[p.x][p.y].equals(Terrain.WATER)
 				|| WorldActor.get(p.x, p.y, actors) != null || neartown(p)
 				|| World.roads[p.x][p.y] || World.highways[p.x][p.y]) {
 			p.x = RPG.r(0, World.SIZE - 1);
@@ -156,7 +157,7 @@ public abstract class Location extends WorldActor {
 
 	/**
 	 * Called when this place is reached with the active Squad.
-	 * 
+	 *
 	 * @throws StartBattle
 	 * @return <code>true</code> if the {@link Squad} is able to interact with
 	 *         this place, <code>false</code> if a {@link #garrison} defends it.
@@ -221,7 +222,7 @@ public abstract class Location extends WorldActor {
 	/**
 	 * Only called for {@link #sacrificeable} places when being reached by an
 	 * {@link Incursion}.
-	 * 
+	 *
 	 * @param attackerel
 	 *            Given an attacking encounter level...
 	 * @return the defending encounter level. A <code>null</code> value is
@@ -270,7 +271,7 @@ public abstract class Location extends WorldActor {
 
 	/**
 	 * Offers information and a chance to back out of the fight.
-	 * 
+	 *
 	 * @param opponents
 	 *            Will be {@link Squad#spot}ted.
 	 * @param description
@@ -407,9 +408,9 @@ public abstract class Location extends WorldActor {
 
 	/**
 	 * Should only be called from a valid {@link District}.
-	 * 
+	 *
 	 * @param d
-	 * 
+	 *
 	 * @return Any upgrades this location may be improved with.
 	 */
 	public ArrayList<Labor> getupgrades(District d) {
@@ -420,7 +421,7 @@ public abstract class Location extends WorldActor {
 		description = name;
 	}
 
-	public boolean haslabor() {
+	public boolean isworking() {
 		return false;
 	}
 }

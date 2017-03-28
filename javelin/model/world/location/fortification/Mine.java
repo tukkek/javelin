@@ -221,7 +221,7 @@ public class Mine extends Fortification {
 	}
 
 	@Override
-	public boolean haslabor() {
+	public boolean isworking() {
 		return !miners.isEmpty();
 	}
 

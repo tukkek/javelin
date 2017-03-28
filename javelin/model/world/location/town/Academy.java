@@ -1,6 +1,7 @@
 package javelin.model.world.location.town;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -9,35 +10,94 @@ import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
+import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.controller.upgrade.classes.ClassAdvancement;
+import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.transport.Transport;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
+import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.OrderQueue;
 import javelin.model.world.location.order.TrainingOrder;
+import javelin.model.world.location.town.labor.Build;
+import javelin.model.world.location.town.labor.BuildingUpgrade;
+import javelin.model.world.location.town.labor.Labor;
 import javelin.view.screen.upgrading.AcademyScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
  * A place where units can go to learn about a general topic - be it physical
  * feats or intellectual or magical prowess.
- * 
+ *
  * @author alex
  */
-public abstract class Academy extends Fortification {
-	private static final Comparator ALPHABETICALSORT = new Comparator<Upgrade>() {
+public class Academy extends Fortification {
+	private static final Comparator<Upgrade> ALPHABETICALSORT = new Comparator<Upgrade>() {
 		@Override
 		public int compare(Upgrade o1, Upgrade o2) {
 			return o1.name.compareTo(o2.name);
 		}
 	};
 
+	public static class BuildAcademy extends Build {
+		Academy goal;
+
+		public BuildAcademy(Academy goal) {
+			super("Build academy", 10);
+			this.goal = goal;
+		}
+
+		@Override
+		protected void define() {
+			super.define();
+			if (goal.upgrades.isEmpty()) {
+				goal.setrealm(town.originalrealm);
+			}
+			cost = Math.min(cost, goal.upgrades.size());
+		}
+
+		@Override
+		public Location getgoal() {
+			return goal;
+		}
+
+		@Override
+		public boolean validate(District d) {
+			return super.validate(d) && d.getlocation(Academy.class) == null;
+		}
+	}
+
+	class UpgradeAcademy extends BuildingUpgrade {
+		public UpgradeAcademy(int cost, Academy previous) {
+			super("", cost, +cost, previous);
+			name = "Upgrade academy";
+		}
+
+		@Override
+		public Location getgoal() {
+			return previous;
+		}
+
+		@Override
+		public boolean validate(District d) {
+			return super.validate(d) && cost > 0;
+		}
+
+		@Override
+		public void done() {
+			super.done();
+			((Academy) previous).level += cost;
+			refill();
+		}
+	}
+
+	private Realm upgradetype;
 	/** Currently training unit. */
 	public OrderQueue training = new OrderQueue();
 	/** Money {@link #training} unit had before entering here (if alone). */
@@ -48,10 +108,43 @@ public abstract class Academy extends Fortification {
 	public boolean pillage = true;
 	/** If a single unit parks with a vehicle here it is stored. */
 	public Transport parking = null;
+	protected boolean allowupgrade = false;
+	int level = 0;
+
+	/**
+	 * Builds a basic, upgradeable academy.
+	 *
+	 * @param r
+	 *            Type of upgrade to offer. If you choose to set this as
+	 *            <code>null</code>, you need to manually call
+	 *            {@link #setrealm(Realm)} later on.
+	 *
+	 * @see BuildAcademy
+	 * @see UpgradeHandler
+	 */
+	public Academy(Realm r) {
+		this("An academy", "An academy", 0, 0, new HashSet<Upgrade>(), null,
+				null);
+		pillage = false;
+		allowupgrade = true;
+		level = 10;
+		r = Realm.AIR;
+		if (r != null) {
+			setrealm(r);
+		}
+	}
+
+	public void setrealm(Realm r) {
+		upgradetype = r;
+		refill();
+		int nupgrades = upgrades.size();
+		minlevel = nupgrades - 1;
+		maxlevel = nupgrades + 1;
+	}
 
 	/**
 	 * See {@link Fortification#Fortification(String, String, int, int)}.
-	 * 
+	 *
 	 * @param upgradesp
 	 * @param classadvancement
 	 * @param raiseability
@@ -140,7 +233,7 @@ public abstract class Academy extends Fortification {
 	 * Applies the upgrade and adjustments. Currently never creates a new squad
 	 * because this isn't being called from {@link WorldActor#turn(long,
 	 * javelin.view.screen.WorldScreen).}
-	 * 
+	 *
 	 * @param o
 	 *            Training information.
 	 * @param member
@@ -204,7 +297,7 @@ public abstract class Academy extends Fortification {
 	 * themselves since this would mean being alone in the wild but if the game
 	 * is about to be lost due to the absence of {@link Squad}s then the unit
 	 * gets out to prevent the game from ending.
-	 * 
+	 *
 	 * @return <code>false</code> if there was no unit in {@link #training}.
 	 */
 	public static boolean train() {
@@ -225,4 +318,35 @@ public abstract class Academy extends Fortification {
 		return trained;
 	}
 
+	void refill() {
+		ArrayList<Upgrade> upgrades = new ArrayList<Upgrade>(
+				getupgrades(upgradetype));
+		Collections.shuffle(upgrades);
+		for (Upgrade u : upgrades) {
+			if (this.upgrades.size() >= level) {
+				break;
+			}
+			this.upgrades.add(u);
+		}
+
+	}
+
+	@Override
+	public ArrayList<Labor> getupgrades(District d) {
+		ArrayList<Labor> getupgrades = super.getupgrades(d);
+		if (allowupgrade && upgrades.size() <= d.town.getrank() * 5) {
+			getupgrades.add(new UpgradeAcademy(
+					getupgrades(upgradetype).size() - upgrades.size(), this));
+		}
+		return getupgrades;
+	}
+
+	static HashSet<Upgrade> getupgrades(Realm r) {
+		return UpgradeHandler.singleton.getupgrades(r);
+	}
+
+	@Override
+	public boolean isworking() {
+		return !training.queue.isEmpty() && !training.reportalldone();
+	}
 }

@@ -14,7 +14,7 @@ import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.view.Images;
-import javelin.view.screen.town.PurchaseScreen;
+import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
 /***
@@ -83,6 +83,8 @@ public class Inn extends Fortification {
 		}
 	}
 
+	int level = 0;
+
 	public Inn() {
 		super(LEVELS[0], LEVELS[0], 1, 5);
 		gossip = true;
@@ -100,7 +102,7 @@ public class Inn extends Fortification {
 				+ "?\n";
 		s += "\nENTER to stay ($" + price + "), w to stay for a week ($"
 				+ weekprice + ")";
-		s += "\np to pillage ($" + PurchaseScreen.formatcost(getspoils()) + ")";
+		s += "\np to pillage ($" + SelectScreen.formatcost(getspoils()) + ")";
 		s += "\nany other key to leave";
 		Character input = Javelin.prompt(s);
 		if (input == '\n') {

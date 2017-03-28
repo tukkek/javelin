@@ -7,7 +7,7 @@ import javelin.model.unit.Monster;
 /**
  * Raises one of the six attributes by +2 score points (equivalent of +1 ability
  * score modifier bonus).
- * 
+ *
  * @author alex
  */
 public abstract class RaiseAbility extends Upgrade {
@@ -33,7 +33,12 @@ public abstract class RaiseAbility extends Upgrade {
 	@Override
 	public boolean apply(Combatant m) {
 		int score = getabilityvalue(m.source);
-		return score > 0 && setattribute(m, score + 2);
+		if (score <= 0) {
+			return false;
+		}
+		score += 2;
+		return score <= 10 + m.source.challengerating
+				&& setattribute(m, score + 2);
 	}
 
 	abstract boolean setattribute(Combatant m, int l);

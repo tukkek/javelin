@@ -28,17 +28,20 @@ public abstract class BuildingUpgrade extends Build {
 
 	@Override
 	public boolean validate(District d) {
-		if (town.ishostile()) {
-			Realm r = d.town.realm;
-			if (!previous.realm.equals(r)
-					|| site != null && !site.realm.equals(r)) {
-				return false;
-			}
-		} else {
-			if (previous.ishostile() || site != null && site.ishostile()) {
-				return false;
-			}
+		if (site != null && site.ishostile() && d.town.ishostile()) {
+			Realm.equals(site.realm, d.town.realm);
 		}
+		// if (town.ishostile()) {
+		// Realm r = d.town.realm;
+		// if (!previous.realm.equals(r)
+		// || site != null && !site.realm.equals(r)) {
+		// return false;
+		// }
+		// } else {
+		// if (previous.ishostile() || site != null && site.ishostile()) {
+		// return false;
+		// }
+		// }
 		return site != null || d.getlocations().contains(previous);
 	}
 

@@ -71,7 +71,7 @@ public class Shop extends Location {
 	class UpgradeShop extends BuildingUpgrade {
 		public UpgradeShop(Shop s, int newlevel) {
 			super("", newlevel - s.level, newlevel, s);
-			this.name = "Upgrade shop";
+			name = "Upgrade shop";
 		}
 
 		@Override
@@ -94,16 +94,17 @@ public class Shop extends Location {
 
 	ItemSelection selection = new ItemSelection();
 	OrderQueue queue = new OrderQueue();
+	int level = 0;
 	Realm selectiontype;
 
 	public Shop(boolean first, Realm r) {
 		super("Shop");
-		selectiontype = Realm.MAGIC;
 		allowentry = false;
 		sacrificeable = true;
 		discard = false;
 		gossip = true;
 		level = 5;
+		selectiontype = r;
 		if (first) {
 			selection.add(new Potion(new CureLightWounds()));
 		}

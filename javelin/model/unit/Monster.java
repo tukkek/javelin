@@ -69,8 +69,8 @@ public class Monster implements Cloneable, Serializable {
 	public static final int COLOSSAL = 8;
 
 	/** An array of all sizes valid in this class. */
-	public static String[] SIZES = { "fine", "diminutive", "tiny", "small", "medium-size", "large", "huge",
-			"gargantuan", "colossal" };
+	public static String[] SIZES = { "fine", "diminutive", "tiny", "small",
+			"medium-size", "large", "huge", "gargantuan", "colossal" };
 
 	/**
 	 * Map of {@link Terrain} types, mapped by {@link Monster#name}.
@@ -288,8 +288,10 @@ public class Monster implements Cloneable, Serializable {
 		}
 	}
 
-	static private ArrayList<AttackSequence> copyattacks(final List<AttackSequence> original) {
-		final ArrayList<AttackSequence> copy = new ArrayList<AttackSequence>(original.size());
+	static private ArrayList<AttackSequence> copyattacks(
+			final List<AttackSequence> original) {
+		final ArrayList<AttackSequence> copy = new ArrayList<AttackSequence>(
+				original.size());
 		for (final AttackSequence sequence : original) {
 			copy.add(sequence.clone());
 		}
@@ -363,7 +365,9 @@ public class Monster implements Cloneable, Serializable {
 		for (ClassAdvancement classdata : ClassAdvancement.CLASSES) {
 			classesbab += classdata.table[classdata.getlevel(this)].bab;
 		}
-		return classesbab + new Long(Math.round(originalhd * WeaponFocus.BAB.get(type))).intValue();
+		return classesbab
+				+ new Long(Math.round(originalhd * WeaponFocus.BAB.get(type)))
+						.intValue();
 	}
 
 	/**
@@ -444,10 +448,13 @@ public class Monster implements Cloneable, Serializable {
 	}
 
 	/**
-	 * TODO turn attributes into {@link Enum}.
+	 * @param ability
+	 *            Ability score.
+	 * @return Ability bonus.
 	 */
-	static public int getbonus(int attribute) {
-		return new Long(Math.round(Math.floor(attribute / 2.0 - 5.0))).intValue();
+	static public int getbonus(int ability) {
+		return new Long(Math.round(Math.floor(ability / 2.0 - 5.0)))
+				.intValue();
 	}
 
 	@Override
@@ -563,7 +570,8 @@ public class Monster implements Cloneable, Serializable {
 		if (skills.usemagicdevice(this) >= 10 + s.spell.casterlevel) {
 			return true;
 		}
-		return skills.decipher(s.spell, this) && 10 + hd.count() + skills.spellcraft / 2 >= s.spell.casterlevel + 1;
+		return skills.decipher(s.spell, this) && 10 + hd.count()
+				+ skills.spellcraft / 2 >= s.spell.casterlevel + 1;
 	}
 
 	/**
@@ -594,13 +602,15 @@ public class Monster implements Cloneable, Serializable {
 			return 0;
 		}
 		String period = Javelin.getDayPeriod();
-		boolean verydark = period == Javelin.PERIODNIGHT || Weather.current == Weather.STORM;
+		boolean verydark = period == Javelin.PERIODNIGHT
+				|| Weather.current == Weather.STORM;
 		if (vision == VISION_LOWLIGHT) {
 			if (verydark) {
 				return -2;
 			}
 		} else { // normal vision
-			if (period == Javelin.PERIODEVENING || Weather.current == Weather.RAIN) {
+			if (period == Javelin.PERIODEVENING
+					|| Weather.current == Weather.RAIN) {
 				return -2;
 			}
 			if (verydark) {

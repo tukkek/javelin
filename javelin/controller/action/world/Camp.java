@@ -43,12 +43,12 @@ public class Camp extends WorldAction {
 					+ "(c)amp (d)ay (w)eek (m)onth (s)eason (y)ear?";
 		}
 		Character input = Javelin.prompt(prompt);
-		int[] restdata = processinput(input);
-		if (restdata == null) {
+		int[] period = pickperiod(input);
+		if (period == null) {
 			return;
 		}
-		final int hours = restdata[0];
-		final int restat = restdata[1];
+		final int hours = period[0];
+		final int restat = period[1];
 		for (int i = 0; i < hours; i++) {
 			Squad.active.hourselapsed += 1;
 			RandomEncounter.encounter(1 / WorldScreen.HOURSPERENCOUNTER);
@@ -58,7 +58,7 @@ public class Camp extends WorldAction {
 		}
 	}
 
-	int[] processinput(Character input) {
+	int[] pickperiod(Character input) {
 		if (input == 'c') {
 			return new int[] { 8, 2 };
 		}

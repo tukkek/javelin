@@ -32,9 +32,9 @@ import javelin.model.world.location.fortification.MartialAcademy;
 import javelin.model.world.location.fortification.Mine;
 import javelin.model.world.location.fortification.Shrine;
 import javelin.model.world.location.fortification.Trove;
+import javelin.model.world.location.town.Academy;
 import javelin.model.world.location.town.Dwelling;
 import javelin.model.world.location.town.Inn;
-import javelin.model.world.location.town.RealmAcademy;
 import javelin.model.world.location.town.Shop;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.AdventurersGuild;
@@ -56,7 +56,7 @@ import tyrant.mikera.engine.RPG;
  * Responsible for generating those {@link WorldActor}s (mostly {@link Location}
  * s that can be spawned both during {@link World} generation and normal
  * gameplay.
- * 
+ *
  * @author alex
  * @see WorldScreen#endturn()
  */
@@ -64,7 +64,7 @@ public class FeatureGenerator {
 	/** Only access point to this class. */
 	public static final FeatureGenerator SINGLETON = new FeatureGenerator();
 
-	static final int NUMBEROFSTARTINGFEATURES = (World.SIZE * World.SIZE) / 5;
+	static final int NUMBEROFSTARTINGFEATURES = World.SIZE * World.SIZE / 5;
 
 	final HashMap<Class<? extends WorldActor>, FeatureGenerationData> generators = new HashMap<Class<? extends WorldActor>, FeatureGenerationData>();
 
@@ -102,7 +102,7 @@ public class FeatureGenerator {
 	 * Will convert all relative (non-absolute)
 	 * {@link FeatureGenerationData#chance} to an absolute value so as to make
 	 * them sum up to a 100%.
-	 * 
+	 *
 	 * @see FeatureGenerationData#absolute
 	 */
 	protected void convertchances() {
@@ -128,7 +128,7 @@ public class FeatureGenerator {
 	/**
 	 * Spawns {@link WorldActor}s into the game world. Used both during world
 	 * generation and during a game's progress.
-	 * 
+	 *
 	 * @param chance
 	 *            Used to modify the default spawning chances. For example: if
 	 *            this is called daily but the target is to spawn one feature
@@ -186,7 +186,7 @@ public class FeatureGenerator {
 
 	static Town gettown(Terrain terrain, World seed) {
 		ArrayList<WorldActor> towns = new ArrayList<WorldActor>(
-				Location.getall(Town.class));
+				WorldActor.getall(Town.class));
 		Collections.shuffle(towns);
 		for (WorldActor town : towns) {
 			if (seed.map[town.x][town.y] == terrain) {
@@ -212,7 +212,7 @@ public class FeatureGenerator {
 		Town easya = FeatureGenerator.gettown(starton, seed);
 		Town easyb = FeatureGenerator.gettown(
 				starton == Terrain.PLAIN ? Terrain.HILL : Terrain.PLAIN, seed);
-		ArrayList<WorldActor> towns = Location.getall(Town.class);
+		ArrayList<WorldActor> towns = WorldActor.getall(Town.class);
 		WorldActor startingtown = WorldActor.get(easya.x, easya.y, towns);
 		if (Terrain.search(new Point(startingtown.x, startingtown.y),
 				Terrain.WATER, 2, seed) != 0) {
@@ -251,7 +251,7 @@ public class FeatureGenerator {
 	void generatestartingarea(World seed, Town t) {
 		spawnnear(t, new Inn(), seed, 1, 2);
 		spawnnear(t, new Shop(true, t.realm), seed, 1, 2);
-		spawnnear(t, new RealmAcademy(t.realm), seed, 1, 2);
+		spawnnear(t, new Academy(t.originalrealm), seed, 1, 2);
 		ArrayList<Monster> recruits = t.getpossiblerecruits();
 		recruits.sort(new Comparator<Monster>() {
 			@Override

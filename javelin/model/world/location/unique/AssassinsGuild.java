@@ -22,6 +22,7 @@ import javelin.model.world.location.town.Academy;
 import javelin.model.world.location.town.Dwelling;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.Option;
+import javelin.view.screen.town.SelectScreen;
 import javelin.view.screen.upgrading.AcademyScreen;
 
 /**
@@ -42,7 +43,8 @@ public class AssassinsGuild extends Academy {
 
 		@Override
 		public boolean equals(final Object obj) {
-			final RecruitOption o = obj instanceof RecruitOption ? (RecruitOption) obj : null;
+			final RecruitOption o = obj instanceof RecruitOption
+					? (RecruitOption) obj : null;
 			return o != null && m.name.equals(o.m.name);
 		}
 
@@ -52,8 +54,10 @@ public class AssassinsGuild extends Academy {
 		}
 	}
 
-	static final String[] RECRUITS = new String[] { "Small monstrous scorpion", "Doppelganger", "Medusa", "Rakshasa", };
-	static final String[] LEVELS = new String[] { "Cutthroat", "Footpad", "Ninja", "Shadow" };
+	static final String[] RECRUITS = new String[] { "Small monstrous scorpion",
+			"Doppelganger", "Medusa", "Rakshasa", };
+	static final String[] LEVELS = new String[] { "Cutthroat", "Footpad",
+			"Ninja", "Shadow" };
 
 	class AssassinGuildScreen extends AcademyScreen {
 		public AssassinGuildScreen(Academy academy, Town t) {
@@ -62,17 +66,22 @@ public class AssassinsGuild extends Academy {
 
 		@Override
 		public String printinfo() {
+			String s = super.printinfo();
+			if (!s.isEmpty()) {
+				s += "\n\n";
+			}
 			int rank = getrank(assassinations);
-			String s = "You are currently a " + LEVELS[rank] + ".\n";
+			s += "You are currently a " + LEVELS[rank] + ".\n";
 			if (rank < LEVELS.length - 1) {
 				float next = 0;
 				while (getrank(assassinations + next) == rank) {
 					next += .5f;
 				}
-				s += "Perform " + round(next) + " assassinations or " + round(next * 2)
-						+ " sabotages to proceed to the next rank.";
+				s += "Perform " + round(next)
+						+ " assassinations to proceed to the next rank.";
 			}
-			return s + "\n\nYou have " + Dwelling.sumxp() + "XP";
+			return s + "\n\nYou have "
+					+ SelectScreen.formatcost(Dwelling.sumxp()) + "XP";
 		}
 
 		private int round(float f) {
@@ -82,8 +91,10 @@ public class AssassinsGuild extends Academy {
 		@Override
 		public List<Option> getoptions() {
 			List<Option> options = super.getoptions();
-			Monster recruit = Javelin.getmonster(RECRUITS[getrank(assassinations)]);
-			RecruitOption option = new RecruitOption("Recruit: " + recruit, 0, recruit);
+			Monster recruit = Javelin
+					.getmonster(RECRUITS[getrank(assassinations)]);
+			RecruitOption option = new RecruitOption("Recruit: " + recruit, 0,
+					recruit);
 			option.key = 'r';
 			options.add(option);
 			return options;
@@ -106,10 +117,9 @@ public class AssassinsGuild extends Academy {
 					Dwelling.spend(ro.m.challengerating);
 					Squad.active.members.add(new Combatant(ro.m.clone(), true));
 					return true;
-				} else {
-					print(text + "\nNot enough XP...");
-					return false;
 				}
+				print(text + "\nNot enough XP...");
+				return false;
 			}
 			return super.select(op);
 		}
@@ -121,7 +131,8 @@ public class AssassinsGuild extends Academy {
 
 	/** Constructor. */
 	public AssassinsGuild() {
-		super(DESCRITPION, DESCRITPION, 6, 10, new HashSet<Upgrade>(), RaiseDexterity.SINGLETON, Expert.SINGLETON);
+		super(DESCRITPION, DESCRITPION, 6, 10, new HashSet<Upgrade>(),
+				RaiseDexterity.SINGLETON, Expert.SINGLETON);
 		vision = 3;
 		upgrades.add(Disguise.SINGLETON);
 		upgrades.add(Stealth.SINGLETON);
@@ -148,7 +159,8 @@ public class AssassinsGuild extends Academy {
 
 	@Override
 	protected void generate() {
-		while (x < 0 || Terrain.get(x, y).equals(Terrain.PLAIN) || Terrain.get(x, y).equals(Terrain.HILL)) {
+		while (x < 0 || Terrain.get(x, y).equals(Terrain.PLAIN)
+				|| Terrain.get(x, y).equals(Terrain.HILL)) {
 			super.generate();
 		}
 	}

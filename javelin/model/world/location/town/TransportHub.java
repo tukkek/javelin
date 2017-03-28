@@ -43,7 +43,7 @@ public class TransportHub extends Location {
 		 */
 		public ShowTransport(TransportHub s) {
 			super("You enter the " + s.getname(), null);
-			this.stables = s;
+			stables = s;
 		}
 
 		@Override
@@ -182,6 +182,7 @@ public class TransportHub extends Location {
 	}
 
 	int cost = 0;
+	int level = 0;
 
 	public TransportHub() {
 		super(NAMES[0]);

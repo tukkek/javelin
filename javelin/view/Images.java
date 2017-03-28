@@ -34,7 +34,7 @@ public class Images {
 	public static final Image CRAFTING = Images.getImage("overlaycrafting");
 	/** @see Location#hasupgraded() */
 	public static final Image UPGRADING = Images.getImage("overlayupgrading");
-	/** @see Town#haslabor() */
+	/** @see Town#isworking() */
 	public static final Image LABOR = Images.getImage("overlaylabor");
 	/** Show while a {@link Meld} is being generated. */
 	public static final Image DEAD = Images.getImage("overlaydead");

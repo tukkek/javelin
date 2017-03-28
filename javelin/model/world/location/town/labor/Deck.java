@@ -5,7 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import javelin.Javelin;
-import javelin.model.world.location.town.RealmAcademy.BuildAcademy;
+import javelin.model.world.location.town.Academy;
+import javelin.model.world.location.town.Academy.BuildAcademy;
 import javelin.model.world.location.town.Shop.BuildShop;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.TransportHub.BuildTransportHub;
@@ -22,7 +23,7 @@ import javelin.model.world.location.town.labor.military.BuildDwelling;
  * cards. It is not a model entity, making it easier to develop as it can be
  * more freely altered during the course of a game. It is then fully loaded and
  * processed when the game starts.
- * 
+ *
  * @author alex
  */
 public class Deck extends ArrayList<Labor> {
@@ -36,7 +37,7 @@ public class Deck extends ArrayList<Labor> {
 				new Labor[] { new Growth(), new BuildInn(), new Redraw(),
 						new BuildDwelling(), new BuildShop(),
 						new BuildTransportHub(), new BuildTransportHub(),
-						new BuildAcademy() });
+						new BuildAcademy(new Academy(null)) });
 		populate(new Deck(), "expansive", new Labor[] { new Settler(),
 				new BuildOutpost(), new BuildRoad(), new BuildHighway() });
 		populate(new Deck(), "productive",

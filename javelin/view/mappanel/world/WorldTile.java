@@ -96,11 +96,11 @@ public class WorldTile extends Tile {
 		if (l.hasupgraded()) {
 			draw(g, Images.UPGRADING);
 		}
-		if (l.haslabor()) {
+		if (l.isworking()) {
 			draw(g, Images.LABOR);
 		}
 		final Town t = l instanceof Town ? (Town) l : null;
-		if (t != null && !t.ishostile() && t.haslabor()) {
+		if (t != null && !t.ishostile() && t.isworking()) {
 			draw(g, Images.LABOR);
 		}
 	}

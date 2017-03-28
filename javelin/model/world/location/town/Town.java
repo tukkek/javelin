@@ -395,7 +395,7 @@ public class Town extends Location {
 	 * @see TownManager
 	 */
 	@Override
-	public boolean haslabor() {
+	public boolean isworking() {
 		return !ishostile() && governor.getprojectssize() > 1;
 	}
 

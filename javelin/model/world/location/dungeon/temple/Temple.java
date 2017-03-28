@@ -35,12 +35,12 @@ import javelin.view.screen.haxor.Win;
  * once all of those are collected they can be taken to {@link Haxor} to finish
  * the game. Each temple is a multi-level, permanent {@link Dungeon}, where on
  * each level can be found a ruby and the Relic sits on the last level.
- * 
+ *
  * Battles inside temples consist of upgraded units.
- * 
+ *
  * The level field here is used to represent a target EL for invading parties
  * (from 1 to 20).
- * 
+ *
  * @see Win
  * @see Haxor#rubies
  * @see TempleEncounter
@@ -48,6 +48,12 @@ import javelin.view.screen.haxor.Win;
  */
 public abstract class Temple extends UniqueLocation {
 	final static int DEPTH = 3;
+	/**
+	 * TODO there's gotta be a better way to do this
+	 */
+	static public boolean climbing = false;
+	/** TODO same as {@link #climbing} */
+	public static boolean leavingfight = false;
 
 	/**
 	 * Create the temples during world generation.
@@ -70,7 +76,7 @@ public abstract class Temple extends UniqueLocation {
 
 	/**
 	 * Reward found on the deepest of the {@link #floors}.
-	 * 
+	 *
 	 * @see Altar
 	 * @see TempleDungeon#deepest
 	 */
@@ -78,7 +84,7 @@ public abstract class Temple extends UniqueLocation {
 	/**
 	 * A temple needs to be opened by a {@link Key} or other method before being
 	 * explored.
-	 * 
+	 *
 	 * @see #open()
 	 */
 	public boolean open = false;
@@ -94,12 +100,7 @@ public abstract class Temple extends UniqueLocation {
 	public String floor = null;
 	/** If not <code>null</code> will override {@link Dungeon#wall}. */
 	public String wall = null;
-	/**
-	 * TODO there's gotta be a better way to do this
-	 */
-	static public boolean climbing = false;
-	/** TODO same as {@link #climbing} */
-	public static boolean leavingfight = false;
+	int level = 0;
 
 	/**
 	 * @param r
@@ -112,7 +113,7 @@ public abstract class Temple extends UniqueLocation {
 				level);
 		realm = r;
 		this.level = level;
-		this.el = leveltoel(level);
+		el = leveltoel(level);
 		relic = relicp;
 		fluff = fluffp;
 		link = true;
@@ -245,7 +246,7 @@ public abstract class Temple extends UniqueLocation {
 	/**
 	 * The given parameters are meant to be used with
 	 * {@link Dungeon#findspot(java.util.Collection, Set)}.
-	 * 
+	 *
 	 * @param used
 	 *            Don't forget to update this if creating multiple features.
 	 * @param templeDungeon
@@ -258,7 +259,7 @@ public abstract class Temple extends UniqueLocation {
 
 	/**
 	 * See {@link Dungeon#hazard()}.
-	 * 
+	 *
 	 * @return <code>true</code> if a hazard happens.
 	 */
 	public boolean hazard(TempleDungeon templeDungeon) {

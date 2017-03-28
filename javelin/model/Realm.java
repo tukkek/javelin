@@ -13,7 +13,7 @@ import tyrant.mikera.engine.RPG;
  * A realm is an in-game faction, associated with d20 concepts in an arbitrary
  * manner, following a generic lore of colors (as in Magic: The Gathering) or
  * factions/races (as featured in many real-time strategy titles).
- * 
+ *
  * @author alex
  */
 public enum Realm {
@@ -131,11 +131,11 @@ public enum Realm {
 	 */
 	public void baptize(Combatant opponent) {
 		String prefix = prefixate();
-		opponent.source.customName =
-				prefix + " " + opponent.source.name.toLowerCase();
-		opponent.source.customName =
-				Character.toUpperCase(opponent.source.customName.charAt(0))
-						+ opponent.source.customName.substring(1).toLowerCase();
+		opponent.source.customName = prefix + " "
+				+ opponent.source.name.toLowerCase();
+		opponent.source.customName = Character
+				.toUpperCase(opponent.source.customName.charAt(0))
+				+ opponent.source.customName.substring(1).toLowerCase();
 	}
 
 	String prefixate() {
@@ -155,5 +155,15 @@ public enum Realm {
 	public String getname() {
 		String name = name();
 		return name.charAt(0) + name().substring(1).toLowerCase();
+	}
+
+	public static boolean equals(Object a, Object b) {
+		if (a == null && b == null) {
+			return true;
+		}
+		if (a == null || b == null) {
+			return false;
+		}
+		return a.equals(b);
 	}
 }

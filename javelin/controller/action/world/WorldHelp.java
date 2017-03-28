@@ -5,14 +5,14 @@ import javelin.view.screen.WorldScreen;
 
 /**
  * In-game help.
- * 
+ *
  * @author alex
  */
 public class WorldHelp extends WorldAction {
 
 	/** Constructor. */
 	public WorldHelp() {
-		super("Help", new int[] {}, new String[] { "h" });
+		super("Help", new int[] {}, new String[] { "h", "?" });
 	}
 
 	@Override

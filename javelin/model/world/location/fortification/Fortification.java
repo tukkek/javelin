@@ -23,7 +23,7 @@ import tyrant.mikera.engine.RPG;
  * explored, while also offering non-scaled (fixed difficulty) encounters to
  * offset the scaled nature of {@link RandomEncounter}s and most other game
  * battles.
- * 
+ *
  * @author alex
  * @see Location#garrison
  */
@@ -54,22 +54,22 @@ public abstract class Fortification extends Location {
 	 * here is taken as the level of 4 characters that would be a fair combat to
 	 * the current garrison. This enables subclasses to use the classic D&D
 	 * tiers, while avoiding absolute predictability:
-	 * 
+	 *
 	 * <br/>
 	 * Levels 1-5 (low level)
-	 * 
+	 *
 	 * <br/>
 	 * Levels 6-10 (medium level)
-	 * 
+	 *
 	 * <br/>
 	 * Levels 11-15 (high level)
-	 * 
+	 *
 	 * <br/>
 	 * Levels 16-20 (legendary level)
-	 * 
+	 *
 	 * <br/>
 	 * Levels 21+ (epic, not yet implemented)
-	 * 
+	 *
 	 * @param minlevel
 	 *            Minimum difficulty. Will be converted into a proper Upper
 	 *            Krust EL.
@@ -93,9 +93,9 @@ public abstract class Fortification extends Location {
 	/**
 	 * The default implementation generates a {@link Location#garrison}
 	 * according to the location.
-	 * 
+	 *
 	 * Called during construction and responsible for setting {@link #targetel}.
-	 * 
+	 *
 	 * @param minlevel
 	 *            See {@link #minlevel}.
 	 * @param maxlevel
@@ -153,7 +153,7 @@ public abstract class Fortification extends Location {
 
 	@Override
 	public String toString() {
-		if (targetel == null) {
+		if (targetel == null || !ishostile()) {
 			return descriptionknown;
 		}
 		return Squad.active.know() - 10 >= targetel ? descriptionknown
@@ -183,7 +183,7 @@ public abstract class Fortification extends Location {
 	 * {@link Squad}. This is mostly allowed as to allow a less strategic
 	 * gameplay for players who want to just pillage and move on, without using
 	 * locations for their strategic value.
-	 * 
+	 *
 	 * @see #getspoils()
 	 */
 	public void pillage() {

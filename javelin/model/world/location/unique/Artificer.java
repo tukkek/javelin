@@ -17,7 +17,7 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * Allows a player to forge and sell artifacts.
- * 
+ *
  * @author alex
  */
 public class Artificer extends UniqueLocation {
@@ -106,7 +106,7 @@ public class Artificer extends UniqueLocation {
 	 */
 	public void craft(PurchaseOption o) {
 		selection.remove(o.i);
-		crafting = new CraftingOrder(o.i);
+		crafting = new CraftingOrder(o.i, null);
 		stock();
 	}
 

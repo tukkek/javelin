@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import javelin.Javelin;
+import javelin.model.world.location.fortification.MagesGuild.BuildMagesGuild;
+import javelin.model.world.location.fortification.MartialAcademy.BuildMartialAcademy;
 import javelin.model.world.location.town.Academy;
 import javelin.model.world.location.town.Academy.BuildAcademy;
 import javelin.model.world.location.town.Shop.BuildShop;
@@ -27,26 +29,37 @@ import javelin.model.world.location.town.labor.military.BuildDwelling;
  * @author alex
  */
 public class Deck extends ArrayList<Labor> {
-	public static final String RELIGIOUS = "religious";
-	public static final String CRIMINAL = "criminal";
+	private static final Labor[] BASE = new Labor[] { new Growth(),
+			new BuildInn(), new Redraw(), new BuildDwelling(), new BuildShop(),
+			new BuildTransportHub(), new BuildTransportHub(),
+			new BuildAcademy(new Academy(null)) };
+	private static final Labor[] CRIMINAL = new Labor[] {};
+	private static final Labor[] CULTURAL = new Labor[] {
+			new BuildMagesGuild(), };
+	private static final Labor[] ECOLOGICAL = new Labor[] {};
+	private static final Labor[] EXPANSIVE = new Labor[] { new Settler(),
+			new BuildOutpost(), new BuildRoad(), new BuildHighway() };
+	private static final Labor[] MILITARY = new Labor[] {
+			new BuildMartialAcademy(), };
+	private static final Labor[] PRODUCTIVE = new Labor[] { new BuildMine(),
+			new Deforestate() };
+	private static final Labor[] RELIGIOUS = new Labor[] {};
+
+	public static final String NAMERELIGIOUS = "religious";
+	public static final String NAMECRIMINAL = "criminal";
+
 	static final HashMap<String, Deck> DECKS = new HashMap<String, Deck>();
 	static final Deck DEFAULT = new Deck();
 
 	static {
-		populate(DEFAULT, null,
-				new Labor[] { new Growth(), new BuildInn(), new Redraw(),
-						new BuildDwelling(), new BuildShop(),
-						new BuildTransportHub(), new BuildTransportHub(),
-						new BuildAcademy(new Academy(null)) });
-		populate(new Deck(), "expansive", new Labor[] { new Settler(),
-				new BuildOutpost(), new BuildRoad(), new BuildHighway() });
-		populate(new Deck(), "productive",
-				new Labor[] { new BuildMine(), new Deforestate() });
-		populate(new Deck(), "military", new Labor[] { new BuildDwelling(), });
-		populate(new Deck(), "cultural", new Labor[] {});
-		populate(new Deck(), CRIMINAL, new Labor[] {});
-		populate(new Deck(), RELIGIOUS, new Labor[] {});
-		populate(new Deck(), "ecological", new Labor[] {});
+		populate(DEFAULT, null, BASE);
+		populate(new Deck(), "expansive", EXPANSIVE);
+		populate(new Deck(), "productive", PRODUCTIVE);
+		populate(new Deck(), "military", MILITARY);
+		populate(new Deck(), "cultural", CULTURAL);
+		populate(new Deck(), NAMECRIMINAL, CRIMINAL);
+		populate(new Deck(), NAMERELIGIOUS, RELIGIOUS);
+		populate(new Deck(), "ecological", ECOLOGICAL);
 		for (String title : new ArrayList<String>(DECKS.keySet())) {
 			/*
 			 * TODO just a placeholder to get rid on unused sets during

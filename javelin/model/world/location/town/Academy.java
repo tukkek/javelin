@@ -46,7 +46,7 @@ public class Academy extends Fortification {
 	};
 
 	public static class BuildAcademy extends Build {
-		Academy goal;
+		public Academy goal;
 
 		public BuildAcademy(Academy goal) {
 			super("Build academy", 10);
@@ -60,6 +60,7 @@ public class Academy extends Fortification {
 				goal.setrealm(town.originalrealm);
 			}
 			cost = Math.min(cost, goal.upgrades.size());
+			name = "Build " + goal.descriptionknown.toLowerCase();
 		}
 
 		@Override
@@ -69,7 +70,7 @@ public class Academy extends Fortification {
 
 		@Override
 		public boolean validate(District d) {
-			return super.validate(d) && d.getlocation(Academy.class) == null;
+			return super.validate(d) && d.getlocation(goal.getClass()) == null;
 		}
 	}
 

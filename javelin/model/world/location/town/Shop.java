@@ -59,12 +59,13 @@ public class Shop extends Location {
 
 		@Override
 		protected void afterpurchase(PurchaseOption o) {
-			s.queue.add(new CraftingOrder(o.i));
+			s.crafting.add(new CraftingOrder(o.i, crafting));
 		}
 
 		@Override
 		public String printinfo() {
-			return queue.queue.isEmpty() ? "" : "Currently crafting: " + queue;
+			return crafting.queue.isEmpty() ? ""
+					: "Currently crafting: " + crafting;
 		}
 	}
 
@@ -81,7 +82,7 @@ public class Shop extends Location {
 
 		@Override
 		public boolean validate(District d) {
-			return cost > 0 && queue.queue.isEmpty() && super.validate(d);
+			return cost > 0 && crafting.queue.isEmpty() && super.validate(d);
 		}
 
 		@Override
@@ -93,7 +94,7 @@ public class Shop extends Location {
 	}
 
 	ItemSelection selection = new ItemSelection();
-	OrderQueue queue = new OrderQueue();
+	OrderQueue crafting = new OrderQueue();
 	int level = 0;
 	Realm selectiontype;
 
@@ -140,7 +141,7 @@ public class Shop extends Location {
 		if (!super.interact()) {
 			return false;
 		}
-		for (Order o : queue.reclaim(Squad.active.hourselapsed)) {
+		for (Order o : crafting.reclaim(Squad.active.hourselapsed)) {
 			CraftingOrder done = (CraftingOrder) o;
 			done.item.grab();
 		}
@@ -150,7 +151,7 @@ public class Shop extends Location {
 
 	@Override
 	public boolean hascrafted() {
-		return queue.reportanydone();
+		return crafting.reportanydone();
 	}
 
 	@Override
@@ -166,5 +167,10 @@ public class Shop extends Location {
 
 	ItemSelection getselection() {
 		return Item.getselection(selectiontype);
+	}
+
+	@Override
+	public boolean isworking() {
+		return !crafting.queue.isEmpty() && !crafting.reportalldone();
 	}
 }

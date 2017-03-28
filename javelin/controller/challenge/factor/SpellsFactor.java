@@ -71,10 +71,10 @@ public class SpellsFactor extends CrFactor {
 		handler.schoolhealwounds.add(new CureSeriousWounds());
 		handler.schoolhealwounds.add(new CureCriticalWounds());
 
-		handler.schoolhealing.add(new NeutralizePoison()); // conjuration
-		handler.schoolhealing.add(new RaiseDead());
-		handler.schoolhealing.add(new Ressurect());
-		handler.schoolhealing.add(new Restoration());
+		handler.schoolrestoration.add(new NeutralizePoison()); // conjuration
+		handler.schoolrestoration.add(new RaiseDead());
+		handler.schoolrestoration.add(new Ressurect());
+		handler.schoolrestoration.add(new Restoration());
 
 		// TODO separate body+mind when mass* comes
 		handler.schooltotem.add(new BearsEndurance()); // transmutation

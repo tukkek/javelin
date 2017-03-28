@@ -10,11 +10,6 @@ import javelin.controller.Point;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.controller.upgrade.ability.RaiseCharisma;
-import javelin.controller.upgrade.ability.RaiseDexterity;
-import javelin.controller.upgrade.ability.RaiseIntelligence;
-import javelin.controller.upgrade.ability.RaiseStrength;
-import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Caravan;
@@ -28,6 +23,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.fortification.Guardian;
 import javelin.model.world.location.fortification.MagesGuild;
+import javelin.model.world.location.fortification.MagesGuild.Guild;
 import javelin.model.world.location.fortification.MartialAcademy;
 import javelin.model.world.location.fortification.Mine;
 import javelin.model.world.location.fortification.Shrine;
@@ -270,13 +266,9 @@ public class FeatureGenerator {
 	}
 
 	static void generatemartialacademies() {
-		new MartialAcademy(UpgradeHandler.singleton.shots,
-				"Academy (shooting range)", RaiseDexterity.SINGLETON).place();
-		new MartialAcademy(UpgradeHandler.singleton.expertise,
-				"Academy (combat expertise)", RaiseIntelligence.SINGLETON)
-						.place();
-		new MartialAcademy(UpgradeHandler.singleton.power,
-				"Academy (power attack)", RaiseStrength.SINGLETON).place();
+		for (javelin.model.world.location.fortification.MartialAcademy.Guild g : MartialAcademy.GUILDS) {
+			g.generate().place();
+		}
 	}
 
 	static int countplaces() {
@@ -292,39 +284,9 @@ public class FeatureGenerator {
 	}
 
 	static void generatemageguilds() {
-		new MagesGuild("Compulsion guild",
-				UpgradeHandler.singleton.schoolcompulsion,
-				RaiseCharisma.SINGLETON).place();
-		new MagesGuild("Conjuration guild",
-				UpgradeHandler.singleton.schoolconjuration,
-				RaiseCharisma.SINGLETON).place();
-		new MagesGuild("Abjuration guild",
-				UpgradeHandler.singleton.schoolabjuration,
-				RaiseCharisma.SINGLETON).place();
-
-		new MagesGuild("Healing guild", UpgradeHandler.singleton.schoolhealing,
-				RaiseWisdom.SINGLETON).place();
-		new MagesGuild("Totem guild", UpgradeHandler.singleton.schooltotem,
-				RaiseWisdom.SINGLETON).place();
-		new MagesGuild("Healing wounds guild",
-				UpgradeHandler.singleton.schoolhealwounds,
-				RaiseWisdom.SINGLETON).place();
-		new MagesGuild("Divination guild",
-				UpgradeHandler.singleton.schooldivination,
-				RaiseWisdom.SINGLETON).place();
-
-		new MagesGuild("Necromancy guild",
-				UpgradeHandler.singleton.schoolnecromancy,
-				RaiseIntelligence.SINGLETON).place();
-		new MagesGuild("Wounding guild",
-				UpgradeHandler.singleton.schoolwounding,
-				RaiseIntelligence.SINGLETON).place();
-		new MagesGuild("Evocation guild",
-				UpgradeHandler.singleton.schoolevocation,
-				RaiseIntelligence.SINGLETON).place();
-		new MagesGuild("Transmutation guild",
-				UpgradeHandler.singleton.schooltransmutation,
-				RaiseIntelligence.SINGLETON).place();
-
+		Collections.shuffle(MagesGuild.GUILDS);
+		for (Guild g : MagesGuild.GUILDS) {
+			g.generate().place();
+		}
 	}
 }

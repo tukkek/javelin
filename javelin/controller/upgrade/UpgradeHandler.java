@@ -23,7 +23,7 @@ import javelin.model.world.location.unique.SummoningCircle;
 
 /**
  * Collects and distributes {@link Upgrade}s from different subsystems.
- * 
+ *
  * @author alex
  */
 public class UpgradeHandler {
@@ -69,7 +69,7 @@ public class UpgradeHandler {
 	/** Spell school. */
 	public HashSet<Upgrade> schoolevocation = new HashSet<Upgrade>();
 	/** Subdomain of conjuration. */
-	public HashSet<Upgrade> schoolhealing = new HashSet<Upgrade>();
+	public HashSet<Upgrade> schoolrestoration = new HashSet<Upgrade>();
 	/** Subdomain of necromancy. */
 	public HashSet<Upgrade> schoolwounding = new HashSet<Upgrade>();
 	/** Spell school; */
@@ -171,8 +171,7 @@ public class UpgradeHandler {
 	 * @return all upgrades.
 	 */
 	public HashMap<String, HashSet<Upgrade>> getall() {
-		HashMap<String, HashSet<Upgrade>> all =
-				new HashMap<String, HashSet<Upgrade>>();
+		HashMap<String, HashSet<Upgrade>> all = new HashMap<String, HashSet<Upgrade>>();
 		addall(fire, all, "fire");
 		addall(earth, all, "earth");
 		addall(water, all, "water");
@@ -187,7 +186,7 @@ public class UpgradeHandler {
 		addall(shots, all, "shots");
 
 		addall(schoolcompulsion, all, "schoolcompulsion");
-		addall(schoolhealing, all, "schoolhealing");
+		addall(schoolrestoration, all, "schoolrestoration");
 		addall(schoolnecromancy, all, "schoolnecromancy");
 		addall(schooltotem, all, "schooltotem");
 		addall(schoolwounding, all, "schoolwounding");
@@ -215,7 +214,7 @@ public class UpgradeHandler {
 
 	/**
 	 * Doesn't count skills, see {@link #countskills()}.
-	 * 
+	 *
 	 * @return Total number of {@link Upgrade}s available.
 	 */
 	public int count() {

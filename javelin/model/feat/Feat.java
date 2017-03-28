@@ -10,10 +10,10 @@ import javelin.model.unit.Monster;
 
 /**
  * See the d20 SRD for more info.
- * 
+ *
  * Would be nice to have Feat be a subclass of {@link Upgrade}, like
  * {@link Spell}?
- * 
+ *
  * @author alex
  */
 public abstract class Feat implements Serializable {
@@ -43,13 +43,18 @@ public abstract class Feat implements Serializable {
 		return name.equals(((Feat) obj).name);
 	}
 
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
+
 	/**
 	 * This is used by {@link MonsterReader} for when a monster source stat
 	 * block needs to updated when it has a feat.
-	 * 
+	 *
 	 * Will be called multiple times if a monster has more than one feat of the
 	 * same type.
-	 * 
+	 *
 	 * @param monster
 	 *            Original unique stat block to derive.
 	 */

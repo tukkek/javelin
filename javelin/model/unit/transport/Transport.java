@@ -12,7 +12,7 @@ import javelin.model.unit.Squad;
 
 /**
  * Vehicles improve speed / random encounter chance.
- * 
+ *
  * @see Squad#transport
  */
 public class Transport implements Serializable {
@@ -45,8 +45,7 @@ public class Transport implements Serializable {
 	 */
 	public boolean parkeable = true;
 
-	Transport(String namep, int speedp, int capacityp, int maintenancep,
-			int price, int researchcost) {
+	Transport(String namep, int speedp, int capacityp, int maintenancep, int price, int researchcost) {
 		name = namep;
 		speed = speedp;
 		capacity = capacityp;
@@ -60,9 +59,7 @@ public class Transport implements Serializable {
 	 */
 	public String load(ArrayList<Combatant> tripulation) {
 		ArrayList<Combatant> trailing = gettrailing(tripulation);
-		return checkload(trailing) ? " ("
-				+ Math.round(trailing.size() * 100 / capacity) + "% load)"
-				: " (overloaded)";
+		return checkload(trailing) ? " (" + Math.round(trailing.size() * 100 / capacity) + "% load)" : " (overloaded)";
 	}
 
 	/**
@@ -75,9 +72,7 @@ public class Transport implements Serializable {
 		}
 		ArrayList<Combatant> trailing = gettrailing(tripulation);
 		return trailing.size() > capacity
-				? Math.round(trailing.get(capacity).source.gettopspeed()
-						* WorldMove.NORMALMARCH)
-				: speed;
+				? Math.round(trailing.get(capacity).source.gettopspeed() * WorldMove.NORMALMARCH) : speed;
 	}
 
 	ArrayList<Combatant> gettrailing(ArrayList<Combatant> tripulation) {
@@ -123,10 +118,15 @@ public class Transport implements Serializable {
 		return obj != null && name.equals(((Transport) obj).name);
 	}
 
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
+
 	/**
 	 * Pays the {@link #maintenance} upkeep and destroys the transport
 	 * otherwise. Will also sink with tripulation that can't swim.
-	 * 
+	 *
 	 * @see Squad#transport
 	 */
 	public void keep(Squad s) {
@@ -136,8 +136,7 @@ public class Transport implements Serializable {
 			s.transport = null;
 			s.updateavatar();
 			if (Terrain.get(s.x, s.y).equals(Terrain.WATER)) {
-				String message = "The " + toString()
-						+ " sinks, taking all non-swimmers with it!";
+				String message = "The " + toString() + " sinks, taking all non-swimmers with it!";
 				Javelin.message(message, true);
 				for (Combatant c : s.members) {
 					if (c.source.swim() == 0) {

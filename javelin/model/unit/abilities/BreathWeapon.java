@@ -2,8 +2,6 @@ package javelin.model.unit.abilities;
 
 import java.io.Serializable;
 
-import com.sun.javafx.geom.Area;
-
 import javelin.controller.action.Breath;
 import javelin.model.Cloneable;
 import javelin.model.unit.Combatant;
@@ -33,10 +31,9 @@ public class BreathWeapon implements Serializable, Cloneable {
 	final public float saveeffect;
 	final public boolean delay;
 
-	public BreathWeapon(final String description, final BreathArea type,
-			final int range, final int die, final int sides, final int bonus,
-			final SavingThrow savethrowp, final int savedcp,
-			final float saveeffectp, final boolean delayp) {
+	public BreathWeapon(final String description, final BreathArea type, final int range, final int die,
+			final int sides, final int bonus, final SavingThrow savethrowp, final int savedcp, final float saveeffectp,
+			final boolean delayp) {
 		super();
 		this.type = type;
 		this.range = range;
@@ -50,9 +47,8 @@ public class BreathWeapon implements Serializable, Cloneable {
 
 	@Override
 	public String toString() {
-		return description + " breath (" + range + " feet "
-				+ type.name().toLowerCase() + ", " + damage[0] + "d" + damage[1]
-				+ (damage[2] >= 0 ? "+" : "") + damage[2] + ")";
+		return description + " breath (" + range + " feet " + type.name().toLowerCase() + ", " + damage[0] + "d"
+				+ damage[1] + (damage[2] >= 0 ? "+" : "") + damage[2] + ")";
 	}
 
 	public Integer save(final Combatant target) {

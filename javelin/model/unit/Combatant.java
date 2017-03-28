@@ -51,7 +51,7 @@ import tyrant.mikera.engine.RPG;
  * the course of battle, speeding up the cloning process for BattleNode
  * replication by sharing the same reference to {@link Monster} among cloned
  * instances.
- * 
+ *
  * @author alex
  */
 public class Combatant implements Serializable, Cloneable {
@@ -105,7 +105,7 @@ public class Combatant implements Serializable, Cloneable {
 	private CloneableList<Condition> conditions = new CloneableList<Condition>();
 	/**
 	 * Canonical representation of the spells this unit has.
-	 * 
+	 *
 	 * @see Monster#spells
 	 * @see Monster#spellcr
 	 */
@@ -147,7 +147,7 @@ public class Combatant implements Serializable, Cloneable {
 
 	/**
 	 * Generates an unique identity number for this Combatant.
-	 * 
+	 *
 	 * @see WorldActor#getcombatants()
 	 */
 	public void newid() {
@@ -162,7 +162,7 @@ public class Combatant implements Serializable, Cloneable {
 	 * TODO add WorldActor#getcombatants to do this
 	 */
 	private boolean checkidcollision() {
-		for (WorldActor a : Squad.getall()) {
+		for (WorldActor a : WorldActor.getall()) {
 			List<Combatant> combatants = a.getcombatants();
 			if (combatants != null) {
 				for (Combatant c : combatants) {
@@ -196,7 +196,7 @@ public class Combatant implements Serializable, Cloneable {
 
 	/**
 	 * Rolls for hit and applies damage.
-	 * 
+	 *
 	 * @param targetCombatant
 	 *            The monster being attacked.
 	 */
@@ -304,7 +304,7 @@ public class Combatant implements Serializable, Cloneable {
 	}
 
 	public void die(BattleState s) {
-		if ((/* hp <= DEADATHP && */Javelin.app.fight.meld) || Meld.DEBUG) {
+		if (Javelin.app.fight.meld || Meld.DEBUG) {
 			Javelin.app.fight.addmeld(location[0], location[1], source, s);
 		}
 		s.remove(this);
@@ -375,7 +375,7 @@ public class Combatant implements Serializable, Cloneable {
 	 * @return {@link #maxhp}, taking into consideration {@link Monster#poison}.
 	 */
 	public int getmaxhp() {
-		return this.maxhp + source.poison * source.hd.count();
+		return maxhp + source.poison * source.hd.count();
 	}
 
 	public String getstatus() {
@@ -403,7 +403,7 @@ public class Combatant implements Serializable, Cloneable {
 
 	/**
 	 * Not to be confused with {@link Skills#perceive(Monster, boolean)}.
-	 * 
+	 *
 	 * @param period
 	 *            objective period of the day
 	 * @return subjective period of the day
@@ -427,7 +427,7 @@ public class Combatant implements Serializable, Cloneable {
 
 	/**
 	 * Not to be confused with {@link Skills#perceive(Monster, boolean)}.
-	 * 
+	 *
 	 * @param period
 	 *            Objective period
 	 * @return monster's vision in squares (5 feet)
@@ -453,6 +453,11 @@ public class Combatant implements Serializable, Cloneable {
 	@Override
 	public boolean equals(Object obj) {
 		return id == ((Combatant) obj).id;
+	}
+
+	@Override
+	public int hashCode() {
+		return id;
 	}
 
 	public void await() {
@@ -614,10 +619,10 @@ public class Combatant implements Serializable, Cloneable {
 
 	/**
 	 * Internally clones {@link #source}.
-	 * 
+	 *
 	 * @return this instance. To allow the following syntax:
 	 *         combatant.clone().clonesource()
-	 * 
+	 *
 	 * @see #clone()
 	 */
 	public Combatant clonesource() {
@@ -627,7 +632,7 @@ public class Combatant implements Serializable, Cloneable {
 
 	/**
 	 * Updates {@link Monster#challengerating} internally.
-	 * 
+	 *
 	 * @param r
 	 *            Applies one {@link Upgrade} from this set to the given
 	 *            {@link Combatant}.
@@ -689,7 +694,7 @@ public class Combatant implements Serializable, Cloneable {
 
 	/**
 	 * TODO at some point update with reach attacks
-	 * 
+	 *
 	 * @return <code>true</code> if can reach the target with a mêlée attack.
 	 * @see Monster#melee
 	 */
@@ -706,7 +711,7 @@ public class Combatant implements Serializable, Cloneable {
 
 	/**
 	 * Locates an enemy by sound during battle.
-	 * 
+	 *
 	 * @see Skills#perceive(Monster, boolean)
 	 */
 	public void detect() {

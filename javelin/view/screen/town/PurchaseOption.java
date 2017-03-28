@@ -6,7 +6,7 @@ import javelin.view.screen.shopping.ShoppingScreen;
 
 /**
  * Option to be used with {@link ShoppingScreen}. Carries an {@link Item}.
- * 
+ *
  * @author alex
  */
 public class PurchaseOption extends Option {
@@ -27,5 +27,10 @@ public class PurchaseOption extends Option {
 	@Override
 	public boolean equals(Object obj) {
 		return i.equals(obj);
+	}
+
+	@Override
+	public int hashCode() {
+		return i.hashCode();
 	}
 }

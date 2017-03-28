@@ -9,15 +9,15 @@ import javelin.model.unit.Combatant;
 
 /**
  * A condition is a temporary effect on a {@link Combatant}.
- * 
+ *
  * @see Combatant#conditions
- * 
+ *
  * @author alex
  */
 public abstract class Condition implements Cloneable, Serializable {
 	/**
 	 * Buff means an effect is benefitial while debuff means it's a penalty.
-	 * 
+	 *
 	 * @author alex
 	 */
 	public enum Effect {
@@ -52,14 +52,14 @@ public abstract class Condition implements Cloneable, Serializable {
 	public Integer casterlevel;
 
 	/** Creates a */
-	public Condition(float expireatp, final Combatant c, final Effect effectp,
-			String description, Integer casterlevel) {
+	public Condition(float expireatp, final Combatant c, final Effect effectp, String description,
+			Integer casterlevel) {
 		this(expireatp, c, effectp, description, casterlevel, null);
 	}
 
 	/** See fields. */
-	public Condition(float expireatp, Combatant c, Effect effectp,
-			String descriptionp, Integer casterlevel, Integer longtermp) {
+	public Condition(float expireatp, Combatant c, Effect effectp, String descriptionp, Integer casterlevel,
+			Integer longtermp) {
 		expireat = expireatp;
 		effect = effectp;
 		description = descriptionp;
@@ -68,8 +68,7 @@ public abstract class Condition implements Cloneable, Serializable {
 		if (!stacks) {
 			Condition preexisting = c.hascondition(getClass());
 			if (preexisting != null) {
-				preexisting.expireat =
-						Math.max(expireatp, preexisting.expireat);
+				preexisting.expireat = Math.max(expireatp, preexisting.expireat);
 				return;
 			}
 		}
@@ -92,6 +91,11 @@ public abstract class Condition implements Cloneable, Serializable {
 		return getClass().equals(obj.getClass());
 	}
 
+	@Override
+	public int hashCode() {
+		return getClass().hashCode();
+	}
+
 	public void finish(BattleState s) {
 		// does nothing by default
 	}
@@ -108,7 +112,7 @@ public abstract class Condition implements Cloneable, Serializable {
 	/**
 	 * Migrates a temporary condition to the original {@link Combatant} instance
 	 * outside of battle.
-	 * 
+	 *
 	 * @param to
 	 *            The original combatant.
 	 * @param to2
@@ -140,7 +144,7 @@ public abstract class Condition implements Cloneable, Serializable {
 	 * This is called when a condition is removed by {@link DispelMagic}, mostly
 	 * as a way to prevent negative effects from happening in
 	 * {@link #end(Combatant)}, when applicable.
-	 * 
+	 *
 	 * See {@link Poisoned} as an example.
 	 */
 	public void dispel() {

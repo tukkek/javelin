@@ -6,7 +6,7 @@ import javelin.view.screen.town.SelectScreen;
 
 /**
  * @see SelectScreen
- * 
+ *
  * @author alex
  */
 public class Option implements Serializable {
@@ -41,5 +41,10 @@ public class Option implements Serializable {
 	@Override
 	public boolean equals(Object obj) {
 		return name.equals(((Option) obj).name);
+	}
+
+	@Override
+	public int hashCode() {
+		return name.hashCode();
 	}
 }

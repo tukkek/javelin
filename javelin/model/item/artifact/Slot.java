@@ -10,20 +10,20 @@ import javelin.model.unit.Monster;
  * Complete adaptation from
  * http://www.d20srd.org/srd/magicItems/creatingMagicItems.htm#
  * bodySlotAffinities .
- * 
+ *
  * Rings were added here as {@link Slot#FINGER}.
- * 
+ *
  * @see Monster#humanoid
- * 
+ *
  * @author alex
  */
 public class Slot implements Serializable {
 	/**
 	 * Assumes heads and eyes are independent instead of worrying about complex
 	 * scenarios.
-	 * 
+	 *
 	 * Valid example: a hat and lenses.
-	 * 
+	 *
 	 * Invalid example: A full-head helmet and googles.
 	 */
 	public static final Slot HEAD = new Slot(0);
@@ -83,7 +83,7 @@ public class Slot implements Serializable {
 
 	/**
 	 * To be called before equipping an {@link Artifact}.
-	 * 
+	 *
 	 * @see Artifact#usepeacefully(javelin.model.unit.Combatant)
 	 * @param c
 	 *            Removes all incompatible items from this unit.
@@ -108,6 +108,11 @@ public class Slot implements Serializable {
 		}
 		Slot s = (Slot) obj;
 		return id == s.id;
+	}
+
+	@Override
+	public int hashCode() {
+		return id;
 	}
 
 	@Override

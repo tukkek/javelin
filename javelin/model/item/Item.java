@@ -28,16 +28,16 @@ import tyrant.mikera.engine.RPG;
 /**
  * Represents an item carried by a {@link Combatant}. Most often items are
  * consumable. Currently only human players use items.
- * 
+ *
  * When crafting new items, it takes a day per $1000 for the process to
  * complete. Exceptions are {@link Potion}s, which always take 1 day.
- * 
+ *
  * @author alex
  */
 public abstract class Item implements Serializable, Cloneable {
 	/**
 	 * Organizes a {@link List} from cheapest to most expensive Item.
-	 * 
+	 *
 	 * @see List#sort(Comparator)
 	 */
 	public static Comparator<Item> PRICECOMPARATOR = new Comparator<Item>() {
@@ -112,8 +112,7 @@ public abstract class Item implements Serializable, Cloneable {
 	 * @param upgradeset
 	 *            One the static constants in this class, like {@link #MAGIC}.
 	 */
-	public Item(final String name, final int price,
-			final ItemSelection upgradeset) {
+	public Item(final String name, final int price, final ItemSelection upgradeset) {
 		this.name = name;
 		this.price = price;
 		if (upgradeset != null) {
@@ -142,7 +141,7 @@ public abstract class Item implements Serializable, Cloneable {
 
 	/**
 	 * Uses an item while on the {@link WorldScreen}.
-	 * 
+	 *
 	 * @param m
 	 *            Unit using the item.
 	 * @return <code>true</code> if item is to be expended.
@@ -154,6 +153,11 @@ public abstract class Item implements Serializable, Cloneable {
 	@Override
 	public boolean equals(final Object obj) {
 		return obj instanceof Item ? name.equals(((Item) obj).name) : false;
+	}
+
+	@Override
+	public int hashCode() {
+		return name.hashCode();
 	}
 
 	@Override
@@ -194,7 +198,7 @@ public abstract class Item implements Serializable, Cloneable {
 	/**
 	 * Each {@link Item} is assigned a {@link Realm} on creation. This
 	 * determines what type of item each {@link Town} can produce.
-	 * 
+	 *
 	 * @see Item#Item(String, int, ItemSelection)
 	 * @param r
 	 *            Given a realm...
@@ -263,8 +267,7 @@ public abstract class Item implements Serializable, Cloneable {
 		return all;
 	}
 
-	static private void addall(ItemSelection fire2,
-			HashMap<String, ItemSelection> all, String string) {
+	static private void addall(ItemSelection fire2, HashMap<String, ItemSelection> all, String string) {
 		all.put(string, fire2);
 	}
 
@@ -278,7 +281,7 @@ public abstract class Item implements Serializable, Cloneable {
 	/**
 	 * Called if this is instance is going to be sold and cloned by a town's
 	 * {@link ShoppingScreen}.
-	 * 
+	 *
 	 * @see #clone()
 	 */
 	public void shop() {
@@ -290,10 +293,8 @@ public abstract class Item implements Serializable, Cloneable {
 	 * this item and updates {@link Squad#equipment}.
 	 */
 	public void grab(Squad s) {
-		final String list = UseItems.listitems(null, false)
-				+ "\nWho will take the " + toString().toLowerCase() + "?";
-		s.equipment.get(UseItems.selectmember(s.members, this, list).id)
-				.add(this);
+		final String list = UseItems.listitems(null, false) + "\nWho will take the " + toString().toLowerCase() + "?";
+		s.equipment.get(UseItems.selectmember(s.members, this, list).id).add(this);
 	}
 
 	/**
@@ -332,7 +333,7 @@ public abstract class Item implements Serializable, Cloneable {
 
 	/**
 	 * Used as strategic resource damage.
-	 * 
+	 *
 	 * @return Lowercase description of used resources or empty string.
 	 * @see StartBattle
 	 */

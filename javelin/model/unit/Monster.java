@@ -43,12 +43,12 @@ import tyrant.mikera.engine.RPG;
  * manual. Different in-game battle units can be linked to the same stat block.
  * A player character creates it's own stat-block which is updated as he levels
  * up.
- * 
+ *
  * For performance, Monsters are not to be cloned during BattleNode replication.
  * A monster should only be cloned and modified during AI thinking in the case a
  * spell or ability changes that specific unit's stats (cat's grace or level
  * drain, for example).
- * 
+ *
  * @author Brian Voon Yee Yap
  * @author alex
  */
@@ -74,7 +74,7 @@ public class Monster implements Cloneable, Serializable {
 
 	/**
 	 * Map of {@link Terrain} types, mapped by {@link Monster#name}.
-	 * 
+	 *
 	 * @deprecated
 	 * @see #getterrains()
 	 */
@@ -105,17 +105,17 @@ public class Monster implements Cloneable, Serializable {
 	/**
 	 * 5 units = 1 square. A unit is able to move this number of squares as a
 	 * move-equivalent action (.5 action points).
-	 * 
+	 *
 	 * @see #fly
 	 */
 	public int walk = 0;
 	/**
 	 * Flying allows an unit to ignore water and obstacles. A flying unit should
 	 * have {@link #walk} 0.
-	 * 
+	 *
 	 * TODO also offer perfect flight, which could at least charge through
 	 * obstacles.
-	 * 
+	 *
 	 * @see #walk
 	 */
 	public int fly = 0;
@@ -123,7 +123,7 @@ public class Monster implements Cloneable, Serializable {
 	 * Burrow allows a creature to submerge into the earth. Normally they would
 	 * be able to descend to any depth but due to AI and complexity concerns
 	 * burrowing right is more restrict. Read "combatmodifiers.txt".
-	 * 
+	 *
 	 * Burrowing and surfacing cost the equivalent of a single square movement
 	 * unless engaged.
 	 */
@@ -132,7 +132,7 @@ public class Monster implements Cloneable, Serializable {
 	/**
 	 * A swimming creature is able to ignore water penalties and charge through
 	 * flooded squares.
-	 * 
+	 *
 	 * @see #walk
 	 */
 	public int swim = 0;
@@ -156,9 +156,9 @@ public class Monster implements Cloneable, Serializable {
 	/**
 	 * This is the spells that this source has by default. Learned spells go to
 	 * {@link Combatant#spells}.
-	 * 
+	 *
 	 * TOOD this could be removed and better designed.
-	 * 
+	 *
 	 * @see Monster#spellcr
 	 * @see Spell
 	 */
@@ -171,7 +171,7 @@ public class Monster implements Cloneable, Serializable {
 	public String name = null;
 	/**
 	 * Index for {@link #SIZES}.
-	 * 
+	 *
 	 * @see #size()
 	 */
 	public int size = -1;
@@ -192,7 +192,7 @@ public class Monster implements Cloneable, Serializable {
 	public String avatarfile = null;
 	/**
 	 * What type of vision perception the monster has.
-	 * 
+	 *
 	 * @see #VISION_LOWLIGHT
 	 * @see #VISION_DARK
 	 */
@@ -200,13 +200,13 @@ public class Monster implements Cloneable, Serializable {
 	public float originalhd;
 	/**
 	 * Used to distribute random spells to a new {@link Combatant}.
-	 * 
+	 *
 	 * TODO {@link ChallengeRatingCalculator} is using this for
 	 * {@link SpellsFactor} instead of taking the {@link Combatant} into
 	 * consideration. Maintain?
-	 * 
+	 *
 	 * @see SpellbookGenerator
-	 * 
+	 *
 	 */
 	public float spellcr = 0;
 	/**
@@ -221,7 +221,7 @@ public class Monster implements Cloneable, Serializable {
 	public int energyresistance = 0;
 	/**
 	 * Spell resistance.
-	 * 
+	 *
 	 * "To affect a creature that has spell resistance, a spellcaster must make
 	 * a caster level check (1d20 + caster level) at least equal to the
 	 * creature’s spell resistance."
@@ -242,7 +242,7 @@ public class Monster implements Cloneable, Serializable {
 	 * {@link Artifact}s. Humanoid and monstrous humanoid monster types are
 	 * humanoid by default, other types have to manually marked as
 	 * Humanoid="yes" in monster.xml to be marked as such.
-	 * 
+	 *
 	 * Ideally this would be defined in a slot-by-slot and monster-by-monster
 	 * basis but for now a creature tagged as humanoid is eligible to use any
 	 * and all {@link Slot}s.
@@ -332,7 +332,7 @@ public class Monster implements Cloneable, Serializable {
 	/**
 	 * Rolls a d20 to determine a saving throw result. Note that for being
 	 * random this can only be used outside of {@link BattleAi} thinking.
-	 * 
+	 *
 	 * @param bonus
 	 *            {@link #fortitude()}, {@link #will()} or {@link #ref} bonus. A
 	 *            value of {@link Integer#MAX_VALUE} represents automatic
@@ -492,6 +492,11 @@ public class Monster implements Cloneable, Serializable {
 		return name.equals(m.name);
 	}
 
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
+
 	/**
 	 * @param bonus
 	 *            Raises {@link #charisma} by this many points (+2 points = +1
@@ -577,7 +582,7 @@ public class Monster implements Cloneable, Serializable {
 	/**
 	 * @return a -0, -2 or -4 skill check penalty depending on time of day and
 	 *         {@link Monster} vision.
-	 * 
+	 *
 	 * @see Javelin#getDayPeriod()
 	 * @see #vision
 	 * @see Combatant#perceive(String)
@@ -607,14 +612,14 @@ public class Monster implements Cloneable, Serializable {
 
 	/**
 	 * Call this to spend {@link #skillpool}.
-	 * 
+	 *
 	 * @param u
 	 *            If <code>null</code> will use all available classes to
 	 *            determine class skills.
 	 * @return You can either call {@link SkillSelectionScreen#show()} for user
 	 *         input or {@link SkillSelectionScreen#upgradeautomatically()} for
 	 *         no user input.
-	 * 
+	 *
 	 * @see ClassAdvancement
 	 * @see RaiseIntelligence
 	 * @see #skills

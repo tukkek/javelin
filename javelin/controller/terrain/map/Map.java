@@ -11,7 +11,7 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * Representation of a battle area.
- * 
+ *
  * @author alex
  */
 public abstract class Map {
@@ -43,7 +43,7 @@ public abstract class Map {
 
 	/**
 	 * Maps that are supposed to be good for any minigame or situation.
-	 * 
+	 *
 	 * @see #random()
 	 */
 	public boolean standard = true;
@@ -113,13 +113,17 @@ public abstract class Map {
 		return name.equals(((Map) obj).name);
 	}
 
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
+
 	/**
 	 * @return A random map, excluding ones that are usually not recommended for
 	 *         typical fights like {@link Water}.
 	 */
 	public static Map random() {
-		ArrayList<Terrain> terrains =
-				new ArrayList<Terrain>(Terrain.ALL.length);
+		ArrayList<Terrain> terrains = new ArrayList<Terrain>(Terrain.ALL.length);
 		terrains.add(Terrain.UNDERGROUND);
 		ArrayList<Map> maps = new ArrayList<Map>();
 		for (Terrain t : Terrain.ALL) {

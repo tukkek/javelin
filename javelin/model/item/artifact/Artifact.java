@@ -13,18 +13,18 @@ import javelin.model.world.location.town.Town;
  * {@link Town}s but can be found on other occasions such as in a
  * {@link Caravan}s' possession, {@link Chest} chests and at the Arcane
  * University.
- * 
+ *
  * The name of this class is a big misnomer from d20 standards. Technically
  * there are just non-consumable, passive normal magic items. They're supposed
  * to be just a simple way to expand inventory management possibilities in a
  * hopefully worthwhile yet simple manner.
- * 
+ *
  * Since stacking bonuses is complicated on d20 a few items have been adapted to
  * solve this with {@link Slot} types instead.
- * 
+ *
  * Equipped artifacts are removed before applying an {@link Upgrade} and then
  * re-equipped afterwards.
- * 
+ *
  * @see Combatant#equipped
  * @author alex
  */
@@ -88,7 +88,7 @@ public abstract class Artifact extends Item {
 	 * Puts on an equipment piece, registering it at {@link Combatant#equipped}
 	 * and activating it's effects. If this is already equipped will remove it,
 	 * to work as well as a toggle on/off function.
-	 * 
+	 *
 	 * @param c
 	 *            Equipping unit.
 	 * @return <code>false</code> if not {@link Monster#humanoid}, in which case
@@ -115,7 +115,7 @@ public abstract class Artifact extends Item {
 
 	/**
 	 * Apply items bonuses to the...
-	 * 
+	 *
 	 * @param c
 	 *            combatant that is wearing this item.
 	 */
@@ -123,7 +123,7 @@ public abstract class Artifact extends Item {
 
 	/**
 	 * Remove item bonuses from the...
-	 * 
+	 *
 	 * @param c
 	 *            combatant that is removing this item.
 	 */
@@ -132,6 +132,11 @@ public abstract class Artifact extends Item {
 	@Override
 	public boolean equals(Object obj) {
 		return getClass().equals(obj.getClass());
+	}
+
+	@Override
+	public int hashCode() {
+		return getClass().hashCode();
 	}
 
 	@Override

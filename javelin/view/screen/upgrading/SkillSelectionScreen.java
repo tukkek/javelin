@@ -20,7 +20,7 @@ import javelin.view.screen.town.SelectScreen;
  * . This is necessary because otherwise the {@link SkillsFactor} calculation
  * would make these upgrades create an negative net-gain and in thie case they
  * would not be applied by the {@link UpgradingScreen}.
- * 
+ *
  * @author alex
  */
 public class SkillSelectionScreen extends SelectScreen {
@@ -65,7 +65,8 @@ public class SkillSelectionScreen extends SelectScreen {
 		if (u != null && u instanceof ClassAdvancement) {
 			addclassskills((ClassAdvancement) u);
 		} else {
-			for (ClassAdvancement c : ClassAdvancement.CLASSES) {
+			ClassAdvancement.init();
+			for (ClassAdvancement c : ClassAdvancement.classes) {
 				if (c.getlevel(m) > 0) {
 					addclassskills(c);
 				}

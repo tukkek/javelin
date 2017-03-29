@@ -46,7 +46,8 @@ public class RaiseIntelligence extends RaiseAbility {
 		int total = Math.round(Math.round(Math.ceil(source.originalhd)))
 				* SkillsFactor.levelup(
 						HdFactor.gettypedata(source).skillprogression, source);
-		for (ClassAdvancement c : ClassAdvancement.CLASSES) {
+		ClassAdvancement.init();
+		for (ClassAdvancement c : ClassAdvancement.classes) {
 			total += c.getlevel(source)
 					* SkillsFactor.levelup(c.skillrate, source);
 		}

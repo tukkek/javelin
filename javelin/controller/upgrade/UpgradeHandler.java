@@ -1,7 +1,6 @@
 package javelin.controller.upgrade;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -9,11 +8,7 @@ import java.util.List;
 
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.factor.CrFactor;
-import javelin.controller.upgrade.classes.Aristocrat;
 import javelin.controller.upgrade.classes.ClassAdvancement;
-import javelin.controller.upgrade.classes.Commoner;
-import javelin.controller.upgrade.classes.Expert;
-import javelin.controller.upgrade.classes.Warrior;
 import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.model.Realm;
 import javelin.model.spell.Summon;
@@ -110,25 +105,8 @@ public class UpgradeHandler {
 	// }
 	// }
 
-	ClassAdvancement getclass(Realm r) {
-		if (r == javelin.model.Realm.AIR) {
-			return Expert.SINGLETON;
-		} else if (r == Realm.FIRE) {
-			return Warrior.SINGLETON;
-		} else if (r == Realm.WATER) {
-			return Aristocrat.SINGLETON;
-		} else if (r == Realm.EARTH) {
-			return Commoner.SINGLETON;
-		} else if (r == Realm.GOOD) {
-			return Aristocrat.SINGLETON;
-		} else if (r == Realm.EVIL) {
-			return Commoner.SINGLETON;
-		} else if (r == Realm.MAGIC) {
-			return Aristocrat.SINGLETON;
-		} else {
-			throw new RuntimeException("Uknown town!");
-		}
-	}
+	// ClassAdvancement getclass(Realm r) {
+	// }
 
 	/**
 	 * @param r
@@ -199,7 +177,8 @@ public class UpgradeHandler {
 		addall(internal, all, "internal");
 
 		HashSet<Upgrade> classes = new HashSet<Upgrade>();
-		for (ClassAdvancement ca : ClassAdvancement.CLASSES) {
+		ClassAdvancement.init();
+		for (ClassAdvancement ca : ClassAdvancement.classes) {
 			classes.add(ca);
 		}
 		addall(classes, all, "classlevels");
@@ -272,15 +251,15 @@ public class UpgradeHandler {
 		return spells;
 	}
 
-	/**
-	 * @return Like {@link #getupgrades(Realm)} except also adds the proper
-	 *         class.
-	 * @see #getclass(Realm)
-	 */
-	public Collection<? extends Upgrade> getfullupgrades(Realm r) {
-		ArrayList<Upgrade> fullset = new ArrayList<Upgrade>(getupgrades(r));
-		fullset.add(getclass(r));
-		return fullset;
-	}
+	// /**
+	// * @return Like {@link #getupgrades(Realm)} except also adds the proper
+	// * class.
+	// * @see #getclass(Realm)
+	// */
+	// public Collection<? extends Upgrade> getfullupgrades(Realm r) {
+	// ArrayList<Upgrade> fullset = new ArrayList<Upgrade>(getupgrades(r));
+	// fullset.add(getclass(r));
+	// return fullset;
+	// }
 
 }

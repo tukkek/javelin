@@ -15,11 +15,11 @@ import javelin.model.unit.Spawner;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.world.location.unique.MercenariesGuild;
-import javelin.view.screen.town.PurchaseScreen;
+import javelin.view.screen.town.SelectScreen;
 
 /**
  * Shows unit information.
- * 
+ *
  * @author alex
  */
 public class StatisticsScreen extends InfoScreen {
@@ -57,14 +57,14 @@ public class StatisticsScreen extends InfoScreen {
 		lines.add("");
 		if (c.mercenary) {
 			lines.add("Mercenary ($"
-					+ PurchaseScreen.formatcost(MercenariesGuild.getfee(c))
+					+ SelectScreen.formatcost(MercenariesGuild.getfee(c))
 					+ "/day)");
 		}
 		if (!(c.source instanceof Spawner)) {
 			lines.add("Challenge rating "
 					+ Math.round(ChallengeRatingCalculator.calculatecr(m)));
 		}
-		for (ClassAdvancement classlevels : ClassAdvancement.CLASSES) {
+		for (ClassAdvancement classlevels : ClassAdvancement.classes) {
 			int level = classlevels.getlevel(m);
 			if (level > 0) {
 				lines.add(classlevels.descriptivename + " level " + level);
@@ -72,8 +72,8 @@ public class StatisticsScreen extends InfoScreen {
 		}
 		lines.add(describealignment(m));
 		lines.add("");
-		final String maxhp =
-				Squad.active.members.contains(c) ? " (" + c.maxhp + "hp)" : "";
+		final String maxhp = Squad.active.members.contains(c)
+				? " (" + c.maxhp + "hp)" : "";
 		lines.add("Hit dice     " + m.hd + maxhp);
 		lines.add("Initiative   " + (m.initiative >= 0 ? "+" : "")
 				+ m.initiative);
@@ -167,8 +167,8 @@ public class StatisticsScreen extends InfoScreen {
 		output += formatskill("acrobatics", s.acrobatics, m.dexterity);
 		output += formatskill("concentration", s.concentration, m.constitution);
 		output += formatskill("diplomacy", s.diplomacy, m.charisma);
-		output +=
-				formatskill("disable device", s.disabledevice, m.intelligence);
+		output += formatskill("disable device", s.disabledevice,
+				m.intelligence);
 		output += formatskill("disguise", s.disguise(m) - 10, m.charisma);
 		output += formatskill("gather information", s.gatherinformation,
 				m.charisma);

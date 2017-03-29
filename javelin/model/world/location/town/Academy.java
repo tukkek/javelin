@@ -129,7 +129,6 @@ public class Academy extends Fortification {
 		pillage = false;
 		allowupgrade = true;
 		level = 10;
-		r = Realm.AIR;
 		if (r != null) {
 			setrealm(r);
 		}
@@ -139,7 +138,7 @@ public class Academy extends Fortification {
 		upgradetype = r;
 		refill();
 		int nupgrades = upgrades.size();
-		minlevel = nupgrades - 1;
+		minlevel = Math.max(1, nupgrades - 1);
 		maxlevel = nupgrades + 1;
 	}
 

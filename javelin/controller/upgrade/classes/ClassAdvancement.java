@@ -16,19 +16,28 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * Levels up in an NPC class.
- * 
+ *
  * @author alex
  */
 public abstract class ClassAdvancement extends Upgrade {
-	public static final ClassAdvancement[] CLASSES =
-			new ClassAdvancement[] { Commoner.SINGLETON, Aristocrat.SINGLETON,
-					Warrior.SINGLETON, Expert.SINGLETON };
+	/**
+	 * Contains all full-fledged (20 level) classes found in the game. Needs to
+	 * be initialized with {@link #init()} to prevent racy initialization.
+	 */
+	public static ClassAdvancement[] classes = null;
+
+	public static void init() {
+		if (classes == null) {
+			classes = new ClassAdvancement[] { Commoner.SINGLETON,
+					Aristocrat.SINGLETON, Warrior.SINGLETON, Expert.SINGLETON };
+		}
+	}
 
 	/** Table of improvements per level as per the SRD. */
 	public final Level[] table;
 	/**
 	 * How many skills points are gained at each level.
-	 * 
+	 *
 	 * @see SkillsFactor
 	 */
 	public final int skillrate;
@@ -134,4 +143,5 @@ public abstract class ClassAdvancement extends Upgrade {
 			return 0;
 		}
 	}
+
 }

@@ -203,15 +203,19 @@ public class Combatant implements Serializable, Cloneable {
 	public void meleeattacks(Combatant targetCombatant, BattleState state) {
 		Combatant current = state.clone(this);
 		targetCombatant = state.clone(targetCombatant);
-		Action.outcome(MeleeAttack.SINGLETON.attack(state, this, targetCombatant,
-				current.chooseattack(current.source.melee, targetCombatant), 0));
+		Action.outcome(MeleeAttack.SINGLETON.attack(state, this,
+				targetCombatant,
+				current.chooseattack(current.source.melee, targetCombatant),
+				0));
 	}
 
 	public void rangedattacks(Combatant targetCombatant, BattleState state) {
 		Combatant current = state.clone(this);
 		targetCombatant = state.clone(targetCombatant);
-		Action.outcome(RangedAttack.SINGLETON.attack(state, this, targetCombatant,
-				current.chooseattack(current.source.melee, targetCombatant), 0));
+		Action.outcome(RangedAttack.SINGLETON.attack(state, this,
+				targetCombatant,
+				current.chooseattack(current.source.melee, targetCombatant),
+				0));
 	}
 
 	public List<AttackSequence> getattacks(final boolean melee) {
@@ -242,7 +246,8 @@ public class Combatant implements Serializable, Cloneable {
 
 	public void checkAttackType(final boolean meleeOnly) {
 		if (!hasattacktype(meleeOnly)) {
-			Game.message("No " + (meleeOnly ? "mẽlée" : "ranged") + " attacks.", Delay.WAIT);
+			Game.message("No " + (meleeOnly ? "mẽlée" : "ranged") + " attacks.",
+					Delay.WAIT);
 			throw new RepeatTurn();
 		}
 	}
@@ -276,7 +281,8 @@ public class Combatant implements Serializable, Cloneable {
 	}
 
 	public void charge() {
-		conditions.add(new Charging(ap + 1f + BattleScreen.active.spentap, this));
+		conditions
+				.add(new Charging(ap + 1f + BattleScreen.active.spentap, this));
 		acmodifier -= 2;
 	}
 
@@ -318,7 +324,8 @@ public class Combatant implements Serializable, Cloneable {
 	/**
 	 * % are against AC only, no bonuses included except attack bonus
 	 */
-	public CurrentAttack chooseattack(List<AttackSequence> attacktype, Combatant target) {
+	public CurrentAttack chooseattack(List<AttackSequence> attacktype,
+			Combatant target) {
 		CurrentAttack currentattack = getcurrentattack(attacktype);
 		if (currentattack.continueattack()) {
 			return currentattack;
@@ -329,7 +336,8 @@ public class Combatant implements Serializable, Cloneable {
 			for (AttackSequence sequence : attacktype) {
 				attacks.add(sequence.toString(target));
 			}
-			attackindex = Javelin.choose("Start which attack sequence?", attacks, false, false);
+			attackindex = Javelin.choose("Start which attack sequence?",
+					attacks, false, false);
 			if (attackindex == STATUSUNCONSCIOUS) {
 				Game.messagepanel.clear();
 				throw new RepeatTurn();
@@ -397,7 +405,8 @@ public class Combatant implements Serializable, Cloneable {
 		case STATUSDEAD:
 			return "killed";
 		default:
-			throw new RuntimeException("Unknown possibility: " + getnumericstatus());
+			throw new RuntimeException(
+					"Unknown possibility: " + getnumericstatus());
 		}
 	}
 
@@ -413,13 +422,15 @@ public class Combatant implements Serializable, Cloneable {
 		case 0:
 			return period;
 		case 2:
-			return Javelin.app.fight.denydarkvision ? Javelin.PERIODEVENING : Javelin.PERIODNOON;
+			return Javelin.app.fight.denydarkvision ? Javelin.PERIODEVENING
+					: Javelin.PERIODNOON;
 		case 1:
 			if (period == Javelin.PERIODNIGHT) {
 				return Javelin.PERIODEVENING;
 			}
 			if (period == Javelin.PERIODEVENING) {
-				return Javelin.app.fight.denydarkvision ? Javelin.PERIODEVENING : Javelin.PERIODNOON;
+				return Javelin.app.fight.denydarkvision ? Javelin.PERIODEVENING
+						: Javelin.PERIODNOON;
 			}
 		}
 		return period;
@@ -434,7 +445,8 @@ public class Combatant implements Serializable, Cloneable {
 	 * @see #perceive(String)
 	 */
 	public int view(String period) {
-		if (source.vision == 2 || source.vision == 1 && period == Javelin.PERIODEVENING) {
+		if (source.vision == 2
+				|| source.vision == 1 && period == Javelin.PERIODEVENING) {
 			return 12;
 		}
 		if (period == Javelin.PERIODEVENING || source.vision == 1) {
@@ -479,7 +491,8 @@ public class Combatant implements Serializable, Cloneable {
 		final ArrayList<String> statuslist = new ArrayList<String>();
 		if (state.isengaged(this)) {
 			statuslist.add("engaged");
-			for (Combatant c : Fight.state.blueTeam.contains(this) ? Fight.state.redTeam : Fight.state.blueTeam) {
+			for (Combatant c : Fight.state.blueTeam.contains(this)
+					? Fight.state.redTeam : Fight.state.blueTeam) {
 				if (state.isflanked(state.clone(this), state.clone(c))) {
 					statuslist.add("flanked");
 					break;
@@ -505,7 +518,8 @@ public class Combatant implements Serializable, Cloneable {
 	}
 
 	public boolean ispenalized(final BattleState s) {
-		if (surprise() != 0 || s.map[location[0]][location[1]].flooded && source.swim() == 0) {
+		if (surprise() != 0 || s.map[location[0]][location[1]].flooded
+				&& source.swim() == 0) {
 			return true;
 		}
 		for (Condition c : conditions) {
@@ -548,7 +562,9 @@ public class Combatant implements Serializable, Cloneable {
 		for (Condition co : new ArrayList<Condition>(conditions)) {
 			co.terminate(timecost, this);
 			if (hp <= DEADATHP) {
-				Javelin.message(this + " dies from being " + co.description + "!", true);
+				Javelin.message(
+						this + " dies from being " + co.description + "!",
+						true);
 				Squad.active.remove(this);
 				return;
 			}
@@ -593,7 +609,8 @@ public class Combatant implements Serializable, Cloneable {
 		int heal = Integer.MIN_VALUE;
 		for (Combatant medic : Squad.active.members) {
 			if (!equals(medic)) {
-				heal = Math.max(heal, Skills.take10(medic.source.skills.heal, medic.source.wisdom));
+				heal = Math.max(heal, Skills.take10(medic.source.skills.heal,
+						medic.source.wisdom));
 			}
 		}
 		return heal;
@@ -641,7 +658,8 @@ public class Combatant implements Serializable, Cloneable {
 	 * @see Upgrade#upgrade(Combatant)
 	 */
 	public boolean upgrade(Realm r) {
-		Upgrade upgrade = RPG.pick(new ArrayList<Upgrade>(UpgradeHandler.singleton.getfullupgrades(r)));
+		Upgrade upgrade = RPG.pick(new ArrayList<Upgrade>(
+				UpgradeHandler.singleton.getupgrades(r)));
 		if (upgrade instanceof BreathUpgrade) {
 			/* TODO Breaths are pretty CPU intensive right now so avoid them */
 			return false;
@@ -665,7 +683,8 @@ public class Combatant implements Serializable, Cloneable {
 		Combatant weakest = null;
 		for (Combatant sensei : garrison) {
 			ChallengeRatingCalculator.calculatecr(sensei.source);
-			if (weakest == null || sensei.source.challengerating < weakest.source.challengerating) {
+			if (weakest == null
+					|| sensei.source.challengerating < weakest.source.challengerating) {
 				weakest = sensei;
 			}
 		}
@@ -680,11 +699,15 @@ public class Combatant implements Serializable, Cloneable {
 		final Fight f = Javelin.app.fight;
 		final String perception = perceive(f.period);
 		final int range = view(f.period);
-		final boolean forcevision = perception == Javelin.PERIODNOON || perception == Javelin.PERIODMORNING;
+		final boolean forcevision = perception == Javelin.PERIODNOON
+				|| perception == Javelin.PERIODMORNING;
 		final Point here = new Point(location[0], location[1]);
-		for (int x = Math.max(0, here.x - range); x <= here.x + range && x < f.map.map.length; x++) {
-			for (int y = Math.max(0, here.y - range); y <= here.y + range && y < f.map.map[0].length; y++) {
-				if (forcevision || s.haslineofsight(here, new Point(x, y), range, perception) != Vision.BLOCKED) {
+		for (int x = Math.max(0, here.x - range); x <= here.x + range
+				&& x < f.map.map.length; x++) {
+			for (int y = Math.max(0, here.y - range); y <= here.y + range
+					&& y < f.map.map[0].length; y++) {
+				if (forcevision || s.haslineofsight(here, new Point(x, y),
+						range, perception) != Vision.BLOCKED) {
 					seen.add(new Point(x, y));
 				}
 			}
@@ -699,14 +722,16 @@ public class Combatant implements Serializable, Cloneable {
 	 * @see Monster#melee
 	 */
 	public boolean isadjacent(Combatant target) {
-		return Math.abs(location[0] - target.location[0]) <= 1 && Math.abs(location[1] - target.location[1]) <= 1;
+		return Math.abs(location[0] - target.location[0]) <= 1
+				&& Math.abs(location[1] - target.location[1]) <= 1;
 	}
 
 	/**
 	 * @return XP in human readeable format (ex: 150XP).
 	 */
 	public String gethumanxp() {
-		return xp.multiply(new BigDecimal(100)).setScale(0, RoundingMode.HALF_UP) + "XP";
+		return xp.multiply(new BigDecimal(100)).setScale(0,
+				RoundingMode.HALF_UP) + "XP";
 	}
 
 	/**
@@ -720,7 +745,8 @@ public class Combatant implements Serializable, Cloneable {
 		}
 		int listen = source.skills.perceive(false, true, source);
 		for (Combatant c : Fight.state.redTeam) {
-			if (listen >= c.source.skills.movesilently(source) + (Walker.distance(this, c) - 1)) {
+			if (listen >= c.source.skills.movesilently(source)
+					+ (Walker.distance(this, c) - 1)) {
 				BattleScreen.active.mappanel.tiles[c.location[0]][c.location[1]].discovered = true;
 			}
 		}

@@ -19,6 +19,7 @@ import javelin.model.world.location.town.labor.expansive.Settler;
 import javelin.model.world.location.town.labor.industrious.BuildMine;
 import javelin.model.world.location.town.labor.industrious.Deforestate;
 import javelin.model.world.location.town.labor.military.BuildDwelling;
+import javelin.model.world.location.unique.AssassinsGuild;
 
 /**
  * This class provides the deck-building mini-game logic for {@link Labor}
@@ -33,7 +34,8 @@ public class Deck extends ArrayList<Labor> {
 			new BuildInn(), new Redraw(), new BuildDwelling(), new BuildShop(),
 			new BuildTransportHub(), new BuildTransportHub(),
 			new BuildAcademy(new Academy(null)) };
-	private static final Labor[] CRIMINAL = new Labor[] {};
+	private static final Labor[] CRIMINAL = new Labor[] {
+			new BuildAcademy(new AssassinsGuild()), };
 	private static final Labor[] CULTURAL = new Labor[] {
 			new BuildMagesGuild(), };
 	private static final Labor[] ECOLOGICAL = new Labor[] {};
@@ -104,23 +106,24 @@ public class Deck extends ArrayList<Labor> {
 		return false;
 	}
 
-	public static int getnprojects() {
-		int projects = DEFAULT.size();
-		for (Deck d : DECKS.values()) {
-			projects += d.size();
-		}
-		return projects;
-	}
-
 	public static int getntraits() {
 		return DECKS.size();
 	}
 
 	public static void printstats() {
-		System.out.println(Deck.getnprojects() + " district projects, "
-				+ Deck.getntraits() + " town traits");
-		if (Javelin.DEBUG) {
-			System.out.println(DECKS);
+		int nprojects = DEFAULT.size();
+		int min = Integer.MAX_VALUE;
+		for (Deck d : DECKS.values()) {
+			int n = d.size();
+			nprojects += n;
+			if (n < min) {
+				min = n;
+			}
 		}
+		System.out.println(Deck.getntraits() + " town traits, " + nprojects
+				+ " district projects (minimum deck size: " + min);
+		// if (Javelin.DEBUG) {
+		// System.out.println(DECKS);
+		// }
 	}
 }

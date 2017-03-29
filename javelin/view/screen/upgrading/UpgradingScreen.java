@@ -25,12 +25,23 @@ import javelin.view.screen.town.SelectScreen;
 
 /**
  * Lets a plear {@link Upgrade} members from a {@link Squad}.
- * 
+ *
  * Upgrading 1 level (100XP) should take 1 week and cost $50.
- * 
+ *
  * @author alex
  */
 public abstract class UpgradingScreen extends SelectScreen {
+	/**
+	 * How many days it takes to upgrade per full level (100XP). The official
+	 * rules say one week per character level. However, Javelin's goal is to
+	 * advance to level 20 in the span of a year.
+	 *
+	 * This may need to be adjusted to balance fun to play (faster) and the
+	 * overarching design (slower). Currently, it's jusst a median between the
+	 * tow.
+	 */
+	private static final float UPGRADETIME = (400 / 20 + 7) / 2;
+
 	public class UpgradeOption extends Option {
 		/** Upgrade in question. */
 		public final Upgrade u;
@@ -50,7 +61,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param t
 	 *            Can be <code>null</code>, only {@link TownUpgradingScreen}
 	 *            depends on it.
@@ -143,7 +154,8 @@ public abstract class UpgradingScreen extends SelectScreen {
 								RoundingMode.HALF_UP)
 						+ "XP, $" + price(cost.floatValue());
 				s += "[" + i++ + "] " + name + " " + o.u.inform(m) + costinfo
-						+ ", " + Math.round(cost.floatValue() * 7) + " days\n";
+						+ ", " + Math.round(cost.floatValue() * UPGRADETIME)
+						+ " days\n";
 			}
 		}
 		return s;
@@ -223,7 +235,8 @@ public abstract class UpgradingScreen extends SelectScreen {
 			float xpcost = ChallengeRatingCalculator.calculaterawcr(c.source)[1]
 					- ChallengeRatingCalculator
 							.calculaterawcr(original.source)[1];
-			trainees.add(new TrainingOrder(Math.round(xpcost * 24 * 7), c,
+			trainees.add(new TrainingOrder(
+					Math.round(xpcost * 24 * UPGRADETIME), c,
 					s.equipment.get(c.id), c.toString(), xpcost, original));
 		}
 		onexit(s);

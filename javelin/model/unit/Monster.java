@@ -362,7 +362,7 @@ public class Monster implements Cloneable, Serializable {
 	 */
 	public int getbaseattackbonus() {
 		int classesbab = 0;
-		for (ClassAdvancement classdata : ClassAdvancement.CLASSES) {
+		for (ClassAdvancement classdata : ClassAdvancement.classes) {
 			classesbab += classdata.table[classdata.getlevel(this)].bab;
 		}
 		return classesbab
@@ -453,8 +453,7 @@ public class Monster implements Cloneable, Serializable {
 	 * @return Ability bonus.
 	 */
 	static public int getbonus(int ability) {
-		return new Long(Math.round(Math.floor(ability / 2.0 - 5.0)))
-				.intValue();
+		return new Long(Math.round(Math.floor(ability / 2.0 - 5.0))).intValue();
 	}
 
 	@Override

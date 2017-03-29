@@ -11,7 +11,10 @@ import javelin.view.screen.WorldScreen;
  * Initially each labor is an empty placeholder inside a {@link Deck}. Upon
  * drawing they are cloned and the clones defined as actual cards via
  * {@link #define(Town)}.
- * 
+ *
+ * The suggested value for {@link #cost} is 5/10/15/20 for
+ * weak/medium/powerful/epic labors.
+ *
  * @author alex
  */
 public abstract class Labor implements Serializable, Cloneable {
@@ -19,7 +22,7 @@ public abstract class Labor implements Serializable, Cloneable {
 	public String name;
 	/**
 	 * Cost in labor.
-	 * 
+	 *
 	 * @see Town#labor
 	 */
 	public int cost;
@@ -32,7 +35,7 @@ public abstract class Labor implements Serializable, Cloneable {
 
 	/**
 	 * Define here all the data that isn't {@link Town}-dependent.
-	 * 
+	 *
 	 * @param name
 	 *            For debug purposes a labor, even in its original abstract mode
 	 *            must define a name for {@link #toString()}. This can updated

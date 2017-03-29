@@ -20,19 +20,19 @@ import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.town.PurchaseScreen;
+import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
  * Allows a player to recruit one type of unit.
- * 
+ *
  * @author alex
  */
 public class Dwelling extends Fortification {
 	/**
 	 * It would be cool to allow players to draft as well but this has a ton of
 	 * implications, including balance ones.
-	 * 
+	 *
 	 * @author alex
 	 */
 	public class Draft extends Labor {
@@ -40,8 +40,8 @@ public class Dwelling extends Fortification {
 
 		public Draft(Monster m) {
 			super("Draft " + m.toString().toLowerCase(),
-					Math.round(Math.max(1, m.challengerating)));
-			this.recruit = m.clone();
+					Math.round(Math.max(1, m.challengerating)), null);
+			recruit = m.clone();
 		}
 
 		@Override
@@ -176,13 +176,13 @@ public class Dwelling extends Fortification {
 					+ "XP)\n";
 		}
 		text += "h - hire a " + monstertype + " mercenary ($"
-				+ PurchaseScreen.formatcost(MercenariesGuild.getfee(dweller))
+				+ SelectScreen.formatcost(MercenariesGuild.getfee(dweller))
 				+ "/day)\n";
 		text += "p - pillage this dwelling ($"
-				+ PurchaseScreen.formatcost(getspoils()) + ")\n";
+				+ SelectScreen.formatcost(getspoils()) + ")\n";
 		text += "q - quit\n";
-		text += "\nCurrent gold: $"
-				+ PurchaseScreen.formatcost(Squad.active.gold) + "\n";
+		text += "\nCurrent gold: $" + SelectScreen.formatcost(Squad.active.gold)
+				+ "\n";
 		if (volunteer) {
 			text += "Current XP: " + sumxp() + "XP\n";
 		}
@@ -195,8 +195,8 @@ public class Dwelling extends Fortification {
 	}
 
 	@Override
-	public boolean hasupgraded() {
-		return volunteer && !ishostile();
+	public boolean isworking() {
+		return !volunteer && !ishostile();
 	}
 
 	@Override

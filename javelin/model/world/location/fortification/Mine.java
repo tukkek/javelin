@@ -16,6 +16,7 @@ import javelin.model.world.WorldActor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.unique.AdventurersGuild;
@@ -30,7 +31,7 @@ import tyrant.mikera.engine.RPG;
  * over a period of time or leave {@link Combatant}s there for long-term mining
  * - in which case the resulting gold needs to be gathered there by a
  * {@link Squad} later on.
- * 
+ *
  * @author alex
  */
 public class Mine extends Fortification {
@@ -43,7 +44,8 @@ public class Mine extends Fortification {
 
 	public class UpgradeMine extends BuildingUpgrade {
 		public UpgradeMine(Mine mine) {
-			super("Ruby mine", Math.max(0, 10 - mine.miners.size()), 5, mine);
+			super("Ruby mine", Math.max(0, 10 - mine.miners.size()), 5, mine,
+					Town.VILLAGE);
 		}
 
 		@Override

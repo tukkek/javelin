@@ -1,6 +1,7 @@
 package javelin.model.world.location.town;
 
 import java.awt.Image;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -40,9 +41,9 @@ import tyrant.mikera.engine.RPG;
 /**
  * A hub for upgrading units, resting, participating in tournament, renting
  * transportation, buying items...
- * 
+ *
  * Each town has it's own profile which is predetermined.
- * 
+ *
  * @author alex
  */
 public class Town extends Location {
@@ -55,19 +56,27 @@ public class Town extends Location {
 	public static final float DAILYLABOR = .2f;
 
 	static final ArrayList<String> NAMES = new ArrayList<String>();
-	static final String[] RANKS = new String[] { "hamlet", "village", "town",
-			"city" };
 	/** TODO */
 	public static final boolean DEBUGPROJECTS = false;
 
-	/**
-	 * TODO could probably use only this instead of #RANKS and #getrank()
-	 * 
-	 * @author alex
-	 */
-	public enum Rank {
-		HAMLET, VILLAGE, TOWN, CITY
+	public static class Rank implements Serializable {
+		public String title;
+		public int size;
+		public int rank;
+
+		public Rank(String name, int size, int rank) {
+			title = name;
+			this.size = size;
+			this.rank = rank;
+		}
 	}
+
+	public static final Rank HAMLET = new Rank("hamlet", 5, 1);
+	public static final Rank VILLAGE = new Rank("village", 10, 2);
+	public static final Rank TOWN = new Rank("town", 15, 3);
+	public static final Rank CITY = new Rank("city", 20, 4);
+
+	static final Rank[] RANKS = new Rank[] { HAMLET, VILLAGE, TOWN, CITY };
 
 	static {
 		initnames();
@@ -77,7 +86,7 @@ public class Town extends Location {
 	/**
 	 * Represent 10 working citizens that will produce 1 {@link #labor} every 10
 	 * days.
-	 * 
+	 *
 	 * An arbitrary decision is to try to fit the game-span of a normal game
 	 * into a 1-year period, which puts a town max size roughly at 10 if it does
 	 * nothing but {@link Growth}.
@@ -87,7 +96,7 @@ public class Town extends Location {
 	public Governor governor = new HumanGovernor(this);
 	/**
 	 * Alphabetically ordered set of urban traits.
-	 * 
+	 *
 	 * @see Deck
 	 */
 	public TreeSet<String> traits = new TreeSet<String>();
@@ -109,8 +118,8 @@ public class Town extends Location {
 			NAMES.remove(0);
 		}
 		allowentry = false;
-		this.x = location.x;
-		this.y = location.y;
+		x = location.x;
+		y = location.y;
 		// if (!World.seed.done) {
 		// checktooclose();
 		// }
@@ -152,7 +161,7 @@ public class Town extends Location {
 	/**
 	 * Populates {@link #NAMES}. This may be needed if restarting {@link World}
 	 * generation.
-	 * 
+	 *
 	 * @see World#retry()
 	 */
 	public static void initnames() {
@@ -276,7 +285,7 @@ public class Town extends Location {
 
 	/**
 	 * When a player captures a hostile town.
-	 * 
+	 *
 	 * @param showsurroundings
 	 *            if <code>true</code> will show this town's surrounding
 	 *            squares.
@@ -406,32 +415,25 @@ public class Town extends Location {
 
 	@Override
 	public Image getimage() {
-		String image = "locationtown" + getranktitle();
+		String image = "locationtown" + getrank().title;
 		if (!ishostile() && ishosting()) {
 			image += "festival";
 		}
 		return Images.getImage(image);
 	}
 
-	public String getranktitle() {
-		return RANKS[getrank() - 1];
-	}
-
 	/**
 	 * @return A rank between [1,4] based on current {@link #population}.
 	 * @see #RANKS
 	 */
-	public int getrank() {
-		if (population <= 5) {
-			return 1;
+	public Rank getrank() {
+		for (int i = 0; i < RANKS.length - 1; i++) {
+			final Rank r = RANKS[i];
+			if (population <= r.size) {
+				return r;
+			}
 		}
-		if (population <= 10) {
-			return 2;
-		}
-		if (population <= 15) {
-			return 3;
-		}
-		return 4;
+		return CITY;
 	}
 
 	@Override

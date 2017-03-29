@@ -22,7 +22,7 @@ import tyrant.mikera.engine.RPG;
  *
  * @author alex
  */
-public class Inn extends Fortification {
+public class Lodge extends Fortification {
 	public static final Lodging LODGE = new Lodging("lodge", 1, 0);
 	public static final Lodging HOTEL = new Lodging("hotel", 2, .5f);
 	public static final Lodging HOSPITAL = new Lodging("hospital", 4, 2);
@@ -58,8 +58,9 @@ public class Inn extends Fortification {
 	static final int MAXLEVEL = LEVELS.length - 1;
 
 	class UpgradeInn extends BuildingUpgrade {
-		public UpgradeInn(Inn i) {
-			super(LEVELS[i.level + 1], LABOR[i.level + 1], 5, i);
+		public UpgradeInn(Lodge i) {
+			super(LEVELS[i.level + 1], LABOR[i.level + 1], 5, i,
+					Town.RANKS[i.level + 1]);
 		}
 
 		@Override
@@ -69,7 +70,7 @@ public class Inn extends Fortification {
 
 		@Override
 		public void done(WorldActor l) {
-			Inn i = (Inn) l;
+			Lodge i = (Lodge) l;
 			i.level += 1;
 			i.rename(LEVELS[i.level]);
 			super.done(l);
@@ -77,15 +78,14 @@ public class Inn extends Fortification {
 
 		@Override
 		public boolean validate(District d) {
-			Inn i = (Inn) previous;
-			return d != null && i.level < MAXLEVEL
-					&& d.town.getrank() - 1 > i.level && super.validate(d);
+			Lodge i = (Lodge) previous;
+			return d != null && i.level < MAXLEVEL && super.validate(d);
 		}
 	}
 
 	int level = 0;
 
-	public Inn() {
+	public Lodge() {
 		super(LEVELS[0], LEVELS[0], 1, 5);
 		gossip = true;
 		neutral = true;
@@ -124,7 +124,7 @@ public class Inn extends Fortification {
 			return false;
 		}
 		Squad.active.gold -= price;
-		Inn.rest(periods, RESTPERIOD * periods, LODGING[level]);
+		Lodge.rest(periods, RESTPERIOD * periods, LODGING[level]);
 		return true;
 	}
 
@@ -132,7 +132,7 @@ public class Inn extends Fortification {
 	protected void generate() {
 		x = -1;
 		while (x == -1 || getdistrict() != null
-				|| getnearest(Inn.class).distance(x, y) <= District.RADIUSMAX) {
+				|| getnearest(Lodge.class).distance(x, y) <= District.RADIUSMAX) {
 			generateawayfromtown();
 		}
 	}

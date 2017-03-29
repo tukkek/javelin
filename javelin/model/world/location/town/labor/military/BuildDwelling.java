@@ -7,6 +7,7 @@ import javelin.model.unit.Monster;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Dwelling;
+import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Build;
 
 public class BuildDwelling extends Build {
@@ -15,7 +16,7 @@ public class BuildDwelling extends Build {
 	Dwelling goal = null;
 
 	public BuildDwelling() {
-		super("Build dwelling", 0);
+		super("Build dwelling", 0, null, Town.HAMLET);
 	}
 
 	@Override
@@ -43,6 +44,6 @@ public class BuildDwelling extends Build {
 
 	@Override
 	public boolean validate(District d) {
-		return goal != null && super.validate(d);
+		return super.validate(d) && goal != null;
 	}
 }

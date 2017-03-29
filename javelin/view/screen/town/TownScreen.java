@@ -12,16 +12,14 @@ import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.OrderQueue;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.Town.Rank;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.Option;
-import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.option.ScreenOption;
 import javelin.view.screen.town.option.TournamentScreenOption;
 
 /**
  * Shown when a {@link Squad} enters a {@link Town}.
- * 
+ *
  * @author alex
  */
 public class TownScreen extends PurchaseScreen {
@@ -175,46 +173,17 @@ public class TownScreen extends PurchaseScreen {
 					+ " resources into town";
 			list.add(UNLOAD);
 		}
-		// list.add(new RecruitScreenOption("Draft", town, 'd'));
-		// list.add(new ShopScreenOption("Shop", town, 's'));
-		// if (town.transport != null) {
-		// list.add(new TransportScreenOption("Rent transport", town, 't'));
-		// }
-		// list.add(town.lodging.getrestoption());
-		// list.add(town.lodging.getweekrestoption());
-		// list.add(new UpgradingScreenOption("Upgrade", town, 'u'));
-		// boolean istraining = !town.training.queue.isEmpty();
-		// if (istraining || !town.crafting.queue.isEmpty()) {
-		// list.add(AWAIT);
-		// if (istraining) {
-		// list.add(CANCELUPGRADES);
-		// }
-		// }
 		if (town.ishosting()) {
 			list.add(new TournamentScreenOption("Enter tournament", town, 't'));
 		}
-		// MANAGE.name = "Manage town (" + (town.governor.automanage ?
-		// "automatic" : "manual") + ")";
-		// if (town.size > 1) {
-		// list.add(DETACHWORKER);
-		// }
 		list.add(SETTLE);
 		list.add(new GovernorScreen(town));
-		// if (!town.governor.automanage) {
-		// // list.add(new ResearchScreenOption(town));
-		// if (!town.governor.isfull()) {
-		// list.add(OPENCARD);
-		// }
-		// list.add(REDRAWCARDS);
-		// REDRAWCARDS.name = "Redraw all labor options (" +
-		// town.governor.gethandsize() + " labor)";
-		if (town.getrank() - 1 < Rank.CITY.ordinal()) {
+		if (town.getrank().rank < Town.CITY.rank) {
 			list.add(RENAME);
-			PILLAGE.name = "Pillage ($" + ShoppingScreen.formatcost(
+			PILLAGE.name = "Pillage ($" + SelectScreen.formatcost(
 					Fortification.getspoils(town.population - 1)) + ")";
 			list.add(PILLAGE);
 		}
-		// }
 		return list;
 	}
 
@@ -238,8 +207,7 @@ public class TownScreen extends PurchaseScreen {
 		// }
 		// if (!town.governor.automanage || DEBUGMANAGEMENT) {
 		// }
-		return "Your squad has $"
-				+ PurchaseScreen.formatcost(Squad.active.gold);
+		return "Your squad has $" + SelectScreen.formatcost(Squad.active.gold);
 	}
 
 	private String showqueue(OrderQueue queue, String output) {

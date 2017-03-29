@@ -7,11 +7,12 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Mine;
 import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Build;
 
 public class BuildMine extends Build {
 	public BuildMine() {
-		super("Build mine", 10, null);
+		super("Build mine", 10, null, Town.HAMLET);
 	}
 
 	@Override
@@ -21,7 +22,8 @@ public class BuildMine extends Build {
 
 	@Override
 	public boolean validate(District d) {
-		return super.validate(d) && d.getlocationtype(Mine.class).isEmpty() && getsitelocation() != null;
+		return super.validate(d) && d.getlocationtype(Mine.class).isEmpty()
+				&& getsitelocation() != null;
 	}
 
 	@Override

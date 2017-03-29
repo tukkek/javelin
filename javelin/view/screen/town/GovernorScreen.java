@@ -39,7 +39,7 @@ public class GovernorScreen extends ScreenOption {
 
 		@Override
 		public String printpriceinfo(Option o) {
-			LaborOption l = o instanceof LaborOption ? ((LaborOption) o) : null;
+			LaborOption l = o instanceof LaborOption ? (LaborOption) o : null;
 			return l == null ? "" : " (" + l.l.cost + " labor)";
 		}
 
@@ -123,7 +123,7 @@ public class GovernorScreen extends ScreenOption {
 
 	public static String printcityinfo(Town t) {
 		String info = "\n\nCity information for " + t.description + ":";
-		info += "\n  Population: " + t.population + " (" + t.getranktitle()
+		info += "\n  Population: " + t.population + " (" + t.getrank().title
 				+ ")";
 		info += "\n  Traits: ";
 		if (t.traits.isEmpty()) {
@@ -136,8 +136,8 @@ public class GovernorScreen extends ScreenOption {
 			info += traits.substring(0, traits.length() - 2) + ".";
 		}
 		float production = t.population * Town.DAILYLABOR;
-		info += "\n  Production: " + String
-				.format((production >= 1 ? "%1.0f" : "%.1f"), production)
+		info += "\n  Production: "
+				+ String.format(production >= 1 ? "%1.0f" : "%.1f", production)
 				+ " labor per day";
 		return info;
 	}

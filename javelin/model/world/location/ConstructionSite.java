@@ -7,14 +7,15 @@ import javelin.model.unit.Combatant;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.town.labor.Labor;
 
-public class Construction extends Location {
+public class ConstructionSite extends Location {
 	public Location goal;
 	private Labor progress;
 	private WorldActor previous;
 
-	public Construction(Location project, WorldActor previous, Labor progress) {
+	public ConstructionSite(Location project, WorldActor previous,
+			Labor progress) {
 		super("Construction site: " + project.toString().toLowerCase());
-		this.goal = project;
+		goal = project;
 		this.previous = previous;
 		this.progress = progress;
 		sacrificeable = true;
@@ -51,6 +52,11 @@ public class Construction extends Location {
 				+ "Press c to cancel this project or any other key to leave...") == 'c') {
 			remove();
 		}
+		return true;
+	}
+
+	@Override
+	public boolean isworking() {
 		return true;
 	}
 }

@@ -49,7 +49,7 @@ public class Academy extends Fortification {
 		public Academy goal;
 
 		public BuildAcademy(Academy goal) {
-			super("Build academy", 10);
+			super("Build academy", 10, null, Town.HAMLET);
 			this.goal = goal;
 		}
 
@@ -76,7 +76,7 @@ public class Academy extends Fortification {
 
 	class UpgradeAcademy extends BuildingUpgrade {
 		public UpgradeAcademy(int cost, Academy previous) {
-			super("", cost, +cost, previous);
+			super("", cost, +cost, previous, Town.HAMLET);
 			name = "Upgrade academy";
 		}
 
@@ -334,7 +334,7 @@ public class Academy extends Fortification {
 	@Override
 	public ArrayList<Labor> getupgrades(District d) {
 		ArrayList<Labor> getupgrades = super.getupgrades(d);
-		if (allowupgrade && upgrades.size() <= d.town.getrank() * 5) {
+		if (allowupgrade && upgrades.size() <= d.town.getrank().size) {
 			getupgrades.add(new UpgradeAcademy(
 					getupgrades(upgradetype).size() - upgrades.size(), this));
 		}

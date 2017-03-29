@@ -3,10 +3,8 @@ package javelin.model.world.location.town.labor.expansive;
 import javelin.controller.Point;
 import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.Town.Rank;
 
-public class BuildHighway
-		extends javelin.model.world.location.town.labor.expansive.BuildRoad {
+public class BuildHighway extends BuildRoad {
 
 	public BuildHighway() {
 		super("Build highway");
@@ -38,7 +36,7 @@ public class BuildHighway
 
 	@Override
 	protected void define() {
-		if (town.getrank() < Rank.TOWN.ordinal() + 1) {
+		if (town.getrank().rank < Town.TOWN.rank) {
 			/* requires town or city */
 			return;
 		}

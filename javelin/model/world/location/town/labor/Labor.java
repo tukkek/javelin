@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.Town.Rank;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -32,6 +33,7 @@ public abstract class Labor implements Serializable, Cloneable {
 	/** <code>true</code> to return to {@link WorldScreen} after selection. */
 	public boolean closescreen = false;
 	public boolean construction = false;
+	Rank minimumsize;
 
 	/**
 	 * Define here all the data that isn't {@link Town}-dependent.
@@ -41,13 +43,10 @@ public abstract class Labor implements Serializable, Cloneable {
 	 *            must define a name for {@link #toString()}. This can updated
 	 *            later on in {@link #define()}.
 	 */
-	public Labor(String name) {
-		this.name = name;
-	}
-
-	public Labor(String name, int cost) {
+	public Labor(String name, int cost, Rank minimumsize) {
 		this.name = name;
 		this.cost = cost;
+		this.minimumsize = minimumsize;
 	}
 
 	public Labor generate(Town t) {
@@ -84,7 +83,9 @@ public abstract class Labor implements Serializable, Cloneable {
 	 * @return <code>false</code> if the current card makes no sense for the
 	 *         given {@link Town}.
 	 */
-	abstract public boolean validate(District d);
+	public boolean validate(District d) {
+		return d.town.getrank().rank >= minimumsize.rank;
+	}
 
 	@Override
 	public String toString() {

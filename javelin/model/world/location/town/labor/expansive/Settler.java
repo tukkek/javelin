@@ -11,8 +11,7 @@ import javelin.model.world.location.town.labor.Labor;
 
 public class Settler extends Labor {
 	public Settler() {
-		super("Produce settler");
-		cost = 0;
+		super("Produce settler", 0, Town.TOWN);
 		automatic = false;
 		closescreen = true;
 	}
@@ -20,17 +19,18 @@ public class Settler extends Labor {
 	@Override
 	public void done() {
 		ArrayList<Squad> nearby = town.getdistrict().getsquads();
-		produce(town, nearby.contains(Squad.active) ? Squad.active : nearby.get(0));
+		produce(town,
+				nearby.contains(Squad.active) ? Squad.active : nearby.get(0));
 	}
 
 	@Override
 	public boolean validate(District d) {
-		return town.population > 1 && !d.getsquads().isEmpty();
+		return super.validate(d) && !d.getsquads().isEmpty();
 	}
 
 	/**
 	 * Adds a Worker units to the active {@link Squad}.
-	 * 
+	 *
 	 * @param t
 	 *            If not <code>null</code> will reduce town {@link #population}
 	 *            by 1. If already at 1 (minimum) returns without any effect.

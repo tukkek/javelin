@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.terrain.Terrain;
@@ -21,10 +22,10 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * An independent overworld feature.
- * 
+ *
  * If you're creating a new actor type don't forget to update
  * {@link WorldActor#getallmapactors()}!
- * 
+ *
  * @author alex
  */
 public abstract class WorldActor implements Serializable {
@@ -69,10 +70,10 @@ public abstract class WorldActor implements Serializable {
 
 	/**
 	 * Called when an incursion reaches this actor's location.
-	 * 
+	 *
 	 * @see Incursion#ignoreincursion(Incursion)
 	 * @see Incursion#fight(int, int)
-	 * 
+	 *
 	 * @param incursion
 	 *            Attacking incursion.
 	 * @return <code>true</code> if this place gets destroyed,
@@ -104,10 +105,13 @@ public abstract class WorldActor implements Serializable {
 		}
 	}
 
-	/**
-	 * Moves actor to nearby square until a free square is found.
-	 */
-	public void displace() {
+	public void displace(int depth) {
+		if (depth == 50) {
+			if (Javelin.DEBUG) {
+				throw new RuntimeException("Too many calls to displace!");
+			}
+			return;
+		}
 		int deltax = 0, deltay = 0;
 		while (deltax == 0 && deltay == 0) {
 			deltax = RPG.pick(NUDGES);
@@ -116,9 +120,9 @@ public abstract class WorldActor implements Serializable {
 		int tox = x + deltax;
 		int toy = y + deltay;
 		if (!World.validatecoordinate(tox, toy)
-				|| (!Terrain.WATER.equals(Terrain.current())
-						&& Terrain.WATER.equals(Terrain.get(tox, toy)))) {
-			displace();
+				|| !Terrain.WATER.equals(Terrain.current())
+						&& Terrain.WATER.equals(Terrain.get(tox, toy))) {
+			displace(depth + 1);
 			return;
 		}
 		ArrayList<WorldActor> actors = WorldActor.getall();
@@ -127,13 +131,20 @@ public abstract class WorldActor implements Serializable {
 				&& WorldActor.get(tox, toy, actors) == null) {
 			move(tox, toy);
 		} else {
-			displace();
+			displace(depth + 1);
 		}
 	}
 
 	/**
+	 * Moves actor to nearby square until a free square is found.
+	 */
+	public void displace() {
+		displace(0);
+	}
+
+	/**
 	 * Called on each instance once per day.
-	 * 
+	 *
 	 * @param time
 	 *            Current hour, starting from hour zero at the beggining of the
 	 *            game.
@@ -144,7 +155,7 @@ public abstract class WorldActor implements Serializable {
 
 	/**
 	 * Called when a {@link Squad} enters the same world square as this actor.
-	 * 
+	 *
 	 * @return <code>true</code> if the {@link World} should react after this
 	 *         interaction.
 	 * @throws RepeatTurn
@@ -155,7 +166,7 @@ public abstract class WorldActor implements Serializable {
 
 	/**
 	 * Note that this doesn't {@link #place()} or update the actor in any way.
-	 * 
+	 *
 	 * @param x
 	 *            World coordinate.
 	 * @param y
@@ -219,7 +230,7 @@ public abstract class WorldActor implements Serializable {
 
 	/**
 	 * Note that this returns the canonical list from {@link #INSTANCES}.
-	 * 
+	 *
 	 * @return All actors of the given type.
 	 */
 	public static ArrayList<WorldActor> getall(
@@ -300,7 +311,7 @@ public abstract class WorldActor implements Serializable {
 
 	/**
 	 * Note that this could return a hostile town!
-	 * 
+	 *
 	 * @return A {@link Town} district this location is part of or
 	 *         <code>null</code> if it is not located inside one. If more than
 	 *         one district encompasses this location, the one with the highest

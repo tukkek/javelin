@@ -108,7 +108,7 @@ public class TransportHub extends Location {
 
 	public static class BuildTransportHub extends Build {
 		public BuildTransportHub() {
-			super("Build stables", 2);
+			super("Build stables", 2, null, Town.HAMLET);
 		}
 
 		@Override
@@ -137,17 +137,15 @@ public class TransportHub extends Location {
 	}
 
 	class DocksUpgrade extends BuildingUpgrade {
-		private Rank minimumsize;
-
 		public DocksUpgrade(TransportHub hub) {
-			this(10, 1, hub, Rank.VILLAGE);
+			this(10, 1, hub, Town.VILLAGE);
 			name = "Upgrade " + hub.getname().toLowerCase() + " to docks";
 		}
 
 		public DocksUpgrade(int cost, int upgradelevel, TransportHub previous,
 				Rank minimumsize) {
-			super("", cost - previous.cost, upgradelevel, previous);
-			this.minimumsize = minimumsize;
+			super("", cost - previous.cost, upgradelevel, previous,
+					minimumsize);
 		}
 
 		@Override
@@ -164,11 +162,6 @@ public class TransportHub extends Location {
 		}
 
 		@Override
-		public boolean validate(District d) {
-			return d.town.getrank() - 1 >= minimumsize.ordinal();
-		}
-
-		@Override
 		public Location getgoal() {
 			return previous;
 		}
@@ -176,7 +169,7 @@ public class TransportHub extends Location {
 
 	class MagicDockUpgrade extends DocksUpgrade {
 		public MagicDockUpgrade(TransportHub hub) {
-			super(20, 2, hub, Rank.CITY);
+			super(20, 2, hub, Town.CITY);
 			name = "Upgrade " + hub.getname().toLowerCase() + " to magic dock";
 		}
 	}

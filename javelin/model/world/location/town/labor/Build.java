@@ -2,24 +2,21 @@ package javelin.model.world.location.town.labor;
 
 import javelin.controller.Point;
 import javelin.model.world.WorldActor;
-import javelin.model.world.location.Construction;
+import javelin.model.world.location.ConstructionSite;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Town.Rank;
 
 public abstract class Build extends Labor {
-	protected Construction site;
+	protected ConstructionSite site;
 	protected Location previous;
 
 	public abstract Location getgoal();
 
-	public Build(String name, int cost, Location previous) {
-		super(name, cost);
+	public Build(String name, int cost, Location previous, Rank minimumrank) {
+		super(name, cost, minimumrank);
 		this.previous = previous;
 		construction = true;
-	}
-
-	public Build(String name, int cost) {
-		this(name, cost, null);
 	}
 
 	@Override
@@ -49,7 +46,7 @@ public abstract class Build extends Labor {
 	@Override
 	public void start() {
 		super.start();
-		site = new Construction(getgoal(), previous, this);
+		site = new ConstructionSite(getgoal(), previous, this);
 		if (town.ishostile()) {
 			site.realm = town.realm;
 		}
@@ -59,7 +56,7 @@ public abstract class Build extends Labor {
 
 	@Override
 	public boolean validate(District d) {
-		return site == null ? !d.getfreespaces().isEmpty()
+		return super.validate(d) && site == null ? !d.getfreespaces().isEmpty()
 				: d.getlocations().contains(site);
 	}
 

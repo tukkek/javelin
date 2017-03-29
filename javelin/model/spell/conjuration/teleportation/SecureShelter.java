@@ -5,7 +5,7 @@ import javelin.controller.upgrade.Spell;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.town.Inn;
+import javelin.model.world.location.town.Lodge;
 
 /**
  * See the d20 SRD for more info.
@@ -25,7 +25,7 @@ public class SecureShelter extends Spell {
 
 	@Override
 	public String castpeacefully(Combatant caster, Combatant target) {
-		Inn.rest(1, 8, Inn.LODGE);
+		Lodge.rest(1, 8, Lodge.LODGE);
 		return null;
 	}
 }

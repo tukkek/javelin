@@ -15,9 +15,9 @@ import tyrant.mikera.engine.RPG;
 /**
  * Holds the {@link Labor} options for each {@link Town} and possibly
  * auto-manages it.
- * 
+ *
  * TODO promote specializing in one trait at a time in subclasses
- * 
+ *
  * @author alex
  */
 public abstract class Governor implements Serializable {
@@ -65,10 +65,10 @@ public abstract class Governor implements Serializable {
 
 	/**
 	 * Processes the current {@link #projects}.
-	 * 
+	 *
 	 * @param labor
 	 *            Labor to be distributed among the {@link #projects}.
-	 * 
+	 *
 	 * @return <code>false</code> if there is no current project.
 	 */
 	public void work(float labor) {
@@ -93,7 +93,7 @@ public abstract class Governor implements Serializable {
 	/**
 	 * The maximum number of cards is 2 + {@link Town#getrank()} (3 minimum, 7
 	 * maximum).
-	 * 
+	 *
 	 * @return <code>true</code> if currently has the maximum number of cards in
 	 *         hand.
 	 */
@@ -102,7 +102,7 @@ public abstract class Governor implements Serializable {
 	}
 
 	public int gethandsize() {
-		return town.getrank() + (Javelin.DEBUG ? 3 : 2);
+		return town.getrank().rank + (Javelin.DEBUG ? 3 : 2);
 	}
 
 	// public String printqueue() {
@@ -147,7 +147,7 @@ public abstract class Governor implements Serializable {
 	/**
 	 * @return A hand of cards sorted by name, including any building upgrades
 	 *         in the {@link District}.
-	 * 
+	 *
 	 * @see Location#getupgrades()
 	 */
 	public ArrayList<Labor> gethand() {
@@ -194,7 +194,7 @@ public abstract class Governor implements Serializable {
 	 * Pretty weird, somewhat lazy but very random normal algorithm that allows
 	 * a computer player to select {@link Labor} with a higher chance if they
 	 * are cheaper.
-	 * 
+	 *
 	 * @return <code>null</code> if there are no option, otherwise a labor card.
 	 */
 	static protected Labor pick(ArrayList<Labor> cards) {

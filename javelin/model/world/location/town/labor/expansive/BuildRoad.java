@@ -17,14 +17,14 @@ import javelin.model.world.location.town.labor.Labor;
 
 /**
  * TODO need to consider A->B and B->A
- * 
+ *
  * @author alex
  */
 public class BuildRoad extends Labor {
 	/**
 	 * To prevent too lengthy searches since the algorhitm is currently
 	 * unoptimized.
-	 * 
+	 *
 	 * TODO
 	 */
 	static final int MAXSEARCHDEPTH = 9;
@@ -55,7 +55,7 @@ public class BuildRoad extends Labor {
 		 * This allows the building of roads from A->B exactly as B->A, enabling
 		 * simultaneous building across 2 ends and also preventing from having a
 		 * unique roas A<->B instead of two.
-		 * 
+		 *
 		 * The path is reversed in {@link #search()} as needed.
 		 */
 		boolean swap(Town from, Town to) {
@@ -141,7 +141,7 @@ public class BuildRoad extends Labor {
 	}
 
 	public BuildRoad(String name) {
-		super(name, 0);
+		super(name, 0, Town.HAMLET);
 	}
 
 	@Override
@@ -214,7 +214,7 @@ public class BuildRoad extends Labor {
 
 	@Override
 	public boolean validate(District d) {
-		if (town.population * 100 < cost) {
+		if (!super.validate(d) || town.population * 100 < cost) {
 			return false;
 		}
 		for (Labor l : d.town.governor.getprojects()) {

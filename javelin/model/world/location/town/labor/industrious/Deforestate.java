@@ -7,13 +7,14 @@ import javelin.controller.Point;
 import javelin.controller.terrain.Terrain;
 import javelin.model.world.World;
 import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Growth;
 import javelin.model.world.location.town.labor.Labor;
 import tyrant.mikera.engine.RPG;
 
 public class Deforestate extends Labor {
 	public Deforestate() {
-		super("Deforestate", 7);
+		super("Deforestate", 7, Town.HAMLET);
 	}
 
 	@Override
@@ -27,10 +28,10 @@ public class Deforestate extends Labor {
 		if (forest == null) {
 			return;
 		}
-		final int adjacentmountains = Terrain.search(forest,
-				Terrain.MOUNTAINS, 1, World.seed);
-		final int adjacenthills = Terrain.search(forest, Terrain.HILL,
+		final int adjacentmountains = Terrain.search(forest, Terrain.MOUNTAINS,
 				1, World.seed);
+		final int adjacenthills = Terrain.search(forest, Terrain.HILL, 1,
+				World.seed);
 		World.seed.map[forest.x][forest.y] = adjacentmountains > 0
 				|| RPG.r(1, 8) <= adjacenthills ? Terrain.HILL : Terrain.PLAIN;
 	}
@@ -56,7 +57,7 @@ public class Deforestate extends Labor {
 
 	@Override
 	public boolean validate(District d) {
-		return getforest(d) != null;
+		return super.validate(d) && getforest(d) != null;
 	}
 
 	Point getforest(District d) {

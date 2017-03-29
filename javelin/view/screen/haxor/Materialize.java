@@ -11,7 +11,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.fortification.Guardian;
 import javelin.model.world.location.fortification.Shrine;
 import javelin.model.world.location.town.Dwelling;
-import javelin.model.world.location.town.Inn;
+import javelin.model.world.location.town.Lodge;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.Haxor;
 import tyrant.mikera.engine.RPG;
@@ -47,7 +47,7 @@ public class Materialize extends Hax {
 		} else if (choice == 2) {
 			materialize = new Guardian();
 		} else if (choice == 3) {
-			materialize = new Inn();
+			materialize = new Lodge();
 			// } else if (choice == 4) {
 			// materialize = new Lair();
 		} else if (choice == 4) {

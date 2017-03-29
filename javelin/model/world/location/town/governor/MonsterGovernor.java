@@ -15,9 +15,9 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * Governor for hostile towns.
- * 
+ *
  * TODO here should go all the code for generating monster garissons and squads
- * 
+ *
  * @see Town#ishostile()
  * @author alex
  */
@@ -55,8 +55,7 @@ public class MonsterGovernor extends Governor {
 		if (!start(filter(Draft.class, hand))) {
 			pick(filter(BuildDwelling.class, hand));
 		}
-		if (town.getrank() - 1 >= Town.Rank.TOWN.ordinal()
-				&& town.traits.isEmpty()) {
+		if (town.getrank().rank >= Town.TOWN.rank && town.traits.isEmpty()) {
 			startttrait(traits);
 		}
 		if (getprojectssize() == 0 && !start(hand)) {

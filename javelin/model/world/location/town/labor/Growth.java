@@ -7,7 +7,7 @@ public class Growth extends Labor {
 	public static final int MAXPOPULATION = 30;
 
 	public Growth() {
-		super("Growth");
+		super("Growth", -1, Town.HAMLET);
 	}
 
 	@Override
@@ -21,7 +21,7 @@ public class Growth extends Labor {
 	@Override
 	public boolean validate(District d) {
 		define();
-		return d.town.population < 30;
+		return super.validate(d) && d.town.population < 30;
 	}
 
 	@Override

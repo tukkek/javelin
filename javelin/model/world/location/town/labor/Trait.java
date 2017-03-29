@@ -1,13 +1,13 @@
 package javelin.model.world.location.town.labor;
 
 import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Town;
 
 public class Trait extends Labor {
 	String trait;
 
 	public Trait(String trait, Deck deck) {
-		super("Trait: " + trait.toLowerCase());
-		cost = deck.size();
+		super("Trait: " + trait.toLowerCase(), deck.size(), Town.HAMLET);
 		this.trait = trait;
 	}
 
@@ -31,7 +31,7 @@ public class Trait extends Labor {
 				&& town.traits.contains(Deck.NAMECRIMINAL)) {
 			return false;
 		}
-		return !town.traits.contains(trait);
+		return super.validate(d) && !town.traits.contains(trait);
 	}
 
 	@Override

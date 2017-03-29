@@ -1,10 +1,10 @@
 package javelin.model.world.location.town.labor;
 
-import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Town;
 
 public class Redraw extends Labor {
 	public Redraw() {
-		super("Redraw", 0);
+		super("Redraw", 0, Town.HAMLET);
 		automatic = false;
 	}
 
@@ -19,10 +19,5 @@ public class Redraw extends Labor {
 			l.discard();
 		}
 		town.governor.redraw();
-	}
-
-	@Override
-	public boolean validate(District d) {
-		return true;
 	}
 }

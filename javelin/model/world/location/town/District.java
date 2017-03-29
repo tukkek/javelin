@@ -9,7 +9,7 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
-import javelin.model.world.location.Construction;
+import javelin.model.world.location.ConstructionSite;
 import javelin.model.world.location.Location;
 
 /**
@@ -17,10 +17,10 @@ import javelin.model.world.location.Location;
  * area. Since this search can be a relatively costly operation if performed
  * repeatedly this serves as a discardable cache to be used within such an
  * operations.
- * 
+ *
  * Instead of performing a full search of the relevant data upon creation, data
  * is only gathered when needed and then cached accordingly.
- * 
+ *
  * @author alex
  */
 public class District {
@@ -40,7 +40,7 @@ public class District {
 	ArrayList<Squad> squads = null;
 
 	public District(Town t) {
-		this.town = t;
+		town = t;
 	}
 
 	public ArrayList<Location> getlocations() {
@@ -75,7 +75,7 @@ public class District {
 	}
 
 	public int getradius() {
-		return town.getrank() + RADIUSBASE;
+		return town.getrank().rank + RADIUSBASE;
 	}
 
 	/**
@@ -139,8 +139,7 @@ public class District {
 			int neighbors = 0;
 			for (int x = p.x - 1; x <= p.x + 1; x++) {
 				for (int y = p.y - 1; y <= p.y + 1; y++) {
-					if ((x == p.x && y == p.y)
-							|| !World.validatecoordinate(x, y)
+					if (x == p.x && y == p.y || !World.validatecoordinate(x, y)
 							|| World.roads[p.x][p.y] || World.highways[p.x][p.y]
 							|| WorldActor.get(x, y, locations) == null) {
 						continue;
@@ -158,8 +157,8 @@ public class District {
 	}
 
 	public boolean isbuilding(Class<? extends Location> site) {
-		for (WorldActor l : getlocationtype(Construction.class)) {
-			Construction c = (Construction) l;
+		for (WorldActor l : getlocationtype(ConstructionSite.class)) {
+			ConstructionSite c = (ConstructionSite) l;
 			if (site.isInstance(c.goal)) {
 				return true;
 			}

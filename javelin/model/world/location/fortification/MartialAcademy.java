@@ -23,13 +23,7 @@ public class MartialAcademy extends Academy {
 
 	public static class BuildMartialAcademy extends BuildAcademy {
 		public BuildMartialAcademy() {
-			super(null);
-		}
-
-		@Override
-		protected void define() {
-			goal = RPG.pick(GUILDS).generate();
-			super.define();
+			super(RPG.pick(GUILDS).generate());
 		}
 	}
 

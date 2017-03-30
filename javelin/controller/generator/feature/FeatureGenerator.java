@@ -73,15 +73,16 @@ public class FeatureGenerator {
 	private FeatureGenerator() {
 		register(Dungeon.class, new FeatureGenerationData(2f, Dungeon.STARTING,
 				Dungeon.STARTING));
-		register(Trove.class, new FeatureGenerationData(1.5f));
 		// register(Lair.class, new FeatureGenerationData());
 		register(Outpost.class, new FeatureGenerationData());
 		register(Lodge.class, new FeatureGenerationData(.75f));
 		register(Shrine.class, new FeatureGenerationData());
-		register(Guardian.class, new FeatureGenerationData());
-		register(Dwelling.class, new FeatureGenerationData(null));
 		register(Resource.class, new FeatureGenerationData());
 		register(Mine.class, new FeatureGenerationData(1, 2, 2));
+
+		register(Trove.class, new FeatureGenerationData(1.5f, null, 0));
+		register(Guardian.class, new FeatureGenerationData(null));
+		register(Dwelling.class, new FeatureGenerationData(null));
 
 		register(Portal.class, new FeatureGenerationData() {
 			@Override
@@ -90,7 +91,10 @@ public class FeatureGenerator {
 			}
 		});
 
-		register(Caravan.class, new FeatureGenerationData(1 / 4f, true, false));
+		if (Caravan.ALLOW) {
+			register(Caravan.class,
+					new FeatureGenerationData(1 / 4f, true, false));
+		}
 		convertchances();
 	}
 

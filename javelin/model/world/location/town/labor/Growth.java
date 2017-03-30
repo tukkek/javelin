@@ -5,6 +5,7 @@ import javelin.model.world.location.town.Town;
 
 public class Growth extends Labor {
 	public static final int MAXPOPULATION = 30;
+	public static final Growth INSTANCE = new Growth();
 
 	public Growth() {
 		super("Growth", -1, Town.HAMLET);

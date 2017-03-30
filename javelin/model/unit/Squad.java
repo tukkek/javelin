@@ -240,9 +240,13 @@ public class Squad extends WorldActor {
 			i.grab();
 		}
 		remove(c);
-		MercenariesGuild guild = (MercenariesGuild) WorldActor
-				.getall(MercenariesGuild.class).get(0);
-		guild.receive(c);
+		for (MercenariesGuild g : sortbydistance(
+				MercenariesGuild.getguilds())) {
+			if (g.all.contains(c)) {
+				g.receive(c);
+				return;
+			}
+		}
 	}
 
 	/**

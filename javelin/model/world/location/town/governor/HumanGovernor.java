@@ -7,13 +7,14 @@ import java.util.Comparator;
 import javelin.Javelin;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Deck;
+import javelin.model.world.location.town.labor.Growth;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.Trait;
 import tyrant.mikera.engine.RPG;
 
 /**
  * Governor for human-captured towns. Auto-manage can be toggled on and off.
- * 
+ *
  * @author alex
  */
 public class HumanGovernor extends Governor {
@@ -41,6 +42,9 @@ public class HumanGovernor extends Governor {
 			hand.clear();
 			redraw();
 			return;
+		}
+		if (hand.size() > 1 && town.getrank().rank >= getseason()) {
+			hand.remove(Growth.INSTANCE);
 		}
 		Labor selected = null;
 		if (nexttrait(hand)) {

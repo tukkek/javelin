@@ -82,12 +82,17 @@ public abstract class Governor implements Serializable {
 			l.work(step);
 		}
 		validate(town.getdistrict());
+		always(hand);
 		if (projects.size() < nprojects && !hand.isEmpty()) {
 			manage();
 			if (Javelin.DEBUG && projects.isEmpty()) {
 				throw new RuntimeException("empty project list!");
 			}
 		}
+	}
+
+	protected void always(ArrayList<Labor> hand2) {
+
 	}
 
 	/**

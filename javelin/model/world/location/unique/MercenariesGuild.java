@@ -13,20 +13,31 @@ import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.model.world.WorldActor;
+import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.BuildUnique;
 import javelin.view.screen.InfoScreen;
-import javelin.view.screen.town.PurchaseScreen;
+import javelin.view.screen.WorldScreen;
+import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
  * The **Mercenaries guild** allows a player to hire mercenaries, which are paid
  * a certain amount in gold per day.
- * 
+ *
  * @see Combatant#mercenary
  * @author alex
  */
 public class MercenariesGuild extends UniqueLocation {
 	private static final int STARTINGMERCENARIES = 9;
-	static boolean DEBUG = false;
+	static final boolean DEBUG = false;
+
+	public static class BuildMercenariesGuild extends BuildUnique {
+		public BuildMercenariesGuild() {
+			super(15, new MercenariesGuild(), Town.TOWN);
+		}
+	}
+
 	/** Available mercenaries. */
 	public ArrayList<Combatant> mercenaries = new ArrayList<Combatant>();
 	/** All mercenaries. */
@@ -94,11 +105,11 @@ public class MercenariesGuild extends UniqueLocation {
 		});
 		ArrayList<String> prices = new ArrayList<String>(mercenaries.size());
 		for (Combatant c : mercenaries) {
-			prices.add(c + " ($" + PurchaseScreen.formatcost(getfee(c)) + ")");
+			prices.add(c + " ($" + SelectScreen.formatcost(getfee(c)) + ")");
 		}
 		int index = Javelin.choose(
 				"\"Welcome to the guild! Do you want to hire one of our mercenaries for a modest daily fee?\"\n\nYou have $"
-						+ PurchaseScreen.formatcost(Squad.active.gold),
+						+ SelectScreen.formatcost(Squad.active.gold),
 				prices, true, false);
 		if (index == -1) {
 			return true;
@@ -113,7 +124,7 @@ public class MercenariesGuild extends UniqueLocation {
 	/**
 	 * Pays for the rest of the day and adds to active {@link Squad}. If cannot
 	 * pay warn the user.
-	 * 
+	 *
 	 * @param message
 	 *            If <code>true</code> and doesn't have enough money will open
 	 *            up a {@link InfoScreen} to let the player know. Use
@@ -127,7 +138,7 @@ public class MercenariesGuild extends UniqueLocation {
 			if (message) {
 				Javelin.app.switchScreen(new InfoScreen(
 						"You don't have the money to pay today's advancement ($"
-								+ PurchaseScreen.formatcost(advance) + ")!"));
+								+ SelectScreen.formatcost(advance) + ")!"));
 				Game.getInput();
 			}
 			return false;
@@ -174,5 +185,31 @@ public class MercenariesGuild extends UniqueLocation {
 		ArrayList<Combatant> combatants = new ArrayList<Combatant>(garrison);
 		combatants.addAll(all);
 		return combatants;
+	}
+
+	public static List<MercenariesGuild> getguilds() {
+		ArrayList<WorldActor> all = getall(MercenariesGuild.class);
+		ArrayList<MercenariesGuild> guilds = new ArrayList<MercenariesGuild>(
+				all.size());
+		for (WorldActor a : all) {
+			guilds.add((MercenariesGuild) a);
+		}
+		return guilds;
+	}
+
+	public static void die(Combatant c) {
+		for (MercenariesGuild g : getguilds()) {
+			if (g.all.contains(c)) {
+				g.all.remove(c);
+			}
+		}
+	}
+
+	@Override
+	public void turn(long time, WorldScreen world) {
+		super.turn(time, world);
+		if (all.size() < STARTINGMERCENARIES && RPG.chancein(100)) {
+			generatemercenary();
+		}
 	}
 }

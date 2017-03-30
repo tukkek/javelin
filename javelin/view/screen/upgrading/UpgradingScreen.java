@@ -80,8 +80,12 @@ public abstract class UpgradingScreen extends SelectScreen {
 	 */
 	protected abstract void registertrainee(Order trainee);
 
-	/** Mostly concerned with {@link Squad} clean-up issues. */
-	protected abstract void onexit(Squad s);
+	/**
+	 * Mostly concerned with {@link Squad} clean-up issues.
+	 * 
+	 * @param trainees
+	 */
+	protected abstract void onexit(Squad s, ArrayList<TrainingOrder> trainees);
 
 	/** Available {@link UpgradeOption}s. */
 	protected abstract Collection<Upgrade> getupgrades();
@@ -239,7 +243,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 					Math.round(xpcost * 24 * UPGRADETIME), c,
 					s.equipment.get(c.id), c.toString(), xpcost, original));
 		}
-		onexit(s);
+		onexit(s, trainees);
 		for (TrainingOrder trainee : trainees) {
 			registertrainee(trainee);
 			Combatant c = trainee.trained;

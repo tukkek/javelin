@@ -3,6 +3,7 @@ package javelin.model.world;
 import java.awt.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -335,5 +336,15 @@ public abstract class WorldActor implements Serializable {
 			}
 		}
 		return main;
+	}
+
+	public <K extends WorldActor> List<K> sortbydistance(List<K> actor) {
+		actor.sort(new Comparator<WorldActor>() {
+			@Override
+			public int compare(WorldActor o1, WorldActor o2) {
+				return o2.distanceinsteps(x, y) - o1.distanceinsteps(x, y);
+			}
+		});
+		return actor;
 	}
 }

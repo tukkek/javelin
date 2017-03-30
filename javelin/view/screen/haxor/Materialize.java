@@ -18,12 +18,13 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * Generate a {@link WorldActor} near {@link Haxor}.
- * 
+ *
  * @author alex
  */
 public class Materialize extends Hax {
 	/** See {@link Hax#Hax(String, double, boolean)}. */
-	public Materialize(String name, Character keyp, double price, boolean requirestargetp) {
+	public Materialize(String name, Character keyp, double price,
+			boolean requirestargetp) {
 		super(name, keyp, price, requirestargetp);
 	}
 
@@ -53,11 +54,13 @@ public class Materialize extends Hax {
 		} else if (choice == 4) {
 			materialize = new Caravan();
 		} else if (choice == 5) {
-			materialize = new Portal(Haxor.singleton, RPG.pick(WorldActor.getall(Town.class)));
+			materialize = new Portal(Haxor.singleton,
+					RPG.pick(WorldActor.getall(Town.class)));
 		} else if (choice == 6) {
-			materialize = new Shrine();
+			materialize = new Shrine(2);
 		} else {
-			throw new RuntimeException("don't know what to materialize #haxorscreen");
+			throw new RuntimeException(
+					"don't know what to materialize #haxorscreen");
 		}
 		s.generate(materialize);
 		return true;

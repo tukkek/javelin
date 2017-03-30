@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
@@ -25,13 +26,15 @@ import tyrant.mikera.engine.RPG;
  * visited to buy {@link Item}s. If it reaches a human {@link Town} it grows by
  * 1 {@link Town#population} - this is an incentive for the player to protect
  * merchants.
- * 
+ *
  * Unlike {@link Town} {@link Item}s, these are not crafted but sold as-is, and
  * as such are removed after purchase.
- * 
+ *
  * @author alex
  */
 public class Caravan extends WorldActor {
+	public static final boolean ALLOW = !Javelin.DEBUG;
+
 	static final int NUMBEROFITEMS = 6;
 	static final int MINARTIFACTS = 1;
 	static final int MAXARTIFACTS = 3;

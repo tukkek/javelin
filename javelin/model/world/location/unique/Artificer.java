@@ -10,6 +10,8 @@ import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.order.CraftingOrder;
+import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.BuildUnique;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.shopping.ArtificerScreen;
 import javelin.view.screen.town.PurchaseOption;
@@ -21,9 +23,14 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Artificer extends UniqueLocation {
-	private static final String DESCRIPTION = "The artificer";
+	static final String DESCRIPTION = "An artificer";
+	static final boolean DEBUG = false;
 
-	static boolean DEBUG = false;
+	public static class BuildArtificer extends BuildUnique {
+		public BuildArtificer() {
+			super(20, new Artificer(), Town.CITY);
+		}
+	}
 
 	/**
 	 * {@link Artifact}s this artificer can craft. This generically represents
@@ -77,10 +84,9 @@ public class Artificer extends UniqueLocation {
 			return true;
 		}
 		Game.messagepanel.clear();
-		Javelin.message(
-				"\"I still need " + crafting.geteta(Squad.active.hourselapsed)
-						+ " before your " + crafting.toString().toLowerCase()
-						+ "is finished.\"" + "\n\nPress any key to coninue...",
+		Javelin.message("\"I still need "
+				+ crafting.geteta(Squad.active.hourselapsed) + " before your "
+				+ crafting.item.toString().toLowerCase() + " is completed.\"",
 				false);
 		Game.getInput();
 		return true;
@@ -113,5 +119,11 @@ public class Artificer extends UniqueLocation {
 	@Override
 	public List<Combatant> getcombatants() {
 		return garrison;
+	}
+
+	@Override
+	public boolean isworking() {
+		return crafting != null
+				&& !crafting.completed(Squad.active.hourselapsed);
 	}
 }

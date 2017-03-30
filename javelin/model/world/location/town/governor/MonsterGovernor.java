@@ -136,4 +136,11 @@ public class MonsterGovernor extends Governor {
 			Incursion.place(town.realm, town.x, town.y, incursion);
 		}
 	}
+
+	@Override
+	protected void always(ArrayList<Labor> hand) {
+		if (town.getrank().rank <= getseason()) {
+			start(filter(Growth.class, hand));
+		}
+	}
 }

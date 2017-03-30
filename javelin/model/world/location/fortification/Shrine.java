@@ -1,7 +1,6 @@
 package javelin.model.world.location.fortification;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javelin.Javelin;
@@ -9,17 +8,43 @@ import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.location.Location;
+import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.Build;
+import javelin.model.world.location.town.labor.BuildingUpgrade;
+import javelin.model.world.location.town.labor.Labor;
 import javelin.view.screen.InfoScreen;
-import javelin.view.screen.town.PurchaseScreen;
+import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
  * Will cast Rituals (certain {@link Spell}s) for gold.
- * 
+ *
  * @see Spell#isritual
  * @author alex
  */
 public class Shrine extends Fortification {
+	public class UpgradeShrine extends BuildingUpgrade {
+		public UpgradeShrine(Shrine s) {
+			super("", 5, +5, s, Town.VILLAGE);
+			name = "Upgrade shrine";
+		}
+
+		@Override
+		public Location getgoal() {
+			return previous;
+		}
+
+		@Override
+		public void done() {
+			super.done();
+			Shrine s = (Shrine) previous;
+			s.level = 2;
+			s.fill();
+		}
+	}
+
 	static final List<Spell> RITUALS = new ArrayList<Spell>();
 
 	static {
@@ -31,17 +56,57 @@ public class Shrine extends Fortification {
 		}
 	}
 
+	public static class BuildShrine extends Build {
+		Shrine s;
+
+		public BuildShrine() {
+			super(null, 5, null, Town.HAMLET);
+		}
+
+		@Override
+		protected void define() {
+			super.define();
+			s = new Shrine(1);
+			name = "Build " + s.descriptionknown.toLowerCase();
+		}
+
+		@Override
+		public Location getgoal() {
+			return s;
+		}
+
+		@Override
+		public boolean validate(District d) {
+			return super.validate(d)
+					&& d.getlocationtype(Shrine.class)
+							.size() < d.town.getrank().rank
+					&& s.rituals.get(0).casterlevel <= d.town.population;
+		}
+	}
+
 	/** Rituals are spells that this shrine will cast for a fee. */
 	final ArrayList<Spell> rituals = new ArrayList<Spell>(2);
+	int level = 1;
+
+	public Shrine() {
+		this(2);
+	}
 
 	/** Constructor. */
-	public Shrine() {
-		super(null, "A seer's shrine", 0, 0);
-		while (rituals.size() < 2) {
-			Spell ritual = RPG.pick(RITUALS);
-			if (!rituals.contains(ritual)) {
-				rituals.add(ritual);
-			}
+	public Shrine(int level) {
+		super(null, "A shrine", 0, 0);
+		discard = false;
+		this.level = level;
+		fill();
+	}
+
+	void update() {
+		Integer cl = rituals.get(0).casterlevel;
+		if (level == 1) {
+			minlevel = maxlevel = cl;
+			descriptionknown = "A shrine (" + rituals.get(0).name.toLowerCase()
+					+ ")";
+			return;
 		}
 		if (price(0) > price(1)) {
 			ArrayList<Spell> swap = new ArrayList<Spell>();
@@ -50,12 +115,20 @@ public class Shrine extends Fortification {
 			rituals.clear();
 			rituals.addAll(swap);
 		}
-		minlevel = rituals.get(0).casterlevel;
+		minlevel = cl;
 		maxlevel = rituals.get(1).casterlevel;
-		descriptionknown =
-				"A seer's shrine (" + rituals.get(0).name.toLowerCase() + ", "
-						+ rituals.get(1).name.toLowerCase() + ")";
-		discard = false;
+		descriptionknown = "A shrine (" + rituals.get(0).name.toLowerCase()
+				+ ", " + rituals.get(1).name.toLowerCase() + ")";
+	}
+
+	void fill() {
+		while (rituals.size() < level) {
+			Spell ritual = RPG.pick(RITUALS);
+			if (!rituals.contains(ritual)) {
+				rituals.add(ritual);
+			}
+		}
+		update();
 	}
 
 	@Override
@@ -67,33 +140,32 @@ public class Shrine extends Fortification {
 		output = "You enter a shrine. \"What can we do for you today?\", says the "
 				+ (RPG.r(1, 2) == 1 ? "priest" : "priestess") + ".\n";
 		output += "\n1 - " + rituals.get(0).name + " ($" + price(0) + ")";
-		output += "\n2 - " + rituals.get(1).name + " ($" + price(1) + ")";
+		if (level > 1) {
+			output += "\n2 - " + rituals.get(1).name + " ($" + price(1) + ")";
+		}
 		output += "\np - Pillage this temple ($"
-				+ PurchaseScreen.formatcost(getspoils()) + ")";
+				+ SelectScreen.formatcost(getspoils()) + ")";
 		output += "\nq - Quit for now ";
 		output += "\n\nSelect an option.";
 		InfoScreen screen = new InfoScreen(output);
 		Javelin.app.switchScreen(screen);
-		char input = ' ';
-		List<Character> options = Arrays.asList('1', '2', 'q', 'p');
-		while (!options.contains(input)) {
-			input = InfoScreen.feedback();
-		}
+		processinput();
+		return true;
+	}
+
+	void processinput() {
+		char input = InfoScreen.feedback();
 		if (input == '1') {
-			return service(0);
-		}
-		if (input == '2') {
-			return service(1);
-		}
-		if (input == 'p') {
+			service(0);
+		} else if (input == '2' && level > 1) {
+			service(1);
+		} else if (input == 'p') {
 			pillage();
-			return true;
+		} else if (input == 'q') {
+			return;
+		} else {
+			processinput();
 		}
-		if (input == 'q') {
-			return false;
-		}
-		fail(screen, output);
-		throw new RuntimeException("Unknown wish " + input + " #shrine");
 	}
 
 	boolean service(int slot) {
@@ -126,11 +198,20 @@ public class Shrine extends Fortification {
 
 	public static void fail(InfoScreen screen, String string) {
 		screen.print(string);
-		screen.feedback();
+		InfoScreen.feedback();
 	}
 
 	@Override
 	public List<Combatant> getcombatants() {
 		return garrison;
+	}
+
+	@Override
+	public ArrayList<Labor> getupgrades(District d) {
+		ArrayList<Labor> upgrades = super.getupgrades(d);
+		if (level == 1) {
+			upgrades.add(new UpgradeShrine(this));
+		}
+		return upgrades;
 	}
 }

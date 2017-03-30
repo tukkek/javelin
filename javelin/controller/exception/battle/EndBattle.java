@@ -21,12 +21,13 @@ import javelin.model.world.Incursion;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
+import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.haxor.HaxorScreen;
 
 /**
  * A victory or defeat condition has been achieved.
- * 
+ *
  * @author alex
  */
 public class EndBattle extends BattleEvent {
@@ -39,14 +40,14 @@ public class EndBattle extends BattleEvent {
 
 	/**
 	 * Handles all post-battle updates.
-	 * 
+	 *
 	 * @param screen
 	 *            Open battle screen.
 	 * @param originalTeam
 	 *            Player team.
 	 */
 	public static void end() {
-		int nsquads = Squad.getall(Squad.class).size();
+		int nsquads = WorldActor.getall(Squad.class).size();
 		Fight.victory = Javelin.app.fight.win();
 		terminateconditions(Fight.state, BattleScreen.active);
 		if (!Javelin.app.fight.onend()) {
@@ -54,7 +55,7 @@ public class EndBattle extends BattleEvent {
 		}
 		AiCache.reset();
 		if (Squad.active != null
-				&& nsquads == Squad.getall(Squad.class).size()) {
+				&& nsquads == WorldActor.getall(Squad.class).size()) {
 			while (WorldActor.get(Squad.active.x, Squad.active.y,
 					Incursion.class) != null) {
 				Squad.active.displace();
@@ -77,7 +78,7 @@ public class EndBattle extends BattleEvent {
 
 	/**
 	 * Prints combat info (rewards, etc).
-	 * 
+	 *
 	 * @param prefix
 	 */
 	public static void showcombatresult(String prefix) {
@@ -150,7 +151,7 @@ public class EndBattle extends BattleEvent {
 	/**
 	 * Tries to {@link #revive(Combatant)} the combatant. If can't, remove him
 	 * from the game.
-	 * 
+	 *
 	 * TODO isn't updating {@link #lastkilled} when the entire Squad dies! this
 	 * probably isn't being called
 	 */
@@ -172,6 +173,7 @@ public class EndBattle extends BattleEvent {
 							}
 						}
 						Squad.active.equipment.remove(original.id);
+						MercenariesGuild.die(original);
 					}
 					break;
 				}

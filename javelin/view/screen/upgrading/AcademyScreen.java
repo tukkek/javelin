@@ -3,14 +3,16 @@ package javelin.view.screen.upgrading;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.fortification.MartialAcademy;
 import javelin.model.world.location.order.Order;
+import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.Academy;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.Option;
-import javelin.view.screen.town.PurchaseScreen;
+import javelin.view.screen.town.SelectScreen;
 
 /**
  * @see MartialAcademy
@@ -26,17 +28,17 @@ public class AcademyScreen extends UpgradingScreen {
 		this.academy = academy;
 		stayopen = true;
 		pillage = new Option("Pillage ($"
-				+ PurchaseScreen.formatcost(academy.getspoils()) + ")", 0, 'p');
+				+ SelectScreen.formatcost(academy.getspoils()) + ")", 0, 'p');
 	}
 
 	@Override
 	protected void registertrainee(Order trainee) {
-		this.academy.training.add(trainee);
+		academy.training.add(trainee);
 	}
 
 	@Override
-	protected void onexit(Squad s) {
-		if (s.members.isEmpty()) {
+	protected void onexit(Squad s, ArrayList<TrainingOrder> trainees) {
+		if (s.members.size() == trainees.size()) {
 			academy.stash += s.gold;
 			if (academy.parking == null
 					|| s.transport.price > academy.parking.price) {
@@ -55,7 +57,8 @@ public class AcademyScreen extends UpgradingScreen {
 	@Override
 	public List<Option> getoptions() {
 		List<Option> options = super.getoptions();
-		if (academy.pillage) {
+		if (academy.pillage && ChallengeRatingCalculator
+				.calculateel(Squad.active.members) > academy.targetel) {
 			options.add(pillage);
 		}
 		return options;

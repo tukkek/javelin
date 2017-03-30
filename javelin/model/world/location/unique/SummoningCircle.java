@@ -14,10 +14,11 @@ import tyrant.mikera.engine.RPG;
 /**
  * Lets you learn summoning spells. All monsters are theoretically possible but
  * offer just a few for higher randomization.
- * 
+ *
  * @author alex
  */
 public class SummoningCircle extends Academy {
+	private static final int MAXSPELLS = 9;
 	static final String DESCRIPTION = "Summoning circle";
 
 	/** Constructor. */
@@ -32,7 +33,7 @@ public class SummoningCircle extends Academy {
 	void populate() {
 		ArrayList<Float> crs = new ArrayList<Float>(
 				Javelin.MONSTERSBYCR.keySet());
-		add: while (upgrades.size() < 5) {
+		add: while (upgrades.size() < MAXSPELLS) {
 			float cr = RPG.pick(crs);
 			for (Upgrade u : upgrades) {
 				Summon s = (Summon) u;

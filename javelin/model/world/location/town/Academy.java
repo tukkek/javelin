@@ -49,7 +49,7 @@ public class Academy extends Fortification {
 		public Academy goal;
 
 		public BuildAcademy(Academy goal) {
-			super("Build academy", 10, null, Town.HAMLET);
+			super("Build academy", goal.level, null, Town.HAMLET);
 			this.goal = goal;
 		}
 
@@ -59,7 +59,7 @@ public class Academy extends Fortification {
 			if (goal.upgrades.isEmpty()) {
 				goal.setrealm(town.originalrealm);
 			}
-			cost = Math.min(cost, goal.upgrades.size());
+			cost = goal.upgrades.size();
 			name = "Build " + goal.descriptionknown.toLowerCase();
 		}
 
@@ -126,20 +126,11 @@ public class Academy extends Fortification {
 	public Academy(Realm r) {
 		this("An academy", "An academy", 0, 0, new HashSet<Upgrade>(), null,
 				null);
-		pillage = false;
 		allowupgrade = true;
-		level = 10;
+		// level = 10;
 		if (r != null) {
 			setrealm(r);
 		}
-	}
-
-	public void setrealm(Realm r) {
-		upgradetype = r;
-		refill();
-		int nupgrades = upgrades.size();
-		minlevel = Math.max(1, nupgrades - 1);
-		maxlevel = nupgrades + 1;
 	}
 
 	/**
@@ -162,6 +153,17 @@ public class Academy extends Fortification {
 		}
 		// sort(upgrades);
 		sacrificeable = false;
+		level = upgrades.size();
+	}
+
+	public void setrealm(Realm r) {
+		upgradetype = r;
+		level = minlevel = maxlevel = Math.min(10, getupgrades(r).size());
+		if (minlevel > 1) {
+			minlevel -= 1;
+		}
+		maxlevel += 1;
+		refill();
 	}
 
 	/**
@@ -321,6 +323,14 @@ public class Academy extends Fortification {
 	void refill() {
 		ArrayList<Upgrade> upgrades = new ArrayList<Upgrade>(
 				getupgrades(upgradetype));
+		if (this.upgrades.isEmpty()) {
+			for (Upgrade u : upgrades) {
+				if (u instanceof ClassAdvancement) {
+					this.upgrades.add(u);
+					break;
+				}
+			}
+		}
 		Collections.shuffle(upgrades);
 		for (Upgrade u : upgrades) {
 			if (this.upgrades.size() >= level) {

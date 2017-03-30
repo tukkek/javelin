@@ -423,6 +423,7 @@ public class Javelin {
 		if (fullscreen) {
 			app.switchScreen(new InfoScreen(output));
 		} else {
+			app.switchScreen(BattleScreen.active);
 			Game.messagepanel.clear();
 			Game.message(output, Delay.NONE);
 		}

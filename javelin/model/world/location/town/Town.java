@@ -54,10 +54,10 @@ public class Town extends Location {
 	 * year.
 	 *
 	 * The best of verifying this with some degree of flexibility is to just
-	 * verify that at the end of year 1, the average town population is between
-	 * 16 and 25.
+	 * verify that at the end of year 1, the town populations are between 16 and
+	 * 25.
 	 */
-	public static final float DAILYLABOR = .1175f;
+	public static final float DAILYLABOR = .130f;
 
 	static final ArrayList<String> NAMES = new ArrayList<String>();
 	/** TODO */
@@ -72,6 +72,11 @@ public class Town extends Location {
 			title = name;
 			this.size = size;
 			this.rank = rank;
+		}
+
+		@Override
+		public String toString() {
+			return title;
 		}
 	}
 

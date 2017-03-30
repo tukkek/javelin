@@ -9,13 +9,13 @@ import javelin.model.world.location.fortification.Fortification;
  * An unique location is a {@link Location} that is only featured in a single
  * location in the {@link World} map during a game. They are usually places of
  * high power, which makes them {@link Location#impermeable} by default.
- * 
+ *
  * @author alex
  */
 public abstract class UniqueLocation extends Fortification {
 	/**
 	 * Constructor. See {@link Location#WorldPlace(String)}.
-	 * 
+	 *
 	 * @param minel
 	 * @param maxel
 	 */
@@ -37,13 +37,21 @@ public abstract class UniqueLocation extends Fortification {
 		l.vision = 0;
 	}
 
+	public static void makecommon(UniqueLocation l, int minlevel,
+			int maxlevel) {
+		l.impermeable = false;
+		l.minlevel = minlevel;
+		l.maxlevel = maxlevel;
+	}
+
 	@Override
 	public Boolean destroy(Incursion attacker) {
-		return Incursion.ignoreincursion(attacker);
+		return impermeable ? Incursion.ignoreincursion(attacker)
+				: super.destroy(attacker);
 	}
 
 	@Override
 	protected Integer getel(int attackel) {
-		return null;
+		return impermeable ? null : super.getel(attackel);
 	}
 }

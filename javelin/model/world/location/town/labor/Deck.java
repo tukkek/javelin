@@ -7,6 +7,7 @@ import java.util.HashMap;
 import javelin.Javelin;
 import javelin.model.world.location.fortification.MagesGuild.BuildMagesGuild;
 import javelin.model.world.location.fortification.MartialAcademy.BuildMartialAcademy;
+import javelin.model.world.location.fortification.Shrine.BuildShrine;
 import javelin.model.world.location.town.Academy;
 import javelin.model.world.location.town.Academy.BuildAcademy;
 import javelin.model.world.location.town.Shop.BuildShop;
@@ -19,7 +20,10 @@ import javelin.model.world.location.town.labor.expansive.Settler;
 import javelin.model.world.location.town.labor.industrious.BuildMine;
 import javelin.model.world.location.town.labor.industrious.Deforestate;
 import javelin.model.world.location.town.labor.military.BuildDwelling;
+import javelin.model.world.location.unique.Artificer.BuildArtificer;
 import javelin.model.world.location.unique.AssassinsGuild;
+import javelin.model.world.location.unique.MercenariesGuild.BuildMercenariesGuild;
+import javelin.model.world.location.unique.SummoningCircle;
 
 /**
  * This class provides the deck-building mini-game logic for {@link Labor}
@@ -34,17 +38,18 @@ public class Deck extends ArrayList<Labor> {
 			new BuildInn(), new Redraw(), new BuildDwelling() };
 	private static final Labor[] CRIMINAL = new Labor[] {
 			new BuildAcademy(new AssassinsGuild()), };
-	private static final Labor[] CULTURAL = new Labor[] {
-			new BuildMagesGuild(), };
+	private static final Labor[] CULTURAL = new Labor[] { new BuildMagesGuild(),
+			new BuildArtificer(), new BuildAcademy(new SummoningCircle()) };
 	private static final Labor[] ECOLOGICAL = new Labor[] {};
 	private static final Labor[] EXPANSIVE = new Labor[] { new Settler(),
 			new BuildOutpost(), new BuildRoad(), new BuildHighway(),
 			new BuildTransportHub() };
 	private static final Labor[] MILITARY = new Labor[] {
-			new BuildMartialAcademy(), new BuildAcademy(new Academy(null)) };
+			new BuildMartialAcademy(), new BuildAcademy(new Academy(null)),
+			new BuildMercenariesGuild() };
 	private static final Labor[] PRODUCTIVE = new Labor[] { new BuildMine(),
 			new Deforestate(), new BuildShop() };
-	private static final Labor[] RELIGIOUS = new Labor[] {};
+	private static final Labor[] RELIGIOUS = new Labor[] { new BuildShrine() };
 
 	public static final String NAMERELIGIOUS = "religious";
 	public static final String NAMECRIMINAL = "criminal";
@@ -120,9 +125,6 @@ public class Deck extends ArrayList<Labor> {
 			}
 		}
 		System.out.println(Deck.getntraits() + " town traits, " + nprojects
-				+ " district projects (minimum deck size: " + min);
-		// if (Javelin.DEBUG) {
-		// System.out.println(DECKS);
-		// }
+				+ " district projects (minimum deck size: " + min + ")");
 	}
 }

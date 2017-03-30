@@ -26,13 +26,7 @@ public class MagesGuild extends Academy {
 
 	public static class BuildMagesGuild extends BuildAcademy {
 		public BuildMagesGuild() {
-			super(null);
-		}
-
-		@Override
-		protected void define() {
-			goal = RPG.pick(GUILDS).generate();
-			super.define();
+			super(RPG.pick(GUILDS).generate());
 		}
 	}
 

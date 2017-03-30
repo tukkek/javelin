@@ -141,7 +141,7 @@ public class BuildRoad extends Labor {
 	}
 
 	public BuildRoad(String name) {
-		super(name, 0, Town.HAMLET);
+		super(name, 0, Town.TOWN);
 	}
 
 	@Override

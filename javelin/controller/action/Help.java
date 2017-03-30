@@ -10,7 +10,7 @@ import javelin.view.screen.InfoScreen;
 
 /**
  * Shows keyboard commands.
- * 
+ *
  * @author alex
  */
 public class Help extends Action {
@@ -64,9 +64,16 @@ public class Help extends Action {
 		}
 		text += "\nKeep up-to-date with new releases at javelinrl.wordpress.com\n"
 				+ "or come discuss the game at reddit.com/r/javelinrl :)";
+		if (Javelin.DEBUG) {
+			text += debug();
+		}
 		Javelin.app.switchScreen(new InfoScreen(text));
 		Game.getInput();
 		Javelin.app.switchScreen(BattleScreen.active);
+	}
+
+	static String debug() {
+		return "";
 	}
 
 	private static String pad(String s, int padding) {

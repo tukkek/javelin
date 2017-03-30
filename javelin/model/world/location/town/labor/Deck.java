@@ -31,20 +31,19 @@ import javelin.model.world.location.unique.AssassinsGuild;
  */
 public class Deck extends ArrayList<Labor> {
 	private static final Labor[] BASE = new Labor[] { new Growth(),
-			new BuildInn(), new Redraw(), new BuildDwelling(), new BuildShop(),
-			new BuildTransportHub(), new BuildTransportHub(),
-			new BuildAcademy(new Academy(null)) };
+			new BuildInn(), new Redraw(), new BuildDwelling() };
 	private static final Labor[] CRIMINAL = new Labor[] {
 			new BuildAcademy(new AssassinsGuild()), };
 	private static final Labor[] CULTURAL = new Labor[] {
 			new BuildMagesGuild(), };
 	private static final Labor[] ECOLOGICAL = new Labor[] {};
 	private static final Labor[] EXPANSIVE = new Labor[] { new Settler(),
-			new BuildOutpost(), new BuildRoad(), new BuildHighway() };
+			new BuildOutpost(), new BuildRoad(), new BuildHighway(),
+			new BuildTransportHub() };
 	private static final Labor[] MILITARY = new Labor[] {
-			new BuildMartialAcademy(), };
+			new BuildMartialAcademy(), new BuildAcademy(new Academy(null)) };
 	private static final Labor[] PRODUCTIVE = new Labor[] { new BuildMine(),
-			new Deforestate() };
+			new Deforestate(), new BuildShop() };
 	private static final Labor[] RELIGIOUS = new Labor[] {};
 
 	public static final String NAMERELIGIOUS = "religious";
@@ -82,7 +81,7 @@ public class Deck extends ArrayList<Labor> {
 			d.addAll(DECKS.get(trait));
 		}
 		Collections.shuffle(d);
-		if (Javelin.DEBUG) {
+		if (Javelin.DEBUG && !t.ishostile()) {
 			d.add(0, new Redraw());
 		}
 		return d;

@@ -71,8 +71,10 @@ public class Lodge extends Fortification {
 		@Override
 		public void done(WorldActor l) {
 			Lodge i = (Lodge) l;
-			i.level += 1;
-			i.rename(LEVELS[i.level]);
+			if (i.level < MAXLEVEL) {
+				i.level += 1;
+				i.rename(LEVELS[i.level]);
+			}
 			super.done(l);
 		}
 
@@ -100,12 +102,12 @@ public class Lodge extends Fortification {
 		int weekprice = WEEKLONGREST * price;
 		String s = "Do you want to rest at the " + LEVELS[level].toLowerCase()
 				+ "?\n";
-		s += "\nENTER to stay ($" + price + "), w to stay for a week ($"
+		s += "\nENTER or d to stay ($" + price + "), w to stay for a week ($"
 				+ weekprice + ")";
 		s += "\np to pillage ($" + SelectScreen.formatcost(getspoils()) + ")";
 		s += "\nany other key to leave";
 		Character input = Javelin.prompt(s);
-		if (input == '\n') {
+		if (input == '\n' || input == 'd') {
 			return rest(price, level + 1);
 		}
 		if (input == 'w') {
@@ -131,8 +133,8 @@ public class Lodge extends Fortification {
 	@Override
 	protected void generate() {
 		x = -1;
-		while (x == -1 || getdistrict() != null
-				|| getnearest(Lodge.class).distance(x, y) <= District.RADIUSMAX) {
+		while (x == -1 || getdistrict() != null || getnearest(Lodge.class)
+				.distance(x, y) <= District.RADIUSMAX) {
 			generateawayfromtown();
 		}
 	}

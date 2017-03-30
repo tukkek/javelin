@@ -26,48 +26,74 @@ public class MonsterGovernor extends Governor {
 	/** Constructor. */
 	public MonsterGovernor(Town t) {
 		super(t);
+		nprojects = 2;
 	}
 
 	@Override
 	public void manage() {
 		ArrayList<Labor> hand = new ArrayList<Labor>();
-		for (Labor l : gethand()) {
-			if (l.automatic) {
-				hand.add(l);
-			} else {
-				l.discard();
+		int tries = 0;
+		while (hand.size() != gethand().size()) {
+			tries += 1;
+			if (tries >= 5) {
+				break;
+			}
+			for (Labor l : gethand()) {
+				if (l.automatic) {
+					if (!hand.contains(l)) {
+						hand.add(l);
+					}
+				} else {
+					l.discard();
+				}
 			}
 		}
-		draft(hand);
-		if (hand.isEmpty()) {
-			gethand().clear();
-			redraw();
-			// manage();
-		} else {
-			selectcards(hand);
-		}
+		selectcards(hand);
+		// draft(hand);
+		// if (hand.isEmpty()) {
+		// gethand().clear();
+		// redraw();
+		// // manage();
+		// } else {
+		// selectcards(hand);
+		// }
 	}
 
 	void selectcards(ArrayList<Labor> hand) {
 		ArrayList<Labor> traits = filter(Trait.class, hand);
 		hand.removeAll(traits);
-		start(filter(Growth.class, hand));
-		if (!start(filter(Draft.class, hand))) {
-			pick(filter(BuildDwelling.class, hand));
+		long season = getseason();
+		int rank = town.getrank().rank;
+		if (rank < season) {
+			int a = 1;
 		}
-		if (town.getrank().rank >= Town.TOWN.rank && town.traits.isEmpty()) {
-			startttrait(traits);
+		if (rank <= season && start(filter(Growth.class, hand))) {
+			return;
 		}
-		if (getprojectssize() == 0 && !start(hand)) {
-			startttrait(traits);
+		if (rank >= season) {
+			if (start(filter(Draft.class, hand))
+					|| start(filter(BuildDwelling.class, hand))) {
+				return;
+			}
+		}
+		if (rank >= Town.TOWN.rank && town.traits.isEmpty()
+				&& startttrait(traits)) {
+			return;
+		}
+		if (getprojectssize() < nprojects) {
+			if (start(hand) || startttrait(traits)) {
+				return;
+			}
 		}
 	}
 
-	void startttrait(ArrayList<Labor> traits) {
-		if (!traits.isEmpty()) {
-			Labor trait = RPG.pick(traits);
-			trait.start();
+	boolean startttrait(ArrayList<Labor> traits) {
+		if (traits.isEmpty()) {
+			return false;
 		}
+		Labor trait = RPG.pick(traits);
+		trait.start();
+		return true;
 	}
 
 	void draft(ArrayList<Labor> hand) {

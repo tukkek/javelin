@@ -119,9 +119,7 @@ public abstract class WorldActor implements Serializable {
 		}
 		int tox = x + deltax;
 		int toy = y + deltay;
-		if (!World.validatecoordinate(tox, toy)
-				|| !Terrain.WATER.equals(Terrain.current())
-						&& Terrain.WATER.equals(Terrain.get(tox, toy))) {
+		if (!World.validatecoordinate(tox, toy) || !cancross(tox, toy)) {
 			displace(depth + 1);
 			return;
 		}
@@ -133,6 +131,15 @@ public abstract class WorldActor implements Serializable {
 		} else {
 			displace(depth + 1);
 		}
+	}
+
+	protected boolean cancross(int tox, int toy) {
+		final boolean to = Terrain.WATER.equals(Terrain.get(tox, toy));
+		if (!to) {
+			return true;
+		}
+		final boolean from = Terrain.WATER.equals(Terrain.get(x, y));
+		return from && to;
 	}
 
 	/**

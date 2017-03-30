@@ -60,7 +60,7 @@ public class Dwelling extends Fortification {
 
 		@Override
 		public boolean validate(District d) {
-			return true;
+			return d.town.population > recruit.challengerating / 2;
 		}
 
 		@Override

@@ -20,21 +20,21 @@ import javelin.model.unit.transport.Transport;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
-import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.Resource;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.Images;
+import javelin.view.screen.BattleScreen;
 import javelin.view.screen.BribingScreen;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.shopping.ShoppingScreen;
+import javelin.view.screen.town.SelectScreen;
 
 /**
  * A group of units that the player controls as a overworld game unit. If a
  * player loses all his squads the game ends.
- * 
+ *
  * @author alex
  */
 public class Squad extends WorldActor {
@@ -139,7 +139,7 @@ public class Squad extends WorldActor {
 	/**
 	 * Updates {@link WorldActor#visual}, taking {@link #transport} into
 	 * account.
-	 * 
+	 *
 	 * @return
 	 */
 	public void updateavatar() {
@@ -182,8 +182,8 @@ public class Squad extends WorldActor {
 		for (final Combatant m : s.members) {
 			equipment.put(m.id, s.equipment.get(m.id));
 		}
-		if (transport == null || (s.transport != null
-				&& s.transport.speed > transport.speed)) {
+		if (transport == null
+				|| s.transport != null && s.transport.speed > transport.speed) {
 			transport = s.transport;
 		}
 		strategic = strategic && s.strategic;
@@ -240,7 +240,7 @@ public class Squad extends WorldActor {
 			i.grab();
 		}
 		remove(c);
-		MercenariesGuild guild = (MercenariesGuild) Location
+		MercenariesGuild guild = (MercenariesGuild) WorldActor
 				.getall(MercenariesGuild.class).get(0);
 		guild.receive(c);
 	}
@@ -280,7 +280,7 @@ public class Squad extends WorldActor {
 
 	/**
 	 * Use {@link Item#grab()} instead
-	 * 
+	 *
 	 * @param key
 	 *            Adds this item to a random {@link #equipment} bag.
 	 */
@@ -347,7 +347,7 @@ public class Squad extends WorldActor {
 
 	/**
 	 * Note that this will use the lowest Hide rating found.
-	 * 
+	 *
 	 * @return A {@link Skills#hide} roll.
 	 * @see #hide(List)
 	 */
@@ -392,7 +392,7 @@ public class Squad extends WorldActor {
 	 * Represents a situation in which a group of hostile {@link Combatant} s is
 	 * approaching this group. The foes must first be heard successfully and
 	 * then a {@link #hide()} attempt is performed.
-	 * 
+	 *
 	 * @return <code>true</code> if hide is successful and player gives input to
 	 *         stay hidden (confirmation).
 	 */
@@ -434,7 +434,7 @@ public class Squad extends WorldActor {
 	/**
 	 * The squad tries to parley with the enemy {@link Combatant}s, possibly
 	 * bribing or hirimg them to avoid the fight.
-	 * 
+	 *
 	 * @return <code>false</code> if the fight is to proceed.
 	 */
 	public boolean bribe(List<Combatant> foes) {
@@ -464,7 +464,7 @@ public class Squad extends WorldActor {
 		final int bribe = Math.max(1, RewardCalculator.receivegold(foes) / 2);
 		final boolean canhire = diplomacyroll - highest >= 5;
 		boolean b = new BribingScreen().bribe(foes, dailyfee, bribe, canhire);
-		Javelin.app.switchScreen(WorldScreen.active);
+		Javelin.app.switchScreen(BattleScreen.active);
 		return b;
 	}
 
@@ -530,7 +530,7 @@ public class Squad extends WorldActor {
 
 	/**
 	 * Takes 10.
-	 * 
+	 *
 	 * @return a roll of {@link Skills#survival}.
 	 */
 	public int survive() {
@@ -605,7 +605,7 @@ public class Squad extends WorldActor {
 			}
 		}
 		return Math.round(WorldMove.NORMALMARCH
-				* ((allfly ? speed : t.speed(speed, x, y))) / snow);
+				* (allfly ? speed : t.speed(speed, x, y)) / snow);
 	}
 
 	// /**
@@ -639,7 +639,7 @@ public class Squad extends WorldActor {
 	 * A squad cannot move on water if any of the combatants can't swim.
 	 * Alternatively a boat or airship will let non-swimming squads move on
 	 * water.
-	 * 
+	 *
 	 * @return <code>true</code> if this squad can move on water.
 	 * @see #MISSING()
 	 */
@@ -657,7 +657,7 @@ public class Squad extends WorldActor {
 
 	/**
 	 * Discover a {@link World} area in a radius around current position.
-	 * 
+	 *
 	 * @param vision
 	 *            Perceive roll with circumstance bonuses.
 	 * @see WorldScreen#DISCOVERED
@@ -700,7 +700,7 @@ public class Squad extends WorldActor {
 		}
 		Character input = ' ';
 		while (input != '\n' && input != 's') {
-			Javelin.app.switchScreen(WorldScreen.active);
+			Javelin.app.switchScreen(BattleScreen.active);
 			final String difficulty = ChallengeRatingCalculator
 					.describedifficulty(diffifculty);
 			final String prompt = "Do you want to skip this " + difficulty
@@ -727,7 +727,7 @@ public class Squad extends WorldActor {
 	/**
 	 * prevents players from cheating the strategic combat system by never
 	 * buying items, which would have no effect in the outcome of battle.
-	 * 
+	 *
 	 * @see StartBattle
 	 */
 	public String wastegold(float resourcesused) {
@@ -736,7 +736,11 @@ public class Squad extends WorldActor {
 			return "";
 		}
 		Squad.active.gold -= spent;
-		return "$" + ShoppingScreen.formatcost(spent)
-				+ " in resources lost.\n\n";
+		return "$" + SelectScreen.formatcost(spent) + " in resources lost.\n\n";
+	}
+
+	@Override
+	protected boolean cancross(int tox, int toy) {
+		return swim() || super.cancross(tox, toy);
 	}
 }

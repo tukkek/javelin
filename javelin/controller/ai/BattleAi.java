@@ -9,7 +9,7 @@ import javelin.model.unit.Combatant;
 
 /**
  * Javelin's implementation of {@link AlphaBetaSearch}.
- * 
+ *
  * @author alex
  */
 public class BattleAi extends AlphaBetaSearch {
@@ -17,7 +17,7 @@ public class BattleAi extends AlphaBetaSearch {
 	 * Using {@link Integer#MAX_VALUE} (over 2 billion) could have been making
 	 * the AI think taking extremely unlikely actions would be good to win the
 	 * game.
-	 * 
+	 *
 	 * Ideally should use something that will never be reached by the
 	 * {@link #ratechallenge(List)} but not any higher.
 	 */
@@ -44,8 +44,8 @@ public class BattleAi extends AlphaBetaSearch {
 		if (blueTeam == 0f) {
 			return LIMIT;
 		}
-		return (redTeam - measuredistances(state.redTeam, state.blueTeam)
-				- state.meld.size() - defending(state))
+		return redTeam - measuredistances(state.redTeam, state.blueTeam)
+				- state.meld.size() - defending(state)
 				- (blueTeam - measuredistances(state.blueTeam, state.redTeam));
 	}
 
@@ -62,8 +62,8 @@ public class BattleAi extends AlphaBetaSearch {
 	static private float ratechallenge(final List<Combatant> team) {
 		float challenge = 0f;
 		for (final Combatant c : team) {
-			challenge +=
-					c.source.challengerating * (1 + c.hp / (float) c.maxhp);
+			challenge += c.source.challengerating
+					* (1 + c.hp / (float) c.maxhp);
 		}
 		return challenge;
 	}
@@ -73,9 +73,9 @@ public class BattleAi extends AlphaBetaSearch {
 		for (Combatant mate : us) {
 			int minimum = Integer.MAX_VALUE;
 			for (Combatant foe : them) {
-				final int distance =
-						Math.max(Math.abs(mate.location[0] - foe.location[0]),
-								Math.abs(mate.location[1] - foe.location[1]));
+				final int distance = Math.max(
+						Math.abs(mate.location[0] - foe.location[0]),
+						Math.abs(mate.location[1] - foe.location[1]));
 				if (distance < minimum) {
 					minimum = distance;
 				}

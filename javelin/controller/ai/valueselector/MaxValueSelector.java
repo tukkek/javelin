@@ -10,20 +10,20 @@ import javelin.controller.ai.Entry;
 
 /**
  * Represents the artificial intelligence player.
- * 
+ *
  * @author Alex Henry
  */
 public class MaxValueSelector extends ValueSelector {
 	/**
 	 * @see MaxValueSelector#MaxValueSelector(AlphaBetaSearch)
-	 * 
+	 *
 	 * @author Alex Henry
 	 */
 	private final AlphaBetaSearch search;
 
 	/**
 	 * Construtor.
-	 * 
+	 *
 	 * @param search
 	 *            Busca atual sendo realizada.
 	 * @author Alex Henry

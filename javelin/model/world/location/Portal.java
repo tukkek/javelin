@@ -15,16 +15,16 @@ import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.town.Town;
-import javelin.view.screen.IntroScreen;
+import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
  * Portals take a {@link Squad} from a place to another. They can also be used
  * to enter {@link PlanarFight}s.
- * 
+ *
  * TODO a portal probably is more of an actor than a location...
- * 
+ *
  * @author alex
  */
 public class Portal extends Location {
@@ -39,7 +39,7 @@ public class Portal extends Location {
 	/**
 	 * Expires at this hour since the start of the game. If <code>null</code>
 	 * never expire.
-	 * 
+	 *
 	 * @see Squad#hourselapsed
 	 */
 	public Long expiresat;
@@ -164,7 +164,7 @@ public class Portal extends Location {
 		if (invasion) {
 			Game.messagepanel.clear();
 			Game.message("You close the invasion portal!", Delay.NONE);
-			IntroScreen.feedback();
+			InfoScreen.feedback();
 			super.interact();
 			return true;
 		}
@@ -208,7 +208,7 @@ public class Portal extends Location {
 	 * @return
 	 */
 	public static Portal open() {
-		ArrayList<WorldActor> towns = Location.getall(Town.class);
+		ArrayList<WorldActor> towns = WorldActor.getall(Town.class);
 		WorldActor from = RPG.pick(towns);
 		WorldActor to = RPG.pick(towns);
 		while (to == from) {
@@ -249,5 +249,10 @@ public class Portal extends Location {
 	@Override
 	public List<Combatant> getcombatants() {
 		return null;
+	}
+
+	@Override
+	protected boolean cancross(int tox, int toy) {
+		return true;
 	}
 }

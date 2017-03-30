@@ -50,10 +50,14 @@ public class Town extends Location {
 	/**
 	 * How much {@link #labor} a single work produces in one day (
 	 * {@value #DAILYLABOR}). The goal here is to have a {@link Town} controlled
-	 * by a {@link HumanGovernor} be around {@link #population} 20 by the end of
-	 * 1 year.
+	 * by a {@link Governor} be around {@link #population} 20 by the end of 1
+	 * year.
+	 *
+	 * The best of verifying this with some degree of flexibility is to just
+	 * verify that at the end of year 1, the average town population is between
+	 * 16 and 25.
 	 */
-	public static final float DAILYLABOR = .2f;
+	public static final float DAILYLABOR = .1175f;
 
 	static final ArrayList<String> NAMES = new ArrayList<String>();
 	/** TODO */

@@ -11,7 +11,7 @@ import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Build;
 
 public class BuildDwelling extends Build {
-	public static final int CRMULTIPLIER = 10;
+	public static final int CRMULTIPLIER = 1;
 
 	Dwelling goal = null;
 
@@ -44,6 +44,8 @@ public class BuildDwelling extends Build {
 
 	@Override
 	public boolean validate(District d) {
-		return super.validate(d) && goal != null;
+		double max = Math.floor(d.town.getrank().rank * 1.5f);
+		return super.validate(d) && goal != null
+				&& d.getlocationtype(Dwelling.class).size() < max;
 	}
 }

@@ -27,6 +27,9 @@ public class Growth extends Labor {
 	@Override
 	protected void define() {
 		cost = town.population;
+		if (cost > 20) {
+			cost += cost - 20;
+		}
 		if (Town.DEBUGPROJECTS) {
 			name = "Growth " + town.population;
 		}

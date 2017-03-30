@@ -29,11 +29,11 @@ import tyrant.mikera.engine.RPG;
  * An attacking {@link Squad}, trying to destroy a {@link Town} or other
  * {@link WorldActor}. Each one that appears grows stronger, which should
  * eventually end the game.
- * 
+ *
  * An {@link Incursion} is similar to an invading {@link Squad} while an
  * Invasion refers to the ongoing process of trying to destroy the player's
  * region.
- * 
+ *
  * @author alex
  */
 public class Incursion extends WorldActor {
@@ -84,7 +84,7 @@ public class Incursion extends WorldActor {
 	 * benefits like canonical {@link #squad} HP not decreasing after a battle
 	 * that has been won, jumping over certain {@link Location}s, not having to
 	 * deal with {@link RandomEncounter}...
-	 * 
+	 *
 	 * @param s
 	 *            TODO use {@link WorldScreen#current}
 	 */
@@ -194,7 +194,7 @@ public class Incursion extends WorldActor {
 		if (RPG.r(1, 18) != 1) {
 			return false;
 		}
-		ArrayList<WorldActor> portals = Location.getall(Portal.class);
+		ArrayList<WorldActor> portals = WorldActor.getall(Portal.class);
 		Collections.shuffle(portals);
 		for (WorldActor p : portals) {
 			if (((Portal) p).invasion) {
@@ -208,7 +208,7 @@ public class Incursion extends WorldActor {
 	/**
 	 * Creates and places a new incursion. Finds an empty spot close to the
 	 * given coordinates.
-	 * 
+	 *
 	 * @param r
 	 *            See {@link WorldActor#realm}.
 	 * @param x
@@ -221,6 +221,9 @@ public class Incursion extends WorldActor {
 	 */
 	public static void place(Realm r, int x, int y,
 			ArrayList<Combatant> squadp) {
+		if (DONTSPAWN) {
+			return;
+		}
 		while (WorldActor.get(x, y) != null) {
 			int delta = RPG.pick(new int[] { -1, 0, +1 });
 			if (RPG.r(1, 2) == 1) {
@@ -269,7 +272,7 @@ public class Incursion extends WorldActor {
 
 	/**
 	 * Helper method for {@link #destroy(Incursion)}
-	 * 
+	 *
 	 * @return <code>null</code>.
 	 */
 	static public Boolean ignoreincursion(WorldActor attacker) {
@@ -288,7 +291,7 @@ public class Incursion extends WorldActor {
 	/**
 	 * Helper method for {@link #destroy(Incursion)}. Uses a percentage to
 	 * decide which combatant wins (adapted from CCR).
-	 * 
+	 *
 	 * @param attacker
 	 *            Encounter level.
 	 * @param defender

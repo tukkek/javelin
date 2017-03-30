@@ -5,7 +5,7 @@ import javelin.model.world.WorldActor;
 
 /**
  * One of these per feature.
- * 
+ *
  * @see FeatureGenerator#spawn(float, boolean)
  * @author alex
  */
@@ -30,7 +30,7 @@ public class FeatureGenerationData {
 	 * If not <code>null</code> won't spawn any more of these feature if there
 	 * maximum allowerd number per {@link World} has been reached already.
 	 */
-	public Integer max = null;
+	public Integer max = 9;
 	/**
 	 * The starting number of instances of this feature to generate on the world
 	 * map.
@@ -79,6 +79,10 @@ public class FeatureGenerationData {
 		this.seeds = seeds;
 	}
 
+	public FeatureGenerationData(Integer object) {
+		max = object;
+	}
+
 	/**
 	 * @return By default a new instance of the given {@link WorldActor} clss,
 	 *         using {@link Class#newInstance()}.
@@ -93,7 +97,7 @@ public class FeatureGenerationData {
 
 	/**
 	 * By default just calls {@link #generate(Class)} and places the result.
-	 * 
+	 *
 	 * @param feature
 	 *            Feature type.
 	 * @see WorldActor#place()

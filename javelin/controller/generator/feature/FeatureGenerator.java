@@ -79,7 +79,7 @@ public class FeatureGenerator {
 		register(Lodge.class, new FeatureGenerationData(.75f));
 		register(Shrine.class, new FeatureGenerationData());
 		register(Guardian.class, new FeatureGenerationData());
-		register(Dwelling.class, new FeatureGenerationData());
+		register(Dwelling.class, new FeatureGenerationData(null));
 		register(Resource.class, new FeatureGenerationData());
 		register(Mine.class, new FeatureGenerationData(1, 2, 2));
 
@@ -144,8 +144,7 @@ public class FeatureGenerator {
 			if (generatingworld && !g.starting) {
 				continue;
 			}
-			if (g.max != null
-					&& WorldActor.getall(Mine.class).size() >= g.max) {
+			if (g.max != null && WorldActor.getall(feature).size() >= g.max) {
 				continue;
 			}
 			if (RPG.random() <= chance * g.chance) {

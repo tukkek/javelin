@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 import javelin.Javelin;
+import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Deck;
 import javelin.model.world.location.town.labor.Labor;
+import javelin.model.world.location.town.labor.Trait;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -36,6 +38,7 @@ public abstract class Governor implements Serializable {
 	private ArrayList<Labor> hand = new ArrayList<Labor>(STARTINGHAND);
 
 	final Town town;
+	int nprojects = 1;
 
 	/** Constructor. */
 	public Governor(Town t) {
@@ -57,7 +60,9 @@ public abstract class Governor implements Serializable {
 			l = l.generate(town);
 			if (!hand.contains(l) && !projects.contains(l) && l.validate(d)) {
 				hand.add(l);
+				// if (hand.size() >= gethandsize()) {
 				return true;
+				// }
 			}
 		}
 		return false;
@@ -77,7 +82,7 @@ public abstract class Governor implements Serializable {
 			l.work(step);
 		}
 		validate(town.getdistrict());
-		if (projects.isEmpty() && !hand.isEmpty()) {
+		if (projects.size() < nprojects && !hand.isEmpty()) {
 			manage();
 			if (Javelin.DEBUG && projects.isEmpty()) {
 				throw new RuntimeException("empty project list!");
@@ -197,7 +202,7 @@ public abstract class Governor implements Serializable {
 	 *
 	 * @return <code>null</code> if there are no option, otherwise a labor card.
 	 */
-	static protected Labor pick(ArrayList<Labor> cards) {
+	protected Labor pick(ArrayList<Labor> cards) {
 		if (cards.isEmpty()) {
 			return null;
 		}
@@ -205,8 +210,15 @@ public abstract class Governor implements Serializable {
 			return cards.get(0);
 		}
 		float total = 0;
+		Labor min = null;
 		for (Labor l : cards) {
 			total += l.cost;
+			if (!(l instanceof Trait) && (min == null || l.cost < min.cost)) {
+				min = l;
+			}
+		}
+		if (town.getrank().rank < getseason()) {
+			return min;
 		}
 		float[] chances = new float[cards.size()];
 		for (int i = 0; i < cards.size(); i++) {
@@ -225,5 +237,9 @@ public abstract class Governor implements Serializable {
 			}
 		}
 		return selected;
+	}
+
+	long getseason() {
+		return Math.min(4, Squad.active.hourselapsed / (24 * 100));
 	}
 }

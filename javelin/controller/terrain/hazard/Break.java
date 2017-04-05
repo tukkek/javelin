@@ -23,6 +23,6 @@ public class Break extends Hazard {
 	@Override
 	public boolean validate() {
 		return Transport.CARRIAGE.equals(Squad.active.transport)
-				&& !World.roads[Squad.active.x][Squad.active.y];
+				&& !World.seed.roads[Squad.active.x][Squad.active.y];
 	}
 }

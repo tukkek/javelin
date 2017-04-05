@@ -131,6 +131,7 @@ public class District {
 			}
 		}
 		ArrayList<Point> free = new ArrayList<Point>();
+		final World w = World.seed;
 		searching: for (Point p : getarea()) {
 			if (Terrain.get(p.x, p.y).equals(Terrain.WATER)
 					|| WorldActor.get(p.x, p.y, actors) != null) {
@@ -140,7 +141,7 @@ public class District {
 			for (int x = p.x - 1; x <= p.x + 1; x++) {
 				for (int y = p.y - 1; y <= p.y + 1; y++) {
 					if (x == p.x && y == p.y || !World.validatecoordinate(x, y)
-							|| World.roads[p.x][p.y] || World.highways[p.x][p.y]
+							|| w.roads[p.x][p.y] || w.highways[p.x][p.y]
 							|| WorldActor.get(x, y, locations) == null) {
 						continue;
 					}

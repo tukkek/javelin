@@ -296,8 +296,10 @@ public class Preferences {
 				}
 			}
 		}
-		for (WorldActor a : Squad.getall(Squad.class)) {
-			initsquaddebug((Squad) a);
+		if (World.seed != null) {
+			for (WorldActor a : Squad.getall(Squad.class)) {
+				initsquaddebug((Squad) a);
+			}
 		}
 		if (DEBUGRUBIES != null && Haxor.singleton != null) {
 			Haxor.singleton.rubies = DEBUGRUBIES;

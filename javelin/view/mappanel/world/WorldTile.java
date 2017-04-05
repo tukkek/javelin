@@ -56,9 +56,9 @@ public class WorldTile extends Tile {
 				}
 			}
 		}
-		if (World.highways[x][y]) {
+		if (World.seed.highways[x][y]) {
 			paintroad(Color.LIGHT_GRAY, (Graphics2D) g);
-		} else if (World.roads[x][y]) {
+		} else if (World.seed.roads[x][y]) {
 			paintroad(new Color(170, 130, 40), (Graphics2D) g);
 		}
 		final WorldActor a = WorldPanel.ACTORS.get(new Point(x, y));
@@ -120,7 +120,7 @@ public class WorldTile extends Tile {
 				if (!World.validatecoordinate(tox, toy)) {
 					continue;
 				}
-				if (World.roads[tox][toy] || World.highways[tox][toy]
+				if (World.seed.roads[tox][toy] || World.seed.highways[tox][toy]
 						|| WorldPanel.DESTINATIONS
 								.get(new Point(tox, toy)) != null) {
 					any = true;

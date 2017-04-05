@@ -12,7 +12,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.HashSet;
 
 import javax.swing.JOptionPane;
@@ -106,18 +105,15 @@ public class StateManager {
 		}
 		attempts = 0;
 		try {
-			ObjectOutputStream writer =
-					new ObjectOutputStream(new FileOutputStream(to));
+			ObjectOutputStream writer = new ObjectOutputStream(
+					new FileOutputStream(to));
 			writer.writeBoolean(abandoned);
-			writer.writeObject(WorldActor.INSTANCES);
 			writer.writeObject(World.seed);
 			writer.writeObject(Dungeon.active);
 			writer.writeObject(Incursion.currentel);
 			writer.writeObject(Weather.current);
 			writer.writeObject(EndBattle.lastkilled);
 			writer.writeObject(getdiscovered());
-			writer.writeObject(World.roads);
-			writer.writeObject(World.highways);
 			writer.writeObject(Season.current);
 			writer.writeObject(Season.endsat);
 			writer.writeObject(OpenJournal.content);
@@ -168,27 +164,22 @@ public class StateManager {
 				stream.close();
 				return false;
 			}
-			WorldActor.INSTANCES =
-					(HashMap<Class<? extends WorldActor>, ArrayList<WorldActor>>) stream
-							.readObject();
-			Javelin.act();
 			World.seed = (World) stream.readObject();
-			for (ArrayList<WorldActor> instances : WorldActor.INSTANCES
+			Javelin.act();
+			for (ArrayList<WorldActor> instances : World.getseed().actors
 					.values()) {
 				for (WorldActor p : instances) {
 					p.place();
 				}
 			}
-			Haxor.singleton =
-					(Haxor) WorldActor.INSTANCES.get(Haxor.class).get(0);
+			Haxor.singleton = (Haxor) World.getseed().actors.get(Haxor.class)
+					.get(0);
 			Haxor.singleton.place();
 			Dungeon.active = (Dungeon) stream.readObject();
 			Incursion.currentel = (Integer) stream.readObject();
 			Weather.read((Integer) stream.readObject());
 			EndBattle.lastkilled = (Combatant) stream.readObject();
 			DISCOVERED.addAll((HashSet<Point>) stream.readObject());
-			World.roads = (boolean[][]) stream.readObject();
-			World.highways = (boolean[][]) stream.readObject();
 			Season.current = (Season) stream.readObject();
 			Season.endsat = (Integer) stream.readObject();
 			OpenJournal.content = (String) stream.readObject();

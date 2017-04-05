@@ -205,7 +205,7 @@ public class FeatureGenerator {
 	 * @return Starting town for the initial {@link Squad} to be placed nearby.
 	 */
 	public Town placestartingfeatures() {
-		World seed = World.seed;
+		World seed = World.getseed();
 		Temple.generatetemples();
 		Terrain starton = RPG.r(1, 2) == 1 ? Terrain.PLAIN : Terrain.HILL;
 		Town easya = FeatureGenerator.gettown(starton, seed);
@@ -276,7 +276,7 @@ public class FeatureGenerator {
 
 	static int countplaces() {
 		int count = 0;
-		for (ArrayList<WorldActor> instances : WorldActor.INSTANCES.values()) {
+		for (ArrayList<WorldActor> instances : World.getseed().actors.values()) {
 			if (instances.isEmpty()
 					|| !(instances.get(0) instanceof Location)) {
 				continue;

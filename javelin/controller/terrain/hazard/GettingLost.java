@@ -30,7 +30,7 @@ public class GettingLost extends Hazard {
 		if (!Squad.active.lastterrain.equals(Terrain.current())) {
 			return false;
 		}
-		if (World.roads[Squad.active.x][Squad.active.y]
+		if (World.seed.roads[Squad.active.x][Squad.active.y]
 				&& Terrain.current().getweather() != Desert.SANDSTORM) {
 			return false;
 		}

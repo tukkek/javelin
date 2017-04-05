@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import javelin.controller.Point;
+import javelin.controller.WorldBuilder;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.RepeatTurn;
@@ -122,13 +123,15 @@ public abstract class Location extends WorldActor {
 		p.x = -1;
 		ArrayList<WorldActor> actors = WorldActor.getall();
 		actors.remove(p);
+		final World w = World.getseed();
 		while (p.x == -1
-				|| !allowwater && World.seed.map[p.x][p.y].equals(Terrain.WATER)
+				|| !allowwater
+						&& World.getseed().map[p.x][p.y].equals(Terrain.WATER)
 				|| WorldActor.get(p.x, p.y, actors) != null || neartown(p)
-				|| World.roads[p.x][p.y] || World.highways[p.x][p.y]) {
+				|| w.roads[p.x][p.y] || w.highways[p.x][p.y]) {
 			p.x = RPG.r(0, World.SIZE - 1);
 			p.y = RPG.r(0, World.SIZE - 1);
-			World.retry();
+			WorldBuilder.retry();
 		}
 	}
 
@@ -361,7 +364,7 @@ public abstract class Location extends WorldActor {
 	 */
 	public static int count() {
 		int sum = 0;
-		for (ArrayList<WorldActor> places : INSTANCES.values()) {
+		for (ArrayList<WorldActor> places : World.getseed().actors.values()) {
 			sum += places.size();
 		}
 		return sum;

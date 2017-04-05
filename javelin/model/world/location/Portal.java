@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.Point;
+import javelin.controller.WorldBuilder;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
@@ -138,8 +139,8 @@ public class Portal extends Location {
 		while (WorldActor.get(p.x, p.y) != null) {
 			p = new Point(determinedistance(t.x), determinedistance(t.y));
 			if (p.x < 0 || p.x >= World.SIZE || p.y < 0 || p.y >= World.SIZE
-					|| World.seed.map[p.x][p.y].equals(Terrain.WATER)) {
-				World.retry();
+					|| World.getseed().map[p.x][p.y].equals(Terrain.WATER)) {
+				WorldBuilder.retry();
 				p = new Point(t.x, t.y);
 			}
 		}

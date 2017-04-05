@@ -62,8 +62,8 @@ public class Plains extends Terrain {
 		Set<Hazard> hazards = super.gethazards(special);
 		if (special) {
 			Point location = new Point(Squad.active.x, Squad.active.y);
-			if (search(location, WATER, 1, World.seed) > 0
-					|| search(location, MARSH, 1, World.seed) > 0) {
+			if (search(location, WATER, 1, World.getseed()) > 0
+					|| search(location, MARSH, 1, World.getseed()) > 0) {
 				hazards.add(new Flood());
 			}
 		}

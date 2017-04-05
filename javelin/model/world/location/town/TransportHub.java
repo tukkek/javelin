@@ -230,6 +230,6 @@ public class TransportHub extends Location {
 	}
 
 	static boolean searchforwater(Point p) {
-		return Terrain.search(p, Terrain.WATER, 1, World.seed) > 0;
+		return Terrain.search(p, Terrain.WATER, 1, World.getseed()) > 0;
 	}
 }

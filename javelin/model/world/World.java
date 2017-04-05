@@ -3,22 +3,11 @@ package javelin.model.world;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
 
-import javelin.controller.Point;
-import javelin.controller.exception.RestartWorldGeneration;
-import javelin.controller.generator.feature.FeatureGenerator;
+import javelin.controller.WorldBuilder;
 import javelin.controller.terrain.Terrain;
-import javelin.controller.walker.Walker;
-import javelin.model.Realm;
-import javelin.model.unit.Squad;
-import javelin.model.world.location.Location;
-import javelin.model.world.location.Outpost;
-import javelin.model.world.location.town.Town;
-import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Game world overview. This is focused on generating the initial game state.
@@ -37,95 +26,20 @@ public class World implements Serializable {
 	/**
 	 * Randomly generated world map.
 	 */
-	public static World seed;
+	public static World seed = null;
 	/** Facilitate movement. */
-	public static boolean[][] roads = new boolean[SIZE][SIZE];
+	public final boolean[][] roads = new boolean[SIZE][SIZE];
 	/** Upgraded {@link #roads}. */
-	public static boolean[][] highways = new boolean[SIZE][SIZE];
-	private static int retries = 0;
-	private static int lastretries = 0;
-	static final int TOWNBUFFER = 1;
-	static final Terrain[] NOISE = new Terrain[] { Terrain.PLAIN, Terrain.HILL,
-			Terrain.FOREST, Terrain.MOUNTAINS };
-	static final int NOISEAMOUNT = SIZE * SIZE / 10;
-
+	public final boolean[][] highways = new boolean[SIZE][SIZE];
 	/** Map of terrain tiles by [x][y] coordinates. */
-	public Terrain[][] map = new Terrain[SIZE][SIZE];
-	/** If <code>false</code> means the world is still being generated. */
-	public boolean done = false;
+	public final Terrain[][] map = new Terrain[SIZE][SIZE];
+	/** Contains all actor instances still in the game. */
+	public final HashMap<Class<? extends WorldActor>, ArrayList<WorldActor>> actors = new HashMap<Class<? extends WorldActor>, ArrayList<WorldActor>>();
+	public final ArrayList<String> townnames = new ArrayList<String>();
 
-	/**
-	 * Arbitrary number to serve as guideline for {@link Terrain} generation.
-	 */
-	public static final int NREGIONS = 16;
-
-	static final Terrain[] GENERATIONORDER = new Terrain[] { Terrain.MOUNTAINS,
-			Terrain.MOUNTAINS, Terrain.DESERT, Terrain.PLAIN, Terrain.HILL,
-			Terrain.WATER, Terrain.WATER, Terrain.MARSH, Terrain.FOREST };
-
-	void generate() {
-		for (int i = 0; i < SIZE; i++) {
-			for (int j = 0; j < SIZE; j++) {
-				map[i][j] = Terrain.FOREST;
-			}
-		}
+	public World() {
 		initroads();
-		LinkedList<Realm> realms = new LinkedList<Realm>();
-		for (Realm r : Realm.values()) {
-			realms.add(r);
-		}
-		Collections.shuffle(realms);
-		ArrayList<List<Point>> regions = new ArrayList<List<Point>>(
-				GENERATIONORDER.length);
-		for (Terrain t : GENERATIONORDER) {
-			regions.add(t.generate(this));
-		}
-		// Terrain.MOUNTAINS.generate(this, realms.pop());
-		// Terrain.MOUNTAINS.generate(this, realms.pop());
-		// Terrain.DESERT.generate(this, realms.pop());
-		// Terrain.PLAIN.generate(this, realms.pop());
-		// Terrain.HILL.generate(this, realms.pop());
-		// Terrain.WATER.generate(this, null);
-		// Terrain.WATER.generate(this, null);
-		// Terrain.MARSH.generate(this, realms.pop());
-		// Terrain.FOREST.generate(this, realms.pop());
-		Point nw = new Point(0, 0);
-		Point sw = new Point(0, SIZE - 1);
-		Point se = new Point(SIZE - 1, SIZE - 1);
-		Point ne = new Point(SIZE - 1, 0);
-		floodedge(nw, sw, +1, 0);
-		floodedge(sw, se, 0, -1);
-		floodedge(ne, se, -1, 0);
-		floodedge(nw, ne, 0, +1);
-		for (int i = 0; i < regions.size(); i++) {
-			if (GENERATIONORDER[i] != Terrain.WATER) {
-				new Town(regions.get(i), realms.pop()).place();
-			}
-		}
-	}
-
-	private void floodedge(Point from, Point to, int deltax, int deltay) {
-		ArrayList<Point> edge = new ArrayList<Point>(SIZE);
-		edge.add(from);
-		edge.add(to);
-		if (from.x != to.x) {
-			for (int x = from.x + 1; x != to.x; x++) {
-				edge.add(new Point(x, from.y));
-			}
-		} else {
-			for (int y = from.y + 1; y != to.y; y++) {
-				edge.add(new Point(from.x, y));
-			}
-		}
-		for (Point p : edge) {
-			map[p.x][p.y] = Terrain.WATER;
-			if (RPG.random() <= .5f) {
-				map[p.x + deltax][p.y + deltay] = Terrain.WATER;
-				if (RPG.random() <= .33f) {
-					map[p.x + deltax * 2][p.y + deltay * 2] = Terrain.WATER;
-				}
-			}
-		}
+		initnames();
 	}
 
 	void initroads() {
@@ -144,168 +58,6 @@ public class World implements Serializable {
 		return 0 <= x && x < SIZE && 0 <= y && y < SIZE;
 	}
 
-	/**
-	 * @param p
-	 *            Given a location...
-	 * @return the {@link Realm} of the closest {@link Town}.
-	 */
-	public static WorldActor determinecolor(Point p) {
-		ArrayList<WorldActor> towns = Location.getall(Town.class);
-		WorldActor closest = towns.get(0);
-		for (int i = 1; i < towns.size(); i++) {
-			Town t = (Town) towns.get(i);
-			if (t.realm != null && Walker.distance(t.x, t.y, p.x, p.y) < Walker
-					.distance(closest.x, closest.y, p.x, p.y)) {
-				closest = t;
-			}
-		}
-		return closest;
-	}
-
-	/**
-	 * Create a map at the start of the game.
-	 * 
-	 * @return Starting point (Town)
-	 */
-	public static void makemap() {
-		Town start = null;
-		while (seed == null) {
-			try {
-				seed = new World();
-				seed.generate();
-				// placemoretowns();
-				start = FeatureGenerator.SINGLETON.placestartingfeatures();
-				for (WorldActor a : WorldActor.getall(Town.class)) {
-					Town t = (Town) a;
-					t.populategarisson();
-				}
-			} catch (RestartWorldGeneration e) {
-				seed = null;
-				Town.initnames();
-				ArrayList<WorldActor> squad = WorldActor.INSTANCES
-						.get(Squad.class);
-				WorldActor.INSTANCES.clear();
-				WorldActor.INSTANCES.put(Squad.class, squad);
-			}
-		}
-		finish(start);
-	}
-
-	static void finish(Town start) {
-		start.garrison.clear();
-		start.captureforhuman(true);
-		placenearbywoods(start);
-		Squad.active.x = start.x;
-		Squad.active.y = start.y;
-		Squad.active.displace();
-		Squad.active.place();
-		Squad.active.equipment.fill(Squad.active);
-		Squad.active.lasttown = start;
-		Outpost.discover(start.x, start.y, Outpost.VISIONRANGE);
-		seed.done = true;
-	}
-
-	static void placemoretowns() {
-		int more = RPG.r(5, 7);
-		while (more > 0) {
-			int x = RPG.r(0, SIZE - 1);
-			int y = RPG.r(0, SIZE - 1);
-			if (WorldActor.get(x, y) != null
-					|| !seed.map[x][y].generatetown(new Point(x, y), seed)) {
-				continue;
-			}
-			more -= 1;
-			Point p = new Point(x, y);
-			Town t = new Town(p, World.determinecolor(p).realm);
-			while (t.isnear(Town.class)) {
-				Location.generate(t, false);
-			}
-			t.place();
-		}
-	}
-
-	static void placenearbywoods(Town start) {
-		int x, y;
-		int minx = start.x - Outpost.VISIONRANGE;
-		int maxx = start.x + Outpost.VISIONRANGE;
-		int miny = start.y - Outpost.VISIONRANGE;
-		int maxy = start.y + Outpost.VISIONRANGE;
-		for (x = minx; x <= maxx; x++) {
-			for (y = miny; y <= maxy; y++) {
-				if (validatecoordinate(x, y)
-						&& seed.map[x][y].equals(Terrain.FOREST)) {
-					return; // already has nearby woods
-				}
-			}
-		}
-		x = -1;
-		y = -1;
-		while (!validatecoordinate(x, y) || !validatecoordinate(x + 1, y)
-				|| WorldActor.get(x, y) != null
-				|| WorldActor.get(x + 1, y) != null) {
-			x = RPG.r(minx, maxx);
-			y = RPG.r(miny, maxy);
-		}
-		seed.map[x][y] = Terrain.FOREST;
-		seed.map[x + 1][y] = Terrain.FOREST;
-	}
-
-	/**
-	 * @param townbufferenabled
-	 *            If <code>true</code> will also return <code>true</code> if too
-	 *            close to a {@link Town}.
-	 * @return <code>true</code> if there is a {@link Town} in this coordinate
-	 *         already.
-	 */
-	static public boolean istown(final int x, final int y,
-			boolean townbufferenabled) {
-		if (WorldActor.get(x, y) != null) {
-			return true;
-		}
-		ArrayList<WorldActor> towns = WorldActor.getall(Town.class);
-		if (townbufferenabled) {
-			for (final WorldActor p : towns) {
-				for (int townx = p.x - TOWNBUFFER; townx <= p.x
-						+ TOWNBUFFER; townx++) {
-					for (int towny = p.y - TOWNBUFFER; towny <= p.y
-							+ TOWNBUFFER; towny++) {
-						if (townx == x && towny == y) {
-							return true;
-						}
-					}
-				}
-			}
-		} else {
-			for (final WorldActor p : towns) {
-				if (p.x == x && p.y == y) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Handles when {@link World} generation is taking too long.
-	 * 
-	 * @throws RestartWorldGeneration
-	 */
-	public static void retry() {
-		if (World.seed != null && World.seed.done) {
-			return;
-		}
-		retries += 1;
-		if (retries > 100000 * 10) {
-			retries = 0;
-			lastretries = 0;
-			throw new RestartWorldGeneration();
-		}
-		if (retries - lastretries >= 100000 * 2) {
-			new InfoScreen("").print("Generating world... Retries: " + retries);
-			lastretries = retries;
-		}
-	}
-
 	@Override
 	public String toString() {
 		String s = "";
@@ -316,5 +68,52 @@ public class World implements Serializable {
 			s += "\n";
 		}
 		return s;
+	}
+
+	/**
+	 * Populates {@link NAMES}. This may be needed if restarting {@link World}
+	 * generation.
+	 *
+	 * @see retry
+	 */
+	public void initnames() {
+		townnames.clear();
+		townnames.add("Alexandria"); // my name :)
+		townnames.add("Lindblum"); // final fantasy 9
+		townnames.add("Sigil"); // planescape: torment
+		townnames.add("Reno");// fallout 2
+		townnames.add("Marrymore");// super mario rpg
+		townnames.add("Kakariko"); // zelda
+		townnames.add("The Citadel"); // mass effect
+		townnames.add("Tristam");// diablo
+		townnames.add("Midgar"); // final fantasy 7
+		townnames.add("Medina");// chrono trigger
+		townnames.add("Figaro"); // final fantasy 6
+		townnames.add("Balamb"); // final fantasy 8
+		townnames.add("Zanarkand"); // final fantasy 10
+		townnames.add("Cornelia"); // final fantasy 1
+		townnames.add("Vivec");// morrowind
+		townnames.add("Termina");// chrono cross
+		townnames.add("Tarant");// arcanum
+		Collections.shuffle(townnames);
+	}
+
+	/**
+	 * Needs to be called during world building, as each {@link WorldBuilder}
+	 * thread has a different world. During normal gameplay, {@link #seed} can
+	 * be accessed directly.
+	 * 
+	 * TODO make sure this is only being used where necessary, to avoid the
+	 * overhead
+	 * 
+	 * @return If {@link #building}, the thread-relevant world instance,
+	 *         otherwise {@link #seed}.
+	 */
+	public static World getseed() {
+		if (seed != null) {
+			return seed;
+		}
+		WorldBuilder builder = (WorldBuilder) Thread.currentThread();
+		return builder.world;
 	}
 }

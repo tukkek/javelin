@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.WorldBuilder;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
@@ -123,9 +124,9 @@ public class Divide extends WorldAction {
 		s.move(true, Terrain.current(), Squad.active.x, Squad.active.y);
 		placement: for (x = Squad.active.x - 1; x <= Squad.active.x + 1; x++) {
 			for (y = Squad.active.y - 1; y <= Squad.active.y + 1; y++) {
-				if (!World.istown(x, y, false)
+				if (!WorldBuilder.istown(x, y, false)
 						&& (nearto == null || findtown(x, y) instanceof Town)
-						&& (s.swim() || !World.seed.map[x][y]
+						&& (s.swim() || !World.getseed().map[x][y]
 								.equals(Terrain.WATER))) {
 					s.x = x;
 					s.y = y;

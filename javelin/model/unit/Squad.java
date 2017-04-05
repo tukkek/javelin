@@ -37,7 +37,7 @@ import javelin.view.screen.town.SelectScreen;
  *
  * @author alex
  */
-public class Squad extends WorldActor {
+public class Squad extends WorldActor implements Cloneable {
 	/**
 	 * See {@link Javelin#act()}.
 	 */
@@ -746,5 +746,15 @@ public class Squad extends WorldActor {
 	@Override
 	protected boolean cancross(int tox, int toy) {
 		return swim() || super.cancross(tox, toy);
+	}
+
+	@Override
+	public Squad clone() {
+		try {
+			/* shallow clone */
+			return (Squad) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

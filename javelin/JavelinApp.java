@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import javelin.controller.TextReader;
+import javelin.controller.WorldBuilder;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.db.Preferences;
 import javelin.controller.db.StateManager;
@@ -31,7 +32,6 @@ import javelin.model.spell.Summon;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
-import javelin.model.world.World;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -209,7 +209,7 @@ public class JavelinApp extends QuestApp {
 
 	void startcampaign() {
 		SquadScreen.open();
-		World.makemap();
+		WorldBuilder.build();
 		UpgradeHandler.singleton.gather();
 		// Item.distribute();
 		if (Javelin.DEBUG) {

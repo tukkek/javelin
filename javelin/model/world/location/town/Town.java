@@ -59,7 +59,6 @@ public class Town extends Location {
 	 */
 	public static final float DAILYLABOR = .130f;
 
-	static final ArrayList<String> NAMES = new ArrayList<String>();
 	/** TODO */
 	public static final boolean DEBUGPROJECTS = false;
 
@@ -86,10 +85,6 @@ public class Town extends Location {
 	public static final Rank CITY = new Rank("city", 20, 4);
 
 	static final Rank[] RANKS = new Rank[] { HAMLET, VILLAGE, TOWN, CITY };
-
-	static {
-		initnames();
-	}
 
 	public ArrayList<Exhibition> events = new ArrayList<Exhibition>();
 	/**
@@ -122,10 +117,8 @@ public class Town extends Location {
 	 *            Type of town.
 	 */
 	public Town(Point location, Realm r) {
-		super(NAMES.isEmpty() ? null : NAMES.get(0));
-		if (!NAMES.isEmpty()) {
-			NAMES.remove(0);
-		}
+		super(World.getseed().townnames.isEmpty() ? null
+				: World.getseed().townnames.remove(0));
 		allowentry = false;
 		x = location.x;
 		y = location.y;
@@ -165,34 +158,6 @@ public class Town extends Location {
 	@Override
 	protected void generate() {
 		// location is given in the constructor
-	}
-
-	/**
-	 * Populates {@link #NAMES}. This may be needed if restarting {@link World}
-	 * generation.
-	 *
-	 * @see World#retry()
-	 */
-	public static void initnames() {
-		NAMES.clear();
-		NAMES.add("Alexandria"); // my name :)
-		NAMES.add("Lindblum"); // final fantasy 9
-		NAMES.add("Sigil"); // planescape: torment
-		NAMES.add("Reno");// fallout 2
-		NAMES.add("Marrymore");// super mario rpg
-		NAMES.add("Kakariko"); // zelda
-		NAMES.add("The Citadel"); // mass effect
-		NAMES.add("Tristam");// diablo
-		NAMES.add("Midgar"); // final fantasy 7
-		NAMES.add("Medina");// chrono trigger
-		NAMES.add("Figaro"); // final fantasy 6
-		NAMES.add("Balamb"); // final fantasy 8
-		NAMES.add("Zanarkand"); // final fantasy 10
-		NAMES.add("Cornelia"); // final fantasy 1
-		NAMES.add("Vivec");// morrowind
-		NAMES.add("Termina");// chrono cross
-		NAMES.add("Tarant");// arcanum
-		Collections.shuffle(NAMES);
 	}
 
 	public ArrayList<Monster> getpossiblerecruits() {

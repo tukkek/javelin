@@ -99,7 +99,7 @@ public class WorldMove extends WorldAction {
 		final WorldScreen s = (WorldScreen) BattleScreen.active;
 		Squad.active.lastterrain = Terrain.current();
 		if (!World.validatecoordinate(tox, toy) || (Dungeon.active == null
-				&& !World.seed.map[tox][toy].enter(tox, toy))) {
+				&& !World.getseed().map[tox][toy].enter(tox, toy))) {
 			throw new RepeatTurn();
 		}
 		float hours = Dungeon.active == null

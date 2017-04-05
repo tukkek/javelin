@@ -172,7 +172,7 @@ public class BuildRoad extends Labor {
 	}
 
 	protected boolean hasroad(Point p) {
-		return World.roads[p.x][p.y] || World.highways[p.x][p.y];
+		return World.seed.roads[p.x][p.y] || World.seed.highways[p.x][p.y];
 	}
 
 	protected String name(Town target) {
@@ -209,7 +209,7 @@ public class BuildRoad extends Labor {
 	}
 
 	protected void build(Point p) {
-		World.roads[p.x][p.y] = true;
+		World.seed.roads[p.x][p.y] = true;
 	}
 
 	@Override

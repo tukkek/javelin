@@ -41,7 +41,7 @@ public class WaterTemple extends Temple {
 	@Override
 	protected void generate() {
 		while (x == -1 || Terrain.search(new Point(x, y), Terrain.WATER,
-				1, World.seed) == 0) {
+				1, World.getseed()) == 0) {
 			super.generate();
 		}
 	}

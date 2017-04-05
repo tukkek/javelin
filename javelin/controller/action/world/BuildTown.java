@@ -2,9 +2,9 @@ package javelin.controller.action.world;
 
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.WorldBuilder;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.WorldScreen;
 
@@ -41,7 +41,7 @@ public class BuildTown extends WorldAction {
 		}
 		Squad.active.members.remove(settler);
 		Point location = new Point(Squad.active.x, Squad.active.y);
-		Town t = new Town(location, World.determinecolor(location).realm);
+		Town t = new Town(location, WorldBuilder.determinecolor(location).realm);
 		t.description = "your new town";
 		t.rename();
 		t.garrison.clear();

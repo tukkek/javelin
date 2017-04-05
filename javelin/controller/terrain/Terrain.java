@@ -10,6 +10,7 @@ import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.Weather;
+import javelin.controller.WorldBuilder;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.terrain.map.Map;
@@ -135,10 +136,10 @@ public abstract class Terrain implements Serializable {
 	 * @see World#highways
 	 */
 	public float getspeed(int x, int y) {
-		if (!World.roads[x][y]) {
+		if (!World.seed.roads[x][y]) {
 			return speedtrackless;
 		}
-		return World.highways[x][y] ? speedhighway : speedroad;
+		return World.seed.highways[x][y] ? speedhighway : speedroad;
 	}
 
 	/**
@@ -162,7 +163,7 @@ public abstract class Terrain implements Serializable {
 	 * @return Terrain difficulty. For example: {@link PLAIN}.
 	 */
 	public static Terrain get(int x, int y) {
-		return World.seed.map[x][y];
+		return World.getseed().map[x][y];
 	}
 
 	@Override
@@ -187,7 +188,6 @@ public abstract class Terrain implements Serializable {
 	abstract public Maps getmaps();
 
 	HashSet<Point> generatearea(World world) {
-		towns = WorldActor.getall(Town.class);
 		Point source = generatesource(world);
 		Point current = source;
 		HashSet<Point> area = generatestartingarea(world);
@@ -202,7 +202,7 @@ public abstract class Terrain implements Serializable {
 	 * @return Number of tiles the generated area for this terrain should have.
 	 */
 	protected int generateareasize() {
-		return World.SIZE * World.SIZE / World.NREGIONS;
+		return World.SIZE * World.SIZE / WorldBuilder.NREGIONS;
 	}
 
 	/**
@@ -250,7 +250,7 @@ public abstract class Terrain implements Serializable {
 			if (checkinvalid(world, x, y)) {
 				x = lastx;
 				y = lasty;
-				World.retry();
+				WorldBuilder.retry();
 				continue;
 			}
 		}
@@ -271,7 +271,7 @@ public abstract class Terrain implements Serializable {
 	}
 
 	boolean checktown(int x, int y) {
-		for (WorldActor town : towns) {
+		for (WorldActor town : Town.gettowns()) {
 			if (town.x == x && town.y == y) {
 				return true;
 			}
@@ -297,8 +297,7 @@ public abstract class Terrain implements Serializable {
 	 *            World instance.
 	 * @return Number of terrain tiles from the given type found in radius.
 	 */
-	public static int search(Point p, Terrain neighbor, int radius,
-			World w) {
+	public static int search(Point p, Terrain neighbor, int radius, World w) {
 		int found = 0;
 		for (int x = p.x - radius; x <= p.x + radius; x++) {
 			for (int y = p.y - radius; y <= p.y + radius; y++) {
@@ -399,13 +398,12 @@ public abstract class Terrain implements Serializable {
 	 *         for this terrain.
 	 */
 	public boolean generatetown(Point p, World w) {
-		if (search(p, WATER, 1, w) > 0
-				|| get(p.x, p.y).equals(Terrain.WATER)) {
+		if (search(p, WATER, 1, w) > 0 || get(p.x, p.y).equals(Terrain.WATER)) {
 			return false;
 		}
 		for (WorldActor town : WorldActor.getall(Town.class)) {
 			if (Walker.distance(p.x, p.y, town.x, town.y) <= 8) {
-				World.retry();
+				WorldBuilder.retry();
 				return false;
 			}
 		}

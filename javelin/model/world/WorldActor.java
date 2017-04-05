@@ -4,7 +4,6 @@ import java.awt.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 
 import javelin.Javelin;
@@ -30,8 +29,6 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public abstract class WorldActor implements Serializable {
-	/** Contains all actor instances still in the game. */
-	public static HashMap<Class<? extends WorldActor>, ArrayList<WorldActor>> INSTANCES = new HashMap<Class<? extends WorldActor>, ArrayList<WorldActor>>();
 	static final int[] NUDGES = new int[] { -1, 0, +1 };
 	/** x coordinate. */
 	public int x = -1;
@@ -83,24 +80,24 @@ public abstract class WorldActor implements Serializable {
 	 */
 	abstract public Boolean destroy(Incursion attacker);
 
-	/** Called during construction to setup {@link #INSTANCES}. */
+	/** Called during construction to setup {@link World#actors}. */
 	protected void registerinstance() {
 		// if (x == -1 && !(this instanceof Squad)) {
 		// throw new RuntimeException("Impossible #actor");
 		// }
-		ArrayList<WorldActor> list = INSTANCES.get(getClass());
+		ArrayList<WorldActor> list = World.getseed().actors.get(getClass());
 		if (list == null) {
 			list = new ArrayList<WorldActor>(1);
-			INSTANCES.put(getClass(), list);
+			World.getseed().actors.put(getClass(), list);
 		}
 		if (!list.contains(this)) {
 			list.add(this);
 		}
 	}
 
-	/** Removes this instance from {@link #INSTANCES}. */
+	/** Removes this instance from {@link World#actors}. */
 	protected void deregisterinstance() {
-		List<WorldActor> list = INSTANCES.get(getClass());
+		List<WorldActor> list = World.getseed().actors.get(getClass());
 		if (list != null) {
 			list.remove(this);
 		}
@@ -226,7 +223,7 @@ public abstract class WorldActor implements Serializable {
 	 */
 	public static ArrayList<WorldActor> getall() {
 		ArrayList<WorldActor> actors = new ArrayList<WorldActor>();
-		for (ArrayList<WorldActor> instances : INSTANCES.values()) {
+		for (ArrayList<WorldActor> instances : World.getseed().actors.values()) {
 			if (instances.isEmpty() || instances.get(0) instanceof Squad) {
 				continue;
 			}
@@ -237,16 +234,16 @@ public abstract class WorldActor implements Serializable {
 	}
 
 	/**
-	 * Note that this returns the canonical list from {@link #INSTANCES}.
+	 * Note that this returns the canonical list from {@link World#actors}.
 	 *
 	 * @return All actors of the given type.
 	 */
 	public static ArrayList<WorldActor> getall(
 			Class<? extends WorldActor> type) {
-		ArrayList<WorldActor> all = INSTANCES.get(type);
+		ArrayList<WorldActor> all = World.getseed().actors.get(type);
 		if (all == null) {
 			all = new ArrayList<WorldActor>();
-			INSTANCES.put(type, all);
+			World.getseed().actors.put(type, all);
 		}
 		return all;
 	}

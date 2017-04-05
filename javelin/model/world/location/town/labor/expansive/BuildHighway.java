@@ -12,7 +12,7 @@ public class BuildHighway extends BuildRoad {
 
 	@Override
 	protected boolean hasroad(Point p) {
-		return World.highways[p.x][p.y];
+		return World.seed.highways[p.x][p.y];
 	}
 
 	@Override
@@ -22,7 +22,7 @@ public class BuildHighway extends BuildRoad {
 
 	@Override
 	protected void build(Point p) {
-		World.highways[p.x][p.y] = true;
+		World.seed.highways[p.x][p.y] = true;
 	}
 
 	@Override

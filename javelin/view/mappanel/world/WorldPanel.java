@@ -19,7 +19,7 @@ public class WorldPanel extends MapPanel {
 	public static final HashMap<Point, Location> DESTINATIONS = new HashMap<Point, Location>();
 
 	public WorldPanel() {
-		super(World.seed.map.length, World.seed.map[0].length,
+		super(World.getseed().map.length, World.getseed().map[0].length,
 				Preferences.KEYTILEWORLD);
 	}
 

@@ -54,7 +54,7 @@ public class Map extends Relic {
 					+ RADIUS; y++) {
 				if (World.validatecoordinate(x, y)
 						&& !Terrain.get(x, y).equals(Terrain.WATER)) {
-					World.seed.map[x][y] = terrain;
+					World.getseed().map[x][y] = terrain;
 				}
 			}
 		}

@@ -3,6 +3,7 @@ package javelin.model.world.location;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.WorldBuilder;
 import javelin.model.unit.Combatant;
 import javelin.model.world.World;
 import javelin.model.world.location.fortification.Fortification;
@@ -17,7 +18,7 @@ import javelin.view.screen.WorldScreen;
  * day of a unseen spot disappearing - as to not negate the benefire of Gather
  * Information and such).
  * 
- * @see World#makemap()
+ * @see WorldBuilder#makemap()
  * @author alex
  */
 public class Outpost extends Fortification {

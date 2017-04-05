@@ -40,6 +40,7 @@ import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.state.Meld;
 import javelin.model.unit.abilities.Spells;
+import javelin.model.world.World;
 import javelin.model.world.WorldActor;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.BattleScreen;
@@ -162,6 +163,9 @@ public class Combatant implements Serializable, Cloneable {
 	 * TODO add WorldActor#getcombatants to do this
 	 */
 	private boolean checkidcollision() {
+		if (World.seed == null) {
+			return false;
+		}
 		for (WorldActor a : WorldActor.getall()) {
 			List<Combatant> combatants = a.getcombatants();
 			if (combatants != null) {

@@ -269,7 +269,7 @@ public class WorldScreen extends BattleScreen {
 		for (int x = 0; x < World.SIZE; x++) {
 			for (int y = 0; y < World.SIZE; y++) {
 				Tile t = mappanel.tiles[x][y];
-				if (t.discovered && !World.roads[t.x][t.y]
+				if (t.discovered && !World.seed.roads[t.x][t.y]
 						&& WorldActor.get(t.x, t.y, locations) == null) {
 					discovered.add(t);
 				}

@@ -14,7 +14,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Caravan;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.Portal;
@@ -49,7 +49,7 @@ import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
- * Responsible for generating those {@link WorldActor}s (mostly {@link Location}
+ * Responsible for generating those {@link Actor}s (mostly {@link Location}
  * s that can be spawned both during {@link World} generation and normal
  * gameplay.
  *
@@ -62,7 +62,7 @@ public class FeatureGenerator {
 
 	static final int NUMBEROFSTARTINGFEATURES = World.SIZE * World.SIZE / 5;
 
-	final HashMap<Class<? extends WorldActor>, FeatureGenerationData> generators = new HashMap<Class<? extends WorldActor>, FeatureGenerationData>();
+	final HashMap<Class<? extends Actor>, FeatureGenerationData> generators = new HashMap<Class<? extends Actor>, FeatureGenerationData>();
 
 	/**
 	 * The ultimate goal of this method is to try and make it so one feature
@@ -86,7 +86,7 @@ public class FeatureGenerator {
 
 		register(Portal.class, new FeatureGenerationData() {
 			@Override
-			public WorldActor generate(Class<? extends WorldActor> feature) {
+			public Actor generate(Class<? extends Actor> feature) {
 				return Portal.open();
 			}
 		});
@@ -119,14 +119,14 @@ public class FeatureGenerator {
 		}
 	}
 
-	FeatureGenerationData register(Class<? extends WorldActor> class1,
+	FeatureGenerationData register(Class<? extends Actor> class1,
 			FeatureGenerationData generator) {
 		generators.put(class1, generator);
 		return generator;
 	}
 
 	/**
-	 * Spawns {@link WorldActor}s into the game world. Used both during world
+	 * Spawns {@link Actor}s into the game world. Used both during world
 	 * generation and during a game's progress.
 	 *
 	 * @param chance
@@ -143,12 +143,12 @@ public class FeatureGenerator {
 	 *            the game is progressing to support the full feature set.
 	 */
 	public void spawn(final float chance, boolean generatingworld) {
-		for (Class<? extends WorldActor> feature : generators.keySet()) {
+		for (Class<? extends Actor> feature : generators.keySet()) {
 			FeatureGenerationData g = generators.get(feature);
 			if (generatingworld && !g.starting) {
 				continue;
 			}
-			if (g.max != null && WorldActor.getall(feature).size() >= g.max) {
+			if (g.max != null && World.getall(feature).size() >= g.max) {
 				continue;
 			}
 			if (RPG.random() <= chance * g.chance) {
@@ -157,10 +157,10 @@ public class FeatureGenerator {
 		}
 	}
 
-	static void spawnnear(Town t, WorldActor a, World w, int min, int max) {
+	static void spawnnear(Town t, Actor a, World w, int min, int max) {
 		int[] location = null;
 		while (location == null
-				|| WorldActor.get(t.x + location[0], t.y + location[1]) != null
+				|| World.get(t.x + location[0], t.y + location[1]) != null
 				|| t.x + location[0] < 0 || t.y + location[1] < 0
 				|| t.x + location[0] >= World.SIZE
 				|| t.y + location[1] >= World.SIZE
@@ -184,10 +184,10 @@ public class FeatureGenerator {
 	}
 
 	static Town gettown(Terrain terrain, World seed) {
-		ArrayList<WorldActor> towns = new ArrayList<WorldActor>(
-				WorldActor.getall(Town.class));
+		ArrayList<Actor> towns = new ArrayList<Actor>(
+				World.getall(Town.class));
 		Collections.shuffle(towns);
-		for (WorldActor town : towns) {
+		for (Actor town : towns) {
 			if (seed.map[town.x][town.y] == terrain) {
 				return (Town) town;
 			}
@@ -211,13 +211,13 @@ public class FeatureGenerator {
 		Town easya = FeatureGenerator.gettown(starton, seed);
 		Town easyb = FeatureGenerator.gettown(
 				starton == Terrain.PLAIN ? Terrain.HILL : Terrain.PLAIN, seed);
-		ArrayList<WorldActor> towns = WorldActor.getall(Town.class);
-		WorldActor startingtown = WorldActor.get(easya.x, easya.y, towns);
+		ArrayList<Actor> towns = World.getall(Town.class);
+		Actor startingtown = World.get(easya.x, easya.y, towns);
 		if (Terrain.search(new Point(startingtown.x, startingtown.y),
 				Terrain.WATER, 2, seed) != 0) {
 			throw new RestartWorldGeneration();
 		}
-		new Portal(startingtown, WorldActor.get(easyb.x, easyb.y, towns), false,
+		new Portal(startingtown, World.get(easyb.x, easyb.y, towns), false,
 				false, true, true, null, false).place();
 		Haxor.singleton = new Haxor();
 		generatestartingarea(seed, easya);
@@ -226,7 +226,7 @@ public class FeatureGenerator {
 		generatemageguilds();
 		generatemartialacademies();
 		new AssassinsGuild().place();
-		for (Class<? extends WorldActor> feature : generators.keySet()) {
+		for (Class<? extends Actor> feature : generators.keySet()) {
 			generators.get(feature).seed(feature);
 		}
 		int target = NUMBEROFSTARTINGFEATURES - Location.count();
@@ -276,7 +276,7 @@ public class FeatureGenerator {
 
 	static int countplaces() {
 		int count = 0;
-		for (ArrayList<WorldActor> instances : World.getseed().actors.values()) {
+		for (ArrayList<Actor> instances : World.getseed().actors.values()) {
 			if (instances.isEmpty()
 					|| !(instances.get(0) instanceof Location)) {
 				continue;

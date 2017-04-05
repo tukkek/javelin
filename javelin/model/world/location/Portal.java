@@ -14,7 +14,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
@@ -33,8 +33,8 @@ public class Portal extends Location {
 
 	private static final int NFEATURES = 6;
 
-	final WorldActor to;
-	final WorldActor from;
+	final Actor to;
+	final Actor from;
 	final boolean safe;
 	final boolean instantaneous;
 	/**
@@ -71,7 +71,7 @@ public class Portal extends Location {
 	 *            If <code>true</code> will periodically bring creatures from
 	 *            the other side until closed.
 	 */
-	public Portal(WorldActor fromp, WorldActor top, boolean bidirectional,
+	public Portal(Actor fromp, Actor top, boolean bidirectional,
 			boolean wanderingp, boolean safep, boolean instantaneousp,
 			Long expiresatp, boolean invasionp) {
 		super(DESCRIPTION);
@@ -117,7 +117,7 @@ public class Portal extends Location {
 		}
 	}
 
-	public Portal(WorldActor from, WorldActor to) {
+	public Portal(Actor from, Actor to) {
 		this(from, to, Portal.activatefeature(), Portal.activatefeature(),
 				!Portal.activatefeature(), !Portal.activatefeature(),
 				Portal.activatefeature()
@@ -134,9 +134,9 @@ public class Portal extends Location {
 		// do nothing
 	}
 
-	private Point spawn(WorldActor t) {
+	private Point spawn(Actor t) {
 		Point p = new Point(t.x, t.y);
-		while (WorldActor.get(p.x, p.y) != null) {
+		while (World.get(p.x, p.y) != null) {
 			p = new Point(determinedistance(t.x), determinedistance(t.y));
 			if (p.x < 0 || p.x >= World.SIZE || p.y < 0 || p.y >= World.SIZE
 					|| World.getseed().map[p.x][p.y].equals(Terrain.WATER)) {
@@ -209,9 +209,9 @@ public class Portal extends Location {
 	 * @return
 	 */
 	public static Portal open() {
-		ArrayList<WorldActor> towns = WorldActor.getall(Town.class);
-		WorldActor from = RPG.pick(towns);
-		WorldActor to = RPG.pick(towns);
+		ArrayList<Actor> towns = World.getall(Town.class);
+		Actor from = RPG.pick(towns);
+		Actor to = RPG.pick(towns);
 		while (to == from) {
 			to = RPG.pick(towns);
 		}

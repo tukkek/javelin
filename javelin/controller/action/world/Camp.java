@@ -27,7 +27,7 @@ public class Camp extends WorldAction {
 		if (Dungeon.active != null) {
 			throw new RepeatTurn();
 		}
-		Town t = (Town) Squad.active.getnearest(Town.class);
+		Town t = (Town) Squad.active.findnearest(Town.class);
 		if (t != null && t.getdistrict().getarea()
 				.contains(Squad.active.getlocation())) {
 			Javelin.message(

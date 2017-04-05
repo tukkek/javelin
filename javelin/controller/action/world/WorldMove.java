@@ -14,7 +14,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.view.screen.BattleScreen;
@@ -105,8 +105,8 @@ public class WorldMove extends WorldAction {
 		float hours = Dungeon.active == null
 				? Squad.active.move(false, Terrain.current(), tox, toy) : 0;
 		try {
-			WorldActor actor =
-					Dungeon.active == null ? WorldActor.get(tox, toy) : null;
+			Actor actor =
+					Dungeon.active == null ? World.get(tox, toy) : null;
 			Location l = actor instanceof Location ? (Location) actor : null;
 			try {
 				if (JavelinApp.context.react(actor, tox, toy)) {
@@ -184,7 +184,7 @@ public class WorldMove extends WorldAction {
 			return true;
 		}
 		final List<Squad> here = new ArrayList<Squad>();
-		for (final WorldActor p : Squad.getall(Squad.class)) {
+		for (final Actor p : World.getall(Squad.class)) {
 			Squad s = (Squad) p;
 			if (s.x == t.x && s.y == t.y) {
 				here.add(s);

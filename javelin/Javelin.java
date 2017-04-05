@@ -38,7 +38,8 @@ import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.Academy;
 import javelin.view.screen.BattleScreen;
@@ -216,7 +217,7 @@ public class Javelin {
 	 */
 	public static Squad nexttoact() {
 		Squad next = null;
-		for (final WorldActor a : WorldActor.getall(Squad.class)) {
+		for (final Actor a : World.getall(Squad.class)) {
 			Squad s = (Squad) a;
 			if (next == null || s.hourselapsed < next.hourselapsed) {
 				next = s;

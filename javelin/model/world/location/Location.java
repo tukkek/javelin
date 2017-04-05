@@ -21,7 +21,7 @@ import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
@@ -33,7 +33,7 @@ import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
- * A {@link WorldActor} that is actually a place that represent a location to be
+ * A {@link Actor} that is actually a place that represent a location to be
  * entered or explored.
  *
  * Im may be tempted to add a uniform #level here for subclass convenience, but
@@ -41,10 +41,10 @@ import tyrant.mikera.engine.RPG;
  * efficiency to ease of searching calls and assignments. The very small
  * convenience added is not worth the trade-off.
  *
- * @see WorldActor#getall()
+ * @see World#getall()
  * @author alex
  */
-public abstract class Location extends WorldActor {
+public abstract class Location extends Actor {
 	/**
 	 * Note that this value is used in a triagonal calculation, not in
 	 * square-steps.
@@ -113,21 +113,21 @@ public abstract class Location extends WorldActor {
 
 	/**
 	 * Default implementation of {@link #generate()}, will try random
-	 * positioning a {@link WorldActor} until it lands on a free space.
+	 * positioning a {@link Actor} until it lands on a free space.
 	 *
 	 * @param allowwater
 	 *            <code>true</code> if it is allowed to place the actor on
 	 *            {@link Terrain#WATER}.
 	 */
-	static public void generate(WorldActor p, boolean allowwater) {
+	static public void generate(Actor p, boolean allowwater) {
 		p.x = -1;
-		ArrayList<WorldActor> actors = WorldActor.getall();
+		ArrayList<Actor> actors = World.getall();
 		actors.remove(p);
 		final World w = World.getseed();
 		while (p.x == -1
 				|| !allowwater
 						&& World.getseed().map[p.x][p.y].equals(Terrain.WATER)
-				|| WorldActor.get(p.x, p.y, actors) != null || neartown(p)
+				|| World.get(p.x, p.y, actors) != null || neartown(p)
 				|| w.roads[p.x][p.y] || w.highways[p.x][p.y]) {
 			p.x = RPG.r(0, World.SIZE - 1);
 			p.y = RPG.r(0, World.SIZE - 1);
@@ -138,7 +138,7 @@ public abstract class Location extends WorldActor {
 	/**
 	 * @return <code>true</code> if given actor is too close to a town.
 	 */
-	static boolean neartown(WorldActor p) {
+	static boolean neartown(Actor p) {
 		// if (p instanceof Town) {
 		// return false;
 		// }
@@ -170,11 +170,11 @@ public abstract class Location extends WorldActor {
 			return false;
 		}
 		if (p.gossip) {
-			WorldActor closest = null;
+			Actor closest = null;
 			for (int x = p.x - 5; x <= p.x + 5; x++) {
 				for (int y = p.y - 5; y <= p.y + 5; y++) {
 					if (!WorldScreen.see(new Point(x, y))) {
-						WorldActor a = WorldActor.get(x, y);
+						Actor a = World.get(x, y);
 						if (a == null) {
 							continue;
 						}
@@ -232,7 +232,7 @@ public abstract class Location extends WorldActor {
 	 *         allowed because some places should not be conquered.
 	 *         {@link Integer#MIN_VALUE} means an automatic victory for the
 	 *         attacker.
-	 * @see WorldActor#impermeable
+	 * @see Actor#impermeable
 	 * @see Incursion#fight(int, int)
 	 */
 	abstract protected Integer getel(int attackerel);
@@ -349,7 +349,7 @@ public abstract class Location extends WorldActor {
 	 * @see Walker#distance(int, int, int, int)
 	 */
 	public boolean isnear(Class<? extends Location> targets) {
-		WorldActor nearest = getnearest(targets);
+		Actor nearest = findnearest(targets);
 		return nearest != null && distance(nearest.x, nearest.y) > CLOSE;
 		// for (WorldActor p : getall(targets)) {
 		// if (p != this && Walker.distance(x, y, p.x, p.y) <= CLOSE) {
@@ -364,7 +364,7 @@ public abstract class Location extends WorldActor {
 	 */
 	public static int count() {
 		int sum = 0;
-		for (ArrayList<WorldActor> places : World.getseed().actors.values()) {
+		for (ArrayList<Actor> places : World.getseed().actors.values()) {
 			sum += places.size();
 		}
 		return sum;

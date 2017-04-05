@@ -10,7 +10,8 @@ import javelin.controller.upgrade.Spell;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.fortification.Fortification;
@@ -43,9 +44,9 @@ public class GreaterTeleport extends Spell {
 
 	@Override
 	public String castpeacefully(Combatant caster, Combatant target) {
-		ArrayList<WorldActor> places = new ArrayList<WorldActor>();
+		ArrayList<Actor> places = new ArrayList<Actor>();
 		ArrayList<String> names = new ArrayList<String>();
-		for (WorldActor a : WorldActor.getall()) {
+		for (Actor a : World.getall()) {
 			if (a instanceof Town || a instanceof UniqueLocation
 					|| a instanceof Temple || a instanceof Academy) {
 				places.add(a);
@@ -59,11 +60,11 @@ public class GreaterTeleport extends Spell {
 			}
 		}
 		Collections.sort(names);
-		WorldActor to =
+		Actor to =
 				places.get(Javelin.choose("Where to?", names, true, true));
 		Squad.active.x = to.x;
 		Squad.active.y = to.y;
-		while (WorldActor.get(Squad.active.x, Squad.active.y) != Squad.active) {
+		while (World.get(Squad.active.x, Squad.active.y) != Squad.active) {
 			Squad.active.displace();
 		}
 		Squad.active.place();

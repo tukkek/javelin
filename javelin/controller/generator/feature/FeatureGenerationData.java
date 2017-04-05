@@ -1,7 +1,7 @@
 package javelin.controller.generator.feature;
 
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 
 /**
  * One of these per feature.
@@ -84,10 +84,10 @@ public class FeatureGenerationData {
 	}
 
 	/**
-	 * @return By default a new instance of the given {@link WorldActor} clss,
+	 * @return By default a new instance of the given {@link Actor} clss,
 	 *         using {@link Class#newInstance()}.
 	 */
-	public WorldActor generate(Class<? extends WorldActor> feature) {
+	public Actor generate(Class<? extends Actor> feature) {
 		try {
 			return feature.newInstance();
 		} catch (Exception e) {
@@ -100,9 +100,9 @@ public class FeatureGenerationData {
 	 *
 	 * @param feature
 	 *            Feature type.
-	 * @see WorldActor#place()
+	 * @see Actor#place()
 	 */
-	public void seed(Class<? extends WorldActor> feature) {
+	public void seed(Class<? extends Actor> feature) {
 		for (int i = 0; i < seeds; i++) {
 			generate(feature).place();
 		}

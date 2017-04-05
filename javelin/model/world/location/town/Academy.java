@@ -19,7 +19,7 @@ import javelin.model.unit.Squad;
 import javelin.model.unit.transport.Transport;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.order.Order;
@@ -259,9 +259,9 @@ public class Academy extends Fortification {
 						|| Terrain.get(x, y).equals(Terrain.WATER)) {
 					continue;
 				}
-				Squad stationed = (Squad) WorldActor.get(x, y, Squad.class);
+				Squad stationed = (Squad) World.get(x, y, Squad.class);
 				if (stationed == null) {
-					if (WorldActor.get(x, y) == null) {
+					if (World.get(x, y) == null) {
 						free.add(new Point(x, y));
 					}
 				} else {
@@ -304,7 +304,7 @@ public class Academy extends Fortification {
 	 */
 	public static boolean train() {
 		boolean trained = false;
-		for (WorldActor actor : WorldActor.getall()) {
+		for (Actor actor : World.getall()) {
 			if (actor instanceof Academy) {
 				Academy a = (Academy) actor;
 				/* don't inline */

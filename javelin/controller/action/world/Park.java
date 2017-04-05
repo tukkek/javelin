@@ -9,7 +9,6 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
 import javelin.model.world.ParkedVehicle;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -38,7 +37,7 @@ public class Park extends WorldAction {
 		for (int x = s.x - 1; x <= s.x + 1; x++) {
 			for (int y = s.y - 1; y <= s.y + 1; y++) {
 				if (x == s.x && y == s.y || !World.validatecoordinate(x, y) || Terrain.get(x, y).equals(Terrain.WATER)
-						|| WorldActor.get(x, y) != null) {
+						|| World.get(x, y) != null) {
 					continue;
 				}
 				exit = new Point(x, y);

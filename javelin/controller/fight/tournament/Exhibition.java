@@ -3,7 +3,7 @@ package javelin.controller.fight.tournament;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import javelin.model.world.location.Location;
+import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
 import tyrant.mikera.engine.RPG;
 
@@ -44,7 +44,7 @@ public abstract class Exhibition implements Serializable {
 	 */
 	public static void opentournament() {
 		if (RPG.r(1, 7) == 1 || DEBUG) {
-			final Town t = (Town) RPG.pick(Location.getall(Town.class));
+			final Town t = (Town) RPG.pick(World.getall(Town.class));
 			t.host();
 		}
 	}

@@ -13,7 +13,7 @@ import javelin.controller.walker.Walker;
 import javelin.model.Realm;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.town.Town;
@@ -43,9 +43,9 @@ public class WorldBuilder extends Thread {
 	 *            Given a location...
 	 * @return the {@link Realm} of the closest {@link Town}.
 	 */
-	public static WorldActor determinecolor(Point p) {
-		ArrayList<WorldActor> towns = Location.getall(Town.class);
-		WorldActor closest = towns.get(0);
+	public static Actor determinecolor(Point p) {
+		ArrayList<Actor> towns = World.getall(Town.class);
+		Actor closest = towns.get(0);
 		for (int i = 1; i < towns.size(); i++) {
 			Town t = (Town) towns.get(i);
 			if (t.realm != null && Walker.distance(t.x, t.y, p.x, p.y) < Walker
@@ -62,7 +62,7 @@ public class WorldBuilder extends Thread {
 			Town start = null;
 			generate(world);
 			start = FeatureGenerator.SINGLETON.placestartingfeatures();
-			for (WorldActor a : WorldActor.getall(Town.class)) {
+			for (Actor a : World.getall(Town.class)) {
 				Town t = (Town) a;
 				t.populategarisson();
 			}
@@ -96,7 +96,7 @@ public class WorldBuilder extends Thread {
 		while (more > 0) {
 			int x = RPG.r(0, World.SIZE - 1);
 			int y = RPG.r(0, World.SIZE - 1);
-			if (WorldActor.get(x, y) != null || !World.seed.map[x][y]
+			if (World.get(x, y) != null || !World.seed.map[x][y]
 					.generatetown(new Point(x, y), World.seed)) {
 				continue;
 			}
@@ -128,8 +128,8 @@ public class WorldBuilder extends Thread {
 		y = -1;
 		while (!World.validatecoordinate(x, y)
 				|| !World.validatecoordinate(x + 1, y)
-				|| WorldActor.get(x, y) != null
-				|| WorldActor.get(x + 1, y) != null) {
+				|| World.get(x, y) != null
+				|| World.get(x + 1, y) != null) {
 			x = RPG.r(minx, maxx);
 			y = RPG.r(miny, maxy);
 		}
@@ -146,12 +146,12 @@ public class WorldBuilder extends Thread {
 	 */
 	static public boolean istown(final int x, final int y,
 			boolean townbufferenabled) {
-		if (WorldActor.get(x, y) != null) {
+		if (World.get(x, y) != null) {
 			return true;
 		}
-		ArrayList<WorldActor> towns = WorldActor.getall(Town.class);
+		ArrayList<Actor> towns = World.getall(Town.class);
 		if (townbufferenabled) {
-			for (final WorldActor p : towns) {
+			for (final Actor p : towns) {
 				for (int townx = p.x - TOWNBUFFER; townx <= p.x
 						+ TOWNBUFFER; townx++) {
 					for (int towny = p.y - TOWNBUFFER; towny <= p.y
@@ -163,7 +163,7 @@ public class WorldBuilder extends Thread {
 				}
 			}
 		} else {
-			for (final WorldActor p : towns) {
+			for (final Actor p : towns) {
 				if (p.x == x && p.y == y) {
 					return true;
 				}

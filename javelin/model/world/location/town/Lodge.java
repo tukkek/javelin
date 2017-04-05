@@ -8,7 +8,7 @@ import javelin.Javelin;
 import javelin.controller.upgrade.Spell;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
@@ -69,7 +69,7 @@ public class Lodge extends Fortification {
 		}
 
 		@Override
-		public void done(WorldActor l) {
+		public void done(Actor l) {
 			Lodge i = (Lodge) l;
 			if (i.level < MAXLEVEL) {
 				i.level += 1;
@@ -133,7 +133,7 @@ public class Lodge extends Fortification {
 	@Override
 	protected void generate() {
 		x = -1;
-		while (x == -1 || getdistrict() != null || getnearest(Lodge.class)
+		while (x == -1 || getdistrict() != null || findnearest(Lodge.class)
 				.distance(x, y) <= District.RADIUSMAX) {
 			generateawayfromtown();
 		}

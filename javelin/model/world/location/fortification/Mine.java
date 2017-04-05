@@ -12,7 +12,8 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.EquipmentMap;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.town.District;
@@ -54,7 +55,7 @@ public class Mine extends Fortification {
 		}
 
 		@Override
-		public void done(WorldActor l) {
+		public void done(Actor l) {
 			super.done(l);
 			Mine m = (Mine) l;
 			m.rename("Ruby mine");
@@ -264,7 +265,7 @@ public class Mine extends Fortification {
 	}
 
 	boolean validatedistance() {
-		for (WorldActor mine : WorldActor.getall(Mine.class)) {
+		for (Actor mine : World.getall(Mine.class)) {
 			if (mine != this
 					&& distance(mine.x, mine.y) < Outpost.VISIONRANGE * 2) {
 				return false;

@@ -9,7 +9,8 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.unique.UniqueLocation;
 import javelin.view.frame.arena.ArenaWindow;
 
@@ -101,7 +102,7 @@ public class Arena extends UniqueLocation {
 	 *         hasn't yet been loaded or the world isn't generated.
 	 */
 	public static Arena get() {
-		ArrayList<WorldActor> actors = WorldActor.getall(Arena.class);
+		ArrayList<Actor> actors = World.getall(Arena.class);
 		return actors.isEmpty() ? null : (Arena) actors.get(0);
 	}
 

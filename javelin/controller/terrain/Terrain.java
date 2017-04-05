@@ -19,7 +19,7 @@ import javelin.controller.walker.Walker;
 import javelin.model.unit.Squad;
 import javelin.model.world.Season;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.fortification.Mine;
 import javelin.model.world.location.town.Town;
@@ -102,7 +102,7 @@ public abstract class Terrain implements Serializable {
 	/** Used to see distant {@link World} terrain. */
 	public Integer visionbonus = null;
 
-	private ArrayList<WorldActor> towns;
+	private ArrayList<Actor> towns;
 
 	/** ASCII representation of terrain type for debugging purposes. */
 	public Character representation = null;
@@ -271,7 +271,7 @@ public abstract class Terrain implements Serializable {
 	}
 
 	boolean checktown(int x, int y) {
-		for (WorldActor town : Town.gettowns()) {
+		for (Actor town : Town.gettowns()) {
 			if (town.x == x && town.y == y) {
 				return true;
 			}
@@ -401,7 +401,7 @@ public abstract class Terrain implements Serializable {
 		if (search(p, WATER, 1, w) > 0 || get(p.x, p.y).equals(Terrain.WATER)) {
 			return false;
 		}
-		for (WorldActor town : WorldActor.getall(Town.class)) {
+		for (Actor town : World.getall(Town.class)) {
 			if (Walker.distance(p.x, p.y, town.x, town.y) <= 8) {
 				WorldBuilder.retry();
 				return false;

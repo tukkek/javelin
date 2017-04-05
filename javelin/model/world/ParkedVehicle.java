@@ -18,7 +18,7 @@ import javelin.view.Images;
  * @see Transport#parkeable
  * @author alex
  */
-public class ParkedVehicle extends WorldActor {
+public class ParkedVehicle extends Actor {
 	Transport transport;
 
 	/**

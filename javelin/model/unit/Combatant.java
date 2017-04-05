@@ -41,7 +41,7 @@ import javelin.model.state.BattleState.Vision;
 import javelin.model.state.Meld;
 import javelin.model.unit.abilities.Spells;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
@@ -149,7 +149,7 @@ public class Combatant implements Serializable, Cloneable {
 	/**
 	 * Generates an unique identity number for this Combatant.
 	 *
-	 * @see WorldActor#getcombatants()
+	 * @see Actor#getcombatants()
 	 */
 	public void newid() {
 		ids += 1;
@@ -166,7 +166,7 @@ public class Combatant implements Serializable, Cloneable {
 		if (World.seed == null) {
 			return false;
 		}
-		for (WorldActor a : WorldActor.getall()) {
+		for (Actor a : World.getall()) {
 			List<Combatant> combatants = a.getcombatants();
 			if (combatants != null) {
 				for (Combatant c : combatants) {

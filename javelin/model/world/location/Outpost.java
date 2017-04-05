@@ -73,8 +73,8 @@ public class Outpost extends Fortification {
 	@Override
 	protected void generate() {
 		x = -1;
-		while (x == -1 || (getnearest(Outpost.class) != null
-				&& getnearest(Outpost.class).distance(x, y) <= VISIONRANGE
+		while (x == -1 || (findnearest(Outpost.class) != null
+				&& findnearest(Outpost.class).distance(x, y) <= VISIONRANGE
 						* 2)) {
 			generateawayfromtown();
 		}

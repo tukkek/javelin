@@ -6,7 +6,8 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.old.Game;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Chest;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
@@ -37,7 +38,7 @@ public class Key extends Item {
 	}
 
 	private static int determineprice(Realm r) {
-		for (WorldActor a : WorldActor.getall()) {
+		for (Actor a : World.getall()) {
 			if (a instanceof Temple) {
 				Temple temple = (Temple) a;
 				if (temple.realm.equals(r)) {
@@ -70,7 +71,7 @@ public class Key extends Item {
 		for (Realm r : Realm.values()) {
 			realms.add(r);
 		}
-		for (WorldActor a : WorldActor.getall()) {
+		for (Actor a : World.getall()) {
 			Temple temple = a instanceof Temple ? (Temple) a : null;
 			if (temple != null && temple.open) {
 				realms.remove(temple.realm);

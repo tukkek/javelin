@@ -8,7 +8,7 @@ import javelin.controller.DistanceComparator;
 import javelin.controller.Point;
 import javelin.controller.terrain.Terrain;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Portal;
 import javelin.model.world.location.town.District;
@@ -33,7 +33,7 @@ public class BuildRoad extends Labor {
 		Point from;
 		Town to;
 		ArrayList<Point> result = null;
-		ArrayList<WorldActor> locations = new ArrayList<WorldActor>();
+		ArrayList<Actor> locations = new ArrayList<Actor>();
 
 		PathSearch(Town from, Town to) {
 			if (swap(from, to)) {
@@ -43,7 +43,7 @@ public class BuildRoad extends Labor {
 				this.from = to.getlocation();
 				this.to = from;
 			}
-			for (WorldActor a : WorldActor.getall()) {
+			for (Actor a : World.getall()) {
 				if (a instanceof Location && !(a instanceof Portal)) {
 					locations.add(a);
 				}
@@ -128,7 +128,7 @@ public class BuildRoad extends Labor {
 					|| to.distanceinsteps(step.x, step.y) >= currentdistance) {
 				return false;
 			}
-			final WorldActor location = WorldActor.get(step.x, step.y,
+			final Actor location = World.get(step.x, step.y,
 					locations);
 			return location == null || location == to;
 		}
@@ -226,7 +226,7 @@ public class BuildRoad extends Labor {
 			}
 		}
 		if (target == null
-				|| WorldActor.get(target.x, target.y, Town.class) == null
+				|| World.get(target.x, target.y, Town.class) == null
 				|| getpath(target) == null || pathcomplete(target)) {
 			return false;
 		}

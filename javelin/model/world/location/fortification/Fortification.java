@@ -12,7 +12,8 @@ import javelin.controller.walker.Walker;
 import javelin.model.Realm;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
 import tyrant.mikera.engine.RPG;
@@ -128,9 +129,9 @@ public abstract class Fortification extends Location {
 		targetel = RPG.r(leveltoel(minlevel), leveltoel(maxlevel));
 	}
 
-	private WorldActor findclosest(Class<? extends WorldActor> type) {
-		WorldActor closest = null;
-		for (WorldActor a : WorldActor.getall(type)) {
+	private Actor findclosest(Class<? extends Actor> type) {
+		Actor closest = null;
+		for (Actor a : World.getall(type)) {
 			if (closest == null || Walker.distance(a.x, a.y, x, y) < Walker
 					.distance(closest.x, closest.y, x, y)) {
 				closest = a;
@@ -195,7 +196,7 @@ public abstract class Fortification extends Location {
 	public void place() {
 		super.place();
 		if (realm != null) {
-			WorldActor town = findclosest(Town.class);
+			Actor town = findclosest(Town.class);
 			realm = town == null ? null : ((Town) town).realm;
 		}
 		if (generategarrison && garrison.isEmpty()) {

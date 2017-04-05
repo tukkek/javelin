@@ -32,7 +32,7 @@ import tyrant.mikera.engine.RPG;
  *
  * @author alex
  */
-public class Caravan extends WorldActor {
+public class Caravan extends Actor {
 	public static final boolean ALLOW = !Javelin.DEBUG;
 
 	static final int NUMBEROFITEMS = 6;
@@ -49,9 +49,9 @@ public class Caravan extends WorldActor {
 
 	/** Creates a merchant in the world map but doesn't {@link #place()} it. */
 	public Caravan() {
-		ArrayList<WorldActor> towns = WorldActor.getall(Town.class);
+		ArrayList<Actor> towns = World.getall(Town.class);
 		Collections.shuffle(towns);
-		WorldActor from = towns.get(0);
+		Actor from = towns.get(0);
 		x = from.x;
 		y = from.y;
 		displace();
@@ -74,8 +74,8 @@ public class Caravan extends WorldActor {
 		}
 	}
 
-	void determinetarget(ArrayList<WorldActor> towns) {
-		WorldActor to = null;
+	void determinetarget(ArrayList<Actor> towns) {
+		Actor to = null;
 		if (towns != null) {
 			for (int i = 1; i < towns.size(); i++) {
 				Town t = (Town) towns.get(i);
@@ -111,7 +111,7 @@ public class Caravan extends WorldActor {
 			determinetarget(null);
 			return;
 		}
-		WorldActor here = WorldActor.get(x, y);
+		Actor here = World.get(x, y);
 		this.x = x;
 		this.y = y;
 		place();

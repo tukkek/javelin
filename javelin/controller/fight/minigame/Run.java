@@ -14,7 +14,7 @@ import javelin.model.item.Key;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.world.WorldActor;
+import javelin.model.world.World;
 import javelin.model.world.location.unique.minigame.Ziggurat;
 import javelin.view.mappanel.Tile;
 import javelin.view.screen.BattleScreen;
@@ -403,7 +403,7 @@ public class Run extends Minigame {
 					"Congratulations, you have won!\n"
 							+ "You can now visit the Ziggurat on the world map to obtain a temple key.",
 					true);
-			Ziggurat z = (Ziggurat) WorldActor.getall(Ziggurat.class).get(0);
+			Ziggurat z = (Ziggurat) World.getall(Ziggurat.class).get(0);
 			z.key = Key.generate();
 		} else {
 			Javelin.message("You lost...", true);

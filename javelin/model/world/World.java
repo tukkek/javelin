@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import javelin.controller.WorldBuilder;
 import javelin.controller.terrain.Terrain;
+import javelin.model.unit.Squad;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -34,7 +36,7 @@ public class World implements Serializable {
 	/** Map of terrain tiles by [x][y] coordinates. */
 	public final Terrain[][] map = new Terrain[SIZE][SIZE];
 	/** Contains all actor instances still in the game. */
-	public final HashMap<Class<? extends WorldActor>, ArrayList<WorldActor>> actors = new HashMap<Class<? extends WorldActor>, ArrayList<WorldActor>>();
+	public final HashMap<Class<? extends Actor>, ArrayList<Actor>> actors = new HashMap<Class<? extends Actor>, ArrayList<Actor>>();
 	public final ArrayList<String> townnames = new ArrayList<String>();
 
 	public World() {
@@ -96,6 +98,65 @@ public class World implements Serializable {
 		townnames.add("Termina");// chrono cross
 		townnames.add("Tarant");// arcanum
 		Collections.shuffle(townnames);
+	}
+
+	/**
+	 * Note that this returns the canonical list from {@link World#actors}.
+	 *
+	 * @return All actors of the given type.
+	 */
+	public static ArrayList<Actor> getall(
+			Class<? extends Actor> type) {
+		ArrayList<Actor> all = getseed().actors.get(type);
+		if (all == null) {
+			all = new ArrayList<Actor>();
+			getseed().actors.put(type, all);
+		}
+		return all;
+	}
+
+	/**
+	 * @return A new list with all existing {@link Actor}s.
+	 */
+	public static ArrayList<Actor> getall() {
+		ArrayList<Actor> actors = new ArrayList<Actor>();
+		for (ArrayList<Actor> instances : getseed().actors.values()) {
+			if (instances.isEmpty() || instances.get(0) instanceof Squad) {
+				continue;
+			}
+			actors.addAll(instances);
+		}
+		actors.addAll(World.getall(Squad.class));
+		return actors;
+	}
+
+	/**
+	 * @return Actor of the given set that occupies these coordinates.
+	 */
+	public static Actor get(int x, int y,
+			List<? extends Actor> actors) {
+		for (Actor actor : actors) {
+			if (actor.x == x && actor.y == y) {
+				return actor;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * @return Any actor on these coordinates.
+	 */
+	public static Actor get(int x, int y) {
+		return World.get(x, y, World.getall());
+	}
+
+	/**
+	 * @return Actor of the given type that occupies the given coordinates, or
+	 *         <code>null</code>.
+	 */
+	public static Actor get(int x, int y,
+			Class<? extends Actor> type) {
+		return World.get(x, y, World.getall(type));
 	}
 
 	/**

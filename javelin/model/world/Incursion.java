@@ -27,7 +27,7 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * An attacking {@link Squad}, trying to destroy a {@link Town} or other
- * {@link WorldActor}. Each one that appears grows stronger, which should
+ * {@link Actor}. Each one that appears grows stronger, which should
  * eventually end the game.
  *
  * An {@link Incursion} is similar to an invading {@link Squad} while an
@@ -36,7 +36,7 @@ import tyrant.mikera.engine.RPG;
  *
  * @author alex
  */
-public class Incursion extends WorldActor {
+public class Incursion extends Actor {
 	/** Move even if {@link Javelin#DEBUGDISABLECOMBAT} is enabled. */
 	static final boolean FORCEMOVEMENT = false;
 	static final boolean DONTSPAWN = Javelin.DEBUG;
@@ -62,7 +62,7 @@ public class Incursion extends WorldActor {
 	 * @param squadp
 	 *            See {@link #currentel}.
 	 * @param r
-	 *            See {@link WorldActor#realm}.
+	 *            See {@link Actor#realm}.
 	 */
 	public Incursion(final int x, final int y, ArrayList<Combatant> squadp,
 			Realm r) {
@@ -89,7 +89,7 @@ public class Incursion extends WorldActor {
 	 *            TODO use {@link WorldScreen#current}
 	 */
 	public void move(final WorldScreen s) {
-		WorldActor target = findtarget(s);
+		Actor target = findtarget(s);
 		if (target == null) {
 			displace();
 			return;
@@ -102,7 +102,7 @@ public class Incursion extends WorldActor {
 			displace();
 			return;
 		}
-		target = WorldActor.get(newx, newy);
+		target = World.get(newx, newy);
 		x = newx;
 		y = newy;
 		place();
@@ -120,9 +120,9 @@ public class Incursion extends WorldActor {
 		}
 	}
 
-	WorldActor findtarget(final WorldScreen s) {
-		ArrayList<WorldActor> targets = new ArrayList<WorldActor>();
-		for (final WorldActor a : WorldActor.getall()) {
+	Actor findtarget(final WorldScreen s) {
+		ArrayList<Actor> targets = new ArrayList<Actor>();
+		for (final Actor a : World.getall()) {
 			if (a.impermeable || a.realm == realm
 					|| crosseswater(this, a.x, a.y)) {
 				continue;
@@ -137,8 +137,8 @@ public class Incursion extends WorldActor {
 		if (targets.isEmpty()) {
 			return null;
 		}
-		WorldActor target = null;
-		for (final WorldActor a : targets) {
+		Actor target = null;
+		for (final Actor a : targets) {
 			if (target == null || Walker.distance(x, y, a.x, a.y) < Walker
 					.distance(x, y, target.x, target.y)) {
 				target = a;
@@ -152,7 +152,7 @@ public class Incursion extends WorldActor {
 	 * @param toy
 	 * @return Checks if there is any body of water between these two actors.
 	 */
-	public static boolean crosseswater(WorldActor from, int tox, int toy) {
+	public static boolean crosseswater(Actor from, int tox, int toy) {
 		if (Terrain.get(tox, toy).equals(Terrain.WATER)) {
 			return true;
 		}
@@ -194,9 +194,9 @@ public class Incursion extends WorldActor {
 		if (RPG.r(1, 18) != 1) {
 			return false;
 		}
-		ArrayList<WorldActor> portals = WorldActor.getall(Portal.class);
+		ArrayList<Actor> portals = World.getall(Portal.class);
 		Collections.shuffle(portals);
-		for (WorldActor p : portals) {
+		for (Actor p : portals) {
 			if (((Portal) p).invasion) {
 				place(p.realm, p.x, p.y, null);
 				return true;
@@ -210,21 +210,21 @@ public class Incursion extends WorldActor {
 	 * given coordinates.
 	 *
 	 * @param r
-	 *            See {@link WorldActor#realm}.
+	 *            See {@link Actor#realm}.
 	 * @param x
 	 *            Starting {@link World} coordinate.
 	 * @param y
 	 *            Starting {@link World} coordinate.
 	 * @param squadp
 	 *            See {@link Incursion#squad}.
-	 * @see WorldActor#place()
+	 * @see Actor#place()
 	 */
 	public static void place(Realm r, int x, int y,
 			ArrayList<Combatant> squadp) {
 		if (DONTSPAWN) {
 			return;
 		}
-		while (WorldActor.get(x, y) != null) {
+		while (World.get(x, y) != null) {
 			int delta = RPG.pick(new int[] { -1, 0, +1 });
 			if (RPG.r(1, 2) == 1) {
 				x += delta;
@@ -275,7 +275,7 @@ public class Incursion extends WorldActor {
 	 *
 	 * @return <code>null</code>.
 	 */
-	static public Boolean ignoreincursion(WorldActor attacker) {
+	static public Boolean ignoreincursion(Actor attacker) {
 		attacker.displace();
 		return null;
 	}

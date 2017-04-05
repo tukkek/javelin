@@ -10,7 +10,7 @@ import javax.swing.BoxLayout;
 
 import javelin.model.item.Item;
 import javelin.model.unit.Squad;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.unique.minigame.Arena;
 import javelin.view.frame.Frame;
 
@@ -43,7 +43,7 @@ public class RedeemItem extends Frame {
 		}
 	}
 
-	WorldActor nearby = null;
+	Actor nearby = null;
 	Arena arena = ArenaWindow.arena;
 	ArenaWindow parent;
 
@@ -55,9 +55,9 @@ public class RedeemItem extends Frame {
 	public RedeemItem(ArenaWindow parent) {
 		super("Redeem items");
 		this.parent = parent;
-		for (WorldActor s : Squad.getsquads()) {
+		for (Actor s : Squad.getsquads()) {
 			if (s.isadjacent(arena)) {
-				nearby = (WorldActor) s;
+				nearby = (Actor) s;
 				break;
 			}
 		}

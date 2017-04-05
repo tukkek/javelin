@@ -13,7 +13,8 @@ import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.BuildUnique;
 import javelin.view.screen.InfoScreen;
@@ -188,10 +189,10 @@ public class MercenariesGuild extends UniqueLocation {
 	}
 
 	public static List<MercenariesGuild> getguilds() {
-		ArrayList<WorldActor> all = getall(MercenariesGuild.class);
+		ArrayList<Actor> all = World.getall(MercenariesGuild.class);
 		ArrayList<MercenariesGuild> guilds = new ArrayList<MercenariesGuild>(
 				all.size());
-		for (WorldActor a : all) {
+		for (Actor a : all) {
 			guilds.add((MercenariesGuild) a);
 		}
 		return guilds;

@@ -18,7 +18,7 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Incursion;
-import javelin.model.world.WorldActor;
+import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.unique.MercenariesGuild;
@@ -47,7 +47,7 @@ public class EndBattle extends BattleEvent {
 	 *            Player team.
 	 */
 	public static void end() {
-		int nsquads = WorldActor.getall(Squad.class).size();
+		int nsquads = World.getall(Squad.class).size();
 		Fight.victory = Javelin.app.fight.win();
 		terminateconditions(Fight.state, BattleScreen.active);
 		if (!Javelin.app.fight.onend()) {
@@ -55,8 +55,8 @@ public class EndBattle extends BattleEvent {
 		}
 		AiCache.reset();
 		if (Squad.active != null
-				&& nsquads == WorldActor.getall(Squad.class).size()) {
-			while (WorldActor.get(Squad.active.x, Squad.active.y,
+				&& nsquads == World.getall(Squad.class).size()) {
+			while (World.get(Squad.active.x, Squad.active.y,
 					Incursion.class) != null) {
 				Squad.active.displace();
 				Squad.active.place();

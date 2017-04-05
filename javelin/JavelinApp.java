@@ -32,7 +32,8 @@ import javelin.model.spell.Summon;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.labor.Deck;
@@ -229,9 +230,9 @@ public class JavelinApp extends QuestApp {
 		System.out.println((UpgradeHandler.singleton.count() - spells.size())
 				+ " upgrades, " + (spells.size() - summon + 1) + " spells, "
 				+ UpgradeHandler.singleton.countskills() + " skills");
-		HashSet<Class<? extends WorldActor>> locationtypes = new HashSet<Class<? extends WorldActor>>();
+		HashSet<Class<? extends Actor>> locationtypes = new HashSet<Class<? extends Actor>>();
 		int uniquelocations = 0;
-		for (WorldActor a : WorldActor.getall()) {
+		for (Actor a : World.getall()) {
 			if (!(a instanceof Location)) {
 				continue;
 			}

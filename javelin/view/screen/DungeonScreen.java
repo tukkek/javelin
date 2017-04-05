@@ -8,7 +8,7 @@ import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomEncounter;
 import javelin.model.unit.Squad;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.Trap;
@@ -46,7 +46,7 @@ public class DungeonScreen extends WorldScreen {
 	}
 
 	@Override
-	public boolean react(WorldActor actor, int x, int y) {
+	public boolean react(Actor actor, int x, int y) {
 		int searchroll = Squad.active.search();
 		for (Feature f : new ArrayList<Feature>(Dungeon.active.features)) {
 			if (f.x == x && f.y == y) {

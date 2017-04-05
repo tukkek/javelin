@@ -34,7 +34,7 @@ import javelin.model.unit.transport.Transport;
 import javelin.model.world.Incursion;
 import javelin.model.world.Season;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.fortification.Fortification;
@@ -164,7 +164,7 @@ public class WorldScreen extends BattleScreen {
 		}
 		StateManager.save(false, StateManager.SAVEFILE);
 		endturn();
-		if (Squad.getall(Squad.class).isEmpty()) {
+		if (World.getall(Squad.class).isEmpty()) {
 			return;
 		}
 		updateplayerinformation();
@@ -218,18 +218,18 @@ public class WorldScreen extends BattleScreen {
 		// }
 		long time = act.hourselapsed;
 		final int day = new Double(Math.ceil(time / 24.0)).intValue();
-		List<WorldActor> squads = Squad.getall(Squad.class);
+		List<Actor> squads = World.getall(Squad.class);
 		while (day > WorldScreen.lastday || squads.isEmpty()) {
 			Season.change(day);
 			FeatureGenerator.SINGLETON.spawn(1 / 7f, false);
-			for (WorldActor p : WorldActor.getall()) {
+			for (Actor p : World.getall()) {
 				if (!(p instanceof Incursion)) {
 					p.turn(time, this);
 				}
 			}
 			Weather.weather();
 			Town tournament = null;
-			for (WorldActor p : Town.getall(Town.class)) {
+			for (Actor p : World.getall(Town.class)) {
 				Town t = (Town) p;
 				if (t.ishosting()) {
 					assert tournament == null;// only one tournament at a time
@@ -240,8 +240,8 @@ public class WorldScreen extends BattleScreen {
 			if (tournament == null) {
 				Exhibition.opentournament();
 			}
-			for (WorldActor p : new ArrayList<WorldActor>(
-					WorldActor.getall(Incursion.class))) {
+			for (Actor p : new ArrayList<Actor>(
+					World.getall(Incursion.class))) {
 				p.turn(time, this);// may throw battle exception
 			}
 			WorldScreen.lastday += 1;
@@ -256,7 +256,7 @@ public class WorldScreen extends BattleScreen {
 		}
 		ArrayList<Location> locations = new ArrayList<Location>();
 		ArrayList<Location> friendlylocations = new ArrayList<Location>();
-		for (WorldActor a : WorldActor.getall()) {
+		for (Actor a : World.getall()) {
 			if (a instanceof Location && mappanel.tiles[a.x][a.y].discovered) {
 				Location l = (Location) a;
 				locations.add(l);
@@ -270,7 +270,7 @@ public class WorldScreen extends BattleScreen {
 			for (int y = 0; y < World.SIZE; y++) {
 				Tile t = mappanel.tiles[x][y];
 				if (t.discovered && !World.seed.roads[t.x][t.y]
-						&& WorldActor.get(t.x, t.y, locations) == null) {
+						&& World.get(t.x, t.y, locations) == null) {
 					discovered.add(t);
 				}
 			}
@@ -433,7 +433,7 @@ public class WorldScreen extends BattleScreen {
 	 * @return <code>true</code> if the active {@link Squad} interacted with
 	 *         some map feature, location, etc.
 	 */
-	public boolean react(WorldActor actor, int x, int y) {
+	public boolean react(Actor actor, int x, int y) {
 		if (actor == null) {
 			return false;
 		}

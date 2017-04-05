@@ -10,7 +10,8 @@ import javelin.model.item.Key;
 import javelin.model.item.relic.Relic;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.Haxor;
@@ -67,12 +68,12 @@ public class Win extends Hax {
 				}
 			}
 		}
-		for (WorldActor a : WorldActor.getall()) {
+		for (Actor a : World.getall()) {
 			if (a instanceof Temple) {
 				a.remove();
 			}
 		}
-		for (WorldActor a : Squad.getall(Squad.class)) {
+		for (Actor a : World.getall(Squad.class)) {
 			WorldScreen.lastday *= 10;
 			((Squad) a).hourselapsed = Math.round(WorldScreen.lastday * 24);
 		}

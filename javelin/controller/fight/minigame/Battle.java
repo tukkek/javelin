@@ -7,7 +7,7 @@ import javelin.controller.CountingSet;
 import javelin.controller.fight.Fight;
 import javelin.controller.terrain.map.plain.Field;
 import javelin.model.unit.Combatant;
-import javelin.model.world.WorldActor;
+import javelin.model.world.World;
 import javelin.model.world.location.unique.minigame.Battlefield;
 
 /**
@@ -45,7 +45,7 @@ public class Battle extends Minigame {
 				counter.add(c.source.toString());
 			}
 		}
-		Battlefield b = (Battlefield) WorldActor.getall(Battlefield.class).get(0);
+		Battlefield b = (Battlefield) World.getall(Battlefield.class).get(0);
 		b.survivors.clear();
 		for (String monstertype : counter.getelements()) {
 			b.survivors.put(monstertype, counter.getcount(monstertype));

@@ -21,7 +21,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Season;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.unique.Haxor;
 import javelin.model.world.location.unique.minigame.Arena;
 import javelin.view.KeysScreen;
@@ -297,7 +297,7 @@ public class Preferences {
 			}
 		}
 		if (World.seed != null) {
-			for (WorldActor a : Squad.getall(Squad.class)) {
+			for (Actor a : World.getall(Squad.class)) {
 				initsquaddebug((Squad) a);
 			}
 		}

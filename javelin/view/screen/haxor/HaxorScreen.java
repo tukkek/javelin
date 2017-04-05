@@ -10,7 +10,7 @@ import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.Haxor;
 import javelin.view.screen.Option;
@@ -144,11 +144,11 @@ public class HaxorScreen extends SelectScreen {
 		return attacks;
 	}
 
-	void generate(WorldActor place) {
+	void generate(Actor place) {
 		int x = Haxor.singleton.x;
 		int y = Haxor.singleton.y;
 		while (x == Haxor.singleton.x && y == Haxor.singleton.y
-				|| WorldActor.get(x, y) != null) {
+				|| World.get(x, y) != null) {
 			x += RPG.pick(new int[] { -1, 0, +1 });
 			y += RPG.pick(new int[] { -1, 0, +1 });
 			if (x < 0 || x >= World.SIZE || y < 0

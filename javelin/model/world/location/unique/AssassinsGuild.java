@@ -17,7 +17,8 @@ import javelin.model.feat.skill.Deceitful;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.town.Academy;
 import javelin.model.world.location.town.Dwelling;
 import javelin.model.world.location.town.Town;
@@ -171,7 +172,7 @@ public class AssassinsGuild extends Academy {
 	}
 
 	public static AssassinsGuild get() {
-		ArrayList<WorldActor> guild = WorldActor.getall(AssassinsGuild.class);
+		ArrayList<Actor> guild = World.getall(AssassinsGuild.class);
 		return guild.isEmpty() ? null : (AssassinsGuild) guild.get(0);
 	}
 

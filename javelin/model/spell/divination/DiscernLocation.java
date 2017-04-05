@@ -11,8 +11,7 @@ import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
-import javelin.model.world.location.Location;
+import javelin.model.world.Actor;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.WorldScreen;
@@ -39,9 +38,9 @@ public class DiscernLocation extends Spell {
 
 	@Override
 	public String castpeacefully(Combatant caster, Combatant combatant) {
-		ArrayList<WorldActor> towns = Location.getall(Town.class);
+		ArrayList<Actor> towns = World.getall(Town.class);
 		Town closest = null;
-		for (WorldActor p : towns) {
+		for (Actor p : towns) {
 			if (WorldScreen.see(new Point(p.x, p.y))) {
 				continue;
 			}

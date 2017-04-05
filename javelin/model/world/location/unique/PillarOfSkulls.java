@@ -15,7 +15,8 @@ import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Dwelling;
 import javelin.model.world.location.town.Town;
@@ -163,7 +164,7 @@ public class PillarOfSkulls extends UniqueLocation {
 				return false;
 			}
 			Dwelling.spend(.5f);
-			WorldActor closest = find(UniqueLocation.class);
+			Actor closest = find(UniqueLocation.class);
 			if (closest == null) {
 				closest = find(Town.class);
 			}
@@ -228,13 +229,13 @@ public class PillarOfSkulls extends UniqueLocation {
 		super(DESCRIPTION, DESCRIPTION, 1, 1);
 	}
 
-	WorldActor find(Class<? extends Location> class1) {
-		WorldActor closest = null;
-		for (WorldActor a : WorldActor.getall()) {
+	Actor find(Class<? extends Location> class1) {
+		Actor closest = null;
+		for (Actor a : World.getall()) {
 			if (class1.isInstance(a) && !WorldScreen.see(new Point(a.x, a.y))) {
 				if (closest == null
 						|| a.distance(x, y) < closest.distance(x, y)) {
-					closest = (WorldActor) a;
+					closest = (Actor) a;
 				}
 			}
 		}

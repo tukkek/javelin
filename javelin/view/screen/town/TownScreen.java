@@ -7,7 +7,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.OrderQueue;
@@ -30,7 +30,7 @@ public class TownScreen extends PurchaseScreen {
 	private static final Option PILLAGE = new Option("Pillage", 0, 'P');
 	// private static final Option MANAGE = new ScreenOption("Manage town", 0,
 	// 'm');
-	private WorldActor entering;
+	private Actor entering;
 
 	/** Constructor. */
 	public TownScreen(final Town t) {
@@ -39,7 +39,7 @@ public class TownScreen extends PurchaseScreen {
 		show();
 	}
 
-	static String title(final WorldActor t) {
+	static String title(final Actor t) {
 		return "Welcome to " + t + "!";
 	}
 

@@ -19,7 +19,7 @@ import javelin.model.item.Item;
 import javelin.model.unit.transport.Transport;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.Resource;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -37,7 +37,7 @@ import javelin.view.screen.town.SelectScreen;
  *
  * @author alex
  */
-public class Squad extends WorldActor implements Cloneable {
+public class Squad extends Actor implements Cloneable {
 	/**
 	 * See {@link Javelin#act()}.
 	 */
@@ -106,7 +106,7 @@ public class Squad extends WorldActor implements Cloneable {
 	 * {@link Javelin#lose()}.
 	 */
 	public void disband() {
-		ArrayList<WorldActor> squads = getall(Squad.class);
+		ArrayList<Actor> squads = World.getall(Squad.class);
 		squads.remove(this);
 		if (squads.isEmpty()) {
 			Javelin.lose();
@@ -137,7 +137,7 @@ public class Squad extends WorldActor implements Cloneable {
 	}
 
 	/**
-	 * Updates {@link WorldActor#visual}, taking {@link #transport} into
+	 * Updates {@link Actor#visual}, taking {@link #transport} into
 	 * account.
 	 *
 	 * @return
@@ -690,9 +690,9 @@ public class Squad extends WorldActor implements Cloneable {
 	 * @return All squads in the {@link World}.
 	 */
 	public static ArrayList<Squad> getsquads() {
-		ArrayList<WorldActor> actors = getall(Squad.class);
+		ArrayList<Actor> actors = World.getall(Squad.class);
 		ArrayList<Squad> squads = new ArrayList<Squad>(actors.size());
-		for (WorldActor a : actors) {
+		for (Actor a : actors) {
 			squads.add((Squad) a);
 		}
 		return squads;

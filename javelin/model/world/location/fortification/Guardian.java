@@ -10,7 +10,7 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -54,7 +54,7 @@ public class Guardian extends Fortification {
 	 * @return a monster from that location and that challenge rating or
 	 *         <code>null</code> if couldn't find one.
 	 */
-	static public Combatant findnativemonster(float cr, WorldActor spot) {
+	static public Combatant findnativemonster(float cr, Actor spot) {
 		String terrain = Terrain.get(spot.x, spot.y).toString();
 		while (true) {
 			if (Javelin.MONSTERSBYCR.descendingKeySet().first() < cr) {

@@ -12,7 +12,6 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
 import javelin.model.world.location.town.Dwelling;
 import javelin.model.world.location.unique.UniqueLocation;
 import javelin.view.screen.WorldScreen;
@@ -149,7 +148,7 @@ public class DungeonRush extends UniqueLocation {
 	 * @return The Dungoen Rush location in the {@link World}.
 	 */
 	public static DungeonRush get() {
-		return (DungeonRush) WorldActor.getall(DungeonRush.class).get(0);
+		return (DungeonRush) World.getall(DungeonRush.class).get(0);
 	}
 
 	@Override

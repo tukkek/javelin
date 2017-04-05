@@ -9,7 +9,8 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.unique.AssassinsGuild;
 import javelin.view.screen.WorldScreen;
@@ -44,7 +45,7 @@ public class Infiltrate extends WorldAction {
 		ArrayList<Location> targets = new ArrayList<Location>();
 		for (int x = Squad.active.x - 1; x <= Squad.active.x + 1; x++) {
 			for (int y = Squad.active.y - 1; y <= Squad.active.y + 1; y++) {
-				WorldActor a = WorldActor.get(x, y);
+				Actor a = World.get(x, y);
 				Location l = a instanceof Location ? (Location) a : null;
 				if (l != null && l.ishostile()) {
 					targets.add(l);

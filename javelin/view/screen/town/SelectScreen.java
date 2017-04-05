@@ -8,6 +8,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.model.unit.Squad;
+import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.IntroScreen;
@@ -72,7 +73,7 @@ public abstract class SelectScreen extends InfoScreen {
 		}
 		IntroScreen.configurescreen(this);
 		processinput(options);
-		if (stayopen && !Squad.getall(Squad.class).isEmpty()) {
+		if (stayopen && !World.getall(Squad.class).isEmpty()) {
 			show();
 		} else {
 			onexit();

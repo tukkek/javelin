@@ -11,7 +11,7 @@ import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.BattleScreen;
@@ -114,7 +114,7 @@ public class Divide extends WorldAction {
 				}
 			}
 		}
-		WorldActor nearto = findtown(Squad.active.x, Squad.active.y);
+		Actor nearto = findtown(Squad.active.x, Squad.active.y);
 		int x, y;
 		Squad s = new Squad(0, 0, Squad.active.hourselapsed,
 				Squad.active.lasttown);
@@ -145,11 +145,11 @@ public class Divide extends WorldAction {
 		Squad.active.updateavatar();
 	}
 
-	WorldActor findtown(int xp, int yp) {
+	Actor findtown(int xp, int yp) {
 		ArrayList<Town> towns = new ArrayList<Town>();
 		for (int x = xp - 1; x <= xp + 1; x++) {
 			for (int y = yp - 1; y <= yp + 1; y++) {
-				WorldActor t = WorldActor.get(x, y);
+				Actor t = World.get(x, y);
 				if (t instanceof Town) {
 					towns.add((Town) t);
 				}

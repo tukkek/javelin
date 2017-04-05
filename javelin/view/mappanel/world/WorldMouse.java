@@ -8,7 +8,8 @@ import javelin.controller.fight.RandomEncounter;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.unit.Squad;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
 import javelin.view.mappanel.MapPanel;
@@ -63,9 +64,9 @@ public class WorldMouse extends Mouse {
 	}
 
 	class Interact implements Runnable {
-		private final WorldActor target;
+		private final Actor target;
 
-		public Interact(WorldActor target) {
+		public Interact(Actor target) {
 			this.target = target;
 		}
 
@@ -114,7 +115,7 @@ public class WorldMouse extends Mouse {
 			return;
 		}
 		if (e.getButton() == MouseEvent.BUTTON1) {
-			final WorldActor target = WorldActor.get(t.x, t.y);
+			final Actor target = World.get(t.x, t.y);
 			if (target == Squad.active) {
 				return;
 			}
@@ -158,7 +159,7 @@ public class WorldMouse extends Mouse {
 		if (!t.discovered) {
 			return;
 		}
-		final WorldActor target = WorldActor.get(t.x, t.y);
+		final Actor target = World.get(t.x, t.y);
 		if (target == null) {
 			if (showingdescription) {
 				showingdescription = false;

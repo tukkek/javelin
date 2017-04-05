@@ -12,7 +12,7 @@ import javelin.controller.terrain.map.Maps;
 import javelin.model.unit.Squad;
 import javelin.model.world.ParkedVehicle;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.town.Town;
 import tyrant.mikera.engine.RPG;
 
@@ -77,7 +77,7 @@ public class Water extends Terrain {
 				WorldBuilder.retry();
 				continue expansion;
 			}
-			for (WorldActor t : WorldActor.getall(Town.class)) {
+			for (Actor t : World.getall(Town.class)) {
 				if (t.distance(to.x, to.y) <= 2) {
 					to = null;
 					WorldBuilder.retry();
@@ -121,7 +121,7 @@ public class Water extends Terrain {
 	@Override
 	public boolean enter(int x, int y) {
 		return Squad.active.swim()
-				|| WorldActor.get(x, y, ParkedVehicle.class) != null;
+				|| World.get(x, y, ParkedVehicle.class) != null;
 	}
 
 	@Override

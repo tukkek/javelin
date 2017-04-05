@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Caravan;
-import javelin.model.world.WorldActor;
+import javelin.model.world.World;
+import javelin.model.world.Actor;
 import javelin.model.world.location.Portal;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.fortification.Guardian;
@@ -17,7 +18,7 @@ import javelin.model.world.location.unique.Haxor;
 import tyrant.mikera.engine.RPG;
 
 /**
- * Generate a {@link WorldActor} near {@link Haxor}.
+ * Generate a {@link Actor} near {@link Haxor}.
  *
  * @author alex
  */
@@ -40,7 +41,7 @@ public class Materialize extends Hax {
 		summonable.add(5, "Portal");
 		summonable.add(6, "Shrine");
 		int choice = Javelin.choose("Materialize what", summonable, true, true);
-		WorldActor materialize;
+		Actor materialize;
 		if (choice == 0) {
 			materialize = new Dungeon();
 		} else if (choice == 1) {
@@ -55,7 +56,7 @@ public class Materialize extends Hax {
 			materialize = new Caravan();
 		} else if (choice == 5) {
 			materialize = new Portal(Haxor.singleton,
-					RPG.pick(WorldActor.getall(Town.class)));
+					RPG.pick(World.getall(Town.class)));
 		} else if (choice == 6) {
 			materialize = new Shrine(2);
 		} else {

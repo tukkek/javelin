@@ -26,7 +26,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.world.Incursion;
 import javelin.model.world.Season;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.unique.Haxor;
 import javelin.view.mappanel.Tile;
@@ -166,9 +166,9 @@ public class StateManager {
 			}
 			World.seed = (World) stream.readObject();
 			Javelin.act();
-			for (ArrayList<WorldActor> instances : World.getseed().actors
+			for (ArrayList<Actor> instances : World.getseed().actors
 					.values()) {
-				for (WorldActor p : instances) {
+				for (Actor p : instances) {
 					p.place();
 				}
 			}

@@ -23,7 +23,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.town.governor.Governor;
@@ -147,7 +147,7 @@ public class Town extends Location {
 	}
 
 	static boolean checktooclose(Point p) {
-		for (WorldActor town : WorldActor.getall(Town.class)) {
+		for (Actor town : World.getall(Town.class)) {
 			if (town.distance(p.x, p.y) <= District.RADIUSMAX) {
 				return true;
 			}
@@ -292,7 +292,7 @@ public class Town extends Location {
 		// look for sleeping defense Squad
 		for (int x = this.x - 1; x <= this.x + 1; x++) {
 			for (int y = this.y - 1; y <= this.y + 1; y++) {
-				Squad s = (Squad) WorldActor.get(x, y, Squad.class);
+				Squad s = (Squad) World.get(x, y, Squad.class);
 				if (s != null) {
 					s.destroy(attacker);
 					throw new RuntimeException(
@@ -421,15 +421,15 @@ public class Town extends Location {
 	 * towns.
 	 */
 	public void populategarisson() {
-		Dwelling d = (Dwelling) getnearest(Dwelling.class);
+		Dwelling d = (Dwelling) findnearest(Dwelling.class);
 		garrison.add(new Combatant(d.dweller.source.clone(), true));
 		governor = new MonsterGovernor(this);
 	}
 
 	public static ArrayList<Town> gettowns() {
-		ArrayList<WorldActor> actors = getall(Town.class);
+		ArrayList<Actor> actors = World.getall(Town.class);
 		ArrayList<Town> towns = new ArrayList<Town>(actors.size());
-		for (WorldActor a : actors) {
+		for (Actor a : actors) {
 			towns.add((Town) a);
 		}
 		return towns;

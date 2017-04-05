@@ -24,11 +24,11 @@ import tyrant.mikera.engine.RPG;
  * An independent overworld feature.
  *
  * If you're creating a new actor type don't forget to update
- * {@link WorldActor#getallmapactors()}!
+ * {@link Actor#getallmapactors()}!
  *
  * @author alex
  */
-public abstract class WorldActor implements Serializable {
+public abstract class Actor implements Serializable {
 	static final int[] NUDGES = new int[] { -1, 0, +1 };
 	/** x coordinate. */
 	public int x = -1;
@@ -46,7 +46,7 @@ public abstract class WorldActor implements Serializable {
 	public boolean impermeable = false;
 
 	/** Constructor. */
-	public WorldActor() {
+	public Actor() {
 		// registerinstance();
 	}
 
@@ -85,9 +85,9 @@ public abstract class WorldActor implements Serializable {
 		// if (x == -1 && !(this instanceof Squad)) {
 		// throw new RuntimeException("Impossible #actor");
 		// }
-		ArrayList<WorldActor> list = World.getseed().actors.get(getClass());
+		ArrayList<Actor> list = World.getseed().actors.get(getClass());
 		if (list == null) {
-			list = new ArrayList<WorldActor>(1);
+			list = new ArrayList<Actor>(1);
 			World.getseed().actors.put(getClass(), list);
 		}
 		if (!list.contains(this)) {
@@ -97,7 +97,7 @@ public abstract class WorldActor implements Serializable {
 
 	/** Removes this instance from {@link World#actors}. */
 	protected void deregisterinstance() {
-		List<WorldActor> list = World.getseed().actors.get(getClass());
+		List<Actor> list = World.getseed().actors.get(getClass());
 		if (list != null) {
 			list.remove(this);
 		}
@@ -121,10 +121,10 @@ public abstract class WorldActor implements Serializable {
 			displace(depth + 1);
 			return;
 		}
-		ArrayList<WorldActor> actors = WorldActor.getall();
+		ArrayList<Actor> actors = World.getall();
 		actors.remove(this);
 		if (tox >= 0 && toy >= 0 && tox < World.SIZE && toy < World.SIZE
-				&& WorldActor.get(tox, toy, actors) == null) {
+				&& World.get(tox, toy, actors) == null) {
 			move(tox, toy);
 		} else {
 			displace(depth + 1);
@@ -190,65 +190,6 @@ public abstract class WorldActor implements Serializable {
 	}
 
 	/**
-	 * @return Actor of the given type that occupies the given coordinates, or
-	 *         <code>null</code>.
-	 */
-	public static WorldActor get(int x, int y,
-			Class<? extends WorldActor> type) {
-		return get(x, y, getall(type));
-	}
-
-	/**
-	 * @return Any actor on these coordinates.
-	 */
-	public static WorldActor get(int x, int y) {
-		return get(x, y, getall());
-	}
-
-	/**
-	 * @return Actor of the given set that occupies these coordinates.
-	 */
-	public static WorldActor get(int x, int y,
-			List<? extends WorldActor> actors) {
-		for (WorldActor actor : actors) {
-			if (actor.x == x && actor.y == y) {
-				return actor;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * @return A new list with all existing {@link WorldActor}s.
-	 */
-	public static ArrayList<WorldActor> getall() {
-		ArrayList<WorldActor> actors = new ArrayList<WorldActor>();
-		for (ArrayList<WorldActor> instances : World.getseed().actors.values()) {
-			if (instances.isEmpty() || instances.get(0) instanceof Squad) {
-				continue;
-			}
-			actors.addAll(instances);
-		}
-		actors.addAll(getall(Squad.class));
-		return actors;
-	}
-
-	/**
-	 * Note that this returns the canonical list from {@link World#actors}.
-	 *
-	 * @return All actors of the given type.
-	 */
-	public static ArrayList<WorldActor> getall(
-			Class<? extends WorldActor> type) {
-		ArrayList<WorldActor> all = World.getseed().actors.get(type);
-		if (all == null) {
-			all = new ArrayList<WorldActor>();
-			World.getseed().actors.put(type, all);
-		}
-		return all;
-	}
-
-	/**
 	 * @return The given realm color will be drawn on the {@link WorldScreen}.
 	 *         <code>null</code> means no overlay.
 	 * @see Realm#getawtcolor()
@@ -281,13 +222,13 @@ public abstract class WorldActor implements Serializable {
 	 * @return <code>true</code> if both these actors are touching each other in
 	 *         the {@link WorldScreen}.
 	 */
-	public boolean isadjacent(WorldActor active) {
+	public boolean isadjacent(Actor active) {
 		return Math.abs(x - active.x) <= 1 && Math.abs(y - active.y) <= 1;
 	}
 
-	public WorldActor getnearest(Class<? extends Location> targets) {
-		WorldActor nearest = null;
-		for (WorldActor p : getall(targets)) {
+	public Actor findnearest(Class<? extends Location> targets) {
+		Actor nearest = null;
+		for (Actor p : World.getall(targets)) {
 			if (p == this) {
 				continue;
 			}
@@ -335,10 +276,10 @@ public abstract class WorldActor implements Serializable {
 		return main;
 	}
 
-	public <K extends WorldActor> List<K> sortbydistance(List<K> actor) {
-		actor.sort(new Comparator<WorldActor>() {
+	public <K extends Actor> List<K> sortbydistance(List<K> actor) {
+		actor.sort(new Comparator<Actor>() {
 			@Override
-			public int compare(WorldActor o1, WorldActor o2) {
+			public int compare(Actor o1, Actor o2) {
 				return o2.distanceinsteps(x, y) - o1.distanceinsteps(x, y);
 			}
 		});

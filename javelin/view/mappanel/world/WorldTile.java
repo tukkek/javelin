@@ -12,7 +12,7 @@ import javelin.controller.Point;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
 import javelin.view.Images;
@@ -61,7 +61,7 @@ public class WorldTile extends Tile {
 		} else if (World.seed.roads[x][y]) {
 			paintroad(new Color(170, 130, 40), (Graphics2D) g);
 		}
-		final WorldActor a = WorldPanel.ACTORS.get(new Point(x, y));
+		final Actor a = WorldPanel.ACTORS.get(new Point(x, y));
 		if (a != null) {
 			drawactor(g, a);
 		}
@@ -70,7 +70,7 @@ public class WorldTile extends Tile {
 		}
 	}
 
-	void drawactor(final Graphics g, final WorldActor a) {
+	void drawactor(final Graphics g, final Actor a) {
 		if (a == Squad.active) {
 			g.setColor(Color.GREEN);
 			g.fillRect(0, 0, MapPanel.tilesize, MapPanel.tilesize);

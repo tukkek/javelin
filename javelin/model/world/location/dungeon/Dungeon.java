@@ -22,7 +22,7 @@ import javelin.model.unit.Squad;
 import javelin.model.world.Caravan;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.crawler.Crawler;
 import javelin.model.world.location.dungeon.temple.TempleDungeon;
@@ -75,7 +75,7 @@ public class Dungeon extends Location {
 	 * course of a game but since this is highly randomized a late-game player
 	 * who ran out of dungeons should not be required to depend on that alone.
 	 * 
-	 * @see WorldActor#destroy(Incursion)
+	 * @see Actor#destroy(Incursion)
 	 * @see FeatureGenerator
 	 */
 	public static final Integer STARTING = Realm.values().length * 2;

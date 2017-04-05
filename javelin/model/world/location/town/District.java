@@ -8,7 +8,7 @@ import javelin.controller.Point;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
-import javelin.model.world.WorldActor;
+import javelin.model.world.Actor;
 import javelin.model.world.location.ConstructionSite;
 import javelin.model.world.location.Location;
 
@@ -49,7 +49,7 @@ public class District {
 		}
 		locations = new ArrayList<Location>();
 		for (Point p : getarea()) {
-			WorldActor a = WorldActor.get(p.x, p.y);
+			Actor a = World.get(p.x, p.y);
 			if (a != null && a instanceof Location) {
 				locations.add((Location) a);
 			}
@@ -84,8 +84,8 @@ public class District {
 	 * @return Location of the given type or <code>null</code> if none was
 	 *         found.
 	 */
-	public WorldActor getlocation(Class<? extends Location> type) {
-		for (WorldActor l : getlocations()) {
+	public Actor getlocation(Class<? extends Location> type) {
+		for (Actor l : getlocations()) {
 			if (l.getClass().equals(type)) {
 				return l;
 			}
@@ -123,9 +123,9 @@ public class District {
 	 *         trouble passing through). This list is shuffled by default.
 	 */
 	public ArrayList<Point> getfreespaces() {
-		ArrayList<WorldActor> actors = WorldActor.getall();
-		ArrayList<WorldActor> locations = new ArrayList<WorldActor>();
-		for (WorldActor a : actors) {
+		ArrayList<Actor> actors = World.getall();
+		ArrayList<Actor> locations = new ArrayList<Actor>();
+		for (Actor a : actors) {
 			if (a instanceof Location) {
 				locations.add(a);
 			}
@@ -134,7 +134,7 @@ public class District {
 		final World w = World.seed;
 		searching: for (Point p : getarea()) {
 			if (Terrain.get(p.x, p.y).equals(Terrain.WATER)
-					|| WorldActor.get(p.x, p.y, actors) != null) {
+					|| World.get(p.x, p.y, actors) != null) {
 				continue searching;
 			}
 			int neighbors = 0;
@@ -142,7 +142,7 @@ public class District {
 				for (int y = p.y - 1; y <= p.y + 1; y++) {
 					if (x == p.x && y == p.y || !World.validatecoordinate(x, y)
 							|| w.roads[p.x][p.y] || w.highways[p.x][p.y]
-							|| WorldActor.get(x, y, locations) == null) {
+							|| World.get(x, y, locations) == null) {
 						continue;
 					}
 					neighbors += 1;
@@ -158,7 +158,7 @@ public class District {
 	}
 
 	public boolean isbuilding(Class<? extends Location> site) {
-		for (WorldActor l : getlocationtype(ConstructionSite.class)) {
+		for (Actor l : getlocationtype(ConstructionSite.class)) {
 			ConstructionSite c = (ConstructionSite) l;
 			if (site.isInstance(c.goal)) {
 				return true;

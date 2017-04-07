@@ -51,15 +51,14 @@ public abstract class Condition implements Cloneable, Serializable {
 	 */
 	public Integer casterlevel;
 
-	/** Creates a */
-	public Condition(float expireatp, final Combatant c, final Effect effectp, String description,
-			Integer casterlevel) {
+	public Condition(float expireatp, final Combatant c, final Effect effectp,
+			String description, Integer casterlevel) {
 		this(expireatp, c, effectp, description, casterlevel, null);
 	}
 
 	/** See fields. */
-	public Condition(float expireatp, Combatant c, Effect effectp, String descriptionp, Integer casterlevel,
-			Integer longtermp) {
+	public Condition(float expireatp, Combatant c, Effect effectp,
+			String descriptionp, Integer casterlevel, Integer longtermp) {
 		expireat = expireatp;
 		effect = effectp;
 		description = descriptionp;
@@ -68,7 +67,8 @@ public abstract class Condition implements Cloneable, Serializable {
 		if (!stacks) {
 			Condition preexisting = c.hascondition(getClass());
 			if (preexisting != null) {
-				preexisting.expireat = Math.max(expireatp, preexisting.expireat);
+				preexisting.expireat = Math.max(expireatp,
+						preexisting.expireat);
 				return;
 			}
 		}

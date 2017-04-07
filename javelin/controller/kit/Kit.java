@@ -28,7 +28,9 @@ import javelin.controller.upgrade.skill.Stealth;
 import javelin.controller.upgrade.skill.Survival;
 import javelin.controller.upgrade.skill.UseMagicDevice;
 import javelin.model.spell.Summon;
+import javelin.model.spell.conjuration.healing.wounds.CureLightWounds;
 import javelin.model.spell.conjuration.healing.wounds.CureModerateWounds;
+import javelin.model.spell.enchantment.compulsion.Bless;
 import javelin.model.spell.evocation.MagicMissile;
 import javelin.model.unit.Monster;
 
@@ -55,15 +57,6 @@ public abstract class Kit {
 			upgrades.add(Heal.SINGLETON);
 		}
 	};
-	public static final Kit WIZARD = new Kit("wizard", Aristocrat.SINGLETON,
-			RaiseIntelligence.SINGLETON) {
-		@Override
-		protected void define() {
-			upgrades.add(new MagicMissile());
-			upgrades.add(Concentration.SINGLETON);
-			upgrades.add(Spellcraft.SINGLETON);
-		}
-	};
 	public static final Kit DRUID = new Kit("druid", Commoner.SINGLETON,
 			RaiseWisdom.SINGLETON) {
 		@Override
@@ -72,6 +65,21 @@ public abstract class Kit {
 			upgrades.add(new Summon("Dire rat", 1));
 			upgrades.add(new Summon("Eagle", 1));
 			upgrades.add(Survival.SINGLETON);
+		}
+	};
+	public static final Kit FIGHTER = new Kit("fighter", Warrior.SINGLETON,
+			RaiseStrength.SINGLETON) {
+		@Override
+		protected void define() {
+			upgrades.add(new MeleeDamage());
+		}
+	};
+	public static final Kit PALADIN = new Kit("paladin", Warrior.SINGLETON,
+			RaiseCharisma.SINGLETON) {
+		@Override
+		protected void define() {
+			upgrades.add(new CureLightWounds());
+			upgrades.add(new Bless());
 		}
 	};
 	public static final Kit ROGUE = new Kit("rogue", Expert.SINGLETON,
@@ -83,18 +91,20 @@ public abstract class Kit {
 			upgrades.add(Stealth.SINGLETON);
 		}
 	};
-	public static final Kit FIGHTER = new Kit("fighter", Warrior.SINGLETON,
-			RaiseStrength.SINGLETON) {
+	public static final Kit WIZARD = new Kit("wizard", Aristocrat.SINGLETON,
+			RaiseIntelligence.SINGLETON) {
 		@Override
 		protected void define() {
-			upgrades.add(new MeleeDamage());
+			upgrades.add(new MagicMissile());
+			upgrades.add(Concentration.SINGLETON);
+			upgrades.add(Spellcraft.SINGLETON);
 		}
 	};
 
 	static {
-		for (Kit kit : new Kit[] { Kit.BARD, Kit.CLERIC, Kit.DRUID, Kit.FIGHTER,
-				Kit.ROGUE, Kit.WIZARD }) {
-			Kit.KITS.add(kit);
+		for (Kit kit : new Kit[] { BARD, CLERIC, DRUID, FIGHTER, PALADIN, ROGUE,
+				WIZARD, }) {
+			KITS.add(kit);
 		}
 	}
 

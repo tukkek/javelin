@@ -40,8 +40,8 @@ import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.state.Meld;
 import javelin.model.unit.abilities.Spells;
-import javelin.model.world.World;
 import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
@@ -663,7 +663,7 @@ public class Combatant implements Serializable, Cloneable {
 	 */
 	public boolean upgrade(Realm r) {
 		Upgrade upgrade = RPG.pick(new ArrayList<Upgrade>(
-				UpgradeHandler.singleton.getupgrades(r)));
+				UpgradeHandler.singleton.getfullupgrades(r)));
 		if (upgrade instanceof BreathUpgrade) {
 			/* TODO Breaths are pretty CPU intensive right now so avoid them */
 			return false;

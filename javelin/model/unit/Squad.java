@@ -17,9 +17,9 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.EquipmentMap;
 import javelin.model.item.Item;
 import javelin.model.unit.transport.Transport;
+import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
-import javelin.model.world.Actor;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.Resource;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -137,8 +137,7 @@ public class Squad extends Actor implements Cloneable {
 	}
 
 	/**
-	 * Updates {@link Actor#visual}, taking {@link #transport} into
-	 * account.
+	 * Updates {@link Actor#visual}, taking {@link #transport} into account.
 	 *
 	 * @return
 	 */
@@ -426,7 +425,9 @@ public class Squad extends Actor implements Cloneable {
 		}
 		// hidden
 		char input = ' ';
-		final String prompt = "You have hidden from a group of enemies!\n"
+		final String prompt = "You have hidden from a "
+				+ ChallengeRatingCalculator.describedifficulty(foes)
+				+ " group of enemies!\n"
 				+ "Press s to storm them or w to wait for them to go away...\n\n"
 				+ "Enemies: " + Squad.active.spot(foes);
 		while (input != 'w' && input != 's') {

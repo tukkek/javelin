@@ -14,6 +14,7 @@ import javelin.controller.Point;
 import javelin.controller.action.Action;
 import javelin.controller.action.ActionMapping;
 import javelin.controller.action.Dig;
+import javelin.controller.action.Examine;
 import javelin.controller.action.world.WorldAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.ThreadManager;
@@ -145,7 +146,8 @@ public class BattleScreen extends Screen {
 	public void mainLoop() {
 		mappanel.setVisible(false);
 		Combatant hero = Fight.state.next;
-		javelin.controller.Point t = new Point(hero.location[0], hero.location[1]);
+		javelin.controller.Point t = new Point(hero.location[0],
+				hero.location[1]);
 		mappanel.setposition(t.x, t.y);
 		Game.redraw();
 		mappanel.center(t.x, t.y, true);
@@ -163,6 +165,7 @@ public class BattleScreen extends Screen {
 			}
 			Fight.state.next();
 			current = Fight.state.next;
+			Examine.lastlooked = null;
 			if (Fight.state.redTeam.contains(current) || current.automatic) {
 				spentap = 0;
 				lastwascomputermove = current;
@@ -190,6 +193,7 @@ public class BattleScreen extends Screen {
 		BattlePanel.current = current;
 		centerscreen(current.location[0], current.location[1]);
 		mappanel.refresh();
+		statuspanel.repaint();
 		Game.userinterface.waiting = true;
 		final KeyEvent updatableUserAction = getUserInput();
 		if (MapPanel.overlay != null) {
@@ -199,7 +203,8 @@ public class BattleScreen extends Screen {
 			callback.run();
 			callback = null;
 		} else {
-			perform(convertEventToAction(updatableUserAction), updatableUserAction.isShiftDown());
+			perform(convertEventToAction(updatableUserAction),
+					updatableUserAction.isShiftDown());
 		}
 		spendap(current, false);
 	}
@@ -254,7 +259,8 @@ public class BattleScreen extends Screen {
 
 	/** TODO */
 	public void view(int x, int y) {
-		if (Javelin.app.fight.period == Javelin.PERIODEVENING || Javelin.app.fight.period == Javelin.PERIODNIGHT) {
+		if (Javelin.app.fight.period == Javelin.PERIODEVENING
+				|| Javelin.app.fight.period == Javelin.PERIODNIGHT) {
 			Fight.state.next.detect();
 		} else if (!maprevealed) {
 			for (javelin.view.mappanel.Tile[] ts : mappanel.tiles) {
@@ -301,7 +307,8 @@ public class BattleScreen extends Screen {
 			Game.redraw();
 		}
 		Delay delay = state.delay;
-		if (enableoverrun && delay == Delay.WAIT && (s.redTeam.contains(s.next) || s.next.automatic)) {
+		if (enableoverrun && delay == Delay.WAIT
+				&& (s.redTeam.contains(s.next) || s.next.automatic)) {
 			delay = Delay.NONE;
 			jointurns = true;
 		}
@@ -384,7 +391,8 @@ public class BattleScreen extends Screen {
 	 * more of these for other platforms.
 	 */
 	protected boolean rejectEvent(final KeyEvent keyEvent) {
-		return (keyEvent.getModifiers() | InputEvent.ALT_DOWN_MASK) > 0 && keyEvent.getKeyCode() == 18;
+		return (keyEvent.getModifiers() | InputEvent.ALT_DOWN_MASK) > 0
+				&& keyEvent.getKeyCode() == 18;
 	}
 
 	/**

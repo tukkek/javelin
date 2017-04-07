@@ -41,7 +41,7 @@ public class CastSpell extends Fire implements AiAction {
 		final ArrayList<Spell> castable = new ArrayList<Spell>();
 		final boolean engaged = Fight.state.isengaged(c);
 		for (Spell s : c.spells) {
-			if (s.provokeaoo && !concentrate(c, s) && engaged) {
+			if (engaged && s.provokeaoo && !concentrate(c, s)) {
 				continue;
 			}
 			if (s.canbecast(c)) {
@@ -110,8 +110,8 @@ public class CastSpell extends Fire implements AiAction {
 		caster.ap += spell.apcost;
 		spell.used += 1;
 		final List<ChanceNode> chances = new ArrayList<ChanceNode>();
-		final String prefix =
-				caster + " casts " + spell.name.toLowerCase() + "!\n";
+		final String prefix = caster + " casts " + spell.name.toLowerCase()
+				+ "!\n";
 		final int touchtarget = spell.hit(caster, target, state);
 		float misschance;
 		if (touchtarget == -Integer.MAX_VALUE) {
@@ -122,8 +122,8 @@ public class CastSpell extends Fire implements AiAction {
 					prefix + caster + " misses touch attack.", Delay.BLOCK));
 		}
 		final float hitc = 1 - misschance;
-		final float affectchance =
-				affect(caster, target, state, spell, chances, prefix, hitc);
+		final float affectchance = affect(caster, target, state, spell, chances,
+				prefix, hitc);
 		final float savec = savechance(caster, target, spell);
 		if (savec != 0) {
 			chances.add(hit(caster, target, state, spell, savec * affectchance,
@@ -157,8 +157,8 @@ public class CastSpell extends Fire implements AiAction {
 				|| caster.equals(target)) {
 			return hitchance;
 		}
-		final float resistchance =
-				bind((target.source.sr - spell.casterlevel) / 20f) * hitchance;
+		final float resistchance = bind(
+				(target.source.sr - spell.casterlevel) / 20f) * hitchance;
 		chances.add(new ChanceNode(state, resistchance,
 				prefix + target + " resists spell!", Delay.BLOCK));
 		return hitchance - resistchance;
@@ -217,8 +217,7 @@ public class CastSpell extends Fire implements AiAction {
 	public List<List<ChanceNode>> getoutcomes(final BattleState gameState,
 			final Combatant active) {
 		casting = null;
-		final ArrayList<List<ChanceNode>> chances =
-				new ArrayList<List<ChanceNode>>();
+		final ArrayList<List<ChanceNode>> chances = new ArrayList<List<ChanceNode>>();
 		boolean engaged = gameState.isengaged(active);
 		final ArrayList<Spell> spells = active.spells;
 		for (int i = 0; i < spells.size(); i++) {
@@ -229,8 +228,8 @@ public class CastSpell extends Fire implements AiAction {
 			if (!s.castinbattle || !s.canbecast(active)) {
 				continue;
 			}
-			final List<Combatant> targets =
-					gameState.gettargets(active, gameState.getcombatants());
+			final List<Combatant> targets = gameState.gettargets(active,
+					gameState.getcombatants());
 			s.filtertargets(active, targets, gameState);
 			for (Combatant target : targets) {
 				chances.add(cast(active, target, i, gameState));

@@ -1,6 +1,7 @@
 package javelin.controller.upgrade;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -12,6 +13,7 @@ import javelin.controller.upgrade.classes.ClassAdvancement;
 import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.model.Realm;
 import javelin.model.spell.Summon;
+import javelin.model.world.location.fortification.MagesGuild;
 import javelin.model.world.location.fortification.MartialAcademy;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.SummoningCircle;
@@ -249,6 +251,20 @@ public class UpgradeHandler {
 			}
 		}
 		return spells;
+	}
+
+	/**
+	 * @return All normal upgrades for the given {@link Realm} plus the relevant
+	 *         {@link Spell}s which can only be found on {@link MagesGuild}s.
+	 */
+	public Collection<? extends Upgrade> getfullupgrades(Realm r) {
+		HashSet<Upgrade> upgrades = getupgrades(r);
+		for (Spell s : getspells()) {
+			if (s.realm.equals(r)) {
+				upgrades.add(s);
+			}
+		}
+		return upgrades;
 	}
 
 	// /**

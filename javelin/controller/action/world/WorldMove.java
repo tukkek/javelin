@@ -17,6 +17,7 @@ import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.town.Town;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
 import javelin.view.screen.WorldScreen;
@@ -86,8 +87,15 @@ public class WorldMove extends WorldAction {
 
 	@Override
 	public void perform(final WorldScreen s) {
-		final Point t = JavelinApp.context.getherolocation();
-		move(t.x + deltax, t.y + deltay, true);
+		final Point p = JavelinApp.context.getherolocation();
+		boolean dangerous = true;
+		for (Town t : Town.gettowns()) {
+			if (t.distanceinsteps(p.x, p.y) <= t.getdistrict().getradius()) {
+				dangerous = false;
+				break;
+			}
+		}
+		move(p.x + deltax, p.y + deltay, dangerous);
 	}
 
 	/**

@@ -31,10 +31,10 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.transport.Transport;
+import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.Season;
 import javelin.model.world.World;
-import javelin.model.world.Actor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.fortification.Fortification;
@@ -434,13 +434,8 @@ public class WorldScreen extends BattleScreen {
 	 *         some map feature, location, etc.
 	 */
 	public boolean react(Actor actor, int x, int y) {
-		if (actor == null) {
-			return false;
-		}
-		if (actor instanceof Location) {
-			return actor.interact();
-		}
-		if (!WorldMove.isleavingplace) {
+		if (actor != null
+				&& (actor instanceof Location || !WorldMove.isleavingplace)) {
 			return actor.interact();
 		}
 		return false;

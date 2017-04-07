@@ -6,6 +6,7 @@ import javelin.model.spell.enchantment.compulsion.Heroism;
 import javelin.model.unit.Attack;
 import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
 
 /**
  * @see javelin.model.spell.enchantment.compulsion.Heroism
@@ -24,15 +25,21 @@ public class Heroic extends Condition {
 
 	@Override
 	public void start(final Combatant c) {
-		c.source = c.source.clone();
-		raiseattacks(c.source.melee, +2);
-		raiseattacks(c.source.ranged, +2);
-		c.source.fort += 2;
-		c.source.ref += 2;
-		c.source.addwill(2);
+		final Monster m = c.source;
+		c.source = m.clone();
+		raiseboth(m, +2);
+		m.fort += 2;
+		m.ref += 2;
+		m.addwill(2);
 	}
 
-	public void raiseattacks(ArrayList<AttackSequence> melee, int bonus) {
+	public static void raiseboth(final Monster m, int bonus) {
+		raiseattacks(m.melee, bonus);
+		raiseattacks(m.ranged, bonus);
+	}
+
+	public static void raiseattacks(ArrayList<AttackSequence> melee,
+			int bonus) {
 		for (final AttackSequence sequence : melee) {
 			for (final Attack a : sequence) {
 				a.bonus += bonus;
@@ -42,12 +49,12 @@ public class Heroic extends Condition {
 
 	@Override
 	public void end(final Combatant c) {
-		c.source = c.source.clone();
-		raiseattacks(c.source.melee, -2);
-		raiseattacks(c.source.ranged, -2);
-		c.source.fort -= 2;
-		c.source.ref -= 2;
-		c.source.addwill(-2);
+		final Monster m = c.source;
+		c.source = m.clone();
+		raiseboth(m, -2);
+		m.fort -= 2;
+		m.ref -= 2;
+		m.addwill(-2);
 	}
 
 }

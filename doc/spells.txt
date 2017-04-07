@@ -4,6 +4,7 @@ You can cast as many spells as you have class levels before resting.
 Touch spells can only be targeted at those immediately adjacent to the spellcaster.
 
 Level 1 (caster level 1)
+  Bless: all allies gain +1 to attack rolls.
   Cure light wounds: cures 5 hit points. Touch.
   Doom: shakens an enemy.
   Inflict light wounds: causes 5 points of damage. Touch.
@@ -40,7 +41,7 @@ Level 4 (caster level 7)
   Cure critical wounds: cures 26 hit points. Touch.
   Inflict critical wounds: causes 26 points of damage. Touch.
   Neutralize poison: poison immunity or disables poison for an hour.
-  Resist energy: grants energy resistance 20 for 1 hour. 
+  Resist energy: grants energy resistance 20 for 1 hour.
   Secure shelter: lets you rest in the wilderness.
   
 Level 5 (caster level 9)

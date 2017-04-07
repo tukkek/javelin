@@ -23,8 +23,7 @@ import javelin.view.screen.StatisticsScreen;
  * @author alex
  */
 public class Examine extends Action {
-	final static HashMap<Character, Point> DIRECTIONS =
-			new HashMap<Character, Point>();
+	final static HashMap<Character, Point> DIRECTIONS = new HashMap<Character, Point>();
 
 	static {
 		DIRECTIONS.put('8', new Point(0, -1));
@@ -67,8 +66,11 @@ public class Examine extends Action {
 				if (DIRECTIONS.get(key) != null) {
 					delta = DIRECTIONS.get(key);
 				} else if (key == 'v') {
-					new StatisticsScreen(
-							Fight.state.getcombatant(cursor.x, cursor.y));
+					Combatant target = Fight.state.getcombatant(cursor.x,
+							cursor.y);
+					if (target != null) {
+						new StatisticsScreen(target);
+					}
 				} else if (key == 'q') {
 					clearCursor();
 					return null;

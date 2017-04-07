@@ -21,11 +21,13 @@ public class Bless extends Spell {
 
 		@Override
 		public void start(Combatant c) {
+			c.source = c.source.clone();
 			Heroic.raiseboth(c.source, +1);
 		}
 
 		@Override
 		public void end(Combatant c) {
+			c.source = c.source.clone();
 			Heroic.raiseboth(c.source, -1);
 		}
 	}
@@ -42,9 +44,9 @@ public class Bless extends Spell {
 	public String cast(Combatant caster, Combatant target, BattleState s,
 			boolean saved) {
 		for (Combatant c : s.getteam(caster)) {
-			target.addcondition(new Blessed(c));
+			c.addcondition(new Blessed(c));
 		}
-		return "All the caster's allies are blessed!";
+		return "All allies are blessed!";
 	}
 
 	@Override

@@ -115,6 +115,12 @@ public class SquadScreen extends InfoScreen {
 		c.hp = c.source.hd.maximize();
 		c.maxhp = c.hp;
 		squad.add(c);
+		if (Javelin.DEBUG) {
+			adddebugdata(c);
+		}
+	}
+
+	void adddebugdata(Combatant c) {
 	}
 
 	boolean checkifsquadfull() {

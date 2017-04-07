@@ -10,6 +10,7 @@ import javelin.model.world.location.fortification.MartialAcademy.BuildMartialAca
 import javelin.model.world.location.fortification.Shrine.BuildShrine;
 import javelin.model.world.location.town.Academy;
 import javelin.model.world.location.town.Academy.BuildAcademy;
+import javelin.model.world.location.town.Sewers.BuildSewers;
 import javelin.model.world.location.town.Shop.BuildShop;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.TransportHub.BuildTransportHub;
@@ -37,7 +38,7 @@ public class Deck extends ArrayList<Labor> {
 	private static final Labor[] BASE = new Labor[] { new Growth(),
 			new BuildInn(), new Redraw(), new BuildDwelling() };
 	private static final Labor[] CRIMINAL = new Labor[] {
-			new BuildAcademy(new AssassinsGuild()), };
+			new BuildAcademy(new AssassinsGuild()), new BuildSewers() };
 	private static final Labor[] CULTURAL = new Labor[] { new BuildMagesGuild(),
 			new BuildArtificer(), new BuildAcademy(new SummoningCircle()) };
 	private static final Labor[] ECOLOGICAL = new Labor[] {};

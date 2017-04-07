@@ -13,8 +13,8 @@ import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
-import javelin.model.world.World;
 import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.view.screen.BattleScreen;
@@ -58,8 +58,8 @@ public class WorldMove extends WorldAction {
 	 * @see #MOVETARGET
 	 * @see #NORMALMARCH
 	 */
-	public static final float TIMECOST =
-			NORMALMARCH * (MOVETARGET * 15f / 30f) / 2f;
+	public static final float TIMECOST = NORMALMARCH * (MOVETARGET * 15f / 30f)
+			/ 2f;
 	/** TODO remove, hack */
 	public static boolean isleavingplace = false;//
 	private final int deltax;
@@ -99,14 +99,13 @@ public class WorldMove extends WorldAction {
 		final WorldScreen s = (WorldScreen) BattleScreen.active;
 		Squad.active.lastterrain = Terrain.current();
 		if (!World.validatecoordinate(tox, toy) || (Dungeon.active == null
-				&& !World.getseed().map[tox][toy].enter(tox, toy))) {
+				&& !World.seed.map[tox][toy].enter(tox, toy))) {
 			throw new RepeatTurn();
 		}
 		float hours = Dungeon.active == null
 				? Squad.active.move(false, Terrain.current(), tox, toy) : 0;
 		try {
-			Actor actor =
-					Dungeon.active == null ? World.get(tox, toy) : null;
+			Actor actor = Dungeon.active == null ? World.get(tox, toy) : null;
 			Location l = actor instanceof Location ? (Location) actor : null;
 			try {
 				if (JavelinApp.context.react(actor, tox, toy)) {

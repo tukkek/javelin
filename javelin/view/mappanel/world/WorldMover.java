@@ -44,16 +44,17 @@ public class WorldMover extends BattleMover {
 		if (WorldPanel.ACTORS.get(new Point(targetx, targety)) != null) {
 			return steps.size() == 1;
 		}
-		return true;
+		return checkwater(targetx, targety);
 	}
 
 	@Override
 	protected boolean valid(int x, int y, BattleState state2) {
-		final Terrain t = Terrain.get(x, y);
-		if (t.equals(Terrain.WATER) && !Squad.active.swim()) {
-			return false;
-		}
-		return WorldPanel.ACTORS.get(new Point(x, y)) == null;
+		return WorldPanel.ACTORS.get(new Point(x, y)) == null
+				&& checkwater(x, y);
+	}
+
+	boolean checkwater(final int x, final int y) {
+		return !Terrain.get(x, y).equals(Terrain.WATER) || Squad.active.swim();
 	}
 
 	@Override

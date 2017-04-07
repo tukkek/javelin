@@ -30,7 +30,7 @@ public class Doom extends Spell {
 
 	@Override
 	public int save(Combatant caster, Combatant target) {
-		return rollsave(target.source.will(), caster);
+		return calculatesavedc(target.source.will(), caster);
 	}
 
 }

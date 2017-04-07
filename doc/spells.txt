@@ -4,6 +4,7 @@ You can cast as many spells as you have class levels before resting.
 Touch spells can only be targeted at those immediately adjacent to the spellcaster.
 
 Level 1 (caster level 1)
+  Bane: all enemies have -1 to attack rolls.
   Bless: all allies gain +1 to attack rolls.
   Cure light wounds: cures 5 hit points. Touch.
   Doom: shakens an enemy.

@@ -12,8 +12,8 @@ import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
 import javelin.model.Realm;
 import javelin.model.unit.Squad;
-import javelin.model.world.World;
 import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.town.Town;
@@ -35,7 +35,7 @@ public class WorldBuilder extends Thread {
 	public static final int TOWNBUFFER = 1;
 	private static int discarded = 0;
 
-	public World world = new World();
+	public World world;
 	public int retries = 0;
 
 	/**
@@ -59,6 +59,7 @@ public class WorldBuilder extends Thread {
 	@Override
 	public void run() {
 		try {
+			world = new World();
 			Town start = null;
 			generate(world);
 			start = FeatureGenerator.SINGLETON.placestartingfeatures();
@@ -128,8 +129,7 @@ public class WorldBuilder extends Thread {
 		y = -1;
 		while (!World.validatecoordinate(x, y)
 				|| !World.validatecoordinate(x + 1, y)
-				|| World.get(x, y) != null
-				|| World.get(x + 1, y) != null) {
+				|| World.get(x, y) != null || World.get(x + 1, y) != null) {
 			x = RPG.r(minx, maxx);
 			y = RPG.r(miny, maxy);
 		}

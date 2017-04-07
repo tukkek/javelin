@@ -22,6 +22,7 @@ import javelin.model.spell.divination.DiscernLocation;
 import javelin.model.spell.divination.FindTraps;
 import javelin.model.spell.divination.LocateObject;
 import javelin.model.spell.divination.PryingEyes;
+import javelin.model.spell.enchantment.compulsion.Bane;
 import javelin.model.spell.enchantment.compulsion.Bless;
 import javelin.model.spell.enchantment.compulsion.DominateMonster;
 import javelin.model.spell.enchantment.compulsion.Heroism;
@@ -104,6 +105,7 @@ public class SpellsFactor extends CrFactor {
 		handler.schoolcompulsion.add(new HoldMonster());
 		handler.schoolcompulsion.add(new DominateMonster());
 		handler.schoolcompulsion.add(new Bless());
+		handler.schoolcompulsion.add(new Bane());
 
 		handler.schoolwounding.add(new InflictLightWounds()); // necromancy
 		handler.schoolwounding.add(new InflictModerateWounds());

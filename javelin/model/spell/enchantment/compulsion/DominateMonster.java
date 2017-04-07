@@ -41,7 +41,7 @@ public class DominateMonster extends Ray {
 
 	@Override
 	public int save(final Combatant caster, final Combatant target) {
-		return rollsave(target.source.will(), caster);
+		return calculatesavedc(target.source.will(), caster);
 	}
 
 }

@@ -15,6 +15,8 @@ import javelin.model.unit.Combatant;
  */
 public class Bless extends Spell {
 	public class Blessed extends Condition {
+		int bonus = +1;
+
 		public Blessed(Combatant c) {
 			super(Float.MAX_VALUE, c, Effect.POSITIVE, "blssed", 1);
 		}
@@ -22,13 +24,13 @@ public class Bless extends Spell {
 		@Override
 		public void start(Combatant c) {
 			c.source = c.source.clone();
-			Heroic.raiseboth(c.source, +1);
+			Heroic.raiseboth(c.source, bonus);
 		}
 
 		@Override
 		public void end(Combatant c) {
 			c.source = c.source.clone();
-			Heroic.raiseboth(c.source, -1);
+			Heroic.raiseboth(c.source, -bonus);
 		}
 	}
 

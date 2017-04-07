@@ -39,8 +39,7 @@ import javelin.model.world.location.fortification.Shrine;
  */
 public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	/** Canonical list of all spells by lower-case name. */
-	final public static HashMap<String, Spell> SPELLS =
-			new HashMap<String, Spell>();
+	final public static HashMap<String, Spell> SPELLS = new HashMap<String, Spell>();
 
 	/** Load spells. */
 	static public void init() {
@@ -103,7 +102,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	/** Material components cost. */
 	public int components = 0;
 	/** Used to determine where each {@link Scroll} will be sold. */
-	final public Realm realm;
+	public Realm realm;
 
 	/**
 	 * @param name
@@ -330,12 +329,12 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	 * @param caster
 	 *            Attacking spellcaster.
 	 * @return Target number that needs to be hit on a d20 roll for the defender
-	 *         to succesfully save against this spell or negative
-	 *         {@link Integer#MAX_VALUE} If the monster is immune to this type
+	 *         to succesfully save against this spell or
+	 *         {@link Integer#MIN_VALUE} If the monster is immune to this type
 	 *         of save.
 	 */
-	public int rollsave(final int savingthrow, final Combatant caster) {
-		return savingthrow == Integer.MAX_VALUE ? -Integer.MAX_VALUE
+	public int calculatesavedc(final int savingthrow, final Combatant caster) {
+		return savingthrow == Integer.MAX_VALUE ? Integer.MIN_VALUE
 				: 10 + level + Monster.getbonus(caster.source.charisma)
 						- savingthrow;
 	}

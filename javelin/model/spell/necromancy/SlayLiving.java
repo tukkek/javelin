@@ -33,7 +33,7 @@ public class SlayLiving extends Touch {
 	@Override
 	public int save(final Combatant caster,
 			final Combatant target) {
-		return rollsave(target.source.fortitude(), caster);
+		return calculatesavedc(target.source.fortitude(), caster);
 	}
 
 }

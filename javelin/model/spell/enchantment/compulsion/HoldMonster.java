@@ -23,7 +23,7 @@ public class HoldMonster extends Spell {
 		if (saved) {
 			return target + " resists.";
 		}
-		int turns = rollsave(0, caster) - 10 - target.source.will();
+		int turns = calculatesavedc(0, caster) - 10 - target.source.will();
 		if (turns > 9) {
 			turns = 9;
 		} else if (turns < 1) {
@@ -37,8 +37,8 @@ public class HoldMonster extends Spell {
 	@Override
 	public int save(Combatant caster, Combatant target) {
 		if (target.source.immunitytoparalysis) {
-			return -Integer.MAX_VALUE;
+			return Integer.MIN_VALUE;
 		}
-		return rollsave(target.source.will(), caster);
+		return calculatesavedc(target.source.will(), caster);
 	}
 }

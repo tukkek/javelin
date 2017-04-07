@@ -30,9 +30,9 @@ public abstract class Condition implements Cloneable, Serializable {
 	 */
 	public float expireat;
 	/** @see Effect */
-	final public Effect effect;
+	public Effect effect;
 	/** Short description. */
-	final public String description;
+	public String description;
 	/**
 	 * The number of hours for this to persist after battle. If
 	 * <code>null</code> will call {@link #end(Combatant)} at the end of combat.

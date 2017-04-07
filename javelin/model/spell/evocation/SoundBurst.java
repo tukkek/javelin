@@ -17,8 +17,8 @@ import javelin.model.unit.Combatant;
 public class SoundBurst extends Spell {
 	/** Constructor. */
 	public SoundBurst() {
-		super("Sound burst", 2, ChallengeRatingCalculator.ratespelllikeability(2),
-				Realm.MAGIC);
+		super("Sound burst", 2,
+				ChallengeRatingCalculator.ratespelllikeability(2), Realm.MAGIC);
 		castinbattle = true;
 		isscroll = true;
 	}
@@ -38,7 +38,7 @@ public class SoundBurst extends Spell {
 			}
 			target = s.clone(c);
 			target.damage(8 / 2, s, 0);
-			if (rollsave(target.source.fortitude(), caster) <= 10) {
+			if (calculatesavedc(target.source.fortitude(), caster) > 10) {
 				target.addcondition(new Stunned(target, casterlevel));
 			}
 		}

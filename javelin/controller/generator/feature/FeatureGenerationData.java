@@ -1,7 +1,8 @@
 package javelin.controller.generator.feature;
 
-import javelin.model.world.World;
+import javelin.controller.exception.RestartWorldGeneration;
 import javelin.model.world.Actor;
+import javelin.model.world.World;
 
 /**
  * One of these per feature.
@@ -84,12 +85,14 @@ public class FeatureGenerationData {
 	}
 
 	/**
-	 * @return By default a new instance of the given {@link Actor} clss,
-	 *         using {@link Class#newInstance()}.
+	 * @return By default a new instance of the given {@link Actor} clss, using
+	 *         {@link Class#newInstance()}.
 	 */
 	public Actor generate(Class<? extends Actor> feature) {
 		try {
 			return feature.newInstance();
+		} catch (RestartWorldGeneration e) {
+			throw e;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

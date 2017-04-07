@@ -175,8 +175,9 @@ public class AdventurersGuild extends UniqueLocation {
 			float cr = ChallengeRatingCalculator.calculatecr(student.source);
 			float original = cr;
 			Upgrade purchaseskills = null;
+			ArrayList<Upgrade> upgrades = new ArrayList<Upgrade>(kit.upgrades);
 			while (cr < TARGETLEVEL) {
-				Upgrade u = RPG.pick(kit.upgrades);
+				Upgrade u = RPG.pick(upgrades);
 				if (u.upgrade(student)) {
 					training += u.name + "\n";
 				}

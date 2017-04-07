@@ -11,6 +11,7 @@ import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.classes.Warrior;
 import javelin.model.world.location.town.Academy;
+import javelin.model.world.location.town.Town;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -23,7 +24,13 @@ public class MartialAcademy extends Academy {
 
 	public static class BuildMartialAcademy extends BuildAcademy {
 		public BuildMartialAcademy() {
-			super(RPG.pick(GUILDS).generate());
+			super(null, Town.HAMLET);
+		}
+
+		@Override
+		protected void define() {
+			goal = RPG.pick(GUILDS).generate();
+			super.define();
 		}
 	}
 

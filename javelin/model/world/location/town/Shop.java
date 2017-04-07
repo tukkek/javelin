@@ -35,7 +35,7 @@ public class Shop extends Location {
 
 		@Override
 		public Location getgoal() {
-			return new Shop(false, town.realm);
+			return new Shop(false, town.originalrealm);
 		}
 
 		@Override

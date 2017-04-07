@@ -17,14 +17,15 @@ import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.transport.Transport;
+import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
-import javelin.model.world.Actor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.OrderQueue;
 import javelin.model.world.location.order.TrainingOrder;
+import javelin.model.world.location.town.Town.Rank;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
@@ -48,8 +49,9 @@ public class Academy extends Fortification {
 	public static class BuildAcademy extends Build {
 		public Academy goal;
 
-		public BuildAcademy(Academy goal) {
-			super("Build academy", goal.level, null, Town.HAMLET);
+		public BuildAcademy(Academy goal, Rank minimumrank) {
+			super("Build academy", goal == null ? 0 : goal.level, null,
+					minimumrank);
 			this.goal = goal;
 		}
 
@@ -98,7 +100,6 @@ public class Academy extends Fortification {
 		}
 	}
 
-	private Realm upgradetype;
 	/** Currently training unit. */
 	public OrderQueue training = new OrderQueue();
 	/** Money {@link #training} unit had before entering here (if alone). */
@@ -109,8 +110,9 @@ public class Academy extends Fortification {
 	public boolean pillage = true;
 	/** If a single unit parks with a vehicle here it is stored. */
 	public Transport parking = null;
+	public int level = 0;
 	protected boolean allowupgrade = false;
-	int level = 0;
+	Realm upgradetype;
 
 	/**
 	 * Builds a basic, upgradeable academy.

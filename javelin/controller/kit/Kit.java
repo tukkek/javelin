@@ -1,6 +1,7 @@
 package javelin.controller.kit;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import javelin.Javelin;
 import javelin.controller.upgrade.Upgrade;
@@ -35,7 +36,7 @@ import javelin.model.spell.evocation.MagicMissile;
 import javelin.model.unit.Monster;
 
 public abstract class Kit {
-	public ArrayList<Upgrade> upgrades = new ArrayList<Upgrade>();
+	public HashSet<Upgrade> upgrades = new HashSet<Upgrade>();
 	public String name;
 	public static final ArrayList<Kit> KITS = new ArrayList<Kit>();
 	public static final Kit BARD = new Kit("bard", Expert.SINGLETON,

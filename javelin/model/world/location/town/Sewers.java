@@ -6,7 +6,6 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
-import javelin.model.world.Actor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.labor.Build;
@@ -34,7 +33,7 @@ public class Sewers extends Fortification {
 		}
 
 		@Override
-		protected void done(Actor goal) {
+		protected void done(Location goal) {
 			super.done(goal);
 			Sewers s = (Sewers) goal;
 			s.generategarrison();

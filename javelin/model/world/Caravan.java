@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javelin.Javelin;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
@@ -33,7 +32,7 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Caravan extends Actor {
-	public static final boolean ALLOW = !Javelin.DEBUG;
+	public static final boolean ALLOW = true;
 
 	static final int NUMBEROFITEMS = 6;
 	static final int MINARTIFACTS = 1;

@@ -258,7 +258,7 @@ public class UpgradeHandler {
 	 *         {@link Spell}s which can only be found on {@link MagesGuild}s.
 	 */
 	public Collection<? extends Upgrade> getfullupgrades(Realm r) {
-		HashSet<Upgrade> upgrades = getupgrades(r);
+		HashSet<Upgrade> upgrades = new HashSet<Upgrade>(getupgrades(r));
 		for (Spell s : getspells()) {
 			if (s.realm.equals(r)) {
 				upgrades.add(s);

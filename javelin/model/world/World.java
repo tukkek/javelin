@@ -105,8 +105,7 @@ public class World implements Serializable {
 	 *
 	 * @return All actors of the given type.
 	 */
-	public static ArrayList<Actor> getall(
-			Class<? extends Actor> type) {
+	public static ArrayList<Actor> getall(Class<? extends Actor> type) {
 		ArrayList<Actor> all = getseed().actors.get(type);
 		if (all == null) {
 			all = new ArrayList<Actor>();
@@ -133,8 +132,7 @@ public class World implements Serializable {
 	/**
 	 * @return Actor of the given set that occupies these coordinates.
 	 */
-	public static Actor get(int x, int y,
-			List<? extends Actor> actors) {
+	public static Actor get(int x, int y, List<? extends Actor> actors) {
 		for (Actor actor : actors) {
 			if (actor.x == x && actor.y == y) {
 				return actor;
@@ -154,8 +152,7 @@ public class World implements Serializable {
 	 * @return Actor of the given type that occupies the given coordinates, or
 	 *         <code>null</code>.
 	 */
-	public static Actor get(int x, int y,
-			Class<? extends Actor> type) {
+	public static Actor get(int x, int y, Class<? extends Actor> type) {
 		return World.get(x, y, World.getall(type));
 	}
 
@@ -171,10 +168,10 @@ public class World implements Serializable {
 	 *         otherwise {@link #seed}.
 	 */
 	public static World getseed() {
-		if (seed != null) {
-			return seed;
+		Thread t = Thread.currentThread();
+		if (t instanceof WorldBuilder) {
+			return ((WorldBuilder) t).world;
 		}
-		WorldBuilder builder = (WorldBuilder) Thread.currentThread();
-		return builder.world;
+		return seed;
 	}
 }

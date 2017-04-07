@@ -12,9 +12,9 @@ import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.model.world.Actor;
 import javelin.model.world.Caravan;
 import javelin.model.world.World;
-import javelin.model.world.Actor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.Portal;
@@ -49,9 +49,8 @@ import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
- * Responsible for generating those {@link Actor}s (mostly {@link Location}
- * s that can be spawned both during {@link World} generation and normal
- * gameplay.
+ * Responsible for generating those {@link Actor}s (mostly {@link Location} s
+ * that can be spawned both during {@link World} generation and normal gameplay.
  *
  * @author alex
  * @see WorldScreen#endturn()
@@ -184,8 +183,7 @@ public class FeatureGenerator {
 	}
 
 	static Town gettown(Terrain terrain, World seed) {
-		ArrayList<Actor> towns = new ArrayList<Actor>(
-				World.getall(Town.class));
+		ArrayList<Actor> towns = new ArrayList<Actor>(World.getall(Town.class));
 		Collections.shuffle(towns);
 		for (Actor town : towns) {
 			if (seed.map[town.x][town.y] == terrain) {
@@ -204,8 +202,7 @@ public class FeatureGenerator {
 	 *            Place all world features in this seed.
 	 * @return Starting town for the initial {@link Squad} to be placed nearby.
 	 */
-	public Town placestartingfeatures() {
-		World seed = World.getseed();
+	public Town placestartingfeatures(World seed) {
 		Temple.generatetemples();
 		Terrain starton = RPG.r(1, 2) == 1 ? Terrain.PLAIN : Terrain.HILL;
 		Town easya = FeatureGenerator.gettown(starton, seed);

@@ -58,6 +58,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 
 	final HashMap<Integer, Combatant> original = new HashMap<Integer, Combatant>();
 	final HashSet<Combatant> upgraded = new HashSet<Combatant>();
+	protected boolean showmoneyinfo = true;
 
 	/**
 	 * Constructor.
@@ -95,9 +96,11 @@ public abstract class UpgradingScreen extends SelectScreen {
 		final UpgradeOption o = (UpgradeOption) op;
 		final String parenttext = text;
 		final List<Combatant> eligible = new ArrayList<Combatant>();
-		text += listeligible(o, eligible) + "\nYour squad has $"
-				+ Squad.active.gold
-				+ "\n\nWhich squad member? Press r to return to upgrade selection.";
+		text += listeligible(o, eligible) + "\n";
+		if (showmoneyinfo) {
+			text += "Your squad has $" + Squad.active.gold + "\n\n";
+		}
+		text += "Which squad member? Press r to return to upgrade selection.";
 		Combatant c = null;
 		while (c == null) {
 			Javelin.app.switchScreen(this);
@@ -210,9 +213,13 @@ public abstract class UpgradingScreen extends SelectScreen {
 		Collection<Upgrade> upgrades = getupgrades();
 		ArrayList<Option> ups = new ArrayList<Option>(upgrades.size());
 		for (Upgrade u : upgrades) {
-			ups.add(new UpgradeOption(u));
+			ups.add(createoption(u));
 		}
 		return ups;
+	}
+
+	protected UpgradeOption createoption(Upgrade u) {
+		return new UpgradeOption(u);
 	}
 
 	@Override

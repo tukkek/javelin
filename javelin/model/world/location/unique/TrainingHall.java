@@ -63,12 +63,7 @@ public class TrainingHall extends Fortification {
 		if (currentlevel == null) {
 			currentlevel = 1;
 		}
-		ArrayList<Monster> senseis = SquadScreen.getcandidates();
-		for (Monster sensei : new ArrayList<Monster>(senseis)) {
-			if (!sensei.think(0)) {
-				senseis.remove(sensei);
-			}
-		}
+		ArrayList<Monster> senseis = getcandidates();
 		int nstudents = Squad.active.members.size();
 		int nsenseis = RPG.r(Math.min(3, nstudents), RPG.max(nstudents, 5));
 		while (isweak() && garrison.size() < nsenseis) {
@@ -77,6 +72,16 @@ public class TrainingHall extends Fortification {
 		while (isweak()) {
 			Combatant.upgradeweakest(garrison, Realm.random());
 		}
+	}
+
+	public static ArrayList<Monster> getcandidates() {
+		ArrayList<Monster> senseis = SquadScreen.getcandidates();
+		for (Monster sensei : new ArrayList<Monster>(senseis)) {
+			if (!sensei.think(0)) {
+				senseis.remove(sensei);
+			}
+		}
+		return senseis;
 	}
 
 	boolean isweak() {

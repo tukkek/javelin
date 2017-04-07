@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
@@ -662,8 +663,11 @@ public class Combatant implements Serializable, Cloneable {
 	 * @see Upgrade#upgrade(Combatant)
 	 */
 	public boolean upgrade(Realm r) {
-		Upgrade upgrade = RPG.pick(new ArrayList<Upgrade>(
-				UpgradeHandler.singleton.getfullupgrades(r)));
+		return upgrade(UpgradeHandler.singleton.getfullupgrades(r));
+	}
+
+	public boolean upgrade(Collection<? extends Upgrade> upgrades) {
+		Upgrade upgrade = RPG.pick(new ArrayList<Upgrade>(upgrades));
 		if (upgrade instanceof BreathUpgrade) {
 			/* TODO Breaths are pretty CPU intensive right now so avoid them */
 			return false;

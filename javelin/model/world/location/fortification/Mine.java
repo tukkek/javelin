@@ -55,7 +55,7 @@ public class Mine extends Fortification {
 		}
 
 		@Override
-		public void done(Actor l) {
+		public void done(Location l) {
 			super.done(l);
 			Mine m = (Mine) l;
 			m.rename("Ruby mine");

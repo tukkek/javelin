@@ -3,7 +3,6 @@ package javelin.model.world.location.town.labor.expansive;
 import java.util.ArrayList;
 
 import javelin.controller.Point;
-import javelin.model.world.Actor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.town.District;
@@ -48,7 +47,7 @@ public class BuildOutpost extends Build {
 	}
 
 	@Override
-	protected void done(Actor goal) {
+	protected void done(Location goal) {
 		super.done(goal);
 		if (!town.ishostile()) {
 			Outpost.discover(goal.x, goal.y, Outpost.VISIONRANGE);

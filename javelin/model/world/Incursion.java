@@ -27,8 +27,8 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * An attacking {@link Squad}, trying to destroy a {@link Town} or other
- * {@link Actor}. Each one that appears grows stronger, which should
- * eventually end the game.
+ * {@link Actor}. Each one that appears grows stronger, which should eventually
+ * end the game.
  *
  * An {@link Incursion} is similar to an invading {@link Squad} while an
  * Invasion refers to the ongoing process of trying to destroy the player's
@@ -39,7 +39,7 @@ import tyrant.mikera.engine.RPG;
 public class Incursion extends Actor {
 	/** Move even if {@link Javelin#DEBUGDISABLECOMBAT} is enabled. */
 	static final boolean FORCEMOVEMENT = false;
-	static final boolean DONTSPAWN = Javelin.DEBUG;
+	static final boolean SPAWN = true;
 	static final Comparator<Combatant> SORTBYCR = new Comparator<Combatant>() {
 		@Override
 		public int compare(Combatant o1, Combatant o2) {
@@ -188,10 +188,7 @@ public class Incursion extends Actor {
 	 * level 20 incursion to appear.
 	 */
 	public static boolean spawn() {
-		if (DONTSPAWN) {
-			return false;
-		}
-		if (RPG.r(1, 18) != 1) {
+		if (!SPAWN || RPG.r(1, 18) != 1) {
 			return false;
 		}
 		ArrayList<Actor> portals = World.getall(Portal.class);
@@ -221,7 +218,7 @@ public class Incursion extends Actor {
 	 */
 	public static void place(Realm r, int x, int y,
 			ArrayList<Combatant> squadp) {
-		if (DONTSPAWN) {
+		if (!SPAWN) {
 			return;
 		}
 		while (World.get(x, y) != null) {

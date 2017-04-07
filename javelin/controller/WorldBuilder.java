@@ -21,6 +21,7 @@ import javelin.view.screen.InfoScreen;
 import tyrant.mikera.engine.RPG;
 
 public class WorldBuilder extends Thread {
+	private static final int MAXRETRIES = 1000; // 1000000
 	public static final Terrain[] GENERATIONORDER = new Terrain[] {
 			Terrain.MOUNTAINS, Terrain.MOUNTAINS, Terrain.DESERT, Terrain.PLAIN,
 			Terrain.HILL, Terrain.WATER, Terrain.WATER, Terrain.MARSH,
@@ -60,12 +61,19 @@ public class WorldBuilder extends Thread {
 	public void run() {
 		try {
 			world = new World();
-			Town start = null;
 			generate(world);
-			start = FeatureGenerator.SINGLETON.placestartingfeatures();
-			for (Actor a : World.getall(Town.class)) {
-				Town t = (Town) a;
-				t.populategarisson();
+			Town start = FeatureGenerator.SINGLETON
+					.placestartingfeatures(world);
+			boolean found = false;
+			for (Actor a : world.actors.get(Town.class)) {
+				if (a != start) {
+					((Town) a).populategarisson();
+				} else {
+					found = true;
+				}
+			}
+			if (!found) {
+				System.out.println("wut");
 			}
 			WorldBuilder.finish(start, world);
 		} catch (RestartWorldGeneration e) {
@@ -80,16 +88,15 @@ public class WorldBuilder extends Thread {
 			return;
 		}
 		World.seed = w;
-		start.garrison.clear();
 		start.captureforhuman(true);
-		WorldBuilder.placenearbywoods(start);
+		placenearbywoods(start);
 		Squad.active.x = start.x;
 		Squad.active.y = start.y;
 		Squad.active.displace();
 		Squad.active.place();
 		Squad.active.equipment.fill(Squad.active);
 		Squad.active.lasttown = start;
-		Outpost.discover(start.x, start.y, Outpost.VISIONRANGE);
+		// Outpost.discover(start.x, start.y, Outpost.VISIONRANGE);
 	}
 
 	static void placemoretowns() {
@@ -179,7 +186,7 @@ public class WorldBuilder extends Thread {
 	 */
 	public void bumpretry() {
 		retries += 1;
-		if (retries > 100000 * 10) {
+		if (retries > MAXRETRIES) {
 			retries = 0;
 			synchronized (this) {
 				discarded += 1;

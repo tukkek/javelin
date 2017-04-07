@@ -8,7 +8,6 @@ import javelin.Javelin;
 import javelin.controller.upgrade.Spell;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.Actor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
@@ -69,7 +68,7 @@ public class Lodge extends Fortification {
 		}
 
 		@Override
-		public void done(Actor l) {
+		public void done(Location l) {
 			Lodge i = (Lodge) l;
 			if (i.level < MAXLEVEL) {
 				i.level += 1;

@@ -1,4 +1,4 @@
-package javelin.model.world.location.town;
+package javelin.model.world.location.town.labor.industrious;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +15,8 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.order.CraftingOrder;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.OrderQueue;
+import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;

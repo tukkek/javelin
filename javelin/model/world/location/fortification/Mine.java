@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.fight.Siege;
 import javelin.controller.terrain.Mountains;
@@ -18,6 +19,7 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.unique.AdventurersGuild;
@@ -42,6 +44,34 @@ public class Mine extends Fortification {
 	static final Option PLACEMINER = new Option(
 			"Assign an unit to work on this mine", 0, 'a');
 	static final Option RECALLMINER = new Option("Recall a miner", 0, 'r');
+
+	public static class BuildMine extends Build {
+		public BuildMine() {
+			super("Build mine", 10, null, Rank.HAMLET);
+		}
+
+		@Override
+		public Location getgoal() {
+			return new Mine();
+		}
+
+		@Override
+		public boolean validate(District d) {
+			return super.validate(d) && d.getlocationtype(Mine.class).isEmpty()
+					&& getsitelocation() != null;
+		}
+
+		@Override
+		protected Point getsitelocation() {
+			ArrayList<Point> free = town.getdistrict().getfreespaces();
+			for (Point p : free) {
+				if (Terrain.get(p.x, p.y).equals(Terrain.MOUNTAINS)) {
+					return p;
+				}
+			}
+			return null;
+		}
+	}
 
 	public class UpgradeMine extends BuildingUpgrade {
 		public UpgradeMine(Mine mine) {

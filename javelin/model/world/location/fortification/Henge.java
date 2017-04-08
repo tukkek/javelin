@@ -10,11 +10,11 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.model.spell.Summon;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.town.Academy;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
+import javelin.model.world.location.town.labor.military.Academy;
 import tyrant.mikera.engine.RPG;
 
 public class Henge extends Academy {

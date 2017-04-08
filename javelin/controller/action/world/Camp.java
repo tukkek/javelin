@@ -7,8 +7,8 @@ import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.RandomEncounter;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.town.Lodge;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.base.Lodge;
 import javelin.view.screen.WorldScreen;
 
 /**

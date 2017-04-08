@@ -5,7 +5,7 @@ import javelin.controller.upgrade.Spell;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.town.Lodge;
+import javelin.model.world.location.town.labor.base.Lodge;
 
 /**
  * See the d20 SRD for more info.

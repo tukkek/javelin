@@ -1,8 +1,9 @@
-package javelin.model.world.location.town.labor;
+package javelin.model.world.location.town.labor.base;
 
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.Labor;
 
 public class Growth extends Labor {
 	public static final int MAXPOPULATION = 30;

@@ -1,4 +1,4 @@
-package javelin.model.world.location.town;
+package javelin.model.world.location.town.labor.base;
 
 import java.awt.Image;
 import java.util.ArrayList;
@@ -10,6 +10,10 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
+import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.view.Images;
@@ -27,6 +31,16 @@ public class Lodge extends Fortification {
 	public static final Lodging HOSPITAL = new Lodging("hospital", 4, 2);
 	public static final Lodging[] LODGING = new Lodging[] { LODGE, HOTEL,
 			HOSPITAL };
+
+	public static final String[] LEVELS = new String[] { "Traveller's lodge",
+			"Hotel", "Hospital" };
+	public static final String[] IMAGES = new String[] { "locationinn",
+			"locationinnhotel", "locationinnhospital" };
+	public static final int[] LABOR = new int[] { 5, 10, 15 };
+
+	static final int RESTPERIOD = 8;
+	static final int WEEKLONGREST = 24 * 7 / RESTPERIOD;
+	static final int MAXLEVEL = LEVELS.length - 1;
 
 	public static class Lodging {
 		String name;
@@ -46,18 +60,29 @@ public class Lodge extends Fortification {
 		}
 	}
 
-	public static final String[] LEVELS = new String[] { "Traveller's lodge",
-			"Hotel", "Hospital" };
-	public static final String[] IMAGES = new String[] { "locationinn",
-			"locationinnhotel", "locationinnhospital" };
-	public static final int[] LABOR = new int[] { 5, 10, 15 };
+	public static class BuildLodge extends Build {
+		public BuildLodge() {
+			super("Build " + Lodge.LEVELS[0].toLowerCase(), Lodge.LABOR[0],
+					null, Rank.HAMLET);
+		}
 
-	static final int RESTPERIOD = 8;
-	static final int WEEKLONGREST = 24 * 7 / RESTPERIOD;
-	static final int MAXLEVEL = LEVELS.length - 1;
+		@Override
+		public Location getgoal() {
+			return new Lodge();
+		}
 
-	class UpgradeInn extends BuildingUpgrade {
-		public UpgradeInn(Lodge i) {
+		@Override
+		public boolean validate(District d) {
+			if (site == null && (d.getlocation(Lodge.class) != null
+					|| d.isbuilding(Lodge.class))) {
+				return false;
+			}
+			return super.validate(d);
+		}
+	}
+
+	class UpgradeLodge extends BuildingUpgrade {
+		public UpgradeLodge(Lodge i) {
 			super(LEVELS[i.level + 1], LABOR[i.level + 1], 5, i,
 					Rank.RANKS[i.level + 1]);
 		}
@@ -147,7 +172,7 @@ public class Lodge extends Fortification {
 	public ArrayList<Labor> getupgrades(District d) {
 		ArrayList<Labor> upgrades = super.getupgrades(d);
 		if (level < MAXLEVEL) {
-			upgrades.add(new UpgradeInn(this));
+			upgrades.add(new UpgradeLodge(this));
 		}
 		return upgrades;
 	}

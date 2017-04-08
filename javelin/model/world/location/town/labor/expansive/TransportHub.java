@@ -1,4 +1,4 @@
-package javelin.model.world.location.town;
+package javelin.model.world.location.town.labor.expansive;
 
 import java.awt.Image;
 import java.util.ArrayList;
@@ -12,6 +12,8 @@ import javelin.model.unit.transport.FlyingNimbus;
 import javelin.model.unit.transport.Transport;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;

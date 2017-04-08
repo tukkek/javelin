@@ -14,7 +14,7 @@ import javelin.model.item.Key;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.labor.Growth;
+import javelin.model.world.location.town.labor.base.Growth;
 import javelin.view.Images;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.shopping.MerchantScreen;

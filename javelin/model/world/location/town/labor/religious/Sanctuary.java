@@ -1,4 +1,4 @@
-package javelin.model.world.location.town;
+package javelin.model.world.location.town.labor.religious;
 
 import java.awt.Image;
 import java.util.ArrayList;
@@ -10,8 +10,13 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
+import javelin.model.world.location.town.labor.military.Academy;
+import javelin.model.world.location.town.labor.military.Academy.BuildAcademy;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.model.world.location.unique.TrainingHall;
 import javelin.view.Images;

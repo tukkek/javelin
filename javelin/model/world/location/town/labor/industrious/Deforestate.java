@@ -8,8 +8,8 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.world.World;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
-import javelin.model.world.location.town.labor.Growth;
 import javelin.model.world.location.town.labor.Labor;
+import javelin.model.world.location.town.labor.base.Growth;
 import tyrant.mikera.engine.RPG;
 
 public class Deforestate extends Labor {

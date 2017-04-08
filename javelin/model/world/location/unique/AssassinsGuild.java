@@ -21,6 +21,7 @@ import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.town.Academy;
 import javelin.model.world.location.town.Dwelling;
+import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.SelectScreen;
@@ -32,6 +33,17 @@ import javelin.view.screen.upgrading.AcademyScreen;
  * @author alex
  */
 public class AssassinsGuild extends Academy {
+	public static class BuildAssassinsGuild extends BuildAcademy {
+		public BuildAssassinsGuild() {
+			super(Rank.HAMLET);
+		}
+
+		@Override
+		protected Academy getacademy() {
+			return new AssassinsGuild();
+		}
+	}
+
 	public class RecruitOption extends Option {
 		/** Unit type to recruited. */
 		public Monster m;

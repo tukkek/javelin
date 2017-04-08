@@ -9,7 +9,6 @@ import javelin.controller.db.reader.SpecialtiesLog;
  * @see FieldReader
  */
 public class Name extends FieldReader {
-
 	public Name(MonsterReader reader, final String fieldname) {
 		super(reader, fieldname);
 	}
@@ -25,7 +24,7 @@ public class Name extends FieldReader {
 			type = "";
 		} else {
 			name = value.substring(typeSeparator + 1);
-			type = value.substring(0, typeSeparator);
+			type = value.substring(0, typeSeparator).toLowerCase();
 		}
 
 		reverseSeparator = name.indexOf(",");

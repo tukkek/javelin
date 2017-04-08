@@ -1,13 +1,13 @@
 package javelin.model.world.location.town.labor;
 
 import javelin.model.world.location.town.District;
-import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.Rank;
 
 public class Trait extends Labor {
 	String trait;
 
 	public Trait(String trait, Deck deck) {
-		super("Trait: " + trait.toLowerCase(), deck.size(), Town.HAMLET);
+		super("Trait: " + trait.toLowerCase(), deck.size(), Rank.HAMLET);
 		this.trait = trait;
 	}
 

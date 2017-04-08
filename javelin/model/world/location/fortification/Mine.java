@@ -17,7 +17,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.town.District;
-import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.unique.AdventurersGuild;
@@ -46,7 +46,7 @@ public class Mine extends Fortification {
 	public class UpgradeMine extends BuildingUpgrade {
 		public UpgradeMine(Mine mine) {
 			super("Ruby mine", Math.max(0, 10 - mine.miners.size()), 5, mine,
-					Town.VILLAGE);
+					Rank.VILLAGE);
 		}
 
 		@Override

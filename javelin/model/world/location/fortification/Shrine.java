@@ -10,7 +10,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
-import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
@@ -27,7 +27,7 @@ import tyrant.mikera.engine.RPG;
 public class Shrine extends Fortification {
 	public class UpgradeShrine extends BuildingUpgrade {
 		public UpgradeShrine(Shrine s) {
-			super("", 5, +5, s, Town.VILLAGE);
+			super("", 5, +5, s, Rank.VILLAGE);
 			name = "Upgrade shrine";
 		}
 
@@ -60,7 +60,7 @@ public class Shrine extends Fortification {
 		Shrine s;
 
 		public BuildShrine() {
-			super(null, 5, null, Town.HAMLET);
+			super(null, 5, null, Rank.HAMLET);
 		}
 
 		@Override

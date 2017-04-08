@@ -19,7 +19,7 @@ public class Sewers extends Fortification {
 
 	public static class BuildSewers extends Build {
 		public BuildSewers() {
-			super("Build sewers", 5, null, Town.HAMLET);
+			super("Build sewers", 5, null, Rank.HAMLET);
 		}
 
 		@Override
@@ -44,7 +44,7 @@ public class Sewers extends Fortification {
 		Sewers s;
 
 		public UpgradeSewers(Sewers s) {
-			super("", 5, 5, s, Town.RANKS[s.level + 1]);
+			super("", 5, 5, s, Rank.RANKS[s.level + 1]);
 			this.s = s;
 			name = "Upgrade sewers";
 		}

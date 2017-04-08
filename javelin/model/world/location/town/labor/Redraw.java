@@ -1,10 +1,10 @@
 package javelin.model.world.location.town.labor;
 
-import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.Rank;
 
 public class Redraw extends Labor {
 	public Redraw() {
-		super("Redraw", 0, Town.HAMLET);
+		super("Redraw", 0, Rank.HAMLET);
 		automatic = false;
 	}
 

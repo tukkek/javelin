@@ -37,8 +37,7 @@ public abstract class UniqueLocation extends Fortification {
 		l.vision = 0;
 	}
 
-	public static void makecommon(UniqueLocation l, int minlevel,
-			int maxlevel) {
+	public static void makecommon(Fortification l, int minlevel, int maxlevel) {
 		l.impermeable = false;
 		l.minlevel = minlevel;
 		l.maxlevel = maxlevel;

@@ -5,7 +5,7 @@ import javelin.model.Realm;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.District;
-import javelin.model.world.location.town.Town.Rank;
+import javelin.model.world.location.town.Rank;
 
 public abstract class BuildingUpgrade extends Build {
 	protected int upgradelevel;

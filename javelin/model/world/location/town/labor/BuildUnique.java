@@ -2,7 +2,7 @@ package javelin.model.world.location.town.labor;
 
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
-import javelin.model.world.location.town.Town.Rank;
+import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.unique.UniqueLocation;
 
 public class BuildUnique extends Build {

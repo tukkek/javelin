@@ -12,6 +12,7 @@ import javelin.model.world.Actor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Portal;
 import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;
 
@@ -141,7 +142,7 @@ public class BuildRoad extends Labor {
 	}
 
 	public BuildRoad(String name) {
-		super(name, 0, Town.TOWN);
+		super(name, 0, Rank.TOWN);
 	}
 
 	@Override

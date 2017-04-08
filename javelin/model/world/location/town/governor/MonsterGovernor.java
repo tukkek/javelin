@@ -6,6 +6,7 @@ import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Incursion;
 import javelin.model.world.location.town.Dwelling.Draft;
+import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Growth;
 import javelin.model.world.location.town.labor.Labor;
@@ -76,7 +77,7 @@ public class MonsterGovernor extends Governor {
 				return;
 			}
 		}
-		if (rank >= Town.TOWN.rank && town.traits.isEmpty()
+		if (rank >= Rank.TOWN.rank && town.traits.isEmpty()
 				&& startttrait(traits)) {
 			return;
 		}

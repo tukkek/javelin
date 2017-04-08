@@ -24,7 +24,7 @@ import javelin.view.screen.town.PurchaseOption;
 public class Shop extends Location {
 	public static class BuildShop extends Build {
 		public BuildShop() {
-			super("Build shop", 5, null, Town.HAMLET);
+			super("Build shop", 5, null, Rank.HAMLET);
 		}
 
 		@Override
@@ -71,7 +71,7 @@ public class Shop extends Location {
 
 	class UpgradeShop extends BuildingUpgrade {
 		public UpgradeShop(Shop s, int newlevel) {
-			super("", newlevel - s.level, newlevel, s, Town.HAMLET);
+			super("", newlevel - s.level, newlevel, s, Rank.HAMLET);
 			name = "Upgrade shop";
 		}
 
@@ -157,7 +157,7 @@ public class Shop extends Location {
 	@Override
 	public ArrayList<Labor> getupgrades(District d) {
 		int newlevel = level + 5;
-		newlevel = Math.min(newlevel, d.town.getrank().size);
+		newlevel = Math.min(newlevel, d.town.getrank().maxpopulation);
 		newlevel = Math.min(newlevel, getselection().size());
 		newlevel = Math.min(newlevel, 20);
 		ArrayList<Labor> upgrades = super.getupgrades(d);

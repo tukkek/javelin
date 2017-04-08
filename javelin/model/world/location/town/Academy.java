@@ -25,7 +25,6 @@ import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.OrderQueue;
 import javelin.model.world.location.order.TrainingOrder;
-import javelin.model.world.location.town.Town.Rank;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
@@ -46,17 +45,23 @@ public class Academy extends Fortification {
 		}
 	};
 
-	public static class BuildAcademy extends Build {
+	/**
+	 * Builds one academy of this type. Since cannot have only 1 instance,
+	 * {@link #getacademy()} needs to be defined by subclasses.
+	 *
+	 * @see BuildAcademies
+	 * @author alex
+	 */
+	public abstract static class BuildAcademy extends Build {
 		public Academy goal;
 
-		public BuildAcademy(Academy goal, Rank minimumrank) {
-			super("Build academy", goal == null ? 0 : goal.level, null,
-					minimumrank);
-			this.goal = goal;
+		public BuildAcademy(Rank minimumrank) {
+			super("", 0, null, minimumrank);
 		}
 
 		@Override
 		protected void define() {
+			goal = getacademy();
 			super.define();
 			if (goal.upgrades.isEmpty()) {
 				goal.setrealm(town.originalrealm);
@@ -65,6 +70,8 @@ public class Academy extends Fortification {
 			name = "Build " + goal.descriptionknown.toLowerCase();
 		}
 
+		protected abstract Academy getacademy();
+
 		@Override
 		public Location getgoal() {
 			return goal;
@@ -72,13 +79,60 @@ public class Academy extends Fortification {
 
 		@Override
 		public boolean validate(District d) {
-			return super.validate(d) && d.getlocation(goal.getClass()) == null;
+			return super.validate(d)
+					&& validatecount(d.getlocationtype(goal.getClass()), d);
+		}
+
+		protected boolean validatecount(ArrayList<Location> count, District d) {
+			return count.isEmpty();
 		}
 	}
 
-	class UpgradeAcademy extends BuildingUpgrade {
-		public UpgradeAcademy(int cost, Academy previous) {
-			super("", cost, +cost, previous, Town.HAMLET);
+	/**
+	 * Like {@link BuildAcademy} except allows for 1 academy of the given type
+	 * per town rank.
+	 *
+	 * @author alex
+	 */
+	public abstract static class BuildAcademies extends BuildAcademy {
+		public BuildAcademies(Rank minimumrank) {
+			super(minimumrank);
+		}
+
+		@Override
+		protected boolean validatecount(ArrayList<Location> count, District d) {
+			if (count.size() >= d.town.getrank().rank) {
+				return false;
+			}
+			for (Location l : count) {
+				Academy a = (Academy) l;
+				if (a.descriptionknown.equals(goal.descriptionknown)) {
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+
+	/**
+	 * Builds a common, base-class {@link Academy}.
+	 *
+	 * @author alex
+	 */
+	public static class BuildCommonAcademy extends BuildAcademy {
+		public BuildCommonAcademy() {
+			super(Rank.HAMLET);
+		}
+
+		@Override
+		protected Academy getacademy() {
+			return new Academy(null);
+		}
+	}
+
+	class UpgradeCommonAcademy extends BuildingUpgrade {
+		public UpgradeCommonAcademy(int cost, Academy previous) {
+			super("", cost, +cost, previous, Rank.HAMLET);
 			name = "Upgrade academy";
 		}
 
@@ -346,8 +400,8 @@ public class Academy extends Fortification {
 	@Override
 	public ArrayList<Labor> getupgrades(District d) {
 		ArrayList<Labor> getupgrades = super.getupgrades(d);
-		if (allowupgrade && upgrades.size() <= d.town.getrank().size) {
-			getupgrades.add(new UpgradeAcademy(
+		if (allowupgrade && upgrades.size() <= d.town.getrank().maxpopulation) {
+			getupgrades.add(new UpgradeCommonAcademy(
 					getupgrades(upgradetype).size() - upgrades.size(), this));
 		}
 		return getupgrades;

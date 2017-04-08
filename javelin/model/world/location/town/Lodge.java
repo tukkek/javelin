@@ -59,7 +59,7 @@ public class Lodge extends Fortification {
 	class UpgradeInn extends BuildingUpgrade {
 		public UpgradeInn(Lodge i) {
 			super(LEVELS[i.level + 1], LABOR[i.level + 1], 5, i,
-					Town.RANKS[i.level + 1]);
+					Rank.RANKS[i.level + 1]);
 		}
 
 		@Override

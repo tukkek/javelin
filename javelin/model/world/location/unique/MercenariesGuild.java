@@ -15,7 +15,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
-import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.BuildUnique;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
@@ -35,7 +35,7 @@ public class MercenariesGuild extends UniqueLocation {
 
 	public static class BuildMercenariesGuild extends BuildUnique {
 		public BuildMercenariesGuild() {
-			super(15, new MercenariesGuild(), Town.TOWN);
+			super(15, new MercenariesGuild(), Rank.TOWN);
 		}
 	}
 

@@ -14,14 +14,14 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * Brings an ally to fight with your team.
- * 
+ *
  * Upper Krust's method is not followed here since it makes no sense for a
  * Gelugon (CR21) that could summon another Gelugon to be CR21.4. More
  * discussion on {@link #ratechallenge(int, String, float)}.
- * 
+ *
  * TODO This should not be a {@link Spell}. See
  * {@link #cast(Combatant, Combatant, BattleState, boolean)}
- * 
+ *
  * @author alex
  */
 public class Summon extends Spell {
@@ -39,15 +39,19 @@ public class Summon extends Spell {
 		}
 	}
 
+	public Summon(String name) {
+		this(name, 1);
+	}
+
 	/**
 	 * Rationale behind CR calculation: {@link Monster} counts as it's own CR
 	 * but divided by 5. 5 is the number of fights a {@link Squad} is supposed
 	 * to be able to survive before resting according to the Dungeon Master's
 	 * Guide. So a summonable counts as an ally of his CR that will participate
 	 * in only 1 battle.
-	 * 
+	 *
 	 * Chance is applied as a normal %.
-	 * 
+	 *
 	 * TODO isn't taking into account summoning a group.
 	 */
 	static float ratechallenge(String monstername2, float chance2) {

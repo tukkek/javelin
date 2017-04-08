@@ -5,12 +5,12 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import javelin.Javelin;
+import javelin.model.world.location.fortification.Henge.BuildHenge;
 import javelin.model.world.location.fortification.MagesGuild.BuildMagesGuild;
 import javelin.model.world.location.fortification.MartialAcademy.BuildMartialAcademy;
 import javelin.model.world.location.fortification.Shrine.BuildShrine;
-import javelin.model.world.location.town.Academy;
-import javelin.model.world.location.town.Academy.BuildAcademy;
-import javelin.model.world.location.town.Sanctuary;
+import javelin.model.world.location.town.Academy.BuildCommonAcademy;
+import javelin.model.world.location.town.Sanctuary.BuildSacntuary;
 import javelin.model.world.location.town.Sewers.BuildSewers;
 import javelin.model.world.location.town.Shop.BuildShop;
 import javelin.model.world.location.town.Town;
@@ -23,9 +23,9 @@ import javelin.model.world.location.town.labor.industrious.BuildMine;
 import javelin.model.world.location.town.labor.industrious.Deforestate;
 import javelin.model.world.location.town.labor.military.BuildDwelling;
 import javelin.model.world.location.unique.Artificer.BuildArtificer;
-import javelin.model.world.location.unique.AssassinsGuild;
+import javelin.model.world.location.unique.AssassinsGuild.BuildAssassinsGuild;
 import javelin.model.world.location.unique.MercenariesGuild.BuildMercenariesGuild;
-import javelin.model.world.location.unique.SummoningCircle;
+import javelin.model.world.location.unique.SummoningCircle.BuildSummoningCircle;
 
 /**
  * This class provides the deck-building mini-game logic for {@link Labor}
@@ -39,23 +39,20 @@ public class Deck extends ArrayList<Labor> {
 	private static final Labor[] BASE = new Labor[] { new Growth(),
 			new BuildInn(), new Redraw(), new BuildDwelling() };
 	private static final Labor[] CRIMINAL = new Labor[] {
-			new BuildAcademy(new AssassinsGuild(), Town.HAMLET),
-			new BuildSewers() };
+			new BuildAssassinsGuild(), new BuildSewers() };
 	private static final Labor[] CULTURAL = new Labor[] { new BuildMagesGuild(),
-			new BuildArtificer(),
-			new BuildAcademy(new SummoningCircle(), Town.VILLAGE) };
-	private static final Labor[] ECOLOGICAL = new Labor[] {};
+			new BuildArtificer(), new BuildSummoningCircle() };
+	private static final Labor[] ECOLOGICAL = new Labor[] { new BuildHenge() };
 	private static final Labor[] EXPANSIVE = new Labor[] { new Settler(),
 			new BuildOutpost(), new BuildRoad(), new BuildHighway(),
 			new BuildTransportHub() };
 	private static final Labor[] MILITARY = new Labor[] {
-			new BuildMartialAcademy(),
-			new BuildAcademy(new Academy(null), Town.HAMLET),
+			new BuildMartialAcademy(), new BuildCommonAcademy(),
 			new BuildMercenariesGuild() };
 	private static final Labor[] PRODUCTIVE = new Labor[] { new BuildMine(),
 			new Deforestate(), new BuildShop() };
 	private static final Labor[] RELIGIOUS = new Labor[] { new BuildShrine(),
-			new BuildAcademy(new Sanctuary(), Town.VILLAGE) };
+			new BuildSacntuary() };
 
 	public static final String NAMERELIGIOUS = "religious";
 	public static final String NAMECRIMINAL = "criminal";

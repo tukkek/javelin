@@ -1,6 +1,7 @@
 package javelin.model.world.location.town.labor;
 
 import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 
 public class Growth extends Labor {
@@ -8,7 +9,7 @@ public class Growth extends Labor {
 	public static final Growth INSTANCE = new Growth();
 
 	public Growth() {
-		super("Growth", -1, Town.HAMLET);
+		super("Growth", -1, Rank.HAMLET);
 	}
 
 	@Override

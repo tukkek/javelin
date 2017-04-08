@@ -6,12 +6,13 @@ import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;
 
 public class Settler extends Labor {
 	public Settler() {
-		super("Produce settler", 0, Town.TOWN);
+		super("Produce settler", 0, Rank.TOWN);
 		automatic = false;
 		closescreen = true;
 	}

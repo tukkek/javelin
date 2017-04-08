@@ -2,6 +2,7 @@ package javelin.model.world.location.town.labor.expansive;
 
 import javelin.controller.Point;
 import javelin.model.world.World;
+import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 
 public class BuildHighway extends BuildRoad {
@@ -36,7 +37,7 @@ public class BuildHighway extends BuildRoad {
 
 	@Override
 	protected void define() {
-		if (town.getrank().rank < Town.TOWN.rank) {
+		if (town.getrank().rank < Rank.TOWN.rank) {
 			/* requires town or city */
 			return;
 		}

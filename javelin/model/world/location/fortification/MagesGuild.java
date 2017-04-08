@@ -14,7 +14,7 @@ import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.controller.upgrade.classes.Aristocrat;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.town.Academy;
-import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.Rank;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -25,15 +25,14 @@ import tyrant.mikera.engine.RPG;
 public class MagesGuild extends Academy {
 	public static final ArrayList<Guild> GUILDS = new ArrayList<Guild>();
 
-	public static class BuildMagesGuild extends BuildAcademy {
+	public static class BuildMagesGuild extends BuildAcademies {
 		public BuildMagesGuild() {
-			super(null, Town.VILLAGE);
+			super(Rank.VILLAGE);
 		}
 
 		@Override
-		protected void define() {
-			goal = RPG.pick(GUILDS).generate();
-			super.define();
+		protected Academy getacademy() {
+			return RPG.pick(GUILDS).generate();
 		}
 	}
 

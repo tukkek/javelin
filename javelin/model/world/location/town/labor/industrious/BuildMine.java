@@ -7,12 +7,12 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Mine;
 import javelin.model.world.location.town.District;
-import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
 
 public class BuildMine extends Build {
 	public BuildMine() {
-		super("Build mine", 10, null, Town.HAMLET);
+		super("Build mine", 10, null, Rank.HAMLET);
 	}
 
 	@Override

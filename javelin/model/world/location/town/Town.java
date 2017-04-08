@@ -1,7 +1,6 @@
 package javelin.model.world.location.town;
 
 import java.awt.Image;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -61,30 +60,6 @@ public class Town extends Location {
 
 	/** TODO */
 	public static final boolean DEBUGPROJECTS = false;
-
-	public static class Rank implements Serializable {
-		public String title;
-		public int size;
-		public int rank;
-
-		public Rank(String name, int size, int rank) {
-			title = name;
-			this.size = size;
-			this.rank = rank;
-		}
-
-		@Override
-		public String toString() {
-			return title;
-		}
-	}
-
-	public static final Rank HAMLET = new Rank("hamlet", 5, 1);
-	public static final Rank VILLAGE = new Rank("village", 10, 2);
-	public static final Rank TOWN = new Rank("town", 15, 3);
-	public static final Rank CITY = new Rank("city", 20, 4);
-
-	static final Rank[] RANKS = new Rank[] { HAMLET, VILLAGE, TOWN, CITY };
 
 	public ArrayList<Exhibition> events = new ArrayList<Exhibition>();
 	/**
@@ -148,7 +123,7 @@ public class Town extends Location {
 
 	static boolean checktooclose(Point p) {
 		for (Actor town : World.getall(Town.class)) {
-			if (town.distance(p.x, p.y) <= District.RADIUSMAX) {
+			if (town.distance(p.x, p.y) <= District.RADIUSMAX * 1.5) {
 				return true;
 			}
 		}
@@ -398,16 +373,16 @@ public class Town extends Location {
 
 	/**
 	 * @return A rank between [1,4] based on current {@link #population}.
-	 * @see #RANKS
+	 * @see Rank#RANKS
 	 */
 	public Rank getrank() {
-		for (int i = 0; i < RANKS.length - 1; i++) {
-			final Rank r = RANKS[i];
-			if (population <= r.size) {
+		for (int i = 0; i < Rank.RANKS.length - 1; i++) {
+			final Rank r = Rank.RANKS[i];
+			if (population <= r.maxpopulation) {
 				return r;
 			}
 		}
-		return CITY;
+		return Rank.CITY;
 	}
 
 	@Override

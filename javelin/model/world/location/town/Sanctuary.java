@@ -17,11 +17,23 @@ import javelin.model.world.location.unique.TrainingHall;
 import javelin.view.Images;
 import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.town.PurchaseScreen;
+import javelin.view.screen.town.SelectScreen;
 import javelin.view.screen.upgrading.AcademyScreen;
 import tyrant.mikera.engine.RPG;
 
 public class Sanctuary extends Academy {
+	public static class BuildSacntuary extends BuildAcademy {
+		public BuildSacntuary() {
+			super(Rank.VILLAGE);
+		}
+
+		@Override
+		protected Academy getacademy() {
+			return new Sanctuary();
+		}
+
+	}
+
 	static final int UPGRADECOST = Kit.PALADIN.upgrades.size();
 	static final Character[] HIREKEYS = new Character[] { 'x', 'y', 'z' };
 
@@ -31,8 +43,8 @@ public class Sanctuary extends Academy {
 		public Hire(Combatant hire) {
 			super("Hire " + hire.toString().toLowerCase(), 0);
 			this.hire = hire;
-			this.name += " ($"
-					+ PurchaseScreen.formatcost(MercenariesGuild.getfee(hire))
+			name += " ($"
+					+ SelectScreen.formatcost(MercenariesGuild.getfee(hire))
 					+ "/day)";
 		}
 	}
@@ -105,14 +117,14 @@ public class Sanctuary extends Academy {
 		@Override
 		public String printinfo() {
 			return "Your squad has $"
-					+ PurchaseScreen.formatcost(Squad.active.gold);
+					+ SelectScreen.formatcost(Squad.active.gold);
 		}
 	}
 
 	public class UpǵradeSanctuary extends BuildingUpgrade {
 
 		public UpǵradeSanctuary(Location previous) {
-			super("Cathedral", UPGRADECOST, UPGRADECOST, previous, Town.TOWN);
+			super("Cathedral", UPGRADECOST, UPGRADECOST, previous, Rank.TOWN);
 		}
 
 		@Override
@@ -234,6 +246,6 @@ public class Sanctuary extends Academy {
 		if (acolyte == null) {
 			return true;
 		}
-		return upgraded && (priest == null && paladin == null);
+		return upgraded && priest == null && paladin == null;
 	}
 }

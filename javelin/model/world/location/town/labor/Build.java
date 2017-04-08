@@ -4,7 +4,7 @@ import javelin.controller.Point;
 import javelin.model.world.location.ConstructionSite;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
-import javelin.model.world.location.town.Town.Rank;
+import javelin.model.world.location.town.Rank;
 
 public abstract class Build extends Labor {
 	protected ConstructionSite site;

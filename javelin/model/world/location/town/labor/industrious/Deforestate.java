@@ -7,14 +7,14 @@ import javelin.controller.Point;
 import javelin.controller.terrain.Terrain;
 import javelin.model.world.World;
 import javelin.model.world.location.town.District;
-import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Growth;
 import javelin.model.world.location.town.labor.Labor;
 import tyrant.mikera.engine.RPG;
 
 public class Deforestate extends Labor {
 	public Deforestate() {
-		super("Deforestate", 7, Town.HAMLET);
+		super("Deforestate", 7, Rank.HAMLET);
 	}
 
 	@Override

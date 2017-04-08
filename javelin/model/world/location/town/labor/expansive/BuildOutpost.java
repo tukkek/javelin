@@ -6,12 +6,12 @@ import javelin.controller.Point;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.town.District;
-import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
 
 public class BuildOutpost extends Build {
 	public BuildOutpost() {
-		super("Build outpost", 5, null, Town.HAMLET);
+		super("Build outpost", 5, null, Rank.HAMLET);
 	}
 
 	@Override

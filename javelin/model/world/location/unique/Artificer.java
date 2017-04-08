@@ -10,7 +10,7 @@ import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.order.CraftingOrder;
-import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.BuildUnique;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.shopping.ArtificerScreen;
@@ -28,7 +28,7 @@ public class Artificer extends UniqueLocation {
 
 	public static class BuildArtificer extends BuildUnique {
 		public BuildArtificer() {
-			super(20, new Artificer(), Town.CITY);
+			super(20, new Artificer(), Rank.CITY);
 		}
 	}
 

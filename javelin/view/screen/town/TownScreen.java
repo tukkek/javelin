@@ -11,6 +11,7 @@ import javelin.model.world.Actor;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.OrderQueue;
+import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.Option;
@@ -178,7 +179,7 @@ public class TownScreen extends PurchaseScreen {
 		}
 		list.add(SETTLE);
 		list.add(new GovernorScreen(town));
-		if (town.getrank().rank < Town.CITY.rank) {
+		if (town.getrank().rank < Rank.CITY.rank) {
 			list.add(RENAME);
 			PILLAGE.name = "Pillage ($" + SelectScreen.formatcost(
 					Fortification.getspoils(town.population - 1)) + ")";

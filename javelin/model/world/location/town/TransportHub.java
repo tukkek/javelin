@@ -12,7 +12,6 @@ import javelin.model.unit.transport.FlyingNimbus;
 import javelin.model.unit.transport.Transport;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.town.Town.Rank;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
@@ -108,7 +107,7 @@ public class TransportHub extends Location {
 
 	public static class BuildTransportHub extends Build {
 		public BuildTransportHub() {
-			super("Build stables", 2, null, Town.HAMLET);
+			super("Build stables", 2, null, Rank.HAMLET);
 		}
 
 		@Override
@@ -138,7 +137,7 @@ public class TransportHub extends Location {
 
 	class DocksUpgrade extends BuildingUpgrade {
 		public DocksUpgrade(TransportHub hub) {
-			this(10, 1, hub, Town.VILLAGE);
+			this(10, 1, hub, Rank.VILLAGE);
 			name = "Upgrade " + hub.getname().toLowerCase() + " to docks";
 		}
 
@@ -169,7 +168,7 @@ public class TransportHub extends Location {
 
 	class MagicDockUpgrade extends DocksUpgrade {
 		public MagicDockUpgrade(TransportHub hub) {
-			super(20, 2, hub, Town.CITY);
+			super(20, 2, hub, Rank.CITY);
 			name = "Upgrade " + hub.getname().toLowerCase() + " to magic dock";
 		}
 	}

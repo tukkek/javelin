@@ -3,8 +3,8 @@ package javelin.model.world.location.town.labor;
 import java.io.Serializable;
 
 import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.Town.Rank;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -33,7 +33,7 @@ public abstract class Labor implements Serializable, Cloneable {
 	/** <code>true</code> to return to {@link WorldScreen} after selection. */
 	public boolean closescreen = false;
 	public boolean construction = false;
-	Rank minimumsize;
+	protected Rank minimumrank;
 
 	/**
 	 * Define here all the data that isn't {@link Town}-dependent.
@@ -46,7 +46,7 @@ public abstract class Labor implements Serializable, Cloneable {
 	public Labor(String name, int cost, Rank minimumsize) {
 		this.name = name;
 		this.cost = cost;
-		this.minimumsize = minimumsize;
+		this.minimumrank = minimumsize;
 	}
 
 	public Labor generate(Town t) {
@@ -84,7 +84,7 @@ public abstract class Labor implements Serializable, Cloneable {
 	 *         given {@link Town}.
 	 */
 	public boolean validate(District d) {
-		return d.town.getrank().rank >= minimumsize.rank;
+		return d.town.getrank().rank >= minimumrank.rank;
 	}
 
 	@Override

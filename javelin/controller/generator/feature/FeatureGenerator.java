@@ -1,9 +1,11 @@
 package javelin.controller.generator.feature;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.Point;
@@ -22,6 +24,7 @@ import javelin.model.world.location.Resource;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.fortification.Guardian;
+import javelin.model.world.location.fortification.Henge;
 import javelin.model.world.location.fortification.MagesGuild;
 import javelin.model.world.location.fortification.MagesGuild.Guild;
 import javelin.model.world.location.fortification.MartialAcademy;
@@ -234,14 +237,14 @@ public class FeatureGenerator {
 	}
 
 	void generateuniquelocations() {
-		new MercenariesGuild().place();
-		new Artificer().place();
-		new SummoningCircle().place();
-		new PillarOfSkulls().place();
-		new Arena().place();
-		new Battlefield().place();
-		new DungeonRush().place();
-		new Ziggurat().place();
+		List<Location> unique = Arrays.asList(new Location[] {
+				new MercenariesGuild(), new Artificer(), new SummoningCircle(),
+				new PillarOfSkulls(), new Arena(), new Battlefield(),
+				new DungeonRush(), new Ziggurat(), new Henge() });
+		Collections.shuffle(unique);
+		for (Location l : unique) {
+			l.place();
+		}
 	}
 
 	void generatestartingarea(World seed, Town t) {

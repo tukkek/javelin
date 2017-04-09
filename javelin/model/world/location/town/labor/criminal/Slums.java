@@ -16,6 +16,12 @@ import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
+/**
+ * Slums buy and sell items depending on availabity and the district's
+ * population.
+ *
+ * @author alex
+ */
 public class Slums extends Location {
 	public static class BuildSlums extends Build {
 		public BuildSlums() {

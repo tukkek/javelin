@@ -68,9 +68,15 @@ public class Dwelling extends Fortification {
 
 		@Override
 		public boolean validate(District d) {
+			ArrayList<Location> dwellings = d.getlocationtype(Dwelling.class);
+			for (Location l : dwellings) {
+				if (((Dwelling) l).descriptionknown
+						.equalsIgnoreCase(goal.descriptionknown)) {
+					return false;
+				}
+			}
 			double max = Math.floor(d.town.getrank().rank * 1.5f);
-			return super.validate(d) && goal != null
-					&& d.getlocationtype(Dwelling.class).size() < max;
+			return super.validate(d) && goal != null && dwellings.size() < max;
 		}
 	}
 

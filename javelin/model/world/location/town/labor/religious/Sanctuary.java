@@ -27,8 +27,8 @@ import javelin.view.screen.upgrading.AcademyScreen;
 import tyrant.mikera.engine.RPG;
 
 public class Sanctuary extends Academy {
-	public static class BuildSacntuary extends BuildAcademy {
-		public BuildSacntuary() {
+	public static class BuildSanctuary extends BuildAcademy {
+		public BuildSanctuary() {
 			super(Rank.VILLAGE);
 		}
 

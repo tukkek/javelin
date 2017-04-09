@@ -25,7 +25,7 @@ import javelin.model.world.location.town.labor.expansive.TransportHub.BuildTrans
 import javelin.model.world.location.town.labor.industrious.Deforestate;
 import javelin.model.world.location.town.labor.industrious.Shop.BuildShop;
 import javelin.model.world.location.town.labor.military.Academy.BuildCommonAcademy;
-import javelin.model.world.location.town.labor.religious.Sanctuary.BuildSacntuary;
+import javelin.model.world.location.town.labor.religious.Sanctuary.BuildSanctuary;
 import javelin.model.world.location.unique.Artificer.BuildArtificer;
 import javelin.model.world.location.unique.AssassinsGuild.BuildAssassinsGuild;
 import javelin.model.world.location.unique.MercenariesGuild.BuildMercenariesGuild;
@@ -56,7 +56,7 @@ public class Deck extends ArrayList<Labor> {
 	private static final Labor[] PRODUCTIVE = new Labor[] { new BuildMine(),
 			new Deforestate(), new BuildShop() };
 	private static final Labor[] RELIGIOUS = new Labor[] { new BuildShrine(),
-			new BuildSacntuary() };
+			new BuildSanctuary() };
 
 	static final HashMap<String, Deck> DECKS = new HashMap<String, Deck>();
 	static final Deck DEFAULT = new Deck();

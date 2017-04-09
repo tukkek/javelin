@@ -16,6 +16,12 @@ import javelin.model.world.location.town.labor.Labor;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
 
+/**
+ * Monsters will inhabit the sewers periodically, can be upgraded for tougher
+ * fights.
+ *
+ * @author alex
+ */
 public class Sewers extends Fortification {
 	static final String SEWERS = "Sewers";
 

@@ -5,7 +5,7 @@ import javelin.model.unit.Monster;
 
 /**
  * Adds to {@link Monster#energyresistance}.
- * 
+ *
  * @author alex
  */
 public class RingOfEnergyResistance extends Artifact {

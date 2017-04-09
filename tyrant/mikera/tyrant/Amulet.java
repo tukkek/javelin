@@ -80,75 +80,75 @@ public class Amulet {
 		
 		t=Lib.extend("amulet of wrath","base amulet");
 		t.set("LevelMin",18);
-        t.add("WieldedModifiers",Modifier.bonus(Skill.ATTACK,RPG.d(3)));
-        t.add("WieldedModifiers",Modifier.bonus(RPG.ST_ATTACKSPEED,RPG.d(2,20)));
+        t.additem("WieldedModifiers",Modifier.bonus(Skill.ATTACK,RPG.d(3)));
+        t.additem("WieldedModifiers",Modifier.bonus(RPG.ST_ATTACKSPEED,RPG.d(2,20)));
 		addNecklace(t);
 		
 		t=Lib.extend("amulet of regeneration","base amulet");
 		t.set("LevelMin",3);
-        t.add("WieldedModifiers",Modifier.bonus(RPG.ST_REGENERATE,30));
+        t.additem("WieldedModifiers",Modifier.bonus(RPG.ST_REGENERATE,30));
 		addNecklace(t);
 		
 		t=Lib.extend("amulet of protection","base amulet");
 		t.set("LevelMin",9);
-        t.add("WieldedModifiers",Modifier.bonus("ARM",RPG.d(6)));
+        t.additem("WieldedModifiers",Modifier.bonus("ARM",RPG.d(6)));
 		addNecklace(t);	
 		
 		t=Lib.extend("amulet of confusion","base amulet");
 		t.set("LevelMin",7);
-        t.add("WieldedModifiers",Modifier.bonus("IsConfused",1));
+        t.additem("WieldedModifiers",Modifier.bonus("IsConfused",1));
         t.set("IsCursed",1);
 		addNecklace(t);	
 		
 		t=Lib.extend("amulet of spellcasting","base amulet");
 		t.set("LevelMin",12);
-        t.add("WieldedModifiers",Modifier.bonus(Skill.CASTING,RPG.d(3)));
-        t.add("WieldedModifiers",Modifier.bonus("IN",RPG.d(2,3)));
+        t.additem("WieldedModifiers",Modifier.bonus(Skill.CASTING,RPG.d(3)));
+        t.additem("WieldedModifiers",Modifier.bonus("IN",RPG.d(2,3)));
 		addNecklace(t);	
 		
 		t=Lib.extend("amulet of courage","base amulet");
 		t.set("LevelMin",2);
-        t.add("WieldedModifiers",Modifier.bonus(Skill.BRAVERY,RPG.d(3)));
+        t.additem("WieldedModifiers",Modifier.bonus(Skill.BRAVERY,RPG.d(3)));
 		addNecklace(t);	
 		
 		t=Lib.extend("amulet of motion","base amulet");
 		t.set("LevelMin",16);
-        t.add("WieldedModifiers",Modifier.linear(RPG.ST_ENCUMBERANCE,70,0));
+        t.additem("WieldedModifiers",Modifier.linear(RPG.ST_ENCUMBERANCE,70,0));
 		addNecklace(t);	
 		
 		t=Lib.extend("amulet of fire resistance","base amulet");
 		t.set("LevelMin",5);
-        t.add("WieldedModifiers",Modifier.bonus("RES:fire",10));
+        t.additem("WieldedModifiers",Modifier.bonus("RES:fire",10));
 		addNecklace(t);	
 		
 		t=Lib.extend("amulet of ice resistance","base amulet");
 		t.set("LevelMin",10);
-        t.add("WieldedModifiers",Modifier.bonus("RES:ice",10));
+        t.additem("WieldedModifiers",Modifier.bonus("RES:ice",10));
 		addNecklace(t);	
 		
 		t=Lib.extend("amulet of acid resistance","base amulet");
 		t.set("LevelMin",15);
-        t.add("WieldedModifiers",Modifier.bonus("RES:acid",10));
+        t.additem("WieldedModifiers",Modifier.bonus("RES:acid",10));
 		addNecklace(t);	
 		
 		t=Lib.extend("amulet of shock resistance","base amulet");
 		t.set("LevelMin",20);
-        t.add("WieldedModifiers",Modifier.bonus("RES:shock",10));
+        t.additem("WieldedModifiers",Modifier.bonus("RES:shock",10));
 		addNecklace(t);	
 		
 		t=Lib.extend("amulet of chill resistance","base amulet");
 		t.set("LevelMin",25);
-        t.add("WieldedModifiers",Modifier.bonus("RES:chill",10));
+        t.additem("WieldedModifiers",Modifier.bonus("RES:chill",10));
 		addNecklace(t);	
 		
 		t=Lib.extend("amulet of poison resistance","base amulet");
 		t.set("LevelMin",30);
-        t.add("WieldedModifiers",Modifier.bonus("RES:poison",10));
+        t.additem("WieldedModifiers",Modifier.bonus("RES:poison",10));
 		addNecklace(t);	
 		
 		t=Lib.extend("amulet of disintegration resistance","base amulet");
 		t.set("LevelMin",35);
-        t.add("WieldedModifiers",Modifier.bonus("RES:disintegrate",10));
+        t.additem("WieldedModifiers",Modifier.bonus("RES:disintegrate",10));
 		addNecklace(t);	
 	}
 }

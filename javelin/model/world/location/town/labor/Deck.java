@@ -17,6 +17,7 @@ import javelin.model.world.location.town.labor.base.Growth;
 import javelin.model.world.location.town.labor.base.Lodge.BuildLodge;
 import javelin.model.world.location.town.labor.base.Redraw;
 import javelin.model.world.location.town.labor.criminal.Sewers.BuildSewers;
+import javelin.model.world.location.town.labor.criminal.Slums.BuildSlums;
 import javelin.model.world.location.town.labor.expansive.BuildHighway;
 import javelin.model.world.location.town.labor.expansive.BuildRoad;
 import javelin.model.world.location.town.labor.expansive.Settler;
@@ -42,7 +43,7 @@ public class Deck extends ArrayList<Labor> {
 	private static final Labor[] BASE = new Labor[] { new Growth(),
 			new BuildLodge(), new Redraw(), new BuildDwelling() };
 	private static final Labor[] CRIMINAL = new Labor[] {
-			new BuildAssassinsGuild(), new BuildSewers() };
+			new BuildAssassinsGuild(), new BuildSewers(), new BuildSlums() };
 	private static final Labor[] CULTURAL = new Labor[] { new BuildMagesGuild(),
 			new BuildArtificer(), new BuildSummoningCircle() };
 	private static final Labor[] ECOLOGICAL = new Labor[] { new BuildHenge() };
@@ -57,9 +58,6 @@ public class Deck extends ArrayList<Labor> {
 	private static final Labor[] RELIGIOUS = new Labor[] { new BuildShrine(),
 			new BuildSacntuary() };
 
-	public static final String NAMERELIGIOUS = "religious";
-	public static final String NAMECRIMINAL = "criminal";
-
 	static final HashMap<String, Deck> DECKS = new HashMap<String, Deck>();
 	static final Deck DEFAULT = new Deck();
 
@@ -69,8 +67,8 @@ public class Deck extends ArrayList<Labor> {
 		populate(new Deck(), "productive", PRODUCTIVE);
 		populate(new Deck(), "military", MILITARY);
 		populate(new Deck(), "cultural", CULTURAL);
-		populate(new Deck(), NAMECRIMINAL, CRIMINAL);
-		populate(new Deck(), NAMERELIGIOUS, RELIGIOUS);
+		populate(new Deck(), "criminal", CRIMINAL);
+		populate(new Deck(), "religious", RELIGIOUS);
 		populate(new Deck(), "ecological", ECOLOGICAL);
 		for (String title : new ArrayList<String>(DECKS.keySet())) {
 			/*

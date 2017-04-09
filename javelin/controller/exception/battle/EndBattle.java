@@ -214,7 +214,7 @@ public class EndBattle extends BattleEvent {
 		spell.castpeacefully(null, dead);
 		spell.used += 1;
 		if (scroll != null) {
-			Squad.active.equipment.pop(scroll.getClass());
+			Squad.active.equipment.popitem(scroll.getClass(), Squad.active);
 		}
 		return true;
 	}

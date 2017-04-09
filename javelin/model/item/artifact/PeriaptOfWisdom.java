@@ -5,7 +5,7 @@ import javelin.model.unit.Monster;
 
 /**
  * Raises {@link Monster#wisdom}.
- * 
+ *
  * @author alex
  */
 public class PeriaptOfWisdom extends Artifact {

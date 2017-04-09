@@ -5,7 +5,7 @@ import javelin.model.unit.Monster;
 
 /**
  * Raise {@link Monster#dexterity}
- * 
+ *
  * @author alex
  */
 public class GlovesOfDexterity extends Artifact {

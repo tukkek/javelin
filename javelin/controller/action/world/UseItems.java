@@ -78,8 +78,8 @@ public class UseItems extends WorldAction {
 
 	Item select(final ArrayList<Item> allitems, final Character input) {
 		Item selected = null;
-		int index =
-				SelectScreen.convertnumericselection(input, KEYS.toCharArray());
+		int index = SelectScreen.convertnumericselection(input,
+				KEYS.toCharArray());
 		if (0 <= index && index < allitems.size()) {
 			selected = allitems.get(index);
 		}
@@ -94,13 +94,7 @@ public class UseItems extends WorldAction {
 			return;
 		}
 		Combatant owner = findowner(selected);
-		if (owner.equipped.contains(selected)) {
-			owner.equipped.remove(selected);
-			if (selected instanceof Artifact) {
-				Artifact a = (Artifact) selected;
-				a.remove(owner);
-			}
-		}
+		owner.unequip(selected);
 		Squad.active.equipment.get(owner.id).remove(selected);
 		Squad.active.equipment.get(selectmember(Squad.active.members, selected,
 				"Transfer " + selected + " to who?").id).add(selected);
@@ -155,8 +149,8 @@ public class UseItems extends WorldAction {
 			s += "\n";
 			s += output + ":\n";
 			boolean none = true;
-			ArrayList<Item> bag =
-					new ArrayList<Item>(Squad.active.equipment.get(c.id));
+			ArrayList<Item> bag = new ArrayList<Item>(
+					Squad.active.equipment.get(c.id));
 			Collections.sort(bag, new Comparator<Item>() {
 				@Override
 				public int compare(Item o1, Item o2) {

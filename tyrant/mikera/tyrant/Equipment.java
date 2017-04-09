@@ -205,7 +205,7 @@ public class Equipment {
 		t.set("IsBoat",1);
 		t.set("Frequency",10);
         t.set("ValueBase", 10);
-		t.add("CarriedModifiers",Modifier.bonus(Skill.SWIMMING,1));
+		t.additem("CarriedModifiers",Modifier.bonus(Skill.SWIMMING,1));
 		Lib.add(t);
 
 		t=Lib.extend("canoe","base boat");

@@ -148,7 +148,7 @@ public class Scroll  {
                 	Thing spell=Spell.create(spellName);
                 	// TODO: modify spell power for IN/literacy
                 	QuestApp.getInstance().getScreen().castSpell(user,spell);
-                	s.remove(1);
+                	s.unequip(1);
                 }
                 
 
@@ -291,7 +291,7 @@ public class Scroll  {
             	private static final long serialVersionUID = 3761967168350336050L;
 
                 public boolean handle(Thing t, Event e) {
-            		t.remove(1);
+            		t.unequip(1);
             		Thing r=e.getThing("Reader");
             		r.message("Your head spins... where are you?");
             		LevelMap.forget(r.getMap(),80);
@@ -309,7 +309,7 @@ public class Scroll  {
             		Thing r=e.getThing("Reader");
             		r.message("You suddenly know this place like the back of your hand");
             		LevelMap.reveal(r.getMap());
-            		t.remove(1);
+            		t.unequip(1);
             		return true;
             	}
             });           	
@@ -321,7 +321,7 @@ public class Scroll  {
             	private static final long serialVersionUID = 3763091964450451513L;
 
                 public boolean handle(Thing t, Event e) {
-              		t.remove(1);
+              		t.unequip(1);
                		Thing r=e.getThing("Reader");
             		Thing[] its=r.getItems();
             		if (its.length==0) {
@@ -349,7 +349,7 @@ public class Scroll  {
             	private static final long serialVersionUID = 3834315042081354553L;
 
                 public boolean handle(Thing t, Event e) {
-              		t.remove(1);
+              		t.unequip(1);
                		Thing r=e.getThing("Reader");
             		Thing[] its=r.getItems();
             		for (int i=0; i<its.length; i++) {
@@ -369,7 +369,7 @@ public class Scroll  {
             	private static final long serialVersionUID = 3257571710911001395L;
 
                 public boolean handle(Thing t, Event e) {
-              		t.remove(1);
+              		t.unequip(1);
                		Thing r=e.getThing("Reader");
                		BattleMap m=r.getMap();
             		Thing[] its=r.getItems();
@@ -399,7 +399,7 @@ public class Scroll  {
             	private static final long serialVersionUID = 3761409733168806195L;
 
                 public boolean handle(Thing t, Event e) {
-              		t.remove(1);
+              		t.unequip(1);
                		Thing r=e.getThing("Reader");
             		Thing[] its=r.getItems();
             		Game.messageTyrant("Your mind is filled with great knowledge about all your posessions");
@@ -419,7 +419,7 @@ public class Scroll  {
             	private static final long serialVersionUID = 3257290244557582388L;
 
                 public boolean handle(Thing t, Event e) {
-              		t.remove(1);
+              		t.unequip(1);
                		Thing r=e.getThing("Reader");
             		Thing[] its=r.getItems();
             		boolean detected=false;
@@ -443,7 +443,7 @@ public class Scroll  {
             	private static final long serialVersionUID = 3016187993514949388L;
 
                 public boolean handle(Thing t, Event e) {
-              		t.remove(1);
+              		t.unequip(1);
                		Thing r=e.getThing("Reader");
             		Thing[] its=r.getItems();
             		boolean cursed=false;

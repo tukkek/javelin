@@ -289,7 +289,7 @@ public class Squad extends Actor implements Cloneable {
 	 */
 	@Deprecated
 	public void receiveitem(Item key) {
-		equipment.add(key, this);
+		equipment.additem(key, this);
 	}
 
 	@Override

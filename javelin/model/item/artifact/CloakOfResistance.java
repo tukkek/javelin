@@ -4,7 +4,7 @@ import javelin.model.unit.Combatant;
 
 /**
  * Adds bonus to saving throws.
- * 
+ *
  * @author alex
  */
 public class CloakOfResistance extends Artifact {

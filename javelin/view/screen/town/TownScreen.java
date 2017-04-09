@@ -179,8 +179,8 @@ public class TownScreen extends PurchaseScreen {
 		}
 		list.add(SETTLE);
 		list.add(new GovernorScreen(town));
+		list.add(RENAME);
 		if (town.getrank().rank < Rank.CITY.rank) {
-			list.add(RENAME);
 			PILLAGE.name = "Pillage ($" + SelectScreen.formatcost(
 					Fortification.getspoils(town.population - 1)) + ")";
 			list.add(PILLAGE);

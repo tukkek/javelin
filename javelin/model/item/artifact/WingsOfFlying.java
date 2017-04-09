@@ -4,7 +4,7 @@ import javelin.model.unit.Combatant;
 
 /**
  * Turn a unit into a flying unit.
- * 
+ *
  * @author alex
  */
 public class WingsOfFlying extends Artifact {

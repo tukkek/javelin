@@ -71,7 +71,7 @@ public class Rune {
     	t.set("IsAlteration",1);
     	t.set("NoStack",1);
     	t.set("LevelMin",1);
-    	t.add("CarriedModifiers",Modifier.constant("IsRunic",1));
+    	t.additem("CarriedModifiers",Modifier.constant("IsRunic",1));
 		Lib.add(t);
 		
 		t=Lib.extend("blank runestone","base runestone");
@@ -164,7 +164,7 @@ public class Rune {
     		rname=rname+" runestone";
     		
     		if (rs!=null) {
-    			t.remove(1);
+    			t.unequip(1);
     			Thing r=Lib.create(rname);
     			int lev=r.getStat("RuneIndex");
     			int prob=RPG.middle(0,50-3*lev+(user.getStat("CR")*(skill-lev)/RPG.round(Math.pow(1.15,lev))),100);
@@ -212,7 +212,7 @@ public class Rune {
 				return true;
 			}
     		
-    		t.remove(1);
+    		t.unequip(1);
 
 			if (it.getFlag("IsArtifact")) {
     			Game.messageTyrant(it.getTheName()+" seems totally unaffected");   				
@@ -268,19 +268,19 @@ public class Rune {
      	t=Lib.extend("permacurse rune","base item rune");
     	t.set("LevelMin",5);
     	t.set("RuneCount",3);
-    	t.add("CarriedModifiers",Modifier.bonus("IsCursed",1));
+    	t.additem("CarriedModifiers",Modifier.bonus("IsCursed",1));
         addRune(t);
     	
      	t=Lib.extend("lightness rune","base item rune");
     	t.set("LevelMin",15);
     	t.set("RuneCount",2);
-    	t.add("CarriedModifiers",Modifier.linear("ItemWeight",80,0));
+    	t.additem("CarriedModifiers",Modifier.linear("ItemWeight",80,0));
         addRune(t);
         
      	t=Lib.extend("featherweight rune","base item rune");
     	t.set("LevelMin",25);
     	t.set("RuneCount",3);
-    	t.add("CarriedModifiers",Modifier.linear("ItemWeight",60,0));
+    	t.additem("CarriedModifiers",Modifier.linear("ItemWeight",60,0));
         addRune(t);
 	}
 
@@ -295,79 +295,79 @@ public class Rune {
 	 	t=Lib.extend("light armour rune","base armour rune");
     	t.set("LevelMin",7);
     	t.set("RuneCount",3);
-    	t.add("CarriedModifiers",Modifier.linear("ItemWeight",90,0));
+    	t.additem("CarriedModifiers",Modifier.linear("ItemWeight",90,0));
         addRune(t);
     	
 	 	t=Lib.extend("armour rune","base armour rune");
     	t.set("LevelMin",6);
     	t.set("RuneCount",2);
-    	t.add("CarriedModifiers",Modifier.bonus("Armour",4));
+    	t.additem("CarriedModifiers",Modifier.bonus("Armour",4));
         addRune(t);
         
      	t=Lib.extend("toughness rune","base armour rune");
     	t.set("LevelMin",11);
     	t.set("RuneCount",3);
-       	t.add("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.linear("TG",100,RPG.d(3))));
+       	t.additem("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.linear("TG",100,RPG.d(3))));
         addRune(t);
         
 	 	t=Lib.extend("advanced armour rune","base armour rune");
     	t.set("LevelMin",16);
     	t.set("RuneCount",2);
-    	t.add("CarriedModifiers",Modifier.bonus("Armour",16));
+    	t.additem("CarriedModifiers",Modifier.bonus("Armour",16));
         addRune(t);
         
 	 	t=Lib.extend("fire defence rune","base armour rune");
     	t.set("LevelMin",7);
     	t.set("RuneCount",2);
-    	t.add("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.bonus("ARM:fire",16)));
+    	t.additem("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.bonus("ARM:fire",16)));
         addRune(t);
         
 	 	t=Lib.extend("ice defence rune","base armour rune");
     	t.set("LevelMin",9);
     	t.set("RuneCount",3);
-    	t.add("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.bonus("ARM:fire",20)));
+    	t.additem("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.bonus("ARM:fire",20)));
         addRune(t);
         
 	 	t=Lib.extend("poison resistance rune","base armour rune");
     	t.set("LevelMin",12);
     	t.set("RuneCount",2);
-    	t.add("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.bonus("RES:poison",2)));
+    	t.additem("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.bonus("RES:poison",2)));
         addRune(t);
         
      	t=Lib.extend("bravery rune","base armour rune");
     	t.set("LevelMin",14);
     	t.set("RuneCount",3);
-       	t.add("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.bonus("Bravery",1)));
+       	t.additem("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.bonus("Bravery",1)));
         addRune(t);
         
 	 	t=Lib.extend("speed rune","base armour rune");
     	t.set("LevelMin",17);
     	t.set("RuneCount",4);
-    	t.add("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.bonus("MoveSpeed",20)));
+    	t.additem("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.bonus("MoveSpeed",20)));
         addRune(t);
         
 	 	t=Lib.extend("greater armour rune","base armour rune");
     	t.set("LevelMin",26);
     	t.set("RuneCount",3);
-    	t.add("CarriedModifiers",Modifier.linear("Armour",110,30));
+    	t.additem("CarriedModifiers",Modifier.linear("Armour",110,30));
         addRune(t);
         
 	 	t=Lib.extend("fire immunity rune","base armour rune");
     	t.set("LevelMin",33);
     	t.set("RuneCount",4);
-    	t.add("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.bonus("RES:fire",12)));
+    	t.additem("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.bonus("RES:fire",12)));
         addRune(t);
         
 	 	t=Lib.extend("poison immunity rune","base armour rune");
     	t.set("LevelMin",37);
     	t.set("RuneCount",4);
-    	t.add("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.bonus("RES:poison",12)));
+    	t.additem("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.bonus("RES:poison",12)));
         addRune(t);
         
 	 	t=Lib.extend("ultimate armour rune","base armour rune");
     	t.set("LevelMin",45);
     	t.set("RuneCount",4);
-    	t.add("CarriedModifiers",Modifier.linear("Armour",140,120));
+    	t.additem("CarriedModifiers",Modifier.linear("Armour",140,120));
         addRune(t);
     	
 	}
@@ -383,19 +383,19 @@ public class Rune {
      	t=Lib.extend("shield enhancement rune","base shield rune");
     	t.set("LevelMin",1);
     	t.set("RuneCount",3);
-    	t.add("CarriedModifiers",Modifier.bonus("Armour",4));
+    	t.additem("CarriedModifiers",Modifier.bonus("Armour",4));
         addRune(t);
         
      	t=Lib.extend("willpower rune","base shield rune");
     	t.set("LevelMin",5);
     	t.set("RuneCount",3);
-       	t.add("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.linear("WP",100,RPG.d(3))));
+       	t.additem("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.linear("WP",100,RPG.d(3))));
         addRune(t);
         
      	t=Lib.extend("defensive shield rune","base shield rune");
     	t.set("LevelMin",13);
     	t.set("RuneCount",3);
-       	t.add("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.linear(Skill.DEFENCE,0,1)));
+       	t.additem("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.linear(Skill.DEFENCE,0,1)));
         addRune(t);
 	}
 	
@@ -409,13 +409,13 @@ public class Rune {
      	t=Lib.extend("returning tendency rune","base weapon rune");
     	t.set("LevelMin",1);
     	t.set("RuneCount",2);
-    	t.add("CarriedModifiers",Modifier.bonus("MissileReturns",15));
+    	t.additem("CarriedModifiers",Modifier.bonus("MissileReturns",15));
      	addRune(t);
      	
      	t=Lib.extend("returning rune","base weapon rune");
     	t.set("LevelMin",25);
     	t.set("RuneCount",4);
-    	t.add("CarriedModifiers",Modifier.bonus("MissileReturns",100));
+    	t.additem("CarriedModifiers",Modifier.bonus("MissileReturns",100));
      	addRune(t);
 	}
 	
@@ -430,87 +430,87 @@ public class Rune {
      	t=Lib.extend("flame damage rune","base weapon rune");
     	t.set("LevelMin",1);
     	t.set("RuneCount",2);
-     	t.add("CarriedModifiers",Modifier.constant("Adjective","smouldering"));
-    	t.add("CarriedModifiers",Modifier.constant("ExtraDamageType","fire"));
-    	t.add("CarriedModifiers",Modifier.bonus("ExtraASTBonus",RPG.d(2,4)));
+     	t.additem("CarriedModifiers",Modifier.constant("Adjective","smouldering"));
+    	t.additem("CarriedModifiers",Modifier.constant("ExtraDamageType","fire"));
+    	t.additem("CarriedModifiers",Modifier.bonus("ExtraASTBonus",RPG.d(2,4)));
         addRune(t);
         
      	t=Lib.extend("defence rune","base weapon rune");
     	t.set("LevelMin",4);
     	t.set("RuneCount",2);
-    	t.add("CarriedModifiers",Modifier.bonus("DSKBonus",RPG.d(2,4)));
+    	t.additem("CarriedModifiers",Modifier.bonus("DSKBonus",RPG.d(2,4)));
         addRune(t);
         
      	t=Lib.extend("strength rune","base weapon rune");
     	t.set("LevelMin",14);
     	t.set("RuneCount",4);
-       	t.add("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.linear("ST",100,RPG.d(3))));
+       	t.additem("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.linear("ST",100,RPG.d(3))));
         addRune(t);
         
      	t=Lib.extend("ice damage rune","base weapon rune");
     	t.set("LevelMin",6);
     	t.set("RuneCount",3);
-     	t.add("CarriedModifiers",Modifier.constant("Adjective","icy"));
-    	t.add("CarriedModifiers",Modifier.constant("ExtraDamageType","ice"));
-    	t.add("CarriedModifiers",Modifier.bonus("ExtraASTBonus",RPG.d(2,5)));
+     	t.additem("CarriedModifiers",Modifier.constant("Adjective","icy"));
+    	t.additem("CarriedModifiers",Modifier.constant("ExtraDamageType","ice"));
+    	t.additem("CarriedModifiers",Modifier.bonus("ExtraASTBonus",RPG.d(2,5)));
         addRune(t);
         
      	t=Lib.extend("flaming rune","base weapon rune");
     	t.set("LevelMin",5);
     	t.set("RuneCount",2);
-     	t.add("CarriedModifiers",Modifier.constant("Adjective","flaming"));
-    	t.add("CarriedModifiers",Modifier.constant("ExtraDamageType","fire"));
-    	t.add("CarriedModifiers",Modifier.bonus("ExtraASTBonus",RPG.d(3,6)));
+     	t.additem("CarriedModifiers",Modifier.constant("Adjective","flaming"));
+    	t.additem("CarriedModifiers",Modifier.constant("ExtraDamageType","fire"));
+    	t.additem("CarriedModifiers",Modifier.bonus("ExtraASTBonus",RPG.d(3,6)));
         addRune(t);
         
      	t=Lib.extend("poison tip rune","base weapon rune");
     	t.set("LevelMin",8);
     	t.set("RuneCount",2);
-     	t.add("CarriedModifiers",Modifier.constant("Adjective","poison-dripping"));
-    	t.add("CarriedModifiers",Modifier.constant("ExtraDamageType","poison"));
-    	t.add("CarriedModifiers",Modifier.bonus("ExtraASTBonus",RPG.d(3,6)));
+     	t.additem("CarriedModifiers",Modifier.constant("Adjective","poison-dripping"));
+    	t.additem("CarriedModifiers",Modifier.constant("ExtraDamageType","poison"));
+    	t.additem("CarriedModifiers",Modifier.bonus("ExtraASTBonus",RPG.d(3,6)));
         addRune(t);
         
     	t=Lib.extend("accuracy rune","base weapon rune");
     	t.set("LevelMin",10);
     	t.set("RuneCount",1);
-    	t.add("CarriedModifiers",Modifier.constant("Adjective","glowing"));
-    	t.add("CarriedModifiers",Modifier.linear(RPG.ST_ASKMULTIPLIER,200,0));
+    	t.additem("CarriedModifiers",Modifier.constant("Adjective","glowing"));
+    	t.additem("CarriedModifiers",Modifier.linear(RPG.ST_ASKMULTIPLIER,200,0));
         addRune(t);
        
     	t=Lib.extend("smiting rune","base weapon rune");
     	t.set("LevelMin",15);
     	t.set("RuneCount",2);
-    	t.add("CarriedModifiers",Modifier.constant("Adjective","glowing"));
-    	t.add("CarriedModifiers",Modifier.linear(RPG.ST_ASTMULTIPLIER,200,0));
+    	t.additem("CarriedModifiers",Modifier.constant("Adjective","glowing"));
+    	t.additem("CarriedModifiers",Modifier.linear(RPG.ST_ASTMULTIPLIER,200,0));
         addRune(t);
        
     	t=Lib.extend("rune of quick striking","base weapon rune");
     	t.set("LevelMin",20);
     	t.set("RuneCount",2);
-    	t.add("CarriedModifiers",Modifier.constant("Adjective","glowing"));
-    	t.add("CarriedModifiers",Modifier.linear(RPG.ST_ATTACKCOST,80,0));
+    	t.additem("CarriedModifiers",Modifier.constant("Adjective","glowing"));
+    	t.additem("CarriedModifiers",Modifier.linear(RPG.ST_ATTACKCOST,80,0));
         addRune(t);
      
     	t=Lib.extend("rune of fearsome appearance","base weapon rune");
     	t.set("LevelMin",20);
     	t.set("RuneCount",3);
-    	t.add("CarriedModifiers",Modifier.constant("Adjective","glowing"));
-    	t.add("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.linear(RPG.ST_FEARFACTOR,0,1)));
+    	t.additem("CarriedModifiers",Modifier.constant("Adjective","glowing"));
+    	t.additem("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.linear(RPG.ST_FEARFACTOR,0,1)));
         addRune(t);
        
     	t=Lib.extend("rune of terror","base weapon rune");
     	t.set("LevelMin",35);
     	t.set("RuneCount",4);
-    	t.add("CarriedModifiers",Modifier.constant("Adjective","shrieking"));
-    	t.add("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.linear(RPG.ST_FEARFACTOR,0,3)));
+    	t.additem("CarriedModifiers",Modifier.constant("Adjective","shrieking"));
+    	t.additem("CarriedModifiers",Modifier.addModifier("WieldedModifiers",Modifier.linear(RPG.ST_FEARFACTOR,0,3)));
         addRune(t);
       
     	t=Lib.extend("whirlwind rune","base weapon rune");
     	t.set("LevelMin",30);
     	t.set("RuneCount",3);
-    	t.add("CarriedModifiers",Modifier.constant("Adjective","smoking"));
-    	t.add("CarriedModifiers",Modifier.linear(RPG.ST_ATTACKCOST,60,0));
+    	t.additem("CarriedModifiers",Modifier.constant("Adjective","smoking"));
+    	t.additem("CarriedModifiers",Modifier.linear(RPG.ST_ATTACKCOST,60,0));
         addRune(t);
 	}
 }

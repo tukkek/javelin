@@ -23,14 +23,6 @@ public class Trait extends Labor {
 
 	@Override
 	public boolean validate(District d) {
-		if (trait.equals(Deck.NAMECRIMINAL)
-				&& town.traits.contains(Deck.NAMERELIGIOUS)) {
-			return false;
-		}
-		if (trait.equals(Deck.NAMERELIGIOUS)
-				&& town.traits.contains(Deck.NAMECRIMINAL)) {
-			return false;
-		}
 		return super.validate(d) && !town.traits.contains(trait);
 	}
 

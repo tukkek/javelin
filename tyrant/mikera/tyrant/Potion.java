@@ -78,7 +78,7 @@ public class Potion  {
         b.incStat("APS", - Being.actionCost(b));
         if (potion.getFlag("IsDrinkable")) {
             Item.identify(potion);
-            Thing p=potion.remove(1);
+            Thing p=potion.unequip(1);
             b.message("You drink "+p.getTheName());
             // do potion effect here
             
@@ -105,7 +105,7 @@ public class Potion  {
     			return false;
     		}
     		
-    		t.remove(1);
+    		t.unequip(1);
     		
     		if (it.getStat("Number")>1) {
     			it=it.separate(RPG.d(4));

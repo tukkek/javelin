@@ -138,7 +138,7 @@ public class Armour {
     	t.set("UName","dark cloak");
     	t.set("Armour",1);
     	t.set("LevelMin",6);
-    	t.add("WieldedModifiers",Modifier.bonus(Skill.STEALTH,1));
+    	t.additem("WieldedModifiers",Modifier.bonus(Skill.STEALTH,1));
     	Lib.add(t);
     	
     	t=Lib.extend("cloak of protection","heavy cloak");
@@ -151,7 +151,7 @@ public class Armour {
     	t.set("UName","ragged cloak");
     	t.set("Armour",3);
     	t.set("LevelMin",15);
-    	t.add("WieldedModifiers",Modifier.bonus(Skill.DEFENCE,1));
+    	t.additem("WieldedModifiers",Modifier.bonus(Skill.DEFENCE,1));
 
     	Lib.add(t);
     }
@@ -183,8 +183,8 @@ public class Armour {
     	t=Lib.extend("thieving gloves","soft gloves");
     	t.set("UName","soft gloves");
     	t.multiplyStat("Frequency",0.2);
-        t.add("WieldedModifiers",Modifier.bonus(Skill.PICKPOCKET,1));
-        t.add("WieldedModifiers",Modifier.bonus("SK",2));
+        t.additem("WieldedModifiers",Modifier.bonus(Skill.PICKPOCKET,1));
+        t.additem("WieldedModifiers",Modifier.bonus("SK",2));
     	t.set("LevelMin",10);
     	Lib.add(t);
     	
@@ -207,7 +207,7 @@ public class Armour {
     	t.set("LevelMin",12);
     	t.set("ItemWeight",900);
     	t.multiplyStat("Frequency",0.2);
-        t.add("WieldedModifiers",Modifier.bonus("ST",RPG.d(3)));
+        t.additem("WieldedModifiers",Modifier.bonus("ST",RPG.d(3)));
     	Lib.add(t);
     	
     	t=Lib.extend("gauntlets of protection","leather gauntlets");
@@ -216,7 +216,7 @@ public class Armour {
     	t.set("LevelMin",14);
     	t.set("ItemWeight",1000);
     	t.multiplyStat("Frequency",0.2);
-        t.add("WieldedModifiers",Modifier.bonus(Skill.DEFENCE,1));
+        t.additem("WieldedModifiers",Modifier.bonus(Skill.DEFENCE,1));
     	Lib.add(t);
     	
     	t=Lib.extend("red leather gauntlets","leather gauntlets");
@@ -233,7 +233,7 @@ public class Armour {
     	t.set("Image",371);
     	t.set("LevelMin",23);
     	t.set("ItemWeight",800);
-        t.add("WieldedModifiers",Modifier.bonus("ARM:fire",8));
+        t.additem("WieldedModifiers",Modifier.bonus("ARM:fire",8));
     	Lib.add(t);
     	
     	t=Lib.extend("gauntlets","base gloves");
@@ -406,7 +406,7 @@ public class Armour {
     	t.set("Armour",2);
     	t.set("ItemWeight",2300);  
     	t.set("Frequency",5);
-        t.add("WieldedModifiers",Modifier.bonus(Skill.MINING,1));
+        t.additem("WieldedModifiers",Modifier.bonus(Skill.MINING,1));
         Lib.add(t);
     }
     
@@ -448,7 +448,7 @@ public class Armour {
         t = Lib.extend("boots of agility", "leather boots");
         t.set("UName","worn boots");
         t.set("LevelMin", 6);
-        t.add("WieldedModifiers",Modifier.linear("AG",100,RPG.d(2,6)));
+        t.additem("WieldedModifiers",Modifier.linear("AG",100,RPG.d(2,6)));
         addFootwear(t);
         
         t = Lib.extend("shoes", "leather boots");
@@ -462,12 +462,12 @@ public class Armour {
         t.set("ItemWeight", 1200);
         t.set("Image", 362);
         t.set("Armour",1);
-        t.add("WieldedModifiers",Modifier.bonus("CH",2));
+        t.additem("WieldedModifiers",Modifier.bonus("CH",2));
         addFootwear(t);
         
         t = Lib.extend("dancing shoes", "shoes");
         t.set("LevelMin", 5);
-        t.add("WieldedModifiers",Modifier.bonus("AG",3));
+        t.additem("WieldedModifiers",Modifier.bonus("AG",3));
         t.set("Image", 362);
         addFootwear(t);
         
@@ -483,7 +483,7 @@ public class Armour {
         t = Lib.extend("magic boots", "leather boots");
         t.set("IsMagicItem",1);
         t.set("UName","worn boots");
-        t.add("WieldedModifiers",Modifier.linear("MoveSpeed",100,100));
+        t.additem("WieldedModifiers",Modifier.linear("MoveSpeed",100,100));
         t.set("Armour", 4);
         t.set("LevelMin", 12);
         addFootwear(t);

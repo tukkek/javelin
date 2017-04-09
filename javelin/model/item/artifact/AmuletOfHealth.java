@@ -5,7 +5,7 @@ import javelin.model.unit.Monster;
 
 /**
  * Raises {@link Monster#constitution}
- * 
+ *
  * @author alex
  */
 public class AmuletOfHealth extends Artifact {

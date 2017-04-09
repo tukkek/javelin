@@ -66,7 +66,7 @@ public class SpellBook {
 				Spell.learn(user, spellName);
 	
 				Item.identify(s);
-				s.remove(1);
+				s.unequip(1);
 			} else {
 				Game.messageTyrant("You are unable to understand this spellbook without knowledge of "+Spell.getOrder(spellName));
 			}

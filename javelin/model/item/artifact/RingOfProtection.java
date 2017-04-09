@@ -4,7 +4,7 @@ import javelin.model.unit.Combatant;
 
 /**
  * Adds AC bonus.
- * 
+ *
  * @author alex
  */
 public class RingOfProtection extends Artifact {

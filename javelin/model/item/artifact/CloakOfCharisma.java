@@ -5,7 +5,7 @@ import javelin.model.unit.Monster;
 
 /**
  * Raises {@link Monster#charisma}.
- * 
+ *
  * @author alex
  */
 public class CloakOfCharisma extends Artifact {

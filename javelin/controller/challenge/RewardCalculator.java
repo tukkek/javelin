@@ -20,7 +20,7 @@ import tyrant.mikera.engine.RPG;
  * Determines experience points and treasure to be awarded after winning a
  * battle. Rules for this are found in the core d20 rules and also on Upper
  * Krust's work which is repackaged with permition on the 'doc' directory.
- * 
+ *
  * @author alex
  */
 public class RewardCalculator {
@@ -172,7 +172,7 @@ public class RewardCalculator {
 	 * but in the long run ensures {@link Combatant}s will level up in a
 	 * balanced manner, with lower level units gaining levels faster than
 	 * already strong units - which is what the d20 system is designed to do.
-	 * 
+	 *
 	 * @param winners
 	 *            {@link Combatant}s to award XP to.
 	 * @param originalblue
@@ -187,8 +187,8 @@ public class RewardCalculator {
 	public static String rewardxp(ArrayList<Combatant> winners,
 			List<Combatant> originalblue, List<Combatant> originalred,
 			int bonus) {
-		int eldifference =
-				Math.round(ChallengeRatingCalculator.calculateel(originalred)
+		int eldifference = Math
+				.round(ChallengeRatingCalculator.calculateel(originalred)
 						- ChallengeRatingCalculator.calculateel(originalblue));
 		double partycr = getpartycr(eldifference, winners.size()) * bonus;
 		distributexp(winners, partycr);
@@ -216,5 +216,13 @@ public class RewardCalculator {
 			survivor.xp = survivor.xp.add(new BigDecimal(xp * i / segments)
 					.setScale(2, RoundingMode.HALF_UP));
 		}
+	}
+
+	public static int calculatepcequipment(int level) {
+		return level * level * level * 100;
+	}
+
+	public static int calculatenpcequipment(int level) {
+		return level * level * level * 25;
 	}
 }

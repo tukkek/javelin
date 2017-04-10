@@ -59,10 +59,10 @@ public class ArcheryRange extends MartialAcademy implements HiringAcademy {
 	@Override
 	public void turn(long time, WorldScreen world) {
 		super.turn(time, world);
-		if (RPG.chancein(7)) {
+		if (tracker == null && RPG.chancein(7)) {
 			tracker = generatetracker();
 		}
-		if (RPG.chancein(30)) {
+		if (ranger == null && RPG.chancein(30)) {
 			ranger = Sanctuary.generatehire("Ranger", 6, 10, Kit.RANGER,
 					RPG.pick(CANDIDATES));
 		}

@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.Point;
@@ -32,6 +31,7 @@ import javelin.model.world.location.town.labor.cultural.MagesGuild;
 import javelin.model.world.location.town.labor.cultural.MagesGuild.Guild;
 import javelin.model.world.location.town.labor.ecological.ArcheryRange;
 import javelin.model.world.location.town.labor.ecological.Henge;
+import javelin.model.world.location.town.labor.ecological.MeadHall;
 import javelin.model.world.location.town.labor.military.Academy;
 import javelin.model.world.location.town.labor.military.MartialAcademy;
 import javelin.model.world.location.town.labor.productive.Mine;
@@ -221,13 +221,8 @@ public class FeatureGenerator {
 		}
 		new Portal(startingtown, World.get(easyb.x, easyb.y, towns), false,
 				false, true, true, null, false).place();
-		Haxor.singleton = new Haxor();
 		generatestartingarea(seed, easya);
-		generateuniquelocations();
-		UpgradeHandler.singleton.gather();
-		generatemageguilds();
-		generatemartialacademies();
-		new AssassinsGuild().place();
+		generatelocations(seed, easya);
 		for (Class<? extends Actor> feature : generators.keySet()) {
 			generators.get(feature).seed(feature);
 		}
@@ -238,15 +233,23 @@ public class FeatureGenerator {
 		return (Town) startingtown;
 	}
 
-	void generateuniquelocations() {
-		List<Location> unique = Arrays.asList(new Location[] {
-				new MercenariesGuild(), new Artificer(), new SummoningCircle(),
-				new PillarOfSkulls(), new Arena(), new Battlefield(),
-				new DungeonRush(), new Ziggurat(), new Henge() });
-		Collections.shuffle(unique);
-		for (Location l : unique) {
+	void generatelocations(World seed, Town easya) {
+		ArrayList<Location> locations = new ArrayList<Location>();
+		generateuniquelocations(locations);
+		UpgradeHandler.singleton.gather();
+		generatemageguilds(locations);
+		generatemartialacademies(locations);
+		Collections.shuffle(locations);
+		for (Location l : locations) {
 			l.place();
 		}
+	}
+
+	void generateuniquelocations(ArrayList<Location> locations) {
+		locations.addAll(Arrays.asList(new Location[] { new MercenariesGuild(),
+				new Artificer(), new SummoningCircle(), new PillarOfSkulls(),
+				new Arena(), new Battlefield(), new DungeonRush(),
+				new Ziggurat() }));
 	}
 
 	void generatestartingarea(World seed, Town t) {
@@ -264,17 +267,20 @@ public class FeatureGenerator {
 				return difference > 0 ? 1 : -1;
 			}
 		});
-		spawnnear(t, new Dwelling(recruits.get(RPG.r(1, 7))), seed, 1, 2, true);
+		Haxor.singleton = new Haxor();
 		spawnnear(t, Haxor.singleton, seed, 2, 3, true);
+		spawnnear(t, new Dwelling(recruits.get(RPG.r(1, 7))), seed, 1, 2, true);
 		spawnnear(t, new AdventurersGuild(), seed, 2, 3, true);
 		spawnnear(t, new TrainingHall(), seed, 2, 3, false);
 	}
 
-	static void generatemartialacademies() {
+	static void generatemartialacademies(ArrayList<Location> locations) {
 		for (javelin.model.world.location.town.labor.military.MartialAcademy.Guild g : MartialAcademy.GUILDS) {
-			g.generate().place();
+			locations.add(g.generate());
 		}
-		new ArcheryRange().place();
+		locations.addAll(Arrays.asList(new Location[] { new ArcheryRange(),
+				new MeadHall(), new AssassinsGuild(), new Henge() }));
+
 	}
 
 	static int countplaces() {
@@ -289,10 +295,9 @@ public class FeatureGenerator {
 		return count;
 	}
 
-	static void generatemageguilds() {
-		Collections.shuffle(MagesGuild.GUILDS);
+	static void generatemageguilds(ArrayList<Location> locations) {
 		for (Guild g : MagesGuild.GUILDS) {
-			g.generate().place();
+			locations.add(g.generate());
 		}
 	}
 }

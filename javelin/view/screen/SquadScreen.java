@@ -23,22 +23,37 @@ import tyrant.mikera.engine.RPG;
 public class SquadScreen extends InfoScreen {
 	/** Minimum starting party encounter level. */
 	public static final float INITIALEL = 5f;
-
 	static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
 	static final int MONSTERPERPAGE = ALPHABET.indexOf('y');
 	static final float[] SELECTABLE = { 1f, 1.25f };
 
-	final ArrayList<Monster> candidates = getcandidates();
-	ArrayList<Combatant> squad = new ArrayList<Combatant>();
+	public static final ArrayList<Monster> CANDIDATES = new ArrayList<Monster>();
 
-	SquadScreen() {
-		super("");
-		Collections.sort(candidates, new Comparator<Monster>() {
+	static {
+		for (float cr : SELECTABLE) {
+			List<Monster> tier = Javelin.MONSTERSBYCR.get(cr);
+			if (tier != null) {
+				for (Monster candidate : tier) {
+					String type = candidate.type.toLowerCase();
+					if (!type.contains("undead")
+							&& !type.contains("construct")) {
+						CANDIDATES.add(candidate);
+					}
+				}
+			}
+		}
+		Collections.sort(CANDIDATES, new Comparator<Monster>() {
 			@Override
 			public int compare(Monster o1, Monster o2) {
 				return o1.toString().compareTo(o2.toString());
 			}
 		});
+	}
+
+	ArrayList<Combatant> squad = new ArrayList<Combatant>();
+
+	SquadScreen() {
+		super("");
 	}
 
 	ArrayList<Combatant> select() {
@@ -53,10 +68,10 @@ public class SquadScreen extends InfoScreen {
 		Javelin.app.switchScreen(this);
 		Character input = InfoScreen.feedback();
 		if (input.equals(' ')) {
-			page(next < candidates.size() ? next : 0);
+			page(next < CANDIDATES.size() ? next : 0);
 		} else if (input == 'z') {
 			fillwithrandom: while (!checkifsquadfull()) {
-				Monster candidate = RPG.pick(candidates);
+				Monster candidate = RPG.pick(CANDIDATES);
 				for (Combatant m : squad) {
 					if (m.source.name.equals(candidate.name)) {
 						continue fillwithrandom;
@@ -72,7 +87,7 @@ public class SquadScreen extends InfoScreen {
 		} else {
 			int selection = ALPHABET.indexOf(input);
 			if (selection >= 0 && selection < letter) {
-				recruit(candidates.get(index + selection));
+				recruit(CANDIDATES.get(index + selection));
 				if (checkifsquadfull()) {
 					return;
 				}
@@ -129,14 +144,14 @@ public class SquadScreen extends InfoScreen {
 
 	int printpage(int index, int next) {
 		int letter = 0;
-		for (int i = index; i < next && i < candidates.size(); i++) {
+		for (int i = index; i < next && i < CANDIDATES.size(); i++) {
 			text += "\n" + ALPHABET.charAt(letter) + " - "
-					+ candidates.get(i).toString();
+					+ CANDIDATES.get(i).toString();
 			letter += 1;
 		}
 		text += "\n";
 		text += "\nPress letter to select character";
-		if (candidates.size() > MONSTERPERPAGE) {
+		if (CANDIDATES.size() > MONSTERPERPAGE) {
 			text += "\nPress SPACE to switch pages";
 		}
 		text += "\nPress z for a random team";
@@ -154,26 +169,5 @@ public class SquadScreen extends InfoScreen {
 	public static void open() {
 		Squad.active = new Squad(0, 0, 8, null);
 		new SquadScreen().select();
-	}
-
-	/**
-	 * @return All possible monster types that can be used as starting party
-	 *         members.
-	 */
-	public static ArrayList<Monster> getcandidates() {
-		ArrayList<Monster> candidates = new ArrayList<Monster>();
-		for (float cr : SELECTABLE) {
-			List<Monster> tier = Javelin.MONSTERSBYCR.get(cr);
-			if (tier != null) {
-				for (Monster candidate : tier) {
-					String type = candidate.type.toLowerCase();
-					if (!type.contains("undead")
-							&& !type.contains("construct")) {
-						candidates.add(candidate);
-					}
-				}
-			}
-		}
-		return candidates;
 	}
 }

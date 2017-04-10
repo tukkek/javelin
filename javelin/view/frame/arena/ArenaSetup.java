@@ -113,8 +113,8 @@ public class ArenaSetup extends javelin.view.frame.Frame {
 
 	ArenaWindow parent;
 	ArrayList<Combatant> allies = new ArrayList<Combatant>();
-	ArrayList<Checkbox> roster =
-			new ArrayList<Checkbox>(ArenaWindow.arena.gladiators.size());
+	ArrayList<Checkbox> roster = new ArrayList<Checkbox>(
+			ArenaWindow.arena.gladiators.size());
 	final ArenaFight fight;
 
 	/** Constructor. */
@@ -125,7 +125,7 @@ public class ArenaSetup extends javelin.view.frame.Frame {
 		int nallies = 3 - ArenaWindow.arena.gladiators.size();
 		while (nallies > 0) {
 			Combatant ally = new Combatant(
-					RPG.pick(SquadScreen.getcandidates()).clone(), true);
+					RPG.pick(SquadScreen.CANDIDATES).clone(), true);
 			ally.automatic = true;
 			allies.add(ally);
 			nallies -= 1;

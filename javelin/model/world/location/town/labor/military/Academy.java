@@ -30,6 +30,7 @@ import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
+import javelin.view.screen.hiringacademy.HiringAcademy;
 import javelin.view.screen.upgrading.AcademyScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -70,6 +71,14 @@ public class Academy extends Fortification {
 			}
 			cost = goal.upgrades.size();
 			name = "Build " + goal.descriptionknown.toLowerCase();
+			if (goal instanceof HiringAcademy) {
+				HiringAcademy ha = (HiringAcademy) goal;
+				for (Combatant hire : ha.gethires()) {
+					if (hire != null) {
+						cost += 1;
+					}
+				}
+			}
 		}
 
 		protected abstract Academy getacademy();

@@ -37,7 +37,7 @@ public class TrainingHall extends Fortification {
 	public final static ArrayList<Monster> CANDIDATES = new ArrayList<Monster>();
 
 	static {
-		for (Monster sensei : SquadScreen.getcandidates()) {
+		for (Monster sensei : SquadScreen.CANDIDATES) {
 			if (sensei.think(0)) {
 				CANDIDATES.add(sensei);
 			}

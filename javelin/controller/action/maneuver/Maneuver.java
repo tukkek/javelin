@@ -17,6 +17,7 @@ import javelin.model.feat.Feat;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 /**
  * This greatly helps feature maneuvers in Javelin - it was adopted with some
@@ -85,8 +86,7 @@ public abstract class Maneuver extends Target implements AiAction {
 	@Override
 	public List<List<ChanceNode>> getoutcomes(final BattleState gameState,
 			final Combatant combatant) {
-		final ArrayList<List<ChanceNode>> outcomes =
-				new ArrayList<List<ChanceNode>>();
+		final ArrayList<List<ChanceNode>> outcomes = new ArrayList<List<ChanceNode>>();
 		if (!combatant.source.hasfeat(prerequisite)) {
 			return outcomes;
 		}
@@ -99,21 +99,25 @@ public abstract class Maneuver extends Target implements AiAction {
 	}
 
 	List<ChanceNode> maneuver(Combatant combatant, Combatant target,
-			BattleState battleState) {
-		battleState = battleState.clone();
-		combatant = battleState.clone(combatant);
-		target = battleState.clone(target);
+			BattleState s) {
+		s = s.clone();
+		combatant = s.clone(combatant);
+		target = s.clone(target);
 		combatant.ap += .5f;
-		final float savechance =
-				calculatesavechance(combatant, calculatesavebonus(target));
-		final float misschance =
-				calculatemisschance(combatant, target, battleState,
-						Math.max(0, Monster.getbonus(target.source.dexterity)));
+		final float savechance = calculatesavechance(combatant,
+				calculatesavebonus(target));
+		final float misschance = calculatemisschance(combatant, target, s,
+				Math.max(0, Monster.getbonus(target.source.dexterity)));
 		final ArrayList<ChanceNode> chances = new ArrayList<ChanceNode>();
 		final float failurechance = savechance + (1 - savechance) * misschance;
-		chances.add(miss(combatant, target, battleState, failurechance));
-		chances.add(hit(combatant, target, battleState, 1 - failurechance));
+		chances.add(mark(miss(combatant, target, s, failurechance), target));
+		chances.add(mark(hit(combatant, target, s, 1 - failurechance), target));
 		return chances;
+	}
+
+	private ChanceNode mark(ChanceNode hit, Combatant target) {
+		hit.overlay = new AiOverlay(target.location[0], target.location[1]);
+		return hit;
 	}
 
 	public float calculatesavechance(Combatant current, final int savebonus) {

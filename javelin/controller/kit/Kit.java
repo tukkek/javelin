@@ -33,6 +33,7 @@ import javelin.controller.upgrade.skill.UseMagicDevice;
 import javelin.model.spell.Summon;
 import javelin.model.spell.conjuration.healing.wounds.CureLightWounds;
 import javelin.model.spell.conjuration.healing.wounds.CureModerateWounds;
+import javelin.model.spell.enchantment.compulsion.BarbarianRage;
 import javelin.model.spell.enchantment.compulsion.Bless;
 import javelin.model.spell.evocation.MagicMissile;
 import javelin.model.unit.Monster;
@@ -50,6 +51,7 @@ public abstract class Kit {
 		@Override
 		protected void define() {
 			upgrades.add(Survival.SINGLETON);
+			upgrades.add(new BarbarianRage());
 		}
 	};
 	public static final Kit BARD = new Kit("bard", Expert.SINGLETON,

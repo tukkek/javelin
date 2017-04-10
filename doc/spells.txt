@@ -5,6 +5,7 @@ Touch spells can only be targeted at those immediately adjacent to the spellcast
 
 Level 1 (caster level 1)
   Bane: all enemies have -1 to attack rolls.
+  Barbarian rage: shorter-lived version of the Rage spell (level 3), targets self only.
   Bless: all allies gain +1 to attack rolls.
   Cure light wounds: cures 5 hit points. Touch.
   Doom: shakens an enemy.
@@ -35,6 +36,7 @@ Level 3 (caster level 5)
   Find traps: caster gains +3 bonus to Search.
   Heroism: For 1 hour target gains a +2 morale bonus on attack rolls, saves, and skill checks. Touch.
   Inflict serious wounds: causes 20 points of damage. Touch.
+  Rage: +2 strength and constitution, +1 will, -2 to armor class of an ally (duration based on target's constitution).
   Vampiric touch: steals 21 temporary hit points from an enemy. Touch. Lasts for 1 hour.
   
 Level 4 (caster level 7)

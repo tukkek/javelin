@@ -488,6 +488,11 @@ public class Monster implements Cloneable, Serializable {
 		will = willp;
 	}
 
+	/**
+	 * @param delta
+	 *            Adds this bonus to willpower saving throws, even if
+	 *            {@link #will()} returns {@link Integer#MAX_VALUE}.
+	 */
 	public void addwill(int delta) {
 		will += delta;
 	}

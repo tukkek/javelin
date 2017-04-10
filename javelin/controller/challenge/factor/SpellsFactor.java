@@ -23,10 +23,12 @@ import javelin.model.spell.divination.FindTraps;
 import javelin.model.spell.divination.LocateObject;
 import javelin.model.spell.divination.PryingEyes;
 import javelin.model.spell.enchantment.compulsion.Bane;
+import javelin.model.spell.enchantment.compulsion.BarbarianRage;
 import javelin.model.spell.enchantment.compulsion.Bless;
 import javelin.model.spell.enchantment.compulsion.DominateMonster;
 import javelin.model.spell.enchantment.compulsion.Heroism;
 import javelin.model.spell.enchantment.compulsion.HoldMonster;
+import javelin.model.spell.enchantment.compulsion.Rage;
 import javelin.model.spell.evocation.DayLight;
 import javelin.model.spell.evocation.DeeperDarkness;
 import javelin.model.spell.evocation.FlameStrike;
@@ -106,6 +108,8 @@ public class SpellsFactor extends CrFactor {
 		handler.schoolcompulsion.add(new DominateMonster());
 		handler.schoolcompulsion.add(new Bless());
 		handler.schoolcompulsion.add(new Bane());
+		handler.schoolcompulsion.add(new Rage());
+		handler.schoolcompulsion.add(new BarbarianRage());
 
 		handler.schoolwounding.add(new InflictLightWounds()); // necromancy
 		handler.schoolwounding.add(new InflictModerateWounds());

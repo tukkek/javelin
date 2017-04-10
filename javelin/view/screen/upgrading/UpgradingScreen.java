@@ -96,7 +96,12 @@ public abstract class UpgradingScreen extends SelectScreen {
 		final UpgradeOption o = (UpgradeOption) op;
 		final String parenttext = text;
 		final List<Combatant> eligible = new ArrayList<Combatant>();
-		text += listeligible(o, eligible) + "\n";
+		String listeligible = listeligible(o, eligible);
+		if (eligible.isEmpty()) {
+			print(text + "\nNone can learn this right now...\n");
+			return false;
+		}
+		text += listeligible;
 		if (showmoneyinfo) {
 			text += "Your squad has $" + Squad.active.gold + "\n\n";
 		}
@@ -165,7 +170,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 						+ " days\n";
 			}
 		}
-		return s;
+		return s + "\n";
 	}
 
 	private int price(float xp) {

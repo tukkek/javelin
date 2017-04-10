@@ -18,7 +18,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
-import javelin.model.world.location.fortification.Shrine;
+import javelin.model.world.location.town.labor.religious.Shrine;
 
 /**
  * Represents a spell-like ability. See the d20 SRD for more info.

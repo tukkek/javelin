@@ -6,11 +6,6 @@ import java.util.HashMap;
 
 import javelin.Javelin;
 import javelin.model.world.location.Outpost.BuildOutpost;
-import javelin.model.world.location.fortification.Henge.BuildHenge;
-import javelin.model.world.location.fortification.MagesGuild.BuildMagesGuild;
-import javelin.model.world.location.fortification.MartialAcademy.BuildMartialAcademy;
-import javelin.model.world.location.fortification.Mine.BuildMine;
-import javelin.model.world.location.fortification.Shrine.BuildShrine;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.base.Dwelling.BuildDwelling;
 import javelin.model.world.location.town.labor.base.Growth;
@@ -18,14 +13,20 @@ import javelin.model.world.location.town.labor.base.Lodge.BuildLodge;
 import javelin.model.world.location.town.labor.base.Redraw;
 import javelin.model.world.location.town.labor.criminal.Sewers.BuildSewers;
 import javelin.model.world.location.town.labor.criminal.Slums.BuildSlums;
+import javelin.model.world.location.town.labor.cultural.MagesGuild.BuildMagesGuild;
+import javelin.model.world.location.town.labor.ecological.ArcheryRange.BuildArcheryRange;
+import javelin.model.world.location.town.labor.ecological.Henge.BuildHenge;
 import javelin.model.world.location.town.labor.expansive.BuildHighway;
 import javelin.model.world.location.town.labor.expansive.BuildRoad;
 import javelin.model.world.location.town.labor.expansive.Settler;
 import javelin.model.world.location.town.labor.expansive.TransportHub.BuildTransportHub;
-import javelin.model.world.location.town.labor.industrious.Deforestate;
-import javelin.model.world.location.town.labor.industrious.Shop.BuildShop;
 import javelin.model.world.location.town.labor.military.Academy.BuildCommonAcademy;
+import javelin.model.world.location.town.labor.military.MartialAcademy.BuildMartialAcademy;
+import javelin.model.world.location.town.labor.productive.Deforestate;
+import javelin.model.world.location.town.labor.productive.Mine.BuildMine;
+import javelin.model.world.location.town.labor.productive.Shop.BuildShop;
 import javelin.model.world.location.town.labor.religious.Sanctuary.BuildSanctuary;
+import javelin.model.world.location.town.labor.religious.Shrine.BuildShrine;
 import javelin.model.world.location.unique.Artificer.BuildArtificer;
 import javelin.model.world.location.unique.AssassinsGuild.BuildAssassinsGuild;
 import javelin.model.world.location.unique.MercenariesGuild.BuildMercenariesGuild;
@@ -46,7 +47,8 @@ public class Deck extends ArrayList<Labor> {
 			new BuildAssassinsGuild(), new BuildSewers(), new BuildSlums() };
 	private static final Labor[] CULTURAL = new Labor[] { new BuildMagesGuild(),
 			new BuildArtificer(), new BuildSummoningCircle() };
-	private static final Labor[] ECOLOGICAL = new Labor[] { new BuildHenge() };
+	private static final Labor[] ECOLOGICAL = new Labor[] { new BuildHenge(),
+			new BuildArcheryRange() };
 	private static final Labor[] EXPANSIVE = new Labor[] { new Settler(),
 			new BuildOutpost(), new BuildRoad(), new BuildHighway(),
 			new BuildTransportHub() };

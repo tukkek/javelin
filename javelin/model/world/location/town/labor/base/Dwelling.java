@@ -256,6 +256,8 @@ public class Dwelling extends Fortification {
 	}
 
 	/**
+	 * 100XP = 1CR.
+	 * 
 	 * @return Total of XP between all active {@link Squad} members.
 	 */
 	public static int sumxp() {

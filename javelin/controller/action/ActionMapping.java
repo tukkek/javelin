@@ -51,14 +51,19 @@ public class ActionMapping {
 			new ZoomOut(), // -
 			new ZoomIn(), // +
 
-			new ActionAdapter(Guide.HOWTO), new ActionAdapter(Guide.MINIGAMES), new ActionAdapter(Guide.ARTIFACTS),
-			new ActionAdapter(Guide.CONDITIONS), new ActionAdapter(Guide.ITEMS), new ActionAdapter(Guide.SKILLS),
-			new ActionAdapter(Guide.SPELLS), new ActionAdapter(Guide.UGRADES), new ActionAdapter(Guide.DISTRICT), //
+			new ActionAdapter(Guide.HOWTO), new ActionAdapter(Guide.MINIGAMES),
+			new ActionAdapter(Guide.ARTIFACTS),
+			new ActionAdapter(Guide.CONDITIONS), new ActionAdapter(Guide.ITEMS),
+			new ActionAdapter(Guide.SKILLS), new ActionAdapter(Guide.SPELLS),
+			new ActionAdapter(Guide.UGRADES), new ActionAdapter(Guide.DISTRICT),
+			new ActionAdapter(Guide.KITS), //
 
 			new Help(), // h
 
-			Action.MOVE_N, Action.MOVE_NE, Action.MOVE_E, Action.MOVE_SE, Action.MOVE_S, Action.MOVE_SW, Action.MOVE_W,
-			Action.MOVE_NW, AiMovement.SINGLETON, MeleeAttack.SINGLETON, RangedAttack.SINGLETON };
+			Action.MOVE_N, Action.MOVE_NE, Action.MOVE_E, Action.MOVE_SE,
+			Action.MOVE_S, Action.MOVE_SW, Action.MOVE_W, Action.MOVE_NW,
+			AiMovement.SINGLETON, MeleeAttack.SINGLETON,
+			RangedAttack.SINGLETON };
 	/** Only instance of this class. */
 	public static final ActionMapping SINGLETON = new ActionMapping();
 	/** If true will reload keys. */
@@ -77,12 +82,14 @@ public class ActionMapping {
 		for (final Action a : ActionMapping.ACTIONS) {
 			for (final String key : a.keys) {
 				if (mappings.put(key, a) != null) {
-					throw new RuntimeException("Key conflict (" + key + ") registering action " + a.name);
+					throw new RuntimeException("Key conflict (" + key
+							+ ") registering action " + a.name);
 				}
 			}
 			for (int code : a.keycodes) {
 				if (mappings.put("KeyEvent" + code, a) != null) {
-					throw new RuntimeException("Key conflict (" + code + ") registering action " + a.name);
+					throw new RuntimeException("Key conflict (" + code
+							+ ") registering action " + a.name);
 				}
 			}
 		}
@@ -98,7 +105,8 @@ public class ActionMapping {
 		}
 		final char keyChar = keyEvent.getKeyChar();
 		if (keyChar == KeyEvent.CHAR_UNDEFINED) {
-			final Action action = mappings.get("KeyEvent" + keyEvent.getKeyCode());
+			final Action action = mappings
+					.get("KeyEvent" + keyEvent.getKeyCode());
 
 			if (action == null) {
 				throw new RepeatTurn();

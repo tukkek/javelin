@@ -46,6 +46,7 @@ public abstract class SelectScreen extends InfoScreen {
 	 */
 	protected boolean showquit = true;
 	public boolean forceclose = false;
+	String originaltext;
 
 	/** Constructor. */
 	public SelectScreen(final String name, final Town t) {
@@ -152,6 +153,10 @@ public abstract class SelectScreen extends InfoScreen {
 	 * @return <code>true</code> to exit this screen.
 	 */
 	protected boolean select(char feedback, final List<Option> options) {
+		if (originaltext == null) {
+			originaltext = text;
+		}
+		print(originaltext);
 		Option o = convertselectionkey(feedback, options);
 		if (o == null) {
 			int selected = convertnumericselection(feedback, KEYS);

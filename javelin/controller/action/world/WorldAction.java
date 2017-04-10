@@ -38,20 +38,25 @@ public abstract class WorldAction implements ActionDescription {
 			new ConfigureWorldKeys(), // K
 			new Abandon(), // Q
 			new EnterZiggurat(), // Z
-			Guide.HOWTO, Guide.MINIGAMES, Guide.ARTIFACTS, Guide.CONDITIONS, Guide.ITEMS, Guide.SKILLS, Guide.SPELLS,
-			Guide.UGRADES, Guide.DISTRICT,
-			new WorldMove(new int[] { KeyEvent.VK_NUMPAD7, }, -1, -1, new String[] { "U", "↖ or 7 or U" }),
-			new WorldMove(new int[] { KeyEvent.VK_UP, KeyEvent.VK_NUMPAD8 }, 0, -1,
-					new String[] { "I", "↑ or 8 or I" }),
-			new WorldMove(new int[] { KeyEvent.VK_NUMPAD9 }, 1, -1, new String[] { "O", "↗ or 9 or O", }),
-			new WorldMove(new int[] { KeyEvent.VK_LEFT, KeyEvent.VK_NUMPAD4 }, -1, 0,
-					new String[] { "J", "← or 4 or J", }),
-			new WorldMove(new int[] { KeyEvent.VK_RIGHT, KeyEvent.VK_NUMPAD6, }, +1, 0,
-					new String[] { "L", "→ or 6 or L" }),
-			new WorldMove(new int[] { KeyEvent.VK_NUMPAD1 }, -1, 1, new String[] { "M", "↙ or 1 or M" }),
-			new WorldMove(new int[] { KeyEvent.VK_DOWN, KeyEvent.VK_NUMPAD2, }, 0, 1,
-					new String[] { "<", "↓ or 2 or <" }),
-			new WorldMove(new int[] { KeyEvent.VK_NUMPAD3 }, 1, 1, new String[] { ">", "↘ or 3 or >" }),
+			Guide.HOWTO, Guide.MINIGAMES, Guide.ARTIFACTS, Guide.CONDITIONS,
+			Guide.ITEMS, Guide.SKILLS, Guide.SPELLS, Guide.UGRADES,
+			Guide.DISTRICT, Guide.KITS,
+			new WorldMove(new int[] { KeyEvent.VK_NUMPAD7, }, -1, -1,
+					new String[] { "U", "↖ or 7 or U" }),
+			new WorldMove(new int[] { KeyEvent.VK_UP, KeyEvent.VK_NUMPAD8 }, 0,
+					-1, new String[] { "I", "↑ or 8 or I" }),
+			new WorldMove(new int[] { KeyEvent.VK_NUMPAD9 }, 1, -1,
+					new String[] { "O", "↗ or 9 or O", }),
+			new WorldMove(new int[] { KeyEvent.VK_LEFT, KeyEvent.VK_NUMPAD4 },
+					-1, 0, new String[] { "J", "← or 4 or J", }),
+			new WorldMove(new int[] { KeyEvent.VK_RIGHT, KeyEvent.VK_NUMPAD6, },
+					+1, 0, new String[] { "L", "→ or 6 or L" }),
+			new WorldMove(new int[] { KeyEvent.VK_NUMPAD1 }, -1, 1,
+					new String[] { "M", "↙ or 1 or M" }),
+			new WorldMove(new int[] { KeyEvent.VK_DOWN, KeyEvent.VK_NUMPAD2, },
+					0, 1, new String[] { "<", "↓ or 2 or <" }),
+			new WorldMove(new int[] { KeyEvent.VK_NUMPAD3 }, 1, 1,
+					new String[] { ">", "↘ or 3 or >" }),
 			new WorldHelp(), };
 
 	/** Action name. */
@@ -62,7 +67,8 @@ public abstract class WorldAction implements ActionDescription {
 	public final String[] morekeys;
 
 	/** Constructor. */
-	public WorldAction(final String name, final int[] keysp, final String[] morekeysp) {
+	public WorldAction(final String name, final int[] keysp,
+			final String[] morekeysp) {
 		this.name = name;
 		keys = keysp;
 		morekeys = morekeysp;

@@ -1,4 +1,4 @@
-package javelin.model.world.location.fortification;
+package javelin.model.world.location.town.labor.military;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -6,12 +6,10 @@ import java.util.HashSet;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseAbility;
-import javelin.controller.upgrade.ability.RaiseDexterity;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.classes.Warrior;
 import javelin.model.world.location.town.Rank;
-import javelin.model.world.location.town.labor.military.Academy;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -21,6 +19,14 @@ import tyrant.mikera.engine.RPG;
  */
 public class MartialAcademy extends Academy {
 	public static final ArrayList<Guild> GUILDS = new ArrayList<MartialAcademy.Guild>();
+
+	static {
+		UpgradeHandler uh = UpgradeHandler.singleton;
+		GUILDS.add(new Guild(uh.expertise, "Academy (combat expertise)",
+				RaiseIntelligence.SINGLETON));
+		GUILDS.add(new Guild(uh.power, "Academy (power attack)",
+				RaiseStrength.SINGLETON));
+	}
 
 	public static class BuildMartialAcademy extends BuildAcademies {
 		public BuildMartialAcademy() {
@@ -49,16 +55,6 @@ public class MartialAcademy extends Academy {
 		public MartialAcademy generate() {
 			return new MartialAcademy(upgrades, name, ability);
 		}
-	}
-
-	static {
-		UpgradeHandler uh = UpgradeHandler.singleton;
-		GUILDS.add(new Guild(uh.shots, "Academy (shooting range)",
-				RaiseDexterity.SINGLETON));
-		GUILDS.add(new Guild(uh.expertise, "Academy (combat expertise)",
-				RaiseIntelligence.SINGLETON));
-		GUILDS.add(new Guild(uh.power, "Academy (power attack)",
-				RaiseStrength.SINGLETON));
 	}
 
 	/**

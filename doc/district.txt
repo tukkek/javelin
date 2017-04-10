@@ -34,7 +34,11 @@ Build summoning circle: teaches summon outsider spells.
 
 ECOLOGICAL DISTRICT
 
-Build Henge: teaches summon animal spells, can be upgraded with each city rank.
+Build archery range: allows you to train and recruit rangers.
+
+Build henge: teaches summon animal spells, can be upgraded with each city rank.
+
+Build mead hall: allows for training and recruiting barbarian units.
 
 EXPANSIVE DISTRICTS
 

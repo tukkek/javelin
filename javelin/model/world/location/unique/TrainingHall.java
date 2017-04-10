@@ -34,6 +34,15 @@ import tyrant.mikera.engine.RPG;
 public class TrainingHall extends Fortification {
 	static final boolean DEBUG = false;
 	private static final String DESCRIPTION = "The Training Hall";
+	public final static ArrayList<Monster> CANDIDATES = new ArrayList<Monster>();
+
+	static {
+		for (Monster sensei : SquadScreen.getcandidates()) {
+			if (sensei.think(0)) {
+				CANDIDATES.add(sensei);
+			}
+		}
+	}
 	/**
 	 * Actual encounter level for each {@link TrainingSession}, by using the
 	 * shifted-to-zero index. Supposed to be difficult (EL-1) encounter party of
@@ -63,25 +72,14 @@ public class TrainingHall extends Fortification {
 		if (currentlevel == null) {
 			currentlevel = 1;
 		}
-		ArrayList<Monster> senseis = getcandidates();
 		int nstudents = Squad.active.members.size();
 		int nsenseis = RPG.r(Math.min(3, nstudents), RPG.max(nstudents, 5));
 		while (isweak() && garrison.size() < nsenseis) {
-			garrison.add(new Combatant(RPG.pick(senseis).clone(), true));
+			garrison.add(new Combatant(RPG.pick(CANDIDATES).clone(), true));
 		}
 		while (isweak()) {
 			Combatant.upgradeweakest(garrison, Realm.random());
 		}
-	}
-
-	public static ArrayList<Monster> getcandidates() {
-		ArrayList<Monster> senseis = SquadScreen.getcandidates();
-		for (Monster sensei : new ArrayList<Monster>(senseis)) {
-			if (!sensei.think(0)) {
-				senseis.remove(sensei);
-			}
-		}
-		return senseis;
 	}
 
 	boolean isweak() {

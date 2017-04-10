@@ -6,11 +6,11 @@ import java.util.List;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Squad;
-import javelin.model.world.location.fortification.MartialAcademy;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.military.Academy;
+import javelin.model.world.location.town.labor.military.MartialAcademy;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.SelectScreen;
 
@@ -19,7 +19,7 @@ import javelin.view.screen.town.SelectScreen;
  * @author alex
  */
 public class AcademyScreen extends UpgradingScreen {
-	final Academy academy;
+	protected Academy academy;
 	Option pillage = null;
 
 	/** Constructor. */

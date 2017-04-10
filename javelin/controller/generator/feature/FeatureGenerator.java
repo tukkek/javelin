@@ -24,18 +24,19 @@ import javelin.model.world.location.Resource;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.fortification.Guardian;
-import javelin.model.world.location.fortification.Henge;
-import javelin.model.world.location.fortification.MagesGuild;
-import javelin.model.world.location.fortification.MagesGuild.Guild;
-import javelin.model.world.location.fortification.MartialAcademy;
-import javelin.model.world.location.fortification.Mine;
-import javelin.model.world.location.fortification.Shrine;
 import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.base.Dwelling;
 import javelin.model.world.location.town.labor.base.Lodge;
-import javelin.model.world.location.town.labor.industrious.Shop;
+import javelin.model.world.location.town.labor.cultural.MagesGuild;
+import javelin.model.world.location.town.labor.cultural.MagesGuild.Guild;
+import javelin.model.world.location.town.labor.ecological.ArcheryRange;
+import javelin.model.world.location.town.labor.ecological.Henge;
 import javelin.model.world.location.town.labor.military.Academy;
+import javelin.model.world.location.town.labor.military.MartialAcademy;
+import javelin.model.world.location.town.labor.productive.Mine;
+import javelin.model.world.location.town.labor.productive.Shop;
+import javelin.model.world.location.town.labor.religious.Shrine;
 import javelin.model.world.location.unique.AdventurersGuild;
 import javelin.model.world.location.unique.Artificer;
 import javelin.model.world.location.unique.AssassinsGuild;
@@ -159,7 +160,8 @@ public class FeatureGenerator {
 		}
 	}
 
-	static void spawnnear(Town t, Actor a, World w, int min, int max) {
+	static void spawnnear(Town t, Actor a, World w, int min, int max,
+			boolean clear) {
 		int[] location = null;
 		while (location == null
 				|| World.get(t.x + location[0], t.y + location[1]) != null
@@ -180,7 +182,7 @@ public class FeatureGenerator {
 		a.y = location[1] + t.y;
 		Location l = a instanceof Location ? (Location) a : null;
 		a.place();
-		if (l != null) {
+		if (l != null && clear) {
 			l.capture();
 		}
 	}
@@ -248,9 +250,9 @@ public class FeatureGenerator {
 	}
 
 	void generatestartingarea(World seed, Town t) {
-		spawnnear(t, new Lodge(), seed, 1, 2);
-		spawnnear(t, new Shop(true, t.realm), seed, 1, 2);
-		spawnnear(t, new Academy(t.originalrealm), seed, 1, 2);
+		spawnnear(t, new Lodge(), seed, 1, 2, true);
+		spawnnear(t, new Shop(true, t.realm), seed, 1, 2, true);
+		spawnnear(t, new Academy(t.originalrealm), seed, 1, 2, true);
 		ArrayList<Monster> recruits = t.getpossiblerecruits();
 		recruits.sort(new Comparator<Monster>() {
 			@Override
@@ -262,16 +264,17 @@ public class FeatureGenerator {
 				return difference > 0 ? 1 : -1;
 			}
 		});
-		spawnnear(t, new Dwelling(recruits.get(RPG.r(1, 7))), seed, 1, 2);
-		spawnnear(t, Haxor.singleton, seed, 2, 3);
-		spawnnear(t, new TrainingHall(), seed, 2, 3);
-		spawnnear(t, new AdventurersGuild(), seed, 2, 3);
+		spawnnear(t, new Dwelling(recruits.get(RPG.r(1, 7))), seed, 1, 2, true);
+		spawnnear(t, Haxor.singleton, seed, 2, 3, true);
+		spawnnear(t, new AdventurersGuild(), seed, 2, 3, true);
+		spawnnear(t, new TrainingHall(), seed, 2, 3, false);
 	}
 
 	static void generatemartialacademies() {
-		for (javelin.model.world.location.fortification.MartialAcademy.Guild g : MartialAcademy.GUILDS) {
+		for (javelin.model.world.location.town.labor.military.MartialAcademy.Guild g : MartialAcademy.GUILDS) {
 			g.generate().place();
 		}
+		new ArcheryRange().place();
 	}
 
 	static int countplaces() {

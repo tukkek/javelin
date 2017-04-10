@@ -10,10 +10,10 @@ import javelin.model.world.Actor;
 import javelin.model.world.location.Portal;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.fortification.Guardian;
-import javelin.model.world.location.fortification.Shrine;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.base.Dwelling;
 import javelin.model.world.location.town.labor.base.Lodge;
+import javelin.model.world.location.town.labor.religious.Shrine;
 import javelin.model.world.location.unique.Haxor;
 import tyrant.mikera.engine.RPG;
 

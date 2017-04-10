@@ -13,9 +13,9 @@ import javelin.controller.upgrade.classes.ClassAdvancement;
 import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.model.Realm;
 import javelin.model.spell.Summon;
-import javelin.model.world.location.fortification.MagesGuild;
-import javelin.model.world.location.fortification.MartialAcademy;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.cultural.MagesGuild;
+import javelin.model.world.location.town.labor.military.MartialAcademy;
 import javelin.model.world.location.unique.SummoningCircle;
 
 /**

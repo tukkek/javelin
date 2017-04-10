@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 import javelin.Javelin;
 import javelin.controller.upgrade.Upgrade;
+import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.controller.upgrade.ability.RaiseDexterity;
@@ -24,6 +25,7 @@ import javelin.controller.upgrade.skill.DisableDevice;
 import javelin.controller.upgrade.skill.GatherInformation;
 import javelin.controller.upgrade.skill.Heal;
 import javelin.controller.upgrade.skill.Knowledge;
+import javelin.controller.upgrade.skill.Search;
 import javelin.controller.upgrade.skill.Spellcraft;
 import javelin.controller.upgrade.skill.Stealth;
 import javelin.controller.upgrade.skill.Survival;
@@ -36,9 +38,20 @@ import javelin.model.spell.evocation.MagicMissile;
 import javelin.model.unit.Monster;
 
 public abstract class Kit {
+	static {
+		UpgradeHandler.singleton.gather();
+	}
+
 	public HashSet<Upgrade> upgrades = new HashSet<Upgrade>();
 	public String name;
 	public static final ArrayList<Kit> KITS = new ArrayList<Kit>();
+	public static final Kit BARBARIAN = new Kit("barbarian", Warrior.SINGLETON,
+			RaiseStrength.SINGLETON) {
+		@Override
+		protected void define() {
+			upgrades.add(Survival.SINGLETON);
+		}
+	};
 	public static final Kit BARD = new Kit("bard", Expert.SINGLETON,
 			RaiseCharisma.SINGLETON) {
 		@Override
@@ -73,6 +86,7 @@ public abstract class Kit {
 		@Override
 		protected void define() {
 			upgrades.add(new MeleeDamage());
+			upgrades.addAll(UpgradeHandler.singleton.power);
 		}
 	};
 	public static final Kit PALADIN = new Kit("paladin", Warrior.SINGLETON,
@@ -83,6 +97,20 @@ public abstract class Kit {
 			upgrades.add(new Bless());
 		}
 	};
+	public static final Kit RANGER = new Kit("ranger", Warrior.SINGLETON,
+			RaiseDexterity.SINGLETON) {
+		@Override
+		protected void define() {
+			upgrades.add(Survival.SINGLETON);
+			upgrades.addAll(UpgradeHandler.singleton.shots);
+		}
+
+		@Override
+		public boolean allow(int bestability, int secondbest, Monster m) {
+			return !m.ranged.isEmpty()
+					&& super.allow(bestability, secondbest, m);
+		}
+	};
 	public static final Kit ROGUE = new Kit("rogue", Expert.SINGLETON,
 			RaiseDexterity.SINGLETON) {
 		@Override
@@ -90,6 +118,7 @@ public abstract class Kit {
 			upgrades.add(Acrobatics.SINGLETON);
 			upgrades.add(DisableDevice.SINGLETON);
 			upgrades.add(Stealth.SINGLETON);
+			upgrades.add(Search.SINGLETON);
 		}
 	};
 	public static final Kit WIZARD = new Kit("wizard", Aristocrat.SINGLETON,
@@ -103,8 +132,8 @@ public abstract class Kit {
 	};
 
 	static {
-		for (Kit kit : new Kit[] { BARD, CLERIC, DRUID, FIGHTER, PALADIN, ROGUE,
-				WIZARD, }) {
+		for (Kit kit : new Kit[] { BARBARIAN, BARD, CLERIC, DRUID, FIGHTER,
+				PALADIN, RANGER, ROGUE, WIZARD, }) {
 			KITS.add(kit);
 		}
 	}
@@ -140,5 +169,16 @@ public abstract class Kit {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	/**
+	 * @return <code>true</code> if this is a good choice for the given
+	 *         {@link Monster}. The default implementation just compares the two
+	 *         given ability scores to this class
+	 *         {@link #getpreferredability(Monster)}.
+	 */
+	public boolean allow(int bestability, int secondbest, Monster m) {
+		int score = getpreferredability(m);
+		return score == bestability || score == secondbest;
 	}
 }

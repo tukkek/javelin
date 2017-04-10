@@ -123,8 +123,7 @@ public class AdventurersGuild extends UniqueLocation {
 		int[] best = new int[] { attributes.get(4), attributes.get(5) };
 		ArrayList<Kit> kits = new ArrayList<Kit>(1);
 		for (Kit k : Kit.KITS) {
-			int score = k.getpreferredability(source);
-			if (score == best[0] || score == best[1]) {
+			if (k.allow(best[0], best[1], source)) {
 				kits.add(k);
 			}
 		}

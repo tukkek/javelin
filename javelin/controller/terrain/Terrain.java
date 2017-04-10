@@ -21,8 +21,8 @@ import javelin.model.world.Season;
 import javelin.model.world.World;
 import javelin.model.world.Actor;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.fortification.Mine;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.productive.Mine;
 import tyrant.mikera.engine.RPG;
 
 /**

@@ -1,4 +1,4 @@
-package javelin.model.world.location.town.labor.industrious;
+package javelin.model.world.location.town.labor.productive;
 
 import java.util.ArrayList;
 import java.util.Collections;

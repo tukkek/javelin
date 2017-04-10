@@ -1,4 +1,4 @@
-package javelin.model.world.location.fortification;
+package javelin.model.world.location.town.labor.ecological;
 
 import java.util.ArrayList;
 import java.util.Collections;

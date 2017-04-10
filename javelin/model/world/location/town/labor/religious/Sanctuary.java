@@ -2,31 +2,38 @@ package javelin.model.world.location.town.labor.religious;
 
 import java.awt.Image;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import javelin.controller.kit.Kit;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
-import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.military.Academy;
-import javelin.model.world.location.town.labor.military.Academy.BuildAcademy;
-import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.model.world.location.unique.TrainingHall;
 import javelin.view.Images;
-import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.town.SelectScreen;
+import javelin.view.screen.hiringacademy.HiringAcademy;
+import javelin.view.screen.hiringacademy.HiringAcademyScreen;
 import javelin.view.screen.upgrading.AcademyScreen;
 import tyrant.mikera.engine.RPG;
 
-public class Sanctuary extends Academy {
+public class Sanctuary extends Academy implements HiringAcademy {
+	static final String DESCRIPTION = "Sanctuary";
+	static final int UPGRADECOST = Kit.PALADIN.upgrades.size();
+	static final ArrayList<Monster> CANDIDATES = TrainingHall.CANDIDATES;
+
+	static {
+		for (Monster m : new ArrayList<Monster>(CANDIDATES)) {
+			if (Boolean.FALSE.equals(m.good)) {
+				CANDIDATES.remove(m);
+			}
+		}
+	}
+
 	public static class BuildSanctuary extends BuildAcademy {
 		public BuildSanctuary() {
 			super(Rank.VILLAGE);
@@ -39,95 +46,7 @@ public class Sanctuary extends Academy {
 
 	}
 
-	static final int UPGRADECOST = Kit.PALADIN.upgrades.size();
-	static final Character[] HIREKEYS = new Character[] { 'x', 'y', 'z' };
-
-	class Hire extends Option {
-		Combatant hire;
-
-		public Hire(Combatant hire) {
-			super("Hire " + hire.toString().toLowerCase(), 0);
-			this.hire = hire;
-			name += " ($"
-					+ SelectScreen.formatcost(MercenariesGuild.getfee(hire))
-					+ "/day)";
-		}
-	}
-
-	class SanctuaryScreen extends AcademyScreen {
-		SanctuaryScreen(Sanctuary s, Town t) {
-			super(s, t);
-			showmoneyinfo = false;
-		}
-
-		@Override
-		protected void sort(List<Option> options) {
-			options.sort(new Comparator<Option>() {
-				@Override
-				public int compare(Option o1, Option o2) {
-					boolean a = o1 instanceof Hire;
-					boolean b = o2 instanceof Hire;
-					if (a && !b) {
-						return +1;
-					}
-					if (!a && b) {
-						return -1;
-					}
-					return o1.name.compareTo(o2.name);
-				}
-			});
-		}
-
-		@Override
-		public List<Option> getoptions() {
-			List<Option> options = new ArrayList<Option>();
-			if (acolyte != null) {
-				options.add(new Hire(acolyte));
-			}
-			if (paladin != null) {
-				options.add(new Hire(paladin));
-			}
-			if (priest != null) {
-				options.add(new Hire(priest));
-			}
-			for (int i = 0; i < options.size(); i++) {
-				options.get(i).key = HIREKEYS[i];
-
-			}
-			options.addAll(super.getoptions());
-			return options;
-		}
-
-		@Override
-		public boolean select(Option o) {
-			if (o instanceof Hire) {
-				Combatant hire = ((Hire) o).hire;
-				if (!MercenariesGuild.recruit(hire, false)) {
-					print(text
-							+ "\nYou don't have enough money to pay today's advancement...\n");
-					return false;
-				}
-				if (hire == acolyte) {
-					acolyte = null;
-				} else if (hire == priest) {
-					priest = null;
-				} else {
-					paladin = null;
-				}
-				return true;
-			}
-			return super.select(o);
-		}
-
-		@Override
-		public String printinfo() {
-			return "Your squad has $"
-					+ SelectScreen.formatcost(Squad.active.gold);
-		}
-	}
-
 	public class UpǵradeSanctuary extends BuildingUpgrade {
-
 		public UpǵradeSanctuary(Location previous) {
 			super("Cathedral", UPGRADECOST, UPGRADECOST, previous, Rank.TOWN);
 		}
@@ -154,7 +73,6 @@ public class Sanctuary extends Academy {
 		}
 	}
 
-	static final String DESCRIPTION = "Sanctuary";
 	boolean upgraded = false;
 	Combatant acolyte = null;
 	Combatant priest = null;
@@ -178,7 +96,7 @@ public class Sanctuary extends Academy {
 
 	@Override
 	protected AcademyScreen getscreen() {
-		return new SanctuaryScreen(this, null);
+		return new HiringAcademyScreen(this);
 	}
 
 	@Override
@@ -200,16 +118,20 @@ public class Sanctuary extends Academy {
 		}
 	}
 
+	Combatant generatehire(String string, int i, int j, Kit cleric) {
+		return generatehire(string, i, j, cleric, RPG.pick(CANDIDATES));
+	}
+
 	@Override
 	public void turn(long time, WorldScreen world) {
 		super.turn(time, world);
 		generatehires(false, false, false);
 	}
 
-	private Combatant generatehire(String title, int min, int max, Kit k) {
-		Combatant c = new Combatant(RPG.pick(generatecandidates()).clone(),
-				true);
-		int target = RPG.r(min, max);
+	public static Combatant generatehire(String title, int minlevel,
+			int maxlevel, Kit k, Monster m) {
+		Combatant c = new Combatant(m.clone(), true);
+		int target = RPG.r(minlevel, maxlevel);
 		int tries = target * 100;
 		while (c.source.challengerating < target) {
 			c.upgrade(k.upgrades);
@@ -220,16 +142,6 @@ public class Sanctuary extends Academy {
 		}
 		c.source.customName = title;
 		return c;
-	}
-
-	public static ArrayList<Monster> generatecandidates() {
-		ArrayList<Monster> candidates = TrainingHall.getcandidates();
-		for (Monster m : new ArrayList<Monster>(candidates)) {
-			if (Boolean.FALSE.equals(m.good)) {
-				candidates.remove(m);
-			}
-		}
-		return candidates;
 	}
 
 	@Override
@@ -252,5 +164,21 @@ public class Sanctuary extends Academy {
 			return true;
 		}
 		return upgraded && priest == null && paladin == null;
+	}
+
+	@Override
+	public Combatant[] gethires() {
+		return new Combatant[] { acolyte, priest, paladin };
+	}
+
+	@Override
+	public void clearhire(Combatant hire) {
+		if (hire == acolyte) {
+			acolyte = null;
+		} else if (hire == priest) {
+			priest = null;
+		} else {
+			paladin = null;
+		}
 	}
 }

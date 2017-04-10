@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import javelin.Javelin;
 import javelin.controller.old.Game;
 import javelin.model.unit.Combatant;
-import javelin.model.world.location.town.Town;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 
@@ -73,14 +72,6 @@ public class Help extends Action {
 		Javelin.app.switchScreen(BattleScreen.active);
 	}
 
-	static String debug() {
-		String s = "\n\n";
-		for (Town t : Town.gettowns()) {
-			s += t.population + " ";
-		}
-		return s;
-	}
-
 	private static String pad(String s, int padding) {
 		while (s.length() < padding + 10) {
 			s += " ";
@@ -105,4 +96,7 @@ public class Help extends Action {
 		return text + ": " + a.getDescriptiveName();
 	}
 
+	static String debug() {
+		return "";
+	}
 }

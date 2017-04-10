@@ -24,6 +24,7 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.classes.ClassAdvancement;
 import javelin.model.Cloneable;
+import javelin.model.feat.CombatCasting;
 import javelin.model.feat.Feat;
 import javelin.model.feat.attack.focus.WeaponFocus;
 import javelin.model.item.Scroll;
@@ -657,5 +658,14 @@ public class Monster implements Cloneable, Serializable {
 	 */
 	public int swim() {
 		return Math.max(swim, fly);
+	}
+
+	public boolean concentrate(Spell casting) {
+		int concentration = skills.concentration
+				+ Monster.getbonus(constitution);
+		if (hasfeat(CombatCasting.SINGLETON)) {
+			concentration += 4;
+		}
+		return concentration >= casting.casterlevel;
 	}
 }

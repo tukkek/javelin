@@ -15,7 +15,6 @@ import javelin.controller.old.Game.Delay;
 import javelin.controller.upgrade.Spell;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Monster;
 import javelin.view.screen.InfoScreen;
 
 /**
@@ -41,7 +40,7 @@ public class CastSpell extends Fire implements AiAction {
 		final ArrayList<Spell> castable = new ArrayList<Spell>();
 		final boolean engaged = Fight.state.isengaged(c);
 		for (Spell s : c.spells) {
-			if (engaged && s.provokeaoo && !concentrate(c, s)) {
+			if (engaged && s.provokeaoo && !c.source.concentrate(s)) {
 				continue;
 			}
 			if (s.canbecast(c)) {
@@ -203,14 +202,8 @@ public class CastSpell extends Fire implements AiAction {
 
 	@Override
 	protected boolean checkengaged(BattleState state, Combatant c) {
-		return casting.provokeaoo && !concentrate(c, casting)
+		return casting.provokeaoo && !c.source.concentrate(casting)
 				&& state.isengaged(c);
-	}
-
-	static boolean concentrate(Combatant c, Spell s) {
-		final int concentration = c.source.skills.concentration
-				+ Monster.getbonus(c.source.constitution);
-		return concentration >= s.casterlevel;
 	}
 
 	@Override
@@ -222,7 +215,7 @@ public class CastSpell extends Fire implements AiAction {
 		final ArrayList<Spell> spells = active.spells;
 		for (int i = 0; i < spells.size(); i++) {
 			final Spell s = spells.get(i);
-			if (s.provokeaoo && !concentrate(active, s) && engaged) {
+			if (s.provokeaoo && !active.source.concentrate(s) && engaged) {
 				continue;
 			}
 			if (!s.castinbattle || !s.canbecast(active)) {

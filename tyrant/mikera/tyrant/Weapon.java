@@ -978,21 +978,21 @@ public class Weapon {
     	Lib.add(t);
     	
     	t=Lib.extend("flaming alteration","base weapon alteration");
-    	t.add("CarriedModifiers",Modifier.constant("Adjective","flaming"));
-    	t.add("CarriedModifiers",Modifier.constant("ExtraDamageType","fire"));
-    	t.add("CarriedModifiers",Modifier.bonus("ExtraASTBonus",RPG.d(3,6)));
+    	t.additem("CarriedModifiers",Modifier.constant("Adjective","flaming"));
+    	t.additem("CarriedModifiers",Modifier.constant("ExtraDamageType","fire"));
+    	t.additem("CarriedModifiers",Modifier.bonus("ExtraASTBonus",RPG.d(3,6)));
     	//t.add("CarriedModifiers",Modifier.simple("ItemWeight",100000));
         Lib.add(t);
         
     	t=Lib.extend("accuracy alteration","base weapon alteration");
     	// t.add("CarriedModifiers",Modifier.constant("Adjective","flaming"));
-    	t.add("CarriedModifiers",Modifier.linear(RPG.ST_ASKMULTIPLIER,200,0));
+    	t.additem("CarriedModifiers",Modifier.linear(RPG.ST_ASKMULTIPLIER,200,0));
     	//t.add("CarriedModifiers",Modifier.simple("ItemWeight",100000));
         Lib.add(t);
         
     	t=Lib.extend("smiting alteration","base weapon alteration");
     	// t.add("CarriedModifiers",Modifier.constant("Adjective","flaming"));
-    	t.add("CarriedModifiers",Modifier.linear(RPG.ST_ASTMULTIPLIER,200,0));
+    	t.additem("CarriedModifiers",Modifier.linear(RPG.ST_ASTMULTIPLIER,200,0));
     	//t.add("CarriedModifiers",Modifier.simple("ItemWeight",100000));
         Lib.add(t);
 

@@ -6,6 +6,8 @@ Note that some of the labor options described below are not actual structures (l
 
 ALL DISTRICTS
 
+Build dwelling: allows recruiting or hiring a single type of unit.
+
 Build traveller's lodge: a place to rest and recover for a small fee, can be upgraded to hotel (requires village) and hospital (requires town).
 
 Growth: grows the city population by 1, resulting in higher labor throughput and possibly increasing the district size, up to "city" size.
@@ -13,6 +15,26 @@ Growth: grows the city population by 1, resulting in higher labor throughput and
 Redraw: discards all available projects and redraws new options (doesn't affect ongoing projects).
 
 Trait: adding a trait to a town will open up new project options, as seen below.
+
+CRIMINAL DISTRICTS
+
+Build assassins guild: an academy dedicated to the Infiltrate skill.
+
+Build sewers: monsters will inhabit the sewers periodically, can be upgraded for tougher fights.
+
+Build slums: slums buy and sell items depending on availabity and the district's population.
+
+CULTURAL DISTRICTS
+
+Build artificer: forges and buys artifacts.
+
+Build mages guild: teaches spells from a certain school of magic or specialization.
+
+Build summoning circle: teaches summon outsider spells.
+
+ECOLOGICAL DISTRICT
+
+Build Henge: teaches summon animal spells, can be upgraded with each city rank.
 
 EXPANSIVE DISTRICTS
 
@@ -24,8 +46,26 @@ Build road: creates a roas between two towns, improving travel time and safety a
 
 Produce settler: reduces city population by 1 but adds a settler unit to a squad inside the district which is able to build a new town elsewhere in the world map.
 
-INDUSTRIOUS DISTRICTS
+Build transport hub: allows leasing vehicles. Can be upgraded to docks (if near water) and ultimately to magical docks.
+
+MILITARY DISTRICTS
+
+Build academy: offers varied upgrades. Each starting town has its own set.
+
+Build martial academy: teaches a set of combat enhancements.
+
+Build mercenaries guild: allows hiring heroes for a daily fee.
+
+PRODUCTIVE DISTRICTS
 
 Build mine: a mine allows you to mine gold and can be upgraded to automatically mine rubies.
 
+Build shop: crafts magic items for a fee.
+
 Deforestate: converts a forest tile in the district into 50% extra labor, automatically adds a Growth project if there isn't another project to benefit from this.
+
+RELIGIOUS DISTRICTS
+
+Build shrine: casts divine rituals in return for a donation.
+
+Build sanctuary: trains and offers clerics for hire. Can be upgraded to train paladins as well.

@@ -158,7 +158,7 @@ public abstract class Temple extends UniqueLocation {
 	boolean open() {
 		@SuppressWarnings("deprecation")
 		Key key = new Key(realm);
-		if (Squad.active.equipment.pop(key) != null) {
+		if (Squad.active.equipment.popitem(key, Squad.active) != null) {
 			Javelin.message("Temple entrance opened by the "
 					+ key.toString().toLowerCase() + "!", true);
 			return true;

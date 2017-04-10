@@ -41,7 +41,7 @@ import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.fortification.Fortification;
-import javelin.model.world.location.town.Academy;
+import javelin.model.world.location.town.labor.military.Academy;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.NamingScreen;

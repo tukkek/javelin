@@ -5,7 +5,7 @@ import javelin.model.unit.Monster;
 
 /**
  * Adds {@link Monster#intelligence}.
- * 
+ *
  * @author alex
  */
 public class HeadbandOfIntellect extends Artifact {

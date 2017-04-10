@@ -15,8 +15,8 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.fortification.Fortification;
-import javelin.model.world.location.town.Academy;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.military.Academy;
 import javelin.model.world.location.unique.UniqueLocation;
 
 /**

@@ -5,7 +5,7 @@ import javelin.model.unit.Monster;
 
 /**
  * Provide darkvision.
- * 
+ *
  * @see Monster#vision
  * @author alex
  */

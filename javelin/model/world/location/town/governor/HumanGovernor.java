@@ -7,9 +7,9 @@ import java.util.Comparator;
 import javelin.Javelin;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Deck;
-import javelin.model.world.location.town.labor.Growth;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.Trait;
+import javelin.model.world.location.town.labor.base.Growth;
 import tyrant.mikera.engine.RPG;
 
 /**

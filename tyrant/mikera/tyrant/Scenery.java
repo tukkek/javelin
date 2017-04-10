@@ -258,7 +258,7 @@ public class Scenery {
 		{
 			final Modifier m = Modifier.bonus(Skill.HEALING, 2);
 			m.set("ApplyMessage", "You smell the sweet scent of the flower");
-			t.add("LocationModifiers", m);
+			t.additem("LocationModifiers", m);
 		}
 		Lib.add(t);
 
@@ -290,7 +290,7 @@ public class Scenery {
 				return false;
 			}
 
-			gift = gift.remove(1);
+			gift = gift.unequip(1);
 			Game.messageTyrant("You drop " + gift.getTheName() + " into "
 					+ t.getTheName());
 			Game.messageTyrant("Splooosh!");

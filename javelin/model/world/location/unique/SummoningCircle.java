@@ -11,8 +11,8 @@ import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.spell.Summon;
 import javelin.model.unit.Monster;
-import javelin.model.world.location.town.Academy;
 import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.labor.military.Academy;
 import tyrant.mikera.engine.RPG;
 
 /**

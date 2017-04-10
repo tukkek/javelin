@@ -1,4 +1,4 @@
-package javelin.model.world.location.town;
+package javelin.model.world.location.town.labor.criminal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,12 +8,20 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
+import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
 
+/**
+ * Monsters will inhabit the sewers periodically, can be upgraded for tougher
+ * fights.
+ *
+ * @author alex
+ */
 public class Sewers extends Fortification {
 	static final String SEWERS = "Sewers";
 

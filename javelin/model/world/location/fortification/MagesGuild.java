@@ -12,13 +12,12 @@ import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.controller.upgrade.classes.Aristocrat;
-import javelin.model.unit.Combatant;
-import javelin.model.world.location.town.Academy;
 import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.labor.military.Academy;
 import tyrant.mikera.engine.RPG;
 
 /**
- * The only place a {@link Combatant} can learn new spells.
+ * Teaches spells from a certain school of magic or specialization.
  *
  * @author alex
  */

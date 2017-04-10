@@ -1,6 +1,7 @@
-package javelin.model.world.location.town.labor;
+package javelin.model.world.location.town.labor.base;
 
 import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.labor.Labor;
 
 public class Redraw extends Labor {
 	public Redraw() {

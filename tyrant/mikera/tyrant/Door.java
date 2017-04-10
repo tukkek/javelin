@@ -242,7 +242,7 @@ public class Door {
 					Game.messageTyrant("You succeed in picking the lock!");
 					door.set("IsLocked",0);
 				} else {
-					pick=pick.remove(1);
+					pick=pick.unequip(1);
 					Game.messageTyrant(pick.getYourName()+" breaks.");
 				}
 			} else {

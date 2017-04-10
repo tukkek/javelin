@@ -7,8 +7,8 @@ import java.util.HashSet;
 import javelin.controller.Point;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
-import javelin.model.world.World;
 import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.ConstructionSite;
 import javelin.model.world.location.Location;
 

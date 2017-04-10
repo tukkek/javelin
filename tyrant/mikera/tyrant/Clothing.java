@@ -316,7 +316,7 @@ public class Clothing {
                             name = color + " " + fabric.name + " " + thing.name();
                         }
                         if (clothingColors[j].charismaBonus != 0) {
-                            thing.add("WieldedModifiers",Modifier.bonus("CH",clothingColors[j].charismaBonus));
+                            thing.additem("WieldedModifiers",Modifier.bonus("CH",clothingColors[j].charismaBonus));
                             thing.set("IsMagicItem",1);
                         }
                         if (clothingColors[j].stealthBonus != 0) {
@@ -329,44 +329,44 @@ public class Clothing {
                         if (resist == 0) {
                         	// nothing
                         } else if (resist == FIRE) {
-                            thing.add("WieldedModifiers",Modifier.bonus("ARM:fire",RPG.d(2,3)));
+                            thing.additem("WieldedModifiers",Modifier.bonus("ARM:fire",RPG.d(2,3)));
                             thing.set("IsMagicItem",1);
                         } else if (resist == ICE) {
-                            thing.add("WieldedModifiers",Modifier.bonus("ARM:ice",RPG.d(2,3)));
+                            thing.additem("WieldedModifiers",Modifier.bonus("ARM:ice",RPG.d(2,3)));
                             thing.set("IsMagicItem",1);
                         }
                         resist = fabric.resistanceBonus;
                         if (resist == 0) {
                         	// nothing
                         } else if (resist == FIRE) {
-                            thing.add("WieldedModifiers",Modifier.bonus("ARM:fire",RPG.d(2,3)));
+                            thing.additem("WieldedModifiers",Modifier.bonus("ARM:fire",RPG.d(2,3)));
                             thing.set("IsMagicItem",1);
                         } else if (resist == ICE) {
-                            thing.add("WieldedModifiers",Modifier.bonus("ARM:ice",RPG.d(2,3)));
+                            thing.additem("WieldedModifiers",Modifier.bonus("ARM:ice",RPG.d(2,3)));
                             thing.set("IsMagicItem",1);
                         } else if (resist == WATER) {
-                            thing.add("WieldedModifiers",Modifier.bonus("ARM:water",RPG.d(2,3)));
+                            thing.additem("WieldedModifiers",Modifier.bonus("ARM:water",RPG.d(2,3)));
                             thing.set("IsMagicItem",1);
                         } else if (resist == SHOCK) {
-                            thing.add("WieldedModifiers",Modifier.bonus("ARM:shock",RPG.d(2,3)));
+                            thing.additem("WieldedModifiers",Modifier.bonus("ARM:shock",RPG.d(2,3)));
                             thing.set("IsMagicItem",1);
                         } else if (resist == PIERCING) {
-                            thing.add("WieldedModifiers",Modifier.bonus("ARM:piercing",RPG.d(2,3)));
+                            thing.additem("WieldedModifiers",Modifier.bonus("ARM:piercing",RPG.d(2,3)));
                             thing.set("IsMagicItem",1);
                         } else if (resist == POISON) {
-                            thing.add("WieldedModifiers",Modifier.bonus("ARM:poison",RPG.d(2,3)));
+                            thing.additem("WieldedModifiers",Modifier.bonus("ARM:poison",RPG.d(2,3)));
                             thing.set("IsMagicItem",1);
                         } else if (resist == CHILL) {
-                            thing.add("WieldedModifiers",Modifier.bonus("ARM:chill",RPG.d(2,3)));
+                            thing.additem("WieldedModifiers",Modifier.bonus("ARM:chill",RPG.d(2,3)));
                             thing.set("IsMagicItem",1);
                         } else if (resist == ACID) {
-                            thing.add("WieldedModifiers",Modifier.bonus("ARM:acid",RPG.d(2,3)));
+                            thing.additem("WieldedModifiers",Modifier.bonus("ARM:acid",RPG.d(2,3)));
                             thing.set("IsMagicItem",1);
                         } else if (resist == IMPACT) {
-                            thing.add("WieldedModifiers",Modifier.bonus("ARM:impact",RPG.d(2,3)));
+                            thing.additem("WieldedModifiers",Modifier.bonus("ARM:impact",RPG.d(2,3)));
                             thing.set("IsMagicItem",1);
                         } else if (resist == WEIGHT) {
-                            thing.add("WieldedModifiers",Modifier.percent("CarryFactor",105));
+                            thing.additem("WieldedModifiers",Modifier.percent("CarryFactor",105));
                             thing.set("IsMagicItem",1);
                         }
                         thing.set("Name",name);
@@ -409,7 +409,7 @@ public class Clothing {
                     name = candidates[i].getstring("Name");
                     newThing = (Thing)candidates[i].clone();
                     newThing.multiplyStat("Frequency",0.1); // 1 in 10 of these
-                    newThing.add("WieldedModifiers",modifier);
+                    newThing.additem("WieldedModifiers",modifier);
                     newThing.set("Uname",name);
                     newThing.set("Name",prefix + name + suffix);
                     newThing.set("IsMagic",1);

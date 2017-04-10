@@ -22,7 +22,7 @@ public class Item_TC extends TyrantTestCase {
         Thing arrow = Lib.create("arrow");
         int num=arrow.getNumber();
         assertTrue(num>1);
-    	Thing one=arrow.remove(1);
+    	Thing one=arrow.unequip(1);
     	
     	assertEquals(null,one.place);
         assertEquals(1,one.getNumber());

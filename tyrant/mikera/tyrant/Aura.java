@@ -19,7 +19,7 @@ public class Aura {
 		{
 			Modifier m=Modifier.bonus("Speed",10);
 			m.set("ApplyMessage","You feel nimble and quick");
-			t.add("LocationModifiers",m);
+			t.additem("LocationModifiers",m);
 		}
 		Lib.add(t);
 		
@@ -27,7 +27,7 @@ public class Aura {
 		{
 			Modifier m=Modifier.bonus("Luck",20);
 			m.set("ApplyMessage","You feel lucky");
-			t.add("LocationModifiers",m);
+			t.additem("LocationModifiers",m);
 		}
 		Lib.add(t);
 	}

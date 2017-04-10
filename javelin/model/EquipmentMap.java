@@ -13,24 +13,34 @@ import tyrant.mikera.engine.RPG;
 /**
  * Map of {@link Combatant#id} and a list of {@link Item}s. Also referred to as
  * a unit's "bag" in other parts of the code.
- * 
+ *
+ * TODO currently using *item in method names to differentiate between Map
+ * methods. May want to enclose a map instead of extending one in the future.
+ *
  * @author alex
  */
-public class EquipmentMap extends HashMap<Integer, ArrayList<Item>> implements Serializable {
+public class EquipmentMap extends HashMap<Integer, ArrayList<Item>>
+		implements Serializable {
 
 	@Override
-	public java.util.ArrayList<Item> get(final Object key) {
+	public ArrayList<Item> get(final Object key) {
 		if (!containsKey(key)) {
 			put((Integer) key, new ArrayList<Item>());
 		}
 		return super.get(key);
 	}
 
-	public Item pop(Class<? extends Item> type) {
-		for (final List<Item> items : values()) {
-			for (final Item i : items) {
+	/**
+	 * @return Any {@link Item} of this class, removed from the {@link Squad}'s
+	 *         bags or <code>null</code> if not found.
+	 */
+	public Item popitem(Class<? extends Item> type, Squad s) {
+		for (Combatant c : s.members) {
+			ArrayList<Item> bag = get(c.id);
+			for (final Item i : bag) {
 				if (type.isInstance(i)) {
-					items.remove(i);
+					bag.remove(i);
+					c.unequip(i);
 					return i;
 				}
 			}
@@ -38,7 +48,7 @@ public class EquipmentMap extends HashMap<Integer, ArrayList<Item>> implements S
 		return null;
 	}
 
-	public Item contains(Class<? extends Item> type) {
+	public Item containsitem(Class<? extends Item> type) {
 		for (final List<Item> items : values()) {
 			for (final Item i : items) {
 				if (type.isInstance(i)) {
@@ -49,11 +59,17 @@ public class EquipmentMap extends HashMap<Integer, ArrayList<Item>> implements S
 		return null;
 	}
 
-	public Item pop(Item type) {
-		for (final List<Item> items : values()) {
-			for (final Item i : items) {
+	/**
+	 * @return Any item equal to the given item, removed from the
+	 *         {@link Squad}'s bags or <code>null</code> if not found.
+	 */
+	public Item popitem(Item type, Squad s) {
+		for (Combatant c : s.members) {
+			ArrayList<Item> bag = get(c.id);
+			for (final Item i : bag) {
 				if (type.equals(i)) {
-					items.remove(i);
+					bag.remove(i);
+					c.unequip(i);
 					return i;
 				}
 			}
@@ -67,13 +83,13 @@ public class EquipmentMap extends HashMap<Integer, ArrayList<Item>> implements S
 		}
 	}
 
-	public void add(Item i, Squad s) {
+	public void additem(Item i, Squad s) {
 		get(RPG.pick(s.members).id).add(i);
 	}
 
 	/**
 	 * TODO ideally should never to a "dirty" state
-	 * 
+	 *
 	 * @param squad
 	 */
 	public void clean(Squad squad) {
@@ -93,5 +109,23 @@ public class EquipmentMap extends HashMap<Integer, ArrayList<Item>> implements S
 			count += bag.size();
 		}
 		return count;
+	}
+
+	/**
+	 * @return The exact given instance, removed from the {@link Squad}'s bags
+	 *         or <code>null</code> if not found.
+	 */
+	public Item removeitem(Item target, Squad s) {
+		for (Combatant c : s.members) {
+			ArrayList<Item> bag = get(c.id);
+			for (final Item i : bag) {
+				if (target == i) {
+					bag.remove(i);
+					c.unequip(i);
+					return i;
+				}
+			}
+		}
+		return null;
 	}
 }

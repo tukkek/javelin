@@ -26,7 +26,7 @@ public class Modifier_TC extends TyrantTestCase {
     public void testLinear_carried() {
        	int baseSK = rabbit.getStat("SK");
     	
-        berry.add("CarriedModifiers", Modifier.linear("SK", 200, 9));
+        berry.additem("CarriedModifiers", Modifier.linear("SK", 200, 9));
         rabbit.addThing(berry);
         assertEquals(2*baseSK+9 , rabbit.getStat("SK"));
     }
@@ -34,7 +34,7 @@ public class Modifier_TC extends TyrantTestCase {
     public void testLinear_dropped() {
         int baseSK = rabbit.getStat("SK");
         
-        berry.add("CarriedModifiers", Modifier.linear("SK", 200, 9));
+        berry.additem("CarriedModifiers", Modifier.linear("SK", 200, 9));
         rabbit.addThing(berry);
         assertEquals(2*baseSK+9 , rabbit.getStat("SK"));
         rabbit.dropThing(berry);
@@ -44,8 +44,8 @@ public class Modifier_TC extends TyrantTestCase {
     public void testLinear_carriedSeveral() {
        	int baseSK = rabbit.getStat("SK");
     	
-    	berry.add("CarriedModifiers", Modifier.linear("SK", 100, 9));    // 3 + 9  = 12
-        berry2.add("CarriedModifiers", Modifier.linear("SK", 100, 9));   // 12 + 9 = 21
+    	berry.additem("CarriedModifiers", Modifier.linear("SK", 100, 9));    // 3 + 9  = 12
+        berry2.additem("CarriedModifiers", Modifier.linear("SK", 100, 9));   // 12 + 9 = 21
         
         rabbit.addThing(berry);
         rabbit.addThing(berry2);
@@ -55,7 +55,7 @@ public class Modifier_TC extends TyrantTestCase {
     public void testBonus() {
        	int baseSK = rabbit.getStat("SK");
     	
-        berry.add("CarriedModifiers", Modifier.bonus("SK", 17));
+        berry.additem("CarriedModifiers", Modifier.bonus("SK", 17));
         
         rabbit.addThing(berry);
         assertEquals(baseSK+17, rabbit.getStat("SK"));
@@ -63,14 +63,14 @@ public class Modifier_TC extends TyrantTestCase {
     }
     
     public void testConstant() {
-        berry.add("CarriedModifiers", Modifier.constant("SK", 1000));
+        berry.additem("CarriedModifiers", Modifier.constant("SK", 1000));
         
         rabbit.addThing(berry);
         assertEquals(1000, rabbit.getStat("SK"));
     }
 	
     public void testScripted() {
-        berry.add("CarriedModifiers", Modifier.scripted("ST", new Script() {
+        berry.additem("CarriedModifiers", Modifier.scripted("ST", new Script() {
 			public boolean handle(Thing t, Event e) {
 				Thing b=e.getThing("Source");
 				int num=b.getNumber();
@@ -86,15 +86,15 @@ public class Modifier_TC extends TyrantTestCase {
     }
 	
     public void testSelf() {
-		berry.add("SelfModifiers", Modifier.constant("MyNumber", 10));
+		berry.additem("SelfModifiers", Modifier.constant("MyNumber", 10));
 		assertEquals(10,berry.getStat("MyNumber"));
 	}
     
     public void testConstant_several() {
         // Is this working as designed? The first constant shortcircuits the other ones
     	// mikera - yes, this is as designed
-        berry.add("CarriedModifiers", Modifier.constant("SK", 9));
-        berry.add("CarriedModifiers", Modifier.constant("SK", 1));
+        berry.additem("CarriedModifiers", Modifier.constant("SK", 9));
+        berry.additem("CarriedModifiers", Modifier.constant("SK", 1));
         
         rabbit.addThing(berry);
         assertEquals(new Integer(9), rabbit.get("SK"));
@@ -102,8 +102,8 @@ public class Modifier_TC extends TyrantTestCase {
     
     public void testConstant_several_flipped() {
         // Is this working as designed? The first constant shortcircuits the other ones
-        berry.add("CarriedModifiers", Modifier.constant("SK", 1));
-        berry.add("CarriedModifiers", Modifier.constant("SK", 9));
+        berry.additem("CarriedModifiers", Modifier.constant("SK", 1));
+        berry.additem("CarriedModifiers", Modifier.constant("SK", 9));
         
         rabbit.addThing(berry);
         assertEquals(new Integer(1), rabbit.get("SK"));
@@ -112,8 +112,8 @@ public class Modifier_TC extends TyrantTestCase {
     public void testMultipleModifiers() {
     	int baseSK = rabbit.getStat("SK");
 
-    	berry.add("CarriedModifiers", Modifier.bonus("SK", 9));
-        berry.add("CarriedModifiers", Modifier.bonus("SK", 4));
+    	berry.additem("CarriedModifiers", Modifier.bonus("SK", 9));
+        berry.additem("CarriedModifiers", Modifier.bonus("SK", 4));
         
         rabbit.addThing(berry);
         assertEquals(baseSK+13, rabbit.getStat("SK"));
@@ -133,19 +133,19 @@ public class Modifier_TC extends TyrantTestCase {
     public void testDynamicModifiers() {
     	int baseSK = rabbit.getStat("SK");
    
-        berry.add("CarriedModifiers", Modifier.bonus("SK", 1));
+        berry.additem("CarriedModifiers", Modifier.bonus("SK", 1));
         rabbit.addThing(berry);
         assertEquals(baseSK+1, rabbit.getStat("SK"));
         
-        berry.add("CarriedModifiers", Modifier.bonus("SK", 2));
+        berry.additem("CarriedModifiers", Modifier.bonus("SK", 2));
         assertEquals(baseSK+3, rabbit.getStat("SK"));
     }
     
     public void testMultilevel() {
     	int baseSK = rabbit.getStat("SK");
     	   
-        berry2.add("CarriedModifiers", Modifier.bonus("SK", 10));
-        berry.add("CarriedModifiers", Modifier.bonus("SK", 1));
+        berry2.additem("CarriedModifiers", Modifier.bonus("SK", 10));
+        berry.additem("CarriedModifiers", Modifier.bonus("SK", 1));
         berry.addThing(berry2);
         rabbit.addThing(berry);
         
@@ -172,11 +172,11 @@ public class Modifier_TC extends TyrantTestCase {
 		Thing c=Lib.create("carrot");
         Thing h=Lib.create("human");
 		
-        a.add("LocationModifiers", Modifier.bonus("SK", 1));
-        a.add("LocationModifiers", Modifier.bonus("SK", 2));
-        a.add("LocationModifiers", Modifier.constant("IsModifiedByApple", 1));
-	    c.add("LocationModifiers", Modifier.bonus("SK", 4));
-		c.add("LocationModifiers", Modifier.constant("IsModifiedByCarrot", 1));
+        a.additem("LocationModifiers", Modifier.bonus("SK", 1));
+        a.additem("LocationModifiers", Modifier.bonus("SK", 2));
+        a.additem("LocationModifiers", Modifier.constant("IsModifiedByApple", 1));
+	    c.additem("LocationModifiers", Modifier.bonus("SK", 4));
+		c.additem("LocationModifiers", Modifier.constant("IsModifiedByCarrot", 1));
        
 		int sk=h.getStat("SK");
 		

@@ -36,6 +36,7 @@ import javelin.model.condition.Defending;
 import javelin.model.condition.Melding;
 import javelin.model.feat.attack.Cleave;
 import javelin.model.feat.attack.GreatCleave;
+import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
@@ -783,5 +784,15 @@ public class Combatant implements Serializable, Cloneable {
 			cast = " Cast: " + cast.substring(0, cast.length() - 2) + ".";
 		}
 		return cast;
+	}
+
+	public void unequip(Item i) {
+		if (equipped.remove(i)) {
+			((Artifact) i).remove(this);
+		}
+	}
+
+	public boolean equip(Artifact a) {
+		return a.equip(this);
 	}
 }

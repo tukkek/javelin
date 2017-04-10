@@ -63,7 +63,7 @@ public class Food {
             
             // remove the "OnEaten" property
             // so that it only works once
-            t.remove("OnEaten");
+            t.unequip("OnEaten");
         }
         
         // default food handling
@@ -81,7 +81,7 @@ public class Food {
             // RPG.percentile(hunger, h.getStat("HungerThreshold")) + "%.");
         }
         if(nutritionValue(t,h) <= 0)
-            t = t.remove(1);
+            t = t.unequip(1);
     }
     
     public static int nutritionValue(Thing t, Thing h) {
@@ -534,7 +534,7 @@ public class Food {
 		t.set("Image",493);
         t.set("ItemWeight",100);
         t.addHandler("OnEaten",Scripts.statGain("Target","CH",40,40));
-        t.add("LocationModifiers",Modifier.bonus("Luck",3));
+        t.additem("LocationModifiers",Modifier.bonus("Luck",3));
         t.set("LevelMin",15);
         addFood(t);
         

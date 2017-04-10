@@ -85,7 +85,7 @@ public class RangedWeapon {
 				// Do not confuse player with possible false info
 				Game.messageTyrant("");
 				if (p != null) {
-					missile = missile.remove(1);
+					missile = missile.unequip(1);
 					fireAt(rangedWeapon, shooter, missile, gs.map, p.x, p.y);
 				}
 			} else {

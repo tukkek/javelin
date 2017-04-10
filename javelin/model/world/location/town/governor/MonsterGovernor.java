@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Incursion;
-import javelin.model.world.location.town.Dwelling.Draft;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.labor.Growth;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.Trait;
-import javelin.model.world.location.town.labor.military.BuildDwelling;
+import javelin.model.world.location.town.labor.base.Dwelling.BuildDwelling;
+import javelin.model.world.location.town.labor.base.Dwelling.Draft;
+import javelin.model.world.location.town.labor.base.Growth;
 import tyrant.mikera.engine.RPG;
 
 /**

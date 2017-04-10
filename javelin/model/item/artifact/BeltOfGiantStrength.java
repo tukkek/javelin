@@ -5,7 +5,7 @@ import javelin.model.unit.Monster;
 
 /**
  * Raises {@link Monster#strength} by +2.
- * 
+ *
  * @author alex
  */
 public class BeltOfGiantStrength extends Artifact {

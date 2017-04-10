@@ -18,6 +18,8 @@ Gather information: DC 10 + number of squares away to learn about a nearby locat
 
 Heal: DC 15 to double natural healing rates and also helps prevent secondary damage from poison. A unit cannot heal itself.
 
+Infiltrate: allows you to perform Infiltrate actions with a higher chance of success.
+
 Knowledge: DC 10 + encounter level to reveal details of a location.
 
 Perception: shows you the location of hidden creatures in battle (individual roll). Allows opponent and defending army units to be revealed. Allows you to notice and hide from enemy groups. Lets you see farther in the world map. 

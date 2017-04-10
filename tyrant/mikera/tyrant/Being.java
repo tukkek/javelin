@@ -37,7 +37,7 @@ public class Being {
 		if (h == Game.hero() && total > 1) {
 			int n = Game.getNumber("Drop how many (Enter=All)? ", total);
 			if (n > 0) {
-				t = t.remove(n);
+				t = t.unequip(n);
 			} else {
 				Game.messageTyrant("");
 				return false;

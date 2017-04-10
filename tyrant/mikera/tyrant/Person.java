@@ -211,7 +211,7 @@ public class Person {
 						"You sell your " + gift.getName(Game.hero(), count)
 								+ " to " + t.getTheName());
 				if (count > 0) {
-					gift.remove(count);
+					gift.unequip(count);
 				}
 				Coin.addMoney(h, value);
 			}

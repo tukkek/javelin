@@ -16,7 +16,11 @@ public abstract class Overlay {
 		MapPanel.overlay = null;
 		final Tile[][] tiles = BattleScreen.active.mappanel.tiles;
 		for (Point p : affected) {
-			tiles[p.x][p.y].repaint();
+			try {
+				tiles[p.x][p.y].repaint();
+			} catch (IndexOutOfBoundsException e) {
+				continue;// TODO
+			}
 		}
 		BattleScreen.active.mappanel.refresh();
 	}

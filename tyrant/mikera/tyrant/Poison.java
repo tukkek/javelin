@@ -64,7 +64,7 @@ public class Poison {
         t.set("DamageMessage","You feel sick...");
         t.set("ResistMessage","You manage to shake off a feeling of weakness");
         t.set("AttributeAddMessage","You feel weakened!");
-        t.add("CarriedModifiers",Modifier.linear("ST",90,0));
+        t.additem("CarriedModifiers",Modifier.linear("ST",90,0));
         Lib.add(t);    
         
         t=Lib.extend("poison","base poison");
@@ -129,8 +129,8 @@ public class Poison {
         t.set("DamageMessage","You feel sick...");
         t.set("ResistMessage","You manage to shake off a feeling of illness");
         t.set("AttributeAddMessage","You feel sick!");
-        t.add("CarriedModifiers",Modifier.bonus("ST",-2));
-        t.add("CarriedModifiers",Modifier.bonus("SK",-2));
+        t.additem("CarriedModifiers",Modifier.bonus("ST",-2));
+        t.additem("CarriedModifiers",Modifier.bonus("SK",-2));
         t.set("CureDifficulty",15);
         Lib.add(t);        
         
@@ -156,7 +156,7 @@ public class Poison {
         t.set("DamageMessage","You feel sick...");
         t.set("AttributeAddMessage","You feel the touch of the plague!");
         t.set("ResistDifficulty",20);
-        t.add("CarriedModifiers",Modifier.linear("CH",100,-10));
+        t.additem("CarriedModifiers",Modifier.linear("CH",100,-10));
         t.addHandler("OnAction",Scripts.generator("plague cloud",30));
         t.set("CureDifficulty",100);
         Lib.add(t);

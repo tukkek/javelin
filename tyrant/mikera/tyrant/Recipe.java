@@ -56,7 +56,7 @@ public class Recipe {
             }
             
             user.addThing(r);
-           	s.remove(1);
+           	s.unequip(1);
         
            	Thing res=recipeResult(r);
            	Item.identify(res);

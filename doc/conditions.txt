@@ -1,3 +1,7 @@
+Baned: -1 to attack rolls.
+
+Blessed: +1 to attack rolls.
+
 Burrowed: burrowed creatures receive +4 on armor class (not cumulative with defense, see below). A burrowed creature can only move or resurface and it is never considered engaged in battle.
 
 Cover: to determine whether your target has cover from your ranged attack, choose a corner of your square. If any line from this corner to any corner of the target’s square passes through a square or border that blocks line of effect or provides cover, or through a square occupied by a creature, the target has cover (+4 to AC). 
@@ -25,6 +29,8 @@ Meld: in some battles if an unit is killed a crystal will form in it's position.
 Poisoned: a poisoned unit has taken constitution damage and will receive secondary damage a little while after leaving combat. The constitution damage needs to be recovered by resting. 
 
 Prone: a prone creature has -2 or +2 armor class against mêlée or ranged attacks and has to spend a move action to get up.
+
+Raging: +2 strength and constitution, +1 will, -2 to armor class.
 
 Shaken: receives -2 to attack rolls and saving throws.
 

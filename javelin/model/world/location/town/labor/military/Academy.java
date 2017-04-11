@@ -223,6 +223,13 @@ public class Academy extends Fortification {
 		level = upgrades.size();
 	}
 
+	public Academy(String descriptionknown, String descriptionunknown,
+			HashSet<Upgrade> upgrades) {
+		this(descriptionknown, descriptionunknown,
+				Math.max(1, upgrades.size() - 1), upgrades.size() + 1, upgrades,
+				null, null);
+	}
+
 	public void setrealm(Realm r) {
 		upgradetype = r;
 		level = minlevel = maxlevel = Math.min(10, getupgrades(r).size());

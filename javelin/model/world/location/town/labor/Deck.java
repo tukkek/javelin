@@ -13,6 +13,7 @@ import javelin.model.world.location.town.labor.base.Lodge.BuildLodge;
 import javelin.model.world.location.town.labor.base.Redraw;
 import javelin.model.world.location.town.labor.criminal.Sewers.BuildSewers;
 import javelin.model.world.location.town.labor.criminal.Slums.BuildSlums;
+import javelin.model.world.location.town.labor.cultural.BardsGuild.BuildBardsGuild;
 import javelin.model.world.location.town.labor.cultural.MagesGuild.BuildMagesGuild;
 import javelin.model.world.location.town.labor.ecological.ArcheryRange.BuildArcheryRange;
 import javelin.model.world.location.town.labor.ecological.Henge.BuildHenge;
@@ -47,7 +48,8 @@ public class Deck extends ArrayList<Labor> {
 	private static final Labor[] CRIMINAL = new Labor[] {
 			new BuildAssassinsGuild(), new BuildSewers(), new BuildSlums() };
 	private static final Labor[] CULTURAL = new Labor[] { new BuildMagesGuild(),
-			new BuildArtificer(), new BuildSummoningCircle() };
+			new BuildArtificer(), new BuildSummoningCircle(),
+			new BuildBardsGuild() };
 	private static final Labor[] ECOLOGICAL = new Labor[] { new BuildHenge(),
 			new BuildArcheryRange(), new BuildMeadHall() };
 	private static final Labor[] EXPANSIVE = new Labor[] { new Settler(),

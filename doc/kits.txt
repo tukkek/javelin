@@ -4,7 +4,7 @@ Kits are initially found as starting options in the Adventurers Guild, in the ea
 
 Assassin (Assassins guild): a master of deceit and stealth, an infiltration expert.
 
-Bard: a social expert, performer and often found in supportive and leadership roles, well suited as a front-man and magic item user.
+Bard (Bards guild): a social expert, performer and often found in supportive and leadership roles, well suited as a front-man and magic item user.
 
 Barbarian (Mead hall): focused on close-combat, often able to enter a temporary battle lust known as berserker rage.
 
@@ -20,6 +20,6 @@ Paladin (upgraded Sanctuary): a more battle-focused Cleric, with lesser healing 
 
 Ranger (Archery range): the ultimate ranged shooter.
 
-Rogue: master of stealth, skilled with traps and ranged combat.
+Rogue (Thieves guild): master of stealth, skilled with traps and ranged combat.
 
 Wizard (Mage guilds): the ultimate spellcaster.

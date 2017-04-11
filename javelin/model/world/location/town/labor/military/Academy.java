@@ -30,6 +30,12 @@ import javelin.model.world.location.town.labor.Build;
 import javelin.view.screen.upgrading.AcademyScreen;
 import tyrant.mikera.engine.RPG;
 
+/**
+ * A place where units can go to learn about a general topic - be it physical
+ * feats or intellectual or magical prowess.
+ *
+ * @author alex
+ */
 public abstract class Academy extends Fortification {
 	private static final Comparator<Upgrade> ALPHABETICALSORT = new Comparator<Upgrade>() {
 		@Override

@@ -12,7 +12,7 @@ Druid (Henge): ally to the wildlife, able to summon animals to fight by his side
 
 Fighter (Academies): the ultimate mêlée fighter.
 
-Paladin (upgraded Sanctuary): a more battle-focused Cleric, with lesser healing abilities.
+Paladin (upgraded Sanctuary): a more battle-focused Cleric, with lesser healing abilities, standing against evil and chaos.
 
 Ranger (Archery range): the ultimate ranged shooter.
 

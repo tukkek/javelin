@@ -113,7 +113,8 @@ public abstract class Item implements Serializable, Cloneable {
 	 * @param upgradeset
 	 *            One the static constants in this class, like {@link #MAGIC}.
 	 */
-	public Item(final String name, final int price, final ItemSelection upgradeset) {
+	public Item(final String name, final int price,
+			final ItemSelection upgradeset) {
 		this.name = name;
 		this.price = price;
 		if (upgradeset != null) {
@@ -268,7 +269,8 @@ public abstract class Item implements Serializable, Cloneable {
 		return all;
 	}
 
-	static private void addall(ItemSelection fire2, HashMap<String, ItemSelection> all, String string) {
+	static private void addall(ItemSelection fire2,
+			HashMap<String, ItemSelection> all, String string) {
 		all.put(string, fire2);
 	}
 
@@ -294,8 +296,10 @@ public abstract class Item implements Serializable, Cloneable {
 	 * this item and updates {@link Squad#equipment}.
 	 */
 	public void grab(Squad s) {
-		final String list = UseItems.listitems(null, false) + "\nWho will take the " + toString().toLowerCase() + "?";
-		s.equipment.get(UseItems.selectmember(s.members, this, list).id).add(this);
+		final String list = UseItems.listitems(null, false)
+				+ "\nWho will take the " + toString().toLowerCase() + "?";
+		s.equipment.get(UseItems.selectmember(s.members, this, list).id)
+				.add(this);
 	}
 
 	/**

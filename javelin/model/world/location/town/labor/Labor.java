@@ -29,7 +29,7 @@ public abstract class Labor implements Serializable, Cloneable {
 	public int cost;
 	public float progress;
 	public boolean automatic = true;
-	protected Town town;
+	public Town town;
 	/** <code>true</code> to return to {@link WorldScreen} after selection. */
 	public boolean closescreen = false;
 	public boolean construction = false;

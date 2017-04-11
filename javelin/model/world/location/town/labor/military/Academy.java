@@ -1,7 +1,6 @@
 package javelin.model.world.location.town.labor.military;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -28,18 +27,10 @@ import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
-import javelin.model.world.location.town.labor.BuildingUpgrade;
-import javelin.model.world.location.town.labor.Labor;
 import javelin.view.screen.upgrading.AcademyScreen;
 import tyrant.mikera.engine.RPG;
 
-/**
- * A place where units can go to learn about a general topic - be it physical
- * feats or intellectual or magical prowess.
- *
- * @author alex
- */
-public class Academy extends Fortification {
+public abstract class Academy extends Fortification {
 	private static final Comparator<Upgrade> ALPHABETICALSORT = new Comparator<Upgrade>() {
 		@Override
 		public int compare(Upgrade o1, Upgrade o2) {
@@ -65,9 +56,6 @@ public class Academy extends Fortification {
 		protected void define() {
 			goal = getacademy();
 			super.define();
-			if (goal.upgrades.isEmpty()) {
-				goal.setrealm(town.originalrealm);
-			}
 			cost = goal.getcost();
 			name = "Build " + goal.descriptionknown.toLowerCase();
 		}
@@ -116,46 +104,6 @@ public class Academy extends Fortification {
 		}
 	}
 
-	/**
-	 * Builds a common, base-class {@link Academy}.
-	 *
-	 * @author alex
-	 */
-	public static class BuildRealmAcademy extends BuildAcademy {
-		public BuildRealmAcademy() {
-			super(Rank.HAMLET);
-		}
-
-		@Override
-		protected Academy getacademy() {
-			return new Academy(null);
-		}
-	}
-
-	class UpgradeCommonAcademy extends BuildingUpgrade {
-		public UpgradeCommonAcademy(int cost, Academy previous) {
-			super("", cost, +cost, previous, Rank.HAMLET);
-			name = "Upgrade academy";
-		}
-
-		@Override
-		public Location getgoal() {
-			return previous;
-		}
-
-		@Override
-		public boolean validate(District d) {
-			return super.validate(d) && cost > 0;
-		}
-
-		@Override
-		public void done() {
-			super.done();
-			((Academy) previous).level += cost;
-			refill();
-		}
-	}
-
 	/** Currently training unit. */
 	public OrderQueue training = new OrderQueue();
 	/** Money {@link #training} unit had before entering here (if alone). */
@@ -167,33 +115,6 @@ public class Academy extends Fortification {
 	/** If a single unit parks with a vehicle here it is stored. */
 	public Transport parking = null;
 	public int level = 0;
-	protected boolean allowupgrade = false;
-	Realm upgradetype;
-
-	/**
-	 * Builds a basic, upgradeable academy.
-	 *
-	 * @param r
-	 *            Type of upgrade to offer. If you choose to set this as
-	 *            <code>null</code>, you need to manually call
-	 *            {@link #setrealm(Realm)} later on.
-	 *
-	 * @see BuildAcademy
-	 * @see UpgradeHandler
-	 */
-	public Academy(Realm r) {
-		this("An academy", "An academy", 0, 0, new HashSet<Upgrade>(), null,
-				null);
-		allowupgrade = true;
-		// level = 10;
-		if (r != null) {
-			setrealm(r);
-		}
-	}
-
-	public int getcost() {
-		return upgrades.size();
-	}
 
 	/**
 	 * See {@link Fortification#Fortification(String, String, int, int)}.
@@ -225,14 +146,34 @@ public class Academy extends Fortification {
 				null, null);
 	}
 
-	public void setrealm(Realm r) {
-		upgradetype = r;
-		level = minlevel = maxlevel = Math.min(10, getupgrades(r).size());
-		if (minlevel > 1) {
-			minlevel -= 1;
+	/**
+	 * Normally {@link #training} units don't get out of the academy by
+	 * themselves since this would mean being alone in the wild but if the game
+	 * is about to be lost due to the absence of {@link Squad}s then the unit
+	 * gets out to prevent the game from ending.
+	 *
+	 * @return <code>false</code> if there was no unit in {@link #training}.
+	 */
+	public static boolean train() {
+		boolean trained = false;
+		for (Actor actor : World.getall()) {
+			if (actor instanceof Academy) {
+				Academy a = (Academy) actor;
+				/* don't inline */
+				for (Order order : a.training.queue) {
+					TrainingOrder o = (TrainingOrder) order;
+					a.completetraining(o).hourselapsed = Math
+							.max(o.completionat, Squad.active.hourselapsed);
+					trained = true;
+				}
+				a.training.clear();
+			}
 		}
-		maxlevel += 1;
-		refill();
+		return trained;
+	}
+
+	public int getcost() {
+		return upgrades.size();
 	}
 
 	/**
@@ -256,7 +197,7 @@ public class Academy extends Fortification {
 	}
 
 	protected AcademyScreen getscreen() {
-		return new AcademyScreen(this, null);// TODO shows progress
+		return new AcademyScreen(this, null);
 	}
 
 	Squad completetraining(TrainingOrder next) {
@@ -363,64 +304,7 @@ public class Academy extends Fortification {
 		parking = null;
 	}
 
-	/**
-	 * Normally {@link #training} units don't get out of the academy by
-	 * themselves since this would mean being alone in the wild but if the game
-	 * is about to be lost due to the absence of {@link Squad}s then the unit
-	 * gets out to prevent the game from ending.
-	 *
-	 * @return <code>false</code> if there was no unit in {@link #training}.
-	 */
-	public static boolean train() {
-		boolean trained = false;
-		for (Actor actor : World.getall()) {
-			if (actor instanceof Academy) {
-				Academy a = (Academy) actor;
-				/* don't inline */
-				for (Order order : a.training.queue) {
-					TrainingOrder o = (TrainingOrder) order;
-					a.completetraining(o).hourselapsed = Math
-							.max(o.completionat, Squad.active.hourselapsed);
-					trained = true;
-				}
-				a.training.clear();
-			}
-		}
-		return trained;
-	}
-
-	void refill() {
-		ArrayList<Upgrade> upgrades = new ArrayList<Upgrade>(
-				getupgrades(upgradetype));
-		if (this.upgrades.isEmpty()) {
-			for (Upgrade u : upgrades) {
-				if (u instanceof ClassAdvancement) {
-					this.upgrades.add(u);
-					break;
-				}
-			}
-		}
-		Collections.shuffle(upgrades);
-		for (Upgrade u : upgrades) {
-			if (this.upgrades.size() >= level) {
-				break;
-			}
-			this.upgrades.add(u);
-		}
-
-	}
-
-	@Override
-	public ArrayList<Labor> getupgrades(District d) {
-		ArrayList<Labor> getupgrades = super.getupgrades(d);
-		if (allowupgrade && upgrades.size() <= d.town.getrank().maxpopulation) {
-			getupgrades.add(new UpgradeCommonAcademy(
-					getupgrades(upgradetype).size() - upgrades.size(), this));
-		}
-		return getupgrades;
-	}
-
-	static HashSet<Upgrade> getupgrades(Realm r) {
+	protected static HashSet<Upgrade> getupgrades(Realm r) {
 		return UpgradeHandler.singleton.getupgrades(r);
 	}
 
@@ -428,4 +312,5 @@ public class Academy extends Fortification {
 	public boolean isworking() {
 		return !training.queue.isEmpty() && !training.reportalldone();
 	}
+
 }

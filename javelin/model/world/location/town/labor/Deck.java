@@ -23,7 +23,7 @@ import javelin.model.world.location.town.labor.expansive.BuildHighway;
 import javelin.model.world.location.town.labor.expansive.BuildRoad;
 import javelin.model.world.location.town.labor.expansive.Settler;
 import javelin.model.world.location.town.labor.expansive.TransportHub.BuildTransportHub;
-import javelin.model.world.location.town.labor.military.Academy.BuildRealmAcademy;
+import javelin.model.world.location.town.labor.military.RealmAcademy.BuildRealmAcademy;
 import javelin.model.world.location.town.labor.military.MartialAcademy.BuildMartialAcademy;
 import javelin.model.world.location.town.labor.military.Monastery.BuildMonastery;
 import javelin.model.world.location.town.labor.productive.Deforestate;

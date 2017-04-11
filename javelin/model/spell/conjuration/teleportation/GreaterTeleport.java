@@ -33,8 +33,8 @@ public class GreaterTeleport extends Spell {
 
 	/** Constructor. */
 	public GreaterTeleport() {
-		super("Greater teleport", 7, ChallengeRatingCalculator.ratespelllikeability(7),
-				Realm.MAGIC);
+		super("Greater teleport", 7,
+				ChallengeRatingCalculator.ratespelllikeability(7), Realm.MAGIC);
 		castinbattle = false;
 		castonallies = false;
 		castoutofbattle = true;
@@ -50,8 +50,8 @@ public class GreaterTeleport extends Spell {
 			if (a instanceof Town || a instanceof UniqueLocation
 					|| a instanceof Temple || a instanceof Academy) {
 				places.add(a);
-				Fortification f =
-						a instanceof Fortification ? (Fortification) a : null;
+				Fortification f = a instanceof Fortification ? (Fortification) a
+						: null;
 				String choice = f == null ? a.toString() : f.descriptionknown;
 				if (showterrain) {
 					choice += " (" + Terrain.get(a.x, a.y) + ")";
@@ -60,8 +60,7 @@ public class GreaterTeleport extends Spell {
 			}
 		}
 		Collections.sort(names);
-		Actor to =
-				places.get(Javelin.choose("Where to?", names, true, true));
+		Actor to = places.get(Javelin.choose("Where to?", names, true, true));
 		Squad.active.x = to.x;
 		Squad.active.y = to.y;
 		while (World.get(Squad.active.x, Squad.active.y) != Squad.active) {

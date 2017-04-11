@@ -138,7 +138,7 @@ public enum Realm {
 				+ opponent.source.customName.substring(1).toLowerCase();
 	}
 
-	String prefixate() {
+	public String prefixate() {
 		if (equals(GOOD)) {
 			return "Blessed";
 		}

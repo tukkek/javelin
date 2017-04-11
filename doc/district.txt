@@ -58,7 +58,7 @@ Build transport hub: allows leasing vehicles. Can be upgraded to docks (if near 
 
 MILITARY DISTRICTS
 
-Build academy: offers varied upgrades, with each starting town offering its own unique set.
+Build realm academy: offers varied upgrades, with each starting town offering its own unique set.
 
 Build martial academy: teaches one of a set of combat enhancements.
 

@@ -40,7 +40,8 @@ public class MagesGuild extends Academy {
 		HashSet<Upgrade> upgrades;
 		RaiseAbility ability;
 
-		MageGuildData(String name, HashSet<Upgrade> upgrades, RaiseAbility ability) {
+		MageGuildData(String name, HashSet<Upgrade> upgrades,
+				RaiseAbility ability) {
 			this.name = name;
 			this.upgrades = upgrades;
 			this.ability = ability;
@@ -56,21 +57,29 @@ public class MagesGuild extends Academy {
 		uh.gather();
 
 		RaiseAbility cha = RaiseCharisma.SINGLETON;
-		GUILDS.add(new MageGuildData("Compulsion guild", uh.schoolcompulsion, cha));
-		GUILDS.add(new MageGuildData("Conjuration guild", uh.schoolconjuration, cha));
-		GUILDS.add(new MageGuildData("Abjuration guild", uh.schoolabjuration, cha));
+		GUILDS.add(new MageGuildData("Compulsion guild", uh.schoolcompulsion,
+				cha));
+		GUILDS.add(new MageGuildData("Conjuration guild", uh.schoolconjuration,
+				cha));
+		GUILDS.add(new MageGuildData("Abjuration guild", uh.schoolabjuration,
+				cha));
 
 		RaiseAbility wisdom = RaiseWisdom.SINGLETON;
-		GUILDS.add(new MageGuildData("Healing guild", uh.schoolrestoration, wisdom));
+		GUILDS.add(new MageGuildData("Healing guild", uh.schoolrestoration,
+				wisdom));
 		GUILDS.add(new MageGuildData("Totem guild", uh.schooltotem, wisdom));
-		GUILDS.add(new MageGuildData("Restoration guild", uh.schoolhealwounds, wisdom));
-		GUILDS.add(new MageGuildData("Divination guild", uh.schooldivination, wisdom));
+		GUILDS.add(new MageGuildData("Restoration guild", uh.schoolhealwounds,
+				wisdom));
+		GUILDS.add(new MageGuildData("Divination guild", uh.schooldivination,
+				wisdom));
 
 		RaiseAbility i = RaiseIntelligence.SINGLETON;
-		GUILDS.add(new MageGuildData("Necromancy guild", uh.schoolnecromancy, i));
+		GUILDS.add(
+				new MageGuildData("Necromancy guild", uh.schoolnecromancy, i));
 		GUILDS.add(new MageGuildData("Wounding guild", uh.schoolwounding, i));
 		GUILDS.add(new MageGuildData("Evocation guild", uh.schoolevocation, i));
-		GUILDS.add(new MageGuildData("Transmutation guild", uh.schooltransmutation, i));
+		GUILDS.add(new MageGuildData("Transmutation guild",
+				uh.schooltransmutation, i));
 	}
 
 	/**

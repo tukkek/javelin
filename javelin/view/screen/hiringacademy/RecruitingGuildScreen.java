@@ -4,18 +4,17 @@ import java.util.List;
 
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.location.town.Town;
+import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.town.labor.base.Dwelling;
-import javelin.model.world.location.town.labor.military.Academy;
 import javelin.view.screen.Option;
 import javelin.view.screen.upgrading.AcademyScreen;
 
-public class RecruitingAcademyScreen extends AcademyScreen {
-	HiringAcademy hiringacademy;
+public class RecruitingGuildScreen extends AcademyScreen {
+	Guild hiringacademy;
 
-	public RecruitingAcademyScreen(Academy academy, Town t) {
-		super(academy, t);
-		hiringacademy = (HiringAcademy) academy;
+	public RecruitingGuildScreen(Guild academy) {
+		super(academy, null);
+		hiringacademy = academy;
 		this.showmoneyinfo = false;
 	}
 

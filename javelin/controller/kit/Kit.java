@@ -1,5 +1,6 @@
 package javelin.controller.kit;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -58,7 +59,7 @@ import javelin.model.world.location.unique.AdventurersGuild;
  * 
  * @author alex
  */
-public abstract class Kit {
+public abstract class Kit implements Serializable {
 	static {
 		UpgradeHandler.singleton.gather();
 	}

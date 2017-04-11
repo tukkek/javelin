@@ -27,15 +27,19 @@ import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.base.Dwelling;
 import javelin.model.world.location.town.labor.base.Lodge;
+import javelin.model.world.location.town.labor.criminal.ThievesGuild;
+import javelin.model.world.location.town.labor.cultural.BardsGuild;
 import javelin.model.world.location.town.labor.cultural.MagesGuild;
-import javelin.model.world.location.town.labor.cultural.MagesGuild.Guild;
+import javelin.model.world.location.town.labor.cultural.MagesGuild.MageGuildData;
 import javelin.model.world.location.town.labor.ecological.ArcheryRange;
 import javelin.model.world.location.town.labor.ecological.Henge;
 import javelin.model.world.location.town.labor.ecological.MeadHall;
 import javelin.model.world.location.town.labor.military.Academy;
 import javelin.model.world.location.town.labor.military.MartialAcademy;
+import javelin.model.world.location.town.labor.military.Monastery;
 import javelin.model.world.location.town.labor.productive.Mine;
 import javelin.model.world.location.town.labor.productive.Shop;
+import javelin.model.world.location.town.labor.religious.Sanctuary;
 import javelin.model.world.location.town.labor.religious.Shrine;
 import javelin.model.world.location.unique.AdventurersGuild;
 import javelin.model.world.location.unique.Artificer;
@@ -78,7 +82,7 @@ public class FeatureGenerator {
 				Dungeon.STARTING));
 		// register(Lair.class, new FeatureGenerationData());
 		register(Outpost.class, new FeatureGenerationData());
-		register(Lodge.class, new FeatureGenerationData(.75f));
+		register(Lodge.class, new FeatureGenerationData(.75f, 5, 1));
 		register(Shrine.class, new FeatureGenerationData());
 		register(Resource.class, new FeatureGenerationData());
 		register(Mine.class, new FeatureGenerationData(1, 2, 2));
@@ -275,11 +279,13 @@ public class FeatureGenerator {
 	}
 
 	static void generatemartialacademies(ArrayList<Location> locations) {
-		for (javelin.model.world.location.town.labor.military.MartialAcademy.Guild g : MartialAcademy.GUILDS) {
+		for (javelin.model.world.location.town.labor.military.MartialAcademy.MartialAcademyData g : MartialAcademy.GUILDS) {
 			locations.add(g.generate());
 		}
 		locations.addAll(Arrays.asList(new Location[] { new ArcheryRange(),
-				new MeadHall(), new AssassinsGuild(), new Henge() }));
+				new MeadHall(), new AssassinsGuild(), new Henge(),
+				new BardsGuild(), new ThievesGuild(), new Monastery(),
+				new Sanctuary() }));
 
 	}
 
@@ -296,7 +302,7 @@ public class FeatureGenerator {
 	}
 
 	static void generatemageguilds(ArrayList<Location> locations) {
-		for (Guild g : MagesGuild.GUILDS) {
+		for (MageGuildData g : MagesGuild.GUILDS) {
 			locations.add(g.generate());
 		}
 	}

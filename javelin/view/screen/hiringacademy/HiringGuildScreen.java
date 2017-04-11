@@ -2,14 +2,14 @@ package javelin.view.screen.hiringacademy;
 
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.location.town.labor.military.Academy;
+import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.town.PurchaseScreen;
 
-public class HiringAcademyScreen extends RecruitingAcademyScreen {
+public class HiringGuildScreen extends RecruitingGuildScreen {
 
-	public HiringAcademyScreen(Academy academy) {
-		super(academy, null);
+	public HiringGuildScreen(Guild academy) {
+		super(academy);
 	}
 
 	@Override

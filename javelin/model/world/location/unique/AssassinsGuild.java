@@ -63,8 +63,8 @@ public class AssassinsGuild extends Academy {
 
 	static final String[] RECRUITS = new String[] { "Small monstrous scorpion",
 			"Doppelganger", "Medusa", "Rakshasa", };
-	static final String[] LEVELS = new String[] { "Cutthroat", "Footpad",
-			"Ninja", "Shadow" };
+	static final String[] LEVELS = new String[] { "Thug", "Cutthroat", "Ninja",
+			"Shadow" };
 
 	class AssassinGuildScreen extends AcademyScreen {
 		public AssassinGuildScreen(Academy academy, Town t) {

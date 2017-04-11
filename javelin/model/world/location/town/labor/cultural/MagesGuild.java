@@ -22,7 +22,7 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class MagesGuild extends Academy {
-	public static final ArrayList<Guild> GUILDS = new ArrayList<Guild>();
+	public static final ArrayList<MageGuildData> GUILDS = new ArrayList<MageGuildData>();
 
 	public static class BuildMagesGuild extends BuildAcademies {
 		public BuildMagesGuild() {
@@ -35,12 +35,12 @@ public class MagesGuild extends Academy {
 		}
 	}
 
-	public static class Guild {
+	public static class MageGuildData {
 		String name;
 		HashSet<Upgrade> upgrades;
 		RaiseAbility ability;
 
-		Guild(String name, HashSet<Upgrade> upgrades, RaiseAbility ability) {
+		MageGuildData(String name, HashSet<Upgrade> upgrades, RaiseAbility ability) {
 			this.name = name;
 			this.upgrades = upgrades;
 			this.ability = ability;
@@ -56,21 +56,21 @@ public class MagesGuild extends Academy {
 		uh.gather();
 
 		RaiseAbility cha = RaiseCharisma.SINGLETON;
-		GUILDS.add(new Guild("Compulsion guild", uh.schoolcompulsion, cha));
-		GUILDS.add(new Guild("Conjuration guild", uh.schoolconjuration, cha));
-		GUILDS.add(new Guild("Abjuration guild", uh.schoolabjuration, cha));
+		GUILDS.add(new MageGuildData("Compulsion guild", uh.schoolcompulsion, cha));
+		GUILDS.add(new MageGuildData("Conjuration guild", uh.schoolconjuration, cha));
+		GUILDS.add(new MageGuildData("Abjuration guild", uh.schoolabjuration, cha));
 
 		RaiseAbility wisdom = RaiseWisdom.SINGLETON;
-		GUILDS.add(new Guild("Healing guild", uh.schoolrestoration, wisdom));
-		GUILDS.add(new Guild("Totem guild", uh.schooltotem, wisdom));
-		GUILDS.add(new Guild("Restoration guild", uh.schoolhealwounds, wisdom));
-		GUILDS.add(new Guild("Divination guild", uh.schooldivination, wisdom));
+		GUILDS.add(new MageGuildData("Healing guild", uh.schoolrestoration, wisdom));
+		GUILDS.add(new MageGuildData("Totem guild", uh.schooltotem, wisdom));
+		GUILDS.add(new MageGuildData("Restoration guild", uh.schoolhealwounds, wisdom));
+		GUILDS.add(new MageGuildData("Divination guild", uh.schooldivination, wisdom));
 
 		RaiseAbility i = RaiseIntelligence.SINGLETON;
-		GUILDS.add(new Guild("Necromancy guild", uh.schoolnecromancy, i));
-		GUILDS.add(new Guild("Wounding guild", uh.schoolwounding, i));
-		GUILDS.add(new Guild("Evocation guild", uh.schoolevocation, i));
-		GUILDS.add(new Guild("Transmutation guild", uh.schooltransmutation, i));
+		GUILDS.add(new MageGuildData("Necromancy guild", uh.schoolnecromancy, i));
+		GUILDS.add(new MageGuildData("Wounding guild", uh.schoolwounding, i));
+		GUILDS.add(new MageGuildData("Evocation guild", uh.schoolevocation, i));
+		GUILDS.add(new MageGuildData("Transmutation guild", uh.schooltransmutation, i));
 	}
 
 	/**

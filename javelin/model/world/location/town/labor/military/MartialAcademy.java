@@ -18,13 +18,13 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class MartialAcademy extends Academy {
-	public static final ArrayList<Guild> GUILDS = new ArrayList<MartialAcademy.Guild>();
+	public static final ArrayList<MartialAcademyData> GUILDS = new ArrayList<MartialAcademy.MartialAcademyData>();
 
 	static {
 		UpgradeHandler uh = UpgradeHandler.singleton;
-		GUILDS.add(new Guild(uh.expertise, "Academy (combat expertise)",
+		GUILDS.add(new MartialAcademyData(uh.expertise, "Academy (combat expertise)",
 				RaiseIntelligence.SINGLETON));
-		GUILDS.add(new Guild(uh.power, "Academy (power attack)",
+		GUILDS.add(new MartialAcademyData(uh.power, "Academy (power attack)",
 				RaiseStrength.SINGLETON));
 	}
 
@@ -39,12 +39,12 @@ public class MartialAcademy extends Academy {
 		}
 	}
 
-	public static class Guild {
+	public static class MartialAcademyData {
 		String name;
 		HashSet<Upgrade> upgrades;
 		RaiseAbility ability;
 
-		public Guild(HashSet<Upgrade> upgrades, String name,
+		public MartialAcademyData(HashSet<Upgrade> upgrades, String name,
 				RaiseAbility ability) {
 			super();
 			this.name = name;

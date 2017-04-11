@@ -13,6 +13,7 @@ import javelin.model.world.location.town.labor.base.Lodge.BuildLodge;
 import javelin.model.world.location.town.labor.base.Redraw;
 import javelin.model.world.location.town.labor.criminal.Sewers.BuildSewers;
 import javelin.model.world.location.town.labor.criminal.Slums.BuildSlums;
+import javelin.model.world.location.town.labor.criminal.ThievesGuild.BuildThievesGuild;
 import javelin.model.world.location.town.labor.cultural.BardsGuild.BuildBardsGuild;
 import javelin.model.world.location.town.labor.cultural.MagesGuild.BuildMagesGuild;
 import javelin.model.world.location.town.labor.ecological.ArcheryRange.BuildArcheryRange;
@@ -22,8 +23,9 @@ import javelin.model.world.location.town.labor.expansive.BuildHighway;
 import javelin.model.world.location.town.labor.expansive.BuildRoad;
 import javelin.model.world.location.town.labor.expansive.Settler;
 import javelin.model.world.location.town.labor.expansive.TransportHub.BuildTransportHub;
-import javelin.model.world.location.town.labor.military.Academy.BuildCommonAcademy;
+import javelin.model.world.location.town.labor.military.Academy.BuildRealmAcademy;
 import javelin.model.world.location.town.labor.military.MartialAcademy.BuildMartialAcademy;
+import javelin.model.world.location.town.labor.military.Monastery.BuildMonastery;
 import javelin.model.world.location.town.labor.productive.Deforestate;
 import javelin.model.world.location.town.labor.productive.Mine.BuildMine;
 import javelin.model.world.location.town.labor.productive.Shop.BuildShop;
@@ -46,7 +48,8 @@ public class Deck extends ArrayList<Labor> {
 	private static final Labor[] BASE = new Labor[] { new Growth(),
 			new BuildLodge(), new Redraw(), new BuildDwelling() };
 	private static final Labor[] CRIMINAL = new Labor[] {
-			new BuildAssassinsGuild(), new BuildSewers(), new BuildSlums() };
+			new BuildAssassinsGuild(), new BuildSewers(), new BuildSlums(),
+			new BuildThievesGuild() };
 	private static final Labor[] CULTURAL = new Labor[] { new BuildMagesGuild(),
 			new BuildArtificer(), new BuildSummoningCircle(),
 			new BuildBardsGuild() };
@@ -56,8 +59,8 @@ public class Deck extends ArrayList<Labor> {
 			new BuildOutpost(), new BuildRoad(), new BuildHighway(),
 			new BuildTransportHub() };
 	private static final Labor[] MILITARY = new Labor[] {
-			new BuildMartialAcademy(), new BuildCommonAcademy(),
-			new BuildMercenariesGuild() };
+			new BuildMartialAcademy(), new BuildRealmAcademy(),
+			new BuildMercenariesGuild(), new BuildMonastery() };
 	private static final Labor[] PRODUCTIVE = new Labor[] { new BuildMine(),
 			new Deforestate(), new BuildShop() };
 	private static final Labor[] RELIGIOUS = new Labor[] { new BuildShrine(),

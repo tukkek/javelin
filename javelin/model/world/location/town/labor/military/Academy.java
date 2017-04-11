@@ -30,7 +30,6 @@ import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
-import javelin.view.screen.hiringacademy.HiringAcademy;
 import javelin.view.screen.upgrading.AcademyScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -69,16 +68,8 @@ public class Academy extends Fortification {
 			if (goal.upgrades.isEmpty()) {
 				goal.setrealm(town.originalrealm);
 			}
-			cost = goal.upgrades.size();
+			cost = goal.getcost();
 			name = "Build " + goal.descriptionknown.toLowerCase();
-			if (goal instanceof HiringAcademy) {
-				HiringAcademy ha = (HiringAcademy) goal;
-				for (Combatant hire : ha.gethires()) {
-					if (hire != null) {
-						cost += 1;
-					}
-				}
-			}
 		}
 
 		protected abstract Academy getacademy();
@@ -130,8 +121,8 @@ public class Academy extends Fortification {
 	 *
 	 * @author alex
 	 */
-	public static class BuildCommonAcademy extends BuildAcademy {
-		public BuildCommonAcademy() {
+	public static class BuildRealmAcademy extends BuildAcademy {
+		public BuildRealmAcademy() {
 			super(Rank.HAMLET);
 		}
 
@@ -198,6 +189,10 @@ public class Academy extends Fortification {
 		if (r != null) {
 			setrealm(r);
 		}
+	}
+
+	public int getcost() {
+		return upgrades.size();
 	}
 
 	/**

@@ -146,11 +146,13 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 			s = clone();
 			s.name = s.name.replaceAll("Spell: ", "");
 			c.spells.add(s);
+		} else if (s.perday == 5) {
+			return false;
 		} else {
 			s.perday += 1;
 		}
 		c.source.spellcr += s.cr;
-		return s.perday <= 5;
+		return true;
 	}
 
 	private boolean checkcasterlevel(int hitdice, Monster source) {

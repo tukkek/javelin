@@ -133,6 +133,7 @@ public abstract class SelectScreen extends InfoScreen {
 			Javelin.app.switchScreen(this);
 			feedback = InfoScreen.feedback();
 			if (select(feedback, options)) {
+				originaltext = null;
 				return;
 			}
 		}

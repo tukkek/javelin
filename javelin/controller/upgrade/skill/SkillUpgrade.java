@@ -47,7 +47,7 @@ public abstract class SkillUpgrade extends Upgrade {
 	 * @return The maximum number of ranks this creature can have in any skill.
 	 */
 	public int maximize(Combatant c) {
-		return c.source.hd.count() + 3;
+		return Math.min(20, c.source.hd.count()) + 3;
 	}
 
 	/**

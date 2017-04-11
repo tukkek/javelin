@@ -9,18 +9,20 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class Defending extends Condition {
+	int acbonus = 4;
 
 	public Defending(float expireatp, Combatant c) {
 		super(expireatp, c, Effect.POSITIVE, "defending", null);
+		acbonus = c.source.skills.acrobatics >= 3 ? 6 : 4;
 	}
 
 	@Override
 	public void start(Combatant c) {
-		c.acmodifier += 4;
+		c.acmodifier += acbonus;
 	}
 
 	@Override
 	public void end(Combatant c) {
-		c.acmodifier -= 4;
+		c.acmodifier -= acbonus;
 	}
 }

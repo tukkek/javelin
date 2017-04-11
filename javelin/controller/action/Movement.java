@@ -74,7 +74,7 @@ public class Movement extends Action {
 	 * @return Action points to disengage.
 	 */
 	static public float disengage(Combatant c) {
-		return Math.max(.1f, DISENGAGE - (.01f * c.source.skills.acrobatics));
+		return Math.max(.01f, DISENGAGE - .01f * c.source.tumble());
 	}
 
 	@Override
@@ -95,9 +95,9 @@ public class Movement extends Action {
 			if (!Movement.lastmovewasattack) {
 				BattleScreen.active.spentap += cost(hero, state, to.x, to.y);
 			}
-			final boolean finishmove =
-					meld != null || disengaging || Movement.lastmovewasattack
-							|| BattleScreen.active.spentap >= .5f;
+			final boolean finishmove = meld != null || disengaging
+					|| Movement.lastmovewasattack
+					|| BattleScreen.active.spentap >= .5f;
 			if (!finishmove) {
 				throw new RepeatTurn();
 			}

@@ -164,8 +164,8 @@ public class StatisticsScreen extends InfoScreen {
 	static String showskills(Monster m) {
 		Skills s = m.skills;
 		String output = "";
-		output += formatskill("acrobatics", s.acrobatics, m.dexterity);
-		output += formatskill("concentration", s.concentration, m.constitution);
+		output += formatskill("acrobatics", m.tumble(), m.dexterity);
+		output += formatskill("concentration", m.concentrate(), m.constitution);
 		output += formatskill("diplomacy", s.diplomacy, m.charisma);
 		output += formatskill("disable device", s.disabledevice,
 				m.intelligence);

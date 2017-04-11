@@ -1,19 +1,11 @@
 package javelin.model.world.location.unique;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.kit.Kit;
 import javelin.controller.terrain.Terrain;
-import javelin.controller.upgrade.FeatUpgrade;
-import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.ability.RaiseCharisma;
-import javelin.controller.upgrade.ability.RaiseDexterity;
-import javelin.controller.upgrade.classes.Expert;
-import javelin.controller.upgrade.skill.Disguise;
-import javelin.controller.upgrade.skill.Stealth;
-import javelin.model.feat.skill.Deceitful;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -33,6 +25,8 @@ import javelin.view.screen.upgrading.AcademyScreen;
  * @author alex
  */
 public class AssassinsGuild extends Academy {
+	static final String DESCRITPION = "Assassins guild";
+
 	public static class BuildAssassinsGuild extends BuildAcademy {
 		public BuildAssassinsGuild() {
 			super(Rank.HAMLET);
@@ -138,22 +132,13 @@ public class AssassinsGuild extends Academy {
 		}
 	}
 
-	static final String DESCRITPION = "Assassins guild";
-
 	public float assassinations = 1;
 
 	/** Constructor. */
 	public AssassinsGuild() {
-		super(DESCRITPION, DESCRITPION, 6, 10, new HashSet<Upgrade>(),
-				RaiseDexterity.SINGLETON, Expert.SINGLETON);
+		super(DESCRITPION, DESCRITPION, 6, 10, Kit.ASSASSIN.upgrades, null,
+				null);
 		vision = 3;
-		upgrades.add(Disguise.SINGLETON);
-		upgrades.add(Stealth.SINGLETON);
-		upgrades.add(RaiseCharisma.SINGLETON);
-		upgrades.add(RaiseDexterity.SINGLETON);
-		upgrades.add(new FeatUpgrade(Deceitful.SINGLETON));
-		upgrades.add(Expert.SINGLETON);
-		// sort(upgrades);
 	}
 
 	public int getrank(double a) {

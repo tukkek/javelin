@@ -35,8 +35,10 @@ public class FeatureGenerationData {
 	/**
 	 * The starting number of instances of this feature to generate on the world
 	 * map.
+	 * 
+	 * Make seed it's always at least 1 so that debug statistics won't botch.
 	 */
-	public Integer seeds = 0;
+	public Integer seeds = 1;
 
 	/** Construct with default values. */
 	public FeatureGenerationData() {
@@ -74,10 +76,10 @@ public class FeatureGenerationData {
 	 * @param seeds
 	 *            Overrides {@link #seeds}.
 	 */
-	public FeatureGenerationData(float chance, Integer max, Integer seeds) {
+	public FeatureGenerationData(float chance, Integer max, int seeds) {
 		this(chance);
 		this.max = max;
-		this.seeds = seeds;
+		this.seeds = Math.max(1, seeds);
 	}
 
 	public FeatureGenerationData(Integer object) {

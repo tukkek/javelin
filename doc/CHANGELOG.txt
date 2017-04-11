@@ -2,11 +2,13 @@ Version 1.7
 
  * Mouse support!
  * 4 mini-games: Arena, Battlefield, Dungeon Rush and Ziggurat!
+ * City management redesign, with 7 city traits and 35 projects!
  * New locations: natural resources and Assassins Guild
  * Infiltrate hostile locations
  * World map fog-of-war
- * Multi-threaded world generation
  * More responsive user-interface during battles
+ * Multi-threaded world generation
+ * 5 new character kits
 
 Version 1.6 (2016-07-15) 
 

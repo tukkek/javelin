@@ -37,10 +37,10 @@ public class DefensiveAttack extends Maneuver {
 	@Override
 	float calculatemisschance(Combatant current, Combatant targetCombatant,
 			BattleState battleState, int touchattackbonus) {
-		final float misschance =
-				super.calculatemisschance(current, targetCombatant, battleState,
-						touchattackbonus) - amount(current, 4) / 20f;
-		return misschance >= .05f ? misschance : .05f;
+		final float misschance = super.calculatemisschance(current,
+				targetCombatant, battleState, touchattackbonus)
+				- amount(current, 4) / 20f;
+		return Math.max(.05f, misschance);
 	}
 
 	@Override
@@ -49,9 +49,13 @@ public class DefensiveAttack extends Maneuver {
 		battleState = battleState.clone();
 		combatant = battleState.clone(combatant);
 		combatant.addcondition(new DefensiveStance(combatant.ap + .1f,
-				combatant, amount(combatant, 2)));
+				combatant, defensiveamount(combatant)));
 		return new ChanceNode(battleState, chance, "Defensive attack misses...",
 				Delay.WAIT);
+	}
+
+	int defensiveamount(Combatant c) {
+		return amount(c, c.source.skills.acrobatics >= 3 ? +3 : +2);
 	}
 
 	@Override
@@ -61,7 +65,7 @@ public class DefensiveAttack extends Maneuver {
 		combatant = battleState.clone(combatant);
 		target = battleState.clone(target);
 		combatant.addcondition(new DefensiveStance(combatant.ap + .1f,
-				combatant, amount(combatant, 2)));
+				combatant, defensiveamount(combatant)));
 		Attack attack = combatant.source.melee.get(0).get(0);
 		target.damage(attack.getaveragedamage(), battleState, attack.energy
 				? target.source.energyresistance : target.source.dr);

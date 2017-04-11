@@ -7,9 +7,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -22,6 +24,7 @@ import javelin.controller.db.StateManager;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
+import javelin.controller.kit.Kit;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.Upgrade;
@@ -229,7 +232,8 @@ public class JavelinApp extends QuestApp {
 		int summon = countsummon(spells);
 		System.out.println((UpgradeHandler.singleton.count() - spells.size())
 				+ " upgrades, " + (spells.size() - summon + 1) + " spells, "
-				+ UpgradeHandler.singleton.countskills() + " skills");
+				+ UpgradeHandler.singleton.countskills() + " skills, "
+				+ Kit.KITS.size() + " kits");
 		HashSet<Class<? extends Actor>> locationtypes = new HashSet<Class<? extends Actor>>();
 		int uniquelocations = 0;
 		for (Actor a : World.getall()) {
@@ -255,30 +259,51 @@ public class JavelinApp extends QuestApp {
 	static void printoptions() {
 		HashMap<String, HashSet<Upgrade>> allupgrades = UpgradeHandler.singleton
 				.getall();
+		ArrayList<Upgrade> upgradelist = new ArrayList<Upgrade>();
 		HashMap<String, ItemSelection> allitems = Item.getall();
-		for (String realm : allupgrades.keySet()) {
-			if (realm == "expertise" || realm == "shots" || realm == "power"
-					|| realm == "classlevels" || realm.startsWith("school")) {
-				continue;
-			}
-			System.out.println(realm);
-			int count = 1;
-			HashSet<Upgrade> upgrades = allupgrades.get(realm);
-			for (Upgrade u : upgrades) {
-				System.out.println("\t" + count + " - " + u);
-				count += 1;
-			}
-			System.out.println();
-			ItemSelection inventory = allitems.get(realm);
-			for (int i = 0; inventory != null && i < inventory.size(); i++) {
-				Item item = inventory.get(i).clone();
-				item.shop();
-				System.out.println(
-						"\t" + count + " - " + item + " ($" + item.price + ")");
-				count += 1;
-			}
-			System.out.println();
+		List<String> primary = Arrays.asList(new String[] { "earth", "wind",
+				"fire", "water", "good", "evil", "magic" });
+		for (String realm : primary) {
+			printrealm(allupgrades, allitems, realm);
+			upgradelist.addAll(allupgrades.get(realm));
 		}
+		ArrayList<String> extrarealms = new ArrayList<String>(
+				allupgrades.keySet());
+		extrarealms.sort(null);
+		for (String realm : extrarealms) {
+			if (!primary.contains(realm)) {
+				printrealm(allupgrades, allitems, realm);
+				upgradelist.addAll(allupgrades.get(realm));
+			}
+		}
+		for (Kit k : Kit.KITS) {
+			for (Upgrade u : k.upgrades) {
+				if (!(u instanceof Summon) && !upgradelist.contains(u)) {
+					throw new RuntimeException("Unregistered upgrade: " + u);
+				}
+			}
+		}
+	}
+
+	static void printrealm(HashMap<String, HashSet<Upgrade>> allupgrades,
+			HashMap<String, ItemSelection> allitems, String realm) {
+		HashSet<Upgrade> upgrades = allupgrades.get(realm);
+		int count = 1;
+		System.out.println(realm);
+		for (Upgrade u : upgrades) {
+			System.out.println("\t" + count + " - " + u);
+			count += 1;
+		}
+		System.out.println();
+		ItemSelection inventory = allitems.get(realm);
+		for (int i = 0; inventory != null && i < inventory.size(); i++) {
+			Item item = inventory.get(i).clone();
+			item.shop();
+			System.out.println(
+					"\t" + count + " - " + item + " ($" + item.price + ")");
+			count += 1;
+		}
+		System.out.println();
 	}
 
 	static int countsummon(Collection<Spell> spells) {

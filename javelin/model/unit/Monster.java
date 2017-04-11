@@ -23,10 +23,13 @@ import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.classes.ClassAdvancement;
+import javelin.controller.upgrade.skill.Acrobatics;
+import javelin.controller.upgrade.skill.Concentration;
 import javelin.model.Cloneable;
 import javelin.model.feat.CombatCasting;
 import javelin.model.feat.Feat;
 import javelin.model.feat.attack.focus.WeaponFocus;
+import javelin.model.feat.skill.Acrobatic;
 import javelin.model.item.Scroll;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.item.artifact.Slot;
@@ -661,11 +664,32 @@ public class Monster implements Cloneable, Serializable {
 	}
 
 	public boolean concentrate(Spell casting) {
-		int concentration = skills.concentration
-				+ Monster.getbonus(constitution);
+		return concentrate() >= casting.casterlevel;
+	}
+
+	/**
+	 * @return Effective {@link Concentration} bonus, with {@link #constitution}
+	 *         bonus.
+	 */
+	@SuppressWarnings("deprecation")
+	public int concentrate() {
+		int concentration = skills.concentration + getbonus(constitution);
 		if (hasfeat(CombatCasting.SINGLETON)) {
 			concentration += 4;
 		}
-		return concentration >= casting.casterlevel;
+		return concentration;
+	}
+
+	/**
+	 * @return Effective {@link Acrobatics} bonus, with {@link #dexterity}
+	 *         bonus.
+	 */
+	@SuppressWarnings("deprecation")
+	public int tumble() {
+		int acrobatics = skills.acrobatics;
+		if (hasfeat(Acrobatic.SINGLETON)) {
+			acrobatics += acrobatics >= 10 ? +5 : +3;
+		}
+		return acrobatics + getbonus(dexterity);
 	}
 }

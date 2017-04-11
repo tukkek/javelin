@@ -31,6 +31,7 @@ import javelin.model.feat.attack.shot.RapidShot;
 import javelin.model.feat.save.GreatFortitude;
 import javelin.model.feat.save.IronWill;
 import javelin.model.feat.save.LightningReflexes;
+import javelin.model.feat.skill.Acrobatic;
 import javelin.model.feat.skill.Alertness;
 import javelin.model.feat.skill.Deceitful;
 import javelin.model.unit.Monster;
@@ -47,10 +48,12 @@ public class FeatsFactor extends CrFactor {
 			MeleeFocus.SINGLETON };
 
 	static final Feat[] WIND = new Feat[] { RangedFocus.SINGLETON,
-			LightningReflexes.singleton, ImprovedInitiative.SINGLETON };
+			LightningReflexes.SINGLETON, ImprovedInitiative.SINGLETON };
 
 	static final Feat[] EARTH = new Feat[] { Toughness.SINGLETON,
 			GreatFortitude.SINGLETON, CombatCasting.SINGLETON };
+
+	static final Feat[] WATER = new Feat[] { Acrobatic.SINGLETON };
 
 	static final Feat[] EXPERTISE = new Feat[] { CombatExpertise.SINGLETON,
 			ImprovedFeint.SINGLETON, ImprovedGrapple.SINGLETON,
@@ -80,6 +83,7 @@ public class FeatsFactor extends CrFactor {
 		register(handler.earth, EARTH);
 		register(handler.wind, WIND);
 		register(handler.fire, FIRE);
+		register(handler.water, WATER);
 		register(handler.good, GOOD);
 		register(handler.evil, EVIL);
 		register(handler.shots, SHOTS);

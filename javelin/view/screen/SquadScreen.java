@@ -135,9 +135,6 @@ public class SquadScreen extends InfoScreen {
 		}
 	}
 
-	void adddebugdata(Combatant c) {
-	}
-
 	boolean checkifsquadfull() {
 		return ChallengeRatingCalculator.calculateel(squad) >= INITIALEL;
 	}
@@ -169,5 +166,10 @@ public class SquadScreen extends InfoScreen {
 	public static void open() {
 		Squad.active = new Squad(0, 0, 8, null);
 		new SquadScreen().select();
+	}
+
+	boolean first = true;
+
+	void adddebugdata(Combatant c) {
 	}
 }

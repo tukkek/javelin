@@ -28,9 +28,15 @@ import javelin.model.item.Wand;
  * @author alex
  */
 public class Skills implements Serializable, Cloneable {
-	/** {@link Monster#dexterity}-based. */
+	/**
+	 * {@link Monster#dexterity}-based.
+	 * 
+	 * @see Monster#tumble()
+	 */
+	@Deprecated
 	public int acrobatics = 0;
 	/** {@link Monster#constitution}-based. */
+	@Deprecated
 	public int concentration = 0;
 	/**
 	 * {@link Monster#charisma}-based. Opposed by {@link #perception}.

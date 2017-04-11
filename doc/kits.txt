@@ -2,6 +2,8 @@ Kits are sets of upgrades that develop a certain type of build for your units. E
 
 Kits are initially found as starting options in the Adventurers Guild, in the early game. Later on, they can be upgraded (and sometimes found for hire or recruitment) on several world and district locations, indicated in parenthesis. Note, however, that even though it can be a good choice for a character to focus on a single kit, nothing prevents you from branching into two or more of these (also known as "multiclassing").
 
+Assassin (Assassins guild): a master of deceit and stealth, an infiltration expert.
+
 Bard: a social expert, performer and often found in supportive and leadership roles, well suited as a front-man and magic item user.
 
 Barbarian (Mead hall): focused on close-combat, often able to enter a temporary battle lust known as berserker rage.
@@ -10,12 +12,14 @@ Cleric (Sanctuary): a healing powerhouse, being able to care for his allies both
 
 Druid (Henge): ally to the wildlife, able to summon animals to fight by his side.
 
-Fighter (Academies): the ultimate mêlée fighter.
+Fighter (Martial academies): the ultimate mêlée fighter.
+
+Monk (Monastery): as skilled on the battlefield with his raw attack power as with his grace and mobility.
 
 Paladin (upgraded Sanctuary): a more battle-focused Cleric, with lesser healing abilities.
 
 Ranger (Archery range): the ultimate ranged shooter.
 
-Rogue: master of stealth and mobility, also good with traps and ranged combat.
+Rogue: master of stealth, skilled with traps and ranged combat.
 
 Wizard (Mage guilds): the ultimate spellcaster.

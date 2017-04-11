@@ -8,7 +8,7 @@ import javelin.model.unit.Monster;
  */
 public class LightningReflexes extends SaveFeat {
 	/** Unique instance of this {@link Feat}. */
-	public static final Feat singleton = new LightningReflexes();
+	public static final Feat SINGLETON = new LightningReflexes();
 
 	private LightningReflexes() {
 		super("lightning reflexes");

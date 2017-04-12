@@ -21,6 +21,7 @@ public class TPanel extends Panel {
 
 		questapp = Javelin.app;
 		addKeyListener(questapp.keyadapter);
+		setFocusTraversalKeysEnabled(false);
 	}
 
 	public Image getTexture() {

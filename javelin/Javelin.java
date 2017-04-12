@@ -131,6 +131,7 @@ public class Javelin {
 		f.addWindowListener(StateManager.SAVEONCLOSE);
 		f.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		f.setLayout(new BorderLayout());
+		f.setFocusTraversalKeysEnabled(false);
 		app = new JavelinApp();
 		app.frame = f;
 		app.setVisible(false);

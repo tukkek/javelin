@@ -391,6 +391,9 @@ public class BattleScreen extends Screen {
 	 * more of these for other platforms.
 	 */
 	protected boolean rejectEvent(final KeyEvent keyEvent) {
+		// if (keyEvent.getKeyCode() == KeyEvent.VK_TAB) {
+		// return false;
+		// }
 		return (keyEvent.getModifiers() | InputEvent.ALT_DOWN_MASK) > 0
 				&& keyEvent.getKeyCode() == 18;
 	}

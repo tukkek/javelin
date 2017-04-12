@@ -9,6 +9,7 @@ Version 1.7
  * More responsive user-interface during battles
  * Multi-threaded world generation
  * 5 new character kits
+ * Auto-attack using the Tab key
 
 Version 1.6 (2016-07-15) 
 

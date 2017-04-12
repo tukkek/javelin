@@ -27,7 +27,7 @@ import javelin.controller.exception.RepeatTurn;
 public class ActionMapping {
 	/** Canonical array of possible battle actions. */
 	public static final Action[] ACTIONS = new Action[] { //
-			Breath.SINGLETON, // b
+			new AutoAttack(), Breath.SINGLETON, // b
 			new Charge(), // c
 			Dig.SINGLETON, // d
 			Fire.SINGLETON, // f
@@ -120,7 +120,7 @@ public class ActionMapping {
 			// Sun should sue those Eclipse guys
 			return mappings.get("Control" + keyEvent.getKeyCode());
 		}
-		final Action action = mappings.get(Character.toString(keyChar));
+		Action action = mappings.get(Character.toString(keyChar));
 		if (action == null) {
 			throw new RepeatTurn();
 		}

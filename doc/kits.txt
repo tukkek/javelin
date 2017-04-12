@@ -16,7 +16,7 @@ Fighter (Martial academies): the ultimate mêlée fighter.
 
 Monk (Monastery): as skilled on the battlefield with his raw attack power as with his grace and mobility.
 
-Paladin (upgraded Sanctuary): a more battle-focused Cleric, with lesser healing abilities.
+Paladin (upgraded Sanctuary): a more battle-focused Cleric, with lesser healing abilities, standing against evil and chaos.
 
 Ranger (Archery range): the ultimate ranged shooter.
 

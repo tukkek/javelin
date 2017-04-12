@@ -37,7 +37,8 @@ import javelin.view.screen.WorldScreen;
 public abstract class QuestApp extends Applet implements Runnable {
 	private static final long serialVersionUID = 3257569503247284020L;
 
-	public static final Image DEFAULTTEXTURE = QuestApp.getImage("/images/texture3.png");
+	public static final Image DEFAULTTEXTURE = QuestApp
+			.getImage("/images/texture3.png");
 
 	public static Image tiles;
 	public static Image greytiles;
@@ -48,8 +49,9 @@ public abstract class QuestApp extends Applet implements Runnable {
 	public static Image title;
 	public static Image paneltexture = QuestApp.DEFAULTTEXTURE;
 
-	static final GraphicsConfiguration configuration = GraphicsEnvironment.getLocalGraphicsEnvironment()
-			.getDefaultScreenDevice().getDefaultConfiguration();
+	static final GraphicsConfiguration configuration = GraphicsEnvironment
+			.getLocalGraphicsEnvironment().getDefaultScreenDevice()
+			.getDefaultConfiguration();
 
 	public static Hashtable images = new Hashtable();
 
@@ -107,8 +109,8 @@ public abstract class QuestApp extends Applet implements Runnable {
 
 		@Override
 		public int filterRGB(final int x, final int y, final int rgb) {
-			return rgb & 0xff000000
-					| 0x10101 * (((rgb & 0xff0000) >> 18) + ((rgb & 0xff00) >> 10) + ((rgb & 0xff) >> 2));
+			return rgb & 0xff000000 | 0x10101 * (((rgb & 0xff0000) >> 18)
+					+ ((rgb & 0xff00) >> 10) + ((rgb & 0xff) >> 2));
 		}
 	}
 
@@ -154,14 +156,15 @@ public abstract class QuestApp extends Applet implements Runnable {
 			s.repaint();
 			return;
 		}
+		if (mainComponent instanceof Screen) {
+			((Screen) mainComponent).close();
+		}
 		setVisible(false);
 		removeAll();
 		add(s);
 		invalidate();
 		validate();
 		if (s instanceof WorldScreen && Squad.active != null) {
-			// ((WorldScreen) s).mappanel.center(Squad.active.x, Squad.active.y,
-			// false);
 			((WorldScreen) s).firstdraw = true;
 		}
 		setVisible(true);
@@ -256,7 +259,8 @@ public abstract class QuestApp extends Applet implements Runnable {
 
 		// create grey-filtered background tiles
 		final ImageFilter imf = new GreyFilter();
-		QuestApp.greytiles = applet.createImage(new FilteredImageSource(QuestApp.tiles.getSource(), imf));
+		QuestApp.greytiles = applet.createImage(
+				new FilteredImageSource(QuestApp.tiles.getSource(), imf));
 
 		// Wait for images to load
 		try {

@@ -19,10 +19,10 @@ import javelin.model.item.ItemSelection;
 import javelin.model.item.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.Actor;
 import javelin.model.world.Caravan;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
-import javelin.model.world.Actor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.crawler.Crawler;
 import javelin.model.world.location.dungeon.temple.TempleDungeon;
@@ -120,6 +120,7 @@ public class Dungeon extends Location {
 
 	/** Create or recreate dungeon. */
 	public void activate(boolean loading) {
+		DungeonScreen.DISCOVEREDDUNGEON.clear();
 		while (features.isEmpty()) {
 			/* not loading a game */
 			try {

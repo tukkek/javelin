@@ -2,6 +2,7 @@ package javelin.view.screen;
 
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import javelin.controller.Point;
 import javelin.controller.exception.battle.StartBattle;
@@ -32,6 +33,7 @@ public class DungeonScreen extends WorldScreen {
 	 * If <code>false</code> skip updating the location this time. TODO is hack?
 	 */
 	public static boolean updatelocation = true;
+	public static final HashSet<Point> DISCOVEREDDUNGEON = new HashSet<Point>();
 
 	@Override
 	public boolean explore(float hoursellapsed, boolean encounter) {
@@ -119,5 +121,10 @@ public class DungeonScreen extends WorldScreen {
 	@Override
 	public Point getherolocation() {
 		return Dungeon.active.herolocation;
+	}
+
+	@Override
+	protected HashSet<Point> getdiscoveredtiles() {
+		return DISCOVEREDDUNGEON;
 	}
 }

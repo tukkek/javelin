@@ -23,15 +23,14 @@ import javelin.controller.Weather;
 import javelin.controller.action.world.OpenJournal;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.model.unit.Combatant;
+import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.Season;
 import javelin.model.world.World;
-import javelin.model.world.Actor;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.unique.Haxor;
-import javelin.view.mappanel.Tile;
-import javelin.view.mappanel.world.WorldTile;
 import javelin.view.screen.BattleScreen;
+import javelin.view.screen.DungeonScreen;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -77,14 +76,6 @@ public class StateManager {
 	public static boolean abandoned = false;
 	static public boolean nofile = false;
 	private static int attempts = 0;
-	/**
-	 * Intermediary for {@link WorldTile} while loading.
-	 * 
-	 * TODO clean?
-	 * 
-	 * @see Tile#discovered
-	 */
-	public static final HashSet<Point> DISCOVERED = new HashSet<Point>();
 
 	/**
 	 * This should only be called from one place during normal execution of the
@@ -107,13 +98,17 @@ public class StateManager {
 		try {
 			ObjectOutputStream writer = new ObjectOutputStream(
 					new FileOutputStream(to));
+			if (WorldScreen.current != null) {
+				WorldScreen.current.savediscovered();
+			}
 			writer.writeBoolean(abandoned);
 			writer.writeObject(World.seed);
 			writer.writeObject(Dungeon.active);
 			writer.writeObject(Incursion.currentel);
 			writer.writeObject(Weather.current);
 			writer.writeObject(EndBattle.lastkilled);
-			writer.writeObject(getdiscovered());
+			writer.writeObject(WorldScreen.DISCOVEREDWORLD);
+			writer.writeObject(DungeonScreen.DISCOVEREDDUNGEON);
 			writer.writeObject(Season.current);
 			writer.writeObject(Season.endsat);
 			writer.writeObject(OpenJournal.content);
@@ -128,21 +123,6 @@ public class StateManager {
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	static HashSet<Point> getdiscovered() {
-		if (WorldScreen.current == null) {
-			return DISCOVERED;
-		}
-		HashSet<Point> discovered = new HashSet<Point>();
-		for (Tile[] ts : WorldScreen.current.mappanel.tiles) {
-			for (Tile t : ts) {
-				if (t.discovered) {
-					discovered.add(new Point(t.x, t.y));
-				}
-			}
-		}
-		return discovered;
 	}
 
 	/**
@@ -166,8 +146,7 @@ public class StateManager {
 			}
 			World.seed = (World) stream.readObject();
 			Javelin.act();
-			for (ArrayList<Actor> instances : World.getseed().actors
-					.values()) {
+			for (ArrayList<Actor> instances : World.getseed().actors.values()) {
 				for (Actor p : instances) {
 					p.place();
 				}
@@ -179,7 +158,10 @@ public class StateManager {
 			Incursion.currentel = (Integer) stream.readObject();
 			Weather.read((Integer) stream.readObject());
 			EndBattle.lastkilled = (Combatant) stream.readObject();
-			DISCOVERED.addAll((HashSet<Point>) stream.readObject());
+			WorldScreen.DISCOVEREDWORLD
+					.addAll((HashSet<Point>) stream.readObject());
+			DungeonScreen.DISCOVEREDDUNGEON
+					.addAll((HashSet<Point>) stream.readObject());
 			Season.current = (Season) stream.readObject();
 			Season.endsat = (Integer) stream.readObject();
 			OpenJournal.content = (String) stream.readObject();

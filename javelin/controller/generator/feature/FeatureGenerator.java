@@ -67,7 +67,8 @@ public class FeatureGenerator {
 	/** Only access point to this class. */
 	public static final FeatureGenerator SINGLETON = new FeatureGenerator();
 
-	static final int NUMBEROFSTARTINGFEATURES = World.SIZE * World.SIZE / 5;
+	static final int NUMBEROFSTARTINGFEATURES = Javelin.DEBUG ? 50
+			: World.SIZE * World.SIZE / 5;
 
 	final HashMap<Class<? extends Actor>, FeatureGenerationData> generators = new HashMap<Class<? extends Actor>, FeatureGenerationData>();
 

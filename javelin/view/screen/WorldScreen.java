@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -93,6 +94,14 @@ public class WorldScreen extends BattleScreen {
 	public static WorldScreen current;
 	static boolean welcome = true;
 	public boolean firstdraw = true;
+	/**
+	 * Intermediary for {@link WorldTile} while loading.
+	 * 
+	 * TODO clean?
+	 * 
+	 * @see Tile#discovered
+	 */
+	public static final HashSet<Point> DISCOVEREDWORLD = new HashSet<Point>();
 
 	/** Constructor. */
 	public WorldScreen() {
@@ -106,11 +115,15 @@ public class WorldScreen extends BattleScreen {
 					t.discovered = true;
 				}
 			}
-		} else if (getClass().equals(WorldScreen.class)) {
-			for (Point p : StateManager.DISCOVERED) {
-				tiles[p.x][p.y].discovered = true;
-			}
+		} else {
+			showdiscovered(tiles);
 		}
+	}
+
+	@Override
+	public void close() {
+		super.close();
+		savediscovered();
 	}
 
 	Tile[][] gettiles() {
@@ -479,7 +492,7 @@ public class WorldScreen extends BattleScreen {
 			return false;
 		}
 		WorldScreen s = getcurrentscreen();
-		return s == null ? StateManager.DISCOVERED.contains(p)
+		return s == null ? s.getdiscoveredtiles().contains(p)
 				: s.gettiles()[p.x][p.y].discovered;
 	}
 
@@ -505,5 +518,30 @@ public class WorldScreen extends BattleScreen {
 	 */
 	public boolean validatepoint(int tox, int toy) {
 		return World.validatecoordinate(tox, toy);
+	}
+
+	public void adddiscovered(HashSet<Point> discovered) {
+		discovered.clear();
+		for (Tile[] ts : current.mappanel.tiles) {
+			for (Tile t : ts) {
+				if (t.discovered) {
+					discovered.add(new Point(t.x, t.y));
+				}
+			}
+		}
+	}
+
+	void showdiscovered(Tile[][] tiles) {
+		for (Point p : getdiscoveredtiles()) {
+			tiles[p.x][p.y].discovered = true;
+		}
+	}
+
+	protected HashSet<Point> getdiscoveredtiles() {
+		return WorldScreen.DISCOVEREDWORLD;
+	}
+
+	public void savediscovered() {
+		adddiscovered(getdiscoveredtiles());
 	}
 }

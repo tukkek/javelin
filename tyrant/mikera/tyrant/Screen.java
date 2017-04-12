@@ -27,4 +27,8 @@ public class Screen extends TPanel {
 	public Character getInput() {
 		return IntroScreen.feedback();
 	}
+
+	public void close() {
+		// nothing by default
+	}
 }

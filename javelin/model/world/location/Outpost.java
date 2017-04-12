@@ -111,7 +111,7 @@ public class Outpost extends Fortification {
 	 *
 	 * @param range
 	 *            How far squares away will become visible.
-	 * @see WorldScreen#DISCOVEREDWORLD
+	 * @see WorldScreen#discovered
 	 */
 	static public void discover(int xp, int yp, int range) {
 		for (int x = xp - range; x <= xp + range; x++) {

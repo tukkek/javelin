@@ -7,13 +7,12 @@ import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.view.Images;
-import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.world.WorldPanel;
 
 public class DungeonTile extends Tile {
-	public DungeonTile(int xp, int yp, MapPanel p) {
-		super(xp, yp, Dungeon.active.visible[xp][yp]);
+	public DungeonTile(int xp, int yp, DungeonPanel p) {
+		super(xp, yp, p.dungeon.visible[xp][yp]);
 		addMouseListener(p.mouse);
 	}
 

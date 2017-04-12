@@ -4,11 +4,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
+import javelin.controller.Point;
 import javelin.controller.WorldBuilder;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
+import javelin.view.mappanel.Tile;
+import javelin.view.mappanel.world.WorldTile;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -38,6 +42,14 @@ public class World implements Serializable {
 	/** Contains all actor instances still in the game. */
 	public final HashMap<Class<? extends Actor>, ArrayList<Actor>> actors = new HashMap<Class<? extends Actor>, ArrayList<Actor>>();
 	public final ArrayList<String> townnames = new ArrayList<String>();
+	/**
+	 * Intermediary for {@link WorldTile} while loading.
+	 * 
+	 * TODO clean?
+	 * 
+	 * @see Tile#discovered
+	 */
+	public final HashSet<Point> discovered = new HashSet<Point>();
 
 	public World() {
 		initroads();

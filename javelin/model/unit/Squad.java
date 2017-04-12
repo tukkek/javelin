@@ -665,7 +665,7 @@ public class Squad extends Actor implements Cloneable {
 	 *
 	 * @param vision
 	 *            Perceive roll with circumstance bonuses.
-	 * @see WorldScreen#DISCOVEREDWORLD
+	 * @see WorldScreen#discovered
 	 * @see Squad#perceive(boolean)
 	 */
 	public void view(int vision) {

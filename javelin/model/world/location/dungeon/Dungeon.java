@@ -103,6 +103,8 @@ public class Dungeon extends Location {
 	public String floor = "dungeonfloor";
 	/** File to use under 'avatar' folder. */
 	public String wall = "dungeonwall";
+	/** Tiles already revealed. */
+	public HashSet<Point> discovered = new HashSet<Point>();
 
 	/** Constructor. */
 	public Dungeon() {
@@ -120,7 +122,6 @@ public class Dungeon extends Location {
 
 	/** Create or recreate dungeon. */
 	public void activate(boolean loading) {
-		DungeonScreen.DISCOVEREDDUNGEON.clear();
 		while (features.isEmpty()) {
 			/* not loading a game */
 			try {
@@ -132,8 +133,8 @@ public class Dungeon extends Location {
 			}
 		}
 		regenerate(loading);
+		JavelinApp.context = new DungeonScreen(this);
 		active = this;
-		JavelinApp.context = new DungeonScreen();
 		BattleScreen.active = JavelinApp.context;
 		Squad.active.updateavatar();
 		BattleScreen.active.mappanel.center(herolocation.x, herolocation.y,
@@ -265,10 +266,10 @@ public class Dungeon extends Location {
 
 	/** Exit and destroy this dungeon. */
 	public void leave() {
-		Dungeon.active = null;
-		JavelinApp.context = new WorldScreen();
+		JavelinApp.context = new WorldScreen(true);
 		BattleScreen.active = JavelinApp.context;
 		Squad.active.place();
+		Dungeon.active = null;
 	}
 
 	void regenerate(boolean loading) {

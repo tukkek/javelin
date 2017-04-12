@@ -94,18 +94,19 @@ public class WorldScreen extends BattleScreen {
 	public static WorldScreen current;
 	static boolean welcome = true;
 	public boolean firstdraw = true;
-	/**
-	 * Intermediary for {@link WorldTile} while loading.
-	 * 
-	 * TODO clean?
-	 * 
-	 * @see Tile#discovered
-	 */
-	public static final HashSet<Point> DISCOVEREDWORLD = new HashSet<Point>();
 
-	/** Constructor. */
-	public WorldScreen() {
-		super(false);
+	/**
+	 * Constructor.
+	 * 
+	 * @param open
+	 */
+	public WorldScreen(boolean open) {
+		super(false, open);
+	}
+
+	@Override
+	void open() {
+		super.open();
 		WorldScreen.current = this;
 		Javelin.settexture(QuestApp.DEFAULTTEXTURE);
 		Tile[][] tiles = gettiles();
@@ -538,7 +539,7 @@ public class WorldScreen extends BattleScreen {
 	}
 
 	protected HashSet<Point> getdiscoveredtiles() {
-		return WorldScreen.DISCOVEREDWORLD;
+		return World.seed.discovered;
 	}
 
 	public void savediscovered() {

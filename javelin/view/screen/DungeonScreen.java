@@ -23,6 +23,14 @@ import javelin.view.mappanel.dungeon.DungeonPanel;
  * @author alex
  */
 public class DungeonScreen extends WorldScreen {
+	Dungeon dungeon;
+
+	public DungeonScreen(Dungeon dungeon) {
+		super(false);
+		this.dungeon = dungeon;
+		open();
+	}
+
 	/** TODO hack */
 	public static boolean dontenter = false;
 	/**
@@ -33,7 +41,6 @@ public class DungeonScreen extends WorldScreen {
 	 * If <code>false</code> skip updating the location this time. TODO is hack?
 	 */
 	public static boolean updatelocation = true;
-	public static final HashSet<Point> DISCOVEREDDUNGEON = new HashSet<Point>();
 
 	@Override
 	public boolean explore(float hoursellapsed, boolean encounter) {
@@ -44,13 +51,13 @@ public class DungeonScreen extends WorldScreen {
 		} catch (StartBattle e) {
 			throw e;
 		}
-		return !Dungeon.active.hazard();
+		return !dungeon.hazard();
 	}
 
 	@Override
 	public boolean react(Actor actor, int x, int y) {
 		int searchroll = Squad.active.search();
-		for (Feature f : new ArrayList<Feature>(Dungeon.active.features)) {
+		for (Feature f : new ArrayList<Feature>(dungeon.features)) {
 			if (f.x == x && f.y == y) {
 				boolean activated = f.activate();
 				if (activated && f.remove) {
@@ -74,13 +81,12 @@ public class DungeonScreen extends WorldScreen {
 
 	@Override
 	public boolean allowmove(int x, int y) {
-		return !Dungeon.active.walls
-				.contains(new javelin.controller.Point(x, y));
+		return !dungeon.walls.contains(new javelin.controller.Point(x, y));
 	}
 
 	@Override
 	public void updatelocation(int x, int y) {
-		Dungeon.active.herolocation = new Point(x, y);
+		dungeon.herolocation = new Point(x, y);
 	}
 
 	@Override
@@ -88,8 +94,8 @@ public class DungeonScreen extends WorldScreen {
 		for (int x = -1; x <= +1; x++) {
 			for (int y = -1; y <= +1; y++) {
 				try {
-					Dungeon.active.setvisible(Dungeon.active.herolocation.x + x,
-							Dungeon.active.herolocation.y + y);
+					dungeon.setvisible(dungeon.herolocation.x + x,
+							dungeon.herolocation.y + y);
 				} catch (ArrayIndexOutOfBoundsException e) {
 					continue;
 				}
@@ -99,18 +105,18 @@ public class DungeonScreen extends WorldScreen {
 
 	@Override
 	public Image gettile(int x, int y) {
-		return Images.getImage(Dungeon.active.walls.contains(new Point(x, y))
-				? Dungeon.active.wall : Dungeon.active.floor);
+		return Images.getImage(dungeon.walls.contains(new Point(x, y))
+				? dungeon.wall : dungeon.floor);
 	}
 
 	@Override
 	public Fight encounter() {
-		return Dungeon.active.encounter();
+		return dungeon.encounter();
 	}
 
 	@Override
 	protected MapPanel getmappanel() {
-		return new DungeonPanel();
+		return new DungeonPanel(dungeon);
 	}
 
 	@Override
@@ -120,11 +126,11 @@ public class DungeonScreen extends WorldScreen {
 
 	@Override
 	public Point getherolocation() {
-		return Dungeon.active.herolocation;
+		return dungeon.herolocation;
 	}
 
 	@Override
 	protected HashSet<Point> getdiscoveredtiles() {
-		return DISCOVEREDDUNGEON;
+		return dungeon.discovered;
 	}
 }

@@ -42,11 +42,13 @@ public class StartBattle extends BattleEvent {
 		fight.setup.setup();
 		Fight.state.next();
 		fight.ready();
-		int diffifculty = ChallengeRatingCalculator.calculateel(Fight.state.redTeam)
+		int diffifculty = ChallengeRatingCalculator
+				.calculateel(Fight.state.redTeam)
 				- ChallengeRatingCalculator.calculateel(Squad.active.members);
-		if (fight instanceof Minigame || !Squad.active.skipcombat(diffifculty)) {
+		if (fight instanceof Minigame
+				|| !Squad.active.skipcombat(diffifculty)) {
 			BattlePanel.current = Fight.state.next;
-			BattleScreen battleScreen = new BattleScreen(true);
+			BattleScreen battleScreen = new BattleScreen(true, true);
 			fight.draw();
 			battleScreen.mainLoop();
 		} else {
@@ -60,9 +62,11 @@ public class StartBattle extends BattleEvent {
 	 * @param difficulty
 	 */
 	public void quickbattle(int difficulty) {
-		float resourcesused = ChallengeRatingCalculator.useresources(difficulty);
+		float resourcesused = ChallengeRatingCalculator
+				.useresources(difficulty);
 		String report = "Battle report:\n\n";
-		ArrayList<Combatant> blueteam = new ArrayList<Combatant>(Squad.active.members);
+		ArrayList<Combatant> blueteam = new ArrayList<Combatant>(
+				Squad.active.members);
 		ArrayList<Float> damage = damage(blueteam, resourcesused);
 		for (int i = 0; i < blueteam.size(); i++) {
 			report += strategicdamage(blueteam.get(i), damage.get(i)) + "\n\n";
@@ -87,7 +91,8 @@ public class StartBattle extends BattleEvent {
 		Javelin.app.fight = null;
 	}
 
-	private ArrayList<Float> damage(ArrayList<Combatant> blueteam, float resourcesused) {
+	private ArrayList<Float> damage(ArrayList<Combatant> blueteam,
+			float resourcesused) {
 		ArrayList<Float> damage = new ArrayList<Float>(blueteam.size());
 		while (damage.size() < blueteam.size()) {
 			damage.add(0f);
@@ -119,7 +124,8 @@ public class StartBattle extends BattleEvent {
 	static String strategicdamage(Combatant c, float resourcesused) {
 		c.hp -= c.maxhp * resourcesused;
 		boolean killed = c.hp <= Combatant.DEADATHP || //
-				(c.hp <= 0 && RPG.random() < Math.abs(c.hp / new Float(Combatant.DEADATHP)));
+				(c.hp <= 0 && RPG.random() < Math
+						.abs(c.hp / new Float(Combatant.DEADATHP)));
 		String report = "";
 		ArrayList<Item> bag = Squad.active.equipment.get(c.id);
 		for (Item i : new ArrayList<Item>(bag)) {
@@ -128,7 +134,8 @@ public class StartBattle extends BattleEvent {
 				used += i.waste(resourcesused, bag) + ", ";
 			}
 			if (!used.isEmpty()) {
-				report += " Used: " + used.substring(0, used.length() - 2) + ".";
+				report += " Used: " + used.substring(0, used.length() - 2)
+						+ ".";
 			}
 		}
 		if (killed) {
@@ -152,8 +159,10 @@ public class StartBattle extends BattleEvent {
 		}
 		JavelinApp.originalteam = cloneteam(Fight.state.blueTeam);
 		JavelinApp.originalfoes = cloneteam(Fight.state.redTeam);
-		BattleScreen.originalblueteam = new ArrayList<Combatant>(Fight.state.blueTeam);
-		BattleScreen.originalredteam = new ArrayList<Combatant>(Fight.state.redTeam);
+		BattleScreen.originalblueteam = new ArrayList<Combatant>(
+				Fight.state.blueTeam);
+		BattleScreen.originalredteam = new ArrayList<Combatant>(
+				Fight.state.redTeam);
 	}
 
 	static ArrayList<Combatant> cloneteam(ArrayList<Combatant> team) {

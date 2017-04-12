@@ -91,11 +91,13 @@ public class BattleScreen extends Screen {
 
 	Combatant lastwascomputermove;
 	boolean jointurns;
+	private boolean addsidebar;
 
 	/**
 	 * @param texture
 	 *            Background texture.
 	 */
+	@Deprecated
 	public BattleScreen(Image texture) {
 		super();
 		Javelin.settexture(texture);
@@ -106,7 +108,14 @@ public class BattleScreen extends Screen {
 	 *            If <code>true</code> will add a {@link StatusPanel} to this
 	 *            screen.
 	 */
-	public BattleScreen(boolean addsidebar) {
+	public BattleScreen(boolean addsidebar, boolean open) {
+		this.addsidebar = addsidebar;
+		if (open) {
+			open();
+		}
+	}
+
+	void open() {
 		BattleScreen.active = this;
 		setForeground(Color.white);
 		setBackground(Color.black);

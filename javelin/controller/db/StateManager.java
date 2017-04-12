@@ -12,13 +12,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashSet;
 
 import javax.swing.JOptionPane;
 
 import javelin.Javelin;
 import javelin.JavelinApp;
-import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.action.world.OpenJournal;
 import javelin.controller.exception.battle.EndBattle;
@@ -30,7 +28,6 @@ import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.unique.Haxor;
 import javelin.view.screen.BattleScreen;
-import javelin.view.screen.DungeonScreen;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -107,8 +104,6 @@ public class StateManager {
 			writer.writeObject(Incursion.currentel);
 			writer.writeObject(Weather.current);
 			writer.writeObject(EndBattle.lastkilled);
-			writer.writeObject(WorldScreen.DISCOVEREDWORLD);
-			writer.writeObject(DungeonScreen.DISCOVEREDDUNGEON);
 			writer.writeObject(Season.current);
 			writer.writeObject(Season.endsat);
 			writer.writeObject(OpenJournal.content);
@@ -158,10 +153,6 @@ public class StateManager {
 			Incursion.currentel = (Integer) stream.readObject();
 			Weather.read((Integer) stream.readObject());
 			EndBattle.lastkilled = (Combatant) stream.readObject();
-			WorldScreen.DISCOVEREDWORLD
-					.addAll((HashSet<Point>) stream.readObject());
-			DungeonScreen.DISCOVEREDDUNGEON
-					.addAll((HashSet<Point>) stream.readObject());
 			Season.current = (Season) stream.readObject();
 			Season.endsat = (Integer) stream.readObject();
 			OpenJournal.content = (String) stream.readObject();

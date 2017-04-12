@@ -118,7 +118,7 @@ public class JavelinApp extends QuestApp {
 	void loop() {
 		try {
 			if (Dungeon.active == null) {
-				JavelinApp.context = new WorldScreen();
+				JavelinApp.context = new WorldScreen(true);
 			}
 			while (true) {
 				switchScreen(JavelinApp.context);

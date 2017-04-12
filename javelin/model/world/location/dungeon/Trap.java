@@ -112,7 +112,7 @@ public class Trap extends Feature {
 			return true;
 		}
 		DungeonScreen.dontenter = true;
-		return true;
+		return false;
 	}
 
 	void fallinto() {

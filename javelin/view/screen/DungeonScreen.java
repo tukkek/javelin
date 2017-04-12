@@ -65,7 +65,7 @@ public class DungeonScreen extends WorldScreen {
 					DungeonScreen.dontenter = !f.enter;
 					DungeonScreen.stopmovesequence = f.stop;
 				}
-				return true;
+				return activated;
 			}
 			if (x - 1 <= f.x && f.x <= x + 1 && y - 1 <= f.y && f.y <= y + 1) {
 				Trap t = f instanceof Trap ? (Trap) f : null;

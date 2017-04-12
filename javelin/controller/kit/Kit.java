@@ -3,6 +3,7 @@ package javelin.controller.kit;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.upgrade.FeatUpgrade;
@@ -232,5 +233,24 @@ public abstract class Kit implements Serializable {
 	public boolean allow(int bestability, int secondbest, Monster m) {
 		int score = getpreferredability(m);
 		return score == bestability || score == secondbest;
+	}
+
+	public static List<Kit> getpossiblekits(Monster source) {
+		ArrayList<Integer> attributes = new ArrayList<Integer>(6);
+		attributes.add(source.strength);
+		attributes.add(source.dexterity);
+		attributes.add(source.constitution);
+		attributes.add(source.intelligence);
+		attributes.add(source.wisdom);
+		attributes.add(source.charisma);
+		attributes.sort(null);
+		int[] best = new int[] { attributes.get(4), attributes.get(5) };
+		ArrayList<Kit> kits = new ArrayList<Kit>(1);
+		for (Kit k : KITS) {
+			if (k.allow(best[0], best[1], source)) {
+				kits.add(k);
+			}
+		}
+		return kits;
 	}
 }

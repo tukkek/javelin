@@ -146,9 +146,7 @@ public class StateManager {
 					p.place();
 				}
 			}
-			Haxor.singleton = (Haxor) World.getseed().actors.get(Haxor.class)
-					.get(0);
-			Haxor.singleton.place();
+			Haxor.load();
 			Dungeon.active = (Dungeon) stream.readObject();
 			Incursion.currentel = (Integer) stream.readObject();
 			Weather.read((Integer) stream.readObject());

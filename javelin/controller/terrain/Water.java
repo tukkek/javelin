@@ -10,9 +10,9 @@ import javelin.controller.terrain.hazard.Ice;
 import javelin.controller.terrain.hazard.Storm;
 import javelin.controller.terrain.map.Maps;
 import javelin.model.unit.Squad;
+import javelin.model.world.Actor;
 import javelin.model.world.ParkedVehicle;
 import javelin.model.world.World;
-import javelin.model.world.Actor;
 import javelin.model.world.location.town.Town;
 import tyrant.mikera.engine.RPG;
 
@@ -26,7 +26,7 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Water extends Terrain {
-	private static final int DESERTRADIUS = 2;
+	private static final int DESERTRADIUS = World.SCENARIO ? 1 : 2;
 	private static final int[] DELTAS = new int[] { +1, -1 };
 	private Point currentheight;
 

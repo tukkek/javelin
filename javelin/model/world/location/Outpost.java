@@ -82,6 +82,7 @@ public class Outpost extends Fortification {
 		super(DESCRIPTION, DESCRIPTION, 1, 5);
 		gossip = true;
 		vision = VISIONRANGE;
+		allowedinscenario = false;
 	}
 
 	/** Puts a new instance in the {@link World} map. */

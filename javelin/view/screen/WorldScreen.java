@@ -265,7 +265,7 @@ public class WorldScreen extends BattleScreen {
 
 	/** Covers a {@link WorldTile} per day with fog of war. */
 	void cover() {
-		if (Preferences.DEBUGESHOWMAP) {
+		if (Preferences.DEBUGESHOWMAP || World.SCENARIO) {
 			return;
 		}
 		ArrayList<Location> locations = new ArrayList<Location>();
@@ -413,6 +413,9 @@ public class WorldScreen extends BattleScreen {
 	 * @return
 	 */
 	public boolean explore(float hoursellapsed, boolean encounter) {
+		if (World.SCENARIO) {
+			return true;
+		}
 		if (encounter && //
 				(Squad.active.transport == null
 						|| Squad.active.transport.battle())) {

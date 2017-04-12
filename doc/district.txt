@@ -8,6 +8,10 @@ ALL DISTRICTS
 
 Build dwelling: allows recruiting or hiring a single type of unit.
 
+Build realm academy: offers varied upgrades, with each starting town offering its own unique set.
+
+Build shop: crafts magic items for a fee.
+
 Build traveller's lodge: a place to rest and recover for a small fee, can be upgraded to hotel (requires village) and hospital (requires town).
 
 Cancel projects: immediately cancels all ongoing projects, discarding any progress.
@@ -60,8 +64,6 @@ Build transport hub: allows leasing vehicles. Can be upgraded to docks (if near 
 
 MILITARY DISTRICTS
 
-Build realm academy: offers varied upgrades, with each starting town offering its own unique set.
-
 Build martial academy: teaches one of a set of combat enhancements.
 
 Build mercenaries guild: allows hiring heroes for a daily fee.
@@ -71,8 +73,6 @@ Build monastery: allows for training and recruiting of monks.
 PRODUCTIVE DISTRICTS
 
 Build mine: a mine allows you to mine gold and can be upgraded to automatically mine rubies.
-
-Build shop: crafts magic items for a fee.
 
 Deforestate: converts a forest tile in the district into 50% extra labor, automatically adds a Growth project if there isn't another project to benefit from this.
 

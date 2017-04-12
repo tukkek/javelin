@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import javelin.Javelin;
+import javelin.model.world.World;
 import javelin.model.world.location.Outpost.BuildOutpost;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.base.Cancel;
@@ -47,7 +48,8 @@ import javelin.model.world.location.unique.SummoningCircle.BuildSummoningCircle;
  */
 public class Deck extends ArrayList<Labor> {
 	private static final Labor[] BASE = new Labor[] { new BuildDwelling(),
-			new BuildLodge(), new Cancel(), new Growth(), new Redraw(), };
+			new BuildLodge(), new Cancel(), new Growth(), new Redraw(),
+			new BuildShop(), new BuildRealmAcademy() };
 	private static final Labor[] CRIMINAL = new Labor[] {
 			new BuildAssassinsGuild(), new BuildSewers(), new BuildSlums(),
 			new BuildThievesGuild() };
@@ -60,10 +62,10 @@ public class Deck extends ArrayList<Labor> {
 			new BuildOutpost(), new BuildRoad(), new BuildHighway(),
 			new BuildTransportHub() };
 	private static final Labor[] MILITARY = new Labor[] {
-			new BuildMartialAcademy(), new BuildRealmAcademy(),
-			new BuildMercenariesGuild(), new BuildMonastery() };
+			new BuildMartialAcademy(), new BuildMercenariesGuild(),
+			new BuildMonastery() };
 	private static final Labor[] PRODUCTIVE = new Labor[] { new BuildMine(),
-			new Deforestate(), new BuildShop() };
+			new Deforestate() };
 	private static final Labor[] RELIGIOUS = new Labor[] { new BuildShrine(),
 			new BuildSanctuary() };
 
@@ -72,23 +74,25 @@ public class Deck extends ArrayList<Labor> {
 
 	static {
 		populate(DEFAULT, null, BASE);
-		populate(new Deck(), "expansive", EXPANSIVE);
-		populate(new Deck(), "productive", PRODUCTIVE);
-		populate(new Deck(), "military", MILITARY);
-		populate(new Deck(), "cultural", CULTURAL);
-		populate(new Deck(), "criminal", CRIMINAL);
-		populate(new Deck(), "religious", RELIGIOUS);
-		populate(new Deck(), "ecological", ECOLOGICAL);
-		for (String title : new ArrayList<String>(DECKS.keySet())) {
-			/*
-			 * TODO just a placeholder to get rid on unused sets during
-			 * development:
-			 */
-			if (DECKS.get(title).isEmpty()) {
-				DECKS.remove(title);
-				continue;
+		if (!World.SCENARIO) {
+			populate(new Deck(), "expansive", EXPANSIVE);
+			populate(new Deck(), "productive", PRODUCTIVE);
+			populate(new Deck(), "military", MILITARY);
+			populate(new Deck(), "cultural", CULTURAL);
+			populate(new Deck(), "criminal", CRIMINAL);
+			populate(new Deck(), "religious", RELIGIOUS);
+			populate(new Deck(), "ecological", ECOLOGICAL);
+			for (String title : new ArrayList<String>(DECKS.keySet())) {
+				/*
+				 * TODO just a placeholder to get rid on unused sets during
+				 * development:
+				 */
+				if (DECKS.get(title).isEmpty()) {
+					DECKS.remove(title);
+					continue;
+				}
+				DEFAULT.add(new Trait(title, DECKS.get(title)));
 			}
-			DEFAULT.add(new Trait(title, DECKS.get(title)));
 		}
 	}
 

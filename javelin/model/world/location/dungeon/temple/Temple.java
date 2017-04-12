@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.TempleEncounter;
 import javelin.controller.terrain.Terrain;
@@ -111,9 +112,10 @@ public abstract class Temple extends UniqueLocation {
 	public Temple(Realm r, int level, Relic relicp, String fluffp) {
 		super("Temple of " + r.getname(), "Temple of " + r.getname(), level,
 				level);
+		allowedinscenario = false;
 		realm = r;
 		this.level = level;
-		el = leveltoel(level);
+		el = ChallengeRatingCalculator.leveltoel(level);
 		relic = relicp;
 		fluff = fluffp;
 		link = true;

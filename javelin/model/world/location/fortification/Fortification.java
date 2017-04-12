@@ -49,6 +49,7 @@ public abstract class Fortification extends Location {
 	public boolean generategarrison = true;
 	/** Neutral location don't generate a garrison. */
 	protected boolean neutral = false;
+	protected boolean clearforscenario = false;
 
 	/**
 	 * Generates a guarded location based on a difficulty range. The difficulty
@@ -108,8 +109,8 @@ public abstract class Fortification extends Location {
 			capture();
 			return;
 		}
-		int minel = leveltoel(minlevel);
-		int maxel = leveltoel(maxlevel);
+		int minel = ChallengeRatingCalculator.leveltoel(minlevel);
+		int maxel = ChallengeRatingCalculator.leveltoel(maxlevel);
 		while (garrison.isEmpty()) {
 			try {
 				int el = RPG.r(minel, maxel);
@@ -126,7 +127,7 @@ public abstract class Fortification extends Location {
 	public void raiselevel(int bonus) {
 		minlevel += bonus;
 		maxlevel += bonus;
-		targetel = RPG.r(leveltoel(minlevel), leveltoel(maxlevel));
+		targetel = RPG.r(ChallengeRatingCalculator.leveltoel(minlevel), ChallengeRatingCalculator.leveltoel(maxlevel));
 	}
 
 	private Actor findclosest(Class<? extends Actor> type) {
@@ -138,13 +139,6 @@ public abstract class Fortification extends Location {
 			}
 		}
 		return closest;
-	}
-
-	/**
-	 * @return the given level (typically from 1 to 20) to an encounter level.
-	 */
-	public static int leveltoel(int level) {
-		return ChallengeRatingCalculator.crtoel(level * 4) - 4;
 	}
 
 	@Override
@@ -202,10 +196,10 @@ public abstract class Fortification extends Location {
 		if (generategarrison && garrison.isEmpty()) {
 			generategarrison(minlevel, maxlevel);
 			generategarrison = false;
+			if (World.SCENARIO && clearforscenario) {
+				capture();
+			}
 		}
-		// if (Preferences.DEBUGCLEARGARRISON) {
-		// garrison.clear();
-		// }
 	}
 
 	@Override

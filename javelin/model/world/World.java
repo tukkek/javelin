@@ -9,8 +9,14 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.WorldBuilder;
+import javelin.controller.fight.RandomEncounter;
+import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.terrain.Terrain;
+import javelin.controller.terrain.hazard.Hazard;
+import javelin.model.Realm;
 import javelin.model.unit.Squad;
+import javelin.model.world.location.Location;
+import javelin.model.world.location.town.Town;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.world.WorldTile;
 import javelin.view.screen.WorldScreen;
@@ -26,9 +32,30 @@ import javelin.view.screen.WorldScreen;
  */
 public class World implements Serializable {
 	/**
+	 * Scenario mode is a much faster type of gameplay than the main campaign
+	 * mode. It's supposed to be finished on anywhere from 2 hours of play to an
+	 * afternoon (but of course it can be saved an resumed too).
+	 * 
+	 * The world is a lot more static in this mode. Several features and
+	 * {@link Location}s are disabled - including {@link RandomEncounter}s in
+	 * ohe overworld map and {@link Hazard}s. The only "moving pieces" in the
+	 * world map are yourself and {@link Incursion}s.
+	 * 
+	 * The {@link FeatureGenerator} is disabled after the original world is
+	 * created, meaning that, wuthout random encounters and other infinite means
+	 * of gaining experience and loot, you are on a race against time to conquer
+	 * all hostile {@link Town}s - 1 to 3, with varying degress of power
+	 * according to the quantity in each game.
+	 * 
+	 * There is only one enemy {@link Realm} per game and the starting features
+	 * are roughly made to be 1/3 neutral and 2/3 hostile.
+	 */
+	public static boolean SCENARIO = true;
+
+	/**
 	 * Map size in squares.
 	 */
-	static public int SIZE = 30;
+	static public int SIZE = SCENARIO ? 22 : 30;
 	/**
 	 * Randomly generated world map.
 	 */
@@ -110,6 +137,15 @@ public class World implements Serializable {
 		townnames.add("Termina");// chrono cross
 		townnames.add("Tarant");// arcanum
 		Collections.shuffle(townnames);
+	}
+
+	/**
+	 * @return Starting encounter level for each hostile town in
+	 *         {@link #SCENARIO} mode. 20 for 1 hostile town, 15 for 2 or 10 for
+	 *         3.
+	 */
+	public static int getscenariochallenge() {
+		return new int[] { 20, 15, 10 }[Town.gettowns().size() - 2];
 	}
 
 	/**

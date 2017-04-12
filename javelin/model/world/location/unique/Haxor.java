@@ -7,6 +7,7 @@ import javelin.controller.db.StateManager;
 import javelin.model.item.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.World;
 import javelin.model.world.location.Portal;
 import javelin.view.screen.haxor.BorrowMoney;
 import javelin.view.screen.haxor.HaxorScreen;
@@ -82,5 +83,12 @@ public class Haxor extends UniqueLocation {
 	@Override
 	public List<Combatant> getcombatants() {
 		return null;
+	}
+
+	public static void load() {
+		if (!World.SCENARIO) {
+			singleton = (Haxor) World.getseed().actors.get(Haxor.class).get(0);
+			singleton.place();
+		}
 	}
 }

@@ -217,7 +217,7 @@ public class Dungeon extends Location {
 			Point p = findspot(free, used);
 			used.add(p);
 			Feature t;
-			if (i == chests) {
+			if (i == chests && !World.SCENARIO) {
 				t = createspecialchest(p);
 			} else {
 				t = RewardCalculator.createchest(gold, p.x, p.y);

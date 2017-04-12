@@ -42,7 +42,7 @@ public class EncounterGenerator {
 	 */
 	public static ArrayList<Combatant> generate(int el,
 			ArrayList<Terrain> terrains) throws GaveUpException {
-		if (javelin.controller.db.Preferences.DEBUGFOE != null) {
+		if (Preferences.DEBUGFOE != null) {
 			return debugmonster();
 		}
 		ArrayList<Combatant> encounter = null;
@@ -162,5 +162,12 @@ public class EncounterGenerator {
 		}
 		return possibilities.isEmpty() ? null
 				: RPG.pick(possibilities).generate();
+	}
+
+	public static ArrayList<Combatant> generate(int el, Terrain terrain)
+			throws GaveUpException {
+		ArrayList<Terrain> terrains = new ArrayList<Terrain>();
+		terrains.add(terrain);
+		return generate(el, terrains);
 	}
 }

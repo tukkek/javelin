@@ -91,6 +91,7 @@ public class Shrine extends Fortification {
 
 	public Shrine() {
 		this(2);
+		allowedinscenario = false;
 	}
 
 	/** Constructor. */

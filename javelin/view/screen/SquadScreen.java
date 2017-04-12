@@ -8,11 +8,13 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.kit.Kit;
+import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.classes.Commoner;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
-import javelin.view.screen.upgrading.SkillSelectionScreen;
+import javelin.model.world.World;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -58,6 +60,7 @@ public class SquadScreen extends InfoScreen {
 
 	ArrayList<Combatant> select() {
 		page(0);
+		upgrade();
 		return squad;
 	}
 
@@ -83,7 +86,6 @@ public class SquadScreen extends InfoScreen {
 			if (squad.isEmpty()) {
 				page(index);
 			}
-			upgrade();
 		} else {
 			int selection = ALPHABET.indexOf(input);
 			if (selection >= 0 && selection < letter) {
@@ -96,23 +98,38 @@ public class SquadScreen extends InfoScreen {
 		}
 	}
 
+	/**
+	 * Adds {@link Commoner} levels to an understaffed squad or upgrades to
+	 * level 6 as per {@link World#SCENARIO} rules.
+	 */
 	void upgrade() {
-		float startingcr = totalcr();
-		while (ChallengeRatingCalculator.calculateel(squad) < INITIALEL) {
-			Combatant weakest = squad.get(0);
-			for (int i = 1; i < squad.size(); i++) {
-				Combatant c = squad.get(i);
-				if (c.source.challengerating < weakest.source.challengerating) {
-					weakest = c;
+		if (World.SCENARIO) {
+			ArrayList<Combatant> members = new ArrayList<Combatant>(squad);
+			while (!members.isEmpty()) {
+				ArrayList<Kit> kits = new ArrayList<Kit>(Kit.KITS);
+				Collections.shuffle(kits);
+				for (Kit k : kits) {
+					Combatant c = members.get(0);
+					if (Kit.getpossiblekits(c.source).contains(k)) {
+						c.source.customName = Character.toUpperCase(
+								k.name.charAt(0)) + k.name.substring(1);
+						while (c.source.challengerating < 6) {
+							c.upgrade(k.upgrades);
+						}
+						members.remove(0);
+						if (members.isEmpty()) {
+							return;
+						}
+					}
 				}
 			}
-			Commoner.SINGLETON.apply(weakest);
-			ChallengeRatingCalculator.calculatecr(weakest.source);
+			return;
 		}
-		for (Combatant c : squad) {
-			if (SkillSelectionScreen.canspend(c.source)) {
-				c.source.purchaseskills(Commoner.SINGLETON).show();
-			}
+		float startingcr = totalcr();
+		while (ChallengeRatingCalculator.calculateel(squad) < INITIALEL) {
+			ArrayList<Upgrade> u = new ArrayList<Upgrade>();
+			u.add(Commoner.SINGLETON);
+			Combatant.upgradeweakest(squad, u);
 		}
 		Squad.active.gold = RewardCalculator.getgold(totalcr() - startingcr);
 	}
@@ -136,7 +153,8 @@ public class SquadScreen extends InfoScreen {
 	}
 
 	boolean checkifsquadfull() {
-		return ChallengeRatingCalculator.calculateel(squad) >= INITIALEL;
+		return World.SCENARIO ? squad.size() >= 4
+				: ChallengeRatingCalculator.calculateel(squad) >= INITIALEL;
 	}
 
 	int printpage(int index, int next) {

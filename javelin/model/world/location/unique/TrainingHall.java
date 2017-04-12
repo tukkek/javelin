@@ -65,6 +65,7 @@ public class TrainingHall extends Fortification {
 		impermeable = false;
 		sacrificeable = true;
 		vision = 2;
+		allowedinscenario = false;
 	}
 
 	@Override

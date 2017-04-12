@@ -688,7 +688,8 @@ public class Combatant implements Serializable, Cloneable {
 	 *            Upgrades the weakest member of this group.
 	 * @see #upgrade(Realm)
 	 */
-	public static void upgradeweakest(List<Combatant> garrison, Realm r) {
+	public static void upgradeweakest(List<Combatant> garrison,
+			Collection<Upgrade> r) {
 		Combatant weakest = null;
 		for (Combatant sensei : garrison) {
 			ChallengeRatingCalculator.calculatecr(sensei.source);
@@ -794,5 +795,9 @@ public class Combatant implements Serializable, Cloneable {
 
 	public boolean equip(Artifact a) {
 		return a.equip(this);
+	}
+
+	public static void upgradeweakest(List<Combatant> garrison, Realm random) {
+		upgradeweakest(garrison, random.getupgrades(UpgradeHandler.singleton));
 	}
 }

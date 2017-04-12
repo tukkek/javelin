@@ -314,7 +314,9 @@ public class Javelin {
 	 */
 	public static Combatant recruit(Monster pick) {
 		Combatant c = new Combatant(pick.clone(), true);
-		c.source.customName = NamingScreen.getname(c.toString());
+		if (!World.SCENARIO && !Javelin.DEBUG) {
+			c.source.customName = NamingScreen.getname(c.toString());
+		}
 		Squad.active.members.add(c);
 		/*
 		 * night-only is largely cosmetic so just don't appear for player units

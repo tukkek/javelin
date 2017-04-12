@@ -2,7 +2,6 @@ package javelin.controller.action.world.minigame;
 
 import java.awt.event.KeyEvent;
 
-import javelin.controller.action.world.WorldAction;
 import javelin.model.world.location.unique.minigame.Arena;
 import javelin.view.screen.WorldScreen;
 
@@ -11,14 +10,16 @@ import javelin.view.screen.WorldScreen;
  *
  * @author alex
  */
-public class EnterArena extends WorldAction {
+public class EnterArena extends EnterMinigame {
 	/** Constructor. */
 	public EnterArena() {
-		super("Arena (mini-game)", new int[] { KeyEvent.VK_A }, new String[] { "A" });
+		super("Arena (mini-game)", new int[] { KeyEvent.VK_A },
+				new String[] { "A" });
 	}
 
 	@Override
 	public void perform(WorldScreen screen) {
+		super.perform(screen);
 		Arena.get().interact();
 	}
 }

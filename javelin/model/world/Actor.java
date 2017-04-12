@@ -44,6 +44,7 @@ public abstract class Actor implements Serializable {
 	 * If <code>true</code> this actor will be ignored by {@link Incursion}s.
 	 */
 	public boolean impermeable = false;
+	public boolean allowedinscenario = true;
 
 	/** Constructor. */
 	public Actor() {
@@ -57,7 +58,9 @@ public abstract class Actor implements Serializable {
 
 	/** Adds this actor to the game. Should only be used once in theory. */
 	public void place() {
-		registerinstance();
+		if (!World.SCENARIO || allowedinscenario) {
+			registerinstance();
+		}
 	}
 
 	/** Move actor to the given coordinates. */

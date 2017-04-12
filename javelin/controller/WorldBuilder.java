@@ -230,10 +230,15 @@ public class WorldBuilder extends Thread {
 		floodedge(sw, se, 0, -1, w);
 		floodedge(ne, se, -1, 0, w);
 		floodedge(nw, ne, 0, +1, w);
+		ArrayList<Town> towns = new ArrayList<Town>();
 		for (int i = 0; i < regions.size(); i++) {
 			if (WorldBuilder.GENERATIONORDER[i] != Terrain.WATER) {
-				new Town(regions.get(i), realms.pop()).place();
+				towns.add(new Town(regions.get(i), realms.pop()));
 			}
+		}
+		int ntowns = World.SCENARIO ? RPG.r(1 + 1, 1 + 3) : towns.size();
+		for (int i = 0; i < ntowns; i++) {
+			towns.get(i).place();
 		}
 	}
 

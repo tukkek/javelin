@@ -10,10 +10,13 @@ import java.util.TreeSet;
 
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.exception.GaveUpException;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.fight.Siege;
 import javelin.controller.fight.tournament.Exhibition;
 import javelin.controller.fight.tournament.Match;
+import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.Realm;
@@ -68,7 +71,7 @@ public class Town extends Location {
 	 * into a 1-year period, which puts a town max size roughly at 10 if it does
 	 * nothing but {@link Growth}.
 	 */
-	public int population = 1;
+	public int population = World.SCENARIO ? 6 : 1;
 	/** See {@link Governor}. */
 	public Governor governor = new HumanGovernor(this);
 	/**
@@ -230,7 +233,7 @@ public class Town extends Location {
 		replacegovernor(new MonsterGovernor(this));
 	}
 
-	void replacegovernor(Governor g) {
+	public void replacegovernor(Governor g) {
 		for (Labor l : governor.getprojects()) {
 			l.cancel();
 		}
@@ -320,6 +323,19 @@ public class Town extends Location {
 	 * towns.
 	 */
 	public void populategarisson() {
+		if (World.SCENARIO) {
+			population = World.getscenariochallenge();
+			int el = ChallengeRatingCalculator.leveltoel(population);
+			Terrain t = Terrain.get(x, y);
+			while (garrison.isEmpty()) {
+				try {
+					garrison.addAll(EncounterGenerator.generate(el, t));
+				} catch (GaveUpException e) {
+					el += 1;
+				}
+			}
+			return;
+		}
 		Dwelling d = (Dwelling) findnearest(Dwelling.class);
 		garrison.add(new Combatant(d.dweller.source.clone(), true));
 		replacegovernor(new MonsterGovernor(this));

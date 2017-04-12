@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
@@ -59,6 +60,7 @@ public class Resource extends Location {
 		super(null);
 		vision = 0;
 		link = false;
+		allowedinscenario = false;
 	}
 
 	@Override
@@ -150,6 +152,6 @@ public class Resource extends Location {
 		} else {
 			throw new RuntimeException("#unkwnonresourceamount " + type.amount);
 		}
-		return Fortification.getspoils(Fortification.leveltoel(el));
+		return Fortification.getspoils(ChallengeRatingCalculator.leveltoel(el));
 	}
 }

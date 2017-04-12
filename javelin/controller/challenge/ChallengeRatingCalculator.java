@@ -746,6 +746,13 @@ public class ChallengeRatingCalculator {
 	}
 
 	/**
+	 * @return the given level (typically from 1 to 20) to an encounter level.
+	 */
+	public static int leveltoel(int level) {
+		return crtoel(level * 4) - 4;
+	}
+
+	/**
 	 * I'm not sure if it's a typo or on purpose but .001 seems to be too low a
 	 * factor, I'm using .01
 	 */

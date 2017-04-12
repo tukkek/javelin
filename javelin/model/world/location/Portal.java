@@ -12,9 +12,9 @@ import javelin.model.Realm;
 import javelin.model.item.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
-import javelin.model.world.Actor;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
@@ -75,6 +75,7 @@ public class Portal extends Location {
 			boolean wanderingp, boolean safep, boolean instantaneousp,
 			Long expiresatp, boolean invasionp) {
 		super(DESCRIPTION);
+		allowedinscenario = false;
 		link = false;
 		from = fromp;
 		to = top;

@@ -16,12 +16,13 @@ import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
+import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
+import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
-import javelin.model.world.Actor;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
@@ -404,6 +405,9 @@ public abstract class Location extends Actor {
 		return !ishostile() && vision > 0;
 	}
 
+	/**
+	 * Clear {@link #garrison} and {@link Realm}.
+	 */
 	public void capture() {
 		garrison.clear();
 		realm = null;

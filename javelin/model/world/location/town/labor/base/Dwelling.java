@@ -104,7 +104,8 @@ public class Dwelling extends Fortification {
 		public void done() {
 			town.garrison.add(new Combatant(recruit, true));
 			if (ChallengeRatingCalculator
-					.calculateel(town.garrison) > town.population) {
+					.calculateel(town.garrison) > ChallengeRatingCalculator
+							.leveltoel(town.population)) {
 				MonsterGovernor.raid(town);
 			}
 		}

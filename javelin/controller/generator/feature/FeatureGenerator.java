@@ -11,6 +11,7 @@ import javelin.controller.Point;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.UpgradeHandler;
+import javelin.model.Realm;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
@@ -25,6 +26,7 @@ import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.fortification.Guardian;
 import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.governor.MonsterGovernor;
 import javelin.model.world.location.town.labor.base.Dwelling;
 import javelin.model.world.location.town.labor.base.Lodge;
 import javelin.model.world.location.town.labor.criminal.ThievesGuild;
@@ -67,10 +69,9 @@ public class FeatureGenerator {
 	/** Only access point to this class. */
 	public static final FeatureGenerator SINGLETON = new FeatureGenerator();
 
-	static final int NUMBEROFSTARTINGFEATURES = Javelin.DEBUG ? 50
-			: World.SIZE * World.SIZE / 5;
+	static final int STARTINGFEATURES = World.SIZE * World.SIZE / 5;
 
-	final HashMap<Class<? extends Actor>, FeatureGenerationData> generators = new HashMap<Class<? extends Actor>, FeatureGenerationData>();
+	final HashMap<Class<? extends Actor>, GenerationData> generators = new HashMap<Class<? extends Actor>, GenerationData>();
 
 	/**
 	 * The ultimate goal of this method is to try and make it so one feature
@@ -79,20 +80,19 @@ public class FeatureGenerator {
 	 * manually-written methods from becoming too large.
 	 */
 	private FeatureGenerator() {
-		register(Dungeon.class, new FeatureGenerationData(2f, Dungeon.STARTING,
-				Dungeon.STARTING));
-		// register(Lair.class, new FeatureGenerationData());
-		register(Outpost.class, new FeatureGenerationData());
-		register(Lodge.class, new FeatureGenerationData(.75f, 5, 1));
-		register(Shrine.class, new FeatureGenerationData());
-		register(Resource.class, new FeatureGenerationData());
-		register(Mine.class, new FeatureGenerationData(1, 2, 2));
+		register(Dungeon.class, World.SCENARIO ? new GenerationData(2f)
+				: new GenerationData(2f, Dungeon.STARTING, Dungeon.STARTING));
+		register(Outpost.class, new GenerationData());
+		register(Lodge.class, new GenerationData(.75f, 5, 1));
+		register(Shrine.class, new GenerationData());
+		register(Resource.class, new GenerationData());
+		register(Mine.class, new GenerationData(1, 2, 2));
 
-		register(Trove.class, new FeatureGenerationData(1.5f, null, 0));
-		register(Guardian.class, new FeatureGenerationData(null));
-		register(Dwelling.class, new FeatureGenerationData(null));
+		register(Trove.class, new GenerationData(1.5f, null, 0));
+		register(Guardian.class, new GenerationData(null));
+		register(Dwelling.class, new GenerationData(null));
 
-		register(Portal.class, new FeatureGenerationData() {
+		register(Portal.class, new GenerationData() {
 			@Override
 			public Actor generate(Class<? extends Actor> feature) {
 				return Portal.open();
@@ -101,34 +101,33 @@ public class FeatureGenerator {
 
 		if (Caravan.ALLOW) {
 			register(Caravan.class,
-					new FeatureGenerationData(1 / 4f, true, false)).seeds = 0;
+					new GenerationData(1 / 4f, true, false)).seeds = 0;
 		}
 		convertchances();
 	}
 
 	/**
-	 * Will convert all relative (non-absolute)
-	 * {@link FeatureGenerationData#chance} to an absolute value so as to make
-	 * them sum up to a 100%.
+	 * Will convert all relative (non-absolute) {@link GenerationData#chance} to
+	 * an absolute value so as to make them sum up to a 100%.
 	 *
-	 * @see FeatureGenerationData#absolute
+	 * @see GenerationData#absolute
 	 */
 	protected void convertchances() {
 		float total = 0;
-		for (FeatureGenerationData g : generators.values()) {
+		for (GenerationData g : generators.values()) {
 			if (!g.absolute) {
 				total += g.chance;
 			}
 		}
-		for (FeatureGenerationData g : generators.values()) {
+		for (GenerationData g : generators.values()) {
 			if (!g.absolute) {
 				g.chance = g.chance / total;
 			}
 		}
 	}
 
-	FeatureGenerationData register(Class<? extends Actor> class1,
-			FeatureGenerationData generator) {
+	GenerationData register(Class<? extends Actor> class1,
+			GenerationData generator) {
 		generators.put(class1, generator);
 		return generator;
 	}
@@ -150,9 +149,13 @@ public class FeatureGenerator {
 	 *            set of actors. <code>true</code> is supposed to be used while
 	 *            the game is progressing to support the full feature set.
 	 */
-	public void spawn(final float chance, boolean generatingworld) {
+	public void spawn(float chance, boolean generatingworld) {
+		if (countplaces() >= STARTINGFEATURES
+				|| (World.SCENARIO && !generatingworld)) {
+			return;
+		}
 		for (Class<? extends Actor> feature : generators.keySet()) {
-			FeatureGenerationData g = generators.get(feature);
+			GenerationData g = generators.get(feature);
 			if (generatingworld && !g.starting) {
 				continue;
 			}
@@ -192,12 +195,11 @@ public class FeatureGenerator {
 		}
 	}
 
-	static Town gettown(Terrain terrain, World seed) {
-		ArrayList<Actor> towns = new ArrayList<Actor>(World.getall(Town.class));
+	static Town gettown(Terrain terrain, World seed, ArrayList<Town> towns) {
 		Collections.shuffle(towns);
-		for (Actor town : towns) {
+		for (Town town : towns) {
 			if (seed.map[town.x][town.y] == terrain) {
-				return (Town) town;
+				return town;
 			}
 		}
 		if (Javelin.DEBUG) {
@@ -215,27 +217,58 @@ public class FeatureGenerator {
 	public Town placestartingfeatures(World seed) {
 		Temple.generatetemples();
 		Terrain starton = RPG.r(1, 2) == 1 ? Terrain.PLAIN : Terrain.HILL;
-		Town easya = FeatureGenerator.gettown(starton, seed);
-		Town easyb = FeatureGenerator.gettown(
-				starton == Terrain.PLAIN ? Terrain.HILL : Terrain.PLAIN, seed);
-		ArrayList<Actor> towns = World.getall(Town.class);
-		Actor startingtown = World.get(easya.x, easya.y, towns);
-		if (Terrain.search(new Point(startingtown.x, startingtown.y),
-				Terrain.WATER, 2, seed) != 0) {
+		ArrayList<Town> towns = Town.gettowns();
+		Town[] easy = getlinkedtowns(seed, starton, towns);
+		Town starting = (Town) World.get(easy[0].x, easy[0].y, towns);
+		if (Terrain.search(new Point(starting.x, starting.y), Terrain.WATER, 2,
+				seed) != 0) {
 			throw new RestartWorldGeneration();
 		}
-		new Portal(startingtown, World.get(easyb.x, easyb.y, towns), false,
+		new Portal(starting, World.get(easy[1].x, easy[1].y, towns), false,
 				false, true, true, null, false).place();
-		generatestartingarea(seed, easya);
-		generatelocations(seed, easya);
+		generatestartingarea(seed, easy[0]);
+		generatelocations(seed, easy[0]);
 		for (Class<? extends Actor> feature : generators.keySet()) {
 			generators.get(feature).seed(feature);
 		}
-		int target = NUMBEROFSTARTINGFEATURES - Location.count();
+		int target = STARTINGFEATURES - Location.count();
 		while (countplaces() < target) {
-			SINGLETON.spawn(1, true);
+			spawn(1, true);
 		}
-		return (Town) startingtown;
+		if (World.SCENARIO) {
+			normalizemap(towns, starting);
+		}
+		return starting;
+	}
+
+	void normalizemap(ArrayList<Town> towns, Town starting) {
+		towns = new ArrayList<Town>(towns);
+		towns.remove(starting);
+		Realm r = towns.get(0).originalrealm;
+		for (Actor a : World.getall()) {
+			if (a instanceof Location) {
+				Location l = (Location) a;
+				if (l.realm != null) {
+					l.realm = r;
+					if (a instanceof Town) {
+						Town t = (Town) a;
+						t.originalrealm = r;
+						t.replacegovernor(new MonsterGovernor(t));
+					}
+				}
+			}
+		}
+	}
+
+	Town[] getlinkedtowns(World w, Terrain t, ArrayList<Town> towns) {
+		if (World.SCENARIO) {
+			Collections.shuffle(towns);
+			return new Town[] { towns.get(0), towns.get(1) };
+		}
+		Town a = gettown(t, w, towns);
+		Town b = gettown(t == Terrain.PLAIN ? Terrain.HILL : Terrain.PLAIN, w,
+				towns);
+		return new Town[] { a, b };
 	}
 
 	void generatelocations(World seed, Town easya) {
@@ -245,7 +278,10 @@ public class FeatureGenerator {
 		generatemageguilds(locations);
 		generatemartialacademies(locations);
 		Collections.shuffle(locations);
-		for (Location l : locations) {
+		int place = Math.min(locations.size(),
+				STARTINGFEATURES / 3 - countplaces());
+		for (int i = 0; i < place; i++) {
+			Location l = locations.get(i);
 			l.place();
 		}
 	}

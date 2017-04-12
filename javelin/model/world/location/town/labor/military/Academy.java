@@ -143,6 +143,7 @@ public abstract class Academy extends Fortification {
 		// sort(upgrades);
 		sacrificeable = false;
 		level = upgrades.size();
+		clearforscenario = true;
 	}
 
 	public Academy(String descriptionknown, String descriptionunknown,
@@ -318,5 +319,4 @@ public abstract class Academy extends Fortification {
 	public boolean isworking() {
 		return !training.queue.isEmpty() && !training.reportalldone();
 	}
-
 }

@@ -207,6 +207,7 @@ public class Mine extends Fortification {
 	public Mine() {
 		super(DESCRIPTION, DESCRIPTION, 6, 10);
 		terrain = Terrain.UNDERGROUND;
+		allowedinscenario = false;
 	}
 
 	/**

@@ -23,6 +23,7 @@ public abstract class UniqueLocation extends Fortification {
 			int minel, int maxel) {
 		super(descriptionknown, descriptionunknown, minel, maxel);
 		init(this);
+		allowedinscenario = false;
 	}
 
 	/**

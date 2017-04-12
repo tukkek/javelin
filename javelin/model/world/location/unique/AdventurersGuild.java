@@ -9,7 +9,6 @@ import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.kit.Kit;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.town.PurchaseScreen;
@@ -106,28 +105,9 @@ public class AdventurersGuild extends UniqueLocation {
 
 	void change(int index) {
 		Kit current = selection.get(index);
-		List<Kit> possible = getpossiblekits(students.get(index).source);
+		List<Kit> possible = Kit.getpossiblekits(students.get(index).source);
 		final int to = 1 + (current == null ? -1 : possible.indexOf(current));
 		selection.set(index, to >= possible.size() ? null : possible.get(to));
-	}
-
-	List<Kit> getpossiblekits(Monster source) {
-		ArrayList<Integer> attributes = new ArrayList<Integer>(6);
-		attributes.add(source.strength);
-		attributes.add(source.dexterity);
-		attributes.add(source.constitution);
-		attributes.add(source.intelligence);
-		attributes.add(source.wisdom);
-		attributes.add(source.charisma);
-		attributes.sort(null);
-		int[] best = new int[] { attributes.get(4), attributes.get(5) };
-		ArrayList<Kit> kits = new ArrayList<Kit>(1);
-		for (Kit k : Kit.KITS) {
-			if (k.allow(best[0], best[1], source)) {
-				kits.add(k);
-			}
-		}
-		return kits;
 	}
 
 	String show(ArrayList<Combatant> students, float mostpowerful, float pay) {

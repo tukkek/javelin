@@ -49,6 +49,7 @@ public class Caravan extends Actor {
 
 	/** Creates a merchant in the world map but doesn't {@link #place()} it. */
 	public Caravan() {
+		allowedinscenario = false;
 		ArrayList<Actor> towns = World.getall(Town.class);
 		Collections.shuffle(towns);
 		Actor from = towns.get(0);

@@ -46,7 +46,7 @@ public class Chest extends Feature {
 	public boolean activate() {
 		if (key != null) {
 			Javelin.message(
-					"You have found a " + key.toString().toLowerCase() + "!",
+					"You have found: " + key.toString().toLowerCase() + "!",
 					true);
 			key.grab();
 			Portal.opensafe();

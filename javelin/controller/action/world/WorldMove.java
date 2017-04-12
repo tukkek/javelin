@@ -116,8 +116,9 @@ public class WorldMove extends WorldAction {
 			Actor actor = Dungeon.active == null ? World.get(tox, toy) : null;
 			Location l = actor instanceof Location ? (Location) actor : null;
 			try {
+				boolean indungeon = Dungeon.active != null;
 				if (JavelinApp.context.react(actor, tox, toy)) {
-					if (Dungeon.active != null) {
+					if (indungeon) {
 						if (DungeonScreen.dontenter) {
 							DungeonScreen.dontenter = false;
 						}
@@ -127,10 +128,9 @@ public class WorldMove extends WorldAction {
 							DungeonScreen.updatelocation = true;
 						}
 						return !DungeonScreen.stopmovesequence;
-					} else if (l != null) {
-						if (l.allowentry && l.garrison.isEmpty()) {
-							place(tox, toy);
-						}
+					} else if (l != null && l.allowentry && l.garrison.isEmpty()
+							&& !(l instanceof Dungeon)) {
+						place(tox, toy);
 					}
 					return true;
 				}
@@ -156,7 +156,9 @@ public class WorldMove extends WorldAction {
 			}
 			heal();
 			return stop;
-		} finally {
+		} finally
+
+		{
 			if (Squad.active != null) {
 				Squad.active.ellapse(Math.round(hours));
 			}
@@ -167,10 +169,8 @@ public class WorldMove extends WorldAction {
 	 * @return <code>true</code> if moved current actor to the given location.
 	 */
 	public static boolean place(final int tox, final int toy) {
-		if (!JavelinApp.context.allowmove(tox, toy)) {
-			return false;
-		}
-		if (!JavelinApp.context.validatepoint(tox, toy)) {
+		if (!JavelinApp.context.allowmove(tox, toy)
+				|| !JavelinApp.context.validatepoint(tox, toy)) {
 			return false;
 		}
 		JavelinApp.context.updatelocation(tox, toy);

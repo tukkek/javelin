@@ -266,6 +266,7 @@ public class Dungeon extends Location {
 
 	/** Exit and destroy this dungeon. */
 	public void leave() {
+		DungeonScreen.dontenter = true;
 		JavelinApp.context = new WorldScreen(true);
 		BattleScreen.active = JavelinApp.context;
 		Squad.active.place();

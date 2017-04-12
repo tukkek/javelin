@@ -86,7 +86,8 @@ public class DungeonScreen extends WorldScreen {
 
 	@Override
 	public void updatelocation(int x, int y) {
-		dungeon.herolocation = new Point(x, y);
+		dungeon.herolocation.x = x;
+		dungeon.herolocation.y = y;
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import javelin.Javelin;
 import javelin.model.world.location.Outpost.BuildOutpost;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.base.Cancel;
 import javelin.model.world.location.town.labor.base.Dwelling.BuildDwelling;
 import javelin.model.world.location.town.labor.base.Growth;
 import javelin.model.world.location.town.labor.base.Lodge.BuildLodge;
@@ -23,9 +24,9 @@ import javelin.model.world.location.town.labor.expansive.BuildHighway;
 import javelin.model.world.location.town.labor.expansive.BuildRoad;
 import javelin.model.world.location.town.labor.expansive.Settler;
 import javelin.model.world.location.town.labor.expansive.TransportHub.BuildTransportHub;
-import javelin.model.world.location.town.labor.military.RealmAcademy.BuildRealmAcademy;
 import javelin.model.world.location.town.labor.military.MartialAcademy.BuildMartialAcademy;
 import javelin.model.world.location.town.labor.military.Monastery.BuildMonastery;
+import javelin.model.world.location.town.labor.military.RealmAcademy.BuildRealmAcademy;
 import javelin.model.world.location.town.labor.productive.Deforestate;
 import javelin.model.world.location.town.labor.productive.Mine.BuildMine;
 import javelin.model.world.location.town.labor.productive.Shop.BuildShop;
@@ -45,8 +46,8 @@ import javelin.model.world.location.unique.SummoningCircle.BuildSummoningCircle;
  * @author alex
  */
 public class Deck extends ArrayList<Labor> {
-	private static final Labor[] BASE = new Labor[] { new Growth(),
-			new BuildLodge(), new Redraw(), new BuildDwelling() };
+	private static final Labor[] BASE = new Labor[] { new BuildDwelling(),
+			new BuildLodge(), new Cancel(), new Growth(), new Redraw(), };
 	private static final Labor[] CRIMINAL = new Labor[] {
 			new BuildAssassinsGuild(), new BuildSewers(), new BuildSlums(),
 			new BuildThievesGuild() };

@@ -2,7 +2,6 @@ package javelin.model.world.location.town.labor.base;
 
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
-import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;
 
 public class Growth extends Labor {
@@ -32,9 +31,6 @@ public class Growth extends Labor {
 		cost = town.population;
 		if (cost > 20) {
 			cost += cost - 20;
-		}
-		if (Town.DEBUGPROJECTS) {
-			name = "Growth " + town.population;
 		}
 	}
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
@@ -120,15 +121,7 @@ public class Caravan extends Actor {
 				if (town.garrison.isEmpty()
 						&& town.population < Growth.MAXPOPULATION) {
 					town.population += 1;
-					Game.messagepanel.clear();
-					Game.message(
-							"A merchant arrives at " + town
-									+ ", city grows! Press ENTER to continue...",
-							Delay.NONE);
-					while (Game.getInput().getKeyChar() != '\n') {
-						// wait for ENTER
-					}
-					Game.messagepanel.clear();
+					announce(town);
 				}
 			}
 			remove();
@@ -136,6 +129,21 @@ public class Caravan extends Actor {
 			ignoreturn = false;
 			turn(0, null);// jump over other Actors
 		}
+	}
+
+	void announce(Town town) {
+		if (Javelin.DEBUG) {
+			return;
+		}
+		Game.messagepanel.clear();
+		Game.message(
+				"A merchant arrives at " + town
+						+ ", city grows! Press ENTER to continue...",
+				Delay.NONE);
+		while (Game.getInput().getKeyChar() != '\n') {
+			// wait for ENTER
+		}
+		Game.messagepanel.clear();
 	}
 
 	int calculatedelta(int from, int to) {

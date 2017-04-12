@@ -23,7 +23,7 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public abstract class Governor implements Serializable {
-	static final int STARTINGHAND = 2 + 1;
+	static final int STARTINGHAND = 3;
 	static final Comparator<? super Labor> SORTYBYNAME = new Comparator<Labor>() {
 		@Override
 		public int compare(Labor o1, Labor o2) {
@@ -31,8 +31,6 @@ public abstract class Governor implements Serializable {
 		}
 	};
 
-	// /** <code>true</code> to draw and use cards automatically. */
-	// public boolean automanage = true;
 	/** Current labor. */
 	private ArrayList<Labor> projects = new ArrayList<Labor>(0);
 	private ArrayList<Labor> hand = new ArrayList<Labor>(STARTINGHAND);
@@ -43,7 +41,6 @@ public abstract class Governor implements Serializable {
 	/** Constructor. */
 	public Governor(Town t) {
 		town = t;
-		// validate();
 	}
 
 	public int redraw() {
@@ -60,9 +57,7 @@ public abstract class Governor implements Serializable {
 			l = l.generate(town);
 			if (!hand.contains(l) && !projects.contains(l) && l.validate(d)) {
 				hand.add(l);
-				// if (hand.size() >= gethandsize()) {
 				return true;
-				// }
 			}
 		}
 		return false;
@@ -112,33 +107,8 @@ public abstract class Governor implements Serializable {
 	}
 
 	public int gethandsize() {
-		return town.getrank().rank + (Javelin.DEBUG ? 3 : 2);
+		return town.getrank().rank - 1 + STARTINGHAND;
 	}
-
-	// public String printqueue() {
-	// if (queue.isEmpty()) {
-	// return "(empty)";
-	// }
-	// String q = "";
-	// for (Labor r : queue) {
-	// q += r + ", ";
-	// }
-	// return q.substring(0, q.length() - 2);
-	// }
-	//
-	// public String printhand() {
-	// if (hand.isEmpty()) {
-	// return "(empty)";
-	// }
-	// District d = town.getdistrict();
-	// validate();
-	// String q = "";
-	// for (int i = 0; i < hand.size(); i++) {
-	// Labor r = hand.get(i);
-	// q += (i + 1) + " - " + r + " (" + r.cost + " labor)\n";
-	// }
-	// return q.substring(0, q.length() - 1);
-	// }
 
 	public void validate(District d) {
 		for (Labor l : new ArrayList<Labor>(hand)) {
@@ -179,6 +149,9 @@ public abstract class Governor implements Serializable {
 		return hand;
 	}
 
+	/**
+	 * @return Ongoing projects.
+	 */
 	public ArrayList<Labor> getprojects() {
 		projects.sort(SORTYBYNAME);
 		return projects;

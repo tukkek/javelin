@@ -1,24 +1,26 @@
 package javelin.model.world.location.town.labor.base;
 
+import java.util.ArrayList;
+
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Labor;
 
-public class Redraw extends Labor {
-	public Redraw() {
-		super("Redraw", 0, Rank.HAMLET);
+public class Cancel extends Labor {
+
+	public Cancel() {
+		super("Cancel projects", 0, Rank.HAMLET);
 		automatic = false;
 	}
 
 	@Override
 	protected void define() {
-		cost = town.governor.gethandsize();
+		// nothing
 	}
 
 	@Override
 	public void done() {
-		for (Labor l : town.governor.gethand()) {
-			l.discard();
+		for (Labor l : new ArrayList<Labor>(town.governor.getprojects())) {
+			l.cancel();
 		}
-		town.governor.redraw();
 	}
 }

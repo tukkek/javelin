@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import javelin.Javelin;
 import javelin.controller.old.Game;
 import javelin.model.unit.Combatant;
+import javelin.model.world.location.town.Town;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 
@@ -97,6 +98,10 @@ public class Help extends Action {
 	}
 
 	static String debug() {
-		return "";
+		String s = "\n\n";
+		for (Town t : Town.gettowns()) {
+			s += t.population + " ";
+		}
+		return s;
 	}
 }

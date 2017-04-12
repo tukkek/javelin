@@ -34,9 +34,9 @@ import javelin.model.world.location.town.labor.cultural.MagesGuild.MageGuildData
 import javelin.model.world.location.town.labor.ecological.ArcheryRange;
 import javelin.model.world.location.town.labor.ecological.Henge;
 import javelin.model.world.location.town.labor.ecological.MeadHall;
-import javelin.model.world.location.town.labor.military.RealmAcademy;
 import javelin.model.world.location.town.labor.military.MartialAcademy;
 import javelin.model.world.location.town.labor.military.Monastery;
+import javelin.model.world.location.town.labor.military.RealmAcademy;
 import javelin.model.world.location.town.labor.productive.Mine;
 import javelin.model.world.location.town.labor.productive.Shop;
 import javelin.model.world.location.town.labor.religious.Sanctuary;
@@ -100,7 +100,7 @@ public class FeatureGenerator {
 
 		if (Caravan.ALLOW) {
 			register(Caravan.class,
-					new FeatureGenerationData(1 / 4f, true, false));
+					new FeatureGenerationData(1 / 4f, true, false)).seeds = 0;
 		}
 		convertchances();
 	}

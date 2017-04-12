@@ -14,12 +14,6 @@ import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
 
-/**
- * A place where units can go to learn about a general topic - be it physical
- * feats or intellectual or magical prowess.
- *
- * @author alex
- */
 public class RealmAcademy extends Academy {
 	public static class BuildRealmAcademy extends BuildAcademy {
 		public BuildRealmAcademy() {

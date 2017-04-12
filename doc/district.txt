@@ -10,9 +10,11 @@ Build dwelling: allows recruiting or hiring a single type of unit.
 
 Build traveller's lodge: a place to rest and recover for a small fee, can be upgraded to hotel (requires village) and hospital (requires town).
 
+Cancel projects: immediately cancels all ongoing projects, discarding any progress.
+
 Growth: grows the city population by 1, resulting in higher labor throughput and possibly increasing the district size, up to "city" size.
 
-Redraw: discards all available projects and redraws new options (doesn't affect ongoing projects).
+Redraw: when done, discards all available project options and draws new (doesn't affect ongoing projects).
 
 Trait: adding a trait to a town will open up new project options, as seen below.
 

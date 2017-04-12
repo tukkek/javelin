@@ -62,8 +62,6 @@ public abstract class Build extends Labor {
 	@Override
 	public void cancel() {
 		super.cancel();
-		if (previous != null) {
-			previous.place();
-		}
+		site.remove(false);
 	}
 }

@@ -12,8 +12,7 @@ public class ConstructionSite extends Location {
 	private Labor progress;
 	private Actor previous;
 
-	public ConstructionSite(Location project, Actor previous,
-			Labor progress) {
+	public ConstructionSite(Location project, Actor previous, Labor progress) {
 		super("Construction site: " + project.toString().toLowerCase());
 		goal = project;
 		this.previous = previous;
@@ -36,8 +35,14 @@ public class ConstructionSite extends Location {
 
 	@Override
 	public void remove() {
+		remove(true);
+	}
+
+	public void remove(boolean removeproject) {
 		super.remove();
-		progress.cancel();
+		if (removeproject) {
+			progress.cancel();
+		}
 		if (previous != null) {
 			previous.place();
 		}
@@ -50,7 +55,7 @@ public class ConstructionSite extends Location {
 				+ "Progress is currently at " + progress.getprogress()
 				+ "%.\n\n"
 				+ "Press c to cancel this project or any other key to leave...") == 'c') {
-			remove();
+			remove(true);
 		}
 		return true;
 	}

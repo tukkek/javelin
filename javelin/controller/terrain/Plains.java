@@ -8,8 +8,8 @@ import javelin.controller.Point;
 import javelin.controller.terrain.hazard.Flood;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.terrain.map.Maps;
-import javelin.controller.terrain.map.plain.Field;
 import javelin.controller.terrain.map.plain.Farm;
+import javelin.controller.terrain.map.plain.Field;
 import javelin.controller.terrain.map.plain.Grasslands;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
@@ -52,10 +52,10 @@ public class Plains extends Terrain {
 		return gettiles(world);
 	}
 
-	@Override
-	public boolean generatetown(Point p, World w) {
-		return search(p, DESERT, 1, w) == 0 && super.generatetown(p, w);
-	}
+	// @Override
+	// public boolean generatetown(Point p, World w) {
+	// return search(p, DESERT, 1, w) == 0 && super.generatetown(p, w);
+	// }
 
 	@Override
 	public Set<Hazard> gethazards(boolean special) {

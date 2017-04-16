@@ -349,15 +349,13 @@ public abstract class Location extends Actor {
 	 *         {@value #CLOSE} distance from here.
 	 * @see Walker#distance(int, int, int, int)
 	 */
-	public boolean isnear(Class<? extends Location> targets) {
+	public boolean isnear(Class<? extends Location> targets, int distance) {
 		Actor nearest = findnearest(targets);
-		return nearest != null && distance(nearest.x, nearest.y) > CLOSE;
-		// for (WorldActor p : getall(targets)) {
-		// if (p != this && Walker.distance(x, y, p.x, p.y) <= CLOSE) {
-		// return true;
-		// }
-		// }
-		// return false;
+		return nearest != null && distance(nearest.x, nearest.y) > distance;
+	}
+
+	public boolean isnear(Class<? extends Location> targets) {
+		return isnear(targets, CLOSE);
 	}
 
 	/**

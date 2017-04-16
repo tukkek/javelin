@@ -113,10 +113,10 @@ public class Water extends Terrain {
 		return super.generateareasize() / 2;
 	}
 
-	@Override
-	public boolean generatetown(Point p, World w) {
-		return false;
-	}
+	// @Override
+	// public boolean generatetown(Point p, World w) {
+	// return false;
+	// }
 
 	@Override
 	public boolean enter(int x, int y) {

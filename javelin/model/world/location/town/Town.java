@@ -50,6 +50,10 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Town extends Location {
+
+	public static final int MINIMUMDISTANCE = Math
+			.round(Math.round(District.RADIUSMAX * 1.5));
+
 	/**
 	 * How much {@link #labor} a single work produces in one day (
 	 * {@value #DAILYLABOR}). The goal here is to have a {@link Town} controlled
@@ -121,7 +125,7 @@ public class Town extends Location {
 
 	static boolean checktooclose(Point p) {
 		for (Actor town : World.getall(Town.class)) {
-			if (town.distance(p.x, p.y) <= District.RADIUSMAX * 1.5) {
+			if (town.distance(p.x, p.y) < MINIMUMDISTANCE) {
 				return true;
 			}
 		}

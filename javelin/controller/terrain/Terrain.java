@@ -15,11 +15,10 @@ import javelin.controller.action.world.WorldMove;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.terrain.map.Map;
 import javelin.controller.terrain.map.Maps;
-import javelin.controller.walker.Walker;
 import javelin.model.unit.Squad;
+import javelin.model.world.Actor;
 import javelin.model.world.Season;
 import javelin.model.world.World;
-import javelin.model.world.Actor;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.productive.Mine;
@@ -391,24 +390,24 @@ public abstract class Terrain implements Serializable {
 		return area;
 	}
 
-	/**
-	 * @param town
-	 *            Given a spot...
-	 * @return <code>false</code> if this is not a good {@link Town} placement
-	 *         for this terrain.
-	 */
-	public boolean generatetown(Point p, World w) {
-		if (search(p, WATER, 1, w) > 0 || get(p.x, p.y).equals(Terrain.WATER)) {
-			return false;
-		}
-		for (Actor town : World.getall(Town.class)) {
-			if (Walker.distance(p.x, p.y, town.x, town.y) <= 8) {
-				WorldBuilder.retry();
-				return false;
-			}
-		}
-		return true;
-	}
+	// /**
+	// * @param town
+	// * Given a spot...
+	// * @return <code>false</code> if this is not a good {@link Town} placement
+	// * for this terrain.
+	// */
+	// public boolean generatetown(Point p, World w) {
+	// if (search(p, WATER, 1, w) > 0 || get(p.x, p.y).equals(Terrain.WATER)) {
+	// return false;
+	// }
+	// for (Actor town : World.getall(Town.class)) {
+	// if (town.distanceinsteps(p.x, p.y) <= Town.MINIMUMDISTANCE) {
+	// WorldBuilder.retry();
+	// return false;
+	// }
+	// }
+	// return true;
+	// }
 
 	static int randomstep() {
 		return RPG.pick(new int[] { -1, 0, +1 });

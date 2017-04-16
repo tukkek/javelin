@@ -14,7 +14,6 @@ import javelin.model.Realm;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
-import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.InfoScreen;
@@ -99,24 +98,24 @@ public class WorldBuilder extends Thread {
 		// Outpost.discover(start.x, start.y, Outpost.VISIONRANGE);
 	}
 
-	static void placemoretowns() {
-		int more = RPG.r(5, 7);
-		while (more > 0) {
-			int x = RPG.r(0, World.SIZE - 1);
-			int y = RPG.r(0, World.SIZE - 1);
-			if (World.get(x, y) != null || !World.seed.map[x][y]
-					.generatetown(new Point(x, y), World.seed)) {
-				continue;
-			}
-			more -= 1;
-			Point p = new Point(x, y);
-			Town t = new Town(p, determinecolor(p).realm);
-			while (t.isnear(Town.class)) {
-				Location.generate(t, false);
-			}
-			t.place();
-		}
-	}
+	// static void placemoretowns() {
+	// int more = RPG.r(5, 7);
+	// while (more > 0) {
+	// int x = RPG.r(0, World.SIZE - 1);
+	// int y = RPG.r(0, World.SIZE - 1);
+	// if (World.get(x, y) != null || !World.seed.map[x][y]
+	// .generatetown(new Point(x, y), World.seed)) {
+	// continue;
+	// }
+	// more -= 1;
+	// Point p = new Point(x, y);
+	// Town t = new Town(p, determinecolor(p).realm);
+	// // while (t.isnear(Town.class, Town.MINIMUMDISTANCE)) {
+	// // Location.generate(t, false);
+	// // }
+	// t.place();
+	// }
+	// }
 
 	public static void placenearbywoods(Town start) {
 		int x, y;
@@ -230,15 +229,21 @@ public class WorldBuilder extends Thread {
 		floodedge(sw, se, 0, -1, w);
 		floodedge(ne, se, -1, 0, w);
 		floodedge(nw, ne, 0, +1, w);
-		ArrayList<Town> towns = new ArrayList<Town>();
+		generatetowns(realms, regions);
+	}
+
+	static void generatetowns(LinkedList<Realm> realms,
+			ArrayList<List<Point>> regions) {
+		int ntowns = World.SCENARIO ? RPG.r(1 + 1, 1 + 3) : realms.size();
 		for (int i = 0; i < regions.size(); i++) {
-			if (WorldBuilder.GENERATIONORDER[i] != Terrain.WATER) {
-				towns.add(new Town(regions.get(i), realms.pop()));
+			Terrain t = WorldBuilder.GENERATIONORDER[i];
+			if (!t.equals(Terrain.WATER)) {
+				new Town(regions.get(i), realms.pop()).place();
+				ntowns -= 1;
+				if (ntowns == 0) {
+					return;
+				}
 			}
-		}
-		int ntowns = World.SCENARIO ? RPG.r(1 + 1, 1 + 3) : towns.size();
-		for (int i = 0; i < ntowns; i++) {
-			towns.get(i).place();
 		}
 	}
 

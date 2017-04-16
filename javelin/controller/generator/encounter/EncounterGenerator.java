@@ -26,6 +26,7 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class EncounterGenerator {
+	private static final int MAXSIZEDIFFERENCE = 5;
 	static final int MAXTRIES = 1000;
 
 	/**
@@ -136,11 +137,8 @@ public class EncounterGenerator {
 	 *         enemies).
 	 */
 	public static int getmaxenemynumber() {
-		if (Squad.active == null) {
-			/* all training */
-			return 4 + 5;
-		}
-		return Squad.active.members.size() + 5;
+		return MAXSIZEDIFFERENCE
+				+ (Squad.active == null ? 4 : Squad.active.members.size());
 	}
 
 	static List<Combatant> makeencounter(final int el,
@@ -148,7 +146,7 @@ public class EncounterGenerator {
 		List<Encounter> possibilities = new ArrayList<Encounter>();
 		int maxel = Integer.MIN_VALUE;
 		for (Terrain t : terrains) {
-			EncounterIndex index = Organization.ENCOUNTERS.get(t.toString());
+			EncounterIndex index = Organization.ENCOUNTERSBYTERRAIN.get(t.toString());
 			if (index != null) {
 				maxel = Math.max(maxel, index.lastKey());
 				List<Encounter> tier = index.get(el);

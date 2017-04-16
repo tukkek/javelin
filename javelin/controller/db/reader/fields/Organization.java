@@ -24,24 +24,30 @@ public class Organization extends FieldReader {
 	}
 
 	/** Don't use, temporary. */
-	public static HashMap<String, Monster> monstersbyname =
-			new HashMap<String, Monster>(Javelin.ALLMONSTERS.size());
+	public static HashMap<String, Monster> monstersbyname = new HashMap<String, Monster>(
+			Javelin.ALLMONSTERS.size());
 
 	/**
 	 * Possible encounters by terrain type.
 	 */
-	public final static HashMap<String, EncounterIndex> ENCOUNTERS =
-			new HashMap<String, EncounterIndex>();
-	public static final HashMap<String, String[]> RANDOM =
-			new HashMap<String, String[]>();
+	public final static HashMap<String, EncounterIndex> ENCOUNTERSBYTERRAIN = new HashMap<String, EncounterIndex>();
+	/**
+	 * Possible encounters by monster type (encounters may have more than one
+	 * type).
+	 */
+	public static HashMap<String, List<Encounter>> ENCOUNTERSBYMONSTER = new HashMap<String, List<Encounter>>();
+	/**
+	 * Random creature expansion (for example: ?mephit expands to any of a
+	 * number of mephit types). Hardcoded, initialized by {@link Organization}.
+	 */
+	public static final HashMap<String, String[]> RANDOM = new HashMap<String, String[]>();
+	static final int MAXIMUMSIZE = 12;
 	static ArrayList<EncounterData> data = new ArrayList<EncounterData>();
 
 	static {
-		RANDOM.put("mephit",
-				new String[] { "Air mephit", "Steam mephit", "Dust mephit",
-						"Earth mephit", "Fire mephit", "Magma mephit",
-						"Ice mephit", "Ooze mephit", "Salt mephit",
-						"Water mephit" });
+		RANDOM.put("mephit", new String[] { "Air mephit", "Steam mephit",
+				"Dust mephit", "Earth mephit", "Fire mephit", "Magma mephit",
+				"Ice mephit", "Ooze mephit", "Salt mephit", "Water mephit" });
 	}
 
 	/** See {@link FieldReader#FieldReader(MonsterReader, String)}. */
@@ -82,9 +88,10 @@ public class Organization extends FieldReader {
 			inform("");
 			inform("");
 			int i = 0;
-			for (String terrain : ENCOUNTERS.keySet()) {
-				for (int el : ENCOUNTERS.get(terrain).keySet()) {
-					for (Encounter e : ENCOUNTERS.get(terrain).get(el)) {
+			for (String terrain : ENCOUNTERSBYTERRAIN.keySet()) {
+				for (int el : ENCOUNTERSBYTERRAIN.get(terrain).keySet()) {
+					for (Encounter e : ENCOUNTERSBYTERRAIN.get(terrain)
+							.get(el)) {
 						inform("    " + terrain + " EL" + el + ": " + e);
 						i += 1;
 					}
@@ -99,15 +106,30 @@ public class Organization extends FieldReader {
 	}
 
 	static void register(final Encounter e) {
+		if (e.group.size() > MAXIMUMSIZE) {
+			return;
+		}
 		final HashSet<String> terrains = new HashSet<String>();
 		jointerrains(e.group, terrains);
 		for (final String terrain : terrains) {
-			EncounterIndex index = ENCOUNTERS.get(terrain);
+			EncounterIndex index = ENCOUNTERSBYTERRAIN.get(terrain);
 			if (index == null) {
 				index = new EncounterIndex();
-				ENCOUNTERS.put(terrain, index);
+				ENCOUNTERSBYTERRAIN.put(terrain, index);
 			}
 			index.put(e.rate(), e);
+		}
+		HashSet<String> monsters = new HashSet<String>();
+		for (Combatant c : e.group) {
+			String monster = c.source.name;
+			if (monsters.add(monster)) {
+				List<Encounter> encounters = ENCOUNTERSBYMONSTER.get(monster);
+				if (encounters == null) {
+					encounters = new ArrayList<Encounter>();
+					ENCOUNTERSBYMONSTER.put(monster, encounters);
+				}
+				encounters.add(e);
+			}
 		}
 	}
 
@@ -122,14 +144,13 @@ public class Organization extends FieldReader {
 
 	private static List<Encounter> prepareexpansion(ArrayList<String> queue,
 			HashMap<String, Monster> monstersbyname) {
-		final ArrayList<EncounterPossibilities> list =
-				new ArrayList<EncounterPossibilities>();
+		final ArrayList<EncounterPossibilities> list = new ArrayList<EncounterPossibilities>();
 		for (String group : queue) {
 			final EncounterPossibilities p = new EncounterPossibilities();
 			group = group.trim();
 			int separator = group.indexOf(' ');
-			final String name =
-					group.substring(separator + 1).trim().toLowerCase();
+			final String name = group.substring(separator + 1).trim()
+					.toLowerCase();
 			if (name.contains("?")) {
 				p.random = name.replace("?", "");
 			} else {
@@ -159,13 +180,13 @@ public class Organization extends FieldReader {
 		return result;
 	}
 
-	private static void inform(String string) {
+	static void inform(String string) {
 		if (Javelin.DEBUG) {
 			MonsterReader.log(string);
 		}
 	}
 
-	private static void expand(final ArrayList<Encounter> result,
+	static void expand(final ArrayList<Encounter> result,
 			final ArrayList<EncounterPossibilities> possibilites,
 			final int depth, final ArrayList<Combatant> monstersp) {
 		if (depth == possibilites.size()) {
@@ -175,8 +196,8 @@ public class Organization extends FieldReader {
 		}
 		final EncounterPossibilities p = possibilites.get(depth);
 		for (int i = p.min; i <= p.max; i++) {
-			final ArrayList<Combatant> monsters =
-					(ArrayList<Combatant>) monstersp.clone();
+			final ArrayList<Combatant> monsters = (ArrayList<Combatant>) monstersp
+					.clone();
 			for (int j = 0; j < i; j++) {
 				monsters.add(new Combatant(p.getmonster(), true));
 			}

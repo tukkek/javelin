@@ -9,6 +9,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.old.Game;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
@@ -140,6 +141,7 @@ public class Dwelling extends Fortification {
 		generategarrison(0, 0);
 		descriptionknown = dweller.toString() + " dwelling";
 		descriptionunknown = "A dwelling";
+		clearforscenario = false;
 	}
 
 	@Override
@@ -147,12 +149,10 @@ public class Dwelling extends Fortification {
 		if (dweller == null) {
 			setdweller(RPG.pick(getcandidates(x, y)));
 		}
-		targetel = ChallengeRatingCalculator
-				.crtoel(ChallengeRatingCalculator.calculatecr(dweller.source));
 		gossip = dweller.source.intelligence > 8;
-		for (int i = 0; i < 4; i++) {
-			garrison.add(new Combatant(dweller.source.clone(), true));
-		}
+		garrison.addAll(RPG.pick(Organization.ENCOUNTERSBYMONSTER
+				.get(dweller.source.name)).group);
+		targetel = ChallengeRatingCalculator.calculateel(garrison);
 		generategarrison = false;
 	}
 

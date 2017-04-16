@@ -50,7 +50,7 @@ public class World implements Serializable {
 	 * There is only one enemy {@link Realm} per game and the starting features
 	 * are roughly made to be 1/3 neutral and 2/3 hostile.
 	 */
-	public static boolean SCENARIO = false;
+	public static boolean SCENARIO = true;
 
 	/**
 	 * Map size in squares.

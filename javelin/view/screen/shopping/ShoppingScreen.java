@@ -62,8 +62,8 @@ public abstract class ShoppingScreen extends PurchaseScreen {
 		Item i = ((PurchaseOption) o).i;
 		String useinfo = "";
 		if (i instanceof Wand || i instanceof Scroll) {
-			ArrayList<Combatant> members =
-					new ArrayList<Combatant>(Squad.active.members);
+			ArrayList<Combatant> members = new ArrayList<Combatant>(
+					Squad.active.members);
 			for (Combatant c : Squad.active.members) {
 				if (i.canuse(c) != null) {
 					members.remove(c);
@@ -91,4 +91,8 @@ public abstract class ShoppingScreen extends PurchaseScreen {
 		return s;
 	}
 
+	@Override
+	public String printinfo() {
+		return "You have $" + PurchaseScreen.formatcost(Squad.active.gold);
+	}
 }

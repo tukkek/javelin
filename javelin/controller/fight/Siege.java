@@ -37,11 +37,6 @@ public class Siege extends Fight {
 	}
 
 	@Override
-	public int getel(int teamel) {
-		throw new RuntimeException("#siege getel");
-	}
-
-	@Override
 	public ArrayList<Combatant> getmonsters(int teamel) {
 		ArrayList<Combatant> clones = new ArrayList<Combatant>(place.garrison);
 		for (int i = 0; i < clones.size(); i++) {

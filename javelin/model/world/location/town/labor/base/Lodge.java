@@ -126,12 +126,12 @@ public class Lodge extends Fortification {
 		int weekprice = WEEKLONGREST * price;
 		String s = "Do you want to rest at the " + LEVELS[level].toLowerCase()
 				+ "?\n";
-		s += "\nENTER or d to stay ($" + price + "), w to stay for a week ($"
+		s += "\nENTER or s to stay ($" + price + "), w to stay for a week ($"
 				+ weekprice + ")";
 		s += "\np to pillage ($" + SelectScreen.formatcost(getspoils()) + ")";
 		s += "\nany other key to leave";
 		Character input = Javelin.prompt(s);
-		if (input == '\n' || input == 'd') {
+		if (input == '\n' || input == 's') {
 			return rest(price, level + 1);
 		}
 		if (input == 'w') {

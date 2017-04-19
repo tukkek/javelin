@@ -2,6 +2,7 @@ package javelin.view.screen;
 
 import java.util.List;
 
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Skills;
@@ -68,7 +69,9 @@ public class BribingScreen {
 
 	static String printdiplomacy(List<Combatant> foes, int dailyfee, int bribe,
 			boolean canhire) {
-		String text = "You are able to parley with the opponents!\n\n";
+		String text = "You are able to parley with the "
+				+ ChallengeRatingCalculator.describedifficulty(foes)
+				+ " opponents!\n\n";
 		for (Combatant c : foes) {
 			text += c + ", ";
 		}

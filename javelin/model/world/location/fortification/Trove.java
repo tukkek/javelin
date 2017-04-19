@@ -9,6 +9,7 @@ import javelin.controller.fight.Siege;
 import javelin.model.item.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Chest;
 import javelin.model.world.location.town.labor.expansive.Settler;
 import tyrant.mikera.engine.RPG;
@@ -29,7 +30,8 @@ public class Trove extends Fortification {
 
 		static Reward getrandom() {
 			Reward[] all = values();
-			return all[RPG.r(0, all.length - 1)];
+			Reward r = all[RPG.r(0, all.length - 1)];
+			return World.SCENARIO && r == KEY ? getrandom() : r;
 		}
 	}
 

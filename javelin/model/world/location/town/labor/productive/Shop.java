@@ -66,8 +66,8 @@ public class Shop extends Location {
 
 		@Override
 		public String printinfo() {
-			return crafting.queue.isEmpty() ? ""
-					: "Currently crafting: " + crafting;
+			return super.printinfo() + (crafting.queue.isEmpty() ? ""
+					: "\n\nCurrently crafting: " + crafting);
 		}
 	}
 

@@ -509,7 +509,7 @@ public class WorldScreen extends BattleScreen {
 	 * @return A random encounter fight.
 	 */
 	public Fight encounter() {
-		return new RandomEncounter();
+		return World.SCENARIO ? null : new RandomEncounter();
 	}
 
 	@Override

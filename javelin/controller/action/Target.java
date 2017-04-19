@@ -72,8 +72,8 @@ public abstract class Target extends Action {
 			throw new RepeatTurn();
 		}
 		final Combatant combatant = state.clone(c);
-		final List<Combatant> targets =
-				state.gettargets(combatant, state.getcombatants());
+		final List<Combatant> targets = state.gettargets(combatant,
+				state.getcombatants());
 		filtertargets(combatant, targets, state);
 		if (targets.isEmpty()) {
 			Game.message("No valid targets.", Delay.WAIT);
@@ -121,9 +121,9 @@ public abstract class Target extends Action {
 		while (true) {
 			Game.redraw();
 			final Character key = InfoScreen.feedback();
-			if (Action.MOVE_W.isPressed(key)) {
+			if (Action.MOVE_W.isPressed(key) || key == '-') {
 				targeti -= 1;
-			} else if (Action.MOVE_E.isPressed(key)) {
+			} else if (Action.MOVE_E.isPressed(key) || key == '+') {
 				targeti += 1;
 			} else if (key == '\n' || key == confirmkey) {
 				MapPanel.overlay.clear();
@@ -188,9 +188,8 @@ public abstract class Target extends Action {
 
 	private void lockTarget(final Combatant target, Combatant active,
 			BattleState state) {
-		// Game.instance().hero = target.visual;
-		MapPanel.overlay =
-				new TargetOverlay(target.location[0], target.location[1]);
+		MapPanel.overlay = new TargetOverlay(target.location[0],
+				target.location[1]);
 		Game.messagepanel.clear();
 		Game.message(
 				"Use ← and → to select target, ENTER or " + confirmkey

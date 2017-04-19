@@ -32,7 +32,10 @@ public class RandomEncounter extends Fight {
 	 */
 	static public void encounter(double d) {
 		if (RPG.random() < d && !Preferences.DEBUGDISABLECOMBAT) {
-			throw new StartBattle(JavelinApp.context.encounter());
+			Fight f = JavelinApp.context.encounter();
+			if (f != null) {
+				throw new StartBattle(f);
+			}
 		}
 	}
 

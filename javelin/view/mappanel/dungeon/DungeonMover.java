@@ -40,7 +40,6 @@ public class DungeonMover extends WorldMover {
 
 	@Override
 	public Point resetlocation() {
-		return new Point(Dungeon.active.herolocation.x,
-				Dungeon.active.herolocation.y);
+		return Dungeon.active == null ? null : Dungeon.active.herolocation;
 	}
 }

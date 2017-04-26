@@ -79,7 +79,7 @@ public class TownScreen extends PurchaseScreen {
 			return retire(town);
 		}
 		if (o == UNLOAD) {
-			town.governor.work(Squad.active.resources);
+			town.governor.work(Squad.active.resources, town.getdistrict());
 			Squad.active.resources = 0;
 			return true;
 		}

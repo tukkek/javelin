@@ -68,15 +68,16 @@ public abstract class Governor implements Serializable {
 	 *
 	 * @param labor
 	 *            Labor to be distributed among the {@link #projects}.
+	 * @param d
 	 *
 	 * @return <code>false</code> if there is no current project.
 	 */
-	public void work(float labor) {
+	public void work(float labor, District d) {
 		float step = labor / projects.size();
 		for (Labor l : new ArrayList<Labor>(projects)) {
 			l.work(step);
 		}
-		validate(town.getdistrict());
+		validate(d);
 		always(hand);
 		if (projects.size() < nprojects && !hand.isEmpty()) {
 			manage();

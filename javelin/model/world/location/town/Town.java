@@ -185,7 +185,7 @@ public class Town extends Location {
 
 	@Override
 	public void turn(long time, WorldScreen screen) {
-		governor.work(population * DAILYLABOR);
+		governor.work(population * DAILYLABOR, getdistrict());
 	}
 
 	/**

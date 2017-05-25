@@ -29,7 +29,8 @@ public class WorldBuilder extends Thread {
 	 * Arbitrary number to serve as guideline for {@link Terrain} generation.
 	 */
 	public static final int NREGIONS = 16;
-	static final int NOISEAMOUNT = World.SIZE * World.SIZE / 10;
+	static final int NOISEAMOUNT = World.scenario.size * World.scenario.size
+			/ 10;
 	static final Terrain[] NOISE = new Terrain[] { Terrain.PLAIN, Terrain.HILL,
 			Terrain.FOREST, Terrain.MOUNTAINS };
 	public static final int TOWNBUFFER = 1;
@@ -206,8 +207,9 @@ public class WorldBuilder extends Thread {
 	}
 
 	public static void generate(World w) {
-		for (int i = 0; i < World.SIZE; i++) {
-			for (int j = 0; j < World.SIZE; j++) {
+		int size = World.scenario.size;
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
 				w.map[i][j] = Terrain.FOREST;
 			}
 		}
@@ -222,9 +224,9 @@ public class WorldBuilder extends Thread {
 			regions.add(t.generate(w));
 		}
 		Point nw = new Point(0, 0);
-		Point sw = new Point(0, World.SIZE - 1);
-		Point se = new Point(World.SIZE - 1, World.SIZE - 1);
-		Point ne = new Point(World.SIZE - 1, 0);
+		Point sw = new Point(0, size - 1);
+		Point se = new Point(size - 1, size - 1);
+		Point ne = new Point(size - 1, 0);
 		floodedge(nw, sw, +1, 0, w);
 		floodedge(sw, se, 0, -1, w);
 		floodedge(ne, se, -1, 0, w);
@@ -234,22 +236,19 @@ public class WorldBuilder extends Thread {
 
 	static void generatetowns(LinkedList<Realm> realms,
 			ArrayList<List<Point>> regions) {
-		int ntowns = World.SCENARIO ? RPG.r(1 + 1, 1 + 3) : realms.size();
-		for (int i = 0; i < regions.size(); i++) {
+		int towns = World.scenario.towns;
+		for (int i = 0; i < regions.size() && towns > 0; i++) {
 			Terrain t = WorldBuilder.GENERATIONORDER[i];
 			if (!t.equals(Terrain.WATER)) {
 				new Town(regions.get(i), realms.pop()).place();
-				ntowns -= 1;
-				if (ntowns == 0) {
-					return;
-				}
+				towns -= 1;
 			}
 		}
 	}
 
 	private static void floodedge(Point from, Point to, int deltax, int deltay,
 			World w) {
-		ArrayList<Point> edge = new ArrayList<Point>(World.SIZE);
+		ArrayList<Point> edge = new ArrayList<Point>(World.scenario.size);
 		edge.add(from);
 		edge.add(to);
 		if (from.x != to.x) {

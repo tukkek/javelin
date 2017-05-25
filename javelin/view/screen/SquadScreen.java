@@ -6,11 +6,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.kit.Kit;
-import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.classes.Commoner;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -23,8 +18,6 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class SquadScreen extends InfoScreen {
-	/** Minimum starting party encounter level. */
-	public static final float INITIALEL = 5f;
 	static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
 	static final int MONSTERPERPAGE = ALPHABET.indexOf('y');
 	static final float[] SELECTABLE = { 1f, 1.25f };
@@ -60,7 +53,7 @@ public class SquadScreen extends InfoScreen {
 
 	ArrayList<Combatant> select() {
 		page(0);
-		upgrade();
+		World.scenario.upgradesquad(squad);
 		return squad;
 	}
 
@@ -98,50 +91,6 @@ public class SquadScreen extends InfoScreen {
 		}
 	}
 
-	/**
-	 * Adds {@link Commoner} levels to an understaffed squad or upgrades to
-	 * level 6 as per {@link World#SCENARIO} rules.
-	 */
-	void upgrade() {
-		if (World.SCENARIO) {
-			ArrayList<Combatant> members = new ArrayList<Combatant>(squad);
-			while (!members.isEmpty()) {
-				ArrayList<Kit> kits = new ArrayList<Kit>(Kit.KITS);
-				Collections.shuffle(kits);
-				for (Kit k : kits) {
-					Combatant c = members.get(0);
-					if (Kit.getpossiblekits(c.source).contains(k)) {
-						c.source.customName = Character.toUpperCase(
-								k.name.charAt(0)) + k.name.substring(1);
-						while (c.source.challengerating < 6) {
-							c.upgrade(k.upgrades);
-						}
-						members.remove(0);
-						if (members.isEmpty()) {
-							return;
-						}
-					}
-				}
-			}
-			return;
-		}
-		float startingcr = totalcr();
-		while (ChallengeRatingCalculator.calculateel(squad) < INITIALEL) {
-			ArrayList<Upgrade> u = new ArrayList<Upgrade>();
-			u.add(Commoner.SINGLETON);
-			Combatant.upgradeweakest(squad, u);
-		}
-		Squad.active.gold = RewardCalculator.getgold(totalcr() - startingcr);
-	}
-
-	private float totalcr() {
-		int cr = 0;
-		for (Combatant c : squad) {
-			cr += ChallengeRatingCalculator.calculatecr(c.source);
-		}
-		return cr;
-	}
-
 	private void recruit(Monster m) {
 		Combatant c = Javelin.recruit(m);
 		c.hp = c.source.hd.maximize();
@@ -153,8 +102,7 @@ public class SquadScreen extends InfoScreen {
 	}
 
 	boolean checkifsquadfull() {
-		return World.SCENARIO ? squad.size() >= 4
-				: ChallengeRatingCalculator.calculateel(squad) >= INITIALEL;
+		return World.scenario.checkfullsquad(squad);
 	}
 
 	int printpage(int index, int next) {

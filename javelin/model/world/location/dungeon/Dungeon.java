@@ -12,15 +12,11 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.GaveUpException;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
-import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.terrain.hazard.Hazard;
-import javelin.model.Realm;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.Actor;
-import javelin.model.world.Caravan;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
@@ -34,7 +30,6 @@ import javelin.model.world.location.dungeon.temple.features.StairsDown;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.haxor.Win;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -66,19 +61,6 @@ public class Dungeon extends Location {
 
 	static final int MAXTRIES = 1000;
 	final static int[] DELTAS = { -1, 0, 1 };
-	/**
-	 * Number of starting dungeons in the {@link World} map. Since {@link Key}s
-	 * are important to {@link Win}ning the game this should be a fair amount,
-	 * otherwise the player will depend only on {@link Caravan}s if too many
-	 * dungeons are destroyed or if unable to find the proper {@link Chest}
-	 * inside the dungeons he does find. Not that dungeons also spawn during the
-	 * course of a game but since this is highly randomized a late-game player
-	 * who ran out of dungeons should not be required to depend on that alone.
-	 * 
-	 * @see Actor#destroy(Incursion)
-	 * @see FeatureGenerator
-	 */
-	public static final Integer STARTING = Realm.values().length * 2;
 
 	/** Current {@link Dungeon} or <code>null</code> if not in one. */
 	public static Dungeon active = null;
@@ -217,7 +199,7 @@ public class Dungeon extends Location {
 			Point p = findspot(free, used);
 			used.add(p);
 			Feature t;
-			if (i == chests && !World.SCENARIO) {
+			if (i == chests && World.scenario.allowkeys) {
 				t = createspecialchest(p);
 			} else {
 				t = RewardCalculator.createchest(gold, p.x, p.y);

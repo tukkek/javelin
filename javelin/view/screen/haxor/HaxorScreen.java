@@ -9,8 +9,8 @@ import javelin.Javelin;
 import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.World;
 import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.Haxor;
 import javelin.view.screen.Option;
@@ -22,8 +22,7 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class HaxorScreen extends SelectScreen {
-	transient private static final ArrayList<String> QUOTES =
-			new ArrayList<String>();
+	transient private static final ArrayList<String> QUOTES = new ArrayList<String>();
 
 	private static final String DAILYQUOTE;
 
@@ -131,8 +130,8 @@ public class HaxorScreen extends SelectScreen {
 	}
 
 	List<AttackSequence> selectattacks(ArrayList<AttackSequence> attacksp) {
-		ArrayList<AttackSequence> attacks =
-				new ArrayList<AttackSequence>(attacksp);
+		ArrayList<AttackSequence> attacks = new ArrayList<AttackSequence>(
+				attacksp);
 		for (AttackSequence attack : attacksp) {
 			if (attack.powerful || attack.rapid) {
 				attacks.remove(attack);
@@ -147,12 +146,12 @@ public class HaxorScreen extends SelectScreen {
 	void generate(Actor place) {
 		int x = Haxor.singleton.x;
 		int y = Haxor.singleton.y;
+		int size = World.scenario.size;
 		while (x == Haxor.singleton.x && y == Haxor.singleton.y
 				|| World.get(x, y) != null) {
 			x += RPG.pick(new int[] { -1, 0, +1 });
 			y += RPG.pick(new int[] { -1, 0, +1 });
-			if (x < 0 || x >= World.SIZE || y < 0
-					|| y >= World.SIZE) {
+			if (x < 0 || x >= size || y < 0 || y >= size) {
 				generate(place);
 				return;
 			}
@@ -175,8 +174,8 @@ public class HaxorScreen extends SelectScreen {
 		options.add(new ChangeAvatar("change unit avatar", 'c', 1, true));
 		options.add(new RemoveAbility("discard ability", 'd', 1, true));
 		options.add(new Ressurect("ressurect last fallen ally", 'r', 1, false));
-		SummonAlly weaksumon =
-				new SummonAlly("summon ally (weak)", 's', 1, false);
+		SummonAlly weaksumon = new SummonAlly("summon ally (weak)", 's', 1,
+				false);
 		weaksumon.fixed = 1f;
 		options.add(weaksumon);
 		options.add(new Teleport("teleport", 't', 1, false));

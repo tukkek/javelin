@@ -86,7 +86,7 @@ public class Haxor extends UniqueLocation {
 	}
 
 	public static void load() {
-		if (!World.SCENARIO) {
+		if (World.scenario.haxor) {
 			singleton = (Haxor) World.getseed().actors.get(Haxor.class).get(0);
 			singleton.place();
 		}

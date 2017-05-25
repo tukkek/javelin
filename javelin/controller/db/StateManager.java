@@ -38,7 +38,8 @@ import javelin.view.screen.WorldScreen;
 public class StateManager {
 	static final String SAVEFOLDER = System.getProperty("user.dir");
 	/** Normal save file. */
-	public static final File SAVEFILE = new File(SAVEFOLDER, "javelin.save");
+	public static final File SAVEFILE = new File(SAVEFOLDER,
+			World.scenario.saveprefix + ".save");
 
 	/**
 	 * Always called on normal exit.
@@ -193,7 +194,8 @@ public class StateManager {
 		timestamp += format(now.get(Calendar.SECOND));
 		File folder = new File(SAVEFOLDER, "backup");
 		folder.mkdir();
-		File backup = new File(folder, timestamp + ".save");
+		File backup = new File(folder,
+				World.scenario.saveprefix + timestamp + ".save");
 		save(true, backup);
 	}
 

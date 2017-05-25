@@ -98,8 +98,9 @@ public abstract class Guild extends Academy {
 
 	@Override
 	protected final void generategarrison(int minlevel, int maxlevel) {
-		targetel = RPG.r(ChallengeRatingCalculator.leveltoel(minlevel), ChallengeRatingCalculator.leveltoel(maxlevel));
-		if (World.SCENARIO) {
+		targetel = RPG.r(ChallengeRatingCalculator.leveltoel(minlevel),
+				ChallengeRatingCalculator.leveltoel(maxlevel));
+		if (World.scenario.clearlocations) {
 			return;
 		}
 		while (ChallengeRatingCalculator.calculateel(garrison) < targetel) {

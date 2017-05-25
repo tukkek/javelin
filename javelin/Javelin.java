@@ -33,6 +33,8 @@ import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.hazard.PartyHazard;
 import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.UpgradeHandler;
+import javelin.model.controller.scenario.Campaign;
+import javelin.model.controller.scenario.Scenario;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
@@ -63,7 +65,6 @@ public class Javelin {
 	 * logging.
 	 */
 	public static final boolean DEBUG = System.getProperty("debug") != null;
-
 	/** TODO turn into {@link Enum} */
 	public static final String PERIODMORNING = "Morning";
 	/** TODO turn into {@link Enum} */
@@ -126,13 +127,15 @@ public class Javelin {
 	 */
 	public static void main(final String[] args) {
 		Thread.currentThread().setName("Javelin");
+		World.scenario = args.length > 0 && args[0].equalsIgnoreCase("scenario")
+				? new Scenario() : new Campaign();
+		app = new JavelinApp();
 		final JFrame f = new JFrame(TITLE);
 		f.setBackground(java.awt.Color.black);
 		f.addWindowListener(StateManager.SAVEONCLOSE);
 		f.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		f.setLayout(new BorderLayout());
 		f.setFocusTraversalKeysEnabled(false);
-		app = new JavelinApp();
 		app.frame = f;
 		app.setVisible(false);
 		f.add(app);
@@ -264,7 +267,7 @@ public class Javelin {
 		StateManager.clear();
 		BattleScreen.active.messagepanel.clear();
 		Game.message(
-				"You have lost all your monsters! Game over T_T\n\n" + record(),
+				"You have lost all your units! Game over T_T\n\n" + record(),
 				Delay.NONE);
 		while (InfoScreen.feedback() != '\n') {
 			continue;
@@ -278,6 +281,9 @@ public class Javelin {
 	 * @return a message with previous and current score.
 	 */
 	public static String record() {
+		if (!World.scenario.record) {
+			return "";
+		}
 		final long stored = gethighscore();
 		final long current = WorldScreen.currentday();
 		String message = "Previous record: " + stored;
@@ -314,7 +320,7 @@ public class Javelin {
 	 */
 	public static Combatant recruit(Monster pick) {
 		Combatant c = new Combatant(pick.clone(), true);
-		if (!World.SCENARIO && !Javelin.DEBUG) {
+		if (World.scenario.asksquadnames && !Javelin.DEBUG) {
 			c.source.customName = NamingScreen.getname(c.toString());
 		}
 		Squad.active.members.add(c);

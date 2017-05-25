@@ -26,7 +26,6 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Water extends Terrain {
-	private static final int DESERTRADIUS = World.SCENARIO ? 1 : 2;
 	private static final int[] DELTAS = new int[] { +1, -1 };
 	private Point currentheight;
 
@@ -54,7 +53,8 @@ public class Water extends Terrain {
 		Point source = super.generatesource(world);
 		while (!world.map[source.x][source.y].equals(Terrain.MOUNTAINS)
 				&& !world.map[source.x][source.y].equals(Terrain.HILL)
-				&& search(source, DESERT, DESERTRADIUS, world) == 0) {
+				&& search(source, DESERT, World.scenario.desertradius,
+						world) == 0) {
 			source = super.generatesource(world);
 		}
 		currentheight = source;
@@ -71,8 +71,8 @@ public class Water extends Terrain {
 			} else {
 				to.y += RPG.pick(DELTAS);
 			}
-			if (checkinvalid(world, to.x, to.y)
-					|| search(to, DESERT, DESERTRADIUS, world) > 0) {
+			if (checkinvalid(world, to.x, to.y) || search(to, DESERT,
+					World.scenario.desertradius, world) > 0) {
 				to = null;
 				WorldBuilder.retry();
 				continue expansion;

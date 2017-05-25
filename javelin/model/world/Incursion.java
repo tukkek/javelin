@@ -221,6 +221,7 @@ public class Incursion extends Actor {
 		if (!SPAWN) {
 			return;
 		}
+		int size = World.scenario.size;
 		while (World.get(x, y) != null) {
 			int delta = RPG.pick(new int[] { -1, 0, +1 });
 			if (RPG.r(1, 2) == 1) {
@@ -232,10 +233,10 @@ public class Incursion extends Actor {
 				x = 0;
 			} else if (y < 0) {
 				y = 0;
-			} else if (x >= World.SIZE) {
-				x = World.SIZE - 1;
-			} else if (y >= World.SIZE) {
-				y = World.SIZE - 1;
+			} else if (x >= size) {
+				x = size - 1;
+			} else if (y >= size) {
+				y = size - 1;
 			}
 		}
 		new Incursion(x, y, squadp, r).place();

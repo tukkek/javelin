@@ -175,6 +175,9 @@ public class WorldScreen extends BattleScreen {
 	public void turn() {
 		if (WorldScreen.welcome) {
 			saywelcome();
+		} else if (World.scenario.win()) {
+			StateManager.clear();
+			System.exit(0);
 		}
 		StateManager.save(false, StateManager.SAVEFILE);
 		endturn();
@@ -265,7 +268,7 @@ public class WorldScreen extends BattleScreen {
 
 	/** Covers a {@link WorldTile} per day with fog of war. */
 	void cover() {
-		if (Preferences.DEBUGESHOWMAP || World.SCENARIO) {
+		if (Preferences.DEBUGESHOWMAP || !World.scenario.fogofwar) {
 			return;
 		}
 		ArrayList<Location> locations = new ArrayList<Location>();
@@ -280,8 +283,9 @@ public class WorldScreen extends BattleScreen {
 			}
 		}
 		LinkedList<Tile> discovered = new LinkedList<Tile>();
-		for (int x = 0; x < World.SIZE; x++) {
-			for (int y = 0; y < World.SIZE; y++) {
+		int size = World.scenario.size;
+		for (int x = 0; x < size; x++) {
+			for (int y = 0; y < size; y++) {
 				Tile t = mappanel.tiles[x][y];
 				if (t.discovered && !World.seed.roads[t.x][t.y]
 						&& World.get(t.x, t.y, locations) == null) {
@@ -410,10 +414,11 @@ public class WorldScreen extends BattleScreen {
 	 * the world scre en smal enough to fit in just a few screens worth of size.
 	 * 
 	 * @param hoursellapsed
-	 * @return
+	 * @return <code>true</code> if exploration was uneventful,
+	 *         <code>false</code> if something happened.
 	 */
 	public boolean explore(float hoursellapsed, boolean encounter) {
-		if (World.SCENARIO) {
+		if (!World.scenario.worldexploration) {
 			return true;
 		}
 		if (encounter && //
@@ -509,7 +514,7 @@ public class WorldScreen extends BattleScreen {
 	 * @return A random encounter fight.
 	 */
 	public Fight encounter() {
-		return World.SCENARIO ? null : new RandomEncounter();
+		return World.scenario.worldexploration ? new RandomEncounter() : null;
 	}
 
 	@Override

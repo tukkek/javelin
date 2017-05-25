@@ -19,9 +19,9 @@ import javelin.controller.old.Game.Delay;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.Actor;
 import javelin.model.world.Season;
 import javelin.model.world.World;
-import javelin.model.world.Actor;
 import javelin.model.world.location.unique.Haxor;
 import javelin.model.world.location.unique.minigame.Arena;
 import javelin.view.KeysScreen;
@@ -290,8 +290,8 @@ public class Preferences {
 	static void initdebug() {
 		if (DEBUGESHOWMAP && BattleScreen.active != null
 				&& BattleScreen.active.getClass().equals(WorldScreen.class)) {
-			for (int x = 0; x < World.SIZE; x++) {
-				for (int y = 0; y < World.SIZE; y++) {
+			for (int x = 0; x < World.scenario.size; x++) {
+				for (int y = 0; y < World.scenario.size; y++) {
 					WorldScreen.setVisible(x, y);
 				}
 			}

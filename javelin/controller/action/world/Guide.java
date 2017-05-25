@@ -15,6 +15,7 @@ import javax.swing.JTextArea;
 
 import javelin.controller.TextReader;
 import javelin.controller.action.SimpleAction;
+import javelin.model.world.World;
 import javelin.view.frame.Frame;
 import javelin.view.screen.WorldScreen;
 
@@ -25,8 +26,8 @@ import javelin.view.screen.WorldScreen;
  */
 public class Guide extends WorldAction implements SimpleAction {
 	/** Guide. */
-	public static final Guide HOWTO = new Guide(KeyEvent.VK_F1, "How to play",
-			"F1");
+	public static final Guide HOWTO = new Guide(KeyEvent.VK_F1,
+			World.scenario.helpfile, "F1");
 	/** Guide. */
 	public static final Guide MINIGAMES = new Guide(KeyEvent.VK_F2, "Minigames",
 			"F2");

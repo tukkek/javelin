@@ -74,7 +74,7 @@ public class Deck extends ArrayList<Labor> {
 
 	static {
 		populate(DEFAULT, null, BASE);
-		if (!World.SCENARIO) {
+		if (World.scenario.allowlabor) {
 			populate(new Deck(), "expansive", EXPANSIVE);
 			populate(new Deck(), "productive", PRODUCTIVE);
 			populate(new Deck(), "military", MILITARY);

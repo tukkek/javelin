@@ -141,7 +141,7 @@ public class Dwelling extends Fortification {
 		generategarrison(0, 0);
 		descriptionknown = dweller.toString() + " dwelling";
 		descriptionunknown = "A dwelling";
-		clearforscenario = false;
+		clear = false;
 	}
 
 	@Override

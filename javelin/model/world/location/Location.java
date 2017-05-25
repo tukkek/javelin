@@ -125,13 +125,14 @@ public abstract class Location extends Actor {
 		ArrayList<Actor> actors = World.getall();
 		actors.remove(p);
 		final World w = World.getseed();
+		int size = World.scenario.size - 1;
 		while (p.x == -1
 				|| !allowwater
 						&& World.getseed().map[p.x][p.y].equals(Terrain.WATER)
 				|| World.get(p.x, p.y, actors) != null || neartown(p)
 				|| w.roads[p.x][p.y] || w.highways[p.x][p.y]) {
-			p.x = RPG.r(0, World.SIZE - 1);
-			p.y = RPG.r(0, World.SIZE - 1);
+			p.x = RPG.r(0, size);
+			p.y = RPG.r(0, size);
 			WorldBuilder.retry();
 		}
 	}

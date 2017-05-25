@@ -10,6 +10,7 @@ cp start.bat package/javelin
 cp monsters.xml package/javelin
 cp preferences.properties package/javelin
 cp README.txt package/javelin
+cp scripts/* package/javelin
 rm javelin.zip
 cd package
 rm -r javelin/doc/javadoc

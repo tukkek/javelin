@@ -10,6 +10,7 @@ import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
 import javelin.model.Realm;
+import javelin.model.controller.scenario.Scenario;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
@@ -40,16 +41,20 @@ public abstract class Fortification extends Location {
 	public Integer targetel = null;
 	public int minlevel;
 	public int maxlevel;
+	/** TODO There is certainly a better way to do this. */
+	public boolean generategarrison = true;
+	/**
+	 * Will not have a garrison if {@link Scenario#clearlocations} is
+	 * <code>true</code>.
+	 */
+	public boolean clear = false;
 	/**
 	 * If not <code>null</code> will use this for
 	 * {@link #generategarrison(int, int)}.
 	 */
 	protected Terrain terrain = null;
-	/** TODO There is certainly a better way to do this. */
-	public boolean generategarrison = true;
 	/** Neutral location don't generate a garrison. */
 	protected boolean neutral = false;
-	protected boolean clearforscenario = false;
 
 	/**
 	 * Generates a guarded location based on a difficulty range. The difficulty
@@ -127,7 +132,8 @@ public abstract class Fortification extends Location {
 	public void raiselevel(int bonus) {
 		minlevel += bonus;
 		maxlevel += bonus;
-		targetel = RPG.r(ChallengeRatingCalculator.leveltoel(minlevel), ChallengeRatingCalculator.leveltoel(maxlevel));
+		targetel = RPG.r(ChallengeRatingCalculator.leveltoel(minlevel),
+				ChallengeRatingCalculator.leveltoel(maxlevel));
 	}
 
 	private Actor findclosest(Class<? extends Actor> type) {
@@ -196,7 +202,7 @@ public abstract class Fortification extends Location {
 		if (generategarrison && garrison.isEmpty()) {
 			generategarrison(minlevel, maxlevel);
 			generategarrison = false;
-			if (World.SCENARIO && clearforscenario) {
+			if (World.scenario.clearlocations && clear) {
 				capture();
 			}
 		}

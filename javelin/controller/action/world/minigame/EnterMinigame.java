@@ -13,7 +13,7 @@ public class EnterMinigame extends WorldAction {
 
 	@Override
 	public void perform(WorldScreen screen) {
-		if (World.SCENARIO) {
+		if (World.scenario.minigames) {
 			Javelin.message("Mini-games are not available on scenario mode.",
 					false);
 			throw new RepeatTurn();

@@ -11,8 +11,8 @@ import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
-import javelin.model.world.World;
 import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
 import javelin.view.Images;
@@ -20,7 +20,6 @@ import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
 
 public class WorldTile extends Tile {
-
 	public static final HashMap<Point, Image> COASTLINES = new HashMap<Point, Image>(
 			4);
 
@@ -35,7 +34,7 @@ public class WorldTile extends Tile {
 	}
 
 	public WorldTile(int xp, int yp, WorldPanel p) {
-		super(xp, yp, false);
+		super(xp, yp, !World.scenario.fogofwar);
 		addMouseListener(p.mouse);
 	}
 

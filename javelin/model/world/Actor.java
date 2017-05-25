@@ -58,7 +58,7 @@ public abstract class Actor implements Serializable {
 
 	/** Adds this actor to the game. Should only be used once in theory. */
 	public void place() {
-		if (!World.SCENARIO || allowedinscenario) {
+		if (World.scenario.allowallactors || allowedinscenario) {
 			registerinstance();
 		}
 	}
@@ -126,7 +126,8 @@ public abstract class Actor implements Serializable {
 		}
 		ArrayList<Actor> actors = World.getall();
 		actors.remove(this);
-		if (tox >= 0 && toy >= 0 && tox < World.SIZE && toy < World.SIZE
+		if (tox >= 0 && toy >= 0 && tox < World.scenario.size
+				&& toy < World.scenario.size
 				&& World.get(tox, toy, actors) == null) {
 			move(tox, toy);
 		} else {

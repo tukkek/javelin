@@ -69,7 +69,8 @@ public class FeatureGenerator {
 	/** Only access point to this class. */
 	public static final FeatureGenerator SINGLETON = new FeatureGenerator();
 
-	static final int STARTINGFEATURES = World.SIZE * World.SIZE / 5;
+	static final int STARTINGFEATURES = World.scenario.size
+			* World.scenario.size / 5;
 
 	final HashMap<Class<? extends Actor>, GenerationData> generators = new HashMap<Class<? extends Actor>, GenerationData>();
 
@@ -80,8 +81,13 @@ public class FeatureGenerator {
 	 * manually-written methods from becoming too large.
 	 */
 	private FeatureGenerator() {
-		register(Dungeon.class, World.SCENARIO ? new GenerationData(2f)
-				: new GenerationData(2f, Dungeon.STARTING, Dungeon.STARTING));
+		GenerationData dungeons = new GenerationData(2f);
+		Integer startingdungeons = World.scenario.startingdungeons;
+		if (startingdungeons != null) {
+			dungeons.seeds = startingdungeons;
+			dungeons.max = startingdungeons;
+		}
+		register(Dungeon.class, dungeons);
 		register(Outpost.class, new GenerationData());
 		register(Lodge.class, new GenerationData(.75f, 5, 1));
 		register(Shrine.class, new GenerationData());
@@ -151,7 +157,7 @@ public class FeatureGenerator {
 	 */
 	public void spawn(float chance, boolean generatingworld) {
 		if (countplaces() >= STARTINGFEATURES
-				|| (World.SCENARIO && !generatingworld)) {
+				|| (!World.scenario.respawnlocations && !generatingworld)) {
 			return;
 		}
 		for (Class<? extends Actor> feature : generators.keySet()) {
@@ -174,8 +180,8 @@ public class FeatureGenerator {
 		while (location == null
 				|| World.get(t.x + location[0], t.y + location[1]) != null
 				|| t.x + location[0] < 0 || t.y + location[1] < 0
-				|| t.x + location[0] >= World.SIZE
-				|| t.y + location[1] >= World.SIZE
+				|| t.x + location[0] >= World.scenario.size
+				|| t.y + location[1] >= World.scenario.size
 				|| w.map[t.x + location[0]][t.y + location[1]]
 						.equals(Terrain.WATER)) {
 			location = new int[] { RPG.r(min, max), RPG.r(min, max) };
@@ -235,7 +241,7 @@ public class FeatureGenerator {
 		while (countplaces() < target) {
 			spawn(1, true);
 		}
-		if (World.SCENARIO) {
+		if (World.scenario.normalizemap) {
 			normalizemap(towns, starting);
 		}
 		return starting;
@@ -261,14 +267,15 @@ public class FeatureGenerator {
 	}
 
 	Town[] getlinkedtowns(World w, Terrain t, ArrayList<Town> towns) {
-		if (World.SCENARIO) {
+		if (World.scenario.linktowns) {
+			Town a = gettown(t, w, towns);
+			Town b = gettown(t == Terrain.PLAIN ? Terrain.HILL : Terrain.PLAIN,
+					w, towns);
+			return new Town[] { a, b };
+		} else {
 			Collections.shuffle(towns);
 			return new Town[] { towns.get(0), towns.get(1) };
 		}
-		Town a = gettown(t, w, towns);
-		Town b = gettown(t == Terrain.PLAIN ? Terrain.HILL : Terrain.PLAIN, w,
-				towns);
-		return new Town[] { a, b };
 	}
 
 	void generatelocations(World seed, Town easya) {

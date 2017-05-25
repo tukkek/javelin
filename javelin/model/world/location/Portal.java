@@ -137,9 +137,10 @@ public class Portal extends Location {
 
 	private Point spawn(Actor t) {
 		Point p = new Point(t.x, t.y);
+		int size = World.scenario.size;
 		while (World.get(p.x, p.y) != null) {
 			p = new Point(determinedistance(t.x), determinedistance(t.y));
-			if (p.x < 0 || p.x >= World.SIZE || p.y < 0 || p.y >= World.SIZE
+			if (p.x < 0 || p.x >= size || p.y < 0 || p.y >= size
 					|| World.getseed().map[p.x][p.y].equals(Terrain.WATER)) {
 				WorldBuilder.retry();
 				p = new Point(t.x, t.y);

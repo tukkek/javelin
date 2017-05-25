@@ -201,7 +201,8 @@ public abstract class Terrain implements Serializable {
 	 * @return Number of tiles the generated area for this terrain should have.
 	 */
 	protected int generateareasize() {
-		return World.SIZE * World.SIZE / WorldBuilder.NREGIONS;
+		return World.scenario.size * World.scenario.size
+				/ WorldBuilder.NREGIONS;
 	}
 
 	/**
@@ -339,8 +340,8 @@ public abstract class Terrain implements Serializable {
 	 */
 	protected HashSet<Point> gettiles(World world) {
 		HashSet<Point> area = new HashSet<Point>();
-		for (int x = 0; x < World.SIZE; x++) {
-			for (int y = 0; y < World.SIZE; y++) {
+		for (int x = 0; x < World.scenario.size; x++) {
+			for (int y = 0; y < World.scenario.size; y++) {
 				if (world.map[x][y] == this) {
 					area.add(new Point(x, y));
 				}
@@ -379,42 +380,16 @@ public abstract class Terrain implements Serializable {
 		for (Point p : area) {
 			w.map[p.x][p.y] = this;
 		}
-		// if (r != null) {
-		// Point town = null;
-		// while (town == null || !generatetown(town, w)) {
-		// town = RPG.pick(area);
-		// }
-		// new Town(town.x, town.y, r).place();
-		// }
 		generatesurroundings(area, w);
 		return area;
 	}
-
-	// /**
-	// * @param town
-	// * Given a spot...
-	// * @return <code>false</code> if this is not a good {@link Town} placement
-	// * for this terrain.
-	// */
-	// public boolean generatetown(Point p, World w) {
-	// if (search(p, WATER, 1, w) > 0 || get(p.x, p.y).equals(Terrain.WATER)) {
-	// return false;
-	// }
-	// for (Actor town : World.getall(Town.class)) {
-	// if (town.distanceinsteps(p.x, p.y) <= Town.MINIMUMDISTANCE) {
-	// WorldBuilder.retry();
-	// return false;
-	// }
-	// }
-	// return true;
-	// }
 
 	static int randomstep() {
 		return RPG.pick(new int[] { -1, 0, +1 });
 	}
 
 	static int randomaxispoint() {
-		return RPG.r(1, World.SIZE - 2);
+		return RPG.r(1, World.scenario.size - 2);
 	}
 
 	/**

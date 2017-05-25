@@ -31,7 +31,7 @@ public class Trove extends Fortification {
 		static Reward getrandom() {
 			Reward[] all = values();
 			Reward r = all[RPG.r(0, all.length - 1)];
-			return World.SCENARIO && r == KEY ? getrandom() : r;
+			return World.scenario.allowkeys && r == KEY ? getrandom() : r;
 		}
 	}
 

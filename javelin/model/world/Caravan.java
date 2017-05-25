@@ -89,8 +89,8 @@ public class Caravan extends Actor {
 		}
 		if (to == null) {
 			while (tox == -1 || Incursion.crosseswater(this, tox, toy)) {
-				tox = RPG.r(0, World.SIZE - 1);
-				toy = RPG.r(0, World.SIZE - 1);
+				tox = RPG.r(0, World.scenario.size - 1);
+				toy = RPG.r(0, World.scenario.size - 1);
 			}
 		} else {
 			tox = to.x;

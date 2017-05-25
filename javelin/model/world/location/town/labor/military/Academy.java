@@ -143,7 +143,7 @@ public abstract class Academy extends Fortification {
 		// sort(upgrades);
 		sacrificeable = false;
 		level = upgrades.size();
-		clearforscenario = true;
+		clear = true;
 	}
 
 	public Academy(String descriptionknown, String descriptionunknown,

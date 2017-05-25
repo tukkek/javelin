@@ -6,7 +6,6 @@ cp javelin.jar package/javelin
 cp -r doc package/javelin
 rm package/javelin/doc/.*~
 cp -r avatars/ package/javelin
-cp start.bat package/javelin
 cp monsters.xml package/javelin
 cp preferences.properties package/javelin
 cp README.txt package/javelin

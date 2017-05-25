@@ -195,7 +195,7 @@ public class StateManager {
 		File folder = new File(SAVEFOLDER, "backup");
 		folder.mkdir();
 		File backup = new File(folder,
-				World.scenario.saveprefix + timestamp + ".save");
+				World.scenario.saveprefix + "-" + timestamp + ".save");
 		save(true, backup);
 	}
 

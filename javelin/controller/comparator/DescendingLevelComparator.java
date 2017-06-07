@@ -1,4 +1,4 @@
-package javelin.controller;
+package javelin.controller.comparator;
 
 import java.util.Comparator;
 

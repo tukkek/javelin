@@ -3,6 +3,7 @@ package javelin.controller.action;
 import java.util.LinkedList;
 
 import javelin.Javelin;
+import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.old.Game;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.town.Town;
@@ -101,6 +102,10 @@ public class Help extends Action {
 		String s = "\n\n";
 		for (Town t : Town.gettowns()) {
 			s += t.population + " ";
+		}
+		s += "\n\n";
+		for (Town t : Town.gettowns()) {
+			s += ChallengeRatingCalculator.calculateel(t.garrison) + " ";
 		}
 		return s;
 	}

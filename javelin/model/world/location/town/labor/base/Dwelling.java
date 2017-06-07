@@ -104,23 +104,23 @@ public class Dwelling extends Fortification {
 		@Override
 		public void done() {
 			town.garrison.add(new Combatant(recruit, true));
-			if (ChallengeRatingCalculator
-					.calculateel(town.garrison) > ChallengeRatingCalculator
-							.leveltoel(town.population)) {
-				MonsterGovernor.raid(town);
-			}
+			MonsterGovernor.raid(town);
 		}
 
 		@Override
 		public boolean validate(District d) {
-			return volunteers > 0
-					&& d.town.population > recruit.challengerating / 2;
+			float cr = recruit.challengerating;
+			int size = d.town.population;
+			return d.town.ishostile() && volunteers > 0 && size >= cr / 2
+					&& size / 4 >= cr;
 		}
 
 		@Override
 		public void start() {
 			super.start();
+			// if (volunteers > 0) {
 			volunteers -= 1;
+			// }
 		}
 	}
 
@@ -251,7 +251,15 @@ public class Dwelling extends Fortification {
 	public void turn(long time, WorldScreen world) {
 		int cr = Math.max(1, Math.round(dweller.source.challengerating));
 		int max = Math.max(1, 21 - cr);
-		if (volunteers < max && RPG.r(cr * 5) == 0) {
+		if (volunteers == max) {
+			return;
+		}
+		int onceeveryxdays = cr * 100 / 20;
+		// District d = getdistrict();
+		// if (d != null && d.town.ishostile()) {
+		// onceeveryxdays = onceeveryxdays * 8 / 10;
+		// }
+		if (RPG.r(onceeveryxdays) == 0) {
 			volunteers += 1;
 		}
 	}
@@ -334,9 +342,7 @@ public class Dwelling extends Fortification {
 	@Override
 	public ArrayList<Labor> getupgrades(District d) {
 		ArrayList<Labor> upgrades = super.getupgrades(d);
-		if (d.town.ishostile() && volunteers > 0) {
-			upgrades.add(new Draft(dweller.source));
-		}
+		upgrades.add(new Draft(dweller.source));
 		return upgrades;
 	}
 }

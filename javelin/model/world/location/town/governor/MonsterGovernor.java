@@ -1,8 +1,10 @@
 package javelin.model.world.location.town.governor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.comparator.CombatantCrComparator;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Incursion;
 import javelin.model.world.location.town.Rank;
@@ -65,9 +67,9 @@ public class MonsterGovernor extends Governor {
 		hand.removeAll(traits);
 		long season = getseason();
 		int rank = town.getrank().rank;
-		if (rank < season) {
-			int a = 1;
-		}
+		// if (rank < season) {
+		// int a = 1;
+		// }
 		if (rank <= season && start(filter(Growth.class, hand))) {
 			return;
 		}
@@ -121,20 +123,20 @@ public class MonsterGovernor extends Governor {
 		return found;
 	}
 
-	public static void raid(Town town) {
-		// if (Preferences.DEBUGDISABLECOMBAT) {
-		// return;
-		// }
-		ArrayList<Combatant> incursion = new ArrayList<Combatant>();
-		while (town.garrison.size() > 1 && ChallengeRatingCalculator
-				.calculateel(incursion) < ChallengeRatingCalculator
-						.calculateel(town.garrison)) {
-			Combatant c = RPG.pick(town.garrison);
-			town.garrison.remove(c);
-			incursion.add(c);
+	public static void raid(Town t) {
+		if (t.garrison.size() < 2) {
+			return;
 		}
+		int el = ChallengeRatingCalculator.calculateel(t.garrison);
+		if (el <= t.population || t.garrison.size() <= t.population) {
+			return;
+		}
+		List<Combatant> garrison = new ArrayList<Combatant>(t.garrison);
+		garrison.sort(new CombatantCrComparator());
+		List<Combatant> incursion = garrison.subList(0, garrison.size() / 2);
 		if (!incursion.isEmpty()) {
-			Incursion.place(town.realm, town.x, town.y, incursion);
+			t.garrison.removeAll(incursion);
+			Incursion.place(t.realm, t.x, t.y, incursion);
 		}
 	}
 

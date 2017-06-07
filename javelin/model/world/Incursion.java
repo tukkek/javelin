@@ -37,7 +37,7 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Incursion extends Actor {
-	static final boolean SPAWN = true;
+	static final boolean SPAWN = Javelin.DEBUG ? false : true;
 	/** Move even if {@link Javelin#DEBUGDISABLECOMBAT} is enabled. */
 	static final boolean FORCEMOVEMENT = false;
 	static final Comparator<Combatant> SORTBYCR = new Comparator<Combatant>() {
@@ -64,7 +64,7 @@ public class Incursion extends Actor {
 	 * @param r
 	 *            See {@link Actor#realm}.
 	 */
-	public Incursion(final int x, final int y, ArrayList<Combatant> squadp,
+	public Incursion(final int x, final int y, List<Combatant> squadp,
 			Realm r) {
 		this.x = x;
 		this.y = y;
@@ -202,6 +202,8 @@ public class Incursion extends Actor {
 		return false;
 	}
 
+	static int spawned = 0;
+
 	/**
 	 * Creates and places a new incursion. Finds an empty spot close to the
 	 * given coordinates.
@@ -216,8 +218,12 @@ public class Incursion extends Actor {
 	 *            See {@link Incursion#squad}.
 	 * @see Actor#place()
 	 */
-	public static void place(Realm r, int x, int y,
-			ArrayList<Combatant> squadp) {
+	public static void place(Realm r, int x, int y, List<Combatant> squadp) {
+		if (Javelin.DEBUG) {
+			spawned += 1;
+			System.out.println("Incursion spawn #" + spawned + " EL"
+					+ ChallengeRatingCalculator.calculateel(squadp));
+		}
 		if (!SPAWN) {
 			return;
 		}

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import javelin.controller.DistanceComparator;
 import javelin.controller.Point;
+import javelin.controller.comparator.DistanceComparator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.world.World;
 import javelin.model.world.Actor;

@@ -239,7 +239,7 @@ public class Town extends Location {
 	}
 
 	public void replacegovernor(Governor g) {
-		for (Labor l : governor.getprojects()) {
+		for (Labor l : new ArrayList<Labor>(governor.getprojects())) {
 			l.cancel();
 		}
 		governor = g;

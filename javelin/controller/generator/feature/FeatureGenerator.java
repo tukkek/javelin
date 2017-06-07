@@ -89,7 +89,7 @@ public class FeatureGenerator {
 		register(Lodge.class, new GenerationData(.75f, 5, 1));
 		register(Shrine.class, new GenerationData());
 		register(Resource.class, new GenerationData());
-		register(Mine.class, new GenerationData(1, 2, 2));
+		register(Mine.class, new GenerationData(0, 2, 2));
 
 		register(Trove.class, new GenerationData(1.5f, null, 0));
 		register(Guardian.class, new GenerationData(null));

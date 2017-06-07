@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javelin.controller.DescendingLevelComparator;
+import javelin.controller.comparator.DescendingLevelComparator;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;

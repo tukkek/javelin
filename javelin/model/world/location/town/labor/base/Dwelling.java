@@ -113,19 +113,19 @@ public class Dwelling extends Fortification {
 
 		@Override
 		public boolean validate(District d) {
-			return d.town.population > recruit.challengerating / 2;
+			return volunteers > 0
+					&& d.town.population > recruit.challengerating / 2;
 		}
 
 		@Override
 		public void start() {
 			super.start();
-			volunteer = false;
+			volunteers -= 1;
 		}
 	}
 
 	public Combatant dweller;
-	/** A volunteer is willing to join a {@link Squad} permanently. */
-	public boolean volunteer = false;
+	int volunteers = 1;
 
 	/** Constructor. */
 	public Dwelling() {
@@ -180,62 +180,68 @@ public class Dwelling extends Fortification {
 		String monstertype = dweller.toString().toLowerCase();
 		InfoScreen screen = new InfoScreen("");
 		screen.print(prompt(monstertype));
-		char choice = ' ';
+		Character choice = null;
 		List<Character> options = Arrays.asList('d', 'h', 'p', 'q');
 		while (!options.contains(choice)) {
 			choice = InfoScreen.feedback();
+			if (volunteers == 0 && (choice == 'h' || choice == 'd')) {
+				choice = null;
+			}
 		}
 		if (choice == 'q') {
-			return true;
-		}
-		if (choice == 'h') {
-			Combatant mercenary = new Combatant(dweller.source.clone(), true);
-			mercenary.mercenary = true;
-			MercenariesGuild.recruit(mercenary, true);
 			return true;
 		}
 		if (choice == 'p') {
 			pillage();
 			return true;
 		}
-		if (!volunteer) {
+		if (choice == 'h') {
+			hire();
 			return true;
 		}
-		int xp = Math.round(dweller.source.challengerating * 100);
-		if (!canbuy(xp)) {
-			screen.print(
-					"Cannot afford a " + monstertype + " (" + xp + "XP)...");
-			Game.getInput();
-			return true;
-		}
-		spend(dweller.source.challengerating);
-		Javelin.recruit(dweller.source.clone());
-		volunteer = false;
+		draft(screen, monstertype);
 		return true;
 	}
 
-	String prompt(String monstertype) {
-		String text = "You enter a " + monstertype + " dwelling.\n";
-		if (volunteer) {
-			text += "A volunteer is available to join you.\n\n";
-		} else {
-			text += "No volunteer is available right now but you can still hire mercenaries.\n\n";
+	void draft(InfoScreen s, String monstertype) {
+		int xp = Math.round(dweller.source.challengerating * 100);
+		if (!canbuy(xp)) {
+			s.print("Cannot afford a " + monstertype + " (" + xp + "XP)...");
+			Game.getInput();
+			return;
 		}
-		text += "What do you want to do?\n\n";
-		if (volunteer) {
-			text += "d - draft a volunteer ("
+		spend(dweller.source.challengerating);
+		Javelin.recruit(dweller.source.clone());
+		volunteers -= 1;
+	}
+
+	void hire() {
+		Combatant mercenary = new Combatant(dweller.source.clone(), true);
+		mercenary.mercenary = true;
+		MercenariesGuild.recruit(mercenary, true);
+		volunteers -= 1;
+	}
+
+	String prompt(String monstertype) {
+		String text = "You enter a " + monstertype
+				+ " dwelling. What do you want to do?\n";
+		if (volunteers > 0) {
+			text += "There are " + volunteers + " available units here.\n\n";
+			text += "d - draft as volunteer ("
 					+ Math.round(100 * dweller.source.challengerating)
 					+ "XP)\n";
+			text += "h - hire as " + monstertype + " mercenary ($"
+					+ SelectScreen.formatcost(MercenariesGuild.getfee(dweller))
+					+ "/day)\n";
+		} else {
+			text += "There are currently no available units here.\n\n";
 		}
-		text += "h - hire a " + monstertype + " mercenary ($"
-				+ SelectScreen.formatcost(MercenariesGuild.getfee(dweller))
-				+ "/day)\n";
 		text += "p - pillage this dwelling ($"
 				+ SelectScreen.formatcost(getspoils()) + ")\n";
 		text += "q - quit\n";
 		text += "\nCurrent gold: $" + SelectScreen.formatcost(Squad.active.gold)
 				+ "\n";
-		if (volunteer) {
+		if (volunteers > 0) {
 			text += "Current XP: " + sumxp() + "XP\n";
 		}
 		return text;
@@ -243,12 +249,16 @@ public class Dwelling extends Fortification {
 
 	@Override
 	public void turn(long time, WorldScreen world) {
-		volunteer = volunteer || RPG.r(1, 7) == 1;
+		int cr = Math.max(1, Math.round(dweller.source.challengerating));
+		int max = Math.max(1, 21 - cr);
+		if (volunteers < max && RPG.r(cr * 5) == 0) {
+			volunteers += 1;
+		}
 	}
 
 	@Override
 	public boolean isworking() {
-		return !volunteer && !ishostile();
+		return volunteers == 0 && !ishostile();
 	}
 
 	@Override
@@ -324,7 +334,7 @@ public class Dwelling extends Fortification {
 	@Override
 	public ArrayList<Labor> getupgrades(District d) {
 		ArrayList<Labor> upgrades = super.getupgrades(d);
-		if (d.town.ishostile() && volunteer) {
+		if (d.town.ishostile() && volunteers > 0) {
 			upgrades.add(new Draft(dweller.source));
 		}
 		return upgrades;

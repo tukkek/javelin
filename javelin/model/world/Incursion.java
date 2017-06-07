@@ -37,9 +37,9 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Incursion extends Actor {
+	static final boolean SPAWN = true;
 	/** Move even if {@link Javelin#DEBUGDISABLECOMBAT} is enabled. */
 	static final boolean FORCEMOVEMENT = false;
-	static final boolean SPAWN = true;
 	static final Comparator<Combatant> SORTBYCR = new Comparator<Combatant>() {
 		@Override
 		public int compare(Combatant o1, Combatant o2) {

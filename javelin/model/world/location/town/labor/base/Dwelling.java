@@ -224,7 +224,7 @@ public class Dwelling extends Fortification {
 
 	String prompt(String monstertype) {
 		String text = "You enter a " + monstertype
-				+ " dwelling. What do you want to do?\n";
+				+ " dwelling. What do you want to do?\n\n";
 		if (volunteers > 0) {
 			text += "There are " + volunteers + " available units here.\n\n";
 			text += "d - draft as volunteer ("

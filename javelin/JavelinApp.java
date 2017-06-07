@@ -17,7 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import javelin.controller.TextReader;
-import javelin.controller.WorldBuilder;
+import javelin.controller.WorldGenerator;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.db.Preferences;
 import javelin.controller.db.StateManager;
@@ -213,7 +213,7 @@ public class JavelinApp extends QuestApp {
 
 	void startcampaign() {
 		SquadScreen.open();
-		WorldBuilder.build();
+		WorldGenerator.build();
 		UpgradeHandler.singleton.gather();
 		// Item.distribute();
 		if (Javelin.DEBUG) {

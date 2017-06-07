@@ -60,7 +60,7 @@ import tyrant.mikera.engine.RPG;
  */
 public class Scenario implements Serializable {
 	/** {@link World} size. */
-	public int size = 22;
+	public int size = 30;
 	/**
 	 * Allow access to {@link Minigame}s or not.
 	 * 
@@ -134,6 +134,8 @@ public class Scenario implements Serializable {
 	public String helpfile = "Scenarios";
 	public boolean record = false;
 	public boolean dominationwin = true;
+	/** Number of {@link Location}s to spawn. See {@link FeatureGenerator}. */
+	public int startingfeatures = size * size / 7;
 
 	/**
 	 * @return Starting encounter level for each hostile town in

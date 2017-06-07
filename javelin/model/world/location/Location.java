@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import javelin.controller.Point;
-import javelin.controller.WorldBuilder;
+import javelin.controller.WorldGenerator;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.RepeatTurn;
@@ -133,7 +133,7 @@ public abstract class Location extends Actor {
 				|| w.roads[p.x][p.y] || w.highways[p.x][p.y]) {
 			p.x = RPG.r(0, size);
 			p.y = RPG.r(0, size);
-			WorldBuilder.retry();
+			WorldGenerator.retry();
 		}
 	}
 

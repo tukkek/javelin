@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javelin.controller.Point;
-import javelin.controller.WorldBuilder;
+import javelin.controller.WorldGenerator;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.terrain.hazard.Ice;
 import javelin.controller.terrain.hazard.Storm;
@@ -74,13 +74,13 @@ public class Water extends Terrain {
 			if (checkinvalid(world, to.x, to.y) || search(to, DESERT,
 					World.scenario.desertradius, world) > 0) {
 				to = null;
-				WorldBuilder.retry();
+				WorldGenerator.retry();
 				continue expansion;
 			}
 			for (Actor t : World.getall(Town.class)) {
 				if (t.distance(to.x, to.y) <= 2) {
 					to = null;
-					WorldBuilder.retry();
+					WorldGenerator.retry();
 					continue expansion;
 				}
 			}

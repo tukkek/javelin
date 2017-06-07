@@ -36,6 +36,7 @@ public class Campaign extends Scenario {
 		towns = Realm.values().length;
 		worldexploration = true;
 		dominationwin = false;
+		startingfeatures = size * size / 5;
 	}
 
 	@Override

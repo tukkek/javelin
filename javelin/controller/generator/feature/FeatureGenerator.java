@@ -69,9 +69,6 @@ public class FeatureGenerator {
 	/** Only access point to this class. */
 	public static final FeatureGenerator SINGLETON = new FeatureGenerator();
 
-	static final int STARTINGFEATURES = World.scenario.size
-			* World.scenario.size / 5;
-
 	final HashMap<Class<? extends Actor>, GenerationData> generators = new HashMap<Class<? extends Actor>, GenerationData>();
 
 	/**
@@ -156,7 +153,7 @@ public class FeatureGenerator {
 	 *            the game is progressing to support the full feature set.
 	 */
 	public void spawn(float chance, boolean generatingworld) {
-		if (countplaces() >= STARTINGFEATURES
+		if (countplaces() >= World.scenario.startingfeatures
 				|| (!World.scenario.respawnlocations && !generatingworld)) {
 			return;
 		}
@@ -237,7 +234,7 @@ public class FeatureGenerator {
 		for (Class<? extends Actor> feature : generators.keySet()) {
 			generators.get(feature).seed(feature);
 		}
-		int target = STARTINGFEATURES - Location.count();
+		int target = World.scenario.startingfeatures - Location.count();
 		while (countplaces() < target) {
 			spawn(1, true);
 		}
@@ -286,7 +283,7 @@ public class FeatureGenerator {
 		generatemartialacademies(locations);
 		Collections.shuffle(locations);
 		int place = Math.min(locations.size(),
-				STARTINGFEATURES / 3 - countplaces());
+				World.scenario.startingfeatures / 3 - countplaces());
 		for (int i = 0; i < place; i++) {
 			Location l = locations.get(i);
 			l.place();

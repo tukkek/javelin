@@ -10,7 +10,7 @@ import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.Weather;
-import javelin.controller.WorldBuilder;
+import javelin.controller.WorldGenerator;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.terrain.map.Map;
@@ -202,7 +202,7 @@ public abstract class Terrain implements Serializable {
 	 */
 	protected int generateareasize() {
 		return World.scenario.size * World.scenario.size
-				/ WorldBuilder.NREGIONS;
+				/ WorldGenerator.NREGIONS;
 	}
 
 	/**
@@ -250,7 +250,7 @@ public abstract class Terrain implements Serializable {
 			if (checkinvalid(world, x, y)) {
 				x = lastx;
 				y = lasty;
-				WorldBuilder.retry();
+				WorldGenerator.retry();
 				continue;
 			}
 		}

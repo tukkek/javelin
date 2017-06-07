@@ -19,7 +19,7 @@ import javelin.model.world.location.town.Town;
 import javelin.view.screen.InfoScreen;
 import tyrant.mikera.engine.RPG;
 
-public class WorldBuilder extends Thread {
+public class WorldGenerator extends Thread {
 	private static final int MAXRETRIES = 1000; // 1000000
 	public static final Terrain[] GENERATIONORDER = new Terrain[] {
 			Terrain.MOUNTAINS, Terrain.MOUNTAINS, Terrain.DESERT, Terrain.PLAIN,
@@ -75,10 +75,10 @@ public class WorldBuilder extends Thread {
 			if (!found) {
 				System.out.println("wut");
 			}
-			WorldBuilder.finish(start, world);
+			WorldGenerator.finish(start, world);
 		} catch (RestartWorldGeneration e) {
 			if (World.seed == null) {
-				new WorldBuilder().start();
+				new WorldGenerator().start();
 			}
 		}
 	}
@@ -197,11 +197,11 @@ public class WorldBuilder extends Thread {
 
 	public static void retry() {
 		Thread t = Thread.currentThread();
-		if (t instanceof WorldBuilder) {
+		if (t instanceof WorldGenerator) {
 			if (World.seed != null) {
 				throw new RestartWorldGeneration();
 			}
-			WorldBuilder builder = (WorldBuilder) t;
+			WorldGenerator builder = (WorldGenerator) t;
 			builder.bumpretry();
 		}
 	}
@@ -219,8 +219,8 @@ public class WorldBuilder extends Thread {
 		}
 		Collections.shuffle(realms);
 		ArrayList<List<Point>> regions = new ArrayList<List<Point>>(
-				WorldBuilder.GENERATIONORDER.length);
-		for (Terrain t : WorldBuilder.GENERATIONORDER) {
+				WorldGenerator.GENERATIONORDER.length);
+		for (Terrain t : WorldGenerator.GENERATIONORDER) {
 			regions.add(t.generate(w));
 		}
 		Point nw = new Point(0, 0);
@@ -238,7 +238,7 @@ public class WorldBuilder extends Thread {
 			ArrayList<List<Point>> regions) {
 		int towns = World.scenario.towns;
 		for (int i = 0; i < regions.size() && towns > 0; i++) {
-			Terrain t = WorldBuilder.GENERATIONORDER[i];
+			Terrain t = WorldGenerator.GENERATIONORDER[i];
 			if (!t.equals(Terrain.WATER)) {
 				new Town(regions.get(i), realms.pop()).place();
 				towns -= 1;
@@ -278,7 +278,7 @@ public class WorldBuilder extends Thread {
 				+ " thread(s)...\n\nWorlds discarded: ";
 		try {
 			for (int i = 0; i < threads; i++) {
-				new WorldBuilder().start();
+				new WorldGenerator().start();
 			}
 			int lastdiscarded = -1;
 			while (World.seed == null) {

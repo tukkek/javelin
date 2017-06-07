@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.controller.Point;
-import javelin.controller.WorldBuilder;
+import javelin.controller.WorldGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.controller.scenario.Scenario;
 import javelin.model.unit.Squad;
@@ -171,7 +171,7 @@ public class World implements Serializable {
 	}
 
 	/**
-	 * Needs to be called during world building, as each {@link WorldBuilder}
+	 * Needs to be called during world building, as each {@link WorldGenerator}
 	 * thread has a different world. During normal gameplay, {@link #seed} can
 	 * be accessed directly.
 	 * 
@@ -183,8 +183,8 @@ public class World implements Serializable {
 	 */
 	public static World getseed() {
 		Thread t = Thread.currentThread();
-		if (t instanceof WorldBuilder) {
-			return ((WorldBuilder) t).world;
+		if (t instanceof WorldGenerator) {
+			return ((WorldGenerator) t).world;
 		}
 		return seed;
 	}

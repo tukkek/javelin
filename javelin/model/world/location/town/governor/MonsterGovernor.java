@@ -128,7 +128,8 @@ public class MonsterGovernor extends Governor {
 			return;
 		}
 		int el = ChallengeRatingCalculator.calculateel(t.garrison);
-		if (el <= t.population || t.garrison.size() <= t.population) {
+		if (el <= t.population
+				|| t.garrison.size() <= Math.min(30, t.population)) {
 			return;
 		}
 		List<Combatant> garrison = new ArrayList<Combatant>(t.garrison);

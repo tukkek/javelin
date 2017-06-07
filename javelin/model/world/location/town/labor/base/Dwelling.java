@@ -54,7 +54,7 @@ public class Dwelling extends Fortification {
 					town.y);
 			Collections.shuffle(candidates);
 			for (Monster m : candidates) {
-				if (m.challengerating <= town.population) {
+				if (m.challengerating <= town.population + 2) {
 					goal = new Dwelling(m);
 					name += ": " + m.toString().toLowerCase();
 					cost = getcost(m);
@@ -92,7 +92,7 @@ public class Dwelling extends Fortification {
 
 		public Draft(Monster m) {
 			super("Draft " + m.toString().toLowerCase(),
-					Math.round(Math.max(1, m.challengerating)), null);
+					Math.round(Math.max(1, m.challengerating / 2f)), null);
 			recruit = m.clone();
 		}
 

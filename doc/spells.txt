@@ -21,7 +21,7 @@ Level 2 (caster level 3)
   Eagle's splendor: +2 charisma bonus. Touch.
   Fox's cunning: +2 intelligence bonus. Touch.
   Inflict moderate wounds: causes 13 points of damage. Touch.
-  Lesser restoration: dispels effects reducing abilities or cures 1d4 ability damage.
+  Lesser restoration: dispels effect-reducing conditions or cures 1d4 ability damage.
   Locate object: locates nearest treasure chest in a dungeon.
   Owl's wisdom: +2 wisdom bonus. Touch.
   Ray of exhaustion: makes a creature fatigued or exhausted.

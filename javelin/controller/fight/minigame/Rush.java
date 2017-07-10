@@ -37,8 +37,8 @@ public class Rush extends Minigame {
 			clear(reda, redb);
 			place(reda, redb, state.redTeam);
 			Point bluea = new Point(1, state.map[0].length - 2 - CLEARINGAREA);
-			Point blueb =
-					new Point(state.map.length - 2, state.map[0].length - 2);
+			Point blueb = new Point(state.map.length - 2,
+					state.map[0].length - 2);
 			clear(bluea, blueb);
 			place(bluea, blueb, state.blueTeam);
 			Combatant spawner = RPG.pick(state.blueTeam);
@@ -101,8 +101,8 @@ public class Rush extends Minigame {
 	@Override
 	public ArrayList<Combatant> getmonsters(int teamel) {
 		DungeonRush dr = DungeonRush.get();
-		ArrayList<Combatant> monsters =
-				new ArrayList<Combatant>(dr.spawners.size());
+		ArrayList<Combatant> monsters = new ArrayList<Combatant>(
+				dr.spawners.size());
 		for (Monster s : dr.spawners) {
 			s = RPG.pick(Javelin.MONSTERSBYCR.get(s.challengerating));
 			monsters.add(new Spawner(s, false).getcombatant());
@@ -113,8 +113,8 @@ public class Rush extends Minigame {
 	@Override
 	public ArrayList<Combatant> getblueteam() {
 		DungeonRush dr = DungeonRush.get();
-		ArrayList<Combatant> monsters =
-				new ArrayList<Combatant>(dr.spawners.size());
+		ArrayList<Combatant> monsters = new ArrayList<Combatant>(
+				dr.spawners.size());
 		for (Monster s : dr.spawners) {
 			monsters.add(new Spawner(s, true).getcombatant());
 		}
@@ -193,9 +193,11 @@ public class Rush extends Minigame {
 	}
 
 	@Override
-	public Meld addmeld(int x, int y, Monster dead, BattleState s) {
+	public Meld addmeld(int x, int y, Combatant dead, BattleState s) {
 		Meld m = super.addmeld(x, y, dead, s);
-		m.meldsat = -Float.MAX_VALUE;
+		if (m != null) {
+			m.meldsat = -Float.MAX_VALUE;
+		}
 		return m;
 	}
 }

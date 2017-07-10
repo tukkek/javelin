@@ -317,7 +317,7 @@ public class Combatant implements Serializable, Cloneable {
 
 	public void die(BattleState s) {
 		if (Javelin.app.fight.meld || Meld.DEBUG) {
-			Javelin.app.fight.addmeld(location[0], location[1], source, s);
+			Javelin.app.fight.addmeld(location[0], location[1], this, s);
 		}
 		s.remove(this);
 		s.dead.add(this);

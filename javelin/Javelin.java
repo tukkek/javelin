@@ -413,15 +413,16 @@ public class Javelin {
 			output += " (q to quit)";
 		}
 		output += " \n\n";
-		boolean multicolumn = names.size() > 20;
+		int nnames = names.size();
+		boolean multicolumn = nnames > 20;
 		ArrayList<Object> options = new ArrayList<Object>();
-		for (int i = 0; i < names.size(); i++) {
+		for (int i = 0; i < nnames; i++) {
 			boolean leftcolumn = i % 2 == 0;
 			String name = names.get(i).toString();
 			options.add(name);
 			String item = "[" + SelectScreen.KEYS[i] + "] " + name;
 			if (multicolumn && leftcolumn) {
-				while (item.length() < 40) {
+				while (item.length() < 50) {
 					item += " ";
 				}
 			}
@@ -568,5 +569,11 @@ public class Javelin {
 		while (s.getInput() != '\n') {
 			// wait for enter
 		}
+	}
+
+	public static char promptscreen(String prompt) {
+		InfoScreen s = new InfoScreen("");
+		s.print(prompt);
+		return InfoScreen.feedback();
 	}
 }

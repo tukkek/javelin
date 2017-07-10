@@ -37,11 +37,11 @@ public class Meld {
 	public final float cr;
 
 	/** Constructor. */
-	public Meld(final int x, final int y, final float meldsat, Monster dead) {
+	public Meld(final int x, final int y, final float meldsat, Combatant dead) {
 		this.x = x;
 		this.y = y;
 		this.meldsat = meldsat;
-		cr = dead == null ? 0 : dead.challengerating;
+		cr = dead == null ? 0 : dead.source.challengerating;
 	}
 
 	/**

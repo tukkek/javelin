@@ -24,12 +24,11 @@ import javelin.model.world.location.town.Town;
  */
 public class Images {
 	static final TreeMap<String, Image> CACHE = new TreeMap<String, Image>();
-	static final TreeMap<String, Image> BURIEDCACHE =
-			new TreeMap<String, Image>();
+	static final TreeMap<String, Image> BURIEDCACHE = new TreeMap<String, Image>();
 
 	/** @see {@link Combatant#ispenalized(javelin.model.state.BattleState)} */
-	public static final Image PENALIZED =
-			Images.maketransparent(3 / 4f, Images.getImage("overlaypenalized"));
+	public static final Image PENALIZED = Images.maketransparent(3 / 4f,
+			Images.getImage("overlaypenalized"));
 	/** @see Location#hascrafted() */
 	public static final Image CRAFTING = Images.getImage("overlaycrafting");
 	/** @see Location#hasupgraded() */
@@ -43,8 +42,10 @@ public class Images {
 	/** @see Location#ishostile() */
 	public static final Image HOSTILE = Images.getImage("overlayhostile");
 	/** @see Town#ishosting() */
-	public static final Image TOURNAMENT =
-			Images.getImage("locationtournament");
+	public static final Image TOURNAMENT = Images
+			.getImage("locationtournament");
+	/** Distinguishes {@link Combatant#mercenary} units. */
+	public static final Image MERCENARY = Images.getImage("overlaymercenary");
 
 	/**
 	 * @param combatant
@@ -92,8 +93,8 @@ public class Images {
 	 *            Alpha level. 1 is 100% opaque, 0 is 100% transparent.
 	 */
 	public static Image maketransparent(float alpha, Image image) {
-		BufferedImage transparent =
-				new BufferedImage(32, 32, Transparency.TRANSLUCENT);
+		BufferedImage transparent = new BufferedImage(32, 32,
+				Transparency.TRANSLUCENT);
 		Graphics2D g = transparent.createGraphics();
 		g.setComposite(
 				AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));

@@ -86,8 +86,8 @@ public class BattleTile extends Tile {
 		}
 		draw(g, Images.getImage(c));
 		g.setColor(blueteam ? Color.BLUE : Color.RED);
-		final int hp =
-				MapPanel.tilesize - MapPanel.tilesize * c.hp / c.getmaxhp();
+		final int hp = MapPanel.tilesize
+				- MapPanel.tilesize * c.hp / c.getmaxhp();
 		g.fillRect(0, hp, MapPanel.tilesize / 10, MapPanel.tilesize - hp);
 		if (c.ispenalized(Fight.state)) {
 			g.drawImage(
@@ -97,6 +97,12 @@ public class BattleTile extends Tile {
 		}
 		if (c.isbuffed()) {
 			BUFF.paintBorder(t, g, 0, 0, MapPanel.tilesize, MapPanel.tilesize);
+		}
+		if (c.mercenary) {
+			g.drawImage(
+					Images.MERCENARY.getScaledInstance(MapPanel.tilesize,
+							MapPanel.tilesize, Image.SCALE_DEFAULT),
+					0, 0, null);
 		}
 	}
 }

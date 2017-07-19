@@ -29,8 +29,7 @@ public class Rebirth extends Hax {
 		target.source = Javelin.getmonster(target.source.name);
 		target.source.customName = customname;
 		ChallengeRatingCalculator.calculatecr(target.source);
-		target.xp = target.xp.add(
-				new BigDecimal(originalcr - target.source.challengerating));
+		target.learn(originalcr - target.source.challengerating);
 		if (target.xp.intValue() < 0) {
 			target.xp = new BigDecimal(0);
 		}

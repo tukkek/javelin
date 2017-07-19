@@ -31,16 +31,7 @@ public class UseItems extends WorldAction {
 
 	@Override
 	public void perform(final WorldScreen worldscreen) {
-		Squad.active.members.sort(new Comparator<Combatant>() {
-			@Override
-			public int compare(Combatant o1, Combatant o2) {
-				if (o1.mercenary && o2.mercenary
-						|| !o1.mercenary && !o2.mercenary) {
-					return 0;
-				}
-				return o1.mercenary ? +1 : -1;
-			}
-		});
+		Squad.active.sort();
 		while (true) {
 			final ArrayList<Item> allitems = new ArrayList<Item>();
 			final InfoScreen infoscreen = new InfoScreen("");

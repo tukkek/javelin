@@ -118,9 +118,7 @@ public class Dwelling extends Fortification {
 		@Override
 		public void start() {
 			super.start();
-			// if (volunteers > 0) {
 			volunteers -= 1;
-			// }
 		}
 	}
 
@@ -216,8 +214,7 @@ public class Dwelling extends Fortification {
 	}
 
 	void hire() {
-		Combatant mercenary = new Combatant(dweller.source.clone(), true);
-		mercenary.mercenary = true;
+		final Combatant mercenary = new Combatant(dweller.source.clone(), true);
 		MercenariesGuild.recruit(mercenary, true);
 		volunteers -= 1;
 	}
@@ -255,10 +252,6 @@ public class Dwelling extends Fortification {
 			return;
 		}
 		int onceeveryxdays = cr * 100 / 20;
-		// District d = getdistrict();
-		// if (d != null && d.town.ishostile()) {
-		// onceeveryxdays = onceeveryxdays * 8 / 10;
-		// }
 		if (RPG.r(onceeveryxdays) == 0) {
 			volunteers += 1;
 		}

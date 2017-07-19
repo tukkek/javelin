@@ -213,8 +213,9 @@ public class RewardCalculator {
 		}
 		for (int i = 1; i <= survivors.size(); i++) {
 			final Combatant survivor = survivors.get(i - 1);
-			survivor.xp = survivor.xp.add(new BigDecimal(xp * i / segments)
-					.setScale(2, RoundingMode.HALF_UP));
+			survivor.learn(xp * i / segments);
+			// survivor.xp = survivor.xp.add(new BigDecimal()
+			// .setScale(2, RoundingMode.HALF_UP));
 		}
 	}
 

@@ -772,4 +772,19 @@ public class Squad extends Actor implements Cloneable {
 		}
 		return upkeep;
 	}
+
+	/**
+	 * Moves all mercenaries to the final of the {@link #members} list, making
+	 * it easier to overcome some current UI limitations. TODO
+	 */
+	public void sort() {
+		ArrayList<Combatant> mercenaries = new ArrayList<Combatant>();
+		for (Combatant c : new ArrayList<Combatant>(members)) {
+			if (c.mercenary) {
+				members.remove(c);
+				mercenaries.add(c);
+			}
+		}
+		members.addAll(mercenaries);
+	}
 }

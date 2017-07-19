@@ -115,6 +115,8 @@ public class Combatant implements Serializable, Cloneable {
 	public Spells spells = new Spells();
 	/**
 	 * XP in CR, you'll want to multiply by 100 and round to show the player.
+	 * 
+	 * @see #learn(float)
 	 */
 	public BigDecimal xp = new BigDecimal(0);
 	public boolean summoned = false;
@@ -799,5 +801,24 @@ public class Combatant implements Serializable, Cloneable {
 
 	public static void upgradeweakest(List<Combatant> garrison, Realm random) {
 		upgradeweakest(garrison, random.getupgrades(UpgradeHandler.singleton));
+	}
+
+	/**
+	 * @param ismercenary
+	 *            Sets {@link #mercenary} and {@link #automatic} to this value.
+	 */
+	public void setmercenary(boolean ismercenary) {
+		mercenary = ismercenary;
+		automatic = ismercenary;
+	}
+
+	/**
+	 * @param xpgained
+	 *            Adds this amount to {@link #xp}.
+	 */
+	public void learn(double xpgained) {
+		if (!mercenary) {
+			xp = xp.add(new BigDecimal(xpgained));
+		}
 	}
 }

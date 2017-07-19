@@ -135,10 +135,10 @@ public class UpgradeGladiatorWindow extends Frame {
 		for (Upgrade u : upgrades) {
 			Combatant clone = gladiator.clone().clonesource();
 			u.upgrade(clone);
-			float cost =
-					ChallengeRatingCalculator.calculaterawcr(clone.source)[1]
-							- ChallengeRatingCalculator
-									.calculaterawcr(gladiator.source)[1];
+			float cost = ChallengeRatingCalculator
+					.calculaterawcr(clone.source)[1]
+					- ChallengeRatingCalculator
+							.calculaterawcr(gladiator.source)[1];
 			if (cost < .1f) {
 				cost = .1f;
 			}
@@ -159,7 +159,7 @@ public class UpgradeGladiatorWindow extends Frame {
 	 *            times this. Spends this number of {@link Arena#coins}.
 	 */
 	public static void boost(Combatant c, int multiplier) {
-		c.xp = c.xp.add(new BigDecimal(multiplier * XPPERCOIN));
+		c.learn(multiplier * XPPERCOIN);
 		ArenaWindow.arena.coins -= multiplier;
 	}
 

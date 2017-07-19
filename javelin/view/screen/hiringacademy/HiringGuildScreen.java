@@ -29,7 +29,7 @@ public class HiringGuildScreen extends RecruitingGuildScreen {
 	@Override
 	void spend(Hire h) {
 		Squad.active.gold -= h.price;
-		h.c.mercenary = true;
+		h.c.setmercenary(true);
 	}
 
 	@Override

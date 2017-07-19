@@ -144,7 +144,7 @@ public class MercenariesGuild extends UniqueLocation {
 			}
 			return false;
 		}
-		combatant.mercenary = true;
+		combatant.setmercenary(true);
 		Squad.active.gold -= advance;
 		Squad.active.members.add(combatant);
 		return true;

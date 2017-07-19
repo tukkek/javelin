@@ -33,6 +33,8 @@ import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Deck;
+import javelin.model.world.location.town.labor.military.RealmAcademy;
+import javelin.model.world.location.town.labor.productive.Shop;
 import javelin.model.world.location.unique.Haxor;
 import javelin.model.world.location.unique.UniqueLocation;
 import javelin.view.mappanel.world.WorldTile;
@@ -139,6 +141,11 @@ public class Scenario implements Serializable {
 	public int startingfeatures = size * size / 7;
 	/** {@link Trove}s will only offer gold and experience rewards. */
 	public boolean simpletroves = true;
+	/**
+	 * Make random {@link RealmAcademy} and {@link Shop}s, insted of local
+	 * {@link Realm}.
+	 */
+	public boolean randomrealms = true;
 
 	/**
 	 * @return Starting encounter level for each hostile town in

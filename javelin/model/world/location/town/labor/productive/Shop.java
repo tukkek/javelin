@@ -11,6 +11,7 @@ import javelin.model.item.Potion;
 import javelin.model.spell.conjuration.healing.wounds.CureLightWounds;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.order.CraftingOrder;
 import javelin.model.world.location.order.Order;
@@ -101,13 +102,13 @@ public class Shop extends Location {
 	Realm selectiontype;
 
 	public Shop(boolean first, Realm r) {
-		super("Shop");
+		super(r.prefixate() + " shop");
 		allowentry = false;
 		sacrificeable = true;
 		discard = false;
 		gossip = true;
 		level = 5;
-		selectiontype = r;
+		selectiontype = World.scenario.randomrealms ? Realm.random() : r;
 		if (first) {
 			selection.add(new Potion(new CureLightWounds()));
 		}

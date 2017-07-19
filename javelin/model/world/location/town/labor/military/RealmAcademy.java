@@ -8,6 +8,7 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.classes.ClassAdvancement;
 import javelin.model.Realm;
+import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
@@ -69,9 +70,9 @@ public class RealmAcademy extends Academy {
 	 * @see UpgradeHandler
 	 */
 	public RealmAcademy(Realm r) {
-		super(r.prefixate() + " academy", r.prefixate() + " academy", 0, 0,
-				new HashSet<Upgrade>(), null, null);
-		upgradetype = r;
+		super("", "Academy", 0, 0, new HashSet<Upgrade>(), null, null);
+		upgradetype = World.scenario.randomrealms ? Realm.random() : r;
+		descriptionknown = r.prefixate() + " academy";
 		level = minlevel = maxlevel = Math.min(10, getupgrades(r).size());
 		if (minlevel > 1) {
 			minlevel -= 1;

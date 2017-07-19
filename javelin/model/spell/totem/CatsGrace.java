@@ -20,6 +20,6 @@ public class CatsGrace extends TotemsSpell {
 			final BattleState s, final boolean saved) {
 		target.addcondition(new Graceful(target, casterlevel));
 		return target + "'s dexterity is now "
-				+ Monster.getsignedbonus(target.source.dexterity);
+				+ Monster.getsignedbonus(target.source.dexterity) + "!";
 	}
 }

@@ -176,14 +176,14 @@ public class Movement extends Action {
 	 */
 	public static boolean tryMove(int x, int y, BattleState state,
 			Combatant hero) {
-		if (state.map[x][y].blocked && hero.source.fly == 0) {
+		Combatant c = state.getcombatant(x, y);
+		if (c == null && state.map[x][y].blocked && hero.source.fly == 0) {
 			return false;
 		}
 		Meld m = state.getmeld(x, y);
 		if (m != null && !m.crystalize(state)) {
 			throw new RepeatTurn();
 		}
-		Combatant c = state.getcombatant(x, y);
 		if (c != null) {
 			if (!c.isally(hero, state)) {
 				if (c.burrowed) {

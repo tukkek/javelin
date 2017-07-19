@@ -12,6 +12,7 @@ import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Chest;
 import javelin.model.world.location.town.labor.expansive.Settler;
+import javelin.view.screen.town.PurchaseScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -31,7 +32,7 @@ public class Trove extends Fortification {
 		static Reward getrandom() {
 			Reward[] all = values();
 			Reward r = all[RPG.r(0, all.length - 1)];
-			return r == KEY && World.scenario.allowkeys ? r : getrandom();
+			return r == KEY && !World.scenario.allowkeys ? getrandom() : r;
 		}
 	}
 
@@ -43,9 +44,14 @@ public class Trove extends Fortification {
 	/** Constructor. */
 	public Trove() {
 		super(DESCRIPTION, DESCRIPTION, 1, 20);
-		rewards[0] = Reward.getrandom();
-		while (rewards[1] == null || rewards[0] == rewards[1]) {
-			rewards[1] = Reward.getrandom();
+		if (World.scenario.simpletroves) {
+			rewards[0] = Reward.EXPERIENCE;
+			rewards[1] = Reward.GOLD;
+		} else {
+			rewards[0] = Reward.getrandom();
+			while (rewards[1] == null || rewards[0] == rewards[1]) {
+				rewards[1] = Reward.getrandom();
+			}
 		}
 		descriptionknown += " (" + describe(rewards[0]) + " or "
 				+ describe(rewards[1]) + ")";
@@ -108,7 +114,7 @@ public class Trove extends Fortification {
 		if (reward == Reward.GOLD) {
 			int gold = RewardCalculator.receivegold(originalgarrison) * 2;
 			Squad.active.gold += gold;
-			return "Party receives $" + gold;
+			return "Party receives $" + PurchaseScreen.formatcost(gold) + "!";
 		}
 		if (reward == Reward.WORKER) {
 			Settler.produce(null, Squad.active);

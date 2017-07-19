@@ -30,6 +30,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Portal;
 import javelin.model.world.location.fortification.Fortification;
+import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Deck;
 import javelin.model.world.location.unique.Haxor;
@@ -136,6 +137,8 @@ public class Scenario implements Serializable {
 	public boolean dominationwin = true;
 	/** Number of {@link Location}s to spawn. See {@link FeatureGenerator}. */
 	public int startingfeatures = size * size / 7;
+	/** {@link Trove}s will only offer gold and experience rewards. */
+	public boolean simpletroves = true;
 
 	/**
 	 * @return Starting encounter level for each hostile town in

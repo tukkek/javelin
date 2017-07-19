@@ -55,8 +55,8 @@ public class PowerAttack extends Feat {
 		HashSet<Integer> targets = new HashSet<Integer>(2);
 		int bab = m.getbaseattackbonus();
 		if (nattacks == 1) {
-			targets.add(Math.round(bab * 1 / 3f));
 			targets.add(Math.round(bab * 2 / 3f));
+			targets.add(Math.round(bab * 1 / 3f));
 		} else {
 			targets.add(bab / 2);
 		}

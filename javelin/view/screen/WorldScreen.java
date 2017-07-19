@@ -45,6 +45,7 @@ import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.world.WorldPanel;
 import javelin.view.mappanel.world.WorldTile;
+import javelin.view.screen.town.PurchaseScreen;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.tyrant.QuestApp;
@@ -330,7 +331,7 @@ public class WorldScreen extends BattleScreen {
 			infos.add(mph + " mph" + (Squad.active.transport == null ? ""
 					: Squad.active.transport.load(Squad.active.members)));
 		}
-		infos.add("$" + SelectScreen.formatcost(Squad.active.gold));
+		infos.add(printgold());
 		final ArrayList<String> hps = showstatusinformation();
 		while (hps.size() > 6) {
 			hps.remove(6);
@@ -350,6 +351,15 @@ public class WorldScreen extends BattleScreen {
 			panel += hp + info + "\n";
 		}
 		Game.message(panel, Delay.NONE);
+	}
+
+	static String printgold() {
+		final int upkeep = Squad.active.getupkeep();
+		String gold = "$" + SelectScreen.formatcost(Squad.active.gold);
+		if (upkeep > 0) {
+			gold += " (upkeep: $" + PurchaseScreen.formatcost(upkeep) + "/day)";
+		}
+		return gold;
 	}
 
 	/**

@@ -21,15 +21,15 @@ public class Dismiss extends WorldAction {
 
 	@Override
 	public void perform(WorldScreen screen) {
-		ArrayList<String> members =
-				new ArrayList<String>(Squad.active.members.size());
+		ArrayList<String> members = new ArrayList<String>(
+				Squad.active.members.size());
 		for (Combatant c : Squad.active.members) {
-			members.add(
-					c.mercenary ? c.toString() + " (mercenary)" : c.toString());
+			String ismercenary = c.mercenary ? ", mercenary" : "";
+			members.add(c + " (" + c.getstatus() + ismercenary + ")");
 		}
-		int choice =
-				Javelin.choose("Which squad member do you want to dismiss?",
-						members, true, false);
+		int choice = Javelin.choose(
+				"Which squad member do you want to dismiss?", members, true,
+				false);
 		if (choice == -1) {
 			return;
 		}

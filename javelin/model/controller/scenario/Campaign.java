@@ -37,6 +37,7 @@ public class Campaign extends Scenario {
 		worldexploration = true;
 		dominationwin = false;
 		startingfeatures = size * size / 5;
+		simpletroves = false;
 	}
 
 	@Override

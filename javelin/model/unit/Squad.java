@@ -758,4 +758,18 @@ public class Squad extends Actor implements Cloneable {
 			throw new RuntimeException(e);
 		}
 	}
+
+	/**
+	 * @return Daily mercenary cost in gold.
+	 * @see Combatant#mercenary
+	 */
+	public int getupkeep() {
+		int upkeep = 0;
+		for (Combatant c : members) {
+			if (c.mercenary) {
+				upkeep += MercenariesGuild.getfee(c);
+			}
+		}
+		return upkeep;
+	}
 }

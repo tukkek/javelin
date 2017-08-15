@@ -11,6 +11,12 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class DescendingLevelComparator implements Comparator<Combatant> {
+	public static final DescendingLevelComparator SINGLETON = new DescendingLevelComparator();
+
+	private DescendingLevelComparator() {
+		super();
+	}
+
 	@Override
 	public int compare(Combatant arg0, Combatant arg1) {
 		return new Integer(sumcrandxp(arg0)).compareTo(sumcrandxp(arg1));

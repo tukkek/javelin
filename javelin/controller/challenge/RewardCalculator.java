@@ -187,9 +187,9 @@ public class RewardCalculator {
 	public static String rewardxp(ArrayList<Combatant> winners,
 			List<Combatant> originalblue, List<Combatant> originalred,
 			int bonus) {
-		int eldifference = Math
-				.round(ChallengeRatingCalculator.calculateel(originalred)
-						- ChallengeRatingCalculator.calculateel(originalblue));
+		int elred = ChallengeRatingCalculator.calculateel(originalred);
+		int elblue = ChallengeRatingCalculator.calculateel(originalblue);
+		int eldifference = Math.round(elred - elblue);
 		double partycr = getpartycr(eldifference, winners.size()) * bonus;
 		distributexp(winners, partycr);
 		return "Party wins "
@@ -198,6 +198,12 @@ public class RewardCalculator {
 	}
 
 	/**
+	 * This discounts a linear parcel for any mercenaries involved and then
+	 * distributes the remainder in a non-linear parcel according to unit power,
+	 * with weaker units receiving more XP, as to emulate offical d20 XP
+	 * progressions. This is necessary because Javelin actually uses a CR value
+	 * (100XP = 1CR) instead of the official exponential XP tables.
+	 * 
 	 * @param units
 	 *            {@link Combatant}s to receive experience.
 	 * @param xp
@@ -205,17 +211,24 @@ public class RewardCalculator {
 	 * @see #rewardxp(ArrayList, List, List, int)
 	 */
 	public static void distributexp(ArrayList<Combatant> units, double xp) {
-		List<Combatant> survivors = (List<Combatant>) units.clone();
-		Collections.sort(survivors, new DescendingLevelComparator());
+		List<Combatant> members = new ArrayList<Combatant>();
+		for (Combatant c : units) {
+			if (!c.mercenary) {
+				members.add(c);
+			}
+		}
+		if (members.isEmpty()) {
+			return;
+		}
+		xp = xp * new Float(members.size()) / new Float(units.size());
+		Collections.sort(members, DescendingLevelComparator.SINGLETON);
 		float segments = 0;
-		for (int i = 1; i <= survivors.size(); i++) {
+		for (int i = 1; i <= members.size(); i++) {
 			segments += i;
 		}
-		for (int i = 1; i <= survivors.size(); i++) {
-			final Combatant survivor = survivors.get(i - 1);
+		for (int i = 1; i <= members.size(); i++) {
+			final Combatant survivor = members.get(i - 1);
 			survivor.learn(xp * i / segments);
-			// survivor.xp = survivor.xp.add(new BigDecimal()
-			// .setScale(2, RoundingMode.HALF_UP));
 		}
 	}
 

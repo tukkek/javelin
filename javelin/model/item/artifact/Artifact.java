@@ -131,12 +131,13 @@ public abstract class Artifact extends Item {
 
 	@Override
 	public boolean equals(Object obj) {
-		return getClass().equals(obj.getClass());
+		Artifact other = obj instanceof Artifact ? (Artifact) obj : null;
+		return other != null && name.equals(other.name);
 	}
 
 	@Override
 	public int hashCode() {
-		return getClass().hashCode();
+		return name.hashCode();
 	}
 
 	@Override

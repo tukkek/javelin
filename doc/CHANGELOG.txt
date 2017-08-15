@@ -4,6 +4,7 @@ Version 1.7
  * 4 mini-games: Arena, Battlefield, Dungeon Rush and Ziggurat!
  * City management redesign, with 7 city traits and 36 projects!
  * Scenario mode!
+ * Caster rings!
  * New locations: natural resources and Assassins Guild
  * Infiltrate hostile locations
  * World map fog-of-war

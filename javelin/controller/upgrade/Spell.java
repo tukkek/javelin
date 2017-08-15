@@ -12,6 +12,7 @@ import javelin.model.item.Item;
 import javelin.model.item.Potion;
 import javelin.model.item.Scroll;
 import javelin.model.item.Wand;
+import javelin.model.item.artifact.CasterRing;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Attack;
 import javelin.model.unit.Combatant;
@@ -68,18 +69,17 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	 * @see #hit(Combatant, Combatant, BattleState)
 	 */
 	public boolean automatichit = false;
-	/** Action point cost to cast this particular spell. */
 	/** Rituals are cast by NPCs in Shrines. */
 	public boolean isritual = false;
-	/**
-	 * <code>true</code> if can automatically generate a {@link Scroll} for
-	 * this.
-	 */
+	/** Generates a {@link Scroll} if <code>true</code>. */
 	public boolean isscroll = false;
-	/** Same as {@link #isscroll} but for {@link Potion}s. */
+	/** Generates a {@link Potion} if <code>true</code>. */
 	public boolean ispotion = false;
-	/** Same as {@link #isscroll} but for {@link Wand}s. */
+	/** Generates a {@link Wand} if <code>true</code>. */
 	public boolean iswand = false;
+	/** Generates a {@link CasterRing} if <code>true</code> (default). */
+	public boolean isring = true;
+
 	/**
 	 * If <code>false</code> will not consider this threatening (ignores attacks
 	 * of opportunity so it can be cast while engaged without needing a
@@ -290,6 +290,11 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	@Override
 	public boolean equals(Object obj) {
 		return obj != null && obj.getClass().equals(getClass());
+	}
+
+	@Override
+	public int hashCode() {
+		return getClass().hashCode();
 	}
 
 	/**

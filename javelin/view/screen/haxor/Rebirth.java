@@ -1,9 +1,11 @@
 package javelin.view.screen.haxor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -22,6 +24,11 @@ public class Rebirth extends Hax {
 
 	@Override
 	protected boolean hack(Combatant target, HaxorScreen s) {
+		ArrayList<Artifact> equipment = new ArrayList<Artifact>(
+				target.equipped);
+		for (Artifact a : equipment) {
+			target.unequip(a);
+		}
 		ChallengeRatingCalculator.calculatecr(target.source);
 		Float originalcr = target.source.challengerating;
 		target.spells.clear();
@@ -32,6 +39,9 @@ public class Rebirth extends Hax {
 		target.learn(originalcr - target.source.challengerating);
 		if (target.xp.intValue() < 0) {
 			target.xp = new BigDecimal(0);
+		}
+		for (Artifact a : equipment) {
+			target.equip(a);
 		}
 		return true;
 	}

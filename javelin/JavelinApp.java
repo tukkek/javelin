@@ -29,6 +29,7 @@ import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
+import javelin.model.controller.scenario.Campaign;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.spell.Summon;
@@ -223,17 +224,21 @@ public class JavelinApp extends QuestApp {
 
 	/** stats */
 	static void printstatistics() {
+		if (!(World.scenario instanceof Campaign)) {
+			return;
+		}
 		System.out.println();
 		printoptions();
 		System.out.println(Javelin.ALLMONSTERS.size() + " monsters");
 		System.out.println((Item.ALL.size() - Item.ARTIFACT.size()) + " items, "
 				+ Item.ARTIFACT.size() + " artifacts, 7 relics");
 		Collection<Spell> spells = Spell.SPELLS.values();
-		int summon = countsummon(spells);
-		System.out.println((UpgradeHandler.singleton.count() - spells.size())
-				+ " upgrades, " + (spells.size() - summon + 1) + " spells, "
-				+ UpgradeHandler.singleton.countskills() + " skills, "
-				+ Kit.KITS.size() + " kits");
+		int nupgrades = UpgradeHandler.singleton.count() - spells.size();
+		int nspells = spells.size() - countsummon(spells) + 1;
+		int nskills = UpgradeHandler.singleton.countskills();
+		int nkits = Kit.KITS.size();
+		System.out.println(nupgrades + " upgrades, " + nspells + " spells, "
+				+ nskills + " skills, " + nkits + " kits");
 		HashSet<Class<? extends Actor>> locationtypes = new HashSet<Class<? extends Actor>>();
 		int uniquelocations = 0;
 		for (Actor a : World.getall()) {
@@ -332,14 +337,6 @@ public class JavelinApp extends QuestApp {
 		if (Preferences.DEBUGSTARTINGITEM != null) {
 			Squad.active.receiveitem(Preferences.DEBUGSTARTINGITEM);
 		}
-		// if (Preferences.DEBUGLABOR != null) {
-		// for (WorldActor p : Town.getall(Town.class)) {
-		// Town t = (Town) p;
-		// if (t.garrison.isEmpty()) {
-		// t.labor = Preferences.DEBUGLABOR;
-		// }
-		// }
-		// }
 	}
 
 	@Override

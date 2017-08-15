@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.MissingResourceException;
 import java.util.Properties;
 
+import javelin.Javelin;
 import javelin.controller.Weather;
 import javelin.controller.action.ActionDescription;
 import javelin.controller.ai.BattleAi;
@@ -123,7 +124,7 @@ public class Preferences {
 	/**
 	 * TODO make this take a {@link String} from the properties file.
 	 */
-	public static Item DEBUGSTARTINGITEM = null;
+	public static Item DEBUGSTARTINGITEM = Javelin.DEBUG ? null : null;
 
 	static {
 		load();

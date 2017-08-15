@@ -14,6 +14,7 @@ import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.upgrade.Spell;
 import javelin.model.Realm;
 import javelin.model.item.artifact.Artifact;
+import javelin.model.item.artifact.CasterRing;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
@@ -83,8 +84,12 @@ public abstract class Item implements Serializable, Cloneable {
 			if (s.ispotion) {
 				new Potion(s);
 			}
+			if (s.isring) {
+				for (int uses : CasterRing.POWERLEVELS) {
+					new CasterRing(s, uses);
+				}
+			}
 		}
-
 		mapbyprice();
 	}
 

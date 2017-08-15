@@ -37,6 +37,7 @@ public class Summon extends Spell {
 		if (!Javelin.MONSTERSBYCR.isEmpty()) {
 			postloadmonsters();
 		}
+		isring = false;
 	}
 
 	public Summon(String name) {

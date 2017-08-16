@@ -1,0 +1,36 @@
+Alex "kek" Henry
+* Main developer
+
+Bruno Terra de Campos
+* Monster images
+
+Craig “Upper Krust” Cochrane @ http://eternitypublishing.wordpress.com/
+* Immortal’s Handbook and its Challenging Challenge RAtins appendix
+
+Wizards of the Coast http://company.wizards.com/
+* d20 System Reference Document
+* Open Game License
+
+John H. Kim @ http://www.darkshire.net/jhkim
+* XML SRD Monster Data
+
+BoLS Interactive @ http://www.bolsinteractive.com/
+* The Hypertext d20 SRD http://www.d20srd.org/index.htm
+
+John Reyst
+* d20PFSRD.com
+
+Mike Anderson
+* Initial Tyrant code-base http://tyrant.sourceforge.net/
+
+David "dpeg" Ploog
+* Dungeon Crawl Stone Soup design philosphy https://github.com/crawl/crawl/blob/master/crawl-ref/docs/crawl_manual.rst#n-philosophy-pas-de-faq
+
+Stealthix @ https://stealthix.deviantart.com/
+* Location images 
+
+Special thanks
+* 11132113
+* Greg
+* Matthew
+* MustAwd

@@ -4,6 +4,7 @@ import java.awt.Canvas;
 import java.awt.Graphics;
 import java.awt.Image;
 
+import javelin.Javelin;
 import javelin.model.state.Square;
 
 /**
@@ -28,8 +29,28 @@ public abstract class Tile extends Canvas {
 	@Override
 	abstract public void paint(Graphics g);
 
-	protected static void draw(final Graphics g, final Image gettile) {
-		g.drawImage(gettile, 0, 0, MapPanel.tilesize, MapPanel.tilesize, null);
+	protected static void draw(final Graphics g, final Image i) {
+		System.out.println("Graphics: " + g);
+		System.out.println("Image: " + i);
+		System.out.println("Tile size: " + MapPanel.tilesize);
+		try {
+			g.drawImage(i, 0, 0, MapPanel.tilesize, MapPanel.tilesize, null);
+		} catch (NullPointerException e) {
+			/**
+			 * On Windows 8 this method can raise a "NullPointerException: HDC
+			 * for component", which seems to be a system or JDK error. It's not
+			 * clear how to fix it but another project seems to just ignore it
+			 * so that's what I'm trying too.
+			 * 
+			 * More info https://netbeans.org/bugzilla/show_bug.cgi?id=165867
+			 */
+			if (Javelin.DEBUG || true) { // TODO remove true after testing
+				e.printStackTrace();
+				System.out.println("Graphics: " + g);
+				System.out.println("Image: " + i);
+				System.out.println("Tile size: " + MapPanel.tilesize);
+			}
+		}
 	}
 
 	public void cover() {

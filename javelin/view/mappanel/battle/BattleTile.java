@@ -41,6 +41,9 @@ public class BattleTile extends Tile {
 		final Map m = Javelin.app.fight.map;
 		final Square s = Fight.state.map[x][y];
 		if (!s.blocked) {
+			if (m.floor == null) { // TODO remove after testing
+				throw new RuntimeException("No floor for map " + m.getClass());
+			}
 			draw(g, m.floor);
 			if (s.obstructed) {
 				if (obstacle == null) {

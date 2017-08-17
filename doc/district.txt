@@ -40,13 +40,13 @@ Build bards guild: offers training for bards.
 
 Build mages guild: teaches spells from a certain school of magic or specialization.
 
-Build summoning circle: teaches summon outsider spells.
+Build summoning circle: teaches Summon Outsider spells.
 
 ECOLOGICAL DISTRICT
 
 Build archery range: allows you to train and recruit rangers.
 
-Build henge: teaches summon animal spells, can be upgraded with each city rank.
+Build henge: teaches Summon Animal spells, can be upgraded with each city rank.
 
 Build mead hall: allows for training and recruiting barbarian units.
 
@@ -56,25 +56,25 @@ Build outpost: outposts greatly increase the vision range of your city.
 
 Build highway: same as build road but with greater benefits and greater labor time, requires a town or city. 
 
-Build road: creates a roas between two towns, improving travel time and safety along the way.
+Build road: creates a road between two towns, improving travel time and safety along the way.
 
-Produce settler: reduces city population by 1 but adds a settler unit to a squad inside the district which is able to build a new town elsewhere in the world map.
+Produce settler: reduces city population by 1 but adds a settler unit to a squad inside the district, which is able to build a new town elsewhere in the world map.
 
-Build transport hub: allows leasing vehicles. Can be upgraded to docks (if near water) and ultimately to magical docks.
+Build transport hub: allows leasing vehicles. Can be upgraded to docks (if near water) and ultimately to magical docks (anywhere).
 
 MILITARY DISTRICTS
 
-Build martial academy: teaches one of a set of combat enhancements.
+Build martial academy: teaches one of many possible sets of combat enhancements.
 
-Build mercenaries guild: allows hiring heroes for a daily fee.
+Build mercenaries guild: allows hiring unique heroes for a daily fee.
 
-Build monastery: allows for training and recruiting of monks.
+Build monastery: allows training and recruiting monks.
 
 PRODUCTIVE DISTRICTS
 
-Build mine: a mine allows you to mine gold and can be upgraded to automatically mine rubies.
+Build mine: a mine allows units placed inside to mine gold and can be upgraded to mine rubies on its own.
 
-Deforestate: converts a forest tile in the district into 50% extra labor, automatically adds a Growth project if there isn't another project to benefit from this.
+Deforestate: converts a forest tile in the district into 50% extra labor (automatically adds a Growth project if there isn't another project to benefit from this).
 
 RELIGIOUS DISTRICTS
 

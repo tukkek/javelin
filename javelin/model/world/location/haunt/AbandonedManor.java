@@ -1,7 +1,7 @@
 package javelin.model.world.location.haunt;
 
-import javelin.controller.map.Map;
 import javelin.controller.map.haunt.AbandonedManorMap;
+import javelin.controller.map.haunt.HauntMap;
 
 public class AbandonedManor extends Haunt {
 	public AbandonedManor() {
@@ -13,7 +13,7 @@ public class AbandonedManor extends Haunt {
 	}
 
 	@Override
-	Map getmap() {
+	HauntMap getmap() {
 		return new AbandonedManorMap();
 	}
 }

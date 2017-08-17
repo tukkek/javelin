@@ -23,7 +23,7 @@ public class DayLight extends Spell {
 	public String cast(Combatant caster, Combatant target, BattleState s,
 			boolean saved) {
 		s.period = Javelin.PERIODNOON;
-		return "The area brightnes!";
+		return "The area brightens!";
 	}
 
 	@Override

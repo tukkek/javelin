@@ -27,6 +27,7 @@ import javelin.model.world.location.fortification.Guardian;
 import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.haunt.AbandonedManor;
 import javelin.model.world.location.haunt.Haunt;
+import javelin.model.world.location.haunt.ShatteredTemple;
 import javelin.model.world.location.haunt.SunkenShip;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.governor.MonsterGovernor;
@@ -298,8 +299,8 @@ public class FeatureGenerator {
 				new Artificer(), new SummoningCircle(), new PillarOfSkulls(),
 				new Arena(), new Battlefield(), new DungeonRush(),
 				new Ziggurat() }));
-		locations.addAll(Arrays.asList(
-				new Haunt[] { new AbandonedManor(), new SunkenShip() }));
+		locations.addAll(Arrays.asList(new Haunt[] { new AbandonedManor(),
+				new SunkenShip(), new ShatteredTemple() }));
 	}
 
 	void generatestartingarea(World seed, Town t) {

@@ -6,7 +6,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.fight.HauntFight;
-import javelin.controller.map.Map;
+import javelin.controller.map.haunt.HauntMap;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.fortification.Fortification;
@@ -51,7 +51,7 @@ public abstract class Haunt extends Fortification {
 		return f;
 	}
 
-	abstract Map getmap();
+	abstract HauntMap getmap();
 
 	@Override
 	protected void generategarrison(int minlevel, int maxlevel) {

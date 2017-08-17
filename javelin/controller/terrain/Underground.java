@@ -1,11 +1,11 @@
 package javelin.controller.terrain;
 
-import javelin.controller.terrain.map.Maps;
-import javelin.controller.terrain.map.underground.BigCave;
-import javelin.controller.terrain.map.underground.Caves;
-import javelin.controller.terrain.map.underground.Floor;
-import javelin.controller.terrain.map.underground.Maze;
-import javelin.controller.terrain.map.underground.Pit;
+import javelin.controller.map.Maps;
+import javelin.controller.map.terrain.underground.BigCave;
+import javelin.controller.map.terrain.underground.Caves;
+import javelin.controller.map.terrain.underground.Floor;
+import javelin.controller.map.terrain.underground.Maze;
+import javelin.controller.map.terrain.underground.Pit;
 
 /**
  * See {@link Terrain#UNDERGROUND}.

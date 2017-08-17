@@ -5,12 +5,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javelin.controller.Point;
+import javelin.controller.map.Maps;
+import javelin.controller.map.terrain.plain.Farm;
+import javelin.controller.map.terrain.plain.Field;
+import javelin.controller.map.terrain.plain.Grasslands;
 import javelin.controller.terrain.hazard.Flood;
 import javelin.controller.terrain.hazard.Hazard;
-import javelin.controller.terrain.map.Maps;
-import javelin.controller.terrain.map.plain.Farm;
-import javelin.controller.terrain.map.plain.Field;
-import javelin.controller.terrain.map.plain.Grasslands;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import tyrant.mikera.engine.RPG;

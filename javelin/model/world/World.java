@@ -9,8 +9,8 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.WorldGenerator;
+import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
-import javelin.model.controller.scenario.Scenario;
 import javelin.model.unit.Squad;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.world.WorldTile;

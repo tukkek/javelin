@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.controller.CountingSet;
 import javelin.controller.fight.Fight;
-import javelin.controller.terrain.map.plain.Field;
+import javelin.controller.map.terrain.plain.Field;
 import javelin.model.unit.Combatant;
 import javelin.model.world.World;
 import javelin.model.world.location.unique.minigame.Battlefield;

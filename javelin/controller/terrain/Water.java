@@ -5,10 +5,10 @@ import java.util.Set;
 
 import javelin.controller.Point;
 import javelin.controller.WorldGenerator;
+import javelin.controller.map.Maps;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.terrain.hazard.Ice;
 import javelin.controller.terrain.hazard.Storm;
-import javelin.controller.terrain.map.Maps;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.ParkedVehicle;
@@ -44,7 +44,7 @@ public class Water extends Terrain {
 	@Override
 	public Maps getmaps() {
 		Maps m = new Maps();
-		m.add(new javelin.controller.terrain.map.Water());
+		m.add(new javelin.controller.map.terrain.Water());
 		return m;
 	}
 

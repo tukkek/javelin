@@ -4,14 +4,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javelin.controller.Point;
+import javelin.controller.map.Maps;
+import javelin.controller.map.terrain.forest.Dense;
+import javelin.controller.map.terrain.forest.Medium;
+import javelin.controller.map.terrain.forest.Sparse;
 import javelin.controller.terrain.hazard.Break;
 import javelin.controller.terrain.hazard.FallingTrees;
 import javelin.controller.terrain.hazard.GettingLost;
 import javelin.controller.terrain.hazard.Hazard;
-import javelin.controller.terrain.map.Maps;
-import javelin.controller.terrain.map.forest.Dense;
-import javelin.controller.terrain.map.forest.Medium;
-import javelin.controller.terrain.map.forest.Sparse;
 import javelin.model.world.World;
 
 /**

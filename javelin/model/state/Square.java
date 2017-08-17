@@ -1,6 +1,6 @@
 package javelin.model.state;
 
-import javelin.controller.terrain.map.Map;
+import javelin.controller.map.Map;
 
 /**
  * A singular area of a {@link Map}.

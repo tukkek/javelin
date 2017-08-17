@@ -1,7 +1,6 @@
 package javelin.controller.map;
 
 import javelin.controller.fight.minigame.Run;
-import javelin.controller.terrain.map.Map;
 
 /**
  * Clear map divided into 5x5 segments (7 rows/columns). It starts wholly closed

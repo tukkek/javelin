@@ -1,0 +1,35 @@
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx.......................xxxxxxx
+xxxx..#####################..xxxxxx
+xxx..##.........#.........##..xxxxx
+xxx..#..........#..........#..xxxxx
+xxx..#.....................#..xxxxx
+xxx..#..........#..........#..xxxxx
+xxx..##  ###############  ##..xxxxx
+xxx..#......#.......#......#..xxxxx
+xxx..#....2.........#......#..xxxxx
+xxx..#......#.......#. ....#..xxxxx
+xxx..#.... .#...2...#......#..xxxxx
+xxx..#......#..............#..xxxxx
+xxx..#......#.......#.2....#..xxxxx
+xxx..#......#.......#......#..xxxxx
+xxx..#...2.####.1.####.2...#..xxxxx
+xxx..#.....#..1...1..#.....#..xxxxx
+xxx..#.....................#..xxxxx
+xxx..#######2##...##2#######..xxxxx
+xxx..##.......##.##.......##..xxxxx
+xxx...##.......#.#.......##...xxxxx
+xxx....##......#.#......##....xxxxx
+xxxx....########.########....xxxxxx
+xxxx.........................xxxxxx
+xxxxx...........x...........xxxxxxx
+xxxxxxxxxxx....xxx....xxxxxxxxxxxxx
+xxxxxxxxxx....xxxxx....xxxxxxxxxxxx
+xxxxxxxxx....xxxxxxx....xxxxxxxxxxx
+xxxxxxxx....xxxxxxxxx....xxxxxxxxxx
+xxxxxxx....xxxxxxxxxxx....xxxxxxxxx
+xxxxxx....xxxxxxxxxxxxx....xxxxxxxx
+xxxxx....xxxxxxxxxxxxxxx....xxxxxxx
+xxxx....xxxxxxxxxxxxxxxxx....xxxxxx
+xxx....xxxxxxxxxxxxxxxxxxx....xxxxx
+xx....xxxxxxxxxxxxxxxxxxxxx....xxxx

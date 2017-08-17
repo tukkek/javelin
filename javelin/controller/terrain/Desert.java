@@ -5,16 +5,16 @@ import java.util.Set;
 
 import javelin.controller.Point;
 import javelin.controller.Weather;
+import javelin.controller.map.Maps;
+import javelin.controller.map.terrain.desert.Rocky;
+import javelin.controller.map.terrain.desert.Sandy;
+import javelin.controller.map.terrain.desert.Tundra;
 import javelin.controller.terrain.hazard.Break;
 import javelin.controller.terrain.hazard.Cold;
 import javelin.controller.terrain.hazard.Dehydration;
 import javelin.controller.terrain.hazard.GettingLost;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.terrain.hazard.Heat;
-import javelin.controller.terrain.map.Maps;
-import javelin.controller.terrain.map.desert.Rocky;
-import javelin.controller.terrain.map.desert.Sandy;
-import javelin.controller.terrain.map.desert.Tundra;
 import javelin.model.world.World;
 
 /**

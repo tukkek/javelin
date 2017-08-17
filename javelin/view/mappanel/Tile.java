@@ -30,9 +30,6 @@ public abstract class Tile extends Canvas {
 	abstract public void paint(Graphics g);
 
 	protected static void draw(final Graphics g, final Image i) {
-		System.out.println("Graphics: " + g);
-		System.out.println("Image: " + i);
-		System.out.println("Tile size: " + MapPanel.tilesize);
 		try {
 			g.drawImage(i, 0, 0, MapPanel.tilesize, MapPanel.tilesize, null);
 		} catch (NullPointerException e) {

@@ -3,7 +3,7 @@ package javelin.controller.fight;
 import java.util.ArrayList;
 
 import javelin.controller.fight.tournament.Exhibition;
-import javelin.controller.terrain.map.Arena;
+import javelin.controller.map.Arena;
 import javelin.model.unit.Combatant;
 import javelin.view.screen.BattleScreen;
 

@@ -1,7 +1,7 @@
 package javelin.controller.fight;
 
 import javelin.controller.Weather;
-import javelin.controller.terrain.map.Arena;
+import javelin.controller.map.Arena;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.unique.TrainingHall;
 

@@ -9,7 +9,7 @@ import javax.swing.border.Border;
 
 import javelin.Javelin;
 import javelin.controller.fight.Fight;
-import javelin.controller.terrain.map.Map;
+import javelin.controller.map.Map;
 import javelin.model.state.Meld;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;

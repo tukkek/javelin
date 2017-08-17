@@ -3,14 +3,14 @@ package javelin.controller.terrain;
 import java.util.Set;
 
 import javelin.controller.Point;
+import javelin.controller.map.Maps;
+import javelin.controller.map.terrain.hill.Rugged;
+import javelin.controller.map.terrain.mountain.Forbidding;
+import javelin.controller.map.terrain.mountain.Meadow;
 import javelin.controller.terrain.hazard.Break;
 import javelin.controller.terrain.hazard.Cold;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.terrain.hazard.Rockslide;
-import javelin.controller.terrain.map.Maps;
-import javelin.controller.terrain.map.hill.Rugged;
-import javelin.controller.terrain.map.mountain.Forbidding;
-import javelin.controller.terrain.map.mountain.Meadow;
 import javelin.model.world.World;
 
 /**

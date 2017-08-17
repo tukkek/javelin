@@ -8,7 +8,7 @@ public class ShatteredTempleMap extends HauntMap {
 	public ShatteredTempleMap() {
 		super("Shattered temple");
 		floor = Images.getImage("dungeonfloortempleevil");
-		wall = Images.getImage("dungeonwall");
+		wall = Images.getImage("terrainrockwall2");
 		obstacle = Images.getImage("terrainbush");
 	}
 

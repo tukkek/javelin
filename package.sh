@@ -18,3 +18,5 @@ zip ../javelin.zip javelin -r > /dev/null
 cd ..
 rm -r package
 rm javelin.jar
+git diff preferences.properties
+

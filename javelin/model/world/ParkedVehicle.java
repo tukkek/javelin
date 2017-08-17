@@ -19,7 +19,7 @@ import javelin.view.Images;
  * @author alex
  */
 public class ParkedVehicle extends Actor {
-	Transport transport;
+	public Transport transport;
 
 	/**
 	 * @param x

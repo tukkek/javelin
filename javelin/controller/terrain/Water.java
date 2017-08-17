@@ -13,6 +13,7 @@ import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.ParkedVehicle;
 import javelin.model.world.World;
+import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
 import tyrant.mikera.engine.RPG;
 
@@ -113,15 +114,24 @@ public class Water extends Terrain {
 		return super.generateareasize() / 2;
 	}
 
-	// @Override
-	// public boolean generatetown(Point p, World w) {
-	// return false;
-	// }
-
 	@Override
 	public boolean enter(int x, int y) {
-		return Squad.active.swim()
-				|| World.get(x, y, ParkedVehicle.class) != null;
+		if (Squad.active.swim()) {
+			return true;
+		}
+		Actor a = World.get(x, y);
+		if (a == null) {
+			return false;
+		}
+		ParkedVehicle v = a instanceof ParkedVehicle ? (ParkedVehicle) a : null;
+		if (v != null && (v.transport.flies || v.transport.sails)) {
+			return true;
+		}
+		Location l = a instanceof Location ? (Location) a : null;
+		if (l != null && !l.allowentry) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override

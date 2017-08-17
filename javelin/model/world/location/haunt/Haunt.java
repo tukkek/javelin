@@ -1,4 +1,4 @@
-package javelin.model.world.location.Haunt;
+package javelin.model.world.location.haunt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +25,7 @@ public abstract class Haunt extends Fortification {
 	 */
 	public Haunt(String description, String[] monsters) {
 		super(description, description, Integer.MAX_VALUE, Integer.MIN_VALUE);
+		realm = null;
 		for (String name : monsters) {
 			Monster m = Javelin.getmonster(name);
 			dwellers.add(m);

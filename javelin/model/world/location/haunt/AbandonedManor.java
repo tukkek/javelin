@@ -1,4 +1,4 @@
-package javelin.model.world.location.Haunt;
+package javelin.model.world.location.haunt;
 
 import javelin.controller.map.Map;
 import javelin.controller.map.haunt.AbandonedManorMap;

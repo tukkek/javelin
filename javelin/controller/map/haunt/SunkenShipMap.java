@@ -7,7 +7,7 @@ import javelin.view.Images;
 public class SunkenShipMap extends HauntMap {
 	public SunkenShipMap() {
 		super("Sunken ship");
-		floor = Images.getImage("terraintraininghall");
+		floor = Images.getImage("terrainshipfloor");
 		flooded = Images.getImage("terrainaquatic");
 	}
 

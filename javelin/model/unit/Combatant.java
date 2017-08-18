@@ -222,7 +222,7 @@ public class Combatant implements Serializable, Cloneable {
 		targetCombatant = state.clone(targetCombatant);
 		Action.outcome(RangedAttack.SINGLETON.attack(state, this,
 				targetCombatant,
-				current.chooseattack(current.source.melee, targetCombatant),
+				current.chooseattack(current.source.ranged, targetCombatant),
 				0));
 	}
 

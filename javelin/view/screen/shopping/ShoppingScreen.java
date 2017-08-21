@@ -48,7 +48,7 @@ public abstract class ShoppingScreen extends PurchaseScreen {
 	@Override
 	public boolean select(final Option op) {
 		if (op.price > Squad.active.gold) {
-			text += "Not enough $!\n";
+			text += "Not enough gold...\n";
 			return false;
 		}
 		final PurchaseOption o = (PurchaseOption) op;

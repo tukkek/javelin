@@ -159,7 +159,7 @@ public class PillarOfSkulls extends UniqueLocation {
 		}
 
 		boolean showlocation() {
-			if (!Dwelling.canbuy(50)) {
+			if (!Dwelling.canrecruit(50)) {
 				print(text + "\nReturn when you have more experience!");
 				return false;
 			}

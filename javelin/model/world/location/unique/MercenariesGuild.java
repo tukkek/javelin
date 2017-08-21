@@ -19,6 +19,7 @@ import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.BuildUnique;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
+import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -150,13 +151,18 @@ public class MercenariesGuild extends UniqueLocation {
 		return true;
 	}
 
+	/** See {@link #getfee(Monster)}. */
+	public static int getfee(Combatant c) {
+		return getfee(c.source);
+	}
+
 	/**
 	 * @return Daily fee for a mercenary, based on it's CR (single treasure
 	 *         value).
 	 */
-	public static int getfee(Combatant c) {
+	public static int getfee(Monster m) {
 		float value = RewardCalculator
-				.getgold(ChallengeRatingCalculator.calculatecr(c.source));
+				.getgold(ChallengeRatingCalculator.calculatecr(m));
 		int roundto;
 		if (value > 1000) {
 			roundto = 1000;
@@ -212,5 +218,14 @@ public class MercenariesGuild extends UniqueLocation {
 		if (all.size() < STARTINGMERCENARIES && RPG.chancein(100)) {
 			generatemercenary();
 		}
+	}
+
+	/**
+	 * @param c
+	 *            Given a combatant
+	 * @return its daily fee as in "$40/day".
+	 */
+	public static String getformattedfee(Combatant c) {
+		return "$" + ShoppingScreen.formatcost(getfee(c)) + "/day";
 	}
 }

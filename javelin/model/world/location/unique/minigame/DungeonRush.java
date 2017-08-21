@@ -34,8 +34,8 @@ public class DungeonRush extends UniqueLocation {
 	 * Units that can be created in battle. Winning battles allows you to spawn
 	 * better units, losing sets you back.
 	 */
-	public ArrayList<Monster> spawners =
-			new ArrayList<Monster>(MINIMUMSPAWNERS);
+	public ArrayList<Monster> spawners = new ArrayList<Monster>(
+			MINIMUMSPAWNERS);
 
 	/**
 	 * Since it would be awkward to show things like CR1.25 to the player better
@@ -59,8 +59,8 @@ public class DungeonRush extends UniqueLocation {
 	 *            upgrade to.
 	 */
 	public void upgrade(boolean humaninteraction) {
-		ArrayList<Float> crs =
-				new ArrayList<Float>(Javelin.MONSTERSBYCR.keySet());
+		ArrayList<Float> crs = new ArrayList<Float>(
+				Javelin.MONSTERSBYCR.keySet());
 		int i = 0;
 		while (crs.get(i) < 1) {
 			i += 1;
@@ -116,16 +116,15 @@ public class DungeonRush extends UniqueLocation {
 		for (Monster m : spawners) {
 			choices.add(m + " (" + Math.round(m.challengerating * 100) + "XP)");
 		}
-		String prompt =
-				"Which creature do you wish to spawn?\n\nYou currently have "
-						+ Dwelling.sumxp() + " XP";
+		String prompt = "Which creature do you wish to spawn?\n\nYou currently have "
+				+ Squad.active.sumxp() + " XP";
 		int choice = Javelin.choose(prompt, choices, true, false);
 		Javelin.app.switchScreen(WorldScreen.active);
 		if (choice == -1) {
 			return true;
 		}
 		Monster recruit = spawners.get(choice);
-		if (Dwelling.canbuy(recruit.challengerating * 100)) {
+		if (Dwelling.canrecruit(recruit.challengerating * 100)) {
 			Dwelling.spend(recruit.challengerating);
 			Squad.active.members.add(new Combatant(recruit.clone(), true));
 		} else {

@@ -52,8 +52,8 @@ public class Battlefield extends UniqueLocation {
 					false);
 			return true;
 		}
-		ArrayList<String> survivors =
-				new ArrayList<String>(this.survivors.keySet());
+		ArrayList<String> survivors = new ArrayList<String>(
+				this.survivors.keySet());
 		survivors.sort(null);
 		ArrayList<String> choices = new ArrayList<String>(survivors.size());
 		ArrayList<Integer> costs = new ArrayList<Integer>(survivors.size());
@@ -65,7 +65,7 @@ public class Battlefield extends UniqueLocation {
 			choices.add(nsurvivors + " " + survivor + " (" + cost + "XP)");
 		}
 		int choice = Javelin.choose(
-				"You currently have " + Dwelling.sumxp()
+				"You currently have " + Squad.active.sumxp()
 						+ " XP.\n\nRecruit which group of survivors?",
 				choices, true, false);
 		Javelin.app.switchScreen(WorldScreen.active);
@@ -73,7 +73,7 @@ public class Battlefield extends UniqueLocation {
 			return true;
 		}
 		Integer cost = costs.get(choice);
-		if (!Dwelling.canbuy(cost)) {
+		if (!Dwelling.canrecruit(cost)) {
 			Javelin.message("Not enough experience to recruit this group...",
 					false);
 			return true;

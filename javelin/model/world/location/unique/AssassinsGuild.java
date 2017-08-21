@@ -88,7 +88,7 @@ public class AssassinsGuild extends Academy {
 						+ " assassinations to proceed to the next rank.";
 			}
 			return s + "\n\nYou have "
-					+ SelectScreen.formatcost(Dwelling.sumxp()) + "XP";
+					+ SelectScreen.formatcost(Squad.active.sumxp()) + "XP";
 		}
 
 		private int round(float f) {
@@ -120,7 +120,7 @@ public class AssassinsGuild extends Academy {
 		public boolean select(Option op) {
 			if (op instanceof RecruitOption) {
 				RecruitOption ro = (RecruitOption) op;
-				if (Dwelling.canbuy(Math.round(ro.m.challengerating * 100))) {
+				if (Dwelling.canrecruit(Math.round(ro.m.challengerating * 100))) {
 					Dwelling.spend(ro.m.challengerating);
 					Squad.active.members.add(new Combatant(ro.m.clone(), true));
 					return true;

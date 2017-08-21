@@ -24,7 +24,8 @@ public class Dismiss extends WorldAction {
 		ArrayList<String> members = new ArrayList<String>(
 				Squad.active.members.size());
 		for (Combatant c : Squad.active.members) {
-			String ismercenary = c.mercenary ? ", mercenary" : "";
+			String ismercenary = c.mercenary
+					? ", " + MercenariesGuild.getformattedfee(c) : "";
 			members.add(c + " (" + c.getstatus() + ismercenary + ")");
 		}
 		int choice = Javelin.choose(

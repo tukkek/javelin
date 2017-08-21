@@ -5,16 +5,22 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.comparator.MonsterNameComparator;
 import javelin.controller.fight.HauntFight;
 import javelin.controller.map.haunt.HauntMap;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.fortification.Fortification;
-import javelin.model.world.location.unique.Haxor;
+import javelin.model.world.location.town.labor.base.Dwelling;
+import javelin.view.screen.HauntScreen;
+import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
 
 public abstract class Haunt extends Fortification {
+	private static final int MAXIMUMAVAILABLE = 5;
 	ArrayList<Monster> dwellers = new ArrayList<Monster>();
+	public ArrayList<Monster> available = new ArrayList<Monster>();
+	int delay = -1;
 
 	/**
 	 * @param description
@@ -26,6 +32,7 @@ public abstract class Haunt extends Fortification {
 	public Haunt(String description, String[] monsters) {
 		super(description, description, Integer.MAX_VALUE, Integer.MIN_VALUE);
 		realm = null;
+		sacrificeable = true;
 		for (String name : monsters) {
 			Monster m = Javelin.getmonster(name);
 			dwellers.add(m);
@@ -74,14 +81,45 @@ public abstract class Haunt extends Fortification {
 	}
 
 	@Override
+	public void turn(long time, WorldScreen world) {
+		super.turn(time, world);
+		if (ishostile()) {
+			return;
+		}
+		delay -= 1;
+		if (delay > 0) {
+			return;
+		}
+		if (Javelin.DEBUG) {
+			System.out.println("Generate @" + descriptionknown);
+		}
+		if (available.size() + 1 > MAXIMUMAVAILABLE) {
+			available.remove(RPG.pick(available));
+		}
+		Monster m = RPG.pick(dwellers);
+		available.add(m);
+		available.sort(MonsterNameComparator.INSTANCE);
+		delay = Dwelling.getspawnrate(m.challengerating);
+	}
+
+	@Override
 	public boolean interact() {
 		if (!super.interact()) {
 			return false;
 		}
-		Javelin.message("You find a ruby inside the now-safe "
-				+ descriptionknown.toLowerCase() + "!", true);
-		Haxor.singleton.rubies += 1;
-		remove();
+		new HauntScreen(this).show();
 		return true;
+	}
+
+	@Override
+	public void capture() {
+		super.capture();
+		available.clear();
+		delay = RPG.r(1, 6) + RPG.r(1, 6);
+	}
+
+	@Override
+	public boolean isworking() {
+		return !ishostile() && available.isEmpty();
 	}
 }

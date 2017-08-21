@@ -1,6 +1,7 @@
 package javelin.model.unit;
 
 import java.awt.Image;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -786,5 +787,18 @@ public class Squad extends Actor implements Cloneable {
 			}
 		}
 		members.addAll(mercenaries);
+	}
+
+	/**
+	 * 100XP = 1CR.
+	 * 
+	 * @return Total of XP between all active {@link Squad} members.
+	 */
+	public int sumxp() {
+		BigDecimal sum = new BigDecimal(0);
+		for (Combatant c : Squad.active.members) {
+			sum = sum.add(c.xp);
+		}
+		return Math.round(sum.floatValue() * 100);
 	}
 }

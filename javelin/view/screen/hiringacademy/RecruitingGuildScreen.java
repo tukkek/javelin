@@ -60,7 +60,7 @@ public class RecruitingGuildScreen extends AcademyScreen {
 	}
 
 	boolean canafford(Hire h) {
-		return Dwelling.sumxp() > h.price;
+		return Squad.active.sumxp() > h.price;
 	}
 
 	@Override
@@ -73,6 +73,6 @@ public class RecruitingGuildScreen extends AcademyScreen {
 	}
 
 	String printresourcesinfo() {
-		return "You currently have " + Dwelling.sumxp() + "XP";
+		return "You currently have " + Squad.active.sumxp() + "XP";
 	}
 }

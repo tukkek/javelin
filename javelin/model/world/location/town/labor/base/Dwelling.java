@@ -203,7 +203,7 @@ public class Dwelling extends Fortification {
 
 	void draft(InfoScreen s, String monstertype) {
 		int xp = Math.round(dweller.source.challengerating * 100);
-		if (!canbuy(xp)) {
+		if (!canrecruit(xp)) {
 			s.print("Cannot afford a " + monstertype + " (" + xp + "XP)...");
 			Game.getInput();
 			return;
@@ -239,7 +239,7 @@ public class Dwelling extends Fortification {
 		text += "\nCurrent gold: $" + SelectScreen.formatcost(Squad.active.gold)
 				+ "\n";
 		if (volunteers > 0) {
-			text += "Current XP: " + sumxp() + "XP\n";
+			text += "Current XP: " + Squad.active.sumxp() + "XP\n";
 		}
 		return text;
 	}
@@ -251,10 +251,18 @@ public class Dwelling extends Fortification {
 		if (volunteers == max) {
 			return;
 		}
-		int onceeveryxdays = cr * 100 / 20;
-		if (RPG.r(onceeveryxdays) == 0) {
+		if (RPG.r(getspawnrate(cr)) == 0) {
 			volunteers += 1;
 		}
+	}
+
+	/**
+	 * @param cr
+	 *            Given this challenge rating...
+	 * @return a monster should spawn once every x days.
+	 */
+	public static int getspawnrate(float cr) {
+		return Math.max(1, Math.round(cr * 100 / 20));
 	}
 
 	@Override
@@ -268,26 +276,13 @@ public class Dwelling extends Fortification {
 	}
 
 	/**
-	 * 100XP = 1CR.
-	 * 
-	 * @return Total of XP between all active {@link Squad} members.
-	 */
-	public static int sumxp() {
-		BigDecimal sum = new BigDecimal(0);
-		for (Combatant c : Squad.active.members) {
-			sum = sum.add(c.xp);
-		}
-		return Math.round(sum.floatValue() * 100);
-	}
-
-	/**
 	 * @param price
 	 *            Price in XP (100XP = 1CR).
 	 * @return <code>true</code> if currently active {@link Squad} can afford
 	 *         this much.
 	 */
-	static public boolean canbuy(double price) {
-		return price <= sumxp();
+	static public boolean canrecruit(double price) {
+		return price <= Squad.active.sumxp();
 	}
 
 	/**
@@ -337,5 +332,20 @@ public class Dwelling extends Fortification {
 		ArrayList<Labor> upgrades = super.getupgrades(d);
 		upgrades.add(new Draft(dweller.source));
 		return upgrades;
+	}
+
+	/**
+	 * @param m
+	 *            Given a monster...
+	 * @return recruits into {@link Squad#active} and {@link #spend(double)} XP
+	 *         if {@link #canrecruit(double)}.
+	 */
+	public static boolean recruit(Monster m) {
+		if (!canrecruit(m.challengerating * 100)) {
+			return false;
+		}
+		spend(m.challengerating);
+		Javelin.recruit(m);
+		return true;
 	}
 }

@@ -21,6 +21,10 @@ public abstract class Haunt extends Fortification {
 	ArrayList<Monster> dwellers = new ArrayList<Monster>();
 	public ArrayList<Monster> available = new ArrayList<Monster>();
 	int delay = -1;
+	/**
+	 * Will be added in order to artifically modify the target encounter level.
+	 */
+	int elmodifier = 0;
 
 	/**
 	 * @param description
@@ -62,8 +66,8 @@ public abstract class Haunt extends Fortification {
 
 	@Override
 	protected void generategarrison(int minlevel, int maxlevel) {
-		int minel = ChallengeRatingCalculator.leveltoel(minlevel);
-		int maxel = ChallengeRatingCalculator.leveltoel(maxlevel);
+		int minel = ChallengeRatingCalculator.leveltoel(minlevel) + elmodifier;
+		int maxel = ChallengeRatingCalculator.leveltoel(maxlevel) + elmodifier;
 		int el = Integer.MIN_VALUE;
 		List<List<Combatant>> possibilities = new ArrayList<List<Combatant>>();
 		while (el < maxel) {

@@ -15,7 +15,7 @@ public class Meadow extends DndMap {
 		super("Meadow", .2, .3, 0);
 		wallfloor = floor;
 		wall = Images.getImage("terraintree");
-		rock = Images.getImage("terrainrock2");
+		rock = Images.getImage("terrainrock3");
 	}
 
 	@Override

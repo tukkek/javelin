@@ -14,6 +14,7 @@ public class Rugged extends DndMap {
 	public Rugged() {
 		super("Rugged mountain", .3, .2, 0);
 		rock = Images.getImage("terrainrock2");
+		wall = Images.getImage("terrainruggedwall");
 		standard = false;
 	}
 

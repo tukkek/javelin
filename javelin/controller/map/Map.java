@@ -127,6 +127,10 @@ public abstract class Map {
 		return name.hashCode();
 	}
 
+	public boolean validatecoordinate(int x, int y) {
+		return 0 <= Math.min(x, y) && Math.max(x, y) < map.length;
+	}
+
 	/**
 	 * @return A random map, excluding ones that are usually not recommended for
 	 *         typical fights like {@link Water}.

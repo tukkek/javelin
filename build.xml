@@ -9,7 +9,7 @@
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="bin"  
-            	excludes="avatars/ doc/ TODO/ *.log javelin.* package.sh monsters.xml preferences.properties"/>
+            	excludes="avatars/ avatarsmore/ backup/ doc/ maps/ scripts/ TODO/ *.log javelin.* package.sh monsters.xml preferences.properties"/>
             <zipfileset excludes="META-INF/*.SF" src="lib/junit.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="lib/forms-1.0.5.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="lib/looks-1.2.2.jar"/>

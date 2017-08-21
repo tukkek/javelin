@@ -28,6 +28,7 @@ import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.haunt.AbandonedManor;
 import javelin.model.world.location.haunt.Graveyard;
 import javelin.model.world.location.haunt.Haunt;
+import javelin.model.world.location.haunt.OrcSettlement;
 import javelin.model.world.location.haunt.ShatteredTemple;
 import javelin.model.world.location.haunt.SunkenShip;
 import javelin.model.world.location.haunt.WitchesHideout;
@@ -303,7 +304,7 @@ public class FeatureGenerator {
 				new Ziggurat() }));
 		locations.addAll(Arrays.asList(new Haunt[] { new AbandonedManor(),
 				new SunkenShip(), new ShatteredTemple(), new WitchesHideout(),
-				new Graveyard() }));
+				new Graveyard(), new OrcSettlement() }));
 	}
 
 	void generatestartingarea(World seed, Town t) {

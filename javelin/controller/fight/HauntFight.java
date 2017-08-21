@@ -6,7 +6,6 @@ import java.util.Collections;
 import javelin.controller.BattleSetup;
 import javelin.controller.Point;
 import javelin.model.unit.Combatant;
-import javelin.model.world.World;
 import javelin.model.world.location.Location;
 
 public class HauntFight extends Siege {
@@ -37,7 +36,7 @@ public class HauntFight extends Siege {
 					for (Point delta : DELTAS) {
 						int x = p.x + delta.x;
 						int y = p.y + delta.y;
-						if (World.validatecoordinate(x, y) && place(c, x, y)) {
+						if (map.validatecoordinate(x, y) && place(c, x, y)) {
 							startingarea.add(new Point(x, y));
 							continue teamplacement;
 						}

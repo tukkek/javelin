@@ -163,17 +163,20 @@ public class EndBattle extends BattleEvent {
 					if (active.hp > Combatant.DEADATHP && active.hp <= 0
 							&& active.source.constitution > 0) {
 						original.hp = 1;
-					} else if (!Fight.victory || !revive(original)) {
+					} else if (!Fight.victory
+							|| !revive(original, originalteam)) {
 						lastkilled = original;
 						originalteam.remove(original);
+						Squad.active.members.remove(original); // remove member
+						MercenariesGuild.die(original);
 						if (Fight.victory) {
-							for (Item i : Squad.active.equipment
-									.get(original.id)) {
+							final ArrayList<Item> bag = Squad.active.equipment
+									.get(original.id);
+							for (Item i : bag) {
 								i.grab();
 							}
 						}
-						Squad.active.equipment.remove(original.id);
-						MercenariesGuild.die(original);
+						Squad.active.remove(original); // remove equipment
 					}
 					break;
 				}
@@ -182,7 +185,7 @@ public class EndBattle extends BattleEvent {
 		Fight.state.dead.clear();
 	}
 
-	static boolean revive(Combatant original) {
+	static boolean revive(Combatant dead, List<Combatant> originalteam) {
 		Spell spell = null;
 		Scroll scroll = null;
 		search: for (Combatant c : Squad.active.members) {
@@ -197,7 +200,8 @@ public class EndBattle extends BattleEvent {
 			for (List<Item> bag : Squad.active.equipment.values()) {
 				for (Item i : bag) {
 					Scroll s = i instanceof Scroll ? (Scroll) i : null;
-					if (s != null && s.spell instanceof RaiseDead) {
+					if (s != null && s.spell instanceof RaiseDead
+							&& canuse(s, originalteam)) {
 						spell = s.spell;
 						scroll = s;
 					}
@@ -207,7 +211,6 @@ public class EndBattle extends BattleEvent {
 		if (spell == null) {
 			return false;
 		}
-		Combatant dead = new Combatant(original.source, false);
 		if (!spell.validate(null, dead)) {
 			return false;
 		}
@@ -217,6 +220,15 @@ public class EndBattle extends BattleEvent {
 			Squad.active.equipment.popitem(scroll.getClass(), Squad.active);
 		}
 		return true;
+	}
+
+	private static boolean canuse(Item s, List<Combatant> alive) {
+		for (Combatant c : alive) {
+			if (!Fight.state.dead.contains(c) && s.canuse(c) == null) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	static void end(ArrayList<Combatant> originalteam) {

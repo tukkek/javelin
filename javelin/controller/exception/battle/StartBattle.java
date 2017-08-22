@@ -130,8 +130,11 @@ public class StartBattle extends BattleEvent {
 		ArrayList<Item> bag = Squad.active.equipment.get(c.id);
 		for (Item i : new ArrayList<Item>(bag)) {
 			String used = "";
-			if (i.usedinbattle) {
-				used += i.waste(resourcesused, bag) + ", ";
+			if (i.waste) {
+				String wasted = i.waste(resourcesused, c, bag);
+				if (wasted != null) {
+					used += wasted + ", ";
+				}
 			}
 			if (!used.isEmpty()) {
 				report += " Used: " + used.substring(0, used.length() - 2)

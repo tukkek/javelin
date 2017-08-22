@@ -23,6 +23,7 @@ public abstract class Relic extends Item {
 	public Relic(String name, Realm r) {
 		super(name, 0, null);
 		consumable = false;
+		waste = false;
 	}
 
 	@Override

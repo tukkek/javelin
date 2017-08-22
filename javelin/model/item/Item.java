@@ -3,13 +3,13 @@ package javelin.model.item;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
 import javelin.controller.action.UseItem;
 import javelin.controller.action.world.UseItems;
+import javelin.controller.comparator.ItemPriceComparator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.upgrade.Spell;
 import javelin.model.Realm;
@@ -37,18 +37,6 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public abstract class Item implements Serializable, Cloneable {
-	/**
-	 * Organizes a {@link List} from cheapest to most expensive Item.
-	 *
-	 * @see List#sort(Comparator)
-	 */
-	public static Comparator<Item> PRICECOMPARATOR = new Comparator<Item>() {
-		@Override
-		public int compare(Item o1, Item o2) {
-			return o1.price - o2.price;
-		}
-	};
-
 	/**
 	 * All available item types from cheapest to most expensive.
 	 */
@@ -114,6 +102,9 @@ public abstract class Item implements Serializable, Cloneable {
 	/** How many action points to spend during {@link UseItem}. */
 	public float apcost = .5f;
 
+	/** Whether to {@link #waste(float, ArrayList)} this item or not. */
+	public boolean waste = true;
+
 	/**
 	 * @param upgradeset
 	 *            One the static constants in this class, like {@link #MAGIC}.
@@ -131,7 +122,7 @@ public abstract class Item implements Serializable, Cloneable {
 	/** Sorts {@link #ALL} by price. */
 	public static void mapbyprice() {
 		Collections.shuffle(ALL);
-		Collections.sort(ALL, PRICECOMPARATOR);
+		Collections.sort(ALL, ItemPriceComparator.SINGLETON);
 	}
 
 	@Override
@@ -175,32 +166,6 @@ public abstract class Item implements Serializable, Cloneable {
 			throw new RuntimeException(e);
 		}
 	}
-
-	// /**
-	// * Fill the {@link Town} shops with {@link Item} at the start of the
-	// * campaign.
-	// */
-	// public static void distribute() {
-	// CureLightWounds curelightwounds = new CureLightWounds();
-	// for (WorldActor p : Location.getall(Town.class)) {
-	// Town t = (Town) p;
-	// t.items.add(new Potion(new CureLightWounds()));
-	// int nitems = RPG.r(3 - 1, 5 - 1);
-	// ItemSelection selection = new ItemSelection(getselection(t.realm));
-	// selection.remove(curelightwounds);
-	// if (nitems > selection.size()) {
-	// nitems = selection.size();
-	// }
-	// while (t.items.size() - 1 < nitems
-	// && t.items.size() != selection.size()) {
-	// t.items.add(selection.random());
-	// }
-	// for (Item i : t.items) {
-	// i.shop();
-	// }
-	// Collections.sort(t.items, Item.PRICECOMPARATOR);
-	// }
-	// }
 
 	/**
 	 * Each {@link Item} is assigned a {@link Realm} on creation. This
@@ -343,15 +308,18 @@ public abstract class Item implements Serializable, Cloneable {
 
 	/**
 	 * Used as strategic resource damage.
+	 * 
+	 * @param c
 	 *
-	 * @return Lowercase description of used resources or empty string.
+	 * @return Lowercase description of used resources or <code>null</code> if
+	 *         wasn't wasted.
 	 * @see StartBattle
 	 */
-	public String waste(float resourcesused, ArrayList<Item> bag) {
-		if (RPG.random() < resourcesused) {
+	public String waste(float resourcesused, Combatant c, ArrayList<Item> bag) {
+		if (RPG.random() < resourcesused && canuse(c) == null) {
 			bag.remove(this);
 			return name;
 		}
-		return "";
+		return null;
 	}
 }

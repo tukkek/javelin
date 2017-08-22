@@ -35,6 +35,7 @@ public class Key extends Item {
 		super(color.getname() + " key", determineprice(color), null);
 		this.color = color;
 		usedinbattle = false;
+		waste = false;
 	}
 
 	private static int determineprice(Realm r) {

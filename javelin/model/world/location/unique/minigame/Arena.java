@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.comparator.ItemPriceComparator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
@@ -149,7 +150,7 @@ public class Arena extends UniqueLocation {
 		while (items.size() < 9) {
 			items.add(Item.ALL.random().clone());
 		}
-		items.sort(Item.PRICECOMPARATOR);
+		items.sort(ItemPriceComparator.SINGLETON);
 	}
 
 	@Override

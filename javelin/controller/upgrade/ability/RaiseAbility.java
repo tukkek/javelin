@@ -33,7 +33,7 @@ public abstract class RaiseAbility extends Upgrade {
 	@Override
 	public boolean apply(Combatant m) {
 		int score = getabilityvalue(m.source);
-		if (score <= 0) {
+		if (score <= 0) { // doesn't have this ability
 			return false;
 		}
 		score += 2;

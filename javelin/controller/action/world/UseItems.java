@@ -177,7 +177,7 @@ public class UseItems extends WorldAction {
 	}
 
 	static String describeitem(final Item it, final Combatant c) {
-		String s = " " + it.name;
+		String s = " " + it.toString();
 		String useerror = it.canuse(c);
 		if (useerror != null) {
 			s += " (" + useerror + ")";

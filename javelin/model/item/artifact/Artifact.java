@@ -72,6 +72,7 @@ public abstract class Artifact extends Item {
 		usedinbattle = false;
 		consumable = false;
 		slot = slotp;
+		waste = false;
 	}
 
 	@Override

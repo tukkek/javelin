@@ -34,20 +34,21 @@ public class CasterRing extends Artifact {
 				Slot.FINGER);
 		spell = s;
 		this.uses = uses;
+		waste = false; // wasted as Spell
 	}
 
 	static String getname(Spell s, int uses) {
 		String prefix;
 		if (uses == 1) {
-			prefix = "Minor ring" + uses;
+			prefix = "Minor ring";
 		} else if (uses == 2) {
 			prefix = "Ring";
 		} else if (uses == 3) {
-			prefix = "Major ring" + uses;
+			prefix = "Major ring";
 		} else if (uses == 4) {
-			prefix = "Greater ring" + uses;
+			prefix = "Greater ring";
 		} else if (uses == 5) {
-			prefix = "Epic ring" + uses;
+			prefix = "Epic ring";
 		} else {
 			throw new RuntimeException("Invalid number of uses #casterring");
 		}

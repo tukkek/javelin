@@ -20,6 +20,7 @@ public class Wand extends Item {
 	int baseprice;
 	Spell spell;
 	boolean shop = false;
+	int maxcharges;
 
 	/**
 	 * Constructor.
@@ -29,9 +30,12 @@ public class Wand extends Item {
 	 * @param upgradeset
 	 */
 	public Wand(Spell s) {
-		super("Wand of " + s.name.toLowerCase(), s.level * s.casterlevel * 15 + s.components, s.realm.getitems());
+		super("Wand of " + s.name.toLowerCase(),
+				s.level * s.casterlevel * 15 + s.components,
+				s.realm.getitems());
 		if (Javelin.DEBUG && s.level > 4) {
-			throw new RuntimeException("Cannot be a wand (level too high): " + s);
+			throw new RuntimeException(
+					"Cannot be a wand (level too high): " + s);
 		}
 		if (name.contains("ray of ")) {
 			name = name.replace("ray of ", "");
@@ -49,7 +53,8 @@ public class Wand extends Item {
 	 * price and full charges.
 	 */
 	void recharge() {
-		charges = shop ? 50 : RPG.r(1, 50);
+		maxcharges = shop ? 50 : RPG.r(1, 50);
+		charges = maxcharges;
 		price = baseprice * charges;
 	}
 
@@ -104,7 +109,8 @@ public class Wand extends Item {
 
 	@Override
 	public String canuse(Combatant c) {
-		return c.source.skills.decipher(spell, c.source) ? null : "can't decipher";
+		return c.source.skills.decipher(spell, c.source) ? null
+				: "can't decipher";
 	}
 
 	@Override
@@ -122,16 +128,20 @@ public class Wand extends Item {
 	}
 
 	@Override
-	public String waste(float resourcesused, ArrayList<Item> bag) {
-		int used = Math.round(charges * resourcesused);
-		if (used == 0) {
-			return "";
+	public String waste(float resourcesused, Combatant c, ArrayList<Item> bag) {
+		if (canuse(c) != null) {
+			return null;
 		}
+		int used = Math.round(maxcharges * resourcesused);
+		if (used == 0) {
+			return null;
+		}
+		used = Math.min(used, Math.max(1, maxcharges / 5));
 		charges -= used;
 		if (charges <= 0) {
 			bag.remove(this);
 			return "exhausted " + name.toLowerCase();
 		}
-		return name.toLowerCase() + " (" + used + " x)";
+		return name.toLowerCase() + " (" + used + " times)";
 	}
 }

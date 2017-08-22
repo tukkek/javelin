@@ -61,7 +61,7 @@ Level 6 (caster level 11)
 Level 7 (caster level 13)
   Control weather: changes weather to dry, raining or storm.
   Greater teleport: teleports you to any town.
-  Resurrect: after battle, resurrects a killed ally to full hit points.
+  Ressurect: after battle, resurrects a killed ally to full hit points.
   
 Level 8 (caster level 15)
   Discern location: reveals location of nearest undiscovered town.

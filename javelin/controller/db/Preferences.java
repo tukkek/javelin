@@ -10,14 +10,12 @@ import java.util.ArrayList;
 import java.util.MissingResourceException;
 import java.util.Properties;
 
-import javelin.Javelin;
 import javelin.controller.Weather;
 import javelin.controller.action.ActionDescription;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.ai.cache.AiCache;
 import javelin.controller.old.Game.Delay;
-import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
@@ -120,11 +118,6 @@ public class Preferences {
 	public static String DEBUGSEASON;
 	/** Debug option. */
 	public static boolean DEBUGUNLOCKTEMPLES;
-
-	/**
-	 * TODO make this take a {@link String} from the properties file.
-	 */
-	public static Item DEBUGSTARTINGITEM = Javelin.DEBUG ? null : null;
 
 	static {
 		load();

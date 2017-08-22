@@ -13,16 +13,21 @@ import javelin.view.screen.InfoScreen;
  */
 public class RaiseDead extends Spell {
 
-	protected static final float RESTORATIONCR =
-			ChallengeRatingCalculator.ratespelllikeability(4);
+	protected static final float RESTORATIONCR = ChallengeRatingCalculator
+			.ratespelllikeability(4);
 
 	/** Constructor. */
 	public RaiseDead() {
-		super("Raise dead", 5,
-				ChallengeRatingCalculator.ratespelllikeability(5) + RESTORATIONCR,
-				Realm.GOOD);
+		super("Raise dead", 5, ChallengeRatingCalculator.ratespelllikeability(5)
+				+ RESTORATIONCR, Realm.GOOD);
 		components = 5000;
 		isscroll = true;
+		castinbattle = false;
+	}
+
+	public RaiseDead(String name, int levelp, float incrementcost,
+			Realm realmp) {
+		super(name, levelp, incrementcost, realmp);
 	}
 
 	@Override

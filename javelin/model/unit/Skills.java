@@ -92,7 +92,7 @@ public class Skills implements Serializable, Cloneable {
 			return true;
 		}
 		return Math.max(Math.max(monster.intelligence, monster.wisdom),
-				monster.charisma) + spellcraft / 2 > 10 + s.level;
+				monster.charisma) + spellcraft / 2 >= 10 + s.level;
 	}
 
 	/**

@@ -32,7 +32,9 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
+import javelin.model.item.Scroll;
 import javelin.model.spell.Summon;
+import javelin.model.spell.conjuration.healing.Ressurect;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -85,6 +87,18 @@ public class JavelinApp extends QuestApp {
 	/** Root window. */
 	public JFrame frame;
 
+	/** Useful for debug */
+	void onstart() {
+		// TODO Auto-generated method stub
+	}
+
+	/** Useful for debug */
+	void oncampaignstart() {
+		for (Item i : new Item[] {}) {
+			Squad.active.receiveitem(i);
+		}
+	}
+
 	@Override
 	public void run() {
 		javelin.controller.db.Preferences.init();// pre
@@ -101,6 +115,10 @@ public class JavelinApp extends QuestApp {
 			Dungeon.active.activate(true);
 		}
 		StateManager.save(true, StateManager.SAVEFILE);
+		onstart();
+		if (Javelin.DEBUG) {
+			new Scroll(new Ressurect()).grab();
+		}
 		if (Javelin.DEBUG) {
 			while (true) {
 				loop();
@@ -127,13 +145,6 @@ public class JavelinApp extends QuestApp {
 			}
 		} catch (final StartBattle e) {
 			fight = e.fight;
-			// if (Squad.active.strategic && fight instanceof RandomEncounter) {
-			// /*
-			// * TODO support all types of strategic battles (Lair, Incursion,
-			// * Siege...) for hard fights up
-			// */
-			// StartBattle.quickbattle();
-			// } else {
 			try {
 				e.battle();
 			} catch (final EndBattle end) {
@@ -216,9 +227,9 @@ public class JavelinApp extends QuestApp {
 		SquadScreen.open();
 		WorldGenerator.build();
 		UpgradeHandler.singleton.gather();
-		// Item.distribute();
 		if (Javelin.DEBUG) {
 			JavelinApp.printstatistics();
+			oncampaignstart();
 		}
 	}
 
@@ -333,9 +344,6 @@ public class JavelinApp extends QuestApp {
 		}
 		if (Preferences.DEBUGRUBIES != null) {
 			Haxor.singleton.rubies = Preferences.DEBUGRUBIES;
-		}
-		if (Preferences.DEBUGSTARTINGITEM != null) {
-			Squad.active.receiveitem(Preferences.DEBUGSTARTINGITEM);
 		}
 	}
 

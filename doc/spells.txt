@@ -15,6 +15,7 @@ Level 1 (caster level 1)
   
 Level 2 (caster level 3)
   Bear's endurance: +2 constitution bonus. Touch.
+  Blink: makes the caster blink for 4 turns, providing a 50% miss chance to attacks against him.
   Bull's strength: +2 strength bonus. Touch.
   Cat's grace: +2 dexterity bonus. Touch.
   Cure moderate wounds: cures 13 hit points. Touch.
@@ -29,9 +30,9 @@ Level 2 (caster level 3)
   Sound burst: blasts a 10-foot radius with a tremendous cacophony.
 
 Level 3 (caster level 5)
-  Blink: caster gains +10 to AC and spell resistance for 5 turns.
   Cure serious wounds: cures 20 hit points. Touch.
   Daylight: lights up environment.
+  Displacement: makes target blink for 6 turns, providing a 50% miss chance to attacks against him. Touch.
   Deeper darkness: darkens environment.
   Find traps: caster gains +3 bonus to Search.
   Heroism: For 1 hour target gains a +2 morale bonus on attack rolls, saves, and skill checks. Touch.

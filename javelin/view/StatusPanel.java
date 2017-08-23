@@ -18,7 +18,7 @@ import javelin.model.feat.attack.martial.ImprovedFeint;
 import javelin.model.feat.attack.martial.ImprovedGrapple;
 import javelin.model.feat.attack.martial.ImprovedTrip;
 import javelin.model.item.Item;
-import javelin.model.spell.Summon;
+import javelin.model.spell.conjuration.Summon;
 import javelin.model.unit.Combatant;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.screen.BattleScreen;
@@ -79,6 +79,9 @@ public class StatusPanel extends TPanel {
 		List<Item> equipment = Javelin.app.fight.getbag(combatant);
 		ArrayList<String> listing = new ArrayList<String>();
 		for (Item i : equipment) {
+			if (!i.usedinbattle) {
+				continue;
+			}
 			String extra = i.canuse(combatant);
 			listing.add(i.name.replaceAll("Potion of", "")
 					+ (extra == null ? "" : "*"));
@@ -186,13 +189,11 @@ public class StatusPanel extends TPanel {
 	String passivedata(final Combatant combatant) {
 		String status = "";
 		if (combatant.source.fasthealing > 0) {
-			status +=
-					"Fast healing "
-							+ new BigDecimal(100.0
-									* new Double(combatant.source.fasthealing)
-									/ new Double(combatant.maxhp)).setScale(0,
-											RoundingMode.HALF_UP)
-							+ "%\n";
+			status += "Fast healing " + new BigDecimal(
+					100.0 * new Double(combatant.source.fasthealing)
+							/ new Double(combatant.maxhp)).setScale(0,
+									RoundingMode.HALF_UP)
+					+ "%\n";
 		}
 		return status.isEmpty() ? "" : "\n" + status;
 	}

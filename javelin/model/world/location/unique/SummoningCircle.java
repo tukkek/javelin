@@ -9,7 +9,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
-import javelin.model.spell.Summon;
+import javelin.model.spell.conjuration.Summon;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.military.Academy;

@@ -272,6 +272,8 @@ public class Monster implements Cloneable, Serializable {
 	public int poison = 0;
 	/** Unspent skill points. */
 	public int skillpool = 0;
+	/** Percent chance of an attack missing (1 = 100%). */
+	public float misschance = 0;
 
 	@Override
 	public Monster clone() {

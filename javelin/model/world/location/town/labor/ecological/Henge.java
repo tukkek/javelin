@@ -7,7 +7,7 @@ import javelin.Javelin;
 import javelin.controller.kit.Kit;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
-import javelin.model.spell.Summon;
+import javelin.model.spell.conjuration.Summon;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;

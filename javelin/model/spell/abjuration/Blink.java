@@ -3,28 +3,22 @@ package javelin.model.spell.abjuration;
 import java.util.List;
 
 import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.controller.upgrade.Spell;
 import javelin.model.Realm;
-import javelin.model.condition.Blinking;
+import javelin.model.spell.illusion.Displacement;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 
 /**
- * See the d20 SRD for more info.
+ * This isn't really blink but a 1-level lower version of Displacement that can
+ * only affect self.
  */
-public class Blink extends Spell {
+public class Blink extends Displacement {
 
 	public Blink() {
-		super("Blink", 3, ChallengeRatingCalculator.ratespelllikeability(3), Realm.MAGIC);
-		castinbattle = true;
-		super.ispotion = true;
-	}
-
-	@Override
-	public String cast(Combatant caster, Combatant target, BattleState s,
-			boolean saved) {
-		caster.addcondition(new Blinking(caster.ap + 5, caster, casterlevel));
-		return caster + " is blinking!";
+		super("Blink", 2, ChallengeRatingCalculator.ratespelllikeability(2),
+				Realm.MAGIC);
+		ispotion = true;
+		turns = 4;
 	}
 
 	@Override

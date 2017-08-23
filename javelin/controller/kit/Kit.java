@@ -39,7 +39,7 @@ import javelin.model.feat.ImprovedInitiative;
 import javelin.model.feat.save.LightningReflexes;
 import javelin.model.feat.skill.Acrobatic;
 import javelin.model.feat.skill.Deceitful;
-import javelin.model.spell.Summon;
+import javelin.model.spell.conjuration.Summon;
 import javelin.model.spell.conjuration.healing.wounds.CureLightWounds;
 import javelin.model.spell.conjuration.healing.wounds.CureModerateWounds;
 import javelin.model.spell.enchantment.compulsion.BarbarianRage;

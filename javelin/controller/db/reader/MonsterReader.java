@@ -35,7 +35,7 @@ import javelin.controller.db.reader.fields.SpecialQualities;
 import javelin.controller.db.reader.fields.Speed;
 import javelin.controller.upgrade.Spell;
 import javelin.model.feat.Feat;
-import javelin.model.spell.Summon;
+import javelin.model.spell.conjuration.Summon;
 import javelin.model.unit.Attack;
 import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Monster;

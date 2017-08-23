@@ -186,7 +186,8 @@ public class Town extends Location {
 
 	@Override
 	public void turn(long time, WorldScreen screen) {
-		governor.work(population * DAILYLABOR, getdistrict());
+		final float labor = (population + RPG.randomize(population) / 10f);
+		governor.work(labor * DAILYLABOR, getdistrict());
 	}
 
 	/**
@@ -234,6 +235,10 @@ public class Town extends Location {
 		attacker.remove();
 		if (realm != null) {
 			realm = attacker.realm;
+		}
+		int damage = RPG.randomize(4) + (attacker.getel()) / 2;
+		if (damage > 0) {
+			population -= Math.max(1, population - damage);
 		}
 		replacegovernor(new MonsterGovernor(this));
 	}

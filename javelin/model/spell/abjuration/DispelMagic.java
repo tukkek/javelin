@@ -6,7 +6,7 @@ import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.upgrade.Spell;
 import javelin.model.Realm;
 import javelin.model.condition.Condition;
-import javelin.model.spell.Summon;
+import javelin.model.spell.conjuration.Summon;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 

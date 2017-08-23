@@ -32,9 +32,9 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
-import javelin.model.item.Scroll;
-import javelin.model.spell.Summon;
-import javelin.model.spell.conjuration.healing.Ressurect;
+import javelin.model.item.artifact.CasterRing;
+import javelin.model.spell.conjuration.Summon;
+import javelin.model.spell.necromancy.Doom;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -94,7 +94,7 @@ public class JavelinApp extends QuestApp {
 
 	/** Useful for debug */
 	void oncampaignstart() {
-		for (Item i : new Item[] {}) {
+		for (Item i : new Item[] { new CasterRing(new Doom(), 5) }) {
 			Squad.active.receiveitem(i);
 		}
 	}
@@ -116,9 +116,6 @@ public class JavelinApp extends QuestApp {
 		}
 		StateManager.save(true, StateManager.SAVEFILE);
 		onstart();
-		if (Javelin.DEBUG) {
-			new Scroll(new Ressurect()).grab();
-		}
 		if (Javelin.DEBUG) {
 			while (true) {
 				loop();

@@ -760,4 +760,18 @@ public class RPG {
 	public static boolean chancein(int x) {
 		return RPG.r(1, x) == 1;
 	}
+
+	/**
+	 * Used to return numbers that average 0, useful for adding a small random
+	 * factor to things that would otherwise be boring and 100% predictable. For
+	 * example, if you input 4, it will return 1d4-1d4, which strongly tends to
+	 * 0 but could actually return anywhere in the range [-3,+3].
+	 * 
+	 * @param sides
+	 *            Given a die X...
+	 * @return the result of 1dX - 1dX.
+	 */
+	public static int randomize(int sides) {
+		return r(sides) - r(sides);
+	}
 }

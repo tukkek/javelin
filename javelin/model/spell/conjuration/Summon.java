@@ -1,4 +1,4 @@
-package javelin.model.spell;
+package javelin.model.spell.conjuration;
 
 import java.util.List;
 

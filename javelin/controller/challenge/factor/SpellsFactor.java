@@ -2,11 +2,11 @@ package javelin.controller.challenge.factor;
 
 import javelin.Javelin;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.model.spell.Summon;
 import javelin.model.spell.abjuration.Barkskin;
 import javelin.model.spell.abjuration.Blink;
 import javelin.model.spell.abjuration.DispelMagic;
 import javelin.model.spell.abjuration.ResistEnergy;
+import javelin.model.spell.conjuration.Summon;
 import javelin.model.spell.conjuration.healing.NeutralizePoison;
 import javelin.model.spell.conjuration.healing.RaiseDead;
 import javelin.model.spell.conjuration.healing.Ressurect;
@@ -36,6 +36,7 @@ import javelin.model.spell.evocation.MagicMissile;
 import javelin.model.spell.evocation.PolarRay;
 import javelin.model.spell.evocation.ScorchingRay;
 import javelin.model.spell.evocation.SoundBurst;
+import javelin.model.spell.illusion.Displacement;
 import javelin.model.spell.necromancy.Doom;
 import javelin.model.spell.necromancy.Poison;
 import javelin.model.spell.necromancy.RayOfExhaustion;
@@ -92,6 +93,7 @@ public class SpellsFactor extends CrFactor {
 		handler.schoolabjuration.add(new Barkskin());
 		handler.schoolabjuration.add(new ResistEnergy());
 		handler.schoolabjuration.add(new DispelMagic());
+		handler.schoolabjuration.add(new Displacement()); // TODO illusion
 
 		handler.schooltransmutation.add(new Darkvision()); // transmutation
 		handler.schooltransmutation.add(new ControlWeather());

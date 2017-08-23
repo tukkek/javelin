@@ -60,7 +60,7 @@ public class BattleMover extends Walker {
 			walk.add(new javelin.controller.walker.Step(targetx, targety));
 		}
 		final boolean engaged = isengaged();
-		float totalcost = 0;
+		float totalcost = BattleScreen.active.spentap;
 		for (final javelin.controller.walker.Step s : walk) {
 			float stepcost = getcost(engaged, s);
 			totalcost += stepcost;
@@ -148,7 +148,6 @@ public class BattleMover extends Walker {
 
 	@Override
 	protected ArrayList<javelin.controller.walker.Step> getsteplist() {
-		// return new NextMove(targetx, targety);
 		return new ArrayList<javelin.controller.walker.Step>();
 	}
 

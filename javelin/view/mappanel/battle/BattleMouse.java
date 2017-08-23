@@ -101,7 +101,8 @@ public class BattleMouse extends Mouse {
 								Combatant c = move.clone(current);
 								c.location[0] = to.x;
 								c.location[1] = to.y;
-								c.ap += to.apcost;
+								c.ap += to.apcost + BattleScreen.active.spentap;
+								BattleScreen.active.spentap = 0;
 								Meld m = move.getmeld(to.x, to.y);
 								if (m != null && c.ap >= m.meldsat) {
 									Javelin.app.fight.meld(c, m);
@@ -155,11 +156,9 @@ public class BattleMouse extends Mouse {
 			final Combatant target = s.getcombatant(t.x, t.y);
 			final Action a = getaction(current, target, s);
 			if (a == Action.MOVE) {
-				MoveOverlay
-						.schedule(new MoveOverlay(new BattleMover(
-								new Point(current.location[0],
-										current.location[1]),
-								new Point(t.x, t.y), current, s)));
+				MoveOverlay.schedule(new MoveOverlay(new BattleMover(
+						new Point(current.location[0], current.location[1]),
+						new Point(t.x, t.y), current, s)));
 				return;
 			} else if (a == Action.MELEE) {
 				final List<Attack> attack = current.currentmelee.next == null
@@ -184,8 +183,8 @@ public class BattleMouse extends Mouse {
 	}
 
 	void status(String s, Combatant target) {
-		MapPanel.overlay =
-				new TargetOverlay(target.location[0], target.location[1]);
+		MapPanel.overlay = new TargetOverlay(target.location[0],
+				target.location[1]);
 		Game.message(s, Delay.NONE);
 	}
 

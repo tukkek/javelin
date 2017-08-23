@@ -72,6 +72,10 @@ public class WorldMouse extends Mouse {
 
 		@Override
 		public void run() {
+			if (!target.isadjacent(Squad.active)) {
+				target.accessremotely();
+				return;
+			}
 			Squad s = target instanceof Squad ? (Squad) target : null;
 			if (s != null) {
 				s.join(Squad.active);
@@ -85,14 +89,6 @@ public class WorldMouse extends Mouse {
 			target.interact();
 		}
 	}
-
-	static final Runnable TOOFAR = new Runnable() {
-		@Override
-		public void run() {
-			Game.messagepanel.clear();
-			Game.message("Too far...", Delay.WAIT);
-		}
-	};
 
 	static boolean processing = false;
 	static Object LOCK = new Object();
@@ -124,8 +120,7 @@ public class WorldMouse extends Mouse {
 					return;
 				}
 			} else {
-				BattleScreen.perform(target.isadjacent(Squad.active)
-						? new Interact(target) : TOOFAR);
+				BattleScreen.perform(new Interact(target));
 				return;
 			}
 		}

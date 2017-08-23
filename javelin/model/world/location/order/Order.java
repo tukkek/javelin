@@ -49,6 +49,9 @@ public class Order implements Serializable {
 
 	public String geteta(long now) {
 		long hoursleft = Math.max(0, completionat - now);
+		if (hoursleft == 0) {
+			return "ready";
+		}
 		return hoursleft >= 24 ? Math.round(hoursleft / 24f) + " days"
 				: hoursleft + " hours";
 	}

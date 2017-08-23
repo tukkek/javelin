@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.terrain.Terrain;
@@ -140,7 +141,6 @@ public abstract class Academy extends Fortification {
 		if (classadvancement != null) {
 			upgrades.add(classadvancement);
 		}
-		// sort(upgrades);
 		sacrificeable = false;
 		level = upgrades.size();
 		clear = true;
@@ -196,11 +196,15 @@ public abstract class Academy extends Fortification {
 		if (!super.interact()) {
 			return false;
 		}
+		completetraining();
+		getscreen().show();
+		return true;
+	}
+
+	void completetraining() {
 		for (Order o : training.reclaim(Squad.active.hourselapsed)) {
 			completetraining((TrainingOrder) o);
 		}
-		getscreen().show();
-		return true;
 	}
 
 	protected AcademyScreen getscreen() {
@@ -318,5 +322,32 @@ public abstract class Academy extends Fortification {
 	@Override
 	public boolean isworking() {
 		return !training.queue.isEmpty() && !training.reportalldone();
+	}
+
+	@Override
+	public void accessremotely() {
+		if (ishostile()) {
+			super.accessremotely();
+			return;
+		}
+		if (training.queue.isEmpty()) {
+			Javelin.message("No one is training here right now...", false);
+			return;
+		}
+		String s = "Training period left::\n\n";
+		boolean anydone = false;
+		for (Order o : training.queue) {
+			s += o + "\n";
+			anydone = anydone || o.completed(Squad.active.hourselapsed);
+		}
+		s += "\n";
+		if (anydone) {
+			s += "To move units who have completed their trainings into a new squad press m (or any other key to continue)...";
+		} else {
+			s += "Clicking this location again once any training period is over will allow you to have units exit into the world map. ";
+		}
+		if (Javelin.promptscreen(s) == 'm' && anydone) {
+			completetraining();
+		}
 	}
 }

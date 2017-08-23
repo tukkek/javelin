@@ -467,7 +467,7 @@ public abstract class Fight {
 				if (s.next == c) {
 					s.next();
 				}
-				Javelin.app.fight.addmeld(c.location[0], c.location[1], c, s);
+				addmeld(c.location[0], c.location[1], c, s);
 				Game.message(
 						c + " is removed from the battlefield!\nPress ENTER to continue...",
 						Delay.NONE);

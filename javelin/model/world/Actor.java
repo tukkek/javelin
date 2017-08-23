@@ -9,6 +9,8 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
 import javelin.model.Realm;
@@ -288,5 +290,14 @@ public abstract class Actor implements Serializable {
 			}
 		});
 		return actor;
+	}
+
+	/**
+	 * Called when players click on a {@link World} {@link Location} that is not
+	 * adjacent to the currently active Squad.
+	 */
+	public void accessremotely() {
+		Game.messagepanel.clear();
+		Game.message("Too far away...", Delay.WAIT);
 	}
 }

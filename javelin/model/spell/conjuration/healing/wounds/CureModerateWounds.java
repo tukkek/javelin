@@ -27,7 +27,8 @@ public class CureModerateWounds extends Touch {
 	}
 
 	public CureModerateWounds() {
-		this("Cure moderate wounds", ChallengeRatingCalculator.ratespelllikeability(2),
+		this("Cure moderate wounds",
+				ChallengeRatingCalculator.ratespelllikeability(2),
 				new int[] { 2, 8, 4 }, 2);
 	}
 
@@ -46,5 +47,10 @@ public class CureModerateWounds extends Touch {
 	public String castpeacefully(final Combatant caster,
 			final Combatant combatant) {
 		return cast(caster, combatant, null, false);
+	}
+
+	@Override
+	public boolean canheal(Combatant c) {
+		return c.hp < c.maxhp;
 	}
 }

@@ -44,7 +44,7 @@ Level 4 (caster level 7)
   Barkskin: grants +3 to armor class for 1 hour.
   Cure critical wounds: cures 26 hit points. Touch.
   Inflict critical wounds: causes 26 points of damage. Touch.
-  Neutralize poison: poison immunity or disables poison for an hour.
+  Neutralize poison: disables natural poison on an enemy or grants poison immunity to ally for an hour.
   Resist energy: grants energy resistance 20 for 1 hour.
   Secure shelter: lets you rest in the wilderness.
   

@@ -236,9 +236,6 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	 *         already before it's {@link Combatant} caster rests.
 	 */
 	public boolean exhausted() {
-		if (Javelin.DEBUG) {
-			assert used <= perday;
-		}
 		return used == perday;
 	}
 
@@ -402,5 +399,19 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	 */
 	public void setdamageeffect() {
 		casterlevel = null;// prevents dispel
+	}
+
+	/**
+	 * Note that Spells implementing this should be able to accept a
+	 * <code>null</code> parameter on
+	 * {@link #castpeacefully(Combatant, Combatant)}.
+	 * 
+	 * Doesn't need to check for {@link #exhausted()}, this is done elsewhere.
+	 * 
+	 * @return true if the given {@link Combatant} can be healed by this spell.
+	 * @see #heal(ArrayList)
+	 */
+	public boolean canheal(Combatant c) {
+		return false;
 	}
 }

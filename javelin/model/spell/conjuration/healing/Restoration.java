@@ -20,17 +20,17 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class Restoration extends Touch {
-	static final ArrayList<Class<? extends Condition>> CONDITIONS =
-			new ArrayList<Class<? extends Condition>>();
+	static final ArrayList<Class<? extends Condition>> CONDITIONS = new ArrayList<Class<? extends Condition>>();
 
 	static {
 		CONDITIONS.add(Poisoned.class);
+		CONDITIONS.add(Fatigued.class);
 	}
 
 	/** Constructor. */
 	public Restoration() {
-		super("Lesser restoration", 2, ChallengeRatingCalculator.ratespelllikeability(2),
-				Realm.WATER);
+		super("Lesser restoration", 2,
+				ChallengeRatingCalculator.ratespelllikeability(2), Realm.WATER);
 		ispotion = true;
 		castinbattle = true;
 		castoutofbattle = true;
@@ -82,5 +82,18 @@ public class Restoration extends Touch {
 				targets.remove(c);
 			}
 		}
+	}
+
+	@Override
+	public boolean canheal(Combatant c) {
+		ArrayList<Class<? extends Condition>> conditions = new ArrayList<Class<? extends Condition>>(
+				CONDITIONS);
+		conditions.add(Fatigued.class);
+		for (Class<? extends Condition> condition : conditions) {
+			if (c.hascondition(condition) != null) {
+				return true;
+			}
+		}
+		return c.source.poison > 0;
 	}
 }

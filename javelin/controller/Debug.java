@@ -33,12 +33,6 @@ public class Debug {
 	public static void oncampaignstart() {
 	}
 
-	static void additems(Item[] items) {
-		for (Item i : items) {
-			Squad.active.receiveitem(i);
-		}
-	}
-
 	/**
 	 * Called from {@link Help}. Useful for making changes during the course of
 	 * a game or testing sequence, since Javelin doesn't have a developer
@@ -47,6 +41,16 @@ public class Debug {
 	 * @return Any text will be printed below the usual help output.
 	 */
 	public static String onhelp() {
+		return "";
+	}
+
+	static void additems(Item[] items) {
+		for (Item i : items) {
+			Squad.active.receiveitem(i);
+		}
+	}
+
+	static String printtowninfo() {
 		String s = "\n\n";
 		for (Town t : Town.gettowns()) {
 			s += t.population + " ";

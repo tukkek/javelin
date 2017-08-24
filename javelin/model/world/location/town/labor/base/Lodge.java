@@ -150,7 +150,7 @@ public class Lodge extends Fortification {
 			return false;
 		}
 		Squad.active.gold -= price;
-		Lodge.rest(periods, RESTPERIOD * periods, LODGING[level]);
+		rest(periods, RESTPERIOD * periods, LODGING[level]);
 		return true;
 	}
 
@@ -192,26 +192,29 @@ public class Lodge extends Fortification {
 	 *            Level of the resting environment.
 	 */
 	public static void rest(int restperiods, long hours, Lodging a) {
-		for (final Combatant c : Squad.active.members) {
-			int heal = c.source.hd.count() * restperiods;
-			if (!a.equals(HOSPITAL) && c.heal() >= 15) {
-				heal *= 2;
+		for (int i = 0; i < restperiods; i++) {
+			Squad.active.heal();
+			for (final Combatant c : Squad.active.members) {
+				int heal = c.source.hd.count();
+				if (!a.equals(HOSPITAL) && c.heal() >= 15) {
+					heal *= 2;
+				}
+				if (heal < 1) {
+					heal = 1;
+				}
+				c.hp += heal;
+				if (c.hp > c.maxhp) {
+					c.hp = c.maxhp;
+				}
+				for (Spell p : c.spells) {
+					p.used = 0;
+				}
+				if (c.source.poison > 0) {
+					final int detox = restperiods == 1 ? RPG.r(0, 1) : i % 2;
+					c.detox(Math.min(c.source.poison, detox));
+				}
+				c.terminateconditions((int) hours);
 			}
-			if (heal < 1) {
-				heal = 1;
-			}
-			c.hp += heal;
-			if (c.hp > c.maxhp) {
-				c.hp = c.maxhp;
-			}
-			for (Spell p : c.spells) {
-				p.used = 0;
-			}
-			if (c.source.poison > 0) {
-				int detox = restperiods == 1 ? RPG.r(0, 1) : restperiods / 2;
-				c.detox(Math.min(c.source.poison, detox));
-			}
-			c.terminateconditions((int) hours);
 		}
 		Squad.active.hourselapsed += hours;
 	}

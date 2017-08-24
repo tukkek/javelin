@@ -10,11 +10,14 @@ import javelin.controller.action.world.WorldMove;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.comparator.CombatantHealthComparator;
+import javelin.controller.comparator.SpellLevelComparator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.IncursionFight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
+import javelin.controller.upgrade.Spell;
 import javelin.model.EquipmentMap;
 import javelin.model.item.Item;
 import javelin.model.unit.transport.Transport;
@@ -800,5 +803,54 @@ public class Squad extends Actor implements Cloneable {
 			sum = sum.add(c.xp);
 		}
 		return Math.round(sum.floatValue() * 100);
+	}
+
+	/**
+	 * @return <code>true</code> if can use any available spell to heal
+	 *         {@link #members}.
+	 * @see #heal()
+	 */
+	public boolean canheal() {
+		for (Spell s : getavailablespells()) {
+			for (Combatant c : members) {
+				if (s.canheal(c)) {
+					return true;
+				}
+			}
+		}
+		return false;
+
+	}
+
+	ArrayList<Spell> getavailablespells() {
+		ArrayList<Spell> available = new ArrayList<Spell>();
+		for (Combatant c : members) {
+			for (Spell s : c.spells) {
+				if (!s.exhausted()) {
+					available.add(s);
+				}
+			}
+		}
+		return available;
+	}
+
+	/**
+	 * Uses available spells to heal your party.
+	 * 
+	 * @see #canheal()
+	 */
+	public void heal() {
+		ArrayList<Combatant> members = new ArrayList<Combatant>(this.members);
+		members.sort(CombatantHealthComparator.SINGLETON);
+		ArrayList<Spell> spells = getavailablespells();
+		spells.sort(SpellLevelComparator.SINGLETON);
+		for (Spell s : spells) {
+			for (Combatant c : members) {
+				while (s.canheal(c) && !s.exhausted()) {
+					s.castpeacefully(null, c);
+					s.used += 1;
+				}
+			}
+		}
 	}
 }

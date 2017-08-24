@@ -67,7 +67,7 @@ public class CastSpells extends WorldAction {
 	int selecttarget() {
 		List<String> targets = new ArrayList<String>();
 		for (Combatant m : Squad.active.members) {
-			targets.add(m.source.customName);
+			targets.add(m.source.toString());
 		}
 		int targetindex = Javelin.choose("Cast on...", targets, false, false);
 		return targetindex;
@@ -95,13 +95,13 @@ public class CastSpells extends WorldAction {
 	}
 
 	ArrayList<Combatant> filtercasters(List<String> names) {
-		ArrayList<Combatant> casters =
-				new ArrayList<Combatant>(Squad.active.members);
+		ArrayList<Combatant> casters = new ArrayList<Combatant>(
+				Squad.active.members);
 		for (Combatant m : new ArrayList<Combatant>(casters)) {
 			if (listspells(new ArrayList<Spell>(m.spells)).size() == 0) {
 				casters.remove(m);
 			} else {
-				names.add(m.source.customName);
+				names.add(m.source.toString());
 			}
 		}
 		return casters;

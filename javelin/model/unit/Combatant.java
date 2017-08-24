@@ -279,6 +279,10 @@ public class Combatant implements Serializable, Cloneable {
 		}
 	}
 
+	/**
+	 * @return If the unit is being affected by the given condition type,
+	 *         returns its instance - otherwise <code>null</code>.
+	 */
 	public Condition hascondition(Class<? extends Condition> clazz) {
 		for (Condition c : conditions) {
 			if (c.getClass().equals(clazz)) {

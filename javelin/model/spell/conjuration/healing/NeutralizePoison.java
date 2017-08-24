@@ -21,8 +21,8 @@ import javelin.model.unit.Combatant;
 public class NeutralizePoison extends Touch {
 	/** Constructor. */
 	public NeutralizePoison() {
-		super("Neutralize poison", 4, ChallengeRatingCalculator.ratespelllikeability(4),
-				Realm.WATER);
+		super("Neutralize poison", 4,
+				ChallengeRatingCalculator.ratespelllikeability(4), Realm.WATER);
 		ispotion = true;
 		isritual = true;
 		castinbattle = true;
@@ -38,8 +38,8 @@ public class NeutralizePoison extends Touch {
 		for (Combatant c : new ArrayList<Combatant>(targets)) {
 			if (!Touch.isfar(combatant, c)) {
 				final boolean ally = combatant.isally(c, s);
-				final boolean poisonerenemy =
-						!ally && (checkpoisoner(c, c.source.melee)
+				final boolean poisonerenemy = !ally
+						&& (checkpoisoner(c, c.source.melee)
 								|| checkpoisoner(c, c.source.ranged));
 				if ((ally && !engaged) || poisonerenemy) {
 					continue;

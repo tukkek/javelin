@@ -24,7 +24,7 @@ public class Camp extends WorldAction {
 
 	@Override
 	public void perform(WorldScreen screen) {
-		if (Dungeon.active != null) {
+		if (quickheal() || Dungeon.active != null) {
 			throw new RepeatTurn();
 		}
 		Town t = (Town) Squad.active.findnearest(Town.class);
@@ -48,14 +48,26 @@ public class Camp extends WorldAction {
 			return;
 		}
 		final int hours = period[0];
-		final int restat = period[1];
+		final int rest = period[1];
 		for (int i = 0; i < hours; i++) {
 			Squad.active.hourselapsed += 1;
 			RandomEncounter.encounter(1 / WorldScreen.HOURSPERENCOUNTER);
-			if (i > 0 && (i + 1) % restat == 0) {
+			if (i > 0 && (i + 1) % rest == 0) {
 				Lodge.rest(1, 0, Lodge.LODGE);
 			}
 		}
+	}
+
+	boolean quickheal() {
+		if (!Squad.active.canheal()) {
+			return false;
+		}
+		if (Javelin.prompt("Do you want to cast spells to heal your party?\n"
+				+ "Press c to cast or any other key to continue...") != 'c') {
+			return false;
+		}
+		Squad.active.heal();
+		return true;
 	}
 
 	int[] pickperiod(Character input) {

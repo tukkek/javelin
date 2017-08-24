@@ -74,10 +74,10 @@ public abstract class Governor implements Serializable {
 	 */
 	public void work(float labor, District d) {
 		float step = labor / projects.size();
+		validate(d);
 		for (Labor l : new ArrayList<Labor>(projects)) {
 			l.work(step);
 		}
-		validate(d);
 		always(hand);
 		if (projects.size() < nprojects && !hand.isEmpty()) {
 			manage();

@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.governor.Governor;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -102,6 +103,16 @@ public abstract class Labor implements Serializable, Cloneable {
 		return getClass().equals(obj.getClass());
 	}
 
+	/**
+	 * This is only after all labors from a {@link Governor} are ensured to be
+	 * valid as in {@link #validate(District)}.
+	 * 
+	 * @param step
+	 *            Works this amount of daily Labor in order to progress this
+	 *            project.
+	 * 
+	 * @see Town#DAILYLABOR
+	 */
 	public void work(float step) {
 		progress += step;
 		if (progress >= cost) {

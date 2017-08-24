@@ -12,6 +12,12 @@ import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.base.Growth;
 import tyrant.mikera.engine.RPG;
 
+/**
+ * Converts a forest tile in the district into 50% extra labor (automatically
+ * adds a Growth project if there isn't another project to benefit from this).
+ * 
+ * @author alex
+ */
 public class Deforestate extends Labor {
 	public Deforestate() {
 		super("Deforestate", 7, Rank.HAMLET);
@@ -28,22 +34,28 @@ public class Deforestate extends Labor {
 		if (forest == null) {
 			return;
 		}
-		final int adjacentmountains = Terrain.search(forest, Terrain.MOUNTAINS,
-				1, World.getseed());
-		final int adjacenthills = Terrain.search(forest, Terrain.HILL, 1,
-				World.getseed());
-		World.getseed().map[forest.x][forest.y] = adjacentmountains > 0
-				|| RPG.r(1, 8) <= adjacenthills ? Terrain.HILL : Terrain.PLAIN;
+		World w = World.getseed();
+		int elevatedneighbors = Terrain.search(forest, Terrain.MOUNTAINS, 1, w);
+		Terrain newterrain = Terrain.PLAIN;
+		if (elevatedneighbors > 0) { // at least one mountain nearby
+			elevatedneighbors += Terrain.search(forest, Terrain.HILL, 1, w);
+			if (RPG.r(1, 8) <= elevatedneighbors) {
+				newterrain = Terrain.HILL;
+			}
+		}
+		w.map[forest.x][forest.y] = newterrain;
 	}
 
 	@Override
 	public void work(float step) {
 		float work = Math.min(cost - progress, step) * 1.5f;
 		ArrayList<Labor> projects = town.governor.getprojects();
-		if (projects.size() == 1) {
+		if (projects.size() == 1) { // only this labor project
 			Labor growth = new Growth().generate(town);
-			growth.start();
-			growth.work(work);
+			if (growth.validate(town.getdistrict())) {
+				growth.start();
+				growth.work(work);
+			}
 		} else {
 			work = work / (projects.size() - 1);
 			for (Labor l : new ArrayList<Labor>(projects)) {

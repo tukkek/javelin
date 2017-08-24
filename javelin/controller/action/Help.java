@@ -3,10 +3,9 @@ package javelin.controller.action;
 import java.util.LinkedList;
 
 import javelin.Javelin;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.Debug;
 import javelin.controller.old.Game;
 import javelin.model.unit.Combatant;
-import javelin.model.world.location.town.Town;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 
@@ -67,7 +66,7 @@ public class Help extends Action {
 		text += "\nKeep up-to-date with new releases at javelinrl.wordpress.com\n"
 				+ "or come discuss the game at reddit.com/r/javelinrl :)";
 		if (Javelin.DEBUG) {
-			text += debug();
+			text += Debug.onhelp();
 		}
 		Javelin.app.switchScreen(new InfoScreen(text));
 		Game.getInput();
@@ -96,17 +95,5 @@ public class Help extends Action {
 			text += key;
 		}
 		return text + ": " + a.getDescriptiveName();
-	}
-
-	static String debug() {
-		String s = "\n\n";
-		for (Town t : Town.gettowns()) {
-			s += t.population + " ";
-		}
-		s += "\n\n";
-		for (Town t : Town.gettowns()) {
-			s += ChallengeRatingCalculator.calculateel(t.garrison) + " ";
-		}
-		return s;
 	}
 }

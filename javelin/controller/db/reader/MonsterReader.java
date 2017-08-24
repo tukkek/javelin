@@ -65,7 +65,6 @@ public class MonsterReader extends DefaultHandler {
 	public void startElement(final String uri, final String localName,
 			final String name, final Attributes attributes)
 			throws SAXException {
-		// super.startElement(uri, localName, name, attributes);
 		if (!Javelin.DEBUG && errorhandler.isinvalid()) {
 			return;
 		}
@@ -562,7 +561,6 @@ public class MonsterReader extends DefaultHandler {
 			throw new RuntimeException(
 					monster + " humanoid tag missing #monsterreader");
 		}
-		System.out.println("Humanoid " + monster.humanoid + ": " + monster);
 		try {
 			ChallengeRatingCalculator.calculatecr(monster);
 		} catch (final Exception e) {

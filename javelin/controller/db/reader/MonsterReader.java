@@ -135,8 +135,23 @@ public class MonsterReader extends DefaultHandler {
 			}
 			monster.size = size;
 			monster.type = attributes.getValue("Type").toLowerCase();
-			monster.humanoid = monster.type.contains("humanoid")
-					|| "yes".equals(attributes.getValue("Humanoid"));
+			String humanoid = attributes.getValue("Humanoid");
+			if (humanoid != null) {
+				if ("true".equalsIgnoreCase(humanoid)) {
+					monster.humanoid = true;
+				} else if ("false".equalsIgnoreCase(humanoid)) {
+					monster.humanoid = false;
+				}
+			} else if (monster.type.contains("humanoid")) {
+				monster.humanoid = true;
+			} else if (monster.type.contains("animal")
+					|| monster.type.contains("vermin")
+					|| monster.type.contains("construct")
+					|| monster.type.contains("elemental")
+					|| monster.type.contains("ooze")
+					|| monster.type.contains("dragon")) {
+				monster.humanoid = false;
+			}
 		} else if (localName.equalsIgnoreCase("avatar")) {
 			monster.avatarfile = attributes.getValue("Image");
 		} else if (localName.equalsIgnoreCase("Climateandterrain")) {
@@ -246,8 +261,8 @@ public class MonsterReader extends DefaultHandler {
 		final String damage = attributes.getValue("damage").toLowerCase();
 		final int d = damage.indexOf('d');
 		final String save = attributes.getValue("save").toLowerCase();
-		final int range =
-				Integer.parseInt(format.substring(format.indexOf(' ') + 1));
+		final int range = Integer
+				.parseInt(format.substring(format.indexOf(' ') + 1));
 		final int dice = Integer.parseInt(damage.substring(0, d));
 		final int bonus;
 		final int plus = damage.indexOf('+');
@@ -417,8 +432,8 @@ public class MonsterReader extends DefaultHandler {
 	private void debugSpecials(final CountingSet atks, final String string) {
 		log("");
 		log(string);
-		final ArrayList<Entry<String, Integer>> count =
-				new ArrayList<Entry<String, Integer>>(atks.getcount());
+		final ArrayList<Entry<String, Integer>> count = new ArrayList<Entry<String, Integer>>(
+				atks.getcount());
 		Collections.sort(count, new Comparator<Entry<String, Integer>>() {
 			@Override
 			public int compare(final Entry<String, Integer> o1,
@@ -536,13 +551,25 @@ public class MonsterReader extends DefaultHandler {
 	}
 
 	void registermonster() {
+		if (monster.humanoid == null) {
+			/*
+			 * TODO ideally this would be integrated with the #invalid error
+			 * system here but this would just give positive to most monsters
+			 * since this is a custom field for Javelin. It'd be better to take
+			 * the time and fill all remaining entries first with the correct
+			 * values.
+			 */
+			throw new RuntimeException(
+					monster + " humanoid tag missing #monsterreader");
+		}
+		System.out.println("Humanoid " + monster.humanoid + ": " + monster);
 		try {
 			ChallengeRatingCalculator.calculatecr(monster);
-			Javelin.ALLMONSTERS.add(monster);
 		} catch (final Exception e) {
 			throw new RuntimeException("Challenge rating issue " + monster.name,
 					e);
 		}
+		Javelin.ALLMONSTERS.add(monster);
 	}
 
 	private static PrintWriter log = null;

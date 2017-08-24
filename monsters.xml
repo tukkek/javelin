@@ -390,7 +390,7 @@ of anything within 60 feet that is in contact with the ground.</p>
 <Name>Aranea</Name>
 <Avatar Image="aranea"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="shapechanger">Medium-Size Shapechanger</SizeAndType>
+  <SizeAndType Size="medium-size" Type="shapechanger" Humanoid="false">Medium-Size Shapechanger</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="19">3d8+6 (19)</HitDice>
   <Initiative>+6 (+2 Dex, +4 Improved Initiative)</Initiative>
   <Speed>50 ft., climb 25 ft.</Speed>
@@ -581,7 +581,7 @@ on whoever has dealt them the most damage.</p>
 <Name>Azer</Name>
 <Avatar Image="azer"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Subtypes="fire,lawful" Humanoid="yes">Medium-Size Outsider (Fire, Lawful)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Subtypes="fire,lawful" Humanoid="true">Medium-Size Outsider (Fire, Lawful)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="11">2d8+2 (11)</HitDice>
   <Initiative>+1 (Dex)</Initiative>
   <Speed>30 ft.</Speed>
@@ -624,7 +624,7 @@ weapons also conduct this heat.</p>
 <Name>Basilisk</Name>
 <Avatar Image="basilisk"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="magical beast" Subtypes="reptilian">Medium-Size Magical Beast (Reptilian)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="magical beast" Subtypes="reptilian" Humanoid="false">Medium-Size Magical Beast (Reptilian)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="45">6d10+12 (45)</HitDice>
   <Initiative>-1 (Dex)</Initiative>
   <Speed>20 ft.</Speed>
@@ -907,7 +907,7 @@ similar to a gaseous form spell cast by a 7th-level sorcerer.</p>
 <Name>Blink Dog</Name>
 <Avatar Image="blinkdog"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="magical beast">Medium-Size Magical Beast</SizeAndType>
+  <SizeAndType Size="medium-size" Type="magical beast" Humanoid="false">Medium-Size Magical Beast</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="22">4d10 (22)</HitDice>
   <Initiative>+3 (Dex)</Initiative>
   <Speed>30 ft.</Speed>
@@ -959,7 +959,7 @@ teleporting.</p>
 <Name>Bodak</Name>
 <Avatar Image="bodak"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="undead" Humanoid="yes">Medium-Size Undead</SizeAndType>
+  <SizeAndType Size="medium-size" Type="undead" Humanoid="true">Medium-Size Undead</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="58">9d12 (58)</HitDice>
   <Initiative>+6 (+2 Dex, +4 Improved Initiative)</Initiative>
   <Speed>20 ft.</Speed>
@@ -1543,7 +1543,7 @@ by a 6th-level sorcerer.</li>
 <Name>Cockatrice</Name>
 <Avatar Image="cockatrice"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="magical beast">Small Magical Beast</SizeAndType>
+  <SizeAndType Size="small" Type="magical beast" Humanoid="false">Small Magical Beast</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="27">5d10 (27)</HitDice>
   <Initiative>+3 (Dex)</Initiative>
   <Speed>20 ft., fly 60 ft. (poor)</Speed>
@@ -1675,7 +1675,7 @@ skills among couatls.</p>
 <Name>Darkmantle</Name>
 <Avatar Image="darkmantle"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="magical beast">Small Magical Beast</SizeAndType>
+  <SizeAndType Size="small" Type="magical beast" Humanoid="false">Small Magical Beast</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="6">1d10+1 (6)</HitDice>
   <Initiative>+4 (Improved Initiative)</Initiative>
   <Speed>20 ft., fly 30 ft. (poor)</Speed>
@@ -1988,7 +1988,7 @@ another.</p>
 <Name>Digester</Name>
 <Avatar Image="digester"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="magical beast">Medium-Size Magical Beast</SizeAndType>
+  <SizeAndType Size="medium-size" Type="magical beast" Humanoid="false">Medium-Size Magical Beast</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="68">8d10+24 (68)</HitDice>
   <Initiative>+6 (+2 Dex, +4 Improved Initiative)</Initiative>
   <Speed>60 ft.</Speed>
@@ -2327,7 +2327,7 @@ Silently checks.</p>
 <Name>Dryad</Name>
 <Avatar Image="dryad"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="fey" Humanoid="yes">Medium-Size Fey</SizeAndType>
+  <SizeAndType Size="medium-size" Type="fey" Humanoid="true">Medium-Size Fey</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="7">2d6 (7)</HitDice>
   <Initiative>+6 (+2 Dex, +4 Improved Initiative)</Initiative>
   <Speed>30 ft.</Speed>
@@ -2376,7 +2376,7 @@ dryad's oak does not radiate magic.</p>
 <Name>Ethereal Filcher</Name>
 <Avatar Image="etherealfilcher"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="aberration">Medium-Size Aberration</SizeAndType>
+  <SizeAndType Size="medium-size" Type="aberration" Humanoid="false">Medium-Size Aberration</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="22">5d8 (22)</HitDice>
   <Initiative>+8 (+4 Dex, +4 Improved Initiative)</Initiative>
   <Speed>40 ft.</Speed>
@@ -2430,7 +2430,7 @@ or restart the ability once per round as a free action.</p>
 <Name>Ethereal Marauder</Name>
 <Avatar Image="etherealmarauder"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="magical beast">Medium-Size Magical Beast</SizeAndType>
+  <SizeAndType Size="medium-size" Type="magical beast" Humanoid="false">Medium-Size Magical Beast</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="11">2d10 (11)</HitDice>
   <Initiative>+5 (+1 Dex, +4 Improved Initiative)</Initiative>
   <Speed>40 ft.</Speed>
@@ -2475,7 +2475,7 @@ ethereal jaunt cast by a 15th-level sorcerer.</p>
 <Name>Ettercap</Name>
 <Avatar Image="ettercap"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="aberration">Medium-Size Aberration</SizeAndType>
+  <SizeAndType Size="medium-size" Type="aberration" Humanoid="false">Medium-Size Aberration</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="27">5d8+5 (27)</HitDice>
   <Initiative>+3 (Dex)</Initiative>
   <Speed>30 ft., climb 30 ft.</Speed>
@@ -2669,7 +2669,7 @@ Hide checks in its native environment.</p>
 <Name>Gargoyle</Name>
 <Avatar Image="gargoyle"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="magical beast" Subtypes="earth">Medium-Size Magical Beast (Earth)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="magical beast" Subtypes="earth" Humanoid="true">Medium-Size Magical Beast (Earth)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="38">4d10+16 (38)</HitDice>
   <Initiative>+2 (Dex)</Initiative>
   <Speed>45 ft., fly 75 ft. (average)</Speed>
@@ -2714,7 +2714,7 @@ when concealed against a background of worked stone.</p>
 <Avatar Image="gianteagle"></Avatar>
 <Name>Giant Eagle</Name>
 <StatBlock>
-  <SizeAndType Size="large" Type="magical beast">Large Magical Beast</SizeAndType>
+  <SizeAndType Size="large" Type="magical beast" Humanoid="false">Large Magical Beast</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="26">4d10+4 (26)</HitDice>
   <Initiative>+3 (Dex)</Initiative>
   <Speed>10 ft., fly 80 ft. (average)</Speed>
@@ -2771,7 +2771,7 @@ pounds.</p>
 <Name>Giant Owl</Name>
 <Avatar Image="giantowl"></Avatar>
 <StatBlock>
-  <SizeAndType Size="large" Type="magical beast">Large Magical Beast</SizeAndType>
+  <SizeAndType Size="large" Type="magical beast" Humanoid="false">Large Magical Beast</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="26">4d10+4 (26)</HitDice>
   <Initiative>+3 (Dex)</Initiative>
   <Speed>10 ft., fly 70 ft. (average)</Speed>
@@ -2834,7 +2834,7 @@ pounds.</p>
 <Name>Gibbering Mouther</Name>
 <Avatar Image="gibberingmouther"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="aberration">Medium-Size Aberration</SizeAndType>
+  <SizeAndType Size="medium-size" Type="aberration" Humanoid="false">Medium-Size Aberration</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="22">4d8+4 (22)</HitDice>
   <Initiative>+1 (Dex)</Initiative>
   <Speed>10 ft., swim 20 ft.</Speed>
@@ -3160,7 +3160,7 @@ due to their six keen eyes.</p>
 <Name>Grick</Name>
 <Avatar Image="grick"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="aberration">Medium-Size Aberration</SizeAndType>
+  <SizeAndType Size="medium-size" Type="aberration" Humanoid="false">Medium-Size Aberration</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="9">2d8 (9)</HitDice>
   <Initiative>+2 (Dex)</Initiative>
   <Speed>30 ft., climb 20 ft.</Speed>
@@ -3325,7 +3325,7 @@ in mountains or underground.</p>
 <Name>Harpy</Name>
 <Avatar Image="harpy"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="monstrous humanoid">Medium-Size Monstrous Humanoid</SizeAndType>
+  <SizeAndType Size="medium-size" Type="monstrous humanoid" Humanoid="false">Medium-Size Monstrous Humanoid</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="31">7d8 (31)</HitDice>
   <Initiative>+2 (Dex)</Initiative>
   <Speed>20 ft., fly 80 ft. (average)</Speed>
@@ -3376,7 +3376,7 @@ captivated creature to attempt a new Will save.</p>
 <Name>Hell Hound</Name>
 <Avatar Image="hellhound"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Subtypes="evil,fire,lawful">Medium-Size Outsider (Evil, Fire, Lawful)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Subtypes="evil,fire,lawful" Humanoid="false">Medium-Size Outsider (Evil, Fire, Lawful)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="22">4d8+4 (22)</HitDice>
   <Initiative>+5 (+1 Dex, +4 Improved Initiative)</Initiative>
   <Speed>40 ft.</Speed>
@@ -3858,7 +3858,7 @@ spells cast by a 9th-level druid (save DC 15 + spell level).</p>
 <Name>Krenshar</Name>
 <Avatar Image="krenshar"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="magical beast">Medium-Size Magical Beast</SizeAndType>
+  <SizeAndType Size="medium-size" Type="magical beast" Humanoid="false">Medium-Size Magical Beast</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="11">2d10 (11)</HitDice>
   <Initiative>+2 (Dex)</Initiative>
   <Speed>40 ft.</Speed>
@@ -4271,7 +4271,7 @@ Protection, and Water.</p>
 <Name>Magmin</Name>
 <Avatar Image="magmin"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="elemental" Subtypes="fire">Small Elemental (Fire)</SizeAndType>
+  <SizeAndType Size="small" Type="elemental" Subtypes="fire" Humanoid="true">Small Elemental (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="9">2d8 (9)</HitDice>
   <Initiative>+1 (Dex)</Initiative>
   <Speed>30 ft.</Speed>
@@ -4417,7 +4417,7 @@ Fortitude save (DC 15).</p>
 <Name>Merfolk</Name>
 <Avatar Image="merfolk"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="humanoid" Subtypes="aquatic">Medium-Size Humanoid (Aquatic)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="humanoid" Subtypes="aquatic" Humanoid="false">Medium-Size Humanoid (Aquatic)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="5">1d8+1 (5)</HitDice>
   <Initiative>+1 (Dex)</Initiative>
   <Speed>5 ft., swim 50 ft.</Speed>
@@ -4525,7 +4525,7 @@ generally far too late.</p>
 <Name>Mind Flayer</Name>
 <Avatar Image="mindflayer"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="aberration" Humanoid="yes">Medium-Size Aberration</SizeAndType>
+  <SizeAndType Size="medium-size" Type="aberration" Humanoid="true">Medium-Size Aberration</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="44">8d8+8 (44)</HitDice>
   <Initiative>+6 (+2 Dex, +4 Improved Initiative)</Initiative>
   <Speed>30 ft.</Speed>
@@ -4656,7 +4656,7 @@ and Listen checks.</p>
 <Name>Mohrg</Name>
 <Avatar Image="mohrg"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="undead">Medium-Size Undead</SizeAndType>
+  <SizeAndType Size="medium-size" Type="undead" Humanoid="false">Medium-Size Undead</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="91">14d12 (91)</HitDice>
   <Initiative>+5 (+1 Dex, +4 Improved Initiative)</Initiative>
   <Speed>30 ft.</Speed>
@@ -4914,7 +4914,7 @@ pounds.</p>
 <Name>Nymph</Name>
 <Avatar Image="nymph"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="fey" Humanoid="yes">Medium-Size Fey</SizeAndType>
+  <SizeAndType Size="medium-size" Type="fey" Humanoid="true">Medium-Size Fey</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="10">3d6 (10)</HitDice>
   <Initiative>+1 (Dex)</Initiative>
   <Speed>30 ft., swim 20 ft.</Speed>
@@ -5165,7 +5165,7 @@ pounds.</p>
 <Name>Phantom Fungus</Name>
 <Avatar Image="phantomfungus"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="plant">Medium-Size Plant</SizeAndType>
+  <SizeAndType Size="medium-size" Type="plant" Humanoid="false">Medium-Size Plant</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="15">2d8+6 (15)</HitDice>
   <Initiative>+0</Initiative>
   <Speed>20 ft.</Speed>
@@ -5451,7 +5451,7 @@ ground.</p>
 <Name>Rakshasa</Name>
 <Avatar Image="rakshasa"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Subtypes="evil,lawful" Humanoid="yes">Medium-Size Outsider (Evil, Lawful)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Subtypes="evil,lawful" Humanoid="true">Medium-Size Outsider (Evil, Lawful)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="52">7d8+21 (52)</HitDice>
   <Initiative>+2 (Dex)</Initiative>
   <Speed>40 ft.</Speed>
@@ -5520,7 +5520,7 @@ Disguise checks increases by a further +4.</p>
 <Name>Rast</Name>
 <Avatar Image="rast"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Subtypes="fire">Medium-Size Outsider (Fire)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Subtypes="fire" Humanoid="false">Medium-Size Outsider (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="22">4d8+4 (22)</HitDice>
   <Initiative>+5 (+1 Dex, +4 Improved Initiative)</Initiative>
   <Speed>Fly 50 ft. (good)</Speed>
@@ -5585,7 +5585,7 @@ and can perform only partial actions.</p>
 <Name>Ravid</Name>
 <Avatar Image="ravid"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider">Medium-Size Outsider</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Humanoid="false">Medium-Size Outsider</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="16">3d8+3 (16)</HitDice>
   <Initiative>+0</Initiative>
   <Speed>Fly 60 ft. (perfect)</Speed>
@@ -6213,7 +6213,7 @@ two of the following domains: Evil, Law, Strength, and War.</p>
 <Name>Satyr</Name>
 <Avatar Image="satyr"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="fey">Medium-Size Fey</SizeAndType>
+  <SizeAndType Size="medium-size" Type="fey" Humanoid="false">Medium-Size Fey</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="22">5d6+5 (22)</HitDice>
   <Initiative>+1 (Dex)</Initiative>
   <Speed>40 ft.</Speed>
@@ -6250,7 +6250,7 @@ Silently, Perform, and Spot checks.</p>
 <Name>Satyr with pipes</Name>
 <Avatar Image="satyrwithpipes"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="fey">Medium-Size Fey</SizeAndType>
+  <SizeAndType Size="medium-size" Type="fey" Humanoid="false">Medium-Size Fey</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="22">5d6+5 (22)</HitDice>
   <Initiative>+1 (Dex)</Initiative>
   <Speed>40 ft.</Speed>
@@ -6394,7 +6394,7 @@ armor. Always moves silently.</p>
 <Name>Shadow Mastiff</Name>
 <Avatar Image="shadowmastiff"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Subtypes="evil">Medium-Size Outsider (Evil)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Subtypes="evil" Humanoid="false">Medium-Size Outsider (Evil)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="30">4d8+12 (30)</HitDice>
   <Initiative>+5 (+1 Dex, +4 Improved Initiative)</Initiative>
   <Speed>50 ft.</Speed>
@@ -6628,7 +6628,7 @@ command given.</p>
 <Name>Shocker Lizard</Name>
 <Avatar Image="shockerlizard"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="magical beast">Small Magical Beast</SizeAndType>
+  <SizeAndType Size="small" Type="magical beast" Humanoid="false">Small Magical Beast</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="13">2d10+2 (13)</HitDice>
   <Initiative>+2 (Dex)</Initiative>
   <Speed>40 ft., climb 20 ft., swim 20 ft.</Speed>
@@ -6692,7 +6692,7 @@ checks due to their coloration.</p>
 <Name>Skum</Name>
 <Avatar Image="skum"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="aberration" Subtypes="aquatic">Medium-Size Aberration (Aquatic)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="aberration" Subtypes="aquatic" Humanoid="true">Medium-Size Aberration (Aquatic)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="11">2d8+2 (11)</HitDice>
   <Initiative>+1 (Dex)</Initiative>
   <Speed>20 ft., swim 40 ft.</Speed>
@@ -7103,7 +7103,7 @@ portion against the mass enables it to reattach instantly.</p>
 <Name>Thoqqua</Name>
 <Avatar Image="thoqqua"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="elemental" Subtypes="earth,fire">Medium-Size Elemental (Earth, Fire)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="elemental" Subtypes="earth,fire" Humanoid="false">Medium-Size Elemental (Earth, Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="16">3d8+3 (16)</HitDice>
   <Initiative>+1 (Dex)</Initiative>
   <Speed>30 ft., burrow 20 ft.</Speed>
@@ -7656,7 +7656,7 @@ checks.</p>
 <Name>Vargouille</Name>
 <Avatar Image="vargouille"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="outsider" Subtypes="evil">Small Outsider (Evil)</SizeAndType>
+  <SizeAndType Size="small" Type="outsider" Subtypes="evil" Humanoid="false">Small Outsider (Evil)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="5">1d8+1 (5)</HitDice>
   <Initiative>+1 (Dex)</Initiative>
   <Speed>Fly 30 ft. (good)</Speed>
@@ -7878,7 +7878,7 @@ tracking by scent.</p>
 <Name>Worg</Name>
 <Avatar Image="worg"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="magical beast">Medium-Size Magical Beast</SizeAndType>
+  <SizeAndType Size="medium-size" Type="magical beast" Humanoid="false">Medium-Size Magical Beast</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="30">4d10+8 (30)</HitDice>
   <Initiative>+2 (Dex)</Initiative>
   <Speed>50 ft.</Speed>
@@ -8066,7 +8066,7 @@ flying during daylight hours.</p>
 <Name>Xill</Name>
 <Avatar Image="xill"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Subtypes="evil,lawful">Medium-Size Outsider (Evil, Lawful)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Subtypes="evil,lawful" Humanoid="false">Medium-Size Outsider (Evil, Lawful)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="32">5d8+10 (32)</HitDice>
   <Initiative>+7 (+3 Dex, +4 Improved Initiative)</Initiative>
   <Speed>40 ft.</Speed>
@@ -8159,7 +8159,7 @@ Evil, Law, Strength, and Travel.</p>
 <Name>Yeth Hound</Name>
 <Avatar Image="yethhound"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Subtypes="evil">Medium-Size Outsider (Evil)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Subtypes="evil" Humanoid="false">Medium-Size Outsider (Evil)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="19">3d8+6 (19)</HitDice>
   <Initiative>+6 (+2 Dex, +4 Improved Initiative)</Initiative>
   <Speed>40 ft., fly 70 ft. (good)</Speed>
@@ -10449,7 +10449,7 @@ cannot end its rage voluntarily.</p>
 <Name>Vermin:Giant Ant Worker</Name>
 <Avatar Image="giantantworker"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="vermin">Medium-Size Vermin</SizeAndType>
+  <SizeAndType Size="medium-size" Type="vermin" Humanoid="false">Medium-Size Vermin</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="9">2d8 (9)</HitDice>
   <Initiative>+0</Initiative>
   <Speed>50 ft., climb 20 ft.</Speed>
@@ -10488,7 +10488,7 @@ can sting.</p>
 <Name>Vermin:Giant Ant Soldier</Name>
 <Avatar Image="giantantsoldier"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="vermin">Medium-Size Vermin</SizeAndType>
+  <SizeAndType Size="medium-size" Type="vermin" Humanoid="false">Medium-Size Vermin</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="11">2d8+2 (11)</HitDice>
   <Initiative>+0</Initiative>
   <Speed>50 ft., climb 20 ft.</Speed>
@@ -12508,7 +12508,7 @@ at half its normal speed.</p>
 <Name>Arrowhawk:Juvenile arrowhawk</Name>
 <Avatar Image="arrowhawkjuvenile"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="outsider" Subtypes="air">Small Outsider (Air)</SizeAndType>
+  <SizeAndType Size="small" Type="outsider" Subtypes="air" Humanoid="false">Small Outsider (Air)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="16">3d8+3 (16)</HitDice>
   <Initiative>+5 (Dex)</Initiative>
   <Speed>Fly 60 ft. (perfect)</Speed>
@@ -12551,7 +12551,7 @@ immunity.</p>
 <Name>Arrowhawk:Arrowhawk</Name>
 <Avatar Image="arrowhawk"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Subtypes="air">Medium-Size Outsider (Air)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Subtypes="air" Humanoid="false">Medium-Size Outsider (Air)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="38">7d8+7 (38)</HitDice>
   <Initiative>+5 (Dex)</Initiative>
   <Speed>Fly 60 ft. (perfect)</Speed>
@@ -12792,7 +12792,7 @@ without trace (as the spell) as a free action.</p>
 <Name>Celestial:Lantern Archon</Name>
 <Avatar Image="lanternarchon"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="outsider" Subtypes="good,lawful">Small Outsider (Good, Lawful)</SizeAndType>
+  <SizeAndType Size="small" Type="outsider" Subtypes="good,lawful" Humanoid="true">Small Outsider (Good, Lawful)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="4">1d8 (4)</HitDice>
   <Initiative>+4 (Improved Initiative)</Initiative>
   <Speed>Fly 60 ft. (perfect)</Speed>
@@ -12877,7 +12877,7 @@ to Fortitude saves against poison.</p>
 <Name>Celestial:Hound Archon</Name>
 <Avatar Image="houndarchon"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Subtypes="good,lawful" Humanoid="yes">Medium-Size Outsider (Good, Lawful)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Subtypes="good,lawful" Humanoid="true">Medium-Size Outsider (Good, Lawful)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="33">6d8+6 (33)</HitDice>
   <Initiative>+4 (Improved Initiative)</Initiative>
   <Speed>40 ft. or 60 ft.*</Speed>
@@ -12966,7 +12966,7 @@ to Fortitude saves against poison.</p>
 <Name>Celestial:Avoral (Guardinal)</Name>
 <Avatar Image="avoral"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Subtypes="good">Medium-Size Outsider (Good)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Subtypes="good" Humanoid="true">Medium-Size Outsider (Good)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="38">7d8+7 (38)</HitDice>
   <Initiative>+7 (+3 Dex, +4 Improved Initiative)</Initiative>
   <Speed>40 ft., fly 90 ft. (good)</Speed>
@@ -13058,7 +13058,7 @@ to Spot checks.</p>
 <Name>Celestial:Ghaele (Eladrin)</Name>
 <Avatar Image="ghaele"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Subtypes="chaotic,good">Medium-Size Outsider (Chaotic, Good)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Subtypes="chaotic,good" Humanoid="true">Medium-Size Outsider (Chaotic, Good)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="65">10d8+20 (65)</HitDice>
   <Initiative>+5 (+1 Dex, +4 Improved Initiative)</Initiative>
   <Speed>50 ft., fly 150 ft. (perfect)</Speed>
@@ -13168,7 +13168,7 @@ to Fortitude saves against poison.</p>
 <Name>Celestial:Trumpet Archon</Name>
 <Avatar Image="trumpetarchon"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Subtypes="good,lawful" Humanoid="yes">Medium-Size Outsider (Good, Lawful)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Subtypes="good,lawful" Humanoid="true">Medium-Size Outsider (Good, Lawful)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="66">12d8+12 (66)</HitDice>
   <Initiative>+7 (+3 Dex, +4 Improved Initiative)</Initiative>
   <Speed>40 ft., Fly 90 ft. (good)</Speed>
@@ -13522,7 +13522,7 @@ to Fortitude saves against poison.</p>
 <Name>Demon (Tanar'ri):Dretch</Name>
 <Avatar Image="dretch"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="outsider" Subtypes="chaotic,evil">Small Outsider (Chaotic, Evil)</SizeAndType>
+  <SizeAndType Size="small" Type="outsider" Subtypes="chaotic,evil" Humanoid="true">Small Outsider (Chaotic, Evil)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="9">2d8 (9)</HitDice>
   <Initiative>+0</Initiative>
   <Speed>20 ft.</Speed>
@@ -13638,7 +13638,7 @@ from holy and blessed weapons.</p>
 <Name>Demon (Tanar'ri):Succubus</Name>
 <Avatar Image="succubus"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Subtypes="chaotic,evil" Humanoid="yes">Medium-Size Outsider (Chaotic, Evil)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Subtypes="chaotic,evil" Humanoid="true">Medium-Size Outsider (Chaotic, Evil)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="33">6d8+6 (33)</HitDice>
   <Initiative>+1 (Dex)</Initiative>
   <Speed>30 ft., fly 50 ft. (average)</Speed>
@@ -14436,7 +14436,7 @@ checks.</p>
 <Name>Devil:Lemure (Baatezu)</Name>
 <Avatar Image="lemure"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Subtypes="evil,lawful">Medium-Size Outsider (Evil, Lawful)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Subtypes="evil,lawful" Humanoid="false">Medium-Size Outsider (Evil, Lawful)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="9">2d8 (9)</HitDice>
   <Initiative>+0</Initiative>
   <Speed>20 ft.</Speed>
@@ -14942,7 +14942,7 @@ any creature within 100 feet that has a language.</p>
 <Name>Devil:Hamatula</Name>
 <Avatar Image="hamatula"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Subtypes="evil,lawful">Medium-Size Outsider (Evil, Lawful)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Subtypes="evil,lawful" Humanoid="false">Medium-Size Outsider (Evil, Lawful)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="49">9d8+9 (49)</HitDice>
   <Initiative>+0</Initiative>
   <Speed>30 ft.</Speed>
@@ -18575,7 +18575,7 @@ actively looking for it.</li>
 <Name>Formian:Formian worker</Name>
 <Avatar Image="formianworker"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="outsider" Subtypes="lawful">Small Outsider (Lawful)</SizeAndType>
+  <SizeAndType Size="small" Type="outsider" Subtypes="lawful" Humanoid="false">Small Outsider (Lawful)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="5">1d8+1 (5)</HitDice>
   <Initiative>+2 (Dex)</Initiative>
   <Speed>40 ft.</Speed>
@@ -18631,7 +18631,7 @@ immunity.</p>
 <Name>Formian:Formian Warrior</Name>
 <Avatar Image="formianwarrior"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Subtypes="lawful">Medium-Size Outsider (Lawful)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Subtypes="lawful" Humanoid="false">Medium-Size Outsider (Lawful)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="26">4d8+8 (26)</HitDice>
   <Initiative>+3 (Dex)</Initiative>
   <Speed>40 ft.</Speed>
@@ -18680,7 +18680,7 @@ immunity.</p>
 <Name>Formian:Formian taskmaster</Name>
 <Avatar Image="formiantaskmaster"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Subtypes="lawful">Medium-Size Outsider (Lawful)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Subtypes="lawful" Humanoid="false">Medium-Size Outsider (Lawful)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="39">6d8+12 (39)</HitDice>
   <Initiative>+7 (+3 Dex, +4 Improved Initiative)</Initiative>
   <Speed>40 ft.</Speed>
@@ -18946,7 +18946,7 @@ Constitution.</p>
 <Name>Genie:Janni</Name>
 <Avatar Image="janni"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Humanoid="yes">Medium-Size Outsider</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Humanoid="true">Medium-Size Outsider</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="33">6d8+6 (33)</HitDice>
   <Initiative>+6 (+2 Dex, +4 Improved Initiative)</Initiative>
   <Speed>20 ft., fly 10 ft. (perfect)</Speed>
@@ -19251,7 +19251,7 @@ any creature within 100 feet that has a language.</p>
 <Name>Ghoul:Ghoul</Name>
 <Avatar Image="ghoul"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="undead">Medium-Size Undead</SizeAndType>
+  <SizeAndType Size="medium-size" Type="undead" Humanoid="true">Medium-Size Undead</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="13">2d12 (13)</HitDice>
   <Initiative>+2 (Dex)</Initiative>
   <Speed>30 ft.</Speed>
@@ -19307,7 +19307,7 @@ massive damage.</p>
 <Name>Ghoul:Lacedon</Name>
 <Avatar Image="lacedon"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="undead">Medium-Size Undead</SizeAndType>
+  <SizeAndType Size="medium-size" Type="undead" Humanoid="true">Medium-Size Undead</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="13">2d12 (13)</HitDice>
   <Initiative>+2 (Dex)</Initiative>
   <Speed>30 ft., swim 30 ft.</Speed>
@@ -19363,7 +19363,7 @@ massive damage.</p>
 <Name>Ghoul:Ghast</Name>
 <Avatar Image="ghoul"></Avatar> <!-- "these creatures look just like their lesser kin" -->
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="undead">Medium-Size Undead</SizeAndType>
+  <SizeAndType Size="medium-size" Type="undead" Humanoid="true">Medium-Size Undead</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="26">4d12 (26)</HitDice>
   <Initiative>+2 (Dex)</Initiative>
   <Speed>30 ft.</Speed>
@@ -24219,7 +24219,7 @@ all its heads for attacks of opportunity each round.</p>
 <Name>Mephit:Air Mephit</Name>
 <Avatar Image="mephitair"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="outsider" Subtypes="air">Small Outsider (Air)</SizeAndType>
+  <SizeAndType Size="small" Type="outsider" Subtypes="air" Humanoid="false">Small Outsider (Air)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="13">3d8 (13)</HitDice>
   <Initiative>+7 (+3 Dex, +4 Improved Initiative)</Initiative>
   <Speed>30 ft., fly 60 ft. (perfect)</Speed>
@@ -24280,7 +24280,7 @@ itself.</p>
 <Name>Mephit:Dust Mephit</Name>
 <Avatar Image="mephitdust"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="outsider" Subtypes="air">Small Outsider (Air)</SizeAndType>
+  <SizeAndType Size="small" Type="outsider" Subtypes="air" Humanoid="false">Small Outsider (Air)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="13">3d8 (13)</HitDice>
   <Initiative>+7 (+3 Dex, +4 Improved Initiative)</Initiative>
   <Speed>30 ft., fly 50 ft. (perfect)</Speed>
@@ -24343,7 +24343,7 @@ environment.</p>
 <Name>Mephit:Earth Mephit</Name>
 <Avatar Image="mephitearth"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="outsider" Subtypes="earth">Small Outsider (Earth)</SizeAndType>
+  <SizeAndType Size="small" Type="outsider" Subtypes="earth" Humanoid="false">Small Outsider (Earth)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="16">3d8+3 (16)</HitDice>
   <Initiative>-1 (Dex)</Initiative>
   <Speed>30 ft., fly 40 ft. (average)</Speed>
@@ -24401,7 +24401,7 @@ up to its waist in earth.</p>
 <Name>Mephit:Fire Mephit</Name>
 <Avatar Image="mephitfire"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="outsider" Subtypes="fire">Small Outsider (Fire)</SizeAndType>
+  <SizeAndType Size="small" Type="outsider" Subtypes="fire" Humanoid="false">Small Outsider (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="13">3d8 (13)</HitDice>
   <Initiative>+5 (+1 Dex, +4 Improved Initiative)</Initiative>
   <Speed>30 ft., fly 50 ft. (average)</Speed>
@@ -24464,7 +24464,7 @@ at least as large as a torch.</p>
 <Name>Mephit:Ice Mephit</Name>
 <Avatar Image="mephitice"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="outsider" Subtypes="air,cold">Small Outsider (Air, Cold)</SizeAndType>
+  <SizeAndType Size="small" Type="outsider" Subtypes="air,cold" Humanoid="false">Small Outsider (Air, Cold)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="13">3d8 (13)</HitDice>
   <Initiative>+7 (+3 Dex, +4 Improved Initiative)</Initiative>
   <Speed>30 ft., fly 50 ft. (perfect)</Speed>
@@ -24532,7 +24532,7 @@ is freezing or below.</p>
 <Name>Mephit:Magma Mephit</Name>
 <Avatar Image="mephitmagma"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="outsider" Subtypes="fire">Small Outsider (Fire)</SizeAndType>
+  <SizeAndType Size="small" Type="outsider" Subtypes="fire" Humanoid="false">Small Outsider (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="13">3d8 (13)</HitDice>
   <Initiative>+5 (+1 Dex, +4 Improved Initiative)</Initiative>
   <Speed>30 ft., fly 50 ft. (average)</Speed>
@@ -24609,7 +24609,7 @@ lava, or a flame at least as large as a torch.</p>
 <Name>Mephit:Ooze Mephit</Name>
 <Avatar Image="mephitooze"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="outsider" Subtypes="water">Small Outsider (Water)</SizeAndType>
+  <SizeAndType Size="small" Type="outsider" Subtypes="water" Humanoid="false">Small Outsider (Water)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="16">3d8+3 (16)</HitDice>
   <Initiative>+0</Initiative>
   <Speed>30 ft., fly 40 ft. (average)</Speed>
@@ -24672,7 +24672,7 @@ muddy environment.</p>
 <Name>Mephit:Salt Mephit</Name>
 <Avatar Image="mephitsalt"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="outsider" Subtypes="earth">Small Outsider (Earth)</SizeAndType>
+  <SizeAndType Size="small" Type="outsider" Subtypes="earth" Humanoid="false">Small Outsider (Earth)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="16">3d8+3 (16)</HitDice>
   <Initiative>-1 (Dex)</Initiative>
   <Speed>30 ft., fly 40 ft. (average)</Speed>
@@ -24736,7 +24736,7 @@ provided it is still alive and it is in an arid environment.</p>
 <Name>Mephit:Steam Mephit</Name>
 <Avatar Image="mephitsteam"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="outsider" Subtypes="fire">Small Outsider (Fire)</SizeAndType>
+  <SizeAndType Size="small" Type="outsider" Subtypes="fire" Humanoid="false">Small Outsider (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="13">3d8 (13)</HitDice>
   <Initiative>+5 (+1 Dex, +4 Improved Initiative)</Initiative>
   <Speed>30 ft., fly 50 ft. (average)</Speed>
@@ -24806,7 +24806,7 @@ is in a hot, humid area.</p>
 <Name>Mephit:Water Mephit</Name>
 <Avatar Image="watermephit"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="outsider" Subtypes="water">Small Outsider (Water)</SizeAndType>
+  <SizeAndType Size="small" Type="outsider" Subtypes="water" Humanoid="false">Small Outsider (Water)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="16">3d8+3 (16)</HitDice>
   <Initiative>+0</Initiative>
   <Speed>30 ft., fly 40 ft. (average)</Speed>
@@ -25822,7 +25822,7 @@ the original's hit points (round down). A pudding with only
 <Name>Planetouched:Aasimar</Name>
 <Avatar Image="aasimar"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Humanoid="yes">Medium-Size Outsider</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Humanoid="true">Medium-Size Outsider</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="4">1d8 (4)</HitDice>
   <Initiative>+4 (Improved Initiative)</Initiative>
   <Speed>30 ft.</Speed>
@@ -25866,7 +25866,7 @@ checks.</p>
 <Name>Planetouched:Tiefling</Name>
 <Avatar Image="tiefling"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Humanoid="yes">Medium-Size Outsider</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Humanoid="true">Medium-Size Outsider</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="4">1d8 (4)</HitDice>
   <Initiative>+1 (Dex)</Initiative>
   <Speed>30 ft.</Speed>
@@ -25910,7 +25910,7 @@ checks.</p>
 <Name>Salamander:Flamebrother</Name>
 <Avatar Image="salamanderflamebrother"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="outsider" Subtypes="fire">Small Outsider (Fire)</SizeAndType>
+  <SizeAndType Size="small" Type="outsider" Subtypes="fire" Humanoid="false">Small Outsider (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="16">3d8+3 (16)</HitDice>
   <Initiative>+1 (Dex)</Initiative>
   <Speed>20 ft.</Speed>
@@ -25971,7 +25971,7 @@ adepts or warriors. </p>
 <Name>Salamander:Salamander</Name>
 <Avatar Image="salamander"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Subtypes="fire">Medium-Size Outsider (Fire)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Subtypes="fire" Humanoid="false">Medium-Size Outsider (Fire)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="38">7d8+7 (38)</HitDice>
   <Initiative>+1 (Dex)</Initiative>
   <Speed>20 ft.</Speed>
@@ -26102,7 +26102,7 @@ fighters (their favored class).</p>
 <Monster id="srd:SkeletonTinySkeleton">
 <Name>Skeleton:Tiny Skeleton</Name>
 <StatBlock>
-  <SizeAndType Size="tiny" Type="undead">Tiny Undead</SizeAndType>
+  <SizeAndType Size="tiny" Type="undead" Humanoid="true">Tiny Undead</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="1">1/4 d12 (1)</HitDice>
   <Initiative>+5 (+1 Dex, +4 Improved Initiative)</Initiative>
   <Speed>30 ft.</Speed>
@@ -26142,7 +26142,7 @@ piercing or slashing weapons.</p>
 <Name>Skeleton:Small Skeleton</Name>
 <Avatar Image="skeletonsmall"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="undead">Small Undead</SizeAndType>
+  <SizeAndType Size="small" Type="undead" Humanoid="true">Small Undead</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="3">1/2 d12 (3)</HitDice>
   <Initiative>+5 (+1 Dex, +4 Improved Initiative)</Initiative>
   <Speed>30 ft.</Speed>
@@ -26182,7 +26182,7 @@ piercing or slashing weapons.</p>
 <Name>Skeleton:Skeleton</Name>
 <Avatar Image="skeleton"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="undead">Medium-Size Undead</SizeAndType>
+  <SizeAndType Size="medium-size" Type="undead" Humanoid="true">Medium-Size Undead</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="6">1d12 (6)</HitDice>
   <Initiative>+5 (+1 Dex, +4 Improved Initiative)</Initiative>
   <Speed>30 ft.</Speed>
@@ -26958,7 +26958,7 @@ forest setting.</p>
 <Name>Sprite:Nixie</Name>
 <Avatar Image="nixie"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="fey" Humanoid="yes">Small Fey</SizeAndType>
+  <SizeAndType Size="small" Type="fey" Humanoid="true">Small Fey</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="3">1d6 (3)</HitDice>
   <Initiative>+7 (+3 Dex, +4 Improved Initiative)</Initiative>
   <Speed>20 ft., swim 30 ft.</Speed>
@@ -27009,7 +27009,7 @@ when in the water.</p>
 <Name>Sprite:Pixie</Name>
 <Avatar Image="pixie"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="fey" Humanoid="yes">Small Fey</SizeAndType>
+  <SizeAndType Size="small" Type="fey" Humanoid="true">Small Fey</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="3">1d6 (3)</HitDice>
   <Initiative>+4 (Dex)</Initiative>
   <Speed>20 ft., fly 60 ft. (good)</Speed>
@@ -27078,7 +27078,7 @@ and Listen checks.</p>
 <Name>Xorn:Minor Xorn</Name>
 <Avatar Image="xorn"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="outsider" Subtypes="earth">Small Outsider (Earth)</SizeAndType>
+  <SizeAndType Size="small" Type="outsider" Subtypes="earth" Humanoid="false">Small Outsider (Earth)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="19">3d8+6 (19)</HitDice>
   <Initiative>+0</Initiative>
   <Speed>20 ft., burrow 20 ft.</Speed>
@@ -27139,7 +27139,7 @@ with the ground.</p>
 <Name>Xorn:Average Xorn</Name>
 <Avatar Image="xorn"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="outsider" Subtypes="earth">Medium-Size Outsider (Earth)</SizeAndType>
+  <SizeAndType Size="medium-size" Type="outsider" Subtypes="earth" Humanoid="false">Medium-Size Outsider (Earth)</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="45">7d8+14 (45)</HitDice>
   <Initiative>+0</Initiative>
   <Speed>20 ft., burrow 20 ft.</Speed>
@@ -27808,7 +27808,7 @@ can only do both if they charge (a partial charge).</p>
 <Name>Zombie:Small Zombie</Name>
 <Avatar Image="zombiesmall"></Avatar>
 <StatBlock>
-  <SizeAndType Size="small" Type="undead">Small Undead</SizeAndType>
+  <SizeAndType Size="small" Type="undead" Humanoid="true">Small Undead</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="9">1d12+3 (9)</HitDice>
   <Initiative>-1 (Dex)</Initiative>
   <Speed>30 ft.</Speed>
@@ -27848,7 +27848,7 @@ can only do both if they charge (a partial charge).</p>
 <Name>Zombie:Zombie</Name>
 <Avatar Image="zombie"></Avatar>
 <StatBlock>
-  <SizeAndType Size="medium-size" Type="undead">Medium-Size Undead</SizeAndType>
+  <SizeAndType Size="medium-size" Type="undead" Humanoid="true">Medium-Size Undead</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="16">2d12+3 (16)</HitDice>
   <Initiative>-1 (Dex)</Initiative>
   <Speed>30 ft.</Speed>

@@ -250,8 +250,12 @@ public class Monster implements Cloneable, Serializable {
 	 * Ideally this would be defined in a slot-by-slot and monster-by-monster
 	 * basis but for now a creature tagged as humanoid is eligible to use any
 	 * and all {@link Slot}s.
+	 * 
+	 * What is or not a humanoid can be hard to determine in a fantasy game.
+	 * Currently, if anything is any less than 90% human in form (and thus able
+	 * to wear all {@link Slot}s comfortably) then it isn't a proper humanoid.
 	 */
-	public boolean humanoid = false;
+	public Boolean humanoid = null;
 	/** See {@link Skills}. */
 	public Skills skills = new Skills();
 	/** Creatures that should only be spawned at night or underground. */

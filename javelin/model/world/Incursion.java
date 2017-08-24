@@ -202,7 +202,7 @@ public class Incursion extends Actor {
 		return false;
 	}
 
-	static int spawned = 0;
+	// static int spawned = 0;
 
 	/**
 	 * Creates and places a new incursion. Finds an empty spot close to the
@@ -219,11 +219,11 @@ public class Incursion extends Actor {
 	 * @see Actor#place()
 	 */
 	public static void place(Realm r, int x, int y, List<Combatant> squadp) {
-		if (Javelin.DEBUG) {
-			spawned += 1;
-			System.out.println("Incursion spawn #" + spawned + " EL"
-					+ ChallengeRatingCalculator.calculateel(squadp));
-		}
+		// if (Javelin.DEBUG) {
+		// spawned += 1;
+		// System.out.println("Incursion spawn #" + spawned + " EL"
+		// + ChallengeRatingCalculator.calculateel(squadp));
+		// }
 		if (!SPAWN) {
 			return;
 		}

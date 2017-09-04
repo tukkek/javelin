@@ -104,4 +104,8 @@ public abstract class Feat implements Serializable {
 		c.source.addfeat(this);
 		return true;
 	}
+
+	public Feat generate(String name2) {
+		return this;
+	}
 }

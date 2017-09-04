@@ -105,7 +105,7 @@ public class StatisticsScreen extends InfoScreen {
 		if (!m.feats.isEmpty()) {
 			String feats = "Feats: ";
 			for (javelin.model.feat.Feat f : m.feats) {
-				feats += f.name + ", ";
+				feats += f + ", ";
 			}
 			lines.add(feats.substring(0, feats.length() - 2));
 			lines.add("");

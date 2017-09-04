@@ -34,7 +34,7 @@ public class Feats extends FieldReader {
 			if (f == null) {
 				reader.debugfeats.add(name);
 			} else {
-				reader.monster.addfeat(f);
+				reader.monster.addfeat(f.generate(name));
 			}
 		}
 		if (!reader.monster.feats.isEmpty()) {

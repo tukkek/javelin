@@ -5,6 +5,7 @@ import javelin.controller.action.Help;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.scenario.Scenario;
 import javelin.model.item.Item;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.WorldScreen;
@@ -27,10 +28,13 @@ public class Debug {
 	 * {@link WorldScreen} is shown.
 	 */
 	public static void ongamestart() {
+
 	}
 
 	/** Called only once when a {@link Scenario} is initialized. */
 	public static void oncampaignstart() {
+		Squad.active.members
+				.add(new Combatant(Javelin.getmonster("Medusa"), true));
 	}
 
 	/**
@@ -42,6 +46,13 @@ public class Debug {
 	 */
 	public static String onhelp() {
 		return "";
+	}
+
+	static void healall() {
+		for (Combatant c : Squad.active.members) {
+			c.hp = c.maxhp;
+			c.detox(c.source.poison);
+		}
 	}
 
 	static void additems(Item[] items) {

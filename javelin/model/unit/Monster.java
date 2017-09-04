@@ -28,6 +28,7 @@ import javelin.controller.upgrade.skill.Concentration;
 import javelin.model.Cloneable;
 import javelin.model.feat.CombatCasting;
 import javelin.model.feat.Feat;
+import javelin.model.feat.attack.WeaponFinesse;
 import javelin.model.feat.attack.focus.WeaponFocus;
 import javelin.model.feat.skill.Acrobatic;
 import javelin.model.item.Scroll;
@@ -330,7 +331,7 @@ public class Monster implements Cloneable, Serializable {
 
 	public boolean hasfeat(final Feat f) {
 		for (final Feat existing : feats) {
-			if (existing.name.equals(f.name)) {
+			if (existing.equals(f)) {
 				return true;
 			}
 		}
@@ -389,10 +390,15 @@ public class Monster implements Cloneable, Serializable {
 		dexterity += 2 * bonus;
 		ac += bonus;
 		ref += bonus;
-		for (List<Attack> attacks : ranged) {
-			for (Attack a : attacks) {
-				a.bonus += bonus;
-			}
+		ArrayList<Attack> attacks = new ArrayList<Attack>();
+		for (AttackSequence sequence : ranged) {
+			attacks.addAll(sequence);
+		}
+		for (WeaponFinesse wf : getfeats(WeaponFinesse.SINGLETON)) {
+			attacks.addAll(wf.getallaffected(this));
+		}
+		for (Attack a : attacks) {
+			a.bonus += bonus;
 		}
 		initiative += bonus;
 	}
@@ -404,12 +410,28 @@ public class Monster implements Cloneable, Serializable {
 	 */
 	public void raisestrength(int bonus) {
 		strength += 2 * bonus;
+		ArrayList<WeaponFinesse> finesses = getfeats(WeaponFinesse.SINGLETON);
 		for (AttackSequence sequence : melee) {
-			for (Attack a : sequence) {
+			attacks: for (Attack a : sequence) {
+				for (WeaponFinesse wf : finesses) {
+					if (wf.affects(a)) {
+						continue attacks;
+					}
+				}
 				a.bonus += bonus;
 				a.damage[2] += bonus;
 			}
 		}
+	}
+
+	public <K extends Feat> ArrayList<K> getfeats(K search) {
+		ArrayList<K> found = new ArrayList<K>(0);
+		for (Feat f : feats) {
+			if (f.equals(search)) {
+				found.add((K) f);
+			}
+		}
+		return found;
 	}
 
 	/**

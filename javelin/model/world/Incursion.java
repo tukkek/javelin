@@ -352,7 +352,7 @@ public class Incursion extends Actor {
 
 	@Override
 	public boolean interact() {
-		if (!Location.headsup(squad, toString())) {
+		if (!Location.headsup(squad, toString(), true)) {
 			return false;
 		}
 		throw new StartBattle(new IncursionFight(this));

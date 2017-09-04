@@ -47,7 +47,7 @@ public class Siege extends Fight {
 
 	@Override
 	public void bribe() {
-		place.garrison.clear();
+		afterwin();
 		place.realm = null;
 	}
 
@@ -55,22 +55,28 @@ public class Siege extends Fight {
 	public boolean onend() {
 		if (cleargarrison) {
 			if (Fight.victory) {
-				place.garrison.clear();
+				afterwin();
 			} else {
-				garrison: for (Combatant garrison : new ArrayList<Combatant>(
-						place.garrison)) {
-					for (Combatant active : Fight.state.getcombatants()) {
-						if (garrison.equals(active)) {
-							continue garrison; // is alive
-						}
-					}
-					place.garrison.remove(garrison);
-				}
+				afterlose();
 			}
+			/* TODO this should probably be inside afterwin() */
 			if (place.garrison.isEmpty()) {
 				place.capture();
 			}
 		}
 		return super.onend();
+	}
+
+	protected void afterlose() {
+		ArrayList<Combatant> alive = state.getcombatants();
+		for (Combatant c : new ArrayList<Combatant>(place.garrison)) {
+			if (!alive.contains(c)) {
+				place.garrison.remove(c);
+			}
+		}
+	}
+
+	protected void afterwin() {
+		place.garrison.clear();
 	}
 }

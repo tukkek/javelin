@@ -53,6 +53,7 @@ import javelin.model.world.location.town.labor.religious.Shrine;
 import javelin.model.world.location.unique.AdventurersGuild;
 import javelin.model.world.location.unique.Artificer;
 import javelin.model.world.location.unique.AssassinsGuild;
+import javelin.model.world.location.unique.DeepDungeon;
 import javelin.model.world.location.unique.Haxor;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.model.world.location.unique.PillarOfSkulls;
@@ -301,7 +302,7 @@ public class FeatureGenerator {
 		locations.addAll(Arrays.asList(new Location[] { new MercenariesGuild(),
 				new Artificer(), new SummoningCircle(), new PillarOfSkulls(),
 				new Arena(), new Battlefield(), new DungeonRush(),
-				new Ziggurat() }));
+				new Ziggurat(), new DeepDungeon() }));
 		locations.addAll(Arrays.asList(new Haunt[] { new AbandonedManor(),
 				new SunkenShip(), new ShatteredTemple(), new WitchesHideout(),
 				new Graveyard(), new OrcSettlement() }));

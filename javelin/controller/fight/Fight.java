@@ -116,6 +116,7 @@ public abstract class Fight {
 	public BattleSetup setup = new BattleSetup();
 	public boolean denydarkvision = false;
 	public boolean canflee = true;
+
 	/** Red team at the moment the {@link Fight} begins. */
 	public static List<Combatant> originalredteam;
 	/** Blue team at the moment the {@link Fight} begins. */
@@ -165,7 +166,7 @@ public abstract class Fight {
 		final float food = Squad.active.eat() / 2;
 		/* should at least serve as food for 1 day */
 		final int bonus = Math.round(Math.max(food, gold));
-		String rewards = "";
+		String rewards = "Congratulations! ";
 		if (Javelin.app.fight.rewardxp) {
 			rewards += RewardCalculator.rewardxp(Fight.state.blueTeam,
 					Fight.originalblueteam, defeated, 1);
@@ -195,7 +196,7 @@ public abstract class Fight {
 		for (Combatant c : state.getfleeing(Fight.originalblueteam)) {
 			state.blueTeam.add(c);
 		}
-		EndBattle.showcombatresult("Congratulations! ");
+		EndBattle.showcombatresult();
 		return true;
 	}
 

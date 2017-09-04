@@ -29,6 +29,7 @@ import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.unique.UniqueLocation;
 import javelin.view.Images;
+import javelin.view.mappanel.world.WorldMouse;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
@@ -92,6 +93,14 @@ public abstract class Location extends Actor {
 
 	/** Link with a road if nearby. */
 	public boolean link = true;
+
+	/**
+	 * If <code>false</code>, will not show individual units.
+	 * 
+	 * @see WorldMouse
+	 * @see Squad#spot(List)
+	 */
+	protected boolean showgarrison = true;
 
 	/**
 	 * @param descriptionknown
@@ -260,7 +269,7 @@ public abstract class Location extends Actor {
 			capture();
 			return false;
 		}
-		if (headsup(garrison, toString())) {
+		if (headsup(garrison, toString(), showgarrison)) {
 			throw new StartBattle(fight());
 		}
 		throw new RuntimeException("headsup sould throw #wplace");
@@ -284,8 +293,8 @@ public abstract class Location extends Actor {
 	 * @return <code>true</code> if player confirms engaging in battle.
 	 * @throws RepeatTurn
 	 */
-	public static boolean headsup(List<Combatant> opponents,
-			String description) {
+	static public boolean headsup(List<Combatant> opponents, String description,
+			boolean showgarrison) {
 		opponents.sort(new Comparator<Combatant>() {
 			@Override
 			public int compare(Combatant o1, Combatant o2) {
@@ -293,32 +302,36 @@ public abstract class Location extends Actor {
 			}
 		});
 		Game.messagepanel.clear();
-		Game.message(
-				describe(opponents, description) + "\n\n"
-						+ "Press s to storm or any other key to retreat.",
-				Delay.NONE);
+		final String prompt = describe(opponents, description, showgarrison)
+				+ "\n\nPress s to storm or any other key to retreat.";
+		Game.message(prompt, Delay.NONE);
 		if (InfoScreen.feedback() == 's') {
 			return true;
 		}
 		throw new RepeatTurn();
 	}
 
-	static String describe(List<Combatant> opponents, String description) {
-		return description + ". Forces: ("
-				+ ChallengeRatingCalculator.describedifficulty(opponents)
-				+ " fight)\n\n" + Squad.active.spot(opponents);
-	}
-
-	@Override
-	public String describe() {
-		String description = toString();
-		if (!garrison.isEmpty()) {
-			return describe(garrison, description);
+	static String describe(List<Combatant> opponents, String name,
+			boolean showgarrison) {
+		String description = name;
+		if (!opponents.isEmpty()) {
+			description += ". Forces: ("
+					+ ChallengeRatingCalculator.describedifficulty(opponents)
+					+ " fight)";
+			if (showgarrison) {
+				description += "\n\n" + Squad.active.spot(opponents);
+			}
+			return description;
 		}
 		if (!description.endsWith(".")) {
 			description += ".";
 		}
 		return description;
+	}
+
+	@Override
+	public String describe() {
+		return describe(garrison, toString(), showgarrison);
 	}
 
 	@Override

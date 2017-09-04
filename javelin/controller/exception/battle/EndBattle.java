@@ -81,13 +81,12 @@ public class EndBattle extends BattleEvent {
 	 *
 	 * @param prefix
 	 */
-	public static void showcombatresult(String prefix) {
+	public static void showcombatresult() {
 		Game.messagepanel.clear();
 		String combatresult;
 		if (Fight.victory) {
-			combatresult = prefix + Javelin.app.fight.dealreward();
-		} else if (Fight.state.getfleeing(Fight.originalblueteam)
-				.isEmpty()) {
+			combatresult = Javelin.app.fight.dealreward();
+		} else if (Fight.state.getfleeing(Fight.originalblueteam).isEmpty()) {
 			Squad.active.disband();
 			combatresult = "You lost!";
 		} else if (Javelin.app.fight.friendly) {

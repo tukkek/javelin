@@ -4,7 +4,6 @@ import java.awt.Canvas;
 import java.awt.Graphics;
 import java.awt.Image;
 
-import javelin.Javelin;
 import javelin.model.state.Square;
 
 /**
@@ -41,12 +40,10 @@ public abstract class Tile extends Canvas {
 			 * 
 			 * More info https://netbeans.org/bugzilla/show_bug.cgi?id=165867
 			 */
-			if (Javelin.DEBUG || true) { // TODO remove true after testing
-				e.printStackTrace();
-				System.out.println("Graphics: " + g);
-				System.out.println("Image: " + i);
-				System.out.println("Tile size: " + MapPanel.tilesize);
-			}
+			e.printStackTrace();
+			System.out.println("Graphics: " + g);
+			System.out.println("Image: " + i);
+			System.out.println("Tile size: " + MapPanel.tilesize);
 		}
 	}
 

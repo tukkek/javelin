@@ -8,6 +8,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import javelin.Javelin;
+import javelin.controller.action.ai.Flee;
 import javelin.controller.action.world.ShowOptions;
 import javelin.controller.ai.cache.AiCache;
 import javelin.controller.db.Preferences;
@@ -22,27 +23,32 @@ import javelin.view.screen.BattleScreen;
  * @author alex
  */
 public class ThreadManager {
+	static final boolean SINGLETHREAD = false;
+	/**
+	 * This is requried so some actions don't cause the game to consume too much
+	 * memory (such as {@link Flee}, which "resolves" the battle. A value 10
+	 * times the target depth should be more than enough.
+	 */
+	static final int MAXIMUMDEPTH = 5 * 10;
+	static final Thread MAIN = Thread.currentThread();
+	static final ArrayList<Integer> BATTLERECORD = new ArrayList<Integer>();
 
-	private static final String PERFORMANCESOLUTION =
-			"The maximum number of AI threads has been lowered to %1$d.\n"
-					+ "This reduces the AI thinking power but increases speed.\n"
-					+ "You may need to go through this step a couple of times.\n\n"
-					+ "If you don't want to lose thinking power you can try\n"
-					+ "raising the thinking time manually via the Options screen.";
-	private static final String PERFORMANCENOTIFICATION =
-			"Your computer seems to be having trouble thinking fast enough.\n\n"
-					+ "The current configured thinking time is ~%1$d seconds.\n" //
-					+ "The current computer move has taken ~%2$d seconds to complete.\n\n"
-					+ "Press Yes to attempt an automatic solution.\n"
-					+ "Press No to ignore this message until the game is restarted.\n"
-					+ "Press Cancel to never see this message again.\n\n"
-					+ "You can also press %3$c after closing this dialog to configure your preferences manually.";
-	private static final ArrayList<Integer> BATTLERECORD =
-			new ArrayList<Integer>();;
+	static final String PERFORMANCESOLUTION = "The maximum number of AI threads has been lowered to %1$d.\n"
+			+ "This reduces the AI thinking power but increases speed.\n"
+			+ "You may need to go through this step a couple of times.\n\n"
+			+ "If you don't want to lose thinking power you can try\n"
+			+ "raising the thinking time manually via the Options screen.";
+	static final String PERFORMANCENOTIFICATION = "Your computer seems to be having trouble thinking fast enough.\n\n"
+			+ "The current configured thinking time is ~%1$d seconds.\n" //
+			+ "The current computer move has taken ~%2$d seconds to complete.\n\n"
+			+ "Press Yes to attempt an automatic solution.\n"
+			+ "Press No to ignore this message until the game is restarted.\n"
+			+ "Press Cancel to never see this message again.\n\n"
+			+ "You can also press %3$c after closing this dialog to configure your preferences manually.";
 
 	static public void determineprocessors() {
-		String message =
-				"\n\nThe AI will use " + Preferences.MAXTHREADS + " cores";
+		String message = "\n\nThe AI will use " + Preferences.MAXTHREADS
+				+ " cores";
 		if (Preferences.AICACHEENABLED) {
 			message += " (cache enabled)";
 		}
@@ -50,7 +56,6 @@ public class ThreadManager {
 		System.out.println();
 	}
 
-	static final Thread MAIN = Thread.currentThread();
 	public static Exception ERROR;
 	public static boolean working;
 	/**
@@ -70,18 +75,12 @@ public class ThreadManager {
 			AiCache.clear();
 			AiThread.depthincremeneter = 1;
 			AiThread.reset();
-			for (int i = 0; i < Preferences.MAXTHREADS; i++) {
+			int nthreads = Javelin.DEBUG && SINGLETHREAD ? 1
+					: Preferences.MAXTHREADS;
+			for (int i = 0; i < nthreads; i++) {
 				AiThread.STARTED.add(new AiThread(state));
 			}
-			long sleepfor =
-					Preferences.MAXMILISECONDSTHINKING - (now() - start);
-			Thread.sleep(sleepfor >= 0 ? sleepfor : 0);
-			while (AiThread.FINISHED.isEmpty()) {
-				if (ThreadManager.ERROR != null) {
-					throw ThreadManager.ERROR;
-				}
-				Thread.sleep(500);
-			}
+			sleep(start);
 			interrupt();
 			working = false;
 		} catch (Exception e) {
@@ -92,12 +91,29 @@ public class ThreadManager {
 			throw new RuntimeException(ERROR);
 		}
 		int deepest = AiThread.FINISHED.descendingKeySet().first();
+		analyze(start, deepest);
+		return AiThread.FINISHED.get(deepest);
+	}
+
+	static void analyze(final long start, int depth) {
 		float miliseconds = (now() - start);
 		checkperformance(miliseconds);
+		final float elapsed = miliseconds / 1000f;
+		String hitmax = depth == MAXIMUMDEPTH ? " (max)" : "";
 		System.out.println(
-				(miliseconds / 1000f) + " seconds elapsed. Depth: " + deepest);
-		BATTLERECORD.add(deepest);
-		return AiThread.FINISHED.get(deepest);
+				elapsed + " seconds elapsed. Depth: " + depth + hitmax);
+		BATTLERECORD.add(depth);
+	}
+
+	static void sleep(final long start) throws InterruptedException, Exception {
+		long sleepfor = Preferences.MAXMILISECONDSTHINKING - (now() - start);
+		Thread.sleep(sleepfor >= 0 ? sleepfor : 0);
+		while (AiThread.FINISHED.isEmpty()) {
+			if (ThreadManager.ERROR != null) {
+				throw ThreadManager.ERROR;
+			}
+			Thread.sleep(500);
+		}
 	}
 
 	static void checkperformance(float miliseconds) {
@@ -139,7 +155,6 @@ public class ThreadManager {
 		interrupting = true;
 		AiThread.group.interrupt();
 		for (Thread t : new ArrayList<Thread>(AiThread.STARTED)) {
-			// t.interrupt();
 			try {
 				t.join();
 			} catch (InterruptedException e) {

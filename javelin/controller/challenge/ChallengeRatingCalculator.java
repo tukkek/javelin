@@ -36,10 +36,14 @@ import javelin.model.unit.Squad;
  * #see CrFactor
  */
 public class ChallengeRatingCalculator {
-	private static final float PCEQUIPMENTCRPERLEVEL = .2f;
+	public static final int DIFFICULTYVERYEASY = -9;
 	public static final int DIFFICULTYMODERATE = -4;
+
+	private static final float PCEQUIPMENTCRPERLEVEL = .2f;
+
 	private static final int MAXIMUM_EL = 50;
 	private static final int MINIMUM_EL = -7;
+
 	public static final float[] CR_FRACTIONS = new float[] { 3.5f, 3f, 2.5f, 2f,
 			1.75f, 1.5f, 1.25f, 1f, .5f, 0f, -.5f, -1f, -1.5f, -2f, -2.5f, -3 };
 	public static final HdFactor HIT_DICE_FACTOR = new HdFactor();
@@ -211,8 +215,8 @@ public class ChallengeRatingCalculator {
 		}
 	}
 
-	private static int calculateel(final List<Combatant> group,
-			final boolean check) throws UnbalancedTeams {
+	static int calculateel(final List<Combatant> group, final boolean check)
+			throws UnbalancedTeams {
 		float highestCr = Float.MIN_VALUE;
 		float sum = 0;
 		for (final Combatant mgc : group) {
@@ -233,7 +237,7 @@ public class ChallengeRatingCalculator {
 		final int groupCr = crtoel(sum)
 				+ multipleOpponentsElModifier(group.size());
 		final int highestCrEl = crtoel(highestCr);
-		return groupCr <= highestCrEl ? highestCrEl : groupCr;
+		return Math.max(highestCrEl, groupCr);
 	}
 
 	public static int multipleOpponentsElModifier(final int teamSize) {
@@ -578,7 +582,7 @@ public class ChallengeRatingCalculator {
 		if (delta <= -13) {
 			return "irrelevant";
 		}
-		if (delta <= -9) {
+		if (delta <= DIFFICULTYVERYEASY) {
 			return "very easy";
 		}
 		if (delta <= -5) {

@@ -70,7 +70,7 @@ public class EndBattle extends BattleEvent {
 	}
 
 	static void terminateconditions(BattleState s, BattleScreen screen) {
-		screen.checkblock();
+		screen.block();
 		for (Combatant c : Fight.state.getcombatants()) {
 			c.finishconditions(s, screen);
 		}
@@ -86,14 +86,15 @@ public class EndBattle extends BattleEvent {
 		String combatresult;
 		if (Fight.victory) {
 			combatresult = prefix + Javelin.app.fight.dealreward();
-		} else if (BattleScreen.active.fleeing.isEmpty()) {
+		} else if (Fight.state.getfleeing(Fight.originalblueteam)
+				.isEmpty()) {
 			Squad.active.disband();
 			combatresult = "You lost!";
 		} else if (Javelin.app.fight.friendly) {
 			combatresult = "You lost!";
 		} else {
 			combatresult = "Fled from combat. No awards received.";
-			if (!Fight.victory && BattleScreen.active.fleeing
+			if (!Fight.victory && Fight.state.fleeing
 					.size() != JavelinApp.originalteam.size()) {
 				combatresult += "\nFallen allies left behind are lost!";
 				for (Combatant abandoned : Fight.state.dead) {

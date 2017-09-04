@@ -115,6 +115,11 @@ public abstract class Fight {
 	/** Delegates some setup details.TODO */
 	public BattleSetup setup = new BattleSetup();
 	public boolean denydarkvision = false;
+	public boolean canflee = true;
+	/** Red team at the moment the {@link Fight} begins. */
+	public static List<Combatant> originalredteam;
+	/** Blue team at the moment the {@link Fight} begins. */
+	public static List<Combatant> originalblueteam;
 
 	/**
 	 * @return an encounter level for which an appropriate challenge should be
@@ -150,15 +155,20 @@ public abstract class Fight {
 	 * @return Reward description.
 	 */
 	public String dealreward() {
+		List<Combatant> defeated = new ArrayList<Combatant>(
+				Fight.originalredteam);
+		defeated.removeAll(Fight.state.fleeing);
+		if (defeated.isEmpty()) {
+			return "All enemies have fled...";
+		}
+		final int gold = RewardCalculator.receivegold(defeated);
+		final float food = Squad.active.eat() / 2;
 		/* should at least serve as food for 1 day */
-		final int bonus = Math.round(Math.max(Squad.active.eat() / 2,
-				RewardCalculator.receivegold(BattleScreen.originalredteam)));
-		// Squad.active.members = Fight.state.blueTeam;
+		final int bonus = Math.round(Math.max(food, gold));
 		String rewards = "";
 		if (Javelin.app.fight.rewardxp) {
 			rewards += RewardCalculator.rewardxp(Fight.state.blueTeam,
-					BattleScreen.originalblueteam, BattleScreen.originalredteam,
-					1);
+					Fight.originalblueteam, defeated, 1);
 		}
 		if (Javelin.app.fight.rewardgold) {
 			Squad.active.gold += bonus;
@@ -182,8 +192,8 @@ public abstract class Fight {
 	 *            vehicle/allies left behind...
 	 */
 	public boolean onend() {
-		for (Combatant c : BattleScreen.active.fleeing) {
-			Fight.state.blueTeam.add(c);
+		for (Combatant c : state.getfleeing(Fight.originalblueteam)) {
+			state.blueTeam.add(c);
 		}
 		EndBattle.showcombatresult("Congratulations! ");
 		return true;
@@ -214,46 +224,6 @@ public abstract class Fight {
 	}
 
 	/**
-	 * TODO probablby better to just have flee=true/false in Fight.
-	 * 
-	 * @param combatant
-	 *            Fleeing unit.
-	 * @param screen
-	 *            Active screen.
-	 */
-	public void withdraw(Combatant combatant, BattleScreen screen) {
-		if (Javelin.DEBUG) {
-			Game.message("Press w to cancel battle (debug feature)",
-					Delay.NONE);
-			if (Game.getInput().getKeyChar() == 'w') {
-				for (Combatant c : new ArrayList<Combatant>(
-						Fight.state.blueTeam)) {
-					c.escape(screen);
-				}
-				throw new EndBattle();
-			}
-			Game.messagepanel.clear();
-		}
-		if (Fight.state.isengaged(combatant)) {
-			Game.message("Disengage first!", Delay.BLOCK);
-			InfoScreen.feedback();
-			throw new RepeatTurn();
-		}
-		Game.message(
-				"Are you sure you want to escape? Press ENTER to confirm...\n",
-				Delay.NONE);
-		if (Game.getInput().getKeyChar() != '\n') {
-			throw new RepeatTurn();
-		}
-		combatant.escape(screen);
-		if (Fight.state.blueTeam.isEmpty()) {
-			throw new EndBattle();
-		} else {
-			throw new RepeatTurn();
-		}
-	}
-
-	/**
 	 * @param foes
 	 *            List of enemies.
 	 * @return <code>true</code> if this battle has been avoided.
@@ -267,13 +237,6 @@ public abstract class Fight {
 			return true;
 		}
 		return false;
-	}
-
-	/** Helper method for {@link #withdraw(Combatant, BattleScreen)}. */
-	static public void dontflee(BattleScreen s) {
-		Game.message("Cannot flee!", Delay.BLOCK);
-		s.checkblock();
-		throw new RepeatTurn();
 	}
 
 	/**
@@ -459,23 +422,23 @@ public abstract class Fight {
 
 	void cleanwounded(ArrayList<Combatant> team, BattleState s) {
 		for (Combatant c : (List<Combatant>) team.clone()) {
-			if (c.getnumericstatus() <= friendlylevel) {
-				if (team == s.blueTeam) {
-					BattleScreen.active.fleeing.add(c);
-				}
-				team.remove(c);
-				if (s.next == c) {
-					s.next();
-				}
-				addmeld(c.location[0], c.location[1], c, s);
-				Game.message(
-						c + " is removed from the battlefield!\nPress ENTER to continue...",
-						Delay.NONE);
-				while (Game.getInput().getKeyChar() != '\n') {
-					// wait for enter
-				}
-				Game.messagepanel.clear();
+			if (c.getnumericstatus() > friendlylevel) {
+				continue;
 			}
+			if (team == s.blueTeam) {
+				s.fleeing.add(c);
+			}
+			team.remove(c);
+			if (s.next == c) {
+				s.next();
+			}
+			addmeld(c.location[0], c.location[1], c, s);
+			Game.message(c + " is removed from the battlefield!\n"
+					+ "Press ENTER to continue...", Delay.NONE);
+			while (Game.getInput().getKeyChar() != '\n') {
+				// wait for enter
+			}
+			Game.messagepanel.clear();
 		}
 	}
 
@@ -518,5 +481,46 @@ public abstract class Fight {
 	 */
 	public void draw() {
 		// nothing by default
+	}
+
+	/**
+	 * TODO probablby better to just have flee=true/false in Fight.
+	 * 
+	 * @param combatant
+	 *            Fleeing unit.
+	 * @param screen
+	 *            Active screen.
+	 */
+	public void withdraw(Combatant combatant, BattleScreen screen) {
+		if (Javelin.DEBUG) {
+			withdrawall();
+		}
+		if (Fight.state.isengaged(combatant)) {
+			Game.message("Disengage first!", Delay.BLOCK);
+			InfoScreen.feedback();
+			throw new RepeatTurn();
+		}
+		final String prompt = "Are you sure you want to escape? Press ENTER to confirm...\n";
+		Game.message(prompt, Delay.NONE);
+		if (Game.getInput().getKeyChar() != '\n') {
+			throw new RepeatTurn();
+		}
+		combatant.escape(Fight.state);
+		if (Fight.state.blueTeam.isEmpty()) {
+			throw new EndBattle();
+		} else {
+			throw new RepeatTurn();
+		}
+	}
+
+	void withdrawall() {
+		Game.message("Press w to cancel battle (debug feature)", Delay.NONE);
+		if (Game.getInput().getKeyChar() == 'w') {
+			for (Combatant c : new ArrayList<Combatant>(Fight.state.blueTeam)) {
+				c.escape(Fight.state);
+			}
+			throw new EndBattle();
+		}
+		Game.messagepanel.clear();
 	}
 }

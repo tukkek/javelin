@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Incursion;
-import javelin.view.screen.BattleScreen;
 import tyrant.mikera.tyrant.QuestApp;
 
 /**
@@ -27,12 +26,11 @@ public class IncursionFight extends Fight {
 		texture = IncursionFight.INCURSIONTEXTURE;
 		meld = true;
 		hide = false;
+		canflee = false;
 	}
 
 	@Override
 	public int getel(final int teamel) {
-		// throw new RuntimeException(
-		// "Shouldn't have to generate an incursion fight.");
 		return incursion.getel();
 	}
 
@@ -74,10 +72,5 @@ public class IncursionFight extends Fight {
 		ArrayList<Combatant> foes = super.generate(teamel);
 		incursion.squad = Incursion.getsafeincursion(foes);
 		return foes;
-	}
-
-	@Override
-	public void withdraw(Combatant combatant, BattleScreen screen) {
-		dontflee(screen);
 	}
 }

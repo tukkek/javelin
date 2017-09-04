@@ -15,10 +15,10 @@ import javelin.model.state.BattleState;
  * @author alex
  */
 public class AiThread extends Thread {
-	public static ThreadGroup group = regroup();
+	public static final TreeMap<Integer, List<ChanceNode>> FINISHED = new TreeMap<Integer, List<ChanceNode>>();
 	static final ArrayList<Thread> STARTED = new ArrayList<Thread>();
-	public static final TreeMap<Integer, List<ChanceNode>> FINISHED =
-			new TreeMap<Integer, List<ChanceNode>>();
+
+	public static ThreadGroup group = regroup();
 	/**
 	 * @see #setdepth()
 	 */
@@ -65,7 +65,8 @@ public class AiThread extends Thread {
 			return;
 		}
 		AiThread.FINISHED.put(depth, result);
-		if (!ThreadManager.interrupting && ThreadManager.working) {
+		if (!ThreadManager.interrupting && ThreadManager.working
+				&& depthincremeneter <= ThreadManager.MAXIMUMDEPTH) {
 			setdepth();
 			run();
 		}

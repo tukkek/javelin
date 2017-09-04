@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import javelin.controller.fight.tournament.Exhibition;
 import javelin.controller.map.Arena;
 import javelin.model.unit.Combatant;
-import javelin.view.screen.BattleScreen;
 
 /**
  * Tournament event.
@@ -22,6 +21,7 @@ public class ExhibitionFight extends Fight {
 		friendly = true;
 		hide = false;
 		bribe = false;
+		canflee = false;
 	}
 
 	@Override
@@ -32,10 +32,5 @@ public class ExhibitionFight extends Fight {
 	@Override
 	public int getel(int teamel) {
 		return teamel;
-	}
-
-	@Override
-	public void withdraw(Combatant combatant, BattleScreen screen) {
-		dontflee(screen);
 	}
 }

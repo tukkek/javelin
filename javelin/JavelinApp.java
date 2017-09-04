@@ -44,7 +44,6 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.labor.Deck;
 import javelin.model.world.location.unique.Haxor;
 import javelin.model.world.location.unique.UniqueLocation;
-import javelin.view.screen.BattleScreen;
 import javelin.view.screen.SquadScreen;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
@@ -75,7 +74,7 @@ public class JavelinApp extends QuestApp {
 	 */
 	public static ArrayList<Combatant> originalteam;
 	/**
-	 * TODO see {@link BattleScreen#originalredteam} }
+	 * TODO see {@link Fight#originalredteam} }
 	 */
 	public static ArrayList<Combatant> originalfoes;
 	/**

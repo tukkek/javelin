@@ -6,8 +6,6 @@ import java.awt.Image;
 import java.awt.Panel;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.Point;
@@ -58,11 +56,6 @@ import tyrant.mikera.tyrant.Screen;
  * @author alex
  */
 public class BattleScreen extends Screen {
-
-	/** Blue team at the moment the {@link Fight} begins. */
-	public static List<Combatant> originalblueteam;
-	/** Red team at the moment the {@link Fight} begins. */
-	public static List<Combatant> originalredteam;
 	/**
 	 * Active {@link BattleScreen} implementation.
 	 * 
@@ -79,8 +72,6 @@ public class BattleScreen extends Screen {
 	public MessagePanel messagepanel;
 	/** Unit info component. */
 	public StatusPanel statuspanel;
-	/** Units that ran away from the fight. */
-	public ArrayList<Combatant> fleeing = new ArrayList<Combatant>();
 	/**
 	 * Allows the human player to use up to .5AP of movement before ending turn.
 	 */
@@ -185,7 +176,7 @@ public class BattleScreen extends Screen {
 				jointurns = false;
 			}
 			updatescreen();
-			checkblock();
+			block();
 		} catch (RepeatTurn e) {
 			Game.messagepanel.clear();
 			return;
@@ -258,7 +249,7 @@ public class BattleScreen extends Screen {
 	}
 
 	/** Processes {@link Game#delayblock}. */
-	public void checkblock() {
+	public void block() {
 		if (Game.delayblock) {
 			Game.delayblock = false;
 			Game.getInput();
@@ -289,10 +280,12 @@ public class BattleScreen extends Screen {
 	/** Redraws screen. */
 	protected void updatescreen() {
 		Combatant current = Fight.state.clone(this.current);
-		int x = current.location[0];
-		int y = current.location[1];
-		centerscreen(x, y);
-		view(x, y);
+		if (current != null) {
+			int x = current.location[0];
+			int y = current.location[1];
+			centerscreen(x, y);
+			view(x, y);
+		}
 		statuspanel.repaint();
 		Game.redraw();
 	}

@@ -76,10 +76,10 @@ public abstract class Terrain implements Serializable {
 	 * 
 	 * @deprecated This is being ignored for positive values. Currently the
 	 *             terrains are already more difficult due to travel speed
-	 *             variations. Besides that {@link #difficultycap} should be
-	 *             enough to also make certain terrains more frightening - and
-	 *             is a rarer ocurrance instead of a fixed adjustment, which can
-	 *             be veryunforgiving and hence no fun.
+	 *             variations. Besides that, {@link #difficultycap} should be
+	 *             enough to also make certain terrains lesser fatal - and is a
+	 *             rarer ocurrance instead of a fixed adjustment, which can be
+	 *             veryunforgiving and hence no fun.
 	 */
 	@Deprecated
 	public Integer difficulty = null;

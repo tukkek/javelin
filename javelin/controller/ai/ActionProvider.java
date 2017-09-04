@@ -10,6 +10,8 @@ import javelin.Javelin;
 import javelin.controller.action.Action;
 import javelin.controller.action.ActionMapping;
 import javelin.controller.action.ai.AiAction;
+import javelin.controller.action.ai.Flee;
+import javelin.controller.exception.StopThinking;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 
@@ -47,15 +49,19 @@ public final class ActionProvider
 	final BattleState battleState;
 	final Stack<Action> actions = new Stack<Action>();
 
-	public ActionProvider(BattleState battleState) {
-		this.battleState = battleState;
-		battleState.next();
-		if (battleState.next.burrowed) {
+	public ActionProvider(BattleState s) {
+		this.battleState = s;
+		s.next();
+		if (s.next.burrowed) {
 			for (Action a : AIACTIONS) {
 				if (a.allowwhileburrowed) {
 					actions.add(a);
 				}
 			}
+			return;
+		}
+		if (Flee.flee(s.next, s)) {
+			actions.add(Flee.SINGLETON);
 		} else {
 			actions.addAll(ActionProvider.AIACTIONS);
 		}
@@ -75,6 +81,9 @@ public final class ActionProvider
 
 	@Override
 	public List<ChanceNode> next() {
+		if (Thread.interrupted()) {
+			throw new StopThinking();
+		}
 		if (!queue.isEmpty()) {
 			List<ChanceNode> n = queue.pop();
 			return n;

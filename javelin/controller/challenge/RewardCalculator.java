@@ -24,7 +24,7 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class RewardCalculator {
-	private static class TableLine {
+	static class TableLine {
 		final double a, b, c, d, e, f, g, h;
 
 		public TableLine(final double a, final double b, final double c,

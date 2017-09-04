@@ -558,9 +558,8 @@ public class Combatant implements Serializable, Cloneable {
 		addcondition(new Melding(this));
 	}
 
-	public void escape(BattleScreen screen) {
-		screen.fleeing.add(this);
-		Fight.state.blueTeam.remove(this);
+	public void escape(BattleState s) {
+		s.flee(this);
 	}
 
 	public void addcondition(Condition c) {
@@ -594,7 +593,7 @@ public class Combatant implements Serializable, Cloneable {
 	public void finishconditions(BattleState s, BattleScreen screen) {
 		for (Condition co : conditions) {
 			co.finish(s);
-			screen.checkblock();
+			screen.block();
 		}
 	}
 

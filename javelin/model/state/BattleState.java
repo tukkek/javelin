@@ -8,6 +8,7 @@ import javelin.controller.Point;
 import javelin.controller.ai.ActionProvider;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.Node;
+import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.walker.ClearPath;
 import javelin.controller.walker.ObstructedPath;
@@ -28,7 +29,6 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class BattleState implements Node, TeamContainer {
-
 	/**
 	 * @see BattleState#haslineofsight(Point, Point, int, String)
 	 * @author alex
@@ -46,6 +46,8 @@ public class BattleState implements Node, TeamContainer {
 	public ArrayList<Combatant> blueTeam;
 	/** Computer units. */
 	public ArrayList<Combatant> redTeam;
+	/** Units that ran away from the fight. */
+	public ArrayList<Combatant> fleeing;
 	/** Dead and unconscious units. */
 	public ArrayList<Combatant> dead;
 	/** @see Meld */
@@ -75,7 +77,8 @@ public class BattleState implements Node, TeamContainer {
 	 */
 	public BattleState(final ArrayList<Combatant> blueTeam,
 			final ArrayList<Combatant> redTeam, ArrayList<Combatant> dead,
-			final Square[][] map, String period, ArrayList<Meld> meld) {
+			ArrayList<Combatant> fleeing, final Square[][] map, String period,
+			ArrayList<Meld> meld) {
 		this.map = map;
 		this.period = period;
 		this.dead = (ArrayList<Combatant>) dead.clone();
@@ -92,6 +95,7 @@ public class BattleState implements Node, TeamContainer {
 	public BattleState(Fight f) {
 		map = f.map == null ? null : f.map.map;
 		period = f.period;
+		fleeing = new ArrayList<Combatant>();
 		dead = new ArrayList<Combatant>();
 		this.blueTeam = new ArrayList<Combatant>();
 		this.redTeam = new ArrayList<Combatant>();
@@ -104,6 +108,7 @@ public class BattleState implements Node, TeamContainer {
 	public BattleState clone() {
 		try {
 			final BattleState clone = (BattleState) super.clone();
+			clone.fleeing = (ArrayList<Combatant>) clone.fleeing.clone();
 			clone.dead = (ArrayList<Combatant>) clone.dead.clone();
 			clone.blueTeam = (ArrayList<Combatant>) blueTeam.clone();
 			clone.redTeam = (ArrayList<Combatant>) redTeam.clone();
@@ -139,8 +144,8 @@ public class BattleState implements Node, TeamContainer {
 
 	@Override
 	public ArrayList<Combatant> getcombatants() {
-		final ArrayList<Combatant> list =
-				(ArrayList<Combatant>) blueTeam.clone();
+		final ArrayList<Combatant> list = (ArrayList<Combatant>) blueTeam
+				.clone();
 		list.addAll(redTeam);
 		return list;
 	}
@@ -255,10 +260,9 @@ public class BattleState implements Node, TeamContainer {
 	public Vision haslineofsight(final Point me, final Point target, int range,
 			String periodperception) {
 		final ArrayList<Step> clear = new ClearPath(me, target, this).walk();
-		final ArrayList<Step> covered =
-				periodperception == Javelin.PERIODEVENING
-						|| periodperception == Javelin.PERIODNIGHT ? null
-								: new ObstructedPath(me, target, this).walk();
+		final ArrayList<Step> covered = periodperception == Javelin.PERIODEVENING
+				|| periodperception == Javelin.PERIODNIGHT ? null
+						: new ObstructedPath(me, target, this).walk();
 		if (clear == null && covered == null) {
 			return Vision.BLOCKED;
 		}
@@ -328,10 +332,10 @@ public class BattleState implements Node, TeamContainer {
 		if (attacker.burrowed || Walker.distance(target, attacker) >= 1.5) {
 			return false;
 		}
-		final ArrayList<Combatant> attackerteam =
-				blueTeam.contains(attacker) ? blueTeam : redTeam;
-		final ArrayList<Combatant> defenderteam =
-				blueTeam.contains(target) ? blueTeam : redTeam;
+		final ArrayList<Combatant> attackerteam = blueTeam.contains(attacker)
+				? blueTeam : redTeam;
+		final ArrayList<Combatant> defenderteam = blueTeam.contains(target)
+				? blueTeam : redTeam;
 		if (attackerteam == defenderteam) {
 			return false;
 		}
@@ -405,5 +409,33 @@ public class BattleState implements Node, TeamContainer {
 			}
 		}
 		return null;
+	}
+
+	public void flee(Combatant c) {
+		fleeing.add(c);
+		remove(c);
+	}
+
+	/**
+	 * This method returns a subset of fleeing characters. Note that
+	 * {@link #blueTeam} and {@link #redTeam} are modified for several
+	 * {@link EndBattle} purposes so it might be preferable to use
+	 * {@link Fight#originalblueteam} and
+	 * {@link Fight#originalredteam} instead.
+	 * 
+	 * @param team
+	 *            A list containing the combatants that should not be excluded
+	 *            from {@link #fleeing}.
+	 * @return a new list (safe for modification) containing only the units
+	 *         provided.
+	 */
+	public ArrayList<Combatant> getfleeing(List<Combatant> team) {
+		ArrayList<Combatant> fleeing = new ArrayList<Combatant>();
+		for (Combatant c : this.fleeing) {
+			if (team.contains(c)) {
+				fleeing.add(c);
+			}
+		}
+		return fleeing;
 	}
 }

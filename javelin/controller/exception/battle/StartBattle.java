@@ -162,9 +162,9 @@ public class StartBattle extends BattleEvent {
 		}
 		JavelinApp.originalteam = cloneteam(Fight.state.blueTeam);
 		JavelinApp.originalfoes = cloneteam(Fight.state.redTeam);
-		BattleScreen.originalblueteam = new ArrayList<Combatant>(
+		Fight.originalblueteam = new ArrayList<Combatant>(
 				Fight.state.blueTeam);
-		BattleScreen.originalredteam = new ArrayList<Combatant>(
+		Fight.originalredteam = new ArrayList<Combatant>(
 				Fight.state.redTeam);
 	}
 

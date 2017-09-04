@@ -371,10 +371,24 @@ public class Combatant implements Serializable, Cloneable {
 		return dexbonus > 0 ? -dexbonus : 0;
 	}
 
+	/**
+	 * Rolls a d20, sums {@link Monster#initiative} and initializes {@link #ap}
+	 * according to the result.
+	 * 
+	 * This also adds a random positive or negative value (below 1% of an action
+	 * point) to help keep the initiative order stable by preventing collisions
+	 * (such as 2 units having exactly 0 {@link #ap}). Given that AP values are
+	 * padded to the user and that normal initiative works in 5% steps and
+	 * normal actions don't usually go finer than 10% AP cost, this is entirely
+	 * harmless when it comes to game balance.
+	 */
 	public void rollinitiative() {
 		ap = -(RPG.r(1, 20) + source.initiative) / 20f;
+		System.out.println(RPG.r(-40, +40) / 10000f + " #initiative");
+		ap += RPG.r(-40, +40) / 10000f;
 		initialap = ap;
 		lastrefresh = -Float.MAX_VALUE;
+
 	}
 
 	public int getnumericstatus() {

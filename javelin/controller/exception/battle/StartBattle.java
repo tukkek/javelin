@@ -42,9 +42,11 @@ public class StartBattle extends BattleEvent {
 		fight.setup.setup();
 		Fight.state.next();
 		fight.ready();
-		int diffifculty = ChallengeRatingCalculator
-				.calculateel(Fight.state.redTeam)
-				- ChallengeRatingCalculator.calculateel(Squad.active.members);
+		final int elred = ChallengeRatingCalculator
+				.calculateel(Fight.state.redTeam);
+		final int elblue = ChallengeRatingCalculator
+				.calculateel(Squad.active.members);
+		int diffifculty = elred - elblue;
 		if (fight instanceof Minigame
 				|| !Squad.active.skipcombat(diffifculty)) {
 			BattlePanel.current = Fight.state.next;
@@ -162,10 +164,8 @@ public class StartBattle extends BattleEvent {
 		}
 		JavelinApp.originalteam = cloneteam(Fight.state.blueTeam);
 		JavelinApp.originalfoes = cloneteam(Fight.state.redTeam);
-		Fight.originalblueteam = new ArrayList<Combatant>(
-				Fight.state.blueTeam);
-		Fight.originalredteam = new ArrayList<Combatant>(
-				Fight.state.redTeam);
+		Fight.originalblueteam = new ArrayList<Combatant>(Fight.state.blueTeam);
+		Fight.originalredteam = new ArrayList<Combatant>(Fight.state.redTeam);
 	}
 
 	static ArrayList<Combatant> cloneteam(ArrayList<Combatant> team) {

@@ -384,8 +384,7 @@ public class Combatant implements Serializable, Cloneable {
 	 */
 	public void rollinitiative() {
 		ap = -(RPG.r(1, 20) + source.initiative) / 20f;
-		System.out.println(RPG.r(-40, +40) / 10000f + " #initiative");
-		ap += RPG.r(-40, +40) / 10000f;
+		ap += RPG.r(-444, +444) / 100000f;
 		initialap = ap;
 		lastrefresh = -Float.MAX_VALUE;
 

@@ -23,4 +23,14 @@ public abstract class Discipline {
 	public Discipline(String name) {
 		this.name = name;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return name.equals(((Maneuver) obj).name);
+	}
+
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
 }

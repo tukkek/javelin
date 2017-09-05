@@ -152,7 +152,7 @@ public class StatusPanel extends TPanel {
 		if (c.source.touch != null) {
 			s += c.source.touch + "\n";
 		}
-		ArrayList<Maneuver> maneuvers = c.source.disciplines.getmaneuvers();
+		ArrayList<Maneuver> maneuvers = c.disciplines.getmaneuvers();
 		if (!maneuvers.isEmpty()) {
 			s += "Maneveurs\n";
 			for (Maneuver m : maneuvers) {

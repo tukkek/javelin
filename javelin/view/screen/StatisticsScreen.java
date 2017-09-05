@@ -225,11 +225,11 @@ public class StatisticsScreen extends InfoScreen {
 
 	private static String describequalities(Monster m, Combatant c) {
 		ArrayList<String> disciplines = new ArrayList<String>(
-				c.source.disciplines.keySet());
+				c.disciplines.keySet());
 		for (int i = 0; i < disciplines.size(); i++) {
 			String discipline = disciplines.get(i);
 			disciplines.set(i, discipline + " ("
-					+ c.source.disciplines.get(discipline).size() + ")");
+					+ c.disciplines.get(discipline).size() + ")");
 		}
 		String s = printqualities("Disciplines", disciplines);
 		ArrayList<String> spells = new ArrayList<String>(c.spells.size());
@@ -255,7 +255,10 @@ public class StatisticsScreen extends InfoScreen {
 			}
 		}
 		s += printqualities("Special qualities", qualities);
-		return s.substring(0, s.length() - 1);
+		if (!s.isEmpty()) {
+			s = s.substring(0, s.length() - 1);
+		}
+		return s;
 	}
 
 	static String printqualities(String header, ArrayList<?> qualities) {

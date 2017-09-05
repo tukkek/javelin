@@ -72,7 +72,7 @@ public class DefensiveAttack extends ExpertiseAction {
 		target.damage(attack.getaveragedamage(), battleState, attack.energy
 				? target.source.energyresistance : target.source.dr);
 		return new ChanceNode(battleState, chance, "Defensive attack hits!\n"
-				+ target + " is " + target.getstatus() + ".", Delay.WAIT);
+				+ target + " is " + target.getstatus() + ".", Delay.BLOCK);
 	}
 
 	static public int amount(final Combatant combatant, int fallback) {

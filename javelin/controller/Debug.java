@@ -50,16 +50,20 @@ public class Debug {
 		}
 	}
 
-	/**
-	 * Called every time a game starts (roughly the first time the
-	 * {@link WorldScreen} is shown.
-	 */
-	public static void ongamestart() {
-
+	public static String onbattlehelp() {
+		return "";
 	}
 
 	/** Called only once when a {@link Scenario} is initialized. */
 	public static void oncampaignstart() {
+
+	}
+
+	/**
+	 * Called every time a game starts (roughly the first time the
+	 * {@link WorldScreen} is shown.
+	 */
+	public static void oninit() {
 
 	}
 
@@ -71,10 +75,6 @@ public class Debug {
 	 * @return Any text will be printed below the usual help output.
 	 */
 	public static String onworldhelp() {
-		return "";
-	}
-
-	public static String onbattlehelp() {
 		return "";
 	}
 

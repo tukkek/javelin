@@ -12,7 +12,7 @@ public abstract class ExpertiseFeat extends Feat {
 
 	@Override
 	public boolean apply(Combatant c) {
-		c.source.disciplines.add(CombatExpertiseDiscipline.INSTANCE, getmaneuver());
+		c.disciplines.add(CombatExpertiseDiscipline.INSTANCE, getmaneuver());
 		return super.apply(c);
 	}
 

@@ -7,11 +7,7 @@ import java.util.Map;
 import javelin.controller.action.ai.AiMovement;
 import javelin.controller.action.ai.MeleeAttack;
 import javelin.controller.action.ai.RangedAttack;
-import javelin.controller.action.maneuver.DefensiveAttack;
 import javelin.controller.action.maneuver.ExecuteManeuver;
-import javelin.controller.action.maneuver.Feint;
-import javelin.controller.action.maneuver.Grapple;
-import javelin.controller.action.maneuver.Trip;
 import javelin.controller.action.world.Automate;
 import javelin.controller.action.world.Guide;
 import javelin.controller.action.world.OpenJournal;
@@ -26,6 +22,8 @@ import javelin.controller.exception.RepeatTurn;
  * @see WorldAction
  */
 public class ActionMapping {
+	/** Only instance of this class. */
+	public static final ActionMapping SINGLETON = new ActionMapping();
 	/** Canonical array of possible battle actions. */
 	public static final Action[] ACTIONS = new Action[] { //
 			new AutoAttack(), Breath.SINGLETON, // b
@@ -60,12 +58,8 @@ public class ActionMapping {
 
 			Action.MOVE_N, Action.MOVE_NE, Action.MOVE_E, Action.MOVE_SE,
 			Action.MOVE_S, Action.MOVE_SW, Action.MOVE_W, Action.MOVE_NW,
-			AiMovement.SINGLETON, MeleeAttack.SINGLETON, RangedAttack.SINGLETON,
-
-			DefensiveAttack.INSTANCE, Feint.INSTANCE, Grapple.INSTANCE,
-			Trip.INSTANCE, };
-	/** Only instance of this class. */
-	public static final ActionMapping SINGLETON = new ActionMapping();
+			AiMovement.SINGLETON, MeleeAttack.SINGLETON,
+			RangedAttack.SINGLETON, };
 	/** If true will reload keys. */
 	public static boolean reset = false;
 

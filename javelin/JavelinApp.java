@@ -102,7 +102,7 @@ public class JavelinApp extends QuestApp {
 		}
 		StateManager.save(true, StateManager.SAVEFILE);
 		if (Javelin.DEBUG) {
-			Debug.ongamestart();
+			Debug.oninit();
 			while (true) {
 				loop();
 			}

@@ -36,4 +36,14 @@ public abstract class Maneuver implements Serializable, Cloneable {
 	/** See {@link AiAction#getoutcomes(BattleState, Combatant)}. */
 	abstract public List<List<ChanceNode>> getoutcomes(BattleState s,
 			Combatant c);
+
+	@Override
+	public boolean equals(Object obj) {
+		return name.equals(((Maneuver) obj).name);
+	}
+
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
 }

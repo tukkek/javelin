@@ -42,6 +42,9 @@ import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.state.Meld;
 import javelin.model.unit.abilities.Spells;
+import javelin.model.unit.discipline.Discipline;
+import javelin.model.unit.discipline.Disciplines;
+import javelin.model.unit.discipline.Maneuver;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.unique.MercenariesGuild;
@@ -106,6 +109,8 @@ public class Combatant implements Serializable, Cloneable {
 	public int acmodifier = 0;
 	/** List of current active {@link Condition}s on this unit. */
 	private CloneableList<Condition> conditions = new CloneableList<Condition>();
+	/** See {@link Discipline}. */
+	public Disciplines disciplines = new Disciplines();
 	/**
 	 * Canonical representation of the spells this unit has.
 	 *
@@ -192,6 +197,7 @@ public class Combatant implements Serializable, Cloneable {
 			c.location = location.clone();
 			c.conditions = conditions.clone();
 			c.spells = (Spells) spells.clone();
+			c.disciplines = disciplines.clone();
 			c.xp = c.xp.add(new BigDecimal(0));
 			if (c.equipped != null) {
 				c.equipped = (ArrayList<Artifact>) c.equipped.clone();
@@ -518,6 +524,7 @@ public class Combatant implements Serializable, Cloneable {
 			statuslist.add("engaged");
 			for (Combatant c : Fight.state.blueTeam.contains(this)
 					? Fight.state.redTeam : Fight.state.blueTeam) {
+				// TODO clone probably unnecessary?
 				if (state.isflanked(state.clone(this), state.clone(c))) {
 					statuslist.add("flanked");
 					break;
@@ -836,5 +843,10 @@ public class Combatant implements Serializable, Cloneable {
 		if (!mercenary) {
 			xp = xp.add(new BigDecimal(xpgained));
 		}
+	}
+
+	public void ready(Maneuver m) {
+		ap += 1;
+		m.spent = false;
 	}
 }

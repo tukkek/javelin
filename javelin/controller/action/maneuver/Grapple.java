@@ -1,16 +1,18 @@
 package javelin.controller.action.maneuver;
 
+import javelin.controller.action.Action;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.old.Game.Delay;
 import javelin.model.condition.Grappling;
-import javelin.model.feat.attack.martial.ImprovedGrapple;
+import javelin.model.feat.attack.expertise.ImprovedGrapple;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
-public class Grapple extends Maneuver {
+public class Grapple extends ExpertiseAction {
+	public static final Action INSTANCE = new Grapple();
 
-	public Grapple() {
+	private Grapple() {
 		super("Grapple", "G", ImprovedGrapple.SINGLETON, +2);
 	}
 

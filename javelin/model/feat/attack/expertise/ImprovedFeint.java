@@ -1,13 +1,15 @@
-package javelin.model.feat.attack.martial;
+package javelin.model.feat.attack.expertise;
 
 import javelin.model.feat.Feat;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.discipline.expertise.CombatExpertiseManeuver;
+import javelin.model.unit.discipline.expertise.FeintManeuver;
 
 /**
  * @see ImprovedGrapple
  * @author alex
  */
-public class ImprovedFeint extends Feat {
+public class ImprovedFeint extends ExpertiseFeat {
 	/** Unique instance of this {@link Feat}. */
 	public static final ImprovedFeint SINGLETON = new ImprovedFeint();
 
@@ -22,4 +24,8 @@ public class ImprovedFeint extends Feat {
 		return "";
 	}
 
+	@Override
+	protected CombatExpertiseManeuver getmaneuver() {
+		return new FeintManeuver();
+	}
 }

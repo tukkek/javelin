@@ -13,13 +13,10 @@ import javelin.Javelin;
 import javelin.controller.action.Examine;
 import javelin.controller.upgrade.Spell;
 import javelin.model.condition.Breathless;
-import javelin.model.feat.attack.martial.CombatExpertise;
-import javelin.model.feat.attack.martial.ImprovedFeint;
-import javelin.model.feat.attack.martial.ImprovedGrapple;
-import javelin.model.feat.attack.martial.ImprovedTrip;
 import javelin.model.item.Item;
 import javelin.model.spell.conjuration.Summon;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.discipline.Maneuver;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
@@ -139,35 +136,31 @@ public class StatusPanel extends TPanel {
 		return output + "\n\n";
 	}
 
-	String attackdata(final Combatant combatant) {
-		String status = "";
-		if (combatant.hasattacktype(true)) {
-			status += "Mêlée\n";
+	String attackdata(final Combatant c) {
+		String s = "";
+		if (c.hasattacktype(true)) {
+			s += "Mêlée\n";
 		}
-		if (combatant.hasattacktype(false)) {
-			status += "Ranged\n";
+		if (c.hasattacktype(false)) {
+			s += "Ranged\n";
 		}
-		status += "\n";
-		if (!combatant.source.breaths.isEmpty()) {
-			status += combatant.hascondition(Breathless.class) == null
-					? "Breath\n" : "Breathless\n";
+		s += "\n";
+		if (!c.source.breaths.isEmpty()) {
+			s += c.hascondition(Breathless.class) == null ? "Breath\n"
+					: "Breathless\n";
 		}
-		if (combatant.source.touch != null) {
-			status += combatant.source.touch + "\n";
+		if (c.source.touch != null) {
+			s += c.source.touch + "\n";
 		}
-		if (combatant.source.hasfeat(CombatExpertise.SINGLETON)) {
-			status += "Defensive\n";
+		ArrayList<Maneuver> maneuvers = c.source.disciplines.getmaneuvers();
+		if (!maneuvers.isEmpty()) {
+			s += "Maneveurs\n";
+			for (Maneuver m : maneuvers) {
+				String spent = m.spent ? "*" : "";
+				s += " " + m.name + spent + "\n";
+			}
 		}
-		if (combatant.source.hasfeat(ImprovedFeint.SINGLETON)) {
-			status += "Feint\n";
-		}
-		if (combatant.source.hasfeat(ImprovedGrapple.SINGLETON)) {
-			status += "Grapple\n";
-		}
-		if (combatant.source.hasfeat(ImprovedTrip.SINGLETON)) {
-			status += "Trip\n";
-		}
-		return status;
+		return s;
 	}
 
 	String maininfo(Combatant combatant) {

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseAbility;
+import javelin.controller.upgrade.ability.RaiseDexterity;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.classes.Warrior;
@@ -22,8 +23,10 @@ public class MartialAcademy extends Academy {
 
 	static {
 		UpgradeHandler uh = UpgradeHandler.singleton;
-		GUILDS.add(new MartialAcademyData(uh.expertise,
-				"Academy (combat expertise)", RaiseIntelligence.SINGLETON));
+		MartialAcademyData expertise = new MartialAcademyData(uh.expertise,
+				"Academy (combat expertise)", RaiseIntelligence.SINGLETON);
+		expertise.upgrades.add(RaiseDexterity.SINGLETON);
+		GUILDS.add(expertise);
 		GUILDS.add(new MartialAcademyData(uh.power, "Academy (power attack)",
 				RaiseStrength.SINGLETON));
 	}

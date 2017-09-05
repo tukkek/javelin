@@ -8,6 +8,7 @@ import javelin.controller.old.Game;
 import javelin.model.unit.Combatant;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
+import javelin.view.screen.WorldScreen;
 
 /**
  * Shows keyboard commands.
@@ -52,7 +53,6 @@ public class Help extends Action {
 				padding = a.length();
 			}
 			if (!commands.isEmpty()) {
-				// columnb.add(0, commands.getLast());
 				columnb.add(commands.removeLast());
 			}
 		}
@@ -66,7 +66,8 @@ public class Help extends Action {
 		text += "\nKeep up-to-date with new releases at javelinrl.wordpress.com\n"
 				+ "or come discuss the game at reddit.com/r/javelinrl :)";
 		if (Javelin.DEBUG) {
-			text += Debug.onhelp();
+			final boolean isworld = BattleScreen.active instanceof WorldScreen;
+			text += isworld ? Debug.onworldhelp() : Debug.onbattlehelp();
 		}
 		Javelin.app.switchScreen(new InfoScreen(text));
 		Game.getInput();

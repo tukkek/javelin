@@ -26,17 +26,20 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  * http://www.dnd-wiki.org/wiki/Simplified_Special_Attacks_%283.
  * 5e_Variant_Rule%29#Trip
  * 
+ * For the human version of these see {@link ExecuteManeuver}.
+ * 
  * TODO this will probably be better handled in a spell-like fashion, together
  * with martial disciplines
  * 
  * @author alex
  */
-public abstract class Maneuver extends Target implements AiAction {
+public abstract class ExpertiseAction extends Target implements AiAction {
 	private final Feat prerequisite;
 	private int featbonus;
 
-	public Maneuver(String name, String key, Feat prerequisite, int featbonus) {
-		super(name, key);
+	public ExpertiseAction(String name, String key, Feat prerequisite,
+			int featbonus) {
+		super(name);
 		this.prerequisite = prerequisite;
 		this.featbonus = featbonus;
 	}

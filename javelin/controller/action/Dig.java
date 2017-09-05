@@ -22,7 +22,7 @@ public class Dig extends Action implements AiAction {
 	public static final Action SINGLETON = new Dig();
 
 	private Dig() {
-		super("Dig (requires burrow speed)", "d");
+		super("Dig (requires burrow movement)", "d");
 		allowwhileburrowed = true;
 	}
 
@@ -65,8 +65,8 @@ public class Dig extends Action implements AiAction {
 
 	@Override
 	public List<List<ChanceNode>> getoutcomes(BattleState s, Combatant active) {
-		ArrayList<List<ChanceNode>> outcomes =
-				new ArrayList<List<ChanceNode>>(1);
+		ArrayList<List<ChanceNode>> outcomes = new ArrayList<List<ChanceNode>>(
+				1);
 		if (active.source.burrow == 0 || flooded(active, s)) {
 			return outcomes;
 		}

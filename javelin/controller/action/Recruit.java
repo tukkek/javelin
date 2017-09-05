@@ -21,7 +21,7 @@ import javelin.view.screen.BattleScreen;
 public class Recruit extends Action {
 	/** Constructor. */
 	public Recruit() {
-		super("Recruit (dungeon rush)", "R");
+		super("Recruit (dungeon rush only)", "R");
 	}
 
 	@Override
@@ -61,7 +61,8 @@ public class Recruit extends Action {
 	}
 
 	int getcost(Monster spawner) {
-		return Math.round(spawner.challengerating * DungeonRush.PLAYERMANAMULTIPLIER);
+		return Math.round(
+				spawner.challengerating * DungeonRush.PLAYERMANAMULTIPLIER);
 	}
 
 	Combatant hasspawner(Monster summon) {

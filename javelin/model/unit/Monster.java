@@ -39,6 +39,8 @@ import javelin.model.spell.necromancy.Poison;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.Spells;
 import javelin.model.unit.abilities.TouchAttack;
+import javelin.model.unit.discipline.Disciplines;
+import javelin.model.unit.discipline.Maneuvers;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.upgrading.SkillSelectionScreen;
 import tyrant.mikera.engine.RPG;
@@ -151,6 +153,7 @@ public class Monster implements Cloneable, Serializable {
 
 	public ArrayList<AttackSequence> melee = new ArrayList<AttackSequence>();
 	public ArrayList<AttackSequence> ranged = new ArrayList<AttackSequence>();
+	public Disciplines disciplines = new Disciplines();
 
 	public List<Feat> feats = new ArrayList<Feat>();
 	public HD hd = new HD();
@@ -286,6 +289,7 @@ public class Monster implements Cloneable, Serializable {
 			final Monster m = (Monster) super.clone();
 			m.melee = copyattacks(melee);
 			m.ranged = copyattacks(ranged);
+			m.disciplines = copydisciplines();
 			m.feats = new ArrayList<Feat>(m.feats);
 			m.hd = hd.clone();
 			m.breaths = breaths.clone();
@@ -297,6 +301,18 @@ public class Monster implements Cloneable, Serializable {
 		} catch (final CloneNotSupportedException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	Disciplines copydisciplines() {
+		Disciplines disciplines = new Disciplines(this.disciplines);
+		for (String discipline : disciplines.keySet()) {
+			Maneuvers maneuvers = new Maneuvers(disciplines.get(discipline));
+			for (int i = 0; i < maneuvers.size(); i++) {
+				maneuvers.set(i, maneuvers.get(i).clone());
+			}
+			disciplines.put(discipline, maneuvers);
+		}
+		return disciplines;
 	}
 
 	static private ArrayList<AttackSequence> copyattacks(

@@ -1,15 +1,18 @@
 package javelin.controller.action.maneuver;
 
+import javelin.controller.action.Action;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.old.Game.Delay;
 import javelin.model.condition.Feigned;
-import javelin.model.feat.attack.martial.ImprovedFeint;
+import javelin.model.feat.attack.expertise.ImprovedFeint;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
-public class Feint extends Maneuver {
-	public Feint() {
+public class Feint extends ExpertiseAction {
+	public static final Action INSTANCE = new Feint();
+
+	private Feint() {
 		super("Feint", "F", ImprovedFeint.SINGLETON, 0);
 	}
 

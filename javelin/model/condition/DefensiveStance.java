@@ -1,6 +1,6 @@
 package javelin.model.condition;
 
-import javelin.model.feat.attack.martial.CombatExpertise;
+import javelin.model.feat.attack.expertise.CombatExpertise;
 import javelin.model.unit.Combatant;
 
 /**

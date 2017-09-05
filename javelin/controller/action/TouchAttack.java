@@ -6,6 +6,7 @@ import java.util.List;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
@@ -45,8 +46,8 @@ public class TouchAttack extends Fire implements AiAction {
 		javelin.model.unit.abilities.TouchAttack attack = active.source.touch;
 		int damage = attack.damage[0] * attack.damage[1] / 2;
 		List<ChanceNode> nodes = new ArrayList<ChanceNode>();
-		String action =
-				active + " uses " + attack.toString().toLowerCase() + "!\n";
+		String action = active + " uses " + attack.toString().toLowerCase()
+				+ "!\n";
 		float savechance = CastSpell
 				.convertsavedctochance(attack.savedc - active.source.ref);
 		nodes.add(registerdamage(gameState, action + target + " resists, is ",
@@ -74,8 +75,8 @@ public class TouchAttack extends Fire implements AiAction {
 	@Override
 	protected void filtertargets(Combatant combatant, List<Combatant> targets,
 			BattleState s) {
-		ArrayList<Combatant> opponents =
-				s.blueTeam.contains(combatant) ? s.redTeam : s.blueTeam;
+		ArrayList<Combatant> opponents = s.blueTeam.contains(combatant)
+				? s.redTeam : s.blueTeam;
 		for (Combatant target : new ArrayList<Combatant>(targets)) {
 			if (!opponents.contains(target)
 					|| Math.abs(target.location[0] - combatant.location[0]) > 1
@@ -89,6 +90,7 @@ public class TouchAttack extends Fire implements AiAction {
 	@Override
 	protected void checkhero(Combatant hero) {
 		if (hero.source.touch == null) {
+			Game.message("No touch attack known...", Delay.WAIT);
 			throw new RepeatTurn();
 		}
 	}

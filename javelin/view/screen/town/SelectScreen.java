@@ -2,6 +2,7 @@ package javelin.view.screen.town;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -25,7 +26,12 @@ public abstract class SelectScreen extends InfoScreen {
 			"####,###,##0");
 	/** Default key to proceed ({@value #PROCEED}). */
 	public static final char PROCEED = 'q';
-	/** List of keys except q. */
+	/**
+	 * List of keys except q.
+	 * 
+	 * TODO would probably work better as a list (with indexof(), etc). Can use
+	 * {@link Arrays#asList(Object...)}.
+	 */
 	public static final char[] KEYS = "1234567890abcdefghijklmnoprstuvxwyz/*-+.?!@#$%&()_=[]{}<>;:\"\\|"
 			.toCharArray();
 	/** Current town or <code>null</code>. */
@@ -176,9 +182,9 @@ public abstract class SelectScreen extends InfoScreen {
 		return select(o);
 	}
 
-	Option convertselectionkey(Character feedback, List<Option> options) {
+	static Option convertselectionkey(Character c, List<Option> options) {
 		for (Option o : options) {
-			if (o.key == feedback) {
+			if (o.key == c) {
 				return o;
 			}
 		}
@@ -186,7 +192,6 @@ public abstract class SelectScreen extends InfoScreen {
 	}
 
 	/**
-	 * @param options
 	 * @return selection index or -1 if not chosen.
 	 */
 	static public int convertnumericselection(char feedback, char[] keys) {

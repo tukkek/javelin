@@ -8,6 +8,7 @@ import javelin.controller.action.ai.AiMovement;
 import javelin.controller.action.ai.MeleeAttack;
 import javelin.controller.action.ai.RangedAttack;
 import javelin.controller.action.maneuver.DefensiveAttack;
+import javelin.controller.action.maneuver.ExecuteManeuver;
 import javelin.controller.action.maneuver.Feint;
 import javelin.controller.action.maneuver.Grapple;
 import javelin.controller.action.maneuver.Trip;
@@ -39,13 +40,10 @@ public class ActionMapping {
 			new Recruit(), new TouchAttack(), // t
 			Defend.SINGLETON, // w
 			new Examine(), // x
+			ExecuteManeuver.INSTANCE, // m
 
 			new ActionAdapter(new Automate()), // A
-			new DefensiveAttack(), // D
-			new Feint(), // F
-			new Grapple(), // G
 			new ConfigureBattleKeys(), // K
-			new Trip(), // T
 			new Withdraw(), // W
 
 			new ZoomOut(), // -
@@ -62,8 +60,10 @@ public class ActionMapping {
 
 			Action.MOVE_N, Action.MOVE_NE, Action.MOVE_E, Action.MOVE_SE,
 			Action.MOVE_S, Action.MOVE_SW, Action.MOVE_W, Action.MOVE_NW,
-			AiMovement.SINGLETON, MeleeAttack.SINGLETON,
-			RangedAttack.SINGLETON };
+			AiMovement.SINGLETON, MeleeAttack.SINGLETON, RangedAttack.SINGLETON,
+
+			DefensiveAttack.INSTANCE, Feint.INSTANCE, Grapple.INSTANCE,
+			Trip.INSTANCE, };
 	/** Only instance of this class. */
 	public static final ActionMapping SINGLETON = new ActionMapping();
 	/** If true will reload keys. */

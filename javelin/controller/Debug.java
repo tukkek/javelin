@@ -23,6 +23,33 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class Debug {
+	static class Helpers {
+		static void healall() {
+			for (Combatant c : Squad.active.members) {
+				c.hp = c.maxhp;
+				c.detox(c.source.poison);
+			}
+		}
+
+		static void additems(Item[] items) {
+			for (Item i : items) {
+				Squad.active.receiveitem(i);
+			}
+		}
+
+		static String printtowninfo() {
+			String s = "\n\n";
+			for (Town t : Town.gettowns()) {
+				s += t.population + " ";
+			}
+			s += "\n\n";
+			for (Town t : Town.gettowns()) {
+				s += ChallengeRatingCalculator.calculateel(t.garrison) + " ";
+			}
+			return s;
+		}
+	}
+
 	/**
 	 * Called every time a game starts (roughly the first time the
 	 * {@link WorldScreen} is shown.
@@ -33,8 +60,7 @@ public class Debug {
 
 	/** Called only once when a {@link Scenario} is initialized. */
 	public static void oncampaignstart() {
-		Squad.active.members
-				.add(new Combatant(Javelin.getmonster("Medusa"), true));
+
 	}
 
 	/**
@@ -44,33 +70,12 @@ public class Debug {
 	 * 
 	 * @return Any text will be printed below the usual help output.
 	 */
-	public static String onhelp() {
+	public static String onworldhelp() {
 		return "";
 	}
 
-	static void healall() {
-		for (Combatant c : Squad.active.members) {
-			c.hp = c.maxhp;
-			c.detox(c.source.poison);
-		}
-	}
-
-	static void additems(Item[] items) {
-		for (Item i : items) {
-			Squad.active.receiveitem(i);
-		}
-	}
-
-	static String printtowninfo() {
-		String s = "\n\n";
-		for (Town t : Town.gettowns()) {
-			s += t.population + " ";
-		}
-		s += "\n\n";
-		for (Town t : Town.gettowns()) {
-			s += ChallengeRatingCalculator.calculateel(t.garrison) + " ";
-		}
-		return s;
+	public static String onbattlehelp() {
+		return "";
 	}
 
 }

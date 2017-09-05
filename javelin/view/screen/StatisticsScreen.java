@@ -6,6 +6,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.quality.Quality;
+import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.classes.ClassAdvancement;
 import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Combatant;
@@ -107,7 +108,7 @@ public class StatisticsScreen extends InfoScreen {
 			for (javelin.model.feat.Feat f : m.feats) {
 				feats += f + ", ";
 			}
-			lines.add(feats.substring(0, feats.length() - 2));
+			lines.add(feats.substring(0, feats.length() - 2) + ".");
 			lines.add("");
 		}
 		final String skills = showskills(m);
@@ -181,7 +182,7 @@ public class StatisticsScreen extends InfoScreen {
 		output += formatskill("survival", s.survival, m.wisdom);
 		output += formatskill("use magic device", s.usemagicdevice, m.charisma);
 		return output.isEmpty() ? null
-				: "Skills: " + output.substring(0, output.length() - 2) + "\n";
+				: "Skills: " + output.substring(0, output.length() - 2) + ".\n";
 	}
 
 	static String describealignment(Monster m) {
@@ -223,11 +224,19 @@ public class StatisticsScreen extends InfoScreen {
 	}
 
 	private static String describequalities(Monster m, Combatant c) {
-		ArrayList<String> spells = new ArrayList<String>(c.spells.size());
-		for (javelin.controller.upgrade.Spell s : c.spells) {
-			spells.add(s.toString());
+		ArrayList<String> disciplines = new ArrayList<String>(
+				c.source.disciplines.keySet());
+		for (int i = 0; i < disciplines.size(); i++) {
+			String discipline = disciplines.get(i);
+			disciplines.set(i, discipline + " ("
+					+ c.source.disciplines.get(discipline).size() + ")");
 		}
-		String string = printqualities("Spells", spells);
+		String s = printqualities("Disciplines", disciplines);
+		ArrayList<String> spells = new ArrayList<String>(c.spells.size());
+		for (Spell spell : c.spells) {
+			spells.add(spell.toString());
+		}
+		s += printqualities("Spells", spells);
 		ArrayList<String> attacks = new ArrayList<String>();
 		for (BreathWeapon breath : m.breaths) {
 			attacks.add(breath.toString());
@@ -235,7 +244,7 @@ public class StatisticsScreen extends InfoScreen {
 		if (m.touch != null) {
 			attacks.add(m.touch.toString());
 		}
-		string += printqualities("Special attacks", attacks);
+		s += printqualities("Special attacks", attacks);
 		ArrayList<String> qualities = new ArrayList<String>();
 		for (Quality q : Quality.qualities) {
 			if (q.has(m)) {
@@ -245,7 +254,8 @@ public class StatisticsScreen extends InfoScreen {
 				}
 			}
 		}
-		return string + printqualities("Special qualities", qualities);
+		s += printqualities("Special qualities", qualities);
+		return s.substring(0, s.length() - 1);
 	}
 
 	static String printqualities(String header, ArrayList<?> qualities) {
@@ -257,7 +267,7 @@ public class StatisticsScreen extends InfoScreen {
 		for (Object quality : qualities) {
 			header += quality.toString().toLowerCase() + ", ";
 		}
-		return header.substring(0, header.length() - 2) + "\n";
+		return header.substring(0, header.length() - 2) + ".\n\n";
 	}
 
 	static void listattacks(ArrayList<String> lines,

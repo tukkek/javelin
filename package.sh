@@ -8,9 +8,9 @@ rm package/javelin/doc/.*~
 cp -r avatars/ package/javelin
 cp -r maps/ package/javelin
 cp monsters.xml package/javelin
+cp javelin.bat package/javelin
 cp preferences.properties package/javelin
 cp README.txt package/javelin
-cp scripts/* package/javelin
 rm javelin.zip
 cd package
 rm -r javelin/doc/javadoc

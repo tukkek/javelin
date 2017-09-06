@@ -1,1 +1,1 @@
-java -jar javelin.jar scenario
+java -jar javelin.jar campaign

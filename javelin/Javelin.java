@@ -30,8 +30,6 @@ import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
-import javelin.controller.scenario.Campaign;
-import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.hazard.PartyHazard;
 import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.UpgradeHandler;
@@ -44,6 +42,7 @@ import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.labor.military.Academy;
+import javelin.view.ModeSelectionScreen;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.NamingScreen;
@@ -127,8 +126,7 @@ public class Javelin {
 	 */
 	public static void main(final String[] args) {
 		Thread.currentThread().setName("Javelin");
-		World.scenario = args.length > 0 && args[0].equalsIgnoreCase("scenario")
-				? new Scenario() : new Campaign();
+		ModeSelectionScreen.choose();
 		app = new JavelinApp();
 		final JFrame f = new JFrame(TITLE);
 		f.setBackground(java.awt.Color.black);

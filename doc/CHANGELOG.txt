@@ -5,7 +5,8 @@ Version 1.7
  * City management redesign, with 7 city traits and 36 projects!
  * Scenario mode!
  * Caster rings!
- * New locations: natural resources and Assassins Guild
+ * New locations: natural resources, Assassins Guild and Deep Dungeon
+ * Introducing 6 Haunt locations
  * Infiltrate hostile locations
  * World map fog-of-war
  * More responsive user-interface during battles

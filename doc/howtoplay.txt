@@ -2,9 +2,9 @@ Javelin is a complex game with simple rules. You can learn everything just by pl
 
 You control a squad and do battle around the world. Towns have shops, let you rest to recover health and upgrade your units when they have enough experience points (XP). You can manage how towns grow or let the game do that for you.
 
-Every time you start a new game a new world is generated! If you don't like the world you're in you can press SHIFT+q to quit and start a new game. If you want to keep your current progress and continue later on just close the game window.
+Every time you start a new game a new world is generated! If you don't like the world you're in, you can press SHIFT+q to quit and start a new game. If you want to keep your current progress and continue later on just close the game window.
 
-There are several types of terrain in the game: plains and hills (easy), forest (moderate), mountains and desert (hard) and marsh (very hard). When the game starts you will probably want to stay very close to the nearest city and level up your party once or twice before adventuring farther. If you're having  trouble getting far on the map select faster starting units or bring workers from towns to build roads and inns on your path.
+There are several types of terrain in the game: plains and hills (easy), forest (moderate), mountains and desert (hard) and marsh (very hard). When the game starts you will probably want to stay very close to the nearest city and level up your party once or twice before adventuring farther. If you're having trouble getting far on the map, select faster starting units or obtain a few class level upgrades first.
 
 Don't forget that fleeing is an option if a situation ever seems less than favorable! Press h in and out of battle for a list of all possible actions. You can also press K to configure your command keys in and out of battle.   
 
@@ -13,11 +13,9 @@ A few nearby locations can help you at the start of the game:
  - Training Hall: lets you earn experience and feats in a safer environment
  - Temple of Haxor: allows you to do a variety of things during the entire game
  
-Another special location for new players is the Arena. The Arena can be seen as a mini-game or a separate game mode for Javelin. Players who are not looking for long-term strategy or a complete RPG campaign experience are probably going to feel more at home in the Arena, where they can focus on combat and growing in power much faster than in the main game world - even players who enjoy Javelin's campaign mode will probably feel tempted to just spend some time in the Arena now and again, which is a more light-hearted game experience. If you think you'd enjoy it the Arena can be accessed at any point in time (unless in battle), just press h to see the corresponding key to it. Once you get used to the coin and betting system you'll be able to ascend in power very fast!
-
 The game's main objective is to beat your own highscore, which is recorded when the game ends. The end-goal is to vanquish all Temples and reap your reward with Haxor. Good luck and have fun!
 
 Check out these websites for more information:
  * javelinrl.wordpress.com (news and updates)
  * reddit.com/r/javelinrl (official game forum)
- * d20srd.org (game rules)
+ * d20srd.org (3.5 SRD game rules)

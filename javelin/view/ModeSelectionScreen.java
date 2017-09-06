@@ -8,24 +8,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 
+import javelin.controller.TextReader;
 import javelin.controller.scenario.Campaign;
 import javelin.controller.scenario.Scenario;
 import javelin.model.world.World;
 
 public class ModeSelectionScreen extends Frame {
-	private static final String[] MESSAGES = new String[] {
-			"Javelin offers two game modes:", "",
-			"* Campaign: a long, epic quest to retrieve the seven Relics from deep inside their ancient Temples. It presents all of the game features, including mini-games.",
-			"",
-			"* Scenario: a shorter mode, offering a challenging experience in which you have to capture all enemy towns. It has a reduced number of game features but is more suitable to play in a single session.",
-			"",
-			"You can read more about each mode by pressing F1 after the game has started.",
-			"", "What mode do you want to start (or continue) today?" };
-
 	class Close extends WindowAdapter {
 		@Override
 		public void windowClosing(WindowEvent e) {
@@ -56,7 +49,8 @@ public class ModeSelectionScreen extends Frame {
 
 	ArrayList<String> preparetext() {
 		ArrayList<String> lines = new ArrayList<String>();
-		for (String s : MESSAGES) {
+		String file = TextReader.read(new File("doc", "introduction.txt"));
+		for (String s : file.trim().split("\n")) {
 			String line = "";
 			for (String word : s.split(" ")) {
 				line += word + " ";

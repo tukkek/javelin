@@ -1,0 +1,7 @@
+Javelin offers two game modes:
+
+* Campaign: a long, epic quest to retrieve the seven Relics from deep inside their ancient Temples. It presents all of the game features, including mini-games. This is recommended for newcomers.
+
+* Scenario: a shorter mode, offering a challenging experience in which you have to capture all enemy towns. It has a reduced number of game features but is more suitable to play in a single session.
+
+You can read more about each mode by pressing F1 after the game has started.

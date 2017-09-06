@@ -2,4 +2,4 @@ Scenarios are a short mode of gameplay designed to be enjoyed over the course of
 
 Your objective in scenario mode is to capture all hostile towns in the world map.
 
-In a scenario, the map is smaller, there aren't hazards or random encounters during world exploration and there is only one enemy faction to battle against. Units and towns start at higher power and population levels. Starting locations are static, without anything new spawning later on, so you need to be careful over how you execute your game plan. City management is very basic, without urban traits. Only certain types of world features are enabled and fog of war is disabled in the world screen.
+In a scenario, the map is less crowded, there aren't hazards or random encounters during world exploration and there is only one enemy faction to battle against. Units and towns start at higher power and population levels. Starting locations are static, without anything new spawning later on, so you need to be careful over how you execute your game plan. City management is very basic, without urban traits. Only certain types of world features are enabled and fog of war is disabled in the world screen.

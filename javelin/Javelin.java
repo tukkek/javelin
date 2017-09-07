@@ -42,7 +42,7 @@ import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.labor.military.Academy;
-import javelin.view.ModeSelectionScreen;
+import javelin.view.ModeSelectionDialog;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.NamingScreen;
@@ -126,7 +126,7 @@ public class Javelin {
 	 */
 	public static void main(final String[] args) {
 		Thread.currentThread().setName("Javelin");
-		ModeSelectionScreen.choose();
+		ModeSelectionDialog.choose(args);
 		app = new JavelinApp();
 		final JFrame f = new JFrame(TITLE);
 		f.setBackground(java.awt.Color.black);
@@ -393,7 +393,7 @@ public class Javelin {
 	/**
 	 * Utility function for user-input selection.
 	 *
-	 * @param output
+	 * @param prompt
 	 *            Text to show the user.
 	 * @param names
 	 *            Will show each's {@link Object#toString()} as an option.
@@ -403,14 +403,15 @@ public class Javelin {
 	 * @param forceselection
 	 *            If <code>false</code> will allow the user to abort the
 	 *            operation.
-	 * @return The index of the selected element or -1 if aborted.
+	 * @return The index of the selected element or -1 if aborted. Won't return
+	 *         an invalid index other than -1.
 	 */
-	static public int choose(String output, List<?> names, boolean fullscreen,
+	static public int choose(String prompt, List<?> names, boolean fullscreen,
 			boolean forceselection) {
 		if (!forceselection) {
-			output += " (q to quit)";
+			prompt += " (q to quit)";
 		}
-		output += " \n\n";
+		prompt += " \n\n";
 		int nnames = names.size();
 		boolean multicolumn = nnames > 20;
 		ArrayList<Object> options = new ArrayList<Object>();
@@ -424,17 +425,17 @@ public class Javelin {
 					item += " ";
 				}
 			}
-			output += item;
+			prompt += item;
 			if (!multicolumn || !leftcolumn) {
-				output += "\n";
+				prompt += "\n";
 			}
 		}
 		if (fullscreen) {
-			app.switchScreen(new InfoScreen(output));
+			app.switchScreen(new InfoScreen(prompt));
 		} else {
 			app.switchScreen(BattleScreen.active);
 			Game.messagepanel.clear();
-			Game.message(output, Delay.NONE);
+			Game.message(prompt, Delay.NONE);
 		}
 		while (true) {
 			try {

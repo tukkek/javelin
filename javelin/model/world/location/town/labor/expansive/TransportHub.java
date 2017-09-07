@@ -6,10 +6,10 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.terrain.Terrain;
-import javelin.model.unit.Combatant;
+import javelin.model.transport.FlyingNimbus;
+import javelin.model.transport.Transport;
 import javelin.model.unit.Squad;
-import javelin.model.unit.transport.FlyingNimbus;
-import javelin.model.unit.transport.Transport;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;

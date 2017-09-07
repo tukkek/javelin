@@ -1,8 +1,8 @@
 package javelin.controller.upgrade.ability;
 
 import javelin.controller.upgrade.Upgrade;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * @see RaiseAbility

@@ -5,7 +5,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.fight.Siege;
 import javelin.controller.terrain.Terrain;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.Location;
 import tyrant.mikera.engine.RPG;
 

@@ -5,9 +5,9 @@ import java.util.List;
 
 import javelin.controller.DamageEffect;
 import javelin.controller.db.reader.MonsterReader;
-import javelin.controller.upgrade.Spell;
-import javelin.model.unit.Attack;
-import javelin.model.unit.AttackSequence;
+import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.attack.Attack;
+import javelin.model.unit.attack.AttackSequence;
 
 /**
  * @see FieldReader

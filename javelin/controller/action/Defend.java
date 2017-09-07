@@ -8,7 +8,7 @@ import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.ai.AiMovement;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * Full Defense action. w is a better keyboard shortcut for it though.

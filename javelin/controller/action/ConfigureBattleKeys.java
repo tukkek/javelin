@@ -1,6 +1,6 @@
 package javelin.controller.action;
 
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 import javelin.view.frame.keys.BattleKeysScreen;
 
 /**

@@ -12,9 +12,9 @@ import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
-import javelin.controller.upgrade.Spell;
 import javelin.model.state.BattleState;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.attack.Combatant;
 import javelin.view.screen.InfoScreen;
 
 /**

@@ -13,7 +13,7 @@ import javelin.controller.ai.Node;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 import javelin.view.Images;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 

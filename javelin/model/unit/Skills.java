@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 import javelin.controller.Weather;
 import javelin.controller.ai.BattleAi;
-import javelin.controller.upgrade.Spell;
-import javelin.model.feat.skill.Alertness;
-import javelin.model.feat.skill.Deceitful;
 import javelin.model.item.Scroll;
 import javelin.model.item.Wand;
+import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.feat.skill.Alertness;
+import javelin.model.unit.feat.skill.Deceitful;
 
 /**
  * Keeps track of skill ranks of a certain {@link Monster}.

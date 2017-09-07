@@ -1,10 +1,10 @@
 package javelin.model.item.relic;
 
-import javelin.controller.upgrade.Spell;
 import javelin.model.Realm;
-import javelin.model.condition.Condition;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.condition.Condition;
 
 /**
  * restores all used spells, recovers hp and eliminates conditions

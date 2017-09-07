@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javelin.Javelin;
 import javelin.controller.terrain.Terrain;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * Generates a harder battle than a {@link RandomEncounter}.

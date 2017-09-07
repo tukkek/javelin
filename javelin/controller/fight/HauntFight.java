@@ -5,7 +5,7 @@ import java.util.Collections;
 
 import javelin.controller.BattleSetup;
 import javelin.controller.Point;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.Location;
 
 public class HauntFight extends Siege {

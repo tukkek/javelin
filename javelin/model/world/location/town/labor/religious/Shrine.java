@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.District;

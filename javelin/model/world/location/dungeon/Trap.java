@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
+import javelin.model.unit.attack.Combatant;
 import javelin.view.screen.DungeonScreen;
 import tyrant.mikera.engine.RPG;
 

@@ -3,11 +3,11 @@ package javelin.controller.action.maneuver;
 import javelin.controller.action.Action;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.old.Game.Delay;
-import javelin.model.condition.Grappling;
-import javelin.model.feat.attack.expertise.ImprovedGrapple;
 import javelin.model.state.BattleState;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.condition.Grappling;
+import javelin.model.unit.feat.attack.expertise.ImprovedGrapple;
 
 public class Grapple extends ExpertiseAction {
 	public static final Action INSTANCE = new Grapple();

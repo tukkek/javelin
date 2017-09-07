@@ -2,8 +2,8 @@ package javelin.model.item.relic;
 
 import javelin.Javelin;
 import javelin.model.Realm;
-import javelin.model.condition.Knowledgeable;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.condition.Knowledgeable;
 
 /**
  * Gives +5 to each skill for a week (all-knowing condition)

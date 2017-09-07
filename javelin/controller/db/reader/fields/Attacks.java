@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import javelin.controller.db.reader.MonsterReader;
-import javelin.model.unit.Attack;
-import javelin.model.unit.AttackSequence;
+import javelin.model.unit.attack.Attack;
+import javelin.model.unit.attack.AttackSequence;
 
 /**
  * @see FieldReader

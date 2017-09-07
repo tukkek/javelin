@@ -6,8 +6,8 @@ import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.ExhibitionFight;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * Exhibition against a shingle opponent.

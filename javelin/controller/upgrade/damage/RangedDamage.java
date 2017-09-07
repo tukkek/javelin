@@ -2,8 +2,8 @@ package javelin.controller.upgrade.damage;
 
 import java.util.List;
 
-import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.AttackSequence;
 
 /**
  * Upgrades ranged damage.

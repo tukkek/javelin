@@ -6,8 +6,8 @@ import java.util.List;
 
 import javelin.controller.kit.Kit;
 import javelin.controller.terrain.Terrain;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.military.Academy;

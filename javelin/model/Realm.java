@@ -6,7 +6,7 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 import tyrant.mikera.engine.RPG;
 
 /**

@@ -5,8 +5,8 @@ import java.util.List;
 
 import javelin.controller.kit.Kit;
 import javelin.controller.terrain.Terrain;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.military.Academy;
@@ -46,7 +46,7 @@ public class ArcheryRange extends Guild {
 	}
 
 	@Override
-	protected javelin.model.unit.Combatant[] generatehires() {
+	protected javelin.model.unit.attack.Combatant[] generatehires() {
 		return new Combatant[] { generatehire(7, "Tracker", 1, 5),
 				generatehire(30, "Ranger", 6, 10) };
 	}

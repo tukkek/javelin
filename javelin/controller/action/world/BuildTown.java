@@ -3,8 +3,8 @@ package javelin.controller.action.world;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.WorldGenerator;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.WorldScreen;
 

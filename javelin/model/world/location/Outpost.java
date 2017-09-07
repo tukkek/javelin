@@ -6,7 +6,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.WorldGenerator;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.World;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.District;

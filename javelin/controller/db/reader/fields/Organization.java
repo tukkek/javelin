@@ -11,8 +11,8 @@ import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.generator.encounter.EncounterPossibilities;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * @see FieldReader

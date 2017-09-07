@@ -9,7 +9,7 @@ import javelin.controller.comparator.ItemPriceComparator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.unique.UniqueLocation;

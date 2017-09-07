@@ -7,8 +7,8 @@ import javelin.controller.action.Movement;
 import javelin.controller.walker.Walker;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.state.Meld;
-import javelin.model.unit.Combatant;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.screen.BattleScreen;
 

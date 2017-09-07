@@ -1,9 +1,9 @@
 package javelin.controller.upgrade;
 
 import javelin.controller.ai.BattleAi;
-import javelin.model.feat.Feat;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.feat.Feat;
 
 /**
  * Adds a feat as an upgrade. It can be used by just giving a {@link Feat} to

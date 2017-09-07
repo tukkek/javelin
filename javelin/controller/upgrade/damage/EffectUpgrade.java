@@ -2,11 +2,11 @@ package javelin.controller.upgrade.damage;
 
 import java.util.HashSet;
 
-import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.Upgrade;
-import javelin.model.unit.Attack;
-import javelin.model.unit.AttackSequence;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.attack.Attack;
+import javelin.model.unit.attack.AttackSequence;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * Adds an effect to all melee attacks.

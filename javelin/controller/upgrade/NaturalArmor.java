@@ -1,7 +1,7 @@
 package javelin.controller.upgrade;
 
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * See the d20 SRD for more info.

@@ -3,9 +3,9 @@ package javelin.view.screen;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.haunt.Haunt;
 import javelin.model.world.location.town.labor.base.Dwelling;
 import javelin.model.world.location.unique.Haxor;

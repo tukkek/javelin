@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import javelin.Javelin;
 import javelin.controller.action.CastSpell;
-import javelin.controller.upgrade.Spell;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.attack.Combatant;
 import tyrant.mikera.engine.RPG;
 
 /**

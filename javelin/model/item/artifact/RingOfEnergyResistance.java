@@ -1,7 +1,7 @@
 package javelin.model.item.artifact;
 
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * Adds to {@link Monster#energyresistance}.

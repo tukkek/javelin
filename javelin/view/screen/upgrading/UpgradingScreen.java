@@ -11,11 +11,11 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.Upgrade;
-import javelin.model.feat.Feat;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.feat.Feat;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.Town;

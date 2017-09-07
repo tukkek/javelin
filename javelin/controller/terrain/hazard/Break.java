@@ -1,9 +1,9 @@
 package javelin.controller.terrain.hazard;
 
 import javelin.Javelin;
+import javelin.model.transport.Carriage;
+import javelin.model.transport.Transport;
 import javelin.model.unit.Squad;
-import javelin.model.unit.transport.Carriage;
-import javelin.model.unit.transport.Transport;
 import javelin.model.world.World;
 
 /**

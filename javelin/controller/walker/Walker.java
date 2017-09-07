@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import javelin.controller.Point;
 import javelin.controller.action.Target;
 import javelin.model.state.BattleState;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 import javelin.view.mappanel.MoveOverlay;
 
 /**

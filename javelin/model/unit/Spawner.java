@@ -4,6 +4,7 @@ import javelin.controller.BattleSetup;
 import javelin.controller.Point;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.Rush;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * Special type of unit (more like a building) used in {@link Rush}es.

@@ -4,7 +4,7 @@ import java.awt.Image;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Incursion;
 import tyrant.mikera.tyrant.QuestApp;
 

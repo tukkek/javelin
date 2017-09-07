@@ -7,7 +7,7 @@ import java.util.List;
 
 import javelin.controller.action.Action;
 import javelin.model.state.BattleState;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * Describes the game state.

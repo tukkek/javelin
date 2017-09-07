@@ -3,8 +3,8 @@ package javelin.controller.upgrade.ability;
 import javelin.controller.challenge.factor.HdFactor;
 import javelin.controller.challenge.factor.SkillsFactor;
 import javelin.controller.upgrade.classes.ClassAdvancement;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * @see RaiseAbility

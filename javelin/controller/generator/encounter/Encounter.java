@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * A group of monsters to be fought against.

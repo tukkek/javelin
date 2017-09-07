@@ -7,8 +7,8 @@ import java.util.Collections;
 import java.util.HashSet;
 
 import javelin.Javelin;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * Changes the image used to represent a {@link Combatant}.

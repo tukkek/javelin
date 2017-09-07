@@ -14,8 +14,8 @@ import javelin.controller.action.SimpleAction;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.unit.attack.Combatant;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 

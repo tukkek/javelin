@@ -2,7 +2,7 @@ package javelin.controller.comparator;
 
 import java.util.Comparator;
 
-import javelin.controller.upgrade.Spell;
+import javelin.model.unit.abilities.spell.Spell;
 
 public class SpellLevelComparator implements Comparator<Spell> {
 	public static final SpellLevelComparator SINGLETON = new SpellLevelComparator();

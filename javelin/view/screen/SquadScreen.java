@@ -6,9 +6,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.World;
 import tyrant.mikera.engine.RPG;
 

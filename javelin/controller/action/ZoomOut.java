@@ -1,7 +1,7 @@
 package javelin.controller.action;
 
 import javelin.controller.exception.RepeatTurn;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 import javelin.view.screen.BattleScreen;
 
 /**

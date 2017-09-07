@@ -1,7 +1,7 @@
 package javelin.model.item.instrument;
 
-import javelin.controller.upgrade.Spell;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.attack.Combatant;
 import javelin.view.screen.town.PurchaseScreen;
 
 /**

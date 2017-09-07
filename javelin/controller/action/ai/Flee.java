@@ -12,7 +12,7 @@ import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * This is a special {@link AiAction} that is not included in the normal

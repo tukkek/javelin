@@ -2,8 +2,8 @@ package javelin.view.screen.haxor;
 
 import javelin.Javelin;
 import javelin.controller.exception.battle.EndBattle;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * One-time offer to ressurect a fallen friendly {@link Combatant}.

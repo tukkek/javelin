@@ -8,8 +8,8 @@ import javelin.controller.exception.UnbalancedTeams;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.ExhibitionFight;
 import javelin.controller.generator.encounter.EncounterGenerator;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * Exhibition against many opponents.

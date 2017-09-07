@@ -12,8 +12,8 @@ import java.util.TreeMap;
 import javax.imageio.ImageIO;
 
 import javelin.model.state.Meld;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
 

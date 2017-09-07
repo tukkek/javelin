@@ -1,9 +1,9 @@
 package javelin.model.item.relic;
 
 import javelin.model.Realm;
-import javelin.model.condition.Heroic;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.condition.Heroic;
 
 /**
  * Recovers full hp and applies heroism to squad units for a day

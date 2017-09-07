@@ -2,13 +2,13 @@ package javelin.controller;
 
 import java.util.ArrayList;
 
-import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.damage.EffectUpgrade;
 import javelin.model.Realm;
-import javelin.model.spell.enchantment.compulsion.HoldMonster;
-import javelin.model.spell.necromancy.Doom;
-import javelin.model.spell.necromancy.Poison;
-import javelin.model.unit.Attack;
+import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.abilities.spell.enchantment.compulsion.HoldMonster;
+import javelin.model.unit.abilities.spell.necromancy.Doom;
+import javelin.model.unit.abilities.spell.necromancy.Poison;
+import javelin.model.unit.attack.Attack;
 import javelin.model.world.location.town.Town;
 
 /**

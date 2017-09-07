@@ -1,6 +1,6 @@
 package javelin.view.screen.hiringacademy;
 
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 import javelin.view.screen.Option;
 
 class Hire extends Option {

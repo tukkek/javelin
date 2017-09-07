@@ -6,7 +6,7 @@ package javelin.controller;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * X Y coordinate.

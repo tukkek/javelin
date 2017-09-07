@@ -13,7 +13,7 @@ import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.ai.Flee;
 import javelin.controller.exception.StopThinking;
 import javelin.model.state.BattleState;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * An {@link Iterator} that uses {@link Action}s from

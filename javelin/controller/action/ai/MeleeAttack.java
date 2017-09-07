@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.ai.ChanceNode;
-import javelin.model.condition.Prone;
 import javelin.model.state.BattleState;
-import javelin.model.unit.AttackSequence;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.AttackSequence;
+import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.condition.Prone;
 
 public class MeleeAttack extends AbstractAttack {
 	static final public MeleeAttack SINGLETON = new MeleeAttack();

@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 import javelin.Javelin;
-import javelin.model.unit.Attack;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
+import javelin.model.unit.attack.Attack;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;

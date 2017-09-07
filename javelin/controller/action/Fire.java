@@ -5,10 +5,10 @@ import java.util.List;
 import javelin.controller.action.ai.RangedAttack;
 import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
-import javelin.model.unit.Attack;
-import javelin.model.unit.AttackSequence;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.CurrentAttack;
+import javelin.model.unit.attack.Attack;
+import javelin.model.unit.attack.AttackSequence;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * Ranged attack.

@@ -1,8 +1,8 @@
 package javelin.controller.quality;
 
-import javelin.controller.upgrade.Spell;
-import javelin.model.spell.necromancy.Doom;
 import javelin.model.unit.Monster;
+import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.abilities.spell.necromancy.Doom;
 
 /**
  * Currently gives a monster at will casts of {@link Doom} since worst fear

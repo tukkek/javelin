@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
 
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.unique.minigame.Arena;
 import javelin.view.frame.Frame;
 

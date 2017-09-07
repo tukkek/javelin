@@ -3,8 +3,8 @@ package javelin.controller.quality.resistance;
 import javelin.controller.quality.Quality;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * Tries to treat all energies as a single resistance.

@@ -1,8 +1,8 @@
 package javelin.model.item;
 
 import javelin.Javelin;
-import javelin.controller.upgrade.Spell;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * Represent a consumable potion to be used in-battle. Any monster can use a
@@ -11,7 +11,7 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class Potion extends Item {
-	javelin.controller.upgrade.Spell spell;
+	javelin.model.unit.abilities.spell.Spell spell;
 
 	/**
 	 * @param s

@@ -20,7 +20,7 @@ import javelin.JavelinApp;
 import javelin.controller.Weather;
 import javelin.controller.action.world.OpenJournal;
 import javelin.controller.exception.battle.EndBattle;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.Season;

@@ -2,7 +2,7 @@ package javelin.controller.comparator;
 
 import java.util.Comparator;
 
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 
 public class CombatantHealthComparator implements Comparator<Combatant> {
 	public static final CombatantHealthComparator SINGLETON = new CombatantHealthComparator();

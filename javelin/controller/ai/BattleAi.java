@@ -3,9 +3,9 @@ package javelin.controller.ai;
 import java.util.List;
 
 import javelin.controller.ai.valueselector.ValueSelector;
-import javelin.model.condition.Defending;
 import javelin.model.state.BattleState;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.condition.Defending;
 
 /**
  * Javelin's implementation of {@link AlphaBetaSearch}.

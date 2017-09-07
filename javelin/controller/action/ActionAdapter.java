@@ -1,7 +1,7 @@
 package javelin.controller.action;
 
 import javelin.controller.action.world.WorldAction;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * Used to create an in-battle {@link Action} from a {@link WorldAction}.

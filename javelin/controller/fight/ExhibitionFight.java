@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javelin.controller.fight.tournament.Exhibition;
 import javelin.controller.map.Arena;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * Tournament event.

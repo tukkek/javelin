@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.kit.Kit;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.town.District;
@@ -101,7 +101,7 @@ public class Sanctuary extends Guild {
 	}
 
 	@Override
-	protected javelin.model.unit.Combatant[] generatehires() {
+	protected javelin.model.unit.attack.Combatant[] generatehires() {
 		return new Combatant[] { generatehire(7, "Acolyte", 1, 5),
 				generatehire(30, "Priest", 6, 10),
 				upgraded && RPG.chancein(30) ? generatehire("Paladin", 6, 15,

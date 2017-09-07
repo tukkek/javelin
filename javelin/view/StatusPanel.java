@@ -11,12 +11,12 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.action.Examine;
-import javelin.controller.upgrade.Spell;
-import javelin.model.condition.Breathless;
 import javelin.model.item.Item;
-import javelin.model.spell.conjuration.Summon;
-import javelin.model.unit.Combatant;
-import javelin.model.unit.discipline.Maneuver;
+import javelin.model.unit.abilities.discipline.Maneuver;
+import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.abilities.spell.conjuration.Summon;
+import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.condition.Breathless;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;

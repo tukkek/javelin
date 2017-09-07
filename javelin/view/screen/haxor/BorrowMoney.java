@@ -1,8 +1,8 @@
 package javelin.view.screen.haxor;
 
 import javelin.controller.challenge.ChallengeRatingCalculator;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.unique.Haxor;
 import javelin.view.screen.InfoScreen;

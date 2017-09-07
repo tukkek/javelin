@@ -5,7 +5,7 @@ import java.util.List;
 
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.comparator.CombatantCrComparator;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Incursion;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;

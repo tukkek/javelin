@@ -7,9 +7,9 @@ import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.Rush;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Spawner;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.unique.minigame.DungeonRush;
 import javelin.view.screen.BattleScreen;
 

@@ -6,15 +6,15 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.quality.Quality;
-import javelin.controller.upgrade.Spell;
 import javelin.controller.upgrade.classes.ClassAdvancement;
-import javelin.model.unit.AttackSequence;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Spawner;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.BreathWeapon;
+import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.attack.AttackSequence;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.town.SelectScreen;
 
@@ -105,7 +105,7 @@ public class StatisticsScreen extends InfoScreen {
 		lines.add("");
 		if (!m.feats.isEmpty()) {
 			String feats = "Feats: ";
-			for (javelin.model.feat.Feat f : m.feats) {
+			for (javelin.model.unit.feat.Feat f : m.feats) {
 				feats += f + ", ";
 			}
 			lines.add(feats.substring(0, feats.length() - 2) + ".");

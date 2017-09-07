@@ -12,11 +12,11 @@ import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
-import javelin.model.condition.Condition;
-import javelin.model.feat.Feat;
 import javelin.model.state.BattleState;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.condition.Condition;
+import javelin.model.unit.feat.Feat;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 /**

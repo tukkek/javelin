@@ -2,8 +2,8 @@ package javelin.model.item.artifact;
 
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.item.Item;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Caravan;
 import javelin.model.world.location.dungeon.Chest;
 import javelin.model.world.location.town.Town;

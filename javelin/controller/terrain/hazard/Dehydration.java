@@ -1,9 +1,9 @@
 package javelin.controller.terrain.hazard;
 
 import javelin.Javelin;
-import javelin.model.condition.Fatigued;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.condition.Fatigued;
 import tyrant.mikera.engine.RPG;
 
 /**

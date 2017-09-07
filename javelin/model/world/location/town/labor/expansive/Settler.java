@@ -3,8 +3,8 @@ package javelin.model.world.location.town.labor.expansive;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;

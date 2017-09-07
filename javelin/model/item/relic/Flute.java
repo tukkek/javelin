@@ -2,9 +2,9 @@ package javelin.model.item.relic;
 
 import javelin.Javelin;
 import javelin.model.Realm;
-import javelin.model.unit.Combatant;
+import javelin.model.transport.FlyingNimbus;
 import javelin.model.unit.Squad;
-import javelin.model.unit.transport.FlyingNimbus;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.view.screen.WorldScreen;
 

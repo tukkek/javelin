@@ -6,7 +6,7 @@ import javelin.JavelinApp;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.terrain.Terrain;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 import tyrant.mikera.engine.RPG;
 
 /**

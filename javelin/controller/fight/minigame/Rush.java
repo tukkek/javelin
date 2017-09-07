@@ -16,9 +16,9 @@ import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Spawner;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.unique.minigame.DungeonRush;
 import tyrant.mikera.engine.RPG;
 

@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import javelin.Javelin;
 import javelin.controller.Debug;
 import javelin.controller.old.Game;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;

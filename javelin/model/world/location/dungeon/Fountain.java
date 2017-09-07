@@ -1,9 +1,9 @@
 package javelin.model.world.location.dungeon;
 
 import javelin.Javelin;
-import javelin.controller.upgrade.Spell;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * Heals hit points and spell uses.

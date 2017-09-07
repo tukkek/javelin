@@ -11,7 +11,7 @@ import java.util.TreeMap;
 import javelin.controller.comparator.DescendingLevelComparator;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.dungeon.Chest;
 import javelin.model.world.location.dungeon.Dungeon;
 import tyrant.mikera.engine.RPG;

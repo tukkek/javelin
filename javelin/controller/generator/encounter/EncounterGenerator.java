@@ -9,9 +9,9 @@ import javelin.controller.db.Preferences;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.exception.GaveUpException;
 import javelin.controller.terrain.Terrain;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.dungeon.Dungeon;
 import tyrant.mikera.engine.RPG;
 

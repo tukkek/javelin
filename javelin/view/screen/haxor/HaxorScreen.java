@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Random;
 
 import javelin.Javelin;
-import javelin.model.unit.AttackSequence;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.unit.attack.AttackSequence;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.town.Town;

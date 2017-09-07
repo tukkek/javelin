@@ -12,7 +12,7 @@ import javelin.controller.fight.Fight;
 import javelin.controller.map.Map;
 import javelin.model.state.Meld;
 import javelin.model.state.Square;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 import javelin.view.Images;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;

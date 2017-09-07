@@ -12,9 +12,9 @@ import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.damage.EffectUpgrade;
 import javelin.controller.upgrade.damage.MeleeDamage;
 import javelin.controller.upgrade.damage.RangedDamage;
-import javelin.model.unit.Attack;
-import javelin.model.unit.AttackSequence;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Attack;
+import javelin.model.unit.attack.AttackSequence;
 
 /**
  * I do have a question about CRs though if you can remember the answer at all.

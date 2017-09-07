@@ -6,13 +6,13 @@ import java.util.List;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.walker.Walker;
-import javelin.model.condition.Prone;
-import javelin.model.feat.attack.shot.ImprovedPreciseShot;
-import javelin.model.feat.attack.shot.PointBlankShot;
-import javelin.model.feat.attack.shot.PreciseShot;
 import javelin.model.state.BattleState;
-import javelin.model.unit.AttackSequence;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.AttackSequence;
+import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.condition.Prone;
+import javelin.model.unit.feat.attack.shot.ImprovedPreciseShot;
+import javelin.model.unit.feat.attack.shot.PointBlankShot;
+import javelin.model.unit.feat.attack.shot.PreciseShot;
 
 /**
  * needs to take into account range increments, each full range increment

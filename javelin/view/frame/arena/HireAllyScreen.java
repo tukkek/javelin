@@ -1,6 +1,6 @@
 package javelin.view.frame.arena;
 
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.unique.minigame.Arena;
 
 /**

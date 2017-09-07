@@ -6,7 +6,7 @@ import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.db.reader.SpecialtiesLog;
 import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.model.feat.Feat;
+import javelin.model.unit.feat.Feat;
 
 /**
  * @see FieldReader

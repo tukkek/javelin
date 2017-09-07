@@ -9,7 +9,7 @@ import javelin.controller.ai.AiThread;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.walker.Walker;
 import javelin.model.state.BattleState;
-import javelin.model.unit.Combatant;
+import javelin.model.unit.attack.Combatant;
 
 public class Burst extends Area {
 	final ArrayList<Point> directions = new ArrayList<Point>();

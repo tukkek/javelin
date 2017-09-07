@@ -8,8 +8,8 @@ import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Skills;
+import javelin.model.unit.attack.Combatant;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.Point;
 

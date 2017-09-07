@@ -7,8 +7,8 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.classes.Commoner;
 import javelin.model.Realm;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.unit.attack.Combatant;
 
 public class Campaign extends Scenario {
 	/** Minimum starting party encounter level. */

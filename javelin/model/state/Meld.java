@@ -3,8 +3,8 @@ package javelin.model.state;
 import java.awt.Image;
 
 import javelin.controller.fight.Fight;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Combatant;
 import javelin.view.Images;
 
 /**

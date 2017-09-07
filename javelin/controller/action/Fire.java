@@ -2,7 +2,9 @@ package javelin.controller.action;
 
 import java.util.List;
 
-import javelin.controller.action.ai.RangedAttack;
+import javelin.controller.action.ai.attack.AbstractAttack;
+import javelin.controller.action.ai.attack.RangedAttack;
+import javelin.controller.action.target.Target;
 import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.unit.CurrentAttack;
@@ -50,11 +52,17 @@ public class Fire extends Target {
 	}
 
 	@Override
-	protected int calculatehitdc(final Combatant target, Combatant active,
-			BattleState state) {
-		return Math.round(20 * RangedAttack.SINGLETON.misschance(state, active,
-				target, predictattack(active.currentranged,
-						active.source.ranged).bonus));
+	protected int calculatehitdc(Combatant active, final Combatant target,
+			BattleState s) {
+		AbstractAttack attacktype = RangedAttack.SINGLETON;
+		Attack a = predictattack(active.currentranged, active.source.ranged);
+		return calculatehiddc(active, target, a, attacktype, s);
+	}
+
+	public static int calculatehiddc(Combatant active, final Combatant target,
+			Attack a, AbstractAttack attacktype, BattleState s) {
+		final float dc = 20 * attacktype.misschance(s, active, target, a.bonus);
+		return Math.round(dc);
 	}
 
 	Attack predictattack(CurrentAttack hint, List<AttackSequence> fallback) {

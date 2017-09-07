@@ -35,6 +35,7 @@ import javelin.view.screen.BattleScreen;
 import javelin.view.screen.BribingScreen;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
+import tyrant.mikera.tyrant.Skill;
 
 /**
  * A group of units that the player controls as a overworld game unit. If a
@@ -809,7 +810,7 @@ public class Squad extends Actor implements Cloneable {
 	/**
 	 * @return <code>true</code> if can use any available spell to heal
 	 *         {@link #members}.
-	 * @see #heal()
+	 * @see #quickheal()
 	 */
 	public boolean canheal() {
 		for (Spell s : getavailablespells()) {
@@ -840,7 +841,7 @@ public class Squad extends Actor implements Cloneable {
 	 * 
 	 * @see #canheal()
 	 */
-	public void heal() {
+	public void quickheal() {
 		ArrayList<Combatant> members = new ArrayList<Combatant>(this.members);
 		members.sort(CombatantHealthComparator.SINGLETON);
 		ArrayList<Spell> spells = getavailablespells();
@@ -853,5 +854,20 @@ public class Squad extends Actor implements Cloneable {
 				}
 			}
 		}
+	}
+
+	/**
+	 * @return Highest take 10 in the squad for {@link Skill#HEALING}.
+	 * @see Combatant#heal()
+	 */
+	public int heal() {
+		int max = Integer.MIN_VALUE;
+		for (Combatant c : members) {
+			int heal = c.heal();
+			if (heal > max) {
+				max = heal;
+			}
+		}
+		return max;
 	}
 }

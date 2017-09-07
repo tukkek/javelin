@@ -1,4 +1,4 @@
-package javelin.controller.action;
+package javelin.controller.action.target;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,6 +7,7 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.action.Action;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
@@ -53,11 +54,13 @@ public abstract class Target extends Action {
 	}
 
 	/**
+	 * Used for descriptive purposes.
+	 * 
 	 * @return Minimum number the active combatant has to roll on a d20 to hit
 	 *         the target.
 	 */
-	protected abstract int calculatehitdc(final Combatant target,
-			Combatant active, BattleState state);
+	protected abstract int calculatehitdc(Combatant active,
+			final Combatant target, BattleState s);
 
 	/** Called once a target is confirmed. */
 	protected abstract void attack(Combatant active, Combatant target,
@@ -68,7 +71,8 @@ public abstract class Target extends Action {
 		checkhero(c);
 		final BattleState state = Fight.state;
 		if (checkengaged(state, state.clone(c))) {
-			Game.message("Disengage first!", Delay.WAIT);
+			Game.messagepanel.clear();
+			Game.message("Disengage first...", Delay.WAIT);
 			throw new RepeatTurn();
 		}
 		final Combatant combatant = state.clone(c);
@@ -76,7 +80,8 @@ public abstract class Target extends Action {
 				state.getcombatants());
 		filtertargets(combatant, targets, state);
 		if (targets.isEmpty()) {
-			Game.message("No valid targets.", Delay.WAIT);
+			Game.messagepanel.clear();
+			Game.message("No valid targets...", Delay.WAIT);
 			throw new RepeatTurn();
 		}
 		Collections.sort(targets, new Comparator<Combatant>() {
@@ -96,6 +101,9 @@ public abstract class Target extends Action {
 	}
 
 	/**
+	 * A higher value means this should be selected first while browsing
+	 * targets.
+	 * 
 	 * TODO turn into dynamic instead?
 	 */
 	public int prioritize(final Combatant c, final BattleState state,
@@ -135,7 +143,6 @@ public abstract class Target extends Action {
 			} else {
 				MapPanel.overlay.clear();
 				Game.messagepanel.clear();
-				// Game.instance().hero = combatant.visual;
 				throw new RepeatTurn();
 			}
 			final int max = targets.size() - 1;
@@ -206,7 +213,7 @@ public abstract class Target extends Action {
 	public String describehitchance(Combatant active, final Combatant target,
 			BattleState state) {
 		return target + " (" + target.getstatus() + ", " + Javelin
-				.translatetochance(calculatehitdc(target, active, state))
+				.translatetochance(calculatehitdc(active, target, state))
 				+ " to hit)";
 	}
 }

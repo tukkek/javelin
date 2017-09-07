@@ -264,7 +264,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	 *         into the range: ]2,19] to allow the ensuing roll of 1 to always
 	 *         be an automatic miss and 20 an automatic hit.
 	 * 
-	 * @see #save(int, int, Combatant)
+	 * @see #calculatesavedc(int, Combatant)
 	 */
 	public int save(Combatant caster, Combatant target) {
 		return -Integer.MAX_VALUE;

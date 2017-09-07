@@ -91,7 +91,7 @@ public class StatisticsScreen extends InfoScreen {
 		if (!qualities.isEmpty()) {
 			lines.add(qualities);
 		}
-		lines.add("Saving throwns");
+		lines.add("Saving throws");
 		lines.add(" Fortitude   " + save(m.fort));
 		lines.add(" Reflex      " + save(m.ref));
 		lines.add(" Will        " + save(m.will));

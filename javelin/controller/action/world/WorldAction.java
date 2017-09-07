@@ -40,7 +40,7 @@ public abstract class WorldAction implements ActionDescription {
 			new EnterZiggurat(), // Z
 			Guide.HOWTO, Guide.MINIGAMES, Guide.ARTIFACTS, Guide.CONDITIONS,
 			Guide.ITEMS, Guide.SKILLS, Guide.SPELLS, Guide.UGRADES,
-			Guide.DISTRICT, Guide.KITS,
+			Guide.DISTRICT, Guide.KITS, Guide.DISCIPLINES,
 			new WorldMove(new int[] { KeyEvent.VK_NUMPAD7, }, -1, -1,
 					new String[] { "U", "↖ or 7 or U" }),
 			new WorldMove(new int[] { KeyEvent.VK_UP, KeyEvent.VK_NUMPAD8 }, 0,

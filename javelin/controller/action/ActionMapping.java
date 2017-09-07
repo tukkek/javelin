@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javelin.controller.action.ai.AiMovement;
-import javelin.controller.action.ai.MeleeAttack;
-import javelin.controller.action.ai.RangedAttack;
+import javelin.controller.action.ai.attack.MeleeAttack;
+import javelin.controller.action.ai.attack.RangedAttack;
 import javelin.controller.action.maneuver.ExecuteManeuver;
 import javelin.controller.action.world.Automate;
 import javelin.controller.action.world.Guide;
@@ -50,7 +50,7 @@ public class ActionMapping {
 			new ActionAdapter(Guide.CONDITIONS), new ActionAdapter(Guide.ITEMS),
 			new ActionAdapter(Guide.SKILLS), new ActionAdapter(Guide.SPELLS),
 			new ActionAdapter(Guide.UGRADES), new ActionAdapter(Guide.DISTRICT),
-			new ActionAdapter(Guide.KITS), //
+			new ActionAdapter(Guide.KITS), new ActionAdapter(Guide.DISCIPLINES), // //
 
 			new Help(), // h
 

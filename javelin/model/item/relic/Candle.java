@@ -1,6 +1,6 @@
 package javelin.model.item.relic;
 
-import javelin.controller.action.Target;
+import javelin.controller.action.target.Target;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.Realm;
@@ -20,8 +20,8 @@ public class Candle extends Relic {
 	protected boolean activate(Combatant user) {
 		new Target("") {
 			@Override
-			protected int calculatehitdc(Combatant target, Combatant active,
-					BattleState state) {
+			protected int calculatehitdc(Combatant active, Combatant target,
+					BattleState s) {
 				return 1;
 			}
 

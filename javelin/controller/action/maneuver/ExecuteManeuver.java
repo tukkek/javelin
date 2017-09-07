@@ -67,17 +67,24 @@ public class ExecuteManeuver extends Action implements AiAction {
 				maneuvers.add(m);
 			}
 		}
+		Maneuver m = choose(maneuvers, prompt);
+		if (m.spent) {
+			c.ready(m);
+			return true;
+		}
+		return m.perform(c);
+	}
+
+	Maneuver choose(Maneuvers maneuvers, String prompt) {
+		if (maneuvers.size() == 1) {
+			return maneuvers.get(0);
+		}
 		int choice = SelectScreen
 				.convertkeytoindex(Javelin.promptscreen(prompt));
 		Javelin.app.switchScreen(BattleScreen.active);
 		if (choice == -1 && choice < maneuvers.size()) {
 			throw new RepeatTurn();
 		}
-		Maneuver m = maneuvers.get(choice);
-		if (m.spent) {
-			c.ready(m);
-			return true;
-		}
-		return m.perform(c);
+		return maneuvers.get(choice);
 	}
 }

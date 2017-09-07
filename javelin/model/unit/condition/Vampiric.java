@@ -15,7 +15,6 @@ public class Vampiric extends Condition {
 			Integer casterlevelp) {
 		super(expireat, caster, Effect.POSITIVE, "vampiric", casterlevelp, 1);
 		this.steal = steal;
-		stacks = true;
 	}
 
 	@Override
@@ -36,5 +35,11 @@ public class Vampiric extends Condition {
 	public void finish(BattleState s) {
 		// Game.message(caster + " loses temporary hit points, is now "
 		// + caster.getStatus() + ".", null, Delay.BLOCK);
+	}
+
+	@Override
+	public boolean merge(Combatant c, Condition previous) {
+		previous.expireat = Math.max(expireat, previous.expireat);
+		return true;
 	}
 }

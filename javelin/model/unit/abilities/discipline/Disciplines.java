@@ -4,24 +4,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javelin.model.unit.Monster;
+import javelin.model.unit.abilities.discipline.expertise.CombatExpertiseDiscipline;
+import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
 import javelin.model.unit.attack.Combatant;
 
 public class Disciplines extends HashMap<String, Maneuvers> {
+	public static final Discipline[] ALL = new Discipline[] {
+			CombatExpertiseDiscipline.INSTANCE, SteelSerpent.INSTANCE };
+
 	public Disciplines() {
 		super(0);
 	}
 
 	public Disciplines(Disciplines d) {
 		super(d);
-	}
-
-	public void add(Discipline d, Maneuver m) {
-		Maneuvers maneuvers = get(d.name);
-		if (maneuvers == null) {
-			maneuvers = new Maneuvers();
-			put(d.name, maneuvers);
-		}
-		maneuvers.add(m);
 	}
 
 	public ArrayList<Maneuver> getmaneuvers() {
@@ -60,5 +56,19 @@ public class Disciplines extends HashMap<String, Maneuvers> {
 			disciplines.put(discipline, maneuvers);
 		}
 		return disciplines;
+	}
+
+	/**
+	 * Use {@link Combatant#addmaneuver(Discipline, Maneuver)} if you need
+	 * validation. This method simply registers the given {@link Maneuver}
+	 * blindly.
+	 */
+	public void add(Discipline d, Maneuver m) {
+		Maneuvers maneuvers = get(d.name);
+		if (maneuvers == null) {
+			maneuvers = new Maneuvers();
+			put(d.name, maneuvers);
+		}
+		maneuvers.add(m);
 	}
 }

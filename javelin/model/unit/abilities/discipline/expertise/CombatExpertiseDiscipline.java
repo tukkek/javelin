@@ -12,5 +12,6 @@ public class CombatExpertiseDiscipline extends Discipline {
 
 	private CombatExpertiseDiscipline() {
 		super("Combat expertise");
+		hasacademy = false;
 	}
 }

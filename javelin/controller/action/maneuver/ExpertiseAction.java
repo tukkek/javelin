@@ -5,9 +5,9 @@ import java.util.List;
 
 import javelin.controller.action.Action;
 import javelin.controller.action.CastSpell;
-import javelin.controller.action.Target;
 import javelin.controller.action.ai.AiAction;
-import javelin.controller.action.ai.MeleeAttack;
+import javelin.controller.action.ai.attack.MeleeAttack;
+import javelin.controller.action.target.Target;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.old.Game;
@@ -161,9 +161,9 @@ public abstract class ExpertiseAction extends Target implements AiAction {
 	abstract int getattackerbonus(Combatant combatant);
 
 	@Override
-	protected int calculatehitdc(Combatant target, Combatant active,
-			BattleState state) {
+	protected int calculatehitdc(Combatant active, Combatant target,
+			BattleState s) {
 		return Math.round(
-				20 - (1 - calculatemisschance(target, active, state, 0)) * 20);
+				20 - (1 - calculatemisschance(target, active, s, 0)) * 20);
 	}
 }

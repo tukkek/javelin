@@ -1,6 +1,6 @@
 package javelin.model.unit.abilities.spell;
 
-import javelin.controller.action.ai.RangedAttack;
+import javelin.controller.action.ai.attack.RangedAttack;
 import javelin.controller.walker.Walker;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;

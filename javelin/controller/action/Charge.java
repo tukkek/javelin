@@ -7,7 +7,7 @@ import java.util.List;
 import javelin.controller.Point;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.ai.AiMovement;
-import javelin.controller.action.ai.MeleeAttack;
+import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game.Delay;
@@ -118,7 +118,7 @@ public class Charge extends Fire implements AiAction {
 	}
 
 	@Override
-	protected int calculatehitdc(Combatant target, Combatant active, BattleState state) {
+	protected int calculatehitdc(Combatant active, Combatant target, BattleState s) {
 		return target.ac() - (2 + usedefaultattack(active).bonus);
 	}
 

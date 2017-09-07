@@ -193,7 +193,7 @@ public class Lodge extends Fortification {
 	 */
 	public static void rest(int restperiods, long hours, Lodging a) {
 		for (int i = 0; i < restperiods; i++) {
-			Squad.active.heal();
+			Squad.active.quickheal();
 			for (final Combatant c : Squad.active.members) {
 				int heal = c.source.hd.count();
 				if (!a.equals(HOSPITAL) && c.heal() >= 15) {

@@ -13,8 +13,8 @@ import javelin.controller.Point;
 import javelin.controller.SpellbookGenerator;
 import javelin.controller.action.Action;
 import javelin.controller.action.Defend;
-import javelin.controller.action.ai.MeleeAttack;
-import javelin.controller.action.ai.RangedAttack;
+import javelin.controller.action.ai.attack.MeleeAttack;
+import javelin.controller.action.ai.attack.RangedAttack;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.exception.RepeatTurn;
@@ -32,6 +32,7 @@ import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
+import javelin.model.state.Meld;
 import javelin.model.unit.CloneableList;
 import javelin.model.unit.CurrentAttack;
 import javelin.model.unit.Monster;
@@ -44,12 +45,11 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.Spells;
 import javelin.model.unit.condition.Charging;
 import javelin.model.unit.condition.Condition;
+import javelin.model.unit.condition.Condition.Effect;
 import javelin.model.unit.condition.Defending;
 import javelin.model.unit.condition.Melding;
-import javelin.model.unit.condition.Condition.Effect;
 import javelin.model.unit.feat.attack.Cleave;
 import javelin.model.unit.feat.attack.GreatCleave;
-import javelin.model.state.Meld;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.unique.MercenariesGuild;
@@ -284,7 +284,7 @@ public class Combatant implements Serializable, Cloneable {
 				}
 			}
 			for (Condition c : (List<Condition>) conditions.clone()) {
-				c.expire(this);
+				c.expireinbattle(this);
 			}
 			lastrefresh = ap;
 		}
@@ -587,10 +587,20 @@ public class Combatant implements Serializable, Cloneable {
 		s.flee(this);
 	}
 
+	/**
+	 * Validates, merge (if necessary) and if everything checks add
+	 * {@link Condition}.
+	 */
 	public void addcondition(Condition c) {
-		if (c.stacks || hascondition(c.getClass()) == null) {
+		if (!c.validate(this)) {
+			return;
+		}
+		Condition previous = hascondition(c.getClass());
+		if (previous == null) {
 			c.start(this);
 			conditions.add(c);
+		} else {
+			c.merge(this, previous);
 		}
 	}
 
@@ -630,8 +640,8 @@ public class Combatant implements Serializable, Cloneable {
 			c.transfer(this, to);
 			if (c.longterm == 0) {
 				c.end(to);
-			} else {
-				to.addcondition(c);
+			} else if (!to.conditions.contains(c)) {
+				to.conditions.add(c);
 			}
 		}
 	}
@@ -853,5 +863,26 @@ public class Combatant implements Serializable, Cloneable {
 	public void ready(Maneuver m) {
 		ap += 1;
 		m.spent = false;
+	}
+
+	/**
+	 * Adds this {@link Discipline}'s {@link Maneuver} to the given
+	 * {@link Combatant}.
+	 * 
+	 * @param d
+	 *            TODO
+	 * @param m
+	 *            TODO
+	 * @param disciplines
+	 *            TODO
+	 * @return <code>false</code> if {@link Maneuver#validate(Combatant)} fails
+	 *         or <code>true</code> otherwise.
+	 */
+	public boolean addmaneuver(Discipline d, Maneuver m) {
+		if (!m.validate(this)) {
+			return false;
+		}
+		disciplines.add(d, m);
+		return true;
 	}
 }

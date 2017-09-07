@@ -27,7 +27,7 @@ import javelin.view.screen.WorldScreen;
  */
 public class World implements Serializable {
 	/** Ruleset of the current game. */
-	public static Scenario scenario;
+	public static Scenario scenario = null;
 	/** Randomly generated world map. */
 	public static World seed = null;
 	/** Facilitate movement. */

@@ -1,9 +1,10 @@
-package javelin.controller.action.ai;
+package javelin.controller.action.ai.attack;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javelin.controller.action.target.RangedTarget;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.walker.Walker;
 import javelin.model.state.BattleState;
@@ -23,7 +24,7 @@ import javelin.model.unit.feat.attack.shot.PreciseShot;
  * http://www.d20pfsrd.com/gamemastering/combat
  * 
  * @author alex
- * 
+ * @see RangedTarget
  */
 public class RangedAttack extends AbstractAttack {
 	static final public RangedAttack SINGLETON = new RangedAttack();
@@ -76,8 +77,7 @@ public class RangedAttack extends AbstractAttack {
 		if (gameState.isengaged(active)) {
 			return Collections.EMPTY_LIST;
 		}
-		final ArrayList<List<ChanceNode>> successors =
-				new ArrayList<List<ChanceNode>>();
+		final ArrayList<List<ChanceNode>> successors = new ArrayList<List<ChanceNode>>();
 		for (final Combatant target : gameState.gettargets(active)) {
 			for (final Integer attack : getcurrentattack(active)) {
 				final BattleState newstate = gameState.clone();

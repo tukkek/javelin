@@ -7,11 +7,16 @@ import javelin.controller.action.Action;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
 
 public abstract class Maneuver implements Serializable, Cloneable {
 	public boolean spent = false;
 	public String name;
+	/**
+	 * {@link Combatant#ap} cost for this action.
+	 */
+	public float ap;
 
 	public Maneuver(String name) {
 		this.name = name;
@@ -45,5 +50,16 @@ public abstract class Maneuver implements Serializable, Cloneable {
 	@Override
 	public int hashCode() {
 		return name.hashCode();
+	}
+
+	static public int getinitiationmodifier(Combatant c) {
+		final Monster m = c.source;
+		final int modifier = Math.max(m.intelligence,
+				Math.max(m.wisdom, m.charisma));
+		return m.hd.count() / 2 + Monster.getbonus(modifier);
+	}
+
+	public boolean validate(Combatant c) {
+		return true;
 	}
 }

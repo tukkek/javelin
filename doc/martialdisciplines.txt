@@ -1,0 +1,7 @@
+There are several types of martial arts in the world of Javelin - each with their own style and specialties. You'll find academies devoted to each style throughout the land and they'll happily teach you their secrets for a fee - and if you meet their requisities.
+
+A strike maneuver usually has to hit to be successful. The "initiation modifier" mentioned in some of the descriptions below is half the attacker's hit dice plus the highest of his Intelligence, Wisdom or Charisma modifiers.
+
+STEEL SERPENT 
+
+Dizzying venom prana (level 1): staggers the enemy for half a turn. Also reduces Wisdom by 2 points on a failed fortitude save (DC11 + initiation modifier).

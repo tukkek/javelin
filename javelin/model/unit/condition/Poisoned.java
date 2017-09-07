@@ -2,11 +2,14 @@ package javelin.model.unit.condition;
 
 import javelin.controller.upgrade.skill.Heal;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 
 /**
  * A poisoned unit takes a certain amount of constitution damage immediately and
  * a secondary amount after a short while.
+ * 
+ * TODO implement {@link #merge(Condition)}
  * 
  * @see Monster#raiseconstitution(Combatant, int)
  * @author alex
@@ -57,7 +60,7 @@ public class Poisoned extends Condition {
 
 	@Override
 	public void end(Combatant c) {
-		if (!neutralized && c.heal() >= dc) {
+		if (!neutralized && Squad.active.heal() < dc) {
 			damage(c, secondary);
 		}
 	}

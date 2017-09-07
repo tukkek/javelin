@@ -2,6 +2,7 @@ package javelin.model.unit.condition;
 
 import java.io.Serializable;
 
+import javelin.controller.fight.Fight;
 import javelin.model.Cloneable;
 import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.spell.abjuration.DispelMagic;
@@ -35,16 +36,18 @@ public abstract class Condition implements Cloneable, Serializable {
 	public String description;
 	/**
 	 * The number of hours for this to persist after battle. If
-	 * <code>null</code> will call {@link #end(Combatant)} at the end of combat.
-	 * If 0 will stop at the end of combat but affect the original
-	 * {@link Combatant} the one used in-battle was cloned from.
+	 * <code>null</code> will call {@link #end(Combatant)} at the end of combat
+	 * if it hasn't experired before that. If 0 will stop at the end of combat
+	 * but {@link #end(Combatant)} will affect the original {@link Combatant}
+	 * instead of the clone used for the {@link Fight}.
+	 * 
+	 * Subclasses that wish to implement their own
+	 * {@link #expire(int, Combatant)} mechanisms can pass
+	 * {@link Integer#MAX_VALUE} here.
+	 * 
+	 * @see Fight#originalblueteam
 	 */
 	public Integer longterm;
-	/**
-	 * If <code>false</code> will extend {@link #expireat} of pre-existing
-	 * condition instead of adding and applying a new instance.
-	 */
-	public boolean stacks = false;
 	/**
 	 * <code>null</code> if this is not magical and can't be affected by
 	 * {@link DispelMagic}.
@@ -64,19 +67,17 @@ public abstract class Condition implements Cloneable, Serializable {
 		description = descriptionp;
 		longterm = longtermp;
 		this.casterlevel = casterlevel;
-		if (!stacks) {
-			Condition preexisting = c.hascondition(getClass());
-			if (preexisting != null) {
-				preexisting.expireat = Math.max(expireatp,
-						preexisting.expireat);
-				return;
-			}
-		}
 	}
 
 	public abstract void start(Combatant c);
 
-	public boolean expire(final Combatant c) {
+	/**
+	 * In-battle check if a Condition has expired.
+	 * 
+	 * @return <code>true</code> if has expired and has been removed.
+	 * @see #expireat
+	 */
+	public boolean expireinbattle(final Combatant c) {
 		if (c.ap > expireat) {
 			c.removecondition(this);
 			return true;
@@ -84,6 +85,11 @@ public abstract class Condition implements Cloneable, Serializable {
 		return false;
 	}
 
+	/**
+	 * Removes all effects of this condition from {@link Combatant}. This may be
+	 * called during battle, right after battle or at a later point depending on
+	 * the values of {@link #expireat} and {@link #longterm}.
+	 */
 	public abstract void end(Combatant c);
 
 	@Override
@@ -111,7 +117,8 @@ public abstract class Condition implements Cloneable, Serializable {
 
 	/**
 	 * Migrates a temporary condition to the original {@link Combatant} instance
-	 * outside of battle.
+	 * outside of battle. {@link #start(Combatant)} is not called again but this
+	 * Condition is transferred to the original {@link Combatant}.
 	 *
 	 * @param to
 	 *            The original combatant.
@@ -122,6 +129,11 @@ public abstract class Condition implements Cloneable, Serializable {
 	}
 
 	/**
+	 * This is called one or more times, eventually calling
+	 * {@link Combatant#removecondition(Condition)} (and thus
+	 * {@link #end(Combatant)}) once {@link #longterm} decreases to zero or
+	 * less.
+	 * 
 	 * @param time
 	 *            Elapsed time in hours.
 	 */
@@ -129,10 +141,24 @@ public abstract class Condition implements Cloneable, Serializable {
 		if (longterm == null) {
 			return;
 		}
-		longterm -= time;
-		if (longterm <= 0) {
+		if (expire(time, c)) {
 			c.removecondition(this);
 		}
+	}
+
+	/**
+	 * Expire out of battle.
+	 * 
+	 * @param c
+	 * 
+	 * @param Time
+	 *            elapsed, in hours.
+	 * @return <code>true</code> if is over and has to be removed.
+	 * @see #longterm
+	 */
+	protected boolean expire(int time, Combatant c) {
+		longterm -= time;
+		return longterm <= 0;
 	}
 
 	@Override
@@ -149,5 +175,22 @@ public abstract class Condition implements Cloneable, Serializable {
 	 */
 	public void dispel() {
 		// nothing
+	}
+
+	public boolean validate(Combatant c) {
+		return true;
+	}
+
+	/**
+	 * Merge two conditions of the same type, as long as they don't stack. By
+	 * the time this is called, {@link #validate(Combatant)} has already been
+	 * verified.
+	 * 
+	 * @return <code>false</code> if merge is not supported. <code>true</code>
+	 *         if merge is supported and performed succesfully. In either case,
+	 *         the new condition is discarded.
+	 */
+	public boolean merge(Combatant c, Condition previous) {
+		return false;
 	}
 }

@@ -1,4 +1,4 @@
-package javelin.controller.action.ai;
+package javelin.controller.action.ai.attack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,11 +7,14 @@ import java.util.Map.Entry;
 import javelin.Javelin;
 import javelin.controller.action.Action;
 import javelin.controller.action.CastSpell;
+import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.Node;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.CurrentAttack;
+import javelin.model.unit.abilities.discipline.Maneuver;
+import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.attack.Combatant;
@@ -23,6 +26,7 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  * @author alex
  */
 public abstract class AbstractAttack extends Action implements AiAction {
+	public static Strike maneuver = null;
 
 	class AttackNode extends ChanceNode {
 		public AttackNode(Node n, float chance, String action, Delay delay,
@@ -74,8 +78,13 @@ public abstract class AbstractAttack extends Action implements AiAction {
 	 * Always a full attack (1AP) but divided among the {@link AttackSequence}.
 	 * This would penalize creatures with only one attack so max AP cost is .5
 	 * per attack.
+	 * 
+	 * If a {@link #maneuver} is being used, returns {@link Maneuver} instead.
 	 */
 	static float calculateattackap(final AttackSequence attacks) {
+		if (maneuver != null) {
+			return maneuver.ap;
+		}
 		final int nattacks = attacks.size();
 		if (nattacks == 1) {
 			return .5f;
@@ -204,34 +213,48 @@ public abstract class AbstractAttack extends Action implements AiAction {
 			final Attack attack, float ap) {
 		String chance = " (" + getchance(attacker, target, attack, gameState)
 				+ " to hit)...";
+		StringBuilder sb = new StringBuilder(attacker.toString());
 		if (dc.damage == 0) {
-			return new AttackNode(gameState, dc.chance,
-					attacker + " misses " + target + chance, Delay.WAIT,
+			final String name;
+			final Delay wait;
+			if (maneuver == null) {
+				name = target.toString();
+				wait = Delay.WAIT;
+			} else {
+				name = maneuver.name.toLowerCase();
+				wait = Delay.BLOCK;
+			}
+			sb = sb.append(" misses ").append(name).append(chance);
+			return new AttackNode(gameState, dc.chance, sb.toString(), wait,
 					target);
 		}
 		final BattleState attackstate = gameState.clone();
 		attacker = attackstate.clone(attacker);
 		target = attackstate.clone(target);
-		StringBuilder messageAdd = new StringBuilder().append(attacker)
-				.append(" attacks ").append(target).append(" with ")
-				.append(attack.name).append(chance).append("\n");
+		if (maneuver != null) {
+			maneuver.hit(attacker, target, attackstate, dc);
+		}
+		final String name = maneuver == null ? attack.name
+				: maneuver.name.toLowerCase();
+		sb = sb.append(" attacks ").append(target).append(" with ").append(name)
+				.append(chance);
 		if (dc.critical) {
-			messageAdd.append("Critical hit!\n");
+			sb.append("\nCritical hit!");
 		}
 		if (dc.damage == 0) {
-			messageAdd.append("Damage absorbed!\n");
+			sb.append("\nDamage absorbed!");
 		} else {
 			target.damage(dc.damage, attackstate, attack.energy
 					? target.source.energyresistance : target.source.dr);
 			if (target.source.customName == null) {
-				messageAdd.append("The ").append(target.source.name);
+				sb.append("\nThe ").append(target.source.name);
 			} else {
-				messageAdd.append(target.source.customName);
+				sb.append("\n").append(target.source.customName);
 			}
-			messageAdd.append(" is ").append(target.getstatus()).append(".");
-			posthit(dc, target, attacker, attack, ap, attackstate, messageAdd);
+			sb.append(" is ").append(target.getstatus()).append(".");
+			posthit(dc, target, attacker, attack, ap, attackstate, sb);
 		}
-		return new AttackNode(attackstate, dc.chance, messageAdd.toString(),
+		return new AttackNode(attackstate, dc.chance, sb.toString(),
 				Delay.BLOCK, target);
 	}
 

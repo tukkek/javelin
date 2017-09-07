@@ -189,9 +189,9 @@ public class CastSpell extends Fire implements AiAction {
 	}
 
 	@Override
-	protected int calculatehitdc(Combatant target, Combatant active,
-			BattleState state) {
-		return casting.hit(active, target, state);
+	protected int calculatehitdc(Combatant active, Combatant target,
+			BattleState s) {
+		return casting.hit(active, target, s);
 	}
 
 	@Override

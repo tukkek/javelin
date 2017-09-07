@@ -497,9 +497,11 @@ public class Monster implements Cloneable, Serializable {
 	}
 
 	/**
+	 * TODO implement 0 == helpless (or something to that effect).
+	 * 
 	 * @param score
 	 *            Raises {@link #wisdom} by this many ability score points (+2
-	 *            point=+1 bonus modifier).
+	 *            point = +1 bonus modifier). Always use a multiple of 2.
 	 */
 	public void raisewisdom(int score) {
 		wisdom += score;

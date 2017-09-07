@@ -317,7 +317,6 @@ public class BattleScreen extends Screen {
 		messagepanel.clear();
 		Game.message(state.action, delay);
 		messagepanel.repaint();
-		// updatescreen();
 	}
 
 	/**

@@ -101,8 +101,8 @@ public class TouchAttack extends Fire implements AiAction {
 	}
 
 	@Override
-	protected int calculatehitdc(Combatant target, Combatant active,
-			BattleState state) {
+	protected int calculatehitdc(Combatant active, Combatant target,
+			BattleState s) {
 		/* should be ignored */
 		return 1;
 	}

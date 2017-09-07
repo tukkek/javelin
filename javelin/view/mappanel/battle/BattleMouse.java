@@ -8,7 +8,7 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.action.Examine;
 import javelin.controller.action.Fire;
-import javelin.controller.action.ai.MeleeAttack;
+import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;

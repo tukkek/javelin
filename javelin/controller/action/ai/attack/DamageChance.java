@@ -1,4 +1,4 @@
-package javelin.controller.action.ai;
+package javelin.controller.action.ai.attack;
 
 /**
  * Data structure representing the result of a damage roll.
@@ -6,10 +6,10 @@ package javelin.controller.action.ai;
  * @author alex
  */
 public class DamageChance {
-	final float chance;
-	int damage;
-	boolean critical;
-	Boolean save;
+	public final float chance;
+	public int damage;
+	public boolean critical;
+	public Boolean save;
 
 	DamageChance(final float chance, final int damage, boolean criticalp,
 			Boolean save) {

@@ -31,7 +31,8 @@ public class Camp extends WorldAction {
 		if (t != null && t.getdistrict().getarea()
 				.contains(Squad.active.getlocation())) {
 			Javelin.message(
-					"Cannot camp inside a town's district!\nTry moving further into the wilderness.\n",
+					"Cannot camp inside a town's district!\n"
+							+ "Try moving further into the wilderness.\n",
 					false);
 			return;
 		}
@@ -53,7 +54,7 @@ public class Camp extends WorldAction {
 			Squad.active.hourselapsed += 1;
 			RandomEncounter.encounter(1 / WorldScreen.HOURSPERENCOUNTER);
 			if (i > 0 && (i + 1) % rest == 0) {
-				Lodge.rest(1, 0, Lodge.LODGE);
+				Lodge.rest(1, rest, Lodge.LODGE);
 			}
 		}
 	}
@@ -66,7 +67,7 @@ public class Camp extends WorldAction {
 				+ "Press c to cast or any other key to continue...") != 'c') {
 			return false;
 		}
-		Squad.active.heal();
+		Squad.active.quickheal();
 		return true;
 	}
 

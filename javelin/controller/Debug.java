@@ -7,8 +7,6 @@ import javelin.controller.fight.Fight;
 import javelin.controller.scenario.Scenario;
 import javelin.model.item.Item;
 import javelin.model.unit.Squad;
-import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
-import javelin.model.unit.abilities.discipline.serpent.StingOfTheRattler;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.WorldScreen;
@@ -27,7 +25,7 @@ import javelin.view.screen.WorldScreen;
  */
 public class Debug {
 	static class Helpers {
-		static void healall() {
+		static void healteam() {
 			for (Combatant c : Squad.active.members) {
 				c.hp = c.maxhp;
 				c.detox(c.source.poison);
@@ -62,26 +60,12 @@ public class Debug {
 	}
 
 	public static String onbattlehelp() {
-		for (Combatant c : Fight.state.blueTeam) {
-			c.hp = c.maxhp;
-			c.detox(c.source.poison);
-		}
-
-		// Fight.state.redTeam.clear();
-		// Combatant c = Fight.state.blueTeam.remove(0);
-		// Fight.state.redTeam.add(c);
-		// c.ap = 9000;
-
-		// Fight.state.blueTeam.add(Fight.state.redTeam.remove(0));
-
 		return "";
 	}
 
 	/** Called only once when a {@link Scenario} is initialized. */
 	public static void oncampaignstart() {
-		for (Combatant c : Squad.active.members) {
-			c.addmaneuver(SteelSerpent.INSTANCE, new StingOfTheRattler());
-		}
+
 	}
 
 	/**

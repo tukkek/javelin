@@ -28,7 +28,7 @@ public abstract class CrFactor implements Comparable<CrFactor> {
 		return getClass().getSimpleName();
 	}
 
-	public void listupgrades(UpgradeHandler handler) {
+	public void registerupgrades(UpgradeHandler handler) {
 		return;
 	}
 }

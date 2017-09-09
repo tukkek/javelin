@@ -43,7 +43,7 @@ public class BreathFactor extends CrFactor {
 	}
 
 	@Override
-	public void listupgrades(UpgradeHandler handler) {
+	public void registerupgrades(UpgradeHandler handler) {
 		/* Too weak, doesnt resolve to positive CR */
 		// handler.fire.add(new BreathUpgrade(
 		// new BreathWeapon("cone of magma", BreathArea.CONE, 10, 1, 4, 0,

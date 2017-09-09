@@ -12,7 +12,7 @@ import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseAbility;
-import javelin.controller.upgrade.classes.ClassAdvancement;
+import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.Realm;
 import javelin.model.transport.Transport;
 import javelin.model.unit.Squad;
@@ -132,7 +132,7 @@ public abstract class Academy extends Fortification {
 	 */
 	public Academy(String descriptionknown, String descriptionunknown,
 			int minlevel, int maxlevel, HashSet<Upgrade> upgradesp,
-			RaiseAbility raiseability, ClassAdvancement classadvancement) {
+			RaiseAbility raiseability, ClassLevelUpgrade classadvancement) {
 		super(descriptionknown, descriptionunknown, minlevel, maxlevel);
 		upgrades = new HashSet<Upgrade>(upgradesp);
 		if (raiseability != null) {

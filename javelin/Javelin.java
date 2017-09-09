@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
@@ -42,6 +43,7 @@ import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.labor.military.Academy;
+import javelin.view.Images;
 import javelin.view.ModeSelectionDialog;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
@@ -73,9 +75,9 @@ public class Javelin {
 	/** TODO turn into {@link Enum} */
 	public static final String PERIODNIGHT = "Night";
 
-	private static final String TITLE = "Javelin";
-
-	private static final Preferences RECORD = Preferences
+	static final String TITLE = "Javelin";
+	static final Image[] ICONS = new Image[] { Images.getImage("javelin") };
+	static final Preferences RECORD = Preferences
 			.userNodeForPackage(Javelin.class);
 
 	/**
@@ -134,6 +136,7 @@ public class Javelin {
 		f.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		f.setLayout(new BorderLayout());
 		f.setFocusTraversalKeysEnabled(false);
+		f.setIconImages(Arrays.asList(ICONS));
 		app.frame = f;
 		app.setVisible(false);
 		f.add(app);

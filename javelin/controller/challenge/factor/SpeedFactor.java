@@ -71,7 +71,7 @@ public class SpeedFactor extends CrFactor {
 	}
 
 	@Override
-	public void listupgrades(UpgradeHandler handler) {
+	public void registerupgrades(UpgradeHandler handler) {
 		handler.good.add(new WalkingSpeed("Speed: human", 30));
 		handler.earth.add(new WalkingSpeed("Speed: cheetah", 50));
 		handler.wind.add(new Flying("Flying: raven", 40));

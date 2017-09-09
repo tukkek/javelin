@@ -25,7 +25,7 @@ public class SecureShelter extends Spell {
 
 	@Override
 	public String castpeacefully(Combatant caster, Combatant target) {
-		Lodge.rest(1, 8, Lodge.LODGE);
+		Lodge.rest(1, 8, true, Lodge.LODGE);
 		return null;
 	}
 }

@@ -49,7 +49,7 @@ public class AbilitiesFactor extends CrFactor {
 	}
 
 	@Override
-	public void listupgrades(UpgradeHandler handler) {
+	public void registerupgrades(UpgradeHandler handler) {
 		handler.earth.add(RaiseConsitution.SINGLETON);
 		handler.fire.add(RaiseStrength.SINGLETON);
 		handler.wind.add(RaiseDexterity.SINGLETON);

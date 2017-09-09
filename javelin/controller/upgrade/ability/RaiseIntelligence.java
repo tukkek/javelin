@@ -2,7 +2,7 @@ package javelin.controller.upgrade.ability;
 
 import javelin.controller.challenge.factor.HdFactor;
 import javelin.controller.challenge.factor.SkillsFactor;
-import javelin.controller.upgrade.classes.ClassAdvancement;
+import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
 
@@ -46,8 +46,8 @@ public class RaiseIntelligence extends RaiseAbility {
 		int total = Math.round(Math.round(Math.ceil(source.originalhd)))
 				* SkillsFactor.levelup(
 						HdFactor.gettypedata(source).skillprogression, source);
-		ClassAdvancement.init();
-		for (ClassAdvancement c : ClassAdvancement.classes) {
+		ClassLevelUpgrade.init();
+		for (ClassLevelUpgrade c : ClassLevelUpgrade.classes) {
 			total += c.getlevel(source)
 					* SkillsFactor.levelup(c.skillrate, source);
 		}

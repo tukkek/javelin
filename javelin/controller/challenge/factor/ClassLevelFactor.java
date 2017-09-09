@@ -2,7 +2,7 @@ package javelin.controller.challenge.factor;
 
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.classes.Aristocrat;
-import javelin.controller.upgrade.classes.ClassAdvancement;
+import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.upgrade.classes.Commoner;
 import javelin.controller.upgrade.classes.Expert;
 import javelin.controller.upgrade.classes.Warrior;
@@ -14,7 +14,7 @@ import javelin.model.unit.Monster;
  * {@link SkillsFactor} and {@link AbilitiesFactor}.
  *
  * @see CrFactor
- * @see ClassAdvancement
+ * @see ClassLevelUpgrade
  */
 public class ClassLevelFactor extends CrFactor {
 	/**
@@ -27,16 +27,17 @@ public class ClassLevelFactor extends CrFactor {
 	@Override
 	public float calculate(Monster monster) {
 		float cr = 0;
-		ClassAdvancement.init();
-		for (ClassAdvancement c : ClassAdvancement.classes) {
-			cr += c.getlevel(monster) * (ABILITY + c.crperlevel
-					- SkillsFactor.levelupcost(c.skillrate, monster));
+		ClassLevelUpgrade.init();
+		for (ClassLevelUpgrade c : ClassLevelUpgrade.classes) {
+			final float perlevel = ABILITY + c.crperlevel
+					- SkillsFactor.levelupcost(c.skillrate, monster);
+			cr += c.getlevel(monster) * perlevel;
 		}
 		return cr;
 	}
 
 	@Override
-	public void listupgrades(UpgradeHandler handler) {
+	public void registerupgrades(UpgradeHandler handler) {
 		handler.wind.add(Expert.SINGLETON);
 		handler.fire.add(Warrior.SINGLETON);
 		handler.water.add(Aristocrat.SINGLETON);

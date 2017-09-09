@@ -6,7 +6,7 @@ import java.util.HashSet;
 
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.controller.upgrade.classes.ClassAdvancement;
+import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.Realm;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
@@ -86,7 +86,7 @@ public class RealmAcademy extends Academy {
 				getupgrades(upgradetype));
 		if (this.upgrades.isEmpty()) {
 			for (Upgrade u : upgrades) {
-				if (u instanceof ClassAdvancement) {
+				if (u instanceof ClassLevelUpgrade) {
 					this.upgrades.add(u);
 					break;
 				}

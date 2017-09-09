@@ -21,7 +21,7 @@ public class TouchAttackFactor extends CrFactor {
 	}
 
 	@Override
-	public void listupgrades(UpgradeHandler handler) {
+	public void registerupgrades(UpgradeHandler handler) {
 		handler.wind.add(new TouchAttack("Stunning shock", 2, 8, 12));
 		handler.evil.add(new TouchAttack("Acid spray", 8, 8, 17));
 	}

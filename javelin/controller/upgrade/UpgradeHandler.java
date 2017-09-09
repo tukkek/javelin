@@ -9,7 +9,7 @@ import java.util.List;
 
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.factor.CrFactor;
-import javelin.controller.upgrade.classes.ClassAdvancement;
+import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.model.Realm;
 import javelin.model.unit.abilities.spell.Spell;
@@ -143,7 +143,7 @@ public class UpgradeHandler {
 		 */
 		if (fire.isEmpty()) {
 			for (final CrFactor factor : ChallengeRatingCalculator.CR_FACTORS) {
-				factor.listupgrades(this);
+				factor.registerupgrades(this);
 			}
 		}
 	}
@@ -180,8 +180,8 @@ public class UpgradeHandler {
 		addall(internal, all, "internal");
 
 		HashSet<Upgrade> classes = new HashSet<Upgrade>();
-		ClassAdvancement.init();
-		for (ClassAdvancement ca : ClassAdvancement.classes) {
+		ClassLevelUpgrade.init();
+		for (ClassLevelUpgrade ca : ClassLevelUpgrade.classes) {
 			classes.add(ca);
 		}
 		addall(classes, all, "classlevels");

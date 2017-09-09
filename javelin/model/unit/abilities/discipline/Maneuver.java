@@ -62,4 +62,9 @@ public abstract class Maneuver implements Serializable, Cloneable {
 	public boolean validate(Combatant c) {
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
 }

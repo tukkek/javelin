@@ -6,7 +6,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.quality.Quality;
-import javelin.controller.upgrade.classes.ClassAdvancement;
+import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Spawner;
@@ -65,7 +65,7 @@ public class StatisticsScreen extends InfoScreen {
 			lines.add("Challenge rating "
 					+ Math.round(ChallengeRatingCalculator.calculatecr(m)));
 		}
-		for (ClassAdvancement classlevels : ClassAdvancement.classes) {
+		for (ClassLevelUpgrade classlevels : ClassLevelUpgrade.classes) {
 			int level = classlevels.getlevel(m);
 			if (level > 0) {
 				lines.add(classlevels.descriptivename + " level " + level);

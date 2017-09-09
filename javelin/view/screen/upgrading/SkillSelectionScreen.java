@@ -8,7 +8,7 @@ import java.util.List;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.factor.SkillsFactor;
 import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.classes.ClassAdvancement;
+import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
@@ -62,11 +62,11 @@ public class SkillSelectionScreen extends SelectScreen {
 		showquit = false;
 		this.m = m;
 		dontbother = !canspend(m);
-		if (u != null && u instanceof ClassAdvancement) {
-			addclassskills((ClassAdvancement) u);
+		if (u != null && u instanceof ClassLevelUpgrade) {
+			addclassskills((ClassLevelUpgrade) u);
 		} else {
-			ClassAdvancement.init();
-			for (ClassAdvancement c : ClassAdvancement.classes) {
+			ClassLevelUpgrade.init();
+			for (ClassLevelUpgrade c : ClassLevelUpgrade.classes) {
 				if (c.getlevel(m) > 0) {
 					addclassskills(c);
 				}
@@ -74,7 +74,7 @@ public class SkillSelectionScreen extends SelectScreen {
 		}
 	}
 
-	private void addclassskills(ClassAdvancement c) {
+	private void addclassskills(ClassLevelUpgrade c) {
 		for (SkillUpgrade u : c.classskills) {
 			classskills.add(u);
 		}

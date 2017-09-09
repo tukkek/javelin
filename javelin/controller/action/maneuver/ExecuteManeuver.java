@@ -70,8 +70,10 @@ public class ExecuteManeuver extends Action implements AiAction {
 		Maneuver m = choose(maneuvers, prompt);
 		if (m.spent) {
 			c.ready(m);
+			Game.message(c + " readies " + m, null);
 			return true;
 		}
+		m.spend();
 		return m.perform(c);
 	}
 

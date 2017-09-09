@@ -16,7 +16,7 @@ import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.controller.upgrade.classes.Aristocrat;
-import javelin.controller.upgrade.classes.ClassAdvancement;
+import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.upgrade.classes.Commoner;
 import javelin.controller.upgrade.classes.Expert;
 import javelin.controller.upgrade.classes.Warrior;
@@ -184,7 +184,7 @@ public abstract class Kit implements Serializable {
 		}
 	}
 
-	public Kit(String name, ClassAdvancement classadvancement,
+	public Kit(String name, ClassLevelUpgrade classadvancement,
 			RaiseAbility raiseability) {
 		this.name = name;
 		upgrades.add(classadvancement);

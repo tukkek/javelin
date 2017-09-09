@@ -19,16 +19,16 @@ import tyrant.mikera.engine.RPG;
  *
  * @author alex
  */
-public abstract class ClassAdvancement extends Upgrade {
+public abstract class ClassLevelUpgrade extends Upgrade {
 	/**
 	 * Contains all full-fledged (20 level) classes found in the game. Needs to
 	 * be initialized with {@link #init()} to prevent racy initialization.
 	 */
-	public static ClassAdvancement[] classes = null;
+	public static ClassLevelUpgrade[] classes = null;
 
 	public static void init() {
 		if (classes == null) {
-			classes = new ClassAdvancement[] { Commoner.SINGLETON,
+			classes = new ClassLevelUpgrade[] { Commoner.SINGLETON,
 					Aristocrat.SINGLETON, Warrior.SINGLETON, Expert.SINGLETON };
 		}
 	}
@@ -51,11 +51,24 @@ public abstract class ClassAdvancement extends Upgrade {
 	public SkillUpgrade[] classskills;
 	/** @see ClassLevelFactor */
 	public float crperlevel;
+	/**
+	 * A linear expression of a class' Base Attack Bonus advancement per level.
+	 * It's OK not to be exact as it's prefereable for allowing a gradual
+	 * improvement to BAB over time than requiring a player to advance in only a
+	 * single class, which may require revisiting academies, bookkeeping of
+	 * which character is which class, etc.
+	 * 
+	 * TODO saves should probably be done like this too...
+	 * 
+	 * @see Monster#babpartial
+	 */
+	float babprograssion;
 
-	public ClassAdvancement(String name, Level[] tablep, int hdp,
+	public ClassLevelUpgrade(String name, float bab, Level[] tablep, int hdp,
 			int skillratep, SkillUpgrade[] classskillsp, float crperlevelp) {
 		super("Class: " + name.toLowerCase());
 		descriptivename = name;
+		this.babprograssion = bab;
 		table = tablep;
 		if (Javelin.DEBUG && table.length != 21) {
 			System.out.println("#>20levels");
@@ -94,19 +107,26 @@ public abstract class ClassAdvancement extends Upgrade {
 		c.maxhp += hp;
 		Level next = table[level];
 		Level last = table[level - 1];
-		int bab = next.bab - last.bab;
-		advanceattack(bab, m.melee);
-		advanceattack(bab, m.ranged);
-		int newattackbonusdelta = checkfornewattack(m, bab);
-		if (newattackbonusdelta != 0) {
-			upgradeattack(m.melee, newattackbonusdelta);
-			upgradeattack(m.ranged, newattackbonusdelta);
+		c.source.babpartial += advancebab(level);
+		if (c.source.babpartial >= 1) {
+			c.source.babpartial -= 1;
+			advanceattack(1, m.melee);
+			advanceattack(1, m.ranged);
+			int newattackbonusdelta = checkfornewattack(m, 1);
+			if (newattackbonusdelta != 0) {
+				upgradeattack(m.melee, newattackbonusdelta);
+				upgradeattack(m.ranged, newattackbonusdelta);
+			}
 		}
 		m.fort += next.fort - last.fort;
 		m.ref += next.ref - last.ref;
 		m.addwill(next.will - last.will);
 		m.skillpool += SkillsFactor.levelup(skillrate, m);
 		return true;
+	}
+
+	public float advancebab(int level) {
+		return babprograssion;
 	}
 
 	public void advanceattack(int bab, ArrayList<AttackSequence> melee) {

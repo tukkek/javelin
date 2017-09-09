@@ -69,7 +69,7 @@ public class FullAttackFactor extends CrFactor {
 	}
 
 	@Override
-	public void listupgrades(UpgradeHandler handler) {
+	public void registerupgrades(UpgradeHandler handler) {
 		handler.fire.add(new MeleeDamage());
 		handler.wind.add(new RangedDamage());
 

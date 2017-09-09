@@ -8,14 +8,12 @@ import java.io.Serializable;
  * @author alex
  */
 public class Level implements Serializable {
-	public int bab;
 	int fort;
 	int ref;
 	int will;
 
-	public Level(int bab, int fort, int ref, int will) {
+	public Level(int fort, int ref, int will) {
 		super();
-		this.bab = bab;
 		this.fort = fort;
 		this.ref = ref;
 		this.will = will;

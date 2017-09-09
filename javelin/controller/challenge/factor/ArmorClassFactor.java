@@ -17,7 +17,7 @@ public class ArmorClassFactor extends CrFactor {
 	}
 
 	@Override
-	public void listupgrades(UpgradeHandler handler) {
+	public void registerupgrades(UpgradeHandler handler) {
 		handler.earth.add(new NaturalArmor("Natural armor: leather", 2));
 		handler.earth.add(new NaturalArmor("Natural armor: scales", 4));
 

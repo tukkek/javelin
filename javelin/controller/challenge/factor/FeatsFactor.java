@@ -79,7 +79,7 @@ public class FeatsFactor extends CrFactor {
 	}
 
 	@Override
-	public void listupgrades(UpgradeHandler handler) {
+	public void registerupgrades(UpgradeHandler handler) {
 		register(handler.earth, EARTH);
 		register(handler.wind, WIND);
 		register(handler.fire, FIRE);

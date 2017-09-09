@@ -25,7 +25,7 @@ public class QualitiesFactor extends CrFactor {
 	}
 
 	@Override
-	public void listupgrades(UpgradeHandler handler) {
+	public void registerupgrades(UpgradeHandler handler) {
 		for (Quality q : Quality.qualities) {
 			q.listupgrades(handler);
 		}

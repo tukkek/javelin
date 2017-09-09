@@ -21,7 +21,7 @@ import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
-import javelin.controller.upgrade.classes.ClassAdvancement;
+import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.upgrade.skill.Acrobatics;
 import javelin.controller.upgrade.skill.Concentration;
 import javelin.model.Cloneable;
@@ -43,6 +43,7 @@ import javelin.model.unit.feat.attack.WeaponFinesse;
 import javelin.model.unit.feat.attack.focus.WeaponFocus;
 import javelin.model.unit.feat.skill.Acrobatic;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.military.Academy;
 import javelin.view.screen.upgrading.SkillSelectionScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -282,6 +283,13 @@ public class Monster implements Cloneable, Serializable {
 	public int skillpool = 0;
 	/** Percent chance of an attack missing (1 = 100%). */
 	public float misschance = 0;
+	/**
+	 * Since it's likely for units to advance in differnent classes instead of
+	 * in a single one due to having {@link Academy} locations and only usually
+	 * one class option at each, Base Attack Bonus is stored as a fraction if a
+	 * {@link ClassLevelUpgrade} isn't enough to bring it to a new digit.
+	 */
+	public float babpartial;
 
 	@Override
 	public Monster clone() {
@@ -376,8 +384,11 @@ public class Monster implements Cloneable, Serializable {
 	 */
 	public int getbaseattackbonus() {
 		int classesbab = 0;
-		for (ClassAdvancement classdata : ClassAdvancement.classes) {
-			classesbab += classdata.table[classdata.getlevel(this)].bab;
+		for (ClassLevelUpgrade classdata : ClassLevelUpgrade.classes) {
+			int level = classdata.getlevel(this);
+			for (int i = 1; i <= level; i++) {
+				classesbab += classdata.advancebab(i);
+			}
 		}
 		return classesbab
 				+ new Long(Math.round(originalhd * WeaponFocus.BAB.get(type)))
@@ -671,7 +682,7 @@ public class Monster implements Cloneable, Serializable {
 	 *         input or {@link SkillSelectionScreen#upgradeautomatically()} for
 	 *         no user input.
 	 *
-	 * @see ClassAdvancement
+	 * @see ClassLevelUpgrade
 	 * @see RaiseIntelligence
 	 * @see #skills
 	 */

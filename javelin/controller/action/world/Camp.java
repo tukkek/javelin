@@ -54,7 +54,7 @@ public class Camp extends WorldAction {
 			Squad.active.hourselapsed += 1;
 			RandomEncounter.encounter(1 / WorldScreen.HOURSPERENCOUNTER);
 			if (i > 0 && (i + 1) % rest == 0) {
-				Lodge.rest(1, rest, Lodge.LODGE);
+				Lodge.rest(1, rest, false, Lodge.LODGE);
 			}
 		}
 	}

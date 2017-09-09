@@ -150,7 +150,7 @@ public class Lodge extends Fortification {
 			return false;
 		}
 		Squad.active.gold -= price;
-		rest(periods, RESTPERIOD * periods, LODGING[level]);
+		rest(periods, RESTPERIOD * periods, true, LODGING[level]);
 		return true;
 	}
 
@@ -191,7 +191,8 @@ public class Lodge extends Fortification {
 	 * @param accomodation
 	 *            Level of the resting environment.
 	 */
-	public static void rest(int restperiods, long hours, Lodging a) {
+	public static void rest(int restperiods, long hours, boolean advancetime,
+			Lodging a) {
 		for (int i = 0; i < restperiods; i++) {
 			Squad.active.quickheal();
 			for (final Combatant c : Squad.active.members) {
@@ -216,6 +217,8 @@ public class Lodge extends Fortification {
 				c.terminateconditions((int) hours);
 			}
 		}
-		Squad.active.hourselapsed += hours;
+		if (advancetime) {
+			Squad.active.hourselapsed += hours;
+		}
 	}
 }

@@ -70,7 +70,7 @@ public class SpellsFactor extends CrFactor {
 	}
 
 	@Override
-	public void listupgrades(UpgradeHandler handler) {
+	public void registerupgrades(UpgradeHandler handler) {
 		handler.schoolhealwounds.add(new CureLightWounds());// conjuration
 		handler.schoolhealwounds.add(new CureModerateWounds());
 		handler.schoolhealwounds.add(new CureSeriousWounds());
@@ -139,7 +139,7 @@ public class SpellsFactor extends CrFactor {
 
 	/**
 	 * To be called post monster initialization.
-	 * {@link #listupgrades(UpgradeHandler)} is called before monster are
+	 * {@link #registerupgrades(UpgradeHandler)} is called before monster are
 	 * loaded.
 	 */
 	static public void init() {

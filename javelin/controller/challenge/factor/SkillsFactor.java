@@ -44,7 +44,7 @@ public class SkillsFactor extends CrFactor {
 	}
 
 	@Override
-	public void listupgrades(UpgradeHandler handler) {
+	public void registerupgrades(UpgradeHandler handler) {
 		handler.good.add(Diplomacy.SINGLETON);
 		handler.good.add(GatherInformation.SINGLETON);
 

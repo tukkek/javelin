@@ -39,6 +39,15 @@ public class Debug {
 			}
 		}
 
+		static void healopponenets() {
+			if (Fight.state == null) {
+				return;
+			}
+			for (Combatant c : Fight.state.redTeam) {
+				c.hp = c.maxhp;
+			}
+		}
+
 		static void additems(Item[] items) {
 			for (Item i : items) {
 				Squad.active.receiveitem(i);
@@ -57,10 +66,20 @@ public class Debug {
 			return s;
 		}
 
+		public static void freezeopponents() {
+			for (Combatant c : Fight.state.redTeam) {
+				c.ap = Float.MAX_VALUE;
+			}
+		}
+
 	}
 
 	public static String onbattlehelp() {
 		return "";
+	}
+
+	public static void onbattlestart() {
+
 	}
 
 	/** Called only once when a {@link Scenario} is initialized. */
@@ -86,5 +105,4 @@ public class Debug {
 	public static String onworldhelp() {
 		return "";
 	}
-
 }

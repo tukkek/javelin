@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.BattleSetup;
+import javelin.controller.Debug;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.Minigame;
@@ -49,6 +50,9 @@ public class StartBattle extends BattleEvent {
 		int diffifculty = elred - elblue;
 		if (fight instanceof Minigame
 				|| !Squad.active.skipcombat(diffifculty)) {
+			if (Javelin.DEBUG) {
+				Debug.onbattlestart();
+			}
 			BattlePanel.current = Fight.state.next;
 			BattleScreen battleScreen = new BattleScreen(true, true);
 			fight.draw();

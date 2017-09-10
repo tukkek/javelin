@@ -1,13 +1,18 @@
 package javelin.model.unit.abilities.discipline;
 
-import java.util.ArrayList;
+import javelin.model.unit.CloneableList;
 
-public class Maneuvers extends ArrayList<Maneuver> {
+public class Maneuvers extends CloneableList<Maneuver> {
 	public Maneuvers() {
 		super();
 	}
 
 	public Maneuvers(Maneuvers m) {
 		super(m);
+	}
+
+	@Override
+	public Maneuvers clone() {
+		return (Maneuvers) super.clone();
 	}
 }

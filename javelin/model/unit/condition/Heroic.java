@@ -56,5 +56,4 @@ public class Heroic extends Condition {
 		m.ref -= 2;
 		m.addwill(-2);
 	}
-
 }

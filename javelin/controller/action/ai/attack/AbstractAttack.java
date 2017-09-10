@@ -3,6 +3,7 @@ package javelin.controller.action.ai.attack;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javelin.Javelin;
 import javelin.controller.action.Action;
@@ -26,7 +27,7 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  * @author alex
  */
 public abstract class AbstractAttack extends Action implements AiAction {
-	public static Strike maneuver = null;
+	static final ConcurrentHashMap<Thread, Strike> CURRENTMANEUVER = new ConcurrentHashMap<Thread, Strike>();
 
 	class AttackNode extends ChanceNode {
 		public AttackNode(Node n, float chance, String action, Delay delay,
@@ -45,31 +46,31 @@ public abstract class AbstractAttack extends Action implements AiAction {
 	public List<ChanceNode> attack(final BattleState gameState,
 			final Combatant current, final Combatant target,
 			CurrentAttack attacks, int bonus) {
-		return attack(gameState, current, target, attacks.getnext(), bonus,
-				getdamagebonus(current, target),
+		return attack(current, target, attacks.getnext(), bonus, getdamagebonus(current, target),
 				AbstractAttack.calculateattackap(
-						getattacks(current).get(attacks.sequenceindex)));
+						getattacks(current).get(attacks.sequenceindex)),
+				gameState);
 	}
 
 	int getdamagebonus(Combatant attacker, Combatant target) {
 		return 0;
 	}
 
-	public List<ChanceNode> attack(final BattleState gameState,
-			Combatant current, final Combatant target, final Attack attack,
-			int bonus, int damagebonus, final float ap) {
-		current = gameState.clone(current);
+	public List<ChanceNode> attack(Combatant current,
+			final Combatant target, final Attack attack, int attackbonus,
+			int damagebonus, final float ap, final BattleState s) {
+		current = s.clone(current);
 		current.ap += ap;
 		final ArrayList<ChanceNode> nodes = new ArrayList<ChanceNode>();
-		for (final DamageChance dc : dealattack(gameState, current, target,
-				bonus, attack)) {
+		for (final DamageChance dc : dealattack(s, current, target,
+				attackbonus, attack)) {
 			if (dc.damage > 0) {
 				dc.damage += damagebonus;
 			}
 			if (dc.damage < 0) {
 				dc.damage = 0;
 			}
-			nodes.add(createnode(dc, target, gameState, current, attack, ap));
+			nodes.add(createnode(current, target, attack, ap, dc, s));
 		}
 		return nodes;
 	}
@@ -79,11 +80,13 @@ public abstract class AbstractAttack extends Action implements AiAction {
 	 * This would penalize creatures with only one attack so max AP cost is .5
 	 * per attack.
 	 * 
-	 * If a {@link #maneuver} is being used, returns {@link Maneuver} instead.
+	 * If a {@link #CURRENTMANEUVER} is being used, returns {@link Maneuver}
+	 * instead.
 	 */
 	static float calculateattackap(final AttackSequence attacks) {
-		if (maneuver != null) {
-			return maneuver.ap;
+		final Maneuver m = getmaneuver();
+		if (m != null) {
+			return m.ap;
 		}
 		final int nattacks = attacks.size();
 		if (nattacks == 1) {
@@ -208,12 +211,12 @@ public abstract class AbstractAttack extends Action implements AiAction {
 				+ (target.burrowed ? 4 : 0);
 	}
 
-	ChanceNode createnode(final DamageChance dc, Combatant target,
-			final BattleState gameState, Combatant attacker,
-			final Attack attack, float ap) {
-		String chance = " (" + getchance(attacker, target, attack, gameState)
+	ChanceNode createnode(Combatant attacker, Combatant target, final Attack a,
+			float ap, final DamageChance dc, final BattleState s) {
+		String chance = " (" + getchance(attacker, target, a, s)
 				+ " to hit)...";
 		StringBuilder sb = new StringBuilder(attacker.toString());
+		Strike maneuver = getmaneuver();
 		if (dc.damage == 0) {
 			final String name;
 			final Delay wait;
@@ -225,16 +228,15 @@ public abstract class AbstractAttack extends Action implements AiAction {
 				wait = Delay.BLOCK;
 			}
 			sb = sb.append(" misses ").append(name).append(chance);
-			return new AttackNode(gameState, dc.chance, sb.toString(), wait,
-					target);
+			return new AttackNode(s, dc.chance, sb.toString(), wait, target);
 		}
-		final BattleState attackstate = gameState.clone();
+		final BattleState attackstate = s.clone();
 		attacker = attackstate.clone(attacker);
 		target = attackstate.clone(target);
 		if (maneuver != null) {
-			maneuver.hit(attacker, target, attackstate, dc);
+			maneuver.hit(attacker, target, dc, attackstate);
 		}
-		final String name = maneuver == null ? attack.name
+		final String name = maneuver == null ? a.name
 				: maneuver.name.toLowerCase();
 		sb = sb.append(" attacks ").append(target).append(" with ").append(name)
 				.append(chance);
@@ -244,7 +246,7 @@ public abstract class AbstractAttack extends Action implements AiAction {
 		if (dc.damage == 0) {
 			sb.append("\nDamage absorbed!");
 		} else {
-			target.damage(dc.damage, attackstate, attack.energy
+			target.damage(dc.damage, attackstate, a.energy
 					? target.source.energyresistance : target.source.dr);
 			if (target.source.customName == null) {
 				sb.append("\nThe ").append(target.source.name);
@@ -252,7 +254,7 @@ public abstract class AbstractAttack extends Action implements AiAction {
 				sb.append("\n").append(target.source.customName);
 			}
 			sb.append(" is ").append(target.getstatus()).append(".");
-			posthit(dc, target, attacker, attack, ap, attackstate, sb);
+			posthit(dc, target, attacker, a, ap, attackstate, sb);
 		}
 		return new AttackNode(attackstate, dc.chance, sb.toString(),
 				Delay.BLOCK, target);
@@ -309,5 +311,25 @@ public abstract class AbstractAttack extends Action implements AiAction {
 			BattleState s) {
 		return Javelin.translatetochance(
 				Math.round(20 * misschance(s, current, target, attack.bonus)));
+	}
+
+	static Strike getmaneuver() {
+		return CURRENTMANEUVER.get(Thread.currentThread());
+	}
+
+	/**
+	 * Sets the current {@link Maneuver} which should be taken as context during
+	 * the execution of this class. Since this class needs to be thread-safe
+	 * this is backed by a {@link ConcurrentHashMap} in order to properly
+	 * synchronize setting and clearing this for any given thread at the right
+	 * time.
+	 */
+	public static void setmaneuver(Strike m) {
+		final Thread t = Thread.currentThread();
+		if (m == null) {
+			CURRENTMANEUVER.remove(t);
+		} else {
+			CURRENTMANEUVER.put(t, m);
+		}
 	}
 }

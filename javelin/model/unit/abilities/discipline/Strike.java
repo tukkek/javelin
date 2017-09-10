@@ -23,7 +23,7 @@ import javelin.model.unit.attack.Combatant;
 
 /**
  * Lets the user select a standard attack (not a full sequence) then sets (and
- * later clears) {@link AbstractAttack#maneuver} and delegates to either
+ * later clears) {@link AbstractAttack#CURRENTMANEUVER} and delegates to either
  * {@link MeleeAttack} or {@link RangedAttack}.
  * 
  * The line between Strikes and Boosts is often blurred, especially when the
@@ -47,29 +47,29 @@ public abstract class Strike extends Maneuver {
 
 	@Override
 	public boolean perform(Combatant c) {
-		ArrayList<Attack> melee = getattacks(c, c.source.melee);
-		ArrayList<Attack> all = new ArrayList<Attack>(melee);
-		all.addAll(getattacks(c, c.source.ranged));
-		Attack a;
-		if (all.size() == 1) {
-			a = all.get(0);
-		} else {
-			final String prompt = "Which attack will you use?";
-			int choice = Javelin.choose(prompt, all, false, false);
-			if (choice == -1) {
-				throw new RepeatTurn();
-			}
-			a = all.get(choice);
-		}
 		try {
-			AbstractAttack.maneuver = this;
+			ArrayList<Attack> melee = getattacks(c, c.source.melee);
+			ArrayList<Attack> all = new ArrayList<Attack>(melee);
+			all.addAll(getattacks(c, c.source.ranged));
+			Attack a;
+			if (all.size() == 1) {
+				a = all.get(0);
+			} else {
+				final String prompt = "Which attack will you use?";
+				int choice = Javelin.choose(prompt, all, false, false);
+				if (choice == -1) {
+					throw new RepeatTurn();
+				}
+				a = all.get(choice);
+			}
+			AbstractAttack.setmaneuver(this);
 			final Target action = melee.contains(a)
 					? new MeleeTarget(a, ap, 'm')
 					: new RangedTarget(a, ap, 'm');
 			action.perform(c);
 			return true;
 		} finally {
-			AbstractAttack.maneuver = null;
+			AbstractAttack.setmaneuver(null);
 		}
 	}
 
@@ -85,16 +85,18 @@ public abstract class Strike extends Maneuver {
 	}
 
 	@Override
-	public List<List<ChanceNode>> getoutcomes(BattleState s, Combatant c) {
+	public List<List<ChanceNode>> getoutcomes(Combatant c, BattleState s,
+			Maneuver m) {
 		try {
+			AbstractAttack.setmaneuver((Strike) m);
+			m.spend();
 			ArrayList<List<ChanceNode>> outcomes = new ArrayList<List<ChanceNode>>();
-			AbstractAttack.maneuver = this;
-			final Monster m = c.source;
-			getoutcomes(c, s, m.melee, MeleeAttack.SINGLETON, outcomes);
-			getoutcomes(c, s, m.ranged, RangedAttack.SINGLETON, outcomes);
+			getoutcomes(c, s, c.source.melee, MeleeAttack.SINGLETON, outcomes);
+			getoutcomes(c, s, c.source.ranged, RangedAttack.SINGLETON,
+					outcomes);
 			return outcomes;
 		} finally {
-			AbstractAttack.maneuver = null;
+			AbstractAttack.setmaneuver(null);
 		}
 	}
 
@@ -102,7 +104,7 @@ public abstract class Strike extends Maneuver {
 			ArrayList<AttackSequence> attacks, AbstractAttack action,
 			ArrayList<List<ChanceNode>> outcomes) {
 		for (Attack a : getattacks(c, attacks)) {
-			outcomes.addAll(action.getoutcomes(s, c));
+			outcomes.addAll(action.getoutcomes(c, s));
 		}
 	}
 
@@ -116,12 +118,13 @@ public abstract class Strike extends Maneuver {
 	 * Does not support randomness, so use take-10 rules whenever possible (for
 	 * saving throws, etc).
 	 * 
+	 * 
 	 * @param dc
 	 *            Make sure to use this to apply extra damage so it will handle
 	 *            death, {@link Monster#dr}, etc.
 	 */
-	abstract public void hit(Combatant active, Combatant target, BattleState s,
-			DamageChance dc);
+	abstract public void hit(Combatant active, Combatant target,
+			DamageChance dc, BattleState s);
 
 	@Override
 	public boolean validate(Combatant c) {

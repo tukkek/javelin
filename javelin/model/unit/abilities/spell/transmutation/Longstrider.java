@@ -7,7 +7,7 @@ import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Combatant;
-import javelin.model.unit.condition.Strider;
+import javelin.model.unit.condition.Condition;
 import javelin.model.world.location.dungeon.Dungeon;
 
 /**
@@ -20,10 +20,28 @@ import javelin.model.world.location.dungeon.Dungeon;
  * @author alex
  */
 public class Longstrider extends Spell {
+	public class Strider extends Condition {
+		public Strider(Combatant c, Integer casterlevelp) {
+			super(Float.MAX_VALUE, c, Effect.POSITIVE, "striding", casterlevelp,
+					1);
+		}
+
+		@Override
+		public void start(Combatant c) {
+			c.source = c.source.clone();
+			c.source.walk += 10;
+		}
+
+		@Override
+		public void end(Combatant c) {
+			c.source.walk -= 10;
+		}
+	}
+
 	/** Constructor. */
 	public Longstrider() {
-		super("Longstrider", 1, ChallengeRatingCalculator.ratespelllikeability(1),
-				Realm.EARTH);
+		super("Longstrider", 1,
+				ChallengeRatingCalculator.ratespelllikeability(1), Realm.EARTH);
 		ispotion = true;
 		castinbattle = true;
 		castonallies = false;

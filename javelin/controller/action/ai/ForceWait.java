@@ -20,8 +20,8 @@ public class ForceWait extends Action implements AiAction {
 	}
 
 	@Override
-	public List<List<ChanceNode>> getoutcomes(BattleState gameState,
-			Combatant combatant) {
+	public List<List<ChanceNode>> getoutcomes(Combatant combatant,
+			BattleState gameState) {
 		ArrayList<List<ChanceNode>> list = new ArrayList<List<ChanceNode>>();
 		list.add(AiMovement.wait(gameState, combatant));
 		return list;

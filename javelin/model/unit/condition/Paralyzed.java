@@ -8,7 +8,6 @@ import javelin.model.unit.attack.Combatant;
  * @author alex
  */
 public class Paralyzed extends Condition {
-
 	private int dex;
 	private int delta;
 

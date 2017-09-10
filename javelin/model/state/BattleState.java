@@ -342,8 +342,8 @@ public class BattleState implements Node, TeamContainer {
 		final int deltax = target.location[0] - attacker.location[0];
 		final int deltay = target.location[1] - attacker.location[1];
 		final int flankingx = target.location[0] + deltax;
-		final int flankingy = target.location[1] + deltay;
-		final Combatant flank = getcombatant(flankingx, flankingy);
+		final int flanking = target.location[1] + deltay;
+		final Combatant flank = getcombatant(flankingx, flanking);
 		return flank != null && !flank.burrowed
 				&& Walker.distance(target, flank) < 1.5
 				&& attackerteam.contains(flank);
@@ -420,8 +420,7 @@ public class BattleState implements Node, TeamContainer {
 	 * This method returns a subset of fleeing characters. Note that
 	 * {@link #blueTeam} and {@link #redTeam} are modified for several
 	 * {@link EndBattle} purposes so it might be preferable to use
-	 * {@link Fight#originalblueteam} and
-	 * {@link Fight#originalredteam} instead.
+	 * {@link Fight#originalblueteam} and {@link Fight#originalredteam} instead.
 	 * 
 	 * @param team
 	 *            A list containing the combatants that should not be excluded
@@ -437,5 +436,28 @@ public class BattleState implements Node, TeamContainer {
 			}
 		}
 		return fleeing;
+	}
+
+	/**
+	 * Utility method to find a clone in this state intance. To be used with
+	 * {@link #getteam(Combatant)}, {@link #getallcombatants()},
+	 * {@link #getcombatants()}, {@link #fleeing}, {@link #dead}, etc.
+	 * 
+	 * @return The clone of the given combatant or <code>null</code>.
+	 */
+	static public Combatant getcombatant(Combatant c,
+			List<Combatant> combatants) {
+		int i = combatants.indexOf(c);
+		return i >= 0 ? combatants.get(i) : null;
+	}
+
+	/**
+	 * New list with {@link #redTeam}, {@link #blueTeam}, {@link #fleeing} and
+	 * {@link #dead}.
+	 */
+	public void getallcombatants() {
+		ArrayList<Combatant> all = getcombatants();
+		all.addAll(fleeing);
+		all.addAll(dead);
 	}
 }

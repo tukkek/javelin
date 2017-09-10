@@ -56,7 +56,7 @@ public class AiMovement extends Action implements AiAction {
 	}
 
 	@Override
-	public List<List<ChanceNode>> getoutcomes(final BattleState gameStatep, final Combatant active) {
+	public List<List<ChanceNode>> getoutcomes(final Combatant active, final BattleState gameStatep) {
 		final ArrayList<List<ChanceNode>> successors = new ArrayList<List<ChanceNode>>();
 		for (int x = active.location[0] - 1, deltax = -1; deltax <= +1; x++, deltax++) {
 			movement: for (int y = active.location[1] - 1, deltay = -1; deltay <= +1; y++, deltay++) {

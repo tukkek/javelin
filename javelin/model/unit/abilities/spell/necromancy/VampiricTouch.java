@@ -5,17 +5,53 @@ import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.spell.Touch;
 import javelin.model.unit.attack.Combatant;
-import javelin.model.unit.condition.Vampiric;
+import javelin.model.unit.condition.Condition;
 
 /**
  * See the d20 SRD for more info.
  */
 public class VampiricTouch extends Touch {
+	public class Vampiric extends Condition {
+		final private int steal;
+
+		public Vampiric(float expireat, Combatant caster, int steal,
+				Integer casterlevelp) {
+			super(expireat, caster, Effect.POSITIVE, "vampiric", casterlevelp,
+					1);
+			this.steal = steal;
+		}
+
+		@Override
+		public void start(Combatant c) {
+			// see VampiricTouch
+
+		}
+
+		@Override
+		public void end(Combatant c) {
+			c.hp -= steal;
+			if (c.hp < 1) {
+				c.hp = 1;
+			}
+		}
+
+		@Override
+		public void finish(BattleState s) {
+			// Game.message(caster + " loses temporary hit points, is now "
+			// + caster.getStatus() + ".", null, Delay.BLOCK);
+		}
+
+		@Override
+		public boolean merge(Combatant c, Condition previous) {
+			previous.expireat = Math.max(expireat, previous.expireat);
+			return true;
+		}
+	}
 
 	/** Constructor. */
 	public VampiricTouch() {
-		super("Vampiric touch", 3, ChallengeRatingCalculator.ratespelllikeability(3),
-				Realm.EVIL);
+		super("Vampiric touch", 3,
+				ChallengeRatingCalculator.ratespelllikeability(3), Realm.EVIL);
 		castinbattle = true;
 		provokeaoo = false;
 	}

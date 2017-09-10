@@ -6,11 +6,27 @@ import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
-import javelin.model.unit.condition.Grappling;
+import javelin.model.unit.condition.Condition;
 import javelin.model.unit.feat.attack.expertise.ImprovedGrapple;
 
 public class Grapple extends ExpertiseAction {
 	public static final Action INSTANCE = new Grapple();
+
+	public class Grappling extends Condition {
+		public Grappling(float expireatp, Combatant c) {
+			super(expireatp, c, Effect.NEGATIVE, "grappling", null);
+		}
+
+		@Override
+		public void start(Combatant c) {
+			c.acmodifier -= 2;
+		}
+
+		@Override
+		public void end(Combatant c) {
+			c.acmodifier += 2;
+		}
+	}
 
 	private Grapple() {
 		super("Grapple", "G", ImprovedGrapple.SINGLETON, +2);

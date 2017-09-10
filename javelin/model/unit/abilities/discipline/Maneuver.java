@@ -5,12 +5,14 @@ import java.util.List;
 
 import javelin.controller.action.Action;
 import javelin.controller.action.ai.AiAction;
+import javelin.controller.action.maneuver.ExecuteManeuver;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
 
-public abstract class Maneuver implements Serializable, Cloneable {
+public abstract class Maneuver
+		implements Serializable, javelin.model.Cloneable {
 	public boolean spent = false;
 	public String name;
 	/**
@@ -35,12 +37,26 @@ public abstract class Maneuver implements Serializable, Cloneable {
 		}
 	}
 
-	/** See {@link Action#perform(Combatant)}. */
+	/**
+	 * Delegate to {@link Action#perform(Combatant)}. The implementations need
+	 * not worry about handling the {@link Combatant#ready(Maneuver)} or
+	 * {@link Maneuver#spend()}.
+	 * 
+	 * @see ExecuteManeuver
+	 */
 	abstract public boolean perform(Combatant c);
 
-	/** See {@link AiAction#getoutcomes(BattleState, Combatant)}. */
-	abstract public List<List<ChanceNode>> getoutcomes(BattleState s,
-			Combatant c);
+	/**
+	 * A delegate for {@link AiAction#getoutcomes(Combatant, BattleState)}. By
+	 * the time this is called, all parameters have already been properly
+	 * cloned. The implementations need not worry about handling the
+	 * {@link Combatant#ready(Maneuver)} flow but are responsible for calling
+	 * {@link Maneuver#spend()}.
+	 * 
+	 * @see ExecuteManeuver
+	 */
+	abstract public List<List<ChanceNode>> getoutcomes(Combatant c,
+			BattleState s, Maneuver m);
 
 	@Override
 	public boolean equals(Object obj) {
@@ -65,6 +81,7 @@ public abstract class Maneuver implements Serializable, Cloneable {
 
 	@Override
 	public String toString() {
-		return name;
+		return name + (spent ? "*" : "");
 	}
+
 }

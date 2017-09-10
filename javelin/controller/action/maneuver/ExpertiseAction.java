@@ -87,8 +87,8 @@ public abstract class ExpertiseAction extends Target implements AiAction {
 	abstract boolean validatetarget(Combatant target);
 
 	@Override
-	public List<List<ChanceNode>> getoutcomes(final BattleState gameState,
-			final Combatant combatant) {
+	public List<List<ChanceNode>> getoutcomes(final Combatant combatant,
+			final BattleState gameState) {
 		final ArrayList<List<ChanceNode>> outcomes = new ArrayList<List<ChanceNode>>();
 		if (!combatant.source.hasfeat(prerequisite)) {
 			return outcomes;

@@ -6,7 +6,7 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Touch;
 import javelin.model.unit.attack.Combatant;
-import javelin.model.unit.condition.Resistant;
+import javelin.model.unit.condition.Condition;
 
 /**
  * See the d20 SRD for more info.
@@ -14,11 +14,37 @@ import javelin.model.unit.condition.Resistant;
  * @see Monster#energyresistance
  */
 public class ResistEnergy extends Touch {
+	public class Resistant extends Condition {
+		int r;
+
+		/**
+		 * @param resistance
+		 *            Number of {@link Monster#energyresistance} points.
+		 * @param casterlevelp
+		 */
+		public Resistant(Combatant c, int resistance, Integer casterlevelp) {
+			super(Float.MAX_VALUE, c, Effect.POSITIVE, "resistant",
+					casterlevelp, 1);
+			this.r = resistance;
+		}
+
+		@Override
+		public void start(Combatant c) {
+			c.source.energyresistance += r;
+		}
+
+		@Override
+		public void end(Combatant c) {
+			c.source.energyresistance -= r;
+		}
+	}
+
 	int resistance;
 
 	/** Constructor. */
 	public ResistEnergy() {
-		super("Resist energy", 2, ChallengeRatingCalculator.ratespelllikeability(2, 7),
+		super("Resist energy", 2,
+				ChallengeRatingCalculator.ratespelllikeability(2, 7),
 				Realm.GOOD);
 		resistance = 20 / 5;
 		casterlevel = 7;

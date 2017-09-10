@@ -29,8 +29,8 @@ public class Defend extends Action implements AiAction {
 	}
 
 	@Override
-	public List<List<ChanceNode>> getoutcomes(final BattleState gameState,
-			final Combatant active) {
+	public List<List<ChanceNode>> getoutcomes(final Combatant active,
+			final BattleState gameState) {
 		if (!ALLOWAI) {
 			return Collections.emptyList();
 		}

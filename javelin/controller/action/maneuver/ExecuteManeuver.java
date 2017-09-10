@@ -26,22 +26,25 @@ public class ExecuteManeuver extends Action implements AiAction {
 	}
 
 	@Override
-	public List<List<ChanceNode>> getoutcomes(BattleState s, Combatant c) {
+	public List<List<ChanceNode>> getoutcomes(Combatant c, BattleState s) {
 		final ArrayList<List<ChanceNode>> outcomes = new ArrayList<List<ChanceNode>>();
 		final Disciplines disciplines = c.disciplines;
 		for (String discipline : disciplines.keySet()) {
 			for (Maneuver m : disciplines.get(discipline)) {
+				BattleState s2 = s.clone();
+				Combatant c2 = s2.clone(c);
+				Maneuver m2 = c2.disciplines.find(m);
 				if (m.spent) {
-					BattleState s2 = s.clone();
-					Combatant c2 = s2.clone(c);
-					c2.ready(c2.disciplines.find(m));
 					ArrayList<ChanceNode> chance = new ArrayList<ChanceNode>();
-					final ChanceNode node = new ChanceNode(s2, 1,
-							c2 + " readies " + m + "!", Delay.BLOCK);
+					c2.ready(m2);
+					final String feedback = c2 + " readies "
+							+ m.name.toLowerCase() + "!";
+					final ChanceNode node = new ChanceNode(s2, 1, feedback,
+							Delay.BLOCK);
 					chance.add(node);
 					outcomes.add(chance);
 				} else {
-					outcomes.addAll(m.getoutcomes(s, c));
+					outcomes.addAll(m.getoutcomes(c2, s2, m2));
 				}
 			}
 		}
@@ -69,12 +72,24 @@ public class ExecuteManeuver extends Action implements AiAction {
 		}
 		Maneuver m = choose(maneuvers, prompt);
 		if (m.spent) {
+			String name = m.name.toLowerCase();
+			Character confirm = Javelin.prompt("Do you want to ready " + name
+					+ "?\nPress ENTER or m to confirm...");
+			if (confirm != 'm' && confirm != '\n') {
+				throw new RepeatTurn();
+			}
 			c.ready(m);
-			Game.message(c + " readies " + m, null);
+			Game.messagepanel.clear();
+			Game.message(c + " readies " + name + "...", Delay.WAIT);
 			return true;
 		}
-		m.spend();
-		return m.perform(c);
+		try {
+			m.spend();
+			return m.perform(c);
+		} catch (RepeatTurn e) {
+			m.spent = false;
+			throw e;
+		}
 	}
 
 	Maneuver choose(Maneuvers maneuvers, String prompt) {

@@ -1,5 +1,6 @@
 package javelin.model.unit.abilities.discipline.serpent;
 
+import javelin.controller.action.ActionCost;
 import javelin.controller.action.ai.attack.DamageChance;
 import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.discipline.Strike;
@@ -40,9 +41,9 @@ public class StingOfTheRattler extends Strike {
 	}
 
 	@Override
-	public void hit(Combatant active, Combatant target, BattleState s,
-			DamageChance dc) {
+	public void hit(Combatant active, Combatant target, DamageChance dc,
+			BattleState s) {
 		dc.damage += 3;
-		target.addcondition(new Stung(active.ap + 1, target));
+		target.addcondition(new Stung(active.ap + ActionCost.FULL, target));
 	}
 }

@@ -56,7 +56,7 @@ public class Flee extends Action implements AiAction {
 	}
 
 	@Override
-	public List<List<ChanceNode>> getoutcomes(BattleState s, Combatant active) {
+	public List<List<ChanceNode>> getoutcomes(Combatant active, BattleState s) {
 		ArrayList<List<ChanceNode>> outcomes = new ArrayList<List<ChanceNode>>();
 		s = s.clone();
 		s.flee(active);

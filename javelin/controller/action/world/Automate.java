@@ -47,7 +47,8 @@ public class Automate extends WorldAction implements SimpleAction {
 			}
 			container.add(new Label());
 			if (BattleScreen.active instanceof WorldScreen) {
-				strategic = new Checkbox("Strategic combat", Squad.active.strategic);
+				strategic = new Checkbox("Strategic combat",
+						Squad.active.strategic);
 				container.add(strategic);
 				// strategicboxes = new Checkbox[] {
 				// new Checkbox("Never skip combat", strategic,
@@ -87,7 +88,8 @@ public class Automate extends WorldAction implements SimpleAction {
 		};
 
 		ArrayList<Combatant> getunits() {
-			return BattleScreen.active instanceof WorldScreen ? Squad.active.members : Fight.state.blueTeam;
+			return BattleScreen.active instanceof WorldScreen
+					? Squad.active.members : Fight.state.blueTeam;
 		}
 	}
 
@@ -118,7 +120,7 @@ public class Automate extends WorldAction implements SimpleAction {
 
 	@Override
 	public void perform() {
-		if (BattleScreen.active.spentap != 0) {
+		if (BattleScreen.partialmove != 0) {
 			Game.message("Finish your turn first...", Delay.WAIT);
 			return;
 		}

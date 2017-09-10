@@ -24,8 +24,8 @@ public class TouchAttack extends Fire implements AiAction {
 	}
 
 	@Override
-	public List<List<ChanceNode>> getoutcomes(BattleState gameState,
-			Combatant combatant) {
+	public List<List<ChanceNode>> getoutcomes(Combatant combatant,
+			BattleState gameState) {
 		List<List<ChanceNode>> outcomes = new ArrayList<List<ChanceNode>>();
 		if (combatant.source.touch == null) {
 			return outcomes;

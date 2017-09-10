@@ -4,12 +4,28 @@ import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
-import javelin.model.unit.condition.totem.Graceful;
+import javelin.model.unit.condition.Condition;
 
 /**
  * See the d20 SRD for more info.
  */
 public class CatsGrace extends TotemsSpell {
+	public class Graceful extends Condition {
+		public Graceful(Combatant c, Integer casterlevelp) {
+			super(Float.MAX_VALUE, c, Effect.POSITIVE, "graceful",
+					casterlevelp);
+		}
+
+		@Override
+		public void start(Combatant c) {
+			c.source.raisedexterity(+2);
+		}
+
+		@Override
+		public void end(Combatant c) {
+			c.source.raisedexterity(-2);
+		}
+	}
 
 	public CatsGrace() {
 		super("Cat's grace", Realm.WATER);

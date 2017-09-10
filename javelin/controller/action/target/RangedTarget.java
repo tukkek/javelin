@@ -32,10 +32,8 @@ public class RangedTarget extends Fire {
 
 	@Override
 	protected void attack(Combatant active, Combatant target, BattleState s) {
-		BattleState state = Fight.state;
-		active = state.clone(active);
-		target = state.clone(target);
-		Action.outcome(attacktype.attack(state, active, target, a, 0, 0, ap));
+		Action.outcome(
+				attacktype.attack(active, target, a, 0, 0, ap, Fight.state));
 		BattleScreen.active.update();
 
 	}

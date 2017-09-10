@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.action.ActionCost;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.quality.Quality;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
@@ -75,7 +76,8 @@ public class StatisticsScreen extends InfoScreen {
 		lines.add("");
 		final String maxhp = Squad.active.members.contains(c)
 				? " (" + c.maxhp + "hp)" : "";
-		lines.add("Hit dice     " + m.hd + maxhp);
+		final String showhp = Javelin.DEBUG ? " [" + c.hp + "]" : "";
+		lines.add("Hit dice     " + m.hd + maxhp + showhp);
 		lines.add("Initiative   " + (m.initiative >= 0 ? "+" : "")
 				+ m.initiative);
 		lines.add("Speed        " + showspeed(m));
@@ -137,7 +139,10 @@ public class StatisticsScreen extends InfoScreen {
 		if (fly) {
 			speedtext += " flying";
 		}
-		speedtext += " (" + speed / 5 + " squares)";
+		long squares = speed / 5;
+		speedtext += " (" + squares + " squares, "
+				+ String.format("%.2f", ActionCost.MOVE / squares)
+				+ "ap per square)";
 		if (m.swim > 0) {
 			speedtext += ", swim " + m.swim + " feet";
 		}

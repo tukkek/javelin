@@ -3,17 +3,44 @@ package javelin.model.unit.abilities.spell.transmutation;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Touch;
 import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.condition.Condition;
 
 /**
  * See the d20 SRD for more info.
  */
 public class Darkvision extends Touch {
+	public class DarkvisionCondition extends Condition {
+		int original;
+
+		/**
+		 * Constructor.
+		 * 
+		 * @param casterlevelp
+		 */
+		public DarkvisionCondition(Combatant c, Integer casterlevelp) {
+			super(Float.MAX_VALUE, c, Effect.NEUTRAL, "darkvision",
+					casterlevelp, 3);
+		}
+
+		@Override
+		public void start(Combatant c) {
+			this.original = c.source.vision;
+			c.source.vision = Monster.VISION_DARK;
+		}
+
+		@Override
+		public void end(Combatant c) {
+			c.source.vision = Math.min(original, c.source.vision);
+		}
+	}
+
 	/** Constructor. */
 	public Darkvision() {
-		super("Darkvision", 2, ChallengeRatingCalculator.ratespelllikeability(2),
-				Realm.EVIL);
+		super("Darkvision", 2,
+				ChallengeRatingCalculator.ratespelllikeability(2), Realm.EVIL);
 		castinbattle = true;
 		castonallies = true;
 		castoutofbattle = true;
@@ -22,8 +49,7 @@ public class Darkvision extends Touch {
 
 	@Override
 	public String castpeacefully(Combatant caster, Combatant target) {
-		target.addcondition(
-				new javelin.model.unit.condition.Darkvision(target, casterlevel));
+		target.addcondition(new DarkvisionCondition(target, casterlevel));
 		return target + "'s eyes glow!";
 	}
 

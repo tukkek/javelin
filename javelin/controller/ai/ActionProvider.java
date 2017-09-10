@@ -20,7 +20,7 @@ import javelin.model.unit.attack.Combatant;
  * {@link ActionMapping#ACTIONS} and returns it's successors as
  * {@link ChanceNode}.
  * 
- * @see AiAction#getoutcomes(BattleState, Combatant)
+ * @see AiAction#getoutcomes(Combatant, BattleState)
  * 
  * @author alex
  */
@@ -93,7 +93,7 @@ public final class ActionProvider
 		}
 		final BattleState stateclone = battleState.clonedeeply();
 		final List<List<ChanceNode>> outcomes = ((AiAction) actions.pop())
-				.getoutcomes(stateclone, stateclone.next);
+				.getoutcomes(stateclone.next, stateclone);
 		for (final List<ChanceNode> sucessors : outcomes) {
 			if (!sucessors.isEmpty()) {
 				if (Javelin.DEBUG) {

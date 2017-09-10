@@ -5,9 +5,27 @@ import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.spell.Touch;
 import javelin.model.unit.attack.Combatant;
-import javelin.model.unit.condition.Blinking;
+import javelin.model.unit.condition.Condition;
 
 public class Displacement extends Touch {
+	public class Blinking extends Condition {
+		public Blinking(float expireatp, Combatant c, Integer casterlevelp) {
+			super(expireatp, c, Effect.POSITIVE, "blinking", casterlevelp);
+		}
+
+		@Override
+		public void start(Combatant c) {
+			c.source = c.source.clone();
+			c.source.misschance += .5;
+		}
+
+		@Override
+		public void end(Combatant c) {
+			c.source = c.source.clone();
+			c.source.misschance -= .5;
+		}
+	}
+
 	protected int turns = 6;
 
 	public Displacement() {

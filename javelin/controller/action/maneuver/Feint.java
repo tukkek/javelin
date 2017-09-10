@@ -6,11 +6,28 @@ import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
-import javelin.model.unit.condition.Feigned;
+import javelin.model.unit.condition.Condition;
 import javelin.model.unit.feat.attack.expertise.ImprovedFeint;
 
 public class Feint extends ExpertiseAction {
 	public static final Action INSTANCE = new Feint();
+
+	public class Feigned extends Condition {
+
+		public Feigned(float expireatp, Combatant c) {
+			super(expireatp, c, Effect.NEGATIVE, "feigned", null);
+		}
+
+		@Override
+		public void start(Combatant c) {
+			c.acmodifier -= Monster.getbonus(c.source.dexterity);
+		}
+
+		@Override
+		public void end(Combatant c) {
+			c.acmodifier += Monster.getbonus(c.source.dexterity);
+		}
+	}
 
 	private Feint() {
 		super("Feint", "F", ImprovedFeint.SINGLETON, 0);

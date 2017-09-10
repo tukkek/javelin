@@ -16,13 +16,13 @@ public interface AiAction {
 
 	/**
 	 * Lists the possible results of an action.
-	 * 
-	 * @param s
-	 *            Current battle state.
 	 * @param active
 	 *            Current unit.
+	 * @param s
+	 *            Current battle state.
+	 * 
 	 * @see BattleState#next
 	 */
-	List<List<ChanceNode>> getoutcomes(final BattleState s,
-			final Combatant active);
+	List<List<ChanceNode>> getoutcomes(final Combatant active,
+			final BattleState s);
 }

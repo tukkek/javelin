@@ -69,7 +69,7 @@ public abstract class Target extends Action {
 	@Override
 	public boolean perform(final Combatant c) {
 		checkhero(c);
-		final BattleState state = Fight.state;
+		final BattleState state = Fight.state.clone();
 		if (checkengaged(state, state.clone(c))) {
 			Game.messagepanel.clear();
 			Game.message("Disengage first...", Delay.WAIT);

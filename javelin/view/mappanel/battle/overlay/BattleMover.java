@@ -7,8 +7,8 @@ import javelin.controller.action.Movement;
 import javelin.controller.walker.Walker;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.state.Meld;
+import javelin.model.unit.attack.Combatant;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.screen.BattleScreen;
 
@@ -60,7 +60,7 @@ public class BattleMover extends Walker {
 			walk.add(new javelin.controller.walker.Step(targetx, targety));
 		}
 		final boolean engaged = isengaged();
-		float totalcost = BattleScreen.active.spentap;
+		float totalcost = BattleScreen.partialmove;
 		for (final javelin.controller.walker.Step s : walk) {
 			float stepcost = getcost(engaged, s);
 			totalcost += stepcost;

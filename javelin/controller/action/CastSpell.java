@@ -207,8 +207,8 @@ public class CastSpell extends Fire implements AiAction {
 	}
 
 	@Override
-	public List<List<ChanceNode>> getoutcomes(final BattleState gameState,
-			final Combatant active) {
+	public List<List<ChanceNode>> getoutcomes(final Combatant active,
+			final BattleState gameState) {
 		casting = null;
 		final ArrayList<List<ChanceNode>> chances = new ArrayList<List<ChanceNode>>();
 		boolean engaged = gameState.isengaged(active);

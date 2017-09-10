@@ -4,12 +4,28 @@ import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
-import javelin.model.unit.condition.totem.Enduring;
+import javelin.model.unit.condition.Condition;
 
 /**
  * See the d20 SRD for more info.
  */
 public class BearsEndurance extends TotemsSpell {
+	public class Enduring extends Condition {
+		public Enduring(Combatant c, Integer casterlevelp) {
+			super(Float.MAX_VALUE, c, Effect.POSITIVE, "enduring",
+					casterlevelp);
+		}
+
+		@Override
+		public void start(Combatant c) {
+			c.source.raiseconstitution(c, 2);
+		}
+
+		@Override
+		public void end(Combatant c) {
+			c.source.raiseconstitution(c, -2);
+		}
+	}
 
 	public BearsEndurance() {
 		super("Bear's endurance", Realm.EARTH);

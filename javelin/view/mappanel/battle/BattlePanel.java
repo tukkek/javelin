@@ -86,7 +86,7 @@ public class BattlePanel extends MapPanel {
 	}
 
 	private void calculatevision(final HashSet<Point> update) {
-		Combatant active = Fight.state.clone(current);
+		Combatant active = Fight.state.clone().clone(current);
 		if (active == null) { // fled
 			return;
 		}

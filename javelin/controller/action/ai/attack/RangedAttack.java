@@ -72,8 +72,8 @@ public class RangedAttack extends AbstractAttack {
 	}
 
 	@Override
-	public List<List<ChanceNode>> getoutcomes(final BattleState gameState,
-			final Combatant active) {
+	public List<List<ChanceNode>> getoutcomes(final Combatant active,
+			final BattleState gameState) {
 		if (gameState.isengaged(active)) {
 			return Collections.EMPTY_LIST;
 		}

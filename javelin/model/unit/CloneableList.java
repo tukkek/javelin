@@ -28,7 +28,7 @@ public class CloneableList<K extends Cloneable> extends ArrayList<K> {
 	public CloneableList<K> clone() {
 		final CloneableList<K> clone = (CloneableList<K>) super.clone();
 		for (int i = 0; i < size(); i++) {
-			K cloneable = get(i);
+			final K cloneable = get(i);
 			clone.set(i, (K) cloneable.clone());
 		}
 		return clone;

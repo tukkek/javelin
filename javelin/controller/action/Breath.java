@@ -84,7 +84,7 @@ public class Breath extends Action implements AiAction {
 	}
 
 	@Override
-	public List<List<ChanceNode>> getoutcomes(final BattleState s, final Combatant combatant) {
+	public List<List<ChanceNode>> getoutcomes(final Combatant combatant, final BattleState s) {
 		final ArrayList<List<ChanceNode>> chances = new ArrayList<List<ChanceNode>>();
 		if (combatant.hascondition(Breathless.class) != null) {
 			return chances;

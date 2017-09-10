@@ -49,11 +49,7 @@ public class Disciplines extends HashMap<String, Maneuvers> {
 	public Disciplines clone() {
 		Disciplines disciplines = (Disciplines) super.clone();
 		for (String discipline : disciplines.keySet()) {
-			Maneuvers maneuvers = new Maneuvers(disciplines.get(discipline));
-			for (int i = 0; i < maneuvers.size(); i++) {
-				maneuvers.set(i, maneuvers.get(i).clone());
-			}
-			disciplines.put(discipline, maneuvers);
+			disciplines.put(discipline, get(discipline).clone());
 		}
 		return disciplines;
 	}

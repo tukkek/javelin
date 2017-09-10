@@ -13,8 +13,8 @@ public class DizzyingVenomPrana extends Strike {
 	}
 
 	@Override
-	public void hit(Combatant active, Combatant target, BattleState s,
-			DamageChance dc) {
+	public void hit(Combatant active, Combatant target, DamageChance dc,
+			BattleState s) {
 		target.ap += ActionCost.PARTIAL;
 		int fort = target.source.fortitude();
 		if (fort != Integer.MAX_VALUE

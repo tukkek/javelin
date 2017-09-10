@@ -3,6 +3,7 @@ package javelin.model.unit.condition;
 import javelin.controller.upgrade.skill.Heal;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.model.unit.abilities.spell.conjuration.healing.NeutralizePoison.Neutralized;
 import javelin.model.unit.attack.Combatant;
 
 /**
@@ -15,7 +16,6 @@ import javelin.model.unit.attack.Combatant;
  * @author alex
  */
 public class Poisoned extends Condition {
-
 	int secondary;
 	int dc;
 	/** See {@link Neutralized}. */

@@ -36,7 +36,8 @@ public abstract class CombatExpertiseManeuver extends Maneuver {
 	}
 
 	@Override
-	public List<List<ChanceNode>> getoutcomes(BattleState s, Combatant c) {
-		return ((AiAction) getaction()).getoutcomes(s, c);
+	public List<List<ChanceNode>> getoutcomes(Combatant c, BattleState s,
+			Maneuver m) {
+		return ((AiAction) getaction()).getoutcomes(c, s);
 	}
 }

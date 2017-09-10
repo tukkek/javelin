@@ -15,7 +15,8 @@ import javelin.model.unit.attack.Combatant;
  *
  * @author alex
  */
-public abstract class Condition implements Cloneable, Serializable {
+public abstract class Condition
+		implements Cloneable, Serializable, Comparable<Condition> {
 	/**
 	 * Buff means an effect is benefitial while debuff means it's a penalty.
 	 *
@@ -186,11 +187,22 @@ public abstract class Condition implements Cloneable, Serializable {
 	 * the time this is called, {@link #validate(Combatant)} has already been
 	 * verified.
 	 * 
+	 * The default implementation just extends the previous condition to
+	 * whichever {@link #expireat} is higher between both.
+	 * 
 	 * @return <code>false</code> if merge is not supported. <code>true</code>
 	 *         if merge is supported and performed succesfully. In either case,
 	 *         the new condition is discarded.
 	 */
 	public boolean merge(Combatant c, Condition previous) {
-		return false;
+		if (expireat > previous.expireat) {
+			previous.expireat = expireat;
+		}
+		return true;
+	}
+
+	@Override
+	public int compareTo(Condition c) {
+		return description.compareTo(c.description);
 	}
 }

@@ -11,14 +11,15 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.action.Examine;
+import javelin.controller.fight.Fight;
 import javelin.model.item.Item;
+import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.discipline.Maneuver;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.condition.Breathless;
 import javelin.view.mappanel.battle.BattlePanel;
-import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.tyrant.QuestApp;
 import tyrant.mikera.tyrant.TPanel;
@@ -52,7 +53,8 @@ public class StatusPanel extends TPanel {
 	public void paint(final Graphics g) {
 		super.paint(g);
 		nextLine = 0;
-		Combatant hero = BattlePanel.current;
+		Combatant hero = BattleState.getcombatant(BattlePanel.current,
+				Fight.state.getcombatants());
 		if (hero == null || hero.source == null) {
 			return;
 		}
@@ -156,8 +158,10 @@ public class StatusPanel extends TPanel {
 		if (!maneuvers.isEmpty()) {
 			s += "Maneveurs\n";
 			for (Maneuver m : maneuvers) {
-				String spent = m.spent ? "*" : "";
-				s += " " + m.name + spent + "\n";
+				final String spent = m.spent ? "*" : "";
+				String name = m.name;
+				final int trim = Math.min(name.length(), 20 - spent.length());
+				s += " " + name.substring(0, trim) + spent + "\n";
 			}
 		}
 		return s;
@@ -165,15 +169,10 @@ public class StatusPanel extends TPanel {
 
 	String maininfo(Combatant combatant) {
 		final String customname = combatant.source.customName;
-		String status = combatant.getstatus();
-		String ap = "";
-		if (combatant.ap < Float.MAX_VALUE) {
-			ap = "AP: "
-					+ new BigDecimal(combatant.ap + BattleScreen.active.spentap)
-							.setScale(1, RoundingMode.HALF_UP)
-					+ "\n";
-		}
-		;
+		final String status = combatant.getstatus();
+		final BigDecimal format = new BigDecimal(combatant.ap).setScale(1,
+				RoundingMode.HALF_UP);
+		final String ap = "AP: " + format + "\n";
 		return (customname != null ? customname : combatant.source.name) + "\n"
 				+ Character.toUpperCase(status.charAt(0)) + status.substring(1)
 				+ "\n" + ap + "\n";

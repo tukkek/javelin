@@ -12,6 +12,7 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.SpellbookGenerator;
 import javelin.controller.action.Action;
+import javelin.controller.action.ActionCost;
 import javelin.controller.action.Defend;
 import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.controller.action.ai.attack.RangedAttack;
@@ -33,7 +34,7 @@ import javelin.model.item.artifact.Artifact;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.state.Meld;
-import javelin.model.unit.CloneableList;
+import javelin.model.unit.Conditions;
 import javelin.model.unit.CurrentAttack;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
@@ -43,7 +44,6 @@ import javelin.model.unit.abilities.discipline.Disciplines;
 import javelin.model.unit.abilities.discipline.Maneuver;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.Spells;
-import javelin.model.unit.condition.Charging;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.condition.Condition.Effect;
 import javelin.model.unit.condition.Defending;
@@ -113,7 +113,7 @@ public class Combatant implements Serializable, Cloneable {
 	/** Temporary modifier to {@link Monster#ac}. */
 	public int acmodifier = 0;
 	/** List of current active {@link Condition}s on this unit. */
-	private CloneableList<Condition> conditions = new CloneableList<Condition>();
+	private Conditions conditions = new Conditions();
 	/** See {@link Discipline}. */
 	public Disciplines disciplines = new Disciplines();
 	/**
@@ -283,7 +283,7 @@ public class Combatant implements Serializable, Cloneable {
 					hp = maxhp;
 				}
 			}
-			for (Condition c : (List<Condition>) conditions.clone()) {
+			for (Condition c : conditions.clone()) {
 				c.expireinbattle(this);
 			}
 			lastrefresh = ap;
@@ -301,12 +301,6 @@ public class Combatant implements Serializable, Cloneable {
 			}
 		}
 		return null;
-	}
-
-	public void charge() {
-		conditions
-				.add(new Charging(ap + 1f + BattleScreen.active.spentap, this));
-		acmodifier -= 2;
 	}
 
 	/**
@@ -511,7 +505,7 @@ public class Combatant implements Serializable, Cloneable {
 	public void await() {
 		ap += Defend.APCOST;
 		if (!burrowed) {
-			addcondition(new Defending(ap + BattleScreen.active.spentap, this));
+			addcondition(new Defending(ap, this));
 		}
 	}
 
@@ -549,8 +543,9 @@ public class Combatant implements Serializable, Cloneable {
 			statuslist.add("knee-deep");
 		}
 		for (Condition c : conditions) {
-			statuslist.add(c.description);
+			statuslist.add(c.description.toLowerCase());
 		}
+		statuslist.sort(null);
 		return statuslist;
 	}
 
@@ -861,7 +856,7 @@ public class Combatant implements Serializable, Cloneable {
 	}
 
 	public void ready(Maneuver m) {
-		ap += 1;
+		ap += ActionCost.FULL;
 		m.spent = false;
 	}
 
@@ -884,5 +879,17 @@ public class Combatant implements Serializable, Cloneable {
 		}
 		disciplines.add(d, m);
 		return true;
+	}
+
+	public String printstatus(BattleState s) {
+		final ArrayList<String> statuslist = liststatus(s);
+		if (statuslist.isEmpty()) {
+			return "";
+		}
+		String description = "";
+		for (final String status : statuslist) {
+			description += status + ", ";
+		}
+		return description.substring(0, description.length() - 2) + "";
 	}
 }

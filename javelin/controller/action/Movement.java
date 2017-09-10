@@ -83,34 +83,36 @@ public class Movement extends Action {
 	}
 
 	@Override
-	public boolean perform(Combatant hero) {
+	public boolean perform(Combatant c) {
 		try {
 			final BattleState state = Fight.state;
-			boolean disengaging = state.isengaged(hero);
-			final Point to = doDirection(this, state, hero);
+			boolean disengaging = state.isengaged(c);
+			final Point to = doDirection(this, state, c);
 			if (to == null) {
 				return false;
 			}
 			Meld meld = Fight.state.getmeld(to.x, to.y);
 			if (!Movement.lastmovewasattack) {
-				BattleScreen.active.spentap += cost(hero, state, to.x, to.y);
+				float ap = cost(c, state, to.x, to.y);
+				BattleScreen.partialmove += ap;
+				c.ap += ap;
 			}
 			final boolean finishmove = meld != null || disengaging
 					|| Movement.lastmovewasattack
-					|| BattleScreen.active.spentap >= .5f;
+					|| BattleScreen.partialmove >= .5f;
 			if (!finishmove) {
 				throw new RepeatTurn();
 			}
+			BattleScreen.partialmove = 0;
 			if (!Movement.lastmovewasattack) {
-				if (meld == null || meld.meldsat > hero.ap) {
-					Game.message(hero + " "
+				if (meld == null || meld.meldsat > c.ap) {
+					Game.message(c + " "
 							+ (disengaging ? "disengages" : "moves") + "...",
 							Delay.WAIT);
 				} else {
-					Javelin.app.fight.meld(hero, meld);
+					Javelin.app.fight.meld(c, meld);
 				}
 			}
-			BattleScreen.active.spendap(hero, true);
 			return true;
 		} catch (RuntimeException e) {
 			throw e;

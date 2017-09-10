@@ -14,9 +14,9 @@ import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
+import javelin.model.state.Meld;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.Combatant;
-import javelin.model.state.Meld;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.MoveOverlay;
@@ -101,8 +101,7 @@ public class BattleMouse extends Mouse {
 								Combatant c = move.clone(current);
 								c.location[0] = to.x;
 								c.location[1] = to.y;
-								c.ap += to.apcost + BattleScreen.active.spentap;
-								BattleScreen.active.spentap = 0;
+								c.ap += to.totalcost - BattleScreen.partialmove;
 								Meld m = move.getmeld(to.x, to.y);
 								if (m != null && c.ap >= m.meldsat) {
 									Javelin.app.fight.meld(c, m);
@@ -167,11 +166,15 @@ public class BattleMouse extends Mouse {
 								: current.currentmelee.next;
 				final String chance = MeleeAttack.SINGLETON.getchance(current,
 						target, attack.get(0), s);
-				status(target + " (" + target.getstatus() + ", " + chance
-						+ " to hit)", target);
+				final String status = target + " (" + target.getstatus() + ", "
+						+ chance + " to hit)";
+				showstatus(status, target, true);
 			} else if (a == Action.RANGED) {
-				status(Fire.SINGLETON.describehitchance(current, target, s),
-						target);
+				showstatus(Fire.SINGLETON.describehitchance(current, target, s),
+						target, true);
+			} else {
+				final String status = target + " (" + target.getstatus() + ")";
+				showstatus(status, target, false);
 			}
 			if (target != null) {
 				Examine.lastlooked = target;
@@ -182,10 +185,14 @@ public class BattleMouse extends Mouse {
 		}
 	}
 
-	void status(String s, Combatant target) {
-		MapPanel.overlay = new TargetOverlay(target.location[0],
-				target.location[1]);
-		Game.message(s, Delay.NONE);
+	void showstatus(String status, Combatant c, boolean target) {
+		if (target) {
+			MapPanel.overlay = new TargetOverlay(c.location[0], c.location[1]);
+		}
+		status += "\n\nConditions: ";
+		String list = c.printstatus(Fight.state);
+		status += list.isEmpty() ? "none" : list;
+		Game.message(status += ".", Delay.NONE);
 	}
 
 	@Override

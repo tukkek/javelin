@@ -10,9 +10,11 @@ import java.awt.event.KeyEvent;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.action.Action;
+import javelin.controller.action.ActionCost;
 import javelin.controller.action.ActionMapping;
 import javelin.controller.action.Dig;
 import javelin.controller.action.Examine;
+import javelin.controller.action.Movement;
 import javelin.controller.action.world.WorldAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.ThreadManager;
@@ -29,7 +31,9 @@ import javelin.model.unit.attack.Combatant;
 import javelin.view.StatusPanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
+import javelin.view.mappanel.battle.BattleMouse;
 import javelin.view.mappanel.battle.BattlePanel;
+import javelin.view.mappanel.battle.overlay.BattleMover;
 import tyrant.mikera.tyrant.QuestApp;
 import tyrant.mikera.tyrant.Screen;
 
@@ -66,16 +70,28 @@ public class BattleScreen extends Screen {
 
 	static Runnable callback = null;
 
+	/**
+	 * Keeps track of human {@link Movement} steps using the keyboard. We want
+	 * to allow them to move up to a {@link ActionCost#MOVE} action without
+	 * disruption their current action - even if {@link RepeatTurn} is thrown
+	 * from another action (like cancelling a menu, etc.).
+	 * 
+	 * {@link BattleMouse} and {@link BattleMover} take this into consideration
+	 * too, so as not to allow the player to cheat by using half their share of
+	 * keyboard movements and then using another {@link ActionCost#MOVE} worth
+	 * of movement witht the mouse. Mouse moves, however are instantaneous and
+	 * apply the relevant AP cost, plus the current value of this variable. This
+	 * of course still allows player to make shorter, tactical moves (consuming
+	 * less AP) if so desired.
+	 */
+	public static float partialmove = 0;
+
 	/** Visual representation of a {@link BattleState}. */
 	public MapPanel mappanel;
 	/** Text output component. */
 	public MessagePanel messagepanel;
 	/** Unit info component. */
 	public StatusPanel statuspanel;
-	/**
-	 * Allows the human player to use up to .5AP of movement before ending turn.
-	 */
-	public float spentap = 0;
 
 	boolean maprevealed = false;
 	Combatant current = null;
@@ -167,19 +183,16 @@ public class BattleScreen extends Screen {
 			current = Fight.state.next;
 			Examine.lastlooked = null;
 			if (Fight.state.redTeam.contains(current) || current.automatic) {
-				spentap = 0;
 				lastwascomputermove = current;
 				computermove();
 			} else {
+				partialmove = 0;
 				humanmove();
 				lastwascomputermove = null;
 				jointurns = false;
 			}
 			updatescreen();
 			block();
-		} catch (RepeatTurn e) {
-			Game.messagepanel.clear();
-			return;
 		} finally {
 			Javelin.app.fight.endturn();
 			Javelin.app.fight.checkendbattle();
@@ -203,10 +216,14 @@ public class BattleScreen extends Screen {
 			callback.run();
 			callback = null;
 		} else {
-			perform(convertEventToAction(updatableUserAction),
-					updatableUserAction.isShiftDown());
+			try {
+				perform(convertEventToAction(updatableUserAction),
+						updatableUserAction.isShiftDown());
+			} catch (RepeatTurn e) {
+				Game.messagepanel.clear();
+				humanmove();
+			}
 		}
-		spendap(current, false);
 	}
 
 	void computermove() {
@@ -315,8 +332,9 @@ public class BattleScreen extends Screen {
 			jointurns = true;
 		}
 		messagepanel.clear();
-		Game.message(state.action, delay);
 		messagepanel.repaint();
+		statuspanel.repaint();
+		Game.message(state.action, delay);
 	}
 
 	/**
@@ -348,7 +366,7 @@ public class BattleScreen extends Screen {
 	 */
 	void perform(final Action action, final boolean isShiftDown) {
 		try {
-			Combatant current = Fight.state.clone(this.current);
+			current = Fight.state.clone(current);
 			if (current.burrowed && !action.allowwhileburrowed) {
 				Dig.refuse();
 			}
@@ -367,23 +385,6 @@ public class BattleScreen extends Screen {
 	}
 
 	/**
-	 * Normalize {@link #spentap} with the canonical {@link Combatant} instance.
-	 * 
-	 * @param force
-	 *            If <code>false</code> will check if an action has been
-	 *            performed first by comparing actual {@link Combatant#ap}.
-	 */
-	public void spendap(Combatant combatant, boolean force) {
-		for (Combatant c : Fight.state.getcombatants()) {
-			if (c.id == combatant.id && (c.ap != combatant.ap || force)) {
-				c.ap += spentap;
-				break;
-			}
-		}
-		spentap = 0;
-	}
-
-	/**
 	 * TODO is needed?
 	 * 
 	 * BUG Fix for
@@ -392,9 +393,6 @@ public class BattleScreen extends Screen {
 	 * more of these for other platforms.
 	 */
 	protected boolean rejectEvent(final KeyEvent keyEvent) {
-		// if (keyEvent.getKeyCode() == KeyEvent.VK_TAB) {
-		// return false;
-		// }
 		return (keyEvent.getModifiers() | InputEvent.ALT_DOWN_MASK) > 0
 				&& keyEvent.getKeyCode() == 18;
 	}

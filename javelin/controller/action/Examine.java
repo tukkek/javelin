@@ -1,7 +1,6 @@
 package javelin.controller.action;
 
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javelin.Javelin;
@@ -158,17 +157,13 @@ public class Examine extends Action {
 		Game.redraw();
 	}
 
-	static String describestatus(final Combatant combatant,
-			final BattleState state) {
-		final ArrayList<String> statuslist = combatant.liststatus(state);
-		if (statuslist.isEmpty()) {
-			return combatant.toString();
+	static String describestatus(final Combatant c, final BattleState s) {
+		String status = c.toString();
+		String list = c.printstatus(s);
+		if (!list.isEmpty()) {
+			status += " (" + list + ")";
 		}
-		String description = combatant + " (";
-		for (final String status : statuslist) {
-			description += status + ", ";
-		}
-		return description.substring(0, description.length() - 2) + ")\n";
+		return status;
 	}
 
 	static char convertkey(final KeyEvent e) {

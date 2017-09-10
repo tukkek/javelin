@@ -4,7 +4,7 @@ import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.Realm;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Combatant;
-import javelin.model.unit.condition.FindingTraps;
+import javelin.model.unit.condition.Condition;
 import javelin.model.world.location.dungeon.Dungeon;
 
 /**
@@ -16,10 +16,33 @@ import javelin.model.world.location.dungeon.Dungeon;
  * @author alex
  */
 public class FindTraps extends Spell {
+	public class FindingTraps extends Condition {
+
+		/**
+		 * Constructor.
+		 * 
+		 * @param casterlevelp
+		 */
+		public FindingTraps(Combatant c, Integer casterlevelp) {
+			super(Float.MAX_VALUE, c, Effect.NEUTRAL, "finding traps",
+					casterlevelp, 1);
+		}
+
+		@Override
+		public void start(Combatant c) {
+			c.source.skills.search += 3;
+		}
+
+		@Override
+		public void end(Combatant c) {
+			c.source.skills.search -= 3;
+		}
+	}
+
 	/** Constructor. */
 	public FindTraps() {
-		super("Find traps", 3, ChallengeRatingCalculator.ratespelllikeability(3),
-				Realm.AIR);
+		super("Find traps", 3,
+				ChallengeRatingCalculator.ratespelllikeability(3), Realm.AIR);
 		ispotion = true;
 		castinbattle = false;
 		castonallies = false;

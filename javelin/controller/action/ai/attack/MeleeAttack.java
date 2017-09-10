@@ -34,8 +34,8 @@ public class MeleeAttack extends AbstractAttack {
 	}
 
 	@Override
-	public List<List<ChanceNode>> getoutcomes(final BattleState gameState,
-			final Combatant active) {
+	public List<List<ChanceNode>> getoutcomes(final Combatant active,
+			final BattleState gameState) {
 		final ArrayList<List<ChanceNode>> successors = new ArrayList<List<ChanceNode>>();
 		for (final Combatant target : gameState.getsurroundings(active)) {
 			for (final Integer attack : getcurrentattack(active)) {

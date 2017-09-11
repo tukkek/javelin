@@ -79,7 +79,7 @@ public class NeutralizePoison extends Touch {
 	boolean checkpoisoner(Combatant c, ArrayList<AttackSequence> attacks) {
 		for (AttackSequence sequence : attacks) {
 			for (Attack a : sequence) {
-				if (a.effect.equals(Poison.instance)) {
+				if (a.effect instanceof Poison) {
 					return true;
 				}
 			}

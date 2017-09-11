@@ -4,6 +4,7 @@ import javelin.controller.action.ActionCost;
 import javelin.controller.action.ai.attack.DamageChance;
 import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.discipline.Strike;
+import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.condition.Condition;
 
@@ -41,9 +42,27 @@ public class StingOfTheRattler extends Strike {
 	}
 
 	@Override
-	public void hit(Combatant active, Combatant target, DamageChance dc,
-			BattleState s) {
+	public void prehit(Combatant active, Combatant target, Attack a,
+			DamageChance dc, BattleState s) {
 		dc.damage += 3;
 		target.addcondition(new Stung(active.ap + ActionCost.FULL, target));
+	}
+
+	@Override
+	public void posthit(Combatant attacker, Combatant target, Attack a,
+			DamageChance dc, BattleState s) {
+		// no cleanup
+	}
+
+	@Override
+	public void preattacks(Combatant current, Combatant target, Attack a,
+			BattleState s) {
+		// nothing
+	}
+
+	@Override
+	public void postattacks(Combatant current, Combatant target, Attack a,
+			BattleState s) {
+		// nothing
 	}
 }

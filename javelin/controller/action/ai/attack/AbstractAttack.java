@@ -10,7 +10,6 @@ import javelin.controller.action.Action;
 import javelin.controller.action.CastSpell;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
-import javelin.controller.ai.Node;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.CurrentAttack;
@@ -19,7 +18,6 @@ import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.attack.Combatant;
-import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 /**
  * Base class for {@link MeleeAttack} and {@link RangedAttack}.
@@ -29,50 +27,89 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
 public abstract class AbstractAttack extends Action implements AiAction {
 	static final ConcurrentHashMap<Thread, Strike> CURRENTMANEUVER = new ConcurrentHashMap<Thread, Strike>();
 
-	class AttackNode extends ChanceNode {
-		public AttackNode(Node n, float chance, String action, Delay delay,
-				Combatant target) {
-			super(n, chance, action, delay);
-			overlay = new AiOverlay(target.location[0], target.location[1]);
-		}
-	}
-
 	public AbstractAttack(final String name) {
 		super(name);
 	}
 
 	protected abstract boolean isMelee();
 
-	public List<ChanceNode> attack(final BattleState gameState,
-			final Combatant current, final Combatant target,
-			CurrentAttack attacks, int bonus) {
-		return attack(current, target, attacks.getnext(), bonus, getdamagebonus(current, target),
-				AbstractAttack.calculateattackap(
-						getattacks(current).get(attacks.sequenceindex)),
-				gameState);
+	public List<ChanceNode> attack(final BattleState s, final Combatant current,
+			final Combatant target, CurrentAttack attacks, int bonus) {
+		final Attack a = attacks.getnext();
+		final int damagebonus = getdamagebonus(current, target);
+		final float ap = AbstractAttack.calculateattackap(
+				getattacks(current).get(attacks.sequenceindex));
+		return attack(current, target, a, bonus, damagebonus, ap, s);
 	}
 
-	int getdamagebonus(Combatant attacker, Combatant target) {
+	protected int getdamagebonus(Combatant attacker, Combatant target) {
 		return 0;
 	}
 
-	public List<ChanceNode> attack(Combatant current,
-			final Combatant target, final Attack attack, int attackbonus,
-			int damagebonus, final float ap, final BattleState s) {
-		current = s.clone(current);
-		current.ap += ap;
+	public List<ChanceNode> attack(Combatant attacker, Combatant target,
+			final Attack a, int attackbonus, int damagebonus, final float ap,
+			BattleState s) {
+		final Strike m = getmaneuver();
+		s = s.clone();
+		attacker = s.clone(attacker);
+		attacker.ap += ap;
+		if (m != null) {
+			m.preattacks(attacker, target, a, s);
+		}
 		final ArrayList<ChanceNode> nodes = new ArrayList<ChanceNode>();
-		for (final DamageChance dc : dealattack(s, current, target,
-				attackbonus, attack)) {
+		for (final DamageChance dc : dealattack(attacker, target, a,
+				attackbonus, s)) {
 			if (dc.damage > 0) {
 				dc.damage += damagebonus;
 			}
 			if (dc.damage < 0) {
 				dc.damage = 0;
 			}
-			nodes.add(createnode(current, target, attack, ap, dc, s));
+			nodes.add(createnode(attacker, target, a, ap, m, dc, s));
+		}
+		if (m != null) {
+			m.postattacks(attacker, target, a, s);
 		}
 		return nodes;
+	}
+
+	ChanceNode createnode(Combatant attacker, Combatant target, final Attack a,
+			float ap, final Strike m, final DamageChance dc, BattleState s) {
+		final String tohit = " (" + getchance(attacker, target, a, s)
+				+ " to hit)...";
+		StringBuilder sb = new StringBuilder(attacker.toString());
+		if (dc.damage == 0) {
+			return miss(target, m, dc, s, sb, tohit);
+		}
+		s = s.clone();
+		attacker = s.clone(attacker);
+		target = s.clone(target);
+		if (m != null) {
+			m.prehit(attacker, target, a, dc, s);
+		}
+		final String name = m == null ? a.name : m.name.toLowerCase();
+		sb.append(" attacks ").append(target).append(" with ").append(name)
+				.append(tohit);
+		if (dc.critical) {
+			sb.append("\nCritical hit!");
+		}
+		if (dc.damage == 0) {
+			sb.append("\nDamage absorbed!");
+		} else {
+			target.damage(dc.damage, s, a.energy
+					? target.source.energyresistance : target.source.dr);
+			if (target.source.customName == null) {
+				sb.append("\nThe ").append(target.source.name);
+			} else {
+				sb.append("\n").append(target.source.customName);
+			}
+			sb.append(" is ").append(target.getstatus()).append(".");
+			posthit(attacker, target, a, ap, dc, s, sb);
+		}
+		if (m != null) {
+			m.posthit(attacker, target, a, dc, s);
+		}
+		return new DamageNode(s, dc.chance, sb.toString(), Delay.BLOCK, target);
 	}
 
 	/**
@@ -102,31 +139,30 @@ public abstract class AbstractAttack extends Action implements AiAction {
 		return 1f / nattacks;
 	}
 
-	List<DamageChance> dealattack(final BattleState gameState,
-			final Combatant current, final Combatant target, int bonus,
-			final Attack a) {
+	List<DamageChance> dealattack(final Combatant active,
+			final Combatant target, final Attack a, int bonus,
+			final BattleState s) {
 		bonus += a.bonus;
 		if (a.touch) {
 			bonus += target.source.armor;
 		}
 		final List<DamageChance> chances = new ArrayList<DamageChance>();
 		final float threatchance = (21 - a.threat) / 20f;
-		final float misschance = misschance(gameState, current, target, bonus);
+		final float misschance = misschance(s, active, target, bonus);
 		final float hitchance = 1 - misschance;
 		final float confirmchance = target.source.immunitytocritical ? 0
 				: threatchance * hitchance;
 		final float savechance = a.effect == null ? 0
-				: CastSpell.savechance(current, target, a.effect);
+				: CastSpell.savechance(active, target, a.effect);
 		final float nosavechance = 1 - savechance;
 		chances.add(new DamageChance(misschance, 0, false, null));
-		AbstractAttack.hit(a, chances, (hitchance - confirmchance) * savechance,
-				1, target, true);
-		AbstractAttack.hit(a, chances,
-				(hitchance - confirmchance) * nosavechance, 1, target, false);
-		AbstractAttack.hit(a, chances, confirmchance * savechance, a.multiplier,
-				target, true);
-		AbstractAttack.hit(a, chances, confirmchance * nosavechance,
-				a.multiplier, target, false);
+		hit(a, (hitchance - confirmchance) * savechance, 1, target, true,
+				chances);
+		hit(a, (hitchance - confirmchance) * nosavechance, 1, target, false,
+				chances);
+		hit(a, confirmchance * savechance, a.multiplier, target, true, chances);
+		hit(a, confirmchance * nosavechance, a.multiplier, target, false,
+				chances);
 		if (Javelin.DEBUG) {
 			AbstractAttack.validate(chances);
 		}
@@ -158,20 +194,20 @@ public abstract class AbstractAttack extends Action implements AiAction {
 		return a + b - a * b;
 	}
 
-	static void hit(final Attack a, final List<DamageChance> chances,
-			final float hitchance, final int multiplier, Combatant target,
-			boolean save) {
+	static void hit(final Attack a, final float hitchance, final int multiplier,
+			Combatant target, boolean save, final List<DamageChance> chances) {
 		if (hitchance == 0) {
 			return;
 		}
 		for (final Entry<Integer, Float> roll : Action
-				.distributeRoll(a.damage[0], a.damage[1]).entrySet()) {
+				.distributeroll(a.damage[0], a.damage[1]).entrySet()) {
 			int damage = (roll.getKey() + a.damage[2]) * multiplier;
 			if (damage < 1) {
 				damage = 1;
 			}
-			chances.add(new DamageChance(hitchance * roll.getValue(), damage,
-					multiplier != 1, a.effect == null ? null : save));
+			final float chance = hitchance * roll.getValue();
+			chances.add(new DamageChance(chance, damage, multiplier != 1,
+					a.effect == null ? null : save));
 		}
 	}
 
@@ -211,67 +247,33 @@ public abstract class AbstractAttack extends Action implements AiAction {
 				+ (target.burrowed ? 4 : 0);
 	}
 
-	ChanceNode createnode(Combatant attacker, Combatant target, final Attack a,
-			float ap, final DamageChance dc, final BattleState s) {
-		String chance = " (" + getchance(attacker, target, a, s)
-				+ " to hit)...";
-		StringBuilder sb = new StringBuilder(attacker.toString());
-		Strike maneuver = getmaneuver();
-		if (dc.damage == 0) {
-			final String name;
-			final Delay wait;
-			if (maneuver == null) {
-				name = target.toString();
-				wait = Delay.WAIT;
-			} else {
-				name = maneuver.name.toLowerCase();
-				wait = Delay.BLOCK;
-			}
-			sb = sb.append(" misses ").append(name).append(chance);
-			return new AttackNode(s, dc.chance, sb.toString(), wait, target);
-		}
-		final BattleState attackstate = s.clone();
-		attacker = attackstate.clone(attacker);
-		target = attackstate.clone(target);
-		if (maneuver != null) {
-			maneuver.hit(attacker, target, dc, attackstate);
-		}
-		final String name = maneuver == null ? a.name
-				: maneuver.name.toLowerCase();
-		sb = sb.append(" attacks ").append(target).append(" with ").append(name)
-				.append(chance);
-		if (dc.critical) {
-			sb.append("\nCritical hit!");
-		}
-		if (dc.damage == 0) {
-			sb.append("\nDamage absorbed!");
+	static DamageNode miss(final Combatant target, final Strike m,
+			final DamageChance dc, final BattleState s, final StringBuilder sb,
+			final String tohit) {
+		final String name;
+		final Delay wait;
+		if (m == null) {
+			name = target.toString();
+			wait = Delay.WAIT;
 		} else {
-			target.damage(dc.damage, attackstate, a.energy
-					? target.source.energyresistance : target.source.dr);
-			if (target.source.customName == null) {
-				sb.append("\nThe ").append(target.source.name);
-			} else {
-				sb.append("\n").append(target.source.customName);
-			}
-			sb.append(" is ").append(target.getstatus()).append(".");
-			posthit(dc, target, attacker, a, ap, attackstate, sb);
+			name = m.name.toLowerCase();
+			wait = Delay.BLOCK;
 		}
-		return new AttackNode(attackstate, dc.chance, sb.toString(),
-				Delay.BLOCK, target);
+		sb.append(" misses ").append(name).append(tohit);
+		return new DamageNode(s, dc.chance, sb.toString(), wait, target);
 	}
 
-	void posthit(final DamageChance dc, Combatant target, Combatant attacker,
-			final Attack attack, float ap, final BattleState attackstate,
-			StringBuilder messageAdd) {
-		if (target.hp > 0) {
-			if (dc.save != null) {
-				target.source = target.source.clone();
-				attacker.source = attacker.source.clone();
-				messageAdd.append("\n" + attack.effect.cast(attacker, target,
-						attackstate, dc.save));
+	void posthit(Combatant active, Combatant target, final Attack a, float ap,
+			final DamageChance dc, final BattleState s, StringBuilder sb) {
+		if (target.hp <= 0) {
+			if (cleave()) {
+				active.cleave(ap);
 			}
-		} else if (cleave()) {
-			attacker.cleave(ap);
+		} else if (dc.save != null) {
+			target.source = target.source.clone();
+			active.source = active.source.clone();
+			final String effect = a.effect.cast(active, target, s, dc.save);
+			sb.append("\n").append(effect);
 		}
 	}
 

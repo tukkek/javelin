@@ -183,7 +183,7 @@ public class Breath extends Action implements AiAction {
 			active.addcondition(new Breathless(active.ap + (1 + 4) / 2f, active));
 		}
 		active.ap += .5f;
-		for (final Entry<Integer, Float> roll : Action.distributeRoll(breath.damage[0], breath.damage[1]).entrySet()) {
+		for (final Entry<Integer, Float> roll : Action.distributeroll(breath.damage[0], breath.damage[1]).entrySet()) {
 			BattleState s2 = s.clone();
 			final float damagechance = roll.getValue();
 			final int damage = roll.getKey() + breath.damage[2];

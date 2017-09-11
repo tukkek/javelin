@@ -2,8 +2,8 @@ package javelin.controller.action;
 
 import java.util.LinkedList;
 
+import javelin.Debug;
 import javelin.Javelin;
-import javelin.controller.Debug;
 import javelin.controller.old.Game;
 import javelin.model.unit.attack.Combatant;
 import javelin.view.screen.BattleScreen;

@@ -97,7 +97,7 @@ public class RangedAttack extends AbstractAttack {
 	}
 
 	@Override
-	int getdamagebonus(Combatant attacker, Combatant target) {
+	protected int getdamagebonus(Combatant attacker, Combatant target) {
 		return ispointblankshot(attacker, target) ? 1 : 0;
 	}
 }

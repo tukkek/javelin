@@ -104,7 +104,7 @@ public abstract class Action implements Serializable, ActionDescription {
 	 *            Type of dice.
 	 * @return Map of percentual chances mapped by total result (sum).
 	 */
-	static protected TreeMap<Integer, Float> distributeRoll(final int dices,
+	static protected TreeMap<Integer, Float> distributeroll(final int dices,
 			final int sides) {
 		final int nCombinations = dices * sides;
 		final int[][] combinations = new int[nCombinations][dices];

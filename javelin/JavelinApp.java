@@ -16,7 +16,6 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import javelin.controller.Debug;
 import javelin.controller.TextReader;
 import javelin.controller.WorldGenerator;
 import javelin.controller.ai.ThreadManager;

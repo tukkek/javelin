@@ -442,11 +442,12 @@ public class Javelin {
 		}
 		while (true) {
 			try {
-				Character feedback = InfoScreen.feedback();
-				if (!forceselection && feedback == 'q') {
+				Character c = InfoScreen.feedback();
+				if (!forceselection
+						&& (c == 'q' || !Character.isLetterOrDigit(c))) {
 					return -1;
 				}
-				int selected = SelectScreen.convertkeytoindex(feedback);
+				int selected = SelectScreen.convertkeytoindex(c);
 				if (0 <= selected && selected < names.size()) {
 					return selected;
 				}

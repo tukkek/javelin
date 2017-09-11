@@ -9,6 +9,7 @@ package tyrant.mikera.engine;
 import java.util.List;
 import java.util.Random;
 
+import javelin.controller.ai.BattleAi;
 import javelin.controller.old.Game;
 
 public class RPG {
@@ -773,5 +774,22 @@ public class RPG {
 	 */
 	public static int randomize(int sides) {
 		return r(sides) - r(sides);
+	}
+
+	/**
+	 * Useful for handling typical cases in {@link BattleAi}-related logic,
+	 * since it only allows for true randomness in a few key points due to
+	 * performance considerations. Uses float for parameters since they'd have
+	 * to be convered anyways.
+	 * 
+	 * @param dice
+	 *            Given this number of dice...
+	 * @param size
+	 *            ...and this number of faces per dice...
+	 * @return ... the most likely outcome of this roll.
+	 */
+	public static int average(float dice, float size) {
+		size += 1;
+		return Math.round(dice * (size / 2f));
 	}
 }

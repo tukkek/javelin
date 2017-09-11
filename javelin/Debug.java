@@ -1,14 +1,13 @@
-package javelin.controller;
+package javelin;
 
-import javelin.Javelin;
 import javelin.controller.action.Help;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.fight.Fight;
 import javelin.controller.scenario.Scenario;
 import javelin.model.item.Item;
 import javelin.model.unit.Squad;
+import javelin.model.unit.abilities.discipline.serpent.IronFang;
 import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
-import javelin.model.unit.abilities.discipline.serpent.StingOfTheRattler;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.WorldScreen;
@@ -78,6 +77,7 @@ public class Debug {
 
 	public static String onbattlehelp() {
 		Helpers.freezeopponents();
+		Helpers.healopponenets();
 		return "";
 	}
 
@@ -88,7 +88,7 @@ public class Debug {
 	/** Called only once when a {@link Scenario} is initialized. */
 	public static void oncampaignstart() {
 		for (Combatant c : Squad.active.members) {
-			c.addmaneuver(SteelSerpent.INSTANCE, new StingOfTheRattler());
+			c.addmaneuver(SteelSerpent.INSTANCE, new IronFang());
 		}
 	}
 

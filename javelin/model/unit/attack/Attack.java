@@ -71,22 +71,25 @@ public class Attack implements Serializable, Cloneable {
 		} else {
 			chance = Javelin.translatetochance(target.ac() - bonus) + " to hit";
 		}
-		return name + " (" + chance + ", " + formatDamage() + ", "
-				+ (threat == 20 ? "20" : threat + "-20") + "/x" + multiplier
-				+ ")";
+		return name + " (" + chance + ", " + formatDamage() + ")";
 	}
 
 	public String formatDamage() {
 		if (damage == null) {
 			return "null";
 		}
-		String output = damage[0] + "d" + damage[1]
-				+ (damage[2] >= 0 ? "+" : "") + damage[2];
+		final String dice = damage[0] + "d" + damage[1];
+		final String bonus = (damage[2] >= 0 ? "+" : "") + damage[2];
+		String output = dice + bonus;
+		if (threat != 20 || multiplier != 2) {
+			final String t = threat == 20 ? "20" : threat + "-20";
+			output += ", " + t + "/x" + multiplier;
+		}
 		if (energy) {
 			output += " energy";
 		}
 		if (effect != null) {
-			output += ", " + effect.name;
+			output += ", " + effect.name.toLowerCase();
 		}
 		return output;
 	}
@@ -115,5 +118,15 @@ public class Attack implements Serializable, Cloneable {
 		} catch (CloneNotSupportedException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return name.equals(((Attack) o).name);
+	}
+
+	@Override
+	public int hashCode() {
+		return name.hashCode();
 	}
 }

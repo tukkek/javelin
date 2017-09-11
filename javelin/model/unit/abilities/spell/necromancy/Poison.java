@@ -6,8 +6,8 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Touch;
 import javelin.model.unit.attack.Combatant;
-import javelin.model.unit.condition.Poisoned;
 import javelin.model.unit.condition.Condition.Effect;
+import javelin.model.unit.condition.Poisoned;
 
 /**
  * Deals 1d10 points of temporary Constitution damage immediately and another
@@ -20,10 +20,12 @@ public class Poison extends Touch {
 
 	public static Poison instance = new Poison();
 	boolean nonmagical = false;
+	public int dcbonus = 0;
 
 	/** Constructor. */
 	public Poison() {
-		super("Poison", 4, ChallengeRatingCalculator.ratespelllikeability(4), Realm.EVIL);
+		super("Poison", 4, ChallengeRatingCalculator.ratespelllikeability(4),
+				Realm.EVIL);
 		castinbattle = true;
 	}
 
@@ -66,7 +68,8 @@ public class Poison extends Touch {
 	}
 
 	int getdc(Combatant caster) {
-		return 10 + casterlevel / 2 + Monster.getbonus(caster.source.wisdom);
+		return 10 + casterlevel / 2 + Monster.getbonus(caster.source.wisdom)
+				+ dcbonus;
 	}
 
 	@Override

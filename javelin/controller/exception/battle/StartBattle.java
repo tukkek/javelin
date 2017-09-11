@@ -2,10 +2,10 @@ package javelin.controller.exception.battle;
 
 import java.util.ArrayList;
 
+import javelin.Debug;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.BattleSetup;
-import javelin.controller.Debug;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.Minigame;

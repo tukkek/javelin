@@ -11,3 +11,5 @@ Sting of the rattler (level 1): Attack that inflicts an additional 1d4 points of
 Iron fang (level 2): strike that inflicts 2d6 extra damage and ignores any damage reduction. Grants +2 to the DC of any poison effects.
 
 Sting of the asp (level 2): strike inflicts 1d6 extra damage and 1 point of constitution damage. On a failed constituion save (DC 12 + initiatior modifier), inflicts 1 extra contitution damage and on the next turn, additional 2 constitution damage and 1d6 normal damage.
+
+Weakening venom prana (level 2): boosts an attack with 1d4 of strength damage (half on a fortitude save, DC 12 + initiatior level).

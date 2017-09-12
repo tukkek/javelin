@@ -20,12 +20,12 @@ public class HeadbandOfIntellect extends Artifact {
 
 	@Override
 	protected void apply(Combatant c) {
-		c.source.raiseintelligence(bonus);
+		c.source.changeintelligencescore(bonus);
 	}
 
 	@Override
 	protected void negate(Combatant c) {
-		c.source.raiseintelligence(-bonus);
+		c.source.changeintelligencescore(-bonus);
 	}
 
 }

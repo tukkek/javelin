@@ -42,9 +42,8 @@ public class VampiricTouch extends Touch {
 		}
 
 		@Override
-		public boolean merge(Combatant c, Condition previous) {
+		public void merge(Combatant c, Condition previous) {
 			previous.expireat = Math.max(expireat, previous.expireat);
-			return true;
 		}
 	}
 

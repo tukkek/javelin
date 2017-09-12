@@ -20,12 +20,12 @@ public class CloakOfCharisma extends Artifact {
 
 	@Override
 	protected void apply(Combatant c) {
-		c.source.raisecharisma(bonus);
+		c.source.changecharismamodifier(bonus);
 	}
 
 	@Override
 	protected void negate(Combatant c) {
-		c.source.raisecharisma(-bonus);
+		c.source.changecharismamodifier(-bonus);
 	}
 
 }

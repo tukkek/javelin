@@ -3,29 +3,35 @@ package javelin.model.unit.abilities.discipline;
 import java.io.Serializable;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.action.Action;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.maneuver.ExecuteManeuver;
 import javelin.controller.ai.ChanceNode;
+import javelin.model.Cloneable;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
 
 public abstract class Maneuver
-		implements Serializable, javelin.model.Cloneable {
+		implements Serializable, Cloneable, Comparable<Maneuver> {
 	public boolean spent = false;
 	public String name;
 	/**
 	 * {@link Combatant#ap} cost for this action.
 	 */
 	public float ap;
+	int level;
 
-	public Maneuver(String name) {
+	public Maneuver(String name, int level) {
 		this.name = name;
+		this.level = level;
 	}
 
 	public void spend() {
-		spent = true;
+		if (!Javelin.DEBUG) {
+			spent = true;
+		}
 	}
 
 	@Override
@@ -75,6 +81,11 @@ public abstract class Maneuver
 		return m.hd.count() / 2 + Monster.getbonus(modifier);
 	}
 
+	protected static boolean save(int save, int savedc, Combatant active) {
+		return save == Integer.MAX_VALUE
+				|| 10 + save >= savedc + getinitiationmodifier(active);
+	}
+
 	public boolean validate(Combatant c) {
 		return true;
 	}
@@ -84,4 +95,9 @@ public abstract class Maneuver
 		return name + (spent ? "*" : "");
 	}
 
+	@Override
+	public int compareTo(Maneuver o) {
+		return level == o.level ? name.compareTo(o.name)
+				: Integer.compare(o.level, level);
+	}
 }

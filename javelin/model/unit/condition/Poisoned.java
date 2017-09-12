@@ -12,7 +12,7 @@ import javelin.model.unit.attack.Combatant;
  * 
  * TODO implement {@link #merge(Condition)}
  * 
- * @see Monster#raiseconstitution(Combatant, int)
+ * @see Monster#changeconstitutionmodifier(Combatant, int)
  * @author alex
  */
 public class Poisoned extends Condition {
@@ -31,7 +31,7 @@ public class Poisoned extends Condition {
 	 *            poison.
 	 * @param casterlevelp
 	 * 
-	 * @see Monster#raiseconstitution(Combatant, int)
+	 * @see Monster#changeconstitutionmodifier(Combatant, int)
 	 */
 	public Poisoned(float expireatp, Combatant c, Effect effectp, int secondary,
 			int dcp, Integer casterlevelp) {
@@ -52,9 +52,7 @@ public class Poisoned extends Condition {
 
 	void damage(Combatant c, int d) {
 		int original = c.source.constitution;
-		if (!c.source.raiseconstitution(c, -d)) {
-			c.hp = 0;
-		}
+		c.source.changeconstitutionmodifier(c, -d);
 		c.source.poison += (original - c.source.constitution) / 2;
 	}
 
@@ -69,7 +67,7 @@ public class Poisoned extends Condition {
 	public void transfer(Combatant from, Combatant to) {
 		to.maxhp = from.maxhp;
 		to.source.poison = from.source.poison;
-		to.source.raiseconstitution(to, -to.source.poison);
+		to.source.changeconstitutionmodifier(to, -to.source.poison);
 		to.hp = from.hp;
 	}
 

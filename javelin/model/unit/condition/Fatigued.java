@@ -24,14 +24,14 @@ public class Fatigued extends Condition {
 	@Override
 	public void start(Combatant c) {
 		c.source = c.source.clone();
-		c.source.raisestrength(-1);
-		c.source.raiseconstitution(c, -1);
+		c.source.changestrengthmodifier(-1);
+		c.source.changeconstitutionmodifier(c, -1);
 	}
 
 	@Override
 	public void end(Combatant c) {
-		c.source.raisestrength(+1);
-		c.source.raiseconstitution(c, +1);
+		c.source.changestrengthmodifier(+1);
+		c.source.changeconstitutionmodifier(c, +1);
 	}
 
 }

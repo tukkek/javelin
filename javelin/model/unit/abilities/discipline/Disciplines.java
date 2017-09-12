@@ -1,19 +1,19 @@
 package javelin.model.unit.abilities.discipline;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.TreeMap;
 
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.discipline.expertise.CombatExpertiseDiscipline;
 import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
 import javelin.model.unit.attack.Combatant;
 
-public class Disciplines extends HashMap<String, Maneuvers> {
+public class Disciplines extends TreeMap<String, Maneuvers> {
 	public static final Discipline[] ALL = new Discipline[] {
 			CombatExpertiseDiscipline.INSTANCE, SteelSerpent.INSTANCE };
 
 	public Disciplines() {
-		super(0);
+		super();
 	}
 
 	public Disciplines(Disciplines d) {
@@ -21,10 +21,11 @@ public class Disciplines extends HashMap<String, Maneuvers> {
 	}
 
 	public ArrayList<Maneuver> getmaneuvers() {
-		ArrayList<Maneuver> maneuvers = new ArrayList<Maneuver>();
+		Maneuvers maneuvers = new Maneuvers();
 		for (Maneuvers discipline : values()) {
 			maneuvers.addAll(discipline);
 		}
+		maneuvers.sort();
 		return maneuvers;
 	}
 
@@ -66,5 +67,14 @@ public class Disciplines extends HashMap<String, Maneuvers> {
 			put(d.name, maneuvers);
 		}
 		maneuvers.add(m);
+	}
+
+	/**
+	 * Sorts underlying manueveurs with {@link Maneuvers#sort()}.
+	 */
+	public void sort() {
+		for (Maneuvers m : values()) {
+			m.sort();
+		}
 	}
 }

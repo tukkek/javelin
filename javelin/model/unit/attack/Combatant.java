@@ -591,7 +591,7 @@ public class Combatant implements Serializable, Cloneable {
 			return;
 		}
 		Condition previous = hascondition(c.getClass());
-		if (previous == null) {
+		if (previous == null || previous.stack) {
 			c.start(this);
 			conditions.add(c);
 		} else {
@@ -671,7 +671,7 @@ public class Combatant implements Serializable, Cloneable {
 	public void detox(int detox) {
 		if (detox > 0) {
 			source.poison -= detox;
-			source.raiseconstitution(this, detox);
+			source.changeconstitutionmodifier(this, detox);
 		}
 	}
 

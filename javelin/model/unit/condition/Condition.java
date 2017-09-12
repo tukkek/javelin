@@ -54,6 +54,12 @@ public abstract class Condition
 	 * {@link DispelMagic}.
 	 */
 	public Integer casterlevel;
+	/**
+	 * If <code>true</code>, allows multiple instances of this condition to
+	 * affect the same {@link Combatant} - otherwise, will
+	 * {@link #merge(Combatant, Condition)} them instead.
+	 */
+	public boolean stack = false;
 
 	public Condition(float expireatp, final Combatant c, final Effect effectp,
 			String description, Integer casterlevel) {
@@ -183,9 +189,9 @@ public abstract class Condition
 	}
 
 	/**
-	 * Merge two conditions of the same type, as long as they don't stack. By
-	 * the time this is called, {@link #validate(Combatant)} has already been
-	 * verified.
+	 * Merge two conditions of the same type, as long as they don't
+	 * {@link #stack}. By the time this is called, {@link #validate(Combatant)}
+	 * has already been verified.
 	 * 
 	 * The default implementation just extends the previous condition to
 	 * whichever {@link #expireat} is higher between both.
@@ -194,11 +200,10 @@ public abstract class Condition
 	 *         if merge is supported and performed succesfully. In either case,
 	 *         the new condition is discarded.
 	 */
-	public boolean merge(Combatant c, Condition previous) {
+	public void merge(Combatant c, Condition previous) {
 		if (expireat > previous.expireat) {
 			previous.expireat = expireat;
 		}
-		return true;
 	}
 
 	@Override

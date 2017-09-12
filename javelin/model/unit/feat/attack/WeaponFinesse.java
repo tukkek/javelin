@@ -12,7 +12,7 @@ import javelin.model.unit.feat.Feat;
  * See the d20 SRD for more info.
  * 
  * TODO the way it's working right now, an {@link Attack} that uses Weapon
- * Finesse can only be upgraded through {@link Monster#raisedexterity(int)}.
+ * Finesse can only be upgraded through {@link Monster#changedexteritymodifier(int)}.
  * Ideally, it should choose between the best of either bonus.
  */
 public class WeaponFinesse extends Feat {

@@ -19,12 +19,12 @@ public class GlovesOfDexterity extends Artifact {
 
 	@Override
 	protected void apply(Combatant c) {
-		c.source.raisedexterity(bonus);
+		c.source.changedexteritymodifier(bonus);
 	}
 
 	@Override
 	protected void negate(Combatant c) {
-		c.source.raisedexterity(-bonus);
+		c.source.changedexteritymodifier(-bonus);
 	}
 
 }

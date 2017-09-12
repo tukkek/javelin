@@ -22,7 +22,7 @@ public class RaiseDexterity extends RaiseAbility {
 
 	@Override
 	boolean setattribute(Combatant m, int l) {
-		m.source.raisedexterity(+1);
+		m.source.changedexteritymodifier(+1);
 		return true;
 	}
 

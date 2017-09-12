@@ -20,13 +20,13 @@ public class Paralyzed extends Condition {
 		c.source = c.source.clone();
 		dex = c.source.dexterity;
 		delta = (int) Math.round(Math.floor(dex / 2f));
-		c.source.raisedexterity(-delta);
+		c.source.changedexteritymodifier(-delta);
 		c.ap = expireat;
 	}
 
 	@Override
 	public void end(Combatant c) {
 		c.source = c.source.clone();
-		c.source.raisedexterity(+delta);
+		c.source.changedexteritymodifier(+delta);
 	}
 }

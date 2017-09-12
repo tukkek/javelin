@@ -6,7 +6,7 @@ import javelin.controller.action.maneuver.DefensiveAttack;
 /** @see DefensiveAttack. */
 public class DefensiveAttackManeuver extends CombatExpertiseManeuver {
 	public DefensiveAttackManeuver() {
-		super("Defensive attack");
+		super("Defensive attack", 1);
 	}
 
 	@Override

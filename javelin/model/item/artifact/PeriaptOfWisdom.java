@@ -19,12 +19,12 @@ public class PeriaptOfWisdom extends Artifact {
 
 	@Override
 	protected void apply(Combatant c) {
-		c.source.raisewisdom(bonus);
+		c.source.changewisdomscore(bonus);
 	}
 
 	@Override
 	protected void negate(Combatant c) {
-		c.source.raisewisdom(-bonus);
+		c.source.changewisdomscore(-bonus);
 	}
 
 }

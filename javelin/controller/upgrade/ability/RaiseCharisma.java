@@ -21,7 +21,7 @@ public class RaiseCharisma extends RaiseAbility {
 
 	@Override
 	boolean setattribute(Combatant m, int l) {
-		m.source.raisecharisma(+1);
+		m.source.changecharismamodifier(+1);
 		return true;
 	}
 

@@ -23,7 +23,7 @@ public class IronFang extends Strike {
 	int originaldr;
 
 	public IronFang() {
-		super("Iron fang");
+		super("Iron fang", 2);
 		ap = ActionCost.STANDARD;
 	}
 

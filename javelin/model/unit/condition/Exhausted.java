@@ -27,8 +27,8 @@ public class Exhausted extends Fatigued {
 		m.fly = m.fly / 2;
 		m.swim = m.swim / 2;
 		m.walk = m.walk / 2;
-		m.raisestrength(-3);
-		m.raisedexterity(-3);
+		m.changestrengthmodifier(-3);
+		m.changedexteritymodifier(-3);
 	}
 
 	@Override
@@ -38,8 +38,8 @@ public class Exhausted extends Fatigued {
 		m.fly = Math.max(m.fly, originalspeeds[1]);
 		m.swim = Math.max(m.swim, originalspeeds[2]);
 		m.walk = Math.max(m.walk, originalspeeds[3]);
-		m.raisestrength(+3);
-		m.raisedexterity(+3);
+		m.changestrengthmodifier(+3);
+		m.changedexteritymodifier(+3);
 		c.addcondition(new Fatigued(c, casterlevel, 0));
 	}
 }

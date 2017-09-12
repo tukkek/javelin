@@ -18,12 +18,12 @@ public class BearsEndurance extends TotemsSpell {
 
 		@Override
 		public void start(Combatant c) {
-			c.source.raiseconstitution(c, 2);
+			c.source.changeconstitutionmodifier(c, 2);
 		}
 
 		@Override
 		public void end(Combatant c) {
-			c.source.raiseconstitution(c, -2);
+			c.source.changeconstitutionmodifier(c, -2);
 		}
 	}
 

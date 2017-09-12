@@ -6,7 +6,7 @@ import javelin.controller.action.maneuver.Grapple;
 public class GrappleManeuver extends CombatExpertiseManeuver {
 
 	public GrappleManeuver() {
-		super("Grapple");
+		super("Grapple", 2);
 	}
 
 	@Override

@@ -19,8 +19,8 @@ import javelin.model.unit.feat.attack.expertise.CombatExpertise;
  * @author alex
  */
 public abstract class CombatExpertiseManeuver extends Maneuver {
-	public CombatExpertiseManeuver(String name) {
-		super(name);
+	public CombatExpertiseManeuver(String name, int level) {
+		super(name, level);
 	}
 
 	@Override

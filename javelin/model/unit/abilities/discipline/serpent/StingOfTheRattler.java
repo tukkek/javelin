@@ -7,6 +7,7 @@ import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.condition.Condition;
+import tyrant.mikera.engine.RPG;
 
 /**
  * Attack that inflicts an additional 1d4 points of damage plus 1d4 damage the
@@ -18,9 +19,12 @@ import javelin.model.unit.condition.Condition;
  * @author alex
  */
 public class StingOfTheRattler extends Strike {
-	public class Stung extends Condition {
-		public Stung(float expireatp, Combatant c) {
-			super(expireatp, c, Effect.NEGATIVE, "Stung", null);
+	static final int DAMAGEBONUS = RPG.average(1, 4);
+
+	public class RattlerSting extends Condition {
+		public RattlerSting(float expireatp, Combatant c) {
+			super(expireatp, c, Effect.NEGATIVE, "Rattler sting", null);
+			stack = true;
 		}
 
 		@Override
@@ -30,7 +34,7 @@ public class StingOfTheRattler extends Strike {
 
 		@Override
 		public void end(Combatant c) {
-			c.hp -= 3;
+			c.hp -= DAMAGEBONUS;
 			if (c.hp < 1) {
 				c.hp = 1;
 			}
@@ -38,14 +42,15 @@ public class StingOfTheRattler extends Strike {
 	}
 
 	public StingOfTheRattler() {
-		super("Sting of the rattler");
+		super("Sting of the rattler", 1);
 	}
 
 	@Override
 	public void prehit(Combatant active, Combatant target, Attack a,
 			DamageChance dc, BattleState s) {
-		dc.damage += 3;
-		target.addcondition(new Stung(active.ap + ActionCost.FULL, target));
+		dc.damage += DAMAGEBONUS;
+		target.addcondition(
+				new RattlerSting(active.ap + ActionCost.FULL, target));
 	}
 
 	@Override

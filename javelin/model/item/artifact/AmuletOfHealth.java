@@ -19,12 +19,12 @@ public class AmuletOfHealth extends Artifact {
 
 	@Override
 	protected void apply(Combatant c) {
-		c.source.raiseconstitution(c, bonus / 2);
+		c.source.changeconstitutionmodifier(c, bonus / 2);
 	}
 
 	@Override
 	protected void negate(Combatant c) {
-		c.source.raiseconstitution(c, -bonus / 2);
+		c.source.changeconstitutionmodifier(c, -bonus / 2);
 	}
 
 }

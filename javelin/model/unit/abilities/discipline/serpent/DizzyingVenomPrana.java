@@ -6,21 +6,19 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.Combatant;
-import javelin.model.unit.condition.WisdomDamage;
+import javelin.model.unit.condition.abilitydamage.WisdomDamage;
 
 public class DizzyingVenomPrana extends Strike {
 	public DizzyingVenomPrana() {
-		super("Dizzying venom prana");
+		super("Dizzying venom prana", 1);
 	}
 
 	@Override
 	public void prehit(Combatant active, Combatant target, Attack a,
 			DamageChance dc, BattleState s) {
 		target.ap += ActionCost.PARTIAL;
-		int fort = target.source.fortitude();
-		if (fort != Integer.MAX_VALUE
-				&& fort + 10 >= 11 + getinitiationmodifier(active)) {
-			target.addcondition(new WisdomDamage(target));
+		if (save(target.source.fortitude(), 11, active)) {
+			target.addcondition(new WisdomDamage(2, target));
 		}
 	}
 

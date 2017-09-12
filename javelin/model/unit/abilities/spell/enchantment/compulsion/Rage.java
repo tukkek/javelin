@@ -18,8 +18,8 @@ public class Rage extends Spell {
 		public void start(Combatant c) {
 			Monster m = c.source.clone();
 			c.source = m;
-			m.raisestrength(+1);
-			m.raiseconstitution(c, +1);
+			m.changestrengthmodifier(+1);
+			m.changeconstitutionmodifier(c, +1);
 			m.addwill(+1);
 			c.acmodifier -= 2;
 		}
@@ -28,8 +28,8 @@ public class Rage extends Spell {
 		public void end(Combatant c) {
 			Monster m = c.source.clone();
 			c.source = m;
-			m.raisestrength(-1);
-			m.raiseconstitution(c, -1);
+			m.changestrengthmodifier(-1);
+			m.changeconstitutionmodifier(c, -1);
 			m.addwill(-1);
 			c.acmodifier += 2;
 		}

@@ -22,7 +22,7 @@ public class RaiseConsitution extends RaiseAbility {
 
 	@Override
 	boolean setattribute(Combatant c, int l) {
-		c.source.raiseconstitution(c, 1);
+		c.source.changeconstitutionmodifier(c, 1);
 		return true;
 	}
 

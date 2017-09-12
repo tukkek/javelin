@@ -17,12 +17,12 @@ public class OwlsWisdom extends TotemsSpell {
 
 		@Override
 		public void start(Combatant c) {
-			c.source.raisewisdom(+4);
+			c.source.changewisdomscore(+4);
 		}
 
 		@Override
 		public void end(Combatant c) {
-			c.source.raisewisdom(+4);
+			c.source.changewisdomscore(+4);
 		}
 	}
 

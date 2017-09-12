@@ -15,6 +15,7 @@ import javelin.controller.action.target.RangedTarget;
 import javelin.controller.action.target.Target;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.discipline.serpent.DizzyingVenomPrana;
@@ -59,31 +60,36 @@ public abstract class Strike extends Maneuver {
 		}
 	}
 
-	public Strike(String name) {
-		super(name);
+	public Strike(String name, int level) {
+		super(name, level);
 		ap = ActionCost.SWIFT + ActionCost.STANDARD;
 	}
 
 	@Override
 	public boolean perform(Combatant c) {
 		try {
-			ArrayList<Attack> melee = getattacks(c, c.source.melee);
-			ArrayList<Attack> all = new ArrayList<Attack>(melee);
-			all.addAll(getattacks(c, c.source.ranged));
+			/**
+			 * TODO this assumes you can only attack if you're engaged.
+			 * implementing reach may change this? how does engagement work with
+			 * reach?
+			 */
+			boolean engaged = Fight.state.isengaged(c);
+			ArrayList<Attack> attacks = getattacks(c,
+					engaged ? c.source.melee : c.source.ranged);
 			Attack a;
-			if (all.size() == 1) {
-				a = all.get(0);
+			if (attacks.size() == 1) {
+				a = attacks.get(0);
 			} else {
 				final String prompt = "Which attack will you use?";
-				int choice = Javelin.choose(prompt, all, all.size() > 3, false);
+				int choice = Javelin.choose(prompt, attacks, attacks.size() > 3,
+						false);
 				if (choice == -1) {
 					throw new RepeatTurn();
 				}
-				a = all.get(choice);
+				a = attacks.get(choice);
 			}
 			AbstractAttack.setmaneuver(this);
-			final Target action = melee.contains(a)
-					? new MeleeTarget(a, ap, 'm')
+			final Target action = engaged ? new MeleeTarget(a, ap, 'm')
 					: new RangedTarget(a, ap, 'm');
 			action.perform(c);
 			return true;

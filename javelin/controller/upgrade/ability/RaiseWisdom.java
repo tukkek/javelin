@@ -20,7 +20,7 @@ public class RaiseWisdom extends RaiseAbility {
 
 	@Override
 	boolean setattribute(Combatant m, int l) {
-		m.source.raisewisdom(+2);
+		m.source.changewisdomscore(+2);
 		return true;
 	}
 

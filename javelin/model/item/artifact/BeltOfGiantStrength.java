@@ -20,12 +20,12 @@ public class BeltOfGiantStrength extends Artifact {
 
 	@Override
 	protected void apply(Combatant c) {
-		c.source.raisestrength(bonus / 2);
+		c.source.changestrengthmodifier(bonus / 2);
 	}
 
 	@Override
 	protected void negate(Combatant c) {
-		c.source.raisestrength(-bonus / 2);
+		c.source.changestrengthmodifier(-bonus / 2);
 	}
 
 }

@@ -29,6 +29,7 @@ public class ExecuteManeuver extends Action implements AiAction {
 	public List<List<ChanceNode>> getoutcomes(Combatant c, BattleState s) {
 		final ArrayList<List<ChanceNode>> outcomes = new ArrayList<List<ChanceNode>>();
 		final Disciplines disciplines = c.disciplines;
+		disciplines.sort();
 		for (String discipline : disciplines.keySet()) {
 			for (Maneuver m : disciplines.get(discipline)) {
 				BattleState s2 = s.clone();

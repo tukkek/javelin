@@ -20,7 +20,7 @@ public class RaiseStrength extends RaiseAbility {
 
 	@Override
 	boolean setattribute(Combatant m, int i) {
-		m.source.raisestrength(+1);
+		m.source.changestrengthmodifier(+1);
 		return true;
 	}
 

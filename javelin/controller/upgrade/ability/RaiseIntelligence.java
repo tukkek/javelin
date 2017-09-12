@@ -25,7 +25,7 @@ public class RaiseIntelligence extends RaiseAbility {
 
 	@Override
 	boolean setattribute(Combatant m, int l) {
-		m.source.raiseintelligence(+2);
+		m.source.changeintelligencescore(+2);
 		return true;
 	}
 

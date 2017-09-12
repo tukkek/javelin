@@ -5,7 +5,7 @@ import javelin.controller.action.maneuver.Feint;
 
 public class FeintManeuver extends CombatExpertiseManeuver {
 	public FeintManeuver() {
-		super("Feint");
+		super("Feint", 2);
 	}
 
 	@Override

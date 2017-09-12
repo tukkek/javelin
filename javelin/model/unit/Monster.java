@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.AbilityModification;
 import javelin.controller.SpellbookGenerator;
 import javelin.controller.Weather;
 import javelin.controller.action.Breath;
@@ -396,34 +397,25 @@ public class Monster implements Cloneable, Serializable {
 	}
 
 	/**
-	 * @param bonus
-	 *            Raises {@link #dexterity} bonus by +1 this many times (+1
-	 *            bonus = +2 ability score points).
-	 */
-	public void raisedexterity(int bonus) {
-		dexterity += 2 * bonus;
-		ac += bonus;
-		ref += bonus;
-		ArrayList<Attack> attacks = new ArrayList<Attack>();
-		for (AttackSequence sequence : ranged) {
-			attacks.addAll(sequence);
-		}
-		for (WeaponFinesse wf : getfeats(WeaponFinesse.SINGLETON)) {
-			attacks.addAll(wf.getallaffected(this));
-		}
-		for (Attack a : attacks) {
-			a.bonus += bonus;
-		}
-		initiative += bonus;
-	}
-
-	/**
-	 * @param bonus
+	 * @param modifierchange
 	 *            Raises {@link #strength} bonus by this many steps (+1 bonus =
 	 *            +2 score points)
 	 */
-	public void raisestrength(int bonus) {
-		strength += 2 * bonus;
+	public void changestrengthmodifier(int modifierchange) {
+		changestrengthscore(modifierchange * 2);
+	}
+
+	/**
+	 * Same as {@link #changestrengthmodifier(int)} but receives a score change
+	 * instead.
+	 */
+	public void changestrengthscore(int scorechange) {
+		AbilityModification m = AbilityModification.modify(strength,
+				scorechange);
+		strength = m.newscore;
+		if (m.modifierchange == 0) {
+			return;
+		}
 		ArrayList<WeaponFinesse> finesses = getfeats(WeaponFinesse.SINGLETON);
 		for (AttackSequence sequence : melee) {
 			attacks: for (Attack a : sequence) {
@@ -432,26 +424,52 @@ public class Monster implements Cloneable, Serializable {
 						continue attacks;
 					}
 				}
-				a.bonus += bonus;
-				a.damage[2] += bonus;
+				a.bonus += m.modifierchange;
+				a.damage[2] += m.modifierchange;
 			}
 		}
 	}
 
-	public <K extends Feat> ArrayList<K> getfeats(K search) {
-		ArrayList<K> found = new ArrayList<K>(0);
-		for (Feat f : feats) {
-			if (f.equals(search)) {
-				found.add((K) f);
-			}
+	/**
+	 * @param modifierchange
+	 *            Raises {@link #dexterity} bonus by +1 this many times (+1
+	 *            bonus = +2 ability score points).
+	 */
+	public void changedexteritymodifier(int modifierchange) {
+		changedexterityscore(modifierchange * 2);
+	}
+
+	/**
+	 * Same as {@link #changedexteritymodifier(int)} but receives an ability
+	 * score change instead.
+	 */
+	public void changedexterityscore(int scorechange) {
+		AbilityModification m = AbilityModification.modify(dexterity,
+				scorechange);
+		dexterity = m.newscore;
+		int modifierchange = m.modifierchange;
+		if (m.modifierchange == 0) {
+			return;
 		}
-		return found;
+		ac += modifierchange;
+		ref += modifierchange;
+		ArrayList<Attack> attacks = new ArrayList<Attack>();
+		for (AttackSequence sequence : ranged) {
+			attacks.addAll(sequence);
+		}
+		for (WeaponFinesse wf : getfeats(WeaponFinesse.SINGLETON)) {
+			attacks.addAll(wf.getallaffected(this));
+		}
+		for (Attack a : attacks) {
+			a.bonus += modifierchange;
+		}
+		initiative += modifierchange;
 	}
 
 	/**
 	 * @param c
 	 *            Raises {@link #constitution} by +2...
-	 * @param bonus
+	 * @param modifierchange
 	 *            multiplied by this magnitude. Negative values allowed.
 	 * @return
 	 * @throws Death
@@ -459,18 +477,28 @@ public class Monster implements Cloneable, Serializable {
 	 * @return <code>false</code> if this combatant has been killed during this
 	 *         operation.
 	 */
-	public boolean raiseconstitution(Combatant c, int bonus) {
-		if (constitution == 0 || bonus == 0) {
-			return true;
+	public void changeconstitutionmodifier(Combatant c, int modifierchange) {
+		changeconstitutionscore(c, modifierchange * 2);
+	}
+
+	/**
+	 * Same as {@link #changeconstitutionmodifier(Combatant, int)} but receives
+	 * score point changes isntead of modifier changes (2 score points = 1
+	 * modifier change).
+	 */
+	public void changeconstitutionscore(Combatant c, int scorechange) {
+		AbilityModification m = AbilityModification.modify(constitution,
+				scorechange);
+		if (constitution == m.newscore) {
+			return;
 		}
-		constitution += bonus * 2;
-		while (constitution <= 0) {
-			constitution += 2;
-			bonus += 2;
+		constitution = m.newscore;
+		if (m.modifierchange == 0) {
+			return;
 		}
-		fort += bonus;
+		fort += m.modifierchange;
 		final int hds = hd.count();
-		int bonushp = hds * bonus;
+		int bonushp = hds * m.modifierchange;
 		if (c.maxhp + bonushp < hds) {
 			bonushp = -(c.maxhp - hds);
 		}
@@ -484,9 +512,80 @@ public class Monster implements Cloneable, Serializable {
 			c.hp = c.maxhp;
 		}
 		for (BreathWeapon breath : breaths) {
-			breath.savedc += bonus;
+			breath.savedc += m.modifierchange;
 		}
-		return true;
+	}
+
+	/**
+	 * Same as {@link #changeintelligencescore(int)} but receives a score change
+	 * instead (2 score points = 1 modifier point).
+	 */
+	public void changeintelligencemodifier(int modifierchange) {
+		changeintelligencescore(modifierchange * 2);
+	}
+
+	/**
+	 * Should give players more points for {@link Skills} but instead just lower
+	 * {@link #challengerating} considering how far behind the unit is form
+	 * where it should be - preventing all sorts of complications.
+	 * 
+	 * @param newscore
+	 *            Raises {@link #intelligence} by this many ability score points
+	 *            (+2 point = +1 bonus modifier).
+	 */
+	public void changeintelligencescore(int scorechange) {
+		intelligence = AbilityModification.modify(intelligence,
+				scorechange).newscore;
+	}
+
+	/**
+	 * Same as {@link #changewisdomscore(int)} but receives a modifier instead
+	 * (1 positive or negative modifier change = 2 score change).
+	 */
+	public void changewisdommodifier(int modifierchange) {
+		changewisdomscore(modifierchange * 2);
+	}
+
+	/**
+	 * TODO implement 0 == helpless (or something to that effect).
+	 * 
+	 * @param scorechange
+	 *            Raises {@link #wisdom} by this many ability score points (+2
+	 *            points = +1 bonus modifier).
+	 */
+	public void changewisdomscore(int scorechange) {
+		AbilityModification m = AbilityModification.modify(wisdom, scorechange);
+		wisdom = m.newscore;
+		if (m.modifierchange != 0) {
+			will += m.modifierchange;
+		}
+	}
+
+	/**
+	 * @param modifierchange
+	 *            Raises {@link #charisma} modifer ( +1 bonus modifier == +2
+	 *            score)
+	 */
+	public void changecharismamodifier(int modifierchange) {
+		changecharismascore(modifierchange * 2);
+	}
+
+	/**
+	 * Same as {@link #changecharismamodifier(int)} but receives a score change
+	 * instead.
+	 */
+	public void changecharismascore(int scorechange) {
+		charisma = AbilityModification.modify(charisma, scorechange).newscore;
+	}
+
+	public <K extends Feat> ArrayList<K> getfeats(K search) {
+		ArrayList<K> found = new ArrayList<K>(0);
+		for (Feat f : feats) {
+			if (f.equals(search)) {
+				found.add((K) f);
+			}
+		}
+		return found;
 	}
 
 	public int gettopspeed() {
@@ -505,18 +604,6 @@ public class Monster implements Cloneable, Serializable {
 	@Override
 	public String toString() {
 		return customName == null ? name : customName;
-	}
-
-	/**
-	 * TODO implement 0 == helpless (or something to that effect).
-	 * 
-	 * @param score
-	 *            Raises {@link #wisdom} by this many ability score points (+2
-	 *            point = +1 bonus modifier). Always use a multiple of 2.
-	 */
-	public void raisewisdom(int score) {
-		wisdom += score;
-		will += score / 2;
 	}
 
 	/**
@@ -554,26 +641,6 @@ public class Monster implements Cloneable, Serializable {
 	@Override
 	public int hashCode() {
 		return name.hashCode();
-	}
-
-	/**
-	 * @param bonus
-	 *            Raises {@link #charisma} by this many points (+2 points = +1
-	 *            bonus modifier)
-	 */
-	public void raisecharisma(int bonus) {
-		charisma += bonus * 2;
-	}
-
-	/**
-	 * @param points
-	 *            Raises {@link #intelligence} by this many ability score points
-	 *            (+2 point = +1 bonus modifier).
-	 */
-	public void raiseintelligence(int points) {
-		if (intelligence > 0) {
-			intelligence += points;
-		}
 	}
 
 	/**

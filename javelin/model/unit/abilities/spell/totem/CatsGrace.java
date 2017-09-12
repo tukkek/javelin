@@ -18,12 +18,12 @@ public class CatsGrace extends TotemsSpell {
 
 		@Override
 		public void start(Combatant c) {
-			c.source.raisedexterity(+2);
+			c.source.changedexteritymodifier(+2);
 		}
 
 		@Override
 		public void end(Combatant c) {
-			c.source.raisedexterity(-2);
+			c.source.changedexteritymodifier(-2);
 		}
 	}
 

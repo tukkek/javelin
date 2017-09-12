@@ -15,4 +15,8 @@ public class Maneuvers extends CloneableList<Maneuver> {
 	public Maneuvers clone() {
 		return (Maneuvers) super.clone();
 	}
+
+	public void sort() {
+		super.sort(null);
+	}
 }

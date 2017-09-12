@@ -17,12 +17,12 @@ public class BullsStrength extends TotemsSpell {
 
 		@Override
 		public void start(Combatant c) {
-			c.source.raisestrength(+2);
+			c.source.changestrengthmodifier(+2);
 		}
 
 		@Override
 		public void end(Combatant c) {
-			c.source.raisestrength(-2);
+			c.source.changestrengthmodifier(-2);
 		}
 	}
 

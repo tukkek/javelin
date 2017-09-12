@@ -15,3 +15,5 @@ Sting of the asp (level 2): strike inflicts 1d6 extra damage and 1 point of Cons
 Weakening venom prana (level 2): boosts an attack with 1d4 of strength damage (half on a Fortitude save, DC 12 + initiatior level).
 
 Sickening venom strike (level 3): deal 2 Constitution damage. Also sickens target for 1d4 turns on a failed Fortitude save (DC 13 + initiator modifier).
+
+Sting of the Adder (level 4): deals 5d6 extra damage and 1d4 Wisdom damage (Fortitude save for half). A failed save results in another 1d6 damage and 2 Wisdom damage in the following turn. Save DC: 14 + initiation level.

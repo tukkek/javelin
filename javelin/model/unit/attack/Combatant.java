@@ -595,7 +595,7 @@ public class Combatant implements Serializable, Cloneable {
 			c.start(this);
 			conditions.add(c);
 		} else {
-			c.merge(this, previous);
+			previous.merge(this, c);
 		}
 	}
 

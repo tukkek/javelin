@@ -4,7 +4,7 @@ import javelin.model.unit.attack.Combatant;
 
 public class WisdomDamage extends AbilityDamage {
 	public WisdomDamage(int damage, Combatant c) {
-		super(damage, c);
+		super(damage, c, "derpy");
 	}
 
 	@Override

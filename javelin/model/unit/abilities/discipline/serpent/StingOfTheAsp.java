@@ -8,6 +8,7 @@ import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.condition.Condition;
+import javelin.model.unit.condition.abilitydamage.StrengthDamage;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -36,7 +37,7 @@ public class StingOfTheAsp extends Strike {
 				c.hp = 1;
 			}
 			c.source = c.source.clone();
-			c.source.changestrengthscore(-2);
+			c.addcondition(new StrengthDamage(2, c));
 		}
 	}
 
@@ -61,9 +62,8 @@ public class StingOfTheAsp extends Strike {
 	public void prehit(Combatant active, Combatant target, Attack a,
 			DamageChance dc, BattleState s) {
 		dc.damage += EXTRADAMAGE;
-		target.source = target.source.clone();
 		boolean save = save(target.source.fortitude(), 12, active);
-		target.source.changestrengthscore(save ? -1 : -2);
+		target.addcondition(new StrengthDamage(save ? 1 : 2, target));
 		if (!save || Javelin.DEBUG) {
 			target.addcondition(new AspString(active.ap + 1, target));
 		}

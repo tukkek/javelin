@@ -196,13 +196,15 @@ public abstract class Condition
 	 * The default implementation just extends the previous condition to
 	 * whichever {@link #expireat} is higher between both.
 	 * 
+	 * @param condition
+	 *            Condition to be merged. Will be discarded afterwards.
 	 * @return <code>false</code> if merge is not supported. <code>true</code>
 	 *         if merge is supported and performed succesfully. In either case,
 	 *         the new condition is discarded.
 	 */
-	public void merge(Combatant c, Condition previous) {
-		if (expireat > previous.expireat) {
-			previous.expireat = expireat;
+	public void merge(Combatant c, Condition condition) {
+		if (condition.expireat > expireat) {
+			expireat = condition.expireat;
 		}
 	}
 

@@ -1,6 +1,5 @@
 package javelin.model.unit.condition.abilitydamage;
 
-import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.condition.Poisoned;
@@ -19,8 +18,8 @@ public abstract class AbilityDamage extends Condition {
 	int timepool;
 	int damage;
 
-	public AbilityDamage(int damage, Combatant c) {
-		super(Float.MAX_VALUE, c, Effect.NEGATIVE, "dummy", null,
+	public AbilityDamage(int damage, Combatant c, String description) {
+		super(Float.MAX_VALUE, c, Effect.NEGATIVE, description, null,
 				Integer.MAX_VALUE);
 		this.damage = damage;
 	}
@@ -31,8 +30,7 @@ public abstract class AbilityDamage extends Condition {
 	}
 
 	void damage(int damage, Combatant c) {
-		Monster m = c.source.clone();
-		c.source = m;
+		c.source = c.source.clone();
 		modifyability(-damage, c);
 		this.damagepool += damage;
 	}
@@ -64,8 +62,8 @@ public abstract class AbilityDamage extends Condition {
 	}
 
 	@Override
-	public void merge(Combatant c, Condition previous) {
-		AbilityDamage p = (AbilityDamage) previous;
-		p.damage(p.damage, c);
+	public void merge(Combatant c, Condition condition) {
+		AbilityDamage ad = (AbilityDamage) condition;
+		damage(ad.damage, c);
 	}
 }

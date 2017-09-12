@@ -12,7 +12,7 @@ import javelin.model.unit.condition.Condition;
  */
 public class VampiricTouch extends Touch {
 	public class Vampiric extends Condition {
-		final private int steal;
+		int steal;
 
 		public Vampiric(float expireat, Combatant caster, int steal,
 				Integer casterlevelp) {
@@ -42,8 +42,8 @@ public class VampiricTouch extends Touch {
 		}
 
 		@Override
-		public void merge(Combatant c, Condition previous) {
-			previous.expireat = Math.max(expireat, previous.expireat);
+		public void merge(Combatant c, Condition condition) {
+			steal += ((Vampiric) condition).steal;
 		}
 	}
 

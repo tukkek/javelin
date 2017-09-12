@@ -31,11 +31,11 @@ public abstract class AbilityDamage extends Condition {
 
 	void damage(int damage, Combatant c) {
 		c.source = c.source.clone();
-		modifyability(-damage, c);
+		modifyability(c, -damage);
 		this.damagepool += damage;
 	}
 
-	abstract void modifyability(int damage, Combatant c);
+	abstract void modifyability(Combatant c, int change);
 
 	@Override
 	public void end(Combatant c) {

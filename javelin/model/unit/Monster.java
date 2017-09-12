@@ -304,7 +304,7 @@ public class Monster implements Cloneable, Serializable {
 			if (m.touch != null) {
 				m.touch = touch.clone();
 			}
-			skills = skills.clone();
+			m.skills = skills.clone();
 			return m;
 		} catch (final CloneNotSupportedException e) {
 			throw new RuntimeException(e);

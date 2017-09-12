@@ -179,4 +179,25 @@ public class Skills implements Serializable, Cloneable {
 	public static String signed(int ranks) {
 		return ranks >= 0 ? "+" + ranks : Integer.toString(ranks);
 	}
+
+	/**
+	 * TODO this is terrible to maintain because it' seasy to forget, making
+	 * Skill enum-based should solve this
+	 */
+	public void changeall(int bonus) {
+		acrobatics += bonus;
+		concentration += bonus;
+		diplomacy += bonus;
+		disabledevice += bonus;
+		disguise += bonus;
+		gatherinformation += bonus;
+		heal += bonus;
+		knowledge += bonus;
+		perception += bonus;
+		search += bonus;
+		spellcraft += bonus;
+		stealth += bonus;
+		survival += bonus;
+		usemagicdevice += bonus;
+	}
 }

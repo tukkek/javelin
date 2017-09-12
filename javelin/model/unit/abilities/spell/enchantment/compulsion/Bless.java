@@ -11,6 +11,8 @@ import javelin.model.unit.condition.Condition;
 import javelin.model.unit.condition.Heroic;
 
 /**
+ * http://www.d20pfsrd.com/magic/all-spells/b/bless/
+ * 
  * @author alex
  */
 public class Bless extends Spell {
@@ -24,13 +26,13 @@ public class Bless extends Spell {
 		@Override
 		public void start(Combatant c) {
 			c.source = c.source.clone();
-			Heroic.raiseboth(c.source, bonus);
+			Heroic.raiseallattacks(c.source, bonus, 0);
 		}
 
 		@Override
 		public void end(Combatant c) {
 			c.source = c.source.clone();
-			Heroic.raiseboth(c.source, -bonus);
+			Heroic.raiseallattacks(c.source, -bonus, 0);
 		}
 	}
 

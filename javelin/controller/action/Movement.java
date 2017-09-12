@@ -41,14 +41,15 @@ public class Movement extends Action {
 	 *            Location.
 	 * @param y
 	 *            Location.
+	 * @param disengaging
 	 * @return How much it costs to move to the specified square.
 	 */
-	public float cost(final Combatant c, final BattleState state, int x,
-			int y) {
+	public float cost(final Combatant c, final BattleState state, int x, int y,
+			boolean disengaging) {
 		float speed;
 		if (c.burrowed) {
 			speed = c.source.burrow;
-		} else if (state.isengaged(c)) {
+		} else if (disengaging) {
 			return disengage(c);
 		} else {
 			speed = c.source.gettopspeed();
@@ -93,7 +94,7 @@ public class Movement extends Action {
 			}
 			Meld meld = Fight.state.getmeld(to.x, to.y);
 			if (!Movement.lastmovewasattack) {
-				float ap = cost(c, state, to.x, to.y);
+				float ap = cost(c, state, to.x, to.y, disengaging);
 				BattleScreen.partialmove += ap;
 				c.ap += ap;
 			}

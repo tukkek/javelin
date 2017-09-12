@@ -8,7 +8,7 @@ public class StrengthDamage extends AbilityDamage {
 	}
 
 	@Override
-	void modifyability(int damage, Combatant c) {
+	void modifyability(Combatant c, int damage) {
 		c.source.changestrengthscore(damage);
 	}
 }

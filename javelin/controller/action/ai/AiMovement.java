@@ -26,7 +26,8 @@ public class AiMovement extends Action implements AiAction {
 
 	static public class MoveNode extends ChanceNode {
 
-		public MoveNode(Node n, float chance, String action, Delay delay, Point from) {
+		public MoveNode(Node n, float chance, String action, Delay delay,
+				Point from) {
 			super(n, chance, action, delay);
 			AiOverlay o = new AiOverlay(from.x, from.y);
 			Images.getImage("overlaymove");
@@ -56,18 +57,24 @@ public class AiMovement extends Action implements AiAction {
 	}
 
 	@Override
-	public List<List<ChanceNode>> getoutcomes(final Combatant active, final BattleState gameStatep) {
+	public List<List<ChanceNode>> getoutcomes(final Combatant active,
+			final BattleState gameStatep) {
 		final ArrayList<List<ChanceNode>> successors = new ArrayList<List<ChanceNode>>();
-		for (int x = active.location[0] - 1, deltax = -1; deltax <= +1; x++, deltax++) {
-			movement: for (int y = active.location[1] - 1, deltay = -1; deltay <= +1; y++, deltay++) {
+		for (int x = active.location[0]
+				- 1, deltax = -1; deltax <= +1; x++, deltax++) {
+			movement: for (int y = active.location[1]
+					- 1, deltay = -1; deltay <= +1; y++, deltay++) {
 				if (deltax == 0 && deltay == 0) {
 					continue;
 				}
 				final BattleState gameState = gameStatep;
-				if (x < 0 || y < 0 || x >= gameState.map.length || y >= gameState.map[0].length) {
+				if (x < 0 || y < 0 || x >= gameState.map.length
+						|| y >= gameState.map[0].length) {
 					continue;
 				}
-				if (gameState.getcombatant(x, y) != null || gameState.map[x][y].blocked && active.source.fly == 0) {
+				if (gameState.getcombatant(x, y) != null
+						|| gameState.map[x][y].blocked
+								&& active.source.fly == 0) {
 					continue;
 				}
 				Meld meld = null;
@@ -80,7 +87,8 @@ public class AiMovement extends Action implements AiAction {
 						break;
 					}
 				}
-				successors.add(registermove(deltax, deltay, active, gameState, x, y, meld));
+				successors.add(registermove(deltax, deltay, active, gameState,
+						x, y, meld));
 			}
 		}
 		if (!Defend.ALLOWAI && successors.isEmpty()) {
@@ -89,14 +97,15 @@ public class AiMovement extends Action implements AiAction {
 		return successors;
 	}
 
-	static private ArrayList<ChanceNode> registermove(final int deltax, final int deltay, Combatant active,
-			BattleState gameState, final int x, final int y, Meld meld) {
+	static private ArrayList<ChanceNode> registermove(final int deltax,
+			final int deltay, Combatant active, BattleState gameState,
+			final int x, final int y, Meld meld) {
 		Point from = new Point(active.location[0], active.location[1]);
 		gameState = gameState.clone();
 		active = gameState.clone(active);
 		final Movement moveaction = movementgridbyy[deltay + 1][deltax + 1];
 		final boolean disengaging = gameState.isengaged(active);
-		active.ap += moveaction.cost(active, gameState, x, y);
+		active.ap += moveaction.cost(active, gameState, x, y, disengaging);
 		active.location[0] = x;
 		active.location[1] = y;
 		final ArrayList<ChanceNode> list = new ArrayList<ChanceNode>(1);
@@ -115,11 +124,13 @@ public class AiMovement extends Action implements AiAction {
 		return list;
 	}
 
-	static public ArrayList<ChanceNode> wait(final BattleState gameState, final Combatant active) {
+	static public ArrayList<ChanceNode> wait(final BattleState gameState,
+			final Combatant active) {
 		final ArrayList<ChanceNode> wait = new ArrayList<ChanceNode>();
 		final BattleState state = gameState.clone();
 		state.clone(active).await();
-		wait.add(new ChanceNode(state, 1f, active.toString() + " defends...", Delay.WAIT));
+		wait.add(new ChanceNode(state, 1f, active.toString() + " defends...",
+				Delay.WAIT));
 		return wait;
 	}
 

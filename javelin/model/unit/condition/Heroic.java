@@ -27,22 +27,28 @@ public class Heroic extends Condition {
 	public void start(final Combatant c) {
 		final Monster m = c.source;
 		c.source = m.clone();
-		raiseboth(m, +2);
-		m.fort += 2;
-		m.ref += 2;
-		m.addwill(2);
+		raiseallattacks(m, +2, +0);
+		raisesaves(m, +2);
 	}
 
-	public static void raiseboth(final Monster m, int bonus) {
-		raiseattacks(m.melee, bonus);
-		raiseattacks(m.ranged, bonus);
+	public static void raisesaves(final Monster m, int amount) {
+		m.fort += amount;
+		m.ref += amount;
+		m.addwill(amount);
+	}
+
+	public static void raiseallattacks(final Monster m, int attackbonus,
+			int damagebonus) {
+		raiseattacks(m.melee, attackbonus, damagebonus);
+		raiseattacks(m.ranged, attackbonus, damagebonus);
 	}
 
 	public static void raiseattacks(ArrayList<AttackSequence> melee,
-			int bonus) {
+			int attackbonus, int damagebonus) {
 		for (final AttackSequence sequence : melee) {
 			for (final Attack a : sequence) {
-				a.bonus += bonus;
+				a.bonus += attackbonus;
+				a.damage[2] += damagebonus;
 			}
 		}
 	}
@@ -51,7 +57,7 @@ public class Heroic extends Condition {
 	public void end(final Combatant c) {
 		final Monster m = c.source;
 		c.source = m.clone();
-		raiseboth(m, -2);
+		raiseallattacks(m, -2, -0);
 		m.fort -= 2;
 		m.ref -= 2;
 		m.addwill(-2);

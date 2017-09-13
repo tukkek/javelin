@@ -75,7 +75,7 @@ public class Damage extends FieldReader {
 		boolean found = false;
 		for (final Attack a : attacks) {
 			if (parseattack(attack, a)) {
-				a.effect = effect;
+				a.seteffect(effect);
 				found = true;
 			}
 		}
@@ -159,8 +159,7 @@ public class Damage extends FieldReader {
 	}
 
 	ArrayList<Attack> getallattacks() {
-		final ArrayList<List<AttackSequence>> attacktypes =
-				new ArrayList<List<AttackSequence>>();
+		final ArrayList<List<AttackSequence>> attacktypes = new ArrayList<List<AttackSequence>>();
 		attacktypes.add(reader.monster.melee);
 		attacktypes.add(reader.monster.ranged);
 		final ArrayList<Attack> attacks = new ArrayList<Attack>();

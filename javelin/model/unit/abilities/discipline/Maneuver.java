@@ -22,6 +22,11 @@ public abstract class Maneuver
 	 */
 	public float ap;
 	int level;
+	/**
+	 * Instant maneuver are those like Boosts where there is no further user
+	 * interaction necessary.
+	 */
+	public boolean instant = true;
 
 	public Maneuver(String name, int level) {
 		this.name = name;
@@ -56,13 +61,12 @@ public abstract class Maneuver
 	 * A delegate for {@link AiAction#getoutcomes(Combatant, BattleState)}. By
 	 * the time this is called, all parameters have already been properly
 	 * cloned. The implementations need not worry about handling the
-	 * {@link Combatant#ready(Maneuver)} flow but are responsible for calling
-	 * {@link Maneuver#spend()}.
+	 * {@link Combatant#ready(Maneuver)} nor {@link Maneuver#spend()}.
 	 * 
 	 * @see ExecuteManeuver
 	 */
 	abstract public List<List<ChanceNode>> getoutcomes(Combatant c,
-			BattleState s, Maneuver m);
+			BattleState s);
 
 	@Override
 	public boolean equals(Object obj) {

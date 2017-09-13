@@ -1,11 +1,7 @@
 package javelin.model.unit.condition;
 
-import java.util.ArrayList;
-
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.Heroism;
-import javelin.model.unit.attack.Attack;
-import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.attack.Combatant;
 
 /**
@@ -29,28 +25,6 @@ public class Heroic extends Condition {
 		c.source = m.clone();
 		raiseallattacks(m, +2, +0);
 		raisesaves(m, +2);
-	}
-
-	public static void raisesaves(final Monster m, int amount) {
-		m.fort += amount;
-		m.ref += amount;
-		m.addwill(amount);
-	}
-
-	public static void raiseallattacks(final Monster m, int attackbonus,
-			int damagebonus) {
-		raiseattacks(m.melee, attackbonus, damagebonus);
-		raiseattacks(m.ranged, attackbonus, damagebonus);
-	}
-
-	public static void raiseattacks(ArrayList<AttackSequence> melee,
-			int attackbonus, int damagebonus) {
-		for (final AttackSequence sequence : melee) {
-			for (final Attack a : sequence) {
-				a.bonus += attackbonus;
-				a.damage[2] += damagebonus;
-			}
-		}
 	}
 
 	@Override

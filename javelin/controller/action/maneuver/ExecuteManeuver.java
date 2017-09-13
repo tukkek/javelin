@@ -35,17 +35,18 @@ public class ExecuteManeuver extends Action implements AiAction {
 				BattleState s2 = s.clone();
 				Combatant c2 = s2.clone(c);
 				Maneuver m2 = c2.disciplines.find(m);
-				if (m.spent) {
+				if (m2.spent) {
 					ArrayList<ChanceNode> chance = new ArrayList<ChanceNode>();
 					c2.ready(m2);
 					final String feedback = c2 + " readies "
-							+ m.name.toLowerCase() + "!";
+							+ m2.name.toLowerCase() + "!";
 					final ChanceNode node = new ChanceNode(s2, 1, feedback,
 							Delay.BLOCK);
 					chance.add(node);
 					outcomes.add(chance);
 				} else {
-					outcomes.addAll(m.getoutcomes(c2, s2, m2));
+					m2.spend();
+					outcomes.addAll(m2.getoutcomes(c2, s2));
 				}
 			}
 		}
@@ -95,7 +96,10 @@ public class ExecuteManeuver extends Action implements AiAction {
 
 	Maneuver choose(Maneuvers maneuvers, String prompt) {
 		if (maneuvers.size() == 1) {
-			return maneuvers.get(0);
+			Maneuver m = maneuvers.get(0);
+			if (!m.instant) {
+				return m;
+			}
 		}
 		int choice = SelectScreen
 				.convertkeytoindex(Javelin.promptscreen(prompt));

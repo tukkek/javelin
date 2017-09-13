@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.CountingSet;
 import javelin.controller.Point;
 import javelin.controller.SpellbookGenerator;
 import javelin.controller.action.Action;
@@ -283,8 +284,18 @@ public class Combatant implements Serializable, Cloneable {
 					hp = maxhp;
 				}
 			}
-			for (Condition c : conditions.clone()) {
-				c.expireinbattle(this);
+			/*
+			 * don't clone the list here or you'll be acting on different
+			 * Conditions than the ones on this Combatant instance!
+			 */
+			for (Condition c : new ArrayList<Condition>(conditions)) {
+				/*
+				 * this second check is needed because some conditions like
+				 * Bleeding may remove other conditions during this loop
+				 */
+				if (conditions.contains(c)) {
+					c.expireinbattle(this);
+				}
 			}
 			lastrefresh = ap;
 		}
@@ -615,8 +626,20 @@ public class Combatant implements Serializable, Cloneable {
 		}
 	}
 
+	/**
+	 * @param c
+	 *            Tries to remove this exact instance from {@link #conditions}
+	 *            first. If fails, resorts to {@link List#remove(Object)}, which
+	 *            will look for an equal object.
+	 */
 	public void removecondition(Condition c) {
 		c.end(this);
+		for (int i = 0; i < conditions.size(); i++) {
+			if (c == conditions.get(i)) {
+				conditions.remove(i);
+				return;
+			}
+		}
 		conditions.remove(c);
 	}
 
@@ -887,9 +910,25 @@ public class Combatant implements Serializable, Cloneable {
 			return "";
 		}
 		String description = "";
-		for (final String status : statuslist) {
-			description += status + ", ";
+		CountingSet cs = new CountingSet();
+		for (String c : statuslist) {
+			cs.add(c);
+		}
+		for (String c : cs.getelements()) {
+			int n = cs.getcount(c);
+			String amount = n == 1 ? "" : " (x" + n + ")";
+			description += c + amount + ", ";
 		}
 		return description.substring(0, description.length() - 2) + "";
+	}
+
+	/**
+	 * @param c
+	 *            Removes all {@link Condition} instances of this type.
+	 */
+	public void clearcondition(Class<? extends Condition> c) {
+		for (Condition co = hascondition(c); co != null; co = hascondition(c)) {
+			removecondition(co);
+		}
 	}
 }

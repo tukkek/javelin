@@ -5,6 +5,7 @@ import javelin.controller.action.ai.attack.DamageChance;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.discipline.Strike;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.necromancy.Poison;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.Combatant;
@@ -51,8 +52,9 @@ public class IronFang extends Strike {
 	}
 
 	void modifypoisondc(Attack a, int dcbonus) {
-		if (a.effect instanceof Poison) {
-			Poison p = (Poison) a.effect;
+		Spell effect = a.geteffect();
+		if (effect instanceof Poison) {
+			Poison p = (Poison) effect;
 			p.dcbonus += dcbonus;
 		}
 	}

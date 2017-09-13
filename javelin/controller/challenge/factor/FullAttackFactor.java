@@ -13,6 +13,7 @@ import javelin.controller.upgrade.damage.EffectUpgrade;
 import javelin.controller.upgrade.damage.MeleeDamage;
 import javelin.controller.upgrade.damage.RangedDamage;
 import javelin.model.unit.Monster;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
 
@@ -40,8 +41,7 @@ public class FullAttackFactor extends CrFactor {
 	@Override
 	public float calculate(final Monster monster) {
 		final List<Attack> attks = new ArrayList<Attack>();
-		final ArrayList<List<AttackSequence>> attacktypes =
-				new ArrayList<List<AttackSequence>>();
+		final ArrayList<List<AttackSequence>> attacktypes = new ArrayList<List<AttackSequence>>();
 		attacktypes.add(monster.melee);
 		attacktypes.add(monster.ranged);
 		for (final List<AttackSequence> attacktype : attacktypes) {
@@ -61,8 +61,9 @@ public class FullAttackFactor extends CrFactor {
 			sum += a.getAverageDamageNoBonus()
 					* (last != null && last.name.equals(a.name) ? .05f : .1f);
 			last = a;
-			if (a.effect != null && effects.add(a.effect.name)) {
-				sum += .1 * a.effect.level;
+			Spell effect = a.geteffect();
+			if (effect != null && effects.add(effect.name)) {
+				sum += .1 * effect.level;
 			}
 		}
 		return sum;

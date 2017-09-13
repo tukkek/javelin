@@ -6,6 +6,7 @@ import java.util.List;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.Touch;
 import javelin.model.unit.abilities.spell.necromancy.Poison;
 import javelin.model.unit.attack.Attack;
@@ -79,7 +80,7 @@ public class NeutralizePoison extends Touch {
 	boolean checkpoisoner(Combatant c, ArrayList<AttackSequence> attacks) {
 		for (AttackSequence sequence : attacks) {
 			for (Attack a : sequence) {
-				if (a.effect instanceof Poison) {
+				if (a.geteffect() instanceof Poison) {
 					return true;
 				}
 			}
@@ -101,8 +102,9 @@ public class NeutralizePoison extends Touch {
 	void neutralize(ArrayList<AttackSequence> attacks) {
 		for (AttackSequence sequence : attacks) {
 			for (Attack a : sequence) {
-				if (a.effect.equals(Poison.instance)) {
-					a.effect = null;
+				Spell effect = a.geteffect();
+				if (Poison.class.isInstance(effect)) {
+					effect = null;
 				}
 			}
 		}

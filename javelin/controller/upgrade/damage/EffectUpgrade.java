@@ -33,8 +33,9 @@ public class EffectUpgrade extends Upgrade {
 		HashSet<String> effects = new HashSet<String>();
 		for (AttackSequence as : c.source.melee) {
 			for (Attack a : as) {
-				if (a.effect != null) {
-					effects.add(a.effect.name);
+				Spell effect = a.geteffect();
+				if (effect != null) {
+					effects.add(effect.name);
 				}
 			}
 		}
@@ -50,7 +51,7 @@ public class EffectUpgrade extends Upgrade {
 	protected boolean apply(Combatant c) {
 		for (AttackSequence as : c.source.melee) {
 			for (Attack a : as) {
-				a.effect = effect;
+				a.seteffect(effect);
 			}
 		}
 		return true;

@@ -1,6 +1,5 @@
 package javelin.model.unit.abilities.discipline.serpent;
 
-import javelin.Javelin;
 import javelin.controller.action.ActionCost;
 import javelin.controller.action.ai.attack.DamageChance;
 import javelin.model.state.BattleState;
@@ -57,9 +56,7 @@ public class StingOfTheAdder extends Strike {
 	@Override
 	public void prehit(Combatant current, Combatant target, Attack a,
 			DamageChance dc, BattleState s) {
-		if (!Javelin.DEBUG) {
-			dc.damage += DAMAGE;
-		}
+		dc.damage += DAMAGE;
 		final boolean save = save(target.source.fortitude(), 14, current);
 		final int wisdomdamage = save ? WISDOMDAMAGE / 2 : WISDOMDAMAGE;
 		target.addcondition(new WisdomDamage(wisdomdamage, target));

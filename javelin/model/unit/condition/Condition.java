@@ -1,11 +1,15 @@
 package javelin.model.unit.condition;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import javelin.controller.fight.Fight;
 import javelin.model.Cloneable;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.abjuration.DispelMagic;
+import javelin.model.unit.attack.Attack;
+import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.attack.Combatant;
 
 /**
@@ -24,6 +28,28 @@ public abstract class Condition
 	 */
 	public enum Effect {
 		POSITIVE, NEUTRAL, NEGATIVE
+	}
+
+	public static void raiseattacks(ArrayList<AttackSequence> melee,
+			int attackbonus, int damagebonus) {
+		for (final AttackSequence sequence : melee) {
+			for (final Attack a : sequence) {
+				a.bonus += attackbonus;
+				a.damage[2] += damagebonus;
+			}
+		}
+	}
+
+	public static void raiseallattacks(final Monster m, int attackbonus,
+			int damagebonus) {
+		raiseattacks(m.melee, attackbonus, damagebonus);
+		raiseattacks(m.ranged, attackbonus, damagebonus);
+	}
+
+	public static void raisesaves(final Monster m, int amount) {
+		m.fort += amount;
+		m.ref += amount;
+		m.addwill(amount);
 	}
 
 	/**
@@ -85,7 +111,7 @@ public abstract class Condition
 	 * @see #expireat
 	 */
 	public boolean expireinbattle(final Combatant c) {
-		if (c.ap > expireat) {
+		if (c.ap >= expireat) {
 			c.removecondition(this);
 			return true;
 		}
@@ -184,6 +210,9 @@ public abstract class Condition
 		// nothing
 	}
 
+	/**
+	 * @return If <code>false</code>, will discard this condition.
+	 */
 	public boolean validate(Combatant c) {
 		return true;
 	}

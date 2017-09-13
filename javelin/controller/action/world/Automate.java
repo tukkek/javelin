@@ -30,7 +30,6 @@ public class Automate extends WorldAction implements SimpleAction {
 	class AutomateWindow extends javelin.view.frame.Frame {
 		ArrayList<Checkbox> boxes = new ArrayList<Checkbox>();
 		Checkbox strategic = null;
-		// Checkbox[] strategicboxes = null;
 
 		public AutomateWindow() {
 			super("Automate units");
@@ -50,17 +49,6 @@ public class Automate extends WorldAction implements SimpleAction {
 				strategic = new Checkbox("Strategic combat",
 						Squad.active.strategic);
 				container.add(strategic);
-				// strategicboxes = new Checkbox[] {
-				// new Checkbox("Never skip combat", strategic,
-				// Boolean.FALSE.equals(Squad.active.strategic)),
-				// new Checkbox("Prompt to skip easy battles", strategic,
-				// Squad.active.strategic == null),
-				// new Checkbox("Always skip, prompt for hard battles",
-				// strategic,
-				// Boolean.TRUE.equals(Squad.active.strategic)), };
-				// for (Checkbox c : strategicboxes) {
-				// container.add(c);
-				// }
 			} else {
 				strategic = null;
 				container.add(new Label("Changes are reset after battle."));

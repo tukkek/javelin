@@ -15,6 +15,7 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.CurrentAttack;
 import javelin.model.unit.abilities.discipline.Maneuver;
 import javelin.model.unit.abilities.discipline.Strike;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.attack.Combatant;
@@ -152,8 +153,9 @@ public abstract class AbstractAttack extends Action implements AiAction {
 		final float hitchance = 1 - misschance;
 		final float confirmchance = target.source.immunitytocritical ? 0
 				: threatchance * hitchance;
-		final float savechance = a.effect == null ? 0
-				: CastSpell.savechance(active, target, a.effect);
+		final Spell effect = a.geteffect();
+		final float savechance = effect == null ? 0
+				: CastSpell.savechance(active, target, effect);
 		final float nosavechance = 1 - savechance;
 		chances.add(new DamageChance(misschance, 0, false, null));
 		hit(a, (hitchance - confirmchance) * savechance, 1, target, true,
@@ -207,7 +209,7 @@ public abstract class AbstractAttack extends Action implements AiAction {
 			}
 			final float chance = hitchance * roll.getValue();
 			chances.add(new DamageChance(chance, damage, multiplier != 1,
-					a.effect == null ? null : save));
+					a.geteffect() == null ? null : save));
 		}
 	}
 
@@ -272,7 +274,8 @@ public abstract class AbstractAttack extends Action implements AiAction {
 		} else if (dc.save != null) {
 			target.source = target.source.clone();
 			active.source = active.source.clone();
-			final String effect = a.effect.cast(active, target, s, dc.save);
+			final String effect = a.geteffect().cast(active, target, s,
+					dc.save);
 			sb.append("\n").append(effect);
 		}
 	}

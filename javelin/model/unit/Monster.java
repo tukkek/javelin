@@ -803,4 +803,20 @@ public class Monster implements Cloneable, Serializable {
 		}
 		return acrobatics + getbonus(dexterity);
 	}
+
+	/**
+	 * @return All attacks in every {@link AttackSequence} in {@link #melee} and
+	 *         {@link #ranged}.
+	 */
+	public ArrayList<Attack> getattacks() {
+		ArrayList<Attack> attacks = new ArrayList<Attack>(
+				melee.size() + ranged.size());
+		for (AttackSequence sequence : melee) {
+			attacks.addAll(sequence);
+		}
+		for (AttackSequence sequence : ranged) {
+			attacks.addAll(sequence);
+		}
+		return attacks;
+	}
 }

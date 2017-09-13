@@ -411,7 +411,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	 * Doesn't need to check for {@link #exhausted()}, this is done elsewhere.
 	 * 
 	 * @return true if the given {@link Combatant} can be healed by this spell.
-	 * @see #heal(ArrayList)
+	 * @see #firstaid(ArrayList)
 	 */
 	public boolean canheal(Combatant c) {
 		return false;

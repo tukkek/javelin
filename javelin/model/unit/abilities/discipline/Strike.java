@@ -63,6 +63,7 @@ public abstract class Strike extends Maneuver {
 	public Strike(String name, int level) {
 		super(name, level);
 		ap = ActionCost.SWIFT + ActionCost.STANDARD;
+		instant = false;
 	}
 
 	@Override
@@ -112,11 +113,9 @@ public abstract class Strike extends Maneuver {
 	}
 
 	@Override
-	public List<List<ChanceNode>> getoutcomes(Combatant c, BattleState s,
-			Maneuver m) {
+	public List<List<ChanceNode>> getoutcomes(Combatant c, BattleState s) {
 		try {
-			AbstractAttack.setmaneuver((Strike) m);
-			m.spend();
+			AbstractAttack.setmaneuver(this);
 			ArrayList<List<ChanceNode>> outcomes = new ArrayList<List<ChanceNode>>();
 			getoutcomes(c, s, c.source.melee, MeleeAttack.SINGLETON, outcomes);
 			getoutcomes(c, s, c.source.ranged, RangedAttack.SINGLETON,

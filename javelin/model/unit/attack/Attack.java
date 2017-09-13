@@ -42,7 +42,14 @@ public class Attack implements Serializable, Cloneable {
 	 * 
 	 * @see Damage
 	 */
-	public Spell effect = null;
+	private Spell effect = null;
+	/**
+	 * Allols for overriding {@link #effect} without having to deal with complex
+	 * clean-up actions. Just set back to <code>null</code> once the new effect
+	 * is over.
+	 */
+	public Spell temporaryeffect = null;
+
 	/**
 	 * If <code>true</code> ignores armor class.
 	 */
@@ -88,6 +95,7 @@ public class Attack implements Serializable, Cloneable {
 		if (energy) {
 			output += " energy";
 		}
+		Spell effect = geteffect();
 		if (effect != null) {
 			output += ", " + effect.name.toLowerCase();
 		}
@@ -128,5 +136,16 @@ public class Attack implements Serializable, Cloneable {
 	@Override
 	public int hashCode() {
 		return name.hashCode();
+	}
+
+	public Spell geteffect() {
+		if (temporaryeffect != null) {
+			return temporaryeffect;
+		}
+		return effect;
+	}
+
+	public void seteffect(Spell effect) {
+		this.effect = effect;
 	}
 }

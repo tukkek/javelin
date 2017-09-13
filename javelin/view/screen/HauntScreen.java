@@ -7,7 +7,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.haunt.Haunt;
-import javelin.model.world.location.town.labor.base.Dwelling;
+import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.model.world.location.unique.Haxor;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.shopping.ShoppingScreen;

@@ -5,7 +5,7 @@ import java.util.List;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.fortification.Guild;
-import javelin.model.world.location.town.labor.base.Dwelling;
+import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.view.screen.Option;
 import javelin.view.screen.upgrading.AcademyScreen;
 

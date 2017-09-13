@@ -92,8 +92,8 @@ public abstract class Guild extends Academy {
 	}
 
 	@Override
-	public final int getcost() {
-		return super.getcost() + gethires().length;
+	public final int getlabor() {
+		return super.getlabor() + gethires().length;
 	}
 
 	@Override

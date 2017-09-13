@@ -1,13 +1,14 @@
 package javelin.model.world.location.town.labor.military;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.comparator.UpgradeByNameComparator;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
@@ -38,13 +39,6 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public abstract class Academy extends Fortification {
-	private static final Comparator<Upgrade> ALPHABETICALSORT = new Comparator<Upgrade>() {
-		@Override
-		public int compare(Upgrade o1, Upgrade o2) {
-			return o1.name.compareTo(o2.name);
-		}
-	};
-
 	/**
 	 * Builds one academy of this type. Since cannot have only 1 instance,
 	 * {@link #getacademy()} needs to be defined by subclasses.
@@ -63,7 +57,7 @@ public abstract class Academy extends Fortification {
 		protected void define() {
 			goal = getacademy();
 			super.define();
-			cost = goal.getcost();
+			cost = goal.getlabor();
 			name = "Build " + goal.descriptionknown.toLowerCase();
 		}
 
@@ -131,7 +125,7 @@ public abstract class Academy extends Fortification {
 	 * @param raiseability
 	 */
 	public Academy(String descriptionknown, String descriptionunknown,
-			int minlevel, int maxlevel, HashSet<Upgrade> upgradesp,
+			int minlevel, int maxlevel, Set<Upgrade> upgradesp,
 			RaiseAbility raiseability, ClassLevelUpgrade classadvancement) {
 		super(descriptionknown, descriptionunknown, minlevel, maxlevel);
 		upgrades = new HashSet<Upgrade>(upgradesp);
@@ -179,7 +173,7 @@ public abstract class Academy extends Fortification {
 		return trained;
 	}
 
-	public int getcost() {
+	public int getlabor() {
 		return upgrades.size();
 	}
 
@@ -188,7 +182,7 @@ public abstract class Academy extends Fortification {
 	 *            {@link #upgrades}, to be sorted.
 	 */
 	public void sort(ArrayList<Upgrade> upgrades) {
-		upgrades.sort(ALPHABETICALSORT);
+		upgrades.sort(UpgradeByNameComparator.ALPHABETICALSORT);
 	}
 
 	@Override

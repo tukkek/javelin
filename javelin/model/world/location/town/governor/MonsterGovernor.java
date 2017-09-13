@@ -11,9 +11,9 @@ import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.Trait;
-import javelin.model.world.location.town.labor.base.Dwelling.BuildDwelling;
-import javelin.model.world.location.town.labor.base.Dwelling.Draft;
-import javelin.model.world.location.town.labor.base.Growth;
+import javelin.model.world.location.town.labor.basic.Growth;
+import javelin.model.world.location.town.labor.basic.Dwelling.BuildDwelling;
+import javelin.model.world.location.town.labor.basic.Dwelling.Draft;
 import tyrant.mikera.engine.RPG;
 
 /**

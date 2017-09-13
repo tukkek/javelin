@@ -21,7 +21,7 @@ public abstract class Maneuver
 	 * {@link Combatant#ap} cost for this action.
 	 */
 	public float ap;
-	int level;
+	public int level;
 	/**
 	 * Instant maneuver are those like Boosts where there is no further user
 	 * interaction necessary.
@@ -101,7 +101,9 @@ public abstract class Maneuver
 
 	@Override
 	public int compareTo(Maneuver o) {
-		return level == o.level ? name.compareTo(o.name)
-				: Integer.compare(o.level, level);
+		if (level != o.level) {
+			return Integer.compare(o.level, level);
+		}
+		return name.compareTo(o.name);
 	}
 }

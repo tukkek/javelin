@@ -2,6 +2,7 @@ package javelin.model.unit.feat;
 
 import java.io.Serializable;
 
+import javelin.controller.challenge.factor.FeatsFactor;
 import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Monster;
@@ -32,6 +33,13 @@ public abstract class Feat implements Serializable {
 	 * acquiring this feat.
 	 */
 	public Feat prerequisite = null;
+
+	/**
+	 * How much Challenge Rating this feat cost.
+	 * 
+	 * @see FeatsFactor#CR
+	 */
+	public float cr = FeatsFactor.CR;
 
 	/** Constructor. */
 	public Feat(String namep) {

@@ -5,14 +5,15 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import javelin.Javelin;
+import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
 import javelin.model.world.World;
 import javelin.model.world.location.Outpost.BuildOutpost;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.labor.base.Cancel;
-import javelin.model.world.location.town.labor.base.Dwelling.BuildDwelling;
-import javelin.model.world.location.town.labor.base.Growth;
-import javelin.model.world.location.town.labor.base.Lodge.BuildLodge;
-import javelin.model.world.location.town.labor.base.Redraw;
+import javelin.model.world.location.town.labor.basic.Cancel;
+import javelin.model.world.location.town.labor.basic.Dwelling.BuildDwelling;
+import javelin.model.world.location.town.labor.basic.Growth;
+import javelin.model.world.location.town.labor.basic.Lodge.BuildLodge;
+import javelin.model.world.location.town.labor.basic.Redraw;
 import javelin.model.world.location.town.labor.criminal.Sewers.BuildSewers;
 import javelin.model.world.location.town.labor.criminal.Slums.BuildSlums;
 import javelin.model.world.location.town.labor.criminal.ThievesGuild.BuildThievesGuild;
@@ -47,26 +48,25 @@ import javelin.model.world.location.unique.SummoningCircle.BuildSummoningCircle;
  * @author alex
  */
 public class Deck extends ArrayList<Labor> {
-	private static final Labor[] BASE = new Labor[] { new BuildDwelling(),
+	static final Labor[] BASE = new Labor[] { new BuildDwelling(),
 			new BuildLodge(), new Cancel(), new Growth(), new Redraw(),
 			new BuildShop(), new BuildRealmAcademy() };
-	private static final Labor[] CRIMINAL = new Labor[] {
-			new BuildAssassinsGuild(), new BuildSewers(), new BuildSlums(),
-			new BuildThievesGuild() };
-	private static final Labor[] CULTURAL = new Labor[] { new BuildMagesGuild(),
+	static final Labor[] CRIMINAL = new Labor[] { new BuildAssassinsGuild(),
+			new BuildSewers(), new BuildSlums(), new BuildThievesGuild() };
+	static final Labor[] CULTURAL = new Labor[] { new BuildMagesGuild(),
 			new BuildArtificer(), new BuildSummoningCircle(),
 			new BuildBardsGuild() };
-	private static final Labor[] ECOLOGICAL = new Labor[] { new BuildHenge(),
-			new BuildArcheryRange(), new BuildMeadHall() };
-	private static final Labor[] EXPANSIVE = new Labor[] { new Settler(),
+	static final Labor[] ECOLOGICAL = new Labor[] { new BuildHenge(),
+			new BuildArcheryRange(), new BuildMeadHall(),
+			SteelSerpent.INSTANCE.buildacademy() };
+	static final Labor[] EXPANSIVE = new Labor[] { new Settler(),
 			new BuildOutpost(), new BuildRoad(), new BuildHighway(),
 			new BuildTransportHub() };
-	private static final Labor[] MILITARY = new Labor[] {
-			new BuildMartialAcademy(), new BuildMercenariesGuild(),
-			new BuildMonastery() };
-	private static final Labor[] PRODUCTIVE = new Labor[] { new BuildMine(),
+	static final Labor[] MILITARY = new Labor[] { new BuildMartialAcademy(),
+			new BuildMercenariesGuild(), new BuildMonastery() };
+	static final Labor[] PRODUCTIVE = new Labor[] { new BuildMine(),
 			new Deforestate() };
-	private static final Labor[] RELIGIOUS = new Labor[] { new BuildShrine(),
+	static final Labor[] RELIGIOUS = new Labor[] { new BuildShrine(),
 			new BuildSanctuary() };
 
 	static final HashMap<String, Deck> DECKS = new HashMap<String, Deck>();

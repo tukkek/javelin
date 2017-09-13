@@ -40,6 +40,8 @@ import javelin.model.unit.feat.skill.Deceitful;
  * @see CrFactor
  */
 public class FeatsFactor extends CrFactor {
+	public static final float CR = .2f;
+
 	static final Feat[] EVIL = new Feat[] { Deceitful.SINGLETON };
 
 	static final Feat[] GOOD = new Feat[] { Alertness.SINGLETON };
@@ -71,11 +73,14 @@ public class FeatsFactor extends CrFactor {
 			MultiweaponFighting.SINGLETON, WeaponFinesse.SINGLETON };
 
 	@Override
-	public float calculate(final Monster monster) {
-		final long normalprogression = 1
-				+ Math.round(Math.floor(monster.originalhd / 3.0));
-		final long extra = monster.countfeats() - normalprogression;
-		return extra * .2f;
+	public float calculate(final Monster m) {
+		float cr = 0;
+		for (Feat f : m.feats) {
+			cr += f.cr;
+		}
+		final float normalprogression = 1
+				+ Math.round(Math.floor(m.originalhd / 3f));
+		return cr - normalprogression * CR;
 	}
 
 	@Override

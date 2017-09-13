@@ -11,7 +11,7 @@ import javelin.controller.map.haunt.HauntMap;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.fortification.Fortification;
-import javelin.model.world.location.town.labor.base.Dwelling;
+import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.view.screen.HauntScreen;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;

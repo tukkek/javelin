@@ -893,7 +893,7 @@ public class Combatant implements Serializable, Cloneable {
 		if (!m.validate(this)) {
 			return false;
 		}
-		disciplines.add(d, m);
+		disciplines.add(d, m.clone());
 		return true;
 	}
 

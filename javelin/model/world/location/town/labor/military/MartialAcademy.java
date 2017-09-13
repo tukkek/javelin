@@ -19,15 +19,15 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class MartialAcademy extends Academy {
-	public static final ArrayList<MartialAcademyData> GUILDS = new ArrayList<MartialAcademy.MartialAcademyData>();
+	public static final ArrayList<MartialAcademyData> ACADEMIES = new ArrayList<MartialAcademy.MartialAcademyData>();
 
 	static {
 		UpgradeHandler uh = UpgradeHandler.singleton;
 		MartialAcademyData expertise = new MartialAcademyData(uh.expertise,
 				"Academy (combat expertise)", RaiseIntelligence.SINGLETON);
 		expertise.upgrades.add(RaiseDexterity.SINGLETON);
-		GUILDS.add(expertise);
-		GUILDS.add(new MartialAcademyData(uh.power, "Academy (power attack)",
+		ACADEMIES.add(expertise);
+		ACADEMIES.add(new MartialAcademyData(uh.power, "Academy (power attack)",
 				RaiseStrength.SINGLETON));
 	}
 
@@ -38,7 +38,11 @@ public class MartialAcademy extends Academy {
 
 		@Override
 		protected Academy getacademy() {
-			return RPG.pick(GUILDS).generate();
+			return RPG.pick(getacademies()).generate();
+		}
+
+		protected ArrayList<MartialAcademyData> getacademies() {
+			return ACADEMIES;
 		}
 	}
 

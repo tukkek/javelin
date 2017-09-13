@@ -19,7 +19,7 @@ import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.labor.base.Dwelling;
+import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.haxor.HaxorScreen;

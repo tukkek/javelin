@@ -7,7 +7,6 @@ package javelin.model.unit;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,6 +18,7 @@ import javelin.controller.action.Breath;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeRatingCalculator;
 import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.comparator.FeatByNameComparator;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
@@ -323,12 +323,7 @@ public class Monster implements Cloneable, Serializable {
 
 	public void addfeat(final Feat feat) {
 		feats.add(feat);
-		feats.sort(new Comparator<Feat>() {
-			@Override
-			public int compare(Feat o1, Feat o2) {
-				return o1.name.compareTo(o2.name);
-			}
-		});
+		feats.sort(new FeatByNameComparator());
 	}
 
 	public int countfeat(final Feat f) {
@@ -348,10 +343,6 @@ public class Monster implements Cloneable, Serializable {
 			}
 		}
 		return false;
-	}
-
-	public long countfeats() {
-		return feats.size();
 	}
 
 	/**

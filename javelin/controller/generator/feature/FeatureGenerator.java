@@ -14,6 +14,7 @@ import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.Realm;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.world.Actor;
 import javelin.model.world.Caravan;
 import javelin.model.world.World;
@@ -34,8 +35,8 @@ import javelin.model.world.location.haunt.SunkenShip;
 import javelin.model.world.location.haunt.WitchesHideout;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.governor.MonsterGovernor;
-import javelin.model.world.location.town.labor.base.Dwelling;
-import javelin.model.world.location.town.labor.base.Lodge;
+import javelin.model.world.location.town.labor.basic.Dwelling;
+import javelin.model.world.location.town.labor.basic.Lodge;
 import javelin.model.world.location.town.labor.criminal.ThievesGuild;
 import javelin.model.world.location.town.labor.cultural.BardsGuild;
 import javelin.model.world.location.town.labor.cultural.MagesGuild;
@@ -43,7 +44,9 @@ import javelin.model.world.location.town.labor.cultural.MagesGuild.MageGuildData
 import javelin.model.world.location.town.labor.ecological.ArcheryRange;
 import javelin.model.world.location.town.labor.ecological.Henge;
 import javelin.model.world.location.town.labor.ecological.MeadHall;
+import javelin.model.world.location.town.labor.military.Academy;
 import javelin.model.world.location.town.labor.military.MartialAcademy;
+import javelin.model.world.location.town.labor.military.MartialAcademy.MartialAcademyData;
 import javelin.model.world.location.town.labor.military.Monastery;
 import javelin.model.world.location.town.labor.military.RealmAcademy;
 import javelin.model.world.location.town.labor.productive.Mine;
@@ -288,7 +291,7 @@ public class FeatureGenerator {
 		generateuniquelocations(locations);
 		UpgradeHandler.singleton.gather();
 		generatemageguilds(locations);
-		generatemartialacademies(locations);
+		generateacademies(locations);
 		Collections.shuffle(locations);
 		int place = Math.min(locations.size(),
 				World.scenario.startingfeatures / 3 - countplaces());
@@ -330,15 +333,19 @@ public class FeatureGenerator {
 		spawnnear(t, new TrainingHall(), seed, 2, 3, false);
 	}
 
-	static void generatemartialacademies(ArrayList<Location> locations) {
-		for (javelin.model.world.location.town.labor.military.MartialAcademy.MartialAcademyData g : MartialAcademy.GUILDS) {
+	static void generateacademies(ArrayList<Location> locations) {
+		for (MartialAcademyData g : MartialAcademy.ACADEMIES) {
 			locations.add(g.generate());
 		}
-		locations.addAll(Arrays.asList(new Location[] { new ArcheryRange(),
+		locations.addAll(Arrays.asList(new Academy[] { new ArcheryRange(),
 				new MeadHall(), new AssassinsGuild(), new Henge(),
 				new BardsGuild(), new ThievesGuild(), new Monastery(),
 				new Sanctuary() }));
-
+		for (Discipline d : Discipline.DISCIPLINES) {
+			if (d.hasacademy) {
+				locations.add(d.generateacademy());
+			}
+		}
 	}
 
 	static int countplaces() {

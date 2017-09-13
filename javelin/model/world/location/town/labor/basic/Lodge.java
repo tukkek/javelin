@@ -1,4 +1,4 @@
-package javelin.model.world.location.town.labor.base;
+package javelin.model.world.location.town.labor.basic;
 
 import java.awt.Image;
 import java.util.ArrayList;

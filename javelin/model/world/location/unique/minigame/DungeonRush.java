@@ -12,7 +12,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.World;
-import javelin.model.world.location.town.labor.base.Dwelling;
+import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.model.world.location.unique.UniqueLocation;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;

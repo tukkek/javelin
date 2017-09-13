@@ -9,7 +9,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Labor;
-import javelin.model.world.location.town.labor.base.Growth;
+import javelin.model.world.location.town.labor.basic.Growth;
 import tyrant.mikera.engine.RPG;
 
 /**

@@ -1,4 +1,4 @@
-package javelin.model.world.location.town.labor.base;
+package javelin.model.world.location.town.labor.basic;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

@@ -21,7 +21,7 @@ public class Ankh extends Relic {
 	@Override
 	protected boolean activate(Combatant user) {
 		for (Combatant c : Squad.active.members) {
-			c.hp = c.maxhp;
+			c.heal(c.maxhp, true);
 			c.addcondition(new Heroic(c, 20, 24));
 		}
 		return true;

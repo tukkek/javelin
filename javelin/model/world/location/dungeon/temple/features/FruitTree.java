@@ -24,7 +24,7 @@ public class FruitTree extends Feature {
 		}
 		Combatant target = Squad.active.members.get(Javelin.choose(
 				"Who will eat the fruit?", Squad.active.members, true, true));
-		target.hp = target.maxhp;
+		target.heal(target.maxhp, true);
 		return true;
 	}
 

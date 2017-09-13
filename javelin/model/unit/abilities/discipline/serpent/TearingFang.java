@@ -85,10 +85,7 @@ public class TearingFang extends Boost {
 		}
 
 		boolean tick(Combatant c) {
-			c.hp -= BLEEDDAMAGE;
-			if (c.hp < 1) {
-				c.hp = 1;
-			}
+			c.damage(BLEEDDAMAGE);
 			ticks -= 1;
 			if (ticks == 0) {
 				c.removecondition(this);

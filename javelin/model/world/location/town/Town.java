@@ -262,9 +262,9 @@ public class Town extends Location {
 		}
 		Squad.active.lasttown = this;
 		new TownScreen(this);
-		for (final Combatant m : Squad.active.members) {
-			if (m.source.fasthealing > 0) {
-				m.hp = m.maxhp;
+		for (final Combatant c : Squad.active.members) {
+			if (c.source.fasthealing > 0) {
+				c.heal(c.maxhp, false);
 			}
 		}
 		return true;

@@ -17,10 +17,7 @@ public class Melding extends Condition {
 
 	@Override
 	public void start(Combatant c) {
-		c.hp += Math.ceil(c.maxhp / 5f);
-		if (c.hp > c.maxhp) {
-			c.hp = c.maxhp;
-		}
+		c.heal(Math.round(Math.round(Math.ceil(c.maxhp / 5f))), true);
 		c.source = c.source.clone();
 		c.source.ac += 2;
 		for (AttackSequence s : c.source.melee) {

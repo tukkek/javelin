@@ -26,7 +26,7 @@ public class Amulet extends Relic {
 			for (Condition co : c.getconditions()) {
 				c.removecondition(co);
 			}
-			c.hp = c.maxhp;
+			c.heal(c.maxhp, true);
 			for (Spell s : c.spells) {
 				s.used = 0;
 			}

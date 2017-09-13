@@ -33,14 +33,11 @@ public class CureModerateWounds extends Touch {
 	}
 
 	@Override
-	public String cast(final Combatant caster, final Combatant targetCombatant,
+	public String cast(final Combatant caster, final Combatant target,
 			final BattleState s, final boolean saved) {
 		final int heal = rolldata[0] * rolldata[1] / 2 + rolldata[2];
-		targetCombatant.hp += heal;
-		if (targetCombatant.hp >= targetCombatant.maxhp) {
-			targetCombatant.hp = targetCombatant.maxhp;
-		}
-		return targetCombatant + " is now " + targetCombatant.getstatus() + ".";
+		target.heal(heal, true);
+		return target + " is now " + target.getstatus() + ".";
 	}
 
 	@Override

@@ -203,10 +203,7 @@ public class Lodge extends Fortification {
 				if (heal < 1) {
 					heal = 1;
 				}
-				c.hp += heal;
-				if (c.hp > c.maxhp) {
-					c.hp = c.maxhp;
-				}
+				c.heal(heal, false);
 				for (Spell p : c.spells) {
 					p.used = 0;
 				}

@@ -38,10 +38,7 @@ public class Heat extends PartyHazard {
 
 	@Override
 	protected String affect(Combatant c, int hoursellapsed) {
-		c.hp -= RPG.r(1, 4) * hoursellapsed;
-		if (c.hp < 1) {
-			c.hp = 1;
-		}
+		c.damage(RPG.r(1, 4) * hoursellapsed);
 		c.addcondition(new Fatigued(c, null, 8));
 		return c + " is suffering from heatstroke";
 	}

@@ -43,6 +43,7 @@ import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.unit.abilities.discipline.Disciplines;
 import javelin.model.unit.abilities.discipline.Maneuver;
+import javelin.model.unit.abilities.discipline.serpent.TearingFang.Bleeding;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.Spells;
 import javelin.model.unit.condition.Condition;
@@ -242,10 +243,6 @@ public class Combatant implements Serializable, Cloneable {
 		return melee ? source.melee : source.ranged;
 	}
 
-	public int gethp() {
-		return hp;
-	}
-
 	public boolean isally(final Combatant c, final TeamContainer tc) {
 		return getteam(tc) == c.getteam(tc);
 	}
@@ -279,10 +276,7 @@ public class Combatant implements Serializable, Cloneable {
 			ap -= .01;
 			final float turns = ap - lastrefresh;
 			if (source.fasthealing > 0) {
-				hp += source.fasthealing * turns;
-				if (hp > maxhp) {
-					hp = maxhp;
-				}
+				heal(Math.round(source.fasthealing * turns), false);
 			}
 			/*
 			 * don't clone the list here or you'll be acting on different
@@ -614,9 +608,8 @@ public class Combatant implements Serializable, Cloneable {
 		for (Condition co : new ArrayList<Condition>(conditions)) {
 			co.terminate(timecost, this);
 			if (hp <= DEADATHP) {
-				Javelin.message(
-						this + " dies from being " + co.description + "!",
-						true);
+				String s = this + " dies from being " + co.description + "!";
+				Javelin.message(s, true);
 				Squad.active.remove(this);
 				return;
 			}
@@ -929,6 +922,27 @@ public class Combatant implements Serializable, Cloneable {
 	public void clearcondition(Class<? extends Condition> c) {
 		for (Condition co = hascondition(c); co != null; co = hascondition(c)) {
 			removecondition(co);
+		}
+	}
+
+	public void heal(int amount, boolean magical) {
+		hp += amount;
+		if (hp > maxhp) {
+			hp = maxhp;
+		}
+		if (magical) {
+			clearcondition(Bleeding.class);
+		}
+	}
+
+	/**
+	 * Simpler version of {@link #damage(int, BattleState, int)}. Just takes the
+	 * given amount from {@link #hp} while making sure it stays positive.
+	 */
+	public void damage(int damage) {
+		hp -= damage;
+		if (hp < 1) {
+			hp = 1;
 		}
 	}
 }

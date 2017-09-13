@@ -28,10 +28,7 @@ public class StingOfTheAdder extends Strike {
 
 		@Override
 		public void end(Combatant c) {
-			c.hp -= SECONDARYDAMAGE;
-			if (c.hp < 1) {
-				c.hp = 1;
-			}
+			c.damage(SECONDARYDAMAGE);
 			c.addcondition(new WisdomDamage(SECONDARYWISDOMDAMAGE, c));
 		}
 	}

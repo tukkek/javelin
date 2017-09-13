@@ -32,10 +32,7 @@ public class StingOfTheAsp extends Strike {
 
 		@Override
 		public void end(Combatant c) {
-			c.hp -= EXTRADAMAGE;
-			if (c.hp < 1) {
-				c.hp = 1;
-			}
+			c.damage(EXTRADAMAGE);
 			c.source = c.source.clone();
 			c.addcondition(new StrengthDamage(2, c));
 		}

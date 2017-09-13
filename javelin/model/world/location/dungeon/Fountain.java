@@ -19,7 +19,7 @@ public class Fountain extends Feature {
 	@Override
 	public boolean activate() {
 		for (Combatant c : Squad.active.members) {
-			c.hp = c.maxhp;
+			c.heal(c.maxhp, true);
 			for (Spell s : c.spells) {
 				s.used = 0;
 			}

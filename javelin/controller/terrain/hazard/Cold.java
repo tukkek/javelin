@@ -22,10 +22,7 @@ public class Cold extends PartyHazard {
 	@Override
 	protected String affect(Combatant c, int hoursellapsed) {
 		for (int i = 0; i < hoursellapsed; i++) {
-			c.hp -= RPG.r(1, 6);
-		}
-		if (c.hp < 1) {
-			c.hp = 1;
+			c.damage(RPG.r(1, 6));
 		}
 		c.addcondition(new Fatigued(c, null, 8));
 		return c + " is suffering from frostbite";

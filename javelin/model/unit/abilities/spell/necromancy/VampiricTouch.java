@@ -29,10 +29,7 @@ public class VampiricTouch extends Touch {
 
 		@Override
 		public void end(Combatant c) {
-			c.hp -= steal;
-			if (c.hp < 1) {
-				c.hp = 1;
-			}
+			c.damage(steal);
 		}
 
 		@Override
@@ -65,10 +62,7 @@ public class VampiricTouch extends Touch {
 		}
 		target.damage(steal, s, target.source.energyresistance);
 		final int originalhp = caster.hp;
-		caster.hp += steal;
-		if (caster.hp > caster.maxhp) {
-			caster.hp = caster.maxhp;
-		}
+		caster.heal(steal, true);
 		caster.addcondition(new Vampiric(Float.MAX_VALUE, caster,
 				caster.hp - originalhp, casterlevel));
 		return describe(target) + "\n" + describe(caster);

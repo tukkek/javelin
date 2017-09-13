@@ -44,10 +44,7 @@ public class Rockslide extends Hazard {
 		if (c.source.save(c.source.ref, 16)) {
 			damage = damage / 2;
 		}
-		c.hp -= damage;
-		if (c.hp < 1) {
-			c.hp = 1;
-		}
+		c.damage(damage);
 	}
 
 	@Override

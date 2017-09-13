@@ -14,10 +14,7 @@ import tyrant.mikera.engine.RPG;
 public class Dehydration extends PartyHazard {
 	@Override
 	protected String affect(Combatant c, int hoursellapsed) {
-		c.hp -= RPG.r(1, 6);
-		if (c.hp < 1) {
-			c.hp = 1;
-		}
+		c.damage(RPG.r(1, 6));
 		c.addcondition(new Fatigued(c, null, 8));
 		return c + " is dehydratading";
 	}

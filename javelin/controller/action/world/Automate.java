@@ -12,8 +12,6 @@ import java.util.ArrayList;
 
 import javelin.controller.action.SimpleAction;
 import javelin.controller.fight.Fight;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.view.screen.BattleScreen;
@@ -108,10 +106,6 @@ public class Automate extends WorldAction implements SimpleAction {
 
 	@Override
 	public void perform() {
-		if (BattleScreen.partialmove != 0) {
-			Game.message("Finish your turn first...", Delay.WAIT);
-			return;
-		}
 		AutomateWindow w = new AutomateWindow();
 		w.show();
 		while (w.frame.isDisplayable() && w.frame.isVisible()) {

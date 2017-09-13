@@ -200,6 +200,10 @@ public class BattleScreen extends Screen {
 	}
 
 	void humanmove() {
+		if (current.automatic) {
+			/** can occur if you set an unit as automatic during its turn */
+			return;
+		}
 		if (MapPanel.overlay != null) {
 			MapPanel.overlay.clear();
 		}

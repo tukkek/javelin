@@ -80,9 +80,10 @@ public abstract class Maneuver
 
 	static public int getinitiationmodifier(Combatant c) {
 		final Monster m = c.source;
-		final int modifier = Math.max(m.intelligence,
-				Math.max(m.wisdom, m.charisma));
-		return m.hd.count() / 2 + Monster.getbonus(modifier);
+		int modifier = m.hd.count() / 2;
+		modifier += Monster.getbonus(
+				Math.max(m.intelligence, Math.max(m.wisdom, m.charisma)));
+		return Math.min(modifier, m.hd.count());
 	}
 
 	protected static boolean save(int save, int savedc, Combatant active) {

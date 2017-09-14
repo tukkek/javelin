@@ -77,4 +77,8 @@ public class Disciplines extends TreeMap<String, Maneuvers> {
 			m.sort();
 		}
 	}
+
+	public Maneuvers get(Discipline d) {
+		return super.get(d.toString());
+	}
 }

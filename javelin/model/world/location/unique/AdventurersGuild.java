@@ -172,9 +172,7 @@ public class AdventurersGuild extends UniqueLocation {
 			while (screen.getInput() != '\n') {
 				// wait
 			}
-			if (purchaseskills != null) {
-				student.source.purchaseskills(purchaseskills).show();
-			}
+			student.postupgrade(purchaseskills != null, purchaseskills);
 		}
 	}
 

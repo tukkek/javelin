@@ -157,7 +157,7 @@ public class Monster implements Cloneable, Serializable {
 	public ArrayList<AttackSequence> melee = new ArrayList<AttackSequence>();
 	public ArrayList<AttackSequence> ranged = new ArrayList<AttackSequence>();
 
-	public List<Feat> feats = new ArrayList<Feat>();
+	public CloneableList<Feat> feats = new CloneableList<Feat>();
 	public HD hd = new HD();
 	/**
 	 * @see Breath
@@ -298,7 +298,7 @@ public class Monster implements Cloneable, Serializable {
 			final Monster m = (Monster) super.clone();
 			m.melee = copyattacks(melee);
 			m.ranged = copyattacks(ranged);
-			m.feats = new ArrayList<Feat>(m.feats);
+			m.feats = m.feats.clone();
 			m.hd = hd.clone();
 			m.breaths = breaths.clone();
 			if (m.touch != null) {

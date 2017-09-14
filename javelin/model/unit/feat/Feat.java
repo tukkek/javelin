@@ -17,7 +17,7 @@ import javelin.model.unit.attack.Combatant;
  *
  * @author alex
  */
-public abstract class Feat implements Serializable {
+public abstract class Feat implements Serializable, javelin.model.Cloneable {
 	/** Feat name as per d20 rules. */
 	public final String name;
 
@@ -95,9 +95,9 @@ public abstract class Feat implements Serializable {
 		int count = c.source.countfeat(this);
 		String name = toString().toLowerCase();
 		if (count == 0) {
-			return c + " doesn't have " + name;
+			return "Doesn't have " + name;
 		} else {
-			return c + " has bought " + name + " " + count + " times";
+			return "Has bought " + name + " " + count + " times";
 		}
 	}
 
@@ -115,5 +115,22 @@ public abstract class Feat implements Serializable {
 
 	public Feat generate(String name2) {
 		return this;
+	}
+
+	public void postupgradeautomatic(Combatant c) {
+		// does nothing by default
+	}
+
+	public void postupgrade(Combatant c) {
+		// nothing by defautl
+	}
+
+	@Override
+	public Feat clone() {
+		try {
+			return (Feat) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

@@ -33,6 +33,14 @@ public class MartialTraining extends Feat {
 
 	Discipline discipline;
 	int level = 0;
+	/**
+	 * Number of {@link Maneuver}s that can be learned after upgrading this.
+	 * 
+	 * @see Combatant#postupgrade(boolean, javelin.controller.upgrade.Upgrade)
+	 * @see Combatant#postupgradeautomatic(boolean,
+	 *      javelin.controller.upgrade.Upgrade)
+	 */
+	int slots = 2;
 
 	public MartialTraining(Discipline d) {
 		super(d.name + " training");
@@ -42,17 +50,19 @@ public class MartialTraining extends Feat {
 
 	@Override
 	public boolean apply(Combatant c) {
+		c.source = c.source.clone();
 		if (level == MAXLEVEL) {
 			return false;
 		}
 		if (!validate(c)) {
 			return false;
 		}
-		if (c.source.hasfeat(this) || super.apply(c)) {
-			upgrade(c);
-			return true;
+		int i = c.source.feats.indexOf(this);
+		if (i == -1) {
+			return super.apply(c);
 		}
-		return false;
+		slots += 2;
+		return true;
 	}
 
 	boolean validate(Combatant c) {
@@ -62,21 +72,38 @@ public class MartialTraining extends Feat {
 				|| c.source.skills.knowledge >= minimum;
 	}
 
-	void upgrade(Combatant c) {
-		level += 1;
-		ArrayList<Maneuver> trainable = discipline.getmaneuvers(level);
-		Maneuvers known = c.disciplines.get(discipline);
-		trainable.removeAll(known);
-		int trained = 0;
-		int level = trainable.get(0).level;
-		while (trained < 2) {
-			if (!learn(trainable, level, c)) {
-				level -= 1;
+	@Override
+	public void postupgradeautomatic(Combatant c) {
+		while (slots > 0) {
+			level += 1;
+			int picked = 0;
+			ArrayList<Maneuver> trainable = gettrainable(c, 2 - picked);
+			int level = trainable.get(0).level;
+			while (picked < 2) {
+				if (pick(trainable, level, c)) {
+					picked -= 1;
+				} else {
+					level -= 1;
+				}
 			}
 		}
 	}
 
-	boolean learn(ArrayList<Maneuver> trainable, int level, Combatant c) {
+	ArrayList<Maneuver> gettrainable(Combatant c, int picks) {
+		Maneuvers trainable = discipline.getmaneuvers(level);
+		Maneuvers known = c.disciplines.get(discipline);
+		if (known != null) {
+			trainable.removeAll(known);
+		}
+		if (trainable.size() < picks) {
+			final String error = "Not enough trainable maneuvers for discipline "
+					+ discipline + " at level " + level + "!";
+			throw new RuntimeException(error);
+		}
+		return trainable;
+	}
+
+	boolean pick(ArrayList<Maneuver> trainable, int level, Combatant c) {
 		Maneuvers tier = new Maneuvers();
 		for (Maneuver m : trainable) {
 			if (m.level == level && m.validate(c)) {
@@ -92,11 +119,42 @@ public class MartialTraining extends Feat {
 			final String error = "Invalid maneuver " + m + " for " + c;
 			throw new RuntimeException(error);
 		}
+		slots -= 1;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return name + " (" + RANK[level - 1] + ")";
+		final String rank = level == 0 ? ""
+				: " (" + getrank().toLowerCase() + ")";
+		return name + rank;
+	}
+
+	String getrank() {
+		return RANK[level - 1];
+	}
+
+	@Override
+	public void postupgrade(Combatant c) {
+		while (slots > 0) {
+			level += 1;
+			int pick = 2;
+			while (pick > 0) {
+				ArrayList<Maneuver> trainable = gettrainable(c, pick);
+				String prompt = "You have advanced to being a "
+						+ getrank().toLowerCase() + " in the path of the "
+						+ discipline + "!\n" + "You can now select " + pick
+						+ " extra maneuver(s). What will you learn?";
+				int choice = Javelin.choose(prompt, trainable, true, true);
+				c.addmaneuver(discipline, trainable.get(choice));
+				pick -= 1;
+				slots -= 1;
+			}
+		}
+	}
+
+	@Override
+	public Feat generate(String name2) {
+		return new MartialTraining(discipline);
 	}
 }

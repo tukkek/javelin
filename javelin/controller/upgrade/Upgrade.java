@@ -15,6 +15,8 @@ import javelin.model.world.location.town.Town;
  * trained (which has a gold and time cost). Upgrades are distributed among
  * {@link Town}s, like {@link Item}s.
  * 
+ * @see Combatant#postupgrade(boolean, Upgrade)
+ * @see Combatant#postupgradeautomatic(boolean, Upgrade)
  * @author alex
  */
 public abstract class Upgrade implements Serializable {
@@ -22,8 +24,8 @@ public abstract class Upgrade implements Serializable {
 	/** Short description. */
 	public String name;
 	/**
-	 * <code>true</code> if this upgrade possibly adds
-	 * {@link Monster#skillpool} which require spending.
+	 * <code>true</code> if this upgrade possibly adds {@link Monster#skillpool}
+	 * which require spending.
 	 * 
 	 * @see Monster#purchaseskills(javelin.controller.upgrade.classes.ClassAdvancement)
 	 */

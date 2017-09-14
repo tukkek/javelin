@@ -133,9 +133,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 		if (buy(o, c, false) != null) {
 			update(c);
 			upgraded.add(c);
-			if (o.u.purchaseskills) {
-				c.source.purchaseskills(o.u).show();
-			}
+			c.postupgrade(o.u.purchaseskills, o.u);
 		}
 	}
 

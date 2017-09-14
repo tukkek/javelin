@@ -5,9 +5,11 @@ import java.util.Collections;
 import java.util.List;
 
 import javelin.controller.Calendar;
+import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.skill.Knowledge;
 import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.feat.MartialTraining;
 import javelin.model.world.location.unique.TrainingHall;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.option.ScreenOption;
@@ -35,6 +37,7 @@ public class DisciplineAcademy extends Academy {
 		descriptionunknown = descriptionknown;
 		upgrades.add(d.skillupgrade);
 		upgrades.add(Knowledge.SINGLETON);
+		upgrades.add(new FeatUpgrade(new MartialTraining(d)));
 	}
 
 	@Override

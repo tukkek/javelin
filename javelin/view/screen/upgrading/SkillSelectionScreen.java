@@ -62,7 +62,7 @@ public class SkillSelectionScreen extends SelectScreen {
 		showquit = false;
 		this.m = m;
 		dontbother = !canspend(m);
-		if (u != null && u instanceof ClassLevelUpgrade) {
+		if (u instanceof ClassLevelUpgrade) {
 			addclassskills((ClassLevelUpgrade) u);
 		} else {
 			ClassLevelUpgrade.init();

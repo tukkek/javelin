@@ -8,6 +8,7 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
+import javelin.model.unit.feat.MartialTraining;
 import javelin.model.unit.feat.attack.expertise.CombatExpertise;
 import javelin.model.world.location.town.labor.military.Academy;
 import javelin.model.world.location.town.labor.military.BuildDisciplineAcademy;
@@ -17,16 +18,15 @@ import javelin.model.world.location.town.labor.military.DisciplineAcademy;
  * Represent a martial-arts discipline from the Path of War books, which is
  * basically a collection of {@link Maneuver}s.
  * 
- * Note that this class isn't {@link Serializable} or {@link Cloneable}. That's
- * because we don't want several instances being persisted/created whenever a
- * new game session is srated. All instances should be accessed in-memory only.
- * 
  * Each discipline should have at least 2 {@link Maneuver}s per level.
+ * Technically, everything is fine as long as there at least 2 disciplines per
+ * leve of {@link MartialTraining} the unit can upgrade to - so having 8 level 1
+ * Maneuvers is enough to get a discipline to level 4 (even if not ideal).
  * 
  * @author alex
  * @see Disciplines#ALL
  */
-public abstract class Discipline {
+public abstract class Discipline implements Serializable {
 	public static final Discipline[] DISCIPLINES = new Discipline[] {
 			SteelSerpent.INSTANCE };
 
@@ -83,6 +83,13 @@ public abstract class Discipline {
 		return new BuildDisciplineAcademy(this);
 	}
 
+	/**
+	 * @return A static, non-serializable list of {@link Maneuver}s that are
+	 *         part of this martial path. This is to reduce the number of bugs,
+	 *         prevent duplication of these lists when each new instance of the
+	 *         game is opened and to make debug easier without losing game
+	 *         state.
+	 */
 	protected abstract Maneuver[] getmaneuvers();
 
 	/**
@@ -93,12 +100,17 @@ public abstract class Discipline {
 	 */
 	public Maneuvers getmaneuvers(Integer maxlevel) {
 		Maneuvers maneuvers = new Maneuvers(maxlevel * 2);
-		for (Maneuver m : maneuvers) {
+		for (Maneuver m : getmaneuvers()) {
 			if (maxlevel == null || m.level <= maxlevel) {
 				maneuvers.add(m);
 			}
 		}
 		maneuvers.sort();
 		return maneuvers;
+	}
+
+	@Override
+	public String toString() {
+		return name;
 	}
 }

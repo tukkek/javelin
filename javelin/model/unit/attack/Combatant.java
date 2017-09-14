@@ -50,6 +50,7 @@ import javelin.model.unit.condition.Condition;
 import javelin.model.unit.condition.Condition.Effect;
 import javelin.model.unit.condition.Defending;
 import javelin.model.unit.condition.Melding;
+import javelin.model.unit.feat.Feat;
 import javelin.model.unit.feat.attack.Cleave;
 import javelin.model.unit.feat.attack.GreatCleave;
 import javelin.model.world.Actor;
@@ -727,9 +728,7 @@ public class Combatant implements Serializable, Cloneable {
 		if (!upgrade.upgrade(this)) {
 			return false;
 		}
-		if (upgrade.purchaseskills) {
-			source.purchaseskills(upgrade).upgradeautomatically();
-		}
+		postupgradeautomatic(upgrade.purchaseskills, upgrade);
 		ChallengeRatingCalculator.calculatecr(source);
 		return true;
 	}
@@ -943,6 +942,36 @@ public class Combatant implements Serializable, Cloneable {
 		hp -= damage;
 		if (hp < 1) {
 			hp = 1;
+		}
+	}
+
+	/**
+	 * Some {@link Upgrade}s need further interaction from a human after they
+	 * are applied. This method deals with all of these cleanups.
+	 * 
+	 * @see #postupgradeautomatic(boolean, Upgrade)
+	 */
+	public void postupgrade(boolean purchaseskills, Upgrade classlevel) {
+		if (purchaseskills) {
+			source.purchaseskills(classlevel).show();
+		}
+		for (Feat f : source.feats) {
+			f.postupgrade(this);
+		}
+	}
+
+	/**
+	 * Like {@link #postupgrade(boolean, Upgrade)} but this handles all of these
+	 * scenarios automatically - either because the player might not care enoug
+	 * to hand-pick the the outcome or because we are upgrading an NPC like with
+	 * {@link #upgrade(Collection)}.
+	 */
+	public void postupgradeautomatic(boolean purchaseskills, Upgrade upgrade) {
+		if (purchaseskills) {
+			source.purchaseskills(upgrade).upgradeautomatically();
+		}
+		for (Feat f : source.feats) {
+			f.postupgradeautomatic(this);
 		}
 	}
 }

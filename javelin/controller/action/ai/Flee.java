@@ -9,7 +9,7 @@ import javelin.controller.action.ActionMapping;
 import javelin.controller.action.Withdraw;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.ai.ChanceNode;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.attack.Combatant;
@@ -35,7 +35,7 @@ public class Flee extends Action implements AiAction {
 	public static final Action SINGLETON = new Flee();
 
 	static final boolean ALLOWFLEE = true;
-	static final int FLEEAT = ChallengeRatingCalculator.DIFFICULTYVERYEASY;
+	static final int FLEEAT = CrCalculator.DIFFICULTYVERYEASY;
 
 	private Flee() {
 		super("Flee");
@@ -50,8 +50,8 @@ public class Flee extends Action implements AiAction {
 		if (!ALLOWFLEE || !Javelin.app.fight.canflee || s.isengaged(active)) {
 			return false;
 		}
-		final int eldifference = ChallengeRatingCalculator.calculateel(
-				s.redTeam) - ChallengeRatingCalculator.calculateel(s.blueTeam);
+		final int eldifference = CrCalculator.calculateel(
+				s.redTeam) - CrCalculator.calculateel(s.blueTeam);
 		return eldifference <= FLEEAT && s.redTeam.contains(s.next);
 	}
 

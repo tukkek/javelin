@@ -3,7 +3,7 @@
  */
 package javelin.controller.challenge.factor;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
 
@@ -11,7 +11,7 @@ import javelin.model.unit.Monster;
  * Describes one step in the calculation of a {@link Monster}'s challenge
  * rating.
  * 
- * @se {@link ChallengeRatingCalculator}
+ * @se {@link CrCalculator}
  * 
  * @author alex
  */

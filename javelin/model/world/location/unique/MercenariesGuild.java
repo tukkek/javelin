@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.old.Game;
 import javelin.model.Realm;
@@ -100,8 +100,8 @@ public class MercenariesGuild extends UniqueLocation {
 			@Override
 			public int compare(Combatant o1, Combatant o2) {
 				return new Float(
-						ChallengeRatingCalculator.calculatecr(o2.source))
-								.compareTo(ChallengeRatingCalculator
+						CrCalculator.calculatecr(o2.source))
+								.compareTo(CrCalculator
 										.calculatecr(o1.source));
 			}
 		});
@@ -162,7 +162,7 @@ public class MercenariesGuild extends UniqueLocation {
 	 */
 	public static int getfee(Monster m) {
 		float value = RewardCalculator
-				.getgold(ChallengeRatingCalculator.calculatecr(m));
+				.getgold(CrCalculator.calculatecr(m));
 		int roundto;
 		if (value > 1000) {
 			roundto = 1000;

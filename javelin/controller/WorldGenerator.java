@@ -21,7 +21,7 @@ import javelin.view.screen.InfoScreen;
 import tyrant.mikera.engine.RPG;
 
 public class WorldGenerator extends Thread {
-	private static final boolean SINGLETHREAD = true;
+	private static final boolean SINGLETHREAD = false;
 	private static final int MAXRETRIES = 1000;
 	public static final Terrain[] GENERATIONORDER = new Terrain[] {
 			Terrain.MOUNTAINS, Terrain.MOUNTAINS, Terrain.DESERT, Terrain.PLAIN,

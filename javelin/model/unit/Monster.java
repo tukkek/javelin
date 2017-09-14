@@ -16,11 +16,10 @@ import javelin.controller.SpellbookGenerator;
 import javelin.controller.Weather;
 import javelin.controller.action.Breath;
 import javelin.controller.ai.BattleAi;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.controller.comparator.FeatByNameComparator;
 import javelin.controller.terrain.Terrain;
-import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.upgrade.skill.Acrobatics;
@@ -187,7 +186,7 @@ public class Monster implements Cloneable, Serializable {
 	public int size = -1;
 	/** Subgroup of {@link #type}, merely descriptive. */
 	public String group;
-	/** Cache for {@link ChallengeRatingCalculator}. */
+	/** Cache for {@link CrCalculator}. */
 	public Float challengerating = null;
 	public String type;
 	/** TODO should probably be a Combatant#name */
@@ -211,9 +210,8 @@ public class Monster implements Cloneable, Serializable {
 	/**
 	 * Used to distribute random spells to a new {@link Combatant}.
 	 *
-	 * TODO {@link ChallengeRatingCalculator} is using this for
-	 * {@link SpellsFactor} instead of taking the {@link Combatant} into
-	 * consideration. Maintain?
+	 * TODO {@link CrCalculator} is using this for {@link SpellsFactor} instead
+	 * of taking the {@link Combatant} into consideration. Maintain?
 	 *
 	 * @see SpellbookGenerator
 	 *
@@ -323,7 +321,7 @@ public class Monster implements Cloneable, Serializable {
 
 	public void addfeat(final Feat feat) {
 		feats.add(feat);
-		feats.sort(new FeatByNameComparator());
+		feats.sort(FeatByNameComparator.INSTANCE);
 	}
 
 	public int countfeat(final Feat f) {
@@ -744,7 +742,7 @@ public class Monster implements Cloneable, Serializable {
 	 * @see RaiseIntelligence
 	 * @see #skills
 	 */
-	public SkillSelectionScreen purchaseskills(Upgrade u) {
+	public SkillSelectionScreen purchaseskills(ClassLevelUpgrade u) {
 		return new SkillSelectionScreen(this, u);
 	}
 

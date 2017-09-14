@@ -12,7 +12,7 @@ import java.util.Comparator;
 
 import javax.swing.BoxLayout;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.attack.Combatant;
@@ -135,9 +135,9 @@ public class UpgradeGladiatorWindow extends Frame {
 		for (Upgrade u : upgrades) {
 			Combatant clone = gladiator.clone().clonesource();
 			u.upgrade(clone);
-			float cost = ChallengeRatingCalculator
+			float cost = CrCalculator
 					.calculaterawcr(clone.source)[1]
-					- ChallengeRatingCalculator
+					- CrCalculator
 							.calculaterawcr(gladiator.source)[1];
 			if (cost < .1f) {
 				cost = .1f;

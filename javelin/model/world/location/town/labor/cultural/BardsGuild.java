@@ -21,7 +21,7 @@ public class BardsGuild extends Academy {
 		}
 
 		@Override
-		protected Academy getacademy() {
+		protected Academy generateacademy() {
 			return new BardsGuild();
 		}
 	}

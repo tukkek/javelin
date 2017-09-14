@@ -77,23 +77,6 @@ public class MartialTraining extends Feat {
 		return bab >= minimum || knowledge >= minimum;
 	}
 
-	@Override
-	public void postupgradeautomatic(Combatant c) {
-		while (slots > 0) {
-			level += 1;
-			int pick = 2;
-			ArrayList<Maneuver> trainable = gettrainable(c, pick);
-			int level = trainable.get(0).level;
-			while (pick > 0) {
-				if (pick(trainable, level, c)) {
-					pick -= 1;
-				} else {
-					level -= 1;
-				}
-			}
-		}
-	}
-
 	ArrayList<Maneuver> gettrainable(Combatant c, int picks) {
 		Maneuvers trainable = discipline.getmaneuvers(level);
 		Maneuvers known = c.disciplines.get(discipline);
@@ -106,37 +89,6 @@ public class MartialTraining extends Feat {
 			throw new RuntimeException(error);
 		}
 		return trainable;
-	}
-
-	boolean pick(ArrayList<Maneuver> trainable, int level, Combatant c) {
-		Maneuvers tier = new Maneuvers();
-		for (Maneuver m : trainable) {
-			if (m.level == level && m.validate(c)) {
-				tier.add(m);
-			}
-		}
-		if (tier.isEmpty()) {
-			return false;
-		}
-		Maneuver m = RPG.pick(tier);
-		boolean failed = !c.addmaneuver(discipline, m);
-		if (Javelin.DEBUG && failed) {
-			final String error = "Invalid maneuver " + m + " for " + c;
-			throw new RuntimeException(error);
-		}
-		slots -= 1;
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		final String rank = level == 0 ? ""
-				: " (" + getrank().toLowerCase() + ")";
-		return name + rank;
-	}
-
-	public String getrank() {
-		return RANK[level - 1];
 	}
 
 	@Override
@@ -156,6 +108,58 @@ public class MartialTraining extends Feat {
 				slots -= 1;
 			}
 		}
+	}
+
+	@Override
+	public void postupgradeautomatic(Combatant c) {
+		while (slots > 0) {
+			level += 1;
+			int pick = 2;
+			ArrayList<Maneuver> trainable = gettrainable(c, pick);
+			int level = trainable.get(0).level;
+			while (pick > 0) {
+				if (pick(trainable, level, c)) {
+					slots -= 1;
+					pick -= 1;
+				} else {
+					level -= 1;
+				}
+			}
+		}
+	}
+
+	boolean pick(ArrayList<Maneuver> trainable, int level, Combatant c) {
+		Maneuvers tier = new Maneuvers();
+		for (Maneuver m : trainable) {
+			if (m.level == level && m.validate(c)) {
+				tier.add(m);
+			}
+		}
+		if (tier.isEmpty()) {
+			return false;
+		}
+		Maneuver m = RPG.pick(tier);
+		boolean failed = !c.addmaneuver(discipline, m);
+		if (Javelin.DEBUG && failed) {
+			final String error = "Invalid maneuver " + m + " for " + c;
+			throw new RuntimeException(error);
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		final String rank = level == 0 ? ""
+				: " (" + getrank().toLowerCase() + ")";
+		return name + rank;
+	}
+
+	/**
+	 * @return A description the current training level.
+	 * @see #RANK
+	 */
+	public String getrank() {
+		return RANK[level - 1];
 	}
 
 	@Override

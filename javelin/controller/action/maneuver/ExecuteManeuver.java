@@ -62,9 +62,9 @@ public class ExecuteManeuver extends Action implements AiAction {
 			throw new RepeatTurn();
 		}
 		Maneuvers maneuvers = new Maneuvers();
-		String prompt = "Choose a manuever to execute (or ready), or press any other key to exit...";
+		String prompt = "Choose a manuever to execute (or ready), or press any other key to exit...\n";
 		for (String discipline : disciplines.keySet()) {
-			prompt += "\n\n" + discipline + ":\n";
+			prompt += "\n" + discipline + ":\n";
 			for (Maneuver m : disciplines.get(discipline)) {
 				final String spent = m.spent ? " (not ready)" : "";
 				prompt += "  " + SelectScreen.KEYS[maneuvers.size()] + " - "

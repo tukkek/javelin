@@ -37,7 +37,7 @@ public class MartialAcademy extends Academy {
 		}
 
 		@Override
-		protected Academy getacademy() {
+		protected Academy generateacademy() {
 			return RPG.pick(getacademies()).generate();
 		}
 

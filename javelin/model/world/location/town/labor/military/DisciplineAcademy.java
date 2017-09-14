@@ -3,9 +3,8 @@ package javelin.model.world.location.town.labor.military;
 import java.util.Collections;
 import java.util.List;
 
-import javelin.Javelin;
 import javelin.controller.Calendar;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.abilities.discipline.Discipline;
@@ -30,6 +29,10 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class DisciplineAcademy extends Academy {
+	static final int LEVERSTUDENT = 9;
+	static final int LEVELTEACHER = 12;
+	static final int LEVERMASTER = 16;
+
 	public class HireOption extends Option {
 		Combatant c;
 
@@ -49,7 +52,7 @@ public class DisciplineAcademy extends Academy {
 		@Override
 		public List<Option> getoptions() {
 			List<Option> options = super.getoptions();
-			for (Combatant c : new Combatant[] { initiate, disciple, master }) {
+			for (Combatant c : new Combatant[] { student, teacher, master }) {
 				if (c != null) {
 					options.add(new HireOption(c));
 				}
@@ -59,21 +62,18 @@ public class DisciplineAcademy extends Academy {
 
 		@Override
 		public boolean select(Option op) {
-			HireOption h = op instanceof HireOption ? (HireOption) op : null;
-			if (h != null) {
-				if (!MercenariesGuild.recruit(h.c, false)) {
+			HireOption hire = op instanceof HireOption ? (HireOption) op : null;
+			if (hire != null) {
+				if (!MercenariesGuild.recruit(hire.c, false)) {
 					final String error = "You don't have enough money to pay today's advance!\n"
 							+ "Press any key to continue...";
-					String text = this.text;
-					print(text + "\n" + error);
-					feedback();
-					this.text = text;
+					printmessage(error);
 					return false;
-				} else if (h.c == initiate) {
-					initiate = null;
-				} else if (h.c == disciple) {
-					disciple = null;
-				} else if (h.c == master) {
+				} else if (hire.c == student) {
+					student = null;
+				} else if (hire.c == teacher) {
+					teacher = null;
+				} else if (hire.c == master) {
 					master = null;
 				}
 				return true;
@@ -83,26 +83,29 @@ public class DisciplineAcademy extends Academy {
 
 		@Override
 		protected boolean upgrade(UpgradeOption o, Combatant c) {
-			FeatUpgrade fu = o.u instanceof FeatUpgrade ? (FeatUpgrade) o.u
-					: null;
-			MartialTraining mt = fu != null
-					&& fu.feat instanceof MartialTraining
-							? (MartialTraining) fu.feat : null;
+			MartialTraining mt = getmartialtrainingfeat(o);
 			if (mt != null) {
-				float cr = ChallengeRatingCalculator
-						.calculaterawcr(c.source)[1];
-				train(c, c.xp.floatValue(), cr);
-				return ChallengeRatingCalculator
-						.calculaterawcr(c.source)[1] > cr;
+				float cr = CrCalculator.calculaterawcr(c.source)[1];
+				train(c, c.xp.floatValue(), cr, d.getupgrades());
+				return CrCalculator.calculaterawcr(c.source)[1] > cr;
 			}
 			return super.upgrade(o, c);
+		}
+
+		MartialTraining getmartialtrainingfeat(UpgradeOption o) {
+			if (!(o.u instanceof FeatUpgrade)) {
+				return null;
+			}
+			final FeatUpgrade fu = (FeatUpgrade) o.u;
+			return fu.feat instanceof MartialTraining
+					? (MartialTraining) fu.feat : null;
 		}
 	}
 
 	/** CR 5 mercenary. */
-	Combatant initiate = null;
+	Combatant student = null;
 	/** CR 10 mercenary. */
-	Combatant disciple = null;
+	Combatant teacher = null;
 	/** CR 15 mercenary. */
 	Combatant master = null;
 	Discipline d;
@@ -115,15 +118,15 @@ public class DisciplineAcademy extends Academy {
 		upgrades.add(d.skillupgrade);
 		upgrades.add(d.knowledgeupgrade);
 		upgrades.add(d.trainingupgrade);
-		initiate = train(initiate, 1, 5);
-		disciple = train(disciple, Javelin.DEBUG ? 1 : 2, 10);
-		master = train(master, Javelin.DEBUG ? 1 : 4, 15);
+		student = train(student, LEVERSTUDENT, 1);
+		teacher = train(teacher, LEVELTEACHER, 2);
+		master = train(master, LEVERMASTER, 4);
 	}
 
 	@Override
 	public List<Combatant> getcombatants() {
 		List<Combatant> combatants = super.getcombatants();
-		for (Combatant c : new Combatant[] { initiate, disciple, master }) {
+		for (Combatant c : new Combatant[] { student, teacher, master }) {
 			if (c != null) {
 				combatants.add(c);
 			}
@@ -134,19 +137,20 @@ public class DisciplineAcademy extends Academy {
 	@Override
 	public void turn(long time, WorldScreen world) {
 		super.turn(time, world);
-		initiate = train(initiate, Calendar.MONTH, 5);
-		disciple = train(disciple, Calendar.SEASON, 10);
-		master = train(master, Calendar.YEAR, 15);
+		student = train(student, LEVERSTUDENT, Calendar.MONTH);
+		teacher = train(teacher, LEVELTEACHER, Calendar.SEASON);
+		master = train(master, LEVERMASTER, Calendar.YEAR);
 	}
 
-	Combatant train(Combatant rank, int period, int level) {
-		if (rank != null || !RPG.chancein(period)) {
-			return rank;
+	Combatant train(Combatant c, int level, int period) {
+		if (c != null || !RPG.chancein(period)) {
+			return c;
 		}
-		Combatant c = new Combatant(RPG.pick(TrainingHall.CANDIDATES), true);
+		c = new Combatant(RPG.pick(TrainingHall.CANDIDATES), true);
 		c.setmercenary(true);
-		train(c, level, ChallengeRatingCalculator.calculaterawcr(c.source)[1]);
-		c.postupgradeautomatic(true, d.classupgrade);
+		train(c, level, CrCalculator.calculaterawcr(c.source)[1],
+				d.getupgrades());
+		c.postupgradeautomatic(d.classupgrade);
 		name(c);
 		return c;
 	}
@@ -154,30 +158,42 @@ public class DisciplineAcademy extends Academy {
 	void name(Combatant c) {
 		c.source.customName = d.name + " initiate";
 		for (Feat f : c.source.feats) {
-			MartialTraining mt = f instanceof MartialTraining
-					? (MartialTraining) f : null;
-			if (mt != null) {
+			if (f instanceof MartialTraining) {
+				final MartialTraining mt = (MartialTraining) f;
 				c.source.customName = d.name + " " + mt.getrank().toLowerCase();
 				return;
 			}
 		}
 	}
 
-	Combatant train(Combatant c, float xp, float cr) {
-		for (Upgrade u : d.getupgrades()) {
+	/**
+	 * @param c
+	 *            Train a combatant...
+	 * @param xp
+	 *            ... up to this amount of XP (not removed form
+	 *            {@link Combatant#xp}) ...
+	 * @param cr
+	 *            ... and this amount of raw CR (with golden rule applied)...
+	 * @param upgrades
+	 *            in these Upgrades...
+	 * @see CrCalculator#calculaterawcr(javelin.model.unit.Monster)
+	 */
+	public static void train(Combatant c, float xp, float cr,
+			Upgrade[] upgrades) {
+		for (Upgrade u : upgrades) {
 			Combatant c2 = c.clone().clonesource();
 			if (!u.upgrade(c2)) {
 				continue;
 			}
-			if (ChallengeRatingCalculator.calculaterawcr(c2.source)[1]
-					- cr > xp) {
+			final float newcr = CrCalculator.calculaterawcr(c2.source)[1];
+			if (newcr - cr > xp) {
 				continue;
 			}
 			c.source = c.source.clone();
 			u.upgrade(c);
-			return train(c, xp, cr);
+			train(c, xp, cr, upgrades);
+			return;
 		}
-		return c;
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import javelin.Debug;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.BattleSetup;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.Minigame;
 import javelin.model.item.Item;
@@ -43,9 +43,9 @@ public class StartBattle extends BattleEvent {
 		fight.setup.setup();
 		Fight.state.next();
 		fight.ready();
-		final int elred = ChallengeRatingCalculator
+		final int elred = CrCalculator
 				.calculateel(Fight.state.redTeam);
-		final int elblue = ChallengeRatingCalculator
+		final int elblue = CrCalculator
 				.calculateel(Squad.active.members);
 		int diffifculty = elred - elblue;
 		if (fight instanceof Minigame
@@ -68,7 +68,7 @@ public class StartBattle extends BattleEvent {
 	 * @param difficulty
 	 */
 	public void quickbattle(int difficulty) {
-		float resourcesused = ChallengeRatingCalculator
+		float resourcesused = CrCalculator
 				.useresources(difficulty);
 		String report = "Battle report:\n\n";
 		ArrayList<Combatant> blueteam = new ArrayList<Combatant>(

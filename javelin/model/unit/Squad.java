@@ -8,7 +8,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.ai.BattleAi;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.CombatantHealthComparator;
 import javelin.controller.comparator.SpellLevelComparator;
@@ -159,8 +159,8 @@ public class Squad extends Actor implements Cloneable {
 		Combatant leader = members.get(0);
 		for (int i = 1; i < members.size(); i++) {
 			Combatant m = members.get(i);
-			if (ChallengeRatingCalculator
-					.calculatecr(m.source) > ChallengeRatingCalculator
+			if (CrCalculator
+					.calculatecr(m.source) > CrCalculator
 							.calculatecr(leader.source)) {
 				leader = m;
 			}
@@ -432,7 +432,7 @@ public class Squad extends Actor implements Cloneable {
 		// hidden
 		char input = ' ';
 		final String prompt = "You have hidden from a "
-				+ ChallengeRatingCalculator.describedifficulty(foes)
+				+ CrCalculator.describedifficulty(foes)
 				+ " group of enemies!\n"
 				+ "Press s to storm them or w to wait for them to go away...\n\n"
 				+ "Enemies: " + Squad.active.spot(foes);
@@ -712,7 +712,7 @@ public class Squad extends Actor implements Cloneable {
 		Character input = ' ';
 		while (input != '\n' && input != 's') {
 			Javelin.app.switchScreen(BattleScreen.active);
-			final String difficulty = ChallengeRatingCalculator
+			final String difficulty = CrCalculator
 					.describedifficulty(diffifculty);
 			final String prompt = "Do you want to skip this " + difficulty
 					+ " battle?\n\n" //

@@ -11,7 +11,7 @@ import java.util.Comparator;
 
 import javax.swing.BoxLayout;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.unique.minigame.Arena;
 import javelin.view.frame.Frame;
@@ -39,7 +39,7 @@ public class ViewGladiators extends Frame {
 			}
 		});
 		for (final Combatant c : ArenaWindow.arena.gladiators) {
-			ChallengeRatingCalculator.calculatecr(c.source);
+			CrCalculator.calculatecr(c.source);
 			Button b = new Button(c.toString() + " (level "
 					+ Math.round(c.source.challengerating) + ")");
 			b.addActionListener(new ActionListener() {

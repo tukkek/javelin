@@ -5,9 +5,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.challenge.factor.SkillsFactor;
-import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.model.unit.Monster;
@@ -54,23 +53,23 @@ public class SkillSelectionScreen extends SelectScreen {
 	/**
 	 * @param m
 	 *            Monster that needs to spend skill points.
-	 * @param u
+	 * @param upgrade
 	 *            If this is a Class
 	 */
-	public SkillSelectionScreen(Monster m, Upgrade u) {
+	public SkillSelectionScreen(Monster m, ClassLevelUpgrade upgrade) {
 		super("Select the skills " + m + " will train:", null);
 		showquit = false;
 		this.m = m;
 		dontbother = !canspend(m);
-		if (u instanceof ClassLevelUpgrade) {
-			addclassskills((ClassLevelUpgrade) u);
-		} else {
+		if (upgrade == null) {
 			ClassLevelUpgrade.init();
 			for (ClassLevelUpgrade c : ClassLevelUpgrade.classes) {
 				if (c.getlevel(m) > 0) {
 					addclassskills(c);
 				}
 			}
+		} else {
+			addclassskills(upgrade);
 		}
 	}
 
@@ -159,7 +158,7 @@ public class SkillSelectionScreen extends SelectScreen {
 	@Override
 	public void onexit() {
 		m.skillpool = 0;
-		ChallengeRatingCalculator.calculatecr(m);
+		CrCalculator.calculatecr(m);
 	}
 
 	/**

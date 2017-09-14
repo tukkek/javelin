@@ -10,8 +10,9 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.upgrade.Upgrade;
+import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Combatant;
@@ -131,10 +132,10 @@ public abstract class UpgradingScreen extends SelectScreen {
 
 	void finishpurchase(final UpgradeOption o, Combatant c) {
 		if (buy(o, c, false) != null) {
-			int hd = c.source.hd.count();
 			update(c);
 			upgraded.add(c);
-			c.postupgrade(c.source.hd.count() > hd, o.u);
+			c.postupgrade(o.u instanceof ClassLevelUpgrade
+					? (ClassLevelUpgrade) o.u : null);
 		}
 	}
 
@@ -178,15 +179,13 @@ public abstract class UpgradingScreen extends SelectScreen {
 
 	private BigDecimal buy(final UpgradeOption o, Combatant c,
 			boolean listing) {
-		float originalcr = ChallengeRatingCalculator
-				.calculaterawcr(c.source)[1];
+		float originalcr = CrCalculator.calculaterawcr(c.source)[1];
 		final Combatant clone = c.clone().clonesource();
 		if (!upgrade(o, clone)) {
 			return null;
 		}
 		BigDecimal cost = new BigDecimal(
-				ChallengeRatingCalculator.calculaterawcr(clone.source)[1]
-						- originalcr);
+				CrCalculator.calculaterawcr(clone.source)[1] - originalcr);
 		if (!listing) {
 			int goldpieces = price(cost.floatValue());
 			if (goldpieces > Squad.active.gold) {
@@ -251,9 +250,8 @@ public abstract class UpgradingScreen extends SelectScreen {
 		Squad s = Squad.active;
 		for (Combatant c : upgraded) {
 			Combatant original = this.original.get(c.id);
-			float xpcost = ChallengeRatingCalculator.calculaterawcr(c.source)[1]
-					- ChallengeRatingCalculator
-							.calculaterawcr(original.source)[1];
+			float xpcost = CrCalculator.calculaterawcr(c.source)[1]
+					- CrCalculator.calculaterawcr(original.source)[1];
 			trainees.add(new TrainingOrder(
 					Math.round(xpcost * 24 * UPGRADETIME), c,
 					s.equipment.get(c.id), c.toString(), xpcost, original));

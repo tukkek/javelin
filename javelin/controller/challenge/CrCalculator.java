@@ -35,7 +35,7 @@ import javelin.model.unit.attack.Combatant;
  * 
  * #see CrFactor
  */
-public class ChallengeRatingCalculator {
+public class CrCalculator {
 	public static final int DIFFICULTYVERYEASY = -9;
 	public static final int DIFFICULTYMODERATE = -4;
 
@@ -653,7 +653,7 @@ public class ChallengeRatingCalculator {
 	 */
 	public static String describedifficulty(List<Combatant> opponents) {
 		return describedifficulty(calculateel(opponents)
-				- ChallengeRatingCalculator.calculateel(Squad.active.members));
+				- CrCalculator.calculateel(Squad.active.members));
 	}
 
 	/** To use with the Buy the Numbers system, */
@@ -769,12 +769,12 @@ public class ChallengeRatingCalculator {
 	 *         minimum possible caster level.
 	 */
 	public static float ratespelllikeability(int spelllevel) {
-		return ChallengeRatingCalculator.ratespelllikeability(spelllevel,
+		return CrCalculator.ratespelllikeability(spelllevel,
 				Spell.calculatecasterlevel(spelllevel));
 	}
 
 	/**
-	 * Same as {@link ChallengeRatingCalculator#ratespelllikeability(int)} but
+	 * Same as {@link CrCalculator#ratespelllikeability(int)} but
 	 * to be used in case a touch spell is being used as a ray spell instead.
 	 */
 	public static float ratetouchspellconvertedtoray(int spelllevel) {

@@ -1,6 +1,6 @@
 package javelin.model.unit.abilities.spell.illusion;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.spell.Touch;
@@ -30,7 +30,7 @@ public class Displacement extends Touch {
 
 	public Displacement() {
 		this("Displacement", 3,
-				ChallengeRatingCalculator.ratespelllikeability(3), Realm.MAGIC);
+				CrCalculator.ratespelllikeability(3), Realm.MAGIC);
 		iswand = true;
 	}
 

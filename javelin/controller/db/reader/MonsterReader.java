@@ -16,7 +16,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import javelin.Javelin;
 import javelin.controller.CountingSet;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.db.reader.fields.Alignment;
 import javelin.controller.db.reader.fields.ArmorClass;
 import javelin.controller.db.reader.fields.Attacks;
@@ -424,7 +424,7 @@ public class MonsterReader extends DefaultHandler {
 			summoncaster.get(summonspell.indexOf(s)).spellcr += s.cr * s.perday;
 		}
 		for (Monster m : updated) {
-			ChallengeRatingCalculator.calculatecr(m);
+			CrCalculator.calculatecr(m);
 		}
 	}
 
@@ -562,7 +562,7 @@ public class MonsterReader extends DefaultHandler {
 					monster + " humanoid tag missing #monsterreader");
 		}
 		try {
-			ChallengeRatingCalculator.calculatecr(monster);
+			CrCalculator.calculatecr(monster);
 		} catch (final Exception e) {
 			throw new RuntimeException("Challenge rating issue " + monster.name,
 					e);

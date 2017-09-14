@@ -33,7 +33,7 @@ public class AssassinsGuild extends Academy {
 		}
 
 		@Override
-		protected Academy getacademy() {
+		protected Academy generateacademy() {
 			return new AssassinsGuild();
 		}
 	}

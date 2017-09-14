@@ -22,7 +22,7 @@ public class RealmAcademy extends Academy {
 		}
 
 		@Override
-		protected RealmAcademy getacademy() {
+		protected RealmAcademy generateacademy() {
 			return new RealmAcademy(town.originalrealm);
 		}
 

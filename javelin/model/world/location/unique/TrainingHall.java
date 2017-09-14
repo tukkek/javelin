@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Siege;
@@ -84,7 +84,7 @@ public class TrainingHall extends Fortification {
 	}
 
 	boolean isweak() {
-		return ChallengeRatingCalculator
+		return CrCalculator
 				.calculateel(garrison) < EL[currentlevel - 1];
 	}
 

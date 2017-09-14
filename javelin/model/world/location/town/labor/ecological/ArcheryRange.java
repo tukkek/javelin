@@ -29,7 +29,7 @@ public class ArcheryRange extends Guild {
 		}
 
 		@Override
-		protected Academy getacademy() {
+		protected Academy generateacademy() {
 			return new ArcheryRange();
 		}
 	}

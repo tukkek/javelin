@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.fight.Siege;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
@@ -37,11 +37,11 @@ public class Guardian extends Fortification {
 	protected void generategarrison(int minel, int maxel) {
 		while (garrison.isEmpty()) {
 			loot = RPG.pick(Item.ALL).clone();
-			int cr = ChallengeRatingCalculator.goldtocr(loot.price);
+			int cr = CrCalculator.goldtocr(loot.price);
 			Combatant c = findnativemonster(cr, this);
 			if (c != null) {
 				garrison.add(c);
-				targetel = new Integer(ChallengeRatingCalculator.crtoel(cr));
+				targetel = new Integer(CrCalculator.crtoel(cr));
 			}
 		}
 	}

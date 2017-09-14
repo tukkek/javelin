@@ -1,6 +1,6 @@
 package javelin.model.unit.abilities.spell.divination;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.model.Realm;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Combatant;
@@ -42,7 +42,7 @@ public class FindTraps extends Spell {
 	/** Constructor. */
 	public FindTraps() {
 		super("Find traps", 3,
-				ChallengeRatingCalculator.ratespelllikeability(3), Realm.AIR);
+				CrCalculator.ratespelllikeability(3), Realm.AIR);
 		ispotion = true;
 		castinbattle = false;
 		castonallies = false;

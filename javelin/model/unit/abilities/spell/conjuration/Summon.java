@@ -3,7 +3,7 @@ package javelin.model.unit.abilities.spell.conjuration;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Monster;
@@ -101,7 +101,7 @@ public class Summon extends Spell {
 		if (m == null) {
 			throw new RuntimeException("Unknown summon: " + monstername);
 		}
-		return ChallengeRatingCalculator
+		return CrCalculator
 				.calculatecr(c.source) >= m.challengerating && super.apply(c);
 	}
 

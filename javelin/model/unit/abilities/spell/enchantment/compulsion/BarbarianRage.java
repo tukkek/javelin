@@ -2,7 +2,7 @@ package javelin.model.unit.abilities.spell.enchantment.compulsion;
 
 import java.util.List;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.attack.Combatant;
@@ -10,7 +10,7 @@ import javelin.model.unit.attack.Combatant;
 public class BarbarianRage extends Rage {
 	public BarbarianRage() {
 		super("Barbarian rage", 1,
-				ChallengeRatingCalculator.ratespelllikeability(1), Realm.FIRE);
+				CrCalculator.ratespelllikeability(1), Realm.FIRE);
 		ispotion = false;
 	}
 

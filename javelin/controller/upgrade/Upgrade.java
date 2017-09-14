@@ -23,13 +23,6 @@ public abstract class Upgrade implements Serializable {
 
 	/** Short description. */
 	public String name;
-	/**
-	 * <code>true</code> if this upgrade possibly adds {@link Monster#skillpool}
-	 * which require spending.
-	 * 
-	 * @see Monster#purchaseskills(javelin.controller.upgrade.classes.ClassAdvancement)
-	 */
-	public boolean purchaseskills = false;
 
 	/** Constructor. */
 	public Upgrade(final String name) {

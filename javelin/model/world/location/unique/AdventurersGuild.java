@@ -5,9 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.kit.Kit;
 import javelin.controller.upgrade.Upgrade;
+import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.view.screen.InfoScreen;
@@ -94,7 +95,7 @@ public class AdventurersGuild extends UniqueLocation {
 			if (c.mercenary) {
 				continue;
 			}
-			float cr = ChallengeRatingCalculator.calculatecr(c.source);
+			float cr = CrCalculator.calculatecr(c.source);
 			if (cr < TARGETLEVEL && c.xp.floatValue() >= 0) {
 				students.add(c);
 			}
@@ -105,9 +106,13 @@ public class AdventurersGuild extends UniqueLocation {
 
 	void change(int index) {
 		Kit current = selection.get(index);
-		List<Kit> possible = Kit.getpossiblekits(students.get(index).source);
+		List<Kit> possible = getcourses(index);
 		final int to = 1 + (current == null ? -1 : possible.indexOf(current));
 		selection.set(index, to >= possible.size() ? null : possible.get(to));
+	}
+
+	List<Kit> getcourses(int index) {
+		return Kit.getpossiblekits(students.get(index).source);
 	}
 
 	String show(ArrayList<Combatant> students, float mostpowerful, float pay) {
@@ -119,7 +124,7 @@ public class AdventurersGuild extends UniqueLocation {
 			if (selection == null) {
 				selection = new ArrayList<Kit>(students.size());
 				for (int i = 0; i < students.size(); i++) {
-					selection.add(null);
+					selection.add(RPG.pick(getcourses(i)));
 				}
 			}
 			for (int i = 0; i < students.size(); i++) {
@@ -151,18 +156,18 @@ public class AdventurersGuild extends UniqueLocation {
 			}
 			Combatant student = students.get(i);
 			String training = student + " learns:\n\n";
-			float cr = ChallengeRatingCalculator.calculatecr(student.source);
+			float cr = CrCalculator.calculatecr(student.source);
 			float original = cr;
-			Upgrade purchaseskills = null;
+			ClassLevelUpgrade classlevel = null;
 			ArrayList<Upgrade> upgrades = new ArrayList<Upgrade>(kit.upgrades);
 			while (cr < TARGETLEVEL) {
 				Upgrade u = RPG.pick(upgrades);
 				if (u.upgrade(student)) {
 					training += u.name + "\n";
 				}
-				cr = ChallengeRatingCalculator.calculatecr(student.source);
-				if (u.purchaseskills) {
-					purchaseskills = u;
+				cr = CrCalculator.calculatecr(student.source);
+				if (u instanceof ClassLevelUpgrade) {
+					classlevel = (ClassLevelUpgrade) u;
 				}
 			}
 			student.xp = student.xp.subtract(new BigDecimal(cr - original));
@@ -172,7 +177,7 @@ public class AdventurersGuild extends UniqueLocation {
 			while (screen.getInput() != '\n') {
 				// wait
 			}
-			student.postupgrade(purchaseskills != null, purchaseskills);
+			student.postupgrade(classlevel);
 		}
 	}
 

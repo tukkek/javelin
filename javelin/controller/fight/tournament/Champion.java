@@ -3,7 +3,7 @@ package javelin.controller.fight.tournament;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.ExhibitionFight;
 import javelin.model.unit.Monster;
@@ -26,7 +26,7 @@ public class Champion extends Exhibition {
 			@Override
 			public ArrayList<Combatant> getmonsters(int teamel) {
 				for (Monster m : new CrIterator(Javelin.MONSTERSBYCR)) {
-					if (ChallengeRatingCalculator
+					if (CrCalculator
 							.crtoel(m.challengerating) >= teamel) {
 						ArrayList<Combatant> opponents =
 								new ArrayList<Combatant>();

@@ -10,7 +10,7 @@ import javelin.controller.BattleSetup;
 import javelin.controller.Weather;
 import javelin.controller.action.Action;
 import javelin.controller.action.world.WorldMove;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.GaveUpException;
 import javelin.controller.exception.RepeatTurn;
@@ -126,7 +126,7 @@ public abstract class Fight {
 	 * @return an encounter level for which an appropriate challenge should be
 	 *         generated.
 	 * 
-	 * @see ChallengeRatingCalculator
+	 * @see CrCalculator
 	 */
 	public int getel(int teamel) {
 		return Terrain.current().getel(teamel);
@@ -402,7 +402,7 @@ public abstract class Fight {
 		Fight.state = new BattleState(this);
 		Fight.state.blueTeam = getblueteam();
 		return generate(getel(
-				ChallengeRatingCalculator.calculateel(Fight.state.blueTeam)));
+				CrCalculator.calculateel(Fight.state.blueTeam)));
 	}
 
 	/**

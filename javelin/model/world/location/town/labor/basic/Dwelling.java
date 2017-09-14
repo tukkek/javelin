@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.old.Game;
 import javelin.controller.terrain.Terrain;
@@ -150,7 +150,7 @@ public class Dwelling extends Fortification {
 		gossip = dweller.source.intelligence > 8;
 		garrison.addAll(RPG.pick(Organization.ENCOUNTERSBYMONSTER
 				.get(dweller.source.name)).group);
-		targetel = ChallengeRatingCalculator.calculateel(garrison);
+		targetel = CrCalculator.calculateel(garrison);
 		generategarrison = false;
 	}
 
@@ -305,7 +305,7 @@ public class Dwelling extends Fortification {
 		} else {
 			ArrayList<Combatant> squad = new ArrayList<Combatant>(
 					Squad.active.members);
-			ChallengeRatingCalculator.calculateel(squad);
+			CrCalculator.calculateel(squad);
 			Collections.sort(squad, new Comparator<Combatant>() {
 				@Override
 				public int compare(Combatant o1, Combatant o2) {

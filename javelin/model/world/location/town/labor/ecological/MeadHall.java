@@ -41,7 +41,7 @@ public class MeadHall extends Guild {
 		}
 
 		@Override
-		protected Academy getacademy() {
+		protected Academy generateacademy() {
 			return new MeadHall();
 		}
 	}

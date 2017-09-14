@@ -26,7 +26,7 @@ public class Henge extends Academy {
 		}
 
 		@Override
-		protected Academy getacademy() {
+		protected Academy generateacademy() {
 			return new Henge(5);
 		}
 	}

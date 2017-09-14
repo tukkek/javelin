@@ -66,6 +66,7 @@ public class Help extends Action {
 		text += "\nKeep up-to-date with new releases at javelinrl.wordpress.com\n"
 				+ "or come discuss the game at reddit.com/r/javelinrl :)";
 		if (Javelin.DEBUG) {
+			text += "\n\n";
 			final boolean isworld = BattleScreen.active instanceof WorldScreen;
 			text += isworld ? Debug.onworldhelp() : Debug.onbattlehelp();
 		}

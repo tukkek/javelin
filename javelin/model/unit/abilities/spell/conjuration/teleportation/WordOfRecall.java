@@ -1,6 +1,6 @@
 package javelin.model.unit.abilities.spell.conjuration.teleportation;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.model.Realm;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
@@ -13,7 +13,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 public class WordOfRecall extends Spell {
 	/** Constructor. */
 	public WordOfRecall() {
-		super("Word of recall", 6, ChallengeRatingCalculator.ratespelllikeability(6),
+		super("Word of recall", 6, CrCalculator.ratespelllikeability(6),
 				Realm.MAGIC);
 		castoutofbattle = true;
 		isritual = true;

@@ -3,7 +3,7 @@ package javelin.view.screen.upgrading;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.order.Order;
@@ -57,7 +57,7 @@ public class AcademyScreen extends UpgradingScreen {
 	@Override
 	public List<Option> getoptions() {
 		List<Option> options = super.getoptions();
-		if (academy.pillage && ChallengeRatingCalculator
+		if (academy.pillage && CrCalculator
 				.calculateel(Squad.active.members) > academy.targetel) {
 			options.add(pillage);
 		}

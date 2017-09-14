@@ -5,7 +5,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.action.ActionCost;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.quality.Quality;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Monster;
@@ -64,7 +64,7 @@ public class StatisticsScreen extends InfoScreen {
 		}
 		if (!(c.source instanceof Spawner)) {
 			lines.add("Challenge rating "
-					+ Math.round(ChallengeRatingCalculator.calculatecr(m)));
+					+ Math.round(CrCalculator.calculatecr(m)));
 		}
 		for (ClassLevelUpgrade classlevels : ClassLevelUpgrade.classes) {
 			int level = classlevels.getlevel(m);
@@ -229,7 +229,7 @@ public class StatisticsScreen extends InfoScreen {
 	}
 
 	private static String describequalities(Monster m, Combatant c) {
-		String s = printqualities("Disciplines", c.disciplines.getmaneuvers());
+		String s = printqualities("Maneuvers", c.disciplines.getmaneuvers());
 		ArrayList<String> spells = new ArrayList<String>(c.spells.size());
 		for (Spell spell : c.spells) {
 			spells.add(spell.toString());

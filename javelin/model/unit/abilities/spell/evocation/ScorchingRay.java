@@ -1,6 +1,6 @@
 package javelin.model.unit.abilities.spell.evocation;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.spell.Ray;
@@ -14,7 +14,7 @@ import javelin.model.unit.attack.Combatant;
 public class ScorchingRay extends Ray {
 
 	public ScorchingRay() {
-		super("Scorching ray", 2, ChallengeRatingCalculator.ratespelllikeability(2),
+		super("Scorching ray", 2, CrCalculator.ratespelllikeability(2),
 				Realm.FIRE);
 		castinbattle = true;
 		iswand = true;

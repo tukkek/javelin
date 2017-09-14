@@ -1,6 +1,6 @@
 package javelin.model.unit.abilities.spell.enchantment.compulsion;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.spell.Ray;
@@ -18,7 +18,7 @@ import javelin.model.unit.condition.Dominated;
 public class DominateMonster extends Ray {
 	/** Constructor. */
 	public DominateMonster() {
-		super("Dominate monster", 9, ChallengeRatingCalculator.ratespelllikeability(9),
+		super("Dominate monster", 9, CrCalculator.ratespelllikeability(9),
 				Realm.EVIL);
 		automatichit = true;
 		apcost = 1;

@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.minigame.Battle;
 import javelin.model.unit.Monster;
@@ -49,13 +49,13 @@ public class EnterBattlefield extends EnterMinigame {
 		}
 		pool(getpool(6, 10), recruits, NELITE);
 		pool(getpool(1, 5), recruits, NFOOTMEN + NELITE);
-		while (ChallengeRatingCalculator.calculateel(blueteam) < TARGETEL) {
+		while (CrCalculator.calculateel(blueteam) < TARGETEL) {
 			if (!manage()) {
 				return;
 			}
 		}
-		int blueel = ChallengeRatingCalculator.calculateel(blueteam);
-		int redel = ChallengeRatingCalculator.calculateel(redteam);
+		int blueel = CrCalculator.calculateel(blueteam);
+		int redel = CrCalculator.calculateel(redteam);
 		if (blueel != redel) {
 			complete(blueel > redel ? redteam : blueteam,
 					Math.max(blueel, redel));
@@ -99,7 +99,7 @@ public class EnterBattlefield extends EnterMinigame {
 				weakest = c.source;
 			}
 		}
-		while (ChallengeRatingCalculator.calculateel(team) < el) {
+		while (CrCalculator.calculateel(team) < el) {
 			team.add(new Combatant(weakest.clone(), true));
 		}
 	}
@@ -130,8 +130,8 @@ public class EnterBattlefield extends EnterMinigame {
 		}
 		boolean elite = recruit < NELITE;
 		recruit(recruits.get(recruit), blueteam, elite);
-		while (ChallengeRatingCalculator.calculateel(
-				redteam) < ChallengeRatingCalculator.calculateel(blueteam)) {
+		while (CrCalculator.calculateel(
+				redteam) < CrCalculator.calculateel(blueteam)) {
 			recruit(RPG.pick(elite ? getelite() : getfootmen()), redteam,
 					elite);
 		}
@@ -151,7 +151,7 @@ public class EnterBattlefield extends EnterMinigame {
 
 	String list(ArrayList<Combatant> team, boolean shownumbers, String header) {
 		String list = header + " (encounter level "
-				+ ChallengeRatingCalculator.calculateel(team) + " of "
+				+ CrCalculator.calculateel(team) + " of "
 				+ TARGETEL + "):\n\n";
 		Combatant commander = team.get(0);
 		list += "Commander: " + commander + level(commander.source) + "\n\n";

@@ -7,7 +7,7 @@ import java.util.Set;
 
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.comparator.UpgradeByNameComparator;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
@@ -41,7 +41,7 @@ import tyrant.mikera.engine.RPG;
 public abstract class Academy extends Fortification {
 	/**
 	 * Builds one academy of this type. Since cannot have only 1 instance,
-	 * {@link #getacademy()} needs to be defined by subclasses.
+	 * {@link #generateacademy()} needs to be defined by subclasses.
 	 *
 	 * @see BuildAcademies
 	 * @author alex
@@ -55,13 +55,13 @@ public abstract class Academy extends Fortification {
 
 		@Override
 		protected void define() {
-			goal = getacademy();
+			goal = generateacademy();
 			super.define();
 			cost = goal.getlabor();
 			name = "Build " + goal.descriptionknown.toLowerCase();
 		}
 
-		protected abstract Academy getacademy();
+		protected abstract Academy generateacademy();
 
 		@Override
 		public Location getgoal() {
@@ -182,7 +182,7 @@ public abstract class Academy extends Fortification {
 	 *            {@link #upgrades}, to be sorted.
 	 */
 	public void sort(ArrayList<Upgrade> upgrades) {
-		upgrades.sort(UpgradeByNameComparator.ALPHABETICALSORT);
+		upgrades.sort(UpgradeByNameComparator.INSTANCE);
 	}
 
 	@Override
@@ -298,7 +298,7 @@ public abstract class Academy extends Fortification {
 
 	@Override
 	protected Integer getel(int attackerel) {
-		return ChallengeRatingCalculator.calculateel(getcombatants());
+		return CrCalculator.calculateel(getcombatants());
 	}
 
 	@Override

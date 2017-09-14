@@ -2,7 +2,7 @@ package javelin.model.unit.abilities.spell.evocation;
 
 import java.util.List;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.spell.Spell;
@@ -18,7 +18,7 @@ public class SoundBurst extends Spell {
 	/** Constructor. */
 	public SoundBurst() {
 		super("Sound burst", 2,
-				ChallengeRatingCalculator.ratespelllikeability(2), Realm.MAGIC);
+				CrCalculator.ratespelllikeability(2), Realm.MAGIC);
 		castinbattle = true;
 		isscroll = true;
 	}

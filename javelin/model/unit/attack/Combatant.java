@@ -18,7 +18,7 @@ import javelin.controller.action.Defend;
 import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.controller.action.ai.attack.RangedAttack;
 import javelin.controller.ai.BattleAi;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
@@ -26,6 +26,7 @@ import javelin.controller.old.Game.Delay;
 import javelin.controller.upgrade.BreathUpgrade;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
+import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.walker.Walker;
 import javelin.model.Cloneable;
 import javelin.model.Realm;
@@ -728,8 +729,9 @@ public class Combatant implements Serializable, Cloneable {
 		if (!upgrade.upgrade(this)) {
 			return false;
 		}
-		postupgradeautomatic(upgrade.purchaseskills, upgrade);
-		ChallengeRatingCalculator.calculatecr(source);
+		postupgradeautomatic(upgrade instanceof ClassLevelUpgrade
+				? (ClassLevelUpgrade) upgrade : null);
+		CrCalculator.calculatecr(source);
 		return true;
 	}
 
@@ -742,7 +744,7 @@ public class Combatant implements Serializable, Cloneable {
 			Collection<Upgrade> r) {
 		Combatant weakest = null;
 		for (Combatant sensei : garrison) {
-			ChallengeRatingCalculator.calculatecr(sensei.source);
+			CrCalculator.calculatecr(sensei.source);
 			if (weakest == null
 					|| sensei.source.challengerating < weakest.source.challengerating) {
 				weakest = sensei;
@@ -951,8 +953,8 @@ public class Combatant implements Serializable, Cloneable {
 	 * 
 	 * @see #postupgradeautomatic(boolean, Upgrade)
 	 */
-	public void postupgrade(boolean purchaseskills, Upgrade classlevel) {
-		if (purchaseskills) {
+	public void postupgrade(ClassLevelUpgrade classlevel) {
+		if (source.skillpool > 0) {
 			source.purchaseskills(classlevel).show();
 		}
 		for (Feat f : source.feats) {
@@ -966,8 +968,8 @@ public class Combatant implements Serializable, Cloneable {
 	 * to hand-pick the the outcome or because we are upgrading an NPC like with
 	 * {@link #upgrade(Collection)}.
 	 */
-	public void postupgradeautomatic(boolean purchaseskills, Upgrade upgrade) {
-		if (purchaseskills) {
+	public void postupgradeautomatic(ClassLevelUpgrade upgrade) {
+		if (source.skillpool > 0) {
 			source.purchaseskills(upgrade).upgradeautomatically();
 		}
 		for (Feat f : source.feats) {

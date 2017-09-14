@@ -9,7 +9,7 @@ import javelin.Javelin;
 import javelin.controller.BattleSetup;
 import javelin.controller.Point;
 import javelin.controller.Weather;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.model.item.Key;
 import javelin.model.state.Square;
 import javelin.model.unit.Monster;
@@ -228,8 +228,8 @@ public class Run extends Minigame {
 				}
 			}
 			neighbors.add(s);
-			while (state.redTeam.isEmpty() || ChallengeRatingCalculator
-					.calculateel(state.redTeam) < ChallengeRatingCalculator
+			while (state.redTeam.isEmpty() || CrCalculator
+					.calculateel(state.redTeam) < CrCalculator
 							.calculateel(state.blueTeam) - 1) {
 				Segment neighbor =
 						neighbors.isEmpty() ? s : RPG.pick(neighbors);
@@ -289,7 +289,7 @@ public class Run extends Minigame {
 			return;
 		}
 		ArrayList<Monster> pool = getrecruits();
-		while (ChallengeRatingCalculator
+		while (CrCalculator
 				.calculateel(state.blueTeam) < targetel) {
 			String currentteam = "Current team: ";
 			int perline = 0;
@@ -358,7 +358,7 @@ public class Run extends Minigame {
 		pool.add(segments[1][0].monster);
 		pool.add(segments[0][1].monster);
 		ArrayList<Combatant> blueteam = new ArrayList<Combatant>();
-		while (blueteam.isEmpty() || ChallengeRatingCalculator
+		while (blueteam.isEmpty() || CrCalculator
 				.calculateel(blueteam) < INITIALEL) {
 			blueteam.add(new Combatant(RPG.pick(pool).clone(), true));
 		}

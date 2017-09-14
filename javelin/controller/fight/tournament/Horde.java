@@ -3,7 +3,7 @@ package javelin.controller.fight.tournament;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.exception.UnbalancedTeams;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.ExhibitionFight;
@@ -33,7 +33,7 @@ public class Horde extends Exhibition {
 					for (int i = 0; i < EncounterGenerator.getmaxenemynumber(); i++) {
 						opponents.add(new Combatant(m.clone(), true));
 						try {
-							el = ChallengeRatingCalculator.calculateelsafe(opponents);
+							el = CrCalculator.calculateelsafe(opponents);
 						} catch (UnbalancedTeams e) {
 							continue crloop;
 						}

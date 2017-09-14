@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.IncursionFight;
@@ -128,7 +128,7 @@ public class Incursion extends Actor {
 				continue;
 			}
 			Location l = a instanceof Location ? (Location) a : null;
-			if (l != null && ChallengeRatingCalculator
+			if (l != null && CrCalculator
 					.calculateel(l.garrison) > getel()) {
 				continue;
 			}
@@ -286,10 +286,10 @@ public class Incursion extends Actor {
 
 	/**
 	 * @return Encounter level for {@link #squad}.
-	 * @see ChallengeRatingCalculator#calculateel(List)
+	 * @see CrCalculator#calculateel(List)
 	 */
 	public int getel() {
-		return ChallengeRatingCalculator.calculateel(squad);
+		return CrCalculator.calculateel(squad);
 	}
 
 	/**
@@ -381,7 +381,7 @@ public class Incursion extends Actor {
 	@Override
 	public String describe() {
 		return "Enemy incursion ("
-				+ ChallengeRatingCalculator.describedifficulty(squad)
+				+ CrCalculator.describedifficulty(squad)
 				+ " fight):\n\n" + Squad.active.spot(squad);
 	}
 
@@ -391,7 +391,7 @@ public class Incursion extends Actor {
 	 */
 	public boolean fight(List<Combatant> defenders) {
 		int me = getel();
-		int them = ChallengeRatingCalculator.calculateel(defenders);
+		int them = CrCalculator.calculateel(defenders);
 		boolean win = fight(me, them);
 		if (win) {
 			damage(squad, getchance(me, them));

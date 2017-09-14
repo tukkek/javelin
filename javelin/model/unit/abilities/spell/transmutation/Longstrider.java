@@ -2,7 +2,7 @@ package javelin.model.unit.abilities.spell.transmutation;
 
 import java.util.List;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.spell.Spell;
@@ -41,7 +41,7 @@ public class Longstrider extends Spell {
 	/** Constructor. */
 	public Longstrider() {
 		super("Longstrider", 1,
-				ChallengeRatingCalculator.ratespelllikeability(1), Realm.EARTH);
+				CrCalculator.ratespelllikeability(1), Realm.EARTH);
 		ispotion = true;
 		castinbattle = true;
 		castonallies = false;

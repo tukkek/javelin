@@ -3,7 +3,7 @@ package javelin.model.world.location.town.governor;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.comparator.CombatantCrComparator;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Incursion;
@@ -127,7 +127,7 @@ public class MonsterGovernor extends Governor {
 		if (t.garrison.size() < 2) {
 			return;
 		}
-		int el = ChallengeRatingCalculator.calculateel(t.garrison);
+		int el = CrCalculator.calculateel(t.garrison);
 		if (el <= t.population
 				|| t.garrison.size() <= Math.min(30, t.population)) {
 			return;

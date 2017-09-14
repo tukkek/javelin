@@ -5,7 +5,7 @@ import java.util.Set;
 
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.fight.Fight;
 import javelin.model.item.ItemSelection;
 import javelin.model.unit.Squad;
@@ -60,8 +60,8 @@ public class TempleDungeon extends Dungeon {
 			super.activate(loading);
 			return;
 		}
-		String difficulty = ChallengeRatingCalculator
-				.describedifficulty(temple.el - ChallengeRatingCalculator
+		String difficulty = CrCalculator
+				.describedifficulty(temple.el - CrCalculator
 						.calculateel(Squad.active.members));
 		Character prompt = Javelin.prompt("You're at the entrance of the "
 				+ temple.descriptionknown + " (difficulty: " + difficulty

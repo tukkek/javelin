@@ -3,7 +3,7 @@ package javelin.controller.fight;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.Realm;
@@ -34,7 +34,7 @@ public class TempleEncounter extends RandomDungeonEncounter {
 
 	@Override
 	public void enhance(List<Combatant> foes) {
-		while (ChallengeRatingCalculator.calculateel(foes) < temple.el) {
+		while (CrCalculator.calculateel(foes) < temple.el) {
 			Combatant.upgradeweakest(foes, temple.realm);
 		}
 	}

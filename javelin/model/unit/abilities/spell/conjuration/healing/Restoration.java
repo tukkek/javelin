@@ -3,7 +3,7 @@ package javelin.model.unit.abilities.spell.conjuration.healing;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.spell.Touch;
@@ -30,7 +30,7 @@ public class Restoration extends Touch {
 	/** Constructor. */
 	public Restoration() {
 		super("Lesser restoration", 2,
-				ChallengeRatingCalculator.ratespelllikeability(2), Realm.WATER);
+				CrCalculator.ratespelllikeability(2), Realm.WATER);
 		ispotion = true;
 		castinbattle = true;
 		castoutofbattle = true;

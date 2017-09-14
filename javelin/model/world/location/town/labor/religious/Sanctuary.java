@@ -43,7 +43,7 @@ public class Sanctuary extends Guild {
 		}
 
 		@Override
-		protected Academy getacademy() {
+		protected Academy generateacademy() {
 			return new Sanctuary();
 		}
 	}

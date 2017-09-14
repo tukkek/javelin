@@ -57,8 +57,7 @@ public class Deck extends ArrayList<Labor> {
 			new BuildArtificer(), new BuildSummoningCircle(),
 			new BuildBardsGuild() };
 	static final Labor[] ECOLOGICAL = new Labor[] { new BuildHenge(),
-			new BuildArcheryRange(), new BuildMeadHall(),
-			SteelSerpent.INSTANCE.buildacademy() };
+			new BuildArcheryRange(), new BuildMeadHall(), SteelSerpent.LABOR };
 	static final Labor[] EXPANSIVE = new Labor[] { new Settler(),
 			new BuildOutpost(), new BuildRoad(), new BuildHighway(),
 			new BuildTransportHub() };

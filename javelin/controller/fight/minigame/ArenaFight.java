@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.Weather;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.db.StateManager;
 import javelin.controller.fight.Fight;
 import javelin.controller.map.Map;
@@ -77,7 +77,7 @@ public class ArenaFight extends Minigame {
 		if (weather == null) {
 			drawweather();
 		}
-		redteam = generate(ChallengeRatingCalculator.calculateel(blueteam));
+		redteam = generate(CrCalculator.calculateel(blueteam));
 	}
 
 	/** Binds {@link Fight#weather}. */

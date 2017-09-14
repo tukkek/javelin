@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
@@ -77,7 +77,7 @@ public class SummonAlly extends Hax {
 		current.addAll(Squad.active.members);
 		for (Combatant c : current) {
 			/* update challenge rating */
-			ChallengeRatingCalculator.calculatecr(c.source);
+			CrCalculator.calculatecr(c.source);
 		}
 		current.sort(new Comparator<Combatant>() {
 			@Override

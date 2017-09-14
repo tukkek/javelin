@@ -77,7 +77,6 @@ public abstract class ClassLevelUpgrade extends Upgrade {
 		skillrate = skillratep;
 		classskills = classskillsp;
 		crperlevel = crperlevelp;
-		purchaseskills = true;
 	}
 
 	@Override

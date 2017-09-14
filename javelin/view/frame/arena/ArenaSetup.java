@@ -18,7 +18,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import javelin.controller.Weather;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.minigame.ArenaFight;
 import javelin.model.unit.attack.Combatant;
@@ -236,7 +236,7 @@ public class ArenaSetup extends javelin.view.frame.Frame {
 	}
 
 	Container drawbetpanel() {
-		int el = ChallengeRatingCalculator.calculateel(fight.redteam);
+		int el = CrCalculator.calculateel(fight.redteam);
 		final JSlider slider = HireGladiatorScreen.newslider(0,
 				Math.min(ArenaWindow.arena.coins, Math.max(1, el / 2)), 0);
 		slider.addChangeListener(new ChangeListener() {

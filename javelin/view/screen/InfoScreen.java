@@ -94,4 +94,19 @@ public class InfoScreen extends Screen {
 		text = string;
 		Javelin.app.switchScreen(this);
 	}
+
+	/**
+	 * @param msg
+	 *            Prints this meesage, which will go away after a keyboard input
+	 *            is received.
+	 * @return The key pressed by the player to acknowledge the message and make
+	 *         it disappear.
+	 */
+	protected Character printmessage(String msg) {
+		String current = this.text;
+		print(current + "\n" + msg);
+		Character c = feedback();
+		this.text = current;
+		return c;
+	}
 }

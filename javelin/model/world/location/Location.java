@@ -7,7 +7,7 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.WorldGenerator;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.StartBattle;
@@ -316,7 +316,7 @@ public abstract class Location extends Actor {
 		String description = name;
 		if (!opponents.isEmpty()) {
 			description += ". Forces: ("
-					+ ChallengeRatingCalculator.describedifficulty(opponents)
+					+ CrCalculator.describedifficulty(opponents)
 					+ " fight)";
 			if (showgarrison) {
 				description += "\n\n" + Squad.active.spot(opponents);

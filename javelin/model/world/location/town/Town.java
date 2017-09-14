@@ -10,7 +10,7 @@ import java.util.TreeSet;
 
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.exception.GaveUpException;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.fight.Siege;
@@ -335,7 +335,7 @@ public class Town extends Location {
 	public void populategarisson() {
 		if (World.scenario.statictowns) {
 			population = Scenario.getscenariochallenge();
-			int el = ChallengeRatingCalculator.leveltoel(population);
+			int el = CrCalculator.leveltoel(population);
 			Terrain t = Terrain.get(x, y);
 			while (garrison.isEmpty()) {
 				try {

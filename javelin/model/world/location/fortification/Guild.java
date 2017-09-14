@@ -2,7 +2,7 @@ package javelin.model.world.location.fortification;
 
 import java.util.List;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.kit.Kit;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
@@ -98,12 +98,12 @@ public abstract class Guild extends Academy {
 
 	@Override
 	protected final void generategarrison(int minlevel, int maxlevel) {
-		targetel = RPG.r(ChallengeRatingCalculator.leveltoel(minlevel),
-				ChallengeRatingCalculator.leveltoel(maxlevel));
+		targetel = RPG.r(CrCalculator.leveltoel(minlevel),
+				CrCalculator.leveltoel(maxlevel));
 		if (World.scenario.clearlocations) {
 			return;
 		}
-		while (ChallengeRatingCalculator.calculateel(garrison) < targetel) {
+		while (CrCalculator.calculateel(garrison) < targetel) {
 			Combatant[] hires = generatehires();
 			for (Combatant hire : hires) {
 				if (hire != null) {

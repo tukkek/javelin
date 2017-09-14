@@ -2,7 +2,7 @@ package javelin.controller.scenario;
 
 import java.util.ArrayList;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.classes.Commoner;
@@ -43,7 +43,7 @@ public class Campaign extends Scenario {
 	@Override
 	public void upgradesquad(ArrayList<Combatant> squad) {
 		float startingcr = totalcr(squad);
-		while (ChallengeRatingCalculator.calculateel(squad) < INITIALEL) {
+		while (CrCalculator.calculateel(squad) < INITIALEL) {
 			ArrayList<Upgrade> u = new ArrayList<Upgrade>();
 			u.add(Commoner.SINGLETON);
 			Combatant.upgradeweakest(squad, u);
@@ -55,14 +55,14 @@ public class Campaign extends Scenario {
 	static float totalcr(ArrayList<Combatant> squad) {
 		int cr = 0;
 		for (Combatant c : squad) {
-			cr += ChallengeRatingCalculator.calculatecr(c.source);
+			cr += CrCalculator.calculatecr(c.source);
 		}
 		return cr;
 	}
 
 	@Override
 	public boolean checkfullsquad(ArrayList<Combatant> squad) {
-		return ChallengeRatingCalculator.calculateel(squad) >= INITIALEL;
+		return CrCalculator.calculateel(squad) >= INITIALEL;
 	}
 
 	@Override

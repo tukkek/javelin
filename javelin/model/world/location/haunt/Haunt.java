@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.comparator.MonsterNameComparator;
 import javelin.controller.fight.HauntFight;
 import javelin.controller.map.haunt.HauntMap;
@@ -66,13 +66,13 @@ public abstract class Haunt extends Fortification {
 
 	@Override
 	protected void generategarrison(int minlevel, int maxlevel) {
-		int minel = ChallengeRatingCalculator.leveltoel(minlevel) + elmodifier;
-		int maxel = ChallengeRatingCalculator.leveltoel(maxlevel) + elmodifier;
+		int minel = CrCalculator.leveltoel(minlevel) + elmodifier;
+		int maxel = CrCalculator.leveltoel(maxlevel) + elmodifier;
 		int el = Integer.MIN_VALUE;
 		List<List<Combatant>> possibilities = new ArrayList<List<Combatant>>();
 		while (el < maxel) {
 			garrison.add(new Combatant(RPG.pick(dwellers).clone(), true));
-			el = ChallengeRatingCalculator.calculateel(garrison);
+			el = CrCalculator.calculateel(garrison);
 			if (minel <= el && el <= maxel) {
 				possibilities.add(new ArrayList<Combatant>(garrison));
 			}

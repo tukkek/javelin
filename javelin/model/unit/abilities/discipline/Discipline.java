@@ -50,14 +50,14 @@ public abstract class Discipline implements Serializable {
 	public boolean hasacademy = true;
 
 	public String name;
-	public RaiseAbility abilityupgrade;
 	/**
 	 * This is supposed to always be {@link Warrior} due to balancing reasons.
 	 */
-	public ClassLevelUpgrade classupgrade = Warrior.SINGLETON;
-	public Upgrade skillupgrade;
+	final public ClassLevelUpgrade classupgrade = Warrior.SINGLETON;
+	final public Upgrade knowledgeupgrade = Knowledge.SINGLETON;
 	public Upgrade trainingupgrade;
-	public Upgrade knowledgeupgrade = Knowledge.SINGLETON;
+	public Upgrade skillupgrade;
+	public RaiseAbility abilityupgrade;
 
 	public Discipline(String name, RaiseAbility abilityupgrade,
 			Upgrade skillupgrade) {

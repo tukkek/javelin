@@ -30,7 +30,7 @@ public class SummoningCircle extends Academy {
 		}
 
 		@Override
-		protected Academy getacademy() {
+		protected Academy generateacademy() {
 			SummoningCircle goal = new SummoningCircle(true, 5);
 			UniqueLocation.makecommon(goal, cost - 1, cost + 1);
 			return goal;

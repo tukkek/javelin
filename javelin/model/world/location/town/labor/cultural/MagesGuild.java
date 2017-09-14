@@ -30,7 +30,7 @@ public class MagesGuild extends Academy {
 		}
 
 		@Override
-		protected Academy getacademy() {
+		protected Academy generateacademy() {
 			return RPG.pick(GUILDS).generate();
 		}
 	}

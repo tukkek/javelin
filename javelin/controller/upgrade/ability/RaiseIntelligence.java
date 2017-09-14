@@ -15,7 +15,6 @@ public class RaiseIntelligence extends RaiseAbility {
 
 	RaiseIntelligence() {
 		super("intelligence");
-		purchaseskills = true;
 	}
 
 	@Override

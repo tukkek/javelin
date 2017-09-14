@@ -1,7 +1,7 @@
 package javelin;
 
 import javelin.controller.action.Help;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.fight.Fight;
 import javelin.controller.scenario.Scenario;
 import javelin.model.item.Item;
@@ -60,7 +60,7 @@ public class Debug {
 			}
 			s += "\n\n";
 			for (Town t : Town.gettowns()) {
-				s += ChallengeRatingCalculator.calculateel(t.garrison) + " ";
+				s += CrCalculator.calculateel(t.garrison) + " ";
 			}
 			return s;
 		}

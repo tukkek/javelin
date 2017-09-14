@@ -2,7 +2,7 @@ package javelin.model.unit.abilities.spell.evocation;
 
 import java.util.List;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.spell.Spell;
@@ -16,7 +16,7 @@ import javelin.model.unit.attack.Combatant;
 public class FlameStrike extends Spell {
 	/** Constructor. */
 	public FlameStrike() {
-		super("Flame strike", 5, ChallengeRatingCalculator.ratespelllikeability(5),
+		super("Flame strike", 5, CrCalculator.ratespelllikeability(5),
 				Realm.FIRE);
 		castinbattle = true;
 		isscroll = true;

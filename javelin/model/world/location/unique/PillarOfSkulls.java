@@ -6,7 +6,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
@@ -120,7 +120,7 @@ public class PillarOfSkulls extends UniqueLocation {
 			}
 			Squad.active.equipment.get(owner.id).remove(i);
 			ArrayList<Combatant> mock = new ArrayList<Combatant>();
-			float targetcr = ChallengeRatingCalculator.goldtocr(i.price);
+			float targetcr = CrCalculator.goldtocr(i.price);
 			while (mock.isEmpty()) {
 				List<Monster> tier = Javelin.MONSTERSBYCR.get(targetcr);
 				if (tier == null) {

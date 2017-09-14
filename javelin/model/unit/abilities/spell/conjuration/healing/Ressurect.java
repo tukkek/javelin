@@ -1,6 +1,6 @@
 package javelin.model.unit.abilities.spell.conjuration.healing;
 
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.model.Realm;
 import javelin.model.unit.attack.Combatant;
 
@@ -11,7 +11,7 @@ public class Ressurect extends RaiseDead {
 	/** Constructor. */
 	public Ressurect() {
 		super("Ressurection", 7,
-				ChallengeRatingCalculator.ratespelllikeability(7)
+				CrCalculator.ratespelllikeability(7)
 						+ RaiseDead.RESTORATIONCR,
 				Realm.GOOD);
 		components = 10000;

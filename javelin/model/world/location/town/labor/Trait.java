@@ -25,15 +25,4 @@ public class Trait extends Labor {
 	public boolean validate(District d) {
 		return super.validate(d) && !town.traits.contains(trait);
 	}
-
-	@Override
-	public boolean equals(Object obj) {
-		Labor t = (Labor) obj;
-		return name.equals(t.name);
-	}
-
-	@Override
-	public int hashCode() {
-		return name.hashCode();
-	}
 }

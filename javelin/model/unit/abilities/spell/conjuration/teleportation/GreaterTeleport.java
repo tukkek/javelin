@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import javelin.Javelin;
-import javelin.controller.challenge.ChallengeRatingCalculator;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.unit.Squad;
@@ -34,7 +34,7 @@ public class GreaterTeleport extends Spell {
 	/** Constructor. */
 	public GreaterTeleport() {
 		super("Greater teleport", 7,
-				ChallengeRatingCalculator.ratespelllikeability(7), Realm.MAGIC);
+				CrCalculator.ratespelllikeability(7), Realm.MAGIC);
 		castinbattle = false;
 		castonallies = false;
 		castoutofbattle = true;

@@ -19,7 +19,7 @@ public class BuildDisciplineAcademy extends BuildAcademies {
 	}
 
 	@Override
-	protected Academy getacademy() {
+	protected Academy generateacademy() {
 		return d.generateacademy();
 	}
 }

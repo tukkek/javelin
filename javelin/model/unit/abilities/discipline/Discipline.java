@@ -4,9 +4,12 @@ import java.io.Serializable;
 
 import javelin.controller.action.maneuver.ExecuteManeuver;
 import javelin.controller.generator.feature.FeatureGenerator;
+import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
+import javelin.controller.upgrade.classes.Warrior;
+import javelin.controller.upgrade.skill.Knowledge;
 import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
 import javelin.model.unit.feat.MartialTraining;
 import javelin.model.unit.feat.attack.expertise.CombatExpertise;
@@ -46,17 +49,22 @@ public abstract class Discipline implements Serializable {
 	 */
 	public boolean hasacademy = true;
 
-	public RaiseAbility abilityupgrade;
-	public ClassLevelUpgrade classupgrade;
-	public Upgrade skillupgrade;
 	public String name;
+	public RaiseAbility abilityupgrade;
+	/**
+	 * This is supposed to always be {@link Warrior} due to balancing reasons.
+	 */
+	public ClassLevelUpgrade classupgrade = Warrior.SINGLETON;
+	public Upgrade skillupgrade;
+	public Upgrade trainingupgrade;
+	public Upgrade knowledgeupgrade = Knowledge.SINGLETON;
 
-	public Discipline(String name, ClassLevelUpgrade classupgrade,
-			RaiseAbility abilityupgrade, Upgrade skillupgrade) {
+	public Discipline(String name, RaiseAbility abilityupgrade,
+			Upgrade skillupgrade) {
 		this(name);
 		this.abilityupgrade = abilityupgrade;
-		this.classupgrade = classupgrade;
 		this.skillupgrade = skillupgrade;
+		trainingupgrade = new FeatUpgrade(new MartialTraining(this));
 	}
 
 	/** Use only for emulated {@link Discipline}s. */
@@ -112,5 +120,14 @@ public abstract class Discipline implements Serializable {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	/**
+	 * @return All of the upgrades that are part of the discipline, in the order
+	 *         they should be applied to get the most out of training under it.
+	 */
+	public Upgrade[] getupgrades() {
+		return new Upgrade[] { trainingupgrade, knowledgeupgrade, classupgrade,
+				abilityupgrade, skillupgrade };
 	}
 }

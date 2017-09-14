@@ -74,13 +74,11 @@ public class FeatsFactor extends CrFactor {
 
 	@Override
 	public float calculate(final Monster m) {
-		float cr = 0;
-		for (Feat f : m.feats) {
-			cr += f.cr;
-		}
-		final float normalprogression = 1
-				+ Math.round(Math.floor(m.originalhd / 3f));
-		return cr - normalprogression * CR;
+		return m.feats.count() * CR - getnormalprogression(m) * CR;
+	}
+
+	static public int getnormalprogression(final Monster m) {
+		return 1 + Math.round(Math.round(Math.floor(m.hd.count() / 3f)));
 	}
 
 	@Override

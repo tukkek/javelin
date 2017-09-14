@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javelin.Javelin;
 import javelin.controller.challenge.factor.FeatsFactor;
+import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.unit.abilities.discipline.Maneuver;
 import javelin.model.unit.abilities.discipline.Maneuvers;
@@ -13,6 +14,11 @@ import tyrant.mikera.engine.RPG;
 /**
  * TODO how to allow player to select the maneuvers to learn?
  * 
+ * Javelin allows you to take as many feats as you want right up the bat so we
+ * need to add some validation here for when the assumption you'll only get a
+ * feat every x levels is false. However we don't want to limit this too much as
+ * we have this count for 2 feats with each buy.
+ * 
  * @author alex
  */
 public class MartialTraining extends Feat {
@@ -20,13 +26,6 @@ public class MartialTraining extends Feat {
 	 * At first will only implement up to lavel 4 TODO
 	 */
 	private static final int MAXLEVEL = 4;
-
-	/**
-	 * Double that of your typical feat because it implies an Extra Readied
-	 * Maneuver feat so that both maneuvers you gain while leveling up are
-	 * readied when combat starts.
-	 */
-	static final float CR = FeatsFactor.CR * 2;
 
 	private static final String[] RANK = new String[] { "Novice", "Student",
 			"Teacher", "Master", "Grandmaster", "Legend", };
@@ -45,43 +44,49 @@ public class MartialTraining extends Feat {
 	public MartialTraining(Discipline d) {
 		super(d.name + " training");
 		this.discipline = d;
-		cr = CR;
 	}
 
 	@Override
 	public boolean apply(Combatant c) {
 		c.source = c.source.clone();
-		if (level == MAXLEVEL) {
-			return false;
-		}
-		if (!validate(c)) {
-			return false;
-		}
 		int i = c.source.feats.indexOf(this);
+		MartialTraining mt = i == -1 ? this
+				: (MartialTraining) c.source.feats.get(i);
+		if (!mt.validate(c)) {
+			return false;
+		}
 		if (i == -1) {
 			return super.apply(c);
 		}
-		slots += 2;
+		mt.slots += 2;
 		return true;
 	}
 
 	boolean validate(Combatant c) {
-		int nextlevel = level + 1;
+		Monster m = c.source;
+		if (m.feats.count() + slots >= FeatsFactor.getnormalprogression(m)) {
+			return false;
+		}
+		int nextlevel = level + slots / 2;
+		if (nextlevel >= MAXLEVEL) {
+			return false;
+		}
 		int minimum = 1 + nextlevel * 2;
-		return c.source.getbaseattackbonus() >= minimum
-				|| c.source.skills.knowledge >= minimum;
+		int bab = m.getbaseattackbonus();
+		int knowledge = m.skills.knowledge;
+		return bab >= minimum || knowledge >= minimum;
 	}
 
 	@Override
 	public void postupgradeautomatic(Combatant c) {
 		while (slots > 0) {
 			level += 1;
-			int picked = 0;
-			ArrayList<Maneuver> trainable = gettrainable(c, 2 - picked);
+			int pick = 2;
+			ArrayList<Maneuver> trainable = gettrainable(c, pick);
 			int level = trainable.get(0).level;
-			while (picked < 2) {
+			while (pick > 0) {
 				if (pick(trainable, level, c)) {
-					picked -= 1;
+					pick -= 1;
 				} else {
 					level -= 1;
 				}
@@ -114,7 +119,7 @@ public class MartialTraining extends Feat {
 			return false;
 		}
 		Maneuver m = RPG.pick(tier);
-		boolean failed = c.addmaneuver(discipline, m);
+		boolean failed = !c.addmaneuver(discipline, m);
 		if (Javelin.DEBUG && failed) {
 			final String error = "Invalid maneuver " + m + " for " + c;
 			throw new RuntimeException(error);
@@ -130,7 +135,7 @@ public class MartialTraining extends Feat {
 		return name + rank;
 	}
 
-	String getrank() {
+	public String getrank() {
 		return RANK[level - 1];
 	}
 
@@ -156,5 +161,10 @@ public class MartialTraining extends Feat {
 	@Override
 	public Feat generate(String name2) {
 		return new MartialTraining(discipline);
+	}
+
+	@Override
+	public int count() {
+		return level * 2;
 	}
 }

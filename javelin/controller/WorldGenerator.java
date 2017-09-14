@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.generator.feature.FeatureGenerator;
@@ -20,7 +21,8 @@ import javelin.view.screen.InfoScreen;
 import tyrant.mikera.engine.RPG;
 
 public class WorldGenerator extends Thread {
-	private static final int MAXRETRIES = 1000; // 1000000
+	private static final boolean SINGLETHREAD = true;
+	private static final int MAXRETRIES = 1000;
 	public static final Terrain[] GENERATIONORDER = new Terrain[] {
 			Terrain.MOUNTAINS, Terrain.MOUNTAINS, Terrain.DESERT, Terrain.PLAIN,
 			Terrain.HILL, Terrain.WATER, Terrain.WATER, Terrain.MARSH,
@@ -274,6 +276,9 @@ public class WorldGenerator extends Thread {
 
 	public static void build() {
 		int threads = Math.max(1, Preferences.MAXTHREADS);
+		if (Javelin.DEBUG && SINGLETHREAD) {
+			threads = 1;
+		}
 		final String info = "Building world, using " + threads
 				+ " thread(s)...\n\nWorlds discarded: ";
 		try {

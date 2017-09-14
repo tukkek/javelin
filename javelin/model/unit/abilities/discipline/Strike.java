@@ -136,6 +136,9 @@ public abstract class Strike extends Maneuver {
 
 	@Override
 	public boolean validate(Combatant c) {
+		if (!super.validate(c)) {
+			return false;
+		}
 		return !c.source.melee.isEmpty() || !c.source.ranged.isEmpty();
 	}
 

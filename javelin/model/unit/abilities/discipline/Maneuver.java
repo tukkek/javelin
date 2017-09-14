@@ -91,7 +91,7 @@ public abstract class Maneuver
 	}
 
 	public boolean validate(Combatant c) {
-		return true;
+		return !c.disciplines.getmaneuvers().contains(this);
 	}
 
 	@Override

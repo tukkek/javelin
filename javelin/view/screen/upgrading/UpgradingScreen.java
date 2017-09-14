@@ -131,9 +131,10 @@ public abstract class UpgradingScreen extends SelectScreen {
 
 	void finishpurchase(final UpgradeOption o, Combatant c) {
 		if (buy(o, c, false) != null) {
+			int hd = c.source.hd.count();
 			update(c);
 			upgraded.add(c);
-			c.postupgrade(o.u.purchaseskills, o.u);
+			c.postupgrade(c.source.hd.count() > hd, o.u);
 		}
 	}
 
@@ -150,20 +151,20 @@ public abstract class UpgradingScreen extends SelectScreen {
 	String listeligible(final UpgradeOption o, final List<Combatant> eligible) {
 		String s = "\n";
 		int i = 1;
-		for (final Combatant m : Squad.active.members) {
-			String name = m.toString();
+		for (final Combatant c : Squad.active.members) {
+			String name = c.toString();
 			while (name.length() <= 10) {
 				name += " ";
 			}
-			final BigDecimal cost = buy(o, m.clone().clonesource(), true);
+			final BigDecimal cost = buy(o, c.clone().clonesource(), true);
 			if (cost != null && cost.compareTo(new BigDecimal(0)) > 0
-					&& m.xp.compareTo(cost) >= 0) {
-				eligible.add(m);
+					&& c.xp.compareTo(cost) >= 0) {
+				eligible.add(c);
 				String costinfo = "    Cost: "
 						+ cost.multiply(new BigDecimal(100)).setScale(0,
 								RoundingMode.HALF_UP)
 						+ "XP, $" + price(cost.floatValue());
-				s += "[" + i++ + "] " + name + " " + o.u.inform(m) + costinfo
+				s += "[" + i++ + "] " + name + " " + o.u.inform(c) + costinfo
 						+ ", " + Math.round(cost.floatValue() * UPGRADETIME)
 						+ " days\n";
 			}
@@ -180,7 +181,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 		float originalcr = ChallengeRatingCalculator
 				.calculaterawcr(c.source)[1];
 		final Combatant clone = c.clone().clonesource();
-		if (!o.u.upgrade(clone)) {
+		if (!upgrade(o, clone)) {
 			return null;
 		}
 		BigDecimal cost = new BigDecimal(
@@ -196,9 +197,13 @@ public abstract class UpgradingScreen extends SelectScreen {
 			}
 			Squad.active.gold -= goldpieces;
 		}
+		upgrade(o, c);
 		c.xp = c.xp.subtract(cost);
-		o.u.upgrade(c);
 		return cost;
+	}
+
+	protected boolean upgrade(final UpgradeOption o, final Combatant c) {
+		return o.u.upgrade(c);
 	}
 
 	@Override

@@ -229,14 +229,7 @@ public class StatisticsScreen extends InfoScreen {
 	}
 
 	private static String describequalities(Monster m, Combatant c) {
-		ArrayList<String> disciplines = new ArrayList<String>(
-				c.disciplines.keySet());
-		for (int i = 0; i < disciplines.size(); i++) {
-			String discipline = disciplines.get(i);
-			disciplines.set(i, discipline + " ("
-					+ c.disciplines.get(discipline).size() + ")");
-		}
-		String s = printqualities("Disciplines", disciplines);
+		String s = printqualities("Disciplines", c.disciplines.getmaneuvers());
 		ArrayList<String> spells = new ArrayList<String>(c.spells.size());
 		for (Spell spell : c.spells) {
 			spells.add(spell.toString());

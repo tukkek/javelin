@@ -34,13 +34,6 @@ public abstract class Feat implements Serializable, javelin.model.Cloneable {
 	 */
 	public Feat prerequisite = null;
 
-	/**
-	 * How much Challenge Rating this feat cost.
-	 * 
-	 * @see FeatsFactor#CR
-	 */
-	public float cr = FeatsFactor.CR;
-
 	/** Constructor. */
 	public Feat(String namep) {
 		name = namep.toLowerCase();
@@ -132,5 +125,14 @@ public abstract class Feat implements Serializable, javelin.model.Cloneable {
 		} catch (CloneNotSupportedException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	/**
+	 * @return how many feats this should count as for purposes of normal
+	 *         progression.
+	 * @see FeatsFactor#getnormalprogression(Monster)
+	 */
+	public int count() {
+		return 1;
 	}
 }

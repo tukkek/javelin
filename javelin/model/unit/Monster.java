@@ -157,7 +157,7 @@ public class Monster implements Cloneable, Serializable {
 	public ArrayList<AttackSequence> melee = new ArrayList<AttackSequence>();
 	public ArrayList<AttackSequence> ranged = new ArrayList<AttackSequence>();
 
-	public CloneableList<Feat> feats = new CloneableList<Feat>();
+	public Feats feats = new Feats();
 	public HD hd = new HD();
 	/**
 	 * @see Breath

@@ -66,17 +66,11 @@ public class WorldGenerator extends Thread {
 			generate(world);
 			Town start = FeatureGenerator.SINGLETON
 					.placestartingfeatures(world);
-			// boolean found = false;
 			for (Actor a : world.actors.get(Town.class)) {
 				if (a != start) {
 					((Town) a).populategarisson();
-					// } else {
-					// found = true;
 				}
 			}
-			// if (!found) {
-			// System.out.println("wut");
-			// }
 			WorldGenerator.finish(start, world);
 		} catch (RestartWorldGeneration e) {
 			if (World.seed == null) {

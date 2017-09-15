@@ -117,9 +117,14 @@ public class Town extends Location {
 	private static Point getvalidlocation(List<Point> list) {
 		Collections.shuffle(list);
 		for (Point p : list) {
-			if (Terrain.get(p.x, p.y) != Terrain.WATER && !checktooclose(p)) {
-				return p;
+			if (Terrain.get(p.x, p.y) == Terrain.WATER || checktooclose(p)) {
+				continue;
 			}
+			if (Terrain.search(new Point(p.x, p.y), Terrain.WATER, 1,
+					World.getseed()) > 4) {
+				continue;
+			}
+			return p;
 		}
 		throw new RestartWorldGeneration();
 	}

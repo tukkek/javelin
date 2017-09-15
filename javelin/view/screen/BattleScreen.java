@@ -417,6 +417,6 @@ public class BattleScreen extends Screen {
 
 	public void center() {
 		Javelin.app.switchScreen(this);
-		mappanel.center(Squad.active.x, Squad.active.y, false);
+		centerscreen(Squad.active.x, Squad.active.y);
 	}
 }

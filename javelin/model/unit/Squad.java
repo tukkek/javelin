@@ -159,9 +159,8 @@ public class Squad extends Actor implements Cloneable {
 		Combatant leader = members.get(0);
 		for (int i = 1; i < members.size(); i++) {
 			Combatant m = members.get(i);
-			if (CrCalculator
-					.calculatecr(m.source) > CrCalculator
-							.calculatecr(leader.source)) {
+			if (CrCalculator.calculatecr(m.source) > CrCalculator
+					.calculatecr(leader.source)) {
 				leader = m;
 			}
 		}
@@ -432,8 +431,7 @@ public class Squad extends Actor implements Cloneable {
 		// hidden
 		char input = ' ';
 		final String prompt = "You have hidden from a "
-				+ CrCalculator.describedifficulty(foes)
-				+ " group of enemies!\n"
+				+ CrCalculator.describedifficulty(foes) + " group of enemies!\n"
 				+ "Press s to storm them or w to wait for them to go away...\n\n"
 				+ "Enemies: " + Squad.active.spot(foes);
 		while (input != 'w' && input != 's') {

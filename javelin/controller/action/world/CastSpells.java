@@ -18,6 +18,7 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class CastSpells extends WorldAction {
+
 	/** Constructor. */
 	public CastSpells() {
 		super("Cast spells", new int[0], new String[] { "s" });

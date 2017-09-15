@@ -7,6 +7,7 @@ import javelin.model.unit.abilities.spell.abjuration.Barkskin;
 import javelin.model.unit.abilities.spell.abjuration.Blink;
 import javelin.model.unit.abilities.spell.abjuration.DispelMagic;
 import javelin.model.unit.abilities.spell.abjuration.ResistEnergy;
+import javelin.model.unit.abilities.spell.conjuration.SecureShelter;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.abilities.spell.conjuration.healing.NeutralizePoison;
 import javelin.model.unit.abilities.spell.conjuration.healing.RaiseDead;
@@ -17,7 +18,6 @@ import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureLightWo
 import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureModerateWounds;
 import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureSeriousWounds;
 import javelin.model.unit.abilities.spell.conjuration.teleportation.GreaterTeleport;
-import javelin.model.unit.abilities.spell.conjuration.teleportation.SecureShelter;
 import javelin.model.unit.abilities.spell.conjuration.teleportation.WordOfRecall;
 import javelin.model.unit.abilities.spell.divination.DiscernLocation;
 import javelin.model.unit.abilities.spell.divination.FindTraps;

@@ -1,4 +1,4 @@
-package javelin.model.unit.abilities.spell.conjuration.teleportation;
+package javelin.model.unit.abilities.spell.conjuration;
 
 import javelin.controller.challenge.CrCalculator;
 import javelin.model.Realm;

@@ -49,7 +49,10 @@ public class Scroll extends Item {
 			failure = c + " needs more experience before reading this scroll.";
 			return false;
 		}
-
+		if (!spell.validate(c, null)) {
+			return false;
+		}
+		spell.castpeacefully(c);
 		return true;
 	}
 

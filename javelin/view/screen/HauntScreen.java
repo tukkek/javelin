@@ -86,6 +86,7 @@ public class HauntScreen extends SelectScreen {
 		if (o == PILLAGE) {
 			Haxor.singleton.rubies += 1;
 			haunt.remove();
+			stayopen = false;
 			return true;
 		}
 		Class<? extends Option> optiontype = o.getClass();

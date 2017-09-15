@@ -488,10 +488,20 @@ public class Javelin {
 	 *            Text to show.
 	 * @return Any {@link InfoScreen#feedback()}.
 	 */
-	static public Character prompt(final String prompt) {
+	static public Character prompt(final String prompt, boolean center) {
 		Game.messagepanel.clear();
 		Game.message(prompt, Delay.NONE);
+		if (center) {
+			BattleScreen.active.center();
+		}
 		return InfoScreen.feedback();
+	}
+
+	/**
+	 * @see
+	 */
+	static public Character prompt(final String prompt) {
+		return prompt(prompt, false);
 	}
 
 	/**

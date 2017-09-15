@@ -12,6 +12,14 @@ import javelin.model.unit.attack.Combatant;
 public class RepeatTurn extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
+	public RepeatTurn(String string) {
+		super(string);
+	}
+
+	public RepeatTurn() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public synchronized Throwable fillInStackTrace() {
 		return this;

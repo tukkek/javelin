@@ -24,6 +24,8 @@ import javelin.view.screen.town.SelectScreen;
 public class UseItems extends WorldAction {
 	static final String KEYS = "1234567890abcdfghijklmnoprstuvxwyz";
 
+	public static boolean skiperror = false;
+
 	/** Constructor. */
 	public UseItems() {
 		super("Inventory", new int[] {}, new String[] { "i" });
@@ -31,6 +33,7 @@ public class UseItems extends WorldAction {
 
 	@Override
 	public void perform(final WorldScreen worldscreen) {
+		skiperror = false;
 		Squad.active.sort();
 		while (true) {
 			final ArrayList<Item> allitems = new ArrayList<Item>();
@@ -68,9 +71,12 @@ public class UseItems extends WorldAction {
 				: inputmember("Which member will use the "
 						+ selected.toString().toLowerCase() + "?");
 		if (!selected.usepeacefully(target)) {
-			infoscreen.print(
-					infoscreen.text + "\n\n" + selected.describefailure());
-			InfoScreen.feedback();
+			if (!skiperror) {
+				String error = infoscreen.text + "\n\n"
+						+ selected.describefailure();
+				infoscreen.print(error);
+				InfoScreen.feedback();
+			}
 		} else if (selected.consumable) {
 			selected.expend();
 		}

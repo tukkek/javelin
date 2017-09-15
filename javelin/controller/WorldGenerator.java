@@ -98,27 +98,7 @@ public class WorldGenerator extends Thread {
 		Squad.active.place();
 		Squad.active.equipment.fill(Squad.active);
 		Squad.active.lasttown = start;
-		// Outpost.discover(start.x, start.y, Outpost.VISIONRANGE);
 	}
-
-	// static void placemoretowns() {
-	// int more = RPG.r(5, 7);
-	// while (more > 0) {
-	// int x = RPG.r(0, World.SIZE - 1);
-	// int y = RPG.r(0, World.SIZE - 1);
-	// if (World.get(x, y) != null || !World.seed.map[x][y]
-	// .generatetown(new Point(x, y), World.seed)) {
-	// continue;
-	// }
-	// more -= 1;
-	// Point p = new Point(x, y);
-	// Town t = new Town(p, determinecolor(p).realm);
-	// // while (t.isnear(Town.class, Town.MINIMUMDISTANCE)) {
-	// // Location.generate(t, false);
-	// // }
-	// t.place();
-	// }
-	// }
 
 	public static void placenearbywoods(Town start) {
 		int x, y;

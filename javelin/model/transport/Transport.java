@@ -5,10 +5,14 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 import javelin.Javelin;
+import javelin.controller.Point;
 import javelin.controller.action.world.WorldMove;
+import javelin.controller.exception.RepeatTurn;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
+import javelin.model.world.ParkedVehicle;
+import javelin.model.world.World;
 
 /**
  * Vehicles improve speed / random encounter chance.
@@ -45,7 +49,8 @@ public class Transport implements Serializable {
 	 */
 	public boolean parkeable = true;
 
-	Transport(String namep, int speedp, int capacityp, int maintenancep, int price, int researchcost) {
+	Transport(String namep, int speedp, int capacityp, int maintenancep,
+			int price, int researchcost) {
 		name = namep;
 		speed = speedp;
 		capacity = capacityp;
@@ -59,7 +64,9 @@ public class Transport implements Serializable {
 	 */
 	public String load(ArrayList<Combatant> tripulation) {
 		ArrayList<Combatant> trailing = gettrailing(tripulation);
-		return checkload(trailing) ? " (" + Math.round(trailing.size() * 100 / capacity) + "% load)" : " (overloaded)";
+		return checkload(trailing) ? " ("
+				+ Math.round(trailing.size() * 100 / capacity) + "% load)"
+				: " (overloaded)";
 	}
 
 	/**
@@ -72,7 +79,9 @@ public class Transport implements Serializable {
 		}
 		ArrayList<Combatant> trailing = gettrailing(tripulation);
 		return trailing.size() > capacity
-				? Math.round(trailing.get(capacity).source.gettopspeed() * WorldMove.NORMALMARCH) : speed;
+				? Math.round(trailing.get(capacity).source.gettopspeed()
+						* WorldMove.NORMALMARCH)
+				: speed;
 	}
 
 	ArrayList<Combatant> gettrailing(ArrayList<Combatant> tripulation) {
@@ -136,7 +145,8 @@ public class Transport implements Serializable {
 			s.transport = null;
 			s.updateavatar();
 			if (Terrain.get(s.x, s.y).equals(Terrain.WATER)) {
-				String message = "The " + toString() + " sinks, taking all non-swimmers with it!";
+				String message = "The " + toString()
+						+ " sinks, taking all non-swimmers with it!";
 				Javelin.message(message, true);
 				for (Combatant c : s.members) {
 					if (c.source.swim() == 0) {
@@ -145,5 +155,40 @@ public class Transport implements Serializable {
 				}
 			}
 		}
+	}
+
+	/**
+	 * @throws RepeatTurn
+	 *             If can't park - with a message explaining why.
+	 */
+	public void park() {
+		if (!parkeable) {
+			throw new RepeatTurn(
+					"This vehicle cannot sustain itself on its own...");
+		}
+		Squad s = Squad.active;
+		Point exit = null;
+		for (int x = s.x - 1; x <= s.x + 1; x++) {
+			for (int y = s.y - 1; y <= s.y + 1; y++) {
+				if (x == s.x && y == s.y || !World.validatecoordinate(x, y)
+						|| Terrain.get(x, y).equals(Terrain.WATER)
+						|| World.get(x, y) != null) {
+					continue;
+				}
+				exit = new Point(x, y);
+				break;
+			}
+		}
+		if (exit == null) {
+			throw new RepeatTurn(
+					"You need to be close to a free land space to park your vehicle...");
+		}
+		int x = s.x;
+		int y = s.y;
+		s.move(exit.x, exit.y);
+		s.place();
+		new ParkedVehicle(x, y, this).place();
+		s.transport = null;
+		s.updateavatar();
 	}
 }

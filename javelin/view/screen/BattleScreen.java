@@ -27,6 +27,7 @@ import javelin.controller.old.Game.Delay;
 import javelin.controller.old.MessagePanel;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
+import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.view.StatusPanel;
 import javelin.view.mappanel.MapPanel;
@@ -414,4 +415,8 @@ public class BattleScreen extends Screen {
 		return m.floor;
 	}
 
+	public void center() {
+		Javelin.app.switchScreen(this);
+		mappanel.center(Squad.active.x, Squad.active.y, false);
+	}
 }

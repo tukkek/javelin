@@ -43,10 +43,8 @@ public class StartBattle extends BattleEvent {
 		fight.setup.setup();
 		Fight.state.next();
 		fight.ready();
-		final int elred = CrCalculator
-				.calculateel(Fight.state.redTeam);
-		final int elblue = CrCalculator
-				.calculateel(Squad.active.members);
+		final int elred = CrCalculator.calculateel(Fight.state.redTeam);
+		final int elblue = CrCalculator.calculateel(Squad.active.members);
 		int diffifculty = elred - elblue;
 		if (fight instanceof Minigame
 				|| !Squad.active.skipcombat(diffifculty)) {
@@ -68,8 +66,7 @@ public class StartBattle extends BattleEvent {
 	 * @param difficulty
 	 */
 	public void quickbattle(int difficulty) {
-		float resourcesused = CrCalculator
-				.useresources(difficulty);
+		float resourcesused = CrCalculator.useresources(difficulty);
 		String report = "Battle report:\n\n";
 		ArrayList<Combatant> blueteam = new ArrayList<Combatant>(
 				Squad.active.members);
@@ -85,7 +82,7 @@ public class StartBattle extends BattleEvent {
 		while (s.getInput() != '\n') {
 			continue;
 		}
-		Javelin.app.switchScreen(WorldScreen.active);
+		WorldScreen.active.center();
 		Squad.active.gold -= Squad.active.gold * (resourcesused / 10f);
 		if (Squad.active.members.isEmpty()) {
 			Javelin.message("Battle report: Squad lost in combat!", false);

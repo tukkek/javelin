@@ -52,7 +52,7 @@ public class Caravan extends Actor {
 		allowedinscenario = false;
 		ArrayList<Actor> towns = World.getall(Town.class);
 		Collections.shuffle(towns);
-		Actor from = towns.get(0);
+		Town from = (Town) towns.get(0);
 		x = from.x;
 		y = from.y;
 		displace();
@@ -60,6 +60,7 @@ public class Caravan extends Actor {
 		while (inventory.size() < NUMBEROFITEMS) {
 			Item i = RPG.pick(Item.ALL);
 			if (!(i instanceof Artifact)) {
+				i = i.clone();
 				inventory.add(i);
 			}
 		}

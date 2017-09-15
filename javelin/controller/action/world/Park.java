@@ -3,12 +3,8 @@ package javelin.controller.action.world;
 import java.awt.event.KeyEvent;
 
 import javelin.Javelin;
-import javelin.controller.Point;
 import javelin.controller.exception.RepeatTurn;
-import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
-import javelin.model.world.ParkedVehicle;
-import javelin.model.world.World;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -20,7 +16,8 @@ public class Park extends WorldAction {
 
 	/** Constructor. */
 	public Park() {
-		super("Park your vehicle", new int[] { KeyEvent.VK_P }, new String[] { "p" });
+		super("Park your vehicle", new int[] { KeyEvent.VK_P },
+				new String[] { "p" });
 	}
 
 	@Override
@@ -28,32 +25,11 @@ public class Park extends WorldAction {
 		if (Squad.active.transport == null) {
 			throw new RepeatTurn();
 		}
-		if (!Squad.active.transport.parkeable) {
-			Javelin.message("This vehicle cannot sustain itself on it's own...", false);
-			throw new RepeatTurn();
+		try {
+			Squad.active.transport.park();
+		} catch (RepeatTurn e) {
+			Javelin.message(e.getMessage(), false);
+			throw e;
 		}
-		Squad s = Squad.active;
-		Point exit = null;
-		for (int x = s.x - 1; x <= s.x + 1; x++) {
-			for (int y = s.y - 1; y <= s.y + 1; y++) {
-				if (x == s.x && y == s.y || !World.validatecoordinate(x, y) || Terrain.get(x, y).equals(Terrain.WATER)
-						|| World.get(x, y) != null) {
-					continue;
-				}
-				exit = new Point(x, y);
-				break;
-			}
-		}
-		if (exit == null) {
-			Javelin.message("You need to be close to a free land space to park your vehicle...", false);
-			throw new RepeatTurn();
-		}
-		int parkingx = Squad.active.x;
-		int parkingy = Squad.active.y;
-		Squad.active.move(exit.x, exit.y);
-		Squad.active.place();
-		new ParkedVehicle(parkingx, parkingy, Squad.active.transport).place();
-		Squad.active.transport = null;
-		Squad.active.updateavatar();
 	}
 }

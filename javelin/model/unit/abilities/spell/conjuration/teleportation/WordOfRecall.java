@@ -5,6 +5,8 @@ import javelin.controller.action.world.UseItems;
 import javelin.controller.challenge.CrCalculator;
 import javelin.controller.exception.RepeatTurn;
 import javelin.model.Realm;
+import javelin.model.item.Item;
+import javelin.model.item.Scroll;
 import javelin.model.transport.Transport;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
@@ -14,6 +16,12 @@ import javelin.model.world.location.dungeon.Dungeon;
 /**
  * Brings you back to last visited town. See the d20 SRD for more info. Assumes
  * caster level 20 to be able to transport as many creatures as willed.
+ * 
+ * Destination for this spell is set when the spell is prepared, not when it's
+ * cast, so it makes some sense that that a {@link Scroll} could also be
+ * prepared before being cast. It's a bit of a stretch but doing anything else
+ * would be very complicated considering the numberr of different ways an
+ * {@link Item} can be generated in Javelin.
  * 
  * http://paizo.com/pathfinderRPG/prd/coreRulebook/spells/wordOfRecall.html
  */

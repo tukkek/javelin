@@ -5,6 +5,7 @@ Version 1.7
  * City management redesign, with 7 city traits and 36 projects!
  * Scenario mode!
  * Caster rings!
+ * Improved battle AI!
  * First martial discipline: Steel Serpent!
  * New locations: natural resources, Assassins Guild and Deep Dungeon
  * Introducing 6 Haunt locations

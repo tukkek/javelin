@@ -11,6 +11,8 @@ import javelin.view.mappanel.MoveOverlay;
 /**
  * Extensible path-finding algorithm.
  * 
+ * TODO improve documentation for all hierarchy.
+ * 
  * @author alex
  */
 public class Walker {
@@ -95,6 +97,10 @@ public class Walker {
 	public void reset() {
 		solution = null;
 		partial = null;
+	}
+
+	public static int distanceinsteps(int ax, int ay, int bx, int by) {
+		return Math.max(Math.abs(ax - bx), Math.abs(ay - by));
 	}
 
 	public static double distance(final Combatant c1, final Combatant c2) {

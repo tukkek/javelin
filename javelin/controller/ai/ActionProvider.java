@@ -54,7 +54,7 @@ public final class ActionProvider
 		s.next();
 		if (s.next.burrowed) {
 			for (Action a : AIACTIONS) {
-				if (a.allowwhileburrowed) {
+				if (a.allowburrowed) {
 					actions.add(a);
 				}
 			}

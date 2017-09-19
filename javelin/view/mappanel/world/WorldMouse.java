@@ -16,7 +16,7 @@ import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.MoveOverlay;
 import javelin.view.mappanel.battle.BattlePanel;
-import javelin.view.mappanel.battle.overlay.BattleMover.Step;
+import javelin.view.mappanel.battle.overlay.BattleMover.BatteStep;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
 import javelin.view.screen.WorldScreen;
@@ -44,7 +44,7 @@ public class WorldMouse extends Mouse {
 					interrupted = true;
 					break;
 				}
-				Step step = overlay.path.steps.get(i);
+				BatteStep step = overlay.path.steps.get(i);
 				if (!step.safe) {
 					RandomEncounter.encounter(step.apcost);
 				}

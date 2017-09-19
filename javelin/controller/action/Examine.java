@@ -41,7 +41,7 @@ public class Examine extends Action {
 	/** Constructor. */
 	public Examine() {
 		super("examine", new String[] { "x" });
-		allowwhileburrowed = true;
+		allowburrowed = true;
 	}
 
 	@Override

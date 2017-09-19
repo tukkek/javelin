@@ -2,10 +2,13 @@ package javelin.controller.ai;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.TreeMap;
 
+import javelin.controller.action.ai.AiAction;
 import javelin.controller.exception.StopThinking;
 import javelin.model.state.BattleState;
+import tyrant.mikera.engine.RPG;
 
 /**
  * Efficiently uses a CPU core to run an {@link AlphaBetaSearch}. When the
@@ -27,10 +30,12 @@ public class AiThread extends Thread {
 	public BattleState state;
 	public int depth;
 	List<ChanceNode> result;
+	final Random random;
 
-	public AiThread(BattleState state) {
+	public AiThread(BattleState state, long randomseed) {
 		super(group, (Runnable) null);
 		this.state = state.clonedeeply();
+		random = new Random(randomseed);
 		setdepth();
 		start();
 	}
@@ -85,5 +90,35 @@ public class AiThread extends Thread {
 		ThreadManager.interrupt();
 		AiThread.FINISHED.clear();
 		AiThread.STARTED.clear();
+	}
+
+	/**
+	 * This allows {@link BattleAi} to achieve some defree of randomization.
+	 * This cannto be used to determine action outcomes though because, even if
+	 * proven to be internally reliable, it would allow the AI to know the
+	 * outcomes of dice rolls during the thinking phase, instead of having to
+	 * force it to think in possibilites instead.
+	 * 
+	 * This is offered in the hopes that, as long as the same seed is given at
+	 * {@link AiThread#AiThread(BattleState, long)}, the same sequence of calls
+	 * to
+	 * {@link AiAction#getoutcomes(javelin.model.unit.attack.Combatant, BattleState)}
+	 * will produce reliable results. This, however, cannot be entirely
+	 * guaranteed given how prunning may work in different {@link #depth}
+	 * calculations.
+	 * 
+	 * TODO this has not been guaranteed to produce deterministic results when
+	 * it comes to different {@link #depth}s and such but is a relatively
+	 * relaible tool that can be used for less important {@link AiAction}s.
+	 * 
+	 * @return A RNG that is bound to the context of this thread. If called from
+	 *         outside an {@link AiThread}, returns {@link RPG#rand} isntead.
+	 */
+	public static Random getrandom() {
+		Thread t = Thread.currentThread();
+		if (t instanceof AiThread) {
+			return ((AiThread) t).random;
+		}
+		return RPG.rand;
 	}
 }

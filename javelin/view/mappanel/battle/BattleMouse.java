@@ -22,7 +22,7 @@ import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.MoveOverlay;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.battle.overlay.BattleMover;
-import javelin.view.mappanel.battle.overlay.BattleMover.Step;
+import javelin.view.mappanel.battle.overlay.BattleMover.BatteStep;
 import javelin.view.mappanel.battle.overlay.TargetOverlay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.StatisticsScreen;
@@ -95,7 +95,7 @@ public class BattleMouse extends Mouse {
 						BattleScreen.perform(new Runnable() {
 							@Override
 							public void run() {
-								final Step to = walk.path.steps
+								final BatteStep to = walk.path.steps
 										.get(walk.path.steps.size() - 1);
 								BattleState move = Fight.state;
 								Combatant c = move.clone(current);

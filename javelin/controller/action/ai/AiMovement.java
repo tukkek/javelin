@@ -2,140 +2,187 @@ package javelin.controller.action.ai;
 
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 
+import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.action.Action;
-import javelin.controller.action.Defend;
-import javelin.controller.action.Movement;
+import javelin.controller.action.ActionCost;
+import javelin.controller.ai.AiThread;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.Node;
+import javelin.controller.fight.Fight;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
+import javelin.model.state.BattleState.Vision;
 import javelin.model.state.Meld;
 import javelin.model.unit.attack.Combatant;
 import javelin.view.Images;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
+import javelin.view.mappanel.battle.overlay.BattleMover;
+import javelin.view.mappanel.battle.overlay.BattleMover.BatteStep;
 
 /**
+ * Attempst to offer a more fluid experience than having {@link AiMovement}
+ * simple do long step-by-step movement. Tries to move at most .5AP (move
+ * action).
+ * 
  * @author alex
- * @see Movement
  */
 public class AiMovement extends Action implements AiAction {
-	public static final Image MOVEOVERLAY = Images.getImage("overlaymove");
-
-	static public class MoveNode extends ChanceNode {
-
-		public MoveNode(Node n, float chance, String action, Delay delay,
-				Point from) {
-			super(n, chance, action, delay);
-			AiOverlay o = new AiOverlay(from.x, from.y);
-			Images.getImage("overlaymove");
-			o.image = MOVEOVERLAY;
+	public class LongMove extends ChanceNode {
+		public LongMove(Combatant c, BatteStep s, BattleMover mover, Meld m,
+				Node n) {
+			super(n, 1, getmessage(c, m, s),
+					m == null ? Delay.WAIT : Delay.BLOCK);
+			/* TODO block on meld only */
+			AiOverlay o = new AiOverlay(
+					mover.steps.subList(0, mover.steps.indexOf(s)));
+			o.affected.add(new Point(mover.sourcex, mover.sourcey));
+			o.image = AiMovement.MOVEOVERLAY;
 			overlay = o;
 		}
 	}
 
+	/**
+	 * Target value for number of outcome nodes.We want to limit the nu,ber of
+	 * node outcomes so that the AI doesn't become to slow.
+	 */
+	static final int MOVES = 8;
 	public static final AiMovement SINGLETON = new AiMovement();
-	static final Movement[][] movementgridbyy = new Movement[3][3];
-
-	static {
-		/* Tyrant vertical axis is inverted :P */
-		movementgridbyy[0][0] = Action.MOVE_NW;
-		movementgridbyy[0][1] = Action.MOVE_N;
-		movementgridbyy[0][2] = Action.MOVE_NE;
-		movementgridbyy[1][0] = Action.MOVE_W;
-		movementgridbyy[1][2] = Action.MOVE_E;
-		movementgridbyy[2][0] = Action.MOVE_SW;
-		movementgridbyy[2][1] = Action.MOVE_S;
-		movementgridbyy[2][2] = Action.MOVE_SE;
-	}
+	public static final Image MOVEOVERLAY = Images.getImage("overlaymove");
 
 	private AiMovement() {
-		super("Move");
-		allowwhileburrowed = true;
+		super("Long move");
+		allowburrowed = true;
 	}
 
 	@Override
-	public List<List<ChanceNode>> getoutcomes(final Combatant active,
-			final BattleState gameStatep) {
-		final ArrayList<List<ChanceNode>> successors = new ArrayList<List<ChanceNode>>();
-		for (int x = active.location[0]
-				- 1, deltax = -1; deltax <= +1; x++, deltax++) {
-			movement: for (int y = active.location[1]
-					- 1, deltay = -1; deltay <= +1; y++, deltay++) {
-				if (deltax == 0 && deltay == 0) {
-					continue;
-				}
-				final BattleState gameState = gameStatep;
-				if (x < 0 || y < 0 || x >= gameState.map.length
-						|| y >= gameState.map[0].length) {
-					continue;
-				}
-				if (gameState.getcombatant(x, y) != null
-						|| gameState.map[x][y].blocked
-								&& active.source.fly == 0) {
-					continue;
-				}
-				Meld meld = null;
-				for (Meld m : gameState.meld) {
-					if (m.x == x && m.y == y) {
-						if (!m.crystalize(gameState)) {
-							continue movement;
-						}
-						meld = m;
-						break;
-					}
-				}
-				successors.add(registermove(deltax, deltay, active, gameState,
-						x, y, meld));
+	public List<List<ChanceNode>> getoutcomes(Combatant c, BattleState s) {
+		HashSet<Point> destinations = getdestinations(c, s);
+		ArrayList<List<ChanceNode>> outcomes = new ArrayList<List<ChanceNode>>(
+				Math.min(destinations.size(), MOVES));
+		Point from = new Point(c.location[0], c.location[1]);
+		for (Point interest : getpointsofinterest(c, s, destinations)) {
+			add(move(c, from, interest, s), outcomes);
+		}
+		if (outcomes.size() >= MOVES) {
+			return outcomes;
+		}
+		Random r = AiThread.getrandom();
+		ArrayList<Point> pool = new ArrayList<Point>(destinations);
+		while (outcomes.size() < MOVES && !pool.isEmpty()) {
+			Point to = pool.remove(r.nextInt(pool.size()));
+			add(move(c, from, to, s), outcomes);
+		}
+		return outcomes;
+	}
+
+	ArrayList<Point> getpointsofinterest(Combatant c, BattleState s,
+			HashSet<Point> destinations) {
+		final ArrayList<Combatant> enemies = s.getteam(c) == s.blueTeam
+				? s.redTeam : s.blueTeam;
+		ArrayList<Point> interesting = new ArrayList<Point>();
+		for (Combatant enemy : enemies) {
+			interesting.add(new Point(enemy.location[0], enemy.location[1]));
+		}
+		for (Meld m : s.meld) {
+			interesting.add(new Point(m.x, m.y));
+		}
+		for (Point p : new ArrayList<Point>(interesting)) {
+			if (destinations.contains(p)) {
+				destinations.remove(p);
+			} else {
+				/* not interesting, can't reach this turn */
+				interesting.remove(p);
 			}
 		}
-		if (!Defend.ALLOWAI && successors.isEmpty()) {
-			successors.add(wait(gameStatep, active));
-		}
-		return successors;
+		return interesting;
 	}
 
-	static private ArrayList<ChanceNode> registermove(final int deltax,
-			final int deltay, Combatant active, BattleState gameState,
-			final int x, final int y, Meld meld) {
-		Point from = new Point(active.location[0], active.location[1]);
-		gameState = gameState.clone();
-		active = gameState.clone(active);
-		final Movement moveaction = movementgridbyy[deltay + 1][deltax + 1];
-		final boolean disengaging = gameState.isengaged(active);
-		active.ap += moveaction.cost(active, gameState, x, y, disengaging);
-		active.location[0] = x;
-		active.location[1] = y;
-		final ArrayList<ChanceNode> list = new ArrayList<ChanceNode>(1);
-		String action;
-		Delay delay;
-		if (meld == null) {
-			action = active + (disengaging ? " disengages..." : " moves...");
-			delay = Delay.WAIT;
-		} else {
-			action = active + " powers up!";
-			delay = Delay.BLOCK;
-			active.meld();
-			gameState.meld.remove(meld);
+	void add(ChanceNode n, ArrayList<List<ChanceNode>> outcomes) {
+		if (n != null) {
+			ArrayList<ChanceNode> chances = new ArrayList<ChanceNode>();
+			chances.add(n);
+			outcomes.add(chances);
 		}
-		list.add(new MoveNode(gameState, 1f, action, delay, from));
-		return list;
 	}
 
-	static public ArrayList<ChanceNode> wait(final BattleState gameState,
-			final Combatant active) {
-		final ArrayList<ChanceNode> wait = new ArrayList<ChanceNode>();
-		final BattleState state = gameState.clone();
-		state.clone(active).await();
-		wait.add(new ChanceNode(state, 1f, active.toString() + " defends...",
-				Delay.WAIT));
-		return wait;
+	LongMove move(Combatant c, Point from, Point to, BattleState s) {
+		BattleMover mover = new BattleMover(from, to, c, s);
+		mover.walk();
+		if (mover.steps == null || mover.steps.isEmpty()) {
+			return null;
+		}
+		BatteStep step = choosestep(mover.steps);
+		s = s.clone();
+		c = s.clone(c);
+		c.ap += step.totalcost;
+		c.location[0] = step.x;
+		c.location[1] = step.y;
+		Meld m = s.getmeld(step.x, step.y);
+		if (m != null) {
+			c.meld();
+			s.meld.remove(m);
+		}
+		return new LongMove(c, step, mover, m, s);
+	}
+
+	BatteStep choosestep(ArrayList<BatteStep> steps) {
+		for (BatteStep step : steps) {
+			if (step.engaged || step.totalcost >= ActionCost.MOVE) {
+				return step;
+			}
+		}
+		return steps.get(steps.size() - 1);
+	}
+
+	HashSet<Point> getdestinations(Combatant c, BattleState s) {
+		HashSet<Point> visible = new HashSet<Point>();
+		final Fight f = Javelin.app.fight;
+		int range = 1;
+		if (!s.isengaged(c)) {
+			range = Math.min(c.view(f.period), c.source.gettopspeed() / 5);
+		}
+		for (int x = -range; x <= +range; x++) {
+			for (int y = -range; y <= +range; y++) {
+				Point p = new Point(c.location[0] + x, c.location[1] + y);
+				if (!p.validate(0, 0, s.map.length, s.map[0].length)) {
+					continue;
+				}
+				if (s.map[p.x][p.y].blocked && c.source.fly == 0) {
+					continue;
+				}
+				if (s.getcombatant(p.x, p.y) != null) {
+					continue;
+				}
+				Meld m = s.getmeld(p.x, p.y);
+				if (m != null && !m.crystalize(s)) {
+					continue;
+				}
+				if (s.haslineofsight(c, p) == Vision.BLOCKED) {
+					continue;
+				}
+				visible.add(p);
+			}
+		}
+		return visible;
 	}
 
 	@Override
 	public boolean perform(Combatant active) {
-		return false;
+		throw new UnsupportedOperationException();
+	}
+
+	static String getmessage(Combatant c, Meld m, BatteStep s) {
+		if (m != null) {
+			return c + " powers up!";
+		}
+		if (s.engaged) {
+			return c + " disengages...";
+		}
+		return c + " moves...";
 	}
 }

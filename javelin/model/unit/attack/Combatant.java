@@ -14,7 +14,6 @@ import javelin.controller.Point;
 import javelin.controller.SpellbookGenerator;
 import javelin.controller.action.Action;
 import javelin.controller.action.ActionCost;
-import javelin.controller.action.Defend;
 import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.controller.action.ai.attack.RangedAttack;
 import javelin.controller.ai.BattleAi;
@@ -49,7 +48,6 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.Spells;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.condition.Condition.Effect;
-import javelin.model.unit.condition.Defending;
 import javelin.model.unit.condition.Melding;
 import javelin.model.unit.feat.Feat;
 import javelin.model.unit.feat.attack.Cleave;
@@ -477,7 +475,7 @@ public class Combatant implements Serializable, Cloneable {
 	 * Not to be confused with {@link Skills#perceive(Monster, boolean)}.
 	 *
 	 * @param period
-	 *            Objective period
+	 *            Objective period.
 	 * @return monster's vision in squares (5 feet)
 	 * @see #perceive(String)
 	 */
@@ -507,13 +505,6 @@ public class Combatant implements Serializable, Cloneable {
 	@Override
 	public int hashCode() {
 		return id;
-	}
-
-	public void await() {
-		ap += Defend.APCOST;
-		if (!burrowed) {
-			addcondition(new Defending(ap, this));
-		}
 	}
 
 	public void cleave(float ap) {

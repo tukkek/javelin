@@ -1,7 +1,6 @@
 package javelin.controller.action;
 
 import javelin.Javelin;
-import javelin.controller.action.ai.AiMovement;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
@@ -33,7 +32,7 @@ public class Movement extends Action {
 			final String descriptivekeys) {
 		super(name, keys);
 		this.descriptivekeys = descriptivekeys;
-		this.allowwhileburrowed = true;
+		this.allowburrowed = true;
 	}
 
 	/**
@@ -44,8 +43,8 @@ public class Movement extends Action {
 	 * @param disengaging
 	 * @return How much it costs to move to the specified square.
 	 */
-	public float cost(final Combatant c, final BattleState state, int x, int y,
-			boolean disengaging) {
+	static public float cost(final Combatant c, final BattleState state, int x,
+			int y, boolean disengaging) {
 		float speed;
 		if (c.burrowed) {
 			speed = c.source.burrow;

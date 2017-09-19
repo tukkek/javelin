@@ -71,7 +71,7 @@ public class WorldMover extends BattleMover {
 	public ArrayList<javelin.controller.walker.Step> walk() {
 		ArrayList<javelin.controller.walker.Step> walk = super.walk();
 		if (checksafe) {
-			for (Step s : steps) {
+			for (BatteStep s : steps) {
 				if (safe.contains(new Point(s.x, s.y))) {
 					s.safe = true;
 				}

@@ -372,7 +372,7 @@ public class BattleScreen extends Screen {
 	void perform(final Action action, final boolean isShiftDown) {
 		try {
 			current = Fight.state.clone(current);
-			if (current.burrowed && !action.allowwhileburrowed) {
+			if (current.burrowed && !action.allowburrowed) {
 				Dig.refuse();
 			}
 			if (!action.perform(current)) {

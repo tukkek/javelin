@@ -10,7 +10,7 @@ import javax.swing.border.Border;
 
 import javelin.controller.Point;
 import javelin.view.mappanel.battle.overlay.BattleMover;
-import javelin.view.mappanel.battle.overlay.BattleMover.Step;
+import javelin.view.mappanel.battle.overlay.BattleMover.BatteStep;
 import javelin.view.screen.BattleScreen;
 
 public class MoveOverlay extends Overlay {
@@ -30,7 +30,7 @@ public class MoveOverlay extends Overlay {
 	public void walk() {
 		path.walk();
 		try {
-			for (Step step : path.steps) {
+			for (BatteStep step : path.steps) {
 				affected.add(new Point(step.x, step.y));
 				BattleScreen.active.mappanel.tiles[step.x][step.y].repaint();
 			}
@@ -41,7 +41,7 @@ public class MoveOverlay extends Overlay {
 
 	@Override
 	public void overlay(Tile t, Graphics g) {
-		for (Step s : path.steps) {
+		for (BatteStep s : path.steps) {
 			if (t.x == s.x && t.y == s.y) {
 				final boolean partial = !s.engaged && s.totalcost <= .5f;
 				Border border;

@@ -19,7 +19,7 @@ public class Help extends Action {
 	/** Constructor. */
 	public Help() {
 		super("help", new String[] { "h", "?" });
-		allowwhileburrowed = true;
+		allowburrowed = true;
 	}
 
 	@Override

@@ -16,6 +16,7 @@ import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.view.screen.BattleScreen;
+import tyrant.mikera.engine.RPG;
 
 /**
  * Managers{@link AiThread}s.
@@ -77,8 +78,9 @@ public class ThreadManager {
 			AiThread.reset();
 			int nthreads = Javelin.DEBUG && SINGLETHREAD ? 1
 					: Preferences.MAXTHREADS;
+			long seed = RPG.rand.nextLong();
 			for (int i = 0; i < nthreads; i++) {
-				AiThread.STARTED.add(new AiThread(state));
+				AiThread.STARTED.add(new AiThread(state, seed));
 			}
 			sleep(start);
 			interrupt();

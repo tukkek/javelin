@@ -7,13 +7,9 @@ import javelin.controller.Point;
  * 
  * @author alex
  */
-public class Step {
-	public int x, y;
-
+public class Step extends Point {
 	public Step(int x, int y) {
-		super();
-		this.x = x;
-		this.y = y;
+		super(x, y);
 	}
 
 	@Override

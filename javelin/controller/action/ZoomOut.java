@@ -14,7 +14,7 @@ public class ZoomOut extends Action {
 	/** Constructor. */
 	public ZoomOut() {
 		super("Zoom out", new String[] { "-", "_" });
-		allowwhileburrowed = true;
+		allowburrowed = true;
 	}
 
 	@Override

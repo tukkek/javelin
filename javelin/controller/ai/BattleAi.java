@@ -3,6 +3,7 @@ package javelin.controller.ai;
 import java.util.List;
 
 import javelin.controller.ai.valueselector.ValueSelector;
+import javelin.controller.walker.Walker;
 import javelin.model.state.BattleState;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.condition.Defending;
@@ -21,7 +22,7 @@ public class BattleAi extends AlphaBetaSearch {
 	 * Ideally should use something that will never be reached by the
 	 * {@link #ratechallenge(List)} but not any higher.
 	 */
-	private static final float LIMIT = 1000;
+	private static final float LIMIT = Float.MAX_VALUE;
 
 	/** Constructor. */
 	public BattleAi(final int aiDepth) {
@@ -38,13 +39,13 @@ public class BattleAi extends AlphaBetaSearch {
 		final BattleState state = (BattleState) node;
 		final float redTeam = BattleAi.ratechallenge(state.getredTeam());
 		if (redTeam == 0f) {
-			return -LIMIT;
+			return LIMIT;
 		}
 		final float blueTeam = BattleAi.ratechallenge(state.getblueTeam());
 		if (blueTeam == 0f) {
-			return LIMIT;
+			return -LIMIT;
 		}
-		return redTeam - measuredistances(state.redTeam, state.blueTeam)
+		return (redTeam - measuredistances(state.redTeam, state.blueTeam))
 				- state.meld.size() - defending(state)
 				- (blueTeam - measuredistances(state.blueTeam, state.redTeam));
 	}
@@ -73,9 +74,8 @@ public class BattleAi extends AlphaBetaSearch {
 		for (Combatant mate : us) {
 			int minimum = Integer.MAX_VALUE;
 			for (Combatant foe : them) {
-				final int distance = Math.max(
-						Math.abs(mate.location[0] - foe.location[0]),
-						Math.abs(mate.location[1] - foe.location[1]));
+				final int distance = Walker.distanceinsteps(mate.location[0],
+						mate.location[1], foe.location[0], foe.location[1]);
 				if (distance < minimum) {
 					minimum = distance;
 				}

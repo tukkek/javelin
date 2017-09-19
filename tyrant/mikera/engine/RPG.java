@@ -380,7 +380,7 @@ public class RPG {
 
 	// LOTS OF RANDOM FUNCTIONALITY
 
-	private static Random rand = new Random();
+	public static Random rand = new Random();
 	// Z ordering constanrs
 	public static final int Z_ELSEWHERE = -10;
 

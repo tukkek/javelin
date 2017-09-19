@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javelin.controller.Point;
 import javelin.controller.action.Movement;
+import javelin.controller.walker.Step;
 import javelin.controller.walker.Walker;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
@@ -12,35 +13,37 @@ import javelin.model.unit.attack.Combatant;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.screen.BattleScreen;
 
+/**
+ * TODO could probably use the hierarchy structure better instead of declaring
+ * our own {@link #steps}, etc.
+ * 
+ * @author alex
+ */
 public class BattleMover extends Walker {
 	/**
 	 * Note that AP cost has a different meaning depending on context. For
 	 * battle is literal AP, for world and dungeons is chance of encounter,
 	 * unrelated to time.
 	 * 
-	 * TODO better doc
-	 * 
 	 * @author alex
 	 */
-	public class Step {
-		public final int x, y;
+	public class BatteStep extends Step {
 		public final float apcost;
 		public boolean engaged;
 		public boolean safe = false;
 		public float totalcost;
 
-		public Step(final int x2, final int y2, final float apcost2,
+		public BatteStep(final int x, final int y, final float apcost,
 				final float totalcost, final boolean engaged) {
-			x = x2;
-			y = y2;
-			apcost = apcost2;
+			super(x, y);
+			this.apcost = apcost;
 			this.totalcost = totalcost;
 			this.engaged = engaged;
 		}
 	}
 
 	Combatant current;
-	public ArrayList<Step> steps = new ArrayList<Step>(1);
+	public ArrayList<BatteStep> steps = new ArrayList<BatteStep>(1);
 
 	public BattleMover(Point from, Point to, Combatant current,
 			BattleState state) {
@@ -64,7 +67,7 @@ public class BattleMover extends Walker {
 		for (final javelin.controller.walker.Step s : walk) {
 			float stepcost = getcost(engaged, s);
 			totalcost += stepcost;
-			steps.add(new Step(s.x, s.y, stepcost, totalcost, engaged));
+			steps.add(new BatteStep(s.x, s.y, stepcost, totalcost, engaged));
 			if (end(totalcost, engaged, s)) {
 				break;
 			}

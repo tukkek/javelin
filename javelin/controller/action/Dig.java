@@ -23,7 +23,7 @@ public class Dig extends Action implements AiAction {
 
 	private Dig() {
 		super("Dig (requires burrow movement)", "d");
-		allowwhileburrowed = true;
+		allowburrowed = true;
 	}
 
 	@Override

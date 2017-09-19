@@ -65,7 +65,7 @@ public abstract class Action implements Serializable, ActionDescription {
 	/** See {@link KeyEvent} constants. */
 	public int[] keycodes = new int[0];
 	/** Most actions cannot be performed while burrowed. */
-	public boolean allowwhileburrowed = false;
+	public boolean allowburrowed = false;
 
 	/**
 	 * @param key

@@ -258,7 +258,7 @@ public abstract class Actor implements Serializable {
 	}
 
 	public int distanceinsteps(int xp, int yp) {
-		return Math.max(Math.abs(xp - x), Math.abs(yp - y));
+		return Walker.distanceinsteps(x, y, xp, yp);
 	}
 
 	/**

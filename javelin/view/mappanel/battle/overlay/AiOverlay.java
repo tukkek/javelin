@@ -22,7 +22,7 @@ public class AiOverlay extends Overlay {
 		affected.add(new Point(x, y));
 	}
 
-	public AiOverlay(Collection<Point> area) {
+	public AiOverlay(Collection<? extends Point> area) {
 		affected.addAll(area);
 	}
 

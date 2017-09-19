@@ -55,4 +55,12 @@ public class Point implements Cloneable, Serializable {
 	public int hashCode() {
 		return Objects.hash(x, y);
 	}
+
+	/**
+	 * @return <code>true</code> if this is valid inside the bounds of a
+	 *         2-dimensional array (not that max values are exclusive).
+	 */
+	public boolean validate(int minx, int miny, int maxx, int maxy) {
+		return minx <= x && x < maxx && miny <= y && y < maxy;
+	}
 }

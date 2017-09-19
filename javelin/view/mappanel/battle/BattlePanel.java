@@ -1,6 +1,7 @@
 package javelin.view.mappanel.battle;
 
 import java.awt.Graphics;
+import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 
 import javelin.Javelin;
@@ -46,33 +47,41 @@ public class BattlePanel extends MapPanel {
 
 	@Override
 	public synchronized void refresh() {
-		updatestate();
-		super.refresh();
-		final HashSet<Point> update = new HashSet<Point>(
-				Fight.state.redTeam.size() + Fight.state.blueTeam.size());
-		for (Combatant c : Fight.state.getcombatants()) {
-			update.add(new Point(c.location[0], c.location[1]));
-		}
-		for (Combatant c : previousstate.getcombatants()) {
-			update.add(new Point(c.location[0], c.location[1]));
-		}
-		updatestate();
-		for (Combatant c : Fight.state.getcombatants()) {
-			update.add(new Point(c.location[0], c.location[1]));
-		}
-		if (!daylight) {
-			calculatevision(update);
-		}
-		if (overlay != null) {
-			update.addAll(overlay.affected);
-		}
-		if (Javelin.app.fight.meld) {
-			for (Meld m : Fight.state.meld) {
-				update.add(new Point(m.x, m.y));
+		try {
+			updatestate();
+			super.refresh();
+			final HashSet<Point> update = new HashSet<Point>(
+					Fight.state.redTeam.size() + Fight.state.blueTeam.size());
+			for (Combatant c : Fight.state.getcombatants()) {
+				update.add(new Point(c.location[0], c.location[1]));
 			}
-		}
-		for (Point p : update) {
-			tiles[p.x][p.y].repaint();
+			for (Combatant c : previousstate.getcombatants()) {
+				update.add(new Point(c.location[0], c.location[1]));
+			}
+			updatestate();
+			for (Combatant c : Fight.state.getcombatants()) {
+				update.add(new Point(c.location[0], c.location[1]));
+			}
+			if (!daylight) {
+				calculatevision(update);
+			}
+			if (overlay != null) {
+				update.addAll(overlay.affected);
+			}
+			if (Javelin.app.fight.meld) {
+				for (Meld m : Fight.state.meld) {
+					update.add(new Point(m.x, m.y));
+				}
+			}
+			for (Point p : update) {
+				tiles[p.x][p.y].repaint();
+			}
+		} catch (ConcurrentModificationException e) {
+			/*
+			 * I have no idea why this is being thrown since the HashSet is
+			 * local and the method is synchronized on top of it.
+			 */
+			refresh();
 		}
 	}
 

@@ -15,10 +15,6 @@ import javelin.model.unit.condition.Defending;
  */
 public class BattleAi extends AlphaBetaSearch {
 	/**
-	 * Using {@link Integer#MAX_VALUE} (over 2 billion) could have been making
-	 * the AI think taking extremely unlikely actions would be good to win the
-	 * game.
-	 *
 	 * Ideally should use something that will never be reached by the
 	 * {@link #ratechallenge(List)} but not any higher.
 	 */

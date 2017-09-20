@@ -773,7 +773,7 @@ public class RPG {
 	 * @return the result of 1dX - 1dX.
 	 */
 	public static int randomize(int sides) {
-		return r(sides) - r(sides);
+		return r(1, sides) - r(1, sides);
 	}
 
 	/**

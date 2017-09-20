@@ -37,7 +37,6 @@ public class AiMovement extends Action implements AiAction {
 				Node n) {
 			super(n, 1, getmessage(c, m, s),
 					m == null ? Delay.WAIT : Delay.BLOCK);
-			/* TODO block on meld only */
 			AiOverlay o = new AiOverlay(
 					mover.steps.subList(0, mover.steps.indexOf(s)));
 			o.affected.add(new Point(mover.sourcex, mover.sourcey));

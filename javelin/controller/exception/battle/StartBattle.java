@@ -61,11 +61,17 @@ public class StartBattle extends BattleEvent {
 	}
 
 	/**
-	 * Runs a strategic combat instead of opening a {@link BattleScreen}.
+	 * Runs a strategic combat instead of opening a {@link BattleScreen}. The
+	 * problem with this is that, being more predictable, makes it easier for a
+	 * human player to just safely farm gold and XP on easy regions without much
+	 * chance of death (even at low HP) - so an extra level of fair difficulty
+	 * randomization is added here, if only to prevent players from farming in
+	 * strategic mode without ever resting.
 	 * 
 	 * @param difficulty
 	 */
 	public void quickbattle(int difficulty) {
+		difficulty += RPG.randomize(2);
 		float resourcesused = CrCalculator.useresources(difficulty);
 		String report = "Battle report:\n\n";
 		ArrayList<Combatant> blueteam = new ArrayList<Combatant>(
@@ -78,8 +84,9 @@ public class StartBattle extends BattleEvent {
 			report += Squad.active.wastegold(resourcesused);
 		}
 		InfoScreen s = new InfoScreen("");
-		s.print(report + "Press ENTER to continue...");
-		while (s.getInput() != '\n') {
+		s.print(report + "Press ENTER or s to continue...");
+		Character feedback = s.getInput();
+		while (feedback != '\n' && feedback != 's') {
 			continue;
 		}
 		WorldScreen.active.center();

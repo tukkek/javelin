@@ -130,8 +130,8 @@ public class EnterBattlefield extends EnterMinigame {
 		}
 		boolean elite = recruit < NELITE;
 		recruit(recruits.get(recruit), blueteam, elite);
-		while (CrCalculator.calculateel(
-				redteam) < CrCalculator.calculateel(blueteam)) {
+		while (CrCalculator.calculateel(redteam) < CrCalculator
+				.calculateel(blueteam)) {
 			recruit(RPG.pick(elite ? getelite() : getfootmen()), redteam,
 					elite);
 		}
@@ -151,8 +151,7 @@ public class EnterBattlefield extends EnterMinigame {
 
 	String list(ArrayList<Combatant> team, boolean shownumbers, String header) {
 		String list = header + " (encounter level "
-				+ CrCalculator.calculateel(team) + " of "
-				+ TARGETEL + "):\n\n";
+				+ CrCalculator.calculateel(team) + " of " + TARGETEL + "):\n\n";
 		Combatant commander = team.get(0);
 		list += "Commander: " + commander + level(commander.source) + "\n\n";
 		list += "Elite soldiers:\n\n";
@@ -163,11 +162,12 @@ public class EnterBattlefield extends EnterMinigame {
 	}
 
 	List<Monster> getfootmen() {
-		return recruits.subList(NELITE, NELITE + NFOOTMEN);
+		return new ArrayList<Monster>(
+				recruits.subList(NELITE, NELITE + NFOOTMEN));
 	}
 
 	List<Monster> getelite() {
-		return recruits.subList(0, NELITE);
+		return new ArrayList<Monster>(recruits.subList(0, NELITE));
 	}
 
 	String listtier(List<Monster> elite2, ArrayList<Combatant> team,

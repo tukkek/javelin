@@ -3,11 +3,12 @@ package javelin.model.world;
 import java.awt.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.challenge.CrCalculator;
+import javelin.controller.comparator.ActorByDistance;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
@@ -87,9 +88,6 @@ public abstract class Actor implements Serializable {
 
 	/** Called during construction to setup {@link World#actors}. */
 	protected void registerinstance() {
-		// if (x == -1 && !(this instanceof Squad)) {
-		// throw new RuntimeException("Impossible #actor");
-		// }
 		ArrayList<Actor> list = World.getseed().actors.get(getClass());
 		if (list == null) {
 			list = new ArrayList<Actor>(1);
@@ -283,12 +281,7 @@ public abstract class Actor implements Serializable {
 	}
 
 	public <K extends Actor> List<K> sortbydistance(List<K> actor) {
-		actor.sort(new Comparator<Actor>() {
-			@Override
-			public int compare(Actor o1, Actor o2) {
-				return o2.distanceinsteps(x, y) - o1.distanceinsteps(x, y);
-			}
-		});
+		actor.sort(new ActorByDistance(this));
 		return actor;
 	}
 
@@ -300,4 +293,20 @@ public abstract class Actor implements Serializable {
 		Game.messagepanel.clear();
 		Game.message("Too far away...", Delay.WAIT);
 	}
+
+	/**
+	 * Called when an {@link Incursion}.reaches its target (and for selecting
+	 * targets).
+	 *
+	 * @param attackerel
+	 *            Given an attacking encounter level...
+	 * @return the defending encounter level. A <code>null</code> value is
+	 *         allowed for places that should not be conquered.
+	 *         {@link Integer#MIN_VALUE} means an automatic victory for the
+	 *         attacker.
+	 * @see Actor#impermeable
+	 * @see Incursion#fight(int, int)
+	 * @see CrCalculator#calculateel(List)
+	 */
+	public abstract Integer getel(int attackerel);
 }

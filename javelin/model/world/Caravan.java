@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
@@ -46,6 +47,7 @@ public class Caravan extends Actor {
 	int toy = -1;
 	/** Merchants are slow, act once very other turn. */
 	boolean ignoreturn = true;
+	int el;
 
 	/** Creates a merchant in the world map but doesn't {@link #place()} it. */
 	public Caravan() {
@@ -55,8 +57,9 @@ public class Caravan extends Actor {
 		Town from = (Town) towns.get(0);
 		x = from.x;
 		y = from.y;
+		el = CrCalculator.leveltoel(from.population);
 		displace();
-		determinetarget(towns);
+		determinedestination(towns);
 		while (inventory.size() < NUMBEROFITEMS) {
 			Item i = RPG.pick(Item.ALL);
 			if (!(i instanceof Artifact)) {
@@ -70,13 +73,15 @@ public class Caravan extends Actor {
 			Item i = RPG.pick(Item.ARTIFACT);
 			inventory.add(i);
 		}
-		Key k = Key.generate();
-		if (k.price > 0) {
-			inventory.add(k);
+		if (World.scenario.allowkeys) {
+			Key k = Key.generate();
+			if (k.price > 0) {
+				inventory.add(k);
+			}
 		}
 	}
 
-	void determinetarget(ArrayList<Actor> towns) {
+	void determinedestination(ArrayList<Actor> towns) {
 		Actor to = null;
 		if (towns != null) {
 			for (int i = 1; i < towns.size(); i++) {
@@ -110,7 +115,7 @@ public class Caravan extends Actor {
 		int y = this.y + calculatedelta(this.y, toy);
 		if (Terrain.get(x, y).equals(Terrain.WATER)) {
 			tox = -1;
-			determinetarget(null);
+			determinedestination(null);
 			return;
 		}
 		Actor here = World.get(x, y);
@@ -182,5 +187,10 @@ public class Caravan extends Actor {
 	@Override
 	public String describe() {
 		return "Caravan.";
+	}
+
+	@Override
+	public Integer getel(int attackerel) {
+		return el;
 	}
 }

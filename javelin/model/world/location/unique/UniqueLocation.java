@@ -51,7 +51,7 @@ public abstract class UniqueLocation extends Fortification {
 	}
 
 	@Override
-	protected Integer getel(int attackel) {
+	public Integer getel(int attackel) {
 		return impermeable ? null : super.getel(attackel);
 	}
 }

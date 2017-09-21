@@ -187,7 +187,7 @@ public class TransportHub extends Location {
 	}
 
 	@Override
-	protected Integer getel(int attackerel) {
+	public Integer getel(int attackerel) {
 		return Integer.MIN_VALUE;
 	}
 

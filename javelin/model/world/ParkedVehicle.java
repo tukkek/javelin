@@ -70,4 +70,9 @@ public class ParkedVehicle extends Actor {
 	public String describe() {
 		return "Parked " + transport.name.toLowerCase() + ".";
 	}
+
+	@Override
+	public Integer getel(int attackerel) {
+		return Integer.MIN_VALUE;
+	}
 }

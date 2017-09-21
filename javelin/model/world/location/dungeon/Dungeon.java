@@ -277,7 +277,7 @@ public class Dungeon extends Location {
 	}
 
 	@Override
-	protected Integer getel(int attackel) {
+	public Integer getel(int attackel) {
 		return attackel - 3;
 	}
 

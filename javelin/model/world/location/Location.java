@@ -235,21 +235,6 @@ public abstract class Location extends Actor {
 	}
 
 	/**
-	 * Only called for {@link #sacrificeable} places when being reached by an
-	 * {@link Incursion}.
-	 *
-	 * @param attackerel
-	 *            Given an attacking encounter level...
-	 * @return the defending encounter level. A <code>null</code> value is
-	 *         allowed because some places should not be conquered.
-	 *         {@link Integer#MIN_VALUE} means an automatic victory for the
-	 *         attacker.
-	 * @see Actor#impermeable
-	 * @see Incursion#fight(int, int)
-	 */
-	abstract protected Integer getel(int attackerel);
-
-	/**
 	 * @return <code>true</code> if this place needs to be conquered.
 	 */
 	public boolean ishostile() {

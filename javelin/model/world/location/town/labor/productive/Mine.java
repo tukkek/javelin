@@ -232,13 +232,16 @@ public class Mine extends Fortification {
 	}
 
 	@Override
-	protected Integer getel(int attackerel) {
+	public Integer getel(int attackerel) {
 		return miners.isEmpty() ? Integer.MIN_VALUE
 				: CrCalculator.calculateel(miners);
 	}
 
 	@Override
 	public void turn(long time, WorldScreen world) {
+		if (ishostile()) {
+			return;
+		}
 		gold += AdventurersGuild.pay(0, 1, miners);
 		if (minesrubies && RPG.random() < 1 / 30f) {
 			rubies += 1;

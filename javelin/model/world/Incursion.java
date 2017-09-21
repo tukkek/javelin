@@ -3,18 +3,18 @@ package javelin.model.world;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.CrCalculator;
+import javelin.controller.comparator.CombatantByCrComparator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.IncursionFight;
 import javelin.controller.fight.RandomEncounter;
 import javelin.controller.terrain.Terrain;
-import javelin.controller.walker.Walker;
 import javelin.model.Realm;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
@@ -37,22 +37,54 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Incursion extends Actor {
-	static final boolean SPAWN = Javelin.DEBUG ? false : true;
+	static final int PREFERREDVICTORYCHANCE = 5 + 2;
+	/** Only taken into account if running {@link Javelin#DEBUG}. */
+	static final boolean SPAWN = true;
 	/** Move even if {@link Javelin#DEBUGDISABLECOMBAT} is enabled. */
 	static final boolean FORCEMOVEMENT = false;
-	static final Comparator<Combatant> SORTBYCR = new Comparator<Combatant>() {
-		@Override
-		public int compare(Combatant o1, Combatant o2) {
-			return new Float(o1.source.challengerating)
-					.compareTo(o2.source.challengerating);
+	static final VictoryChance VICTORYCHANCES = new VictoryChance();
+
+	static class VictoryChance {
+		HashMap<Integer, Integer> chances = new HashMap<Integer, Integer>();
+
+		VictoryChance() {
+			chances.put(-4, 9);
+			chances.put(-3, 8);
+			chances.put(-2, 7);
+			chances.put(-1, 6);
+			chances.put(0, 5);
+			chances.put(1, 4);
+			chances.put(2, 3);
+			chances.put(3, 2);
+			chances.put(4, 1);
 		}
-	};
+
+		/**
+		 * @param defender
+		 *            Encounter level.
+		 * @param attacker
+		 *            Encounter level.
+		 * @return A chance from 1 to 9 that the attacker will win (meant to be
+		 *         used with a d10 roll).
+		 */
+		public Integer get(int attackerel, int defenderel) {
+			int gap = defenderel - attackerel;
+			if (gap < -4) {
+				gap = -4;
+			} else if (gap > 4) {
+				gap = 4;
+			}
+			return chances.get(gap);
+		}
+	}
 
 	/** Should probably move this to {@link Portal}? */
 	public static Integer currentel = 1;
 
 	/** @see #getel() */
 	public List<Combatant> squad = new ArrayList<Combatant>();
+
+	Actor target = null;
 
 	/**
 	 * @param x
@@ -88,27 +120,30 @@ public class Incursion extends Actor {
 	 * @param s
 	 *            TODO use {@link WorldScreen#current}
 	 */
-	public void move(final WorldScreen s) {
-		Actor target = findtarget(s);
+	public void move() {
+		choosetarget();
 		if (target == null) {
 			displace();
 			return;
 		}
 		final int targetx = target.x;
 		final int targety = target.y;
-		int newx = x + decideaxismove(x, targetx);
-		int newy = y + decideaxismove(y, targety);
+		int newx = x + determinemove(x, targetx);
+		int newy = y + determinemove(y, targety);
 		if (Terrain.get(newx, newy).equals(Terrain.WATER)) {
 			displace();
 			return;
 		}
-		target = World.get(newx, newy);
+		Actor arrived = World.get(newx, newy, World.getactors());
 		x = newx;
 		y = newy;
 		place();
-		if (target == null) {
-			return;
+		if (arrived != null) {
+			attack(arrived);
 		}
+	}
+
+	void attack(Actor target) {
 		Boolean status = target.destroy(this);
 		if (status == null) {
 			return;
@@ -120,30 +155,43 @@ public class Incursion extends Actor {
 		}
 	}
 
-	Actor findtarget(final WorldScreen s) {
-		ArrayList<Actor> targets = new ArrayList<Actor>();
-		for (final Actor a : World.getactors()) {
-			if (a.impermeable || a.realm == realm
-					|| crosseswater(this, a.x, a.y)) {
-				continue;
+	/**
+	 * Updates {@link #target} when first called or if it's been destroyed. Will
+	 * not consider {@link Actor#impermeable} targets, those from teh same
+	 * {@link Actor#realm} or targets that would require the Incursion to cross
+	 * water to get there. If this results in no potential target, will assgign
+	 * <code>null</code> to {@link #target}.
+	 * 
+	 * Once tha filtering is done, will select the closest target that allows
+	 * for the {@link #PREFERREDVICTORYCHANCE} of winning. If none is available,
+	 * will use the nearest valid target.
+	 */
+	void choosetarget() {
+		final ArrayList<Actor> actors = World.getactors();
+		if (target != null && target == World.get(target.x, target.y, actors)) {
+			return;
+		}
+		List<Actor> targets = new ArrayList<Actor>();
+		for (final Actor a : actors) {
+			if (!a.impermeable && a.realm != realm
+					&& !crosseswater(this, a.x, a.y)) {
+				targets.add(a);
 			}
-			Location l = a instanceof Location ? (Location) a : null;
-			if (l != null && CrCalculator.calculateel(l.garrison) > getel()) {
-				continue;
-			}
-			targets.add(a);
 		}
 		if (targets.isEmpty()) {
-			return null;
+			target = null;
+			return;
 		}
-		Actor target = null;
-		for (final Actor a : targets) {
-			if (target == null || Walker.distance(x, y, a.x, a.y) < Walker
-					.distance(x, y, target.x, target.y)) {
-				target = a;
+		sortbydistance(targets);
+		for (Actor target : targets) {
+			int incursionel = getel();
+			if (VICTORYCHANCES.get(incursionel,
+					target.getel(incursionel)) >= PREFERREDVICTORYCHANCE) {
+				this.target = target;
+				return;
 			}
 		}
-		return target;
+		target = targets.get(0);
 	}
 
 	/**
@@ -158,8 +206,8 @@ public class Incursion extends Actor {
 		int x = from.x;
 		int y = from.y;
 		while (x != tox || y != toy) {
-			x += decideaxismove(x, tox);
-			y += decideaxismove(y, toy);
+			x += determinemove(x, tox);
+			y += determinemove(y, toy);
 			if (Terrain.get(x, y).equals(Terrain.WATER)) {
 				return true;
 			}
@@ -167,7 +215,7 @@ public class Incursion extends Actor {
 		return false;
 	}
 
-	static int decideaxismove(final int me, final int target) {
+	static int determinemove(final int me, final int target) {
 		if (target == me) {
 			return 0;
 		}
@@ -176,10 +224,7 @@ public class Incursion extends Actor {
 
 	@Override
 	public void turn(long time, WorldScreen world) {
-		// if (Preferences.DEBUGDISABLECOMBAT && !FORCEMOVEMENT) {
-		// return;
-		// }
-		move(world);
+		move();
 	}
 
 	/**
@@ -187,7 +232,10 @@ public class Incursion extends Actor {
 	 * level 20 incursion to appear.
 	 */
 	public static boolean spawn() {
-		if (!SPAWN || RPG.r(1, 18) != 1) {
+		if (Javelin.DEBUG && !SPAWN) {
+			return false;
+		}
+		if (!RPG.chancein(18)) {
 			return false;
 		}
 		ArrayList<Actor> portals = World.getall(Portal.class);
@@ -218,12 +266,7 @@ public class Incursion extends Actor {
 	 * @see Actor#place()
 	 */
 	public static void place(Realm r, int x, int y, List<Combatant> squadp) {
-		// if (Javelin.DEBUG) {
-		// spawned += 1;
-		// System.out.println("Incursion spawn #" + spawned + " EL"
-		// + ChallengeRatingCalculator.calculateel(squadp));
-		// }
-		if (!SPAWN) {
+		if (Javelin.DEBUG && !SPAWN) {
 			return;
 		}
 		int size = World.scenario.size;
@@ -284,6 +327,11 @@ public class Incursion extends Actor {
 		return null;
 	}
 
+	@Override
+	public Integer getel(int attackerel) {
+		return getel();
+	}
+
 	/**
 	 * @return Encounter level for {@link #squad}.
 	 * @see CrCalculator#calculateel(List)
@@ -305,44 +353,7 @@ public class Incursion extends Actor {
 	 */
 	public static boolean fight(int attacker, int defender) {
 		return defender == Integer.MIN_VALUE
-				|| RPG.r(1, 10) <= getchance(attacker, defender);
-	}
-
-	/**
-	 * @param defender
-	 *            Encounter level.
-	 * @param attacker
-	 *            Encounter level.
-	 * @return A chance from 1 to 9 that the attacker will win (meant to be used
-	 *         with a d10 roll).
-	 */
-	static int getchance(int attacker, int defender) {
-		int gap = defender - attacker;
-		if (gap <= -4) {
-			return 9;
-		}
-		if (gap == -3) {
-			return 8;
-		}
-		if (gap == -2) {
-			return 7;
-		}
-		if (gap == -1) {
-			return 6;
-		}
-		if (gap == 0) {
-			return 5;
-		}
-		if (gap == 1) {
-			return 4;
-		}
-		if (gap == 2) {
-			return 3;
-		}
-		if (gap == 3) {
-			return 2;
-		}
-		return 1;
+				|| RPG.r(1, 10) <= VICTORYCHANCES.get(attacker, defender);
 	}
 
 	@Override
@@ -393,9 +404,9 @@ public class Incursion extends Actor {
 		int them = CrCalculator.calculateel(defenders);
 		boolean win = fight(me, them);
 		if (win) {
-			damage(squad, getchance(me, them));
+			damage(squad, VICTORYCHANCES.get(me, them));
 		} else {
-			damage(defenders, getchance(them, me));
+			damage(defenders, VICTORYCHANCES.get(them, me));
 		}
 		return win;
 	}
@@ -408,7 +419,7 @@ public class Incursion extends Actor {
 		}
 		float damage = totalcr * (1 - chance / 10f);
 		LinkedList<Combatant> wounded = new LinkedList<Combatant>(survivors);
-		Collections.sort(wounded, SORTBYCR);
+		Collections.sort(wounded, CombatantByCrComparator.SINGLETON);
 		while (damage > 0 && survivors.size() > 1) {
 			Combatant dead = wounded.pop();
 			survivors.remove(dead);

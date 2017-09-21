@@ -148,7 +148,7 @@ public abstract class Fortification extends Location {
 	}
 
 	@Override
-	protected Integer getel(int attackerel) {
+	public Integer getel(int attackerel) {
 		return CrCalculator.calculateel(garrison);
 	}
 

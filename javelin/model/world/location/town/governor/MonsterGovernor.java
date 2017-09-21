@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.challenge.CrCalculator;
-import javelin.controller.comparator.CombatantCrComparator;
+import javelin.controller.comparator.CombatantByCrComparator;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Incursion;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.Trait;
-import javelin.model.world.location.town.labor.basic.Growth;
 import javelin.model.world.location.town.labor.basic.Dwelling.BuildDwelling;
 import javelin.model.world.location.town.labor.basic.Dwelling.Draft;
+import javelin.model.world.location.town.labor.basic.Growth;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -133,8 +133,9 @@ public class MonsterGovernor extends Governor {
 			return;
 		}
 		List<Combatant> garrison = new ArrayList<Combatant>(t.garrison);
-		garrison.sort(new CombatantCrComparator());
-		List<Combatant> incursion = garrison.subList(0, garrison.size() / 2);
+		garrison.sort(CombatantByCrComparator.SINGLETON);
+		List<Combatant> incursion = new ArrayList<Combatant>(
+				garrison.subList(0, garrison.size() / 2));
 		if (!incursion.isEmpty()) {
 			t.garrison.removeAll(incursion);
 			Incursion.place(t.realm, t.x, t.y, incursion);

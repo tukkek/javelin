@@ -235,7 +235,7 @@ public class Portal extends Location {
 	}
 
 	@Override
-	protected Integer getel(int attackerel) {
+	public Integer getel(int attackerel) {
 		assert !impermeable;
 		return attackerel - 4;
 	}

@@ -252,8 +252,9 @@ public class Town extends Location {
 	}
 
 	@Override
-	protected Integer getel(int attackerel) {
-		return null;
+	public Integer getel(int attackerel) {
+		return garrison.isEmpty() ? Integer.MIN_VALUE
+				: CrCalculator.calculateel(garrison);
 	}
 
 	@Override

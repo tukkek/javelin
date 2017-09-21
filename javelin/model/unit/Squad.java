@@ -617,33 +617,6 @@ public class Squad extends Actor implements Cloneable {
 				* (allfly ? speed : t.speed(speed, x, y)) / snow);
 	}
 
-	// /**
-	// * Finishes the current {@link #work}.
-	// */
-	// public void build() {
-	// Location built = work.done(x, y);
-	// work.removeworker();
-	// if (built != null) {
-	// built.place();
-	// built.garrison.clear();
-	// built.realm = null;
-	// if (built instanceof Fortification) {
-	// Fortification f = (Fortification) built;
-	// f.targetel = 1;
-	// }
-	// }
-	// if (members.size() > 0 && WorldActor.get(x, y) != this) {
-	// displace();
-	// place();
-	// }
-	// String extra = work.inform();
-	// extra = extra == null ? "" : "\n" + extra;
-	// Javelin.message("Work finished: " + work.name.toLowerCase() + "!" +
-	// extra, true);
-	// Game.messagepanel.clear();
-	// work = null;
-	// }
-
 	/**
 	 * A squad cannot move on water if any of the combatants can't swim.
 	 * Alternatively a boat or airship will let non-swimming squads move on
@@ -867,5 +840,10 @@ public class Squad extends Actor implements Cloneable {
 			}
 		}
 		return max;
+	}
+
+	@Override
+	public Integer getel(int attackerel) {
+		return CrCalculator.calculateel(members);
 	}
 }

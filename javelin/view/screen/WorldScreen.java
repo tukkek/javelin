@@ -231,15 +231,12 @@ public class WorldScreen extends BattleScreen {
 	 */
 	public void endturn() {
 		Squad act = Javelin.act();
-		// if (act != null && act.work != null) {
-		// act.build();
-		// }
 		long time = act.hourselapsed;
 		final int day = new Double(Math.ceil(time / 24.0)).intValue();
 		List<Actor> squads = World.getall(Squad.class);
 		while (day > WorldScreen.lastday || squads.isEmpty()) {
 			Season.change(day);
-			FeatureGenerator.SINGLETON.spawn(1 / 7f, false);
+			FeatureGenerator.SINGLETON.spawn(1 / 14f, false);
 			for (Actor p : World.getactors()) {
 				if (!(p instanceof Incursion)) {
 					p.turn(time, this);
@@ -382,8 +379,7 @@ public class WorldScreen extends BattleScreen {
 				vital += " ";
 			}
 			hps.add(vital + " Level "
-					+ Math.round(Math.floor(
-							CrCalculator.calculatecr(c.source)))
+					+ Math.round(Math.floor(CrCalculator.calculatecr(c.source)))
 					+ " " + c.gethumanxp());
 		}
 		return hps;

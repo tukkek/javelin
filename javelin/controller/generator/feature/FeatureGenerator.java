@@ -162,6 +162,7 @@ public class FeatureGenerator {
 	 *            If <code>false</code> will limit spawning to only a starting
 	 *            set of actors. <code>true</code> is supposed to be used while
 	 *            the game is progressing to support the full feature set.
+	 * @see GenerationData#starting
 	 */
 	public void spawn(float chance, boolean generatingworld) {
 		if (countplaces() >= World.scenario.startingfeatures

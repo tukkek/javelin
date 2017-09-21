@@ -39,7 +39,7 @@ public class Key extends Item {
 	}
 
 	private static int determineprice(Realm r) {
-		for (Actor a : World.getall()) {
+		for (Actor a : World.getactors()) {
 			if (a instanceof Temple) {
 				Temple temple = (Temple) a;
 				if (temple.realm.equals(r)) {
@@ -72,7 +72,7 @@ public class Key extends Item {
 		for (Realm r : Realm.values()) {
 			realms.add(r);
 		}
-		for (Actor a : World.getall()) {
+		for (Actor a : World.getactors()) {
 			Temple temple = a instanceof Temple ? (Temple) a : null;
 			if (temple != null && temple.open) {
 				realms.remove(temple.realm);

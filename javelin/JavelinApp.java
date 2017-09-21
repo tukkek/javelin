@@ -234,7 +234,7 @@ public class JavelinApp extends QuestApp {
 				+ nskills + " skills, " + nkits + " kits");
 		HashSet<Class<? extends Actor>> locationtypes = new HashSet<Class<? extends Actor>>();
 		int uniquelocations = 0;
-		for (Actor a : World.getall()) {
+		for (Actor a : World.getactors()) {
 			if (!(a instanceof Location)) {
 				continue;
 			}

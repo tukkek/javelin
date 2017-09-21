@@ -182,7 +182,7 @@ public class Combatant implements Serializable, Cloneable {
 		if (World.seed == null) {
 			return false;
 		}
-		for (Actor a : World.getall()) {
+		for (Actor a : World.getactors()) {
 			List<Combatant> combatants = a.getcombatants();
 			if (combatants != null) {
 				for (Combatant c : combatants) {

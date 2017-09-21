@@ -43,9 +43,10 @@ public class Infiltrate extends WorldAction {
 
 	Location selecttarget() {
 		ArrayList<Location> targets = new ArrayList<Location>();
+		ArrayList<Actor> actors = World.getactors();
 		for (int x = Squad.active.x - 1; x <= Squad.active.x + 1; x++) {
 			for (int y = Squad.active.y - 1; y <= Squad.active.y + 1; y++) {
-				Actor a = World.get(x, y);
+				Actor a = World.get(x, y, actors);
 				Location l = a instanceof Location ? (Location) a : null;
 				if (l != null && l.ishostile()) {
 					targets.add(l);

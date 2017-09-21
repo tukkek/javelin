@@ -231,7 +231,7 @@ public class PillarOfSkulls extends UniqueLocation {
 
 	Actor find(Class<? extends Location> class1) {
 		Actor closest = null;
-		for (Actor a : World.getall()) {
+		for (Actor a : World.getactors()) {
 			if (class1.isInstance(a) && !WorldScreen.see(new Point(a.x, a.y))) {
 				if (closest == null
 						|| a.distance(x, y) < closest.distance(x, y)) {

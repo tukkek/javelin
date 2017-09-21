@@ -1,14 +1,20 @@
 package javelin;
 
+import java.util.ArrayList;
+
 import javelin.controller.action.Help;
 import javelin.controller.challenge.CrCalculator;
 import javelin.controller.fight.Fight;
 import javelin.controller.scenario.Scenario;
+import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
+import javelin.model.world.Actor;
+import javelin.model.world.Incursion;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.WorldScreen;
+import tyrant.mikera.engine.RPG;
 
 /**
  * A collection of methods that can be altered to facilitate testing the game.
@@ -69,6 +75,25 @@ public class Debug {
 			for (Combatant c : Fight.state.redTeam) {
 				c.ap = Float.MAX_VALUE;
 			}
+		}
+
+		static void generateincursion() {
+			for (Actor a : Incursion.getincursions()) {
+				a.remove();
+			}
+			Town safe = null;
+			for (Town t : Town.gettowns()) {
+				if (!t.ishostile()) {
+					safe = t;
+					break;
+				}
+			}
+			ArrayList<Combatant> members = new ArrayList<Combatant>();
+			members.add(new Combatant(RPG.pick(Javelin.ALLMONSTERS), true));
+			Incursion i = new Incursion(safe.x, safe.y, members,
+					safe.realm == Realm.AIR ? Realm.EARTH : Realm.AIR);
+			i.displace();
+			i.place();
 		}
 
 	}

@@ -240,7 +240,7 @@ public class WorldScreen extends BattleScreen {
 		while (day > WorldScreen.lastday || squads.isEmpty()) {
 			Season.change(day);
 			FeatureGenerator.SINGLETON.spawn(1 / 7f, false);
-			for (Actor p : World.getall()) {
+			for (Actor p : World.getactors()) {
 				if (!(p instanceof Incursion)) {
 					p.turn(time, this);
 				}
@@ -274,7 +274,7 @@ public class WorldScreen extends BattleScreen {
 		}
 		ArrayList<Location> locations = new ArrayList<Location>();
 		ArrayList<Location> friendlylocations = new ArrayList<Location>();
-		for (Actor a : World.getall()) {
+		for (Actor a : World.getactors()) {
 			if (a instanceof Location && mappanel.tiles[a.x][a.y].discovered) {
 				Location l = (Location) a;
 				locations.add(l);

@@ -285,7 +285,7 @@ public abstract class Item implements Serializable, Cloneable {
 	 */
 	public static List<Item> getplayeritems() {
 		ArrayList<Item> items = new ArrayList<Item>();
-		for (Actor a : World.getall()) {
+		for (Actor a : World.getactors()) {
 			Academy academy = a instanceof Academy ? (Academy) a : null;
 			if (academy != null) {
 				for (Order o : academy.training.queue) {

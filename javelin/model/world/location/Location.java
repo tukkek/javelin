@@ -43,7 +43,7 @@ import tyrant.mikera.engine.RPG;
  * efficiency to ease of searching calls and assignments. The very small
  * convenience added is not worth the trade-off.
  *
- * @see World#getall()
+ * @see World#getactors()
  * @author alex
  */
 public abstract class Location extends Actor {
@@ -131,7 +131,7 @@ public abstract class Location extends Actor {
 	 */
 	static public void generate(Actor p, boolean allowwater) {
 		p.x = -1;
-		ArrayList<Actor> actors = World.getall();
+		ArrayList<Actor> actors = World.getactors();
 		actors.remove(p);
 		final World w = World.getseed();
 		int size = World.scenario.size - 1;
@@ -182,10 +182,11 @@ public abstract class Location extends Actor {
 		}
 		if (p.gossip) {
 			Actor closest = null;
+			ArrayList<Actor> actors = World.getactors();
 			for (int x = p.x - 5; x <= p.x + 5; x++) {
 				for (int y = p.y - 5; y <= p.y + 5; y++) {
 					if (!WorldScreen.see(new Point(x, y))) {
-						Actor a = World.get(x, y);
+						Actor a = World.get(x, y, actors);
 						if (a == null) {
 							continue;
 						}
@@ -316,8 +317,7 @@ public abstract class Location extends Actor {
 		String description = name;
 		if (!opponents.isEmpty()) {
 			description += ". Forces: ("
-					+ CrCalculator.describedifficulty(opponents)
-					+ " fight)";
+					+ CrCalculator.describedifficulty(opponents) + " fight)";
 			if (showgarrison) {
 				description += "\n\n" + Squad.active.spot(opponents);
 			}

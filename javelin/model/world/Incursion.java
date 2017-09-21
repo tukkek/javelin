@@ -122,14 +122,13 @@ public class Incursion extends Actor {
 
 	Actor findtarget(final WorldScreen s) {
 		ArrayList<Actor> targets = new ArrayList<Actor>();
-		for (final Actor a : World.getall()) {
+		for (final Actor a : World.getactors()) {
 			if (a.impermeable || a.realm == realm
 					|| crosseswater(this, a.x, a.y)) {
 				continue;
 			}
 			Location l = a instanceof Location ? (Location) a : null;
-			if (l != null && CrCalculator
-					.calculateel(l.garrison) > getel()) {
+			if (l != null && CrCalculator.calculateel(l.garrison) > getel()) {
 				continue;
 			}
 			targets.add(a);
@@ -228,7 +227,8 @@ public class Incursion extends Actor {
 			return;
 		}
 		int size = World.scenario.size;
-		while (World.get(x, y) != null) {
+		ArrayList<Actor> actors = World.getactors();
+		while (World.get(x, y, actors) != null) {
 			int delta = RPG.pick(new int[] { -1, 0, +1 });
 			if (RPG.r(1, 2) == 1) {
 				x += delta;
@@ -380,8 +380,7 @@ public class Incursion extends Actor {
 
 	@Override
 	public String describe() {
-		return "Enemy incursion ("
-				+ CrCalculator.describedifficulty(squad)
+		return "Enemy incursion (" + CrCalculator.describedifficulty(squad)
 				+ " fight):\n\n" + Squad.active.spot(squad);
 	}
 
@@ -415,5 +414,15 @@ public class Incursion extends Actor {
 			survivors.remove(dead);
 			damage -= dead.source.challengerating;
 		}
+	}
+
+	public static ArrayList<Incursion> getincursions() {
+		ArrayList<Incursion> all = new ArrayList<Incursion>();
+		for (Actor a : World.getall(Incursion.class)) {
+			if (a instanceof Incursion) {
+				all.add((Incursion) a);
+			}
+		}
+		return all;
 	}
 }

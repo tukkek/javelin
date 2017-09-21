@@ -126,7 +126,7 @@ public abstract class Actor implements Serializable {
 			displace(depth + 1);
 			return;
 		}
-		ArrayList<Actor> actors = World.getall();
+		ArrayList<Actor> actors = World.getactors();
 		actors.remove(this);
 		if (tox >= 0 && toy >= 0 && tox < World.scenario.size
 				&& toy < World.scenario.size

@@ -219,16 +219,12 @@ public class Town extends Location {
 		if (!garrison.isEmpty()) {
 			return attacker.fight(garrison);
 		}
-		// look for sleeping defense Squad
-		for (int x = this.x - 1; x <= this.x + 1; x++) {
-			for (int y = this.y - 1; y <= this.y + 1; y++) {
-				Squad s = (Squad) World.get(x, y, Squad.class);
-				if (s != null) {
-					s.destroy(attacker);
-					throw new RuntimeException(
-							"destroy is supposed to throw exception #town");
-				}
-			}
+		/* look for sleeping defense Squad */
+		ArrayList<Squad> defending = getdistrict().getsquads();
+		if (!defending.isEmpty()) {
+			RPG.pick(defending).destroy(attacker);
+			throw new RuntimeException(
+					"Squad#destroy() is supposed to throw StartBattle #town");
 		}
 		captureforcomputer(attacker);
 		return false;// remove attacking squad, now garrison

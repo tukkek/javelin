@@ -11,6 +11,7 @@ import javelin.controller.exception.RepeatTurn;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
+import javelin.model.world.Actor;
 import javelin.model.world.ParkedVehicle;
 import javelin.model.world.World;
 
@@ -168,11 +169,12 @@ public class Transport implements Serializable {
 		}
 		Squad s = Squad.active;
 		Point exit = null;
+		ArrayList<Actor> getactors = World.getactors();
 		for (int x = s.x - 1; x <= s.x + 1; x++) {
 			for (int y = s.y - 1; y <= s.y + 1; y++) {
 				if (x == s.x && y == s.y || !World.validatecoordinate(x, y)
 						|| Terrain.get(x, y).equals(Terrain.WATER)
-						|| World.get(x, y) != null) {
+						|| World.get(x, y, getactors) != null) {
 					continue;
 				}
 				exit = new Point(x, y);

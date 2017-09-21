@@ -68,7 +68,7 @@ public class Win extends Hax {
 				}
 			}
 		}
-		for (Actor a : World.getall()) {
+		for (Actor a : World.getactors()) {
 			if (a instanceof Temple) {
 				a.remove();
 			}

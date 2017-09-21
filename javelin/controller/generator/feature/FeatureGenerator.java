@@ -185,8 +185,10 @@ public class FeatureGenerator {
 	static void spawnnear(Town t, Actor a, World w, int min, int max,
 			boolean clear) {
 		int[] location = null;
+		ArrayList<Actor> actors = World.getactors();
 		while (location == null
-				|| World.get(t.x + location[0], t.y + location[1]) != null
+				|| World.get(t.x + location[0], t.y + location[1],
+						actors) != null
 				|| t.x + location[0] < 0 || t.y + location[1] < 0
 				|| t.x + location[0] >= World.scenario.size
 				|| t.y + location[1] >= World.scenario.size
@@ -259,7 +261,7 @@ public class FeatureGenerator {
 		towns = new ArrayList<Town>(towns);
 		towns.remove(starting);
 		Realm r = towns.get(0).originalrealm;
-		for (Actor a : World.getall()) {
+		for (Actor a : World.getactors()) {
 			if (a instanceof Location) {
 				Location l = (Location) a;
 				if (l.realm != null) {

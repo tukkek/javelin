@@ -48,9 +48,10 @@ public class District {
 			return locations;
 		}
 		locations = new ArrayList<Location>();
+		ArrayList<Actor> all = World.getactors();
 		for (Point p : getarea()) {
-			Actor a = World.get(p.x, p.y);
-			if (a != null && a instanceof Location) {
+			Actor a = World.get(p.x, p.y, all);
+			if (a instanceof Location) {
 				locations.add((Location) a);
 			}
 		}
@@ -123,7 +124,7 @@ public class District {
 	 *         trouble passing through). This list is shuffled by default.
 	 */
 	public ArrayList<Point> getfreespaces() {
-		ArrayList<Actor> actors = World.getall();
+		ArrayList<Actor> actors = World.getactors();
 		ArrayList<Actor> locations = new ArrayList<Actor>();
 		for (Actor a : actors) {
 			if (a instanceof Location) {

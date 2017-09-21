@@ -44,7 +44,7 @@ public class BuildRoad extends Labor {
 				this.from = to.getlocation();
 				this.to = from;
 			}
-			for (Actor a : World.getall()) {
+			for (Actor a : World.getactors()) {
 				if (a instanceof Location && !(a instanceof Portal)) {
 					locations.add(a);
 				}

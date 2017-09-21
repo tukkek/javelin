@@ -157,7 +157,7 @@ public abstract class Academy extends Fortification {
 	 */
 	public static boolean train() {
 		boolean trained = false;
-		for (Actor actor : World.getall()) {
+		for (Actor actor : World.getactors()) {
 			if (actor instanceof Academy) {
 				Academy a = (Academy) actor;
 				/* don't inline */
@@ -263,6 +263,7 @@ public abstract class Academy extends Fortification {
 	 */
 	public Squad moveout(TrainingOrder o, Combatant member) {
 		ArrayList<Point> free = new ArrayList<Point>();
+		ArrayList<Actor> actors = World.getactors();
 		for (int deltax = -1; deltax <= +1; deltax++) {
 			for (int deltay = -1; deltay <= +1; deltay++) {
 				if (deltax == 0 && deltay == 0) {
@@ -276,7 +277,7 @@ public abstract class Academy extends Fortification {
 				}
 				Squad stationed = (Squad) World.get(x, y, Squad.class);
 				if (stationed == null) {
-					if (World.get(x, y) == null) {
+					if (World.get(x, y, actors) == null) {
 						free.add(new Point(x, y));
 					}
 				} else {

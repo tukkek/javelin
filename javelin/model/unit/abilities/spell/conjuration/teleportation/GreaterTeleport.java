@@ -47,7 +47,7 @@ public class GreaterTeleport extends Spell {
 	@Override
 	public String castpeacefully(Combatant caster, Combatant target) {
 		ArrayList<Actor> places = new ArrayList<Actor>();
-		for (Actor a : World.getall()) {
+		for (Actor a : World.getactors()) {
 			if (a instanceof Town || a instanceof UniqueLocation
 					|| a instanceof Temple) {
 				places.add(a);

@@ -131,7 +131,7 @@ public class World implements Serializable {
 	/**
 	 * @return A new list with all existing {@link Actor}s.
 	 */
-	public static ArrayList<Actor> getall() {
+	public static ArrayList<Actor> getactors() {
 		ArrayList<Actor> actors = new ArrayList<Actor>();
 		for (ArrayList<Actor> instances : getseed().actors.values()) {
 			if (instances.isEmpty() || instances.get(0) instanceof Squad) {
@@ -139,6 +139,7 @@ public class World implements Serializable {
 			}
 			actors.addAll(instances);
 		}
+		/* squads added at end */
 		actors.addAll(World.getall(Squad.class));
 		return actors;
 	}
@@ -157,9 +158,12 @@ public class World implements Serializable {
 
 	/**
 	 * @return Any actor on these coordinates.
+	 * @deprecated This loops through all of {@link #getactors()} with every
+	 *             call. Makes it really inefficient.
 	 */
+	@Deprecated
 	public static Actor get(int x, int y) {
-		return World.get(x, y, World.getall());
+		return World.get(x, y, World.getactors());
 	}
 
 	/**

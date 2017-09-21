@@ -47,7 +47,7 @@ public class WorldPanel extends MapPanel {
 	void updateactors() {
 		DESTINATIONS.clear();
 		ACTORS.clear();
-		for (Actor a : World.getall()) {
+		for (Actor a : World.getactors()) {
 			ACTORS.put(new Point(a.x, a.y), a);
 			if (!(a instanceof Location)) {
 				continue;

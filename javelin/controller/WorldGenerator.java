@@ -110,9 +110,11 @@ public class WorldGenerator extends Thread {
 		}
 		x = -1;
 		y = -1;
+		ArrayList<Actor> actors = World.getactors();
 		while (!World.validatecoordinate(x, y)
 				|| !World.validatecoordinate(x + 1, y)
-				|| World.get(x, y) != null || World.get(x + 1, y) != null) {
+				|| World.get(x, y, actors) != null
+				|| World.get(x + 1, y, actors) != null) {
 			x = RPG.r(minx, maxx);
 			y = RPG.r(miny, maxy);
 		}

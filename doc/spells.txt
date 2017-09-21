@@ -51,7 +51,7 @@ Level 4 (caster level 7)
 Level 5 (caster level 9)
   Flame strike: produces a vertical column of divine fire with a 10 foot radius.
   Hold monster: target temporarily cannot move and loses all dexterity.
-  Prying eyes: reveals dungeon or nearby area on world map.
+  Prying eyes: reveals dungeon map or nearby area on world map.
   Raise dead: after battle, resurrects a killed ally.
   Slay living: kills target. Touch.
   

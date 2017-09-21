@@ -175,12 +175,15 @@ public class CastSpell extends Fire implements AiAction {
 
 	static ChanceNode hit(Combatant active, Combatant target, BattleState state,
 			final Spell spell, final float chance, final boolean saved,
-			final String prefix) {
+			String prefix) {
 		state = state.clone();
 		active = state.clone(active);
 		target = state.cloneifdifferent(target, active);
-		return new ChanceNode(state, chance,
-				prefix + spell.cast(active, target, state, saved), Delay.BLOCK);
+		String message = spell.cast(active, target, state, saved);
+		if (message == null || message.isEmpty()) {
+			prefix = prefix.substring(0, prefix.length() - 1);
+		}
+		return new ChanceNode(state, chance, prefix + message, Delay.BLOCK);
 	}
 
 	@Override

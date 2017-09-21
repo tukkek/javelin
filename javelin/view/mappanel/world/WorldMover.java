@@ -7,6 +7,7 @@ import javelin.controller.Point;
 import javelin.controller.terrain.Terrain;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Squad;
+import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
 import javelin.view.mappanel.battle.overlay.BattleMover;
 import javelin.view.screen.WorldScreen;
@@ -59,6 +60,9 @@ public class WorldMover extends BattleMover {
 
 	@Override
 	public String drawtext(float apcost) {
+		if (!World.scenario.worldexploration) {
+			return "";
+		}
 		return apcost > 1 ? "100%" : Math.round(apcost * 100) + "%";
 	}
 

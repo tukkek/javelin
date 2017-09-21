@@ -13,6 +13,9 @@ import tyrant.mikera.engine.RPG;
  */
 public class HD implements Serializable, Cloneable {
 	private static final String SEPARATOR = " + ";
+	/**
+	 * List of dice number by dice type (1d8 would hitdice[8]=1).
+	 */
 	TreeMap<Integer, Float> hitdice = new TreeMap<Integer, Float>();
 	public int extrahp = 0;
 
@@ -87,5 +90,13 @@ public class HD implements Serializable, Cloneable {
 			dice += ndice;
 		}
 		return new Long(Math.round(dice)).intValue();
+	}
+
+	public int average() {
+		float average = extrahp;
+		for (Integer hd : hitdice.keySet()) {
+			average += hitdice.get(hd) * (1 + hd) / 2f;
+		}
+		return Math.round(average);
 	}
 }

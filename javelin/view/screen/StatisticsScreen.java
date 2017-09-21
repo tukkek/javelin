@@ -6,12 +6,12 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.action.ActionCost;
 import javelin.controller.challenge.CrCalculator;
+import javelin.controller.fight.Fight;
 import javelin.controller.quality.Quality;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Spawner;
-import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.AttackSequence;
@@ -74,10 +74,7 @@ public class StatisticsScreen extends InfoScreen {
 		}
 		lines.add(describealignment(m));
 		lines.add("");
-		final String maxhp = Squad.active.members.contains(c)
-				? " (" + c.maxhp + "hp)" : "";
-		final String showhp = Javelin.DEBUG ? " [" + c.hp + "]" : "";
-		lines.add("Hit dice     " + m.hd + maxhp + showhp);
+		lines.add(showhp(c, m));
 		lines.add("Initiative   " + (m.initiative >= 0 ? "+" : "")
 				+ m.initiative);
 		lines.add("Speed        " + showspeed(m));
@@ -126,6 +123,18 @@ public class StatisticsScreen extends InfoScreen {
 			text += line + "\n";
 		}
 		return text;
+	}
+
+	static String showhp(Combatant c, Monster m) {
+		final String hp;
+		if (Javelin.DEBUG) {
+			hp = Integer.toString(c.hp);
+		} else if (Fight.state.blueTeam.contains(c)) {
+			hp = Integer.toString(c.maxhp);
+		} else {
+			hp = "~" + c.source.hd.average();
+		}
+		return "Hit dice     " + m.hd + " (" + hp + "hp)";
 	}
 
 	static String showspeed(Monster m) {

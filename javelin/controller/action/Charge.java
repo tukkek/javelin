@@ -36,12 +36,10 @@ public class Charge extends Fire implements AiAction {
 	class ChargeOverlay extends Overlay {
 		Point target;
 
-		public ChargeOverlay(List<Step> steps, Point target) {
+		public ChargeOverlay(List<Point> steps, Point target) {
 			this.target = target;
 			affected.add(target);
-			for (Step s : steps) {
-				affected.add(new Point(s.x, s.y));
-			}
+			affected.addAll(steps);
 		}
 
 		@Override
@@ -72,6 +70,7 @@ public class Charge extends Fire implements AiAction {
 		if (me.hascondition(Fatigued.class) != null) {
 			return chances;
 		}
+		Point from = new Point(me.location[0], me.location[1]);
 		state = state.clone();
 		me = state.clone(me);
 		target = state.clone(target);
@@ -86,8 +85,10 @@ public class Charge extends Fire implements AiAction {
 		final List<ChanceNode> move = MeleeAttack.SINGLETON.attack(me, target,
 				usedefaultattack(me), 2, 0, 1, state);
 		final boolean bullrush = me.source.hasfeat(BullRush.SINGLETON);
-		final Overlay o = new ChargeOverlay(walk.subList(0, walk.size() - 1),
-				new Point(target));
+		List<Point> steps = new ArrayList<Point>(
+				walk.subList(0, walk.size() - 1));
+		steps.add(from);
+		final Overlay o = new ChargeOverlay(steps, new Point(target));
 		for (ChanceNode node : move) {
 			node.action = me + " charges!\n" + node.action;
 			node.delay = Delay.BLOCK;

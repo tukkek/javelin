@@ -211,8 +211,16 @@ public class RewardCalculator {
 	 * @see #rewardxp(ArrayList, List, List, int)
 	 */
 	public static void distributexp(ArrayList<Combatant> units, double xp) {
+		units = new ArrayList<Combatant>(units); /* safe copy */
+		for (Combatant c : new ArrayList<Combatant>(units)) {
+			/* ignore summons */
+			if (c.summoned) {
+				units.remove(c);
+			}
+		}
 		List<Combatant> members = new ArrayList<Combatant>();
 		for (Combatant c : units) {
+			/* mercenaries get a flat share */
 			if (!c.mercenary) {
 				members.add(c);
 			}

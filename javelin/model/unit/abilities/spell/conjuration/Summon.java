@@ -6,6 +6,7 @@ import javelin.Javelin;
 import javelin.controller.challenge.CrCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
+import javelin.model.state.Square;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
@@ -75,12 +76,13 @@ public class Summon extends Spell {
 		 * spent
 		 */
 		summoned.ap = target.ap;
+		final Square[][] map = s.map;
 		int x = target.location[0];
 		int y = target.location[1];
-		while (s.getcombatant(x, y) != null) {
+		while (s.getcombatant(x, y) != null || map[x][y].blocked) {
 			x += RPG.pick(new int[] { -1, 0, +1 });
 			y += RPG.pick(new int[] { -1, 0, +1 });
-			if (x < 0 || y < 0 || x >= s.map.length || y >= s.map.length) {
+			if (x < 0 || y < 0 || x >= map.length || y >= map.length) {
 				x = target.location[0];
 				y = target.location[1];
 			}
@@ -101,8 +103,8 @@ public class Summon extends Spell {
 		if (m == null) {
 			throw new RuntimeException("Unknown summon: " + monstername);
 		}
-		return CrCalculator
-				.calculatecr(c.source) >= m.challengerating && super.apply(c);
+		return CrCalculator.calculatecr(c.source) >= m.challengerating
+				&& super.apply(c);
 	}
 
 	@Override

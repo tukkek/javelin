@@ -32,6 +32,14 @@ import javelin.view.mappanel.battle.overlay.BattleMover.BatteStep;
  * @author alex
  */
 public class AiMovement extends Action implements AiAction {
+	/**
+	 * Target value for number of outcome nodes.We want to limit the nu,ber of
+	 * node outcomes so that the AI doesn't become to slow.
+	 */
+	static final int MOVES = 8;
+	public static final AiMovement SINGLETON = new AiMovement();
+	public static final Image MOVEOVERLAY = Images.getImage("overlaymove");
+
 	public class LongMove extends ChanceNode {
 		public LongMove(Combatant c, BatteStep s, BattleMover mover, Meld m,
 				Node n) {
@@ -44,14 +52,6 @@ public class AiMovement extends Action implements AiAction {
 			overlay = o;
 		}
 	}
-
-	/**
-	 * Target value for number of outcome nodes.We want to limit the nu,ber of
-	 * node outcomes so that the AI doesn't become to slow.
-	 */
-	static final int MOVES = 8;
-	public static final AiMovement SINGLETON = new AiMovement();
-	public static final Image MOVEOVERLAY = Images.getImage("overlaymove");
 
 	private AiMovement() {
 		super("Long move");

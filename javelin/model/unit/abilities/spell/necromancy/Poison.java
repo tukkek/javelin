@@ -24,8 +24,7 @@ public class Poison extends Touch {
 
 	/** Constructor. */
 	public Poison() {
-		super("Poison", 4, CrCalculator.ratespelllikeability(4),
-				Realm.EVIL);
+		super("Poison", 4, CrCalculator.ratespelllikeability(4), Realm.EVIL);
 		castinbattle = true;
 	}
 
@@ -44,7 +43,7 @@ public class Poison extends Touch {
 		}
 		final int damage = Math.round(3 * ratio);
 		if (damage <= 0) {
-			return target + " resists!";
+			return target + " resists the poison!";
 		}
 		Poisoned p = new Poisoned(Float.MAX_VALUE, target, Effect.NEGATIVE,
 				damage, dc, nonmagical ? null : casterlevel);

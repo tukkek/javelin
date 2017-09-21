@@ -13,6 +13,7 @@ import javelin.controller.challenge.CrCalculator;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.attack.Combatant;
+import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 /**
  * This is a special {@link AiAction} that is not included in the normal
@@ -77,7 +78,12 @@ public class Flee extends Action implements AiAction {
 		s = s.clone();
 		s.flee(active);
 		ArrayList<ChanceNode> chances = new ArrayList<ChanceNode>(1);
-		chances.add(new ChanceNode(s, 1, active + " flees!", Delay.BLOCK));
+		ChanceNode node = new ChanceNode(s, 1, active + " flees!", Delay.BLOCK);
+		AiOverlay overlay = new AiOverlay(active.location[0],
+				active.location[1]);
+		overlay.image = AiMovement.MOVEOVERLAY;
+		node.overlay = overlay;
+		chances.add(node);
 		outcomes.add(chances);
 		return outcomes;
 	}

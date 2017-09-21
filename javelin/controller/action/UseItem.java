@@ -44,6 +44,7 @@ public class UseItem extends Action {
 		if (item.use(c)) {
 			Javelin.app.fight.getbag(c).remove(item);
 		}
+		Game.messagepanel.clear();
 		return true;
 	}
 
@@ -55,8 +56,8 @@ public class UseItem extends Action {
 	 */
 	public static Item queryforitemselection(final Combatant c,
 			boolean validate) {
-		final List<Item> items =
-				(List<Item>) Javelin.app.fight.getbag(c).clone();
+		final List<Item> items = (List<Item>) Javelin.app.fight.getbag(c)
+				.clone();
 		if (items.isEmpty()) {
 			Game.message("Isn't carrying battle items!", Delay.WAIT);
 			return null;
@@ -90,6 +91,7 @@ public class UseItem extends Action {
 			prompt += "[" + i++ + "] " + it + "\n";
 		}
 		if (i == 1) {
+			Game.messagepanel.clear();
 			Game.message("Can't use any of these while threatened!",
 					Delay.WAIT);
 			return null;

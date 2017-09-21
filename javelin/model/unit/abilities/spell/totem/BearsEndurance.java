@@ -36,7 +36,7 @@ public class BearsEndurance extends TotemsSpell {
 			final BattleState s, final boolean saved) {
 		target.addcondition(new Enduring(target, casterlevel));
 		return target + "'s constitution is now "
-				+ Monster.getsignedbonus(target.source.constitution);
+				+ Monster.getsignedbonus(target.source.constitution) + "!";
 	}
 
 }

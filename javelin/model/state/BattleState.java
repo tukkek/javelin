@@ -345,8 +345,8 @@ public class BattleState implements Node, TeamContainer {
 		final int deltax = target.location[0] - attacker.location[0];
 		final int deltay = target.location[1] - attacker.location[1];
 		final int flankingx = target.location[0] + deltax;
-		final int flanking = target.location[1] + deltay;
-		final Combatant flank = getcombatant(flankingx, flanking);
+		final int flankingy = target.location[1] + deltay;
+		final Combatant flank = getcombatant(flankingx, flankingy);
 		return flank != null && !flank.burrowed
 				&& Walker.distance(target, flank) < 1.5
 				&& attackerteam.contains(flank);

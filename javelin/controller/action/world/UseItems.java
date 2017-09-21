@@ -145,7 +145,7 @@ public class UseItems extends WorldAction {
 			boolean showkeys) {
 		String s = "";
 		int i = 0;
-		ArrayList<Combatant> members = Squad.active.members;
+		ArrayList<Combatant> members = filtermercenaries(Squad.active.members);
 		for (int j = 0; j < members.size(); j++) {
 			final Combatant c = members.get(j);
 			String output = "";
@@ -180,6 +180,25 @@ public class UseItems extends WorldAction {
 			}
 		}
 		return s;
+	}
+
+	/**
+	 * Tries to filter out mercenaries from the list. This is necessary because
+	 * having 10 low-level mercenaries makes the equipment handling screens
+	 * impossible to use. If squad is all mercenaries, will show it anyways.
+	 * 
+	 * TODO this is a necessity due to the poor 1,0 series user interface. With
+	 * 2.0+ should instead have a "show mercenaries" checkbox, allowing
+	 * mercenaries to use items in this way.
+	 */
+	static ArrayList<Combatant> filtermercenaries(ArrayList<Combatant> all) {
+		ArrayList<Combatant> members = new ArrayList<Combatant>(all.size());
+		for (Combatant c : all) {
+			if (!c.mercenary) {
+				members.add(c);
+			}
+		}
+		return members.isEmpty() ? all : members;
 	}
 
 	static String describeitem(final Item it, final Combatant c) {

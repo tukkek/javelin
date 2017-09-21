@@ -234,9 +234,12 @@ public class CrCalculator {
 				}
 			}
 		}
-		final int groupCr = crtoel(sum)
-				+ multipleOpponentsElModifier(group.size());
-		final int highestCrEl = crtoel(highestCr);
+		return calculatel(sum, highestCr, group.size());
+	}
+
+	public static int calculatel(float totalcr, float highestcr, int size) {
+		final int groupCr = crtoel(totalcr) + multipleOpponentsElModifier(size);
+		final int highestCrEl = crtoel(highestcr);
 		return Math.max(highestCrEl, groupCr);
 	}
 
@@ -774,8 +777,8 @@ public class CrCalculator {
 	}
 
 	/**
-	 * Same as {@link CrCalculator#ratespelllikeability(int)} but
-	 * to be used in case a touch spell is being used as a ray spell instead.
+	 * Same as {@link CrCalculator#ratespelllikeability(int)} but to be used in
+	 * case a touch spell is being used as a ray spell instead.
 	 */
 	public static float ratetouchspellconvertedtoray(int spelllevel) {
 		return .4f * spelllevel;

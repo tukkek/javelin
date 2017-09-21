@@ -50,9 +50,25 @@ public class Flee extends Action implements AiAction {
 		if (!ALLOWFLEE || !Javelin.app.fight.canflee || s.isengaged(active)) {
 			return false;
 		}
-		final int eldifference = CrCalculator.calculateel(
-				s.redTeam) - CrCalculator.calculateel(s.blueTeam);
+		if (s.blueTeam.isEmpty() || s.redTeam.isEmpty()) {
+			return false;
+		}
+		final int eldifference = calculateel(s.redTeam)
+				- calculateel(s.blueTeam);
 		return eldifference <= FLEEAT && s.redTeam.contains(s.next);
+	}
+
+	private static int calculateel(ArrayList<Combatant> team) {
+		float totalcr = 0;
+		float highestcr = -Integer.MAX_VALUE;
+		for (Combatant c : team) {
+			Float cr = c.source.challengerating * c.hp / c.maxhp;
+			totalcr += cr;
+			if (cr > highestcr) {
+				highestcr = cr;
+			}
+		}
+		return CrCalculator.calculatel(totalcr, highestcr, team.size());
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package javelin.model.world.location.town.labor.basic;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -177,27 +176,23 @@ public class Dwelling extends Fortification {
 		}
 		String monstertype = dweller.toString().toLowerCase();
 		InfoScreen screen = new InfoScreen("");
-		screen.print(prompt(monstertype));
-		Character choice = null;
-		List<Character> options = Arrays.asList('d', 'h', 'p', 'q');
-		while (!options.contains(choice)) {
+		char choice = ' ';
+		while (choice != 'q') {
+			screen.print(prompt(monstertype));
 			choice = InfoScreen.feedback();
-			if (volunteers == 0 && (choice == 'h' || choice == 'd')) {
-				choice = null;
+			if (choice == 'p') {
+				pillage();
+				break;
+			}
+			if (volunteers == 0) {
+				continue;
+			}
+			if (choice == 'h') {
+				hire();
+			} else if (choice == 'd') {
+				draft(screen, monstertype);
 			}
 		}
-		if (choice == 'q') {
-			return true;
-		}
-		if (choice == 'p') {
-			pillage();
-			return true;
-		}
-		if (choice == 'h') {
-			hire();
-			return true;
-		}
-		draft(screen, monstertype);
 		return true;
 	}
 

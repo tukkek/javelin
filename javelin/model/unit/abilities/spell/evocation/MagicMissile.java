@@ -23,7 +23,7 @@ public class MagicMissile extends Spell {
 	public String cast(Combatant caster, Combatant target, BattleState s,
 			boolean saved) {
 		target.damage(1 * 4 / 2 + 1, s, 0);
-		return target + " is " + target.getstatus();
+		return target + " is " + target.getstatus() + "!";
 	}
 
 	@Override

@@ -40,7 +40,9 @@ public class Wand extends Item {
 		if (name.contains("ray of ")) {
 			name = name.replace("ray of ", "");
 		}
-		spell = s;
+		spell = s.clone();
+		spell.provokeaoo = false;
+		provokesaoo = false;
 		baseprice = price;
 		recharge();
 		usedinbattle = s.castinbattle;

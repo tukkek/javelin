@@ -2,11 +2,11 @@ package javelin.controller.action;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
 
 import javelin.Javelin;
+import javelin.controller.comparator.ItemsByName;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
@@ -44,7 +44,7 @@ public class UseItem extends Action {
 		if (item.use(c)) {
 			Javelin.app.fight.getbag(c).remove(item);
 		}
-		Game.messagepanel.clear();
+		// Game.messagepanel.clear();
 		return true;
 	}
 
@@ -73,18 +73,13 @@ public class UseItem extends Action {
 			Game.message("Can't use any of these items!", Delay.WAIT);
 			return null;
 		}
-		Collections.sort(items, new Comparator<Item>() {
-			@Override
-			public int compare(Item o1, Item o2) {
-				return o1.name.compareTo(o2.name);
-			}
-		});
+		Collections.sort(items, ItemsByName.SINGLETON);
 		final boolean threatened = Fight.state.isengaged(c);
 		int i = 1;
 		final TreeMap<Integer, Item> options = new TreeMap<Integer, Item>();
 		String prompt = "Which item? (press q to quit)\n";
 		for (final Item it : items) {
-			if (threatened) {
+			if (threatened && it.provokesaoo) {
 				continue;
 			}
 			options.put(i, it);

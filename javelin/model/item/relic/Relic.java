@@ -24,6 +24,7 @@ public abstract class Relic extends Item {
 		super(name, 0, null);
 		consumable = false;
 		waste = false;
+		provokesaoo = false;
 	}
 
 	@Override

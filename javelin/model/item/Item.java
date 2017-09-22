@@ -104,6 +104,11 @@ public abstract class Item implements Serializable, Cloneable {
 
 	/** Whether to {@link #waste(float, ArrayList)} this item or not. */
 	public boolean waste = true;
+	/**
+	 * Usually only {@link Scroll}s and {@link Potion}s provoke attacks of
+	 * opportunity.
+	 */
+	public boolean provokesaoo = true;
 
 	/**
 	 * @param upgradeset

@@ -29,6 +29,49 @@ import javelin.view.screen.StatisticsScreen;
  * @author alex
  */
 public abstract class Target extends Action {
+	public class SelectTarget implements Comparator<Combatant> {
+		final Combatant c;
+		final BattleState state;
+
+		public SelectTarget(Combatant c, BattleState state) {
+			this.c = c;
+			this.state = state;
+		}
+
+		/**
+		 * A higher value means this should be selected first while browsing
+		 * targets.
+		 * 
+		 * TODO turn into dynamic instead?
+		 */
+		public int prioritize(final Combatant c, final BattleState state,
+				final Combatant target) {
+			int priority = -target.surprise();
+			if (state.haslineofsight(c, target) == Vision.COVERED) {
+				priority -= 4;
+			}
+			/* TODO take into account relevant feats */
+			if (state.isengaged(target)) {
+				priority -= 4;
+			}
+			if (target.hascondition(Charging.class) != null) {
+				priority += 2;
+			}
+			return priority;
+		}
+
+		@Override
+		public int compare(final Combatant o1, final Combatant o2) {
+			int priority1 = prioritize(c, state, o1);
+			int priority2 = prioritize(c, state, o2);
+			if (priority1 != priority2) {
+				return priority1 > priority2 ? -1 : 1;
+			}
+			final double distance1 = Walker.distance(o1, c) * 10;
+			final double distance2 = Walker.distance(o2, c) * 10;
+			return Math.round(Math.round(distance1 - distance2));
+		}
+	}
 
 	/**
 	 * Pressing this key confirms the target selection, usually same as the
@@ -84,42 +127,9 @@ public abstract class Target extends Action {
 			Game.message("No valid targets...", Delay.WAIT);
 			throw new RepeatTurn();
 		}
-		Collections.sort(targets, new Comparator<Combatant>() {
-			@Override
-			public int compare(final Combatant o1, final Combatant o2) {
-				int priority1 = prioritize(c, state, o1);
-				int priority2 = prioritize(c, state, o2);
-				if (priority1 == priority2) {
-					return new Long(Math.round(Walker.distance(o1, c) * 10
-							- Walker.distance(o2, c) * 10)).intValue();
-				}
-				return priority1 > priority2 ? -1 : 1;
-			}
-		});
+		Collections.sort(targets, new SelectTarget(c, state));
 		selecttarget(combatant, targets, state);
 		return true;
-	}
-
-	/**
-	 * A higher value means this should be selected first while browsing
-	 * targets.
-	 * 
-	 * TODO turn into dynamic instead?
-	 */
-	public int prioritize(final Combatant c, final BattleState state,
-			final Combatant target) {
-		int priority = -target.surprise();
-		if (state.haslineofsight(c, target) == Vision.COVERED) {
-			priority -= 4;
-		}
-		/* TODO take into account relevant feats */
-		if (state.isengaged(target)) {
-			priority -= 4;
-		}
-		if (target.hascondition(Charging.class) != null) {
-			priority += 2;
-		}
-		return priority;
 	}
 
 	private void selecttarget(final Combatant combatant,

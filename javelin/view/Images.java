@@ -46,6 +46,7 @@ public class Images {
 			.getImage("locationtournament");
 	/** Distinguishes {@link Combatant#mercenary} units. */
 	public static final Image MERCENARY = Images.getImage("overlaymercenary");
+	public static final Image SUMMONED = Images.getImage("overlaysummoned");
 
 	/**
 	 * @param combatant

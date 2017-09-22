@@ -1,15 +1,12 @@
 Alex "kek" Henry
 * Main developer
 
-Bruno Terra de Campos
-* Monster images
-
-Craig “Upper Krust” Cochrane @ http://eternitypublishing.wordpress.com/
-* Immortal’s Handbook and its Challenging Challenge RAtins appendix
-
 Wizards of the Coast http://company.wizards.com/
 * d20 System Reference Document
 * Open Game License
+
+Craig “Upper Krust” Cochrane @ http://eternitypublishing.wordpress.com/
+* Immortal’s Handbook and its Challenging Challenge RAtins appendix
 
 John H. Kim @ http://www.darkshire.net/jhkim
 * XML SRD Monster Data
@@ -26,8 +23,11 @@ Mike Anderson
 David "dpeg" Ploog
 * Dungeon Crawl Stone Soup design philosphy https://github.com/crawl/crawl/blob/master/crawl-ref/docs/crawl_manual.rst#n-philosophy-pas-de-faq
 
+Bruno Terra de Campos
+* Monster images
+
 Stealthix @ https://stealthix.deviantart.com/
-* Location images 
+* Location, terrain and monster images
 * Javelin logo!
 
 Special thanks

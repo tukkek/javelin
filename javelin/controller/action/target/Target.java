@@ -32,38 +32,18 @@ public abstract class Target extends Action {
 	public class SelectTarget implements Comparator<Combatant> {
 		final Combatant c;
 		final BattleState state;
+		private Target action;
 
-		public SelectTarget(Combatant c, BattleState state) {
+		public SelectTarget(Combatant c, BattleState state, Target action) {
 			this.c = c;
 			this.state = state;
-		}
-
-		/**
-		 * A higher value means this should be selected first while browsing
-		 * targets.
-		 * 
-		 * TODO turn into dynamic instead?
-		 */
-		public int prioritize(final Combatant c, final BattleState state,
-				final Combatant target) {
-			int priority = -target.surprise();
-			if (state.haslineofsight(c, target) == Vision.COVERED) {
-				priority -= 4;
-			}
-			/* TODO take into account relevant feats */
-			if (state.isengaged(target)) {
-				priority -= 4;
-			}
-			if (target.hascondition(Charging.class) != null) {
-				priority += 2;
-			}
-			return priority;
+			this.action = action;
 		}
 
 		@Override
 		public int compare(final Combatant o1, final Combatant o2) {
-			int priority1 = prioritize(c, state, o1);
-			int priority2 = prioritize(c, state, o2);
+			int priority1 = action.prioritize(c, state, o1);
+			int priority2 = action.prioritize(c, state, o2);
 			if (priority1 != priority2) {
 				return priority1 > priority2 ? -1 : 1;
 			}
@@ -127,7 +107,7 @@ public abstract class Target extends Action {
 			Game.message("No valid targets...", Delay.WAIT);
 			throw new RepeatTurn();
 		}
-		Collections.sort(targets, new SelectTarget(c, state));
+		Collections.sort(targets, new SelectTarget(c, state, this));
 		selecttarget(combatant, targets, state);
 		return true;
 	}
@@ -226,4 +206,27 @@ public abstract class Target extends Action {
 				.translatetochance(calculatehitdc(active, target, state))
 				+ " to hit)";
 	}
+
+	/**
+	 * A higher value means this should be selected first while browsing
+	 * targets.
+	 * 
+	 * TODO turn into dynamic instead?
+	 */
+	public int prioritize(final Combatant c, final BattleState state,
+			final Combatant target) {
+		int priority = -target.surprise();
+		if (state.haslineofsight(c, target) == Vision.COVERED) {
+			priority -= 4;
+		}
+		/* TODO take into account relevant feats */
+		if (state.isengaged(target)) {
+			priority -= 4;
+		}
+		if (target.hascondition(Charging.class) != null) {
+			priority += 2;
+		}
+		return priority;
+	}
+
 }

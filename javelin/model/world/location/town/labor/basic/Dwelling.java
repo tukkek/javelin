@@ -214,9 +214,10 @@ public class Dwelling extends Fortification {
 	}
 
 	void hire() {
-		final Combatant mercenary = new Combatant(dweller.source.clone(), true);
-		MercenariesGuild.recruit(mercenary, true);
-		volunteers -= 1;
+		Combatant mercenary = new Combatant(dweller.source.clone(), true);
+		if (MercenariesGuild.recruit(mercenary, true)) {
+			volunteers -= 1;
+		}
 	}
 
 	String prompt(String monstertype) {

@@ -2,6 +2,7 @@ package javelin.controller.challenge;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -782,5 +783,16 @@ public class CrCalculator {
 	 */
 	public static float ratetouchspellconvertedtoray(int spelllevel) {
 		return .4f * spelllevel;
+	}
+
+	/**
+	 * @param update
+	 *            Updates {@link Monster#challengerating} for each unit in this
+	 *            list.
+	 */
+	public static void updatecr(ArrayList<Combatant> update) {
+		for (Combatant c : update) {
+			calculatecr(c.source);
+		}
 	}
 }

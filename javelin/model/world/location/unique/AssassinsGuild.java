@@ -120,9 +120,10 @@ public class AssassinsGuild extends Academy {
 		public boolean select(Option op) {
 			if (op instanceof RecruitOption) {
 				RecruitOption ro = (RecruitOption) op;
-				if (Dwelling.canrecruit(Math.round(ro.m.challengerating * 100))) {
+				final int xp = Math.round(ro.m.challengerating * 100);
+				if (Dwelling.canrecruit(xp)) {
 					Dwelling.spend(ro.m.challengerating);
-					Squad.active.members.add(new Combatant(ro.m.clone(), true));
+					Squad.active.add(new Combatant(ro.m.clone(), true));
 					return true;
 				}
 				print(text + "\nNot enough XP...");

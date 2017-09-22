@@ -43,7 +43,7 @@ public class Settler extends Labor {
 			}
 			t.population -= 1;
 		}
-		s.members.add(new Combatant(Javelin.getmonster("Settler"), false));
+		s.add(new Combatant(Javelin.getmonster("Settler"), false));
 	}
 
 	@Override

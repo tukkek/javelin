@@ -9,7 +9,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.CrCalculator;
-import javelin.controller.comparator.CombatantByCrComparator;
+import javelin.controller.comparator.CombatantByCr;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.IncursionFight;
@@ -419,7 +419,7 @@ public class Incursion extends Actor {
 		}
 		float damage = totalcr * (1 - chance / 10f);
 		LinkedList<Combatant> wounded = new LinkedList<Combatant>(survivors);
-		Collections.sort(wounded, CombatantByCrComparator.SINGLETON);
+		Collections.sort(wounded, CombatantByCr.SINGLETON);
 		while (damage > 0 && survivors.size() > 1) {
 			Combatant dead = wounded.pop();
 			survivors.remove(dead);

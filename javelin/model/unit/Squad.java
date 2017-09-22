@@ -11,6 +11,7 @@ import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.CrCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.CombatantHealthComparator;
+import javelin.controller.comparator.CombatantsByNameAndMercenary;
 import javelin.controller.comparator.SpellLevelComparator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.IncursionFight;
@@ -40,6 +41,9 @@ import tyrant.mikera.tyrant.Skill;
 /**
  * A group of units that the player controls as a overworld game unit. If a
  * player loses all his squads the game ends.
+ * 
+ * TODO when this breaks the 1000 line limit an easy fix is to turn
+ * {@link #members} into a SquadMemmbers class. See {@link #sort()}.
  *
  * @author alex
  */
@@ -70,9 +74,6 @@ public class Squad extends Actor implements Cloneable {
 	 * {@link Town} but in practice should never be <code>null</code>.
 	 */
 	public Town lasttown = null;
-
-	// /** See {@link Work}. */
-	// public Improvement work = null;
 
 	/**
 	 * <code>false</code> will never prompt to skip battles.
@@ -125,17 +126,6 @@ public class Squad extends Actor implements Cloneable {
 		}
 	}
 
-	/**
-	 * @return The sum of {@link Monster#size()} for this squad.
-	 */
-	public float eat() {
-		float sum = 0;
-		for (final Combatant m : members) {
-			sum += m.source.size();
-		}
-		return sum;
-	}
-
 	@Override
 	public void place() {
 		super.place();
@@ -174,12 +164,29 @@ public class Squad extends Actor implements Cloneable {
 	}
 
 	/**
+	 * Sorts alphabetically, with all mercenaries to the final of the
+	 * {@link #members} list, making it easier to overcome some current UI
+	 * limitations.
+	 * 
+	 * TODO this shouldn't be public but ensure by the architecure. A solution
+	 * would be to make {@link #members} a class of its own (not a List) which
+	 * exposes a singgle add methods like {@link #add(Combatant)} and
+	 * {@link #add(Combatant, List)}. This needs some rewriting in the code and
+	 * also making sure Cloning works as intended both for shallow and deep
+	 * oprateions.
+	 */
+	public void sort() {
+		members.sort(CombatantsByNameAndMercenary.SINGLETON);
+	}
+
+	/**
 	 * @param s
 	 *            Takes this squad, {@link #disband()} it and join with the
 	 *            current instance.
 	 */
 	public void join(final Squad s) {
 		members.addAll(s.members);
+		sort();
 		gold += s.gold;
 		resources += s.resources;
 		hourselapsed = Math.max(hourselapsed, s.hourselapsed);
@@ -194,6 +201,17 @@ public class Squad extends Actor implements Cloneable {
 		s.disband();
 	}
 
+	/**
+	 * @return The sum of {@link Monster#size()} for this squad.
+	 */
+	public float eat() {
+		float sum = 0;
+		for (final Combatant c : members) {
+			sum += c.source.eat();
+		}
+		return sum;
+	}
+
 	@Override
 	public void turn(long time, WorldScreen world) {
 		paymercenaries();
@@ -203,7 +221,7 @@ public class Squad extends Actor implements Cloneable {
 		} else if (foodfound < 0) {
 			foodfound = 0;
 		}
-		gold -= Math.round(Math.ceil(eat() / 2f * (1 - foodfound)));
+		gold -= Math.round(Math.ceil(eat() * (1 - foodfound)));
 		if (gold < 0) {
 			gold = 0;
 		}
@@ -254,14 +272,24 @@ public class Squad extends Actor implements Cloneable {
 	}
 
 	/**
+	 * Will automatically {@link #sort()} after inclusion..
+	 * 
 	 * @param member
 	 *            Adds this unit to {@link #members}.
 	 * @param equipmentp
 	 *            Unit's equipment to be added to {@link #equipment}.
 	 */
-	public void add(Combatant member, ArrayList<Item> equipmentp) {
+	public void add(Combatant member, List<Item> equipmentp) {
 		members.add(member);
-		equipment.put(member.id, equipmentp);
+		sort();
+		equipment.put(member.id, new ArrayList<Item>(equipmentp));
+	}
+
+	/**
+	 * Like {@link #add(Combatant, List)} but adds an empty item list.
+	 */
+	public void add(Combatant c) {
+		add(c, new ArrayList<Item>(0));
 	}
 
 	/**
@@ -751,21 +779,6 @@ public class Squad extends Actor implements Cloneable {
 	}
 
 	/**
-	 * Moves all mercenaries to the final of the {@link #members} list, making
-	 * it easier to overcome some current UI limitations. TODO
-	 */
-	public void sort() {
-		ArrayList<Combatant> mercenaries = new ArrayList<Combatant>();
-		for (Combatant c : new ArrayList<Combatant>(members)) {
-			if (c.mercenary) {
-				members.remove(c);
-				mercenaries.add(c);
-			}
-		}
-		members.addAll(mercenaries);
-	}
-
-	/**
 	 * 100XP = 1CR.
 	 * 
 	 * @return Total of XP between all active {@link Squad} members.
@@ -845,5 +858,19 @@ public class Squad extends Actor implements Cloneable {
 	@Override
 	public Integer getel(int attackerel) {
 		return CrCalculator.calculateel(members);
+	}
+
+	/**
+	 * @return A new list contianing all mercenaries in this squad.
+	 * @see Combatant#mercenary
+	 */
+	public ArrayList<Combatant> getmercenaries() {
+		ArrayList<Combatant> mercenaries = new ArrayList<Combatant>();
+		for (Combatant c : members) {
+			if (c.mercenary) {
+				mercenaries.add(c);
+			}
+		}
+		return mercenaries;
 	}
 }

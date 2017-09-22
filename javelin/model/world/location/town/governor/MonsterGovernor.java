@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.challenge.CrCalculator;
-import javelin.controller.comparator.CombatantByCrComparator;
+import javelin.controller.comparator.CombatantByCr;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Incursion;
 import javelin.model.world.location.town.Rank;
@@ -133,7 +133,7 @@ public class MonsterGovernor extends Governor {
 			return;
 		}
 		List<Combatant> garrison = new ArrayList<Combatant>(t.garrison);
-		garrison.sort(CombatantByCrComparator.SINGLETON);
+		garrison.sort(CombatantByCr.SINGLETON);
 		List<Combatant> incursion = new ArrayList<Combatant>(
 				garrison.subList(0, garrison.size() / 2));
 		if (!incursion.isEmpty()) {

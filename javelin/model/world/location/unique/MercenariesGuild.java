@@ -2,12 +2,12 @@ package javelin.model.world.location.unique;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.CrCalculator;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.comparator.CombatantByCr;
 import javelin.controller.old.Game;
 import javelin.model.Realm;
 import javelin.model.unit.Monster;
@@ -96,15 +96,8 @@ public class MercenariesGuild extends UniqueLocation {
 		if (!super.interact()) {
 			return false;
 		}
-		Collections.sort(mercenaries, new Comparator<Combatant>() {
-			@Override
-			public int compare(Combatant o1, Combatant o2) {
-				return new Float(
-						CrCalculator.calculatecr(o2.source))
-								.compareTo(CrCalculator
-										.calculatecr(o1.source));
-			}
-		});
+		CrCalculator.updatecr(mercenaries);
+		mercenaries.sort(Collections.reverseOrder(CombatantByCr.SINGLETON));
 		ArrayList<String> prices = new ArrayList<String>(mercenaries.size());
 		for (Combatant c : mercenaries) {
 			prices.add(c + " ($" + SelectScreen.formatcost(getfee(c)) + ")");
@@ -147,7 +140,7 @@ public class MercenariesGuild extends UniqueLocation {
 		}
 		combatant.setmercenary(true);
 		Squad.active.gold -= advance;
-		Squad.active.members.add(combatant);
+		Squad.active.add(combatant);
 		return true;
 	}
 
@@ -161,8 +154,7 @@ public class MercenariesGuild extends UniqueLocation {
 	 *         value).
 	 */
 	public static int getfee(Monster m) {
-		float value = RewardCalculator
-				.getgold(CrCalculator.calculatecr(m));
+		float value = RewardCalculator.getgold(CrCalculator.calculatecr(m));
 		int roundto;
 		if (value > 1000) {
 			roundto = 1000;

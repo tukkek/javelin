@@ -324,7 +324,7 @@ public class Javelin {
 		if (World.scenario.asksquadnames && !Javelin.DEBUG) {
 			c.source.customName = NamingScreen.getname(c.toString());
 		}
-		Squad.active.members.add(c);
+		Squad.active.add(c);
 		/*
 		 * night-only is largely cosmetic so just don't appear for player units
 		 */

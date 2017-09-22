@@ -86,7 +86,7 @@ public class Battlefield extends UniqueLocation {
 		Dwelling.spend(cost / 100);
 		Monster m = Javelin.getmonster(choice);
 		for (int i = 0; i < this.survivors.get(choice); i++) {
-			Squad.active.members.add(new Combatant(m, true));
+			Squad.active.add(new Combatant(m, true));
 		}
 		this.survivors.remove(choice);
 	}

@@ -23,7 +23,7 @@ public class Ressurect extends Hax {
 			return false;
 		}
 		EndBattle.lastkilled.hp = EndBattle.lastkilled.maxhp;
-		Squad.active.members.add(EndBattle.lastkilled);
+		Squad.active.add(EndBattle.lastkilled);
 		return true;
 	}
 }

@@ -44,6 +44,7 @@ import javelin.model.unit.feat.attack.focus.WeaponFocus;
 import javelin.model.unit.feat.skill.Acrobatic;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.military.Academy;
+import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.upgrading.SkillSelectionScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -633,6 +634,8 @@ public class Monster implements Cloneable, Serializable {
 	}
 
 	/**
+	 * TODO could probably be turned into a map
+	 * 
 	 * @return A more computational-friendly version of {@link #size} where
 	 *         small is 1/2, medium is 1, large is 2...
 	 * @see Squad#eat()
@@ -807,5 +810,16 @@ public class Monster implements Cloneable, Serializable {
 			attacks.addAll(sequence);
 		}
 		return attacks;
+	}
+
+	/**
+	 * Represents a general daily upkeep for this unit, not considering a
+	 * emrcenary's fee.
+	 * 
+	 * @return How much food this units eats in gold pieces per day.
+	 * @see MercenariesGuild#getfee(Monster)
+	 */
+	public float eat() {
+		return size() / 2f;
 	}
 }

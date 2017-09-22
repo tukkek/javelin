@@ -46,7 +46,7 @@ public class RecruitingGuildScreen extends AcademyScreen {
 			if (canafford(h)) {
 				spend(h);
 				hiringacademy.clearhire(h.c);
-				Squad.active.members.add(h.c);
+				Squad.active.add(h.c);
 				return true;
 			}
 			print(text + "\nCan't afford it...");

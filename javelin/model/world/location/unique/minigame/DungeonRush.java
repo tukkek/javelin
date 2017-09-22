@@ -126,7 +126,7 @@ public class DungeonRush extends UniqueLocation {
 		Monster recruit = spawners.get(choice);
 		if (Dwelling.canrecruit(recruit.challengerating * 100)) {
 			Dwelling.spend(recruit.challengerating);
-			Squad.active.members.add(new Combatant(recruit.clone(), true));
+			Squad.active.add(new Combatant(recruit.clone(), true));
 		} else {
 			Javelin.message(
 					"You don't have enough experience to acquire this unit...",

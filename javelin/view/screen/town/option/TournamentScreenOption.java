@@ -35,7 +35,7 @@ public class TournamentScreenOption extends ScreenOption {
 	}
 
 	@Override
-	public SelectScreen show() {
+	public SelectScreen getscreen() {
 		return new PurchaseScreen("Join: ", t) {
 			@Override
 			public boolean select(Option o) {

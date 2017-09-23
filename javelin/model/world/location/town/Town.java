@@ -39,6 +39,7 @@ import javelin.model.world.location.town.labor.basic.Growth;
 import javelin.view.Images;
 import javelin.view.screen.NamingScreen;
 import javelin.view.screen.WorldScreen;
+import javelin.view.screen.town.GovernorScreen;
 import javelin.view.screen.town.TownScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -377,5 +378,14 @@ public class Town extends Location {
 
 	public static Set<Hazard> gethazards(boolean special) {
 		return new HashSet<Hazard>();
+	}
+
+	@Override
+	public void accessremotely() {
+		if (ishostile()) {
+			super.accessremotely();
+		} else {
+			new GovernorScreen(this).show();
+		}
 	}
 }

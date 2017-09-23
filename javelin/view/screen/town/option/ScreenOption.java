@@ -26,5 +26,5 @@ abstract public class ScreenOption extends Option {
 	/**
 	 * @return Shows the screen.
 	 */
-	abstract public SelectScreen show();
+	abstract public SelectScreen getscreen();
 }

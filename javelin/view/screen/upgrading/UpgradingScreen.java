@@ -32,17 +32,6 @@ import javelin.view.screen.town.SelectScreen;
  * @author alex
  */
 public abstract class UpgradingScreen extends SelectScreen {
-	/**
-	 * How many days it takes to upgrade per full level (100XP). The official
-	 * rules say one week per character level. However, Javelin's goal is to
-	 * advance to level 20 in the span of a year.
-	 *
-	 * This may need to be adjusted to balance fun to play (faster) and the
-	 * overarching design (slower). Currently, it's jusst a median between the
-	 * tow.
-	 */
-	private static final float UPGRADETIME = (400 / 20 + 7) / 2;
-
 	public class UpgradeOption extends Option {
 		/** Upgrade in question. */
 		public final Upgrade u;
@@ -166,7 +155,9 @@ public abstract class UpgradingScreen extends SelectScreen {
 								RoundingMode.HALF_UP)
 						+ "XP, $" + price(cost.floatValue());
 				s += "[" + i++ + "] " + name + " " + o.u.inform(c) + costinfo
-						+ ", " + Math.round(cost.floatValue() * UPGRADETIME)
+						+ ", "
+						+ Math.round(
+								cost.floatValue() * TrainingOrder.UPGRADETIME)
 						+ " days\n";
 			}
 		}
@@ -252,9 +243,8 @@ public abstract class UpgradingScreen extends SelectScreen {
 			Combatant original = this.original.get(c.id);
 			float xpcost = CrCalculator.calculaterawcr(c.source)[1]
 					- CrCalculator.calculaterawcr(original.source)[1];
-			trainees.add(new TrainingOrder(
-					Math.round(xpcost * 24 * UPGRADETIME), c,
-					s.equipment.get(c.id), c.toString(), xpcost, original));
+			trainees.add(new TrainingOrder(c, s.equipment.get(c.id),
+					c.toString(), xpcost, original));
 		}
 		onexit(s, trainees);
 		for (TrainingOrder trainee : trainees) {

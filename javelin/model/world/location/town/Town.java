@@ -191,7 +191,8 @@ public class Town extends Location {
 
 	@Override
 	public void turn(long time, WorldScreen screen) {
-		final float labor = (population + RPG.randomize(population) / 10f);
+		final float labor = (population + RPG.randomize(population) / 10f)
+				* World.scenario.speed;
 		governor.work(labor * DAILYLABOR, getdistrict());
 	}
 

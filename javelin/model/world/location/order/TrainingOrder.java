@@ -6,6 +6,7 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.model.item.Item;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
+import javelin.model.world.World;
 import javelin.view.screen.upgrading.UpgradingScreen;
 
 /**
@@ -16,6 +17,17 @@ import javelin.view.screen.upgrading.UpgradingScreen;
  * @author alex
  */
 public class TrainingOrder extends Order {
+	/**
+	 * How many days it takes to upgrade per full level (100XP). The official
+	 * rules say one week per character level. However, Javelin's goal is to
+	 * advance to level 20 in the span of a year.
+	 *
+	 * This may need to be adjusted to balance fun to play (faster) and the
+	 * overarching design (slower). Currently, it's jusst a median between the
+	 * tow.
+	 */
+	public static final float UPGRADETIME = (400 / 20 + 7) / 2;
+
 	/** * The upgraded unit. */
 	final public Combatant trained;
 	/** Cost in challenge rating. */
@@ -26,14 +38,13 @@ public class TrainingOrder extends Order {
 	public Combatant untrained;
 
 	/** Constructor. See {@link Order#Order(long, String)}. */
-	public TrainingOrder(long completionat, Combatant trained,
-			ArrayList<Item> equipment, String namep, float xpcostp,
-			Combatant original) {
-		super(completionat, namep);
+	public TrainingOrder(Combatant trained, ArrayList<Item> equipment,
+			String namep, float xpcostp, Combatant original) {
+		super(Math.round(xpcostp * 24 * UPGRADETIME / World.scenario.speed),
+				namep);
 		this.trained = trained;
 		this.equipment = equipment;
 		this.xpcost = xpcostp;
 		this.untrained = original;
 	}
-
 }

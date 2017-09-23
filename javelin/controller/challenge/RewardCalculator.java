@@ -12,6 +12,7 @@ import javelin.controller.comparator.DescendingLevelComparator;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.unit.attack.Combatant;
+import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Chest;
 import javelin.model.world.location.dungeon.Dungeon;
 import tyrant.mikera.engine.RPG;
@@ -99,8 +100,7 @@ public class RewardCalculator {
 		table.put(4, new TableLine(4800, 2400, 1600, 1200, 800, 600, 400, 300));
 	}
 
-	static private double getexperiencepercharacter(int eldifference,
-			final int nsurvivors) {
+	static double getcharacterxp(int eldifference, final int nsurvivors) {
 		if (eldifference > 4) {
 			eldifference = 4;
 		} else if (eldifference < -12) {
@@ -109,9 +109,9 @@ public class RewardCalculator {
 		return table.get(eldifference).getValue(nsurvivors);
 	}
 
-	static double getpartycr(final int eldifference, final int nsurvivors) {
-		return nsurvivors * .8
-				* getexperiencepercharacter(eldifference, nsurvivors) / 1000.0;
+	static double getpartyxp(final int eldifference, final int nsurvivors) {
+		return nsurvivors * .8 * getcharacterxp(eldifference, nsurvivors)
+				* World.scenario.speed / 1000.0;
 	}
 
 	/**
@@ -134,7 +134,10 @@ public class RewardCalculator {
 	 * @return gold treasure reward for such an opponent.
 	 */
 	public static int getgold(final float cr) {
-		return cr > 0 ? Math.round(cr * cr * cr * 7.5f) : 0;
+		if (cr <= 0) {
+			return 0;
+		}
+		return Math.round(cr * cr * cr * 7.5f * World.scenario.speed);
 	}
 
 	/**
@@ -190,7 +193,7 @@ public class RewardCalculator {
 		int elred = CrCalculator.calculateel(originalred);
 		int elblue = CrCalculator.calculateel(originalblue);
 		int eldifference = Math.round(elred - elblue);
-		double partycr = getpartycr(eldifference, winners.size()) * bonus;
+		double partycr = getpartyxp(eldifference, winners.size()) * bonus;
 		distributexp(winners, partycr);
 		return "Party wins "
 				+ new BigDecimal(100 * partycr).setScale(0, RoundingMode.UP)

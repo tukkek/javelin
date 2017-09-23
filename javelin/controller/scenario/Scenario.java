@@ -146,6 +146,11 @@ public class Scenario implements Serializable {
 	 * {@link Realm}.
 	 */
 	public boolean randomrealms = true;
+	/**
+	 * Overall speed at which the strategic context should progress. Also
+	 * affects rewards.
+	 */
+	public int speed = 2;
 
 	/**
 	 * @return Starting encounter level for each hostile town in

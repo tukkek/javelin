@@ -38,6 +38,7 @@ public class Campaign extends Scenario {
 		dominationwin = false;
 		startingfeatures = size * size / 5;
 		simpletroves = false;
+		speed = 1;
 	}
 
 	@Override

@@ -75,7 +75,9 @@ public class Damage extends FieldReader {
 		boolean found = false;
 		for (final Attack a : attacks) {
 			if (parseattack(attack, a)) {
-				a.seteffect(effect);
+				if (effect != null) {
+					a.seteffect(effect);
+				}
 				found = true;
 			}
 		}

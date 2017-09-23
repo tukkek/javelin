@@ -146,6 +146,6 @@ public class Attack implements Serializable, Cloneable {
 	}
 
 	public void seteffect(Spell effect) {
-		this.effect = effect;
+		this.effect = effect.clone();
 	}
 }

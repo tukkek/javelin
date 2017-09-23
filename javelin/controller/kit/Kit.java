@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.DamageEffect;
 import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
@@ -20,6 +21,7 @@ import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.upgrade.classes.Commoner;
 import javelin.controller.upgrade.classes.Expert;
 import javelin.controller.upgrade.classes.Warrior;
+import javelin.controller.upgrade.damage.EffectUpgrade;
 import javelin.controller.upgrade.damage.MeleeDamage;
 import javelin.controller.upgrade.skill.Acrobatics;
 import javelin.controller.upgrade.skill.Concentration;
@@ -76,6 +78,8 @@ public abstract class Kit implements Serializable {
 			upgrades.add(Stealth.SINGLETON);
 			upgrades.add(RaiseCharisma.SINGLETON);
 			upgrades.add(new FeatUpgrade(Deceitful.SINGLETON));
+			upgrades.add(new EffectUpgrade(DamageEffect.POISON));
+
 		}
 	};
 	public static final Kit BARBARIAN = new Kit("barbarian", Warrior.SINGLETON,

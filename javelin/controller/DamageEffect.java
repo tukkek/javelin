@@ -18,9 +18,10 @@ import javelin.model.world.location.town.Town;
  * @author alex
  */
 public class DamageEffect {
+	public static final DamageEffect POISON = new DamageEffect("poison",
+			new Poison(), Realm.EVIL);
 	/** All supported damage effects */
-	public static final ArrayList<DamageEffect> EFFECTS =
-			new ArrayList<DamageEffect>();
+	public static final ArrayList<DamageEffect> EFFECTS = new ArrayList<DamageEffect>();
 
 	/**
 	 * Call before using {@link #EFFECTS}.
@@ -30,7 +31,7 @@ public class DamageEffect {
 			EFFECTS.add(new DamageEffect("paralysis", new HoldMonster(),
 					Realm.EARTH));
 			EFFECTS.add(new DamageEffect("fear", new Doom(), Realm.EVIL));
-			EFFECTS.add(new DamageEffect("poison", new Poison(), Realm.EVIL));
+			EFFECTS.add(POISON);
 		}
 	}
 
@@ -52,5 +53,10 @@ public class DamageEffect {
 		this.name = name;
 		this.spell = s;
 		this.realm = r;
+	}
+
+	@Override
+	public String toString() {
+		return name;
 	}
 }

@@ -2,6 +2,7 @@ package javelin.controller.upgrade.damage;
 
 import java.util.HashSet;
 
+import javelin.controller.DamageEffect;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Attack;
@@ -26,6 +27,10 @@ public class EffectUpgrade extends Upgrade {
 	public EffectUpgrade(String name, Spell effect) {
 		super("Damage effect: " + name.toLowerCase());
 		this.effect = effect;
+	}
+
+	public EffectUpgrade(DamageEffect e) {
+		this(e.name, e.spell.clone());
 	}
 
 	@Override

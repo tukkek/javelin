@@ -67,6 +67,14 @@ public class Siege extends Fight {
 		return super.onend();
 	}
 
+	/**
+	 * TODO ideally would have a d10 check to give a chance for negative
+	 * {@link Combatant}s in {@link BattleState#dead} to recover: for example, a
+	 * character that ends with -5hp should have a 50% of immediately recovering
+	 * to full HP instead of being removed from {@link Location#garrison}. 0hp
+	 * would mean 100% recovery chance while -10 or less would be guaranteed
+	 * removal.
+	 */
 	protected void afterlose() {
 		ArrayList<Combatant> alive = state.getcombatants();
 		for (Combatant c : new ArrayList<Combatant>(place.garrison)) {

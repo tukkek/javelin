@@ -395,6 +395,10 @@ public class Javelin {
 
 	/**
 	 * Utility function for user-input selection.
+	 * 
+	 * TODO due to the UI being poor, if this method runs out of alphanumeric
+	 * characters to use, it will display more choices but not allow the player
+	 * to actually select them.
 	 *
 	 * @param prompt
 	 *            Text to show the user.
@@ -422,7 +426,7 @@ public class Javelin {
 			boolean leftcolumn = i % 2 == 0;
 			String name = names.get(i).toString();
 			options.add(name);
-			String item = "[" + SelectScreen.KEYS[i] + "] " + name;
+			String item = "[" + SelectScreen.getkey(i) + "] " + name;
 			if (multicolumn && leftcolumn) {
 				while (item.length() < 50) {
 					item += " ";
@@ -443,8 +447,7 @@ public class Javelin {
 		while (true) {
 			try {
 				Character c = InfoScreen.feedback();
-				if (!forceselection
-						&& (c == 'q' || !Character.isLetterOrDigit(c))) {
+				if (!forceselection && (c == 'q' || c == InfoScreen.ESCAPE)) {
 					return -1;
 				}
 				int selected = SelectScreen.convertkeytoindex(c);
@@ -490,6 +493,7 @@ public class Javelin {
 	 */
 	static public Character prompt(final String prompt, boolean center) {
 		Game.messagepanel.clear();
+		BattleScreen.active.center();
 		Game.message(prompt, Delay.NONE);
 		if (center) {
 			BattleScreen.active.center();

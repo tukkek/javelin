@@ -267,16 +267,4 @@ public class UpgradeHandler {
 		}
 		return upgrades;
 	}
-
-	// /**
-	// * @return Like {@link #getupgrades(Realm)} except also adds the proper
-	// * class.
-	// * @see #getclass(Realm)
-	// */
-	// public Collection<? extends Upgrade> getfullupgrades(Realm r) {
-	// ArrayList<Upgrade> fullset = new ArrayList<Upgrade>(getupgrades(r));
-	// fullset.add(getclass(r));
-	// return fullset;
-	// }
-
 }

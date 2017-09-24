@@ -29,7 +29,7 @@ public class Dismiss extends WorldAction {
 	@Override
 	public void perform(WorldScreen screen) {
 		Squad.active.sort();
-		ArrayList<Combatant> squad = Squad.active.members;
+		List<Combatant> squad = Squad.active.members;
 		ArrayList<String> members = new ArrayList<String>(squad.size());
 		for (int i = 0; i < squad.size(); i++) {
 			Combatant c = squad.get(i);

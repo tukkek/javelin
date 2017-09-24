@@ -32,7 +32,7 @@ public abstract class SelectScreen extends InfoScreen {
 	 * TODO would probably work better as a list (with indexof(), etc). Can use
 	 * {@link Arrays#asList(Object...)}.
 	 */
-	public static final char[] KEYS = "1234567890abcdefghijklmnoprstuvxwyz/*-+.?!@#$%&()_=[]{}<>;:\"\\|"
+	static final char[] KEYS = "1234567890abcdefghijklmnoprstuvxwyz/*-+.!@#$%&()_=[]{}<>;:\"\\|"
 			.toCharArray();
 	/** Current town or <code>null</code>. */
 	protected final Town town;
@@ -166,7 +166,7 @@ public abstract class SelectScreen extends InfoScreen {
 		print(originaltext);
 		Option o = convertselectionkey(feedback, options);
 		if (o == null) {
-			int selected = convertnumericselection(feedback, KEYS);
+			int selected = convertnumericselection(feedback);
 			if (selected < 0 || selected >= options.size()) {
 				return false;
 			}
@@ -194,9 +194,9 @@ public abstract class SelectScreen extends InfoScreen {
 	/**
 	 * @return selection index or -1 if not chosen.
 	 */
-	static public int convertnumericselection(char feedback, char[] keys) {
-		for (int i = 0; i < keys.length; i++) {
-			if (keys[i] == feedback) {
+	static public int convertnumericselection(char feedback) {
+		for (int i = 0; i < KEYS.length; i++) {
+			if (KEYS[i] == feedback) {
 				return i;
 			}
 		}
@@ -262,5 +262,13 @@ public abstract class SelectScreen extends InfoScreen {
 			}
 		}
 		return -1;
+	}
+
+	/**
+	 * @return The corresponding key from {@link #KEYS}. If the index is higher
+	 *         than actionable keys will return ? instead.
+	 */
+	public static char getkey(int i) {
+		return i < KEYS.length ? KEYS[i] : '?';
 	}
 }

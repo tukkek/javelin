@@ -48,7 +48,8 @@ import javelin.view.mappanel.battle.overlay.BreathOverlay;
  */
 public class Breath extends Action implements AiAction {
 	static public class BreathNode extends ChanceNode {
-		public BreathNode(Node n, float chance, String action, Collection<Point> area) {
+		public BreathNode(Node n, float chance, String action,
+				Collection<Point> area) {
 			super(n, chance, action, Delay.BLOCK);
 			overlay = new AiOverlay(area);
 		}
@@ -84,15 +85,18 @@ public class Breath extends Action implements AiAction {
 	}
 
 	@Override
-	public List<List<ChanceNode>> getoutcomes(final Combatant combatant, final BattleState s) {
+	public List<List<ChanceNode>> getoutcomes(final Combatant combatant,
+			final BattleState s) {
 		final ArrayList<List<ChanceNode>> chances = new ArrayList<List<ChanceNode>>();
 		if (combatant.hascondition(Breathless.class) != null) {
 			return chances;
 		}
 		for (final BreathWeapon breath : combatant.source.breaths) {
-			for (final Area a : (breath.type == BreathArea.CONE ? BURSTS : LINES).values()) {
+			for (final Area a : (breath.type == BreathArea.CONE ? BURSTS
+					: LINES).values()) {
 				Point source = a.initiate(combatant);
-				if (source.x >= 0 && source.y >= 0 && source.x < s.map.length && source.y < s.map[0].length) {
+				if (source.x >= 0 && source.y >= 0 && source.x < s.map.length
+						&& source.y < s.map[0].length) {
 					chances.add(breath(breath, a, combatant, s));
 				}
 			}
@@ -121,7 +125,10 @@ public class Breath extends Action implements AiAction {
 		MapPanel.overlay = overlay;
 		clear();
 		Game.redraw();
-		Game.message(targetinfo(state, area) + "Press ENTER or b to confirm, q to quit.", Delay.NONE);
+		Game.message(
+				targetinfo(state, area)
+						+ "Press ENTER or b to confirm, q to quit.",
+				Delay.NONE);
 		char confirm = Game.getInput().getKeyChar();
 		try {
 			quit(confirm);
@@ -141,7 +148,8 @@ public class Breath extends Action implements AiAction {
 		Game.message("Select a direction or press q to quit.", Delay.NONE);
 		Area a = null;
 		while (a == null) {
-			a = (breath.type == BreathWeapon.BreathArea.CONE ? BURSTS : LINES).get(selectdirection(hero));
+			a = (breath.type == BreathWeapon.BreathArea.CONE ? BURSTS : LINES)
+					.get(selectdirection(hero));
 		}
 		return a;
 	}
@@ -155,7 +163,8 @@ public class Breath extends Action implements AiAction {
 			}
 		}
 		if (!targets.isEmpty()) {
-			targets = "Targetting: " + targets.substring(0, targets.length() - 2) + ".\n\n";
+			targets = "Targetting: "
+					+ targets.substring(0, targets.length() - 2) + ".\n\n";
 		}
 		return targets;
 	}
@@ -164,7 +173,8 @@ public class Breath extends Action implements AiAction {
 		Game.messagepanel.clear();
 	}
 
-	static ArrayList<ChanceNode> breath(final BreathWeapon breath, final Area a, Combatant active, BattleState s) {
+	static ArrayList<ChanceNode> breath(final BreathWeapon breath, final Area a,
+			Combatant active, BattleState s) {
 		final ArrayList<ChanceNode> chances = new ArrayList<ChanceNode>();
 		final ArrayList<Combatant> targets = new ArrayList<Combatant>();
 		final Set<Point> area = a.fill(breath.range, active, s);
@@ -180,14 +190,18 @@ public class Breath extends Action implements AiAction {
 		s = s.clone();
 		active = s.clone(active);
 		if (breath.delay) {
-			active.addcondition(new Breathless(active.ap + (1 + 4) / 2f, active));
+			active.addcondition(
+					new Breathless(active.ap + (1 + 4) / 2f, active));
 		}
 		active.ap += .5f;
-		for (final Entry<Integer, Float> roll : Action.distributeroll(breath.damage[0], breath.damage[1]).entrySet()) {
+		for (final Entry<Integer, Float> roll : Action
+				.distributeroll(breath.damage[0], breath.damage[1])
+				.entrySet()) {
 			BattleState s2 = s.clone();
 			final float damagechance = roll.getValue();
 			final int damage = roll.getKey() + breath.damage[2];
-			StringBuilder action = new StringBuilder(active + " breaths " + breath.description + "!");
+			StringBuilder action = new StringBuilder(
+					active + " breaths " + breath.description + "!");
 			StringBuilder affected = new StringBuilder();
 			for (Combatant target : targets) {
 				if (Thread.interrupted()) {
@@ -195,14 +209,15 @@ public class Breath extends Action implements AiAction {
 				}
 				hit(s2.clone(target), damage, s2, breath, affected);
 			}
-			ChanceNode n = new BreathNode(s2, damagechance, compound(action.toString(), affected.toString()), area);
+			ChanceNode n = new BreathNode(s2, damagechance,
+					compound(action.toString(), affected.toString()), area);
 			chances.add(n);
 		}
 		return chances;
 	}
 
-	static void hit(Combatant target, final int damage, final BattleState s, final BreathWeapon breath,
-			StringBuilder affected) {
+	static void hit(Combatant target, final int damage, final BattleState s,
+			final BreathWeapon breath, StringBuilder affected) {
 		if (target == null) {
 			System.out.println("#breath null target");
 		}
@@ -223,7 +238,8 @@ public class Breath extends Action implements AiAction {
 		}
 	}
 
-	static void damage(Combatant target, final int damage, final BattleState s, StringBuilder affected) {
+	static void damage(Combatant target, final int damage, final BattleState s,
+			StringBuilder affected) {
 		if (damage > 0) {
 			target.damage(damage, s, target.source.energyresistance);
 			affected.append(" is " + target.getstatus() + ". ");
@@ -231,25 +247,9 @@ public class Breath extends Action implements AiAction {
 	}
 
 	static String compound(String action, String affected) {
-		return affected.isEmpty() ? action : action + "\n" + affected.substring(0, affected.length() - 1);
+		return affected.isEmpty() ? action
+				: action + "\n" + affected.substring(0, affected.length() - 1);
 	}
-
-	// static ArrayList<Float> updatechances(final ArrayList<Float> chances,
-	// float x) {
-	// final ArrayList<Float> unsafechances = (ArrayList<Float>)
-	// chances.clone();
-	// unsafechances.add(x);
-	// return unsafechances;
-	// }
-
-	// static float sumchance(final ArrayList<Float> chances, final float
-	// damagechance) {
-	// float finalchance = damagechance;
-	// for (final float chance : chances) {
-	// finalchance = finalchance * chance;
-	// }
-	// return finalchance;
-	// }
 
 	BreathWeapon selectbreath(Monster m) {
 		int size = m.breaths.size();
@@ -260,7 +260,8 @@ public class Breath extends Action implements AiAction {
 		if (size == 1) {
 			return m.breaths.get(0);
 		}
-		int index = Javelin.choose("Select a breath attack or press q to quit", m.breaths, false, false);
+		int index = Javelin.choose("Select a breath attack or press q to quit",
+				m.breaths, false, false);
 		if (index >= 0) {
 			return m.breaths.get(index);
 		}

@@ -27,7 +27,6 @@ import javelin.controller.old.Game.Delay;
 import javelin.controller.old.MessagePanel;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
-import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.view.StatusPanel;
 import javelin.view.mappanel.MapPanel;
@@ -201,6 +200,7 @@ public class BattleScreen extends Screen {
 	}
 
 	void humanmove() {
+		Javelin.app.switchScreen(BattleScreen.active);
 		if (current == null || current.automatic) {
 			/** fled or set an unit as automatic during its turn */
 			return;
@@ -417,6 +417,6 @@ public class BattleScreen extends Screen {
 
 	public void center() {
 		Javelin.app.switchScreen(this);
-		centerscreen(Squad.active.x, Squad.active.y);
+		centerscreen(current.location[0], current.location[1]);
 	}
 }

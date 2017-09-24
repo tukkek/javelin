@@ -1,5 +1,7 @@
 package javelin.controller.action.world;
 
+import java.util.List;
+
 import javelin.Javelin;
 import javelin.model.unit.Squad;
 import javelin.view.screen.StatisticsScreen;
@@ -18,8 +20,8 @@ public class ShowStatistics extends WorldAction {
 
 	@Override
 	public void perform(WorldScreen screen) {
-		int answer = Javelin.choose("Choose a character:",
-				WorldScreen.showstatusinformation(), true, false);
+		List<String> status = WorldScreen.showstatusinformation();
+		int answer = Javelin.choose("Choose a character:", status, true, false);
 		if (answer != -1) {
 			new StatisticsScreen(Squad.active.members.get(answer));
 		}

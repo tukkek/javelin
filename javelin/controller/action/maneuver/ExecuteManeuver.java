@@ -63,12 +63,14 @@ public class ExecuteManeuver extends Action implements AiAction {
 		}
 		Maneuvers maneuvers = new Maneuvers();
 		String prompt = "Choose a manuever to execute (or ready), or press any other key to exit...\n";
-		for (String discipline : disciplines.keySet()) {
-			prompt += "\n" + discipline + ":\n";
-			for (Maneuver m : disciplines.get(discipline)) {
+		for (String disciplinet : disciplines.keySet()) {
+			prompt += "\n" + disciplinet + ":\n";
+			Maneuvers learned = disciplines.get(disciplinet);
+			for (int i = 0; i < learned.size(); i++) {
+				Maneuver m = learned.get(i);
 				final String spent = m.spent ? " (not ready)" : "";
-				prompt += "  " + SelectScreen.KEYS[maneuvers.size()] + " - "
-						+ m.name + spent + "\n";
+				prompt += "  " + SelectScreen.getkey(i) + " - " + m.name + spent
+						+ "\n";
 				maneuvers.add(m);
 			}
 		}

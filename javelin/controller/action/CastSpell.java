@@ -15,7 +15,6 @@ import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Combatant;
-import javelin.view.screen.InfoScreen;
 
 /**
  * Spells with attack rolls are supposed to have critical hits too but for the
@@ -57,21 +56,12 @@ public class CastSpell extends Fire implements AiAction {
 				return o1.name.compareTo(o2.name);
 			}
 		});
-		String list = "Choose a spell:\n";
-		for (int i = 0; i < castable.size(); i++) {
-			list += "[" + (i + 1) + "] " + castable.get(i) + "\n";
-		}
-		Game.message(list, Delay.NONE);
-		try {
-			final int i = Integer.parseInt(InfoScreen.feedback().toString());
-			if (i > c.spells.size()) {
-				return perform(c);
-			}
-			return cast(castable.get(i - 1), c);
-		} catch (NumberFormatException e) {
-			Game.messagepanel.clear();
+		int i = Javelin.choose("Choose a spell:", castable, castable.size() > 4,
+				false);
+		if (i == -1) {
 			throw new RepeatTurn();
 		}
+		return cast(castable.get(i), c);
 	}
 
 	/**

@@ -20,13 +20,14 @@ import tyrant.mikera.tyrant.util.Text;
  * @author alex
  */
 public class InfoScreen extends Screen {
-	private static final long serialVersionUID = 3256727281736168249L;
+	public static final char ESCAPE = '\u001B';
+
 	/** Screen content. */
 	public String text;
 	/** {@link #text} rendering style.t */
 	public Font font;
 
-	private final int border = 20;
+	final int border = 20;
 
 	/** Constructor. */
 	public InfoScreen(final String textp) {
@@ -70,6 +71,7 @@ public class InfoScreen extends Screen {
 
 	/**
 	 * @return Player input.
+	 * @see #ESCAPE
 	 */
 	static public Character feedback() {
 		KeyEvent input = Game.getInput();
@@ -82,6 +84,8 @@ public class InfoScreen extends Screen {
 			return '\b';
 		case KeyEvent.VK_SHIFT:
 			return feedback();
+		case KeyEvent.VK_ESCAPE:
+			return ESCAPE;
 		}
 		return Character.valueOf(input.getKeyChar());
 	}

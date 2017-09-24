@@ -22,8 +22,6 @@ import javelin.view.screen.town.SelectScreen;
  * @author alex
  */
 public class UseItems extends WorldAction {
-	static final String KEYS = "1234567890abcdfghijklmnoprstuvxwyz";
-
 	public static boolean skiperror = false;
 
 	/** Constructor. */
@@ -45,14 +43,14 @@ public class UseItems extends WorldAction {
 			actions += "\n";
 			final String list = listitems(allitems, true);
 			infoscreen.print(actions + list);
-			if (command(allitems, list, infoscreen)) {
+			if (executecommand(allitems, list, infoscreen)) {
 				break;
 			}
 		}
 		Javelin.app.switchScreen(JavelinApp.context);
 	}
 
-	boolean command(final ArrayList<Item> allitems, final String list,
+	boolean executecommand(final ArrayList<Item> allitems, final String list,
 			final InfoScreen infoscreen) {
 		Javelin.app.switchScreen(infoscreen);
 		final Character input = InfoScreen.feedback();
@@ -85,8 +83,7 @@ public class UseItems extends WorldAction {
 
 	Item select(final ArrayList<Item> allitems, final Character input) {
 		Item selected = null;
-		int index = SelectScreen.convertnumericselection(input,
-				KEYS.toCharArray());
+		int index = SelectScreen.convertnumericselection(input);
 		if (0 <= index && index < allitems.size()) {
 			selected = allitems.get(index);
 		}
@@ -150,7 +147,7 @@ public class UseItems extends WorldAction {
 			final Combatant c = members.get(j);
 			String output = "";
 			if (!showkeys) {
-				output += SelectScreen.KEYS[j] + " - ";
+				output += SelectScreen.getkey(j) + " - ";
 			}
 			output = c.toString();
 			s += "\n";
@@ -169,7 +166,7 @@ public class UseItems extends WorldAction {
 					allitems.add(it);
 				}
 				if (showkeys) {
-					s += "  [" + SelectScreen.KEYS[i] + "]";
+					s += "  [" + SelectScreen.getkey(i) + "]";
 				}
 				s += describeitem(it, c);
 				i += 1;

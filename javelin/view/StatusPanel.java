@@ -82,8 +82,11 @@ public class StatusPanel extends TPanel {
 				continue;
 			}
 			String extra = i.canuse(combatant);
-			listing.add(i.name.replaceAll("Potion of", "")
-					+ (extra == null ? "" : "*"));
+			String name = i.name.replaceAll("Potion of", "");
+			if (name.length() > 19) {
+				name = name.substring(0, 19).trim();
+			}
+			listing.add(name + (extra == null ? "" : "*"));
 		}
 		return listlist("Items", listing);
 	}

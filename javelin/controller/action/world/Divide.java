@@ -131,9 +131,9 @@ public class Divide extends WorldAction {
 		final int increment = Squad.active.gold / 10;
 		while (input != '\n') {
 			clear();
-			input = Javelin
-					.prompt("How much gold do you want to transfer to the new squad? Use the + and - keys to change and ENTER to confirm.\n"
-							+ gold);
+			String prompt = "How much gold do you want to transfer to the new squad? Use the + and - keys to change and ENTER to confirm.\n"
+					+ gold;
+			input = Javelin.prompt(prompt);
 			if (input == '+') {
 				gold += increment;
 				if (gold > Squad.active.gold) {
@@ -153,7 +153,6 @@ public class Divide extends WorldAction {
 			final ArrayList<String> newcolumn) {
 		String text = "";
 		int nlines = Math.max(oldcolumn.size(), newcolumn.size());
-		// nlines = Math.min(6, nlines);
 		for (int i = 0; i < nlines; i++) {
 			String oldtd = i < oldcolumn.size() ? oldcolumn.get(i) : "";
 			while (oldtd.length() < WorldScreen.SPACER.length()) {
@@ -196,9 +195,9 @@ public class Divide extends WorldAction {
 			oldcolumn.add("Empty");
 		} else {
 			for (final Combatant m : oldsquad) {
-				oldcolumn.add(
-						"[" + (SelectScreen.KEYS[indexreference.indexOf(m)])
-								+ "] " + m + " (" + m.getstatus() + ")");
+				int i = indexreference.indexOf(m);
+				oldcolumn.add("[" + SelectScreen.getkey(i) + "] " + m + " ("
+						+ m.getstatus() + ")");
 			}
 		}
 	}

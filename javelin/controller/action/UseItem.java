@@ -3,7 +3,6 @@ package javelin.controller.action;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.TreeMap;
 
 import javelin.Javelin;
 import javelin.controller.comparator.ItemsByName;
@@ -12,7 +11,6 @@ import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.item.Item;
 import javelin.model.unit.attack.Combatant;
-import javelin.view.screen.InfoScreen;
 
 /**
  * Activates an {@link Item} in battle.
@@ -75,35 +73,20 @@ public class UseItem extends Action {
 		}
 		Collections.sort(items, ItemsByName.SINGLETON);
 		final boolean threatened = Fight.state.isengaged(c);
-		int i = 1;
-		final TreeMap<Integer, Item> options = new TreeMap<Integer, Item>();
-		String prompt = "Which item? (press q to quit)\n";
-		for (final Item it : items) {
+		for (final Item it : new ArrayList<Item>(items)) {
 			if (threatened && it.provokesaoo) {
-				continue;
+				items.remove(it);
 			}
-			options.put(i, it);
-			prompt += "[" + i++ + "] " + it + "\n";
 		}
-		if (i == 1) {
+		if (items.isEmpty()) {
 			Game.messagepanel.clear();
 			Game.message("Can't use any of these while threatened!",
 					Delay.WAIT);
 			return null;
 		}
-		Game.message(prompt, Delay.NONE);
-		try {
-			final String string = InfoScreen.feedback().toString();
-			final Item item = options.get(Integer.parseInt(string));
-			Game.messagepanel.clear();
-			return item;
-		} catch (final NumberFormatException e) {
-			Game.messagepanel.clear();
-			return null;
-		} catch (final IndexOutOfBoundsException e) {
-			Game.messagepanel.clear();
-			return null;
-		}
+		int choice = Javelin.choose("Which item? (press q to quit)", items,
+				items.size() > 4, false);
+		return choice >= 0 ? items.get(choice) : null;
 	}
 
 }

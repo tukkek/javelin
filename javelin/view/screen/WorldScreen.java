@@ -559,4 +559,10 @@ public class WorldScreen extends BattleScreen {
 	public void savediscovered() {
 		adddiscovered(getdiscoveredtiles());
 	}
+
+	@Override
+	public void center() {
+		Javelin.app.switchScreen(this);
+		centerscreen(Squad.active.x, Squad.active.y);
+	}
 }

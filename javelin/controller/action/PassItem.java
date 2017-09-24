@@ -3,13 +3,14 @@ package javelin.controller.action;
 import java.util.ArrayList;
 
 import javelin.Javelin;
+import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.item.Item;
 import javelin.model.state.BattleState;
 import javelin.model.unit.attack.Combatant;
-import javelin.view.screen.InfoScreen;
+import javelin.view.screen.BattleScreen;
 
 /**
  * Hands item over to a friendly unit.
@@ -30,7 +31,7 @@ public class PassItem extends Action {
 		final BattleState state = Fight.state;
 		final Combatant sameme = state.clone(me);
 		if (state.isengaged(sameme)) {
-			Game.message("You are engaged in combat!", Delay.NONE);
+			Game.message("Disengage first...", Delay.WAIT);
 			return false;
 		}
 		final ArrayList<Combatant> surroudings = state.getsurroundings(sameme);
@@ -40,30 +41,25 @@ public class PassItem extends Action {
 			}
 		}
 		if (surroudings.isEmpty()) {
-			Game.message("No unthreatened allies nearby.", Delay.NONE);
+			Game.message("No unthreatened allies nearby...", Delay.WAIT);
 			return false;
 		}
 		final Item item = UseItem.queryforitemselection(me, false);
 		if (item == null) {
 			return false;
 		}
-		String prompt = "Give this item to whom?\n";
-		for (int i = 0; i < surroudings.size(); i++) {
-			prompt += "[" + (i + 1) + "] " + surroudings.get(i) + "\n";
+		BattleScreen.active.center();
+		int choice = Javelin.choose("Give this item to whom?", surroudings,
+				surroudings.size() > 4, false);
+		if (choice < 0) {
+			throw new RepeatTurn();
 		}
-		Game.message(prompt, Delay.NONE);
-		try {
-			final Combatant receiver = getmonster(surroudings.get(
-					Integer.parseInt(InfoScreen.feedback().toString()) - 1));
-			final Combatant giver = getmonster(me);
-			receiver.ap += .5f;
-			giver.ap += .5f;
-			Javelin.app.fight.getbag(giver).remove(item);
-			Javelin.app.fight.getbag(receiver).add(item);
-		} catch (final NumberFormatException e) {
-		} catch (final IndexOutOfBoundsException e) {
-		}
-		Game.messagepanel.clear();
+		final Combatant receiver = getmonster(surroudings.get(choice));
+		final Combatant giver = getmonster(me);
+		receiver.ap += ActionCost.PARTIAL;
+		giver.ap += ActionCost.PARTIAL;
+		Javelin.app.fight.getbag(giver).remove(item);
+		Javelin.app.fight.getbag(receiver).add(item);
 		return true;
 	}
 

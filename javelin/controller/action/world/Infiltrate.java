@@ -2,6 +2,7 @@ package javelin.controller.action.world;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import javelin.Javelin;
 import javelin.model.unit.Monster;
@@ -35,10 +36,9 @@ public class Infiltrate extends WorldAction {
 	@Override
 	public void perform(WorldScreen screen) {
 		Location target = selecttarget();
-		if (target == null) {
-			return;
+		if (target != null) {
+			infiltrate(selectspy(target), target);
 		}
-		infiltrate(selectspy(target), target);
 	}
 
 	Location selecttarget() {
@@ -75,7 +75,7 @@ public class Infiltrate extends WorldAction {
 		}
 		boolean killed = false;
 		while (true) {
-			ArrayList<Combatant> targets = new ArrayList<Combatant>();
+			List<Combatant> targets = new ArrayList<Combatant>();
 			String immune = getassassinationtargets(spy, l, targets);
 			ArrayList<String> description = new ArrayList<String>(
 					targets.size());
@@ -181,7 +181,7 @@ public class Infiltrate extends WorldAction {
 	}
 
 	String getassassinationtargets(Combatant spy, Location l,
-			ArrayList<Combatant> targets) {
+			List<Combatant> targets) {
 		Attack blow = spy.source.melee.get(0).get(0);
 		int damage = blow.getaveragedamage() * blow.multiplier;
 		String s = "";

@@ -26,14 +26,13 @@ public class CastSpells extends WorldAction {
 
 	@Override
 	public void perform(WorldScreen screen) {
-		List<String> names = new ArrayList<String>();
-		ArrayList<Combatant> casters = filtercasters(names);
+		ArrayList<Combatant> casters = filtercasters();
 		if (casters.isEmpty()) {
 			Game.messagepanel.clear();
 			Game.message("No peaceful spells to cast right now...", Delay.WAIT);
 			return;
 		}
-		int choice = Javelin.choose("Who?", names, false, false);
+		int choice = Javelin.choose("Who?", casters, false, false);
 		if (choice == -1) {
 			Game.messagepanel.clear();
 			return;
@@ -95,14 +94,12 @@ public class CastSpells extends WorldAction {
 		throw new RuntimeException("Should have caught spell name");
 	}
 
-	ArrayList<Combatant> filtercasters(List<String> names) {
+	ArrayList<Combatant> filtercasters() {
 		ArrayList<Combatant> casters = new ArrayList<Combatant>(
 				Squad.active.members);
 		for (Combatant m : new ArrayList<Combatant>(casters)) {
 			if (listspells(new ArrayList<Spell>(m.spells)).size() == 0) {
 				casters.remove(m);
-			} else {
-				names.add(m.source.toString());
 			}
 		}
 		return casters;

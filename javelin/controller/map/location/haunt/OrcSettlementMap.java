@@ -1,9 +1,10 @@
-package javelin.controller.map.haunt;
+package javelin.controller.map.location.haunt;
 
+import javelin.controller.map.location.LocationMap;
 import javelin.view.Images;
 import tyrant.mikera.engine.RPG;
 
-public class OrcSettlementMap extends HauntMap {
+public class OrcSettlementMap extends LocationMap {
 	public OrcSettlementMap() {
 		super("Orc settlement");
 		wall = Images.getImage("terrainorcwall");

@@ -1,9 +1,11 @@
-package javelin.controller;
+package javelin.controller.fight.setup;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.Point;
+import javelin.controller.Weather;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.GaveUpException;
 import javelin.controller.fight.Fight;

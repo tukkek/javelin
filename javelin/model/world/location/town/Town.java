@@ -14,6 +14,7 @@ import javelin.controller.challenge.CrCalculator;
 import javelin.controller.exception.GaveUpException;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.fight.Siege;
+import javelin.controller.fight.TownSiege;
 import javelin.controller.fight.tournament.Exhibition;
 import javelin.controller.fight.tournament.Match;
 import javelin.controller.generator.encounter.EncounterGenerator;
@@ -276,7 +277,7 @@ public class Town extends Location {
 
 	@Override
 	protected Siege fight() {
-		Siege f = new Siege(this);
+		Siege f = new TownSiege(this);
 		f.bribe = false;
 		return f;
 	}

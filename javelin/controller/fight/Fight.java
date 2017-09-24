@@ -6,7 +6,6 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.JavelinApp;
-import javelin.controller.BattleSetup;
 import javelin.controller.Weather;
 import javelin.controller.action.Action;
 import javelin.controller.action.world.WorldMove;
@@ -15,6 +14,7 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.GaveUpException;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;
+import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.Map;
 import javelin.controller.old.Game;

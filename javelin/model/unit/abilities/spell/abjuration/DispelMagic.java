@@ -30,8 +30,15 @@ public class DispelMagic extends Spell {
 	@Override
 	public String cast(Combatant caster, Combatant target, BattleState s,
 			boolean saved) {
-		if (target.summoned && casterlevel > new Summon(target.source.name,
-				1).casterlevel) {
+		Summon summon;
+		try {
+			summon = new Summon(target.source.name, 1);
+		} catch (RuntimeException e) {
+			summon = null;
+			/* TODO figure out why Summon#ratechallenge is throwin NPE */
+		}
+		if (target.summoned && summon != null
+				&& casterlevel > summon.casterlevel) {
 			s.remove(target);
 			return target + " goes back to its plane of existence!";
 		}

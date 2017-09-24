@@ -1,7 +1,7 @@
 package javelin.model.world.location.haunt;
 
-import javelin.controller.map.haunt.GraveyardMap;
-import javelin.controller.map.haunt.HauntMap;
+import javelin.controller.map.location.LocationMap;
+import javelin.controller.map.location.haunt.GraveyardMap;
 
 public class Graveyard extends Haunt {
 
@@ -12,7 +12,7 @@ public class Graveyard extends Haunt {
 	}
 
 	@Override
-	HauntMap getmap() {
+	LocationMap getmap() {
 		return new GraveyardMap();
 	}
 }

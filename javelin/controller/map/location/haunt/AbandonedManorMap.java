@@ -1,8 +1,9 @@
-package javelin.controller.map.haunt;
+package javelin.controller.map.location.haunt;
 
+import javelin.controller.map.location.LocationMap;
 import javelin.view.Images;
 
-public class AbandonedManorMap extends HauntMap {
+public class AbandonedManorMap extends LocationMap {
 	public AbandonedManorMap() {
 		super("Abandoned manor");
 		floor = Images.getImage("dungeonfloortempleevil");

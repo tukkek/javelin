@@ -1,7 +1,7 @@
 package javelin.model.world.location.haunt;
 
-import javelin.controller.map.haunt.HauntMap;
-import javelin.controller.map.haunt.OrcSettlementMap;
+import javelin.controller.map.location.LocationMap;
+import javelin.controller.map.location.haunt.OrcSettlementMap;
 
 public class OrcSettlement extends Haunt {
 	public OrcSettlement() {
@@ -11,7 +11,7 @@ public class OrcSettlement extends Haunt {
 	}
 
 	@Override
-	HauntMap getmap() {
+	LocationMap getmap() {
 		return new OrcSettlementMap();
 	}
 }

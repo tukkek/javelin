@@ -1,4 +1,4 @@
-package javelin.controller.map.haunt;
+package javelin.controller.map.location;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,8 +10,8 @@ import javelin.controller.Point;
 import javelin.controller.map.Map;
 import javelin.model.state.Square;
 
-public class HauntMap extends Map {
-	public HauntMap(String name) {
+public class LocationMap extends Map {
+	public LocationMap(String name) {
 		super(name, 0, 0);
 	}
 
@@ -45,7 +45,7 @@ public class HauntMap extends Map {
 		}
 	}
 
-	Square processtile(int x, int y, char c) {
+	protected Square processtile(int x, int y, char c) {
 		Square tile = new Square(false, false, false);
 		map[x][y] = tile;
 		if (c == '~') {

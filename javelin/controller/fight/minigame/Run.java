@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.BattleSetup;
 import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.challenge.CrCalculator;
+import javelin.controller.fight.setup.BattleSetup;
 import javelin.model.item.Key;
 import javelin.model.state.Square;
 import javelin.model.unit.Monster;

@@ -3,13 +3,13 @@ package javelin.controller.fight.minigame;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.controller.BattleSetup;
 import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.action.Recruit;
 import javelin.controller.db.StateManager;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.Fight;
+import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.map.Map;
 import javelin.controller.map.terrain.underground.Floor;
 import javelin.controller.old.Game;

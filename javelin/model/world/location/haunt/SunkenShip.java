@@ -1,7 +1,7 @@
 package javelin.model.world.location.haunt;
 
-import javelin.controller.map.haunt.HauntMap;
-import javelin.controller.map.haunt.SunkenShipMap;
+import javelin.controller.map.location.LocationMap;
+import javelin.controller.map.location.haunt.SunkenShipMap;
 import javelin.controller.terrain.Terrain;
 
 public class SunkenShip extends Haunt {
@@ -12,7 +12,7 @@ public class SunkenShip extends Haunt {
 	}
 
 	@Override
-	HauntMap getmap() {
+	LocationMap getmap() {
 		return new SunkenShipMap();
 	}
 

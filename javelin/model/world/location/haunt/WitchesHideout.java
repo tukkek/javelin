@@ -1,7 +1,7 @@
 package javelin.model.world.location.haunt;
 
-import javelin.controller.map.haunt.HauntMap;
-import javelin.controller.map.haunt.WitchesHideoutMap;
+import javelin.controller.map.location.LocationMap;
+import javelin.controller.map.location.haunt.WitchesHideoutMap;
 import javelin.controller.terrain.Terrain;
 
 public class WitchesHideout extends Haunt {
@@ -11,7 +11,7 @@ public class WitchesHideout extends Haunt {
 	}
 
 	@Override
-	HauntMap getmap() {
+	LocationMap getmap() {
 		return new WitchesHideoutMap();
 	}
 

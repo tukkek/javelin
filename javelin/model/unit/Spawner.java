@@ -1,9 +1,9 @@
 package javelin.model.unit;
 
-import javelin.controller.BattleSetup;
 import javelin.controller.Point;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.Rush;
+import javelin.controller.fight.setup.BattleSetup;
 import javelin.model.unit.attack.Combatant;
 
 /**

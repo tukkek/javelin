@@ -157,6 +157,7 @@ public class WorldScreen extends BattleScreen {
 		for (final WorldAction a : WorldAction.ACTIONS) {
 			for (final String s : a.morekeys) {
 				if (s.equals(Character.toString(keyEvent.getKeyChar()))) {
+					Game.messagepanel.clear();
 					a.perform(this);
 					return;
 				}
@@ -165,6 +166,7 @@ public class WorldScreen extends BattleScreen {
 		for (final WorldAction a : WorldAction.ACTIONS) {
 			for (final int s : a.keys) {
 				if (s == keyEvent.getKeyCode()) {
+					Game.messagepanel.clear();
 					a.perform(this);
 					return;
 				}

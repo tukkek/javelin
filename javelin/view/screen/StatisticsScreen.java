@@ -12,6 +12,7 @@ import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Spawner;
+import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.AttackSequence;
@@ -126,10 +127,12 @@ public class StatisticsScreen extends InfoScreen {
 	}
 
 	static String showhp(Combatant c, Monster m) {
+		boolean isally = Fight.state == null ? Squad.active.members.contains(c)
+				: Fight.state.blueTeam.contains(c);
 		final String hp;
 		if (Javelin.DEBUG) {
 			hp = Integer.toString(c.hp);
-		} else if (Fight.state.blueTeam.contains(c)) {
+		} else if (isally) {
 			hp = Integer.toString(c.maxhp);
 		} else {
 			hp = "~" + c.source.hd.average();

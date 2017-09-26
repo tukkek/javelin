@@ -1,7 +1,7 @@
 package javelin.model.unit.attack;
 
-import java.util.ArrayList;
-
+import javelin.model.unit.CloneableList;
+import javelin.model.unit.feat.attack.PowerAttack;
 import javelin.model.unit.feat.attack.shot.RapidShot;
 import javelin.view.screen.StatisticsScreen;
 
@@ -11,26 +11,20 @@ import javelin.view.screen.StatisticsScreen;
  * 
  * @author alex
  */
-public class AttackSequence extends ArrayList<Attack> {
+public class AttackSequence extends CloneableList<Attack> {
+	/** @see PowerAttack */
 	public boolean powerful = false;
-	/**
-	 * See {@link RapidShot}
-	 */
+	/** @see RapidShot */
 	public boolean rapid = false;
 
 	@Override
 	public String toString() {
 		return toString(null);
-	};
+	}
 
 	@Override
 	public AttackSequence clone() {
-		final AttackSequence clone = (AttackSequence) super.clone();
-		final int size = size();
-		for (int i = 0; i < size; i++) {
-			clone.set(i, get(i).clone());
-		}
-		return clone;
+		return (AttackSequence) super.clone();
 	}
 
 	public String toString(Combatant target) {

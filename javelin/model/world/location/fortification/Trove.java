@@ -23,11 +23,17 @@ import tyrant.mikera.engine.RPG;
  * Since the actual fight gives no xp or gold these results are doubled as
  * treasure.
  * 
+ * TODO experience was a nice reward but too explotiable. You could dismiss
+ * mercenaries and have a larger XP reward, or divide the squad and have only
+ * reiceve all XP, which is super explotaible. If could trigger
+ * {@link #reward(Reward)} just after the battle is over, this could be easily
+ * solved.
+ * 
  * @author alex
  */
 public class Trove extends Fortification {
 	enum Reward {
-		GOLD, EXPERIENCE, KEY, WORKER, RUBY;
+		GOLD, /* EXPERIENCE, */ KEY, WORKER, RUBY;
 
 		static Reward getrandom() {
 			Reward[] all = values();
@@ -45,7 +51,7 @@ public class Trove extends Fortification {
 	public Trove() {
 		super(DESCRIPTION, DESCRIPTION, 1, 20);
 		if (World.scenario.simpletroves) {
-			rewards[0] = Reward.EXPERIENCE;
+			rewards[0] = Reward.GOLD;
 			rewards[1] = Reward.GOLD;
 		} else {
 			rewards[0] = Reward.getrandom();
@@ -107,10 +113,11 @@ public class Trove extends Fortification {
 	}
 
 	String reward(Reward reward) {
-		if (reward == Reward.EXPERIENCE) {
-			return RewardCalculator.rewardxp(Squad.active.members,
-					Squad.active.members, originalgarrison, 2);
-		}
+		/*
+		 * if (reward == Reward.EXPERIENCE) { return
+		 * RewardCalculator.rewardxp(Squad.active.members, Squad.active.members,
+		 * originalgarrison, 2); }
+		 */
 		if (reward == Reward.GOLD) {
 			int gold = RewardCalculator.receivegold(originalgarrison) * 2;
 			Squad.active.gold += gold;

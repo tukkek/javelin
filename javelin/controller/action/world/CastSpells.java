@@ -69,7 +69,8 @@ public class CastSpells extends WorldAction {
 		for (Combatant m : Squad.active.members) {
 			targets.add(m.source.toString());
 		}
-		int targetindex = Javelin.choose("Cast on...", targets, false, false);
+		int targetindex = Javelin.choose("Cast on...", targets,
+				targets.size() > 4, false);
 		return targetindex;
 	}
 

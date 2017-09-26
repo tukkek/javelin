@@ -822,4 +822,9 @@ public class Monster implements Cloneable, Serializable {
 	public float eat() {
 		return size() / 2f;
 	}
+
+	public boolean isalive() {
+		String type = this.type.toLowerCase();
+		return !type.contains("undead") && !type.contains("construct");
+	}
 }

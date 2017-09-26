@@ -468,7 +468,8 @@ public abstract class Fight {
 	 * @return Created meld.
 	 */
 	public Meld addmeld(int x, int y, Combatant dead, BattleState s) {
-		if (dead.summoned || dead.getnumericstatus() != Combatant.STATUSDEAD) {
+		if (dead.summoned || dead.getnumericstatus() != Combatant.STATUSDEAD
+				|| !dead.source.isalive()) {
 			return null;
 		}
 		Meld m = new Meld(x, y, s.next.ap + 1, dead);

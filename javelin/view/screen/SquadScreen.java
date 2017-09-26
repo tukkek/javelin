@@ -2,10 +2,10 @@ package javelin.view.screen;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.comparator.MonsterNameComparator;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
@@ -29,20 +29,13 @@ public class SquadScreen extends InfoScreen {
 			List<Monster> tier = Javelin.MONSTERSBYCR.get(cr);
 			if (tier != null) {
 				for (Monster candidate : tier) {
-					String type = candidate.type.toLowerCase();
-					if (!type.contains("undead")
-							&& !type.contains("construct")) {
+					if (candidate.isalive()) {
 						CANDIDATES.add(candidate);
 					}
 				}
 			}
 		}
-		Collections.sort(CANDIDATES, new Comparator<Monster>() {
-			@Override
-			public int compare(Monster o1, Monster o2) {
-				return o1.toString().compareTo(o2.toString());
-			}
-		});
+		Collections.sort(CANDIDATES, MonsterNameComparator.INSTANCE);
 	}
 
 	ArrayList<Combatant> squad = new ArrayList<Combatant>();

@@ -1,6 +1,7 @@
 package javelin.controller.upgrade.classes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javelin.Javelin;
@@ -149,6 +150,8 @@ public abstract class ClassLevelUpgrade extends Upgrade {
 	 * Prevents an upgrade to reach a level where the character will receive a
 	 * new attack per turn, which would need to modify the {@link Monster} to
 	 * the point of creating new attacks, calculating 2-handed weapon bonuses...
+	 * 
+	 * TODO can be converted to a {@link HashMap}
 	 */
 	public int checkfornewattack(Monster m, int babdelta) {
 		switch (m.getbaseattackbonus() + babdelta) {

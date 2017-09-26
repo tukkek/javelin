@@ -50,6 +50,10 @@ public class Dismiss extends WorldAction {
 		if (choice == dismissmercenaries) {
 			dismissmercenaries(mercenaries);
 		} else if (choice >= 0) {
+			if (dismissmercenaries != Integer.MIN_VALUE
+					&& choice >= dismissmercenaries) {
+				choice -= 1;
+			}
 			dismiss(squad.get(choice));
 		}
 	}

@@ -381,9 +381,8 @@ public class Monster implements Cloneable, Serializable {
 				classesbab += classdata.advancebab(i);
 			}
 		}
-		return classesbab
-				+ new Long(Math.round(originalhd * WeaponFocus.BAB.get(type)))
-						.intValue();
+		double bab = originalhd * WeaponFocus.BAB.get(type);
+		return classesbab + new Long(Math.round(bab)).intValue();
 	}
 
 	/**

@@ -39,14 +39,18 @@ public class PowerAttack extends Feat {
 		update(c.source);
 	}
 
-	private AttackSequence createattack(AttackSequence attack, int target) {
-		attack = attack.clone();
-		for (Attack a : attack) {
+	private AttackSequence createattack(AttackSequence sequence, int target) {
+		if (sequence.powerful) {
+			throw new RuntimeException(
+					"Cannot derivate from a Power Attack sequence!");
+		}
+		sequence = sequence.clone();
+		for (Attack a : sequence) {
 			a.bonus -= target;
 			a.damage[2] += target;
 		}
-		attack.powerful = true;
-		return attack;
+		sequence.powerful = true;
+		return sequence;
 	}
 
 	@Override

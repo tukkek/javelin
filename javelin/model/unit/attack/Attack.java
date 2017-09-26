@@ -128,16 +128,6 @@ public class Attack implements Serializable, Cloneable {
 		}
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		return name.equals(((Attack) o).name);
-	}
-
-	@Override
-	public int hashCode() {
-		return name.hashCode();
-	}
-
 	public Spell geteffect() {
 		if (temporaryeffect != null) {
 			return temporaryeffect;

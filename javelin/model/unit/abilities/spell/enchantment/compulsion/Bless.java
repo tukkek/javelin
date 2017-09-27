@@ -20,7 +20,7 @@ public class Bless extends Spell {
 		int bonus = +1;
 
 		public Blessed(Combatant c) {
-			super(Float.MAX_VALUE, c, Effect.POSITIVE, "blssed", 1);
+			super(Float.MAX_VALUE, c, Effect.POSITIVE, "blessed", 1);
 		}
 
 		@Override
@@ -37,8 +37,7 @@ public class Bless extends Spell {
 	}
 
 	public Bless() {
-		super("Bless", 1, CrCalculator.ratespelllikeability(1),
-				Realm.GOOD);
+		super("Bless", 1, CrCalculator.ratespelllikeability(1), Realm.GOOD);
 		castonallies = true;
 		castinbattle = true;
 		isscroll = true;
@@ -47,6 +46,7 @@ public class Bless extends Spell {
 	@Override
 	public String cast(Combatant caster, Combatant target, BattleState s,
 			boolean saved) {
+		s = s.clone();
 		for (Combatant c : s.getteam(caster)) {
 			c.addcondition(new Blessed(c));
 		}

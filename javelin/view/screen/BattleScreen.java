@@ -201,7 +201,8 @@ public class BattleScreen extends Screen {
 
 	void humanmove() {
 		Javelin.app.switchScreen(BattleScreen.active);
-		if (current == null || current.automatic) {
+		if (current == null || current.automatic
+				|| Fight.state.fleeing.contains(current)) {
 			/** fled or set an unit as automatic during its turn */
 			return;
 		}

@@ -151,17 +151,19 @@ public class AiMovement extends Action implements AiAction {
 				if (!p.validate(0, 0, s.map.length, s.map[0].length)) {
 					continue;
 				}
-				if (s.map[p.x][p.y].blocked && c.source.fly == 0) {
-					continue;
+				if (c.source.fly == 0) {
+					if (s.map[p.x][p.y].blocked) {
+						continue;
+					}
+					if (s.haslineofsight(c, p) == Vision.BLOCKED) {
+						continue;
+					}
 				}
 				if (s.getcombatant(p.x, p.y) != null) {
 					continue;
 				}
 				Meld m = s.getmeld(p.x, p.y);
 				if (m != null && !m.crystalize(s)) {
-					continue;
-				}
-				if (s.haslineofsight(c, p) == Vision.BLOCKED) {
 					continue;
 				}
 				visible.add(p);

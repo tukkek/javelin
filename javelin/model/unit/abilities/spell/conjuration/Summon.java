@@ -76,6 +76,7 @@ public class Summon extends Spell {
 		 * spent
 		 */
 		summoned.ap = target.ap;
+		summoned.initialap = summoned.ap;
 		final Square[][] map = s.map;
 		int x = target.location[0];
 		int y = target.location[1];

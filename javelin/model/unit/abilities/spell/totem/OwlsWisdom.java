@@ -35,7 +35,7 @@ public class OwlsWisdom extends TotemsSpell {
 			boolean saved) {
 		target.addcondition(new Wise(target, casterlevel));
 		return target + "'s wisdom is now "
-				+ Monster.getsignedbonus(target.source.wisdom);
+				+ Monster.getsignedbonus(target.source.wisdom) + "!";
 	}
 
 }

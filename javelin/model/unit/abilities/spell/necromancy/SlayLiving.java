@@ -10,7 +10,6 @@ import javelin.model.unit.attack.Combatant;
  * See the d20 SRD for more info.
  */
 public class SlayLiving extends Touch {
-
 	public SlayLiving() {
 		super("Slay living", 5, CrCalculator.ratespelllikeability(5),
 				Realm.EVIL);
@@ -31,8 +30,7 @@ public class SlayLiving extends Touch {
 	}
 
 	@Override
-	public int save(final Combatant caster,
-			final Combatant target) {
+	public int save(final Combatant caster, final Combatant target) {
 		return calculatesavedc(target.source.fortitude(), caster);
 	}
 

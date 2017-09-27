@@ -70,14 +70,13 @@ public class BribingScreen {
 	static String printdiplomacy(List<Combatant> foes, int dailyfee, int bribe,
 			boolean canhire) {
 		String text = "You are able to parley with the "
-				+ CrCalculator.describedifficulty(foes)
-				+ " opponents!\n\n";
+				+ CrCalculator.describedifficulty(foes) + " opponents!\n\n";
 		for (Combatant c : foes) {
 			text += c + ", ";
 		}
 		text = text.substring(0, text.length() - 2);
 		text += "\n\nWhat do you want to do? You have $"
-				+ PurchaseScreen.formatcost(Squad.active.gold);
+				+ PurchaseScreen.formatcost(Squad.active.gold) + ".";
 		text += "\n";
 		text += "\n1 - battle!";
 		text += "\n2 - bribe them ($" + PurchaseScreen.formatcost(bribe) + ")";

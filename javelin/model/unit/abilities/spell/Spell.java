@@ -86,6 +86,8 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	 * If <code>false</code> will not consider this threatening (ignores attacks
 	 * of opportunity so it can be cast while engaged without needing a
 	 * {@link Skills#concentration} roll). Default: true.
+	 * 
+	 * TODO rename to safe and invert meaning?
 	 */
 	public boolean provokeaoo = true;
 	/**

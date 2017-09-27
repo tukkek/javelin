@@ -4,8 +4,11 @@ Rules:
 * To learn each spell you need to have a certain minimum amount of class levels ("caster level").
 * Every hero starts at class level 1 and receives an extra class level when upgrading in a class.
 * You can learn and cast as many spells per day as you have class levels. After a period of rest you can cast these again.
-* Touch spells can only be targeted at those immediately adjacent to the spellcaster or the spellcaster himself.
 * Most spells cannot be cast while engaged in close combat, while more offensive ones generally can. High enough Concentration will bypass that for all spells.
+
+Qualifiers:
+* Touch spells can only be targeted at those immediately adjacent to the spellcaster or the spellcaster himself.
+* Safe spells are those that can be cast even while engaged in close combat.
 
 Level 1 (caster level 1)
   Bane: all enemies have -1 to attack rolls.
@@ -13,19 +16,19 @@ Level 1 (caster level 1)
   Bless: all allies gain +1 to attack rolls.
   Cure light wounds: cures 5 hit points. Touch.
   Doom: shakens an enemy.
-  Inflict light wounds: causes 5 points of damage. Touch.
+  Inflict light wounds: causes 5 points of damage. Touch, safe.
   Longstrider: increases caster's walking speed by 10 feet per round.
   Magic missile: deals 1d4+1 of force damage, always hits.
   
 Level 2 (caster level 3)
   Bear's endurance: +2 constitution bonus. Touch.
-  Blink: makes the caster blink for 4 turns, providing a 50% miss chance to attacks against him.
+  Blink: makes the caster blink for 4 turns, providing a 50% miss chance to attacks against him. Safe.
   Bull's strength: +2 strength bonus. Touch.
   Cat's grace: +2 dexterity bonus. Touch.
   Cure moderate wounds: cures 13 hit points. Touch.
   Eagle's splendor: +2 charisma bonus. Touch.
   Fox's cunning: +2 intelligence bonus. Touch.
-  Inflict moderate wounds: causes 13 points of damage. Touch.
+  Inflict moderate wounds: causes 13 points of damage. Touch, safe.
   Lesser restoration: dispels effect-reducing conditions or cures 1d4 ability damage.
   Locate object: locates nearest treasure chest in a dungeon.
   Owl's wisdom: +2 wisdom bonus. Touch.
@@ -40,15 +43,15 @@ Level 3 (caster level 5)
   Deeper darkness: darkens environment.
   Find traps: caster gains +3 bonus to Search.
   Heroism: For 1 hour target gains a +2 morale bonus on attack rolls, saves, and skill checks. Touch.
-  Inflict serious wounds: causes 20 points of damage. Touch.
+  Inflict serious wounds: causes 20 points of damage. Touch, safe.
   Rage: +2 strength and constitution, +1 will, -2 to armor class of an ally (duration based on target's constitution).
-  Vampiric touch: steals 21 temporary hit points from an enemy. Touch. Lasts for 1 hour.
+  Vampiric touch: steals 21 temporary hit points from an enemy. Touch, safe. Lasts for 1 hour.
   
 Level 4 (caster level 7)
   Barkskin: grants +3 to armor class for 1 hour.
   Cure critical wounds: cures 26 hit points. Touch.
-  Inflict critical wounds: causes 26 points of damage. Touch.
-  Neutralize poison: disables natural poison on an enemy or grants poison immunity to ally for an hour.
+  Inflict critical wounds: causes 26 points of damage. Touch, safe.
+  Neutralize poison: disables natural poison on an enemy or grants poison immunity to ally for an hour. Safe.
   Resist energy: grants energy resistance 20 for 1 hour.
   Secure shelter: lets you rest in the wilderness.
   
@@ -57,7 +60,7 @@ Level 5 (caster level 9)
   Hold monster: target temporarily cannot move and loses all dexterity.
   Prying eyes: reveals dungeon map or nearby area on world map.
   Raise dead: after battle, resurrects a killed ally.
-  Slay living: kills target. Touch.
+  Slay living: kills target. Touch, safe.
   
 Level 6 (caster level 11)
   Greater dispel magic: removes target's magical conditions.

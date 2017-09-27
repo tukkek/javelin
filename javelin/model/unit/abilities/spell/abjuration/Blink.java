@@ -10,15 +10,16 @@ import javelin.model.unit.attack.Combatant;
 
 /**
  * This isn't really blink but a 1-level lower version of Displacement that can
- * only affect self.
+ * only affect self and doesn't cause AoO as a way to simulate the blink Special
+ * Quality.
  */
 public class Blink extends Displacement {
 
 	public Blink() {
-		super("Blink", 2, CrCalculator.ratespelllikeability(2),
-				Realm.MAGIC);
+		super("Blink", 2, CrCalculator.ratespelllikeability(2), Realm.MAGIC);
 		ispotion = true;
 		turns = 4;
+		provokeaoo = false;
 	}
 
 	@Override

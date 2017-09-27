@@ -379,6 +379,7 @@ public class BattleScreen extends Screen {
 			if (!action.perform(current)) {
 				throw new RepeatTurn();
 			}
+			Game.messagepanel.clear();
 		} catch (EndBattle e) {
 			throw e;
 		} catch (Exception e) {

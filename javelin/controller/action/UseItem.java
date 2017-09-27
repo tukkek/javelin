@@ -42,7 +42,6 @@ public class UseItem extends Action {
 		if (item.use(c)) {
 			Javelin.app.fight.getbag(c).remove(item);
 		}
-		// Game.messagepanel.clear();
 		return true;
 	}
 

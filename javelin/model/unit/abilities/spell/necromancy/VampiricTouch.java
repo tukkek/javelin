@@ -23,8 +23,6 @@ public class VampiricTouch extends Touch {
 
 		@Override
 		public void start(Combatant c) {
-			// see VampiricTouch
-
 		}
 
 		@Override
@@ -34,8 +32,6 @@ public class VampiricTouch extends Touch {
 
 		@Override
 		public void finish(BattleState s) {
-			// Game.message(caster + " loses temporary hit points, is now "
-			// + caster.getStatus() + ".", null, Delay.BLOCK);
 		}
 
 		@Override
@@ -46,8 +42,8 @@ public class VampiricTouch extends Touch {
 
 	/** Constructor. */
 	public VampiricTouch() {
-		super("Vampiric touch", 3,
-				CrCalculator.ratespelllikeability(3), Realm.EVIL);
+		super("Vampiric touch", 3, CrCalculator.ratespelllikeability(3),
+				Realm.EVIL);
 		castinbattle = true;
 		provokeaoo = false;
 	}

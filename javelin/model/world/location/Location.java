@@ -150,17 +150,6 @@ public abstract class Location extends Actor {
 	 * @return <code>true</code> if given actor is too close to a town.
 	 */
 	static boolean neartown(Actor p) {
-		// if (p instanceof Town) {
-		// return false;
-		// }
-		// for (WorldActor a : Location.getall(Town.class)) {
-		// Town t = (Town) a;
-		// if (t.x - 1 <= p.x && p.x <= t.x + 1 && t.y - 1 <= p.y
-		// && p.y <= t.y + 1) {
-		// return true;
-		// }
-		// }
-		// return false;
 		return p.getdistrict() != null;
 	}
 

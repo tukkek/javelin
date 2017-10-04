@@ -93,8 +93,6 @@ public class Javelin {
 	public static List<Monster> ALLMONSTERS = new ArrayList<Monster>();
 	/** Singleton. */
 	public static JavelinApp app;
-	/** Monster captured on a {@link LairFight}. */
-	public static Combatant captured = null;
 
 	static {
 		try {
@@ -418,7 +416,7 @@ public class Javelin {
 		if (!forceselection) {
 			prompt += " (q to quit)";
 		}
-		prompt += " \n\n";
+		prompt += "\n\n";
 		int nnames = names.size();
 		boolean multicolumn = nnames > 20;
 		ArrayList<Object> options = new ArrayList<Object>();
@@ -481,6 +479,7 @@ public class Javelin {
 		while (requireenter && input.getKeyChar() != '\n') {
 			input = Game.getInput();
 		}
+		Game.messagepanel.clear();
 		return input;
 	}
 

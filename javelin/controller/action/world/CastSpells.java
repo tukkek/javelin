@@ -59,6 +59,8 @@ public class CastSpells extends WorldAction {
 		}
 		String message = s.castpeacefully(caster, target);
 		if (message != null) {
+			Javelin.app.switchScreen(screen);
+			screen.center();
 			Javelin.message(message, false);
 		}
 		s.used += 1;

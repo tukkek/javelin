@@ -6,10 +6,12 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.fight.Siege;
+import javelin.controller.old.Game;
 import javelin.model.item.Key;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.World;
+import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Chest;
 import javelin.model.world.location.town.labor.expansive.Settler;
 import javelin.view.screen.town.PurchaseScreen;
@@ -33,12 +35,27 @@ import tyrant.mikera.engine.RPG;
  */
 public class Trove extends Fortification {
 	enum Reward {
-		GOLD, /* EXPERIENCE, */ KEY, WORKER, RUBY;
+		GOLD, EXPERIENCE, KEY, WORKER, RUBY;
 
 		static Reward getrandom() {
 			Reward[] all = values();
 			Reward r = all[RPG.r(0, all.length - 1)];
 			return r == KEY && !World.scenario.allowkeys ? getrandom() : r;
+		}
+	}
+
+	public class TroveFight extends Siege {
+		public TroveFight(Location l) {
+			super(l);
+			rewardgold = false;
+			rewardxp = false;
+		}
+
+		@Override
+		public String reward() {
+			String message = take();
+			Game.messagepanel.clear();
+			return message;
 		}
 	}
 
@@ -51,12 +68,15 @@ public class Trove extends Fortification {
 	public Trove() {
 		super(DESCRIPTION, DESCRIPTION, 1, 20);
 		if (World.scenario.simpletroves) {
-			rewards[0] = Reward.GOLD;
+			rewards[0] = Reward.EXPERIENCE;
 			rewards[1] = Reward.GOLD;
 		} else {
 			rewards[0] = Reward.getrandom();
 			while (rewards[1] == null || rewards[0] == rewards[1]) {
 				rewards[1] = Reward.getrandom();
+			}
+			if (rewards[0] == Reward.KEY || rewards[1] == Reward.KEY) {
+				key = Key.generate();
 			}
 		}
 		descriptionknown += " (" + describe(rewards[0]) + " or "
@@ -67,21 +87,13 @@ public class Trove extends Fortification {
 	}
 
 	String describe(Reward reward) {
-		if (reward == Reward.KEY) {
-			if (key == null) {
-				key = Key.generate();
-			}
-			return key.toString().toLowerCase();
-		}
-		return reward.toString().toLowerCase();
+		Object o = reward == Reward.KEY ? key : reward;
+		return o.toString().toLowerCase();
 	}
 
 	@Override
 	protected Siege fight() {
-		Siege s = super.fight();
-		s.rewardgold = false;
-		s.rewardxp = false;
-		return s;
+		return new TroveFight(this);
 	}
 
 	@Override
@@ -92,32 +104,11 @@ public class Trove extends Fortification {
 		}
 	}
 
-	@Override
-	public boolean interact() {
-		if (!super.interact()) {
-			return false;
-		}
-		int input = parse(Javelin
-				.prompt("What will you take as a spoil from the battle? (press any other key to leave)\n\n"
-						+ "1 - " + describe(rewards[0]) + "\n" + "2 - "
-						+ describe(rewards[1])))
-				- 1;
-		if (input == 0 || input == 1) {
-			String reward = reward(rewards[input]);
-			if (reward != null) {
-				Javelin.message(reward, false);
-			}
-			remove();
-		}
-		return true;
-	}
-
 	String reward(Reward reward) {
-		/*
-		 * if (reward == Reward.EXPERIENCE) { return
-		 * RewardCalculator.rewardxp(Squad.active.members, Squad.active.members,
-		 * originalgarrison, 2); }
-		 */
+		if (reward == Reward.EXPERIENCE) {
+			return RewardCalculator.rewardxp(Squad.active.members,
+					originalgarrison, 2);
+		}
 		if (reward == Reward.GOLD) {
 			int gold = RewardCalculator.receivegold(originalgarrison) * 2;
 			Squad.active.gold += gold;
@@ -137,16 +128,31 @@ public class Trove extends Fortification {
 		throw new RuntimeException(reward + " #unknownreward");
 	}
 
-	int parse(Character input) {
-		try {
-			return Integer.parseInt(Character.toString(input));
-		} catch (NumberFormatException e) {
-			return -1;
-		}
-	}
-
 	@Override
 	public List<Combatant> getcombatants() {
 		return garrison;
+	}
+
+	String take() {
+		remove();
+		ArrayList<String> choices = new ArrayList<String>(rewards.length);
+		for (Reward r : rewards) {
+			choices.add(describe(r));
+		}
+		String prompt = "What will you take as a spoil from this trove?";
+		int choice = Javelin.choose(prompt, choices, false, true);
+		return reward(rewards[choice]);
+	}
+
+	@Override
+	public boolean interact() {
+		if (!Javelin.DEBUG) {
+			return super.interact();
+		}
+		if (!super.interact()) {
+			return false;
+		}
+		Javelin.message(take(), false);
+		return true;
 	}
 }

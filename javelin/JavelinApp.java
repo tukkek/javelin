@@ -68,15 +68,6 @@ public class JavelinApp extends QuestApp {
 	public static ArrayList<Monster> lastenemies = new ArrayList<Monster>();
 
 	/**
-	 * Keeps track of monster status before combat so we can restore any
-	 * temporary effects.
-	 */
-	public static ArrayList<Combatant> originalteam;
-	/**
-	 * TODO see {@link Fight#originalredteam} }
-	 */
-	public static ArrayList<Combatant> originalfoes;
-	/**
 	 * Controller for active battle. Should be <code>null</code> at any point a
 	 * battle is not occurring.
 	 */

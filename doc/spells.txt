@@ -48,11 +48,11 @@ Level 3 (caster level 5)
   Vampiric touch: steals 21 temporary hit points from an enemy. Touch, safe. Lasts for 1 hour.
   
 Level 4 (caster level 7)
-  Barkskin: grants +3 to armor class for 1 hour.
+  Barkskin: grants +3 to armor class for 1 hour to an ally.
   Cure critical wounds: cures 26 hit points. Touch.
   Inflict critical wounds: causes 26 points of damage. Touch, safe.
   Neutralize poison: disables natural poison on an enemy or grants poison immunity to ally for an hour. Safe.
-  Resist energy: grants energy resistance 20 for 1 hour.
+  Resist energy: grants energy resistance 20 for 1 hour to an ally.
   Secure shelter: lets you rest in the wilderness.
   
 Level 5 (caster level 9)

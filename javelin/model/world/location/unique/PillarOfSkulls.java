@@ -41,8 +41,8 @@ public class PillarOfSkulls extends UniqueLocation {
 
 	static Option SHOWLOCATION = new Option("Show location (50XP)", 0, 'l');
 	static Option OFFERITEM = new Option("Offer item (1 item)", 0, 'o');
-	static Option SACRIFICE =
-			new Option("Sacrifice (1 non-mercenary unit)", 0, 's');
+	static Option SACRIFICE = new Option("Sacrifice (1 non-mercenary unit)", 0,
+			's');
 	static Option UNHOLYBLESSING = new Option(
 			"Unholy blessing (99% of a non-mercenary's hit points)", 0, 'u');
 
@@ -132,8 +132,7 @@ public class PillarOfSkulls extends UniqueLocation {
 				}
 				mock.add(new Combatant(RPG.pick(tier), false));
 			}
-			RewardCalculator.rewardxp(Squad.active.members,
-					Squad.active.members, mock, 1);
+			RewardCalculator.rewardxp(Squad.active.members, mock, 1);
 			return true;
 		}
 
@@ -180,14 +179,14 @@ public class PillarOfSkulls extends UniqueLocation {
 		}
 
 		boolean sacrifice() {
-			ArrayList<Combatant> sacrifices =
-					getsacrifices(Combatant.STATUSDYING);
+			ArrayList<Combatant> sacrifices = getsacrifices(
+					Combatant.STATUSDYING);
 			if (Squad.active.members.size() == 1 || sacrifices.isEmpty()) {
 				print(text + "\nBring me a good sacrifice first!");
 				return false;
 			}
-			int choice =
-					Javelin.choose("Sacrifice who?", sacrifices, true, false);
+			int choice = Javelin.choose("Sacrifice who?", sacrifices, true,
+					false);
 			if (choice < 0) {
 				return false;
 			}
@@ -195,16 +194,15 @@ public class PillarOfSkulls extends UniqueLocation {
 			Squad.active.remove(sacrifice);
 			ArrayList<Combatant> mock = new ArrayList<Combatant>();
 			mock.add(sacrifice);
-			RewardCalculator.rewardxp(Squad.active.members,
-					Squad.active.members, mock, 2);
+			RewardCalculator.rewardxp(Squad.active.members, mock, 2);
 			RewardCalculator.distributexp(Squad.active.members,
 					sacrifice.xp.floatValue());
 			return true;
 		}
 
 		boolean bless() {
-			ArrayList<Combatant> sacrifices =
-					getsacrifices(Combatant.STATUSSCRATCHED);
+			ArrayList<Combatant> sacrifices = getsacrifices(
+					Combatant.STATUSSCRATCHED);
 			if (sacrifices.isEmpty()) {
 				print(text + "\nCome back in better health!");
 				return false;
@@ -235,7 +233,7 @@ public class PillarOfSkulls extends UniqueLocation {
 			if (class1.isInstance(a) && !WorldScreen.see(new Point(a.x, a.y))) {
 				if (closest == null
 						|| a.distance(x, y) < closest.distance(x, y)) {
-					closest = (Actor) a;
+					closest = a;
 				}
 			}
 		}

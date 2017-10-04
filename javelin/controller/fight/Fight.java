@@ -118,9 +118,9 @@ public abstract class Fight {
 	public boolean canflee = true;
 
 	/** Red team at the moment the {@link Fight} begins. */
-	public static List<Combatant> originalredteam;
+	public static ArrayList<Combatant> originalredteam;
 	/** Blue team at the moment the {@link Fight} begins. */
-	public static List<Combatant> originalblueteam;
+	public static ArrayList<Combatant> originalblueteam;
 
 	/**
 	 * @return an encounter level for which an appropriate challenge should be
@@ -155,7 +155,7 @@ public abstract class Fight {
 	 * 
 	 * @return Reward description.
 	 */
-	public String dealreward() {
+	public String reward() {
 		List<Combatant> defeated = new ArrayList<Combatant>(
 				Fight.originalredteam);
 		defeated.removeAll(Fight.state.fleeing);
@@ -168,8 +168,8 @@ public abstract class Fight {
 		final int bonus = Math.round(Math.max(food, gold));
 		String rewards = "Congratulations! ";
 		if (Javelin.app.fight.rewardxp) {
-			rewards += RewardCalculator.rewardxp(Fight.state.blueTeam,
-					Fight.originalblueteam, defeated, 1);
+			rewards += RewardCalculator.rewardxp(Fight.originalblueteam,
+					defeated, 1);
 		}
 		if (Javelin.app.fight.rewardgold) {
 			Squad.active.gold += bonus;
@@ -180,7 +180,7 @@ public abstract class Fight {
 	}
 
 	/**
-	 * Called when a battle ends.
+	 * Called when a battle ends but before {@link EndBattle} clean-ups.
 	 * 
 	 * @param screen
 	 *            Currently open screen.

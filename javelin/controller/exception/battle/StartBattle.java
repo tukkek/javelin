@@ -170,8 +170,6 @@ public class StartBattle extends BattleEvent {
 		for (final Combatant m : Fight.state.redTeam) {
 			JavelinApp.lastenemies.add(m.source.clone());
 		}
-		JavelinApp.originalteam = cloneteam(Fight.state.blueTeam);
-		JavelinApp.originalfoes = cloneteam(Fight.state.redTeam);
 		Fight.originalblueteam = new ArrayList<Combatant>(Fight.state.blueTeam);
 		Fight.originalredteam = new ArrayList<Combatant>(Fight.state.redTeam);
 	}

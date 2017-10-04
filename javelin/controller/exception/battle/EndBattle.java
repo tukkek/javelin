@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.JavelinApp;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.ai.cache.AiCache;
 import javelin.controller.fight.Fight;
@@ -61,7 +60,7 @@ public class EndBattle extends BattleEvent {
 				Squad.active.displace();
 				Squad.active.place();
 			}
-			end(JavelinApp.originalteam);
+			end(Fight.originalblueteam);
 			if (Dungeon.active != null) {
 				Temple.climbing = false;
 				Dungeon.active.activate(false);
@@ -85,7 +84,7 @@ public class EndBattle extends BattleEvent {
 		Game.messagepanel.clear();
 		String combatresult;
 		if (Fight.victory) {
-			combatresult = Javelin.app.fight.dealreward();
+			combatresult = Javelin.app.fight.reward();
 		} else if (Fight.state.getfleeing(Fight.originalblueteam).isEmpty()) {
 			Squad.active.disband();
 			combatresult = "You lost!";
@@ -94,7 +93,7 @@ public class EndBattle extends BattleEvent {
 		} else {
 			combatresult = "Fled from combat. No awards received.";
 			if (!Fight.victory && Fight.state.fleeing
-					.size() != JavelinApp.originalteam.size()) {
+					.size() != Fight.originalblueteam.size()) {
 				combatresult += "\nFallen allies left behind are lost!";
 				for (Combatant abandoned : Fight.state.dead) {
 					abandoned.hp = Combatant.DEADATHP;
@@ -112,22 +111,15 @@ public class EndBattle extends BattleEvent {
 	}
 
 	static void updateoriginal(List<Combatant> originalteam) {
-		for (final Combatant inbattle : Fight.state.dead) {
-			for (final Combatant original : originalteam) {
-				if (original.equals(inbattle)) {
-					update(inbattle, original);
-				}
-			}
-		}
-		for (final Combatant inbattle : new ArrayList<Combatant>(
-				Fight.state.blueTeam)) {
-			for (final Combatant original : originalteam) {
-				if (original.equals(inbattle)) {
-					update(inbattle, original);
-					original.xp = inbattle.xp;
-					inbattle.transferconditions(original);
-					break;
-				}
+		ArrayList<Combatant> update = new ArrayList<Combatant>(
+				Fight.state.blueTeam);
+		update.addAll(Fight.state.dead);
+		for (final Combatant inbattle : update) {
+			int originali = originalteam.indexOf(inbattle);
+			if (originali >= 0) {
+				Combatant original = originalteam.get(originali);
+				update(inbattle, original);
+				inbattle.transferconditions(original);
 			}
 		}
 	}
@@ -240,10 +232,6 @@ public class EndBattle extends BattleEvent {
 		}
 		updateoriginal(originalteam);
 		bury(originalteam);
-		if (Javelin.captured != null) {
-			originalteam.add(Javelin.captured);
-			Javelin.captured = null;
-		}
 		Squad.active.members = originalteam;
 		for (Combatant member : Squad.active.members) {
 			member.currentmelee.sequenceindex = -1;

@@ -87,5 +87,4 @@ public class UseItem extends Action {
 				items.size() > 4, false);
 		return choice >= 0 ? items.get(choice) : null;
 	}
-
 }

@@ -187,14 +187,13 @@ public class RewardCalculator {
 	 * @return A string representing how much XP was gained by the party.
 	 * @see Combatant#xp
 	 */
-	public static String rewardxp(ArrayList<Combatant> winners,
-			List<Combatant> originalblue, List<Combatant> originalred,
-			int bonus) {
+	public static String rewardxp(List<Combatant> originalblue,
+			List<Combatant> originalred, int bonus) {
 		int elred = CrCalculator.calculateel(originalred);
 		int elblue = CrCalculator.calculateel(originalblue);
 		int eldifference = Math.round(elred - elblue);
-		double partycr = getpartyxp(eldifference, winners.size()) * bonus;
-		distributexp(winners, partycr);
+		double partycr = getpartyxp(eldifference, originalblue.size()) * bonus;
+		distributexp(originalblue, partycr);
 		return "Party wins "
 				+ new BigDecimal(100 * partycr).setScale(0, RoundingMode.UP)
 				+ "XP!";
@@ -213,7 +212,7 @@ public class RewardCalculator {
 	 *            Total amount of experience to be distributed.
 	 * @see #rewardxp(ArrayList, List, List, int)
 	 */
-	public static void distributexp(ArrayList<Combatant> units, double xp) {
+	public static void distributexp(List<Combatant> units, double xp) {
 		units = new ArrayList<Combatant>(units); /* safe copy */
 		for (Combatant c : new ArrayList<Combatant>(units)) {
 			/* ignore summons */

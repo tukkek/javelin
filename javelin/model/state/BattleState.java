@@ -5,6 +5,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.action.ai.Flee;
 import javelin.controller.ai.ActionProvider;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.Node;
@@ -46,7 +47,10 @@ public class BattleState implements Node, TeamContainer {
 	public ArrayList<Combatant> blueTeam;
 	/** Computer units. */
 	public ArrayList<Combatant> redTeam;
-	/** Units that ran away from the fight. */
+	/**
+	 * Units that ran away from the fight. Computer units that {@link Flee} are
+	 * not stored here.
+	 */
 	public ArrayList<Combatant> fleeing;
 	/** Dead and unconscious units. */
 	public ArrayList<Combatant> dead;

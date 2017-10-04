@@ -90,11 +90,7 @@ public class Trap extends Feature {
 	@Override
 	public boolean activate() {
 		if (!draw) {
-			// if (map != null) {
 			draw = true;
-			// super.addvisual(map);
-			// map = null;
-			// }
 			fallinto();
 			return true;
 		}

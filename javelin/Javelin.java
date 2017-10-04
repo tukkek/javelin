@@ -492,7 +492,7 @@ public class Javelin {
 	 */
 	static public Character prompt(final String prompt, boolean center) {
 		Game.messagepanel.clear();
-		BattleScreen.active.center();
+		// BattleScreen.active.center();
 		Game.message(prompt, Delay.NONE);
 		if (center) {
 			BattleScreen.active.center();

@@ -21,11 +21,10 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class AirTemple extends Temple {
-	private static final String FLUFF =
-			"You are at the very peak of this mountain range, way above the cloud cover.\n"
-					+ "The cold wind makes your limbs tremble and your heart lust for warmer surroundings.\n"
-					+ "At last you manage to overcome the stone entryway that dives deep into the summit's core.\n"
-					+ "As you enter you immediately feel warmer but the strong gale coming from the outside threatens to carry you along its momentum.";
+	private static final String FLUFF = "You are at the very peak of this mountain range, way above the cloud cover.\n"
+			+ "The cold wind makes your limbs tremble and your heart lust for warmer surroundings.\n"
+			+ "At last you manage to overcome the stone entryway that dives deep into the summit's core.\n"
+			+ "As you enter you immediately feel warmer but the strong gale coming from the outside threatens to carry you along its momentum.";
 
 	/** Constructor. */
 	public AirTemple(Integer pop) {
@@ -53,6 +52,7 @@ public class AirTemple extends Temple {
 		}
 		Javelin.message("A strong wind pushes you around!", true);
 		Point to = steps.get(steps.size() - 1);
+		d.herolocation = to;
 		JavelinApp.context.view(hero.x, hero.y);
 		return true;
 	}

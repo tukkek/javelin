@@ -187,8 +187,8 @@ public class Dungeon extends Location {
 
 	void createchests(Set<Point> free, final Set<Point> used) {
 		int chests = RPG.r(3, 5);
-		int pool = RewardCalculator.receivegold(Squad.active.members);
-		for (int i = 0; i < chests; i++) {// equal trap/treasure find chance
+		int pool = getgoldpool();
+		for (int i = 0; i < chests; i++) {/* equal trap/treasure find chance */
 			Trap t = new Trap(findspot(free, used));
 			build(t, used);
 			pool += RewardCalculator.getgold(t.cr);
@@ -206,6 +206,10 @@ public class Dungeon extends Location {
 			}
 			build(t, used);
 		}
+	}
+
+	public int getgoldpool() {
+		return RewardCalculator.receivegold(Squad.active.members);
 	}
 
 	/**

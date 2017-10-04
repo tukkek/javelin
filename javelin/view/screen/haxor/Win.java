@@ -82,10 +82,10 @@ public class Win extends Hax {
 			s.text += "\nPress any key to continue...\n\n";
 			s.print();
 		}
+		int current = Math.round(Math.round(WorldScreen.lastday));
 		s.text += "Your highscore record is " + Javelin.gethighscore() + "\n";
-		s.text += "Your current score now is " + WorldScreen.lastday + "\n";
-		s.text +=
-				"\nDo you want to finish the current game? Press y for yes, n to continue playing.";
+		s.text += "Your current score now is " + current + "\n";
+		s.text += "\nDo you want to finish the current game? Press y for yes, n to continue playing.";
 		Character input = s.print();
 		while (input != 'y' && input != 'n') {
 			input = s.print();
@@ -105,7 +105,7 @@ public class Win extends Hax {
 
 	@Override
 	public String validate() {
-		if (Haxor.singleton.rubies < price) {
+		if (Haxor.singleton.rubies < price || Javelin.DEBUG) {
 			/* let the player think he only needs rubies to win the game hihi */
 			return null;
 		}

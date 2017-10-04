@@ -45,9 +45,9 @@ public class Chest extends Feature {
 	@Override
 	public boolean activate() {
 		if (key != null) {
-			Javelin.message(
-					"You have found: " + key.toString().toLowerCase() + "!",
-					true);
+			String message = "You have found: " + key.toString().toLowerCase()
+					+ "!";
+			Javelin.message(message, true);
 			key.grab();
 			Portal.opensafe();
 		} else if (!items.isEmpty()) {
@@ -63,9 +63,9 @@ public class Chest extends Feature {
 		} else if (rubies > 0) {
 			Javelin.message(takeruby(rubies), false);
 		} else {
-			Javelin.message(
-					"Party receives $" + PurchaseScreen.formatcost(gold) + "!",
-					false);
+			String message = "Party receives $"
+					+ PurchaseScreen.formatcost(gold) + "!";
+			Javelin.message(message, false);
 			Squad.active.gold += gold;
 		}
 		return true;

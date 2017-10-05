@@ -9,14 +9,17 @@ import javelin.Javelin;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.generator.feature.FeatureGenerator;
+import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
 import javelin.model.Realm;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
+import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.governor.MonsterGovernor;
 import javelin.view.screen.InfoScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -63,9 +66,7 @@ public class WorldGenerator extends Thread {
 	public void run() {
 		try {
 			world = new World();
-			generate(world);
-			Town start = FeatureGenerator.SINGLETON
-					.placestartingfeatures(world);
+			Town start = generate(world);
 			for (Actor a : world.actors.get(Town.class)) {
 				if (a != start) {
 					((Town) a).populategarisson();
@@ -184,7 +185,7 @@ public class WorldGenerator extends Thread {
 		}
 	}
 
-	public static void generate(World w) {
+	public static Town generate(World w) {
 		int size = World.scenario.size;
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
@@ -210,6 +211,67 @@ public class WorldGenerator extends Thread {
 		floodedge(ne, se, -1, 0, w);
 		floodedge(nw, ne, 0, +1, w);
 		generatetowns(realms, regions);
+		Town starting = determinestartingtown(w);
+		normalizemap(starting);
+		FeatureGenerator.SINGLETON.placestartingfeatures(w, starting);
+		normalizemap(starting);
+		return starting;
+	}
+
+	static Town determinestartingtown(World seed) {
+		Terrain starton = RPG.r(1, 2) == 1 ? Terrain.PLAIN : Terrain.HILL;
+		ArrayList<Town> towns = Town.gettowns();
+		Town starting = World.scenario.easystartingtown ? gettown(starton, seed, towns)
+				: RPG.pick(towns);
+		if (Terrain.search(new Point(starting.x, starting.y), Terrain.WATER, 2,
+				seed) != 0) {
+			throw new RestartWorldGeneration();
+		}
+		return starting;
+	}
+
+	static Town gettown(Terrain terrain, World seed, ArrayList<Town> towns) {
+		Collections.shuffle(towns);
+		for (Town town : towns) {
+			if (seed.map[town.x][town.y] == terrain) {
+				return town;
+			}
+		}
+		if (Javelin.DEBUG) {
+			throw new RuntimeException("No town in terrain " + terrain);
+		} else {
+			throw new RestartWorldGeneration();
+		}
+	}
+
+	/**
+	 * Turn whole map into 2 {@link Realm}s only so that there won't be
+	 * in-fighting between hostile {@link Town}s.
+	 * 
+	 * @param starting
+	 * 
+	 * @see Scenario#normalizemap
+	 */
+	static void normalizemap(Town starting) {
+		if (!World.scenario.normalizemap) {
+			return;
+		}
+		ArrayList<Town> towns = Town.gettowns();
+		towns.remove(starting);
+		Realm r = towns.get(0).originalrealm;
+		for (Actor a : World.getactors()) {
+			if (a instanceof Location) {
+				Location l = (Location) a;
+				if (l.realm != null) {
+					l.realm = r;
+					if (a instanceof Town) {
+						Town t = (Town) a;
+						t.originalrealm = r;
+						t.replacegovernor(new MonsterGovernor(t));
+					}
+				}
+			}
+		}
 	}
 
 	static void generatetowns(LinkedList<Realm> realms,

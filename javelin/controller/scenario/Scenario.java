@@ -3,6 +3,8 @@ package javelin.controller.scenario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.action.world.Guide;
@@ -14,8 +16,7 @@ import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.generator.feature.GenerationData;
 import javelin.controller.kit.Kit;
 import javelin.controller.terrain.Desert;
-import javelin.controller.terrain.Hill;
-import javelin.controller.terrain.Plains;
+import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.Water;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.upgrade.Upgrade;
@@ -28,7 +29,7 @@ import javelin.model.world.Caravan;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.Portal;
+import javelin.model.world.location.dungeon.Chest;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.town.Town;
@@ -101,10 +102,10 @@ public class Scenario implements Serializable {
 	/** Wheter {@link Key}s should exist at all. */
 	public boolean allowkeys = false;
 	/**
-	 * Wheter to link {@link Plains} and {@link Hill} {@link Town}s.through a
-	 * {@link Portal}.
+	 * <code>true</code> if first {@link Town} should be located on
+	 * {@link Terrain#PLAIN} or {@link Terrain#HILL}.
 	 */
-	public boolean linktowns = false;
+	public boolean easystartingtown = false;
 	/** Minimum distance between {@link Desert} and {@link Water}. */
 	public int desertradius = 1;
 	/** Number of {@link Town}s in the {@link World}. */
@@ -203,8 +204,23 @@ public class Scenario implements Serializable {
 				return false;
 			}
 		}
-		Javelin.show(
-				"Congratulations, you have won this scenario!\nThanks for playing!");
+		String win = "Congratulations, you have won this scenario!\nThanks for playing!";
+		Javelin.show(win);
 		return true;
+	}
+
+	public List<Location> generatelocations(World seed) {
+		HashSet<Realm> realms = new HashSet<Realm>(2);
+		for (Actor a : seed.actors.get(Town.class)) {
+			Town t = (Town) a;
+			realms.add(t.originalrealm);
+		}
+		ArrayList<Location> shops = new ArrayList<Location>();
+		for (Realm r : Realm.values()) {
+			if (!realms.contains(r)) {
+				shops.add(new Shop(false, r));
+			}
+		}
+		return shops;
 	}
 }

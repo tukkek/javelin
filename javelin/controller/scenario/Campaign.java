@@ -1,6 +1,8 @@
 package javelin.controller.scenario;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javelin.controller.challenge.CrCalculator;
 import javelin.controller.challenge.RewardCalculator;
@@ -9,6 +11,8 @@ import javelin.controller.upgrade.classes.Commoner;
 import javelin.model.Realm;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
+import javelin.model.world.World;
+import javelin.model.world.location.Location;
 
 public class Campaign extends Scenario {
 	/** Minimum starting party encounter level. */
@@ -24,7 +28,7 @@ public class Campaign extends Scenario {
 		fogofwar = true;
 		haxor = true;
 		helpfile = "How to play";
-		linktowns = true;
+		easystartingtown = true;
 		minigames = true;
 		normalizemap = false;
 		record = true;
@@ -69,5 +73,10 @@ public class Campaign extends Scenario {
 	@Override
 	public boolean win() {
 		return false;
+	}
+
+	@Override
+	public List<Location> generatelocations(World seed) {
+		return Collections.EMPTY_LIST;
 	}
 }

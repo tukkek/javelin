@@ -6,12 +6,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
-import javelin.Javelin;
-import javelin.controller.Point;
-import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.model.Realm;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.discipline.Discipline;
@@ -34,7 +30,6 @@ import javelin.model.world.location.haunt.ShatteredTemple;
 import javelin.model.world.location.haunt.SunkenShip;
 import javelin.model.world.location.haunt.WitchesHideout;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.governor.MonsterGovernor;
 import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.model.world.location.town.labor.basic.Lodge;
 import javelin.model.world.location.town.labor.criminal.ThievesGuild;
@@ -212,80 +207,21 @@ public class FeatureGenerator {
 		}
 	}
 
-	static Town gettown(Terrain terrain, World seed, ArrayList<Town> towns) {
-		Collections.shuffle(towns);
-		for (Town town : towns) {
-			if (seed.map[town.x][town.y] == terrain) {
-				return town;
-			}
-		}
-		if (Javelin.DEBUG) {
-			throw new RuntimeException("No town in terrain " + terrain);
-		} else {
-			throw new RestartWorldGeneration();
-		}
-	}
-
 	/**
 	 * @param seed
 	 *            Place all world features in this seed.
 	 * @return Starting town for the initial {@link Squad} to be placed nearby.
 	 */
-	public Town placestartingfeatures(World seed) {
+	public void placestartingfeatures(World seed, Town starting) {
 		Temple.generatetemples();
-		Terrain starton = RPG.r(1, 2) == 1 ? Terrain.PLAIN : Terrain.HILL;
-		ArrayList<Town> towns = Town.gettowns();
-		Town[] easy = getlinkedtowns(seed, starton, towns);
-		Town starting = (Town) World.get(easy[0].x, easy[0].y, towns);
-		if (Terrain.search(new Point(starting.x, starting.y), Terrain.WATER, 2,
-				seed) != 0) {
-			throw new RestartWorldGeneration();
-		}
-		new Portal(starting, World.get(easy[1].x, easy[1].y, towns), false,
-				false, true, true, null, false).place();
-		generatestartingarea(seed, easy[0]);
-		generatelocations(seed, easy[0]);
+		generatestartingarea(seed, starting);
+		generatelocations(seed, starting);
 		for (Class<? extends Actor> feature : generators.keySet()) {
 			generators.get(feature).seed(feature);
 		}
 		int target = World.scenario.startingfeatures - Location.count();
 		while (countplaces() < target) {
 			spawn(1, true);
-		}
-		if (World.scenario.normalizemap) {
-			normalizemap(towns, starting);
-		}
-		return starting;
-	}
-
-	void normalizemap(ArrayList<Town> towns, Town starting) {
-		towns = new ArrayList<Town>(towns);
-		towns.remove(starting);
-		Realm r = towns.get(0).originalrealm;
-		for (Actor a : World.getactors()) {
-			if (a instanceof Location) {
-				Location l = (Location) a;
-				if (l.realm != null) {
-					l.realm = r;
-					if (a instanceof Town) {
-						Town t = (Town) a;
-						t.originalrealm = r;
-						t.replacegovernor(new MonsterGovernor(t));
-					}
-				}
-			}
-		}
-	}
-
-	Town[] getlinkedtowns(World w, Terrain t, ArrayList<Town> towns) {
-		if (World.scenario.linktowns) {
-			Town a = gettown(t, w, towns);
-			Town b = gettown(t == Terrain.PLAIN ? Terrain.HILL : Terrain.PLAIN,
-					w, towns);
-			return new Town[] { a, b };
-		} else {
-			Collections.shuffle(towns);
-			return new Town[] { towns.get(0), towns.get(1) };
 		}
 	}
 
@@ -295,6 +231,7 @@ public class FeatureGenerator {
 		UpgradeHandler.singleton.gather();
 		generatemageguilds(locations);
 		generateacademies(locations);
+		locations.addAll(World.scenario.generatelocations(seed));
 		Collections.shuffle(locations);
 		int place = Math.min(locations.size(),
 				World.scenario.startingfeatures / 3 - countplaces());

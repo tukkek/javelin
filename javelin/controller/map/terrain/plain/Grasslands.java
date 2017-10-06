@@ -10,10 +10,9 @@ public class Grasslands extends DndMap {
 	/** Constructor. */
 	public Grasslands() {
 		super("Grasslands", .1, .2, 0);
-		floor = Images.getImage("terrainplains");
+		floor = Images.getImage("terraingrass");
 		wallfloor = floor;
 		wall = Images.getImage("terraintree");
 		obstacle = Images.getImage("terrainbush2");
 	}
-
 }

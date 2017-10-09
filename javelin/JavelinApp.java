@@ -124,7 +124,6 @@ public class JavelinApp extends QuestApp {
 				EndBattle.end();
 				Javelin.app.fight = null;
 			}
-			// }
 		}
 	}
 
@@ -315,7 +314,7 @@ public class JavelinApp extends QuestApp {
 				m.xp = new BigDecimal(Preferences.DEBUGSXP / 100f);
 			}
 		}
-		if (Preferences.DEBUGRUBIES != null) {
+		if (Preferences.DEBUGRUBIES != null && Haxor.singleton != null) {
 			Haxor.singleton.rubies = Preferences.DEBUGRUBIES;
 		}
 	}

@@ -117,9 +117,7 @@ public class EndBattle extends BattleEvent {
 		for (final Combatant inbattle : update) {
 			int originali = originalteam.indexOf(inbattle);
 			if (originali >= 0) {
-				Combatant original = originalteam.get(originali);
-				update(inbattle, original);
-				inbattle.transferconditions(original);
+				update(inbattle, originalteam.get(originali));
 			}
 		}
 	}
@@ -132,6 +130,7 @@ public class EndBattle extends BattleEvent {
 			to.hp = 1;
 		}
 		copyspells(from, to);
+		from.transferconditions(to);
 	}
 
 	static void copyspells(final Combatant from, final Combatant to) {

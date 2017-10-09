@@ -9,6 +9,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.action.world.Guide;
 import javelin.controller.action.world.WorldMove;
+import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.db.StateManager;
 import javelin.controller.fight.RandomEncounter;
 import javelin.controller.fight.minigame.Minigame;
@@ -32,8 +33,10 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Chest;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.fortification.Trove;
+import javelin.model.world.location.order.Order;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Deck;
+import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.military.RealmAcademy;
 import javelin.model.world.location.town.labor.productive.Shop;
 import javelin.model.world.location.unique.Haxor;
@@ -148,10 +151,13 @@ public class Scenario implements Serializable {
 	 */
 	public boolean randomrealms = true;
 	/**
-	 * Overall speed at which the strategic context should progress. Also
-	 * affects rewards.
+	 * Affect labor and training speeds and amounts for XP and gold rewards.
+	 * 
+	 * @see Labor#work(float)
+	 * @see RewardCalculator
+	 * @see Order
 	 */
-	public int speed = 2;
+	public int rewardbonus = 3;
 
 	/**
 	 * @return Starting encounter level for each hostile town in

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.MonsterNameComparator;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -47,7 +48,20 @@ public class SquadScreen extends InfoScreen {
 	ArrayList<Combatant> select() {
 		page(0);
 		World.scenario.upgradesquad(squad);
+		Squad.active.gold = getstartinggold();
 		return squad;
+	}
+
+	public int getstartinggold() {
+		int gold = 0;
+		for (Combatant c : squad) {
+			float level = c.source.challengerating - 1;
+			if (level >= 1) {
+				gold += RewardCalculator
+						.calculatepcequipment(Math.round(level));
+			}
+		}
+		return gold;
 	}
 
 	private void page(int index) {

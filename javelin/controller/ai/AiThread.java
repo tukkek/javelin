@@ -31,6 +31,7 @@ public class AiThread extends Thread {
 	public int depth;
 	List<ChanceNode> result;
 	final Random random;
+	BattleAi ai;
 
 	public AiThread(BattleState state, long randomseed) {
 		super(group, (Runnable) null);
@@ -47,7 +48,8 @@ public class AiThread extends Thread {
 	@Override
 	public void run() {
 		try {
-			result = new BattleAi(depth).alphaBetaSearch(state);
+			ai = new BattleAi(depth);
+			result = ai.alphaBetaSearch(state);
 			onend();
 		} catch (StopThinking e) {
 			// abort
@@ -71,10 +73,19 @@ public class AiThread extends Thread {
 		}
 		AiThread.FINISHED.put(depth, result);
 		if (!ThreadManager.interrupting && ThreadManager.working
-				&& depthincremeneter <= ThreadManager.MAXIMUMDEPTH) {
+				&& !terminate()) {
 			setdepth();
 			run();
 		}
+	}
+
+	private boolean terminate() {
+		for (ChanceNode c : result) {
+			if (!ai.terminalTest(c.n)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	static public void checkinterrupted() {

@@ -250,14 +250,17 @@ public abstract class SelectScreen extends InfoScreen {
 	public abstract List<Option> getoptions();
 
 	/**
-	 * @param feedback
+	 * @param c
 	 *            Given the user-input key
 	 * @return the index of that key in {@link #KEYS}.
 	 */
-	public static int convertkeytoindex(char feedback) {
+	public static int convertkeytoindex(char c) {
+		if (c == '\t') {
+			return 0;
+		}
 		for (int i = 0; i < KEYS.length; i++) {
-			char c = KEYS[i];
-			if (c == feedback) {
+			char key = KEYS[i];
+			if (key == c) {
 				return i;
 			}
 		}

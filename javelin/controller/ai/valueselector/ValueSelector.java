@@ -94,14 +94,13 @@ public abstract class ValueSelector {
 		Entry chosen = previous;
 		float a = alpha;
 		float b = beta;
-		Iterable<List<ChanceNode>> sucessors =
-				AiCache.getcache(previous.node, index);
+		Iterable<List<ChanceNode>> sucessors = AiCache.getcache(previous.node,
+				index);
 		int i = -1;
 		for (final List<ChanceNode> cns : sucessors) {
 			i += 1;
 			ArrayList<Integer> newindex = (ArrayList<Integer>) index.clone();
 			newindex.add(i);
-			// final Float utility = AiCache.getutility(newindex, ai, cns);
 			for (final ChanceNode cn : cns) {
 				final BattleState state = (BattleState) cn.n;
 				final ValueSelector selector = ai.getplayer(state);
@@ -109,13 +108,11 @@ public abstract class ValueSelector {
 						new Entry(state, selector.failure, cns), ai, depth, a,
 						b, newindex);
 				if (ValueSelector.DEBUGLOG) {
-					ValueSelector.LOG
-							.append("\n" + ident
-									+ (selector == ai.maxValueSelector ? "MAX"
-											: "MIN")
-									+ (outcomeState.value >= 0 ? "+" : "")
-									+ outcomeState.value + "|"
-									+ cn.action.replaceAll("\n", ","));
+					ValueSelector.LOG.append("\n" + ident
+							+ (selector == ai.maxValueSelector ? "MAX" : "MIN")
+							+ (outcomeState.value >= 0 ? "+" : "")
+							+ outcomeState.value + "|"
+							+ cn.action.replaceAll("\n", ","));
 				}
 				outcomeState = outcomeState.value == chosen.value ? chosen
 						: returnBest(chosen, outcomeState);

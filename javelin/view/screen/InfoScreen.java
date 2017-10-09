@@ -86,6 +86,8 @@ public class InfoScreen extends Screen {
 			return feedback();
 		case KeyEvent.VK_ESCAPE:
 			return ESCAPE;
+		case KeyEvent.VK_TAB:
+			return '\t';
 		}
 		return Character.valueOf(input.getKeyChar());
 	}

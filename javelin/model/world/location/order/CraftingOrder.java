@@ -20,7 +20,7 @@ public class CraftingOrder extends Order {
 		item = i.clone();
 		if (queue != null && !queue.queue.isEmpty()) {
 			long hours = queue.last().completionat - Squad.active.hourselapsed;
-			completionat += hours / World.scenario.speed;
+			completionat += hours / World.scenario.rewardbonus;
 		}
 	}
 }

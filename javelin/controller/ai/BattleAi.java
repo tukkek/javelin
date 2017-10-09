@@ -84,7 +84,7 @@ public class BattleAi extends AlphaBetaSearch {
 	@Override
 	public boolean terminalTest(final Node node) {
 		final BattleState state = (BattleState) node;
-		return state.getredTeam().isEmpty() || state.getblueTeam().isEmpty();
+		return state.redTeam.isEmpty() || state.blueTeam.isEmpty();
 	}
 
 	@Override

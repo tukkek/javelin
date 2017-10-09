@@ -8,7 +8,6 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import javelin.Javelin;
-import javelin.controller.action.ai.Flee;
 import javelin.controller.action.world.ShowOptions;
 import javelin.controller.ai.cache.AiCache;
 import javelin.controller.db.Preferences;
@@ -24,13 +23,6 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class ThreadManager {
-	static final boolean SINGLETHREAD = false;
-	/**
-	 * This is requried so some actions don't cause the game to consume too much
-	 * memory (such as {@link Flee}, which "resolves" the battle. A value 10
-	 * times the target depth should be more than enough.
-	 */
-	static final int MAXIMUMDEPTH = 5 * 10;
 	static final Thread MAIN = Thread.currentThread();
 	static final ArrayList<Integer> BATTLERECORD = new ArrayList<Integer>();
 
@@ -76,8 +68,7 @@ public class ThreadManager {
 			AiCache.clear();
 			AiThread.depthincremeneter = 1;
 			AiThread.reset();
-			int nthreads = Javelin.DEBUG && SINGLETHREAD ? 1
-					: Preferences.MAXTHREADS;
+			int nthreads = Preferences.MAXTHREADS;
 			long seed = RPG.rand.nextLong();
 			for (int i = 0; i < nthreads; i++) {
 				AiThread.STARTED.add(new AiThread(state, seed));
@@ -101,9 +92,7 @@ public class ThreadManager {
 		float miliseconds = (now() - start);
 		checkperformance(miliseconds);
 		final float elapsed = miliseconds / 1000f;
-		String hitmax = depth == MAXIMUMDEPTH ? " (max)" : "";
-		System.out.println(
-				elapsed + " seconds elapsed. Depth: " + depth + hitmax);
+		System.out.println(elapsed + " seconds elapsed. Depth: " + depth);
 		BATTLERECORD.add(depth);
 	}
 

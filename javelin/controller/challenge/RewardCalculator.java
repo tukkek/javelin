@@ -111,7 +111,7 @@ public class RewardCalculator {
 
 	static double getpartyxp(final int eldifference, final int nsurvivors) {
 		return nsurvivors * .8 * getcharacterxp(eldifference, nsurvivors)
-				* World.scenario.speed / 1000.0;
+				* World.scenario.rewardbonus / 1000.0;
 	}
 
 	/**
@@ -137,7 +137,7 @@ public class RewardCalculator {
 		if (cr <= 0) {
 			return 0;
 		}
-		return Math.round(cr * cr * cr * 7.5f * World.scenario.speed);
+		return Math.round(cr * cr * cr * 7.5f * World.scenario.rewardbonus);
 	}
 
 	/**
@@ -194,9 +194,9 @@ public class RewardCalculator {
 		int eldifference = Math.round(elred - elblue);
 		double partycr = getpartyxp(eldifference, originalblue.size()) * bonus;
 		distributexp(originalblue, partycr);
-		return "Party wins "
-				+ new BigDecimal(100 * partycr).setScale(0, RoundingMode.UP)
-				+ "XP!";
+		BigDecimal xp = new BigDecimal(100 * partycr).setScale(0,
+				RoundingMode.UP);
+		return "Party wins " + xp + "XP!";
 	}
 
 	/**

@@ -52,7 +52,7 @@ public class ArenaFight extends Minigame {
 	}
 
 	@Override
-	public ArrayList<Combatant> getmonsters(int teamel) {
+	public ArrayList<Combatant> getmonsters(Integer teamel) {
 		return redteam;
 	}
 
@@ -99,8 +99,8 @@ public class ArenaFight extends Minigame {
 
 	@Override
 	public ArrayList<Terrain> getterrains() {
-		ArrayList<Terrain> terrains =
-				new ArrayList<Terrain>(Terrain.ALL.length);
+		ArrayList<Terrain> terrains = new ArrayList<Terrain>(
+				Terrain.ALL.length);
 		for (Terrain t : Terrain.ALL) {
 			if (!t.equals(Terrain.WATER)) {
 				terrains.add(t);

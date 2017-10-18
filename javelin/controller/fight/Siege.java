@@ -37,7 +37,7 @@ public class Siege extends Fight {
 	}
 
 	@Override
-	public ArrayList<Combatant> getmonsters(int teamel) {
+	public ArrayList<Combatant> getmonsters(Integer teamel) {
 		ArrayList<Combatant> clones = new ArrayList<Combatant>(place.garrison);
 		for (int i = 0; i < clones.size(); i++) {
 			clones.set(i, clones.get(i).clone().clonesource());

@@ -111,8 +111,7 @@ public class Run extends Minigame {
 
 	static final float INITIALEL = 7;
 
-	final HashMap<Integer, ArrayList<Monster>> pool =
-			new HashMap<Integer, ArrayList<Monster>>();
+	final HashMap<Integer, ArrayList<Monster>> pool = new HashMap<Integer, ArrayList<Monster>>();
 
 	/**
 	 * Organized with [0][0] being southwesternmost, which causes some funky
@@ -155,8 +154,8 @@ public class Run extends Minigame {
 
 	void pool() {
 		for (float cr : Javelin.MONSTERSBYCR.keySet()) {
-			List<Monster> tier =
-					new ArrayList<Monster>(Javelin.MONSTERSBYCR.get(cr));
+			List<Monster> tier = new ArrayList<Monster>(
+					Javelin.MONSTERSBYCR.get(cr));
 			for (Monster m : new ArrayList<Monster>(tier)) {
 				if (m.fly > 0) {
 					tier.remove(m);
@@ -183,7 +182,7 @@ public class Run extends Minigame {
 	}
 
 	@Override
-	public ArrayList<Combatant> getmonsters(int teamel) {
+	public ArrayList<Combatant> getmonsters(Integer teamel) {
 		return new ArrayList<Combatant>();
 	}
 
@@ -228,11 +227,11 @@ public class Run extends Minigame {
 				}
 			}
 			neighbors.add(s);
-			while (state.redTeam.isEmpty() || CrCalculator
-					.calculateel(state.redTeam) < CrCalculator
-							.calculateel(state.blueTeam) - 1) {
-				Segment neighbor =
-						neighbors.isEmpty() ? s : RPG.pick(neighbors);
+			while (state.redTeam.isEmpty() || CrCalculator.calculateel(
+					state.redTeam) < CrCalculator.calculateel(state.blueTeam)
+							- 1) {
+				Segment neighbor = neighbors.isEmpty() ? s
+						: RPG.pick(neighbors);
 				neighbors.remove(neighbor);
 				Combatant c = new Combatant(neighbor.monster.clone(), true);
 				state.redTeam.add(c);
@@ -289,8 +288,7 @@ public class Run extends Minigame {
 			return;
 		}
 		ArrayList<Monster> pool = getrecruits();
-		while (CrCalculator
-				.calculateel(state.blueTeam) < targetel) {
+		while (CrCalculator.calculateel(state.blueTeam) < targetel) {
 			String currentteam = "Current team: ";
 			int perline = 0;
 			for (Combatant c : state.blueTeam) {
@@ -358,8 +356,8 @@ public class Run extends Minigame {
 		pool.add(segments[1][0].monster);
 		pool.add(segments[0][1].monster);
 		ArrayList<Combatant> blueteam = new ArrayList<Combatant>();
-		while (blueteam.isEmpty() || CrCalculator
-				.calculateel(blueteam) < INITIALEL) {
+		while (blueteam.isEmpty()
+				|| CrCalculator.calculateel(blueteam) < INITIALEL) {
 			blueteam.add(new Combatant(RPG.pick(pool).clone(), true));
 		}
 		return blueteam;

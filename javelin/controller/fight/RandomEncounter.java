@@ -16,12 +16,12 @@ import tyrant.mikera.engine.RPG;
  */
 public class RandomEncounter extends Fight {
 	@Override
-	public int getel(int teamel) {
+	public Integer getel(int teamel) {
 		return Terrain.current().getel(teamel);
 	}
 
 	@Override
-	public ArrayList<Combatant> getmonsters(int teamel) {
+	public ArrayList<Combatant> getmonsters(Integer teamel) {
 		return null;
 	}
 

@@ -26,7 +26,8 @@ public class Battle extends Minigame {
 	 * @param monsters
 	 *            Opponents.
 	 */
-	public Battle(ArrayList<Combatant> blueteam, ArrayList<Combatant> monsters) {
+	public Battle(ArrayList<Combatant> blueteam,
+			ArrayList<Combatant> monsters) {
 		this.blueteam = blueteam;
 		this.monsters = monsters;
 		this.map = new Field();
@@ -57,7 +58,7 @@ public class Battle extends Minigame {
 	}
 
 	@Override
-	public ArrayList<Combatant> getmonsters(int teamel) {
+	public ArrayList<Combatant> getmonsters(Integer teamel) {
 		return monsters;
 	}
 

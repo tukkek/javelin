@@ -99,7 +99,7 @@ public class Rush extends Minigame {
 	}
 
 	@Override
-	public ArrayList<Combatant> getmonsters(int teamel) {
+	public ArrayList<Combatant> getmonsters(Integer teamel) {
 		DungeonRush dr = DungeonRush.get();
 		ArrayList<Combatant> monsters = new ArrayList<Combatant>(
 				dr.spawners.size());

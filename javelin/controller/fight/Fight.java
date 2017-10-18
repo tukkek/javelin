@@ -124,20 +124,25 @@ public abstract class Fight {
 
 	/**
 	 * @return an encounter level for which an appropriate challenge should be
-	 *         generated.
+	 *         generated. May return <code>null</code> if the subclass will
+	 *         generate its own foes manually.
 	 * 
 	 * @see CrCalculator
 	 */
-	public int getel(int teamel) {
+	public Integer getel(int teamel) {
 		return Terrain.current().getel(teamel);
 	}
 
 	/**
+	 * @param teamel
+	 *            usually comes from {@link #getel(int)}, and so might be
+	 *            <code>null</code>.
+	 * 
 	 * @return The list of monsters that are going to be featured in this fight.
 	 *         If <code>null</code>, will then use
 	 *         {@link #getel(JavelinApp, int)}.
 	 */
-	public abstract ArrayList<Combatant> getmonsters(int teamel);
+	public abstract ArrayList<Combatant> getmonsters(Integer teamel);
 
 	/**
 	 * Called in case of a successful bribe.
@@ -257,14 +262,13 @@ public abstract class Fight {
 	 *            Terrain this fight takes place on.
 	 * @return The resulting opponents.
 	 */
-	public ArrayList<Combatant> generate(final int el) {
+	public ArrayList<Combatant> generate(final Integer el) {
 		ArrayList<Terrain> terrains = getterrains();
 		ArrayList<Combatant> foes = getmonsters(el);
-		if (foes != null) {
-			enhance(foes);
-			return foes;
+		if (foes == null) {
+			assert el != null;
+			foes = generate(el, terrains);
 		}
-		foes = generate(el, terrains);
 		enhance(foes);
 		return foes;
 	}

@@ -19,12 +19,12 @@ public class RandomDungeonEncounter extends RandomEncounter {
 	}
 
 	@Override
-	public int getel(int teamel) {
+	public Integer getel(int teamel) {
 		return teamel + Javelin.randomdifficulty() + 1;
 	}
 
 	@Override
-	public ArrayList<Combatant> getmonsters(int teamel) {
+	public ArrayList<Combatant> getmonsters(Integer teamel) {
 		return null;
 	}
 }

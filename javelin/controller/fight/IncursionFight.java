@@ -30,12 +30,12 @@ public class IncursionFight extends Fight {
 	}
 
 	@Override
-	public int getel(final int teamel) {
+	public Integer getel(final int teamel) {
 		return incursion.getel();
 	}
 
 	@Override
-	public ArrayList<Combatant> getmonsters(int teamel) {
+	public ArrayList<Combatant> getmonsters(Integer teamel) {
 		return Incursion.getsafeincursion(incursion.squad);
 	}
 
@@ -68,7 +68,7 @@ public class IncursionFight extends Fight {
 	}
 
 	@Override
-	public ArrayList<Combatant> generate(int teamel) {
+	public ArrayList<Combatant> generate(Integer teamel) {
 		ArrayList<Combatant> foes = super.generate(teamel);
 		incursion.squad = Incursion.getsafeincursion(foes);
 		return foes;

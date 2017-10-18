@@ -27,8 +27,8 @@ public abstract class Minigame extends Fight {
 	}
 
 	@Override
-	public int getel(int teamel) {
-		throw new RuntimeException("#noautogenerate #minigame");
+	public Integer getel(int teamel) {
+		return null;
 	}
 
 	@Override

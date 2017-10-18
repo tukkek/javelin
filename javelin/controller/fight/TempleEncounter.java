@@ -28,7 +28,7 @@ public class TempleEncounter extends RandomDungeonEncounter {
 	}
 
 	@Override
-	public int getel(int teamel) {
+	public Integer getel(int teamel) {
 		return Math.max(1, temple.el - RPG.r(3, 5));
 	}
 

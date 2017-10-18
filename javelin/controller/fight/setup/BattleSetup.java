@@ -37,7 +37,6 @@ public class BattleSetup {
 				: Preferences.DEBUGPERIOD;
 		place();
 		Weather.flood();
-
 	}
 
 	/** Allows greater control of {@link Map} generation. */
@@ -113,8 +112,8 @@ public class BattleSetup {
 		if (vision > 8 || vision > MAXDISTANCE) {
 			vision = MAXDISTANCE;
 		}
-		final ArrayList<Point> possibilities =
-				mappossibilities(reference, vision, s);
+		final ArrayList<Point> possibilities = mappossibilities(reference,
+				vision, s);
 		while (!possibilities.isEmpty()) {
 			Point p = RPG.pick(possibilities);
 			placing.location[0] = p.x;

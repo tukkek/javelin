@@ -51,9 +51,10 @@ public class Poisoned extends Condition {
 	}
 
 	void damage(Combatant c, int d) {
+		d = d * 2;
 		int original = c.source.constitution;
-		c.source.changeconstitutionmodifier(c, -d);
-		c.source.poison += (original - c.source.constitution) / 2;
+		c.source.changeconstitutionscore(c, -d);
+		c.source.poison += original - c.source.constitution;
 	}
 
 	@Override
@@ -67,7 +68,8 @@ public class Poisoned extends Condition {
 	public void transfer(Combatant from, Combatant to) {
 		to.maxhp = from.maxhp;
 		to.source.poison = from.source.poison;
-		to.source.changeconstitutionmodifier(to, -to.source.poison);
+		to.source.changeconstitutionscore(to, -to.source.poison);
+		to.maxhp = from.maxhp;
 		to.hp = from.hp;
 	}
 

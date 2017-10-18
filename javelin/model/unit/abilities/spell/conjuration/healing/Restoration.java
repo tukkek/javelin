@@ -29,8 +29,8 @@ public class Restoration extends Touch {
 
 	/** Constructor. */
 	public Restoration() {
-		super("Lesser restoration", 2,
-				CrCalculator.ratespelllikeability(2), Realm.WATER);
+		super("Lesser restoration", 2, CrCalculator.ratespelllikeability(2),
+				Realm.WATER);
 		ispotion = true;
 		castinbattle = true;
 		castoutofbattle = true;

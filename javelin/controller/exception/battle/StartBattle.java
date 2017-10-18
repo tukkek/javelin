@@ -39,7 +39,7 @@ public class StartBattle extends BattleEvent {
 		if (fight.avoid(foes)) {
 			return;
 		}
-		StartBattle.preparebattle(foes);
+		preparebattle(foes);
 		fight.setup.setup();
 		Fight.state.next();
 		fight.ready();
@@ -172,6 +172,10 @@ public class StartBattle extends BattleEvent {
 		}
 		Fight.originalblueteam = new ArrayList<Combatant>(Fight.state.blueTeam);
 		Fight.originalredteam = new ArrayList<Combatant>(Fight.state.redTeam);
+		for (int i = 0; i < Fight.state.blueTeam.size(); i++) {
+			Combatant c = Fight.state.blueTeam.get(i);
+			Fight.state.blueTeam.set(i, c.clone().clonesource());
+		}
 	}
 
 	static ArrayList<Combatant> cloneteam(ArrayList<Combatant> team) {

@@ -275,7 +275,7 @@ public class Monster implements Cloneable, Serializable {
 	public boolean immunitytomind = false;
 
 	/**
-	 * Temporary {@link Monster#constitution} damage. 1 poison = -2 temporary
+	 * Temporary {@link Monster#constitution} damage. 1 poison = -1 temporary
 	 * constitution score.
 	 */
 	public int poison = 0;
@@ -478,19 +478,22 @@ public class Monster implements Cloneable, Serializable {
 	public void changeconstitutionscore(Combatant c, int scorechange) {
 		AbilityModification m = AbilityModification.modify(constitution,
 				scorechange);
-		if (constitution == m.newscore) {
+		if (constitution == m.newscore || m.modifierchange == 0) {
 			return;
 		}
-		constitution = m.newscore;
-		if (m.modifierchange == 0) {
-			return;
-		}
-		fort += m.modifierchange;
 		final int hds = hd.count();
 		int bonushp = hds * m.modifierchange;
 		if (c.maxhp + bonushp < hds) {
-			bonushp = -(c.maxhp - hds);
+			/*
+			 * it's tricky to come back to the original state from <1hp/hd so
+			 * just avoid it for now. maybe it'll be easier when abiblities and
+			 * skills are enums and we can just have a simple AbilityDamage
+			 * field or something like that TODO
+			 */
+			return;
 		}
+		constitution = m.newscore;
+		fort += m.modifierchange;
 		hd.extrahp += bonushp;
 		c.hp += bonushp;
 		if (c.hp < 1) {

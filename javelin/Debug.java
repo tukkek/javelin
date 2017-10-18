@@ -9,6 +9,7 @@ import javelin.controller.scenario.Scenario;
 import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.unit.Squad;
+import javelin.model.unit.abilities.spell.necromancy.Poison;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
@@ -90,6 +91,9 @@ public class Debug {
 	}
 
 	public static String onbattlehelp() {
+		for (Combatant c : Fight.state.blueTeam) {
+			new Poison().cast(c, c, Fight.state, false);
+		}
 		return "";
 	}
 

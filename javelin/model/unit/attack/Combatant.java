@@ -418,7 +418,7 @@ public class Combatant implements Serializable, Cloneable {
 	 * @return {@link #maxhp}, taking into consideration {@link Monster#poison}.
 	 */
 	public int getmaxhp() {
-		return maxhp + source.poison * source.hd.count();
+		return maxhp + source.poison / 2 * source.hd.count();
 	}
 
 	public String getstatus() {
@@ -675,12 +675,14 @@ public class Combatant implements Serializable, Cloneable {
 
 	/**
 	 * @param detox
-	 *            Remove this many points of {@link #poison} damage.
+	 *            Remove this many points of {@link #poison} damage. Note that
+	 *            this receives a modifier (1 modifier = 2 ability points).
 	 */
 	public void detox(int detox) {
-		if (detox > 0) {
+		if (detox > 0 && source.poison > 0) {
+			detox = Math.min(detox * 2, source.poison);
 			source.poison -= detox;
-			source.changeconstitutionmodifier(this, detox);
+			source.changeconstitutionscore(this, +detox);
 		}
 	}
 

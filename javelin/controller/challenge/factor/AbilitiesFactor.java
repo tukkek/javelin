@@ -27,7 +27,7 @@ public class AbilitiesFactor extends CrFactor {
 	@Override
 	public float calculate(final Monster monster) {
 		final int[] abilites = new int[] { monster.strength, monster.dexterity,
-				monster.constitution + monster.poison * 2, monster.wisdom,
+				monster.constitution + monster.poison, monster.wisdom,
 				monster.intelligence, monster.charisma };
 		float sum = 0;
 		for (final int a : abilites) {

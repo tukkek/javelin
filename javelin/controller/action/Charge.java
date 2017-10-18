@@ -67,7 +67,8 @@ public class Charge extends Fire implements AiAction {
 	ArrayList<List<ChanceNode>> charge(BattleState state, Combatant me,
 			Combatant target) {
 		final ArrayList<List<ChanceNode>> chances = new ArrayList<List<ChanceNode>>();
-		if (me.hascondition(Fatigued.class) != null) {
+		if (me.source.melee.isEmpty()
+				|| me.hascondition(Fatigued.class) != null) {
 			return chances;
 		}
 		Point from = new Point(me.location[0], me.location[1]);

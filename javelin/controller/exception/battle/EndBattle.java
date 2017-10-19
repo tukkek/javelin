@@ -123,6 +123,7 @@ public class EndBattle extends BattleEvent {
 	}
 
 	static void update(final Combatant from, final Combatant to) {
+		from.transferconditions(to);
 		to.hp = from.hp;
 		if (to.hp > to.maxhp) {
 			to.hp = to.maxhp;
@@ -130,7 +131,6 @@ public class EndBattle extends BattleEvent {
 			to.hp = 1;
 		}
 		copyspells(from, to);
-		from.transferconditions(to);
 	}
 
 	static void copyspells(final Combatant from, final Combatant to) {

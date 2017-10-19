@@ -16,7 +16,7 @@ public class CombatCasting extends Feat {
 	}
 
 	@Override
-	public boolean apply(Combatant c) {
-		return super.apply(c) && !c.spells.isEmpty();
+	public boolean upgrade(Combatant c) {
+		return super.upgrade(c) && !c.spells.isEmpty();
 	}
 }

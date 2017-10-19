@@ -81,7 +81,7 @@ public class StatisticsScreen extends InfoScreen {
 		lines.add("Speed        " + showspeed(m));
 		lines.add("Armor class  " + alignnumber(m.ac + c.acmodifier));
 		lines.add("");
-		lines.add("Mêlée attacks");
+		lines.add("Melee attacks");
 		listattacks(lines, m.melee);
 		lines.add("");
 		lines.add("Ranged attacks");

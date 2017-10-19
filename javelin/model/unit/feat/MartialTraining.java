@@ -47,7 +47,7 @@ public class MartialTraining extends Feat {
 	}
 
 	@Override
-	public boolean apply(Combatant c) {
+	public boolean upgrade(Combatant c) {
 		c.source = c.source.clone();
 		int i = c.source.feats.indexOf(this);
 		MartialTraining mt = i == -1 ? this
@@ -56,7 +56,7 @@ public class MartialTraining extends Feat {
 			return false;
 		}
 		if (i == -1) {
-			return super.apply(c);
+			return super.upgrade(c);
 		}
 		mt.slots += 2;
 		return true;

@@ -34,7 +34,7 @@ public class FeatUpgrade extends Upgrade {
 
 	@Override
 	public boolean apply(final Combatant c) {
-		return feat.apply(c);
+		return feat.upgrade(c);
 	}
 
 	@Override

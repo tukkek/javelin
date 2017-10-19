@@ -24,7 +24,7 @@ public class GreatCleave extends Feat {
 	}
 
 	@Override
-	public boolean apply(Combatant m) {
-		return m.source.getbaseattackbonus() >= 4 && super.apply(m);
+	public boolean upgrade(Combatant m) {
+		return m.source.getbaseattackbonus() >= 4 && super.upgrade(m);
 	}
 }

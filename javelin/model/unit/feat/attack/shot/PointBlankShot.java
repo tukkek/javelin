@@ -20,7 +20,7 @@ public class PointBlankShot extends Feat {
 	}
 
 	@Override
-	public boolean apply(Combatant m) {
-		return !m.source.ranged.isEmpty() && super.apply(m);
+	public boolean upgrade(Combatant m) {
+		return !m.source.ranged.isEmpty() && super.upgrade(m);
 	}
 }

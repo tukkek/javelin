@@ -26,35 +26,17 @@ public class PowerAttack extends Feat {
 
 	@Override
 	public void remove(Combatant c) {
-		for (AttackSequence attack : (ArrayList<AttackSequence>) c.source.melee
-				.clone()) {
+		ArrayList<AttackSequence> melee = c.source.melee;
+		for (AttackSequence attack : new ArrayList<AttackSequence>(melee)) {
 			if (attack.powerful) {
-				c.source.melee.remove(attack);
+				melee.remove(attack);
 			}
 		}
 	}
 
 	@Override
-	public void add(Combatant c) {
-		update(c.source);
-	}
-
-	private AttackSequence createattack(AttackSequence sequence, int target) {
-		if (sequence.powerful) {
-			throw new RuntimeException(
-					"Cannot derivate from a Power Attack sequence!");
-		}
-		sequence = sequence.clone();
-		for (Attack a : sequence) {
-			a.bonus -= target;
-			a.damage[2] += target;
-		}
-		sequence.powerful = true;
-		return sequence;
-	}
-
-	@Override
-	public void update(Monster m) {
+	public boolean add(Combatant c) {
+		Monster m = c.source;
 		int nattacks = m.melee.size();
 		HashSet<Integer> targets = new HashSet<Integer>(2);
 		int bab = m.getbaseattackbonus();
@@ -73,6 +55,21 @@ public class PowerAttack extends Feat {
 				m.melee.add(createattack(attack, target));
 			}
 		}
+		return true;
+	}
+
+	private AttackSequence createattack(AttackSequence sequence, int target) {
+		if (sequence.powerful) {
+			throw new RuntimeException(
+					"Cannot derivate from a Power Attack sequence!");
+		}
+		sequence = sequence.clone();
+		for (Attack a : sequence) {
+			a.bonus -= target;
+			a.damage[2] += target;
+		}
+		sequence.powerful = true;
+		return sequence;
 	}
 
 	@Override
@@ -81,8 +78,8 @@ public class PowerAttack extends Feat {
 	}
 
 	@Override
-	public boolean apply(Combatant c) {
+	public boolean upgrade(Combatant c) {
 		return c.source.strength >= 13 && c.source.getbaseattackbonus() >= 1
-				&& super.apply(c);
+				&& super.upgrade(c);
 	}
 }

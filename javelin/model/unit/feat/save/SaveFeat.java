@@ -20,11 +20,11 @@ abstract public class SaveFeat extends Feat {
 	}
 
 	@Override
-	public boolean apply(final Combatant m) {
+	public boolean upgrade(final Combatant m) {
 		if (m.source.hasfeat(this)) {
 			return false;
 		}
-		super.apply(m);
+		super.upgrade(m);
 		setbonus(m.source, getbonus(m.source) + 2);
 		return true;
 	}

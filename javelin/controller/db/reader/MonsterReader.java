@@ -35,14 +35,13 @@ import javelin.controller.db.reader.fields.SpecialQualities;
 import javelin.controller.db.reader.fields.Speed;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.BreathWeapon;
-import javelin.model.unit.abilities.TouchAttack;
 import javelin.model.unit.abilities.BreathWeapon.BreathArea;
 import javelin.model.unit.abilities.BreathWeapon.SavingThrow;
+import javelin.model.unit.abilities.TouchAttack;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
-import javelin.model.unit.feat.Feat;
 
 /**
  * Reads the monster.xml file at startup.
@@ -510,9 +509,6 @@ public class MonsterReader extends DefaultHandler {
 				errorhandler.informInvalid(this);
 				errorhandler.setInvalid(null);
 			} else {
-				for (Feat f : monster.feats) {
-					f.update(monster);
-				}
 				registermonster();
 				if (!monster.breaths.isEmpty()) {
 					SpecialtiesLog.log("    Breaths: " + monster.breaths);

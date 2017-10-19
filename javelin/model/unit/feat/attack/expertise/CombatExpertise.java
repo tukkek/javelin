@@ -29,9 +29,9 @@ public class CombatExpertise extends ExpertiseFeat {
 	}
 
 	@Override
-	public boolean apply(Combatant c) {
+	public boolean upgrade(Combatant c) {
 		return c.source.intelligence >= 13 && !c.source.melee.isEmpty()
-				&& super.apply(c);
+				&& super.upgrade(c);
 	}
 
 	@Override

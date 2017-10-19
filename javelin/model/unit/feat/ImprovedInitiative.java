@@ -19,8 +19,8 @@ public class ImprovedInitiative extends Feat {
 	}
 
 	@Override
-	public boolean apply(final Combatant m) {
-		if (super.apply(m)) {
+	public boolean upgrade(final Combatant m) {
+		if (super.upgrade(m)) {
 			m.source.initiative += 4;
 			return true;
 		}

@@ -321,8 +321,10 @@ public class Monster implements Cloneable, Serializable {
 	}
 
 	public void addfeat(final Feat feat) {
-		feats.add(feat);
-		feats.sort(FeatByNameComparator.INSTANCE);
+		if (feat.stack || !hasfeat(feat)) {
+			feats.add(feat);
+			feats.sort(FeatByNameComparator.INSTANCE);
+		}
 	}
 
 	public int countfeat(final Feat f) {
@@ -483,7 +485,7 @@ public class Monster implements Cloneable, Serializable {
 		}
 		final int hds = hd.count();
 		int bonushp = hds * m.modifierchange;
-		if (c.maxhp + bonushp < hds) {
+		if (c.maxhp + bonushp < hds + hd.extrahp || c.hp + bonushp < 1) {
 			/*
 			 * it's tricky to come back to the original state from <1hp/hd so
 			 * just avoid it for now. maybe it'll be easier when abiblities and
@@ -496,9 +498,6 @@ public class Monster implements Cloneable, Serializable {
 		fort += m.modifierchange;
 		hd.extrahp += bonushp;
 		c.hp += bonushp;
-		if (c.hp < 1) {
-			c.hp = 1;
-		}
 		c.maxhp += bonushp;
 		if (c.hp > c.maxhp) {
 			c.hp = c.maxhp;

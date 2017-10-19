@@ -130,11 +130,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 
 	void update(Combatant c) {
 		for (Feat f : c.source.feats) {
-			if (f.update) {
-				c.source = c.source.clone();
-				f.remove(c);
-				f.add(c);
-			}
+			f.update(c);
 		}
 	}
 

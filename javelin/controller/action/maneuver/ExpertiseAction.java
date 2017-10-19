@@ -42,6 +42,7 @@ public abstract class ExpertiseAction extends Target implements AiAction {
 		super(name);
 		this.prerequisite = prerequisite;
 		this.featbonus = featbonus;
+		this.confirmkey = 'm';
 	}
 
 	@Override

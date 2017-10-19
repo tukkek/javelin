@@ -32,7 +32,7 @@ public class GreatFortitude extends SaveFeat {
 	}
 
 	@Override
-	public boolean apply(Combatant m) {
-		return m.source.constitution > 0 && super.apply(m);
+	public boolean upgrade(Combatant m) {
+		return m.source.constitution > 0 && super.upgrade(m);
 	}
 }

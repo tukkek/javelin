@@ -109,20 +109,24 @@ public abstract class ClassLevelUpgrade extends Upgrade {
 		Level last = table[level - 1];
 		c.source.babpartial += advancebab(level);
 		if (c.source.babpartial >= 1) {
-			c.source.babpartial -= 1;
-			advanceattack(1, m.melee);
-			advanceattack(1, m.ranged);
-			int newattackbonusdelta = checkfornewattack(m, 1);
-			if (newattackbonusdelta != 0) {
-				upgradeattack(m.melee, newattackbonusdelta);
-				upgradeattack(m.ranged, newattackbonusdelta);
-			}
+			levelbabup(c, m);
 		}
 		m.fort += next.fort - last.fort;
 		m.ref += next.ref - last.ref;
 		m.addwill(next.will - last.will);
 		m.skillpool += SkillsFactor.levelup(skillrate, m);
 		return true;
+	}
+
+	public void levelbabup(Combatant c, Monster m) {
+		c.source.babpartial -= 1;
+		advanceattack(1, m.melee);
+		advanceattack(1, m.ranged);
+		int newattackbonusdelta = checkfornewattack(m, 1);
+		if (newattackbonusdelta != 0) {
+			upgradeattack(m.melee, newattackbonusdelta);
+			upgradeattack(m.ranged, newattackbonusdelta);
+		}
 	}
 
 	public float advancebab(int level) {

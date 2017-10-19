@@ -34,8 +34,8 @@ public class ImprovedGrapple extends ExpertiseFeat {
 	}
 
 	@Override
-	public boolean apply(Combatant c) {
-		return c.source.dexterity >= 13 && super.apply(c);
+	public boolean upgrade(Combatant c) {
+		return c.source.dexterity >= 13 && super.upgrade(c);
 	}
 
 	@Override

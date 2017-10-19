@@ -3,7 +3,6 @@ package javelin.model.unit.feat;
 import java.io.Serializable;
 
 import javelin.controller.challenge.factor.FeatsFactor;
-import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Spell;
@@ -21,7 +20,7 @@ public abstract class Feat implements Serializable, javelin.model.Cloneable {
 	/** Feat name as per d20 rules. */
 	public final String name;
 
-	boolean stack = false;
+	public boolean stack = false;
 	/**
 	 * If a feat needs updating, every time a {@link Combatant} is upgraded
 	 * {@link #remove(Combatant)} and {@link #add(Combatant)} will be called so
@@ -49,33 +48,30 @@ public abstract class Feat implements Serializable, javelin.model.Cloneable {
 		return name.hashCode();
 	}
 
-	/**
-	 * This is used by {@link MonsterReader} for when a monster source stat
-	 * block needs to updated when it has a feat.
-	 *
-	 * Will be called multiple times if a monster has more than one feat of the
-	 * same type.
-	 *
-	 * @param monster
-	 *            Original unique stat block to derive.
-	 */
-	public void update(Monster m) {
-		// do nothing
-	}
-
-	/**
-	 * @see #update
-	 */
+	/** Called as part of the {@link #update} flow. */
 	public void remove(Combatant c) {
 		// do nothing
 
 	}
 
 	/**
-	 * @see #update
+	 * This will be called when a {@link Monster} is being made into a
+	 * {@link Combatant}. It is also called after upgrades when the
+	 * {@link #update} flag is set.
+	 * 
+	 * Can be called multiple times if a monster has more than one feat of the
+	 * same type as allowed by {@link #stack}.
+	 * 
+	 * Note that many feats do not have to implement this as the stat block
+	 * itself will have the changes pre-computated in it. For example:
+	 * {@link Toughness} and {@link ImprovedInitiative} only need to implement
+	 * {@link #upgrade(Combatant)}.
+	 * 
+	 * @return <code>true</code> in case of success.
 	 */
-	public void add(Combatant c) {
+	public boolean add(Combatant c) {
 		// do nothing
+		return true;
 	}
 
 	@Override
@@ -94,8 +90,8 @@ public abstract class Feat implements Serializable, javelin.model.Cloneable {
 		}
 	}
 
-	/** See {@link Upgrade} */
-	public boolean apply(Combatant c) {
+	/** This is called when an existing unit is being upgraded. */
+	public boolean upgrade(Combatant c) {
 		if (!stack && c.source.hasfeat(this)) {
 			return false;
 		}
@@ -134,5 +130,13 @@ public abstract class Feat implements Serializable, javelin.model.Cloneable {
 	 */
 	public int count() {
 		return 1;
+	}
+
+	public void update(Combatant c) {
+		if (update) {
+			c.source = c.source.clone();
+			remove(c);
+			add(c);
+		}
 	}
 }

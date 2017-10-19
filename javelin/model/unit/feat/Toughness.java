@@ -20,8 +20,8 @@ public class Toughness extends Feat {
 	}
 
 	@Override
-	public boolean apply(final Combatant m) {
-		if (!super.apply(m)) {
+	public boolean upgrade(final Combatant m) {
+		if (!super.upgrade(m)) {
 			return false;
 		}
 		m.maxhp += 3;

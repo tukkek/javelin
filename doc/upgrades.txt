@@ -8,21 +8,21 @@ Deceitful: +3 to disguise skill checks (+4 if 10 or more ranks in disguise).
 Darkvision: greatly improved vision when dark.
 Energy resistance/immunity: reduces or ignores damage from non-physical attacks.
 Fast healing: heals a certain number of hit points per turn (1AP).
-Fear damage: adds the fear effect to mêlée attacks.
+Fear damage: adds the fear effect to melee attacks.
 Flying: allows character to fly over terrain and water.
 Great fortitude: +2 fortitude.
 Improved initiative: +4 initiative.
 Iron will: +2 will.
 Lightning reflexes: +2 reflexes.
 Low-light vision: improved vision when dark.
-Mêlée damage: raises damage of all mêlée attacks.
-Mêlée focus: +1 to all mêlee attack bonuses (requires +1 Base Attack Bonus).
+melee damage: raises damage of all melee attacks.
+melee focus: +1 to all mêlee attack bonuses (requires +1 Base Attack Bonus).
 Natural armor: raises armor class.
-Paralysis damage: adds the paralysis effect to mêlée attacks.
-Poison damage: adds the poison effect to mêlée attacks.
+Paralysis damage: adds the paralysis effect to melee attacks.
+Poison damage: adds the poison effect to melee attacks.
 Raise constitution: raises fortitude, hit points and breath weapon saving throw difficulty.
 Raise dexterity: raises armor class, reflexes, ranged attack bonuses and initiative.
-Raise strength: raises mêlée attack bonuses and damage.
+Raise strength: raises melee attack bonuses and damage.
 Raise wisdom: raises will saving throw bonus.
 Ranged damage: raises damage of all ranged attacks.
 Ranged focus: +1 to all ranged attack bonuses (requires +1 BAB).
@@ -53,7 +53,7 @@ Point blank shot: you get a +1 bonus on attack and damage rolls with ranged weap
     Improved precise shot: ignores the -4 penalty for cover (dexterity 19, BAB +11).
     Rapid shot: you can make an extra ranged attack but have a -2 penalty to all attacks for a turn (dexterity 13).
 
-Power attack: you may subtract up to your base attack bonus from mêlée attack rolls and add it as damage (requires strength 13, BAB +1).
+Power attack: you may subtract up to your base attack bonus from melee attack rolls and add it as damage (requires strength 13, BAB +1).
   Bull rush: push opponent back on a successful charge.
   Cleave: acts faster right after downing an opponent. 
     Great cleave: grants a bonus attack after downing an opponent (BAB +4).

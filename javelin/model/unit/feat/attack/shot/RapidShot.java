@@ -1,6 +1,7 @@
 package javelin.model.unit.feat.attack.shot;
 
-import javelin.model.unit.Monster;
+import java.util.ArrayList;
+
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.attack.Combatant;
@@ -17,6 +18,7 @@ public class RapidShot extends Feat {
 	private RapidShot() {
 		super("Rapid shot");
 		prerequisite = javelin.model.unit.feat.attack.shot.PreciseShot.SINGLETON;
+		update = true;
 	}
 
 	@Override
@@ -25,17 +27,17 @@ public class RapidShot extends Feat {
 	}
 
 	@Override
-	public boolean apply(Combatant m) {
-		if (m.source.dexterity >= 13 && super.apply(m)) {
-			update(m.source);
+	public boolean upgrade(Combatant c) {
+		if (c.source.dexterity >= 13 && super.upgrade(c)) {
+			add(c);
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public void update(Monster m) {
-		for (AttackSequence sequence : (Iterable<AttackSequence>) m.ranged
+	public boolean add(Combatant c) {
+		for (AttackSequence sequence : (Iterable<AttackSequence>) c.source.ranged
 				.clone()) {
 			AttackSequence rapid = sequence.clone();
 			rapid.add(0, rapid.get(0).clone());
@@ -43,7 +45,18 @@ public class RapidShot extends Feat {
 				a.bonus -= 2;
 			}
 			rapid.rapid = true;
-			m.ranged.add(rapid);
+			c.source.ranged.add(rapid);
+		}
+		return true;
+	}
+
+	@Override
+	public void remove(Combatant c) {
+		ArrayList<AttackSequence> ranged = c.source.ranged;
+		for (AttackSequence s : new ArrayList<AttackSequence>(ranged)) {
+			if (s.rapid) {
+				ranged.remove(s);
+			}
 		}
 	}
 }

@@ -149,11 +149,14 @@ public class Combatant implements Serializable, Cloneable {
 	 */
 	public Combatant(final Monster sourcep, boolean generatespells) {
 		super();
-		source = sourcep;
+		source = sourcep.clone();
 		newid();
 		ap = 0;
 		hp = source.hd.roll(source);
 		maxhp = hp;
+		for (Feat f : source.feats) {
+			f.update(this);
+		}
 		for (Spell s : source.spells) {
 			spells.add(s.clone());
 		}

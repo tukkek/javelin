@@ -54,11 +54,7 @@ public class HD implements Serializable, Cloneable {
 				continue;
 			}
 			for (int i = 0; i < dice; i++) {
-				int roll = RPG.r(1, hd);
-				if (m.constitution > 0) {
-					roll += Monster.getbonus(m.constitution);
-				}
-				hp += Math.max(1, roll);
+				hp += RPG.r(1, hd);
 			}
 		}
 		return Math.max(1, hp);

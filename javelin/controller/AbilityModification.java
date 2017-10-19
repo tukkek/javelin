@@ -66,7 +66,8 @@ public class AbilityModification {
 			}
 			newscore += direction;
 			scorechange += direction;
-			if (newscore % 2 == 0) {
+			boolean even = newscore % 2 == 0;
+			if ((direction == +1 && even) || (direction == -1 && !even)) {
 				modifications.add(direction);
 				modifierchange += direction;
 			}

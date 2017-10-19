@@ -67,14 +67,14 @@ public class WeaponFocus extends Feat {
 	}
 
 	@Override
-	public boolean apply(final Combatant c) {
+	public boolean upgrade(final Combatant c) {
 		Monster m = c.source;
 		if (m.hasfeat(this) || getattacks(m).isEmpty()
 				|| m.getbaseattackbonus() < 1) {
 			return false;
 		}
 		for (int i = 0; i < countattacks(m); i++) {
-			super.apply(c);
+			super.upgrade(c);
 		}
 		for (final List<Attack> as : getattacks(m)) {
 			for (final Attack a : as) {

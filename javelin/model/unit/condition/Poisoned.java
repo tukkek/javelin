@@ -66,9 +66,10 @@ public class Poisoned extends Condition {
 
 	@Override
 	public void transfer(Combatant from, Combatant to) {
-		to.maxhp = from.maxhp;
-		to.source.poison = from.source.poison;
-		to.source.changeconstitutionscore(to, -to.source.poison);
+		int poison = from.source.poison;
+		int original = to.source.constitution;
+		to.source.changeconstitutionscore(to, -poison);
+		to.source.poison = Math.min(poison, original - to.source.constitution);
 		to.maxhp = from.maxhp;
 		to.hp = from.hp;
 	}

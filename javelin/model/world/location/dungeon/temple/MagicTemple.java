@@ -21,11 +21,10 @@ import javelin.model.world.location.dungeon.temple.features.Portal;
  * @author alex
  */
 public class MagicTemple extends Temple {
-	private static final String FLUFF =
-			"The air inside the castle feels laden with static.\n"
-					+ "As you descend through the unsealed magic barrier your eyes begin to adjust to the light.\n"
-					+ "There are a few stones along the walls, they give off a faint octarine glow.\n"
-					+ "You walk along a grand mural written in an ancient language but alas you cannot decipher it.";
+	private static final String FLUFF = "The air inside the castle feels laden with static.\n"
+			+ "As you descend through the unsealed magic barrier your eyes begin to adjust to the light.\n"
+			+ "There are a few stones along the walls, they give off a faint octarine glow.\n"
+			+ "You walk along a grand mural written in an ancient language but alas you cannot decipher it.";
 
 	/**
 	 * @param level
@@ -35,7 +34,7 @@ public class MagicTemple extends Temple {
 	public MagicTemple(Integer level) {
 		super(Realm.MAGIC, level, new Amulet(), FLUFF);
 		terrain = Terrain.HILL;
-		floor = "terraintraininghall";
+		floor = "terrainwoodfloor";
 		wall = "terrainwall";
 	}
 

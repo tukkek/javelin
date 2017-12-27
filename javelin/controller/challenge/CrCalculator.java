@@ -50,11 +50,11 @@ public class CrCalculator {
 	public static final HdFactor HIT_DICE_FACTOR = new HdFactor();
 	private static final CrFactor CLASS_LEVEL_FACTOR = new ClassLevelFactor();
 	public static final CrFactor[] CR_FACTORS = new CrFactor[] {
-			new AbilitiesFactor(), new ArmorClassFactor(), new FeatsFactor(),
-			new FullAttackFactor(), HIT_DICE_FACTOR, new SizeFactor(),
-			new SpeedFactor(), new SpellsFactor(), CLASS_LEVEL_FACTOR,
-			new QualitiesFactor(), new BreathFactor(), new TouchAttackFactor(),
-			new SkillsFactor() };
+			new SkillsFactor(), new AbilitiesFactor(), new ArmorClassFactor(),
+			new FeatsFactor(), new FullAttackFactor(), HIT_DICE_FACTOR,
+			new SizeFactor(), new SpeedFactor(), new SpellsFactor(),
+			CLASS_LEVEL_FACTOR, new QualitiesFactor(), new BreathFactor(),
+			new TouchAttackFactor(), };
 	private static final FileWriter LOGFILE;
 	static final int[] XPPERLEVEL = new int[] { 0, 1000, 3000, 6000, 10000,
 			15000, 21000, 28000, 36000, 45000, 55000, 66000, 78000, 91000,

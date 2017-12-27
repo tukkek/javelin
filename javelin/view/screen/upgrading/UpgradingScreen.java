@@ -93,7 +93,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 		}
 		text += listeligible;
 		if (showmoneyinfo) {
-			text += "Your squad has $" + Squad.active.gold + "\n\n";
+			text += "Your squad has $" + Squad.active.gold + ".\n\n";
 		}
 		text += "Which squad member? Press r to return to upgrade selection.";
 		Combatant c = null;

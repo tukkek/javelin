@@ -18,8 +18,7 @@ public class WeaponFocus extends Feat {
 	/**
 	 * Map of base attack bonus increment per level by lower-case monster type.
 	 */
-	public static final TreeMap<String, Double> BAB =
-			new TreeMap<String, Double>();
+	public static final TreeMap<String, Double> BAB = new TreeMap<String, Double>();
 	/** Unique instance of this {@link Feat}. */
 	public static final Feat SINGLETON = new WeaponFocus();
 
@@ -69,14 +68,15 @@ public class WeaponFocus extends Feat {
 	@Override
 	public boolean upgrade(final Combatant c) {
 		Monster m = c.source;
-		if (m.hasfeat(this) || getattacks(m).isEmpty()
+		List<AttackSequence> attacks = getattacks(m);
+		if (m.hasfeat(this) || (attacks == null || attacks.isEmpty())
 				|| m.getbaseattackbonus() < 1) {
 			return false;
 		}
 		for (int i = 0; i < countattacks(m); i++) {
 			super.upgrade(c);
 		}
-		for (final List<Attack> as : getattacks(m)) {
+		for (final List<Attack> as : attacks) {
 			for (final Attack a : as) {
 				a.bonus += 1;
 			}

@@ -14,6 +14,7 @@ import javelin.model.world.Season;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.Town;
 import javelin.view.Images;
+import javelin.view.screen.shopping.ShoppingScreen;
 
 /**
  * A resource can be extracted by Workers and acts as "mobile labor" which can
@@ -103,8 +104,8 @@ public class Resource extends Location {
 		if (totalsize == 0) {
 			Character input = Javelin
 					.prompt("Your current party members can't harvest this resource.\n"
-							+ "Do you want to plunder it instead for $" + gold
-							+ "?\n\n"
+							+ "Do you want to plunder it instead for $"
+							+ ShoppingScreen.formatcost(gold) + "?\n\n"
 							+ "Press p to plunder or any other key to cancel...");
 			if (input == 'p') {
 				plunder(gold);
@@ -118,8 +119,8 @@ public class Resource extends Location {
 				.prompt("With your current party, gathering this resource will take "
 						+ rounded + " day(s).\n\n" //
 						+ "Press s to start " + type.action + "\n"//
-						+ "Press p to immediately plunder resource for $" + gold
-						+ "\n" + //
+						+ "Press p to immediately plunder resource for $"
+						+ ShoppingScreen.formatcost(gold) + "\n" + //
 						"Press any other key to leave...");
 		if (input == 'p') {
 			plunder(gold);

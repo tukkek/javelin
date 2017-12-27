@@ -2,6 +2,7 @@ package javelin.model.world.location.order;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javelin.model.unit.Squad;
@@ -59,6 +60,12 @@ public class OrderQueue implements Serializable {
 
 	public void add(Order item) {
 		queue.add(item);
+		queue.sort(new Comparator<Order>() {
+			@Override
+			public int compare(Order o1, Order o2) {
+				return new Long(o1.completionat).compareTo(o2.completionat);
+			}
+		});
 	}
 
 	public Order next() {

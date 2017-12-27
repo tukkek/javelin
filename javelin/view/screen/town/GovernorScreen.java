@@ -11,7 +11,7 @@ import javelin.view.screen.Option;
 
 public class GovernorScreen extends SelectScreen {
 	static final String TEMPLATE = "Town management:\n\n"//
-			+ "A town will auto-manage itself but this screen enables you to control the process.\n"//
+			+ "A town will auto-manage itself but this screen enables you to direct the process.\n"//
 			+ "Press h to see the description for each project." //
 			+ "%s\n"//
 			+ "%s\n"//

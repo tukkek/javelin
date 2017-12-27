@@ -156,7 +156,9 @@ public class EndBattle extends BattleEvent {
 						original.hp = 1;
 					} else if (!Fight.victory
 							|| !revive(original, originalteam)) {
-						lastkilled = original;
+						if (!original.summoned && !original.mercenary) {
+							lastkilled = original;
+						}
 						originalteam.remove(original);
 						Squad.active.members.remove(original); // remove member
 						MercenariesGuild.die(original);

@@ -23,6 +23,8 @@ import javelin.view.mappanel.dungeon.DungeonPanel;
  * @author alex
  */
 public class DungeonScreen extends WorldScreen {
+	static final int VIEWRADIUS = 2;
+
 	Dungeon dungeon;
 
 	public DungeonScreen(Dungeon dungeon) {
@@ -92,8 +94,8 @@ public class DungeonScreen extends WorldScreen {
 
 	@Override
 	public void view(int xp, int yp) {
-		for (int x = -1; x <= +1; x++) {
-			for (int y = -1; y <= +1; y++) {
+		for (int x = -VIEWRADIUS; x <= +VIEWRADIUS; x++) {
+			for (int y = -VIEWRADIUS; y <= +VIEWRADIUS; y++) {
 				try {
 					dungeon.setvisible(dungeon.herolocation.x + x,
 							dungeon.herolocation.y + y);

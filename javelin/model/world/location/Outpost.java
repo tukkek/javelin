@@ -100,7 +100,7 @@ public class Outpost extends Fortification {
 				.prompt("This outpost grants you vision of the surrounding area.\n"
 						+ "Do you want to pillage it for $" + getspoils()
 						+ "\n\n"
-						+ "Press p to pillage it and any other key to laave...") == 'p') {
+						+ "Press p to pillage it and any other key to leave...") == 'p') {
 			pillage();
 			return true;
 		}

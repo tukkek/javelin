@@ -84,8 +84,7 @@ public class TrainingHall extends Fortification {
 	}
 
 	boolean isweak() {
-		return CrCalculator
-				.calculateel(garrison) < EL[currentlevel - 1];
+		return CrCalculator.calculateel(garrison) < EL[currentlevel - 1];
 	}
 
 	@Override
@@ -99,8 +98,8 @@ public class TrainingHall extends Fortification {
 			throw new RepeatTurn();
 		}
 		Game.message(
-				"Do you want to pay a free of $" + price
-						+ " for a lesson?\nPress s to study or any other key to leave",
+				"Do you want to pay a fee of $" + price
+						+ " for a lesson?\nPress s to study or any other key to leave...",
 				Delay.NONE);
 		if (Game.getInput().getKeyChar() == 's') {
 			Squad.active.gold -= price;

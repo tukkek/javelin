@@ -1,7 +1,6 @@
 package javelin.controller.ai;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
@@ -89,10 +88,11 @@ public final class ActionProvider
 			return n;
 		}
 		if (actions.isEmpty()) {
-			return Collections.emptyList();
+			return null;
 		}
 		final BattleState stateclone = battleState.clonedeeply();
-		final List<List<ChanceNode>> outcomes = ((AiAction) actions.pop())
+		final AiAction action = (AiAction) actions.pop();
+		final List<List<ChanceNode>> outcomes = action
 				.getoutcomes(stateclone.next, stateclone);
 		for (final List<ChanceNode> sucessors : outcomes) {
 			if (!sucessors.isEmpty()) {

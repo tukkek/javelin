@@ -91,13 +91,16 @@ public abstract class ValueSelector {
 					previous.cns);
 		}
 		final String ident = calcIdent(depth);
-		Entry chosen = previous;
+		Entry chosen = null;
 		float a = alpha;
 		float b = beta;
 		Iterable<List<ChanceNode>> sucessors = AiCache.getcache(previous.node,
 				index);
 		int i = -1;
 		for (final List<ChanceNode> cns : sucessors) {
+			if (cns == null) {
+				continue;
+			}
 			i += 1;
 			ArrayList<Integer> newindex = (ArrayList<Integer>) index.clone();
 			newindex.add(i);
@@ -114,10 +117,12 @@ public abstract class ValueSelector {
 							+ outcomeState.value + "|"
 							+ cn.action.replaceAll("\n", ","));
 				}
-				outcomeState = outcomeState.value == chosen.value ? chosen
-						: returnBest(chosen, outcomeState);
-				if (outcomeState == chosen) {
-					continue;
+				if (chosen != null) {
+					outcomeState = outcomeState.value == chosen.value ? chosen
+							: returnBest(chosen, outcomeState);
+					if (outcomeState == chosen) {
+						continue;
+					}
 				}
 				if (ValueSelector.DEBUGLOG) {
 					ValueSelector.LOG.append("*");
@@ -133,6 +138,9 @@ public abstract class ValueSelector {
 				a = different(a, newAlpha(chosen.value, a));
 				b = different(b, newBeta(chosen.value, b));
 			}
+		}
+		if (Javelin.DEBUG) {
+			assert chosen != null;
 		}
 		return chosen;
 	}

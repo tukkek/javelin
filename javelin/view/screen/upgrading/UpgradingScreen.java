@@ -22,6 +22,7 @@ import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.Option;
+import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.SelectScreen;
 
 /**
@@ -93,7 +94,8 @@ public abstract class UpgradingScreen extends SelectScreen {
 		}
 		text += listeligible;
 		if (showmoneyinfo) {
-			text += "Your squad has $" + Squad.active.gold + ".\n\n";
+			text += "Your squad has $"
+					+ ShoppingScreen.formatcost(Squad.active.gold) + ".\n\n";
 		}
 		text += "Which squad member? Press r to return to upgrade selection.";
 		Combatant c = null;

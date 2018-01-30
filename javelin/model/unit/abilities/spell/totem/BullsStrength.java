@@ -35,7 +35,7 @@ public class BullsStrength extends TotemsSpell {
 			final BattleState s, final boolean saved) {
 		target.addcondition(new Strong(target, casterlevel));
 		return target + "'s strength is now "
-				+ Monster.getsignedbonus(target.source.strength);
+				+ Monster.getsignedbonus(target.source.strength) + "!";
 	}
 
 }

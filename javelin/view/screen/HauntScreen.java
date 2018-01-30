@@ -62,7 +62,7 @@ public class HauntScreen extends SelectScreen {
 			info = "This location is empty right now. You should come back later.";
 		} else {
 			info = "You have $" + ShoppingScreen.formatcost(Squad.active.gold)
-					+ " and " + Squad.active.sumxp() + "XP";
+					+ " and " + Squad.active.sumxp() + "XP.";
 		}
 		if (!extrainfo.isEmpty()) {
 			info += "\n\n" + extrainfo;

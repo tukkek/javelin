@@ -99,7 +99,7 @@ public class Outpost extends Fortification {
 		if (Javelin
 				.prompt("This outpost grants you vision of the surrounding area.\n"
 						+ "Do you want to pillage it for $" + getspoils()
-						+ "\n\n"
+						+ "?\n\n"
 						+ "Press p to pillage it and any other key to leave...") == 'p') {
 			pillage();
 			return true;

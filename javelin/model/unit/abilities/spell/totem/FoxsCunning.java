@@ -40,7 +40,7 @@ public class FoxsCunning extends TotemsSpell {
 			final BattleState s, final boolean saved) {
 		target.addcondition(new Cunning(target, casterlevel));
 		return target + "'s intelligence is now "
-				+ Monster.getsignedbonus(target.source.intelligence);
+				+ Monster.getsignedbonus(target.source.intelligence) + "!";
 	}
 
 }

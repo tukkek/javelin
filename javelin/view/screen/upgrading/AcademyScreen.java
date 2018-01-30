@@ -12,6 +12,7 @@ import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.military.Academy;
 import javelin.model.world.location.town.labor.military.MartialAcademy;
 import javelin.view.screen.Option;
+import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.SelectScreen;
 
 /**
@@ -81,7 +82,10 @@ public class AcademyScreen extends UpgradingScreen {
 
 	@Override
 	public String printinfo() {
-		return academy.training.queue.isEmpty() ? ""
+		String training = academy.training.queue.isEmpty() ? ""
 				: "Currently training: " + academy.training;
+		return "Your squad currently has $"
+				+ ShoppingScreen.formatcost(Squad.active.gold) + ". "
+				+ training;
 	}
 }

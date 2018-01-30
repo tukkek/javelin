@@ -99,7 +99,7 @@ public class EndBattle extends BattleEvent {
 					abandoned.hp = Combatant.DEADATHP;
 				}
 			}
-			if (Squad.active.transport != null) {
+			if (Squad.active.transport != null && Dungeon.active == null) {
 				combatresult += " Vehicle lost!";
 				Squad.active.transport = null;
 				Squad.active.updateavatar();

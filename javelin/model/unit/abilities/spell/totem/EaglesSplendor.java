@@ -36,7 +36,7 @@ public class EaglesSplendor extends TotemsSpell {
 			final BattleState s, final boolean saved) {
 		target.addcondition(new Splendid(target, casterlevel));
 		return target + "'s charisma is now "
-				+ Monster.getsignedbonus(target.source.charisma);
+				+ Monster.getsignedbonus(target.source.charisma) + "!";
 	}
 
 }

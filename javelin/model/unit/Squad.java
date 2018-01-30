@@ -715,8 +715,8 @@ public class Squad extends Actor implements Cloneable {
 					.describedifficulty(diffifculty);
 			final String prompt = "Do you want to skip this " + difficulty
 					+ " battle?\n\n" //
-					+ "Press ENTER to open the battle screen\n"
-					+ "Press s to skip it and calculate results autoamatically";
+					+ "Press ENTER to open the battle screen.\n"
+					+ "Press s to skip it and calculate results autmatically.";
 			input = Javelin.prompt(prompt);
 		}
 		return input == 's';

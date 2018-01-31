@@ -23,6 +23,7 @@ public class Trait extends Labor {
 
 	@Override
 	public boolean validate(District d) {
-		return super.validate(d) && !town.traits.contains(trait);
+		return super.validate(d) && !town.traits.contains(trait)
+				&& town.traits.size() < town.getrank().rank;
 	}
 }

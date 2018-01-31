@@ -13,6 +13,7 @@ public class Rank implements Serializable {
 	public String title;
 	public int maxpopulation;
 	private int minpopulation;
+	/** Numerical rank, from 1 ({@link #HAMLET}) to 4 ({@link #CITY}). */
 	public int rank;
 
 	public Rank(String name, int minsize, int maxsize, int rank) {
@@ -34,5 +35,9 @@ public class Rank implements Serializable {
 			}
 		}
 		return Rank.CITY;
+	}
+
+	public int getradius() {
+		return rank <= 2 ? 2 : 3;
 	}
 }

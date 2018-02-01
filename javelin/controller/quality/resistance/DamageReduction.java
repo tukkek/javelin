@@ -7,7 +7,28 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
 
 /**
- * See more info on the d20 SRD.
+ * A major point of damage reduction in d20 is that it can be entirely bypassed.
+ * Since traditional equipment is not a feature of Javelin, it becomes
+ * impossible to bypass damage reduction with normal attacks. Instead we apply
+ * DR more like a monster's "hardness" (usually reserved for objects).
+ * 
+ * For the same reason, damage reduction can never fully negate damage, only
+ * reduce it to 1 point at most. Otherwise with a high enough DR value a unit
+ * would literally become immune to damage - especially if a player doesn't have
+ * hard-hitting characters and no access to damage upgrades.
+ * 
+ * Having to deal with even 5 points of damage reduction without any ability to
+ * bypass it has proven to be entirely too strong, especially when combined with
+ * fast healing (such as for mephits). To counteract that we simply reduce all
+ * absolute DR values to 1/3 (the "single element" equivalent from the CCR
+ * document, by far the most common found in monsters.xml).
+ * 
+ * At some point it may be necessary to more assertively apply the modifiers
+ * from the CCR document, not just x1/3, but currently 100% of the monsters used
+ * are single-element-only (either silver or magic).
+ * 
+ * More info on the d20 SRD
+ * http://www.d20srd.org/srd/specialAbilities.htm#damageReduction
  */
 public class DamageReduction extends Quality {
 
@@ -15,7 +36,6 @@ public class DamageReduction extends Quality {
 	 * See the d20 SRD for more info.
 	 */
 	static class DamageReductionUpgrade extends Upgrade {
-
 		public DamageReductionUpgrade() {
 			super("Damage reduction");
 		}
@@ -27,12 +47,12 @@ public class DamageReduction extends Quality {
 
 		@Override
 		public boolean apply(Combatant m) {
-			m.source.dr += 5;
+			m.source.dr += 5 / 3;
 			// design parameter
-			return m.source.dr <= 5
-					+ Math.round(Math.floor(m.source.hd.count() / 2f));
+			final int hd = m.source.hd.count();
+			final long max = 5 + Math.round(Math.floor(hd / 2f));
+			return m.source.dr <= max / 3;
 		}
-
 	}
 
 	public DamageReduction() {
@@ -41,17 +61,13 @@ public class DamageReduction extends Quality {
 
 	@Override
 	public void add(String declaration, Monster m) {
-		boolean singleelement = declaration.contains("silver");
 		final int magicbonus = declaration.indexOf('/');
 		if (magicbonus >= 0) {
 			declaration = declaration.substring(0, magicbonus);
 		}
-		m.dr = Integer.parseInt(declaration.substring(
+		final int dr = Integer.parseInt(declaration.substring(
 				declaration.lastIndexOf(' ') + 1, declaration.length()));
-		if (singleelement) {
-			/* instead of implementing element convert to full DR */
-			m.dr = m.dr / 3;
-		}
+		m.dr = dr / 3;
 	}
 
 	@Override
@@ -61,7 +77,7 @@ public class DamageReduction extends Quality {
 
 	@Override
 	public float rate(Monster monster) {
-		return monster.dr * .2f;
+		return monster.dr * .1f;
 	}
 
 	@Override

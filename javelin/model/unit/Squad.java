@@ -41,7 +41,7 @@ import tyrant.mikera.tyrant.Skill;
 /**
  * A group of units that the player controls as a overworld game unit. If a
  * player loses all his squads the game ends.
- * 
+ *
  * TODO when this breaks the 1000 line limit an easy fix is to turn
  * {@link #members} into a SquadMemmbers class. See {@link #sort()}.
  *
@@ -167,7 +167,7 @@ public class Squad extends Actor implements Cloneable {
 	 * Sorts alphabetically, with all mercenaries to the final of the
 	 * {@link #members} list, making it easier to overcome some current UI
 	 * limitations.
-	 * 
+	 *
 	 * TODO this shouldn't be public but ensure by the architecure. A solution
 	 * would be to make {@link #members} a class of its own (not a List) which
 	 * exposes a singgle add methods like {@link #add(Combatant)} and
@@ -273,7 +273,7 @@ public class Squad extends Actor implements Cloneable {
 
 	/**
 	 * Will automatically {@link #sort()} after inclusion..
-	 * 
+	 *
 	 * @param member
 	 *            Adds this unit to {@link #members}.
 	 * @param equipmentp
@@ -716,7 +716,7 @@ public class Squad extends Actor implements Cloneable {
 			final String prompt = "Do you want to skip this " + difficulty
 					+ " battle?\n\n" //
 					+ "Press ENTER to open the battle screen.\n"
-					+ "Press s to skip it and calculate results autmatically.";
+					+ "Press s to skip it and calculate results automatically.";
 			input = Javelin.prompt(prompt);
 		}
 		return input == 's';
@@ -780,7 +780,7 @@ public class Squad extends Actor implements Cloneable {
 
 	/**
 	 * 100XP = 1CR.
-	 * 
+	 *
 	 * @return Total of XP between all active {@link Squad} members.
 	 */
 	public int sumxp() {
@@ -822,7 +822,7 @@ public class Squad extends Actor implements Cloneable {
 
 	/**
 	 * Uses available spells to heal your party.
-	 * 
+	 *
 	 * @see #canheal()
 	 */
 	public void quickheal() {

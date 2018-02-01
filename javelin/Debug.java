@@ -22,10 +22,10 @@ import javelin.view.screen.WorldScreen;
  * never be called from other parts of the game unless {@link Javelin#DEBUG} is
  * <code>true</code>. Other methods are helpers to be used within the class,
  * such as {@link #additems(Item[])}.
- * 
+ *
  * Ideally changes to this class should never be commited unless when expanding
  * debug functionalities (such adding new entry or helper methods).
- * 
+ *
  * @author alex
  */
 public class Debug {
@@ -60,13 +60,11 @@ public class Debug {
 		}
 
 		static String printtowninfo() {
-			String s = "\n\n";
+			String s = "";
 			for (Town t : Town.gettowns()) {
-				s += t.population + " ";
-			}
-			s += "\n\n";
-			for (Town t : Town.gettowns()) {
-				s += CrCalculator.calculateel(t.garrison) + " ";
+				String el = t.ishostile()
+						? ", EL " + CrCalculator.calculateel(t.garrison) : "";
+				s += t + " (" + t.getrank().title + el + ")\n";
 			}
 			return s;
 		}
@@ -114,7 +112,7 @@ public class Debug {
 	 * Called from {@link Help}. Useful for making changes during the course of
 	 * a game or testing sequence, since Javelin doesn't have a developer
 	 * console for debugging purposes.
-	 * 
+	 *
 	 * @return Any text will be printed below the usual help output.
 	 */
 	public static String onworldhelp() {

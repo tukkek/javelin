@@ -67,7 +67,7 @@ public class Town extends Location {
 	 * verify that at the end of year 1, the town populations are between 16 and
 	 * 25.
 	 */
-	public static final float DAILYLABOR = .12f;
+	public static final float DAILYLABOR = .11f;
 
 	public ArrayList<Exhibition> events = new ArrayList<Exhibition>();
 	/**
@@ -240,7 +240,7 @@ public class Town extends Location {
 		if (realm != null) {
 			realm = attacker.realm;
 		}
-		int damage = RPG.randomize(4) + (attacker.getel()) / 2;
+		int damage = RPG.randomize(4) + attacker.getel() / 2;
 		if (damage > 0) {
 			population -= Math.max(1, population - damage);
 		}

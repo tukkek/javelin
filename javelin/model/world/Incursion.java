@@ -39,7 +39,7 @@ import tyrant.mikera.engine.RPG;
 public class Incursion extends Actor {
 	static final int PREFERREDVICTORYCHANCE = 5 + 2;
 	/** Only taken into account if running {@link Javelin#DEBUG}. */
-	static final boolean SPAWN = true;
+	static final boolean SPAWN = false;
 	/** Move even if {@link Javelin#DEBUGDISABLECOMBAT} is enabled. */
 	static final boolean FORCEMOVEMENT = false;
 	static final VictoryChance VICTORYCHANCES = new VictoryChance();
@@ -161,7 +161,7 @@ public class Incursion extends Actor {
 	 * {@link Actor#realm} or targets that would require the Incursion to cross
 	 * water to get there. If this results in no potential target, will assgign
 	 * <code>null</code> to {@link #target}.
-	 * 
+	 *
 	 * Once tha filtering is done, will select the closest target that allows
 	 * for the {@link #PREFERREDVICTORYCHANCE} of winning. If none is available,
 	 * will use the nearest valid target.

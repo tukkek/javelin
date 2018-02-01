@@ -24,13 +24,11 @@ import javelin.model.world.location.Location;
  * @author alex
  */
 public class District {
-	/** Added to {@link Town#getrank()} to determine actual radius. */
-	public static final int RADIUSBASE = 1;
 	/**
 	 * Not really the maximum size but the maximum natural size if no other
 	 * district improvement are affecting it.
 	 */
-	public static final double RADIUSMAX = RADIUSBASE + Rank.RANKS.length;
+	public static final double RADIUSMAX = Rank.CITY.getradius();
 
 	static final int MOSTNEIGHBORSALLOWED = 2;
 
@@ -76,7 +74,7 @@ public class District {
 	}
 
 	public int getradius() {
-		return town.getrank().rank + RADIUSBASE;
+		return town.getrank().getradius();
 	}
 
 	/**

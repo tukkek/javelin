@@ -16,13 +16,13 @@ import javelin.model.world.location.dungeon.Dungeon;
 /**
  * Brings you back to last visited town. See the d20 SRD for more info. Assumes
  * caster level 20 to be able to transport as many creatures as willed.
- * 
+ *
  * Destination for this spell is set when the spell is prepared, not when it's
  * cast, so it makes some sense that that a {@link Scroll} could also be
  * prepared before being cast. It's a bit of a stretch but doing anything else
  * would be very complicated considering the numberr of different ways an
  * {@link Item} can be generated in Javelin.
- * 
+ *
  * http://paizo.com/pathfinderRPG/prd/coreRulebook/spells/wordOfRecall.html
  */
 public class WordOfRecall extends Spell {
@@ -32,7 +32,7 @@ public class WordOfRecall extends Spell {
 				Realm.MAGIC);
 		casterlevel = 20;
 		castoutofbattle = true;
-		isritual = true;
+		isritual = false;
 		isscroll = true;
 	}
 

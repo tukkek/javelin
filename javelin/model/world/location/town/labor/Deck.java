@@ -7,7 +7,6 @@ import java.util.HashMap;
 import javelin.Javelin;
 import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
 import javelin.model.world.World;
-import javelin.model.world.location.Outpost.BuildOutpost;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.basic.Cancel;
 import javelin.model.world.location.town.labor.basic.Dwelling.BuildDwelling;
@@ -59,8 +58,7 @@ public class Deck extends ArrayList<Labor> {
 	static final Labor[] ECOLOGICAL = new Labor[] { new BuildHenge(),
 			new BuildArcheryRange(), new BuildMeadHall(), SteelSerpent.LABOR };
 	static final Labor[] EXPANSIVE = new Labor[] { new Settler(),
-			new BuildOutpost(), new BuildRoad(), new BuildHighway(),
-			new BuildTransportHub() };
+			new BuildRoad(), new BuildHighway(), new BuildTransportHub() };
 	static final Labor[] MILITARY = new Labor[] { new BuildMartialAcademy(),
 			new BuildMercenariesGuild(), new BuildMonastery() };
 	static final Labor[] PRODUCTIVE = new Labor[] { new BuildMine(),

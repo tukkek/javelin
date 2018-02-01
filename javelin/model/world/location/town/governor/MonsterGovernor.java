@@ -128,7 +128,7 @@ public class MonsterGovernor extends Governor {
 			return;
 		}
 		int el = CrCalculator.calculateel(t.garrison);
-		if (el <= t.population
+		if (el <= CrCalculator.leveltoel(t.population)
 				|| t.garrison.size() <= Math.min(30, t.population)) {
 			return;
 		}

@@ -377,6 +377,7 @@ public class MonsterReader extends DefaultHandler {
 		}
 		log("");
 		log(nMonsters + "/" + total + " monsters succesfully loaded.");
+		CrCalculator.log = null;
 	}
 
 	/**

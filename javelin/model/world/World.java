@@ -12,6 +12,7 @@ import javelin.controller.WorldGenerator;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
+import javelin.model.world.location.Location;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.world.WorldTile;
 import javelin.view.screen.WorldScreen;
@@ -39,6 +40,15 @@ public class World implements Serializable {
 
 	/** Contains all actor instances still in the game. */
 	public final HashMap<Class<? extends Actor>, ArrayList<Actor>> actors = new HashMap<Class<? extends Actor>, ArrayList<Actor>>();
+	/**
+	 * Used o speed-up coordinate-based searches. Useful for long debugging
+	 * operations as it speeds things up, safe to remove if troublesome.
+	 * 
+	 * Don't bother registering non {@link Location}s because they can change
+	 * coordinates often and are a minority. The performance gains would be
+	 * irrelevant and definitely not worth the trouble of get it working right.
+	 */
+	public final HashMap<Point, Location> locations = new HashMap<Point, Location>();
 	public final ArrayList<String> townnames = new ArrayList<String>();
 	/**
 	 * Intermediary for {@link WorldTile} while loading.
@@ -144,13 +154,21 @@ public class World implements Serializable {
 		return actors;
 	}
 
+	static Location getlocation(int x, int y) {
+		return getseed().locations.get(new Point(x, y));
+	}
+
 	/**
 	 * @return Actor of the given set that occupies these coordinates.
 	 */
 	public static Actor get(int x, int y, List<? extends Actor> actors) {
-		for (Actor actor : actors) {
-			if (actor.x == x && actor.y == y) {
-				return actor;
+		final Location l = getlocation(x, y);
+		if (l != null) {
+			return l;
+		}
+		for (Actor a : actors) {
+			if (a.x == x && a.y == y) {
+				return a;
 			}
 		}
 		return null;
@@ -163,6 +181,10 @@ public class World implements Serializable {
 	 */
 	@Deprecated
 	public static Actor get(int x, int y) {
+		final Location l = getlocation(x, y);
+		if (l != null) {
+			return l;
+		}
 		return World.get(x, y, World.getactors());
 	}
 
@@ -171,6 +193,10 @@ public class World implements Serializable {
 	 *         <code>null</code>.
 	 */
 	public static Actor get(int x, int y, Class<? extends Actor> type) {
+		final Location l = getlocation(x, y);
+		if (l != null) {
+			return l;
+		}
 		return World.get(x, y, World.getall(type));
 	}
 

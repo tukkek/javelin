@@ -221,8 +221,8 @@ public class WorldGenerator extends Thread {
 	static Town determinestartingtown(World seed) {
 		Terrain starton = RPG.r(1, 2) == 1 ? Terrain.PLAIN : Terrain.HILL;
 		ArrayList<Town> towns = Town.gettowns();
-		Town starting = World.scenario.easystartingtown ? gettown(starton, seed, towns)
-				: RPG.pick(towns);
+		Town starting = World.scenario.easystartingtown
+				? gettown(starton, seed, towns) : RPG.pick(towns);
 		if (Terrain.search(new Point(starting.x, starting.y), Terrain.WATER, 2,
 				seed) != 0) {
 			throw new RestartWorldGeneration();

@@ -55,7 +55,6 @@ public class CrCalculator {
 			new SizeFactor(), new SpeedFactor(), new SpellsFactor(),
 			CLASS_LEVEL_FACTOR, new QualitiesFactor(), new BreathFactor(),
 			new TouchAttackFactor(), };
-	private static final FileWriter LOGFILE;
 	static final int[] XPPERLEVEL = new int[] { 0, 1000, 3000, 6000, 10000,
 			15000, 21000, 28000, 36000, 45000, 55000, 66000, 78000, 91000,
 			105000, 12000, 136000, 153000, 171000, 190000, };
@@ -63,15 +62,16 @@ public class CrCalculator {
 			13000, 19000, 27000, 36000, 49000, 66000, 88000, 110000, 150000,
 			200000, 260000, 340000, 440000, 580000, 760000, };
 
+	public static FileWriter log = null;
+
 	static {
 		if (Javelin.DEBUG) {
 			try {
-				LOGFILE = new FileWriter("crs.log", false);
+				log = new FileWriter("crs.log", false);
+				log("Some monsters may have their CRs calculated in more tha one pass (necessary for summons spells, etc)\n");
 			} catch (final IOException e) {
 				throw new RuntimeException(e);
 			}
-		} else {
-			LOGFILE = null;
 		}
 	}
 
@@ -117,7 +117,9 @@ public class CrCalculator {
 		float cr = 0;
 		for (final CrFactor f : CR_FACTORS) {
 			final float result = f.calculate(monster);
-			log(" " + f + ": " + result);
+			if (log != null) {
+				log(" " + f + ": " + result);
+			}
 			factorHistory.put(f, result);
 			cr += result;
 		}
@@ -172,12 +174,12 @@ public class CrCalculator {
 	}
 
 	private static void log(final String s) {
-		if (!Javelin.DEBUG) {
+		if (log == null) {
 			return;
 		}
 		try {
-			LOGFILE.write(s + "\n");
-			LOGFILE.flush();
+			log.write(s + "\n");
+			log.flush();
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}

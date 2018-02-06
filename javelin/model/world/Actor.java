@@ -88,22 +88,28 @@ public abstract class Actor implements Serializable {
 
 	/** Called during construction to setup {@link World#actors}. */
 	protected void registerinstance() {
-		ArrayList<Actor> list = World.getseed().actors.get(getClass());
+		final World w = World.getseed();
+		ArrayList<Actor> list = w.actors.get(getClass());
 		if (list == null) {
 			list = new ArrayList<Actor>(1);
-			World.getseed().actors.put(getClass(), list);
+			w.actors.put(getClass(), list);
 		}
 		if (!list.contains(this)) {
 			list.add(this);
+		}
+		if (Location.class.isInstance(this)) {
+			w.locations.put(new Point(x, y), (Location) this);
 		}
 	}
 
 	/** Removes this instance from {@link World#actors}. */
 	protected void deregisterinstance() {
-		List<Actor> list = World.getseed().actors.get(getClass());
+		final World w = World.getseed();
+		List<Actor> list = w.actors.get(getClass());
 		if (list != null) {
 			list.remove(this);
 		}
+		w.locations.remove(new Point(x, y));
 	}
 
 	public void displace(int depth) {

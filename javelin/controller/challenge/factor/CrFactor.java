@@ -19,8 +19,8 @@ public abstract class CrFactor implements Comparable<CrFactor> {
 	public abstract float calculate(Monster m);
 
 	@Override
-	public int compareTo(final CrFactor factor) {
-		return getClass().toString().compareTo(factor.getClass().toString());
+	public int compareTo(final CrFactor f) {
+		return Integer.compare(getClass().hashCode(), f.getClass().hashCode());
 	}
 
 	@Override

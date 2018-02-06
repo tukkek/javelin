@@ -217,8 +217,7 @@ public class Scenario implements Serializable {
 
 	public List<Location> generatelocations(World seed) {
 		HashSet<Realm> realms = new HashSet<Realm>(2);
-		for (Actor a : seed.actors.get(Town.class)) {
-			Town t = (Town) a;
+		for (Town t : Town.gettowns()) {
 			realms.add(t.originalrealm);
 		}
 		ArrayList<Location> shops = new ArrayList<Location>();

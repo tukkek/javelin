@@ -50,18 +50,18 @@ import tyrant.mikera.engine.RPG;
  * Scenario mode is a much faster type of gameplay than the main
  * {@link Campaign} mode. It's supposed to be finished on anywhere from 2 hours
  * of play to an afternoon (but of course it can be saved an resumed too).
- * 
+ *
  * The world is a lot more static in this mode. Several features and
  * {@link Location}s are disabled - including {@link RandomEncounter}s in ohe
  * overworld map and {@link Hazard}s. The only "moving pieces" in the world map
  * are yourself and {@link Incursion}s.
- * 
+ *
  * The {@link FeatureGenerator} is disabled after the original world is created,
  * meaning that, wuthout random encounters and other infinite means of gaining
  * experience and loot, you are on a race against time to conquer all hostile
  * {@link Town}s - 1 to 3, with varying degress of power according to the
  * quantity in each game.
- * 
+ *
  * There is only one enemy {@link Realm} per game and the starting features are
  * roughly made to be 1/3 neutral and 2/3 hostile.
  */
@@ -70,7 +70,7 @@ public class Scenario implements Serializable {
 	public int size = 30;
 	/**
 	 * Allow access to {@link Minigame}s or not.
-	 * 
+	 *
 	 * TODO may allow access but should fix them for scenario mode where their
 	 * {@link UniqueLocation}s aren't present.
 	 */
@@ -87,7 +87,7 @@ public class Scenario implements Serializable {
 	/**
 	 * If not <code>null</code>, this amount will be seeded during {@link World}
 	 * generation. It will also be the cap as per {@link GenerationData#max}.
-	 * 
+	 *
 	 * Number of starting dungeons in the {@link World} map. Since {@link Key}s
 	 * are important to {@link Win}ning the game this should be a fair amount,
 	 * otherwise the player will depend only on {@link Caravan}s if too many
@@ -95,7 +95,7 @@ public class Scenario implements Serializable {
 	 * inside the dungeons he does find. Not that dungeons also spawn during the
 	 * course of a game but since this is highly randomized a late-game player
 	 * who ran out of dungeons should not be required to depend on that alone.
-	 * 
+	 *
 	 * @see Actor#destroy(Incursion)
 	 * @see FeatureGenerator
 	 */
@@ -152,12 +152,17 @@ public class Scenario implements Serializable {
 	public boolean randomrealms = true;
 	/**
 	 * Affect labor and training speeds and amounts for XP and gold rewards.
-	 * 
+	 *
 	 * @see Labor#work(float)
 	 * @see RewardCalculator
 	 * @see Order
 	 */
 	public int rewardbonus = 3;
+	/**
+	 * If <code>true</code> will try to generate all possible {@link Location}s
+	 * around the world.
+	 */
+	public boolean worlddistrict = true;
 
 	/**
 	 * @return Starting encounter level for each hostile town in
@@ -170,7 +175,7 @@ public class Scenario implements Serializable {
 
 	/**
 	 * {@link Upgrade} or not the starting squad after it's been selected.
-	 * 
+	 *
 	 * @see SquadScreen
 	 */
 	public void upgradesquad(ArrayList<Combatant> squad) {

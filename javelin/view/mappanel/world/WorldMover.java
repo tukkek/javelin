@@ -50,8 +50,9 @@ public class WorldMover extends BattleMover {
 
 	@Override
 	protected boolean valid(int x, int y, BattleState state2) {
-		return WorldPanel.ACTORS.get(new Point(x, y)) == null
-				&& checkwater(x, y);
+		final Point p = new Point(x, y);
+		return WorldPanel.ACTORS.get(p) == null && checkwater(x, y)
+				&& World.seed.discovered.contains(p);
 	}
 
 	boolean checkwater(final int x, final int y) {

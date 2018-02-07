@@ -97,4 +97,8 @@ public class OrderQueue implements Serializable {
 		}
 		return s.substring(0, s.length() - 2);
 	}
+
+	public boolean isempty() {
+		return queue.isEmpty();
+	}
 }

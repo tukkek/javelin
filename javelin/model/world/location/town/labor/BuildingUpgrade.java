@@ -28,6 +28,9 @@ public abstract class BuildingUpgrade extends Build {
 
 	@Override
 	public boolean validate(District d) {
+		if (previous == null || !previous.canupgrade()) {
+			return false;
+		}
 		if (site != null && site.ishostile() && d.town.ishostile()) {
 			Realm.equals(site.realm, d.town.realm);
 		}

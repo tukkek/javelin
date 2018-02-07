@@ -417,4 +417,8 @@ public abstract class Location extends Actor {
 	public boolean isworking() {
 		return false;
 	}
+
+	public boolean canupgrade() {
+		return !ishostile();
+	}
 }

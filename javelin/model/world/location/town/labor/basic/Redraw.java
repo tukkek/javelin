@@ -11,7 +11,7 @@ public class Redraw extends Labor {
 
 	@Override
 	protected void define() {
-		cost = town.governor.gethandsize();
+		cost = Math.min(town.population, town.governor.gethandsize());
 	}
 
 	@Override

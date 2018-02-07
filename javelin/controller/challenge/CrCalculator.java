@@ -601,7 +601,7 @@ public class CrCalculator {
 			return "difficult";
 		}
 		if (delta <= +4) {
-			return "very difficult";
+			return "deadly";
 		}
 		return "impossible";
 	}

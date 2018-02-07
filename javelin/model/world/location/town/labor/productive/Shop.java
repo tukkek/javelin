@@ -125,6 +125,8 @@ public class Shop extends Location {
 			if (selection.size() >= level) {
 				break;
 			}
+			i = i.clone();
+			i.shop();
 			selection.add(i);
 		}
 	}
@@ -175,5 +177,10 @@ public class Shop extends Location {
 	@Override
 	public boolean isworking() {
 		return !crafting.queue.isEmpty() && !crafting.reportalldone();
+	}
+
+	@Override
+	public boolean canupgrade() {
+		return super.canupgrade() && crafting.isempty();
 	}
 }

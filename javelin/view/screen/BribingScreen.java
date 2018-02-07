@@ -2,6 +2,7 @@ package javelin.view.screen;
 
 import java.util.List;
 
+import javelin.controller.CountingSet;
 import javelin.controller.challenge.CrCalculator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.model.unit.Skills;
@@ -71,8 +72,18 @@ public class BribingScreen {
 			boolean canhire) {
 		String text = "You are able to parley with the "
 				+ CrCalculator.describedifficulty(foes) + " opponents!\n\n";
+		CountingSet count = new CountingSet();
+		count.casesensitive = true;
 		for (Combatant c : foes) {
-			text += c + ", ";
+			count.add(c.toString());
+		}
+		for (String c : count.getorderedelements()) {
+			text += c;
+			int n = count.getcount(c);
+			if (n > 1) {
+				text += " (x" + n + ")";
+			}
+			text += ", ";
 		}
 		text = text.substring(0, text.length() - 2);
 		text += "\n\nWhat do you want to do? You have $"

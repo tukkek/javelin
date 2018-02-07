@@ -10,6 +10,7 @@ import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.world.Actor;
 import javelin.model.world.Caravan;
 import javelin.model.world.World;
@@ -30,12 +31,29 @@ import javelin.model.world.location.haunt.WitchesHideout;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.model.world.location.town.labor.basic.Lodge;
+import javelin.model.world.location.town.labor.criminal.ThievesGuild;
+import javelin.model.world.location.town.labor.cultural.BardsGuild;
+import javelin.model.world.location.town.labor.cultural.MagesGuild;
+import javelin.model.world.location.town.labor.cultural.MagesGuild.MageGuildData;
+import javelin.model.world.location.town.labor.ecological.ArcheryRange;
+import javelin.model.world.location.town.labor.ecological.Henge;
+import javelin.model.world.location.town.labor.ecological.MeadHall;
+import javelin.model.world.location.town.labor.military.Academy;
+import javelin.model.world.location.town.labor.military.MartialAcademy;
+import javelin.model.world.location.town.labor.military.MartialAcademy.MartialAcademyData;
+import javelin.model.world.location.town.labor.military.Monastery;
 import javelin.model.world.location.town.labor.military.RealmAcademy;
 import javelin.model.world.location.town.labor.productive.Shop;
+import javelin.model.world.location.town.labor.religious.Sanctuary;
+import javelin.model.world.location.town.labor.religious.Shrine;
 import javelin.model.world.location.unique.AdventurersGuild;
+import javelin.model.world.location.unique.Artificer;
+import javelin.model.world.location.unique.AssassinsGuild;
 import javelin.model.world.location.unique.DeepDungeon;
 import javelin.model.world.location.unique.Haxor;
+import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.model.world.location.unique.PillarOfSkulls;
+import javelin.model.world.location.unique.SummoningCircle;
 import javelin.model.world.location.unique.TrainingHall;
 import javelin.model.world.location.unique.minigame.Arena;
 import javelin.model.world.location.unique.minigame.Battlefield;
@@ -72,21 +90,16 @@ public class FeatureGenerator {
 		}
 		register(Dungeon.class, dungeons);
 		register(Outpost.class, new GenerationData(.25f, null, 0));
-		// register(Lodge.class, new GenerationData(.75f, 5, 1));
-		// register(Shrine.class, new GenerationData());
 		register(Resource.class, new GenerationData());
-		// register(Mine.class, new GenerationData(0, 2, 2));
 
 		register(Trove.class, new GenerationData(null));
 		register(Guardian.class, new GenerationData(null));
 		register(Dwelling.class, new GenerationData(null));
 
-		// register(Portal.class, new GenerationData() {
-		// @Override
-		// public Actor generate(Class<? extends Actor> feature) {
-		// return Portal.open();
-		// }
-		// });
+		if (World.scenario.worlddistrict) {
+			register(Lodge.class, new GenerationData(.75f, 5, 1));
+			register(Shrine.class, new GenerationData());
+		}
 
 		if (Caravan.ALLOW) {
 			register(Caravan.class,
@@ -209,8 +222,10 @@ public class FeatureGenerator {
 		ArrayList<Location> locations = new ArrayList<Location>();
 		generateuniquelocations(locations);
 		UpgradeHandler.singleton.gather();
-		// generatemageguilds(locations);
-		// generateacademies(locations);
+		if (World.scenario.worlddistrict) {
+			generatemageguilds(locations);
+			generateacademies(locations);
+		}
 		locations.addAll(World.scenario.generatelocations(seed));
 		Collections.shuffle(locations);
 		int place = Math.min(locations.size(),
@@ -222,12 +237,14 @@ public class FeatureGenerator {
 	}
 
 	void generateuniquelocations(ArrayList<Location> locations) {
-		locations.addAll(Arrays.asList(new Location[] {
-				// new MercenariesGuild(),
-				// new Artificer(),
-				// new SummoningCircle(),
-				new PillarOfSkulls(), new Arena(), new Battlefield(),
-				new DungeonRush(), new Ziggurat(), new DeepDungeon() }));
+		locations.addAll(Arrays.asList(new Location[] { new PillarOfSkulls(),
+				new Arena(), new Battlefield(), new DungeonRush(),
+				new Ziggurat(), new DeepDungeon() }));
+		if (World.scenario.worlddistrict) {
+			locations.addAll(
+					Arrays.asList(new Location[] { new MercenariesGuild(),
+							new Artificer(), new SummoningCircle(), }));
+		}
 		locations.addAll(Arrays.asList(new Haunt[] { new AbandonedManor(),
 				new SunkenShip(), new ShatteredTemple(), new WitchesHideout(),
 				new Graveyard(), new OrcSettlement() }));
@@ -255,20 +272,20 @@ public class FeatureGenerator {
 		spawnnear(t, new TrainingHall(), seed, 2, 3, false);
 	}
 
-	// static void generateacademies(ArrayList<Location> locations) {
-	// for (MartialAcademyData g : MartialAcademy.ACADEMIES) {
-	// locations.add(g.generate());
-	// }
-	// locations.addAll(Arrays.asList(new Academy[] { new ArcheryRange(),
-	// new MeadHall(), new AssassinsGuild(), new Henge(),
-	// new BardsGuild(), new ThievesGuild(), new Monastery(),
-	// new Sanctuary() }));
-	// for (Discipline d : Discipline.DISCIPLINES) {
-	// if (d.hasacademy) {
-	// locations.add(d.generateacademy());
-	// }
-	// }
-	// }
+	static void generateacademies(ArrayList<Location> locations) {
+		for (MartialAcademyData g : MartialAcademy.ACADEMIES) {
+			locations.add(g.generate());
+		}
+		locations.addAll(Arrays.asList(new Academy[] { new ArcheryRange(),
+				new MeadHall(), new AssassinsGuild(), new Henge(),
+				new BardsGuild(), new ThievesGuild(), new Monastery(),
+				new Sanctuary() }));
+		for (Discipline d : Discipline.DISCIPLINES) {
+			if (d.hasacademy) {
+				locations.add(d.generateacademy());
+			}
+		}
+	}
 
 	static int countplaces() {
 		int count = 0;
@@ -282,9 +299,9 @@ public class FeatureGenerator {
 		return count;
 	}
 
-	// static void generatemageguilds(ArrayList<Location> locations) {
-	// for (MageGuildData g : MagesGuild.GUILDS) {
-	// locations.add(g.generate());
-	// }
-	// }
+	static void generatemageguilds(ArrayList<Location> locations) {
+		for (MageGuildData g : MagesGuild.GUILDS) {
+			locations.add(g.generate());
+		}
+	}
 }

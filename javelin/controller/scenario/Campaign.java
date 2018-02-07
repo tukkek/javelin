@@ -44,6 +44,7 @@ public class Campaign extends Scenario {
 		simpletroves = false;
 		rewardbonus = 1;
 		randomrealms = false;
+		worlddistrict = false;
 	}
 
 	@Override

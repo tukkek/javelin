@@ -1,5 +1,6 @@
 #!/bin/bash
 # simple assembly system to package a .zip file for distribution
+ant
 mkdir package
 mkdir package/javelin
 cp javelin.jar package/javelin

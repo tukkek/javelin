@@ -52,7 +52,7 @@ public class WorldMover extends BattleMover {
 	protected boolean valid(int x, int y, BattleState state2) {
 		final Point p = new Point(x, y);
 		return WorldPanel.ACTORS.get(p) == null && checkwater(x, y)
-				&& World.seed.discovered.contains(p);
+				&& WorldScreen.current.mappanel.tiles[x][y].discovered;
 	}
 
 	boolean checkwater(final int x, final int y) {

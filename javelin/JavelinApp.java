@@ -122,7 +122,6 @@ public class JavelinApp extends QuestApp {
 				e.battle();
 			} catch (final EndBattle end) {
 				EndBattle.end();
-				Javelin.app.fight = null;
 			}
 		}
 	}
@@ -238,7 +237,7 @@ public class JavelinApp extends QuestApp {
 				+ " unique locations");
 		Deck.printstats();
 		int maps = Terrain.UNDERGROUND.getmaps().size();
-		for (Terrain t : Terrain.ALL) {
+		for (Terrain t : Terrain.NONUNDERGROUND) {
 			maps += t.getmaps().size();
 		}
 		System.out.println(maps + " battle maps");

@@ -36,8 +36,8 @@ public class Map extends Relic {
 			return true;
 		}
 		ArrayList<Terrain> terrains =
-				new ArrayList<Terrain>(Terrain.ALL.length - 1);
-		for (Terrain t : Terrain.ALL) {
+				new ArrayList<Terrain>(Terrain.NONUNDERGROUND.length - 1);
+		for (Terrain t : Terrain.NONUNDERGROUND) {
 			if (!t.equals(Terrain.WATER)) {
 				terrains.add(t);
 			}

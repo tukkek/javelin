@@ -41,7 +41,7 @@ public class MagicTemple extends Temple {
 	@Override
 	public ArrayList<Terrain> getterrains() {
 		ArrayList<Terrain> terrains = new ArrayList<Terrain>();
-		for (Terrain t : Terrain.ALL) {
+		for (Terrain t : Terrain.NONUNDERGROUND) {
 			terrains.add(t);
 		}
 		terrains.add(Terrain.UNDERGROUND);

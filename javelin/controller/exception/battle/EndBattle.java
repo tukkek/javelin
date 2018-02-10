@@ -66,6 +66,8 @@ public class EndBattle extends BattleEvent {
 				Dungeon.active.activate(false);
 			}
 		}
+		Javelin.app.fight = null;
+		Fight.state = null;
 	}
 
 	static void terminateconditions(BattleState s, BattleScreen screen) {

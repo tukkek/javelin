@@ -86,6 +86,7 @@ public class BattleSetup {
 	/** Rolls initiative for each {@link Combatant}. */
 	public void rollinitiative() {
 		for (final Combatant c : Fight.state.getcombatants()) {
+			c.ap = 0;
 			c.rollinitiative();
 		}
 	}

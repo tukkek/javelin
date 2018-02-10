@@ -181,6 +181,7 @@ public class BattleScreen extends Screen {
 			}
 			Fight.state.next();
 			current = Fight.state.next;
+			Javelin.app.fight.startturn(current);
 			Examine.lastlooked = null;
 			if (Fight.state.redTeam.contains(current) || current.automatic) {
 				lastwascomputermove = current;
@@ -195,7 +196,6 @@ public class BattleScreen extends Screen {
 			block();
 		} finally {
 			Javelin.app.fight.endturn();
-			Javelin.app.fight.checkendbattle();
 		}
 	}
 

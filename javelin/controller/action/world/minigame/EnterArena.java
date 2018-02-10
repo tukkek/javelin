@@ -4,7 +4,7 @@ import java.awt.event.KeyEvent;
 
 import javelin.Javelin;
 import javelin.controller.exception.battle.StartBattle;
-import javelin.controller.fight.minigame.ArenaFight;
+import javelin.controller.fight.minigame.arena.ArenaFight;
 import javelin.view.screen.WorldScreen;
 
 /**

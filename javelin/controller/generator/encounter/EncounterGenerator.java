@@ -33,16 +33,18 @@ public class EncounterGenerator {
 	 * @param el
 	 *            Target encounter level - will work around this is cannot
 	 *            generate exactly what is given.
-	 * @param terrain
+	 * @param terrains
 	 *            Usually {@link Terrain#current()} but not necessarily - for
 	 *            example not when generation a
 	 *            {@link javelin.model.world.location.Location#garrison}, which
 	 *            uses the local terrain instead.
 	 * @return Enemy units for an encounter.
 	 * @throws GaveUpException
+	 *             After too many tries without result, even relaxing the given
+	 *             EL parameter.
 	 */
-	public static ArrayList<Combatant> generate(int el,
-			ArrayList<Terrain> terrains) throws GaveUpException {
+	public static ArrayList<Combatant> generate(int el, List<Terrain> terrains)
+			throws GaveUpException {
 		if (Preferences.DEBUGFOE != null) {
 			return debugmonster();
 		}
@@ -76,7 +78,7 @@ public class EncounterGenerator {
 		return opponents;
 	}
 
-	static ArrayList<Combatant> select(int elp, ArrayList<Terrain> terrains) {
+	static ArrayList<Combatant> select(int elp, List<Terrain> terrains) {
 		ArrayList<Integer> popper = new ArrayList<Integer>();
 		popper.add(elp);
 		while (RPG.r(0, 1) == 1) {
@@ -137,16 +139,26 @@ public class EncounterGenerator {
 	 *         enemies).
 	 */
 	public static int getmaxenemynumber() {
-		return MAXSIZEDIFFERENCE
-				+ (Squad.active == null ? 4 : Squad.active.members.size());
+		int current = 4;
+		if (Javelin.app.fight == null) {
+			if (Squad.active != null) {
+				current = Squad.active.members.size();
+			}
+		} else {
+			ArrayList<Combatant> squad = Javelin.app.fight.getblueteam();
+			if (squad != null && !squad.isEmpty()) {
+				current = squad.size();
+			}
+		}
+		return MAXSIZEDIFFERENCE + current;
 	}
 
-	static List<Combatant> makeencounter(final int el,
-			ArrayList<Terrain> terrains) {
+	static List<Combatant> makeencounter(final int el, List<Terrain> terrains) {
 		List<Encounter> possibilities = new ArrayList<Encounter>();
 		int maxel = Integer.MIN_VALUE;
 		for (Terrain t : terrains) {
-			EncounterIndex index = Organization.ENCOUNTERSBYTERRAIN.get(t.toString());
+			EncounterIndex index = Organization.ENCOUNTERSBYTERRAIN
+					.get(t.toString());
 			if (index != null) {
 				maxel = Math.max(maxel, index.lastKey());
 				List<Encounter> tier = index.get(el);

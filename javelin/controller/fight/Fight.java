@@ -14,11 +14,13 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.GaveUpException;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;
+import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.Map;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
+import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.Underground;
 import javelin.controller.terrain.Water;
@@ -196,6 +198,10 @@ public abstract class Fight {
 	 * @param combatresult
 	 *            Description of rewards and other remarks such as
 	 *            vehicle/allies left behind...
+	 * 
+	 * @return If <code>true</code> will perform a bunch of post-battle
+	 *         clean-ups, usually required only for typical {@link Scenario}
+	 *         battles but not for {@link Minigame}s.
 	 */
 	public boolean onend() {
 		for (Combatant c : state.getfleeing(Fight.originalblueteam)) {
@@ -211,7 +217,7 @@ public abstract class Fight {
 	 * @throws EndBattle
 	 *             If this battle is over.
 	 */
-	public void checkendbattle() {
+	public void checkend() {
 		if (win() || Fight.state.blueTeam.isEmpty()) {
 			throw new EndBattle();
 		}
@@ -528,4 +534,23 @@ public abstract class Fight {
 		}
 		Game.messagepanel.clear();
 	}
+
+	/**
+	 * Called before a unit acts.
+	 * 
+	 * @param acting
+	 *            Creature to perform this turn (human or AI).
+	 */
+	public void startturn(Combatant acting) {
+		// nothing
+	}
+
+	public void die(Combatant c) {
+		if (meld || Meld.DEBUG) {
+			addmeld(c.location[0], c.location[1], c, state);
+		}
+		state.remove(c);
+		state.dead.add(c);
+	}
+
 }

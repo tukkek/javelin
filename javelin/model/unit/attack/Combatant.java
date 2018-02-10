@@ -34,7 +34,6 @@ import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
-import javelin.model.state.Meld;
 import javelin.model.unit.Conditions;
 import javelin.model.unit.CurrentAttack;
 import javelin.model.unit.Monster;
@@ -330,16 +329,8 @@ public class Combatant implements Serializable, Cloneable {
 		}
 		hp -= damage;
 		if (hp <= 0) {
-			die(s);
+			Javelin.app.fight.die(this);
 		}
-	}
-
-	public void die(BattleState s) {
-		if (Javelin.app.fight.meld || Meld.DEBUG) {
-			Javelin.app.fight.addmeld(location[0], location[1], this, s);
-		}
-		s.remove(this);
-		s.dead.add(this);
 	}
 
 	public CurrentAttack getcurrentattack(List<AttackSequence> attacktype) {
@@ -394,13 +385,16 @@ public class Combatant implements Serializable, Cloneable {
 	 * padded to the user and that normal initiative works in 5% steps and
 	 * normal actions don't usually go finer than 10% AP cost, this is entirely
 	 * harmless when it comes to game balance.
+	 * 
+	 * If you want an unit to enter battle mid-way, you can set a starting value
+	 * to {@link #ap} representing the current point in time and then call this
+	 * method.
 	 */
 	public void rollinitiative() {
-		ap = -(RPG.r(1, 20) + source.initiative) / 20f;
+		ap += -(RPG.r(1, 20) + source.initiative) / 20f;
 		ap += RPG.r(-444, +444) / 100000f;
 		initialap = ap;
 		lastrefresh = -Float.MAX_VALUE;
-
 	}
 
 	public int getnumericstatus() {
@@ -983,4 +977,9 @@ public class Combatant implements Serializable, Cloneable {
 	public void act(BattleState s) {
 		// do nothing by default
 	}
+
+	public Point getlocation() {
+		return new Point(location[0], location[1]);
+	}
+
 }

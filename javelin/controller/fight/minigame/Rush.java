@@ -139,7 +139,7 @@ public class Rush extends Minigame {
 	}
 
 	@Override
-	public void checkendbattle() {
+	public void checkend() {
 		if (Fight.state.redTeam.isEmpty()) {
 			throw new EndBattle();
 		}

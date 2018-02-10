@@ -67,9 +67,16 @@ public abstract class Terrain implements Serializable {
 	public static final Terrain MARSH = new Marsh();
 	/** Represent {@link Dungeon}s and {@link Mine}s. */
 	public static final Terrain UNDERGROUND = new Underground();
-	/** All terrain types except {@link #UNDERGROUND}. */
+
+	/** All terrain types. */
 	public static final Terrain[] ALL = new Terrain[] { PLAIN, HILL, FOREST,
-			WATER, MOUNTAINS, DESERT, MARSH, WATER };
+			WATER, MOUNTAINS, DESERT, MARSH, UNDERGROUND, WATER };
+	/** All terrain types except {@link #UNDERGROUND}. */
+	public static final Terrain[] NONUNDERGROUND = new Terrain[] { PLAIN, HILL,
+			FOREST, WATER, MOUNTAINS, DESERT, MARSH, WATER };
+	/** All terrain types except {@link #water}. */
+	public static final Terrain[] NONWATER = new Terrain[] { PLAIN, HILL,
+			FOREST, WATER, MOUNTAINS, DESERT, MARSH, UNDERGROUND };
 
 	/**
 	 * Encounter level adjustment.

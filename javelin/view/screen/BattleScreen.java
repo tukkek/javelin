@@ -196,6 +196,7 @@ public class BattleScreen extends Screen {
 			block();
 		} finally {
 			Javelin.app.fight.endturn();
+			Javelin.app.fight.checkend();
 		}
 	}
 

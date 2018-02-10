@@ -545,12 +545,12 @@ public abstract class Fight {
 		// nothing
 	}
 
-	public void die(Combatant c) {
+	public void die(Combatant c, BattleState s) {
 		if (meld || Meld.DEBUG) {
-			addmeld(c.location[0], c.location[1], c, state);
+			addmeld(c.location[0], c.location[1], c, s);
 		}
-		state.remove(c);
-		state.dead.add(c);
+		s.remove(c);
+		s.dead.add(c);
 	}
 
 }

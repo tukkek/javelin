@@ -329,7 +329,7 @@ public class Combatant implements Serializable, Cloneable {
 		}
 		hp -= damage;
 		if (hp <= 0) {
-			Javelin.app.fight.die(this);
+			Javelin.app.fight.die(this, s);
 		}
 	}
 
@@ -391,7 +391,7 @@ public class Combatant implements Serializable, Cloneable {
 	 * method.
 	 */
 	public void rollinitiative() {
-		ap += -(RPG.r(1, 20) + source.initiative) / 20f;
+		ap = -(RPG.r(1, 20) + source.initiative) / 20f;
 		ap += RPG.r(-444, +444) / 100000f;
 		initialap = ap;
 		lastrefresh = -Float.MAX_VALUE;

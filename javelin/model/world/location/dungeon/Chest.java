@@ -5,7 +5,6 @@ import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.Key;
 import javelin.model.unit.Squad;
-import javelin.model.world.location.Portal;
 import javelin.model.world.location.unique.Haxor;
 import javelin.view.screen.town.PurchaseScreen;
 
@@ -49,7 +48,6 @@ public class Chest extends Feature {
 					+ "!";
 			Javelin.message(message, true);
 			key.grab();
-			Portal.opensafe();
 		} else if (!items.isEmpty()) {
 			String message = "Party receives " + items + "!";
 			int quantity = items.size();

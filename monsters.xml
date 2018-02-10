@@ -37998,6 +37998,37 @@ second. After that, will try to flank the enemy with the aid of others.</p>
 </Combat>
 </Description>
 </Monster>
+<Monster id="building" passive="true">
+<Name>Building</Name>
+<Avatar Image=""></Avatar>
+<StatBlock>
+  <SizeAndType Size="large" Type="construct">Large construct</SizeAndType>
+  <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="0">0d0+0 (0)</HitDice>
+  <Initiative>-5 (Dex)</Initiative>
+  <Speed>0 ft.</Speed>
+  <ArmorClass>3  (-5 dexterity, -2 immobile)</ArmorClass>
+  <Attacks></Attacks>
+  <Damage></Damage>
+  <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
+  <Saves Fort="-20" Ref="-20" Will="-20">Fort -20, Ref -20, Will -20</Saves>
+  <Abilities Str="1" Dex="1" Con="1" Int="0" Wis="1" Cha="1">Str 0, Dex 0, Con 0, Int 0, Wis 0, Cha 1</Abilities>
+  <Skills></Skills>
+  <Feats></Feats>
+  <ClimateAndTerrain Climate="all" Terrain="">Usually found in towns.</ClimateAndTerrain>
+  <Organization>0</Organization> <!-- internal -->
+  <ChallengeRating Value="0">0</ChallengeRating>
+  <Treasure>None</Treasure>
+  <Alignment>Always neutral</Alignment>
+  <Advancement>None</Advancement>
+</StatBlock>
+<Description>
+<General><p>This is a building. It probably has a door and some windows.</p></General>
+<Combat>
+<p>Building tend to have a lot of hit points and damage reduction. Some can repair themselves over time.</p>
+<p>They don't do much besides just stand there, looking pretty.</p>
+</Combat>
+</Description>
+</Monster>
 
 </Monsters>
 </d20xml>

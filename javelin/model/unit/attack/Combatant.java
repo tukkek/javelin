@@ -972,4 +972,15 @@ public class Combatant implements Serializable, Cloneable {
 			f.postupgradeautomatic(this);
 		}
 	}
+
+	/**
+	 * Passive {@link Monster}s don't rely on BattleAi, and use this instead.
+	 * 
+	 * @see Monster#passive.
+	 * 
+	 * @return Outcomes.
+	 */
+	public void act(BattleState s) {
+		// do nothing by default
+	}
 }

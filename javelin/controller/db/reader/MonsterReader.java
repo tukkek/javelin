@@ -81,6 +81,11 @@ public class MonsterReader extends DefaultHandler {
 			if (disabled != null && disabled.equals("true")) {
 				errorhandler.setInvalid("disabled");
 			}
+			String passive = attributes.getValue("passive");
+			monster.passive = passive != null && Boolean.parseBoolean(passive);
+			if (monster.passive) {
+				monster.challengerating = 0f;
+			}
 		} else if ("feats".equals(localName.toLowerCase())) {
 			section = "Feats";
 		} else if (localName.equals("Skills")) {
@@ -357,6 +362,9 @@ public class MonsterReader extends DefaultHandler {
 		postprocessspells();
 		int nMonsters = 0;
 		for (Monster m : Javelin.ALLMONSTERS) {
+			if (m.passive) {
+				continue;
+			}
 			List<Monster> list = Javelin.MONSTERSBYCR.get(m.challengerating);
 			if (list == null) {
 				list = new ArrayList<Monster>();

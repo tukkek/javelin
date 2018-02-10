@@ -2,7 +2,9 @@ package javelin.controller.action.world.minigame;
 
 import java.awt.event.KeyEvent;
 
-import javelin.model.world.location.unique.minigame.Arena;
+import javelin.Javelin;
+import javelin.controller.exception.battle.StartBattle;
+import javelin.controller.fight.minigame.ArenaFight;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -11,6 +13,8 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class EnterArena extends EnterMinigame {
+	private static final String PROMPT = "Start an arena match?\n\nPress ENTER start or any other key to cancel...";
+
 	/** Constructor. */
 	public EnterArena() {
 		super("Arena (mini-game)", new int[] { KeyEvent.VK_A },
@@ -20,6 +24,8 @@ public class EnterArena extends EnterMinigame {
 	@Override
 	public void perform(WorldScreen screen) {
 		super.perform(screen);
-		Arena.get().interact();
+		if (Javelin.DEBUG || Javelin.prompt(PROMPT) == '\n') {
+			throw new StartBattle(new ArenaFight());
+		}
 	}
 }

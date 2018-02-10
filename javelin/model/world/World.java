@@ -53,7 +53,7 @@ public class World implements Serializable {
 	/**
 	 * Intermediary for {@link WorldTile} while loading.
 	 * 
-	 * TODO clean?
+	 * TODO remove
 	 * 
 	 * @see Tile#discovered
 	 */

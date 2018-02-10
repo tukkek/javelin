@@ -135,6 +135,10 @@ public class BattleState implements Node, TeamContainer {
 				next = c;
 			}
 		}
+		if (next.source.passive) {
+			next.act(this);
+			next();
+		}
 	}
 
 	@Override
@@ -184,9 +188,6 @@ public class BattleState implements Node, TeamContainer {
 		return redTeam;
 	}
 
-	/**
-	 * @see BattleState#clone(Combatant)
-	 */
 	public Combatant clone(Combatant c) {
 		final ArrayList<Combatant> team = getteam(c);
 		final int index = team.indexOf(c);

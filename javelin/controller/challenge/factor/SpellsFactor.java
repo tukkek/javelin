@@ -144,7 +144,10 @@ public class SpellsFactor extends CrFactor {
 	 */
 	static public void init() {
 		for (Monster m : Javelin.ALLMONSTERS) {
-			UpgradeHandler.singleton.schoolsummoning.add(new Summon(m.name, 1));
+			if (!m.passive) {
+				UpgradeHandler.singleton.schoolsummoning
+						.add(new Summon(m.name, 1));
+			}
 		}
 	}
 }

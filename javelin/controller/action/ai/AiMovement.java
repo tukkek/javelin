@@ -2,6 +2,7 @@ package javelin.controller.action.ai;
 
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -60,6 +61,9 @@ public class AiMovement extends Action implements AiAction {
 
 	@Override
 	public List<List<ChanceNode>> getoutcomes(Combatant c, BattleState s) {
+		if (c.source.gettopspeed() == 0) {
+			return Collections.emptyList();
+		}
 		HashSet<Point> destinations = getdestinations(c, s);
 		ArrayList<List<ChanceNode>> outcomes = new ArrayList<List<ChanceNode>>(
 				Math.min(destinations.size(), MOVES));

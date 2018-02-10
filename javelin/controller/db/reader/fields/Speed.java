@@ -45,8 +45,7 @@ public class Speed extends FieldReader {
 				speedType = speedType.replaceAll("\\(", " \\(");
 			}
 			if (speedType.contains("climb ")) {
-				// speed.setClimb(Long.parseLong(speedType.replace("climb ",
-				// "")));
+				// ignore
 			} else if (speedType.contains("fly ")) {
 				final String maneuverability = speedType.substring(
 						speedType.indexOf("(") + 1, speedType.indexOf(")"));
@@ -63,9 +62,6 @@ public class Speed extends FieldReader {
 			} else {
 				m.walk = Integer.parseInt(reader.cleanArmor(speedType));
 			}
-		}
-		if (m.fly == 0 && m.walk == 0) {
-			reader.errorhandler.setInvalid("Cannot move out of water!");
 		}
 		if (m.fly > 0) {
 			m.walk = 0;

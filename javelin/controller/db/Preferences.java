@@ -22,7 +22,6 @@ import javelin.model.world.Actor;
 import javelin.model.world.Season;
 import javelin.model.world.World;
 import javelin.model.world.location.unique.Haxor;
-import javelin.model.world.location.unique.minigame.Arena;
 import javelin.view.KeysScreen;
 import javelin.view.frame.keys.BattleKeysScreen;
 import javelin.view.frame.keys.PreferencesScreen;
@@ -100,10 +99,6 @@ public class Preferences {
 	public static Integer DEBUGRUBIES;
 	/** Debug option. */
 	public static boolean DEBUGLABOR;
-	/** Debug option. */
-	public static Integer DEBUGCOINS;
-	// /** Debug option. */
-	// public static boolean DEBUGCLEARGARRISON;
 	/** Debug option. */
 	public static String DEBUGFOE;
 	/** Debug option. */
@@ -265,7 +260,6 @@ public class Preferences {
 		DEBUGRUBIES = javelin.controller.db.Preferences
 				.getinteger("cheat.rubies", null);
 		DEBUGLABOR = getboolean("cheat.labor");
-		DEBUGCOINS = getinteger("cheat.coins", null);
 		DEBUGFOE = getstring("cheat.monster");
 		DEBUGPERIOD = getstring("cheat.period");
 		DEBUGMAPTYPE = getstring("cheat.map");
@@ -298,17 +292,6 @@ public class Preferences {
 		if (DEBUGRUBIES != null && Haxor.singleton != null) {
 			Haxor.singleton.rubies = DEBUGRUBIES;
 		}
-		if (DEBUGCOINS != null && Arena.get() != null) {
-			Arena.get().coins = DEBUGCOINS;
-		}
-		// if (DEBUGLABOR != null) {
-		// for (WorldActor a : Town.getall(Town.class)) {
-		// Town t = (Town) a;
-		// if (!t.ishostile()) {
-		// t.turn(time, screen);
-		// }
-		// }
-		// }
 		if (DEBUGWEATHER != null) {
 			DEBUGWEATHER = DEBUGWEATHER.toLowerCase();
 			Weather.read(0); // tests cheat.weather value

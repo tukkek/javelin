@@ -85,17 +85,20 @@ public class CrCalculator {
 	 * 
 	 * Will also update {@link Monster#challengerating}.
 	 * 
-	 * @param monster
+	 * @param m
 	 *            Unit to rate.
 	 * @return The calculated CR.
 	 */
-	static public float calculatecr(final Monster monster) {
-		float[] r = calculaterawcr(monster);
+	static public float calculatecr(final Monster m) {
+		if (m.passive) {
+			return 0;
+		}
+		float[] r = calculaterawcr(m);
 		float goldenrule = r[1];
 		float base = goldenrule >= 4 ? Math.round(goldenrule)
 				: roundfraction(goldenrule);
 		float cr = translatecr(base);
-		monster.challengerating = cr;
+		m.challengerating = cr;
 		log(" total: " + r[0] + " golden rule: " + goldenrule + " final: " + cr
 				+ "\n");
 		return cr;
@@ -106,17 +109,20 @@ public class CrCalculator {
 	 * {@link #roundfraction(float)} or {@link #translatecr(float)}, making it
 	 * more suitable for more precise calculations.
 	 * 
-	 * @param monster
+	 * @param m
 	 *            Unit whose CR is to be calculated.
 	 * @return An array where index 0 is the sum of all {@link #CR_FACTORS} and
 	 *         1 is the same after the golden rule has been applied.
 	 */
-	public static float[] calculaterawcr(final Monster monster) {
-		log(monster.toString());
+	public static float[] calculaterawcr(final Monster m) {
+		if (m.passive) {
+			return new float[] { 0, 0 };
+		}
+		log(m.toString());
 		final TreeMap<CrFactor, Float> factorHistory = new TreeMap<CrFactor, Float>();
 		float cr = 0;
 		for (final CrFactor f : CR_FACTORS) {
-			final float result = f.calculate(monster);
+			final float result = f.calculate(m);
 			if (log != null) {
 				log(" " + f + ": " + result);
 			}
@@ -480,7 +486,7 @@ public class CrCalculator {
 		throw new RuntimeException("Expand EL conversion: " + cr);
 	}
 
-	public static float calculatepositive(final List<Combatant> group) {
+	public static float calculatepositiveel(final List<Combatant> group) {
 		return calculateel(group) + Math.abs(MINIMUM_EL) + 1;
 	}
 

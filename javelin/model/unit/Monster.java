@@ -290,6 +290,12 @@ public class Monster implements Cloneable, Serializable {
 	 * {@link ClassLevelUpgrade} isn't enough to bring it to a new digit.
 	 */
 	public float babpartial;
+	/**
+	 * A passive combatant represents something other than a {@link Monster}.
+	 * They usually don't act (at least in the normal sense) and have zero
+	 * Challenge Rating.
+	 */
+	public boolean passive = false;
 
 	@Override
 	public Monster clone() {

@@ -208,9 +208,6 @@ public class Portal extends Location {
 		}
 	}
 
-	/**
-	 * @return
-	 */
 	public static Portal open() {
 		ArrayList<Actor> towns = World.getall(Town.class);
 		Actor from = RPG.pick(towns);

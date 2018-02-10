@@ -1,175 +1,183 @@
 package javelin.controller.fight.minigame;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.Weather;
-import javelin.controller.challenge.CrCalculator;
-import javelin.controller.db.StateManager;
 import javelin.controller.fight.Fight;
+import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.map.Map;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
-import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
-import javelin.model.state.BattleState.Vision;
-import javelin.model.state.Meld;
+import javelin.model.state.BattleState;
+import javelin.model.state.Square;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.unique.minigame.Arena;
-import javelin.view.frame.arena.ArenaSetup;
-import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
- * Fight for the {@link Arena}, using it's gladiators instead of the active
- * {@link Squad}.
+ * @see Arena
  * 
  * @author alex
  */
 public class ArenaFight extends Minigame {
-	/**
-	 * {@link Arena#gladiators} and temporary allies.
-	 * 
-	 * @see ArenaSetup
-	 */
-	public ArrayList<Combatant> blueteam = new ArrayList<Combatant>();
-	/** Enemies. */
-	public ArrayList<Combatant> redteam = null;
-	/** Number of {@link Meld} to place at the start of battle. */
-	public int nmeld = 0;
-	/** Double or nothing bet. */
-	public int bet = 0;
+	static final int BOOST = 13;
+	static final int MAPSIZE = 28;
+
+	class ArenaSetup extends BattleSetup {
+		@Override
+		public void generatemap(Fight f) {
+			f.map = Map.random();
+			super.generatemap(f);
+			Square[][] map = f.map.map;
+			f.map.map = new Square[MAPSIZE][];
+			Fight.state.map = f.map.map;
+			for (int i = 0; i < MAPSIZE; i++) {
+				f.map.map[i] = Arrays.copyOfRange(map[i], 0, MAPSIZE);
+			}
+			for (int x = 0; x < MAPSIZE; x++) {
+				for (int y = 0; y < MAPSIZE; y++) {
+					if (x == 0 || x == MAPSIZE - 1 || y == 0
+							|| y == MAPSIZE - 1) {
+						f.map.map[x][y].blocked = true;
+					}
+				}
+			}
+		}
+
+		@Override
+		public void place() {
+			Building b = new Building("locationinn");
+			b.setlocation(
+					new Point(RPG.r(map.map.length), RPG.r(map.map[0].length)));
+			state.redTeam.add(b);
+		}
+	}
+
+	static BuildingLevel[] BUILDINGLEVELS = new BuildingLevel[] {
+			new BuildingLevel(0, 5, 70, 60, 5, 0),
+			new BuildingLevel(1, 10, 110, 90, 7, 7500 * BOOST),
+			new BuildingLevel(2, 15, 240, 180, 8, 25000 * BOOST),
+			new BuildingLevel(3, 20, 600, 540, 8, 60000 * BOOST), };
+
+	static class BuildingLevel {
+		int level;
+		int repair;
+		int hp;
+		int damagethresold;
+		int hardness;
+		int cost;
+
+		public BuildingLevel(int level, int repair, int hp, int damagethresold,
+				int hardness, int cost) {
+			super();
+			this.level = level;
+			this.repair = repair;
+			this.hp = hp;
+			this.damagethresold = damagethresold;
+			this.hardness = hardness;
+			this.cost = cost;
+		}
+	}
+
+	class Building extends Combatant {
+		int level;
+		int damagethresold;
+
+		public Building(String avatar) {
+			super(Javelin.getmonster("Building"), false);
+			source.passive = true;
+			source.avatarfile = avatar;
+			source.immunitytocritical = true;
+			source.immunitytomind = true;
+			source.immunitytoparalysis = true;
+			source.immunitytopoison = true;
+			setlevel(BUILDINGLEVELS[0]);
+		}
+
+		void setlevel(BuildingLevel level) {
+			this.level = level.level;
+			maxhp = level.hp;
+			hp = maxhp;
+			damagethresold = level.damagethresold;
+			source.dr = level.hardness;
+			source.fasthealing = level.repair;
+		}
+
+		void upgrade() {
+			setlevel(BUILDINGLEVELS[level + 1]);
+		}
+
+		/** TODO use */
+		Integer getupgradecost() {
+			int next = level + 1;
+			return next < BUILDINGLEVELS.length ? BUILDINGLEVELS[next].cost
+					: null;
+		}
+
+		@Override
+		public void act(BattleState s) {
+			s.clone(this).ap += 1;
+		}
+	}
+
+	/** {@link Item} bag for {@link #gladiators}. */
+	HashMap<Integer, ArrayList<Item>> items = new HashMap<Integer, ArrayList<Item>>();
 
 	/** Constructor. */
 	public ArenaFight() {
 		meld = true;
-		friendly = true;
-		friendlylevel = Combatant.STATUSINJURED;
-		weather = null;
-		period = null;
+		weather = Weather.DRY;
+		period = Javelin.PERIODNOON;
+		setup = new ArenaSetup();
 	}
 
 	@Override
-	public ArrayList<Combatant> getmonsters(Integer teamel) {
-		return redteam;
-	}
-
-	/**
-	 * @param gladiators
-	 *            Add clones to {@link #getblueteam()}.
-	 */
-	public void addgladiators(ArrayList<Combatant> gladiators) {
-		for (Combatant gladiator : gladiators) {
-			blueteam.add(gladiator.clone().clonesource());
-		}
-	}
-
-	/** Fills up {@link #redteam} and unbound fields. */
-	public void generate() {
-		if (map == null) {
-			drawmap();
-		}
-		if (period == null) {
-			drawperiod();
-		}
-		if (weather == null) {
-			drawweather();
-		}
-		redteam = generate(CrCalculator.calculateel(blueteam));
-	}
-
-	/** Binds {@link Fight#weather}. */
-	public void drawweather() {
-		Integer original = weather;
-		while (weather == original) {
-			weather = RPG.r(Weather.DRY, Weather.STORM);
-		}
-	}
-
-	/** Binds {@link Fight#period}. */
-	public void drawperiod() {
-		String original = period;
-		while (period == original) {
-			period = RPG.pick(new String[] { Javelin.PERIODNOON,
-					Javelin.PERIODEVENING, Javelin.PERIODNIGHT });
-		}
-	}
-
-	@Override
-	public ArrayList<Terrain> getterrains() {
-		ArrayList<Terrain> terrains = new ArrayList<Terrain>(
-				Terrain.ALL.length);
-		for (Terrain t : Terrain.ALL) {
-			if (!t.equals(Terrain.WATER)) {
-				terrains.add(t);
-			}
-		}
-		terrains.add(Terrain.UNDERGROUND);
-		return terrains;
+	public ArrayList<Combatant> generate(Integer el) {
+		// if (map == null) {
+		// drawmap();
+		// }
+		// if (period == null) {
+		// drawperiod();
+		// }
+		// if (weather == null) {
+		// drawweather();
+		// }
+		// redteam = generate(CrCalculator.calculateel(blueteam));
+		return new ArrayList<Combatant>();
 	}
 
 	@Override
 	public ArrayList<Combatant> getblueteam() {
-		return blueteam;
+		return Squad.active.members; // TODO
 	}
 
 	@Override
 	public boolean onend() {
-		Arena arena = Arena.get();
-		for (Combatant dead : Fight.state.dead) {
-			if (dead.getnumericstatus() == Combatant.STATUSDEAD) {
-				arena.gladiators.remove(dead);
-			}
-		}
-		String result = "";
-		if (victory) {
-			result += "You won " + (bet + 1) + " coins!\n";
-			arena.coins += (bet + 1);
-		} else if (bet > 0) {
-			result += "You lost " + bet + " coins...\n";
-			arena.coins -= bet;
-		}
-		Game.messagepanel.clear();
-		Game.message("Your bet was " + bet + " coins.\n" + result
-				+ "Press any key to continue...", Delay.BLOCK);
-		BattleScreen.active.getUserInput();
-		StateManager.save(true, StateManager.SAVEFILE);
+		// TODO
 		return false;
 	}
 
 	@Override
-	public ArrayList<Item> getbag(Combatant combatant) {
-		return Arena.get().getitems(combatant);
+	public ArrayList<Item> getbag(Combatant c) {
+		ArrayList<Item> bag = items.get(c.id);
+		if (bag == null) {
+			bag = new ArrayList<Item>();
+			items.put(c.id, bag);
+		}
+		return bag;
 	}
 
 	@Override
 	public void ready() {
-		meldplacement: while (nmeld > 0) {
-			Point p = new Point(RPG.r(0, map.map.length - 1),
-					RPG.r(0, map.map[0].length - 1));
-			if (map.map[p.x][p.y].blocked
-					|| Fight.state.getcombatant(p.x, p.y) != null) {
-				continue;
-			}
-			for (Combatant c : Fight.state.getcombatants()) {
-				if (Fight.state.haslineofsight(c, p) == Vision.CLEAR) {
-					Fight.state.meld
-							.add(new Meld(p.x, p.y, -Float.MAX_VALUE, null));
-					nmeld -= 1;
-					continue meldplacement;
-				}
-			}
-		}
 	}
 
-	/** Binds {@link Fight#map}. */
-	public void drawmap() {
-		Map map = null;
-		while (map == null || (this.map != null && map.equals(this.map))) {
-			map = Map.random();
-		}
-		this.map = map;
+	@Override
+	public ArrayList<Combatant> getmonsters(Integer teamel) {
+		return null;
 	}
+
 }

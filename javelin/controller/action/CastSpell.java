@@ -157,7 +157,7 @@ public class CastSpell extends Fire implements AiAction {
 		if (savedc == Integer.MAX_VALUE) {
 			return 0;
 		}
-		if (savedc == Integer.MIN_VALUE) {
+		if (savedc == -Integer.MAX_VALUE) {
 			return 1;
 		}
 		return 1 - bind(savedc / 20f);

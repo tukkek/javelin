@@ -8,6 +8,7 @@ import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.Preferences;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.exception.GaveUpException;
+import javelin.controller.fight.Fight;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -140,15 +141,12 @@ public class EncounterGenerator {
 	 */
 	public static int getmaxenemynumber() {
 		int current = 4;
-		if (Javelin.app.fight == null) {
+		if (Fight.state == null) {
 			if (Squad.active != null) {
 				current = Squad.active.members.size();
 			}
-		} else {
-			ArrayList<Combatant> squad = Javelin.app.fight.getblueteam();
-			if (squad != null && !squad.isEmpty()) {
-				current = squad.size();
-			}
+		} else if (!Fight.state.blueTeam.isEmpty()) {
+			current = Fight.state.blueTeam.size();
 		}
 		return MAXSIZEDIFFERENCE + current;
 	}

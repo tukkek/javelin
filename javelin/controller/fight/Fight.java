@@ -503,6 +503,11 @@ public abstract class Fight {
 	 *            Active screen.
 	 */
 	public void withdraw(Combatant combatant, BattleScreen screen) {
+		if (!canflee) {
+			Game.message("Cannot flee!", Delay.BLOCK);
+			BattleScreen.active.block();
+			throw new RepeatTurn();
+		}
 		if (Javelin.DEBUG) {
 			withdrawall();
 		}

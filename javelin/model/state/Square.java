@@ -33,4 +33,10 @@ public class Square {
 		}
 		return " ";
 	}
+
+	public void clear() {
+		blocked = false;
+		obstructed = false;
+		flooded = false;
+	}
 }

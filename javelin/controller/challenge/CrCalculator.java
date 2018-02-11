@@ -91,7 +91,7 @@ public class CrCalculator {
 	 */
 	static public float calculatecr(final Monster m) {
 		if (m.passive) {
-			return 0;
+			return m.challengerating;
 		}
 		float[] r = calculaterawcr(m);
 		float goldenrule = r[1];
@@ -116,7 +116,7 @@ public class CrCalculator {
 	 */
 	public static float[] calculaterawcr(final Monster m) {
 		if (m.passive) {
-			return new float[] { 0, 0 };
+			return new float[] { m.challengerating, m.challengerating };
 		}
 		log(m.toString());
 		final TreeMap<CrFactor, Float> factorHistory = new TreeMap<CrFactor, Float>();

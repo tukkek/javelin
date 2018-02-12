@@ -1,6 +1,7 @@
 package javelin.controller.action.world;
 
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
 
 import javelin.Javelin;
 import javelin.controller.exception.RepeatTurn;
@@ -17,6 +18,30 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class Camp extends WorldAction {
+	static final boolean DEBUG = Javelin.DEBUG && false;
+
+	static final String PROMPT = "Are you sure you want to try to set up camp in this wild area?\n"
+			+ "Monsters may interrupt you.\n\n"
+			+ "Press c to set camp, w to camp for a week or any other key to cancel...";
+	static final String PROMPTDEBUG = "DEBUG CAMP\n"
+			+ "(c)amp (d)ay (w)eek (m)onth (s)eason (y)ear?";
+	static final String INSIDETOWN = "Cannot camp inside a town's district!\n"
+			+ "Try moving further into the wilderness.\n";
+
+	static final HashMap<Character, int[]> PERIODS = new HashMap<Character, int[]>();
+
+	static {
+		final int day = 24;
+		PERIODS.put('c', new int[] { 8, 2 });
+		PERIODS.put('w', new int[] { 7 * day, 12 });
+		if (DEBUG) {
+			PERIODS.put('d', new int[] { 1 * day, 12 });
+			PERIODS.put('m', new int[] { 30 * day, 12 });
+			PERIODS.put('s', new int[] { 100 * day, 12 });
+			PERIODS.put('y', new int[] { 400 * day, 12 });
+		}
+	}
+
 	/** Constructor. */
 	public Camp() {
 		super("Camp", new int[] { KeyEvent.VK_C }, new String[] { "c" });
@@ -30,21 +55,11 @@ public class Camp extends WorldAction {
 		Town t = (Town) Squad.active.findnearest(Town.class);
 		if (t != null && t.getdistrict().getarea()
 				.contains(Squad.active.getlocation())) {
-			Javelin.message(
-					"Cannot camp inside a town's district!\n"
-							+ "Try moving further into the wilderness.\n",
-					false);
+			Javelin.message(INSIDETOWN, false);
 			return;
 		}
-		String prompt = "Are you sure you want to try to set up camp in this wild area?\n"
-				+ "Monsters may interrupt you.\n\n"
-				+ "Press c to set camp, w to camp for a week or any other key to cancel...";
-		if (Javelin.DEBUG) {
-			prompt = "DEBUG CAMP\n"
-					+ "(c)amp (d)ay (w)eek (m)onth (s)eason (y)ear?";
-		}
-		Character input = Javelin.prompt(prompt);
-		int[] period = pickperiod(input);
+		int[] period = PERIODS
+				.get(Javelin.prompt(DEBUG ? PROMPTDEBUG : PROMPT));
 		if (period == null) {
 			return;
 		}
@@ -69,27 +84,5 @@ public class Camp extends WorldAction {
 		}
 		Squad.active.quickheal();
 		return true;
-	}
-
-	int[] pickperiod(Character input) {
-		if (input == 'c') {
-			return new int[] { 8, 2 };
-		}
-		if (input == 'd' && Javelin.DEBUG) {
-			return new int[] { 24, 12 };
-		}
-		if (input == 'w') {
-			return new int[] { 24 * 7, 12 };
-		}
-		if (input == 'm' && Javelin.DEBUG) {
-			return new int[] { 24 * 30, 12 };
-		}
-		if (input == 's' && Javelin.DEBUG) {
-			return new int[] { 24 * 100, 12 };
-		}
-		if (input == 'y' && Javelin.DEBUG) {
-			return new int[] { 24 * 400, 12 };
-		}
-		return null;
 	}
 }

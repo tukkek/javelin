@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.prefs.Preferences;
@@ -372,28 +371,8 @@ public class Javelin {
 	}
 
 	/**
-	 * 2 chances of an easy encounter, 10 chances of a moderate encounter, 4
-	 * chances of a difficult encounter and 1 chance of an overwhelming
-	 * encounter
-	 */
-	public static Integer randomdifficulty() {
-		final LinkedList<Integer> elchoices = new LinkedList<Integer>();
-		for (int j = 0; j < 2; j++) {
-			elchoices.add(RPG.r(-5, -8));
-		}
-		for (int j = 0; j < 10; j++) {
-			elchoices.add(-4);
-		}
-		for (int j = -3; j <= 0; j++) {
-			elchoices.add(j);
-		}
-		elchoices.add(1);
-		return RPG.pick(elchoices);
-	}
-
-	/**
 	 * Utility function for user-input selection.
-	 * 
+	 *
 	 * TODO due to the UI being poor, if this method runs out of alphanumeric
 	 * characters to use, it will display more choices but not allow the player
 	 * to actually select them.

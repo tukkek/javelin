@@ -76,8 +76,8 @@ public abstract class Template implements Cloneable {
 	@Override
 	public String toString() {
 		String s = "";
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
+		for (int y = height - 1; y >= 0; y--) {
+			for (int x = 0; x < width; x++) {
 				s += tiles[x][y];
 			}
 			s += "\n";
@@ -139,7 +139,7 @@ public abstract class Template implements Cloneable {
 		ArrayList<Point> doors = d.getborder(this);
 		Collections.shuffle(doors);
 		for (Point door : doors) {
-			if (tiles[door.x - d.delta.x][door.y - d.delta.y] == FLOOR) {
+			if (tiles[door.x + d.reverse.x][door.y + d.reverse.y] == FLOOR) {
 				return door;
 			}
 		}

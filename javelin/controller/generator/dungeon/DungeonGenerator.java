@@ -1,10 +1,11 @@
 package javelin.controller.generator.dungeon;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 
 import javelin.controller.db.Preferences;
+import javelin.controller.generator.dungeon.tables.ConnectionTable;
 import javelin.controller.generator.dungeon.template.Irregular;
 import javelin.controller.generator.dungeon.template.Template;
 
@@ -16,20 +17,31 @@ public class DungeonGenerator {
 	 */
 	static final int PERMUTATIONS = 10;
 
-	ArrayList<Template> pool = new ArrayList<Template>();
+	LinkedList<Template> pool = new LinkedList<Template>();
+	ConnectionTable connections = new ConnectionTable();
+	VirtualMap map = new VirtualMap();
 	String log = "";
 
 	public DungeonGenerator() {
+		generatepool();
+		draw(pool.pop());
+		// log = pool.pop().toString();
+		write();
+	}
+
+	void draw(Template root) {
+		map.draw(root, 0, 0);
+		log += root.toString() + "\n";
+		log += map.toString() + "\n";
+	}
+
+	void generatepool() {
 		for (Template t : TEMPLATES) {
 			for (int i = 0; i < PERMUTATIONS; i++) {
 				pool.add(t.create());
 			}
 		}
 		Collections.shuffle(pool);
-		for (Template t : pool) {
-			log += t + "\n";
-		}
-		write();
 	}
 
 	void write() { // debug

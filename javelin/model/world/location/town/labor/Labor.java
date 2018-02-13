@@ -2,6 +2,7 @@ package javelin.model.world.location.town.labor;
 
 import java.io.Serializable;
 
+import javelin.Javelin;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
@@ -116,8 +117,18 @@ public abstract class Labor implements Serializable, Cloneable {
 	public void work(float step) {
 		progress += step;
 		if (progress >= cost) {
-			done();
-			cancel();
+			ready();
+		}
+	}
+
+	/** Calls {@link #done()} and cleans up. */
+	protected void ready() {
+		done();
+		cancel();
+		if (!town.ishostile()) {
+			WorldScreen.current.update();
+			WorldScreen.current.centerscreen(town.x, town.y);
+			Javelin.message(name + ", finished on " + town + "!", false);
 		}
 	}
 

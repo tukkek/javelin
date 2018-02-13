@@ -7,8 +7,8 @@ import java.util.Comparator;
 import javelin.controller.Point;
 import javelin.controller.comparator.DistanceComparator;
 import javelin.controller.terrain.Terrain;
-import javelin.model.world.World;
 import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Portal;
 import javelin.model.world.location.town.District;
@@ -129,8 +129,7 @@ public class BuildRoad extends Labor {
 					|| to.distanceinsteps(step.x, step.y) >= currentdistance) {
 				return false;
 			}
-			final Actor location = World.get(step.x, step.y,
-					locations);
+			final Actor location = World.get(step.x, step.y, locations);
 			return location == null || location == to;
 		}
 	}
@@ -226,8 +225,7 @@ public class BuildRoad extends Labor {
 				return false;
 			}
 		}
-		if (target == null
-				|| World.get(target.x, target.y, Town.class) == null
+		if (target == null || World.get(target.x, target.y, Town.class) == null
 				|| getpath(target) == null || pathcomplete(target)) {
 			return false;
 		}
@@ -240,8 +238,7 @@ public class BuildRoad extends Labor {
 		progress += step;
 		Point p = currenttile(target);
 		if (p == null) {
-			done();
-			cancel();
+			ready();
 			return;
 		}
 		float cost = getcost(p);

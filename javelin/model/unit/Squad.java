@@ -674,8 +674,11 @@ public class Squad extends Actor implements Cloneable {
 	 * @see Squad#perceive(boolean)
 	 */
 	public void view(int vision) {
-		Outpost.discover(Squad.active.x, Squad.active.y,
-				Math.round(Math.round(Math.floor(vision / 5f))));
+		int radius = Math.round(Math.round(Math.floor(vision / 5f)));
+		if (radius < 1) {
+			radius = 1;
+		}
+		Outpost.discover(Squad.active.x, Squad.active.y, radius);
 	}
 
 	@Override

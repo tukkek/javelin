@@ -1,9 +1,11 @@
 package javelin.controller.action.world;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.Point;
 import javelin.controller.WorldGenerator;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.terrain.Terrain;
@@ -165,21 +167,17 @@ public class Divide extends WorldAction {
 	}
 
 	Actor findtown(int xp, int yp) {
-		ArrayList<Town> near = new ArrayList<Town>();
-		for (int x = xp - 1; x <= xp + 1; x++) {
-			for (int y = yp - 1; y <= yp + 1; y++) {
-				near.add((Town) World.get(x, y, Town.class));
+		for (Town t : Town.gettowns()) {
+			HashSet<Point> district = t.getdistrict().getarea();
+			for (int x = xp - 1; x <= xp + 1; x++) {
+				for (int y = yp - 1; y <= yp + 1; y++) {
+					if (district.contains(new Point(x, y))) {
+						return t;
+					}
+				}
 			}
 		}
-		if (near.isEmpty()) {
-			return null;
-		}
-		for (Town t : near) {
-			if (!t.ishostile()) {
-				return t;
-			}
-		}
-		return near.get(0);
+		return null;
 	}
 
 	static void clear() {

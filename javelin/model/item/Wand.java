@@ -63,7 +63,7 @@ public class Wand extends Item {
 	@Override
 	public Item clone() {
 		Wand clone = (Wand) super.clone();
-		recharge();
+		clone.recharge();
 		return clone;
 	}
 

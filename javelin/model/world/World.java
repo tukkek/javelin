@@ -164,7 +164,7 @@ public class World implements Serializable {
 	public static Actor get(int x, int y, List<? extends Actor> actors) {
 		final Location l = getlocation(x, y);
 		if (l != null) {
-			return l;
+			return actors.contains(l) ? l : null;
 		}
 		for (Actor a : actors) {
 			if (a.x == x && a.y == y) {
@@ -195,7 +195,7 @@ public class World implements Serializable {
 	public static Actor get(int x, int y, Class<? extends Actor> type) {
 		final Location l = getlocation(x, y);
 		if (l != null) {
-			return l;
+			return type.isInstance(l) ? l : null;
 		}
 		return World.get(x, y, World.getall(type));
 	}

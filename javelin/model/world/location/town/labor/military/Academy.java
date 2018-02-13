@@ -345,4 +345,9 @@ public abstract class Academy extends Fortification {
 			completetraining();
 		}
 	}
+
+	@Override
+	public boolean canupgrade() {
+		return super.canupgrade() && training.isempty();
+	}
 }

@@ -369,6 +369,9 @@ public class Town extends Location {
 		return distanceinsteps(p.x, p.y);
 	}
 
+	/**
+	 * @return All Points in the game World that are districts.
+	 */
 	public static HashSet<Point> getdistricts() {
 		HashSet<Point> districts = new HashSet<Point>();
 		for (Town t : Town.gettowns()) {

@@ -43,6 +43,7 @@ public class Campaign extends Scenario {
 		startingfeatures = size * size / 5;
 		simpletroves = false;
 		rewardbonus = 1;
+		randomrealms = false;
 		worlddistrict = false;
 	}
 

@@ -12,6 +12,7 @@ import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.WorldGenerator;
 import javelin.controller.action.world.WorldMove;
+import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.Map;
 import javelin.controller.map.Maps;
 import javelin.controller.terrain.hazard.Hazard;
@@ -453,7 +454,7 @@ public abstract class Terrain implements Serializable {
 	 * @return Encounter level for a fight taking place in this type of terrain.
 	 */
 	public Integer getel(int teamel) {
-		final int delta = Javelin.randomdifficulty() + Math.min(0, difficulty);
+		final int delta = EncounterGenerator.getdifficulty() + Math.min(0, difficulty);
 		return teamel + Math.min(delta, difficultycap);
 	}
 

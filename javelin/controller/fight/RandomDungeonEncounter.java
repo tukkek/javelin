@@ -2,7 +2,7 @@ package javelin.controller.fight;
 
 import java.util.ArrayList;
 
-import javelin.Javelin;
+import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.attack.Combatant;
 
@@ -20,7 +20,7 @@ public class RandomDungeonEncounter extends RandomEncounter {
 
 	@Override
 	public Integer getel(int teamel) {
-		return teamel + Javelin.randomdifficulty() + 1;
+		return teamel + EncounterGenerator.getdifficulty() + 1;
 	}
 
 	@Override

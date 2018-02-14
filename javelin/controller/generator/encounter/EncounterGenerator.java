@@ -18,17 +18,32 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * Generates an {@link Encounter}.
- * 
+ *
  * If I'm not mistaken when manually converting {@link Organization} data on
  * monster.xml to a parseable format I only included monster groups up to 16
  * strong - anything other than that for generated encounters will need to be
  * worked upon or done through other means than only this class.
- * 
+ *
  * @author alex
  */
 public class EncounterGenerator {
 	private static final int MAXSIZEDIFFERENCE = 5;
 	static final int MAXTRIES = 1000;
+
+	static final ArrayList<Integer> DIFFICULTIES = new ArrayList<Integer>(17);
+
+	static {
+		DIFFICULTIES.add(-6);
+		DIFFICULTIES.add(-5);
+		for (int i = 0; i < 10; i++) {
+			DIFFICULTIES.add(-4);
+		}
+		DIFFICULTIES.add(-3);
+		DIFFICULTIES.add(-2);
+		DIFFICULTIES.add(-1);
+		DIFFICULTIES.add(+0);
+		DIFFICULTIES.add(+1);
+	}
 
 	/**
 	 * @param el
@@ -132,7 +147,7 @@ public class EncounterGenerator {
 	/**
 	 * See {@link EncounterGenerator}'s main javadoc description for mote info
 	 * on enemy group size.
-	 * 
+	 *
 	 * @return The recommended number of enemies to face at most in one battle.
 	 *         Other modules may differ from this but this is a suggestion to
 	 *         avoid the computer player taking a long time to act while the
@@ -177,5 +192,16 @@ public class EncounterGenerator {
 		ArrayList<Terrain> terrains = new ArrayList<Terrain>();
 		terrains.add(terrain);
 		return generate(el, terrains);
+	}
+
+	/**
+	 * 2 chances of an easy encounter, 10 chances of a moderate encounter, 4
+	 * chances of a difficult encounter and 1 chance of an overwhelming
+	 * encounter
+	 *
+	 * @return The EL modifier (-6 to +1).
+	 */
+	public static int getdifficulty() {
+		return RPG.pick(DIFFICULTIES);
 	}
 }

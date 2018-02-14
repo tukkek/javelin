@@ -33,7 +33,7 @@ public class StaticTemplate extends Template {
 
 	}
 
-	public static final ArrayList<Template> CRAWL = new ArrayList<Template>();
+	public static final ArrayList<Template> STATIC = new ArrayList<Template>();
 	static final HashMap<Character, Character> TRANSLATE = new HashMap<Character, Character>();
 
 	static {
@@ -47,7 +47,7 @@ public class StaticTemplate extends Template {
 
 		ArrayList<File> files = new ArrayList<File>(300);
 		try {
-			Files.walkFileTree(Paths.get("maps/templates/crawl"),
+			Files.walkFileTree(Paths.get("maps/templates/"),
 					new TemplateReader(files));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -57,7 +57,7 @@ public class StaticTemplate extends Template {
 			t.generate();
 			if (validate(t)) {
 				t.create();
-				CRAWL.add(t);
+				STATIC.add(t);
 			} else {
 				System.err.println("Failed to load static template: " + t.name);
 			}
@@ -133,9 +133,6 @@ public class StaticTemplate extends Template {
 				return false;
 			}
 		}
-		// if (t.name.equals("maps/templates/crawl/traps/grate4.template")) {
-		// System.out.println("debug");
-		// }
 		if (t.count(WALL) == size) {
 			return false;
 		}

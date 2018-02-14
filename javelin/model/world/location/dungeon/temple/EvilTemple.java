@@ -10,7 +10,6 @@ import javelin.model.item.relic.Skull;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
-import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.StairsUp;
 import javelin.model.world.location.dungeon.temple.features.Altar;
@@ -27,11 +26,10 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class EvilTemple extends Temple {
-	private static final String FLUFF =
-			"You have heard of this fort once before, upon a dark stormy night.\n"
-					+ "You recognize the looming towers from that tale. It was related to you as the Fortress of Regrets.\n"
-					+ "It is said that a once powerful king oversaw his domain from his throne here but bad tidings befell him.\n"
-					+ "The once great castle became a prison, torture chamber and hall of twisted pleasures as the kingdom's honor slowly faded into oblivion.";
+	private static final String FLUFF = "You have heard of this fort once before, upon a dark stormy night.\n"
+			+ "You recognize the looming towers from that tale. It was related to you as the Fortress of Regrets.\n"
+			+ "It is said that a once powerful king oversaw his domain from his throne here but bad tidings befell him.\n"
+			+ "The once great castle became a prison, torture chamber and hall of twisted pleasures as the kingdom's honor slowly faded into oblivion.";
 
 	/** Constructor. */
 	public EvilTemple(Integer pop) {
@@ -53,7 +51,7 @@ public class EvilTemple extends Temple {
 
 	@Override
 	public boolean hazard(TempleDungeon dungeon) {
-		if (RPG.r(1, Dungeon.STEPSPERENCOUNTER * 10) != 1) {
+		if (RPG.r(1, dungeon.stepsperencounter * 10) != 1) {
 			return false;
 		}
 		Class<? extends Feature> targettype;

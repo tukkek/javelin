@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
+import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.terrain.Mountains;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
@@ -36,7 +37,7 @@ public class AirTemple extends Temple {
 
 	@Override
 	public boolean hazard(TempleDungeon d) {
-		if (RPG.r(1, Dungeon.STEPSPERENCOUNTER) != 1) {
+		if (RPG.chancein(d.stepsperencounter)) {
 			return false;
 		}
 		ArrayList<Point> steps = new ArrayList<Point>();
@@ -57,7 +58,7 @@ public class AirTemple extends Temple {
 		return true;
 	}
 
-	private Point push(ArrayList<Point> steps, TempleDungeon d) {
+	private Point push(ArrayList<Point> steps, Dungeon d) {
 		Point current = steps.get(steps.size() - 1);
 		ArrayList<Point> possibilities = new ArrayList<Point>();
 		for (int x = current.x - 1; x <= current.x + 1; x++) {
@@ -75,7 +76,8 @@ public class AirTemple extends Temple {
 					}
 				}
 				Point step = new Point(x, y);
-				if (!steps.contains(step) && !d.walls.contains(step)) {
+				if (!steps.contains(step)
+						&& d.map[step.x][step.y] != Template.WALL) {
 					possibilities.add(step);
 				}
 			}

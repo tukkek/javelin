@@ -134,7 +134,7 @@ public class WorldMouse extends Mouse {
 	 */
 	public static boolean move() {
 		final MoveOverlay overlay = (MoveOverlay) BattlePanel.overlay;
-		if (BattlePanel.overlay == null || overlay.path.steps.isEmpty()) {
+		if (overlay == null || overlay.path.steps.isEmpty()) {
 			return false;
 		}
 		BattleScreen.perform(new Movement(overlay));

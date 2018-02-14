@@ -10,6 +10,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.Trap;
 import javelin.model.world.location.dungeon.temple.GoodTemple;
+import javelin.view.screen.DungeonScreen;
 
 /**
  * @see GoodTemple
@@ -24,8 +25,8 @@ public class Spirit extends Feature {
 
 	@Override
 	public boolean activate() {
-		ArrayList<Feature> features =
-				new ArrayList<Feature>(Dungeon.active.features);
+		ArrayList<Feature> features = new ArrayList<Feature>(
+				Dungeon.active.features);
 		Collections.shuffle(features);
 		Feature show = null;
 		for (Feature f : features) {
@@ -43,10 +44,9 @@ public class Spirit extends Feature {
 					false);
 			return true;
 		}
-		Javelin.message(
-				"This nice spirit tells you the location of something important!",
-				false);
 		Dungeon.active.setvisible(show.x, show.y);
+		DungeonScreen.active.center(show.x, show.y);
+		Javelin.message("'Hey, look!'", false);
 		if (show instanceof Trap) {
 			((Trap) show).discover();
 		}

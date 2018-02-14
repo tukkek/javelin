@@ -12,6 +12,11 @@ import javelin.model.unit.attack.Combatant;
  * @author alex
  */
 public class RandomDungeonEncounter extends RandomEncounter {
+	/**
+	 * Adds this to {@link EncounterGenerator#getdifficulty()}.
+	 */
+	static final int ELMODIFIER = +1;
+
 	/** Constructor. */
 	public RandomDungeonEncounter() {
 		meld = true;
@@ -20,7 +25,7 @@ public class RandomDungeonEncounter extends RandomEncounter {
 
 	@Override
 	public Integer getel(int teamel) {
-		return teamel + EncounterGenerator.getdifficulty() + 1;
+		return teamel + EncounterGenerator.getdifficulty() + ELMODIFIER;
 	}
 
 	@Override

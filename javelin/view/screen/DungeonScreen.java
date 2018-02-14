@@ -8,6 +8,7 @@ import javelin.controller.Point;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomEncounter;
+import javelin.controller.generator.dungeon.template.Template;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -23,7 +24,7 @@ import javelin.view.mappanel.dungeon.DungeonPanel;
  * @author alex
  */
 public class DungeonScreen extends WorldScreen {
-	static final int VIEWRADIUS = 2;
+	public static final int VIEWRADIUS = 2;
 
 	Dungeon dungeon;
 
@@ -44,11 +45,15 @@ public class DungeonScreen extends WorldScreen {
 	 */
 	public static boolean updatelocation = true;
 
+	static float fights = 0;
+
 	@Override
 	public boolean explore(float hoursellapsed, boolean encounter) {
 		try {
+			fights += dungeon.encounterratio;
+			System.out.println("#dungeonencounter " + fights);
 			if (encounter) {
-				RandomEncounter.encounter(Dungeon.ENCOUNTERRATIO);
+				RandomEncounter.encounter(dungeon.encounterratio);
 			}
 		} catch (StartBattle e) {
 			throw e;
@@ -83,7 +88,7 @@ public class DungeonScreen extends WorldScreen {
 
 	@Override
 	public boolean allowmove(int x, int y) {
-		return !dungeon.walls.contains(new javelin.controller.Point(x, y));
+		return dungeon.map[x][y] != Template.WALL;
 	}
 
 	@Override
@@ -97,8 +102,13 @@ public class DungeonScreen extends WorldScreen {
 		for (int x = -VIEWRADIUS; x <= +VIEWRADIUS; x++) {
 			for (int y = -VIEWRADIUS; y <= +VIEWRADIUS; y++) {
 				try {
-					dungeon.setvisible(dungeon.herolocation.x + x,
-							dungeon.herolocation.y + y);
+					Point hero = dungeon.herolocation;
+					Point target = new Point(hero);
+					target.x += x;
+					target.y += y;
+					if (checkclear(hero, target)) {
+						dungeon.setvisible(hero.x + x, hero.y + y);
+					}
 				} catch (ArrayIndexOutOfBoundsException e) {
 					continue;
 				}
@@ -106,10 +116,27 @@ public class DungeonScreen extends WorldScreen {
 		}
 	}
 
+	boolean checkclear(Point hero, Point target) {
+		Point step = new Point(hero);
+		while (step.x != target.x || step.y != target.y) {
+			if (step.x != target.x) {
+				step.x += step.x > target.x ? -1 : +1;
+			}
+			if (step.y != target.y) {
+				step.y += step.y > target.y ? -1 : +1;
+			}
+			if (!step.equals(target)
+					&& dungeon.map[step.x][step.y] == Template.WALL) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	@Override
 	public Image gettile(int x, int y) {
-		return Images.getImage(dungeon.walls.contains(new Point(x, y))
-				? dungeon.wall : dungeon.floor);
+		return Images.getImage(dungeon.map[x][y] == Template.WALL ? dungeon.wall
+				: dungeon.floor);
 	}
 
 	@Override
@@ -124,7 +151,7 @@ public class DungeonScreen extends WorldScreen {
 
 	@Override
 	public boolean validatepoint(int tox, int toy) {
-		return 0 <= tox && tox < Dungeon.SIZE && 0 <= toy && toy < Dungeon.SIZE;
+		return 0 <= tox && tox < dungeon.size && 0 <= toy && toy < dungeon.size;
 	}
 
 	@Override

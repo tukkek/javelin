@@ -10,9 +10,9 @@ import javelin.view.mappanel.world.WorldPanel;
 public class DungeonPanel extends MapPanel {
 	Dungeon dungeon;
 
-	public DungeonPanel(Dungeon dungeon) {
-		super(Dungeon.SIZE, Dungeon.SIZE, Preferences.KEYTILEDUNGEON);
-		this.dungeon = dungeon;
+	public DungeonPanel(Dungeon d) {
+		super(d.size, d.size, Preferences.KEYTILEDUNGEON);
+		this.dungeon = d;
 	}
 
 	@Override

@@ -365,7 +365,7 @@ public class ArenaFight extends Minigame {
 
 	public void notify(String text, Point p) {
 		BattleScreen.active.update();
-		BattleScreen.active.centerscreen(p.x, p.y);
+		BattleScreen.active.center(p.x, p.y);
 		Javelin.message(text, true);
 	}
 

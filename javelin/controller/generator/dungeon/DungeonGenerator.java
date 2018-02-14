@@ -1,6 +1,5 @@
 package javelin.controller.generator.dungeon;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,7 +8,6 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.db.Preferences;
 import javelin.controller.generator.dungeon.VirtualMap.Room;
 import javelin.controller.generator.dungeon.tables.ConnectionTable;
 import javelin.controller.generator.dungeon.template.Direction;
@@ -24,6 +22,7 @@ public class DungeonGenerator {
 	static final int DEBUGSIZE = 1;
 
 	public String ascii;
+	public char[][] grid;
 
 	LinkedList<Template> pool = new LinkedList<Template>();
 	ConnectionTable connections = new ConnectionTable();
@@ -37,7 +36,13 @@ public class DungeonGenerator {
 	private DungeonGenerator(int sizehint) {
 		generatepool(sizehint);
 		draw(pool.pop(), new Point(0, 0));
-		ascii = map.rasterize(true);
+		ascii = map.rasterize(true).replaceAll(" ",
+				Character.toString(Template.WALL));
+		String[] grid = ascii.split("\n");
+		this.grid = new char[grid.length][];
+		for (int i = 0; i < grid.length; i++) {
+			this.grid[i] = grid[i].toCharArray();
+		}
 	}
 
 	boolean draw(Template t, Point cursor) {
@@ -117,10 +122,10 @@ public class DungeonGenerator {
 			builder.append(line);
 			builder.append('\n');
 		}
-		write(builder.toString());
+		// write(builder.toString());
 	}
 
-	private static DungeonGenerator generate(int minrooms, int maxrooms) {
+	public static DungeonGenerator generate(int minrooms, int maxrooms) {
 		minrooms *= DEBUGSIZE;
 		maxrooms *= DEBUGSIZE;
 		DungeonGenerator dungeon = null;
@@ -135,16 +140,10 @@ public class DungeonGenerator {
 	}
 
 	public static void main(String[] args) {
-		DungeonGenerator dungeon = generate(13, 13 * 2);
-		dungeon.print();
+		generate().print();
 	}
 
-	static void write(String log) { // debug
-		try {
-			Preferences.write(log, "/tmp/dungeon.txt");
-			System.out.println(log);
-		} catch (IOException e) {
-			throw new RuntimeException();
-		}
+	public static DungeonGenerator generate() {
+		return generate(13 / 2, 13 * 2);
 	}
 }

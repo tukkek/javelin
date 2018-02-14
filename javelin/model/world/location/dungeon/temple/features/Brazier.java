@@ -3,6 +3,7 @@ package javelin.model.world.location.dungeon.temple.features;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
+import javelin.controller.generator.dungeon.template.Template;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.Trap;
@@ -42,10 +43,10 @@ public class Brazier extends Feature {
 		} catch (IndexOutOfBoundsException e) {
 			return;
 		}
-		if (depth > 2) {
+		if (depth > 4) {
 			return;
 		}
-		if (Dungeon.active.walls.contains(new Point(xp, yp))) {
+		if (Dungeon.active.map[xp][yp] == Template.WALL) {
 			return;
 		}
 		for (int x = xp - 1; x <= xp + 1; x++) {

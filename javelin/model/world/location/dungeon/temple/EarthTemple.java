@@ -2,13 +2,13 @@ package javelin.model.world.location.dungeon.temple;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javelin.controller.Point;
 import javelin.controller.terrain.Forest;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.relic.Map;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.temple.features.FruitTree;
 import tyrant.mikera.engine.RPG;
@@ -34,13 +34,11 @@ public class EarthTemple extends Temple {
 	}
 
 	@Override
-	public List<Feature> getfeatures(Set<Point> free, Set<Point> used,
-			TempleDungeon d) {
+	public List<Feature> getfeatures(Dungeon d) {
 		int ntrees = RPG.r(1, 3);
 		ArrayList<Feature> trees = new ArrayList<Feature>();
 		for (int i = 0; i < ntrees; i++) {
-			Point spot = d.findspot(free, used);
-			used.add(spot);
+			Point spot = d.findspot();
 			trees.add(new FruitTree(spot.x, spot.y));
 		}
 		return trees;

@@ -29,7 +29,7 @@ public class TargetOverlay extends Overlay {
 	public void overlay(Tile t, Graphics g) {
 		if (t.x == x && t.y == y) {
 			draw(t, g, TARGET);
-			BattleScreen.active.centerscreen(x, y);
+			BattleScreen.active.center(x, y);
 		}
 	}
 }

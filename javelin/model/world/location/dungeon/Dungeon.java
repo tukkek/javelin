@@ -1,7 +1,6 @@
 package javelin.model.world.location.dungeon;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -9,9 +8,10 @@ import java.util.Set;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.exception.GaveUpException;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
+import javelin.controller.generator.dungeon.DungeonGenerator;
+import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.Key;
@@ -20,7 +20,6 @@ import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.dungeon.crawler.Crawler;
 import javelin.model.world.location.dungeon.temple.TempleDungeon;
 import javelin.model.world.location.dungeon.temple.features.Brazier;
 import javelin.model.world.location.dungeon.temple.features.FruitTree;
@@ -44,31 +43,25 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Dungeon extends Location {
-	/** Screen dimensions. */
-	public final static int SIZE = 30;
-	final static float WALLRATIO = 1 / 4f;
-	public final static int WALKABLEAREA = Math.round(SIZE * SIZE * WALLRATIO);
 	/**
-	 * Assumes you will explore all the dungeon, being able to rest at the
-	 * fountain mid-way for a total of 8 moderate encounters. This ignores the
-	 * returning path towards the exit and getting to and from the dungeon
-	 * itself, which means squads are supposed to be well equipped before diving
-	 * in.
+	 * The base EL for {@link RandomDungeonEncounter}s is -3, which represents
+	 * somewhere between 25% and 50% resources used. We modify this to 200%
+	 * since there is a fountain somewhere that will fully heal your party.
 	 */
-	public static final float ENCOUNTERRATIO = 8f / WALKABLEAREA;
-	/** Approximate number of steps per encounter. */
-	public static final int STEPSPERENCOUNTER = Math.round(1 / ENCOUNTERRATIO);
-
+	public static final int ENCOUNTERSPERDUNGEON = Math.round(2 / .4f);
 	static final int MAXTRIES = 1000;
-	final static int[] DELTAS = { -1, 0, 1 };
+	static final int[] DELTAS = { -1, 0, 1 };
 
 	/** Current {@link Dungeon} or <code>null</code> if not in one. */
 	public static Dungeon active = null;
+
 	/** All of this dungeon's {@link Feature}s. */
 	public List<Feature> features = new ArrayList<Feature>();
-	/** Set of points that are occupied by walls. */
-	public HashSet<Point> walls = new HashSet<Point>();
-	/** Explored squares in this dungeon. */
+	/**
+	 * Explored squares in this dungeon.
+	 * 
+	 * TODO why is there this and also {@link #discovered}?
+	 */
 	public boolean[][] visible;
 	/**
 	 * Current {@link Squad} location.
@@ -87,6 +80,10 @@ public class Dungeon extends Location {
 	public String wall = "dungeonwall";
 	/** Tiles already revealed. */
 	public HashSet<Point> discovered = new HashSet<Point>();
+	public char[][] map;
+	public int size;
+	public float encounterratio;
+	public int stepsperencounter;
 
 	/** Constructor. */
 	public Dungeon() {
@@ -106,13 +103,7 @@ public class Dungeon extends Location {
 	public void activate(boolean loading) {
 		while (features.isEmpty()) {
 			/* not loading a game */
-			try {
-				map();
-			} catch (GaveUpException e) {
-				features.clear();
-				walls.clear();
-				herolocation = null;
-			}
+			map();
 		}
 		regenerate(loading);
 		JavelinApp.context = new DungeonScreen(this);
@@ -123,42 +114,33 @@ public class Dungeon extends Location {
 				true);
 	}
 
-	void map() throws GaveUpException {
-		final Set<Point> free = new HashSet<Point>();
-		final Set<Point> used = new HashSet<Point>();
-		for (int i = 0; i < SIZE; i++) {
-			used.add(new Point(i, 0));
-			used.add(new Point(i, SIZE - 1));
-			used.add(new Point(0, i));
-			used.add(new Point(SIZE - 1, i));
-		}
-		Point root = new Point(RPG.r(2, SIZE - 3), RPG.r(2, SIZE - 3));
-		// free.add(root);
-		used.add(root);
-		build(new StairsUp("stairs up", root), used);
-		for (int x = root.x - 1; x <= root.x + 1; x++) {
-			for (int y = root.y - 1; y <= root.y + 1; y++) {
-				Point p = new Point(x, y);
-				free.add(p);
-				// used.add(p);
+	void map() {
+		map = DungeonGenerator.generate().grid;
+		size = map.length;
+		int vision = DungeonScreen.VIEWRADIUS * 2 + 1;
+		stepsperencounter = Math
+				.round(countfloor() / (ENCOUNTERSPERDUNGEON * vision * 2f));
+		encounterratio = 1f / stepsperencounter;
+		placefeatures();
+		visible = new boolean[size][size];
+		for (int x = 0; x < size; x++) {
+			for (int y = 0; y < size; y++) {
+				visible[x][y] = false;
 			}
 		}
-		while (herolocation == null || herolocation.equals(root)) {
-			herolocation = new Point(root.x + RPG.pick(DELTAS),
-					root.y + RPG.pick(DELTAS));
-		}
-		Crawler.carve(root, free, used);
-		placefeatures(free, used);
-		visible = new boolean[SIZE][SIZE];
-		for (int x = 0; x < Dungeon.SIZE; x++) {
-			for (int y = 0; y < Dungeon.SIZE; y++) {
-				visible[x][y] = false;
-				Point p = new Point(x, y);
-				if (!free.contains(p)) {
-					walls.add(p);
+	}
+
+	int countfloor() {
+		int floortiles = 0;
+		for (int x = 0; x < size; x++) {
+			for (int y = 0; y < size; y++) {
+				char tile = map[x][y];
+				if (tile == Template.WALL || tile == Template.DECORATION) {
+					floortiles += 1;
 				}
 			}
 		}
+		return floortiles;
 	}
 
 	/**
@@ -168,43 +150,48 @@ public class Dungeon extends Location {
 	 * @param free
 	 * @param used
 	 */
-	protected void placefeatures(final Set<Point> free, final Set<Point> used) {
-		Point fountain = findspot(free, used);
-		build(new Fountain("fountain", fountain.x, fountain.y), used);
-		free.add(fountain);
-		createchests(free, used);
-		for (Feature f : getextrafeatures(free, used)) {
-			build(f, used);
+	protected void placefeatures() {
+		herolocation = findspot();
+		features.add(new StairsUp("stairs up", herolocation));
+		for (int x = herolocation.x - 1; x <= herolocation.x + 1; x++) {
+			for (int y = herolocation.y - 1; y <= herolocation.y + 1; y++) {
+				map[x][y] = Template.FLOOR;
+			}
+		}
+		Point fountain = findspot();
+		features.add(new Fountain("fountain", fountain.x, fountain.y));
+		createchests();
+		for (Feature f : getextrafeatures()) {
+			features.add(f);
 		}
 	}
 
 	/**
 	 * @return <code>true</code> if given point is between 0 and {@link #SIZE}.
 	 */
-	public static boolean valid(int coordinate) {
-		return 0 <= coordinate && coordinate <= SIZE;
+	public boolean valid(int coordinate) {
+		return 0 <= coordinate && coordinate <= size;
 	}
 
-	void createchests(Set<Point> free, final Set<Point> used) {
+	void createchests() {
 		int chests = RPG.r(3, 5);
 		int pool = getgoldpool();
 		for (int i = 0; i < chests; i++) {/* equal trap/treasure find chance */
-			Trap t = new Trap(findspot(free, used));
-			build(t, used);
+			Trap t = new Trap(findspot());
+			features.add(t);
 			pool += RewardCalculator.getgold(t.cr);
 		}
 		for (int i = chests; i > 0; i--) {
 			int gold = i == 1 ? pool : pool / RPG.r(2, i);
 			pool -= gold;
-			Point p = findspot(free, used);
-			used.add(p);
-			Feature t;
+			Point p = findspot();
+			Feature c;
 			if (i == chests && World.scenario.allowkeys) {
-				t = createspecialchest(p);
+				c = createspecialchest(p);
 			} else {
-				t = RewardCalculator.createchest(gold, p.x, p.y);
+				c = RewardCalculator.createchest(gold, p.x, p.y);
 			}
-			build(t, used);
+			features.add(c);
 		}
 	}
 
@@ -224,30 +211,30 @@ public class Dungeon extends Location {
 	}
 
 	/**
-	 * @param feature
-	 *            Adds this to {@link #features}...
-	 * @param all
-	 *            and it's location to this set.
-	 */
-	protected void build(Feature feature, Set<Point> all) {
-		features.add(feature);
-		all.add(new Point(feature.x, feature.y));
-	}
-
-	/**
 	 * @param freep
 	 *            Pick a location from here...
 	 * @param used
 	 *            as long as it's not being used...
 	 * @return and returns it.
 	 */
-	public Point findspot(Collection<Point> freep, Set<Point> used) {
-		ArrayList<Point> free = new ArrayList<Point>(freep);
+	public Point findspot() {
 		Point p = null;
-		while (p == null || used.contains(p)) {
-			p = RPG.pick(free);
+		while (p == null || isoccupied(p)) {
+			p = new Point(RPG.r(0, size - 1), RPG.r(0, size - 1));
 		}
 		return p;
+	}
+
+	public boolean isoccupied(Point p) {
+		if (map[p.x][p.y] == Template.WALL) {
+			return true;
+		}
+		for (Feature f : features) {
+			if (f.x == p.x && f.y == f.y) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/** Exit and destroy this dungeon. */
@@ -324,26 +311,22 @@ public class Dungeon extends Location {
 	 *            Don't forget to update this as you generate new features!
 	 * @return Extra features to be placed using {@link #build(Feature, Set)}.
 	 */
-	protected List<Feature> getextrafeatures(Set<Point> free, Set<Point> used) {
+	protected List<Feature> getextrafeatures() {
 		ArrayList<Feature> extra = new ArrayList<Feature>();
 		if (RPG.r(1, 10) == 1) {
-			Point spot = findspot(free, used);
-			used.add(spot);
+			Point spot = findspot();
 			extra.add(new Brazier(spot.x, spot.y));
 		}
 		if (RPG.r(1, 10) == 1) {
-			Point spot = findspot(free, used);
-			used.add(spot);
+			Point spot = findspot();
 			extra.add(new FruitTree(spot.x, spot.y));
 		}
 		if (RPG.r(1, 10) == 1) {
-			Point spot = findspot(free, used);
-			used.add(spot);
+			Point spot = findspot();
 			extra.add(new Portal(spot.x, spot.y));
 		}
 		if (RPG.r(1, 10) == 1) {
-			Point spot = findspot(free, used);
-			used.add(spot);
+			Point spot = findspot();
 			extra.add(new Spirit(spot.x, spot.y));
 		}
 		return extra;

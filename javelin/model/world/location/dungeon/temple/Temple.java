@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 import javelin.Javelin;
-import javelin.controller.Point;
 import javelin.controller.challenge.CrCalculator;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.TempleEncounter;
@@ -254,8 +253,7 @@ public abstract class Temple extends UniqueLocation {
 	 * @param templeDungeon
 	 * @return a new {@link Feature} to be placed.
 	 */
-	public List<Feature> getfeatures(Set<Point> free, Set<Point> used,
-			TempleDungeon dungeon) {
+	public List<Feature> getfeatures(Dungeon dungeon) {
 		return new ArrayList<Feature>();
 	}
 

@@ -127,7 +127,7 @@ public abstract class Labor implements Serializable, Cloneable {
 		cancel();
 		if (!town.ishostile()) {
 			WorldScreen.current.update();
-			WorldScreen.current.centerscreen(town.x, town.y);
+			WorldScreen.current.center(town.x, town.y);
 			Javelin.message(name + ", finished on " + town + "!", false);
 		}
 	}

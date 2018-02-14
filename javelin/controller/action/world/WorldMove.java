@@ -105,8 +105,10 @@ public class WorldMove extends WorldAction {
 	 */
 	public static boolean move(int tox, int toy, boolean encounter) {
 		final WorldScreen s = (WorldScreen) BattleScreen.active;
-		Squad.active.lastterrain = Terrain.current();
-		if (!World.validatecoordinate(tox, toy) || (Dungeon.active == null
+		if (Dungeon.active == null) {
+			Squad.active.lastterrain = Terrain.current();
+		}
+		if (!validatecoordinate(tox, toy) || (Dungeon.active == null
 				&& !World.seed.map[tox][toy].enter(tox, toy))) {
 			throw new RepeatTurn();
 		}
@@ -162,6 +164,15 @@ public class WorldMove extends WorldAction {
 			if (Squad.active != null) {
 				Squad.active.ellapse(Math.round(hours));
 			}
+		}
+	}
+
+	static boolean validatecoordinate(int tox, int toy) {
+		Dungeon d = Dungeon.active;
+		if (d == null) {
+			return World.validatecoordinate(tox, toy);
+		} else {
+			return new Point(tox, toy).validate(0, 0, d.size, d.size);
 		}
 	}
 

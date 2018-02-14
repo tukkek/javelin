@@ -201,7 +201,7 @@ public class WorldScreen extends BattleScreen {
 	void redraw() {
 		Javelin.app.switchScreen(this);
 		Point h = JavelinApp.context.getherolocation();
-		centerscreen(h.x, h.y);
+		center(h.x, h.y);
 		view(h.x, h.y);
 		Game.redraw();
 	}
@@ -317,9 +317,11 @@ public class WorldScreen extends BattleScreen {
 		final ArrayList<String> infos = new ArrayList<String>();
 		String period = Javelin.getDayPeriod();
 		String date = "Day " + currentday() + ", " + period.toLowerCase();
-		String weather = Terrain.current().getweather();
-		if (!weather.isEmpty()) {
-			date += " (" + weather + ")";
+		if (Dungeon.active == null) {
+			String weather = Terrain.current().getweather();
+			if (!weather.isEmpty()) {
+				date += " (" + weather + ")";
+			}
 		}
 		infos.add(date);
 		infos.add(Season.current.toString());
@@ -487,7 +489,7 @@ public class WorldScreen extends BattleScreen {
 	}
 
 	@Override
-	public void centerscreen(int x, int y) {
+	public void center(int x, int y) {
 		if (firstdraw) {
 			mappanel.setposition(x, y);
 			firstdraw = false;
@@ -565,6 +567,7 @@ public class WorldScreen extends BattleScreen {
 	@Override
 	public void center() {
 		Javelin.app.switchScreen(this);
-		centerscreen(Squad.active.x, Squad.active.y);
+		Point here = getherolocation();
+		center(here.x, here.y);
 	}
 }

@@ -1,7 +1,6 @@
 package javelin.model.world.location.dungeon.temple;
 
 import java.util.List;
-import java.util.Set;
 
 import javelin.Javelin;
 import javelin.controller.Point;
@@ -125,16 +124,16 @@ public class TempleDungeon extends Dungeon {
 	}
 
 	@Override
-	protected void placefeatures(Set<Point> free, Set<Point> used) {
+	protected void placefeatures() {
 		if (!deepest) {
-			build(new StairsDown("stairs up", findspot(free, used)), used);
+			features.add(new StairsDown("stairs up", findspot()));
 		}
-		super.placefeatures(free, used);
+		super.placefeatures();
 	}
 
 	@Override
-	protected List<Feature> getextrafeatures(Set<Point> free, Set<Point> used) {
-		return temple.getfeatures(free, used, this);
+	protected List<Feature> getextrafeatures() {
+		return temple.getfeatures(this);
 	}
 
 	@Override

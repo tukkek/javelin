@@ -193,7 +193,7 @@ public abstract class Target extends Action {
 						+ " to confirm, v to view target's sheet, q to quit.\n",
 				Delay.NONE);
 		Game.message(describehitchance(active, target, state), Delay.NONE);
-		BattleScreen.active.centerscreen(target.location[0],
+		BattleScreen.active.center(target.location[0],
 				target.location[1]);
 	}
 

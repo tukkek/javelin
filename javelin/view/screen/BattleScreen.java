@@ -211,7 +211,7 @@ public class BattleScreen extends Screen {
 			MapPanel.overlay.clear();
 		}
 		BattlePanel.current = current;
-		centerscreen(current.location[0], current.location[1]);
+		center(current.location[0], current.location[1]);
 		mappanel.refresh();
 		statuspanel.repaint();
 		Game.userinterface.waiting = true;
@@ -297,7 +297,7 @@ public class BattleScreen extends Screen {
 	}
 
 	/** Like {@link #centerscreen(int, int, boolean)} but without forcing. */
-	public void centerscreen(int x, int y) {
+	public void center(int x, int y) {
 		mappanel.center(x, y, false);
 	}
 
@@ -307,7 +307,7 @@ public class BattleScreen extends Screen {
 		if (current != null) {
 			int x = current.location[0];
 			int y = current.location[1];
-			centerscreen(x, y);
+			center(x, y);
 			view(x, y);
 		}
 		statuspanel.repaint();
@@ -419,6 +419,6 @@ public class BattleScreen extends Screen {
 
 	public void center() {
 		Javelin.app.switchScreen(this);
-		centerscreen(current.location[0], current.location[1]);
+		center(current.location[0], current.location[1]);
 	}
 }

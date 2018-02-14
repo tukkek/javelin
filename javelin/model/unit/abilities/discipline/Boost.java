@@ -21,7 +21,7 @@ public abstract class Boost extends Maneuver {
 	public boolean perform(Combatant c) {
 		boost(c);
 		c.ap += ap;
-		BattleScreen.active.centerscreen(c.location[0], c.location[1]);
+		BattleScreen.active.center(c.location[0], c.location[1]);
 		Game.messagepanel.clear();
 		Game.message(getaction(c), Delay.WAIT);
 		return true;

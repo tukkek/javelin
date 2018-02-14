@@ -90,7 +90,9 @@ public class VirtualMap {
 			return false;
 		}
 		draw(t, x, y, false);
-		rooms.add(new Room(x, y, t.width, t.height));
+		if (!t.corridor) {
+			rooms.add(new Room(x, y, t.width, t.height));
+		}
 		return true;
 	}
 

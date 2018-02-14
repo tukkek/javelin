@@ -8,6 +8,9 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.template.Iterator.TemplateTile;
+import javelin.controller.generator.dungeon.template.generated.Corridor;
+import javelin.controller.generator.dungeon.template.generated.Irregular;
+import javelin.controller.generator.dungeon.template.generated.Rectangle;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -21,12 +24,17 @@ public abstract class Template implements Cloneable {
 	public static final char DECORATION = '!';
 	public static final char DOOR = '□';
 
+	/** Procedurally generated templates only. */
+	public static final Template[] GENERATED = new Template[] { new Irregular(),
+			new Rectangle() };
+	public static final Template CORRIDOR = new Corridor();
+
 	public char[][] tiles = null;
 	public int width = 0;
 	public int height = 0;
-	// public boolean hasdecoration;
+	public boolean corridor = false;
 
-	void init(int width, int height) {
+	protected void init(int width, int height) {
 		this.width = width;
 		this.height = height;
 		tiles = new char[width][height];
@@ -35,6 +43,10 @@ public abstract class Template implements Cloneable {
 				tiles[x][y] = FLOOR;
 			}
 		}
+	}
+
+	protected void initrandom() {
+		init(RPG.r(3, 7), RPG.r(1, 6));
 	}
 
 	public abstract void generate();

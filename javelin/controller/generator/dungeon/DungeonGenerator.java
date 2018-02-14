@@ -2,8 +2,10 @@ package javelin.controller.generator.dungeon;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.Point;
@@ -11,18 +13,14 @@ import javelin.controller.db.Preferences;
 import javelin.controller.generator.dungeon.VirtualMap.Room;
 import javelin.controller.generator.dungeon.tables.ConnectionTable;
 import javelin.controller.generator.dungeon.template.Direction;
-import javelin.controller.generator.dungeon.template.Irregular;
 import javelin.controller.generator.dungeon.template.Template;
+import javelin.controller.generator.dungeon.template.generated.Corridor;
 import javelin.view.screen.town.SelectScreen;
+import tyrant.mikera.engine.RPG;
 
 public class DungeonGenerator {
 	static final boolean DEBUGROOMS = true;
-	/** Procedurally generated templates only. */
-	static final Template[] TEMPLATES = new Template[] { new Irregular() };
-	/**
-	 * How many times to generate each procedurally-generated {@link Template}.
-	 */
-	static final int PERMUTATIONS = 100;
+	static final int DEBUGSIZE = 1;
 
 	public String ascii;
 
@@ -30,8 +28,13 @@ public class DungeonGenerator {
 	ConnectionTable connections = new ConnectionTable();
 	VirtualMap map = new VirtualMap();
 
-	private DungeonGenerator() {
-		generatepool();
+	/**
+	 * @param sizehint
+	 *            TOOD would be cool to have this handled built-in, not on
+	 *            {@link #generate(int, int)}.
+	 */
+	private DungeonGenerator(int sizehint) {
+		generatepool(sizehint);
 		draw(pool.pop(), new Point(0, 0));
 		ascii = map.rasterize(true);
 	}
@@ -52,8 +55,9 @@ public class DungeonGenerator {
 			Direction from = t.inborder(door.x, door.y);
 			Direction to = Direction.opposite(from);
 			Point doorb = next.rotate(to);
-			Point cursorb = from.connect(new Point(cursor), t, next, door,
-					doorb);
+			Point cursorb = new Point(cursor);
+			cursorb = from.connect(cursorb, t, next, door, doorb);
+			Corridor.clear(t, cursor, door, next, doorb, map);
 			if (draw(next, cursorb)) {
 				map.set(Template.FLOOR, cursorb.x + doorb.x,
 						cursorb.y + doorb.y);
@@ -64,18 +68,22 @@ public class DungeonGenerator {
 		return true;
 	}
 
-	void generatepool() {
-		for (Template t : TEMPLATES) {
-			for (int i = 0; i < PERMUTATIONS; i++) {
+	void generatepool(int sizehint) {
+		List<Template> templates = new LinkedList<Template>(
+				Arrays.asList(Template.GENERATED));
+		Collections.shuffle(templates);
+		templates = templates.subList(0,
+				Math.min(RPG.r(1, 4), templates.size()));
+		int permutations = 10 * sizehint / templates.size();
+		if (RPG.chancein(2)) {
+			templates.add(Template.CORRIDOR);
+		}
+		for (Template t : templates) {
+			for (int i = 0; i < permutations; i++) {
 				pool.add(t.create());
 			}
 		}
 		Collections.shuffle(pool);
-	}
-
-	public static void main(String[] args) {
-		DungeonGenerator dungeon = generate(13, 13 * 2);
-		dungeon.print();
 	}
 
 	void print() {
@@ -106,9 +114,11 @@ public class DungeonGenerator {
 	}
 
 	private static DungeonGenerator generate(int minrooms, int maxrooms) {
+		minrooms *= DEBUGSIZE;
+		maxrooms *= DEBUGSIZE;
 		DungeonGenerator dungeon = null;
 		while (dungeon == null) {
-			dungeon = new DungeonGenerator();
+			dungeon = new DungeonGenerator((minrooms + maxrooms) / 2);
 			int size = dungeon.map.rooms.size();
 			if (!(minrooms <= size && size <= maxrooms)) {
 				dungeon = null;
@@ -117,9 +127,15 @@ public class DungeonGenerator {
 		return dungeon;
 	}
 
+	public static void main(String[] args) {
+		DungeonGenerator dungeon = generate(13, 13 * 2);
+		dungeon.print();
+	}
+
 	static void write(String log) { // debug
 		try {
 			Preferences.write(log, "/tmp/dungeon.txt");
+			System.out.println(log);
 		} catch (IOException e) {
 			throw new RuntimeException();
 		}

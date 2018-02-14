@@ -1,9 +1,12 @@
-package javelin.controller.generator.dungeon.template;
+package javelin.controller.generator.dungeon.template.generated;
 
 import java.util.Collections;
 import java.util.LinkedList;
 
 import javelin.controller.Point;
+import javelin.controller.generator.dungeon.template.Iterator;
+import javelin.controller.generator.dungeon.template.Template;
+import javelin.controller.generator.dungeon.template.Iterator.TemplateTile;
 import tyrant.mikera.engine.RPG;
 
 public class Irregular extends Template {
@@ -42,10 +45,6 @@ public class Irregular extends Template {
 				}
 			}
 		}
-	}
-
-	void initrandom() {
-		init(RPG.r(3, 7), RPG.r(1, 6));
 	}
 
 	boolean checkblock(Point p) {

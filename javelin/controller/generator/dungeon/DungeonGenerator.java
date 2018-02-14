@@ -13,6 +13,7 @@ import javelin.controller.db.Preferences;
 import javelin.controller.generator.dungeon.VirtualMap.Room;
 import javelin.controller.generator.dungeon.tables.ConnectionTable;
 import javelin.controller.generator.dungeon.template.Direction;
+import javelin.controller.generator.dungeon.template.StaticTemplate;
 import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.generator.dungeon.template.generated.Corridor;
 import javelin.view.screen.town.SelectScreen;
@@ -82,6 +83,12 @@ public class DungeonGenerator {
 			for (int i = 0; i < permutations; i++) {
 				pool.add(t.create());
 			}
+		}
+		if (RPG.chancein(2)) {
+			Collections.shuffle(StaticTemplate.CRAWL);
+			int target = pool.size() / templates.size();
+			pool.addAll(StaticTemplate.CRAWL.subList(0,
+					Math.min(target, StaticTemplate.CRAWL.size())));
 		}
 		Collections.shuffle(pool);
 	}

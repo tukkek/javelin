@@ -20,8 +20,9 @@ John Reyst
 Mike Anderson
 * Initial Tyrant code-base http://tyrant.sourceforge.net/
 
-David "dpeg" Ploog
-* Dungeon Crawl Stone Soup design philosphy https://github.com/crawl/crawl/blob/master/crawl-ref/docs/crawl_manual.rst#n-philosophy-pas-de-faq
+Dungeon Crawl Stone Soup
+* Design philosphy https://github.com/crawl/crawl/blob/master/crawl-ref/docs/crawl_manual.rst#n-philosophy-pas-de-faq
+* Static map templates
 
 Bruno Terra de Campos
 * Monster images

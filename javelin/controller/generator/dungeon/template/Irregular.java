@@ -9,8 +9,8 @@ import tyrant.mikera.engine.RPG;
 public class Irregular extends Template {
 	private static final Point[] ADJACENT = new Point[] { new Point(-1, 0),
 			new Point(+1, 0), new Point(0, -1), new Point(0, +1) };
-	private static final int PERCENTMIN = 30;
-	private static final int PERCENTMAX = 60;
+	private static final int PERCENTMIN = 15;
+	private static final int PERCENTMAX = 55;
 
 	@Override
 	public void generate() {

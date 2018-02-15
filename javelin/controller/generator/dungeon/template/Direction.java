@@ -3,15 +3,17 @@ package javelin.controller.generator.dungeon.template;
 import java.util.ArrayList;
 
 import javelin.controller.Point;
+import javelin.controller.generator.dungeon.Roomlike;
 import tyrant.mikera.engine.RPG;
 
 public abstract class Direction {
 	public static final Direction NORTH = new Direction("North", 0, +1) {
 		@Override
-		ArrayList<Point> getborder(Template t) {
+		public ArrayList<Point> getborder(Roomlike t) {
 			ArrayList<Point> border = new ArrayList<Point>();
-			for (int x = 0; x < t.width; x++) {
-				border.add(new Point(x, t.height - 1));
+			for (int x = 0; x < t.getwidth(); x++) {
+				border.add(
+						new Point(t.getx() + x, t.gety() + t.getheight() - 1));
 			}
 			return border;
 		}
@@ -26,10 +28,10 @@ public abstract class Direction {
 	};
 	public static final Direction SOUTH = new Direction("South", 0, -1) {
 		@Override
-		ArrayList<Point> getborder(Template t) {
+		public ArrayList<Point> getborder(Roomlike t) {
 			ArrayList<Point> border = new ArrayList<Point>();
-			for (int x = 0; x < t.width; x++) {
-				border.add(new Point(x, 0));
+			for (int x = 0; x < t.getwidth(); x++) {
+				border.add(new Point(t.getx() + x, t.gety()));
 			}
 			return border;
 		}
@@ -44,10 +46,11 @@ public abstract class Direction {
 	};
 	public static final Direction EAST = new Direction("East", +1, 0) {
 		@Override
-		ArrayList<Point> getborder(Template t) {
+		public ArrayList<Point> getborder(Roomlike t) {
 			ArrayList<Point> border = new ArrayList<Point>();
-			for (int y = 0; y < t.height; y++) {
-				border.add(new Point(t.width - 1, y));
+			for (int y = 0; y < t.getheight(); y++) {
+				border.add(
+						new Point(t.getx() + t.getwidth() - 1, t.gety() + y));
 			}
 			return border;
 		}
@@ -62,10 +65,10 @@ public abstract class Direction {
 	};
 	public static final Direction WEST = new Direction("West", -1, 0) {
 		@Override
-		ArrayList<Point> getborder(Template t) {
+		public ArrayList<Point> getborder(Roomlike t) {
 			ArrayList<Point> border = new ArrayList<Point>();
-			for (int y = 0; y < t.height; y++) {
-				border.add(new Point(0, y));
+			for (int y = 0; y < t.getheight(); y++) {
+				border.add(new Point(t.getx(), t.gety() + y));
 			}
 			return border;
 		}
@@ -91,7 +94,7 @@ public abstract class Direction {
 		reverse = new Point(-x, -y);
 	}
 
-	abstract ArrayList<Point> getborder(Template t);
+	public abstract ArrayList<Point> getborder(Roomlike t);
 
 	public static Direction getrandom() {
 		return DIRECTIONS[RPG.r(0, 3)];

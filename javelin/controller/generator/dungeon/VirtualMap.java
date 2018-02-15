@@ -7,11 +7,15 @@ import javelin.controller.Point;
 import javelin.controller.generator.dungeon.template.Template;
 
 public class VirtualMap {
-	class Room {
-		int x;
-		int y;
-		int width;
-		int height;
+	public class Room implements Roomlike {
+		public int x;
+		public int y;
+		public int width;
+		public int height;
+
+		public Room() {
+
+		}
 
 		public Room(int x, int y, int width, int height) {
 			super();
@@ -24,6 +28,26 @@ public class VirtualMap {
 		@Override
 		public String toString() {
 			return x + ":" + y + " (" + width + "x" + height + ")";
+		}
+
+		@Override
+		public int getwidth() {
+			return width;
+		}
+
+		@Override
+		public int getheight() {
+			return height;
+		}
+
+		@Override
+		public int getx() {
+			return x;
+		}
+
+		@Override
+		public int gety() {
+			return y;
 		}
 	}
 
@@ -98,5 +122,17 @@ public class VirtualMap {
 
 	public void set(char c, int x, int y) {
 		map.put(new Point(x, y), c);
+	}
+
+	public Character get(Point p) {
+		return map.get(p);
+	}
+
+	public void set(char tile, Point cursor, Point p) {
+		set(tile, cursor.x + p.x, cursor.y + p.y);
+	}
+
+	public void set(char c, Point p) {
+		set(c, p.x, p.y);
 	}
 }

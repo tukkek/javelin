@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.controller.Point;
+import javelin.controller.generator.dungeon.Roomlike;
 import javelin.controller.generator.dungeon.template.Iterator.TemplateTile;
 import javelin.controller.generator.dungeon.template.generated.Corridor;
 import javelin.controller.generator.dungeon.template.generated.Irregular;
@@ -18,11 +19,12 @@ import tyrant.mikera.engine.RPG;
  *
  * @author alex
  */
-public abstract class Template implements Cloneable {
-	public static final char FLOOR = '.';
-	public static final char WALL = '█';
-	public static final char DECORATION = '!';
-	public static final char DOOR = '□';
+public abstract class Template implements Cloneable, Roomlike {
+
+	public static final Character FLOOR = '.';
+	public static final Character WALL = '█';
+	public static final Character DECORATION = '!';
+	public static final Character DOOR = '□';
 
 	/** Procedurally generated templates only. */
 	public static final Template[] GENERATED = new Template[] { new Irregular(),
@@ -290,5 +292,25 @@ public abstract class Template implements Cloneable {
 			}
 		}
 		return todoor;
+	}
+
+	@Override
+	public int getwidth() {
+		return width;
+	}
+
+	@Override
+	public int getheight() {
+		return height;
+	}
+
+	@Override
+	public int getx() {
+		return 0;
+	}
+
+	@Override
+	public int gety() {
+		return 0;
 	}
 }

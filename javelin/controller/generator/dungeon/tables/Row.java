@@ -14,10 +14,13 @@ public class Row implements Cloneable {
 		this.max = max;
 		this.change = change;
 		this.optional = optional;
-		change();
 	}
 
-	void change() {
+	public Row(int min, int max, boolean optional) {
+		this(min, max, (min + max) / 2, optional);
+	}
+
+	void modify() {
 		int amount = RPG.r(-change, +change);
 		min += amount;
 		max += amount;

@@ -7,7 +7,9 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.controller.Point;
+import javelin.controller.generator.dungeon.DungeonGenerator;
 import javelin.controller.generator.dungeon.Roomlike;
+import javelin.controller.generator.dungeon.tables.RoomSizeTable;
 import javelin.controller.generator.dungeon.template.Iterator.TemplateTile;
 import javelin.controller.generator.dungeon.template.corridor.LinearCorridor;
 import javelin.controller.generator.dungeon.template.corridor.WindingCorridor;
@@ -52,7 +54,9 @@ public abstract class Template implements Cloneable, Roomlike {
 	}
 
 	protected void initrandom() {
-		init(RPG.r(3, 7), RPG.r(1, 6));
+		Point dimensions = DungeonGenerator.instance.tables.get(RoomSizeTable.class)
+				.rolldimensions();
+		init(dimensions.x, dimensions.x);
 	}
 
 	public abstract void generate();

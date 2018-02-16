@@ -6,7 +6,6 @@ import tyrant.mikera.engine.RPG;
 
 public class DungeonTable implements Cloneable {
 	ArrayList<Row> table = new ArrayList<Row>();
-	ArrayList<Row> rows = new ArrayList<Row>();
 
 	void add(Row r) {
 		int n = r.getamount();
@@ -23,12 +22,19 @@ public class DungeonTable implements Cloneable {
 	protected DungeonTable clone() {
 		try {
 			DungeonTable clone = (DungeonTable) super.clone();
-			for (int i = 0; i < rows.size(); i++) {
-				clone.rows.set(i, clone.rows.get(i).clone());
+			for (int i = 0; i < table.size(); i++) {
+				clone.table.set(i, clone.table.get(i).clone());
 			}
+			clone.modify();
 			return clone;
 		} catch (CloneNotSupportedException e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	protected void modify() {
+		for (Row r : table) {
+			r.modify();
 		}
 	}
 }

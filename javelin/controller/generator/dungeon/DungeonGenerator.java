@@ -23,17 +23,24 @@ public class DungeonGenerator {
 	static final int DEBUGSIZE = 1;
 	static final int POOLTARGET = 100;
 
-	public String ascii;
+	public LevelTables tables = new LevelTables();
 	public char[][] grid;
+	public String ascii;
 
 	LinkedList<Template> pool = new LinkedList<Template>();
-	LevelTables tables = new LevelTables();
 	VirtualMap map = new VirtualMap();
 
 	static int ntemplates;
 	static int ncorridors;
 	private static int minrooms;
 	private static int maxrooms;
+	/**
+	 * TODO temporary: will need to be refactored when more than one level can
+	 * be generated (with one set of tables/parameters per level) and/or for
+	 * multithreading. Should be as simple as passing an instance of this or of
+	 * a new class GeneratorLevel to Templates.
+	 */
+	public static DungeonGenerator instance;
 
 	static {
 		setupparameters();
@@ -45,6 +52,7 @@ public class DungeonGenerator {
 	 *            {@link #generate(int, int)}.
 	 */
 	private DungeonGenerator(int sizehint) {
+		instance = this;
 		generatepool(sizehint);
 		draw(pool.pop(), new Point(0, 0));
 		/* TODO make this a Table 5±10 */

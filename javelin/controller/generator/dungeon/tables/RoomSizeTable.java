@@ -9,21 +9,19 @@ public class RoomSizeTable extends NumericTable {
 		}
 
 		@Override
-		protected void modify() {
-			super.modify();
-			while (min <= 2 && min <= 2) {
+		protected void modify(int change) {
+			super.modify(change);
+			while (max * max < 12) {
 				super.modify();
 			}
 		}
 	}
 
 	NumericTable width = new RoomSize(3, 7, 3, false);
-	NumericTable height = new RoomSize(1, 6, 2, false);
+	NumericTable height = new RoomSize(3, 7, 3, false);
 
 	public RoomSizeTable() {
 		super(0, 0, 0, false);
-		width.modify();
-		height.modify(width.change);
 	}
 
 	@Override

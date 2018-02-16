@@ -62,4 +62,9 @@ public class NumericTable extends DungeonTable {
 			add(new NumericValue(i));
 		}
 	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " [" + min + "," + max + "]";
+	}
 }

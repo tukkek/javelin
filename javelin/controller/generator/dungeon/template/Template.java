@@ -9,7 +9,8 @@ import java.util.List;
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.Roomlike;
 import javelin.controller.generator.dungeon.template.Iterator.TemplateTile;
-import javelin.controller.generator.dungeon.template.generated.Corridor;
+import javelin.controller.generator.dungeon.template.corridor.LinearCorridor;
+import javelin.controller.generator.dungeon.template.corridor.WindingCorridor;
 import javelin.controller.generator.dungeon.template.generated.Irregular;
 import javelin.controller.generator.dungeon.template.generated.Rectangle;
 import tyrant.mikera.engine.RPG;
@@ -29,12 +30,15 @@ public abstract class Template implements Cloneable, Roomlike {
 	/** Procedurally generated templates only. */
 	public static final Template[] GENERATED = new Template[] { new Irregular(),
 			new Rectangle() };
-	public static final Template CORRIDOR = new Corridor();
+	public static final LinearCorridor[] CORRIDORS = new LinearCorridor[] {
+			new LinearCorridor(), new WindingCorridor() };
+	public static final ArrayList<Template> STATIC = new ArrayList<Template>();
 
 	public char[][] tiles = null;
 	public int width = 0;
 	public int height = 0;
 	public boolean corridor = false;
+	protected Character fill = FLOOR;
 
 	protected void init(int width, int height) {
 		this.width = width;
@@ -42,7 +46,7 @@ public abstract class Template implements Cloneable, Roomlike {
 		tiles = new char[width][height];
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				tiles[x][y] = FLOOR;
+				tiles[x][y] = fill;
 			}
 		}
 	}
@@ -131,27 +135,30 @@ public abstract class Template implements Cloneable, Roomlike {
 	}
 
 	public Template create() {
-		if (width == 0 || !validate()) {
+		do {
+			tiles = null;
+			width = 0;
+			height = 0;
 			generate();
-		}
-		modify();
-		close();
-		makedoors();
+			modify();
+			close();
+			makedoors();
+		} while (!validate());
 		return clone();
 	}
 
 	static HashSet<Point> walkcache = new HashSet<Point>();
 
-	boolean validate() {
+	protected boolean validate() {
 		List<Point> doors = getdoors();
 		for (int a = 0; a < doors.size(); a++) {
 			Point doora = doors.get(a);
 			for (int b = a + 1; b < doors.size(); b++) {
 				Point doorb = doors.get(b);
 				walkcache.clear();
-				if (!walk(new Point(doora.x, doora.y),
+				if (walk(new Point(doora.x, doora.y),
 						new Point(doorb.x, doorb.y))) {
-					return false;
+					return true;
 				}
 			}
 		}
@@ -159,17 +166,22 @@ public abstract class Template implements Cloneable, Roomlike {
 	}
 
 	boolean walk(Point a, Point b) {
-		if (a.equals(b)) {
-			return true;
-		}
-		if (!walkcache.add(b)) {
+		if (!walkcache.add(a)) {
 			return false;
 		}
 		for (int x = a.x - 1; x <= a.x + 1; x++) {
+			if (!(0 <= x && x < width)) {
+				continue;
+			}
 			for (int y = a.y - 1; y <= a.y + 1; y++) {
+				if (!(0 <= y && y < height)) {
+					continue;
+				}
 				Point step = new Point(x, y);
-				if (step.equals(a) || !step.validate(0, 0, width, height)
-						|| tiles[x][y] != FLOOR) {
+				if (step.equals(b)) {
+					return true;
+				}
+				if (step.equals(a) || tiles[x][y] != FLOOR) {
 					continue;
 				}
 				if (walk(step, b)) {
@@ -181,7 +193,7 @@ public abstract class Template implements Cloneable, Roomlike {
 	}
 
 	void makedoors() {
-		int doors = RPG.r(1, 4);
+		int doors = RPG.r(corridor ? 2 : 1, 4);
 		for (int i = 0; i < doors; i++) {
 			Direction direction = Direction.getrandom();
 			Point door = findentry(direction);

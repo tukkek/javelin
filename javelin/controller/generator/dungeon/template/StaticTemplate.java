@@ -33,7 +33,6 @@ public class StaticTemplate extends Template {
 
 	}
 
-	public static final ArrayList<Template> STATIC = new ArrayList<Template>();
 	static final HashMap<Character, Character> TRANSLATE = new HashMap<Character, Character>();
 
 	static {
@@ -57,7 +56,7 @@ public class StaticTemplate extends Template {
 			t.generate();
 			if (validate(t)) {
 				t.create();
-				STATIC.add(t);
+				Template.STATIC.add(t);
 			} else {
 				System.err.println("Failed to load static template: " + t.name);
 			}

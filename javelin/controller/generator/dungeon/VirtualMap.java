@@ -51,8 +51,19 @@ public class VirtualMap {
 		}
 	}
 
+	/**
+	 * This contains some rooms information that can be used post-generation to
+	 * place monsters, treasure, counter the number of rooms in the dungeon,
+	 * etc. Note that Corridors aren't considered rooms so not all map area is
+	 * covered by this field.
+	 *
+	 * TODO should be easy enough to check doors after the map is ready and
+	 * provide a "this room is connected with these other rooms" field. This
+	 * could be useful as a graph for the consumers to determine solution paths,
+	 * most distant rooms, etc.
+	 */
 	public ArrayList<Room> rooms = new ArrayList<Room>();
-	public Character fill = ' ';
+	public Character fill = Template.WALL;
 
 	HashMap<Point, Character> map = new HashMap<Point, Character>();
 
@@ -134,5 +145,17 @@ public class VirtualMap {
 
 	public void set(char c, Point p) {
 		set(c, p.x, p.y);
+	}
+
+	public int countadjacent(Character tile, Point p) {
+		int found = 0;
+		for (int x = p.x - 1; x <= p.x + 1; x++) {
+			for (int y = p.y - 1; y <= p.y + 1; y++) {
+				if (tile.equals(get(new Point(x, y)))) {
+					found += 1;
+				}
+			}
+		}
+		return found;
 	}
 }

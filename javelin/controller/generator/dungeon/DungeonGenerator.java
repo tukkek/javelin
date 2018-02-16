@@ -6,28 +6,38 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.VirtualMap.Room;
-import javelin.controller.generator.dungeon.tables.ConnectionTable;
+import javelin.controller.generator.dungeon.tables.LevelTables;
 import javelin.controller.generator.dungeon.template.Direction;
-import javelin.controller.generator.dungeon.template.StaticTemplate;
 import javelin.controller.generator.dungeon.template.Template;
-import javelin.controller.generator.dungeon.template.generated.Corridor;
+import javelin.controller.generator.dungeon.template.corridor.LinearCorridor;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
 public class DungeonGenerator {
 	static final boolean DEBUG = true;
+	static final Template DEBUGTEMPLATE = null;
+	static final Template DEBUGCORRIDOR = null;
 	static final boolean DEBUGROOMS = true;
 	static final int DEBUGSIZE = 1;
+	static final int POOLTARGET = 100;
 
 	public String ascii;
 	public char[][] grid;
 
 	LinkedList<Template> pool = new LinkedList<Template>();
-	ConnectionTable connections = new ConnectionTable();
+	LevelTables tables = new LevelTables();
 	VirtualMap map = new VirtualMap();
+
+	static int ntemplates;
+	static int ncorridors;
+	private static int minrooms;
+	private static int maxrooms;
+
+	static {
+		setupparameters();
+	}
 
 	/**
 	 * @param sizehint
@@ -38,38 +48,34 @@ public class DungeonGenerator {
 		generatepool(sizehint);
 		draw(pool.pop(), new Point(0, 0));
 		/* TODO make this a Table 5±10 */
-		int corridorattempts = map.rooms.size() * RPG.r(0, 10);
-		for (int i = 0; i < corridorattempts; i++) {
-			createcorridor();
+		int connectionattempts = map.rooms.size() * RPG.r(0, 10);
+		for (int i = 0; i < connectionattempts; i++) {
+			createconnection();
 		}
 		finish();
 	}
 
-	void createcorridor() {
+	void createconnection() {
 		Room r = RPG.pick(map.rooms);
 		Direction d = Direction.getrandom();
-		// d = Direction.SOUTH;
 		Point exit = RPG.pick(d.getborder(r));
-		if (countadjacent(exit, Template.FLOOR) == 0) {
+		if (map.countadjacent(Template.FLOOR, exit) == 0) {
 			return;
 		}
-		ArrayList<Point> corridor = new ArrayList<Point>();
+		ArrayList<Point> connection = new ArrayList<Point>();
 		int length = RPG.r(1, 4) + RPG.r(1, 4) + 1;
 		boolean connected = false;
 		for (int i = 0; i < length; i++) {
 			Point step = new Point(exit);
 			step.x -= d.reverse.x * i;
 			step.y -= d.reverse.y * i;
-			if (countadjacent(step, Template.DOOR) > 0) {
+			if (map.countadjacent(Template.DOOR, step) > 0) {
 				return;
 			}
-			corridor.add(step);
+			connection.add(step);
 			Character tile = map.get(step);
-			// map.set(Integer.toString(i).charAt(0), step);
-			// TODO check door
-			if (corridor.size() > 1
-					&& countadjacent(step, Template.FLOOR) == 1) {
-				// corridor.remove(step);
+			if (connection.size() > 1
+					&& map.countadjacent(Template.FLOOR, step) == 1) {
 				connected = true;
 				break;
 			}
@@ -78,29 +84,17 @@ public class DungeonGenerator {
 			}
 			return;
 		}
-		if (connected && corridor.size() > 2) {
-			// if (countadjacent(door, Template.DOOR) > 0) {
-			// return;
-			// }
-			for (Point step : corridor) {
-				map.set(Template.FLOOR, step);
-			}
-			Point door = corridor.get(corridor.size() - 1);
-			map.set(Template.DOOR, door);
-
-		}
+		drawconnection(connection, connected);
 	}
 
-	public int countadjacent(Point p, Character tile) {
-		int found = 0;
-		for (int x = p.x - 1; x <= p.x + 1; x++) {
-			for (int y = p.y - 1; y <= p.y + 1; y++) {
-				if (tile.equals(map.get(new Point(x, y)))) {
-					found += 1;
-				}
+	void drawconnection(ArrayList<Point> connection, boolean connected) {
+		if (connected && connection.size() > 2) {
+			for (Point step : connection) {
+				map.set(Template.FLOOR, step);
 			}
+			Point door = connection.get(connection.size() - 1);
+			map.set(Template.DOOR, door);
 		}
-		return found;
 	}
 
 	public void finish() {
@@ -119,8 +113,8 @@ public class DungeonGenerator {
 		}
 		for (Point door : t.getdoors()) {
 			if (pool.isEmpty()) {
-				if (Javelin.DEBUG) {
-					System.out.println("#dungeongenerator empty pool");
+				if (DEBUG) {
+					System.err.println("#dungeongenerator empty pool");
 				}
 				map.set(Template.WALL, cursor, door);
 				continue;
@@ -131,7 +125,7 @@ public class DungeonGenerator {
 			Point doorb = next.rotate(coming);
 			Point cursorb = new Point(cursor);
 			cursorb = going.connect(cursorb, t, next, door, doorb);
-			Corridor.clear(t, cursor, door, next, doorb, map);
+			LinearCorridor.clear(t, cursor, door, next, doorb, map);
 			if (draw(next, cursorb)) {
 				map.set(Template.FLOOR, cursorb, doorb);
 			} else {
@@ -142,27 +136,52 @@ public class DungeonGenerator {
 	}
 
 	void generatepool(int sizehint) {
-		List<Template> templates = new LinkedList<Template>(
-				Arrays.asList(Template.GENERATED));
-		Collections.shuffle(templates);
-		templates = templates.subList(0,
-				Math.min(RPG.r(1, 4), templates.size()));
-		int permutations = 10 * sizehint / templates.size();
-		if (RPG.chancein(2)) {
-			templates.add(Template.CORRIDOR);
-		}
+		List<Template> templates = selectrooms();
+		templates.addAll(selectcorridors());
+		int permutations = POOLTARGET * sizehint / templates.size();
 		for (Template t : templates) {
 			for (int i = 0; i < permutations; i++) {
 				pool.add(t.create());
 			}
 		}
 		if (RPG.chancein(2)) {
-			Collections.shuffle(StaticTemplate.STATIC);
+			Collections.shuffle(Template.STATIC);
 			int target = pool.size() / templates.size();
-			pool.addAll(StaticTemplate.STATIC.subList(0,
-					Math.min(target, StaticTemplate.STATIC.size())));
+			pool.addAll(Template.STATIC.subList(0,
+					Math.min(target, Template.STATIC.size())));
 		}
 		Collections.shuffle(pool);
+	}
+
+	List<Template> selectrooms() {
+		List<Template> templates;
+		if (DEBUG && DEBUGTEMPLATE != null) {
+			templates = new ArrayList<Template>(1);
+			templates.add(DEBUGTEMPLATE);
+			return templates;
+		}
+		templates = new ArrayList<Template>(Arrays.asList(Template.GENERATED));
+		Collections.shuffle(templates);
+		return templates.subList(0, Math.min(ntemplates, templates.size()));
+	}
+
+	ArrayList<Template> selectcorridors() {
+		ArrayList<Template> corridors = new ArrayList<Template>();
+		if (DEBUG && DEBUGCORRIDOR != null) {
+			corridors.add(DEBUGCORRIDOR);
+			return corridors;
+		}
+		if (ncorridors == 0) {
+			return corridors;
+		}
+		corridors.addAll(Arrays.asList(Template.CORRIDORS));
+		Collections.shuffle(corridors);
+		for (int i = 0; i < ncorridors; i++) {
+			if (i < corridors.size()) {
+				corridors.add(corridors.get(i));
+			}
+		}
+		return corridors;
 	}
 
 	void print() {
@@ -171,7 +190,7 @@ public class DungeonGenerator {
 		for (int i = 0; i < lines.length; i++) {
 			map[i] = lines[i].toCharArray();
 		}
-		if (DEBUGROOMS) {
+		if (DEBUG && DEBUGROOMS) {
 			ArrayList<Room> rooms = this.map.rooms;
 			for (int i = 0; i < rooms.size(); i++) {
 				Room r = rooms.get(i);
@@ -192,9 +211,32 @@ public class DungeonGenerator {
 		System.out.println(ascii);
 	}
 
-	public static DungeonGenerator generate(int minrooms, int maxrooms) {
-		minrooms *= DEBUGSIZE;
-		maxrooms *= DEBUGSIZE;
+	/**
+	 * Called to set-up default parameters. You may call this method to "reset"
+	 * and then provide your own before calling {@link #generate()}.
+	 *
+	 * This step is done in advance - otherwise the random generator will just
+	 * naturally select "easy" parameters. This way parameters are "set" and the
+	 * generator needs to rety as many times as necesar to achieve them.
+	 */
+	public static void setupparameters() {
+		minrooms = 13 * DEBUGSIZE;
+		maxrooms = 13 * 2 * DEBUGSIZE;
+		ntemplates = RPG.r(1, 4);
+		ncorridors = 0;
+		while (RPG.chancein(2)) {
+			ncorridors += 1;
+		}
+		ncorridors = Math.min(ncorridors, ntemplates);
+	}
+
+	/**
+	 * @return A dungeon map, ready for drawing.
+	 *
+	 * @see VirtualMap#rooms
+	 * @see #setupparameters()
+	 */
+	public static DungeonGenerator generate() {
 		DungeonGenerator dungeon = null;
 		while (dungeon == null) {
 			dungeon = new DungeonGenerator((minrooms + maxrooms) / 2);
@@ -207,11 +249,8 @@ public class DungeonGenerator {
 	}
 
 	public static void main(String[] args) {
+		setupparameters();
 		generate().print();
-	}
-
-	public static DungeonGenerator generate() {
-		return generate(13, 13 * 2);
 	}
 
 	@Override

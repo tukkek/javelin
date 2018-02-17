@@ -9,6 +9,7 @@ public class VerticalMirror extends Mutator {
 
 	private VerticalMirror() {
 		chance = .5;
+		allowcorridor = true;
 	}
 
 	@Override

@@ -68,12 +68,6 @@ public class StaticTemplate extends Template {
 				STATIC.add(t);
 			}
 		}
-		for (StaticTemplate t : STATIC) {
-			int area = t.width * t.height;
-			if (!(9 <= area && area <= 100)) {
-				errors.add("rm " + t.name);
-			}
-		}
 		if (DEBUG) {
 			Collections.shuffle(errors);
 			for (String error : errors) {
@@ -98,15 +92,17 @@ public class StaticTemplate extends Template {
 			original = null;
 			return;
 		}
+		width = map.length;
 		original = new char[map.length][];
 		for (int i = 0; i < map.length; i++) {
 			original[i] = map[i].toCharArray();
 			height = Math.max(original[i].length, height);
 		}
-		// if (original.length * height < 9) {
-		// original = null;
-		// return;
-		// }
+		int area = width * height;
+		if (!(9 <= area && area <= 100)) {
+			original = null;
+			return;
+		}
 		for (int i = 0; i < original.length; i++) {
 			original[i] = Arrays.copyOf(original[i], height);
 			for (int y = 0; y < height; y++) {
@@ -193,7 +189,7 @@ public class StaticTemplate extends Template {
 	}
 
 	@Override
-	void makedoors() {
+	void makedoors() throws GaveUpException {
 		if (original != null) {
 			super.makedoors();
 		}

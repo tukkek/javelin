@@ -56,7 +56,7 @@ public class WindingCorridor extends LinearCorridor {
 
 	@Override
 	protected boolean validate() throws GaveUpException {
-		return count(DOOR) > 1 && super.validate();
+		return super.validate() && count(DOOR) > 1;
 	}
 
 	protected int countadjacent(Character tile, Point p) {

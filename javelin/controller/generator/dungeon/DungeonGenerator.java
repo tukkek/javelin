@@ -1,5 +1,6 @@
 package javelin.controller.generator.dungeon;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,7 +23,8 @@ public class DungeonGenerator {
 	static final Template DEBUGCORRIDOR = null;
 	static final boolean DEBUGROOMS = true;
 	static final int DEBUGSIZE = 1;
-	static final int POOLTARGET = 100;
+	/** Tries to generate this many templates per room. */
+	static final int POOLTARGET = 5;
 
 	public LevelTables tables = new LevelTables();
 	public char[][] grid;
@@ -259,8 +261,10 @@ public class DungeonGenerator {
 		return dungeon;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		setupparameters();
+		// minrooms *= 20;
+		// maxrooms *= 30;
 		generate().print();
 	}
 

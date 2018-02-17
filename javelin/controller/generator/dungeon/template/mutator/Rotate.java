@@ -1,6 +1,5 @@
 package javelin.controller.generator.dungeon.template.mutator;
 
-import javelin.controller.Point;
 import javelin.controller.generator.dungeon.template.Template;
 
 public class Rotate extends Mutator {
@@ -8,6 +7,7 @@ public class Rotate extends Mutator {
 
 	private Rotate() {
 		chance = .5;
+		allowcorridor = true;
 	}
 
 	@Override
@@ -19,8 +19,7 @@ public class Rotate extends Mutator {
 			}
 		}
 		t.tiles = rotated;
-		Point dimensions = new Point(t.width, t.height);
-		t.width = dimensions.y;
-		t.height = dimensions.x;
+		t.width = rotated.length;
+		t.height = rotated[0].length;
 	}
 }

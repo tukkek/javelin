@@ -18,6 +18,7 @@ import javelin.controller.generator.dungeon.template.generated.Irregular;
 import javelin.controller.generator.dungeon.template.generated.Rectangle;
 import javelin.controller.generator.dungeon.template.mutator.HorizontalMirror;
 import javelin.controller.generator.dungeon.template.mutator.Mutator;
+import javelin.controller.generator.dungeon.template.mutator.Noise;
 import javelin.controller.generator.dungeon.template.mutator.Rotate;
 import javelin.controller.generator.dungeon.template.mutator.Symmetry;
 import javelin.controller.generator.dungeon.template.mutator.VerticalMirror;
@@ -44,7 +45,7 @@ public abstract class Template implements Cloneable, Roomlike {
 
 	static final ArrayList<Mutator> MUTATORS = new ArrayList<Mutator>(Arrays
 			.asList(new Mutator[] { Rotate.INSTANCE, HorizontalMirror.INSTANCE,
-					VerticalMirror.INSTANCE, new Symmetry() }));
+					VerticalMirror.INSTANCE, new Symmetry(), new Noise() }));
 	static final ArrayList<Mutator> ROTATORS = new ArrayList<Mutator>(
 			Arrays.asList(new Mutator[] { Rotate.INSTANCE,
 					HorizontalMirror.INSTANCE, VerticalMirror.INSTANCE }));
@@ -72,9 +73,7 @@ public abstract class Template implements Cloneable, Roomlike {
 		this.height = height;
 		tiles = new char[width][height];
 		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				tiles[x][y] = fill;
-			}
+			Arrays.fill(tiles[x], fill);
 		}
 	}
 
@@ -90,6 +89,9 @@ public abstract class Template implements Cloneable, Roomlike {
 		double chance = mutate / FREEMUTATORS;
 		Collections.shuffle(MUTATORS);
 		for (Mutator m : MUTATORS) {
+			if (corridor && !m.allowcorridor) {
+				continue;
+			}
 			if (RPG.random() < (m.chance == null ? chance : m.chance)) {
 				m.apply(this);
 			}
@@ -101,7 +103,8 @@ public abstract class Template implements Cloneable, Roomlike {
 		String s = "";
 		for (int y = height - 1; y >= 0; y--) {
 			for (int x = 0; x < width; x++) {
-				s += tiles[x][y];
+				Character c = tiles[x][y];
+				s += c == null ? ' ' : c;
 			}
 			s += "\n";
 		}
@@ -205,9 +208,9 @@ public abstract class Template implements Cloneable, Roomlike {
 		return false;
 	}
 
-	void makedoors() {
+	void makedoors() throws GaveUpException {
 		int doors = RPG.r(corridor ? 2 : 1, 4);
-		int attempts = 10000;
+		int attempts = 4 * 4;
 		for (int i = 0; i < doors; i++) {
 			Direction direction = Direction.getrandom();
 			Point door = findentry(direction);
@@ -228,7 +231,15 @@ public abstract class Template implements Cloneable, Roomlike {
 	}
 
 	public int count(char c) {
-		return find(c).size();
+		int i = 0;
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (tiles[x][y] == c) {
+					i += 1;
+				}
+			}
+		}
+		return i;
 	}
 
 	Point findentry(Direction d) {
@@ -267,14 +278,16 @@ public abstract class Template implements Cloneable, Roomlike {
 	public void close() {
 		width += 2;
 		height += 2;
-		char[][] closed = new char[width + 2][height + 2];
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				if (isborder(x, y)) {
-					closed[x][y] = WALL;
-				} else {
-					closed[x][y] = tiles[x - 1][y - 1];
-				}
+		char[][] closed = new char[width][height];
+		Arrays.fill(closed[0], WALL);
+		Arrays.fill(closed[width - 1], WALL);
+		for (int x = 1; x < width - 1; x++) {
+			closed[x][0] = WALL;
+			closed[x][height - 1] = WALL;
+		}
+		for (int x = 0; x < tiles.length; x++) {
+			for (int y = 0; y < tiles[x].length; y++) {
+				closed[x + 1][y + 1] = tiles[x][y];
 			}
 		}
 		tiles = closed;

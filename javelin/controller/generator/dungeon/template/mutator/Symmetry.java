@@ -5,7 +5,7 @@ import tyrant.mikera.engine.RPG;
 
 public class Symmetry extends Mutator {
 	public Symmetry() {
-		chance = 0.1;
+		// chance = 1.0;
 	}
 
 	@Override
@@ -32,9 +32,6 @@ public class Symmetry extends Mutator {
 	}
 
 	void apply(Template t, boolean horizontal) {
-		if (t.corridor) {
-			return;
-		}
 		int axis = (horizontal ? t.width : t.height) - 1;
 		boolean reverse = RPG.chancein(2);
 		for (int cursor = 0; cursor < axis - cursor + 1; cursor++) {

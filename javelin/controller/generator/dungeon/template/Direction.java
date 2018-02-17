@@ -81,8 +81,8 @@ public abstract class Direction {
 			return cursor;
 		}
 	};
-	public static final Direction[] DIRECTIONS = new Direction[] { NORTH, SOUTH,
-			WEST, EAST };
+	public static final Direction[] ALL = new Direction[] { NORTH, SOUTH, WEST,
+			EAST };
 
 	public String name;
 	public Point reverse;
@@ -97,7 +97,7 @@ public abstract class Direction {
 	public abstract ArrayList<Point> getborder(Roomlike t);
 
 	public static Direction getrandom() {
-		return DIRECTIONS[RPG.r(0, 3)];
+		return ALL[RPG.r(0, 3)];
 	}
 
 	@Override
@@ -121,4 +121,14 @@ public abstract class Direction {
 
 	public abstract Point connect(Point cursor, Template from, Template to,
 			Point fromdoor, Point todoor);
+
+	public Point takestep() {
+		Point step = null;
+		while (step == null || following.x != 0 && step.x == following.x
+				|| following.y != 0 && step.y == following.y
+				|| step.x == 0 && step.y == 0) {
+			step = new Point(RPG.r(-1, +1), RPG.r(-1, +1));
+		}
+		return step;
+	}
 }

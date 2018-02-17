@@ -16,6 +16,7 @@ import javelin.controller.generator.dungeon.template.corridor.LinearCorridor;
 import javelin.controller.generator.dungeon.template.corridor.WindingCorridor;
 import javelin.controller.generator.dungeon.template.generated.Irregular;
 import javelin.controller.generator.dungeon.template.generated.Rectangle;
+import javelin.controller.generator.dungeon.template.mutator.Alcoves;
 import javelin.controller.generator.dungeon.template.mutator.HorizontalMirror;
 import javelin.controller.generator.dungeon.template.mutator.Mutator;
 import javelin.controller.generator.dungeon.template.mutator.Noise;
@@ -47,7 +48,7 @@ public abstract class Template implements Cloneable, Roomlike {
 	static final ArrayList<Mutator> MUTATORS = new ArrayList<Mutator>(
 			Arrays.asList(new Mutator[] { Rotate.INSTANCE,
 					HorizontalMirror.INSTANCE, VerticalMirror.INSTANCE,
-					new Symmetry(), new Noise(), new Wall() }));
+					new Symmetry(), new Noise(), new Wall(), new Alcoves() }));
 	static final ArrayList<Mutator> ROTATORS = new ArrayList<Mutator>(
 			Arrays.asList(new Mutator[] { Rotate.INSTANCE,
 					HorizontalMirror.INSTANCE, VerticalMirror.INSTANCE }));

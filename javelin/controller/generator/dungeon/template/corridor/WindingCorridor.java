@@ -6,7 +6,6 @@ import java.util.HashSet;
 import javelin.controller.Point;
 import javelin.controller.exception.GaveUpException;
 import javelin.controller.generator.dungeon.template.Direction;
-import javelin.controller.generator.dungeon.template.Template;
 import tyrant.mikera.engine.RPG;
 
 public class WindingCorridor extends LinearCorridor {
@@ -58,15 +57,6 @@ public class WindingCorridor extends LinearCorridor {
 	@Override
 	protected boolean validate() throws GaveUpException {
 		return count(DOOR) > 1 && super.validate();
-	}
-
-	@Override
-	public Template create() {
-		try {
-			return super.create();
-		} finally {
-			assert 0 < 1;
-		}
 	}
 
 	protected int countadjacent(Character tile, Point p) {

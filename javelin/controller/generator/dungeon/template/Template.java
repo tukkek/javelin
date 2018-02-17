@@ -2,6 +2,7 @@ package javelin.controller.generator.dungeon.template;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -15,6 +16,11 @@ import javelin.controller.generator.dungeon.template.corridor.LinearCorridor;
 import javelin.controller.generator.dungeon.template.corridor.WindingCorridor;
 import javelin.controller.generator.dungeon.template.generated.Irregular;
 import javelin.controller.generator.dungeon.template.generated.Rectangle;
+import javelin.controller.generator.dungeon.template.mutator.HorizontalMirror;
+import javelin.controller.generator.dungeon.template.mutator.Mutator;
+import javelin.controller.generator.dungeon.template.mutator.Rotate;
+import javelin.controller.generator.dungeon.template.mutator.Symmetry;
+import javelin.controller.generator.dungeon.template.mutator.VerticalMirror;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -36,11 +42,30 @@ public abstract class Template implements Cloneable, Roomlike {
 			new LinearCorridor(), new WindingCorridor() };
 	public static final ArrayList<StaticTemplate> STATIC = new ArrayList<StaticTemplate>();
 
+	static final ArrayList<Mutator> MUTATORS = new ArrayList<Mutator>(Arrays
+			.asList(new Mutator[] { Rotate.INSTANCE, HorizontalMirror.INSTANCE,
+					VerticalMirror.INSTANCE, new Symmetry() }));
+	static final ArrayList<Mutator> ROTATORS = new ArrayList<Mutator>(
+			Arrays.asList(new Mutator[] { Rotate.INSTANCE,
+					HorizontalMirror.INSTANCE, VerticalMirror.INSTANCE }));
+	static final int FREEMUTATORS;
+
+	static {
+		int freemutators = 0;
+		for (Mutator m : MUTATORS) {
+			if (m.chance == null) {
+				freemutators += 1;
+			}
+		}
+		FREEMUTATORS = freemutators;
+	}
+
 	public char[][] tiles = null;
 	public int width = 0;
 	public int height = 0;
 	public boolean corridor = false;
 	protected Character fill = FLOOR;
+	public double mutate = 0.1;
 
 	protected void init(int width, int height) {
 		this.width = width;
@@ -62,44 +87,13 @@ public abstract class Template implements Cloneable, Roomlike {
 	public abstract void generate();
 
 	public void modify() {
-		if (RPG.chancein(2)) {
-			rotate();
-		}
-		if (RPG.chancein(2)) {
-			mirrorhorizontally();
-		}
-		if (RPG.chancein(2)) {
-			mirrorvertically();
-		}
-	}
-
-	private void mirrorvertically() {
-		for (int x = 0; x < width; x++) {
-			char[] original = Arrays.copyOf(tiles[x], height);
-			for (int y = 0; y < height; y++) {
-				tiles[x][height - 1 - y] = original[y];
+		double chance = mutate / FREEMUTATORS;
+		Collections.shuffle(MUTATORS);
+		for (Mutator m : MUTATORS) {
+			if (RPG.random() < (m.chance == null ? chance : m.chance)) {
+				m.apply(this);
 			}
 		}
-	}
-
-	void mirrorhorizontally() {
-		char[][] original = Arrays.copyOf(tiles, width);
-		for (int x = 0; x < width; x++) {
-			tiles[width - x - 1] = original[x];
-		}
-	}
-
-	void rotate() {
-		char[][] rotated = new char[height][width];
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				rotated[y][x] = tiles[x][y];
-			}
-		}
-		tiles = rotated;
-		Point dimensions = new Point(width, height);
-		width = dimensions.y;
-		height = dimensions.x;
 	}
 
 	@Override
@@ -324,7 +318,7 @@ public abstract class Template implements Cloneable, Roomlike {
 		while (todoor == null) {
 			todoor = getdoor(to);
 			if (todoor == null) {
-				modify();
+				RPG.pick(ROTATORS).apply(this);
 			}
 		}
 		return todoor;

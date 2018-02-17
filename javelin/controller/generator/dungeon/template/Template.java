@@ -2,11 +2,11 @@ package javelin.controller.generator.dungeon.template;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
 import javelin.controller.Point;
+import javelin.controller.exception.GaveUpException;
 import javelin.controller.generator.dungeon.DungeonGenerator;
 import javelin.controller.generator.dungeon.Roomlike;
 import javelin.controller.generator.dungeon.tables.RoomSizeTable;
@@ -54,8 +54,8 @@ public abstract class Template implements Cloneable, Roomlike {
 	}
 
 	protected void initrandom() {
-		Point dimensions = DungeonGenerator.instance.tables.get(RoomSizeTable.class)
-				.rolldimensions();
+		Point dimensions = DungeonGenerator.instance.tables
+				.get(RoomSizeTable.class).rolldimensions();
 		init(dimensions.x, dimensions.x);
 	}
 
@@ -139,34 +139,49 @@ public abstract class Template implements Cloneable, Roomlike {
 	}
 
 	public Template create() {
-		do {
-			tiles = null;
-			width = 0;
-			height = 0;
-			generate();
-			modify();
-			close();
-			makedoors();
-		} while (!validate());
-		return clone();
+		try {
+			do {
+				tiles = null;
+				width = 0;
+				height = 0;
+				generate();
+				modify();
+				close();
+				makedoors();
+			} while (!validate());
+			return clone();
+		} catch (GaveUpException e) {
+			return null;
+		}
 	}
 
 	static HashSet<Point> walkcache = new HashSet<Point>();
 
-	protected boolean validate() {
+	/**
+	 * @return <code>true</code> if the generated template is good to use in an
+	 *         actual map.
+	 * @throws GaveUpException
+	 *             Subclasses may throw, otherwise will continue calling
+	 *             {@link #create()} infinitely. Especially useful for
+	 *             sanitizing {@link StaticTemplate}s.
+	 */
+	protected boolean validate() throws GaveUpException {
+		if (tiles == null) {
+			return false;
+		}
 		List<Point> doors = getdoors();
 		for (int a = 0; a < doors.size(); a++) {
 			Point doora = doors.get(a);
 			for (int b = a + 1; b < doors.size(); b++) {
 				Point doorb = doors.get(b);
 				walkcache.clear();
-				if (walk(new Point(doora.x, doora.y),
+				if (!walk(new Point(doora.x, doora.y),
 						new Point(doorb.x, doorb.y))) {
-					return true;
+					return false;
 				}
 			}
 		}
-		return false;
+		return true;
 	}
 
 	boolean walk(Point a, Point b) {
@@ -198,6 +213,7 @@ public abstract class Template implements Cloneable, Roomlike {
 
 	void makedoors() {
 		int doors = RPG.r(corridor ? 2 : 1, 4);
+		int attempts = 10000;
 		for (int i = 0; i < doors; i++) {
 			Direction direction = Direction.getrandom();
 			Point door = findentry(direction);
@@ -209,6 +225,11 @@ public abstract class Template implements Cloneable, Roomlike {
 				return;
 			}
 			i -= 1;
+			attempts -= 1;
+			if (attempts == 0) {
+				tiles = null;
+				return;
+			}
 		}
 	}
 
@@ -218,7 +239,6 @@ public abstract class Template implements Cloneable, Roomlike {
 
 	Point findentry(Direction d) {
 		ArrayList<Point> doors = d.getborder(this);
-		Collections.shuffle(doors);
 		for (Point door : doors) {
 			Point p = new Point(door.x + d.reverse.x, door.y + d.reverse.y);
 			if (tiles[p.x][p.y] == FLOOR && !neardoor(p)) {

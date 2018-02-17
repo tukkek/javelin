@@ -10,6 +10,7 @@ import javelin.controller.Point;
 import javelin.controller.generator.dungeon.VirtualMap.Room;
 import javelin.controller.generator.dungeon.tables.LevelTables;
 import javelin.controller.generator.dungeon.template.Direction;
+import javelin.controller.generator.dungeon.template.StaticTemplate;
 import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.generator.dungeon.template.corridor.LinearCorridor;
 import javelin.view.screen.town.SelectScreen;
@@ -173,7 +174,7 @@ public class DungeonGenerator {
 		return templates.subList(0, Math.min(ntemplates, templates.size()));
 	}
 
-	ArrayList<Template> selectcorridors() {
+	List<Template> selectcorridors() {
 		ArrayList<Template> corridors = new ArrayList<Template>();
 		if (DEBUG && DEBUGCORRIDOR != null) {
 			corridors.add(DEBUGCORRIDOR);
@@ -184,12 +185,7 @@ public class DungeonGenerator {
 		}
 		corridors.addAll(Arrays.asList(Template.CORRIDORS));
 		Collections.shuffle(corridors);
-		for (int i = 0; i < ncorridors; i++) {
-			if (i < corridors.size()) {
-				corridors.add(corridors.get(i));
-			}
-		}
-		return corridors;
+		return corridors.subList(0, Math.min(ncorridors, corridors.size()));
 	}
 
 	void print() {
@@ -245,6 +241,9 @@ public class DungeonGenerator {
 	 * @see #setupparameters()
 	 */
 	public static DungeonGenerator generate() {
+		if (Template.STATIC.isEmpty()) {
+			StaticTemplate.load();
+		}
 		DungeonGenerator dungeon = null;
 		while (dungeon == null) {
 			dungeon = new DungeonGenerator((minrooms + maxrooms) / 2);

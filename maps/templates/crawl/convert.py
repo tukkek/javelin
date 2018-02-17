@@ -36,7 +36,6 @@ def save(m,des):
     while i==0 or os.path.isfile(target):
         i+=1
         target=os.path.join(des['directory'],filename)+str(i)+'.template'
-    #print(des['directory'])
     print(m,file=open(target,'w'))
 
 def convert(m,des):

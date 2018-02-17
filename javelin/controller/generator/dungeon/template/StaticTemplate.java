@@ -11,7 +11,11 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+
+import javelin.controller.exception.GaveUpException;
 
 public class StaticTemplate extends Template {
 	public static class TemplateReader extends SimpleFileVisitor<Path> {
@@ -33,9 +37,13 @@ public class StaticTemplate extends Template {
 
 	}
 
+	static final boolean DEBUG = false;
 	static final HashMap<Character, Character> TRANSLATE = new HashMap<Character, Character>();
 
-	static {
+	char[][] original;
+	String name;
+
+	public static void load() {
 		TRANSLATE.put(' ', WALL);
 		TRANSLATE.put('.', FLOOR);
 		TRANSLATE.put('#', WALL);
@@ -44,6 +52,7 @@ public class StaticTemplate extends Template {
 		TRANSLATE.put('~', FLOOR); // TODO water;
 		TRANSLATE.put('!', FLOOR); // TODO decotartion
 
+		ArrayList<String> errors = new ArrayList<String>();
 		ArrayList<File> files = new ArrayList<File>(300);
 		try {
 			Files.walkFileTree(Paths.get("maps/templates/"),
@@ -53,22 +62,42 @@ public class StaticTemplate extends Template {
 		}
 		for (File f : files) {
 			StaticTemplate t = new StaticTemplate(f);
-			t.generate();
-			if (validate(t)) {
-				t.create();
-				Template.STATIC.add(t);
+			if (t.original == null || t.create() == null) {
+				errors.add("rm " + t.name);
 			} else {
-				System.err.println("Failed to load static template: " + t.name);
+				STATIC.add(t);
 			}
+		}
+		ArrayList<Template> toobig = new ArrayList<Template>();
+		for (Template t : STATIC) {
+			int area = t.width * t.height;
+			if (!(9 <= area && area <= 150)) {
+				toobig.add(t);
+			}
+		}
+		STATIC.removeAll(toobig);
+		if (DEBUG) {
+			Collections.shuffle(errors);
+			for (String error : errors) {
+				System.err.println(error);
+			}
+			System.out.println("Errors " + errors.size());
+			System.out.println("Dropped " + toobig.size());
+			System.out.println("Loaded " + STATIC.size());
+			errors.clear();
 		}
 	}
 
-	char[][] original;
-	String name;
-
 	public StaticTemplate(File file) {
 		name = file.toString();
-		String[] map = read(file).split("\n");
+		String content = read(file);
+		while (content.indexOf("\n\n") >= 0) {
+			content = content.replaceAll("\n\n", "\n");
+		}
+		if (content.endsWith("\n")) {
+			content = content.substring(0, content.length() - 1);
+		}
+		String[] map = content.split("\n");
 		if (map.length == 0) {
 			original = null;
 			return;
@@ -76,19 +105,17 @@ public class StaticTemplate extends Template {
 		original = new char[map.length][];
 		for (int i = 0; i < map.length; i++) {
 			original[i] = map[i].toCharArray();
+			height = Math.max(original[i].length, height);
 		}
-		height = original[0].length;
-		if (height == 0) {
-			original = null;
-			return;
-		}
-		for (char[] line : original) {
-			if (line.length != height) {
-				original = null;
-				return;
-			}
-			for (int y = 0; y < line.length; y++) {
-				line[y] = TRANSLATE.get(line[y]);
+		// if (original.length * height < 9) {
+		// original = null;
+		// return;
+		// }
+		for (int i = 0; i < original.length; i++) {
+			original[i] = Arrays.copyOf(original[i], height);
+			for (int y = 0; y < height; y++) {
+				Character c = TRANSLATE.get(original[i][y]);
+				original[i][y] = c == null ? WALL : c;
 			}
 		}
 	}
@@ -99,6 +126,13 @@ public class StaticTemplate extends Template {
 		if (tiles != null) {
 			width = tiles.length;
 			height = tiles[0].length;
+		}
+		try {
+			if (!validatestatic()) {
+				original = null;
+			}
+		} catch (GaveUpException e) {
+			original = null;
 		}
 	}
 
@@ -119,25 +153,6 @@ public class StaticTemplate extends Template {
 		}
 	}
 
-	static boolean validate(StaticTemplate t) {
-		if (t.original == null || t.original.length == 0) {
-			return false;
-		}
-		int size = t.original.length * t.original[0].length;
-		if (!(3 <= size && size < 42)) {
-			return false;
-		}
-		for (char[] line : t.original) {
-			if (line.length != t.height) {
-				return false;
-			}
-		}
-		if (t.count(WALL) == size) {
-			return false;
-		}
-		return true;
-	}
-
 	@Override
 	public void close() {
 		for (int x = 0; x < width; x++) {
@@ -149,6 +164,42 @@ public class StaticTemplate extends Template {
 					}
 				}
 			}
+		}
+	}
+
+	@Override
+	protected boolean validate() throws GaveUpException {
+		boolean valid = validatestatic();
+		if (valid) {
+			return true;
+		}
+		throw new GaveUpException();
+	}
+
+	boolean validatestatic() throws GaveUpException {
+		if (original == null || tiles == null || original.length == 0) {
+			return false;
+		}
+		int size = width * height;
+		// if (!(9 <= size && size < 200)) {
+		// return false;
+		// }
+		for (int i = 1; i < original.length; i++) {
+			char[] line = original[i];
+			if (line.length != original[0].length) {
+				return false;
+			}
+		}
+		if (count(WALL) == size) {
+			return false;
+		}
+		return super.validate();
+	}
+
+	@Override
+	void makedoors() {
+		if (original != null) {
+			super.makedoors();
 		}
 	}
 }

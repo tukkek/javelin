@@ -154,10 +154,14 @@ public class DungeonGenerator {
 			}
 		}
 		if (RPG.chancein(2)) {
-			Collections.shuffle(Template.STATIC);
 			int target = pool.size() / templates.size();
-			pool.addAll(Template.STATIC.subList(0,
-					Math.min(target, Template.STATIC.size())));
+			ArrayList<StaticTemplate> sts = new ArrayList<StaticTemplate>();
+			while (sts.size() < target) {
+				Collections.shuffle(Template.STATIC);
+				sts.addAll(Template.STATIC.subList(0,
+						Math.min(target, Template.STATIC.size())));
+			}
+			pool.addAll(sts);
 		}
 		Collections.shuffle(pool);
 	}

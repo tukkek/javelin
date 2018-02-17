@@ -68,23 +68,19 @@ public class StaticTemplate extends Template {
 				STATIC.add(t);
 			}
 		}
-		ArrayList<Template> toobig = new ArrayList<Template>();
-		for (Template t : STATIC) {
+		for (StaticTemplate t : STATIC) {
 			int area = t.width * t.height;
-			if (!(9 <= area && area <= 150)) {
-				toobig.add(t);
+			if (!(9 <= area && area <= 100)) {
+				errors.add("rm " + t.name);
 			}
 		}
-		STATIC.removeAll(toobig);
 		if (DEBUG) {
 			Collections.shuffle(errors);
 			for (String error : errors) {
 				System.err.println(error);
 			}
 			System.out.println("Errors " + errors.size());
-			System.out.println("Dropped " + toobig.size());
 			System.out.println("Loaded " + STATIC.size());
-			errors.clear();
 		}
 	}
 

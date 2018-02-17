@@ -34,7 +34,7 @@ public abstract class Template implements Cloneable, Roomlike {
 			new Rectangle() };
 	public static final LinearCorridor[] CORRIDORS = new LinearCorridor[] {
 			new LinearCorridor(), new WindingCorridor() };
-	public static final ArrayList<Template> STATIC = new ArrayList<Template>();
+	public static final ArrayList<StaticTemplate> STATIC = new ArrayList<StaticTemplate>();
 
 	public char[][] tiles = null;
 	public int width = 0;

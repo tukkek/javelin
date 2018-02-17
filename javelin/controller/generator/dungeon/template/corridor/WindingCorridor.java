@@ -58,17 +58,4 @@ public class WindingCorridor extends LinearCorridor {
 	protected boolean validate() throws GaveUpException {
 		return super.validate() && count(DOOR) > 1;
 	}
-
-	protected int countadjacent(Character tile, Point p) {
-		int found = 0;
-		for (int x = p.x - 1; x <= p.x + 1; x++) {
-			for (int y = p.y - 1; y <= p.y + 1; y++) {
-				if (new Point(x, y).validate(0, 0, width, height)
-						&& tile.equals(tiles[x][y])) {
-					found += 1;
-				}
-			}
-		}
-		return found;
-	}
 }

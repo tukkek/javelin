@@ -22,6 +22,7 @@ import javelin.controller.generator.dungeon.template.mutator.Noise;
 import javelin.controller.generator.dungeon.template.mutator.Rotate;
 import javelin.controller.generator.dungeon.template.mutator.Symmetry;
 import javelin.controller.generator.dungeon.template.mutator.VerticalMirror;
+import javelin.controller.generator.dungeon.template.mutator.Wall;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -43,9 +44,10 @@ public abstract class Template implements Cloneable, Roomlike {
 			new LinearCorridor(), new WindingCorridor() };
 	public static final ArrayList<StaticTemplate> STATIC = new ArrayList<StaticTemplate>();
 
-	static final ArrayList<Mutator> MUTATORS = new ArrayList<Mutator>(Arrays
-			.asList(new Mutator[] { Rotate.INSTANCE, HorizontalMirror.INSTANCE,
-					VerticalMirror.INSTANCE, new Symmetry(), new Noise() }));
+	static final ArrayList<Mutator> MUTATORS = new ArrayList<Mutator>(
+			Arrays.asList(new Mutator[] { Rotate.INSTANCE,
+					HorizontalMirror.INSTANCE, VerticalMirror.INSTANCE,
+					new Symmetry(), new Noise(), new Wall() }));
 	static final ArrayList<Mutator> ROTATORS = new ArrayList<Mutator>(
 			Arrays.asList(new Mutator[] { Rotate.INSTANCE,
 					HorizontalMirror.INSTANCE, VerticalMirror.INSTANCE }));
@@ -355,5 +357,18 @@ public abstract class Template implements Cloneable, Roomlike {
 	@Override
 	public int gety() {
 		return 0;
+	}
+
+	public int countadjacent(Character tile, Point p) {
+		int found = 0;
+		for (int x = p.x - 1; x <= p.x + 1; x++) {
+			for (int y = p.y - 1; y <= p.y + 1; y++) {
+				if (new Point(x, y).validate(0, 0, width, height)
+						&& tile.equals(tiles[x][y])) {
+					found += 1;
+				}
+			}
+		}
+		return found;
 	}
 }

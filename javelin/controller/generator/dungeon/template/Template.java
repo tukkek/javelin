@@ -17,6 +17,7 @@ import javelin.controller.generator.dungeon.template.corridor.WindingCorridor;
 import javelin.controller.generator.dungeon.template.generated.Irregular;
 import javelin.controller.generator.dungeon.template.generated.Rectangle;
 import javelin.controller.generator.dungeon.template.mutator.Alcoves;
+import javelin.controller.generator.dungeon.template.mutator.Grow;
 import javelin.controller.generator.dungeon.template.mutator.HorizontalMirror;
 import javelin.controller.generator.dungeon.template.mutator.Mutator;
 import javelin.controller.generator.dungeon.template.mutator.Noise;
@@ -45,10 +46,10 @@ public abstract class Template implements Cloneable, Roomlike {
 			new LinearCorridor(), new WindingCorridor() };
 	public static final ArrayList<StaticTemplate> STATIC = new ArrayList<StaticTemplate>();
 
-	static final ArrayList<Mutator> MUTATORS = new ArrayList<Mutator>(
-			Arrays.asList(new Mutator[] { Rotate.INSTANCE,
-					HorizontalMirror.INSTANCE, VerticalMirror.INSTANCE,
-					new Symmetry(), new Noise(), new Wall(), new Alcoves() }));
+	static final ArrayList<Mutator> MUTATORS = new ArrayList<Mutator>(Arrays
+			.asList(new Mutator[] { Rotate.INSTANCE, HorizontalMirror.INSTANCE,
+					VerticalMirror.INSTANCE, new Symmetry(), new Noise(),
+					new Wall(), new Alcoves(), new Grow() }));
 	static final ArrayList<Mutator> ROTATORS = new ArrayList<Mutator>(
 			Arrays.asList(new Mutator[] { Rotate.INSTANCE,
 					HorizontalMirror.INSTANCE, VerticalMirror.INSTANCE }));
@@ -371,5 +372,11 @@ public abstract class Template implements Cloneable, Roomlike {
 			}
 		}
 		return found;
+	}
+
+	public void settiles(char[][] t) {
+		tiles = t;
+		width = t.length;
+		height = t[0].length;
 	}
 }

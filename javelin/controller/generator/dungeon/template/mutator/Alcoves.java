@@ -39,7 +39,7 @@ public class Alcoves extends Mutator {
 			Point p = RPG.pick(d.getborder(t));
 			while (p.validate(0, 0, t.width, t.height)
 					&& t.tiles[p.x][p.y] == Template.WALL) {
-				t.tiles[p.x][p.y] = Template.WALL;
+				t.tiles[p.x][p.y] = Template.FLOOR;
 				Point step = d.takestep();
 				p.x += step.x;
 				p.y += step.y;

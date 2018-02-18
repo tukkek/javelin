@@ -14,8 +14,8 @@ import javelin.controller.generator.dungeon.tables.RoomSizeTable;
 import javelin.controller.generator.dungeon.template.Iterator.TemplateTile;
 import javelin.controller.generator.dungeon.template.corridor.StraightCorridor;
 import javelin.controller.generator.dungeon.template.corridor.WindingCorridor;
-import javelin.controller.generator.dungeon.template.generated.Linear;
 import javelin.controller.generator.dungeon.template.generated.Irregular;
+import javelin.controller.generator.dungeon.template.generated.Linear;
 import javelin.controller.generator.dungeon.template.generated.Rectangle;
 import javelin.controller.generator.dungeon.template.mutator.Alcoves;
 import javelin.controller.generator.dungeon.template.mutator.Grow;
@@ -85,7 +85,7 @@ public abstract class Template implements Cloneable, Roomlike {
 	protected void initrandom() {
 		Point dimensions = DungeonGenerator.instance.tables
 				.get(RoomSizeTable.class).rolldimensions();
-		init(dimensions.x, dimensions.x);
+		init(dimensions.x, dimensions.y);
 	}
 
 	public abstract void generate();
@@ -249,6 +249,7 @@ public abstract class Template implements Cloneable, Roomlike {
 
 	Point findentry(Direction d) {
 		ArrayList<Point> doors = d.getborder(this);
+		Collections.shuffle(doors);
 		for (Point door : doors) {
 			Point p = new Point(door.x + d.reverse.x, door.y + d.reverse.y);
 			if (tiles[p.x][p.y] == FLOOR && !neardoor(p)) {

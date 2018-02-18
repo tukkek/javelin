@@ -5,8 +5,8 @@ import javelin.controller.generator.dungeon.VirtualMap;
 import javelin.controller.generator.dungeon.template.Template;
 import tyrant.mikera.engine.RPG;
 
-public class LinearCorridor extends Template {
-	public LinearCorridor() {
+public class StraightCorridor extends Template {
+	public StraightCorridor() {
 		corridor = true;
 	}
 
@@ -17,7 +17,7 @@ public class LinearCorridor extends Template {
 
 	public static void clear(Template t, Point cursor, Point door,
 			Template next, Point doorb, VirtualMap map) {
-		if (t instanceof LinearCorridor && next instanceof LinearCorridor) {
+		if (t instanceof StraightCorridor && next instanceof StraightCorridor) {
 			map.set(FLOOR, cursor.x + door.x, cursor.y + door.y);
 			next.tiles[doorb.x][doorb.y] = FLOOR;
 		}

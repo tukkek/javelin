@@ -8,7 +8,7 @@ import javelin.controller.exception.GaveUpException;
 import javelin.controller.generator.dungeon.template.Direction;
 import tyrant.mikera.engine.RPG;
 
-public class WindingCorridor extends LinearCorridor {
+public class WindingCorridor extends StraightCorridor {
 	protected ArrayList<Point> steps;
 
 	public WindingCorridor() {

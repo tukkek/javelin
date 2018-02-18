@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package javelin.controller;
 
@@ -10,7 +10,7 @@ import javelin.model.unit.attack.Combatant;
 
 /**
  * X Y coordinate.
- * 
+ *
  * @author alex
  */
 public class Point implements Cloneable, Serializable {
@@ -62,5 +62,11 @@ public class Point implements Cloneable, Serializable {
 	 */
 	public boolean validate(int minx, int miny, int maxx, int maxy) {
 		return minx <= x && x < maxx && miny <= y && y < maxy;
+	}
+
+	public double distance(Point p) {
+		final int deltax = Math.abs(x - p.x);
+		final int deltay = Math.abs(y - p.y);
+		return Math.sqrt(deltax * deltax + deltay * deltay);
 	}
 }

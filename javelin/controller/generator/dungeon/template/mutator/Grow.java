@@ -4,8 +4,10 @@ import javelin.controller.generator.dungeon.template.Template;
 import tyrant.mikera.engine.RPG;
 
 public class Grow extends Mutator {
-	public Grow() {
-		chance = 1.0;
+	public static final Grow INSTANCE = new Grow();
+
+	private Grow() {
+		chance = 0.1;
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import javelin.controller.generator.dungeon.tables.LevelTables;
 import javelin.controller.generator.dungeon.template.Direction;
 import javelin.controller.generator.dungeon.template.StaticTemplate;
 import javelin.controller.generator.dungeon.template.Template;
-import javelin.controller.generator.dungeon.template.corridor.LinearCorridor;
+import javelin.controller.generator.dungeon.template.corridor.StraightCorridor;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -136,7 +136,7 @@ public class DungeonGenerator {
 			Point doorb = next.rotate(coming);
 			Point cursorb = new Point(cursor);
 			cursorb = going.connect(cursorb, t, next, door, doorb);
-			LinearCorridor.clear(t, cursor, door, next, doorb, map);
+			StraightCorridor.clear(t, cursor, door, next, doorb, map);
 			if (draw(next, cursorb)) {
 				map.set(Template.FLOOR, cursorb, doorb);
 			} else {

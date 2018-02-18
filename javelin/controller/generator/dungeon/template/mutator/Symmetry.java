@@ -5,7 +5,7 @@ import tyrant.mikera.engine.RPG;
 
 public class Symmetry extends Mutator {
 	public Symmetry() {
-		// chance = 1.0;
+		chance = 0.1;
 	}
 
 	@Override

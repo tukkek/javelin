@@ -12,8 +12,9 @@ import javelin.controller.generator.dungeon.DungeonGenerator;
 import javelin.controller.generator.dungeon.Roomlike;
 import javelin.controller.generator.dungeon.tables.RoomSizeTable;
 import javelin.controller.generator.dungeon.template.Iterator.TemplateTile;
-import javelin.controller.generator.dungeon.template.corridor.LinearCorridor;
+import javelin.controller.generator.dungeon.template.corridor.StraightCorridor;
 import javelin.controller.generator.dungeon.template.corridor.WindingCorridor;
+import javelin.controller.generator.dungeon.template.generated.Linear;
 import javelin.controller.generator.dungeon.template.generated.Irregular;
 import javelin.controller.generator.dungeon.template.generated.Rectangle;
 import javelin.controller.generator.dungeon.template.mutator.Alcoves;
@@ -41,15 +42,15 @@ public abstract class Template implements Cloneable, Roomlike {
 
 	/** Procedurally generated templates only. */
 	public static final Template[] GENERATED = new Template[] { new Irregular(),
-			new Rectangle() };
-	public static final LinearCorridor[] CORRIDORS = new LinearCorridor[] {
-			new LinearCorridor(), new WindingCorridor() };
+			new Rectangle(), new Linear() };
+	public static final StraightCorridor[] CORRIDORS = new StraightCorridor[] {
+			new StraightCorridor(), new WindingCorridor() };
 	public static final ArrayList<StaticTemplate> STATIC = new ArrayList<StaticTemplate>();
 
 	static final ArrayList<Mutator> MUTATORS = new ArrayList<Mutator>(Arrays
 			.asList(new Mutator[] { Rotate.INSTANCE, HorizontalMirror.INSTANCE,
 					VerticalMirror.INSTANCE, new Symmetry(), new Noise(),
-					new Wall(), new Alcoves(), new Grow() }));
+					new Wall(), new Alcoves(), Grow.INSTANCE }));
 	static final ArrayList<Mutator> ROTATORS = new ArrayList<Mutator>(
 			Arrays.asList(new Mutator[] { Rotate.INSTANCE,
 					HorizontalMirror.INSTANCE, VerticalMirror.INSTANCE }));
@@ -280,6 +281,9 @@ public abstract class Template implements Cloneable, Roomlike {
 	}
 
 	public void close() {
+		if (isclosed()) {
+			return;
+		}
 		width += 2;
 		height += 2;
 		char[][] closed = new char[width][height];
@@ -295,6 +299,19 @@ public abstract class Template implements Cloneable, Roomlike {
 			}
 		}
 		tiles = closed;
+	}
+
+	boolean isclosed() {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (x == 0 || y == 0 || x == width - 1 || y == height - 1) {
+					if (tiles[x][y] != WALL) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
 	}
 
 	protected boolean isborder(int x, int y) {

@@ -18,13 +18,22 @@ import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
 public class DungeonGenerator {
-	static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
+
 	static final Template DEBUGTEMPLATE = null;
 	static final Template DEBUGCORRIDOR = null;
 	static final boolean DEBUGROOMS = true;
 	static final int DEBUGSIZE = 1;
 	/** Tries to generate this many templates per room. */
 	static final int POOLTARGET = 5;
+
+	/**
+	 * TODO temporary: will need to be refactored when more than one level can
+	 * be generated (with one set of tables/parameters per level) and/or for
+	 * multithreading. Should be as simple as passing an instance of this or of
+	 * a new class GeneratorLevel to Templates.
+	 */
+	public static DungeonGenerator instance;
 
 	public LevelTables tables = new LevelTables();
 	public char[][] grid;
@@ -35,15 +44,8 @@ public class DungeonGenerator {
 
 	static int ntemplates;
 	static int ncorridors;
-	private static int minrooms;
-	private static int maxrooms;
-	/**
-	 * TODO temporary: will need to be refactored when more than one level can
-	 * be generated (with one set of tables/parameters per level) and/or for
-	 * multithreading. Should be as simple as passing an instance of this or of
-	 * a new class GeneratorLevel to Templates.
-	 */
-	public static DungeonGenerator instance;
+	static int minrooms;
+	static int maxrooms;
 
 	static {
 		setupparameters();
@@ -262,9 +264,6 @@ public class DungeonGenerator {
 	}
 
 	public static void main(String[] args) throws IOException {
-		setupparameters();
-		// minrooms *= 20;
-		// maxrooms *= 30;
 		generate().print();
 	}
 

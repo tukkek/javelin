@@ -7,12 +7,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javelin.controller.Point;
+import javelin.controller.generator.dungeon.DungeonGenerator;
 import javelin.controller.generator.dungeon.template.Direction;
 import javelin.controller.generator.dungeon.template.Template;
 import tyrant.mikera.engine.RPG;
 
 public class Linear extends Template {
 	static final float MAXDISTANCE = 1 / 3f;
+	protected int minsize = 7;
 
 	public Linear() {
 		mutate = 0.5;
@@ -20,10 +22,25 @@ public class Linear extends Template {
 
 	@Override
 	public void generate() {
+		setupsize();
+		List<Point> borders = getdots();
+		if (DungeonGenerator.DEBUG) {
+			for (Point p : borders) {
+				tiles[p.x][p.y] = '*';
+			}
+		}
+		draw(new LinkedList<Point>(borders));
+		fill();
+	}
+
+	void setupsize() {
 		initrandom();
-		while (width * height < 7 * 7) {
+		while (width * height < minsize * minsize) {
 			init(width + RPG.r(1, 4), height + RPG.r(1, 4));
 		}
+	}
+
+	List<Point> getdots() {
 		List<Point> borders = new ArrayList<Point>();
 		for (Direction d : Direction.ALL) {
 			borders.addAll(d.getborder(this));
@@ -33,11 +50,9 @@ public class Linear extends Template {
 		Collections.shuffle(borders);
 		borders = borders.subList(0, sides);
 		for (Point p : borders) {
-			bump(p, borders);
-			tiles[p.x][p.y] = '*';
+			bump(p);
 		}
-		draw(new LinkedList<Point>(borders));
-		fill();
+		return borders;
 	}
 
 	void draw(LinkedList<Point> dots) {
@@ -92,7 +107,7 @@ public class Linear extends Template {
 		return closest;
 	}
 
-	void bump(Point p, List<Point> borders) {
+	protected void bump(Point p) {
 		int maxdeltax = Math.round(width * MAXDISTANCE);
 		int maxdeltay = Math.round(height * MAXDISTANCE);
 		HashSet<Point> set = new HashSet<Point>();

@@ -3,13 +3,13 @@ package javelin.controller.generator.dungeon.template;
 import java.util.ArrayList;
 
 import javelin.controller.Point;
-import javelin.controller.generator.dungeon.Roomlike;
+import javelin.controller.generator.dungeon.DungeonArea;
 import tyrant.mikera.engine.RPG;
 
 public abstract class Direction {
 	public static final Direction NORTH = new Direction("North", 0, +1) {
 		@Override
-		public ArrayList<Point> getborder(Roomlike t) {
+		public ArrayList<Point> getborder(DungeonArea t) {
 			ArrayList<Point> border = new ArrayList<Point>();
 			for (int x = 0; x < t.getwidth(); x++) {
 				border.add(
@@ -28,7 +28,7 @@ public abstract class Direction {
 	};
 	public static final Direction SOUTH = new Direction("South", 0, -1) {
 		@Override
-		public ArrayList<Point> getborder(Roomlike t) {
+		public ArrayList<Point> getborder(DungeonArea t) {
 			ArrayList<Point> border = new ArrayList<Point>();
 			for (int x = 0; x < t.getwidth(); x++) {
 				border.add(new Point(t.getx() + x, t.gety()));
@@ -46,7 +46,7 @@ public abstract class Direction {
 	};
 	public static final Direction EAST = new Direction("East", +1, 0) {
 		@Override
-		public ArrayList<Point> getborder(Roomlike t) {
+		public ArrayList<Point> getborder(DungeonArea t) {
 			ArrayList<Point> border = new ArrayList<Point>();
 			for (int y = 0; y < t.getheight(); y++) {
 				border.add(
@@ -65,7 +65,7 @@ public abstract class Direction {
 	};
 	public static final Direction WEST = new Direction("West", -1, 0) {
 		@Override
-		public ArrayList<Point> getborder(Roomlike t) {
+		public ArrayList<Point> getborder(DungeonArea t) {
 			ArrayList<Point> border = new ArrayList<Point>();
 			for (int y = 0; y < t.getheight(); y++) {
 				border.add(new Point(t.getx(), t.gety() + y));
@@ -94,7 +94,7 @@ public abstract class Direction {
 		reverse = new Point(-x, -y);
 	}
 
-	public abstract ArrayList<Point> getborder(Roomlike t);
+	public abstract ArrayList<Point> getborder(DungeonArea t);
 
 	public static Direction getrandom() {
 		return ALL[RPG.r(0, 3)];

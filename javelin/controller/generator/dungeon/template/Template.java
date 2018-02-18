@@ -9,7 +9,7 @@ import java.util.List;
 import javelin.controller.Point;
 import javelin.controller.exception.GaveUpException;
 import javelin.controller.generator.dungeon.DungeonGenerator;
-import javelin.controller.generator.dungeon.Roomlike;
+import javelin.controller.generator.dungeon.DungeonArea;
 import javelin.controller.generator.dungeon.tables.RoomSizeTable;
 import javelin.controller.generator.dungeon.template.Iterator.TemplateTile;
 import javelin.controller.generator.dungeon.template.corridor.StraightCorridor;
@@ -33,7 +33,7 @@ import tyrant.mikera.engine.RPG;
  *
  * @author alex
  */
-public abstract class Template implements Cloneable, Roomlike {
+public abstract class Template implements Cloneable, DungeonArea {
 
 	public static final Character FLOOR = '.';
 	public static final Character WALL = '█';

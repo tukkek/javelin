@@ -7,7 +7,7 @@ import javelin.controller.Point;
 import javelin.controller.generator.dungeon.template.Template;
 
 public class VirtualMap {
-	public class Room implements Roomlike {
+	public class Room implements DungeonArea {
 		public int x;
 		public int y;
 		public int width;

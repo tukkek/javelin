@@ -10,6 +10,7 @@ import tyrant.mikera.engine.RPG;
 
 public class WindingCorridor extends StraightCorridor {
 	protected ArrayList<Point> steps;
+	protected int nearbyfloorlimit = 1;
 
 	public WindingCorridor() {
 		super();
@@ -43,7 +44,8 @@ public class WindingCorridor extends StraightCorridor {
 				continue;
 			}
 			step = new Point(p.x + step.x, p.y + step.y);
-			if (steps.contains(step) || countadjacent(FLOOR, step) > 1) {
+			if (steps.contains(step)
+					|| countadjacent(FLOOR, step) > nearbyfloorlimit) {
 				continue;
 			}
 			if (steps.size() == 0 && !step.validate(0, 0, width, height)) {

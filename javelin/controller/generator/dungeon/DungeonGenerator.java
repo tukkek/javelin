@@ -10,7 +10,6 @@ import java.util.List;
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.VirtualMap.Room;
 import javelin.controller.generator.dungeon.tables.LevelTables;
-import javelin.controller.generator.dungeon.template.Direction;
 import javelin.controller.generator.dungeon.template.StaticTemplate;
 import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.generator.dungeon.template.corridor.StraightCorridor;
@@ -46,6 +45,8 @@ public class DungeonGenerator {
 	static int ncorridors;
 	static int minrooms;
 	static int maxrooms;
+
+	private String templatesused;
 
 	static {
 		setupparameters();
@@ -124,7 +125,9 @@ public class DungeonGenerator {
 		if (!map.draw(t, cursor.x, cursor.y)) {
 			return false;
 		}
-		for (Point door : t.getdoors()) {
+		List<Point> doors = t.getdoors();
+		Collections.shuffle(doors);
+		for (Point door : doors) {
 			if (pool.isEmpty()) {
 				if (DEBUG) {
 					System.err.println("#dungeongenerator empty pool");
@@ -151,6 +154,10 @@ public class DungeonGenerator {
 	void generatepool(int sizehint) {
 		List<Template> templates = selectrooms();
 		templates.addAll(selectcorridors());
+		templatesused = "";
+		for (Template t : templates) {
+			templatesused += t.getClass().getSimpleName() + " ";
+		}
 		int permutations = POOLTARGET * sizehint / templates.size();
 		for (Template t : templates) {
 			for (int i = 0; i < permutations; i++) {
@@ -158,6 +165,7 @@ public class DungeonGenerator {
 			}
 		}
 		if (RPG.chancein(2)) {
+			templatesused += "static ";
 			int target = pool.size() / templates.size();
 			ArrayList<StaticTemplate> sts = new ArrayList<StaticTemplate>();
 			while (sts.size() < target) {
@@ -264,7 +272,9 @@ public class DungeonGenerator {
 	}
 
 	public static void main(String[] args) throws IOException {
-		generate().print();
+		DungeonGenerator dungeon = generate();
+		dungeon.print();
+		System.out.println(dungeon.templatesused);
 	}
 
 	@Override

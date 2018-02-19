@@ -7,8 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javelin.controller.Point;
+import javelin.controller.generator.dungeon.Direction;
 import javelin.controller.generator.dungeon.DungeonGenerator;
-import javelin.controller.generator.dungeon.template.Direction;
 import javelin.controller.generator.dungeon.template.Template;
 import tyrant.mikera.engine.RPG;
 

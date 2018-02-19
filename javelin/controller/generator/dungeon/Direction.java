@@ -1,9 +1,9 @@
-package javelin.controller.generator.dungeon.template;
+package javelin.controller.generator.dungeon;
 
 import java.util.ArrayList;
 
 import javelin.controller.Point;
-import javelin.controller.generator.dungeon.DungeonArea;
+import javelin.controller.generator.dungeon.template.Template;
 import tyrant.mikera.engine.RPG;
 
 public abstract class Direction {

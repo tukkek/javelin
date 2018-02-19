@@ -4,6 +4,13 @@ import java.util.ArrayList;
 
 import tyrant.mikera.engine.RPG;
 
+/**
+ * TODO this implementation needs more work in order for cloning to work as
+ * intended - {@link #modify()} is not acting on the {@link #table}, for
+ * example.
+ *
+ * @author alex
+ */
 public class DungeonTable implements Cloneable {
 	ArrayList<Row> table = new ArrayList<Row>();
 

@@ -8,8 +8,9 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.exception.GaveUpException;
-import javelin.controller.generator.dungeon.DungeonGenerator;
+import javelin.controller.generator.dungeon.Direction;
 import javelin.controller.generator.dungeon.DungeonArea;
+import javelin.controller.generator.dungeon.DungeonGenerator;
 import javelin.controller.generator.dungeon.tables.RoomSizeTable;
 import javelin.controller.generator.dungeon.template.Iterator.TemplateTile;
 import javelin.controller.generator.dungeon.template.corridor.StraightCorridor;
@@ -142,16 +143,18 @@ public abstract class Template implements Cloneable, DungeonArea {
 
 	public Template create() {
 		try {
-			do {
-				tiles = null;
-				width = 0;
-				height = 0;
-				generate();
-				modify();
-				close();
-				makedoors();
-			} while (!validate());
-			return clone();
+			Template c = null;
+			while (c == null || !c.validate()) {
+				c = clone();
+				c.tiles = null;
+				c.width = 0;
+				c.height = 0;
+				c.generate();
+				c.modify();
+				c.close();
+				c.makedoors();
+			}
+			return c;
 		} catch (GaveUpException e) {
 			return null;
 		}

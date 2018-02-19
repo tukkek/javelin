@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import javelin.controller.Point;
-import javelin.controller.generator.dungeon.template.Direction;
+import javelin.controller.generator.dungeon.Direction;
 import javelin.controller.generator.dungeon.template.Template;
 import tyrant.mikera.engine.RPG;
 

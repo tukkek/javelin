@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.Point;
-import javelin.controller.generator.dungeon.template.Direction;
+import javelin.controller.generator.dungeon.Direction;
 import tyrant.mikera.engine.RPG;
 
 public class Geometric extends Linear {

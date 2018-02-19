@@ -62,10 +62,14 @@ public class StaticTemplate extends Template {
 		}
 		for (File f : files) {
 			StaticTemplate t = new StaticTemplate(f);
-			if (t.original == null || t.create() == null) {
+			if (t.original == null) {
+				continue;
+			}
+			StaticTemplate clone = (StaticTemplate) t.create();
+			if (clone == null) {
 				errors.add("rm " + t.name);
 			} else {
-				STATIC.add(t);
+				STATIC.add(clone);
 			}
 		}
 		if (DEBUG) {

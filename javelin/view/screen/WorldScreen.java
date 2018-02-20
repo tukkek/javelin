@@ -231,7 +231,10 @@ public class WorldScreen extends BattleScreen {
 	 * @see Javelin#act()
 	 * @see Squad#hourselapsed
 	 */
-	public void endturn() {
+	void endturn() {
+		if (Dungeon.active != null) {
+			return;
+		}
 		Squad act = Javelin.act();
 		long time = act.hourselapsed;
 		final int day = new Double(Math.ceil(time / 24.0)).intValue();

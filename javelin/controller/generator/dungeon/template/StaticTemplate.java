@@ -151,8 +151,7 @@ public class StaticTemplate extends Template {
 
 	@Override
 	protected boolean validate() throws GaveUpException {
-		boolean valid = validatestatic();
-		if (valid) {
+		if (validatestatic() && super.validate()) {
 			return true;
 		}
 		throw new GaveUpException();
@@ -175,7 +174,7 @@ public class StaticTemplate extends Template {
 		if (count(WALL) == size) {
 			return false;
 		}
-		return super.validate();
+		return true;
 	}
 
 	@Override

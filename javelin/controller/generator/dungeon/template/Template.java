@@ -164,8 +164,6 @@ public abstract class Template implements Cloneable, DungeonArea {
 		}
 	}
 
-	static HashSet<Point> walkcache = new HashSet<Point>();
-
 	/**
 	 * @return <code>true</code> if the generated template is good to use in an
 	 *         actual map.
@@ -179,45 +177,36 @@ public abstract class Template implements Cloneable, DungeonArea {
 			return false;
 		}
 		List<Point> doors = getdoors();
-		for (int a = 0; a < doors.size(); a++) {
-			Point doora = doors.get(a);
-			for (int b = a + 1; b < doors.size(); b++) {
-				Point doorb = doors.get(b);
-				walkcache.clear();
-				if (!walk(new Point(doora.x, doora.y),
-						new Point(doorb.x, doorb.y))) {
-					return false;
-				}
+		final HashSet<Point> free = new HashSet<Point>(width * height);
+		walk(doors.get(0), free);
+		for (Point door : doors) {
+			if (!free.contains(door)) {
+				return false;
 			}
 		}
+		iterate(new Iterator() {
+			@Override
+			public void iterate(TemplateTile t) {
+				if (!free.contains(new Point(t.x, t.y))) {
+					tiles[t.x][t.y] = WALL;
+				}
+			}
+		});
 		return true;
 	}
 
-	boolean walk(Point a, Point b) {
-		if (!walkcache.add(a)) {
-			return false;
+	void walk(Point tile, HashSet<Point> free) {
+		if (!free.add(tile)) {
+			return;
 		}
-		for (int x = a.x - 1; x <= a.x + 1; x++) {
-			if (!(0 <= x && x < width)) {
-				continue;
-			}
-			for (int y = a.y - 1; y <= a.y + 1; y++) {
-				if (!(0 <= y && y < height)) {
-					continue;
-				}
-				Point step = new Point(x, y);
-				if (step.equals(b)) {
-					return true;
-				}
-				if (step.equals(a) || tiles[x][y] != FLOOR) {
-					continue;
-				}
-				if (walk(step, b)) {
-					return true;
-				}
+		for (Point step : Point.getadjacent()) {
+			step.x += tile.x;
+			step.y += tile.y;
+			if (step.validate(0, 0, width, height)
+					&& tiles[step.x][step.y] != WALL) {
+				walk(step, free);
 			}
 		}
-		return false;
 	}
 
 	void makedoors() throws GaveUpException {

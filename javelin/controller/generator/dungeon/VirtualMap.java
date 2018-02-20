@@ -12,6 +12,7 @@ public class VirtualMap {
 		public int y;
 		public int width;
 		public int height;
+		public ArrayList<Point> accessible;
 
 		public Room() {
 

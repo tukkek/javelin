@@ -26,9 +26,11 @@ public class Noise extends Mutator {
 		});
 		int walls = Math.round(free.size() * RPG.r(10, 25) / 100f);
 		Collections.shuffle(free);
+		Character glyph = t.count(Template.FLOOR) >= t.count(Template.WALL)
+				? Template.WALL : Template.FLOOR;
 		for (int i = 0; i < walls; i++) {
 			Point wall = free.get(i);
-			t.tiles[wall.x][wall.y] = Template.WALL;
+			t.tiles[wall.x][wall.y] = glyph;
 		}
 	}
 }

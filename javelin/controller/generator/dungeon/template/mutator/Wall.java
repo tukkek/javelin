@@ -2,23 +2,16 @@ package javelin.controller.generator.dungeon.template.mutator;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.template.Template;
 import tyrant.mikera.engine.RPG;
 
 public class Wall extends Mutator {
-	public Wall() {
-		// chance = 1.0;
-	}
-
 	@Override
 	public void apply(Template t) {
-		int nwalls = 1;
-		while (RPG.chancein(2)) {
-			nwalls += 1;
-		}
-		for (int i = 0; i < nwalls; i++) {
+		for (int i = 0; i < RPG.r(1, 4); i++) {
 			if (!generatewall(t)) {
 				return;
 			}
@@ -26,9 +19,11 @@ public class Wall extends Mutator {
 	}
 
 	boolean generatewall(Template t) {
-		ArrayList<Point> spaces = t.find(Template.FLOOR);
+		LinkedList<Point> spaces = new LinkedList<Point>(
+				t.find(Template.FLOOR));
 		Collections.shuffle(spaces);
-		for (Point p : spaces) {
+		while (!spaces.isEmpty()) {
+			Point p = spaces.pop();
 			if (t.countadjacent(Template.FLOOR, p) > 4) {
 				carve(t, p);
 				return true;
@@ -38,22 +33,34 @@ public class Wall extends Mutator {
 	}
 
 	void carve(Template t, Point p) {
-		t.tiles[p.x][p.y] = 'X';
-		t.tiles[p.x][p.y] = Template.WALL;
+		for (int length = RPG.r(1, t.width + t.height); length > 0; length--) {
+			t.tiles[p.x][p.y] = Template.WALL;
+			ArrayList<Point> next = getsteps(t, p);
+			if (next.isEmpty()) {
+				return;
+			}
+			p = RPG.pick(next);
+		}
+	}
+
+	ArrayList<Point> getsteps(Template t, Point p) {
 		ArrayList<Point> next = new ArrayList<Point>(8);
-		for (int x = p.x - 1; x < p.x + 1; x++) {
-			for (int y = p.y - 1; y < p.y + 1; y++) {
-				Point step = new Point(x, y);
-				if (step.validate(0, 0, t.width, t.height)
-						&& t.tiles[x][y] == Template.FLOOR
-						&& t.countadjacent(Template.WALL, step) <= 1
-						&& t.countadjacent('X', step) <= 1) {
-					next.add(step);
-				}
+		for (Point step : getpossiblesteps()) {
+			step.x += p.x;
+			step.y += p.y;
+			if (validatestep(t, step)) {
+				next.add(step);
 			}
 		}
-		if (!next.isEmpty()) {
-			carve(t, RPG.pick(next));
-		}
+		return next;
+	}
+
+	public boolean validatestep(Template t, Point step) {
+		return step.validate(0, 0, t.width, t.height)
+				&& t.tiles[step.x][step.y] == Template.FLOOR;
+	}
+
+	protected Point[] getpossiblesteps() {
+		return Point.getadjacent();
 	}
 }

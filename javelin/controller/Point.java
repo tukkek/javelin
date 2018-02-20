@@ -69,4 +69,24 @@ public class Point implements Cloneable, Serializable {
 		final int deltay = Math.abs(y - p.y);
 		return Math.sqrt(deltax * deltax + deltay * deltay);
 	}
+
+	static public Point[] getadjacent() {
+		Point[] adjacent = new Point[8];
+		int i = 0;
+		for (int x = -1; x <= +1; x++) {
+			for (int y = -1; y <= +1; y++) {
+				if (x == 0 && y == 0) {
+					continue;
+				}
+				adjacent[i] = new Point(x, y);
+				i += 1;
+			}
+		}
+		return adjacent;
+	}
+
+	static public Point[] getadjacentorthogonal() {
+		return new Point[] { new Point(-1, 0), new Point(+1, 0),
+				new Point(0, -1), new Point(0, +1) };
+	}
 }

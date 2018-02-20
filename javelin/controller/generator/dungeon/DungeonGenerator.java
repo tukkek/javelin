@@ -13,14 +13,18 @@ import javelin.controller.generator.dungeon.tables.LevelTables;
 import javelin.controller.generator.dungeon.template.StaticTemplate;
 import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.generator.dungeon.template.corridor.StraightCorridor;
+import javelin.controller.generator.dungeon.template.generated.Rectangle;
+import javelin.controller.generator.dungeon.template.mutator.Mutator;
+import javelin.controller.generator.dungeon.template.mutator.Wall;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
 public class DungeonGenerator {
 	public static final boolean DEBUG = false;
 
-	static final Template DEBUGTEMPLATE = null;
-	static final Template DEBUGCORRIDOR = null;
+	public static final Template DEBUGTEMPLATE = DEBUG ? new Rectangle() : null;
+	public static final Template DEBUGCORRIDOR = DEBUG ? null : null;
+	public static final Mutator DEBUGMUTATOR = DEBUG ? new Wall() : null;
 	static final boolean DEBUGROOMS = true;
 	static final int DEBUGSIZE = 1;
 	/** Tries to generate this many templates per room. */
@@ -164,7 +168,7 @@ public class DungeonGenerator {
 				pool.add(t.create());
 			}
 		}
-		if (RPG.chancein(2)) {
+		if (RPG.chancein(2) && DEBUGTEMPLATE == null) {
 			templatesused += "static ";
 			int target = pool.size() / templates.size();
 			ArrayList<StaticTemplate> sts = new ArrayList<StaticTemplate>();
@@ -180,7 +184,7 @@ public class DungeonGenerator {
 
 	List<Template> selectrooms() {
 		List<Template> templates;
-		if (DEBUG && DEBUGTEMPLATE != null) {
+		if (DEBUGTEMPLATE != null) {
 			templates = new ArrayList<Template>(1);
 			templates.add(DEBUGTEMPLATE);
 			return templates;
@@ -192,7 +196,7 @@ public class DungeonGenerator {
 
 	List<Template> selectcorridors() {
 		ArrayList<Template> corridors = new ArrayList<Template>();
-		if (DEBUG && DEBUGCORRIDOR != null) {
+		if (DEBUGCORRIDOR != null) {
 			corridors.add(DEBUGCORRIDOR);
 			return corridors;
 		}
@@ -210,7 +214,7 @@ public class DungeonGenerator {
 		for (int i = 0; i < lines.length; i++) {
 			map[i] = lines[i].toCharArray();
 		}
-		if (DEBUG && DEBUGROOMS) {
+		if (DEBUGROOMS) {
 			ArrayList<Room> rooms = this.map.rooms;
 			for (int i = 0; i < rooms.size(); i++) {
 				Room r = rooms.get(i);

@@ -92,6 +92,10 @@ public abstract class Template implements Cloneable, DungeonArea {
 	public abstract void generate();
 
 	public void modify() {
+		if (DungeonGenerator.DEBUGMUTATOR != null) {
+			DungeonGenerator.DEBUGMUTATOR.apply(this);
+			return;
+		}
 		double chance = mutate / FREEMUTATORS;
 		Collections.shuffle(MUTATORS);
 		for (Mutator m : MUTATORS) {

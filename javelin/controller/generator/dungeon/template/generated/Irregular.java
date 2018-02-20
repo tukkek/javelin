@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.template.Iterator;
 import javelin.controller.generator.dungeon.template.Template;
-import javelin.controller.generator.dungeon.template.Iterator.TemplateTile;
 import tyrant.mikera.engine.RPG;
 
 public class Irregular extends Template {
@@ -14,6 +13,10 @@ public class Irregular extends Template {
 			new Point(+1, 0), new Point(0, -1), new Point(0, +1) };
 	private static final int PERCENTMIN = 15;
 	private static final int PERCENTMAX = 55;
+
+	public Irregular() {
+		mutate = .5;
+	}
 
 	@Override
 	public void generate() {

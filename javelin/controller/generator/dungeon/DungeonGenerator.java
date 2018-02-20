@@ -13,18 +13,17 @@ import javelin.controller.generator.dungeon.tables.LevelTables;
 import javelin.controller.generator.dungeon.template.StaticTemplate;
 import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.generator.dungeon.template.corridor.StraightCorridor;
-import javelin.controller.generator.dungeon.template.generated.Rectangle;
+import javelin.controller.generator.dungeon.template.generated.Irregular;
 import javelin.controller.generator.dungeon.template.mutator.Mutator;
-import javelin.controller.generator.dungeon.template.mutator.Wall;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
 public class DungeonGenerator {
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 
-	public static final Template DEBUGTEMPLATE = DEBUG ? new Rectangle() : null;
+	public static final Template DEBUGTEMPLATE = DEBUG ? new Irregular() : null;
 	public static final Template DEBUGCORRIDOR = DEBUG ? null : null;
-	public static final Mutator DEBUGMUTATOR = DEBUG ? new Wall() : null;
+	public static final Mutator DEBUGMUTATOR = DEBUG ? null : null;
 	static final boolean DEBUGROOMS = true;
 	static final int DEBUGSIZE = 1;
 	/** Tries to generate this many templates per room. */

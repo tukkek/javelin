@@ -1,5 +1,7 @@
 package javelin.model.world.location.dungeon;
 
+import java.util.List;
+
 import javelin.Javelin;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
@@ -7,6 +9,7 @@ import javelin.model.item.Key;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.unique.Haxor;
 import javelin.view.screen.town.PurchaseScreen;
+import tyrant.mikera.engine.RPG;
 
 /**
  * Loot!
@@ -14,6 +17,9 @@ import javelin.view.screen.town.PurchaseScreen;
  * @author alex
  */
 public class Chest extends Feature {
+	/**
+	 * TODO it's OK for Chests go only give a single item
+	 */
 	final ItemSelection items;
 	int gold;
 	/**
@@ -67,6 +73,34 @@ public class Chest extends Feature {
 			Squad.active.gold += gold;
 		}
 		return true;
+	}
+
+	/**
+	 * @param gold
+	 *            Value to be added in gold or {@link Item}s.
+	 * @param x
+	 *            {@link Dungeon} coordinate.
+	 * @param y
+	 *            {@link Dungeon} coordinate.
+	 * @return A {@link Dungeon} chest.
+	 */
+	public static Chest create(int gold, int x, int y) {
+		ItemSelection items = new ItemSelection();
+		if (RPG.r(1, 2) == 1) {// 50% are gold and 50% are item
+			List<Item> all = Item.randomize(Item.ALL);
+			for (int i = all.size() - 1; i >= 0; i--) {
+				Item item = all.get(i);
+				if (item.price < gold * .9) {
+					break;
+				}
+				if (item.price < gold) {
+					gold -= item.price;
+					items.add(item);
+					break;
+				}
+			}
+		}
+		return new Chest("chest", x, y, gold, items);
 	}
 
 	/**

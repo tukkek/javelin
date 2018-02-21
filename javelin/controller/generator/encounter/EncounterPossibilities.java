@@ -5,7 +5,7 @@ import javelin.model.unit.Monster;
 import tyrant.mikera.engine.RPG;
 
 /**
- * @see Organization#process()
+ * @see Organization#init()
  */
 public class EncounterPossibilities {
 	/** Minimum quantity. */

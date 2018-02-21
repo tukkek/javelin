@@ -9,6 +9,7 @@ import javax.swing.border.Border;
 
 import javelin.Javelin;
 import javelin.controller.fight.Fight;
+import javelin.controller.fight.minigame.arena.building.ArenaBuilding;
 import javelin.controller.map.Map;
 import javelin.model.state.Meld;
 import javelin.model.state.Square;
@@ -106,6 +107,11 @@ public class BattleTile extends Tile {
 			g.drawImage(mercenary, 0, 0, null);
 		} else if (c.summoned) {
 			final Image summoned = Images.SUMMONED.getScaledInstance(
+					MapPanel.tilesize, MapPanel.tilesize, Image.SCALE_DEFAULT);
+			g.drawImage(summoned, 0, 0, null);
+		} else if (c instanceof ArenaBuilding
+				&& ((ArenaBuilding) c).repairing) {
+			final Image summoned = Images.LABOR.getScaledInstance(
 					MapPanel.tilesize, MapPanel.tilesize, Image.SCALE_DEFAULT);
 			g.drawImage(summoned, 0, 0, null);
 		}

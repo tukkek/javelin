@@ -105,7 +105,7 @@ public class Javelin {
 			FileReader filereader = new FileReader("monsters.xml");
 			reader.parse(new InputSource(filereader));
 			filereader.close();
-			Organization.process();
+			Organization.init();
 			SpellsFactor.init();
 			Spell.init();
 			Artifact.init();

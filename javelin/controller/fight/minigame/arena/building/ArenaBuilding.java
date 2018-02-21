@@ -9,6 +9,7 @@ import javelin.model.unit.attack.Combatant;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.battle.action.BattleMouseAction;
 import javelin.view.screen.BattleScreen;
+import javelin.view.screen.shopping.ShoppingScreen;
 
 /**
  * TODO on upgrade start fast healing
@@ -44,8 +45,11 @@ public abstract class ArenaBuilding extends Combatant {
 
 	final protected String actiondescription;
 
+	int materials = 0;
+	/** Building level from 0 to 4. */
 	int level;
 	int damagethresold;
+	public boolean repairing = false;
 
 	public ArenaBuilding(String name, String avatar, String description) {
 		super(Javelin.getmonster("Building"), false);
@@ -64,6 +68,7 @@ public abstract class ArenaBuilding extends Combatant {
 		this.level = level.level;
 		maxhp = level.hp;
 		hp = maxhp;
+		hp = hp / 2;
 		damagethresold = level.damagethresold;
 		source.dr = level.hardness;
 		source.challengerating = (level.level + 1) * 5f;
@@ -82,14 +87,16 @@ public abstract class ArenaBuilding extends Combatant {
 
 	@Override
 	public void act(BattleState s) {
-		s.clone(this).ap += 1;
-		if (hp == maxhp) {
-			source.fasthealing = 0;
+		ArenaBuilding c = (ArenaBuilding) s.clone(this);
+		c.ap += 1;
+		if (repairing) {
+			int repair = LEVELS[c.level].repair;
+			c.materials -= repair * c.source.dr;
+			c.hp = Math.min(c.hp + repair, c.maxhp);
+			if (c.hp == c.maxhp || c.materials <= 0) {
+				c.repairing = false;
+			}
 		}
-	}
-
-	public boolean isrepairing() {
-		return source.fasthealing > 0;
 	}
 
 	@Override
@@ -99,7 +106,8 @@ public abstract class ArenaBuilding extends Combatant {
 			@Override
 			public void onenter(Combatant current, Combatant target, Tile t,
 					BattleState s) {
-				Game.message(getactiondescription(current), Delay.NONE);
+				Game.message(isdamaged() ? getrepairmessage()
+						: getactiondescription(current), Delay.NONE);
 			}
 
 			@Override
@@ -114,7 +122,14 @@ public abstract class ArenaBuilding extends Combatant {
 				BattleScreen.perform(new Runnable() {
 					@Override
 					public void run() {
-						if (!current.isadjacent(target)) {
+						if (isdamaged()) {
+							if (!repair()) {
+								Game.messagepanel.clear();
+								Game.message("Not enough gold...", Delay.WAIT);
+							} else {
+								Game.messagepanel.clear();
+							}
+						} else if (!current.isadjacent(target)) {
 							Game.messagepanel.clear();
 							Game.message("Too far away...", Delay.WAIT);
 						} else if (click(current)) {
@@ -126,9 +141,72 @@ public abstract class ArenaBuilding extends Combatant {
 		};
 	}
 
+	boolean repair() {
+		if (repairing) {
+			return true;
+		}
+		int cost = getrepaircost();
+		if (ArenaFight.get().gold < cost) {
+			return false;
+		}
+		ArenaFight.get().gold -= cost;
+		repairing = true;
+		materials = cost;
+		return true;
+	}
+
+	String getrepairmessage() {
+		String suffix = "\n\nYou currently have $"
+				+ ShoppingScreen.formatcost(ArenaFight.get().gold);
+		String name = source.customName.toLowerCase();
+		if (repairing) {
+			return "This " + name + " is being repaired." + suffix;
+		}
+		return "This " + name + " needs to be repaired (for a total of $"
+				+ ShoppingScreen.formatcost(getrepaircost())
+				+ "). Click to start repairs." + suffix;
+	}
+
+	int getrepaircost() {
+		return (maxhp - hp) * source.dr;
+	}
+
+	public boolean isdamaged() {
+		return hp <= damagethresold || repairing;
+	}
+
 	abstract protected boolean click(Combatant current);
 
 	public String getactiondescription(Combatant current) {
 		return actiondescription;
+	}
+
+	@Override
+	public String getstatus() {
+		switch (getnumericstatus()) {
+		case STATUSUNHARMED:
+			return "pristine";
+		case STATUSSCRATCHED:
+			return "scathed";
+		case STATUSHURT:
+			return "worn";
+		case STATUSWOUNDED:
+			return "broken";
+		case STATUSINJURED:
+			return "torn";
+		case STATUSDYING:
+			return "demolished";
+		case STATUSUNCONSCIOUS:
+		case STATUSDEAD:
+			return "destroyed";
+		default:
+			throw new RuntimeException(
+					"Unknown possibility: " + getnumericstatus());
+		}
+	}
+
+	@Override
+	public boolean ispenalized(BattleState s) {
+		return isdamaged();
 	}
 }

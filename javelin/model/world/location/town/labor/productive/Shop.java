@@ -125,9 +125,7 @@ public class Shop extends Location {
 			if (selection.size() >= level) {
 				break;
 			}
-			i = i.clone();
-			i.shop();
-			selection.add(i);
+			selection.add(i.clone());
 		}
 	}
 

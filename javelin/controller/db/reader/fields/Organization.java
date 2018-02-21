@@ -16,7 +16,7 @@ import javelin.model.unit.attack.Combatant;
 
 /**
  * @see FieldReader
- * @see #process()
+ * @see #init()
  */
 public class Organization extends FieldReader {
 	class EncounterData {
@@ -73,7 +73,7 @@ public class Organization extends FieldReader {
 	/**
 	 * Uses organization data to create {@link Encounter}s.
 	 */
-	static public void process() {
+	static public void init() {
 		for (Monster m : Javelin.ALLMONSTERS) {
 			monstersbyname.put(m.toString().toLowerCase(), m);
 		}

@@ -2,6 +2,7 @@ package javelin.model.item;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.TreeMap;
 
 import javelin.controller.action.UseItem;
 import javelin.controller.action.world.UseItems;
-import javelin.controller.comparator.ItemPriceComparator;
+import javelin.controller.comparator.ItemsByPrice;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.model.Realm;
 import javelin.model.item.artifact.Artifact;
@@ -24,7 +25,6 @@ import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.military.Academy;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.shopping.ShoppingScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -60,28 +60,7 @@ public abstract class Item implements Serializable, Cloneable {
 	/** @see Artifact */
 	public static final ItemSelection ARTIFACT = new ItemSelection();
 
-	/** Creates {@link Item}s from {@link Spell}s. */
-	public static void init() {
-		for (Spell s : Spell.SPELLS.values()) {
-			if (s.isscroll) {
-				new Scroll(s);
-			}
-			if (s.iswand) {
-				new Wand(s);
-			}
-			if (s.ispotion) {
-				new Potion(s);
-			}
-			if (s.isring) {
-				for (int uses : CasterRing.POWERLEVELS) {
-					new CasterRing(s, uses);
-				}
-			}
-		}
-		mapbyprice();
-	}
-
-	/** Name to be shown the player. */
+	/** Name to show the player. */
 	public String name;
 	/** Cost in gold pieces. */
 	public int price;
@@ -96,9 +75,6 @@ public abstract class Item implements Serializable, Cloneable {
 	public boolean usedoutofbattle = true;
 	/** <code>true</code> if should be expended after use (default: true). */
 	public boolean consumable = true;
-
-	/** If not <code>null</code> will be used for {@link #describefailure()}. */
-	volatile protected String failure = null;
 	/** How many action points to spend during {@link UseItem}. */
 	public float apcost = .5f;
 
@@ -109,6 +85,9 @@ public abstract class Item implements Serializable, Cloneable {
 	 * opportunity.
 	 */
 	public boolean provokesaoo = true;
+
+	/** If not <code>null</code> will be used for {@link #describefailure()}. */
+	volatile protected String failure = null;
 
 	/**
 	 * @param upgradeset
@@ -124,10 +103,17 @@ public abstract class Item implements Serializable, Cloneable {
 		}
 	}
 
-	/** Sorts {@link #ALL} by price. */
-	public static void mapbyprice() {
-		Collections.shuffle(ALL);
-		Collections.sort(ALL, ItemPriceComparator.SINGLETON);
+	protected Item randomize() {
+		return clone();
+	}
+
+	public void register() {
+		Tier.ITEMS.get(Tier.gettier(getlevel())).add(this);
+	}
+
+	public int getlevel() {
+		final double level = Math.pow(price / 7.5, 1.0 / 3.0);
+		return Math.max(1, Math.round(Math.round(level)));
 	}
 
 	@Override
@@ -227,43 +213,10 @@ public abstract class Item implements Serializable, Cloneable {
 	}
 
 	/**
-	 * @return All items types mapped by realm.
-	 */
-	public static HashMap<String, ItemSelection> getall() {
-		HashMap<String, ItemSelection> all = new HashMap<String, ItemSelection>();
-		addall(FIRE, all, "fire");
-		addall(EARTH, all, "earth");
-		addall(WATER, all, "water");
-		addall(WIND, all, "wind");
-
-		addall(GOOD, all, "good");
-		addall(EVIL, all, "evil");
-		addall(MAGIC, all, "magic");
-
-		addall(ARTIFACT, all, "artifact");
-		return all;
-	}
-
-	static private void addall(ItemSelection fire2,
-			HashMap<String, ItemSelection> all, String string) {
-		all.put(string, fire2);
-	}
-
-	/**
 	 * @return <code>null</code> if can use this, or an error message otherwise.
 	 */
 	public String canuse(Combatant c) {
 		return null;
-	}
-
-	/**
-	 * Called if this is instance is going to be sold and cloned by a town's
-	 * {@link ShoppingScreen}.
-	 *
-	 * @see #clone()
-	 */
-	public void shop() {
-		// does nothing
 	}
 
 	/**
@@ -282,6 +235,73 @@ public abstract class Item implements Serializable, Cloneable {
 	 */
 	public void grab() {
 		grab(Squad.active);
+	}
+
+	/**
+	 * Used as strategic resource damage.
+	 * 
+	 * @param c
+	 *
+	 * @return Lowercase description of used resources or <code>null</code> if
+	 *         wasn't wasted.
+	 * @see StartBattle
+	 */
+	public String waste(float resourcesused, Combatant c, ArrayList<Item> bag) {
+		if (RPG.random() < resourcesused && canuse(c) == null) {
+			bag.remove(this);
+			return name;
+		}
+		return null;
+	}
+
+	/** Creates {@link Item}s from {@link Spell}s. */
+	public static void init() {
+		for (Spell s : Spell.SPELLS.values()) {
+			if (s.isscroll) {
+				new Scroll(s).register();
+			}
+			if (s.iswand) {
+				new Wand(s).register();
+			}
+			if (s.ispotion) {
+				new Potion(s).register();
+			}
+			if (s.isring) {
+				for (int uses : CasterRing.POWERLEVELS) {
+					new CasterRing(s, uses).register();
+				}
+			}
+		}
+		mapbyprice();
+	}
+
+	/** Sorts {@link #ALL} by price. */
+	public static void mapbyprice() {
+		Collections.shuffle(ALL);
+		Collections.sort(ALL, ItemsByPrice.SINGLETON);
+	}
+
+	/**
+	 * @return All items types mapped by realm.
+	 */
+	public static HashMap<String, ItemSelection> getall() {
+		HashMap<String, ItemSelection> all = new HashMap<String, ItemSelection>();
+		addall(FIRE, all, "fire");
+		addall(EARTH, all, "earth");
+		addall(WATER, all, "water");
+		addall(WIND, all, "wind");
+
+		addall(GOOD, all, "good");
+		addall(EVIL, all, "evil");
+		addall(MAGIC, all, "magic");
+
+		addall(ARTIFACT, all, "artifact");
+		return all;
+	}
+
+	static void addall(ItemSelection fire2, HashMap<String, ItemSelection> all,
+			String string) {
+		all.put(string, fire2);
 	}
 
 	/**
@@ -312,19 +332,20 @@ public abstract class Item implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Used as strategic resource damage.
-	 * 
-	 * @param c
-	 *
-	 * @return Lowercase description of used resources or <code>null</code> if
-	 *         wasn't wasted.
-	 * @see StartBattle
+	 * @param from
+	 *            A sample of items (like {@link #ALL} or from
+	 *            {@link Tier#ITEMS}).
+	 * @return The same items but with randomized parameters, from cheapest to
+	 *         most expensive (previously shuffled to introduce order randomness
+	 *         for items with exact same price).
 	 */
-	public String waste(float resourcesused, Combatant c, ArrayList<Item> bag) {
-		if (RPG.random() < resourcesused && canuse(c) == null) {
-			bag.remove(this);
-			return name;
+	public static List<Item> randomize(Collection<Item> from) {
+		ArrayList<Item> randomized = new ArrayList<Item>(from.size());
+		for (Item i : from) {
+			randomized.add(i.randomize());
 		}
-		return null;
+		Collections.shuffle(randomized);
+		randomized.sort(ItemsByPrice.SINGLETON);
+		return randomized;
 	}
 }

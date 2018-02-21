@@ -44,7 +44,7 @@ public class Wand extends Item {
 		spell.provokeaoo = false;
 		provokesaoo = false;
 		baseprice = price;
-		recharge();
+		recharge(null);
 		usedinbattle = s.castinbattle;
 		usedoutofbattle = s.castoutofbattle;
 		apcost = s.apcost;
@@ -54,17 +54,10 @@ public class Wand extends Item {
 	 * Offer a new charge/price for this item instead of always having a fixed
 	 * price and full charges.
 	 */
-	void recharge() {
-		maxcharges = shop ? 50 : RPG.r(1, 50);
-		charges = maxcharges;
-		price = baseprice * charges;
-	}
-
-	@Override
-	public Item clone() {
-		Wand clone = (Wand) super.clone();
-		clone.recharge();
-		return clone;
+	void recharge(Integer charges) {
+		maxcharges = charges == null ? 50 : charges;
+		this.charges = maxcharges;
+		price = baseprice * this.charges;
 	}
 
 	@Override
@@ -116,12 +109,6 @@ public class Wand extends Item {
 	}
 
 	@Override
-	public void shop() {
-		shop = true;
-		recharge();
-	}
-
-	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Wand) {
 			return name.equals(((Wand) obj).name);
@@ -145,5 +132,12 @@ public class Wand extends Item {
 			return "exhausted " + name.toLowerCase();
 		}
 		return name.toLowerCase() + " (" + used + " times)";
+	}
+
+	@Override
+	protected Item randomize() {
+		Wand clone = (Wand) super.randomize();
+		clone.recharge(RPG.r(1, 50));
+		return clone;
 	}
 }

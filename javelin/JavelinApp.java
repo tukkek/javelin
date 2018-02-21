@@ -285,7 +285,6 @@ public class JavelinApp extends QuestApp {
 		ItemSelection inventory = allitems.get(realm);
 		for (int i = 0; inventory != null && i < inventory.size(); i++) {
 			Item item = inventory.get(i).clone();
-			item.shop();
 			System.out.println(
 					"\t" + count + " - " + item + " ($" + item.price + ")");
 			count += 1;

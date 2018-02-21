@@ -27,6 +27,7 @@ import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.Map;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
+import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
@@ -155,7 +156,7 @@ public class ArenaFight extends Minigame {
 		}
 	}
 
-	public int gold = Javelin.DEBUG ? 99000 : 0;
+	public int gold = 99000;
 
 	/** {@link Item} bag for {@link #gladiators}. */
 	HashMap<Integer, ArrayList<Item>> items = new HashMap<Integer, ArrayList<Item>>();
@@ -297,6 +298,9 @@ public class ArenaFight extends Minigame {
 	}
 
 	void raisetension(int elblue) {
+		if (true == true) {
+			return;
+		}
 		placefoes(elblue);
 		ArrayList<ArenaFountain> fountains = getfountains();
 		refillfountains(fountains);
@@ -433,5 +437,11 @@ public class ArenaFight extends Minigame {
 	public static ArenaFight get() {
 		Fight f = Javelin.app.fight;
 		return f != null && f instanceof ArenaFight ? (ArenaFight) f : null;
+	}
+
+	@Override
+	public void die(Combatant c, BattleState s) {
+		super.die(c, s);
+		gold += RewardCalculator.getgold(c.source.challengerating) * BOOST;
 	}
 }

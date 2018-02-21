@@ -189,7 +189,7 @@ public class Dungeon extends Location {
 			if (i == chests && World.scenario.allowkeys) {
 				c = createspecialchest(p);
 			} else {
-				c = RewardCalculator.createchest(gold, p.x, p.y);
+				c = Chest.create(gold, p.x, p.y);
 			}
 			features.add(c);
 		}

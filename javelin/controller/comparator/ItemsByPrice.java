@@ -5,15 +5,15 @@ import java.util.List;
 
 import javelin.model.item.Item;
 
-public class ItemPriceComparator implements Comparator<Item> {
+public class ItemsByPrice implements Comparator<Item> {
 	/**
 	 * Organizes a {@link List} from cheapest to most expensive Item.
 	 *
 	 * @see List#sort(Comparator)
 	 */
-	public static Comparator<Item> SINGLETON = new ItemPriceComparator();
+	public static Comparator<Item> SINGLETON = new ItemsByPrice();
 
-	private ItemPriceComparator() {
+	private ItemsByPrice() {
 		// use SINGLETON
 	}
 

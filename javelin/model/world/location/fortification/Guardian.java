@@ -36,7 +36,7 @@ public class Guardian extends Fortification {
 	@Override
 	protected void generategarrison(int minel, int maxel) {
 		while (garrison.isEmpty()) {
-			loot = RPG.pick(Item.ALL).clone();
+			loot = RPG.pick(Item.randomize(Item.ALL));
 			int cr = CrCalculator.goldtocr(loot.price);
 			Combatant c = findnativemonster(cr, this);
 			if (c != null) {

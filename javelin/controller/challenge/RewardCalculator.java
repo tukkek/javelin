@@ -9,13 +9,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javelin.controller.comparator.DescendingLevelComparator;
-import javelin.model.item.Item;
-import javelin.model.item.ItemSelection;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.World;
-import javelin.model.world.location.dungeon.Chest;
-import javelin.model.world.location.dungeon.Dungeon;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Determines experience points and treasure to be awarded after winning a
@@ -138,32 +133,6 @@ public class RewardCalculator {
 			return 0;
 		}
 		return Math.round(cr * cr * cr * 7.5f * World.scenario.rewardbonus);
-	}
-
-	/**
-	 * @param gold
-	 *            Value to be added in gold or {@link Item}s.
-	 * @param x
-	 *            {@link Dungeon} coordinate.
-	 * @param y
-	 *            {@link Dungeon} coordinate.
-	 * @return A {@link Dungeon} chest.
-	 */
-	public static Chest createchest(int gold, int x, int y) {
-		ItemSelection chest = new ItemSelection();
-		if (RPG.r(1, 2) == 1) {// 50% are gold and 50% are item
-			int limit = gold / 10;
-			for (Integer price : Item.BYPRICE.descendingMap().keySet()) {
-				if (price <= limit) {
-					break;
-				}
-				if (gold > price) {
-					gold -= price;
-					chest.add(RPG.pick(Item.BYPRICE.get(price)));
-				}
-			}
-		}
-		return new Chest("chest", x, y, gold, chest);
 	}
 
 	/**

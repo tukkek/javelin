@@ -252,7 +252,10 @@ public class WorldScreen extends BattleScreen {
 			for (Actor p : World.getall(Town.class)) {
 				Town t = (Town) p;
 				if (t.ishosting()) {
-					assert tournament == null;// only one tournament at a time
+					if (Javelin.DEBUG) {
+						/* only one tournament at a time */
+						assert tournament == null;
+					}
 					tournament = t;
 					tournament.events.remove(0);
 				}

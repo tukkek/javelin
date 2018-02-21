@@ -45,13 +45,9 @@ public class DungeonScreen extends WorldScreen {
 	 */
 	public static boolean updatelocation = true;
 
-	static float fights = 0;
-
 	@Override
 	public boolean explore(float hoursellapsed, boolean encounter) {
 		try {
-			fights += dungeon.encounterratio;
-			System.out.println("#dungeonencounter " + fights);
 			if (encounter) {
 				RandomEncounter.encounter(dungeon.encounterratio);
 			}

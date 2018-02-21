@@ -2,27 +2,21 @@ package javelin.view.mappanel.battle;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import java.util.List;
 
-import javelin.Javelin;
-import javelin.controller.Point;
 import javelin.controller.action.Examine;
-import javelin.controller.action.Fire;
-import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
-import javelin.model.state.BattleState.Vision;
-import javelin.model.state.Meld;
-import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.Combatant;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.MoveOverlay;
 import javelin.view.mappanel.Tile;
-import javelin.view.mappanel.battle.overlay.BattleMover;
-import javelin.view.mappanel.battle.overlay.BattleMover.BatteStep;
+import javelin.view.mappanel.battle.action.BattleMouseAction;
+import javelin.view.mappanel.battle.action.MeleeMouseAction;
+import javelin.view.mappanel.battle.action.MoveMouseAction;
+import javelin.view.mappanel.battle.action.RangedMouseAction;
 import javelin.view.mappanel.battle.overlay.TargetOverlay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.StatisticsScreen;
@@ -33,30 +27,9 @@ import javelin.view.screen.StatisticsScreen;
  * @author alex
  */
 public class BattleMouse extends Mouse {
-	enum Action {
-		MELEE, RANGED, MOVE
-	}
-
-	/**
-	 * TODO there is an edge case here for the future: if you're not engaged
-	 * with an opponent but could either attack with a ranged weapon or a reach
-	 * weapon
-	 */
-	static Action getaction(final Combatant current, final Combatant target,
-			final BattleState s) {
-		if (target == null) {
-			return Action.MOVE;
-		}
-		if (target.isally(current, s)) {
-			return null;
-		}
-		if (current.isadjacent(target)) {
-			return current.source.melee.isEmpty() ? null : Action.MELEE;
-		}
-		return current.source.ranged.isEmpty() || s.isengaged(current)
-				|| s.haslineofsight(current, target) == Vision.BLOCKED ? null
-						: Action.RANGED;
-	}
+	static final BattleMouseAction[] ACTIONS = new BattleMouseAction[] {
+			new MoveMouseAction(), new MeleeMouseAction(),
+			new RangedMouseAction() };
 
 	/** Constructor. */
 	public BattleMouse(MapPanel panel) {
@@ -86,52 +59,29 @@ public class BattleMouse extends Mouse {
 		}
 		if (button == MouseEvent.BUTTON1) {
 			final Combatant current = BattlePanel.current;
-			final Action a = getaction(current, target, s);
-			if (a == Action.MOVE) {
-				if (MapPanel.overlay instanceof MoveOverlay) {
-					final MoveOverlay walk = (MoveOverlay) MapPanel.overlay;
-					if (!walk.path.steps.isEmpty()) {
-						walk.clear();
-						BattleScreen.perform(new Runnable() {
-							@Override
-							public void run() {
-								final BatteStep to = walk.path.steps
-										.get(walk.path.steps.size() - 1);
-								BattleState move = Fight.state;
-								Combatant c = move.clone(current);
-								c.location[0] = to.x;
-								c.location[1] = to.y;
-								c.ap += to.totalcost - BattleScreen.partialmove;
-								Meld m = move.getmeld(to.x, to.y);
-								if (m != null && c.ap >= m.meldsat) {
-									Javelin.app.fight.meld(c, m);
-								}
-							}
-						});
-					}
-				}
-				return;
-			} else if (a == Action.MELEE) {
-				BattleScreen.perform(new Runnable() {
-					@Override
-					public void run() {
-						current.meleeattacks(target, s);
-					}
-				});
-			} else if (a == Action.RANGED) {
-				BattleScreen.perform(new Runnable() {
-					@Override
-					public void run() {
-						current.rangedattacks(target, s);
-					}
-				});
+			BattleMouseAction action = getaction(s, target, current);
+			if (action != null) {
+				action.act(current, target, s);
 			}
-			if (MapPanel.overlay != null) {
+			if (MapPanel.overlay != null
+					&& (action == null || action.clearoverlay)) {
 				MapPanel.overlay.clear();
 			}
 			return;
 		}
 		super.mouseClicked(e);
+	}
+
+	public BattleMouseAction getaction(final BattleState s, final Combatant target,
+			final Combatant current) {
+		BattleMouseAction action = null;
+		for (BattleMouseAction a : ACTIONS) {
+			if (a.determine(current, target, s)) {
+				action = a;
+				break;
+			}
+		}
+		return action;
 	}
 
 	@Override
@@ -153,30 +103,14 @@ public class BattleMouse extends Mouse {
 			final BattleState s = Fight.state;
 			final Combatant current = s.clone(BattlePanel.current);
 			final Combatant target = s.getcombatant(t.x, t.y);
-			final Action a = getaction(current, target, s);
-			if (a == Action.MOVE) {
-				MoveOverlay.schedule(new MoveOverlay(new BattleMover(
-						new Point(current.location[0], current.location[1]),
-						new Point(t.x, t.y), current, s)));
-				return;
-			} else if (a == Action.MELEE) {
-				final List<Attack> attack = current.currentmelee.next == null
-						|| current.currentmelee.next.isEmpty()
-								? current.source.melee.get(0)
-								: current.currentmelee.next;
-				final String chance = MeleeAttack.SINGLETON.getchance(current,
-						target, attack.get(0), s);
-				final String status = target + " (" + target.getstatus() + ", "
-						+ chance + " to hit)";
-				showstatus(status, target, true);
-			} else if (a == Action.RANGED) {
-				showstatus(Fire.SINGLETON.describehitchance(current, target, s),
-						target, true);
-			} else {
+			BattleMouseAction action = getaction(s, target, current);
+			if (action == null) {
 				final String status = target + " (" + target.getstatus() + ")";
 				showstatus(status, target, false);
+			} else {
+				action.onenter(current, target, t, s);
 			}
-			if (target != null) {
+			if (target != null && (action == null || action.clearoverlay)) {
 				Examine.lastlooked = target;
 				BattleScreen.active.statuspanel.repaint();
 			}
@@ -185,7 +119,7 @@ public class BattleMouse extends Mouse {
 		}
 	}
 
-	void showstatus(String status, Combatant c, boolean target) {
+	public static void showstatus(String status, Combatant c, boolean target) {
 		if (target) {
 			MapPanel.overlay = new TargetOverlay(c.location[0], c.location[1]);
 		}

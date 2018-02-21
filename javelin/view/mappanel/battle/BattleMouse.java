@@ -72,16 +72,19 @@ public class BattleMouse extends Mouse {
 		super.mouseClicked(e);
 	}
 
-	public BattleMouseAction getaction(final BattleState s, final Combatant target,
-			final Combatant current) {
-		BattleMouseAction action = null;
+	public BattleMouseAction getaction(final BattleState s,
+			final Combatant target, final Combatant current) {
+		BattleMouseAction custom = target == null ? null
+				: target.getmouseaction();
+		if (custom != null && custom.determine(current, target, s)) {
+			return custom;
+		}
 		for (BattleMouseAction a : ACTIONS) {
 			if (a.determine(current, target, s)) {
-				action = a;
-				break;
+				return a;
 			}
 		}
-		return action;
+		return null;
 	}
 
 	@Override

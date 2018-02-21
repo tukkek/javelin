@@ -54,6 +54,7 @@ import javelin.model.unit.feat.attack.GreatCleave;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.unique.MercenariesGuild;
+import javelin.view.mappanel.battle.action.BattleMouseAction;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -125,9 +126,10 @@ public class Combatant implements Serializable, Cloneable {
 	 */
 	public Spells spells = new Spells();
 	/**
-	 * XP in CR, you'll want to multiply by 100 and round to show the player.
+	 * Experience points as unspent challenge rating value.
 	 * 
 	 * @see #learn(float)
+	 * @see #gethumanxp()
 	 */
 	public BigDecimal xp = new BigDecimal(0);
 	public boolean summoned = false;
@@ -980,6 +982,10 @@ public class Combatant implements Serializable, Cloneable {
 
 	public Point getlocation() {
 		return new Point(location[0], location[1]);
+	}
+
+	public BattleMouseAction getmouseaction() {
+		return null;
 	}
 
 }

@@ -33,8 +33,8 @@ public class MoveMouseAction extends BattleMouseAction {
 				BattleScreen.perform(new Runnable() {
 					@Override
 					public void run() {
-						final BatteStep to = walk.path.steps
-								.get(walk.path.steps.size() - 1);
+						int finalstep = walk.path.steps.size() - 1;
+						final BatteStep to = walk.path.steps.get(finalstep);
 						BattleState move = Fight.state;
 						Combatant c = move.clone(current);
 						c.location[0] = to.x;
@@ -53,8 +53,9 @@ public class MoveMouseAction extends BattleMouseAction {
 	@Override
 	public void onenter(Combatant current, Combatant target, Tile t,
 			BattleState s) {
-		MoveOverlay.schedule(new MoveOverlay(new BattleMover(
-				new Point(current.location[0], current.location[1]),
-				new Point(t.x, t.y), current, s)));
+		Point from = new Point(current.location[0], current.location[1]);
+		Point to = new Point(t.x, t.y);
+		MoveOverlay.schedule(
+				new MoveOverlay(new BattleMover(from, to, current, s)));
 	}
 }

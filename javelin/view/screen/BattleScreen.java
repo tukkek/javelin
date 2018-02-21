@@ -219,17 +219,20 @@ public class BattleScreen extends Screen {
 		if (MapPanel.overlay != null) {
 			MapPanel.overlay.clear();
 		}
-		if (updatableUserAction == null) {
-			callback.run();
-			callback = null;
-		} else {
-			try {
+		try {
+			if (updatableUserAction == null) {
+				try {
+					callback.run();
+				} finally {
+					callback = null;
+				}
+			} else {
 				perform(convertEventToAction(updatableUserAction),
 						updatableUserAction.isShiftDown());
-			} catch (RepeatTurn e) {
-				Game.messagepanel.clear();
-				humanmove();
 			}
+		} catch (RepeatTurn e) {
+			Game.messagepanel.clear();
+			humanmove();
 		}
 	}
 

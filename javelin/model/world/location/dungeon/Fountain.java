@@ -19,13 +19,18 @@ public class Fountain extends Feature {
 	@Override
 	public boolean activate() {
 		for (Combatant c : Squad.active.members) {
-			c.heal(c.maxhp, true);
-			for (Spell s : c.spells) {
-				s.used = 0;
-			}
+			heal(c);
 		}
 		Javelin.message("Party totally recovered!", false);
 		return true;
+	}
+
+	public static void heal(Combatant c) {
+		c.detox(c.source.poison);
+		c.heal(c.maxhp, true);
+		for (Spell s : c.spells) {
+			s.used = 0;
+		}
 	}
 
 }

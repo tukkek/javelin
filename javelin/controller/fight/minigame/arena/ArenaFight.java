@@ -17,6 +17,11 @@ import javelin.controller.exception.GaveUpException;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.Minigame;
+import javelin.controller.fight.minigame.arena.building.ArenaAcademy;
+import javelin.controller.fight.minigame.arena.building.ArenaBuilding;
+import javelin.controller.fight.minigame.arena.building.ArenaFountain;
+import javelin.controller.fight.minigame.arena.building.ArenaLair;
+import javelin.controller.fight.minigame.arena.building.ArenaShop;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.Map;
@@ -43,7 +48,7 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class ArenaFight extends Minigame {
-	static final int BOOST = 13;
+	public static final int BOOST = 13;
 	static final int MAPSIZE = 28;
 	static final int TENSIONMIN = -5;
 	static final int TENSIONMAX = 0;
@@ -93,7 +98,8 @@ public class ArenaFight extends Minigame {
 			generate(2, ArenaAcademy.class, quadrants);
 			generate(2, ArenaLair.class, quadrants);
 			generate(2, ArenaShop.class, quadrants);
-			generate(RPG.r(1, 4), ArenaFountain.class, quadrants);
+			generate(RPG.r(state.blueTeam.size(), state.blueTeam.size() * 2),
+					ArenaFountain.class, quadrants);
 			Collections.shuffle(quadrants);
 			for (int i = 0; i < quadrants.size(); i++) {
 				for (ArenaBuilding b : quadrants.get(i)) {
@@ -141,7 +147,7 @@ public class ArenaFight extends Minigame {
 			quadrants.sort(SizeComparator.INSTANCE);
 			for (int i = 0; i < amount; i++) {
 				try {
-					quadrants.get(i).add(building.newInstance());
+					quadrants.get(i % 4).add(building.newInstance());
 				} catch (ReflectiveOperationException e) {
 					throw new RuntimeException(e);
 				}
@@ -149,12 +155,13 @@ public class ArenaFight extends Minigame {
 		}
 	}
 
+	public int gold = Javelin.DEBUG ? 99000 : 0;
+
 	/** {@link Item} bag for {@link #gladiators}. */
 	HashMap<Integer, ArrayList<Item>> items = new HashMap<Integer, ArrayList<Item>>();
 	ArrayList<Combatant> gladiators = new ArrayList<Combatant>();
 	int tension = RPG.r(TENSIONMIN, TENSIONMAX);
 	float check = -Float.MAX_VALUE;
-	int gold = Javelin.DEBUG ? 99000 : 0;
 	/**
 	 * Ensures that new waves are never becoming less dangerous (pressuring the
 	 * player to upgrade and not just sit around).
@@ -290,14 +297,38 @@ public class ArenaFight extends Minigame {
 	}
 
 	void raisetension(int elblue) {
-		System.out.println("#arena raising tension: " + tension);
+		placefoes(elblue);
+		ArrayList<ArenaFountain> fountains = getfountains();
+		refillfountains(fountains);
+	}
+
+	public void refillfountains(ArrayList<ArenaFountain> fountains) {
+		if (check == -Float.MAX_VALUE) {
+			return;
+		}
+		float refillchance = 1f / fountains.size();
+		int i = 0;
+		Point p = null;
+		for (ArenaFountain f : fountains) {
+			if (RPG.random() < refillchance) {
+				f.setspent(false);
+				i += 1;
+				p = f.getlocation();
+			}
+		}
+		if (i > 0) {
+			notify(i + " fountain(s) refilled!!", p);
+		}
+	}
+
+	public void placefoes(int elblue) {
 		ArrayList<Combatant> last = null;
 		int min = Math.max(elblue + ELMIN, baseline);
 		baseline = min;
 		for (int el = min; el <= elblue + ELMAX; el += 1) {
 			ArrayList<Combatant> group;
 			try {
-				group = EncounterGenerator.generate(elblue,
+				group = EncounterGenerator.generate(el,
 						Arrays.asList(Terrain.ALL));
 			} catch (GaveUpException e) {
 				continue;
@@ -308,15 +339,34 @@ public class ArenaFight extends Minigame {
 			int tension = CrCalculator.calculateel(redteam) - elblue;
 			if (tension == this.tension) {
 				enter(group, state.redTeam, getmonsterentry());
-				return;
+				break;
 			}
 			if (tension > this.tension) {
 				enter(last == null ? group : last, state.redTeam,
 						getmonsterentry());
-				return;
+				break;
 			}
 			last = group;
 		}
+	}
+
+	float getbaseap() {
+		float ap = 0;
+		List<Combatant> gladiators = getgladiators();
+		for (Combatant c : gladiators) {
+			ap += c.ap;
+		}
+		return ap / gladiators.size();
+	}
+
+	ArrayList<ArenaFountain> getfountains() {
+		ArrayList<ArenaFountain> fountains = new ArrayList<ArenaFountain>();
+		for (Combatant c : state.blueTeam) {
+			if (c instanceof ArenaFountain) {
+				fountains.add((ArenaFountain) c);
+			}
+		}
+		return fountains;
 	}
 
 	Point getmonsterentry() {
@@ -336,12 +386,13 @@ public class ArenaFight extends Minigame {
 		Collections.shuffle(place);
 		Combatant last = place.pop();
 		last.setlocation(entry);
+		float ap = getbaseap();
 		if (!team.contains(last)) {
 			team.addAll(entering);
 			for (Combatant c : entering) {
 				c.rollinitiative();
 				if (check != -Float.MAX_VALUE) {
-					c.ap += state.next.ap;
+					c.ap += ap;
 					c.initialap = c.ap;
 				}
 			}
@@ -371,14 +422,16 @@ public class ArenaFight extends Minigame {
 
 	@Override
 	public void checkend() {
-		for (Combatant c : gladiators) {
-			if (state.blueTeam.contains(c)) {
-				return;
-			}
+		if (getgladiators().isEmpty()) {
+			state.blueTeam.clear();
+			String msg = "You've lost this match... better luck next time!";
+			Javelin.message(msg, true);
+			throw new EndBattle();
 		}
-		state.blueTeam.clear();
-		String msg = "You've lost this match - better luck next time!";
-		Javelin.message(msg, true);
-		throw new EndBattle();
+	}
+
+	public static ArenaFight get() {
+		Fight f = Javelin.app.fight;
+		return f != null && f instanceof ArenaFight ? (ArenaFight) f : null;
 	}
 }

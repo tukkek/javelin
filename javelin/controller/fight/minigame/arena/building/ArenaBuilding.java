@@ -1,15 +1,21 @@
-package javelin.controller.fight.minigame.arena;
+package javelin.controller.fight.minigame.arena.building;
 
 import javelin.Javelin;
+import javelin.controller.fight.minigame.arena.ArenaFight;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.attack.Combatant;
+import javelin.view.mappanel.Tile;
+import javelin.view.mappanel.battle.action.BattleMouseAction;
+import javelin.view.screen.BattleScreen;
 
 /**
  * TODO on upgrade start fast healing
  * 
  * @author alex
  */
-public class ArenaBuilding extends Combatant {
+public abstract class ArenaBuilding extends Combatant {
 	static BuildingLevel[] LEVELS = new BuildingLevel[] {
 			new BuildingLevel(0, 5, 70, 60, 5, 0),
 			new BuildingLevel(1, 10, 110, 90, 7, 7500 * ArenaFight.BOOST),
@@ -36,11 +42,14 @@ public class ArenaBuilding extends Combatant {
 		}
 	}
 
+	final protected String actiondescription;
+
 	int level;
 	int damagethresold;
 
-	public ArenaBuilding(String name, String avatar) {
+	public ArenaBuilding(String name, String avatar, String description) {
 		super(Javelin.getmonster("Building"), false);
+		this.actiondescription = description;
 		source.customName = name;
 		source.passive = true;
 		source.avatarfile = avatar;
@@ -81,5 +90,45 @@ public class ArenaBuilding extends Combatant {
 
 	public boolean isrepairing() {
 		return source.fasthealing > 0;
+	}
+
+	@Override
+	public BattleMouseAction getmouseaction() {
+		return new BattleMouseAction() {
+
+			@Override
+			public void onenter(Combatant current, Combatant target, Tile t,
+					BattleState s) {
+				Game.message(getactiondescription(current), Delay.NONE);
+			}
+
+			@Override
+			public boolean determine(Combatant current, Combatant target,
+					BattleState s) {
+				return true;
+			}
+
+			@Override
+			public void act(final Combatant current, final Combatant target,
+					final BattleState s) {
+				BattleScreen.perform(new Runnable() {
+					@Override
+					public void run() {
+						if (!current.isadjacent(target)) {
+							Game.messagepanel.clear();
+							Game.message("Too far away...", Delay.WAIT);
+						} else if (click(current)) {
+							s.clone(current).ap += 1;
+						}
+					}
+				});
+			}
+		};
+	}
+
+	abstract protected boolean click(Combatant current);
+
+	public String getactiondescription(Combatant current) {
+		return actiondescription;
 	}
 }

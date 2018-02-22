@@ -6,7 +6,6 @@ import javelin.controller.action.Action;
 import javelin.controller.action.ActionDescription;
 import javelin.controller.action.world.minigame.EnterArena;
 import javelin.controller.action.world.minigame.EnterBattlefield;
-import javelin.controller.action.world.minigame.EnterDungeonRush;
 import javelin.controller.action.world.minigame.EnterZiggurat;
 import javelin.view.screen.WorldScreen;
 
@@ -33,8 +32,7 @@ public abstract class WorldAction implements ActionDescription {
 			new EnterArena(), // A
 			new EnterBattlefield(), // B
 			new ClearHighscore(), // C
-			new Infiltrate(), new EnterDungeonRush(), // R
-			new Dismiss(), // D
+			new Infiltrate(), new Dismiss(), // D
 			new ConfigureWorldKeys(), // K
 			new Abandon(), // Q
 			new EnterZiggurat(), // Z

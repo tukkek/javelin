@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.arena.ArenaFight;
@@ -13,6 +14,8 @@ import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
+import javelin.view.screen.Option;
+import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.upgrading.UpgradingScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -38,6 +41,36 @@ public class ArenaAcademy extends ArenaBuilding {
 		protected Collection<Upgrade> getupgrades() {
 			restock(trainee);
 			return upgrades;
+		}
+
+		@Override
+		public List<Option> getoptions() {
+			List<Option> options = super.getoptions();
+			if (getupgradecost() != null) {
+				options.add(new BuildingUpgradeOption());
+			}
+			return options;
+		}
+
+		@Override
+		public boolean select(Option op) {
+			BuildingUpgradeOption upgrade = op instanceof BuildingUpgradeOption
+					? ((BuildingUpgradeOption) op) : null;
+			if (upgrade == null) {
+				return super.select(op);
+			}
+			stayopen = false;
+			return upgrade.buy(this);
+		}
+
+		@Override
+		public String printpriceinfo(Option o) {
+			BuildingUpgradeOption upgrade = o instanceof BuildingUpgradeOption
+					? ((BuildingUpgradeOption) o) : null;
+			if (upgrade == null) {
+				return super.printpriceinfo(o);
+			}
+			return " $" + ShoppingScreen.formatcost(o.price);
 		}
 
 		@Override
@@ -76,7 +109,7 @@ public class ArenaAcademy extends ArenaBuilding {
 				"Click this academy to upgrade the active unit!");
 	}
 
-	public void restock(Combatant trainee) {
+	void restock(Combatant trainee) {
 		if (upgrades.size() == NOPTIONS) {
 			return;
 		}
@@ -93,6 +126,11 @@ public class ArenaAcademy extends ArenaBuilding {
 				upgrades.add(u);
 			}
 		}
+	}
+
+	@Override
+	protected void upgradebuilding() {
+		upgrades.clear();
 	}
 
 	@Override

@@ -56,6 +56,33 @@ public class ArenaShop extends ArenaBuilding {
 		protected ItemSelection getitems() {
 			return stock;
 		}
+
+		@Override
+		protected void sort(List<Option> options) {
+			super.sort(options);
+			if (getupgradecost() != null) {
+				options.add(new BuildingUpgradeOption());
+			}
+		}
+
+		@Override
+		public boolean select(Option op) {
+			BuildingUpgradeOption upgrade = op instanceof BuildingUpgradeOption
+					? ((BuildingUpgradeOption) op) : null;
+			if (upgrade == null) {
+				return super.select(op);
+			}
+			stayopen = false;
+			return upgrade.buy(this);
+		}
+
+		@Override
+		public String printpriceinfo(Option o) {
+			if (o instanceof BuildingUpgradeOption) {
+				return " $" + formatcost(o.price);
+			}
+			return super.printpriceinfo(o);
+		}
 	}
 
 	public ItemSelection stock = new ItemSelection();
@@ -98,5 +125,10 @@ public class ArenaShop extends ArenaBuilding {
 	public static String getgoldinfo() {
 		return "\n\nYour gladiators currently have $"
 				+ ShoppingScreen.formatcost(ArenaFight.get().gold) + ".";
+	}
+
+	@Override
+	protected void upgradebuilding() {
+		restock();
 	}
 }

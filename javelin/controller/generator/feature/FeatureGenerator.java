@@ -57,7 +57,6 @@ import javelin.model.world.location.unique.SummoningCircle;
 import javelin.model.world.location.unique.TrainingHall;
 import javelin.model.world.location.unique.minigame.Arena;
 import javelin.model.world.location.unique.minigame.Battlefield;
-import javelin.model.world.location.unique.minigame.DungeonRush;
 import javelin.model.world.location.unique.minigame.Ziggurat;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
@@ -238,8 +237,8 @@ public class FeatureGenerator {
 
 	void generateuniquelocations(ArrayList<Location> locations) {
 		locations.addAll(Arrays.asList(new Location[] { new PillarOfSkulls(),
-				new Arena(), new Battlefield(), new DungeonRush(),
-				new Ziggurat(), new DeepDungeon() }));
+				new Arena(), new Battlefield(), new Ziggurat(),
+				new DeepDungeon() }));
 		if (World.scenario.worlddistrict) {
 			locations.addAll(
 					Arrays.asList(new Location[] { new MercenariesGuild(),

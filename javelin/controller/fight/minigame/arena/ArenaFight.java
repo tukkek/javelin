@@ -161,7 +161,7 @@ public class ArenaFight extends Minigame {
 		}
 	}
 
-	public int gold = 99000;
+	public int gold = false ? 0 : 9900000;
 	/** {@link Item} bag for {@link #gladiators}. */
 	public HashMap<Integer, ArrayList<Item>> items = new HashMap<Integer, ArrayList<Item>>();
 

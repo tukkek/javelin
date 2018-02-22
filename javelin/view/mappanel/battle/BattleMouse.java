@@ -52,7 +52,9 @@ public class BattleMouse extends Mouse {
 			BattleScreen.perform(new Runnable() {
 				@Override
 				public void run() {
-					new StatisticsScreen(target);
+					if (!target.source.passive) {
+						new StatisticsScreen(target);
+					}
 				}
 			});
 			return;

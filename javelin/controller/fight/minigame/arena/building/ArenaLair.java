@@ -34,7 +34,6 @@ public class ArenaLair extends ArenaBuilding {
 	}
 
 	class ArenaLairScreen extends PurchaseScreen {
-
 		ArrayList<Combatant> hired = null;
 
 		public ArenaLairScreen() {
@@ -50,6 +49,10 @@ public class ArenaLair extends ArenaBuilding {
 		@Override
 		protected void spend(Option o) {
 			ArenaFight.get().gold -= o.price;
+			if (o instanceof BuildingUpgradeOption) {
+				((BuildingUpgradeOption) o).upgrade();
+				return;
+			}
 			hired = ((HireOption) o).group;
 			for (Combatant c : hired) {
 				c.setmercenary(true);
@@ -76,6 +79,13 @@ public class ArenaLair extends ArenaBuilding {
 			return options;
 		}
 
+		@Override
+		protected void sort(List<Option> options) {
+			super.sort(options);
+			if (getupgradecost() != null) {
+				options.add(new BuildingUpgradeOption());
+			}
+		}
 	}
 
 	ArrayList<ArrayList<Combatant>> hires = new ArrayList<ArrayList<Combatant>>(
@@ -124,5 +134,11 @@ public class ArenaLair extends ArenaBuilding {
 	public static String getgoldinfo() {
 		return "\n\nYour gladiators currently have $"
 				+ ShoppingScreen.formatcost(ArenaFight.get().gold) + ".";
+	}
+
+	@Override
+	protected void upgradebuilding() {
+		hires.clear();
+		stock();
 	}
 }

@@ -9,7 +9,10 @@ import javelin.model.unit.attack.Combatant;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.battle.action.BattleMouseAction;
 import javelin.view.screen.BattleScreen;
+import javelin.view.screen.InfoScreen;
+import javelin.view.screen.Option;
 import javelin.view.screen.shopping.ShoppingScreen;
+import javelin.view.screen.town.PurchaseScreen;
 
 /**
  * TODO on upgrade start fast healing
@@ -43,6 +46,34 @@ public abstract class ArenaBuilding extends Combatant {
 		}
 	}
 
+	protected class BuildingUpgradeOption extends Option {
+		protected BuildingUpgradeOption() {
+			super("Upgrade " + source.customName.toLowerCase(),
+					getupgradecost(), 'u');
+		}
+
+		protected void upgrade() {
+			materials = getupgradecost();
+			setlevel(ArenaBuilding.LEVELS[level + 1]);
+			repairing = true;
+			upgradebuilding();
+		}
+
+		public boolean buy(InfoScreen s) {
+			int gold = ArenaFight.get().gold;
+			if (gold >= price) {
+				ArenaFight.get().gold -= price;
+				upgrade();
+				return true;
+			} else {
+				s.print("Not enough gold (you currently have $"
+						+ PurchaseScreen.formatcost(gold)
+						+ ").\n\nPress any key to continue....");
+				return false;
+			}
+		}
+	}
+
 	final protected String actiondescription;
 
 	int materials = 0;
@@ -62,26 +93,22 @@ public abstract class ArenaBuilding extends Combatant {
 		source.immunitytoparalysis = true;
 		source.immunitytopoison = true;
 		setlevel(ArenaBuilding.LEVELS[0]);
+		hp = maxhp;
 	}
 
 	void setlevel(ArenaBuilding.BuildingLevel level) {
 		this.level = level.level;
 		maxhp = level.hp;
-		hp = maxhp;
 		damagethresold = level.damagethresold;
 		source.dr = level.hardness;
 		source.challengerating = (level.level + 1) * 5f;
-	}
-
-	void upgrade() {
-		setlevel(ArenaBuilding.LEVELS[level + 1]);
 	}
 
 	/** TODO use */
 	Integer getupgradecost() {
 		int next = level + 1;
 		return next < ArenaBuilding.LEVELS.length
-				? ArenaBuilding.LEVELS[next].cost : null;
+				? getrepaircost() + ArenaBuilding.LEVELS[next].cost : null;
 	}
 
 	@Override
@@ -97,6 +124,8 @@ public abstract class ArenaBuilding extends Combatant {
 			}
 		}
 	}
+
+	abstract protected void upgradebuilding();
 
 	@Override
 	public BattleMouseAction getmouseaction() {
@@ -122,11 +151,14 @@ public abstract class ArenaBuilding extends Combatant {
 					@Override
 					public void run() {
 						if (isdamaged()) {
-							if (!repair()) {
+							if (repair()) {
 								Game.messagepanel.clear();
-								Game.message("Not enough gold...", Delay.WAIT);
+								String underrepair = source.customName
+										+ " is being repaired...";
+								Game.message(underrepair, Delay.WAIT);
 							} else {
 								Game.messagepanel.clear();
+								Game.message("Not enough gold...", Delay.WAIT);
 							}
 						} else if (!current.isadjacent(target)) {
 							Game.messagepanel.clear();

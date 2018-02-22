@@ -34,7 +34,7 @@ public class ActionMapping {
 			new ActionAdapter(OpenJournal.getsingleton()), // o
 			new ActionAdapter(ShowOptions.getsingleton()), // o
 			PassItem.SINGLETON, // p
-			new Recruit(), new TouchAttack(), // t
+			new TouchAttack(), // t
 			Defend.SINGLETON, // w
 			new Examine(), // x
 			ExecuteManeuver.INSTANCE, // m

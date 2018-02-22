@@ -11,7 +11,6 @@ import javelin.controller.quality.Quality;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
-import javelin.model.unit.Spawner;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.spell.Spell;
@@ -63,10 +62,8 @@ public class StatisticsScreen extends InfoScreen {
 					+ SelectScreen.formatcost(MercenariesGuild.getfee(c))
 					+ "/day)");
 		}
-		if (!(c.source instanceof Spawner)) {
-			lines.add("Challenge rating "
-					+ Math.round(CrCalculator.calculatecr(m)));
-		}
+		lines.add(
+				"Challenge rating " + Math.round(CrCalculator.calculatecr(m)));
 		for (ClassLevelUpgrade classlevels : ClassLevelUpgrade.classes) {
 			int level = classlevels.getlevel(m);
 			if (level > 0) {

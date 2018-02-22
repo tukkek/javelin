@@ -67,7 +67,7 @@ public class Examine extends Action {
 				} else if (key == 'v') {
 					Combatant target = Fight.state.getcombatant(cursor.x,
 							cursor.y);
-					if (target != null) {
+					if (target != null && !target.source.passive) {
 						new StatisticsScreen(target);
 					}
 				} else if (key == 'q') {

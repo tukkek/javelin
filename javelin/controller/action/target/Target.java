@@ -128,7 +128,7 @@ public abstract class Target extends Action {
 				Game.messagepanel.clear();
 				attack(combatant, targets.get(targeti), state);
 				break;
-			} else if (key == 'v') {
+			} else if (key == 'v' && !targets.get(targeti).source.passive) {
 				new StatisticsScreen(targets.get(targeti));
 			} else {
 				MapPanel.overlay.clear();
@@ -193,8 +193,7 @@ public abstract class Target extends Action {
 						+ " to confirm, v to view target's sheet, q to quit.\n",
 				Delay.NONE);
 		Game.message(describehitchance(active, target, state), Delay.NONE);
-		BattleScreen.active.center(target.location[0],
-				target.location[1]);
+		BattleScreen.active.center(target.location[0], target.location[1]);
 	}
 
 	/**

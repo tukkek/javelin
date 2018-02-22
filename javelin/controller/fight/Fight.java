@@ -118,6 +118,7 @@ public abstract class Fight {
 	public BattleSetup setup = new BattleSetup();
 	public boolean denydarkvision = false;
 	public boolean canflee = true;
+	public boolean endless = false;
 
 	/** Red team at the moment the {@link Fight} begins. */
 	public static ArrayList<Combatant> originalredteam;

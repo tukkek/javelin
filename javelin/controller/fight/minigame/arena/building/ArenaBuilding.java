@@ -32,14 +32,14 @@ public abstract class ArenaBuilding extends Combatant {
 		int cost;
 
 		public BuildingLevel(int level, int repair, int hp, int damagethresold,
-				int hardness, int cost) {
+				int hardness, float cost) {
 			super();
 			this.level = level;
 			this.repair = repair;
 			this.hp = hp;
 			this.damagethresold = damagethresold;
 			this.hardness = hardness;
-			this.cost = cost;
+			this.cost = Math.round(cost);
 		}
 	}
 
@@ -68,7 +68,6 @@ public abstract class ArenaBuilding extends Combatant {
 		this.level = level.level;
 		maxhp = level.hp;
 		hp = maxhp;
-		hp = hp / 2;
 		damagethresold = level.damagethresold;
 		source.dr = level.hardness;
 		source.challengerating = (level.level + 1) * 5f;

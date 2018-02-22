@@ -74,8 +74,17 @@ public class Automate extends WorldAction implements SimpleAction {
 		};
 
 		ArrayList<Combatant> getunits() {
-			return BattleScreen.active instanceof WorldScreen
-					? Squad.active.members : Fight.state.blueTeam;
+			if (BattleScreen.active instanceof WorldScreen) {
+				return Squad.active.members;
+			}
+			ArrayList<Combatant> team = new ArrayList<Combatant>(
+					Fight.state.blueTeam);
+			for (Combatant c : new ArrayList<Combatant>(team)) {
+				if (c.source.passive) {
+					team.remove(c);
+				}
+			}
+			return team;
 		}
 	}
 

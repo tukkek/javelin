@@ -43,12 +43,16 @@ public abstract class PurchaseScreen extends SelectScreen {
 	 * @return <code>true</code> if can pay for the current {@link Option}.
 	 */
 	protected boolean canbuy(final Option o) {
-		return Squad.active.gold >= o.price;
+		return getgold() >= o.price;
 	}
 
 	@Override
 	public String printinfo() {
-		return "Your squad has $" + formatcost(Squad.active.gold);
+		return "Your squad has $" + formatcost(getgold());
+	}
+
+	protected int getgold() {
+		return Squad.active.gold;
 	}
 
 	@Override

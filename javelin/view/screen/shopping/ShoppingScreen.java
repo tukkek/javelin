@@ -47,14 +47,24 @@ public abstract class ShoppingScreen extends PurchaseScreen {
 
 	@Override
 	public boolean select(final Option op) {
-		if (op.price > Squad.active.gold) {
+		if (!canbuy(op)) {
 			text += "Not enough gold...\n";
 			return false;
 		}
 		final PurchaseOption o = (PurchaseOption) op;
-		Squad.active.gold -= o.i.price;
+		spend(o);
 		afterpurchase(o);
 		return true;
+	}
+
+	@Override
+	protected boolean canbuy(Option o) {
+		return getgold() >= ((PurchaseOption) o).i.price;
+	}
+
+	@Override
+	protected void spend(final Option o) {
+		Squad.active.gold -= ((PurchaseOption) o).i.price;
 	}
 
 	@Override
@@ -63,8 +73,8 @@ public abstract class ShoppingScreen extends PurchaseScreen {
 		String useinfo = "";
 		if (i instanceof Wand || i instanceof Scroll) {
 			ArrayList<Combatant> members = new ArrayList<Combatant>(
-					Squad.active.members);
-			for (Combatant c : Squad.active.members) {
+					getbuyers());
+			for (Combatant c : new ArrayList<Combatant>(members)) {
 				if (i.canuse(c) != null) {
 					members.remove(c);
 				}
@@ -82,17 +92,16 @@ public abstract class ShoppingScreen extends PurchaseScreen {
 		return " (" + super.printpriceinfo(o).substring(1) + ")" + useinfo;
 	}
 
-	static String listactivemembers() {
-		int i = 1;
-		String s = "";
-		for (final Combatant m : Squad.active.members) {
-			s += "[" + i++ + "] " + m.toString() + "\n";
-		}
-		return s;
+	protected List<Combatant> getbuyers() {
+		return Squad.active.members;
 	}
 
 	@Override
 	public String printinfo() {
-		return "You have $" + PurchaseScreen.formatcost(Squad.active.gold);
+		return "You have $" + PurchaseScreen.formatcost(getgold());
+	}
+
+	protected int getgold() {
+		return Squad.active.gold;
 	}
 }

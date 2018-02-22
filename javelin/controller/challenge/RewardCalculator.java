@@ -157,7 +157,7 @@ public class RewardCalculator {
 	 * @see Combatant#xp
 	 */
 	public static String rewardxp(List<Combatant> originalblue,
-			List<Combatant> originalred, int bonus) {
+			List<Combatant> originalred, float bonus) {
 		int elred = CrCalculator.calculateel(originalred);
 		int elblue = CrCalculator.calculateel(originalblue);
 		int eldifference = Math.round(elred - elblue);

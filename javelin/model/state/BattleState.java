@@ -464,4 +464,8 @@ public class BattleState implements Node, TeamContainer {
 		all.addAll(fleeing);
 		all.addAll(dead);
 	}
+
+	public ArrayList<Combatant> getopponents(Combatant c) {
+		return getteam(c) == blueTeam ? redTeam : blueTeam;
+	}
 }

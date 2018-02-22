@@ -49,7 +49,7 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class ArenaFight extends Minigame {
-	public static final int BOOST = 13;
+	public static final float BOOST = 2;
 	static final int MAPSIZE = 28;
 	static final int TENSIONMIN = -5;
 	static final int TENSIONMAX = 0;
@@ -82,8 +82,11 @@ public class ArenaFight extends Minigame {
 			ArrayList<Combatant> gladiators = new ArrayList<Combatant>(
 					state.blueTeam);
 			placebuildings();
-			enter(gladiators, state.blueTeam,
-					new Point(getcenterpoint(), getcenterpoint()));
+			Point p = null;
+			while (p == null || !validate(p)) {
+				p = new Point(getcenterpoint(), getcenterpoint());
+			}
+			enter(gladiators, state.blueTeam, p);
 		}
 
 		int getcenterpoint() {
@@ -157,9 +160,9 @@ public class ArenaFight extends Minigame {
 	}
 
 	public int gold = 99000;
-
 	/** {@link Item} bag for {@link #gladiators}. */
-	HashMap<Integer, ArrayList<Item>> items = new HashMap<Integer, ArrayList<Item>>();
+	public HashMap<Integer, ArrayList<Item>> items = new HashMap<Integer, ArrayList<Item>>();
+
 	ArrayList<Combatant> gladiators = new ArrayList<Combatant>();
 	int tension = RPG.r(TENSIONMIN, TENSIONMAX);
 	float check = -Float.MAX_VALUE;
@@ -177,6 +180,7 @@ public class ArenaFight extends Minigame {
 		setup = new ArenaSetup();
 		meld = false;
 		canflee = false;
+		endless = true;
 	}
 
 	@Override
@@ -251,7 +255,7 @@ public class ArenaFight extends Minigame {
 	void reward(ArrayList<Combatant> dead) {
 		ArrayList<Combatant> defeated = new ArrayList<Combatant>(dead.size());
 		for (Combatant c : new ArrayList<Combatant>(dead)) {
-			if (c.mercenary) {
+			if (c.mercenary || c.summoned) {
 				dead.remove(c);
 			} else if (!gladiators.contains(c)) {
 				defeated.add(c);
@@ -260,10 +264,12 @@ public class ArenaFight extends Minigame {
 						* BOOST;
 			}
 		}
-		RewardCalculator.rewardxp(gladiators, defeated, BOOST);
+		if (!defeated.isEmpty()) {
+			RewardCalculator.rewardxp(getallies(), defeated, BOOST);
+		}
 	}
 
-	List<Combatant> getgladiators() {
+	public List<Combatant> getgladiators() {
 		ArrayList<Combatant> gladiators = new ArrayList<Combatant>(
 				this.gladiators.size());
 		for (Combatant c : state.blueTeam) {
@@ -342,16 +348,23 @@ public class ArenaFight extends Minigame {
 			redteam.addAll(group);
 			int tension = CrCalculator.calculateel(redteam) - elblue;
 			if (tension == this.tension) {
-				enter(group, state.redTeam, getmonsterentry());
+				enter(group, state.redTeam);
 				break;
 			}
 			if (tension > this.tension) {
-				enter(last == null ? group : last, state.redTeam,
-						getmonsterentry());
+				enter(last == null ? group : last, state.redTeam);
 				break;
 			}
 			last = group;
 		}
+	}
+
+	public void enter(ArrayList<Combatant> group, ArrayList<Combatant> team) {
+		Point entrance = null;
+		while (entrance == null || !validate(entrance)) {
+			entrance = getmonsterentry();
+		}
+		enter(group, team, entrance);
 	}
 
 	float getbaseap() {
@@ -405,9 +418,7 @@ public class ArenaFight extends Minigame {
 			Point p = last.getlocation();
 			p.x += RPG.r(-2, +2);
 			p.y += RPG.r(-2, +2);
-			if (!p.validate(0, 0, MAPSIZE, MAPSIZE)
-					|| state.map[p.x][p.y].blocked
-					|| state.getcombatant(p.x, p.y) != null) {
+			if (!validate(p)) {
 				continue;
 			}
 			last = place.pop();
@@ -416,6 +427,12 @@ public class ArenaFight extends Minigame {
 		if (check != -Float.MAX_VALUE) {
 			notify("New enemies enter the arena!", last.getlocation());
 		}
+	}
+
+	public boolean validate(Point p) {
+		return p.validate(0, 0, MAPSIZE, MAPSIZE)
+				&& !state.map[p.x][p.y].blocked
+				&& state.getcombatant(p.x, p.y) == null;
 	}
 
 	public void notify(String text, Point p) {
@@ -442,6 +459,15 @@ public class ArenaFight extends Minigame {
 	@Override
 	public void die(Combatant c, BattleState s) {
 		super.die(c, s);
-		gold += RewardCalculator.getgold(c.source.challengerating) * BOOST;
+	}
+
+	List<Combatant> getallies() {
+		ArrayList<Combatant> allies = new ArrayList<Combatant>();
+		for (Combatant c : state.blueTeam) {
+			if (!c.source.passive) {
+				allies.add(c);
+			}
+		}
+		return allies;
 	}
 }

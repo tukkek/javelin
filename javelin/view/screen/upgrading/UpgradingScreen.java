@@ -60,9 +60,14 @@ public abstract class UpgradingScreen extends SelectScreen {
 	 */
 	public UpgradingScreen(String name, Town t) {
 		super(name, t);
-		for (Combatant c : Squad.active.members) {
+	}
+
+	@Override
+	public void show() {
+		for (Combatant c : gettrainees()) {
 			original.put(c.id, c.clone().clonesource());
 		}
+		super.show();
 	}
 
 	/**
@@ -77,7 +82,9 @@ public abstract class UpgradingScreen extends SelectScreen {
 	 * 
 	 * @param trainees
 	 */
-	protected abstract void onexit(Squad s, ArrayList<TrainingOrder> trainees);
+	protected void onexit(ArrayList<TrainingOrder> trainees) {
+		// nothing by default
+	}
 
 	/** Available {@link UpgradeOption}s. */
 	protected abstract Collection<Upgrade> getupgrades();
@@ -94,8 +101,8 @@ public abstract class UpgradingScreen extends SelectScreen {
 		}
 		text += listeligible;
 		if (showmoneyinfo) {
-			text += "Your squad has $"
-					+ ShoppingScreen.formatcost(Squad.active.gold) + ".\n\n";
+			text += "Your squad has $" + ShoppingScreen.formatcost(getgold())
+					+ ".\n\n";
 		}
 		text += "Which squad member? Press r to return to upgrade selection.";
 		Combatant c = null;
@@ -139,7 +146,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 	String listeligible(final UpgradeOption o, final List<Combatant> eligible) {
 		String s = "\n";
 		int i = 1;
-		for (final Combatant c : Squad.active.members) {
+		for (final Combatant c : gettrainees()) {
 			String name = c.toString();
 			while (name.length() <= 10) {
 				name += " ";
@@ -152,15 +159,21 @@ public abstract class UpgradingScreen extends SelectScreen {
 						+ cost.multiply(new BigDecimal(100)).setScale(0,
 								RoundingMode.HALF_UP)
 						+ "XP, $" + price(cost.floatValue());
-				s += "[" + i++ + "] " + name + " " + o.u.inform(c) + costinfo
-						+ ", "
-						+ Math.round(
-								cost.floatValue() * TrainingOrder.UPGRADETIME)
-						+ " days\n";
+				s += "[" + i++ + "] " + name + " " + o.u.inform(c) + costinfo;
+				Integer days = getperiod(cost.floatValue());
+				if (days != null) {
+					s += ", " + days + " days\n";
+				}
 			}
 		}
 		return s + "\n";
 	}
+
+	protected Integer getperiod(float cost) {
+		return Math.round(cost * TrainingOrder.UPGRADETIME);
+	}
+
+	abstract public ArrayList<Combatant> gettrainees();
 
 	private int price(float xp) {
 		return Math.round(xp * 50);
@@ -177,18 +190,22 @@ public abstract class UpgradingScreen extends SelectScreen {
 				CrCalculator.calculaterawcr(clone.source)[1] - originalcr);
 		if (!listing) {
 			int goldpieces = price(cost.floatValue());
-			if (goldpieces > Squad.active.gold) {
+			if (goldpieces > getgold()) {
 				text += "\n\nNot enough gold! Press any key to continue...";
 				Javelin.app.switchScreen(this);
 				InfoScreen.feedback();
 				return null;
 			}
-			Squad.active.gold -= goldpieces;
+			pay(goldpieces);
 		}
 		upgrade(o, c);
 		c.xp = c.xp.subtract(cost);
 		return cost;
 	}
+
+	abstract public int getgold();
+
+	abstract public void pay(int goldpieces);
 
 	protected boolean upgrade(final UpgradeOption o, final Combatant c) {
 		return o.u.upgrade(c);
@@ -236,21 +253,19 @@ public abstract class UpgradingScreen extends SelectScreen {
 	@Override
 	public void onexit() {
 		ArrayList<TrainingOrder> trainees = new ArrayList<TrainingOrder>();
-		Squad s = Squad.active;
 		for (Combatant c : upgraded) {
 			Combatant original = this.original.get(c.id);
 			float xpcost = CrCalculator.calculaterawcr(c.source)[1]
 					- CrCalculator.calculaterawcr(original.source)[1];
-			trainees.add(new TrainingOrder(c, s.equipment.get(c.id),
-					c.toString(), xpcost, original));
+			trainees.add(createorder(c, original, xpcost));
 		}
-		onexit(s, trainees);
+		onexit(trainees);
 		for (TrainingOrder trainee : trainees) {
 			registertrainee(trainee);
-			Combatant c = trainee.trained;
-			s.equipment.remove(c.toString());
-			s.remove(c);
 		}
 	}
+
+	abstract public TrainingOrder createorder(Combatant c, Combatant original,
+			float xpcost);
 
 }

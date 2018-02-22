@@ -72,20 +72,7 @@ public class BribingScreen {
 			boolean canhire) {
 		String text = "You are able to parley with the "
 				+ CrCalculator.describedifficulty(foes) + " opponents!\n\n";
-		CountingSet count = new CountingSet();
-		count.casesensitive = true;
-		for (Combatant c : foes) {
-			count.add(c.toString());
-		}
-		for (String c : count.getorderedelements()) {
-			text += c;
-			int n = count.getcount(c);
-			if (n > 1) {
-				text += " (x" + n + ")";
-			}
-			text += ", ";
-		}
-		text = text.substring(0, text.length() - 2);
+		text = printgroupsummary(foes);
 		text += "\n\nWhat do you want to do? You have $"
 				+ PurchaseScreen.formatcost(Squad.active.gold) + ".";
 		text += "\n";
@@ -97,5 +84,23 @@ public class BribingScreen {
 		}
 		text += "\n";
 		return text;
+	}
+
+	public static String printgroupsummary(List<Combatant> foes) {
+		CountingSet count = new CountingSet();
+		count.casesensitive = true;
+		for (Combatant c : foes) {
+			count.add(c.toString());
+		}
+		String text = "";
+		for (String c : count.getorderedelements()) {
+			text += c;
+			int n = count.getcount(c);
+			if (n > 1) {
+				text += " (x" + n + ")";
+			}
+			text += ", ";
+		}
+		return text.substring(0, text.length() - 2);
 	}
 }

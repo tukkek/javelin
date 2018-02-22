@@ -267,4 +267,12 @@ public class UpgradeHandler {
 		}
 		return upgrades;
 	}
+
+	public HashSet<Upgrade> getalluncategorized() {
+		HashSet<Upgrade> all = new HashSet<Upgrade>();
+		for (HashSet<Upgrade> upgrades : getall().values()) {
+			all.addAll(upgrades);
+		}
+		return all;
+	}
 }

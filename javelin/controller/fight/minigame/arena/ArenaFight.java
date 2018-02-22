@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.InfiniteList;
 import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.challenge.CrCalculator;
@@ -25,11 +26,12 @@ import javelin.controller.fight.minigame.arena.building.ArenaShop;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.Map;
+import javelin.controller.scenario.Campaign;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
-import javelin.model.unit.Squad;
+import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.unique.minigame.Arena;
 import javelin.view.screen.BattleScreen;
@@ -190,7 +192,30 @@ public class ArenaFight extends Minigame {
 
 	@Override
 	public ArrayList<Combatant> getblueteam() {
-		return (ArrayList<Combatant>) Squad.active.members.clone(); // TODO
+		return choosegladiators(Integer.MIN_VALUE, 1.25);
+	}
+
+	public ArrayList<Combatant> choosegladiators(double crmin, double crmax) {
+		InfiniteList<Monster> candidates = new InfiniteList<Monster>();
+		for (float cr : Javelin.MONSTERSBYCR.keySet()) {
+			if (crmin <= cr && cr <= crmax) {
+				candidates.add(Javelin.MONSTERSBYCR.get(cr));
+			}
+		}
+		ArrayList<Combatant> gladiators = new ArrayList<Combatant>();
+		while (CrCalculator.calculateel(gladiators) < Campaign.INITIALEL) {
+			ArrayList<Monster> page = candidates.pop(3);
+			ArrayList<String> names = new ArrayList<String>(3);
+			for (int i = 0; i < 3; i++) {
+				Monster m = page.get(i);
+				names.add(m + " (level " + Math.round(m.challengerating) + ")");
+			}
+			Monster choice = page.get(Javelin.choose("Select your gladiators:",
+					names, false, true));
+			gladiators.add(new Combatant(choice, true));
+			candidates.remove(choice);
+		}
+		return gladiators;
 	}
 
 	@Override

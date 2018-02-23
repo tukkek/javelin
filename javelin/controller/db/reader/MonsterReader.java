@@ -177,6 +177,9 @@ public class MonsterReader extends DefaultHandler {
 				}
 			}
 			Monster.TERRAINDATA.put(monster.name, terrains);
+			if (terrains.isEmpty()) {
+				monster.internal = true;
+			}
 		} else if (localName.equalsIgnoreCase("Breath")) {
 			/* TODO */
 			// if (attributes.getValue("effect") == null) {

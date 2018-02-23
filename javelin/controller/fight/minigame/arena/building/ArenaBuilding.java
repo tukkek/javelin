@@ -1,6 +1,7 @@
 package javelin.controller.fight.minigame.arena.building;
 
 import javelin.Javelin;
+import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.arena.ArenaFight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
@@ -150,26 +151,31 @@ public abstract class ArenaBuilding extends Combatant {
 				BattleScreen.perform(new Runnable() {
 					@Override
 					public void run() {
-						if (isdamaged()) {
+						if (!current.isadjacent(target)) {
+							Game.messagepanel.clear();
+							Game.message("Too far away...", Delay.WAIT);
+						} else if (isdamaged()) {
 							if (repair()) {
 								Game.messagepanel.clear();
 								String underrepair = source.customName
 										+ " is being repaired...";
 								Game.message(underrepair, Delay.WAIT);
+								Fight.state.next.ap += 1;
 							} else {
 								Game.messagepanel.clear();
 								Game.message("Not enough gold...", Delay.WAIT);
 							}
-						} else if (!current.isadjacent(target)) {
-							Game.messagepanel.clear();
-							Game.message("Too far away...", Delay.WAIT);
-						} else if (click(current)) {
-							s.clone(current).ap += 1;
+						} else {
+							if (click(current)) {
+								s.clone(current).ap += 1;
+							}
+							Javelin.app.switchScreen(BattleScreen.active);
 						}
 					}
 				});
 			}
 		};
+
 	}
 
 	boolean repair() {
@@ -188,12 +194,12 @@ public abstract class ArenaBuilding extends Combatant {
 
 	String getrepairmessage() {
 		String suffix = "\n\nYou currently have $"
-				+ ShoppingScreen.formatcost(ArenaFight.get().gold);
+				+ ShoppingScreen.formatcost(ArenaFight.get().gold) + ".";
 		String name = source.customName.toLowerCase();
 		if (repairing) {
 			return "This " + name + " is being repaired." + suffix;
 		}
-		return "This " + name + " needs to be repaired (for a total of $"
+		return "This " + name + " needs to be repaired ($"
 				+ ShoppingScreen.formatcost(getrepaircost())
 				+ "). Click to start repairs." + suffix;
 	}

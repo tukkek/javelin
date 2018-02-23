@@ -13,7 +13,7 @@ import javelin.view.screen.town.PurchaseScreen;
 
 public class ArenaFountain extends ArenaBuilding {
 	private static final String REFILLING = "This fountain is refilling... be patient!";
-	boolean spent = true;
+	public boolean spent = true;
 
 	public ArenaFountain() {
 		super("Fountain", "dungeonfountain",
@@ -79,7 +79,7 @@ public class ArenaFountain extends ArenaBuilding {
 
 	@Override
 	public String getactiondescription(Combatant current) {
-		return spent ? REFILLING + "(or click to upgrade)"
+		return spent ? REFILLING + " (or click to upgrade)"
 				: super.getactiondescription(current);
 	}
 }

@@ -51,4 +51,8 @@ public class InfiniteList<T> {
 	public void remove(T choice) {
 		original.remove(choice);
 	}
+
+	public void add(T e) {
+		original.add(e);
+	}
 }

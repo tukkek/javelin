@@ -25,7 +25,6 @@ import javelin.controller.fight.minigame.arena.building.ArenaLair;
 import javelin.controller.fight.minigame.arena.building.ArenaShop;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.generator.encounter.EncounterGenerator;
-import javelin.controller.map.Map;
 import javelin.controller.scenario.Campaign;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
@@ -61,7 +60,8 @@ public class ArenaFight extends Minigame {
 	class ArenaSetup extends BattleSetup {
 		@Override
 		public void generatemap(Fight f) {
-			f.map = Map.random();
+			Terrain t = Terrain.NONWATER[RPG.r(0, Terrain.NONWATER.length - 1)];
+			f.map = RPG.pick(t.getmaps());
 			super.generatemap(f);
 			Square[][] map = f.map.map;
 			f.map.map = new Square[MAPSIZE][];
@@ -161,7 +161,7 @@ public class ArenaFight extends Minigame {
 		}
 	}
 
-	public int gold = false ? 0 : 9900000;
+	public int gold = 0;
 	/** {@link Item} bag for {@link #gladiators}. */
 	public HashMap<Integer, ArrayList<Item>> items = new HashMap<Integer, ArrayList<Item>>();
 
@@ -199,7 +199,11 @@ public class ArenaFight extends Minigame {
 		InfiniteList<Monster> candidates = new InfiniteList<Monster>();
 		for (float cr : Javelin.MONSTERSBYCR.keySet()) {
 			if (crmin <= cr && cr <= crmax) {
-				candidates.add(Javelin.MONSTERSBYCR.get(cr));
+				for (Monster m : Javelin.MONSTERSBYCR.get(cr)) {
+					if (!m.internal) {
+						candidates.add(m);
+					}
+				}
 			}
 		}
 		ArrayList<Combatant> gladiators = new ArrayList<Combatant>();
@@ -263,7 +267,14 @@ public class ArenaFight extends Minigame {
 	@Override
 	public void startturn(Combatant acting) {
 		super.startturn(acting);
+		if (!state.blueTeam.contains(state.next)) {
+			return;
+		}
+		awaken();
 		if (acting.ap < check) {
+			if (state.redTeam.isEmpty()) {
+				reward(state.dead);
+			}
 			return;
 		}
 		int elblue = CrCalculator.calculateel(getgladiators());
@@ -271,13 +282,15 @@ public class ArenaFight extends Minigame {
 		if (elred - elblue < tension) {
 			raisetension(elblue);
 			tension = RPG.r(TENSIONMIN, TENSIONMAX);
-			awaken();
 			reward(state.dead);
 		}
 		check = acting.ap + RPG.r(10, 40) / 10f;
 	}
 
 	void reward(ArrayList<Combatant> dead) {
+		if (dead.isEmpty()) {
+			return;
+		}
 		ArrayList<Combatant> defeated = new ArrayList<Combatant>(dead.size());
 		for (Combatant c : new ArrayList<Combatant>(dead)) {
 			if (c.mercenary || c.summoned) {
@@ -318,10 +331,13 @@ public class ArenaFight extends Minigame {
 			if (state.getcombatant(c.location[0], c.location[1]) != null) {
 				continue;
 			}
-			if (RPG.r(1, 10) < 10 + c.hp) {
+			if (c.ap >= state.next.ap) {
+				continue;
+			}
+			c.ap += 1;
+			if (RPG.r(1, 10) > Math.abs(c.hp)) {
 				state.dead.remove(c);
 				c.hp = 1;
-				c.ap = state.next.ap;
 				state.blueTeam.add(c);
 				notify(c + " awakens!", c.getlocation());
 			}
@@ -329,30 +345,26 @@ public class ArenaFight extends Minigame {
 	}
 
 	void raisetension(int elblue) {
-		if (true == true) {
-			return;
-		}
 		placefoes(elblue);
-		ArrayList<ArenaFountain> fountains = getfountains();
-		refillfountains(fountains);
+		refillfountains(getfountains());
 	}
 
 	public void refillfountains(ArrayList<ArenaFountain> fountains) {
-		if (check == -Float.MAX_VALUE) {
+		if (check == -Float.MAX_VALUE || fountains.isEmpty()) {
 			return;
 		}
 		float refillchance = 1f / fountains.size();
 		int i = 0;
 		Point p = null;
 		for (ArenaFountain f : fountains) {
-			if (RPG.random() < refillchance) {
+			if (f.spent && !f.isdamaged() && RPG.random() < refillchance) {
 				f.setspent(false);
 				i += 1;
 				p = f.getlocation();
 			}
 		}
 		if (i > 0) {
-			notify(i + " fountain(s) refilled!!", p);
+			notify(i + " fountain(s) refilled!", p);
 		}
 	}
 
@@ -404,8 +416,10 @@ public class ArenaFight extends Minigame {
 	ArrayList<ArenaFountain> getfountains() {
 		ArrayList<ArenaFountain> fountains = new ArrayList<ArenaFountain>();
 		for (Combatant c : state.blueTeam) {
-			if (c instanceof ArenaFountain) {
-				fountains.add((ArenaFountain) c);
+			ArenaFountain f = c instanceof ArenaFountain ? (ArenaFountain) c
+					: null;
+			if (f != null/* && !f.isdamaged() */) {
+				fountains.add(f);
 			}
 		}
 		return fountains;
@@ -463,7 +477,7 @@ public class ArenaFight extends Minigame {
 	public void notify(String text, Point p) {
 		BattleScreen.active.update();
 		BattleScreen.active.center(p.x, p.y);
-		Javelin.message(text, true);
+		Javelin.message(text, false);
 	}
 
 	@Override

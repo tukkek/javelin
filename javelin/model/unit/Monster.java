@@ -296,6 +296,12 @@ public class Monster implements Cloneable, Serializable {
 	 * Challenge Rating.
 	 */
 	public boolean passive = false;
+	/**
+	 * <code>true</code> if this stat block shoudl'nt be used normally but is
+	 * required for some internal game feature (examples being Settlers and
+	 * Arena buildings).
+	 */
+	public boolean internal = false;
 
 	@Override
 	public Monster clone() {

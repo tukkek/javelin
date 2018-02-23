@@ -2,6 +2,7 @@ package javelin.controller.fight.minigame.arena.building;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -119,6 +120,7 @@ public class ArenaAcademy extends ArenaBuilding {
 		}
 		LinkedList<Upgrade> allupgrades = new LinkedList<Upgrade>(
 				UpgradeHandler.singleton.getalluncategorized());
+		Collections.shuffle(allupgrades);
 		while (upgrades.size() < NOPTIONS) {
 			Combatant clone = trainee.clone().clonesource();
 			Upgrade u = allupgrades.pop();

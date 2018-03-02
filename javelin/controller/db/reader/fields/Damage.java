@@ -38,7 +38,8 @@ public class Damage extends FieldReader {
 		nocrit = false;
 		parseattacks(value, getallattacks());
 		if (nocrit) {
-			MonsterReader.log(reader.monster + ": no critical damage data");
+			MonsterReader.log(reader.monster + ": no critical damage data",
+					"monsters.log");
 		}
 	}
 

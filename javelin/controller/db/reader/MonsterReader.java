@@ -1,6 +1,6 @@
 package javelin.controller.db.reader;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,16 +49,39 @@ import javelin.model.unit.attack.AttackSequence;
  * @author alex
  */
 public class MonsterReader extends DefaultHandler {
+	static HashMap<String, PrintWriter> logs = new HashMap<String, PrintWriter>();
+
+	public ErrorHandler errorhandler = new ErrorHandler();
+	public CountingSet debugqualities = new CountingSet();
+	public CountingSet sAtks = new CountingSet();
+	public CountingSet debugfeats = new CountingSet();
+	HashMap<Monster, String> spelldata = new HashMap<Monster, String>();
+	ArrayList<FieldReader> readers = new ArrayList<FieldReader>();
+	static int debugnmonsters = 0;
 
 	public Monster monster;
-	private String section = null;
-	public final ErrorHandler errorhandler = new ErrorHandler();
-	private int total;
-	public final CountingSet debugqualities = new CountingSet();
-	public final CountingSet sAtks = new CountingSet();
-	public final CountingSet debugfeats = new CountingSet();
-	HashMap<Monster, String> spelldata = new HashMap<Monster, String>();
+	String section = null;
+	int total;
 	boolean description = false;
+
+	{
+		readers.add(new Name(this, "Name"));
+		readers.add(new Skills(this, "Skills"));
+		readers.add(new Feats(this, "Feats"));
+		readers.add(new SpecialQualities(this, "SpecialQualities"));
+		readers.add(new FaceAndReach(this, "FaceAndReach"));
+		readers.add(new SpecialAttacks(this, "SpecialAttacks"));
+		readers.add(new Attacks(this, "Attacks"));
+		readers.add(new Damage(this, "Damage"));
+		readers.add(new ArmorClass(this, "ArmorClass"));
+		readers.add(new Initiative(this, "Initiative"));
+		readers.add(new Speed(this, "Speed"));
+		readers.add(new HitDice(this, "HitDice"));
+		readers.add(new Paragraph(this, "Paragraph"));
+		readers.add(new Organization(this, "Organization"));
+		readers.add(new Alignment(this, "Alignment"));
+
+	}
 
 	@Override
 	public void startElement(final String uri, final String localName,
@@ -324,7 +347,6 @@ public class MonsterReader extends DefaultHandler {
 	}
 
 	public static int getSize(final String size) {
-		// logger.info("getSize(String " + size + ")");
 		int result = -1;
 		for (int i = 0; i < Monster.SIZES.length; i++) {
 			if (size.compareTo(Monster.SIZES[i]) == 0) {
@@ -361,7 +383,6 @@ public class MonsterReader extends DefaultHandler {
 		debugSpecials(sAtks, "Special attacks:");
 		debugSpecials(debugqualities, "Special qualities:");
 		debugSpecials(debugfeats, "Feats:");
-		log("");
 		postprocessspells();
 		int nMonsters = 0;
 		for (Monster m : Javelin.ALLMONSTERS) {
@@ -384,18 +405,22 @@ public class MonsterReader extends DefaultHandler {
 			for (final Monster m : value) {
 				listing += m.toString() + ", ";
 			}
-			log("CR " + key + " (" + value.size() + "): " + listing);
+			log("CR " + key + " (" + value.size() + "): " + listing,
+					"monster table.log");
 		}
-		log("");
-		log(nMonsters + "/" + total + " monsters succesfully loaded.");
+		log(nMonsters + "/" + total + " monsters succesfully loaded.",
+				"monster table.log");
 		CrCalculator.log = null;
+		for (PrintWriter log : logs.values()) {
+			log.close();
+		}
 	}
 
 	/**
 	 * TODO doesn't capture cycle summon references in neither pass, maybe issue
 	 * exception?
 	 */
-	private void postprocessspells() {
+	void postprocessspells() {
 		ArrayList<Summon> summonspell = new ArrayList<Summon>();
 		ArrayList<Monster> summoncaster = new ArrayList<Monster>();
 		ArrayList<Monster> updated = new ArrayList<Monster>();
@@ -439,9 +464,8 @@ public class MonsterReader extends DefaultHandler {
 		}
 	}
 
-	private void debugSpecials(final CountingSet atks, final String string) {
-		log("");
-		log(string);
+	void debugSpecials(final CountingSet atks, final String string) {
+		log(string, "monsters.log");
 		final ArrayList<Entry<String, Integer>> count = new ArrayList<Entry<String, Integer>>(
 				atks.getcount());
 		Collections.sort(count, new Comparator<Entry<String, Integer>>() {
@@ -452,31 +476,8 @@ public class MonsterReader extends DefaultHandler {
 			}
 		});
 		for (final Entry<String, Integer> e : count) {
-			log("\t" + e.getKey() + " (" + e.getValue() + ")");
+			log("\t" + e.getKey() + " (" + e.getValue() + ")", "monsters.log");
 		}
-	}
-
-	static int debugnmonsters = 0;
-
-	ArrayList<FieldReader> readers = new ArrayList<FieldReader>();
-
-	{
-		readers.add(new Name(this, "Name"));
-		readers.add(new Skills(this, "Skills"));
-		readers.add(new Feats(this, "Feats"));
-		readers.add(new SpecialQualities(this, "SpecialQualities"));
-		readers.add(new FaceAndReach(this, "FaceAndReach"));
-		readers.add(new SpecialAttacks(this, "SpecialAttacks"));
-		readers.add(new Attacks(this, "Attacks"));
-		readers.add(new Damage(this, "Damage"));
-		readers.add(new ArmorClass(this, "ArmorClass"));
-		readers.add(new Initiative(this, "Initiative"));
-		readers.add(new Speed(this, "Speed"));
-		readers.add(new HitDice(this, "HitDice"));
-		readers.add(new Paragraph(this, "Paragraph"));
-		readers.add(new Organization(this, "Organization"));
-		readers.add(new Alignment(this, "Alignment"));
-
 	}
 
 	@Override
@@ -578,21 +579,19 @@ public class MonsterReader extends DefaultHandler {
 		Javelin.ALLMONSTERS.add(monster);
 	}
 
-	private static PrintWriter log = null;
-
-	public static void log(final String string) {
+	public static void log(final String string, String file) {
 		if (!Javelin.DEBUG) {
 			return;
 		}
+		PrintWriter log = logs.get(file);
 		if (log == null) {
 			try {
-				log = new PrintWriter("monsters.log");
-			} catch (final FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log = new PrintWriter(file);
+				logs.put(file, log);
+			} catch (final IOException e) {
+				throw new RuntimeException(e);
 			}
 		}
 		log.write(string + "\n");
-		log.flush();
 	}
 }

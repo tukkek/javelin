@@ -24,7 +24,7 @@ public class ErrorHandler {
 
 	void informInvalid(final MonsterReader monsterReader) {
 		MonsterReader.log("Couldn't load monster '" + monsterReader.monster
-				+ "', " + invalid);
+				+ "', " + invalid, "monsters.log");
 	}
 
 	public boolean isinvalid() {

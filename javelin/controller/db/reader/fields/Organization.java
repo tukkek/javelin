@@ -182,7 +182,7 @@ public class Organization extends FieldReader {
 
 	static void inform(String string) {
 		if (Javelin.DEBUG) {
-			MonsterReader.log(string);
+			MonsterReader.log(string, "organization.log");
 		}
 	}
 

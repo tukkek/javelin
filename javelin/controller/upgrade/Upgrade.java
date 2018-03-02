@@ -24,6 +24,8 @@ public abstract class Upgrade implements Serializable {
 	/** Short description. */
 	public String name;
 
+	public boolean arena = true;
+
 	/** Constructor. */
 	public Upgrade(final String name) {
 		super();

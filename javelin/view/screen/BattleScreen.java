@@ -33,7 +33,7 @@ import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.battle.BattleMouse;
 import javelin.view.mappanel.battle.BattlePanel;
-import javelin.view.mappanel.battle.overlay.BattleMover;
+import javelin.view.mappanel.battle.overlay.BattleWalker;
 import tyrant.mikera.tyrant.QuestApp;
 import tyrant.mikera.tyrant.Screen;
 
@@ -76,7 +76,7 @@ public class BattleScreen extends Screen {
 	 * disruption their current action - even if {@link RepeatTurn} is thrown
 	 * from another action (like cancelling a menu, etc.).
 	 * 
-	 * {@link BattleMouse} and {@link BattleMover} take this into consideration
+	 * {@link BattleMouse} and {@link BattleWalker} take this into consideration
 	 * too, so as not to allow the player to cheat by using half their share of
 	 * keyboard movements and then using another {@link ActionCost#MOVE} worth
 	 * of movement witht the mouse. Mouse moves, however are instantaneous and
@@ -200,7 +200,7 @@ public class BattleScreen extends Screen {
 		}
 	}
 
-	void humanmove() {
+	synchronized void humanmove() {
 		Javelin.app.switchScreen(BattleScreen.active);
 		if (current == null || current.automatic
 				|| Fight.state.fleeing.contains(current)) {

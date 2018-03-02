@@ -24,7 +24,7 @@ import javelin.view.mappanel.dungeon.DungeonPanel;
  * @author alex
  */
 public class DungeonScreen extends WorldScreen {
-	public static final int VIEWRADIUS = 2;
+	public static final int VIEWRADIUS = 6;
 
 	Dungeon dungeon;
 

@@ -32,6 +32,7 @@ public abstract class Feat implements Serializable, javelin.model.Cloneable {
 	 * acquiring this feat.
 	 */
 	public Feat prerequisite = null;
+	public boolean arena = true;
 
 	/** Constructor. */
 	public Feat(String namep) {

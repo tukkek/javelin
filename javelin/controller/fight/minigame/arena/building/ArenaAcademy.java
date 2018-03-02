@@ -45,12 +45,9 @@ public class ArenaAcademy extends ArenaBuilding {
 		}
 
 		@Override
-		public List<Option> getoptions() {
-			List<Option> options = super.getoptions();
-			if (getupgradecost() != null) {
-				options.add(new BuildingUpgradeOption());
-			}
-			return options;
+		protected void sort(List<Option> options) {
+			super.sort(options);
+			options.add(new BuildingUpgradeOption());
 		}
 
 		@Override
@@ -124,7 +121,7 @@ public class ArenaAcademy extends ArenaBuilding {
 		while (upgrades.size() < NOPTIONS) {
 			Combatant clone = trainee.clone().clonesource();
 			Upgrade u = allupgrades.pop();
-			if (u.upgrade(clone)) {
+			if (u.arena && u.upgrade(clone)) {
 				upgrades.add(u);
 			}
 		}

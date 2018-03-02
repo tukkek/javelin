@@ -17,8 +17,13 @@ public abstract class SkillUpgrade extends Upgrade {
 	public String skillname;
 
 	public SkillUpgrade(String name) {
+		this(name, false);
+	}
+
+	public SkillUpgrade(String name, boolean arena) {
 		super("Skill: " + name.toLowerCase());
 		skillname = name;
+		this.arena = arena;
 		ALL.add(this);
 	}
 

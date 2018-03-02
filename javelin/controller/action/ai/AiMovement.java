@@ -22,8 +22,8 @@ import javelin.model.state.Meld;
 import javelin.model.unit.attack.Combatant;
 import javelin.view.Images;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
-import javelin.view.mappanel.battle.overlay.BattleMover;
-import javelin.view.mappanel.battle.overlay.BattleMover.BatteStep;
+import javelin.view.mappanel.battle.overlay.BattleWalker;
+import javelin.view.mappanel.battle.overlay.BattleWalker.BattleStep;
 
 /**
  * Attempst to offer a more fluid experience than having {@link AiMovement}
@@ -42,7 +42,7 @@ public class AiMovement extends Action implements AiAction {
 	public static final Image MOVEOVERLAY = Images.getImage("overlaymove");
 
 	public class LongMove extends ChanceNode {
-		public LongMove(Combatant c, BatteStep s, BattleMover mover, Meld m,
+		public LongMove(Combatant c, BattleStep s, BattleWalker mover, Meld m,
 				Node n) {
 			super(n, 1, getmessage(c, m, s),
 					m == null ? Delay.WAIT : Delay.BLOCK);
@@ -114,12 +114,12 @@ public class AiMovement extends Action implements AiAction {
 	}
 
 	LongMove move(Combatant c, Point from, Point to, BattleState s) {
-		BattleMover mover = new BattleMover(from, to, c, s);
+		BattleWalker mover = new BattleWalker(from, to, c, s);
 		mover.walk();
 		if (mover.steps == null || mover.steps.isEmpty()) {
 			return null;
 		}
-		BatteStep step = choosestep(mover.steps);
+		BattleStep step = choosestep(mover.steps);
 		s = s.clone();
 		c = s.clone(c);
 		c.ap += step.totalcost;
@@ -133,8 +133,8 @@ public class AiMovement extends Action implements AiAction {
 		return new LongMove(c, step, mover, m, s);
 	}
 
-	BatteStep choosestep(ArrayList<BatteStep> steps) {
-		for (BatteStep step : steps) {
+	BattleStep choosestep(ArrayList<BattleStep> steps) {
+		for (BattleStep step : steps) {
 			if (step.engaged || step.totalcost >= ActionCost.MOVE) {
 				return step;
 			}
@@ -181,7 +181,7 @@ public class AiMovement extends Action implements AiAction {
 		throw new UnsupportedOperationException();
 	}
 
-	static String getmessage(Combatant c, Meld m, BatteStep s) {
+	static String getmessage(Combatant c, Meld m, BattleStep s) {
 		if (m != null) {
 			return c + " powers up!";
 		}

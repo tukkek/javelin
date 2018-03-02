@@ -19,6 +19,7 @@ import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.view.screen.SquadScreen;
+import javelin.view.screen.town.PurchaseScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -156,7 +157,8 @@ public class TrainingHall extends Fortification {
 
 	@Override
 	public String toString() {
-		return super.toString() + " ($" + getfee() + ")";
+		return super.toString() + " ($" + PurchaseScreen.formatcost(getfee())
+				+ ")";
 	}
 
 	@Override

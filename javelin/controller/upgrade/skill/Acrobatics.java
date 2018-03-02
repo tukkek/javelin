@@ -12,7 +12,7 @@ public class Acrobatics extends SkillUpgrade {
 	public final static SkillUpgrade SINGLETON = new Acrobatics();
 
 	Acrobatics() {
-		super("Acrobatics");
+		super("Acrobatics", true);
 	}
 
 	@Override

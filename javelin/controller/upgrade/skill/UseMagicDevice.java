@@ -14,7 +14,7 @@ public class UseMagicDevice extends SkillUpgrade {
 
 	/** Constructor. */
 	UseMagicDevice() {
-		super("Use magic device");
+		super("Use magic device", true);
 	}
 
 	@Override

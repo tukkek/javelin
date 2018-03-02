@@ -13,5 +13,6 @@ public class Deceitful extends Feat {
 
 	private Deceitful() {
 		super("Deceitful");
+		arena = false;
 	}
 }

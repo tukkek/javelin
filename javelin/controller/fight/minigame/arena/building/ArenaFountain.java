@@ -64,7 +64,10 @@ public class ArenaFountain extends ArenaBuilding {
 	}
 
 	void restore(Combatant current) {
-		Combatant c = Fight.state.clone(current);
+		heal(Fight.state.clone(current));
+	}
+
+	public static void heal(Combatant c) {
 		for (Condition co : c.getconditions()) {
 			c.removecondition(co);
 		}

@@ -11,6 +11,7 @@ public class ImprovedInitiative extends Feat {
 
 	private ImprovedInitiative() {
 		super("improved initiative");
+		arena = false;
 	}
 
 	@Override

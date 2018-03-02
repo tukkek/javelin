@@ -12,7 +12,7 @@ public class Concentration extends SkillUpgrade {
 	public final static SkillUpgrade SINGLETON = new Concentration();
 
 	Concentration() {
-		super("Concentration");
+		super("Concentration", true);
 	}
 
 	@Override

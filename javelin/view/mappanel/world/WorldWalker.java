@@ -9,14 +9,14 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
-import javelin.view.mappanel.battle.overlay.BattleMover;
+import javelin.view.mappanel.battle.overlay.BattleWalker;
 import javelin.view.screen.WorldScreen;
 
-public class WorldMover extends BattleMover {
+public class WorldWalker extends BattleWalker {
 	HashSet<Point> safe = Town.getdistricts();
 	protected boolean checksafe = true;
 
-	public WorldMover(Point from, Point to) {
+	public WorldWalker(Point from, Point to) {
 		super(from, to, null, null);
 	}
 
@@ -76,7 +76,7 @@ public class WorldMover extends BattleMover {
 	public ArrayList<javelin.controller.walker.Step> walk() {
 		ArrayList<javelin.controller.walker.Step> walk = super.walk();
 		if (checksafe) {
-			for (BatteStep s : steps) {
+			for (BattleStep s : steps) {
 				if (safe.contains(new Point(s.x, s.y))) {
 					s.safe = true;
 				}

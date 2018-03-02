@@ -48,7 +48,7 @@ public class DungeonMouse extends Mouse {
 			return;
 		}
 		MoveOverlay
-				.schedule(new MoveOverlay(new DungeonMover(
+				.schedule(new MoveOverlay(new DungeonWalker(
 						new Point(Dungeon.active.herolocation.x,
 								Dungeon.active.herolocation.y),
 						new Point(t.x, t.y))));

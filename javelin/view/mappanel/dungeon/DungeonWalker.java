@@ -6,11 +6,11 @@ import javelin.model.state.BattleState;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.Trap;
-import javelin.view.mappanel.world.WorldMover;
+import javelin.view.mappanel.world.WorldWalker;
 import javelin.view.screen.DungeonScreen;
 
-public class DungeonMover extends WorldMover {
-	public DungeonMover(Point from, Point to) {
+public class DungeonWalker extends WorldWalker {
+	public DungeonWalker(Point from, Point to) {
 		super(from, to);
 		checksafe = false;
 	}

@@ -19,7 +19,7 @@ import javelin.view.screen.BattleScreen;
  * 
  * @author alex
  */
-public class BattleMover extends Walker {
+public class BattleWalker extends Walker {
 	/**
 	 * Note that AP cost has a different meaning depending on context. For
 	 * battle is literal AP, for world and dungeons is chance of encounter,
@@ -27,13 +27,13 @@ public class BattleMover extends Walker {
 	 * 
 	 * @author alex
 	 */
-	public class BatteStep extends Step {
+	public class BattleStep extends Step {
 		public final float apcost;
 		public boolean engaged;
 		public boolean safe = false;
 		public float totalcost;
 
-		public BatteStep(final int x, final int y, final float apcost,
+		public BattleStep(final int x, final int y, final float apcost,
 				final float totalcost, final boolean engaged) {
 			super(x, y);
 			this.apcost = apcost;
@@ -43,9 +43,9 @@ public class BattleMover extends Walker {
 	}
 
 	Combatant current;
-	public ArrayList<BatteStep> steps = new ArrayList<BatteStep>(1);
+	public ArrayList<BattleStep> steps = new ArrayList<BattleStep>(1);
 
-	public BattleMover(Point from, Point to, Combatant current,
+	public BattleWalker(Point from, Point to, Combatant current,
 			BattleState state) {
 		super(from, to, state);
 		this.current = current;
@@ -67,7 +67,7 @@ public class BattleMover extends Walker {
 		for (final javelin.controller.walker.Step s : walk) {
 			float stepcost = getcost(engaged, s);
 			totalcost += stepcost;
-			steps.add(new BatteStep(s.x, s.y, stepcost, totalcost, engaged));
+			steps.add(new BattleStep(s.x, s.y, stepcost, totalcost, engaged));
 			if (end(totalcost, engaged, s)) {
 				break;
 			}
@@ -166,5 +166,29 @@ public class BattleMover extends Walker {
 
 	public Point resetlocation() {
 		return null;
+	}
+
+	@Override
+	protected ArrayList<Step> takebeststep(int x, int y) {
+		ArrayList<Step> steps = super.takebeststep(x, y);
+		/*
+		 * TODO tried to make this smarter as per the parent TODO but it can't
+		 * be done on a step-by-step basis
+		 */
+		// float best = Float.MAX_VALUE;
+		// for (Step s : steps) {
+		// float cost = getcost(false, s);
+		// if (cost < best) {
+		// best = cost;
+		// }
+		// }
+		// if (best != 0) {
+		// for (Step s : new ArrayList<Step>(steps)) {
+		// if (getcost(false, s) != best) {
+		// steps.remove(s);
+		// }
+		// }
+		// }
+		return steps;
 	}
 }

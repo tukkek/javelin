@@ -270,7 +270,14 @@ public abstract class Fight {
 	 * @return The resulting opponents.
 	 */
 	public ArrayList<Combatant> generate(final Integer el) {
-		ArrayList<Terrain> terrains = getterrains();
+		ArrayList<Terrain> terrains;
+		if (Dungeon.active == null) {
+			terrains = getterrains();
+		} else {
+			/* TODO refactor to RandomDungeonEncounter */
+			terrains = new ArrayList<Terrain>(1);
+			terrains.add(Terrain.UNDERGROUND);
+		}
 		ArrayList<Combatant> foes = getmonsters(el);
 		if (foes == null) {
 			assert el != null;

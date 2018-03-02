@@ -72,6 +72,18 @@ public class FeatsFactor extends CrFactor {
 			ExoticWeaponProficiency.SINGLETON, Multiattack.SINGLETON,
 			MultiweaponFighting.SINGLETON, WeaponFinesse.SINGLETON };
 
+	static {
+		/*
+		 * TODO need a similar field for internal, which can then go to null
+		 * #arena as well by default. this is necessary for example to filter
+		 * useless feats from the Academy. Alternatively, make it a list and
+		 * just use contains().
+		 */
+		for (Feat f : INTERNAL) {
+			f.arena = false;
+		}
+	}
+
 	@Override
 	public float calculate(final Monster m) {
 		return m.feats.count() * CR - getnormalprogression(m) * CR;

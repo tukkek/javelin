@@ -9,8 +9,8 @@ import javelin.model.unit.attack.Combatant;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.MoveOverlay;
 import javelin.view.mappanel.Tile;
-import javelin.view.mappanel.battle.overlay.BattleMover;
-import javelin.view.mappanel.battle.overlay.BattleMover.BatteStep;
+import javelin.view.mappanel.battle.overlay.BattleWalker;
+import javelin.view.mappanel.battle.overlay.BattleWalker.BattleStep;
 import javelin.view.screen.BattleScreen;
 
 public class MoveMouseAction extends BattleMouseAction {
@@ -34,7 +34,7 @@ public class MoveMouseAction extends BattleMouseAction {
 					@Override
 					public void run() {
 						int finalstep = walk.path.steps.size() - 1;
-						final BatteStep to = walk.path.steps.get(finalstep);
+						final BattleStep to = walk.path.steps.get(finalstep);
 						BattleState move = Fight.state;
 						Combatant c = move.clone(current);
 						c.location[0] = to.x;
@@ -56,6 +56,6 @@ public class MoveMouseAction extends BattleMouseAction {
 		Point from = new Point(current.location[0], current.location[1]);
 		Point to = new Point(t.x, t.y);
 		MoveOverlay.schedule(
-				new MoveOverlay(new BattleMover(from, to, current, s)));
+				new MoveOverlay(new BattleWalker(from, to, current, s)));
 	}
 }

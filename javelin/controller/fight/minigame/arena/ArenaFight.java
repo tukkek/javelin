@@ -25,6 +25,7 @@ import javelin.controller.fight.minigame.arena.building.ArenaLair;
 import javelin.controller.fight.minigame.arena.building.ArenaShop;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.generator.encounter.EncounterGenerator;
+import javelin.controller.old.Game;
 import javelin.controller.scenario.Campaign;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
@@ -45,12 +46,16 @@ import tyrant.mikera.engine.RPG;
  * TODO clicking on a building, even if far away, should tell you your current
  * amount of XP
  * 
+ * TODO would be cool to have gates that let you teleport anywhere in the map.
+ * It could just transport you to a building who has foes closest to it.
+ * 
  * @see Arena
  * 
  * @author alex
  */
 public class ArenaFight extends Minigame {
-	public static final float BOOST = 2;
+	public static final float BOOST = 3;
+	static final String RETIRE = "You have beaten this level of the arena! Do you want to retire and have your gladiators available as recruits?\n\nPress r to retire or c to continue...";
 	static final int MAPSIZE = 28;
 	static final int TENSIONMIN = -5;
 	static final int TENSIONMAX = 0;
@@ -173,6 +178,8 @@ public class ArenaFight extends Minigame {
 	 * player to upgrade and not just sit around).
 	 */
 	int baseline = Integer.MIN_VALUE;
+	ArrayList<ArrayList<Combatant>> foes = new ArrayList<ArrayList<Combatant>>();
+	int goal = 6;
 
 	/** Constructor. */
 	public ArenaFight() {
@@ -267,6 +274,10 @@ public class ArenaFight extends Minigame {
 	@Override
 	public void startturn(Combatant acting) {
 		super.startturn(acting);
+		for (ArrayList<Combatant> group : new ArrayList<ArrayList<Combatant>>(
+				foes)) {
+			rewardxp(group);
+		}
 		if (!state.blueTeam.contains(state.next)) {
 			return;
 		}
@@ -279,7 +290,7 @@ public class ArenaFight extends Minigame {
 		}
 		int elblue = CrCalculator.calculateel(getgladiators());
 		int elred = CrCalculator.calculateel(state.redTeam);
-		if (elred - elblue < tension) {
+		if (elred - elblue < tension && !goalreached(getgladiators())) {
 			raisetension(elblue);
 			tension = RPG.r(TENSIONMIN, TENSIONMAX);
 			reward(state.dead);
@@ -288,9 +299,6 @@ public class ArenaFight extends Minigame {
 	}
 
 	void reward(ArrayList<Combatant> dead) {
-		if (dead.isEmpty()) {
-			return;
-		}
 		ArrayList<Combatant> defeated = new ArrayList<Combatant>(dead.size());
 		for (Combatant c : new ArrayList<Combatant>(dead)) {
 			if (c.mercenary || c.summoned) {
@@ -302,9 +310,17 @@ public class ArenaFight extends Minigame {
 						* BOOST;
 			}
 		}
-		if (!defeated.isEmpty()) {
-			RewardCalculator.rewardxp(getallies(), defeated, BOOST);
+	}
+
+	void rewardxp(ArrayList<Combatant> group) {
+		List<Combatant> redteam = state.getredTeam();
+		for (Combatant foe : group) {
+			if (redteam.contains(foe)) {
+				return;
+			}
 		}
+		RewardCalculator.rewardxp(getallies(), group, BOOST);
+		foes.remove(group);
 	}
 
 	public List<Combatant> getgladiators() {
@@ -438,6 +454,9 @@ public class ArenaFight extends Minigame {
 
 	void enter(ArrayList<Combatant> entering, List<Combatant> team,
 			Point entry) {
+		if (team == state.redTeam) {
+			foes.add(entering);
+		}
 		LinkedList<Combatant> place = new LinkedList<Combatant>(entering);
 		Collections.shuffle(place);
 		Combatant last = place.pop();
@@ -463,7 +482,7 @@ public class ArenaFight extends Minigame {
 			last = place.pop();
 			last.setlocation(p);
 		}
-		if (check != -Float.MAX_VALUE) {
+		if (team == state.redTeam) {
 			notify("New enemies enter the arena!", last.getlocation());
 		}
 	}
@@ -475,19 +494,46 @@ public class ArenaFight extends Minigame {
 	}
 
 	public void notify(String text, Point p) {
-		BattleScreen.active.update();
+		Game.redraw();
 		BattleScreen.active.center(p.x, p.y);
 		Javelin.message(text, false);
 	}
 
 	@Override
 	public void checkend() {
-		if (getgladiators().isEmpty()) {
+		List<Combatant> gladiators = getgladiators();
+		if (gladiators.isEmpty()) {
 			state.blueTeam.clear();
 			String msg = "You've lost this match... better luck next time!";
 			Javelin.message(msg, true);
 			throw new EndBattle();
 		}
+		if (goalreached(gladiators)) {
+			char retire = ' ';
+			while (retire != 'c' && retire != 'r') {
+				retire = Javelin.prompt(RETIRE);
+			}
+			if (retire == 'c') {
+				goal += 5;
+			} else {
+				for (Combatant c : gladiators) {
+					ArenaFountain.heal(c);
+				}
+				Arena.get().gladiators.addAll(gladiators);
+				throw new EndBattle();
+			}
+		}
+	}
+
+	public boolean goalreached(List<Combatant> gladiators) {
+		boolean goalreached = true;
+		for (Combatant c : gladiators) {
+			if (c.source.challengerating < goal) {
+				goalreached = false;
+				break;
+			}
+		}
+		return goalreached;
 	}
 
 	public static ArenaFight get() {
@@ -497,6 +543,10 @@ public class ArenaFight extends Minigame {
 
 	@Override
 	public void die(Combatant c, BattleState s) {
+		if (c instanceof ArenaAcademy) {
+			c.hp = 1;
+			return;
+		}
 		super.die(c, s);
 	}
 

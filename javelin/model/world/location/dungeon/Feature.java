@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import javelin.model.unit.Squad;
 import javelin.view.Images;
-import javelin.view.mappanel.dungeon.DungeonMover;
+import javelin.view.mappanel.dungeon.DungeonWalker;
 import javelin.view.mappanel.dungeon.DungeonTile;
 
 /**
@@ -34,7 +34,7 @@ public abstract class Feature implements Serializable {
 	 * If <code>true</code>, once {@link #activate()} is called will not allow a
 	 * movement sequence to carry through.
 	 * 
-	 * @see DungeonMover
+	 * @see DungeonWalker
 	 */
 	public boolean stop = false;
 

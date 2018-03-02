@@ -49,7 +49,7 @@ public class CriticalImmunity extends Quality {
 
 	@Override
 	public float rate(Monster m) {
-		return .5f;
+		return 0.5f;
 	}
 
 	@Override

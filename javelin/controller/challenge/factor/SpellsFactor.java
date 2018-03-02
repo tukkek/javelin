@@ -150,4 +150,16 @@ public class SpellsFactor extends CrFactor {
 			}
 		}
 	}
+
+	@Override
+	public String log(Monster m) {
+		String log = "";
+		if (m.spellcr != 0) {
+			log += "#spellbook " + m.spellcr + " ";
+		}
+		if (!m.spells.isEmpty()) {
+			log += "#" + m.spells + " ";
+		}
+		return log;
+	}
 }

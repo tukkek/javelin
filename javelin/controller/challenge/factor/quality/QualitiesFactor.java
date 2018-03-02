@@ -30,4 +30,15 @@ public class QualitiesFactor extends CrFactor {
 			q.listupgrades(handler);
 		}
 	}
+
+	@Override
+	public String log(Monster m) {
+		String s = "";
+		for (Quality q : Quality.qualities) {
+			if (q.has(m)) {
+				s += q.getClass().getSimpleName() + " ";
+			}
+		}
+		return s.isEmpty() ? s : "(" + s.substring(0, s.length() - 1) + ")";
+	}
 }

@@ -18,7 +18,6 @@ import javax.swing.WindowConstants;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import javelin.controller.ai.BattleAi;
@@ -98,14 +97,15 @@ public class Javelin {
 			checkjava();
 			UpgradeHandler.singleton.gather();
 			Spell.init();
-			final DefaultHandler defaultHandler = new MonsterReader();
-			final XMLReader reader = XMLReaderFactory.createXMLReader();
-			reader.setContentHandler(defaultHandler);
-			reader.setErrorHandler(defaultHandler);
+			final MonsterReader monsterdb = new MonsterReader();
+			final XMLReader xml = XMLReaderFactory.createXMLReader();
+			xml.setContentHandler(monsterdb);
+			xml.setErrorHandler(monsterdb);
 			FileReader filereader = new FileReader("monsters.xml");
-			reader.parse(new InputSource(filereader));
+			xml.parse(new InputSource(filereader));
 			filereader.close();
 			Organization.init();
+			monsterdb.closelogs();
 			SpellsFactor.init();
 			Spell.init();
 			Artifact.init();

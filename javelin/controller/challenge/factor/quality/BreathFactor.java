@@ -68,4 +68,9 @@ public class BreathFactor extends CrFactor {
 				.add(new BreathUpgrade(new BreathWeapon("cold", BreathArea.CONE,
 						40, 6, 6, 0, SavingThrow.REFLEXES, 23, .5f, true)));
 	}
+
+	@Override
+	public String log(Monster m) {
+		return m.breaths.isEmpty() ? "" : m.breaths.toString();
+	}
 }

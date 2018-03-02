@@ -19,6 +19,8 @@ import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.CrCalculator;
 import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.controller.comparator.FeatByNameComparator;
+import javelin.controller.quality.subtype.Construct;
+import javelin.controller.quality.subtype.Undead;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
@@ -302,6 +304,11 @@ public class Monster implements Cloneable, Serializable {
 	 * Arena buildings).
 	 */
 	public boolean internal = false;
+	/**
+	 * <code>true</code> for most monster. {@link Undead} and {@link Construct}
+	 * types don't heal naturally though.
+	 */
+	public boolean heal = true;
 
 	@Override
 	public Monster clone() {
@@ -679,8 +686,11 @@ public class Monster implements Cloneable, Serializable {
 	}
 
 	/**
-	 * @return {@link Integer#MAX_VALUE} if immune or the fortitude saving throw
-	 *         bonus.
+	 * Monsters such as {@link Construct} and {@link Undead} with 0
+	 * {@link #constitution} always pass fortitude checks.
+	 * 
+	 * @return The fortitude saving throw bonus of {@link Integer#MAX_VALUE} if
+	 *         immune.
 	 */
 	public int fortitude() {
 		return constitution == 0 ? Integer.MAX_VALUE : fort;

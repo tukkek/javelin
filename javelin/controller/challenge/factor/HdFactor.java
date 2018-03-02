@@ -14,6 +14,19 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public class HdFactor extends CrFactor {
+	public static class TypeData {
+		/** Challenge rating per HD. */
+		public float cr;
+		/** How many skill points per HD. */
+		public int skillprogression;
+
+		/** Constructor. */
+		public TypeData(float cr, int skillprogression) {
+			this.cr = cr;
+			this.skillprogression = skillprogression;
+		}
+	}
+
 	@Override
 	public float calculate(final Monster monster) {
 		TypeData typedata = gettypedata(monster);
@@ -54,10 +67,10 @@ public class HdFactor extends CrFactor {
 			return new TypeData(.5f, 6);
 		}
 		if (andIntelligent("construct", monster)) {
-			return new TypeData(.35f, 2);
+			return new TypeData(.45f, 2);
 		}
 		if (andIntelligent("undead", monster)) {
-			return new TypeData(.35f, 4);
+			return new TypeData(.45f, 4);
 		}
 		if (type.contains("undead") || type.contains("construct")) {
 			return new TypeData(.35f, 0);

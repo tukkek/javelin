@@ -1,7 +1,5 @@
 package javelin.controller.challenge;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
@@ -20,6 +18,7 @@ import javelin.controller.challenge.factor.SpeedFactor;
 import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.controller.challenge.factor.quality.BreathFactor;
 import javelin.controller.challenge.factor.quality.QualitiesFactor;
+import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.exception.UnbalancedTeams;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -62,17 +61,8 @@ public class CrCalculator {
 			13000, 19000, 27000, 36000, 49000, 66000, 88000, 110000, 150000,
 			200000, 260000, 340000, 440000, 580000, 760000, };
 
-	public static FileWriter log = null;
-
 	static {
-		if (Javelin.DEBUG) {
-			try {
-				log = new FileWriter("crs.log", false);
-				log("Some monsters may have their CRs calculated in more tha one pass (necessary for summons spells, etc)\n");
-			} catch (final IOException e) {
-				throw new RuntimeException(e);
-			}
-		}
+		log("Some monsters may have their CRs calculated in more tha one pass (necessary for summons spells, etc)\n");
 	}
 
 	/**
@@ -123,8 +113,8 @@ public class CrCalculator {
 		float cr = 0;
 		for (final CrFactor f : CR_FACTORS) {
 			final float result = f.calculate(m);
-			if (log != null) {
-				log(" " + f + ": " + result);
+			if (Javelin.DEBUG && result != 0) {
+				log(" " + f + ": " + result + " " + f.log(m));
 			}
 			factorHistory.put(f, result);
 			cr += result;
@@ -179,15 +169,9 @@ public class CrCalculator {
 		return cr;
 	}
 
-	private static void log(final String s) {
-		if (log == null) {
-			return;
-		}
-		try {
-			log.write(s + "\n");
-			log.flush();
-		} catch (final IOException e) {
-			throw new RuntimeException(e);
+	static void log(final String s) {
+		if (MonsterReader.logs != null) {
+			MonsterReader.log(s, "crs.log");
 		}
 	}
 

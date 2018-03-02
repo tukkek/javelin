@@ -31,4 +31,8 @@ public abstract class CrFactor implements Comparable<CrFactor> {
 	public void registerupgrades(UpgradeHandler handler) {
 		return;
 	}
+
+	public String log(Monster m) {
+		return "";
+	}
 }

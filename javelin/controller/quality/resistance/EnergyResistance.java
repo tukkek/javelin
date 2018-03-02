@@ -18,6 +18,17 @@ import javelin.model.unit.attack.Combatant;
  */
 public class EnergyResistance extends Quality {
 	/**
+	 * How much CR to add per point of energy resistance. Currently .02 (from
+	 * CCR document) times 5 (since it applies to any of the five energy types).
+	 */
+	public static final float CR = .02f * 5;
+
+	static final String[] RESISTANCETYPES = new String[] { "cold", "fire",
+			"acid", "electricity", "sonic" };
+	static final String[] BLACKLIST = new String[] { "turn resistance",
+			"resistance to ranged attacks", "charm resistance" };
+
+	/**
 	 * See the d20 SRD for more info.
 	 */
 	static public class EnergyResistanceUpgrade extends Upgrade {
@@ -43,11 +54,6 @@ public class EnergyResistance extends Quality {
 
 	}
 
-	static final String[] RESISTANCETYPES =
-			new String[] { "cold", "fire", "acid", "electricity", "sonic" };
-	private static final String[] BLACKLIST = new String[] { "turn resistance",
-			"resistance to ranged attacks", "charm resistance" };
-
 	public EnergyResistance() {
 		super("resistance");
 	}
@@ -71,17 +77,18 @@ public class EnergyResistance extends Quality {
 				types += 1f;
 			}
 		}
-		m.energyresistance = Math.round(amount * types / 5f);
+		m.energyresistance += Math.round(amount * types / 5f);
 	}
 
 	@Override
 	public boolean has(Monster monster) {
-		return 0 < monster.energyresistance && monster.energyresistance < Integer.MAX_VALUE;
+		return 0 < monster.energyresistance
+				&& monster.energyresistance < Integer.MAX_VALUE;
 	}
 
 	@Override
 	public float rate(Monster monster) {
-		return monster.energyresistance * .02f * 5;
+		return monster.energyresistance * CR;
 	}
 
 	@Override

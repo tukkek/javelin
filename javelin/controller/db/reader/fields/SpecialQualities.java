@@ -1,7 +1,8 @@
 package javelin.controller.db.reader.fields;
 
+import java.util.ArrayList;
+
 import javelin.controller.db.reader.MonsterReader;
-import javelin.controller.db.reader.SpecialtiesLog;
 import javelin.controller.quality.Quality;
 
 /**
@@ -18,20 +19,20 @@ public class SpecialQualities extends FieldReader {
 
 	@Override
 	public void read(final String value) {
-		int ignored = 0;
+		// int ignored = 0;
 		String[] values = value.split(",");
+		ArrayList<String> qualities = new ArrayList<String>();
 		reading: for (final String quality : values) {
 			final String trim = quality.trim().toLowerCase();
 			for (final Quality q : Quality.qualities) {
 				if (q.apply(trim, reader.monster)) {
 					q.add(trim, reader.monster);
+					qualities.add(q.getClass().getSimpleName());
 					continue reading;
 				}
 			}
-			ignored += 1;
+			// ignored += 1;
 			reader.debugqualities.add(trim);
 		}
-		SpecialtiesLog.log("    Special qualities: " + value + " (used "
-				+ (values.length - ignored) + ")");
 	}
 }

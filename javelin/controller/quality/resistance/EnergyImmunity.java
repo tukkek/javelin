@@ -6,7 +6,21 @@ import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
 
-/** @see EnergyResistance */
+/**
+ * This is a tricky one because since we're treating all energy types as the
+ * same one, and this is a high-rated special quality at 1cr per energy type, it
+ * means that any monster with a immunity immediately is at least level 5 -
+ * including, for example, a Small Skeleton.
+ * 
+ * Initially this was meant to flag {@link Monster#energyresistance} as
+ * {@link Integer#MAX_VALUE} but to counter the problem above we're simply
+ * adding the equivalent of 1CR as {@link EnergyResistance} instead.
+ * 
+ * Units can still have true immunity to all energy types through the
+ * {@link EnergyImmunityUpgrade}.
+ * 
+ * @see EnergyResistance
+ */
 public class EnergyImmunity extends Quality {
 	/**
 	 * See the d20 SRD for more info.
@@ -40,7 +54,7 @@ public class EnergyImmunity extends Quality {
 	public void add(String declaration, Monster m) {
 		for (String type : EnergyResistance.RESISTANCETYPES) {
 			if (declaration.contains(type)) {
-				m.energyresistance = Integer.MAX_VALUE;
+				m.energyresistance += Math.round(1 / EnergyResistance.CR);
 				return;
 			}
 		}

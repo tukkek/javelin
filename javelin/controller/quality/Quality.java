@@ -15,6 +15,7 @@ import javelin.controller.quality.resistance.ParalysisImmunity;
 import javelin.controller.quality.resistance.PoisonImmunity;
 import javelin.controller.quality.resistance.SpellImmunity;
 import javelin.controller.quality.resistance.SpellResistance;
+import javelin.controller.quality.subtype.Construct;
 import javelin.controller.quality.subtype.Elemental;
 import javelin.controller.quality.subtype.Ooze;
 import javelin.controller.quality.subtype.Subtype;
@@ -59,8 +60,9 @@ public abstract class Quality {
 				new EnergyImmunity(), new MindImmunity(), new Perception(),
 				new CriticalImmunity(), new ImprovedGrab(), new Elemental(),
 				new Subtype(), new SunlightVulnerability(), new Undead(),
-				new Ooze(), new FrightfulPresence(), new ParalysisImmunity(),
-				new PoisonImmunity(), new Poison(), }) {
+				new Construct(), new Ooze(), new FrightfulPresence(),
+				new ParalysisImmunity(), new PoisonImmunity(), new Poison(),
+				new NoHealing() }) {
 			qualities.add(q);
 		}
 	}

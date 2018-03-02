@@ -49,7 +49,7 @@ import javelin.model.unit.attack.AttackSequence;
  * @author alex
  */
 public class MonsterReader extends DefaultHandler {
-	static HashMap<String, PrintWriter> logs = new HashMap<String, PrintWriter>();
+	public static HashMap<String, PrintWriter> logs = new HashMap<String, PrintWriter>();
 
 	public ErrorHandler errorhandler = new ErrorHandler();
 	public CountingSet debugqualities = new CountingSet();
@@ -152,7 +152,9 @@ public class MonsterReader extends DefaultHandler {
 				monster.immunitytomind = true;
 			}
 			if (monster.constitution == 0) {
+				monster.immunitytocritical = true;
 				monster.immunitytopoison = true;
+				monster.immunitytoparalysis = true;
 			}
 		} else if (localName.equals("SizeAndType")) {
 			final int size = getSize(attributes.getValue("Size"));
@@ -217,12 +219,10 @@ public class MonsterReader extends DefaultHandler {
 			String known = attributes.getValue("known");
 			if (known != null) {
 				registerspells(known, monster);
-				SpecialtiesLog.log("    Spells: " + known);
 			}
 			String spellcr = attributes.getValue("cr");
 			if (spellcr != null) {
 				monster.spellcr = Float.parseFloat(spellcr);
-				SpecialtiesLog.log("    Spell cr: " + monster.spellcr);
 			}
 		} else if (localName.equalsIgnoreCase("description")) {
 			description = true;
@@ -410,7 +410,9 @@ public class MonsterReader extends DefaultHandler {
 		}
 		log(nMonsters + "/" + total + " monsters succesfully loaded.",
 				"monster table.log");
-		CrCalculator.log = null;
+	}
+
+	public void closelogs() {
 		for (PrintWriter log : logs.values()) {
 			log.close();
 		}
@@ -524,12 +526,7 @@ public class MonsterReader extends DefaultHandler {
 				errorhandler.setInvalid(null);
 			} else {
 				registermonster();
-				if (!monster.breaths.isEmpty()) {
-					SpecialtiesLog.log("    Breaths: " + monster.breaths);
-				}
-				SpecialtiesLog.log();
 			}
-			SpecialtiesLog.clear();
 		}
 		if ("p".equalsIgnoreCase(localName)) {
 			describe("\n\n");

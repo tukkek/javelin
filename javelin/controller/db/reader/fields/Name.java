@@ -3,7 +3,6 @@ package javelin.controller.db.reader.fields;
 import java.beans.PropertyVetoException;
 
 import javelin.controller.db.reader.MonsterReader;
-import javelin.controller.db.reader.SpecialtiesLog;
 
 /**
  * @see FieldReader
@@ -36,6 +35,5 @@ public class Name extends FieldReader {
 				+ name.substring(1).toLowerCase();
 		reader.monster.name = name;
 		reader.monster.group = type;
-		SpecialtiesLog.log(name);
 	}
 }

@@ -1,7 +1,6 @@
 package javelin.controller.db.reader.fields;
 
 import javelin.controller.db.reader.MonsterReader;
-import javelin.controller.db.reader.SpecialtiesLog;
 import javelin.controller.quality.Quality;
 
 /**
@@ -28,7 +27,5 @@ public class SpecialAttacks extends FieldReader {
 			ignored += 1;
 			reader.sAtks.add(trim);
 		}
-		SpecialtiesLog.log("    Special attacks: " + value + " (used "
-				+ (values.length - ignored) + ")");
 	}
 }

@@ -112,4 +112,9 @@ public class FeatsFactor extends CrFactor {
 			upgrades.add(new FeatUpgrade(f));
 		}
 	}
+
+	@Override
+	public String log(Monster m) {
+		return m.feats.isEmpty() ? "" : m.feats.toString();
+	}
 }

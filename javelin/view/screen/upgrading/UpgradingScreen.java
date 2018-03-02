@@ -64,8 +64,10 @@ public abstract class UpgradingScreen extends SelectScreen {
 
 	@Override
 	public void show() {
-		for (Combatant c : gettrainees()) {
-			original.put(c.id, c.clone().clonesource());
+		if (original.isEmpty()) {
+			for (Combatant c : gettrainees()) {
+				original.put(c.id, c.clone().clonesource());
+			}
 		}
 		super.show();
 	}

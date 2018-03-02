@@ -45,8 +45,6 @@ public class DungeonGenerator {
 
 	static int ntemplates;
 	static int ncorridors;
-	static int minrooms;
-	static int maxrooms;
 
 	private String templatesused;
 
@@ -242,8 +240,6 @@ public class DungeonGenerator {
 	 * generator needs to rety as many times as necesar to achieve them.
 	 */
 	public static void setupparameters() {
-		minrooms = 13 * DEBUGSIZE;
-		maxrooms = 13 * 2 * DEBUGSIZE;
 		ntemplates = RPG.r(1, 4);
 		ncorridors = 0;
 		while (RPG.chancein(2)) {
@@ -258,7 +254,7 @@ public class DungeonGenerator {
 	 * @see VirtualMap#rooms
 	 * @see #setupparameters()
 	 */
-	public static DungeonGenerator generate() {
+	public static DungeonGenerator generate(int minrooms, int maxrooms) {
 		if (Template.STATIC.isEmpty()) {
 			StaticTemplate.load();
 		}
@@ -274,7 +270,7 @@ public class DungeonGenerator {
 	}
 
 	public static void main(String[] args) throws IOException {
-		DungeonGenerator dungeon = generate();
+		DungeonGenerator dungeon = generate(13 * DEBUGSIZE, 13 * 2 * DEBUGSIZE);
 		dungeon.print();
 		System.out.println(dungeon.templatesused);
 	}

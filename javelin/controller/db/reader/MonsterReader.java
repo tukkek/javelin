@@ -414,6 +414,7 @@ public class MonsterReader extends DefaultHandler {
 		for (PrintWriter log : logs.values()) {
 			log.close();
 		}
+		logs = null;
 	}
 
 	/**

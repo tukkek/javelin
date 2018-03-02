@@ -115,7 +115,9 @@ public class Dungeon extends Location {
 	}
 
 	void map() {
-		map = DungeonGenerator.generate().grid;
+		int minrooms = 5 + RPG.randomize(2);
+		int maxrooms = 10 + RPG.randomize(3);
+		map = DungeonGenerator.generate(minrooms, maxrooms).grid;
 		size = map.length;
 		int vision = DungeonScreen.VIEWRADIUS * 2 + 1;
 		stepsperencounter = Math

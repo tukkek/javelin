@@ -32,4 +32,11 @@ public class RandomDungeonEncounter extends RandomEncounter {
 	public ArrayList<Combatant> getmonsters(Integer teamel) {
 		return null;
 	}
+
+	@Override
+	public ArrayList<Terrain> getterrains() {
+		ArrayList<Terrain> terrains = new ArrayList<Terrain>(1);
+		terrains.add(Terrain.UNDERGROUND);
+		return terrains;
+	}
 }

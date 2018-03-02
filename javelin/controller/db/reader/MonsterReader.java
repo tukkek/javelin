@@ -406,10 +406,10 @@ public class MonsterReader extends DefaultHandler {
 				listing += m.toString() + ", ";
 			}
 			log("CR " + key + " (" + value.size() + "): " + listing,
-					"monster table.log");
+					"organization.log");
 		}
 		log(nMonsters + "/" + total + " monsters succesfully loaded.",
-				"monster table.log");
+				"organization.log");
 	}
 
 	public void closelogs() {

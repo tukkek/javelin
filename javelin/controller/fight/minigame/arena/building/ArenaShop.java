@@ -10,6 +10,7 @@ import javelin.controller.fight.minigame.arena.ArenaFight;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.Tier;
+import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.attack.Combatant;
 import javelin.view.screen.Option;
 import javelin.view.screen.shopping.ShoppingScreen;
@@ -97,7 +98,7 @@ public class ArenaShop extends ArenaBuilding {
 		ArrayList<Item> selection = new ArrayList<Item>(
 				Tier.ITEMS.get(Tier.values()[level]));
 		for (Item i : new ArrayList<Item>(selection)) {
-			if (!i.usedinbattle) {
+			if (!i.usedinbattle || i instanceof Artifact) {
 				selection.remove(i);
 			}
 		}

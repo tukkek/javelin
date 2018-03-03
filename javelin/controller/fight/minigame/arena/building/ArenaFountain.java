@@ -5,6 +5,7 @@ import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.arena.ArenaFight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
+import javelin.model.state.BattleState;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.condition.Condition;
 import javelin.model.world.location.dungeon.Fountain;
@@ -84,5 +85,13 @@ public class ArenaFountain extends ArenaBuilding {
 	public String getactiondescription(Combatant current) {
 		return spent ? REFILLING + " (or click to upgrade)"
 				: super.getactiondescription(current);
+	}
+
+	@Override
+	public void damage(int damagep, BattleState s, int reduce) {
+		super.damage(damagep, s, reduce);
+		if (isdamaged()) {
+			setspent(true);
+		}
 	}
 }

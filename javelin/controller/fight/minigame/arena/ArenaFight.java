@@ -49,18 +49,32 @@ import tyrant.mikera.engine.RPG;
  * TODO would be cool to have gates that let you teleport anywhere in the map.
  * It could just transport you to a building who has foes closest to it.
  * 
+ * TODO instead of current victory condition, add a Gate building that on raise
+ * tension has a (current monster EL/EL goal) chance of activating (minimum
+ * always 5%). If it is destroyed, lose the arena. If it is activated, save
+ * progress and allow to pick up from there.
+ * 
+ * TODO would be a good time to implement Map#canfly for disallowing flying over
+ * obstacles
+ * 
  * @see Arena
  * 
  * @author alex
  */
 public class ArenaFight extends Minigame {
-	public static final float BOOST = 3;
+	public static final float BOOST = 4; // 3,5 talvez?
 	static final String RETIRE = "You have beaten this level of the arena! Do you want to retire and have your gladiators available as recruits?\n\nPress r to retire or c to continue...";
 	static final int MAPSIZE = 28;
+	static final int[] ARENASIZE = new int[] { 21, 10 };
 	static final int TENSIONMIN = -5;
 	static final int TENSIONMAX = 0;
 	static final int ELMIN = -12;
 	static final int ELMAX = 0;
+	static final Point[] AREA = new Point[] {
+			new Point((MAPSIZE - ARENASIZE[0]) / 2,
+					(MAPSIZE - ARENASIZE[1]) / 2),
+			new Point((MAPSIZE + ARENASIZE[0]) / 2,
+					(MAPSIZE + ARENASIZE[1]) / 2) };
 
 	class ArenaSetup extends BattleSetup {
 		@Override
@@ -76,8 +90,13 @@ public class ArenaFight extends Minigame {
 			}
 			for (int x = 0; x < MAPSIZE; x++) {
 				for (int y = 0; y < MAPSIZE; y++) {
-					if (x == 0 || x == MAPSIZE - 1 || y == 0
-							|| y == MAPSIZE - 1) {
+					Point p = new Point(x, y);
+					if (!p.validate(AREA[0].x, AREA[0].y, AREA[1].x,
+							AREA[1].y)) {
+						f.map.map[x][y].blocked = true;
+						f.map.map[x][y].flooded = false;
+					} else if (x == AREA[0].x || x == AREA[1].x - 1
+							|| y == AREA[0].y || y == AREA[1].y - 1) {
 						f.map.map[x][y].blocked = false;
 					}
 				}
@@ -91,13 +110,14 @@ public class ArenaFight extends Minigame {
 			placebuildings();
 			Point p = null;
 			while (p == null || !validate(p)) {
-				p = new Point(getcenterpoint(), getcenterpoint());
+				p = getcenterpoint();
 			}
 			enter(gladiators, state.blueTeam, p);
 		}
 
-		int getcenterpoint() {
-			return RPG.r(MAPSIZE * 1 / 4, MAPSIZE * 3 / 4);
+		Point getcenterpoint() {
+			return new Point(RPG.r(AREA[0].x, AREA[1].x),
+					RPG.r(AREA[0].y, AREA[1].y));
 		}
 
 		void placebuildings() {
@@ -106,11 +126,10 @@ public class ArenaFight extends Minigame {
 			for (int i = 0; i < 4; i++) {
 				quadrants.add(new ArrayList<ArenaBuilding>());
 			}
-			generate(2, ArenaAcademy.class, quadrants);
-			generate(2, ArenaLair.class, quadrants);
-			generate(2, ArenaShop.class, quadrants);
-			generate(RPG.r(state.blueTeam.size(), state.blueTeam.size() * 2),
-					ArenaFountain.class, quadrants);
+			generate(1, ArenaAcademy.class, quadrants);
+			generate(1, ArenaLair.class, quadrants);
+			generate(1, ArenaShop.class, quadrants);
+			generate(state.blueTeam.size(), ArenaFountain.class, quadrants);
 			Collections.shuffle(quadrants);
 			for (int i = 0; i < quadrants.size(); i++) {
 				for (ArenaBuilding b : quadrants.get(i)) {
@@ -120,19 +139,26 @@ public class ArenaFight extends Minigame {
 		}
 
 		void place(ArenaBuilding b, int quadrant) {
+			int minx = AREA[0].x + 1;
+			int maxx = AREA[1].x - 2;
+			int midx = (minx + maxx) / 2;
+			int miny = AREA[0].y + 1;
+			int maxy = AREA[1].y - 2;
+			int midy = (miny + maxy) / 2;
 			Point p = null;
-			int gap = 2;
-			int mid = MAPSIZE / 2;
-			int max = MAPSIZE - gap - 1;
 			searching: while (p == null) {
+				int xa = RPG.r(minx, midx);
+				int xb = RPG.r(midx, maxx);
+				int ya = RPG.r(miny, midy);
+				int yb = RPG.r(midy, maxy);
 				if (quadrant == 0) {
-					p = new Point(RPG.r(gap, mid), RPG.r(gap, mid));
+					p = new Point(xa, ya);
 				} else if (quadrant == 1) {
-					p = new Point(RPG.r(gap, mid), RPG.r(mid + gap, max));
+					p = new Point(xa, yb);
 				} else if (quadrant == 2) {
-					p = new Point(RPG.r(mid + gap, max), RPG.r(gap, mid));
+					p = new Point(xb, ya);
 				} else if (quadrant == 3) {
-					p = new Point(RPG.r(mid + gap, max), RPG.r(mid + gap, max));
+					p = new Point(xb, yb);
 				}
 				for (int x = p.x - 1; x <= p.x + 1; x++) {
 					for (int y = p.y - 1; y <= p.y + 1; y++) {
@@ -443,11 +469,10 @@ public class ArenaFight extends Minigame {
 
 	Point getmonsterentry() {
 		Point p = new Point(RPG.r(MAPSIZE), RPG.r(MAPSIZE));
-		int border = RPG.r(1, 2) == 1 ? 0 : MAPSIZE - 1;
-		if (RPG.r(1, 2) == 1) {
-			p.x = border;
+		if (RPG.chancein(2)) {
+			p.x = RPG.chancein(2) ? AREA[0].x : AREA[1].x - 1;
 		} else {
-			p.y = border;
+			p.y = RPG.chancein(2) ? AREA[0].y : AREA[1].y - 1;
 		}
 		return p;
 	}
@@ -474,8 +499,8 @@ public class ArenaFight extends Minigame {
 		}
 		while (!place.isEmpty()) {
 			Point p = last.getlocation();
-			p.x += RPG.r(-2, +2);
-			p.y += RPG.r(-2, +2);
+			p.x += RPG.r(-1, +1);
+			p.y += RPG.r(-1, +1);
 			if (!validate(p)) {
 				continue;
 			}
@@ -488,7 +513,7 @@ public class ArenaFight extends Minigame {
 	}
 
 	public boolean validate(Point p) {
-		return p.validate(0, 0, MAPSIZE, MAPSIZE)
+		return p.validate(AREA[0].x, AREA[0].y, AREA[1].x, AREA[1].y)
 				&& !state.map[p.x][p.y].blocked
 				&& state.getcombatant(p.x, p.y) == null;
 	}
@@ -543,10 +568,10 @@ public class ArenaFight extends Minigame {
 
 	@Override
 	public void die(Combatant c, BattleState s) {
-		if (c instanceof ArenaAcademy) {
-			c.hp = 1;
-			return;
-		}
+		// if (c instanceof ArenaAcademy) {
+		// c.hp = 1;
+		// return;
+		// }
 		super.die(c, s);
 	}
 

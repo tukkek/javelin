@@ -29,7 +29,7 @@ import javelin.view.mappanel.battle.overlay.BattleWalker.BattleStep;
  * Attempst to offer a more fluid experience than having {@link AiMovement}
  * simple do long step-by-step movement. Tries to move at most .5AP (move
  * action).
- * 
+ *
  * @author alex
  */
 public class AiMovement extends Action implements AiAction {
@@ -155,13 +155,10 @@ public class AiMovement extends Action implements AiAction {
 				if (!p.validate(0, 0, s.map.length, s.map[0].length)) {
 					continue;
 				}
-				if (c.source.fly == 0) {
-					if (s.map[p.x][p.y].blocked) {
-						continue;
-					}
-					if (s.haslineofsight(c, p) == Vision.BLOCKED) {
-						continue;
-					}
+				if ((c.source.fly == 0 || !Javelin.app.fight.map.flying)
+						&& (s.map[p.x][p.y].blocked
+								|| s.haslineofsight(c, p) == Vision.BLOCKED)) {
+					continue;
 				}
 				if (s.getcombatant(p.x, p.y) != null) {
 					continue;

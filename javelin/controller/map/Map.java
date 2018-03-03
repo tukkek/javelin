@@ -5,9 +5,12 @@ import java.util.ArrayList;
 
 import javelin.controller.Point;
 import javelin.controller.Weather;
+import javelin.controller.ai.BattleAi;
 import javelin.controller.map.terrain.Water;
 import javelin.controller.terrain.Terrain;
 import javelin.model.state.Square;
+import javelin.model.unit.Monster;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.view.Images;
 import tyrant.mikera.engine.RPG;
 
@@ -56,6 +59,20 @@ public abstract class Map {
 	public ArrayList<Point> startingareablue = new ArrayList<Point>(0);
 	/** Same as {@link #startingareablue} but for enemies. */
 	public ArrayList<Point> startingareared = new ArrayList<Point>(0);
+
+	/**
+	 * Usually <code>true</code> but confined spaces where flyers cannot fly
+	 * over walls will be <code>false</code>.
+	 *
+	 * This is done for consistency but mostly because it allows for the
+	 * {@link BattleAi} to just stay out of reach with flying creatures instead
+	 * of losing a fight. {@link Dungeon} maps for example can have wall
+	 * placement that makes it very hard to kill a flying unit unless you have
+	 * one yourself.
+	 *
+	 * @see Monster#fly
+	 */
+	public boolean flying = true;
 
 	/**
 	 * Construcor based on map size. By default all {@link Square}s are

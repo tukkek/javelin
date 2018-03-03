@@ -8,6 +8,7 @@ public class OrcSettlementMap extends LocationMap {
 	public OrcSettlementMap() {
 		super("Orc settlement");
 		wall = Images.getImage("terrainorcwall");
+		flying = false;
 	}
 
 	@Override

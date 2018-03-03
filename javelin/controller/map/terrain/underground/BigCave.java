@@ -6,7 +6,7 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * Adapted from {@link tyrant.mikera.tyrant.Caves#createBigCave(int, int, int)}.
- * 
+ *
  * @author alex
  */
 public class BigCave extends Caves {
@@ -14,6 +14,7 @@ public class BigCave extends Caves {
 	public BigCave() {
 		super("Big cave");
 		coresize = 3;
+		flying = false;
 	}
 
 	@Override

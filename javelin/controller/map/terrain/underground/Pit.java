@@ -5,12 +5,13 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * Adapted from {@link tyrant.mikera.tyrant.Pit}.
- * 
+ *
  * @author alex
  */
 public class Pit extends Caves {
 	public Pit() {
 		super("Pit");
+		flying = false;
 	}
 
 	@Override
@@ -23,13 +24,13 @@ public class Pit extends Caves {
 				seeds -= 1;
 			}
 		}
-		fractalize(0, 0, (SIZE - 1), (SIZE - 1), 4);
+		fractalize(0, 0, SIZE - 1, SIZE - 1, 4);
 		close();
 	}
 
 	/**
 	 * fractally builds an area - square technique. very cool algorithm!!
-	 * 
+	 *
 	 * @param x1
 	 * @param y1
 	 * @param x2

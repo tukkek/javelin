@@ -1,6 +1,7 @@
 package javelin.controller.action;
 
 import javelin.Javelin;
+import javelin.controller.action.ai.AiMovement;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
@@ -32,7 +33,7 @@ public class Movement extends Action {
 			final String descriptivekeys) {
 		super(name, keys);
 		this.descriptivekeys = descriptivekeys;
-		this.allowburrowed = true;
+		allowburrowed = true;
 	}
 
 	/**
@@ -169,17 +170,18 @@ public class Movement extends Action {
 
 	/**
 	 * try to move
-	 * 
+	 *
 	 * @param state
 	 *            TODO use {@link Fight#state} directly.
 	 * @param hero2
-	 * 
+	 *
 	 * @return <code>true</code> if some action taken
 	 */
 	public static boolean tryMove(int x, int y, BattleState state,
 			Combatant hero) {
 		Combatant c = state.getcombatant(x, y);
-		if (c == null && state.map[x][y].blocked && hero.source.fly == 0) {
+		if (c == null && state.map[x][y].blocked
+				&& (hero.source.fly == 0 || !Javelin.app.fight.map.flying)) {
 			return false;
 		}
 		Meld m = state.getmeld(x, y);

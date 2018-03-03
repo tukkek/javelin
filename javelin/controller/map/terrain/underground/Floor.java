@@ -5,7 +5,7 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * Adapted from the Dungeon map from Tyrant.
- * 
+ *
  * @author alex
  */
 public class Floor extends Caves {
@@ -15,6 +15,7 @@ public class Floor extends Caves {
 	public Floor() {
 		super("Dungeon floor");
 		coresize = 0;
+		flying = false;
 	}
 
 	@Override
@@ -28,8 +29,8 @@ public class Floor extends Caves {
 				map[x][y].blocked = false;
 			}
 		}
-		for (int buildloop =
-				0; buildloop < (SIZE * SIZE * density); buildloop++) {
+		for (int buildloop = 0; buildloop < SIZE * SIZE
+				* density; buildloop++) {
 			// first choose a direction
 			Point d = randomdirection();
 			int dx = d.x;
@@ -133,13 +134,13 @@ public class Floor extends Caves {
 			map[x + i * dx][y + i * dy].blocked = false;
 		}
 		// add a door if there is space
-		if ((l > 4) && (RPG.d(2) == 1)) {
+		if (l > 4 && RPG.d(2) == 1) {
 			if (map[x + dy][y + dx].blocked && map[x - dy][y - dx].blocked) {
 				map[x][y].blocked = false;
 			}
 		}
 		// try adding a room to end
-		if ((l > 3)) {
+		if (l > 3) {
 			makeRoom(x + dx * l, y + dy * l, dx, dy);
 		}
 		return true;
@@ -151,7 +152,7 @@ public class Floor extends Caves {
 		int y1 = y - RPG.d(RPG.abs(dy - 1), 5);
 		int x2 = x + RPG.d(RPG.abs(dx + 1), 5);
 		int y2 = y + RPG.d(RPG.abs(dy + 1), 5);
-		if (((x2 - x1) < 3) || ((y2 - y1) < 3) || (!isBlank(x1, y1, x2, y2))) {
+		if (x2 - x1 < 3 || y2 - y1 < 3 || !isBlank(x1, y1, x2, y2)) {
 			return false;
 		}
 		// draw the floor

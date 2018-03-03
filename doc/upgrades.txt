@@ -9,7 +9,7 @@ Darkvision: greatly improved vision when dark.
 Energy resistance/immunity: reduces or ignores damage from non-physical attacks.
 Fast healing: heals a certain number of hit points per turn (1AP).
 Fear damage: adds the fear effect to melee attacks.
-Flying: allows character to fly over terrain and water.
+Flying: allows characters to fly over terrain (on open areas) and water.
 Great fortitude: +2 fortitude.
 Improved initiative: +4 initiative.
 Iron will: +2 will.

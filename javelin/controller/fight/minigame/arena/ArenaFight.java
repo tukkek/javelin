@@ -39,26 +39,20 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * TODO would be cool if could generate heroes to fight against at some point
- * 
+ *
  * TODO would be amazing to have 4 different map types generated (1 per
  * quadrant), also visually, when the engine allows it
- * 
+ *
  * TODO clicking on a building, even if far away, should tell you your current
  * amount of XP
- * 
- * TODO would be cool to have gates that let you teleport anywhere in the map.
- * It could just transport you to a building who has foes closest to it.
- * 
+ *
  * TODO instead of current victory condition, add a Gate building that on raise
  * tension has a (current monster EL/EL goal) chance of activating (minimum
  * always 5%). If it is destroyed, lose the arena. If it is activated, save
  * progress and allow to pick up from there.
- * 
- * TODO would be a good time to implement Map#canfly for disallowing flying over
- * obstacles
- * 
+ *
  * @see Arena
- * 
+ *
  * @author alex
  */
 public class ArenaFight extends Minigame {
@@ -82,6 +76,7 @@ public class ArenaFight extends Minigame {
 			Terrain t = Terrain.NONWATER[RPG.r(0, Terrain.NONWATER.length - 1)];
 			f.map = RPG.pick(t.getmaps());
 			super.generatemap(f);
+			f.map.flying = false;
 			Square[][] map = f.map.map;
 			f.map.map = new Square[MAPSIZE][];
 			Fight.state.map = f.map.map;
@@ -332,7 +327,7 @@ public class ArenaFight extends Minigame {
 			} else if (!gladiators.contains(c)) {
 				defeated.add(c);
 				dead.remove(c);
-				this.gold += RewardCalculator.getgold(c.source.challengerating)
+				gold += RewardCalculator.getgold(c.source.challengerating)
 						* BOOST;
 			}
 		}

@@ -12,7 +12,7 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * Adaptation of {@link tyrant.mikera.tyrant.Caves}.
- * 
+ *
  * @author alex
  */
 public class Caves extends Map {
@@ -32,6 +32,7 @@ public class Caves extends Map {
 			wall = Images.getImage("terraindungeonwall");
 		}
 		obstacle = rock;
+		flying = false;
 	}
 
 	public Caves() {
@@ -194,10 +195,10 @@ public class Caves extends Map {
 		int cx = (x1 + x2) / 2;
 		int cy = (y1 + y2) / 2;
 
-		for (int lx = x1; lx <= (x1 + w * 2); lx++) {
-			for (int ly = y1; ly < (y1 + h * 2); ly++) {
-				if ((((lx - cx) * (lx - cx) * 100) / (w * w)
-						+ ((ly - cy) * (ly - cy) * 100) / (h * h)) < 100) {
+		for (int lx = x1; lx <= x1 + w * 2; lx++) {
+			for (int ly = y1; ly < y1 + h * 2; ly++) {
+				if ((lx - cx) * (lx - cx) * 100 / (w * w)
+						+ (ly - cy) * (ly - cy) * 100 / (h * h) < 100) {
 					map[lx][ly].blocked = false;
 				}
 			}

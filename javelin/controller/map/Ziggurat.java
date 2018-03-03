@@ -6,7 +6,7 @@ import javelin.controller.fight.minigame.Run;
  * Clear map divided into 5x5 segments (7 rows/columns). It starts wholly closed
  * an is opened up as the player advances. Some initial areas are also opened by
  * default.
- * 
+ *
  * @see Run
  * @author alex
  */
@@ -17,6 +17,7 @@ public class Ziggurat extends Map {
 	/** Constructor. */
 	public Ziggurat() {
 		super("Ziggurat", SIZE, SIZE);
+		flying = false;
 	}
 
 	@Override

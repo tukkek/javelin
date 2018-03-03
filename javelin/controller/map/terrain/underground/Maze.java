@@ -8,7 +8,7 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * Adapted from {@link tyrant.mikera.tyrant.Maze}.
- * 
+ *
  * @author alex
  */
 public class Maze extends Caves {
@@ -18,6 +18,7 @@ public class Maze extends Caves {
 	public Maze() {
 		super("Maze");
 		coresize = 0;
+		flying = false;
 	}
 
 	@Override
@@ -26,8 +27,8 @@ public class Maze extends Caves {
 		int center = (SIZE + 1) / 2;
 		map[2 * RPG.r(center)][2 * RPG.r(center)].blocked = false;
 		int finishedCount = 0;
-		for (int i = 1; (i < (center * center * 1000))
-				&& (finishedCount < (center * center)); i++) {
+		for (int i = 1; i < center * center * 1000
+				&& finishedCount < center * center; i++) {
 			int x = 0 + 2 * RPG.r(center);
 			int y = 0 + 2 * RPG.r(center);
 			if (!map[x][y].blocked) {
@@ -37,8 +38,7 @@ public class Maze extends Caves {
 			int dy = dx == 0 ? RPG.r(2) * 2 - 1 : 0;
 			int lx = x + dx * 2;
 			int ly = y + dy * 2;
-			if ((lx >= 0) && (lx <= SIZE - 1) && (ly >= 0)
-					&& (ly <= SIZE - 1)) {
+			if (lx >= 0 && lx <= SIZE - 1 && ly >= 0 && ly <= SIZE - 1) {
 				if (!map[lx][ly].blocked) {
 					map[x][y].blocked = false;
 					map[x + dx][y + dy].blocked = false;

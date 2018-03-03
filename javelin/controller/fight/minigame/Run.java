@@ -22,7 +22,7 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * {@link Ziggurat} match.
- * 
+ *
  * @author alex
  */
 public class Run extends Minigame {
@@ -156,11 +156,6 @@ public class Run extends Minigame {
 		for (float cr : Javelin.MONSTERSBYCR.keySet()) {
 			List<Monster> tier = new ArrayList<Monster>(
 					Javelin.MONSTERSBYCR.get(cr));
-			for (Monster m : new ArrayList<Monster>(tier)) {
-				if (m.fly > 0) {
-					tier.remove(m);
-				}
-			}
 			int round = Math.max(1, Math.round(cr));
 			ArrayList<Monster> pooltier = pool.get(cr);
 			if (pooltier == null) {

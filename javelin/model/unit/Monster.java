@@ -19,6 +19,7 @@ import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.CrCalculator;
 import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.controller.comparator.FeatByNameComparator;
+import javelin.controller.map.Map;
 import javelin.controller.quality.subtype.Construct;
 import javelin.controller.quality.subtype.Undead;
 import javelin.controller.terrain.Terrain;
@@ -124,6 +125,10 @@ public class Monster implements Cloneable, Serializable {
 	/**
 	 * Flying allows an unit to ignore water and obstacles. A flying unit should
 	 * have {@link #walk} 0.
+	 *
+	 * {@link Map#flying} might prevent units from flying over obstacles (like
+	 * undergound, where there's no "above" to fly over) - but it still allows
+	 * for other benefits, such as ignoring water.
 	 *
 	 * TODO also offer perfect flight, which could at least charge through
 	 * obstacles.
@@ -257,7 +262,7 @@ public class Monster implements Cloneable, Serializable {
 	 * Ideally this would be defined in a slot-by-slot and monster-by-monster
 	 * basis but for now a creature tagged as humanoid is eligible to use any
 	 * and all {@link Slot}s.
-	 * 
+	 *
 	 * What is or not a humanoid can be hard to determine in a fantasy game.
 	 * Currently, if anything is any less than 90% human in form (and thus able
 	 * to wear all {@link Slot}s comfortably) then it isn't a proper humanoid.
@@ -538,7 +543,7 @@ public class Monster implements Cloneable, Serializable {
 	 * Should give players more points for {@link Skills} but instead just lower
 	 * {@link #challengerating} considering how far behind the unit is form
 	 * where it should be - preventing all sorts of complications.
-	 * 
+	 *
 	 * @param newscore
 	 *            Raises {@link #intelligence} by this many ability score points
 	 *            (+2 point = +1 bonus modifier).
@@ -558,7 +563,7 @@ public class Monster implements Cloneable, Serializable {
 
 	/**
 	 * TODO implement 0 == helpless (or something to that effect).
-	 * 
+	 *
 	 * @param scorechange
 	 *            Raises {@link #wisdom} by this many ability score points (+2
 	 *            points = +1 bonus modifier).
@@ -655,7 +660,7 @@ public class Monster implements Cloneable, Serializable {
 
 	/**
 	 * TODO could probably be turned into a map
-	 * 
+	 *
 	 * @return A more computational-friendly version of {@link #size} where
 	 *         small is 1/2, medium is 1, large is 2...
 	 * @see Squad#eat()
@@ -688,7 +693,7 @@ public class Monster implements Cloneable, Serializable {
 	/**
 	 * Monsters such as {@link Construct} and {@link Undead} with 0
 	 * {@link #constitution} always pass fortitude checks.
-	 * 
+	 *
 	 * @return The fortitude saving throw bonus of {@link Integer#MAX_VALUE} if
 	 *         immune.
 	 */
@@ -838,7 +843,7 @@ public class Monster implements Cloneable, Serializable {
 	/**
 	 * Represents a general daily upkeep for this unit, not considering a
 	 * emrcenary's fee.
-	 * 
+	 *
 	 * @return How much food this units eats in gold pieces per day.
 	 * @see MercenariesGuild#getfee(Monster)
 	 */

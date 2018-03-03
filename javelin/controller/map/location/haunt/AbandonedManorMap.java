@@ -9,5 +9,6 @@ public class AbandonedManorMap extends LocationMap {
 		floor = Images.getImage("dungeonfloortempleevil");
 		wall = Images.getImage("terrainmoldwall");
 		obstacle = Images.getImage("terraintreeforest");
+		flying = false;
 	}
 }

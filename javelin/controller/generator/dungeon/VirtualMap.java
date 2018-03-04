@@ -140,6 +140,10 @@ public class VirtualMap {
 		return map.get(p);
 	}
 
+	public Character get(Point cursor, Point p) {
+		return get(new Point(cursor.x + p.x, cursor.y + p.y));
+	}
+
 	public void set(char tile, Point cursor, Point p) {
 		set(tile, cursor.x + p.x, cursor.y + p.y);
 	}

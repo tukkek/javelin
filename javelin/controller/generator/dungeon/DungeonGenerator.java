@@ -43,7 +43,7 @@ public class DungeonGenerator {
 	LinkedList<Segment> segments = new LinkedList<Segment>();
 	ArrayList<Template> pool = new ArrayList<Template>();
 	VirtualMap map = new VirtualMap();
-	String templatesused;
+	String templatesused = "";
 	int attempts = 3000;
 	private int minrooms;
 	private int maxrooms;

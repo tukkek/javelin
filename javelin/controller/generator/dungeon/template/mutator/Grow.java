@@ -24,13 +24,13 @@ public class Grow extends Mutator {
 		}
 	}
 
-	void grow(Template t, boolean horizontal, int tiles) {
+	public static void grow(Template t, boolean horizontal, int tiles) {
 		for (int i = 0; i < tiles; i++) {
 			t.settiles(horizontal ? growhorizontal(t) : growvertical(t));
 		}
 	}
 
-	char[][] growvertical(Template t) {
+	static char[][] growvertical(Template t) {
 		int slice = RPG.r(1, t.height - 1);
 		char[][] grown = new char[t.width][t.height + 1];
 		for (int x = 0; x < t.width; x++) {
@@ -42,7 +42,7 @@ public class Grow extends Mutator {
 		return grown;
 	}
 
-	char[][] growhorizontal(Template t) {
+	static char[][] growhorizontal(Template t) {
 		int slice = RPG.r(1, t.width - 1);
 		char[][] grown = new char[t.width + 1][t.height];
 		copyandslice(t.tiles, slice, grown, t.tiles.length);
@@ -54,7 +54,8 @@ public class Grow extends Mutator {
 		return grown;
 	}
 
-	void copyandslice(Object tiles, int slice, Object grown, int length) {
+	static void copyandslice(Object tiles, int slice, Object grown,
+			int length) {
 		System.arraycopy(tiles, 0, grown, 0, slice);
 		System.arraycopy(tiles, slice, grown, slice + 1, length - slice);
 	}

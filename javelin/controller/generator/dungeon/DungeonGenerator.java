@@ -44,9 +44,9 @@ public class DungeonGenerator {
 	ArrayList<Template> pool = new ArrayList<Template>();
 	VirtualMap map = new VirtualMap();
 	String templatesused = "";
-	int attempts = 3000;
 	private int minrooms;
 	private int maxrooms;
+	private int nrooms;
 
 	static {
 		setupparameters();
@@ -140,39 +140,20 @@ public class DungeonGenerator {
 		Template start = generateroom();
 		segments.add(new Segment(start, new Point(0, 0)));
 		map.draw(start, 0, 0);
-		int nrooms = RPG.r(minrooms, maxrooms);
+		nrooms = RPG.r(minrooms, maxrooms);
 		while (nrooms > 0 && !segments.isEmpty()) {
 			Segment s = RPG.pick(segments);
 			segments.remove(s);
-			List<Point> doors = s.room.getdoors();
+			LinkedList<Point> doors = new LinkedList<Point>(s.room.getdoors());
 			Collections.shuffle(doors);
-			for (Point door : doors) {
-				attempts -= 1;
-				if (attempts == 0) {
-					if (DEBUG) {
-						System.err.println("#dungeongenerator empty pool");
+			placingdoors: while (!doors.isEmpty()) {
+				Point door = doors.pop();
+				for (int i = 0; i < 10; i++) {
+					if (expandroom(door, s)) {
+						continue placingdoors;
 					}
-					map.set(Template.WALL, s.cursor, door);
-					continue;
 				}
-				Template next = generateroom();
-				Direction going = s.room.inborder(door.x, door.y);
-				if (going == null) {
-					/* static template with internal door */
-					map.set(Template.FLOOR, door.x, door.y);
-					continue;
-				}
-				Direction coming = Direction.opposite(going);
-				Point doorb = next.rotate(coming);
-				Point cursorb = new Point(s.cursor);
-				cursorb = going.connect(cursorb, s.room, next, door, doorb);
-				StraightCorridor.clear(s.room, s.cursor, door, next, doorb,
-						map);
-				if (map.draw(next, cursorb.x, cursorb.y)) {
-					map.set(Template.FLOOR, cursorb, doorb);
-					nrooms -= 1;
-					segments.add(new Segment(next, cursorb));
-				} else if (map.get(s.cursor, door).equals(Template.DOOR)) {
+				if (map.get(s.cursor, door).equals(Template.DOOR)) {
 					map.set(Template.WALL, s.cursor, door);
 				}
 			}
@@ -184,6 +165,28 @@ public class DungeonGenerator {
 				}
 			}
 		}
+	}
+
+	boolean expandroom(Point door, Segment s) {
+		Template next = generateroom();
+		Direction going = s.room.inborder(door.x, door.y);
+		if (going == null) {
+			/* static template with internal door */
+			map.set(Template.FLOOR, door.x, door.y);
+			return true;
+		}
+		Direction coming = Direction.opposite(going);
+		Point doorb = next.rotate(coming);
+		Point cursorb = new Point(s.cursor);
+		cursorb = going.connect(cursorb, s.room, next, door, doorb);
+		StraightCorridor.clear(s.room, s.cursor, door, next, doorb, map);
+		if (!map.draw(next, cursorb.x, cursorb.y)) {
+			return false;
+		}
+		map.set(Template.FLOOR, cursorb, doorb);
+		segments.add(new Segment(next, cursorb));
+		nrooms -= 1;
+		return true;
 	}
 
 	void generatepool() {
@@ -287,8 +290,8 @@ public class DungeonGenerator {
 	}
 
 	public static void main(String[] args) throws IOException {
-		int minrooms = 5 + RPG.randomize(2);
-		int maxrooms = 10 + RPG.randomize(3);
+		int minrooms = 3;
+		int maxrooms = 7;
 		minrooms = 13;
 		maxrooms = 13 * 2;
 		DungeonGenerator dungeon = generate(minrooms, maxrooms);

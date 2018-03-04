@@ -34,12 +34,12 @@ import tyrant.mikera.engine.RPG;
 /**
  * A dungeon is an underground area of the world where the combats are harder
  * but have extra treasure laying around.
- * 
+ *
  * The in-game logic for dungeons is that they are a hideout of bandits or
  * similar, which is why they are sacrificeable by {@link Incursion}s and are
  * removed from the game after a {@link Squad} leaves one (in this case it's
  * assumed the bandits packed their stuff and left).
- * 
+ *
  * @author alex
  */
 public class Dungeon extends Location {
@@ -59,13 +59,13 @@ public class Dungeon extends Location {
 	public List<Feature> features = new ArrayList<Feature>();
 	/**
 	 * Explored squares in this dungeon.
-	 * 
+	 *
 	 * TODO why is there this and also {@link #discovered}?
 	 */
 	public boolean[][] visible;
 	/**
 	 * Current {@link Squad} location.
-	 * 
+	 *
 	 * TODO is this needed?
 	 */
 	public Point herolocation;
@@ -115,9 +115,7 @@ public class Dungeon extends Location {
 	}
 
 	void map() {
-		int minrooms = 5 + RPG.randomize(2);
-		int maxrooms = 10 + RPG.randomize(3);
-		map = DungeonGenerator.generate(minrooms, maxrooms).grid;
+		map = DungeonGenerator.generate(3, 7).grid;
 		size = map.length;
 		int vision = DungeonScreen.VIEWRADIUS * 2 + 1;
 		stepsperencounter = Math
@@ -148,7 +146,7 @@ public class Dungeon extends Location {
 	/**
 	 * Places {@link Fountain}, {@link Chest}s and {@link Trap}s then those from
 	 * {@link #getextrafeatures(Set, Set)}.
-	 * 
+	 *
 	 * @param free
 	 * @param used
 	 */
@@ -260,7 +258,7 @@ public class Dungeon extends Location {
 
 	/**
 	 * Responsible for deciding where the player should be.
-	 * 
+	 *
 	 * @param loading
 	 *            <code>true</code> if activating this {@link Dungeon} when
 	 *            starting the application (loading up a save game with an
@@ -295,7 +293,7 @@ public class Dungeon extends Location {
 
 	/**
 	 * Akin to terrain {@link Hazard}s.
-	 * 
+	 *
 	 * @return <code>true</code> if a hazard happens.
 	 */
 	public boolean hazard() {
@@ -306,7 +304,7 @@ public class Dungeon extends Location {
 	/**
 	 * Similar to {@link #placefeatures(Set, Set)} but usually reserved to
 	 * placing {@link TempleDungeon} {@link Feature}s.
-	 * 
+	 *
 	 * Called after placing all basic features.
 	 *
 	 * @param used

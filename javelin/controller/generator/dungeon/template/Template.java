@@ -13,7 +13,6 @@ import javelin.controller.generator.dungeon.DungeonArea;
 import javelin.controller.generator.dungeon.DungeonGenerator;
 import javelin.controller.generator.dungeon.tables.RoomSizeTable;
 import javelin.controller.generator.dungeon.template.Iterator.TemplateTile;
-import javelin.controller.generator.dungeon.template.corridor.Hallway;
 import javelin.controller.generator.dungeon.template.corridor.StraightCorridor;
 import javelin.controller.generator.dungeon.template.corridor.WindingCorridor;
 import javelin.controller.generator.dungeon.template.generated.Irregular;
@@ -21,6 +20,7 @@ import javelin.controller.generator.dungeon.template.generated.Linear;
 import javelin.controller.generator.dungeon.template.generated.Rectangle;
 import javelin.controller.generator.dungeon.template.mutator.Alcoves;
 import javelin.controller.generator.dungeon.template.mutator.Grow;
+import javelin.controller.generator.dungeon.template.mutator.Hallway;
 import javelin.controller.generator.dungeon.template.mutator.HorizontalMirror;
 import javelin.controller.generator.dungeon.template.mutator.Mutator;
 import javelin.controller.generator.dungeon.template.mutator.Noise;
@@ -46,12 +46,12 @@ public abstract class Template implements Cloneable, DungeonArea {
 	public static final Template[] GENERATED = new Template[] { new Irregular(),
 			new Rectangle(), new Linear() };
 	public static final Template[] CORRIDORS = new Template[] {
-			new StraightCorridor(), new WindingCorridor(), new Hallway() };
+			new StraightCorridor(), new WindingCorridor() };
 
 	static final ArrayList<Mutator> MUTATORS = new ArrayList<Mutator>(Arrays
 			.asList(new Mutator[] { Rotate.INSTANCE, HorizontalMirror.INSTANCE,
 					VerticalMirror.INSTANCE, new Symmetry(), new Noise(),
-					new Wall(), new Alcoves(), Grow.INSTANCE }));
+					new Wall(), new Alcoves(), Grow.INSTANCE, new Hallway() }));
 	static final ArrayList<Mutator> ROTATORS = new ArrayList<Mutator>(
 			Arrays.asList(new Mutator[] { Rotate.INSTANCE,
 					HorizontalMirror.INSTANCE, VerticalMirror.INSTANCE }));
@@ -74,7 +74,7 @@ public abstract class Template implements Cloneable, DungeonArea {
 	public int height = 0;
 
 	protected Character fill = FLOOR;
-	protected int doors = RPG.r(1, 4);
+	public int doors = RPG.r(1, 4);
 
 	protected void init(int width, int height) {
 		this.width = width;
@@ -216,19 +216,18 @@ public abstract class Template implements Cloneable, DungeonArea {
 			doors = 2;
 		}
 		int attempts = doors * 4;
-		for (int i = 0; i < doors; i++) {
+		while (attempts > 0 && doors > 0) {
 			Direction direction = Direction.getrandom();
 			Point door = findentry(direction);
-			if (door != null) {
+			if (door == null) {
+				attempts -= 1;
+			} else {
 				tiles[door.x][door.y] = DOOR;
-				continue;
+				doors -= 1;
 			}
-			i -= 1;
-			attempts -= 1;
-			if (attempts == 0) {
-				tiles = null;
-				return;
-			}
+		}
+		if (attempts == 0) {
+			tiles = null;
 		}
 	}
 

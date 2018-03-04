@@ -16,8 +16,25 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import javelin.controller.exception.GaveUpException;
+import tyrant.mikera.engine.RPG;
 
 public class StaticTemplate extends Template {
+	public static final boolean DEBUG = false;
+	public static final StaticTemplate FACTORY = new StaticTemplate();
+
+	static final ArrayList<StaticTemplate> STATIC = new ArrayList<StaticTemplate>();
+	static final HashMap<Character, Character> TRANSLATE = new HashMap<Character, Character>();
+
+	static {
+		TRANSLATE.put(' ', WALL);
+		TRANSLATE.put('.', FLOOR);
+		TRANSLATE.put('#', WALL);
+
+		TRANSLATE.put('+', FLOOR); // TODO cant handle custom door yet;
+		TRANSLATE.put('~', FLOOR); // TODO water;
+		TRANSLATE.put('!', FLOOR); // TODO decotartion
+	}
+
 	public static class TemplateReader extends SimpleFileVisitor<Path> {
 		ArrayList<File> files;
 
@@ -34,24 +51,16 @@ public class StaticTemplate extends Template {
 			}
 			return super.visitFile(file, attrs);
 		}
-
 	}
 
-	static final boolean DEBUG = false;
-	static final HashMap<Character, Character> TRANSLATE = new HashMap<Character, Character>();
-
+	boolean factory = false;
 	char[][] original;
 	String name;
 
 	public static void load() {
-		TRANSLATE.put(' ', WALL);
-		TRANSLATE.put('.', FLOOR);
-		TRANSLATE.put('#', WALL);
-
-		TRANSLATE.put('+', FLOOR); // TODO cant handle custom door yet;
-		TRANSLATE.put('~', FLOOR); // TODO water;
-		TRANSLATE.put('!', FLOOR); // TODO decotartion
-
+		if (!STATIC.isEmpty()) {
+			return;
+		}
 		ArrayList<String> errors = new ArrayList<String>();
 		ArrayList<File> files = new ArrayList<File>(300);
 		try {
@@ -82,7 +91,7 @@ public class StaticTemplate extends Template {
 		}
 	}
 
-	public StaticTemplate(File file) {
+	private StaticTemplate(File file) {
 		name = file.toString();
 		String content = read(file);
 		while (content.indexOf("\n\n") >= 0) {
@@ -114,6 +123,11 @@ public class StaticTemplate extends Template {
 				original[i][y] = c == null ? WALL : c;
 			}
 		}
+	}
+
+	private StaticTemplate() {
+		// just used to deliver other instances
+		factory = true;
 	}
 
 	@Override
@@ -182,5 +196,10 @@ public class StaticTemplate extends Template {
 		if (original != null) {
 			super.makedoors();
 		}
+	}
+
+	@Override
+	public Template create() {
+		return factory ? RPG.pick(STATIC).create() : super.create();
 	}
 }

@@ -47,7 +47,6 @@ public abstract class Template implements Cloneable, DungeonArea {
 			new Rectangle(), new Linear() };
 	public static final Template[] CORRIDORS = new Template[] {
 			new StraightCorridor(), new WindingCorridor(), new Hallway() };
-	public static final ArrayList<StaticTemplate> STATIC = new ArrayList<StaticTemplate>();
 
 	static final ArrayList<Mutator> MUTATORS = new ArrayList<Mutator>(Arrays
 			.asList(new Mutator[] { Rotate.INSTANCE, HorizontalMirror.INSTANCE,

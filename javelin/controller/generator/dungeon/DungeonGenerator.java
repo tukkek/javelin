@@ -26,7 +26,7 @@ public class DungeonGenerator {
 	static final boolean DEBUGROOMS = true;
 	static final int DEBUGSIZE = 1;
 	/** Tries to generate this many templates per room. */
-	static final int POOLTARGET = 5;
+	static final int POOLTARGET = 10;
 
 	/**
 	 * TODO temporary: will need to be refactored when more than one level can
@@ -270,7 +270,11 @@ public class DungeonGenerator {
 	}
 
 	public static void main(String[] args) throws IOException {
-		DungeonGenerator dungeon = generate(13 * DEBUGSIZE, 13 * 2 * DEBUGSIZE);
+		int minrooms = 5 + RPG.randomize(2);
+		int maxrooms = 10 + RPG.randomize(3);
+		minrooms = 13;
+		maxrooms = 13 * 2;
+		DungeonGenerator dungeon = generate(minrooms, maxrooms);
 		dungeon.print();
 		System.out.println(dungeon.templatesused);
 	}

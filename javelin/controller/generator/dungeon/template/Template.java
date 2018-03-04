@@ -13,6 +13,7 @@ import javelin.controller.generator.dungeon.DungeonArea;
 import javelin.controller.generator.dungeon.DungeonGenerator;
 import javelin.controller.generator.dungeon.tables.RoomSizeTable;
 import javelin.controller.generator.dungeon.template.Iterator.TemplateTile;
+import javelin.controller.generator.dungeon.template.corridor.Hallway;
 import javelin.controller.generator.dungeon.template.corridor.StraightCorridor;
 import javelin.controller.generator.dungeon.template.corridor.WindingCorridor;
 import javelin.controller.generator.dungeon.template.generated.Irregular;
@@ -44,8 +45,8 @@ public abstract class Template implements Cloneable, DungeonArea {
 	/** Procedurally generated templates only. */
 	public static final Template[] GENERATED = new Template[] { new Irregular(),
 			new Rectangle(), new Linear() };
-	public static final StraightCorridor[] CORRIDORS = new StraightCorridor[] {
-			new StraightCorridor(), new WindingCorridor() };
+	public static final Template[] CORRIDORS = new Template[] {
+			new StraightCorridor(), new WindingCorridor(), new Hallway() };
 	public static final ArrayList<StaticTemplate> STATIC = new ArrayList<StaticTemplate>();
 
 	static final ArrayList<Mutator> MUTATORS = new ArrayList<Mutator>(Arrays
@@ -67,12 +68,14 @@ public abstract class Template implements Cloneable, DungeonArea {
 		FREEMUTATORS = freemutators;
 	}
 
+	public boolean corridor = false;
 	public char[][] tiles = null;
+	public double mutate = 0.1;
 	public int width = 0;
 	public int height = 0;
-	public boolean corridor = false;
+
 	protected Character fill = FLOOR;
-	public double mutate = 0.1;
+	protected int doors = RPG.r(1, 4);
 
 	protected void init(int width, int height) {
 		this.width = width;
@@ -210,17 +213,16 @@ public abstract class Template implements Cloneable, DungeonArea {
 	}
 
 	void makedoors() throws GaveUpException {
-		int doors = RPG.r(corridor ? 2 : 1, 4);
-		int attempts = 4 * 4;
+		if (corridor && doors == 1) {
+			doors = 2;
+		}
+		int attempts = doors * 4;
 		for (int i = 0; i < doors; i++) {
 			Direction direction = Direction.getrandom();
 			Point door = findentry(direction);
 			if (door != null) {
 				tiles[door.x][door.y] = DOOR;
 				continue;
-			}
-			if (count(DOOR) != 0) {
-				return;
 			}
 			i -= 1;
 			attempts -= 1;

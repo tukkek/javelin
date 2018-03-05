@@ -15,7 +15,8 @@ Version 1.7
  * Multi-threaded world generation
  * 5 new character kits
  * Auto-attack using the Tab key
- * Tile-based dungeon map generation 
+ * Tile-based dungeon map generation
+ * Dungeon redesigned into Caves, Dungeons, Ruins and Keeps
 
 Version 1.6 (2016-07-15) 
 

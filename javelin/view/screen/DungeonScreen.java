@@ -20,7 +20,7 @@ import javelin.view.mappanel.dungeon.DungeonPanel;
 
 /**
  * Shows the inside of a {@link Dungeon}.
- * 
+ *
  * @author alex
  */
 public class DungeonScreen extends WorldScreen {

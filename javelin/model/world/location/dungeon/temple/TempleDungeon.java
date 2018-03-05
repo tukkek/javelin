@@ -20,7 +20,7 @@ import javelin.view.screen.DungeonScreen;
 /**
  * Unlike normal dungeons {@link Temple}s have many floors (levels), chests with
  * rubies and an Altar on the deepest level.
- * 
+ *
  * @author alex
  */
 public class TempleDungeon extends Dungeon {
@@ -37,6 +37,17 @@ public class TempleDungeon extends Dungeon {
 	public TempleDungeon(Temple temple, boolean deepest) {
 		this.temple = temple;
 		this.deepest = deepest;
+	}
+
+	@Override
+	protected void determineel() {
+		// uses Temple#el instead
+	}
+
+	@Override
+	protected Tier gettier() {
+		el = temple.el;
+		return super.gettier();
 	}
 
 	@Override

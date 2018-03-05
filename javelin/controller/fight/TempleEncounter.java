@@ -4,19 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.challenge.CrCalculator;
+import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.Realm;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
-import tyrant.mikera.engine.RPG;
 
 /**
  * {@link Temple} fights are different from normal {@link Dungeon} encounters
  * because the creatures are upgraded with {@link Upgrade}s from the respective
  * {@link Realm}.
- * 
+ *
  * @author alex
  */
 public class TempleEncounter extends RandomDungeonEncounter {
@@ -24,12 +24,13 @@ public class TempleEncounter extends RandomDungeonEncounter {
 
 	/** Constructor. */
 	public TempleEncounter(Temple temple) {
+		super();
 		this.temple = temple;
 	}
 
 	@Override
 	public Integer getel(int teamel) {
-		return Math.max(1, temple.el - RPG.r(3, 5));
+		return temple.el + EncounterGenerator.getdifficulty();
 	}
 
 	@Override

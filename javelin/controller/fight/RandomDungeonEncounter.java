@@ -5,27 +5,30 @@ import java.util.ArrayList;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.attack.Combatant;
+import javelin.model.world.location.dungeon.Dungeon;
 
 /**
  * Generates a harder battle than a {@link RandomEncounter}.
- * 
+ *
  * @author alex
  */
 public class RandomDungeonEncounter extends RandomEncounter {
-	/**
-	 * Adds this to {@link EncounterGenerator#getdifficulty()}.
-	 */
-	static final int ELMODIFIER = +1;
+	Dungeon dungeon;
 
 	/** Constructor. */
-	public RandomDungeonEncounter() {
+	public RandomDungeonEncounter(Dungeon d) {
+		this();
+		dungeon = d;
+	}
+
+	protected RandomDungeonEncounter() {
 		meld = true;
 		map = Terrain.UNDERGROUND.getmaps().pick();
 	}
 
 	@Override
 	public Integer getel(int teamel) {
-		return teamel + EncounterGenerator.getdifficulty() + ELMODIFIER;
+		return dungeon.el + EncounterGenerator.getdifficulty();
 	}
 
 	@Override

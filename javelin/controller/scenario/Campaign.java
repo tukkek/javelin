@@ -34,7 +34,7 @@ public class Campaign extends Scenario {
 		record = true;
 		respawnlocations = true;
 		size = 30;
-		startingdungeons = Realm.values().length * 2;
+		startingdungeons = 20;
 		startingpopulation = 1;
 		statictowns = false;
 		towns = Realm.values().length;

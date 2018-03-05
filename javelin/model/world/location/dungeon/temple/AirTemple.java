@@ -17,7 +17,7 @@ import tyrant.mikera.engine.RPG;
 /**
  * Found high on the {@link Mountains}. The wind can push you up to three
  * squares around explored spaces.
- * 
+ *
  * @see Temple
  * @author alex
  */
@@ -37,7 +37,7 @@ public class AirTemple extends Temple {
 
 	@Override
 	public boolean hazard(TempleDungeon d) {
-		if (RPG.chancein(d.stepsperencounter)) {
+		if (!RPG.chancein(d.stepsperencounter)) {
 			return false;
 		}
 		ArrayList<Point> steps = new ArrayList<Point>();

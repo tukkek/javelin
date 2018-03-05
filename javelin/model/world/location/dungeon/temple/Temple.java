@@ -19,6 +19,8 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
+import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Chest;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
@@ -273,5 +275,15 @@ public abstract class Temple extends UniqueLocation {
 
 	public int getlevel() {
 		return level;
+	}
+
+	public static ArrayList<Temple> gettemples() {
+		ArrayList<Temple> temples = new ArrayList<Temple>(7);
+		for (Actor a : World.getactors()) {
+			if (a instanceof Temple) {
+				temples.add((Temple) a);
+			}
+		}
+		return temples;
 	}
 }

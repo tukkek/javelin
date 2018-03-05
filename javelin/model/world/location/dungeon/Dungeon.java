@@ -1,5 +1,6 @@
 package javelin.model.world.location.dungeon;
 
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Set;
 
 import javelin.JavelinApp;
 import javelin.controller.Point;
+import javelin.controller.challenge.CrCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
@@ -17,6 +19,7 @@ import javelin.model.item.ItemSelection;
 import javelin.model.item.Key;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
+import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
@@ -26,6 +29,7 @@ import javelin.model.world.location.dungeon.temple.features.FruitTree;
 import javelin.model.world.location.dungeon.temple.features.Portal;
 import javelin.model.world.location.dungeon.temple.features.Spirit;
 import javelin.model.world.location.dungeon.temple.features.StairsDown;
+import javelin.view.Images;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
 import javelin.view.screen.WorldScreen;
@@ -43,6 +47,20 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Dungeon extends Location {
+	static protected class Tier {
+		int el;
+		String name;
+		int minrooms;
+		int maxrooms;
+
+		public Tier(String name, int level, int minrooms, int maxrooms) {
+			this.name = name;
+			this.minrooms = minrooms;
+			this.maxrooms = maxrooms;
+			el = CrCalculator.leveltoel(level);
+		}
+	}
+
 	/**
 	 * The base EL for {@link RandomDungeonEncounter}s is -3, which represents
 	 * somewhere between 25% and 50% resources used. We modify this to 200%
@@ -51,6 +69,9 @@ public class Dungeon extends Location {
 	public static final int ENCOUNTERSPERDUNGEON = Math.round(2 / .4f);
 	static final int MAXTRIES = 1000;
 	static final int[] DELTAS = { -1, 0, 1 };
+	static final Tier[] TIERS = new Tier[] { new Tier("Cave", 5, 3, 7),
+			new Tier("Dungeon", 10, 5, 10), new Tier("Ruins", 15, 10, 15),
+			new Tier("Keep", 20, 10, 20), };
 
 	/** Current {@link Dungeon} or <code>null</code> if not in one. */
 	public static Dungeon active = null;
@@ -69,11 +90,6 @@ public class Dungeon extends Location {
 	 * TODO is this needed?
 	 */
 	public Point herolocation;
-
-	// public transient BattleMap map = null;
-	/** TODO remove from 2.0+ */
-	// transient public Thing hero;
-	transient boolean generated = false;
 	/** File to use under 'avatar' folder. */
 	public String floor = "dungeonfloor";
 	/** File to use under 'avatar' folder. */
@@ -84,12 +100,37 @@ public class Dungeon extends Location {
 	public int size;
 	public float encounterratio;
 	public int stepsperencounter;
+	public int el = -1;
+	public int level;
+
+	transient boolean generated = false;
 
 	/** Constructor. */
 	public Dungeon() {
 		super("A dungeon");
 		sacrificeable = true;
 		link = false;
+		discard = false;
+		determineel();
+	}
+
+	protected void determineel() {
+		List<Dungeon> all = getdungeons();
+		if (all.size() >= 20) {
+			level = RPG.r(1, 20);
+			el = CrCalculator.leveltoel(level);
+			return;
+		}
+		generating: while (el == -1) {
+			level = RPG.r(1, 20);
+			int el = CrCalculator.leveltoel(level);
+			for (Dungeon d : all) {
+				if (d.level == level) {
+					continue generating;
+				}
+			}
+			this.el = el;
+		}
 	}
 
 	@Override
@@ -115,7 +156,10 @@ public class Dungeon extends Location {
 	}
 
 	void map() {
-		map = DungeonGenerator.generate(3, 7).grid;
+		Tier tier = gettier();
+		DungeonGenerator generator = DungeonGenerator.generate(tier.minrooms,
+				tier.maxrooms);
+		map = generator.grid;
 		size = map.length;
 		int vision = DungeonScreen.VIEWRADIUS * 2 + 1;
 		stepsperencounter = Math
@@ -174,9 +218,12 @@ public class Dungeon extends Location {
 	}
 
 	void createchests() {
-		int chests = RPG.r(3, 5);
+		Tier tier = gettier();
+		int chests = RPG.r(tier.minrooms, tier.maxrooms)
+				+ RPG.randomize(tier.minrooms);
 		int pool = getgoldpool();
-		for (int i = 0; i < chests; i++) {/* equal trap/treasure find chance */
+		int traps = chests + RPG.randomize(tier.minrooms);
+		for (int i = 0; i < traps; i++) {
 			Trap t = new Trap(findspot());
 			features.add(t);
 			pool += RewardCalculator.getgold(t.cr);
@@ -230,7 +277,7 @@ public class Dungeon extends Location {
 			return true;
 		}
 		for (Feature f : features) {
-			if (f.x == p.x && f.y == f.y) {
+			if (f.x == p.x && f.y == p.y) {
 				return true;
 			}
 		}
@@ -288,7 +335,7 @@ public class Dungeon extends Location {
 
 	/** See {@link WorldScreen#encounter()}. */
 	public Fight encounter() {
-		return new RandomDungeonEncounter();
+		return new RandomDungeonEncounter(this);
 	}
 
 	/**
@@ -349,5 +396,36 @@ public class Dungeon extends Location {
 	public void setvisible(int x, int y) {
 		visible[x][y] = true;
 		BattleScreen.active.mappanel.tiles[x][y].discovered = true;
+	}
+
+	static public List<Dungeon> getdungeons() {
+		ArrayList<Actor> actors = World.getall(Dungeon.class);
+		ArrayList<Dungeon> dungeons = new ArrayList<Dungeon>(actors.size());
+		for (Actor a : actors) {
+			dungeons.add((Dungeon) a);
+		}
+		return dungeons;
+	}
+
+	protected Tier gettier() {
+		for (Tier t : TIERS) {
+			if (el <= t.el) {
+				return t;
+			}
+		}
+		return TIERS[3];
+	}
+
+	@Override
+	public String describe() {
+		return gettier().name + " ("
+				+ CrCalculator.describedifficulty(
+						el - CrCalculator.calculateel(Squad.active.members))
+				+ ")";
+	}
+
+	@Override
+	public Image getimage() {
+		return Images.getImage("location" + gettier().name.toLowerCase());
 	}
 }

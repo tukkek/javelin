@@ -47,17 +47,16 @@ public class Trap extends Feature {
 	 * @param p
 	 *            Creates a trap at this point.
 	 */
-	public Trap(Point p) {
+	public Trap(int cr, Point p) {
 		super("poison trap", p.x, p.y, "dungeontrap");
 		float sum = 0;
 		for (Combatant c : Squad.active.members) {
 			sum += CrCalculator.calculatecr(c.source);
 		}
-		cr = Math.round(
-				Math.max(1, sum / Squad.active.members.size() - RPG.r(8, 5)));
+		this.cr = cr;
 		draw = false;
 		stop = true;
-		int currentcr = -1;// doesn't kill ("subdual damage")
+		int currentcr = -1;// doesn't kill ("subdual damage", kinda)
 		while (currentcr != cr || damagedie < 1) {
 			reflexdc = RPG.r(10, 35);
 			disarmdc = RPG.r(10, 35);

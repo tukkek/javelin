@@ -37,12 +37,12 @@ public class DungeonGenerator {
 	static int ntemplates;
 
 	public LevelTables tables = new LevelTables();
+	public VirtualMap map = new VirtualMap();
 	public char[][] grid;
 	public String ascii;
 
 	LinkedList<Segment> segments = new LinkedList<Segment>();
 	ArrayList<Template> pool = new ArrayList<Template>();
-	VirtualMap map = new VirtualMap();
 	String templatesused = "";
 	private int minrooms;
 	private int maxrooms;

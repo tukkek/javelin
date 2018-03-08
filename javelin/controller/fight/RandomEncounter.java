@@ -26,12 +26,12 @@ public class RandomEncounter extends Fight {
 	}
 
 	/**
-	 * @param d
+	 * @param chance
 	 *            % chance of starting a battle.
 	 * @throws StartBattle
 	 */
-	static public void encounter(double d) {
-		if (RPG.random() < d && !Preferences.DEBUGDISABLECOMBAT) {
+	static public void encounter(double chance) {
+		if (RPG.random() < chance && !Preferences.DEBUGDISABLECOMBAT) {
 			Fight f = JavelinApp.context.encounter();
 			if (f != null) {
 				throw new StartBattle(f);

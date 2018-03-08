@@ -51,7 +51,7 @@ public class EvilTemple extends Temple {
 
 	@Override
 	public boolean hazard(TempleDungeon dungeon) {
-		if (RPG.r(1, dungeon.stepsperencounter * 10) != 1) {
+		if (!RPG.chancein(dungeon.stepsperencounter * 10)) {
 			return false;
 		}
 		Class<? extends Feature> targettype;
@@ -67,6 +67,8 @@ public class EvilTemple extends Temple {
 				break;
 			}
 		}
+		dungeon.herolocation.x = target.x;
+		dungeon.herolocation.y = target.y;
 		Javelin.message("A macabre force draws upon you...", true);
 		return true;
 	}

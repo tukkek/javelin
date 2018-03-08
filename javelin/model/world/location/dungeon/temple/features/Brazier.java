@@ -1,5 +1,7 @@
 package javelin.model.world.location.dungeon.temple.features;
 
+import java.util.HashSet;
+
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
@@ -22,15 +24,21 @@ public class Brazier extends Feature {
 	@Override
 	public boolean activate() {
 		Javelin.message("You light up the brazier!", false);
-		brighten(x, y, 0);
+		brighten(new Point(x, y), 0, new HashSet<Point>());
 		Point p = JavelinApp.context.getherolocation();
 		JavelinApp.context.view(p.x, p.y);
 		return true;
 	}
 
-	void brighten(int xp, int yp, int depth) {
+	/**
+	 * TODO add a recursion cache (HashSet<Point>) to avoid taking too long.
+	 */
+	void brighten(Point p, int depth, HashSet<Point> visited) {
+		if (!visited.add(p)) {
+			return;
+		}
 		for (Feature f : Dungeon.active.features) {
-			if (f.x != xp || f.y != xp) {
+			if (f.x != p.x || f.y != p.x) {
 				continue;
 			}
 			Trap t = f instanceof Trap ? (Trap) f : null;
@@ -39,22 +47,19 @@ public class Brazier extends Feature {
 			}
 		}
 		try {
-			Dungeon.active.setvisible(xp, yp);
+			Dungeon.active.setvisible(p.x, p.y);
 		} catch (IndexOutOfBoundsException e) {
 			return;
 		}
-		if (depth > 4) {
+		if (depth > 9 || Dungeon.active.map[p.x][p.y] == Template.WALL) {
 			return;
 		}
-		if (Dungeon.active.map[xp][yp] == Template.WALL) {
-			return;
-		}
-		for (int x = xp - 1; x <= xp + 1; x++) {
-			for (int y = yp - 1; y <= yp + 1; y++) {
-				if (x == xp && y == yp) {
+		for (int x = p.x - 1; x <= p.x + 1; x++) {
+			for (int y = p.y - 1; y <= p.y + 1; y++) {
+				if (x == p.x && y == p.y) {
 					continue;
 				}
-				brighten(x, y, depth + 1);
+				brighten(new Point(x, y), depth + 1, visited);
 			}
 		}
 	}

@@ -5,7 +5,6 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.CrCalculator;
-import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.fight.Fight;
 import javelin.model.item.ItemSelection;
 import javelin.model.unit.Squad;
@@ -16,6 +15,7 @@ import javelin.model.world.location.dungeon.StairsUp;
 import javelin.model.world.location.dungeon.temple.features.Altar;
 import javelin.model.world.location.dungeon.temple.features.StairsDown;
 import javelin.view.screen.DungeonScreen;
+import tyrant.mikera.engine.RPG;
 
 /**
  * Unlike normal dungeons {@link Temple}s have many floors (levels), chests with
@@ -45,7 +45,7 @@ public class TempleDungeon extends Dungeon {
 	}
 
 	@Override
-	protected Tier gettier() {
+	protected DungeonTier gettier() {
 		el = temple.el;
 		return super.gettier();
 	}
@@ -109,7 +109,7 @@ public class TempleDungeon extends Dungeon {
 		if (deepest) {
 			return new Altar(p, temple);
 		}
-		Chest c = new Chest("chest", p.x, p.y, 0, new ItemSelection());
+		Chest c = new Chest(p.x, p.y, 0, new ItemSelection());
 		c.rubies = 1;
 		return c;
 	}
@@ -135,11 +135,11 @@ public class TempleDungeon extends Dungeon {
 	}
 
 	@Override
-	protected void placefeatures() {
+	protected void placefeatures(int fountains) {
 		if (!deepest) {
 			features.add(new StairsDown("stairs up", findspot()));
 		}
-		super.placefeatures();
+		super.placefeatures(fountains);
 	}
 
 	@Override
@@ -161,12 +161,7 @@ public class TempleDungeon extends Dungeon {
 	}
 
 	@Override
-	protected void generate() {
-		super.generate();
-	}
-
-	@Override
-	public int getgoldpool() {
-		return RewardCalculator.getgold(temple.el) * 4;
+	public int getfountains(int rooms) {
+		return super.getfountains(rooms) + RPG.r(1, 4) - 1;
 	}
 }

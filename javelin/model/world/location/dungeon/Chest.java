@@ -41,8 +41,8 @@ public class Chest extends Feature {
 	 * @param itemsp
 	 *            {@link Item} loot.
 	 */
-	public Chest(String visual, int x, int y, int goldp, ItemSelection itemsp) {
-		super(visual, x, y, "dungeonchest");
+	public Chest(int x, int y, int goldp, ItemSelection itemsp) {
+		super("chest", x, y, "dungeonchest");
 		items = itemsp;
 		gold = goldp;
 	}
@@ -100,7 +100,7 @@ public class Chest extends Feature {
 				}
 			}
 		}
-		return new Chest("chest", x, y, gold, items);
+		return new Chest(x, y, gold, items);
 	}
 
 	/**

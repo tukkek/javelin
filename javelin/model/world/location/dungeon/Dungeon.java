@@ -14,6 +14,7 @@ import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
 import javelin.controller.generator.dungeon.DungeonGenerator;
 import javelin.controller.generator.dungeon.template.Template;
+import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.Key;
@@ -47,13 +48,13 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Dungeon extends Location {
-	static protected class Tier {
+	static protected class DungeonTier {
 		int el;
 		String name;
 		int minrooms;
 		int maxrooms;
 
-		public Tier(String name, int level, int minrooms, int maxrooms) {
+		public DungeonTier(String name, int level, int minrooms, int maxrooms) {
 			this.name = name;
 			this.minrooms = minrooms;
 			this.maxrooms = maxrooms;
@@ -61,17 +62,13 @@ public class Dungeon extends Location {
 		}
 	}
 
-	/**
-	 * The base EL for {@link RandomDungeonEncounter}s is -3, which represents
-	 * somewhere between 25% and 50% resources used. We modify this to 200%
-	 * since there is a fountain somewhere that will fully heal your party.
-	 */
-	public static final int ENCOUNTERSPERDUNGEON = Math.round(2 / .4f);
 	static final int MAXTRIES = 1000;
 	static final int[] DELTAS = { -1, 0, 1 };
-	static final Tier[] TIERS = new Tier[] { new Tier("Cave", 5, 3, 7),
-			new Tier("Dungeon", 10, 5, 10), new Tier("Ruins", 15, 10, 15),
-			new Tier("Keep", 20, 10, 20), };
+	static final DungeonTier[] TIERS = new DungeonTier[] {
+			new DungeonTier("Cave", 5, 5, 7),
+			new DungeonTier("Dungeon", 10, 5, 10),
+			new DungeonTier("Ruins", 15, 10, 15),
+			new DungeonTier("Keep", 20, 10, 20), };
 
 	/** Current {@link Dungeon} or <code>null</code> if not in one. */
 	public static Dungeon active = null;
@@ -155,23 +152,49 @@ public class Dungeon extends Location {
 				true);
 	}
 
+	/**
+	 * This function generates the dungeon map using {@link DungeonGenerator}
+	 * and then {@link #placefeatures()}. One notable thing that happens here is
+	 * the determination of how many {@link RandomDungeonEncounter}s should take
+	 * for the player to explore the whole level.
+	 * 
+	 * Currently, the calculation is done by setting a goal of one fight per
+	 * room on average (so naturally, larger {@link DungeonTier}s will have more
+	 * fights than smaller ones). The formula takes into account
+	 * {@link DungeonScreen#VIEWRADIUS} instead of counting each step as a
+	 * single tile.
+	 * 
+	 * Since a Squad of the dungeon's intended level cannot hope to clear a
+	 * dungeon if it's large (in average they can only take 4-5 encounters of
+	 * the same EL), this is then offset by placing enough fountains that would
+	 * theoretically allow them to do the one dungeon in one go.
+	 * 
+	 * This is currently not counting backtracking out of the dungeon or finding
+	 * your way back to town safely, so this naturally makes the dungeon more
+	 * challenging (hopefully being offset by the rewards inside).
+	 */
 	void map() {
-		Tier tier = gettier();
+		DungeonTier tier = gettier();
 		DungeonGenerator generator = DungeonGenerator.generate(tier.minrooms,
 				tier.maxrooms);
 		map = generator.grid;
 		size = map.length;
 		int vision = DungeonScreen.VIEWRADIUS * 2 + 1;
-		stepsperencounter = Math
-				.round(countfloor() / (ENCOUNTERSPERDUNGEON * vision * 2f));
+		int rooms = generator.map.rooms.size();
+		int stepsperroom = countfloor() / rooms;
+		stepsperencounter = Math.round(stepsperroom / vision);
 		encounterratio = 1f / stepsperencounter;
-		placefeatures();
+		placefeatures(getfountains(rooms));
 		visible = new boolean[size][size];
 		for (int x = 0; x < size; x++) {
 			for (int y = 0; y < size; y++) {
 				visible[x][y] = false;
 			}
 		}
+	}
+
+	public int getfountains(int rooms) {
+		return (rooms - 4) / 4;
 	}
 
 	int countfloor() {
@@ -190,11 +213,13 @@ public class Dungeon extends Location {
 	/**
 	 * Places {@link Fountain}, {@link Chest}s and {@link Trap}s then those from
 	 * {@link #getextrafeatures(Set, Set)}.
+	 * 
+	 * @param fountains
 	 *
 	 * @param free
 	 * @param used
 	 */
-	protected void placefeatures() {
+	protected void placefeatures(int fountains) {
 		herolocation = findspot();
 		features.add(new StairsUp("stairs up", herolocation));
 		for (int x = herolocation.x - 1; x <= herolocation.x + 1; x++) {
@@ -202,9 +227,16 @@ public class Dungeon extends Location {
 				map[x][y] = Template.FLOOR;
 			}
 		}
-		Point fountain = findspot();
-		features.add(new Fountain("fountain", fountain.x, fountain.y));
 		createchests();
+		for (Feature f : features) {
+			if (f instanceof Trap && RPG.chancein(4)) {
+				fountains += 1;
+			}
+		}
+		for (int i = 0; i < fountains; i++) {
+			Point fountain = findspot();
+			features.add(new Fountain(fountain.x, fountain.y));
+		}
 		for (Feature f : getextrafeatures()) {
 			features.add(f);
 		}
@@ -218,13 +250,14 @@ public class Dungeon extends Location {
 	}
 
 	void createchests() {
-		Tier tier = gettier();
+		DungeonTier tier = gettier();
 		int chests = RPG.r(tier.minrooms, tier.maxrooms)
 				+ RPG.randomize(tier.minrooms);
 		int pool = getgoldpool();
 		int traps = chests + RPG.randomize(tier.minrooms);
 		for (int i = 0; i < traps; i++) {
-			Trap t = new Trap(findspot());
+			int cr = Math.round(getcr()) + EncounterGenerator.getdifficulty();
+			Trap t = new Trap(cr, findspot());
 			features.add(t);
 			pool += RewardCalculator.getgold(t.cr);
 		}
@@ -243,7 +276,13 @@ public class Dungeon extends Location {
 	}
 
 	public int getgoldpool() {
-		return RewardCalculator.receivegold(Squad.active.members);
+		return RewardCalculator.getgold(getcr());
+	}
+
+	float getcr() {
+		float[] crs = CrCalculator.eltocr(el);
+		float cr = crs[RPG.r(crs.length)];
+		return cr;
 	}
 
 	/**
@@ -252,7 +291,7 @@ public class Dungeon extends Location {
 	 * @return Most special chest here.
 	 */
 	protected Feature createspecialchest(Point p) {
-		Chest t = new Chest("chest", p.x, p.y, 0, new ItemSelection());
+		Chest t = new Chest(p.x, p.y, 0, new ItemSelection());
 		t.key = Key.generate();
 		return t;
 	}
@@ -407,8 +446,8 @@ public class Dungeon extends Location {
 		return dungeons;
 	}
 
-	protected Tier gettier() {
-		for (Tier t : TIERS) {
+	protected DungeonTier gettier() {
+		for (DungeonTier t : TIERS) {
 			if (el <= t.el) {
 				return t;
 			}
@@ -418,10 +457,9 @@ public class Dungeon extends Location {
 
 	@Override
 	public String describe() {
-		return gettier().name + " ("
-				+ CrCalculator.describedifficulty(
-						el - CrCalculator.calculateel(Squad.active.members))
-				+ ")";
+		int squadel = CrCalculator.calculateel(Squad.active.members);
+		String difficulty = CrCalculator.describedifficulty(el - squadel);
+		return gettier().name + " (" + difficulty + ")";
 	}
 
 	@Override

@@ -6,11 +6,13 @@ import java.util.Collections;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
+import javelin.controller.old.Game;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.Trap;
 import javelin.model.world.location.dungeon.temple.GoodTemple;
 import javelin.view.screen.DungeonScreen;
+import tyrant.mikera.engine.RPG;
 
 /**
  * @see GoodTemple
@@ -46,7 +48,9 @@ public class Spirit extends Feature {
 		}
 		Dungeon.active.setvisible(show.x, show.y);
 		DungeonScreen.active.center(show.x, show.y);
-		Javelin.message("'Hey, look!'", false);
+		Game.redraw();
+		String navitext = RPG.chancein(2) ? "'Hey, look!'" : "'Hey, listen!'";
+		Javelin.message(navitext, false);
 		if (show instanceof Trap) {
 			((Trap) show).discover();
 		}

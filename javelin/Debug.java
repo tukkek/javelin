@@ -116,6 +116,7 @@ public class Debug {
 	 * @return Any text will be printed below the usual help output.
 	 */
 	public static String onworldhelp() {
-		return "";
+		String s = "";
+		return s;
 	}
 }

@@ -12,8 +12,8 @@ import javelin.model.unit.attack.Combatant;
  */
 public class Fountain extends Feature {
 	/** Constructor. */
-	public Fountain(String thing, int i, int j) {
-		super(thing, i, j, "dungeonfountain");
+	public Fountain(int x, int y) {
+		super("fountain", x, y, "dungeonfountain");
 	}
 
 	@Override

@@ -242,10 +242,16 @@ public class ArenaFight extends Minigame {
 				Monster m = page.get(i);
 				names.add(m + " (level " + Math.round(m.challengerating) + ")");
 			}
-			Monster choice = page.get(Javelin.choose("Select your gladiators:",
-					names, false, true));
-			gladiators.add(new Combatant(choice, true));
-			candidates.remove(choice);
+			int choice = Javelin.choose("Select your gladiators:", names, false,
+					false);
+			if (choice == -1) {
+				throw new EndBattle();
+			}
+			Monster m = page.get(choice);
+			Combatant c = new Combatant(m, true);
+			c.hp = m.hd.maximize();
+			gladiators.add(c);
+			candidates.remove(m);
 		}
 		return gladiators;
 	}
@@ -327,8 +333,10 @@ public class ArenaFight extends Minigame {
 			} else if (!gladiators.contains(c)) {
 				defeated.add(c);
 				dead.remove(c);
-				gold += RewardCalculator.getgold(c.source.challengerating)
-						* BOOST;
+				if (!c.summoned) {
+					Float cr = c.source.challengerating;
+					gold += RewardCalculator.getgold(cr) * BOOST;
+				}
 			}
 		}
 	}
@@ -494,8 +502,8 @@ public class ArenaFight extends Minigame {
 		}
 		while (!place.isEmpty()) {
 			Point p = last.getlocation();
-			p.x += RPG.r(-1, +1);
-			p.y += RPG.r(-1, +1);
+			p.x += RPG.r(-1, +1) + RPG.randomize(2);
+			p.y += RPG.r(-2, +2) + RPG.randomize(2);
 			if (!validate(p)) {
 				continue;
 			}
@@ -515,7 +523,7 @@ public class ArenaFight extends Minigame {
 
 	public void notify(String text, Point p) {
 		Game.redraw();
-		BattleScreen.active.center(p.x, p.y);
+		// BattleScreen.active.center(p.x, p.y);
 		Javelin.message(text, false);
 	}
 

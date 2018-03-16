@@ -29,7 +29,6 @@ import javelin.controller.old.Game;
 import javelin.controller.scenario.Campaign;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
-import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
@@ -57,7 +56,8 @@ import tyrant.mikera.engine.RPG;
  */
 public class ArenaFight extends Minigame {
 	public static final float BOOST = 4; // 3,5 talvez?
-	static final String RETIRE = "You have beaten this level of the arena! Do you want to retire and have your gladiators available as recruits?\n\nPress r to retire or c to continue...";
+	static final String RETIRE = "You have beaten this level of the arena! Do you want to retire and have your gladiators available as recruits?\n"
+			+ "\nPress r to retire or c to continue...";
 	static final int MAPSIZE = 28;
 	static final int[] ARENASIZE = new int[] { 21, 10 };
 	static final int TENSIONMIN = -5;
@@ -294,6 +294,13 @@ public class ArenaFight extends Minigame {
 
 	@Override
 	public void startturn(Combatant acting) {
+		if (state.redTeam.isEmpty()) {
+			while (state.next.automatic) {
+				state.next.ap += .5f;
+				state.next();
+			}
+			acting = state.next;
+		}
 		super.startturn(acting);
 		for (ArrayList<Combatant> group : new ArrayList<ArrayList<Combatant>>(
 				foes)) {
@@ -533,6 +540,7 @@ public class ArenaFight extends Minigame {
 			while (retire != 'c' && retire != 'r') {
 				retire = Javelin.prompt(RETIRE);
 			}
+			Game.messagepanel.clear();
 			if (retire == 'c') {
 				goal += 5;
 			} else {
@@ -559,15 +567,6 @@ public class ArenaFight extends Minigame {
 	public static ArenaFight get() {
 		Fight f = Javelin.app.fight;
 		return f != null && f instanceof ArenaFight ? (ArenaFight) f : null;
-	}
-
-	@Override
-	public void die(Combatant c, BattleState s) {
-		// if (c instanceof ArenaAcademy) {
-		// c.hp = 1;
-		// return;
-		// }
-		super.die(c, s);
 	}
 
 	List<Combatant> getallies() {

@@ -1,8 +1,10 @@
 package javelin.model.item;
 
 import javelin.Javelin;
+import javelin.controller.old.Game;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Combatant;
+import javelin.view.screen.BattleScreen;
 
 /**
  * Represent a consumable potion to be used in-battle. Any monster can use a
@@ -27,7 +29,13 @@ public class Potion extends Item {
 
 	@Override
 	public boolean use(Combatant user) {
-		Javelin.message(spell.cast(user, user, null, false), false);
+		String text = spell.cast(user, user, null, false);
+		Game.redraw();
+		/* TODO should be less awkward once Context are implemented (2.0) */
+		if (BattleScreen.active.getClass().equals(BattleScreen.class)) {
+			BattleScreen.active.center(user.location[0], user.location[1]);
+		}
+		Javelin.message(text, false);
 		return true;
 	}
 

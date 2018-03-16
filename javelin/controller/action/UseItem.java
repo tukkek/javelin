@@ -11,6 +11,7 @@ import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.item.Item;
 import javelin.model.unit.attack.Combatant;
+import javelin.view.screen.BattleScreen;
 
 /**
  * Activates an {@link Item} in battle.
@@ -83,8 +84,13 @@ public class UseItem extends Action {
 					Delay.WAIT);
 			return null;
 		}
-		int choice = Javelin.choose("Which item? (press q to quit)", items,
-				items.size() > 4, false);
-		return choice >= 0 ? items.get(choice) : null;
+		boolean fullscreen = items.size() > 4;
+		String prompt = "Which item? (press q to quit)";
+		int choice = Javelin.choose(prompt, items, fullscreen, false);
+		Item i = choice >= 0 ? items.get(choice) : null;
+		if (fullscreen) {
+			Javelin.app.switchScreen(BattleScreen.active);
+		}
+		return i;
 	}
 }

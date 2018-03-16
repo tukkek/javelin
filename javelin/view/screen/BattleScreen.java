@@ -180,8 +180,8 @@ public class BattleScreen extends Screen {
 				c.refresh();
 			}
 			Fight.state.next();
+			Javelin.app.fight.startturn(Fight.state.next);
 			current = Fight.state.next;
-			Javelin.app.fight.startturn(current);
 			Examine.lastlooked = null;
 			if (Fight.state.redTeam.contains(current) || current.automatic) {
 				lastwascomputermove = current;

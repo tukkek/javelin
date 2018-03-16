@@ -184,11 +184,7 @@ public class StatusPanel extends TPanel {
 	String passivedata(final Combatant combatant) {
 		String status = "";
 		if (combatant.source.fasthealing > 0) {
-			status += "Fast healing " + new BigDecimal(
-					100.0 * new Double(combatant.source.fasthealing)
-							/ new Double(combatant.maxhp)).setScale(0,
-									RoundingMode.HALF_UP)
-					+ "%\n";
+			status += "Fast healing " + combatant.source.fasthealing + "\n";
 		}
 		return status.isEmpty() ? "" : "\n" + status;
 	}

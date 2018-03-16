@@ -91,6 +91,9 @@ public class Skills implements Serializable, Cloneable {
 		if (usemagicdevice(monster) >= 15 + s.level) {
 			return true;
 		}
+		if (!monster.think(-2)) {
+			return false;
+		}
 		return Math.max(Math.max(monster.intelligence, monster.wisdom),
 				monster.charisma) + spellcraft / 2 >= 10 + s.level;
 	}

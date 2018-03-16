@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.action.Action;
-import javelin.controller.action.CastSpell;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.controller.action.target.Target;
@@ -22,15 +21,15 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
 /**
  * This greatly helps feature maneuvers in Javelin - it was adopted with some
  * modifications.
- * 
+ *
  * http://www.dnd-wiki.org/wiki/Simplified_Special_Attacks_%283.
  * 5e_Variant_Rule%29#Trip
- * 
+ *
  * For the human version of these see {@link ExecuteManeuver}.
- * 
+ *
  * TODO this will probably be better handled in a spell-like fashion, together
  * with martial disciplines
- * 
+ *
  * @author alex
  */
 public abstract class ExpertiseAction extends Target implements AiAction {
@@ -42,7 +41,7 @@ public abstract class ExpertiseAction extends Target implements AiAction {
 		super(name);
 		this.prerequisite = prerequisite;
 		this.featbonus = featbonus;
-		this.confirmkey = 'm';
+		confirmkey = 'm';
 	}
 
 	@Override
@@ -69,6 +68,9 @@ public abstract class ExpertiseAction extends Target implements AiAction {
 			BattleState s) {
 		super.filtertargets(combatant, targets, s);
 		for (final Combatant target : new ArrayList<Combatant>(targets)) {
+			if (target.source.passive) {
+				continue;
+			}
 			final int deltax = combatant.location[0] - target.location[0];
 			final int deltay = combatant.location[1] - target.location[1];
 			if (-1 <= deltax && deltax <= +1 && //
@@ -142,7 +144,7 @@ public abstract class ExpertiseAction extends Target implements AiAction {
 			BattleState battleState, float chance);
 
 	public float calculatesavechance(final int dc, final int bonus) {
-		return CastSpell.bind(1 - (dc - bonus) / 20f);
+		return Action.bind(1 - (dc - bonus) / 20f);
 	}
 
 	float calculatemisschance(final Combatant combatant,

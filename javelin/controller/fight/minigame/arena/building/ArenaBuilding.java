@@ -12,12 +12,11 @@ import javelin.view.mappanel.battle.action.BattleMouseAction;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.Option;
-import javelin.view.screen.shopping.ShoppingScreen;
-import javelin.view.screen.town.PurchaseScreen;
+import javelin.view.screen.town.SelectScreen;
 
 /**
  * TODO on upgrade start fast healing
- * 
+ *
  * @author alex
  */
 public abstract class ArenaBuilding extends Combatant {
@@ -66,12 +65,11 @@ public abstract class ArenaBuilding extends Combatant {
 				ArenaFight.get().gold -= price;
 				upgrade();
 				return true;
-			} else {
-				s.print("Not enough gold (you currently have $"
-						+ PurchaseScreen.formatcost(gold)
-						+ ").\n\nPress any key to continue....");
-				return false;
 			}
+			s.print("Not enough gold (you currently have $"
+					+ SelectScreen.formatcost(gold)
+					+ ").\n\nPress any key to continue....");
+			return false;
 		}
 	}
 
@@ -85,7 +83,7 @@ public abstract class ArenaBuilding extends Combatant {
 
 	public ArenaBuilding(String name, String avatar, String description) {
 		super(Javelin.getmonster("Building"), false);
-		this.actiondescription = description;
+		actiondescription = description;
 		source.customName = name;
 		source.passive = true;
 		source.avatarfile = avatar;
@@ -188,24 +186,24 @@ public abstract class ArenaBuilding extends Combatant {
 		}
 		ArenaFight.get().gold -= cost;
 		repairing = true;
-		materials = cost;
+		materials += cost;
 		return true;
 	}
 
 	String getrepairmessage() {
 		String suffix = "\n\nYou currently have $"
-				+ ShoppingScreen.formatcost(ArenaFight.get().gold) + ".";
+				+ SelectScreen.formatcost(ArenaFight.get().gold) + ".";
 		String name = source.customName.toLowerCase();
 		if (repairing) {
 			return "This " + name + " is being repaired." + suffix;
 		}
 		return "This " + name + " needs to be repaired ($"
-				+ ShoppingScreen.formatcost(getrepaircost())
+				+ SelectScreen.formatcost(getrepaircost())
 				+ "). Click to start repairs." + suffix;
 	}
 
 	int getrepaircost() {
-		return (maxhp - hp) * source.dr;
+		return Math.max(1, (maxhp - hp) * source.dr - materials);
 	}
 
 	public boolean isdamaged() {
@@ -245,5 +243,16 @@ public abstract class ArenaBuilding extends Combatant {
 	@Override
 	public boolean ispenalized(BattleState s) {
 		return isdamaged();
+	}
+
+	@Override
+	public void damage(int damagep, BattleState s, int reduce) {
+		super.damage(damagep, s, reduce);
+		if (repairing) {
+			ArenaBuilding b = (ArenaBuilding) s.clone(this);
+			if (b != null) {
+				b.repairing = false;
+			}
+		}
 	}
 }

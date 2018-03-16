@@ -9,8 +9,7 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.condition.Condition;
 import javelin.model.world.location.dungeon.Fountain;
-import javelin.view.screen.shopping.ShoppingScreen;
-import javelin.view.screen.town.PurchaseScreen;
+import javelin.view.screen.town.SelectScreen;
 
 public class ArenaFountain extends ArenaBuilding {
 	private static final String REFILLING = "This fountain is refilling... be patient!";
@@ -40,11 +39,11 @@ public class ArenaFountain extends ArenaBuilding {
 			Javelin.prompt(REFILLING + " (already at max level)");
 			return false;
 		}
-		String priceformat = ShoppingScreen.formatcost(cost);
+		String priceformat = SelectScreen.formatcost(cost);
 		int gold = ArenaFight.get().gold;
 		if (gold < cost) {
 			Javelin.prompt("You can upgrade this fountain for $" + priceformat
-					+ " (you currently have $" + PurchaseScreen.formatcost(gold)
+					+ " (you currently have $" + SelectScreen.formatcost(gold)
 					+ ").\n\nPress any key to continue...");
 			return false;
 		}
@@ -77,8 +76,7 @@ public class ArenaFountain extends ArenaBuilding {
 
 	public void setspent(boolean spent) {
 		this.spent = spent;
-		this.source.avatarfile = spent ? "dungeonfountaindry"
-				: "dungeonfountain";
+		source.avatarfile = spent ? "dungeonfountaindry" : "dungeonfountain";
 	}
 
 	@Override
@@ -91,7 +89,10 @@ public class ArenaFountain extends ArenaBuilding {
 	public void damage(int damagep, BattleState s, int reduce) {
 		super.damage(damagep, s, reduce);
 		if (isdamaged()) {
-			setspent(true);
+			ArenaFountain f = (ArenaFountain) s.clone(this);
+			if (f != null) {
+				f.setspent(true);
+			}
 		}
 	}
 }

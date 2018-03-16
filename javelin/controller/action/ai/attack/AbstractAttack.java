@@ -22,7 +22,7 @@ import javelin.model.unit.attack.Combatant;
 
 /**
  * Base class for {@link MeleeAttack} and {@link RangedAttack}.
- * 
+ *
  * @author alex
  */
 public abstract class AbstractAttack extends Action implements AiAction {
@@ -110,14 +110,17 @@ public abstract class AbstractAttack extends Action implements AiAction {
 		if (m != null) {
 			m.posthit(attacker, target, a, dc, s);
 		}
-		return new DamageNode(s, dc.chance, sb.toString(), Delay.BLOCK, target);
+		final Delay delay = target.source.passive
+				&& target.getnumericstatus() > Combatant.STATUSUNCONSCIOUS
+						? Delay.WAIT : Delay.BLOCK;
+		return new DamageNode(s, dc.chance, sb.toString(), delay, target);
 	}
 
 	/**
 	 * Always a full attack (1AP) but divided among the {@link AttackSequence}.
 	 * This would penalize creatures with only one attack so max AP cost is .5
 	 * per attack.
-	 * 
+	 *
 	 * If a {@link #CURRENTMANEUVER} is being used, returns {@link Maneuver}
 	 * instead.
 	 */
@@ -184,8 +187,7 @@ public abstract class AbstractAttack extends Action implements AiAction {
 			final int attackbonus) {
 		final int penalty = getpenalty(current, target, gameState);
 		final float misschance = (target.ac() + penalty - attackbonus) / 20f;
-		return AbstractAttack
-				.bind(addchances(misschance, target.source.misschance));
+		return Action.bind(addchances(misschance, target.source.misschance));
 	}
 
 	/**

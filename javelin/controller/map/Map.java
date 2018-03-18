@@ -153,17 +153,7 @@ public abstract class Map {
 	 *         typical fights like {@link Water}.
 	 */
 	public static Map random() {
-		ArrayList<Terrain> terrains = new ArrayList<Terrain>(
-				Terrain.NONUNDERGROUND.length);
-		terrains.add(Terrain.UNDERGROUND);
-		ArrayList<Map> maps = new ArrayList<Map>();
-		for (Terrain t : Terrain.NONUNDERGROUND) {
-			for (Map m : t.getmaps()) {
-				if (m.standard) {
-					maps.add(m);
-				}
-			}
-		}
-		return RPG.pick(maps);
+		Terrain t = Terrain.NONWATER[RPG.r(0, Terrain.NONWATER.length - 1)];
+		return RPG.pick(t.getmaps());
 	}
 }

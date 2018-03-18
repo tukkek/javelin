@@ -12,7 +12,7 @@ import javelin.view.screen.BattleScreen;
 
 public class MeleeMouseAction extends BattleMouseAction {
 	@Override
-	public boolean determine(Combatant current, Combatant target,
+	public boolean validate(Combatant current, Combatant target,
 			BattleState s) {
 		return !target.isally(current, s) && current.isadjacent(target)
 				&& !current.source.melee.isEmpty();

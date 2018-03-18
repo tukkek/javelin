@@ -5,7 +5,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.CrCalculator;
-import javelin.controller.comparator.MonsterNameComparator;
+import javelin.controller.comparator.MonstersByName;
 import javelin.controller.fight.LocationFight;
 import javelin.controller.map.location.LocationMap;
 import javelin.model.unit.Monster;
@@ -100,7 +100,7 @@ public abstract class Haunt extends Fortification {
 		}
 		Monster m = RPG.pick(dwellers);
 		available.add(m);
-		available.sort(MonsterNameComparator.INSTANCE);
+		available.sort(MonstersByName.INSTANCE);
 		delay = Dwelling.getspawnrate(m.challengerating);
 	}
 

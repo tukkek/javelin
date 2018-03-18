@@ -14,7 +14,6 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.BattleScreen;
-import javelin.view.screen.BribingScreen;
 import javelin.view.screen.Option;
 import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.PurchaseScreen;
@@ -27,7 +26,7 @@ public class ArenaLair extends ArenaBuilding {
 		ArrayList<Combatant> group;
 
 		public HireOption(ArrayList<Combatant> group) {
-			super(BribingScreen.printgroupsummary(group),
+			super(Combatant.group(group),
 					calculateprice(group));
 			this.group = group;
 		}

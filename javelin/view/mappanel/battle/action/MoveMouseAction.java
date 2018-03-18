@@ -19,7 +19,7 @@ public class MoveMouseAction extends BattleMouseAction {
 	}
 
 	@Override
-	public boolean determine(Combatant current, Combatant target,
+	public boolean validate(Combatant current, Combatant target,
 			BattleState s) {
 		return target == null;
 	}

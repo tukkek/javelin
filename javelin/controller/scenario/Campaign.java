@@ -16,7 +16,7 @@ import javelin.model.world.location.Location;
 
 public class Campaign extends Scenario {
 	/** Minimum starting party encounter level. */
-	public static final float INITIALEL = 5f;
+	public static final float INITIALEL = CrCalculator.leveltoel(1);
 
 	public Campaign() {
 		allowallactors = true;

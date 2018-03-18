@@ -30,6 +30,7 @@ import javelin.controller.scenario.Campaign;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.state.Square;
+import javelin.model.unit.Building;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.unique.minigame.Arena;
@@ -127,13 +128,13 @@ public class ArenaFight extends Minigame {
 			generate(state.blueTeam.size(), ArenaFountain.class, quadrants);
 			Collections.shuffle(quadrants);
 			for (int i = 0; i < quadrants.size(); i++) {
-				for (ArenaBuilding b : quadrants.get(i)) {
+				for (Building b : quadrants.get(i)) {
 					place(b, i);
 				}
 			}
 		}
 
-		void place(ArenaBuilding b, int quadrant) {
+		void place(Building b, int quadrant) {
 			int minx = AREA[0].x + 1;
 			int maxx = AREA[1].x - 2;
 			int midx = (minx + maxx) / 2;

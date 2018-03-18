@@ -39,10 +39,19 @@ public class CrCalculator {
 	public static final int DIFFICULTYVERYEASY = -9;
 	public static final int DIFFICULTYMODERATE = -4;
 
-	private static final float PCEQUIPMENTCRPERLEVEL = .2f;
+	static final float PCEQUIPMENTCRPERLEVEL = .2f;
 
-	private static final int MAXIMUM_EL = 50;
-	private static final int MINIMUM_EL = -7;
+	static final int MAXIMUM_EL = 50;
+	static final int MINIMUM_EL = -7;
+	/**
+	 * This isn't part of the CCR document but it's obvious that the system was
+	 * "rewarding" very large groups of creatures with low CRs so this is used
+	 * to modifiy the group-size table by a factor. Since this affects all
+	 * parties equally, it should be more of an adjustment than a game changer
+	 * but it might need to be more deeply rethought if the problem persists
+	 * despite adjustments.
+	 */
+	static final int GROUPFACTOR = 3;
 
 	public static final float[] CR_FRACTIONS = new float[] { 3.5f, 3f, 2.5f, 2f,
 			1.75f, 1.5f, 1.25f, 1f, .5f, 0f, -.5f, -1f, -1.5f, -2f, -2.5f, -3 };
@@ -204,7 +213,7 @@ public class CrCalculator {
 		try {
 			return calculateel(group, false);
 		} catch (final UnbalancedTeams e) {
-			throw new RuntimeException("shouldn't happen!");
+			throw new RuntimeException("Unbalanced teams #crcalculator");
 		}
 	}
 
@@ -231,7 +240,8 @@ public class CrCalculator {
 	}
 
 	public static int calculatel(float totalcr, float highestcr, int size) {
-		final int groupCr = crtoel(totalcr) + multipleOpponentsElModifier(size);
+		final int groupCr = crtoel(totalcr)
+				+ multipleOpponentsElModifier(size) / GROUPFACTOR;
 		final int highestCrEl = crtoel(highestcr);
 		return Math.max(highestCrEl, groupCr);
 	}
@@ -749,7 +759,7 @@ public class CrCalculator {
 	 * @return the given level (typically from 1 to 20) to an encounter level.
 	 */
 	public static int leveltoel(int level) {
-		return crtoel(level * 4) - 4;
+		return crtoel(level * 4) - 4 / GROUPFACTOR;
 	}
 
 	/**

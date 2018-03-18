@@ -4,10 +4,10 @@ import java.util.Comparator;
 
 import javelin.model.unit.Monster;
 
-public class MonsterNameComparator implements Comparator<Monster> {
-	public static final Comparator<? super Monster> INSTANCE = new MonsterNameComparator();
+public class MonstersByName implements Comparator<Monster> {
+	public static final Comparator<? super Monster> INSTANCE = new MonstersByName();
 
-	private MonsterNameComparator() {
+	private MonstersByName() {
 		// prevent instantiation
 	}
 

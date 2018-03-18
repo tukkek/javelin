@@ -72,6 +72,8 @@ public class Javelin {
 	public static final String PERIODEVENING = "Evening";
 	/** TODO turn into {@link Enum} */
 	public static final String PERIODNIGHT = "Night";
+	public static final String[] PERIODS = new String[] { PERIODMORNING,
+			PERIODNOON, PERIODEVENING, PERIODNIGHT };
 
 	static final String TITLE = "Javelin";
 	static final Image[] ICONS = new Image[] { Images.getImage("javelin") };

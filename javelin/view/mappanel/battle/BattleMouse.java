@@ -78,11 +78,11 @@ public class BattleMouse extends Mouse {
 			final Combatant target, final Combatant current) {
 		BattleMouseAction custom = target == null ? null
 				: target.getmouseaction();
-		if (custom != null && custom.determine(current, target, s)) {
+		if (custom != null && custom.validate(current, target, s)) {
 			return custom;
 		}
 		for (BattleMouseAction a : ACTIONS) {
-			if (a.determine(current, target, s)) {
+			if (a.validate(current, target, s)) {
 				return a;
 			}
 		}

@@ -6,7 +6,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.comparator.MonsterNameComparator;
+import javelin.controller.comparator.MonstersByName;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
@@ -36,7 +36,7 @@ public class SquadScreen extends InfoScreen {
 				}
 			}
 		}
-		Collections.sort(CANDIDATES, MonsterNameComparator.INSTANCE);
+		Collections.sort(CANDIDATES, MonstersByName.INSTANCE);
 	}
 
 	ArrayList<Combatant> squad = new ArrayList<Combatant>();

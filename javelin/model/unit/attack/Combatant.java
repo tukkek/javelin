@@ -988,4 +988,22 @@ public class Combatant implements Serializable, Cloneable {
 		return null;
 	}
 
+	public static String group(List<?> foes) {
+		CountingSet count = new CountingSet();
+		count.casesensitive = true;
+		for (Object c : foes) {
+			count.add(c.toString());
+		}
+		String text = "";
+		for (String c : count.getorderedelements()) {
+			text += c;
+			int n = count.getcount(c);
+			if (n > 1) {
+				text += " (x" + n + ")";
+			}
+			text += ", ";
+		}
+		return text.substring(0, text.length() - 2);
+	}
+
 }

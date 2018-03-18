@@ -9,6 +9,7 @@ import javelin.JavelinApp;
 import javelin.controller.Weather;
 import javelin.controller.action.Action;
 import javelin.controller.action.world.WorldMove;
+import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.CrCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.GaveUpException;
@@ -542,7 +543,8 @@ public abstract class Fight {
 	}
 
 	/**
-	 * Called before a unit acts.
+	 * Called before a unit acts, human or computer. Called from controller
+	 * code, not from {@link BattleAi} routines.
 	 * 
 	 * @param acting
 	 *            Creature to perform this turn (human or AI).

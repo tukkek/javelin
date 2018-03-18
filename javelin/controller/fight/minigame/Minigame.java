@@ -3,6 +3,7 @@ package javelin.controller.fight.minigame;
 import java.util.ArrayList;
 
 import javelin.Javelin;
+import javelin.controller.Weather;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.map.Map;
@@ -11,6 +12,7 @@ import javelin.model.item.Item;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.view.screen.BattleScreen;
+import tyrant.mikera.engine.RPG;
 
 /**
  * A minigame is a battle totally independent from the normal game {@link Squad}
@@ -24,6 +26,8 @@ public abstract class Minigame extends Fight {
 		bribe = false;
 		hide = false;
 		map = Map.random();
+		period = RPG.pick(Javelin.PERIODS);
+		weather = RPG.pick(Weather.DISTRIBUTION);
 	}
 
 	@Override

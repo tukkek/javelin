@@ -134,6 +134,7 @@ public class Breath extends Action implements AiAction {
 			quit(confirm);
 		} catch (RepeatTurn e) {
 			overlay.clear();
+			Game.messagepanel.clear();
 			throw e;
 		}
 		if (confirm == '\n' || confirm == 'b') {
@@ -141,6 +142,7 @@ public class Breath extends Action implements AiAction {
 			Action.outcome(breath(breath, a, state.clone(hero), state));
 		}
 		overlay.clear();
+		Game.messagepanel.clear();
 		return true;
 	}
 

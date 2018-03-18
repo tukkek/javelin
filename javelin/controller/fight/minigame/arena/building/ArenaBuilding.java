@@ -6,6 +6,7 @@ import javelin.controller.fight.minigame.arena.ArenaFight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Building;
 import javelin.model.unit.attack.Combatant;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.battle.action.BattleMouseAction;
@@ -19,7 +20,7 @@ import javelin.view.screen.town.SelectScreen;
  *
  * @author alex
  */
-public abstract class ArenaBuilding extends Combatant {
+public abstract class ArenaBuilding extends Building {
 	static BuildingLevel[] LEVELS = new BuildingLevel[] {
 			new BuildingLevel(0, 5, 70, 60, 5, 0),
 			new BuildingLevel(1, 10, 110, 90, 7, 7500 * ArenaFight.BOOST),
@@ -85,12 +86,7 @@ public abstract class ArenaBuilding extends Combatant {
 		super(Javelin.getmonster("Building"), false);
 		actiondescription = description;
 		source.customName = name;
-		source.passive = true;
 		source.avatarfile = avatar;
-		source.immunitytocritical = true;
-		source.immunitytomind = true;
-		source.immunitytoparalysis = true;
-		source.immunitytopoison = true;
 		setlevel(ArenaBuilding.LEVELS[0]);
 		hp = maxhp;
 	}
@@ -129,7 +125,6 @@ public abstract class ArenaBuilding extends Combatant {
 	@Override
 	public BattleMouseAction getmouseaction() {
 		return new BattleMouseAction() {
-
 			@Override
 			public void onenter(Combatant current, Combatant target, Tile t,
 					BattleState s) {
@@ -138,7 +133,7 @@ public abstract class ArenaBuilding extends Combatant {
 			}
 
 			@Override
-			public boolean determine(Combatant current, Combatant target,
+			public boolean validate(Combatant current, Combatant target,
 					BattleState s) {
 				return true;
 			}
@@ -214,30 +209,6 @@ public abstract class ArenaBuilding extends Combatant {
 
 	public String getactiondescription(Combatant current) {
 		return actiondescription;
-	}
-
-	@Override
-	public String getstatus() {
-		switch (getnumericstatus()) {
-		case STATUSUNHARMED:
-			return "pristine";
-		case STATUSSCRATCHED:
-			return "scathed";
-		case STATUSHURT:
-			return "worn";
-		case STATUSWOUNDED:
-			return "broken";
-		case STATUSINJURED:
-			return "torn";
-		case STATUSDYING:
-			return "demolished";
-		case STATUSUNCONSCIOUS:
-		case STATUSDEAD:
-			return "destroyed";
-		default:
-			throw new RuntimeException(
-					"Unknown possibility: " + getnumericstatus());
-		}
 	}
 
 	@Override

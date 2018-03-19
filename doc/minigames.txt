@@ -6,9 +6,11 @@ A number of battles taking place in the same map, also offering buildings that w
 Surviving gladiators will be available for recruitment at the Arena's location after a match is won.
 
 BATTLEFIELD
-The purpose of the battlefield is to pit large armies against each other. You start by selecting a commander and different tiers of units, while the computer opponent does the same. Once the battle finishes you'll be able to visit the Battlefield to recruit any survivors to help you!
+The purpose of the Battlefield is to pit large armies against each other. You start by selecting a commander and different tiers of units, while the computer opponent does the same.
 
-Winnning a battlefield combat will allow yout to hire the army units as mercenaries from it's location in the world map.
+There are strategic points placed around the map, assigned to both teams - each generating army points, every turn, that can be used to summon more units into the battle. One thing to note is that summoning an army worth 10 points is much better than summong an army of 5 points twice - so it pays to use your points intelligently!
+
+Once the battle finishes you'll be able to visit the Battlefield to recruit any survivors to help you!
 
 ZIGGURAT
 The Ziggurat map is divided into several segments, each representing a type of creature. You start at the bottom-left of the map with weaker units and must advance and conquer the segment in the very top-right in order to achieve victory. As you conquer new segments along the way you'll be able to recruit units from these and grow in power with each step!

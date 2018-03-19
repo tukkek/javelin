@@ -10,6 +10,7 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
+import javelin.model.world.World;
 import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.model.world.location.unique.UniqueLocation;
 import javelin.view.screen.WorldScreen;
@@ -97,5 +98,9 @@ public class Battlefield extends UniqueLocation {
 				&& !Terrain.get(x, y).equals(Terrain.PLAIN))) {
 			super.generate();
 		}
+	}
+
+	public static Battlefield get() {
+		return (Battlefield) World.getall(Battlefield.class).get(0);
 	}
 }

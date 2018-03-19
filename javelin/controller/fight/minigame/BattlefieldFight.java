@@ -8,9 +8,11 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.CountingSet;
 import javelin.controller.Point;
 import javelin.controller.challenge.CrCalculator;
 import javelin.controller.exception.GaveUpException;
+import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.old.Game;
@@ -20,20 +22,16 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Building;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
+import javelin.model.world.location.unique.minigame.Battlefield;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.battle.action.BattleMouseAction;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
 
-/**
- * TODO mostly done - what's missing now is playtesting, possibly adding a
- * comeback mechanic and using #onend to offer the surviving units as recruits
- * (one per monster type)
- * 
- * @author alex
- */
 public class BattlefieldFight extends Minigame {
 	static final boolean DEBUG = true;
+	/** This is used as a come-back mechanic (negative feedback loop). */
+	static final float MAXARMY = 30;
 	static final int CHOICES = 3;
 	static final List<Monster> COMMANDERS = getcommanders();
 	static final List<Terrain> TERRAIN = Arrays.asList(Terrain.NONWATER);
@@ -154,9 +152,14 @@ public class BattlefieldFight extends Minigame {
 						BattleState s) {
 					BigDecimal points = new BigDecimal(rank * POINTSPERTURN);
 					points.setScale(2);
+					updateflagpoles();
+					int upkeep = Math.round(
+							100 * getupkeep(state.blueTeam, blueflagpoles));
 					String message = "This is your flagpole. It generates "
 							+ points
-							+ " army point(s) per turn.\nIf it is captured by the enemy, attack it to recapture it for your team!\nYou currently have "
+							+ " army point(s) per turn, reduced by your current army upkeep ("
+							+ upkeep
+							+ "%).\nIf it is captured by the enemy, attack it to recapture it for your team!\nYou currently have "
 							+ Math.round(bluepoints)
 							+ " army points, click to recruit new units.";
 					Game.message(message, Delay.NONE);
@@ -358,13 +361,6 @@ public class BattlefieldFight extends Minigame {
 	}
 
 	@Override
-	public boolean onend() {
-		state.blueTeam.clear();
-		// TODO
-		return DEBUG ? false : false;
-	}
-
-	@Override
 	public void startturn(Combatant acting) {
 		super.startturn(acting);
 		if (lastupdate == Float.MIN_VALUE) {
@@ -373,7 +369,10 @@ public class BattlefieldFight extends Minigame {
 			return;
 		}
 		updateflagpoles();
-		updatepoints(acting.ap - lastupdate);
+		bluepoints += updatepoints(acting.ap - lastupdate, blueflagpoles,
+				state.blueTeam);
+		redpoints += updatepoints(acting.ap - lastupdate, redflagpoles,
+				state.redTeam);
 		lastupdate = acting.ap;
 		int elred = calculateteammel(state.redTeam, redflagpoles);
 		int elblue = calculateteammel(state.blueTeam, blueflagpoles);
@@ -425,14 +424,21 @@ public class BattlefieldFight extends Minigame {
 		return selection;
 	}
 
-	void updatepoints(float ap) {
-		for (Flagpole f : blueflagpoles) {
-			float points = f.rank * POINTSPERTURN * ap;
-			bluepoints += points;
+	float updatepoints(float ap, ArrayList<Flagpole> flagpoles,
+			ArrayList<Combatant> team) {
+		float points = 0;
+		for (Flagpole f : flagpoles) {
+			points += f.rank * POINTSPERTURN * ap;
 		}
-		for (Flagpole f : redflagpoles) {
-			redpoints += f.rank * POINTSPERTURN * ap;
-		}
+		float upkeep = getupkeep(team, flagpoles);
+		return points * upkeep;
+	}
+
+	public float getupkeep(ArrayList<Combatant> team,
+			ArrayList<Flagpole> flagpoles) {
+		team = (ArrayList<Combatant>) team.clone();
+		team.removeAll(flagpoles);
+		return 1 - (CrCalculator.calculateel(team) / MAXARMY);
 	}
 
 	void updateredarmy(ArrayList<Combatant> tier) {
@@ -525,5 +531,43 @@ public class BattlefieldFight extends Minigame {
 		return !p.validate(0, 0, map.map.length, map.map[0].length)
 				|| map.map[p.x][p.y].blocked
 				|| state.getcombatant(p.x, p.y) != null;
+	}
+
+	@Override
+	public void checkend() {
+		updateflagpoles();
+		ArrayList<Combatant> blueteam = (ArrayList<Combatant>) state.blueTeam
+				.clone();
+		ArrayList<Combatant> redteam = (ArrayList<Combatant>) state.redTeam
+				.clone();
+		blueteam.removeAll(blueflagpoles);
+		redteam.removeAll(redflagpoles);
+		if (blueteam.isEmpty() || redteam.isEmpty()) {
+			throw new EndBattle();
+		}
+	}
+
+	@Override
+	public boolean onend() {
+		state.blueTeam.removeAll(blueflagpoles);
+		state.redTeam.removeAll(redflagpoles);
+		if (state.blueTeam.isEmpty()) {
+			Javelin.prompt("You've lost this match... Better luck next time!");
+			return false;
+		}
+		Javelin.prompt("Congratulations, you've won!\n"
+				+ "Your surviving units will be available for hire at the Battlefiled location.");
+		Battlefield b = Battlefield.get();
+		b.survivors.clear();
+		CountingSet counter = new CountingSet();
+		for (Combatant c : state.blueTeam) {
+			if (!c.summoned) {
+				counter.add(c.source.name);
+			}
+		}
+		for (String name : counter.getelements()) {
+			b.survivors.put(name, counter.getcount(name));
+		}
+		return DEBUG ? false : false;
 	}
 }

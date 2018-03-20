@@ -8,6 +8,7 @@ import javelin.model.unit.attack.Combatant;
 public class Toughness extends Feat {
 	/** Unique instance of this {@link Feat}. */
 	public static final Toughness SINGLETON = new Toughness();
+	public static final int HP = 3;
 
 	private Toughness() {
 		super("toughness");
@@ -26,7 +27,7 @@ public class Toughness extends Feat {
 		}
 		m.maxhp += 3;
 		m.hp += 3;
-		m.source.hd.extrahp += 3;
+		m.source.hd.extrahp += HP;
 		return true;
 	}
 }

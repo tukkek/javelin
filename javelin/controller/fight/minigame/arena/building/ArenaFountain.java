@@ -12,8 +12,10 @@ import javelin.model.world.location.dungeon.Fountain;
 import javelin.view.screen.town.SelectScreen;
 
 public class ArenaFountain extends ArenaBuilding {
-	private static final String REFILLING = "This fountain is refilling... be patient!";
+	static final String REFILLING = "This fountain is refilling... be patient!";
+
 	public boolean spent = true;
+	public float refillchance;
 
 	public ArenaFountain() {
 		super("Fountain", "dungeonfountain",

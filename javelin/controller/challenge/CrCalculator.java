@@ -24,6 +24,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Combatant;
+import tyrant.mikera.engine.RPG;
 
 /**
  * Determines a {@link Monster#challengerating} according to the rules of Upper
@@ -484,7 +485,7 @@ public class CrCalculator {
 		return calculateel(group) + Math.abs(MINIMUM_EL) + 1;
 	}
 
-	public static float[] eltocr(int teamel) {
+	public static float[] eltocrs(int teamel) {
 		switch (teamel) {
 		case -9:
 			return new float[] { 1 / 32f };
@@ -570,7 +571,7 @@ public class CrCalculator {
 			if (Javelin.DEBUG) {
 				throw new RuntimeException("Unknown EL " + teamel);
 			}
-			return eltocr(30);
+			return eltocrs(30);
 		}
 	}
 
@@ -796,5 +797,10 @@ public class CrCalculator {
 		for (Combatant c : update) {
 			calculatecr(c.source);
 		}
+	}
+
+	public static float eltocr(int el) {
+		float[] crs = eltocrs(el);
+		return crs[RPG.r(0, crs.length - 1)];
 	}
 }

@@ -26,8 +26,10 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Summon extends Spell {
+	static final float CRFACTOR = 5f;
+
 	public String monstername;
-	private float chance;
+	float chance;
 
 	public Summon(String monstername, float chance) {
 		super("Summon " + monstername, 0, 0, Realm.MAGIC);
@@ -46,19 +48,23 @@ public class Summon extends Spell {
 	}
 
 	/**
-	 * Rationale behind CR calculation: {@link Monster} counts as it's own CR
-	 * but divided by 5. 5 is the number of fights a {@link Squad} is supposed
-	 * to be able to survive before resting according to the Dungeon Master's
-	 * Guide. So a summonable counts as an ally of his CR that will participate
-	 * in only 1 battle.
+	 * Rationale behind CR calculation: {@link Monster} counts as its own CR but
+	 * divided by 5. 5 is the number of fights a {@link Squad} is supposed to be
+	 * able to survive before resting according to the Dungeon Master's Guide.
+	 * So a summonable counts as an ally of his CR that will participate in only
+	 * 1 battle.
 	 *
 	 * Chance is applied as a normal %.
 	 *
 	 * TODO isn't taking into account summoning a group.
 	 */
-	static float ratechallenge(String monstername2, float chance2) {
-		Monster monster = Javelin.getmonster(monstername2);
-		return chance2 * monster.challengerating / 5f;
+	public static float ratechallenge(String monster, float chance) {
+		Monster m = Javelin.getmonster(monster);
+		return chance * m.challengerating / 5f;
+	}
+
+	public static int gemonstertcr(int targetcr, float chance) {
+		return Math.round(CRFACTOR * targetcr / chance);
 	}
 
 	@Override

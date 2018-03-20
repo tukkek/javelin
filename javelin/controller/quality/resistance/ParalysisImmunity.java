@@ -12,6 +12,8 @@ import javelin.model.unit.attack.Combatant;
  * @see Monster#will()
  */
 public class ParalysisImmunity extends Quality {
+	public static final float CR = 0.1f;
+
 	static class ParalysisImmunityUpgrade extends Upgrade {
 		ParalysisImmunityUpgrade() {
 			super("Paralysis immunity");
@@ -50,7 +52,7 @@ public class ParalysisImmunity extends Quality {
 
 	@Override
 	public float rate(Monster monster) {
-		return 0.1f;
+		return CR;
 	}
 
 	@Override

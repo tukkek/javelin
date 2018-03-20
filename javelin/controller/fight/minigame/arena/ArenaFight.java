@@ -21,6 +21,7 @@ import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.fight.minigame.arena.building.ArenaAcademy;
 import javelin.controller.fight.minigame.arena.building.ArenaBuilding;
 import javelin.controller.fight.minigame.arena.building.ArenaFountain;
+import javelin.controller.fight.minigame.arena.building.ArenaGateway;
 import javelin.controller.fight.minigame.arena.building.ArenaLair;
 import javelin.controller.fight.minigame.arena.building.ArenaShop;
 import javelin.controller.fight.setup.BattleSetup;
@@ -51,31 +52,47 @@ import tyrant.mikera.engine.RPG;
  * always 5%). If it is destroyed, lose the arena. If it is activated, save
  * progress and allow to pick up from there.
  *
+ * TODO things to add to make it more strategic: towers, powerup (shrines).
+ * Towers could be static spawners, summoning units with a percent chance arch
+ * turn or static buildings with a single unlimited-use spell. Shrines would be
+ * ArenaBuildings that work like Campaign-mode shrines.
+ *
+ * TODO having buildings to be attacked would add a lot to gemeplay, instead of
+ * being only a defensive game. The goal could then be to killa all buildings
+ * instead.
+ *
+ * TODO to make space for new structures, altering fountains to heal everyone in
+ * an area instead of just the user would be great.
+ *
+ * TODO it would be cool if when a enemy structure is razed, the player could
+ * choose which one of build in its stead (by paying the level 1 building price
+ * and waiting for it to be reconstructed). The same could apply for monsters
+ * razing player's structures.
+ *
  * @see Arena
  *
  * @author alex
  */
 public class ArenaFight extends Minigame {
 	public static final float BOOST = 4; // 3,5 talvez?
-	static final String RETIRE = "You have beaten this level of the arena! Do you want to retire and have your gladiators available as recruits?\n"
-			+ "\nPress r to retire or c to continue...";
-	static final int MAPSIZE = 28;
-	static final int[] ARENASIZE = new int[] { 21, 10 };
-	static final int TENSIONMIN = -5;
-	static final int TENSIONMAX = 0;
-	static final int ELMIN = -12;
-	static final int ELMAX = 0;
-	static final Point[] AREA = new Point[] {
+	public static final int MAPSIZE = 28;
+	public static final int[] ARENASIZE = new int[] { 21, 10 };
+	public static final Point[] AREA = new Point[] {
 			new Point((MAPSIZE - ARENASIZE[0]) / 2,
 					(MAPSIZE - ARENASIZE[1]) / 2),
 			new Point((MAPSIZE + ARENASIZE[0]) / 2,
 					(MAPSIZE + ARENASIZE[1]) / 2) };
 
+	static final String RETIRE = "You have beaten this level of the arena! Do you want to retire and have your gladiators available as recruits?\n"
+			+ "\nPress r to retire or c to continue...";
+	static final int TENSIONMIN = -5;
+	static final int TENSIONMAX = 0;
+	static final int ELMIN = -12;
+	static final int ELMAX = 0;
+
 	class ArenaSetup extends BattleSetup {
 		@Override
 		public void generatemap(Fight f) {
-			Terrain t = Terrain.NONWATER[RPG.r(0, Terrain.NONWATER.length - 1)];
-			f.map = RPG.pick(t.getmaps());
 			super.generatemap(f);
 			f.map.flying = false;
 			Square[][] map = f.map.map;
@@ -125,7 +142,7 @@ public class ArenaFight extends Minigame {
 			generate(1, ArenaAcademy.class, quadrants);
 			generate(1, ArenaLair.class, quadrants);
 			generate(1, ArenaShop.class, quadrants);
-			generate(state.blueTeam.size(), ArenaFountain.class, quadrants);
+			generate(2, ArenaFountain.class, quadrants);
 			Collections.shuffle(quadrants);
 			for (int i = 0; i < quadrants.size(); i++) {
 				for (Building b : quadrants.get(i)) {
@@ -180,7 +197,13 @@ public class ArenaFight extends Minigame {
 			quadrants.sort(SizeComparator.INSTANCE);
 			for (int i = 0; i < amount; i++) {
 				try {
-					quadrants.get(i % 4).add(building.newInstance());
+					ArenaBuilding b = building.newInstance();
+					quadrants.get(i % 4).add(b);
+					ArenaFountain f = b instanceof ArenaFountain
+							? (ArenaFountain) b : null;
+					if (f != null) {
+						f.refillchance = 1f / amount;
+					}
 				} catch (ReflectiveOperationException e) {
 					throw new RuntimeException(e);
 				}
@@ -307,6 +330,8 @@ public class ArenaFight extends Minigame {
 				state.next();
 			}
 			acting = state.next;
+		} else {
+			ArenaGateway.summon(state.redTeam, this);
 		}
 		super.startturn(acting);
 		for (ArrayList<Combatant> group : new ArrayList<ArrayList<Combatant>>(
@@ -399,53 +424,73 @@ public class ArenaFight extends Minigame {
 
 	void raisetension(int elblue) {
 		placefoes(elblue);
-		refillfountains(getfountains());
+		refillfountains();
 	}
 
-	public void refillfountains(ArrayList<ArenaFountain> fountains) {
+	void refillfountains() {
+		ArrayList<ArenaFountain> fountains = getfountains();
 		if (check == -Float.MAX_VALUE || fountains.isEmpty()) {
 			return;
 		}
-		float refillchance = 1f / fountains.size();
-		int i = 0;
+		int refilled = 0;
 		Point p = null;
 		for (ArenaFountain f : fountains) {
-			if (f.spent && !f.isdamaged() && RPG.random() < refillchance) {
+			if (f.spent && !f.isdamaged() && RPG.random() < f.refillchance) {
 				f.setspent(false);
-				i += 1;
+				refilled += 1;
 				p = f.getlocation();
 			}
 		}
-		if (i > 0) {
-			notify(i + " fountain(s) refilled!", p);
+		if (refilled > 0) {
+			notify(refilled + " fountain(s) refilled!", p);
 		}
 	}
 
-	public void placefoes(int elblue) {
+	void placefoes(int elblue) {
 		ArrayList<Combatant> last = null;
 		int min = Math.max(elblue + ELMIN, baseline);
 		baseline = min;
+		ArrayList<Combatant> redteam = new ArrayList<Combatant>();
+		for (Combatant c : state.redTeam) {
+			if (!c.summoned) {
+				redteam.add(c);
+			}
+		}
 		for (int el = min; el <= elblue + ELMAX; el += 1) {
-			ArrayList<Combatant> group;
-			try {
-				group = EncounterGenerator.generate(el,
-						Arrays.asList(Terrain.ALL));
-			} catch (GaveUpException e) {
+			ArrayList<Combatant> group = generatefoes(el);
+			if (group == null) {
 				continue;
 			}
-			ArrayList<Combatant> redteam = (ArrayList<Combatant>) state.redTeam
-					.clone();
-			redteam.addAll(group);
-			int tension = CrCalculator.calculateel(redteam) - elblue;
+			ArrayList<Combatant> newteam = new ArrayList<Combatant>(redteam);
+			newteam.addAll(group);
+			int tension = CrCalculator.calculateel(newteam) - elblue;
 			if (tension == this.tension) {
 				enter(group, state.redTeam);
-				break;
+				return;
 			}
 			if (tension > this.tension) {
 				enter(last == null ? group : last, state.redTeam);
-				break;
+				return;
 			}
 			last = group;
+		}
+	}
+
+	ArrayList<Combatant> generatefoes(int el) {
+		if (!state.redTeam.isEmpty() && RPG.chancein(2)) {
+			ArenaGateway targetcr = ArenaGateway
+					.generate(CrCalculator.eltocr(el));
+			ArenaGateway gate = targetcr;
+			if (gate != null) {
+				ArrayList<Combatant> list = new ArrayList<Combatant>(1);
+				list.add(gate);
+				return list;
+			}
+		}
+		try {
+			return EncounterGenerator.generate(el, Arrays.asList(Terrain.ALL));
+		} catch (GaveUpException e) {
+			return null;
 		}
 	}
 
@@ -488,7 +533,7 @@ public class ArenaFight extends Minigame {
 		return p;
 	}
 
-	void enter(ArrayList<Combatant> entering, List<Combatant> team,
+	public void enter(ArrayList<Combatant> entering, List<Combatant> team,
 			Point entry) {
 		if (team == state.redTeam) {
 			foes.add(entering);
@@ -496,7 +541,7 @@ public class ArenaFight extends Minigame {
 		LinkedList<Combatant> place = new LinkedList<Combatant>(entering);
 		Collections.shuffle(place);
 		Combatant last = place.pop();
-		last.setlocation(entry);
+		setlocation(last, entry);
 		float ap = getbaseap();
 		if (!team.contains(last)) {
 			team.addAll(entering);
@@ -509,27 +554,37 @@ public class ArenaFight extends Minigame {
 			}
 		}
 		while (!place.isEmpty()) {
-			Point p = last.getlocation();
-			p.x += RPG.r(-1, +1) + RPG.randomize(2);
-			p.y += RPG.r(-2, +2) + RPG.randomize(2);
-			if (!validate(p)) {
-				continue;
-			}
+			Point p = displace(last.getlocation());
 			last = place.pop();
-			last.setlocation(p);
+			setlocation(last, p);
 		}
 		if (team == state.redTeam) {
 			notify("New enemies enter the arena!", last.getlocation());
 		}
 	}
 
-	public boolean validate(Point p) {
+	static public Point displace(Point reference) {
+		Point p = null;
+		while (p == null || !validate(p)) {
+			p = new Point(reference);
+			p.x += RPG.r(-1, +1) + RPG.randomize(2);
+			p.y += RPG.r(-1, +1) + RPG.randomize(2);
+		}
+		return p;
+	}
+
+	void setlocation(Combatant c, Point p) {
+		c.setlocation(c instanceof ArenaGateway ? ArenaGateway.place() : p);
+
+	}
+
+	static public boolean validate(Point p) {
 		return p.validate(AREA[0].x, AREA[0].y, AREA[1].x, AREA[1].y)
 				&& !state.map[p.x][p.y].blocked
 				&& state.getcombatant(p.x, p.y) == null;
 	}
 
-	public void notify(String text, Point p) {
+	void notify(String text, Point p) {
 		Game.redraw();
 		// BattleScreen.active.center(p.x, p.y);
 		Javelin.message(text, false);

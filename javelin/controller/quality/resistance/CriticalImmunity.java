@@ -11,6 +11,8 @@ import javelin.model.unit.attack.Combatant;
  * @author alex
  */
 public class CriticalImmunity extends Quality {
+	public static final float CR = 0.5f;
+
 	static class CriticalImmunityUpgrade extends Upgrade {
 		CriticalImmunityUpgrade() {
 			super("Critical immunity");
@@ -49,7 +51,7 @@ public class CriticalImmunity extends Quality {
 
 	@Override
 	public float rate(Monster m) {
-		return 0.5f;
+		return CR;
 	}
 
 	@Override

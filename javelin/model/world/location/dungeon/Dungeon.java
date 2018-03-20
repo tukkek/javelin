@@ -280,7 +280,7 @@ public class Dungeon extends Location {
 	}
 
 	float getcr() {
-		float[] crs = CrCalculator.eltocr(el);
+		float[] crs = CrCalculator.eltocrs(el);
 		float cr = crs[RPG.r(crs.length)];
 		return cr;
 	}

@@ -9,6 +9,8 @@ import javelin.model.unit.attack.Combatant;
  * See more info on the d20 SRD.
  */
 public class FastHealing extends Quality {
+	public static final float CR = .075f;
+
 	/**
 	 * See the d20 SRD for more info.
 	 */
@@ -57,7 +59,7 @@ public class FastHealing extends Quality {
 
 	@Override
 	public float rate(Monster monster) {
-		return monster.fasthealing * .075f;
+		return monster.fasthealing * CR;
 	}
 
 	@Override

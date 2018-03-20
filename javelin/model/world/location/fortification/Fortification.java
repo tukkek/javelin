@@ -176,7 +176,7 @@ public abstract class Fortification extends Location {
 	 */
 	static public int getspoils(Integer el) {
 		return RewardCalculator
-				.getgold(CrCalculator.eltocr(el + 1)[0]);
+				.getgold(CrCalculator.eltocrs(el + 1)[0]);
 	}
 
 	/**

@@ -35,7 +35,7 @@ public class BattlefieldFight extends Minigame {
 	static final int CHOICES = 3;
 	static final List<Monster> COMMANDERS = getcommanders();
 	static final List<Terrain> TERRAIN = Arrays.asList(Terrain.NONWATER);
-	static final float POINTSPERTURN = .25f;
+	static final float POINTSPERTURN = 1f;
 
 	class Reinforcement {
 		ArrayList<Combatant> commander = new ArrayList<Combatant>();
@@ -107,7 +107,7 @@ public class BattlefieldFight extends Minigame {
 			this.rank = rank;
 			maxhp = Math.round(rank * 25);
 			hp = maxhp;
-			source.challengerating = 5f * rank;
+			source.challengerating = 2 * rank;
 			source.customName = "Flagpole";
 			setteam(blueteam);
 		}
@@ -428,7 +428,7 @@ public class BattlefieldFight extends Minigame {
 			ArrayList<Combatant> team) {
 		float points = 0;
 		for (Flagpole f : flagpoles) {
-			points += f.rank * POINTSPERTURN * ap;
+			points += f.rank * POINTSPERTURN * ap * (f.hp / new Float(f.maxhp));
 		}
 		float upkeep = getupkeep(team, flagpoles);
 		return points * upkeep;
@@ -438,7 +438,7 @@ public class BattlefieldFight extends Minigame {
 			ArrayList<Flagpole> flagpoles) {
 		team = (ArrayList<Combatant>) team.clone();
 		team.removeAll(flagpoles);
-		return 1 - (CrCalculator.calculateel(team) / MAXARMY);
+		return 1 - CrCalculator.calculateel(team) / MAXARMY;
 	}
 
 	void updateredarmy(ArrayList<Combatant> tier) {

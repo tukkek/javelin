@@ -17,7 +17,7 @@ public class ImprovedGrab extends Quality {
 	@Override
 	public void add(String declaration, Monster m) {
 		if (!has(m)) {
-			m.feats.add(ImprovedGrapple.SINGLETON);
+			m.addfeat(ImprovedGrapple.SINGLETON);
 		}
 	}
 

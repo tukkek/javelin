@@ -314,6 +314,7 @@ public class Monster implements Cloneable, Serializable {
 	 * types don't heal naturally though.
 	 */
 	public boolean heal = true;
+	public Constrict constrict = null;
 
 	@Override
 	public Monster clone() {
@@ -324,10 +325,13 @@ public class Monster implements Cloneable, Serializable {
 			m.feats = m.feats.clone();
 			m.hd = hd.clone();
 			m.breaths = breaths.clone();
-			if (m.touch != null) {
+			m.skills = skills.clone();
+			if (touch != null) {
 				m.touch = touch.clone();
 			}
-			m.skills = skills.clone();
+			if (constrict != null) {
+				m.constrict = constrict.clone();
+			}
 			return m;
 		} catch (final CloneNotSupportedException e) {
 			throw new RuntimeException(e);

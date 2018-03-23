@@ -62,7 +62,7 @@ public abstract class Quality {
 				new Subtype(), new SunlightVulnerability(), new Undead(),
 				new Construct(), new Ooze(), new FrightfulPresence(),
 				new ParalysisImmunity(), new PoisonImmunity(), new Poison(),
-				new NoHealing() }) {
+				new NoHealing(), new Constrict() }) {
 			qualities.add(q);
 		}
 	}

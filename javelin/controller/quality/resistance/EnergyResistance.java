@@ -13,7 +13,7 @@ import javelin.model.unit.attack.Combatant;
  * resistance is actually 5 (one for each type of energy resistance).
  * 
  * @author alex
- * @see javelin.controller.quality.resistance.EnergyResistance#RESISTANCETYPES
+ * @see javelin.controller.quality.resistance.EnergyResistance#ENERGYTYPES
  * @see Monster#energyresistance
  */
 public class EnergyResistance extends Quality {
@@ -22,9 +22,8 @@ public class EnergyResistance extends Quality {
 	 * CCR document) times 5 (since it applies to any of the five energy types).
 	 */
 	public static final float CR = .02f * 5;
-
-	static final String[] RESISTANCETYPES = new String[] { "cold", "fire",
-			"acid", "electricity", "sonic" };
+	public static final String[] ENERGYTYPES = new String[] { "cold",
+			"fire", "acid", "electricity", "sonic" };
 	static final String[] BLACKLIST = new String[] { "turn resistance",
 			"resistance to ranged attacks", "charm resistance" };
 
@@ -72,7 +71,7 @@ public class EnergyResistance extends Quality {
 		float amount = Integer.parseInt(
 				declaration.substring(declaration.lastIndexOf(' ') + 1));
 		float types = 0;
-		for (String type : RESISTANCETYPES) {
+		for (String type : ENERGYTYPES) {
 			if (declaration.contains(type)) {
 				types += 1f;
 			}

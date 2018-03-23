@@ -52,7 +52,7 @@ public class EnergyImmunity extends Quality {
 
 	@Override
 	public void add(String declaration, Monster m) {
-		for (String type : EnergyResistance.RESISTANCETYPES) {
+		for (String type : EnergyResistance.ENERGYTYPES) {
 			if (declaration.contains(type)) {
 				m.energyresistance += Math.round(1 / EnergyResistance.CR);
 				return;

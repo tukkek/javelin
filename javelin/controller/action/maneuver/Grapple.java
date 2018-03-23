@@ -4,6 +4,7 @@ import javelin.controller.action.Action;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Constrict;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.condition.Condition;
@@ -55,12 +56,31 @@ public class Grapple extends ExpertiseAction {
 		if (duration < 1) {
 			duration = 1;
 		}
-		current.ap += duration;
-		target.ap += duration;
-		current.addcondition(new Grappling(current.ap + .1f, current));
-		target.addcondition(new Grappling(target.ap + .1f, target));
-		return new ChanceNode(s, chance, current + " and " + target
-				+ " are grappling for " + duration + " turn(s)!", Delay.BLOCK);
+		String message = current + " grapples " + target + " for " + duration
+				+ " turn(s)!";
+		message += constrict(current, target, duration, s);
+		message += constrict(target, current, duration, s);
+		grapple(current, duration);
+		grapple(target, duration);
+		return new ChanceNode(s, chance, message, Delay.BLOCK);
+	}
+
+	void grapple(Combatant c, int duration) {
+		if (c.hp > 0) {
+			c.ap += duration;
+			c.addcondition(new Grappling(c.ap + .1f, c));
+		}
+	}
+
+	String constrict(Combatant current, Combatant target, int duration,
+			BattleState s) {
+		Constrict c = current.source.constrict;
+		if (c == null) {
+			return "";
+		}
+		target.damage(c.damage * duration, s,
+				c.energy ? target.source.energyresistance : target.source.dr);
+		return "\n" + target + " is " + target.getstatus() + ".";
 	}
 
 	@Override

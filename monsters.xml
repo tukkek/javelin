@@ -3798,7 +3798,7 @@ Trickery.</p>
   <Attacks>2 tentacle rakes +28 melee, 6 arms +23 melee, bite +23melee</Attacks>
   <Damage>Tentacle rake 2d8+12, arm 1d6+6, bite 4d6+6</Damage>
   <FaceAndReach>20 ft. by 40 ft./10 ft. (100 ft. with tentacle)</FaceAndReach>
-  <SpecialAttacks>Improved grab, constrict 2d8+12 or 1d6+6</SpecialAttacks>
+  <SpecialAttacks>Improved grab, constrict 2d8+12</SpecialAttacks>
   <SpecialQualities>Jet, ink cloud, spell-like abilities</SpecialQualities>
   <Saves Fort="21" Ref="12" Will="13">Fort +21, Ref +12, Will +13</Saves>
   <Abilities Str="34" Dex="10" Con="29" Int="21" Wis="20" Cha="10">Str 34, Dex 10, Con 29, Int 21, Wis 20, Cha 10</Abilities>
@@ -9369,7 +9369,7 @@ bonus to Hide checks.</p>
 </Description>
 </Monster>
 <Monster id="srd:AnimalOctopusGiant">
-<Name>Animal:Octopus, Giant</Name>
+<Name>Animal:Giant octopus</Name>
 <StatBlock>
   <SizeAndType Size="large" Type="animal">Large Animal</SizeAndType>
   <HitDice D4="0" D6="0" D8="0" D10="0" D12="0" Modifier="0" HitPoints="44">8d8+8 (44)</HitDice>
@@ -9379,7 +9379,7 @@ bonus to Hide checks.</p>
   <Attacks>8 tentacle rakes +10 melee, bite +5 melee</Attacks>
   <Damage>Tentacle rake 1d4+5, bite 1d8+2</Damage>
   <FaceAndReach>5 ft. by 5 ft./10 ft.</FaceAndReach>
-  <SpecialAttacks>Improved grab, constrict</SpecialAttacks>
+  <SpecialAttacks>Improved grab, constrict 2d8+6</SpecialAttacks>
   <SpecialQualities>Ink cloud, jet</SpecialQualities>
   <Saves Fort="7" Ref="8" Will="3">Fort +7, Ref +8, Will +3</Saves>
   <Abilities Str="20" Dex="15" Con="13" Int="2" Wis="12" Cha="3">Str 20, Dex 15, Con 13, Int 2, Wis 12, Cha 3</Abilities>
@@ -25556,7 +25556,7 @@ cannot regrow lost body parts.</p>
   <Attacks>Slam +3 melee</Attacks>
   <Damage>Slam 2d6+1 (20/x2) acid</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
-  <SpecialAttacks>Improved grab, acid, corrosion, constrict 1d6+1 and 1d6 acid</SpecialAttacks>
+  <SpecialAttacks>Improved grab, acid, corrosion, constrict 2d6+1 acid</SpecialAttacks>
   <SpecialQualities>Blindsight, cold and fire immunity, ooze, camouflage</SpecialQualities>
   <Skills>Hide +5</Skills>
   <Saves Fort="1" Ref="-4" Will="-4">Fort +1, Ref -4, Will -4</Saves>
@@ -25697,7 +25697,7 @@ are automatically engulfed.</p>
   <Attacks>Slam +5 melee</Attacks>
   <Damage>Slam 2d4+3 and 1d4 acid</Damage>
   <FaceAndReach>5 ft. by 10 ft./10 ft.</FaceAndReach>
-  <SpecialAttacks>Improved grab, acid, constrict 2d4+3 and 1d4 acid</SpecialAttacks>
+  <SpecialAttacks>Improved grab, acid, constrict 3d4+3 acid</SpecialAttacks>
   <SpecialQualities>Blindsight, split, ooze</SpecialQualities>
   <Saves Fort="4" Ref="-3" Will="-3">Fort +4, Ref -3, Will -3</Saves>
   <Abilities Str="15" Dex="1" Con="15" Wis="1" Cha="1">Str 15, Dex 1, Con 15, Int -, Wis 1, Cha 1</Abilities>
@@ -25758,7 +25758,7 @@ down). A jelly with only 1 hit point cannot be further split.</p>
   <Attacks>Slam +8 melee</Attacks>
   <Damage>Slam 2d6+4 and 2d6 acid</Damage>
   <FaceAndReach>5 ft. by 20 ft./10 ft.</FaceAndReach>
-  <SpecialAttacks>Improved grab, acid, constrict 2d6+4 and 2d6 acid</SpecialAttacks>
+  <SpecialAttacks>Improved grab, acid, constrict 4d6+4 acid</SpecialAttacks>
   <SpecialQualities>Blindsight, split, ooze</SpecialQualities>
   <Saves Fort="7" Ref="-2" Will="-2">Fort +7, Ref -2, Will -2</Saves>
   <Abilities Str="17" Dex="1" Con="19" Wis="1" Cha="1">Str 17, Dex 1, Con 19, Int -, Wis 1, Cha 1</Abilities>
@@ -25918,7 +25918,7 @@ checks.</p>
   <Attacks>Halfspear +5 melee,  tail slap +3 melee</Attacks>
   <Damage>Halfspear 2d6+1 (20/x3) fire, tail slap 2d4+2 (20/x2) fire</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
-  <SpecialAttacks>Heat, constrict 1d4 and 1d6 fire</SpecialAttacks>
+  <SpecialAttacks>Heat, constrict 2d6-1 fire</SpecialAttacks>
   <SpecialQualities>Fire subtype</SpecialQualities>
   <Saves Fort="4" Ref="4" Will="5">Fort +4, Ref +4, Will +5</Saves>
   <Abilities Str="12" Dex="13" Con="12" Int="14" Wis="15" Cha="13">Str 12, Dex 13, Con 12, Int 14, Wis 15, Cha 13</Abilities>
@@ -25979,7 +25979,7 @@ adepts or warriors. </p>
   <Attacks>Longspear +9/+4 melee,  tail slap +7 melee</Attacks>
   <Damage>Longspear 2d8+1 (20/x3) fire, tail slap 3d6+1 (20/x2) fire</Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
-  <SpecialAttacks>Heat, constrict 2d6+1 and 1d6 fire</SpecialAttacks>
+  <SpecialAttacks>Heat, constrict 3d6+1 fire</SpecialAttacks>
   <SpecialQualities>Fire subtype, damage reduction 10/+1</SpecialQualities>
   <Saves Fort="6" Ref="6" Will="7">Fort +6, Ref +6, Will +7</Saves>
   <Abilities Str="14" Dex="13" Con="12" Int="14" Wis="15" Cha="13">Str 14, Dex 13, Con 12, Int 14, Wis 15, Cha 13</Abilities>
@@ -26040,7 +26040,7 @@ fighters (their favored class).</p>
   <Attacks>+3 Huge longspear +23/+18/+13  melee, tail slap +15 melee</Attacks>
   <Damage>+3 Huge longspear 2d8+9 and 1d8 fire, tail slap 2d8+3 and 1d8 fire</Damage>
   <FaceAndReach>5 ft. by 5 ft./10 ft.</FaceAndReach>
-  <SpecialAttacks>Heat, constrict 2d8+3 and 1d8 fire, spell-like abilities</SpecialAttacks>
+  <SpecialAttacks>Heat, constrict 3d8+3 fire, spell-like abilities</SpecialAttacks>
   <SpecialQualities>Fire subtype, damage reduction 20/+2</SpecialQualities>
   <Saves Fort="12" Ref="10" Will="11">Fort +12, Ref +10, Will +11</Saves>
   <Abilities Str="22" Dex="13" Con="16" Int="15" Wis="15" Cha="15">Str 22, Dex 13, Con 16, Int 15, Wis 15, Cha 15</Abilities>

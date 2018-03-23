@@ -14,8 +14,7 @@ public class Darkvision extends Vision {
 	}
 
 	@Override
-	public boolean apply(String attack, Monster m) {
-		return super.apply(attack, m) || attack.contains("keen vision")
-				|| attack.contains("keen senses");
+	public boolean apply(String text, Monster m) {
+		return super.apply(text, m) || text.contains("blindsight");
 	}
 }

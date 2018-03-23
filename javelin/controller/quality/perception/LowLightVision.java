@@ -14,7 +14,8 @@ public class LowLightVision extends Vision {
 	}
 
 	@Override
-	public boolean apply(String attack, Monster m) {
-		return super.apply(attack, m) || attack.contains("blindsight");
+	public boolean apply(String text, Monster m) {
+		return super.apply(text, m) || text.contains("keen vision")
+				|| text.contains("keen senses");
 	}
 }

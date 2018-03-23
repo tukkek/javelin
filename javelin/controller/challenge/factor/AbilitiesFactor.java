@@ -25,10 +25,10 @@ public class AbilitiesFactor extends CrFactor {
 	public static final float COST = .1f;
 
 	@Override
-	public float calculate(final Monster monster) {
-		final int[] abilites = new int[] { monster.strength, monster.dexterity,
-				monster.constitution + monster.poison, monster.wisdom,
-				monster.intelligence, monster.charisma };
+	public float calculate(final Monster m) {
+		final int[] abilites = new int[] { m.strength, m.dexterity,
+				m.constitution + m.poison, m.wisdom, m.intelligence,
+				m.charisma };
 		float sum = 0;
 		for (final int a : abilites) {
 			if (a != 0) {
@@ -36,13 +36,12 @@ public class AbilitiesFactor extends CrFactor {
 			}
 		}
 		sum = sum * COST;
-		if (monster.constitution <= 0) {
+		if (m.constitution <= 0) {
 			sum += 1;// immune to fortitude saves
-			sum += .2;// destroyed at 0hp
-			if (!monster.type.equals("undead")
-					&& !monster.type.equals("construct")) {
+			sum -= .2;// destroyed at 0hp
+			if (!m.type.equals("undead") && !m.type.equals("construct")) {
 				// no hd bonus
-				sum -= 0.1 * monster.hd.count();
+				sum -= 0.1 * m.hd.count();
 			}
 		}
 		return sum;

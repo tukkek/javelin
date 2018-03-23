@@ -10,6 +10,16 @@ import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.feat.attack.expertise.ImprovedGrapple;
 
+/**
+ * TODO since one of the combatants can die while grappling due to constriction,
+ * it would make sense to do some turn-by-turn calculation of damage instead to
+ * prevent extra damage in the case of a combatant diying on the first turn of a
+ * 3-turn grapple. the turn-by-turn doesn't need to be handled by game flow,
+ * just when applying the damagein
+ * {@link #hit(Combatant, Combatant, BattleState, float)}.
+ * 
+ * @author alex
+ */
 public class Grapple extends ExpertiseAction {
 	public static final Action INSTANCE = new Grapple();
 

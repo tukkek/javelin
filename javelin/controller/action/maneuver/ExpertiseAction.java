@@ -69,6 +69,7 @@ public abstract class ExpertiseAction extends Target implements AiAction {
 		super.filtertargets(combatant, targets, s);
 		for (final Combatant target : new ArrayList<Combatant>(targets)) {
 			if (target.source.passive) {
+				targets.remove(target);
 				continue;
 			}
 			final int deltax = combatant.location[0] - target.location[0];

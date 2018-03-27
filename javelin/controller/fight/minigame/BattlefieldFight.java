@@ -11,10 +11,11 @@ import javelin.Javelin;
 import javelin.controller.CountingSet;
 import javelin.controller.Point;
 import javelin.controller.challenge.CrCalculator;
-import javelin.controller.exception.GaveUpException;
+import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.generator.encounter.EncounterGenerator;
+import javelin.controller.map.Map;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
@@ -29,7 +30,7 @@ import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
 
 public class BattlefieldFight extends Minigame {
-	static final boolean DEBUG = true;
+	static final boolean DEBUG = false;
 	/** This is used as a come-back mechanic (negative feedback loop). */
 	static final float MAXARMY = 30;
 	static final int CHOICES = 3;
@@ -62,7 +63,7 @@ public class BattlefieldFight extends Minigame {
 					if (footsoldiers.size() == 1) {
 						footsoldiers = null;
 					}
-				} catch (GaveUpException e) {
+				} catch (GaveUp e) {
 					base += RPG.chancein(2) ? +1 : -1;
 				}
 			}
@@ -81,7 +82,7 @@ public class BattlefieldFight extends Minigame {
 					if (elites.size() == 1) {
 						elites = null;
 					}
-				} catch (GaveUpException e) {
+				} catch (GaveUp e) {
 					target += RPG.chancein(2) ? +1 : -1;
 				}
 			}
@@ -188,38 +189,51 @@ public class BattlefieldFight extends Minigame {
 	class BattlefieldSetup extends BattleSetup {
 		@Override
 		public void place() {
-			int width = map.map.length;
-			int height = map.map[0].length;
-			int midx = width / 2;
-			int midy = height / 2;
-			boolean[] regions = new boolean[] { false, false, false, false };
-			HashSet<Integer> blueterrains = new HashSet<Integer>();
-			while (blueterrains.size() < 2) {
-				int i = RPG.r(0, 3);
-				blueterrains.add(i);
-				regions[i] = true;
-			}
-			placeflagpoles(new Point(1, 1), new Point(midx - 1, midy - 1),
-					regions[0]);
-			placeflagpoles(new Point(midx + 1, 1),
-					new Point(width - 1, midy - 1), regions[1]);
-			placeflagpoles(new Point(1, midy + 1),
-					new Point(midx - 1, height - 1), regions[2]);
-			placeflagpoles(new Point(midx + 1, midy + 1),
-					new Point(width - 1, height - 1), regions[3]);
-			updateflagpoles();
-			for (Combatant c : state.getcombatants()) {
-				if (c instanceof Flagpole) {
-					continue;
+			try {
+				int width = map.map.length;
+				int height = map.map[0].length;
+				int midx = width / 2;
+				int midy = height / 2;
+				boolean[] regions = new boolean[] { false, false, false,
+						false };
+				HashSet<Integer> blueterrains = new HashSet<Integer>();
+				while (blueterrains.size() < 2) {
+					int i = RPG.r(0, 3);
+					blueterrains.add(i);
+					regions[i] = true;
 				}
-				placeunit(c);
+				placeflagpoles(new Point(1, 1), new Point(midx - 1, midy - 1),
+						regions[0]);
+				placeflagpoles(new Point(midx + 1, 1),
+						new Point(width - 1, midy - 1), regions[1]);
+				placeflagpoles(new Point(1, midy + 1),
+						new Point(midx - 1, height - 1), regions[2]);
+				placeflagpoles(new Point(midx + 1, midy + 1),
+						new Point(width - 1, height - 1), regions[3]);
+				updateflagpoles();
+				for (Combatant c : state.getcombatants()) {
+					if (c instanceof Flagpole) {
+						continue;
+					}
+					placeunit(c);
+				}
+			} catch (GaveUp e) {
+				map = Map.random();
+				generatemap(BattlefieldFight.this);
+				place();
 			}
 		}
 
-		void placeflagpoles(Point from, Point to, boolean blueteam) {
+		void placeflagpoles(Point from, Point to, boolean blueteam)
+				throws GaveUp {
 			int flagpoles = RPG.pick(new int[] { 1, 2, 4 });
 			int placed = 0;
+			int tries = 0;
 			placing: while (placed < flagpoles) {
+				tries += 1;
+				if (tries > 1000) {
+					throw new GaveUp();
+				}
 				Point spot = new Point(RPG.r(from.x, to.x),
 						RPG.r(from.y, to.y));
 				if (checkblocked(spot)) {
@@ -340,7 +354,7 @@ public class BattlefieldFight extends Minigame {
 				return generatesquad(crmin, crmax);
 			}
 			return group;
-		} catch (GaveUpException e) {
+		} catch (GaveUp e) {
 			return generatesquad(crmin, crmax);
 		}
 	}
@@ -551,8 +565,9 @@ public class BattlefieldFight extends Minigame {
 	public boolean onend() {
 		state.blueTeam.removeAll(blueflagpoles);
 		state.redTeam.removeAll(redflagpoles);
-		if (state.blueTeam.isEmpty()) {
-			Javelin.prompt("You've lost this match... Better luck next time!");
+		if (!state.redTeam.isEmpty()) {
+			Javelin.prompt("You've lost this match... Better luck next time!\n"
+					+ "Press any key to continue...");
 			return false;
 		}
 		Javelin.prompt("Congratulations, you've won!\n"

@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 
-import javelin.controller.exception.GaveUpException;
+import javelin.controller.exception.GaveUp;
 import tyrant.mikera.engine.RPG;
 
 public class StaticTemplate extends Template {
@@ -141,7 +141,7 @@ public class StaticTemplate extends Template {
 			if (!validatestatic()) {
 				original = null;
 			}
-		} catch (GaveUpException e) {
+		} catch (GaveUp e) {
 			original = null;
 		}
 	}
@@ -164,14 +164,14 @@ public class StaticTemplate extends Template {
 	}
 
 	@Override
-	protected boolean validate() throws GaveUpException {
+	protected boolean validate() throws GaveUp {
 		if (validatestatic() && super.validate()) {
 			return true;
 		}
-		throw new GaveUpException();
+		throw new GaveUp();
 	}
 
-	boolean validatestatic() throws GaveUpException {
+	boolean validatestatic() throws GaveUp {
 		if (original == null || tiles == null || original.length == 0) {
 			return false;
 		}
@@ -192,7 +192,7 @@ public class StaticTemplate extends Template {
 	}
 
 	@Override
-	void makedoors() throws GaveUpException {
+	void makedoors() throws GaveUp {
 		if (original != null) {
 			super.makedoors();
 		}

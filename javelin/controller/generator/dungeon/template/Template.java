@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.controller.Point;
-import javelin.controller.exception.GaveUpException;
+import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.dungeon.Direction;
 import javelin.controller.generator.dungeon.DungeonArea;
 import javelin.controller.generator.dungeon.DungeonGenerator;
@@ -161,7 +161,7 @@ public abstract class Template implements Cloneable, DungeonArea {
 				c.makedoors();
 			}
 			return c;
-		} catch (GaveUpException e) {
+		} catch (GaveUp e) {
 			return null;
 		}
 	}
@@ -169,12 +169,12 @@ public abstract class Template implements Cloneable, DungeonArea {
 	/**
 	 * @return <code>true</code> if the generated template is good to use in an
 	 *         actual map.
-	 * @throws GaveUpException
+	 * @throws GaveUp
 	 *             Subclasses may throw, otherwise will continue calling
 	 *             {@link #create()} infinitely. Especially useful for
 	 *             sanitizing {@link StaticTemplate}s.
 	 */
-	protected boolean validate() throws GaveUpException {
+	protected boolean validate() throws GaveUp {
 		if (tiles == null) {
 			return false;
 		}
@@ -211,7 +211,7 @@ public abstract class Template implements Cloneable, DungeonArea {
 		}
 	}
 
-	void makedoors() throws GaveUpException {
+	void makedoors() throws GaveUp {
 		if (corridor && doors == 1) {
 			doors = 2;
 		}

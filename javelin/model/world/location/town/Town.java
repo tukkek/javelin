@@ -11,7 +11,7 @@ import java.util.TreeSet;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.CrCalculator;
-import javelin.controller.exception.GaveUpException;
+import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.fight.Siege;
 import javelin.controller.fight.TownSiege;
@@ -345,7 +345,7 @@ public class Town extends Location {
 			while (garrison.isEmpty()) {
 				try {
 					garrison.addAll(EncounterGenerator.generate(el, t));
-				} catch (GaveUpException e) {
+				} catch (GaveUp e) {
 					el += 1;
 				}
 			}

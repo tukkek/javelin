@@ -7,7 +7,7 @@ import javelin.Javelin;
 import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.Preferences;
 import javelin.controller.db.reader.fields.Organization;
-import javelin.controller.exception.GaveUpException;
+import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Monster;
@@ -55,12 +55,12 @@ public class EncounterGenerator {
 	 *            {@link javelin.model.world.location.Location#garrison}, which
 	 *            uses the local terrain instead.
 	 * @return Enemy units for an encounter.
-	 * @throws GaveUpException
+	 * @throws GaveUp
 	 *             After too many tries without result, even relaxing the given
 	 *             EL parameter.
 	 */
 	public static ArrayList<Combatant> generate(int el, List<Terrain> terrains)
-			throws GaveUpException {
+			throws GaveUp {
 		if (Preferences.DEBUGFOE != null) {
 			return debugmonster();
 		}
@@ -76,7 +76,7 @@ public class EncounterGenerator {
 			}
 			return encounter;
 		}
-		throw new GaveUpException();
+		throw new GaveUp();
 	}
 
 	private static ArrayList<Combatant> debugmonster() {
@@ -188,7 +188,7 @@ public class EncounterGenerator {
 	}
 
 	public static ArrayList<Combatant> generate(int el, Terrain terrain)
-			throws GaveUpException {
+			throws GaveUp {
 		ArrayList<Terrain> terrains = new ArrayList<Terrain>();
 		terrains.add(terrain);
 		return generate(el, terrains);

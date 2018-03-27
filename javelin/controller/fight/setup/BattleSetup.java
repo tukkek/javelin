@@ -7,7 +7,7 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.db.Preferences;
-import javelin.controller.exception.GaveUpException;
+import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.map.Map;
 import javelin.controller.map.MapGenerator;
@@ -76,7 +76,7 @@ public class BattleSetup {
 					placeteammate(queueb, placedb, Fight.state);
 				}
 				return;
-			} catch (GaveUpException e) {
+			} catch (GaveUp e) {
 				continue;
 			}
 		}
@@ -93,7 +93,7 @@ public class BattleSetup {
 
 	void placeteammate(final List<Combatant> queue,
 			final ArrayList<Combatant> placed, final BattleState s)
-			throws GaveUpException {
+			throws GaveUp {
 		if (!queue.isEmpty()) {
 			Combatant c = RPG.pick(queue);
 			placecombatant(c, RPG.pick(placed), s);
@@ -108,7 +108,7 @@ public class BattleSetup {
 	}
 
 	void placecombatant(final Combatant placing, final Combatant reference,
-			final BattleState s) throws GaveUpException {
+			final BattleState s) throws GaveUp {
 		int vision = placing.view(s.period);
 		if (vision > 8 || vision > MAXDISTANCE) {
 			vision = MAXDISTANCE;
@@ -127,7 +127,7 @@ public class BattleSetup {
 			possibilities.remove(p);
 		}
 		if (possibilities.isEmpty()) {
-			throw new GaveUpException();
+			throw new GaveUp();
 		}
 	}
 

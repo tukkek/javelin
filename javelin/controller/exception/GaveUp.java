@@ -11,6 +11,6 @@ package javelin.controller.exception;
  * 
  * @author alex
  */
-public class GaveUpException extends Exception {
+public class GaveUp extends Exception {
 
 }

@@ -14,7 +14,7 @@ import javelin.controller.Weather;
 import javelin.controller.challenge.CrCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.SizeComparator;
-import javelin.controller.exception.GaveUpException;
+import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.Minigame;
@@ -273,7 +273,8 @@ public class ArenaFight extends Minigame {
 			}
 			Monster m = page.get(choice);
 			Combatant c = new Combatant(m, true);
-			c.hp = m.hd.maximize();
+			c.maxhp = m.hd.maximize();
+			c.hp = c.maxhp;
 			gladiators.add(c);
 			candidates.remove(m);
 		}
@@ -489,7 +490,7 @@ public class ArenaFight extends Minigame {
 		}
 		try {
 			return EncounterGenerator.generate(el, Arrays.asList(Terrain.ALL));
-		} catch (GaveUpException e) {
+		} catch (GaveUp e) {
 			return null;
 		}
 	}

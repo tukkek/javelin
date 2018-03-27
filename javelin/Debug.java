@@ -88,7 +88,8 @@ public class Debug {
 	}
 
 	public static String onbattlehelp() {
-		return "";
+		String s = "";
+		return s;
 	}
 
 	public static void onbattlestart() {

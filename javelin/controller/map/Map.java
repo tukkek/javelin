@@ -156,4 +156,25 @@ public abstract class Map {
 		Terrain t = Terrain.NONWATER[RPG.r(0, Terrain.NONWATER.length - 1)];
 		return RPG.pick(t.getmaps());
 	}
+
+	@Override
+	public String toString() {
+		String map = "";
+		for (int x = 0; x < this.map.length; x++) {
+			for (int y = 0; y < this.map[x].length; y++) {
+				Square s = this.map[x][y];
+				if (s.blocked) {
+					map += '#';
+				} else if (s.obstructed) {
+					map += '.';
+				} else if (s.flooded) {
+					map += '~';
+				} else {
+					map += ' ';
+				}
+			}
+			map += "\n";
+		}
+		return map;
+	}
 }

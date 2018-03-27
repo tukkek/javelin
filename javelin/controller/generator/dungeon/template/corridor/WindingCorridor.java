@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import javelin.controller.Point;
-import javelin.controller.exception.GaveUpException;
+import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.dungeon.Direction;
 import tyrant.mikera.engine.RPG;
 
@@ -57,7 +57,7 @@ public class WindingCorridor extends StraightCorridor {
 	}
 
 	@Override
-	protected boolean validate() throws GaveUpException {
+	protected boolean validate() throws GaveUp {
 		return super.validate() && count(DOOR) > 1;
 	}
 }

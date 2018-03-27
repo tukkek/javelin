@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javelin.controller.challenge.CrCalculator;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.exception.GaveUpException;
+import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.RandomEncounter;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.scenario.Scenario;
@@ -123,7 +123,7 @@ public abstract class Fortification extends Location {
 				terrains.add(terrain == null ? Terrain.get(x, y) : terrain);
 				garrison.addAll(EncounterGenerator.generate(el, terrains));
 				targetel = el;
-			} catch (GaveUpException e) {
+			} catch (GaveUp e) {
 				continue;
 			}
 		}

@@ -286,8 +286,8 @@ public class BattleScreen extends Screen {
 
 	/** TODO */
 	public void view(int x, int y) {
-		if (Javelin.app.fight.period == Javelin.PERIODEVENING
-				|| Javelin.app.fight.period == Javelin.PERIODNIGHT) {
+		if (Fight.state.period == Javelin.PERIODEVENING
+				|| Fight.state.period == Javelin.PERIODNIGHT) {
 			Fight.state.next.detect();
 		} else if (!maprevealed) {
 			for (javelin.view.mappanel.Tile[] ts : mappanel.tiles) {

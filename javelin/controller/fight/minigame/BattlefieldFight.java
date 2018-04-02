@@ -44,7 +44,7 @@ public class BattlefieldFight extends Minigame {
 		ArrayList<Combatant> footsoldiers = new ArrayList<Combatant>();
 
 		Reinforcement(int el) {
-			el = Math.min(20, el);
+			el = CrCalculator.leveltoel(Math.min(20, el));
 			generatecommander(el);
 			generateelites(el);
 			generatefootsoldiers(el);
@@ -347,6 +347,8 @@ public class BattlefieldFight extends Minigame {
 	}
 
 	public ArrayList<Combatant> generatesquad(int crmin, int crmax) {
+		crmin = CrCalculator.leveltoel(crmin);
+		crmin = CrCalculator.leveltoel(crmax);
 		try {
 			ArrayList<Combatant> group = EncounterGenerator
 					.generate(RPG.r(crmin, crmax), TERRAIN);

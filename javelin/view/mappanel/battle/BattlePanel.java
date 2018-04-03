@@ -30,6 +30,9 @@ public class BattlePanel extends MapPanel {
 
 	public BattlePanel(BattleState s) {
 		super(s.map.length, s.map[0].length, Preferences.KEYTILEBATTLE);
+		String period = Javelin.app.fight.period;
+		daylight = period.equals(Javelin.PERIODMORNING)
+				|| period.equals(Javelin.PERIODNOON);
 	}
 
 	@Override
@@ -134,9 +137,12 @@ public class BattlePanel extends MapPanel {
 		if (state.period != previousstate.period) {
 			for (Tile[] tiles : tiles) {
 				for (Tile t : tiles) {
-					t.discovered = daylight;
+					((BattleTile) t).shrouded = !daylight;
 					t.repaint();
 				}
+			}
+			if (!daylight) {
+				calculatevision(null);
 			}
 		}
 	}

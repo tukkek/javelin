@@ -34,6 +34,7 @@ import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
+import javelin.model.state.Square;
 import javelin.model.unit.Conditions;
 import javelin.model.unit.CurrentAttack;
 import javelin.model.unit.Monster;
@@ -750,16 +751,16 @@ public class Combatant implements Serializable, Cloneable {
 	 */
 	public HashSet<Point> calculatevision(BattleState s) {
 		final HashSet<Point> seen = new HashSet<Point>();
-		final Fight f = Javelin.app.fight;
-		final String perception = perceive(f.period);
-		final int range = view(f.period);
+		final String perception = perceive(s.period);
+		final int range = view(s.period);
 		final boolean forcevision = perception == Javelin.PERIODNOON
 				|| perception == Javelin.PERIODMORNING;
 		final Point here = new Point(location[0], location[1]);
+		Square[][] map = Javelin.app.fight.map.map;
 		for (int x = Math.max(0, here.x - range); x <= here.x + range
-				&& x < f.map.map.length; x++) {
+				&& x < map.length; x++) {
 			for (int y = Math.max(0, here.y - range); y <= here.y + range
-					&& y < f.map.map[0].length; y++) {
+					&& y < map[0].length; y++) {
 				if (forcevision || s.haslineofsight(here, new Point(x, y),
 						range, perception) != Vision.BLOCKED) {
 					seen.add(new Point(x, y));

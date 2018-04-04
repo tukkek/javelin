@@ -36,7 +36,7 @@ public abstract class Fortification extends Location {
 	protected String descriptionunknown;
 	/**
 	 * The decided encounter level in the given range. See
-	 * {@link #GuardedPlace(String, String, int, int)}.
+	 * {@link #Fortification(String, String, int, int)}.
 	 */
 	public Integer targetel = null;
 	public int minlevel;
@@ -175,8 +175,7 @@ public abstract class Fortification extends Location {
 	 * @return See {@link #getspoils()}.
 	 */
 	static public int getspoils(Integer el) {
-		return RewardCalculator
-				.getgold(CrCalculator.eltocrs(el + 1)[0]);
+		return RewardCalculator.getgold(CrCalculator.eltocrs(el + 1)[0]);
 	}
 
 	/**
@@ -205,6 +204,9 @@ public abstract class Fortification extends Location {
 			if (World.scenario.clearlocations && clear) {
 				capture();
 			}
+		}
+		if (!ishostile()) {
+			realm = null;
 		}
 	}
 

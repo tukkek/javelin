@@ -150,7 +150,7 @@ public class World implements Serializable {
 			actors.addAll(instances);
 		}
 		/* squads added at end */
-		actors.addAll(World.getall(Squad.class));
+		actors.addAll(getall(Squad.class));
 		return actors;
 	}
 

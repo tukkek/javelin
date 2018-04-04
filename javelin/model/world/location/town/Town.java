@@ -193,6 +193,11 @@ public class Town extends Location {
 
 	@Override
 	public void turn(long time, WorldScreen screen) {
+		if (ishosting()) {
+			events.remove(0);
+		} else if (!ishostile() && RPG.chancein(30)) {
+			host();
+		}
 		final float labor = (population + RPG.randomize(population) / 10f)
 				* World.scenario.rewardbonus;
 		governor.work(labor * DAILYLABOR, getdistrict());
@@ -215,25 +220,14 @@ public class Town extends Location {
 	}
 
 	@Override
-	public Boolean destroy(Incursion attacker) {
-		if (attacker.realm == realm) {
-			return Incursion.ignoreincursion(attacker);
-		}
-		if (!garrison.isEmpty()) {
-			return attacker.fight(garrison);
-		}
-		/* look for sleeping defense Squad */
+	public void captureforai(Incursion attacker) {
 		ArrayList<Squad> defending = getdistrict().getsquads();
 		if (!defending.isEmpty()) {
 			RPG.pick(defending).destroy(attacker);
 			throw new RuntimeException(
 					"Squad#destroy() is supposed to throw StartBattle #town");
 		}
-		captureforcomputer(attacker);
-		return false;// remove attacking squad, now garrison
-	}
-
-	public void captureforcomputer(Incursion attacker) {
+		super.captureforai(attacker);
 		garrison.clear();
 		garrison.addAll(attacker.squad);
 		attacker.remove();

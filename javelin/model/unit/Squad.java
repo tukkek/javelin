@@ -368,12 +368,16 @@ public class Squad extends Actor implements Cloneable {
 	 * @return a {@link Skills#perception} roll.
 	 */
 	public int perceive(boolean flyingbonus, boolean weatherpenalty) {
+		return perceive(flyingbonus, weatherpenalty, members);
+	}
+
+	public static int perceive(boolean flyingbonus, boolean weatherpenalty,
+			List<Combatant> squad) {
 		int best = Integer.MIN_VALUE;
-		for (int i = 0; i < members.size(); i++) {
-			Monster m = members.get(i).source;
-			int roll = Skills.take10(
-					m.skills.perceive(flyingbonus, weatherpenalty, m),
-					m.wisdom);
+		for (Combatant c : squad) {
+			Monster m = c.source;
+			int perception = m.skills.perceive(flyingbonus, weatherpenalty, m);
+			int roll = Skills.take10(perception, m.wisdom);
 			if (roll > best) {
 				best = roll;
 			}
@@ -674,11 +678,8 @@ public class Squad extends Actor implements Cloneable {
 	 * @see Squad#perceive(boolean)
 	 */
 	public void view(int vision) {
-		int radius = Math.round(Math.round(Math.floor(vision / 5f)));
-		if (radius < 1) {
-			radius = 1;
-		}
-		Outpost.discover(Squad.active.x, Squad.active.y, radius);
+		Outpost.discover(Squad.active.x, Squad.active.y,
+				Math.max(1, vision / 5));
 	}
 
 	@Override

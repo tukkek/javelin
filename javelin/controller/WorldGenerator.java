@@ -67,6 +67,7 @@ public class WorldGenerator extends Thread {
 		try {
 			world = new World();
 			Town start = generate(world);
+			start.capture();
 			for (Actor a : world.actors.get(Town.class)) {
 				if (a != start) {
 					((Town) a).populategarisson();
@@ -260,15 +261,13 @@ public class WorldGenerator extends Thread {
 		towns.remove(starting);
 		Realm r = towns.get(0).originalrealm;
 		for (Actor a : World.getactors()) {
-			if (a instanceof Location) {
-				Location l = (Location) a;
-				if (l.realm != null) {
-					l.realm = r;
-					if (a instanceof Town) {
-						Town t = (Town) a;
-						t.originalrealm = r;
-						t.replacegovernor(new MonsterGovernor(t));
-					}
+			Location l = a instanceof Location ? (Location) a : null;
+			if (l != null && l.realm != null) {
+				l.realm = r;
+				if (a instanceof Town) {
+					Town t = (Town) a;
+					t.originalrealm = r;
+					t.replacegovernor(new MonsterGovernor(t));
 				}
 			}
 		}

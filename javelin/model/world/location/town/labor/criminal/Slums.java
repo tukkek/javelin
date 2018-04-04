@@ -45,7 +45,6 @@ public class Slums extends Location {
 	public Slums() {
 		super("Slums");
 		allowentry = false;
-		sacrificeable = true;
 		discard = false;
 		gossip = true;
 	}

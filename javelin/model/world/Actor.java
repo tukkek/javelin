@@ -115,7 +115,7 @@ public abstract class Actor implements Serializable {
 	public void displace(int depth) {
 		if (depth == 50) {
 			if (Javelin.DEBUG) {
-				throw new RuntimeException("Too many calls to displace!");
+				System.err.println("Too many calls to displace!");
 			}
 			return;
 		}

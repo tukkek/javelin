@@ -63,8 +63,7 @@ public class TrainingHall extends Fortification {
 		super(DESCRIPTION, DESCRIPTION, 0, 0);
 		UniqueLocation.init(this);
 		discard = false;
-		impermeable = false;
-		sacrificeable = true;
+		impermeable = true;
 		vision = 2;
 		allowedinscenario = false;
 	}
@@ -164,5 +163,10 @@ public class TrainingHall extends Fortification {
 	@Override
 	public boolean view() {
 		return true;
+	}
+
+	@Override
+	public boolean ishostile() {
+		return false;
 	}
 }

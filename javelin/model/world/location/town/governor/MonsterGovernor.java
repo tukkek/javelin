@@ -1,18 +1,12 @@
 package javelin.model.world.location.town.governor;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import javelin.controller.challenge.CrCalculator;
-import javelin.controller.comparator.CombatantByCr;
-import javelin.model.unit.attack.Combatant;
-import javelin.model.world.Incursion;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.Trait;
 import javelin.model.world.location.town.labor.basic.Dwelling.BuildDwelling;
-import javelin.model.world.location.town.labor.basic.Dwelling.Draft;
 import javelin.model.world.location.town.labor.basic.Growth;
 import tyrant.mikera.engine.RPG;
 
@@ -52,14 +46,6 @@ public class MonsterGovernor extends Governor {
 			}
 		}
 		selectcards(hand);
-		// draft(hand);
-		// if (hand.isEmpty()) {
-		// gethand().clear();
-		// redraw();
-		// // manage();
-		// } else {
-		// selectcards(hand);
-		// }
 	}
 
 	void selectcards(ArrayList<Labor> hand) {
@@ -67,17 +53,11 @@ public class MonsterGovernor extends Governor {
 		hand.removeAll(traits);
 		long season = getseason();
 		int rank = town.getrank().rank;
-		// if (rank < season) {
-		// int a = 1;
-		// }
 		if (rank <= season && start(filter(Growth.class, hand))) {
 			return;
 		}
-		if (rank >= season) {
-			if (start(filter(Draft.class, hand))
-					|| start(filter(BuildDwelling.class, hand))) {
-				return;
-			}
+		if (rank >= season && start(filter(BuildDwelling.class, hand))) {
+			return;
 		}
 		if (rank >= Rank.TOWN.rank && town.traits.isEmpty()
 				&& startttrait(traits)) {
@@ -121,25 +101,6 @@ public class MonsterGovernor extends Governor {
 			}
 		}
 		return found;
-	}
-
-	public static void raid(Town t) {
-		if (t.garrison.size() < 2) {
-			return;
-		}
-		int el = CrCalculator.calculateel(t.garrison);
-		if (el <= CrCalculator.leveltoel(t.population)
-				|| t.garrison.size() <= Math.min(30, t.population)) {
-			return;
-		}
-		List<Combatant> garrison = new ArrayList<Combatant>(t.garrison);
-		garrison.sort(CombatantByCr.SINGLETON);
-		List<Combatant> incursion = new ArrayList<Combatant>(
-				garrison.subList(0, garrison.size() / 2));
-		if (!incursion.isEmpty()) {
-			t.garrison.removeAll(incursion);
-			Incursion.place(t.realm, t.x, t.y, incursion);
-		}
 	}
 
 	@Override

@@ -35,8 +35,6 @@ public abstract class Haunt extends Fortification {
 	 */
 	public Haunt(String description, String[] monsters) {
 		super(description, description, Integer.MAX_VALUE, Integer.MIN_VALUE);
-		realm = null;
-		sacrificeable = true;
 		for (String name : monsters) {
 			Monster m = Javelin.getmonster(name);
 			dwellers.add(m);

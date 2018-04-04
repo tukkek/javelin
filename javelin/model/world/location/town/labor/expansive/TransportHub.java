@@ -181,7 +181,6 @@ public class TransportHub extends Location {
 	public TransportHub() {
 		super(NAMES[0]);
 		allowentry = false;
-		sacrificeable = true;
 		discard = false;
 		gossip = true;
 	}

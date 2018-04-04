@@ -33,7 +33,6 @@ public abstract class UniqueLocation extends Fortification {
 	public static void init(Location l) {
 		l.impermeable = true;
 		l.allowentry = false;
-		l.realm = null;
 		l.gossip = true;
 		l.vision = 0;
 	}

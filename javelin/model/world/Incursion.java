@@ -3,6 +3,7 @@ package javelin.model.world;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +21,7 @@ import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Portal;
+import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.Town;
 import javelin.view.Images;
 import javelin.view.screen.WorldScreen;
@@ -39,7 +41,7 @@ import tyrant.mikera.engine.RPG;
 public class Incursion extends Actor {
 	static final int PREFERREDVICTORYCHANCE = 5 + 2;
 	/** Only taken into account if running {@link Javelin#DEBUG}. */
-	static final boolean SPAWN = false;
+	static final boolean SPAWN = true;
 	/** Move even if {@link Javelin#DEBUGDISABLECOMBAT} is enabled. */
 	static final boolean FORCEMOVEMENT = false;
 	static final VictoryChance VICTORYCHANCES = new VictoryChance();
@@ -106,7 +108,7 @@ public class Incursion extends Actor {
 			squad.addAll(Fight.generate(Incursion.currentel, terrains));
 			currentel += 1;
 		} else {
-			squad = squadp;
+			squad.addAll(squadp);
 		}
 		realm = r;
 	}
@@ -148,9 +150,9 @@ public class Incursion extends Actor {
 		if (status == null) {
 			return;
 		}
-		if (status == true) {
+		if (status) {
 			target.remove();
-		} else if (status == false) {
+		} else {
 			remove();
 		}
 	}
@@ -168,12 +170,12 @@ public class Incursion extends Actor {
 	 */
 	void choosetarget() {
 		final ArrayList<Actor> actors = World.getactors();
-		if (target != null && target == World.get(target.x, target.y, actors)) {
-			return;
-		}
 		List<Actor> targets = new ArrayList<Actor>();
+		int vision = Math.max(1, (Squad.perceive(true, true, squad)
+				+ Terrain.get(x, y).visionbonus) / 5);
 		for (final Actor a : actors) {
 			if (!a.impermeable && a.realm != realm
+					&& a.distanceinsteps(x, y) <= vision
 					&& !crosseswater(this, a.x, a.y)) {
 				targets.add(a);
 			}
@@ -182,16 +184,21 @@ public class Incursion extends Actor {
 			target = null;
 			return;
 		}
-		sortbydistance(targets);
-		for (Actor target : targets) {
-			int incursionel = getel();
-			if (VICTORYCHANCES.get(incursionel,
-					target.getel(incursionel)) >= PREFERREDVICTORYCHANCE) {
-				this.target = target;
+		final int incursionel = getel();
+		// sortbydistance(targets);
+		targets.sort(new Comparator<Actor>() {
+			@Override
+			public int compare(Actor o1, Actor o2) {
+				return o1.getel(incursionel) - o2.getel(incursionel);
+			}
+		});
+		for (Actor a : targets) {
+			if (a.getel(incursionel) < incursionel) {
+				target = a;
 				return;
 			}
 		}
-		target = targets.get(0);
+		target = null;
 	}
 
 	/**
@@ -228,30 +235,6 @@ public class Incursion extends Actor {
 	}
 
 	/**
-	 * A rate of 1 incursion every 18 days means that it will take a year for a
-	 * level 20 incursion to appear.
-	 */
-	public static boolean spawn() {
-		if (Javelin.DEBUG && !SPAWN) {
-			return false;
-		}
-		if (!RPG.chancein(18)) {
-			return false;
-		}
-		ArrayList<Actor> portals = World.getall(Portal.class);
-		Collections.shuffle(portals);
-		for (Actor p : portals) {
-			if (((Portal) p).invasion) {
-				place(p.realm, p.x, p.y, null);
-				return true;
-			}
-		}
-		return false;
-	}
-
-	// static int spawned = 0;
-
-	/**
 	 * Creates and places a new incursion. Finds an empty spot close to the
 	 * given coordinates.
 	 *
@@ -263,32 +246,36 @@ public class Incursion extends Actor {
 	 *            Starting {@link World} coordinate.
 	 * @param squadp
 	 *            See {@link Incursion#squad}.
+	 * @return
 	 * @see Actor#place()
 	 */
-	public static void place(Realm r, int x, int y, List<Combatant> squadp) {
+	public static Incursion place(Realm r, int xp, int yp,
+			List<Combatant> squadp) {
 		if (Javelin.DEBUG && !SPAWN) {
-			return;
+			return null;
 		}
 		int size = World.scenario.size;
 		ArrayList<Actor> actors = World.getactors();
-		while (World.get(x, y, actors) != null) {
+		int x = xp;
+		int y = yp;
+		while (World.get(x, y, actors) != null
+				|| Terrain.get(x, y).equals(Terrain.WATER)) {
 			int delta = RPG.pick(new int[] { -1, 0, +1 });
-			if (RPG.r(1, 2) == 1) {
+			if (RPG.chancein(2)) {
 				x += delta;
 			} else {
 				y += delta;
 			}
-			if (x < 0) {
-				x = 0;
-			} else if (y < 0) {
-				y = 0;
-			} else if (x >= size) {
-				x = size - 1;
-			} else if (y >= size) {
-				y = size - 1;
+			if (x < 0 || x >= size) {
+				x = xp;
+			}
+			if (y < 0 || y >= size) {
+				y = yp;
 			}
 		}
-		new Incursion(x, y, squadp, r).place();
+		Incursion i = new Incursion(x, y, squadp, r);
+		i.place();
+		return i;
 	}
 
 	/**
@@ -435,5 +422,34 @@ public class Incursion extends Actor {
 			}
 		}
 		return all;
+	}
+
+	public static void raid(Location l) {
+		if (l.garrison.size() < 2) {
+			return;
+		}
+		int target;
+		if (l instanceof Town) {
+			target = ((Town) l).population;
+		} else if (l instanceof Fortification
+				&& ((Fortification) l).targetel != null) {
+			target = ((Fortification) l).targetel;
+		} else {
+			int day = Math.round(Math.round(WorldScreen.lastday));
+			target = Math.min(20, 20 * day / 400);
+		}
+		if (CrCalculator.calculateel(
+				l.garrison) <= CrCalculator.leveltoel(target) + 2) {
+			return;
+		}
+		l.garrison.sort(CombatantByCr.SINGLETON);
+		List<Combatant> incursion = new ArrayList<Combatant>(
+				l.garrison.subList(0, l.garrison.size() / 2));
+		l.garrison.removeAll(incursion);
+		Incursion i = Incursion.place(l.realm, l.x, l.y, incursion);
+		if (Javelin.DEBUG && i != null) {
+			System.out.println(l + " spawned an incursion (el "
+					+ CrCalculator.calculateel(i.squad) + ")");
+		}
 	}
 }

@@ -21,7 +21,7 @@ public class ActorByDistance implements Comparator<Actor> {
 
 	@Override
 	public int compare(Actor o1, Actor o2) {
-		return o2.distanceinsteps(reference.x, reference.y)
-				- o1.distanceinsteps(reference.x, reference.y);
+		return o1.distanceinsteps(reference.x, reference.y)
+				- o2.distanceinsteps(reference.x, reference.y);
 	}
 }

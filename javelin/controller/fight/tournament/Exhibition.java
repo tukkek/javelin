@@ -3,9 +3,7 @@ package javelin.controller.fight.tournament;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
-import tyrant.mikera.engine.RPG;
 
 /**
  * One of the events in a tournament.
@@ -35,18 +33,6 @@ public abstract class Exhibition implements Serializable {
 	/** Constructor. */
 	public Exhibition(String namep) {
 		name = namep;
-	}
-
-	/**
-	 * A chance per week that a random {@link Town} will host a tournament.
-	 * 
-	 * @see Town#host()
-	 */
-	public static void opentournament() {
-		if (RPG.r(1, 7) == 1 || DEBUG) {
-			final Town t = (Town) RPG.pick(World.getall(Town.class));
-			t.host();
-		}
 	}
 
 	/** Deals with the specifics of this exhibition type. */

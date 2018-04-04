@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.WorldGenerator;
 import javelin.controller.challenge.CrCalculator;
@@ -205,9 +206,6 @@ public abstract class Location extends Actor {
 	public Boolean destroy(Incursion attacker) {
 		if (impermeable || attacker.realm == realm) {
 			return Incursion.ignoreincursion(attacker);
-		}
-		if (!garrison.isEmpty()) {
-			return attacker.fight(garrison);
 		}
 		if (sacrificeable) {
 			int el = attacker.getel();
@@ -420,5 +418,35 @@ public abstract class Location extends Actor {
 
 	public boolean canupgrade() {
 		return !ishostile();
+	}
+
+	public void spawn() {
+		if (!ishostile() || garrison.isEmpty()) {
+			return;
+		}
+		int el = CrCalculator.calculateel(garrison);
+		float cr = CrCalculator.eltocr(el);
+		if (!RPG.chancein(Math.max(1, Math.round(cr * cr)))) {
+			return;
+		}
+		Combatant spawn = RPG.pick(garrison);
+		Location reinforce = this;
+		for (Town t : Town.gettowns()) {
+			if (t != this && t.realm == realm
+					&& t.population >= spawn.source.challengerating
+					&& CrCalculator.calculateel(t.garrison) < CrCalculator
+							.calculateel(reinforce.garrison)) {
+				reinforce = t;
+			}
+		}
+		if (Javelin.DEBUG) {
+			System.out.println("Spawning a " + spawn + " (cr "
+					+ spawn.source.challengerating + ") from " + this + " (el "
+					+ CrCalculator.calculateel(garrison) + ") to " + reinforce
+					+ " (cr " + CrCalculator.calculateel(reinforce.garrison)
+					+ ")");
+		}
+		reinforce.garrison.add(new Combatant(spawn.source, true));
+		Incursion.raid(reinforce);
 	}
 }

@@ -105,9 +105,9 @@ public class Dungeon extends Location {
 	/** Constructor. */
 	public Dungeon() {
 		super("A dungeon");
-		sacrificeable = true;
 		link = false;
 		discard = false;
+		impermeable = true;
 		determineel();
 	}
 

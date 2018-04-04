@@ -21,7 +21,6 @@ import javelin.controller.db.StateManager;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomEncounter;
-import javelin.controller.fight.tournament.Exhibition;
 import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
@@ -240,35 +239,27 @@ public class WorldScreen extends BattleScreen {
 		final int day = new Double(Math.ceil(time / 24.0)).intValue();
 		List<Actor> squads = World.getall(Squad.class);
 		while (day > WorldScreen.lastday || squads.isEmpty()) {
-			Season.change(day);
-			FeatureGenerator.SINGLETON.spawn(1 / 14f, false);
-			for (Actor p : World.getactors()) {
-				if (!(p instanceof Incursion)) {
-					p.turn(time, this);
-				}
-			}
-			Weather.weather();
-			Town tournament = null;
-			for (Actor p : World.getall(Town.class)) {
-				Town t = (Town) p;
-				if (t.ishosting()) {
-					if (Javelin.DEBUG) {
-						/* only one tournament at a time */
-						assert tournament == null;
-					}
-					tournament = t;
-					tournament.events.remove(0);
-				}
-			}
-			if (tournament == null) {
-				Exhibition.opentournament();
-			}
-			for (Actor p : new ArrayList<Actor>(
-					World.getall(Incursion.class))) {
-				p.turn(time, this);// may throw battle exception
-			}
 			WorldScreen.lastday += 1;
 			cover();
+			Season.change(day);
+			Weather.weather();
+			FeatureGenerator.SINGLETON.spawn(1 / 14f, false);
+			ArrayList<Actor> actors = World.getactors();
+			ArrayList<Incursion> incursions = Incursion.getincursions();
+			actors.removeAll(incursions);
+			Collections.shuffle(actors);
+			for (Actor a : actors) {
+				a.turn(time, this);
+				Location l = a instanceof Location ? (Location) a : null;
+				if (l != null) {
+					l.spawn();
+				}
+			}
+			Collections.shuffle(incursions);
+			for (Incursion i : incursions) {
+				/* may throw StartBattle */
+				i.turn(time, this);
+			}
 		}
 	}
 

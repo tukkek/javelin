@@ -18,7 +18,7 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class Camp extends WorldAction {
-	static final boolean DEBUG = Javelin.DEBUG && false;
+	static final boolean DEBUG = Javelin.DEBUG && true;
 
 	static final String PROMPT = "Are you sure you want to try to set up camp in this wild area?\n"
 			+ "Monsters may interrupt you.\n\n"

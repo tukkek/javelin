@@ -82,8 +82,8 @@ public abstract class Governor implements Serializable {
 		if (projects.size() < nprojects && !hand.isEmpty()) {
 			manage();
 			if (Javelin.DEBUG && projects.isEmpty()) {
-				throw new RuntimeException(
-						"empty project list! " + town.traits);
+				System.err.println(
+						town + ": empty project list (" + town.traits + ")");
 			}
 		}
 	}

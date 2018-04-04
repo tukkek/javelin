@@ -73,9 +73,9 @@ public class Win extends Hax {
 				a.remove();
 			}
 		}
-		for (Actor a : World.getall(Squad.class)) {
+		for (Squad squad : Squad.getsquads()) {
 			WorldScreen.lastday *= 10;
-			((Squad) a).hourselapsed = Math.round(WorldScreen.lastday * 24);
+			squad.hourselapsed = Math.round(WorldScreen.lastday * 24);
 		}
 		for (String win : Win.WINMESSAGES) {
 			s.text = win;

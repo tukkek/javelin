@@ -18,9 +18,7 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
-import javelin.model.world.location.town.governor.MonsterGovernor;
 import javelin.model.world.location.town.labor.Build;
-import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
@@ -77,47 +75,6 @@ public class Dwelling extends Fortification {
 			}
 			double max = Math.floor(d.town.getrank().rank * 1.5f);
 			return super.validate(d) && goal != null && dwellings.size() < max;
-		}
-	}
-
-	/**
-	 * It would be cool to allow players to draft as well but this has a ton of
-	 * implications, including balance ones.
-	 *
-	 * @author alex
-	 */
-	public class Draft extends Labor {
-		Monster recruit;
-
-		public Draft(Monster m) {
-			super("Draft " + m.toString().toLowerCase(),
-					Math.round(Math.max(1, m.challengerating / 2f)), null);
-			recruit = m.clone();
-		}
-
-		@Override
-		protected void define() {
-			// nothing
-		}
-
-		@Override
-		public void done() {
-			town.garrison.add(new Combatant(recruit, true));
-			MonsterGovernor.raid(town);
-		}
-
-		@Override
-		public boolean validate(District d) {
-			float cr = recruit.challengerating;
-			int size = d.town.population;
-			return d.town.ishostile() && volunteers > 0 && size >= cr / 2
-					&& size / 4 >= cr;
-		}
-
-		@Override
-		public void start() {
-			super.start();
-			volunteers -= 1;
 		}
 	}
 
@@ -321,13 +278,6 @@ public class Dwelling extends Fortification {
 				c.xp = new BigDecimal(0);
 			}
 		}
-	}
-
-	@Override
-	public ArrayList<Labor> getupgrades(District d) {
-		ArrayList<Labor> upgrades = super.getupgrades(d);
-		upgrades.add(new Draft(dweller.source));
-		return upgrades;
 	}
 
 	/**

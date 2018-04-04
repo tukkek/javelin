@@ -104,7 +104,6 @@ public class Shop extends Location {
 	public Shop(boolean first, Realm r) {
 		super(r.prefixate() + " shop");
 		allowentry = false;
-		sacrificeable = true;
 		discard = false;
 		gossip = true;
 		level = 5;

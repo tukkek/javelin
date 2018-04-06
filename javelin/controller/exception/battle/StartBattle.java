@@ -176,6 +176,7 @@ public class StartBattle extends BattleEvent {
 			Combatant c = Fight.state.blueTeam.get(i);
 			Fight.state.blueTeam.set(i, c.clone().clonesource());
 		}
+		Fight.state.next();
 	}
 
 	static ArrayList<Combatant> cloneteam(ArrayList<Combatant> team) {

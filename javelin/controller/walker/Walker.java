@@ -53,9 +53,7 @@ public class Walker {
 			return;
 		}
 		if (!steps.isEmpty() && !valid(x, y, state)) {
-			if (!steps.isEmpty()) {
-				steps.remove(steps.size() - 1);
-			}
+			steps.remove(steps.size() - 1);
 			partial = steps;
 			return;
 		}

@@ -1,6 +1,5 @@
-package javelin.controller.fight.minigame;
+package javelin.controller.fight.minigame.battlefield;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -12,19 +11,16 @@ import javelin.controller.Point;
 import javelin.controller.challenge.CrCalculator;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.battle.EndBattle;
+import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.fight.setup.BattleSetup;
-import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.Map;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.model.state.BattleState;
-import javelin.model.unit.Building;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.unique.minigame.Battlefield;
-import javelin.view.mappanel.Tile;
-import javelin.view.mappanel.battle.action.BattleMouseAction;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -43,158 +39,8 @@ public class BattlefieldFight extends Minigame {
 	/** This is used as a come-back mechanic (negative feedback loop). */
 	static final float MAXARMY = 30;
 	static final int CHOICES = 3;
-	// static final List<Monster> COMMANDERS = getcommanders();
 	static final List<Terrain> TERRAIN = Arrays.asList(Terrain.NONWATER);
 	static final float POINTSPERTURN = 1f;
-
-	static public class Reinforcement {
-		ArrayList<Combatant> commander = new ArrayList<Combatant>();
-		ArrayList<Combatant> elites;
-		ArrayList<Combatant> footsoldiers = new ArrayList<Combatant>();
-
-		public Reinforcement(int el) {
-			el = Math.min(el, HIGHESTEL);
-			generatecommander(el);
-			generateelites(el);
-			generatefootsoldiers(el);
-		}
-
-		Reinforcement(float el) {
-			this(Math.round(el));
-		}
-
-		void generatecommander(int el) {
-			for (float cr = CrCalculator.eltocr(el); commander
-					.isEmpty(); cr -= 1) {
-				List<Monster> tier = Javelin.MONSTERSBYCR.get(cr);
-				if (tier == null) {
-					continue;
-				}
-				commander.add(new Combatant(RPG.pick(tier), true));
-			}
-		}
-
-		void generateelites(int el) {
-			for (int target = el; elites == null;) {
-				try {
-					elites = EncounterGenerator.generate(target, TERRAIN);
-					if (elites.size() == 1) {
-						elites = null;
-					}
-				} catch (GaveUp e) {
-					continue;
-				}
-			}
-		}
-
-		void generatefootsoldiers(int elp) {
-			int el = Math.max(1, elp - RPG.r(5, 10));
-			ArrayList<Combatant> footsoldiers = null;
-			while (footsoldiers == null) {
-				try {
-					footsoldiers = EncounterGenerator.generate(el, TERRAIN);
-					if (footsoldiers.size() == 1) {
-						footsoldiers = null;
-					}
-				} catch (GaveUp e) {
-					el += RPG.chancein(2) ? +1 : -1;
-				}
-			}
-			this.footsoldiers.addAll(footsoldiers);
-			while (CrCalculator.calculateel(this.footsoldiers) < elp) {
-				for (Combatant c : footsoldiers) {
-					this.footsoldiers.add(new Combatant(c.source, true));
-				}
-			}
-		}
-	}
-
-	class Flagpole extends Building {
-		boolean blueteam;
-		float rank;
-
-		public Flagpole(float rank, boolean blueteam) {
-			super(Javelin.getmonster("building"), false);
-			this.rank = rank;
-			maxhp = Math.round(rank * 25);
-			hp = maxhp;
-			source.challengerating = 2 * rank;
-			source.customName = "Flagpole";
-			setteam(blueteam);
-		}
-
-		void setteam(boolean blueteam) {
-			this.blueteam = blueteam;
-			source.avatarfile = blueteam ? "flagpoleblue" : "flagpolered";
-		}
-
-		@Override
-		public void damage(int damagep, BattleState s, int reduce) {
-			super.damage(damagep, s, reduce);
-			if (hp <= 0) {
-				Flagpole clone = (Flagpole) s.clone(this).clonesource();
-				if (blueteam) {
-					s.blueTeam.remove(clone);
-					s.redTeam.add(clone);
-				} else {
-					s.redTeam.remove(clone);
-					s.blueTeam.add(clone);
-				}
-				clone.setteam(!blueteam);
-				clone.hp = 1;
-			}
-		}
-
-		@Override
-		public void act(BattleState s) {
-			super.act(s);
-			hp += rank;
-			if (hp > maxhp) {
-				hp = maxhp;
-			}
-			ap += 1;
-		}
-
-		@Override
-		public BattleMouseAction getmouseaction() {
-			return new BattleMouseAction() {
-				@Override
-				public void onenter(Combatant current, Combatant target, Tile t,
-						BattleState s) {
-					BigDecimal points = new BigDecimal(rank * POINTSPERTURN);
-					points.setScale(2);
-					updateflagpoles();
-					int upkeep = Math.round(
-							100 * getupkeep(state.blueTeam, blueflagpoles));
-					String message = "This is your flagpole. It generates "
-							+ points
-							+ " army point(s) per turn, reduced by your current army upkeep ("
-							+ upkeep
-							+ "%).\nIf it is captured by the enemy, attack it to recapture it for your team!\nYou currently have "
-							+ Math.round(bluepoints)
-							+ " army points, click to recruit new units.";
-					Game.message(message, Delay.NONE);
-				}
-
-				@Override
-				public boolean validate(Combatant current, Combatant target,
-						BattleState s) {
-					return blueteam;
-				}
-
-				@Override
-				public void act(Combatant current, Combatant target,
-						BattleState s) {
-					BattleScreen.perform(new Runnable() {
-						@Override
-						public void run() {
-							recruitbluearmy();
-						}
-					});
-				}
-			};
-		}
-	}
 
 	class BattlefieldSetup extends BattleSetup {
 		@Override
@@ -262,7 +108,7 @@ public class BattlefieldFight extends Minigame {
 						continue placing;
 					}
 				}
-				Flagpole flag = new Flagpole(4 / flagpoles, blueteam);
+				Flagpole flag = new Flagpole(BattlefieldFight.this, 4 / flagpoles, blueteam);
 				flag.setlocation(spot);
 				if (blueteam) {
 					state.blueTeam.add(flag);
@@ -347,7 +193,7 @@ public class BattlefieldFight extends Minigame {
 		updateredarmy(redelites);
 		updateredarmy(redfootsoliders);
 		float el = redpoints;
-		ArrayList<Combatant> selection = selectredsquad(el);
+		ArrayList<Combatant> selection = recruitredsquad(el);
 		state.redTeam.addAll(selection);
 		redpoints -= CrCalculator.calculateel(selection);
 		for (Combatant c : selection) {
@@ -356,24 +202,31 @@ public class BattlefieldFight extends Minigame {
 		return selection;
 	}
 
-	public ArrayList<Combatant> selectredsquad(float el) {
-		Reinforcement r = new Reinforcement(el);
+	public ArrayList<Combatant> recruitredsquad(float el) {
 		int elcommander = CrCalculator.calculateel(redcommanders);
 		int elelites = CrCalculator.calculateel(redelites);
 		int elfootsolider = CrCalculator.calculateel(redfootsoliders);
-		int lowest = Math.min(elcommander, Math.min(elelites, elfootsolider));
-		ArrayList<Combatant> selection;
-		if (lowest == elcommander) {
-			selection = r.commander;
-			redcommanders.addAll(selection);
-		} else if (lowest == elelites) {
-			selection = r.elites;
-			redelites.addAll(selection);
-		} else {
-			selection = r.footsoldiers;
-			redfootsoliders.addAll(selection);
+		int lowel = Math.min(elcommander, Math.min(elelites, elfootsolider));
+		Reinforcement r = new Reinforcement(el);
+		ArrayList<ArrayList<Combatant>> choices = new ArrayList<ArrayList<Combatant>>();
+		if (elcommander == lowel) {
+			choices.add(r.commander);
 		}
-		return selection;
+		if (elelites == lowel) {
+			choices.add(r.elites);
+		}
+		if (elfootsolider == lowel) {
+			choices.add(r.footsoldiers);
+		}
+		ArrayList<Combatant> choice = RPG.pick(choices);
+		if (choice == r.commander) {
+			redcommanders.addAll(choice);
+		} else if (choice == r.elites) {
+			redelites.addAll(choice);
+		} else {
+			redfootsoliders.addAll(choice);
+		}
+		return choice;
 	}
 
 	float updatepoints(float ap, ArrayList<Flagpole> flagpoles,

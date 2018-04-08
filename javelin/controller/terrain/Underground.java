@@ -3,6 +3,7 @@ package javelin.controller.terrain;
 import javelin.controller.map.Maps;
 import javelin.controller.map.terrain.underground.BigCave;
 import javelin.controller.map.terrain.underground.Caves;
+import javelin.controller.map.terrain.underground.Complex;
 import javelin.controller.map.terrain.underground.Floor;
 import javelin.controller.map.terrain.underground.Maze;
 import javelin.controller.map.terrain.underground.Pit;
@@ -26,6 +27,7 @@ public class Underground extends Terrain {
 		m.add(new Maze());
 		m.add(new Pit());
 		m.add(new Floor());
+		m.add(new Complex());
 		return m;
 	}
 }

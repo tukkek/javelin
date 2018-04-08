@@ -1,0 +1,67 @@
+package javelin.controller.map.terrain.underground;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import javelin.controller.Point;
+import javelin.controller.map.DndMap;
+import javelin.controller.map.Map;
+import javelin.view.Images;
+import tyrant.mikera.engine.RPG;
+
+public class Complex extends Map {
+	static final double SEED = .1;
+	HashMap<Point, ArrayList<Point>> sections = new HashMap<Point, ArrayList<Point>>();
+	int occupied = 0;
+	int area;
+
+	public Complex() {
+		super("Underground complex", DndMap.SIZE, DndMap.SIZE);
+		floor = Images.getImage("terraindungeonfloor");
+		wall = Images.getImage("terraindungeonwall");
+		area = map.length * map[0].length;
+	}
+
+	@Override
+	public void generate() {
+		while (occupied / (float) area < SEED) {
+			generateseed();
+		}
+		double target = RPG.r(25, 50) / 100f;
+		ArrayList<Point> seeds = new ArrayList<Point>(sections.keySet());
+		while (occupied / (float) area < target) {
+			expand(sections.get(RPG.pick(seeds)));
+		}
+		for (Point seed : seeds) {
+			for (Point p : sections.get(seed)) {
+				map[p.x][p.y].blocked = true;
+			}
+		}
+	}
+
+	void expand(ArrayList<Point> section) {
+		Point expand = new Point(RPG.pick(section));
+		int increment = RPG.chancein(2) ? +1 : -1;
+		if (RPG.chancein(2)) {
+			expand.x += increment;
+		} else {
+			expand.y += increment;
+		}
+		if (expand.validate(0, 0, map.length, map[0].length)) {
+			section.add(expand);
+			occupied += 1;
+		}
+	}
+
+	void generateseed() {
+		Point seed = new Point(RPG.r(0, map.length - 1),
+				RPG.r(0, map[0].length - 1));
+		if (sections.containsKey(seed)) {
+			return;
+		}
+		ArrayList<Point> walls = new ArrayList<Point>();
+		walls.add(seed);
+		sections.put(seed, walls);
+		occupied += 1;
+	}
+}

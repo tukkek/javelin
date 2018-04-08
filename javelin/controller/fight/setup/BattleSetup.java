@@ -6,7 +6,6 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.Weather;
-import javelin.controller.db.Preferences;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.map.Map;
@@ -33,8 +32,6 @@ public class BattleSetup {
 		rollinitiative();
 		Fight f = Javelin.app.fight;
 		generatemap(f);
-		f.period = Preferences.DEBUGPERIOD == null ? f.period
-				: Preferences.DEBUGPERIOD;
 		place();
 		Weather.flood();
 	}

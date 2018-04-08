@@ -12,6 +12,7 @@ import javelin.controller.action.world.WorldMove;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.CrCalculator;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.db.Preferences;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;
@@ -411,6 +412,9 @@ public abstract class Fight {
 	 * @return Opponent units.
 	 */
 	public ArrayList<Combatant> init() {
+		if (Preferences.DEBUGPERIOD != null) {
+			period = Preferences.DEBUGPERIOD;
+		}
 		Fight.state = new BattleState(this);
 		Fight.state.blueTeam = getblueteam();
 		return generate(getel(CrCalculator.calculateel(Fight.state.blueTeam)));

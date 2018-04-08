@@ -719,8 +719,8 @@ public class Monster implements Cloneable, Serializable {
 
 	/**
 	 * @param minimum
-	 *            Minimum intelligence bonus required. If <code>null</code> will
-	 *            assume -1 or higher is fine (primitive intelligence).
+	 *            Minimum intelligence bonus required. -1 or higher is primitive
+	 *            intelligence.
 	 * @return <code>true</code> if able to communicate and think reasonably
 	 *         well. Being able to understand and follow simple, general tasks
 	 *         should do (which is not the case for animals that can only follow

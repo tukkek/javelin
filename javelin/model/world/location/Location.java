@@ -424,27 +424,24 @@ public abstract class Location extends Actor {
 		if (!ishostile() || garrison.isEmpty()) {
 			return;
 		}
-		int el = CrCalculator.calculateel(garrison);
-		float cr = CrCalculator.eltocr(el);
-		if (!RPG.chancein(Math.max(1, Math.round(cr * cr)))) {
+		Combatant spawn = RPG.pick(garrison);
+		Float cr = spawn.source.challengerating;
+		if (!RPG.chancein(Math.round(400 * cr / 20))) {
 			return;
 		}
-		Combatant spawn = RPG.pick(garrison);
 		Location reinforce = this;
 		for (Town t : Town.gettowns()) {
-			if (t != this && t.realm == realm
-					&& t.population >= spawn.source.challengerating
+			if (t != this && t.realm == realm && t.population >= cr
 					&& CrCalculator.calculateel(t.garrison) < CrCalculator
 							.calculateel(reinforce.garrison)) {
 				reinforce = t;
 			}
 		}
 		if (Javelin.DEBUG) {
-			System.out.println("Spawning a " + spawn + " (cr "
-					+ spawn.source.challengerating + ") from " + this + " (el "
-					+ CrCalculator.calculateel(garrison) + ") to " + reinforce
-					+ " (cr " + CrCalculator.calculateel(reinforce.garrison)
-					+ ")");
+			System.out.println("Spawning a " + spawn + " (cr " + cr + ") from "
+					+ this + " (el " + CrCalculator.calculateel(garrison)
+					+ ") to " + reinforce + " (cr "
+					+ CrCalculator.calculateel(reinforce.garrison) + ")");
 		}
 		reinforce.garrison.add(new Combatant(spawn.source, true));
 		Incursion.raid(reinforce);

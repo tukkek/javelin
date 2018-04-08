@@ -428,12 +428,12 @@ public class Incursion extends Actor {
 		if (l.garrison.size() < 2) {
 			return;
 		}
+		Fortification f = l instanceof Fortification ? (Fortification) l : null;
 		int target;
 		if (l instanceof Town) {
 			target = ((Town) l).population;
-		} else if (l instanceof Fortification
-				&& ((Fortification) l).targetel != null) {
-			target = ((Fortification) l).targetel;
+		} else if (f != null && f.targetel != null) {
+			target = f.targetel;
 		} else {
 			int day = Math.round(Math.round(WorldScreen.lastday));
 			target = Math.min(20, 20 * day / 400);
@@ -450,6 +450,9 @@ public class Incursion extends Actor {
 		if (Javelin.DEBUG && i != null) {
 			System.out.println(l + " spawned an incursion (el "
 					+ CrCalculator.calculateel(i.squad) + ")");
+		}
+		if (f != null && f.targetel != null) {
+			f.targetel += 1;
 		}
 	}
 }

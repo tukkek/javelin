@@ -5,6 +5,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Actor;
+import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.labor.Labor;
 
 public class ConstructionSite extends Location {
@@ -25,7 +26,10 @@ public class ConstructionSite extends Location {
 
 	@Override
 	public Integer getel(int attackerel) {
-		return Integer.MIN_VALUE;
+		District d = getdistrict();
+		int townsize = d != null && d.town != null ? d.town.population : 0;
+		float labor = progress == null ? 0 : progress.progress;
+		return Math.round(Math.max(labor, townsize));
 	}
 
 	@Override

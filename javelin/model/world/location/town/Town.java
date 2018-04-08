@@ -195,7 +195,7 @@ public class Town extends Location {
 	public void turn(long time, WorldScreen screen) {
 		if (ishosting()) {
 			events.remove(0);
-		} else if (!ishostile() && RPG.chancein(30)) {
+		} else if (!ishostile() && RPG.chancein(100)) {
 			host();
 		}
 		final float labor = (population + RPG.randomize(population) / 10f)

@@ -1,6 +1,7 @@
 package javelin.controller.walker;
 
 import javelin.controller.Point;
+import javelin.controller.walker.pathing.Pathing;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 
@@ -10,8 +11,12 @@ import javelin.model.state.Square;
  * @author alex
  */
 public class ClearPath extends Walker {
-	public ClearPath(Point me, Point target, BattleState state) {
-		super(me, target, state);
+	public ClearPath(Point from, Point to, BattleState s) {
+		super(from, to, s);
+	}
+
+	public ClearPath(Point from, Point to, Pathing path, BattleState s) {
+		super(from, to, path, s);
 	}
 
 	@Override

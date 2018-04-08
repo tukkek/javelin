@@ -54,8 +54,8 @@ public class WorldMouse extends Mouse {
 				Point p = overlay.path.resetlocation();
 				if (p != null) {
 					overlay.reset();
-					overlay.path.sourcex = p.x;
-					overlay.path.sourcey = p.y;
+					overlay.path.fromx = p.x;
+					overlay.path.fromy = p.y;
 					overlay.walk();
 					BattlePanel.overlay = overlay;
 				}

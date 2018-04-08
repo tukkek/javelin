@@ -14,6 +14,7 @@ import javelin.controller.walker.ClearPath;
 import javelin.controller.walker.ObstructedPath;
 import javelin.controller.walker.Step;
 import javelin.controller.walker.Walker;
+import javelin.controller.walker.pathing.DirectPath;
 import javelin.model.TeamContainer;
 import javelin.model.unit.attack.Combatant;
 
@@ -263,10 +264,12 @@ public class BattleState implements Node, TeamContainer {
 		if (Walker.distance(me.x, me.y, target.x, target.y) == 1) {
 			return Vision.CLEAR;
 		}
-		final ArrayList<Step> clear = new ClearPath(me, target, this).walk();
+		final ArrayList<Step> clear = new ClearPath(me, target,
+				new DirectPath(me, target), this).walk();
 		final ArrayList<Step> covered = periodperception == Javelin.PERIODEVENING
 				|| periodperception == Javelin.PERIODNIGHT ? null
-						: new ObstructedPath(me, target, this).walk();
+						: new ObstructedPath(me, target,
+								new DirectPath(me, target), this).walk();
 		if (clear == null && covered == null) {
 			return Vision.BLOCKED;
 		}

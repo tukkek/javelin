@@ -60,7 +60,7 @@ public class BattleWalker extends Walker {
 			}
 			walk = partial;
 		} else if (validatefinal()) {
-			walk.add(new javelin.controller.walker.Step(targetx, targety));
+			walk.add(new javelin.controller.walker.Step(tox, toy));
 		}
 		final boolean engaged = isengaged();
 		float totalcost = BattleScreen.partialmove;
@@ -105,11 +105,11 @@ public class BattleWalker extends Walker {
 	}
 
 	protected boolean validatefinal() {
-		Meld m = state.getmeld(targetx, targety);
+		Meld m = state.getmeld(tox, toy);
 		if (m != null && current.ap >= m.meldsat) {
 			return true;
 		}
-		return valid(targetx, targety, state);
+		return valid(tox, toy, state);
 	}
 
 	@Override
@@ -150,8 +150,8 @@ public class BattleWalker extends Walker {
 	}
 
 	@Override
-	protected ArrayList<javelin.controller.walker.Step> getsteplist() {
-		return new ArrayList<javelin.controller.walker.Step>();
+	protected ArrayList<Step> getsteplist() {
+		return new ArrayList<Step>();
 	}
 
 	public String drawtext(float apcost) {
@@ -166,29 +166,5 @@ public class BattleWalker extends Walker {
 
 	public Point resetlocation() {
 		return null;
-	}
-
-	@Override
-	protected ArrayList<Step> takebeststep(int x, int y) {
-		ArrayList<Step> steps = super.takebeststep(x, y);
-		/*
-		 * TODO tried to make this smarter as per the parent TODO but it can't
-		 * be done on a step-by-step basis
-		 */
-		// float best = Float.MAX_VALUE;
-		// for (Step s : steps) {
-		// float cost = getcost(false, s);
-		// if (cost < best) {
-		// best = cost;
-		// }
-		// }
-		// if (best != 0) {
-		// for (Step s : new ArrayList<Step>(steps)) {
-		// if (getcost(false, s) != best) {
-		// steps.remove(s);
-		// }
-		// }
-		// }
-		return steps;
 	}
 }

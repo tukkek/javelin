@@ -3,10 +3,10 @@ package javelin.controller.walker;
 import java.util.ArrayList;
 
 import javelin.controller.Point;
-import javelin.controller.action.target.Target;
+import javelin.controller.walker.pathing.BranchingPath;
+import javelin.controller.walker.pathing.Pathing;
 import javelin.model.state.BattleState;
 import javelin.model.unit.attack.Combatant;
-import javelin.view.mappanel.MoveOverlay;
 
 /**
  * Extensible path-finding algorithm.
@@ -17,24 +17,30 @@ import javelin.view.mappanel.MoveOverlay;
  */
 public class Walker {
 	public static final int[] DELTAS = new int[] { 0, +1, -1 };
-	protected int targetx;
-	protected int targety;
 	public ArrayList<Step> solution = null;
 	protected final BattleState state;
-	public int sourcex;
-	public int sourcey;
+	public int fromx;
+	public int fromy;
+	public int tox;
+	public int toy;
 	public ArrayList<Step> partial = null;
+	public Pathing pathing = BranchingPath.SINTANCE;
 
-	public Walker(Point me, Point target, BattleState state) {
-		this.state = state;
-		targetx = target.x;
-		targety = target.y;
-		sourcex = me.x;
-		sourcey = me.y;
+	public Walker(Point from, Point to, BattleState s) {
+		this.state = s;
+		fromx = from.x;
+		fromy = from.y;
+		tox = to.x;
+		toy = to.y;
+	}
+
+	public Walker(Point from, Point to, Pathing p, BattleState s) {
+		this(from, to, s);
+		pathing = p;
 	}
 
 	public ArrayList<Step> walk() {
-		walk(sourcex, sourcey, new ArrayList<Step>());
+		walk(fromx, fromy, new ArrayList<Step>());
 		return solution;
 	}
 
@@ -42,7 +48,7 @@ public class Walker {
 		if (solution != null && steps.size() >= solution.size()) {
 			return;
 		}
-		if (x == targetx && y == targety) {
+		if (x == tox && y == toy) {
 			solution = steps;
 			return;
 		}
@@ -53,41 +59,18 @@ public class Walker {
 			partial = steps;
 			return;
 		}
-		ArrayList<Step> nextsteps = takebeststep(x, y);
+		ArrayList<Step> nextsteps = pathing.step(x, y, getsteplist(), this);
 		for (Step step : nextsteps) {
 			final ArrayList<Step> stepinto = (ArrayList<Step>) steps.clone();
-			if (step.x != targetx || step.y != targety) {
+			if (step.x != tox || step.y != toy) {
 				stepinto.add(step);
 			}
 			walk(step.x, step.y, stepinto);
 		}
 	}
 
-	/**
-	 * TODO This probably can be overloaded by {@link MoveOverlay} to take more
-	 * steps and try to find the best solution instead of the fastest one.
-	 * 
-	 * TODO this produces weird, almost curved angles for {@link Target} since
-	 * it goes ↘__
-	 */
-	protected ArrayList<Step> takebeststep(final int x, final int y) {
-		final ArrayList<Step> steps = getsteplist();
-		final int stepx = x + (targetx > x ? +1 : -1);
-		final int stepy = y + (targety > y ? +1 : -1);
-		if (y != targety) {
-			steps.add(new Step(x, stepy));
-		}
-		if (x != targetx) {
-			steps.add(new Step(stepx, y));
-			if (y != targety) {
-				steps.add(new Step(stepx, stepy));
-			}
-		}
-		return steps;
-	}
-
 	protected ArrayList<Step> getsteplist() {
-		return new NextMove(targetx, targety);
+		return new NextMove(tox, toy);
 	}
 
 	protected boolean valid(int x, int y, BattleState state2) {

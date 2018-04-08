@@ -8,11 +8,10 @@ import java.util.ArrayList;
  * @author alex
  */
 public class NextMove extends ArrayList<Step> {
-
-	private final int targetx;
-	private final int targety;
-	private double currentsourcedistance = Integer.MAX_VALUE;
-	private double currenttargetdistance = Integer.MAX_VALUE;
+	final int targetx;
+	final int targety;
+	double currentsourcedistance = Integer.MAX_VALUE;
+	double currenttargetdistance = Integer.MAX_VALUE;
 
 	public NextMove(int targetx, int targety) {
 		super(3);
@@ -25,8 +24,8 @@ public class NextMove extends ArrayList<Step> {
 		if (isEmpty()) {
 			return super.add(step);
 		}
-		final double newtargetdistance =
-				distance(targetx, targety, step.x, step.y);
+		final double newtargetdistance = distance(targetx, targety, step.x,
+				step.y);
 		if (newtargetdistance > currenttargetdistance) {
 			return false;
 		}

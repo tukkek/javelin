@@ -42,10 +42,10 @@ public class WorldWalker extends BattleWalker {
 
 	@Override
 	protected boolean validatefinal() {
-		if (WorldPanel.ACTORS.get(new Point(targetx, targety)) != null) {
+		if (WorldPanel.ACTORS.get(new Point(tox, toy)) != null) {
 			return steps.size() == 1;
 		}
-		return checkwater(targetx, targety);
+		return checkwater(tox, toy);
 	}
 
 	@Override

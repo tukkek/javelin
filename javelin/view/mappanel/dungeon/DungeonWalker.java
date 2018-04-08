@@ -22,9 +22,9 @@ public class DungeonWalker extends WorldWalker {
 
 	@Override
 	protected boolean validatefinal() {
-		final Point target = new Point(targetx, targety);
+		final Point target = new Point(tox, toy);
 		return !Dungeon.active.herolocation.equals(target)
-				&& Dungeon.active.map[targetx][targety] != Template.WALL;
+				&& Dungeon.active.map[tox][toy] != Template.WALL;
 	}
 
 	@Override

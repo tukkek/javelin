@@ -26,6 +26,7 @@ public class Flagpole extends Building {
 		hp = maxhp;
 		source.challengerating = 2 * rank;
 		source.customName = "Flagpole";
+		source.passive = true;
 		setteam(blueteam);
 	}
 
@@ -74,11 +75,12 @@ public class Flagpole extends Building {
 				int upkeep = Math.round(100 * Flagpole.this.fight.getupkeep(
 						BattlefieldFight.state.blueTeam,
 						Flagpole.this.fight.blueflagpoles));
+				int currentpoints = Math.round(Flagpole.this.fight.bluepoints);
 				String message = "This is your flagpole. It generates " + points
 						+ " army point(s) per turn, reduced by your current army upkeep ("
 						+ upkeep
 						+ "%).\nIf it is captured by the enemy, attack it to recapture it for your team!\nYou currently have "
-						+ Math.round(Flagpole.this.fight.bluepoints)
+						+ (currentpoints < 1 ? 0 : currentpoints)
 						+ " army points, click to recruit new units.";
 				Game.message(message, Delay.NONE);
 			}

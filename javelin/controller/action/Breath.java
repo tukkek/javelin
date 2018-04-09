@@ -250,7 +250,8 @@ public class Breath extends Action implements AiAction {
 
 	static String compound(String action, String affected) {
 		return affected.isEmpty() ? action
-				: action + "\n" + affected.substring(0, affected.length() - 1);
+				: (action + "\n"
+						+ affected.substring(0, affected.length() - 1));
 	}
 
 	BreathWeapon selectbreath(Monster m) {

@@ -56,7 +56,7 @@ public class ArmySelectionScreen {
 		if (!bluepick) {
 			String pick = pickred(el, f);
 			Javelin.promptscreen(describearmies(f) + pick
-					+ "\nPress any key to continue...");
+					+ "\n\nPress any key to continue...");
 			return true;
 		}
 		return pickblue(describearmies(f), el, f);

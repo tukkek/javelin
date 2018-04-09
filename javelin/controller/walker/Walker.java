@@ -18,13 +18,13 @@ import javelin.model.unit.attack.Combatant;
 public class Walker {
 	public static final int[] DELTAS = new int[] { 0, +1, -1 };
 	public ArrayList<Step> solution = null;
-	protected final BattleState state;
+	public final BattleState state;
 	public int fromx;
 	public int fromy;
 	public int tox;
 	public int toy;
 	public ArrayList<Step> partial = null;
-	public Pathing pathing = BranchingPath.SINTANCE;
+	public Pathing pathing = BranchingPath.INSTANCE;
 
 	public Walker(Point from, Point to, BattleState s) {
 		this.state = s;
@@ -52,7 +52,7 @@ public class Walker {
 			solution = steps;
 			return;
 		}
-		if (!steps.isEmpty() && !valid(x, y, state)) {
+		if (!steps.isEmpty() && !valid(x, y)) {
 			steps.remove(steps.size() - 1);
 			partial = steps;
 			return;
@@ -71,7 +71,7 @@ public class Walker {
 		return new NextMove(tox, toy);
 	}
 
-	protected boolean valid(int x, int y, BattleState state2) {
+	public boolean valid(int x, int y) {
 		return true;
 	}
 

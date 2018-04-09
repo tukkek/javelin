@@ -2,6 +2,7 @@ package javelin.controller.upgrade.classes;
 
 import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * @see ClassLevelUpgrade
@@ -29,5 +30,12 @@ public class Warrior extends ClassLevelUpgrade {
 	@Override
 	public int getlevel(Monster m) {
 		return m.warrior;
+	}
+
+	@Override
+	protected boolean prefer(Combatant c) {
+		Monster m = c.source;
+		int highest = gethighestability(m);
+		return highest == m.strength || highest == m.constitution;
 	}
 }

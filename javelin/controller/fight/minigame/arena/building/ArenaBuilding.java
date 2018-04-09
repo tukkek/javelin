@@ -87,6 +87,7 @@ public abstract class ArenaBuilding extends Building {
 		actiondescription = description;
 		source.customName = name;
 		source.avatarfile = avatar;
+		source.passive = true;
 		setlevel(ArenaBuilding.LEVELS[0]);
 		hp = maxhp;
 	}
@@ -220,7 +221,7 @@ public abstract class ArenaBuilding extends Building {
 	public void damage(int damagep, BattleState s, int reduce) {
 		super.damage(damagep, s, reduce);
 		if (repairing) {
-			ArenaBuilding b = (ArenaBuilding) s.clone(this);
+			ArenaBuilding b = (ArenaBuilding) s.clone(this).clonesource();
 			if (b != null) {
 				b.repairing = false;
 			}

@@ -109,12 +109,11 @@ public class BattleWalker extends Walker {
 		if (m != null && current.ap >= m.meldsat) {
 			return true;
 		}
-		return valid(tox, toy, state);
+		return valid(tox, toy);
 	}
 
 	@Override
-	protected boolean valid(final int x, final int y,
-			final BattleState state2) {
+	public boolean valid(final int x, final int y) {
 		if (current.source.fly == 0 && state.map[x][y].blocked) {
 			return false;
 		}

@@ -170,4 +170,26 @@ public abstract class ClassLevelUpgrade extends Upgrade {
 		}
 	}
 
+	public static ClassLevelUpgrade getpreferred(Combatant c) {
+		init();
+		ArrayList<ClassLevelUpgrade> preferred = new ArrayList<ClassLevelUpgrade>(
+				1);
+		for (ClassLevelUpgrade u : classes) {
+			if (u.prefer(c)) {
+				preferred.add(u);
+			}
+		}
+		return RPG.pick(preferred);
+	}
+
+	protected static int gethighestability(Monster m) {
+		int highest = 0;
+		for (int ability : new int[] { m.strength, m.dexterity, m.constitution,
+				m.intelligence, m.wisdom, m.charisma }) {
+			highest = Math.max(highest, ability);
+		}
+		return highest;
+	}
+
+	abstract protected boolean prefer(Combatant c);
 }

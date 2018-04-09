@@ -18,7 +18,6 @@ import javelin.model.world.location.order.TrainingOrder;
 import javelin.view.screen.Option;
 import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.upgrading.UpgradingScreen;
-import tyrant.mikera.engine.RPG;
 
 public class ArenaAcademy extends ArenaBuilding {
 	static final int NOPTIONS = 9;
@@ -108,19 +107,14 @@ public class ArenaAcademy extends ArenaBuilding {
 	}
 
 	void restock(Combatant trainee) {
-		if (upgrades.size() == NOPTIONS) {
-			return;
-		}
-		if (upgrades.isEmpty()) {
-			upgrades.add(ClassLevelUpgrade.classes[RPG.r(0,
-					ClassLevelUpgrade.classes.length - 1)]);
-		}
-		LinkedList<Upgrade> allupgrades = new LinkedList<Upgrade>(
+		upgrades.clear();
+		upgrades.add(ClassLevelUpgrade.getpreferred(trainee));
+		LinkedList<Upgrade> all = new LinkedList<Upgrade>(
 				UpgradeHandler.singleton.getalluncategorized());
-		Collections.shuffle(allupgrades);
-		while (upgrades.size() < NOPTIONS) {
+		Collections.shuffle(all);
+		while (upgrades.size() < 3 + level && !all.isEmpty()) {
+			Upgrade u = all.pop();
 			Combatant clone = trainee.clone().clonesource();
-			Upgrade u = allupgrades.pop();
 			if (u.arena && u.upgrade(clone)) {
 				upgrades.add(u);
 			}

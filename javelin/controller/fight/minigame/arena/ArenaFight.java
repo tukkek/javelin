@@ -21,7 +21,6 @@ import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.fight.minigame.arena.building.ArenaAcademy;
 import javelin.controller.fight.minigame.arena.building.ArenaBuilding;
 import javelin.controller.fight.minigame.arena.building.ArenaFountain;
-import javelin.controller.fight.minigame.arena.building.ArenaGateway;
 import javelin.controller.fight.minigame.arena.building.ArenaLair;
 import javelin.controller.fight.minigame.arena.building.ArenaShop;
 import javelin.controller.fight.setup.BattleSetup;
@@ -331,8 +330,6 @@ public class ArenaFight extends Minigame {
 				state.next();
 			}
 			acting = state.next;
-		} else {
-			ArenaGateway.summon(state.redTeam, this);
 		}
 		super.startturn(acting);
 		for (ArrayList<Combatant> group : new ArrayList<ArrayList<Combatant>>(
@@ -478,16 +475,6 @@ public class ArenaFight extends Minigame {
 	}
 
 	ArrayList<Combatant> generatefoes(int el) {
-		if (!state.redTeam.isEmpty() && RPG.chancein(2)) {
-			ArenaGateway targetcr = ArenaGateway
-					.generate(CrCalculator.eltocr(el));
-			ArenaGateway gate = targetcr;
-			if (gate != null) {
-				ArrayList<Combatant> list = new ArrayList<Combatant>(1);
-				list.add(gate);
-				return list;
-			}
-		}
 		try {
 			return EncounterGenerator.generate(el, Arrays.asList(Terrain.ALL));
 		} catch (GaveUp e) {
@@ -542,7 +529,7 @@ public class ArenaFight extends Minigame {
 		LinkedList<Combatant> place = new LinkedList<Combatant>(entering);
 		Collections.shuffle(place);
 		Combatant last = place.pop();
-		setlocation(last, entry);
+		last.setlocation(entry);
 		float ap = getbaseap();
 		if (!team.contains(last)) {
 			team.addAll(entering);
@@ -557,7 +544,7 @@ public class ArenaFight extends Minigame {
 		while (!place.isEmpty()) {
 			Point p = displace(last.getlocation());
 			last = place.pop();
-			setlocation(last, p);
+			last.setlocation(p);
 		}
 		if (team == state.redTeam) {
 			notify("New enemies enter the arena!", last.getlocation());
@@ -572,11 +559,6 @@ public class ArenaFight extends Minigame {
 			p.y += RPG.r(-1, +1) + RPG.randomize(2);
 		}
 		return p;
-	}
-
-	void setlocation(Combatant c, Point p) {
-		c.setlocation(c instanceof ArenaGateway ? ArenaGateway.place() : p);
-
 	}
 
 	static public boolean validate(Point p) {

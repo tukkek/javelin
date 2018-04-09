@@ -20,7 +20,7 @@ public class ClearPath extends Walker {
 	}
 
 	@Override
-	protected boolean valid(int x, int y, BattleState state) {
+	public boolean valid(int x, int y) {
 		try {
 			final Square square = state.map[x][y];
 			return !square.blocked && !square.obstructed

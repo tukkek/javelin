@@ -5,7 +5,6 @@ import java.util.HashSet;
 
 import javelin.controller.Point;
 import javelin.controller.terrain.Terrain;
-import javelin.model.state.BattleState;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
@@ -49,7 +48,7 @@ public class WorldWalker extends BattleWalker {
 	}
 
 	@Override
-	protected boolean valid(int x, int y, BattleState state2) {
+	public boolean valid(int x, int y) {
 		final Point p = new Point(x, y);
 		return WorldPanel.ACTORS.get(p) == null && checkwater(x, y)
 				&& WorldScreen.current.mappanel.tiles[x][y].discovered;

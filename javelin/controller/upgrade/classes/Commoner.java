@@ -3,6 +3,7 @@ package javelin.controller.upgrade.classes;
 import javelin.controller.upgrade.skill.Perception;
 import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * @see ClassLevelUpgrade
@@ -34,4 +35,8 @@ public class Commoner extends ClassLevelUpgrade {
 		return m.commoner;
 	}
 
+	@Override
+	protected boolean prefer(Combatant c) {
+		return true;
+	}
 }

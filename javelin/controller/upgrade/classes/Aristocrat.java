@@ -7,12 +7,13 @@ import javelin.controller.upgrade.skill.Perception;
 import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.controller.upgrade.skill.Survival;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Combatant;
 
 /**
  * @see ClassLevelUpgrade
  */
 public class Aristocrat extends ClassLevelUpgrade {
-	private static final Level[] TABLE = new Level[] { new Level(0, 0, 0),
+	public static final Level[] TABLE = new Level[] { new Level(0, 0, 0),
 			new Level(0, 0, 2), new Level(0, 0, 3), new Level(1, 1, 3),
 			new Level(1, 1, 4), new Level(1, 1, 4), new Level(2, 2, 5),
 			new Level(2, 2, 5), new Level(2, 2, 6), new Level(3, 3, 6),
@@ -20,7 +21,7 @@ public class Aristocrat extends ClassLevelUpgrade {
 			new Level(4, 4, 8), new Level(4, 4, 9), new Level(5, 5, 9),
 			new Level(5, 5, 10), new Level(5, 5, 10), new Level(6, 6, 10),
 			new Level(6, 6, 11), new Level(6, 6, 12), };
-	private static final SkillUpgrade[] SKILLS = new SkillUpgrade[] {
+	public static final SkillUpgrade[] SKILLS = new SkillUpgrade[] {
 			Diplomacy.SINGLETON, GatherInformation.SINGLETON,
 			Knowledge.SINGLETON, Perception.SINGLETON, Survival.SINGLETON };
 	public static final ClassLevelUpgrade SINGLETON = new Aristocrat();
@@ -42,5 +43,12 @@ public class Aristocrat extends ClassLevelUpgrade {
 	@Override
 	public float advancebab(int next) {
 		return next == 1 ? 0 : super.advancebab(next);
+	}
+
+	@Override
+	protected boolean prefer(Combatant c) {
+		Monster m = c.source;
+		int highest = gethighestability(m);
+		return highest == m.wisdom || highest == m.charisma;
 	}
 }

@@ -2,7 +2,6 @@ package javelin.view.mappanel.dungeon;
 
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.template.Template;
-import javelin.model.state.BattleState;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.Trap;
@@ -28,7 +27,7 @@ public class DungeonWalker extends WorldWalker {
 	}
 
 	@Override
-	protected boolean valid(int x, int y, BattleState state2) {
+	public boolean valid(int x, int y) {
 		if (!DungeonScreen.active.mappanel.tiles[x][y].discovered
 				|| Dungeon.active.map[x][y] == Template.WALL) {
 			return false;

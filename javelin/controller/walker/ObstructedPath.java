@@ -19,7 +19,7 @@ public class ObstructedPath extends Walker {
 	}
 
 	@Override
-	protected boolean valid(int x, int y, BattleState state) {
+	public boolean valid(int x, int y) {
 		try {
 			return !state.map[x][y].blocked;
 		} catch (ArrayIndexOutOfBoundsException e) {

@@ -20,13 +20,12 @@ public class ChargePath extends ClearPath {
 	}
 
 	@Override
-	protected boolean valid(int x, int y, BattleState state) {
+	public boolean valid(int x, int y) {
 		for (Meld m : state.meld) {
 			if (m.x == x && m.y == y) {
 				return false;
 			}
 		}
-		return (swimmer || !state.map[x][y].flooded)
-				&& super.valid(x, y, state);
+		return (swimmer || !state.map[x][y].flooded) && super.valid(x, y);
 	}
 }

@@ -11,7 +11,7 @@ import javelin.view.mappanel.MoveOverlay;
  * steps and try to find the best solution instead of the fastest one.
  */
 public class BranchingPath implements Pathing {
-	public static final Pathing SINTANCE = new BranchingPath();
+	public static final BranchingPath INSTANCE = new BranchingPath();
 
 	private BranchingPath() {
 		// prevent instantiation

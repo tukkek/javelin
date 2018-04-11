@@ -10,7 +10,7 @@ import tyrant.mikera.engine.RPG;
 
 public class ArmySelectionScreen {
 	BattleSize[] SIZES = new BattleSize[] { new BattleSize("Brawl", 1, 4),
-			new BattleSize("Skirmish", 2, 4), new BattleSize("Standard", 3, 4),
+			new BattleSize("Skirmish", 2, 4), new BattleSize("Battle", 3, 4),
 			new BattleSize("War", 4, 4), new BattleSize("Armageddon", 5, 4),
 			new BattleSize("Random", 1, 20), };
 

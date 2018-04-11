@@ -5,6 +5,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.CrCalculator.Difficulty;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.model.unit.Monster;
@@ -23,13 +24,12 @@ public class Reinforcement {
 		generatefootsoldiers(el);
 	}
 
-	Reinforcement(float el) {
+	public Reinforcement(float el) {
 		this(Math.round(el));
 	}
 
 	void generatecommander(int el) {
-		for (float cr = CrCalculator.eltocr(el); commander
-				.isEmpty(); cr -= 1) {
+		for (float cr = CrCalculator.eltocr(el); commander.isEmpty(); cr--) {
 			List<Monster> tier = Javelin.MONSTERSBYCR.get(cr);
 			if (tier == null) {
 				continue;
@@ -41,7 +41,8 @@ public class Reinforcement {
 	void generateelites(int el) {
 		for (int target = el; elites == null;) {
 			try {
-				elites = EncounterGenerator.generate(target, BattlefieldFight.TERRAIN);
+				elites = EncounterGenerator.generate(target,
+						BattlefieldFight.TERRAIN);
 				if (elites.size() == 1) {
 					elites = null;
 				}
@@ -52,11 +53,15 @@ public class Reinforcement {
 	}
 
 	void generatefootsoldiers(int elp) {
-		int el = Math.max(1, elp - RPG.r(5, 10));
+		int el = elp + RPG.r(Difficulty.MODERATE, Difficulty.VERYEASY + 1);
+		if (el < -1) {
+			el = RPG.chancein(2) ? -1 : 0;
+		}
 		ArrayList<Combatant> footsoldiers = null;
 		while (footsoldiers == null) {
 			try {
-				footsoldiers = EncounterGenerator.generate(el, BattlefieldFight.TERRAIN);
+				footsoldiers = EncounterGenerator.generate(el,
+						BattlefieldFight.TERRAIN);
 				if (footsoldiers.size() == 1) {
 					footsoldiers = null;
 				}

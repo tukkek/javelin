@@ -108,7 +108,8 @@ public class BattlefieldFight extends Minigame {
 						continue placing;
 					}
 				}
-				Flagpole flag = new Flagpole(BattlefieldFight.this, 4 / flagpoles, blueteam);
+				Flagpole flag = new Flagpole(BattlefieldFight.this,
+						4 / flagpoles, blueteam);
 				flag.setlocation(spot);
 				if (blueteam) {
 					state.blueTeam.add(flag);
@@ -173,6 +174,7 @@ public class BattlefieldFight extends Minigame {
 			Game.redraw();
 			Javelin.message("The enemy calls for reinforcements:\n"
 					+ Combatant.group(units) + "!\n", true);
+			Game.messagepanel.clear();
 		}
 	}
 

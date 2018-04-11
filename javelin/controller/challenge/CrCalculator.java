@@ -37,8 +37,18 @@ import tyrant.mikera.engine.RPG;
  * #see CrFactor
  */
 public class CrCalculator {
-	public static final int DIFFICULTYVERYEASY = -9;
-	public static final int DIFFICULTYMODERATE = -4;
+	/**
+	 * Describes an Encounter Level difference. For example: an encounter is
+	 * irrelevant if it's of {@value #IRRELEVANT} of lower.
+	 */
+	static public class Difficulty {
+		public static final int IRRELEVANT = -13;
+		public static final int VERYEASY = -9;
+		public static final int EASY = -5;
+		public static final int MODERATE = -4;
+		public static final int DIFFICULT = 0;
+		public static final int DEADLY = +4;
+	}
 
 	static final float PCEQUIPMENTCRPERLEVEL = .2f;
 
@@ -586,22 +596,22 @@ public class CrCalculator {
 	}
 
 	public static String describedifficulty(int delta) {
-		if (delta <= -13) {
+		if (delta <= -Difficulty.IRRELEVANT) {
 			return "irrelevant";
 		}
-		if (delta <= DIFFICULTYVERYEASY) {
+		if (delta <= Difficulty.VERYEASY) {
 			return "very easy";
 		}
-		if (delta <= -5) {
+		if (delta <= Difficulty.EASY) {
 			return "easy";
 		}
-		if (delta == DIFFICULTYMODERATE) {
+		if (delta == Difficulty.MODERATE) {
 			return "moderate";
 		}
-		if (delta <= 0) {
+		if (delta <= Difficulty.DIFFICULT) {
 			return "difficult";
 		}
-		if (delta <= +4) {
+		if (delta <= Difficulty.DEADLY) {
 			return "deadly";
 		}
 		return "impossible";

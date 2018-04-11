@@ -10,6 +10,7 @@ import javelin.controller.action.Withdraw;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.CrCalculator.Difficulty;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.attack.Combatant;
@@ -36,7 +37,7 @@ public class Flee extends Action implements AiAction {
 	public static final Action SINGLETON = new Flee();
 
 	static final boolean ALLOWFLEE = true;
-	static final int FLEEAT = CrCalculator.DIFFICULTYVERYEASY;
+	static final int FLEEAT = Difficulty.VERYEASY;
 
 	private Flee() {
 		super("Flee");

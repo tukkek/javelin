@@ -9,6 +9,7 @@ import javelin.Javelin;
 import javelin.controller.CountingSet;
 import javelin.controller.Point;
 import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.CrCalculator.Difficulty;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.minigame.Minigame;
@@ -168,6 +169,9 @@ public class BattlefieldFight extends Minigame {
 		lastupdate = acting.ap;
 		int elred = calculateteammel(state.redTeam, redflagpoles);
 		int elblue = calculateteammel(state.blueTeam, blueflagpoles);
+		if ((elred + redpoints) - (elblue + bluepoints) <= Difficulty.EASY) {
+			surrender();
+		}
 		if (!redflagpoles.isEmpty() && elred < elblue
 				&& elred + redpoints >= elblue) {
 			ArrayList<Combatant> units = reinforceenemy();
@@ -175,7 +179,14 @@ public class BattlefieldFight extends Minigame {
 			Javelin.message("The enemy calls for reinforcements:\n"
 					+ Combatant.group(units) + "!\n", true);
 			Game.messagepanel.clear();
+			Game.messagepanel.getPanel().repaint();
 		}
+	}
+
+	void surrender() {
+		Game.messagepanel.clear();
+		Javelin.message("The enemy army disbands and flees in defeat!", true);
+		throw new EndBattle();
 	}
 
 	int calculateteammel(ArrayList<Combatant> team,
@@ -363,13 +374,14 @@ public class BattlefieldFight extends Minigame {
 	public boolean onend() {
 		state.blueTeam.removeAll(blueflagpoles);
 		state.redTeam.removeAll(redflagpoles);
-		if (!state.redTeam.isEmpty()) {
+		if (state.blueTeam.isEmpty()) {
 			Javelin.prompt("You've lost this match... Better luck next time!\n"
 					+ "Press any key to continue...");
 			return false;
 		}
 		Javelin.prompt("Congratulations, you've won!\n"
-				+ "Your surviving units will be available for hire at the Battlefiled location.");
+				+ "Your surviving units will be available for hire at the Battlefiled location.\n"
+				+ "Press any key to continue...");
 		Battlefield b = Battlefield.get();
 		b.survivors.clear();
 		CountingSet counter = new CountingSet();

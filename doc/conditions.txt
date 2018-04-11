@@ -4,7 +4,7 @@ Blessed: +1 to attack rolls.
 
 Burrowed: burrowed creatures receive +4 on armor class (not cumulative with defense, see below). A burrowed creature can only move or resurface and it is never considered engaged in battle.
 
-Cover: to determine whether your target has cover from your ranged attack, choose a corner of your square. If any line from this corner to any corner of the target’s square passes through a square or border that blocks line of effect or provides cover, or through a square occupied by a creature, the target has cover (+4 to AC). 
+Covered: an unit that is sitting inside a non-empty terrain square gains cover (+4 to AC against ranged attack). If there is cover directly between a ranged attacker and its target, then cover is also in effect, even if the target itself isn't sitting in a covered square. Other units on the attack path are also considered cover for these purposes.
 
 Charge: charging is a special full-round action that allows you to move up to twice your speed and attack. You must move at least 10 feet (2 squares) and may move up to double your speed directly toward the designated opponent. You must have a clear path toward the opponent. After moving, you may make a single melee attack. You get a +2 bonus on the attack roll and take a -2 penalty to your AC until the start of your next turn.
 

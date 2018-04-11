@@ -62,9 +62,6 @@ public class Reinforcement {
 			try {
 				footsoldiers = EncounterGenerator.generate(el,
 						BattlefieldFight.TERRAIN);
-				if (footsoldiers.size() == 1) {
-					footsoldiers = null;
-				}
 			} catch (GaveUp e) {
 				el += RPG.chancein(2) ? +1 : -1;
 			}

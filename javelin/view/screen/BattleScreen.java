@@ -342,7 +342,6 @@ public class BattleScreen extends Screen {
 			jointurns = true;
 		}
 		messagepanel.clear();
-		messagepanel.repaint();
 		statuspanel.repaint();
 		Game.message(state.action, delay);
 	}

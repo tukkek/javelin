@@ -137,12 +137,16 @@ public class Breath extends Action implements AiAction {
 			Game.messagepanel.clear();
 			throw e;
 		}
-		if (confirm == '\n' || confirm == 'b') {
-			state = state.clone();
-			Action.outcome(breath(breath, a, state.clone(hero), state));
+		if (confirm != '\n' && confirm != 'b') {
+			return false;
 		}
-		overlay.clear();
-		Game.messagepanel.clear();
+		state = state.clone();
+		ArrayList<ChanceNode> outcomes = breath(breath, a, state.clone(hero),
+				state);
+		if (outcomes.isEmpty()) {
+			return false;
+		}
+		Action.outcome(outcomes);
 		return true;
 	}
 

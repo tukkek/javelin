@@ -169,7 +169,8 @@ public class BattlefieldFight extends Minigame {
 		lastupdate = acting.ap;
 		int elred = calculateteammel(state.redTeam, redflagpoles);
 		int elblue = calculateteammel(state.blueTeam, blueflagpoles);
-		if ((elred + redpoints) - (elblue + bluepoints) <= Difficulty.EASY) {
+		if ((elred + redpoints)
+				- (elblue + bluepoints) <= Difficulty.VERYEASY) {
 			surrender();
 		}
 		if (!redflagpoles.isEmpty() && elred < elblue

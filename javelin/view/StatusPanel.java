@@ -94,14 +94,18 @@ public class StatusPanel extends TPanel {
 	private String spelldata(Combatant combatant) {
 		ArrayList<String> listing = new ArrayList<String>();
 		for (Spell s : combatant.spells) {
-			if (s.exhausted() || s instanceof Summon && combatant.summoned) {
+			int uses = s.perday - s.used;
+			if (uses == 0 || s instanceof Summon && combatant.summoned) {
 				continue;
 			}
 			String spellname = s.name;
 			if (spellname.length() >= 14) {
 				spellname = s.name.substring(0, 14);
 			}
-			listing.add(spellname + " (" + (s.perday - s.used) + ")");
+			if (uses > 1) {
+				spellname += " (" + (s.perday - s.used) + ")";
+			}
+			listing.add(spellname);
 		}
 		return listlist("Spells", listing);
 	}

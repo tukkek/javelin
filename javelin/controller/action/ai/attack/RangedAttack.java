@@ -8,6 +8,7 @@ import javelin.controller.action.target.RangedTarget;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.walker.Walker;
 import javelin.model.state.BattleState;
+import javelin.model.state.BattleState.Vision;
 import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.condition.Prone;
@@ -52,8 +53,7 @@ public class RangedAttack extends AbstractAttack {
 			penalty += 4;
 		}
 		if (!attacker.source.hasfeat(ImprovedPreciseShot.SINGLETON)
-				&& s.haslineofsight(attacker,
-						target) == javelin.model.state.BattleState.Vision.COVERED) {
+				&& iscovered(s.haslineofsight(attacker, target), target, s)) {
 			penalty += 4;
 		}
 		if (target.hascondition(Prone.class) != null) {
@@ -63,6 +63,12 @@ public class RangedAttack extends AbstractAttack {
 			penalty -= 1;
 		}
 		return penalty;
+	}
+
+	public static boolean iscovered(Vision sight, Combatant target,
+			BattleState s) {
+		return sight == Vision.COVERED || (sight == Vision.CLEAR
+				&& s.map[target.location[0]][target.location[1]].obstructed);
 	}
 
 	static boolean ispointblankshot(final Combatant attacker,

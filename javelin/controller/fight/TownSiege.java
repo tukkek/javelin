@@ -26,6 +26,7 @@ public class TownSiege extends Siege {
 
 	public class TownSiegeMap extends LocationMap {
 		TreeMap<Integer, List<Point>> PLACEMENT = new TreeMap<Integer, List<Point>>();
+		int grassratio = RPG.r(3, 6);
 
 		public TownSiegeMap() {
 			super("town-hamlet");
@@ -47,7 +48,7 @@ public class TownSiege extends Siege {
 					c = '.';
 				}
 			}
-			if (c == '.' && RPG.r(1, 10) <= 6) {
+			if (c == '.' && RPG.r(1, 10) <= grassratio) {
 				s.obstructed = true;
 			}
 			return s;

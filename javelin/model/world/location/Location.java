@@ -242,7 +242,7 @@ public abstract class Location extends Actor {
 			capture();
 			return false;
 		}
-		if (headsup(garrison, toString(), showgarrison)) {
+		if (headsup(garrison, toString(), showgarrison, this)) {
 			throw new StartBattle(fight());
 		}
 		throw new RuntimeException("headsup sould throw #wplace");
@@ -267,7 +267,7 @@ public abstract class Location extends Actor {
 	 * @throws RepeatTurn
 	 */
 	static public boolean headsup(List<Combatant> opponents, String description,
-			boolean showgarrison) {
+			boolean showgarrison, Actor a) {
 		opponents.sort(new Comparator<Combatant>() {
 			@Override
 			public int compare(Combatant o1, Combatant o2) {
@@ -275,7 +275,7 @@ public abstract class Location extends Actor {
 			}
 		});
 		Game.messagepanel.clear();
-		final String prompt = describe(opponents, description, showgarrison)
+		final String prompt = describe(opponents, description, showgarrison, a)
 				+ "\n\nPress s to storm or any other key to retreat.";
 		Game.message(prompt, Delay.NONE);
 		if (InfoScreen.feedback() == 's') {
@@ -285,13 +285,13 @@ public abstract class Location extends Actor {
 	}
 
 	static String describe(List<Combatant> opponents, String name,
-			boolean showgarrison) {
+			boolean showgarrison, Actor a) {
 		String description = name;
 		if (!opponents.isEmpty()) {
 			description += ". Forces: ("
 					+ CrCalculator.describedifficulty(opponents) + " fight)";
 			if (showgarrison) {
-				description += "\n\n" + Squad.active.spot(opponents);
+				description += "\n\n" + Squad.active.spot(opponents, a);
 			}
 			return description;
 		}
@@ -303,7 +303,7 @@ public abstract class Location extends Actor {
 
 	@Override
 	public String describe() {
-		return describe(garrison, toString(), showgarrison);
+		return describe(garrison, toString(), showgarrison, this);
 	}
 
 	@Override

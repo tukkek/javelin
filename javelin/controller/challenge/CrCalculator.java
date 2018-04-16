@@ -596,7 +596,7 @@ public class CrCalculator {
 	}
 
 	public static String describedifficulty(int delta) {
-		if (delta <= -Difficulty.IRRELEVANT) {
+		if (delta <= Difficulty.IRRELEVANT) {
 			return "irrelevant";
 		}
 		if (delta <= Difficulty.VERYEASY) {

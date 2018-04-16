@@ -21,9 +21,6 @@ public class ClearPath extends Walker {
 
 	@Override
 	public boolean valid(int x, int y) {
-		if (Walker.distance(fromx, fromy, x, y) == 1) {
-			return true;
-		}
 		try {
 			final Square square = state.map[x][y];
 			return !square.blocked && !square.obstructed

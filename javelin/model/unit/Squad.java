@@ -404,27 +404,25 @@ public class Squad extends Actor implements Cloneable {
 	}
 
 	/**
+	 * @param target
+	 *            If not <code>null</code>, will only shown information if
+	 *            adjacent in the {@link WorldScreen}.
 	 * @return A list with the name of the given {@link Combatant}s, replaced
 	 *         with "?" when failed to {@link #perceive()} properly.
 	 */
-	public String spot(List<Combatant> opponents) {
+	public String spot(List<Combatant> opponents, Actor target) {
+		if (target != null && distanceinsteps(target.x, target.y) > 1) {
+			return "?";
+		}
 		String garrison = "";
 		int spot = perceive(false, true);
-		// boolean allseen = true;
 		for (int i = 0; i < opponents.size(); i++) {
 			Combatant c = opponents.get(i);
 			boolean spotted = spot >= Skills.take10(c.source.skills.stealth,
 					c.source.dexterity);
 			garrison += (spotted ? c : "?") + ", ";
-			// if (allseen) {
-			// allseen = spotted;
-			// }
 		}
 		garrison = garrison.substring(0, garrison.length() - 2);
-		// if (allseen) {
-		// garrison += " (" +
-		// ChallengeRatingCalculator.describedifficulty(opponents) + " battle)";
-		// }
 		return garrison;
 	}
 
@@ -465,7 +463,7 @@ public class Squad extends Actor implements Cloneable {
 		final String prompt = "You have hidden from a "
 				+ CrCalculator.describedifficulty(foes) + " group of enemies!\n"
 				+ "Press s to storm them or w to wait for them to go away...\n\n"
-				+ "Enemies: " + Squad.active.spot(foes);
+				+ "Enemies: " + Squad.active.spot(foes, null);
 		while (input != 'w' && input != 's') {
 			input = Javelin.prompt(prompt);
 		}

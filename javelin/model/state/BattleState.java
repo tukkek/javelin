@@ -261,11 +261,11 @@ public class BattleState implements Node, TeamContainer {
 	 */
 	public Vision haslineofsight(final Point me, final Point target, int range,
 			String periodperception) {
-		if (Walker.distance(me.x, me.y, target.x, target.y) == 1) {
+		if (Walker.distance(me.x, me.y, target.x, target.y) <= 1) {
 			return Vision.CLEAR;
 		}
-		final ArrayList<Step> clear = map[target.x][target.y].obstructed ? null
-				: new ClearPath(me, target, new DirectPath(), this).walk();
+		final ArrayList<Step> clear = new ClearPath(me, target,
+				new DirectPath(), this).walk();
 		final ArrayList<Step> covered = periodperception == Javelin.PERIODEVENING
 				|| periodperception == Javelin.PERIODNIGHT ? null
 						: new ObstructedPath(me, target, new DirectPath(), this)

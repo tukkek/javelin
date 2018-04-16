@@ -15,14 +15,17 @@ public class DirectPath implements Pathing {
 
 	@Override
 	public ArrayList<Step> step(int x, int y, ArrayList<Step> steps, Walker w) {
-		if (first) {
-			first = false;
-			Point first = takefirststep(w);
-			if (first != null) {
-				steps.add(new Step(first.x, first.y));
-				calculatepath(first, w);
-			}
-			return steps;
+		// if (first) {
+		// first = false;
+		// Point first = takefirststep(w);
+		// if (first != null) {
+		// steps.add(new Step(first.x, first.y));
+		// calculatepath(first, w);
+		// }
+		// return steps;
+		// }
+		if (stepx == null) {
+			calculatepath(new Point(x, y), w);
 		}
 		partialx += stepx;
 		partialy += stepy;

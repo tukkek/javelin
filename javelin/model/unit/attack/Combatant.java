@@ -532,7 +532,7 @@ public class Combatant implements Serializable, Cloneable {
 			statuslist.add("flat-footed");
 		}
 		Vision v = state.haslineofsight(state.next, this);
-		if (v == Vision.COVERED) {
+		if (RangedAttack.iscovered(v, this, state)) {
 			statuslist.add("covered");
 		} else if (v == Vision.BLOCKED) {
 			statuslist.add("blocked");

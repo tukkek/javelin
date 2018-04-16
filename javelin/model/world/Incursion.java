@@ -350,7 +350,7 @@ public class Incursion extends Actor {
 
 	@Override
 	public boolean interact() {
-		if (!Location.headsup(squad, toString(), true)) {
+		if (!Location.headsup(squad, toString(), true, this)) {
 			return false;
 		}
 		throw new StartBattle(new IncursionFight(this));
@@ -379,7 +379,7 @@ public class Incursion extends Actor {
 	@Override
 	public String describe() {
 		return "Enemy incursion (" + CrCalculator.describedifficulty(squad)
-				+ " fight):\n\n" + Squad.active.spot(squad);
+				+ " fight):\n\n" + Squad.active.spot(squad, this);
 	}
 
 	/**

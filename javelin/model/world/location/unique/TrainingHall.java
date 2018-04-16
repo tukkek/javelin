@@ -167,6 +167,6 @@ public class TrainingHall extends Fortification {
 
 	@Override
 	public boolean ishostile() {
-		return false;
+		return super.ishostile();
 	}
 }

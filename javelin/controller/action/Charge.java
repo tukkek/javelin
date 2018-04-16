@@ -146,8 +146,7 @@ public class Charge extends Fire implements AiAction {
 				targets.remove(target);
 			} else {
 				final double distance = steps.size();
-				if (distance < 2
-						|| distance > 2 * combatant.source.gettopspeed() / 5
+				if (distance < 2 || distance > 2 * combatant.gettopspeed(s) / 5
 						|| distance > combatant.view(s.period)) {
 					targets.remove(target);
 				}

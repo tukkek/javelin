@@ -80,7 +80,7 @@ public class Transport implements Serializable {
 		}
 		ArrayList<Combatant> trailing = gettrailing(tripulation);
 		return trailing.size() > capacity
-				? Math.round(trailing.get(capacity).source.gettopspeed()
+				? Math.round(trailing.get(capacity).gettopspeed(null)
 						* WorldMove.NORMALMARCH)
 				: speed;
 	}
@@ -88,14 +88,14 @@ public class Transport implements Serializable {
 	ArrayList<Combatant> gettrailing(ArrayList<Combatant> tripulation) {
 		ArrayList<Combatant> trailing = new ArrayList<Combatant>(tripulation);
 		for (Combatant c : tripulation) {
-			if (c.source.gettopspeed() * WorldMove.NORMALMARCH >= speed) {
+			if (c.gettopspeed(null) * WorldMove.NORMALMARCH >= speed) {
 				trailing.remove(c);
 			}
 		}
 		trailing.sort(new Comparator<Combatant>() {
 			@Override
 			public int compare(Combatant o1, Combatant o2) {
-				return o1.source.gettopspeed() - o2.source.gettopspeed();
+				return o1.gettopspeed(null) - o2.gettopspeed(null);
 			}
 		});
 		return trailing;

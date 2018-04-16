@@ -61,7 +61,7 @@ public class AiMovement extends Action implements AiAction {
 
 	@Override
 	public List<List<ChanceNode>> getoutcomes(Combatant c, BattleState s) {
-		if (c.source.gettopspeed() == 0) {
+		if (c.gettopspeed(s) == 0) {
 			return Collections.emptyList();
 		}
 		HashSet<Point> destinations = getdestinations(c, s);
@@ -147,7 +147,7 @@ public class AiMovement extends Action implements AiAction {
 		final Fight f = Javelin.app.fight;
 		int range = 1;
 		if (!s.isengaged(c)) {
-			range = Math.min(c.view(f.period), c.source.gettopspeed() / 5);
+			range = Math.min(c.view(f.period), c.gettopspeed(s) / 5);
 		}
 		for (int x = -range; x <= +range; x++) {
 			for (int y = -range; y <= +range; y++) {

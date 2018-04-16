@@ -218,8 +218,8 @@ public class Monster implements Cloneable, Serializable {
 	/**
 	 * Used to distribute random spells to a new {@link Combatant}.
 	 *
-	 * TODO {@link ChallengeCalculator} is using this for {@link SpellsFactor} instead
-	 * of taking the {@link Combatant} into consideration. Maintain?
+	 * TODO {@link ChallengeCalculator} is using this for {@link SpellsFactor}
+	 * instead of taking the {@link Combatant} into consideration. Maintain?
 	 *
 	 * @see SpellbookGenerator
 	 *
@@ -605,10 +605,6 @@ public class Monster implements Cloneable, Serializable {
 			}
 		}
 		return found;
-	}
-
-	public int gettopspeed() {
-		return walk == 0 ? fly : walk;
 	}
 
 	/**

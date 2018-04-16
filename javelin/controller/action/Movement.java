@@ -44,7 +44,7 @@ public class Movement extends Action {
 	 * @param disengaging
 	 * @return How much it costs to move to the specified square.
 	 */
-	static public float cost(final Combatant c, final BattleState state, int x,
+	static public float cost(final Combatant c, final BattleState s, int x,
 			int y, boolean disengaging) {
 		float speed;
 		if (c.burrowed) {
@@ -52,8 +52,8 @@ public class Movement extends Action {
 		} else if (disengaging) {
 			return disengage(c);
 		} else {
-			speed = c.source.gettopspeed();
-			if (state.map[x][y].flooded && c.source.fly == 0) {
+			speed = c.gettopspeed(s);
+			if (s.map[x][y].flooded && c.source.fly == 0) {
 				speed = c.source.swim() > 0 ? c.source.swim : speed / 2f;
 			}
 		}

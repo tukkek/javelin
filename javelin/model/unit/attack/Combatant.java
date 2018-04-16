@@ -738,8 +738,7 @@ public class Combatant implements Serializable, Cloneable {
 		Combatant weakest = null;
 		for (Combatant sensei : garrison) {
 			ChallengeCalculator.calculatecr(sensei.source);
-			if (weakest == null
-					|| sensei.source.cr < weakest.source.cr) {
+			if (weakest == null || sensei.source.cr < weakest.source.cr) {
 				weakest = sensei;
 			}
 		}
@@ -1007,4 +1006,28 @@ public class Combatant implements Serializable, Cloneable {
 		return text.substring(0, text.length() - 2);
 	}
 
+	/**
+	 * @param s
+	 *            If not <code>null</code>, will verify the current position and
+	 *            if {@link Square#flooded}, returns {@link Monster#swim}. If
+	 *            <code>null</code>, will never return swimming speed.
+	 * @return The highest relevant spped available (in feet).
+	 * 
+	 * @see Monster#burrow
+	 * @see Monster#fly
+	 * @see Monster#walk
+	 */
+	public int gettopspeed(BattleState s) {
+		if (burrowed) {
+			return source.burrow;
+		}
+		if (source.fly != 0) {
+			return source.fly;
+		}
+		if (s != null && s.map[location[0]][location[1]].flooded
+				&& source.swim != 0) {
+			return source.swim;
+		}
+		return source.walk;
+	}
 }

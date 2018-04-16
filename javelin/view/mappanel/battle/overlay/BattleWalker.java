@@ -95,7 +95,7 @@ public class BattleWalker extends Walker {
 					.converttoap(swim > 0 ? swim : current.source.walk / 2);
 		} else {
 			apcost = javelin.controller.action.Movement
-					.converttoap(current.source.gettopspeed());
+					.converttoap(current.gettopspeed(state));
 		}
 		return apcost;
 	}

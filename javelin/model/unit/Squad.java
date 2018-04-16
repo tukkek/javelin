@@ -461,7 +461,8 @@ public class Squad extends Actor implements Cloneable {
 		// hidden
 		char input = ' ';
 		final String prompt = "You have hidden from a "
-				+ ChallengeCalculator.describedifficulty(foes) + " group of enemies!\n"
+				+ ChallengeCalculator.describedifficulty(foes)
+				+ " group of enemies!\n"
 				+ "Press s to storm them or w to wait for them to go away...\n\n"
 				+ "Enemies: " + Squad.active.spot(foes, null);
 		while (input != 'w' && input != 's') {
@@ -638,7 +639,7 @@ public class Squad extends Actor implements Cloneable {
 		for (Combatant c : members) {
 			Monster m = c.source;
 			speed = Math.min(speed, Terrain.WATER.equals(t)
-					? Math.max(m.fly, m.swim) : m.gettopspeed());
+					? Math.max(m.fly, m.swim) : c.gettopspeed(null));
 			if (m.fly == 0) {
 				allfly = false;
 			}

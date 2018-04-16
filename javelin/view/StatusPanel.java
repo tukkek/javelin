@@ -20,6 +20,7 @@ import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.condition.Breathless;
 import javelin.view.mappanel.battle.BattlePanel;
+import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.tyrant.QuestApp;
 import tyrant.mikera.tyrant.TPanel;
@@ -122,23 +123,31 @@ public class StatusPanel extends TPanel {
 		return "\n" + text;
 	}
 
-	String movementdata(final Combatant combatant) {
+	String movementdata(final Combatant c) {
 		ArrayList<String> data = new ArrayList<String>(2);
-		if (combatant.source.fly > 0) {
+		if (c.source.fly > 0) {
 			data.add("Fly");
-		} else if (combatant.source.swim > 0) {
+		} else if (c.source.swim > 0) {
 			data.add("Swim");
 		}
-		if (combatant.source.burrow > 0) {
-			data.add(combatant.burrowed ? "Burrowed" : "Burrow");
+		if (c.source.burrow > 0) {
+			data.add(c.burrowed ? "Burrowed" : "Burrow");
 		}
-		if (data.isEmpty()) {
-			return "";
+		String output = "";
+		if (!data.isEmpty()) {
+			output = data.get(0);
+			data.remove(0);
+			for (String s : data) {
+				output += ", " + s.toLowerCase();
+			}
+			output += "\n";
 		}
-		String output = data.get(0);
-		data.remove(0);
-		for (String s : data) {
-			output += ", " + s.toLowerCase();
+		int steps = c.gettopspeed(Fight.state) / 5;
+		output += steps + " steps";
+		if (BattlePanel.current.equals(c) && BattleScreen.partialmove != 0) {
+			float left = (.5f - BattleScreen.partialmove) / .5f;
+			left = steps * left;
+			output += " (" + Math.round(left) + " left)";
 		}
 		return output + "\n\n";
 	}

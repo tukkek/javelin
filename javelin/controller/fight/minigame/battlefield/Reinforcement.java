@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.CrCalculator;
-import javelin.controller.challenge.CrCalculator.Difficulty;
+import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.challenge.ChallengeCalculator.Difficulty;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.model.unit.Monster;
@@ -29,7 +29,8 @@ public class Reinforcement {
 	}
 
 	void generatecommander(int el) {
-		for (float cr = CrCalculator.eltocr(el); commander.isEmpty(); cr--) {
+		for (float cr = ChallengeCalculator.eltocr(el); commander
+				.isEmpty(); cr--) {
 			List<Monster> tier = Javelin.MONSTERSBYCR.get(cr);
 			if (tier == null) {
 				continue;
@@ -53,7 +54,7 @@ public class Reinforcement {
 	}
 
 	void generatefootsoldiers(int elp) {
-		int el = elp + RPG.r(Difficulty.MODERATE, Difficulty.VERYEASY + 1);
+		int el = elp + RPG.r(-2, Difficulty.MODERATE);
 		if (el < -1) {
 			el = RPG.chancein(2) ? -1 : 0;
 		}
@@ -67,7 +68,7 @@ public class Reinforcement {
 			}
 		}
 		this.footsoldiers.addAll(footsoldiers);
-		while (CrCalculator.calculateel(this.footsoldiers) < elp) {
+		while (ChallengeCalculator.calculateel(this.footsoldiers) < elp) {
 			for (Combatant c : footsoldiers) {
 				this.footsoldiers.add(new Combatant(c.source, true));
 			}

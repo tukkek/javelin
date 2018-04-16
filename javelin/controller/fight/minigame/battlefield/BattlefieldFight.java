@@ -8,8 +8,8 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.CountingSet;
 import javelin.controller.Point;
-import javelin.controller.challenge.CrCalculator;
-import javelin.controller.challenge.CrCalculator.Difficulty;
+import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.challenge.ChallengeCalculator.Difficulty;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.minigame.Minigame;
@@ -34,7 +34,7 @@ public class BattlefieldFight extends Minigame {
 		List<Monster> tier = Javelin.MONSTERSBYCR
 				.get(Javelin.MONSTERSBYCR.descendingKeySet().first());
 		highest.add(new Combatant(RPG.pick(tier), true));
-		HIGHESTEL = CrCalculator.calculateel(highest);
+		HIGHESTEL = ChallengeCalculator.calculateel(highest);
 	}
 
 	/** This is used as a come-back mechanic (negative feedback loop). */
@@ -199,7 +199,7 @@ public class BattlefieldFight extends Minigame {
 				clean.add(c);
 			}
 		}
-		return CrCalculator.calculateel(clean);
+		return ChallengeCalculator.calculateel(clean);
 	}
 
 	ArrayList<Combatant> reinforceenemy() {
@@ -209,7 +209,7 @@ public class BattlefieldFight extends Minigame {
 		float el = redpoints;
 		ArrayList<Combatant> selection = recruitredsquad(el);
 		state.redTeam.addAll(selection);
-		redpoints -= CrCalculator.calculateel(selection);
+		redpoints -= ChallengeCalculator.calculateel(selection);
 		for (Combatant c : selection) {
 			placeunit(c, RPG.pick(redflagpoles));
 		}
@@ -217,9 +217,9 @@ public class BattlefieldFight extends Minigame {
 	}
 
 	public ArrayList<Combatant> recruitredsquad(float el) {
-		int elcommander = CrCalculator.calculateel(redcommanders);
-		int elelites = CrCalculator.calculateel(redelites);
-		int elfootsolider = CrCalculator.calculateel(redfootsoliders);
+		int elcommander = ChallengeCalculator.calculateel(redcommanders);
+		int elelites = ChallengeCalculator.calculateel(redelites);
+		int elfootsolider = ChallengeCalculator.calculateel(redfootsoliders);
 		int lowel = Math.min(elcommander, Math.min(elelites, elfootsolider));
 		Reinforcement r = new Reinforcement(el);
 		ArrayList<ArrayList<Combatant>> choices = new ArrayList<ArrayList<Combatant>>();
@@ -256,7 +256,7 @@ public class BattlefieldFight extends Minigame {
 	float getupkeep(ArrayList<Combatant> team, ArrayList<Flagpole> flagpoles) {
 		team = (ArrayList<Combatant>) team.clone();
 		team.removeAll(flagpoles);
-		return 1 - CrCalculator.calculateel(team) / MAXARMY;
+		return 1 - ChallengeCalculator.calculateel(team) / MAXARMY;
 	}
 
 	void updateredarmy(ArrayList<Combatant> tier) {
@@ -285,7 +285,7 @@ public class BattlefieldFight extends Minigame {
 				+ "(Keep in mind that recruiting once with more army points is better than recruiting many times with fewer points.)";
 		Reinforcement r = new Reinforcement(bluepoints);
 		ArrayList<Combatant> units = recruitbluesquad(prompt, r, true);
-		bluepoints -= CrCalculator.calculateel(units);
+		bluepoints -= ChallengeCalculator.calculateel(units);
 		state.blueTeam.addAll(units);
 		for (Combatant c : units) {
 			placeunit(c, RPG.pick(blueflagpoles));
@@ -316,7 +316,7 @@ public class BattlefieldFight extends Minigame {
 	static String group(ArrayList<Combatant> group) {
 		String s = Combatant.group(group);
 		if (Javelin.DEBUG) {
-			s += " (EL" + CrCalculator.calculateel(group) + ")";
+			s += " (EL" + ChallengeCalculator.calculateel(group) + ")";
 		}
 		return s;
 	}

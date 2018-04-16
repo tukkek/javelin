@@ -5,11 +5,10 @@ import javelin.controller.map.location.haunt.AbandonedManorMap;
 
 public class AbandonedManor extends Haunt {
 	public AbandonedManor() {
-		super("Abandoned manor",
+		super("Abandoned manor", 5, 10,
 				new String[] { "Small animated object", "animated object",
 						"Small monstrous spider", "monstrous spider",
-						"Phantom fungus", "Ethereal marauder", "aranea",
-						"Ethereal Filcher" });
+						"Phantom fungus", "Ethereal marauder", });
 	}
 
 	@Override

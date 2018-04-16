@@ -21,7 +21,7 @@ import tyrant.mikera.engine.RPG;
 public class SquadScreen extends InfoScreen {
 	static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
 	static final int MONSTERPERPAGE = ALPHABET.indexOf('y');
-	static final float[] SELECTABLE = { 1f, 1.25f };
+	static final float[] SELECTABLE = { 1f, 1.25f, 1.5f };
 
 	public static final ArrayList<Monster> CANDIDATES = new ArrayList<Monster>();
 
@@ -55,7 +55,7 @@ public class SquadScreen extends InfoScreen {
 	public int getstartinggold() {
 		int gold = 0;
 		for (Combatant c : squad) {
-			float level = c.source.challengerating - 1;
+			float level = c.source.cr - 1;
 			if (level >= 1) {
 				gold += RewardCalculator
 						.calculatepcequipment(Math.round(level));

@@ -188,7 +188,7 @@ public class Scenario implements Serializable {
 				if (Kit.getpossiblekits(c.source).contains(k)) {
 					c.source.customName = Character.toUpperCase(
 							k.name.charAt(0)) + k.name.substring(1);
-					while (c.source.challengerating < 6) {
+					while (c.source.cr < 6) {
 						c.upgrade(k.upgrades);
 					}
 					members.remove(0);

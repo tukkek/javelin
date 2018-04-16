@@ -14,6 +14,6 @@ class Hire extends Option {
 	}
 
 	public Hire(Combatant c) {
-		this(c, Math.round(c.source.challengerating * 100));
+		this(c, Math.round(c.source.cr * 100));
 	}
 }

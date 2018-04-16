@@ -1,6 +1,6 @@
 package javelin.model.unit.abilities.spell.conjuration;
 
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Combatant;
@@ -13,7 +13,7 @@ import javelin.model.world.location.town.labor.basic.Lodge;
 public class SecureShelter extends Spell {
 	public SecureShelter() {
 		super("Secure shelter", 4,
-				CrCalculator.ratespelllikeability(4), Realm.MAGIC);
+				ChallengeCalculator.ratespelllikeability(4), Realm.MAGIC);
 		castoutofbattle = true;
 		isscroll = true;
 	}

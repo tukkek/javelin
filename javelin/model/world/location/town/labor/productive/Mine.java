@@ -6,7 +6,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.fight.Siege;
 import javelin.controller.terrain.Mountains;
 import javelin.controller.terrain.Terrain;
@@ -234,7 +234,7 @@ public class Mine extends Fortification {
 	@Override
 	public Integer getel(int attackerel) {
 		return miners.isEmpty() ? Integer.MIN_VALUE
-				: CrCalculator.calculateel(miners);
+				: ChallengeCalculator.calculateel(miners);
 	}
 
 	@Override

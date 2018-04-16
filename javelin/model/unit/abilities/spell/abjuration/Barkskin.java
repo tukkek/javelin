@@ -1,6 +1,6 @@
 package javelin.model.unit.abilities.spell.abjuration;
 
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.spell.Touch;
 import javelin.model.unit.attack.Combatant;
@@ -32,7 +32,7 @@ public class Barkskin extends Touch {
 	/** Constructor */
 	public Barkskin() {
 		super("Barkskin", 3,
-				CrCalculator.ratespelllikeability(2, 6),
+				ChallengeCalculator.ratespelllikeability(2, 6),
 				javelin.model.Realm.EARTH);
 		casterlevel = 6;
 		castinbattle = true;

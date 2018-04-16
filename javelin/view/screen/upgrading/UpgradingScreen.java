@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Squad;
@@ -183,13 +183,13 @@ public abstract class UpgradingScreen extends SelectScreen {
 
 	private BigDecimal buy(final UpgradeOption o, Combatant c,
 			boolean listing) {
-		float originalcr = CrCalculator.calculaterawcr(c.source)[1];
+		float originalcr = ChallengeCalculator.calculaterawcr(c.source)[1];
 		final Combatant clone = c.clone().clonesource();
 		if (!upgrade(o, clone)) {
 			return null;
 		}
 		BigDecimal cost = new BigDecimal(
-				CrCalculator.calculaterawcr(clone.source)[1] - originalcr);
+				ChallengeCalculator.calculaterawcr(clone.source)[1] - originalcr);
 		if (!listing) {
 			int goldpieces = price(cost.floatValue());
 			if (goldpieces > getgold()) {
@@ -257,8 +257,8 @@ public abstract class UpgradingScreen extends SelectScreen {
 		ArrayList<TrainingOrder> trainees = new ArrayList<TrainingOrder>();
 		for (Combatant c : upgraded) {
 			Combatant original = this.original.get(c.id);
-			float xpcost = CrCalculator.calculaterawcr(c.source)[1]
-					- CrCalculator.calculaterawcr(original.source)[1];
+			float xpcost = ChallengeCalculator.calculaterawcr(c.source)[1]
+					- ChallengeCalculator.calculaterawcr(original.source)[1];
 			trainees.add(createorder(c, original, xpcost));
 		}
 		onexit(trainees);

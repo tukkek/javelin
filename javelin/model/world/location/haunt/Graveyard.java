@@ -6,7 +6,7 @@ import javelin.controller.map.location.haunt.GraveyardMap;
 public class Graveyard extends Haunt {
 
 	public Graveyard() {
-		super("Graveyard", new String[] { "zombie", "Small skeleton",
+		super("Graveyard", 5, 15, new String[] { "zombie", "Small skeleton",
 				"Skeleton", "ghoul", "ghast" });
 		elmodifier = +5;
 	}

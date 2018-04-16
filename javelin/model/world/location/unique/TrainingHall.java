@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Siege;
@@ -66,6 +66,7 @@ public class TrainingHall extends Fortification {
 		impermeable = true;
 		vision = 2;
 		allowedinscenario = false;
+		realm = null;
 	}
 
 	@Override
@@ -84,7 +85,7 @@ public class TrainingHall extends Fortification {
 	}
 
 	boolean isweak() {
-		return CrCalculator.calculateel(garrison) < EL[currentlevel - 1];
+		return ChallengeCalculator.calculateel(garrison) < EL[currentlevel - 1];
 	}
 
 	@Override
@@ -163,10 +164,5 @@ public class TrainingHall extends Fortification {
 	@Override
 	public boolean view() {
 		return true;
-	}
-
-	@Override
-	public boolean ishostile() {
-		return super.ishostile();
 	}
 }

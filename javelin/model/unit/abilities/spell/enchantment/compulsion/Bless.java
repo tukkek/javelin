@@ -2,7 +2,7 @@ package javelin.model.unit.abilities.spell.enchantment.compulsion;
 
 import java.util.List;
 
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.spell.Spell;
@@ -37,7 +37,7 @@ public class Bless extends Spell {
 	}
 
 	public Bless() {
-		super("Bless", 1, CrCalculator.ratespelllikeability(1), Realm.GOOD);
+		super("Bless", 1, ChallengeCalculator.ratespelllikeability(1), Realm.GOOD);
 		castonallies = true;
 		castinbattle = true;
 		isscroll = true;

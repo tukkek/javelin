@@ -16,7 +16,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import javelin.Javelin;
 import javelin.controller.CountingSet;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.db.reader.fields.Alignment;
 import javelin.controller.db.reader.fields.ArmorClass;
 import javelin.controller.db.reader.fields.Attacks;
@@ -107,7 +107,7 @@ public class MonsterReader extends DefaultHandler {
 			String passive = attributes.getValue("passive");
 			monster.passive = passive != null && Boolean.parseBoolean(passive);
 			if (monster.passive) {
-				monster.challengerating = 0f;
+				monster.cr = 0f;
 			}
 		} else if ("feats".equals(localName.toLowerCase())) {
 			section = "Feats";
@@ -389,10 +389,10 @@ public class MonsterReader extends DefaultHandler {
 			if (m.passive) {
 				continue;
 			}
-			List<Monster> list = Javelin.MONSTERSBYCR.get(m.challengerating);
+			List<Monster> list = Javelin.MONSTERSBYCR.get(m.cr);
 			if (list == null) {
 				list = new ArrayList<Monster>();
-				Javelin.MONSTERSBYCR.put(m.challengerating, list);
+				Javelin.MONSTERSBYCR.put(m.cr, list);
 			}
 			list.add(m);
 		}
@@ -463,7 +463,7 @@ public class MonsterReader extends DefaultHandler {
 			summoncaster.get(summonspell.indexOf(s)).spellcr += s.cr * s.perday;
 		}
 		for (Monster m : updated) {
-			CrCalculator.calculatecr(m);
+			ChallengeCalculator.calculatecr(m);
 		}
 	}
 
@@ -569,7 +569,7 @@ public class MonsterReader extends DefaultHandler {
 					monster + " humanoid tag missing #monsterreader");
 		}
 		try {
-			CrCalculator.calculatecr(monster);
+			ChallengeCalculator.calculatecr(monster);
 		} catch (final Exception e) {
 			throw new RuntimeException("Challenge rating issue " + monster.name,
 					e);

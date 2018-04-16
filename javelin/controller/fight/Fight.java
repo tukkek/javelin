@@ -10,7 +10,7 @@ import javelin.controller.Weather;
 import javelin.controller.action.Action;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.ai.BattleAi;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.GaveUp;
@@ -132,7 +132,7 @@ public abstract class Fight {
 	 *         generated. May return <code>null</code> if the subclass will
 	 *         generate its own foes manually.
 	 * 
-	 * @see CrCalculator
+	 * @see ChallengeCalculator
 	 */
 	public Integer getel(int teamel) {
 		return Terrain.current().getel(teamel);
@@ -417,7 +417,7 @@ public abstract class Fight {
 		}
 		Fight.state = new BattleState(this);
 		Fight.state.blueTeam = getblueteam();
-		return generate(getel(CrCalculator.calculateel(Fight.state.blueTeam)));
+		return generate(getel(ChallengeCalculator.calculateel(Fight.state.blueTeam)));
 	}
 
 	/**

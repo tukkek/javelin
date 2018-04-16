@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 import javelin.Javelin;
-import javelin.controller.challenge.CrCalculator;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.TempleEncounter;
 import javelin.controller.terrain.Terrain;
@@ -116,7 +115,7 @@ public abstract class Temple extends UniqueLocation {
 		allowedinscenario = false;
 		realm = r;
 		this.level = level;
-		el = CrCalculator.leveltoel(level);
+		el = level;
 		relic = relicp;
 		fluff = fluffp;
 		link = true;

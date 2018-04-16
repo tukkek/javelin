@@ -1,6 +1,6 @@
 package javelin.model.unit.abilities.spell.enchantment.compulsion;
 
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Monster;
@@ -36,7 +36,7 @@ public class Rage extends Spell {
 	}
 
 	public Rage() {
-		super("Rage", 3, CrCalculator.ratespelllikeability(3),
+		super("Rage", 3, ChallengeCalculator.ratespelllikeability(3),
 				Realm.FIRE);
 		castinbattle = true;
 		castonallies = true;

@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.CombatantByCr;
 import javelin.controller.old.Game;
@@ -80,7 +80,7 @@ public class MercenariesGuild extends UniqueLocation {
 			}
 		}
 		int tries = 0;
-		while (c.source.challengerating < cr) {
+		while (c.source.cr < cr) {
 			c.upgrade(r);
 			tries += 1;
 			if (tries >= 100) {
@@ -96,7 +96,7 @@ public class MercenariesGuild extends UniqueLocation {
 		if (!super.interact()) {
 			return false;
 		}
-		CrCalculator.updatecr(mercenaries);
+		ChallengeCalculator.updatecr(mercenaries);
 		mercenaries.sort(Collections.reverseOrder(CombatantByCr.SINGLETON));
 		ArrayList<String> prices = new ArrayList<String>(mercenaries.size());
 		for (Combatant c : mercenaries) {
@@ -154,7 +154,7 @@ public class MercenariesGuild extends UniqueLocation {
 	 *         value).
 	 */
 	public static int getfee(Monster m) {
-		float value = RewardCalculator.getgold(CrCalculator.calculatecr(m));
+		float value = RewardCalculator.getgold(ChallengeCalculator.calculatecr(m));
 		int roundto;
 		if (value > 1000) {
 			roundto = 1000;

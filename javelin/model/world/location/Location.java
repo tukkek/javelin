@@ -8,7 +8,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.WorldGenerator;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.StartBattle;
@@ -289,7 +289,8 @@ public abstract class Location extends Actor {
 		String description = name;
 		if (!opponents.isEmpty()) {
 			description += ". Forces: ("
-					+ CrCalculator.describedifficulty(opponents) + " fight)";
+					+ ChallengeCalculator.describedifficulty(opponents)
+					+ " fight)";
 			if (showgarrison) {
 				description += "\n\n" + Squad.active.spot(opponents, a);
 			}
@@ -421,27 +422,28 @@ public abstract class Location extends Actor {
 	}
 
 	public void spawn() {
-		if (!ishostile() || garrison.isEmpty()) {
+		if (realm == null || !ishostile() || garrison.isEmpty()) {
 			return;
 		}
 		Combatant spawn = RPG.pick(garrison);
-		Float cr = spawn.source.challengerating;
+		Float cr = spawn.source.cr;
 		if (!RPG.chancein(Math.round(400 * cr / 20))) {
 			return;
 		}
 		Location reinforce = this;
 		for (Town t : Town.gettowns()) {
 			if (t != this && t.realm == realm && t.population >= cr
-					&& CrCalculator.calculateel(t.garrison) < CrCalculator
+					&& t.getel(0) < ChallengeCalculator
 							.calculateel(reinforce.garrison)) {
 				reinforce = t;
 			}
 		}
 		if (Javelin.DEBUG) {
 			System.out.println("Spawning a " + spawn + " (cr " + cr + ") from "
-					+ this + " (el " + CrCalculator.calculateel(garrison)
+					+ this + " (el " + ChallengeCalculator.calculateel(garrison)
 					+ ") to " + reinforce + " (cr "
-					+ CrCalculator.calculateel(reinforce.garrison) + ")");
+					+ ChallengeCalculator.calculateel(reinforce.garrison)
+					+ ")");
 		}
 		reinforce.garrison.add(new Combatant(spawn.source, true));
 		Incursion.raid(reinforce);

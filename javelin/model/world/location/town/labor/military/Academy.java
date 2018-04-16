@@ -7,7 +7,7 @@ import java.util.Set;
 
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.comparator.UpgradeByNameComparator;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
@@ -299,7 +299,7 @@ public abstract class Academy extends Fortification {
 
 	@Override
 	public Integer getel(int attackerel) {
-		return CrCalculator.calculateel(getcombatants());
+		return ChallengeCalculator.calculateel(getcombatants());
 	}
 
 	@Override

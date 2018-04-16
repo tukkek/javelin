@@ -11,7 +11,7 @@ import javelin.Javelin;
 import javelin.controller.InfiniteList;
 import javelin.controller.Point;
 import javelin.controller.Weather;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.SizeComparator;
 import javelin.controller.exception.GaveUp;
@@ -258,12 +258,12 @@ public class ArenaFight extends Minigame {
 			}
 		}
 		ArrayList<Combatant> gladiators = new ArrayList<Combatant>();
-		while (CrCalculator.calculateel(gladiators) < Campaign.INITIALEL) {
+		while (ChallengeCalculator.calculateel(gladiators) < Campaign.INITIALEL) {
 			ArrayList<Monster> page = candidates.pop(3);
 			ArrayList<String> names = new ArrayList<String>(3);
 			for (int i = 0; i < 3; i++) {
 				Monster m = page.get(i);
-				names.add(m + " (level " + Math.round(m.challengerating) + ")");
+				names.add(m + " (level " + Math.round(m.cr) + ")");
 			}
 			int choice = Javelin.choose("Select your gladiators:", names, false,
 					false);
@@ -346,8 +346,8 @@ public class ArenaFight extends Minigame {
 			}
 			return;
 		}
-		int elblue = CrCalculator.calculateel(getgladiators());
-		int elred = CrCalculator.calculateel(state.redTeam);
+		int elblue = ChallengeCalculator.calculateel(getgladiators());
+		int elred = ChallengeCalculator.calculateel(state.redTeam);
 		if (elred - elblue < tension && !goalreached(getgladiators())) {
 			raisetension(elblue);
 			tension = RPG.r(TENSIONMIN, TENSIONMAX);
@@ -365,7 +365,7 @@ public class ArenaFight extends Minigame {
 				defeated.add(c);
 				dead.remove(c);
 				if (!c.summoned) {
-					Float cr = c.source.challengerating;
+					Float cr = c.source.cr;
 					gold += RewardCalculator.getgold(cr) * BOOST;
 				}
 			}
@@ -461,7 +461,7 @@ public class ArenaFight extends Minigame {
 			}
 			ArrayList<Combatant> newteam = new ArrayList<Combatant>(redteam);
 			newteam.addAll(group);
-			int tension = CrCalculator.calculateel(newteam) - elblue;
+			int tension = ChallengeCalculator.calculateel(newteam) - elblue;
 			if (tension == this.tension) {
 				enter(group, state.redTeam);
 				return;
@@ -603,7 +603,7 @@ public class ArenaFight extends Minigame {
 	public boolean goalreached(List<Combatant> gladiators) {
 		boolean goalreached = true;
 		for (Combatant c : gladiators) {
-			if (c.source.challengerating < goal) {
+			if (c.source.cr < goal) {
 				goalreached = false;
 				break;
 			}

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.comparator.MonstersByName;
 import javelin.controller.fight.LocationFight;
 import javelin.controller.map.location.LocationMap;
@@ -17,7 +17,8 @@ import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
 
 public abstract class Haunt extends Fortification {
-	private static final int MAXIMUMAVAILABLE = 5;
+	static final int MAXIMUMAVAILABLE = 5;
+
 	ArrayList<Monster> dwellers = new ArrayList<Monster>();
 	public ArrayList<Monster> available = new ArrayList<Monster>();
 	int delay = -1;
@@ -29,23 +30,19 @@ public abstract class Haunt extends Fortification {
 	/**
 	 * @param description
 	 *            Location name.
+	 * @param minel
+	 * @param maxel
 	 * @param tier
 	 *            A number from 1 to 4 (inclusive), determining the level range
 	 *            for this haunt (1-5, 6-10, 11-15, 16-20).
 	 */
-	public Haunt(String description, String[] monsters) {
+	public Haunt(String description, int minel, int maxel, String[] monsters) {
 		super(description, description, Integer.MAX_VALUE, Integer.MIN_VALUE);
 		for (String name : monsters) {
-			Monster m = Javelin.getmonster(name);
-			dwellers.add(m);
-			int cr = Math.max(1, Math.round(m.challengerating));
-			if (cr < minlevel) {
-				minlevel = cr;
-			}
-			if (cr > maxlevel) {
-				maxlevel = cr;
-			}
+			dwellers.add(Javelin.getmonster(name));
 		}
+		minlevel = minel;
+		maxlevel = maxel;
 	}
 
 	@Override
@@ -62,13 +59,14 @@ public abstract class Haunt extends Fortification {
 
 	@Override
 	protected void generategarrison(int minlevel, int maxlevel) {
-		int minel = CrCalculator.leveltoel(minlevel) + elmodifier;
-		int maxel = CrCalculator.leveltoel(maxlevel) + elmodifier;
+		int minel = minlevel + elmodifier;
+		int maxel = maxlevel + elmodifier;
+		int target = RPG.r(minel, maxel);
 		int el = Integer.MIN_VALUE;
 		List<List<Combatant>> possibilities = new ArrayList<List<Combatant>>();
-		while (el < maxel) {
+		while (el < target) {
 			garrison.add(new Combatant(RPG.pick(dwellers).clone(), true));
-			el = CrCalculator.calculateel(garrison);
+			el = ChallengeCalculator.calculateel(garrison);
 			if (minel <= el && el <= maxel) {
 				possibilities.add(new ArrayList<Combatant>(garrison));
 			}
@@ -99,7 +97,7 @@ public abstract class Haunt extends Fortification {
 		Monster m = RPG.pick(dwellers);
 		available.add(m);
 		available.sort(MonstersByName.INSTANCE);
-		delay = Dwelling.getspawnrate(m.challengerating);
+		delay = Dwelling.getspawnrate(m.cr);
 	}
 
 	@Override

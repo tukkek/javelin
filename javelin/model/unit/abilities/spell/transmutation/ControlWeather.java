@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import javelin.Javelin;
 import javelin.controller.Weather;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.unit.abilities.spell.Spell;
@@ -21,7 +21,7 @@ import javelin.model.unit.attack.Combatant;
 public class ControlWeather extends Spell {
 	/** Constructor. */
 	public ControlWeather() {
-		super("Control weather", 7, CrCalculator.ratespelllikeability(7),
+		super("Control weather", 7, ChallengeCalculator.ratespelllikeability(7),
 				Realm.AIR);
 		isscroll = true;
 		isritual = true;

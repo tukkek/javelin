@@ -3,7 +3,7 @@ package javelin;
 import java.util.List;
 
 import javelin.controller.action.Help;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.fight.Fight;
 import javelin.controller.scenario.Scenario;
 import javelin.model.Realm;
@@ -63,7 +63,8 @@ public class Debug {
 			String s = "";
 			for (Town t : Town.gettowns()) {
 				String el = t.ishostile()
-						? ", EL " + CrCalculator.calculateel(t.garrison) : "";
+						? ", EL " + ChallengeCalculator.calculateel(t.garrison)
+						: "";
 				s += t + " (" + t.getrank().title + el + ")\n";
 			}
 			return s;

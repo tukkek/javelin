@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.CrCalculator;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
@@ -57,7 +56,7 @@ public class Caravan extends Actor {
 		Town from = (Town) towns.get(0);
 		x = from.x;
 		y = from.y;
-		el = CrCalculator.leveltoel(from.population);
+		el = from.population;
 		displace();
 		determinedestination(towns);
 		while (inventory.size() < NUMBEROFITEMS) {

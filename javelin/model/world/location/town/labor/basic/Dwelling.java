@@ -7,7 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.old.Game;
 import javelin.controller.terrain.Terrain;
@@ -51,7 +51,7 @@ public class Dwelling extends Fortification {
 					town.y);
 			Collections.shuffle(candidates);
 			for (Monster m : candidates) {
-				if (m.challengerating <= town.population + 2) {
+				if (m.cr <= town.population + 2) {
 					goal = new Dwelling(m);
 					name += ": " + m.toString().toLowerCase();
 					cost = getcost(m);
@@ -61,7 +61,7 @@ public class Dwelling extends Fortification {
 		}
 
 		public static int getcost(Monster m) {
-			return Math.max(1, Math.round(m.challengerating * CRMULTIPLIER));
+			return Math.max(1, Math.round(m.cr * CRMULTIPLIER));
 		}
 
 		@Override
@@ -106,7 +106,7 @@ public class Dwelling extends Fortification {
 		gossip = dweller.source.intelligence > 8;
 		garrison.addAll(RPG.pick(Organization.ENCOUNTERSBYMONSTER
 				.get(dweller.source.name)).group);
-		targetel = CrCalculator.calculateel(garrison);
+		targetel = ChallengeCalculator.calculateel(garrison);
 		generategarrison = false;
 	}
 
@@ -154,13 +154,13 @@ public class Dwelling extends Fortification {
 	}
 
 	void draft(InfoScreen s, String monstertype) {
-		int xp = Math.round(dweller.source.challengerating * 100);
+		int xp = Math.round(dweller.source.cr * 100);
 		if (!canrecruit(xp)) {
 			s.print("Cannot afford a " + monstertype + " (" + xp + "XP)...");
 			Game.getInput();
 			return;
 		}
-		spend(dweller.source.challengerating);
+		spend(dweller.source.cr);
 		Javelin.recruit(dweller.source.clone());
 		volunteers -= 1;
 	}
@@ -178,7 +178,7 @@ public class Dwelling extends Fortification {
 		if (volunteers > 0) {
 			text += "There are " + volunteers + " available units here.\n\n";
 			text += "d - draft as volunteer ("
-					+ Math.round(100 * dweller.source.challengerating)
+					+ Math.round(100 * dweller.source.cr)
 					+ "XP)\n";
 			text += "h - hire as " + monstertype + " mercenary ($"
 					+ SelectScreen.formatcost(MercenariesGuild.getfee(dweller))
@@ -199,7 +199,7 @@ public class Dwelling extends Fortification {
 
 	@Override
 	public void turn(long time, WorldScreen world) {
-		int cr = Math.max(1, Math.round(dweller.source.challengerating));
+		int cr = Math.max(1, Math.round(dweller.source.cr));
 		int max = Math.max(1, 21 - cr);
 		if (volunteers == max) {
 			return;
@@ -258,14 +258,14 @@ public class Dwelling extends Fortification {
 		} else {
 			ArrayList<Combatant> squad = new ArrayList<Combatant>(
 					Squad.active.members);
-			CrCalculator.calculateel(squad);
+			ChallengeCalculator.calculateel(squad);
 			Collections.sort(squad, new Comparator<Combatant>() {
 				@Override
 				public int compare(Combatant o1, Combatant o2) {
 					final float cr1 = o2.xp.floatValue()
-							+ o2.source.challengerating;
+							+ o2.source.cr;
 					final float cr2 = o1.xp.floatValue()
-							+ o1.source.challengerating;
+							+ o1.source.cr;
 					return new Float(cr1).compareTo(cr2);
 				}
 			});
@@ -287,10 +287,10 @@ public class Dwelling extends Fortification {
 	 *         if {@link #canrecruit(double)}.
 	 */
 	public static boolean recruit(Monster m) {
-		if (!canrecruit(m.challengerating * 100)) {
+		if (!canrecruit(m.cr * 100)) {
 			return false;
 		}
-		spend(m.challengerating);
+		spend(m.cr);
 		Javelin.recruit(m);
 		return true;
 	}

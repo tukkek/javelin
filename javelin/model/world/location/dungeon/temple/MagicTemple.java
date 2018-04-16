@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.Point;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.terrain.Hill;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
@@ -29,7 +29,7 @@ public class MagicTemple extends Temple {
 	/**
 	 * @param level
 	 *            Level of this temple.
-	 * @see CrCalculator#leveltoel(int)
+	 * @see ChallengeCalculator#leveltoel(int)
 	 */
 	public MagicTemple(Integer level) {
 		super(Realm.MAGIC, level, new Amulet(), FLUFF);

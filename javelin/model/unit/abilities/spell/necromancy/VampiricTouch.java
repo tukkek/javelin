@@ -1,6 +1,6 @@
 package javelin.model.unit.abilities.spell.necromancy;
 
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.spell.Touch;
@@ -42,7 +42,7 @@ public class VampiricTouch extends Touch {
 
 	/** Constructor. */
 	public VampiricTouch() {
-		super("Vampiric touch", 3, CrCalculator.ratespelllikeability(3),
+		super("Vampiric touch", 3, ChallengeCalculator.ratespelllikeability(3),
 				Realm.EVIL);
 		castinbattle = true;
 		provokeaoo = false;

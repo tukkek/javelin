@@ -6,7 +6,7 @@ import javelin.controller.terrain.Terrain;
 
 public class WitchesHideout extends Haunt {
 	public WitchesHideout() {
-		super("Witches' hideout",
+		super("Witches' hideout", 10, 15,
 				new String[] { "Green hag", "Harpy", "Succubus" });
 	}
 

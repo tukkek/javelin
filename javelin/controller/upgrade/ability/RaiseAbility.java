@@ -37,7 +37,7 @@ public abstract class RaiseAbility extends Upgrade {
 			return false;
 		}
 		score += 2;
-		return score <= 10 + m.source.challengerating
+		return score <= 10 + m.source.cr
 				&& setattribute(m, score + 2);
 	}
 

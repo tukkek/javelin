@@ -15,7 +15,7 @@ import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.action.world.WorldAction;
 import javelin.controller.action.world.WorldMove;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.db.Preferences;
 import javelin.controller.db.StateManager;
 import javelin.controller.exception.RepeatTurn;
@@ -380,7 +380,7 @@ public class WorldScreen extends BattleScreen {
 				vital += " ";
 			}
 			hps.add(vital + " Level "
-					+ Math.round(Math.floor(CrCalculator.calculatecr(c.source)))
+					+ Math.round(Math.floor(ChallengeCalculator.calculatecr(c.source)))
 					+ " " + c.gethumanxp());
 		}
 		return hps;

@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.factor.CrFactor;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.upgrade.skill.SkillUpgrade;
@@ -142,7 +142,7 @@ public class UpgradeHandler {
 		 * TODO could initialize #getall map here instead of #isempty
 		 */
 		if (fire.isEmpty()) {
-			for (final CrFactor factor : CrCalculator.CR_FACTORS) {
+			for (final CrFactor factor : ChallengeCalculator.CR_FACTORS) {
 				factor.registerupgrades(this);
 			}
 		}

@@ -1,6 +1,6 @@
 package javelin.model.unit.abilities.spell.necromancy;
 
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.spell.Spell;
@@ -13,7 +13,7 @@ import javelin.model.unit.condition.Shaken;
 public class Doom extends Spell {
 
 	public Doom() {
-		super("Doom", 1, CrCalculator.ratespelllikeability(1), Realm.EVIL);
+		super("Doom", 1, ChallengeCalculator.ratespelllikeability(1), Realm.EVIL);
 		castinbattle = true;
 		isscroll = true;
 	}

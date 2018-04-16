@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.factor.SkillsFactor;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.upgrade.skill.SkillUpgrade;
@@ -158,7 +158,7 @@ public class SkillSelectionScreen extends SelectScreen {
 	@Override
 	public void onexit() {
 		m.skillpool = 0;
-		CrCalculator.calculatecr(m);
+		ChallengeCalculator.calculatecr(m);
 	}
 
 	/**

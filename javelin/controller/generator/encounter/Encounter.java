@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.unit.attack.Combatant;
 
 /**
@@ -35,10 +35,10 @@ public class Encounter {
 
 	/**
 	 * @return Encounter level for this group.
-	 * @see CrCalculator#calculateel(List)
+	 * @see ChallengeCalculator#calculateel(List)
 	 */
 	public int rate() {
-		return CrCalculator.calculateel(group);
+		return ChallengeCalculator.calculateel(group);
 	}
 
 	@Override

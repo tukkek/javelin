@@ -6,7 +6,7 @@ import javelin.controller.terrain.Terrain;
 
 public class SunkenShip extends Haunt {
 	public SunkenShip() {
-		super("Sunken ship",
+		super("Sunken ship", 5, 10,
 				new String[] { "Aquatic elf", "merfolk", "Locathah", "octopus",
 						"Skum", "Sahuagin", "Malenti", "Sahuagin mutant" });
 	}

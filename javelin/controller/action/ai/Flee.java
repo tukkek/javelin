@@ -9,8 +9,8 @@ import javelin.controller.action.ActionMapping;
 import javelin.controller.action.Withdraw;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.ai.ChanceNode;
-import javelin.controller.challenge.CrCalculator;
-import javelin.controller.challenge.CrCalculator.Difficulty;
+import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.challenge.ChallengeCalculator.Difficulty;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.attack.Combatant;
@@ -55,22 +55,9 @@ public class Flee extends Action implements AiAction {
 		if (s.blueTeam.isEmpty() || s.redTeam.isEmpty()) {
 			return false;
 		}
-		final int eldifference = calculateel(s.redTeam)
-				- calculateel(s.blueTeam);
+		final int eldifference = ChallengeCalculator.calculateel(s.redTeam)
+				- ChallengeCalculator.calculateel(s.blueTeam);
 		return eldifference <= FLEEAT && s.redTeam.contains(s.next);
-	}
-
-	private static int calculateel(ArrayList<Combatant> team) {
-		float totalcr = 0;
-		float highestcr = -Integer.MAX_VALUE;
-		for (Combatant c : team) {
-			Float cr = c.source.challengerating * c.hp / c.maxhp;
-			totalcr += cr;
-			if (cr > highestcr) {
-				highestcr = cr;
-			}
-		}
-		return CrCalculator.calculatel(totalcr, highestcr, team.size());
 	}
 
 	@Override

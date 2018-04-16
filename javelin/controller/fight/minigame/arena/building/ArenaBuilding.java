@@ -97,7 +97,7 @@ public abstract class ArenaBuilding extends Building {
 		maxhp = level.hp;
 		damagethresold = level.damagethresold;
 		source.dr = level.hardness;
-		source.challengerating = (level.level + 1) * 5f;
+		source.cr = (level.level + 1) * 5f;
 	}
 
 	/** TODO use */

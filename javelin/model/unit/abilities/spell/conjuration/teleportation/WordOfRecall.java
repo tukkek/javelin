@@ -2,7 +2,7 @@ package javelin.model.unit.abilities.spell.conjuration.teleportation;
 
 import javelin.Javelin;
 import javelin.controller.action.world.UseItems;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.exception.RepeatTurn;
 import javelin.model.Realm;
 import javelin.model.item.Item;
@@ -28,7 +28,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 public class WordOfRecall extends Spell {
 	/** Constructor. */
 	public WordOfRecall() {
-		super("Word of recall", 6, CrCalculator.ratespelllikeability(6, 20),
+		super("Word of recall", 6, ChallengeCalculator.ratespelllikeability(6, 20),
 				Realm.MAGIC);
 		casterlevel = 20;
 		castoutofbattle = true;

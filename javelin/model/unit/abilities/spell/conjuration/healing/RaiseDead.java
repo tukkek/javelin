@@ -1,6 +1,6 @@
 package javelin.model.unit.abilities.spell.conjuration.healing;
 
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.Realm;
@@ -13,12 +13,12 @@ import javelin.view.screen.InfoScreen;
  */
 public class RaiseDead extends Spell {
 
-	protected static final float RESTORATIONCR = CrCalculator
+	protected static final float RESTORATIONCR = ChallengeCalculator
 			.ratespelllikeability(4);
 
 	/** Constructor. */
 	public RaiseDead() {
-		super("Raise dead", 5, CrCalculator.ratespelllikeability(5)
+		super("Raise dead", 5, ChallengeCalculator.ratespelllikeability(5)
 				+ RESTORATIONCR, Realm.GOOD);
 		components = 5000;
 		isscroll = true;

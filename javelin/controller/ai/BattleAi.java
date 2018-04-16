@@ -60,7 +60,7 @@ public class BattleAi extends AlphaBetaSearch {
 	static private float ratechallenge(final List<Combatant> team) {
 		float challenge = 0f;
 		for (final Combatant c : team) {
-			challenge += c.source.challengerating
+			challenge += c.source.cr
 					* (1 + c.hp / (float) c.maxhp);
 		}
 		return challenge;

@@ -17,7 +17,7 @@ import javelin.controller.action.ActionCost;
 import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.controller.action.ai.attack.RangedAttack;
 import javelin.controller.ai.BattleAi;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
@@ -700,7 +700,7 @@ public class Combatant implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Updates {@link Monster#challengerating} internally.
+	 * Updates {@link Monster#cr} internally.
 	 *
 	 * @param r
 	 *            Applies one {@link Upgrade} from this set to the given
@@ -724,7 +724,7 @@ public class Combatant implements Serializable, Cloneable {
 		}
 		postupgradeautomatic(upgrade instanceof ClassLevelUpgrade
 				? (ClassLevelUpgrade) upgrade : null);
-		CrCalculator.calculatecr(source);
+		ChallengeCalculator.calculatecr(source);
 		return true;
 	}
 
@@ -737,9 +737,9 @@ public class Combatant implements Serializable, Cloneable {
 			Collection<Upgrade> r) {
 		Combatant weakest = null;
 		for (Combatant sensei : garrison) {
-			CrCalculator.calculatecr(sensei.source);
+			ChallengeCalculator.calculatecr(sensei.source);
 			if (weakest == null
-					|| sensei.source.challengerating < weakest.source.challengerating) {
+					|| sensei.source.cr < weakest.source.cr) {
 				weakest = sensei;
 			}
 		}

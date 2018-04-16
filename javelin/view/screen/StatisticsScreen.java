@@ -5,7 +5,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.action.ActionCost;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.fight.Fight;
 import javelin.controller.quality.Quality;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
@@ -63,7 +63,7 @@ public class StatisticsScreen extends InfoScreen {
 					+ "/day)");
 		}
 		lines.add(
-				"Challenge rating " + Math.round(CrCalculator.calculatecr(m)));
+				"Challenge rating " + Math.round(ChallengeCalculator.calculatecr(m)));
 		for (ClassLevelUpgrade classlevels : ClassLevelUpgrade.classes) {
 			int level = classlevels.getlevel(m);
 			if (level > 0) {

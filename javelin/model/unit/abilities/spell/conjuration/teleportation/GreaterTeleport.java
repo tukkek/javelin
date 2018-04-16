@@ -3,7 +3,7 @@ package javelin.model.unit.abilities.spell.conjuration.teleportation;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.comparator.ActorsByName;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
@@ -34,7 +34,7 @@ public class GreaterTeleport extends Spell {
 
 	/** Constructor. */
 	public GreaterTeleport() {
-		super("Greater teleport", 7, CrCalculator.ratespelllikeability(7, 20),
+		super("Greater teleport", 7, ChallengeCalculator.ratespelllikeability(7, 20),
 				Realm.MAGIC);
 		casterlevel = 20;
 		castinbattle = false;

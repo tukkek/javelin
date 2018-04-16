@@ -2,7 +2,7 @@ package javelin.view.screen;
 
 import java.util.List;
 
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
@@ -70,7 +70,7 @@ public class BribingScreen {
 	static String printdiplomacy(List<Combatant> foes, int dailyfee, int bribe,
 			boolean canhire) {
 		String text = "You are able to parley with the "
-				+ CrCalculator.describedifficulty(foes) + " opponents!\n\n";
+				+ ChallengeCalculator.describedifficulty(foes) + " opponents!\n\n";
 		text = Combatant.group(foes);
 		text += "\n\nWhat do you want to do? You have $"
 				+ PurchaseScreen.formatcost(Squad.active.gold) + ".";

@@ -118,7 +118,7 @@ public class RewardCalculator {
 	public static int receivegold(final List<Combatant> team) {
 		int sum = 0;
 		for (final Combatant m : team) {
-			sum += getgold(CrCalculator.calculatecr(m.source));
+			sum += getgold(ChallengeCalculator.calculatecr(m.source));
 		}
 		return sum;
 	}
@@ -158,8 +158,8 @@ public class RewardCalculator {
 	 */
 	public static String rewardxp(List<Combatant> originalblue,
 			List<Combatant> originalred, float bonus) {
-		int elred = CrCalculator.calculateel(originalred);
-		int elblue = CrCalculator.calculateel(originalblue);
+		int elred = ChallengeCalculator.calculateel(originalred);
+		int elblue = ChallengeCalculator.calculateel(originalblue);
 		int eldifference = Math.round(elred - elblue);
 		double partycr = getpartyxp(eldifference, originalblue.size()) * bonus;
 		distributexp(originalblue, partycr);

@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
@@ -77,17 +77,17 @@ public class SummonAlly extends Hax {
 		current.addAll(Squad.active.members);
 		for (Combatant c : current) {
 			/* update challenge rating */
-			CrCalculator.calculatecr(c.source);
+			ChallengeCalculator.calculatecr(c.source);
 		}
 		current.sort(new Comparator<Combatant>() {
 			@Override
 			public int compare(Combatant o1, Combatant o2) {
-				return o1.source.challengerating
-						.compareTo(o2.source.challengerating);
+				return o1.source.cr
+						.compareTo(o2.source.cr);
 			}
 		});
 		return current.get(Math.round(Math.round(
-				Math.floor(current.size() / 2.0)))).source.challengerating;
+				Math.floor(current.size() / 2.0)))).source.cr;
 	}
 
 	Float findnextlowercr(Float cr) {

@@ -8,7 +8,7 @@ import java.util.Set;
 
 import javelin.JavelinApp;
 import javelin.controller.Point;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
@@ -58,7 +58,7 @@ public class Dungeon extends Location {
 			this.name = name;
 			this.minrooms = minrooms;
 			this.maxrooms = maxrooms;
-			el = CrCalculator.leveltoel(level);
+			el = level;
 		}
 	}
 
@@ -98,7 +98,6 @@ public class Dungeon extends Location {
 	public float encounterratio;
 	public int stepsperencounter;
 	public int el = -1;
-	public int level;
 
 	transient boolean generated = false;
 
@@ -112,21 +111,18 @@ public class Dungeon extends Location {
 	}
 
 	protected void determineel() {
-		List<Dungeon> all = getdungeons();
-		if (all.size() >= 20) {
-			level = RPG.r(1, 20);
-			el = CrCalculator.leveltoel(level);
+		List<Dungeon> dungeons = getdungeons();
+		if (dungeons.size() >= 20) {
+			el = RPG.r(1, 20);
 			return;
 		}
 		generating: while (el == -1) {
-			level = RPG.r(1, 20);
-			int el = CrCalculator.leveltoel(level);
-			for (Dungeon d : all) {
-				if (d.level == level) {
+			el = RPG.r(1, 20);
+			for (Dungeon d : dungeons) {
+				if (d.el == el) {
 					continue generating;
 				}
 			}
-			this.el = el;
 		}
 	}
 
@@ -280,9 +276,7 @@ public class Dungeon extends Location {
 	}
 
 	float getcr() {
-		float[] crs = CrCalculator.eltocrs(el);
-		float cr = crs[RPG.r(crs.length)];
-		return cr;
+		return ChallengeCalculator.eltocr(el);
 	}
 
 	/**
@@ -457,8 +451,9 @@ public class Dungeon extends Location {
 
 	@Override
 	public String describe() {
-		int squadel = CrCalculator.calculateel(Squad.active.members);
-		String difficulty = CrCalculator.describedifficulty(el - squadel);
+		int squadel = ChallengeCalculator.calculateel(Squad.active.members);
+		String difficulty = ChallengeCalculator
+				.describedifficulty(el - squadel);
 		return gettier().name + " (" + difficulty + ")";
 	}
 

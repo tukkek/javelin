@@ -1,6 +1,6 @@
 package javelin.view.screen.haxor;
 
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.fortification.Fortification;
@@ -28,7 +28,7 @@ public class BorrowMoney extends Hax {
 	@Override
 	protected boolean hack(Combatant target, HaxorScreen s) {
 		Haxor.singleton.borrowed = Fortification.getspoils(
-				CrCalculator.calculateel(Squad.active.members));
+				ChallengeCalculator.calculateel(Squad.active.members));
 		Squad.active.gold += Haxor.singleton.borrowed;
 		s.print(charge());
 		InfoScreen.feedback();

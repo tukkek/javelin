@@ -27,7 +27,7 @@ public class HauntScreen extends SelectScreen {
 		}
 
 		void addprice() {
-			name += " (" + Math.round(m.challengerating * 100) + "XP)";
+			name += " (" + Math.round(m.cr * 100) + "XP)";
 		}
 	}
 

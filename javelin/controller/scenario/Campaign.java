@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.exception.UnbalancedTeams;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.classes.Commoner;
 import javelin.model.Realm;
@@ -16,7 +17,19 @@ import javelin.model.world.location.Location;
 
 public class Campaign extends Scenario {
 	/** Minimum starting party encounter level. */
-	public static final float INITIALEL = CrCalculator.leveltoel(1);
+	public static final float INITIALEL;
+
+	static {
+		ArrayList<Float> crs = new ArrayList<Float>(4);
+		for (int i = 0; i < 4; i++) {
+			crs.add(1f);
+		}
+		try {
+			INITIALEL = ChallengeCalculator.calculateelfromcrs(crs, false);
+		} catch (UnbalancedTeams e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	public Campaign() {
 		allowallactors = true;
@@ -50,7 +63,7 @@ public class Campaign extends Scenario {
 	@Override
 	public void upgradesquad(ArrayList<Combatant> squad) {
 		float startingcr = totalcr(squad);
-		while (CrCalculator.calculateel(squad) < INITIALEL) {
+		while (ChallengeCalculator.calculateel(squad) < INITIALEL) {
 			ArrayList<Upgrade> u = new ArrayList<Upgrade>();
 			u.add(Commoner.SINGLETON);
 			Combatant.upgradeweakest(squad, u);
@@ -62,14 +75,14 @@ public class Campaign extends Scenario {
 	static float totalcr(ArrayList<Combatant> squad) {
 		int cr = 0;
 		for (Combatant c : squad) {
-			cr += CrCalculator.calculatecr(c.source);
+			cr += ChallengeCalculator.calculatecr(c.source);
 		}
 		return cr;
 	}
 
 	@Override
 	public boolean checkfullsquad(ArrayList<Combatant> squad) {
-		return CrCalculator.calculateel(squad) >= INITIALEL;
+		return ChallengeCalculator.calculateel(squad) >= INITIALEL;
 	}
 
 	@Override

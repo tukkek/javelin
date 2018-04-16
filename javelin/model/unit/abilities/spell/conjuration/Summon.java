@@ -3,7 +3,7 @@ package javelin.model.unit.abilities.spell.conjuration;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
@@ -60,7 +60,7 @@ public class Summon extends Spell {
 	 */
 	public static float ratechallenge(String monster, float chance) {
 		Monster m = Javelin.getmonster(monster);
-		return chance * m.challengerating / 5f;
+		return chance * m.cr / 5f;
 	}
 
 	public static int gemonstertcr(int targetcr, float chance) {
@@ -110,7 +110,7 @@ public class Summon extends Spell {
 		if (m == null) {
 			throw new RuntimeException("Unknown summon: " + monstername);
 		}
-		return CrCalculator.calculatecr(c.source) >= m.challengerating
+		return ChallengeCalculator.calculatecr(c.source) >= m.cr
 				&& super.apply(c);
 	}
 
@@ -122,7 +122,7 @@ public class Summon extends Spell {
 	@Override
 	public void postloadmonsters() {
 		cr = ratechallenge(monstername, chance);
-		level = Math.round(Javelin.getmonster(monstername).challengerating / 2);
+		level = Math.round(Javelin.getmonster(monstername).cr / 2);
 		casterlevel = calculatecasterlevel(level);
 	}
 

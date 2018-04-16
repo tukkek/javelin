@@ -1,6 +1,6 @@
 package javelin.model.unit.abilities.spell.conjuration.healing.wounds;
 
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 
 /**
  * See the d20 SRD for more info.
@@ -12,6 +12,6 @@ public class CureSeriousWounds extends CureModerateWounds {
 	}
 
 	public CureSeriousWounds() {
-		this("Cure serious wounds", CrCalculator.ratespelllikeability(3));
+		this("Cure serious wounds", ChallengeCalculator.ratespelllikeability(3));
 	}
 }

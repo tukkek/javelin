@@ -2,7 +2,7 @@ package javelin.model.world.location.fortification;
 
 import java.util.ArrayList;
 
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.RandomEncounter;
@@ -114,11 +114,9 @@ public abstract class Fortification extends Location {
 			capture();
 			return;
 		}
-		int minel = CrCalculator.leveltoel(minlevel);
-		int maxel = CrCalculator.leveltoel(maxlevel);
 		while (garrison.isEmpty()) {
 			try {
-				int el = RPG.r(minel, maxel);
+				int el = RPG.r(minlevel, maxlevel);
 				ArrayList<Terrain> terrains = new ArrayList<Terrain>(1);
 				terrains.add(terrain == null ? Terrain.get(x, y) : terrain);
 				garrison.addAll(EncounterGenerator.generate(el, terrains));
@@ -132,8 +130,7 @@ public abstract class Fortification extends Location {
 	public void raiselevel(int bonus) {
 		minlevel += bonus;
 		maxlevel += bonus;
-		targetel = RPG.r(CrCalculator.leveltoel(minlevel),
-				CrCalculator.leveltoel(maxlevel));
+		targetel = RPG.r(minlevel, maxlevel);
 	}
 
 	private Actor findclosest(Class<? extends Actor> type) {
@@ -149,7 +146,7 @@ public abstract class Fortification extends Location {
 
 	@Override
 	public Integer getel(int attackerel) {
-		return CrCalculator.calculateel(garrison);
+		return ChallengeCalculator.calculateel(garrison);
 	}
 
 	@Override
@@ -175,7 +172,7 @@ public abstract class Fortification extends Location {
 	 * @return See {@link #getspoils()}.
 	 */
 	static public int getspoils(Integer el) {
-		return RewardCalculator.getgold(CrCalculator.eltocrs(el + 1)[0]);
+		return RewardCalculator.getgold(ChallengeCalculator.eltocr(el + 1));
 	}
 
 	/**

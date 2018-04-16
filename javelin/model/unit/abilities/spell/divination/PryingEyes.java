@@ -1,6 +1,6 @@
 package javelin.model.unit.abilities.spell.divination;
 
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
@@ -16,7 +16,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 public class PryingEyes extends Spell {
 	/** Constructor. */
 	public PryingEyes() {
-		super("Prying eyes", 5, CrCalculator.ratespelllikeability(5),
+		super("Prying eyes", 5, ChallengeCalculator.ratespelllikeability(5),
 				Realm.MAGIC);
 		castoutofbattle = true;
 		isscroll = true;

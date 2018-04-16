@@ -24,7 +24,7 @@ public class Flagpole extends Building {
 		this.rank = rank;
 		maxhp = Math.round(rank * 25);
 		hp = maxhp;
-		source.challengerating = 2 * rank;
+		source.cr = 2 * rank;
 		source.customName = "Flagpole";
 		source.passive = true;
 		setteam(blueteam);

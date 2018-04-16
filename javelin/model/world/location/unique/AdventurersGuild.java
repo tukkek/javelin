@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.kit.Kit;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
@@ -95,7 +95,7 @@ public class AdventurersGuild extends UniqueLocation {
 			if (c.mercenary) {
 				continue;
 			}
-			float cr = CrCalculator.calculatecr(c.source);
+			float cr = ChallengeCalculator.calculatecr(c.source);
 			if (cr < TARGETLEVEL && c.xp.floatValue() >= 0) {
 				students.add(c);
 			}
@@ -156,7 +156,7 @@ public class AdventurersGuild extends UniqueLocation {
 			}
 			Combatant student = students.get(i);
 			String training = student + " learns:\n\n";
-			float cr = CrCalculator.calculatecr(student.source);
+			float cr = ChallengeCalculator.calculatecr(student.source);
 			float original = cr;
 			ClassLevelUpgrade classlevel = null;
 			ArrayList<Upgrade> upgrades = new ArrayList<Upgrade>(kit.upgrades);
@@ -165,7 +165,7 @@ public class AdventurersGuild extends UniqueLocation {
 				if (u.upgrade(student)) {
 					training += u.name + "\n";
 				}
-				cr = CrCalculator.calculatecr(student.source);
+				cr = ChallengeCalculator.calculatecr(student.source);
 				if (u instanceof ClassLevelUpgrade) {
 					classlevel = (ClassLevelUpgrade) u;
 				}

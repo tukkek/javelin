@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.comparator.CombatantByCr;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
@@ -321,10 +321,10 @@ public class Incursion extends Actor {
 
 	/**
 	 * @return Encounter level for {@link #squad}.
-	 * @see CrCalculator#calculateel(List)
+	 * @see ChallengeCalculator#calculateel(List)
 	 */
 	public int getel() {
-		return CrCalculator.calculateel(squad);
+		return ChallengeCalculator.calculateel(squad);
 	}
 
 	/**
@@ -368,8 +368,7 @@ public class Incursion extends Actor {
 		}
 		Combatant leader = null;
 		for (Combatant c : squad) {
-			if (leader == null
-					|| c.source.challengerating > leader.source.challengerating) {
+			if (leader == null || c.source.cr > leader.source.cr) {
 				leader = c;
 			}
 		}
@@ -378,8 +377,9 @@ public class Incursion extends Actor {
 
 	@Override
 	public String describe() {
-		return "Enemy incursion (" + CrCalculator.describedifficulty(squad)
-				+ " fight):\n\n" + Squad.active.spot(squad, this);
+		return "Enemy incursion ("
+				+ ChallengeCalculator.describedifficulty(squad) + " fight):\n\n"
+				+ Squad.active.spot(squad, this);
 	}
 
 	/**
@@ -388,7 +388,7 @@ public class Incursion extends Actor {
 	 */
 	public boolean fight(List<Combatant> defenders) {
 		int me = getel();
-		int them = CrCalculator.calculateel(defenders);
+		int them = ChallengeCalculator.calculateel(defenders);
 		boolean win = fight(me, them);
 		if (win) {
 			damage(squad, VICTORYCHANCES.get(me, them));
@@ -402,7 +402,7 @@ public class Incursion extends Actor {
 	void damage(List<Combatant> survivors, int chance) {
 		int totalcr = 0;
 		for (Combatant c : survivors) {
-			totalcr += c.source.challengerating;
+			totalcr += c.source.cr;
 		}
 		float damage = totalcr * (1 - chance / 10f);
 		LinkedList<Combatant> wounded = new LinkedList<Combatant>(survivors);
@@ -410,7 +410,7 @@ public class Incursion extends Actor {
 		while (damage > 0 && survivors.size() > 1) {
 			Combatant dead = wounded.pop();
 			survivors.remove(dead);
-			damage -= dead.source.challengerating;
+			damage -= dead.source.cr;
 		}
 	}
 
@@ -438,8 +438,7 @@ public class Incursion extends Actor {
 			int day = Math.round(Math.round(WorldScreen.lastday));
 			target = Math.min(20, 20 * day / 400);
 		}
-		if (CrCalculator.calculateel(
-				l.garrison) <= CrCalculator.leveltoel(target) + 2) {
+		if (ChallengeCalculator.calculateel(l.garrison) <= target + 2) {
 			return;
 		}
 		l.garrison.sort(CombatantByCr.SINGLETON);
@@ -449,7 +448,7 @@ public class Incursion extends Actor {
 		Incursion i = Incursion.place(l.realm, l.x, l.y, incursion);
 		if (Javelin.DEBUG && i != null) {
 			System.out.println(l + " spawned an incursion (el "
-					+ CrCalculator.calculateel(i.squad) + ")");
+					+ ChallengeCalculator.calculateel(i.squad) + ")");
 		}
 		if (f != null && f.targetel != null) {
 			f.targetel += 1;

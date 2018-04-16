@@ -257,7 +257,7 @@ public class FeatureGenerator {
 		recruits.sort(new Comparator<Monster>() {
 			@Override
 			public int compare(Monster o1, Monster o2) {
-				float difference = o1.challengerating - o2.challengerating;
+				float difference = o1.cr - o2.cr;
 				if (difference == 0) {
 					return 0;
 				}

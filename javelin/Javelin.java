@@ -21,7 +21,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import javelin.controller.ai.BattleAi;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.controller.db.StateManager;
 import javelin.controller.db.reader.MonsterReader;
@@ -506,7 +506,7 @@ public class Javelin {
 		if (monster == null) {
 			return null;
 		}
-		CrCalculator.calculatecr(monster);
+		ChallengeCalculator.calculatecr(monster);
 		return monster;
 	}
 

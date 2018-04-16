@@ -7,7 +7,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.comparator.ActorByDistance;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.old.Game;
@@ -312,7 +312,7 @@ public abstract class Actor implements Serializable {
 	 *         attacker.
 	 * @see Actor#impermeable
 	 * @see Incursion#fight(int, int)
-	 * @see CrCalculator#calculateel(List)
+	 * @see ChallengeCalculator#calculateel(List)
 	 */
 	public abstract Integer getel(int attackerel);
 }

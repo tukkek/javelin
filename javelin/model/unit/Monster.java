@@ -16,7 +16,7 @@ import javelin.controller.SpellbookGenerator;
 import javelin.controller.Weather;
 import javelin.controller.action.Breath;
 import javelin.controller.ai.BattleAi;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.controller.comparator.FeatByNameComparator;
 import javelin.controller.map.Map;
@@ -194,8 +194,8 @@ public class Monster implements Cloneable, Serializable {
 	public int size = -1;
 	/** Subgroup of {@link #type}, merely descriptive. */
 	public String group;
-	/** Cache for {@link CrCalculator}. */
-	public Float challengerating = null;
+	/** Challenge rating (cache for {@link ChallengeCalculator}). */
+	public Float cr = null;
 	public String type;
 	/** TODO should probably be a Combatant#name */
 	public String customName = null;
@@ -218,7 +218,7 @@ public class Monster implements Cloneable, Serializable {
 	/**
 	 * Used to distribute random spells to a new {@link Combatant}.
 	 *
-	 * TODO {@link CrCalculator} is using this for {@link SpellsFactor} instead
+	 * TODO {@link ChallengeCalculator} is using this for {@link SpellsFactor} instead
 	 * of taking the {@link Combatant} into consideration. Maintain?
 	 *
 	 * @see SpellbookGenerator
@@ -545,8 +545,8 @@ public class Monster implements Cloneable, Serializable {
 
 	/**
 	 * Should give players more points for {@link Skills} but instead just lower
-	 * {@link #challengerating} considering how far behind the unit is form
-	 * where it should be - preventing all sorts of complications.
+	 * {@link #cr} considering how far behind the unit is form where it should
+	 * be - preventing all sorts of complications.
 	 *
 	 * @param newscore
 	 *            Raises {@link #intelligence} by this many ability score points

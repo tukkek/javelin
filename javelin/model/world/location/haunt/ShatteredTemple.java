@@ -5,8 +5,8 @@ import javelin.controller.map.location.haunt.ShatteredTempleMap;
 
 public class ShatteredTemple extends Haunt {
 	public ShatteredTemple() {
-		super("Shaterred temple", new String[] { "Tiefling", "Aasimar", "Satyr",
-				"Satyr with pipes", "azer", "Janni" });
+		super("Shaterred temple", 10, 15, new String[] { "Tiefling", "Aasimar",
+				"Satyr", "Satyr with pipes", "azer", "Janni" });
 	}
 
 	@Override

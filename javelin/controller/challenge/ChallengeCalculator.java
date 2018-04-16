@@ -1,6 +1,7 @@
 package javelin.controller.challenge;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -27,8 +28,8 @@ import javelin.model.unit.attack.Combatant;
 import tyrant.mikera.engine.RPG;
 
 /**
- * Determines a {@link Monster#challengerating} according to the rules of Upper
- * Krust's work, which is repackaged with permission on the 'doc' directory.
+ * Determines a {@link Monster#cr} according to the rules of Upper Krust's work,
+ * which is repackaged with permission on the 'doc' directory.
  * 
  * His reference is used to the best of my abilities but has been adapted in a
  * few cases due to programming complexity and artificial intelligence
@@ -36,7 +37,7 @@ import tyrant.mikera.engine.RPG;
  * 
  * #see CrFactor
  */
-public class CrCalculator {
+public class ChallengeCalculator {
 	/**
 	 * Describes an Encounter Level difference. For example: an encounter is
 	 * irrelevant if it's of {@value #IRRELEVANT} of lower.
@@ -52,7 +53,6 @@ public class CrCalculator {
 
 	static final float PCEQUIPMENTCRPERLEVEL = .2f;
 
-	static final int MAXIMUM_EL = 50;
 	static final int MINIMUM_EL = -7;
 	/**
 	 * This isn't part of the CCR document but it's obvious that the system was
@@ -80,9 +80,28 @@ public class CrCalculator {
 	static final int[] GOLDPERLEVEL = new int[] { 0, 900, 2700, 5400, 9000,
 			13000, 19000, 27000, 36000, 49000, 66000, 88000, 110000, 150000,
 			200000, 260000, 340000, 440000, 580000, 760000, };
+	static final HashMap<Integer, List<Float>> CRSBYEL = new HashMap<Integer, List<Float>>();
 
 	static {
 		log("Some monsters may have their CRs calculated in more tha one pass (necessary for summons spells, etc)\n");
+		ArrayList<Float> crs = new ArrayList<Float>(8 + 30);
+		for (float fraction : new float[] { 1 / 16f, 1 / 12f, 1 / 8f, 1 / 6f,
+				1 / 4f, 1 / 3f, 1 / 2f, 2 / 3f }) {
+			crs.add(fraction);
+		}
+		for (int cr = 1; cr <= 30; cr++) {
+			crs.add(new Float(cr));
+		}
+		for (float cr : crs) {
+			int el = crtoel(cr);
+			List<Float> list = CRSBYEL.get(el);
+			if (list == null) {
+				list = new ArrayList<Float>(1);
+				CRSBYEL.put(el, list);
+			}
+			list.add(cr);
+		}
+
 	}
 
 	/**
@@ -93,7 +112,7 @@ public class CrCalculator {
 	 * This is intended more for human-readable CR, if you need to make
 	 * calculation you might prefer {@link #calculaterawcr(Monster)}.
 	 * 
-	 * Will also update {@link Monster#challengerating}.
+	 * Will also update {@link Monster#cr}.
 	 * 
 	 * @param m
 	 *            Unit to rate.
@@ -101,14 +120,14 @@ public class CrCalculator {
 	 */
 	static public float calculatecr(final Monster m) {
 		if (m.passive) {
-			return m.challengerating;
+			return m.cr;
 		}
 		float[] r = calculaterawcr(m);
 		float goldenrule = r[1];
 		float base = goldenrule >= 4 ? Math.round(goldenrule)
 				: roundfraction(goldenrule);
 		float cr = translatecr(base);
-		m.challengerating = cr;
+		m.cr = cr;
 		log(" total: " + r[0] + " golden rule: " + goldenrule + " final: " + cr
 				+ "\n");
 		return cr;
@@ -126,7 +145,7 @@ public class CrCalculator {
 	 */
 	public static float[] calculaterawcr(final Monster m) {
 		if (m.passive) {
-			return new float[] { m.challengerating, m.challengerating };
+			return new float[] { m.cr, m.cr };
 		}
 		log(m.toString());
 		final TreeMap<CrFactor, Float> factorHistory = new TreeMap<CrFactor, Float>();
@@ -228,371 +247,93 @@ public class CrCalculator {
 		}
 	}
 
-	static int calculateel(final List<Combatant> group, final boolean check)
+	static int calculateel(List<Combatant> group, boolean check)
 			throws UnbalancedTeams {
-		float highestCr = Float.MIN_VALUE;
-		float sum = 0;
-		for (final Combatant mgc : group) {
-			Monster mg = mgc.source;
-			sum += mg.challengerating;
-			if (mg.challengerating > highestCr) {
-				highestCr = mg.challengerating;
+		ArrayList<Float> crs = new ArrayList<Float>(group.size());
+		for (Combatant c : group) {
+			crs.add(c.source.cr);
+		}
+		return calculateelfromcrs(crs, check);
+	}
+
+	public static int calculateelfromcrs(List<Float> crs, boolean check)
+			throws UnbalancedTeams {
+		double highestcr = Float.MIN_VALUE;
+		double sum = 0;
+		for (final float cr : crs) {
+			if (cr > highestcr) {
+				highestcr = cr;
 			}
+			sum += cr >= 2 ? Math.pow(2, cr / 2.0) : cr;
 		}
 		if (check) {
-			for (final Combatant mgc : group) {
-				Monster mg = mgc.source;
-				if (highestCr - mg.challengerating > 18) {
+			for (final float cr : crs) {
+				if (Math.abs(highestcr - cr) > 18) {
 					throw new UnbalancedTeams();
 				}
 			}
 		}
-		return calculatel(sum, highestCr, group.size());
+		if (sum >= 2) {
+			sum = 2 * Math.log(sum) / Math.log(2);
+		}
+		return translateelfraction(sum);
 	}
 
-	public static int calculatel(float totalcr, float highestcr, int size) {
-		final int groupCr = crtoel(totalcr)
-				+ multipleOpponentsElModifier(size) / GROUPFACTOR;
-		final int highestCrEl = crtoel(highestcr);
-		return Math.max(highestCrEl, groupCr);
-	}
-
-	public static int multipleOpponentsElModifier(final int teamSize) {
-		if (teamSize <= 1) {
-			return 0;
+	public static int translateelfraction(double el) {
+		if (el <= 1 / 16f) {
+			return MINIMUM_EL;
 		}
-		if (teamSize <= 2) {
-			return -2;
-		}
-		if (teamSize <= 3) {
-			return -3;
-		}
-		if (teamSize <= 5) {
-			return -4;
-		}
-		if (teamSize <= 7) {
-			return -5;
-		}
-		if (teamSize <= 11) {
+		if (el <= 1 / 12f) {
 			return -6;
 		}
-		if (teamSize <= 15) {
-			return -7;
+		if (el <= 1 / 8f) {
+			return -5;
 		}
-		if (teamSize <= 23) {
-			return -8;
+		if (el <= 1 / 6f) {
+			return -4;
 		}
-		if (teamSize <= 31) {
-			return -9;
+		if (el <= 1 / 4f) {
+			return -3;
 		}
-		if (teamSize <= 47) {
-			return -10;
+		if (el <= 1 / 3f) {
+			return -2;
 		}
-		if (teamSize <= 63) {
-			return -11;
+		if (el <= 1 / 2f) {
+			return -1;
 		}
-		if (teamSize <= 95) {
-			return -12;
+		if (el <= 2 / 3f) {
+			return 0;
 		}
-		if (teamSize <= 127) {
-			return -13;
-		}
-		if (teamSize <= 191) {
-			return -14;
-		}
-		if (teamSize <= 255) {
-			return -15;
-		}
-		if (teamSize <= 383) {
-			return -16;
-		}
-		if (teamSize <= 511) {
-			return -17;
-		}
-		throw new RuntimeException(
-				"Expand multiple opponents EL table: " + teamSize);
+		return Math.round(Math.round(el));
 	}
 
 	public static int crtoel(final float cr) {
-		if (cr <= 1 / 16f) {
-			return MINIMUM_EL;
+		ArrayList<Float> crs = new ArrayList<Float>(1);
+		crs.add(cr);
+		try {
+			return calculateelfromcrs(crs, false);
+		} catch (UnbalancedTeams e) {
+			throw new RuntimeException("Shouldn't happen #crtoel", e);
 		}
-		if (cr <= 1 / 12f) {
-			return -6;
-		}
-		if (cr <= 1 / 8f) {
-			return -5;
-		}
-		if (cr <= 1 / 6f) {
-			return -4;
-		}
-		if (cr <= 1 / 4f) {
-			return -3;
-		}
-		if (cr <= 1 / 3f) {
-			return -2;
-		}
-		if (cr <= 1 / 2f) {
-			return -1;
-		}
-		if (cr <= 2 / 3f) {
-			return 0;
-		}
-		if (cr <= 1) {
-			return 1;
-		}
-		if (cr <= 1.25) {
-			return 2;
-		}
-		if (cr <= 1.5) {
-			return 3;
-		}
-		if (cr <= 1.75) {
-			return 4;
-		}
-		if (cr <= 2) {
-			return 5;
-		}
-		if (cr <= 2.5) {
-			return 6;
-		}
-		if (cr <= 3) {
-			return 7;
-		}
-		if (cr <= 3.5) {
-			return 8;
-		}
-		if (cr <= 4) {
-			return 9;
-		}
-		if (cr <= 5) {
-			return 10;
-		}
-		if (cr <= 6) {
-			return 11;
-		}
-		if (cr <= 7) {
-			return 12;
-		}
-		if (cr <= 9) {
-			return 13;
-		}
-		if (cr <= 11) {
-			return 14;
-		}
-		if (cr <= 13) {
-			return 15;
-		}
-		if (cr <= 15) {
-			return 16;
-		}
-		if (cr <= 19) {
-			return 17;
-		}
-		if (cr <= 23) {
-			return 18;
-		}
-		if (cr <= 27) {
-			return 19;
-		}
-		if (cr <= 31) {
-			return 20;
-		}
-		if (cr <= 39) {
-			return 21;
-		}
-		if (cr <= 47) {
-			return 22;
-		}
-		if (cr <= 55) {
-			return 23;
-		}
-		if (cr <= 63) {
-			return 24;
-		}
-		if (cr <= 79) {
-			return 25;
-		}
-		if (cr <= 95) {
-			return 26;
-		}
-		if (cr <= 111) {
-			return 27;
-		}
-		if (cr <= 127) {
-			return 28;
-		}
-		if (cr <= 159) {
-			return 29;
-		}
-		if (cr <= 191) {
-			return 30;
-		}
-		if (cr <= 223) {
-			return 31;
-		}
-		if (cr <= 255) {
-			return 32;
-		}
-		if (cr <= 319) {
-			return 33;
-		}
-		if (cr <= 383) {
-			return 34;
-		}
-		if (cr <= 447) {
-			return 35;
-		}
-		if (cr <= 511) {
-			return 36;
-		}
-		if (cr <= 639) {
-			return 37;
-		}
-		if (cr <= 767) {
-			return 38;
-		}
-		if (cr <= 895) {
-			return 39;
-		}
-		if (cr <= 1023) {
-			return 40;
-		}
-		if (cr <= 1279) {
-			return 41;
-		}
-		if (cr <= 1535) {
-			return 42;
-		}
-		if (cr <= 1791) {
-			return 43;
-		}
-		if (cr <= 2047) {
-			return 44;
-		}
-		if (cr <= 2559) {
-			return 45;
-		}
-		if (cr <= 3071) {
-			return 46;
-		}
-		if (cr <= 3583) {
-			return 47;
-		}
-		if (cr <= 4095) {
-			return 48;
-		}
-		if (cr <= 5119) {
-			return 49;
-		}
-		if (cr <= 6143) {
-			return MAXIMUM_EL;
-		}
-		throw new RuntimeException("Expand EL conversion: " + cr);
 	}
 
 	public static float calculatepositiveel(final List<Combatant> group) {
 		return calculateel(group) + Math.abs(MINIMUM_EL) + 1;
 	}
 
-	public static float[] eltocrs(int teamel) {
-		switch (teamel) {
-		case -9:
-			return new float[] { 1 / 32f };
-		case -8:
-			return new float[] { 1 / 24f };
-		case -7:
-			return new float[] { 1 / 16f };
-		case -6:
-			return new float[] { 1 / 12f };
-		case -5:
-			return new float[] { 1 / 8f };
-		case -4:
-			return new float[] { 1 / 6f };
-		case -3:
-			return new float[] { 1 / 4f };
-		case -2:
-			return new float[] { 1 / 3f };
-		case -1:
-			return new float[] { 1 / 2f };
-		case 0:
-			return new float[] { 2 / 3f };
-		case 1:
-			return new float[] { 1 };
-		case 2:
-			return new float[] { 1.25f };
-		case 3:
-			return new float[] { 1.5f };
-		case 4:
-			return new float[] { 1.75f };
-		case 5:
-			return new float[] { 2 };
-		case 6:
-			return new float[] { 2.5f };
-		case 7:
-			return new float[] { 3 };
-		case 8:
-			return new float[] { 3.5f };
-		case 9:
-			return new float[] { 4 };
-		case 10:
-			return new float[] { 5 };
-		case 11:
-			return new float[] { 6 };
-		case 12:
-			return new float[] { 7 };
-		case 13:
-			return new float[] { 8, 9 };
-		case 14:
-			return new float[] { 10, 11 };
-		case 15:
-			return new float[] { 12, 13 };
-		case 16:
-			return new float[] { 14, 15 };
-		case 17:
-			return range(16, 19);
-		case 18:
-			return range(20, 23);
-		case 19:
-			return range(24, 27);
-		case 20:
-			return range(28, 31);
-		case 21:
-			return range(32, 39);
-		case 22:
-			return range(40, 47);
-		case 23:
-			return range(48, 55);
-		case 24:
-			return range(56, 63);
-		case 25:
-			return range(64, 79);
-		case 26:
-			return range(80, 95);
-		case 27:
-			return range(96, 111);
-		case 28:
-			return range(112, 127);
-		case 29:
-			return range(128, 159);
-		case 30:
-			return range(160, 191);
-		default:
-			if (Javelin.DEBUG) {
-				throw new RuntimeException("Unknown EL " + teamel);
-			}
-			return eltocrs(30);
+	public static List<Float> eltocrs(int el) {
+		List<Float> crs = CRSBYEL.get(el);
+		if (crs != null) {
+			return crs;
 		}
+		if (Javelin.DEBUG) {
+			throw new RuntimeException("Unknown EL " + el);
+		}
+		return eltocrs(30);
 	}
 
-	private static float[] range(int from, int to) {
-		float[] range = new float[to - from + 1];
-		int i = 0;
-		for (; from <= to; from++) {
-			range[i] = from;
-			i += 1;
-		}
-		return range;
+	public static Float eltocr(int el) {
+		return RPG.pick(eltocrs(el));
 	}
 
 	public static String describedifficulty(int delta) {
@@ -670,7 +411,7 @@ public class CrCalculator {
 	 */
 	public static String describedifficulty(List<Combatant> opponents) {
 		return describedifficulty(calculateel(opponents)
-				- CrCalculator.calculateel(Squad.active.members));
+				- ChallengeCalculator.calculateel(Squad.active.members));
 	}
 
 	/** To use with the Buy the Numbers system, */
@@ -767,13 +508,6 @@ public class CrCalculator {
 	}
 
 	/**
-	 * @return the given level (typically from 1 to 20) to an encounter level.
-	 */
-	public static int leveltoel(int level) {
-		return crtoel(level * 4) - 4 / GROUPFACTOR;
-	}
-
-	/**
 	 * I'm not sure if it's a typo or on purpose but .001 seems to be too low a
 	 * factor, I'm using .01
 	 */
@@ -786,13 +520,13 @@ public class CrCalculator {
 	 *         minimum possible caster level.
 	 */
 	public static float ratespelllikeability(int spelllevel) {
-		return CrCalculator.ratespelllikeability(spelllevel,
+		return ChallengeCalculator.ratespelllikeability(spelllevel,
 				Spell.calculatecasterlevel(spelllevel));
 	}
 
 	/**
-	 * Same as {@link CrCalculator#ratespelllikeability(int)} but to be used in
-	 * case a touch spell is being used as a ray spell instead.
+	 * Same as {@link ChallengeCalculator#ratespelllikeability(int)} but to be
+	 * used in case a touch spell is being used as a ray spell instead.
 	 */
 	public static float ratetouchspellconvertedtoray(int spelllevel) {
 		return .4f * spelllevel;
@@ -800,17 +534,11 @@ public class CrCalculator {
 
 	/**
 	 * @param update
-	 *            Updates {@link Monster#challengerating} for each unit in this
-	 *            list.
+	 *            Updates {@link Monster#cr} for each unit in this list.
 	 */
 	public static void updatecr(ArrayList<Combatant> update) {
 		for (Combatant c : update) {
 			calculatecr(c.source);
 		}
-	}
-
-	public static float eltocr(int el) {
-		float[] crs = eltocrs(el);
-		return crs[RPG.r(0, crs.length - 1)];
 	}
 }

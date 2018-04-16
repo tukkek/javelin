@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.CrCalculator;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.arena.ArenaFight;
@@ -98,8 +97,6 @@ public class ArenaLair extends ArenaBuilding {
 	void stock() {
 		int levelmin = level * 5 + 1;
 		int levelmax = levelmin + 4;
-		levelmin = CrCalculator.leveltoel(levelmin);
-		levelmax = CrCalculator.leveltoel(levelmax);
 		while (hires.size() < OPTIONS) {
 			try {
 				hires.add(EncounterGenerator.generate(RPG.r(levelmin, levelmax),

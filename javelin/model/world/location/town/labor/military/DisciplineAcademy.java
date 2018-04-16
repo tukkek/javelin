@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javelin.controller.Calendar;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.abilities.discipline.Discipline;
@@ -85,9 +85,9 @@ public class DisciplineAcademy extends Academy {
 		protected boolean upgrade(UpgradeOption o, Combatant c) {
 			MartialTraining mt = getmartialtrainingfeat(o);
 			if (mt != null) {
-				float cr = CrCalculator.calculaterawcr(c.source)[1];
+				float cr = ChallengeCalculator.calculaterawcr(c.source)[1];
 				train(c, c.xp.floatValue(), cr, d.getupgrades());
-				return CrCalculator.calculaterawcr(c.source)[1] > cr;
+				return ChallengeCalculator.calculaterawcr(c.source)[1] > cr;
 			}
 			return super.upgrade(o, c);
 		}
@@ -148,7 +148,7 @@ public class DisciplineAcademy extends Academy {
 		}
 		c = new Combatant(RPG.pick(TrainingHall.CANDIDATES), true);
 		c.setmercenary(true);
-		train(c, level, CrCalculator.calculaterawcr(c.source)[1],
+		train(c, level, ChallengeCalculator.calculaterawcr(c.source)[1],
 				d.getupgrades());
 		c.postupgradeautomatic(d.classupgrade);
 		name(c);
@@ -176,7 +176,7 @@ public class DisciplineAcademy extends Academy {
 	 *            ... and this amount of raw CR (with golden rule applied)...
 	 * @param upgrades
 	 *            in these Upgrades...
-	 * @see CrCalculator#calculaterawcr(javelin.model.unit.Monster)
+	 * @see ChallengeCalculator#calculaterawcr(javelin.model.unit.Monster)
 	 */
 	public static void train(Combatant c, float xp, float cr,
 			Upgrade[] upgrades) {
@@ -185,7 +185,7 @@ public class DisciplineAcademy extends Academy {
 			if (!u.upgrade(c2)) {
 				continue;
 			}
-			final float newcr = CrCalculator.calculaterawcr(c2.source)[1];
+			final float newcr = ChallengeCalculator.calculaterawcr(c2.source)[1];
 			if (newcr - cr > xp) {
 				continue;
 			}

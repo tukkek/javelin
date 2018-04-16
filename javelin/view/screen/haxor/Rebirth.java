@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
@@ -29,14 +29,14 @@ public class Rebirth extends Hax {
 		for (Artifact a : equipment) {
 			target.unequip(a);
 		}
-		CrCalculator.calculatecr(target.source);
-		Float originalcr = target.source.challengerating;
+		ChallengeCalculator.calculatecr(target.source);
+		Float originalcr = target.source.cr;
 		target.spells.clear();
 		String customname = target.source.customName;
 		target.source = Javelin.getmonster(target.source.name);
 		target.source.customName = customname;
-		CrCalculator.calculatecr(target.source);
-		target.learn(originalcr - target.source.challengerating);
+		ChallengeCalculator.calculatecr(target.source);
+		target.learn(originalcr - target.source.cr);
 		if (target.xp.intValue() < 0) {
 			target.xp = new BigDecimal(0);
 		}

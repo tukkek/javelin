@@ -2,7 +2,7 @@ package javelin.controller.comparator;
 
 import java.util.Comparator;
 
-import javelin.controller.challenge.CrCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.unit.attack.Combatant;
 
 /**
@@ -24,6 +24,6 @@ public class DescendingLevelComparator implements Comparator<Combatant> {
 
 	int sumcrandxp(Combatant arg0) {
 		return -Math.round(100 * (arg0.xp.floatValue()
-				+ CrCalculator.calculatecr(arg0.source)));
+				+ ChallengeCalculator.calculatecr(arg0.source)));
 	}
 }

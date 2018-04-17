@@ -5,6 +5,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.fight.Siege;
 import javelin.controller.terrain.Terrain;
+import javelin.model.item.Ruby;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.Location;
 import tyrant.mikera.engine.RPG;
@@ -69,9 +70,9 @@ public class DeepDungeon extends UniqueLocation {
 	public void capture() {
 		clear();
 		if (RPG.chancein(5)) {
-			final String prompt = "You find a ruby after vanquishing this layer of the Deep Dungeon!";
-			Haxor.singleton.rubies += 1;
-			Javelin.message(prompt, true);
+			String text = "You find a ruby after vanquishing this layer of the Deep Dungeon!";
+			Javelin.message(text, true);
+			new Ruby().grab();
 		}
 	}
 }

@@ -3,12 +3,12 @@ package javelin.view.screen;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.model.item.Ruby;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.haunt.Haunt;
 import javelin.model.world.location.town.labor.basic.Dwelling;
-import javelin.model.world.location.unique.Haxor;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.SelectScreen;
@@ -84,8 +84,8 @@ public class HauntScreen extends SelectScreen {
 	@Override
 	public boolean select(Option o) {
 		if (o == PILLAGE) {
-			Haxor.singleton.rubies += 1;
 			haunt.remove();
+			new Ruby().grab();
 			stayopen = false;
 			return true;
 		}

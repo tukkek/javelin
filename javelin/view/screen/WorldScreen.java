@@ -425,7 +425,7 @@ public class WorldScreen extends BattleScreen {
 	 *         <code>false</code> if something happened.
 	 */
 	public boolean explore(float hoursellapsed, boolean encounter) {
-		if (!World.scenario.worldexploration) {
+		if (!World.scenario.exploration) {
 			return true;
 		}
 		if (encounter && //
@@ -521,7 +521,7 @@ public class WorldScreen extends BattleScreen {
 	 * @return A random encounter fight.
 	 */
 	public Fight encounter() {
-		return World.scenario.worldexploration ? new RandomEncounter() : null;
+		return World.scenario.exploration ? new RandomEncounter() : null;
 	}
 
 	@Override

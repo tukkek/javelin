@@ -42,7 +42,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.labor.military.Academy;
 import javelin.view.Images;
-import javelin.view.ModeSelectionDialog;
+import javelin.view.ScenarioSelectionDialog;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.NamingScreen;
@@ -127,7 +127,7 @@ public class Javelin {
 	 */
 	public static void main(final String[] args) {
 		Thread.currentThread().setName("Javelin");
-		ModeSelectionDialog.choose(args);
+		ScenarioSelectionDialog.choose(args);
 		app = new JavelinApp();
 		final JFrame f = new JFrame(TITLE);
 		f.setBackground(java.awt.Color.black);

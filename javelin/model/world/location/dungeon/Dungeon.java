@@ -48,28 +48,8 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Dungeon extends Location {
-	static protected class DungeonTier {
-		int el;
-		String name;
-		int minrooms;
-		int maxrooms;
-
-		public DungeonTier(String name, int level, int minrooms, int maxrooms) {
-			this.name = name;
-			this.minrooms = minrooms;
-			this.maxrooms = maxrooms;
-			el = level;
-		}
-	}
-
 	static final int MAXTRIES = 1000;
 	static final int[] DELTAS = { -1, 0, 1 };
-	static final DungeonTier[] TIERS = new DungeonTier[] {
-			new DungeonTier("Cave", 5, 5, 7),
-			new DungeonTier("Dungeon", 10, 5, 10),
-			new DungeonTier("Ruins", 15, 10, 15),
-			new DungeonTier("Keep", 20, 10, 20), };
-
 	/** Current {@link Dungeon} or <code>null</code> if not in one. */
 	public static Dungeon active = null;
 
@@ -97,33 +77,35 @@ public class Dungeon extends Location {
 	public int size;
 	public float encounterratio;
 	public int stepsperencounter;
-	public int el = -1;
+	public int level = -1;
 
 	transient boolean generated = false;
 
 	/** Constructor. */
-	public Dungeon() {
+	public Dungeon(Integer level) {
 		super("A dungeon");
 		link = false;
 		discard = false;
 		impermeable = true;
-		determineel();
+		this.level = level == null ? determineel() : level;
 	}
 
-	protected void determineel() {
+	public Dungeon() {
+		this(null);
+	}
+
+	protected int determineel() {
 		List<Dungeon> dungeons = getdungeons();
-		if (dungeons.size() >= 20) {
-			el = RPG.r(1, 20);
-			return;
+		HashSet<Integer> els = new HashSet<Integer>(dungeons.size());
+		for (Dungeon d : dungeons) {
+			els.add(d.level);
 		}
-		generating: while (el == -1) {
-			el = RPG.r(1, 20);
-			for (Dungeon d : dungeons) {
-				if (d.el == el) {
-					continue generating;
-				}
+		for (int i = 1; i <= 20; i++) {
+			if (!els.contains(i)) {
+				return i;
 			}
 		}
+		return RPG.r(1, 20);
 	}
 
 	@Override
@@ -253,21 +235,18 @@ public class Dungeon extends Location {
 		int traps = chests + RPG.randomize(tier.minrooms);
 		for (int i = 0; i < traps; i++) {
 			int cr = Math.round(getcr()) + EncounterGenerator.getdifficulty();
-			Trap t = new Trap(cr, findspot());
-			features.add(t);
-			pool += RewardCalculator.getgold(t.cr);
+			if (cr >= -2) {
+				Trap t = new Trap(cr, findspot());
+				features.add(t);
+				pool += RewardCalculator.getgold(t.cr);
+			}
 		}
 		for (int i = chests; i > 0; i--) {
 			int gold = i == 1 ? pool : pool / RPG.r(2, i);
 			pool -= gold;
 			Point p = findspot();
-			Feature c;
-			if (i == chests && World.scenario.allowkeys) {
-				c = createspecialchest(p);
-			} else {
-				c = Chest.create(gold, p.x, p.y);
-			}
-			features.add(c);
+			features.add(i == chests ? createspecialfeature(p)
+					: Chest.create(gold, p.x, p.y));
 		}
 	}
 
@@ -276,18 +255,25 @@ public class Dungeon extends Location {
 	}
 
 	float getcr() {
-		return ChallengeCalculator.eltocr(el);
+		return ChallengeCalculator.eltocr(level);
 	}
 
 	/**
+	 * TODO at some point rubies shouldn't depend on Haxor anymore
+	 * 
 	 * @param p
 	 *            Chest's location.
 	 * @return Most special chest here.
 	 */
-	protected Feature createspecialchest(Point p) {
+	protected Feature createspecialfeature(Point p) {
 		Chest t = new Chest(p.x, p.y, 0, new ItemSelection());
-		t.key = Key.generate();
+		if (World.scenario.allowkeys) {
+			t.key = Key.generate();
+		} else {
+			t.ruby = true;
+		}
 		return t;
+
 	}
 
 	/**
@@ -324,6 +310,18 @@ public class Dungeon extends Location {
 		BattleScreen.active = JavelinApp.context;
 		Squad.active.place();
 		Dungeon.active = null;
+		if (World.scenario.expiredungeons && expire()) {
+			remove();
+		}
+	}
+
+	protected boolean expire() {
+		for (Feature f : features) {
+			if (f instanceof Chest) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	void regenerate(boolean loading) {
@@ -440,20 +438,20 @@ public class Dungeon extends Location {
 		return dungeons;
 	}
 
-	protected DungeonTier gettier() {
-		for (DungeonTier t : TIERS) {
-			if (el <= t.el) {
+	public DungeonTier gettier() {
+		for (DungeonTier t : DungeonTier.TIERS) {
+			if (level <= t.level) {
 				return t;
 			}
 		}
-		return TIERS[3];
+		return DungeonTier.TIERS[3];
 	}
 
 	@Override
 	public String describe() {
 		int squadel = ChallengeCalculator.calculateel(Squad.active.members);
 		String difficulty = ChallengeCalculator
-				.describedifficulty(el - squadel);
+				.describedifficulty(level - squadel);
 		return gettier().name + " (" + difficulty + ")";
 	}
 

@@ -11,6 +11,7 @@ import javelin.controller.fight.Siege;
 import javelin.controller.terrain.Mountains;
 import javelin.controller.terrain.Terrain;
 import javelin.model.EquipmentMap;
+import javelin.model.item.Ruby;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Actor;
@@ -24,7 +25,6 @@ import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.unique.AdventurersGuild;
-import javelin.model.world.location.unique.Haxor;
 import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
@@ -278,7 +278,9 @@ public class Mine extends Fortification {
 		}
 		if (rubies > 0) {
 			collected += "You collect " + rubies + " rubies from the mine!\n";
-			Haxor.singleton.rubies += rubies;
+			for (int i = 0; i < rubies; i++) {
+				new Ruby().grab();
+			}
 			rubies = 0;
 		}
 		if (!collected.isEmpty()) {

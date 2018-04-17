@@ -2,7 +2,9 @@ package javelin.model.world.location.unique;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 import javelin.Javelin;
 import javelin.controller.Point;
@@ -22,7 +24,6 @@ import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.haxor.HaxorScreen;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -60,8 +61,8 @@ public class PillarOfSkulls extends UniqueLocation {
 
 		@Override
 		public String printinfo() {
-			return "One of the skulls "
-					+ HaxorScreen.getdailyquote(Arrays.asList(QUOTES)) + " ";
+			return "One of the skulls " + getdailyquote(Arrays.asList(QUOTES))
+					+ " ";
 		}
 
 		@Override
@@ -274,5 +275,18 @@ public class PillarOfSkulls extends UniqueLocation {
 	@Override
 	public List<Combatant> getcombatants() {
 		return null;
+	}
+
+	/**
+	 * @return A random element from the list, guaranteed to be the same for a
+	 *         24 hour period.
+	 */
+	public static String getdailyquote(List<String> list) {
+		Calendar now = Calendar.getInstance();
+		String seed = "";
+		seed += now.get(Calendar.DAY_OF_MONTH);
+		seed += now.get(Calendar.MONTH) + 1;
+		seed += now.get(Calendar.YEAR);
+		return list.get(new Random(seed.hashCode()).nextInt(list.size() - 1));
 	}
 }

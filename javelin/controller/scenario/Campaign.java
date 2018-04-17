@@ -37,10 +37,8 @@ public class Campaign extends Scenario {
 		allowlabor = true;
 		asksquadnames = true;
 		desertradius = 2;
-		saveprefix = "campaign";
 		fogofwar = true;
-		haxor = true;
-		helpfile = "How to play";
+		helpfile = "Campaign";
 		easystartingtown = true;
 		minigames = true;
 		normalizemap = false;
@@ -51,13 +49,14 @@ public class Campaign extends Scenario {
 		startingpopulation = 1;
 		statictowns = false;
 		towns = Realm.values().length;
-		worldexploration = true;
+		exploration = true;
 		dominationwin = false;
 		startingfeatures = size * size / 5;
 		simpletroves = false;
 		rewardbonus = 1;
 		randomrealms = false;
 		worlddistrict = false;
+		spawn = true;
 	}
 
 	@Override

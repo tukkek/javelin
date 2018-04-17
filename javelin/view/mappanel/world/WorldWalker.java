@@ -60,7 +60,7 @@ public class WorldWalker extends BattleWalker {
 
 	@Override
 	public String drawtext(float apcost) {
-		if (!World.scenario.worldexploration) {
+		if (!World.scenario.exploration) {
 			return "";
 		}
 		return apcost > 1 ? "100%" : Math.round(apcost * 100) + "%";

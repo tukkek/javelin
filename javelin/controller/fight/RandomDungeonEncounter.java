@@ -28,7 +28,7 @@ public class RandomDungeonEncounter extends RandomEncounter {
 
 	@Override
 	public Integer getel(int teamel) {
-		return dungeon.el + EncounterGenerator.getdifficulty();
+		return dungeon.level + EncounterGenerator.getdifficulty();
 	}
 
 	@Override

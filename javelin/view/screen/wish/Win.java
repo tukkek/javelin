@@ -1,4 +1,4 @@
-package javelin.view.screen.haxor;
+package javelin.view.screen.wish;
 
 import java.util.ArrayList;
 
@@ -14,7 +14,6 @@ import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.unique.Haxor;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -24,7 +23,7 @@ import javelin.view.screen.WorldScreen;
  * 
  * @author alex
  */
-public class Win extends Hax {
+public class Win extends Wish {
 	/**
 	 * A curiosity: I had no intention of having seven different types of
 	 * {@link Keys} in the game - they were a late 1.1 idea to give more of a
@@ -54,12 +53,12 @@ public class Win extends Hax {
 
 	/** Constructor. */
 	public Win(String name, Character keyp, double price,
-			boolean requirestargetp) {
-		super(name, keyp, price, requirestargetp);
+			boolean requirestargetp, WishScreen s) {
+		super(name, keyp, price, requirestargetp, s);
 	}
 
 	@Override
-	protected boolean hack(Combatant target, HaxorScreen s) {
+	protected boolean hack(Combatant target) {
 		for (Combatant c : Squad.active.members) {
 			ArrayList<Item> bag = Squad.active.equipment.get(c.id);
 			for (Item i : new ArrayList<Item>(bag)) {
@@ -78,25 +77,26 @@ public class Win extends Hax {
 			squad.hourselapsed = Math.round(WorldScreen.lastday * 24);
 		}
 		for (String win : Win.WINMESSAGES) {
-			s.text = win;
-			s.text += "\nPress any key to continue...\n\n";
-			s.print();
+			screen.text = win;
+			screen.text += "\nPress any key to continue...\n\n";
+			screen.print();
 		}
 		int current = Math.round(Math.round(WorldScreen.lastday));
-		s.text += "Your highscore record is " + Javelin.gethighscore() + "\n";
-		s.text += "Your current score now is " + current + "\n";
-		s.text += "\nDo you want to finish the current game? Press y for yes, n to continue playing.";
-		Character input = s.print();
+		screen.text += "Your highscore record is " + Javelin.gethighscore()
+				+ "\n";
+		screen.text += "Your current score now is " + current + "\n";
+		screen.text += "\nDo you want to finish the current game? Press y for yes, n to continue playing.";
+		Character input = screen.print();
 		while (input != 'y' && input != 'n') {
-			input = s.print();
+			input = screen.print();
 		}
 		if (input == 'y') {
 			StateManager.clear();
-			s.text = "Congratulations!\n\n" + Javelin.record()
+			screen.text = "Congratulations!\n\n" + Javelin.record()
 					+ "\n\nThank you for playing :) press ENTER to leave...";
-			input = s.print();
+			input = screen.print();
 			while (input != '\n') {
-				input = s.print();
+				input = screen.print();
 			}
 			System.exit(0);
 		}
@@ -105,7 +105,7 @@ public class Win extends Hax {
 
 	@Override
 	public String validate() {
-		if (Haxor.singleton.rubies < price || Javelin.DEBUG) {
+		if (screen.rubies < price || Javelin.DEBUG) {
 			/* let the player think he only needs rubies to win the game hihi */
 			return null;
 		}

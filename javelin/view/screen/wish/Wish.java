@@ -1,18 +1,18 @@
-package javelin.view.screen.haxor;
+package javelin.view.screen.wish;
 
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
-import javelin.model.world.location.unique.Haxor;
 import javelin.view.screen.Option;
 
 /**
  * A trick to be done by {@link Haxor}.
  * 
- * @see HaxorScreen
+ * @see WishScreen
  * @author alex
  */
-public abstract class Hax extends Option {
+public abstract class Wish extends Option {
 	final boolean requirestarget;
+	protected WishScreen screen;
 
 	/**
 	 * See {@link Option#Option(String, double, Character)}.
@@ -21,10 +21,11 @@ public abstract class Hax extends Option {
 	 *            <code>true</code> if should ask for a {@link Squad}
 	 *            {@link Combatant} as target of this effect.
 	 */
-	public Hax(String name, Character keyp, double price,
-			boolean requirestargetp) {
+	public Wish(String name, Character keyp, double price,
+			boolean requirestargetp, WishScreen screen) {
 		super(name, price, keyp);
 		requirestarget = requirestargetp;
+		this.screen = screen;
 	}
 
 	/**
@@ -33,7 +34,7 @@ public abstract class Hax extends Option {
 	 * @return <code>true</code> if successful and tickets can be deduced.
 	 * @see Haxor#rubies
 	 */
-	protected abstract boolean hack(Combatant target, HaxorScreen s);
+	protected abstract boolean hack(Combatant target);
 
 	/**
 	 * @return A String indicating why this can't be chosen, <code>null</code>

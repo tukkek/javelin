@@ -22,7 +22,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.BattleScreen;
-import javelin.view.screen.haxor.HaxorScreen;
+import javelin.view.screen.wish.WishScreen;
 
 /**
  * A victory or defeat condition has been achieved.
@@ -33,7 +33,7 @@ public class EndBattle extends BattleEvent {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @see HaxorScreen#RESSURECT
+	 * @see WishScreen#RESSURECT
 	 */
 	public static Combatant lastkilled = null;
 

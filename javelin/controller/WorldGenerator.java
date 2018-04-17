@@ -73,6 +73,7 @@ public class WorldGenerator extends Thread {
 					((Town) a).populategarisson();
 				}
 			}
+			world.scenario.finish(world);
 			WorldGenerator.finish(start, world);
 		} catch (RestartWorldGeneration e) {
 			if (World.seed == null) {

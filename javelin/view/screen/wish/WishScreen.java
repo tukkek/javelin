@@ -1,18 +1,17 @@
-package javelin.view.screen.haxor;
+package javelin.view.screen.wish;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 
 import javelin.Javelin;
+import javelin.controller.scenario.Campaign;
+import javelin.model.item.Ruby;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.unique.Haxor;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
@@ -21,75 +20,42 @@ import tyrant.mikera.engine.RPG;
  * @see Haxor
  * @author alex
  */
-public class HaxorScreen extends SelectScreen {
-	transient private static final ArrayList<String> QUOTES = new ArrayList<String>();
-
-	private static final String DAILYQUOTE;
-
-	static {
-		QUOTES.add("Keep up with updates at http://javelinrl.wordpress.com :)");
-		QUOTES.add("Come discuss the game at www.reddit.com/r/javelinrl/ :)");
-		QUOTES.add("Haxor's pet exclaims \"Kupo!\"");
-		QUOTES.add("Haxor's pet exclaims \"Pika-pika!\"");
-		QUOTES.add(
-				"Haxor asks \"Do you feel like playing a round of Pachisi?\"");
-		QUOTES.add(
-				"Haxor's temple is unusually dark today... You are likely to be eaten by a grue.");
-		QUOTES.add(
-				"Haxor tells you again about how his son used to be an adventurer until he took an arrow to the knee.");
-		QUOTES.add(
-				"A night hag is visiting the Temple, she asks of you \"What can change the nature of a man?\"");
-		QUOTES.add(
-				"Haxor reminisces about one of his battle stories. He starts with \"War... War never changes...\"");
-		QUOTES.add(
-				"Haxor is working on an artifact he calls the Chrono Trigger.");
-		QUOTES.add(
-				"Haxor is reading maps, trying to deduce the hidden location of the Rogue Basin.");
-		QUOTES.add(
-				"Haxor is laughing histerically. He smiles at you and asks \"Why so serious?\"");
-		QUOTES.add("Haxor says he is baking a cake but you don't see any...");
-		DAILYQUOTE = getdailyquote(QUOTES);
-	}
-
-	/**
-	 * @return A random element from the list, guaranteed to be the same for a
-	 *         24 hour period.
-	 */
-	public static String getdailyquote(List<String> list) {
-		Calendar now = Calendar.getInstance();
-		String seed = "";
-		seed += now.get(Calendar.DAY_OF_MONTH);
-		seed += now.get(Calendar.MONTH) + 1;
-		seed += now.get(Calendar.YEAR);
-		return list.get(new Random(seed.hashCode()).nextInt(list.size() - 1));
-	}
+public class WishScreen extends SelectScreen {
+	int rubies;
 
 	/** See {@link SelectScreen#SelectScreen(String, Town)}. */
-	public HaxorScreen() {
-		super("Welcome to the Temple of Haxor!", null);
+	public WishScreen(int rubies) {
+		super("Make your wish:", null);
+		this.rubies = rubies;
 		stayopen = false;
 	}
 
 	@Override
 	public boolean select(Option o) {
 		double price = o.price;
-		Hax h = (Hax) o;
+		Wish h = (Wish) o;
 		String error = h.validate();
 		if (error != null) {
 			text += "\n" + error;
 			Javelin.app.switchScreen(this);
 			return false;
 		}
-		if (price > Haxor.singleton.rubies) {
-			text += "\n\"I need more rupees!!\", says Haxor with a smirk on his face.";
+		if (price > rubies) {
+			text += "\n\nNot enough rubies...";
 			Javelin.app.switchScreen(this);
 			return false;
 		}
-		if (!h.hack(h.requirestarget ? selectmember() : null, this)) {
+		if (!h.hack(h.requirestarget ? selectmember() : null)) {
 			return false;
 		}
-		Haxor.singleton.rubies -= price;
+		pay(price);
 		return true;
+	}
+
+	public void pay(double nrubies) {
+		for (int i = 0; i < nrubies; i++) {
+			Squad.active.equipment.popitem(Ruby.class, Squad.active);
+		}
 	}
 
 	Combatant selectmember() {
@@ -144,10 +110,10 @@ public class HaxorScreen extends SelectScreen {
 	}
 
 	void generate(Actor place) {
-		int x = Haxor.singleton.x;
-		int y = Haxor.singleton.y;
+		int x = Squad.active.x;
+		int y = Squad.active.y;
 		int size = World.scenario.size;
-		while (x == Haxor.singleton.x && y == Haxor.singleton.y
+		while (x == Squad.active.x && y == Squad.active.y
 				|| World.get(x, y) != null) {
 			x += RPG.pick(new int[] { -1, 0, +1 });
 			y += RPG.pick(new int[] { -1, 0, +1 });
@@ -163,27 +129,28 @@ public class HaxorScreen extends SelectScreen {
 
 	@Override
 	public String printinfo() {
-		return DAILYQUOTE + "\nYou have " + Haxor.singleton.rubies + " rubies.";
+		return "You have " + rubies + " rubies.";
 	}
 
 	@Override
 	public List<Option> getoptions() {
 		ArrayList<Option> options = new ArrayList<Option>();
 		// 1 ruby
-		options.add(new BorrowMoney("borrow money", 'b', 1, false));
-		options.add(new ChangeAvatar("change unit avatar", 'c', 1, true));
-		options.add(new RemoveAbility("discard ability", 'd', 1, true));
-		options.add(new Ressurect("ressurect last fallen ally", 'r', 1, false));
+		options.add(new ChangeAvatar("change unit avatar", 'c', 1, true, this));
+		options.add(new RemoveAbility("discard ability", 'd', 1, true, this));
+		options.add(new Ressurect("ressurect last fallen ally", 'r', 1, false,
+				this));
 		SummonAlly weaksumon = new SummonAlly("summon ally (weak)", 's', 1,
-				false);
+				false, this);
 		weaksumon.fixed = 1f;
 		options.add(weaksumon);
-		options.add(new Teleport("teleport", 't', 1, false));
-		options.add(new Rebirth("upgrade cleanse", 'u', 1, true));
+		options.add(new Teleport("teleport", 't', 3, false, this));
+		options.add(new Rebirth("upgrade cleanse", 'u', 1, true, this));
 		// 2 rubies
-		options.add(new SummonAlly("summon ally", 'S', 2, false));
-		options.add(new Materialize("materialize", 'M', 2, false));
-		options.add(new Win("win", 'W', 7, false));
+		options.add(new SummonAlly("summon ally", 'S', 2, false, this));
+		if (World.scenario instanceof Campaign) {
+			options.add(new Win("win", 'W', 7, false, this));
+		}
 		return options;
 	}
 

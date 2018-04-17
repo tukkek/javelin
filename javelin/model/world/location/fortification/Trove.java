@@ -8,11 +8,11 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.fight.Siege;
 import javelin.controller.old.Game;
 import javelin.model.item.Key;
+import javelin.model.item.Ruby;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.dungeon.Chest;
 import javelin.model.world.location.town.labor.expansive.Settler;
 import javelin.view.screen.town.PurchaseScreen;
 import tyrant.mikera.engine.RPG;
@@ -123,7 +123,8 @@ public class Trove extends Fortification {
 			return null;
 		}
 		if (reward == Reward.RUBY) {
-			return Chest.takeruby(1);
+			new Ruby().grab();
+			return null;
 		}
 		throw new RuntimeException(reward + " #unknownreward");
 	}

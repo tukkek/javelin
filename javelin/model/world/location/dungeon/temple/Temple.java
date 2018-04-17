@@ -24,10 +24,9 @@ import javelin.model.world.location.dungeon.Chest;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.temple.features.Altar;
-import javelin.model.world.location.unique.Haxor;
 import javelin.model.world.location.unique.UniqueLocation;
 import javelin.view.Images;
-import javelin.view.screen.haxor.Win;
+import javelin.view.screen.wish.Win;
 
 /**
  * Temples are the key to winning Javelin. Each temple is locked and needs to be

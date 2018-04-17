@@ -1,4 +1,4 @@
-package javelin.view.screen.haxor;
+package javelin.view.screen.wish;
 
 import java.util.ArrayList;
 
@@ -10,23 +10,27 @@ import javelin.model.unit.attack.Combatant;
  * 
  * @author alex
  */
-public class RemoveAbility extends Hax {
-	/** Constructor. */
+public class RemoveAbility extends Wish {
+	/**
+	 * Constructor.
+	 * 
+	 * @param haxorScreen
+	 */
 	public RemoveAbility(String name, Character keyp, double price,
-			boolean requirestargetp) {
-		super(name, keyp, price, requirestargetp);
+			boolean requirestargetp, WishScreen haxorScreen) {
+		super(name, keyp, price, requirestargetp, haxorScreen);
 	}
 
 	@Override
-	protected boolean hack(Combatant target, HaxorScreen s) {
-		s.text = "";
-		s.refresh();
+	protected boolean hack(Combatant target) {
+		screen.text = "";
+		screen.refresh();
 		ArrayList<String> types = new ArrayList<String>();
-		s.listremovals(target, types);
+		screen.listremovals(target, types);
 		if (types.isEmpty()) {
-			s.text = "Unit has no abilities that can be removed.";
-			s.refresh();
-			s.getInput();
+			screen.text = "Unit has no abilities that can be removed.";
+			screen.refresh();
+			screen.getInput();
 			return false;// abort
 		}
 		int i = Javelin.choose("Which type of ability? Press q to quit.", types,
@@ -42,9 +46,9 @@ public class RemoveAbility extends Hax {
 			target.spells.remove(Javelin.choose("Select a spell:",
 					target.spells, true, true));
 		} else if (type == "Mêléé attack") {
-			s.removeaattack(target.source.melee);
+			screen.removeaattack(target.source.melee);
 		} else if (type == "Ranged attack") {
-			s.removeaattack(target.source.ranged);
+			screen.removeaattack(target.source.ranged);
 		}
 		return true;
 	}

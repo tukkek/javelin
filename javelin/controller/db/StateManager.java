@@ -26,7 +26,6 @@ import javelin.model.world.Incursion;
 import javelin.model.world.Season;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.unique.Haxor;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 
@@ -39,7 +38,7 @@ public class StateManager {
 	static final String SAVEFOLDER = System.getProperty("user.dir");
 	/** Normal save file. */
 	public static final File SAVEFILE = new File(SAVEFOLDER,
-			World.scenario.saveprefix + ".save");
+			World.scenario.getsaveprefix() + ".save");
 
 	/**
 	 * Always called on normal exit.
@@ -147,7 +146,6 @@ public class StateManager {
 					p.place();
 				}
 			}
-			Haxor.load();
 			Dungeon.active = (Dungeon) stream.readObject();
 			Incursion.currentel = (Integer) stream.readObject();
 			Weather.read((Integer) stream.readObject());
@@ -195,7 +193,7 @@ public class StateManager {
 		File folder = new File(SAVEFOLDER, "backup");
 		folder.mkdir();
 		File backup = new File(folder,
-				World.scenario.saveprefix + "-" + timestamp + ".save");
+				World.scenario.getsaveprefix() + "-" + timestamp + ".save");
 		save(true, backup);
 	}
 

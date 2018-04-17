@@ -1,4 +1,4 @@
-package javelin.view.screen.haxor;
+package javelin.view.screen.wish;
 
 import javelin.model.unit.abilities.spell.conjuration.teleportation.GreaterTeleport;
 import javelin.model.unit.attack.Combatant;
@@ -8,15 +8,19 @@ import javelin.model.unit.attack.Combatant;
  * 
  * @author alex
  */
-public class Teleport extends Hax {
-	/** See {@link Hax#Hax(String, double, boolean)}. */
+public class Teleport extends Wish {
+	/**
+	 * See {@link Wish#Hax(String, double, boolean)}.
+	 * 
+	 * @param haxorScreen
+	 */
 	public Teleport(String name, Character keyp, int price,
-			boolean requirestargetp) {
-		super(name, keyp, price, requirestargetp);
+			boolean requirestargetp, WishScreen haxorScreen) {
+		super(name, keyp, price, requirestargetp, haxorScreen);
 	}
 
 	@Override
-	protected boolean hack(Combatant target, HaxorScreen s) {
+	protected boolean hack(Combatant target) {
 		GreaterTeleport spell = new GreaterTeleport();
 		spell.showterrain = true;
 		spell.castpeacefully(null);

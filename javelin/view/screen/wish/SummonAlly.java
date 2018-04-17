@@ -1,4 +1,4 @@
-package javelin.view.screen.haxor;
+package javelin.view.screen.wish;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,20 +23,24 @@ import javelin.view.screen.SquadScreen;
  * 
  * @see SquadScreen
  */
-public class SummonAlly extends Hax {
+public class SummonAlly extends Wish {
 	/**
 	 * If not <code>null</code> will use this as the challenge rating target.
 	 */
 	public Float fixed = null;
 
-	/** Constructor. */
+	/**
+	 * Constructor.
+	 * 
+	 * @param haxorScreen
+	 */
 	public SummonAlly(String name, Character keyp, double price,
-			boolean requirestargetp) {
-		super(name, keyp, price, requirestargetp);
+			boolean requirestargetp, WishScreen haxorScreen) {
+		super(name, keyp, price, requirestargetp, haxorScreen);
 	}
 
 	@Override
-	protected boolean hack(Combatant target, HaxorScreen s) {
+	protected boolean hack(Combatant target) {
 		Float cr = getstartingcr();
 		Monster ally = null;
 		while (ally == null) {
@@ -72,8 +76,8 @@ public class SummonAlly extends Hax {
 		if (fixed != null) {
 			return fixed;
 		}
-		ArrayList<Combatant> current =
-				new ArrayList<Combatant>(Squad.active.members);
+		ArrayList<Combatant> current = new ArrayList<Combatant>(
+				Squad.active.members);
 		current.addAll(Squad.active.members);
 		for (Combatant c : current) {
 			/* update challenge rating */
@@ -82,12 +86,11 @@ public class SummonAlly extends Hax {
 		current.sort(new Comparator<Combatant>() {
 			@Override
 			public int compare(Combatant o1, Combatant o2) {
-				return o1.source.cr
-						.compareTo(o2.source.cr);
+				return o1.source.cr.compareTo(o2.source.cr);
 			}
 		});
-		return current.get(Math.round(Math.round(
-				Math.floor(current.size() / 2.0)))).source.cr;
+		return current.get(Math
+				.round(Math.round(Math.floor(current.size() / 2.0)))).source.cr;
 	}
 
 	Float findnextlowercr(Float cr) {

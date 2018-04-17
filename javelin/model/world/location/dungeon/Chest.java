@@ -6,8 +6,8 @@ import javelin.Javelin;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.Key;
+import javelin.model.item.Ruby;
 import javelin.model.unit.Squad;
-import javelin.model.world.location.unique.Haxor;
 import javelin.view.screen.town.PurchaseScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -26,8 +26,7 @@ public class Chest extends Feature {
 	 * <code>null</code> if no key.
 	 */
 	public Key key = null;
-	/** See {@link Haxor#rubies}. */
-	public int rubies = 0;
+	public boolean ruby = false;
 
 	/**
 	 * @param visual
@@ -64,9 +63,12 @@ public class Chest extends Feature {
 			for (Item i : items) {
 				i.grab();
 			}
-		} else if (rubies > 0) {
-			Javelin.message(takeruby(rubies), false);
+		} else if (ruby) {
+			new Ruby().grab();
 		} else {
+			if (gold < 1) {
+				gold = 1;
+			}
 			String message = "Party receives $"
 					+ PurchaseScreen.formatcost(gold) + "!";
 			Javelin.message(message, false);
@@ -103,16 +105,4 @@ public class Chest extends Feature {
 		return new Chest(x, y, gold, items);
 	}
 
-	/**
-	 * @param rubies
-	 *            quantity of rubies to add.
-	 * @return
-	 * @return a message about getting a ruby. Note that the message assumes
-	 *         only 1 is gained.
-	 * @see Haxor#rubies
-	 */
-	public static String takeruby(int rubies) {
-		Haxor.singleton.rubies += rubies;
-		return "You find a ruby! Haxor might appreciate these...";
-	}
 }

@@ -50,7 +50,6 @@ import javelin.model.world.location.unique.AdventurersGuild;
 import javelin.model.world.location.unique.Artificer;
 import javelin.model.world.location.unique.AssassinsGuild;
 import javelin.model.world.location.unique.DeepDungeon;
-import javelin.model.world.location.unique.Haxor;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.model.world.location.unique.PillarOfSkulls;
 import javelin.model.world.location.unique.SummoningCircle;
@@ -264,8 +263,6 @@ public class FeatureGenerator {
 				return difference > 0 ? 1 : -1;
 			}
 		});
-		Haxor.singleton = new Haxor();
-		spawnnear(t, Haxor.singleton, seed, 2, 3, true);
 		spawnnear(t, new Dwelling(recruits.get(RPG.r(1, 7))), seed, 1, 2, true);
 		spawnnear(t, new AdventurersGuild(), seed, 2, 3, true);
 		spawnnear(t, new TrainingHall(), seed, 2, 3, false);

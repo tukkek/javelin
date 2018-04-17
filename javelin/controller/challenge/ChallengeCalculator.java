@@ -361,7 +361,7 @@ public class ChallengeCalculator {
 	/**
 	 * @param teamel
 	 *            Active group encounter level.
-	 * @param el
+	 * @param level
 	 *            Opponent encounter level.
 	 * @return % of resources used on battle.
 	 */

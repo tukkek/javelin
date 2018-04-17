@@ -41,7 +41,6 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.labor.Deck;
-import javelin.model.world.location.unique.Haxor;
 import javelin.model.world.location.unique.UniqueLocation;
 import javelin.view.screen.SquadScreen;
 import javelin.view.screen.WorldScreen;
@@ -311,9 +310,6 @@ public class JavelinApp extends QuestApp {
 			for (final Combatant m : Squad.active.members) {
 				m.xp = new BigDecimal(Preferences.DEBUGSXP / 100f);
 			}
-		}
-		if (Preferences.DEBUGRUBIES != null && Haxor.singleton != null) {
-			Haxor.singleton.rubies = Preferences.DEBUGRUBIES;
 		}
 	}
 

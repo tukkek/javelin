@@ -59,7 +59,7 @@ public class Guide extends WorldAction implements SimpleAction {
 
 	class GuideWindow extends Frame {
 		public GuideWindow() {
-			super(name);
+			super(name + " guide");
 		}
 
 		@Override

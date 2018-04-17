@@ -1,4 +1,4 @@
-package javelin.view.screen.haxor;
+package javelin.view.screen.wish;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -16,15 +16,15 @@ import javelin.model.unit.attack.Combatant;
  * @see Monster#avatarfile
  * @author alex
  */
-public final class ChangeAvatar extends Hax {
+public final class ChangeAvatar extends Wish {
 	/** Constructor. */
 	public ChangeAvatar(String name, Character keyp, double price,
-			boolean requirestargetp) {
-		super(name, keyp, price, requirestargetp);
+			boolean requirestargetp, WishScreen s) {
+		super(name, keyp, price, requirestargetp, s);
 	}
 
 	@Override
-	protected boolean hack(Combatant target, HaxorScreen s) {
+	protected boolean hack(Combatant target) {
 		HashSet<String> avatars = new HashSet<String>();
 		try {
 			File avatarfolder = new File("avatars");
@@ -48,14 +48,13 @@ public final class ChangeAvatar extends Hax {
 		Collections.sort(alphabetical);
 		int delta = 0;
 		while (delta < alphabetical.size()) {
-			s.text = "";
+			screen.text = "";
 			for (int i = delta; i < delta + 9 && i < alphabetical.size(); i++) {
-				s.text += "[" + (i - delta + 1) + "] " + alphabetical.get(i)
-						+ "\n";
+				screen.text += "[" + (i - delta + 1) + "] "
+						+ alphabetical.get(i) + "\n";
 			}
-			s.text +=
-					"\nPress ENTER to see more options or a number to select a new avatar.";
-			Character feedback = s.print();
+			screen.text += "\nPress ENTER to see more options or a number to select a new avatar.";
+			Character feedback = screen.print();
 			if (feedback == '\n') {
 				delta += 9;
 				if (delta >= alphabetical.size()) {
@@ -64,8 +63,8 @@ public final class ChangeAvatar extends Hax {
 				continue;
 			}
 			try {
-				final int index =
-						Integer.parseInt(Character.toString(feedback));
+				final int index = Integer
+						.parseInt(Character.toString(feedback));
 				target.source.avatarfile = alphabetical.get(delta + index - 1);
 				break;
 			} catch (NumberFormatException e) {

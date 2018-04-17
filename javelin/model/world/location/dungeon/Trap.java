@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
@@ -49,10 +48,6 @@ public class Trap extends Feature {
 	 */
 	public Trap(int cr, Point p) {
 		super("poison trap", p.x, p.y, "dungeontrap");
-		float sum = 0;
-		for (Combatant c : Squad.active.members) {
-			sum += ChallengeCalculator.calculatecr(c.source);
-		}
 		this.cr = cr;
 		draw = false;
 		stop = true;
@@ -63,7 +58,7 @@ public class Trap extends Feature {
 			searchdc = RPG.r(10, 35);
 			damagedie = 0;
 			currentcr = calculatecr();
-			damagedie = (cr - currentcr) * 2;
+			damagedie = Math.max(1, (cr - currentcr) * 2);
 			currentcr = calculatecr();
 		}
 	}

@@ -35,19 +35,9 @@ public class TempleDungeon extends Dungeon {
 	 *            <code>true</code> if the last (bottom) floor.
 	 */
 	public TempleDungeon(Temple temple, boolean deepest) {
+		super(temple.el);
 		this.temple = temple;
 		this.deepest = deepest;
-	}
-
-	@Override
-	protected void determineel() {
-		// uses Temple#el instead
-	}
-
-	@Override
-	protected DungeonTier gettier() {
-		el = temple.el;
-		return super.gettier();
 	}
 
 	@Override
@@ -72,8 +62,8 @@ public class TempleDungeon extends Dungeon {
 			super.activate(loading);
 			return;
 		}
-		String difficulty = ChallengeCalculator.describedifficulty(
-				temple.el - ChallengeCalculator.calculateel(Squad.active.members));
+		String difficulty = ChallengeCalculator.describedifficulty(temple.el
+				- ChallengeCalculator.calculateel(Squad.active.members));
 		Character prompt = Javelin.prompt("You're at the entrance of the "
 				+ temple.descriptionknown + " (difficulty: " + difficulty
 				+ "). Do you want to enter?\n"
@@ -105,12 +95,12 @@ public class TempleDungeon extends Dungeon {
 	}
 
 	@Override
-	protected Feature createspecialchest(Point p) {
+	protected Feature createspecialfeature(Point p) {
 		if (deepest) {
 			return new Altar(p, temple);
 		}
 		Chest c = new Chest(p.x, p.y, 0, new ItemSelection());
-		c.rubies = 1;
+		c.ruby = true;
 		return c;
 	}
 
@@ -163,5 +153,10 @@ public class TempleDungeon extends Dungeon {
 	@Override
 	public int getfountains(int rooms) {
 		return super.getfountains(rooms) + RPG.r(1, 4) - 1;
+	}
+
+	@Override
+	protected boolean expire() {
+		return false;
 	}
 }

@@ -10,7 +10,6 @@ import javelin.Javelin;
 import javelin.controller.action.world.Guide;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.db.StateManager;
 import javelin.controller.fight.RandomEncounter;
 import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.generator.feature.FeatureGenerator;
@@ -39,11 +38,10 @@ import javelin.model.world.location.town.labor.Deck;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.military.RealmAcademy;
 import javelin.model.world.location.town.labor.productive.Shop;
-import javelin.model.world.location.unique.Haxor;
 import javelin.model.world.location.unique.UniqueLocation;
 import javelin.view.mappanel.world.WorldTile;
 import javelin.view.screen.SquadScreen;
-import javelin.view.screen.haxor.Win;
+import javelin.view.screen.wish.Win;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -119,8 +117,6 @@ public class Scenario implements Serializable {
 	public boolean clearlocations = true;
 	/** Wheter a full {@link Deck} should be allowed. */
 	public boolean allowlabor = false;
-	/** Place {@link Haxor} or not. */
-	public boolean haxor = false;
 	/**
 	 * If <code>false</code>, only allow Actors marked as
 	 * {@link Actor#allowedinscenario}.
@@ -134,11 +130,9 @@ public class Scenario implements Serializable {
 	 * Wheter {@link RandomEncounter}s and {@link Hazard}s should be triggered
 	 * during {@link WorldMove}s.
 	 */
-	public boolean worldexploration = false;
-	/** Save prefix for {@link StateManager}. */
-	public String saveprefix = "scenario";
+	public boolean exploration = false;
 	/** File name for the F1 help {@link Guide}. */
-	public String helpfile = "Scenarios";
+	public String helpfile = "Scenario";
 	public boolean record = false;
 	public boolean dominationwin = true;
 	/** Number of {@link Location}s to spawn. See {@link FeatureGenerator}. */
@@ -163,6 +157,17 @@ public class Scenario implements Serializable {
 	 * around the world.
 	 */
 	public boolean worlddistrict = true;
+
+	/**
+	 * If <code>true</code>, hostile {@link Location}s will spawn more monsters
+	 * over time.
+	 * 
+	 * @see Location#ishostile()
+	 * @see Location#spawn()
+	 * @see Incursion
+	 */
+	public boolean spawn = false;
+	public boolean expiredungeons = false;
 
 	/**
 	 * @return Starting encounter level for each hostile town in
@@ -232,5 +237,13 @@ public class Scenario implements Serializable {
 			}
 		}
 		return shops;
+	}
+
+	public void finish(World w) {
+		// nothing by default
+	}
+
+	public String getsaveprefix() {
+		return getClass().getSimpleName().toLowerCase();
 	}
 }

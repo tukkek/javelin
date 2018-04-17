@@ -1,4 +1,4 @@
-package javelin.view.screen.haxor;
+package javelin.view.screen.wish;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -15,15 +15,19 @@ import javelin.model.unit.attack.Combatant;
  * 
  * @author alex
  */
-public class Rebirth extends Hax {
-	/** Constructor. */
+public class Rebirth extends Wish {
+	/**
+	 * Constructor.
+	 * 
+	 * @param haxorScreen
+	 */
 	public Rebirth(String name, Character keyp, double price,
-			boolean requirestargetp) {
-		super(name, keyp, price, requirestargetp);
+			boolean requirestargetp, WishScreen haxorScreen) {
+		super(name, keyp, price, requirestargetp, haxorScreen);
 	}
 
 	@Override
-	protected boolean hack(Combatant target, HaxorScreen s) {
+	protected boolean hack(Combatant target) {
 		ArrayList<Artifact> equipment = new ArrayList<Artifact>(
 				target.equipped);
 		for (Artifact a : equipment) {

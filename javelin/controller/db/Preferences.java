@@ -21,7 +21,6 @@ import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Actor;
 import javelin.model.world.Season;
 import javelin.model.world.World;
-import javelin.model.world.location.unique.Haxor;
 import javelin.view.KeysScreen;
 import javelin.view.frame.keys.BattleKeysScreen;
 import javelin.view.frame.keys.PreferencesScreen;
@@ -95,8 +94,6 @@ public class Preferences {
 	public static Integer DEBUGSXP;
 	/** Debug option. */
 	public static Integer DEBUGSGOLD;
-	/** Debug option. */
-	public static Integer DEBUGRUBIES;
 	/** Debug option. */
 	public static boolean DEBUGLABOR;
 	/** Debug option. */
@@ -257,8 +254,6 @@ public class Preferences {
 		DEBUGESHOWMAP = getboolean("cheat.world");
 		DEBUGSXP = getinteger("cheat.xp", null);
 		DEBUGSGOLD = getinteger("cheat.gold", null);
-		DEBUGRUBIES = javelin.controller.db.Preferences
-				.getinteger("cheat.rubies", null);
 		DEBUGLABOR = getboolean("cheat.labor");
 		DEBUGFOE = getstring("cheat.monster");
 		DEBUGPERIOD = getstring("cheat.period");
@@ -288,9 +283,6 @@ public class Preferences {
 			for (Actor a : World.getall(Squad.class)) {
 				initsquaddebug((Squad) a);
 			}
-		}
-		if (DEBUGRUBIES != null && Haxor.singleton != null) {
-			Haxor.singleton.rubies = DEBUGRUBIES;
 		}
 		if (DEBUGWEATHER != null) {
 			DEBUGWEATHER = DEBUGWEATHER.toLowerCase();

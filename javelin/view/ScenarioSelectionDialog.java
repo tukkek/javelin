@@ -10,22 +10,27 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.swing.BoxLayout;
 
+import javelin.Javelin;
 import javelin.controller.TextReader;
 import javelin.controller.scenario.Campaign;
+import javelin.controller.scenario.DungeonWorld;
 import javelin.controller.scenario.Scenario;
 import javelin.model.world.World;
 
-public class ModeSelectionDialog extends Frame {
-	static final Map<String, Scenario> MODES = new TreeMap<String, Scenario>();
+public class ScenarioSelectionDialog extends Frame {
+	static final Map<String, Scenario> MODES = new LinkedHashMap<String, Scenario>();
 
 	static {
 		MODES.put("campaign", new Campaign());
 		MODES.put("scenario", new Scenario());
+		if (Javelin.DEBUG) {
+			MODES.put("dungeon world", new DungeonWorld());
+		}
 	}
 
 	class Close extends WindowAdapter {
@@ -59,7 +64,7 @@ public class ModeSelectionDialog extends Frame {
 
 	ArrayList<String> preparetext() {
 		ArrayList<String> lines = new ArrayList<String>();
-		String file = TextReader.read(new File("doc", "introduction.txt"));
+		String file = TextReader.read(new File("doc", "scenarios.txt"));
 		for (String s : file.trim().split("\n")) {
 			String line = "";
 			for (String word : s.split(" ")) {
@@ -92,7 +97,7 @@ public class ModeSelectionDialog extends Frame {
 		if (choosefromcommandline(args)) {
 			return;
 		}
-		ModeSelectionDialog s = new ModeSelectionDialog();
+		ScenarioSelectionDialog s = new ScenarioSelectionDialog();
 		s.draw();
 		s.pack();
 		s.setLocationRelativeTo(null);
@@ -110,7 +115,12 @@ public class ModeSelectionDialog extends Frame {
 		if (args.length == 0) {
 			return false;
 		}
-		World.scenario = MODES.get(args[0].toLowerCase());
+		for (String mode : MODES.keySet()) {
+			if (args[0].compareToIgnoreCase(mode.replaceAll(" ", "")) == 0) {
+				World.scenario = MODES.get(mode);
+				break;
+			}
+		}
 		return World.scenario != null;
 	}
 }

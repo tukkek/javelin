@@ -438,7 +438,7 @@ public abstract class Location extends Actor {
 				reinforce = t;
 			}
 		}
-		if (Javelin.DEBUG) {
+		if (Javelin.DEBUG && false) {
 			System.out.println("Spawning a " + spawn + " (cr " + cr + ") from "
 					+ this + " (el " + ChallengeCalculator.calculateel(garrison)
 					+ ") to " + reinforce + " (cr "

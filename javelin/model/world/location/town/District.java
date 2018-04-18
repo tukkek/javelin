@@ -130,7 +130,7 @@ public class District {
 			}
 		}
 		ArrayList<Point> free = new ArrayList<Point>();
-		final World w = World.seed;
+		final World w = World.getseed();
 		searching: for (Point p : getarea()) {
 			if (Terrain.get(p.x, p.y).equals(Terrain.WATER)
 					|| World.get(p.x, p.y, actors) != null) {

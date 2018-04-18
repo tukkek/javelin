@@ -15,7 +15,6 @@ import java.util.Map;
 
 import javax.swing.BoxLayout;
 
-import javelin.Javelin;
 import javelin.controller.TextReader;
 import javelin.controller.scenario.Campaign;
 import javelin.controller.scenario.DungeonWorld;
@@ -28,9 +27,7 @@ public class ScenarioSelectionDialog extends Frame {
 	static {
 		MODES.put("Campaign", new Campaign());
 		MODES.put("Scenario", new Scenario());
-		if (Javelin.DEBUG) {
-			MODES.put("Dungeon world", new DungeonWorld());
-		}
+		MODES.put("Dungeon world", new DungeonWorld());
 	}
 
 	class Close extends WindowAdapter {
@@ -79,7 +76,7 @@ public class ScenarioSelectionDialog extends Frame {
 			}
 		}
 		lines.add("");
-		lines.add("Choose a game mode:");
+		lines.add("Select a game mode:");
 		return lines;
 	}
 

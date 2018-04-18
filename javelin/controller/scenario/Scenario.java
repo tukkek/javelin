@@ -133,6 +133,9 @@ public class Scenario implements Serializable {
 	public boolean exploration = false;
 	/** File name for the F1 help {@link Guide}. */
 	public String helpfile = "Scenario";
+	/**
+	 * TODO highscores should be scenario-agnostic
+	 */
 	public boolean record = false;
 	public boolean dominationwin = true;
 	/** Number of {@link Location}s to spawn. See {@link FeatureGenerator}. */

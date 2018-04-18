@@ -36,7 +36,6 @@ public class DungeonWorld extends Campaign {
 
 	@Override
 	public void finish(World w) {
-		super.finish(w);
 		for (Actor a : World.getactors()) {
 			if (a instanceof Town || a instanceof Dungeon || a instanceof Lodge
 					|| a instanceof Shop || a instanceof Academy) {
@@ -68,6 +67,9 @@ public class DungeonWorld extends Campaign {
 		}
 		for (Town t : towns) {
 			if (t.ishostile()) {
+				Shop shop = new Shop(false, t.realm);
+				shop.setlocation(RPG.pick(t.getdistrict().getfreespaces()));
+				shop.place();
 				t.capture();
 			}
 		}

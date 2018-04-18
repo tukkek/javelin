@@ -18,8 +18,8 @@ import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.hazard.Hazard;
-import javelin.model.item.ItemSelection;
 import javelin.model.item.Key;
+import javelin.model.item.Ruby;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Actor;
@@ -238,7 +238,7 @@ public class Dungeon extends Location {
 		int traps = chests + RPG.randomize(tier.minrooms);
 		for (int i = 0; i < traps; i++) {
 			int cr = Math.round(getcr()) + EncounterGenerator.getdifficulty();
-			if (cr >= -2) {
+			if (cr >= Trap.MINIMUMCR) {
 				Trap t = new Trap(cr, findspot());
 				features.add(t);
 				pool += RewardCalculator.getgold(t.cr);
@@ -269,15 +269,10 @@ public class Dungeon extends Location {
 	 * @return Most special chest here.
 	 */
 	protected Feature createspecialfeature(Point p) {
-		Chest t = new Chest(p.x, p.y, 0, new ItemSelection());
-		t.setspecial();
-		if (World.scenario.allowkeys) {
-			t.key = Key.generate();
-		} else {
-			t.ruby = true;
-		}
-		return t;
-
+		Chest c = new Chest(p.x, p.y);
+		c.setspecial();
+		c.items.add(World.scenario.allowkeys ? Key.generate() : new Ruby());
+		return c;
 	}
 
 	/**
@@ -322,7 +317,7 @@ public class Dungeon extends Location {
 	protected boolean expire() {
 		for (Feature f : features) {
 			Chest c = f instanceof Chest ? (Chest) f : null;
-			if (c != null && c.ruby) {
+			if (c != null && c.items.contains(Ruby.class)) {
 				return false;
 			}
 		}

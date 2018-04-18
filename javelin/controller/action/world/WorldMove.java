@@ -154,7 +154,8 @@ public class WorldMove extends WorldAction {
 			}
 			boolean stop = false;
 			if (WorldMove.walk(JavelinApp.context.getherolocation())) {
-				stop = JavelinApp.context.explore(hours, encounter);
+				stop = JavelinApp.context.explore(hours,
+						encounter && World.scenario.exploration);
 			}
 			heal();
 			return stop;

@@ -38,13 +38,4 @@ public class RandomEncounter extends Fight {
 			}
 		}
 	}
-
-	static public StartBattle encountersafe(double d) {
-		try {
-			encounter(d);
-			return null;
-		} catch (StartBattle e) {
-			return e;
-		}
-	}
 }

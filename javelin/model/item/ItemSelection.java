@@ -44,4 +44,12 @@ public class ItemSelection extends ArrayList<Item> {
 		return s.toLowerCase();
 	}
 
+	public boolean contains(Class<? extends Item> itemtype) {
+		for (Item i : this) {
+			if (itemtype.isInstance(i)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

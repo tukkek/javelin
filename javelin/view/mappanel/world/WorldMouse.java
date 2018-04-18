@@ -45,7 +45,7 @@ public class WorldMouse extends Mouse {
 					break;
 				}
 				BattleStep step = overlay.path.steps.get(i);
-				if (!step.safe) {
+				if (!step.safe && World.scenario.exploration) {
 					RandomEncounter.encounter(step.apcost);
 				}
 			}

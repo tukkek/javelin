@@ -29,8 +29,12 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Trap extends Feature {
+	/**
+	 * TODO this is entirely circunstancial. Hopefully, at the most basic,
+	 * adding new trap times should allow for lesser CRs.
+	 */
+	public static final int MINIMUMCR = -2;
 
-	// transient private BattleMap map;
 	/** Challenge rating. */
 	public final int cr;
 	/** Difficulty class to save against. */

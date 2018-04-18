@@ -6,7 +6,7 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.fight.Fight;
-import javelin.model.item.ItemSelection;
+import javelin.model.item.Ruby;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Chest;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -99,9 +99,9 @@ public class TempleDungeon extends Dungeon {
 		if (deepest) {
 			return new Altar(p, temple);
 		}
-		Chest c = new Chest(p.x, p.y, 0, new ItemSelection());
+		Chest c = new Chest(p.x, p.y);
+		c.items.add(new Ruby());
 		c.setspecial();
-		c.ruby = true;
 		return c;
 	}
 

@@ -15,7 +15,6 @@ import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.action.world.WorldAction;
 import javelin.controller.action.world.WorldMove;
-import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.db.Preferences;
 import javelin.controller.db.StateManager;
 import javelin.controller.exception.RepeatTurn;
@@ -379,9 +378,8 @@ public class WorldScreen extends BattleScreen {
 			while (vital.length() < WorldScreen.STATUSSPACE) {
 				vital += " ";
 			}
-			hps.add(vital + " Level "
-					+ Math.round(Math.floor(ChallengeCalculator.calculatecr(c.source)))
-					+ " " + c.gethumanxp());
+			long cr = Math.round(Math.floor(c.source.cr));
+			hps.add(vital + " Level " + cr + " " + c.gethumanxp());
 		}
 		return hps;
 	}
@@ -521,7 +519,7 @@ public class WorldScreen extends BattleScreen {
 	 * @return A random encounter fight.
 	 */
 	public Fight encounter() {
-		return World.scenario.exploration ? new RandomEncounter() : null;
+		return new RandomEncounter();
 	}
 
 	@Override

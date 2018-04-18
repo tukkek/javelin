@@ -446,7 +446,7 @@ public class Incursion extends Actor {
 				l.garrison.subList(0, l.garrison.size() / 2));
 		l.garrison.removeAll(incursion);
 		Incursion i = Incursion.place(l.realm, l.x, l.y, incursion);
-		if (Javelin.DEBUG && i != null) {
+		if (false && Javelin.DEBUG && i != null) {
 			System.out.println(l + " spawned an incursion (el "
 					+ ChallengeCalculator.calculateel(i.squad) + ")");
 		}

@@ -51,7 +51,7 @@ public abstract class Temple extends UniqueLocation {
 	/**
 	 * TODO there's gotta be a better way to do this
 	 */
-	static public boolean climbing = false;
+	public static boolean climbing = false;
 	/** TODO same as {@link #climbing} */
 	public static boolean leavingfight = false;
 

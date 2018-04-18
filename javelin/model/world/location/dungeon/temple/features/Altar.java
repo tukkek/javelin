@@ -4,6 +4,7 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.model.item.Item;
 import javelin.model.item.relic.Relic;
+import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.temple.Temple;
 
@@ -29,11 +30,16 @@ public class Altar extends Feature {
 			Javelin.message("The " + temple.relic + " is not here anymore...",
 					true);
 		} else {
-			Javelin.message(
-					"This altar holds the epic " + temple.relic + "!\n"
-							+ "If it is lost for any reason it shall be teleported back to safety here.",
-					true);
+			String text = "This altar holds the " + temple.relic + "!";
+			if (!World.scenario.expiredungeons) {
+				text += "\nIf it is lost for any reason it shall be teleported back to safety here.";
+			}
+			Javelin.message(text, true);
 			temple.relic.clone().grab();
+			if (World.scenario.expiredungeons) {
+				remove();
+				temple.remove();
+			}
 		}
 		return true;
 	}

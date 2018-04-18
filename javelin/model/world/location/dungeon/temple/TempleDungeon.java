@@ -158,6 +158,7 @@ public class TempleDungeon extends Dungeon {
 
 	@Override
 	protected boolean expire() {
+		/* Temples expiring is handled by the Altar feature */
 		return false;
 	}
 }

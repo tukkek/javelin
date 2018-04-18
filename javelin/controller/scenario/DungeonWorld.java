@@ -2,6 +2,7 @@ package javelin.controller.scenario;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
@@ -12,6 +13,8 @@ import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonTier;
+import javelin.model.world.location.dungeon.temple.Temple;
+import javelin.model.world.location.haunt.Haunt;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.model.world.location.town.labor.basic.Lodge;
@@ -20,10 +23,17 @@ import javelin.model.world.location.town.labor.productive.Shop;
 import tyrant.mikera.engine.RPG;
 
 public class DungeonWorld extends Campaign {
-	private static final int DISTANCE = 6;
+	static final HashSet<Class<?>> ALLOW = new HashSet<Class<?>>();
+	static final int DISTANCE = 6;
+
+	static {
+		for (Class<?> actortype : new Class[] { Town.class, Dungeon.class,
+				Lodge.class, Academy.class, Shop.class, Squad.class }) {
+			ALLOW.add(actortype);
+		}
+	}
 
 	public DungeonWorld() {
-		exploration = false;
 		startingpopulation = 11;
 		allowkeys = false;
 		minigames = false;
@@ -32,23 +42,36 @@ public class DungeonWorld extends Campaign {
 		fogofwar = false;
 		expiredungeons = true;
 		helpfile = "Dungeon World";
+		spawn = false;
 	}
 
 	@Override
 	public void finish(World w) {
 		for (Actor a : World.getactors()) {
-			if (a instanceof Town || a instanceof Dungeon || a instanceof Lodge
-					|| a instanceof Shop || a instanceof Academy) {
+			if (allowactor(a)) {
 				continue;
 			}
 			if (a instanceof Dwelling) {
 				((Dwelling) a).capture();
-			} else if (!(a instanceof Squad)) {
+			} else if (a instanceof Temple) {
+				((Temple) a).open = true;
+			} else if (a instanceof Haunt) {
+				a.realm = null;
+			} else {
 				a.remove();
 			}
 		}
 		Town starting = process(Town.gettowns());
 		process(Dungeon.getdungeons(), starting);
+	}
+
+	boolean allowactor(Actor a) {
+		for (Class<?> actortype : ALLOW) {
+			if (actortype.isInstance(a)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	Town process(ArrayList<Town> towns) {

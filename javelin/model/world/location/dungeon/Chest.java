@@ -105,4 +105,7 @@ public class Chest extends Feature {
 		return new Chest(x, y, gold, items);
 	}
 
+	public void setspecial() {
+		avatarfile = "dungeonchestspecial";
+	}
 }

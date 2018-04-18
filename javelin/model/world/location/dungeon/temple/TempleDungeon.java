@@ -100,6 +100,7 @@ public class TempleDungeon extends Dungeon {
 			return new Altar(p, temple);
 		}
 		Chest c = new Chest(p.x, p.y, 0, new ItemSelection());
+		c.setspecial();
 		c.ruby = true;
 		return c;
 	}

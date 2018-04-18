@@ -26,10 +26,10 @@ public class ScenarioSelectionDialog extends Frame {
 	static final Map<String, Scenario> MODES = new LinkedHashMap<String, Scenario>();
 
 	static {
-		MODES.put("campaign", new Campaign());
-		MODES.put("scenario", new Scenario());
+		MODES.put("Campaign", new Campaign());
+		MODES.put("Scenario", new Scenario());
 		if (Javelin.DEBUG) {
-			MODES.put("dungeon world", new DungeonWorld());
+			MODES.put("Dungeon world", new DungeonWorld());
 		}
 	}
 
@@ -52,7 +52,7 @@ public class ScenarioSelectionDialog extends Frame {
 		buttonarea.setLayout(new BoxLayout(buttonarea, BoxLayout.X_AXIS));
 		add(buttonarea);
 		for (String mode : MODES.keySet()) {
-			addbutton("Launch " + mode + " mode", MODES.get(mode), buttonarea);
+			addbutton(mode, MODES.get(mode), buttonarea);
 		}
 	}
 
@@ -78,6 +78,8 @@ public class ScenarioSelectionDialog extends Frame {
 				lines.add(line);
 			}
 		}
+		lines.add("");
+		lines.add("Choose a game mode:");
 		return lines;
 	}
 

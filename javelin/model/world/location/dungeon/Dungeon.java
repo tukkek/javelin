@@ -15,6 +15,8 @@ import javelin.controller.fight.RandomDungeonEncounter;
 import javelin.controller.generator.dungeon.DungeonGenerator;
 import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.generator.encounter.EncounterGenerator;
+import javelin.controller.old.Game;
+import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.Key;
@@ -118,7 +120,8 @@ public class Dungeon extends Location {
 	/** Create or recreate dungeon. */
 	public void activate(boolean loading) {
 		while (features.isEmpty()) {
-			/* not loading a game */
+			Game.messagepanel.clear();
+			Game.message("Generating dungeon map...", Delay.NONE);
 			map();
 		}
 		regenerate(loading);
@@ -267,6 +270,7 @@ public class Dungeon extends Location {
 	 */
 	protected Feature createspecialfeature(Point p) {
 		Chest t = new Chest(p.x, p.y, 0, new ItemSelection());
+		t.setspecial();
 		if (World.scenario.allowkeys) {
 			t.key = Key.generate();
 		} else {
@@ -317,7 +321,8 @@ public class Dungeon extends Location {
 
 	protected boolean expire() {
 		for (Feature f : features) {
-			if (f instanceof Chest) {
+			Chest c = f instanceof Chest ? (Chest) f : null;
+			if (c != null && c.ruby) {
 				return false;
 			}
 		}

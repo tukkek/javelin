@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
@@ -30,6 +31,7 @@ public class DungeonWorld extends Campaign {
 		respawnlocations = false;
 		fogofwar = false;
 		expiredungeons = true;
+		helpfile = "Dungeon World";
 	}
 
 	@Override
@@ -124,6 +126,13 @@ public class DungeonWorld extends Campaign {
 
 	@Override
 	public boolean win() {
-		return super.win();
+		for (Dungeon d : Dungeon.getdungeons()) {
+			if (d.gettier() == DungeonTier.HIGHEST) {
+				return false;
+			}
+		}
+		Javelin.message("You have cleared all major dungeons! Congratulations!",
+				true);
+		return true;
 	}
 }

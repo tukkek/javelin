@@ -15,7 +15,6 @@ public class Floor extends Caves {
 	public Floor() {
 		super("Dungeon floor");
 		coresize = 0;
-		flying = false;
 	}
 
 	@Override

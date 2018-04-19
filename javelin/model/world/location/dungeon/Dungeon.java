@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -112,7 +113,10 @@ public class Dungeon extends Location {
 
 	@Override
 	public boolean interact() {
-		super.interact();
+		if (Javelin.prompt("You are about to enter: " + describe() + ".\n"
+				+ "Press ENTER to continue or any other key to cancel...") != '\n') {
+			return true;
+		}
 		activate(false);
 		return true;
 	}
@@ -138,18 +142,18 @@ public class Dungeon extends Location {
 	 * and then {@link #placefeatures()}. One notable thing that happens here is
 	 * the determination of how many {@link RandomDungeonEncounter}s should take
 	 * for the player to explore the whole level.
-	 * 
+	 *
 	 * Currently, the calculation is done by setting a goal of one fight per
 	 * room on average (so naturally, larger {@link DungeonTier}s will have more
 	 * fights than smaller ones). The formula takes into account
 	 * {@link DungeonScreen#VIEWRADIUS} instead of counting each step as a
 	 * single tile.
-	 * 
+	 *
 	 * Since a Squad of the dungeon's intended level cannot hope to clear a
 	 * dungeon if it's large (in average they can only take 4-5 encounters of
 	 * the same EL), this is then offset by placing enough fountains that would
 	 * theoretically allow them to do the one dungeon in one go.
-	 * 
+	 *
 	 * This is currently not counting backtracking out of the dungeon or finding
 	 * your way back to town safely, so this naturally makes the dungeon more
 	 * challenging (hopefully being offset by the rewards inside).
@@ -194,7 +198,7 @@ public class Dungeon extends Location {
 	/**
 	 * Places {@link Fountain}, {@link Chest}s and {@link Trap}s then those from
 	 * {@link #getextrafeatures(Set, Set)}.
-	 * 
+	 *
 	 * @param fountains
 	 *
 	 * @param free
@@ -263,7 +267,7 @@ public class Dungeon extends Location {
 
 	/**
 	 * TODO at some point rubies shouldn't depend on Haxor anymore
-	 * 
+	 *
 	 * @param p
 	 *            Chest's location.
 	 * @return Most special chest here.

@@ -11,7 +11,6 @@ import tyrant.mikera.engine.RPG;
 public class Pit extends Caves {
 	public Pit() {
 		super("Pit");
-		flying = false;
 	}
 
 	@Override

@@ -26,8 +26,8 @@ public class ScenarioSelectionDialog extends Frame {
 
 	static {
 		MODES.put("Campaign", new Campaign());
-		MODES.put("Scenario", new Scenario());
 		MODES.put("Dungeon world", new DungeonWorld());
+		MODES.put("Scenario", new Scenario());
 	}
 
 	class Close extends WindowAdapter {

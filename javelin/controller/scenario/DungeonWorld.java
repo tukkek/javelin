@@ -34,7 +34,7 @@ public class DungeonWorld extends Campaign {
 	}
 
 	public DungeonWorld() {
-		startingpopulation = 11;
+		startingpopulation = 6;
 		allowkeys = false;
 		minigames = false;
 		record = false;
@@ -100,17 +100,9 @@ public class DungeonWorld extends Campaign {
 	}
 
 	void process(List<Dungeon> dungeons, Town starting) {
-		for (Dungeon d : dungeons) {
-			d.level -= 1;
-		}
 		List<Town> towns = Town.gettowns();
 		for (int i = 0; i < DungeonTier.TIERS.length; i++) {
 			DungeonTier tier = DungeonTier.TIERS[i];
-			for (int j = i; j < 4; j++) {
-				Dungeon d = new Dungeon(RPG.r(tier.level - 4, tier.level));
-				d.place();
-				dungeons.add(d);
-			}
 			Town t = i == 0 ? starting : RPG.pick(towns);
 			move(dungeons, tier, t);
 			towns.remove(t);

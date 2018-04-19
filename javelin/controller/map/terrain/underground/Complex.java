@@ -20,6 +20,7 @@ public class Complex extends Map {
 		floor = Images.getImage("terraindungeonfloor");
 		wall = Images.getImage("terraindungeonwall");
 		area = map.length * map[0].length;
+		flying = false;
 	}
 
 	@Override

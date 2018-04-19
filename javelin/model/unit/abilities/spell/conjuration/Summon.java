@@ -76,7 +76,7 @@ public class Summon extends Spell {
 		Combatant summoned = new Combatant(m, true);
 		team.add(summoned);
 		summoned.summoned = true;
-		summoned.automatic = caster2.automatic;
+		summoned.automatic = true;
 		/*
 		 * TODO test if this is called after the CastSpell AP has already been
 		 * spent

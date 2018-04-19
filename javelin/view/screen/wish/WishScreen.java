@@ -1,6 +1,7 @@
 package javelin.view.screen.wish;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
@@ -21,17 +22,27 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class WishScreen extends SelectScreen {
+	static final Option ADD = new Option("Add 1 ruby to this wish", 0, '+');
+	static final Option REMOVE = new Option("Remove 1 ruby from this wish", 0,
+			'-');
+
 	int rubies;
+	int maxrubies;
 
 	/** See {@link SelectScreen#SelectScreen(String, Town)}. */
 	public WishScreen(int rubies) {
 		super("Make your wish:", null);
 		this.rubies = rubies;
+		maxrubies = rubies;
 		stayopen = false;
 	}
 
 	@Override
 	public boolean select(Option o) {
+		if (add(o) || remove(o)) {
+			stayopen = true;
+			return true;
+		}
 		double price = o.price;
 		Wish h = (Wish) o;
 		String error = h.validate();
@@ -49,6 +60,27 @@ public class WishScreen extends SelectScreen {
 			return false;
 		}
 		pay(price);
+		stayopen = false;
+		return true;
+	}
+
+	boolean remove(Option o) {
+		if (o != REMOVE) {
+			return false;
+		}
+		if (rubies > 1) {
+			rubies -= 1;
+		}
+		return true;
+	}
+
+	boolean add(Option o) {
+		if (o != ADD) {
+			return false;
+		}
+		if (rubies < maxrubies) {
+			rubies += 1;
+		}
 		return true;
 	}
 
@@ -129,7 +161,8 @@ public class WishScreen extends SelectScreen {
 
 	@Override
 	public String printinfo() {
-		return "You have " + rubies + " rubies.";
+		return "You are wishing " + rubies + " of your " + maxrubies
+				+ " rubies.";
 	}
 
 	@Override
@@ -146,11 +179,13 @@ public class WishScreen extends SelectScreen {
 		options.add(weaksumon);
 		options.add(new Teleport("teleport", 't', 3, false, this));
 		options.add(new Rebirth("upgrade cleanse", 'u', 1, true, this));
-		// 2 rubies
 		options.add(new SummonAlly("summon ally", 'S', 2, false, this));
-		if (World.scenario instanceof Campaign) {
-			options.add(new Win("win", 'W', 7, false, this));
+		options.add(new Gold(this));
+		if (World.scenario.getClass() == Campaign.class) {
+			options.add(new Win("win", 'w', 7, false, this));
 		}
+		options.add(ADD);
+		options.add(REMOVE);
 		return options;
 	}
 
@@ -161,11 +196,24 @@ public class WishScreen extends SelectScreen {
 
 	@Override
 	public String printpriceinfo(Option o) {
+		if (o == ADD || o == REMOVE) {
+			return "";
+		}
 		if (o.price == 0) {
-			return o instanceof ChangeAvatar ? (" (free)")
+			return o instanceof ChangeAvatar ? " (free)"
 					: " (free, single use)";
 		}
 		long price = Math.round(o.price);
 		return " (" + price + " " + (price == 1 ? "ruby" : "rubies") + ")";
+	}
+
+	@Override
+	protected Comparator<Option> sort() {
+		return new Comparator<Option>() {
+			@Override
+			public int compare(Option o1, Option o2) {
+				return o1.key.compareTo(o2.key);
+			}
+		};
 	}
 }

@@ -39,30 +39,30 @@ import tyrant.mikera.tyrant.Screen;
 
 /**
  * Screen context during battle.
- * 
+ *
  * TODO it has become a hierarchy that behaves how different types of
  * {@link Fight}s should behave. The ideal would be for all this type of
  * controller behavior to move to {@link Fight}. For example: {@link LairScreen}
  * .
- * 
+ *
  * TODO the 2.0 interface should absolutely not be redrawn every time, only when
  * an update is needed and even then the redraw should be on a tile-by-tile
  * basis, not the entire screen.
- * 
+ *
  * TODO many things this is actually handling should be moved to {@link Fight}
  * controllers instead.
- * 
+ *
  * TODO {@link BattleScreen} should not be the supertype for {@link WorldScreen}
  * and such. Extract a proper super type or move everything to a proper context
  * controller. Would probably be better to make this a unified ContextScreen and
  * delegate all differences to the context objects.
- * 
+ *
  * @author alex
  */
 public class BattleScreen extends Screen {
 	/**
 	 * Active {@link BattleScreen} implementation.
-	 * 
+	 *
 	 * @see WorldScreen
 	 * @see DungeonScreen
 	 */
@@ -75,7 +75,7 @@ public class BattleScreen extends Screen {
 	 * to allow them to move up to a {@link ActionCost#MOVE} action without
 	 * disruption their current action - even if {@link RepeatTurn} is thrown
 	 * from another action (like cancelling a menu, etc.).
-	 * 
+	 *
 	 * {@link BattleMouse} and {@link BattleWalker} take this into consideration
 	 * too, so as not to allow the player to cheat by using half their share of
 	 * keyboard movements and then using another {@link ActionCost#MOVE} worth
@@ -183,11 +183,11 @@ public class BattleScreen extends Screen {
 			Javelin.app.fight.startturn(Fight.state.next);
 			current = Fight.state.next;
 			Examine.lastlooked = null;
+			partialmove = 0;
 			if (Fight.state.redTeam.contains(current) || current.automatic) {
 				lastwascomputermove = current;
 				computermove();
 			} else {
-				partialmove = 0;
 				humanmove();
 				lastwascomputermove = null;
 				jointurns = false;
@@ -264,7 +264,7 @@ public class BattleScreen extends Screen {
 
 	/**
 	 * Use this to break the input loop.
-	 * 
+	 *
 	 * @param r
 	 *            This will be run instead of an {@link Action} or
 	 *            {@link WorldAction}.
@@ -395,7 +395,7 @@ public class BattleScreen extends Screen {
 
 	/**
 	 * TODO is needed?
-	 * 
+	 *
 	 * BUG Fix for
 	 * http://sourceforge.net/tracker/index.php?func=detail&aid=1088187
 	 * &group_id=16696&atid=116696 Ignore Alt keypresses, we may need to add

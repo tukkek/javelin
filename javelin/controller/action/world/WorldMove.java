@@ -24,19 +24,19 @@ import javelin.view.screen.WorldScreen;
 
 /**
  * Makes a movement on the overworld or {@link Dungeon}.
- * 
+ *
  * TODO {@link WorldScreen} hierarchy should be refactored into proper Battle /
  * Dungeon / World screens.
- * 
+ *
  * TODO {@link #perform(WorldScreen)} needs refactoring after 2.0
- * 
+ *
  * @see Javelin#getDayPeriod()
  * @author alex
  */
 public class WorldMove extends WorldAction {
 	/**
 	 * Represents time spent on resting, eating, sleeping, etc.
-	 * 
+	 *
 	 * TODO forced march
 	 */
 	public static final float NORMALMARCH = 4f / 5f;
@@ -44,17 +44,17 @@ public class WorldMove extends WorldAction {
 	 * Ideally a move should always be 6 hours in a worst-case scenario (the
 	 * time of a period), so as to avoid a move taking longer than a period,
 	 * which could confuse {@link Hazard}s.
-	 * 
+	 *
 	 * @see #TIMECOST
 	 */
 	public static final float MOVETARGET = 6f;
 	/**
 	 * How much time it takes to walk a single square with speed 30 (~30mph,
 	 * normal human speed).
-	 * 
+	 *
 	 * Calculation of worst case scenario (which should take 6 hours): 6 *
 	 * 15/30ft (slow races) * .5 (bad terrain)
-	 * 
+	 *
 	 * @see Monster#gettopspeed()
 	 * @see #MOVETARGET
 	 * @see #NORMALMARCH
@@ -68,7 +68,7 @@ public class WorldMove extends WorldAction {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param keycodes
 	 *            Integer/char keys.
 	 * @param deltax
@@ -95,12 +95,16 @@ public class WorldMove extends WorldAction {
 				break;
 			}
 		}
-		move(p.x + deltax, p.y + deltay, dangerous);
+		int x = p.x + deltax;
+		int y = p.y + deltay;
+		if (move(x, y, dangerous)) {
+			BattleScreen.active.mappanel.center(x, y, true);
+		}
 	}
 
 	/**
 	 * TODO needs to be refactored
-	 * 
+	 *
 	 * @see BattleScreen
 	 */
 	public static boolean move(int tox, int toy, boolean encounter) {
@@ -108,8 +112,8 @@ public class WorldMove extends WorldAction {
 		if (Dungeon.active == null) {
 			Squad.active.lastterrain = Terrain.current();
 		}
-		if (!validatecoordinate(tox, toy) || (Dungeon.active == null
-				&& !World.seed.map[tox][toy].enter(tox, toy))) {
+		if (!validatecoordinate(tox, toy) || Dungeon.active == null
+				&& !World.seed.map[tox][toy].enter(tox, toy)) {
 			throw new RepeatTurn();
 		}
 		float hours = Dungeon.active == null
@@ -145,7 +149,7 @@ public class WorldMove extends WorldAction {
 				}
 				throw e;
 			}
-			if (s instanceof DungeonScreen && (DungeonScreen.dontenter)) {
+			if (s instanceof DungeonScreen && DungeonScreen.dontenter) {
 				DungeonScreen.dontenter = false;
 				return false;// TODO hack
 			}

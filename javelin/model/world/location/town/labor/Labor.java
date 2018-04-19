@@ -3,6 +3,7 @@ package javelin.model.world.location.town.labor;
 import java.io.Serializable;
 
 import javelin.Javelin;
+import javelin.controller.old.Game;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
@@ -48,7 +49,7 @@ public abstract class Labor implements Serializable, Cloneable {
 	public Labor(String name, int cost, Rank minimumsize) {
 		this.name = name;
 		this.cost = cost;
-		this.minimumrank = minimumsize;
+		minimumrank = minimumsize;
 	}
 
 	public Labor generate(Town t) {
@@ -107,11 +108,11 @@ public abstract class Labor implements Serializable, Cloneable {
 	/**
 	 * This is only after all labors from a {@link Governor} are ensured to be
 	 * valid as in {@link #validate(District)}.
-	 * 
+	 *
 	 * @param step
 	 *            Works this amount of daily Labor in order to progress this
 	 *            project.
-	 * 
+	 *
 	 * @see Town#DAILYLABOR
 	 */
 	public void work(float step) {
@@ -128,7 +129,8 @@ public abstract class Labor implements Serializable, Cloneable {
 		if (!town.ishostile()) {
 			WorldScreen.current.update();
 			WorldScreen.current.center(town.x, town.y);
-			Javelin.message(name + ", finished on " + town + "!", false);
+			Game.redraw();
+			Javelin.message(name + ", finished on " + town + "!", true);
 		}
 	}
 

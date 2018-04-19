@@ -18,7 +18,7 @@ import javelin.view.screen.StatisticsScreen;
 
 /**
  * Lets the player examine the surroundings and monsters.
- * 
+ *
  * @author alex
  */
 public class Examine extends Action {
@@ -29,7 +29,7 @@ public class Examine extends Action {
 		DIRECTIONS.put('2', new Point(0, 1));
 		DIRECTIONS.put('4', new Point(-1, 0));
 		DIRECTIONS.put('6', new Point(1, 0));
-		DIRECTIONS.put('7', new Point(0, -1));
+		DIRECTIONS.put('7', new Point(-1, -1));
 		DIRECTIONS.put('9', new Point(1, -1));
 		DIRECTIONS.put('1', new Point(-1, 1));
 		DIRECTIONS.put('3', new Point(1, 1));

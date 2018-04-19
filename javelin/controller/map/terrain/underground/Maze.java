@@ -18,7 +18,6 @@ public class Maze extends Caves {
 	public Maze() {
 		super("Maze");
 		coresize = 0;
-		flying = false;
 	}
 
 	@Override

@@ -111,7 +111,11 @@ public class SkillSelectionScreen extends SelectScreen {
 	@Override
 	public boolean select(Option o) {
 		SkillOption s = (SkillOption) o;
-		return !ismaxed(s.u) && buy(s.u);
+		boolean bought = !ismaxed(s.u) && buy(s.u);
+		if (m.skillpool == 0) {
+			stayopen = false;
+		}
+		return bought;
 	}
 
 	boolean buy(SkillUpgrade s) {

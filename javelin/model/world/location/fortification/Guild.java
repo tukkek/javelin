@@ -25,7 +25,7 @@ public abstract class Guild extends Academy {
 	boolean hire;
 
 	public Guild(String string, Kit k, boolean hire) {
-		super(string, string, k.upgrades);
+		super(string, string, k.basic);
 		this.kit = k;
 		this.hire = hire;
 		hires = generatehires();
@@ -137,7 +137,7 @@ public abstract class Guild extends Academy {
 		int target = RPG.r(minlevel, maxlevel);
 		int tries = target * 100;
 		while (c.source.cr < target) {
-			c.upgrade(k.upgrades);
+			c.upgrade(k.basic);
 			tries -= 1;
 			if (tries == 0) {
 				break;

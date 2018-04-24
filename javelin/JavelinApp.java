@@ -263,7 +263,7 @@ public class JavelinApp extends QuestApp {
 			}
 		}
 		for (Kit k : Kit.KITS) {
-			for (Upgrade u : k.upgrades) {
+			for (Upgrade u : k.basic) {
 				if (!(u instanceof Summon) && !upgradelist.contains(u)) {
 					throw new RuntimeException("Unregistered upgrade: " + u);
 				}

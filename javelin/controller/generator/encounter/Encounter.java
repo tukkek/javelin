@@ -9,7 +9,7 @@ import javelin.model.unit.attack.Combatant;
 
 /**
  * A group of monsters to be fought against.
- * 
+ *
  * @author alex
  */
 public class Encounter {
@@ -25,8 +25,8 @@ public class Encounter {
 	 * @return Copy of {@link #group}.
 	 */
 	public ArrayList<Combatant> generate() {
-		final ArrayList<Combatant> encounter =
-				new ArrayList<Combatant>(group.size());
+		final ArrayList<Combatant> encounter = new ArrayList<Combatant>(
+				group.size());
 		for (final Combatant m : group) {
 			encounter.add(new Combatant(m.source, true));
 		}

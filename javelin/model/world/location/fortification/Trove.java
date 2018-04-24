@@ -13,29 +13,28 @@ import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.town.labor.expansive.Settler;
-import javelin.view.screen.town.PurchaseScreen;
+import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
  * Represents all the resource types found in the game: gold, experience, keys,
  * labor and rubies. Usually only 2 are offered per instance though, to increase
  * randomization.
- * 
+ *
  * Since the actual fight gives no xp or gold these results are doubled as
  * treasure.
- * 
+ *
  * TODO experience was a nice reward but too explotiable. You could dismiss
  * mercenaries and have a larger XP reward, or divide the squad and have only
  * reiceve all XP, which is super explotaible. If could trigger
  * {@link #reward(Reward)} just after the battle is over, this could be easily
  * solved.
- * 
+ *
  * @author alex
  */
 public class Trove extends Fortification {
 	enum Reward {
-		GOLD, EXPERIENCE, KEY, WORKER, RUBY;
+		GOLD, EXPERIENCE, KEY, RUBY;
 
 		static Reward getrandom() {
 			Reward[] all = values();
@@ -112,11 +111,7 @@ public class Trove extends Fortification {
 		if (reward == Reward.GOLD) {
 			int gold = RewardCalculator.receivegold(originalgarrison) * 2;
 			Squad.active.gold += gold;
-			return "Party receives $" + PurchaseScreen.formatcost(gold) + "!";
-		}
-		if (reward == Reward.WORKER) {
-			Settler.produce(null, Squad.active);
-			return "A worker joins the party! It can be assigned to any friendly town.";
+			return "Party receives $" + SelectScreen.formatcost(gold) + "!";
 		}
 		if (reward == Reward.KEY) {
 			key.grab();

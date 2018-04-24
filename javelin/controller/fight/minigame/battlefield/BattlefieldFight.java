@@ -19,7 +19,6 @@ import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.model.state.BattleState;
-import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.unique.minigame.Battlefield;
 import javelin.view.screen.BattleScreen;
@@ -27,15 +26,9 @@ import tyrant.mikera.engine.RPG;
 
 public class BattlefieldFight extends Minigame {
 	public static final boolean DEBUG = false;
-	public static final int HIGHESTEL;
-
-	static {
-		ArrayList<Combatant> highest = new ArrayList<Combatant>(1);
-		List<Monster> tier = Javelin.MONSTERSBYCR
-				.get(Javelin.MONSTERSBYCR.descendingKeySet().first());
-		highest.add(new Combatant(RPG.pick(tier), true));
-		HIGHESTEL = ChallengeCalculator.calculateel(highest);
-	}
+	public static final int HIGHESTEL = ChallengeCalculator
+			.crtoel(RPG.pick(Javelin.MONSTERSBYCR
+					.get(Javelin.MONSTERSBYCR.descendingKeySet().first())).cr);
 
 	/** This is used as a come-back mechanic (negative feedback loop). */
 	static final float MAXARMY = 30;
@@ -169,8 +162,7 @@ public class BattlefieldFight extends Minigame {
 		lastupdate = acting.ap;
 		int elred = calculateteammel(state.redTeam, redflagpoles);
 		int elblue = calculateteammel(state.blueTeam, blueflagpoles);
-		if ((elred + redpoints)
-				- (elblue + bluepoints) <= Difficulty.VERYEASY) {
+		if (elred + redpoints - (elblue + bluepoints) <= Difficulty.VERYEASY) {
 			surrender();
 		}
 		if (!redflagpoles.isEmpty() && elred < elblue

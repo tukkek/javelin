@@ -22,7 +22,6 @@ import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
-import javelin.controller.upgrade.BreathUpgrade;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
@@ -128,7 +127,7 @@ public class Combatant implements Serializable, Cloneable {
 	public Spells spells = new Spells();
 	/**
 	 * Experience points as unspent challenge rating value.
-	 * 
+	 *
 	 * @see #learn(float)
 	 * @see #gethumanxp()
 	 */
@@ -381,14 +380,14 @@ public class Combatant implements Serializable, Cloneable {
 	/**
 	 * Rolls a d20, sums {@link Monster#initiative} and initializes {@link #ap}
 	 * according to the result.
-	 * 
+	 *
 	 * This also adds a random positive or negative value (below 1% of an action
 	 * point) to help keep the initiative order stable by preventing collisions
 	 * (such as 2 units having exactly 0 {@link #ap}). Given that AP values are
 	 * padded to the user and that normal initiative works in 5% steps and
 	 * normal actions don't usually go finer than 10% AP cost, this is entirely
 	 * harmless when it comes to game balance.
-	 * 
+	 *
 	 * If you want an unit to enter battle mid-way, you can set a starting value
 	 * to {@link #ap} representing the current point in time and then call this
 	 * method.
@@ -715,10 +714,6 @@ public class Combatant implements Serializable, Cloneable {
 
 	public boolean upgrade(Collection<? extends Upgrade> upgrades) {
 		Upgrade upgrade = RPG.pick(new ArrayList<Upgrade>(upgrades));
-		if (upgrade instanceof BreathUpgrade) {
-			/* TODO Breaths are pretty CPU intensive right now so avoid them */
-			return false;
-		}
 		if (!upgrade.upgrade(this)) {
 			return false;
 		}
@@ -872,7 +867,7 @@ public class Combatant implements Serializable, Cloneable {
 	/**
 	 * Adds this {@link Discipline}'s {@link Maneuver} to the given
 	 * {@link Combatant}.
-	 * 
+	 *
 	 * @param d
 	 *            TODO
 	 * @param m
@@ -942,7 +937,7 @@ public class Combatant implements Serializable, Cloneable {
 	/**
 	 * Some {@link Upgrade}s need further interaction from a human after they
 	 * are applied. This method deals with all of these cleanups.
-	 * 
+	 *
 	 * @see #postupgradeautomatic(boolean, Upgrade)
 	 */
 	public void postupgrade(ClassLevelUpgrade classlevel) {
@@ -971,9 +966,9 @@ public class Combatant implements Serializable, Cloneable {
 
 	/**
 	 * Passive {@link Monster}s don't rely on BattleAi, and use this instead.
-	 * 
+	 *
 	 * @see Monster#passive.
-	 * 
+	 *
 	 * @return Outcomes.
 	 */
 	public void act(BattleState s) {
@@ -1012,7 +1007,7 @@ public class Combatant implements Serializable, Cloneable {
 	 *            if {@link Square#flooded}, returns {@link Monster#swim}. If
 	 *            <code>null</code>, will never return swimming speed.
 	 * @return The highest relevant spped available (in feet).
-	 * 
+	 *
 	 * @see Monster#burrow
 	 * @see Monster#fly
 	 * @see Monster#walk

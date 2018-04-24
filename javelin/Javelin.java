@@ -75,8 +75,9 @@ public class Javelin {
 	public static final String[] PERIODS = new String[] { PERIODMORNING,
 			PERIODNOON, PERIODEVENING, PERIODNIGHT };
 
+	public static final Image[] ICONS = new Image[] {
+			Images.getImage("javelin") };
 	static final String TITLE = "Javelin";
-	static final Image[] ICONS = new Image[] { Images.getImage("javelin") };
 	static final Preferences RECORD = Preferences
 			.userNodeForPackage(Javelin.class);
 

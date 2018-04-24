@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import javelin.controller.kit.Kit;
+import javelin.controller.kit.Rogue;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
@@ -47,7 +47,7 @@ public class ThievesGuild extends Guild {
 	 * @param raise
 	 */
 	public ThievesGuild() {
-		super("Thieves guild", Kit.ROGUE, true);
+		super("Thieves guild", Rogue.INSTANCE, true);
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package javelin.model.world.location.town.labor.cultural;
 
 import java.util.HashSet;
 
-import javelin.controller.kit.Kit;
+import javelin.controller.kit.Bard;
 import javelin.controller.terrain.Terrain;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.military.Academy;
@@ -32,7 +32,7 @@ public class BardsGuild extends Academy {
 	 * @param raise
 	 */
 	public BardsGuild() {
-		super(DESCRIPTION, DESCRIPTION, Kit.BARD.upgrades);
+		super(DESCRIPTION, DESCRIPTION, Bard.INSTANCE.basic);
 	}
 
 	@Override

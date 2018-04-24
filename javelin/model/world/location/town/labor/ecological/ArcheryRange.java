@@ -3,7 +3,7 @@ package javelin.model.world.location.town.labor.ecological;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.controller.kit.Kit;
+import javelin.controller.kit.Ranger;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
@@ -35,7 +35,7 @@ public class ArcheryRange extends Guild {
 	}
 
 	public ArcheryRange() {
-		super("Archery range", Kit.RANGER, false);
+		super("Archery range", Ranger.INSTANCE, false);
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.reader.MonsterReader;
+import javelin.controller.generator.NpcGenerator;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.generator.encounter.EncounterPossibilities;
 import javelin.model.unit.Monster;
@@ -84,6 +85,7 @@ public class Organization extends FieldReader {
 				register(e);
 			}
 		}
+		new NpcGenerator().generate();
 		if (Javelin.DEBUG) {
 			inform("");
 			inform("");

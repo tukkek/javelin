@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.kit.Kit;
+import javelin.controller.kit.Assassin;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -137,7 +137,7 @@ public class AssassinsGuild extends Academy {
 
 	/** Constructor. */
 	public AssassinsGuild() {
-		super(DESCRITPION, DESCRITPION, 6, 10, Kit.ASSASSIN.upgrades, null,
+		super(DESCRITPION, DESCRITPION, 6, 10, Assassin.INSTANCE.basic, null,
 				null);
 		vision = 3;
 	}

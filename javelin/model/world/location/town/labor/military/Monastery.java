@@ -3,7 +3,7 @@ package javelin.model.world.location.town.labor.military;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.controller.kit.Kit;
+import javelin.controller.kit.Monk;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
@@ -35,7 +35,7 @@ public class Monastery extends Guild {
 	}
 
 	public Monastery() {
-		super("Monastery", Kit.MONK, false);
+		super("Monastery", Monk.INSTANCE, false);
 	}
 
 	@Override

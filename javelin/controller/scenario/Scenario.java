@@ -193,11 +193,11 @@ public class Scenario implements Serializable {
 			Collections.shuffle(kits);
 			for (Kit k : kits) {
 				Combatant c = members.get(0);
-				if (Kit.getpossiblekits(c.source).contains(k)) {
+				if (Kit.gerpreferred(c.source).contains(k)) {
 					c.source.customName = Character.toUpperCase(
 							k.name.charAt(0)) + k.name.substring(1);
 					while (c.source.cr < 6) {
-						c.upgrade(k.upgrades);
+						c.upgrade(k.basic);
 					}
 					members.remove(0);
 					if (members.isEmpty()) {

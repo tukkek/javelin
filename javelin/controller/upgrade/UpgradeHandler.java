@@ -50,9 +50,9 @@ public class UpgradeHandler {
 	public HashSet<Upgrade> magic = new HashSet<Upgrade>();
 
 	/** Linked to an {@link MartialAcademy}. */
-	public HashSet<Upgrade> expertise = new HashSet<Upgrade>();
+	public HashSet<Upgrade> combatexpertise = new HashSet<Upgrade>();
 	/** Linked to an {@link MartialAcademy}. */
-	public HashSet<Upgrade> power = new HashSet<Upgrade>();
+	public HashSet<Upgrade> powerattack = new HashSet<Upgrade>();
 	/** Linked to an {@link MartialAcademy}. */
 	public HashSet<Upgrade> shots = new HashSet<Upgrade>();
 
@@ -162,8 +162,8 @@ public class UpgradeHandler {
 		addall(evil, all, "evil");
 		addall(magic, all, "magic");
 
-		addall(power, all, "power");
-		addall(expertise, all, "expertise");
+		addall(powerattack, all, "power");
+		addall(combatexpertise, all, "expertise");
 		addall(shots, all, "shots");
 
 		addall(schoolcompulsion, all, "schoolcompulsion");

@@ -4,7 +4,8 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.controller.kit.Kit;
+import javelin.controller.kit.Cleric;
+import javelin.controller.kit.Paladin;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.Location;
@@ -19,7 +20,7 @@ import javelin.view.screen.SquadScreen;
 import tyrant.mikera.engine.RPG;
 
 public class Sanctuary extends Guild {
-	static final int UPGRADECOST = Kit.PALADIN.upgrades.size();
+	static final int UPGRADECOST = Paladin.INSTANCE.getupgrades().size();
 	static final ArrayList<Monster> PRIESTS = new ArrayList<Monster>();
 	static final ArrayList<Monster> PALADINS = new ArrayList<Monster>();
 
@@ -62,7 +63,7 @@ public class Sanctuary extends Guild {
 		protected void done(Location goal) {
 			super.done(goal);
 			Sanctuary s = (Sanctuary) goal;
-			s.upgrades.addAll(Kit.PALADIN.upgrades);
+			s.upgrades.addAll(Paladin.INSTANCE.getupgrades());
 			s.upgraded = true;
 			s.descriptionknown = s.descriptionunknown = "Cathedral";
 			boolean forcepriest = false;
@@ -78,7 +79,7 @@ public class Sanctuary extends Guild {
 	boolean upgraded = false;
 
 	public Sanctuary() {
-		super("Sanctuary", Kit.CLERIC, true);
+		super("Sanctuary", Cleric.INSTANCE, true);
 	}
 
 	@Override
@@ -105,7 +106,7 @@ public class Sanctuary extends Guild {
 		return new Combatant[] { generatehire(7, "Acolyte", 1, 5),
 				generatehire(30, "Priest", 6, 10),
 				upgraded && RPG.chancein(30) ? generatehire("Paladin", 6, 15,
-						Kit.PALADIN, RPG.pick(PALADINS)) : null };
+						Paladin.INSTANCE, RPG.pick(PALADINS)) : null };
 	}
 
 	@Override

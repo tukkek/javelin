@@ -10,11 +10,13 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.swing.BoxLayout;
 
+import javelin.Javelin;
 import javelin.controller.TextReader;
 import javelin.controller.scenario.Campaign;
 import javelin.controller.scenario.DungeonWorld;
@@ -40,6 +42,7 @@ public class ScenarioSelectionDialog extends Frame {
 	void draw() {
 		setTitle("Welcome to Javelin!");
 		setSize(400, 400);
+		setIconImages(Arrays.asList(Javelin.ICONS));
 		addWindowListener(new Close());
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		for (String s : preparetext()) {

@@ -112,7 +112,7 @@ public class AdventurersGuild extends UniqueLocation {
 	}
 
 	List<Kit> getcourses(int index) {
-		return Kit.getpossiblekits(students.get(index).source);
+		return Kit.gerpreferred(students.get(index).source);
 	}
 
 	String show(ArrayList<Combatant> students, float mostpowerful, float pay) {
@@ -159,7 +159,7 @@ public class AdventurersGuild extends UniqueLocation {
 			float cr = ChallengeCalculator.calculatecr(student.source);
 			float original = cr;
 			ClassLevelUpgrade classlevel = null;
-			ArrayList<Upgrade> upgrades = new ArrayList<Upgrade>(kit.upgrades);
+			ArrayList<Upgrade> upgrades = new ArrayList<Upgrade>(kit.basic);
 			while (cr < TARGETLEVEL) {
 				Upgrade u = RPG.pick(upgrades);
 				if (u.upgrade(student)) {

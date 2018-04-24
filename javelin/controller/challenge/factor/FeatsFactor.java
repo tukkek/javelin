@@ -102,8 +102,8 @@ public class FeatsFactor extends CrFactor {
 		register(handler.good, GOOD);
 		register(handler.evil, EVIL);
 		register(handler.shots, SHOTS);
-		register(handler.power, POWER);
-		register(handler.expertise, EXPERTISE);
+		register(handler.powerattack, POWER);
+		register(handler.combatexpertise, EXPERTISE);
 		register(handler.internal, INTERNAL);
 	}
 

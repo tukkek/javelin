@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.kit.Kit;
+import javelin.controller.kit.Barbarian;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
@@ -47,7 +47,7 @@ public class MeadHall extends Guild {
 	}
 
 	public MeadHall() {
-		super("Mead hall", Kit.BARBARIAN, true);
+		super("Mead hall", Barbarian.INSTANCE, true);
 	}
 
 	@Override

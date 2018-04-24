@@ -4,8 +4,11 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Panel;
 import java.awt.Rectangle;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javelin.Javelin;
+import javelin.controller.old.Game;
 
 public class TPanel extends Panel {
 	public QuestApp questapp;
@@ -20,7 +23,12 @@ public class TPanel extends Panel {
 		globalKeyListenerHasBeenAdded = true;
 
 		questapp = Javelin.app;
-		addKeyListener(questapp.keyadapter);
+		addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				Game.userinterface.go(e);
+			}
+		});
 		setFocusTraversalKeysEnabled(false);
 	}
 
@@ -38,8 +46,8 @@ public class TPanel extends Panel {
 		Graphics bg;
 
 		// only build when needed
-		if ((buffer == null) || (buffer.getWidth(this) != this.getSize().width)
-				|| (buffer.getHeight(this) != this.getSize().height)) {
+		if (buffer == null || buffer.getWidth(this) != this.getSize().width
+				|| buffer.getHeight(this) != this.getSize().height) {
 			try {
 				buffer = this.createImage(getSize().width, getSize().height);
 			} catch (Throwable x) {

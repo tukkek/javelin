@@ -855,4 +855,10 @@ public class Monster implements Cloneable, Serializable {
 		String type = this.type.toLowerCase();
 		return !type.contains("undead") && !type.contains("construct");
 	}
+
+	public boolean isaquatic() {
+		List<String> terrains = getterrains();
+		return terrains.size() == 1
+				&& terrains.get(0).equalsIgnoreCase(Terrain.WATER.name);
+	}
 }

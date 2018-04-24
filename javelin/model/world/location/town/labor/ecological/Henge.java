@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import javelin.Javelin;
-import javelin.controller.kit.Kit;
+import javelin.controller.kit.Druid;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Monster;
@@ -64,7 +64,7 @@ public class Henge extends Academy {
 
 	public Henge(int level) {
 		super(DESCRIPTIION, DESCRIPTIION, level - 1, level + 1,
-				Kit.DRUID.upgrades, null, null);
+				Druid.INSTANCE.basic, null, null);
 		for (Upgrade u : new ArrayList<Upgrade>(upgrades)) {
 			if (u instanceof Summon) {
 				upgrades.remove(u);

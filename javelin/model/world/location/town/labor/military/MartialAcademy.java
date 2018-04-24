@@ -23,11 +23,11 @@ public class MartialAcademy extends Academy {
 
 	static {
 		UpgradeHandler uh = UpgradeHandler.singleton;
-		MartialAcademyData expertise = new MartialAcademyData(uh.expertise,
+		MartialAcademyData expertise = new MartialAcademyData(uh.combatexpertise,
 				"Academy (combat expertise)", RaiseIntelligence.SINGLETON);
 		expertise.upgrades.add(RaiseDexterity.SINGLETON);
 		ACADEMIES.add(expertise);
-		ACADEMIES.add(new MartialAcademyData(uh.power, "Academy (power attack)",
+		ACADEMIES.add(new MartialAcademyData(uh.powerattack, "Academy (power attack)",
 				RaiseStrength.SINGLETON));
 	}
 

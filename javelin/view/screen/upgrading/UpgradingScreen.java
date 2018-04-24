@@ -22,7 +22,6 @@ import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.Option;
-import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.SelectScreen;
 
 /**
@@ -43,7 +42,13 @@ public abstract class UpgradingScreen extends SelectScreen {
 			this.u = u;
 			if (u instanceof Spell) {
 				name = "Spell: " + name.toLowerCase();
+				priority = 2;
 			}
+		}
+
+		@Override
+		public double sort() {
+			return u instanceof Spell ? ((Spell) u).level : super.sort();
 		}
 	}
 
@@ -81,7 +86,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 
 	/**
 	 * Mostly concerned with {@link Squad} clean-up issues.
-	 * 
+	 *
 	 * @param trainees
 	 */
 	protected void onexit(ArrayList<TrainingOrder> trainees) {
@@ -103,7 +108,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 		}
 		text += listeligible;
 		if (showmoneyinfo) {
-			text += "Your squad has $" + ShoppingScreen.formatcost(getgold())
+			text += "Your squad has $" + SelectScreen.formatcost(getgold())
 					+ ".\n\n";
 		}
 		text += "Which squad member? Press r to return to upgrade selection.";
@@ -189,7 +194,8 @@ public abstract class UpgradingScreen extends SelectScreen {
 			return null;
 		}
 		BigDecimal cost = new BigDecimal(
-				ChallengeCalculator.calculaterawcr(clone.source)[1] - originalcr);
+				ChallengeCalculator.calculaterawcr(clone.source)[1]
+						- originalcr);
 		if (!listing) {
 			int goldpieces = price(cost.floatValue());
 			if (goldpieces > getgold()) {
@@ -226,11 +232,11 @@ public abstract class UpgradingScreen extends SelectScreen {
 	@Override
 	public List<Option> getoptions() {
 		Collection<Upgrade> upgrades = getupgrades();
-		ArrayList<Option> ups = new ArrayList<Option>(upgrades.size());
+		ArrayList<Option> options = new ArrayList<Option>(upgrades.size());
 		for (Upgrade u : upgrades) {
-			ups.add(createoption(u));
+			options.add(createoption(u));
 		}
-		return ups;
+		return options;
 	}
 
 	protected UpgradeOption createoption(Upgrade u) {
@@ -241,8 +247,14 @@ public abstract class UpgradingScreen extends SelectScreen {
 	protected Comparator<Option> sort() {
 		return new Comparator<Option>() {
 			@Override
-			public int compare(Option arg0, Option arg1) {
-				return arg0.name.compareTo(arg1.name);
+			public int compare(Option a, Option b) {
+				if (a.priority != b.priority) {
+					return Double.compare(a.priority, b.priority);
+				}
+				if (a.sort() != b.sort()) {
+					return Double.compare(a.sort(), b.sort());
+				}
+				return a.name.compareTo(b.name);
 			}
 		};
 	}

@@ -43,14 +43,13 @@ import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.world.WorldPanel;
 import javelin.view.mappanel.world.WorldTile;
-import javelin.view.screen.town.PurchaseScreen;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.tyrant.QuestApp;
 
 /**
  * Shows and helps manage the overworld view.
- * 
+ *
  * @see World
  * @see JavelinApp#overviewmap
  * @author alex
@@ -63,10 +62,10 @@ public class WorldScreen extends BattleScreen {
 	 * a small amount of screen-space. If the World is small enough to fit a
 	 * screen we can't have the player walking around too freely or he will be
 	 * able to reach anywhere without difficulty.
-	 * 
+	 *
 	 * One encounter every 2 steps is way too restricting though - 3 feels like
 	 * "most" steps will be safe, but just barely enough.
-	 * 
+	 *
 	 * Per D&D rules a well-equipped party should be able to withstand 4
 	 * encounters in a row before needing to rest. This means that the player
 	 * can take (statistically speaking) 6 steps away from a Town and still come
@@ -74,7 +73,7 @@ public class WorldScreen extends BattleScreen {
 	 * considering how small the map is and that the player can build roads,
 	 * rent {@link Transport} vehicles, etc - which will further reduce the
 	 * encounter rate by increasing player speed.
-	 * 
+	 *
 	 * The current value (1.85) has been selected to make sure starting units
 	 * are close to the 3-step per encounter mark but actually a {@link Squad}
 	 * with 30ft-moving units is getting closer to 5 steps even on bad
@@ -96,7 +95,7 @@ public class WorldScreen extends BattleScreen {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param open
 	 */
 	public WorldScreen(boolean open) {
@@ -225,7 +224,7 @@ public class WorldScreen extends BattleScreen {
 
 	/**
 	 * Player acts and ends turn, allowing time to pass.
-	 * 
+	 *
 	 * @see Javelin#act()
 	 * @see Squad#hourselapsed
 	 */
@@ -250,7 +249,7 @@ public class WorldScreen extends BattleScreen {
 			for (Actor a : actors) {
 				a.turn(time, this);
 				Location l = a instanceof Location ? (Location) a : null;
-				if (l != null) {
+				if (l != null && World.scenario.spawn) {
 					l.spawn();
 				}
 			}
@@ -354,7 +353,7 @@ public class WorldScreen extends BattleScreen {
 		final int upkeep = Squad.active.getupkeep();
 		String gold = "$" + SelectScreen.formatcost(Squad.active.gold);
 		if (upkeep > 0) {
-			gold += " (upkeep: $" + PurchaseScreen.formatcost(upkeep) + "/day)";
+			gold += " (upkeep: $" + SelectScreen.formatcost(upkeep) + "/day)";
 		}
 		return gold;
 	}
@@ -409,7 +408,7 @@ public class WorldScreen extends BattleScreen {
 
 	/**
 	 * The arbitrary rule is 1 encounter per day in the wild.
-	 * 
+	 *
 	 * TODO think of a better framework as design guideline for distance between
 	 * towns, encounter ratio, etc. The game has changed a lot since 1.0 but the
 	 * goal back then was to allow you to reach a new {@link Town} after an
@@ -417,7 +416,7 @@ public class WorldScreen extends BattleScreen {
 	 * and hostile Towns change everything. The ultimate goal still is to make
 	 * every move strategically meaningful (no no-brainers) while still keeping
 	 * the world scre en smal enough to fit in just a few screens worth of size.
-	 * 
+	 *
 	 * @param hoursellapsed
 	 * @return <code>true</code> if exploration was uneventful,
 	 *         <code>false</code> if something happened.
@@ -450,7 +449,7 @@ public class WorldScreen extends BattleScreen {
 
 	/**
 	 * TODO it's a conceptual mess
-	 * 
+	 *
 	 * @param actor
 	 *            Used for the {@link WorldScreen}.
 	 * @param x

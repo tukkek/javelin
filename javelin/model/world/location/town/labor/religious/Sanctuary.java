@@ -2,12 +2,11 @@ package javelin.model.world.location.town.labor.religious;
 
 import java.awt.Image;
 import java.util.ArrayList;
-import java.util.List;
 
 import javelin.controller.kit.Cleric;
 import javelin.controller.kit.Paladin;
-import javelin.model.unit.Monster;
-import javelin.model.unit.attack.Combatant;
+import javelin.controller.upgrade.Upgrade;
+import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.town.District;
@@ -16,27 +15,11 @@ import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.military.Academy;
 import javelin.view.Images;
-import javelin.view.screen.SquadScreen;
 import tyrant.mikera.engine.RPG;
 
 public class Sanctuary extends Guild {
-	static final int UPGRADECOST = Paladin.INSTANCE.getupgrades().size();
-	static final ArrayList<Monster> PRIESTS = new ArrayList<Monster>();
-	static final ArrayList<Monster> PALADINS = new ArrayList<Monster>();
-
-	static {
-		for (Monster m : SquadScreen.CANDIDATES) {
-			if (Boolean.FALSE.equals(m.lawful) || !m.think(-2)) {
-				continue;
-			}
-			if (!Boolean.FALSE.equals(m.good)) {
-				PRIESTS.add(m);
-				if (Boolean.TRUE.equals(m.good)) {
-					PALADINS.add(m);
-				}
-			}
-		}
-	}
+	static final String CATHEDRAL = "Cathedral";
+	static final int MAXUPGRADES = 15;
 
 	public static class BuildSanctuary extends BuildAcademy {
 		public BuildSanctuary() {
@@ -49,9 +32,17 @@ public class Sanctuary extends Guild {
 		}
 	}
 
-	public class UpǵradeSanctuary extends BuildingUpgrade {
+	public static class UpǵradeSanctuary extends BuildingUpgrade {
+
 		public UpǵradeSanctuary(Location previous) {
-			super("Cathedral", UPGRADECOST, UPGRADECOST, previous, Rank.TOWN);
+			super(CATHEDRAL, getupgradecost(previous), getupgradecost(previous),
+					previous, Rank.TOWN);
+		}
+
+		static int getupgradecost(Location previous) {
+			Sanctuary s = (Sanctuary) previous;
+			return Math.max(MAXUPGRADES,
+					s.upgrades.size() + Paladin.INSTANCE.getupgrades().size());
 		}
 
 		@Override
@@ -64,22 +55,23 @@ public class Sanctuary extends Guild {
 			super.done(goal);
 			Sanctuary s = (Sanctuary) goal;
 			s.upgrades.addAll(Paladin.INSTANCE.getupgrades());
-			s.upgraded = true;
-			s.descriptionknown = s.descriptionunknown = "Cathedral";
-			boolean forcepriest = false;
-			boolean forcepaladin = false;
-			while (!forcepriest && !forcepaladin) {
-				forcepriest = RPG.chancein(2);
-				forcepaladin = RPG.chancein(2);
+			while (s.upgrades.size() > MAXUPGRADES) {
+				Upgrade u = RPG.pick(new ArrayList<Upgrade>(s.upgrades));
+				if (u instanceof ClassLevelUpgrade) {
+					continue;
+				}
+				s.upgrades.remove(u);
 			}
-			s.generatehires(true, forcepriest, forcepaladin);
+			s.upgraded = true;
+			s.descriptionknown = CATHEDRAL;
+			s.descriptionunknown = CATHEDRAL;
 		}
 	}
 
 	boolean upgraded = false;
 
 	public Sanctuary() {
-		super("Sanctuary", Cleric.INSTANCE, true);
+		super("Sanctuary", Cleric.INSTANCE);
 	}
 
 	@Override
@@ -97,20 +89,11 @@ public class Sanctuary extends Guild {
 				: super.getimage();
 	}
 
-	void generatehires(boolean forceacolyte, boolean forcepriest,
-			boolean forcepaladin) {
-	}
-
 	@Override
-	protected javelin.model.unit.attack.Combatant[] generatehires() {
-		return new Combatant[] { generatehire(7, "Acolyte", 1, 5),
-				generatehire(30, "Priest", 6, 10),
-				upgraded && RPG.chancein(30) ? generatehire("Paladin", 6, 15,
-						Paladin.INSTANCE, RPG.pick(PALADINS)) : null };
-	}
-
-	@Override
-	protected List<Monster> getcandidates() {
-		return PRIESTS;
+	protected void generatehires() {
+		if (upgraded) {
+			kit = RPG.chancein(2) ? Cleric.INSTANCE : Paladin.INSTANCE;
+		}
+		super.generatehires();
 	}
 }

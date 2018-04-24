@@ -1,9 +1,7 @@
 package javelin.controller.kit;
 
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.controller.upgrade.ability.RaiseCharisma;
-import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.upgrade.classes.Expert;
 import javelin.controller.upgrade.skill.Diplomacy;
 import javelin.controller.upgrade.skill.GatherInformation;
@@ -11,12 +9,11 @@ import javelin.controller.upgrade.skill.Knowledge;
 import javelin.controller.upgrade.skill.UseMagicDevice;
 
 public class Bard extends Kit {
-	public static final Kit INSTANCE = new Bard("bard", Expert.SINGLETON,
-			RaiseCharisma.SINGLETON);
+	public static final Kit INSTANCE = new Bard();
 
-	private Bard(String name, ClassLevelUpgrade classadvancement,
-			RaiseAbility raiseability) {
-		super(name, classadvancement, raiseability);
+	private Bard() {
+		super("bard", Expert.SINGLETON, RaiseCharisma.SINGLETON, "Joker",
+				"Minstrel", "Bard", "Maestro");
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
+import javelin.model.item.Tier;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.town.labor.military.Academy;
@@ -42,19 +43,23 @@ public abstract class Kit implements Serializable {
 	public HashSet<Upgrade> extension = new HashSet<Upgrade>();
 	public ClassLevelUpgrade classlevel;
 
+	String[] titles;
+
 	public Kit(String name, ClassLevelUpgrade classadvancement,
-			RaiseAbility raiseability) {
+			RaiseAbility raiseability, String title1, String title2,
+			String title3, String title4) {
 		this.name = name;
 		classlevel = classadvancement;
 		basic.add(classadvancement);
 		basic.add(raiseability);
 		define();
-		extend(UpgradeHandler.singleton);
 		int nupgrades = basic.size();
 		if (!(3 <= nupgrades && nupgrades <= 7) && Javelin.DEBUG) {
 			throw new RuntimeException(
 					"Kit " + name + " has " + nupgrades + " upgrades");
 		}
+		extend(UpgradeHandler.singleton);
+		titles = new String[] { title1, title2, title3, title4, };
 	}
 
 	protected abstract void extend(UpgradeHandler h);
@@ -65,11 +70,11 @@ public abstract class Kit implements Serializable {
 		return false;
 	}
 
-	public int getpreferredability(Monster source) {
+	public int getpreferredability(Monster m) {
 		int preferred = Integer.MIN_VALUE;
 		for (Upgrade u : basic) {
 			if (u instanceof RaiseAbility) {
-				int ability = ((RaiseAbility) u).getattribute(source);
+				int ability = ((RaiseAbility) u).getattribute(m);
 				if (ability > preferred) {
 					preferred = ability;
 				}
@@ -97,7 +102,7 @@ public abstract class Kit implements Serializable {
 		return score == bestability || score == secondbest;
 	}
 
-	public static List<Kit> gerpreferred(Monster m) {
+	public static List<Kit> getpreferred(Monster m) {
 		ArrayList<Integer> attributes = new ArrayList<Integer>(6);
 		attributes.add(m.strength);
 		attributes.add(m.dexterity);
@@ -120,5 +125,10 @@ public abstract class Kit implements Serializable {
 		HashSet<Upgrade> upgrades = new HashSet<Upgrade>(basic);
 		upgrades.addAll(extension);
 		return upgrades;
+	}
+
+	public String gettitle(Monster m) {
+		int index = Tier.gettier(Math.round(m.cr)).ordinal();
+		return titles[Math.min(index, titles.length - 1)];
 	}
 }

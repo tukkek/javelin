@@ -1,28 +1,12 @@
 package javelin.model.world.location.town.labor.ecological;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javelin.controller.kit.Ranger;
 import javelin.controller.terrain.Terrain;
-import javelin.model.unit.Monster;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.military.Academy;
-import javelin.model.world.location.unique.TrainingHall;
 
 public class ArcheryRange extends Guild {
-	static final ArrayList<Monster> CANDIDATES = new ArrayList<Monster>();
-
-	static {
-		for (Monster m : TrainingHall.CANDIDATES) {
-			if (!m.ranged.isEmpty()) {
-				CANDIDATES.add(m);
-			}
-		}
-	}
-
 	public static class BuildArcheryRange extends BuildAcademy {
 		public BuildArcheryRange() {
 			super(Rank.HAMLET);
@@ -35,7 +19,7 @@ public class ArcheryRange extends Guild {
 	}
 
 	public ArcheryRange() {
-		super("Archery range", Ranger.INSTANCE, false);
+		super("Archery range", Ranger.INSTANCE);
 	}
 
 	@Override
@@ -43,16 +27,5 @@ public class ArcheryRange extends Guild {
 		while (x == -1 || !Terrain.get(x, y).equals(Terrain.FOREST)) {
 			super.generate();
 		}
-	}
-
-	@Override
-	protected javelin.model.unit.attack.Combatant[] generatehires() {
-		return new Combatant[] { generatehire(7, "Tracker", 1, 5),
-				generatehire(30, "Ranger", 6, 10) };
-	}
-
-	@Override
-	protected List<Monster> getcandidates() {
-		return CANDIDATES;
 	}
 }

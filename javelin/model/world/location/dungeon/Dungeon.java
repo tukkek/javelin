@@ -90,6 +90,7 @@ public class Dungeon extends Location {
 		link = false;
 		discard = false;
 		impermeable = true;
+		allowedinscenario = false;
 		this.level = level == null ? determineel() : level;
 	}
 

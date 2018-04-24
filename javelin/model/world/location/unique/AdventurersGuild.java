@@ -112,7 +112,7 @@ public class AdventurersGuild extends UniqueLocation {
 	}
 
 	List<Kit> getcourses(int index) {
-		return Kit.gerpreferred(students.get(index).source);
+		return Kit.getpreferred(students.get(index).source);
 	}
 
 	String show(ArrayList<Combatant> students, float mostpowerful, float pay) {

@@ -1,20 +1,18 @@
 package javelin.controller.kit;
 
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.controller.upgrade.ability.RaiseCharisma;
-import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.upgrade.classes.Warrior;
+import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureLightWounds;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.Bless;
 
 public class Paladin extends Kit {
-	public static final Kit INSTANCE = new Paladin("paladin", Warrior.SINGLETON,
-			RaiseCharisma.SINGLETON);
+	public static final Kit INSTANCE = new Paladin();
 
-	Paladin(String name, ClassLevelUpgrade classadvancement,
-			RaiseAbility raiseability) {
-		super(name, classadvancement, raiseability);
+	Paladin() {
+		super("paladin", Warrior.SINGLETON, RaiseCharisma.SINGLETON, "Keeper",
+				"Guardian", "Paladin", "Justicar");
 	}
 
 	@Override
@@ -29,5 +27,11 @@ public class Paladin extends Kit {
 		extension.addAll(h.magic);
 		extension.addAll(h.schoolhealwounds);
 		extension.addAll(h.schoolcompulsion);
+	}
+
+	@Override
+	public boolean allow(int bestability, int secondbest, Monster m) {
+		return Boolean.TRUE.equals(m.good)
+				&& Cleric.INSTANCE.allow(bestability, secondbest, m);
 	}
 }

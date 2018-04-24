@@ -3,11 +3,11 @@ package javelin.view.screen.town;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.comparator.OptionsByPriority;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
@@ -17,7 +17,7 @@ import javelin.view.screen.Option;
 
 /**
  * Any screen with multiple choices.
- * 
+ *
  * @author alex
  */
 public abstract class SelectScreen extends InfoScreen {
@@ -28,7 +28,7 @@ public abstract class SelectScreen extends InfoScreen {
 	public static final char PROCEED = 'q';
 	/**
 	 * List of keys except q.
-	 * 
+	 *
 	 * TODO would probably work better as a list (with indexof(), etc). Can use
 	 * {@link Arrays#asList(Object...)}.
 	 */
@@ -69,7 +69,7 @@ public abstract class SelectScreen extends InfoScreen {
 		for (final Option o : options) {
 			roundcost(o);
 		}
-		sort(options);
+		options.sort(sort());
 		printoptions(options);
 		final String extrainfo = printinfo();
 		if (!extrainfo.isEmpty()) {
@@ -87,20 +87,16 @@ public abstract class SelectScreen extends InfoScreen {
 		}
 	}
 
+	protected Comparator<Option> sort() {
+		return OptionsByPriority.INSTANCE;
+	}
+
 	public void printoptions(final List<Option> options) {
 		for (int i = 0; i < options.size(); i++) {
 			final Option o = options.get(i);
 			text += (o.key == null ? KEYS[i] : o.key) + " - " + o.toString()
 					+ printpriceinfo(o) + "\n";
 		}
-	}
-
-	/**
-	 * @param options
-	 *            All options to be sorted.
-	 */
-	protected void sort(final List<Option> options) {
-		Collections.sort(options, sort());
 	}
 
 	/** Called when closing this screen. */
@@ -113,19 +109,6 @@ public abstract class SelectScreen extends InfoScreen {
 	 */
 	public String printpriceinfo(Option o) {
 		return " " + getCurrency() + formatcost(o.price);
-	}
-
-	/**
-	 * @return A comparator for the default implementation of
-	 *         {@link #sort(List)}.
-	 */
-	protected Comparator<Option> sort() {
-		return new Comparator<Option>() {
-			@Override
-			public int compare(final Option o1, final Option o2) {
-				return new Long(Math.round(o1.price - o2.price)).intValue();
-			}
-		};
 	}
 
 	/**
@@ -234,7 +217,7 @@ public abstract class SelectScreen extends InfoScreen {
 
 	/**
 	 * Called after an Option is selected.
-	 * 
+	 *
 	 * @param o
 	 *            Selection.
 	 * @return <code>true</code> to exit the screen, <code>false</code> to

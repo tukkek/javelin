@@ -3,23 +3,21 @@ package javelin.controller.kit;
 import javelin.controller.DamageEffect;
 import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.controller.upgrade.ability.RaiseDexterity;
-import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.upgrade.classes.Expert;
 import javelin.controller.upgrade.damage.EffectUpgrade;
 import javelin.controller.upgrade.skill.Disguise;
 import javelin.controller.upgrade.skill.Stealth;
+import javelin.model.unit.Monster;
 import javelin.model.unit.feat.skill.Deceitful;
 
 public class Assassin extends Kit {
-	public static final Kit INSTANCE = new Assassin("assassin",
-			Expert.SINGLETON, RaiseDexterity.SINGLETON);
+	public static final Kit INSTANCE = new Assassin();
 
-	private Assassin(String name, ClassLevelUpgrade classadvancement,
-			RaiseAbility raiseability) {
-		super(name, classadvancement, raiseability);
+	private Assassin() {
+		super("assassin", Expert.SINGLETON, RaiseDexterity.SINGLETON, "Thug",
+				"Cutthroat", "Assassin", "Ninja");
 	}
 
 	@Override
@@ -37,5 +35,11 @@ public class Assassin extends Kit {
 		extension.addAll(h.evil);
 		extension.addAll(h.wind);
 		extension.addAll(h.combatexpertise);
+	}
+
+	@Override
+	public boolean allow(int bestability, int secondbest, Monster m) {
+		return Boolean.FALSE.equals(m.good)
+				&& super.allow(bestability, secondbest, m);
 	}
 }

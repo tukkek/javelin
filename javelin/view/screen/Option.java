@@ -16,6 +16,13 @@ public class Option implements Serializable {
 	public String name;
 	/** Corresponding input. */
 	public Character key;
+	/**
+	 * This is the first sorting consideration. Lower number will appear first
+	 * on the {@link SelectScreen} list.
+	 *
+	 * @see #sort()
+	 */
+	public float priority = 1;
 
 	/** Constructor. */
 	public Option(final String name, final double d, Character keyp) {
@@ -23,6 +30,16 @@ public class Option implements Serializable {
 		this.name = name;
 		price = d;
 		key = keyp;
+	}
+
+	/**
+	 * This is the second sorting priority. It's used to compare between Options
+	 * with the same {@link #priority}.
+	 *
+	 * @return A value that is then fed to {@link Double#compareTo(Double)}.
+	 */
+	public double sort() {
+		return price;
 	}
 
 	/**

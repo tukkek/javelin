@@ -15,7 +15,7 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * Squad selection screen when starting a new game.
- * 
+ *
  * @author alex
  */
 public class SquadScreen extends InfoScreen {
@@ -49,6 +49,7 @@ public class SquadScreen extends InfoScreen {
 		page(0);
 		World.scenario.upgradesquad(squad);
 		Squad.active.gold = getstartinggold();
+		Squad.active.sort();
 		return squad;
 	}
 

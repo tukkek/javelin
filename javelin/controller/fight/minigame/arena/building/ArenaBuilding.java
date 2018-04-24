@@ -51,6 +51,7 @@ public abstract class ArenaBuilding extends Building {
 		protected BuildingUpgradeOption() {
 			super("Upgrade " + source.customName.toLowerCase(),
 					getupgradecost(), 'u');
+			priority = 2;
 		}
 
 		protected void upgrade() {

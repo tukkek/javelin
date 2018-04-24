@@ -15,7 +15,7 @@ import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.model.world.location.unique.TrainingHall;
 import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.town.PurchaseScreen;
+import javelin.view.screen.town.SelectScreen;
 import javelin.view.screen.town.option.ScreenOption;
 import javelin.view.screen.upgrading.AcademyScreen;
 import tyrant.mikera.engine.RPG;
@@ -25,7 +25,7 @@ import tyrant.mikera.engine.RPG;
  * burdersome for players to learn? Also for upgrading NPCs? Here it should be
  * easy enough to have a {@link ScreenOption} that takes care of that but what
  * for NPCs?
- * 
+ *
  * @author alex
  */
 public class DisciplineAcademy extends Academy {
@@ -38,9 +38,14 @@ public class DisciplineAcademy extends Academy {
 
 		public HireOption(Combatant c) {
 			super("Hire " + c + " ($"
-					+ PurchaseScreen.formatcost(MercenariesGuild.getfee(c))
+					+ SelectScreen.formatcost(MercenariesGuild.getfee(c))
 					+ "/day)", 0);
 			this.c = c;
+		}
+
+		@Override
+		public double sort() {
+			return c.source.cr;
 		}
 	}
 
@@ -185,7 +190,8 @@ public class DisciplineAcademy extends Academy {
 			if (!u.upgrade(c2)) {
 				continue;
 			}
-			final float newcr = ChallengeCalculator.calculaterawcr(c2.source)[1];
+			final float newcr = ChallengeCalculator
+					.calculaterawcr(c2.source)[1];
 			if (newcr - cr > xp) {
 				continue;
 			}

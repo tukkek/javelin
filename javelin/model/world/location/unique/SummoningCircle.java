@@ -1,8 +1,6 @@
 package javelin.model.world.location.unique;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -13,6 +11,8 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.military.Academy;
+import javelin.view.screen.Option;
+import javelin.view.screen.upgrading.UpgradingScreen.UpgradeOption;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -23,6 +23,7 @@ import tyrant.mikera.engine.RPG;
  */
 public class SummoningCircle extends Academy {
 	static final String DESCRIPTION = "Summoning circle";
+	static final int MAXSPELLS = 9;
 
 	public static class BuildSummoningCircle extends BuildAcademy {
 		public BuildSummoningCircle() {
@@ -31,62 +32,31 @@ public class SummoningCircle extends Academy {
 
 		@Override
 		protected Academy generateacademy() {
-			SummoningCircle goal = new SummoningCircle(true, 5);
+			SummoningCircle goal = new SummoningCircle();
 			UniqueLocation.makecommon(goal, cost - 1, cost + 1);
 			return goal;
 		}
 	}
 
-	int maxspells;
-	boolean outsidersonly;
-
 	/** Constructor. */
-	public SummoningCircle(boolean outsidersonly, int maxspells) {
-		super(DESCRIPTION, DESCRIPTION, maxspells - 1, maxspells + 1,
-				new HashSet<Upgrade>(), null, null);
-		this.outsidersonly = outsidersonly;
-		this.maxspells = maxspells;
+	public SummoningCircle() {
+		super(DESCRIPTION, DESCRIPTION, new HashSet<Upgrade>());
 		UniqueLocation.init(this);
 		pillage = false;
 		populate();
 	}
 
-	public SummoningCircle() {
-		this(false, RPG.r(10, 15));
-	}
-
 	void populate() {
-		ArrayList<Float> crs = new ArrayList<Float>(
-				Javelin.MONSTERSBYCR.keySet());
-		int tries = 1000;
-		add: while (upgrades.size() < maxspells) {
-			tries -= 1;
-			if (tries == 0) {
-				if (Javelin.DEBUG) {
-					throw new RuntimeException(
-							"too many summoning circle populaiton retries");
-				}
-				break;
-			}
-			float cr = RPG.pick(crs);
-			for (Upgrade u : upgrades) {
-				Summon s = (Summon) u;
-				if (Javelin.getmonster(s.monstername).cr == cr) {
-					continue add;
-				}
-			}
-			Monster m = pickmonster(cr);
-			if (m != null) {
-				upgrades.add(new Summon(m.name, 1f));
-			}
+		List<Monster> summons = Javelin.getmonsterbytype("outsider");
+		while (upgrades.size() < MAXSPELLS && !summons.isEmpty()) {
+			Monster m = RPG.pick(summons);
+			summons.remove(m);
+			upgrades.add(new Summon(m.name, 1f));
 		}
 	}
 
 	Monster pickmonster(float cr) {
 		List<Monster> monsters = Javelin.MONSTERSBYCR.get(cr);
-		if (!outsidersonly) {
-			return RPG.pick(monsters);
-		}
 		Collections.shuffle(monsters);
 		for (Monster m : monsters) {
 			if (m.type.equals("outsider")) {
@@ -97,15 +67,16 @@ public class SummoningCircle extends Academy {
 	}
 
 	@Override
-	public void sort(ArrayList<Upgrade> upgrades) {
-		upgrades.sort(new Comparator<Upgrade>() {
-			@Override
-			public int compare(Upgrade o1, Upgrade o2) {
-				Summon a = (Summon) o1;
-				Summon b = (Summon) o2;
-				return a.monstername.compareTo(b.monstername);
+	public void sort(List<Option> upgrades) {
+		for (Option o : upgrades) {
+			UpgradeOption uo = o instanceof UpgradeOption ? (UpgradeOption) o
+					: null;
+			Summon s = uo != null && uo.u instanceof Summon ? (Summon) uo.u
+					: null;
+			if (s != null) {
+				o.priority += s.cr / 21f;
 			}
-		});
+		}
 	}
 
 	@Override

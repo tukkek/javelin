@@ -1,20 +1,22 @@
 package javelin.controller.kit;
 
+import java.util.LinkedList;
+
+import javelin.Javelin;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.controller.upgrade.ability.RaiseWisdom;
-import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.upgrade.classes.Commoner;
 import javelin.controller.upgrade.skill.Survival;
+import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
+import tyrant.mikera.engine.RPG;
 
 public class Druid extends Kit {
-	public static final Kit INSTANCE = new Druid("druid", Commoner.SINGLETON,
-			RaiseWisdom.SINGLETON);
+	public static final Kit INSTANCE = new Druid();
 
-	private Druid(String name, ClassLevelUpgrade classadvancement,
-			RaiseAbility raiseability) {
-		super(name, classadvancement, raiseability);
+	private Druid() {
+		super("druid", Commoner.SINGLETON, RaiseWisdom.SINGLETON, "Herder",
+				"Elder", "Druid", "Archdruid");
 	}
 
 	@Override
@@ -35,9 +37,18 @@ public class Druid extends Kit {
 		extension.addAll(h.schooltotem);
 		extension.addAll(h.schooltransmutation);
 		extension.addAll(h.schooldivination);
-		int summons = extension.size();
-		for (int i = 0; i < summons; i++) {
-			extension.add(Summon.getrandom());
+		addsummons(extension.size());
+	}
+
+	void addsummons(int nsummons) {
+		LinkedList<Monster> summons = new LinkedList<Monster>();
+		summons.addAll(Javelin.getmonsterbytype("vermin"));
+		summons.addAll(Javelin.getmonsterbytype("animal"));
+		summons.addAll(Javelin.getmonsterbytype("fey"));
+		summons.addAll(Javelin.getmonsterbytype("elemental"));
+		for (int i = 0; i < nsummons && !summons.isEmpty(); i++) {
+			Monster m = RPG.pick(summons);
+			extension.add(new Summon(m.name));
 		}
 	}
 }

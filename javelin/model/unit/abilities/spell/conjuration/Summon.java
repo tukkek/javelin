@@ -137,8 +137,4 @@ public class Summon extends Spell {
 		return super.equals(obj)
 				&& monstername.equals(((Summon) obj).monstername);
 	}
-
-	public static Summon getrandom() {
-		return new Summon(RPG.pick(Javelin.ALLMONSTERS).name, 1);
-	}
 }

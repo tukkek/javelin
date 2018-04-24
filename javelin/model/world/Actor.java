@@ -12,6 +12,7 @@ import javelin.controller.comparator.ActorByDistance;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
+import javelin.controller.scenario.DungeonWorld;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
 import javelin.model.Realm;
@@ -47,6 +48,9 @@ public abstract class Actor implements Serializable {
 	 * If <code>true</code> this actor will be ignored by {@link Incursion}s.
 	 */
 	public boolean impermeable = false;
+	/**
+	 * TODO probably better to handle this the way {@link DungeonWorld} does.
+	 */
 	public boolean allowedinscenario = true;
 
 	/** Constructor. */

@@ -15,6 +15,7 @@ import javelin.model.unit.attack.Combatant;
 import javelin.view.screen.Option;
 import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.PurchaseOption;
+import javelin.view.screen.town.SelectScreen;
 
 public class ArenaShop extends ArenaBuilding {
 	private static final int STOCKSIZE = 9;
@@ -59,17 +60,18 @@ public class ArenaShop extends ArenaBuilding {
 		}
 
 		@Override
-		protected void sort(List<Option> options) {
-			super.sort(options);
+		public List<Option> getoptions() {
+			List<Option> options = super.getoptions();
 			if (getupgradecost() != null) {
 				options.add(new BuildingUpgradeOption());
 			}
+			return options;
 		}
 
 		@Override
 		public boolean select(Option op) {
 			BuildingUpgradeOption upgrade = op instanceof BuildingUpgradeOption
-					? ((BuildingUpgradeOption) op) : null;
+					? (BuildingUpgradeOption) op : null;
 			if (upgrade == null) {
 				return super.select(op);
 			}
@@ -125,7 +127,7 @@ public class ArenaShop extends ArenaBuilding {
 
 	public static String getgoldinfo() {
 		return "\n\nYour gladiators currently have $"
-				+ ShoppingScreen.formatcost(ArenaFight.get().gold) + ".";
+				+ SelectScreen.formatcost(ArenaFight.get().gold) + ".";
 	}
 
 	@Override

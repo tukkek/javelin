@@ -574,4 +574,17 @@ public class Javelin {
 		s.print(prompt);
 		return InfoScreen.feedback();
 	}
+
+	/**
+	 * TODO a collection would make more sense
+	 */
+	public static List<Monster> getmonsterbytype(String type) {
+		ArrayList<Monster> monsters = new ArrayList<Monster>();
+		for (Monster m : Javelin.ALLMONSTERS) {
+			if (m.type.equalsIgnoreCase(type)) {
+				monsters.add(m);
+			}
+		}
+		return monsters;
+	}
 }

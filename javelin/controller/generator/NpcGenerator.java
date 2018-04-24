@@ -19,7 +19,7 @@ import javelin.model.unit.attack.Combatant;
 import tyrant.mikera.engine.RPG;
 
 public class NpcGenerator {
-	static final boolean DEBUG = Javelin.DEBUG && true;
+	static final boolean DEBUG = Javelin.DEBUG && false;
 	static final int MAXCR = 25;
 	static final double RATIO = .1;
 
@@ -76,7 +76,12 @@ public class NpcGenerator {
 			if (1 <= cr && cr <= MAXCR && !candidates.isEmpty()) {
 				double npcs = gettarget(tier);
 				for (int i = 0; i < npcs; i++) {
-					generatenpc(RPG.pick(candidates), cr);
+					Monster m = RPG.pick(candidates);
+					Kit k = RPG.pick(Kit.getpreferred(m));
+					Combatant c = generatenpc(m, k, cr);
+					if (c != null) {
+						register(c);
+					}
 				}
 			}
 			if (tier != null) {
@@ -103,11 +108,9 @@ public class NpcGenerator {
 		return crs;
 	}
 
-	void generatenpc(Monster m, float targetcr) {
+	static public Combatant generatenpc(Monster m, Kit k, float targetcr) {
 		int tries = 10000;
 		Combatant c = new Combatant(m, true);
-		Kit k = RPG.pick(Kit.gerpreferred(m));
-		c.source.customName = m.name + " " + k.name.toLowerCase();
 		float base = c.source.cr + targetcr / 2;
 		while (c.source.cr < base && k.classlevel.apply(c)) {
 			ChallengeCalculator.calculatecr(c.source);
@@ -118,10 +121,12 @@ public class NpcGenerator {
 			c.upgrade(upgrades);
 			tries -= 1;
 			if (tries == 0) {
-				return;
+				return null;
 			}
 		}
-		register(c);
+		c.source.customName = c.source.name + " "
+				+ k.gettitle(c.source).toLowerCase();
+		return c;
 	}
 
 	void register(Combatant c) {

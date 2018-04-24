@@ -1,46 +1,59 @@
 package javelin.model.world.location.fortification;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.generator.NpcGenerator;
 import javelin.controller.kit.Kit;
+import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.World;
 import javelin.model.world.location.town.labor.military.Academy;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.hiringacademy.HiringGuildScreen;
-import javelin.view.screen.hiringacademy.RecruitingGuildScreen;
+import javelin.view.screen.hiringacademy.GuildScreen;
 import javelin.view.screen.upgrading.AcademyScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
  * TODO all methods marked final to help with refactoring, may remove it
- * 
+ *
  * @author alex
  */
 public abstract class Guild extends Academy {
-	Combatant[] hires;
-	Kit kit;
-	boolean hire;
+	protected Combatant[] hires = new Combatant[4];
+	protected Kit kit;
 
-	public Guild(String string, Kit k, boolean hire) {
-		super(string, string, k.basic);
-		this.kit = k;
-		this.hire = hire;
-		hires = generatehires();
+	public Guild(String string, Kit k) {
+		super(string, string, getselection(k));
+		kit = k;
 		while (!hashire()) {
-			turn();
+			generatehires();
 		}
+	}
+
+	static HashSet<Upgrade> getselection(Kit k) {
+		HashSet<Upgrade> upgrades = new HashSet<Upgrade>(k.basic);
+		LinkedList<Upgrade> extension = new LinkedList<Upgrade>(k.extension);
+		while (upgrades.size() < 9) {
+			Upgrade u = RPG.pick(extension);
+			extension.remove(u);
+			upgrades.add(u);
+		}
+		return upgrades;
 	}
 
 	@Override
 	public final boolean isworking() {
-		return super.isworking() || (!hashire() && !ishostile());
+		return super.isworking() || !hashire() && !ishostile();
 	}
 
 	boolean hashire() {
-		for (Combatant c : gethires()) {
+		for (Combatant c : hires) {
 			if (c != null) {
 				return true;
 			}
@@ -48,27 +61,28 @@ public abstract class Guild extends Academy {
 		return false;
 	}
 
-	protected final Combatant generatehire(int chance, String title,
-			int minlevel, int maxlevel, Kit kit) {
-		return RPG.chancein(chance) ? Guild.generatehire(title, minlevel,
-				maxlevel, kit, RPG.pick(getcandidates())) : null;
+	protected final Combatant generatehire(int level) {
+		if (!RPG.chancein(level * 20)) {
+			return null;
+		}
+		Monster m = getcandidate(level);
+		return m == null ? null : NpcGenerator.generatenpc(m, kit, level);
 	}
 
-	protected Combatant generatehire(int chance, String title, int minlevel,
-			int maxlevel) {
-		return generatehire(chance, title, minlevel, maxlevel, kit);
+	Monster getcandidate(int level) {
+		ArrayList<Monster> candidates = new ArrayList<Monster>();
+		for (Monster m : Javelin.ALLMONSTERS) {
+			if (m.cr <= level / 2 && m.think(-1)
+					&& Kit.getpreferred(m).contains(kit)) {
+				candidates.add(m);
+			}
+		}
+		return candidates.isEmpty() ? null : RPG.pick(candidates);
 	}
-
-	protected abstract List<Monster> getcandidates();
 
 	@Override
 	protected final AcademyScreen getscreen() {
-		return hire ? new HiringGuildScreen(this)
-				: new RecruitingGuildScreen(this);
-	}
-
-	public final Combatant[] gethires() {
-		return hires;
+		return new GuildScreen(this);
 	}
 
 	public final void clearhire(Combatant hire) {
@@ -83,17 +97,18 @@ public abstract class Guild extends Academy {
 	@Override
 	public final List<Combatant> getcombatants() {
 		List<Combatant> combatants = super.getcombatants();
-		for (Combatant hire : hires) {
-			if (hire != null) {
-				combatants.add(hire);
-			}
-		}
+		combatants.addAll(gethires());
 		return combatants;
 	}
 
-	@Override
-	public final int getlabor() {
-		return super.getlabor() + gethires().length;
+	public List<Combatant> gethires() {
+		List<Combatant> hires = new ArrayList<Combatant>(4);
+		for (Combatant hire : this.hires) {
+			if (hire != null) {
+				hires.add(hire);
+			}
+		}
+		return hires;
 	}
 
 	@Override
@@ -103,7 +118,7 @@ public abstract class Guild extends Academy {
 			return;
 		}
 		while (ChallengeCalculator.calculateel(garrison) < targetel) {
-			Combatant[] hires = generatehires();
+			generatehires();
 			for (Combatant hire : hires) {
 				if (hire != null) {
 					garrison.add(hire);
@@ -112,38 +127,29 @@ public abstract class Guild extends Academy {
 		}
 	}
 
-	protected abstract Combatant[] generatehires();
+	protected void generatehires() {
+		Integer[] crs = new Integer[] { RPG.r(1, 5), RPG.r(6, 10),
+				RPG.r(11, 15), RPG.r(16, 20), };
+		for (int i = 0; i < crs.length; i++) {
+			Combatant hire = generatehire(crs[i]);
+			if (hire != null) {
+				hires[i] = hire;
+			}
+		}
+	}
 
 	@Override
 	public final void turn(long time, WorldScreen world) {
-		turn();
-	}
-
-	void turn() {
 		if (ishostile()) {
 			return;
 		}
-		Combatant[] candidates = generatehires();
-		for (int i = 0; i < candidates.length; i++) {
-			if (candidates[i] != null) {
-				hires[i] = candidates[i];
+		generatehires();
+		if (RPG.chancein(100)) {
+			List<Combatant> hires = gethires();
+			if (!hires.isEmpty()) {
+				clearhire(hires.get(0));
 			}
 		}
 	}
 
-	public static Combatant generatehire(String title, int minlevel,
-			int maxlevel, Kit k, Monster m) {
-		Combatant c = new Combatant(m.clone(), true);
-		int target = RPG.r(minlevel, maxlevel);
-		int tries = target * 100;
-		while (c.source.cr < target) {
-			c.upgrade(k.basic);
-			tries -= 1;
-			if (tries == 0) {
-				break;
-			}
-		}
-		c.source.customName = title;
-		return c;
-	}
 }

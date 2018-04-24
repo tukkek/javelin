@@ -8,7 +8,7 @@ import java.util.Set;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.comparator.UpgradeByNameComparator;
+import javelin.controller.comparator.OptionsByPriority;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
@@ -29,6 +29,7 @@ import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
+import javelin.view.screen.Option;
 import javelin.view.screen.upgrading.AcademyScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -178,11 +179,11 @@ public abstract class Academy extends Fortification {
 	}
 
 	/**
-	 * @param upgrades
+	 * @param options
 	 *            {@link #upgrades}, to be sorted.
 	 */
-	public void sort(ArrayList<Upgrade> upgrades) {
-		upgrades.sort(UpgradeByNameComparator.INSTANCE);
+	public void sort(List<Option> options) {
+		options.sort(OptionsByPriority.INSTANCE);
 	}
 
 	@Override

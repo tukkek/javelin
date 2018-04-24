@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 import javelin.controller.kit.Bard;
 import javelin.controller.terrain.Terrain;
+import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.military.Academy;
 
@@ -12,7 +13,7 @@ import javelin.model.world.location.town.labor.military.Academy;
  *
  * @author alex
  */
-public class BardsGuild extends Academy {
+public class BardsGuild extends Guild {
 	private static final String DESCRIPTION = "Bards guild";
 
 	public static class BuildBardsGuild extends BuildAcademy {
@@ -32,7 +33,7 @@ public class BardsGuild extends Academy {
 	 * @param raise
 	 */
 	public BardsGuild() {
-		super(DESCRIPTION, DESCRIPTION, Bard.INSTANCE.basic);
+		super(DESCRIPTION, Bard.INSTANCE);
 	}
 
 	@Override

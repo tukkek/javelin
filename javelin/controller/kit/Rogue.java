@@ -1,21 +1,19 @@
 package javelin.controller.kit;
 
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.controller.upgrade.ability.RaiseDexterity;
-import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.upgrade.classes.Expert;
 import javelin.controller.upgrade.skill.DisableDevice;
 import javelin.controller.upgrade.skill.Search;
 import javelin.controller.upgrade.skill.Stealth;
+import javelin.model.unit.Monster;
 
 public class Rogue extends Kit {
-	public static final Kit INSTANCE = new Rogue("rogue", Expert.SINGLETON,
-			RaiseDexterity.SINGLETON);
+	public static final Kit INSTANCE = new Rogue();
 
-	private Rogue(String name, ClassLevelUpgrade classadvancement,
-			RaiseAbility raiseability) {
-		super(name, classadvancement, raiseability);
+	private Rogue() {
+		super("rogue", Expert.SINGLETON, RaiseDexterity.SINGLETON, "Cutpurse",
+				"Burglar", "Rogue", "Shadow");
 	}
 
 	@Override
@@ -31,5 +29,12 @@ public class Rogue extends Kit {
 		extension.addAll(h.evil);
 		extension.addAll(h.combatexpertise);
 		extension.addAll(h.shots);
+	}
+
+	@Override
+	public boolean allow(int bestability, int secondbest, Monster m) {
+		return super.allow(bestability, secondbest, m)
+				&& !Boolean.TRUE.equals(m.good)
+				&& !Boolean.TRUE.equals(m.lawful);
 	}
 }

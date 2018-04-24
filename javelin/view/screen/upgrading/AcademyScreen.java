@@ -7,13 +7,13 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
+import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.military.Academy;
 import javelin.model.world.location.town.labor.military.MartialAcademy;
 import javelin.view.screen.Option;
-import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.SelectScreen;
 
 /**
@@ -21,16 +21,21 @@ import javelin.view.screen.town.SelectScreen;
  * @author alex
  */
 public class AcademyScreen extends UpgradingScreen {
+	class Pillage extends Option {
+		Pillage(Fortification f) {
+			super("Pillage ($" + SelectScreen.formatcost(f.getspoils()) + ")",
+					0, 'p');
+			priority = 4;
+		}
+	}
+
 	protected Academy academy;
-	Option pillage = null;
 
 	/** Constructor. */
 	public AcademyScreen(Academy academy, Town t) {
 		super(academy.descriptionknown, t);
 		this.academy = academy;
 		stayopen = true;
-		pillage = new Option("Pillage ($"
-				+ SelectScreen.formatcost(academy.getspoils()) + ")", 0, 'p');
 	}
 
 	@Override
@@ -54,9 +59,7 @@ public class AcademyScreen extends UpgradingScreen {
 
 	@Override
 	protected ArrayList<Upgrade> getupgrades() {
-		ArrayList<Upgrade> list = new ArrayList<Upgrade>(academy.upgrades);
-		academy.sort(list);
-		return list;
+		return new ArrayList<Upgrade>(academy.upgrades);
 	}
 
 	@Override
@@ -64,24 +67,18 @@ public class AcademyScreen extends UpgradingScreen {
 		List<Option> options = super.getoptions();
 		if (academy.pillage && ChallengeCalculator
 				.calculateel(Squad.active.members) > academy.targetel) {
-			options.add(pillage);
+			options.add(new Pillage(academy));
 		}
 		return options;
 	}
 
 	@Override
-	protected void sort(List<Option> options) {
-		// don't sort
-	}
-
-	@Override
-	protected boolean select(char feedback, List<Option> options) {
-		if (academy.pillage && feedback == pillage.key) {
+	public boolean select(Option op) {
+		if (op instanceof Pillage) {
 			academy.pillage();
 			return true;
 		}
-		options.remove(pillage);
-		return super.select(feedback, options);
+		return super.select(op);
 	}
 
 	@Override
@@ -89,8 +86,7 @@ public class AcademyScreen extends UpgradingScreen {
 		String training = academy.training.queue.isEmpty() ? ""
 				: "Currently training: " + academy.training;
 		return "Your squad currently has $"
-				+ ShoppingScreen.formatcost(Squad.active.gold) + ". "
-				+ training;
+				+ SelectScreen.formatcost(Squad.active.gold) + ". " + training;
 	}
 
 	@Override

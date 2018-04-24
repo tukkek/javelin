@@ -164,7 +164,7 @@ public class Scenario implements Serializable {
 	/**
 	 * If <code>true</code>, hostile {@link Location}s will spawn more monsters
 	 * over time.
-	 * 
+	 *
 	 * @see Location#ishostile()
 	 * @see Location#spawn()
 	 * @see Incursion
@@ -188,23 +188,25 @@ public class Scenario implements Serializable {
 	 */
 	public void upgradesquad(ArrayList<Combatant> squad) {
 		ArrayList<Combatant> members = new ArrayList<Combatant>(squad);
+		HashSet<Kit> chosen = new HashSet<Kit>(members.size());
 		while (!members.isEmpty()) {
-			ArrayList<Kit> kits = new ArrayList<Kit>(Kit.KITS);
+			Combatant c = members.get(0);
+			Kit kit = null;
+			List<Kit> kits = Kit.getpreferred(c.source);
 			Collections.shuffle(kits);
 			for (Kit k : kits) {
-				Combatant c = members.get(0);
-				if (Kit.gerpreferred(c.source).contains(k)) {
-					c.source.customName = Character.toUpperCase(
-							k.name.charAt(0)) + k.name.substring(1);
-					while (c.source.cr < 6) {
-						c.upgrade(k.basic);
-					}
-					members.remove(0);
-					if (members.isEmpty()) {
-						return;
-					}
+				kit = k;
+				if (!chosen.contains(kit)) {
+					break;
 				}
 			}
+			chosen.add(kit);
+			c.source.customName = Character.toUpperCase(kit.name.charAt(0))
+					+ kit.name.substring(1);
+			while (c.source.cr < 6) {
+				c.upgrade(kit.basic);
+			}
+			members.remove(0);
 		}
 	}
 

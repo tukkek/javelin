@@ -14,8 +14,8 @@ import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.Option;
-import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.PurchaseScreen;
+import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
 public class ArenaLair extends ArenaBuilding {
@@ -73,15 +73,10 @@ public class ArenaLair extends ArenaBuilding {
 			for (ArrayList<Combatant> group : hires) {
 				options.add(new HireOption(group));
 			}
-			return options;
-		}
-
-		@Override
-		protected void sort(List<Option> options) {
-			super.sort(options);
 			if (getupgradecost() != null) {
 				options.add(new BuildingUpgradeOption());
 			}
+			return options;
 		}
 	}
 
@@ -128,7 +123,7 @@ public class ArenaLair extends ArenaBuilding {
 
 	public static String getgoldinfo() {
 		return "\n\nYour gladiators currently have $"
-				+ ShoppingScreen.formatcost(ArenaFight.get().gold) + ".";
+				+ SelectScreen.formatcost(ArenaFight.get().gold) + ".";
 	}
 
 	@Override

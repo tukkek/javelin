@@ -17,7 +17,7 @@ public enum Tier {
 		}
 	}
 
-	static Tier gettier(int level) {
+	public static Tier gettier(int level) {
 		if (level <= 5) {
 			return LOW;
 		}

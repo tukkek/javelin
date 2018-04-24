@@ -109,22 +109,4 @@ public class MagesGuild extends Academy {
 			maxlevel = 10;
 		}
 	}
-
-	@Override
-	public void sort(ArrayList<Upgrade> upgrades) {
-		upgrades.sort(new Comparator<Upgrade>() {
-			@Override
-			public int compare(Upgrade o1, Upgrade o2) {
-				if (!(o1 instanceof Spell)) {
-					return 1;
-				}
-				if (!(o2 instanceof Spell)) {
-					return -1;
-				}
-				Spell s1 = (Spell) o1;
-				Spell s2 = (Spell) o2;
-				return s1.casterlevel - s2.casterlevel;
-			}
-		});
-	}
 }

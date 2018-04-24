@@ -13,7 +13,6 @@ import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.unique.AssassinsGuild;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -168,7 +167,6 @@ public class Infiltrate extends WorldAction {
 			return false;
 		}
 		l.garrison.remove(target);
-		AssassinsGuild.notify(1f);
 		if (l.garrison.isEmpty()) {
 			l.capture();
 		}

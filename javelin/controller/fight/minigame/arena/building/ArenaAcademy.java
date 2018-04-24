@@ -16,7 +16,7 @@ import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
 import javelin.view.screen.Option;
-import javelin.view.screen.shopping.ShoppingScreen;
+import javelin.view.screen.town.SelectScreen;
 import javelin.view.screen.upgrading.UpgradingScreen;
 
 public class ArenaAcademy extends ArenaBuilding {
@@ -27,7 +27,7 @@ public class ArenaAcademy extends ArenaBuilding {
 
 		public ArenaAcademyScreen(Combatant c) {
 			super("What will you learn, " + c + "?", null);
-			this.trainee = c;
+			trainee = c;
 		}
 
 		@Override
@@ -44,15 +44,18 @@ public class ArenaAcademy extends ArenaBuilding {
 		}
 
 		@Override
-		protected void sort(List<Option> options) {
-			super.sort(options);
-			options.add(new BuildingUpgradeOption());
+		public List<Option> getoptions() {
+			List<Option> options = super.getoptions();
+			if (getupgradecost() != null) {
+				options.add(new BuildingUpgradeOption());
+			}
+			return options;
 		}
 
 		@Override
 		public boolean select(Option op) {
 			BuildingUpgradeOption upgrade = op instanceof BuildingUpgradeOption
-					? ((BuildingUpgradeOption) op) : null;
+					? (BuildingUpgradeOption) op : null;
 			if (upgrade == null) {
 				return super.select(op);
 			}
@@ -63,11 +66,11 @@ public class ArenaAcademy extends ArenaBuilding {
 		@Override
 		public String printpriceinfo(Option o) {
 			BuildingUpgradeOption upgrade = o instanceof BuildingUpgradeOption
-					? ((BuildingUpgradeOption) o) : null;
+					? (BuildingUpgradeOption) o : null;
 			if (upgrade == null) {
 				return super.printpriceinfo(o);
 			}
-			return " $" + ShoppingScreen.formatcost(o.price);
+			return " $" + SelectScreen.formatcost(o.price);
 		}
 
 		@Override

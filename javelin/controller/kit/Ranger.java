@@ -1,20 +1,17 @@
 package javelin.controller.kit;
 
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.controller.upgrade.ability.RaiseDexterity;
-import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.upgrade.classes.Warrior;
 import javelin.controller.upgrade.skill.Survival;
 import javelin.model.unit.Monster;
 
 public class Ranger extends Kit {
-	public static final Kit INSTANCE = new Ranger("ranger", Warrior.SINGLETON,
-			RaiseDexterity.SINGLETON);
+	public static final Kit INSTANCE = new Ranger();
 
-	private Ranger(String name, ClassLevelUpgrade classadvancement,
-			RaiseAbility raiseability) {
-		super(name, classadvancement, raiseability);
+	private Ranger() {
+		super("ranger", Warrior.SINGLETON, RaiseDexterity.SINGLETON, "Wanderer",
+				"Hunter", "Ranger", "Warden");
 	}
 
 	@Override

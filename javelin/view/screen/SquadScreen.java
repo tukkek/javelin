@@ -19,11 +19,11 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class SquadScreen extends InfoScreen {
+	public static final ArrayList<Monster> CANDIDATES = new ArrayList<Monster>();
+	public static final float[] SELECTABLE = { 1f, 1.25f, 1.5f };
+
 	static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
 	static final int MONSTERPERPAGE = ALPHABET.indexOf('y');
-	static final float[] SELECTABLE = { 1f, 1.25f, 1.5f };
-
-	public static final ArrayList<Monster> CANDIDATES = new ArrayList<Monster>();
 
 	static {
 		for (float cr : SELECTABLE) {

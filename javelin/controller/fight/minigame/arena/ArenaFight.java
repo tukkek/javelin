@@ -35,6 +35,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.unique.minigame.Arena;
 import javelin.view.screen.BattleScreen;
+import javelin.view.screen.SquadScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -243,7 +244,8 @@ public class ArenaFight extends Minigame {
 
 	@Override
 	public ArrayList<Combatant> getblueteam() {
-		return choosegladiators(Integer.MIN_VALUE, 1.25);
+		return choosegladiators(Integer.MIN_VALUE,
+				SquadScreen.SELECTABLE[SquadScreen.SELECTABLE.length - 1]);
 	}
 
 	public ArrayList<Combatant> choosegladiators(double crmin, double crmax) {
@@ -258,7 +260,8 @@ public class ArenaFight extends Minigame {
 			}
 		}
 		ArrayList<Combatant> gladiators = new ArrayList<Combatant>();
-		while (ChallengeCalculator.calculateel(gladiators) < Campaign.INITIALEL) {
+		while (ChallengeCalculator
+				.calculateel(gladiators) < Campaign.INITIALEL) {
 			ArrayList<Monster> page = candidates.pop(3);
 			ArrayList<String> names = new ArrayList<String>(3);
 			for (int i = 0; i < 3; i++) {
@@ -336,10 +339,10 @@ public class ArenaFight extends Minigame {
 				foes)) {
 			rewardxp(group);
 		}
+		awaken();
 		if (!state.blueTeam.contains(state.next)) {
 			return;
 		}
-		awaken();
 		if (acting.ap < check) {
 			if (state.redTeam.isEmpty()) {
 				reward(state.dead);
@@ -404,13 +407,13 @@ public class ArenaFight extends Minigame {
 				gladiators.remove(c);
 				continue;
 			}
-			if (state.getcombatant(c.location[0], c.location[1]) != null) {
-				continue;
-			}
 			if (c.ap >= state.next.ap) {
 				continue;
 			}
 			c.ap += 1;
+			if (state.getcombatant(c.location[0], c.location[1]) != null) {
+				continue;
+			}
 			if (RPG.r(1, 10) > Math.abs(c.hp)) {
 				state.dead.remove(c);
 				c.hp = 1;
@@ -547,7 +550,9 @@ public class ArenaFight extends Minigame {
 			last.setlocation(p);
 		}
 		if (team == state.redTeam) {
-			notify("New enemies enter the arena!", last.getlocation());
+			String msg = "New enemies enter the arena:\n"
+					+ Combatant.group(entering) + "!";
+			notify(msg, last.getlocation());
 		}
 	}
 
@@ -569,8 +574,8 @@ public class ArenaFight extends Minigame {
 
 	void notify(String text, Point p) {
 		Game.redraw();
-		// BattleScreen.active.center(p.x, p.y);
 		Javelin.message(text, false);
+		Game.messagepanel.clear();
 	}
 
 	@Override

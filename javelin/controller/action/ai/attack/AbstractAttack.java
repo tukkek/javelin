@@ -157,7 +157,7 @@ public abstract class AbstractAttack extends Action implements AiAction {
 		final float confirmchance = target.source.immunitytocritical ? 0
 				: threatchance * hitchance;
 		final Spell effect = target.source.passive ? null : a.geteffect();
-		final float savechance = effect == null ? 0
+		final float savechance = effect == null ? 1
 				: CastSpell.savechance(active, target, effect);
 		final float nosavechance = 1 - savechance;
 		chances.add(new DamageChance(misschance, 0, false, null));

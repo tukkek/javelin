@@ -90,8 +90,9 @@ public class ArenaFountain extends ArenaBuilding {
 	@Override
 	public void damage(int damagep, BattleState s, int reduce) {
 		super.damage(damagep, s, reduce);
-		ArenaFountain f = (ArenaFountain) s.clone(this).clonesource();
+		ArenaFountain f = (ArenaFountain) s.clone(this);
 		if (f != null && f.isdamaged()) {
+			f.clonesource();
 			f.setspent(true);
 		}
 	}

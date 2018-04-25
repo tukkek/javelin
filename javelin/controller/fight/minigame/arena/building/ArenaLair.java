@@ -55,7 +55,6 @@ public class ArenaLair extends ArenaBuilding {
 				c.setmercenary(true);
 			}
 			hires.remove(hired);
-			stock();
 		}
 
 		@Override

@@ -145,10 +145,7 @@ public class TempleDungeon extends Dungeon {
 
 	@Override
 	public boolean hazard() {
-		if (!temple.hazard(this)) {
-			return false;
-		}
-		return true;
+		return temple.hazard(this);
 	}
 
 	@Override

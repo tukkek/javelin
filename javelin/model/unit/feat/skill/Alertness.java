@@ -18,5 +18,6 @@ public class Alertness extends Feat {
 	/** Constructor. */
 	private Alertness() {
 		super("alertness");
+		arena = false;
 	}
 }

@@ -12,10 +12,12 @@ import javelin.controller.fight.minigame.arena.ArenaFight;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
 import javelin.view.screen.Option;
+import javelin.view.screen.town.PurchaseScreen;
 import javelin.view.screen.town.SelectScreen;
 import javelin.view.screen.upgrading.UpgradingScreen;
 
@@ -28,6 +30,7 @@ public class ArenaAcademy extends ArenaBuilding {
 		public ArenaAcademyScreen(Combatant c) {
 			super("What will you learn, " + c + "?", null);
 			trainee = c;
+			restock(trainee);
 		}
 
 		@Override
@@ -39,7 +42,6 @@ public class ArenaAcademy extends ArenaBuilding {
 
 		@Override
 		protected Collection<Upgrade> getupgrades() {
-			restock(trainee);
 			return upgrades;
 		}
 
@@ -100,6 +102,12 @@ public class ArenaAcademy extends ArenaBuilding {
 		protected Integer getperiod(float cost) {
 			return null;
 		}
+
+		@Override
+		public String printinfo() {
+			return "Your gladiators have $"
+					+ PurchaseScreen.formatcost(ArenaFight.get().gold);
+		}
 	}
 
 	HashSet<Upgrade> upgrades = new HashSet<Upgrade>(NOPTIONS);
@@ -118,6 +126,10 @@ public class ArenaAcademy extends ArenaBuilding {
 		while (upgrades.size() < 3 + level && !all.isEmpty()) {
 			Upgrade u = all.pop();
 			Combatant clone = trainee.clone().clonesource();
+			Spell s = u instanceof Spell ? (Spell) u : null;
+			if (s != null && !s.castinbattle) {
+				continue;
+			}
 			if (u.arena && u.upgrade(clone)) {
 				upgrades.add(u);
 			}
@@ -138,6 +150,7 @@ public class ArenaAcademy extends ArenaBuilding {
 	@Override
 	public String getactiondescription(Combatant current) {
 		return super.getactiondescription(current) + "\n\n" + current
-				+ " currently has " + current.gethumanxp() + ".";
+				+ " currently has " + current.gethumanxp() + ". Your team has $"
+				+ PurchaseScreen.formatcost(ArenaFight.get().gold) + ".";
 	}
 }

@@ -129,10 +129,7 @@ public class Attack implements Serializable, Cloneable {
 	}
 
 	public Spell geteffect() {
-		if (temporaryeffect != null) {
-			return temporaryeffect;
-		}
-		return effect;
+		return temporaryeffect != null ? temporaryeffect : effect;
 	}
 
 	public void seteffect(Spell effect) {

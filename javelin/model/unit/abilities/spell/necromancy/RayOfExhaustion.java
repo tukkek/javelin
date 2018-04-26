@@ -1,5 +1,6 @@
 package javelin.model.unit.abilities.spell.necromancy;
 
+import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
@@ -25,8 +26,8 @@ public class RayOfExhaustion extends Ray {
 	}
 
 	@Override
-	public String cast(Combatant caster, Combatant target, BattleState s,
-			boolean saved) {
+	public String cast(Combatant caster, Combatant target, boolean saved,
+			BattleState s, ChanceNode cn) {
 		Condition c = !saved || target.hascondition(Fatigued.class) != null
 				? new Exhausted(target, casterlevel)
 				: new Fatigued(target, casterlevel, 0);

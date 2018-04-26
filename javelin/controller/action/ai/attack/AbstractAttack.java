@@ -276,8 +276,8 @@ public abstract class AbstractAttack extends Action implements AiAction {
 		} else if (dc.save != null) {
 			target.source = target.source.clone();
 			active.source = active.source.clone();
-			final String effect = a.geteffect().cast(active, target, s,
-					dc.save);
+			final String effect = a.geteffect().cast(active, target, dc.save,
+					s, null);
 			sb.append("\n").append(effect);
 		}
 	}

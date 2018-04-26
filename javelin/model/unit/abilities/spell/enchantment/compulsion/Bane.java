@@ -1,5 +1,6 @@
 package javelin.model.unit.abilities.spell.enchantment.compulsion;
 
+import javelin.controller.ai.ChanceNode;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.attack.Combatant;
@@ -20,8 +21,8 @@ public class Bane extends Bless {
 	}
 
 	@Override
-	public String cast(Combatant caster, Combatant target, BattleState s,
-			boolean saved) {
+	public String cast(Combatant caster, Combatant target, boolean saved,
+			BattleState s, ChanceNode cn) {
 		String result = "";
 		for (Combatant c : s.getcombatants()) {
 			if (!c.isally(caster, s)

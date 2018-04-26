@@ -2,6 +2,7 @@ package javelin.model.unit.abilities.spell.abjuration;
 
 import java.util.ArrayList;
 
+import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
@@ -28,8 +29,8 @@ public class DispelMagic extends Spell {
 	}
 
 	@Override
-	public String cast(Combatant caster, Combatant target, BattleState s,
-			boolean saved) {
+	public String cast(Combatant caster, Combatant target, boolean saved,
+			BattleState s, ChanceNode cn) {
 		Summon summon;
 		try {
 			summon = new Summon(target.source.name, 1);
@@ -71,6 +72,6 @@ public class DispelMagic extends Spell {
 
 	@Override
 	public String castpeacefully(Combatant caster, Combatant target) {
-		return cast(caster, target, null, true);
+		return cast(caster, target, true, null, null);
 	}
 }

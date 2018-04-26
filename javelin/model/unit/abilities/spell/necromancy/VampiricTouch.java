@@ -1,5 +1,6 @@
 package javelin.model.unit.abilities.spell.necromancy;
 
+import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
@@ -50,7 +51,7 @@ public class VampiricTouch extends Touch {
 
 	@Override
 	public String cast(final Combatant caster, final Combatant target,
-			final BattleState s, final boolean saved) {
+			final boolean saved, final BattleState s, ChanceNode cn) {
 		int steal = 21;
 		final int max = target.hp + 10;
 		if (steal > max) {

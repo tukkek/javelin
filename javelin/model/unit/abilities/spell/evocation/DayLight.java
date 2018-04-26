@@ -3,6 +3,7 @@ package javelin.model.unit.abilities.spell.evocation;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.ai.ChanceNode;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.spell.Spell;
@@ -20,8 +21,8 @@ public class DayLight extends Spell {
 	}
 
 	@Override
-	public String cast(Combatant caster, Combatant target, BattleState s,
-			boolean saved) {
+	public String cast(Combatant caster, Combatant target, boolean saved,
+			BattleState s, ChanceNode cn) {
 		s.period = Javelin.PERIODNOON;
 		return "The area brightens!";
 	}

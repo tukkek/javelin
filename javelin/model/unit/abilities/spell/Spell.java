@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.factor.CrFactor;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
@@ -25,24 +26,24 @@ import javelin.model.world.location.town.labor.religious.Shrine;
 
 /**
  * Represents a spell-like ability. See the d20 SRD for more info.
- * 
+ *
  * A spell can be manifested in {@link Item} form through several means but
  * should choose only one:
- * 
+ *
  * - A {@link Potion} (usually a self spell)
- * 
+ *
  * - A {@link Wand} (usually a ranged spell)
- * 
+ *
  * - A {@link Scroll} (everything else)
- * 
+ *
  * Spells that can be {@link #castinbattle} and {@link #castoutofbattle} cannot
  * have a {@link #components} cost currently.
- * 
+ *
  * TODO extract a SpellUpgrade class
  */
 public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	/** Canonical list of all spells by lower-case name. */
-	final public static HashMap<String, Spell> SPELLS = new HashMap<String, Spell>();
+	public static final HashMap<String, Spell> SPELLS = new HashMap<String, Spell>();
 
 	/** Load spells. */
 	static public void init() {
@@ -67,7 +68,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	public boolean castonallies = false;
 	/**
 	 * Set to <code>true</code> if doesn't need to roll a touch attack.
-	 * 
+	 *
 	 * @see #hit(Combatant, Combatant, BattleState)
 	 */
 	public boolean automatichit = false;
@@ -86,7 +87,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	 * If <code>false</code> will not consider this threatening (ignores attacks
 	 * of opportunity so it can be cast while engaged without needing a
 	 * {@link Skills#concentration} roll). Default: true.
-	 * 
+	 *
 	 * TODO rename to safe and invert meaning?
 	 */
 	public boolean provokeaoo = true;
@@ -175,16 +176,21 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 
 	/**
 	 * Once the spell hits, apply effect.
-	 * 
-	 * @param s
-	 *            Should modify this directly (no internal cloning).
+	 *
 	 * @param saved
 	 *            <code>true</code> in case the target's saving throw was
 	 *            successful.
-	 * @return Description of outcome.
+	 * @param s
+	 *            Should modify this directly (no internal cloning).
+	 * @param cn
+	 *            Can be used to set {@link ChanceNode#overlay}. Might be
+	 *            <code>null</code>, for example, if this spell is being
+	 *            triggered by an {@link Attack} effect.
+	 * @return Description of outcome (do not assign to
+	 *         {@link ChanceNode#action} directly).
 	 */
-	public String cast(Combatant caster, Combatant target, BattleState s,
-			boolean saved) {
+	public String cast(Combatant caster, Combatant target, boolean saved,
+			BattleState s, ChanceNode cn) {
 		throw new RuntimeException("Can't be cast in battle: " + name);
 	}
 
@@ -227,7 +233,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 
 	/**
 	 * By default is an automatic hit.
-	 * 
+	 *
 	 * @return Difficulty class target to be hit on a d20 roll or
 	 *         -Integer.MAX_VALUE for automatic hit.
 	 */
@@ -251,7 +257,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	/**
 	 * " (4/5)" - where 4 is the times this still can be cast before resting and
 	 * 5 is the total {@link #perday} uses.
-	 * 
+	 *
 	 * @return A description in the format above.
 	 */
 	public String showleft() {
@@ -265,7 +271,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	 *         throw. With the exceptions above numbers will be approximated
 	 *         into the range: ]2,19] to allow the ensuing roll of 1 to always
 	 *         be an automatic miss and 20 an automatic hit.
-	 * 
+	 *
 	 * @see #calculatesavedc(int, Combatant)
 	 */
 	public int save(Combatant caster, Combatant target) {
@@ -281,7 +287,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	 *         handled internally.
 	 * @throws NotPeaceful
 	 *             if should not be used out of combat.
-	 * 
+	 *
 	 * @see #isritual
 	 */
 	public String castpeacefully(Combatant caster, Combatant target) {
@@ -300,7 +306,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 
 	/**
 	 * Helper method for {@link #filtertargets(Combatant, List, BattleState)}.
-	 * 
+	 *
 	 * @param combatant
 	 *            Will clear the given targets and include only this one (self).
 	 */
@@ -330,7 +336,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 
 	/**
 	 * Takes 10.
-	 * 
+	 *
 	 * @param savingthrow
 	 *            Value for the defending unit's saving throw bonus (fortitude,
 	 *            reflexes or will).
@@ -366,7 +372,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 
 	/**
 	 * TODO offer error message as return instead.
-	 * 
+	 *
 	 * @param target
 	 *            May be <code>null</code> if this spell doesn't need to target
 	 *            someone.
@@ -379,7 +385,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 
 	/**
 	 * Helper method to select a target automatically if needed.
-	 * 
+	 *
 	 * @see #castonallies
 	 * @see Javelin#choose(String, List, boolean, boolean)
 	 * @see #castpeacefully(Combatant, Combatant)
@@ -409,9 +415,9 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	 * Note that Spells implementing this should be able to accept a
 	 * <code>null</code> parameter on
 	 * {@link #castpeacefully(Combatant, Combatant)}.
-	 * 
+	 *
 	 * Doesn't need to check for {@link #exhausted()}, this is done elsewhere.
-	 * 
+	 *
 	 * @return true if the given {@link Combatant} can be healed by this spell.
 	 * @see #firstaid(ArrayList)
 	 */

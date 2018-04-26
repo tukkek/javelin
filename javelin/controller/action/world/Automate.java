@@ -19,9 +19,9 @@ import javelin.view.screen.WorldScreen;
 
 /**
  * Configures {@link Combatant#automatic} and {@link Squad#strategic}.
- * 
+ *
  * TODO shouldn't need this, the UI should help set this more easily
- * 
+ *
  * @author alex
  */
 public class Automate extends WorldAction implements SimpleAction {
@@ -36,20 +36,17 @@ public class Automate extends WorldAction implements SimpleAction {
 		@Override
 		protected Container generate() {
 			boxes.clear();
-			Panel container = new Panel(new GridLayout(0, 1));
-			for (Combatant c : getunits()) {
+			ArrayList<Combatant> units = getunits();
+			int columns = Math.max(1, units.size() / 10);
+			GridLayout layout = new GridLayout(0, columns);
+			Panel container = new Panel(layout);
+			for (Combatant c : units) {
 				Checkbox box = new Checkbox(c.toString(), c.automatic);
 				container.add(box);
 				boxes.add(box);
 			}
-			container.add(new Label());
-			if (BattleScreen.active instanceof WorldScreen) {
-				strategic = new Checkbox("Strategic combat",
-						Squad.active.strategic);
-				container.add(strategic);
-			} else {
-				strategic = null;
-				container.add(new Label("Changes are reset after battle."));
+			for (int i = units.size(); i % columns != 0; i++) {
+				container.add(new Label());
 			}
 			Button confirm = new Button("Apply");
 			container.add(confirm);
@@ -59,6 +56,14 @@ public class Automate extends WorldAction implements SimpleAction {
 					enter();
 				}
 			});
+			if (BattleScreen.active instanceof WorldScreen) {
+				strategic = new Checkbox("Strategic combat",
+						Squad.active.strategic);
+				container.add(strategic);
+			} else {
+				strategic = null;
+				container.add(new Label("Changes are reset after battle."));
+			}
 			return container;
 		}
 

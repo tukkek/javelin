@@ -38,7 +38,7 @@ public class Scroll extends Item {
 
 	@Override
 	public boolean use(Combatant user) {
-		CastSpell.singleton.cast(spell, user);
+		CastSpell.SINGLETON.cast(spell, user);
 		return true;
 	}
 

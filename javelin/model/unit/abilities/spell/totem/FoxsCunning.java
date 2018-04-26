@@ -1,5 +1,6 @@
 package javelin.model.unit.abilities.spell.totem;
 
+import javelin.controller.ai.ChanceNode;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Monster;
@@ -37,7 +38,7 @@ public class FoxsCunning extends TotemsSpell {
 
 	@Override
 	public String cast(final Combatant caster, final Combatant target,
-			final BattleState s, final boolean saved) {
+			final boolean saved, final BattleState s, ChanceNode cn) {
 		target.addcondition(new Cunning(target, casterlevel));
 		return target + "'s intelligence is now "
 				+ Monster.getsignedbonus(target.source.intelligence) + "!";

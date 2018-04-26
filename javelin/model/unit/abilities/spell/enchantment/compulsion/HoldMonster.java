@@ -1,5 +1,6 @@
 package javelin.model.unit.abilities.spell.enchantment.compulsion;
 
+import javelin.controller.ai.ChanceNode;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.spell.Spell;
@@ -18,8 +19,8 @@ public class HoldMonster extends Spell {
 	}
 
 	@Override
-	public String cast(Combatant caster, Combatant target, BattleState s,
-			boolean saved) {
+	public String cast(Combatant caster, Combatant target, boolean saved,
+			BattleState s, ChanceNode cn) {
 		if (saved) {
 			return target + " resists.";
 		}

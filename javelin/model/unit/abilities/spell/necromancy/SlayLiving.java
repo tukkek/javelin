@@ -1,5 +1,6 @@
 package javelin.model.unit.abilities.spell.necromancy;
 
+import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
@@ -19,7 +20,7 @@ public class SlayLiving extends Touch {
 
 	@Override
 	public String cast(final Combatant caster, final Combatant target,
-			final BattleState s, final boolean saved) {
+			final boolean saved, final BattleState s, ChanceNode cn) {
 		if (saved) {
 			target.damage(Math.round(3 * 3.5f + 9), s,
 					target.source.energyresistance);

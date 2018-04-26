@@ -1,5 +1,6 @@
 package javelin.model.unit.abilities.spell.abjuration;
 
+import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
@@ -61,8 +62,8 @@ public class ResistEnergy extends Touch {
 	}
 
 	@Override
-	public String cast(Combatant caster, Combatant target, BattleState s,
-			boolean saved) {
+	public String cast(Combatant caster, Combatant target, boolean saved,
+			BattleState s, ChanceNode cn) {
 		return castpeacefully(caster, target);
 	}
 }

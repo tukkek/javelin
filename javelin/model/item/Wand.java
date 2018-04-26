@@ -65,7 +65,7 @@ public class Wand extends Item {
 		if (!decipher(user)) {
 			return false;
 		}
-		CastSpell.singleton.cast(spell, user);
+		CastSpell.SINGLETON.cast(spell, user);
 		return discharge();
 	}
 

@@ -1,6 +1,7 @@
 package javelin.model.unit.abilities.discipline.serpent;
 
 import javelin.controller.action.ActionCost;
+import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
@@ -56,8 +57,8 @@ public class TearingFang extends Boost {
 		}
 
 		@Override
-		public String cast(Combatant caster, Combatant target, BattleState s,
-				boolean saved) {
+		public String cast(Combatant caster, Combatant target, boolean saved,
+				BattleState s, ChanceNode cn) {
 			target.addcondition(new Bleeding(target));
 			return target + " is bleeding!";
 		}

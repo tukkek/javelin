@@ -2,6 +2,7 @@ package javelin.view.mappanel.battle.overlay;
 
 import java.util.ArrayList;
 
+import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.action.Movement;
 import javelin.controller.walker.Step;
@@ -16,7 +17,7 @@ import javelin.view.screen.BattleScreen;
 /**
  * TODO could probably use the hierarchy structure better instead of declaring
  * our own {@link #steps}, etc.
- * 
+ *
  * @author alex
  */
 public class BattleWalker extends Walker {
@@ -24,7 +25,7 @@ public class BattleWalker extends Walker {
 	 * Note that AP cost has a different meaning depending on context. For
 	 * battle is literal AP, for world and dungeons is chance of encounter,
 	 * unrelated to time.
-	 * 
+	 *
 	 * @author alex
 	 */
 	public class BattleStep extends Step {
@@ -114,16 +115,17 @@ public class BattleWalker extends Walker {
 
 	@Override
 	public boolean valid(final int x, final int y) {
-		if (current.source.fly == 0 && state.map[x][y].blocked) {
+		if (state.map[x][y].blocked
+				&& (current.source.fly == 0 || !Javelin.app.fight.map.flying)) {
 			return false;
 		}
 		if (state.getcombatant(x, y) != null || state.getmeld(x, y) != null) {
 			return false;
 		}
 		try {
-			return (((BattlePanel) BattleScreen.active.mappanel).daylight
+			return ((BattlePanel) BattleScreen.active.mappanel).daylight
 					|| state.haslineofsight(current,
-							new Point(x, y)) != Vision.BLOCKED);
+							new Point(x, y)) != Vision.BLOCKED;
 		} catch (NullPointerException e) {
 			return false;
 		} catch (ClassCastException e) {

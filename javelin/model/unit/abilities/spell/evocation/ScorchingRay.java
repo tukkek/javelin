@@ -1,5 +1,6 @@
 package javelin.model.unit.abilities.spell.evocation;
 
+import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
@@ -21,8 +22,8 @@ public class ScorchingRay extends Ray {
 	}
 
 	@Override
-	public String cast(Combatant caster, Combatant target, BattleState s,
-			boolean saved) {
+	public String cast(Combatant caster, Combatant target, boolean saved,
+			BattleState s, ChanceNode cn) {
 		target.damage(4 * 6 / 2, s, target.source.energyresistance);
 		return target + " is " + target.getstatus() + ".";
 	}

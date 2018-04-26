@@ -1,5 +1,6 @@
 package javelin.model.unit.abilities.spell.totem;
 
+import javelin.controller.ai.ChanceNode;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Monster;
@@ -31,8 +32,8 @@ public class OwlsWisdom extends TotemsSpell {
 	}
 
 	@Override
-	public String cast(Combatant caster, Combatant target, BattleState s,
-			boolean saved) {
+	public String cast(Combatant caster, Combatant target, boolean saved,
+			BattleState s, ChanceNode cn) {
 		target.addcondition(new Wise(target, casterlevel));
 		return target + "'s wisdom is now "
 				+ Monster.getsignedbonus(target.source.wisdom) + "!";

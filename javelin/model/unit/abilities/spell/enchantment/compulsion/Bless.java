@@ -2,6 +2,7 @@ package javelin.model.unit.abilities.spell.enchantment.compulsion;
 
 import java.util.List;
 
+import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
@@ -44,8 +45,8 @@ public class Bless extends Spell {
 	}
 
 	@Override
-	public String cast(Combatant caster, Combatant target, BattleState s,
-			boolean saved) {
+	public String cast(Combatant caster, Combatant target, boolean saved,
+			BattleState s, ChanceNode cn) {
 		s = s.clone();
 		for (Combatant c : s.getteam(caster)) {
 			c.addcondition(new Blessed(c));

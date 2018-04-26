@@ -46,7 +46,7 @@ public class Examine extends Action {
 
 	@Override
 	public boolean perform(Combatant active) {
-		doLook(BattleScreen.active);
+		doLook(active, BattleScreen.active);
 		throw new RepeatTurn();
 	}
 
@@ -119,10 +119,11 @@ public class Examine extends Action {
 		clearCursor();
 		MapPanel.overlay = new TargetOverlay(x, y);
 		s.mappanel.refresh();
+		BattleScreen.active.mappanel.center(x, y, true);
 	}
 
-	static void doLook(BattleScreen s) {
-		doLookPoint(getTargetLocation(null, s), s);
+	static void doLook(Combatant active, BattleScreen s) {
+		doLookPoint(getTargetLocation(active.getlocation(), s), s);
 	}
 
 	static void doLookPoint(final Point p, BattleScreen s) {

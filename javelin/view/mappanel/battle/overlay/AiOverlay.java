@@ -12,7 +12,7 @@ import javelin.view.mappanel.Tile;
 /**
  * Used to simply allow {@link AiAction}s to present some visual feedback. Takes
  * one or more {@link Point}s and draws a target on them.
- * 
+ *
  * @author alex
  */
 public class AiOverlay extends Overlay {
@@ -24,6 +24,10 @@ public class AiOverlay extends Overlay {
 
 	public AiOverlay(Collection<? extends Point> area) {
 		affected.addAll(area);
+	}
+
+	public AiOverlay(Point p) {
+		this(p.x, p.y);
 	}
 
 	@Override

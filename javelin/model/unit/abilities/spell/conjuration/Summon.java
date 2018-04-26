@@ -3,6 +3,7 @@ package javelin.model.unit.abilities.spell.conjuration;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
@@ -21,7 +22,7 @@ import tyrant.mikera.engine.RPG;
  * discussion on {@link #ratechallenge(int, String, float)}.
  *
  * TODO This should not be a {@link Spell}. See
- * {@link #cast(Combatant, Combatant, BattleState, boolean)}
+ * {@link #cast(Combatant, Combatant, boolean, BattleState, ChanceNode)}
  *
  * @author alex
  */
@@ -68,8 +69,8 @@ public class Summon extends Spell {
 	}
 
 	@Override
-	public String cast(Combatant caster2, Combatant target, BattleState s,
-			boolean saved) {
+	public String cast(Combatant caster2, Combatant target, boolean saved,
+			BattleState s, ChanceNode cn) {
 		List<Combatant> team = target.getteam(s);
 		Monster m = Javelin.getmonster(monstername);
 		m.name = "Summoned " + m.name.toLowerCase();

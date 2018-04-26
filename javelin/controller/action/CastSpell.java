@@ -19,12 +19,12 @@ import javelin.model.unit.attack.Combatant;
 /**
  * Spells with attack rolls are supposed to have critical hits too but for the
  * sake of AI speed this rule is ignored.
- * 
+ *
  * @author alex
  */
 public class CastSpell extends Fire implements AiAction {
 	/** Only instance of CastSpell to exist. */
-	public static final CastSpell singleton = new CastSpell();
+	public static final CastSpell SINGLETON = new CastSpell();
 	/** Spell for {@link Fire} to perform. */
 	public Spell casting;
 
@@ -169,11 +169,13 @@ public class CastSpell extends Fire implements AiAction {
 		state = state.clone();
 		active = state.clone(active);
 		target = state.cloneifdifferent(target, active);
-		String message = spell.cast(active, target, state, saved);
+		ChanceNode cn = new ChanceNode(state, chance, null, Delay.BLOCK);
+		String message = spell.cast(active, target, saved, state, cn);
 		if (message == null || message.isEmpty()) {
 			prefix = prefix.substring(0, prefix.length() - 1);
 		}
-		return new ChanceNode(state, chance, prefix + message, Delay.BLOCK);
+		cn.action = prefix + message;
+		return cn;
 	}
 
 	@Override

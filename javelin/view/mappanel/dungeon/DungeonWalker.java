@@ -6,7 +6,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.Trap;
 import javelin.view.mappanel.world.WorldWalker;
-import javelin.view.screen.DungeonScreen;
+import javelin.view.screen.BattleScreen;
 
 public class DungeonWalker extends WorldWalker {
 	public DungeonWalker(Point from, Point to) {
@@ -16,7 +16,7 @@ public class DungeonWalker extends WorldWalker {
 
 	@Override
 	protected float getcost(boolean engaged, javelin.controller.walker.Step s) {
-		return Dungeon.active.encounterratio;
+		return 1f / Dungeon.active.stepsperencounter;
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class DungeonWalker extends WorldWalker {
 
 	@Override
 	public boolean valid(int x, int y) {
-		if (!DungeonScreen.active.mappanel.tiles[x][y].discovered
+		if (!BattleScreen.active.mappanel.tiles[x][y].discovered
 				|| Dungeon.active.map[x][y] == Template.WALL) {
 			return false;
 		}

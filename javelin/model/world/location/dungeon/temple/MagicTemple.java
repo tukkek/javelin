@@ -1,7 +1,6 @@
 package javelin.model.world.location.dungeon.temple;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -16,7 +15,7 @@ import javelin.model.world.location.dungeon.temple.features.Portal;
 /**
  * Found atop a {@link Hill}. 1 portal per level takes you immediately outside.
  * All types of monsters can be found here.
- * 
+ *
  * @see Temple
  * @author alex
  */
@@ -49,10 +48,7 @@ public class MagicTemple extends Temple {
 	}
 
 	@Override
-	public List<Feature> getfeatures(Dungeon d) {
-		ArrayList<Feature> features = new ArrayList<Feature>();
-		Point spot = d.findspot();
-		features.add(new Portal(spot.x, spot.y));
-		return features;
+	public Feature createfeature(Point p, Dungeon d) {
+		return new Portal(p.x, p.y);
 	}
 }

@@ -49,7 +49,7 @@ public class DungeonScreen extends WorldScreen {
 	public boolean explore(float hoursellapsed, boolean encounter) {
 		try {
 			if (encounter) {
-				RandomEncounter.encounter(dungeon.encounterratio);
+				RandomEncounter.encounter(1f / dungeon.stepsperencounter);
 			}
 		} catch (StartBattle e) {
 			throw e;

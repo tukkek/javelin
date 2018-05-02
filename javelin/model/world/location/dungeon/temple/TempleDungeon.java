@@ -1,7 +1,5 @@
 package javelin.model.world.location.dungeon.temple;
 
-import java.util.List;
-
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -11,6 +9,7 @@ import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Chest;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
+import javelin.model.world.location.dungeon.Fountain;
 import javelin.model.world.location.dungeon.StairsUp;
 import javelin.model.world.location.dungeon.temple.features.Altar;
 import javelin.model.world.location.dungeon.temple.features.StairsDown;
@@ -95,7 +94,7 @@ public class TempleDungeon extends Dungeon {
 	}
 
 	@Override
-	protected Feature createspecialfeature(Point p) {
+	protected Feature createspecialchest(Point p) {
 		if (deepest) {
 			return new Altar(p, temple);
 		}
@@ -126,16 +125,17 @@ public class TempleDungeon extends Dungeon {
 	}
 
 	@Override
-	protected void placefeatures(int fountains) {
+	protected void createstairs(Point p) {
 		if (!deepest) {
 			features.add(new StairsDown("stairs up", findspot()));
 		}
-		super.placefeatures(fountains);
+		super.createstairs(p);
 	}
 
 	@Override
-	protected List<Feature> getextrafeatures() {
-		return temple.getfeatures(this);
+	protected Feature createfeature(Point p) {
+		return RPG.chancein(6) ? new Fountain(p.x, p.y)
+				: temple.createfeature(p, this);
 	}
 
 	@Override
@@ -146,11 +146,6 @@ public class TempleDungeon extends Dungeon {
 	@Override
 	public boolean hazard() {
 		return temple.hazard(this);
-	}
-
-	@Override
-	public int getfountains(int rooms) {
-		return super.getfountains(rooms) + RPG.r(1, 4) - 1;
 	}
 
 	@Override

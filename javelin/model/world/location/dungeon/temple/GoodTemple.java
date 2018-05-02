@@ -1,7 +1,6 @@
 package javelin.model.world.location.dungeon.temple;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.terrain.Plains;
@@ -13,12 +12,11 @@ import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.temple.features.Spirit;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Found resting in the {@link Plains}. Evil enemies never found here. 1-3 good
  * spirits can tell show you the location of an undiscovered {@link Feature}.
- * 
+ *
  * @see Temple
  * @see Monster#good
  * @author alex
@@ -48,13 +46,7 @@ public class GoodTemple extends Temple {
 	}
 
 	@Override
-	public List<Feature> getfeatures(Dungeon d) {
-		ArrayList<Feature> spirits = new ArrayList<Feature>();
-		int nbraziers = RPG.r(5, 7);
-		for (int i = 0; i < nbraziers; i++) {
-			Point spot = d.findspot();
-			spirits.add(new Spirit(spot.x, spot.y));
-		}
-		return spirits;
+	public Feature createfeature(Point p, Dungeon d) {
+		return new Spirit(p.x, p.y);
 	}
 }

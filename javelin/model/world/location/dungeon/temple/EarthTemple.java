@@ -1,8 +1,5 @@
 package javelin.model.world.location.dungeon.temple;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javelin.controller.Point;
 import javelin.controller.terrain.Forest;
 import javelin.controller.terrain.Terrain;
@@ -11,11 +8,10 @@ import javelin.model.item.relic.Map;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.temple.features.FruitTree;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Found deep in the {@link Forest}. Apple trees restore health of 1 unit.
- * 
+ *
  * @see Temple
  * @author alex
  */
@@ -34,13 +30,7 @@ public class EarthTemple extends Temple {
 	}
 
 	@Override
-	public List<Feature> getfeatures(Dungeon d) {
-		int ntrees = RPG.r(1, 3);
-		ArrayList<Feature> trees = new ArrayList<Feature>();
-		for (int i = 0; i < ntrees; i++) {
-			Point spot = d.findspot();
-			trees.add(new FruitTree(spot.x, spot.y));
-		}
-		return trees;
+	public Feature createfeature(Point p, Dungeon d) {
+		return new FruitTree(p.x, p.y);
 	}
 }

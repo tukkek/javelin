@@ -1,8 +1,5 @@
 package javelin.model.world.location.dungeon.temple;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javelin.controller.Point;
 import javelin.controller.terrain.Desert;
 import javelin.controller.terrain.Terrain;
@@ -11,12 +8,11 @@ import javelin.model.item.relic.Candle;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.temple.features.Brazier;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Found buried in the {@link Desert}. 1-3 pedestals light an area around the
  * cave.
- * 
+ *
  * @see Temple
  * @author alex
  */
@@ -35,13 +31,7 @@ public class FireTemple extends Temple {
 	}
 
 	@Override
-	public List<Feature> getfeatures(Dungeon d) {
-		ArrayList<Feature> braziers = new ArrayList<Feature>();
-		int nbraziers = RPG.r(3, 5);
-		for (int i = 0; i < nbraziers; i++) {
-			Point spot = d.findspot();
-			braziers.add(new Brazier(spot.x, spot.y));
-		}
-		return braziers;
+	public Feature createfeature(Point p, Dungeon d) {
+		return new Brazier(p.x, p.y);
 	}
 }

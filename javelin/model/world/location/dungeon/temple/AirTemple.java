@@ -84,4 +84,9 @@ public class AirTemple extends Temple {
 		}
 		return possibilities.isEmpty() ? null : RPG.pick(possibilities);
 	}
+
+	@Override
+	public Feature createfeature(Point p, Dungeon d) {
+		return null;
+	}
 }

@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import javelin.Javelin;
+import javelin.controller.Point;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.TempleEncounter;
 import javelin.controller.terrain.Terrain;
@@ -244,18 +244,7 @@ public abstract class Temple extends UniqueLocation {
 		}
 	}
 
-	/**
-	 * The given parameters are meant to be used with
-	 * {@link Dungeon#findspot(java.util.Collection, Set)}.
-	 *
-	 * @param used
-	 *            Don't forget to update this if creating multiple features.
-	 * @param templeDungeon
-	 * @return a new {@link Feature} to be placed.
-	 */
-	public List<Feature> getfeatures(Dungeon dungeon) {
-		return new ArrayList<Feature>();
-	}
+	abstract public Feature createfeature(Point p, Dungeon d);
 
 	/**
 	 * See {@link Dungeon#hazard()}.

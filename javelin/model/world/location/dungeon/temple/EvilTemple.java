@@ -3,6 +3,7 @@ package javelin.model.world.location.dungeon.temple;
 import java.util.ArrayList;
 
 import javelin.Javelin;
+import javelin.controller.Point;
 import javelin.controller.terrain.Marsh;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
@@ -10,6 +11,7 @@ import javelin.model.item.relic.Skull;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.StairsUp;
 import javelin.model.world.location.dungeon.temple.features.Altar;
@@ -20,7 +22,7 @@ import tyrant.mikera.engine.RPG;
  * Found drowning in the {@link Marsh}. Good creatures are never found in the
  * temple. An evil force can bring you back to the stairs up at any point (or
  * stairs down if you have the {@link Skull}).
- * 
+ *
  * @see Temple
  * @see Monster#good
  * @author alex
@@ -71,5 +73,10 @@ public class EvilTemple extends Temple {
 		dungeon.herolocation.y = target.y;
 		Javelin.message("A macabre force draws upon you...", true);
 		return true;
+	}
+
+	@Override
+	public Feature createfeature(Point p, Dungeon d) {
+		return null;
 	}
 }

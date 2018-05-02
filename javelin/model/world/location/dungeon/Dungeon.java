@@ -51,8 +51,14 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Dungeon extends Location {
+	static final float RATIOMONSTER = .5f;
+	static final float RATIOFEATURES = .5f;
+	static final float RATIOTRAPS = .1f;
+	static final float RATIOTREASURE = .1f;
+
 	static final int MAXTRIES = 1000;
 	static final int[] DELTAS = { -1, 0, 1 };
+
 	/** Current {@link Dungeon} or <code>null</code> if not in one. */
 	public static Dungeon active = null;
 
@@ -78,7 +84,6 @@ public class Dungeon extends Location {
 	public HashSet<Point> discovered = new HashSet<Point>();
 	public char[][] map;
 	public int size;
-	public float encounterratio;
 	public int stepsperencounter;
 	public int level = -1;
 
@@ -165,12 +170,9 @@ public class Dungeon extends Location {
 				tier.maxrooms);
 		map = generator.grid;
 		size = map.length;
-		int vision = DungeonScreen.VIEWRADIUS * 2 + 1;
-		int rooms = generator.map.rooms.size();
-		int stepsperroom = countfloor() / rooms;
-		stepsperencounter = Math.round(stepsperroom / vision);
-		encounterratio = 1f / stepsperencounter;
-		placefeatures(getfountains(rooms));
+		int nrooms = generator.map.rooms.size();
+		stepsperencounter = calculateencounterratio(nrooms);
+		populatedungeon(nrooms);
 		visible = new boolean[size][size];
 		for (int x = 0; x < size; x++) {
 			for (int y = 0; y < size; y++) {
@@ -179,8 +181,10 @@ public class Dungeon extends Location {
 		}
 	}
 
-	public int getfountains(int rooms) {
-		return (rooms - 4) / 4;
+	int calculateencounterratio(int nrooms) {
+		int tilesperroom = countfloor() / nrooms;
+		int vision = DungeonScreen.VIEWRADIUS * 2 + 1;
+		return Math.round(RATIOMONSTER * tilesperroom / vision);
 	}
 
 	int countfloor() {
@@ -196,36 +200,48 @@ public class Dungeon extends Location {
 		return floortiles;
 	}
 
-	/**
-	 * Places {@link Fountain}, {@link Chest}s and {@link Trap}s then those from
-	 * {@link #getextrafeatures(Set, Set)}.
-	 *
-	 * @param fountains
-	 *
-	 * @param free
-	 * @param used
-	 */
-	protected void placefeatures(int fountains) {
+	protected void populatedungeon(int nrooms) {
 		herolocation = findspot();
-		features.add(new StairsUp("stairs up", herolocation));
-		for (int x = herolocation.x - 1; x <= herolocation.x + 1; x++) {
-			for (int y = herolocation.y - 1; y <= herolocation.y + 1; y++) {
+		createstairs(herolocation);
+		int goldpool = createtraps(getfeaturequantity(nrooms, RATIOTRAPS));
+		createchests(getfeaturequantity(nrooms, RATIOTREASURE), goldpool);
+		createfeatures(getfeaturequantity(nrooms, RATIOFEATURES));
+	}
+
+	protected void createstairs(Point p) {
+		features.add(new StairsUp("stairs up", p));
+		for (int x = p.x - 1; x <= p.x + 1; x++) {
+			for (int y = p.y - 1; y <= p.y + 1; y++) {
 				map[x][y] = Template.FLOOR;
 			}
 		}
-		createchests();
-		for (Feature f : features) {
-			if (f instanceof Trap && RPG.chancein(4)) {
-				fountains += 1;
+	}
+
+	void createfeatures(int nfeatures) {
+		for (int i = 0; i < nfeatures; i++) {
+			Feature f = createfeature(findspot());
+			if (f != null) {
+				features.add(f);
 			}
 		}
-		for (int i = 0; i < fountains; i++) {
-			Point fountain = findspot();
-			features.add(new Fountain(fountain.x, fountain.y));
+	}
+
+	static int getfeaturequantity(int rooms, float ratio) {
+		int quantity = Math.round(rooms * ratio);
+		return quantity + RPG.randomize(quantity);
+	}
+
+	int createtraps(int ntraps) {
+		int gold = 0;
+		for (int i = 0; i < ntraps; i++) {
+			int cr = Math.round(level) + EncounterGenerator.getdifficulty();
+			if (cr >= Trap.MINIMUMCR) {
+				Trap t = new Trap(cr, findspot());
+				features.add(t);
+				gold += RewardCalculator.getgold(t.cr);
+			}
 		}
-		for (Feature f : getextrafeatures()) {
-			features.add(f);
-		}
+		return gold;
 	}
 
 	/**
@@ -235,35 +251,25 @@ public class Dungeon extends Location {
 		return 0 <= coordinate && coordinate <= size;
 	}
 
-	void createchests() {
-		DungeonTier tier = gettier();
-		int chests = RPG.r(tier.minrooms, tier.maxrooms)
-				+ RPG.randomize(tier.minrooms);
-		int pool = getgoldpool();
-		int traps = chests + RPG.randomize(tier.minrooms);
-		for (int i = 0; i < traps; i++) {
-			int cr = Math.round(getcr()) + EncounterGenerator.getdifficulty();
-			if (cr >= Trap.MINIMUMCR) {
-				Trap t = new Trap(cr, findspot());
-				features.add(t);
-				pool += RewardCalculator.getgold(t.cr);
-			}
+	/*
+	 * TODO would be cool to generate a flood-map to see which chest is more
+	 * distant before deciding which one is the special one. Would probably need
+	 * to generate points frist, chests later.
+	 */
+	void createchests(int nchests, int pool) {
+		features.add(createspecialchest(findspot()));
+		int hidden = RewardCalculator.getgold(level) * nchests;
+		if (pool > 0) {
+			nchests += 1;
+		} else if (nchests == 0) {
+			return;
 		}
-		for (int i = chests; i > 0; i--) {
+		pool += hidden;
+		for (int i = nchests; i > 0; i--) {
 			int gold = i == 1 ? pool : pool / RPG.r(2, i);
+			features.add(new Chest(gold, findspot()));
 			pool -= gold;
-			Point p = findspot();
-			features.add(i == chests ? createspecialfeature(p)
-					: Chest.create(gold, p.x, p.y));
 		}
-	}
-
-	public int getgoldpool() {
-		return RewardCalculator.getgold(getcr());
-	}
-
-	float getcr() {
-		return ChallengeCalculator.eltocr(level);
 	}
 
 	/**
@@ -273,7 +279,7 @@ public class Dungeon extends Location {
 	 *            Chest's location.
 	 * @return Most special chest here.
 	 */
-	protected Feature createspecialfeature(Point p) {
+	protected Feature createspecialchest(Point p) {
 		Chest c = new Chest(p.x, p.y);
 		c.setspecial();
 		c.items.add(World.scenario.allowkeys ? Key.generate() : new Ruby());
@@ -394,25 +400,13 @@ public class Dungeon extends Location {
 	 *            Don't forget to update this as you generate new features!
 	 * @return Extra features to be placed using {@link #build(Feature, Set)}.
 	 */
-	protected List<Feature> getextrafeatures() {
-		ArrayList<Feature> extra = new ArrayList<Feature>();
-		if (RPG.r(1, 10) == 1) {
-			Point spot = findspot();
-			extra.add(new Brazier(spot.x, spot.y));
-		}
-		if (RPG.r(1, 10) == 1) {
-			Point spot = findspot();
-			extra.add(new FruitTree(spot.x, spot.y));
-		}
-		if (RPG.r(1, 10) == 1) {
-			Point spot = findspot();
-			extra.add(new Portal(spot.x, spot.y));
-		}
-		if (RPG.r(1, 10) == 1) {
-			Point spot = findspot();
-			extra.add(new Spirit(spot.x, spot.y));
-		}
-		return extra;
+	protected Feature createfeature(Point p) {
+		ArrayList<Feature> features = new ArrayList<Feature>();
+		features.add(new Brazier(p.x, p.y));
+		features.add(new FruitTree(p.x, p.y));
+		features.add(new Portal(p.x, p.y));
+		features.add(new Spirit(p.x, p.y));
+		return RPG.pick(features);
 	}
 
 	@Override

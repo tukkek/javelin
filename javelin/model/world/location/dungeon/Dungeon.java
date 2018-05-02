@@ -406,6 +406,7 @@ public class Dungeon extends Location {
 		features.add(new FruitTree(p.x, p.y));
 		features.add(new Portal(p.x, p.y));
 		features.add(new Spirit(p.x, p.y));
+		features.add(new Fountain(p.x, p.y));
 		return RPG.pick(features);
 	}
 

@@ -11,6 +11,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.Fountain;
+import tyrant.mikera.engine.RPG;
 
 /**
  * Found next to {@link Water}. Always flooded.
@@ -50,6 +51,6 @@ public class WaterTemple extends Temple {
 
 	@Override
 	public Feature createfeature(Point p, Dungeon d) {
-		return new Fountain(p.x, p.y);
+		return RPG.chancein(2) ? null : new Fountain(p.x, p.y);
 	}
 }

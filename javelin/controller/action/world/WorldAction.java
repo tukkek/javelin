@@ -11,7 +11,7 @@ import javelin.view.screen.WorldScreen;
 
 /**
  * An action to be performed by the human player while on the overworld view.
- * 
+ *
  * @see Action
  * @author alex
  */
@@ -19,7 +19,6 @@ public abstract class WorldAction implements ActionDescription {
 	/** All world actions. */
 	public static final WorldAction[] ACTIONS = new WorldAction[] { //
 			new Automate(), // a
-			new BuildTown(), // b
 			new Camp(), // c
 			new Divide(), // d
 			new UseItems(), // i
@@ -74,7 +73,7 @@ public abstract class WorldAction implements ActionDescription {
 
 	/**
 	 * Executes action.
-	 * 
+	 *
 	 * @param screen
 	 *            Current screen.
 	 */

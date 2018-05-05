@@ -8,7 +8,7 @@ import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.condition.Condition;
-import javelin.model.world.location.dungeon.Fountain;
+import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.view.screen.town.SelectScreen;
 
 public class ArenaFountain extends ArenaBuilding {

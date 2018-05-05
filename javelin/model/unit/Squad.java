@@ -541,7 +541,7 @@ public class Squad extends Actor implements Cloneable {
 	/**
 	 * @return roll of {@link Skills#disabledevice}
 	 */
-	public int disarm() {
+	public int disable() {
 		int best = Integer.MIN_VALUE;
 		for (int i = 1; i < members.size(); i++) {
 			Monster m = members.get(i).source;

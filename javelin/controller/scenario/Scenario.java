@@ -29,7 +29,7 @@ import javelin.model.world.Caravan;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.dungeon.Chest;
+import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.order.Order;

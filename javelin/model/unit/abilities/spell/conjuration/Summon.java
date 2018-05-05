@@ -12,6 +12,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Combatant;
+import javelin.view.mappanel.battle.overlay.AiOverlay;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -97,6 +98,7 @@ public class Summon extends Spell {
 		}
 		summoned.location[0] = x;
 		summoned.location[1] = y;
+		cn.overlay = new AiOverlay(summoned.getlocation());
 		return "";// default message is enough
 	}
 

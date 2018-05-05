@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import javelin.controller.Point;
 import javelin.controller.action.ai.AiAction;
+import javelin.model.unit.attack.Combatant;
 import javelin.view.mappanel.Overlay;
 import javelin.view.mappanel.Tile;
 
@@ -28,6 +29,10 @@ public class AiOverlay extends Overlay {
 
 	public AiOverlay(Point p) {
 		this(p.x, p.y);
+	}
+
+	public AiOverlay(Combatant c) {
+		this(c.getlocation());
 	}
 
 	@Override

@@ -7,20 +7,21 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.abilities.spell.Ray;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.condition.Dominated;
+import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 /**
  * Based on the spell Dominate Monster but trades the duration (1 day/level) to
  * a single battle and to maintain spell-level balance cuts out all the costs of
  * redirecting and commanding the enchanted target.
- * 
+ *
  * It's not really a ray but we're abusing the existing logic here because it's
  * a lot easier.
  */
 public class DominateMonster extends Ray {
 	/** Constructor. */
 	public DominateMonster() {
-		super("Dominate monster", 9, ChallengeCalculator.ratespelllikeability(9),
-				Realm.EVIL);
+		super("Dominate monster", 9,
+				ChallengeCalculator.ratespelllikeability(9), Realm.EVIL);
 		automatichit = true;
 		apcost = 1;
 		castinbattle = true;
@@ -31,6 +32,7 @@ public class DominateMonster extends Ray {
 	@Override
 	public String cast(Combatant caster, Combatant target, boolean saved,
 			BattleState s, ChanceNode cn) {
+		cn.overlay = new AiOverlay(target.getlocation());
 		if (saved) {
 			return target + " resists!";
 		}

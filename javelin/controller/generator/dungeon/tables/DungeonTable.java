@@ -14,7 +14,7 @@ import tyrant.mikera.engine.RPG;
 public class DungeonTable implements Cloneable {
 	ArrayList<Row> table = new ArrayList<Row>();
 
-	void add(Row r) {
+	public void add(Row r) {
 		int n = r.getamount();
 		for (int i = 0; i < n; i++) {
 			table.add(r);

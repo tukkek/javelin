@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon;
+package javelin.model.world.location.dungeon.feature;
 
 import javelin.Javelin;
 import javelin.model.unit.Squad;
@@ -7,13 +7,13 @@ import javelin.model.unit.attack.Combatant;
 
 /**
  * Heals hit points and spell uses.
- * 
+ *
  * @author alex
  */
 public class Fountain extends Feature {
 	/** Constructor. */
 	public Fountain(int x, int y) {
-		super("fountain", x, y, "dungeonfountain");
+		super(x, y, "dungeonfountain");
 	}
 
 	@Override

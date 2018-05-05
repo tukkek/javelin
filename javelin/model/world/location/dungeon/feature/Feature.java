@@ -1,22 +1,23 @@
-package javelin.model.world.location.dungeon;
+package javelin.model.world.location.dungeon.feature;
 
 import java.io.Serializable;
 
 import javelin.model.unit.Squad;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.view.Images;
-import javelin.view.mappanel.dungeon.DungeonWalker;
 import javelin.view.mappanel.dungeon.DungeonTile;
+import javelin.view.mappanel.dungeon.DungeonWalker;
 
 /**
  * An interactive dungeon tile.
- * 
+ *
  * @author alex
  */
 public abstract class Feature implements Serializable {
 	/** X coordinate. */
-	final public int x;
+	public int x;
 	/** Y coordinate. */
-	final public int y;
+	public int y;
 	public String avatarfile;
 	/**
 	 * If <code>true</code> will {@link #remove()} this if {@link #activate()}
@@ -33,7 +34,7 @@ public abstract class Feature implements Serializable {
 	/**
 	 * If <code>true</code>, once {@link #activate()} is called will not allow a
 	 * movement sequence to carry through.
-	 * 
+	 *
 	 * @see DungeonWalker
 	 */
 	public boolean stop = false;
@@ -48,7 +49,7 @@ public abstract class Feature implements Serializable {
 	 * @param avatarfilep
 	 *            File name for {@link Images#getImage(String)}.
 	 */
-	public Feature(String thing, int xp, int yp, String avatarfilep) {
+	public Feature(int xp, int yp, String avatarfilep) {
 		x = xp;
 		y = yp;
 		avatarfile = avatarfilep;
@@ -56,7 +57,7 @@ public abstract class Feature implements Serializable {
 
 	/**
 	 * TODO evolve on 2.0+
-	 * 
+	 *
 	 * @param map
 	 *            Adds itself to this map.
 	 */
@@ -75,7 +76,7 @@ public abstract class Feature implements Serializable {
 
 	/**
 	 * Called when a {@link Squad} reaches this location.
-	 * 
+	 *
 	 * @return <code>true</code> if the Squad activates this feature or
 	 *         <code>false</code> if it is ignored.
 	 */

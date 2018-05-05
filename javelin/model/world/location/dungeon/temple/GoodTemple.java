@@ -10,8 +10,8 @@ import javelin.model.item.relic.Ankh;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.Feature;
-import javelin.model.world.location.dungeon.temple.features.Spirit;
+import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.Spirit;
 
 /**
  * Found resting in the {@link Plains}. Evil enemies never found here. 1-3 good

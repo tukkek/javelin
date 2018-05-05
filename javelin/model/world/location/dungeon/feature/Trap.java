@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon;
+package javelin.model.world.location.dungeon.feature;
 
 import java.util.ArrayList;
 
@@ -14,18 +14,18 @@ import tyrant.mikera.engine.RPG;
  * A trap is a semi-permanent strategic dungeon feature that deals subdual
  * (non-lethal) damage to a single character. It is balanced by generating more
  * {@link Chest}.
- * 
+ *
  * Traps are currently on the average party CR -5 to -8 so as to be easy
  * encounters. It's no fun to step onto a hard trap you didn't see coming and
  * possibly lose the game. They are there more as a strategic path consideration
  * when exploring a dungeon.
- * 
+ *
  * In d20 traps are supposed to award XP as well as gold. This isn't done here
  * partly because since the traps are permanent (so as to be strategic) it would
  * be easy to continually step on traps to plunder xp.
- * 
+ *
  * TODO evasion upgrade (half damage/no damage instead of full/half)
- * 
+ *
  * @author alex
  */
 public class Trap extends Feature {
@@ -51,7 +51,7 @@ public class Trap extends Feature {
 	 *            Creates a trap at this point.
 	 */
 	public Trap(int cr, Point p) {
-		super("poison trap", p.x, p.y, "dungeontrap");
+		super(p.x, p.y, "dungeontrap");
 		this.cr = cr;
 		draw = false;
 		stop = true;
@@ -92,7 +92,7 @@ public class Trap extends Feature {
 			fallinto();
 			return true;
 		}
-		int disarm = Squad.active.disarm() - disarmdc;
+		int disarm = Squad.active.disable() - disarmdc;
 		if (draw && disarm >= 0) {
 			Javelin.prompt("You disarm the trap!");
 			super.remove();

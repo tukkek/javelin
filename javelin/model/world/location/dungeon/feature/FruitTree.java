@@ -1,9 +1,8 @@
-package javelin.model.world.location.dungeon.temple.features;
+package javelin.model.world.location.dungeon.feature;
 
 import javelin.Javelin;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
-import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.temple.EarthTemple;
 
 /**
@@ -13,7 +12,7 @@ import javelin.model.world.location.dungeon.temple.EarthTemple;
 public class FruitTree extends Feature {
 	/** Constructor. */
 	public FruitTree(int xp, int yp) {
-		super("dog", xp, yp, "dungeontreefruit");
+		super(xp, yp, "dungeontreefruit");
 	}
 
 	@Override

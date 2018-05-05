@@ -11,7 +11,7 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.relic.Flute;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.Feature;
+import javelin.model.world.location.dungeon.feature.Feature;
 import tyrant.mikera.engine.RPG;
 
 /**

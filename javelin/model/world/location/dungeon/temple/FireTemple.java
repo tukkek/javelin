@@ -6,8 +6,8 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.relic.Candle;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.Feature;
-import javelin.model.world.location.dungeon.temple.features.Brazier;
+import javelin.model.world.location.dungeon.feature.Brazier;
+import javelin.model.world.location.dungeon.feature.Feature;
 
 /**
  * Found buried in the {@link Desert}. 1-3 pedestals light an area around the

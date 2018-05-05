@@ -6,13 +6,13 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.fight.Fight;
 import javelin.model.item.Ruby;
 import javelin.model.unit.Squad;
-import javelin.model.world.location.dungeon.Chest;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.Feature;
-import javelin.model.world.location.dungeon.Fountain;
-import javelin.model.world.location.dungeon.StairsUp;
-import javelin.model.world.location.dungeon.temple.features.Altar;
-import javelin.model.world.location.dungeon.temple.features.StairsDown;
+import javelin.model.world.location.dungeon.feature.Altar;
+import javelin.model.world.location.dungeon.feature.Chest;
+import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.Fountain;
+import javelin.model.world.location.dungeon.feature.StairsDown;
+import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.view.screen.DungeonScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -127,7 +127,7 @@ public class TempleDungeon extends Dungeon {
 	@Override
 	protected void createstairs(Point p) {
 		if (!deepest) {
-			features.add(new StairsDown("stairs up", findspot()));
+			features.add(new StairsDown(findspot()));
 		}
 		super.createstairs(p);
 	}

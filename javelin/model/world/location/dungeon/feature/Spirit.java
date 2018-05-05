@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon.temple.features;
+package javelin.model.world.location.dungeon.feature;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,10 +8,8 @@ import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.old.Game;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.Feature;
-import javelin.model.world.location.dungeon.Trap;
 import javelin.model.world.location.dungeon.temple.GoodTemple;
-import javelin.view.screen.DungeonScreen;
+import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -22,7 +20,7 @@ public class Spirit extends Feature {
 
 	/** Constructor. */
 	public Spirit(int xp, int yp) {
-		super("dog", xp, yp, "dungeonspirit");
+		super(xp, yp, "dungeonspirit");
 	}
 
 	@Override
@@ -47,7 +45,7 @@ public class Spirit extends Feature {
 			return true;
 		}
 		Dungeon.active.setvisible(show.x, show.y);
-		DungeonScreen.active.center(show.x, show.y);
+		BattleScreen.active.center(show.x, show.y);
 		Game.redraw();
 		String navitext = RPG.chancein(2) ? "'Hey, look!'" : "'Hey, listen!'";
 		Javelin.message(navitext, false);

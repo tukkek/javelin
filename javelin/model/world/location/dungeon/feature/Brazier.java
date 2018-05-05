@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon.temple.features;
+package javelin.model.world.location.dungeon.feature;
 
 import java.util.HashSet;
 
@@ -7,8 +7,7 @@ import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.template.Template;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.Feature;
-import javelin.model.world.location.dungeon.Trap;
+import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.model.world.location.dungeon.temple.FireTemple;
 
 /**
@@ -18,7 +17,7 @@ import javelin.model.world.location.dungeon.temple.FireTemple;
 public class Brazier extends Feature {
 	/** Constructor. */
 	public Brazier(int xp, int yp) {
-		super("dog", xp, yp, "dungeonbrazier");
+		super(xp, yp, "dungeonbrazier");
 	}
 
 	@Override
@@ -37,21 +36,18 @@ public class Brazier extends Feature {
 		if (!visited.add(p)) {
 			return;
 		}
-		for (Feature f : Dungeon.active.features) {
-			if (f.x != p.x || f.y != p.x) {
-				continue;
-			}
-			Trap t = f instanceof Trap ? (Trap) f : null;
-			if (t != null && !t.draw) {
-				t.discover();
-			}
+		Feature f = Dungeon.active.getfeature(p.x, p.y);
+		Trap t = f instanceof Trap ? (Trap) f : null;
+		if (t != null && !t.draw) {
+			t.discover();
 		}
 		try {
 			Dungeon.active.setvisible(p.x, p.y);
 		} catch (IndexOutOfBoundsException e) {
 			return;
 		}
-		if (depth > 9 || Dungeon.active.map[p.x][p.y] == Template.WALL) {
+		if (depth > 9 || Dungeon.active.map[p.x][p.y] == Template.WALL
+				|| f instanceof Door) {
 			return;
 		}
 		for (int x = p.x - 1; x <= p.x + 1; x++) {

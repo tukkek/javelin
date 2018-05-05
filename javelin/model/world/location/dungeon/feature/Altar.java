@@ -1,17 +1,16 @@
-package javelin.model.world.location.dungeon.temple.features;
+package javelin.model.world.location.dungeon.feature;
 
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.model.item.Item;
 import javelin.model.item.relic.Relic;
 import javelin.model.world.World;
-import javelin.model.world.location.dungeon.Feature;
 import javelin.model.world.location.dungeon.temple.Temple;
 
 /**
  * Holds the {@link Relic} for this temple. If for any reason the {@link Relic}
  * is lost by the player it shall be available for pickup here again.
- * 
+ *
  * @author alex
  */
 public class Altar extends Feature {
@@ -19,7 +18,7 @@ public class Altar extends Feature {
 
 	/** Constructor. */
 	public Altar(Point p, Temple temple) {
-		super("altar", p.x, p.y, "dungeonaltar");
+		super(p.x, p.y, "dungeonaltar");
 		this.temple = temple;
 		remove = false;
 	}

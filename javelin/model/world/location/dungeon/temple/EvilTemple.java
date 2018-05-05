@@ -12,10 +12,10 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.Feature;
-import javelin.model.world.location.dungeon.StairsUp;
-import javelin.model.world.location.dungeon.temple.features.Altar;
-import javelin.model.world.location.dungeon.temple.features.StairsDown;
+import javelin.model.world.location.dungeon.feature.Altar;
+import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.StairsDown;
+import javelin.model.world.location.dungeon.feature.StairsUp;
 import tyrant.mikera.engine.RPG;
 
 /**

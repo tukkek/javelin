@@ -27,12 +27,18 @@ import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.dungeon.feature.Brazier;
+import javelin.model.world.location.dungeon.feature.Chest;
+import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.Fountain;
+import javelin.model.world.location.dungeon.feature.FruitTree;
+import javelin.model.world.location.dungeon.feature.Portal;
+import javelin.model.world.location.dungeon.feature.Spirit;
+import javelin.model.world.location.dungeon.feature.StairsDown;
+import javelin.model.world.location.dungeon.feature.StairsUp;
+import javelin.model.world.location.dungeon.feature.Trap;
+import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.model.world.location.dungeon.temple.TempleDungeon;
-import javelin.model.world.location.dungeon.temple.features.Brazier;
-import javelin.model.world.location.dungeon.temple.features.FruitTree;
-import javelin.model.world.location.dungeon.temple.features.Portal;
-import javelin.model.world.location.dungeon.temple.features.Spirit;
-import javelin.model.world.location.dungeon.temple.features.StairsDown;
 import javelin.view.Images;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
@@ -170,6 +176,7 @@ public class Dungeon extends Location {
 				tier.maxrooms);
 		map = generator.grid;
 		size = map.length;
+		createdoors();
 		int nrooms = generator.map.rooms.size();
 		stepsperencounter = calculateencounterratio(nrooms);
 		populatedungeon(nrooms);
@@ -177,6 +184,19 @@ public class Dungeon extends Location {
 		for (int x = 0; x < size; x++) {
 			for (int y = 0; y < size; y++) {
 				visible[x][y] = false;
+			}
+		}
+	}
+
+	void createdoors() {
+		for (int x = 0; x < size; x++) {
+			for (int y = 0; y < size; y++) {
+				if (map[x][y] == Template.DOOR) {
+					Door d = Door.generate(this, new Point(x, y));
+					if (d != null) {
+						features.add(d);
+					}
+				}
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon;
+package javelin.model.world.location.dungeon.feature;
 
 import javelin.Javelin;
 import javelin.controller.Point;
@@ -6,6 +6,7 @@ import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Squad;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -34,7 +35,7 @@ public class Chest extends Feature {
 	 *            {@link Item} loot.
 	 */
 	public Chest(int x, int y) {
-		super("chest", x, y, "dungeonchest");
+		super(x, y, "dungeonchest");
 	}
 
 	/**

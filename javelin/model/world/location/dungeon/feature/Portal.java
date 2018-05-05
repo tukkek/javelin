@@ -1,10 +1,8 @@
-package javelin.model.world.location.dungeon.temple.features;
+package javelin.model.world.location.dungeon.feature;
 
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.Feature;
-import javelin.model.world.location.dungeon.StairsUp;
 import javelin.model.world.location.dungeon.temple.MagicTemple;
 import javelin.view.screen.DungeonScreen;
 
@@ -15,7 +13,7 @@ import javelin.view.screen.DungeonScreen;
 public class Portal extends Feature {
 	/** Constructor. */
 	public Portal(int xp, int yp) {
-		super("dog", xp, yp, "locationportal");
+		super(xp, yp, "locationportal");
 		remove = false;
 	}
 

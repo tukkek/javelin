@@ -5,10 +5,11 @@ import java.awt.Graphics;
 import javelin.JavelinApp;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.Feature;
+import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.view.Images;
+import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
-import javelin.view.mappanel.world.WorldPanel;
 
 public class DungeonTile extends Tile {
 	public DungeonTile(int xp, int yp, DungeonPanel p) {
@@ -27,6 +28,9 @@ public class DungeonTile extends Tile {
 		}
 		final Feature f = Dungeon.active.getfeature(x, y);
 		if (f != null && f.draw) {
+			if (f instanceof Door) {
+				draw(g, Images.getImage(Dungeon.active.wall));
+			}
 			draw(g, Images.getImage(f.avatarfile));
 		}
 		if (Dungeon.active.herolocation.x == x
@@ -34,8 +38,8 @@ public class DungeonTile extends Tile {
 			Squad.active.updateavatar();
 			draw(g, Squad.active.getimage());
 		}
-		if (WorldPanel.overlay != null) {
-			WorldPanel.overlay.overlay(this, g);
+		if (MapPanel.overlay != null) {
+			MapPanel.overlay.overlay(this, g);
 		}
 	}
 }

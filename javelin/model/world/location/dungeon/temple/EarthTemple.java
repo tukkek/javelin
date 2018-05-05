@@ -6,8 +6,8 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.relic.Map;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.Feature;
-import javelin.model.world.location.dungeon.temple.features.FruitTree;
+import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.FruitTree;
 
 /**
  * Found deep in the {@link Forest}. Apple trees restore health of 1 unit.

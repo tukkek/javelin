@@ -3,8 +3,8 @@ package javelin.view.mappanel.dungeon;
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.template.Template;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.Feature;
-import javelin.model.world.location.dungeon.Trap;
+import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.Trap;
 import javelin.view.mappanel.world.WorldWalker;
 import javelin.view.screen.BattleScreen;
 

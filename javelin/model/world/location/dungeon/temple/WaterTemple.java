@@ -9,8 +9,8 @@ import javelin.model.Realm;
 import javelin.model.item.relic.Crown;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.Feature;
-import javelin.model.world.location.dungeon.Fountain;
+import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.Fountain;
 import tyrant.mikera.engine.RPG;
 
 /**

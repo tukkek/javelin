@@ -12,8 +12,9 @@ import javelin.controller.generator.dungeon.template.Template;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.Feature;
-import javelin.model.world.location.dungeon.Trap;
+import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.Trap;
+import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.view.Images;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.dungeon.DungeonPanel;
@@ -65,9 +66,9 @@ public class DungeonScreen extends WorldScreen {
 				boolean activated = f.activate();
 				if (activated && f.remove) {
 					f.remove();
-					DungeonScreen.dontenter = !f.enter;
-					DungeonScreen.stopmovesequence = f.stop;
 				}
+				DungeonScreen.dontenter = !f.enter;
+				DungeonScreen.stopmovesequence = f.stop;
 				return activated;
 			}
 			if (x - 1 <= f.x && f.x <= x + 1 && y - 1 <= f.y && f.y <= y + 1) {
@@ -122,7 +123,8 @@ public class DungeonScreen extends WorldScreen {
 				step.y += step.y > target.y ? -1 : +1;
 			}
 			if (!step.equals(target)
-					&& dungeon.map[step.x][step.y] == Template.WALL) {
+					&& (dungeon.map[step.x][step.y] == Template.WALL || dungeon
+							.getfeature(step.x, step.y) instanceof Door)) {
 				return false;
 			}
 		}

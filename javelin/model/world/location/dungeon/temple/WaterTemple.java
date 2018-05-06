@@ -32,6 +32,7 @@ public class WaterTemple extends Temple {
 		terrain = Terrain.WATER;
 		floor = "terraindungeonfloor";
 		wall = "dungeonwalltemplewater";
+		doorbackground = false;
 	}
 
 	@Override

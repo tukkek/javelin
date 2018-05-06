@@ -83,15 +83,16 @@ public class Dungeon extends Location {
 	 */
 	public Point herolocation;
 	/** File to use under 'avatar' folder. */
-	public String floor = "dungeonfloor";
+	public String floor;
 	/** File to use under 'avatar' folder. */
-	public String wall = "dungeonwall";
+	public String wall;
 	/** Tiles already revealed. */
 	public HashSet<Point> discovered = new HashSet<Point>();
 	public char[][] map;
 	public int size;
 	public int stepsperencounter;
 	public int level = -1;
+	public boolean doorbackground = true;
 
 	transient boolean generated = false;
 
@@ -103,6 +104,9 @@ public class Dungeon extends Location {
 		impermeable = true;
 		allowedinscenario = false;
 		this.level = level == null ? determineel() : level;
+		DungeonTier tier = gettier();
+		wall = tier.wall;
+		floor = tier.floor;
 	}
 
 	public Dungeon() {

@@ -39,6 +39,7 @@ public class EvilTemple extends Temple {
 		terrain = Terrain.MARSH;
 		floor = "dungeonfloortempleevil";
 		wall = "dungeonwalltempleevil";
+		doorbackground = false;
 	}
 
 	@Override

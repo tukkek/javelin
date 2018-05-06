@@ -100,6 +100,7 @@ public abstract class Temple extends UniqueLocation {
 	public String floor = null;
 	/** If not <code>null</code> will override {@link Dungeon#wall}. */
 	public String wall = null;
+	public boolean doorbackground = true;
 	int level = 0;
 
 	/**
@@ -118,9 +119,6 @@ public abstract class Temple extends UniqueLocation {
 		relic = relicp;
 		fluff = fluffp;
 		link = true;
-		for (int i = 0; i < DEPTH; i++) {
-			floors.add(new TempleDungeon(this, i == DEPTH - 1));
-		}
 	}
 
 	@Override
@@ -144,6 +142,11 @@ public abstract class Temple extends UniqueLocation {
 	@Override
 	public boolean interact() {
 		if (open) {
+			if (floors.isEmpty()) {
+				for (int i = 0; i < DEPTH; i++) {
+					floors.add(new TempleDungeon(this, i == DEPTH - 1));
+				}
+			}
 			floors.get(0).activate(false);
 		} else {
 			if (!javelin.controller.db.Preferences.DEBUGUNLOCKTEMPLES

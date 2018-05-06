@@ -19,7 +19,7 @@ import javelin.model.world.location.town.Town;
 
 /**
  * Cache for {@link Monster#avatar}
- * 
+ *
  * @author alex
  */
 public class Images {
@@ -69,7 +69,7 @@ public class Images {
 	/**
 	 * This should be the preferred method of loading images because this way
 	 * it's friendlier for modding purposes.
-	 * 
+	 *
 	 * @param file
 	 *            PNG extension is added.
 	 * @return An image from the avatar folder.
@@ -104,4 +104,8 @@ public class Images {
 		return transparent;
 	}
 
+	public static void clearcache() {
+		CACHE.clear();
+		BURIEDCACHE.clear();
+	}
 }

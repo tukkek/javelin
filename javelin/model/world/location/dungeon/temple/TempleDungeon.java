@@ -28,15 +28,16 @@ public class TempleDungeon extends Dungeon {
 	public boolean deepest;
 
 	/**
-	 * @param temple
+	 * @param t
 	 *            Temples this floor is a part of.
 	 * @param deepest
 	 *            <code>true</code> if the last (bottom) floor.
 	 */
-	public TempleDungeon(Temple temple, boolean deepest) {
-		super(temple.el);
-		this.temple = temple;
+	public TempleDungeon(Temple t, boolean deepest) {
+		super(t.el);
+		temple = t;
 		this.deepest = deepest;
+		doorbackground = t.doorbackground;
 	}
 
 	@Override

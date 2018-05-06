@@ -18,7 +18,7 @@ public class Altar extends Feature {
 
 	/** Constructor. */
 	public Altar(Point p, Temple temple) {
-		super(p.x, p.y, "dungeonaltar");
+		super(p.x, p.y, "dungeonchestrelic");
 		this.temple = temple;
 		remove = false;
 	}

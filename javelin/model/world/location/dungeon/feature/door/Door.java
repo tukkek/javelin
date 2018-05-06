@@ -6,6 +6,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.action.Action;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
@@ -21,6 +22,9 @@ public class Door extends Feature {
 	/**
 	 * TODO used as a workaround while we don't have a take-20 Dungeon
 	 * interaction.
+	 *
+	 * once the {@link Action} is implemented, bump {@link #stuck} to chance in
+	 * 2 and remove bonus.
 	 */
 	private static final int BREAKBONUS = 5;
 	static final List<Class<? extends Door>> TYPES = new ArrayList<Class<? extends Door>>();
@@ -42,13 +46,13 @@ public class Door extends Feature {
 	}
 
 	public int unlockdc = RPG.r(20, 30);
-	public int breakdc;
-	/** Used if {@link #hidden}. */
+	/** Used if {@link #hidden}. TODO */
 	public int finddc = RPG.r(20, 30);
+	public int breakdc;
 
-	boolean stuck = RPG.chancein(2); // or 5-20%?
-	boolean locked = RPG.chancein(4);
 	DoorTrap trap = RPG.chancein(6) ? RPG.pick(TRAPS) : null;
+	boolean stuck = RPG.chancein(10);
+	boolean locked = RPG.chancein(4);
 	/** @see #finddc */
 	boolean hidden = false;
 
@@ -57,6 +61,7 @@ public class Door extends Feature {
 		enter = false;
 		stop = true;
 		breakdc = locked ? breakdclocked : breakdcstuck;
+		breakdc = Math.max(1, breakdc + RPG.randomize(5));
 		if (trap != null) {
 			trap.generate(this);
 		}
@@ -86,11 +91,11 @@ public class Door extends Feature {
 		}
 		enter = true;
 		remove();
-		spring(trap, unlocker == null ? forcer : unlocker);
+		spring(unlocker == null ? forcer : unlocker);
 		return true;
 	}
 
-	void spring(DoorTrap trap, Combatant opening) {
+	void spring(Combatant opening) {
 		if (trap == null) {
 			return;
 		}

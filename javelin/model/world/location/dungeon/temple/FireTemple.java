@@ -28,6 +28,7 @@ public class FireTemple extends Temple {
 		terrain = Terrain.DESERT;
 		floor = "dungeonfloortemplefire";
 		wall = "dungeonwalltemplefire";
+		doorbackground = false;
 	}
 
 	@Override

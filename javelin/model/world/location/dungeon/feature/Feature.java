@@ -2,6 +2,8 @@ package javelin.model.world.location.dungeon.feature;
 
 import java.io.Serializable;
 
+import javelin.model.unit.Combatant;
+import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.view.Images;
@@ -65,20 +67,34 @@ public abstract class Feature implements Serializable {
 	}
 
 	/**
-	 * TODO the if here is probably due to some wacky interface bug which should
-	 * be solved by 2.0
-	 */
-	public void remove() {
-		if (Dungeon.active != null) {
-			Dungeon.active.features.remove(this);
-		}
-	}
-
-	/**
 	 * Called when a {@link Squad} reaches this location.
 	 *
 	 * @return <code>true</code> if the Squad activates this feature or
 	 *         <code>false</code> if it is ignored.
 	 */
 	abstract public boolean activate();
+
+	/**
+	 * Called when the {@link Squad} is passing nearby this feature. If it's
+	 * hidden, might have a chance of revealing it.
+	 * 
+	 * @param searching
+	 *            The unit that is actively looking around (usually the one with
+	 *            highest perception).
+	 * @param searchroll
+	 *            A {@link Skills#perception} roll (usually a take-10, to
+	 *            prevent scumming). If you want to have an automatic success,
+	 *            inform a high number like 9000, because if you use
+	 *            {@link Integer#MAX_VALUE}, it may overflow after internal
+	 *            bonuses being applied.
+	 * 
+	 * @see #draw
+	 */
+	public void discover(Combatant searching, int searchroll) {
+		// nothing by default
+	}
+
+	public void place(Dungeon d) {
+		// nothing by default
+	}
 }

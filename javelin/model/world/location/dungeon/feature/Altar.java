@@ -5,6 +5,7 @@ import javelin.controller.Point;
 import javelin.model.item.Item;
 import javelin.model.item.relic.Relic;
 import javelin.model.world.World;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
 
 /**
@@ -36,7 +37,7 @@ public class Altar extends Feature {
 			Javelin.message(text, true);
 			temple.relic.clone().grab();
 			if (World.scenario.expiredungeons) {
-				remove();
+				Dungeon.active.features.remove(this);
 				temple.remove();
 			}
 		}

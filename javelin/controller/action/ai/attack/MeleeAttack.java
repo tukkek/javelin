@@ -6,8 +6,8 @@ import java.util.List;
 import javelin.controller.action.target.MeleeTarget;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.attack.AttackSequence;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.condition.Prone;
 
 /**

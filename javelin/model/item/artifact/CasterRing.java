@@ -1,7 +1,7 @@
 package javelin.model.item.artifact;
 
+import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * Provides a {@link Combatant} with a certain number of daily {@link #uses} of

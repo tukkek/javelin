@@ -6,7 +6,7 @@ import javelin.controller.Point;
 import javelin.controller.walker.pathing.BranchingPath;
 import javelin.controller.walker.pathing.Pathing;
 import javelin.model.state.BattleState;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 /**
  * Extensible path-finding algorithm.

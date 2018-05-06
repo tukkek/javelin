@@ -1,7 +1,7 @@
 package javelin.view.screen.wish;
 
+import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.conjuration.teleportation.GreaterTeleport;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * Teleports player to any town and shows their .

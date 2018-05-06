@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import javelin.controller.fight.Fight;
 import javelin.model.Cloneable;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.abjuration.DispelMagic;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * A condition is a temporary effect on a {@link Combatant}.

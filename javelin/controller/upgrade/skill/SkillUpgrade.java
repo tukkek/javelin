@@ -3,9 +3,9 @@ package javelin.controller.upgrade.skill;
 import java.util.HashSet;
 
 import javelin.controller.upgrade.Upgrade;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * Upgrades one of the {@link Monster#skills}.

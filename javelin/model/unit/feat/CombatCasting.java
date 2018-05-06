@@ -1,7 +1,7 @@
 package javelin.model.unit.feat;
 
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Skills;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * +4 to {@link Skills#concentration}.

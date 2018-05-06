@@ -8,8 +8,8 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.ChallengeCalculator.Difficulty;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.encounter.EncounterGenerator;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.attack.Combatant;
 import tyrant.mikera.engine.RPG;
 
 public class Reinforcement {

@@ -2,7 +2,7 @@ package javelin.model.unit.abilities.spell.conjuration.healing;
 
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 /**
  * Also features "restoration", implicitly. See the d20 SRD for more info.

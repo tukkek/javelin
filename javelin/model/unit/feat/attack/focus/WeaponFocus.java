@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.TreeMap;
 
 import javelin.controller.db.reader.fields.Feats;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.feat.Feat;
 
 /**

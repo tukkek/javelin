@@ -5,8 +5,8 @@ import java.util.List;
 
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * Base implementation for touch spells.

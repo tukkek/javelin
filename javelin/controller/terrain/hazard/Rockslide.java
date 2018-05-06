@@ -2,8 +2,8 @@ package javelin.controller.terrain.hazard;
 
 import javelin.Javelin;
 import javelin.controller.terrain.Terrain;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Season;
 import tyrant.mikera.engine.RPG;
 

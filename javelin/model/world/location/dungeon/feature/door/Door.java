@@ -7,12 +7,14 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.action.Action;
+import javelin.controller.generator.dungeon.template.Template;
+import javelin.controller.old.Game;
 import javelin.model.item.Item;
 import javelin.model.item.key.door.Key;
 import javelin.model.item.key.door.MasterKey;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.door.trap.Alarm;
@@ -50,15 +52,15 @@ public class Door extends Feature {
 
 	public int unlockdc = RPG.r(20, 30);
 	/** Used if {@link #hidden}. TODO */
-	public int finddc = RPG.r(20, 30);
+	public int searchdc = RPG.r(20, 30);
 	public int breakdc;
 	Class<? extends Key> key;
 
 	DoorTrap trap = RPG.chancein(6) ? RPG.pick(TRAPS) : null;
 	boolean stuck = RPG.chancein(10);
 	boolean locked = RPG.chancein(4);
-	/** @see #finddc */
-	boolean hidden = false;
+	/** @see #searchdc */
+	boolean hidden = RPG.chancein(20) || true;
 
 	public Door(String avatar, int breakdcstuck, int breakdclocked,
 			Class<? extends Key> key) {
@@ -71,10 +73,14 @@ public class Door extends Feature {
 		if (trap != null) {
 			trap.generate(this);
 		}
+		draw = !hidden;
 	}
 
 	@Override
 	public boolean activate() {
+		if (hidden) {
+			return false;
+		}
 		Combatant unlocker = unlock();
 		Combatant forcer = force();
 		if (locked) {
@@ -98,7 +104,7 @@ public class Door extends Feature {
 			}
 		}
 		enter = true;
-		remove();
+		Dungeon.active.features.remove(this);
 		spring(unlocker == null ? forcer : unlocker);
 		return true;
 	}
@@ -187,6 +193,26 @@ public class Door extends Feature {
 					: RPG.pick(TYPES).newInstance().key.newInstance();
 		} catch (ReflectiveOperationException e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public void place(Dungeon d) {
+		super.place(d);
+		if (hidden) {
+			d.map[x][y] = Template.WALL;
+		}
+	}
+
+	@Override
+	public void discover(Combatant searching, int searchroll) {
+		super.discover(searching, searchroll);
+		if (!draw && searchroll >= searchdc) {
+			Dungeon.active.map[x][y] = Template.FLOOR;
+			draw = true;
+			hidden = false;
+			Game.redraw();
+			Javelin.message("You find a hidden door!", true);
 		}
 	}
 }

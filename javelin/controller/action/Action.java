@@ -10,7 +10,7 @@ import java.util.TreeMap;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.fight.Fight;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;
 

@@ -1,8 +1,8 @@
 package javelin.controller.terrain.hazard;
 
 import javelin.controller.Weather;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.unit.attack.Combatant;
 import tyrant.mikera.engine.RPG;
 
 /**

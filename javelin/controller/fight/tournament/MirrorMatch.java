@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.ExhibitionFight;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * Fight against your own squad.

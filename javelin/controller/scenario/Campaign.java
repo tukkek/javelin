@@ -10,8 +10,8 @@ import javelin.controller.exception.UnbalancedTeams;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.classes.Commoner;
 import javelin.model.Realm;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 

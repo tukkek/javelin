@@ -1,7 +1,7 @@
 package javelin.model.unit.abilities.spell;
 
 import javelin.model.unit.CloneableList;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 /**
  * Known spells for a {@link Combatant}.

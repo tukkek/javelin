@@ -16,7 +16,7 @@ import javelin.controller.walker.Step;
 import javelin.controller.walker.Walker;
 import javelin.controller.walker.pathing.DirectPath;
 import javelin.model.TeamContainer;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 /**
  * Javelin's implementation of {@link Node}.

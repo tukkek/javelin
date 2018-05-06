@@ -1,7 +1,7 @@
 package javelin.model.unit.condition;
 
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.attack.Combatant;
 
 public class Stunned extends Condition {
 

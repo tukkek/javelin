@@ -6,8 +6,8 @@ import javelin.controller.upgrade.skill.Knowledge;
 import javelin.controller.upgrade.skill.Perception;
 import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.controller.upgrade.skill.Survival;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * @see ClassLevelUpgrade

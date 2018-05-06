@@ -7,7 +7,7 @@ import javelin.controller.action.Breath;
 import javelin.controller.action.Fire;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 /**
  * Controller class to fill a certain region of the map by shape and a source

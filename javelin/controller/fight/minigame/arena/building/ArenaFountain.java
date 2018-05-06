@@ -6,7 +6,7 @@ import javelin.controller.fight.minigame.arena.ArenaFight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Condition;
 import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.view.screen.town.SelectScreen;

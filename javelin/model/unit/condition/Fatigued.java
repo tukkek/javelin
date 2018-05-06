@@ -1,6 +1,6 @@
 package javelin.model.unit.condition;
 
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 /**
  * A fatigued character can neither run nor charge and takes a -2 penalty to

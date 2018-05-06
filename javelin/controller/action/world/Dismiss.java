@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.PurchaseScreen;

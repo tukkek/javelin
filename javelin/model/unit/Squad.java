@@ -22,7 +22,6 @@ import javelin.model.EquipmentMap;
 import javelin.model.item.Item;
 import javelin.model.transport.Transport;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
@@ -146,12 +145,10 @@ public class Squad extends Actor implements Cloneable {
 					.getImage(transport.name.replaceAll(" ", "").toLowerCase());
 			return;
 		}
-		Combatant leader = members.get(0);
-		for (int i = 1; i < members.size(); i++) {
-			Combatant m = members.get(i);
-			if (ChallengeCalculator.calculatecr(m.source) > ChallengeCalculator
-					.calculatecr(leader.source)) {
-				leader = m;
+		Combatant leader = null;
+		for (Combatant c : members) {
+			if (leader == null || c.source.cr > leader.source.cr) {
+				leader = c;
 			}
 		}
 		image = Images.getImage(leader.source.avatarfile);
@@ -354,9 +351,9 @@ public class Squad extends Actor implements Cloneable {
 	 */
 	public int know() {
 		int best = Integer.MIN_VALUE;
-		for (int i = 1; i < members.size(); i++) {
-			Monster m = members.get(i).source;
-			int roll = Skills.take10(m.skills.knowledge, m.intelligence);
+		for (Combatant c : members) {
+			int roll = Skills.take10(c.source.skills.knowledge,
+					c.source.intelligence);
 			if (roll > best) {
 				best = roll;
 			}
@@ -365,18 +362,21 @@ public class Squad extends Actor implements Cloneable {
 	}
 
 	/**
+	 * @param periodbonus
 	 * @return a {@link Skills#perception} roll.
 	 */
-	public int perceive(boolean flyingbonus, boolean weatherpenalty) {
-		return perceive(flyingbonus, weatherpenalty, members);
+	public int perceive(boolean flyingbonus, boolean weatherpenalty,
+			boolean periodbonus) {
+		return perceive(flyingbonus, weatherpenalty, periodbonus, members);
 	}
 
 	public static int perceive(boolean flyingbonus, boolean weatherpenalty,
-			List<Combatant> squad) {
+			boolean periodbonus, List<Combatant> squad) {
 		int best = Integer.MIN_VALUE;
 		for (Combatant c : squad) {
 			Monster m = c.source;
-			int perception = m.skills.perceive(flyingbonus, weatherpenalty, m);
+			int perception = m.skills.perceive(flyingbonus, weatherpenalty,
+					periodbonus, m);
 			int roll = Skills.take10(perception, m.wisdom);
 			if (roll > best) {
 				best = roll;
@@ -393,9 +393,9 @@ public class Squad extends Actor implements Cloneable {
 	 */
 	public int hide() {
 		int worst = Integer.MAX_VALUE;
-		for (int i = 1; i < members.size(); i++) {
-			Monster m = members.get(i).source;
-			int roll = Skills.take10(m.skills.stealth, m.dexterity);
+		for (Combatant c : members) {
+			int roll = Skills.take10(c.source.skills.stealth,
+					c.source.dexterity);
 			if (roll < worst) {
 				worst = roll;
 			}
@@ -404,18 +404,20 @@ public class Squad extends Actor implements Cloneable {
 	}
 
 	/**
+	 * Spot a group of enemies.
+	 * 
 	 * @param target
 	 *            If not <code>null</code>, will only shown information if
 	 *            adjacent in the {@link WorldScreen}.
 	 * @return A list with the name of the given {@link Combatant}s, replaced
 	 *         with "?" when failed to {@link #perceive()} properly.
 	 */
-	public String spot(List<Combatant> opponents, Actor target) {
+	public String spotenemies(List<Combatant> opponents, Actor target) {
 		if (target != null && distanceinsteps(target.x, target.y) > 1) {
 			return "?";
 		}
 		String garrison = "";
-		int spot = perceive(false, true);
+		int spot = perceive(true, true, true);
 		for (int i = 0; i < opponents.size(); i++) {
 			Combatant c = opponents.get(i);
 			boolean spotted = spot >= Skills.take10(c.source.skills.stealth,
@@ -437,8 +439,8 @@ public class Squad extends Actor implements Cloneable {
 	public boolean hide(List<Combatant> foes) {
 		// needs to pass on a listen check to notice enemy
 		boolean outside = Dungeon.active == null;
-		int listenroll = Squad.active.perceive(
-				outside && !Terrain.current().equals(Terrain.FOREST), outside);
+		boolean flying = outside && !Terrain.current().equals(Terrain.FOREST);
+		int listenroll = Squad.active.perceive(flying, outside, outside);
 		boolean listen = false;
 		for (Combatant foe : foes) {
 			if (listenroll >= Skills.take10(foe.source.skills.stealth,
@@ -453,7 +455,7 @@ public class Squad extends Actor implements Cloneable {
 		int hideroll = Squad.active.hide();
 		for (Combatant foe : foes) {
 			Monster m = foe.source;
-			if (Skills.take10(m.skills.perceive(false, outside, m),
+			if (Skills.take10(m.skills.perceive(flying, outside, outside, m),
 					m.wisdom) >= hideroll) {
 				return false; // spotted!
 			}
@@ -464,7 +466,7 @@ public class Squad extends Actor implements Cloneable {
 				+ ChallengeCalculator.describedifficulty(foes)
 				+ " group of enemies!\n"
 				+ "Press s to storm them or w to wait for them to go away...\n\n"
-				+ "Enemies: " + Squad.active.spot(foes, null);
+				+ "Enemies: " + Squad.active.spotenemies(foes, null);
 		while (input != 'w' && input != 's') {
 			input = Javelin.prompt(prompt);
 		}
@@ -513,9 +515,9 @@ public class Squad extends Actor implements Cloneable {
 	 */
 	public int negotiate() {
 		int best = Integer.MIN_VALUE;
-		for (int i = 1; i < members.size(); i++) {
-			Monster m = members.get(i).source;
-			int roll = Skills.take10(m.skills.diplomacy, m.charisma);
+		for (Combatant c : members) {
+			int roll = Skills.take10(c.source.skills.diplomacy,
+					c.source.charisma);
 			if (roll > best) {
 				best = roll;
 			}
@@ -528,9 +530,9 @@ public class Squad extends Actor implements Cloneable {
 	 */
 	public int search() {
 		int best = Integer.MIN_VALUE;
-		for (int i = 1; i < members.size(); i++) {
-			Monster m = members.get(i).source;
-			int roll = Skills.take10(m.skills.search, m.intelligence);
+		for (Combatant c : members) {
+			int roll = Skills.take10(c.source.skills.perception,
+					c.source.intelligence);
 			if (roll > best) {
 				best = roll;
 			}
@@ -543,9 +545,8 @@ public class Squad extends Actor implements Cloneable {
 	 */
 	public int disable() {
 		int best = Integer.MIN_VALUE;
-		for (int i = 1; i < members.size(); i++) {
-			Monster m = members.get(i).source;
-			int roll = m.skills.disable(m);
+		for (Combatant c : members) {
+			int roll = c.source.skills.disable(c.source);
 			if (roll > best) {
 				best = roll;
 			}
@@ -558,9 +559,9 @@ public class Squad extends Actor implements Cloneable {
 	 */
 	public int gossip() {
 		int best = Integer.MIN_VALUE;
-		for (int i = 1; i < members.size(); i++) {
-			Monster m = members.get(i).source;
-			int roll = Skills.take10(m.skills.gatherinformation, m.charisma);
+		for (Combatant c : members) {
+			int roll = Skills.take10(c.source.skills.gatherinformation,
+					c.source.charisma);
 			if (roll > best) {
 				best = roll;
 			}
@@ -575,9 +576,8 @@ public class Squad extends Actor implements Cloneable {
 	 */
 	public int survive() {
 		int best = Integer.MIN_VALUE;
-		for (int i = 1; i < members.size(); i++) {
-			Monster m = members.get(i).source;
-			int roll = m.skills.survive(m);
+		for (Combatant c : members) {
+			int roll = c.source.skills.survive(c.source);
 			if (roll > best) {
 				best = roll;
 			}
@@ -676,7 +676,7 @@ public class Squad extends Actor implements Cloneable {
 	 * @see WorldScreen#discovered
 	 * @see Squad#perceive(boolean)
 	 */
-	public void view(int vision) {
+	public void seesurroundings(int vision) {
 		Outpost.discover(Squad.active.x, Squad.active.y,
 				Math.max(1, vision / 5));
 	}
@@ -725,15 +725,15 @@ public class Squad extends Actor implements Cloneable {
 		return input == 's';
 	}
 
-	public void view() {
-		view(Squad.active.perceive(true, true)
+	public void seesurroudings() {
+		seesurroundings(Squad.active.perceive(true, true, true)
 				+ (Squad.active.transport == Transport.AIRSHIP ? +4
 						: Terrain.current().visionbonus));
 	}
 
 	public static void updatevision() {
 		for (Squad s : Squad.getsquads()) {
-			s.view();
+			s.seesurroudings();
 		}
 	}
 

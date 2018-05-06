@@ -2,7 +2,7 @@ package javelin.model.world.location.dungeon.feature.door.trap;
 
 import java.io.Serializable;
 
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 import javelin.model.world.location.dungeon.feature.door.Door;
 
 public abstract class DoorTrap implements Serializable {

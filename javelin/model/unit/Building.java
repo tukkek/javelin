@@ -4,7 +4,6 @@ import javelin.controller.quality.resistance.CriticalImmunity;
 import javelin.controller.quality.resistance.MindImmunity;
 import javelin.controller.quality.resistance.ParalysisImmunity;
 import javelin.controller.quality.resistance.PoisonImmunity;
-import javelin.model.unit.attack.Combatant;
 
 public class Building extends Combatant {
 	public static final float CRADJUSTMENT = CriticalImmunity.CR

@@ -3,7 +3,7 @@ package javelin.model.world.location.dungeon.feature.door.trap;
 import javelin.Javelin;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.RandomDungeonEncounter;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.door.Door;
 

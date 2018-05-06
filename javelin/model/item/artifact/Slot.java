@@ -3,8 +3,8 @@ package javelin.model.item.artifact;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * Complete adaptation from
@@ -84,7 +84,7 @@ public class Slot implements Serializable {
 	/**
 	 * To be called before equipping an {@link Artifact}.
 	 *
-	 * @see Artifact#usepeacefully(javelin.model.unit.attack.Combatant)
+	 * @see Artifact#usepeacefully(javelin.model.unit.Combatant)
 	 * @param c
 	 *            Removes all incompatible items from this unit.
 	 */

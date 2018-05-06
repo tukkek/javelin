@@ -1,6 +1,6 @@
 package javelin.model.unit.condition.abilitydamage;
 
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.condition.Poisoned;
 

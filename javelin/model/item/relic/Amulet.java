@@ -1,9 +1,9 @@
 package javelin.model.item.relic;
 
 import javelin.model.Realm;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.condition.Condition;
 
 /**

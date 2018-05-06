@@ -1,8 +1,8 @@
 package javelin.controller.upgrade.ability;
 
 import javelin.controller.upgrade.Upgrade;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * Raises one of the six attributes by +2 score points (equivalent of +1 ability

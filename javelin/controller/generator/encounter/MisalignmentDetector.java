@@ -2,7 +2,7 @@ package javelin.controller.generator.encounter;
 
 import java.util.ArrayList;
 
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 /**
  * Checks if a group of {@link Combatant}s is aligned enough to work as a team.

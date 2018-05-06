@@ -3,7 +3,7 @@ package javelin.model.transport;
 import java.util.ArrayList;
 
 import javelin.controller.terrain.Terrain;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 /** Moves on water and very slowly at land (while it's being transported. */
 public class Ship extends Transport {

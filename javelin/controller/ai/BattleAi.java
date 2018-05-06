@@ -6,7 +6,7 @@ import javelin.Javelin;
 import javelin.controller.ai.valueselector.ValueSelector;
 import javelin.controller.walker.Walker;
 import javelin.model.state.BattleState;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Defending;
 
 /**

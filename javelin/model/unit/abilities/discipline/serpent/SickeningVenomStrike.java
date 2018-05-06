@@ -2,9 +2,9 @@ package javelin.model.unit.abilities.discipline.serpent;
 
 import javelin.controller.action.ai.attack.DamageChance;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.attack.Attack;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.condition.Sickened;
 import javelin.model.unit.condition.abilitydamage.ConstitutionDamage;
 import tyrant.mikera.engine.RPG;

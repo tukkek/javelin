@@ -7,8 +7,8 @@ import javelin.controller.Weather;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * http://www.d20srd.org/srd/spells/controlWeather.htm

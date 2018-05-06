@@ -26,10 +26,10 @@ import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.transport.Transport;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.Season;
@@ -205,7 +205,7 @@ public class WorldScreen extends BattleScreen {
 
 	@Override
 	public void view(int x, int y) {
-		Squad.active.view();
+		Squad.active.seesurroudings();
 	}
 
 	/**

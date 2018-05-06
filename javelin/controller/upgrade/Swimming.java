@@ -1,8 +1,8 @@
 package javelin.controller.upgrade;
 
 import javelin.controller.upgrade.movement.WalkingSpeed;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * See the d20 SRD for more info.

@@ -1,8 +1,8 @@
 package javelin.controller.upgrade;
 
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.BreathWeapon;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * See {@link Monster#breaths}

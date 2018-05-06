@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.abilities.spell.divination.FindTraps.FindingTraps;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.view.screen.DungeonScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -34,6 +36,8 @@ public class Trap extends Feature {
 	 * adding new trap times should allow for lesser CRs.
 	 */
 	public static final int MINIMUMCR = -2;
+	static final String CONFIRM = "Are you sure you want to step in to this trap?\n"
+			+ "Press ENTER to confirm or any other key to quit...";
 
 	/** Challenge rating. */
 	public final int cr;
@@ -55,6 +59,7 @@ public class Trap extends Feature {
 		this.cr = cr;
 		draw = false;
 		stop = true;
+		remove = false;
 		int currentcr = -1;// doesn't kill ("subdual damage", kinda)
 		while (currentcr != cr || damagedie < 1) {
 			reflexdc = RPG.r(10, 35);
@@ -89,27 +94,24 @@ public class Trap extends Feature {
 	public boolean activate() {
 		if (!draw) {
 			draw = true;
-			fallinto();
+			spring();
 			return true;
 		}
-		int disarm = Squad.active.disable() - disarmdc;
-		if (draw && disarm >= 0) {
+		int disable = Squad.active.disable();
+		if (disable >= disarmdc) {
 			Javelin.prompt("You disarm the trap!");
-			super.remove();
+			Dungeon.active.features.remove(this);
 			return true;
 		}
-		if (!draw || /* disarm <= -5 || */ Javelin
-				.prompt("Are you sure you want to step in to this trap?\n"
-						+ "Press ENTER to confirm or any other key to quit...")
-				.equals('\n')) {
-			fallinto();
+		if (disable <= disarmdc - 5 || Javelin.prompt(CONFIRM).equals('\n')) {
+			spring();
 			return true;
 		}
 		DungeonScreen.dontenter = true;
 		return false;
 	}
 
-	void fallinto() {
+	void spring() {
 		String status = "You step onto a trap!\n";
 		ArrayList<Combatant> targets = new ArrayList<Combatant>();
 		for (Combatant c : Squad.active.members) {
@@ -138,13 +140,23 @@ public class Trap extends Feature {
 	}
 
 	@Override
-	public void remove() {
-		// don't
-	}
-
-	/** Shows this trap to the player. */
-	public void discover() {
-		draw = true;
-		generate();
+	public void discover(Combatant searching, int searchroll) {
+		super.discover(searching, searchroll);
+		if (draw) {
+			return;
+		}
+		boolean success = searchroll >= searchdc;
+		if (!success && searching != null) {
+			for (Combatant c : Squad.active.members) {
+				int bonus = c.hascondition(FindingTraps.class) == null ? 0 : +5;
+				searchroll = Math.max(searchroll,
+						DungeonScreen.search(c.source) + bonus);
+			}
+			success = searchroll >= searchdc;
+		}
+		if (success) {
+			draw = true;
+			generate();
+		}
 	}
 }

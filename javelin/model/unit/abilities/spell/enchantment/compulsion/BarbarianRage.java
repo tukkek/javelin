@@ -5,7 +5,7 @@ import java.util.List;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 public class BarbarianRage extends Rage {
 	public BarbarianRage() {

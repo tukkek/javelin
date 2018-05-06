@@ -3,10 +3,10 @@ package javelin.model.unit.abilities.discipline;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.discipline.expertise.CombatExpertiseDiscipline;
 import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
-import javelin.model.unit.attack.Combatant;
 
 public class Disciplines extends TreeMap<String, Maneuvers> {
 	public static final Discipline[] ALL = new Discipline[] {

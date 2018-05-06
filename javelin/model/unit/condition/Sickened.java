@@ -1,6 +1,6 @@
 package javelin.model.unit.condition;
 
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 /**
  * TODO should affect ability checks, better left for when these are enum-based

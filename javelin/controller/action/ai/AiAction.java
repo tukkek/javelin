@@ -6,7 +6,7 @@ import javelin.controller.action.Action;
 import javelin.controller.ai.ActionProvider;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 /**
  * Use this if you want {@link ActionProvider} to use your {@link Action} as a

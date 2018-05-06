@@ -8,9 +8,9 @@ import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.item.Scroll;
 import javelin.model.transport.Transport;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.dungeon.Dungeon;
 
 /**

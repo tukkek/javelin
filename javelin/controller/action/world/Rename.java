@@ -2,8 +2,8 @@ package javelin.controller.action.world;
 
 import javelin.Javelin;
 import javelin.controller.exception.RepeatTurn;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.unit.attack.Combatant;
 import javelin.view.screen.NamingScreen;
 import javelin.view.screen.WorldScreen;
 

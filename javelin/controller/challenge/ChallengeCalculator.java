@@ -21,10 +21,10 @@ import javelin.controller.challenge.factor.quality.BreathFactor;
 import javelin.controller.challenge.factor.quality.QualitiesFactor;
 import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.exception.UnbalancedTeams;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.unit.attack.Combatant;
 import tyrant.mikera.engine.RPG;
 
 /**

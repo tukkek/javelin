@@ -1,8 +1,8 @@
 package javelin.controller.upgrade;
 
 import javelin.controller.ai.BattleAi;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.feat.Feat;
 
 /**

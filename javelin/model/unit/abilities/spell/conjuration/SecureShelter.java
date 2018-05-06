@@ -2,8 +2,8 @@ package javelin.model.unit.abilities.spell.conjuration;
 
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.labor.basic.Lodge;
 

@@ -4,8 +4,8 @@ import javelin.controller.action.Action;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.attack.Attack;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.feat.attack.expertise.CombatExpertise;
 

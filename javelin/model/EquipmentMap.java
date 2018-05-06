@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import javelin.model.item.Item;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.unit.attack.Combatant;
 import tyrant.mikera.engine.RPG;
 
 /**

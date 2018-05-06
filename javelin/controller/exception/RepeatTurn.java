@@ -1,7 +1,7 @@
 package javelin.controller.exception;
 
 import javelin.controller.action.Action;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 /**
  * Let's an {@link Action} finish execution at any point without causing the

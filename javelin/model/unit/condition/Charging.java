@@ -1,7 +1,7 @@
 package javelin.model.unit.condition;
 
 import javelin.controller.action.Charge;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 /**
  * @see Charge

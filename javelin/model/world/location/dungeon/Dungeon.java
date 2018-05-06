@@ -20,8 +20,8 @@ import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.item.key.TempleKey;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
@@ -68,7 +68,7 @@ public class Dungeon extends Location {
 	public static Dungeon active = null;
 
 	/** All of this dungeon's {@link Feature}s. */
-	public List<Feature> features = new ArrayList<Feature>();
+	public Features features = new Features(this);
 	/**
 	 * Explored squares in this dungeon.
 	 *

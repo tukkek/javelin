@@ -4,7 +4,7 @@ import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseDexterity;
 import javelin.controller.upgrade.classes.Expert;
 import javelin.controller.upgrade.skill.DisableDevice;
-import javelin.controller.upgrade.skill.Search;
+import javelin.controller.upgrade.skill.Perception;
 import javelin.controller.upgrade.skill.Stealth;
 import javelin.model.unit.Monster;
 
@@ -20,7 +20,7 @@ public class Rogue extends Kit {
 	protected void define() {
 		basic.add(DisableDevice.SINGLETON);
 		basic.add(Stealth.SINGLETON);
-		basic.add(Search.SINGLETON);
+		basic.add(Perception.SINGLETON);
 	}
 
 	@Override

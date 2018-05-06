@@ -6,9 +6,9 @@ import javelin.controller.action.Action;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.unit.abilities.discipline.Maneuver;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.feat.Feat;
 import javelin.model.unit.feat.attack.expertise.CombatExpertise;
 

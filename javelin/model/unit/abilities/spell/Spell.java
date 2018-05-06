@@ -17,11 +17,11 @@ import javelin.model.item.Scroll;
 import javelin.model.item.Wand;
 import javelin.model.item.artifact.CasterRing;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Attack;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.town.labor.religious.Shrine;
 
 /**

@@ -9,7 +9,7 @@ import javelin.controller.exception.RepeatTurn;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 /**
  * An attack that reaches out only 5 feet, like from the Digester or Shocker

@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javelin.Javelin;
 import javelin.controller.db.reader.fields.Damage;
 import javelin.model.Cloneable;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Spell;
 

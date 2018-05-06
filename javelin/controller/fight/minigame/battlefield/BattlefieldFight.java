@@ -19,7 +19,7 @@ import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.model.state.BattleState;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 import javelin.model.world.location.unique.minigame.Battlefield;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.RPG;

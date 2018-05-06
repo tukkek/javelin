@@ -1,6 +1,6 @@
 package javelin.model.unit.condition;
 
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 /**
  * Moves at half speed and takes a -6 penalty to Strength and Dexterity.

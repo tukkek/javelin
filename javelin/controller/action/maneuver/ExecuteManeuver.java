@@ -11,10 +11,10 @@ import javelin.controller.exception.RepeatTurn;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.discipline.Disciplines;
 import javelin.model.unit.abilities.discipline.Maneuver;
 import javelin.model.unit.abilities.discipline.Maneuvers;
-import javelin.model.unit.attack.Combatant;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.town.SelectScreen;
 

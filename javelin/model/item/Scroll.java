@@ -3,9 +3,9 @@ package javelin.model.item;
 import java.util.HashSet;
 
 import javelin.controller.action.CastSpell;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * Can only be used out-of-combat. The lore concept is that there is actually a

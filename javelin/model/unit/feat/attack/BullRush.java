@@ -1,6 +1,6 @@
 package javelin.model.unit.feat.attack;
 
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.feat.Feat;
 
 /**

@@ -4,9 +4,9 @@ import java.util.List;
 
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.exception.battle.StartBattle;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.town.PurchaseScreen;
 

@@ -2,8 +2,8 @@ package javelin.controller;
 
 import java.util.ArrayList;
 
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Skills;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * Handles ability score modification for {@link Monster}s.

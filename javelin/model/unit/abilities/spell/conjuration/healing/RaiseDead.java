@@ -4,8 +4,8 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.Realm;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.unit.attack.Combatant;
 import javelin.view.screen.InfoScreen;
 
 /**

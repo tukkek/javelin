@@ -1,12 +1,13 @@
 package javelin.controller.action;
 
+import javelin.controller.Point;
 import javelin.controller.exception.RepeatTurn;
 import javelin.model.unit.attack.Combatant;
 import javelin.view.screen.BattleScreen;
 
 /**
  * TODO this should be a view feature in d20
- * 
+ *
  * @author alex
  */
 public class ZoomOut extends Action {
@@ -19,9 +20,11 @@ public class ZoomOut extends Action {
 
 	@Override
 	public boolean perform(Combatant active) {
-		BattleScreen.active.mappanel.zoom(-1, true, active.location[0],
-				active.location[1]);
+		zoom(active.getlocation());
 		throw new RepeatTurn();
 	}
 
+	public static void zoom(Point p) {
+		BattleScreen.active.mappanel.zoom(-1, true, p.x, p.y);
+	}
 }

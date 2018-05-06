@@ -1,5 +1,6 @@
 package javelin.controller.action;
 
+import javelin.controller.Point;
 import javelin.model.unit.attack.Combatant;
 import javelin.view.screen.BattleScreen;
 
@@ -17,9 +18,11 @@ public class ZoomIn extends Action {
 
 	@Override
 	public boolean perform(Combatant active) {
-		BattleScreen.active.mappanel.zoom(+1, true, active.location[0],
-				active.location[1]);
+		zoom(active.getlocation());
 		return true;
 	}
 
+	public static void zoom(Point p) {
+		BattleScreen.active.mappanel.zoom(+1, true, p.x, p.y);
+	}
 }

@@ -32,6 +32,8 @@ public abstract class WorldAction implements ActionDescription {
 			new EnterBattlefield(), // B
 			new ClearHighscore(), // C
 			new Infiltrate(), new Dismiss(), // D
+			new ZoomWorldIn(), // +
+			new ZoomWorldOut(), // +
 			new ConfigureWorldKeys(), // K
 			new Abandon(), // Q
 			new EnterZiggurat(), // Z

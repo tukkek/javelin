@@ -27,7 +27,7 @@ public class Rebirth extends Wish {
 	}
 
 	@Override
-	protected boolean hack(Combatant target) {
+	protected boolean wish(Combatant target) {
 		ArrayList<Artifact> equipment = new ArrayList<Artifact>(
 				target.equipped);
 		for (Artifact a : equipment) {

@@ -9,7 +9,7 @@ import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
-import javelin.model.item.Key;
+import javelin.model.item.key.TempleKey;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Actor;
@@ -238,7 +238,7 @@ public class Portal extends Location {
 	}
 
 	/**
-	 * Opens a portal that a {@link Key} can be safely used upon.
+	 * Opens a portal that a {@link TempleKey} can be safely used upon.
 	 */
 	public static void opensafe() {
 		Portal p = Portal.open();

@@ -20,7 +20,7 @@ public class Teleport extends Wish {
 	}
 
 	@Override
-	protected boolean hack(Combatant target) {
+	protected boolean wish(Combatant target) {
 		GreaterTeleport spell = new GreaterTeleport();
 		spell.showterrain = true;
 		spell.castpeacefully(null);

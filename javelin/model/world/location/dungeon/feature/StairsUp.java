@@ -13,12 +13,12 @@ public class StairsUp extends Feature {
 	public StairsUp(String thing, Point p) {
 		super(p.x, p.y, "dungeonstairsup");
 		remove = false;
+		enter = false;
 	}
 
 	@Override
 	public boolean activate() {
 		Dungeon.active.goup();
-		enter = false;
 		return false;
 	}
 }

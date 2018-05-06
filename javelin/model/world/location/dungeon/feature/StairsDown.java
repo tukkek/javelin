@@ -13,6 +13,7 @@ public class StairsDown extends Feature {
 	public StairsDown(Point p) {
 		super(p.x, p.y, "dungeonstairsdown");
 		remove = false;
+		enter = false;
 	}
 
 	@Override

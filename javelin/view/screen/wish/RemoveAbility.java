@@ -22,7 +22,7 @@ public class RemoveAbility extends Wish {
 	}
 
 	@Override
-	protected boolean hack(Combatant target) {
+	protected boolean wish(Combatant target) {
 		screen.text = "";
 		screen.refresh();
 		ArrayList<String> types = new ArrayList<String>();

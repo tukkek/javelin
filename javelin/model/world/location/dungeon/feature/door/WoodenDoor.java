@@ -1,11 +1,13 @@
 package javelin.model.world.location.dungeon.feature.door;
 
+import javelin.model.item.key.door.WoodKey;
+
 public class WoodenDoor extends Door {
 	public WoodenDoor() {
-		super("dungeondoorwood", 13, 15);
+		this("dungeondoorwood", 13, 15);
 	}
 
 	public WoodenDoor(String avatar, int breakdcstuck, int breakdclocked) {
-		super(avatar, breakdcstuck, breakdclocked);
+		super(avatar, breakdcstuck, breakdclocked, WoodKey.class);
 	}
 }

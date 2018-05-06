@@ -40,7 +40,7 @@ public class SummonAlly extends Wish {
 	}
 
 	@Override
-	protected boolean hack(Combatant target) {
+	protected boolean wish(Combatant target) {
 		Float cr = getstartingcr();
 		Monster ally = null;
 		while (ally == null) {

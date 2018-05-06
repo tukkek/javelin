@@ -35,7 +35,7 @@ public class DungeonWorld extends Campaign {
 
 	public DungeonWorld() {
 		startingpopulation = 6;
-		allowkeys = false;
+		templekeys = false;
 		minigames = false;
 		record = false;
 		respawnlocations = false;

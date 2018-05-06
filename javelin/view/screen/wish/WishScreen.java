@@ -56,7 +56,7 @@ public class WishScreen extends SelectScreen {
 			Javelin.app.switchScreen(this);
 			return false;
 		}
-		if (!h.hack(h.requirestarget ? selectmember() : null)) {
+		if (!h.wish(h.requirestarget ? selectmember() : null)) {
 			return false;
 		}
 		pay(price);
@@ -181,6 +181,7 @@ public class WishScreen extends SelectScreen {
 		options.add(new Rebirth("upgrade cleanse", 'u', 1, true, this));
 		options.add(new SummonAlly("summon ally", 'S', 2, false, this));
 		options.add(new Gold(this));
+		options.add(new ConjureMasterKey(this));
 		if (World.scenario.getClass() == Campaign.class) {
 			options.add(new Win("win", 'w', 7, false, this));
 		}

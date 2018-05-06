@@ -7,12 +7,13 @@ import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.fight.Siege;
 import javelin.controller.old.Game;
-import javelin.model.item.Key;
 import javelin.model.item.Ruby;
+import javelin.model.item.key.TempleKey;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -34,12 +35,11 @@ import tyrant.mikera.engine.RPG;
  */
 public class Trove extends Fortification {
 	enum Reward {
-		GOLD, EXPERIENCE, KEY, RUBY;
+		GOLD, EXPERIENCE, TEMPLEKEY, RUBY, KEY;
 
 		static Reward getrandom() {
 			Reward[] all = values();
-			Reward r = all[RPG.r(0, all.length - 1)];
-			return r == KEY && !World.scenario.allowkeys ? getrandom() : r;
+			return all[RPG.r(0, all.length - 1)];
 		}
 	}
 
@@ -59,7 +59,7 @@ public class Trove extends Fortification {
 	}
 
 	static final String DESCRIPTION = "A treasure trove";
-	Key key = null;
+	TempleKey key = null;
 	Reward[] rewards = new Reward[2];
 	List<Combatant> originalgarrison = new ArrayList<Combatant>();
 
@@ -74,8 +74,9 @@ public class Trove extends Fortification {
 			while (rewards[1] == null || rewards[0] == rewards[1]) {
 				rewards[1] = Reward.getrandom();
 			}
-			if (rewards[0] == Reward.KEY || rewards[1] == Reward.KEY) {
-				key = Key.generate();
+			if (rewards[0] == Reward.TEMPLEKEY
+					|| rewards[1] == Reward.TEMPLEKEY) {
+				key = TempleKey.generate();
 			}
 		}
 		descriptionknown += " (" + describe(rewards[0]) + " or "
@@ -86,7 +87,7 @@ public class Trove extends Fortification {
 	}
 
 	String describe(Reward reward) {
-		Object o = reward == Reward.KEY ? key : reward;
+		Object o = reward == Reward.TEMPLEKEY ? key : reward;
 		return o.toString().toLowerCase();
 	}
 
@@ -113,12 +114,16 @@ public class Trove extends Fortification {
 			Squad.active.gold += gold;
 			return "Party receives $" + SelectScreen.formatcost(gold) + "!";
 		}
-		if (reward == Reward.KEY) {
+		if (reward == Reward.TEMPLEKEY) {
 			key.grab();
 			return null;
 		}
 		if (reward == Reward.RUBY) {
 			new Ruby().grab();
+			return null;
+		}
+		if (reward == Reward.KEY) {
+			Door.generatekey().grab();
 			return null;
 		}
 		throw new RuntimeException(reward + " #unknownreward");

@@ -11,8 +11,8 @@ import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
-import javelin.model.item.Key;
 import javelin.model.item.artifact.Artifact;
+import javelin.model.item.key.TempleKey;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.basic.Growth;
@@ -72,8 +72,8 @@ public class Caravan extends Actor {
 			Item i = RPG.pick(Item.ARTIFACT);
 			inventory.add(i);
 		}
-		if (World.scenario.allowkeys) {
-			Key k = Key.generate();
+		if (World.scenario.templekeys) {
+			TempleKey k = TempleKey.generate();
 			if (k.price > 0) {
 				inventory.add(k);
 			}

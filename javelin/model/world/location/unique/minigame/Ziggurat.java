@@ -6,7 +6,8 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.fight.minigame.Run;
 import javelin.controller.terrain.Terrain;
-import javelin.model.item.Key;
+import javelin.model.item.Item;
+import javelin.model.item.key.TempleKey;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.conjuration.teleportation.GreaterTeleport;
 import javelin.model.unit.attack.Combatant;
@@ -19,7 +20,7 @@ import javelin.model.world.location.unique.UniqueLocation;
  * also controls the segment north and east. Each segment represents a
  * {@link Monster} type, so the player has 3 types at his disposal when the
  * match starts.
- * 
+ *
  * Every time a new, unexplored segment in entered an enemy group is formed from
  * the not-captured segments north, east, south and west of the current segment
  * (and the current one too, of course). Monsters are positioned in the given
@@ -27,18 +28,18 @@ import javelin.model.world.location.unique.UniqueLocation;
  * team with units from any of the segments he has captured before, up to the
  * Encounter Level of the current segment (next fight). The objective is to
  * reach and conquer the northeastmost segment.
- * 
- * Every time a {@link Run} is completed a {@link Key} to a locked
+ *
+ * Every time a {@link Run} is completed a {@link TempleKey} to a locked
  * {@link Temple} spawns to be taken via {@link #interact()}. A player may also
  * choose to sacrifice this key to be teleported to the location of any Temple.
- * 
+ *
  * @author alex
  */
 public class Ziggurat extends UniqueLocation {
 
 	private static final String DESCRIPTION = "Ziggurat";
 	/** Treasure for conquering the Ziggurat. */
-	public Key key = null;
+	public Item key = null;
 
 	/** Constructor. */
 	public Ziggurat() {

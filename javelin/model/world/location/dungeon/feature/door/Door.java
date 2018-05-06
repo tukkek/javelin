@@ -7,6 +7,9 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.action.Action;
+import javelin.model.item.Item;
+import javelin.model.item.key.door.Key;
+import javelin.model.item.key.door.MasterKey;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
@@ -49,6 +52,7 @@ public class Door extends Feature {
 	/** Used if {@link #hidden}. TODO */
 	public int finddc = RPG.r(20, 30);
 	public int breakdc;
+	Class<? extends Key> key;
 
 	DoorTrap trap = RPG.chancein(6) ? RPG.pick(TRAPS) : null;
 	boolean stuck = RPG.chancein(10);
@@ -56,12 +60,14 @@ public class Door extends Feature {
 	/** @see #finddc */
 	boolean hidden = false;
 
-	public Door(String avatar, int breakdcstuck, int breakdclocked) {
+	public Door(String avatar, int breakdcstuck, int breakdclocked,
+			Class<? extends Key> key) {
 		super(-1, -1, avatar);
 		enter = false;
 		stop = true;
 		breakdc = locked ? breakdclocked : breakdcstuck;
 		breakdc = Math.max(1, breakdc + RPG.randomize(5));
+		this.key = key;
 		if (trap != null) {
 			trap.generate(this);
 		}
@@ -76,16 +82,18 @@ public class Door extends Feature {
 				Javelin.message(unlocker + " unlocks the door!", false);
 			} else if (forcer != null) {
 				Javelin.message(forcer + " forces the lock!", false);
-			} else {
-				Javelin.message("The door's lock is too complex...", false);
+			} else if (getkey() == null) {
+				Javelin.message("The lock is too complex...", false);
+				return false;
+			} else if (!usekey()) {
+				// feedback alredy shown as prompt
 				return false;
 			}
 		} else if (stuck) {
 			if (forcer != null) {
 				Javelin.message(forcer + " breaks the door open!", false);
 			} else {
-				Javelin.message("The door is stuck and too heavy to open...",
-						false);
+				Javelin.message("The door is too heavy to open...", false);
 				return false;
 			}
 		}
@@ -93,6 +101,29 @@ public class Door extends Feature {
 		remove();
 		spring(unlocker == null ? forcer : unlocker);
 		return true;
+	}
+
+	boolean usekey() {
+		Item k = getkey();
+		if (k == null) {
+			return false;
+		}
+		if (Javelin.prompt(
+				"Do you want to use your " + k.name.toLowerCase() + "?\n"
+						+ "Press y to use or any other key to cancel...",
+				false) != 'y') {
+			return false;
+		}
+		Squad.active.equipment.removeitem(k, Squad.active);
+		return true;
+	}
+
+	Item getkey() {
+		Item k = Squad.active.equipment.containsitem(key);
+		if (k == null) {
+			k = Squad.active.equipment.containsitem(MasterKey.class);
+		}
+		return k;
 	}
 
 	void spring(Combatant opening) {
@@ -145,6 +176,15 @@ public class Door extends Feature {
 			d.y = p.y;
 			d.unlockdc += dungeon.level;
 			return d;
+		} catch (ReflectiveOperationException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static Key generatekey() {
+		try {
+			return RPG.chancein(TYPES.size() + 1) ? new MasterKey()
+					: RPG.pick(TYPES).newInstance().key.newInstance();
 		} catch (ReflectiveOperationException e) {
 			throw new RuntimeException(e);
 		}

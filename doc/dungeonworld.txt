@@ -1,9 +1,9 @@
 In Dungeon World mode, the main challenges in the game world are dungeons of varying sizes and difficulty. Exploring and conquering each dungeon will allow you to gain rewards and experience, while the outside world will provide you with means of resting, acquiring gear, recruiting allies and upgrading your heroes.
 
-Each dungeon contains a ruby that can be used as an item to make several types of wishes. Once you take a dungeon's ruby and leave, that dungeon will disband and disappear from the map. Temples will start unlocked and will also disband once you obtain the Relics inside.
+Each dungeon contains a ruby that can be used as an item to make several types of wishes. Once you take a dungeon's special chest and leave, that dungeon will disappear from the map. Temples will start unlocked and will also disband once you obtain the Relics inside.
 
 Your final objective is to disband all the most difficult dungeons in the game world by taking away their rubies. Note that you do not have to disband every single dungeon - just the few most difficult ones. You will need to gain a lot of power before you can stand to face their perils, though!
 
 The world map will start mostly empty but as time progresses the Towns around the map will start building academies, shops and general places of interest for your benefit. You can even interact with them to choose which projects they should focus on next!
 
-A final hint: remember that even if you find a ruby inside a dungeon, you may choose not to take it right away. This gives you the opportunity to continue exploring the map for its treasures before having it disbands forever!
+A final hint: remember that even if you find a special chest inside a dungeon, you may choose not to take it right away - this gives you the opportunity to continue exploring the map for all treasures before having it disband forever!

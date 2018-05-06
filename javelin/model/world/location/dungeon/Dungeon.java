@@ -19,8 +19,7 @@ import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.hazard.Hazard;
-import javelin.model.item.Key;
-import javelin.model.item.Ruby;
+import javelin.model.item.key.TempleKey;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Actor;
@@ -306,7 +305,8 @@ public class Dungeon extends Location {
 	protected Feature createspecialchest(Point p) {
 		Chest c = new Chest(p.x, p.y);
 		c.setspecial();
-		c.items.add(World.scenario.allowkeys ? Key.generate() : new Ruby());
+		c.items.add(World.scenario.templekeys ? TempleKey.generate()
+				: Door.generatekey());
 		return c;
 	}
 
@@ -352,7 +352,7 @@ public class Dungeon extends Location {
 	protected boolean expire() {
 		for (Feature f : features) {
 			Chest c = f instanceof Chest ? (Chest) f : null;
-			if (c != null && c.items.contains(Ruby.class)) {
+			if (c != null && c.special) {
 				return false;
 			}
 		}

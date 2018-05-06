@@ -33,7 +33,7 @@ public class Campaign extends Scenario {
 
 	public Campaign() {
 		allowallactors = true;
-		allowkeys = true;
+		templekeys = true;
 		allowlabor = true;
 		asksquadnames = true;
 		desertradius = 2;

@@ -21,7 +21,7 @@ import javelin.controller.terrain.Water;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.Realm;
-import javelin.model.item.Key;
+import javelin.model.item.key.TempleKey;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Actor;
@@ -86,7 +86,7 @@ public class Scenario implements Serializable {
 	 * If not <code>null</code>, this amount will be seeded during {@link World}
 	 * generation. It will also be the cap as per {@link GenerationData#max}.
 	 *
-	 * Number of starting dungeons in the {@link World} map. Since {@link Key}s
+	 * Number of starting dungeons in the {@link World} map. Since {@link TempleKey}s
 	 * are important to {@link Win}ning the game this should be a fair amount,
 	 * otherwise the player will depend only on {@link Caravan}s if too many
 	 * dungeons are destroyed or if unable to find the proper {@link Chest}
@@ -100,8 +100,8 @@ public class Scenario implements Serializable {
 	public Integer startingdungeons = null;
 	public boolean respawnlocations = false;
 	public boolean normalizemap = true;
-	/** Wheter {@link Key}s should exist at all. */
-	public boolean allowkeys = false;
+	/** Wheter {@link TempleKey}s should exist at all. */
+	public boolean templekeys = false;
 	/**
 	 * <code>true</code> if first {@link Town} should be located on
 	 * {@link Terrain#PLAIN} or {@link Terrain#HILL}.

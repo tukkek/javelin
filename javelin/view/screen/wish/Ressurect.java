@@ -20,7 +20,7 @@ public class Ressurect extends Wish {
 	}
 
 	@Override
-	protected boolean hack(Combatant target) {
+	protected boolean wish(Combatant target) {
 		if (EndBattle.lastkilled == null) {
 			screen.text += "\nNo ally has died yet.";
 			Javelin.app.switchScreen(screen);

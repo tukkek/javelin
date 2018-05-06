@@ -6,7 +6,7 @@ import javelin.view.screen.Option;
 
 /**
  * A trick to be done by {@link Haxor}.
- * 
+ *
  * @see WishScreen
  * @author alex
  */
@@ -16,7 +16,7 @@ public abstract class Wish extends Option {
 
 	/**
 	 * See {@link Option#Option(String, double, Character)}.
-	 * 
+	 *
 	 * @param requirestargetp
 	 *            <code>true</code> if should ask for a {@link Squad}
 	 *            {@link Combatant} as target of this effect.
@@ -31,10 +31,9 @@ public abstract class Wish extends Option {
 	/**
 	 * @param target
 	 *            Provided if this hack {@link #requirestarget}.
-	 * @return <code>true</code> if successful and tickets can be deduced.
-	 * @see Haxor#rubies
+	 * @return <code>true</code> if successful and rubies can be deduced.
 	 */
-	protected abstract boolean hack(Combatant target);
+	protected abstract boolean wish(Combatant target);
 
 	/**
 	 * @return A String indicating why this can't be chosen, <code>null</code>

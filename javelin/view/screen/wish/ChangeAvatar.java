@@ -24,7 +24,7 @@ public final class ChangeAvatar extends Wish {
 	}
 
 	@Override
-	protected boolean hack(Combatant target) {
+	protected boolean wish(Combatant target) {
 		HashSet<String> avatars = new HashSet<String>();
 		try {
 			File avatarfolder = new File("avatars");

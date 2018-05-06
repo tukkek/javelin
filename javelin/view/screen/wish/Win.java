@@ -6,7 +6,7 @@ import javelin.Javelin;
 import javelin.controller.db.StateManager;
 import javelin.model.Realm;
 import javelin.model.item.Item;
-import javelin.model.item.Key;
+import javelin.model.item.key.TempleKey;
 import javelin.model.item.relic.Relic;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Combatant;
@@ -17,7 +17,7 @@ import javelin.model.world.location.town.Town;
 import javelin.view.screen.WorldScreen;
 
 /**
- * If you conquer 7 {@link Key}s, unlock their challenges and survive you can
+ * If you conquer 7 {@link TempleKey}s, unlock their challenges and survive you can
  * "win the game". It will actually just multiply your scores by 10 and ask if
  * you want to conclude the game.
  * 
@@ -58,7 +58,7 @@ public class Win extends Wish {
 	}
 
 	@Override
-	protected boolean hack(Combatant target) {
+	protected boolean wish(Combatant target) {
 		for (Combatant c : Squad.active.members) {
 			ArrayList<Item> bag = Squad.active.equipment.get(c.id);
 			for (Item i : new ArrayList<Item>(bag)) {

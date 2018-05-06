@@ -21,6 +21,7 @@ public class Chest extends Feature {
 	 */
 	public ItemSelection items = new ItemSelection();
 	public int gold = 0;
+	public boolean special = false;
 
 	/**
 	 * @param visual
@@ -91,6 +92,7 @@ public class Chest extends Feature {
 	}
 
 	public void setspecial() {
+		special = true;
 		avatarfile = "dungeonchestspecial";
 	}
 }

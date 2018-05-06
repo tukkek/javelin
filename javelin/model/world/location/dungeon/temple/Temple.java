@@ -12,7 +12,7 @@ import javelin.controller.fight.Fight;
 import javelin.controller.fight.TempleEncounter;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
-import javelin.model.item.Key;
+import javelin.model.item.key.TempleKey;
 import javelin.model.item.relic.Relic;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
@@ -30,7 +30,7 @@ import javelin.view.screen.wish.Win;
 
 /**
  * Temples are the key to winning Javelin. Each temple is locked and needs to be
- * unlocked by a {@link Key}, brute {@link Monster#strength} or
+ * unlocked by a {@link TempleKey}, brute {@link Monster#strength} or
  * {@link Skills#disabledevice}. Inside the Temple there will be a Relic, and
  * once all of those are collected they can be taken to {@link Haxor} to finish
  * the game. Each temple is a multi-level, permanent {@link Dungeon}, where on
@@ -82,7 +82,7 @@ public abstract class Temple extends UniqueLocation {
 	 */
 	public Relic relic;
 	/**
-	 * A temple needs to be opened by a {@link Key} or other method before being
+	 * A temple needs to be opened by a {@link TempleKey} or other method before being
 	 * explored.
 	 *
 	 * @see #open()
@@ -161,7 +161,7 @@ public abstract class Temple extends UniqueLocation {
 
 	boolean open() {
 		@SuppressWarnings("deprecation")
-		Key key = new Key(realm);
+		TempleKey key = new TempleKey(realm);
 		if (Squad.active.equipment.popitem(key, Squad.active) != null) {
 			Javelin.message("Temple entrance opened by the "
 					+ key.toString().toLowerCase() + "!", true);

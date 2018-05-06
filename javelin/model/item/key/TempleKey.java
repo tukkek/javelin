@@ -1,10 +1,11 @@
-package javelin.model.item;
+package javelin.model.item.key;
 
 import java.util.ArrayList;
 
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.old.Game;
 import javelin.model.Realm;
+import javelin.model.item.Item;
 import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
@@ -22,7 +23,7 @@ import tyrant.mikera.engine.RPG;
  * @see Temple#open
  * @author alex
  */
-public class Key extends Item {
+public class TempleKey extends Item {
 	/** Color/realm of this key. */
 	public Realm color;
 
@@ -31,7 +32,7 @@ public class Key extends Item {
 	 * @see #generate()
 	 */
 	@Deprecated
-	public Key(Realm color) {
+	public TempleKey(Realm color) {
 		super(color.getname() + " key", determineprice(color), null);
 		this.color = color;
 		usedinbattle = false;
@@ -67,7 +68,7 @@ public class Key extends Item {
 	 *         currently possess. If none fits the description, a random key,
 	 *         instead.
 	 */
-	public static Key generate() {
+	public static TempleKey generate() {
 		ArrayList<Realm> realms = new ArrayList<Realm>();
 		for (Realm r : Realm.values()) {
 			realms.add(r);
@@ -80,12 +81,12 @@ public class Key extends Item {
 			}
 		}
 		for (Item i : Item.getplayeritems()) {
-			Key key = i instanceof Key ? (Key) i : null;
+			TempleKey key = i instanceof TempleKey ? (TempleKey) i : null;
 			if (key != null && realms.contains(key.color)) {
 				realms.remove(key.color);
 			}
 		}
-		return new Key(realms.isEmpty() ? Realm.random() : RPG.pick(realms));
+		return new TempleKey(realms.isEmpty() ? Realm.random() : RPG.pick(realms));
 	}
 
 	@Override

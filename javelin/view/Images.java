@@ -48,6 +48,7 @@ public class Images {
 	public static final Image MERCENARY = Images.getImage("overlaymercenary");
 	public static final Image SUMMONED = Images.getImage("overlaysummoned");
 	public static final Image ELITE = Images.getImage("overlayelite");
+	public static final Image TEXTUREMAP = Images.getImage("texturemap");
 
 	/**
 	 * @param combatant

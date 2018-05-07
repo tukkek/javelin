@@ -3,11 +3,12 @@ package javelin.view.mappanel;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Panel;
 import java.awt.ScrollPane;
 
 import javelin.controller.db.Preferences;
+import javelin.view.Images;
 
 public abstract class MapPanel extends Panel {
 	public static int tilesize = Preferences.TILESIZEWORLD;
@@ -16,7 +17,18 @@ public abstract class MapPanel extends Panel {
 
 	public Tile[][] tiles = null;
 	public ScrollPane scroll = new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS);
-	Panel container = new Panel();
+	Panel container = new Panel() {
+		@Override
+		public void paint(Graphics g) {
+			Image texture = Images.TEXTUREMAP;
+			for (int x = 0; x < getWidth(); x += texture.getWidth(null)) {
+				for (int y = 0; y < getHeight(); y += texture.getHeight(null)) {
+					g.drawImage(texture, x, y, null);
+				}
+			}
+			super.paint(g);
+		}
+	};
 	public Canvas canvas = new Canvas() {
 		@Override
 		public void paint(Graphics g) {
@@ -54,9 +66,8 @@ public abstract class MapPanel extends Panel {
 	abstract protected Mouse getmouselistener();
 
 	void updatesize() {
-		container.setSize(tilesize * mapwidth, tilesize * mapheight);
+		// container.setSize(tilesize * mapwidth, tilesize * mapheight);
 		canvas.setSize(tilesize * mapwidth, tilesize * mapheight);
-		container.doLayout();
 	}
 
 	protected void updatetilesize() {
@@ -76,7 +87,6 @@ public abstract class MapPanel extends Panel {
 		tilesize = gettilesize();
 		scroll.setVisible(false);
 		updatesize();
-		container.setLayout(new GridLayout(1, 1));
 		tiles = new Tile[mapwidth][mapheight];
 		for (int y = 0; y < mapheight; y++) {
 			for (int x = 0; x < mapwidth; x++) {
@@ -117,17 +127,8 @@ public abstract class MapPanel extends Panel {
 		}
 	}
 
-	protected void ensureminimumsize() {
-		Dimension preferredSize = getPreferredSize();
-		while (tilesize * mapwidth < preferredSize.getWidth()
-				|| tilesize * mapheight < preferredSize.getHeight()) {
-			tilesize += 1;
-		}
-	}
-
 	public void zoom(int factor, boolean save, int x, int y) {
 		tilesize += factor * 4;
-		ensureminimumsize();
 		updatetilesize();
 		center(x, y, false);
 		Preferences.setoption(configurationkey, tilesize);
@@ -165,7 +166,6 @@ public abstract class MapPanel extends Panel {
 			initial = false;
 			scroll.setBounds(getBounds());
 			int before = tilesize;
-			ensureminimumsize();
 			if (tilesize != before) {
 				updatetilesize();
 			}
@@ -176,11 +176,6 @@ public abstract class MapPanel extends Panel {
 	public void paint(Graphics g) {
 		super.paint(g);
 	}
-
-	// @Override
-	// public synchronized void addMouseListener(MouseListener l) {
-	// canvas.addMouseListener(l);
-	// }
 
 	public Graphics getdrawgraphics() {
 		return canvas.getGraphics();

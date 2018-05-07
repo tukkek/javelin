@@ -6,8 +6,8 @@ import javelin.Javelin;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * See the d20 SRD for more info.

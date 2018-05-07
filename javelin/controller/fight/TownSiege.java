@@ -9,7 +9,7 @@ import javelin.controller.comparator.CombatantByCr;
 import javelin.controller.fight.setup.LocationFightSetup;
 import javelin.controller.map.location.LocationMap;
 import javelin.model.state.Square;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 import javelin.model.world.location.town.Town;
 import javelin.view.Images;
 import tyrant.mikera.engine.RPG;

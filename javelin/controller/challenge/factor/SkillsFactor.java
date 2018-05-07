@@ -10,7 +10,6 @@ import javelin.controller.upgrade.skill.GatherInformation;
 import javelin.controller.upgrade.skill.Heal;
 import javelin.controller.upgrade.skill.Knowledge;
 import javelin.controller.upgrade.skill.Perception;
-import javelin.controller.upgrade.skill.Search;
 import javelin.controller.upgrade.skill.Spellcraft;
 import javelin.controller.upgrade.skill.Stealth;
 import javelin.controller.upgrade.skill.Survival;
@@ -38,9 +37,9 @@ public class SkillsFactor extends CrFactor {
 		Skills skills = m.skills;
 		return COST * (m.skillpool + skills.concentration + skills.diplomacy
 				+ skills.disabledevice + skills.gatherinformation
-				+ skills.stealth + skills.knowledge + +skills.search
-				+ skills.spellcraft + skills.perception + skills.acrobatics
-				+ skills.survival + skills.usemagicdevice);
+				+ skills.stealth + skills.knowledge + +skills.spellcraft
+				+ skills.perception + skills.acrobatics + skills.survival
+				+ skills.usemagicdevice);
 	}
 
 	@Override
@@ -61,7 +60,6 @@ public class SkillsFactor extends CrFactor {
 
 		handler.earth.add(Survival.SINGLETON);
 
-		handler.magic.add(Search.SINGLETON);
 		handler.magic.add(Spellcraft.SINGLETON);
 		handler.magic.add(UseMagicDevice.SINGLETON);
 	}

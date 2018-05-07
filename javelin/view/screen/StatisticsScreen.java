@@ -9,13 +9,13 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.fight.Fight;
 import javelin.controller.quality.Quality;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.AttackSequence;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.town.SelectScreen;
 
@@ -62,8 +62,8 @@ public class StatisticsScreen extends InfoScreen {
 					+ SelectScreen.formatcost(MercenariesGuild.getfee(c))
 					+ "/day)");
 		}
-		lines.add(
-				"Challenge rating " + Math.round(ChallengeCalculator.calculatecr(m)));
+		lines.add("Challenge rating "
+				+ Math.round(ChallengeCalculator.calculatecr(m)));
 		for (ClassLevelUpgrade classlevels : ClassLevelUpgrade.classes) {
 			int level = classlevels.getlevel(m);
 			if (level > 0) {
@@ -190,7 +190,6 @@ public class StatisticsScreen extends InfoScreen {
 		output += formatskill("heal", s.heal, m.wisdom);
 		output += formatskill("knowledge", s.knowledge, m.intelligence);
 		output += formatskill("perception", s.perception, m.wisdom);
-		output += formatskill("search", s.search, m.intelligence);
 		output += formatskill("spellcraft", s.spellcraft, m.intelligence);
 		output += formatskill("stealth", s.stealth, m.dexterity);
 		output += formatskill("survival", s.survival, m.wisdom);

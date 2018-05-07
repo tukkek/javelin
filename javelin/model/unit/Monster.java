@@ -32,6 +32,7 @@ import javelin.model.item.Scroll;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.item.artifact.Slot;
 import javelin.model.unit.abilities.BreathWeapon;
+import javelin.model.unit.abilities.Constrict;
 import javelin.model.unit.abilities.TouchAttack;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.Spells;
@@ -39,7 +40,6 @@ import javelin.model.unit.abilities.spell.enchantment.compulsion.HoldMonster;
 import javelin.model.unit.abilities.spell.necromancy.Poison;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.feat.CombatCasting;
 import javelin.model.unit.feat.Feat;
 import javelin.model.unit.feat.attack.WeaponFinesse;
@@ -736,7 +736,7 @@ public class Monster implements Cloneable, Serializable {
 	 * @see Combatant#view(String)
 	 * @see Skills#perceive(Monster, boolean)
 	 */
-	public int view() {
+	public int see() {
 		if (vision == VISION_DARK) {
 			return 0;
 		}

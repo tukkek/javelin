@@ -2,8 +2,8 @@ package javelin.model.item;
 
 import javelin.Javelin;
 import javelin.controller.old.Game;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.unit.attack.Combatant;
 import javelin.view.screen.BattleScreen;
 
 /**

@@ -1,4 +1,4 @@
-package javelin.model.unit;
+package javelin.model.unit.abilities;
 
 import java.io.Serializable;
 

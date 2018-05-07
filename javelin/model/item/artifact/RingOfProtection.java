@@ -1,6 +1,6 @@
 package javelin.model.item.artifact;
 
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 /**
  * Adds AC bonus.

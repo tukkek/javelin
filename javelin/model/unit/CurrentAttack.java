@@ -7,7 +7,6 @@ import java.util.List;
 import javelin.model.Cloneable;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * The current {@link AttackSequence} being used as a full-attack by a

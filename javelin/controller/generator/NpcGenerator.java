@@ -14,8 +14,8 @@ import javelin.controller.kit.Kit;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.classes.Commoner;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.attack.Combatant;
 import tyrant.mikera.engine.RPG;
 
 public class NpcGenerator {

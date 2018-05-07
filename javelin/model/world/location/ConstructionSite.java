@@ -3,7 +3,7 @@ package javelin.model.world.location;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 import javelin.model.world.Actor;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.labor.Labor;

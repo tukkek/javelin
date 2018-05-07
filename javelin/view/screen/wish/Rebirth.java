@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.item.artifact.Artifact;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * Return an unit to it's original {@link Monster} form. Keep all the XP though

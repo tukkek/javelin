@@ -3,7 +3,7 @@ package javelin.controller.comparator;
 import java.util.Comparator;
 
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 /**
  * Helps sort a list of {@link Combatant} by level.

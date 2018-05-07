@@ -3,7 +3,7 @@ package javelin.controller.fight;
 import java.util.ArrayList;
 
 import javelin.model.state.BattleState;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.BattleScreen;

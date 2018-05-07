@@ -2,8 +2,8 @@ package javelin.controller.upgrade.classes;
 
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.skill.SkillUpgrade;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * @see ClassLevelUpgrade

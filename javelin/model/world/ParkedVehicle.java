@@ -7,8 +7,8 @@ import javelin.Javelin;
 import javelin.controller.action.world.Park;
 import javelin.controller.exception.RepeatTurn;
 import javelin.model.transport.Transport;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.unit.attack.Combatant;
 import javelin.view.Images;
 
 /**

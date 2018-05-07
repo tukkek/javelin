@@ -3,8 +3,8 @@ package javelin.controller.comparator;
 import java.util.Comparator;
 
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * Compares combatants by their {@link Monster#cr}. This doesn't

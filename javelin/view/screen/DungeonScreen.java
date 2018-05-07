@@ -1,7 +1,6 @@
 package javelin.view.screen;
 
 import java.awt.Image;
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import javelin.controller.Point;
@@ -9,11 +8,14 @@ import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomEncounter;
 import javelin.controller.generator.dungeon.template.Template;
+import javelin.controller.walker.Walker;
+import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
+import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
-import javelin.model.world.location.dungeon.feature.Trap;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.view.Images;
 import javelin.view.mappanel.MapPanel;
@@ -60,27 +62,37 @@ public class DungeonScreen extends WorldScreen {
 
 	@Override
 	public boolean react(Actor actor, int x, int y) {
-		int searchroll = Squad.active.search();
-		for (Feature f : new ArrayList<Feature>(dungeon.features)) {
+		Combatant searching = search(Squad.active);
+		for (Feature f : dungeon.features.copy()) {
 			if (f.x == x && f.y == y) {
 				boolean activated = f.activate();
 				if (activated && f.remove) {
-					f.remove();
+					dungeon.features.remove(f);
 				}
 				DungeonScreen.dontenter = !f.enter;
 				DungeonScreen.stopmovesequence = f.stop;
 				return activated;
 			}
-			if (x - 1 <= f.x && f.x <= x + 1 && y - 1 <= f.y && f.y <= y + 1) {
-				Trap t = f instanceof Trap ? (Trap) f : null;
-				if (t != null && !t.draw) {
-					if (searchroll >= t.searchdc) {
-						t.discover();
-					}
-				}
+			if (Walker.distanceinsteps(x, y, f.x, f.y) == 1) {
+				f.discover(searching, search(searching.source));
 			}
 		}
 		return false;
+	}
+
+	Combatant search(Squad s) {
+		Combatant best = null;
+		for (Combatant c : s.members) {
+			if (best == null || search(c.source) > search(best.source)) {
+				best = c;
+			}
+		}
+		return best;
+	}
+
+	public static int search(Monster m) {
+		return Skills.take10(m.skills.perceive(false, false, false, m),
+				m.wisdom);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package javelin.model.unit.attack;
+package javelin.model.unit;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -34,17 +34,13 @@ import javelin.model.item.artifact.Artifact;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.state.Square;
-import javelin.model.unit.Conditions;
-import javelin.model.unit.CurrentAttack;
-import javelin.model.unit.Monster;
-import javelin.model.unit.Skills;
-import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.unit.abilities.discipline.Disciplines;
 import javelin.model.unit.abilities.discipline.Maneuver;
 import javelin.model.unit.abilities.discipline.serpent.TearingFang.Bleeding;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.Spells;
+import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.condition.Condition.Effect;
 import javelin.model.unit.condition.Melding;
@@ -792,7 +788,7 @@ public class Combatant implements Serializable, Cloneable {
 		if (Fight.state.redTeam.contains(this)) {
 			return;
 		}
-		int listen = source.skills.perceive(false, true, source);
+		int listen = source.skills.perceive(true, true, true, source);
 		for (Combatant c : Fight.state.redTeam) {
 			if (listen >= c.source.skills.movesilently(source)
 					+ (Walker.distance(this, c) - 1)) {

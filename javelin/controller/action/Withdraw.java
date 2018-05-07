@@ -2,7 +2,7 @@ package javelin.controller.action;
 
 import javelin.Javelin;
 import javelin.controller.action.ai.Flee;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 import javelin.view.screen.BattleScreen;
 
 /**

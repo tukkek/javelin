@@ -8,9 +8,9 @@ import javelin.controller.fight.minigame.Run;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.item.key.TempleKey;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.conjuration.teleportation.GreaterTeleport;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.unique.UniqueLocation;
 

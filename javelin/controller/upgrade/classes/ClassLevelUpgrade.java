@@ -9,10 +9,10 @@ import javelin.controller.challenge.factor.ClassLevelFactor;
 import javelin.controller.challenge.factor.SkillsFactor;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.skill.SkillUpgrade;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
-import javelin.model.unit.attack.Combatant;
 import tyrant.mikera.engine.RPG;
 
 /**

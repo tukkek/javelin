@@ -3,8 +3,8 @@ package javelin.model.unit.abilities.spell.totem;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.condition.Condition;
 
 /**

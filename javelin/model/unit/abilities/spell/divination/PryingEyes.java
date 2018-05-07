@@ -2,9 +2,9 @@ package javelin.model.unit.abilities.spell.divination;
 
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.dungeon.Dungeon;
 

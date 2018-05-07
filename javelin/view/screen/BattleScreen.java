@@ -27,7 +27,7 @@ import javelin.controller.old.Game.Delay;
 import javelin.controller.old.MessagePanel;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 import javelin.view.StatusPanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;

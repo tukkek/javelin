@@ -7,7 +7,7 @@ import java.util.List;
 import javelin.controller.Point;
 import javelin.controller.fight.Fight;
 import javelin.controller.map.location.LocationMap;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 public class LocationFightSetup extends BattleSetup {
 	static final ArrayList<Point> DELTAS = new ArrayList<Point>();

@@ -18,9 +18,9 @@ import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
 import javelin.model.Realm;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
@@ -292,7 +292,7 @@ public abstract class Location extends Actor {
 					+ ChallengeCalculator.describedifficulty(opponents)
 					+ " fight)";
 			if (showgarrison) {
-				description += "\n\n" + Squad.active.spot(opponents, a);
+				description += "\n\n" + Squad.active.spotenemies(opponents, a);
 			}
 			return description;
 		}

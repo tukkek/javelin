@@ -1,8 +1,8 @@
 package javelin.model.unit.condition;
 
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.Heroism;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * @see javelin.model.unit.abilities.spell.enchantment.compulsion.Heroism

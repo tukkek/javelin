@@ -38,27 +38,23 @@ public class Brazier extends Feature {
 		if (!visited.add(p)) {
 			return;
 		}
-		Feature f = Dungeon.active.getfeature(p.x, p.y);
-		Trap t = f instanceof Trap ? (Trap) f : null;
-		if (t != null && !t.draw) {
-			t.discover();
-		}
 		try {
 			Dungeon.active.setvisible(p.x, p.y);
 		} catch (IndexOutOfBoundsException e) {
 			return;
 		}
+		Feature f = Dungeon.active.getfeature(p.x, p.y);
+		if (f != null) {
+			f.discover(null, 9000);
+		}
 		if (depth > RADIUS || Dungeon.active.map[p.x][p.y] == Template.WALL
 				|| f instanceof Door) {
 			return;
 		}
-		for (int x = p.x - 1; x <= p.x + 1; x++) {
-			for (int y = p.y - 1; y <= p.y + 1; y++) {
-				if (x == p.x && y == p.y) {
-					continue;
-				}
-				brighten(new Point(x, y), depth + 1, visited);
-			}
+		for (Point adjacent : Point.getadjacent()) {
+			adjacent.x += p.x;
+			adjacent.y += p.y;
+			brighten(adjacent, depth + 1, visited);
 		}
 	}
 }

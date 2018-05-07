@@ -6,7 +6,7 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.old.Game;
 import javelin.model.Realm;
 import javelin.model.item.Item;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;

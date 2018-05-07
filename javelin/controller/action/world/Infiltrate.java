@@ -5,11 +5,11 @@ import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Attack;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
@@ -134,7 +134,7 @@ public class Infiltrate extends WorldAction {
 	}
 
 	int perceive(Combatant c) {
-		return c.source.skills.perceive(false, true, c.source)
+		return c.source.skills.perceive(false, true, true, c.source)
 				+ Monster.getbonus(c.source.wisdom);
 	}
 

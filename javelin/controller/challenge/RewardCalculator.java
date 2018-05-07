@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javelin.controller.comparator.DescendingLevelComparator;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 import javelin.model.world.World;
 
 /**

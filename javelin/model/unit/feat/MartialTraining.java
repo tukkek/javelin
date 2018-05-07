@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 import javelin.Javelin;
 import javelin.controller.challenge.factor.FeatsFactor;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.unit.abilities.discipline.Maneuver;
 import javelin.model.unit.abilities.discipline.Maneuvers;
-import javelin.model.unit.attack.Combatant;
 import tyrant.mikera.engine.RPG;
 
 /**

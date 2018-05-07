@@ -13,7 +13,7 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.ChallengeCalculator.Difficulty;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 /**

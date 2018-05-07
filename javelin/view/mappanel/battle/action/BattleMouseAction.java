@@ -1,7 +1,7 @@
 package javelin.view.mappanel.battle.action;
 
 import javelin.model.state.BattleState;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 import javelin.view.mappanel.Tile;
 
 public abstract class BattleMouseAction {

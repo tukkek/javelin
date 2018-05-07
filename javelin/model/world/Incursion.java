@@ -17,8 +17,8 @@ import javelin.controller.fight.IncursionFight;
 import javelin.controller.fight.RandomEncounter;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Portal;
 import javelin.model.world.location.fortification.Fortification;
@@ -171,7 +171,7 @@ public class Incursion extends Actor {
 	void choosetarget() {
 		final ArrayList<Actor> actors = World.getactors();
 		List<Actor> targets = new ArrayList<Actor>();
-		int vision = Math.max(1, (Squad.perceive(true, true, squad)
+		int vision = Math.max(1, (Squad.perceive(true, true, true, squad)
 				+ Terrain.get(x, y).visionbonus) / 5);
 		for (final Actor a : actors) {
 			if (!a.impermeable && a.realm != realm
@@ -379,7 +379,7 @@ public class Incursion extends Actor {
 	public String describe() {
 		return "Enemy incursion ("
 				+ ChallengeCalculator.describedifficulty(squad) + " fight):\n\n"
-				+ Squad.active.spot(squad, this);
+				+ Squad.active.spotenemies(squad, this);
 	}
 
 	/**

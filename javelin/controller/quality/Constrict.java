@@ -22,7 +22,7 @@ public class Constrict extends Quality {
 			damageend = declaration.length();
 		}
 		String damage = declaration.substring(0, damageend);
-		m.constrict = new javelin.model.unit.Constrict();
+		m.constrict = new javelin.model.unit.abilities.Constrict();
 		m.constrict.damage = parsedamage(damage);
 		for (String energy : EnergyResistance.ENERGYTYPES) {
 			if (declaration.contains(energy)) {

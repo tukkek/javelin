@@ -10,8 +10,8 @@ import javelin.controller.action.maneuver.ExecuteManeuver;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.Cloneable;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.attack.Combatant;
 
 public abstract class Maneuver
 		implements Serializable, Cloneable, Comparable<Maneuver> {

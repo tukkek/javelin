@@ -5,8 +5,8 @@ import java.util.List;
 
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.upgrade.Upgrade;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;

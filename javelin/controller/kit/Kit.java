@@ -12,8 +12,8 @@ import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.item.Tier;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.world.location.town.labor.military.Academy;
 import javelin.model.world.location.unique.AdventurersGuild;
 

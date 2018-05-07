@@ -12,13 +12,13 @@ import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.CurrentAttack;
 import javelin.model.unit.abilities.discipline.Maneuver;
 import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * Base class for {@link MeleeAttack} and {@link RangedAttack}.

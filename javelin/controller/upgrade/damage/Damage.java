@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.upgrade.Upgrade;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * Upgrades damage.

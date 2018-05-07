@@ -1,7 +1,7 @@
 package javelin.model.unit.feat.save;
 
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.feat.Feat;
 
 /**

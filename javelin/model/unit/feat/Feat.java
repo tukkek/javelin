@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 import javelin.controller.challenge.factor.FeatsFactor;
 import javelin.controller.upgrade.Upgrade;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * See the d20 SRD for more info.

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import javelin.controller.action.Breath;
 import javelin.model.Cloneable;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 /**
  * @see Breath

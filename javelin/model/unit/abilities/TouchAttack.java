@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.Cloneable;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 public class TouchAttack extends Upgrade implements Cloneable, Serializable {
 	/** See {@link #TouchAttack(String, int, int, Integer, Integer)}. */

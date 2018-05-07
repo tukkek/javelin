@@ -4,8 +4,8 @@ import java.util.List;
 
 import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.attack.Attack;
-import javelin.model.unit.attack.Combatant;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.battle.BattleMouse;
 import javelin.view.screen.BattleScreen;

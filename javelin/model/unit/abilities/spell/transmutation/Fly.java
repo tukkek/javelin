@@ -4,8 +4,8 @@ import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Touch;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.condition.Condition;
 
 /**

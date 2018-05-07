@@ -3,12 +3,12 @@ package javelin.model.unit.abilities.discipline.serpent;
 import javelin.controller.action.ActionCost;
 import javelin.controller.action.ai.attack.DamageChance;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.necromancy.Poison;
 import javelin.model.unit.attack.Attack;
-import javelin.model.unit.attack.Combatant;
 import tyrant.mikera.engine.RPG;
 
 /**

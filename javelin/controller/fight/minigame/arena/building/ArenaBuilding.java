@@ -7,7 +7,7 @@ import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Building;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.battle.action.BattleMouseAction;
 import javelin.view.screen.BattleScreen;

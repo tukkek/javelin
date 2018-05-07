@@ -13,8 +13,8 @@ import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * Spells with attack rolls are supposed to have critical hits too but for the

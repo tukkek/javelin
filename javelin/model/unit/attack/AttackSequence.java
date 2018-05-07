@@ -1,6 +1,7 @@
 package javelin.model.unit.attack;
 
 import javelin.model.unit.CloneableList;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.feat.attack.PowerAttack;
 import javelin.model.unit.feat.attack.shot.RapidShot;
 import javelin.view.screen.StatisticsScreen;

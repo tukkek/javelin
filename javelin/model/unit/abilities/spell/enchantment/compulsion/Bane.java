@@ -3,7 +3,7 @@ package javelin.model.unit.abilities.spell.enchantment.compulsion;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 public class Bane extends Bless {
 	public class Baned extends Blessed {

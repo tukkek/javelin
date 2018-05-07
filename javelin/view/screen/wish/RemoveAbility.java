@@ -3,7 +3,7 @@ package javelin.view.screen.wish;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 /**
  * Remvoes a single undesired ability from a {@link Combatant}.

@@ -17,11 +17,11 @@ import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.discipline.serpent.DizzyingVenomPrana;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * Lets the user select a standard attack (not a full sequence) then sets (and

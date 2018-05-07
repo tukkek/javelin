@@ -3,7 +3,7 @@ package javelin.model.item.relic;
 import javelin.Javelin;
 import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.model.Realm;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Condition;
 
 /**

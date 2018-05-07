@@ -4,8 +4,8 @@ import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Ray;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * A blue-white ray of freezing air and ice springs from your hand. The ray

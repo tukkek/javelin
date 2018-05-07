@@ -5,7 +5,7 @@ import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 /** Brings a single creature to 1hp. */
 public class Candle extends Relic {

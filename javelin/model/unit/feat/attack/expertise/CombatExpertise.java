@@ -1,8 +1,8 @@
 package javelin.model.unit.feat.attack.expertise;
 
+import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.discipline.expertise.CombatExpertiseManeuver;
 import javelin.model.unit.abilities.discipline.expertise.DefensiveAttackManeuver;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.feat.Feat;
 
 /**

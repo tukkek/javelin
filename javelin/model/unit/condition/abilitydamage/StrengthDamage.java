@@ -1,6 +1,6 @@
 package javelin.model.unit.condition.abilitydamage;
 
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 public class StrengthDamage extends AbilityDamage {
 	public StrengthDamage(int damage, Combatant c) {

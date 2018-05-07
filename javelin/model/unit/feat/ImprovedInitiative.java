@@ -1,6 +1,6 @@
 package javelin.model.unit.feat;
 
-import javelin.model.unit.attack.Combatant;
+import javelin.model.unit.Combatant;
 
 /**
  * See the d20 SRD for more info.

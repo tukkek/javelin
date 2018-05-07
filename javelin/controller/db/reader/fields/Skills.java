@@ -14,8 +14,8 @@ import javelin.model.unit.Monster;
  */
 public class Skills extends FieldReader {
 	/** Keeps track of unknown skills for debugging purposes. */
-	public static final HashSet<String> UNKNOWN =
-			Javelin.DEBUG ? new HashSet<String>() : null;
+	public static final HashSet<String> UNKNOWN = Javelin.DEBUG
+			? new HashSet<String>() : null;
 
 	/** Constructor. */
 	public Skills(MonsterReader reader, String fieldname) {
@@ -29,8 +29,8 @@ public class Skills extends FieldReader {
 		for (String skill : text.split(",")) {
 			skill = skill.trim().toLowerCase();
 			String[] split = skill.split(" ");
-			int value =
-					Integer.parseInt(split[split.length - 1].replace("*", ""));
+			int value = Integer
+					.parseInt(split[split.length - 1].replace("*", ""));
 			apply(m, skill, value);
 		}
 	}
@@ -60,10 +60,10 @@ public class Skills extends FieldReader {
 			s.perception = Math.max(s.perception, wisbased);
 		} else if (skill.contains("spot")) {
 			s.perception = Math.max(s.perception, wisbased);
+		} else if (skill.contains("search")) {
+			s.perception = Math.max(s.perception, wisbased);
 		} else if (skill.contains("knowledge")) {
 			s.knowledge = Math.max(s.knowledge, intbased);
-		} else if (skill.contains("search")) {
-			s.search = Math.max(s.search, intbased);
 		} else if (skill.contains("spellcraft")) {
 			s.spellcraft = Math.max(s.spellcraft, intbased);
 		} else if (skill.contains("survival")) {

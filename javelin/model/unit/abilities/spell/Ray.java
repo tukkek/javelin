@@ -4,8 +4,8 @@ import javelin.controller.action.ai.attack.RangedAttack;
 import javelin.controller.walker.Walker;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * A ranged touch attack spell.

@@ -6,8 +6,8 @@ import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.unit.attack.Combatant;
 import javelin.model.unit.condition.Condition;
 import javelin.model.world.location.dungeon.Dungeon;
 

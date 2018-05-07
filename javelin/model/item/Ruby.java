@@ -3,8 +3,8 @@ package javelin.model.item;
 import java.util.ArrayList;
 
 import javelin.controller.action.world.UseItems;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.unit.attack.Combatant;
 import javelin.view.screen.wish.WishScreen;
 
 public class Ruby extends Item {

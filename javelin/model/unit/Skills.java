@@ -2,6 +2,7 @@ package javelin.model.unit;
 
 import java.io.Serializable;
 
+import javelin.Javelin;
 import javelin.controller.Weather;
 import javelin.controller.ai.BattleAi;
 import javelin.model.item.Scroll;
@@ -68,8 +69,6 @@ public class Skills implements Serializable, Cloneable {
 	@Deprecated
 	public int perception = 0;
 	/** {@link Monster#intelligence}-based. */
-	public int search = 0;
-	/** {@link Monster#intelligence}-based. */
 	public int spellcraft = 0;
 	/** {@link Monster#dexterity}-based. */
 	public int stealth = 0;
@@ -120,28 +119,40 @@ public class Skills implements Serializable, Cloneable {
 	 * @param flyingbonus
 	 *            <code>true</code> if flying creatures get a bonus for seeing
 	 *            farther.
-	 * @return Modified spot rank for given {@link Monster}.
+	 * @param periodpenalty
+	 *            Penalty according to {@link Monster#vision} and
+	 *            {@link Javelin#getDayPeriod()}.
+	 * @return Modified spot rank for given {@link Monster} - doesn't include
+	 *         widsom bonus or dice roll.
+	 * @see Skills#take10(int, int)
 	 */
 	public int perceive(boolean flyingbonus, boolean weatherpenalty,
-			Monster monster) {
+			boolean periodpenalty, Monster monster) {
 		int p = perception;
-		if (flyingbonus && monster.fly > 0) {
-			p += 1;
-		}
 		if (monster.hasfeat(Alertness.SINGLETON)) {
-			p += Alertness.BONUS;
+			int bonus = Alertness.BONUS;
+			if (p >= 10) {
+				bonus += 2;
+			}
+			p += bonus;
+		}
+		if (flyingbonus && monster.fly > 0) {
+			p += 2;
 		}
 		if (weatherpenalty && Weather.current != Weather.DRY) {
-			p -= 4;
+			p += Weather.current == Weather.STORM ? -4 : -2;
 		}
-		return p + monster.view() / 2;
+		if (periodpenalty) {
+			p += monster.see();
+		}
+		return p;
 	}
 
 	/**
 	 * @return A take 10 of {@link Skills#survival}.
 	 */
-	public int survive(Monster monster) {
-		return Skills.take10(survival, monster.wisdom) - monster.view();
+	public int survive(Monster m) {
+		return Skills.take10(survival, m.wisdom) - m.see();
 	}
 
 	/**
@@ -197,7 +208,6 @@ public class Skills implements Serializable, Cloneable {
 		heal += bonus;
 		knowledge += bonus;
 		perception += bonus;
-		search += bonus;
 		spellcraft += bonus;
 		stealth += bonus;
 		survival += bonus;

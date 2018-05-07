@@ -1,9 +1,9 @@
 package javelin.model.unit.condition;
 
 import javelin.model.state.Meld;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * @see Meld

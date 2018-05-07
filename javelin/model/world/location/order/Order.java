@@ -3,8 +3,8 @@ package javelin.model.world.location.order;
 import java.io.Serializable;
 
 import javelin.model.item.Item;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * Represents a training {@link Combatant} or a forging {@link Item}.

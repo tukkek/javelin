@@ -1,8 +1,8 @@
 package javelin.view.screen.wish;
 
 import javelin.controller.challenge.RewardCalculator;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.unit.attack.Combatant;
 
 public class Gold extends Wish {
 

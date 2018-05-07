@@ -2,9 +2,9 @@ package javelin.controller;
 
 import java.util.TreeMap;
 
+import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.Spells;
-import javelin.model.unit.attack.Combatant;
 import tyrant.mikera.engine.RPG;
 
 public class SpellbookGenerator {

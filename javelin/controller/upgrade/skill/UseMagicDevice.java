@@ -1,8 +1,8 @@
 package javelin.controller.upgrade.skill;
 
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * See {@link Skills#usemagicdevice}

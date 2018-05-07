@@ -3,8 +3,8 @@ package javelin.model.unit.condition;
 import java.util.ArrayList;
 
 import javelin.model.state.BattleState;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.DominateMonster;
-import javelin.model.unit.attack.Combatant;
 
 /**
  * @see DominateMonster

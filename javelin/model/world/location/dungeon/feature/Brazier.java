@@ -15,6 +15,8 @@ import javelin.model.world.location.dungeon.temple.FireTemple;
  * @author alex
  */
 public class Brazier extends Feature {
+	static final int RADIUS = 13;
+
 	/** Constructor. */
 	public Brazier(int xp, int yp) {
 		super(xp, yp, "dungeonbrazier");
@@ -46,7 +48,7 @@ public class Brazier extends Feature {
 		} catch (IndexOutOfBoundsException e) {
 			return;
 		}
-		if (depth > 9 || Dungeon.active.map[p.x][p.y] == Template.WALL
+		if (depth > RADIUS || Dungeon.active.map[p.x][p.y] == Template.WALL
 				|| f instanceof Door) {
 			return;
 		}

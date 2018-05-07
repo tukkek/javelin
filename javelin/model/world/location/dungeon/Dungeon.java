@@ -426,11 +426,15 @@ public class Dungeon extends Location {
 	 */
 	protected Feature createfeature(Point p) {
 		ArrayList<Feature> features = new ArrayList<Feature>();
-		features.add(new Brazier(p.x, p.y));
-		features.add(new FruitTree(p.x, p.y));
-		features.add(new Portal(p.x, p.y));
-		features.add(new Spirit(p.x, p.y));
-		features.add(new Fountain(p.x, p.y));
+		if (RPG.chancein(4)) {
+			features.add(new Fountain(p.x, p.y));
+			// TODO map
+		} else {
+			features.add(new Brazier(p.x, p.y));
+			features.add(new FruitTree(p.x, p.y));
+			features.add(new Portal(p.x, p.y));
+			features.add(new Spirit(p.x, p.y));
+		}
 		return RPG.pick(features);
 	}
 

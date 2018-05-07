@@ -136,6 +136,7 @@ public class Combatant implements Serializable, Cloneable {
 	public boolean burrowed = false;
 	/** Is a player unit that should be controlled by {@link BattleAi}. */
 	public boolean automatic = false;
+	public boolean elite = false;
 
 	/**
 	 * @param generatespells

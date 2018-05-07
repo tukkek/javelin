@@ -63,6 +63,7 @@ public class NpcGenerator {
 
 	void upgradeelite(Monster m, float targetcr) {
 		Combatant c = new Combatant(m, true);
+		c.elite = true;
 		c.source.customName = "Elite " + c.source.name.toLowerCase();
 		while (c.source.cr < targetcr && Commoner.SINGLETON.upgrade(c)) {
 			ChallengeCalculator.calculatecr(c.source);
@@ -126,6 +127,7 @@ public class NpcGenerator {
 		}
 		c.source.customName = c.source.name + " "
 				+ k.gettitle(c.source).toLowerCase();
+		c.elite = true;
 		return c;
 	}
 

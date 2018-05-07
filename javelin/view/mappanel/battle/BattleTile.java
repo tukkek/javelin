@@ -101,6 +101,11 @@ public class BattleTile extends Tile {
 		if (c.isbuffed()) {
 			BUFF.paintBorder(t, g, 0, 0, MapPanel.tilesize, MapPanel.tilesize);
 		}
+		if (c.elite) {
+			final Image elite = Images.ELITE.getScaledInstance(
+					MapPanel.tilesize, MapPanel.tilesize, Image.SCALE_DEFAULT);
+			g.drawImage(elite, 0, 0, null);
+		}
 		if (c.mercenary) {
 			final Image mercenary = Images.MERCENARY.getScaledInstance(
 					MapPanel.tilesize, MapPanel.tilesize, Image.SCALE_DEFAULT);

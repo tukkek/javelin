@@ -15,7 +15,6 @@ import javelin.model.world.location.town.Town;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.MoveOverlay;
-import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.mappanel.battle.overlay.BattleWalker.BattleStep;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
@@ -23,7 +22,7 @@ import javelin.view.screen.WorldScreen;
 
 /**
  * Handles mouse events for {@link WorldScreen}.
- * 
+ *
  * @author alex
  */
 public class WorldMouse extends Mouse {
@@ -57,7 +56,7 @@ public class WorldMouse extends Mouse {
 					overlay.path.fromx = p.x;
 					overlay.path.fromy = p.y;
 					overlay.walk();
-					BattlePanel.overlay = overlay;
+					MapPanel.overlay = overlay;
 				}
 			}
 		}
@@ -106,7 +105,7 @@ public class WorldMouse extends Mouse {
 		if (overrideinput() || !Game.userinterface.waiting) {
 			return;
 		}
-		final WorldTile t = (WorldTile) e.getSource();
+		final WorldTile t = (WorldTile) gettile(e);
 		if (!t.discovered) {
 			return;
 		}
@@ -129,11 +128,11 @@ public class WorldMouse extends Mouse {
 
 	/**
 	 * Handles movement for {@link WorldScreen} and {@link DungeonScreen}.
-	 * 
+	 *
 	 * @return <code>true</code> if moved the current {@link Squad}.
 	 */
 	public static boolean move() {
-		final MoveOverlay overlay = (MoveOverlay) BattlePanel.overlay;
+		final MoveOverlay overlay = (MoveOverlay) MapPanel.overlay;
 		if (overlay == null || overlay.path.steps.isEmpty()) {
 			return false;
 		}
@@ -142,7 +141,7 @@ public class WorldMouse extends Mouse {
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
+	public void mouseMoved(MouseEvent e) {
 		if (!Game.userinterface.waiting) {
 			return;
 		}
@@ -150,7 +149,7 @@ public class WorldMouse extends Mouse {
 			MapPanel.overlay.clear();
 		}
 		MoveOverlay.cancel();
-		final WorldTile t = (WorldTile) e.getSource();
+		final WorldTile t = (WorldTile) gettile(e);
 		if (!t.discovered) {
 			return;
 		}
@@ -159,7 +158,7 @@ public class WorldMouse extends Mouse {
 			if (showingdescription) {
 				showingdescription = false;
 				Game.messagepanel.clear();
-				((WorldScreen) WorldScreen.active).updateplayerinformation();
+				((WorldScreen) BattleScreen.active).updateplayerinformation();
 				Game.messagepanel.getPanel().repaint();
 			}
 			MoveOverlay.schedule(new MoveOverlay(
@@ -172,7 +171,7 @@ public class WorldMouse extends Mouse {
 			showingdescription = true;
 			if (target instanceof Town) {
 				MapPanel.overlay = new DistrictOverlay((Town) target);
-				MapPanel.overlay.refresh(WorldScreen.active.mappanel);
+				MapPanel.overlay.refresh(BattleScreen.active.mappanel);
 			}
 		}
 	}

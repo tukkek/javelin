@@ -75,7 +75,7 @@ public class Images {
 	 *            PNG extension is added.
 	 * @return An image from the avatar folder.
 	 */
-	public static Image getImage(final String file) {
+	synchronized public static Image getImage(final String file) {
 		Image i = CACHE.get(file);
 		if (i != null) {
 			return i;

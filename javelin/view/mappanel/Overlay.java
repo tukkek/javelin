@@ -1,6 +1,5 @@
 package javelin.view.mappanel;
 
-import java.awt.Graphics;
 import java.awt.Image;
 import java.util.ArrayList;
 
@@ -10,7 +9,7 @@ import javelin.view.screen.BattleScreen;
 public abstract class Overlay {
 	public ArrayList<Point> affected = new ArrayList<Point>();
 
-	abstract public void overlay(Tile t, Graphics g);
+	abstract public void overlay(Tile t);
 
 	public void clear() {
 		MapPanel.overlay = null;
@@ -28,8 +27,10 @@ public abstract class Overlay {
 	/**
 	 * Draws image on given tile and adds it to #affected.
 	 */
-	protected void draw(Tile t, Graphics g, Image i) {
-		g.drawImage(i, 0, 0, MapPanel.tilesize, MapPanel.tilesize, null);
+	protected void draw(Tile t, Image i) {
+		Point p = t.getposition();
+		BattleScreen.active.mappanel.getdrawgraphics().drawImage(i, p.x, p.y,
+				MapPanel.tilesize, MapPanel.tilesize, null);
 		affected.add(new Point(t.x, t.y));
 	}
 

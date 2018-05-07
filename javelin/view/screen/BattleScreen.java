@@ -143,7 +143,7 @@ public class BattleScreen extends Screen {
 		Javelin.app.switchScreen(this);
 		BattleScreen.active = this;
 		Game.delayblock = false;
-		mappanel.repaint();
+		// mappanel.repaint();
 	}
 
 	/**

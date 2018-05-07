@@ -23,7 +23,7 @@ import javelin.view.screen.StatisticsScreen;
 
 /**
  * Handles mouse events for {@link BattleScreen}.
- * 
+ *
  * @author alex
  */
 public class BattleMouse extends Mouse {
@@ -44,7 +44,7 @@ public class BattleMouse extends Mouse {
 		if (!Game.userinterface.waiting) {
 			return;
 		}
-		final Tile t = (Tile) e.getSource();
+		final Tile t = gettile(e);
 		final BattleState s = Fight.state;
 		final Combatant target = s.getcombatant(t.x, t.y);
 		final int button = e.getButton();
@@ -90,7 +90,7 @@ public class BattleMouse extends Mouse {
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
+	public void mouseMoved(MouseEvent e) {
 		MoveOverlay.cancel();
 		if (Examine.lastlooked != null) {
 			Examine.lastlooked = null;
@@ -104,7 +104,7 @@ public class BattleMouse extends Mouse {
 		}
 		BattleScreen.active.messagepanel.clear();
 		try {
-			final Tile t = (Tile) e.getSource();
+			final Tile t = gettile(e);
 			final BattleState s = Fight.state;
 			final Combatant current = s.clone(BattlePanel.current);
 			final Combatant target = s.getcombatant(t.x, t.y);

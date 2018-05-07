@@ -35,7 +35,6 @@ public class WorldTile extends Tile {
 
 	public WorldTile(int xp, int yp, WorldPanel p) {
 		super(xp, yp, !World.scenario.fogofwar);
-		addMouseListener(p.mouse);
 	}
 
 	@Override
@@ -64,15 +63,17 @@ public class WorldTile extends Tile {
 		if (a != null) {
 			drawactor(g, a);
 		}
-		if (WorldPanel.overlay != null) {
-			WorldPanel.overlay.overlay(this, g);
+		if (MapPanel.overlay != null) {
+			MapPanel.overlay.overlay(this);
 		}
 	}
 
 	void drawactor(final Graphics g, final Actor a) {
+		int x = this.x * MapPanel.tilesize;
+		int y = this.y * MapPanel.tilesize;
 		if (a == Squad.active) {
 			g.setColor(Color.GREEN);
-			g.fillRect(0, 0, MapPanel.tilesize, MapPanel.tilesize);
+			g.fillRect(x, y, MapPanel.tilesize, MapPanel.tilesize);
 			if (Squad.active.getdistrict() != null) {
 				DistrictOverlay.paint(this, g);
 			}
@@ -80,7 +81,7 @@ public class WorldTile extends Tile {
 		draw(g, a.getimage());
 		if (a.getrealmoverlay() != null) {
 			g.setColor(a.getrealmoverlay().getawtcolor());
-			g.fillRect(0, WorldPanel.tilesize - 5, WorldPanel.tilesize, 5);
+			g.fillRect(x, y + MapPanel.tilesize - 5, MapPanel.tilesize, 5);
 		}
 		final Location l = a instanceof Location ? (Location) a : null;
 		if (l == null) {
@@ -107,15 +108,16 @@ public class WorldTile extends Tile {
 	void paintroad(Color c, Graphics2D g) {
 		g.setColor(c);
 		g.setStroke(new BasicStroke(4));
-		final int center = WorldPanel.tilesize / 2;
+		final int center = MapPanel.tilesize / 2;
 		boolean any = false;
+		Point p = getposition();
 		for (int deltax = -1; deltax <= +1; deltax++) {
 			for (int deltay = -1; deltay <= +1; deltay++) {
 				if (deltax == 0 && deltay == 0) {
 					continue;
 				}
-				final int tox = x + deltax;
-				final int toy = y + deltay;
+				final int tox = p.x + deltax;
+				final int toy = p.y + deltay;
 				if (!World.validatecoordinate(tox, toy)) {
 					continue;
 				}
@@ -123,14 +125,14 @@ public class WorldTile extends Tile {
 						|| WorldPanel.DESTINATIONS
 								.get(new Point(tox, toy)) != null) {
 					any = true;
-					g.drawLine(center, center, deltax * center + center,
-							deltay * center + center);
+					g.drawLine(p.x + center, p.y + center,
+							deltax * center + center, deltay * center + center);
 				}
 			}
 		}
 		if (!any) {
-			g.drawLine(center, 0, center, WorldPanel.tilesize);
-			g.drawLine(0, center, WorldPanel.tilesize, center);
+			g.drawLine(center, y, center, MapPanel.tilesize);
+			g.drawLine(x, center, MapPanel.tilesize, center);
 		}
 	}
 }

@@ -17,7 +17,7 @@ import javelin.view.mappanel.Tile;
 
 /**
  * TODO remove {@link BattleMap} and rename this hierarchy
- * 
+ *
  * @author alex
  */
 public class BattlePanel extends MapPanel {
@@ -42,7 +42,7 @@ public class BattlePanel extends MapPanel {
 
 	@Override
 	protected Tile newtile(int x, int y) {
-		return new BattleTile(x, y, daylight, this);
+		return new BattleTile(x, y, daylight);
 	}
 
 	@Override

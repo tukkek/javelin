@@ -10,6 +10,7 @@ import javelin.model.world.location.town.Town;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Overlay;
 import javelin.view.mappanel.Tile;
+import javelin.view.screen.BattleScreen;
 
 public class DistrictOverlay extends Overlay {
 	static final javax.swing.border.Border WHITEBORDER = BorderFactory
@@ -20,14 +21,15 @@ public class DistrictOverlay extends Overlay {
 	}
 
 	@Override
-	public void overlay(Tile t, Graphics g) {
+	public void overlay(Tile t) {
 		if (affected.contains(new Point(t.x, t.y))) {
-			paint(t, g);
+			paint(t, BattleScreen.active.mappanel.getdrawgraphics());
 		}
 	}
 
 	static public void paint(Tile t, Graphics g) {
-		WHITEBORDER.paintBorder(t, g, 0, 0, MapPanel.tilesize,
-				MapPanel.tilesize);
+		Point p = t.getposition();
+		WHITEBORDER.paintBorder(BattleScreen.active.mappanel.canvas, g, p.x,
+				p.y, MapPanel.tilesize, MapPanel.tilesize);
 	}
 }

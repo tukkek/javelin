@@ -1,6 +1,5 @@
 package javelin.controller.action;
 
-import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,12 +42,12 @@ public class Charge extends Fire implements AiAction {
 		}
 
 		@Override
-		public void overlay(Tile t, Graphics g) {
+		public void overlay(Tile t) {
 			Point p = new Point(t.x, t.y);
 			if (p.equals(target)) {
-				draw(t, g, TargetOverlay.TARGET);
+				draw(t, TargetOverlay.TARGET);
 			} else if (affected.contains(p)) {
-				draw(t, g, AiMovement.MOVEOVERLAY);
+				draw(t, AiMovement.MOVEOVERLAY);
 			}
 		}
 	}

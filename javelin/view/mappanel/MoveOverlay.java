@@ -40,7 +40,9 @@ public class MoveOverlay extends Overlay {
 	}
 
 	@Override
-	public void overlay(Tile t, Graphics g) {
+	public void overlay(Tile t) {
+		Graphics g = BattleScreen.active.mappanel.getdrawgraphics();
+		Point p = t.getposition();
 		for (BattleStep s : path.steps) {
 			if (t.x == s.x && t.y == s.y) {
 				final boolean partial = !s.engaged && s.totalcost <= .5f;
@@ -50,12 +52,12 @@ public class MoveOverlay extends Overlay {
 				} else {
 					border = partial ? GREENBORDER : REDBORDER;
 				}
-				border.paintBorder(t, g, 0, 0, MapPanel.tilesize,
-						MapPanel.tilesize);
+				border.paintBorder(BattleScreen.active.mappanel.canvas, g, p.x,
+						p.y, MapPanel.tilesize, MapPanel.tilesize);
 				if (!s.safe) {
 					g.setColor(partial ? Color.GREEN : Color.RED);
-					g.drawString(path.drawtext(s.totalcost), 5,
-							MapPanel.tilesize - 5);
+					g.drawString(path.drawtext(s.totalcost), p.x + 5,
+							p.y + MapPanel.tilesize - 5);
 				}
 			}
 		}

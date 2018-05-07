@@ -24,7 +24,7 @@ public class DungeonMouse extends Mouse {
 		if (!Game.userinterface.waiting) {
 			return;
 		}
-		final Tile t = (Tile) e.getSource();
+		final Tile t = gettile(e);
 		if (!t.discovered) {
 			return;
 		}
@@ -35,7 +35,7 @@ public class DungeonMouse extends Mouse {
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
+	public void mouseMoved(MouseEvent e) {
 		if (!Game.userinterface.waiting) {
 			return;
 		}
@@ -43,7 +43,7 @@ public class DungeonMouse extends Mouse {
 			MapPanel.overlay.clear();
 		}
 		MoveOverlay.cancel();
-		final Tile t = (Tile) e.getSource();
+		final Tile t = gettile(e);
 		if (!t.discovered) {
 			return;
 		}

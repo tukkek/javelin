@@ -60,7 +60,7 @@ public class Door extends Feature {
 	boolean stuck = RPG.chancein(10);
 	boolean locked = RPG.chancein(4);
 	/** @see #searchdc */
-	boolean hidden = RPG.chancein(20) || true;
+	boolean hidden = RPG.chancein(20);
 
 	public Door(String avatar, int breakdcstuck, int breakdclocked,
 			Class<? extends Key> key) {
@@ -212,7 +212,9 @@ public class Door extends Feature {
 			draw = true;
 			hidden = false;
 			Game.redraw();
-			Javelin.message("You find a hidden door!", true);
+			if (searching != null) {
+				Javelin.message("You find a hidden door!", true);
+			}
 		}
 	}
 }

@@ -1,11 +1,11 @@
 package javelin.view.mappanel;
 
+import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Panel;
 import java.awt.ScrollPane;
-import java.awt.event.MouseListener;
 
 import javelin.controller.db.Preferences;
 
@@ -16,7 +16,18 @@ public abstract class MapPanel extends Panel {
 
 	public Tile[][] tiles = null;
 	public ScrollPane scroll = new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS);
-	Panel parent = new Panel();
+	Panel container = new Panel();
+	public Canvas canvas = new Canvas() {
+		@Override
+		public void paint(Graphics g) {
+			super.paint(g);
+			for (Tile[] ts : tiles) {
+				for (Tile t : ts) {
+					t.repaint();
+				}
+			}
+		}
+	};
 	int mapwidth;
 	int mapheight;
 
@@ -26,7 +37,7 @@ public abstract class MapPanel extends Panel {
 	 * Make sure we have a field for this to ensure we're going to instantiate
 	 * {@link #tilesize}**2 listeners for this.
 	 */
-	public Mouse mouse = getmouselistener();
+	Mouse mouse = getmouselistener();
 
 	final private String configurationkey;
 
@@ -34,26 +45,26 @@ public abstract class MapPanel extends Panel {
 		mapwidth = widthp;
 		mapheight = heightp;
 		scroll.setFocusable(false);
-		scroll.setWheelScrollingEnabled(false);
-		scroll.addMouseWheelListener(mouse);
 		add(scroll);
-		parent.setFocusable(false);
+		container.setFocusable(false);
+		canvas.setFocusable(false);
 		configurationkey = configurationkeyp;
 	}
 
 	abstract protected Mouse getmouselistener();
 
 	void updatesize() {
-		parent.setSize(tilesize * mapwidth, tilesize * mapheight);
+		container.setSize(tilesize * mapwidth, tilesize * mapheight);
+		canvas.setSize(tilesize * mapwidth, tilesize * mapheight);
+		container.doLayout();
 	}
 
 	protected void updatetilesize() {
 		try {
-			for (Tile[] ts : tiles) {
-				for (Tile t : ts) {
-					t.setSize(tilesize, tilesize);
-				}
-			}
+			/*
+			 * TODO could use this to cache position instead of calculating on
+			 * the fly
+			 */
 			updatesize();
 			scroll.validate();
 		} catch (NullPointerException e) {
@@ -65,20 +76,22 @@ public abstract class MapPanel extends Panel {
 		tilesize = gettilesize();
 		scroll.setVisible(false);
 		updatesize();
-		parent.setLayout(new GridLayout(mapwidth, mapheight));
+		container.setLayout(new GridLayout(1, 1));
 		tiles = new Tile[mapwidth][mapheight];
 		for (int y = 0; y < mapheight; y++) {
 			for (int x = 0; x < mapwidth; x++) {
-				Tile t = newtile(x, y);
-				parent.add(t);
-				tiles[x][y] = t;
+				tiles[x][y] = newtile(x, y);
 			}
 		}
-		scroll.add(parent);
+		container.add(canvas);
+		canvas.addMouseListener(mouse);
+		canvas.addMouseMotionListener(mouse);
+		canvas.addMouseWheelListener(mouse);
+		scroll.add(container);
 		scroll.setVisible(true);
 	}
 
-	abstract protected int gettilesize();
+	protected abstract int gettilesize();
 
 	protected abstract Tile newtile(int x, int y);
 
@@ -134,9 +147,9 @@ public abstract class MapPanel extends Panel {
 		x -= width / 2;
 		y -= height / 2;
 		x = Math.min(x,
-				parent.getWidth() - width + scroll.getHScrollbarHeight());
+				container.getWidth() - width + scroll.getHScrollbarHeight());
 		y = Math.min(y,
-				parent.getHeight() - height + scroll.getVScrollbarWidth());
+				container.getHeight() - height + scroll.getVScrollbarWidth());
 		x = Math.max(0, x);
 		y = Math.max(0, y);
 		scroll.setScrollPosition(x, y);
@@ -162,15 +175,14 @@ public abstract class MapPanel extends Panel {
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		for (Tile[] ts : tiles) {
-			for (Tile t : ts) {
-				t.repaint();
-			}
-		}
 	}
 
-	@Override
-	public synchronized void addMouseListener(MouseListener l) {
-		parent.addMouseListener(l);
+	// @Override
+	// public synchronized void addMouseListener(MouseListener l) {
+	// canvas.addMouseListener(l);
+	// }
+
+	public Graphics getdrawgraphics() {
+		return canvas.getGraphics();
 	}
 }

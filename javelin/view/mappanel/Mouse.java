@@ -18,10 +18,16 @@ public abstract class Mouse extends MouseAdapter {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if (e.getButton() == e.BUTTON3) {
-			Tile t = (Tile) e.getSource();
+		if (e.getButton() == MouseEvent.BUTTON3) {
+			Tile t = gettile(e);
 			BattleScreen.active.mappanel.center(t.x, t.y, true);
 		}
+	}
+
+	protected Tile gettile(MouseEvent e) {
+		int x = Math.floorDiv(e.getX(), MapPanel.tilesize);
+		int y = Math.floorDiv(e.getY(), MapPanel.tilesize);
+		return panel.tiles[x][y];
 	}
 
 	@Override

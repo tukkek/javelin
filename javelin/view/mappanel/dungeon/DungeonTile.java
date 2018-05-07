@@ -14,7 +14,6 @@ import javelin.view.mappanel.Tile;
 public class DungeonTile extends Tile {
 	public DungeonTile(int xp, int yp, DungeonPanel p) {
 		super(xp, yp, p.dungeon.visible[xp][yp]);
-		addMouseListener(p.mouse);
 	}
 
 	@Override
@@ -39,7 +38,7 @@ public class DungeonTile extends Tile {
 			draw(g, Squad.active.getimage());
 		}
 		if (MapPanel.overlay != null) {
-			MapPanel.overlay.overlay(this, g);
+			MapPanel.overlay.overlay(this);
 		}
 	}
 }

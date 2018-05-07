@@ -8,6 +8,7 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
 import javelin.Javelin;
+import javelin.controller.Point;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.arena.building.ArenaBuilding;
 import javelin.controller.map.Map;
@@ -26,11 +27,8 @@ public class BattleTile extends Tile {
 	private Image obstacle;
 	public boolean shrouded;
 
-	public BattleTile(final int xp, final int yp, final boolean discoveredp,
-			final MapPanel panel) {
+	public BattleTile(final int xp, final int yp, final boolean discoveredp) {
 		super(xp, yp, discoveredp);
-		setSize(MapPanel.tilesize, MapPanel.tilesize);
-		addMouseListener(panel.mouse);
 		shrouded = !discovered;
 	}
 
@@ -74,51 +72,54 @@ public class BattleTile extends Tile {
 		}
 		if (shrouded) {
 			g.setColor(new Color(0, 0, 0, 0.5f));
-			g.fillRect(0, 0, MapPanel.tilesize, MapPanel.tilesize);
+			Point p = getposition();
+			g.fillRect(p.x, p.y, MapPanel.tilesize, MapPanel.tilesize);
 		}
 		if (MapPanel.overlay != null) {
-			MapPanel.overlay.overlay(this, g);
+			MapPanel.overlay.overlay(this);
 		}
 	}
 
-	static private void drawcombatant(final Graphics g, final Combatant c,
-			final Tile t) {
+	void drawcombatant(final Graphics g, final Combatant c, final Tile t) {
 		final boolean isblueteam = Fight.state.blueTeam.contains(c);
+		Point p = getposition();
 		if (BattlePanel.current.equals(c)) {
 			g.setColor(isblueteam ? Color.GREEN : Color.ORANGE);
-			g.fillRect(0, 0, MapPanel.tilesize, MapPanel.tilesize);
+			g.fillRect(p.x, p.y, MapPanel.tilesize, MapPanel.tilesize);
 		}
 		draw(g, Images.getImage(c));
 		g.setColor(isblueteam ? Color.BLUE : Color.RED);
 		final int hp = MapPanel.tilesize
 				- MapPanel.tilesize * c.hp / c.getmaxhp();
-		g.fillRect(0, hp, MapPanel.tilesize / 10, MapPanel.tilesize - hp);
+		g.fillRect(p.x, p.y + hp, MapPanel.tilesize / 10,
+				MapPanel.tilesize - hp);
 		if (c.ispenalized(Fight.state)) {
 			final Image penalized = Images.PENALIZED.getScaledInstance(
 					MapPanel.tilesize, MapPanel.tilesize, Image.SCALE_DEFAULT);
-			g.drawImage(penalized, 0, 0, null);
+			g.drawImage(penalized, p.x, p.y, null);
 		}
 		if (c.isbuffed()) {
-			BUFF.paintBorder(t, g, 0, 0, MapPanel.tilesize, MapPanel.tilesize);
+			BUFF.paintBorder(panel.canvas, g, p.x, p.y, MapPanel.tilesize,
+					MapPanel.tilesize);
 		}
 		if (c.elite) {
 			final Image elite = Images.ELITE.getScaledInstance(
 					MapPanel.tilesize, MapPanel.tilesize, Image.SCALE_DEFAULT);
-			g.drawImage(elite, 0, 0, null);
+			g.drawImage(elite, p.x, p.y, null);
 		}
 		if (c.mercenary) {
 			final Image mercenary = Images.MERCENARY.getScaledInstance(
 					MapPanel.tilesize, MapPanel.tilesize, Image.SCALE_DEFAULT);
-			g.drawImage(mercenary, 0, 0, null);
+			g.drawImage(mercenary, p.x, p.y, null);
 		} else if (c.summoned) {
 			final Image summoned = Images.SUMMONED.getScaledInstance(
 					MapPanel.tilesize, MapPanel.tilesize, Image.SCALE_DEFAULT);
-			g.drawImage(summoned, 0, 0, null);
+			g.drawImage(summoned, p.x, p.y, null);
 		} else if (c instanceof ArenaBuilding
 				&& ((ArenaBuilding) c).repairing) {
 			final Image summoned = Images.LABOR.getScaledInstance(
 					MapPanel.tilesize, MapPanel.tilesize, Image.SCALE_DEFAULT);
-			g.drawImage(summoned, 0, 0, null);
+			g.drawImage(summoned, p.x, p.y, null);
 		}
 	}
 }

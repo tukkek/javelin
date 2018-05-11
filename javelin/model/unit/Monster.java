@@ -45,7 +45,6 @@ import javelin.model.unit.feat.Feat;
 import javelin.model.unit.feat.attack.WeaponFinesse;
 import javelin.model.unit.feat.attack.focus.WeaponFocus;
 import javelin.model.unit.feat.skill.Acrobatic;
-import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.military.Academy;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.upgrading.SkillSelectionScreen;
@@ -779,7 +778,7 @@ public class Monster implements Cloneable, Serializable {
 
 	/**
 	 * @return All terrain types this monster can be found in. May be empty if
-	 *         this is an internal Javelin monster (like {@link Town} Workers).
+	 *         this is an internal Javelin monster.
 	 * @see Terrain#toString()
 	 */
 	public List<String> getterrains() {

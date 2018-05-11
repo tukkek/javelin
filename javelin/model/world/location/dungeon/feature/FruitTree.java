@@ -1,5 +1,7 @@
 package javelin.model.world.location.dungeon.feature;
 
+import java.util.ArrayList;
+
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -17,12 +19,17 @@ public class FruitTree extends Feature {
 
 	@Override
 	public boolean activate() {
-		if (Javelin.prompt("Take a fruit from the tree?\n"
-				+ "Press ENTER to confirm, any other key to cancel...") != '\n') {
+		ArrayList<Combatant> squad = Squad.active.members;
+		ArrayList<String> names = new ArrayList<String>(squad.size());
+		for (Combatant c : squad) {
+			names.add(c + " (" + c.getstatus() + ")");
+		}
+		int choice = Javelin.choose("Who will eat the fruit?", names, true,
+				false);
+		if (choice < 0) {
 			return false;
 		}
-		Combatant target = Squad.active.members.get(Javelin.choose(
-				"Who will eat the fruit?", Squad.active.members, true, true));
+		Combatant target = squad.get(choice);
 		target.heal(target.maxhp, true);
 		return true;
 	}

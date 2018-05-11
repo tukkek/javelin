@@ -25,7 +25,7 @@ import javelin.view.screen.StatisticsScreen;
 
 /**
  * Base class for all actions involving selecting an unit as target.
- * 
+ *
  * @author alex
  */
 public abstract class Target extends Action {
@@ -56,7 +56,7 @@ public abstract class Target extends Action {
 	/**
 	 * Pressing this key confirms the target selection, usually same as the
 	 * action key.
-	 * 
+	 *
 	 * @see Action#keys
 	 */
 	protected char confirmkey;
@@ -78,7 +78,7 @@ public abstract class Target extends Action {
 
 	/**
 	 * Used for descriptive purposes.
-	 * 
+	 *
 	 * @return Minimum number the active combatant has to roll on a d20 to hit
 	 *         the target.
 	 */
@@ -147,7 +147,7 @@ public abstract class Target extends Action {
 
 	/**
 	 * By default uses {@link BattleState#isengaged(Combatant)}
-	 * 
+	 *
 	 * @return <code>true</code> if the active unit is currently engaded and
 	 *         should not be allowed to continue targetting.
 	 */
@@ -157,7 +157,7 @@ public abstract class Target extends Action {
 
 	/**
 	 * Does nothing by default.
-	 * 
+	 *
 	 * @param hero
 	 *            Active unit.
 	 * @throws RepeatTurn
@@ -168,7 +168,7 @@ public abstract class Target extends Action {
 
 	/**
 	 * By default only allows targeting enemies that are in line-of-sight.
-	 * 
+	 *
 	 * @param targets
 	 *            Remove invalid targets from this list. Beware of
 	 *            {@link ConcurrentModificationException}.
@@ -188,11 +188,10 @@ public abstract class Target extends Action {
 		MapPanel.overlay = new TargetOverlay(target.location[0],
 				target.location[1]);
 		Game.messagepanel.clear();
-		Game.message(
-				"Use ← and → to select target, ENTER or " + confirmkey
-						+ " to confirm, v to view target's sheet, q to quit.\n",
-				Delay.NONE);
-		Game.message(describehitchance(active, target, state), Delay.NONE);
+		String prompt = "Use ← and → to select target, ENTER or " + confirmkey
+				+ " to confirm, v to view target's sheet, q to quit.\n\n";
+		prompt += describehitchance(active, target, state);
+		Game.message(prompt, Delay.NONE);
 		BattleScreen.active.center(target.location[0], target.location[1]);
 	}
 
@@ -201,15 +200,25 @@ public abstract class Target extends Action {
 	 */
 	public String describehitchance(Combatant active, final Combatant target,
 			BattleState state) {
-		return target + " (" + target.getstatus() + ", " + Javelin
-				.translatetochance(calculatehitdc(active, target, state))
-				+ " to hit)";
+		String conditions = "";
+		ArrayList<String> status = target.liststatus(state);
+		if (!status.isEmpty()) {
+			conditions += ", ";
+			for (String s : status) {
+				conditions += s + ", ";
+			}
+			conditions = conditions.substring(0, conditions.length() - 2);
+		}
+		return target + " (" + target.getstatus() + ", "
+				+ Javelin.translatetochance(
+						calculatehitdc(active, target, state))
+				+ " to hit" + conditions + ")";
 	}
 
 	/**
 	 * A higher value means this should be selected first while browsing
 	 * targets.
-	 * 
+	 *
 	 * TODO turn into dynamic instead?
 	 */
 	public int prioritize(final Combatant c, final BattleState state,

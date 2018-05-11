@@ -28,6 +28,6 @@ public class RaiseConsitution extends RaiseAbility {
 
 	@Override
 	public int getattribute(Monster source) {
-		return source.constitution;
+		return source.constitution + source.poison;
 	}
 }

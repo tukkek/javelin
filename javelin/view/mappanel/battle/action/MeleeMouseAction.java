@@ -36,10 +36,10 @@ public class MeleeMouseAction extends BattleMouseAction {
 				|| current.currentmelee.next.isEmpty()
 						? current.source.melee.get(0)
 						: current.currentmelee.next;
-		final String chance = MeleeAttack.SINGLETON.getchance(current,
-				target, attack.get(0), s);
-		final String status = target + " (" + target.getstatus() + ", "
-				+ chance + " to hit)";
+		final String chance = MeleeAttack.SINGLETON.getchance(current, target,
+				attack.get(0), s);
+		final String status = target + " (" + target.getstatus() + ", " + chance
+				+ " to hit)";
 		BattleMouse.showstatus(status, target, true);
 	}
 }

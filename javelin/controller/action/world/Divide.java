@@ -22,7 +22,7 @@ import javelin.view.screen.town.SelectScreen;
 
 /**
  * Split squad into two.
- * 
+ *
  * @author alex
  */
 public class Divide extends WorldAction {
@@ -91,7 +91,7 @@ public class Divide extends WorldAction {
 			return;
 		}
 		input = ' ';
-		int gold = transfergold(input);
+		int gold = transfergold(input, newsquad);
 		spawn(oldsquad, newsquad, gold);
 	}
 
@@ -128,8 +128,9 @@ public class Divide extends WorldAction {
 		Squad.active.updateavatar();
 	}
 
-	int transfergold(char input) {
-		int gold = Squad.active.gold / 2;
+	int transfergold(char input, ArrayList<Combatant> newsquad) {
+		int gold = Squad.active.gold * newsquad.size()
+				/ Squad.active.members.size();
 		final int increment = Squad.active.gold / 10;
 		while (input != '\n') {
 			clear();

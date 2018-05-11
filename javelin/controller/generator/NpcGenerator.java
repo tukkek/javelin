@@ -1,6 +1,7 @@
 package javelin.controller.generator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.TreeSet;
@@ -63,12 +64,11 @@ public class NpcGenerator {
 
 	void upgradeelite(Monster m, float targetcr) {
 		Combatant c = new Combatant(m, true);
-		c.elite = true;
 		c.source.customName = "Elite " + c.source.name.toLowerCase();
 		while (c.source.cr < targetcr && Commoner.SINGLETON.upgrade(c)) {
 			ChallengeCalculator.calculatecr(c.source);
 		}
-		register(c);
+		register(c, c.source.getterrains());
 	}
 
 	void generatenpcs() {
@@ -81,7 +81,7 @@ public class NpcGenerator {
 					Kit k = RPG.pick(Kit.getpreferred(m));
 					Combatant c = generatenpc(m, k, cr);
 					if (c != null) {
-						register(c);
+						register(c, Arrays.asList(Terrain.NONWATER));
 					}
 				}
 			}
@@ -127,24 +127,21 @@ public class NpcGenerator {
 		}
 		c.source.customName = c.source.name + " "
 				+ k.gettitle(c.source).toLowerCase();
-		c.elite = true;
 		return c;
 	}
 
-	void register(Combatant c) {
+	void register(Combatant c, List<?> terrains) {
 		if (c.source.isaquatic()) {
 			return;
 		}
-		for (Terrain t : Terrain.NONWATER) {
+		c.elite = true;
+		for (Object t : terrains) {
 			ArrayList<Combatant> encounter = new ArrayList<Combatant>(1);
 			encounter.add(c);
-			Organization.ENCOUNTERSBYTERRAIN.get(t.name.toLowerCase()).put(
-					ChallengeCalculator.crtoel(c.source.cr),
-					new Encounter(encounter));
+			Organization.ENCOUNTERSBYTERRAIN.get(t.toString().toLowerCase())
+					.put(ChallengeCalculator.crtoel(c.source.cr),
+							new Encounter(encounter));
 			totalregistered += 1;
-		}
-		if (DEBUG) {
-			System.out.println(c + " cr" + c.source.cr);
 		}
 	}
 

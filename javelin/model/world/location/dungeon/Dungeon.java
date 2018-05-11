@@ -18,6 +18,7 @@ import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
+import javelin.controller.table.Tables;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.item.key.TempleKey;
 import javelin.model.unit.Combatant;
@@ -93,11 +94,15 @@ public class Dungeon extends Location {
 	public int level = -1;
 	public boolean doorbackground = true;
 
+	Dungeon parent;
+	public Tables tables;
+
 	transient boolean generated = false;
 
 	/** Constructor. */
-	public Dungeon(Integer level) {
+	public Dungeon(Integer level, Dungeon parent) {
 		super("A dungeon");
+		this.parent = parent;
 		link = false;
 		discard = false;
 		impermeable = true;
@@ -109,7 +114,7 @@ public class Dungeon extends Location {
 	}
 
 	public Dungeon() {
-		this(null);
+		this(null, null);
 	}
 
 	protected int determineel() {
@@ -176,7 +181,8 @@ public class Dungeon extends Location {
 	void map() {
 		DungeonTier tier = gettier();
 		DungeonGenerator generator = DungeonGenerator.generate(tier.minrooms,
-				tier.maxrooms);
+				tier.maxrooms, parent == null ? null : parent.tables);
+		tables = generator.tables;
 		map = generator.grid;
 		size = map.length;
 		createdoors();

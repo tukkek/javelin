@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.action.Action;
@@ -60,7 +61,7 @@ public class Door extends Feature {
 	boolean stuck = RPG.chancein(10);
 	boolean locked = RPG.chancein(4);
 	/** @see #searchdc */
-	boolean hidden = RPG.chancein(20);
+	boolean hidden = !Debug.bypassdoors && RPG.chancein(20);
 
 	public Door(String avatar, int breakdcstuck, int breakdclocked,
 			Class<? extends Key> key) {
@@ -78,6 +79,9 @@ public class Door extends Feature {
 
 	@Override
 	public boolean activate() {
+		if (Debug.bypassdoors) {
+			return true;
+		}
 		if (hidden) {
 			return false;
 		}
@@ -116,8 +120,8 @@ public class Door extends Feature {
 		}
 		if (Javelin.prompt(
 				"Do you want to use your " + k.name.toLowerCase() + "?\n"
-						+ "Press y to use or any other key to cancel...",
-				false) != 'y') {
+						+ "Press ENTER to use or any other key to cancel...",
+				false) != '\n') {
 			return false;
 		}
 		Squad.active.equipment.removeitem(k, Squad.active);

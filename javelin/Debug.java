@@ -4,6 +4,7 @@ import java.util.List;
 
 import javelin.controller.action.Help;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.db.Preferences;
 import javelin.controller.fight.Fight;
 import javelin.controller.scenario.Scenario;
 import javelin.model.Realm;
@@ -121,4 +122,25 @@ public class Debug {
 		String s = "";
 		return s;
 	}
+
+	/** @see Preferences */
+	public static boolean disablecombat;
+	/** @see Preferences */
+	public static boolean showmap;
+	/** @see Preferences */
+	public static Integer xp;
+	/** @see Preferences */
+	public static Integer gold;
+	/** @see Preferences */
+	public static boolean labor;
+	/** @see Preferences */
+	public static String period;
+	/** @see Preferences */
+	public static String weather;
+	/** @see Preferences */
+	public static String season;
+	/** @see Preferences */
+	public static boolean unlcoktemples;
+	/** @see Preferences */
+	public static boolean bypassdoors;
 }

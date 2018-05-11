@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.WorldGenerator;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.db.Preferences;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Siege;
@@ -238,7 +238,7 @@ public abstract class Location extends Actor {
 		if (!ishostile()) {
 			return false;
 		}
-		if (Preferences.DEBUGDISABLECOMBAT) {
+		if (Debug.disablecombat) {
 			capture();
 			return false;
 		}

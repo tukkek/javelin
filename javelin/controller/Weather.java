@@ -2,8 +2,8 @@ package javelin.controller;
 
 import java.util.ArrayList;
 
+import javelin.Debug;
 import javelin.Javelin;
-import javelin.controller.db.Preferences;
 import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
@@ -37,7 +37,7 @@ public class Weather {
 	 * @see Season#getweather()
 	 */
 	public static void weather() {
-		if (Preferences.DEBUGWEATHER != null) {
+		if (Debug.weather != null) {
 			current = read(0);
 			return;
 		}
@@ -81,19 +81,19 @@ public class Weather {
 	}
 
 	public static int read(int nowp) {
-		if (Preferences.DEBUGWEATHER == null) {
+		if (Debug.weather == null) {
 			return nowp;
 		}
-		if (Preferences.DEBUGWEATHER.equals("dry")) {
+		if (Debug.weather.equals("dry")) {
 			return DRY;
 		}
-		if (Preferences.DEBUGWEATHER.equals("rain")) {
+		if (Debug.weather.equals("rain")) {
 			return RAIN;
 		}
-		if (Preferences.DEBUGWEATHER.equals("storm")) {
+		if (Debug.weather.equals("storm")) {
 			return STORM;
 		}
 		throw new RuntimeException(
-				"Unknown weather: " + Preferences.DEBUGWEATHER);
+				"Unknown weather: " + Debug.weather);
 	}
 }

@@ -42,7 +42,7 @@ public class Incursion extends Actor {
 	static final int PREFERREDVICTORYCHANCE = 5 + 2;
 	/** Only taken into account if running {@link Javelin#DEBUG}. */
 	static final boolean SPAWN = true;
-	/** Move even if {@link Javelin#DEBUGDISABLECOMBAT} is enabled. */
+	/** Move even if {@link Debug#disablecombat} is enabled. */
 	static final boolean FORCEMOVEMENT = false;
 	static final VictoryChance VICTORYCHANCES = new VictoryChance();
 

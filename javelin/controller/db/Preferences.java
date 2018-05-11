@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.MissingResourceException;
 import java.util.Properties;
 
+import javelin.Debug;
 import javelin.controller.Weather;
 import javelin.controller.action.ActionDescription;
 import javelin.controller.ai.BattleAi;
@@ -34,7 +35,7 @@ import tyrant.mikera.tyrant.TextZone;
  * Used to read the file "preferences.properties". See the file
  * "preferences.properties" for more details on standard options and this link
  * for development options:
- * 
+ *
  * https://github.com/tukkek/javelin/wiki/Development-options
  *
  * @see PreferencesScreen
@@ -73,7 +74,7 @@ public class Preferences {
 	public static String TEXTCOLOR;
 	/**
 	 * If <code>true</code> backups the game on initialization.
-	 * 
+	 *
 	 * @see StateManager
 	 */
 	public static boolean BACKUP;
@@ -85,31 +86,6 @@ public class Preferences {
 	public static int TILESIZEWORLD;
 	/** Tile size for {@link DungeonScreen}. */
 	public static int TILESIZEDUNGEON;
-
-	/** Debug option. */
-	public static boolean DEBUGDISABLECOMBAT;
-	/** Debug option. */
-	public static boolean DEBUGESHOWMAP;
-	/** Debug option. */
-	public static Integer DEBUGSXP;
-	/** Debug option. */
-	public static Integer DEBUGSGOLD;
-	/** Debug option. */
-	public static boolean DEBUGLABOR;
-	/** Debug option. */
-	public static String DEBUGFOE;
-	/** Debug option. */
-	public static String DEBUGPERIOD;
-	/** Debug option. */
-	public static String DEBUGMAPTYPE;
-	/** Debug option. */
-	public static Integer DEBUGMINIMUMFOES;
-	/** Debug option. */
-	public static String DEBUGWEATHER;
-	/** Debug option. */
-	public static String DEBUGSEASON;
-	/** Debug option. */
-	public static boolean DEBUGUNLOCKTEMPLES;
 
 	static {
 		load();
@@ -165,7 +141,7 @@ public class Preferences {
 	 * value) that would read the file, replace a line with the given key and
 	 * save it in the proper order instead of forever appending to the file. It
 	 * could be used in a few places this is being used instead.
-	 * 
+	 *
 	 * @param content
 	 *            Overwrite the properties file with this content and reloads
 	 *            all options.
@@ -250,18 +226,16 @@ public class Preferences {
 	}
 
 	static void readdebug() {
-		DEBUGDISABLECOMBAT = "false".equals(getstring("cheat.combat"));
-		DEBUGESHOWMAP = getboolean("cheat.world");
-		DEBUGSXP = getinteger("cheat.xp", null);
-		DEBUGSGOLD = getinteger("cheat.gold", null);
-		DEBUGLABOR = getboolean("cheat.labor");
-		DEBUGFOE = getstring("cheat.monster");
-		DEBUGPERIOD = getstring("cheat.period");
-		DEBUGMAPTYPE = getstring("cheat.map");
-		DEBUGMINIMUMFOES = getinteger("cheat.foes", null);
-		DEBUGWEATHER = getstring("cheat.weather");
-		DEBUGSEASON = getstring("cheat.season");
-		DEBUGUNLOCKTEMPLES = getboolean("cheat.temples");
+		Debug.disablecombat = "false".equals(getstring("cheat.combat"));
+		Debug.xp = getinteger("cheat.xp", null);
+		Debug.gold = getinteger("cheat.gold", null);
+		Debug.labor = getboolean("cheat.labor");
+		Debug.showmap = getboolean("cheat.world");
+		Debug.period = getstring("cheat.period");
+		Debug.weather = getstring("cheat.weather");
+		Debug.season = getstring("cheat.season");
+		Debug.unlcoktemples = getboolean("cheat.temples");
+		Debug.bypassdoors = getboolean("cheat.doors");
 		initdebug();
 	}
 
@@ -271,7 +245,7 @@ public class Preferences {
 	}
 
 	static void initdebug() {
-		if (DEBUGESHOWMAP && BattleScreen.active != null
+		if (Debug.showmap && BattleScreen.active != null
 				&& BattleScreen.active.getClass().equals(WorldScreen.class)) {
 			for (int x = 0; x < World.scenario.size; x++) {
 				for (int y = 0; y < World.scenario.size; y++) {
@@ -284,22 +258,22 @@ public class Preferences {
 				initsquaddebug((Squad) a);
 			}
 		}
-		if (DEBUGWEATHER != null) {
-			DEBUGWEATHER = DEBUGWEATHER.toLowerCase();
+		if (Debug.weather != null) {
+			Debug.weather = Debug.weather.toLowerCase();
 			Weather.read(0); // tests cheat.weather value
 		}
-		if (DEBUGSEASON != null) {
-			Season.current = Season.valueOf(DEBUGSEASON.toUpperCase());
+		if (Debug.season != null) {
+			Season.current = Season.valueOf(Debug.season.toUpperCase());
 		}
 	}
 
 	static void initsquaddebug(Squad s) {
-		if (DEBUGSGOLD != null) {
-			s.gold = DEBUGSGOLD;
+		if (Debug.gold != null) {
+			s.gold = Debug.gold;
 		}
-		if (DEBUGSXP != null) {
+		if (Debug.xp != null) {
 			for (Combatant c : s.members) {
-				c.xp = new BigDecimal(DEBUGSXP / 100f);
+				c.xp = new BigDecimal(Debug.xp / 100f);
 			}
 		}
 	}
@@ -310,7 +284,7 @@ public class Preferences {
 
 	/**
 	 * Reads and writes to actual file.
-	 * 
+	 *
 	 * @param key
 	 *            Replaces the line with this option or creates a new line at
 	 *            the end of the properties file.

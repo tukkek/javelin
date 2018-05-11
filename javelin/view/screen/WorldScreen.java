@@ -9,13 +9,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import javelin.Debug;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.action.world.WorldAction;
 import javelin.controller.action.world.WorldMove;
-import javelin.controller.db.Preferences;
 import javelin.controller.db.StateManager;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
@@ -108,7 +108,7 @@ public class WorldScreen extends BattleScreen {
 		WorldScreen.current = this;
 		Javelin.settexture(QuestApp.DEFAULTTEXTURE);
 		Tile[][] tiles = gettiles();
-		if (Preferences.DEBUGESHOWMAP) {
+		if (Debug.showmap) {
 			for (Tile[] ts : tiles) {
 				for (Tile t : ts) {
 					t.discovered = true;
@@ -263,7 +263,7 @@ public class WorldScreen extends BattleScreen {
 
 	/** Covers a {@link WorldTile} per day with fog of war. */
 	void cover() {
-		if (Preferences.DEBUGESHOWMAP || !World.scenario.fogofwar) {
+		if (Debug.showmap || !World.scenario.fogofwar) {
 			return;
 		}
 		ArrayList<Location> locations = new ArrayList<Location>();

@@ -11,7 +11,6 @@ import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.dungeon.Direction;
 import javelin.controller.generator.dungeon.DungeonArea;
 import javelin.controller.generator.dungeon.DungeonGenerator;
-import javelin.controller.generator.dungeon.tables.RoomSizeTable;
 import javelin.controller.generator.dungeon.template.Iterator.TemplateTile;
 import javelin.controller.generator.dungeon.template.corridor.StraightCorridor;
 import javelin.controller.generator.dungeon.template.corridor.WindingCorridor;
@@ -28,6 +27,7 @@ import javelin.controller.generator.dungeon.template.mutator.Rotate;
 import javelin.controller.generator.dungeon.template.mutator.Symmetry;
 import javelin.controller.generator.dungeon.template.mutator.VerticalMirror;
 import javelin.controller.generator.dungeon.template.mutator.Wall;
+import javelin.controller.table.dungeon.RoomSizeTable;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -86,9 +86,9 @@ public abstract class Template implements Cloneable, DungeonArea {
 	}
 
 	protected void initrandom() {
-		Point dimensions = DungeonGenerator.instance.tables
-				.get(RoomSizeTable.class).rolldimensions();
-		init(dimensions.x, dimensions.y);
+		RoomSizeTable table = DungeonGenerator.instance.tables
+				.get(RoomSizeTable.class);
+		init(table.rollnumber(), table.rollnumber());
 	}
 
 	public abstract void generate();

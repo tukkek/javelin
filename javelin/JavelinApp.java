@@ -303,12 +303,12 @@ public class JavelinApp extends QuestApp {
 
 	@SuppressWarnings("deprecation")
 	void preparedebug() {
-		if (Preferences.DEBUGSGOLD != null) {
-			Squad.active.gold = Preferences.DEBUGSGOLD;
+		if (Debug.gold != null) {
+			Squad.active.gold = Debug.gold;
 		}
-		if (Preferences.DEBUGSXP != null) {
+		if (Debug.xp != null) {
 			for (final Combatant m : Squad.active.members) {
-				m.xp = new BigDecimal(Preferences.DEBUGSXP / 100f);
+				m.xp = new BigDecimal(Debug.xp / 100f);
 			}
 		}
 	}

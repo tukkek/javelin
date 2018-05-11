@@ -3,8 +3,8 @@ package javelin.view.screen.town;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Debug;
 import javelin.controller.action.world.Guide;
-import javelin.controller.db.Preferences;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.view.screen.Option;
@@ -47,7 +47,7 @@ public class GovernorScreen extends SelectScreen {
 	@Override
 	public boolean select(Option o) {
 		Labor l = ((LaborOption) o).l;
-		if (Preferences.DEBUGLABOR) {
+		if (Debug.labor) {
 			l.start();
 			while (town.governor.getprojects().contains(l)) {
 				l.work(1);

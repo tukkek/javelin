@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Debug;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Weather;
@@ -12,7 +13,6 @@ import javelin.controller.action.world.WorldMove;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.db.Preferences;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;
@@ -412,8 +412,8 @@ public abstract class Fight {
 	 * @return Opponent units.
 	 */
 	public ArrayList<Combatant> init() {
-		if (Preferences.DEBUGPERIOD != null) {
-			period = Preferences.DEBUGPERIOD;
+		if (Debug.period != null) {
+			period = Debug.period;
 		}
 		Fight.state = new BattleState(this);
 		Fight.state.blueTeam = getblueteam();

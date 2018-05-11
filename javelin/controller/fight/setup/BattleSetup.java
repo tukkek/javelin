@@ -9,7 +9,6 @@ import javelin.controller.Weather;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.map.Map;
-import javelin.controller.map.MapGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
@@ -21,7 +20,7 @@ import tyrant.mikera.engine.RPG;
 /**
  * Given a {@link Map}, a {@link Squad} and a {@link Fight} setups an initial
  * battle state.
- * 
+ *
  * @author alex
  */
 public class BattleSetup {
@@ -39,9 +38,15 @@ public class BattleSetup {
 	/** Allows greater control of {@link Map} generation. */
 	public void generatemap(Fight f) {
 		if (f.map == null) {
-			f.map = MapGenerator.generatebattlemap(
-					f.terrain == null ? Terrain.current() : f.terrain,
-					Dungeon.active != null);
+			Terrain t;
+			if (Dungeon.active != null) {
+				t = Terrain.UNDERGROUND;
+			} else if (f.terrain == null) {
+				t = Terrain.current();
+			} else {
+				t = f.terrain;
+			}
+			f.map = t.getmaps().pick();
 		}
 		f.map.generate();
 		Fight.state.map = f.map.map;

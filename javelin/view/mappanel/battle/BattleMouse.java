@@ -3,6 +3,7 @@ package javelin.view.mappanel.battle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
+import javelin.controller.Point;
 import javelin.controller.action.Examine;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
@@ -126,7 +127,10 @@ public class BattleMouse extends Mouse {
 
 	public static void showstatus(String status, Combatant c, boolean target) {
 		if (target) {
-			MapPanel.overlay = new TargetOverlay(c.location[0], c.location[1]);
+			Point p = c.getlocation();
+			MapPanel.overlay = new TargetOverlay(p.x, p.y);
+			Tile t = BattleScreen.active.mappanel.tiles[p.x][p.y];
+			MapPanel.overlay.overlay(t);
 		}
 		status += "\n\nConditions: ";
 		String list = c.printstatus(Fight.state);

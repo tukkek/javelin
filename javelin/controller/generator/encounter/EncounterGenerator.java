@@ -5,13 +5,11 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.db.EncounterIndex;
-import javelin.controller.db.Preferences;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
 import tyrant.mikera.engine.RPG;
@@ -61,9 +59,6 @@ public class EncounterGenerator {
 	 */
 	public static ArrayList<Combatant> generate(int el, List<Terrain> terrains)
 			throws GaveUp {
-		if (Preferences.DEBUGFOE != null) {
-			return debugmonster();
-		}
 		ArrayList<Combatant> encounter = null;
 		for (int i = 0; i < MAXTRIES; i++) {
 			encounter = select(el, terrains);
@@ -77,21 +72,6 @@ public class EncounterGenerator {
 			return encounter;
 		}
 		throw new GaveUp();
-	}
-
-	private static ArrayList<Combatant> debugmonster() {
-		ArrayList<Combatant> opponents = new ArrayList<Combatant>();
-		if (Preferences.DEBUGFOE != null) {
-			Monster m = Javelin.getmonster(Preferences.DEBUGFOE);
-			Integer n = Preferences.DEBUGMINIMUMFOES;
-			if (n == null) {
-				n = 1;
-			}
-			for (int i = 0; i < n; i++) {
-				opponents.add(new Combatant(m.clone(), true));
-			}
-		}
-		return opponents;
 	}
 
 	static ArrayList<Combatant> select(int elp, List<Terrain> terrains) {
@@ -120,10 +100,6 @@ public class EncounterGenerator {
 			}
 		}
 		if (!new MisalignmentDetector(foes).check()) {
-			return null;
-		}
-		if (Preferences.DEBUGMINIMUMFOES != null
-				&& foes.size() != Preferences.DEBUGMINIMUMFOES) {
 			return null;
 		}
 		return foes.size() > getmaxenemynumber() ? null : foes;

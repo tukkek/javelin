@@ -26,7 +26,6 @@ public class SpellbookGenerator {
 		for (Spell s : combatant.spells) {
 			crremaining -= s.cr * s.perday;
 		}
-		// float crused = 0;
 		distribution: while (crremaining > 0) {
 			selection: for (float cost : SPELLS.descendingKeySet()) {
 				Spell s = RPG.pick(SPELLS.get(cost));
@@ -48,6 +47,5 @@ public class SpellbookGenerator {
 			}
 			break;
 		}
-		// combatant.source.spellcr = crused;
 	}
 }

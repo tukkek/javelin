@@ -82,8 +82,8 @@ public abstract class Temple extends UniqueLocation {
 	 */
 	public Relic relic;
 	/**
-	 * A temple needs to be opened by a {@link TempleKey} or other method before being
-	 * explored.
+	 * A temple needs to be opened by a {@link TempleKey} or other method before
+	 * being explored.
 	 *
 	 * @see #open()
 	 */
@@ -143,13 +143,16 @@ public abstract class Temple extends UniqueLocation {
 	public boolean interact() {
 		if (open) {
 			if (floors.isEmpty()) {
+				TempleDungeon floor = null;
 				for (int i = 0; i < DEPTH; i++) {
-					floors.add(new TempleDungeon(this, i == DEPTH - 1));
+					boolean deepest = i == DEPTH - 1;
+					floor = new TempleDungeon(el + i, deepest, floor, this);
+					floors.add(floor);
 				}
 			}
 			floors.get(0).activate(false);
 		} else {
-			if (!javelin.controller.db.Preferences.DEBUGUNLOCKTEMPLES
+			if (!javelin.Debug.unlcoktemples
 					&& !open()) {
 				return true;
 			}

@@ -2,8 +2,8 @@ package javelin.controller.fight;
 
 import java.util.ArrayList;
 
+import javelin.Debug;
 import javelin.JavelinApp;
-import javelin.controller.db.Preferences;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
@@ -31,7 +31,7 @@ public class RandomEncounter extends Fight {
 	 * @throws StartBattle
 	 */
 	static public void encounter(double chance) {
-		if (RPG.random() < chance && !Preferences.DEBUGDISABLECOMBAT) {
+		if (RPG.random() < chance && !Debug.disablecombat) {
 			Fight f = JavelinApp.context.encounter();
 			if (f != null) {
 				throw new StartBattle(f);

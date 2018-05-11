@@ -9,11 +9,11 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.VirtualMap.Room;
-import javelin.controller.generator.dungeon.tables.LevelTables;
 import javelin.controller.generator.dungeon.template.StaticTemplate;
 import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.generator.dungeon.template.corridor.StraightCorridor;
 import javelin.controller.generator.dungeon.template.mutator.Mutator;
+import javelin.controller.table.Tables;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -36,7 +36,7 @@ public class DungeonGenerator {
 	static int ncorridors;
 	static int ntemplates;
 
-	public LevelTables tables = new LevelTables();
+	public Tables tables;
 	public VirtualMap map = new VirtualMap();
 	public char[][] grid;
 	public String ascii;
@@ -55,13 +55,15 @@ public class DungeonGenerator {
 	/**
 	 * @param maxrooms
 	 * @param minrooms
+	 * @param tables2
 	 * @param sizehint
 	 *            TOOD would be cool to have this handled built-in, not on
 	 *            {@link #generate(int, int)}.
 	 */
-	private DungeonGenerator(int minrooms, int maxrooms) {
+	private DungeonGenerator(int minrooms, int maxrooms, Tables tables) {
 		this.minrooms = minrooms;
 		this.maxrooms = maxrooms;
+		this.tables = tables == null ? new Tables() : tables.clone();
 		instance = this;
 		generatepool();
 		draw();
@@ -276,11 +278,12 @@ public class DungeonGenerator {
 	 * @see VirtualMap#rooms
 	 * @see #setupparameters()
 	 */
-	public static DungeonGenerator generate(int minrooms, int maxrooms) {
+	public static DungeonGenerator generate(int minrooms, int maxrooms,
+			Tables tables) {
 		StaticTemplate.load();
 		DungeonGenerator dungeon = null;
 		while (dungeon == null) {
-			dungeon = new DungeonGenerator(minrooms, maxrooms);
+			dungeon = new DungeonGenerator(minrooms, maxrooms, tables);
 			int size = dungeon.map.rooms.size();
 			if (!(minrooms <= size && size <= maxrooms)) {
 				dungeon = null;
@@ -294,7 +297,7 @@ public class DungeonGenerator {
 		int maxrooms = 7;
 		minrooms = 13;
 		maxrooms = 13 * 2;
-		DungeonGenerator dungeon = generate(minrooms, maxrooms);
+		DungeonGenerator dungeon = generate(minrooms, maxrooms, null);
 		dungeon.print();
 		System.out.println(dungeon.templatesused);
 	}

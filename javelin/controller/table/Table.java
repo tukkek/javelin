@@ -37,11 +37,11 @@ public class Table implements Serializable, Cloneable {
 	}
 
 	public void add(Object row, int min, int max) {
-		add(row, min, max, (min + max) / 2);
+		add(row, min, max, Math.max(1, (min + max) / 2));
 	}
 
 	public void add(Object row, int max) {
-		add(row, 0, max);
+		add(row, 1, max);
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class Table implements Serializable, Cloneable {
 				continue;
 			}
 			int current = rows.get(key);
-			current += RPG.r(-d.variance, +d.variance);
+			current += RPG.randomize(d.variance + 1);
 			if (current > d.max) {
 				current = d.max;
 			} else if (current < d.min) {
@@ -101,7 +101,7 @@ public class Table implements Serializable, Cloneable {
 		Set<Object> keys = rows.keySet();
 		int format = Integer.toString(getchances() + keys.size()).length();
 		int current = 1;
-		String table = "";
+		String table = getClass().getSimpleName().toString() + "\n";
 		for (Object row : keys) {
 			Integer chance = rows.get(row);
 			int ceiling = current + chance - 1;
@@ -119,5 +119,9 @@ public class Table implements Serializable, Cloneable {
 
 	public Integer rollnumber() {
 		return (Integer) roll();
+	}
+
+	public boolean rollboolean() {
+		return (Boolean) roll();
 	}
 }

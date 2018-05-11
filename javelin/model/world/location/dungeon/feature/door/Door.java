@@ -10,6 +10,11 @@ import javelin.controller.Point;
 import javelin.controller.action.Action;
 import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.old.Game;
+import javelin.controller.table.Table;
+import javelin.controller.table.dungeon.HiddenDoor;
+import javelin.controller.table.dungeon.LockedDoor;
+import javelin.controller.table.dungeon.StuckDoor;
+import javelin.controller.table.dungeon.TrappedDoor;
 import javelin.model.item.Item;
 import javelin.model.item.key.door.Key;
 import javelin.model.item.key.door.MasterKey;
@@ -57,11 +62,11 @@ public class Door extends Feature {
 	public int breakdc;
 	Class<? extends Key> key;
 
-	DoorTrap trap = RPG.chancein(6) ? RPG.pick(TRAPS) : null;
-	boolean stuck = RPG.chancein(10);
-	boolean locked = RPG.chancein(4);
+	DoorTrap trap = rolltable(TrappedDoor.class) ? RPG.pick(TRAPS) : null;
+	boolean stuck = rolltable(StuckDoor.class);
+	boolean locked = rolltable(LockedDoor.class);
 	/** @see #searchdc */
-	boolean hidden = !Debug.bypassdoors && RPG.chancein(20);
+	boolean hidden = !Debug.bypassdoors && rolltable(HiddenDoor.class);
 
 	public Door(String avatar, int breakdcstuck, int breakdclocked,
 			Class<? extends Key> key) {
@@ -220,5 +225,9 @@ public class Door extends Feature {
 				Javelin.message("You find a hidden door!", true);
 			}
 		}
+	}
+
+	static boolean rolltable(Class<? extends Table> table) {
+		return Dungeon.active.tables.get(table).rollboolean();
 	}
 }

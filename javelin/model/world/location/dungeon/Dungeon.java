@@ -143,6 +143,7 @@ public class Dungeon extends Location {
 
 	/** Create or recreate dungeon. */
 	public void activate(boolean loading) {
+		active = this;
 		while (features.isEmpty()) {
 			Game.messagepanel.clear();
 			Game.message("Generating dungeon map...", Delay.NONE);
@@ -150,7 +151,6 @@ public class Dungeon extends Location {
 		}
 		regenerate(loading);
 		JavelinApp.context = new DungeonScreen(this);
-		active = this;
 		BattleScreen.active = JavelinApp.context;
 		Squad.active.updateavatar();
 		BattleScreen.active.mappanel.center(herolocation.x, herolocation.y,

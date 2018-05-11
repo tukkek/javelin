@@ -86,8 +86,28 @@ public class Debug {
 			i.displace();
 			i.place();
 		}
-
 	}
+
+	/** @see Preferences */
+	public static boolean disablecombat;
+	/** @see Preferences */
+	public static boolean showmap;
+	/** @see Preferences */
+	public static Integer xp;
+	/** @see Preferences */
+	public static Integer gold;
+	/** @see Preferences */
+	public static boolean labor;
+	/** @see Preferences */
+	public static String period;
+	/** @see Preferences */
+	public static String weather;
+	/** @see Preferences */
+	public static String season;
+	/** @see Preferences */
+	public static boolean unlcoktemples;
+	/** @see Preferences */
+	public static boolean bypassdoors;
 
 	public static String onbattlehelp() {
 		String s = "";
@@ -122,25 +142,4 @@ public class Debug {
 		String s = "";
 		return s;
 	}
-
-	/** @see Preferences */
-	public static boolean disablecombat;
-	/** @see Preferences */
-	public static boolean showmap;
-	/** @see Preferences */
-	public static Integer xp;
-	/** @see Preferences */
-	public static Integer gold;
-	/** @see Preferences */
-	public static boolean labor;
-	/** @see Preferences */
-	public static String period;
-	/** @see Preferences */
-	public static String weather;
-	/** @see Preferences */
-	public static String season;
-	/** @see Preferences */
-	public static boolean unlcoktemples;
-	/** @see Preferences */
-	public static boolean bypassdoors;
 }

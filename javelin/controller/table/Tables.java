@@ -34,4 +34,13 @@ public class Tables implements Serializable, Cloneable {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Override
+	public String toString() {
+		String tables = "";
+		for (Class<? extends Table> table : this.tables.keySet()) {
+			tables += this.tables.get(table) + "\n\n";
+		}
+		return tables;
+	}
 }

@@ -2,7 +2,9 @@ package javelin.controller.scenario;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 import javelin.Javelin;
@@ -11,13 +13,17 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
+import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonTier;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.haunt.Haunt;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.Deck;
+import javelin.model.world.location.town.labor.Trait;
 import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.model.world.location.town.labor.basic.Lodge;
+import javelin.model.world.location.town.labor.cultural.MagesGuild;
 import javelin.model.world.location.town.labor.military.Academy;
 import javelin.model.world.location.town.labor.productive.Shop;
 import tyrant.mikera.engine.RPG;
@@ -76,11 +82,15 @@ public class DungeonWorld extends Campaign {
 	}
 
 	Town process(ArrayList<Town> towns) {
+		LinkedList<Trait> traits = new LinkedList<Trait>(Deck.TRAITS);
+		Collections.shuffle(traits);
 		Town starting = null;
 		for (Town t : towns) {
 			if (!t.ishostile()) {
-				starting = t;
 				towns.remove(t);
+				traits.pop().addto(t);
+				place(RPG.pick(MagesGuild.GUILDS).generate(), t);
+				starting = t;
 				break;
 			}
 		}
@@ -90,14 +100,16 @@ public class DungeonWorld extends Campaign {
 			towns.remove(t);
 		}
 		for (Town t : towns) {
-			if (t.ishostile()) {
-				Shop shop = new Shop(false, t.realm);
-				shop.setlocation(RPG.pick(t.getdistrict().getfreespaces()));
-				shop.place();
-				t.capture();
-			}
+			place(new Shop(false, t.realm), t);
+			t.capture();
+			traits.pop().addto(t);
 		}
 		return starting;
+	}
+
+	void place(Location l, Town t) {
+		l.setlocation(RPG.pick(t.getdistrict().getfreespaces()));
+		l.place();
 	}
 
 	void process(List<Dungeon> dungeons, Town starting) {

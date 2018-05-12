@@ -2,6 +2,7 @@ package javelin.model.world.location.town.labor;
 
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.Town;
 
 public class Trait extends Labor {
 	String trait;
@@ -18,12 +19,16 @@ public class Trait extends Labor {
 
 	@Override
 	public void done() {
-		town.traits.add(trait);
+		addto(town);
 	}
 
 	@Override
 	public boolean validate(District d) {
 		return super.validate(d) && !town.traits.contains(trait)
 				&& town.traits.size() < town.getrank().rank;
+	}
+
+	public void addto(Town t) {
+		t.traits.add(trait);
 	}
 }

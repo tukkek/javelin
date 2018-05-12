@@ -3,6 +3,7 @@ package javelin.model.world.location.town.labor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import javelin.Javelin;
 import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
@@ -46,6 +47,8 @@ import javelin.model.world.location.unique.SummoningCircle.BuildSummoningCircle;
  * @author alex
  */
 public class Deck extends ArrayList<Labor> {
+	public static final List<Trait> TRAITS = new ArrayList<Trait>(7);
+
 	static final Labor[] BASE = new Labor[] { new BuildDwelling(),
 			new BuildLodge(), new Cancel(), new Growth(), new Redraw(),
 			new BuildShop(), new BuildRealmAcademy() };
@@ -87,7 +90,9 @@ public class Deck extends ArrayList<Labor> {
 					DECKS.remove(title);
 					continue;
 				}
-				DEFAULT.add(new Trait(title, DECKS.get(title)));
+				Trait t = new Trait(title, DECKS.get(title));
+				TRAITS.add(t);
+				DEFAULT.add(t);
 			}
 		}
 	}

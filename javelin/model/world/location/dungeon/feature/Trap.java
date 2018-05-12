@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.table.HiddenTrap;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
@@ -57,7 +58,7 @@ public class Trap extends Feature {
 	public Trap(int cr, Point p) {
 		super(p.x, p.y, "dungeontrap");
 		this.cr = cr;
-		draw = false;
+		draw = Dungeon.gettable(HiddenTrap.class).rollboolean();
 		stop = true;
 		remove = false;
 		int currentcr = -1;// doesn't kill ("subdual damage", kinda)

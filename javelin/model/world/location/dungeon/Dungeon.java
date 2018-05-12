@@ -21,7 +21,10 @@ import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
+import javelin.controller.table.Table;
 import javelin.controller.table.Tables;
+import javelin.controller.table.dungeon.DoorExists;
+import javelin.controller.table.dungeon.DungeonFeatureModifier;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.item.key.TempleKey;
@@ -62,11 +65,6 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Dungeon extends Location {
-	static final float RATIOMONSTER = .5f;
-	static final float RATIOFEATURES = .5f;
-	static final float RATIOTRAPS = .1f;
-	static final float RATIOTREASURE = .1f;
-
 	static final int MAXTRIES = 1000;
 	static final int[] DELTAS = { -1, 0, 1 };
 
@@ -100,6 +98,11 @@ public class Dungeon extends Location {
 	public boolean doorbackground = true;
 	public Tables tables;
 	public ArrayList<Combatants> encounters = new ArrayList<Combatants>();
+
+	float ratiomonster = RPG.r(25, 50) / 100f;
+	float ratiofeatures = RPG.r(50, 95) / 100f;
+	float ratiotraps = RPG.r(10, 25) / 100f;
+	float ratiotreasure = RPG.r(5, 10) / 100f;
 
 	Dungeon parent;
 
@@ -193,7 +196,7 @@ public class Dungeon extends Location {
 		size = map.length;
 		createdoors();
 		int nrooms = generator.map.rooms.size();
-		stepsperencounter = calculateencounterratio(nrooms);
+		calculateencounterfrequency(nrooms);
 		generateencounters();
 		populatedungeon(nrooms);
 		visible = new boolean[size][size];
@@ -243,7 +246,8 @@ public class Dungeon extends Location {
 	void createdoors() {
 		for (int x = 0; x < size; x++) {
 			for (int y = 0; y < size; y++) {
-				if (map[x][y] == Template.DOOR) {
+				if (map[x][y] == Template.DOOR
+						&& gettable(DoorExists.class).rollboolean()) {
 					Door d = Door.generate(this, new Point(x, y));
 					if (d != null) {
 						features.add(d);
@@ -253,10 +257,10 @@ public class Dungeon extends Location {
 		}
 	}
 
-	int calculateencounterratio(int nrooms) {
+	void calculateencounterfrequency(int nrooms) {
 		int tilesperroom = countfloor() / nrooms;
 		int vision = DungeonScreen.VIEWRADIUS * 2 + 1;
-		return Math.round(RATIOMONSTER * tilesperroom / vision);
+		stepsperencounter = Math.round(ratiomonster * tilesperroom / vision);
 	}
 
 	int countfloor() {
@@ -275,9 +279,9 @@ public class Dungeon extends Location {
 	protected void populatedungeon(int nrooms) {
 		herolocation = findspot();
 		createstairs(herolocation);
-		int goldpool = createtraps(getfeaturequantity(nrooms, RATIOTRAPS));
-		createchests(getfeaturequantity(nrooms, RATIOTREASURE), goldpool);
-		createfeatures(getfeaturequantity(nrooms, RATIOFEATURES));
+		int goldpool = createtraps(getfeaturequantity(nrooms, ratiotraps));
+		createchests(getfeaturequantity(nrooms, ratiotreasure), goldpool);
+		createfeatures(getfeaturequantity(nrooms, ratiofeatures));
 	}
 
 	protected void createstairs(Point p) {
@@ -306,7 +310,8 @@ public class Dungeon extends Location {
 	int createtraps(int ntraps) {
 		int gold = 0;
 		for (int i = 0; i < ntraps; i++) {
-			int cr = Math.round(level) + EncounterGenerator.getdifficulty();
+			int cr = level + EncounterGenerator.getdifficulty()
+					+ gettable(DungeonFeatureModifier.class).getmodifier();
 			if (cr >= Trap.MINIMUMCR) {
 				Trap t = new Trap(cr, findspot());
 				features.add(t);
@@ -329,6 +334,11 @@ public class Dungeon extends Location {
 	 * to generate points frist, chests later.
 	 */
 	void createchests(int nchests, int pool) {
+		for (int i = 0; i < nchests; i++) {
+			if (RPG.chancein(10)) {
+				nchests += 1;
+			}
+		}
 		features.add(createspecialchest(findspot()));
 		int hidden = RewardCalculator.getgold(level) * nchests;
 		if (pool > 0) {
@@ -339,6 +349,9 @@ public class Dungeon extends Location {
 		pool += hidden;
 		for (int i = nchests; i > 0; i--) {
 			int gold = i == 1 ? pool : pool / RPG.r(2, i);
+			int percentmodifier = gettable(DungeonFeatureModifier.class)
+					.getmodifier() * 2;
+			gold = gold * (100 + percentmodifier) / 100;
 			features.add(new Chest(gold, findspot()));
 			pool -= gold;
 		}
@@ -536,4 +549,9 @@ public class Dungeon extends Location {
 	public Image getimage() {
 		return Images.getImage("location" + gettier().name.toLowerCase());
 	}
+
+	public static <K extends Table> K gettable(Class<K> table) {
+		return Dungeon.active.tables.get(table);
+	}
+
 }

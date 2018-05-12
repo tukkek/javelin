@@ -12,6 +12,7 @@ import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.old.Game;
 import javelin.controller.table.Table;
 import javelin.controller.table.dungeon.HiddenDoor;
+import javelin.controller.table.dungeon.DungeonFeatureModifier;
 import javelin.controller.table.dungeon.LockedDoor;
 import javelin.controller.table.dungeon.StuckDoor;
 import javelin.controller.table.dungeon.TrappedDoor;
@@ -56,7 +57,9 @@ public class Door extends Feature {
 		}
 	}
 
-	public int unlockdc = RPG.r(20, 30);
+	public int unlockdc = RPG.r(20, 30)
+			+ Dungeon.gettable(DungeonFeatureModifier.class).getmodifier();
+
 	/** Used if {@link #hidden}. TODO */
 	public int searchdc = RPG.r(20, 30);
 	public int breakdc;
@@ -74,7 +77,8 @@ public class Door extends Feature {
 		enter = false;
 		stop = true;
 		breakdc = locked ? breakdclocked : breakdcstuck;
-		breakdc = Math.max(1, breakdc + RPG.randomize(5));
+		breakdc = Math.max(2, breakdc + RPG.randomize(5));
+		unlockdc = Math.max(2, unlockdc);
 		this.key = key;
 		if (trap != null) {
 			trap.generate(this);

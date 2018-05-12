@@ -422,13 +422,13 @@ public class WorldScreen extends BattleScreen {
 	 *         <code>false</code> if something happened.
 	 */
 	public boolean explore(float hoursellapsed, boolean encounter) {
-		if (!World.scenario.exploration) {
-			return true;
-		}
-		if (encounter && //
-				(Squad.active.transport == null
+		if (encounter && World.scenario.worldencounters
+				&& (Squad.active.transport == null
 						|| Squad.active.transport.battle())) {
 			RandomEncounter.encounter(hoursellapsed / HOURSPERENCOUNTER);
+		}
+		if (!World.scenario.worldhazards) {
+			return false;
 		}
 		boolean special = RPG.r(1, Terrain.HAZARDCHANCE) == 1;
 		Set<Hazard> hazards = Squad.active.getdistrict() == null

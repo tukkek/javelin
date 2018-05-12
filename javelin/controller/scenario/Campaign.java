@@ -49,7 +49,8 @@ public class Campaign extends Scenario {
 		startingpopulation = 1;
 		statictowns = false;
 		towns = Realm.values().length;
-		exploration = true;
+		worldencounters = true;
+		worldhazards = true;
 		dominationwin = false;
 		startingfeatures = size * size / 5;
 		simpletroves = false;

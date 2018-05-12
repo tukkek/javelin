@@ -103,7 +103,8 @@ public class WorldMove extends WorldAction {
 	}
 
 	/**
-	 * TODO needs to be refactored
+	 * TODO needs to be rewritten from scratch using controller Contexts
+	 * instead.
 	 *
 	 * @see BattleScreen
 	 */
@@ -158,8 +159,7 @@ public class WorldMove extends WorldAction {
 			}
 			boolean stop = false;
 			if (WorldMove.walk(JavelinApp.context.getherolocation())) {
-				stop = JavelinApp.context.explore(hours,
-						encounter && World.scenario.exploration);
+				stop = JavelinApp.context.explore(hours, encounter);
 			}
 			heal();
 			return stop;

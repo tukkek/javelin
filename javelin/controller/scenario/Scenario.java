@@ -8,7 +8,6 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.action.world.Guide;
-import javelin.controller.action.world.WorldMove;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.fight.RandomEncounter;
 import javelin.controller.fight.minigame.Minigame;
@@ -86,13 +85,14 @@ public class Scenario implements Serializable {
 	 * If not <code>null</code>, this amount will be seeded during {@link World}
 	 * generation. It will also be the cap as per {@link GenerationData#max}.
 	 *
-	 * Number of starting dungeons in the {@link World} map. Since {@link TempleKey}s
-	 * are important to {@link Win}ning the game this should be a fair amount,
-	 * otherwise the player will depend only on {@link Caravan}s if too many
-	 * dungeons are destroyed or if unable to find the proper {@link Chest}
-	 * inside the dungeons he does find. Not that dungeons also spawn during the
-	 * course of a game but since this is highly randomized a late-game player
-	 * who ran out of dungeons should not be required to depend on that alone.
+	 * Number of starting dungeons in the {@link World} map. Since
+	 * {@link TempleKey}s are important to {@link Win}ning the game this should
+	 * be a fair amount, otherwise the player will depend only on
+	 * {@link Caravan}s if too many dungeons are destroyed or if unable to find
+	 * the proper {@link Chest} inside the dungeons he does find. Not that
+	 * dungeons also spawn during the course of a game but since this is highly
+	 * randomized a late-game player who ran out of dungeons should not be
+	 * required to depend on that alone.
 	 *
 	 * @see Actor#destroy(Incursion)
 	 * @see FeatureGenerator
@@ -126,11 +126,8 @@ public class Scenario implements Serializable {
 	public boolean asksquadnames = false;
 	/** Wheter to cover {@link WorldTile}s. */
 	public boolean fogofwar = false;
-	/**
-	 * Wheter {@link RandomEncounter}s and {@link Hazard}s should be triggered
-	 * during {@link WorldMove}s.
-	 */
-	public boolean exploration = false;
+	public boolean worldencounters = false;
+	public boolean worldhazards = false;
 	/** File name for the F1 help {@link Guide}. */
 	public String helpfile = "Scenario";
 	/**

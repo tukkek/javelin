@@ -41,6 +41,7 @@ public class DungeonWorld extends Campaign {
 		respawnlocations = false;
 		fogofwar = false;
 		expiredungeons = true;
+		worldencounters = false;
 		helpfile = "Dungeon World";
 		spawn = false;
 	}

@@ -55,20 +55,23 @@ public class NpcGenerator {
 			if (last != null) {
 				double elites = gettarget(tier);
 				for (int i = 0; i < elites; i++) {
-					upgradeelite(RPG.pick(last), cr);
+					generateelite(RPG.pick(last), cr);
 				}
 			}
 			last = tier;
 		}
 	}
 
-	void upgradeelite(Monster m, float targetcr) {
+	void generateelite(Monster m, float targetcr) {
+		Float originalcr = m.cr;
 		Combatant c = new Combatant(m, true);
 		c.source.customName = "Elite " + c.source.name.toLowerCase();
 		while (c.source.cr < targetcr && Commoner.SINGLETON.upgrade(c)) {
 			ChallengeCalculator.calculatecr(c.source);
 		}
-		register(c, c.source.getterrains());
+		if (c.source.cr > originalcr) {
+			register(c, c.source.getterrains());
+		}
 	}
 
 	void generatenpcs() {
@@ -86,7 +89,11 @@ public class NpcGenerator {
 				}
 			}
 			if (tier != null) {
-				registercandidates(tier);
+				for (Monster m : tier) {
+					if (m.think(-1)) {
+						candidates.add(m);
+					}
+				}
 			}
 		}
 	}
@@ -110,6 +117,7 @@ public class NpcGenerator {
 	}
 
 	static public Combatant generatenpc(Monster m, Kit k, float targetcr) {
+		Float originalcr = m.cr;
 		int tries = 10000;
 		Combatant c = new Combatant(m, true);
 		float base = c.source.cr + targetcr / 2;
@@ -124,6 +132,9 @@ public class NpcGenerator {
 			if (tries == 0) {
 				return null;
 			}
+		}
+		if (c.source.cr <= originalcr) {
+			return null;
 		}
 		c.source.customName = c.source.name + " "
 				+ k.gettitle(c.source).toLowerCase();
@@ -142,14 +153,6 @@ public class NpcGenerator {
 					.put(ChallengeCalculator.crtoel(c.source.cr),
 							new Encounter(encounter));
 			totalregistered += 1;
-		}
-	}
-
-	void registercandidates(List<Monster> tier) {
-		for (Monster m : tier) {
-			if (m.think(-1)) {
-				candidates.add(m);
-			}
 		}
 	}
 }

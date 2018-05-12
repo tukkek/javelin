@@ -27,6 +27,7 @@ public class EarthTemple extends Temple {
 		terrain = Terrain.FOREST;
 		floor = "terraindirt";
 		wall = "dungeonwalltempleearth";
+		doorbackground = false;
 	}
 
 	@Override

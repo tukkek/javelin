@@ -36,8 +36,8 @@ public class WaterTemple extends Temple {
 	}
 
 	@Override
-	public Fight encounter() {
-		Fight f = super.encounter();
+	public Fight encounter(Dungeon d) {
+		Fight f = super.encounter(d);
 		f.weather = Weather.STORM;
 		return f;
 	}

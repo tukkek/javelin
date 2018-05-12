@@ -1,10 +1,16 @@
 package javelin.model.world.location.dungeon.temple;
 
+import java.util.List;
+
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
+import javelin.controller.terrain.Terrain;
 import javelin.model.item.Ruby;
+import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Altar;
@@ -145,7 +151,7 @@ public class TempleDungeon extends Dungeon {
 
 	@Override
 	public Fight encounter() {
-		return temple.encounter();
+		return temple.encounter(this);
 	}
 
 	@Override
@@ -157,5 +163,20 @@ public class TempleDungeon extends Dungeon {
 	protected boolean expire() {
 		/* Temples expiring is handled by the Altar feature */
 		return false;
+	}
+
+	@Override
+	protected Combatants generateencounter(int level, List<Terrain> terrains)
+			throws GaveUp {
+		terrains = temple.getterrains();
+		Combatants encounter = super.generateencounter(level - RPG.r(1, 4),
+				terrains);
+		if (!temple.validate(encounter)) {
+			return null;
+		}
+		while (ChallengeCalculator.calculateel(encounter) < level) {
+			Combatant.upgradeweakest(encounter, temple.realm);
+		}
+		return encounter;
 	}
 }

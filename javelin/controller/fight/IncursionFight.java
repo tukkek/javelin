@@ -68,8 +68,8 @@ public class IncursionFight extends Fight {
 	}
 
 	@Override
-	public ArrayList<Combatant> generate(Integer teamel) {
-		ArrayList<Combatant> foes = super.generate(teamel);
+	public ArrayList<Combatant> generate() {
+		ArrayList<Combatant> foes = super.generate();
 		incursion.squad = Incursion.getsafeincursion(foes);
 		return foes;
 	}

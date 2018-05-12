@@ -1,14 +1,7 @@
 package javelin.controller.fight;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.generator.encounter.EncounterGenerator;
-import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.Realm;
-import javelin.model.unit.Combatant;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
 
@@ -23,21 +16,9 @@ public class TempleEncounter extends RandomDungeonEncounter {
 	Temple temple;
 
 	/** Constructor. */
-	public TempleEncounter(Temple temple) {
-		super();
+	public TempleEncounter(Temple temple, Dungeon d) {
+		super(d);
 		this.temple = temple;
-	}
-
-	@Override
-	public Integer getel(int teamel) {
-		return temple.el + EncounterGenerator.getdifficulty();
-	}
-
-	@Override
-	public void enhance(List<Combatant> foes) {
-		while (ChallengeCalculator.calculateel(foes) < temple.el) {
-			Combatant.upgradeweakest(foes, temple.realm);
-		}
 	}
 
 	@Override
@@ -45,15 +26,5 @@ public class TempleEncounter extends RandomDungeonEncounter {
 		super.onend();
 		Temple.leavingfight = true;
 		return true;
-	}
-
-	@Override
-	public boolean validate(ArrayList<Combatant> foes) {
-		return temple.validate(foes);
-	}
-
-	@Override
-	public ArrayList<Terrain> getterrains() {
-		return temple.getterrains();
 	}
 }

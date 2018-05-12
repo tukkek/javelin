@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.fight.Fight;
@@ -152,8 +153,7 @@ public abstract class Temple extends UniqueLocation {
 			}
 			floors.get(0).activate(false);
 		} else {
-			if (!javelin.Debug.unlcoktemples
-					&& !open()) {
+			if (!Debug.unlcoktemples && !open()) {
 				return true;
 			}
 			open = true;
@@ -222,8 +222,8 @@ public abstract class Temple extends UniqueLocation {
 	/**
 	 * @return Starts a {@link TempleEncounter}.
 	 */
-	public Fight encounter() {
-		return new TempleEncounter(this);
+	public Fight encounter(Dungeon d) {
+		return new TempleEncounter(this, d);
 	}
 
 	/** See {@link Fight#validate(ArrayList)}. */

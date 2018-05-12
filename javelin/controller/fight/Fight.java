@@ -96,7 +96,7 @@ public abstract class Fight {
 
 	/**
 	 * If not <code>null</code> will override any other flooding level.
-	 * 
+	 *
 	 * @see Weather#current
 	 * @see Map#maxflooding
 	 */
@@ -108,7 +108,7 @@ public abstract class Fight {
 	 * the moment of instantiation, so we can be more faithful to what appears
 	 * on screen instead of the period after the {@link WorldMove} or similar
 	 * has been completed.
-	 * 
+	 *
 	 * @see Javelin#getDayPeriod()
 	 */
 	public String period = Javelin.getDayPeriod();
@@ -131,7 +131,7 @@ public abstract class Fight {
 	 * @return an encounter level for which an appropriate challenge should be
 	 *         generated. May return <code>null</code> if the subclass will
 	 *         generate its own foes manually.
-	 * 
+	 *
 	 * @see ChallengeCalculator
 	 */
 	public Integer getel(int teamel) {
@@ -142,7 +142,7 @@ public abstract class Fight {
 	 * @param teamel
 	 *            usually comes from {@link #getel(int)}, and so might be
 	 *            <code>null</code>.
-	 * 
+	 *
 	 * @return The list of monsters that are going to be featured in this fight.
 	 *         If <code>null</code>, will then use
 	 *         {@link #getel(JavelinApp, int)}.
@@ -162,7 +162,7 @@ public abstract class Fight {
 
 	/**
 	 * Only called on victory.
-	 * 
+	 *
 	 * @return Reward description.
 	 */
 	public String reward() {
@@ -191,7 +191,7 @@ public abstract class Fight {
 
 	/**
 	 * Called when a battle ends but before {@link EndBattle} clean-ups.
-	 * 
+	 *
 	 * @param screen
 	 *            Currently open screen.
 	 * @param originalTeam
@@ -201,7 +201,7 @@ public abstract class Fight {
 	 * @param combatresult
 	 *            Description of rewards and other remarks such as
 	 *            vehicle/allies left behind...
-	 * 
+	 *
 	 * @return If <code>true</code> will perform a bunch of post-battle
 	 *         clean-ups, usually required only for typical {@link Scenario}
 	 *         battles but not for {@link Minigame}s.
@@ -271,7 +271,9 @@ public abstract class Fight {
 	 *            Terrain this fight takes place on.
 	 * @return The resulting opponents.
 	 */
-	public ArrayList<Combatant> generate(final Integer el) {
+	public ArrayList<Combatant> generate() {
+		Integer el = getel(
+				ChallengeCalculator.calculateel(Fight.state.blueTeam));
 		ArrayList<Terrain> terrains = getterrains();
 		ArrayList<Combatant> foes = getmonsters(el);
 		if (foes == null) {
@@ -328,8 +330,7 @@ public abstract class Fight {
 	/**
 	 * @param town
 	 *            Terrain hint. Usually {@link Terrain#current()}.
-	 * @return A list of {@link Terrain}s which players in this fight can
-	 *         inhabit.
+	 * @return A list of {@link Terrain}s which foes in this fight can inhabit.
 	 */
 	public ArrayList<Terrain> getterrains() {
 		return getdefaultterrains(Terrain.current(), flood());
@@ -337,12 +338,12 @@ public abstract class Fight {
 
 	/**
 	 * Default implementation of {@link #getterrains(Terrain)}.
-	 * 
+	 *
 	 * @param t
 	 *            Will return this (alongside {@link Water} if enough flood
 	 *            level)...
 	 * @return or {@link Underground} if there is inside a {@link Dungeon}.
-	 * 
+	 *
 	 * @see Weather#flood(BattleMap, int)
 	 * @see Map#maxflooding
 	 * @see Dungeon#active
@@ -399,7 +400,7 @@ public abstract class Fight {
 	/**
 	 * Last opportunity for changing this fight before battle begins. At this
 	 * point the entire stack should be setup.
-	 * 
+	 *
 	 * @see BattleSetup
 	 */
 	public void ready() {
@@ -408,7 +409,7 @@ public abstract class Fight {
 
 	/**
 	 * Setups {@link #state} and {@link BattleState#blueTeam}.
-	 * 
+	 *
 	 * @return Opponent units.
 	 */
 	public ArrayList<Combatant> init() {
@@ -417,7 +418,7 @@ public abstract class Fight {
 		}
 		Fight.state = new BattleState(this);
 		Fight.state.blueTeam = getblueteam();
-		return generate(getel(ChallengeCalculator.calculateel(Fight.state.blueTeam)));
+		return generate();
 	}
 
 	/**
@@ -461,7 +462,7 @@ public abstract class Fight {
 	/**
 	 * Called when an unit reaches {@link Meld}. Note that only human units use
 	 * this, computer units use {@link Combatant#meld()} directly.
-	 * 
+	 *
 	 * @param hero
 	 *            Meld collector.
 	 * @param meld2
@@ -502,7 +503,7 @@ public abstract class Fight {
 
 	/**
 	 * TODO probablby better to just have flee=true/false in Fight.
-	 * 
+	 *
 	 * @param combatant
 	 *            Fleeing unit.
 	 * @param screen
@@ -549,7 +550,7 @@ public abstract class Fight {
 	/**
 	 * Called before a unit acts, human or computer. Called from controller
 	 * code, not from {@link BattleAi} routines.
-	 * 
+	 *
 	 * @param acting
 	 *            Creature to perform this turn (human or AI).
 	 */

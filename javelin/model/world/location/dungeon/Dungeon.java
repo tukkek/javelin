@@ -2,6 +2,7 @@ package javelin.model.world.location.dungeon;
 
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,6 +12,8 @@ import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.comparator.EncountersByEl;
+import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
 import javelin.controller.generator.dungeon.DungeonGenerator;
@@ -19,9 +22,11 @@ import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.table.Tables;
+import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.item.key.TempleKey;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
@@ -93,9 +98,10 @@ public class Dungeon extends Location {
 	public int stepsperencounter;
 	public int level = -1;
 	public boolean doorbackground = true;
+	public Tables tables;
+	public ArrayList<Combatants> encounters = new ArrayList<Combatants>();
 
 	Dungeon parent;
-	public Tables tables;
 
 	transient boolean generated = false;
 
@@ -188,6 +194,7 @@ public class Dungeon extends Location {
 		createdoors();
 		int nrooms = generator.map.rooms.size();
 		stepsperencounter = calculateencounterratio(nrooms);
+		generateencounters();
 		populatedungeon(nrooms);
 		visible = new boolean[size][size];
 		for (int x = 0; x < size; x++) {
@@ -195,6 +202,42 @@ public class Dungeon extends Location {
 				visible[x][y] = false;
 			}
 		}
+	}
+
+	void generateencounters() {
+		int target = 3 + RPG.r(1, 4) + gettier().tier;
+		if (parent != null) {
+			encounters = new ArrayList<Combatants>(parent.encounters);
+			encounters.sort(EncountersByEl.INSTANCE);
+			int crop = RPG.r(1, 4);
+			for (int i = 0; i < crop; i++) {
+				encounters.remove(0);
+			}
+		}
+		int attempts = 0;
+		int level = this.level;
+		List<Terrain> terrains = Arrays
+				.asList(new Terrain[] { Terrain.UNDERGROUND });
+		while (encounters.size() < target) {
+			attempts += 1;
+			if (attempts % 100 == 0) {
+				level += 1;
+			}
+			try {
+				int el = level + EncounterGenerator.getdifficulty();
+				Combatants encounter = generateencounter(el, terrains);
+				if (encounter != null && !encounters.contains(encounter)) {
+					encounters.add(encounter);
+				}
+			} catch (GaveUp e) {
+				continue;
+			}
+		}
+	}
+
+	protected Combatants generateencounter(int level, List<Terrain> terrains)
+			throws GaveUp {
+		return EncounterGenerator.generate(level, terrains);
 	}
 
 	void createdoors() {

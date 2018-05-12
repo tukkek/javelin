@@ -1,22 +1,22 @@
 Version 1.7
 
  * Mouse support!
+ * 3 gameplay modes: campaign, dungeon world and scenario!
  * 4 mini-games: Arena, Battlefield, Dungeon Rush and Ziggurat!
  * City management redesign, with 7 city traits and 36 projects!
- * Scenario mode!
  * Caster rings!
  * Improved battle AI!
  * First martial discipline: Steel Serpent!
+ * Dungeon redesign (templated-based maps, 4 tiers, new features)!
+ * Introducing 6 Haunt locations!
  * New locations: natural resources, Assassins Guild and Deep Dungeon
- * Introducing 6 Haunt locations
  * Infiltrate hostile locations
  * World map fog-of-war
  * More responsive user-interface during battles
  * Multi-threaded world generation
- * 5 new character kits
+ * New character kits
  * Auto-attack using the Tab key
- * Tile-based dungeon map generation
- * Dungeon redesigned into Caves, Dungeons, Ruins and Keeps
+ * Improved artwork
 
 Version 1.6 (2016-07-15) 
 

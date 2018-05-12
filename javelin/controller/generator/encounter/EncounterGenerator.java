@@ -10,6 +10,7 @@ import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
 import tyrant.mikera.engine.RPG;
@@ -57,9 +58,9 @@ public class EncounterGenerator {
 	 *             After too many tries without result, even relaxing the given
 	 *             EL parameter.
 	 */
-	public static ArrayList<Combatant> generate(int el, List<Terrain> terrains)
+	public static Combatants generate(int el, List<Terrain> terrains)
 			throws GaveUp {
-		ArrayList<Combatant> encounter = null;
+		Combatants encounter = null;
 		for (int i = 0; i < MAXTRIES; i++) {
 			encounter = select(el, terrains);
 			if (encounter == null) {
@@ -74,7 +75,7 @@ public class EncounterGenerator {
 		throw new GaveUp();
 	}
 
-	static ArrayList<Combatant> select(int elp, List<Terrain> terrains) {
+	static Combatants select(int elp, List<Terrain> terrains) {
 		ArrayList<Integer> popper = new ArrayList<Integer>();
 		popper.add(elp);
 		while (RPG.r(0, 1) == 1) {
@@ -84,7 +85,7 @@ public class EncounterGenerator {
 			popper.add(pop);
 			popper.add(pop);
 		}
-		final ArrayList<Combatant> foes = new ArrayList<Combatant>();
+		final Combatants foes = new Combatants();
 		for (final int el : popper) {
 			List<Combatant> group = makeencounter(el, terrains);
 			if (group == null) {
@@ -163,8 +164,7 @@ public class EncounterGenerator {
 				: RPG.pick(possibilities).generate();
 	}
 
-	public static ArrayList<Combatant> generate(int el, Terrain terrain)
-			throws GaveUp {
+	public static Combatants generate(int el, Terrain terrain) throws GaveUp {
 		ArrayList<Terrain> terrains = new ArrayList<Terrain>();
 		terrains.add(terrain);
 		return generate(el, terrains);

@@ -238,7 +238,7 @@ public class ArenaFight extends Minigame {
 	}
 
 	@Override
-	public ArrayList<Combatant> generate(Integer el) {
+	public ArrayList<Combatant> generate() {
 		return new ArrayList<Combatant>();
 	}
 

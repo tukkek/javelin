@@ -162,8 +162,12 @@ public class BattlefieldFight extends Minigame {
 		lastupdate = acting.ap;
 		int elred = calculateteammel(state.redTeam, redflagpoles);
 		int elblue = calculateteammel(state.blueTeam, blueflagpoles);
-		if (elred + redpoints - (elblue + bluepoints) <= Difficulty.VERYEASY) {
-			surrender();
+		float advantage = elblue + bluepoints / 2 - elred - redpoints / 2;
+		System.out.println();
+		if (advantage >= Math.abs(Difficulty.VERYEASY)) {
+			// surrender(state.redTeam);
+		} else if (advantage <= Difficulty.VERYEASY) {
+			// surrender(state.blueTeam);
 		}
 		if (!redflagpoles.isEmpty() && elred < elblue
 				&& elred + redpoints >= elblue) {
@@ -176,10 +180,21 @@ public class BattlefieldFight extends Minigame {
 		}
 	}
 
-	void surrender() {
+	void surrender(ArrayList<Combatant> team) {
+		team.clear();
 		Game.messagepanel.clear();
-		Javelin.message("The enemy army disbands and flees in defeat!", true);
+		String army = team == state.blueTeam ? "Your" : "The enemy";
+		Javelin.message(army + " army disbands and flees in defeat!", true);
 		throw new EndBattle();
+	}
+
+	@Override
+	public void withdraw(Combatant combatant, BattleScreen screen) {
+		try {
+			super.withdraw(combatant, screen);
+		} catch (EndBattle e) {
+			state.blueTeam.clear();
+		}
 	}
 
 	int calculateteammel(ArrayList<Combatant> team,

@@ -5,7 +5,6 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.challenge.ChallengeCalculator.Difficulty;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.model.unit.Combatant;
@@ -54,12 +53,12 @@ public class Reinforcement {
 	}
 
 	void generatefootsoldiers(int elp) {
-		int el = elp + RPG.r(-2, Difficulty.MODERATE);
+		int el = elp + (RPG.chancein(2) ? -2 : -3);
 		if (el < -1) {
 			el = RPG.chancein(2) ? -1 : 0;
 		}
 		ArrayList<Combatant> footsoldiers = null;
-		while (footsoldiers == null) {
+		while (footsoldiers == null || footsoldiers.size() > 9) {
 			try {
 				footsoldiers = EncounterGenerator.generate(el,
 						BattlefieldFight.TERRAIN);
@@ -69,9 +68,8 @@ public class Reinforcement {
 		}
 		this.footsoldiers.addAll(footsoldiers);
 		while (ChallengeCalculator.calculateel(this.footsoldiers) < elp) {
-			for (Combatant c : footsoldiers) {
-				this.footsoldiers.add(new Combatant(c.source, true));
-			}
+			Combatant c = RPG.pick(footsoldiers);
+			this.footsoldiers.add(new Combatant(c.source, true));
 		}
 	}
 }

@@ -7,9 +7,9 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Attack;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
@@ -125,7 +125,7 @@ public class Infiltrate extends WorldAction {
 				dc += 2;
 			}
 		}
-		return dc - (spy.source.skills.disguise(spy.source) - 10);
+		return dc - Skill.DISGUISE.getbonus(spy);
 	}
 
 	boolean roll(int dc) {
@@ -134,8 +134,7 @@ public class Infiltrate extends WorldAction {
 	}
 
 	int perceive(Combatant c) {
-		return c.source.skills.perceive(false, true, true, c.source)
-				+ Monster.getbonus(c.source.wisdom);
+		return c.perceive(false, true, true);
 	}
 
 	Combatant selectspy(Location target) {
@@ -143,9 +142,8 @@ public class Infiltrate extends WorldAction {
 				Squad.active.members);
 		spies.sort(new Comparator<Combatant>() {
 			@Override
-			public int compare(Combatant o1, Combatant o2) {
-				return o2.source.skills.disguise(o2.source)
-						- o1.source.skills.disguise(o1.source);
+			public int compare(Combatant a, Combatant b) {
+				return Skill.DISGUISE.getbonus(a) - Skill.DISGUISE.getbonus(b);
 			}
 		});
 		ArrayList<String> choices = new ArrayList<String>(spies.size());
@@ -174,8 +172,7 @@ public class Infiltrate extends WorldAction {
 	}
 
 	int calculatestealthdc(Combatant spy, Combatant target) {
-		return 10 + perceive(target) - (Skills.take10(spy.source.skills.stealth,
-				spy.source.dexterity) - 10);
+		return 10 + perceive(target) - Skill.STEALTH.getbonus(spy);
 	}
 
 	String getassassinationtargets(Combatant spy, Location l,

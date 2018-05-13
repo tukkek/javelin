@@ -20,7 +20,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.controller.db.StateManager;
@@ -29,7 +28,6 @@ import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
-import javelin.controller.terrain.hazard.PartyHazard;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
@@ -39,7 +37,6 @@ import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
-import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.labor.military.Academy;
 import javelin.view.Images;
 import javelin.view.ScenarioSelectionDialog;
@@ -48,7 +45,6 @@ import javelin.view.screen.InfoScreen;
 import javelin.view.screen.NamingScreen;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
-import tyrant.mikera.engine.RPG;
 import tyrant.mikera.tyrant.QuestApp;
 
 /**
@@ -509,27 +505,6 @@ public class Javelin {
 		}
 		ChallengeCalculator.calculatecr(monster);
 		return monster;
-	}
-
-	/**
-	 * Most of the time take-10 rules are used to prevent players from boring
-	 * themselves. For example: trying repeatedly to use
-	 * {@link Skills#perception} to see what's inside a {@link Fortification}.
-	 * That's no fun. On other scenarios though it's more interesting to make
-	 * these rolls random - for example, if always using take-10 rolls
-	 * {@link PartyHazard}s would become obsolete when a character with enough
-	 * {@link Skills#survival} is in the party.
-	 *
-	 * Note also that randomization can't be used without proper treatment
-	 * inside {@link BattleAi} computing, which is why take-10 rolls makes
-	 * things easier while in-battle.
-	 *
-	 * @param take10
-	 *            A take-10 result.
-	 * @return result of the same roll, but rolling a d20 instead.
-	 */
-	public static int roll(int take10) {
-		return take10 - 10 + RPG.r(1, 20);
 	}
 
 	public static String describedifficulty(int dc) {

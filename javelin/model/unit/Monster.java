@@ -25,10 +25,7 @@ import javelin.controller.quality.subtype.Undead;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
-import javelin.controller.upgrade.skill.Acrobatics;
-import javelin.controller.upgrade.skill.Concentration;
 import javelin.model.Cloneable;
-import javelin.model.item.Scroll;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.item.artifact.Slot;
 import javelin.model.unit.abilities.BreathWeapon;
@@ -40,11 +37,9 @@ import javelin.model.unit.abilities.spell.enchantment.compulsion.HoldMonster;
 import javelin.model.unit.abilities.spell.necromancy.Poison;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
-import javelin.model.unit.feat.CombatCasting;
 import javelin.model.unit.feat.Feat;
 import javelin.model.unit.feat.attack.WeaponFinesse;
 import javelin.model.unit.feat.attack.focus.WeaponFocus;
-import javelin.model.unit.feat.skill.Acrobatic;
 import javelin.model.world.location.town.labor.military.Academy;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.upgrading.SkillSelectionScreen;
@@ -314,6 +309,7 @@ public class Monster implements Cloneable, Serializable {
 	 */
 	public boolean heal = true;
 	public Constrict constrict = null;
+	public HashMap<String, Integer> ranks = new HashMap<String, Integer>();
 
 	@Override
 	public Monster clone() {
@@ -701,18 +697,6 @@ public class Monster implements Cloneable, Serializable {
 	}
 
 	/**
-	 * @return <code>true</code> if can read a {@link Spell} from a
-	 *         {@link Scroll}.
-	 */
-	public boolean read(Scroll s) {
-		if (skills.usemagicdevice(this) >= 10 + s.spell.casterlevel) {
-			return true;
-		}
-		return skills.decipher(s.spell, this) && 10 + hd.count()
-				+ skills.spellcraft / 2 >= s.spell.casterlevel + 1;
-	}
-
-	/**
 	 * @param minimum
 	 *            Minimum intelligence bonus required. -1 or higher is primitive
 	 *            intelligence.
@@ -791,36 +775,6 @@ public class Monster implements Cloneable, Serializable {
 	 */
 	public int swim() {
 		return Math.max(swim, fly);
-	}
-
-	public boolean concentrate(Spell casting) {
-		return concentrate() >= casting.casterlevel;
-	}
-
-	/**
-	 * @return Effective {@link Concentration} bonus, with {@link #constitution}
-	 *         bonus.
-	 */
-	@SuppressWarnings("deprecation")
-	public int concentrate() {
-		int concentration = skills.concentration + getbonus(constitution);
-		if (hasfeat(CombatCasting.SINGLETON)) {
-			concentration += 4;
-		}
-		return concentration;
-	}
-
-	/**
-	 * @return Effective {@link Acrobatics} bonus, with {@link #dexterity}
-	 *         bonus.
-	 */
-	@SuppressWarnings("deprecation")
-	public int tumble() {
-		int acrobatics = skills.acrobatics;
-		if (hasfeat(Acrobatic.SINGLETON)) {
-			acrobatics += acrobatics >= 10 ? +5 : +3;
-		}
-		return acrobatics + getbonus(dexterity);
 	}
 
 	/**

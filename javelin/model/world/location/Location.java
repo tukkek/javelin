@@ -21,6 +21,7 @@ import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
@@ -97,7 +98,7 @@ public abstract class Location extends Actor {
 
 	/**
 	 * If <code>false</code>, will not show individual units.
-	 * 
+	 *
 	 * @see WorldMouse
 	 * @see Squad#spot(List)
 	 */
@@ -191,7 +192,8 @@ public abstract class Location extends Actor {
 			if (closest != null) {
 				final double distance = Walker.distance(p.x, p.y, closest.x,
 						closest.y);
-				if (Squad.active.gossip() >= 10 + distance) {
+				if (Squad.active.getbest(Skill.DIPLOMACY)
+						.taketen(Skill.DIPLOMACY) >= 10 + distance) {
 					WorldScreen.setVisible(closest.x, closest.y);
 				}
 			}

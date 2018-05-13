@@ -4,11 +4,12 @@ import javelin.Javelin;
 import javelin.controller.terrain.Desert;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.World;
 
 /**
  * A party that is lost will wander around and waste time.
- * 
+ *
  * @author alex
  */
 public class GettingLost extends Hazard {
@@ -34,7 +35,7 @@ public class GettingLost extends Hazard {
 				&& Terrain.current().getweather() != Desert.SANDSTORM) {
 			return false;
 		}
-		return Javelin.roll(Squad.active.survive()) < dc;
+		return Squad.active.getbest(Skill.SURVIVAL).roll(Skill.SURVIVAL) < dc;
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class GettingLost extends Hazard {
 
 	/**
 	 * {@link Squad#displace()} on the active squad.
-	 * 
+	 *
 	 * @param message
 	 *            Shows this message in a prompt.
 	 * @param hoursellapsed

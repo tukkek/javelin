@@ -11,11 +11,11 @@ import javelin.controller.quality.Quality;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.AttackSequence;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.town.SelectScreen;
 
@@ -108,7 +108,7 @@ public class StatisticsScreen extends InfoScreen {
 			lines.add(feats.substring(0, feats.length() - 2) + ".");
 			lines.add("");
 		}
-		final String skills = showskills(m);
+		final String skills = showskills(c);
 		if (skills != null) {
 			lines.add(skills);
 		}
@@ -161,39 +161,14 @@ public class StatisticsScreen extends InfoScreen {
 		return speedtext;
 	}
 
-	static String formatskill(String name, int ranks, int ability) {
-		if (ranks == 0) {
-			return "";
-		}
-		ranks += Monster.getbonus(ability);
-		String bonus;
-		if (ranks > 0) {
-			bonus = "+" + ranks;
-		} else {
-			bonus = "-" + -ranks;
-		}
-		return name + " " + bonus + ", ";
-	}
-
 	@SuppressWarnings("deprecation")
-	static String showskills(Monster m) {
-		Skills s = m.skills;
+	static String showskills(Combatant c) {
 		String output = "";
-		output += formatskill("acrobatics", m.tumble(), m.dexterity);
-		output += formatskill("concentration", m.concentrate(), m.constitution);
-		output += formatskill("diplomacy", s.diplomacy, m.charisma);
-		output += formatskill("disable device", s.disabledevice,
-				m.intelligence);
-		output += formatskill("disguise", s.disguise(m) - 10, m.charisma);
-		output += formatskill("gather information", s.gatherinformation,
-				m.charisma);
-		output += formatskill("heal", s.heal, m.wisdom);
-		output += formatskill("knowledge", s.knowledge, m.intelligence);
-		output += formatskill("perception", s.perception, m.wisdom);
-		output += formatskill("spellcraft", s.spellcraft, m.intelligence);
-		output += formatskill("stealth", s.stealth, m.dexterity);
-		output += formatskill("survival", s.survival, m.wisdom);
-		output += formatskill("use magic device", s.usemagicdevice, m.charisma);
+		for (Skill s : Skill.ALL) {
+			int bonus = s.getbonus(c);
+			String signed = bonus >= 0 ? "+" + bonus : Integer.toString(bonus);
+			output += s.getranks(c) == 0 ? "" : s.name + " " + signed + ", ";
+		}
 		return output.isEmpty() ? null
 				: "Skills: " + output.substring(0, output.length() - 2) + ".\n";
 	}

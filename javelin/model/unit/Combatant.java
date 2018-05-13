@@ -12,6 +12,7 @@ import javelin.Javelin;
 import javelin.controller.CountingSet;
 import javelin.controller.Point;
 import javelin.controller.SpellbookGenerator;
+import javelin.controller.Weather;
 import javelin.controller.action.Action;
 import javelin.controller.action.ActionCost;
 import javelin.controller.action.ai.attack.MeleeAttack;
@@ -30,6 +31,8 @@ import javelin.model.Cloneable;
 import javelin.model.Realm;
 import javelin.model.TeamContainer;
 import javelin.model.item.Item;
+import javelin.model.item.Scroll;
+import javelin.model.item.Wand;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
@@ -47,6 +50,7 @@ import javelin.model.unit.condition.Melding;
 import javelin.model.unit.feat.Feat;
 import javelin.model.unit.feat.attack.Cleave;
 import javelin.model.unit.feat.attack.GreatCleave;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.unique.MercenariesGuild;
@@ -137,6 +141,7 @@ public class Combatant implements Serializable, Cloneable {
 	/** Is a player unit that should be controlled by {@link BattleAi}. */
 	public boolean automatic = false;
 	public boolean elite = false;
+	public int skillmodifier = 0;
 
 	/**
 	 * @param generatespells
@@ -653,10 +658,9 @@ public class Combatant implements Serializable, Cloneable {
 	 */
 	public int heal() {
 		int heal = Integer.MIN_VALUE;
-		for (Combatant medic : Squad.active.members) {
-			if (!equals(medic)) {
-				heal = Math.max(heal, Skills.take10(medic.source.skills.heal,
-						medic.source.wisdom));
+		for (Combatant c : Squad.active.members) {
+			if (!equals(c)) {
+				heal = Math.max(heal, c.taketen(Skill.HEAL));
 			}
 		}
 		return heal;
@@ -789,9 +793,9 @@ public class Combatant implements Serializable, Cloneable {
 		if (Fight.state.redTeam.contains(this)) {
 			return;
 		}
-		int listen = source.skills.perceive(true, true, true, source);
+		int listen = perceive(true, true, true);
 		for (Combatant c : Fight.state.redTeam) {
-			if (listen >= c.source.skills.movesilently(source)
+			if (listen >= c.taketen(Skill.STEALTH)
 					+ (Walker.distance(this, c) - 1)) {
 				BattleScreen.active.mappanel.tiles[c.location[0]][c.location[1]].discovered = true;
 			}
@@ -1021,5 +1025,67 @@ public class Combatant implements Serializable, Cloneable {
 			return source.swim;
 		}
 		return source.walk;
+	}
+
+	public int taketen(Skill s) {
+		return 10 + s.getbonus(this);
+	}
+
+	public int roll(Skill s) {
+		return RPG.r(1, 20) + s.getbonus(this);
+	}
+
+	/**
+	 * TODO MOVE TO COMBATANT
+	 *
+	 * @return <code>true</code> if can decioher a {@link Spell} from a
+	 *         {@link Scroll} or {@link Wand}.
+	 */
+	public boolean decipher(Spell s) {
+		if (taketen(Skill.USEMAGICDEVICE) >= 15 + s.level) {
+			return true;
+		}
+		if (!source.think(-2)) {
+			return false;
+		}
+		int spellcraft = Skill.SPELLCRAFT.getranks(this);
+		int ability = Math.max(source.intelligence, source.wisdom);
+		ability = Math.max(ability, source.charisma);
+		return ability + spellcraft / 2 >= 10 + s.level;
+	}
+
+	public boolean concentrate(Spell s) {
+		return Skill.CONCENTRATION.getbonus(this) >= s.casterlevel;
+	}
+
+	/**
+	 * @param flyingbonus
+	 *            <code>true</code> if flying creatures get a bonus for seeing
+	 *            farther.
+	 * @param weatherpenalty
+	 *            TODO
+	 * @param periodpenalty
+	 *            Penalty according to {@link Monster#vision} and
+	 *            {@link Javelin#getDayPeriod()}.
+	 * @param skills
+	 *            TODO
+	 * @return Total spot roll modifier for given {@link Monster} - doesn't
+	 *         include widsom bonus or dice roll.
+	 * @see Skill#taketen(int, int)
+	 */
+	public int perceive(boolean flyingbonus, boolean weatherpenalty,
+			boolean periodpenalty) {
+		int p = Skill.PERCEPTION.getbonus(this);
+		if (flyingbonus && source.fly > 0) {
+			p += 2;
+		}
+		if (weatherpenalty && Weather.current != Weather.DRY) {
+			p += Weather.current == Weather.STORM ? -4 : -2;
+		}
+		if (periodpenalty) {
+			/* half because they apply only to vision, not listening */
+			p += source.see() / 2;
+		}
+		return p;
 	}
 }

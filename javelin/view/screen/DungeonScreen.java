@@ -10,9 +10,8 @@ import javelin.controller.fight.RandomEncounter;
 import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.walker.Walker;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Monster;
-import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
@@ -62,7 +61,7 @@ public class DungeonScreen extends WorldScreen {
 
 	@Override
 	public boolean react(Actor actor, int x, int y) {
-		Combatant searching = search(Squad.active);
+		Combatant searching = Squad.active.getbest(Skill.PERCEPTION);
 		for (Feature f : dungeon.features.copy()) {
 			if (f.x == x && f.y == y) {
 				boolean activated = f.activate();
@@ -74,25 +73,10 @@ public class DungeonScreen extends WorldScreen {
 				return activated;
 			}
 			if (Walker.distanceinsteps(x, y, f.x, f.y) == 1) {
-				f.discover(searching, search(searching.source));
+				f.discover(searching, searching.taketen(Skill.PERCEPTION));
 			}
 		}
 		return false;
-	}
-
-	Combatant search(Squad s) {
-		Combatant best = null;
-		for (Combatant c : s.members) {
-			if (best == null || search(c.source) > search(best.source)) {
-				best = c;
-			}
-		}
-		return best;
-	}
-
-	public static int search(Monster m) {
-		return Skills.take10(m.skills.perceive(false, false, false, m),
-				m.wisdom);
 	}
 
 	@Override

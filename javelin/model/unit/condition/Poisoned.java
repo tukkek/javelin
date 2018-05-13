@@ -5,13 +5,14 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.conjuration.healing.NeutralizePoison.Neutralized;
+import javelin.model.unit.skill.Skill;
 
 /**
  * A poisoned unit takes a certain amount of constitution damage immediately and
  * a secondary amount after a short while.
- * 
+ *
  * TODO implement {@link #merge(Condition)}
- * 
+ *
  * @see Monster#changeconstitutionmodifier(Combatant, int)
  * @author alex
  */
@@ -23,21 +24,21 @@ public class Poisoned extends Condition {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param secondary
 	 *            The positive amount of secondary damage to cause.
 	 * @param dcp
 	 *            DC for a {@link Heal} check to ignore secondary effects of the
 	 *            poison.
 	 * @param casterlevelp
-	 * 
+	 *
 	 * @see Monster#changeconstitutionmodifier(Combatant, int)
 	 */
 	public Poisoned(float expireatp, Combatant c, Effect effectp, int secondary,
 			int dcp, Integer casterlevelp) {
 		super(expireatp, c, effectp, "poisoned", casterlevelp, 1);
 		this.secondary = secondary;
-		this.dc = dcp;
+		dc = dcp;
 		neutralized = c.hascondition(Neutralized.class) != null;
 	}
 
@@ -59,7 +60,8 @@ public class Poisoned extends Condition {
 
 	@Override
 	public void end(Combatant c) {
-		if (!neutralized && Squad.active.heal() < dc) {
+		int heal = Squad.active.getbest(Skill.HEAL).taketen(Skill.HEAL);
+		if (!neutralized && heal < dc) {
 			damage(c, secondary);
 		}
 	}

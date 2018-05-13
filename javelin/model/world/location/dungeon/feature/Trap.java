@@ -9,6 +9,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.divination.FindTraps.FindingTraps;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.view.screen.DungeonScreen;
 import tyrant.mikera.engine.RPG;
@@ -98,9 +99,10 @@ public class Trap extends Feature {
 			spring();
 			return true;
 		}
-		int disable = Squad.active.disable();
+		Combatant disabler = Squad.active.getbest(Skill.DISABLEDEVICE);
+		int disable = disabler.taketen(Skill.DISABLEDEVICE);
 		if (disable >= disarmdc) {
-			Javelin.prompt("You disarm the trap!");
+			Javelin.prompt(disabler + " disarms the trap!");
 			Dungeon.active.features.remove(this);
 			return true;
 		}
@@ -151,7 +153,7 @@ public class Trap extends Feature {
 			for (Combatant c : Squad.active.members) {
 				int bonus = c.hascondition(FindingTraps.class) == null ? 0 : +5;
 				searchroll = Math.max(searchroll,
-						DungeonScreen.search(c.source) + bonus);
+						searching.taketen(Skill.PERCEPTION) + bonus);
 			}
 			success = searchroll >= searchdc;
 		}

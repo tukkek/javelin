@@ -22,6 +22,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Attack;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.town.labor.religious.Shrine;
 
 /**
@@ -141,8 +142,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	@Override
 	public boolean apply(Combatant c) {
 		int hitdice = c.source.hd.count();
-		if (!checkcasterlevel(hitdice, c.source)
-				|| c.spells.count() >= hitdice) {
+		if (!checkcasterlevel(hitdice, c) || c.spells.count() >= hitdice) {
 			// design parameters
 			return false;
 		}
@@ -160,9 +160,9 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 		return true;
 	}
 
-	private boolean checkcasterlevel(int hitdice, Monster source) {
-		return hitdice >= casterlevel || Skills.take10(source.skills.spellcraft,
-				source.intelligence) >= 10 + getspelllevel();
+	private boolean checkcasterlevel(int hitdice, Combatant c) {
+		return hitdice >= casterlevel
+				|| c.taketen(Skill.SPELLCRAFT) >= 10 + getspelllevel();
 	}
 
 	private int getspelllevel() {

@@ -22,6 +22,7 @@ import javelin.model.EquipmentMap;
 import javelin.model.item.Item;
 import javelin.model.transport.Transport;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
@@ -35,7 +36,6 @@ import javelin.view.screen.BattleScreen;
 import javelin.view.screen.BribingScreen;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
-import tyrant.mikera.tyrant.Skill;
 
 /**
  * A group of units that the player controls as a overworld game unit. If a
@@ -212,7 +212,8 @@ public class Squad extends Actor implements Cloneable {
 	@Override
 	public void turn(long time, WorldScreen world) {
 		paymercenaries();
-		float foodfound = (survive() - 10) / (4f * members.size());
+		int surival = Skill.SURVIVAL.getbonus(getbest(Skill.SURVIVAL));
+		float foodfound = surival / (4f * members.size());
 		if (foodfound > 1) {
 			foodfound = 1;
 		} else if (foodfound < 0) {
@@ -347,21 +348,6 @@ public class Squad extends Actor implements Cloneable {
 	}
 
 	/**
-	 * @return a {@link Skills#knowledge} roll.
-	 */
-	public int know() {
-		int best = Integer.MIN_VALUE;
-		for (Combatant c : members) {
-			int roll = Skills.take10(c.source.skills.knowledge,
-					c.source.intelligence);
-			if (roll > best) {
-				best = roll;
-			}
-		}
-		return best;
-	}
-
-	/**
 	 * @param periodbonus
 	 * @return a {@link Skills#perception} roll.
 	 */
@@ -374,10 +360,8 @@ public class Squad extends Actor implements Cloneable {
 			boolean periodbonus, List<Combatant> squad) {
 		int best = Integer.MIN_VALUE;
 		for (Combatant c : squad) {
-			Monster m = c.source;
-			int perception = m.skills.perceive(flyingbonus, weatherpenalty,
-					periodbonus, m);
-			int roll = Skills.take10(perception, m.wisdom);
+			int roll = 10
+					+ c.perceive(flyingbonus, weatherpenalty, periodbonus);
 			if (roll > best) {
 				best = roll;
 			}
@@ -386,26 +370,8 @@ public class Squad extends Actor implements Cloneable {
 	}
 
 	/**
-	 * Note that this will use the lowest Hide rating found.
-	 *
-	 * @return A {@link Skills#hide} roll.
-	 * @see #hide(List)
-	 */
-	public int hide() {
-		int worst = Integer.MAX_VALUE;
-		for (Combatant c : members) {
-			int roll = Skills.take10(c.source.skills.stealth,
-					c.source.dexterity);
-			if (roll < worst) {
-				worst = roll;
-			}
-		}
-		return worst;
-	}
-
-	/**
 	 * Spot a group of enemies.
-	 * 
+	 *
 	 * @param target
 	 *            If not <code>null</code>, will only shown information if
 	 *            adjacent in the {@link WorldScreen}.
@@ -420,8 +386,7 @@ public class Squad extends Actor implements Cloneable {
 		int spot = perceive(true, true, true);
 		for (int i = 0; i < opponents.size(); i++) {
 			Combatant c = opponents.get(i);
-			boolean spotted = spot >= Skills.take10(c.source.skills.stealth,
-					c.source.dexterity);
+			boolean spotted = spot >= c.taketen(Skill.STEALTH);
 			garrison += (spotted ? c : "?") + ", ";
 		}
 		garrison = garrison.substring(0, garrison.length() - 2);
@@ -443,8 +408,7 @@ public class Squad extends Actor implements Cloneable {
 		int listenroll = Squad.active.perceive(flying, outside, outside);
 		boolean listen = false;
 		for (Combatant foe : foes) {
-			if (listenroll >= Skills.take10(foe.source.skills.stealth,
-					foe.source.dexterity)) {
+			if (listenroll >= foe.taketen(Skill.STEALTH)) {
 				listen = true;
 				break;
 			}
@@ -452,11 +416,9 @@ public class Squad extends Actor implements Cloneable {
 		if (!listen) {
 			return false; // doesn't hear them coming
 		}
-		int hideroll = Squad.active.hide();
+		int hideroll = getworst(Skill.STEALTH).roll(Skill.STEALTH);
 		for (Combatant foe : foes) {
-			Monster m = foe.source;
-			if (Skills.take10(m.skills.perceive(flying, outside, outside, m),
-					m.wisdom) >= hideroll) {
+			if (10 + foe.perceive(flying, outside, outside) >= hideroll) {
 				return false; // spotted!
 			}
 		}
@@ -490,12 +452,12 @@ public class Squad extends Actor implements Cloneable {
 		if (!intelligent) {
 			return false;
 		}
-		int diplomacyroll = negotiate() - 10;
+		int diplomacybonus = Skill.DIPLOMACY.getbonus(getbest(Skill.DIPLOMACY));
 		int highest = Integer.MIN_VALUE;
 		int dailyfee = 0;
 		for (Combatant foe : foes) {
 			int will = foe.source.will();
-			if (will > diplomacyroll) {
+			if (will >= diplomacybonus) {
 				return false;// no deal!
 			}
 			if (will > highest) {
@@ -504,85 +466,10 @@ public class Squad extends Actor implements Cloneable {
 			dailyfee += MercenariesGuild.getfee(foe);
 		}
 		final int bribe = Math.max(1, RewardCalculator.receivegold(foes) / 2);
-		final boolean canhire = diplomacyroll - highest >= 5;
+		final boolean canhire = diplomacybonus - highest >= 5;
 		boolean b = new BribingScreen().bribe(foes, dailyfee, bribe, canhire);
 		Javelin.app.switchScreen(BattleScreen.active);
 		return b;
-	}
-
-	/**
-	 * @return A {@link Skills#diplomacy} roll.
-	 */
-	public int negotiate() {
-		int best = Integer.MIN_VALUE;
-		for (Combatant c : members) {
-			int roll = Skills.take10(c.source.skills.diplomacy,
-					c.source.charisma);
-			if (roll > best) {
-				best = roll;
-			}
-		}
-		return best;
-	}
-
-	/**
-	 * @return roll of {@link Skills#search}.
-	 */
-	public int search() {
-		int best = Integer.MIN_VALUE;
-		for (Combatant c : members) {
-			int roll = Skills.take10(c.source.skills.perception,
-					c.source.intelligence);
-			if (roll > best) {
-				best = roll;
-			}
-		}
-		return best;
-	}
-
-	/**
-	 * @return roll of {@link Skills#disabledevice}
-	 */
-	public int disable() {
-		int best = Integer.MIN_VALUE;
-		for (Combatant c : members) {
-			int roll = c.source.skills.disable(c.source);
-			if (roll > best) {
-				best = roll;
-			}
-		}
-		return best;
-	}
-
-	/**
-	 * @return roll of {@link Skills#gatherinformation}.
-	 */
-	public int gossip() {
-		int best = Integer.MIN_VALUE;
-		for (Combatant c : members) {
-			int roll = Skills.take10(c.source.skills.gatherinformation,
-					c.source.charisma);
-			if (roll > best) {
-				best = roll;
-			}
-		}
-		return best;
-	}
-
-	/**
-	 * Takes 10.
-	 *
-	 * @return a roll of {@link Skills#survival}.
-	 */
-	public int survive() {
-		int best = Integer.MIN_VALUE;
-		for (Combatant c : members) {
-			int roll = c.source.skills.survive(c.source);
-			if (roll > best) {
-				best = roll;
-			}
-		}
-		return best;
 	}
 
 	/**
@@ -843,21 +730,6 @@ public class Squad extends Actor implements Cloneable {
 		}
 	}
 
-	/**
-	 * @return Highest take 10 in the squad for {@link Skill#HEALING}.
-	 * @see Combatant#heal()
-	 */
-	public int heal() {
-		int max = Integer.MIN_VALUE;
-		for (Combatant c : members) {
-			int heal = c.heal();
-			if (heal > max) {
-				max = heal;
-			}
-		}
-		return max;
-	}
-
 	@Override
 	public Integer getel(int attackerel) {
 		return ChallengeCalculator.calculateel(members);
@@ -875,5 +747,25 @@ public class Squad extends Actor implements Cloneable {
 			}
 		}
 		return mercenaries;
+	}
+
+	public Combatant getbest(Skill s) {
+		Combatant best = null;
+		for (Combatant c : Squad.active.members) {
+			if (best == null || s.getbonus(c) > s.getbonus(best)) {
+				best = c;
+			}
+		}
+		return best;
+	}
+
+	public Combatant getworst(Skill s) {
+		Combatant worst = null;
+		for (Combatant c : Squad.active.members) {
+			if (worst == null || s.getbonus(c) < s.getbonus(worst)) {
+				worst = c;
+			}
+		}
+		return worst;
 	}
 }

@@ -1,14 +1,14 @@
 package javelin.controller.terrain.hazard;
 
-import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.condition.Fatigued;
+import javelin.model.unit.skill.Skill;
 import tyrant.mikera.engine.RPG;
 
 /**
  * Damages characters if Squad has no resource reserves (gold) left.
- * 
+ *
  * @author alex
  */
 public class Dehydration extends PartyHazard {
@@ -27,7 +27,7 @@ public class Dehydration extends PartyHazard {
 
 	@Override
 	public boolean validate() {
-		return Squad.active.gold == 0
-				&& Javelin.roll(Squad.active.survive()) < 25;
+		return Squad.active.gold == 0 && Squad.active.getbest(Skill.SURVIVAL)
+				.roll(Skill.SURVIVAL) < 25;
 	}
 }

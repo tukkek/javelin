@@ -11,8 +11,8 @@ import javelin.controller.action.Action;
 import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.old.Game;
 import javelin.controller.table.Table;
-import javelin.controller.table.dungeon.HiddenDoor;
 import javelin.controller.table.dungeon.DungeonFeatureModifier;
+import javelin.controller.table.dungeon.HiddenDoor;
 import javelin.controller.table.dungeon.LockedDoor;
 import javelin.controller.table.dungeon.StuckDoor;
 import javelin.controller.table.dungeon.TrappedDoor;
@@ -22,6 +22,7 @@ import javelin.model.item.key.door.MasterKey;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.door.trap.Alarm;
@@ -162,14 +163,12 @@ public class Door extends Feature {
 	Combatant unlock() {
 		Combatant expert = null;
 		for (Combatant c : Squad.active.members) {
-			if (expert == null
-					|| c.source.skills.disable(c.source) > expert.source.skills
-							.disable(expert.source)) {
+			if (expert == null || Skill.DISABLEDEVICE
+					.getbonus(c) > Skill.DISABLEDEVICE.getbonus(expert)) {
 				expert = c;
 			}
 		}
-		int disableroll = expert.source.skills.disable(expert.source);
-		return disableroll >= unlockdc ? expert : null;
+		return Skill.DISABLEDEVICE.getbonus(expert) >= unlockdc ? expert : null;
 	}
 
 	Combatant force() {

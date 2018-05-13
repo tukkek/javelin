@@ -5,16 +5,16 @@ import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.Skills;
 import javelin.model.unit.abilities.discipline.Boost;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.condition.Condition;
+import javelin.model.unit.skill.Skill;
 import tyrant.mikera.engine.RPG;
 
 /**
  * http://www.d20pfsrd.com/path-of-war/disciplines-and-maneuvers/steel-serpent-maneuvers/#TOC-Tearing-Fang
- * 
+ *
  * @author alex
  */
 public class TearingFang extends Boost {
@@ -98,7 +98,7 @@ public class TearingFang extends Boost {
 		/** TODO ideally would also check if enganged. */
 		boolean heal(final Combatant c) {
 			final Monster m = c.source;
-			return Skills.take10(m.skills.heal, m.wisdom) >= HEALDC;
+			return c.taketen(Skill.HEAL) >= HEALDC;
 		}
 
 		@Override

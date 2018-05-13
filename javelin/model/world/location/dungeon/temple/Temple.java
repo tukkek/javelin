@@ -19,6 +19,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -200,18 +201,8 @@ public abstract class Temple extends UniqueLocation {
 	}
 
 	Combatant unlock() {
-		Combatant best = null;
-		for (Combatant c : Squad.active.members) {
-			int roll = c.source.skills.disable(c.source);
-			if (roll - 10 < level) {
-				continue;
-			}
-			if (best == null
-					|| roll > best.source.skills.disable(best.source)) {
-				best = c;
-			}
-		}
-		return best;
+		Combatant best = Squad.active.getbest(Skill.DISABLEDEVICE);
+		return best.taketen(Skill.DISABLEDEVICE) >= 10 + level ? null : best;
 	}
 
 	@Override

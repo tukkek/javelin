@@ -39,7 +39,7 @@ public class CastSpell extends Fire implements AiAction {
 		final ArrayList<Spell> castable = new ArrayList<Spell>();
 		final boolean engaged = Fight.state.isengaged(c);
 		for (Spell s : c.spells) {
-			if (engaged && s.provokeaoo && !c.source.concentrate(s)) {
+			if (engaged && s.provokeaoo && !c.concentrate(s)) {
 				continue;
 			}
 			if (s.canbecast(c)) {
@@ -197,7 +197,7 @@ public class CastSpell extends Fire implements AiAction {
 
 	@Override
 	protected boolean checkengaged(BattleState state, Combatant c) {
-		return casting.provokeaoo && !c.source.concentrate(casting)
+		return casting.provokeaoo && !c.concentrate(casting)
 				&& state.isengaged(c);
 	}
 
@@ -210,7 +210,7 @@ public class CastSpell extends Fire implements AiAction {
 		final ArrayList<Spell> spells = active.spells;
 		for (int i = 0; i < spells.size(); i++) {
 			final Spell s = spells.get(i);
-			if (s.provokeaoo && !active.source.concentrate(s) && engaged) {
+			if (s.provokeaoo && !active.concentrate(s) && engaged) {
 				continue;
 			}
 			if (!s.castinbattle || !s.canbecast(active)) {

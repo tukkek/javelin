@@ -6,12 +6,13 @@ import javelin.controller.action.CastSpell;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.skill.Skill;
 
 /**
  * Can only be used out-of-combat. The lore concept is that there is actually a
  * non-combatant able spellcaster (or at least spellreader) accompanying each
  * {@link Squad}.
- * 
+ *
  * @author alex
  */
 public class Scroll extends Item {
@@ -45,7 +46,7 @@ public class Scroll extends Item {
 	@Override
 	public boolean usepeacefully(Combatant c) {
 		failure = null;
-		if (!c.source.read(this)) {
+		if (!read(c)) {
 			failure = c + " needs more experience before reading this scroll.";
 			return false;
 		}
@@ -68,6 +69,23 @@ public class Scroll extends Item {
 
 	@Override
 	public String canuse(Combatant c) {
-		return c.source.read(this) ? null : "can't read";
+		return read(c) ? null : "can't read";
+	}
+
+	/**
+	 * TODO move to scroll?
+	 *
+	 * @param c
+	 *            TODO
+	 * @return <code>true</code> if can read a {@link Spell} from a
+	 *         {@link Scroll}.
+	 */
+	public boolean read(Combatant c) {
+		if (c.taketen(Skill.USEMAGICDEVICE) >= 10 + spell.casterlevel) {
+			return true;
+		}
+		int spellcraft = Skill.SPELLCRAFT.getranks(c);
+		return c.decipher(spell) && 10 + c.source.hd.count()
+				+ spellcraft / 2 >= spell.casterlevel + 1;
 	}
 }

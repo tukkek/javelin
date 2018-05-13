@@ -13,6 +13,7 @@ import javelin.controller.walker.Walker;
 import javelin.model.Realm;
 import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
@@ -154,8 +155,9 @@ public abstract class Fortification extends Location {
 		if (targetel == null || !ishostile()) {
 			return descriptionknown;
 		}
-		return Squad.active.know() - 10 >= targetel ? descriptionknown
-				: descriptionunknown;
+		int knowledge = Squad.active.getbest(Skill.KNOWLEDGE)
+				.taketen(Skill.KNOWLEDGE);
+		return knowledge >= 10 + targetel ? descriptionknown : descriptionunknown;
 	}
 
 	/**

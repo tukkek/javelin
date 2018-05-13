@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.controller.action.CastSpell;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.skill.Skill;
 import tyrant.mikera.engine.RPG;
 
 /**
  * A wand is ideally a item that fires a ray. It has up to 50 charges and is
  * spent when empty.
- * 
+ *
  * @author alex
  */
 public class Wand extends Item {
@@ -24,7 +24,7 @@ public class Wand extends Item {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param s
 	 *            Spell to be cast.
 	 * @param upgradeset
@@ -77,11 +77,7 @@ public class Wand extends Item {
 
 	boolean decipher(Combatant user) {
 		failure = null;
-		Monster m = user.source;
-		if (m.skills.usemagicdevice(m) >= 20) {
-			return true;
-		}
-		if (m.skills.decipher(spell, m)) {
+		if (user.taketen(Skill.USEMAGICDEVICE) >= 20 || user.decipher(spell)) {
 			return true;
 		}
 		failure = "Cannot currently decipher this spell.";
@@ -104,8 +100,7 @@ public class Wand extends Item {
 
 	@Override
 	public String canuse(Combatant c) {
-		return c.source.skills.decipher(spell, c.source) ? null
-				: "can't decipher";
+		return c.decipher(spell) ? null : "can't decipher";
 	}
 
 	@Override

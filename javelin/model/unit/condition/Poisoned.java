@@ -5,7 +5,6 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.conjuration.healing.NeutralizePoison.Neutralized;
-import javelin.model.unit.skill.Skill;
 
 /**
  * A poisoned unit takes a certain amount of constitution damage immediately and
@@ -60,8 +59,7 @@ public class Poisoned extends Condition {
 
 	@Override
 	public void end(Combatant c) {
-		int heal = Squad.active.getbest(Skill.HEAL).taketen(Skill.HEAL);
-		if (!neutralized && heal < dc) {
+		if (!neutralized && Squad.active.heal() < dc) {
 			damage(c, secondary);
 		}
 	}

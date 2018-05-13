@@ -769,4 +769,21 @@ public class Squad extends Actor implements Cloneable {
 		}
 		return worst;
 	}
+
+	/**
+	 * @return The highest take 10 roll of the current {@link Squad}. Creatures
+	 *         that are injured or worse won't be able to heal others. If nobody
+	 *         can heal, returns {@link Integer#MIN_VALUE}.
+	 *
+	 * @see Combatant#getstatus()
+	 */
+	public int heal() {
+		int heal = Integer.MIN_VALUE;
+		for (Combatant c : Squad.active.members) {
+			if (c.getnumericstatus() > Combatant.STATUSINJURED) {
+				heal = Math.max(heal, c.taketen(Skill.HEAL));
+			}
+		}
+		return heal;
+	}
 }

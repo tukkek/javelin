@@ -402,18 +402,22 @@ public class Combatant implements Serializable, Cloneable {
 		lastrefresh = -Float.MAX_VALUE;
 	}
 
+	/**
+	 * @return Same as {@link #getstatus()} but returns a constant instead.
+	 * @see #STATUSUNHARMED
+	 */
 	public int getnumericstatus() {
 		int maxhp = getmaxhp();
 		if (hp >= maxhp) {
-			return 5;
+			return STATUSUNHARMED;
+		}
+		if (hp > 1) {
+			return Math.round(4.0f * hp / maxhp);
 		}
 		if (hp == 1) {
-			return 0;
+			return STATUSDYING;
 		}
-		if (hp <= 0) {
-			return hp > Combatant.DEADATHP ? STATUSUNCONSCIOUS : STATUSDEAD;
-		}
-		return Math.round(4.0f * hp / maxhp);
+		return hp > Combatant.DEADATHP ? STATUSUNCONSCIOUS : STATUSDEAD;
 	}
 
 	/**
@@ -423,6 +427,10 @@ public class Combatant implements Serializable, Cloneable {
 		return maxhp + source.poison / 2 * source.hd.count();
 	}
 
+	/**
+	 * @return String describing {@link #hp} condition.
+	 * @see #getnumericstatus()
+	 */
 	public String getstatus() {
 		switch (getnumericstatus()) {
 		case STATUSUNHARMED:
@@ -650,21 +658,6 @@ public class Combatant implements Serializable, Cloneable {
 				to.conditions.add(c);
 			}
 		}
-	}
-
-	/**
-	 * @return The highest take 10 roll of the current {@link Squad} that isn't
-	 *         this combatant. If this is the only member of the squad will
-	 *         return {@link Integer#MIN_VALUE}.
-	 */
-	public int heal() {
-		int heal = Integer.MIN_VALUE;
-		for (Combatant c : Squad.active.members) {
-			if (!equals(c)) {
-				heal = Math.max(heal, c.taketen(Skill.HEAL));
-			}
-		}
-		return heal;
 	}
 
 	/**

@@ -4,7 +4,6 @@ import javelin.controller.action.ActionCost;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.discipline.Boost;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Attack;
@@ -97,7 +96,6 @@ public class TearingFang extends Boost {
 
 		/** TODO ideally would also check if enganged. */
 		boolean heal(final Combatant c) {
-			final Monster m = c.source;
 			return c.taketen(Skill.HEAL) >= HEALDC;
 		}
 

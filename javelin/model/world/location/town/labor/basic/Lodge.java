@@ -197,7 +197,7 @@ public class Lodge extends Fortification {
 			Squad.active.quickheal();
 			for (final Combatant c : Squad.active.members) {
 				int heal = c.source.hd.count();
-				if (!a.equals(HOSPITAL) && c.heal() >= 15) {
+				if (!a.equals(HOSPITAL) && Squad.active.heal() >= 15) {
 					heal *= 2;
 				}
 				if (heal < 1) {

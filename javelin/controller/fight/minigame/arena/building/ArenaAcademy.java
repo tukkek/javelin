@@ -130,7 +130,7 @@ public class ArenaAcademy extends ArenaBuilding {
 			if (s != null && !s.castinbattle) {
 				continue;
 			}
-			if (u.arena && u.upgrade(clone)) {
+			if (u.usedincombat && u.upgrade(clone)) {
 				upgrades.add(u);
 			}
 		}

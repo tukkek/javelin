@@ -1,9 +1,9 @@
 package javelin.model.unit.abilities.discipline.serpent;
 
 import javelin.controller.upgrade.ability.RaiseWisdom;
-import javelin.controller.upgrade.skill.Heal;
 import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.unit.abilities.discipline.Maneuver;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.town.labor.military.BuildDisciplineAcademy;
 
 public class SteelSerpent extends Discipline {
@@ -16,7 +16,7 @@ public class SteelSerpent extends Discipline {
 	public static final BuildDisciplineAcademy LABOR = INSTANCE.buildacademy();
 
 	public SteelSerpent() {
-		super("Steel serpent", RaiseWisdom.SINGLETON, Heal.SINGLETON);
+		super("Steel serpent", RaiseWisdom.SINGLETON, Skill.HEAL);
 	}
 
 	@Override

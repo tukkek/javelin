@@ -3,18 +3,19 @@ package javelin.controller;
 import java.util.ArrayList;
 
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Skills;
+import javelin.model.unit.Monster;
+import javelin.model.unit.skill.Skill;
 
 /**
  * Handles ability score modification for {@link Monster}s.
- * 
+ *
  * TODO currently handler zero abilities (no changes) but does not handle scores
  * being sent to zero.
- * 
- * TODO turning ability scores and {@link Skills} into enum-based structures
+ *
+ * TODO turning ability scores and {@link Skill} into enum-based structures
  * would make this easier, instead of spamming {@link Combatant} with 2 methods
  * (changescore and changemodifier) per per-ability.
- * 
+ *
  * @author alex
  */
 public class AbilityModification {
@@ -49,7 +50,7 @@ public class AbilityModification {
 	/**
 	 * Generates proper content for {@link #newscore} and
 	 * {@link #modifications}.
-	 * 
+	 *
 	 * @param change
 	 *            The amount ability score change to apply (for example +2 ou
 	 *            -1).
@@ -67,7 +68,7 @@ public class AbilityModification {
 			newscore += direction;
 			scorechange += direction;
 			boolean even = newscore % 2 == 0;
-			if ((direction == +1 && even) || (direction == -1 && !even)) {
+			if (direction == +1 && even || direction == -1 && !even) {
 				modifications.add(direction);
 				modifierchange += direction;
 			}

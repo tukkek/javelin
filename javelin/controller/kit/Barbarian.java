@@ -1,11 +1,12 @@
 package javelin.controller.kit;
 
+import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.classes.Warrior;
-import javelin.controller.upgrade.skill.Survival;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.BarbarianRage;
+import javelin.model.unit.skill.Skill;
 
 public class Barbarian extends Kit {
 	public static final Kit INSTANCE = new Barbarian();
@@ -17,7 +18,7 @@ public class Barbarian extends Kit {
 
 	@Override
 	protected void define() {
-		basic.add(Survival.SINGLETON);
+		basic.add(new SkillUpgrade(Skill.SURVIVAL));
 		basic.add(new BarbarianRage());
 	}
 

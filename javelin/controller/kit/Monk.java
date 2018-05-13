@@ -1,17 +1,18 @@
 package javelin.controller.kit;
 
 import javelin.controller.upgrade.FeatUpgrade;
+import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.controller.upgrade.classes.Warrior;
-import javelin.controller.upgrade.skill.Acrobatics;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.unit.feat.Feat;
 import javelin.model.unit.feat.ImprovedInitiative;
 import javelin.model.unit.feat.save.LightningReflexes;
 import javelin.model.unit.feat.skill.Acrobatic;
+import javelin.model.unit.skill.Skill;
 
 public class Monk extends Kit {
 	public static final Kit INSTANCE = new Monk();
@@ -24,7 +25,7 @@ public class Monk extends Kit {
 	@Override
 	protected void define() {
 		basic.add(RaiseWisdom.SINGLETON);
-		basic.add(Acrobatics.SINGLETON);
+		basic.add(new SkillUpgrade(Skill.ACROBATICS));
 		for (Feat f : new Feat[] { Acrobatic.SINGLETON,
 				ImprovedInitiative.SINGLETON, LightningReflexes.SINGLETON }) {
 			basic.add(new FeatUpgrade(f));

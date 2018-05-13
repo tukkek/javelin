@@ -1,14 +1,13 @@
 package javelin.model.item.relic;
 
 import javelin.Javelin;
-import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Condition;
 
 /**
  * Gives +5 to each skill for a week (all-knowing condition)
- * 
+ *
  * @author alex
  */
 public class Crown extends Relic {
@@ -21,16 +20,12 @@ public class Crown extends Relic {
 
 		@Override
 		public void start(Combatant c) {
-			for (SkillUpgrade s : SkillUpgrade.ALL) {
-				s.setranks(c.source.skills, s.getranks(c.source.skills) + 5);
-			}
+			c.skillmodifier += 5;
 		}
 
 		@Override
 		public void end(Combatant c) {
-			for (SkillUpgrade s : SkillUpgrade.ALL) {
-				s.setranks(c.source.skills, s.getranks(c.source.skills) - 5);
-			}
+			c.skillmodifier -= 5;
 		}
 	}
 

@@ -6,6 +6,7 @@ import java.util.List;
 import javelin.controller.Calendar;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.upgrade.FeatUpgrade;
+import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.discipline.Discipline;
@@ -120,8 +121,8 @@ public class DisciplineAcademy extends Academy {
 				d.abilityupgrade, d.classupgrade);
 		this.d = d;
 		descriptionunknown = descriptionknown;
-		upgrades.add(d.skillupgrade);
-		upgrades.add(d.knowledgeupgrade);
+		upgrades.add(new SkillUpgrade(d.skillupgrade));
+		upgrades.add(new SkillUpgrade(d.knowledgeupgrade));
 		upgrades.add(d.trainingupgrade);
 		student = train(student, LEVERSTUDENT, 1);
 		teacher = train(teacher, LEVELTEACHER, 2);

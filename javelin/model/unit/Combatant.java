@@ -19,6 +19,7 @@ import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.controller.action.ai.attack.RangedAttack;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.db.reader.fields.Skills;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
@@ -936,9 +937,6 @@ public class Combatant implements Serializable, Cloneable {
 	 * @see #postupgradeautomatic(boolean, Upgrade)
 	 */
 	public void postupgrade(ClassLevelUpgrade classlevel) {
-		if (source.skillpool > 0) {
-			source.purchaseskills(classlevel).show();
-		}
 		for (Feat f : source.feats) {
 			f.postupgrade(this);
 		}
@@ -951,9 +949,6 @@ public class Combatant implements Serializable, Cloneable {
 	 * {@link #upgrade(Collection)}.
 	 */
 	public void postupgradeautomatic(ClassLevelUpgrade upgrade) {
-		if (source.skillpool > 0) {
-			source.purchaseskills(upgrade).upgradeautomatically();
-		}
 		for (Feat f : source.feats) {
 			f.postupgradeautomatic(this);
 		}

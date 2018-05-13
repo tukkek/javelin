@@ -1,11 +1,11 @@
 package javelin.model.unit.feat;
 
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Skills;
+import javelin.model.unit.skill.Concentration;
 
 /**
- * +4 to {@link Skills#concentration}.
- * 
+ * +4 to {@link Concentration}.
+ *
  * @author alex
  */
 public class CombatCasting extends Feat {

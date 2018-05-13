@@ -10,7 +10,6 @@ import java.util.List;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.factor.CrFactor;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
-import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.model.Realm;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;

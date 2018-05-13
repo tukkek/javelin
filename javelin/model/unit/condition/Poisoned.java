@@ -1,10 +1,10 @@
 package javelin.model.unit.condition;
 
-import javelin.controller.upgrade.skill.Heal;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.conjuration.healing.NeutralizePoison.Neutralized;
+import javelin.model.unit.skill.Heal;
 
 /**
  * A poisoned unit takes a certain amount of constitution damage immediately and

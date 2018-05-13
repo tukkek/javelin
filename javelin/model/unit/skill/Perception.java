@@ -16,15 +16,15 @@ import javelin.model.unit.feat.skill.Alertness;
  */
 public class Perception extends Skill {
 	public Perception() {
-		super("Perception", Ability.WISDOM);
+		super(new String[] { "Perception", "listen", "spot", "search" },
+				Ability.WISDOM);
 	}
 
 	@Override
 	public int getbonus(Combatant c) {
 		int bonus = super.getbonus(c);
 		if (c.source.hasfeat(Alertness.SINGLETON)) {
-			/** +1 since we don't support Sense Motive in the game. */
-			bonus += getranks(c) >= 10 ? +3 : +5;
+			bonus += Alertness.BONUS;
 		}
 		return bonus;
 	}

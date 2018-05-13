@@ -3,6 +3,7 @@ package javelin.model.unit.feat;
 import java.io.Serializable;
 
 import javelin.controller.challenge.factor.FeatsFactor;
+import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -59,15 +60,15 @@ public abstract class Feat implements Serializable, javelin.model.Cloneable {
 	 * This will be called when a {@link Monster} is being made into a
 	 * {@link Combatant}. It is also called after upgrades when the
 	 * {@link #update} flag is set.
-	 * 
+	 *
 	 * Can be called multiple times if a monster has more than one feat of the
 	 * same type as allowed by {@link #stack}.
-	 * 
+	 *
 	 * Note that many feats do not have to implement this as the stat block
 	 * itself will have the changes pre-computated in it. For example:
 	 * {@link Toughness} and {@link ImprovedInitiative} only need to implement
 	 * {@link #upgrade(Combatant)}.
-	 * 
+	 *
 	 * @return <code>true</code> in case of success.
 	 */
 	public boolean add(Combatant c) {
@@ -139,5 +140,15 @@ public abstract class Feat implements Serializable, javelin.model.Cloneable {
 			remove(c);
 			add(c);
 		}
+	}
+
+	/**
+	 * @param monster
+	 *            Called during {@link MonsterReader} execution to give feats a
+	 *            chance to make necessary adjustements to the monster being
+	 *            read.
+	 */
+	public void read(Monster m) {
+		// nothing unless overriden
 	}
 }

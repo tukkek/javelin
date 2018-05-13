@@ -2,11 +2,12 @@ package javelin.controller.quality.perception;
 
 import javelin.controller.quality.Quality;
 import javelin.model.unit.Monster;
+import javelin.model.unit.skill.Skill;
 
 /**
  * Since {@link Perception} allows you to "see" far away enemies makes sense
  * that this would function like 20 ranks of listen.
- * 
+ *
  * @author alex
  */
 public class Perception extends Quality {
@@ -17,7 +18,7 @@ public class Perception extends Quality {
 
 	@Override
 	public void add(String declaration, Monster m) {
-		m.skills.perception += 10;
+		Skill.PERCEPTION.raise(10, m);
 	}
 
 	@Override

@@ -1,12 +1,12 @@
 package javelin.controller.kit;
 
+import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.controller.upgrade.classes.Aristocrat;
-import javelin.controller.upgrade.skill.Heal;
-import javelin.controller.upgrade.skill.Knowledge;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureModerateWounds;
+import javelin.model.unit.skill.Skill;
 
 public class Cleric extends Kit {
 	/**
@@ -23,8 +23,8 @@ public class Cleric extends Kit {
 	@Override
 	protected void define() {
 		basic.add(new CureModerateWounds());
-		basic.add(Knowledge.SINGLETON);
-		basic.add(Heal.SINGLETON);
+		basic.add(new SkillUpgrade(Skill.KNOWLEDGE));
+		basic.add(new SkillUpgrade(Skill.HEAL));
 	}
 
 	@Override

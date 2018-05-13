@@ -1,7 +1,5 @@
 package javelin.controller.upgrade.classes;
 
-import javelin.controller.upgrade.skill.Perception;
-import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -17,12 +15,10 @@ public class Commoner extends ClassLevelUpgrade {
 			new Level(4, 4, 4), new Level(4, 4, 4), new Level(5, 5, 5),
 			new Level(5, 5, 5), new Level(5, 5, 5), new Level(6, 6, 6),
 			new Level(6, 6, 6), new Level(6, 6, 6), };
-	private static final SkillUpgrade[] SKILLS = new SkillUpgrade[] {
-			Perception.SINGLETON };
 	public static final ClassLevelUpgrade SINGLETON = new Commoner();
 
 	private Commoner() {
-		super("Commoner", .48f, TABLE, 4, 2, SKILLS, .45f);
+		super("Commoner", .48f, TABLE, 4, 2, .45f);
 	}
 
 	@Override

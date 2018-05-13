@@ -19,7 +19,6 @@ import javelin.model.item.artifact.CasterRing;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.skill.Skill;
@@ -87,7 +86,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	/**
 	 * If <code>false</code> will not consider this threatening (ignores attacks
 	 * of opportunity so it can be cast while engaged without needing a
-	 * {@link Skills#concentration} roll). Default: true.
+	 * {@link Skill#CONCENTRATION} roll). Default: true.
 	 *
 	 * TODO rename to safe and invert meaning?
 	 */

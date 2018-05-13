@@ -9,7 +9,7 @@ import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Skills;
+import javelin.model.unit.skill.Acrobatics;
 import javelin.model.unit.skill.Skill;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.Point;
@@ -72,7 +72,7 @@ public class Movement extends Action {
 
 	/**
 	 * @param c
-	 *            Checks {@link Skills#acrobatics}.
+	 *            Checks {@link Acrobatics}.
 	 * @return Action points to disengage.
 	 */
 	static public float disengage(Combatant c) {

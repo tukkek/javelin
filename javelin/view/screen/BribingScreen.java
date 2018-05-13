@@ -5,15 +5,14 @@ import java.util.List;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
+import javelin.model.unit.skill.Diplomacy;
 import javelin.model.world.location.unique.MercenariesGuild;
-import javelin.view.screen.town.PurchaseScreen;
+import javelin.view.screen.town.SelectScreen;
 
 /**
- * Uses a {@link InfoScreen} to deal with succesful {@link Skills#diplomacy}
- * checks.
- * 
+ * Uses a {@link InfoScreen} to deal with succesful {@link Diplomacy} checks.
+ *
  * @author alex
  */
 public class BribingScreen {
@@ -70,16 +69,17 @@ public class BribingScreen {
 	static String printdiplomacy(List<Combatant> foes, int dailyfee, int bribe,
 			boolean canhire) {
 		String text = "You are able to parley with the "
-				+ ChallengeCalculator.describedifficulty(foes) + " opponents!\n\n";
+				+ ChallengeCalculator.describedifficulty(foes)
+				+ " opponents!\n\n";
 		text = Combatant.group(foes);
 		text += "\n\nWhat do you want to do? You have $"
-				+ PurchaseScreen.formatcost(Squad.active.gold) + ".";
+				+ SelectScreen.formatcost(Squad.active.gold) + ".";
 		text += "\n";
 		text += "\n1 - battle!";
-		text += "\n2 - bribe them ($" + PurchaseScreen.formatcost(bribe) + ")";
+		text += "\n2 - bribe them ($" + SelectScreen.formatcost(bribe) + ")";
 		if (canhire) {
 			text += "\n3 - hire as mercenaries ($"
-					+ PurchaseScreen.formatcost(dailyfee) + "/day)";
+					+ SelectScreen.formatcost(dailyfee) + "/day)";
 		}
 		text += "\n";
 		return text;

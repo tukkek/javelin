@@ -2,16 +2,17 @@ package javelin.model.item.instrument;
 
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.view.screen.town.PurchaseScreen;
+import javelin.model.unit.skill.Skill;
+import javelin.view.screen.town.SelectScreen;
 
 /**
  * Currently just a helper class to help with designing costs.
- * 
+ *
  * Your average bard (assuming a charisma of 16) can take 10 on a perform roll
  * with a result of 16+level.
- * 
+ *
  * Easy DC: 10+level. Medium DC: 16+level. Hard DC: 22+level.
- * 
+ *
  * @author alex
  */
 public class Instrument {
@@ -32,9 +33,13 @@ public class Instrument {
 		cost = calculatecost(level, casterlevel, extraperformdc);
 	}
 
-	/** TODO needs to be perform, not spellcraft. */
+	/**
+	 * TODO needs to be perform, not spellcraft.
+	 *
+	 * TODO really +20? not 1d20?
+	 */
 	public boolean checkifcanuse(Combatant c) {
-		return c.source.skills.spellcraft + 20 > performdc;
+		return Skill.SPELLCRAFT.getranks(c) + 20 > performdc;
 	}
 
 	static int calculatecost(Spell s, int extraperformdc) {
@@ -54,8 +59,7 @@ public class Instrument {
 
 	public static void main(String[] args) {
 		Instrument i = new Instrument(7, 13, 3);
-		System.out.println(PurchaseScreen.formatcost(i.cost));
+		System.out.println(SelectScreen.formatcost(i.cost));
 		System.out.println("DC" + i.performdc);
-		// System.out.println("Caster level " + new Doom().casterlevel);
 	}
 }

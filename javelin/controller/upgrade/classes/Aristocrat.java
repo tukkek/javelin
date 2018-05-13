@@ -1,11 +1,5 @@
 package javelin.controller.upgrade.classes;
 
-import javelin.controller.upgrade.skill.Diplomacy;
-import javelin.controller.upgrade.skill.GatherInformation;
-import javelin.controller.upgrade.skill.Knowledge;
-import javelin.controller.upgrade.skill.Perception;
-import javelin.controller.upgrade.skill.SkillUpgrade;
-import javelin.controller.upgrade.skill.Survival;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -21,13 +15,10 @@ public class Aristocrat extends ClassLevelUpgrade {
 			new Level(4, 4, 8), new Level(4, 4, 9), new Level(5, 5, 9),
 			new Level(5, 5, 10), new Level(5, 5, 10), new Level(6, 6, 10),
 			new Level(6, 6, 11), new Level(6, 6, 12), };
-	public static final SkillUpgrade[] SKILLS = new SkillUpgrade[] {
-			Diplomacy.SINGLETON, GatherInformation.SINGLETON,
-			Knowledge.SINGLETON, Perception.SINGLETON, Survival.SINGLETON };
 	public static final ClassLevelUpgrade SINGLETON = new Aristocrat();
 
 	private Aristocrat() {
-		super("Aristocrat", .72f, TABLE, 8, 4, SKILLS, .65f);
+		super("Aristocrat", .72f, TABLE, 8, 4, .65f);
 	}
 
 	@Override

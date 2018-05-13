@@ -17,8 +17,8 @@ import javelin.model.item.key.TempleKey;
 import javelin.model.item.relic.Relic;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
+import javelin.model.unit.skill.DisableDevice;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
@@ -33,10 +33,10 @@ import javelin.view.screen.wish.Win;
 /**
  * Temples are the key to winning Javelin. Each temple is locked and needs to be
  * unlocked by a {@link TempleKey}, brute {@link Monster#strength} or
- * {@link Skills#disabledevice}. Inside the Temple there will be a Relic, and
- * once all of those are collected they can be taken to {@link Haxor} to finish
- * the game. Each temple is a multi-level, permanent {@link Dungeon}, where on
- * each level can be found a ruby and the Relic sits on the last level.
+ * {@link DisableDevice}. Inside the Temple there will be a Relic, and once all
+ * of those are collected they can be taken to {@link Haxor} to finish the game.
+ * Each temple is a multi-level, permanent {@link Dungeon}, where on each level
+ * can be found a ruby and the Relic sits on the last level.
  *
  * Battles inside temples consist of upgraded units.
  *

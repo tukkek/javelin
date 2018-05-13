@@ -20,11 +20,11 @@ import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.controller.comparator.FeatByNameComparator;
+import javelin.controller.db.reader.fields.Skills;
 import javelin.controller.map.Map;
 import javelin.controller.quality.subtype.Construct;
 import javelin.controller.quality.subtype.Undead;
 import javelin.controller.terrain.Terrain;
-import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.Cloneable;
 import javelin.model.item.artifact.Artifact;
@@ -41,9 +41,9 @@ import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.feat.Feat;
 import javelin.model.unit.feat.attack.WeaponFinesse;
 import javelin.model.unit.feat.attack.focus.WeaponFocus;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.town.labor.military.Academy;
 import javelin.model.world.location.unique.MercenariesGuild;
-import javelin.view.screen.upgrading.SkillSelectionScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -263,8 +263,6 @@ public class Monster implements Cloneable, Serializable {
 	 * to wear all {@link Slot}s comfortably) then it isn't a proper humanoid.
 	 */
 	public Boolean humanoid = null;
-	/** See {@link Skills}. */
-	public Skills skills = new Skills();
 	/** Creatures that should only be spawned at night or underground. */
 	public boolean nightonly = false;
 	/** Immunity to critical hits. */
@@ -281,8 +279,6 @@ public class Monster implements Cloneable, Serializable {
 	 * constitution score.
 	 */
 	public int poison = 0;
-	/** Unspent skill points. */
-	public int skillpool = 0;
 	/** Percent chance of an attack missing (1 = 100%). */
 	public float misschance = 0;
 	/**
@@ -310,7 +306,18 @@ public class Monster implements Cloneable, Serializable {
 	 */
 	public boolean heal = true;
 	public Constrict constrict = null;
+	/**
+	 * Counts skill ranks both from {@link #trained} and untrained
+	 * {@link Skill}s. Untrained skill usually come from the base monster stats.
+	 */
 	public HashMap<String, Integer> ranks = new HashMap<String, Integer>();
+	/**
+	 * Trained {@link Skill}s are maximized every time a unit levels up.
+	 *
+	 * @see Skill#maximize(Monster)
+	 * @see ClassLevelUpgrade
+	 * @see #ranks
+	 */
 	public HashSet<String> trained = new HashSet<String>(0);
 
 	@Override
@@ -322,7 +329,8 @@ public class Monster implements Cloneable, Serializable {
 			m.feats = m.feats.clone();
 			m.hd = hd.clone();
 			m.breaths = breaths.clone();
-			m.skills = skills.clone();
+			m.ranks = (HashMap<String, Integer>) ranks.clone();
+			m.trained = (HashSet<String>) trained.clone();
 			if (touch != null) {
 				m.touch = touch.clone();
 			}
@@ -742,24 +750,6 @@ public class Monster implements Cloneable, Serializable {
 			}
 		}
 		return 0;
-	}
-
-	/**
-	 * Call this to spend {@link #skillpool}.
-	 *
-	 * @param u
-	 *            If <code>null</code> will use all available classes to
-	 *            determine class skills.
-	 * @return You can either call {@link SkillSelectionScreen#show()} for user
-	 *         input or {@link SkillSelectionScreen#upgradeautomatically()} for
-	 *         no user input.
-	 *
-	 * @see ClassLevelUpgrade
-	 * @see RaiseIntelligence
-	 * @see #skills
-	 */
-	public SkillSelectionScreen purchaseskills(ClassLevelUpgrade u) {
-		return new SkillSelectionScreen(this, u);
 	}
 
 	/**

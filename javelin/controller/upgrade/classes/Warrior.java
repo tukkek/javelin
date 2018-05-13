@@ -1,6 +1,5 @@
 package javelin.controller.upgrade.classes;
 
-import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -19,7 +18,7 @@ public class Warrior extends ClassLevelUpgrade {
 	public static final ClassLevelUpgrade SINGLETON = new Warrior();
 
 	private Warrior() {
-		super("Warrior", 1f, TABLE, 8, 2, new SkillUpgrade[0], .7f);
+		super("Warrior", 1f, TABLE, 8, 2, .7f);
 	}
 
 	@Override

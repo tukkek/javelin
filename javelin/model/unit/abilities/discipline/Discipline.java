@@ -5,14 +5,15 @@ import java.io.Serializable;
 import javelin.controller.action.maneuver.ExecuteManeuver;
 import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.upgrade.FeatUpgrade;
+import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.upgrade.classes.Warrior;
-import javelin.controller.upgrade.skill.Knowledge;
 import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
 import javelin.model.unit.feat.MartialTraining;
 import javelin.model.unit.feat.attack.expertise.CombatExpertise;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.town.labor.military.Academy;
 import javelin.model.world.location.town.labor.military.BuildDisciplineAcademy;
 import javelin.model.world.location.town.labor.military.DisciplineAcademy;
@@ -20,12 +21,12 @@ import javelin.model.world.location.town.labor.military.DisciplineAcademy;
 /**
  * Represent a martial-arts discipline from the Path of War books, which is
  * basically a collection of {@link Maneuver}s.
- * 
+ *
  * Each discipline should have at least 2 {@link Maneuver}s per level.
  * Technically, everything is fine as long as there at least 2 disciplines per
  * leve of {@link MartialTraining} the unit can upgrade to - so having 8 level 1
  * Maneuvers is enough to get a discipline to level 4 (even if not ideal).
- * 
+ *
  * @author alex
  * @see Disciplines#ALL
  */
@@ -38,12 +39,12 @@ public abstract class Discipline implements Serializable {
 	 * not. Useful for emulating abilities that are not {@link Maneuvers} as
 	 * disciplines for the sake of using the existing {@link ExecuteManeuver}
 	 * integrated user interface.
-	 * 
+	 *
 	 * Note that some disciplines (such as {@link CombatExpertise}) have an
 	 * {@link Academy} - but they are not actual instances of DisciplineAcademy
 	 * and are generateed in some other way. In these cases, {@link #hasacademy}
 	 * would always be <code>false</code>.
-	 * 
+	 *
 	 * @see FeatureGenerator
 	 * @see #generateacademy()
 	 */
@@ -54,13 +55,13 @@ public abstract class Discipline implements Serializable {
 	 * This is supposed to always be {@link Warrior} due to balancing reasons.
 	 */
 	final public ClassLevelUpgrade classupgrade = Warrior.SINGLETON;
-	final public Upgrade knowledgeupgrade = Knowledge.SINGLETON;
+	final public Skill knowledgeupgrade = Skill.KNOWLEDGE;
 	public Upgrade trainingupgrade;
-	public Upgrade skillupgrade;
+	public Skill skillupgrade;
 	public RaiseAbility abilityupgrade;
 
 	public Discipline(String name, RaiseAbility abilityupgrade,
-			Upgrade skillupgrade) {
+			Skill skillupgrade) {
 		this(name);
 		this.abilityupgrade = abilityupgrade;
 		this.skillupgrade = skillupgrade;
@@ -127,7 +128,8 @@ public abstract class Discipline implements Serializable {
 	 *         they should be applied to get the most out of training under it.
 	 */
 	public Upgrade[] getupgrades() {
-		return new Upgrade[] { trainingupgrade, knowledgeupgrade, classupgrade,
-				abilityupgrade, skillupgrade };
+		return new Upgrade[] { trainingupgrade,
+				new SkillUpgrade(knowledgeupgrade), classupgrade,
+				abilityupgrade, new SkillUpgrade(skillupgrade) };
 	}
 }

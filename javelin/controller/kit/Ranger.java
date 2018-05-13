@@ -1,10 +1,11 @@
 package javelin.controller.kit;
 
+import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseDexterity;
 import javelin.controller.upgrade.classes.Warrior;
-import javelin.controller.upgrade.skill.Survival;
 import javelin.model.unit.Monster;
+import javelin.model.unit.skill.Skill;
 
 public class Ranger extends Kit {
 	public static final Kit INSTANCE = new Ranger();
@@ -16,7 +17,7 @@ public class Ranger extends Kit {
 
 	@Override
 	protected void define() {
-		basic.add(Survival.SINGLETON);
+		basic.add(new SkillUpgrade(Skill.SURVIVAL));
 		basic.addAll(UpgradeHandler.singleton.shots);
 	}
 

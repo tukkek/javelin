@@ -8,11 +8,11 @@ import javelin.Javelin;
 import javelin.controller.challenge.factor.ClassLevelFactor;
 import javelin.controller.challenge.factor.SkillsFactor;
 import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
+import javelin.model.unit.skill.Skill;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -45,11 +45,6 @@ public abstract class ClassLevelUpgrade extends Upgrade {
 	/** Name of the skill. */
 	public final String descriptivename;
 	final int hd;
-	/**
-	 * All skills this class can use normally. Other skills cost twice the
-	 * points to increase.
-	 */
-	public SkillUpgrade[] classskills;
 	/** @see ClassLevelFactor */
 	public float crperlevel;
 	/**
@@ -58,25 +53,24 @@ public abstract class ClassLevelUpgrade extends Upgrade {
 	 * improvement to BAB over time than requiring a player to advance in only a
 	 * single class, which may require revisiting academies, bookkeeping of
 	 * which character is which class, etc.
-	 * 
+	 *
 	 * TODO saves should probably be done like this too...
-	 * 
+	 *
 	 * @see Monster#babpartial
 	 */
-	float babprograssion;
+	float babprogression;
 
 	public ClassLevelUpgrade(String name, float bab, Level[] tablep, int hdp,
-			int skillratep, SkillUpgrade[] classskillsp, float crperlevelp) {
+			int skillratep, float crperlevelp) {
 		super("Class: " + name.toLowerCase());
 		descriptivename = name;
-		this.babprograssion = bab;
+		babprogression = bab;
 		table = tablep;
 		if (Javelin.DEBUG && table.length != 21) {
 			System.out.println("#>20levels");
 		}
 		hd = hdp;
 		skillrate = skillratep;
-		classskills = classskillsp;
 		crperlevel = crperlevelp;
 	}
 
@@ -114,7 +108,9 @@ public abstract class ClassLevelUpgrade extends Upgrade {
 		m.fort += next.fort - last.fort;
 		m.ref += next.ref - last.ref;
 		m.addwill(next.will - last.will);
-		m.skillpool += SkillsFactor.levelup(skillrate, m);
+		for (String skill : m.trained) {
+			Skill.BYNAME.get(skill).maximize(m);
+		}
 		return true;
 	}
 
@@ -130,7 +126,7 @@ public abstract class ClassLevelUpgrade extends Upgrade {
 	}
 
 	public float advancebab(int level) {
-		return babprograssion;
+		return babprogression;
 	}
 
 	public void advanceattack(int bab, ArrayList<AttackSequence> melee) {
@@ -154,7 +150,7 @@ public abstract class ClassLevelUpgrade extends Upgrade {
 	 * Prevents an upgrade to reach a level where the character will receive a
 	 * new attack per turn, which would need to modify the {@link Monster} to
 	 * the point of creating new attacks, calculating 2-handed weapon bonuses...
-	 * 
+	 *
 	 * TODO can be converted to a {@link HashMap}
 	 */
 	public int checkfornewattack(Monster m, int babdelta) {

@@ -3,6 +3,7 @@ package javelin.controller.upgrade;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import javelin.controller.fight.Fight;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
@@ -14,17 +15,19 @@ import javelin.model.world.location.town.Town;
  * A improvement to a {@link Combatant}'s {@link Monster} which has to be
  * trained (which has a gold and time cost). Upgrades are distributed among
  * {@link Town}s, like {@link Item}s.
- * 
+ *
  * @see Combatant#postupgrade(boolean, Upgrade)
  * @see Combatant#postupgradeautomatic(boolean, Upgrade)
  * @author alex
  */
 public abstract class Upgrade implements Serializable {
-
 	/** Short description. */
 	public String name;
-
-	public boolean arena = true;
+	/**
+	 * Indicates that this upgrade is immediately relevant during
+	 * {@link Fight}s.
+	 */
+	public boolean usedincombat = true;
 
 	/** Constructor. */
 	public Upgrade(final String name) {
@@ -35,10 +38,10 @@ public abstract class Upgrade implements Serializable {
 	/**
 	 * To be show before upgrade confirmation, containing relevant information
 	 * that might help decide to buy it or not.
-	 * 
+	 *
 	 * For example, a {@link Spell} could show how many times it can already be
 	 * cast by the {@link Combatant} in question.
-	 * 
+	 *
 	 * @return one line of text.
 	 */
 	public abstract String inform(final Combatant c);

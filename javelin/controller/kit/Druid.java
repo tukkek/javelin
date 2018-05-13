@@ -3,12 +3,13 @@ package javelin.controller.kit;
 import java.util.LinkedList;
 
 import javelin.Javelin;
+import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.controller.upgrade.classes.Commoner;
-import javelin.controller.upgrade.skill.Survival;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
+import javelin.model.unit.skill.Skill;
 import tyrant.mikera.engine.RPG;
 
 public class Druid extends Kit {
@@ -24,7 +25,7 @@ public class Druid extends Kit {
 		basic.add(new Summon("Small monstrous centipede", 1));
 		basic.add(new Summon("Dire rat", 1));
 		basic.add(new Summon("Eagle", 1));
-		basic.add(Survival.SINGLETON);
+		basic.add(new SkillUpgrade(Skill.SURVIVAL));
 	}
 
 	@Override

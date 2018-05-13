@@ -1,12 +1,10 @@
 package javelin.controller.kit;
 
+import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.controller.upgrade.classes.Expert;
-import javelin.controller.upgrade.skill.Diplomacy;
-import javelin.controller.upgrade.skill.GatherInformation;
-import javelin.controller.upgrade.skill.Knowledge;
-import javelin.controller.upgrade.skill.UseMagicDevice;
+import javelin.model.unit.skill.Skill;
 
 public class Bard extends Kit {
 	public static final Kit INSTANCE = new Bard();
@@ -18,10 +16,9 @@ public class Bard extends Kit {
 
 	@Override
 	protected void define() {
-		basic.add(Diplomacy.SINGLETON);
-		basic.add(GatherInformation.SINGLETON);
-		basic.add(Knowledge.SINGLETON);
-		basic.add(UseMagicDevice.SINGLETON);
+		basic.add(new SkillUpgrade(Skill.DIPLOMACY));
+		basic.add(new SkillUpgrade(Skill.KNOWLEDGE));
+		basic.add(new SkillUpgrade(Skill.USEMAGICDEVICE));
 	}
 
 	@Override

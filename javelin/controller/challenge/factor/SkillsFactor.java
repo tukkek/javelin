@@ -1,21 +1,9 @@
 package javelin.controller.challenge.factor;
 
+import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.controller.upgrade.skill.Acrobatics;
-import javelin.controller.upgrade.skill.Concentration;
-import javelin.controller.upgrade.skill.Diplomacy;
-import javelin.controller.upgrade.skill.DisableDevice;
-import javelin.controller.upgrade.skill.Disguise;
-import javelin.controller.upgrade.skill.GatherInformation;
-import javelin.controller.upgrade.skill.Heal;
-import javelin.controller.upgrade.skill.Knowledge;
-import javelin.controller.upgrade.skill.Perception;
-import javelin.controller.upgrade.skill.Spellcraft;
-import javelin.controller.upgrade.skill.Stealth;
-import javelin.controller.upgrade.skill.Survival;
-import javelin.controller.upgrade.skill.UseMagicDevice;
 import javelin.model.unit.Monster;
-import javelin.model.unit.Skills;
+import javelin.model.unit.skill.Skill;
 
 /**
  * Calculates a challenge rating value based on the skills a character has. To
@@ -23,9 +11,9 @@ import javelin.model.unit.Skills;
  * {@link HdFactor}. Since if a creature acquires a character class it follows
  * the rules for multi-class characters then we ignore the 4x bonus points of
  * first level..
- * 
+ *
  * All skills are being considered class skills.
- * 
+ *
  * @author alex
  */
 public class SkillsFactor extends CrFactor {
@@ -34,40 +22,38 @@ public class SkillsFactor extends CrFactor {
 
 	@Override
 	public float calculate(Monster m) {
-		Skills skills = m.skills;
-		return COST * (m.skillpool + skills.concentration + skills.diplomacy
-				+ skills.disabledevice + skills.gatherinformation
-				+ skills.stealth + skills.knowledge + +skills.spellcraft
-				+ skills.perception + skills.acrobatics + skills.survival
-				+ skills.usemagicdevice);
+		int ranks = 0;
+		for (int skill : m.ranks.values()) {
+			ranks += skill;
+		}
+		return COST * ranks;
 	}
 
 	@Override
 	public void registerupgrades(UpgradeHandler handler) {
-		handler.good.add(Diplomacy.SINGLETON);
-		handler.good.add(GatherInformation.SINGLETON);
+		handler.good.add(new SkillUpgrade(Skill.DIPLOMACY));
 
-		handler.evil.add(Stealth.SINGLETON);
-		handler.evil.add(Disguise.SINGLETON);
+		handler.evil.add(new SkillUpgrade(Skill.STEALTH));
+		handler.evil.add(new SkillUpgrade(Skill.DISGUISE));
 
-		handler.water.add(Knowledge.SINGLETON);
-		handler.water.add(Concentration.SINGLETON);
-		handler.water.add(Heal.SINGLETON);
+		handler.water.add(new SkillUpgrade(Skill.KNOWLEDGE));
+		handler.water.add(new SkillUpgrade(Skill.CONCENTRATION));
+		handler.water.add(new SkillUpgrade(Skill.HEAL));
 
-		handler.wind.add(Perception.SINGLETON);
-		handler.wind.add(Acrobatics.SINGLETON);
-		handler.wind.add(DisableDevice.SINGLETON);
+		handler.wind.add(new SkillUpgrade(Skill.PERCEPTION));
+		handler.wind.add(new SkillUpgrade(Skill.ACROBATICS));
+		handler.wind.add(new SkillUpgrade(Skill.DISABLEDEVICE));
 
-		handler.earth.add(Survival.SINGLETON);
+		handler.earth.add(new SkillUpgrade(Skill.SURVIVAL));
 
-		handler.magic.add(Spellcraft.SINGLETON);
-		handler.magic.add(UseMagicDevice.SINGLETON);
+		handler.magic.add(new SkillUpgrade(Skill.SPELLCRAFT));
+		handler.magic.add(new SkillUpgrade(Skill.USEMAGICDEVICE));
 	}
 
 	/**
 	 * @param progression
 	 *            How many skills are gained per class level or monster hit die.
-	 * @param monster
+	 * @param m
 	 *            Applies {@link Monster#intelligence} to sum
 	 * @return the challenge rating value for how much should be gained in
 	 *         skills each level.

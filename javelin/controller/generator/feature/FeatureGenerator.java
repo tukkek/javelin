@@ -7,10 +7,12 @@ import java.util.Comparator;
 import java.util.HashMap;
 
 import javelin.controller.terrain.Terrain;
+import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.discipline.Discipline;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.Caravan;
 import javelin.model.world.World;
@@ -251,7 +253,9 @@ public class FeatureGenerator {
 	void generatestartingarea(World seed, Town t) {
 		spawnnear(t, new Lodge(), seed, 1, 2, true);
 		spawnnear(t, new Shop(true, t.realm), seed, 1, 2, true);
-		spawnnear(t, new RealmAcademy(t.originalrealm), seed, 1, 2, true);
+		RealmAcademy academy = new RealmAcademy(t.originalrealm);
+		academy.upgrades.add(new SkillUpgrade(Skill.SURVIVAL));
+		spawnnear(t, academy, seed, 1, 2, true);
 		ArrayList<Monster> recruits = t.getpossiblerecruits();
 		recruits.sort(new Comparator<Monster>() {
 			@Override

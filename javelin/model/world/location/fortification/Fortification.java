@@ -11,8 +11,8 @@ import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
 import javelin.model.Realm;
-import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
+import javelin.model.unit.skill.Knowledge;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
@@ -31,9 +31,9 @@ import tyrant.mikera.engine.RPG;
  * @see Location#garrison
  */
 public abstract class Fortification extends Location {
-	/** To be shown on a successful {@link Skills#knowledge} check. */
+	/** To be shown on a successful {@link Knowledge} check. */
 	public String descriptionknown;
-	/** To be shown on a failed {@link Skills#knowledge} check. */
+	/** To be shown on a failed {@link Knowledge} check. */
 	protected String descriptionunknown;
 	/**
 	 * The decided encounter level in the given range. See
@@ -157,7 +157,8 @@ public abstract class Fortification extends Location {
 		}
 		int knowledge = Squad.active.getbest(Skill.KNOWLEDGE)
 				.taketen(Skill.KNOWLEDGE);
-		return knowledge >= 10 + targetel ? descriptionknown : descriptionunknown;
+		return knowledge >= 10 + targetel ? descriptionknown
+				: descriptionunknown;
 	}
 
 	/**

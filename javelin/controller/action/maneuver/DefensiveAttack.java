@@ -8,6 +8,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.feat.attack.expertise.CombatExpertise;
+import javelin.model.unit.skill.Skill;
 
 public class DefensiveAttack extends ExpertiseAction {
 	public static final Action INSTANCE = new DefensiveAttack();
@@ -77,7 +78,7 @@ public class DefensiveAttack extends ExpertiseAction {
 	}
 
 	int defensiveamount(Combatant c) {
-		return amount(c, c.source.skills.acrobatics >= 3 ? +3 : +2);
+		return amount(c, Skill.ACROBATICS.getranks(c) >= 3 ? +3 : +2);
 	}
 
 	@Override

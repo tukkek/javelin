@@ -1,12 +1,11 @@
 package javelin.controller.kit;
 
+import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseDexterity;
 import javelin.controller.upgrade.classes.Expert;
-import javelin.controller.upgrade.skill.DisableDevice;
-import javelin.controller.upgrade.skill.Perception;
-import javelin.controller.upgrade.skill.Stealth;
 import javelin.model.unit.Monster;
+import javelin.model.unit.skill.Skill;
 
 public class Rogue extends Kit {
 	public static final Kit INSTANCE = new Rogue();
@@ -18,9 +17,9 @@ public class Rogue extends Kit {
 
 	@Override
 	protected void define() {
-		basic.add(DisableDevice.SINGLETON);
-		basic.add(Stealth.SINGLETON);
-		basic.add(Perception.SINGLETON);
+		basic.add(new SkillUpgrade(Skill.DISABLEDEVICE));
+		basic.add(new SkillUpgrade(Skill.STEALTH));
+		basic.add(new SkillUpgrade(Skill.PERCEPTION));
 	}
 
 	@Override

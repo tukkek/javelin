@@ -1,7 +1,6 @@
 package javelin.controller.upgrade.classes;
 
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.controller.upgrade.skill.SkillUpgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -25,8 +24,7 @@ public class Expert extends ClassLevelUpgrade {
 	}
 
 	private Expert() {
-		super("Expert", .72f, TABLE, 6, 6, SkillUpgrade.ALL
-				.toArray(new SkillUpgrade[SkillUpgrade.ALL.size()]), .65f);
+		super("Expert", .72f, TABLE, 6, 6, .65f);
 	}
 
 	@Override

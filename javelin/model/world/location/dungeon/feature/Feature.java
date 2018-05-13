@@ -3,8 +3,8 @@ package javelin.model.world.location.dungeon.feature;
 import java.io.Serializable;
 
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
+import javelin.model.unit.skill.Perception;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.view.Images;
 import javelin.view.mappanel.dungeon.DungeonTile;
@@ -77,17 +77,17 @@ public abstract class Feature implements Serializable {
 	/**
 	 * Called when the {@link Squad} is passing nearby this feature. If it's
 	 * hidden, might have a chance of revealing it.
-	 * 
+	 *
 	 * @param searching
 	 *            The unit that is actively looking around (usually the one with
 	 *            highest perception).
 	 * @param searchroll
-	 *            A {@link Skills#perception} roll (usually a take-10, to
-	 *            prevent scumming). If you want to have an automatic success,
-	 *            inform a high number like 9000, because if you use
+	 *            A {@link Perception} roll (usually a take-10, to prevent
+	 *            scumming). If you want to have an automatic success, inform a
+	 *            high number like 9000, because if you use
 	 *            {@link Integer#MAX_VALUE}, it may overflow after internal
 	 *            bonuses being applied.
-	 * 
+	 *
 	 * @see #draw
 	 */
 	public void discover(Combatant searching, int searchroll) {

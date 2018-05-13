@@ -6,9 +6,10 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.table.HiddenTrap;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.divination.FindTraps.FindingTraps;
+import javelin.model.unit.skill.DisableDevice;
+import javelin.model.unit.skill.Perception;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.view.screen.DungeonScreen;
@@ -45,9 +46,9 @@ public class Trap extends Feature {
 	public final int cr;
 	/** Difficulty class to save against. */
 	public float reflexdc;
-	/** See {@link Skills#disabledevice}. */
+	/** See {@link DisableDevice}. */
 	public int disarmdc = -1;
-	/** See {@link Skills#search}. */
+	/** See {@link Perception}. */
 	public int searchdc = -1;
 	/** d6 */
 	private int damagedie = 0;

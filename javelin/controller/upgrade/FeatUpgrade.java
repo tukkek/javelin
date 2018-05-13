@@ -30,7 +30,7 @@ public class FeatUpgrade extends Upgrade {
 				+ featp.name.substring(1));
 		feat = featp;
 		prerequisite = feat.prerequisite;
-		arena = feat.arena;
+		usedincombat = feat.arena;
 	}
 
 	@Override

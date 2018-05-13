@@ -9,16 +9,17 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.unit.abilities.discipline.Maneuver;
 import javelin.model.unit.abilities.discipline.Maneuvers;
+import javelin.model.unit.skill.Skill;
 import tyrant.mikera.engine.RPG;
 
 /**
  * TODO how to allow player to select the maneuvers to learn?
- * 
+ *
  * Javelin allows you to take as many feats as you want right up the bat so we
  * need to add some validation here for when the assumption you'll only get a
  * feat every x levels is false. However we don't want to limit this too much as
  * we have this count for 2 feats with each buy.
- * 
+ *
  * @author alex
  */
 public class MartialTraining extends Feat {
@@ -34,7 +35,7 @@ public class MartialTraining extends Feat {
 	int level = 0;
 	/**
 	 * Number of {@link Maneuver}s that can be learned after upgrading this.
-	 * 
+	 *
 	 * @see Combatant#postupgrade(boolean, javelin.controller.upgrade.Upgrade)
 	 * @see Combatant#postupgradeautomatic(boolean,
 	 *      javelin.controller.upgrade.Upgrade)
@@ -43,7 +44,7 @@ public class MartialTraining extends Feat {
 
 	public MartialTraining(Discipline d) {
 		super(d.name + " training");
-		this.discipline = d;
+		discipline = d;
 	}
 
 	@Override
@@ -73,7 +74,7 @@ public class MartialTraining extends Feat {
 		}
 		int minimum = 1 + nextlevel * 2;
 		int bab = m.getbaseattackbonus();
-		int knowledge = m.skills.knowledge;
+		int knowledge = Skill.KNOWLEDGE.getranks(c);
 		return bab >= minimum || knowledge >= minimum;
 	}
 

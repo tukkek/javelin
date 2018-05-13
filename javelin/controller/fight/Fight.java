@@ -31,9 +31,9 @@ import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
 import javelin.model.unit.condition.Dominated;
+import javelin.model.unit.skill.Diplomacy;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
@@ -86,8 +86,7 @@ public abstract class Fight {
 	public boolean hide = true;
 
 	/**
-	 * <code>true</code> if this fight is susceptible to
-	 * {@link Skills#diplomacy}.
+	 * <code>true</code> if this fight is susceptible to {@link Diplomacy}.
 	 */
 	public boolean bribe = true;
 

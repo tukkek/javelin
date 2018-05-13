@@ -19,8 +19,9 @@ import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Skills;
 import javelin.model.unit.Squad;
+import javelin.model.unit.skill.Diplomacy;
+import javelin.model.unit.skill.Knowledge;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
@@ -81,7 +82,7 @@ public abstract class Location extends Actor {
 	 */
 	public String description;
 	/**
-	 * Allows use of {@link Skills#gatherinformation}.
+	 * Allows use of {@link Diplomacy}.
 	 */
 	public boolean gossip = false;
 
@@ -106,8 +107,7 @@ public abstract class Location extends Actor {
 
 	/**
 	 * @param descriptionknown
-	 *            What to show a player on a succesfull {@link Skills#knowledge}
-	 *            check.
+	 *            What to show a player on a succesfull {@link Knowledge} check.
 	 * @param descriptionunknown
 	 *            What to show otherwise.
 	 */

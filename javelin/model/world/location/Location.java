@@ -167,41 +167,45 @@ public abstract class Location extends Actor {
 	 * @return <code>true</code> if the {@link Squad} is able to interact with
 	 *         this place, <code>false</code> if a {@link #garrison} defends it.
 	 */
-	public static boolean interact(Location p) {
-		if (p.defend()) {
+	public static boolean interact(Location l) {
+		if (l.defend()) {
 			return false;
 		}
-		if (p.gossip) {
-			Actor closest = null;
-			ArrayList<Actor> actors = World.getactors();
-			for (int x = p.x - 5; x <= p.x + 5; x++) {
-				for (int y = p.y - 5; y <= p.y + 5; y++) {
-					if (!WorldScreen.see(new Point(x, y))) {
-						Actor a = World.get(x, y, actors);
-						if (a == null) {
-							continue;
-						}
-						if (closest == null || Walker.distance(p.x, p.y, a.x,
-								a.y) < Walker.distance(p.x, p.y, closest.x,
-										closest.y)) {
-							closest = a;
-						}
-					}
-				}
-			}
-			if (closest != null) {
-				final double distance = Walker.distance(p.x, p.y, closest.x,
-						closest.y);
-				if (Squad.active.getbest(Skill.DIPLOMACY)
-						.taketen(Skill.DIPLOMACY) >= 10 + distance) {
-					WorldScreen.setVisible(closest.x, closest.y);
-				}
-			}
+		if (l.gossip) {
+			gossip(l);
 		}
-		if (p.discard) {
-			p.remove();
+		if (l.discard) {
+			l.remove();
 		}
 		return true;
+	}
+
+	static void gossip(Location here) {
+		Actor closest = null;
+		ArrayList<Actor> actors = World.getactors();
+		for (int x = here.x - 5; x <= here.x + 5; x++) {
+			for (int y = here.y - 5; y <= here.y + 5; y++) {
+				if (WorldScreen.see(new Point(x, y))) {
+					continue;
+				}
+				Actor a = World.get(x, y, actors);
+				if (a == null) {
+					continue;
+				}
+				if (closest == null || a.distance(here.x, here.y) < closest
+						.distance(here.x, here.y)) {
+					closest = a;
+				}
+			}
+		}
+		if (closest == null) {
+			return;
+		}
+		int diplomacy = Squad.active.getbest(Skill.DIPLOMACY)
+				.taketen(Skill.DIPLOMACY);
+		if (diplomacy >= 10 + closest.distance(here.x, here.y)) {
+			WorldScreen.setVisible(closest.x, closest.y);
+		}
 	}
 
 	@Override

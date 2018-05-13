@@ -161,14 +161,8 @@ public class Door extends Feature {
 	}
 
 	Combatant unlock() {
-		Combatant expert = null;
-		for (Combatant c : Squad.active.members) {
-			if (expert == null || Skill.DISABLEDEVICE
-					.getbonus(c) > Skill.DISABLEDEVICE.getbonus(expert)) {
-				expert = c;
-			}
-		}
-		return Skill.DISABLEDEVICE.getbonus(expert) >= unlockdc ? expert : null;
+		Combatant expert = Squad.active.getbest(Skill.DISABLEDEVICE);
+		return expert.taketen(Skill.DISABLEDEVICE) >= unlockdc ? expert : null;
 	}
 
 	Combatant force() {
@@ -179,9 +173,9 @@ public class Door extends Feature {
 				strongest = c;
 			}
 		}
-		int breakroll = 10 + BREAKBONUS
+		int force = 10 + BREAKBONUS
 				+ Monster.getbonus(strongest.source.strength);
-		return breakroll >= breakdc ? strongest : null;
+		return force >= breakdc ? strongest : null;
 	}
 
 	public static Door generate(Dungeon dungeon, Point p) {

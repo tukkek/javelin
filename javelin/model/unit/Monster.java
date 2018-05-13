@@ -8,6 +8,7 @@ package javelin.model.unit;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
@@ -310,6 +311,7 @@ public class Monster implements Cloneable, Serializable {
 	public boolean heal = true;
 	public Constrict constrict = null;
 	public HashMap<String, Integer> ranks = new HashMap<String, Integer>();
+	public HashSet<String> trained = new HashSet<String>(0);
 
 	@Override
 	public Monster clone() {

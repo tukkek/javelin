@@ -21,10 +21,7 @@ public class Flood extends Hazard {
 	@Override
 	public void hazard(int hoursellapsed) {
 		for (Combatant c : Squad.active.members) {
-			Monster m = c.source;
-			if (RPG.r(1, 20) + Monster.getbonus(m.dexterity) < DC
-					&& Squad.active.getbest(Skill.SURVIVAL)
-							.roll(Skill.SURVIVAL) < DC) {
+			if (RPG.r(1, 20) + Monster.getbonus(c.source.dexterity) < DC) {
 				GettingLost.getlost("Squad is taken by a flash flood!", 0);
 				return;
 			}
@@ -34,6 +31,9 @@ public class Flood extends Hazard {
 	@Override
 	public boolean validate() {
 		if (Squad.active.fly()) {
+			return false;
+		}
+		if (Squad.active.getbest(Skill.SURVIVAL).roll(Skill.SURVIVAL) >= DC) {
 			return false;
 		}
 		return Weather.current == Weather.STORM

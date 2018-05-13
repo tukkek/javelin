@@ -40,12 +40,18 @@ public abstract class Condition
 		}
 	}
 
+	/**
+	 * TODO make more like {@link Combatant#skillmodifier}
+	 */
 	public static void raiseallattacks(final Monster m, int attackbonus,
 			int damagebonus) {
 		raiseattacks(m.melee, attackbonus, damagebonus);
 		raiseattacks(m.ranged, attackbonus, damagebonus);
 	}
 
+	/**
+	 * TODO make more like {@link Combatant#skillmodifier}
+	 */
 	public static void raisesaves(final Monster m, int amount) {
 		m.fort += amount;
 		m.ref += amount;
@@ -67,11 +73,11 @@ public abstract class Condition
 	 * if it hasn't experired before that. If 0 will stop at the end of combat
 	 * but {@link #end(Combatant)} will affect the original {@link Combatant}
 	 * instead of the clone used for the {@link Fight}.
-	 * 
+	 *
 	 * Subclasses that wish to implement their own
 	 * {@link #expire(int, Combatant)} mechanisms can pass
 	 * {@link Integer#MAX_VALUE} here.
-	 * 
+	 *
 	 * @see Fight#originalblueteam
 	 */
 	public Integer longterm;
@@ -106,7 +112,7 @@ public abstract class Condition
 
 	/**
 	 * In-battle check if a Condition has expired.
-	 * 
+	 *
 	 * @return <code>true</code> if has expired and has been removed.
 	 * @see #expireat
 	 */
@@ -166,7 +172,7 @@ public abstract class Condition
 	 * {@link Combatant#removecondition(Condition)} (and thus
 	 * {@link #end(Combatant)}) once {@link #longterm} decreases to zero or
 	 * less.
-	 * 
+	 *
 	 * @param time
 	 *            Elapsed time in hours.
 	 */
@@ -181,9 +187,9 @@ public abstract class Condition
 
 	/**
 	 * Expire out of battle.
-	 * 
+	 *
 	 * @param c
-	 * 
+	 *
 	 * @param Time
 	 *            elapsed, in hours.
 	 * @return <code>true</code> if is over and has to be removed.
@@ -221,10 +227,10 @@ public abstract class Condition
 	 * Merge two conditions of the same type, as long as they don't
 	 * {@link #stack}. By the time this is called, {@link #validate(Combatant)}
 	 * has already been verified.
-	 * 
+	 *
 	 * The default implementation just extends the previous condition to
 	 * whichever {@link #expireat} is higher between both.
-	 * 
+	 *
 	 * @param condition
 	 *            Condition to be merged. Will be discarded afterwards.
 	 * @return <code>false</code> if merge is not supported. <code>true</code>

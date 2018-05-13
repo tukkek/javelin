@@ -501,12 +501,8 @@ public class WorldScreen extends BattleScreen {
 	 * @return <code>true</code> if this {@link World} coordinate can be seen.
 	 */
 	public static boolean see(Point p) {
-		if (!World.validatecoordinate(p.x, p.y)) {
-			return false;
-		}
-		WorldScreen s = getcurrentscreen();
-		return s == null ? s.getdiscoveredtiles().contains(p)
-				: s.gettiles()[p.x][p.y].discovered;
+		return World.validatecoordinate(p.x, p.y)
+				&& getcurrentscreen().gettiles()[p.x][p.y].discovered;
 	}
 
 	static WorldScreen getcurrentscreen() {

@@ -108,29 +108,26 @@ public class Infiltrate extends WorldAction {
 	}
 
 	boolean detect(Combatant spy, Location target) {
-		return !roll(calculatedisguisedc(spy, target)) && !DEBUG;
+		return !roll(calculatedisguiseroll(spy, target)) && !DEBUG;
 	}
 
-	int calculatedisguisedc(Combatant spy, Location target) {
-		int ndefenders = target.garrison.size();
-		ArrayList<Integer> perception = new ArrayList<Integer>(ndefenders);
+	int calculatedisguiseroll(Combatant spy, Location target) {
+		int dc = Integer.MIN_VALUE;
 		for (Combatant c : target.garrison) {
-			perception.add(perceive(c));
-		}
-		perception.sort(null);
-		ndefenders -= 1;
-		int dc = 10 + perception.remove(ndefenders);
-		for (int i = 0; i < ndefenders; i++) {
-			if (perceive(target.garrison.get(ndefenders)) >= 0) {
-				dc += 2;
-			}
+			dc = Math.max(dc, RPG.r(1, 20) + perceive(c));
 		}
 		return dc - Skill.DISGUISE.getbonus(spy);
 	}
 
 	boolean roll(int dc) {
 		int r = RPG.r(1, 20);
-		return r != 1 && r >= dc || r == 20;
+		if (r == 1) {
+			return false;
+		}
+		if (r == 20) {
+			return true;
+		}
+		return r >= dc;
 	}
 
 	int perceive(Combatant c) {
@@ -149,9 +146,8 @@ public class Infiltrate extends WorldAction {
 		ArrayList<String> choices = new ArrayList<String>(spies.size());
 		for (Combatant c : spies) {
 			Monster m = c.source;
-			choices.add(c + " (difficulty: "
-					+ Javelin.describedifficulty(calculatedisguisedc(c, target))
-					+ ")");
+			choices.add(c + " (difficulty: " + Javelin.describedifficulty(
+					calculatedisguiseroll(c, target)) + ")");
 		}
 		int choice = Javelin.choose(
 				"Who will infiltrate the target: " + target.toString() + "?",
@@ -187,9 +183,13 @@ public class Infiltrate extends WorldAction {
 				s += c + ", ";
 			}
 		}
-		return s.isEmpty() ? ""
-				: "\n\nThe following targets are either immune to assassinations or too buff for your assassin to kill them in one blow:\n"
-						+ s.substring(0, s.length() - 2) + "\n";
+		if (s.isEmpty()) {
+			return "";
+		}
+		return "\n\n"
+				+ "The following targets are either immune to assassinations "
+				+ "or too buff for your assassin to kill them in one blow:\n"
+				+ s.substring(0, s.length() - 2) + "\n";
 	}
 
 	private boolean kill(int damage, Combatant target) {

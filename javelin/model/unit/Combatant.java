@@ -50,6 +50,7 @@ import javelin.model.unit.condition.Melding;
 import javelin.model.unit.feat.Feat;
 import javelin.model.unit.feat.attack.Cleave;
 import javelin.model.unit.feat.attack.GreatCleave;
+import javelin.model.unit.skill.Perception;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
@@ -1027,17 +1028,28 @@ public class Combatant implements Serializable, Cloneable {
 		return source.walk;
 	}
 
-	public int taketen(Skill s) {
-		return 10 + s.getbonus(this);
-	}
-
+	/**
+	 * @return Rolls a d20 and adds the given {@link Skill#getbonus(Combatant)}.
+	 * @see #taketen(Skill)
+	 */
 	public int roll(Skill s) {
 		return RPG.r(1, 20) + s.getbonus(this);
 	}
 
 	/**
-	 * TODO MOVE TO COMBATANT
+	 * This should be preferred to {@link #roll(Skill)} on any circumstance
+	 * where retrying is possible. We don't want players to bore/game/grind
+	 * themselves by retrying an action 20 times until they reach the best
+	 * possible result.
 	 *
+	 * @return Takes an automatic 10 on a d20 ("take 10" rule) and adds the
+	 *         given {@link Skill#getbonus(Combatant)}.
+	 */
+	public int taketen(Skill s) {
+		return 10 + s.getbonus(this);
+	}
+
+	/**
 	 * @return <code>true</code> if can decioher a {@link Spell} from a
 	 *         {@link Scroll} or {@link Wand}.
 	 */
@@ -1063,15 +1075,13 @@ public class Combatant implements Serializable, Cloneable {
 	 *            <code>true</code> if flying creatures get a bonus for seeing
 	 *            farther.
 	 * @param weatherpenalty
-	 *            TODO
+	 *            <code>true</code> if {@link Weather} should influence this
+	 *            roll.
 	 * @param periodpenalty
 	 *            Penalty according to {@link Monster#vision} and
 	 *            {@link Javelin#getDayPeriod()}.
-	 * @param skills
-	 *            TODO
-	 * @return Total spot roll modifier for given {@link Monster} - doesn't
-	 *         include widsom bonus or dice roll.
-	 * @see Skill#taketen(int, int)
+	 * @return Total {@link Perception} roll bonus modifier as in
+	 *         {@link Perception#getbonus(Combatant)}.
 	 */
 	public int perceive(boolean flyingbonus, boolean weatherpenalty,
 			boolean periodpenalty) {

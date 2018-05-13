@@ -36,6 +36,7 @@ import javelin.view.screen.BattleScreen;
 import javelin.view.screen.BribingScreen;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
+import tyrant.mikera.engine.RPG;
 
 /**
  * A group of units that the player controls as a overworld game unit. If a
@@ -386,7 +387,7 @@ public class Squad extends Actor implements Cloneable {
 		int spot = perceive(true, true, true);
 		for (int i = 0; i < opponents.size(); i++) {
 			Combatant c = opponents.get(i);
-			boolean spotted = spot >= c.taketen(Skill.STEALTH);
+			boolean spotted = spot >= c.roll(Skill.STEALTH);
 			garrison += (spotted ? c : "?") + ", ";
 		}
 		garrison = garrison.substring(0, garrison.length() - 2);
@@ -452,12 +453,12 @@ public class Squad extends Actor implements Cloneable {
 		if (!intelligent) {
 			return false;
 		}
-		int diplomacybonus = Skill.DIPLOMACY.getbonus(getbest(Skill.DIPLOMACY));
+		int diplomac = getbest(Skill.DIPLOMACY).roll(Skill.DIPLOMACY);
 		int highest = Integer.MIN_VALUE;
 		int dailyfee = 0;
 		for (Combatant foe : foes) {
 			int will = foe.source.will();
-			if (will >= diplomacybonus) {
+			if (RPG.r(1, 20) + will >= diplomac) {
 				return false;// no deal!
 			}
 			if (will > highest) {
@@ -466,7 +467,7 @@ public class Squad extends Actor implements Cloneable {
 			dailyfee += MercenariesGuild.getfee(foe);
 		}
 		final int bribe = Math.max(1, RewardCalculator.receivegold(foes) / 2);
-		final boolean canhire = diplomacybonus - highest >= 5;
+		final boolean canhire = diplomac >= highest + 5;
 		boolean b = new BribingScreen().bribe(foes, dailyfee, bribe, canhire);
 		Javelin.app.switchScreen(BattleScreen.active);
 		return b;

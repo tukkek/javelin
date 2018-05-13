@@ -1,6 +1,7 @@
 package javelin.model.unit.skill;
 
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
 
 public class Skill {
 	/**
@@ -47,7 +48,8 @@ public class Skill {
 	}
 
 	public int getbonus(Combatant c) {
-		return getranks(c) + getability(c) + c.skillmodifier;
+		return getranks(c) + Monster.getbonus(getabilityvalue(c))
+				+ c.skillmodifier;
 	}
 
 	public int getranks(Combatant c) {
@@ -55,7 +57,7 @@ public class Skill {
 		return ranks == null ? 0 : ranks;
 	}
 
-	int getability(Combatant c) {
+	int getabilityvalue(Combatant c) {
 		if (ability == Ability.STRENGTH) {
 			return c.source.strength;
 		}

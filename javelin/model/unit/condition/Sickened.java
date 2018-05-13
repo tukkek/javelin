@@ -17,7 +17,7 @@ public class Sickened extends Condition {
 
 	@Override
 	public void start(Combatant c) {
-		c.source = c.source.clone();
+		c = c.clone().clonesource();
 		Condition.raiseallattacks(c.source, -2, -2);
 		Condition.raisesaves(c.source, -2);
 		c.skillmodifier -= 2;
@@ -25,7 +25,7 @@ public class Sickened extends Condition {
 
 	@Override
 	public void end(Combatant c) {
-		c.source = c.source.clone();
+		c = c.clone().clonesource();
 		Condition.raiseallattacks(c.source, +2, +2);
 		Condition.raisesaves(c.source, +2);
 		c.skillmodifier += 2;

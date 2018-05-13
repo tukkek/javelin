@@ -6,7 +6,7 @@ package javelin.model.unit.skill;
  */
 public class Stealth extends Skill {
 	public Stealth() {
-		super(new String[] { "Stealth", "hide", "move silently" },
-				Ability.DEXTERITY);
+		super(new String[] { "Stealth", "hide", "move silently",
+				"pick pocket" }, Ability.DEXTERITY);
 	}
 }

@@ -37,11 +37,21 @@ public class Skills extends FieldReader {
 	}
 
 	static void apply(Monster m, String skill, int value) {
+		skill = skill.substring(0, skill.lastIndexOf(" "));
+		while (skill.contains("(")) {
+			String detail = skill.substring(skill.indexOf("("),
+					skill.indexOf(")") + 1);
+			skill = skill.replace(detail, "");
+		}
+		while (skill.contains("  ")) {
+			skill = skill.replace("  ", " ");
+		}
+		skill = skill.trim();
 		Skill s = Skill.BYNAME.get(skill);
 		if (s != null) {
 			s.setoriginal(value, m);
 		} else if (Javelin.DEBUG) {
-			UNKNOWN.add(skill.replace('-', '+').split("\\+")[0].trim());
+			UNKNOWN.add(skill);
 		}
 	}
 }

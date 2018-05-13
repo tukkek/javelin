@@ -5,7 +5,8 @@ import javelin.model.unit.feat.skill.Acrobatic;
 
 public class Acrobatics extends Skill {
 	public Acrobatics() {
-		super(new String[] { "Acrobatics", "tumble" }, Ability.DEXTERITY);
+		super(new String[] { "Acrobatics", "tumble", "balance",
+				"escape artist" }, Ability.DEXTERITY);
 		usedincombat = true;
 	}
 

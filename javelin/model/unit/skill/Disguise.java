@@ -13,7 +13,7 @@ public class Disguise extends Skill {
 	public int getbonus(Combatant c) {
 		int bonus = super.getbonus(c);
 		if (c.source.hasfeat(Deceitful.SINGLETON)) {
-			bonus += getranks(c) >= 10 ? 4 : 3;
+			bonus += Deceitful.BONUS;
 		}
 		return bonus;
 	}

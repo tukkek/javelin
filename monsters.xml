@@ -1166,7 +1166,7 @@ for 2d6 minutes.</p>
   <FaceAndReach>5 ft. by 10 ft./5 ft.</FaceAndReach>
   <Saves Fort="3" Ref="6" Will="5">Fort +3, Ref +6, Will +5</Saves>
   <Abilities Str="18" Dex="14" Con="15" Int="8" Wis="13" Cha="11">Str 18, Dex 14, Con 15, Int 8, Wis 13, Cha 11</Abilities>
-  <Skills>Hide +2 Listen +4, Move Silently +4, Spot +4,Survival +5</Skills>
+  <Skills>Hide +2, Listen +4, Move Silently +4, Spot +4,Survival +5</Skills>
   <Feats>Weapon Focus (hoof)</Feats>
   <ClimateAndTerrain Climate="temperate" Terrain="forest">Temperate forest</ClimateAndTerrain>
   <Organization>1, 5-8</Organization>   <!--Organization>troop (8-18 plus 1 leaderof 2nd-5th level), or tribe (20-200 plus 10 3rd-level sergeants, 5 5th-level lieutenants, and 1 leader of 5th-9th level)</Organization-->
@@ -2340,7 +2340,7 @@ Silently checks.</p>
   <SpecialQualities>Symbiosis</SpecialQualities>
   <Saves Fort="0" Ref="5" Will="5">Fort +0, Ref +5, Will +5</Saves>
   <Abilities Str="10" Dex="15" Con="11" Int="14" Wis="15" Cha="18">Str 10, Dex 15, Con 11, Int 14, Wis 15, Cha 18</Abilities>
-  <Skills>Animal Empathy +9, Craft (any one) or Knowledge (any one) +6, Escape Artist +7, Hide +7, Listen +9, Move Silently +7, Sense Motive +7, Spot +9, Survival +7</Skills>
+  <Skills>Animal Empathy +9, Knowledge (any one) +6, Escape Artist +7, Hide +7, Listen +9, Move Silently +7, Sense Motive +7, Spot +9, Survival +7</Skills>
   <Feats>Alertness, Dodge, Improved Initiative</Feats>
   <ClimateAndTerrain Climate="temperate,warm" Terrain="forest">Temperate and warm forest</ClimateAndTerrain>
   <Organization>1, 4-7</Organization>
@@ -4719,7 +4719,7 @@ possess any of the abilities they had in life.</p>
   <SpecialQualities>Undead, resistant to blows, damage reduction 5/+1, fire vulnerability</SpecialQualities>
   <Saves Fort="2" Ref="1" Will="7">Fort +2, Ref +1, Will +7</Saves>
   <Abilities Str="17" Dex="8" Int="6" Wis="14" Cha="15">Str 17, Dex 8, Con -, Int 6, Wis 14, Cha 15</Abilities>
-  <Skills>Hide +8, Listen +9 Move Silently +8, Spot +9</Skills>
+  <Skills>Hide +8, Listen +9, Move Silently +8, Spot +9</Skills>
   <Feats>Alertness, Toughness</Feats>
   <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="desert,underground">Any desert and underground</ClimateAndTerrain>
   <Organization>1-4, 6-10</Organization>
@@ -4927,7 +4927,7 @@ pounds.</p>
   <Spells cr="2.0"></Spells>
   <Saves Fort="1" Ref="4" Will="8">Fort +1, Ref +4, Will +8</Saves>
   <Abilities Str="10" Dex="13" Con="10" Int="16" Wis="17" Cha="19">Str 10, Dex 13, Con 10, Int 16, Wis 17, Cha 19</Abilities>
-  <Skills>Animal Empathy +10, Craft (any one) or Knowledge (anyone) +7, Escape Artist +7, Heal +9, Hide +7, Listen +11, Move Silently +7, Sense Motive +9, Spot +11</Skills>
+  <Skills>Animal Empathy +10, Knowledge (anyone) +7, Escape Artist +7, Heal +9, Hide +7, Listen +11, Move Silently +7, Sense Motive +9, Spot +11</Skills>
   <Feats>Ability Focus (unearthly beauty), Alertness, Dodge, Iron Will</Feats>
   <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="desert,forest,hill,marsh,mountains,plains">Any land</ClimateAndTerrain>
   <Organization>1</Organization>
@@ -9265,7 +9265,7 @@ bonus improves to +8.</p>
   <FaceAndReach>2 1/2 ft. by 2 1/2 ft./0 ft.</FaceAndReach>
   <Saves Fort="2" Ref="4" Will="1">Fort +2, Ref +4, Will +1</Saves>
   <Abilities Str="3" Dex="15" Con="10" Int="2" Wis="12" Cha="5">Str 3, Dex 15, Con 10, Int 2, Wis 12, Cha 5</Abilities>
-  <Skills>Balance + 10, Climb +13, Hide +13, Listen +4, Spot +4</Skills>
+  <Skills>Balance +10, Climb +13, Hide +13, Listen +4, Spot +4</Skills>
   <Feats>Weapon Finesse (bite)</Feats>
   <ClimateAndTerrain Climate="warm" Terrain="forest">Warm forest</ClimateAndTerrain>
   <Organization>10-40</Organization>
@@ -9849,7 +9849,7 @@ whichever is better.</p>
   <SpecialQualities>Scent</SpecialQualities>
   <Saves Fort="2" Ref="5" Will="1">Fort +2, Ref +5, Will +1</Saves>
   <Abilities Str="6" Dex="17" Con="11" Int="1" Wis="12" Cha="2">Str 6, Dex 17, Con 11, Int 1, Wis 12, Cha 2</Abilities>
-  <Skills>Balance +11, Climb +12, Hide +18 Listen +8, Spot +8</Skills>
+  <Skills>Balance +11, Climb +12, Hide +18, Listen +8, Spot +8</Skills>
   <Feats>Weapon Finesse (bite)</Feats>
   <ClimateAndTerrain Climate="temperate,warm" Terrain="aquatic,desert,forest,hill,marsh,mountains,plains,underground">Temperate and warm land, aquatic, and underground</ClimateAndTerrain>
   <Organization>1</Organization>
@@ -10709,7 +10709,7 @@ with a 10-foot radius</p>
   <SpecialQualities>Vermin</SpecialQualities>
   <Saves Fort="8" Ref="2" Will="2">Fort +8, Ref +2, Will +2</Saves>
   <Abilities Str="23" Dex="10" Con="17" Wis="10" Cha="9">Str 23, Dex 10, Con 17,  Int -, Wis 10, Cha 9</Abilities>
-  <Skills>Listen +8, Spot +7 Hide +1*,</Skills>
+  <Skills>Listen +8, Spot +7, Hide +1*,</Skills>
   <ClimateAndTerrain Climate="temperate,warm" Terrain="forest,underground">Temperate and warm forest and underground</ClimateAndTerrain>
   <Organization>2-11</Organization>
   <ChallengeRating Value="4">4</ChallengeRating>
@@ -12979,7 +12979,7 @@ to Fortitude saves against poison.</p>
   <SpecialQualities>Damage reduction 10/+1, SR 25, lay on hands, animal telepathy, true seeing, electricity and petrification immunity, cold and acid resistance 20, tongues, poison saves, keen vision</SpecialQualities>
   <Saves Fort="6" Ref="8" Will="8">Fort +6, Ref +8, Will +8</Saves>
   <Abilities Str="15" Dex="17" Con="12" Int="15" Wis="16" Cha="16">Str 15, Dex 17, Con 12, Int 15, Wis 16, Cha 16</Abilities>
-  <Skills>Animal Empathy +10, Concentration +8, Hide +10, Knowledge (any two) or  Craft (any two) +9, Listen +10,  Move Silently +10, Sense Motive +10, Spellcraft +9, Spot +18</Skills>
+  <Skills>Animal Empathy +10, Concentration +8, Hide +10, Knowledge (any two) +9, Listen +10,  Move Silently +10, Sense Motive +10, Spellcraft +9, Spot +18</Skills>
   <Feats>Improved Initiative, Flyby Attack</Feats>
   <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="desert,forest,hill,marsh,mountains,plains,underground">Any land and underground</ClimateAndTerrain>
   <Organization>1-5</Organization>
@@ -13071,7 +13071,7 @@ to Spot checks.</p>
   <SpecialQualities>Damage reduction 25/+3, SR 28, alternate form, protective aura, electricity and petrification immunity, cold and acid resistance 20, tongues, poison saves, keen vision</SpecialQualities>
   <Saves Fort="9" Ref="8" Will="10">Fort +9, Ref +8, Will +10</Saves>
   <Abilities Str="25" Dex="12" Con="15" Int="17" Wis="16" Cha="16">Str 25, Dex 12, Con 15, Int 17, Wis 16, Cha 16</Abilities>
-  <Skills>Animal Empathy +13, Concentration +12, Escape Artist +11, Hide +11, Knowledge (any three) or Craft (any three) +13, Listen +15, Move Silently  +11, Sense Motive +13, Spot +15</Skills>
+  <Skills>Animal Empathy +13, Concentration +12, Escape Artist +11, Hide +11, Knowledge (any three) +13, Listen +15, Move Silently  +11, Sense Motive +13, Spot +15</Skills>
   <Feats>Alertness, Blind-Fight, Improved Initiative</Feats>
   <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="desert,forest,hill,marsh,mountains,plains,underground">Any land and underground</ClimateAndTerrain>
   <Organization>1-5</Organization>
@@ -13278,7 +13278,7 @@ to Fortitude saves against poison.</p>
   <SpecialQualities>Damage reduction 10/+1, SR 30, uncanny dodge, protective aura, immunities, fire resistance 20, poison saves, tongues, keen vision</SpecialQualities>
   <Saves Fort="12" Ref="12" Will="12">Fort +12, Ref +12, Will +12</Saves>
   <Abilities Str="22" Dex="18" Con="18" Int="18" Wis="18" Cha="20">Str 22, Dex 18, Con 18, Int 18, Wis 18, Cha 20</Abilities>
-  <Skills>Concentration +19, Escape Artist +19, Hide +19, Knowledge (any three) or Craft (any three) +17, Listen +25, Move Silently +19, Sense Motive +19, Spot +25</Skills>
+  <Skills>Concentration +19, Escape Artist +19, Hide +19, Knowledge (any three) +17, Listen +25, Move Silently +19, Sense Motive +19, Spot +25</Skills>
   <Feats>Alertness, Cleave, Improved Initiative, Power Attack</Feats>
   <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="desert,forest,hill,marsh,mountains,plains,underground">Any land and underground</ClimateAndTerrain>
   <Organization>1-5</Organization>
@@ -13364,7 +13364,7 @@ bonus to Spot and Listen checks.</p>
   <SpecialQualities>Damage reduction 30/+3, SR 30, regeneration 10, protective aura, immunities, fire resistance 20, tongues, poison saves, keen vision</SpecialQualities>
   <Saves Fort="14" Ref="13" Will="15">Fort +14, Ref +13, Will +15</Saves>
   <Abilities Str="25" Dex="19" Con="20" Int="22" Wis="23" Cha="22">Str 25, Dex 19, Con 20,  Int 22, Wis 23, Cha 22</Abilities>
-  <Skills>Concentration +16, Escape Artist +20, Hide +17, Knowledge (any five) or  Craft (any five) +21, Listen +23, Move Silently +17, Sense Motive +23,  Search +19, Spot +23</Skills>
+  <Skills>Concentration +16, Escape Artist +20, Hide +17, Knowledge (any five) +21, Listen +23, Move Silently +17, Sense Motive +23,  Search +19, Spot +23</Skills>
   <Feats>Blind-Fight, Cleave, Improved Initiative, Power Attack</Feats>
   <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="desert,forest,hill,marsh,mountains,plains,underground">Any land and underground</ClimateAndTerrain>
   <Organization>1-2</Organization>
@@ -13447,7 +13447,7 @@ to Fortitude saves against poison.</p>
   <SpecialQualities>Damage reduction 35/+4, SR 32, regeneration 15, protective aura, immunities, fire resistance 20, poison saves, tongues, keen vision</SpecialQualities>
   <Saves Fort="18" Ref="18" Will="20">Fort +18, Ref +18, Will +20</Saves>
   <Abilities Str="28" Dex="20" Con="20" Int="23" Wis="25" Cha="25">Str 28, Dex 20, Con 20, Int 23, Wis 25, Cha 25</Abilities>
-  <Skills>Concentration +16, Escape Artist +30, Hide +26, Knowledge (any five) or Craft (any five) +28, Listen +32, Move Silently +30, Search +30, Sense Motive +32, Spellcraft +19, Spot +32</Skills>
+  <Skills>Concentration +16, Escape Artist +30, Hide +26, Knowledge (any five) +28, Listen +32, Move Silently +30, Search +30, Sense Motive +32, Spellcraft +19, Spot +32</Skills>
   <Feats>Cleave, Dodge, Great Cleave,  Improved Initiative, Mobility, Power Attack</Feats>
   <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="desert,forest,hill,marsh,mountains,plains,underground">Any land and underground</ClimateAndTerrain>
   <Organization>1-2</Organization>
@@ -14163,7 +14163,7 @@ checks.</p>
   <SpecialQualities>Damage reduction 20/+2, SR 24, tanar'ri qualities, know alignment, see invisibility, cold fire and acid resistance 20</SpecialQualities>
   <Saves Fort="11" Ref="8" Will="13">Fort +11, Ref +8, Will +13</Saves>
   <Abilities Str="23" Dex="13" Con="19" Int="22" Wis="22" Cha="16">Str 23, Dex 13, Con 19, Int 22, Wis 22, Cha 16</Abilities>
-  <Skills>Bluff +17, Concentration +18, Diplomacy +17, Hide +7 Knowledge (arcana) +16, Listen +26, Move Silently +15, Scry +19, Search +20, Sense Motive +19, Spellcraft +20, Spot +26</Skills>
+  <Skills>Bluff +17, Concentration +18, Diplomacy +17, Hide +7, Knowledge (arcana) +16, Listen +26, Move Silently +15, Scry +19, Search +20, Sense Motive +19, Spellcraft +20, Spot +26</Skills>
   <Feats>Cleave, Multiattack, Power Attack</Feats>
   <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="desert,forest,hill,marsh,mountains,plains,underground">Any land and underground</ClimateAndTerrain>
   <Organization>1, 1 plus 1 hezrou plus 2-5 vrocks</Organization>
@@ -20578,7 +20578,7 @@ geas/quest, limited wish, and polymorph any object.</p>
   <SpecialQualities>SR 14, water breathing</SpecialQualities>
   <Saves Fort="2" Ref="4" Will="4">Fort +2, Ref +4, Will +4</Saves>
   <Abilities Str="19" Dex="12" Con="12" Int="10" Wis="13" Cha="10">Str 19, Dex 12, Con 12, Int 10, Wis 13, Cha 10</Abilities>
-  <Skills>Craft or Knowledge (any one) +4, Hide +3, Listen +9, Spot +9</Skills>
+  <Skills>Knowledge (any one) +4, Hide +3, Listen +9, Spot +9</Skills>
   <Feats>Alertness</Feats>
   <ClimateAndTerrain Climate="cold,temperate,warm" Terrain="aquatic">Any aquatic</ClimateAndTerrain>
   <Organization>1</Organization>
@@ -20697,7 +20697,7 @@ weapons such as morningstars as bludgeoning weapons.)</p>
   <SpecialQualities>SR 18, darkvision 90 ft.</SpecialQualities>
   <Saves Fort="6" Ref="7" Will="7">Fort +6, Ref +7, Will +7</Saves>
   <Abilities Str="19" Dex="12" Con="12" Int="13" Wis="13" Cha="10">Str 19, Dex 12, Con 12, Int 13, Wis 13, Cha 10</Abilities>
-  <Skills>Concentration +13, Craft or Knowledge (any one) +5, Hide +11, Listen +11, Spot +11</Skills>
+  <Skills>Concentration +13, Knowledge (any one) +5, Hide +11, Listen +11, Spot +11</Skills>
   <Feats>Alertness, Blind-Fight, Combat Casting, Great Fortitude</Feats>
   <ClimateAndTerrain Climate="temperate,warm" Terrain="forest,marsh">Temperate and warm forest and marsh</ClimateAndTerrain>
   <Organization>1</Organization>
@@ -26970,7 +26970,7 @@ forest setting.</p>
   <SpecialQualities>SR 16</SpecialQualities>
   <Saves Fort="0" Ref="5" Will="3">Fort +0, Ref +5, Will +3</Saves>
   <Abilities Str="7" Dex="16" Con="11" Int="12" Wis="13" Cha="18">Str 7, Dex 16, Con 11,  Int 12, Wis 13, Cha 18</Abilities>
-  <Skills>Animal Empathy +7, Bluff +8, Craft (any  one) +5, Escape Artist +6, Handle Animal  Hide +10*, Listen +7, Perform +7,  Search +3, Sense Motive +5, Spot +7</Skills>
+  <Skills>Animal Empathy +7, Bluff +8, Craft (any  one) +5, Escape Artist +6, Handle Animal +8, Hide +10*, Listen +7, Perform +7,  Search +3, Sense Motive +5, Spot +7</Skills>
   <Feats>Dodge, Improved Initiative, Weapon Finesse (dagger)</Feats>
   <ClimateAndTerrain Climate="temperate" Terrain="aquatic">Temperate aquatic</ClimateAndTerrain>
   <Organization>2-4, 6-11, 20-80</Organization>

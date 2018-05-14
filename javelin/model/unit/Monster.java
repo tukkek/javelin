@@ -319,6 +319,7 @@ public class Monster implements Cloneable, Serializable {
 	 * @see #ranks
 	 */
 	public HashSet<String> trained = new HashSet<String>(0);
+	public boolean elite = false;
 
 	@Override
 	public Monster clone() {

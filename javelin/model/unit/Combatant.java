@@ -142,7 +142,6 @@ public class Combatant implements Serializable, Cloneable {
 	public boolean burrowed = false;
 	/** Is a player unit that should be controlled by {@link BattleAi}. */
 	public boolean automatic = false;
-	public boolean elite = false;
 	public int skillmodifier = 0;
 
 	/**
@@ -716,7 +715,7 @@ public class Combatant implements Serializable, Cloneable {
 		postupgradeautomatic(upgrade instanceof ClassLevelUpgrade
 				? (ClassLevelUpgrade) upgrade : null);
 		ChallengeCalculator.calculatecr(source);
-		elite = true;
+		source.elite = true;
 		return true;
 	}
 

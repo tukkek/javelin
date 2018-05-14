@@ -149,7 +149,7 @@ public class NpcGenerator {
 		if (c.source.isaquatic()) {
 			return;
 		}
-		c.elite = true;
+		c.source.elite = true;
 		for (Object t : terrains) {
 			ArrayList<Combatant> encounter = new ArrayList<Combatant>(1);
 			encounter.add(c);

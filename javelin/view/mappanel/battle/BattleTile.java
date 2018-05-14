@@ -102,7 +102,7 @@ public class BattleTile extends Tile {
 			BUFF.paintBorder(panel.canvas, g, p.x, p.y, MapPanel.tilesize,
 					MapPanel.tilesize);
 		}
-		if (c.elite) {
+		if (c.source.elite) {
 			final Image elite = Images.ELITE.getScaledInstance(
 					MapPanel.tilesize, MapPanel.tilesize, Image.SCALE_DEFAULT);
 			g.drawImage(elite, p.x, p.y, null);

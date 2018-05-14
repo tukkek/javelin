@@ -108,7 +108,7 @@ public abstract class Item implements Serializable, Cloneable {
 	}
 
 	public void register() {
-		Tier.ITEMS.get(Tier.gettier(getlevel())).add(this);
+		Tier.ITEMS.get(Tier.get(getlevel())).add(this);
 	}
 
 	public int getlevel() {

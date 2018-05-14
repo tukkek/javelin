@@ -42,6 +42,7 @@ import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.dungeon.feature.Altar;
 import javelin.model.world.location.dungeon.feature.Brazier;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
@@ -598,5 +599,14 @@ public class Dungeon extends Location {
 		}
 		Collections.shuffle(enemies);
 		return enemies;
+	}
+
+	public boolean hasfeature(Class<Altar> featuretype) {
+		for (Feature f : features) {
+			if (featuretype.isInstance(f)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

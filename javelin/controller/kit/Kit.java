@@ -128,7 +128,7 @@ public abstract class Kit implements Serializable {
 	}
 
 	public String gettitle(Monster m) {
-		int index = Tier.gettier(Math.round(m.cr)).ordinal();
+		int index = Tier.get(Math.round(m.cr)).ordinal();
 		return titles[Math.min(index, titles.length - 1)];
 	}
 }

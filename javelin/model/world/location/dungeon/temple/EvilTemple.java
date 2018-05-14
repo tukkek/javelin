@@ -59,8 +59,10 @@ public class EvilTemple extends Temple {
 		Class<? extends Feature> targettype;
 		if (Squad.active.equipment.containsitem(Skull.class) == null) {
 			targettype = StairsUp.class;
+		} else if (dungeon.hasfeature(Altar.class)) {
+			targettype = Altar.class;
 		} else {
-			targettype = dungeon.deepest ? Altar.class : StairsDown.class;
+			targettype = StairsDown.class;
 		}
 		Feature target = null;
 		for (Feature f : dungeon.features) {
@@ -68,6 +70,9 @@ public class EvilTemple extends Temple {
 				target = f;
 				break;
 			}
+		}
+		if (target == null) {
+			return false;
 		}
 		dungeon.herolocation.x = target.x;
 		dungeon.herolocation.y = target.y;

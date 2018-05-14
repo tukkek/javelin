@@ -18,7 +18,7 @@ import tyrant.mikera.engine.RPG;
 /**
  * Keys are found in {@link Dungeon} {@link Chest}s. They unlock {@link Temple}
  * s.
- * 
+ *
  * @see Chest#key
  * @see Temple#open
  * @author alex
@@ -44,7 +44,7 @@ public class TempleKey extends Item {
 			if (a instanceof Temple) {
 				Temple temple = (Temple) a;
 				if (temple.realm.equals(r)) {
-					return 4 * RewardCalculator.getgold(temple.getlevel());
+					return 4 * RewardCalculator.getgold(temple.level);
 				}
 			}
 		}
@@ -86,7 +86,8 @@ public class TempleKey extends Item {
 				realms.remove(key.color);
 			}
 		}
-		return new TempleKey(realms.isEmpty() ? Realm.random() : RPG.pick(realms));
+		return new TempleKey(
+				realms.isEmpty() ? Realm.random() : RPG.pick(realms));
 	}
 
 	@Override

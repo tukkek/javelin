@@ -182,7 +182,7 @@ public class WishScreen extends SelectScreen {
 		options.add(new SummonAlly("summon ally", 'S', 2, false, this));
 		options.add(new Gold(this));
 		options.add(new ConjureMasterKey(this));
-		if (World.scenario.getClass() == Campaign.class) {
+		if (Campaign.class.isInstance(World.scenario)) {
 			options.add(new Win("win", 'w', 7, false, this));
 		}
 		options.add(ADD);

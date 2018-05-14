@@ -13,6 +13,7 @@ import javelin.controller.fight.Fight;
 import javelin.controller.fight.TempleEncounter;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
+import javelin.model.item.Tier;
 import javelin.model.item.key.TempleKey;
 import javelin.model.item.relic.Relic;
 import javelin.model.unit.Combatant;
@@ -49,7 +50,6 @@ import javelin.view.screen.wish.Win;
  * @author alex
  */
 public abstract class Temple extends UniqueLocation {
-	final static int DEPTH = 3;
 	/**
 	 * TODO there's gotta be a better way to do this
 	 */
@@ -103,7 +103,7 @@ public abstract class Temple extends UniqueLocation {
 	/** If not <code>null</code> will override {@link Dungeon#wall}. */
 	public String wall = null;
 	public boolean doorbackground = true;
-	int level = 0;
+	public int level;
 
 	/**
 	 * @param r
@@ -121,6 +121,24 @@ public abstract class Temple extends UniqueLocation {
 		relic = relicp;
 		fluff = fluffp;
 		link = true;
+		generatefloors(level);
+	}
+
+	void generatefloors(int level) {
+		Tier tier = Tier.get(level);
+		int nfloors;
+		if (tier == Tier.LOW) {
+			nfloors = 2;
+		} else if (tier == Tier.PARAGON) {
+			nfloors = 4;
+		} else {
+			nfloors = 3;
+		}
+		TempleDungeon parent = null;
+		for (int i = 0; i < nfloors; i++) {
+			boolean deepest = i == nfloors - 1;
+			floors.add(new TempleDungeon(el + i, deepest, parent, this));
+		}
 	}
 
 	@Override
@@ -137,21 +155,13 @@ public abstract class Temple extends UniqueLocation {
 
 	@Override
 	public Image getimage() {
-		return Images
-				.getImage("locationtemple" + realm.getname().toLowerCase());
+		final String name = "locationtemple" + realm.getname().toLowerCase();
+		return Images.getImage(name);
 	}
 
 	@Override
 	public boolean interact() {
 		if (open) {
-			if (floors.isEmpty()) {
-				TempleDungeon floor = null;
-				for (int i = 0; i < DEPTH; i++) {
-					boolean deepest = i == DEPTH - 1;
-					floor = new TempleDungeon(el + i, deepest, floor, this);
-					floors.add(floor);
-				}
-			}
 			floors.get(0).activate(false);
 		} else {
 			if (!Debug.unlcoktemples && !open()) {
@@ -255,10 +265,6 @@ public abstract class Temple extends UniqueLocation {
 	@Override
 	public List<Combatant> getcombatants() {
 		return null;
-	}
-
-	public int getlevel() {
-		return level;
 	}
 
 	public static ArrayList<Temple> gettemples() {

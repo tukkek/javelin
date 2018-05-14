@@ -11,11 +11,11 @@ import javelin.controller.Weather;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.model.item.key.TempleKey;
+import javelin.model.item.key.door.MasterKey;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.World;
-import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.model.world.location.unique.minigame.Ziggurat;
 import javelin.view.mappanel.Tile;
 import javelin.view.screen.BattleScreen;
@@ -399,7 +399,7 @@ public class Run extends Minigame {
 					true);
 			Ziggurat z = (Ziggurat) World.getall(Ziggurat.class).get(0);
 			z.key = World.scenario.templekeys ? TempleKey.generate()
-					: Door.generatekey();
+					: new MasterKey();
 		} else {
 			Javelin.message("You lost...", true);
 		}

@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -11,6 +12,7 @@ import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.EncountersByEl;
 import javelin.controller.exception.GaveUp;
@@ -21,6 +23,7 @@ import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
+import javelin.controller.table.RareFeature;
 import javelin.controller.table.Table;
 import javelin.controller.table.Tables;
 import javelin.controller.table.dungeon.DoorExists;
@@ -28,6 +31,8 @@ import javelin.controller.table.dungeon.DungeonFeatureModifier;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.item.key.TempleKey;
+import javelin.model.item.key.door.Key;
+import javelin.model.item.key.door.MasterKey;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
@@ -40,6 +45,7 @@ import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.model.world.location.dungeon.feature.FruitTree;
+import javelin.model.world.location.dungeon.feature.Inhabitant;
 import javelin.model.world.location.dungeon.feature.Portal;
 import javelin.model.world.location.dungeon.feature.Spirit;
 import javelin.model.world.location.dungeon.feature.StairsDown;
@@ -227,7 +233,7 @@ public class Dungeon extends Location {
 				level += 1;
 			}
 			try {
-				int el = level + EncounterGenerator.getdifficulty();
+				int el = level + Difficulty.get();
 				Combatants encounter = generateencounter(el, terrains);
 				if (encounter != null && !encounters.contains(encounter)) {
 					encounters.add(encounter);
@@ -295,7 +301,8 @@ public class Dungeon extends Location {
 
 	void createfeatures(int nfeatures) {
 		for (int i = 0; i < nfeatures; i++) {
-			Feature f = createfeature(findspot());
+			boolean rare = gettable(RareFeature.class).rollboolean();
+			Feature f = createfeature(rare, findspot());
 			if (f != null) {
 				features.add(f);
 			}
@@ -310,7 +317,7 @@ public class Dungeon extends Location {
 	int createtraps(int ntraps) {
 		int gold = 0;
 		for (int i = 0; i < ntraps; i++) {
-			int cr = level + EncounterGenerator.getdifficulty()
+			int cr = level + Difficulty.get()
 					+ gettable(DungeonFeatureModifier.class).getmodifier();
 			if (cr >= Trap.MINIMUMCR) {
 				Trap t = new Trap(cr, findspot());
@@ -365,10 +372,9 @@ public class Dungeon extends Location {
 	 * @return Most special chest here.
 	 */
 	protected Feature createspecialchest(Point p) {
-		Chest c = new Chest(p.x, p.y);
+		Chest c = new Chest(p.x, p.y, World.scenario.templekeys
+				? TempleKey.generate() : new MasterKey());
 		c.setspecial();
-		c.items.add(World.scenario.templekeys ? TempleKey.generate()
-				: Door.generatekey());
 		return c;
 	}
 
@@ -482,15 +488,14 @@ public class Dungeon extends Location {
 	 *
 	 * Called after placing all basic features.
 	 *
-	 * @param used
-	 *            Don't forget to update this as you generate new features!
 	 * @return Extra features to be placed using {@link #build(Feature, Set)}.
 	 */
-	protected Feature createfeature(Point p) {
-		ArrayList<Feature> features = new ArrayList<Feature>();
-		if (RPG.chancein(4)) {
+	protected Feature createfeature(boolean rare, Point p) {
+		LinkedList<Feature> features = new LinkedList<Feature>();
+		if (rare) {
 			features.add(new Fountain(p.x, p.y));
-			// TODO map
+			features.add(new Inhabitant(p.x, p.y));
+			features.add(new Chest(p.x, p.y, Key.generate()));
 		} else {
 			features.add(new Brazier(p.x, p.y));
 			features.add(new FruitTree(p.x, p.y));
@@ -540,8 +545,7 @@ public class Dungeon extends Location {
 	@Override
 	public String describe() {
 		int squadel = ChallengeCalculator.calculateel(Squad.active.members);
-		String difficulty = ChallengeCalculator
-				.describedifficulty(level - squadel);
+		String difficulty = Difficulty.describe(level - squadel);
 		return gettier().name + " (" + difficulty + ")";
 	}
 

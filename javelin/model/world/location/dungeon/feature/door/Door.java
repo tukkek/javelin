@@ -40,7 +40,7 @@ public class Door extends Feature {
 	 * 2 and remove bonus.
 	 */
 	private static final int BREAKBONUS = 5;
-	static final List<Class<? extends Door>> TYPES = new ArrayList<Class<? extends Door>>();
+	public static final List<Class<? extends Door>> TYPES = new ArrayList<Class<? extends Door>>();
 	static final List<DoorTrap> TRAPS = Arrays.asList(new DoorTrap[] {
 			Alarm.INSTANCE, ArcaneLock.INSTANCE, HoldPortal.INSTANCE });
 
@@ -64,7 +64,7 @@ public class Door extends Feature {
 	/** Used if {@link #hidden}. TODO */
 	public int searchdc = RPG.r(20, 30);
 	public int breakdc;
-	Class<? extends Key> key;
+	public Class<? extends Key> key;
 
 	DoorTrap trap = rolltable(TrappedDoor.class) ? RPG.pick(TRAPS) : null;
 	boolean stuck = rolltable(StuckDoor.class);
@@ -188,15 +188,6 @@ public class Door extends Feature {
 			d.y = p.y;
 			d.unlockdc += dungeon.level;
 			return d;
-		} catch (ReflectiveOperationException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public static Key generatekey() {
-		try {
-			return RPG.chancein(TYPES.size() + 1) ? new MasterKey()
-					: RPG.pick(TYPES).newInstance().key.newInstance();
 		} catch (ReflectiveOperationException e) {
 			throw new RuntimeException(e);
 		}

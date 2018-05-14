@@ -564,5 +564,4 @@ public abstract class Fight {
 		s.remove(c);
 		s.dead.add(c);
 	}
-
 }

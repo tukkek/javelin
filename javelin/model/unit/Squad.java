@@ -9,6 +9,7 @@ import javelin.Javelin;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.CombatantHealthComparator;
 import javelin.controller.comparator.CombatantsByNameAndMercenary;
@@ -426,7 +427,7 @@ public class Squad extends Actor implements Cloneable {
 		// hidden
 		char input = ' ';
 		final String prompt = "You have hidden from a "
-				+ ChallengeCalculator.describedifficulty(foes)
+				+ Difficulty.describe(foes)
 				+ " group of enemies!\n"
 				+ "Press s to storm them or w to wait for them to go away...\n\n"
 				+ "Enemies: " + Squad.active.spotenemies(foes, null);
@@ -602,8 +603,8 @@ public class Squad extends Actor implements Cloneable {
 		Character input = ' ';
 		while (input != '\n' && input != 's') {
 			Javelin.app.switchScreen(BattleScreen.active);
-			final String difficulty = ChallengeCalculator
-					.describedifficulty(diffifculty);
+			final String difficulty = Difficulty
+					.describe(diffifculty);
 			final String prompt = "Do you want to skip this " + difficulty
 					+ " battle?\n\n" //
 					+ "Press ENTER to open the battle screen.\n"

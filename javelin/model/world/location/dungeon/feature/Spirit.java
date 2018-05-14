@@ -25,24 +25,28 @@ public class Spirit extends Feature {
 
 	@Override
 	public boolean activate() {
-		Feature show = getfeature();
+		Feature show = findtarget();
 		if (show == null) {
 			Javelin.message("The spirit flees from your presence in shame...",
 					false);
 			return true;
 		}
-		Dungeon.active.setvisible(show.x, show.y);
+		discover(show);
 		BattleScreen.active.center(show.x, show.y);
 		Game.redraw();
 		String navitext = RPG.chancein(2) ? "'Hey, look!'" : "'Hey, listen!'";
 		Javelin.message(navitext, false);
-		show.discover(null, 9000);
 		Point p = JavelinApp.context.getherolocation();
 		JavelinApp.context.view(p.x, p.y);
 		return true;
 	}
 
-	Feature getfeature() {
+	public static void discover(Feature f) {
+		Dungeon.active.setvisible(f.x, f.y);
+		f.discover(null, 9000);
+	}
+
+	public static Feature findtarget() {
 		ArrayList<Feature> features = Dungeon.active.features.copy();
 		Collections.shuffle(features);
 		for (Feature f : features) {

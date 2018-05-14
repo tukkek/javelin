@@ -10,7 +10,7 @@ import javelin.controller.action.Withdraw;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.challenge.ChallengeCalculator.Difficulty;
+import javelin.controller.challenge.Difficulty;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;

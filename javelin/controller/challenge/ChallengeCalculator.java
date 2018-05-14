@@ -23,7 +23,6 @@ import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.exception.UnbalancedTeams;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import tyrant.mikera.engine.RPG;
 
@@ -38,19 +37,6 @@ import tyrant.mikera.engine.RPG;
  * #see CrFactor
  */
 public class ChallengeCalculator {
-	/**
-	 * Describes an Encounter Level difference. For example: an encounter is
-	 * irrelevant if it's of {@value #IRRELEVANT} of lower.
-	 */
-	static public class Difficulty {
-		public static final int IRRELEVANT = -13;
-		public static final int VERYEASY = -9;
-		public static final int EASY = -5;
-		public static final int MODERATE = -4;
-		public static final int DIFFICULT = 0;
-		public static final int DEADLY = +4;
-	}
-
 	static final float PCEQUIPMENTCRPERLEVEL = .2f;
 
 	static final int MINIMUM_EL = -7;
@@ -336,28 +322,6 @@ public class ChallengeCalculator {
 		return RPG.pick(eltocrs(el));
 	}
 
-	public static String describedifficulty(int delta) {
-		if (delta <= Difficulty.IRRELEVANT) {
-			return "irrelevant";
-		}
-		if (delta <= Difficulty.VERYEASY) {
-			return "very easy";
-		}
-		if (delta <= Difficulty.EASY) {
-			return "easy";
-		}
-		if (delta == Difficulty.MODERATE) {
-			return "moderate";
-		}
-		if (delta <= Difficulty.DIFFICULT) {
-			return "difficult";
-		}
-		if (delta <= Difficulty.DEADLY) {
-			return "deadly";
-		}
-		return "impossible";
-	}
-
 	/**
 	 * @param teamel
 	 *            Active group encounter level.
@@ -403,15 +367,6 @@ public class ChallengeCalculator {
 			return .75f;
 		}
 		return 1;
-	}
-
-	/**
-	 * @return Same as {@link #describedifficulty(int)} except compares given
-	 *         {@link Combatant}s to {@link Squad#active}.
-	 */
-	public static String describedifficulty(List<Combatant> opponents) {
-		return describedifficulty(calculateel(opponents)
-				- ChallengeCalculator.calculateel(Squad.active.members));
 	}
 
 	/** To use with the Buy the Numbers system, */

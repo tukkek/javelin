@@ -20,6 +20,8 @@ public class Underground extends Terrain {
 	/** Constructor. */
 	public Underground() {
 		name = "underground";
+		difficulty = 0;
+		difficultycap = Integer.MAX_VALUE;
 	}
 
 	@Override

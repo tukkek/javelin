@@ -5,6 +5,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.challenge.Difficulty;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.terrain.Terrain;
@@ -72,7 +73,7 @@ public class TempleDungeon extends Dungeon {
 			super.activate(loading);
 			return;
 		}
-		String difficulty = ChallengeCalculator.describedifficulty(temple.el
+		String difficulty = Difficulty.describe(temple.el
 				- ChallengeCalculator.calculateel(Squad.active.members));
 		Character prompt = Javelin.prompt("You're at the entrance of the "
 				+ temple.descriptionknown + " (difficulty: " + difficulty
@@ -144,7 +145,10 @@ public class TempleDungeon extends Dungeon {
 	}
 
 	@Override
-	protected Feature createfeature(Point p) {
+	protected Feature createfeature(boolean rare, Point p) {
+		if (rare) {
+			return super.createfeature(false, p);
+		}
 		return RPG.chancein(6) ? new Fountain(p.x, p.y)
 				: temple.createfeature(p, this);
 	}

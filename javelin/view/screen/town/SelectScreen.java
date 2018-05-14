@@ -66,20 +66,24 @@ public abstract class SelectScreen extends InfoScreen {
 		text = showtitle ? title : "";
 		final List<Option> options = getoptions();
 		options.addAll(getfixedoptions());
-		for (final Option o : options) {
-			roundcost(o);
+		if (options.isEmpty()) {
+			stayopen = false;
+		} else {
+			for (final Option o : options) {
+				roundcost(o);
+			}
+			options.sort(sort());
+			printoptions(options);
+			final String extrainfo = printinfo();
+			if (!extrainfo.isEmpty()) {
+				text += "\n" + extrainfo + "\n";
+			}
+			if (showquit) {
+				text += "\nPress " + PROCEED + " to quit this screen\n";
+			}
+			IntroScreen.configurescreen(this);
+			processinput(options);
 		}
-		options.sort(sort());
-		printoptions(options);
-		final String extrainfo = printinfo();
-		if (!extrainfo.isEmpty()) {
-			text += "\n" + extrainfo + "\n";
-		}
-		if (showquit) {
-			text += "\nPress " + PROCEED + " to quit this screen\n";
-		}
-		IntroScreen.configurescreen(this);
-		processinput(options);
 		if (stayopen && !World.getall(Squad.class).isEmpty()) {
 			show();
 		} else {

@@ -11,6 +11,7 @@ import java.util.List;
 import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.challenge.Difficulty;
 import javelin.controller.comparator.CombatantByCr;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
@@ -379,7 +380,7 @@ public class Incursion extends Actor {
 	@Override
 	public String describe() {
 		return "Enemy incursion ("
-				+ ChallengeCalculator.describedifficulty(squad) + " fight):\n\n"
+				+ Difficulty.describe(squad) + " fight):\n\n"
 				+ Squad.active.spotenemies(squad, this);
 	}
 

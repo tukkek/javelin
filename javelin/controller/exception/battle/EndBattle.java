@@ -49,23 +49,22 @@ public class EndBattle extends BattleEvent {
 		int nsquads = World.getall(Squad.class).size();
 		Fight.victory = Javelin.app.fight.win();
 		terminateconditions(Fight.state, BattleScreen.active);
-		if (!Javelin.app.fight.onend()) {
-			return;
+		if (Javelin.app.fight.onend()) {
+			if (Squad.active != null
+					&& nsquads == World.getall(Squad.class).size()) {
+				while (World.get(Squad.active.x, Squad.active.y,
+						Incursion.class) != null) {
+					Squad.active.displace();
+					Squad.active.place();
+				}
+				end(Fight.originalblueteam);
+				if (Dungeon.active != null) {
+					Temple.climbing = false;
+					Dungeon.active.activate(false);
+				}
+			}
 		}
 		AiCache.reset();
-		if (Squad.active != null
-				&& nsquads == World.getall(Squad.class).size()) {
-			while (World.get(Squad.active.x, Squad.active.y,
-					Incursion.class) != null) {
-				Squad.active.displace();
-				Squad.active.place();
-			}
-			end(Fight.originalblueteam);
-			if (Dungeon.active != null) {
-				Temple.climbing = false;
-				Dungeon.active.activate(false);
-			}
-		}
 		Javelin.app.fight = null;
 		Fight.state = null;
 	}

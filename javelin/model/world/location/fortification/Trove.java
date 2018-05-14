@@ -9,11 +9,11 @@ import javelin.controller.fight.Siege;
 import javelin.controller.old.Game;
 import javelin.model.item.Ruby;
 import javelin.model.item.key.TempleKey;
+import javelin.model.item.key.door.MasterKey;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -123,7 +123,7 @@ public class Trove extends Fortification {
 			return null;
 		}
 		if (reward == Reward.KEY) {
-			Door.generatekey().grab();
+			new MasterKey().grab();
 			return null;
 		}
 		throw new RuntimeException(reward + " #unknownreward");

@@ -12,7 +12,7 @@ import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.WorldGenerator;
 import javelin.controller.action.world.WorldMove;
-import javelin.controller.generator.encounter.EncounterGenerator;
+import javelin.controller.challenge.Difficulty;
 import javelin.controller.map.Map;
 import javelin.controller.map.Maps;
 import javelin.controller.terrain.hazard.Hazard;
@@ -27,16 +27,16 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * Represent different types of {@link World} terrain.
- * 
+ *
  * One of the responsibilities of subclasses is to generate {@link World} areas.
  * The world generation method is pretty arbitrary, though it's based on
  * real-life geological considerations (like which area is usually close or
  * distant to each area) but not too worried with realist. Read the
  * documentation for methods starting with generate- for more information.
- * 
+ *
  * Each terrain also offer hazards and events, which occur about 1% of the step,
  * but are only really triggered if conditions are right.
- * 
+ *
  * @author alex
  */
 public abstract class Terrain implements Serializable {
@@ -81,7 +81,7 @@ public abstract class Terrain implements Serializable {
 
 	/**
 	 * Encounter level adjustment.
-	 * 
+	 *
 	 * @deprecated This is being ignored for positive values. Currently the
 	 *             terrains are already more difficult due to travel speed
 	 *             variations. Besides that, {@link #difficultycap} should be
@@ -116,7 +116,7 @@ public abstract class Terrain implements Serializable {
 
 	/**
 	 * Uses current terrain as base.
-	 * 
+	 *
 	 * @param mph
 	 *            Applies terrain penalty to base Squad speed.
 	 * @param x
@@ -124,7 +124,7 @@ public abstract class Terrain implements Serializable {
 	 * @param y
 	 *            {@link World} coordinate.
 	 * @return Speed in miles per hour to traverse this terrain.
-	 * 
+	 *
 	 * @see Squad#move()
 	 * @see Terrain#current()
 	 */
@@ -151,7 +151,7 @@ public abstract class Terrain implements Serializable {
 
 	/**
 	 * TODO this probably should return {@link Underground} as well.
-	 * 
+	 *
 	 * @return Current terrain difficulty. For example: {@link PLAIN}.
 	 */
 	static public Terrain current() {
@@ -170,7 +170,8 @@ public abstract class Terrain implements Serializable {
 	 * @return Terrain difficulty. For example: {@link PLAIN}.
 	 */
 	public static Terrain get(int x, int y) {
-		return World.getseed().map[x][y];
+		return Dungeon.active == null ? World.getseed().map[x][y]
+				: Terrain.UNDERGROUND;
 	}
 
 	@Override
@@ -215,7 +216,7 @@ public abstract class Terrain implements Serializable {
 
 	/**
 	 * Usually returns an empty set.
-	 * 
+	 *
 	 * @return a set of points which will be considered as already included in
 	 *         the generated area, before starting the
 	 *         {@link #generatearea(World)} process proper.
@@ -227,7 +228,7 @@ public abstract class Terrain implements Serializable {
 	/**
 	 * Decides where to start the {@link #expand(HashSet, World, Point)} process
 	 * from.
-	 * 
+	 *
 	 * @param source
 	 *            The very starting point for this area.
 	 * @param current
@@ -325,7 +326,7 @@ public abstract class Terrain implements Serializable {
 
 	/**
 	 * Called at the end of the {@link #generatearea(World)} process.
-	 * 
+	 *
 	 * @param area
 	 *            The generated area.
 	 */
@@ -368,7 +369,7 @@ public abstract class Terrain implements Serializable {
 
 	/**
 	 * Generate terrain area and...
-	 * 
+	 *
 	 * @param r
 	 *            a {@link Town} of this realm, if not <code>null</code>.
 	 * @return
@@ -413,14 +414,14 @@ public abstract class Terrain implements Serializable {
 	 * {@link Water}, which can have dire implication for a {@link Squad}
 	 * travelling in that terrain, Somewhat of a misnomer, a hazard can also be
 	 * a more peaceful event like meeting a special character or such.
-	 * 
+	 *
 	 * Almost all types of hazards are dependent upon {@link Season},
 	 * {@link Weather} and day period conditions. No one suffers a heatstroke on
 	 * the desert during the night, for example.
-	 * 
+	 *
 	 * Usually, even if the conditions for multiple types of hazards are met in
 	 * a certain time period, only one of them should actually trigger.
-	 * 
+	 *
 	 * @param special
 	 *            <code>true</code> if may allow a special event to happen.
 	 *            Special events are rare occurances like a spontaneous
@@ -449,13 +450,12 @@ public abstract class Terrain implements Serializable {
 	}
 
 	/**
-	 * @param teame
-	 *            Added to the encounter level delta.l
+	 * @param teamel
+	 *            Added to the encounter level delta.
 	 * @return Encounter level for a fight taking place in this type of terrain.
 	 */
 	public Integer getel(int teamel) {
-		final int delta = EncounterGenerator.getdifficulty()
-				+ Math.min(0, difficulty);
+		final int delta = Difficulty.get() + Math.min(0, difficulty);
 		return teamel + Math.min(delta, difficultycap);
 	}
 

@@ -67,6 +67,11 @@ public class Chest extends Feature {
 		}
 	}
 
+	public Chest(int x, int y, Item i) {
+		this(x, y);
+		items.add(i);
+	}
+
 	@Override
 	public boolean activate() {
 		if (items.isEmpty()) {

@@ -1017,11 +1017,15 @@ public class Combatant implements Serializable, Cloneable {
 	}
 
 	/**
-	 * @return Rolls a d20 and adds the given {@link Skill#getbonus(Combatant)}.
+	 * @return Rolls a d20 and adds the given
+	 *         {@link Skill#getbonus(Combatant)}.Returns 0 if cannot use this
+	 *         skill.
+	 *
+	 * @see Skill#canuse(Combatant)
 	 * @see #taketen(Skill)
 	 */
 	public int roll(Skill s) {
-		return RPG.r(1, 20) + s.getbonus(this);
+		return s.canuse(this) ? RPG.r(1, 20) + s.getbonus(this) : 0;
 	}
 
 	/**
@@ -1031,10 +1035,13 @@ public class Combatant implements Serializable, Cloneable {
 	 * possible result.
 	 *
 	 * @return Takes an automatic 10 on a d20 ("take 10" rule) and adds the
-	 *         given {@link Skill#getbonus(Combatant)}.
+	 *         given {@link Skill#getbonus(Combatant)}. Returns 0 if cannot use
+	 *         this skill.
+	 *
+	 * @see Skill#canuse(Combatant)
 	 */
 	public int taketen(Skill s) {
-		return 10 + s.getbonus(this);
+		return s.canuse(this) ? 10 + s.getbonus(this) : 0;
 	}
 
 	/**

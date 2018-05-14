@@ -144,4 +144,24 @@ public class Skill implements Serializable {
 			setranks(max, m);
 		}
 	}
+
+	public String getsignedbonus(Combatant c) {
+		int bonus = getbonus(c);
+		String signed = Integer.toString(bonus);
+		if (bonus >= 0) {
+			signed = "+" + signed;
+		}
+		return signed;
+	}
+
+	/**
+	 * @param c
+	 *            Needs to be intelligent...
+	 * @return if this is an {@link #intelligent} skill.
+	 *
+	 * @see Monster#think(int)
+	 */
+	public boolean canuse(Combatant c) {
+		return !intelligent || c.source.think(-2);
+	}
 }

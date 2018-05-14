@@ -16,19 +16,23 @@ public class SkillUpgrade extends Upgrade {
 	Skill skill;
 
 	public SkillUpgrade(Skill s) {
-		super("Train skill: " + s.name.toLowerCase());
+		super("Skill: " + s.name.toLowerCase());
 		skill = s;
 	}
 
 	@Override
 	public String inform(Combatant c) {
-		return "Currently untrained";
+		return "Currently: " + skill.name + " " + skill.getsignedbonus(c)
+				+ " (untrained)";
 	}
 
 	@Override
 	protected boolean apply(Combatant c) {
+		if (c.source.trained.contains(skill.name)) {
+			return false;
+		}
 		Monster m = c.source;
-		if (skill.intelligent && !m.think(-2)) {
+		if (!skill.canuse(c)) {
 			return false;
 		}
 		m.trained.add(skill.name);

@@ -168,11 +168,9 @@ public class StatisticsScreen extends InfoScreen {
 			if (s.getranks(c) == 0) {
 				continue;
 			}
-			int bonus = s.getbonus(c);
-			String signed = bonus >= 0 ? "+" + bonus : Integer.toString(bonus);
 			String trained = c.source.trained.contains(s.name) ? ""
 					: " (untrained)";
-			output += s.name + " " + signed + trained + ", ";
+			output += s.name + " " + s.getsignedbonus(c) + trained + ", ";
 		}
 		return output.isEmpty() ? null
 				: "Skills: " + output.substring(0, output.length() - 2) + ".\n";

@@ -50,7 +50,7 @@ public class Door extends Feature {
 	}
 
 	public int unlockdc = RPG.r(20, 30)
-			+ Dungeon.gettable(DungeonFeatureModifier.class).getmodifier();
+			+ Dungeon.gettable(DungeonFeatureModifier.class).rollmodifier();
 
 	/** Used if {@link #hidden}. TODO */
 	public int searchdc = RPG.r(20, 30);

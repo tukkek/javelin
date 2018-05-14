@@ -16,7 +16,7 @@ public class DungeonFeatureModifier extends Table {
 		add(Modifier.VERYHARD, 1);
 	}
 
-	public int getmodifier() {
+	public int rollmodifier() {
 		Object modifier = roll();
 		if (modifier == Modifier.VERYEASY) {
 			return -RPG.r(1, 8);

@@ -349,7 +349,7 @@ public class Dungeon extends Location {
 		int gold = 0;
 		for (int i = 0; i < ntraps; i++) {
 			int cr = level + Difficulty.get()
-					+ gettable(DungeonFeatureModifier.class).getmodifier();
+					+ gettable(DungeonFeatureModifier.class).rollmodifier();
 			if (cr >= Trap.MINIMUMCR) {
 				Trap t = new Trap(cr, findspot());
 				features.add(t);
@@ -388,7 +388,7 @@ public class Dungeon extends Location {
 		for (int i = nchests; i > 0; i--) {
 			int gold = i == 1 ? pool : pool / RPG.r(2, i);
 			int percentmodifier = gettable(DungeonFeatureModifier.class)
-					.getmodifier() * 2;
+					.rollmodifier() * 2;
 			gold = gold * (100 + percentmodifier) / 100;
 			features.add(new Chest(gold, findspot()));
 			pool -= gold;

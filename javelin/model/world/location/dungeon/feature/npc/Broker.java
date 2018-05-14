@@ -176,7 +176,6 @@ public class Broker extends Inhabitant {
 
 	ArrayList<Key> keys = new ArrayList<Key>();
 	protected int hints = RPG.r(1, 10);
-	protected int basedc = 10 + Dungeon.active.level;
 
 	public Broker(int xp, int yp) {
 		super(xp, yp);

@@ -10,6 +10,7 @@ import javelin.Javelin;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.generator.NpcGenerator;
+import javelin.controller.table.dungeon.DungeonFeatureModifier;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -34,6 +35,12 @@ public abstract class Inhabitant extends Feature {
 	 * up-to-date).
 	 */
 	protected int gold;
+	/**
+	 * DC 10 + {@link Dungeon#level} + {@link DungeonFeatureModifier}.
+	 * Subclasses may alter them as needed.
+	 */
+	protected int basedc = 10 + Dungeon.active.level
+			+ Dungeon.gettable(DungeonFeatureModifier.class).rollmodifier();
 
 	public Inhabitant(int xp, int yp) {
 		super(xp, yp, null);

@@ -81,8 +81,7 @@ public class NpcGenerator {
 				double npcs = gettarget(tier);
 				for (int i = 0; i < npcs; i++) {
 					Monster m = RPG.pick(candidates);
-					Kit k = RPG.pick(Kit.getpreferred(m));
-					Combatant c = generatenpc(m, k, cr);
+					Combatant c = generatenpc(m, cr);
 					if (c != null) {
 						register(c, Arrays.asList(Terrain.NONWATER));
 					}
@@ -116,7 +115,12 @@ public class NpcGenerator {
 		return crs;
 	}
 
-	static public Combatant generatenpc(Monster m, Kit k, float targetcr) {
+	public static final Combatant generatenpc(Monster m, float cr) {
+		Kit k = RPG.pick(Kit.getpreferred(m));
+		return generatenpc(m, k, cr);
+	}
+
+	public static Combatant generatenpc(Monster m, Kit k, float targetcr) {
 		Float originalcr = m.cr;
 		int tries = 10000;
 		Combatant c = new Combatant(m, true);

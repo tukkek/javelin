@@ -1,27 +1,25 @@
-package javelin.model.world.location.dungeon.feature;
+package javelin.model.world.location.dungeon.feature.npc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import javelin.Javelin;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.model.item.key.door.Key;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
-public class Inhabitant extends Feature {
+public class Broker extends Inhabitant {
 	class InhabitantFight extends Fight {
 		List<Combatant> enemy;
 
@@ -145,14 +143,14 @@ public class Inhabitant extends Feature {
 		}
 
 		boolean attack() {
-			Dungeon.active.features.remove(Inhabitant.this);
+			Dungeon.active.features.remove(Broker.this);
 			throw new StartBattle(new InhabitantFight(enemy));
 		}
 
 		boolean hire() {
 			inhabitant.setmercenary(true);
 			Squad.active.members.add(inhabitant);
-			Dungeon.active.features.remove(Inhabitant.this);
+			Dungeon.active.features.remove(Broker.this);
 			hire = null;
 			attack = null;
 			return true;
@@ -177,48 +175,15 @@ public class Inhabitant extends Feature {
 	}
 
 	ArrayList<Key> keys = new ArrayList<Key>();
-	int basedc = 10 + Dungeon.active.level;
-	int hints = RPG.r(1, 10);
-	Combatant inhabitant;
-	int gold;
+	protected int hints = RPG.r(1, 10);
+	protected int basedc = 10 + Dungeon.active.level;
 
-	public Inhabitant(int xp, int yp) {
-		super(xp, yp, null);
-		remove = false;
-		initinhabitant();
-		initkeys(RPG.r(1, 4) - 1);
-	}
-
-	void initkeys(int nkeys) {
+	public Broker(int xp, int yp) {
+		super(xp, yp);
+		int nkeys = RPG.r(1, 4) - 1;
 		for (int i = 0; i < nkeys; i++) {
 			keys.add(Key.generate());
 		}
-	}
-
-	void initinhabitant() {
-		int crmin = Dungeon.active.level + Difficulty.DIFFICULT;
-		int crmax = Dungeon.active.level + Difficulty.DEADLY;
-		Monster m = getmonster(crmin, crmax);
-		inhabitant = new Combatant(m, true);
-		Monster source = inhabitant.source;
-		avatarfile = source.avatarfile;
-		gold = RewardCalculator.getgold(source.cr) * RPG.r(0, 100) / 100;
-	}
-
-	Monster getmonster(int crmin, int crmax) {
-		ArrayList<Monster> candidates = new ArrayList<Monster>();
-		for (Float cr : Javelin.MONSTERSBYCR.keySet()) {
-			if (crmin <= cr && cr <= crmax) {
-				candidates.addAll(Javelin.MONSTERSBYCR.get(cr));
-			}
-		}
-		Collections.shuffle(candidates);
-		for (Monster m : candidates) {
-			if (m.think(+1)) {
-				return m;
-			}
-		}
-		return getmonster(crmin - 1, crmax + 1);
 	}
 
 	@Override

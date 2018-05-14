@@ -1,6 +1,6 @@
 package javelin.model.world.location.dungeon.temple;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.Point;
@@ -8,7 +8,6 @@ import javelin.controller.terrain.Marsh;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.relic.Skull;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -43,9 +42,9 @@ public class EvilTemple extends Temple {
 	}
 
 	@Override
-	public boolean validate(ArrayList<Combatant> foes) {
-		for (Combatant c : foes) {
-			if (Boolean.FALSE.equals(c.source.good)) {
+	public boolean validate(List<Monster> foes) {
+		for (Monster m : foes) {
+			if (Boolean.FALSE.equals(m.good)) {
 				return false;
 			}
 		}

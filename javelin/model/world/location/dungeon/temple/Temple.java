@@ -218,7 +218,7 @@ public abstract class Temple extends UniqueLocation {
 	}
 
 	/** See {@link Fight#validate(ArrayList)}. */
-	public boolean validate(ArrayList<Combatant> foes) {
+	public boolean validate(List<Monster> foes) {
 		return true;
 	}
 

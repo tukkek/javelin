@@ -2,6 +2,7 @@ package javelin.model.unit;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Combatants extends ArrayList<Combatant>
 		implements Cloneable, Serializable {
@@ -35,5 +36,13 @@ public class Combatants extends ArrayList<Combatant>
 			clone.set(i, get(i).clone());
 		}
 		return clone;
+	}
+
+	public List<Monster> getmonsters() {
+		ArrayList<Monster> monsters = new ArrayList<Monster>(size());
+		for (Combatant c : this) {
+			monsters.add(c.source);
+		}
+		return monsters;
 	}
 }

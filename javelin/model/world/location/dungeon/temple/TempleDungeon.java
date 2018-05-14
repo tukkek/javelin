@@ -30,7 +30,7 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class TempleDungeon extends Dungeon {
-	Temple temple;
+	public Temple temple;
 	/** <code>true</code> if last dungeon level. */
 	public boolean deepest;
 
@@ -175,7 +175,7 @@ public class TempleDungeon extends Dungeon {
 		terrains = temple.getterrains();
 		Combatants encounter = super.generateencounter(level - RPG.r(1, 4),
 				terrains);
-		if (!temple.validate(encounter)) {
+		if (!temple.validate(encounter.getmonsters())) {
 			return null;
 		}
 		while (ChallengeCalculator.calculateel(encounter) < level) {

@@ -1,13 +1,12 @@
 package javelin.model.world.location.dungeon.temple;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.terrain.Plains;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.relic.Ankh;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
@@ -36,9 +35,9 @@ public class GoodTemple extends Temple {
 	}
 
 	@Override
-	public boolean validate(ArrayList<Combatant> foes) {
-		for (Combatant c : foes) {
-			if (Boolean.TRUE.equals(c.source.good)) {
+	public boolean validate(List<Monster> foes) {
+		for (Monster m : foes) {
+			if (Boolean.TRUE.equals(m.good)) {
 				return false;
 			}
 		}

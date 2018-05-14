@@ -47,13 +47,13 @@ import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.model.world.location.dungeon.feature.FruitTree;
-import javelin.model.world.location.dungeon.feature.Inhabitant;
 import javelin.model.world.location.dungeon.feature.Portal;
 import javelin.model.world.location.dungeon.feature.Spirit;
 import javelin.model.world.location.dungeon.feature.StairsDown;
 import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.Trap;
 import javelin.model.world.location.dungeon.feature.door.Door;
+import javelin.model.world.location.dungeon.feature.npc.Broker;
 import javelin.model.world.location.dungeon.temple.TempleDungeon;
 import javelin.view.Images;
 import javelin.view.screen.BattleScreen;
@@ -511,7 +511,7 @@ public class Dungeon extends Location {
 		LinkedList<Feature> features = new LinkedList<Feature>();
 		if (rare) {
 			features.add(new Fountain(p.x, p.y));
-			features.add(new Inhabitant(p.x, p.y));
+			features.add(new Broker(p.x, p.y));
 		} else {
 			features.add(new Chest(p.x, p.y, Key.generate()));
 			features.add(new Brazier(p.x, p.y));
@@ -591,4 +591,12 @@ public class Dungeon extends Location {
 		return Dungeon.active.tables.get(table);
 	}
 
+	public List<Combatant> rasterizenecounters() {
+		ArrayList<Combatant> enemies = new ArrayList<Combatant>();
+		for (Combatants encounter : encounters) {
+			enemies.addAll(encounter);
+		}
+		Collections.shuffle(enemies);
+		return enemies;
+	}
 }

@@ -7,7 +7,6 @@ import java.util.List;
 import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.action.Action;
 import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.old.Game;
 import javelin.controller.table.Table;
@@ -32,14 +31,6 @@ import javelin.model.world.location.dungeon.feature.door.trap.HoldPortal;
 import tyrant.mikera.engine.RPG;
 
 public class Door extends Feature {
-	/**
-	 * TODO used as a workaround while we don't have a take-20 Dungeon
-	 * interaction.
-	 *
-	 * once the {@link Action} is implemented, bump {@link #stuck} to chance in
-	 * 2 and remove bonus.
-	 */
-	private static final int BREAKBONUS = 5;
 	public static final List<Class<? extends Door>> TYPES = new ArrayList<Class<? extends Door>>();
 	static final List<DoorTrap> TRAPS = Arrays.asList(new DoorTrap[] {
 			Alarm.INSTANCE, ArcaneLock.INSTANCE, HoldPortal.INSTANCE });
@@ -173,8 +164,7 @@ public class Door extends Feature {
 				strongest = c;
 			}
 		}
-		int force = 10 + BREAKBONUS
-				+ Monster.getbonus(strongest.source.strength);
+		int force = 10 + Monster.getbonus(strongest.source.strength);
 		return force >= breakdc ? strongest : null;
 	}
 
@@ -217,5 +207,10 @@ public class Door extends Feature {
 
 	static boolean rolltable(Class<? extends Table> table) {
 		return Dungeon.active.tables.get(table).rollboolean();
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName();
 	}
 }

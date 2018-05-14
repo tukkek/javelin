@@ -495,8 +495,8 @@ public class Dungeon extends Location {
 		if (rare) {
 			features.add(new Fountain(p.x, p.y));
 			features.add(new Inhabitant(p.x, p.y));
-			features.add(new Chest(p.x, p.y, Key.generate()));
 		} else {
+			features.add(new Chest(p.x, p.y, Key.generate()));
 			features.add(new Brazier(p.x, p.y));
 			features.add(new FruitTree(p.x, p.y));
 			features.add(new Portal(p.x, p.y));

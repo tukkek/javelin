@@ -202,7 +202,7 @@ public abstract class Temple extends UniqueLocation {
 
 	Combatant unlock() {
 		Combatant best = Squad.active.getbest(Skill.DISABLEDEVICE);
-		return best.taketen(Skill.DISABLEDEVICE) >= 10 + level ? null : best;
+		return best.taketen(Skill.DISABLEDEVICE) >= 10 + level ? best : null;
 	}
 
 	@Override

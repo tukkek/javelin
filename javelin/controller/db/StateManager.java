@@ -31,7 +31,7 @@ import javelin.view.screen.WorldScreen;
 
 /**
  * Saves and loads game progress to a file.
- * 
+ *
  * @author alex
  */
 public class StateManager {
@@ -50,15 +50,15 @@ public class StateManager {
 			try {
 				boolean inbattle = BattleScreen.active != null
 						&& !(BattleScreen.active instanceof WorldScreen);
-				if (inbattle && JOptionPane.showConfirmDialog(w,
-						"Exiting during battle will not save your progress.\n"
-								+ "Leave the game anyway?",
+				String warning = "Exiting during battle will not save your progress.\n"
+						+ "Leave the game anyway?";
+				if (inbattle && JOptionPane.showConfirmDialog(w, warning,
 						"Warning!",
 						JOptionPane.OK_CANCEL_OPTION) != JOptionPane.OK_OPTION) {
 					return;
 				}
 				w.dispose();
-				if (WorldScreen.active != null
+				if (BattleScreen.active != null
 						&& BattleScreen.active == WorldScreen.current) {
 					save(true, SAVEFILE);
 				}
@@ -80,7 +80,7 @@ public class StateManager {
 	 * error-prone if not done carefully! Any error could potentially represent
 	 * the loss of dozens of hours of gameplay so don't call this method unless
 	 * absolutely necessary!
-	 * 
+	 *
 	 * @param force
 	 *            If <code>false</code> will only save once upon a certain
 	 *            number of calls.
@@ -122,7 +122,7 @@ public class StateManager {
 
 	/**
 	 * Loads {@link #SAVEFILE} and saves a backup of it.
-	 * 
+	 *
 	 * @return <code>false</code> if starting a new game (no previous save).
 	 */
 	public static boolean load() {

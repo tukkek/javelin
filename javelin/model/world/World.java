@@ -2,9 +2,11 @@ package javelin.model.world;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 import javelin.controller.Point;
@@ -19,10 +21,10 @@ import javelin.view.screen.WorldScreen;
 
 /**
  * Game world overview. This is focused on generating the initial game state.
- * 
+ *
  * TODO would be nice to have tiles reflect the official d20 terrains (add
  * desert and hill)
- * 
+ *
  * @see WorldScreen
  * @author alex
  */
@@ -31,7 +33,7 @@ public class World implements Serializable {
 	public static Scenario scenario = null;
 	/**
 	 * Randomly generated world map.
-	 * 
+	 *
 	 * @see #getseed()
 	 */
 	public static World seed = null;
@@ -47,7 +49,7 @@ public class World implements Serializable {
 	/**
 	 * Used o speed-up coordinate-based searches. Useful for long debugging
 	 * operations as it speeds things up, safe to remove if troublesome.
-	 * 
+	 *
 	 * Don't bother registering non {@link Location}s because they can change
 	 * coordinates often and are a minority. The performance gains would be
 	 * irrelevant and definitely not worth the trouble of get it working right.
@@ -56,17 +58,40 @@ public class World implements Serializable {
 	public final ArrayList<String> townnames = new ArrayList<String>();
 	/**
 	 * Intermediary for {@link WorldTile} while loading.
-	 * 
+	 *
 	 * TODO remove
-	 * 
+	 *
 	 * @see Tile#discovered
 	 */
 	public final HashSet<Point> discovered = new HashSet<Point>();
+	/** Tribute to masters in of tabletop RPGs, literature, video games... */
+	public final LinkedList<String> dungeonnames = new LinkedList<String>(Arrays
+			.asList(new String[] { "Frank Herbert", "Lao Tze", "Robert Monroe",
+					"Gary Gygax", "Dave Arneson", "Ed Greenwood",
+					"Tracy Hickman", "Margaret Weis", "Monte Cook",
+					"Tony DiTerlizzi", "Brian Fargo", "Tim Cain", "John Romero",
+					"Chris Avellone", "Feargus Urquhart", "Jon Van Caneghem",
+					"John Carmack", "Richard Garriott", "Guido Henkel",
+					"Mark Rein Hagen", "Norman Sirotek", "George Lucas",
+					"Mark Morgan", "Colin McComb", "Jordan Weisman",
+					"Nobue Uematsu", "Michiel van den Bos", "Alexander Brandon",
+					"Hironobu Sakaguchi", "Shinji Mikami", "Ben Houge",
+					"Jeremy Soule", "Yoshitaka Amano", "Takashi Tokita",
+					"Koji Kondo", "Katsuhiro Otomo", "Shigeru Miyamoto",
+					"Yoshinori Kitase", "Hiroyuki Ito", "Robert Howard",
+					"Érica Awano", "André Vazzios", "Marcelo Cassaro",
+					"J. M. Trevisan", "Rogério Saladino", "Marcelo Del Debbio",
+					"Evandro Gregório", "Steve Jackson", "Clyde Caldwell",
+					"Jeff Easley", "Sandy Petersen", "Stan Lee", "Hideaki Anno",
+					"Patrick Wyatt", "Bill Roper", "Michiru Yamane",
+					"Sid Meier", "William Gibson", "Julie Bell",
+					"Boris Vallejo", "Lee Salzman", "Johannes Bonitz" }));
 
 	public World() {
 		map = new Terrain[scenario.size][scenario.size];
 		initroads();
-		initnames();
+		inittownnames();
+		Collections.shuffle(dungeonnames);
 	}
 
 	void initroads() {
@@ -106,7 +131,7 @@ public class World implements Serializable {
 	 *
 	 * @see retry
 	 */
-	public void initnames() {
+	public void inittownnames() {
 		townnames.clear();
 		townnames.add("Alexandria"); // my name :)
 		townnames.add("Lindblum"); // final fantasy 9
@@ -208,10 +233,10 @@ public class World implements Serializable {
 	 * Needs to be called during world building, as each {@link WorldGenerator}
 	 * thread has a different world. During normal gameplay, {@link #seed} can
 	 * be accessed directly.
-	 * 
+	 *
 	 * TODO make sure this is only being used where necessary, to avoid the
 	 * overhead
-	 * 
+	 *
 	 * @return If {@link #building}, the thread-relevant world instance,
 	 *         otherwise {@link #seed}.
 	 */

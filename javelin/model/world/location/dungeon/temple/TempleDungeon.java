@@ -14,6 +14,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonTier;
 import javelin.model.world.location.dungeon.feature.Altar;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
@@ -182,5 +183,10 @@ public class TempleDungeon extends Dungeon {
 			Combatant.upgradeweakest(encounter, temple.realm);
 		}
 		return encounter;
+	}
+
+	@Override
+	protected String baptize(DungeonTier tier) {
+		return "";
 	}
 }

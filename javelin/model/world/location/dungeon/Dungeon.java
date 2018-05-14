@@ -120,7 +120,7 @@ public class Dungeon extends Location {
 
 	/** Constructor. */
 	public Dungeon(Integer level, Dungeon parent) {
-		super("A dungeon");
+		super(null);
 		this.parent = parent;
 		link = false;
 		discard = false;
@@ -130,6 +130,19 @@ public class Dungeon extends Location {
 		DungeonTier tier = gettier();
 		wall = tier.wall;
 		floor = tier.floor;
+		description = baptize(tier);
+	}
+
+	protected String baptize(DungeonTier tier) {
+		LinkedList<String> names = World.getseed().dungeonnames;
+		String type = tier.name.toLowerCase();
+		if (names.isEmpty()) {
+			return "Nameless " + type;
+		}
+		String name = names.pop();
+		name = name.substring(name.lastIndexOf(" ") + 1, name.length());
+		name += name.charAt(name.length() - 1) == 's' ? "'" : "'s";
+		return name + " " + type;
 	}
 
 	public Dungeon() {
@@ -564,7 +577,7 @@ public class Dungeon extends Location {
 	public String describe() {
 		int squadel = ChallengeCalculator.calculateel(Squad.active.members);
 		String difficulty = Difficulty.describe(level - squadel);
-		return gettier().name + " (" + difficulty + ")";
+		return description + " (" + difficulty + ")";
 	}
 
 	@Override

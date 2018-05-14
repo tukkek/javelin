@@ -160,9 +160,9 @@ public class Inhabitant extends Feature {
 
 		boolean getinformation() {
 			for (int i = 0; i < hints; i++) {
-				Feature f = Spirit.findtarget();
+				Feature f = Dungeon.active.getundiscoveredfeature();
 				if (f != null) {
-					Spirit.discover(f);
+					Dungeon.active.discover(f);
 				}
 			}
 			hints = 0;

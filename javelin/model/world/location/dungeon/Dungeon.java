@@ -3,6 +3,7 @@ package javelin.model.world.location.dungeon;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,6 +37,7 @@ import javelin.model.item.key.door.MasterKey;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
@@ -111,6 +113,7 @@ public class Dungeon extends Location {
 	float ratiotreasure = RPG.r(5, 10) / 100f;
 
 	Dungeon parent;
+	int revealed = 0;
 
 	transient boolean generated = false;
 
@@ -170,6 +173,20 @@ public class Dungeon extends Location {
 		Squad.active.updateavatar();
 		BattleScreen.active.mappanel.center(herolocation.x, herolocation.y,
 				true);
+		knowfeatures();
+	}
+
+	void knowfeatures() {
+		int knowledge = Squad.active.getbest(Skill.KNOWLEDGE)
+				.taketen(Skill.KNOWLEDGE);
+		int reveal = knowledge - (10 + level);
+		while (revealed < reveal) {
+			revealed += 1;
+			Feature f = getundiscoveredfeature();
+			if (f != null) {
+				discover(f);
+			}
+		}
 	}
 
 	/**
@@ -552,6 +569,22 @@ public class Dungeon extends Location {
 	@Override
 	public Image getimage() {
 		return Images.getImage("location" + gettier().name.toLowerCase());
+	}
+
+	public void discover(Feature f) {
+		setvisible(f.x, f.y);
+		f.discover(null, 9000);
+	}
+
+	public Feature getundiscoveredfeature() {
+		ArrayList<Feature> features = this.features.copy();
+		Collections.shuffle(features);
+		for (Feature f : features) {
+			if (!visible[f.x][f.y] || !f.draw) {
+				return f;
+			}
+		}
+		return null;
 	}
 
 	public static <K extends Table> K gettable(Class<K> table) {

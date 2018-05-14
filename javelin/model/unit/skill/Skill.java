@@ -129,7 +129,7 @@ public class Skill implements Serializable {
 	}
 
 	void setranks(int ranks, Monster m) {
-		m.ranks.put(name, ranks);
+		m.ranks.put(name, Math.max(0, ranks));
 	}
 
 	/**

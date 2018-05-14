@@ -16,7 +16,7 @@ Disguise: allows you to infiltrate an enemy location. Individual roll, resisted 
 
 Heal: DC 15 to double natural healing rates and also helps prevent secondary damage from poison. A unit usually cannot heal while badly wounded.
 
-Knowledge: DC 10 + encounter level to reveal details of a particular location.
+Knowledge: DC 10 + encounter level to reveal details of a particular location (including dungeon features).
 
 Perception: Allows opponent and defending army units to be revealed. Allows you to notice and try to avoid enemy groups. Lets you see farther in the world map. Helps find hidden dungeon features. Subject to time of day, weather and other conditions (such as fliers gaining circumstancial bonuses in open areas).
  

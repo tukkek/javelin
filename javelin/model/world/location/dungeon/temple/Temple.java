@@ -11,6 +11,7 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.TempleEncounter;
+import javelin.controller.scenario.Campaign;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.Tier;
@@ -32,21 +33,18 @@ import javelin.view.Images;
 import javelin.view.screen.wish.Win;
 
 /**
- * Temples are the key to winning Javelin. Each temple is locked and needs to be
- * unlocked by a {@link TempleKey}, brute {@link Monster#strength} or
- * {@link DisableDevice}. Inside the Temple there will be a Relic, and once all
- * of those are collected they can be taken to {@link Haxor} to finish the game.
- * Each temple is a multi-level, permanent {@link Dungeon}, where on each level
- * can be found a ruby and the Relic sits on the last level.
+ * Temples are the key to winning Javelin's {@link Campaign} mode. Each temple
+ * is locked and needs to be unlocked by a {@link TempleKey}, brute
+ * {@link Monster#strength} or {@link DisableDevice}. Inside the Temple there
+ * will be a {@link Relic}, and once all of those are collected the player can
+ * make the {@link Win} wish to finish the game.
  *
- * Battles inside temples consist of upgraded units.
- *
- * The level field here is used to represent a target EL for invading parties
- * (from 1 to 20).
+ * Each temple is a multi-level {@link TempleDungeon}, where on each floor can
+ * be found a special {@link Chest}. The Relic sits on the deepest floor.
  *
  * @see Win
- * @see Haxor#rubies
  * @see TempleEncounter
+ * @see TempleDungeon#createspecialchest(Point)
  * @author alex
  */
 public abstract class Temple extends UniqueLocation {

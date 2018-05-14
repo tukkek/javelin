@@ -716,6 +716,7 @@ public class Combatant implements Serializable, Cloneable {
 		postupgradeautomatic(upgrade instanceof ClassLevelUpgrade
 				? (ClassLevelUpgrade) upgrade : null);
 		ChallengeCalculator.calculatecr(source);
+		elite = true;
 		return true;
 	}
 

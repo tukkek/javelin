@@ -6,9 +6,9 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
 
 /**
- * {@link Temple} fights are different from normal {@link Dungeon} encounters
- * because the creatures are upgraded with {@link Upgrade}s from the respective
- * {@link Realm}.
+ * {@link Temple} {@link Fight}s are different from normal {@link Dungeon}
+ * encounters because the creatures are upgraded with {@link Upgrade}s from
+ * their respective {@link Realm}.
  *
  * @author alex
  */

@@ -50,6 +50,7 @@ public class TempleDungeon extends Dungeon {
 		temple = t;
 		this.deepest = deepest;
 		doorbackground = t.doorbackground;
+		description = temple.descriptionknown;
 	}
 
 	@Override
@@ -187,6 +188,6 @@ public class TempleDungeon extends Dungeon {
 
 	@Override
 	protected String baptize(DungeonTier tier) {
-		return "";
+		return null;
 	}
 }

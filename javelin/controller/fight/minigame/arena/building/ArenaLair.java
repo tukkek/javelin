@@ -15,7 +15,6 @@ import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.PurchaseScreen;
-import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
 public class ArenaLair extends ArenaBuilding {
@@ -122,7 +121,7 @@ public class ArenaLair extends ArenaBuilding {
 
 	public static String getgoldinfo() {
 		return "\n\nYour gladiators currently have $"
-				+ SelectScreen.formatcost(ArenaFight.get().gold) + ".";
+				+ PurchaseScreen.format(ArenaFight.get().gold) + ".";
 	}
 
 	@Override

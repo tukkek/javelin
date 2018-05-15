@@ -18,7 +18,6 @@ import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.PurchaseScreen;
-import javelin.view.screen.town.SelectScreen;
 import javelin.view.screen.upgrading.UpgradingScreen;
 
 public class ArenaAcademy extends ArenaBuilding {
@@ -72,7 +71,7 @@ public class ArenaAcademy extends ArenaBuilding {
 			if (upgrade == null) {
 				return super.printpriceinfo(o);
 			}
-			return " $" + SelectScreen.formatcost(o.price);
+			return " $" + PurchaseScreen.format(o.price);
 		}
 
 		@Override
@@ -106,7 +105,7 @@ public class ArenaAcademy extends ArenaBuilding {
 		@Override
 		public String printinfo() {
 			return "Your gladiators have $"
-					+ PurchaseScreen.formatcost(ArenaFight.get().gold);
+					+ PurchaseScreen.format(ArenaFight.get().gold);
 		}
 	}
 
@@ -151,6 +150,6 @@ public class ArenaAcademy extends ArenaBuilding {
 	public String getactiondescription(Combatant current) {
 		return super.getactiondescription(current) + "\n\n" + current
 				+ " currently has " + current.gethumanxp() + ". Your team has $"
-				+ PurchaseScreen.formatcost(ArenaFight.get().gold) + ".";
+				+ PurchaseScreen.format(ArenaFight.get().gold) + ".";
 	}
 }

@@ -61,13 +61,13 @@ import tyrant.mikera.engine.RPG;
  * being only a defensive game. The goal could then be to killa all buildings
  * instead.
  *
- * TODO to make space for new structures, altering fountains to heal everyone in
- * an area instead of just the user would be great.
- *
- * TODO it would be cool if when a enemy structure is razed, the player could
+ * TODO it would be cool if when an enemy structure is razed, the player could
  * choose which one of build in its stead (by paying the level 1 building price
  * and waiting for it to be reconstructed). The same could apply for monsters
  * razing player's structures.
+ *
+ * TODO to make space for new structures, altering fountains to heal everyone in
+ * an area instead of just the user would be great.
  *
  * @see Arena
  *
@@ -76,7 +76,8 @@ import tyrant.mikera.engine.RPG;
 public class ArenaFight extends Minigame {
 	public static final float BOOST = 4; // 3,5 talvez?
 	public static final int MAPSIZE = 28;
-	public static final int[] ARENASIZE = new int[] { 21, 10 };
+	public static final int[] ARENASIZE = new int[] { MAPSIZE - 2,
+			MAPSIZE - 2 };
 	public static final Point[] AREA = new Point[] {
 			new Point((MAPSIZE - ARENASIZE[0]) / 2,
 					(MAPSIZE - ARENASIZE[1]) / 2),
@@ -139,10 +140,10 @@ public class ArenaFight extends Minigame {
 			for (int i = 0; i < 4; i++) {
 				quadrants.add(new ArrayList<ArenaBuilding>());
 			}
-			generate(1, ArenaAcademy.class, quadrants);
-			generate(1, ArenaLair.class, quadrants);
-			generate(1, ArenaShop.class, quadrants);
-			generate(2, ArenaFountain.class, quadrants);
+			generate(2, false, ArenaAcademy.class, quadrants);
+			generate(2, true, ArenaLair.class, quadrants);
+			generate(2, true, ArenaShop.class, quadrants);
+			generate(4, true, ArenaFountain.class, quadrants);
 			Collections.shuffle(quadrants);
 			for (int i = 0; i < quadrants.size(); i++) {
 				for (Building b : quadrants.get(i)) {
@@ -191,8 +192,12 @@ public class ArenaFight extends Minigame {
 			state.blueTeam.add(b);
 		}
 
-		void generate(int amount, Class<? extends ArenaBuilding> building,
+		void generate(int amount, boolean randomize,
+				Class<? extends ArenaBuilding> building,
 				ArrayList<ArrayList<ArenaBuilding>> quadrants) {
+			if (randomize) {
+				amount += RPG.randomize(amount);
+			}
 			Collections.shuffle(quadrants);
 			quadrants.sort(SizeComparator.INSTANCE);
 			for (int i = 0; i < amount; i++) {
@@ -573,6 +578,7 @@ public class ArenaFight extends Minigame {
 	}
 
 	void notify(String text, Point p) {
+		BattleScreen.active.center(p.x, p.y);
 		Game.redraw();
 		Javelin.message(text, false);
 		Game.messagepanel.clear();

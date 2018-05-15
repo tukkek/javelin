@@ -10,7 +10,7 @@ public abstract class BattleMouseAction {
 	public abstract boolean validate(Combatant current, Combatant target,
 			BattleState s);
 
-	public abstract void act(Combatant current, Combatant target,
+	public abstract Runnable act(Combatant current, Combatant target,
 			BattleState s);
 
 	public abstract void onenter(Combatant current, Combatant target, Tile t,

@@ -25,29 +25,30 @@ public class MoveMouseAction extends BattleMouseAction {
 	}
 
 	@Override
-	public void act(final Combatant current, Combatant target, BattleState s) {
-		if (MapPanel.overlay instanceof MoveOverlay) {
-			final MoveOverlay walk = (MoveOverlay) MapPanel.overlay;
-			if (!walk.path.steps.isEmpty()) {
-				walk.clear();
-				BattleScreen.perform(new Runnable() {
-					@Override
-					public void run() {
-						int finalstep = walk.path.steps.size() - 1;
-						final BattleStep to = walk.path.steps.get(finalstep);
-						BattleState move = Fight.state;
-						Combatant c = move.clone(current);
-						c.location[0] = to.x;
-						c.location[1] = to.y;
-						c.ap += to.totalcost - BattleScreen.partialmove;
-						Meld m = move.getmeld(to.x, to.y);
-						if (m != null && c.ap >= m.meldsat) {
-							Javelin.app.fight.meld(c, m);
-						}
-					}
-				});
-			}
+	public Runnable act(final Combatant current, Combatant target,
+			BattleState s) {
+		final MoveOverlay walk = MapPanel.overlay instanceof MoveOverlay
+				? (MoveOverlay) MapPanel.overlay : null;
+		if (walk == null || walk.path.steps.isEmpty()) {
+			return null;
 		}
+		walk.clear();
+		return new Runnable() {
+			@Override
+			public void run() {
+				int finalstep = walk.path.steps.size() - 1;
+				final BattleStep to = walk.path.steps.get(finalstep);
+				BattleState move = Fight.state;
+				Combatant c = move.clone(current);
+				c.location[0] = to.x;
+				c.location[1] = to.y;
+				c.ap += to.totalcost - BattleScreen.partialmove;
+				Meld m = move.getmeld(to.x, to.y);
+				if (m != null && c.ap >= m.meldsat) {
+					Javelin.app.fight.meld(c, m);
+				}
+			}
+		};
 	}
 
 	@Override

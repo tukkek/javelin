@@ -143,7 +143,6 @@ public class BattleScreen extends Screen {
 		Javelin.app.switchScreen(this);
 		BattleScreen.active = this;
 		Game.delayblock = false;
-		// mappanel.repaint();
 	}
 
 	/**
@@ -168,6 +167,10 @@ public class BattleScreen extends Screen {
 		Game.redraw();
 		mappanel.center(t.x, t.y, true);
 		mappanel.setVisible(true);
+		if (Fight.state != null) {
+			Point center = Fight.state.next.getlocation();
+			mappanel.zoom(0, true, center.x, center.y);
+		}
 		while (true) {
 			turn();
 		}
@@ -215,7 +218,8 @@ public class BattleScreen extends Screen {
 		mappanel.refresh();
 		statuspanel.repaint();
 		Game.userinterface.waiting = true;
-		final KeyEvent updatableUserAction = getUserInput();
+		final KeyEvent updatableUserAction = callback == null ? getUserInput()
+				: null;
 		if (MapPanel.overlay != null) {
 			MapPanel.overlay.clear();
 		}

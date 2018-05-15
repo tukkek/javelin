@@ -6,7 +6,6 @@ import javelin.model.state.BattleState.Vision;
 import javelin.model.unit.Combatant;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.battle.BattleMouse;
-import javelin.view.screen.BattleScreen;
 
 /**
  * TODO there is an edge case here for the future: if you're not engaged with an
@@ -22,14 +21,14 @@ public class RangedMouseAction extends BattleMouseAction {
 	}
 
 	@Override
-	public void act(final Combatant current, final Combatant target,
+	public Runnable act(final Combatant current, final Combatant target,
 			final BattleState s) {
-		BattleScreen.perform(new Runnable() {
+		return new Runnable() {
 			@Override
 			public void run() {
 				current.rangedattacks(target, s);
 			}
-		});
+		};
 	}
 
 	@Override

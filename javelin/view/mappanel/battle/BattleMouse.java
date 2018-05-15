@@ -61,18 +61,24 @@ public class BattleMouse extends Mouse {
 			return;
 		}
 		if (button == MouseEvent.BUTTON1) {
-			final Combatant current = BattlePanel.current;
-			BattleMouseAction action = getaction(s, target, current);
-			if (action != null) {
-				action.act(current, target, s);
-			}
-			if (MapPanel.overlay != null
-					&& (action == null || action.clearoverlay)) {
-				MapPanel.overlay.clear();
-			}
+			click(target, s);
 			return;
 		}
 		super.mouseClicked(e);
+	}
+
+	void click(final Combatant target, final BattleState s) {
+		final Combatant current = BattlePanel.current;
+		BattleMouseAction action = getaction(s, target, current);
+		Runnable outcome = action == null ? null
+				: action.act(current, target, s);
+		if (outcome != null) {
+			BattleScreen.perform(outcome);
+		}
+		if (MapPanel.overlay != null
+				&& (action == null || action.clearoverlay)) {
+			MapPanel.overlay.clear();
+		}
 	}
 
 	public BattleMouseAction getaction(final BattleState s,

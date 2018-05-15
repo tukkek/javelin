@@ -11,6 +11,7 @@ import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.skill.Acrobatics;
 import javelin.model.unit.skill.Skill;
+import javelin.view.mappanel.battle.action.BattleMouseAction;
 import javelin.view.screen.BattleScreen;
 import tyrant.mikera.engine.Point;
 
@@ -87,15 +88,14 @@ public class Movement extends Action {
 	@Override
 	public boolean perform(Combatant c) {
 		try {
-			final BattleState state = Fight.state;
-			boolean disengaging = state.isengaged(c);
-			final Point to = doDirection(this, state, c);
+			boolean disengaging = Fight.state.isengaged(c);
+			final Point to = doDirection(this, Fight.state, c);
 			if (to == null) {
 				return false;
 			}
 			Meld meld = Fight.state.getmeld(to.x, to.y);
 			if (!Movement.lastmovewasattack) {
-				float ap = cost(c, state, to.x, to.y, disengaging);
+				float ap = cost(c, Fight.state, to.x, to.y, disengaging);
 				BattleScreen.partialmove += ap;
 				c.ap += ap;
 			}
@@ -108,9 +108,8 @@ public class Movement extends Action {
 			BattleScreen.partialmove = 0;
 			if (!Movement.lastmovewasattack) {
 				if (meld == null || meld.meldsat > c.ap) {
-					Game.message(c + " "
-							+ (disengaging ? "disengages" : "moves") + "...",
-							Delay.WAIT);
+					String action = disengaging ? "disengages" : "moves";
+					Game.message(c + " " + action + "...", Delay.WAIT);
 				} else {
 					Javelin.app.fight.meld(c, meld);
 				}
@@ -189,19 +188,23 @@ public class Movement extends Action {
 		if (m != null && !m.crystalize(state)) {
 			throw new RepeatTurn();
 		}
-		if (c != null) {
-			if (!c.isally(hero, state)) {
-				if (c.burrowed) {
-					Dig.refuse();
-				}
-				javelin.controller.action.Movement.lastmovewasattack = true;
-				hero.meleeattacks(c, state);
-				return true;
+		if (c == null) {
+			hero.location[0] = x;
+			hero.location[1] = y;
+			return true;
+		}
+		if (c.isally(hero, state)) {
+			BattleMouseAction action = c.getmouseaction();
+			if (action != null && action.validate(hero, c, state)) {
+				BattleScreen.perform(action.act(hero, c, state));
 			}
 			throw new RepeatTurn();
 		}
-		hero.location[0] = x;
-		hero.location[1] = y;
+		if (c.burrowed) {
+			Dig.refuse();
+		}
+		javelin.controller.action.Movement.lastmovewasattack = true;
+		hero.meleeattacks(c, state);
 		return true;
 	}
 

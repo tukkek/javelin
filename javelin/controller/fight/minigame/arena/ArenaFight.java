@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.InfiniteList;
 import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -17,21 +16,17 @@ import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.Minigame;
-import javelin.controller.fight.minigame.arena.building.ArenaBuilding;
 import javelin.controller.fight.minigame.arena.building.ArenaFountain;
 import javelin.controller.fight.minigame.arena.building.ArenaGateway;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.old.Game;
-import javelin.controller.scenario.Campaign;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
-import javelin.model.unit.Monster;
 import javelin.model.world.location.unique.minigame.Arena;
 import javelin.view.screen.BattleScreen;
-import javelin.view.screen.SquadScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -95,7 +90,7 @@ public class ArenaFight extends Minigame {
 	 *
 	 * @see #getgladiators()
 	 */
-	ArrayList<Combatant> gladiators = new ArrayList<Combatant>();
+	Combatants gladiators;
 	int tension = RPG.r(TENSIONMIN, TENSIONMAX);
 	float check = -Float.MAX_VALUE;
 	/**
@@ -108,7 +103,8 @@ public class ArenaFight extends Minigame {
 	ArenaSetup arenasetup = new ArenaSetup(this);
 
 	/** Constructor. */
-	public ArenaFight() {
+	public ArenaFight(Combatants gladiatorsp) {
+		gladiators = gladiatorsp;
 		meld = true;
 		weather = Weather.DRY;
 		period = Javelin.PERIODNOON;
@@ -125,43 +121,7 @@ public class ArenaFight extends Minigame {
 
 	@Override
 	public ArrayList<Combatant> getblueteam() {
-		return choosegladiators(Integer.MIN_VALUE,
-				SquadScreen.SELECTABLE[SquadScreen.SELECTABLE.length - 1]);
-	}
-
-	ArrayList<Combatant> choosegladiators(double crmin, double crmax) {
-		InfiniteList<Monster> candidates = new InfiniteList<Monster>();
-		for (float cr : Javelin.MONSTERSBYCR.keySet()) {
-			if (crmin <= cr && cr <= crmax) {
-				for (Monster m : Javelin.MONSTERSBYCR.get(cr)) {
-					if (!m.internal) {
-						candidates.add(m);
-					}
-				}
-			}
-		}
-		ArrayList<Combatant> gladiators = new ArrayList<Combatant>();
-		while (ChallengeCalculator
-				.calculateel(gladiators) < Campaign.INITIALEL) {
-			ArrayList<Monster> page = candidates.pop(3);
-			ArrayList<String> names = new ArrayList<String>(3);
-			for (int i = 0; i < 3; i++) {
-				Monster m = page.get(i);
-				names.add(m + " (level " + Math.round(m.cr) + ")");
-			}
-			int choice = Javelin.choose("Select your gladiators:", names, false,
-					false);
-			if (choice == -1) {
-				throw new EndBattle();
-			}
-			Monster m = page.get(choice);
-			Combatant c = new Combatant(m, true);
-			c.maxhp = m.hd.maximize();
-			c.hp = c.maxhp;
-			gladiators.add(c);
-			candidates.remove(m);
-		}
-		return gladiators;
+		return new ArrayList<Combatant>(gladiators);
 	}
 
 	@Override
@@ -175,25 +135,8 @@ public class ArenaFight extends Minigame {
 	}
 
 	@Override
-	public void ready() {
-		/* TODO this will be selected later */
-		for (Combatant c : state.blueTeam) {
-			if (c instanceof ArenaBuilding) {
-				continue;
-			}
-			gladiators.add(c);
-		}
-	}
-
-	@Override
 	public ArrayList<Combatant> getmonsters(Integer teamel) {
 		return null;
-	}
-
-	@Override
-	public void withdraw(Combatant combatant, BattleScreen screen) {
-		// TODO parent is enough
-		super.withdraw(combatant, screen);
 	}
 
 	@Override
@@ -477,7 +420,7 @@ public class ArenaFight extends Minigame {
 			for (Combatant c : gladiators) {
 				ArenaFountain.heal(c);
 			}
-			Arena.get().gladiators.addAll(gladiators);
+			Arena.get().gladiators = victors;
 		}
 		throw new EndBattle();
 	}

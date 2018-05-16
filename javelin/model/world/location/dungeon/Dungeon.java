@@ -55,6 +55,7 @@ import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.Trap;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.model.world.location.dungeon.feature.npc.Broker;
+import javelin.model.world.location.dungeon.feature.npc.Prisoner;
 import javelin.model.world.location.dungeon.temple.TempleDungeon;
 import javelin.view.Images;
 import javelin.view.screen.BattleScreen;
@@ -526,6 +527,7 @@ public class Dungeon extends Location {
 		if (rare) {
 			features.add(new Fountain(p.x, p.y));
 			features.add(new Broker(p.x, p.y));
+			features.add(new Prisoner(p.x, p.y));
 		} else {
 			features.add(new Chest(p.x, p.y, Key.generate()));
 			features.add(new Brazier(p.x, p.y));

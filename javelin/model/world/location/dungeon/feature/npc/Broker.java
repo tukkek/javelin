@@ -40,8 +40,7 @@ public class Broker extends Inhabitant {
 		public String reward() {
 			String rewards = super.reward();
 			Squad.active.gold += gold;
-			rewards += " Party receives $" + Javelin.format(gold)
-					+ "!\n";
+			rewards += " Party receives $" + Javelin.format(gold) + "!\n";
 			return rewards;
 		}
 
@@ -89,8 +88,7 @@ public class Broker extends Inhabitant {
 
 		@Override
 		public String printinfo() {
-			return "You have $" + Javelin.format(Squad.active.gold)
-					+ ".";
+			return "You have $" + Javelin.format(Squad.active.gold) + ".";
 		}
 
 		@Override
@@ -179,7 +177,8 @@ public class Broker extends Inhabitant {
 	protected int hints = RPG.r(1, 10);
 
 	public Broker(int xp, int yp) {
-		super(xp, yp);
+		super(xp, yp, Dungeon.active.level + Difficulty.DIFFICULT,
+				Dungeon.active.level + Difficulty.DEADLY);
 		int nkeys = RPG.r(1, 4) - 1;
 		for (int i = 0; i < nkeys; i++) {
 			keys.add(Key.generate());

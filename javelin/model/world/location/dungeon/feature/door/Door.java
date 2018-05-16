@@ -130,9 +130,9 @@ public class Door extends Feature {
 	}
 
 	Item getkey() {
-		Item k = Squad.active.equipment.contains(key);
+		Item k = Squad.active.equipment.get(key);
 		if (k == null) {
-			k = Squad.active.equipment.contains(MasterKey.class);
+			k = Squad.active.equipment.get(MasterKey.class);
 		}
 		return k;
 	}

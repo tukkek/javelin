@@ -57,7 +57,7 @@ public class EvilTemple extends Temple {
 			return false;
 		}
 		Class<? extends Feature> targettype;
-		if (Squad.active.equipment.contains(Skull.class) == null) {
+		if (Squad.active.equipment.get(Skull.class) == null) {
 			targettype = StairsUp.class;
 		} else if (dungeon.hasfeature(Altar.class)) {
 			targettype = Altar.class;

@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.generator.NpcGenerator;
 import javelin.controller.table.dungeon.DungeonFeatureModifier;
@@ -29,6 +28,17 @@ public abstract class Inhabitant extends Feature {
 	/** @see Inhabitant */
 	public Combatant inhabitant;
 	/**
+	 * Will advance any selected {@link Monster} up to this level using
+	 * {@link NpcGenerator}.
+	 *
+	 * @see #select()
+	 */
+	float crmin;
+	/**
+	 * Used as an upper bound if having to generate a monsster.
+	 */
+	float crmax;
+	/**
 	 * Between 0-100% normal treasure, to prevent players from blindly attacking
 	 * them for treasure. However, allows players to recuperate any gold they
 	 * provide the NPC if they choose to do so (as long as the value is kept
@@ -42,8 +52,10 @@ public abstract class Inhabitant extends Feature {
 	protected int basedc = 10 + Dungeon.active.level
 			+ Dungeon.gettable(DungeonFeatureModifier.class).rollmodifier();
 
-	public Inhabitant(int xp, int yp) {
+	public Inhabitant(int xp, int yp, float crmin, float crmax) {
 		super(xp, yp, null);
+		this.crmin = crmin;
+		this.crmax = crmax;
 		remove = false;
 		inhabitant = select();
 		avatarfile = inhabitant.source.avatarfile;
@@ -55,16 +67,11 @@ public abstract class Inhabitant extends Feature {
 	 * Both CR parameters may be stretched internally to find a suitable
 	 * candidate.
 	 *
-	 * @param crmin
-	 *            Will advance any selected monster up to this level using
-	 *            {@link NpcGenerator}.
-	 * @param crmax
-	 *            Used as an upper bound if having to generate a monsster.
 	 * @return An intelligent {@link Monster}, which is valid even if
 	 *         {@link #dungeon} is a {@link TempleDungeon}. If it can't find one
 	 *         in {@link Dungeon#encounters}, generates one instead.
 	 */
-	public Combatant select(int crmin, int crmax) {
+	public Combatant select() {
 		HashSet<String> invalid = new HashSet<String>();
 		for (Combatant c : Dungeon.active.rasterizenecounters()) {
 			String name = c.source.name;
@@ -80,7 +87,7 @@ public abstract class Inhabitant extends Feature {
 		return new Combatant(generate(crmin, crmax), true);
 	}
 
-	Monster generate(int crmin, int crmax) {
+	Monster generate(float crmin, float crmax) {
 		ArrayList<Monster> candidates = new ArrayList<Monster>();
 		for (Float cr : Javelin.MONSTERSBYCR.keySet()) {
 			if (crmin <= cr && cr <= crmax) {
@@ -108,14 +115,5 @@ public abstract class Inhabitant extends Feature {
 				? Dungeon.active : null);
 		List<Monster> aslist = Arrays.asList(new Monster[] { m });
 		return td == null || td.temple.validate(aslist);
-	}
-
-	/**
-	 * @return The result of {@link #select()} with a CR between
-	 *         {@link Difficulty#DIFFICULT} and {@link Difficulty#DEADLY}.
-	 */
-	public Combatant select() {
-		return select(Dungeon.active.level + Difficulty.DIFFICULT,
-				Dungeon.active.level + Difficulty.DEADLY);
 	}
 }

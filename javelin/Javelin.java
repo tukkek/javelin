@@ -316,7 +316,7 @@ public class Javelin {
 	 *            Source statistics to make an unit from.
 	 * @return An actual unit with said statistics.
 	 * @see Combatant#clone()
-	 * @see RecruitScreen#namingscreen(String)
+	 * @see NamingScreen
 	 */
 	public static Combatant recruit(Monster pick) {
 		Combatant c = new Combatant(pick.clone(), true);

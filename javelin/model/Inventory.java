@@ -53,11 +53,11 @@ public class Inventory implements Serializable {
 		return null;
 	}
 
-	public Item contains(Class<? extends Item> type) {
+	public <K extends Item> K get(Class<K> type) {
 		for (final List<Item> items : bags.values()) {
 			for (final Item i : items) {
 				if (type.isInstance(i)) {
-					return i;
+					return (K) i;
 				}
 			}
 		}

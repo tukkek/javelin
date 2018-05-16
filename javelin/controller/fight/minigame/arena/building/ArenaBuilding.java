@@ -110,14 +110,14 @@ public abstract class ArenaBuilding extends Building {
 
 	@Override
 	public void act(BattleState s) {
-		ArenaBuilding c = (ArenaBuilding) s.clone(this);
-		c.ap += 1;
+		// ArenaBuilding c = (ArenaBuilding) s.clone(this);
+		ap += 1;
 		if (repairing) {
-			int repair = LEVELS[c.level].repair;
-			c.materials -= repair * c.source.dr;
-			c.hp = Math.min(c.hp + repair, c.maxhp);
-			if (c.hp == c.maxhp || c.materials <= 0) {
-				c.repairing = false;
+			int repair = LEVELS[level].repair;
+			materials -= repair * source.dr;
+			hp = Math.min(hp + repair, maxhp);
+			if (hp == maxhp || materials <= 0) {
+				repairing = false;
 			}
 		}
 	}
@@ -207,6 +207,17 @@ public abstract class ArenaBuilding extends Building {
 		return hp <= damagethresold || repairing;
 	}
 
+	/**
+	 * Called not from the {@link ArenaFight} main logic but from the
+	 * {@link BattleScreen#perform(Runnable)} callback (boils down to be being
+	 * the same pretty much though).
+	 *
+	 * @param current
+	 *            Unit using this.
+	 * @return Wheter to update {@link Combatant#ap} or not. <code>false</code>
+	 *         if nothing was actually done or if removing the unit from the
+	 *         Fight.
+	 */
 	abstract protected boolean click(Combatant current);
 
 	public String getactiondescription(Combatant current) {
@@ -221,11 +232,6 @@ public abstract class ArenaBuilding extends Building {
 	@Override
 	public void damage(int damagep, BattleState s, int reduce) {
 		super.damage(damagep, s, reduce);
-		if (repairing) {
-			ArenaBuilding b = (ArenaBuilding) s.clone(this).clonesource();
-			if (b != null) {
-				b.repairing = false;
-			}
-		}
+		repairing = false;
 	}
 }

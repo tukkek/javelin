@@ -3,6 +3,7 @@ package javelin.controller.fight.minigame.battlefield;
 import java.math.BigDecimal;
 
 import javelin.Javelin;
+import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
@@ -10,7 +11,6 @@ import javelin.model.unit.Building;
 import javelin.model.unit.Combatant;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.battle.action.BattleMouseAction;
-import javelin.view.screen.BattleScreen;
 
 public class Flagpole extends Building {
 	BattlefieldFight fight;
@@ -39,16 +39,9 @@ public class Flagpole extends Building {
 	public void damage(int damagep, BattleState s, int reduce) {
 		super.damage(damagep, s, reduce);
 		if (hp <= 0) {
-			Flagpole clone = (Flagpole) s.clone(this).clonesource();
-			if (blueteam) {
-				s.blueTeam.remove(clone);
-				s.redTeam.add(clone);
-			} else {
-				s.redTeam.remove(clone);
-				s.blueTeam.add(clone);
-			}
-			clone.setteam(!blueteam);
-			clone.hp = 1;
+			s.swapteam(this);
+			setteam(!blueteam);
+			hp = 1;
 		}
 	}
 
@@ -71,11 +64,10 @@ public class Flagpole extends Building {
 				BigDecimal points = new BigDecimal(
 						rank * BattlefieldFight.POINTSPERTURN);
 				points.setScale(2);
-				Flagpole.this.fight.updateflagpoles();
-				int upkeep = Math.round(100 * Flagpole.this.fight.getupkeep(
-						BattlefieldFight.state.blueTeam,
-						Flagpole.this.fight.blueflagpoles));
-				int currentpoints = Math.round(Flagpole.this.fight.bluepoints);
+				fight.updateflagpoles();
+				int upkeep = Math.round(100 * fight
+						.getupkeep(Fight.state.blueTeam, fight.blueflagpoles));
+				int currentpoints = Math.round(fight.bluepoints);
 				String message = "This is your flagpole. It generates " + points
 						+ " army point(s) per turn, reduced by your current army upkeep ("
 						+ upkeep
@@ -92,14 +84,14 @@ public class Flagpole extends Building {
 			}
 
 			@Override
-			public void act(Combatant current, Combatant target,
+			public Runnable act(Combatant current, Combatant target,
 					BattleState s) {
-				BattleScreen.perform(new Runnable() {
+				return new Runnable() {
 					@Override
 					public void run() {
-						Flagpole.this.fight.recruitbluearmy();
+						fight.recruitbluearmy();
 					}
-				});
+				};
 			}
 		};
 	}

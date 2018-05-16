@@ -20,13 +20,13 @@ import javelin.model.unit.Combatant;
 
 /**
  * Javelin's implementation of {@link Node}.
- * 
+ *
  * {@link #clone()} is used for cloning the state but it does not clone the
  * {@link Combatant} instances! You need to use {@link #clone(Combatant))}
  * afterwards to do so.
- * 
+ *
  * @see #cloneifdifferent(Combatant, Combatant)
- * 
+ *
  * @author alex
  */
 public class BattleState implements Node, TeamContainer {
@@ -59,13 +59,13 @@ public class BattleState implements Node, TeamContainer {
 	transient public Square[][] map;
 	/**
 	 * Next unit to act.
-	 * 
+	 *
 	 * @see #next()
 	 */
 	public Combatant next;
 	/**
 	 * Period of the day, affecting visibility.
-	 * 
+	 *
 	 * @see Fight#period
 	 * @see Javelin#getDayPeriod()
 	 */
@@ -73,7 +73,7 @@ public class BattleState implements Node, TeamContainer {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @see #clone()
 	 */
 	public BattleState(final ArrayList<Combatant> blueTeam,
@@ -98,9 +98,9 @@ public class BattleState implements Node, TeamContainer {
 		period = f.period;
 		fleeing = new ArrayList<Combatant>();
 		dead = new ArrayList<Combatant>();
-		this.blueTeam = new ArrayList<Combatant>();
-		this.redTeam = new ArrayList<Combatant>();
-		this.meld = new ArrayList<Meld>();
+		blueTeam = new ArrayList<Combatant>();
+		redTeam = new ArrayList<Combatant>();
+		meld = new ArrayList<Meld>();
 		next();
 
 	}
@@ -234,7 +234,7 @@ public class BattleState implements Node, TeamContainer {
 	 * To avoid having to implement attacks-of-opporutnity gonna simply prohibit
 	 * that anything that would cause an aoo is simply prohibited. since the
 	 * game is more fluid with movement/turns now this shouldn't be a problem.
-	 * 
+	 *
 	 * Disengaging is simply forcing a 5-foot step to avoid aoo as per the core
 	 * rules.
 	 */
@@ -382,7 +382,7 @@ public class BattleState implements Node, TeamContainer {
 	 * (which would result in 2 different clones). For example: if you have a
 	 * Caster and a Target it just could be they are both the same unit
 	 * (self-targetting) and in this case you don't want to clone them twice.
-	 * 
+	 *
 	 * @param c
 	 *            If not equal, will clone and return this unit.
 	 * @param same
@@ -428,7 +428,7 @@ public class BattleState implements Node, TeamContainer {
 	 * {@link #blueTeam} and {@link #redTeam} are modified for several
 	 * {@link EndBattle} purposes so it might be preferable to use
 	 * {@link Fight#originalblueteam} and {@link Fight#originalredteam} instead.
-	 * 
+	 *
 	 * @param team
 	 *            A list containing the combatants that should not be excluded
 	 *            from {@link #fleeing}.
@@ -449,7 +449,7 @@ public class BattleState implements Node, TeamContainer {
 	 * Utility method to find a clone in this state intance. To be used with
 	 * {@link #getteam(Combatant)}, {@link #getallcombatants()},
 	 * {@link #getcombatants()}, {@link #fleeing}, {@link #dead}, etc.
-	 * 
+	 *
 	 * @return The clone of the given combatant or <code>null</code>.
 	 */
 	static public Combatant getcombatant(Combatant c,
@@ -470,5 +470,15 @@ public class BattleState implements Node, TeamContainer {
 
 	public ArrayList<Combatant> getopponents(Combatant c) {
 		return getteam(c) == blueTeam ? redTeam : blueTeam;
+	}
+
+	public void swapteam(Combatant c) {
+		if (blueTeam.contains(c)) {
+			blueTeam.remove(c);
+			redTeam.add(c);
+		} else {
+			redTeam.remove(c);
+			blueTeam.add(c);
+		}
 	}
 }

@@ -13,25 +13,21 @@ import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.comparator.SizeComparator;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.Minigame;
-import javelin.controller.fight.minigame.arena.building.ArenaAcademy;
 import javelin.controller.fight.minigame.arena.building.ArenaBuilding;
 import javelin.controller.fight.minigame.arena.building.ArenaFountain;
-import javelin.controller.fight.minigame.arena.building.ArenaLair;
-import javelin.controller.fight.minigame.arena.building.ArenaShop;
-import javelin.controller.fight.setup.BattleSetup;
+import javelin.controller.fight.minigame.arena.building.ArenaGateway;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.old.Game;
 import javelin.controller.scenario.Campaign;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
-import javelin.model.state.Square;
-import javelin.model.unit.Building;
+import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.unique.minigame.Arena;
 import javelin.view.screen.BattleScreen;
@@ -74,152 +70,31 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class ArenaFight extends Minigame {
-	public static final float BOOST = 4; // 3,5 talvez?
-	public static final int MAPSIZE = 28;
-	public static final int[] ARENASIZE = new int[] { MAPSIZE - 2,
-			MAPSIZE - 2 };
-	public static final Point[] AREA = new Point[] {
-			new Point((MAPSIZE - ARENASIZE[0]) / 2,
-					(MAPSIZE - ARENASIZE[1]) / 2),
-			new Point((MAPSIZE + ARENASIZE[0]) / 2,
-					(MAPSIZE + ARENASIZE[1]) / 2) };
 
-	static final String RETIRE = "You have beaten this level of the arena! Do you want to retire and have your gladiators available as recruits?\n"
-			+ "\nPress r to retire or c to continue...";
+	public static final float BOOST = 4; // 3,5 talvez?
+
+	static final boolean SPAWN = true;
+	/**
+	 * Each level up is supposed to take 13.3_ moderate fights. Each Arena bout
+	 * is supposed to take a tier up (5 levels). Take {@link #BOOST} into
+	 * consideration to lower the resulting value.
+	 */
+	static final float NFIGHTS = .8f * 13 * 5 / BOOST;
 	static final int TENSIONMIN = -5;
 	static final int TENSIONMAX = 0;
 	static final int ELMIN = -12;
 	static final int ELMAX = 0;
 
-	class ArenaSetup extends BattleSetup {
-		@Override
-		public void generatemap(Fight f) {
-			super.generatemap(f);
-			f.map.flying = false;
-			Square[][] map = f.map.map;
-			f.map.map = new Square[MAPSIZE][];
-			Fight.state.map = f.map.map;
-			for (int i = 0; i < MAPSIZE; i++) {
-				f.map.map[i] = Arrays.copyOfRange(map[i], 0, MAPSIZE);
-			}
-			for (int x = 0; x < MAPSIZE; x++) {
-				for (int y = 0; y < MAPSIZE; y++) {
-					Point p = new Point(x, y);
-					if (!p.validate(AREA[0].x, AREA[0].y, AREA[1].x,
-							AREA[1].y)) {
-						f.map.map[x][y].blocked = true;
-						f.map.map[x][y].flooded = false;
-					} else if (x == AREA[0].x || x == AREA[1].x - 1
-							|| y == AREA[0].y || y == AREA[1].y - 1) {
-						f.map.map[x][y].blocked = false;
-					}
-				}
-			}
-		}
-
-		@Override
-		public void place() {
-			ArrayList<Combatant> gladiators = new ArrayList<Combatant>(
-					state.blueTeam);
-			placebuildings();
-			Point p = null;
-			while (p == null || !validate(p)) {
-				p = getcenterpoint();
-			}
-			enter(gladiators, state.blueTeam, p);
-		}
-
-		Point getcenterpoint() {
-			return new Point(RPG.r(AREA[0].x, AREA[1].x),
-					RPG.r(AREA[0].y, AREA[1].y));
-		}
-
-		void placebuildings() {
-			ArrayList<ArrayList<ArenaBuilding>> quadrants = new ArrayList<ArrayList<ArenaBuilding>>(
-					4);
-			for (int i = 0; i < 4; i++) {
-				quadrants.add(new ArrayList<ArenaBuilding>());
-			}
-			generate(2, false, ArenaAcademy.class, quadrants);
-			generate(2, true, ArenaLair.class, quadrants);
-			generate(2, true, ArenaShop.class, quadrants);
-			generate(4, true, ArenaFountain.class, quadrants);
-			Collections.shuffle(quadrants);
-			for (int i = 0; i < quadrants.size(); i++) {
-				for (Building b : quadrants.get(i)) {
-					place(b, i);
-				}
-			}
-		}
-
-		void place(Building b, int quadrant) {
-			int minx = AREA[0].x + 1;
-			int maxx = AREA[1].x - 2;
-			int midx = (minx + maxx) / 2;
-			int miny = AREA[0].y + 1;
-			int maxy = AREA[1].y - 2;
-			int midy = (miny + maxy) / 2;
-			Point p = null;
-			searching: while (p == null) {
-				int xa = RPG.r(minx, midx);
-				int xb = RPG.r(midx, maxx);
-				int ya = RPG.r(miny, midy);
-				int yb = RPG.r(midy, maxy);
-				if (quadrant == 0) {
-					p = new Point(xa, ya);
-				} else if (quadrant == 1) {
-					p = new Point(xa, yb);
-				} else if (quadrant == 2) {
-					p = new Point(xb, ya);
-				} else if (quadrant == 3) {
-					p = new Point(xb, yb);
-				}
-				for (int x = p.x - 1; x <= p.x + 1; x++) {
-					for (int y = p.y - 1; y <= p.y + 1; y++) {
-						if (state.getcombatant(p.x, p.y) != null) {
-							p = null;
-							continue searching;
-						}
-					}
-				}
-			}
-			for (int x = p.x - 1; x <= p.x + 1; x++) {
-				for (int y = p.y - 1; y <= p.y + 1; y++) {
-					state.map[x][y].clear();
-				}
-			}
-			b.setlocation(p);
-			state.blueTeam.add(b);
-		}
-
-		void generate(int amount, boolean randomize,
-				Class<? extends ArenaBuilding> building,
-				ArrayList<ArrayList<ArenaBuilding>> quadrants) {
-			if (randomize) {
-				amount += RPG.randomize(amount);
-			}
-			Collections.shuffle(quadrants);
-			quadrants.sort(SizeComparator.INSTANCE);
-			for (int i = 0; i < amount; i++) {
-				try {
-					ArenaBuilding b = building.newInstance();
-					quadrants.get(i % 4).add(b);
-					ArenaFountain f = b instanceof ArenaFountain
-							? (ArenaFountain) b : null;
-					if (f != null) {
-						f.refillchance = 1f / amount;
-					}
-				} catch (ReflectiveOperationException e) {
-					throw new RuntimeException(e);
-				}
-			}
-		}
-	}
-
-	public int gold = 0;
 	/** {@link Item} bag for {@link #gladiators}. */
 	public HashMap<Integer, ArrayList<Item>> items = new HashMap<Integer, ArrayList<Item>>();
+	public int gold = 0;
+	public Combatants victors = new Combatants();
 
+	/**
+	 * Non-mercenary units, live and dead.
+	 *
+	 * @see #getgladiators()
+	 */
 	ArrayList<Combatant> gladiators = new ArrayList<Combatant>();
 	int tension = RPG.r(TENSIONMIN, TENSIONMAX);
 	float check = -Float.MAX_VALUE;
@@ -230,13 +105,14 @@ public class ArenaFight extends Minigame {
 	int baseline = Integer.MIN_VALUE;
 	ArrayList<ArrayList<Combatant>> foes = new ArrayList<ArrayList<Combatant>>();
 	int goal = 6;
+	ArenaSetup arenasetup = new ArenaSetup(this);
 
 	/** Constructor. */
 	public ArenaFight() {
 		meld = true;
 		weather = Weather.DRY;
 		period = Javelin.PERIODNOON;
-		setup = new ArenaSetup();
+		setup = arenasetup;
 		meld = false;
 		canflee = false;
 		endless = true;
@@ -253,7 +129,7 @@ public class ArenaFight extends Minigame {
 				SquadScreen.SELECTABLE[SquadScreen.SELECTABLE.length - 1]);
 	}
 
-	public ArrayList<Combatant> choosegladiators(double crmin, double crmax) {
+	ArrayList<Combatant> choosegladiators(double crmin, double crmax) {
 		InfiniteList<Monster> candidates = new InfiniteList<Monster>();
 		for (float cr : Javelin.MONSTERSBYCR.keySet()) {
 			if (crmin <= cr && cr <= crmax) {
@@ -356,7 +232,7 @@ public class ArenaFight extends Minigame {
 		}
 		int elblue = ChallengeCalculator.calculateel(getgladiators());
 		int elred = ChallengeCalculator.calculateel(state.redTeam);
-		if (elred - elblue < tension && !goalreached(getgladiators())) {
+		if (elred - elblue < tension) {
 			raisetension(elblue);
 			tension = RPG.r(TENSIONMIN, TENSIONMAX);
 			reward(state.dead);
@@ -391,6 +267,11 @@ public class ArenaFight extends Minigame {
 		foes.remove(group);
 	}
 
+	/**
+	 * @return Live gladiators.
+	 *
+	 * @see BattleState#dead
+	 */
 	public List<Combatant> getgladiators() {
 		ArrayList<Combatant> gladiators = new ArrayList<Combatant>(
 				this.gladiators.size());
@@ -429,7 +310,16 @@ public class ArenaFight extends Minigame {
 	}
 
 	void raisetension(int elblue) {
-		placefoes(elblue);
+		Integer el = placefoes(elblue);
+		if (el == null) {
+			return;
+		}
+		float open = ChallengeCalculator.useresources(el - elblue) / NFIGHTS;
+		if (RPG.random() <= open) {
+			ArenaGateway g = new ArenaGateway();
+			g.place();
+			notify("A gateway to victory apears!", g.getlocation());
+		}
 		refillfountains();
 	}
 
@@ -452,7 +342,7 @@ public class ArenaFight extends Minigame {
 		}
 	}
 
-	void placefoes(int elblue) {
+	Integer placefoes(int elblue) {
 		ArrayList<Combatant> last = null;
 		int min = Math.max(elblue + ELMIN, baseline);
 		baseline = min;
@@ -472,14 +362,15 @@ public class ArenaFight extends Minigame {
 			int tension = ChallengeCalculator.calculateel(newteam) - elblue;
 			if (tension == this.tension) {
 				enter(group, state.redTeam);
-				return;
+				return el;
 			}
 			if (tension > this.tension) {
 				enter(last == null ? group : last, state.redTeam);
-				return;
+				return el;
 			}
 			last = group;
 		}
+		return null;
 	}
 
 	ArrayList<Combatant> generatefoes(int el) {
@@ -492,8 +383,8 @@ public class ArenaFight extends Minigame {
 
 	public void enter(ArrayList<Combatant> group, ArrayList<Combatant> team) {
 		Point entrance = null;
-		while (entrance == null || !validate(entrance)) {
-			entrance = getmonsterentry();
+		while (entrance == null || !arenasetup.validate(entrance)) {
+			entrance = ArenaSetup.getmonsterentry();
 		}
 		enter(group, team, entrance);
 	}
@@ -519,19 +410,12 @@ public class ArenaFight extends Minigame {
 		return fountains;
 	}
 
-	Point getmonsterentry() {
-		Point p = new Point(RPG.r(MAPSIZE), RPG.r(MAPSIZE));
-		if (RPG.chancein(2)) {
-			p.x = RPG.chancein(2) ? AREA[0].x : AREA[1].x - 1;
-		} else {
-			p.y = RPG.chancein(2) ? AREA[0].y : AREA[1].y - 1;
-		}
-		return p;
-	}
-
-	public void enter(ArrayList<Combatant> entering, List<Combatant> team,
+	void enter(ArrayList<Combatant> entering, List<Combatant> team,
 			Point entry) {
 		if (team == state.redTeam) {
+			if (!SPAWN) {
+				return;
+			}
 			foes.add(entering);
 		}
 		LinkedList<Combatant> place = new LinkedList<Combatant>(entering);
@@ -561,9 +445,9 @@ public class ArenaFight extends Minigame {
 		}
 	}
 
-	static public Point displace(Point reference) {
+	Point displace(Point reference) {
 		Point p = null;
-		while (p == null || !validate(p)) {
+		while (p == null || !arenasetup.validate(p)) {
 			p = new Point(reference);
 			p.x += RPG.r(-1, +1) + RPG.randomize(2);
 			p.y += RPG.r(-1, +1) + RPG.randomize(2);
@@ -571,55 +455,31 @@ public class ArenaFight extends Minigame {
 		return p;
 	}
 
-	static public boolean validate(Point p) {
-		return p.validate(AREA[0].x, AREA[0].y, AREA[1].x, AREA[1].y)
-				&& !state.map[p.x][p.y].blocked
-				&& state.getcombatant(p.x, p.y) == null;
-	}
-
 	void notify(String text, Point p) {
 		BattleScreen.active.center(p.x, p.y);
 		Game.redraw();
-		Javelin.message(text, false);
+		Javelin.message(text, true);
 		Game.messagepanel.clear();
 	}
 
 	@Override
 	public void checkend() {
 		List<Combatant> gladiators = getgladiators();
-		if (gladiators.isEmpty()) {
+		if (!gladiators.isEmpty()) {
+			return;
+		}
+		if (victors.isEmpty()) {
 			state.blueTeam.clear();
-			String msg = "You've lost this match... better luck next time!";
-			Javelin.message(msg, true);
-			throw new EndBattle();
-		}
-		if (goalreached(gladiators)) {
-			char retire = ' ';
-			while (retire != 'c' && retire != 'r') {
-				retire = Javelin.prompt(RETIRE);
+			String loss = "You've lost this match... better luck next time!";
+			Javelin.message(loss, true);
+		} else {
+			Javelin.message("You have beaten this level of the arena!", true);
+			for (Combatant c : gladiators) {
+				ArenaFountain.heal(c);
 			}
-			Game.messagepanel.clear();
-			if (retire == 'c') {
-				goal += 5;
-			} else {
-				for (Combatant c : gladiators) {
-					ArenaFountain.heal(c);
-				}
-				Arena.get().gladiators.addAll(gladiators);
-				throw new EndBattle();
-			}
+			Arena.get().gladiators.addAll(gladiators);
 		}
-	}
-
-	public boolean goalreached(List<Combatant> gladiators) {
-		boolean goalreached = true;
-		for (Combatant c : gladiators) {
-			if (c.source.cr < goal) {
-				goalreached = false;
-				break;
-			}
-		}
-		return goalreached;
+		throw new EndBattle();
 	}
 
 	public static ArenaFight get() {

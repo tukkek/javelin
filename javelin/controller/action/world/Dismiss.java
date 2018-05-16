@@ -9,7 +9,6 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.town.PurchaseScreen;
 
 /**
  * Allows members to be removed from a {@link Squad} at any point.
@@ -71,8 +70,8 @@ public class Dismiss extends WorldAction {
 		if (chosen.mercenary) {
 			dailyupkeep += MercenariesGuild.getfee(chosen);
 		}
-		final String formattedcost = PurchaseScreen
-				.formatcost(Math.round(dailyupkeep));
+		final String formattedcost = Javelin
+				.format(Math.round(dailyupkeep));
 		if (confirm("Are you sure you want to dismiss " + chosen
 				+ ", with a daily cost of $" + formattedcost + "?")) {
 			Squad.active.dismiss(chosen);

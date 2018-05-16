@@ -14,7 +14,6 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -112,7 +111,7 @@ public class Trove extends Fortification {
 		if (reward == Reward.GOLD) {
 			int gold = RewardCalculator.receivegold(originalgarrison) * 2;
 			Squad.active.gold += gold;
-			return "Party receives $" + SelectScreen.formatcost(gold) + "!";
+			return "Party receives $" + Javelin.format(gold) + "!";
 		}
 		if (reward == Reward.TEMPLEKEY) {
 			key.grab();

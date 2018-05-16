@@ -30,18 +30,19 @@ public class UseItems extends WorldAction {
 	}
 
 	@Override
-	public void perform(final WorldScreen worldscreen) {
+	public void perform(WorldScreen worldscreen) {
 		skiperror = false;
 		Squad.active.sort();
 		while (true) {
-			final ArrayList<Item> allitems = new ArrayList<Item>();
-			final InfoScreen infoscreen = new InfoScreen("");
+			ArrayList<Item> allitems = new ArrayList<Item>();
+			InfoScreen infoscreen = new InfoScreen("");
 			String actions = "";
 			actions += "Press number to use an item";
+			actions += "\nPress d to drop an item";
 			actions += "\nPress e to exchange an item";
 			actions += "\nPress q to quit the inventory";
 			actions += "\n";
-			final String list = listitems(allitems, true);
+			String list = listitems(allitems, true);
 			infoscreen.print(actions + list);
 			if (executecommand(allitems, list, infoscreen)) {
 				break;
@@ -50,10 +51,10 @@ public class UseItems extends WorldAction {
 		Javelin.app.switchScreen(JavelinApp.context);
 	}
 
-	boolean executecommand(final ArrayList<Item> allitems, final String list,
-			final InfoScreen infoscreen) {
+	boolean executecommand(ArrayList<Item> allitems, String list,
+			InfoScreen infoscreen) {
 		Javelin.app.switchScreen(infoscreen);
-		final Character input = InfoScreen.feedback();
+		Character input = InfoScreen.feedback();
 		if (input == 'q') {
 			return true;// leaves screen
 		}
@@ -61,10 +62,18 @@ public class UseItems extends WorldAction {
 			exchange(allitems, list, infoscreen);
 			return false;
 		}
+		if (input == 'd') {
+			Squad.active.equipment.remove(select(allitems, infoscreen));
+			return false;
+		}
 		Item selected = select(allitems, input);
 		if (selected == null || !selected.usedoutofbattle) {
 			return false;
 		}
+		return use(infoscreen, selected);
+	}
+
+	boolean use(InfoScreen infoscreen, Item selected) {
 		Combatant target = selected instanceof Artifact ? findowner(selected)
 				: inputmember("Which member will use the "
 						+ selected.toString().toLowerCase() + "?");
@@ -81,7 +90,7 @@ public class UseItems extends WorldAction {
 		return selected.consumable;
 	}
 
-	Item select(final ArrayList<Item> allitems, final Character input) {
+	Item select(ArrayList<Item> allitems, Character input) {
 		Item selected = null;
 		int index = SelectScreen.convertnumericselection(input);
 		if (0 <= index && index < allitems.size()) {
@@ -90,25 +99,29 @@ public class UseItems extends WorldAction {
 		return selected;
 	}
 
-	void exchange(final ArrayList<Item> allitems, final String reequiptext,
-			final InfoScreen infoscreen) {
-		infoscreen.print(infoscreen.text + "\n\nSelect an item.");
-		Item selected = select(allitems, InfoScreen.feedback());
-		if (selected == null) {
+	void exchange(ArrayList<Item> allitems, String reequiptext,
+			InfoScreen infoscreen) {
+		Item i = select(allitems, infoscreen);
+		if (i == null) {
 			return;
 		}
-		Combatant owner = findowner(selected);
-		owner.unequip(selected);
-		Squad.active.equipment.get(owner.id).remove(selected);
-		Squad.active.equipment.get(selectmember(Squad.active.members, selected,
-				"Transfer " + selected + " to who?").id).add(selected);
+		Combatant owner = findowner(i);
+		owner.unequip(i);
+		Squad.active.equipment.get(owner).remove(i);
+		Squad.active.equipment.get(selectmember(Squad.active.members, i,
+				"Transfer " + i + " to who?")).add(i);
+	}
+
+	Item select(ArrayList<Item> allitems, InfoScreen infoscreen) {
+		infoscreen.print(infoscreen.text + "\n\nSelect an item.");
+		return select(allitems, InfoScreen.feedback());
 	}
 
 	Combatant findowner(Item selected) {
-		for (Combatant bag : Squad.active.members) {
-			for (Item i : Squad.active.equipment.get(bag.id)) {
+		for (Combatant c : Squad.active.members) {
+			for (Item i : Squad.active.equipment.get(c)) {
 				if (i == selected) {
-					return bag;
+					return c;
 				}
 			}
 		}
@@ -125,7 +138,7 @@ public class UseItems extends WorldAction {
 		return count;
 	}
 
-	Combatant inputmember(final String message) {
+	Combatant inputmember(String message) {
 		return Squad.active.members
 				.get(Javelin.choose(message, Squad.active.members, true, true));
 	}
@@ -138,13 +151,12 @@ public class UseItems extends WorldAction {
 	 *            {@link SelectScreen#KEYS}.
 	 * @return A textual listing.
 	 */
-	static public String listitems(final ArrayList<Item> allitems,
-			boolean showkeys) {
+	static public String listitems(ArrayList<Item> allitems, boolean showkeys) {
 		String s = "";
 		int i = 0;
 		ArrayList<Combatant> members = filtermercenaries(Squad.active.members);
 		for (int j = 0; j < members.size(); j++) {
-			final Combatant c = members.get(j);
+			Combatant c = members.get(j);
 			String output = "";
 			if (!showkeys) {
 				output += SelectScreen.getkey(j) + " - ";
@@ -154,21 +166,21 @@ public class UseItems extends WorldAction {
 			s += output + ":\n";
 			boolean none = true;
 			ArrayList<Item> bag = new ArrayList<Item>(
-					Squad.active.equipment.get(c.id));
+					Squad.active.equipment.get(c));
 			Collections.sort(bag, new Comparator<Item>() {
 				@Override
 				public int compare(Item o1, Item o2) {
-					return o1.toString().compareTo(o2.toString());
+					return o1.name.compareTo(o2.name);
 				}
 			});
-			for (final Item it : bag) {
+			for (Item it : bag) {
 				if (allitems != null) {
 					allitems.add(it);
 				}
 				if (showkeys) {
 					s += "  [" + SelectScreen.getkey(i) + "]";
 				}
-				s += describeitem(it, c);
+				s += " " + it.describe(c) + "\n";
 				i += 1;
 				none = false;
 			}
@@ -183,7 +195,7 @@ public class UseItems extends WorldAction {
 	 * Tries to filter out mercenaries from the list. This is necessary because
 	 * having 10 low-level mercenaries makes the equipment handling screens
 	 * impossible to use. If squad is all mercenaries, will show it anyways.
-	 * 
+	 *
 	 * TODO this is a necessity due to the poor 1,0 series user interface. With
 	 * 2.0+ should instead have a "show mercenaries" checkbox, allowing
 	 * mercenaries to use items in this way.
@@ -196,17 +208,6 @@ public class UseItems extends WorldAction {
 			}
 		}
 		return members.isEmpty() ? all : members;
-	}
-
-	static String describeitem(final Item it, final Combatant c) {
-		String s = " " + it.toString();
-		String useerror = it.canuse(c);
-		if (useerror != null) {
-			s += " (" + useerror + ")";
-		} else if (c.equipped.contains(it)) {
-			s += " (equipped)";
-		}
-		return s + "\n";
 	}
 
 	/**

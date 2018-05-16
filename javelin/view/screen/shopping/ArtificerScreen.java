@@ -13,11 +13,10 @@ import javelin.model.unit.Squad;
 import javelin.model.world.location.unique.Artificer;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.PurchaseOption;
-import javelin.view.screen.town.PurchaseScreen;
 
 /**
  * See {@link Artificer}.
- * 
+ *
  * @author alex
  */
 public class ArtificerScreen extends ShoppingScreen {
@@ -38,7 +37,7 @@ public class ArtificerScreen extends ShoppingScreen {
 
 	@Override
 	protected ItemSelection getitems() {
-		return this.artificer.selection;
+		return artificer.selection;
 	}
 
 	@Override
@@ -73,8 +72,8 @@ public class ArtificerScreen extends ShoppingScreen {
 	@Override
 	public boolean select(Option op) {
 		if (op == SELL) {
-			ArrayList<Combatant> squad =
-					new ArrayList<Combatant>(Squad.active.members);
+			ArrayList<Combatant> squad = new ArrayList<Combatant>(
+					Squad.active.members);
 			for (Combatant c : Squad.active.members) {
 				if (getbag(c).isEmpty()) {
 					squad.remove(c);
@@ -97,8 +96,8 @@ public class ArtificerScreen extends ShoppingScreen {
 			}
 			ArrayList<String> sellingprices = new ArrayList<String>(bag.size());
 			for (Item i : bag) {
-				sellingprices.add(i + " ($"
-						+ PurchaseScreen.formatcost(i.price / 2) + ")");
+				sellingprices.add(
+						i + " ($" + Javelin.format(i.price / 2) + ")");
 			}
 			int bagi = Javelin.choose("Sell which item?", sellingprices, true,
 					false);
@@ -114,7 +113,7 @@ public class ArtificerScreen extends ShoppingScreen {
 	}
 
 	ArrayList<Item> getbag(Combatant seller) {
-		return Squad.active.equipment.get(seller.id);
+		return Squad.active.equipment.get(seller);
 	}
 
 	void sell(Combatant seller, Item sold) {

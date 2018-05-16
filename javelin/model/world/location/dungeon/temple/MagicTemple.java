@@ -31,7 +31,7 @@ public class MagicTemple extends Temple {
 	 * @see ChallengeCalculator#leveltoel(int)
 	 */
 	public MagicTemple(Integer level) {
-		super(Realm.MAGIC, level, new Amulet(), FLUFF);
+		super(Realm.MAGIC, level, new Amulet(level), FLUFF);
 		terrain = Terrain.HILL;
 		floor = "terrainwoodfloor";
 		wall = "terrainwall";

@@ -15,12 +15,11 @@ import javelin.model.unit.Squad;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
-import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
  * A {@link Fight} has started.
- * 
+ *
  * @see BattleSetup
  * @author alex
  */
@@ -44,7 +43,8 @@ public class StartBattle extends BattleEvent {
 		Fight.state.next();
 		fight.ready();
 		final int elred = ChallengeCalculator.calculateel(Fight.state.redTeam);
-		final int elblue = ChallengeCalculator.calculateel(Squad.active.members);
+		final int elblue = ChallengeCalculator
+				.calculateel(Squad.active.members);
 		int diffifculty = elred - elblue;
 		if (fight instanceof Minigame
 				|| !Squad.active.skipcombat(diffifculty)) {
@@ -67,7 +67,7 @@ public class StartBattle extends BattleEvent {
 	 * chance of death (even at low HP) - so an extra level of fair difficulty
 	 * randomization is added here, if only to prevent players from farming in
 	 * strategic mode without ever resting.
-	 * 
+	 *
 	 * @param difficulty
 	 */
 	public void quickbattle(int difficulty) {
@@ -89,7 +89,7 @@ public class StartBattle extends BattleEvent {
 		while (feedback != '\n' && feedback != 's') {
 			continue;
 		}
-		WorldScreen.active.center();
+		BattleScreen.active.center();
 		Squad.active.gold -= Squad.active.gold * (resourcesused / 10f);
 		if (Squad.active.members.isEmpty()) {
 			Javelin.message("Battle report: Squad lost in combat!", false);
@@ -128,16 +128,16 @@ public class StartBattle extends BattleEvent {
 	 * think of a new system where the damage can be distributed randomly
 	 * between party members (instead of uniformly) or even "cancel" units of
 	 * same CR before doing calculations.
-	 * 
+	 *
 	 * @return
 	 */
 	static String strategicdamage(Combatant c, float resourcesused) {
 		c.hp -= c.maxhp * resourcesused;
 		boolean killed = c.hp <= Combatant.DEADATHP || //
-				(c.hp <= 0 && RPG.random() < Math
-						.abs(c.hp / new Float(Combatant.DEADATHP)));
+				c.hp <= 0 && RPG.random() < Math
+						.abs(c.hp / new Float(Combatant.DEADATHP));
 		String report = "";
-		ArrayList<Item> bag = Squad.active.equipment.get(c.id);
+		ArrayList<Item> bag = Squad.active.equipment.get(c);
 		for (Item i : new ArrayList<Item>(bag)) {
 			String used = "";
 			if (i.waste) {

@@ -1,7 +1,6 @@
 package javelin.model.item.relic;
 
 import javelin.Javelin;
-import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Condition;
 
@@ -30,8 +29,8 @@ public class Crown extends Relic {
 	}
 
 	/** Constructor. */
-	public Crown() {
-		super("Crown of Knowlege", Realm.WATER);
+	public Crown(Integer level) {
+		super("Crown of knowlege", level);
 		usedinbattle = false;
 		usedoutofbattle = true;
 	}

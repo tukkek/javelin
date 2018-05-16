@@ -12,7 +12,6 @@ import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.view.screen.InfoScreen;
-import javelin.view.screen.town.PurchaseScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -136,9 +135,9 @@ public class AdventurersGuild extends UniqueLocation {
 			t += "t - begin training\n";
 		}
 		t += "w - work as " + TITLES[rank(mostpowerful)] + " for a week ($"
-				+ PurchaseScreen.formatcost(pay / 7) + " minus expenses)\n";
+				+ Javelin.format(pay / 7) + " minus expenses)\n";
 		t += "m - work as " + TITLES[rank(mostpowerful)] + " for a month ($"
-				+ PurchaseScreen.formatcost(Math.round(pay))
+				+ Javelin.format(Math.round(pay))
 				+ " minus expenses)\n";
 		t += "q - quit";
 		return t;

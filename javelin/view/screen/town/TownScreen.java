@@ -123,7 +123,7 @@ public class TownScreen extends PurchaseScreen {
 			list.add(new TournamentScreenOption("Enter tournament", town, 't'));
 		}
 		if (town.getrank().rank < Rank.CITY.rank) {
-			PILLAGE.name = "Pillage ($" + SelectScreen.formatcost(
+			PILLAGE.name = "Pillage ($" + Javelin.format(
 					Fortification.getspoils(town.population - 1)) + ")";
 			list.add(PILLAGE);
 		}
@@ -142,7 +142,7 @@ public class TownScreen extends PurchaseScreen {
 
 	@Override
 	public String printinfo() {
-		return "Your squad has $" + SelectScreen.formatcost(Squad.active.gold);
+		return "Your squad has $" + Javelin.format(Squad.active.gold);
 	}
 
 	private String showqueue(OrderQueue queue, String output) {

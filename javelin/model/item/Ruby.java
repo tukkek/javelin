@@ -27,7 +27,7 @@ public class Ruby extends Item {
 
 	@Override
 	public boolean usepeacefully(Combatant user) {
-		Squad.active.equipment.clean(Squad.active);
+		Squad.active.equipment.clean();
 		int rubies = 0;
 		for (ArrayList<Item> bag : Squad.active.equipment.values()) {
 			for (Item i : bag) {

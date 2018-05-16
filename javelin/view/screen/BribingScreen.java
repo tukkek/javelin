@@ -2,13 +2,13 @@ package javelin.view.screen;
 
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Diplomacy;
 import javelin.model.world.location.unique.MercenariesGuild;
-import javelin.view.screen.town.SelectScreen;
 
 /**
  * Uses a {@link InfoScreen} to deal with succesful {@link Diplomacy} checks.
@@ -73,13 +73,13 @@ public class BribingScreen {
 				+ " opponents!\n\n";
 		text = Combatant.group(foes);
 		text += "\n\nWhat do you want to do? You have $"
-				+ SelectScreen.formatcost(Squad.active.gold) + ".";
+				+ Javelin.format(Squad.active.gold) + ".";
 		text += "\n";
 		text += "\n1 - battle!";
-		text += "\n2 - bribe them ($" + SelectScreen.formatcost(bribe) + ")";
+		text += "\n2 - bribe them ($" + Javelin.format(bribe) + ")";
 		if (canhire) {
 			text += "\n3 - hire as mercenaries ($"
-					+ SelectScreen.formatcost(dailyfee) + "/day)";
+					+ Javelin.format(dailyfee) + "/day)";
 		}
 		text += "\n";
 		return text;

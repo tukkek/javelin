@@ -27,7 +27,7 @@ public class Item {
         HashSet identifiedItems = (HashSet) Game.hero().get("IdentifiedItems");
         if (identifiedItems == null)
             return false;
-        return identifiedItems.containsitem(item.name());
+        return identifiedItems.contains(item.name());
     }
 	
 	public static boolean repair(Thing t, boolean perfect) {

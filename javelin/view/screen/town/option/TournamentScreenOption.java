@@ -3,6 +3,7 @@ package javelin.view.screen.town.option;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.fight.tournament.Exhibition;
 import javelin.model.unit.Squad;
@@ -51,7 +52,7 @@ public class TournamentScreenOption extends ScreenOption {
 			@Override
 			public String printinfo() {
 				return "You currently have $"
-						+ PurchaseScreen.formatcost(Squad.active.gold);
+						+ Javelin.format(Squad.active.gold);
 			}
 
 			@Override

@@ -108,7 +108,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 		}
 		text += listeligible;
 		if (showmoneyinfo) {
-			text += "Your squad has $" + SelectScreen.formatcost(getgold())
+			text += "Your squad has $" + Javelin.format(getgold())
 					+ ".\n\n";
 		}
 		text += "Which squad member? Press r to return to upgrade selection.";

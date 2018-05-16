@@ -18,7 +18,8 @@ import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.basic.Growth;
 import javelin.view.Images;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.shopping.MerchantScreen;
+import javelin.view.screen.shopping.ShoppingScreen;
+import javelin.view.screen.town.PurchaseOption;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -38,6 +39,24 @@ public class Caravan extends Actor {
 	static final int NUMBEROFITEMS = 6;
 	static final int MINARTIFACTS = 1;
 	static final int MAXARTIFACTS = 3;
+
+	class CaravanScreen extends ShoppingScreen {
+		/** Constructor. */
+		public CaravanScreen() {
+			super("You reach a trading caravan:", null);
+		}
+
+		@Override
+		protected void afterpurchase(PurchaseOption o) {
+			inventory.remove(o.i);
+			o.i.clone().grab();
+		}
+
+		@Override
+		protected ItemSelection getitems() {
+			return inventory;
+		}
+	}
 
 	/** Selection of {@link Item}s available for purchase. */
 	public ItemSelection inventory = new ItemSelection();
@@ -169,7 +188,7 @@ public class Caravan extends Actor {
 
 	@Override
 	public boolean interact() {
-		new MerchantScreen(this).show();
+		new CaravanScreen().show();
 		return true;
 	}
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.battle.StartBattle;
@@ -39,7 +40,7 @@ public class Broker extends Inhabitant {
 		public String reward() {
 			String rewards = super.reward();
 			Squad.active.gold += gold;
-			rewards += " Party receives $" + SelectScreen.formatcost(gold)
+			rewards += " Party receives $" + Javelin.format(gold)
 					+ "!\n";
 			return rewards;
 		}
@@ -88,7 +89,7 @@ public class Broker extends Inhabitant {
 
 		@Override
 		public String printinfo() {
-			return "You have $" + SelectScreen.formatcost(Squad.active.gold)
+			return "You have $" + Javelin.format(Squad.active.gold)
 					+ ".";
 		}
 

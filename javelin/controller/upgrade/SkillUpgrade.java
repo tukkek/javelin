@@ -18,6 +18,7 @@ public class SkillUpgrade extends Upgrade {
 	public SkillUpgrade(Skill s) {
 		super("Skill: " + s.name.toLowerCase());
 		skill = s;
+		usedincombat = s.usedincombat;
 	}
 
 	@Override

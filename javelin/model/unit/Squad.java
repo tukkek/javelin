@@ -14,12 +14,13 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.CombatantHealthComparator;
 import javelin.controller.comparator.CombatantsByNameAndMercenary;
 import javelin.controller.comparator.SpellLevelComparator;
+import javelin.controller.db.reader.fields.Skills;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.IncursionFight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
-import javelin.model.EquipmentMap;
+import javelin.model.Inventory;
 import javelin.model.item.Item;
 import javelin.model.transport.Transport;
 import javelin.model.unit.abilities.spell.Spell;
@@ -36,7 +37,6 @@ import javelin.view.Images;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.BribingScreen;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -63,7 +63,7 @@ public class Squad extends Actor implements Cloneable {
 	 * {@link BattleAi} doesn't use items having this as a Squad filed is the
 	 * best choice performance-wise.
 	 */
-	public EquipmentMap equipment = new EquipmentMap();
+	public Inventory equipment = new Inventory(this);
 	/**
 	 * Start at morning.
 	 */
@@ -189,8 +189,8 @@ public class Squad extends Actor implements Cloneable {
 		gold += s.gold;
 		resources += s.resources;
 		hourselapsed = Math.max(hourselapsed, s.hourselapsed);
-		for (final Combatant m : s.members) {
-			equipment.put(m.id, s.equipment.get(m.id));
+		for (final Combatant c : s.members) {
+			equipment.put(c, s.equipment.get(c));
 		}
 		if (transport == null
 				|| s.transport != null && s.transport.speed > transport.speed) {
@@ -258,7 +258,7 @@ public class Squad extends Actor implements Cloneable {
 	 */
 	public void dismiss(Combatant c) {
 		members.remove(c);
-		for (Item i : equipment.get(c.id)) {
+		for (Item i : equipment.get(c)) {
 			i.grab();
 		}
 		remove(c);
@@ -274,15 +274,15 @@ public class Squad extends Actor implements Cloneable {
 	/**
 	 * Will automatically {@link #sort()} after inclusion..
 	 *
-	 * @param member
+	 * @param c
 	 *            Adds this unit to {@link #members}.
 	 * @param equipmentp
 	 *            Unit's equipment to be added to {@link #equipment}.
 	 */
-	public void add(Combatant member, List<Item> equipmentp) {
-		members.add(member);
+	public void add(Combatant c, List<Item> equipmentp) {
+		members.add(c);
 		sort();
-		equipment.put(member.id, new ArrayList<Item>(equipmentp));
+		equipment.put(c, new ArrayList<Item>(equipmentp));
 	}
 
 	/**
@@ -298,7 +298,7 @@ public class Squad extends Actor implements Cloneable {
 	 */
 	public void remove(Combatant c) {
 		members.remove(c);
-		equipment.clean(this);
+		equipment.clean();
 		if (members.isEmpty()) {
 			disband();
 		}
@@ -322,7 +322,7 @@ public class Squad extends Actor implements Cloneable {
 	 */
 	@Deprecated
 	public void receiveitem(Item key) {
-		equipment.additem(key, this);
+		equipment.add(key);
 	}
 
 	@Override
@@ -427,8 +427,7 @@ public class Squad extends Actor implements Cloneable {
 		// hidden
 		char input = ' ';
 		final String prompt = "You have hidden from a "
-				+ Difficulty.describe(foes)
-				+ " group of enemies!\n"
+				+ Difficulty.describe(foes) + " group of enemies!\n"
 				+ "Press s to storm them or w to wait for them to go away...\n\n"
 				+ "Enemies: " + Squad.active.spotenemies(foes, null);
 		while (input != 'w' && input != 's') {
@@ -603,8 +602,7 @@ public class Squad extends Actor implements Cloneable {
 		Character input = ' ';
 		while (input != '\n' && input != 's') {
 			Javelin.app.switchScreen(BattleScreen.active);
-			final String difficulty = Difficulty
-					.describe(diffifculty);
+			final String difficulty = Difficulty.describe(diffifculty);
 			final String prompt = "Do you want to skip this " + difficulty
 					+ " battle?\n\n" //
 					+ "Press ENTER to open the battle screen.\n"
@@ -638,7 +636,7 @@ public class Squad extends Actor implements Cloneable {
 			return "";
 		}
 		Squad.active.gold -= spent;
-		return "$" + SelectScreen.formatcost(spent) + " in resources lost.\n\n";
+		return "$" + Javelin.format(spent) + " in resources lost.\n\n";
 	}
 
 	@Override

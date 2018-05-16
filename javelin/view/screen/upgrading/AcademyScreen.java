@@ -3,6 +3,7 @@ package javelin.view.screen.upgrading;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
@@ -14,7 +15,6 @@ import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.military.Academy;
 import javelin.model.world.location.town.labor.military.MartialAcademy;
 import javelin.view.screen.Option;
-import javelin.view.screen.town.SelectScreen;
 
 /**
  * @see MartialAcademy
@@ -23,7 +23,7 @@ import javelin.view.screen.town.SelectScreen;
 public class AcademyScreen extends UpgradingScreen {
 	class Pillage extends Option {
 		Pillage(Fortification f) {
-			super("Pillage ($" + SelectScreen.formatcost(f.getspoils()) + ")",
+			super("Pillage ($" + Javelin.format(f.getspoils()) + ")",
 					0, 'p');
 			priority = 4;
 		}
@@ -42,7 +42,7 @@ public class AcademyScreen extends UpgradingScreen {
 	protected void registertrainee(Order trainee) {
 		academy.training.add(trainee);
 		Combatant c = ((TrainingOrder) trainee).trained;
-		Squad.active.equipment.remove(c.toString());
+		Squad.active.equipment.remove(c);
 		Squad.active.remove(c);
 	}
 
@@ -86,14 +86,14 @@ public class AcademyScreen extends UpgradingScreen {
 		String training = academy.training.queue.isEmpty() ? ""
 				: "Currently training: " + academy.training;
 		return "Your squad currently has $"
-				+ SelectScreen.formatcost(Squad.active.gold) + ". " + training;
+				+ Javelin.format(Squad.active.gold) + ". " + training;
 	}
 
 	@Override
 	public TrainingOrder createorder(Combatant c, Combatant original,
 			float xpcost) {
-		return new TrainingOrder(c, Squad.active.equipment.get(c.id),
-				c.toString(), xpcost, original);
+		return new TrainingOrder(c, Squad.active.equipment.get(c), c.toString(),
+				xpcost, original);
 	}
 
 	@Override

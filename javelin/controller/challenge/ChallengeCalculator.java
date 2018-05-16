@@ -29,12 +29,13 @@ import tyrant.mikera.engine.RPG;
 /**
  * Determines a {@link Monster#cr} according to the rules of Upper Krust's work,
  * which is repackaged with permission on the 'doc' directory.
- * 
+ *
  * His reference is used to the best of my abilities but has been adapted in a
  * few cases due to programming complexity and artificial intelligence
  * efficiency. Such cases should be documented in Javadoc.
- * 
- * #see CrFactor
+ *
+ * @see CrFactor
+ * @see Difficulty
  */
 public class ChallengeCalculator {
 	static final float PCEQUIPMENTCRPERLEVEL = .2f;
@@ -94,12 +95,12 @@ public class ChallengeCalculator {
 	 * See "challenging challenge ratings" source document (@ 'doc' folder),
 	 * page 1: "HOW DO FACTORS WORK?". The silver rule isn't computed for at
 	 * this stage the plan is not to use the PHB classes.
-	 * 
+	 *
 	 * This is intended more for human-readable CR, if you need to make
 	 * calculation you might prefer {@link #calculaterawcr(Monster)}.
-	 * 
+	 *
 	 * Will also update {@link Monster#cr}.
-	 * 
+	 *
 	 * @param m
 	 *            Unit to rate.
 	 * @return The calculated CR.
@@ -123,7 +124,7 @@ public class ChallengeCalculator {
 	 * Unlike {@link #calculatecr(Monster)} this method doesn't
 	 * {@link #roundfraction(float)} or {@link #translatecr(float)}, making it
 	 * more suitable for more precise calculations.
-	 * 
+	 *
 	 * @param m
 	 *            Unit whose CR is to be calculated.
 	 * @return An array where index 0 is the sum of all {@link #CR_FACTORS} and
@@ -398,11 +399,11 @@ public class ChallengeCalculator {
 	/**
 	 * To use with the Buy the Numbers system. Covers passive abilities, for
 	 * others see {@link #rateability(int, int, int, int)}.
-	 * 
+	 *
 	 * Note than when adding abilities to Javelin this way you should carefully
 	 * consider the prerequisite tree, like having Barbarian Rage before
 	 * Tireless Rage.
-	 * 
+	 *
 	 * @param prerequisite
 	 *            Usually 0 but when converting an ability from a prestige class
 	 *            this should be the minimum level required to enter that class.
@@ -410,7 +411,7 @@ public class ChallengeCalculator {
 	 *            Level this ability is being taken from.
 	 * @param adjustment
 	 *            Usually 50% to 200% depending on the ability's usefulness.
-	 * 
+	 *
 	 * @return Challenge rating for this ability.
 	 */
 	public float ratesimpleability(int prerequisite, int level,
@@ -422,11 +423,11 @@ public class ChallengeCalculator {
 	 * For use with the Buy the Numbers system. Encompasses activated,
 	 * level-dependent and abilities with a limit on use per day (usually one of
 	 * the two, at least).
-	 * 
+	 *
 	 * Note than when adding abilities to Javelin this way you should carefully
 	 * consider the prerequisite tree, like having Barbarian Rage before
 	 * Tireless Rage.
-	 * 
+	 *
 	 * @param minimumlevel
 	 *            The minimum level in which this ability can be accessed. If
 	 *            from a prestige class, add the prestige class level to the
@@ -445,7 +446,7 @@ public class ChallengeCalculator {
 	 *            the pure prestige class level (not added to minimumlevel).
 	 * @param adjustment
 	 *            Usually 100 to 200% depending on the ability's usefulness.
-	 * 
+	 *
 	 * @return Challenge rating.
 	 */
 	public float rateability(int minimumlevel, int usesperday,

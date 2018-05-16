@@ -5,20 +5,19 @@ import java.util.ArrayList;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
-import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import tyrant.mikera.engine.RPG;
 
 /**
  * Damages all good creatures in battle (1-99% will save).
- * 
+ *
  * @author alex
  */
 public class Skull extends Relic {
 	/** Constructor. */
-	public Skull() {
-		super("Skull of Pain", Realm.EVIL);
+	public Skull(Integer level) {
+		super("Skull of Pain", level);
 		usedinbattle = true;
 		usedoutofbattle = false;
 	}

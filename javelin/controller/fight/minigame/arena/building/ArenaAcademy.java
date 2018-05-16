@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.arena.ArenaFight;
 import javelin.controller.upgrade.Upgrade;
@@ -17,7 +18,6 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
 import javelin.view.screen.Option;
-import javelin.view.screen.town.PurchaseScreen;
 import javelin.view.screen.upgrading.UpgradingScreen;
 
 public class ArenaAcademy extends ArenaBuilding {
@@ -71,7 +71,7 @@ public class ArenaAcademy extends ArenaBuilding {
 			if (upgrade == null) {
 				return super.printpriceinfo(o);
 			}
-			return " $" + PurchaseScreen.format(o.price);
+			return " $" + Javelin.format(o.price);
 		}
 
 		@Override
@@ -105,7 +105,7 @@ public class ArenaAcademy extends ArenaBuilding {
 		@Override
 		public String printinfo() {
 			return "Your gladiators have $"
-					+ PurchaseScreen.format(ArenaFight.get().gold);
+					+ Javelin.format(ArenaFight.get().gold);
 		}
 	}
 
@@ -150,6 +150,6 @@ public class ArenaAcademy extends ArenaBuilding {
 	public String getactiondescription(Combatant current) {
 		return super.getactiondescription(current) + "\n\n" + current
 				+ " currently has " + current.gethumanxp() + ". Your team has $"
-				+ PurchaseScreen.format(ArenaFight.get().gold) + ".";
+				+ Javelin.format(ArenaFight.get().gold) + ".";
 	}
 }

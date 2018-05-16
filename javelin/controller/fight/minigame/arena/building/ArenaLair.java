@@ -121,7 +121,7 @@ public class ArenaLair extends ArenaBuilding {
 
 	public static String getgoldinfo() {
 		return "\n\nYour gladiators currently have $"
-				+ PurchaseScreen.format(ArenaFight.get().gold) + ".";
+				+ Javelin.format(ArenaFight.get().gold) + ".";
 	}
 
 	@Override

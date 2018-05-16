@@ -13,7 +13,6 @@ import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -103,7 +102,7 @@ public class Slums extends Location {
 			return true;
 		}
 		String prompt = "Do you want to buy: " + item.toString().toLowerCase()
-				+ " ($" + SelectScreen.formatcost(item.price) + ")?\n"
+				+ " ($" + Javelin.format(item.price) + ")?\n"
 				+ "Press b to buy or any other key to leave...";
 		if (Javelin.prompt(prompt) == 'b') {
 			if (Squad.active.gold >= item.price) {
@@ -122,7 +121,7 @@ public class Slums extends Location {
 		ArrayList<String> descriptions = new ArrayList<String>();
 		int limit = getlimit();
 		for (Combatant c : Squad.active.members) {
-			for (Item i : Squad.active.equipment.get(c.id)) {
+			for (Item i : Squad.active.equipment.get(c)) {
 				int sellingprice = i.price / 2;
 				if (sellingprice > limit) {
 					continue;
@@ -130,7 +129,7 @@ public class Slums extends Location {
 				items.add(i);
 				String equipped = c.equipped.contains(i) ? ", equipped" : "";
 				descriptions.add(i + " (" + c + equipped + ") $"
-						+ SelectScreen.formatcost(sellingprice));
+						+ Javelin.format(sellingprice));
 			}
 		}
 		int choice = Javelin.choose("Do you want to sell one of your items?",
@@ -138,7 +137,7 @@ public class Slums extends Location {
 		if (choice >= 0) {
 			Item i = items.get(choice);
 			Squad.active.gold += i.price / 2;
-			Squad.active.equipment.removeitem(i, Squad.active);
+			Squad.active.equipment.remove(i);
 			item = i;
 		}
 	}

@@ -9,7 +9,7 @@ import javelin.Javelin;
 import javelin.controller.CountingSet;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.challenge.ChallengeCalculator.Difficulty;
+import javelin.controller.challenge.Difficulty;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.minigame.Minigame;

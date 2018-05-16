@@ -73,7 +73,7 @@ public class WorldGenerator extends Thread {
 					((Town) a).populategarisson();
 				}
 			}
-			world.scenario.finish(world);
+			World.scenario.finish(world);
 			WorldGenerator.finish(start, world);
 		} catch (RestartWorldGeneration e) {
 			if (World.seed == null) {
@@ -93,7 +93,7 @@ public class WorldGenerator extends Thread {
 		Squad.active.y = start.y;
 		Squad.active.displace();
 		Squad.active.place();
-		Squad.active.equipment.fill(Squad.active);
+		Squad.active.equipment.fill();
 		Squad.active.lasttown = start;
 	}
 
@@ -162,7 +162,7 @@ public class WorldGenerator extends Thread {
 
 	/**
 	 * Handles when {@link World} generation is taking too long.
-	 * 
+	 *
 	 * @throws RestartWorldGeneration
 	 */
 	public void bumpretry() {
@@ -249,9 +249,9 @@ public class WorldGenerator extends Thread {
 	/**
 	 * Turn whole map into 2 {@link Realm}s only so that there won't be
 	 * in-fighting between hostile {@link Town}s.
-	 * 
+	 *
 	 * @param starting
-	 * 
+	 *
 	 * @see Scenario#normalizemap
 	 */
 	static void normalizemap(Town starting) {

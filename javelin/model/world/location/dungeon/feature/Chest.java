@@ -7,7 +7,6 @@ import javelin.model.item.ItemSelection;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -78,7 +77,7 @@ public class Chest extends Feature {
 			if (gold < 1) {
 				gold = 1;
 			}
-			String message = "Party receives $" + SelectScreen.formatcost(gold)
+			String message = "Party receives $" + Javelin.format(gold)
 					+ "!";
 			Javelin.message(message, false);
 			Squad.active.gold += gold;

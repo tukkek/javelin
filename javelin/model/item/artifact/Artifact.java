@@ -65,7 +65,8 @@ public abstract class Artifact extends Item {
 		new WingsOfFlying(54000);
 	}
 
-	public final Slot slot;
+	public Slot slot;
+	Combatant owner = null;
 
 	public Artifact(String name, int price, Slot slotp) {
 		super(name, price, Item.ARTIFACT);
@@ -105,6 +106,7 @@ public abstract class Artifact extends Item {
 		}
 		slot.clear(c);
 		c.equipped.add(this);
+		owner = c;
 		apply(c);
 		return true;
 	}
@@ -112,6 +114,7 @@ public abstract class Artifact extends Item {
 	public void remove(Combatant c) {
 		negate(c);
 		c.equipped.remove(this);
+		owner = null;
 	}
 
 	/**
@@ -152,5 +155,10 @@ public abstract class Artifact extends Item {
 			return null;
 		}
 		return "can't equip";
+	}
+
+	@Override
+	public boolean sell() {
+		return owner == null;
 	}
 }

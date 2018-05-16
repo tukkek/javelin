@@ -7,7 +7,7 @@ import javelin.view.screen.Option;
 
 /***
  * Any screen in which the player can spend money tu buy something.**
- * 
+ *
  * @author alex
  */
 public abstract class PurchaseScreen extends SelectScreen {
@@ -48,7 +48,7 @@ public abstract class PurchaseScreen extends SelectScreen {
 
 	@Override
 	public String printinfo() {
-		return "Your squad has $" + formatcost(getgold());
+		return "Your squad has $" + Javelin.format(getgold());
 	}
 
 	protected int getgold() {

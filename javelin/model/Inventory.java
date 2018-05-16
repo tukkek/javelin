@@ -2,6 +2,7 @@ package javelin.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,24 +20,28 @@ import tyrant.mikera.engine.RPG;
  *
  * @author alex
  */
-public class EquipmentMap extends HashMap<Integer, ArrayList<Item>>
-		implements Serializable {
+public class Inventory implements Serializable {
+	HashMap<Integer, ArrayList<Item>> bags = new HashMap<Integer, ArrayList<Item>>();
+	Squad squad;
 
-	@Override
-	public ArrayList<Item> get(final Object key) {
-		if (!containsKey(key)) {
-			put((Integer) key, new ArrayList<Item>());
+	public Inventory(Squad s) {
+		squad = s;
+	}
+
+	public ArrayList<Item> get(final Combatant c) {
+		if (!bags.containsKey(c.id)) {
+			bags.put(c.id, new ArrayList<Item>());
 		}
-		return super.get(key);
+		return bags.get(c.id);
 	}
 
 	/**
 	 * @return Any {@link Item} of this class, removed from the {@link Squad}'s
 	 *         bags or <code>null</code> if not found.
 	 */
-	public Item popitem(Class<? extends Item> type, Squad s) {
-		for (Combatant c : s.members) {
-			ArrayList<Item> bag = get(c.id);
+	public Item pop(Class<? extends Item> type) {
+		for (Combatant c : squad.members) {
+			ArrayList<Item> bag = get(c);
 			for (final Item i : bag) {
 				if (type.isInstance(i)) {
 					bag.remove(i);
@@ -48,8 +53,8 @@ public class EquipmentMap extends HashMap<Integer, ArrayList<Item>>
 		return null;
 	}
 
-	public Item containsitem(Class<? extends Item> type) {
-		for (final List<Item> items : values()) {
+	public Item contains(Class<? extends Item> type) {
+		for (final List<Item> items : bags.values()) {
 			for (final Item i : items) {
 				if (type.isInstance(i)) {
 					return i;
@@ -63,9 +68,9 @@ public class EquipmentMap extends HashMap<Integer, ArrayList<Item>>
 	 * @return Any item equal to the given item, removed from the
 	 *         {@link Squad}'s bags or <code>null</code> if not found.
 	 */
-	public Item popitem(Item type, Squad s) {
-		for (Combatant c : s.members) {
-			ArrayList<Item> bag = get(c.id);
+	public Item pop(Item type) {
+		for (Combatant c : squad.members) {
+			ArrayList<Item> bag = get(c);
 			for (final Item i : bag) {
 				if (type.equals(i)) {
 					bag.remove(i);
@@ -77,35 +82,33 @@ public class EquipmentMap extends HashMap<Integer, ArrayList<Item>>
 		return null;
 	}
 
-	public void fill(Squad active) {
-		for (Combatant c : active.members) {
-			get(c.id);
+	public void fill() {
+		for (Combatant c : squad.members) {
+			get(c);
 		}
 	}
 
-	public void additem(Item i, Squad s) {
-		get(RPG.pick(s.members).id).add(i);
+	public void add(Item i) {
+		get(RPG.pick(squad.members)).add(i);
 	}
 
 	/**
 	 * TODO ideally should never to a "dirty" state
-	 *
-	 * @param squad
 	 */
-	public void clean(Squad squad) {
-		keyloop: for (Integer key : new ArrayList<Integer>(keySet())) {
+	public void clean() {
+		keyloop: for (Integer key : new ArrayList<Integer>(bags.keySet())) {
 			for (Combatant c : squad.members) {
 				if (c.id == key) {
 					continue keyloop;
 				}
 			}
-			remove(key);
+			bags.remove(key);
 		}
 	}
 
 	public int count() {
 		int count = 0;
-		for (ArrayList<Item> bag : values()) {
+		for (ArrayList<Item> bag : bags.values()) {
 			count += bag.size();
 		}
 		return count;
@@ -115,9 +118,9 @@ public class EquipmentMap extends HashMap<Integer, ArrayList<Item>>
 	 * @return The exact given instance, removed from the {@link Squad}'s bags
 	 *         or <code>null</code> if not found.
 	 */
-	public Item removeitem(Item target, Squad s) {
-		for (Combatant c : s.members) {
-			ArrayList<Item> bag = get(c.id);
+	public Item remove(Item target) {
+		for (Combatant c : squad.members) {
+			ArrayList<Item> bag = get(c);
 			for (final Item i : bag) {
 				if (target == i) {
 					bag.remove(i);
@@ -127,5 +130,17 @@ public class EquipmentMap extends HashMap<Integer, ArrayList<Item>>
 			}
 		}
 		return null;
+	}
+
+	public void remove(Combatant c) {
+		bags.remove(c.id);
+	}
+
+	public void put(Combatant c, ArrayList<Item> items) {
+		bags.put(c.id, items);
+	}
+
+	public Collection<ArrayList<Item>> values() {
+		return bags.values();
 	}
 }

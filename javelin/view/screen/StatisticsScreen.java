@@ -17,7 +17,6 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.unique.MercenariesGuild;
-import javelin.view.screen.town.SelectScreen;
 
 /**
  * Shows unit information.
@@ -59,7 +58,7 @@ public class StatisticsScreen extends InfoScreen {
 		lines.add("");
 		if (c.mercenary) {
 			lines.add("Mercenary ($"
-					+ SelectScreen.formatcost(MercenariesGuild.getfee(c))
+					+ Javelin.format(MercenariesGuild.getfee(c))
 					+ "/day)");
 		}
 		lines.add("Challenge rating "

@@ -2,8 +2,11 @@ package javelin.model.world.location.town.labor.productive;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
+import javelin.Javelin;
+import javelin.controller.challenge.RewardCalculator;
 import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
@@ -21,10 +24,61 @@ import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
+import javelin.view.screen.Option;
 import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.PurchaseOption;
+import javelin.view.screen.town.SelectScreen;
 
 public class Shop extends Location {
+	public static final Option SELL = new Option("Sell items", 0, 's');
+
+	public class SellingScreen extends SelectScreen {
+		HashMap<Option, Item> selling = new HashMap<Option, Item>();
+		int buylimit;
+
+		public SellingScreen() {
+			super("Sell which items?", null);
+			buylimit = Javelin.round(
+					RewardCalculator.getgold(getdistrict().town.population));
+		}
+
+		@Override
+		public String getCurrency() {
+			return "$";
+		}
+
+		@Override
+		public String printinfo() {
+			return "Your squad has $" + Javelin.format(Squad.active.gold)
+					+ ".\n" + "The shop will pay at most $"
+					+ Javelin.format(buylimit) + " for an item.";
+		}
+
+		@Override
+		public List<Option> getoptions() {
+			ArrayList<Option> options = new ArrayList<Option>();
+			for (Combatant c : Squad.active.members) {
+				for (Item i : Squad.active.equipment.get(c)) {
+					if (i.sell()) {
+						String listing = "[" + c + "] " + i.describe(c);
+						int sellingprice = Math.min(buylimit, i.price / 2);
+						Option o = new Option(listing, sellingprice);
+						selling.put(o, i);
+						options.add(o);
+					}
+				}
+			}
+			return options;
+		}
+
+		@Override
+		public boolean select(Option o) {
+			Squad.active.gold += o.price;
+			Squad.active.equipment.remove(selling.get(o));
+			return true;
+		}
+	}
+
 	public static class BuildShop extends Build {
 		public BuildShop() {
 			super("Build shop", 5, null, Rank.HAMLET);
@@ -69,6 +123,41 @@ public class Shop extends Location {
 		public String printinfo() {
 			return super.printinfo() + (crafting.queue.isEmpty() ? ""
 					: "\n\nCurrently crafting: " + crafting);
+		}
+
+		@Override
+		public String printpriceinfo(Option o) {
+			return o.price == 0 ? "" : super.printpriceinfo(o);
+		}
+
+		@Override
+		public List<Option> getoptions() {
+			List<Option> options = super.getoptions();
+			if (cansell()) {
+				SELL.priority = 2;
+				options.add(SELL);
+			}
+			return options;
+		}
+
+		private boolean cansell() {
+			for (ArrayList<Item> bag : Squad.active.equipment.values()) {
+				for (Item i : bag) {
+					if (i.sell()) {
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
+		@Override
+		public boolean select(Option o) {
+			if (o == SELL) {
+				new SellingScreen().show();
+				return true;
+			}
+			return super.select(o);
 		}
 	}
 

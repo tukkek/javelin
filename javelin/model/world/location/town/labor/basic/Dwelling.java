@@ -22,7 +22,6 @@ import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -181,15 +180,15 @@ public class Dwelling extends Fortification {
 					+ Math.round(100 * dweller.source.cr)
 					+ "XP)\n";
 			text += "h - hire as " + monstertype + " mercenary ($"
-					+ SelectScreen.formatcost(MercenariesGuild.getfee(dweller))
+					+ Javelin.format(MercenariesGuild.getfee(dweller))
 					+ "/day)\n";
 		} else {
 			text += "There are currently no available units here.\n\n";
 		}
 		text += "p - pillage this dwelling ($"
-				+ SelectScreen.formatcost(getspoils()) + ")\n";
+				+ Javelin.format(getspoils()) + ")\n";
 		text += "q - quit\n";
-		text += "\nCurrent gold: $" + SelectScreen.formatcost(Squad.active.gold)
+		text += "\nCurrent gold: $" + Javelin.format(Squad.active.gold)
 				+ "\n";
 		if (volunteers > 0) {
 			text += "Current XP: " + Squad.active.sumxp() + "XP\n";

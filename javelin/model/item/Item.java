@@ -195,7 +195,7 @@ public abstract class Item implements Serializable, Cloneable {
 		 * needs to catch actual instance not just any item of the same type
 		 */
 		spend: for (final Combatant owner : Squad.active.members) {
-			List<Item> items = Squad.active.equipment.get(owner.id);
+			List<Item> items = Squad.active.equipment.get(owner);
 			for (Item used : new ArrayList<Item>(items)) {
 				if (used == this) {
 					items.remove(used);
@@ -226,8 +226,7 @@ public abstract class Item implements Serializable, Cloneable {
 	public void grab(Squad s) {
 		final String list = UseItems.listitems(null, false)
 				+ "\nWho will take the " + toString().toLowerCase() + "?";
-		s.equipment.get(UseItems.selectmember(s.members, this, list).id)
-				.add(this);
+		s.equipment.get(UseItems.selectmember(s.members, this, list)).add(this);
 	}
 
 	/**
@@ -239,7 +238,7 @@ public abstract class Item implements Serializable, Cloneable {
 
 	/**
 	 * Used as strategic resource damage.
-	 * 
+	 *
 	 * @param c
 	 *
 	 * @return Lowercase description of used resources or <code>null</code> if
@@ -321,7 +320,7 @@ public abstract class Item implements Serializable, Cloneable {
 			}
 			Squad squad = a instanceof Squad ? (Squad) a : null;
 			if (squad != null) {
-				squad.equipment.clean(squad);
+				squad.equipment.clean();
 				for (List<Item> bag : squad.equipment.values()) {
 					items.addAll(bag);
 				}
@@ -347,5 +346,23 @@ public abstract class Item implements Serializable, Cloneable {
 		Collections.shuffle(randomized);
 		randomized.sort(ItemsByPrice.SINGLETON);
 		return randomized;
+	}
+
+	/**
+	 * @return <code>true</code> if this item can be currently sold.
+	 */
+	public boolean sell() {
+		return true;
+	}
+
+	public String describe(Combatant c) {
+		String description = toString();
+		String prohibited = canuse(c);
+		if (prohibited != null) {
+			description += " (" + prohibited + ")";
+		} else if (c.equipped.contains(this)) {
+			description += " (equipped)";
+		}
+		return description;
 	}
 }

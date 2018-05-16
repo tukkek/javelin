@@ -125,14 +125,14 @@ public class Door extends Feature {
 				false) != '\n') {
 			return false;
 		}
-		Squad.active.equipment.removeitem(k, Squad.active);
+		Squad.active.equipment.remove(k);
 		return true;
 	}
 
 	Item getkey() {
-		Item k = Squad.active.equipment.containsitem(key);
+		Item k = Squad.active.equipment.contains(key);
 		if (k == null) {
-			k = Squad.active.equipment.containsitem(MasterKey.class);
+			k = Squad.active.equipment.contains(MasterKey.class);
 		}
 		return k;
 	}

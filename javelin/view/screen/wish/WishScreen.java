@@ -86,7 +86,7 @@ public class WishScreen extends SelectScreen {
 
 	public void pay(double nrubies) {
 		for (int i = 0; i < nrubies; i++) {
-			Squad.active.equipment.popitem(Ruby.class, Squad.active);
+			Squad.active.equipment.pop(Ruby.class);
 		}
 	}
 

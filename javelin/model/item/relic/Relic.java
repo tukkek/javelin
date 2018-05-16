@@ -1,9 +1,9 @@
 package javelin.model.item.relic;
 
 import javelin.Javelin;
+import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
-import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -12,7 +12,7 @@ import javelin.view.screen.WorldScreen;
 
 /**
  * TODO placeholder for real relics
- * 
+ *
  * @author alex
  */
 public abstract class Relic extends Item {
@@ -20,8 +20,8 @@ public abstract class Relic extends Item {
 	long lastused = -RECHARGEPERIOD;
 
 	/** Constructor. */
-	public Relic(String name, Realm r) {
-		super(name, 0, null);
+	public Relic(String name, int templelevel) {
+		super(name, RewardCalculator.getgold(templelevel), null);
 		consumable = false;
 		waste = false;
 		provokesaoo = false;
@@ -69,7 +69,7 @@ public abstract class Relic extends Item {
 
 	/**
 	 * Invoke the relics's power.
-	 * 
+	 *
 	 * @param user
 	 *            Unit handling the relic.
 	 * @return <code>false</code> if the use is cancelled by the player.

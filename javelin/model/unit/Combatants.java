@@ -14,6 +14,10 @@ public class Combatants extends ArrayList<Combatant>
 		super(size);
 	}
 
+	public Combatants(Combatants list) {
+		super(list);
+	}
+
 	@Override
 	public int hashCode() {
 		return toString().hashCode();

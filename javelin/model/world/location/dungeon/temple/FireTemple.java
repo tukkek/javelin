@@ -24,7 +24,7 @@ public class FireTemple extends Temple {
 
 	/** Constructor. */
 	public FireTemple(int level) {
-		super(Realm.FIRE, level, new Candle(), FLUFF);
+		super(Realm.FIRE, level, new Candle(level), FLUFF);
 		terrain = Terrain.DESERT;
 		floor = "dungeonfloortemplefire";
 		wall = "dungeonwalltemplefire";

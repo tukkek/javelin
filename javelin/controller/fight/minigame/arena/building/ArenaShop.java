@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.comparator.ItemsByPrice;
 import javelin.controller.fight.minigame.arena.ArenaFight;
 import javelin.model.item.Item;
@@ -15,7 +16,6 @@ import javelin.model.unit.Combatant;
 import javelin.view.screen.Option;
 import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.PurchaseOption;
-import javelin.view.screen.town.PurchaseScreen;
 
 public class ArenaShop extends ArenaBuilding {
 	private static final int STOCKSIZE = 9;
@@ -82,7 +82,7 @@ public class ArenaShop extends ArenaBuilding {
 		@Override
 		public String printpriceinfo(Option o) {
 			if (o instanceof BuildingUpgradeOption) {
-				return " $" + PurchaseScreen.format(o.price);
+				return " $" + Javelin.format(o.price);
 			}
 			return super.printpriceinfo(o);
 		}
@@ -127,7 +127,7 @@ public class ArenaShop extends ArenaBuilding {
 
 	public static String getgoldinfo() {
 		return "\n\nYour gladiators currently have $"
-				+ PurchaseScreen.format(ArenaFight.get().gold) + ".";
+				+ Javelin.format(ArenaFight.get().gold) + ".";
 	}
 
 	@Override

@@ -43,7 +43,6 @@ import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.world.WorldPanel;
 import javelin.view.mappanel.world.WorldTile;
-import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.tyrant.QuestApp;
 
@@ -351,9 +350,9 @@ public class WorldScreen extends BattleScreen {
 
 	static String printgold() {
 		final int upkeep = Squad.active.getupkeep();
-		String gold = "$" + SelectScreen.formatcost(Squad.active.gold);
+		String gold = "$" + Javelin.format(Squad.active.gold);
 		if (upkeep > 0) {
-			gold += " (upkeep: $" + SelectScreen.formatcost(upkeep) + "/day)";
+			gold += " (upkeep: $" + Javelin.format(upkeep) + "/day)";
 		}
 		return gold;
 	}

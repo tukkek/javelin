@@ -37,7 +37,6 @@ import javelin.model.unit.skill.Diplomacy;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
-import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.tyrant.QuestApp;
 
 /**
@@ -182,7 +181,7 @@ public abstract class Fight {
 		}
 		if (Javelin.app.fight.rewardgold) {
 			Squad.active.gold += bonus;
-			rewards += " Party receives $" + SelectScreen.formatcost(bonus)
+			rewards += " Party receives $" + Javelin.format(bonus)
 					+ "!\n";
 		}
 		return rewards;
@@ -393,7 +392,7 @@ public abstract class Fight {
 	 * @return Inventory for the given unit..
 	 */
 	public ArrayList<Item> getbag(Combatant combatant) {
-		return Squad.active.equipment.get(combatant.id);
+		return Squad.active.equipment.get(combatant);
 	}
 
 	/**

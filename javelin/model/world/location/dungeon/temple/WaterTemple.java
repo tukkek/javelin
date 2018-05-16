@@ -27,8 +27,8 @@ public class WaterTemple extends Temple {
 			+ "You hear a distant sound, unsure if it was a gull's cry, the wind hitting the wall besides you or the invitation of a hidden mermaid.";
 
 	/** Constructor. */
-	public WaterTemple(Integer pop) {
-		super(Realm.WATER, pop, new Crown(), FLUFF);
+	public WaterTemple(Integer level) {
+		super(Realm.WATER, level, new Crown(level), FLUFF);
 		terrain = Terrain.WATER;
 		floor = "terraindungeonfloor";
 		wall = "dungeonwalltemplewater";

@@ -1,13 +1,12 @@
-package javelin.view.screen.hiringacademy;
+package javelin.view.screen;
 
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.unique.MercenariesGuild;
-import javelin.view.screen.Option;
-import javelin.view.screen.town.SelectScreen;
 import javelin.view.screen.upgrading.AcademyScreen;
 
 public class GuildScreen extends AcademyScreen {
@@ -48,7 +47,7 @@ public class GuildScreen extends AcademyScreen {
 		Hire h = new Hire(c);
 		h.price = MercenariesGuild.getfee(c);
 		h.name = "Hire: " + c.toString().toLowerCase() + " ($"
-				+ SelectScreen.formatcost(h.price) + "/day)";
+				+ Javelin.format(h.price) + "/day)";
 		return h;
 	}
 

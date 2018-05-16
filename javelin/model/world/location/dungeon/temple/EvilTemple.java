@@ -33,8 +33,8 @@ public class EvilTemple extends Temple {
 			+ "The once great castle became a prison, torture chamber and hall of twisted pleasures as the kingdom's honor slowly faded into oblivion.";
 
 	/** Constructor. */
-	public EvilTemple(Integer pop) {
-		super(Realm.EVIL, pop, new Skull(), FLUFF);
+	public EvilTemple(Integer level) {
+		super(Realm.EVIL, level, new Skull(level), FLUFF);
 		terrain = Terrain.MARSH;
 		floor = "dungeonfloortempleevil";
 		wall = "dungeonwalltempleevil";
@@ -57,7 +57,7 @@ public class EvilTemple extends Temple {
 			return false;
 		}
 		Class<? extends Feature> targettype;
-		if (Squad.active.equipment.containsitem(Skull.class) == null) {
+		if (Squad.active.equipment.contains(Skull.class) == null) {
 			targettype = StairsUp.class;
 		} else if (dungeon.hasfeature(Altar.class)) {
 			targettype = Altar.class;

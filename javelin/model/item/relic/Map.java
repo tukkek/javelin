@@ -4,24 +4,23 @@ import java.util.ArrayList;
 
 import javelin.Javelin;
 import javelin.controller.terrain.Terrain;
-import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.view.screen.WorldScreen;
+import javelin.view.screen.BattleScreen;
 
 /**
  * Terraforms surroundings (3x3?) except to/from water.
- * 
+ *
  * @author alex
  */
 public class Map extends Relic {
 	static final int RADIUS = 2;
 
 	/** Constructor. */
-	public Map() {
-		super("Map of Creation", Realm.FIRE);
+	public Map(Integer level) {
+		super("Map of Creation", level);
 		usedinbattle = false;
 		usedoutofbattle = true;
 	}
@@ -29,14 +28,14 @@ public class Map extends Relic {
 	@Override
 	protected boolean activate(Combatant user) {
 		if (Dungeon.active != null) {
-			Javelin.app.switchScreen(WorldScreen.active);
+			Javelin.app.switchScreen(BattleScreen.active);
 			Javelin.message(
 					"You draw on the map but nothing happens. Try it outside next time!",
 					false);
 			return true;
 		}
-		ArrayList<Terrain> terrains =
-				new ArrayList<Terrain>(Terrain.NONUNDERGROUND.length - 1);
+		ArrayList<Terrain> terrains = new ArrayList<Terrain>(
+				Terrain.NONUNDERGROUND.length - 1);
 		for (Terrain t : Terrain.NONUNDERGROUND) {
 			if (!t.equals(Terrain.WATER)) {
 				terrains.add(t);

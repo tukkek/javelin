@@ -1,6 +1,5 @@
 package javelin.view.screen.town;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -21,9 +20,6 @@ import javelin.view.screen.Option;
  * @author alex
  */
 public abstract class SelectScreen extends InfoScreen {
-
-	private static final DecimalFormat COSTFORMAT = new DecimalFormat(
-			"####,###,##0");
 	/** Default key to proceed ({@value #PROCEED}). */
 	public static final char PROCEED = 'q';
 	/**
@@ -112,7 +108,7 @@ public abstract class SelectScreen extends InfoScreen {
 	 * @return Textual representation of {@link Option#price}.
 	 */
 	public String printpriceinfo(Option o) {
-		return " " + getCurrency() + formatcost(o.price);
+		return " " + getCurrency() + Javelin.format(o.price);
 	}
 
 	/**
@@ -193,13 +189,6 @@ public abstract class SelectScreen extends InfoScreen {
 	/** Allows subclasses to round {@link Option#price}s. */
 	public void roundcost(final Option o) {
 		return;
-	}
-
-	/**
-	 * @return Textual representation of the givne {@link Option#price}.
-	 */
-	static public String formatcost(double price) {
-		return COSTFORMAT.format(price);
 	}
 
 	/**

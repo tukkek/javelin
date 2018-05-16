@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,6 +44,7 @@ import javelin.view.ScenarioSelectionDialog;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.NamingScreen;
+import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.tyrant.QuestApp;
@@ -70,24 +72,25 @@ public class Javelin {
 	public static final String PERIODNIGHT = "Night";
 	public static final String[] PERIODS = new String[] { PERIODMORNING,
 			PERIODNOON, PERIODEVENING, PERIODNIGHT };
-
 	public static final Image[] ICONS = new Image[] {
 			Images.getImage("javelin") };
-	static final String TITLE = "Javelin";
-	static final Preferences RECORD = Preferences
-			.userNodeForPackage(Javelin.class);
-
 	/**
 	 * Monster descriptions, separate from {@link Monster} data to avoid
 	 * duplication in memory when using {@link Monster#clone()}.
 	 *
 	 * @see Combatant#clonedeeply()
 	 */
-	public static TreeMap<String, String> DESCRIPTIONS = new TreeMap<String, String>();
+	public static final TreeMap<String, String> DESCRIPTIONS = new TreeMap<String, String>();
 	/** All loaded monster mapped by challenge rating. */
-	public static TreeMap<Float, List<Monster>> MONSTERSBYCR = new TreeMap<Float, List<Monster>>();
+	public static final TreeMap<Float, List<Monster>> MONSTERSBYCR = new TreeMap<Float, List<Monster>>();
 	/** All loaded XML {@link Monster}s. See {@link MonsterReader}. */
-	public static List<Monster> ALLMONSTERS = new ArrayList<Monster>();
+	public static final List<Monster> ALLMONSTERS = new ArrayList<Monster>();
+
+	static final String TITLE = "Javelin";
+	static final Preferences RECORD = Preferences
+			.userNodeForPackage(Javelin.class);
+	static final DecimalFormat COSTFORMAT = new DecimalFormat("####,###,##0");
+
 	/** Singleton. */
 	public static JavelinApp app;
 
@@ -561,5 +564,35 @@ public class Javelin {
 			}
 		}
 		return monsters;
+	}
+
+	/**
+	 * @return Textual representation of the givne {@link Option#price}.
+	 */
+	static public String format(double gold) {
+		return COSTFORMAT.format(gold);
+	}
+
+	/**
+	 * Example: 194,151 will be "rounded" to 190,000.
+	 *
+	 * A 10% loss of precision is expected at most but it tends to normalize
+	 * (and lessen with the game's exponential increase as challenge levels
+	 * rise). The loss of precision is easily worth the much higher readability.
+	 *
+	 * @param gold
+	 *            A value in gold or other unit that needn't be precise.
+	 *
+	 * @return The input value, but rounded off as to be more legible.
+	 */
+	static public int round(int gold) {
+		if (gold <= 100) {
+			return gold;
+		}
+		int roundto = 1;
+		while (roundto * 100 < gold) {
+			roundto = roundto * 10;
+		}
+		return roundto * Math.round((float) gold / roundto);
 	}
 }

@@ -28,8 +28,8 @@ public class AirTemple extends Temple {
 			+ "As you enter you immediately feel warmer but the strong gale coming from the outside threatens to carry you along its momentum.";
 
 	/** Constructor. */
-	public AirTemple(Integer pop) {
-		super(Realm.AIR, pop, new Flute(), FLUFF);
+	public AirTemple(Integer level) {
+		super(Realm.AIR, level, new Flute(level), FLUFF);
 		terrain = Terrain.MOUNTAINS;
 		wall = "terraindungeonwall";
 		floor = "terraindungeonfloor";

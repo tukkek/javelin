@@ -13,7 +13,6 @@ import javelin.view.mappanel.battle.action.BattleMouseAction;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.Option;
-import javelin.view.screen.town.PurchaseScreen;
 
 /**
  * TODO on upgrade start fast healing
@@ -69,7 +68,7 @@ public abstract class ArenaBuilding extends Building {
 				return true;
 			}
 			s.print("Not enough gold (you currently have $"
-					+ PurchaseScreen.format(gold)
+					+ Javelin.format(gold)
 					+ ").\n\nPress any key to continue....");
 			return false;
 		}
@@ -189,13 +188,13 @@ public abstract class ArenaBuilding extends Building {
 
 	String getrepairmessage() {
 		String suffix = "\n\nYou currently have $"
-				+ PurchaseScreen.format(ArenaFight.get().gold) + ".";
+				+ Javelin.format(ArenaFight.get().gold) + ".";
 		String name = source.customName.toLowerCase();
 		if (repairing) {
 			return "This " + name + " is being repaired." + suffix;
 		}
 		return "This " + name + " needs to be repaired ($"
-				+ PurchaseScreen.format(getrepaircost())
+				+ Javelin.format(getrepaircost())
 				+ "). Click to start repairs." + suffix;
 	}
 

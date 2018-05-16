@@ -16,7 +16,6 @@ import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.view.screen.InfoScreen;
-import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -146,7 +145,7 @@ public class Shrine extends Fortification {
 			output += "\n2 - " + rituals.get(1).name + " ($" + price(1) + ")";
 		}
 		output += "\np - Pillage this temple ($"
-				+ SelectScreen.formatcost(getspoils()) + ")";
+				+ Javelin.format(getspoils()) + ")";
 		output += "\nq - Quit for now ";
 		output += "\n\nSelect an option.";
 		InfoScreen screen = new InfoScreen(output);

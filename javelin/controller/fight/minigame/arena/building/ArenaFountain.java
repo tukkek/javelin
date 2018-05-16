@@ -9,7 +9,6 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Condition;
 import javelin.model.world.location.dungeon.feature.Fountain;
-import javelin.view.screen.town.PurchaseScreen;
 
 public class ArenaFountain extends ArenaBuilding {
 	static final String REFILLING = "This fountain is refilling... be patient!";
@@ -41,11 +40,11 @@ public class ArenaFountain extends ArenaBuilding {
 			Javelin.prompt(REFILLING + " (already at max level)");
 			return false;
 		}
-		String priceformat = PurchaseScreen.format(cost);
+		String priceformat = Javelin.format(cost);
 		int gold = ArenaFight.get().gold;
 		if (gold < cost) {
 			Javelin.prompt("You can upgrade this fountain for $" + priceformat
-					+ " (you currently have $" + PurchaseScreen.format(gold)
+					+ " (you currently have $" + Javelin.format(gold)
 					+ ").\n\nPress any key to continue...");
 			return false;
 		}

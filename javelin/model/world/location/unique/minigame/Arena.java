@@ -6,6 +6,7 @@ import java.util.List;
 import javelin.controller.action.world.minigame.EnterArena;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.unique.UniqueLocation;
@@ -14,7 +15,7 @@ import javelin.view.screen.WorldScreen;
 /**
  * A battle arena minigamge based on MOBAs. Ideally a single match should last
  * between 30 to 90 minutes.
- * 
+ *
  * @author alex
  */
 public class Arena extends UniqueLocation {
@@ -22,10 +23,10 @@ public class Arena extends UniqueLocation {
 
 	/**
 	 * Roster of permanent player units.
-	 * 
+	 *
 	 * TODO use as reward
 	 */
-	public ArrayList<Combatant> gladiators = new ArrayList<Combatant>();
+	public Combatants gladiators = new Combatants();
 
 	/** Constructor. */
 	public Arena() {

@@ -1,9 +1,9 @@
 package javelin.model.item.instrument;
 
+import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.skill.Skill;
-import javelin.view.screen.town.SelectScreen;
 
 /**
  * Currently just a helper class to help with designing costs.
@@ -59,7 +59,7 @@ public class Instrument {
 
 	public static void main(String[] args) {
 		Instrument i = new Instrument(7, 13, 3);
-		System.out.println(SelectScreen.formatcost(i.cost));
+		System.out.println(Javelin.format(i.cost));
 		System.out.println("DC" + i.performdc);
 	}
 }

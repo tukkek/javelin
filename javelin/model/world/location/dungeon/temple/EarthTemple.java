@@ -22,8 +22,8 @@ public class EarthTemple extends Temple {
 			+ "As you try to find you way through the temple's entrance you must tear away the overgrowth as you wander in.";
 
 	/** Constructor. */
-	public EarthTemple(Integer pop) {
-		super(Realm.EARTH, pop, new Map(), FLUFF);
+	public EarthTemple(Integer level) {
+		super(Realm.EARTH, level, new Map(level), FLUFF);
 		terrain = Terrain.FOREST;
 		floor = "terraindirt";
 		wall = "dungeonwalltempleearth";

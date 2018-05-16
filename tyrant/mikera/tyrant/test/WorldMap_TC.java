@@ -149,7 +149,7 @@ public class WorldMap_TC extends TyrantTestCase {
 			// test that no two portals has same target
 			assertTrue("Two portals [" + p.name() + "] on [" + m.name()
 					+ "] point to same target map [" + newMap.name() + "]!",
-					!dests.containsitem(newMap));
+					!dests.contains(newMap));
 			dests.add(newMap);
 
 			assertTrue("Portal [" + p.name() + "] has null getTargetMap()",

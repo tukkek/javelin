@@ -19,8 +19,6 @@ import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.BuildUnique;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.shopping.ShoppingScreen;
-import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -100,11 +98,11 @@ public class MercenariesGuild extends UniqueLocation {
 		mercenaries.sort(Collections.reverseOrder(CombatantByCr.SINGLETON));
 		ArrayList<String> prices = new ArrayList<String>(mercenaries.size());
 		for (Combatant c : mercenaries) {
-			prices.add(c + " ($" + SelectScreen.formatcost(getfee(c)) + ")");
+			prices.add(c + " ($" + Javelin.format(getfee(c)) + ")");
 		}
 		int index = Javelin.choose(
 				"\"Welcome to the guild! Do you want to hire one of our mercenaries for a modest daily fee?\"\n\nYou have $"
-						+ SelectScreen.formatcost(Squad.active.gold),
+						+ Javelin.format(Squad.active.gold),
 				prices, true, false);
 		if (index == -1) {
 			return true;
@@ -133,7 +131,7 @@ public class MercenariesGuild extends UniqueLocation {
 			if (message) {
 				Javelin.app.switchScreen(new InfoScreen(
 						"You don't have the money to pay today's advancement ($"
-								+ SelectScreen.formatcost(advance) + ")!"));
+								+ Javelin.format(advance) + ")!"));
 				Game.getInput();
 			}
 			return false;
@@ -218,6 +216,6 @@ public class MercenariesGuild extends UniqueLocation {
 	 * @return its daily fee as in "$40/day".
 	 */
 	public static String getformattedfee(Combatant c) {
-		return "$" + ShoppingScreen.formatcost(getfee(c)) + "/day";
+		return "$" + Javelin.format(getfee(c)) + "/day";
 	}
 }

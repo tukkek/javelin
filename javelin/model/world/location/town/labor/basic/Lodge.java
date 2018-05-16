@@ -17,7 +17,6 @@ import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.view.Images;
-import javelin.view.screen.town.SelectScreen;
 import tyrant.mikera.engine.RPG;
 
 /***
@@ -128,7 +127,7 @@ public class Lodge extends Fortification {
 				+ "?\n";
 		s += "\nENTER or s to stay ($" + price + "), w to stay for a week ($"
 				+ weekprice + ")";
-		s += "\np to pillage ($" + SelectScreen.formatcost(getspoils()) + ")";
+		s += "\np to pillage ($" + Javelin.format(getspoils()) + ")";
 		s += "\nany other key to leave";
 		Character input = Javelin.prompt(s);
 		if (input == '\n' || input == 's') {

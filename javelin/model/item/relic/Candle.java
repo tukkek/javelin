@@ -3,15 +3,14 @@ package javelin.model.item.relic;
 import javelin.controller.action.target.Target;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 
 /** Brings a single creature to 1hp. */
 public class Candle extends Relic {
 	/** Constructor. */
-	public Candle() {
-		super("Candle of Searing", Realm.FIRE);
+	public Candle(int level) {
+		super("Candle of searing", level);
 		usedinbattle = true;
 		usedoutofbattle = false;
 	}

@@ -3,6 +3,7 @@ package javelin.view.screen;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.model.item.Ruby;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -10,7 +11,6 @@ import javelin.model.unit.Squad;
 import javelin.model.world.location.haunt.Haunt;
 import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.model.world.location.unique.MercenariesGuild;
-import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.SelectScreen;
 
 public class HauntScreen extends SelectScreen {
@@ -40,8 +40,8 @@ public class HauntScreen extends SelectScreen {
 
 		@Override
 		void addprice() {
-			final String fee = ShoppingScreen
-					.formatcost(MercenariesGuild.getfee(m));
+			final String fee = Javelin
+					.format(MercenariesGuild.getfee(m));
 			name += " ($" + fee + "/day)";
 		}
 	}
@@ -61,7 +61,7 @@ public class HauntScreen extends SelectScreen {
 		if (haunt.available.isEmpty()) {
 			info = "This location is empty right now. You should come back later.";
 		} else {
-			info = "You have $" + ShoppingScreen.formatcost(Squad.active.gold)
+			info = "You have $" + Javelin.format(Squad.active.gold)
 					+ " and " + Squad.active.sumxp() + "XP.";
 		}
 		if (!extrainfo.isEmpty()) {

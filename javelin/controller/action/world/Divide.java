@@ -120,10 +120,10 @@ public class Divide extends WorldAction {
 		Squad.active.members = oldsquad;
 		Squad.active.gold -= gold;
 		s.place();
-		for (final Combatant m : newsquad) {
-			final ArrayList<Item> items = Squad.active.equipment.get(m.id);
-			Squad.active.equipment.remove(m.id);
-			s.equipment.put(m.id, items);
+		for (final Combatant c : newsquad) {
+			final ArrayList<Item> items = Squad.active.equipment.get(c);
+			Squad.active.equipment.remove(c);
+			s.equipment.put(c, items);
 		}
 		Squad.active.updateavatar();
 	}

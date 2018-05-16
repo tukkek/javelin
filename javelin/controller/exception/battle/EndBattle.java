@@ -165,7 +165,7 @@ public class EndBattle extends BattleEvent {
 						MercenariesGuild.die(original);
 						if (Fight.victory) {
 							final ArrayList<Item> bag = Squad.active.equipment
-									.get(original.id);
+									.get(original);
 							for (Item i : bag) {
 								i.grab();
 							}
@@ -211,7 +211,7 @@ public class EndBattle extends BattleEvent {
 		spell.castpeacefully(null, dead);
 		spell.used += 1;
 		if (scroll != null) {
-			Squad.active.equipment.popitem(scroll.getClass(), Squad.active);
+			Squad.active.equipment.pop(scroll.getClass());
 		}
 		return true;
 	}

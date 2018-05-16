@@ -14,8 +14,8 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.World;
 import javelin.model.world.location.town.labor.military.Academy;
+import javelin.view.screen.GuildScreen;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.hiringacademy.GuildScreen;
 import javelin.view.screen.upgrading.AcademyScreen;
 import tyrant.mikera.engine.RPG;
 

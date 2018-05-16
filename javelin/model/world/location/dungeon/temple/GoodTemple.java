@@ -27,8 +27,8 @@ public class GoodTemple extends Temple {
 			+ "You enter the holy ground, daring say nothing as you breath deeply in anticipation of the vistas inside.";
 
 	/** Constructor. */
-	public GoodTemple(Integer pop) {
-		super(Realm.GOOD, pop, new Ankh(), FLUFF);
+	public GoodTemple(Integer level) {
+		super(Realm.GOOD, level, new Ankh(level), FLUFF);
 		terrain = Terrain.PLAIN;
 		floor = "terrainarena";
 		wall = "terraindungeonwall";

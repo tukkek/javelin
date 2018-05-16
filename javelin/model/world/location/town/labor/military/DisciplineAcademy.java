@@ -3,6 +3,7 @@ package javelin.model.world.location.town.labor.military;
 import java.util.Collections;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.Calendar;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.upgrade.FeatUpgrade;
@@ -16,7 +17,6 @@ import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.model.world.location.unique.TrainingHall;
 import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
-import javelin.view.screen.town.SelectScreen;
 import javelin.view.screen.town.option.ScreenOption;
 import javelin.view.screen.upgrading.AcademyScreen;
 import tyrant.mikera.engine.RPG;
@@ -39,7 +39,7 @@ public class DisciplineAcademy extends Academy {
 
 		public HireOption(Combatant c) {
 			super("Hire " + c + " ($"
-					+ SelectScreen.formatcost(MercenariesGuild.getfee(c))
+					+ Javelin.format(MercenariesGuild.getfee(c))
 					+ "/day)", 0);
 			this.c = c;
 		}

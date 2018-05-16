@@ -29,7 +29,7 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * Sacrifice allies, experience and items for benefits.
- * 
+ *
  * @author alex
  */
 public class PillarOfSkulls extends UniqueLocation {
@@ -119,7 +119,7 @@ public class PillarOfSkulls extends UniqueLocation {
 					a.remove(owner);
 				}
 			}
-			Squad.active.equipment.get(owner.id).remove(i);
+			Squad.active.equipment.get(owner).remove(i);
 			ArrayList<Combatant> mock = new ArrayList<Combatant>();
 			float targetcr = ChallengeCalculator.goldtocr(i.price);
 			while (mock.isEmpty()) {
@@ -139,21 +139,11 @@ public class PillarOfSkulls extends UniqueLocation {
 
 		void gatheritems(ArrayList<Item> items, ArrayList<Combatant> owners,
 				ArrayList<String> choices) {
-			for (Integer id : Squad.active.equipment.keySet()) {
-				Combatant owner = null;
-				for (Combatant c : Squad.active.members) {
-					if (c.id == id) {
-						owner = c;
-						break;
-					}
-				}
-				if (owner == null) {
-					continue;
-				}
-				for (Item i : Squad.active.equipment.get(id)) {
+			for (Combatant c : Squad.active.members) {
+				for (Item i : Squad.active.equipment.get(c)) {
 					items.add(i);
-					owners.add(owner);
-					choices.add(i + " (with " + owner + ")");
+					owners.add(c);
+					choices.add(i + " (with " + c + ")");
 				}
 			}
 		}

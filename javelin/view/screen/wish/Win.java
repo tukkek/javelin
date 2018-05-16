@@ -17,10 +17,10 @@ import javelin.model.world.location.town.Town;
 import javelin.view.screen.WorldScreen;
 
 /**
- * If you conquer 7 {@link TempleKey}s, unlock their challenges and survive you can
- * "win the game". It will actually just multiply your scores by 10 and ask if
- * you want to conclude the game.
- * 
+ * If you conquer 7 {@link TempleKey}s, unlock their challenges and survive you
+ * can "win the game". It will actually just multiply your scores by 10 and ask
+ * if you want to conclude the game.
+ *
  * @author alex
  */
 public class Win extends Wish {
@@ -33,7 +33,7 @@ public class Win extends Wish {
 	 * purely random (or it would be a pain in the ass to keep track of what is
 	 * where in each game) - but in the end is there anything more win than
 	 * Helloween? So I had to make the best out of this coincidence :)
-	 * 
+	 *
 	 * @author alex
 	 */
 	static final String[] WINMESSAGES = new String[] {
@@ -60,7 +60,7 @@ public class Win extends Wish {
 	@Override
 	protected boolean wish(Combatant target) {
 		for (Combatant c : Squad.active.members) {
-			ArrayList<Item> bag = Squad.active.equipment.get(c.id);
+			ArrayList<Item> bag = Squad.active.equipment.get(c);
 			for (Item i : new ArrayList<Item>(bag)) {
 				if (i instanceof Relic) {
 					bag.remove(i);
@@ -111,7 +111,7 @@ public class Win extends Wish {
 		}
 		int nrelics = 0;
 		for (Combatant c : Squad.active.members) {
-			for (Item i : Squad.active.equipment.get(c.id)) {
+			for (Item i : Squad.active.equipment.get(c)) {
 				if (i instanceof Relic) {
 					nrelics += 1;
 				}

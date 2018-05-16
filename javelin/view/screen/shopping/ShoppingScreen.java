@@ -3,6 +3,7 @@ package javelin.view.screen.shopping;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.Scroll;
@@ -16,7 +17,7 @@ import javelin.view.screen.town.PurchaseScreen;
 
 /**
  * Allows player to buy items.
- * 
+ *
  * @author alex
  */
 public abstract class ShoppingScreen extends PurchaseScreen {
@@ -98,9 +99,10 @@ public abstract class ShoppingScreen extends PurchaseScreen {
 
 	@Override
 	public String printinfo() {
-		return "You have $" + PurchaseScreen.formatcost(getgold());
+		return "You squad has $" + Javelin.format(getgold()) + ".";
 	}
 
+	@Override
 	protected int getgold() {
 		return Squad.active.gold;
 	}

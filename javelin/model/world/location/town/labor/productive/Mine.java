@@ -10,7 +10,7 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.fight.Siege;
 import javelin.controller.terrain.Mountains;
 import javelin.controller.terrain.Terrain;
-import javelin.model.EquipmentMap;
+import javelin.model.Inventory;
 import javelin.model.item.Ruby;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -158,9 +158,9 @@ public class Mine extends Fortification {
 		}
 
 		void assign(Combatant recruit, List<Combatant> from, List<Combatant> to,
-				EquipmentMap fromequipment, EquipmentMap toequipment) {
-			toequipment.put(recruit.id, fromequipment.get(recruit.id));
-			fromequipment.remove(recruit.id);
+				Inventory fromequipment, Inventory toequipment) {
+			toequipment.put(recruit, fromequipment.get(recruit));
+			fromequipment.remove(recruit);
 			from.remove(recruit);
 			to.add(recruit);
 		}
@@ -199,7 +199,8 @@ public class Mine extends Fortification {
 
 	List<Combatant> miners = new ArrayList<Combatant>();
 	float gold = 0;
-	EquipmentMap equipment = new EquipmentMap();
+	/** TODO should use a normal map instead */
+	Inventory equipment = new Inventory(null);
 	boolean minesrubies = false;
 	int rubies = 0;
 
@@ -273,7 +274,7 @@ public class Mine extends Fortification {
 			int g = Math.round(Math.round(Math.ceil(gold)));
 			Squad.active.gold += g;
 			gold = 0;
-			collected += "You collect $" + SelectScreen.formatcost(g)
+			collected += "You collect $" + Javelin.format(g)
 					+ " from the mine!\n";
 		}
 		if (rubies > 0) {

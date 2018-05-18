@@ -54,7 +54,7 @@ public class Campaign extends Scenario {
 		dominationwin = false;
 		startingfeatures = size * size / 5;
 		simpletroves = false;
-		rewardbonus = 1;
+		boost = 1;
 		randomrealms = false;
 		worlddistrict = false;
 		spawn = true;

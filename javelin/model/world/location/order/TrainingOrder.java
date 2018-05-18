@@ -40,7 +40,7 @@ public class TrainingOrder extends Order {
 	/** Constructor. See {@link Order#Order(long, String)}. */
 	public TrainingOrder(Combatant trained, ArrayList<Item> equipment,
 			String namep, float xpcostp, Combatant original) {
-		super(Math.round(xpcostp * 24 * UPGRADETIME / World.scenario.rewardbonus),
+		super(Math.round(xpcostp * 24 * UPGRADETIME / World.scenario.boost),
 				namep);
 		this.trained = trained;
 		this.equipment = equipment;

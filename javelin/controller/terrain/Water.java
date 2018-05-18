@@ -1,6 +1,8 @@
 package javelin.controller.terrain;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javelin.controller.Point;
@@ -19,11 +21,11 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * Can only be trespassed by flying or swimming units or boat.
- * 
+ *
  * TODO water combats
- * 
+ *
  * TODO water vehicle
- * 
+ *
  * @author alex
  */
 public class Water extends Terrain {
@@ -32,14 +34,15 @@ public class Water extends Terrain {
 
 	/** Constructor. */
 	public Water() {
-		this.name = "aquatic";
-		this.difficulty = 0;
-		this.difficultycap = -3;
-		this.speedtrackless = 1f;
-		this.speedroad = 1f;
-		this.speedhighway = 1f;
-		this.visionbonus = 0;
+		name = "aquatic";
+		difficulty = 0;
+		difficultycap = -3;
+		speedtrackless = 1f;
+		speedroad = 1f;
+		speedhighway = 1f;
+		visionbonus = 0;
 		representation = '~';
+		liquid = true;
 	}
 
 	@Override
@@ -63,31 +66,34 @@ public class Water extends Terrain {
 	}
 
 	@Override
-	protected Point expand(HashSet<Point> area, World world, Point p) {
+	protected Point expand(HashSet<Point> area, World world) {
+		List<Point> pool = new ArrayList<Point>(area);
 		Point to = null;
-		expansion: while (to == null) {
-			to = new Point(p.x, p.y);
-			if (RPG.r(1, 2) == 1) {
-				to.x += RPG.pick(DELTAS);
-			} else {
-				to.y += RPG.pick(DELTAS);
-			}
-			if (checkinvalid(world, to.x, to.y) || search(to, DESERT,
-					World.scenario.desertradius, world) > 0) {
-				to = null;
-				WorldGenerator.retry();
-				continue expansion;
-			}
-			for (Actor t : World.getall(Town.class)) {
-				if (t.distance(to.x, to.y) <= 2) {
-					to = null;
-					WorldGenerator.retry();
-					continue expansion;
-				}
-			}
+		while (to == null) {
+			to = expandto(RPG.pick(pool), world);
+			WorldGenerator.retry();
 		}
 		currentheight = to;
 		return currentheight;
+	}
+
+	Point expandto(Point p, World w) {
+		Point to = new Point(p);
+		if (RPG.chancein(2)) {
+			to.x += RPG.pick(DELTAS);
+		} else {
+			to.y += RPG.pick(DELTAS);
+		}
+		if (checkinvalid(w, to.x, to.y)
+				|| search(to, DESERT, World.scenario.desertradius, w) > 0) {
+			return null;
+		}
+		for (Town t : Town.gettowns()) {
+			if (t.distance(to.x, to.y) <= 2) {
+				return null;
+			}
+		}
+		return to;
 	}
 
 	@Override
@@ -97,8 +103,8 @@ public class Water extends Terrain {
 				&& !current.equals(Terrain.MOUNTAINS)) {
 			return false;
 		}
-		if (terrain.equals(Terrain.HILL) && (!current.equals(Terrain.MOUNTAINS)
-				&& !current.equals(Terrain.HILL))) {
+		if (terrain.equals(Terrain.HILL) && !current.equals(Terrain.MOUNTAINS)
+				&& !current.equals(Terrain.HILL)) {
 			return false;
 		}
 		return true;
@@ -110,8 +116,8 @@ public class Water extends Terrain {
 	}
 
 	@Override
-	protected int generateareasize() {
-		return super.generateareasize() / 2;
+	protected int getareasize() {
+		return super.getareasize() / 2;
 	}
 
 	@Override

@@ -43,7 +43,7 @@ public class WorldTile extends Tile {
 			return;
 		}
 		draw(g, JavelinApp.context.gettile(x, y));
-		if (Terrain.get(x, y).flooded()) {
+		if (Terrain.get(x, y).liquid) {
 			final Terrain t = Terrain.get(x, y);
 			for (final Point p : COASTLINES.keySet()) {
 				final int x = this.x + p.x;

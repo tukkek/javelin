@@ -20,7 +20,6 @@ import javelin.controller.db.StateManager;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomEncounter;
-import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
@@ -240,7 +239,7 @@ public class WorldScreen extends BattleScreen {
 			cover();
 			Season.change(day);
 			Weather.weather();
-			FeatureGenerator.SINGLETON.spawn(1 / 14f, false);
+			World.scenario.featuregenerator.spawn(1 / 14f, false);
 			ArrayList<Actor> actors = World.getactors();
 			ArrayList<Incursion> incursions = Incursion.getincursions();
 			actors.removeAll(incursions);

@@ -5,11 +5,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 
+import javelin.controller.Point;
+import javelin.controller.WorldGenerator;
+import javelin.controller.exception.RestartWorldGeneration;
+import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.UpgradeHandler;
+import javelin.model.Realm;
 import javelin.model.unit.Monster;
-import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
@@ -30,6 +36,7 @@ import javelin.model.world.location.haunt.ShatteredTemple;
 import javelin.model.world.location.haunt.SunkenShip;
 import javelin.model.world.location.haunt.WitchesHideout;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.governor.MonsterGovernor;
 import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.model.world.location.town.labor.basic.Lodge;
 import javelin.model.world.location.town.labor.criminal.ThievesGuild;
@@ -58,20 +65,15 @@ import javelin.model.world.location.unique.TrainingHall;
 import javelin.model.world.location.unique.minigame.Arena;
 import javelin.model.world.location.unique.minigame.Battlefield;
 import javelin.model.world.location.unique.minigame.Ziggurat;
-import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
 
 /**
- * Responsible for generating those {@link Actor}s (mostly {@link Location} s
+ * Responsible for generating those {@link Actor}s (mostly {@link Location}s
  * that can be spawned both during {@link World} generation and normal gameplay.
  *
  * @author alex
- * @see WorldScreen#endturn()
  */
 public class FeatureGenerator {
-	/** Only access point to this class. */
-	public static final FeatureGenerator SINGLETON = new FeatureGenerator();
-
 	final HashMap<Class<? extends Actor>, GenerationData> generators = new HashMap<Class<? extends Actor>, GenerationData>();
 
 	/**
@@ -80,7 +82,7 @@ public class FeatureGenerator {
 	 * chance of being spawned this deals with these cases dynamically to avoid
 	 * manually-written methods from becoming too large.
 	 */
-	private FeatureGenerator() {
+	void init() {
 		GenerationData dungeons = new GenerationData(2f);
 		Integer startingdungeons = World.scenario.startingdungeons;
 		if (startingdungeons != null) {
@@ -113,7 +115,7 @@ public class FeatureGenerator {
 	 *
 	 * @see GenerationData#absolute
 	 */
-	protected void convertchances() {
+	void convertchances() {
 		float total = 0;
 		for (GenerationData g : generators.values()) {
 			if (!g.absolute) {
@@ -170,28 +172,22 @@ public class FeatureGenerator {
 		}
 	}
 
-	static void spawnnear(Town t, Actor a, World w, int min, int max,
-			boolean clear) {
-		int[] location = null;
+	void spawnnear(Town t, Actor a, World w, int min, int max, boolean clear) {
+		Point p = null;
 		ArrayList<Actor> actors = World.getactors();
-		while (location == null
-				|| World.get(t.x + location[0], t.y + location[1],
-						actors) != null
-				|| t.x + location[0] < 0 || t.y + location[1] < 0
-				|| t.x + location[0] >= World.scenario.size
-				|| t.y + location[1] >= World.scenario.size
-				|| w.map[t.x + location[0]][t.y + location[1]]
-						.equals(Terrain.WATER)) {
-			location = new int[] { RPG.r(min, max), RPG.r(min, max) };
-			if (RPG.r(1, 2) == 1) {
-				location[0] = -location[0];
+		while (p == null || World.get(t.x + p.x, t.y + p.y, actors) != null
+				|| !World.validatecoordinate(t.x + p.x, t.y + p.y)
+				|| w.map[t.x + p.x][t.y + p.y].equals(Terrain.WATER)) {
+			p = new Point(RPG.r(min, max), RPG.r(min, max));
+			if (RPG.chancein(2)) {
+				p.x *= -1;
 			}
-			if (RPG.r(1, 2) == 1) {
-				location[1] = -location[1];
+			if (RPG.chancein(2)) {
+				p.y *= -1;
 			}
 		}
-		a.x = location[0] + t.x;
-		a.y = location[1] + t.y;
+		a.x = p.x + t.x;
+		a.y = p.y + t.y;
 		Location l = a instanceof Location ? (Location) a : null;
 		a.place();
 		if (l != null && clear) {
@@ -199,25 +195,7 @@ public class FeatureGenerator {
 		}
 	}
 
-	/**
-	 * @param seed
-	 *            Place all world features in this seed.
-	 * @return Starting town for the initial {@link Squad} to be placed nearby.
-	 */
-	public void placestartingfeatures(World seed, Town starting) {
-		Temple.generatetemples();
-		generatestartingarea(seed, starting);
-		generatelocations(seed, starting);
-		for (Class<? extends Actor> feature : generators.keySet()) {
-			generators.get(feature).seed(feature);
-		}
-		int target = World.scenario.startingfeatures - Location.count();
-		while (countplaces() < target) {
-			spawn(1, true);
-		}
-	}
-
-	void generatelocations(World seed, Town easya) {
+	void generatelocations(World w) {
 		ArrayList<Location> locations = new ArrayList<Location>();
 		generateuniquelocations(locations);
 		UpgradeHandler.singleton.gather();
@@ -225,7 +203,7 @@ public class FeatureGenerator {
 			generatemageguilds(locations);
 			generateacademies(locations);
 		}
-		locations.addAll(World.scenario.generatelocations(seed));
+		locations.addAll(World.scenario.generatelocations(w));
 		Collections.shuffle(locations);
 		int place = Math.min(locations.size(),
 				World.scenario.startingfeatures / 3 - countplaces());
@@ -271,7 +249,7 @@ public class FeatureGenerator {
 		spawnnear(t, new TrainingHall(), seed, 2, 3, false);
 	}
 
-	static void generateacademies(ArrayList<Location> locations) {
+	void generateacademies(ArrayList<Location> locations) {
 		for (MartialAcademyData g : MartialAcademy.ACADEMIES) {
 			locations.add(g.generate());
 		}
@@ -286,7 +264,7 @@ public class FeatureGenerator {
 		}
 	}
 
-	static int countplaces() {
+	int countplaces() {
 		int count = 0;
 		for (ArrayList<Actor> instances : World.getseed().actors.values()) {
 			if (instances.isEmpty()
@@ -298,9 +276,116 @@ public class FeatureGenerator {
 		return count;
 	}
 
-	static void generatemageguilds(ArrayList<Location> locations) {
+	void generatemageguilds(ArrayList<Location> locations) {
 		for (MageGuildData g : MagesGuild.GUILDS) {
 			locations.add(g.generate());
+		}
+	}
+
+	/**
+	 * Starts generating the inital state for this {@link World}.
+	 *
+	 * TODO parameters should be a Map instead of 2 lists
+	 *
+	 * @param realms
+	 *            Shuffled list of realms.
+	 * @param regions
+	 *            Each area in the world, in the same order as the realms.
+	 *
+	 * @see Terrain
+	 */
+	public Town generate(LinkedList<Realm> realms,
+			ArrayList<HashSet<Point>> regions, World w) {
+		generatetowns(realms, regions);
+		Town starting = determinestartingtown(w);
+		normalizemap(starting);
+		generatefeatures(w, starting);
+		normalizemap(starting);
+		starting.capture();
+		for (Town t : Town.gettowns()) {
+			t.populategarisson();
+		}
+		return starting;
+	}
+
+	void generatefeatures(World w, Town starting) {
+		init();
+		Temple.generatetemples();
+		generatestartingarea(w, starting);
+		generatelocations(w);
+		for (Class<? extends Actor> feature : generators.keySet()) {
+			generators.get(feature).seed(feature);
+		}
+		int target = World.scenario.startingfeatures - Location.count();
+		while (countplaces() < target) {
+			spawn(1, true);
+		}
+	}
+
+	static Town gettown(Terrain terrain, World seed, ArrayList<Town> towns) {
+		Collections.shuffle(towns);
+		for (Town town : towns) {
+			if (seed.map[town.x][town.y] == terrain) {
+				return town;
+			}
+		}
+		throw new RestartWorldGeneration();
+		/*
+		 * TODO there is a bug that is allowing the generation to fall here,
+		 * debug when it happens and make sure towns are being generated
+		 * properly
+		 */
+	}
+
+	Town determinestartingtown(World seed) {
+		Terrain starton = RPG.r(1, 2) == 1 ? Terrain.PLAIN : Terrain.HILL;
+		ArrayList<Town> towns = Town.gettowns();
+		Town starting = World.scenario.easystartingtown
+				? gettown(starton, seed, towns) : RPG.pick(towns);
+		if (Terrain.search(new Point(starting.x, starting.y), Terrain.WATER, 2,
+				seed) != 0) {
+			throw new RestartWorldGeneration();
+		}
+		return starting;
+	}
+
+	/**
+	 * Turn whole map into 2 {@link Realm}s only so that there won't be
+	 * in-fighting between hostile {@link Town}s.
+	 *
+	 * @param starting
+	 *
+	 * @see Scenario#normalizemap
+	 */
+	void normalizemap(Town starting) {
+		if (!World.scenario.normalizemap) {
+			return;
+		}
+		ArrayList<Town> towns = Town.gettowns();
+		towns.remove(starting);
+		Realm r = towns.get(0).originalrealm;
+		for (Actor a : World.getactors()) {
+			Location l = a instanceof Location ? (Location) a : null;
+			if (l != null && l.realm != null) {
+				l.realm = r;
+				if (a instanceof Town) {
+					Town t = (Town) a;
+					t.originalrealm = r;
+					t.replacegovernor(new MonsterGovernor(t));
+				}
+			}
+		}
+	}
+
+	void generatetowns(LinkedList<Realm> realms,
+			ArrayList<HashSet<Point>> regions) {
+		int towns = World.scenario.towns;
+		for (int i = 0; i < regions.size() && towns > 0; i++) {
+			Terrain t = WorldGenerator.GENERATIONORDER[i];
+			if (!t.equals(Terrain.WATER)) {
+				new Town(regions.get(i), realms.pop()).place();
+				towns -= 1;
+			}
 		}
 	}
 }

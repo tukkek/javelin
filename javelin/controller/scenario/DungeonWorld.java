@@ -9,7 +9,9 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.terrain.Terrain;
+import javelin.model.Realm;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
@@ -29,6 +31,41 @@ import javelin.model.world.location.town.labor.productive.Shop;
 import tyrant.mikera.engine.RPG;
 
 public class DungeonWorld extends Campaign {
+	public class ZoneGenerator extends FeatureGenerator {
+		@Override
+		public void spawn(float chance, boolean generatingworld) {
+			// don't: static world
+		}
+
+		@Override
+		public Town generate(LinkedList<Realm> realms,
+				ArrayList<HashSet<Point>> regions, World w) {
+			// generatenewareas(regions.get(realms.indexOf(Realm.EARTH)));
+			Point p = new Point(World.scenario.size / 2,
+					World.scenario.size / 2);
+			Town t = new Town(p, Realm.FIRE);
+			t.place();
+			return t;
+		}
+
+		void generatenewareas(HashSet<Point> region) {
+			int newareas = RPG.r(1, 4);
+			List<Terrain> terrains = new ArrayList<Terrain>(
+					Arrays.asList(Terrain.ALL));
+			terrains.remove(Terrain.WATER);
+			terrains.remove(Terrain.UNDERGROUND);
+			terrains.remove(Terrain.FOREST);
+			for (int i = 0; i < newareas; i++) {
+				generatenewarea(RPG.pick(terrains), region.size() / newareas);
+			}
+		}
+
+		void generatenewarea(Terrain t, int size) {
+			size = RPG.randomize(size);
+			// t.generate(null);
+		}
+	}
+
 	static final HashSet<Class<?>> ALLOW = new HashSet<Class<?>>();
 	static final int DISTANCE = 6;
 
@@ -40,6 +77,7 @@ public class DungeonWorld extends Campaign {
 	}
 
 	public DungeonWorld() {
+		size = size * 2;
 		startingpopulation = 6;
 		templekeys = false;
 		minigames = false;
@@ -50,10 +88,30 @@ public class DungeonWorld extends Campaign {
 		worldencounters = false;
 		helpfile = "Dungeon World";
 		spawn = false;
+		labormodifier = 0;
+		featuregenerator = new ZoneGenerator();
+	}
+
+	@Override
+	public boolean win() {
+		if (Javelin.DEBUG) {
+			return false;
+		}
+		for (Dungeon d : Dungeon.getdungeons()) {
+			if (d.gettier() == DungeonTier.HIGHEST) {
+				return false;
+			}
+		}
+		String success = "You have cleared all major dungeons! Congratulations!";
+		Javelin.message(success, true);
+		return true;
 	}
 
 	@Override
 	public void finish(World w) {
+		if (Javelin.DEBUG) {
+			return;
+		}
 		for (Actor a : World.getactors()) {
 			if (allowactor(a)) {
 				continue;
@@ -152,17 +210,5 @@ public class DungeonWorld extends Campaign {
 			}
 		}
 		return p;
-	}
-
-	@Override
-	public boolean win() {
-		for (Dungeon d : Dungeon.getdungeons()) {
-			if (d.gettier() == DungeonTier.HIGHEST) {
-				return false;
-			}
-		}
-		Javelin.message("You have cleared all major dungeons! Congratulations!",
-				true);
-		return true;
 	}
 }

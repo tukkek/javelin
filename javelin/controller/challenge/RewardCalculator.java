@@ -106,7 +106,7 @@ public class RewardCalculator {
 
 	static double getpartyxp(final int eldifference, final int nsurvivors) {
 		return nsurvivors * .8 * getcharacterxp(eldifference, nsurvivors)
-				* World.scenario.rewardbonus / 1000.0;
+				* World.scenario.boost / 1000.0;
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class RewardCalculator {
 		if (cr <= 0) {
 			return 0;
 		}
-		return Math.round(cr * cr * cr * 7.5f * World.scenario.rewardbonus);
+		return Math.round(cr * cr * cr * 7.5f * World.scenario.boost);
 	}
 
 	/**

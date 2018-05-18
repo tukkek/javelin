@@ -16,19 +16,19 @@ import javelin.model.world.World;
 
 /**
  * Dense forest but not quite a jungle.
- * 
+ *
  * @author alex
  */
 public class Forest extends Terrain {
 	/** Constructor. */
 	public Forest() {
-		this.name = "forest";
-		this.difficulty = 0;
-		this.difficultycap = -3;
-		this.speedtrackless = 1 / 2f;
-		this.speedroad = 1f;
-		this.speedhighway = 1f;
-		this.visionbonus = -4;
+		name = "forest";
+		difficulty = 0;
+		difficultycap = -3;
+		speedtrackless = 1 / 2f;
+		speedroad = 1f;
+		speedhighway = 1f;
+		visionbonus = -4;
 		representation = 'F';
 	}
 
@@ -42,7 +42,7 @@ public class Forest extends Terrain {
 	}
 
 	@Override
-	HashSet<Point> generatearea(World world) {
+	HashSet<Point> generatearea(World world, Integer size) {
 		return gettiles(world);
 	}
 

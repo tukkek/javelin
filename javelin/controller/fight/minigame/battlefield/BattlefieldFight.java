@@ -165,9 +165,9 @@ public class BattlefieldFight extends Minigame {
 		float advantage = elblue + bluepoints / 2 - elred - redpoints / 2;
 		System.out.println();
 		if (advantage >= Math.abs(Difficulty.VERYEASY)) {
-			// surrender(state.redTeam);
+			surrender(state.redTeam);
 		} else if (advantage <= Difficulty.VERYEASY) {
-			// surrender(state.blueTeam);
+			surrender(state.blueTeam);
 		}
 		if (!redflagpoles.isEmpty() && elred < elblue
 				&& elred + redpoints >= elblue) {

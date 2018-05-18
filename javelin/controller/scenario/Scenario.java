@@ -151,7 +151,7 @@ public class Scenario implements Serializable {
 	 * @see RewardCalculator
 	 * @see Order
 	 */
-	public int rewardbonus = 3;
+	public int boost = 3;
 	/**
 	 * If <code>true</code> will try to generate all possible {@link Location}s
 	 * around the world.
@@ -168,6 +168,9 @@ public class Scenario implements Serializable {
 	 */
 	public boolean spawn = false;
 	public boolean expiredungeons = false;
+	public FeatureGenerator featuregenerator = new FeatureGenerator();
+	/** Multiplied to daily {@link Labor}. */
+	public float labormodifier = 1;
 
 	/**
 	 * @return Starting encounter level for each hostile town in

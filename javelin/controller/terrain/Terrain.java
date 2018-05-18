@@ -79,6 +79,8 @@ public abstract class Terrain implements Serializable {
 	public static final Terrain[] NONWATER = new Terrain[] { PLAIN, HILL,
 			FOREST, MOUNTAINS, DESERT, MARSH, UNDERGROUND };
 
+	static final int[] STEPS = new int[] { -1, 0, +1 };
+
 	/**
 	 * Encounter level adjustment.
 	 *
@@ -113,6 +115,9 @@ public abstract class Terrain implements Serializable {
 
 	/** ASCII representation of terrain type for debugging purposes. */
 	public Character representation = null;
+
+	/** Terrains that "overflow". They receive a "shore" visual. */
+	public boolean liquid = false;
 
 	/**
 	 * Uses current terrain as base.
@@ -195,13 +200,16 @@ public abstract class Terrain implements Serializable {
 	 */
 	abstract public Maps getmaps();
 
-	HashSet<Point> generatearea(World world) {
+	HashSet<Point> generatearea(World world, Integer size) {
 		Point source = generatesource(world);
 		Point current = source;
 		HashSet<Point> area = generatestartingarea(world);
-		while (area.size() < generateareasize()) {
+		if (size == null) {
+			size = getareasize();
+		}
+		while (area.size() < size) {
 			area.add(current);
-			current = expand(area, world, generatereference(source, current));
+			current = expand(area, world);
 		}
 		return area;
 	}
@@ -209,7 +217,7 @@ public abstract class Terrain implements Serializable {
 	/**
 	 * @return Number of tiles the generated area for this terrain should have.
 	 */
-	protected int generateareasize() {
+	protected int getareasize() {
 		return World.scenario.size * World.scenario.size
 				/ WorldGenerator.NREGIONS;
 	}
@@ -246,24 +254,18 @@ public abstract class Terrain implements Serializable {
 	 *            and a point of reference...
 	 * @return A new point to be added to the area.
 	 */
-	protected Point expand(HashSet<Point> area, World world, Point p) {
-		int x = p.x;
-		int y = p.y;
-		Integer lastx;
-		Integer lasty;
-		while (area.contains(new Point(x, y))) {
-			lastx = x;
-			lasty = y;
-			x += randomstep();
-			y += randomstep();
-			if (checkinvalid(world, x, y)) {
-				x = lastx;
-				y = lasty;
+	protected Point expand(HashSet<Point> area, World world) {
+		List<Point> pool = new ArrayList<Point>(area);
+		Point p = new Point(RPG.pick(pool));
+		while (area.contains(p)) {
+			p.x += RPG.pick(STEPS);
+			p.y += RPG.pick(STEPS);
+			if (checkinvalid(world, p.x, p.y)) {
+				p = new Point(RPG.pick(pool));
 				WorldGenerator.retry();
-				continue;
 			}
 		}
-		return new Point(x, y);
+		return p;
 	}
 
 	/**
@@ -330,7 +332,7 @@ public abstract class Terrain implements Serializable {
 	 * @param area
 	 *            The generated area.
 	 */
-	public void generatesurroundings(List<Point> area, World w) {
+	public void generatesurroundings(HashSet<Point> area, World w) {
 		// nothing by default
 	}
 
@@ -359,31 +361,13 @@ public abstract class Terrain implements Serializable {
 		return area;
 	}
 
-	static ArrayList<Point> adjacent = new ArrayList<Point>(4);
-	static {
-		adjacent.add(new Point(-1, 0));
-		adjacent.add(new Point(0, -1));
-		adjacent.add(new Point(+1, 0));
-		adjacent.add(new Point(0, +1));
-	}
-
-	/**
-	 * Generate terrain area and...
-	 *
-	 * @param r
-	 *            a {@link Town} of this realm, if not <code>null</code>.
-	 * @return
-	 */
-	public List<Point> generate(World w) {
-		List<Point> area = new ArrayList<Point>(generatearea(w));
-		if (flooded()) {
-			isolated: for (Point p : new ArrayList<Point>(area)) {
-				for (Point a : adjacent) {
-					if (area.contains(new Point(p.x + a.x, p.y + a.y))) {
-						continue isolated;
-					}
+	public HashSet<Point> generate(World w, Integer size) {
+		HashSet<Point> area = generatearea(w, size);
+		if (liquid) {
+			for (Point p : new HashSet<Point>(area)) {
+				if (checkisolated(p, area)) {
+					area.remove(p);
 				}
-				area.remove(p);
 			}
 		}
 		for (Point p : area) {
@@ -393,8 +377,15 @@ public abstract class Terrain implements Serializable {
 		return area;
 	}
 
-	static int randomstep() {
-		return RPG.pick(new int[] { -1, 0, +1 });
+	boolean checkisolated(Point p, HashSet<Point> area) {
+		for (Point adjacent : Point.getadjacentorthogonal()) {
+			adjacent.x += p.x;
+			adjacent.y += p.y;
+			if (area.contains(adjacent)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	static int randomaxispoint() {
@@ -457,9 +448,5 @@ public abstract class Terrain implements Serializable {
 	public Integer getel(int teamel) {
 		final int delta = Difficulty.get() + Math.min(0, difficulty);
 		return teamel + Math.min(delta, difficultycap);
-	}
-
-	public boolean flooded() {
-		return equals(MARSH) || equals(WATER) || equals(DESERT);
 	}
 }

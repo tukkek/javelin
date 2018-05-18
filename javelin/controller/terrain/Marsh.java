@@ -15,20 +15,21 @@ import javelin.model.world.World;
 
 /**
  * Bog, swamp.
- * 
+ *
  * @author alex
  */
 public class Marsh extends Terrain {
 	/** Constructor. */
 	public Marsh() {
-		this.name = "marsh";
-		this.difficulty = +2;
-		this.difficultycap = -1;
-		this.speedtrackless = 1 / 2f;
-		this.speedroad = 3 / 4f;
-		this.speedhighway = 1f;
-		this.visionbonus = -2;
+		name = "marsh";
+		difficulty = +2;
+		difficultycap = -1;
+		speedtrackless = 1 / 2f;
+		speedroad = 3 / 4f;
+		speedhighway = 1f;
+		visionbonus = -2;
 		representation = 'm';
+		liquid = true;
 	}
 
 	@Override

@@ -2,30 +2,25 @@ package javelin.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.RestartWorldGeneration;
-import javelin.controller.generator.feature.FeatureGenerator;
-import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
 import javelin.model.Realm;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
-import javelin.model.world.location.Location;
-import javelin.model.world.location.Outpost;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.governor.MonsterGovernor;
 import javelin.view.screen.InfoScreen;
 import tyrant.mikera.engine.RPG;
 
 public class WorldGenerator extends Thread {
 	private static final boolean SINGLETHREAD = false;
-	private static final int MAXRETRIES = 1000;
+	private static final int MAXRETRIES = 100000;
 	public static final Terrain[] GENERATIONORDER = new Terrain[] {
 			Terrain.MOUNTAINS, Terrain.MOUNTAINS, Terrain.DESERT, Terrain.PLAIN,
 			Terrain.HILL, Terrain.WATER, Terrain.WATER, Terrain.MARSH,
@@ -66,13 +61,16 @@ public class WorldGenerator extends Thread {
 	public void run() {
 		try {
 			world = new World();
-			Town start = generate(world);
-			start.capture();
-			for (Actor a : world.actors.get(Town.class)) {
-				if (a != start) {
-					((Town) a).populategarisson();
-				}
+			LinkedList<Realm> realms = new LinkedList<Realm>();
+			for (Realm r : Realm.values()) {
+				realms.add(r);
 			}
+			Collections.shuffle(realms);
+			ArrayList<HashSet<Point>> regions = new ArrayList<HashSet<Point>>(
+					realms.size());
+			generate(realms, regions, world);
+			Town start = World.scenario.featuregenerator.generate(realms,
+					regions, world);
 			World.scenario.finish(world);
 			WorldGenerator.finish(start, world);
 		} catch (RestartWorldGeneration e) {
@@ -87,42 +85,11 @@ public class WorldGenerator extends Thread {
 			return;
 		}
 		World.seed = w;
-		start.captureforhuman(true);
-		placenearbywoods(start);
 		Squad.active.x = start.x;
 		Squad.active.y = start.y;
 		Squad.active.displace();
 		Squad.active.place();
-		Squad.active.equipment.fill();
 		Squad.active.lasttown = start;
-	}
-
-	public static void placenearbywoods(Town start) {
-		int x, y;
-		int minx = start.x - Outpost.VISIONRANGE;
-		int maxx = start.x + Outpost.VISIONRANGE;
-		int miny = start.y - Outpost.VISIONRANGE;
-		int maxy = start.y + Outpost.VISIONRANGE;
-		for (x = minx; x <= maxx; x++) {
-			for (y = miny; y <= maxy; y++) {
-				if (World.validatecoordinate(x, y)
-						&& World.seed.map[x][y].equals(Terrain.FOREST)) {
-					return; // already has nearby woods
-				}
-			}
-		}
-		x = -1;
-		y = -1;
-		ArrayList<Actor> actors = World.getactors();
-		while (!World.validatecoordinate(x, y)
-				|| !World.validatecoordinate(x + 1, y)
-				|| World.get(x, y, actors) != null
-				|| World.get(x + 1, y, actors) != null) {
-			x = RPG.r(minx, maxx);
-			y = RPG.r(miny, maxy);
-		}
-		World.seed.map[x][y] = Terrain.FOREST;
-		World.seed.map[x + 1][y] = Terrain.FOREST;
 	}
 
 	/**
@@ -187,22 +154,16 @@ public class WorldGenerator extends Thread {
 		}
 	}
 
-	public static Town generate(World w) {
+	public static void generate(LinkedList<Realm> realms,
+			ArrayList<HashSet<Point>> regions, World w) {
 		int size = World.scenario.size;
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				w.map[i][j] = Terrain.FOREST;
 			}
 		}
-		LinkedList<Realm> realms = new LinkedList<Realm>();
-		for (Realm r : Realm.values()) {
-			realms.add(r);
-		}
-		Collections.shuffle(realms);
-		ArrayList<List<Point>> regions = new ArrayList<List<Point>>(
-				WorldGenerator.GENERATIONORDER.length);
 		for (Terrain t : WorldGenerator.GENERATIONORDER) {
-			regions.add(t.generate(w));
+			regions.add(t.generate(w, null));
 		}
 		Point nw = new Point(0, 0);
 		Point sw = new Point(0, size - 1);
@@ -212,81 +173,9 @@ public class WorldGenerator extends Thread {
 		floodedge(sw, se, 0, -1, w);
 		floodedge(ne, se, -1, 0, w);
 		floodedge(nw, ne, 0, +1, w);
-		generatetowns(realms, regions);
-		Town starting = determinestartingtown(w);
-		normalizemap(starting);
-		FeatureGenerator.SINGLETON.placestartingfeatures(w, starting);
-		normalizemap(starting);
-		return starting;
 	}
 
-	static Town determinestartingtown(World seed) {
-		Terrain starton = RPG.r(1, 2) == 1 ? Terrain.PLAIN : Terrain.HILL;
-		ArrayList<Town> towns = Town.gettowns();
-		Town starting = World.scenario.easystartingtown
-				? gettown(starton, seed, towns) : RPG.pick(towns);
-		if (Terrain.search(new Point(starting.x, starting.y), Terrain.WATER, 2,
-				seed) != 0) {
-			throw new RestartWorldGeneration();
-		}
-		return starting;
-	}
-
-	static Town gettown(Terrain terrain, World seed, ArrayList<Town> towns) {
-		Collections.shuffle(towns);
-		for (Town town : towns) {
-			if (seed.map[town.x][town.y] == terrain) {
-				return town;
-			}
-		}
-		if (Javelin.DEBUG) {
-			throw new RuntimeException("No town in terrain " + terrain);
-		} else {
-			throw new RestartWorldGeneration();
-		}
-	}
-
-	/**
-	 * Turn whole map into 2 {@link Realm}s only so that there won't be
-	 * in-fighting between hostile {@link Town}s.
-	 *
-	 * @param starting
-	 *
-	 * @see Scenario#normalizemap
-	 */
-	static void normalizemap(Town starting) {
-		if (!World.scenario.normalizemap) {
-			return;
-		}
-		ArrayList<Town> towns = Town.gettowns();
-		towns.remove(starting);
-		Realm r = towns.get(0).originalrealm;
-		for (Actor a : World.getactors()) {
-			Location l = a instanceof Location ? (Location) a : null;
-			if (l != null && l.realm != null) {
-				l.realm = r;
-				if (a instanceof Town) {
-					Town t = (Town) a;
-					t.originalrealm = r;
-					t.replacegovernor(new MonsterGovernor(t));
-				}
-			}
-		}
-	}
-
-	static void generatetowns(LinkedList<Realm> realms,
-			ArrayList<List<Point>> regions) {
-		int towns = World.scenario.towns;
-		for (int i = 0; i < regions.size() && towns > 0; i++) {
-			Terrain t = WorldGenerator.GENERATIONORDER[i];
-			if (!t.equals(Terrain.WATER)) {
-				new Town(regions.get(i), realms.pop()).place();
-				towns -= 1;
-			}
-		}
-	}
-
-	private static void floodedge(Point from, Point to, int deltax, int deltay,
+	static void floodedge(Point from, Point to, int deltax, int deltay,
 			World w) {
 		ArrayList<Point> edge = new ArrayList<Point>(World.scenario.size);
 		edge.add(from);

@@ -112,11 +112,12 @@ public class Town extends Location {
 		vision = getdistrict().getradius();
 	}
 
-	public Town(List<Point> list, Realm r) {
+	public Town(HashSet<Point> list, Realm r) {
 		this(getvalidlocation(list), r);
 	}
 
-	private static Point getvalidlocation(List<Point> list) {
+	private static Point getvalidlocation(HashSet<Point> region) {
+		ArrayList<Point> list = new ArrayList<Point>(region);
 		Collections.shuffle(list);
 		for (Point p : list) {
 			if (Terrain.get(p.x, p.y) == Terrain.WATER || checktooclose(p)) {
@@ -198,8 +199,8 @@ public class Town extends Location {
 		} else if (!ishostile() && RPG.chancein(100)) {
 			host();
 		}
-		final float labor = (population + RPG.randomize(population) / 10f)
-				* World.scenario.rewardbonus;
+		float labor = population + RPG.randomize(population) / 10f;
+		labor *= World.scenario.boost * World.scenario.labormodifier;
 		governor.work(labor * DAILYLABOR, getdistrict());
 	}
 

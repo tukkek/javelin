@@ -1,4 +1,4 @@
-Each skill allows you to perform one or more type of actions more easily in the game world. Once you train a skill, it will automatically be raised whenever you gain a class level. 
+Each skill allows you to perform one or more type of actions more easily in the game world. Once you train a skill, it will automatically be raised whenever you gain a class level. At most 3 (plus Intelligence bonus) skills can be trained.
 
 Some skill checks only take into account the best (or worst) value of your entire party, so you usually don't necessarily benefit from having multiple units trained in Survival or Knowledge, for example.
 

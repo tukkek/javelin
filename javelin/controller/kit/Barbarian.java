@@ -1,6 +1,5 @@
 package javelin.controller.kit;
 
-import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.classes.Warrior;
@@ -18,7 +17,7 @@ public class Barbarian extends Kit {
 
 	@Override
 	protected void define() {
-		basic.add(new SkillUpgrade(Skill.SURVIVAL));
+		basic.add(Skill.SURVIVAL.getupgrade());
 		basic.add(new BarbarianRage());
 	}
 

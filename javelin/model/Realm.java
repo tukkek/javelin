@@ -70,9 +70,7 @@ public enum Realm {
 	 * @param handler2
 	 * @return the proper upgrade set in this {@link UpgradeHandler}.
 	 */
-	public HashSet<Upgrade> getupgrades(UpgradeHandler handler2) {
-		final UpgradeHandler handler = UpgradeHandler.singleton;
-		// handler.gather();
+	public HashSet<Upgrade> getupgrades(UpgradeHandler handler) {
 		switch (this) {
 		case WATER:
 			return handler.water;

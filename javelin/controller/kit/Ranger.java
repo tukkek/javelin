@@ -1,6 +1,5 @@
 package javelin.controller.kit;
 
-import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseDexterity;
 import javelin.controller.upgrade.classes.Warrior;
@@ -17,7 +16,7 @@ public class Ranger extends Kit {
 
 	@Override
 	protected void define() {
-		basic.add(new SkillUpgrade(Skill.SURVIVAL));
+		basic.add(Skill.SURVIVAL.getupgrade());
 		basic.addAll(UpgradeHandler.singleton.shots);
 	}
 

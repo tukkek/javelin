@@ -2,7 +2,6 @@ package javelin.controller.kit;
 
 import javelin.controller.DamageEffect;
 import javelin.controller.upgrade.FeatUpgrade;
-import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.controller.upgrade.ability.RaiseDexterity;
@@ -22,8 +21,8 @@ public class Assassin extends Kit {
 
 	@Override
 	protected void define() {
-		basic.add(new SkillUpgrade(Skill.DISGUISE));
-		basic.add(new SkillUpgrade(Skill.STEALTH));
+		basic.add(Skill.DISGUISE.getupgrade());
+		basic.add(Skill.STEALTH.getupgrade());
 		basic.add(RaiseCharisma.SINGLETON);
 		basic.add(new FeatUpgrade(Deceitful.SINGLETON));
 		basic.add(new EffectUpgrade(DamageEffect.POISON));

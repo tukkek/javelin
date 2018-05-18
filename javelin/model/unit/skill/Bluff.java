@@ -2,6 +2,7 @@ package javelin.model.unit.skill;
 
 import javelin.controller.action.ActionCost;
 import javelin.controller.ai.BattleAi;
+import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.condition.Condition;
@@ -56,7 +57,7 @@ public class Bluff extends Skill {
 	}
 
 	public Bluff() {
-		super("Bluff", Ability.CHARISMA);
+		super("Bluff", Ability.CHARISMA, Realm.EVIL);
 		usedincombat = true;
 	}
 

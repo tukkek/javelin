@@ -1,6 +1,5 @@
 package javelin.controller.kit;
 
-import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.controller.upgrade.classes.Warrior;
@@ -21,7 +20,7 @@ public class Paladin extends Kit {
 	protected void define() {
 		basic.add(new CureLightWounds());
 		basic.add(new Bless());
-		basic.add(new SkillUpgrade(Skill.SENSEMOTIVE));
+		basic.add(Skill.SENSEMOTIVE.getupgrade());
 	}
 
 	@Override

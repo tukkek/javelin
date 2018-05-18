@@ -1,7 +1,6 @@
 package javelin.controller.kit;
 
 import javelin.controller.upgrade.FeatUpgrade;
-import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.ability.RaiseWisdom;
@@ -25,9 +24,7 @@ public class Monk extends Kit {
 	@Override
 	protected void define() {
 		basic.add(RaiseWisdom.SINGLETON);
-		basic.add(new SkillUpgrade(Skill.ACROBATICS));
-		basic.add(new SkillUpgrade(Skill.BLUFF));
-		basic.add(new SkillUpgrade(Skill.SENSEMOTIVE));
+		basic.add(Skill.ACROBATICS.getupgrade());
 		for (Feat f : new Feat[] { Acrobatic.SINGLETON,
 				ImprovedInitiative.SINGLETON, LightningReflexes.SINGLETON }) {
 			basic.add(new FeatUpgrade(f));
@@ -36,6 +33,8 @@ public class Monk extends Kit {
 
 	@Override
 	protected void extend(UpgradeHandler h) {
+		extension.add(Skill.BLUFF.getupgrade());
+		extension.add(Skill.SENSEMOTIVE.getupgrade());
 		extension.addAll(h.water);
 		extension.addAll(h.earth);
 		extension.addAll(h.combatexpertise);

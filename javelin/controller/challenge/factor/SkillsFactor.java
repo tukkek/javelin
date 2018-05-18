@@ -2,7 +2,6 @@ package javelin.controller.challenge.factor;
 
 import java.util.TreeSet;
 
-import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
 import javelin.model.unit.skill.Skill;
@@ -33,25 +32,7 @@ public class SkillsFactor extends CrFactor {
 
 	@Override
 	public void registerupgrades(UpgradeHandler handler) {
-		handler.good.add(new SkillUpgrade(Skill.DIPLOMACY));
-		handler.good.add(new SkillUpgrade(Skill.SENSEMOTIVE));
-
-		handler.evil.add(new SkillUpgrade(Skill.STEALTH));
-		handler.evil.add(new SkillUpgrade(Skill.DISGUISE));
-		handler.evil.add(new SkillUpgrade(Skill.BLUFF));
-
-		handler.water.add(new SkillUpgrade(Skill.KNOWLEDGE));
-		handler.water.add(new SkillUpgrade(Skill.CONCENTRATION));
-		handler.water.add(new SkillUpgrade(Skill.HEAL));
-
-		handler.wind.add(new SkillUpgrade(Skill.PERCEPTION));
-		handler.wind.add(new SkillUpgrade(Skill.ACROBATICS));
-		handler.wind.add(new SkillUpgrade(Skill.DISABLEDEVICE));
-
-		handler.earth.add(new SkillUpgrade(Skill.SURVIVAL));
-
-		handler.magic.add(new SkillUpgrade(Skill.SPELLCRAFT));
-		handler.magic.add(new SkillUpgrade(Skill.USEMAGICDEVICE));
+		Skill.init();
 	}
 
 	/**

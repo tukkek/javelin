@@ -55,8 +55,8 @@ public abstract class Kit implements Serializable {
 		define();
 		int nupgrades = basic.size();
 		if (!(3 <= nupgrades && nupgrades <= 7) && Javelin.DEBUG) {
-			throw new RuntimeException(
-					"Kit " + name + " has " + nupgrades + " upgrades");
+			String error = "Kit " + name + " has " + nupgrades + " upgrades";
+			throw new RuntimeException(error);
 		}
 		extend(UpgradeHandler.singleton);
 		titles = new String[] { title1, title2, title3, title4, };

@@ -7,7 +7,6 @@ import javelin.Javelin;
 import javelin.controller.Calendar;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.upgrade.FeatUpgrade;
-import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.discipline.Discipline;
@@ -39,8 +38,7 @@ public class DisciplineAcademy extends Academy {
 
 		public HireOption(Combatant c) {
 			super("Hire " + c + " ($"
-					+ Javelin.format(MercenariesGuild.getfee(c))
-					+ "/day)", 0);
+					+ Javelin.format(MercenariesGuild.getfee(c)) + "/day)", 0);
 			this.c = c;
 		}
 
@@ -121,8 +119,8 @@ public class DisciplineAcademy extends Academy {
 				d.abilityupgrade, d.classupgrade);
 		this.d = d;
 		descriptionunknown = descriptionknown;
-		upgrades.add(new SkillUpgrade(d.skillupgrade));
-		upgrades.add(new SkillUpgrade(d.knowledgeupgrade));
+		upgrades.add(d.skillupgrade.getupgrade());
+		upgrades.add(d.knowledgeupgrade.getupgrade());
 		upgrades.add(d.trainingupgrade);
 		student = train(student, LEVERSTUDENT, 1);
 		teacher = train(teacher, LEVELTEACHER, 2);

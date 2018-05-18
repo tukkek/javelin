@@ -1,7 +1,6 @@
 package javelin.controller.kit;
 
 import javelin.controller.upgrade.FeatUpgrade;
-import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseDexterity;
 import javelin.controller.upgrade.classes.Expert;
@@ -19,11 +18,11 @@ public class Rogue extends Kit {
 
 	@Override
 	protected void define() {
-		basic.add(new SkillUpgrade(Skill.BLUFF));
-		basic.add(new SkillUpgrade(Skill.DISABLEDEVICE));
-		basic.add(new SkillUpgrade(Skill.SENSEMOTIVE));
-		basic.add(new SkillUpgrade(Skill.STEALTH));
-		basic.add(new SkillUpgrade(Skill.PERCEPTION));
+		basic.add(Skill.BLUFF.getupgrade());
+		basic.add(Skill.DISABLEDEVICE.getupgrade());
+		basic.add(Skill.SENSEMOTIVE.getupgrade());
+		basic.add(Skill.STEALTH.getupgrade());
+		basic.add(Skill.PERCEPTION.getupgrade());
 	}
 
 	@Override

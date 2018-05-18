@@ -1,6 +1,5 @@
 package javelin.controller.kit;
 
-import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.classes.Warrior;
@@ -18,12 +17,12 @@ public class Fighter extends Kit {
 	@Override
 	protected void define() {
 		basic.add(new MeleeDamage());
-		basic.add(new SkillUpgrade(Skill.SENSEMOTIVE));
 		basic.addAll(UpgradeHandler.singleton.powerattack);
 	}
 
 	@Override
 	protected void extend(UpgradeHandler h) {
+		extension.add(Skill.SENSEMOTIVE.getupgrade());
 		extension.addAll(h.fire);
 		extension.addAll(h.earth);
 		extension.addAll(h.combatexpertise);

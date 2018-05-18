@@ -5,7 +5,6 @@ import java.io.Serializable;
 import javelin.controller.action.maneuver.ExecuteManeuver;
 import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.upgrade.FeatUpgrade;
-import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
@@ -128,8 +127,7 @@ public abstract class Discipline implements Serializable {
 	 *         they should be applied to get the most out of training under it.
 	 */
 	public Upgrade[] getupgrades() {
-		return new Upgrade[] { trainingupgrade,
-				new SkillUpgrade(knowledgeupgrade), classupgrade,
-				abilityupgrade, new SkillUpgrade(skillupgrade) };
+		return new Upgrade[] { trainingupgrade, knowledgeupgrade.getupgrade(),
+				classupgrade, abilityupgrade, skillupgrade.getupgrade(), };
 	}
 }

@@ -1,6 +1,5 @@
 package javelin.controller.kit;
 
-import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.controller.upgrade.classes.Expert;
@@ -16,11 +15,11 @@ public class Bard extends Kit {
 
 	@Override
 	protected void define() {
-		basic.add(new SkillUpgrade(Skill.DIPLOMACY));
-		basic.add(new SkillUpgrade(Skill.KNOWLEDGE));
-		basic.add(new SkillUpgrade(Skill.USEMAGICDEVICE));
-		basic.add(new SkillUpgrade(Skill.BLUFF));
-		basic.add(new SkillUpgrade(Skill.SENSEMOTIVE));
+		basic.add(Skill.DIPLOMACY.getupgrade());
+		basic.add(Skill.KNOWLEDGE.getupgrade());
+		basic.add(Skill.USEMAGICDEVICE.getupgrade());
+		basic.add(Skill.BLUFF.getupgrade());
+		basic.add(Skill.SENSEMOTIVE.getupgrade());
 	}
 
 	@Override

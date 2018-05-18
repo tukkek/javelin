@@ -13,6 +13,7 @@ import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.Realm;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
+import javelin.model.unit.skill.Skill.SkillUpgrade;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.cultural.MagesGuild;
 import javelin.model.world.location.town.labor.military.MartialAcademy;

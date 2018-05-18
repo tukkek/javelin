@@ -1,6 +1,5 @@
 package javelin.controller.kit;
 
-import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.controller.upgrade.classes.Aristocrat;
@@ -23,8 +22,8 @@ public class Cleric extends Kit {
 	@Override
 	protected void define() {
 		basic.add(new CureModerateWounds());
-		basic.add(new SkillUpgrade(Skill.KNOWLEDGE));
-		basic.add(new SkillUpgrade(Skill.HEAL));
+		basic.add(Skill.KNOWLEDGE.getupgrade());
+		basic.add(Skill.HEAL.getupgrade());
 	}
 
 	@Override

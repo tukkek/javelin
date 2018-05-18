@@ -22,19 +22,19 @@ import javelin.model.unit.attack.AttackSequence;
  * The full attack factor uses average damage to calculate part of the monster's
  * CR. But what about monsters who have multiple attack sequences? Let's say my
  * Huge Tentacled Nerd monster has 2 full-attack sequences:
- * 
+ *
  * 1. Keyboard +3 (2d4-1), tablet +2 (1d8) and assorted wires +0 (1d4); and
- * 
+ *
  * 2. Tentacles +9/+3 (1d6+2 and poison)
- * 
+ *
  * The Challenging CRs appendix isn't clear what I should do here. Do I factor
  * in just the best full-attack sequence? Do I count both sequences for CR
  * purposes?
- * 
+ *
  * UPPER KRUST'S ANSWER: In this situation you need to factor both.
- * 
+ *
  * See {@link CrFactor}.
- * 
+ *
  * @author alex
  */
 public class FullAttackFactor extends CrFactor {

@@ -1,12 +1,15 @@
 package javelin.model.unit.skill;
 
+import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.feat.skill.Acrobatic;
 
 public class Acrobatics extends Skill {
+	static final String[] NAMES = new String[] { "Acrobatics", "tumble",
+			"balance", "escape artist" };
+
 	public Acrobatics() {
-		super(new String[] { "Acrobatics", "tumble", "balance",
-				"escape artist" }, Ability.DEXTERITY);
+		super(NAMES, Ability.DEXTERITY, Realm.AIR);
 		usedincombat = true;
 	}
 

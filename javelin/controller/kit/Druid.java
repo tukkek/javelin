@@ -3,7 +3,6 @@ package javelin.controller.kit;
 import java.util.LinkedList;
 
 import javelin.Javelin;
-import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.controller.upgrade.classes.Commoner;
@@ -25,7 +24,7 @@ public class Druid extends Kit {
 		basic.add(new Summon("Small monstrous centipede", 1));
 		basic.add(new Summon("Dire rat", 1));
 		basic.add(new Summon("Eagle", 1));
-		basic.add(new SkillUpgrade(Skill.SURVIVAL));
+		basic.add(Skill.SURVIVAL.getupgrade());
 	}
 
 	@Override

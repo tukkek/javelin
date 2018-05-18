@@ -10,7 +10,6 @@ import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.generator.NpcGenerator;
 import javelin.controller.table.dungeon.DungeonFeatureModifier;
-import javelin.controller.upgrade.SkillUpgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.skill.Skill;
@@ -61,7 +60,7 @@ public abstract class Inhabitant extends Feature {
 		remove = false;
 		inhabitant = select();
 		avatarfile = inhabitant.source.avatarfile;
-		new SkillUpgrade(Skill.DIPLOMACY).upgrade(inhabitant);
+		Skill.DIPLOMACY.getupgrade().upgrade(inhabitant);
 		diplomacydc = inhabitant.taketen(Skill.DIPLOMACY)
 				+ Dungeon.gettable(DungeonFeatureModifier.class).rollmodifier();
 		int d100 = RPG.r(0, 100);

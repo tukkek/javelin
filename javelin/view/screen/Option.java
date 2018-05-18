@@ -25,10 +25,10 @@ public class Option implements Serializable {
 	public float priority = 1;
 
 	/** Constructor. */
-	public Option(final String name, final double d, Character keyp) {
+	public Option(String name, double price, Character keyp) {
 		super();
 		this.name = name;
-		price = d;
+		this.price = price;
 		key = keyp;
 	}
 
@@ -48,6 +48,11 @@ public class Option implements Serializable {
 	 */
 	public Option(String name, double price) {
 		this(name, price, null);
+	}
+
+	public Option(String name, double price, Character keyp, float priority) {
+		this(name, price, keyp);
+		this.priority = priority;
 	}
 
 	@Override

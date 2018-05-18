@@ -97,4 +97,8 @@ public abstract class Feature implements Serializable {
 	public void place(Dungeon d) {
 		// nothing by default
 	}
+
+	public void remove() {
+		Dungeon.active.features.remove(this);
+	}
 }

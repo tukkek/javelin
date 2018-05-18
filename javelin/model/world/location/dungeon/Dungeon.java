@@ -55,6 +55,7 @@ import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.Trap;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.model.world.location.dungeon.feature.npc.Broker;
+import javelin.model.world.location.dungeon.feature.npc.Leader;
 import javelin.model.world.location.dungeon.feature.npc.Prisoner;
 import javelin.model.world.location.dungeon.temple.TempleDungeon;
 import javelin.view.Images;
@@ -107,6 +108,17 @@ public class Dungeon extends Location {
 	public int level = -1;
 	public boolean doorbackground = true;
 	public Tables tables;
+	/**
+	 * Table of encounters to roll from when generating
+	 * {@link RandomDungeonEncounter}s.
+	 *
+	 * Entries can be set to <code>null</code> when certain encounters are
+	 * pacified. If rolled, these will result in skipped encounters (ie: the
+	 * {@link Squad} met them but they weren't hostile). Pacified encounters do
+	 * not carry over to the next level.
+	 *
+	 * @see Leader
+	 */
 	public ArrayList<Combatants> encounters = new ArrayList<Combatants>();
 
 	float ratiomonster = RPG.r(25, 50) / 100f;
@@ -249,9 +261,12 @@ public class Dungeon extends Location {
 		int target = 3 + RPG.r(1, 4) + gettier().tier;
 		if (parent != null) {
 			encounters = new ArrayList<Combatants>(parent.encounters);
+			while (encounters.contains(null)) {
+				encounters.remove(null);
+			}
 			encounters.sort(EncountersByEl.INSTANCE);
 			int crop = RPG.r(1, 4);
-			for (int i = 0; i < crop; i++) {
+			for (int i = 0; i < crop && !encounters.isEmpty(); i++) {
 				encounters.remove(0);
 			}
 		}
@@ -523,11 +538,15 @@ public class Dungeon extends Location {
 	 * @return Extra features to be placed using {@link #build(Feature, Set)}.
 	 */
 	protected Feature createfeature(boolean rare, Point p) {
+		if (Javelin.DEBUG) {
+			return new Leader(p.x, p.y);
+		}
 		LinkedList<Feature> features = new LinkedList<Feature>();
 		if (rare) {
 			features.add(new Fountain(p.x, p.y));
 			features.add(new Broker(p.x, p.y));
 			features.add(new Prisoner(p.x, p.y));
+			features.add(new Leader(p.x, p.y));
 		} else {
 			features.add(new Chest(p.x, p.y, Key.generate()));
 			features.add(new Brazier(p.x, p.y));

@@ -147,8 +147,13 @@ public class Squad extends Actor implements Cloneable {
 					.getImage(transport.name.replaceAll(" ", "").toLowerCase());
 			return;
 		}
+		ArrayList<Combatant> squad = new Combatants(members);
+		squad.removeAll(getmercenaries());
+		if (squad.isEmpty()) {
+			squad = members;
+		}
 		Combatant leader = null;
-		for (Combatant c : members) {
+		for (Combatant c : squad) {
 			if (leader == null || c.source.cr > leader.source.cr) {
 				leader = c;
 			}

@@ -2,6 +2,7 @@ package javelin.model.unit;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Combatants extends ArrayList<Combatant>
@@ -14,7 +15,7 @@ public class Combatants extends ArrayList<Combatant>
 		super(size);
 	}
 
-	public Combatants(Combatants list) {
+	public Combatants(Collection<Combatant> list) {
 		super(list);
 	}
 
@@ -30,7 +31,7 @@ public class Combatants extends ArrayList<Combatant>
 
 	@Override
 	public boolean equals(Object o) {
-		return o.getClass() == Combatants.class && hashCode() == o.hashCode();
+		return o instanceof Combatants && hashCode() == o.hashCode();
 	}
 
 	@Override

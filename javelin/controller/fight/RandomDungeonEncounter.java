@@ -1,9 +1,11 @@
 package javelin.controller.fight;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.world.location.dungeon.Dungeon;
 import tyrant.mikera.engine.RPG;
 
@@ -24,6 +26,12 @@ public class RandomDungeonEncounter extends RandomEncounter {
 
 	@Override
 	public ArrayList<Combatant> generate() {
-		return RPG.pick(dungeon.encounters).clone();
+		Combatants encounter = RPG.pick(dungeon.encounters);
+		return encounter == null ? null : encounter.clone();
+	}
+
+	@Override
+	public boolean avoid(List<Combatant> foes) {
+		return foes == null || super.avoid(foes);
 	}
 }

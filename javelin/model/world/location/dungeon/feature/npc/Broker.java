@@ -96,18 +96,18 @@ public class Broker extends Inhabitant {
 			ArrayList<Option> options = new ArrayList<Option>();
 			int diplomacy = Squad.active.getbest(Skill.DIPLOMACY)
 					.taketen(Skill.DIPLOMACY);
-			if (diplomacy >= basedc + 5) {
+			if (diplomacy >= diplomacydc + 5) {
 				options.add(hire);
 			}
-			if (diplomacy >= basedc) {
+			if (diplomacy >= diplomacydc) {
 				for (Key k : keys) {
 					options.add(new SellKey(k));
 				}
 			}
 			if (hints > 0) {
-				if (diplomacy >= basedc) {
+				if (diplomacy >= diplomacydc) {
 					options.add(extractinformation);
-				} else if (diplomacy >= basedc - 5) {
+				} else if (diplomacy >= diplomacydc - 5) {
 					options.add(sellinformation);
 				}
 			}

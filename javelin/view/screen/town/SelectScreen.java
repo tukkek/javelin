@@ -167,7 +167,7 @@ public abstract class SelectScreen extends InfoScreen {
 
 	static Option convertselectionkey(Character c, List<Option> options) {
 		for (Option o : options) {
-			if (o.key == c) {
+			if (c.equals(o.key)) {
 				return o;
 			}
 		}

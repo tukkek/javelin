@@ -109,11 +109,6 @@ public class Debug {
 	/** @see Preferences */
 	public static boolean bypassdoors;
 
-	public static String onbattlehelp() {
-		String s = "";
-		return s;
-	}
-
 	public static void onbattlestart() {
 
 	}
@@ -129,6 +124,11 @@ public class Debug {
 	 */
 	public static void oninit() {
 
+	}
+
+	public static String onbattlehelp() {
+		String s = "";
+		return s;
 	}
 
 	/**

@@ -9,7 +9,7 @@ import javelin.model.unit.Monster;
 
 /**
  * A ranged touch attack spell.
- * 
+ *
  * @author alex
  */
 public abstract class Ray extends Spell {
@@ -19,12 +19,11 @@ public abstract class Ray extends Spell {
 	}
 
 	@Override
-	public int hit(Combatant active, Combatant target,
-			BattleState state) {
+	public int hit(Combatant active, Combatant target, BattleState state) {
 		if (automatichit) {
 			return -Integer.MAX_VALUE;
 		}
-		int bonus = active.source.getbaseattackbonus()
+		int bonus = active.source.getbab()
 				+ Monster.getbonus(active.source.dexterity);
 		int ac;
 		if (castonallies) {
@@ -33,7 +32,7 @@ public abstract class Ray extends Spell {
 			}
 			ac = 10;
 		} else {
-			ac = target.ac() - target.source.armor;
+			ac = target.source.getrawac() - target.source.armor;
 			bonus -= RangedAttack.SINGLETON.getpenalty(active, target, state);
 		}
 		return ac - bonus;

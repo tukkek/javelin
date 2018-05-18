@@ -23,7 +23,7 @@ public class ImprovedPreciseShot extends Feat {
 
 	@Override
 	public boolean upgrade(Combatant m) {
-		return m.source.dexterity >= 19 && m.source.getbaseattackbonus() >= 11
+		return m.source.dexterity >= 19 && m.source.getbab() >= 11
 				&& super.upgrade(m);
 	}
 }

@@ -12,15 +12,16 @@ import javelin.model.unit.condition.Prone;
 
 /**
  * AI version of mêlée attacks.
- * 
+ *
  * @see MeleeTarget
  * @author alex
  */
 public class MeleeAttack extends AbstractAttack {
 	static final public MeleeAttack SINGLETON = new MeleeAttack();
 
-	private MeleeAttack() {
+	MeleeAttack() {
 		super("Melee attack");
+		feign = true;
 	}
 
 	@Override

@@ -10,6 +10,7 @@ Version 1.7
  * Dungeon redesign (templated-based maps, 4 tiers, new features)!
  * Introducing 6 Haunt locations!
  * New locations: natural resources, Assassins Guild and Deep Dungeon
+ * New skills: Bluff and Sense Motive
  * Infiltrate hostile locations
  * World map fog-of-war
  * More responsive user-interface during battles

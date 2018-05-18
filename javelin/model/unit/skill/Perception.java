@@ -15,9 +15,11 @@ import javelin.model.unit.feat.skill.Alertness;
  * @see Combatant#perceive(boolean, boolean, boolean)
  */
 public class Perception extends Skill {
+	static final String[] NAMES = new String[] { "Perception", "listen", "spot",
+			"search" };
+
 	public Perception() {
-		super(new String[] { "Perception", "listen", "spot", "search" },
-				Ability.WISDOM);
+		super(NAMES, Ability.WISDOM);
 	}
 
 	@Override

@@ -26,6 +26,8 @@ public class Monk extends Kit {
 	protected void define() {
 		basic.add(RaiseWisdom.SINGLETON);
 		basic.add(new SkillUpgrade(Skill.ACROBATICS));
+		basic.add(new SkillUpgrade(Skill.BLUFF));
+		basic.add(new SkillUpgrade(Skill.SENSEMOTIVE));
 		for (Feat f : new Feat[] { Acrobatic.SINGLETON,
 				ImprovedInitiative.SINGLETON, LightningReflexes.SINGLETON }) {
 			basic.add(new FeatUpgrade(f));

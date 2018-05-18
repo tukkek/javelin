@@ -4,7 +4,7 @@ Breath weapon: special area attack, press b during battle to activate.
 Classes: raises hit dice, base attack bonus and saving throws.
 Combat casting: adds +4 to the concentration skill.
 Damage reduction: reduces damage from physical attacks.
-Deceitful: +3 to disguise skill checks (+4 if 10 or more ranks in disguise).
+Deceitful: +3 to Disguise and Bluff skill checks.
 Darkvision: greatly improved vision when dark.
 Energy resistance/immunity: reduces or ignores damage from non-physical attacks.
 Fast healing: heals a certain number of hit points per turn (1AP).

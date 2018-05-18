@@ -1,11 +1,13 @@
 package javelin.controller.kit;
 
+import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.controller.upgrade.classes.Warrior;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureLightWounds;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.Bless;
+import javelin.model.unit.skill.Skill;
 
 public class Paladin extends Kit {
 	public static final Kit INSTANCE = new Paladin();
@@ -19,6 +21,7 @@ public class Paladin extends Kit {
 	protected void define() {
 		basic.add(new CureLightWounds());
 		basic.add(new Bless());
+		basic.add(new SkillUpgrade(Skill.SENSEMOTIVE));
 	}
 
 	@Override

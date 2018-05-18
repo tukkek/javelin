@@ -39,7 +39,7 @@ public class PowerAttack extends Feat {
 		Monster m = c.source;
 		int nattacks = m.melee.size();
 		HashSet<Integer> targets = new HashSet<Integer>(2);
-		int bab = m.getbaseattackbonus();
+		int bab = m.getbab();
 		if (nattacks == 1) {
 			targets.add(Math.round(bab * 2 / 3f));
 			targets.add(Math.round(bab * 1 / 3f));
@@ -74,12 +74,12 @@ public class PowerAttack extends Feat {
 
 	@Override
 	public String inform(Combatant c) {
-		return "Current base attack bonus: +" + c.source.getbaseattackbonus();
+		return "Current base attack bonus: +" + c.source.getbab();
 	}
 
 	@Override
 	public boolean upgrade(Combatant c) {
-		return c.source.strength >= 13 && c.source.getbaseattackbonus() >= 1
+		return c.source.strength >= 13 && c.source.getbab() >= 1
 				&& super.upgrade(c);
 	}
 }

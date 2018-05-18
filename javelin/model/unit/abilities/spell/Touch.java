@@ -10,7 +10,7 @@ import javelin.model.unit.Monster;
 
 /**
  * Base implementation for touch spells.
- * 
+ *
  * @see Ray
  * @author alex
  */
@@ -18,7 +18,7 @@ public abstract class Touch extends Spell {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param realmp
 	 */
 	public Touch(String name, int level, float incrementcost, Realm realmp) {
@@ -31,9 +31,10 @@ public abstract class Touch extends Spell {
 		if (castonallies && active.isally(target, s)) {
 			return -Integer.MAX_VALUE;
 		}
-		return (target.ac() - target.source.armor)
-				- (active.source.getbaseattackbonus()
-						+ Monster.getbonus(active.source.strength));
+		int touchac = target.getac() - target.source.armor;
+		int attackbonus = active.source.getbab()
+				- Monster.getbonus(active.source.strength);
+		return touchac - attackbonus;
 	}
 
 	@Override

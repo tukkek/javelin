@@ -20,6 +20,7 @@ public class Skill implements Serializable {
 	public static final HashSet<Skill> ALL = new HashSet<Skill>();
 
 	public static final Skill ACROBATICS = new Acrobatics();
+	public static final Skill BLUFF = new Bluff();
 	public static final Skill CONCENTRATION = new Concentration();
 	public static final Skill DIPLOMACY = new Diplomacy();
 	public static final Skill DISABLEDEVICE = new DisableDevice();
@@ -27,6 +28,7 @@ public class Skill implements Serializable {
 	public static final Skill HEAL = new Heal();
 	public static final Skill KNOWLEDGE = new Knowledge();
 	public static final Skill PERCEPTION = new Perception();
+	public static final Skill SENSEMOTIVE = new SenseMotive();
 	public static final Skill SPELLCRAFT = new Spellcraft();
 	public static final Skill STEALTH = new Stealth();
 	public static final Skill SURVIVAL = new Survival();
@@ -64,7 +66,7 @@ public class Skill implements Serializable {
 		return getranks(c) + getabilitybonus(c.source) + c.skillmodifier;
 	}
 
-	int getabilitybonus(Monster m) {
+	public int getabilitybonus(Monster m) {
 		return Monster.getbonus(getabilityvalue(m));
 	}
 
@@ -146,12 +148,7 @@ public class Skill implements Serializable {
 	}
 
 	public String getsignedbonus(Combatant c) {
-		int bonus = getbonus(c);
-		String signed = Integer.toString(bonus);
-		if (bonus >= 0) {
-			signed = "+" + signed;
-		}
-		return signed;
+		return getsigned(getbonus(c));
 	}
 
 	/**
@@ -163,5 +160,9 @@ public class Skill implements Serializable {
 	 */
 	public boolean canuse(Combatant c) {
 		return !intelligent || c.source.think(-2);
+	}
+
+	public static String getsigned(int bonus) {
+		return bonus >= 0 ? "+" + bonus : Integer.toString(bonus);
 	}
 }

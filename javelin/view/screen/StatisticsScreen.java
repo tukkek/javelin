@@ -49,6 +49,26 @@ public class StatisticsScreen extends InfoScreen {
 	static public String gettext(Combatant c, boolean toggle) {
 		Monster m = c.source;
 		ArrayList<String> lines = new ArrayList<String>();
+		showheader(c, m, lines);
+		lines.add(showhp(c, m));
+		lines.add("Initiative   " + Skill.getsigned(m.initiative));
+		lines.add("Speed        " + showspeed(m));
+		lines.add("Armor class  " + alignnumber(c.getac()));
+		lines.add("");
+		showattacks(m, lines);
+		describequalities(c, lines);
+		showsaves(m, lines);
+		showabilities(m, lines);
+		showfeats(m, lines);
+		showskills(c, lines);
+		if (toggle) {
+			String describe = "Press v to see the monster description, any other key to exit";
+			lines.add(describe);
+		}
+		return String.join("\n", lines);
+	}
+
+	static void showheader(Combatant c, Monster m, ArrayList<String> lines) {
 		String monstername = m.name;
 		if (!m.group.isEmpty()) {
 			monstername += " (" + m.group + ")";
@@ -58,8 +78,7 @@ public class StatisticsScreen extends InfoScreen {
 		lines.add("");
 		if (c.mercenary) {
 			lines.add("Mercenary ($"
-					+ Javelin.format(MercenariesGuild.getfee(c))
-					+ "/day)");
+					+ Javelin.format(MercenariesGuild.getfee(c)) + "/day)");
 		}
 		lines.add("Challenge rating "
 				+ Math.round(ChallengeCalculator.calculatecr(m)));
@@ -71,34 +90,9 @@ public class StatisticsScreen extends InfoScreen {
 		}
 		lines.add(describealignment(m));
 		lines.add("");
-		lines.add(showhp(c, m));
-		lines.add("Initiative   " + (m.initiative >= 0 ? "+" : "")
-				+ m.initiative);
-		lines.add("Speed        " + showspeed(m));
-		lines.add("Armor class  " + alignnumber(m.ac + c.acmodifier));
-		lines.add("");
-		lines.add("Melee attacks");
-		listattacks(lines, m.melee);
-		lines.add("");
-		lines.add("Ranged attacks");
-		listattacks(lines, m.ranged);
-		lines.add("");
-		String qualities = describequalities(m, c);
-		if (!qualities.isEmpty()) {
-			lines.add(qualities);
-		}
-		lines.add("Saving throws");
-		lines.add(" Fortitude   " + save(m.fort));
-		lines.add(" Reflex      " + save(m.ref));
-		lines.add(" Will        " + save(m.will));
-		lines.add("");
-		lines.add(printability(m.strength, "Strength"));
-		lines.add(printability(m.dexterity, "Dexterity"));
-		lines.add(printability(m.constitution, "Constitution"));
-		lines.add(printability(m.intelligence, "Intelligence"));
-		lines.add(printability(m.wisdom, "Wisdom"));
-		lines.add(printability(m.charisma, "Charisma"));
-		lines.add("");
+	}
+
+	static void showfeats(Monster m, ArrayList<String> lines) {
 		if (!m.feats.isEmpty()) {
 			String feats = "Feats: ";
 			for (javelin.model.unit.feat.Feat f : m.feats) {
@@ -107,19 +101,33 @@ public class StatisticsScreen extends InfoScreen {
 			lines.add(feats.substring(0, feats.length() - 2) + ".");
 			lines.add("");
 		}
-		final String skills = showskills(c);
-		if (skills != null) {
-			lines.add(skills);
-		}
-		if (toggle) {
-			lines.add(
-					"Press v to see the monster description, any other key to exit");
-		}
-		String text = "";
-		for (String line : lines) {
-			text += line + "\n";
-		}
-		return text;
+	}
+
+	static void showabilities(Monster m, ArrayList<String> lines) {
+		lines.add(printability(m.strength, "Strength"));
+		lines.add(printability(m.dexterity, "Dexterity"));
+		lines.add(printability(m.constitution, "Constitution"));
+		lines.add(printability(m.intelligence, "Intelligence"));
+		lines.add(printability(m.wisdom, "Wisdom"));
+		lines.add(printability(m.charisma, "Charisma"));
+		lines.add("");
+	}
+
+	static void showsaves(Monster m, ArrayList<String> lines) {
+		lines.add("Saving throws");
+		lines.add(" Fortitude   " + save(m.fort));
+		lines.add(" Reflex      " + save(m.ref));
+		lines.add(" Will        " + save(m.will));
+		lines.add("");
+	}
+
+	static void showattacks(Monster m, ArrayList<String> lines) {
+		lines.add("Melee attacks");
+		listattacks(lines, m.melee);
+		lines.add("");
+		lines.add("Ranged attacks");
+		listattacks(lines, m.ranged);
+		lines.add("");
 	}
 
 	static String showhp(Combatant c, Monster m) {
@@ -160,19 +168,21 @@ public class StatisticsScreen extends InfoScreen {
 		return speedtext;
 	}
 
-	@SuppressWarnings("deprecation")
-	static String showskills(Combatant c) {
+	static void showskills(Combatant c, ArrayList<String> lines) {
+		if (c.source.ranks.isEmpty()) {
+			return;
+		}
+		Monster m = c.source;
 		String output = "";
 		for (Skill s : Skill.ALL) {
 			if (s.getranks(c) == 0) {
 				continue;
 			}
-			String trained = c.source.trained.contains(s.name) ? ""
-					: " (untrained)";
+			String trained = m.trained.contains(s.name) ? "" : " (untrained)";
 			output += s.name + " " + s.getsignedbonus(c) + trained + ", ";
 		}
-		return output.isEmpty() ? null
-				: "Skills: " + output.substring(0, output.length() - 2) + ".\n";
+		output = output.substring(0, output.length() - 2);
+		lines.add("Skills: " + output + ".\n");
 	}
 
 	static String describealignment(Monster m) {
@@ -213,7 +223,8 @@ public class StatisticsScreen extends InfoScreen {
 				+ Monster.getsignedbonus(score) + ")";
 	}
 
-	private static String describequalities(Monster m, Combatant c) {
+	static void describequalities(Combatant c, ArrayList<String> lines) {
+		Monster m = c.source;
 		String s = printqualities("Maneuvers", c.disciplines.getmaneuvers());
 		ArrayList<String> spells = new ArrayList<String>(c.spells.size());
 		for (Spell spell : c.spells) {
@@ -239,9 +250,8 @@ public class StatisticsScreen extends InfoScreen {
 		}
 		s += printqualities("Special qualities", qualities);
 		if (!s.isEmpty()) {
-			s = s.substring(0, s.length() - 1);
+			lines.add(s.substring(0, s.length() - 1));
 		}
-		return s;
 	}
 
 	static String printqualities(String header, ArrayList<?> qualities) {

@@ -1,9 +1,11 @@
 package javelin.controller.kit;
 
+import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.classes.Warrior;
 import javelin.controller.upgrade.damage.MeleeDamage;
+import javelin.model.unit.skill.Skill;
 
 public class Fighter extends Kit {
 	public static final Kit INSTANCE = new Fighter();
@@ -16,6 +18,7 @@ public class Fighter extends Kit {
 	@Override
 	protected void define() {
 		basic.add(new MeleeDamage());
+		basic.add(new SkillUpgrade(Skill.SENSEMOTIVE));
 		basic.addAll(UpgradeHandler.singleton.powerattack);
 	}
 

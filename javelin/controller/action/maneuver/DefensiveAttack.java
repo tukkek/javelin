@@ -97,7 +97,7 @@ public class DefensiveAttack extends ExpertiseAction {
 	}
 
 	static public int amount(final Combatant combatant, int fallback) {
-		final int acbonus = Math.min(combatant.source.getbaseattackbonus(), 5);
+		final int acbonus = Math.min(combatant.source.getbab(), 5);
 		return acbonus == 0 ? fallback : acbonus;
 	}
 }

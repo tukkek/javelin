@@ -149,10 +149,6 @@ public class Monster implements Cloneable, Serializable {
 	 */
 	public int swim = 0;
 
-	/**
-	 * Use {@link Combatant#ac() instead.}
-	 */
-	public int ac;
 	/** The portion of {@link #ac} due to armor protection. */
 	public int armor;
 
@@ -321,6 +317,8 @@ public class Monster implements Cloneable, Serializable {
 	public HashSet<String> trained = new HashSet<String>(0);
 	public boolean elite = false;
 
+	int ac;
+
 	@Override
 	public Monster clone() {
 		try {
@@ -407,9 +405,9 @@ public class Monster implements Cloneable, Serializable {
 	}
 
 	/**
-	 * @return 0 or higher value.
+	 * @return Base attack bonus (0 or higher value).
 	 */
-	public int getbaseattackbonus() {
+	public int getbab() {
 		int classesbab = 0;
 		for (ClassLevelUpgrade classdata : ClassLevelUpgrade.classes) {
 			int level = classdata.getlevel(this);
@@ -467,6 +465,10 @@ public class Monster implements Cloneable, Serializable {
 	/**
 	 * Same as {@link #changedexteritymodifier(int)} but receives an ability
 	 * score change instead.
+	 *
+	 * Assumes that the maximum dexterity bonus for the given armor is equal to
+	 * (8-{@link #armor}). This doesn't affect anything else besides allowing
+	 * dexterity to improve AC or not, internally.
 	 */
 	public void changedexterityscore(int scorechange) {
 		AbilityModification m = AbilityModification.modify(dexterity,
@@ -476,7 +478,9 @@ public class Monster implements Cloneable, Serializable {
 		if (m.modifierchange == 0) {
 			return;
 		}
-		ac += modifierchange;
+		if (getbonus(dexterity) <= armor) {
+			ac += modifierchange;
+		}
 		ref += modifierchange;
 		ArrayList<Attack> attacks = new ArrayList<Attack>();
 		for (AttackSequence sequence : ranged) {
@@ -806,5 +810,21 @@ public class Monster implements Cloneable, Serializable {
 		List<String> terrains = getterrains();
 		return terrains.size() == 1
 				&& terrains.get(0).equalsIgnoreCase(Terrain.WATER.name);
+	}
+
+	/**
+	 * @return Unmodified Armor Class.
+	 * @see Combatant#getac()
+	 */
+	public int getrawac() {
+		return ac;
+	}
+
+	/**
+	 * @param ac
+	 *            Sets this as the unmodified Armor Class.
+	 */
+	public void setrawac(int ac) {
+		this.ac = ac;
 	}
 }

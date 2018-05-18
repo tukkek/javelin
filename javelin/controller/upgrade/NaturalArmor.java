@@ -4,7 +4,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
 /**
- * See the d20 SRD for more info.
+ * See the d20 SRD for more information.
  */
 public class NaturalArmor extends Upgrade {
 	private final int target;
@@ -15,20 +15,21 @@ public class NaturalArmor extends Upgrade {
 	}
 
 	@Override
-	public String inform(final Combatant m) {
-		return "Current armor class: " + m.source.ac;
+	public String inform(final Combatant c) {
+		return "Current armor class: " + c.source.getrawac();
 	}
 
 	@Override
 	public boolean apply(final Combatant c) {
 		Monster m = c.source;
-		int newac = m.ac + target - m.armor;
-		if (target < m.armor || newac > m.ac + 10
-				|| newac > m.dexterity + m.constitution) {
+		int from = m.getrawac();
+		int to = from + target - m.armor;
+		if (target < m.armor || to > from + 10
+				|| to > m.dexterity + m.constitution) {
 			return false;
 		}
 		m.armor = target;
-		m.ac = newac;
+		m.setrawac(to);
 		return true;
 	}
 }

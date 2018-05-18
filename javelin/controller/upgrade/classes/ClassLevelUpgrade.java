@@ -154,7 +154,7 @@ public abstract class ClassLevelUpgrade extends Upgrade {
 	 * TODO can be converted to a {@link HashMap}
 	 */
 	public int checkfornewattack(Monster m, int babdelta) {
-		switch (m.getbaseattackbonus() + babdelta) {
+		switch (m.getbab() + babdelta) {
 		case 6:
 			return 5;
 		case 11:

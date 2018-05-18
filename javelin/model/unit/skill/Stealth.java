@@ -5,8 +5,10 @@ package javelin.model.unit.skill;
  * Stealh instead of Perception (was hidden enough for others not to notice him)
  */
 public class Stealth extends Skill {
+	static final String[] NAMES = new String[] { "Stealth", "hide",
+			"move silently", "pick pocket" };
+
 	public Stealth() {
-		super(new String[] { "Stealth", "hide", "move silently",
-				"pick pocket" }, Ability.DEXTERITY);
+		super(NAMES, Ability.DEXTERITY);
 	}
 }

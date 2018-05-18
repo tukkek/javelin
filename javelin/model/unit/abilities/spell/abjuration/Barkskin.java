@@ -9,7 +9,7 @@ import javelin.model.unit.condition.Condition;
 
 /**
  * Gives a 1-hour bonus to
- * 
+ *
  * See the d20 SRD for more info.
  */
 public class Barkskin extends Touch {
@@ -32,8 +32,7 @@ public class Barkskin extends Touch {
 
 	/** Constructor */
 	public Barkskin() {
-		super("Barkskin", 3,
-				ChallengeCalculator.ratespelllikeability(2, 6),
+		super("Barkskin", 3, ChallengeCalculator.ratespelllikeability(2, 6),
 				javelin.model.Realm.EARTH);
 		casterlevel = 6;
 		castinbattle = true;
@@ -45,7 +44,7 @@ public class Barkskin extends Touch {
 	@Override
 	public String castpeacefully(Combatant caster, Combatant target) {
 		target.addcondition(new BarkskinCondition(target, casterlevel));
-		return target + " now has an armor class of " + target.ac() + "!";
+		return target + " now has an armor class of " + target.getac() + "!";
 	}
 
 	@Override

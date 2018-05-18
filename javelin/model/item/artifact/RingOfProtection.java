@@ -18,12 +18,11 @@ public class RingOfProtection extends Artifact {
 
 	@Override
 	protected void apply(Combatant c) {
-		c.source.ac += bonus;
+		c.source.setrawac(c.source.getrawac() + bonus);
 	}
 
 	@Override
 	protected void negate(Combatant c) {
-		c.source.ac -= bonus;
+		c.source.setrawac(c.source.getrawac() - bonus);
 	}
-
 }

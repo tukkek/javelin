@@ -19,7 +19,7 @@ public class Melding extends Condition {
 	public void start(Combatant c) {
 		c.heal(Math.round(Math.round(Math.ceil(c.maxhp / 5f))), true);
 		c.source = c.source.clone();
-		c.source.ac += 2;
+		c.acmodifier += 2;
 		for (AttackSequence s : c.source.melee) {
 			for (Attack a : s) {
 				a.bonus += 2;

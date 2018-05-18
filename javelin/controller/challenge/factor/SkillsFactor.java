@@ -1,5 +1,7 @@
 package javelin.controller.challenge.factor;
 
+import java.util.TreeSet;
+
 import javelin.controller.upgrade.SkillUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
@@ -32,9 +34,11 @@ public class SkillsFactor extends CrFactor {
 	@Override
 	public void registerupgrades(UpgradeHandler handler) {
 		handler.good.add(new SkillUpgrade(Skill.DIPLOMACY));
+		handler.good.add(new SkillUpgrade(Skill.SENSEMOTIVE));
 
 		handler.evil.add(new SkillUpgrade(Skill.STEALTH));
 		handler.evil.add(new SkillUpgrade(Skill.DISGUISE));
+		handler.evil.add(new SkillUpgrade(Skill.BLUFF));
 
 		handler.water.add(new SkillUpgrade(Skill.KNOWLEDGE));
 		handler.water.add(new SkillUpgrade(Skill.CONCENTRATION));
@@ -68,5 +72,14 @@ public class SkillsFactor extends CrFactor {
 	 */
 	public static int levelup(int progression, Monster m) {
 		return Math.max(1, progression + Monster.getbonus(m.intelligence));
+	}
+
+	@Override
+	public String log(Monster m) {
+		TreeSet<String> skills = new TreeSet<String>();
+		for (String skill : m.ranks.keySet()) {
+			skills.add(skill);
+		}
+		return skills.toString();
 	}
 }

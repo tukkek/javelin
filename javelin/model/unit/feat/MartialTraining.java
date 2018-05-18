@@ -73,7 +73,7 @@ public class MartialTraining extends Feat {
 			return false;
 		}
 		int minimum = 1 + nextlevel * 2;
-		int bab = m.getbaseattackbonus();
+		int bab = m.getbab();
 		int knowledge = Skill.KNOWLEDGE.getranks(c);
 		return bab >= minimum || knowledge >= minimum;
 	}

@@ -52,7 +52,7 @@ public class WeaponFocus extends Feat {
 
 	@Override
 	public String inform(final Combatant m) {
-		return "Base attack bonus: " + m.source.getbaseattackbonus();
+		return "Base attack bonus: " + m.source.getbab();
 	}
 
 	int countattacks(final Monster m) {
@@ -70,7 +70,7 @@ public class WeaponFocus extends Feat {
 		Monster m = c.source;
 		List<AttackSequence> attacks = getattacks(m);
 		if (m.hasfeat(this) || (attacks == null || attacks.isEmpty())
-				|| m.getbaseattackbonus() < 1) {
+				|| m.getbab() < 1) {
 			return false;
 		}
 		for (int i = 0; i < countattacks(m); i++) {

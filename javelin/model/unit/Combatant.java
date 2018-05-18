@@ -44,6 +44,7 @@ import javelin.model.unit.abilities.discipline.Maneuver;
 import javelin.model.unit.abilities.discipline.serpent.TearingFang.Bleeding;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.Spells;
+import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.condition.Condition.Effect;
@@ -134,7 +135,12 @@ public class Combatant implements Serializable, Cloneable {
 	 * @see #gethumanxp()
 	 */
 	public BigDecimal xp = new BigDecimal(0);
+	/**
+	 * <code>true</code> if this unit is the result of a {@link Summon} spell.
+	 * This means it cannot summon other creatures.
+	 */
 	public boolean summoned = false;
+	/** Equipment this unit is currently wearing. */
 	public ArrayList<Artifact> equipped = new ArrayList<Artifact>(0);
 	/** See {@link MercenariesGuild} */
 	public boolean mercenary = false;
@@ -142,6 +148,7 @@ public class Combatant implements Serializable, Cloneable {
 	public boolean burrowed = false;
 	/** Is a player unit that should be controlled by {@link BattleAi}. */
 	public boolean automatic = false;
+	/** Global {@link Skill} modifier. */
 	public int skillmodifier = 0;
 
 	/**
@@ -503,10 +510,6 @@ public class Combatant implements Serializable, Cloneable {
 		return Integer.MAX_VALUE;
 	}
 
-	public int ac() {
-		return source.ac + acmodifier;
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		return id == ((Combatant) obj).id;
@@ -551,7 +554,7 @@ public class Combatant implements Serializable, Cloneable {
 			statuslist.add("knee-deep");
 		}
 		for (Condition c : conditions) {
-			statuslist.add(c.description.toLowerCase());
+			statuslist.add(c.toString().toLowerCase());
 		}
 		statuslist.sort(null);
 		return statuslist;
@@ -1092,5 +1095,12 @@ public class Combatant implements Serializable, Cloneable {
 			p += source.see() / 2;
 		}
 		return p;
+	}
+
+	/**
+	 * @return Effective armor class.
+	 */
+	public int getac() {
+		return source.ac + acmodifier;
 	}
 }

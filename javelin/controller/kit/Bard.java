@@ -19,6 +19,8 @@ public class Bard extends Kit {
 		basic.add(new SkillUpgrade(Skill.DIPLOMACY));
 		basic.add(new SkillUpgrade(Skill.KNOWLEDGE));
 		basic.add(new SkillUpgrade(Skill.USEMAGICDEVICE));
+		basic.add(new SkillUpgrade(Skill.BLUFF));
+		basic.add(new SkillUpgrade(Skill.SENSEMOTIVE));
 	}
 
 	@Override

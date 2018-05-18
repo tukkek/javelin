@@ -19,6 +19,7 @@ import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
+import javelin.model.unit.skill.Bluff;
 
 /**
  * Base class for {@link MeleeAttack} and {@link RangedAttack}.
@@ -27,6 +28,9 @@ import javelin.model.unit.attack.AttackSequence;
  */
 public abstract class AbstractAttack extends Action implements AiAction {
 	static final ConcurrentHashMap<Thread, Strike> CURRENTMANEUVER = new ConcurrentHashMap<Thread, Strike>();
+
+	/** @see Bluff#feign(Combatant) */
+	protected boolean feign = false;
 
 	public AbstractAttack(final String name) {
 		super(name);
@@ -80,7 +84,7 @@ public abstract class AbstractAttack extends Action implements AiAction {
 				+ " to hit)...";
 		StringBuilder sb = new StringBuilder(attacker.toString());
 		if (dc.damage == 0) {
-			return miss(target, m, dc, s, sb, tohit);
+			return miss(attacker, target, m, dc, s, sb, tohit);
 		}
 		s = s.clone();
 		attacker = s.clone(attacker);
@@ -186,7 +190,7 @@ public abstract class AbstractAttack extends Action implements AiAction {
 			final Combatant current, final Combatant target,
 			final int attackbonus) {
 		final int penalty = getpenalty(current, target, gameState);
-		final float misschance = (target.ac() + penalty - attackbonus) / 20f;
+		final float misschance = (target.getac() + penalty - attackbonus) / 20f;
 		return Action.bind(addchances(misschance, target.source.misschance));
 	}
 
@@ -251,9 +255,14 @@ public abstract class AbstractAttack extends Action implements AiAction {
 				+ (target.burrowed ? 4 : 0);
 	}
 
-	static DamageNode miss(final Combatant target, final Strike m,
-			final DamageChance dc, final BattleState s, final StringBuilder sb,
+	DamageNode miss(Combatant attacker, Combatant target, final Strike m,
+			final DamageChance dc, BattleState s, final StringBuilder sb,
 			final String tohit) {
+		if (feign && target.source.dexterity >= 12) {
+			s = s.clone();
+			target = s.clone(target);
+			Bluff.feign(attacker, target);
+		}
 		final String name;
 		final Delay wait;
 		if (m == null) {
@@ -276,8 +285,8 @@ public abstract class AbstractAttack extends Action implements AiAction {
 		} else if (dc.save != null) {
 			target.source = target.source.clone();
 			active.source = active.source.clone();
-			final String effect = a.geteffect().cast(active, target, dc.save,
-					s, null);
+			final String effect = a.geteffect().cast(active, target, dc.save, s,
+					null);
 			sb.append("\n").append(effect);
 		}
 	}

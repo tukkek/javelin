@@ -11,7 +11,7 @@ import javelin.model.unit.abilities.spell.Spell;
 
 /**
  * A single attack in an {@link AttackSequence}.
- * 
+ *
  * @author alex
  */
 public class Attack implements Serializable, Cloneable {
@@ -34,13 +34,13 @@ public class Attack implements Serializable, Cloneable {
 	/**
 	 * If changed to <code>true</code> will use energy resistance instead of
 	 * damage reducton to absorb attack.
-	 * 
+	 *
 	 * @see Monster#energyresistance
 	 */
 	public boolean energy = false;
 	/**
 	 * This spell will be cast upon hitting with attack.
-	 * 
+	 *
 	 * @see Damage
 	 */
 	private Spell effect = null;
@@ -77,7 +77,8 @@ public class Attack implements Serializable, Cloneable {
 		if (target == null) {
 			chance = (bonus >= 0 ? "+" : "") + bonus;
 		} else {
-			chance = Javelin.translatetochance(target.ac() - bonus) + " to hit";
+			int rolltarget = target.getac() - bonus;
+			chance = Javelin.translatetochance(rolltarget) + " to hit";
 		}
 		return name + " (" + chance + ", " + formatDamage() + ")";
 	}

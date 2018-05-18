@@ -128,10 +128,9 @@ public abstract class ExpertiseAction extends Target implements AiAction {
 	}
 
 	public float calculatesavechance(Combatant current, final int savebonus) {
-		return calculatesavechance(
-				10 + current.source.getbaseattackbonus() / 2
-						+ getattackerbonus(current) + size(current) + featbonus,
-				savebonus);
+		int dc = 10 + current.source.getbab() / 2 + getattackerbonus(current)
+				+ size(current) + featbonus;
+		return calculatesavechance(dc, savebonus);
 	}
 
 	public int calculatesavebonus(Combatant target) {

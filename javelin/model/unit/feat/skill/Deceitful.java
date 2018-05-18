@@ -12,8 +12,11 @@ import javelin.model.unit.skill.Skill;
 public class Deceitful extends Feat {
 	/** Unique instance of this feat. */
 	public static final Feat SINGLETON = new Deceitful();
-	/** Adjusted since there's no Bluff skill in Javelin. */
-	public static final int BONUS = +4;
+	/**
+	 * Technically +2, rising to +4 at 10 ranks but this causes problems with
+	 * {@link #read(Monster)}.
+	 */
+	public static final int BONUS = +3;
 
 	private Deceitful() {
 		super("Deceitful");
@@ -23,6 +26,7 @@ public class Deceitful extends Feat {
 	@Override
 	public void read(Monster m) {
 		super.read(m);
+		Acrobatic.normalize(Skill.BLUFF, BONUS, m);
 		Acrobatic.normalize(Skill.DISGUISE, BONUS, m);
 	}
 }

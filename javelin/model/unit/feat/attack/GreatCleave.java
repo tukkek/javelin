@@ -20,11 +20,11 @@ public class GreatCleave extends Feat {
 
 	@Override
 	public String inform(Combatant c) {
-		return "Base attack bonus: +" + c.source.getbaseattackbonus();
+		return "Base attack bonus: +" + c.source.getbab();
 	}
 
 	@Override
 	public boolean upgrade(Combatant m) {
-		return m.source.getbaseattackbonus() >= 4 && super.upgrade(m);
+		return m.source.getbab() >= 4 && super.upgrade(m);
 	}
 }

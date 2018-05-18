@@ -52,14 +52,11 @@ public class BattlefieldFight extends Minigame {
 					blueterrains.add(i);
 					regions[i] = true;
 				}
-				placeflagpoles(new Point(1, 1), new Point(midx - 1, midy - 1),
-						regions[0]);
-				placeflagpoles(new Point(midx + 1, 1),
-						new Point(width - 1, midy - 1), regions[1]);
-				placeflagpoles(new Point(1, midy + 1),
-						new Point(midx - 1, height - 1), regions[2]);
-				placeflagpoles(new Point(midx + 1, midy + 1),
-						new Point(width - 1, height - 1), regions[3]);
+				placeflags(1, 1, midx - 1, midy - 1, regions[0]);
+				placeflags(midx + 1, 1, width - 1, midy - 1, regions[1]);
+				placeflags(1, midy + 1, midx - 1, height - 1, regions[2]);
+				placeflags(midx + 1, midy + 1, width - 1, height - 1,
+						regions[3]);
 				updateflagpoles();
 				placesquads(bluequads, blueflagpoles);
 				placesquads(redsquads, redflagpoles);
@@ -80,8 +77,8 @@ public class BattlefieldFight extends Minigame {
 			}
 		}
 
-		void placeflagpoles(Point from, Point to, boolean blueteam)
-				throws GaveUp {
+		void placeflags(int fromx, int fromy, int tox, int toy,
+				boolean blueteam) throws GaveUp {
 			int flagpoles = RPG.pick(new int[] { 1, 2, 4 });
 			int placed = 0;
 			int tries = 0;
@@ -90,8 +87,7 @@ public class BattlefieldFight extends Minigame {
 				if (tries > 1000) {
 					throw new GaveUp();
 				}
-				Point spot = new Point(RPG.r(from.x, to.x),
-						RPG.r(from.y, to.y));
+				Point spot = new Point(RPG.r(fromx, tox), RPG.r(fromy, toy));
 				if (checkblocked(spot)) {
 					continue placing;
 				}
@@ -165,9 +161,9 @@ public class BattlefieldFight extends Minigame {
 		float advantage = elblue + bluepoints / 2 - elred - redpoints / 2;
 		System.out.println();
 		if (advantage >= Math.abs(Difficulty.VERYEASY)) {
-			surrender(state.redTeam);
+			// surrender(state.redTeam);
 		} else if (advantage <= Difficulty.VERYEASY) {
-			surrender(state.blueTeam);
+			// surrender(state.blueTeam);
 		}
 		if (!redflagpoles.isEmpty() && elred < elblue
 				&& elred + redpoints >= elblue) {

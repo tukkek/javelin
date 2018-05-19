@@ -67,11 +67,11 @@ public class ChallengeCalculator {
 	static final int[] GOLDPERLEVEL = new int[] { 0, 900, 2700, 5400, 9000,
 			13000, 19000, 27000, 36000, 49000, 66000, 88000, 110000, 150000,
 			200000, 260000, 340000, 440000, 580000, 760000, };
-	static final HashMap<Integer, List<Float>> CRSBYEL = new HashMap<Integer, List<Float>>();
+	static final HashMap<Integer, List<Float>> CRSBYEL = new HashMap<>();
 
 	static {
 		log("Some monsters may have their CRs calculated in more tha one pass (necessary for summons spells, etc)\n");
-		ArrayList<Float> crs = new ArrayList<Float>(8 + 30);
+		ArrayList<Float> crs = new ArrayList<>(8 + 30);
 		for (float fraction : new float[] { 1 / 16f, 1 / 12f, 1 / 8f, 1 / 6f,
 				1 / 4f, 1 / 3f, 1 / 2f, 2 / 3f }) {
 			crs.add(fraction);
@@ -83,7 +83,7 @@ public class ChallengeCalculator {
 			int el = crtoel(cr);
 			List<Float> list = CRSBYEL.get(el);
 			if (list == null) {
-				list = new ArrayList<Float>(1);
+				list = new ArrayList<>(1);
 				CRSBYEL.put(el, list);
 			}
 			list.add(cr);
@@ -135,7 +135,7 @@ public class ChallengeCalculator {
 			return new float[] { m.cr, m.cr };
 		}
 		log(m.toString());
-		final TreeMap<CrFactor, Float> factorHistory = new TreeMap<CrFactor, Float>();
+		final TreeMap<CrFactor, Float> factorHistory = new TreeMap<>();
 		float cr = 0;
 		for (final CrFactor f : CR_FACTORS) {
 			final float result = f.calculate(m);
@@ -236,7 +236,7 @@ public class ChallengeCalculator {
 
 	static int calculateel(List<Combatant> group, boolean check)
 			throws UnbalancedTeams {
-		ArrayList<Float> crs = new ArrayList<Float>(group.size());
+		ArrayList<Float> crs = new ArrayList<>(group.size());
 		for (Combatant c : group) {
 			crs.add(c.source.cr);
 		}
@@ -295,7 +295,7 @@ public class ChallengeCalculator {
 	}
 
 	public static int crtoel(final float cr) {
-		ArrayList<Float> crs = new ArrayList<Float>(1);
+		ArrayList<Float> crs = new ArrayList<>(1);
 		crs.add(cr);
 		try {
 			return calculateelfromcrs(crs, false);
@@ -495,6 +495,14 @@ public class ChallengeCalculator {
 	public static void updatecr(ArrayList<Combatant> update) {
 		for (Combatant c : update) {
 			calculatecr(c.source);
+		}
+	}
+
+	public static int calculateelfromcrs(List<Float> crs) {
+		try {
+			return calculateelfromcrs(crs, false);
+		} catch (UnbalancedTeams e) {
+			throw new RuntimeException(e);
 		}
 	}
 }

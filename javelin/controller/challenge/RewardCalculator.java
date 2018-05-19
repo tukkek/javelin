@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import javelin.controller.comparator.DescendingLevelComparator;
 import javelin.model.unit.Combatant;
@@ -66,7 +67,7 @@ public class RewardCalculator {
 		}
 	}
 
-	static Map<Integer, TableLine> table = new TreeMap<Integer, TableLine>();
+	static Map<Integer, TableLine> table = new TreeMap<>();
 
 	static {
 		table.put(-12, new TableLine(18.75, 9.375, 6.25, 4.6875, 3.125, 2.34375,
@@ -159,7 +160,9 @@ public class RewardCalculator {
 	public static String rewardxp(List<Combatant> originalblue,
 			List<Combatant> originalred, float bonus) {
 		int elred = ChallengeCalculator.calculateel(originalred);
-		int elblue = ChallengeCalculator.calculateel(originalblue);
+		List<Float> crs = originalblue.stream().map((c) -> c.source.cr)
+				.collect(Collectors.toList());
+		int elblue = ChallengeCalculator.calculateelfromcrs(crs);
 		int eldifference = Math.round(elred - elblue);
 		double partycr = getpartyxp(eldifference, originalblue.size()) * bonus;
 		distributexp(originalblue, partycr);
@@ -174,7 +177,7 @@ public class RewardCalculator {
 	 * with weaker units receiving more XP, as to emulate offical d20 XP
 	 * progressions. This is necessary because Javelin actually uses a CR value
 	 * (100XP = 1CR) instead of the official exponential XP tables.
-	 * 
+	 *
 	 * @param units
 	 *            {@link Combatant}s to receive experience.
 	 * @param xp
@@ -182,14 +185,14 @@ public class RewardCalculator {
 	 * @see #rewardxp(ArrayList, List, List, int)
 	 */
 	public static void distributexp(List<Combatant> units, double xp) {
-		units = new ArrayList<Combatant>(units); /* safe copy */
-		for (Combatant c : new ArrayList<Combatant>(units)) {
+		units = new ArrayList<>(units); /* safe copy */
+		for (Combatant c : new ArrayList<>(units)) {
 			/* ignore summons */
 			if (c.summoned) {
 				units.remove(c);
 			}
 		}
-		List<Combatant> members = new ArrayList<Combatant>();
+		List<Combatant> members = new ArrayList<>();
 		for (Combatant c : units) {
 			/* mercenaries get a flat share */
 			if (!c.mercenary) {

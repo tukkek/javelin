@@ -1,6 +1,5 @@
-package javelin.controller.challenge;
+package javelin.controller.challenge.factor;
 
-import javelin.controller.challenge.factor.CrFactor;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.TouchAttack;

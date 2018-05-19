@@ -17,6 +17,7 @@ import javelin.controller.challenge.factor.SizeFactor;
 import javelin.controller.challenge.factor.SkillsFactor;
 import javelin.controller.challenge.factor.SpeedFactor;
 import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.challenge.factor.TouchAttackFactor;
 import javelin.controller.challenge.factor.quality.BreathFactor;
 import javelin.controller.challenge.factor.quality.QualitiesFactor;
 import javelin.controller.db.reader.MonsterReader;

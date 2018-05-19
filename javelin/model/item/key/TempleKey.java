@@ -28,10 +28,10 @@ public class TempleKey extends Item {
 	public Realm color;
 
 	/**
-	 * @deprecated
+	 * Prefer {@link #generate()} instead.
+	 *
 	 * @see #generate()
 	 */
-	@Deprecated
 	public TempleKey(Realm color) {
 		super(color.getname() + " key", determineprice(color), null);
 		this.color = color;

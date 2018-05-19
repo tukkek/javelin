@@ -5,7 +5,6 @@ import javelin.controller.Point;
 import javelin.model.item.Item;
 import javelin.model.item.relic.Relic;
 import javelin.model.world.World;
-import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
 
 /**
@@ -26,20 +25,14 @@ public class Altar extends Feature {
 
 	@Override
 	public boolean activate() {
-		if (Item.getplayeritems().contains(temple.relic)) {
-			Javelin.message("The " + temple.relic + " is not here anymore...",
-					true);
+		Item reward = World.scenario.openaltar(temple);
+		if (Item.getplayeritems().contains(reward)) {
+			Javelin.message("The " + reward + " is not here anymore...", true);
 		} else {
-			String text = "This altar holds the " + temple.relic + "!";
-			if (!World.scenario.expiredungeons) {
-				text += "\nIf it is lost for any reason it shall be teleported back to safety here.";
-			}
+			String text = "This chest contains the " + reward + "!";
+			text += "\nIf it is lost for any reason it shall be teleported back to safety here.";
 			Javelin.message(text, true);
-			temple.relic.clone().grab();
-			if (World.scenario.expiredungeons) {
-				Dungeon.active.features.remove(this);
-				temple.remove();
-			}
+			reward.clone().grab();
 		}
 		return true;
 	}

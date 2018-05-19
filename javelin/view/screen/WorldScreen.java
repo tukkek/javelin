@@ -239,7 +239,8 @@ public class WorldScreen extends BattleScreen {
 			cover();
 			Season.change(day);
 			Weather.weather();
-			World.scenario.featuregenerator.spawn(1 / 14f, false);
+			World.seed.featuregenerator.spawn(1 / 14f, false);
+			World.scenario.endday();
 			ArrayList<Actor> actors = World.getactors();
 			ArrayList<Incursion> incursions = Incursion.getincursions();
 			actors.removeAll(incursions);

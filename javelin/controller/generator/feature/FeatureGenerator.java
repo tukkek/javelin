@@ -1,5 +1,6 @@
 package javelin.controller.generator.feature;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -73,7 +74,7 @@ import tyrant.mikera.engine.RPG;
  *
  * @author alex
  */
-public class FeatureGenerator {
+public class FeatureGenerator implements Serializable {
 	final HashMap<Class<? extends Actor>, GenerationData> generators = new HashMap<Class<? extends Actor>, GenerationData>();
 
 	/**

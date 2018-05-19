@@ -10,10 +10,14 @@ import javelin.controller.exception.UnbalancedTeams;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.classes.Commoner;
 import javelin.model.Realm;
+import javelin.model.item.Item;
+import javelin.model.item.key.TempleKey;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.temple.Temple;
 
 public class Campaign extends Scenario {
 	/** Minimum starting party encounter level. */
@@ -33,7 +37,7 @@ public class Campaign extends Scenario {
 
 	public Campaign() {
 		allowallactors = true;
-		templekeys = true;
+		lockedtemples = true;
 		allowlabor = true;
 		asksquadnames = true;
 		desertradius = 2;
@@ -93,5 +97,15 @@ public class Campaign extends Scenario {
 	@Override
 	public List<Location> generatelocations(World seed) {
 		return Collections.EMPTY_LIST;
+	}
+
+	@Override
+	public Item openspecialchest(Dungeon d) {
+		return TempleKey.generate();
+	}
+
+	@Override
+	public Item openaltar(Temple t) {
+		return t.relic;
 	}
 }

@@ -11,6 +11,7 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.generator.WorldGenerator;
+import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
@@ -86,6 +87,8 @@ public class World implements Serializable {
 					"Patrick Wyatt", "Bill Roper", "Michiru Yamane",
 					"Sid Meier", "William Gibson", "Julie Bell",
 					"Boris Vallejo", "Lee Salzman", "Johannes Bonitz" }));
+
+	public FeatureGenerator featuregenerator;
 
 	public World() {
 		map = new Terrain[scenario.size][scenario.size];

@@ -91,7 +91,7 @@ public class Caravan extends Actor {
 			Item i = RPG.pick(Item.ARTIFACT);
 			inventory.add(i);
 		}
-		if (World.scenario.templekeys) {
+		if (World.scenario.lockedtemples) {
 			TempleKey k = TempleKey.generate();
 			if (k.price > 0) {
 				inventory.add(k);

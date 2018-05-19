@@ -1,13 +1,14 @@
 package javelin.controller.scenario.dungeonworld;
 
-import java.awt.Image;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.scenario.dungeonworld.ZoneGenerator.Zone;
 import javelin.model.Realm;
+import javelin.model.item.key.TempleKey;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
-import javelin.view.Images;
 
 public class Gate extends Location {
 	public Realm key;
@@ -17,27 +18,36 @@ public class Gate extends Location {
 		super(null);
 		this.to = to;
 		setkey(r);
+		allowentry = false;
+		sacrificeable = false;
 	}
 
 	@Override
 	public List<Combatant> getcombatants() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Integer getel(int attackerel) {
-		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public Image getimage() {
-		return Images.getImage("locationportal");
 	}
 
 	public void setkey(Realm r) {
 		key = r;
 		description = r + " gate";
+		realm = r;
+	}
+
+	@Override
+	public boolean interact() {
+		TempleKey key = new TempleKey(this.key);
+		if (Squad.active.equipment.get(key) == null) {
+			String fail = "Only the " + key + " will unlock this gate...";
+			Javelin.message(fail, false);
+		} else {
+			Javelin.message("You unlock the " + description + "!", false);
+			remove();
+		}
+		return true;
 	}
 }

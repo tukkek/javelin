@@ -1,5 +1,7 @@
 package javelin.controller.generator.feature;
 
+import java.io.Serializable;
+
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
@@ -10,7 +12,7 @@ import javelin.model.world.World;
  * @see FeatureGenerator#spawn(float, boolean)
  * @author alex
  */
-public class GenerationData {
+public class GenerationData implements Serializable {
 	/**
 	 * When instantiated this is the relative chance of this feature being
 	 * spawned. This is later modified.
@@ -35,7 +37,7 @@ public class GenerationData {
 	/**
 	 * The starting number of instances of this feature to generate on the world
 	 * map.
-	 * 
+	 *
 	 * Make seed it's always at least 1 so that debug statistics won't botch.
 	 */
 	public Integer seeds = 1;
@@ -61,8 +63,7 @@ public class GenerationData {
 	 * @param startingp
 	 *            Overrides {@link #starting}.
 	 */
-	public GenerationData(float chancep, boolean absolutep,
-			boolean startingp) {
+	public GenerationData(float chancep, boolean absolutep, boolean startingp) {
 		this(chancep);
 		absolute = absolutep;
 		starting = startingp;

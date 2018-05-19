@@ -49,43 +49,42 @@ public enum Realm {
 		switch (this) {
 		case WATER:
 			return "Water";
-		case MAGIC:
-			return "Magic";
-		case GOOD:
-			return "Good";
 		case FIRE:
 			return "Fire";
 		case EARTH:
 			return "Earth";
-		case EVIL:
-			return "Evil";
 		case AIR:
 			return "Air";
+		case GOOD:
+			return "Blessed";
+		case EVIL:
+			return "Cursed";
+		case MAGIC:
+			return "Magic";
 		default:
 			throw new RuntimeException("#unknownColor");
 		}
 	}
 
 	/**
-	 * @param handler2
 	 * @return the proper upgrade set in this {@link UpgradeHandler}.
 	 */
 	public HashSet<Upgrade> getupgrades(UpgradeHandler handler) {
 		switch (this) {
 		case WATER:
 			return handler.water;
-		case MAGIC:
-			return handler.magic;
-		case GOOD:
-			return handler.good;
 		case FIRE:
 			return handler.fire;
 		case EARTH:
 			return handler.earth;
-		case EVIL:
-			return handler.evil;
 		case AIR:
 			return handler.wind;
+		case GOOD:
+			return handler.good;
+		case EVIL:
+			return handler.evil;
+		case MAGIC:
+			return handler.magic;
 		default:
 			throw new RuntimeException("#unknownColor");
 		}

@@ -31,9 +31,8 @@ import javelin.controller.table.dungeon.DoorExists;
 import javelin.controller.table.dungeon.DungeonFeatureModifier;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
-import javelin.model.item.key.TempleKey;
+import javelin.model.item.Item;
 import javelin.model.item.key.door.Key;
-import javelin.model.item.key.door.MasterKey;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
@@ -419,8 +418,8 @@ public class Dungeon extends Location {
 	 * @return Most special chest here.
 	 */
 	protected Feature createspecialchest(Point p) {
-		Chest c = new Chest(p.x, p.y, World.scenario.templekeys
-				? TempleKey.generate() : new MasterKey());
+		Item i = World.scenario.openspecialchest(this);
+		Chest c = new Chest(p.x, p.y, i);
 		c.setspecial();
 		return c;
 	}

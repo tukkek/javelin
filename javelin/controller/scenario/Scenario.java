@@ -21,15 +21,20 @@ import javelin.controller.terrain.Water;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.Realm;
+import javelin.model.item.Item;
 import javelin.model.item.key.TempleKey;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.Caravan;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.feature.Altar;
 import javelin.model.world.location.dungeon.feature.Chest;
+import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.order.Order;
@@ -102,7 +107,7 @@ public class Scenario implements Serializable {
 	public boolean respawnlocations = false;
 	public boolean normalizemap = true;
 	/** Wheter {@link TempleKey}s should exist at all. */
-	public boolean templekeys = false;
+	public boolean lockedtemples = false;
 	/**
 	 * <code>true</code> if first {@link Town} should be located on
 	 * {@link Terrain#PLAIN} or {@link Terrain#HILL}.
@@ -169,7 +174,7 @@ public class Scenario implements Serializable {
 	 */
 	public boolean spawn = false;
 	public boolean expiredungeons = false;
-	public FeatureGenerator featuregenerator = new FeatureGenerator();
+	public Class<? extends FeatureGenerator> featuregenerator = FeatureGenerator.class;
 	/** Multiplied to daily {@link Labor}. */
 	public float labormodifier = 1;
 	public Class<? extends WorldGenerator> worldgenerator = WorldGenerator.class;
@@ -189,8 +194,8 @@ public class Scenario implements Serializable {
 	 * @see SquadScreen
 	 */
 	public void upgradesquad(ArrayList<Combatant> squad) {
-		ArrayList<Combatant> members = new ArrayList<Combatant>(squad);
-		HashSet<Kit> chosen = new HashSet<Kit>(members.size());
+		ArrayList<Combatant> members = new ArrayList<>(squad);
+		HashSet<Kit> chosen = new HashSet<>(members.size());
 		while (!members.isEmpty()) {
 			Combatant c = members.get(0);
 			Kit kit = null;
@@ -233,11 +238,11 @@ public class Scenario implements Serializable {
 	}
 
 	public List<Location> generatelocations(World seed) {
-		HashSet<Realm> realms = new HashSet<Realm>(2);
+		HashSet<Realm> realms = new HashSet<>(2);
 		for (Town t : Town.gettowns()) {
 			realms.add(t.originalrealm);
 		}
-		ArrayList<Location> shops = new ArrayList<Location>();
+		ArrayList<Location> shops = new ArrayList<>();
 		for (Realm r : Realm.values()) {
 			if (!realms.contains(r)) {
 				shops.add(new Shop(false, r));
@@ -248,5 +253,35 @@ public class Scenario implements Serializable {
 
 	public String getsaveprefix() {
 		return getClass().getSimpleName().toLowerCase();
+	}
+
+	/**
+	 * A special {@link Chest} is found in each {@link Dungeon}.
+	 *
+	 * @return Item inside the Chest.
+	 * @see #openaltar(Temple)
+	 */
+	public Item openspecialchest(Dungeon d) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * The deepest floor of each {@link Temple} doesn't contain a special
+	 * {@link Chest} but an {@link Altar} instead.
+	 *
+	 * @return Item inside the Altar.
+	 * @see #openspecialchest(Dungeon)
+	 */
+	public Item openaltar(Temple t) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Called at the end of each day. Might be called several times in a row -
+	 * for example: if a lone {@link Squad} decides to rest for a week, it'll be
+	 * called 7 times in a row.
+	 */
+	public void endday() {
+		// nothing
 	}
 }

@@ -13,6 +13,8 @@ import javelin.model.world.World;
  * @author alex
  */
 public class GettingLost extends Hazard {
+	static final boolean ANNOY = false;
+
 	int dc;
 
 	/**
@@ -40,7 +42,7 @@ public class GettingLost extends Hazard {
 
 	@Override
 	public void hazard(int hoursellapsed) {
-		getlost("Squad got lost!", hoursellapsed);
+		getlost(ANNOY ? "Squad got lost!" : null, hoursellapsed);
 	}
 
 	/**
@@ -55,6 +57,8 @@ public class GettingLost extends Hazard {
 		Squad.active.displace();
 		Squad.active.place();
 		Squad.active.hourselapsed += hoursellapsed;
-		Javelin.message(message, false);
+		if (message != null) {
+			Javelin.message(message, false);
+		}
 	}
 }

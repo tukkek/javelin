@@ -398,7 +398,7 @@ public class Run extends Minigame {
 							+ "You can now visit the Ziggurat on the world map to obtain a temple key.",
 					true);
 			Ziggurat z = (Ziggurat) World.getall(Ziggurat.class).get(0);
-			z.key = World.scenario.templekeys ? TempleKey.generate()
+			z.key = World.scenario.lockedtemples ? TempleKey.generate()
 					: new MasterKey();
 		} else {
 			Javelin.message("You lost...", true);

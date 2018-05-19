@@ -9,9 +9,12 @@ import java.util.List;
 import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.challenge.Difficulty;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.TempleEncounter;
 import javelin.controller.scenario.Campaign;
+import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.Tier;
@@ -85,9 +88,10 @@ public abstract class Temple extends UniqueLocation {
 	 * A temple needs to be opened by a {@link TempleKey} or other method before
 	 * being explored.
 	 *
-	 * @see #open()
+	 * @see TempleKey
+	 * @see Scenario#lockedtemples
 	 */
-	public boolean open = false;
+	public boolean open = !World.scenario.lockedtemples;
 	/**
 	 * Each floor has a {@link Chest} with a ruby in it and there is also an
 	 * {@link Altar} on the deepest level.
@@ -273,5 +277,12 @@ public abstract class Temple extends UniqueLocation {
 			}
 		}
 		return temples;
+	}
+
+	@Override
+	public String describe() {
+		int squad = ChallengeCalculator.calculateel(Squad.active.members);
+		String difficulty = Difficulty.describe(level - squad);
+		return descriptionknown + " (" + difficulty + ")";
 	}
 }

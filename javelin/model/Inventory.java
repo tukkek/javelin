@@ -28,7 +28,7 @@ public class Inventory implements Serializable {
 		squad = s;
 	}
 
-	public ArrayList<Item> get(final Combatant c) {
+	public ArrayList<Item> get(Combatant c) {
 		if (!bags.containsKey(c.id)) {
 			bags.put(c.id, new ArrayList<Item>());
 		}
@@ -142,5 +142,22 @@ public class Inventory implements Serializable {
 
 	public Collection<ArrayList<Item>> values() {
 		return bags.values();
+	}
+
+	/**
+	 * @param item
+	 *            Will check bags for {@link Item#equals(Object)}
+	 * @return <code>null</code> if item was not found or the internal instance,
+	 *         if so.
+	 */
+	public <K extends Item> K get(K item) {
+		for (ArrayList<Item> bag : bags.values()) {
+			for (final Item i : bag) {
+				if (i.equals(item)) {
+					return (K) i;
+				}
+			}
+		}
+		return null;
 	}
 }

@@ -14,6 +14,7 @@ import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
+import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.temple.AirTemple;
@@ -46,7 +47,7 @@ public class ZoneGenerator extends FeatureGenerator {
 		Realm realm;
 		int level;
 
-		public Zone(Realm r, int level) {
+		public Zone(Realm r) {
 			realm = r;
 		}
 
@@ -104,12 +105,18 @@ public class ZoneGenerator extends FeatureGenerator {
 		}
 	}
 
-	ArrayList<Zone> zones = new ArrayList<Zone>();
-	HashSet<Point> allborders = new HashSet<Point>();
-	int claimed = 0;
-	int worldsize;
-	World world;
-	private Town starting;
+	/**
+	 * Keys in the order the player needs to find them to beat the game.
+	 *
+	 * @see #checksolvable()
+	 */
+	transient ArrayList<Realm> keys = new ArrayList<Realm>();
+	transient HashSet<Point> allborders = new HashSet<Point>();
+	transient ArrayList<Zone> zones = new ArrayList<Zone>();
+	transient int claimed = 0;
+	transient int worldsize;
+	transient World world;
+	transient Town starting;
 
 	@Override
 	public void spawn(float chance, boolean generatingworld) {
@@ -150,7 +157,11 @@ public class ZoneGenerator extends FeatureGenerator {
 			throw new RestartWorldGeneration();
 		}
 		for (Zone z : zones) {
+			z.level = 1 + keys.indexOf(z.realm) * 19 / (realms.size() - 1);
 			placefeatures(z);
+		}
+		if (counttemples() != 7) {
+			throw new RestartWorldGeneration();
 		}
 		return starting;
 	}
@@ -173,7 +184,6 @@ public class ZoneGenerator extends FeatureGenerator {
 
 	boolean checksolvable() {
 		HashSet<Zone> visited = new HashSet<Zone>();
-		HashSet<Realm> keys = new HashSet<Realm>();
 		visited.add(zones.get(0));
 		keys.add(zones.get(0).realm);
 		while (true) {
@@ -183,7 +193,9 @@ public class ZoneGenerator extends FeatureGenerator {
 					if (keys.contains(g.key)) {
 						Zone to = g.to;
 						visited.add(to);
-						keys.add(to.realm);
+						if (!keys.contains(to.realm)) {
+							keys.add(to.realm);
+						}
 					}
 				}
 			}
@@ -194,6 +206,21 @@ public class ZoneGenerator extends FeatureGenerator {
 				return false;
 			}
 		}
+	}
+
+	/**
+	 * TODO make it throw a fatal error so we can determine why someitmes
+	 * temples are missing. a similar problem was found before in the
+	 * feature-placing function.
+	 */
+	int counttemples() {
+		int temples = 0;
+		for (Actor a : World.getactors()) {
+			if (a instanceof Temple) {
+				temples += 1;
+			}
+		}
+		return temples;
 	}
 
 	void placefeatures(Zone z) {
@@ -358,9 +385,7 @@ public class ZoneGenerator extends FeatureGenerator {
 		}
 		int nrealms = REALMS.size();
 		for (int i = 0; i < nzones; i++) {
-			int level = 1 + i * 19 / (nrealms - 1);
-			Zone z = new Zone(REALMS.get(i), level);
-			System.out.print(level + " ");
+			Zone z = new Zone(REALMS.get(i));
 			z.add(zones.get(i));
 			this.zones.add(z);
 		}

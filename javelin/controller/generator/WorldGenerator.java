@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import javelin.controller.Point;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.RestartWorldGeneration;
+import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.unit.Squad;
@@ -31,10 +32,10 @@ public class WorldGenerator extends Thread {
 			/ 10;
 	static final Terrain[] NOISE = new Terrain[] { Terrain.PLAIN, Terrain.HILL,
 			Terrain.FOREST, Terrain.MOUNTAINS };
-	private static int discarded = 0;
+	static int discarded = 0;
 
-	public World world;
 	public int retries = 0;
+	public World world;
 
 	@Override
 	public final void run() {
@@ -61,9 +62,15 @@ public class WorldGenerator extends Thread {
 		ArrayList<HashSet<Point>> regions = new ArrayList<HashSet<Point>>(
 				realms.size());
 		generate(realms, regions, world);
-		Town start = World.scenario.featuregenerator.generate(realms, regions,
-				world);
-		finish(start, world);
+		try {
+			FeatureGenerator generator = World.scenario.featuregenerator
+					.newInstance();
+			world.featuregenerator = generator;
+			Town start = generator.generate(realms, regions, world);
+			finish(start, world);
+		} catch (ReflectiveOperationException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public synchronized void finish(Town start, World w) {

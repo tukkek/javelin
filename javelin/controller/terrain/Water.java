@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import javelin.controller.Point;
-import javelin.controller.WorldGenerator;
+import javelin.controller.generator.WorldGenerator;
 import javelin.controller.map.Maps;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.terrain.hazard.Ice;

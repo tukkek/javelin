@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javelin.controller.Point;
-import javelin.controller.WorldGenerator;
+import javelin.controller.generator.WorldGenerator;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;

@@ -17,13 +17,13 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import javelin.controller.TextReader;
-import javelin.controller.WorldGenerator;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.db.Preferences;
 import javelin.controller.db.StateManager;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
+import javelin.controller.generator.WorldGenerator;
 import javelin.controller.kit.Kit;
 import javelin.controller.scenario.Campaign;
 import javelin.controller.terrain.Terrain;
@@ -49,10 +49,10 @@ import tyrant.mikera.tyrant.QuestApp;
 
 /**
  * Application and game life-cycle.
- * 
+ *
  * TODO refactor a time manager out of this which works with
  * TimeManager#tick(int time,WorldState world)?
- * 
+ *
  * @author alex
  */
 public class JavelinApp extends QuestApp {
@@ -211,7 +211,7 @@ public class JavelinApp extends QuestApp {
 		System.out.println();
 		printoptions();
 		System.out.println(Javelin.ALLMONSTERS.size() + " monsters");
-		System.out.println((Item.ALL.size() - Item.ARTIFACT.size()) + " items, "
+		System.out.println(Item.ALL.size() - Item.ARTIFACT.size() + " items, "
 				+ Item.ARTIFACT.size() + " artifacts, 7 relics");
 		Collection<Spell> spells = Spell.SPELLS.values();
 		int nupgrades = UpgradeHandler.singleton.count() - spells.size();
@@ -231,7 +231,7 @@ public class JavelinApp extends QuestApp {
 				uniquelocations += 1;
 			}
 		}
-		System.out.println((locationtypes.size() - uniquelocations)
+		System.out.println(locationtypes.size() - uniquelocations
 				+ " world location types, " + uniquelocations
 				+ " unique locations");
 		Deck.printstats();

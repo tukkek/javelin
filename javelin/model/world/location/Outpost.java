@@ -3,7 +3,7 @@ package javelin.model.world.location;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.WorldGenerator;
+import javelin.controller.generator.WorldGenerator;
 import javelin.model.unit.Combatant;
 import javelin.model.world.World;
 import javelin.model.world.location.fortification.Fortification;

@@ -12,7 +12,7 @@ import javelin.controller.comparator.ActorByDistance;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
-import javelin.controller.scenario.DungeonWorld;
+import javelin.controller.scenario.dungeonworld.DungeonWorld;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
 import javelin.model.Realm;

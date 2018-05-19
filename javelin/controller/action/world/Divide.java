@@ -6,7 +6,6 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.WorldGenerator;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
@@ -26,6 +25,7 @@ import javelin.view.screen.town.SelectScreen;
  * @author alex
  */
 public class Divide extends WorldAction {
+	static final int TOWNBUFFER = 1;
 
 	/** Constructor. */
 	public Divide() {
@@ -107,7 +107,7 @@ public class Divide extends WorldAction {
 		s.move(true, Terrain.current(), Squad.active.x, Squad.active.y);
 		placement: for (x = Squad.active.x - 1; x <= Squad.active.x + 1; x++) {
 			for (y = Squad.active.y - 1; y <= Squad.active.y + 1; y++) {
-				if (!WorldGenerator.istown(x, y, false)
+				if (!Divide.istown(x, y, false)
 						&& (nearto == null || findtown(x, y) instanceof Town)
 						&& (s.swim() || !World.getseed().map[x][y]
 								.equals(Terrain.WATER))) {
@@ -196,5 +196,40 @@ public class Divide extends WorldAction {
 						+ m.getstatus() + ")");
 			}
 		}
+	}
+
+	/**
+	 * @param townbufferenabled
+	 *            If <code>true</code> will also return <code>true</code> if too
+	 *            close to a {@link Town}.
+	 * @return <code>true</code> if there is a {@link Town} in this coordinate
+	 *         already.
+	 */
+	static public boolean istown(final int x, final int y,
+			boolean townbufferenabled) {
+		if (World.get(x, y) != null) {
+			return true;
+		}
+		ArrayList<Actor> towns = World.getall(Town.class);
+		if (townbufferenabled) {
+			for (final Actor p : towns) {
+				for (int townx = p.x - TOWNBUFFER; townx <= p.x
+						+ TOWNBUFFER; townx++) {
+					for (int towny = p.y - TOWNBUFFER; towny <= p.y
+							+ TOWNBUFFER; towny++) {
+						if (townx == x && towny == y) {
+							return true;
+						}
+					}
+				}
+			}
+		} else {
+			for (final Actor p : towns) {
+				if (p.x == x && p.y == y) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

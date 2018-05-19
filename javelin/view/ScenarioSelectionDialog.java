@@ -19,8 +19,8 @@ import javax.swing.BoxLayout;
 import javelin.Javelin;
 import javelin.controller.TextReader;
 import javelin.controller.scenario.Campaign;
-import javelin.controller.scenario.DungeonWorld;
 import javelin.controller.scenario.Scenario;
+import javelin.controller.scenario.dungeonworld.DungeonWorld;
 import javelin.model.world.World;
 
 public class ScenarioSelectionDialog extends Frame {

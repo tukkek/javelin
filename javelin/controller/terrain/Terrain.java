@@ -10,9 +10,9 @@ import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.Weather;
-import javelin.controller.WorldGenerator;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.challenge.Difficulty;
+import javelin.controller.generator.WorldGenerator;
 import javelin.controller.map.Map;
 import javelin.controller.map.Maps;
 import javelin.controller.terrain.hazard.Hazard;
@@ -200,13 +200,11 @@ public abstract class Terrain implements Serializable {
 	 */
 	abstract public Maps getmaps();
 
-	HashSet<Point> generatearea(World world, Integer size) {
+	HashSet<Point> generatearea(World world) {
 		Point source = generatesource(world);
 		Point current = source;
 		HashSet<Point> area = generatestartingarea(world);
-		if (size == null) {
-			size = getareasize();
-		}
+		int size = getareasize();
 		while (area.size() < size) {
 			area.add(current);
 			current = expand(area, world);
@@ -361,8 +359,8 @@ public abstract class Terrain implements Serializable {
 		return area;
 	}
 
-	public HashSet<Point> generate(World w, Integer size) {
-		HashSet<Point> area = generatearea(w, size);
+	public HashSet<Point> generate(World w) {
+		HashSet<Point> area = generatearea(w);
 		if (liquid) {
 			for (Point p : new HashSet<Point>(area)) {
 				if (checkisolated(p, area)) {

@@ -9,8 +9,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 import javelin.controller.Point;
-import javelin.controller.WorldGenerator;
 import javelin.controller.exception.RestartWorldGeneration;
+import javelin.controller.generator.WorldGenerator;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.UpgradeHandler;

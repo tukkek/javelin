@@ -11,6 +11,7 @@ import javelin.controller.action.world.Guide;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.fight.RandomEncounter;
 import javelin.controller.fight.minigame.Minigame;
+import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.generator.feature.GenerationData;
 import javelin.controller.kit.Kit;
@@ -171,6 +172,7 @@ public class Scenario implements Serializable {
 	public FeatureGenerator featuregenerator = new FeatureGenerator();
 	/** Multiplied to daily {@link Labor}. */
 	public float labormodifier = 1;
+	public Class<? extends WorldGenerator> worldgenerator = WorldGenerator.class;
 
 	/**
 	 * @return Starting encounter level for each hostile town in
@@ -242,10 +244,6 @@ public class Scenario implements Serializable {
 			}
 		}
 		return shops;
-	}
-
-	public void finish(World w) {
-		// nothing by default
 	}
 
 	public String getsaveprefix() {

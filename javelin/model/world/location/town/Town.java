@@ -103,8 +103,10 @@ public class Town extends Location {
 		super(World.getseed().townnames.isEmpty() ? null
 				: World.getseed().townnames.remove(0));
 		allowentry = false;
-		x = location.x;
-		y = location.y;
+		if (location != null) {
+			x = location.x;
+			y = location.y;
+		}
 		realm = r;
 		originalrealm = r;
 		gossip = true;

@@ -9,11 +9,21 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javelin.controller.Point;
+import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.world.World;
+import javelin.model.world.location.Location;
+import javelin.model.world.location.dungeon.temple.AirTemple;
+import javelin.model.world.location.dungeon.temple.EarthTemple;
+import javelin.model.world.location.dungeon.temple.EvilTemple;
+import javelin.model.world.location.dungeon.temple.FireTemple;
+import javelin.model.world.location.dungeon.temple.GoodTemple;
+import javelin.model.world.location.dungeon.temple.MagicTemple;
+import javelin.model.world.location.dungeon.temple.Temple;
+import javelin.model.world.location.dungeon.temple.WaterTemple;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Deck;
 import javelin.model.world.location.town.labor.Trait;
@@ -34,8 +44,9 @@ public class ZoneGenerator extends FeatureGenerator {
 		HashMap<Zone, HashSet<Point>> borders = new HashMap<Zone, HashSet<Point>>();
 		ArrayList<Gate> gates = new ArrayList<Gate>();
 		Realm realm;
+		int level;
 
-		public Zone(Realm r) {
+		public Zone(Realm r, int level) {
 			realm = r;
 		}
 
@@ -98,6 +109,7 @@ public class ZoneGenerator extends FeatureGenerator {
 	int claimed = 0;
 	int worldsize;
 	World world;
+	private Town starting;
 
 	@Override
 	public void spawn(float chance, boolean generatingworld) {
@@ -132,14 +144,108 @@ public class ZoneGenerator extends FeatureGenerator {
 			RPG.pick(zones).expand();
 		}
 		createborders();
-		createcheckpoints(zones.get(0), new HashSet<Zone>(zones.size()));
-		Point p = new Point(World.scenario.size / 2, World.scenario.size / 2);
-		Town t = new Town(p, Realm.FIRE);
-		t.place();
-		return t;
+		placegates(zones.get(0), new HashSet<Zone>(zones.size()));
+		shufflegates();
+		if (!checksolvable()) {
+			throw new RestartWorldGeneration();
+		}
+		for (Zone z : zones) {
+			placefeatures(z);
+		}
+		return starting;
 	}
 
-	void createcheckpoints(Zone from, HashSet<Zone> cache) {
+	void shufflegates() {
+		for (Zone z : zones) {
+			if (z.gates.size() <= 1) {
+				continue;
+			}
+			ArrayList<Realm> keys = new ArrayList<Realm>(z.gates.size());
+			for (Gate g : z.gates) {
+				keys.add(g.key);
+			}
+			Collections.shuffle(keys);
+			for (int i = 0; i < z.gates.size(); i++) {
+				z.gates.get(i).setkey(keys.get(i));
+			}
+		}
+	}
+
+	boolean checksolvable() {
+		HashSet<Zone> visited = new HashSet<Zone>();
+		HashSet<Realm> keys = new HashSet<Realm>();
+		visited.add(zones.get(0));
+		keys.add(zones.get(0).realm);
+		while (true) {
+			int oldvisited = visited.size();
+			for (Zone z : new ArrayList<Zone>(visited)) {
+				for (Gate g : z.gates) {
+					if (keys.contains(g.key)) {
+						Zone to = g.to;
+						visited.add(to);
+						keys.add(to.realm);
+					}
+				}
+			}
+			int newvisited = visited.size();
+			if (newvisited == REALMS.size()) {
+				return true;
+			} else if (newvisited == oldvisited) {
+				return false;
+			}
+		}
+	}
+
+	void placefeatures(Zone z) {
+		placefeature(createtemple(z.realm, z.level), z);
+		Town t = (Town) placefeature(new Town((Point) null, z.realm), z);
+		if (starting == null) {
+			starting = t;
+		}
+	}
+
+	Location placefeature(Location l, Zone z) {
+		Point p = null;
+		while (p == null || world.map[p.x][p.y] == Terrain.WATER
+				|| World.get(p.x, p.y) != null || checkclutter(p)) {
+			p = RPG.pick(z.arealist);
+		}
+		l.setlocation(p);
+		l.place();
+		return l;
+	}
+
+	boolean checkclutter(Point p) {
+		// TODO check open space7
+		return false;
+	}
+
+	Temple createtemple(Realm r, int level) {
+		if (r == Realm.AIR) {
+			return new AirTemple(level);
+		}
+		if (r == Realm.EARTH) {
+			return new EarthTemple(level);
+		}
+		if (r == Realm.EVIL) {
+			return new EvilTemple(level);
+		}
+		if (r == Realm.FIRE) {
+			return new FireTemple(level);
+		}
+		if (r == Realm.GOOD) {
+			return new GoodTemple(level);
+		}
+		if (r == Realm.MAGIC) {
+			return new MagicTemple(level);
+		}
+		if (r == Realm.WATER) {
+			return new WaterTemple(level);
+		}
+		return null;
+	}
+
+	void placegates(Zone from, HashSet<Zone> cache) {
 		if (cache.contains(from)) {
 			return;
 		}
@@ -147,7 +253,7 @@ public class ZoneGenerator extends FeatureGenerator {
 		for (Zone to : from.borders.keySet()) {
 			if (!cache.contains(to)) {
 				placegate(from, to, from.realm);
-				createcheckpoints(to, cache);
+				placegates(to, cache);
 			} else if (RPG.chancein(2)) {
 				placegate(from, to, RPG.pick(REALMS));
 			}
@@ -167,12 +273,13 @@ public class ZoneGenerator extends FeatureGenerator {
 	}
 
 	void placegate(Zone from, Zone to, Realm key) {
-		Point gate = null;
 		int limit = World.scenario.size;
+		Point gate = null;
 		while (gate == null) {
 			gate = RPG.pick(new ArrayList<Point>(from.borders.get(to)));
 			if (gate.x == 0 || gate.y == 0 || gate.x == limit - 1
-					|| gate.x == limit - 1) {
+					|| gate.y == limit - 1) {
+				gate = null;
 				continue;
 			}
 			boolean reacha = false;
@@ -180,6 +287,9 @@ public class ZoneGenerator extends FeatureGenerator {
 			for (Point p : Point.getadjacent()) {
 				p.x += gate.x;
 				p.y += gate.y;
+				if (world.map[p.x][p.y] == Terrain.WATER) {
+					continue;
+				}
 				if (from.area.contains(p)) {
 					reacha = true;
 				}
@@ -192,7 +302,8 @@ public class ZoneGenerator extends FeatureGenerator {
 				WorldGenerator.retry();
 			}
 		}
-		Gate g = new Gate(key);
+		Gate g = new Gate(key, to);
+		from.gates.add(g);
 		g.setlocation(gate);
 		g.place();
 		clearterrain(gate);
@@ -202,7 +313,12 @@ public class ZoneGenerator extends FeatureGenerator {
 		List<Point> ajacent = Arrays.asList(Point.getadjacent());
 		Collections.shuffle(ajacent);
 		for (Point p : ajacent) {
-			Terrain t = world.map[p.x + gate.x][p.y + gate.y];
+			p.x += +gate.x;
+			p.y += +gate.y;
+			if (!World.validatecoordinate(p.x, p.y)) {
+				continue;
+			}
+			Terrain t = world.map[p.x][p.y];
 			if (t != Terrain.WATER) {
 				world.map[gate.x][gate.y] = t;
 				break;
@@ -240,8 +356,11 @@ public class ZoneGenerator extends FeatureGenerator {
 				}
 			}
 		}
+		int nrealms = REALMS.size();
 		for (int i = 0; i < nzones; i++) {
-			Zone z = new Zone(REALMS.get(i));
+			int level = 1 + i * 19 / (nrealms - 1);
+			Zone z = new Zone(REALMS.get(i), level);
+			System.out.print(level + " ");
 			z.add(zones.get(i));
 			this.zones.add(z);
 		}

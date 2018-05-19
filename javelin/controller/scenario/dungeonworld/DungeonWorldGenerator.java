@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javelin.controller.Point;
+import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.generator.WorldGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
@@ -14,10 +15,6 @@ import javelin.model.world.World;
 import tyrant.mikera.engine.RPG;
 
 public class DungeonWorldGenerator extends WorldGenerator {
-	public DungeonWorldGenerator() {
-		// explicit so reflection can instantiate class
-	}
-
 	@Override
 	public void generate(LinkedList<Realm> realms,
 			ArrayList<HashSet<Point>> regions, World w) {
@@ -34,7 +31,11 @@ public class DungeonWorldGenerator extends WorldGenerator {
 				if (x == 0 || y == 0 || x == limit || y == limit) {
 					continue;
 				}
-				if (w.map[x][y] == Terrain.FOREST) {
+				Terrain t = w.map[x][y];
+				if (t == Terrain.WATER) {
+					w.map[x][y] = Terrain.FOREST;
+					free.add(new Point(x, y));
+				} else if (t == Terrain.FOREST) {
 					free.add(new Point(x, y));
 				}
 			}
@@ -55,8 +56,7 @@ public class DungeonWorldGenerator extends WorldGenerator {
 		}
 	}
 
-	void generatenewarea(Terrain t, HashSet<Point> region, int size,
-			World w) {
+	void generatenewarea(Terrain t, HashSet<Point> region, int size, World w) {
 		if (t == Terrain.FOREST) {
 			return;
 		}
@@ -65,7 +65,7 @@ public class DungeonWorldGenerator extends WorldGenerator {
 		ArrayList<Point> newarea = new ArrayList<Point>(size);
 		newarea.add(source);
 		while (size > 0) {
-			newarea.add(expand(t, newarea, region));
+			newarea.add(expand(newarea, region));
 			size -= 1;
 		}
 		int limit = World.scenario.size - 1;
@@ -76,13 +76,25 @@ public class DungeonWorldGenerator extends WorldGenerator {
 		}
 	}
 
-	Point expand(Terrain t, List<Point> pool, HashSet<Point> region) {
+	/**
+	 * Expands an area.
+	 *
+	 * @param pool
+	 *            Possibilites to start from.
+	 * @param region
+	 *            Points that are not in this region will be discarded. Ignored
+	 *            if <code>null</code>.
+	 * @return A new point for the given area.
+	 * @throws RestartWorldGeneration
+	 *             Through {@link WorldGenerator#retry()}.
+	 */
+	static public Point expand(List<Point> pool, HashSet<Point> region) {
 		int[] steps = new int[] { -1, 0, +1 };
 		Point p = new Point(RPG.pick(pool));
 		while (pool.contains(p)) {
 			p.x += RPG.pick(steps);
 			p.y += RPG.pick(steps);
-			if (!region.contains(p)) {
+			if (region != null && !region.contains(p)) {
 				p = new Point(RPG.pick(pool));
 				WorldGenerator.retry();
 			}

@@ -48,19 +48,19 @@ public enum Realm {
 	public String toString() {
 		switch (this) {
 		case WATER:
-			return "Blue";
+			return "Water";
 		case MAGIC:
-			return "Octarine";
+			return "Magic";
 		case GOOD:
-			return "White";
+			return "Good";
 		case FIRE:
-			return "Red";
+			return "Fire";
 		case EARTH:
-			return "Green";
+			return "Earth";
 		case EVIL:
-			return "Black";
+			return "Evil";
 		case AIR:
-			return "Translucid";
+			return "Air";
 		default:
 			throw new RuntimeException("#unknownColor");
 		}

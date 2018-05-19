@@ -6,6 +6,7 @@ package javelin.controller;
 import java.io.Serializable;
 import java.util.Objects;
 
+import javelin.controller.walker.Walker;
 import javelin.model.unit.Combatant;
 
 /**
@@ -68,6 +69,10 @@ public class Point implements Cloneable, Serializable {
 		final int deltax = Math.abs(x - p.x);
 		final int deltay = Math.abs(y - p.y);
 		return Math.sqrt(deltax * deltax + deltay * deltay);
+	}
+
+	public int distanceinsteps(Point p) {
+		return Walker.distanceinsteps(x, y, p.x, p.y);
 	}
 
 	static public Point[] getadjacent() {

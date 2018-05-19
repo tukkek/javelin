@@ -42,7 +42,11 @@ public class WorldGenerator extends Thread {
 			generate();
 		} catch (RestartWorldGeneration e) {
 			if (World.seed == null) {
-				new WorldGenerator().start();
+				try {
+					startthread();
+				} catch (ReflectiveOperationException e2) {
+					throw new RuntimeException(e2);
+				}
 			}
 		}
 	}
@@ -153,7 +157,7 @@ public class WorldGenerator extends Thread {
 				+ " thread(s)...\n\nWorlds discarded: ";
 		try {
 			for (int i = 0; i < threads; i++) {
-				World.scenario.worldgenerator.newInstance().start();
+				startthread();
 			}
 			int lastdiscarded = -1;
 			while (World.seed == null) {
@@ -168,5 +172,9 @@ public class WorldGenerator extends Thread {
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	static void startthread() throws ReflectiveOperationException {
+		World.scenario.worldgenerator.newInstance().start();
 	}
 }

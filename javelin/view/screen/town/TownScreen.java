@@ -8,6 +8,7 @@ import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.OrderQueue;
@@ -88,7 +89,7 @@ public class TownScreen extends PurchaseScreen {
 	}
 
 	private boolean retire(Town town) {
-		List<Combatant> retirees = new ArrayList<Combatant>();
+		List<Combatant> retirees = new ArrayList<>();
 		for (Combatant c : Squad.active.members) {
 			if (!c.mercenary) {
 				retirees.add(c);
@@ -110,8 +111,10 @@ public class TownScreen extends PurchaseScreen {
 
 	@Override
 	public List<Option> getoptions() {
-		final ArrayList<Option> list = new ArrayList<Option>();
-		list.add(new Manage(town));
+		final ArrayList<Option> list = new ArrayList<>();
+		if (World.scenario.labormodifier > 0) {
+			list.add(new Manage(town));
+		}
 		list.add(RENAME);
 		list.add(SETTLE);
 		if (Squad.active.resources > 0) {
@@ -123,8 +126,8 @@ public class TownScreen extends PurchaseScreen {
 			list.add(new TournamentScreenOption("Enter tournament", town, 't'));
 		}
 		if (town.getrank().rank < Rank.CITY.rank) {
-			PILLAGE.name = "Pillage ($" + Javelin.format(
-					Fortification.getspoils(town.population - 1)) + ")";
+			int spoils = Fortification.getspoils(town.population - 1);
+			PILLAGE.name = "Pillage ($" + Javelin.format(spoils) + ")";
 			list.add(PILLAGE);
 		}
 		return list;

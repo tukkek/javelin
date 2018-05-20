@@ -37,10 +37,8 @@ public class BuildHighway extends BuildRoad {
 
 	@Override
 	protected void define() {
-		if (town.getrank().rank < Rank.TOWN.rank) {
-			/* requires town or city */
-			return;
+		if (town.getrank().rank >= Rank.TOWN.rank) {
+			super.define();
 		}
-		super.define();
 	}
 }

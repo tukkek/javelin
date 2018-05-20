@@ -92,7 +92,7 @@ public class Shop extends Location {
 
 		@Override
 		public Location getgoal() {
-			return new Shop(false, town.originalrealm);
+			return new Shop(town.originalrealm, false);
 		}
 
 		@Override
@@ -190,7 +190,7 @@ public class Shop extends Location {
 	int level = 0;
 	Realm selectiontype;
 
-	public Shop(boolean first, Realm r) {
+	public Shop(Realm r, boolean first) {
 		super(r.prefixate() + " shop");
 		allowentry = false;
 		discard = false;

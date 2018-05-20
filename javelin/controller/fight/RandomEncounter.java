@@ -11,7 +11,7 @@ import tyrant.mikera.engine.RPG;
 
 /**
  * Fight that happens on the overworld map.
- * 
+ *
  * @author alex
  */
 public class RandomEncounter extends Fight {
@@ -31,7 +31,7 @@ public class RandomEncounter extends Fight {
 	 * @throws StartBattle
 	 */
 	static public void encounter(double chance) {
-		if (RPG.random() < chance && !Debug.disablecombat) {
+		if (!Debug.disablecombat && RPG.random() < chance) {
 			Fight f = JavelinApp.context.encounter();
 			if (f != null) {
 				throw new StartBattle(f);

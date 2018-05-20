@@ -15,7 +15,8 @@ public class DungeonTier {
 			RUINS, KEEP, };
 
 	public String name;
-	public int level;
+	public int minlevel;
+	public int maxlevel;
 	public int minrooms;
 	public int maxrooms;
 	public String floor;
@@ -26,7 +27,8 @@ public class DungeonTier {
 			int maxrooms, String tilesuffix) {
 		this.name = name;
 		this.tier = tier;
-		this.level = level;
+		minlevel = level - 4;
+		maxlevel = level;
 		this.minrooms = minrooms;
 		this.maxrooms = maxrooms;
 		floor = "dungeonfloor" + tilesuffix;

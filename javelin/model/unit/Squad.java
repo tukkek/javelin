@@ -55,7 +55,7 @@ public class Squad extends Actor implements Cloneable {
 	static public Squad active;
 
 	/** Which units are in this squad. */
-	public ArrayList<Combatant> members = new ArrayList<Combatant>();
+	public ArrayList<Combatant> members = new ArrayList<>();
 	/** Gold pieces (currency). 1GP = 10 silver pieces. 1SP=10 copper pieces. */
 	public int gold = 0;
 	/**
@@ -236,7 +236,7 @@ public class Squad extends Actor implements Cloneable {
 	}
 
 	void paymercenaries() {
-		for (Combatant c : new ArrayList<Combatant>(members)) {
+		for (Combatant c : new ArrayList<>(members)) {
 			if (!c.mercenary) {
 				continue;
 			}
@@ -287,7 +287,7 @@ public class Squad extends Actor implements Cloneable {
 	public void add(Combatant c, List<Item> equipmentp) {
 		members.add(c);
 		sort();
-		equipment.put(c, new ArrayList<Item>(equipmentp));
+		equipment.put(c, new ArrayList<>(equipmentp));
 	}
 
 	/**
@@ -487,7 +487,7 @@ public class Squad extends Actor implements Cloneable {
 			return;
 		}
 		hourselapsed += timecost;
-		for (Combatant c : new ArrayList<Combatant>(members)) {
+		for (Combatant c : new ArrayList<>(members)) {
 			c.terminateconditions(timecost);
 		}
 	}
@@ -593,7 +593,7 @@ public class Squad extends Actor implements Cloneable {
 	 */
 	public static ArrayList<Squad> getsquads() {
 		ArrayList<Actor> actors = World.getall(Squad.class);
-		ArrayList<Squad> squads = new ArrayList<Squad>(actors.size());
+		ArrayList<Squad> squads = new ArrayList<>(actors.size());
 		for (Actor a : actors) {
 			squads.add((Squad) a);
 		}
@@ -704,7 +704,7 @@ public class Squad extends Actor implements Cloneable {
 	}
 
 	ArrayList<Spell> getavailablespells() {
-		ArrayList<Spell> available = new ArrayList<Spell>();
+		ArrayList<Spell> available = new ArrayList<>();
 		for (Combatant c : members) {
 			for (Spell s : c.spells) {
 				if (!s.exhausted()) {
@@ -721,7 +721,7 @@ public class Squad extends Actor implements Cloneable {
 	 * @see #canheal()
 	 */
 	public void quickheal() {
-		ArrayList<Combatant> members = new ArrayList<Combatant>(this.members);
+		ArrayList<Combatant> members = new ArrayList<>(this.members);
 		members.sort(CombatantHealthComparator.SINGLETON);
 		ArrayList<Spell> spells = getavailablespells();
 		spells.sort(SpellLevelComparator.SINGLETON);
@@ -745,7 +745,7 @@ public class Squad extends Actor implements Cloneable {
 	 * @see Combatant#mercenary
 	 */
 	public ArrayList<Combatant> getmercenaries() {
-		ArrayList<Combatant> mercenaries = new ArrayList<Combatant>();
+		ArrayList<Combatant> mercenaries = new ArrayList<>();
 		for (Combatant c : members) {
 			if (c.mercenary) {
 				mercenaries.add(c);
@@ -789,5 +789,9 @@ public class Squad extends Actor implements Cloneable {
 			}
 		}
 		return heal;
+	}
+
+	public int getel() {
+		return ChallengeCalculator.calculateel(members);
 	}
 }

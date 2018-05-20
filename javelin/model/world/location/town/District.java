@@ -45,7 +45,7 @@ public class District {
 		if (locations != null) {
 			return locations;
 		}
-		locations = new ArrayList<Location>();
+		locations = new ArrayList<>();
 		ArrayList<Actor> all = World.getactors();
 		for (Point p : getarea()) {
 			Actor a = World.get(p.x, p.y, all);
@@ -62,7 +62,7 @@ public class District {
 			return area;
 		}
 		int radius = getradius();
-		area = new HashSet<Point>();
+		area = new HashSet<>();
 		for (int x = town.x - radius; x <= town.x + radius; x++) {
 			for (int y = town.y - radius; y <= town.y + radius; y++) {
 				if (World.validatecoordinate(x, y)) {
@@ -74,7 +74,7 @@ public class District {
 	}
 
 	public int getradius() {
-		return town.getrank().getradius();
+		return town.getrank().getradius() * World.scenario.districtmodifier;
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class District {
 	}
 
 	public ArrayList<Location> getlocationtype(Class<? extends Location> type) {
-		ArrayList<Location> result = new ArrayList<Location>();
+		ArrayList<Location> result = new ArrayList<>();
 		for (Location l : getlocations()) {
 			if (type.isInstance(l)) {
 				result.add(l);
@@ -107,7 +107,7 @@ public class District {
 			return squads;
 		}
 		getarea();
-		squads = new ArrayList<Squad>();
+		squads = new ArrayList<>();
 		for (Squad s : Squad.getsquads()) {
 			if (area.contains(new Point(s.x, s.y))) {
 				squads.add(s);
@@ -123,13 +123,13 @@ public class District {
 	 */
 	public ArrayList<Point> getfreespaces() {
 		ArrayList<Actor> actors = World.getactors();
-		ArrayList<Actor> locations = new ArrayList<Actor>();
+		ArrayList<Actor> locations = new ArrayList<>();
 		for (Actor a : actors) {
 			if (a instanceof Location) {
 				locations.add(a);
 			}
 		}
-		ArrayList<Point> free = new ArrayList<Point>();
+		ArrayList<Point> free = new ArrayList<>();
 		final World w = World.getseed();
 		searching: for (Point p : getarea()) {
 			if (Terrain.get(p.x, p.y).equals(Terrain.WATER)

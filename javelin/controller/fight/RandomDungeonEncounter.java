@@ -3,9 +3,12 @@ package javelin.controller.fight;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.challenge.Difficulty;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
+import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
 import tyrant.mikera.engine.RPG;
 
@@ -27,7 +30,14 @@ public class RandomDungeonEncounter extends RandomEncounter {
 	@Override
 	public ArrayList<Combatant> generate() {
 		Combatants encounter = RPG.pick(dungeon.encounters);
-		return encounter == null ? null : encounter.clone();
+		if (encounter == null) {
+			return null;
+		}
+		int el = ChallengeCalculator.calculateel(encounter);
+		if (el - Squad.active.getel() <= Difficulty.VERYEASY) {
+			return null;
+		}
+		return encounter.clone();
 	}
 
 	@Override

@@ -18,7 +18,6 @@ import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.Realm;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.discipline.Discipline;
-import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.Caravan;
 import javelin.model.world.World;
@@ -75,7 +74,7 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class FeatureGenerator implements Serializable {
-	final HashMap<Class<? extends Actor>, GenerationData> generators = new HashMap<Class<? extends Actor>, GenerationData>();
+	final HashMap<Class<? extends Actor>, GenerationData> generators = new HashMap<>();
 
 	/**
 	 * The ultimate goal of this method is to try and make it so one feature
@@ -197,7 +196,7 @@ public class FeatureGenerator implements Serializable {
 	}
 
 	void generatelocations(World w) {
-		ArrayList<Location> locations = new ArrayList<Location>();
+		ArrayList<Location> locations = new ArrayList<>();
 		generateuniquelocations(locations);
 		UpgradeHandler.singleton.gather();
 		if (World.scenario.worlddistrict) {
@@ -230,9 +229,8 @@ public class FeatureGenerator implements Serializable {
 
 	void generatestartingarea(World seed, Town t) {
 		spawnnear(t, new Lodge(), seed, 1, 2, true);
-		spawnnear(t, new Shop(true, t.realm), seed, 1, 2, true);
-		RealmAcademy academy = new RealmAcademy(t.originalrealm);
-		academy.upgrades.add(Skill.SURVIVAL.getupgrade());
+		spawnnear(t, new Shop(t.realm, true), seed, 1, 2, true);
+		RealmAcademy academy = new RealmAcademy(t.originalrealm, true);
 		spawnnear(t, academy, seed, 1, 2, true);
 		ArrayList<Monster> recruits = t.getpossiblerecruits();
 		recruits.sort(new Comparator<Monster>() {

@@ -172,11 +172,6 @@ public abstract class MapPanel extends Panel {
 		}
 	}
 
-	@Override
-	public void paint(Graphics g) {
-		super.paint(g);
-	}
-
 	public Graphics getdrawgraphics() {
 		return canvas.getGraphics();
 	}

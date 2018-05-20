@@ -43,7 +43,7 @@ import javelin.model.world.location.town.labor.religious.Shrine;
  */
 public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	/** Canonical list of all spells by lower-case name. */
-	public static final HashMap<String, Spell> SPELLS = new HashMap<String, Spell>();
+	public static final HashMap<String, Spell> SPELLS = new HashMap<>();
 
 	/** Load spells. */
 	static public void init() {
@@ -112,7 +112,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	/**
 	 * @param name
 	 *            Upgrade name.
-	 * @param level
+	 * @param levelp
 	 *            level, from which caster level is calculated.
 	 * @param incrementcost
 	 *            Challenge rating factor.
@@ -204,7 +204,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	 */
 	public void filtertargets(final Combatant combatant,
 			final List<Combatant> targets, BattleState s) {
-		final ArrayList<Combatant> iterable = new ArrayList<Combatant>(targets);
+		final ArrayList<Combatant> iterable = new ArrayList<>(targets);
 		if (castonallies) {
 			for (Combatant c : iterable) {
 				if (!c.isally(combatant, s)) {
@@ -323,7 +323,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	 */
 	public static List<Combatant> getradius(Combatant target, int radius,
 			Spell spell, BattleState state) {
-		ArrayList<Combatant> targets = new ArrayList<Combatant>();
+		ArrayList<Combatant> targets = new ArrayList<>();
 		for (Combatant c : state.getcombatants()) {
 			if (Walker.distance(c, target) <= radius
 					&& 10 + spell.casterlevel >= c.source.sr) {

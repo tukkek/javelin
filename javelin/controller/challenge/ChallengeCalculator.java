@@ -24,6 +24,7 @@ import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.exception.UnbalancedTeams;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import tyrant.mikera.engine.RPG;
 
@@ -325,10 +326,8 @@ public class ChallengeCalculator {
 	}
 
 	/**
-	 * @param teamel
-	 *            Active group encounter level.
-	 * @param level
-	 *            Opponent encounter level.
+	 * @param delta
+	 *            EL of enemies minus EL of {@link Squad}.
 	 * @return % of resources used on battle.
 	 */
 	public static float useresources(int delta) {

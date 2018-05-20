@@ -586,7 +586,7 @@ public class Dungeon extends Location {
 
 	public DungeonTier gettier() {
 		for (DungeonTier t : DungeonTier.TIERS) {
-			if (level <= t.level) {
+			if (level <= t.maxlevel) {
 				return t;
 			}
 		}

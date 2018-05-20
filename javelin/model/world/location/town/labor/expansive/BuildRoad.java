@@ -34,7 +34,7 @@ public class BuildRoad extends Labor {
 		Point from;
 		Town to;
 		ArrayList<Point> result = null;
-		ArrayList<Actor> locations = new ArrayList<Actor>();
+		ArrayList<Actor> locations = new ArrayList<>();
 
 		PathSearch(Town from, Town to) {
 			if (swap(from, to)) {
@@ -87,7 +87,7 @@ public class BuildRoad extends Labor {
 				return;
 			}
 			if (p != from) {
-				partialpath = new ArrayList<Point>(partialpath);
+				partialpath = new ArrayList<>(partialpath);
 				partialpath.add(p);
 			}
 			for (Point step : getsteps(p)) {
@@ -101,7 +101,7 @@ public class BuildRoad extends Labor {
 		ArrayList<Point> getsteps(Point current) {
 			final int currentdistance = to.distanceinsteps(current.x,
 					current.y);
-			final ArrayList<Point> steps = new ArrayList<Point>();
+			final ArrayList<Point> steps = new ArrayList<>();
 			for (int x = -1; x <= +1; x++) {
 				for (int y = -1; y <= +1; y++) {
 					if (x == 0 && y == 0) {
@@ -146,6 +146,9 @@ public class BuildRoad extends Labor {
 
 	@Override
 	protected void define() {
+		if (!World.scenario.roads) {
+			return;
+		}
 		ArrayList<Town> towns = Town.gettowns();
 		towns.remove(town);
 		towns.sort(new DistanceComparator(town));
@@ -214,7 +217,8 @@ public class BuildRoad extends Labor {
 
 	@Override
 	public boolean validate(District d) {
-		if (!super.validate(d) || town.population * 100 < cost) {
+		if (!World.scenario.roads || town.population * 100 < cost
+				|| !super.validate(d)) {
 			return false;
 		}
 		for (Labor l : d.town.governor.getprojects()) {

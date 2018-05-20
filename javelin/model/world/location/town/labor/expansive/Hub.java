@@ -6,6 +6,7 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.terrain.Terrain;
+import javelin.model.transport.Airship;
 import javelin.model.transport.FlyingNimbus;
 import javelin.model.transport.Transport;
 import javelin.model.unit.Combatant;
@@ -21,7 +22,12 @@ import javelin.view.Images;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.PurchaseScreen;
 
-public class TransportHub extends Location {
+/**
+ * {@link Transport} hub.
+ *
+ * @author alex
+ */
+public class Hub extends Location {
 	static final Option REFUND = new Option("Return vehicle (refund)", 0, 'r');
 	static final Option CARRIAGE = new Option("Carriage",
 			Transport.CARRIAGE.price, 'c');
@@ -34,22 +40,16 @@ public class TransportHub extends Location {
 			"Magic dock" };
 
 	class ShowTransport extends PurchaseScreen {
-		TransportHub stables;
+		Hub stables;
 
-		/**
-		 * @param description
-		 *            Title.
-		 * @param t
-		 *            Town the active {@link Squad} is in.
-		 */
-		public ShowTransport(TransportHub s) {
+		public ShowTransport(Hub s) {
 			super("You enter the " + s.getname(), null);
 			stables = s;
 		}
 
 		@Override
 		public List<Option> getoptions() {
-			ArrayList<Option> list = new ArrayList<Option>();
+			ArrayList<Option> list = new ArrayList<>();
 			list.add(REFUND);
 			if (Squad.active.transport == null) {
 				for (int i = 0; i <= stables.level; i++) {
@@ -114,15 +114,14 @@ public class TransportHub extends Location {
 
 		@Override
 		public Location getgoal() {
-			TransportHub hub = new TransportHub();
+			Hub hub = new Hub();
 			hub.cost += cost;
 			return hub;
 		}
 
 		@Override
 		public boolean validate(District d) {
-			return super.validate(d)
-					&& d.getlocationtype(TransportHub.class).isEmpty();
+			return super.validate(d) && d.getlocationtype(Hub.class).isEmpty();
 		}
 
 		@Override
@@ -138,12 +137,12 @@ public class TransportHub extends Location {
 	}
 
 	class DocksUpgrade extends BuildingUpgrade {
-		public DocksUpgrade(TransportHub hub) {
+		public DocksUpgrade(Hub hub) {
 			this(10, 1, hub, Rank.VILLAGE);
 			name = "Upgrade " + hub.getname().toLowerCase() + " to docks";
 		}
 
-		public DocksUpgrade(int cost, int upgradelevel, TransportHub previous,
+		public DocksUpgrade(int cost, int upgradelevel, Hub previous,
 				Rank minimumsize) {
 			super("", cost - previous.cost, upgradelevel, previous,
 					minimumsize);
@@ -157,7 +156,7 @@ public class TransportHub extends Location {
 		@Override
 		public void done() {
 			super.done();
-			TransportHub hub = (TransportHub) previous;
+			Hub hub = (Hub) previous;
 			hub.level = upgradelevel;
 			hub.cost += cost;
 		}
@@ -169,16 +168,20 @@ public class TransportHub extends Location {
 	}
 
 	class MagicDockUpgrade extends DocksUpgrade {
-		public MagicDockUpgrade(TransportHub hub) {
+		public MagicDockUpgrade(Hub hub) {
 			super(20, 2, hub, Rank.CITY);
 			name = "Upgrade " + hub.getname().toLowerCase() + " to magic dock";
 		}
 	}
 
+	/**
+	 * Type of hub. Stable (0), Dock (1) or Magic dock (2).
+	 */
+	public int level = 0;
 	int cost = 0;
-	int level = 0;
 
-	public TransportHub() {
+	/** Constructor. */
+	public Hub() {
 		super(NAMES[0]);
 		allowentry = false;
 		discard = false;
@@ -217,7 +220,7 @@ public class TransportHub extends Location {
 	@Override
 	public ArrayList<Labor> getupgrades(District d) {
 		ArrayList<Labor> upgrades = super.getupgrades(d);
-		if (searchforwater(getlocation())) {
+		if (World.scenario.boats && searchforwater(getlocation())) {
 			if (level == 0) {
 				upgrades.add(new DocksUpgrade(this));
 			} else if (level == 1) {
@@ -229,7 +232,19 @@ public class TransportHub extends Location {
 		return upgrades;
 	}
 
+	/** If not able already, allows this to rent {@link Airship}s. */
+	public void upgradetomagicdocks() {
+		if (level != 2) {
+			new MagicDockUpgrade(this).done();
+		}
+	}
+
 	static boolean searchforwater(Point p) {
 		return Terrain.search(p, Terrain.WATER, 1, World.getseed()) > 0;
+	}
+
+	@Override
+	public String describe() {
+		return getname() + ".";
 	}
 }

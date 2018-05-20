@@ -178,6 +178,9 @@ public class Scenario implements Serializable {
 	/** Multiplied to daily {@link Labor}. */
 	public float labormodifier = 1;
 	public Class<? extends WorldGenerator> worldgenerator = WorldGenerator.class;
+	public boolean roads = false;
+	public boolean boats = false;
+	public int districtmodifier = 1;
 
 	/**
 	 * @return Starting encounter level for each hostile town in
@@ -245,7 +248,7 @@ public class Scenario implements Serializable {
 		ArrayList<Location> shops = new ArrayList<>();
 		for (Realm r : Realm.values()) {
 			if (!realms.contains(r)) {
-				shops.add(new Shop(false, r));
+				shops.add(new Shop(r, false));
 			}
 		}
 		return shops;

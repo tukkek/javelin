@@ -14,9 +14,11 @@ import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
+import javelin.model.transport.Airship;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.AirTemple;
 import javelin.model.world.location.dungeon.temple.EarthTemple;
 import javelin.model.world.location.dungeon.temple.EvilTemple;
@@ -25,25 +27,34 @@ import javelin.model.world.location.dungeon.temple.GoodTemple;
 import javelin.model.world.location.dungeon.temple.MagicTemple;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.dungeon.temple.WaterTemple;
+import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Deck;
+import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.Trait;
+import javelin.model.world.location.town.labor.basic.Lodge;
+import javelin.model.world.location.town.labor.cultural.MagesGuild;
+import javelin.model.world.location.town.labor.expansive.Hub;
+import javelin.model.world.location.town.labor.military.RealmAcademy;
+import javelin.model.world.location.town.labor.productive.Shop;
 import tyrant.mikera.engine.RPG;
 
 public class ZoneGenerator extends FeatureGenerator {
 	static final double MINDISTANCE = 5;
-	static ArrayList<Realm> REALMS = new ArrayList<Realm>(
+	static final ArrayList<Trait> TRAITS = new ArrayList<>(Deck.TRAITS);
+	static final ArrayList<Realm> REALMS = new ArrayList<>(
 			Arrays.asList(Realm.values()));
 
 	static {
+		Collections.shuffle(TRAITS);
 		Collections.shuffle(REALMS);
 	}
 
 	class Zone {
-		HashSet<Point> area = new HashSet<Point>();
-		ArrayList<Point> arealist = new ArrayList<Point>();
-		HashMap<Zone, HashSet<Point>> borders = new HashMap<Zone, HashSet<Point>>();
-		ArrayList<Gate> gates = new ArrayList<Gate>();
+		HashSet<Point> area = new HashSet<>();
+		ArrayList<Point> arealist = new ArrayList<>();
+		HashMap<Zone, HashSet<Point>> borders = new HashMap<>();
+		ArrayList<Gate> gates = new ArrayList<>();
 		Realm realm;
 		int level;
 
@@ -82,14 +93,14 @@ public class ZoneGenerator extends FeatureGenerator {
 			arealist.remove(p);
 			HashSet<Point> border = borders.get(neighbor);
 			if (border == null) {
-				border = new HashSet<Point>(1);
+				border = new HashSet<>(1);
 				borders.put(neighbor, border);
 			}
 			border.add(p);
 		}
 
 		HashSet<Point> enclose() {
-			HashSet<Point> frontier = new HashSet<Point>();
+			HashSet<Point> frontier = new HashSet<>();
 			for (Point territory : area) {
 				for (Point p : Point.getadjacent()) {
 					p.x += territory.x;
@@ -110,13 +121,13 @@ public class ZoneGenerator extends FeatureGenerator {
 	 *
 	 * @see #checksolvable()
 	 */
-	transient ArrayList<Realm> keys = new ArrayList<Realm>();
-	transient HashSet<Point> allborders = new HashSet<Point>();
-	transient ArrayList<Zone> zones = new ArrayList<Zone>();
+	transient ArrayList<Realm> keys = new ArrayList<>();
+	transient HashSet<Point> allborders = new HashSet<>();
+	transient ArrayList<Zone> zones = new ArrayList<>();
 	transient int claimed = 0;
 	transient int worldsize;
 	transient World world;
-	transient Town starting;
+	transient ArrayList<Town> towns = new ArrayList<>();
 
 	@Override
 	public void spawn(float chance, boolean generatingworld) {
@@ -160,10 +171,36 @@ public class ZoneGenerator extends FeatureGenerator {
 			z.level = 1 + keys.indexOf(z.realm) * 19 / (realms.size() - 1);
 			placefeatures(z);
 		}
+		createmagicdocks();
 		if (counttemples() != 7) {
 			throw new RestartWorldGeneration();
 		}
-		return starting;
+		return towns.get(0);
+	}
+
+	/**
+	 * Make sure there's at least one place to get a kewl {@link Airship}!
+	 */
+	void createmagicdocks() {
+		ArrayList<Hub> hubs = new ArrayList<>();
+		for (Actor a : World.getactors()) {
+			if (a instanceof Hub) {
+				Hub hub = (Hub) a;
+				if (hub.level == 2) {
+					return;
+				}
+				hubs.add(hub);
+			}
+		}
+		if (!hubs.isEmpty()) {
+			RPG.pick(hubs).level = 2;
+			return;
+		}
+		Zone z = RPG.pick(zones.subList(1, zones.size()));
+		Town t = towns.get(zones.indexOf(z));
+		Hub hub = new Hub();
+		hub.upgradetomagicdocks();
+		placeintown(hub, t.getdistrict(), z);
 	}
 
 	void shufflegates() {
@@ -171,7 +208,7 @@ public class ZoneGenerator extends FeatureGenerator {
 			if (z.gates.size() <= 1) {
 				continue;
 			}
-			ArrayList<Realm> keys = new ArrayList<Realm>(z.gates.size());
+			ArrayList<Realm> keys = new ArrayList<>(z.gates.size());
 			for (Gate g : z.gates) {
 				keys.add(g.key);
 			}
@@ -183,12 +220,12 @@ public class ZoneGenerator extends FeatureGenerator {
 	}
 
 	boolean checksolvable() {
-		HashSet<Zone> visited = new HashSet<Zone>();
+		HashSet<Zone> visited = new HashSet<>();
 		visited.add(zones.get(0));
 		keys.add(zones.get(0).realm);
 		while (true) {
 			int oldvisited = visited.size();
-			for (Zone z : new ArrayList<Zone>(visited)) {
+			for (Zone z : new ArrayList<>(visited)) {
 				for (Gate g : z.gates) {
 					if (keys.contains(g.key)) {
 						Zone to = g.to;
@@ -225,25 +262,80 @@ public class ZoneGenerator extends FeatureGenerator {
 
 	void placefeatures(Zone z) {
 		placefeature(createtemple(z.realm, z.level), z);
-		Town t = (Town) placefeature(new Town((Point) null, z.realm), z);
-		if (starting == null) {
-			starting = t;
+		int tiers = RPG.r(1, 4) + RPG.r(1, 4);
+		createtown(z);
+		while (tiers > 0) {
+			Dungeon d = placefeature(createdungeon(z), z);
+			tiers -= d.gettier().tier + 1;
 		}
 	}
 
-	Location placefeature(Location l, Zone z) {
+	Dungeon createdungeon(Zone z) {
+		int level = -1;
+		while (level < 1 || level > 20) {
+			level = z.level + RPG.randomize(6);
+		}
+		return new Dungeon(level, null);
+	}
+
+	Town createtown(Zone z) {
+		Town t = placefeature(new Town((Point) null, z.realm), z);
+		int size = z.level;
+		if (towns.isEmpty()) {
+			size = 11;
+			District d = t.getdistrict();
+			placeintown(RPG.pick(MagesGuild.GUILDS).generate(), d, z);
+			placeintown(new RealmAcademy(z.realm, false), d, z);
+			placeintown(new Shop(z.realm, true), d, z);
+			placeintown(new Lodge(), d, z);
+		}
+		towns.add(t);
+		TRAITS.get(zones.indexOf(z)).addto(t);
+		size = Math.min(15, size);
+		while (t.population < size) {
+			t.governor.work(1, t.getdistrict());
+		}
+		for (Labor l : new ArrayList<>(t.governor.getprojects())) {
+			l.cancel();
+		}
+		return t;
+	}
+
+	void placeintown(Location l, District d, Zone z) {
+		ArrayList<Actor> actors = World.getactors();
 		Point p = null;
+		while (p == null || checkclutter(p, actors) || !z.area.contains(p)) {
+			p = RPG.pick(d.getfreespaces());
+		}
+		l.setlocation(p);
+		l.place();
+	}
+
+	<K extends Location> K placefeature(K l, Zone z) {
+		Point p = null;
+		ArrayList<Actor> actors = World.getactors();
 		while (p == null || world.map[p.x][p.y] == Terrain.WATER
-				|| World.get(p.x, p.y) != null || checkclutter(p)) {
+				|| World.get(p.x, p.y, actors) != null
+				|| checkclutter(p, actors)) {
 			p = RPG.pick(z.arealist);
+			WorldGenerator.retry();
 		}
 		l.setlocation(p);
 		l.place();
 		return l;
 	}
 
-	boolean checkclutter(Point p) {
-		// TODO check open space7
+	boolean checkclutter(Point target, ArrayList<Actor> actors) {
+		int worldsize = World.scenario.size;
+		for (Point p : Point.getadjacent()) {
+			p.x += target.x;
+			p.y += target.y;
+			if (!p.validate(0, 0, worldsize, worldsize)
+					|| world.map[p.x][p.y] == Terrain.WATER
+					|| World.get(p.x, p.y, actors) != null) {
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -303,7 +395,7 @@ public class ZoneGenerator extends FeatureGenerator {
 		int limit = World.scenario.size;
 		Point gate = null;
 		while (gate == null) {
-			gate = RPG.pick(new ArrayList<Point>(from.borders.get(to)));
+			gate = RPG.pick(new ArrayList<>(from.borders.get(to)));
 			if (gate.x == 0 || gate.y == 0 || gate.x == limit - 1
 					|| gate.y == limit - 1) {
 				gate = null;
@@ -367,7 +459,7 @@ public class ZoneGenerator extends FeatureGenerator {
 	}
 
 	void generatezones(int nzones) {
-		ArrayList<Point> zones = new ArrayList<Point>(nzones);
+		ArrayList<Point> zones = new ArrayList<>(nzones);
 		while (zones.size() < nzones) {
 			Point p = new Point(RPG.r(1, World.scenario.size - 2),
 					RPG.r(1, World.scenario.size - 2));
@@ -383,7 +475,6 @@ public class ZoneGenerator extends FeatureGenerator {
 				}
 			}
 		}
-		int nrealms = REALMS.size();
 		for (int i = 0; i < nzones; i++) {
 			Zone z = new Zone(REALMS.get(i));
 			z.add(zones.get(i));
@@ -391,13 +482,4 @@ public class ZoneGenerator extends FeatureGenerator {
 		}
 	}
 
-	Town process(ArrayList<Town> towns) {
-		LinkedList<Trait> traits = new LinkedList<Trait>(Deck.TRAITS);
-		Collections.shuffle(traits);
-
-		Point p = new Point(World.scenario.size / 2, World.scenario.size / 2);
-		Town t = new Town(p, Realm.FIRE);
-		t.place();
-		return t;
-	}
 }

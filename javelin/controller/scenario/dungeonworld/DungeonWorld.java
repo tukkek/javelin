@@ -15,12 +15,10 @@ import tyrant.mikera.engine.RPG;
 public class DungeonWorld extends Campaign {
 	public DungeonWorld() {
 		size = size * 2;
-		startingpopulation = 6;
 		lockedtemples = false;
 		minigames = false;
 		record = false;
 		respawnlocations = false;
-		fogofwar = false;
 		expiredungeons = true;
 		worldencounters = false;
 		worldhazards = false;
@@ -30,13 +28,11 @@ public class DungeonWorld extends Campaign {
 		featuregenerator = ZoneGenerator.class;
 		worldgenerator = DungeonWorldGenerator.class;
 		districtmodifier = 2;
+		crossrivers = false;
 	}
 
 	@Override
 	public boolean win() {
-		if (Javelin.DEBUG) {
-			return false;
-		}
 		for (Dungeon d : Dungeon.getdungeons()) {
 			if (d.gettier() == DungeonTier.HIGHEST) {
 				return false;

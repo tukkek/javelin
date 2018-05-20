@@ -24,12 +24,12 @@ import javelin.controller.scenario.dungeonworld.DungeonWorld;
 import javelin.model.world.World;
 
 public class ScenarioSelectionDialog extends Frame {
-	static final Map<String, Scenario> MODES = new LinkedHashMap<String, Scenario>();
+	static final Map<String, Scenario> MODES = new LinkedHashMap<>();
 
 	static {
-		MODES.put("Campaign", new Campaign());
-		MODES.put("Dungeon world", new DungeonWorld());
 		MODES.put("Scenario", new Scenario());
+		MODES.put("Dungeon world", new DungeonWorld());
+		MODES.put("Campaign", new Campaign());
 	}
 
 	class Close extends WindowAdapter {
@@ -63,7 +63,7 @@ public class ScenarioSelectionDialog extends Frame {
 	}
 
 	ArrayList<String> preparetext() {
-		ArrayList<String> lines = new ArrayList<String>();
+		ArrayList<String> lines = new ArrayList<>();
 		String file = TextReader.read(new File("doc", "scenarios.txt"));
 		for (String s : file.trim().split("\n")) {
 			String line = "";

@@ -553,6 +553,9 @@ public class Squad extends Actor implements Cloneable {
 		if (transport != null && (transport.sails || transport.flies)) {
 			return true;
 		}
+		if (!World.scenario.crossrivers) {
+			return false;
+		}
 		for (Combatant c : members) {
 			if (c.source.swim() == 0) {
 				return false;

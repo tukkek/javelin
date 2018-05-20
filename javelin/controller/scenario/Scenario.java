@@ -23,6 +23,7 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.item.key.TempleKey;
+import javelin.model.transport.Transport;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -181,6 +182,15 @@ public class Scenario implements Serializable {
 	public boolean roads = false;
 	public boolean boats = false;
 	public int districtmodifier = 1;
+	/**
+	 * Whether all-flying or all-swimming {@link Squad}s can cross
+	 * {@link Water}. Does not impede {@link Transport}s from doing so.
+	 *
+	 * @see Squad#swim()
+	 * @see Monster#swim
+	 * @see Monster#fly
+	 */
+	public boolean crossrivers = true;
 
 	/**
 	 * @return Starting encounter level for each hostile town in

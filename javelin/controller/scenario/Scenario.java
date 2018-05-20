@@ -39,6 +39,7 @@ import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.order.Order;
+import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Deck;
 import javelin.model.world.location.town.labor.Labor;
@@ -181,7 +182,12 @@ public class Scenario implements Serializable {
 	public Class<? extends WorldGenerator> worldgenerator = WorldGenerator.class;
 	public boolean roads = false;
 	public boolean boats = false;
-	public int districtmodifier = 1;
+	/**
+	 * Adds this many squares to {@link District}s.
+	 *
+	 * @see District#getradius()
+	 */
+	public int districtmodifier = 0;
 	/**
 	 * Whether all-flying or all-swimming {@link Squad}s can cross
 	 * {@link Water}. Does not impede {@link Transport}s from doing so.

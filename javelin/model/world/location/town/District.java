@@ -73,8 +73,12 @@ public class District {
 		return area;
 	}
 
+	/**
+	 * @return Number of squares away from a {@link Town} to consider its
+	 *         district.
+	 */
 	public int getradius() {
-		return town.getrank().getradius() * World.scenario.districtmodifier;
+		return town.getrank().getradius() + World.scenario.districtmodifier;
 	}
 
 	/**

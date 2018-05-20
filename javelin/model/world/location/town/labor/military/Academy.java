@@ -129,7 +129,7 @@ public abstract class Academy extends Fortification {
 			int minlevel, int maxlevel, Set<Upgrade> upgradesp,
 			RaiseAbility raiseability, ClassLevelUpgrade classadvancement) {
 		super(descriptionknown, descriptionunknown, minlevel, maxlevel);
-		upgrades = new HashSet<Upgrade>(upgradesp);
+		upgrades = new HashSet<>(upgradesp);
 		if (raiseability != null) {
 			upgrades.add(raiseability);
 		}
@@ -232,7 +232,7 @@ public abstract class Academy extends Fortification {
 
 	@Override
 	public List<Combatant> getcombatants() {
-		ArrayList<Combatant> combatants = new ArrayList<Combatant>(garrison);
+		ArrayList<Combatant> combatants = new ArrayList<>(garrison);
 		for (Order o : training.queue) {
 			TrainingOrder next = (TrainingOrder) o;
 			combatants.add(next.untrained);
@@ -263,30 +263,28 @@ public abstract class Academy extends Fortification {
 	 * @return The Squad the trainee is now into.
 	 */
 	public Squad moveout(TrainingOrder o, Combatant member) {
-		ArrayList<Point> free = new ArrayList<Point>();
+		ArrayList<Point> free = new ArrayList<>();
 		ArrayList<Actor> actors = World.getactors();
-		for (int deltax = -1; deltax <= +1; deltax++) {
-			for (int deltay = -1; deltay <= +1; deltay++) {
-				if (deltax == 0 && deltay == 0) {
-					continue;
+		HashSet<Point> district = getdistrict().getarea();
+		for (Point p : Point.getadjacent()) {
+			p.x += x;
+			p.y += y;
+			if (!World.validatecoordinate(p.x, p.y)
+					|| Terrain.get(p.x, p.y).equals(Terrain.WATER)) {
+				continue;
+			}
+			Squad stationed = (Squad) World.get(p.x, p.y, Squad.class);
+			if (stationed == null) {
+				if (World.get(p.x, p.y, actors) == null
+						&& district.contains(p)) {
+					free.add(new Point(p.x, p.y));
 				}
-				int x = this.x + deltax;
-				int y = this.y + deltay;
-				if (!World.validatecoordinate(x, y)
-						|| Terrain.get(x, y).equals(Terrain.WATER)) {
-					continue;
-				}
-				Squad stationed = (Squad) World.get(x, y, Squad.class);
-				if (stationed == null) {
-					if (World.get(x, y, actors) == null) {
-						free.add(new Point(x, y));
-					}
-				} else {
-					stationed.add(member, o.equipment);
-					return stationed;
-				}
+			} else {
+				stationed.add(member, o.equipment);
+				return stationed;
 			}
 		}
+
 		Point destination = free.isEmpty() ? getlocation() : RPG.pick(free);
 		Squad s = new Squad(destination.x, destination.y,
 				Math.round(Math.ceil(o.completionat / 24f) * 24), null);

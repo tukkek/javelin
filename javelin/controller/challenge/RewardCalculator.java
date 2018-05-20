@@ -160,7 +160,8 @@ public class RewardCalculator {
 	public static String rewardxp(List<Combatant> originalblue,
 			List<Combatant> originalred, float bonus) {
 		int elred = ChallengeCalculator.calculateel(originalred);
-		List<Float> crs = originalblue.stream().map((c) -> c.source.cr)
+		List<Float> crs = originalblue.stream()
+				.map((c) -> c.source.cr + Math.max(0, c.xp.floatValue()))
 				.collect(Collectors.toList());
 		int elblue = ChallengeCalculator.calculateelfromcrs(crs);
 		int eldifference = Math.round(elred - elblue);

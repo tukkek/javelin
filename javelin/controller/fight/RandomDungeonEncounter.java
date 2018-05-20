@@ -3,6 +3,7 @@ package javelin.controller.fight;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.controller.Weather;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.terrain.Terrain;
@@ -25,6 +26,7 @@ public class RandomDungeonEncounter extends RandomEncounter {
 		dungeon = d;
 		meld = true;
 		map = Terrain.UNDERGROUND.getmaps().pick();
+		weather = Math.max(0, Weather.current - 1);
 	}
 
 	@Override

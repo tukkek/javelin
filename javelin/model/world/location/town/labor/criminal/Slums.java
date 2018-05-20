@@ -71,13 +71,14 @@ public class Slums extends Location {
 
 	Item generateitem() {
 		int limit = getlimit();
-		ArrayList<Item> items = new ArrayList<Item>();
+		List<Item> items = new ArrayList<>();
 		for (Item i : Item.ALL) {
 			if (i.price > limit) {
 				break;
 			}
-			items.add(i);
+			items.add(i.clone());
 		}
+		items = Item.randomize(items);
 		return items.isEmpty() ? null : RPG.pick(items);
 	}
 
@@ -117,8 +118,8 @@ public class Slums extends Location {
 	}
 
 	void buyitem() {
-		ArrayList<Item> items = new ArrayList<Item>();
-		ArrayList<String> descriptions = new ArrayList<String>();
+		ArrayList<Item> items = new ArrayList<>();
+		ArrayList<String> descriptions = new ArrayList<>();
 		int limit = getlimit();
 		for (Combatant c : Squad.active.members) {
 			for (Item i : Squad.active.equipment.get(c)) {

@@ -33,7 +33,7 @@ public class Shop extends Location {
 	public static final Option SELL = new Option("Sell items", 0, 's');
 
 	public class SellingScreen extends SelectScreen {
-		HashMap<Option, Item> selling = new HashMap<Option, Item>();
+		HashMap<Option, Item> selling = new HashMap<>();
 		int buylimit;
 
 		public SellingScreen() {
@@ -49,14 +49,14 @@ public class Shop extends Location {
 
 		@Override
 		public String printinfo() {
-			return "Your squad has $" + Javelin.format(Squad.active.gold)
-					+ ".\n" + "The shop will pay at most $"
-					+ Javelin.format(buylimit) + " for an item.";
+			return "The shop will pay at most $" + Javelin.format(buylimit)
+					+ " for an item.\n" + "Your squad has $"
+					+ Javelin.format(Squad.active.gold);
 		}
 
 		@Override
 		public List<Option> getoptions() {
-			ArrayList<Option> options = new ArrayList<Option>();
+			ArrayList<Option> options = new ArrayList<>();
 			for (Combatant c : Squad.active.members) {
 				for (Item i : Squad.active.equipment.get(c)) {
 					if (i.sell()) {

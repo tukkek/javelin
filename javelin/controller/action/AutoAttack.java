@@ -17,6 +17,12 @@ public class AutoAttack extends Action {
 			return o1.getnumericstatus() - o2.getnumericstatus();
 		}
 	};
+	private static final Comparator<? super Combatant> SORTBYDISTANCE = new Comparator<Combatant>() {
+		@Override
+		public int compare(Combatant o1, Combatant o2) {
+			return o1.getlocation().distanceinsteps(o2.getlocation());
+		}
+	};
 
 	public AutoAttack() {
 		super("Auto-attack nearest visible enemy", new String[] { "\t" });
@@ -34,7 +40,7 @@ public class AutoAttack extends Action {
 		List<Combatant> ranged = Fight.state.gettargets(active);
 		ranged.removeAll(melee);
 		if (!ranged.isEmpty() && !active.source.ranged.isEmpty()) {
-			ranged.sort(SORTBYSTATUS);
+			ranged.sort(SORTBYDISTANCE);
 			active.meleeattacks(ranged.get(0), Fight.state);
 			return true;
 		}

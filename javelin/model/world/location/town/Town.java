@@ -69,7 +69,7 @@ public class Town extends Location {
 	 */
 	public static final float DAILYLABOR = .11f;
 
-	public ArrayList<Exhibition> events = new ArrayList<Exhibition>();
+	public ArrayList<Exhibition> events = new ArrayList<>();
 	/**
 	 * Represent 10 working citizens that will produce 1 {@link #labor} every 10
 	 * days.
@@ -86,7 +86,7 @@ public class Town extends Location {
 	 *
 	 * @see Deck
 	 */
-	public TreeSet<String> traits = new TreeSet<String>();
+	public TreeSet<String> traits = new TreeSet<>();
 
 	/** Remains the same even after capture. */
 	public Realm originalrealm;
@@ -119,7 +119,7 @@ public class Town extends Location {
 	}
 
 	private static Point getvalidlocation(HashSet<Point> region) {
-		ArrayList<Point> list = new ArrayList<Point>(region);
+		ArrayList<Point> list = new ArrayList<>(region);
 		Collections.shuffle(list);
 		for (Point p : list) {
 			if (Terrain.get(p.x, p.y) == Terrain.WATER || checktooclose(p)) {
@@ -149,7 +149,7 @@ public class Town extends Location {
 	}
 
 	public ArrayList<Monster> getpossiblerecruits() {
-		ArrayList<Monster> recruits = new ArrayList<Monster>();
+		ArrayList<Monster> recruits = new ArrayList<>();
 		String terrain = Terrain.get(x, y).toString();
 		for (Monster m : Javelin.ALLMONSTERS) {
 			if (m.getterrains().contains(terrain)) {
@@ -203,7 +203,9 @@ public class Town extends Location {
 		}
 		float labor = population + RPG.randomize(population) / 10f;
 		labor *= World.scenario.boost * World.scenario.labormodifier;
-		governor.work(labor * DAILYLABOR, getdistrict());
+		if (labor > 0) {
+			governor.work(labor * DAILYLABOR, getdistrict());
+		}
 	}
 
 	/**
@@ -245,7 +247,7 @@ public class Town extends Location {
 	}
 
 	public void replacegovernor(Governor g) {
-		for (Labor l : new ArrayList<Labor>(governor.getprojects())) {
+		for (Labor l : new ArrayList<>(governor.getprojects())) {
 			l.cancel();
 		}
 		governor = g;
@@ -355,7 +357,7 @@ public class Town extends Location {
 
 	public static ArrayList<Town> gettowns() {
 		ArrayList<Actor> actors = World.getall(Town.class);
-		ArrayList<Town> towns = new ArrayList<Town>(actors.size());
+		ArrayList<Town> towns = new ArrayList<>(actors.size());
 		for (Actor a : actors) {
 			towns.add((Town) a);
 		}
@@ -370,7 +372,7 @@ public class Town extends Location {
 	 * @return All Points in the game World that are districts.
 	 */
 	public static HashSet<Point> getdistricts() {
-		HashSet<Point> districts = new HashSet<Point>();
+		HashSet<Point> districts = new HashSet<>();
 		for (Town t : Town.gettowns()) {
 			districts.addAll(t.getdistrict().getarea());
 		}
@@ -378,7 +380,7 @@ public class Town extends Location {
 	}
 
 	public static Set<Hazard> gethazards(boolean special) {
-		return new HashSet<Hazard>();
+		return new HashSet<>();
 	}
 
 	@Override

@@ -27,7 +27,7 @@ public class DungeonWorld extends Campaign {
 		labormodifier = 0;
 		featuregenerator = ZoneGenerator.class;
 		worldgenerator = DungeonWorldGenerator.class;
-		districtmodifier = 2;
+		districtmodifier = 1;
 		crossrivers = false;
 	}
 

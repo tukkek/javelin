@@ -40,8 +40,10 @@ public abstract class UpgradingScreen extends SelectScreen {
 		public UpgradeOption(final Upgrade u) {
 			super(u.name, 0);
 			this.u = u;
-			if (u instanceof Spell) {
-				name = "Spell: " + name.toLowerCase();
+			Spell s = u instanceof Spell ? (Spell) u : null;
+			if (s != null) {
+				name = name.toLowerCase();
+				name = "Spell: " + name + " (level " + s.level + ")";
 				priority = 2;
 			}
 		}
@@ -52,8 +54,8 @@ public abstract class UpgradingScreen extends SelectScreen {
 		}
 	}
 
-	final HashMap<Integer, Combatant> original = new HashMap<Integer, Combatant>();
-	final HashSet<Combatant> upgraded = new HashSet<Combatant>();
+	final HashMap<Integer, Combatant> original = new HashMap<>();
+	final HashSet<Combatant> upgraded = new HashSet<>();
 	protected boolean showmoneyinfo = true;
 
 	/**
@@ -100,7 +102,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 	public boolean select(final Option op) {
 		final UpgradeOption o = (UpgradeOption) op;
 		final String parenttext = text;
-		final List<Combatant> eligible = new ArrayList<Combatant>();
+		final List<Combatant> eligible = new ArrayList<>();
 		String listeligible = listeligible(o, eligible);
 		if (eligible.isEmpty()) {
 			print(text + "\nNone can learn this right now...\n");
@@ -108,8 +110,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 		}
 		text += listeligible;
 		if (showmoneyinfo) {
-			text += "Your squad has $" + Javelin.format(getgold())
-					+ ".\n\n";
+			text += "Your squad has $" + Javelin.format(getgold()) + ".\n\n";
 		}
 		text += "Which squad member? Press r to return to upgrade selection.";
 		Combatant c = null;
@@ -232,7 +233,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 	@Override
 	public List<Option> getoptions() {
 		Collection<Upgrade> upgrades = getupgrades();
-		ArrayList<Option> options = new ArrayList<Option>(upgrades.size());
+		ArrayList<Option> options = new ArrayList<>(upgrades.size());
 		for (Upgrade u : upgrades) {
 			options.add(createoption(u));
 		}
@@ -266,7 +267,7 @@ public abstract class UpgradingScreen extends SelectScreen {
 
 	@Override
 	public void onexit() {
-		ArrayList<TrainingOrder> trainees = new ArrayList<TrainingOrder>();
+		ArrayList<TrainingOrder> trainees = new ArrayList<>();
 		for (Combatant c : upgraded) {
 			Combatant original = this.original.get(c.id);
 			float xpcost = ChallengeCalculator.calculaterawcr(c.source)[1]

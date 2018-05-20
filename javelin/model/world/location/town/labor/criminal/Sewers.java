@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.Location;
@@ -112,8 +113,13 @@ public class Sewers extends Fortification {
 
 	@Override
 	public boolean interact() {
-		if (!super.interact()) {
-			return false;
+		try {
+			if (!super.interact()) {
+				return false;
+			}
+		} catch (StartBattle e) {
+			e.fight.map = RPG.pick(Terrain.UNDERGROUND.getmaps());
+			throw e;
 		}
 		Javelin.message("The sewers are empty and safe right now...", false);
 		return true;

@@ -100,7 +100,7 @@ public class Dungeon extends Location {
 	/** File to use under 'avatar' folder. */
 	public String wall;
 	/** Tiles already revealed. */
-	public HashSet<Point> discovered = new HashSet<Point>();
+	public HashSet<Point> discovered = new HashSet<>();
 	public char[][] map;
 	public int size;
 	public int stepsperencounter;
@@ -118,7 +118,7 @@ public class Dungeon extends Location {
 	 *
 	 * @see Leader
 	 */
-	public ArrayList<Combatants> encounters = new ArrayList<Combatants>();
+	public ArrayList<Combatants> encounters = new ArrayList<>();
 
 	float ratiomonster = RPG.r(25, 50) / 100f;
 	float ratiofeatures = RPG.r(50, 95) / 100f;
@@ -163,7 +163,7 @@ public class Dungeon extends Location {
 
 	protected int determineel() {
 		List<Dungeon> dungeons = getdungeons();
-		HashSet<Integer> els = new HashSet<Integer>(dungeons.size());
+		HashSet<Integer> els = new HashSet<>(dungeons.size());
 		for (Dungeon d : dungeons) {
 			els.add(d.level);
 		}
@@ -259,7 +259,7 @@ public class Dungeon extends Location {
 	void generateencounters() {
 		int target = 3 + RPG.r(1, 4) + gettier().tier;
 		if (parent != null) {
-			encounters = new ArrayList<Combatants>(parent.encounters);
+			encounters = new ArrayList<>(parent.encounters);
 			while (encounters.contains(null)) {
 				encounters.remove(null);
 			}
@@ -537,10 +537,7 @@ public class Dungeon extends Location {
 	 * @return Extra features to be placed using {@link #build(Feature, Set)}.
 	 */
 	protected Feature createfeature(boolean rare, Point p) {
-		if (Javelin.DEBUG) {
-			return new Leader(p.x, p.y);
-		}
-		LinkedList<Feature> features = new LinkedList<Feature>();
+		LinkedList<Feature> features = new LinkedList<>();
 		if (rare) {
 			features.add(new Fountain(p.x, p.y));
 			features.add(new Broker(p.x, p.y));
@@ -577,7 +574,7 @@ public class Dungeon extends Location {
 
 	static public List<Dungeon> getdungeons() {
 		ArrayList<Actor> actors = World.getall(Dungeon.class);
-		ArrayList<Dungeon> dungeons = new ArrayList<Dungeon>(actors.size());
+		ArrayList<Dungeon> dungeons = new ArrayList<>(actors.size());
 		for (Actor a : actors) {
 			dungeons.add((Dungeon) a);
 		}
@@ -626,7 +623,7 @@ public class Dungeon extends Location {
 	}
 
 	public List<Combatant> rasterizenecounters() {
-		ArrayList<Combatant> enemies = new ArrayList<Combatant>();
+		ArrayList<Combatant> enemies = new ArrayList<>();
 		for (Combatants encounter : encounters) {
 			enemies.addAll(encounter);
 		}

@@ -7,6 +7,7 @@ import javelin.Javelin;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.RandomEncounter;
 import javelin.model.unit.Squad;
+import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.basic.Lodge;
@@ -14,7 +15,7 @@ import javelin.view.screen.WorldScreen;
 
 /**
  * Rest in the {@link WorldScreen}. High chance of finding a monster instead.
- * 
+ *
  * @author alex
  */
 public class Camp extends WorldAction {
@@ -28,7 +29,7 @@ public class Camp extends WorldAction {
 	static final String INSIDETOWN = "Cannot camp inside a town's district!\n"
 			+ "Try moving further into the wilderness.\n";
 
-	static final HashMap<Character, int[]> PERIODS = new HashMap<Character, int[]>();
+	static final HashMap<Character, int[]> PERIODS = new HashMap<>();
 
 	static {
 		final int day = 24;
@@ -67,7 +68,9 @@ public class Camp extends WorldAction {
 		final int rest = period[1];
 		for (int i = 0; i < hours; i++) {
 			Squad.active.hourselapsed += 1;
-			RandomEncounter.encounter(1 / WorldScreen.HOURSPERENCOUNTER);
+			if (World.scenario.worldencounters) {
+				RandomEncounter.encounter(1 / WorldScreen.HOURSPERENCOUNTER);
+			}
 			if (i > 0 && (i + 1) % rest == 0) {
 				Lodge.rest(1, rest, false, Lodge.LODGE);
 			}

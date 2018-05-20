@@ -43,7 +43,7 @@ public class Hub extends Location {
 		Hub stables;
 
 		public ShowTransport(Hub s) {
-			super("You enter the " + s.getname(), null);
+			super("You enter the " + s.getname() + ":", null);
 			stables = s;
 		}
 

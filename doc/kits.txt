@@ -1,4 +1,4 @@
-Kits are sets of upgrades that develop a certain type of build for your units. Experienced player will notice they are the equivalent to standard d20 classes - however, they are only used as inpiration and don't follow the exact same rules. The reason for this is that Javelin allows for much more free-form character development, with kits being used as a starting point, if at all, for developing your units.
+Kits are sets of upgrades that develop a certain type of build for your units. Experienced players will notice they are mostly equivalent to standard d20 classes - however, they are only used as inpiration and don't follow the exact same rules. The reason for this is that Javelin allows for much more free-form character development, with kits being used as a starting point, if at all, for developing your units.
 
 Kits are initially found as starting options in the Adventurers Guild, in the early game. Later on, they can be upgraded (and sometimes found for hire or recruitment) on several world and district locations, indicated in parenthesis. Note, however, that even though it can be a good choice for a character to focus on a single kit, nothing prevents you from branching into two or more of these (also known as "multiclassing").
 
@@ -8,7 +8,7 @@ Bard (Bards guild): a social expert, performer and often found in supportive and
 
 Barbarian (Mead hall): focused on close-combat, often able to enter a temporary battle lust known as berserker rage.
 
-Cleric (Sanctuary): a healing powerhouse, being able to care for his allies both inside and outside battle.
+Cleric (Sanctuary): a healing and support powerhouse, being able to care for his allies both inside and outside battle.
 
 Druid (Henge): ally to the wildlife, able to summon animals to fight by his side.
 

@@ -1,5 +1,6 @@
 package javelin.controller.scenario.dungeonworld;
 
+import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.scenario.Campaign;
@@ -55,6 +56,9 @@ public class DungeonWorld extends Campaign {
 
 	@Override
 	public void endday() {
+		if (Debug.disablecombat) {
+			return;
+		}
 		for (Squad s : Squad.getsquads()) {
 			if (s.getdistrict() == null && RPG.chancein(7)) {
 				Squad.active = s;

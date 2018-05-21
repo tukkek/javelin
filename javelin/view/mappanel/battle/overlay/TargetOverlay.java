@@ -6,7 +6,6 @@ import javelin.controller.Point;
 import javelin.view.Images;
 import javelin.view.mappanel.Overlay;
 import javelin.view.mappanel.Tile;
-import javelin.view.mappanel.battle.BattleTile;
 import javelin.view.screen.BattleScreen;
 
 public class TargetOverlay extends Overlay {
@@ -15,7 +14,7 @@ public class TargetOverlay extends Overlay {
 	public int x;
 	public int y;
 
-	BattleTile t = null;
+	Tile t = null;
 
 	public TargetOverlay(int x, int y) {
 		this.x = x;

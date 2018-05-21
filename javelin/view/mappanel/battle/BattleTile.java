@@ -35,6 +35,7 @@ public class BattleTile extends Tile {
 	@Override
 	public void paint(final Graphics g) {
 		if (!discovered) {
+			drawcover(g);
 			return;
 		}
 		final Map m = Javelin.app.fight.map;
@@ -71,8 +72,8 @@ public class BattleTile extends Tile {
 			}
 		}
 		if (shrouded) {
-			g.setColor(new Color(0, 0, 0, 0.5f));
 			Point p = getposition();
+			g.setColor(new Color(0, 0, 0, 0.5f));
 			g.fillRect(p.x, p.y, MapPanel.tilesize, MapPanel.tilesize);
 		}
 		if (MapPanel.overlay != null) {

@@ -19,6 +19,7 @@ public class DungeonTile extends Tile {
 	@Override
 	public void paint(Graphics g) {
 		if (!discovered || Dungeon.active == null) {
+			drawcover(g);
 			return;
 		}
 		draw(g, JavelinApp.context.gettile(x, y));

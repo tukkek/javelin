@@ -5,7 +5,6 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -41,7 +40,6 @@ import javelin.view.Images;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.world.WorldPanel;
-import javelin.view.mappanel.world.WorldTile;
 import tyrant.mikera.engine.RPG;
 import tyrant.mikera.tyrant.QuestApp;
 
@@ -236,7 +234,6 @@ public class WorldScreen extends BattleScreen {
 		List<Actor> squads = World.getall(Squad.class);
 		while (day > WorldScreen.lastday || squads.isEmpty()) {
 			WorldScreen.lastday += 1;
-			cover();
 			Season.change(day);
 			Weather.weather();
 			World.seed.featuregenerator.spawn(1 / 14f, false);
@@ -260,55 +257,10 @@ public class WorldScreen extends BattleScreen {
 		}
 	}
 
-	/** Covers a {@link WorldTile} per day with fog of war. */
-	void cover() {
-		if (Debug.showmap || !World.scenario.fogofwar) {
-			return;
-		}
-		ArrayList<Location> locations = new ArrayList<Location>();
-		ArrayList<Location> friendlylocations = new ArrayList<Location>();
-		for (Actor a : World.getactors()) {
-			if (a instanceof Location && mappanel.tiles[a.x][a.y].discovered) {
-				Location l = (Location) a;
-				locations.add(l);
-				if (l.view()) {
-					friendlylocations.add(l);
-				}
-			}
-		}
-		LinkedList<Tile> discovered = new LinkedList<Tile>();
-		int size = World.scenario.size;
-		for (int x = 0; x < size; x++) {
-			for (int y = 0; y < size; y++) {
-				Tile t = mappanel.tiles[x][y];
-				if (t.discovered && !World.seed.roads[t.x][t.y]
-						&& World.get(t.x, t.y, locations) == null) {
-					discovered.add(t);
-				}
-			}
-		}
-		Collections.shuffle(discovered);
-		int hideperday = 2;
-		searching: while (!discovered.isEmpty()) {
-			Tile t = discovered.pop();
-			for (Location l : friendlylocations) {
-				if (l.vision >= l.distanceinsteps(t.x, t.y)) {
-					continue searching;
-				}
-			}
-			t.cover();
-			hideperday -= 1;
-			if (hideperday == 0) {
-				break;
-			}
-		}
-		Squad.updatevision();
-	}
-
 	/** Show party/world status. */
 	public void updateplayerinformation() {
 		Game.messagepanel.clear();
-		final ArrayList<String> infos = new ArrayList<String>();
+		final ArrayList<String> infos = new ArrayList<>();
 		String period = Javelin.getDayPeriod();
 		String date = "Day " + currentday() + ", " + period.toLowerCase();
 		if (Dungeon.active == null) {
@@ -362,7 +314,7 @@ public class WorldScreen extends BattleScreen {
 	 *         (health, poison, etc).
 	 */
 	static public ArrayList<String> showstatusinformation() {
-		final ArrayList<String> hps = new ArrayList<String>();
+		final ArrayList<String> hps = new ArrayList<>();
 		for (final Combatant c : Squad.active.members) {
 			String status = c.getstatus() + ", ";
 			if (c.source.poison > 0) {
@@ -433,7 +385,7 @@ public class WorldScreen extends BattleScreen {
 		Set<Hazard> hazards = Squad.active.getdistrict() == null
 				? Terrain.current().gethazards(special)
 				: Town.gethazards(special);
-		for (Hazard h : new ArrayList<Hazard>(hazards)) {
+		for (Hazard h : new ArrayList<>(hazards)) {
 			if (!h.validate()) {
 				hazards.remove(h);
 			}
@@ -441,8 +393,7 @@ public class WorldScreen extends BattleScreen {
 		if (hazards.isEmpty()) {
 			return true;
 		}
-		RPG.pick(new ArrayList<Hazard>(hazards))
-				.hazard(Math.round(hoursellapsed));
+		RPG.pick(new ArrayList<>(hazards)).hazard(Math.round(hoursellapsed));
 		return false;
 	}
 

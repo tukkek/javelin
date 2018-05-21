@@ -1,5 +1,6 @@
 package javelin.view.mappanel;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 
@@ -49,7 +50,6 @@ public abstract class Tile {
 
 	public void cover() {
 		discovered = false;
-		repaint();
 	}
 
 	public void repaint() {
@@ -61,5 +61,11 @@ public abstract class Tile {
 	 */
 	public Point getposition() {
 		return new Point(x * MapPanel.tilesize, y * MapPanel.tilesize);
+	}
+
+	protected void drawcover(final Graphics g) {
+		Point p = getposition();
+		g.setColor(Color.BLACK);
+		g.fillRect(p.x, p.y, MapPanel.tilesize, MapPanel.tilesize);
 	}
 }

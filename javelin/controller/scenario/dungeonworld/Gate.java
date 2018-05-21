@@ -2,6 +2,7 @@ package javelin.controller.scenario.dungeonworld;
 
 import java.util.List;
 
+import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.scenario.dungeonworld.ZoneGenerator.Zone;
 import javelin.model.Realm;
@@ -40,6 +41,10 @@ public class Gate extends Location {
 
 	@Override
 	public boolean interact() {
+		if (Debug.bypassdoors) {
+			remove();
+			return true;
+		}
 		TempleKey key = new TempleKey(this.key);
 		if (Squad.active.equipment.get(key) == null) {
 			String fail = "Only the " + key + " will unlock this gate...";

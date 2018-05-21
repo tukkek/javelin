@@ -1,5 +1,7 @@
 package javelin.model.world.location.dungeon.feature;
 
+import java.util.Set;
+
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.model.item.Item;
@@ -44,21 +46,28 @@ public class Chest extends Feature {
 	 *            generated items.
 	 * @param p
 	 *            {@link Dungeon} coordinate.
+	 * @param forbidden
+	 *            Do not generate these item types.
 	 */
-	public Chest(int pool, Point p) {
+	public Chest(int pool, Point p, Set<Class<? extends Item>> forbidden) {
 		this(p.x, p.y);
 		gold = pool;
-		int floor = pool / RPG.r(3, 5);
+		boolean allowartifact = RPG.chancein(2);
+		int floor = allowartifact ? pool * 3 / 4 : pool / RPG.r(3, 5);
 		for (Item i : Item.randomize(Item.ALL)) {
+			if (forbidden.contains(i.getClass())) {
+				continue;
+			}
 			if (!(floor <= i.price && i.price < pool)) {
+				continue;
+			}
+			if (i instanceof Artifact && !allowartifact) {
 				continue;
 			}
 			while (gold > i.price) {
 				gold -= i.price;
 				items.add(i);
-				if (i instanceof Artifact) {
-					break;
-				}
+				forbidden.add(i.getClass());
 			}
 		}
 		if (!items.isEmpty()) {
@@ -77,8 +86,7 @@ public class Chest extends Feature {
 			if (gold < 1) {
 				gold = 1;
 			}
-			String message = "Party receives $" + Javelin.format(gold)
-					+ "!";
+			String message = "Party receives $" + Javelin.format(gold) + "!";
 			Javelin.message(message, false);
 			Squad.active.gold += gold;
 		} else {

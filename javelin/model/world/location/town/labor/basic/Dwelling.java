@@ -110,7 +110,7 @@ public class Dwelling extends Fortification {
 	}
 
 	static public ArrayList<Monster> getcandidates(int x, int y) {
-		ArrayList<Monster> candidates = new ArrayList<Monster>();
+		ArrayList<Monster> candidates = new ArrayList<>();
 		monsters: for (Monster m : Javelin.ALLMONSTERS) {
 			String terrain = Terrain.get(x, y).toString();
 			if (m.getterrains().contains(terrain)) {
@@ -177,21 +177,19 @@ public class Dwelling extends Fortification {
 		if (volunteers > 0) {
 			text += "There are " + volunteers + " available units here.\n\n";
 			text += "d - draft as volunteer ("
-					+ Math.round(100 * dweller.source.cr)
-					+ "XP)\n";
+					+ Math.round(100 * dweller.source.cr) + "XP)\n";
 			text += "h - hire as " + monstertype + " mercenary ($"
 					+ Javelin.format(MercenariesGuild.getfee(dweller))
 					+ "/day)\n";
 		} else {
 			text += "There are currently no available units here.\n\n";
 		}
-		text += "p - pillage this dwelling ($"
-				+ Javelin.format(getspoils()) + ")\n";
+		String spoils = Javelin.format(getspoils());
+		text += "p - pillage this dwelling ($" + spoils + ")\n";
 		text += "q - quit\n";
-		text += "\nCurrent gold: $" + Javelin.format(Squad.active.gold)
-				+ "\n";
+		text += "\nCurrent gold: $" + Javelin.format(Squad.active.gold) + ".\n";
 		if (volunteers > 0) {
-			text += "Current XP: " + Squad.active.sumxp() + "XP\n";
+			text += "Current XP: " + Squad.active.sumxp() + "XP.\n";
 		}
 		return text;
 	}
@@ -255,16 +253,13 @@ public class Dwelling extends Fortification {
 				c.xp = c.xp.subtract(new BigDecimal(percapita));
 			}
 		} else {
-			ArrayList<Combatant> squad = new ArrayList<Combatant>(
-					Squad.active.members);
+			ArrayList<Combatant> squad = new ArrayList<>(Squad.active.members);
 			ChallengeCalculator.calculateel(squad);
 			Collections.sort(squad, new Comparator<Combatant>() {
 				@Override
 				public int compare(Combatant o1, Combatant o2) {
-					final float cr1 = o2.xp.floatValue()
-							+ o2.source.cr;
-					final float cr2 = o1.xp.floatValue()
-							+ o1.source.cr;
+					final float cr1 = o2.xp.floatValue() + o2.source.cr;
+					final float cr2 = o1.xp.floatValue() + o1.source.cr;
 					return new Float(cr1).compareTo(cr2);
 				}
 			});

@@ -41,15 +41,15 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Incursion extends Actor {
-	static final int PREFERREDVICTORYCHANCE = 5 + 2;
 	/** Only taken into account if running {@link Javelin#DEBUG}. */
-	static final boolean SPAWN = true;
+	static final boolean SPAWN = false;
+	static final int PREFERREDVICTORYCHANCE = 5 + 2;
 	/** Move even if {@link Debug#disablecombat} is enabled. */
 	static final boolean FORCEMOVEMENT = false;
 	static final VictoryChance VICTORYCHANCES = new VictoryChance();
 
 	static class VictoryChance {
-		HashMap<Integer, Integer> chances = new HashMap<Integer, Integer>();
+		HashMap<Integer, Integer> chances = new HashMap<>();
 
 		VictoryChance() {
 			chances.put(-4, 9);
@@ -86,7 +86,7 @@ public class Incursion extends Actor {
 	public static Integer currentel = 1;
 
 	/** @see #getel() */
-	public List<Combatant> squad = new ArrayList<Combatant>();
+	public List<Combatant> squad = new ArrayList<>();
 
 	Actor target = null;
 
@@ -105,7 +105,7 @@ public class Incursion extends Actor {
 		this.x = x;
 		this.y = y;
 		if (squadp == null) {
-			ArrayList<Terrain> terrains = new ArrayList<Terrain>(1);
+			ArrayList<Terrain> terrains = new ArrayList<>(1);
 			terrains.add(Terrain.get(x, y));
 			squad.addAll(Fight.generate(Incursion.currentel, terrains));
 			currentel += 1;
@@ -172,7 +172,7 @@ public class Incursion extends Actor {
 	 */
 	void choosetarget() {
 		final ArrayList<Actor> actors = World.getactors();
-		List<Actor> targets = new ArrayList<Actor>();
+		List<Actor> targets = new ArrayList<>();
 		int vision = Math.max(1, (Squad.perceive(true, true, true, squad)
 				+ Terrain.get(x, y).visionbonus) / 5);
 		for (final Actor a : actors) {
@@ -289,7 +289,7 @@ public class Incursion extends Actor {
 	 */
 	static public ArrayList<Combatant> getsafeincursion(List<Combatant> from) {
 		int size = from.size();
-		ArrayList<Combatant> to = new ArrayList<Combatant>(size);
+		ArrayList<Combatant> to = new ArrayList<>(size);
 		for (int i = 0; i < size; i++) {
 			to.add(from.get(i).clone().clonesource());
 		}
@@ -379,8 +379,7 @@ public class Incursion extends Actor {
 
 	@Override
 	public String describe() {
-		return "Enemy incursion ("
-				+ Difficulty.describe(squad) + " fight):\n\n"
+		return "Enemy incursion (" + Difficulty.describe(squad) + " fight):\n\n"
 				+ Squad.active.spotenemies(squad, this);
 	}
 
@@ -407,7 +406,7 @@ public class Incursion extends Actor {
 			totalcr += c.source.cr;
 		}
 		float damage = totalcr * (1 - chance / 10f);
-		LinkedList<Combatant> wounded = new LinkedList<Combatant>(survivors);
+		LinkedList<Combatant> wounded = new LinkedList<>(survivors);
 		Collections.sort(wounded, CombatantByCr.SINGLETON);
 		while (damage > 0 && survivors.size() > 1) {
 			Combatant dead = wounded.pop();
@@ -417,7 +416,7 @@ public class Incursion extends Actor {
 	}
 
 	public static ArrayList<Incursion> getincursions() {
-		ArrayList<Incursion> all = new ArrayList<Incursion>();
+		ArrayList<Incursion> all = new ArrayList<>();
 		for (Actor a : World.getall(Incursion.class)) {
 			if (a instanceof Incursion) {
 				all.add((Incursion) a);
@@ -444,7 +443,7 @@ public class Incursion extends Actor {
 			return;
 		}
 		l.garrison.sort(CombatantByCr.SINGLETON);
-		List<Combatant> incursion = new ArrayList<Combatant>(
+		List<Combatant> incursion = new ArrayList<>(
 				l.garrison.subList(0, l.garrison.size() / 2));
 		l.garrison.removeAll(incursion);
 		Incursion i = Incursion.place(l.realm, l.x, l.y, incursion);

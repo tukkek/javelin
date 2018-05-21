@@ -66,7 +66,7 @@ public class VampiricTouch extends Touch {
 	}
 
 	public String describe(final Combatant c) {
-		return c + " is " + c.getstatus();
+		return c + " is " + c.getstatus() + ".";
 	}
 
 }

@@ -15,7 +15,6 @@ public class DungeonWorldFight extends Fight {
 
 	@Override
 	public Integer getel(int teamel) {
-		return ChallengeCalculator
-				.calculateel(Squad.active.members);
+		return ChallengeCalculator.calculateel(Squad.active.members) - 1;
 	}
 }

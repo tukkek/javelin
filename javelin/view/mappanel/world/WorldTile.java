@@ -20,8 +20,7 @@ import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
 
 public class WorldTile extends Tile {
-	public static final HashMap<Point, Image> COASTLINES = new HashMap<Point, Image>(
-			4);
+	public static final HashMap<Point, Image> COASTLINES = new HashMap<>(4);
 
 	static {
 		COASTLINES.put(new Point(-1, 0),
@@ -40,6 +39,7 @@ public class WorldTile extends Tile {
 	@Override
 	public void paint(Graphics g) {
 		if (!discovered) {
+			drawcover(g);
 			return;
 		}
 		draw(g, JavelinApp.context.gettile(x, y));

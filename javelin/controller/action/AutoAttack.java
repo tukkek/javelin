@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import javelin.controller.Point;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
@@ -15,12 +16,6 @@ public class AutoAttack extends Action {
 		@Override
 		public int compare(Combatant o1, Combatant o2) {
 			return o1.getnumericstatus() - o2.getnumericstatus();
-		}
-	};
-	private static final Comparator<? super Combatant> SORTBYDISTANCE = new Comparator<Combatant>() {
-		@Override
-		public int compare(Combatant o1, Combatant o2) {
-			return o1.getlocation().distanceinsteps(o2.getlocation());
 		}
 	};
 
@@ -40,7 +35,14 @@ public class AutoAttack extends Action {
 		List<Combatant> ranged = Fight.state.gettargets(active);
 		ranged.removeAll(melee);
 		if (!ranged.isEmpty() && !active.source.ranged.isEmpty()) {
-			ranged.sort(SORTBYDISTANCE);
+			ranged.sort(new Comparator<Combatant>() {
+				@Override
+				public int compare(Combatant o1, Combatant o2) {
+					Point p = active.getlocation();
+					return p.distanceinsteps(o1.getlocation())
+							- p.distanceinsteps(o2.getlocation());
+				}
+			});
 			active.meleeattacks(ranged.get(0), Fight.state);
 			return true;
 		}

@@ -62,7 +62,7 @@ public abstract class Temple extends UniqueLocation {
 	 * Create the temples during world generation.
 	 */
 	public static void generatetemples() {
-		LinkedList<Integer> els = new LinkedList<Integer>();
+		LinkedList<Integer> els = new LinkedList<>();
 		for (int el : new int[] { 3, 5, 8, 10, 13, 15, 18 }) {
 			els.add(el);
 		}
@@ -96,7 +96,7 @@ public abstract class Temple extends UniqueLocation {
 	 * Each floor has a {@link Chest} with a ruby in it and there is also an
 	 * {@link Altar} on the deepest level.
 	 */
-	public List<TempleDungeon> floors = new ArrayList<TempleDungeon>();
+	public List<TempleDungeon> floors = new ArrayList<>();
 	/** Encounter level equivalent for {@link #level}. */
 	public int el;
 	String fluff;
@@ -139,7 +139,8 @@ public abstract class Temple extends UniqueLocation {
 		TempleDungeon parent = null;
 		for (int i = 0; i < nfloors; i++) {
 			boolean deepest = i == nfloors - 1;
-			floors.add(new TempleDungeon(el + i, deepest, parent, this));
+			parent = new TempleDungeon(el + i, deepest, parent, this);
+			floors.add(parent);
 		}
 	}
 
@@ -236,7 +237,7 @@ public abstract class Temple extends UniqueLocation {
 
 	/** See {@link Fight#getterrains(Terrain)}; */
 	public ArrayList<Terrain> getterrains() {
-		ArrayList<Terrain> terrains = new ArrayList<Terrain>();
+		ArrayList<Terrain> terrains = new ArrayList<>();
 		terrains.add(Terrain.UNDERGROUND);
 		terrains.add(terrain);
 		return terrains;
@@ -270,7 +271,7 @@ public abstract class Temple extends UniqueLocation {
 	}
 
 	public static ArrayList<Temple> gettemples() {
-		ArrayList<Temple> temples = new ArrayList<Temple>(7);
+		ArrayList<Temple> temples = new ArrayList<>(7);
 		for (Actor a : World.getactors()) {
 			if (a instanceof Temple) {
 				temples.add((Temple) a);

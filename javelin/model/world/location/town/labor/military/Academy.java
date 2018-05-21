@@ -265,7 +265,8 @@ public abstract class Academy extends Fortification {
 	public Squad moveout(TrainingOrder o, Combatant member) {
 		ArrayList<Point> free = new ArrayList<>();
 		ArrayList<Actor> actors = World.getactors();
-		HashSet<Point> district = getdistrict().getarea();
+		HashSet<Point> district = getdistrict() == null ? null
+				: getdistrict().getarea();
 		for (Point p : Point.getadjacent()) {
 			p.x += x;
 			p.y += y;
@@ -276,7 +277,7 @@ public abstract class Academy extends Fortification {
 			Squad stationed = (Squad) World.get(p.x, p.y, Squad.class);
 			if (stationed == null) {
 				if (World.get(p.x, p.y, actors) == null
-						&& district.contains(p)) {
+						&& (district == null || district.contains(p))) {
 					free.add(new Point(p.x, p.y));
 				}
 			} else {

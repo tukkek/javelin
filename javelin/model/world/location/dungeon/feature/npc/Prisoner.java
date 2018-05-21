@@ -39,6 +39,7 @@ public class Prisoner extends Inhabitant {
 		prisoner.hp = prisoner.maxhp
 				* RPG.r(Combatant.STATUSWOUNDED, Combatant.STATUSSCRATCHED)
 				/ Combatant.STATUSUNHARMED;
+		prisoner.hp = Math.max(1, prisoner.hp);
 		Dungeon.active.features.remove(this);
 		return true;
 	}

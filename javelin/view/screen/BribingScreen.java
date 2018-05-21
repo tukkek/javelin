@@ -36,28 +36,26 @@ public class BribingScreen {
 		InfoScreen screen = new InfoScreen("");
 		while (true) {
 			screen.print(text);
-			int choice = InfoScreen.numberfeedback();
-			if (choice == 1) {
+			char choice = InfoScreen.feedback();
+			if (choice == 'f') {
 				return false;
 			}
 			boolean nogold = false;
-			if (choice == 2) {
+			if (choice == 'b') {
 				if (Squad.active.gold >= bribe) {
 					Squad.active.gold -= bribe;
 					return true;
-				} else {
-					nogold = true;
 				}
+				nogold = true;
 			}
-			if (canhire && choice == 3) {
+			if (canhire && choice == 'h') {
 				if (Squad.active.gold >= dailyfee) {
 					for (Combatant foe : foes) {
 						MercenariesGuild.recruit(foe, false);
 					}
 					return true;
-				} else {
-					nogold = true;
 				}
+				nogold = true;
 			}
 			if (nogold) {
 				text += "\nNot enough gold!";
@@ -69,17 +67,16 @@ public class BribingScreen {
 	static String printdiplomacy(List<Combatant> foes, int dailyfee, int bribe,
 			boolean canhire) {
 		String text = "You are able to parley with the "
-				+ Difficulty.describe(foes)
-				+ " opponents!\n\n";
+				+ Difficulty.describe(foes) + " opponents!\n\n";
 		text = Combatant.group(foes);
 		text += "\n\nWhat do you want to do? You have $"
 				+ Javelin.format(Squad.active.gold) + ".";
 		text += "\n";
-		text += "\n1 - battle!";
-		text += "\n2 - bribe them ($" + Javelin.format(bribe) + ")";
+		text += "\nf - fight!";
+		text += "\nb - bribe them ($" + Javelin.format(bribe) + ")";
 		if (canhire) {
-			text += "\n3 - hire as mercenaries ($"
-					+ Javelin.format(dailyfee) + "/day)";
+			text += "\nh - hire as mercenaries ($" + Javelin.format(dailyfee)
+					+ "/day)";
 		}
 		text += "\n";
 		return text;

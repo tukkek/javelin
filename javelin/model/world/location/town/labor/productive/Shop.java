@@ -34,12 +34,15 @@ public class Shop extends Location {
 
 	public class SellingScreen extends SelectScreen {
 		HashMap<Option, Item> selling = new HashMap<>();
-		int buylimit;
+		int buylimit = 0;
 
 		public SellingScreen() {
 			super("Sell which items?", null);
-			buylimit = Javelin.round(
-					RewardCalculator.getgold(getdistrict().town.population));
+			District d = getdistrict();
+			if (d != null) {
+				buylimit = RewardCalculator.getgold(d.town.population);
+				buylimit = Javelin.round(buylimit);
+			}
 		}
 
 		@Override
@@ -141,6 +144,9 @@ public class Shop extends Location {
 		}
 
 		private boolean cansell() {
+			if (getdistrict() == null) {
+				return false;
+			}
 			for (ArrayList<Item> bag : Squad.active.equipment.values()) {
 				for (Item i : bag) {
 					if (i.sell()) {

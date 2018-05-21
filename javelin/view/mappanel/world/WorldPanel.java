@@ -6,8 +6,8 @@ import java.util.HashMap;
 import javelin.controller.Point;
 import javelin.controller.db.Preferences;
 import javelin.model.unit.Squad;
-import javelin.model.world.World;
 import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
@@ -15,8 +15,8 @@ import javelin.view.mappanel.Tile;
 
 public class WorldPanel extends MapPanel {
 
-	static final HashMap<Point, Actor> ACTORS = new HashMap<Point, Actor>();
-	public static final HashMap<Point, Location> DESTINATIONS = new HashMap<Point, Location>();
+	static final HashMap<Point, Actor> ACTORS = new HashMap<>();
+	public static final HashMap<Point, Location> DESTINATIONS = new HashMap<>();
 
 	public WorldPanel() {
 		super(World.getseed().map.length, World.getseed().map[0].length,
@@ -65,7 +65,12 @@ public class WorldPanel extends MapPanel {
 			resize(this, Squad.active.x, Squad.active.y);
 		}
 		super.refresh();
-		repaint();
+		updateactors();
+		for (Tile[] ts : tiles) {
+			for (Tile t : ts) {
+				t.repaint();
+			}
+		}
 	}
 
 	static public void resize(MapPanel p, int x, int y) {
@@ -81,14 +86,7 @@ public class WorldPanel extends MapPanel {
 		 * For some reasone super.repaint() isn't calling #paint at all, so
 		 * let's do it manually
 		 */
-		updateactors();
-		for (Tile[] ts : tiles) {
-			for (Tile t : ts) {
-				if (t.discovered) {
-					t.repaint();
-				}
-			}
-		}
+		super.repaint();
 	}
 
 	@Override

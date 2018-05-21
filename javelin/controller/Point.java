@@ -4,6 +4,7 @@
 package javelin.controller;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
 
 import javelin.controller.walker.Walker;
@@ -93,5 +94,26 @@ public class Point implements Cloneable, Serializable {
 	static public Point[] getadjacentorthogonal() {
 		return new Point[] { new Point(-1, 0), new Point(+1, 0),
 				new Point(0, -1), new Point(0, +1) };
+	}
+
+	/**
+	 * @param x
+	 *            Initial x, inclusive.
+	 * @param yp
+	 *            Initial y, inclusive.
+	 * @param tox
+	 *            Final x, exclusive.
+	 * @param toy
+	 *            Final y, exclusive.
+	 * @return A list containig all the Points in the given range.
+	 */
+	public static HashSet<Point> getrange(int x, int yp, int tox, int toy) {
+		HashSet<Point> range = new HashSet<>((tox - x) * (toy - yp));
+		for (; x < tox; x++) {
+			for (int y = yp; y < toy; y++) {
+				range.add(new Point(x, y));
+			}
+		}
+		return range;
 	}
 }

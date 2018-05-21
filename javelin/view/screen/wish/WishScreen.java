@@ -92,7 +92,7 @@ public class WishScreen extends SelectScreen {
 
 	Combatant selectmember() {
 		Combatant target;
-		ArrayList<String> members = new ArrayList<String>();
+		ArrayList<String> members = new ArrayList<>();
 		for (Combatant c : Squad.active.members) {
 			members.add(c.toString());
 		}
@@ -128,7 +128,7 @@ public class WishScreen extends SelectScreen {
 	}
 
 	List<AttackSequence> selectattacks(ArrayList<AttackSequence> attacksp) {
-		ArrayList<AttackSequence> attacks = new ArrayList<AttackSequence>(
+		ArrayList<AttackSequence> attacks = new ArrayList<>(
 				attacksp);
 		for (AttackSequence attack : attacksp) {
 			if (attack.powerful || attack.rapid) {
@@ -167,8 +167,7 @@ public class WishScreen extends SelectScreen {
 
 	@Override
 	public List<Option> getoptions() {
-		ArrayList<Option> options = new ArrayList<Option>();
-		// 1 ruby
+		ArrayList<Option> options = new ArrayList<>();
 		options.add(new ChangeAvatar("change unit avatar", 'c', 1, true, this));
 		options.add(new RemoveAbility("discard ability", 'd', 1, true, this));
 		options.add(new Ressurect("ressurect last fallen ally", 'r', 1, false,
@@ -177,9 +176,9 @@ public class WishScreen extends SelectScreen {
 				false, this);
 		weaksumon.fixed = 1f;
 		options.add(weaksumon);
-		options.add(new Teleport("teleport", 't', 3, false, this));
 		options.add(new Rebirth("upgrade cleanse", 'u', 1, true, this));
 		options.add(new SummonAlly("summon ally", 'S', 2, false, this));
+		options.add(new Teleport("teleport", 't', 3, false, this));
 		options.add(new Gold(this));
 		options.add(new ConjureMasterKey(this));
 		if (Campaign.class.isInstance(World.scenario)) {

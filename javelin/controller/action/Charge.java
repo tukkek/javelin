@@ -65,7 +65,7 @@ public class Charge extends Fire implements AiAction {
 
 	ArrayList<List<ChanceNode>> charge(BattleState state, Combatant me,
 			Combatant target) {
-		final ArrayList<List<ChanceNode>> chances = new ArrayList<List<ChanceNode>>();
+		final ArrayList<List<ChanceNode>> chances = new ArrayList<>();
 		if (me.source.melee.isEmpty()
 				|| me.hascondition(Fatigued.class) != null) {
 			return chances;
@@ -77,7 +77,7 @@ public class Charge extends Fire implements AiAction {
 		final ArrayList<Step> walk = walk(me, target, state);
 		final Step destination = walk.get(walk.size() - 1);
 		if (state.getmeld(destination.x, destination.y) != null) {
-			return new ArrayList<List<ChanceNode>>();
+			return chances;
 		}
 		me.location[0] = destination.x;
 		me.location[1] = destination.y;
@@ -85,8 +85,7 @@ public class Charge extends Fire implements AiAction {
 		final List<ChanceNode> move = MeleeAttack.SINGLETON.attack(me, target,
 				usedefaultattack(me), 2, 0, 1, state);
 		final boolean bullrush = me.source.hasfeat(BullRush.SINGLETON);
-		List<Point> steps = new ArrayList<Point>(
-				walk.subList(0, walk.size() - 1));
+		List<Point> steps = new ArrayList<>(walk.subList(0, walk.size() - 1));
 		steps.add(from);
 		final Overlay o = new ChargeOverlay(steps, new Point(target));
 		for (ChanceNode node : move) {
@@ -139,7 +138,7 @@ public class Charge extends Fire implements AiAction {
 	protected void filtertargets(Combatant combatant, List<Combatant> targets,
 			BattleState s) {
 		super.filtertargets(combatant, targets, s);
-		for (Combatant target : new ArrayList<Combatant>(targets)) {
+		for (Combatant target : new ArrayList<>(targets)) {
 			final ArrayList<Step> steps = walk(combatant, target, s);
 			if (steps == null) {
 				targets.remove(target);
@@ -169,13 +168,13 @@ public class Charge extends Fire implements AiAction {
 		final ArrayList<Combatant> opponents = state.blueTeam == state
 				.getteam(me) ? state.redTeam : state.blueTeam;
 		for (Step s : threatened) {
-			for (int deltax : Walker.DELTAS) {
-				for (int deltay : Walker.DELTAS) {
-					for (Combatant neighbor : opponents) {
-						if (s.x + deltax == neighbor.location[0]
-								&& s.y + deltay == neighbor.location[1]) {
-							return null;
-						}
+			for (Point p : Point.getadjacent()) {
+				p.x += s.x;
+				p.y += s.y;
+				for (Combatant neighbor : opponents) {
+					if (neighbor != target && p.x == neighbor.location[0]
+							&& p.y == neighbor.location[1]) {
+						return null;
 					}
 				}
 			}
@@ -186,7 +185,7 @@ public class Charge extends Fire implements AiAction {
 	@Override
 	public List<List<ChanceNode>> getoutcomes(Combatant combatant,
 			BattleState gameState) {
-		ArrayList<List<ChanceNode>> outcomes = new ArrayList<List<ChanceNode>>();
+		ArrayList<List<ChanceNode>> outcomes = new ArrayList<>();
 		if (gameState.isengaged(combatant)) {
 			return outcomes;
 		}

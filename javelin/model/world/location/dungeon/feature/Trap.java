@@ -60,7 +60,7 @@ public class Trap extends Feature {
 	public Trap(int cr, Point p) {
 		super(p.x, p.y, "dungeontrap");
 		this.cr = cr;
-		draw = Dungeon.gettable(HiddenTrap.class).rollboolean();
+		draw = !Dungeon.gettable(HiddenTrap.class).rollboolean();
 		stop = true;
 		remove = false;
 		int currentcr = -1;// doesn't kill ("subdual damage", kinda)
@@ -117,7 +117,7 @@ public class Trap extends Feature {
 
 	void spring() {
 		String status = "You step onto a trap!\n";
-		ArrayList<Combatant> targets = new ArrayList<Combatant>();
+		ArrayList<Combatant> targets = new ArrayList<>();
 		for (Combatant c : Squad.active.members) {
 			if (c.hp > 1) {
 				targets.add(c);

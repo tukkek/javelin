@@ -195,7 +195,7 @@ public abstract class SelectScreen extends InfoScreen {
 	 * @return Static options.
 	 */
 	protected List<Option> getfixedoptions() {
-		return new ArrayList<Option>();
+		return new ArrayList<>();
 	}
 
 	/**
@@ -249,5 +249,20 @@ public abstract class SelectScreen extends InfoScreen {
 	 */
 	public static char getkey(int i) {
 		return i < KEYS.length ? KEYS[i] : '?';
+	}
+
+	/**
+	 * @param skip
+	 *            Skip these characters.
+	 * @return A list of input characters used to convert to/from input lists.
+	 */
+	public static ArrayList<Character> filterkeys(String skip) {
+		ArrayList<Character> keys = new ArrayList<>();
+		for (char key : KEYS) {
+			if (skip.indexOf(key) == -1) {
+				keys.add(key);
+			}
+		}
+		return keys;
 	}
 }

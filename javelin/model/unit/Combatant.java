@@ -141,7 +141,7 @@ public class Combatant implements Serializable, Cloneable {
 	 */
 	public boolean summoned = false;
 	/** Equipment this unit is currently wearing. */
-	public ArrayList<Artifact> equipped = new ArrayList<Artifact>(0);
+	public ArrayList<Artifact> equipped = new ArrayList<>(0);
 	/** See {@link MercenariesGuild} */
 	public boolean mercenary = false;
 	/** See {@link Monster#burrow}. */
@@ -268,7 +268,8 @@ public class Combatant implements Serializable, Cloneable {
 
 	@Override
 	public String toString() {
-		return source.toString();
+		String s = source.toString();
+		return mercenary ? s + " mercenary" : s;
 	}
 
 	public boolean hasattacktype(final boolean meleeOnly) {
@@ -296,7 +297,7 @@ public class Combatant implements Serializable, Cloneable {
 			 * don't clone the list here or you'll be acting on different
 			 * Conditions than the ones on this Combatant instance!
 			 */
-			for (Condition c : new ArrayList<Condition>(conditions)) {
+			for (Condition c : new ArrayList<>(conditions)) {
 				/*
 				 * this second check is needed because some conditions like
 				 * Bleeding may remove other conditions during this loop
@@ -341,6 +342,9 @@ public class Combatant implements Serializable, Cloneable {
 		}
 		hp -= damage;
 		if (hp <= 0) {
+			if (mercenary) {
+				hp = Math.min(hp, DEADATHP);
+			}
 			Javelin.app.fight.die(this, s);
 		}
 	}
@@ -360,7 +364,7 @@ public class Combatant implements Serializable, Cloneable {
 		}
 		int attackindex = 0;
 		if (attacktype.size() > 1) {
-			ArrayList<String> attacks = new ArrayList<String>();
+			ArrayList<String> attacks = new ArrayList<>();
 			for (AttackSequence sequence : attacktype) {
 				attacks.add(sequence.toString(target));
 			}
@@ -529,7 +533,7 @@ public class Combatant implements Serializable, Cloneable {
 	}
 
 	public ArrayList<String> liststatus(final BattleState state) {
-		final ArrayList<String> statuslist = new ArrayList<String>();
+		final ArrayList<String> statuslist = new ArrayList<>();
 		if (state.isengaged(this)) {
 			statuslist.add("engaged");
 			for (Combatant c : Fight.state.blueTeam.contains(this)
@@ -611,7 +615,7 @@ public class Combatant implements Serializable, Cloneable {
 	}
 
 	public void terminateconditions(int timecost) {
-		for (Condition co : new ArrayList<Condition>(conditions)) {
+		for (Condition co : new ArrayList<>(conditions)) {
 			co.terminate(timecost, this);
 			if (hp <= DEADATHP) {
 				String s = this + " dies from being " + co.description + "!";
@@ -667,7 +671,7 @@ public class Combatant implements Serializable, Cloneable {
 	 * @return a copy of the current conditions in effect.
 	 */
 	public ArrayList<Condition> getconditions() {
-		return new ArrayList<Condition>(conditions);
+		return new ArrayList<>(conditions);
 	}
 
 	/**
@@ -743,7 +747,7 @@ public class Combatant implements Serializable, Cloneable {
 	 * @return All squares that are clearly visible by this unit.
 	 */
 	public HashSet<Point> calculatevision(BattleState s) {
-		final HashSet<Point> seen = new HashSet<Point>();
+		final HashSet<Point> seen = new HashSet<>();
 		final String perception = perceive(s.period);
 		final int range = view(s.period);
 		final boolean forcevision = perception == Javelin.PERIODNOON

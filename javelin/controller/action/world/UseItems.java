@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.JavelinApp;
@@ -22,6 +23,8 @@ import javelin.view.screen.town.SelectScreen;
  * @author alex
  */
 public class UseItems extends WorldAction {
+	static final ArrayList<Character> KEYS = SelectScreen.filterkeys("deq");
+
 	public static boolean skiperror = false;
 
 	/** Constructor. */
@@ -34,7 +37,6 @@ public class UseItems extends WorldAction {
 		skiperror = false;
 		Squad.active.sort();
 		while (true) {
-			ArrayList<Item> allitems = new ArrayList<Item>();
 			InfoScreen infoscreen = new InfoScreen("");
 			String actions = "";
 			actions += "Press number to use an item";
@@ -42,6 +44,7 @@ public class UseItems extends WorldAction {
 			actions += "\nPress e to exchange an item";
 			actions += "\nPress q to quit the inventory";
 			actions += "\n";
+			ArrayList<Item> allitems = new ArrayList<>();
 			String list = listitems(allitems, true);
 			infoscreen.print(actions + list);
 			if (executecommand(allitems, list, infoscreen)) {
@@ -67,10 +70,8 @@ public class UseItems extends WorldAction {
 			return false;
 		}
 		Item selected = select(allitems, input);
-		if (selected == null || !selected.usedoutofbattle) {
-			return false;
-		}
-		return use(infoscreen, selected);
+		return selected != null && selected.usedoutofbattle
+				&& use(infoscreen, selected);
 	}
 
 	boolean use(InfoScreen infoscreen, Item selected) {
@@ -91,12 +92,8 @@ public class UseItems extends WorldAction {
 	}
 
 	Item select(ArrayList<Item> allitems, Character input) {
-		Item selected = null;
-		int index = SelectScreen.convertnumericselection(input);
-		if (0 <= index && index < allitems.size()) {
-			selected = allitems.get(index);
-		}
-		return selected;
+		int index = KEYS.indexOf(input);
+		return index >= 0 ? allitems.get(index) : null;
 	}
 
 	void exchange(ArrayList<Item> allitems, String reequiptext,
@@ -139,8 +136,11 @@ public class UseItems extends WorldAction {
 	}
 
 	Combatant inputmember(String message) {
-		return Squad.active.members
-				.get(Javelin.choose(message, Squad.active.members, true, true));
+		ArrayList<Combatant> members = Squad.active.members;
+		List<String> choices = members.stream()
+				.map((member) -> member + " (" + member.getstatus() + ")")
+				.collect(Collectors.toList());
+		return members.get(Javelin.choose(message, choices, true, true));
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class UseItems extends WorldAction {
 	 *            Adds items to this list if not <code>null</code>.
 	 * @param showkeys
 	 *            If <code>true</code> will prepend each item with a key from
-	 *            {@link SelectScreen#KEYS}.
+	 *            #KEYS.
 	 * @return A textual listing.
 	 */
 	static public String listitems(ArrayList<Item> allitems, boolean showkeys) {
@@ -159,13 +159,13 @@ public class UseItems extends WorldAction {
 			Combatant c = members.get(j);
 			String output = "";
 			if (!showkeys) {
-				output += SelectScreen.getkey(j) + " - ";
+				output += KEYS.get(j) + " - ";
 			}
 			output = c.toString();
 			s += "\n";
 			s += output + ":\n";
 			boolean none = true;
-			ArrayList<Item> bag = new ArrayList<Item>(
+			ArrayList<Item> bag = new ArrayList<>(
 					Squad.active.equipment.get(c));
 			Collections.sort(bag, new Comparator<Item>() {
 				@Override
@@ -178,7 +178,8 @@ public class UseItems extends WorldAction {
 					allitems.add(it);
 				}
 				if (showkeys) {
-					s += "  [" + SelectScreen.getkey(i) + "]";
+					Character key = i >= KEYS.size() ? '?' : KEYS.get(i);
+					s += "  [" + key + "]";
 				}
 				s += " " + it.describe(c) + "\n";
 				i += 1;
@@ -201,7 +202,7 @@ public class UseItems extends WorldAction {
 	 * mercenaries to use items in this way.
 	 */
 	static ArrayList<Combatant> filtermercenaries(ArrayList<Combatant> all) {
-		ArrayList<Combatant> members = new ArrayList<Combatant>(all.size());
+		ArrayList<Combatant> members = new ArrayList<>(all.size());
 		for (Combatant c : all) {
 			if (!c.mercenary) {
 				members.add(c);
@@ -219,7 +220,7 @@ public class UseItems extends WorldAction {
 	 */
 	public static Combatant selectmember(ArrayList<Combatant> members, Item i,
 			String text) {
-		ArrayList<String> options = new ArrayList<String>(members.size());
+		ArrayList<String> options = new ArrayList<>(members.size());
 		for (Combatant c : members) {
 			String option = c.toString();
 			String invalid = i.canuse(c);

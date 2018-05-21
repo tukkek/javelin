@@ -125,8 +125,16 @@ public class Dungeon extends Location {
 	float ratiotraps = RPG.r(10, 25) / 100f;
 	float ratiotreasure = RPG.r(5, 10) / 100f;
 
-	Dungeon parent;
+	/**
+	 * Prevent generating the same type of item for different {@link Chest}s.
+	 * Since we're dealing with similar amounts of gold, this ends up happening
+	 * to often if left to randomness.
+	 *
+	 * If a dungeon floor has a {@link #parent}, refer to it instead.
+	 */
+	Set<Class<? extends Item>> forbidden = null;
 	int revealed = 0;
+	Dungeon parent;
 
 	transient boolean generated = false;
 
@@ -134,6 +142,9 @@ public class Dungeon extends Location {
 	public Dungeon(Integer level, Dungeon parent) {
 		super(null);
 		this.parent = parent;
+		if (parent == null) {
+			forbidden = new HashSet<>();
+		}
 		link = false;
 		discard = false;
 		impermeable = true;
@@ -405,7 +416,11 @@ public class Dungeon extends Location {
 			int percentmodifier = gettable(DungeonFeatureModifier.class)
 					.rollmodifier() * 2;
 			gold = gold * (100 + percentmodifier) / 100;
-			features.add(new Chest(gold, findspot()));
+			Dungeon toplevel = this;
+			while (toplevel.parent != null) {
+				toplevel = toplevel.parent;
+			}
+			features.add(new Chest(gold, findspot(), toplevel.forbidden));
 			pool -= gold;
 		}
 	}

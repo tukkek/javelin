@@ -74,8 +74,7 @@ public class StartBattle extends BattleEvent {
 		difficulty += RPG.randomize(2);
 		float resourcesused = ChallengeCalculator.useresources(difficulty);
 		String report = "Battle report:\n\n";
-		ArrayList<Combatant> blueteam = new ArrayList<Combatant>(
-				Squad.active.members);
+		ArrayList<Combatant> blueteam = new ArrayList<>(Squad.active.members);
 		ArrayList<Float> damage = damage(blueteam, resourcesused);
 		for (int i = 0; i < blueteam.size(); i++) {
 			report += strategicdamage(blueteam.get(i), damage.get(i)) + "\n\n";
@@ -103,7 +102,7 @@ public class StartBattle extends BattleEvent {
 
 	private ArrayList<Float> damage(ArrayList<Combatant> blueteam,
 			float resourcesused) {
-		ArrayList<Float> damage = new ArrayList<Float>(blueteam.size());
+		ArrayList<Float> damage = new ArrayList<>(blueteam.size());
 		while (damage.size() < blueteam.size()) {
 			damage.add(0f);
 		}
@@ -138,7 +137,7 @@ public class StartBattle extends BattleEvent {
 						.abs(c.hp / new Float(Combatant.DEADATHP));
 		String report = "";
 		ArrayList<Item> bag = Squad.active.equipment.get(c);
-		for (Item i : new ArrayList<Item>(bag)) {
+		for (Item i : new ArrayList<>(bag)) {
 			String used = "";
 			if (i.waste) {
 				String wasted = i.waste(resourcesused, c, bag);
@@ -170,8 +169,8 @@ public class StartBattle extends BattleEvent {
 		for (final Combatant m : Fight.state.redTeam) {
 			JavelinApp.lastenemies.add(m.source.clone());
 		}
-		Fight.originalblueteam = new ArrayList<Combatant>(Fight.state.blueTeam);
-		Fight.originalredteam = new ArrayList<Combatant>(Fight.state.redTeam);
+		Fight.originalblueteam = new ArrayList<>(Fight.state.blueTeam);
+		Fight.originalredteam = new ArrayList<>(Fight.state.redTeam);
 		for (int i = 0; i < Fight.state.blueTeam.size(); i++) {
 			Combatant c = Fight.state.blueTeam.get(i);
 			Fight.state.blueTeam.set(i, c.clone().clonesource());
@@ -180,7 +179,7 @@ public class StartBattle extends BattleEvent {
 	}
 
 	static ArrayList<Combatant> cloneteam(ArrayList<Combatant> team) {
-		ArrayList<Combatant> clone = new ArrayList<Combatant>(team.size());
+		ArrayList<Combatant> clone = new ArrayList<>(team.size());
 		for (Combatant c : team) {
 			clone.add(c.clone());
 		}

@@ -46,7 +46,7 @@ public class BattlefieldFight extends Minigame {
 				int midy = height / 2;
 				boolean[] regions = new boolean[] { false, false, false,
 						false };
-				HashSet<Integer> blueterrains = new HashSet<Integer>();
+				HashSet<Integer> blueterrains = new HashSet<>();
 				while (blueterrains.size() < 2) {
 					int i = RPG.r(0, 3);
 					blueterrains.add(i);
@@ -111,18 +111,18 @@ public class BattlefieldFight extends Minigame {
 		}
 	}
 
-	public ArrayList<ArrayList<Combatant>> bluequads = new ArrayList<ArrayList<Combatant>>();
-	public ArrayList<ArrayList<Combatant>> redsquads = new ArrayList<ArrayList<Combatant>>();
+	public ArrayList<ArrayList<Combatant>> bluequads = new ArrayList<>();
+	public ArrayList<ArrayList<Combatant>> redsquads = new ArrayList<>();
 
-	public ArrayList<Combatant> bluearmy = new ArrayList<Combatant>();
-	public ArrayList<Combatant> redarmy = new ArrayList<Combatant>();
+	public ArrayList<Combatant> bluearmy = new ArrayList<>();
+	public ArrayList<Combatant> redarmy = new ArrayList<>();
 
-	public ArrayList<Flagpole> blueflagpoles = new ArrayList<Flagpole>();
-	public ArrayList<Flagpole> redflagpoles = new ArrayList<Flagpole>();
+	public ArrayList<Flagpole> blueflagpoles = new ArrayList<>();
+	public ArrayList<Flagpole> redflagpoles = new ArrayList<>();
 
-	public ArrayList<Combatant> redcommanders = new ArrayList<Combatant>();
-	public ArrayList<Combatant> redelites = new ArrayList<Combatant>();
-	public ArrayList<Combatant> redfootsoliders = new ArrayList<Combatant>();
+	public ArrayList<Combatant> redcommanders = new ArrayList<>();
+	public ArrayList<Combatant> redelites = new ArrayList<>();
+	public ArrayList<Combatant> redfootsoliders = new ArrayList<>();
 
 	float lastupdate = Float.MIN_VALUE;
 	float redpoints = 0;
@@ -195,7 +195,7 @@ public class BattlefieldFight extends Minigame {
 
 	int calculateteammel(ArrayList<Combatant> team,
 			ArrayList<Flagpole> flagpoles) {
-		ArrayList<Combatant> clean = new ArrayList<Combatant>(
+		ArrayList<Combatant> clean = new ArrayList<>(
 				team.size() - flagpoles.size());
 		for (Combatant c : team) {
 			if (!(c instanceof Flagpole)) {
@@ -225,7 +225,7 @@ public class BattlefieldFight extends Minigame {
 		int elfootsolider = ChallengeCalculator.calculateel(redfootsoliders);
 		int lowel = Math.min(elcommander, Math.min(elelites, elfootsolider));
 		Reinforcement r = new Reinforcement(el);
-		ArrayList<ArrayList<Combatant>> choices = new ArrayList<ArrayList<Combatant>>();
+		ArrayList<ArrayList<Combatant>> choices = new ArrayList<>();
 		if (elcommander == lowel) {
 			choices.add(r.commander);
 		}
@@ -263,7 +263,7 @@ public class BattlefieldFight extends Minigame {
 	}
 
 	void updateredarmy(ArrayList<Combatant> tier) {
-		for (Combatant c : new ArrayList<Combatant>(tier)) {
+		for (Combatant c : new ArrayList<>(tier)) {
 			if (!state.redTeam.contains(c)) {
 				tier.remove(c);
 			}
@@ -299,7 +299,7 @@ public class BattlefieldFight extends Minigame {
 
 	static public ArrayList<Combatant> recruitbluesquad(String prompt,
 			Reinforcement r, boolean forceselection) {
-		ArrayList<String> choices = new ArrayList<String>(3);
+		ArrayList<String> choices = new ArrayList<>(3);
 		choices.add(group(r.commander));
 		choices.add(group(r.elites));
 		choices.add(group(r.footsoldiers));

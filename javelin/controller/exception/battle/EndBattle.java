@@ -9,6 +9,7 @@ import javelin.controller.ai.cache.AiCache;
 import javelin.controller.fight.Fight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
+import javelin.controller.wish.Ressurect;
 import javelin.model.item.Item;
 import javelin.model.item.Scroll;
 import javelin.model.state.BattleState;
@@ -22,7 +23,6 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.BattleScreen;
-import javelin.view.screen.wish.WishScreen;
 
 /**
  * A victory or defeat condition has been achieved.
@@ -30,21 +30,7 @@ import javelin.view.screen.wish.WishScreen;
  * @author alex
  */
 public class EndBattle extends BattleEvent {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * @see WishScreen#RESSURECT
-	 */
-	public static Combatant lastkilled = null;
-
-	/**
-	 * Handles all post-battle updates.
-	 *
-	 * @param screen
-	 *            Open battle screen.
-	 * @param originalTeam
-	 *            Player team.
-	 */
+	/** Start after-{@link Fight} cleanup. */
 	public static void end() {
 		int nsquads = World.getall(Squad.class).size();
 		Fight.victory = Javelin.app.fight.win();
@@ -112,8 +98,7 @@ public class EndBattle extends BattleEvent {
 	}
 
 	static void updateoriginal(List<Combatant> originalteam) {
-		ArrayList<Combatant> update = new ArrayList<Combatant>(
-				Fight.state.blueTeam);
+		ArrayList<Combatant> update = new ArrayList<>(Fight.state.blueTeam);
 		update.addAll(Fight.state.dead);
 		for (final Combatant inbattle : update) {
 			int originali = originalteam.indexOf(inbattle);
@@ -144,36 +129,31 @@ public class EndBattle extends BattleEvent {
 	 * Tries to {@link #revive(Combatant)} the combatant. If can't, remove him
 	 * from the game.
 	 *
-	 * TODO isn't updating {@link #lastkilled} when the entire Squad dies! this
-	 * probably isn't being called
+	 * TODO isn't updating {@link Ressurect#dead} when the entire Squad
+	 * dies! this probably isn't being called
 	 */
 	static void bury(List<Combatant> originalteam) {
-		for (Combatant active : Fight.state.dead) {
-			for (final Combatant original : new ArrayList<Combatant>(
-					originalteam)) {
-				if (active.equals(original)) {
-					if (active.hp > Combatant.DEADATHP && active.hp <= 0
-							&& active.source.constitution > 0) {
-						original.hp = 1;
-					} else if (!Fight.victory
-							|| !revive(original, originalteam)) {
-						if (!original.summoned && !original.mercenary) {
-							lastkilled = original;
-						}
-						originalteam.remove(original);
-						Squad.active.members.remove(original); // remove member
-						MercenariesGuild.die(original);
-						if (Fight.victory) {
-							final ArrayList<Item> bag = Squad.active.equipment
-									.get(original);
-							for (Item i : bag) {
-								i.grab();
-							}
-						}
-						Squad.active.remove(original); // remove equipment
-					}
-					break;
+		Squad squad = Squad.active;
+		for (Combatant c : Fight.state.dead) {
+			c = originalteam.get(originalteam.indexOf(c));
+			if (Combatant.DEADATHP <= c.hp && c.hp <= 0
+					&& c.source.constitution > 0) {
+				c.hp = 1;
+				continue;
+			}
+			if (Fight.victory) {
+				if (revive(c, originalteam)) {
+					continue;
 				}
+				for (Item i : squad.equipment.get(c)) {
+					i.grab();
+				}
+			}
+			originalteam.remove(c);
+			squad.remove(c);
+			MercenariesGuild.die(c);
+			if (!c.summoned && !c.mercenary) {
+				Ressurect.dead = c;
 			}
 		}
 		Fight.state.dead.clear();

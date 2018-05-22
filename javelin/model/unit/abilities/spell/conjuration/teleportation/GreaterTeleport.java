@@ -19,7 +19,7 @@ import javelin.model.world.location.unique.UniqueLocation;
 
 /**
  * Teleports {@link Squad#active} to any named {@link Location}.
- * 
+ *
  * @author alex
  */
 public class GreaterTeleport extends Spell {
@@ -27,15 +27,15 @@ public class GreaterTeleport extends Spell {
 	 * If <code>true</code> will show each target's {@link Terrain} for a better
 	 * informed decision. Assumes level 20 to be able to move as many creatures
 	 * as desired.
-	 * 
+	 *
 	 * @see WordOfRecall
 	 */
 	public boolean showterrain = false;
 
 	/** Constructor. */
 	public GreaterTeleport() {
-		super("Greater teleport", 7, ChallengeCalculator.ratespelllikeability(7, 20),
-				Realm.MAGIC);
+		super("Greater teleport", 7,
+				ChallengeCalculator.ratespelllikeability(7, 20), Realm.MAGIC);
 		casterlevel = 20;
 		castinbattle = false;
 		castonallies = false;
@@ -46,8 +46,11 @@ public class GreaterTeleport extends Spell {
 
 	@Override
 	public String castpeacefully(Combatant caster, Combatant target) {
-		ArrayList<Actor> places = new ArrayList<Actor>();
+		ArrayList<Actor> places = new ArrayList<>();
 		for (Actor a : World.getactors()) {
+			if (!World.seed.discovered.contains(a.getlocation())) {
+				continue;
+			}
 			if (a instanceof Town || a instanceof UniqueLocation
 					|| a instanceof Temple) {
 				places.add(a);

@@ -38,7 +38,7 @@ import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
-import javelin.model.world.location.town.labor.military.Academy;
+import javelin.model.world.location.fortification.Academy;
 import javelin.view.Images;
 import javelin.view.ScenarioSelectionDialog;
 import javelin.view.screen.BattleScreen;

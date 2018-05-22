@@ -13,9 +13,9 @@ import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
 import javelin.model.unit.feat.MartialTraining;
 import javelin.model.unit.feat.attack.expertise.CombatExpertise;
 import javelin.model.unit.skill.Skill;
-import javelin.model.world.location.town.labor.military.Academy;
-import javelin.model.world.location.town.labor.military.BuildDisciplineAcademy;
+import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.town.labor.military.DisciplineAcademy;
+import javelin.model.world.location.town.labor.military.DisciplineAcademy.BuildDisciplineAcademy;
 
 /**
  * Represent a martial-arts discipline from the Path of War books, which is

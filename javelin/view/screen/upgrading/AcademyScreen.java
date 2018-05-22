@@ -8,11 +8,11 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.labor.military.Academy;
 import javelin.model.world.location.town.labor.military.MartialAcademy;
 import javelin.view.screen.Option;
 
@@ -23,8 +23,7 @@ import javelin.view.screen.Option;
 public class AcademyScreen extends UpgradingScreen {
 	class Pillage extends Option {
 		Pillage(Fortification f) {
-			super("Pillage ($" + Javelin.format(f.getspoils()) + ")",
-					0, 'p');
+			super("Pillage ($" + Javelin.format(f.getspoils()) + ")", 0, 'p');
 			priority = 4;
 		}
 	}
@@ -59,7 +58,7 @@ public class AcademyScreen extends UpgradingScreen {
 
 	@Override
 	protected ArrayList<Upgrade> getupgrades() {
-		return new ArrayList<Upgrade>(academy.upgrades);
+		return new ArrayList<>(academy.upgrades);
 	}
 
 	@Override
@@ -85,8 +84,8 @@ public class AcademyScreen extends UpgradingScreen {
 	public String printinfo() {
 		String training = academy.training.queue.isEmpty() ? ""
 				: "Currently training: " + academy.training;
-		return "Your squad currently has $"
-				+ Javelin.format(Squad.active.gold) + ". " + training;
+		return "Your squad currently has $" + Javelin.format(Squad.active.gold)
+				+ ". " + training;
 	}
 
 	@Override

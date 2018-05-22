@@ -207,7 +207,6 @@ public class Dungeon extends Location {
 		}
 		regenerate(loading);
 		JavelinApp.context = new DungeonScreen(this);
-		JavelinApp.context.open();
 		BattleScreen.active = JavelinApp.context;
 		Squad.active.updateavatar();
 		BattleScreen.active.mappanel.center(herolocation.x, herolocation.y,
@@ -468,7 +467,7 @@ public class Dungeon extends Location {
 	/** Exit and destroy this dungeon. */
 	public void leave() {
 		DungeonScreen.dontenter = true;
-		JavelinApp.context = new WorldScreen();
+		JavelinApp.context = new WorldScreen(true);
 		BattleScreen.active = JavelinApp.context;
 		Squad.active.place();
 		Dungeon.active = null;

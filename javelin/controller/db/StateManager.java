@@ -19,7 +19,7 @@ import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Weather;
 import javelin.controller.action.world.OpenJournal;
-import javelin.controller.exception.battle.EndBattle;
+import javelin.controller.wish.Ressurect;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
@@ -103,7 +103,7 @@ public class StateManager {
 			writer.writeObject(Dungeon.active);
 			writer.writeObject(Incursion.currentel);
 			writer.writeObject(Weather.current);
-			writer.writeObject(EndBattle.lastkilled);
+			writer.writeObject(Ressurect.dead);
 			writer.writeObject(Season.current);
 			writer.writeObject(Season.endsat);
 			writer.writeObject(OpenJournal.content);
@@ -149,7 +149,7 @@ public class StateManager {
 			Dungeon.active = (Dungeon) stream.readObject();
 			Incursion.currentel = (Integer) stream.readObject();
 			Weather.read((Integer) stream.readObject());
-			EndBattle.lastkilled = (Combatant) stream.readObject();
+			Ressurect.dead = (Combatant) stream.readObject();
 			Season.current = (Season) stream.readObject();
 			Season.endsat = (Integer) stream.readObject();
 			OpenJournal.content = (String) stream.readObject();

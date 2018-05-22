@@ -20,10 +20,10 @@ import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
+import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.labor.military.Academy;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
 

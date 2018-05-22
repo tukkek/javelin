@@ -27,6 +27,7 @@ import javelin.model.world.location.dungeon.temple.GoodTemple;
 import javelin.model.world.location.dungeon.temple.MagicTemple;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.dungeon.temple.WaterTemple;
+import javelin.model.world.location.fortification.RealmAcademy;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Deck;
@@ -35,7 +36,6 @@ import javelin.model.world.location.town.labor.Trait;
 import javelin.model.world.location.town.labor.basic.Lodge;
 import javelin.model.world.location.town.labor.cultural.MagesGuild;
 import javelin.model.world.location.town.labor.expansive.Hub;
-import javelin.model.world.location.town.labor.military.RealmAcademy;
 import javelin.model.world.location.town.labor.productive.Shop;
 import tyrant.mikera.engine.RPG;
 

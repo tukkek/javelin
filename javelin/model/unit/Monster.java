@@ -42,7 +42,7 @@ import javelin.model.unit.feat.Feat;
 import javelin.model.unit.feat.attack.WeaponFinesse;
 import javelin.model.unit.feat.attack.focus.WeaponFocus;
 import javelin.model.unit.skill.Skill;
-import javelin.model.world.location.town.labor.military.Academy;
+import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.unique.MercenariesGuild;
 import tyrant.mikera.engine.RPG;
 

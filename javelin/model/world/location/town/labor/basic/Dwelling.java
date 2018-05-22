@@ -160,7 +160,7 @@ public class Dwelling extends Fortification {
 			return;
 		}
 		spend(dweller.source.cr);
-		Javelin.recruit(dweller.source.clone());
+		Squad.active.recruit(dweller.source.clone());
 		volunteers -= 1;
 	}
 
@@ -285,7 +285,7 @@ public class Dwelling extends Fortification {
 			return false;
 		}
 		spend(m.cr);
-		Javelin.recruit(m);
+		Squad.active.recruit(m);
 		return true;
 	}
 }

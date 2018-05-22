@@ -35,7 +35,7 @@ public class Prisoner extends Inhabitant {
 			throw new StartBattle(new RandomDungeonEncounter(Dungeon.active));
 		}
 		Squad.active.equipment.remove(key);
-		Combatant prisoner = Javelin.recruit(inhabitant.source);
+		Combatant prisoner = Squad.active.recruit(inhabitant.source);
 		prisoner.hp = prisoner.maxhp
 				* RPG.r(Combatant.STATUSWOUNDED, Combatant.STATUSSCRATCHED)
 				/ Combatant.STATUSUNHARMED;

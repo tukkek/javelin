@@ -36,6 +36,7 @@ import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.Images;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.BribingScreen;
+import javelin.view.screen.NamingScreen;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -796,5 +797,43 @@ public class Squad extends Actor implements Cloneable {
 
 	public int getel() {
 		return ChallengeCalculator.calculateel(members);
+	}
+
+	/**
+	 * @return <code>true</code> if there's a non-mercenary monster of this type
+	 *         in the current squad.
+	 *
+	 * @see Combatant#mercenary
+	 */
+	public boolean contains(Monster m) {
+		for (Combatant c : members) {
+			if (!c.mercenary && c.source.name.equals(m.name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public Combatant recruit(Combatant c) {
+		if (World.scenario.asksquadnames && !Javelin.DEBUG) {
+			c.source.customName = NamingScreen.getname(c.toString());
+		}
+		add(c);
+		/*
+		 * night-only is largely cosmetic so just don't appear for player units
+		 */
+		c.source.nightonly = false;
+		return c;
+	}
+
+	/**
+	 * @param m
+	 *            Source statistics to make an unit from.
+	 * @return An actual unit with said statistics.
+	 * @see Combatant#clone()
+	 * @see NamingScreen
+	 */
+	public Combatant recruit(Monster m) {
+		return recruit(new Combatant(m.clone(), true));
 	}
 }

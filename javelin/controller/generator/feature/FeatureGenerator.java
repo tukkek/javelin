@@ -26,7 +26,9 @@ import javelin.model.world.location.Outpost;
 import javelin.model.world.location.Resource;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
+import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.fortification.Guardian;
+import javelin.model.world.location.fortification.RealmAcademy;
 import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.haunt.AbandonedManor;
 import javelin.model.world.location.haunt.Graveyard;
@@ -46,11 +48,9 @@ import javelin.model.world.location.town.labor.cultural.MagesGuild.MageGuildData
 import javelin.model.world.location.town.labor.ecological.ArcheryRange;
 import javelin.model.world.location.town.labor.ecological.Henge;
 import javelin.model.world.location.town.labor.ecological.MeadHall;
-import javelin.model.world.location.town.labor.military.Academy;
 import javelin.model.world.location.town.labor.military.MartialAcademy;
 import javelin.model.world.location.town.labor.military.MartialAcademy.MartialAcademyData;
 import javelin.model.world.location.town.labor.military.Monastery;
-import javelin.model.world.location.town.labor.military.RealmAcademy;
 import javelin.model.world.location.town.labor.productive.Shop;
 import javelin.model.world.location.town.labor.religious.Sanctuary;
 import javelin.model.world.location.town.labor.religious.Shrine;
@@ -220,7 +220,7 @@ public class FeatureGenerator implements Serializable {
 		if (World.scenario.worlddistrict) {
 			locations.addAll(
 					Arrays.asList(new Location[] { new MercenariesGuild(),
-							new Artificer(), new SummoningCircle(), }));
+							new Artificer(), new SummoningCircle(5, 15), }));
 		}
 		locations.addAll(Arrays.asList(new Haunt[] { new AbandonedManor(),
 				new SunkenShip(), new ShatteredTemple(), new WitchesHideout(),

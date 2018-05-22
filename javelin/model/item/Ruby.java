@@ -3,9 +3,9 @@ package javelin.model.item;
 import java.util.ArrayList;
 
 import javelin.controller.action.world.UseItems;
+import javelin.controller.wish.Wish.WishScreen;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.view.screen.wish.WishScreen;
 
 public class Ruby extends Item {
 	public Ruby() {

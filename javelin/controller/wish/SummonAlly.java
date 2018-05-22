@@ -37,13 +37,13 @@ public class SummonAlly extends Wish {
 		int cr = screen.rubies;
 		Monster m = getcandidate(cr);
 		if (m != null) {
-			Javelin.recruit(m);
+			Squad.active.recruit(m);
 			return true;
 		}
 		while (m == null) {
 			m = getcandidate(RPG.r(cr / 2, cr - 1));
 		}
-		Javelin.recruit(NpcGenerator.generatenpc(m, cr));
+		Squad.active.recruit(NpcGenerator.generatenpc(m, cr));
 		return true;
 	}
 

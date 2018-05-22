@@ -20,6 +20,7 @@ import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.Water;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.controller.upgrade.Upgrade;
+import javelin.controller.wish.Win;
 import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.item.key.TempleKey;
@@ -37,18 +38,17 @@ import javelin.model.world.location.dungeon.feature.Altar;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.fortification.Fortification;
+import javelin.model.world.location.fortification.RealmAcademy;
 import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Deck;
 import javelin.model.world.location.town.labor.Labor;
-import javelin.model.world.location.town.labor.military.RealmAcademy;
 import javelin.model.world.location.town.labor.productive.Shop;
 import javelin.model.world.location.unique.UniqueLocation;
 import javelin.view.mappanel.world.WorldTile;
 import javelin.view.screen.SquadScreen;
-import javelin.view.screen.wish.Win;
 import tyrant.mikera.engine.RPG;
 
 /**

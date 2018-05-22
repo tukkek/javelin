@@ -21,7 +21,7 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Inventory implements Serializable {
-	HashMap<Integer, ArrayList<Item>> bags = new HashMap<Integer, ArrayList<Item>>();
+	HashMap<Integer, ArrayList<Item>> bags = new HashMap<>();
 	Squad squad;
 
 	public Inventory(Squad s) {
@@ -96,7 +96,7 @@ public class Inventory implements Serializable {
 	 * TODO ideally should never to a "dirty" state
 	 */
 	public void clean() {
-		keyloop: for (Integer key : new ArrayList<Integer>(bags.keySet())) {
+		keyloop: for (Integer key : new ArrayList<>(bags.keySet())) {
 			for (Combatant c : squad.members) {
 				if (c.id == key) {
 					continue keyloop;
@@ -159,5 +159,9 @@ public class Inventory implements Serializable {
 			}
 		}
 		return null;
+	}
+
+	public void add(Combatant target, ArrayList<Item> bad) {
+		bags.put(target.id, bad);
 	}
 }

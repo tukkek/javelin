@@ -4,7 +4,7 @@ import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.unit.abilities.discipline.Maneuver;
 import javelin.model.unit.skill.Skill;
-import javelin.model.world.location.town.labor.military.BuildDisciplineAcademy;
+import javelin.model.world.location.town.labor.military.DisciplineAcademy.BuildDisciplineAcademy;
 
 public class SteelSerpent extends Discipline {
 	public static final Maneuver[] MANEUVERS = new Maneuver[] {

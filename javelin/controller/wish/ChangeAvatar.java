@@ -1,4 +1,4 @@
-package javelin.view.screen.wish;
+package javelin.controller.wish;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -6,45 +6,45 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 
-import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
 /**
  * Changes the image used to represent a {@link Combatant}.
- * 
+ *
  * @see Monster#avatarfile
  * @author alex
  */
 public final class ChangeAvatar extends Wish {
+	static final FilenameFilter FILTER = new FilenameFilter() {
+		@Override
+		public boolean accept(File dir, String name) {
+			return name.toLowerCase().endsWith(".png");
+		}
+	};
+
 	/** Constructor. */
-	public ChangeAvatar(String name, Character keyp, double price,
-			boolean requirestargetp, WishScreen s) {
-		super(name, keyp, price, requirestargetp, s);
+	public ChangeAvatar(Character keyp, WishScreen s) {
+		super("change unit avatar", keyp, 1, true, s);
 	}
 
 	@Override
-	protected boolean wish(Combatant target) {
-		HashSet<String> avatars = new HashSet<String>();
+	boolean wish(Combatant target) {
+		HashSet<String> avatars = new HashSet<>();
 		try {
 			File avatarfolder = new File("avatars");
 			if (avatarfolder.isDirectory()) {
-				for (String avatar : avatarfolder.list(new FilenameFilter() {
-					@Override
-					public boolean accept(File dir, String name) {
-						return name.toLowerCase().endsWith(".png");
+				for (String avatar : avatarfolder.list(FILTER)) {
+					avatar = avatar.substring(0, avatar.length() - 4).trim();
+					if (!avatar.isEmpty()) {
+						avatars.add(avatar);
 					}
-				})) {
-					avatars.add(avatar.substring(0, avatar.length() - 4));
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		for (Monster m : Javelin.ALLMONSTERS) {
-			avatars.add(m.avatarfile);
-		}
-		ArrayList<String> alphabetical = new ArrayList<String>(avatars);
+		ArrayList<String> alphabetical = new ArrayList<>(avatars);
 		Collections.sort(alphabetical);
 		int delta = 0;
 		while (delta < alphabetical.size()) {

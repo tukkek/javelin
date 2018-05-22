@@ -1,26 +1,22 @@
-package javelin.view.screen.wish;
+package javelin.controller.wish;
 
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.conjuration.teleportation.GreaterTeleport;
 
 /**
  * Teleports player to any town and shows their .
- * 
+ *
  * @author alex
  */
 public class Teleport extends Wish {
-	/**
-	 * See {@link Wish#Hax(String, double, boolean)}.
-	 * 
-	 * @param haxorScreen
-	 */
-	public Teleport(String name, Character keyp, int price,
-			boolean requirestargetp, WishScreen haxorScreen) {
-		super(name, keyp, price, requirestargetp, haxorScreen);
+	/** Constructor. */
+	public Teleport(Character keyp, WishScreen s) {
+		super("teleport", keyp, Squad.active.members.size(), false, s);
 	}
 
 	@Override
-	protected boolean wish(Combatant target) {
+	boolean wish(Combatant target) {
 		GreaterTeleport spell = new GreaterTeleport();
 		spell.showterrain = true;
 		spell.castpeacefully(null);

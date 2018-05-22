@@ -1,4 +1,4 @@
-package javelin.view.screen.wish;
+package javelin.controller.wish;
 
 import java.util.ArrayList;
 
@@ -52,16 +52,15 @@ public class Win extends Wish {
 			"You're the Keeper of the Seven Keys\nYou locked up the seven seas\nAnd the Seer of Visions can now rest in peace\nThere ain't no more demons and no more disease\nAnd, mankind, live up, you're free again\nYes the tyrant is dead, he is gone, overthrown\nYou have given our souls back to light\n\n    \"Keeper of the seven keys\", by the german power metal band Helloween\n", };
 
 	/** Constructor. */
-	public Win(String name, Character keyp, double price,
-			boolean requirestargetp, WishScreen s) {
-		super(name, keyp, price, requirestargetp, s);
+	public Win(Character keyp, WishScreen s) {
+		super("win", keyp, 7, false, s);
 	}
 
 	@Override
-	protected boolean wish(Combatant target) {
+	boolean wish(Combatant target) {
 		for (Combatant c : Squad.active.members) {
 			ArrayList<Item> bag = Squad.active.equipment.get(c);
-			for (Item i : new ArrayList<Item>(bag)) {
+			for (Item i : new ArrayList<>(bag)) {
 				if (i instanceof Relic) {
 					bag.remove(i);
 				}
@@ -105,7 +104,7 @@ public class Win extends Wish {
 
 	@Override
 	public String validate() {
-		if (screen.rubies < price || Javelin.DEBUG) {
+		if (screen.rubies < price) {
 			/* let the player think he only needs rubies to win the game hihi */
 			return null;
 		}
@@ -118,7 +117,6 @@ public class Win extends Wish {
 			}
 		}
 		int all = Realm.values().length;
-		return nrelics == all ? null
-				: "You need to bring the " + all + " relics here first!";
+		return nrelics == all ? null : "You need the " + all + " relics first!";
 	}
 }

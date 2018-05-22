@@ -42,8 +42,6 @@ public abstract class Feature implements Serializable {
 	public boolean stop = false;
 
 	/**
-	 * @param thing
-	 *            TODO remove
 	 * @param xp
 	 *            {@link #x}
 	 * @param yp

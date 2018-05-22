@@ -47,6 +47,7 @@ import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.model.world.location.dungeon.feature.FruitTree;
+import javelin.model.world.location.dungeon.feature.Herb;
 import javelin.model.world.location.dungeon.feature.Portal;
 import javelin.model.world.location.dungeon.feature.Spirit;
 import javelin.model.world.location.dungeon.feature.StairsDown;
@@ -555,10 +556,10 @@ public class Dungeon extends Location {
 			features.add(new Broker(p.x, p.y));
 			features.add(new Prisoner(p.x, p.y));
 			features.add(new Leader(p.x, p.y));
-			// if (level <= Herb.MAXLEVEL) {
-			// features.add(new Herb(p.x, p.y));
-			// }
 			// features.add(new LearningStone(p.x, p.y));
+			if (level <= Herb.MAXLEVEL) {
+				features.add(new Herb(p.x, p.y));
+			}
 		} else {
 			features.add(new Chest(p.x, p.y, Key.generate()));
 			features.add(new Brazier(p.x, p.y));

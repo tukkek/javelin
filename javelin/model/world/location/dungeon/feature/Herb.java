@@ -4,9 +4,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javelin.Debug;
+import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.exception.battle.StartBattle;
+import javelin.controller.fight.RandomDungeonEncounter;
+import javelin.controller.table.dungeon.DungeonFeatureModifier;
 import javelin.model.item.Item;
 import javelin.model.item.Potion;
+import javelin.model.unit.Combatant;
+import javelin.model.unit.Squad;
+import javelin.model.unit.skill.Skill;
 import javelin.model.unit.skill.Survival;
 import javelin.model.world.location.dungeon.Dungeon;
 import tyrant.mikera.engine.RPG;
@@ -43,16 +51,42 @@ public class Herb extends Feature {
 		MAXLEVEL = level;
 	}
 
+	int dc = 10 + Dungeon.active.level
+			+ Dungeon.gettable(DungeonFeatureModifier.class).rollmodifier();
+	List<Potion> loot = generate(Dungeon.active.level);
+
 	/** Constructor. */
 	public Herb(int xp, int yp) {
 		super(xp, yp, "dungeonherb");
+		remove = false;
 	}
 
 	@Override
 	public boolean activate() {
-		// check survival
-		// 50% chance of encounter
-		// generate + grab
+		String description = describe(loot);
+		Squad s = Squad.active;
+		Combatant survivalist = s.getbest(Skill.SURVIVAL);
+		if (survivalist.taketen(Skill.SURVIVAL) < dc) {
+			String text = survivalist + " is not familiar with this plant...";
+			if (s.getbest(Skill.KNOWLEDGE).taketen(Skill.KNOWLEDGE) >= dc) {
+				text = "A more skilled group could turn these herbs into "
+						+ description + "...";
+			}
+			Javelin.message(text, false);
+			return true;
+		}
+		if (RPG.chancein(2) && !Debug.disablecombat) {
+			String interupted = "You are interrupted while extracting the herbs!";
+			Javelin.message(interupted, false);
+			throw new StartBattle(new RandomDungeonEncounter(Dungeon.active));
+		}
+		s.hourselapsed += 1;
+		String success = "You extract " + description + " from the herbs!";
+		Javelin.message(success, false);
+		for (Potion p : loot) {
+			p.grab();
+		}
+		remove();
 		return false;
 	}
 

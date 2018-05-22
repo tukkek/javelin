@@ -4,9 +4,9 @@ import java.util.HashSet;
 
 import javelin.controller.kit.Rogue;
 import javelin.controller.terrain.Terrain;
+import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.town.Rank;
-import javelin.model.world.location.town.labor.military.Academy;
 
 /**
  * Allows a player to learn one upgrade set.

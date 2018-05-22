@@ -17,7 +17,6 @@ import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
-import javelin.model.world.location.fortification.Fortification;
 import javelin.view.screen.SquadScreen;
 import tyrant.mikera.engine.RPG;
 
@@ -26,15 +25,15 @@ import tyrant.mikera.engine.RPG;
  * amount of treasure in gold as a fee and offers a fight which, if won, will
  * offer a free feat upgrade. There are 4 levels and each is a difficult fight
  * for parties of 4 of the same level. The encounter levels are: 2, 7, 10, 17.
- * 
+ *
  * Inspired by the tower in WUtai on Final Fantasy VII.
- * 
+ *
  * @author alex
  */
-public class TrainingHall extends Fortification {
+public class TrainingHall extends UniqueLocation {
 	static final boolean DEBUG = false;
 	private static final String DESCRIPTION = "The Training Hall";
-	public final static ArrayList<Monster> CANDIDATES = new ArrayList<Monster>();
+	public final static ArrayList<Monster> CANDIDATES = new ArrayList<>();
 
 	static {
 		for (Monster sensei : SquadScreen.CANDIDATES) {
@@ -52,7 +51,7 @@ public class TrainingHall extends Fortification {
 	/**
 	 * From 1 upwards, the current training session difficulty, supposed to
 	 * represent different floors.
-	 * 
+	 *
 	 * TODO this is being initialized in 2 places
 	 */
 	public Integer currentlevel = 1;
@@ -60,7 +59,6 @@ public class TrainingHall extends Fortification {
 	/** Constructor. */
 	public TrainingHall() {
 		super(DESCRIPTION, DESCRIPTION, 0, 0);
-		UniqueLocation.init(this);
 		discard = false;
 		impermeable = true;
 		vision = 2;
@@ -136,7 +134,7 @@ public class TrainingHall extends Fortification {
 				.get(Javelin.choose(prefix + "Which student will learn a feat?",
 						Squad.active.members, true, true));
 		ArrayList<FeatUpgrade> feats = UpgradeHandler.singleton.getfeats();
-		ArrayList<FeatUpgrade> options = new ArrayList<FeatUpgrade>();
+		ArrayList<FeatUpgrade> options = new ArrayList<>();
 		while (options.size() < 3 && !feats.isEmpty()) {
 			FeatUpgrade f = RPG.pick(feats);
 			feats.remove(f);
@@ -156,8 +154,7 @@ public class TrainingHall extends Fortification {
 
 	@Override
 	public String toString() {
-		return super.toString() + " ($" + Javelin.format(getfee())
-				+ ")";
+		return super.toString() + " ($" + Javelin.format(getfee()) + ")";
 	}
 
 	@Override

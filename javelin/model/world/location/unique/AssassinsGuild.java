@@ -6,9 +6,9 @@ import javelin.controller.kit.Assassin;
 import javelin.controller.terrain.Terrain;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
+import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.town.Rank;
-import javelin.model.world.location.town.labor.military.Academy;
 
 /**
  * An academy dedicated to learning how to Infiltrate.

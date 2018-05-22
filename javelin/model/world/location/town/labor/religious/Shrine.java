@@ -45,7 +45,7 @@ public class Shrine extends Fortification {
 		}
 	}
 
-	static final List<Spell> RITUALS = new ArrayList<Spell>();
+	static final List<Spell> RITUALS = new ArrayList<>();
 
 	static {
 		UpgradeHandler.singleton.gather();
@@ -85,7 +85,7 @@ public class Shrine extends Fortification {
 	}
 
 	/** Rituals are spells that this shrine will cast for a fee. */
-	final ArrayList<Spell> rituals = new ArrayList<Spell>(2);
+	final ArrayList<Spell> rituals = new ArrayList<>(2);
 	int level = 1;
 
 	public Shrine() {
@@ -96,8 +96,9 @@ public class Shrine extends Fortification {
 	/** Constructor. */
 	public Shrine(int level) {
 		super(null, "A shrine", 0, 0);
-		discard = false;
 		this.level = level;
+		discard = false;
+		gossip = true;
 		fill();
 	}
 
@@ -110,7 +111,7 @@ public class Shrine extends Fortification {
 			return;
 		}
 		if (price(0) > price(1)) {
-			ArrayList<Spell> swap = new ArrayList<Spell>();
+			ArrayList<Spell> swap = new ArrayList<>();
 			swap.add(rituals.get(1));
 			swap.add(rituals.get(0));
 			rituals.clear();
@@ -144,8 +145,8 @@ public class Shrine extends Fortification {
 		if (level > 1) {
 			output += "\n2 - " + rituals.get(1).name + " ($" + price(1) + ")";
 		}
-		output += "\np - Pillage this temple ($"
-				+ Javelin.format(getspoils()) + ")";
+		output += "\np - Pillage this temple ($" + Javelin.format(getspoils())
+				+ ")";
 		output += "\nq - Quit for now ";
 		output += "\n\nSelect an option.";
 		InfoScreen screen = new InfoScreen(output);

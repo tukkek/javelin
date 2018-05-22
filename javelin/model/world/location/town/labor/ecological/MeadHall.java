@@ -2,9 +2,9 @@ package javelin.model.world.location.town.labor.ecological;
 
 import javelin.controller.kit.Barbarian;
 import javelin.controller.terrain.Terrain;
+import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.town.Rank;
-import javelin.model.world.location.town.labor.military.Academy;
 
 public class MeadHall extends Guild {
 	public static class BuildMeadHall extends BuildAcademy {

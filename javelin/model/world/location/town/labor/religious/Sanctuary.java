@@ -8,12 +8,12 @@ import javelin.controller.kit.Paladin;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
-import javelin.model.world.location.town.labor.military.Academy;
 import javelin.view.Images;
 import tyrant.mikera.engine.RPG;
 

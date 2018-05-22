@@ -2,9 +2,9 @@ package javelin.model.world.location.town.labor.ecological;
 
 import javelin.controller.kit.Ranger;
 import javelin.controller.terrain.Terrain;
+import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.town.Rank;
-import javelin.model.world.location.town.labor.military.Academy;
 
 public class ArcheryRange extends Guild {
 	public static class BuildArcheryRange extends BuildAcademy {

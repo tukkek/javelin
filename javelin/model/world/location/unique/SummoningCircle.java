@@ -9,8 +9,8 @@ import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
+import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.town.Rank;
-import javelin.model.world.location.town.labor.military.Academy;
 import javelin.view.screen.Option;
 import javelin.view.screen.upgrading.UpgradingScreen.UpgradeOption;
 import tyrant.mikera.engine.RPG;
@@ -32,16 +32,20 @@ public class SummoningCircle extends Academy {
 
 		@Override
 		protected Academy generateacademy() {
-			SummoningCircle goal = new SummoningCircle();
-			UniqueLocation.makecommon(goal, cost - 1, cost + 1);
-			return goal;
+			return new SummoningCircle(cost - 1, cost + 1);
 		}
 	}
 
-	/** Constructor. */
-	public SummoningCircle() {
+	/**
+	 * Constructor.
+	 *
+	 * @param minlevelp
+	 * @param maxlevelp
+	 */
+	public SummoningCircle(int minlevelp, int maxlevelp) {
 		super(DESCRIPTION, DESCRIPTION, new HashSet<Upgrade>());
-		UniqueLocation.init(this);
+		minlevel = minlevelp;
+		maxlevel = maxlevelp;
 		pillage = false;
 		populate();
 	}

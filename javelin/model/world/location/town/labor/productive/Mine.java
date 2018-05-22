@@ -167,7 +167,7 @@ public class Mine extends Fortification {
 
 		@Override
 		public List<Option> getoptions() {
-			ArrayList<Option> options = new ArrayList<Option>();
+			ArrayList<Option> options = new ArrayList<>();
 			MINEDAY.name = "Mine for a day ($" + mine(1) + ")";
 			MINEWEEK.name = "Mine for a week ($" + mine(7) + ")";
 			options.add(MINEDAY);
@@ -197,7 +197,7 @@ public class Mine extends Fortification {
 		}
 	}
 
-	List<Combatant> miners = new ArrayList<Combatant>();
+	List<Combatant> miners = new ArrayList<>();
 	float gold = 0;
 	/** TODO should use a normal map instead */
 	Inventory equipment = new Inventory(null);
@@ -209,6 +209,7 @@ public class Mine extends Fortification {
 		super(DESCRIPTION, DESCRIPTION, 6, 10);
 		terrain = Terrain.UNDERGROUND;
 		allowedinscenario = false;
+		gossip = true;
 	}
 
 	/**
@@ -222,7 +223,7 @@ public class Mine extends Fortification {
 	}
 
 	ArrayList<Combatant> geteligible() {
-		ArrayList<Combatant> eligible = new ArrayList<Combatant>();
+		ArrayList<Combatant> eligible = new ArrayList<>();
 		for (Combatant c : Squad.active.members) {
 			if (!c.mercenary && c.getnumericstatus() >= Combatant.STATUSHURT
 					&& c.source.think(-1)) {
@@ -321,7 +322,7 @@ public class Mine extends Fortification {
 
 	@Override
 	public List<Combatant> getcombatants() {
-		ArrayList<Combatant> combatants = new ArrayList<Combatant>(garrison);
+		ArrayList<Combatant> combatants = new ArrayList<>(garrison);
 		combatants.addAll(miners);
 		return combatants;
 	}

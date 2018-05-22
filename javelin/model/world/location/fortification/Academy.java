@@ -1,4 +1,4 @@
-package javelin.model.world.location.town.labor.military;
+package javelin.model.world.location.fortification;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,7 +22,6 @@ import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.OrderQueue;
 import javelin.model.world.location.order.TrainingOrder;
@@ -139,6 +138,7 @@ public abstract class Academy extends Fortification {
 		sacrificeable = false;
 		level = upgrades.size();
 		clear = true;
+		gossip = true;
 	}
 
 	public Academy(String descriptionknown, String descriptionunknown,

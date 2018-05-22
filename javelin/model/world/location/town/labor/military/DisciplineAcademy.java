@@ -12,6 +12,10 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.unit.feat.Feat;
 import javelin.model.unit.feat.MartialTraining;
+import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.labor.Labor;
+import javelin.model.world.location.town.labor.Trait;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.model.world.location.unique.TrainingHall;
 import javelin.view.screen.Option;
@@ -32,6 +36,24 @@ public class DisciplineAcademy extends Academy {
 	static final int LEVERSTUDENT = 9;
 	static final int LEVELTEACHER = 12;
 	static final int LEVERMASTER = 16;
+
+	/**
+	 * TODO use one per {@link Discipline} so the {@link Labor}s don't have to
+	 * be all at one {@link Trait}.
+	 */
+	public static class BuildDisciplineAcademy extends BuildAcademies {
+		Discipline d;
+
+		public BuildDisciplineAcademy(Discipline d) {
+			super(Rank.VILLAGE);
+			this.d = d;
+		}
+
+		@Override
+		protected Academy generateacademy() {
+			return d.generateacademy();
+		}
+	}
 
 	public class HireOption extends Option {
 		Combatant c;

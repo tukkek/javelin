@@ -9,9 +9,9 @@ import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
+import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.town.Rank;
-import javelin.model.world.location.town.labor.military.Academy;
 
 public class Henge extends Guild {
 	static final String DESCRIPTIION = "Henge";

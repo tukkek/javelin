@@ -22,25 +22,11 @@ public abstract class UniqueLocation extends Fortification {
 	public UniqueLocation(String descriptionknown, String descriptionunknown,
 			int minel, int maxel) {
 		super(descriptionknown, descriptionunknown, minel, maxel);
-		init(this);
+		impermeable = true;
+		allowentry = false;
+		gossip = true;
+		vision = 0;
 		allowedinscenario = false;
-	}
-
-	/**
-	 * @param l
-	 *            Sets flags common to {@link UniqueLocation}s.
-	 */
-	public static void init(Location l) {
-		l.impermeable = true;
-		l.allowentry = false;
-		l.gossip = true;
-		l.vision = 0;
-	}
-
-	public static void makecommon(Fortification l, int minlevel, int maxlevel) {
-		l.impermeable = false;
-		l.minlevel = minlevel;
-		l.maxlevel = maxlevel;
 	}
 
 	@Override
@@ -53,4 +39,5 @@ public abstract class UniqueLocation extends Fortification {
 	public Integer getel(int attackel) {
 		return impermeable ? null : super.getel(attackel);
 	}
+
 }

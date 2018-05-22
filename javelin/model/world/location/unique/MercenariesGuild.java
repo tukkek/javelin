@@ -8,15 +8,17 @@ import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.CombatantByCr;
+import javelin.controller.generator.NpcGenerator;
 import javelin.controller.old.Game;
-import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
+import javelin.model.world.location.Location;
+import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.Rank;
-import javelin.model.world.location.town.labor.BuildUnique;
+import javelin.model.world.location.town.labor.Build;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
 import tyrant.mikera.engine.RPG;
@@ -28,20 +30,25 @@ import tyrant.mikera.engine.RPG;
  * @see Combatant#mercenary
  * @author alex
  */
-public class MercenariesGuild extends UniqueLocation {
+public class MercenariesGuild extends Fortification {
 	private static final int STARTINGMERCENARIES = 9;
 	static final boolean DEBUG = false;
 
-	public static class BuildMercenariesGuild extends BuildUnique {
+	public static class BuildMercenariesGuild extends Build {
 		public BuildMercenariesGuild() {
-			super(15, new MercenariesGuild(), Rank.TOWN);
+			super("Build mercenaries guild", 15, null, Rank.TOWN);
+		}
+
+		@Override
+		public Location getgoal() {
+			return new MercenariesGuild();
 		}
 	}
 
 	/** Available mercenaries. */
-	public ArrayList<Combatant> mercenaries = new ArrayList<Combatant>();
+	public ArrayList<Combatant> mercenaries = new ArrayList<>();
 	/** All mercenaries. */
-	public ArrayList<Combatant> all = new ArrayList<Combatant>();
+	public ArrayList<Combatant> all = new ArrayList<>();
 
 	/** Constructor. */
 	public MercenariesGuild() {
@@ -58,33 +65,19 @@ public class MercenariesGuild extends UniqueLocation {
 
 	void generatemercenary() {
 		int cr = RPG.r(11, 20);
-		Combatant c = null;
-		Realm r = Realm.random();
-		while (c == null) {
-			List<Monster> tier = Javelin.MONSTERSBYCR.get((float) RPG.r(1, cr));
-			if (tier != null) {
-				Monster m = RPG.pick(tier);
-				if (!m.humanoid) {
-					return;
-				}
-				c = new Combatant(m.clone(), true);
-				c.mercenary = true;
-				r.baptize(c);
-				for (Combatant c2 : mercenaries) {
-					if (c.toString().equals(c2.toString())) {
-						return;
+		List<Monster> candidates = new ArrayList<>();
+		for (Float tier : Javelin.MONSTERSBYCR.keySet()) {
+			if (cr / 2 <= tier && tier < cr) {
+				for (Monster m : Javelin.MONSTERSBYCR.get(tier)) {
+					if (m.think(-1) && m.humanoid) {
+						candidates.add(m);
 					}
 				}
 			}
 		}
-		int tries = 0;
-		while (c.source.cr < cr) {
-			c.upgrade(r);
-			tries += 1;
-			if (tries >= 100) {
-				return;
-			}
-		}
+		Monster m = RPG.pick(candidates);
+		Combatant c = NpcGenerator.generatenpc(m, cr);
+		c.setmercenary(true);
 		mercenaries.add(c);
 		all.add(c);
 	}
@@ -96,7 +89,7 @@ public class MercenariesGuild extends UniqueLocation {
 		}
 		ChallengeCalculator.updatecr(mercenaries);
 		mercenaries.sort(Collections.reverseOrder(CombatantByCr.SINGLETON));
-		ArrayList<String> prices = new ArrayList<String>(mercenaries.size());
+		ArrayList<String> prices = new ArrayList<>(mercenaries.size());
 		for (Combatant c : mercenaries) {
 			prices.add(c + " ($" + Javelin.format(getfee(c)) + ")");
 		}
@@ -152,7 +145,8 @@ public class MercenariesGuild extends UniqueLocation {
 	 *         value).
 	 */
 	public static int getfee(Monster m) {
-		float value = RewardCalculator.getgold(ChallengeCalculator.calculatecr(m));
+		float value = RewardCalculator
+				.getgold(ChallengeCalculator.calculatecr(m));
 		int roundto;
 		if (value > 1000) {
 			roundto = 1000;
@@ -179,15 +173,14 @@ public class MercenariesGuild extends UniqueLocation {
 
 	@Override
 	public List<Combatant> getcombatants() {
-		ArrayList<Combatant> combatants = new ArrayList<Combatant>(garrison);
+		ArrayList<Combatant> combatants = new ArrayList<>(garrison);
 		combatants.addAll(all);
 		return combatants;
 	}
 
 	public static List<MercenariesGuild> getguilds() {
 		ArrayList<Actor> all = World.getall(MercenariesGuild.class);
-		ArrayList<MercenariesGuild> guilds = new ArrayList<MercenariesGuild>(
-				all.size());
+		ArrayList<MercenariesGuild> guilds = new ArrayList<>(all.size());
 		for (Actor a : all) {
 			guilds.add((MercenariesGuild) a);
 		}

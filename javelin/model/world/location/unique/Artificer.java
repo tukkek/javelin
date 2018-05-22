@@ -9,9 +9,11 @@ import javelin.model.item.ItemSelection;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.location.Location;
+import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.order.CraftingOrder;
 import javelin.model.world.location.town.Rank;
-import javelin.model.world.location.town.labor.BuildUnique;
+import javelin.model.world.location.town.labor.Build;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.shopping.ArtificerScreen;
 import javelin.view.screen.town.PurchaseOption;
@@ -22,13 +24,18 @@ import tyrant.mikera.engine.RPG;
  *
  * @author alex
  */
-public class Artificer extends UniqueLocation {
+public class Artificer extends Fortification {
 	static final String DESCRIPTION = "An artificer";
 	static final boolean DEBUG = false;
 
-	public static class BuildArtificer extends BuildUnique {
+	public static class BuildArtificer extends Build {
 		public BuildArtificer() {
-			super(20, new Artificer(), Rank.CITY);
+			super("Build artificer", 20, null, Rank.CITY);
+		}
+
+		@Override
+		public Location getgoal() {
+			return new Artificer();
 		}
 	}
 
@@ -46,6 +53,7 @@ public class Artificer extends UniqueLocation {
 	public Artificer() {
 		super(DESCRIPTION, DESCRIPTION, 11, 15);
 		vision = 1;
+		gossip = true;
 		while (selection.size() < 9) {
 			stock();
 		}

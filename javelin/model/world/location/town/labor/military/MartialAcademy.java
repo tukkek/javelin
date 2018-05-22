@@ -10,6 +10,7 @@ import javelin.controller.upgrade.ability.RaiseDexterity;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.classes.Warrior;
+import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.town.Rank;
 import tyrant.mikera.engine.RPG;
 

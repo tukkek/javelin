@@ -5,8 +5,10 @@ import java.util.Collections;
 import java.util.List;
 
 import javelin.controller.challenge.RewardCalculator;
+import javelin.model.item.Item;
 import javelin.model.item.Potion;
 import javelin.model.unit.skill.Survival;
+import javelin.model.world.location.dungeon.Dungeon;
 import tyrant.mikera.engine.RPG;
 
 /**
@@ -17,6 +19,15 @@ import tyrant.mikera.engine.RPG;
  * @author alex
  */
 public class Herb extends Feature {
+	/**
+	 * Unfortunately {@link Potion}s are on the lower end of magic
+	 * {@link Item}s, so it's hard to scale this {@link Dungeon} feature
+	 * indefinitely. Instead, set this max allowed level as per
+	 * {@link Dungeon#level}.
+	 *
+	 * Note that this feature will generate one or multiple instances of the
+	 * same potion type.
+	 */
 	public static final int MAXLEVEL;
 
 	static final List<Potion> POTIONS = Potion.getpotions();
@@ -45,7 +56,14 @@ public class Herb extends Feature {
 		return false;
 	}
 
-	public static List<Potion> generate(int level) {
+	/**
+	 * @param level
+	 *            Approximate reward level.
+	 * @return Generates a set of potions.
+	 * @see RewardCalculator
+	 * @see #MAXLEVEL
+	 */
+	static List<Potion> generate(int level) {
 		Collections.shuffle(POTIONS);
 		ArrayList<Potion> potions = new ArrayList<>(MAXCOPIES);
 		int reward = RewardCalculator.getgold(level);
@@ -63,9 +81,14 @@ public class Herb extends Feature {
 		return potions;
 	}
 
-	public static String describe(List<Potion> potions) {
+	/**
+	 * @param potions
+	 *            A number of the same type of item.
+	 * @return "a potion of cure light wounds", "4x potion of barkskin"...
+	 */
+	static String describe(List<? extends Item> potions) {
 		int amount = potions.size();
 		String description = potions.get(0).toString().toLowerCase();
-		return (amount == 1 ? "a" : amount) + " " + description;
+		return (amount == 1 ? "a" : amount + "x") + " " + description;
 	}
 }

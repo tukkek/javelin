@@ -1,5 +1,8 @@
 package javelin.model.item;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javelin.Javelin;
 import javelin.controller.old.Game;
 import javelin.model.unit.Combatant;
@@ -9,7 +12,7 @@ import javelin.view.screen.BattleScreen;
 /**
  * Represent a consumable potion to be used in-battle. Any monster can use a
  * potion.
- * 
+ *
  * @author alex
  */
 public class Potion extends Item {
@@ -43,5 +46,15 @@ public class Potion extends Item {
 	public boolean usepeacefully(Combatant user) {
 		spell.castpeacefully(user, user);
 		return true;
+	}
+
+	public static List<Potion> getpotions() {
+		ArrayList<Potion> potions = new ArrayList<>();
+		for (Item i : ALL) {
+			if (i instanceof Potion) {
+				potions.add((Potion) i);
+			}
+		}
+		return potions;
 	}
 }

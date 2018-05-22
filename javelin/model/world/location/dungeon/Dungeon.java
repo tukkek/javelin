@@ -555,7 +555,9 @@ public class Dungeon extends Location {
 			features.add(new Broker(p.x, p.y));
 			features.add(new Prisoner(p.x, p.y));
 			features.add(new Leader(p.x, p.y));
+			// if (level <= Herb.MAXLEVEL) {
 			// features.add(new Herb(p.x, p.y));
+			// }
 			// features.add(new LearningStone(p.x, p.y));
 		} else {
 			features.add(new Chest(p.x, p.y, Key.generate()));

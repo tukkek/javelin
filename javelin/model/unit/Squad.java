@@ -20,7 +20,7 @@ import javelin.controller.fight.IncursionFight;
 import javelin.controller.old.Game;
 import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
-import javelin.model.Inventory;
+import javelin.model.Equipment;
 import javelin.model.item.Item;
 import javelin.model.transport.Transport;
 import javelin.model.unit.abilities.spell.Spell;
@@ -64,7 +64,7 @@ public class Squad extends Actor implements Cloneable {
 	 * {@link BattleAi} doesn't use items having this as a Squad filed is the
 	 * best choice performance-wise.
 	 */
-	public Inventory equipment = new Inventory(this);
+	public Equipment equipment = new Equipment(this);
 	/**
 	 * Start at morning.
 	 */

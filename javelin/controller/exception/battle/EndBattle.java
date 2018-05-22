@@ -129,15 +129,13 @@ public class EndBattle extends BattleEvent {
 	 * Tries to {@link #revive(Combatant)} the combatant. If can't, remove him
 	 * from the game.
 	 *
-	 * TODO isn't updating {@link Ressurect#dead} when the entire Squad
-	 * dies! this probably isn't being called
+	 * TODO isn't updating {@link Ressurect#dead} when the entire Squad dies!
+	 * this probably isn't being called
 	 */
 	static void bury(List<Combatant> originalteam) {
 		Squad squad = Squad.active;
 		for (Combatant c : Fight.state.dead) {
-			c = originalteam.get(originalteam.indexOf(c));
-			if (Combatant.DEADATHP <= c.hp && c.hp <= 0
-					&& c.source.constitution > 0) {
+			if (c.hp > Combatant.DEADATHP && c.source.constitution > 0) {
 				c.hp = 1;
 				continue;
 			}
@@ -159,50 +157,63 @@ public class EndBattle extends BattleEvent {
 		Fight.state.dead.clear();
 	}
 
+	/**
+	 * TODO this doesnt let you select between spell or scroll, between which
+	 * instance of nay of those nor between which characters to use it with. In
+	 * short, we need a screen for all that.
+	 */
 	static boolean revive(Combatant dead, List<Combatant> originalteam) {
-		Spell spell = null;
+		List<Combatant> alive = new ArrayList<>(originalteam);
+		alive.removeAll(Fight.state.dead);
+		Spell spell = castrevive(alive);
 		Scroll scroll = null;
-		search: for (Combatant c : Squad.active.members) {
-			for (Spell s : c.spells) {
-				if (s instanceof RaiseDead && !s.exhausted()) {
-					spell = s;
-					break search;
-				}
+		if (scroll == null) {
+			scroll = findressurectscroll(alive);
+			if (scroll != null) {
+				spell = scroll.spell;
 			}
 		}
-		if (spell == null) {
-			for (List<Item> bag : Squad.active.equipment.values()) {
-				for (Item i : bag) {
-					Scroll s = i instanceof Scroll ? (Scroll) i : null;
-					if (s != null && s.spell instanceof RaiseDead
-							&& canuse(s, originalteam)) {
-						spell = s.spell;
-						scroll = s;
-					}
-				}
-			}
-		}
-		if (spell == null) {
-			return false;
-		}
-		if (!spell.validate(null, dead)) {
+		if (spell == null || !spell.validate(null, dead)) {
 			return false;
 		}
 		spell.castpeacefully(null, dead);
-		spell.used += 1;
-		if (scroll != null) {
-			Squad.active.equipment.pop(scroll.getClass());
+		if (scroll == null) {
+			spell.used += 1;
+		} else {
+			Squad.active.equipment.remove(scroll);
 		}
 		return true;
 	}
 
-	private static boolean canuse(Item s, List<Combatant> alive) {
-		for (Combatant c : alive) {
-			if (!Fight.state.dead.contains(c) && s.canuse(c) == null) {
-				return true;
+	static Scroll findressurectscroll(List<Combatant> alive) {
+		List<Scroll> ressurectscrolls = new ArrayList<>();
+		for (Scroll s : Squad.active.equipment.getall(Scroll.class)) {
+			if (s.spell instanceof RaiseDead) {
+				ressurectscrolls.add(s);
 			}
 		}
-		return false;
+		if (ressurectscrolls.isEmpty()) {
+			return null;
+		}
+		for (Combatant c : alive) {
+			for (Scroll s : ressurectscrolls) {
+				if (s.canuse(c) == null) {
+					return s;
+				}
+			}
+		}
+		return null;
+	}
+
+	static Spell castrevive(List<Combatant> alive) {
+		for (Combatant c : alive) {
+			for (Spell s : c.spells) {
+				if (s instanceof RaiseDead && !s.exhausted()) {
+					return s;
+				}
+			}
+		}
+		return null;
 	}
 
 	static void end(ArrayList<Combatant> originalteam) {

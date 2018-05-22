@@ -13,6 +13,7 @@ public class Ruby extends Item {
 		consumable = true;
 		waste = false;
 		usedinbattle = false;
+		targeted = false;
 	}
 
 	@Override

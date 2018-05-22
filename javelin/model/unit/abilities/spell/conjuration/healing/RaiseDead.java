@@ -18,8 +18,9 @@ public class RaiseDead extends Spell {
 
 	/** Constructor. */
 	public RaiseDead() {
-		super("Raise dead", 5, ChallengeCalculator.ratespelllikeability(5)
-				+ RESTORATIONCR, Realm.GOOD);
+		super("Raise dead", 5,
+				ChallengeCalculator.ratespelllikeability(5) + RESTORATIONCR,
+				Realm.GOOD);
 		components = 5000;
 		isscroll = true;
 		castinbattle = false;
@@ -33,10 +34,9 @@ public class RaiseDead extends Spell {
 	@Override
 	public boolean validate(Combatant caster, Combatant target) {
 		Game.messagepanel.clear();
-		Game.message(
-				"Revive " + target
-						+ "? Press y to confirm or n to let go of this unit.",
-				Delay.NONE);
+		String prompt = "Revive " + target + "?\n"
+				+ "Press y to confirm or n to let go of this unit.";
+		Game.message(prompt, Delay.NONE);
 		while (true) {
 			final Character feedback = InfoScreen.feedback();
 			if (feedback == 'y') {

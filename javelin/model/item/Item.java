@@ -42,7 +42,7 @@ public abstract class Item implements Serializable, Cloneable {
 	 */
 	public static final ItemSelection ALL = new ItemSelection();
 	/** Map of items by price in gold coins ($). */
-	public static final TreeMap<Integer, ItemSelection> BYPRICE = new TreeMap<Integer, ItemSelection>();
+	public static final TreeMap<Integer, ItemSelection> BYPRICE = new TreeMap<>();
 	/** @see Item#getselection(Realm) */
 	public static final ItemSelection FIRE = new ItemSelection();
 	/** @see Item#getselection(Realm) */
@@ -85,6 +85,8 @@ public abstract class Item implements Serializable, Cloneable {
 	 * opportunity.
 	 */
 	public boolean provokesaoo = true;
+	/** Whether to select a {@link Combatant} to use this on. */
+	public boolean targeted = true;
 
 	/** If not <code>null</code> will be used for {@link #describefailure()}. */
 	volatile protected String failure = null;
@@ -196,7 +198,7 @@ public abstract class Item implements Serializable, Cloneable {
 		 */
 		spend: for (final Combatant owner : Squad.active.members) {
 			List<Item> items = Squad.active.equipment.get(owner);
-			for (Item used : new ArrayList<Item>(items)) {
+			for (Item used : new ArrayList<>(items)) {
 				if (used == this) {
 					items.remove(used);
 					break spend;
@@ -284,7 +286,7 @@ public abstract class Item implements Serializable, Cloneable {
 	 * @return All items types mapped by realm.
 	 */
 	public static HashMap<String, ItemSelection> getall() {
-		HashMap<String, ItemSelection> all = new HashMap<String, ItemSelection>();
+		HashMap<String, ItemSelection> all = new HashMap<>();
 		addall(FIRE, all, "fire");
 		addall(EARTH, all, "earth");
 		addall(WATER, all, "water");
@@ -308,7 +310,7 @@ public abstract class Item implements Serializable, Cloneable {
 	 *         trainees and {@link Academy} trainees (including subclasses).
 	 */
 	public static List<Item> getplayeritems() {
-		ArrayList<Item> items = new ArrayList<Item>();
+		ArrayList<Item> items = new ArrayList<>();
 		for (Actor a : World.getactors()) {
 			Academy academy = a instanceof Academy ? (Academy) a : null;
 			if (academy != null) {
@@ -339,7 +341,7 @@ public abstract class Item implements Serializable, Cloneable {
 	 *         for items with exact same price).
 	 */
 	public static List<Item> randomize(Collection<Item> from) {
-		ArrayList<Item> randomized = new ArrayList<Item>(from.size());
+		ArrayList<Item> randomized = new ArrayList<>(from.size());
 		for (Item i : from) {
 			randomized.add(i.randomize());
 		}

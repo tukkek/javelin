@@ -300,9 +300,10 @@ public class FeatureGenerator implements Serializable {
 		normalizemap(starting);
 		generatefeatures(w, starting);
 		normalizemap(starting);
-		starting.capture();
 		for (Town t : Town.gettowns()) {
-			t.populategarisson();
+			if (t != starting) {
+				t.populategarisson();
+			}
 		}
 		return starting;
 	}

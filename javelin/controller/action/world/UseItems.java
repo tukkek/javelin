@@ -38,12 +38,11 @@ public class UseItems extends WorldAction {
 		Squad.active.sort();
 		while (true) {
 			InfoScreen infoscreen = new InfoScreen("");
-			String actions = "";
-			actions += "Press number to use an item";
-			actions += "\nPress d to drop an item";
-			actions += "\nPress e to exchange an item";
-			actions += "\nPress q to quit the inventory";
-			actions += "\n";
+			String actions;
+			actions = "Press number to use an item\n";
+			actions += "Press d to drop an item\n";
+			actions += "Press e to exchange an item\n";
+			actions += "Press q to quit the inventory\n";
 			ArrayList<Item> allitems = new ArrayList<>();
 			String list = listitems(allitems, true);
 			infoscreen.print(actions + list);
@@ -75,25 +74,33 @@ public class UseItems extends WorldAction {
 	}
 
 	boolean use(InfoScreen infoscreen, Item selected) {
-		Combatant target = selected instanceof Artifact ? findowner(selected)
-				: inputmember("Which member will use the "
-						+ selected.toString().toLowerCase() + "?");
+		Combatant target;
+		if (selected instanceof Artifact) {
+			target = findowner(selected);
+		} else if (selected.targeted) {
+			target = inputmember("Which member will use the "
+					+ selected.toString().toLowerCase() + "?");
+		} else {
+			target = null;
+		}
 		if (!selected.usepeacefully(target)) {
 			if (!skiperror) {
-				String error = infoscreen.text + "\n\n"
-						+ selected.describefailure();
-				infoscreen.print(error);
+				String error = selected.describefailure();
+				infoscreen.print(infoscreen.text + "\n\n" + error);
 				InfoScreen.feedback();
 			}
-		} else if (selected.consumable) {
+			return false;
+		}
+		if (selected.consumable) {
 			selected.expend();
 		}
-		return selected.consumable;
+		return true;
 	}
 
 	Item select(ArrayList<Item> allitems, Character input) {
 		int index = KEYS.indexOf(input);
-		return index >= 0 ? allitems.get(index) : null;
+		return 0 <= index && index < allitems.size() ? allitems.get(index)
+				: null;
 	}
 
 	void exchange(ArrayList<Item> allitems, String reequiptext,

@@ -80,11 +80,11 @@ public class Javelin {
 	 *
 	 * @see Combatant#clonedeeply()
 	 */
-	public static final TreeMap<String, String> DESCRIPTIONS = new TreeMap<String, String>();
+	public static final TreeMap<String, String> DESCRIPTIONS = new TreeMap<>();
 	/** All loaded monster mapped by challenge rating. */
-	public static final TreeMap<Float, List<Monster>> MONSTERSBYCR = new TreeMap<Float, List<Monster>>();
+	public static final TreeMap<Float, List<Monster>> MONSTERSBYCR = new TreeMap<>();
 	/** All loaded XML {@link Monster}s. See {@link MonsterReader}. */
-	public static final List<Monster> ALLMONSTERS = new ArrayList<Monster>();
+	public static final List<Monster> ALLMONSTERS = new ArrayList<>();
 
 	static final String TITLE = "Javelin";
 	static final Preferences RECORD = Preferences
@@ -400,7 +400,7 @@ public class Javelin {
 		prompt += "\n\n";
 		int nnames = names.size();
 		boolean multicolumn = nnames > 20;
-		ArrayList<Object> options = new ArrayList<Object>();
+		ArrayList<Object> options = new ArrayList<>();
 		for (int i = 0; i < nnames; i++) {
 			boolean leftcolumn = i % 2 == 0;
 			String name = names.get(i).toString();
@@ -482,7 +482,9 @@ public class Javelin {
 	}
 
 	/**
-	 * @see
+	 * @param prompt
+	 *            Shows this message...
+	 * @return and returns the user input.
 	 */
 	static public Character prompt(final String prompt) {
 		return prompt(prompt, false);
@@ -557,7 +559,7 @@ public class Javelin {
 	 * TODO a collection would make more sense
 	 */
 	public static List<Monster> getmonsterbytype(String type) {
-		ArrayList<Monster> monsters = new ArrayList<Monster>();
+		ArrayList<Monster> monsters = new ArrayList<>();
 		for (Monster m : Javelin.ALLMONSTERS) {
 			if (m.type.equalsIgnoreCase(type)) {
 				monsters.add(m);

@@ -24,11 +24,6 @@ public class Ressurect extends Wish {
 
 	@Override
 	boolean wish(Combatant target) {
-		if (dead == null) {
-			screen.print(screen.text + "\n"
-					+ "No non-mercenary ally to ressurect...");
-			return false;
-		}
 		dead.hp = dead.maxhp;
 		Squad.active.add(dead);
 		dead = null;
@@ -38,7 +33,7 @@ public class Ressurect extends Wish {
 	@Override
 	String validate() {
 		if (dead == null) {
-			return "No one to ressurect...";
+			return "No non-mercenary ally to ressurect...";
 		}
 		return super.validate();
 	}

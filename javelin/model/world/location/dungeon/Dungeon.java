@@ -396,6 +396,9 @@ public class Dungeon extends Location {
 	 * TODO would be cool to generate a flood-map to see which chest is more
 	 * distant before deciding which one is the special one. Would probably need
 	 * to generate points frist, chests later.
+	 *
+	 * AFter introducing Doors, actually would have to have some sort of zoning
+	 * in there too.
 	 */
 	void createchests(int nchests, int pool) {
 		for (int i = 0; i < nchests; i++) {
@@ -426,8 +429,6 @@ public class Dungeon extends Location {
 	}
 
 	/**
-	 * TODO at some point rubies shouldn't depend on Haxor anymore
-	 *
 	 * @param p
 	 *            Chest's location.
 	 * @return Most special chest here.
@@ -440,11 +441,7 @@ public class Dungeon extends Location {
 	}
 
 	/**
-	 * @param freep
-	 *            Pick a location from here...
-	 * @param used
-	 *            as long as it's not being used...
-	 * @return and returns it.
+	 * @return Free spot on the dungeon floor (no walls or features).
 	 */
 	public Point findspot() {
 		Point p = null;
@@ -558,6 +555,8 @@ public class Dungeon extends Location {
 			features.add(new Broker(p.x, p.y));
 			features.add(new Prisoner(p.x, p.y));
 			features.add(new Leader(p.x, p.y));
+			// features.add(new Herb(p.x, p.y));
+			// features.add(new LearningStone(p.x, p.y));
 		} else {
 			features.add(new Chest(p.x, p.y, Key.generate()));
 			features.add(new Brazier(p.x, p.y));

@@ -16,6 +16,7 @@ import javelin.controller.fight.TempleEncounter;
 import javelin.controller.scenario.Campaign;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
+import javelin.controller.wish.Win;
 import javelin.model.Realm;
 import javelin.model.item.Tier;
 import javelin.model.item.key.TempleKey;
@@ -33,7 +34,6 @@ import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.unique.UniqueLocation;
 import javelin.view.Images;
-import javelin.view.screen.wish.Win;
 
 /**
  * Temples are the key to winning Javelin's {@link Campaign} mode. Each temple

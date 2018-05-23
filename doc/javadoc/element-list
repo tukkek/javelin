@@ -46,7 +46,6 @@ javelin.controller.map.terrain.hill
 javelin.controller.map.terrain.marsh
 javelin.controller.map.terrain.mountain
 javelin.controller.map.terrain.plain
-javelin.controller.map.terrain.underground
 javelin.controller.quality
 javelin.controller.quality.perception
 javelin.controller.quality.resistance
@@ -129,6 +128,8 @@ javelin.model.world.location.town.labor.religious
 javelin.model.world.location.unique
 javelin.model.world.location.unique.minigame
 javelin.old
+javelin.old.messagepanel
+javelin.old.underground
 javelin.view
 javelin.view.frame
 javelin.view.frame.keys

@@ -1,6 +1,7 @@
 package javelin.controller.action;
 
 import javelin.Javelin;
+import javelin.controller.Point;
 import javelin.controller.action.ai.AiMovement;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
@@ -13,7 +14,6 @@ import javelin.model.unit.skill.Acrobatics;
 import javelin.model.unit.skill.Skill;
 import javelin.view.mappanel.battle.action.BattleMouseAction;
 import javelin.view.screen.BattleScreen;
-import tyrant.mikera.engine.Point;
 
 /**
  * @see AiMovement

@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 import javelin.Javelin;
+import javelin.controller.Point;
 import javelin.controller.db.Preferences;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import tyrant.mikera.engine.BaseObject;
-import tyrant.mikera.engine.Point;
 import tyrant.mikera.tyrant.InputHandler;
 import tyrant.mikera.tyrant.Screen;
 import tyrant.mikera.tyrant.TextZone;
@@ -38,7 +38,7 @@ public final class Game extends BaseObject {
 
 	/**
 	 * Main output function for {@link BattleScreen}s.
-	 * 
+	 *
 	 * @param message
 	 *            Text to be printed.
 	 * @param t
@@ -80,28 +80,27 @@ public final class Game extends BaseObject {
 	}
 
 	public void clearMessageList() {
-		messageStack = new Stack<ArrayList<Object>>();
+		messageStack = new Stack<>();
 	}
 
 	/**
 	 * Stack to store messages before they are displayed.
-	 * 
+	 *
 	 * This is useful so that you can defer the display of messages until after
 	 * the result of several actions has been dtermined
-	 * 
+	 *
 	 * Game.pushMessages(); .... Do something complex here, possibly generating
 	 * many messages ArrayList al=Game.popMessages(); Game.message("The
 	 * following interesting things happen:); Game.message(al); // now display
 	 * the messages
-	 * 
+	 *
 	 * You can also use this method to suppress messages (use exactly the same
 	 * technique, but omit the final line).
 	 */
 	/**
 	 * TODO parametrize
 	 */
-	public Stack<ArrayList<Object>> messageStack =
-			new Stack<ArrayList<Object>>();
+	public Stack<ArrayList<Object>> messageStack = new Stack<>();
 	private boolean isDesigner = false;
 
 	public InputHandler createInputHandler() {
@@ -219,7 +218,7 @@ public final class Game extends BaseObject {
 
 	/**
 	 * Temporary access method for Game.instance
-	 * 
+	 *
 	 * @return
 	 */
 	public static Game instance() {

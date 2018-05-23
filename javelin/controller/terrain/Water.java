@@ -67,7 +67,7 @@ public class Water extends Terrain {
 
 	@Override
 	protected Point expand(HashSet<Point> area, World world) {
-		List<Point> pool = new ArrayList<Point>(area);
+		List<Point> pool = new ArrayList<>(area);
 		Point to = null;
 		while (to == null) {
 			to = expandto(RPG.pick(pool), world);
@@ -80,9 +80,9 @@ public class Water extends Terrain {
 	Point expandto(Point p, World w) {
 		Point to = new Point(p);
 		if (RPG.chancein(2)) {
-			to.x += RPG.pick(DELTAS);
+			to.x += DELTAS[RPG.r(DELTAS.length)];
 		} else {
-			to.y += RPG.pick(DELTAS);
+			to.y += DELTAS[RPG.r(DELTAS.length)];
 		}
 		if (checkinvalid(w, to.x, to.y)
 				|| search(to, DESERT, World.scenario.desertradius, w) > 0) {

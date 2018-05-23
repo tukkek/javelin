@@ -1,29 +1,21 @@
 package javelin.controller.fight;
 
-import java.awt.Image;
 import java.util.ArrayList;
 
-import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Incursion;
-import javelin.old.QuestApp;
 
 /**
  * @see Incursion
  * @author alex
  */
 public class IncursionFight extends Fight {
-	/** See {@link Javelin#settexture(Image)}. */
-	public static final Image INCURSIONTEXTURE = QuestApp
-			.getImage("/images/texture2.png");
-
 	/** Incursion being fought. */
 	public final Incursion incursion;
 
 	/** Constructor. */
 	public IncursionFight(final Incursion incursion) {
 		this.incursion = incursion;
-		texture = IncursionFight.INCURSIONTEXTURE;
 		meld = true;
 		hide = false;
 		canflee = false;
@@ -50,8 +42,7 @@ public class IncursionFight extends Fight {
 		if (Fight.victory) {
 			incursion.remove();
 		} else {
-			for (Combatant incursant : new ArrayList<Combatant>(
-					incursion.squad)) {
+			for (Combatant incursant : new ArrayList<>(incursion.squad)) {
 				Combatant alive = null;
 				for (Combatant inbattle : Fight.state.getcombatants()) {
 					if (inbattle.id == incursant.id) {

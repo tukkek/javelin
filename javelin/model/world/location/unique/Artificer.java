@@ -96,7 +96,7 @@ public class Artificer extends Fortification {
 				+ crafting.geteta(Squad.active.hourselapsed) + " before your "
 				+ crafting.item.toString().toLowerCase() + " is completed.\"",
 				false);
-		Game.getInput();
+		Game.input();
 		return true;
 	}
 

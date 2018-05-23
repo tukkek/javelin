@@ -129,7 +129,7 @@ public class Breath extends Action implements AiAction {
 				targetinfo(state, area)
 						+ "Press ENTER or b to confirm, q to quit.",
 				Delay.NONE);
-		char confirm = Game.getInput().getKeyChar();
+		char confirm = Game.input().getKeyChar();
 		try {
 			quit(confirm);
 		} catch (RepeatTurn e) {
@@ -275,7 +275,7 @@ public class Breath extends Action implements AiAction {
 	}
 
 	public Integer selectdirection(Combatant hero) {
-		KeyEvent direction = Game.getInput();
+		KeyEvent direction = Game.input();
 		int code = direction.getKeyCode();
 		char key = direction.getKeyChar();
 		quit(key);

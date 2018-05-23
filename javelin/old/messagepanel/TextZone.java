@@ -1,8 +1,4 @@
-//
-// Graphical component to display an area of text
-//
-
-package javelin.old;
+package javelin.old.messagepanel;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -11,12 +7,12 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
+import javelin.old.QuestApp;
+
 public class TextZone extends Component {
 	public static final String BLACK = "\\b";
 	private final int BORDER = 5;
-	private static final long serialVersionUID = 3256443603391033401L;
 	public String text;
-	public Font font;
 	public static int linelength;
 	static public Color fontcolor;
 	// static public Color color;
@@ -27,8 +23,7 @@ public class TextZone extends Component {
 
 	public TextZone(final String t) {
 		text = t;
-		font = QuestApp.mainfont;
-		setFont(font);
+		setFont(QuestApp.mainfont);
 	}
 
 	public void setText(final String s) {
@@ -67,7 +62,7 @@ public class TextZone extends Component {
 			}
 		}
 
-		final int scroll = RPG.max(0, height - getHeight());
+		final int scroll = Math.max(0, height - getHeight());
 
 		g.setColor(fontcolor);
 		for (final String s : st) {

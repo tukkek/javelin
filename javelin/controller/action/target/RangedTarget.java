@@ -10,13 +10,12 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.attack.Attack;
 import javelin.view.mappanel.battle.BattleMouse;
-import javelin.view.screen.BattleScreen;
 
 /**
  * Gives a human-usable version of the {@link RangedAttack} {@link AiAction}.
  * This is to be used internally for convenience. Tupical ranged attacks are
  * handled by {@link Fire} (through {@link BattleMouse} if using the mouse).
- * 
+ *
  * @author alex
  */
 public class RangedTarget extends Fire {
@@ -34,8 +33,6 @@ public class RangedTarget extends Fire {
 	protected void attack(Combatant active, Combatant target, BattleState s) {
 		Action.outcome(
 				attacktype.attack(active, target, a, 0, 0, ap, Fight.state));
-		BattleScreen.active.update();
-
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package javelin.controller.map.terrain.underground;
+package javelin.old.underground;
 
 import javelin.model.state.Square;
 import javelin.old.RPG;
@@ -64,7 +64,7 @@ public class Pit extends Caves {
 		for (int y = y1; y <= y2; y += gran) {
 			for (int x = x1; x <= x2; x += gran) {
 				Square s;
-				switch (RPG.d(4)) {
+				switch (RPG.r(1, 4)) {
 				case 1:
 					s = map[x + g][y];
 					break;

@@ -29,6 +29,7 @@ public class EncounterPossibilities {
 			throw new RuntimeException(
 					"Unknown random monster group: " + random);
 		}
-		return Organization.monstersbyname.get(RPG.pick(group).toLowerCase());
+		String name = group[RPG.r(group.length)].toLowerCase();
+		return Organization.monstersbyname.get(name);
 	}
 }

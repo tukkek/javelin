@@ -1,4 +1,4 @@
-package javelin.controller.map.terrain.underground;
+package javelin.old.underground;
 
 import javelin.controller.Point;
 import javelin.old.RPG;
@@ -19,8 +19,8 @@ public class Floor extends Caves {
 	public void generate() {
 		init();
 		// create a central room
-		int from = (0 + SIZE - 1) / 2 - RPG.d(3);
-		int to = (0 + SIZE - 1) / 2 + RPG.d(3);
+		int from = (0 + SIZE - 1) / 2 - RPG.r(1, 3);
+		int to = (0 + SIZE - 1) / 2 + RPG.r(1, 3);
 		for (int x = from; x <= to; x++) {
 			for (int y = from; y <= to; y++) {
 				map[x][y].blocked = false;
@@ -83,11 +83,11 @@ public class Floor extends Caves {
 		int ndx = dx;
 		int ndy = dy;
 		map[x][y].blocked = false;
-		if (RPG.d(3) == 1) {
+		if (RPG.r(1, 3) == 1) {
 			ndx = -dy;
 			ndy = dx;
 		}
-		if (RPG.d(4) == 1) {
+		if (RPG.r(1, 4) == 1) {
 			ndx = dy;
 			ndy = -dx;
 		}
@@ -114,9 +114,9 @@ public class Floor extends Caves {
 		map[x][y].blocked = false;
 		map[x + dy][y - dx].blocked = true;
 		map[x - dy][y + dx].blocked = true;
-		int j1 = RPG.rspread(1, cl - 1);
+		int j1 = BigCave.rspread(1, cl - 1);
 		makeRoom(x + j1 * dx, y + j1 * dy, dy, -dx);
-		int j2 = RPG.rspread(1, cl - 1);
+		int j2 = BigCave.rspread(1, cl - 1);
 		makeRoom(x + j2 * dx, y + j2 * dy, -dy, dx);
 		return true;
 	}
@@ -131,7 +131,7 @@ public class Floor extends Caves {
 			map[x + i * dx][y + i * dy].blocked = false;
 		}
 		// add a door if there is space
-		if (l > 4 && RPG.d(2) == 1) {
+		if (l > 4 && RPG.r(1, 2) == 1) {
 			if (map[x + dy][y + dx].blocked && map[x - dy][y - dx].blocked) {
 				map[x][y].blocked = false;
 			}
@@ -145,10 +145,10 @@ public class Floor extends Caves {
 
 	boolean makeRoom(int x, int y, int dx, int dy) {
 		// random dimesions and offset
-		int x1 = x - RPG.d(RPG.abs(dx - 1), 5);
-		int y1 = y - RPG.d(RPG.abs(dy - 1), 5);
-		int x2 = x + RPG.d(RPG.abs(dx + 1), 5);
-		int y2 = y + RPG.d(RPG.abs(dy + 1), 5);
+		int x1 = x - RPG.d(Floor.abs(dx - 1), 5);
+		int y1 = y - RPG.d(Floor.abs(dy - 1), 5);
+		int x2 = x + RPG.d(Floor.abs(dx + 1), 5);
+		int y2 = y + RPG.d(Floor.abs(dy + 1), 5);
 		if (x2 - x1 < 3 || y2 - y1 < 3 || !isBlank(x1, y1, x2, y2)) {
 			return false;
 		}
@@ -166,7 +166,7 @@ public class Floor extends Caves {
 	private Point randomdirection() {
 		int dx = 0;
 		int dy = 0;
-		switch (RPG.d(4)) {
+		switch (RPG.r(1, 4)) {
 		case 1:
 			dx = 1;
 			break; // W
@@ -181,5 +181,9 @@ public class Floor extends Caves {
 			break; // S
 		}
 		return new Point(dx, dy);
+	}
+
+	public static final int abs(final int a) {
+		return a >= 0 ? a : -a;
 	}
 }

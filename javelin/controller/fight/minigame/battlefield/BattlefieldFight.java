@@ -35,6 +35,7 @@ public class BattlefieldFight extends Minigame {
 	static final int CHOICES = 3;
 	static final List<Terrain> TERRAIN = Arrays.asList(Terrain.NONWATER);
 	static final float POINTSPERTURN = 1f;
+	static final int[] FLAGS = new int[] { 1, 2, 4 };
 
 	class BattlefieldSetup extends BattleSetup {
 		@Override
@@ -79,7 +80,7 @@ public class BattlefieldFight extends Minigame {
 
 		void placeflags(int fromx, int fromy, int tox, int toy,
 				boolean blueteam) throws GaveUp {
-			int flagpoles = RPG.pick(new int[] { 1, 2, 4 });
+			int flagpoles = FLAGS[RPG.r(FLAGS.length)];
 			int placed = 0;
 			int tries = 0;
 			placing: while (placed < flagpoles) {
@@ -172,7 +173,7 @@ public class BattlefieldFight extends Minigame {
 			Javelin.message("The enemy calls for reinforcements:\n"
 					+ Combatant.group(units) + "!\n", true);
 			Game.messagepanel.clear();
-			Game.messagepanel.getPanel().repaint();
+			Game.messagepanel.repaint();
 		}
 	}
 

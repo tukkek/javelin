@@ -125,7 +125,7 @@ public class MercenariesGuild extends Fortification {
 				Javelin.app.switchScreen(new InfoScreen(
 						"You don't have the money to pay today's advancement ($"
 								+ Javelin.format(advance) + ")!"));
-				Game.getInput();
+				Game.input();
 			}
 			return false;
 		}

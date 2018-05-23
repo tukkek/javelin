@@ -2,6 +2,7 @@ package javelin;
 
 import java.awt.BorderLayout;
 import java.awt.Image;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.FileReader;
 import java.io.IOException;
@@ -21,12 +22,12 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import javelin.controller.Highscore;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.controller.db.StateManager;
 import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.db.reader.fields.Organization;
-import javelin.controller.fight.Fight;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
@@ -38,13 +39,11 @@ import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.fortification.Academy;
 import javelin.old.Game;
-import javelin.old.QuestApp;
 import javelin.old.Game.Delay;
 import javelin.view.Images;
 import javelin.view.ScenarioSelectionDialog;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
-import javelin.view.screen.NamingScreen;
 import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
@@ -87,7 +86,7 @@ public class Javelin {
 	public static final List<Monster> ALLMONSTERS = new ArrayList<>();
 
 	static final String TITLE = "Javelin";
-	static final Preferences RECORD = Preferences
+	public static final Preferences RECORD = Preferences
 			.userNodeForPackage(Javelin.class);
 	static final DecimalFormat COSTFORMAT = new DecimalFormat("####,###,##0");
 
@@ -140,7 +139,12 @@ public class Javelin {
 		app.setVisible(false);
 		f.add(app);
 		f.setSize(app.getPreferredSize().width, app.getPreferredSize().height);
-		f.addKeyListener(app.keyadapter);
+		f.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(final KeyEvent e) {
+				Game.userinterface.go(e);
+			}
+		});
 		app.setVisible(true);
 		f.setVisible(true);
 		app.init();
@@ -236,7 +240,7 @@ public class Javelin {
 	 * @return Welcomes the playet to the game based on the current time of the
 	 *         day.
 	 */
-	public static String sayWelcome() {
+	public static String welcome() {
 		final String period = getDayPeriod();
 		String flavor;
 		if (period == PERIODMORNING) {
@@ -266,87 +270,12 @@ public class Javelin {
 		Javelin.app.switchScreen(BattleScreen.active);
 		StateManager.clear();
 		BattleScreen.active.messagepanel.clear();
-		Game.message(
-				"You have lost all your units! Game over T_T\n\n" + record(),
-				Delay.NONE);
+		String sadface = "You have lost all your units! Game over T_T\n\n";
+		Game.message(sadface + Highscore.record(), Delay.NONE);
 		while (InfoScreen.feedback() != '\n') {
 			continue;
 		}
 		System.exit(0);
-	}
-
-	/**
-	 * Sets the highscore and...
-	 *
-	 * @return a message with previous and current score.
-	 */
-	public static String record() {
-		if (!World.scenario.record) {
-			return "";
-		}
-		final long stored = gethighscore();
-		final long current = WorldScreen.currentday();
-		String message = "Previous record: " + stored;
-		if (stored < current) {
-			message += "\nNew record: " + current + "!";
-			sethighscore(current);
-		} else {
-			message += "\nCurrent game: " + current;
-		}
-		return message;
-	}
-
-	/**
-	 * @param score
-	 *            Updates the highscore record with this value.
-	 */
-	public static void sethighscore(final long score) {
-		RECORD.putLong("record", score);
-	}
-
-	/**
-	 * @return The current highscore value.
-	 */
-	public static long gethighscore() {
-		return RECORD.getLong("record", 0);
-	}
-
-	/**
-	 * @param pick
-	 *            Source statistics to make an unit from.
-	 * @return An actual unit with said statistics.
-	 * @see Combatant#clone()
-	 * @see NamingScreen
-	 */
-	public static Combatant recruit(Monster pick) {
-		Combatant c = new Combatant(pick.clone(), true);
-		if (World.scenario.asksquadnames && !Javelin.DEBUG) {
-			c.source.customName = NamingScreen.getname(c.toString());
-		}
-		Squad.active.add(c);
-		/*
-		 * night-only is largely cosmetic so just don't appear for player units
-		 */
-		c.source.nightonly = false;
-		return c;
-	}
-
-	/**
-	 * @param file
-	 *            Uses the given image as background.
-	 */
-	public static void settexture(Image file) {
-		QuestApp.paneltexture = file;
-	}
-
-	/** TODO remove? */
-	public static Combatant getCombatant(int id) {
-		for (Combatant c : Fight.state.getcombatants()) {
-			if (c.id == id) {
-				return c;
-			}
-		}
-		return null;
 	}
 
 	/**
@@ -450,15 +379,14 @@ public class Javelin {
 	 *            otherwise any key will do.
 	 * @return the key pressed by the user as confirmation for seeing the
 	 *         message.
-	 * @see Game#message(String, Combatant, Delay)
 	 */
 	public static KeyEvent message(String text, boolean requireenter) {
 		Game.messagepanel.clear();
 		Game.message(text + "\nPress " + (requireenter ? "ENTER" : "any key")
 				+ " to continue...", Delay.NONE);
-		KeyEvent input = Game.getInput();
+		KeyEvent input = Game.input();
 		while (requireenter && input.getKeyChar() != '\n') {
-			input = Game.getInput();
+			input = Game.input();
 		}
 		Game.messagepanel.clear();
 		return input;
@@ -488,28 +416,6 @@ public class Javelin {
 	 */
 	static public Character prompt(final String prompt) {
 		return prompt(prompt, false);
-	}
-
-	/**
-	 * @param name
-	 *            Monster type. Example: orc, kobold, young white dragon... Case
-	 *            insensitive.
-	 * @return A clone.
-	 * @see Monster#clone()
-	 */
-	public static Monster getmonster(String name) {
-		Monster monster = null;
-		for (Monster m : ALLMONSTERS) {
-			if (m.name.equalsIgnoreCase(name)) {
-				monster = m.clone();
-				break;
-			}
-		}
-		if (monster == null) {
-			return null;
-		}
-		ChallengeCalculator.calculatecr(monster);
-		return monster;
 	}
 
 	public static String describedifficulty(int dc) {
@@ -596,5 +502,27 @@ public class Javelin {
 			roundto = roundto * 10;
 		}
 		return roundto * Math.round((float) gold / roundto);
+	}
+
+	/**
+	 * @param name
+	 *            Monster type. Example: orc, kobold, young white dragon... Case
+	 *            insensitive.
+	 * @return A clone.
+	 * @see Monster#clone()
+	 */
+	public static Monster getmonster(String name) {
+		Monster monster = null;
+		for (Monster m : ALLMONSTERS) {
+			if (m.name.equalsIgnoreCase(name)) {
+				monster = m.clone();
+				break;
+			}
+		}
+		if (monster == null) {
+			return null;
+		}
+		ChallengeCalculator.calculatecr(monster);
+		return monster;
 	}
 }

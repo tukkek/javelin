@@ -55,7 +55,7 @@ public class Examine extends Action {
 		startlooking(start, s);
 		try {
 			while (true) {
-				final KeyEvent e = Game.getInput();
+				final KeyEvent e = Game.input();
 				if (e == null) {
 					continue;
 				}

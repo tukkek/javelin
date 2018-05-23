@@ -1,6 +1,6 @@
 package javelin.controller.action.world;
 
-import javelin.Javelin;
+import javelin.controller.Highscore;
 import javelin.old.Game;
 import javelin.old.Game.Delay;
 import javelin.view.screen.InfoScreen;
@@ -19,7 +19,7 @@ public class ClearHighscore extends WorldAction {
 	}
 
 	static String name() {
-		return "Clear highscore (" + Javelin.gethighscore() + ")";
+		return "Clear highscore (" + Highscore.gethighscore() + ")";
 	}
 
 	@Override
@@ -27,11 +27,11 @@ public class ClearHighscore extends WorldAction {
 		Game.messagepanel.clear();
 		Game.message(
 				"Are you sure you want to reset your highscore ("
-						+ Javelin.gethighscore() + ")? Press y to proceed.\n",
+						+ Highscore.gethighscore() + ")? Press y to proceed.\n",
 				Delay.NONE);
 		boolean ok = InfoScreen.feedback() == 'y';
 		if (ok) {
-			Javelin.sethighscore(0);
+			Highscore.sethighscore(0);
 		}
 		Game.message((ok ? "Score reset" : "Aborted") + "...", Delay.WAIT);
 		name = name();

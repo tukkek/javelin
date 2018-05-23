@@ -1,4 +1,4 @@
-package javelin.controller.map.terrain.underground;
+package javelin.old.underground;
 
 import javelin.controller.Point;
 import javelin.controller.Weather;
@@ -90,7 +90,7 @@ public class Caves extends Map {
 		// first choose a direction
 		int dx = 0;
 		int dy = 0;
-		switch (RPG.d(4)) {
+		switch (RPG.r(1, 4)) {
 		case 1:
 			dx = 1;
 			break; // W
@@ -136,7 +136,7 @@ public class Caves extends Map {
 
 	void addfeature(int dx, int dy, Point p) {
 		// choose new feature to add
-		switch (RPG.d(7)) {
+		switch (RPG.r(1, 7)) {
 		case 1:
 		case 2:
 			makeThinPassage(p.x, p.y, dx, dy, false);
@@ -211,7 +211,7 @@ public class Caves extends Map {
 	private void makeThinPassage(int x, int y, int dx, int dy,
 			boolean diagonals) {
 		int len = RPG.d(2, 12);
-		int size = RPG.d(4);
+		int size = RPG.r(1, 4);
 		if (!isBlank(x + size * dy, y - size * dx, x - size * dy + len * dx,
 				y + size * dx + len * dy)) {
 			return;
@@ -231,10 +231,10 @@ public class Caves extends Map {
 			int passagex = x + i * dx + p * dy;
 			int passagey = y + i * dy - p * dx;
 			map[passagex][passagey].blocked = false;
-			map[passagex + RPG.pick(DELTAS)][passagey
-					+ RPG.pick(DELTAS)].blocked = false;
-			if (RPG.d(2) == 1) {
-				p = RPG.middle(-size, p + RPG.r(2) - RPG.r(2), size);
+			map[passagex + DELTAS[RPG.r(DELTAS.length)]][passagey
+					+ DELTAS[RPG.r(DELTAS.length)]].blocked = false;
+			if (RPG.r(1, 2) == 1) {
+				p = BigCave.middle(-size, p + RPG.r(2) - RPG.r(2), size);
 			}
 			if (!diagonals) {
 				map[x + i * dx + p * dy][y + i * dy - p * dx].blocked = false;

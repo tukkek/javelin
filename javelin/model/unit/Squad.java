@@ -32,8 +32,8 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.old.Game;
-import javelin.old.RPG;
 import javelin.old.Game.Delay;
+import javelin.old.RPG;
 import javelin.view.Images;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.BribingScreen;
@@ -249,7 +249,7 @@ public class Squad extends Actor implements Cloneable {
 				Game.message(
 						c + " is not paid, abandons your ranks!\n\nPress ENTER to coninue...",
 						Delay.NONE);
-				while (Game.getInput().getKeyChar() != '\n') {
+				while (Game.input().getKeyChar() != '\n') {
 					// wait for enter
 				}
 				Game.messagepanel.clear();

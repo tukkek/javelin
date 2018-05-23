@@ -165,7 +165,7 @@ public class Caravan extends Actor {
 				"A merchant arrives at " + town
 						+ ", city grows! Press ENTER to continue...",
 				Delay.NONE);
-		while (Game.getInput().getKeyChar() != '\n') {
+		while (Game.input().getKeyChar() != '\n') {
 			// wait for ENTER
 		}
 		Game.messagepanel.clear();

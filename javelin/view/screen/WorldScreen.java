@@ -35,9 +35,8 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.Town;
 import javelin.old.Game;
-import javelin.old.QuestApp;
-import javelin.old.RPG;
 import javelin.old.Game.Delay;
+import javelin.old.RPG;
 import javelin.view.Images;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
@@ -102,7 +101,6 @@ public class WorldScreen extends BattleScreen {
 	void open() {
 		super.open();
 		WorldScreen.current = this;
-		Javelin.settexture(QuestApp.DEFAULTTEXTURE);
 		Tile[][] tiles = gettiles();
 		if (Debug.showmap) {
 			for (Tile[] ts : tiles) {
@@ -351,7 +349,7 @@ public class WorldScreen extends BattleScreen {
 	}
 
 	private void saywelcome() {
-		Game.message(Javelin.sayWelcome(), Delay.NONE);
+		Game.message(Javelin.welcome(), Delay.NONE);
 		InfoScreen.feedback();
 		messagepanel.clear();
 		WorldScreen.welcome = false;

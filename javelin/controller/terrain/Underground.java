@@ -2,13 +2,13 @@ package javelin.controller.terrain;
 
 import javelin.controller.map.Map;
 import javelin.controller.map.Maps;
-import javelin.controller.map.terrain.underground.BigCave;
-import javelin.controller.map.terrain.underground.Caves;
-import javelin.controller.map.terrain.underground.Complex;
-import javelin.controller.map.terrain.underground.Floor;
-import javelin.controller.map.terrain.underground.Maze;
-import javelin.controller.map.terrain.underground.Pit;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.old.underground.BigCave;
+import javelin.old.underground.Caves;
+import javelin.old.underground.Complex;
+import javelin.old.underground.Floor;
+import javelin.old.underground.Maze;
+import javelin.old.underground.Pit;
 import javelin.view.Images;
 
 /**

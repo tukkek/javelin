@@ -127,7 +127,7 @@ public class BattleMouse extends Mouse {
 				BattleScreen.active.statuspanel.repaint();
 			}
 		} finally {
-			Game.messagepanel.getPanel().repaint();
+			Game.messagepanel.repaint();
 		}
 	}
 

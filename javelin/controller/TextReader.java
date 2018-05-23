@@ -33,6 +33,6 @@ public class TextReader {
 
 	public static KeyEvent show(File f, String footer) {
 		Javelin.app.switchScreen(new InfoScreen(TextReader.read(f) + footer));
-		return Game.getInput();
+		return Game.input();
 	}
 }

@@ -10,7 +10,7 @@ import javelin.Javelin;
 import javelin.old.Game;
 import javelin.old.QuestApp;
 import javelin.old.Screen;
-import javelin.old.Text;
+import javelin.old.messagepanel.Text;
 
 /**
  * Fullscreen text display. For hiding the current {@link BattleScreen} or
@@ -73,7 +73,7 @@ public class InfoScreen extends Screen {
 	 * @see #ESCAPE
 	 */
 	static public Character feedback() {
-		KeyEvent input = Game.getInput();
+		KeyEvent input = Game.input();
 		switch (input.getKeyCode()) {
 		case KeyEvent.VK_RIGHT:
 			return '→';

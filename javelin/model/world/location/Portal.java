@@ -204,7 +204,7 @@ public class Portal extends Location {
 		if (!description.isEmpty()) {
 			Game.messagepanel.clear();
 			Game.message(description, Delay.BLOCK);
-			Game.getInput();
+			Game.input();
 		}
 	}
 

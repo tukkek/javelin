@@ -8,7 +8,7 @@ public class Interface {
 	public KeyEvent keyevent;
 	private Object lock = new Object();
 	/** If <code>true</code> is waiting for a {@link BattleScreen} input. */
-	public boolean waiting = false;;
+	public boolean waiting = false;
 
 	public void go(KeyEvent k) {
 		keyevent = k;
@@ -18,7 +18,7 @@ public class Interface {
 		}
 	}
 
-	public void getInput() {
+	public void getinput() {
 		try {
 			synchronized (lock) {
 				lock.wait();

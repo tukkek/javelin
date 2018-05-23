@@ -10,9 +10,9 @@ import javelin.view.screen.BattleScreen;
 
 /**
  * Battle when a player invades a hostile town.
- * 
+ *
  * @see Town#ishostile()
- * 
+ *
  * @author alex
  */
 public class Siege extends Fight {
@@ -30,15 +30,14 @@ public class Siege extends Fight {
 	 *            Where this fight is occurring at.
 	 */
 	public Siege(Location l) {
-		this.place = l;
-		texture = IncursionFight.INCURSIONTEXTURE;
+		place = l;
 		hide = false;
 		meld = true;
 	}
 
 	@Override
 	public ArrayList<Combatant> getmonsters(Integer teamel) {
-		ArrayList<Combatant> clones = new ArrayList<Combatant>(place.garrison);
+		ArrayList<Combatant> clones = new ArrayList<>(place.garrison);
 		for (int i = 0; i < clones.size(); i++) {
 			clones.set(i, clones.get(i).clone().clonesource());
 		}
@@ -77,7 +76,7 @@ public class Siege extends Fight {
 	 */
 	protected void afterlose() {
 		ArrayList<Combatant> alive = state.getcombatants();
-		for (Combatant c : new ArrayList<Combatant>(place.garrison)) {
+		for (Combatant c : new ArrayList<>(place.garrison)) {
 			if (!alive.contains(c)) {
 				place.garrison.remove(c);
 			}

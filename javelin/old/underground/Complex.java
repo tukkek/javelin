@@ -1,4 +1,4 @@
-package javelin.controller.map.terrain.underground;
+package javelin.old.underground;
 
 import java.util.ArrayList;
 import java.util.HashMap;

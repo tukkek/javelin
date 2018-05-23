@@ -28,6 +28,8 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  * @author alex
  */
 public class Summon extends Spell {
+	static final int[] DISPLACE = new int[] { -1, 0, +1 };
+
 	static final float CRFACTOR = 5f;
 
 	public String monstername;
@@ -89,8 +91,8 @@ public class Summon extends Spell {
 		int x = target.location[0];
 		int y = target.location[1];
 		while (s.getcombatant(x, y) != null || map[x][y].blocked) {
-			x += RPG.pick(new int[] { -1, 0, +1 });
-			y += RPG.pick(new int[] { -1, 0, +1 });
+			x += DISPLACE[RPG.r(DISPLACE.length)];
+			y += DISPLACE[RPG.r(DISPLACE.length)];
 			if (x < 0 || y < 0 || x >= map.length || y >= map.length) {
 				x = target.location[0];
 				y = target.location[1];

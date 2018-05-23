@@ -1,5 +1,6 @@
 package javelin.view.mappanel;
 
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -45,7 +46,10 @@ public abstract class Mouse extends MouseAdapter {
 		if (Game.userinterface.waiting) {
 			return false;
 		}
-		Game.simulateKey('\n');
+		final KeyEvent k = new KeyEvent(BattleScreen.active.mappanel, 0,
+				System.currentTimeMillis(), 0, 0, 'c');
+		k.setKeyChar('\n');
+		Game.userinterface.go(k);
 		return true;
 	}
 }

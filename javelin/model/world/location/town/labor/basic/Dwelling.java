@@ -156,7 +156,7 @@ public class Dwelling extends Fortification {
 		int xp = Math.round(dweller.source.cr * 100);
 		if (!canrecruit(xp)) {
 			s.print("Cannot afford a " + monstertype + " (" + xp + "XP)...");
-			Game.getInput();
+			Game.input();
 			return;
 		}
 		spend(dweller.source.cr);

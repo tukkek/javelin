@@ -2,7 +2,7 @@ package javelin.controller.wish;
 
 import java.util.ArrayList;
 
-import javelin.Javelin;
+import javelin.controller.Highscore;
 import javelin.controller.db.StateManager;
 import javelin.model.Realm;
 import javelin.model.item.Item;
@@ -81,7 +81,7 @@ public class Win extends Wish {
 			screen.print();
 		}
 		int current = Math.round(Math.round(WorldScreen.lastday));
-		screen.text += "Your highscore record is " + Javelin.gethighscore()
+		screen.text += "Your highscore record is " + Highscore.gethighscore()
 				+ "\n";
 		screen.text += "Your current score now is " + current + "\n";
 		screen.text += "\nDo you want to finish the current game? Press y for yes, n to continue playing.";
@@ -91,7 +91,7 @@ public class Win extends Wish {
 		}
 		if (input == 'y') {
 			StateManager.clear();
-			screen.text = "Congratulations!\n\n" + Javelin.record()
+			screen.text = "Congratulations!\n\n" + Highscore.record()
 					+ "\n\nThank you for playing :) press ENTER to leave...";
 			input = screen.print();
 			while (input != '\n') {

@@ -17,7 +17,7 @@ import javelin.view.screen.BattleScreen;
 /**
  * A minigame is a battle totally independent from the normal game {@link Squad}
  * . It usually has differing objectives, mechanics and overall dynamics.
- * 
+ *
  * @author alex
  */
 public abstract class Minigame extends Fight {
@@ -26,8 +26,8 @@ public abstract class Minigame extends Fight {
 		bribe = false;
 		hide = false;
 		map = Map.random();
-		period = RPG.pick(Javelin.PERIODS);
-		weather = RPG.pick(Weather.DISTRIBUTION);
+		period = Javelin.PERIODS[RPG.r(Javelin.PERIODS.length)];
+		weather = Weather.DISTRIBUTION[RPG.r(Weather.DISTRIBUTION.length)];
 	}
 
 	@Override
@@ -49,6 +49,6 @@ public abstract class Minigame extends Fight {
 
 	@Override
 	public ArrayList<Item> getbag(Combatant combatant) {
-		return new ArrayList<Item>();
+		return new ArrayList<>();
 	}
 }

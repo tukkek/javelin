@@ -26,10 +26,10 @@ import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.old.Game;
-import javelin.old.MessagePanel;
+import javelin.old.Game.Delay;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.old.QuestApp;
 import javelin.old.Screen;
-import javelin.old.Game.Delay;
 import javelin.view.StatusPanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
@@ -99,16 +99,6 @@ public class BattleScreen extends Screen {
 	Combatant lastwascomputermove;
 	boolean jointurns;
 	private boolean addsidebar;
-
-	/**
-	 * @param texture
-	 *            Background texture.
-	 */
-	@Deprecated
-	public BattleScreen(Image texture) {
-		super();
-		Javelin.settexture(texture);
-	}
 
 	/**
 	 * @param addsidebar
@@ -283,7 +273,7 @@ public class BattleScreen extends Screen {
 	public void block() {
 		if (Game.delayblock) {
 			Game.delayblock = false;
-			Game.getInput();
+			Game.input();
 			messagepanel.clear();
 		}
 	}
@@ -366,7 +356,7 @@ public class BattleScreen extends Screen {
 	 */
 	public KeyEvent getUserInput() {
 		// Game.instance().clearMessageList();
-		return Game.getInput();
+		return Game.input();
 	}
 
 	/**

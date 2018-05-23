@@ -59,7 +59,7 @@ public class TempleKey extends Item {
 	@Override
 	public boolean usepeacefully(Combatant m) {
 		new InfoScreen("").print("\"I wonder what this unlocks?\"");
-		Game.getInput();
+		Game.input();
 		return true;
 	}
 

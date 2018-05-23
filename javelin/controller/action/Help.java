@@ -71,7 +71,7 @@ public class Help extends Action {
 			text += isworld ? Debug.onworldhelp() : Debug.onbattlehelp();
 		}
 		Javelin.app.switchScreen(new InfoScreen(text));
-		Game.getInput();
+		Game.input();
 		Javelin.app.switchScreen(BattleScreen.active);
 	}
 

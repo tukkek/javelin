@@ -159,7 +159,7 @@ public class WorldMouse extends Mouse {
 				showingdescription = false;
 				Game.messagepanel.clear();
 				((WorldScreen) BattleScreen.active).updateplayerinformation();
-				Game.messagepanel.getPanel().repaint();
+				Game.messagepanel.repaint();
 			}
 			MoveOverlay.schedule(new MoveOverlay(
 					new WorldWalker(new Point(Squad.active.x, Squad.active.y),
@@ -167,7 +167,7 @@ public class WorldMouse extends Mouse {
 		} else {
 			Game.messagepanel.clear();
 			Game.message(target.describe(), Delay.NONE);
-			Game.messagepanel.getPanel().repaint();
+			Game.messagepanel.repaint();
 			showingdescription = true;
 			if (target instanceof Town) {
 				MapPanel.overlay = new DistrictOverlay((Town) target);

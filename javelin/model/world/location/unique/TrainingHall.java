@@ -16,8 +16,8 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.old.Game;
-import javelin.old.RPG;
 import javelin.old.Game.Delay;
+import javelin.old.RPG;
 import javelin.view.screen.SquadScreen;
 
 /**
@@ -72,7 +72,7 @@ public class TrainingHall extends UniqueLocation {
 			currentlevel = 1;
 		}
 		int nstudents = Squad.active.members.size();
-		int nsenseis = RPG.r(Math.min(3, nstudents), RPG.max(nstudents, 5));
+		int nsenseis = RPG.r(Math.min(3, nstudents), Math.max(nstudents, 5));
 		while (isweak() && garrison.size() < nsenseis) {
 			garrison.add(new Combatant(RPG.pick(CANDIDATES).clone(), true));
 		}
@@ -92,14 +92,14 @@ public class TrainingHall extends UniqueLocation {
 		if (price > Squad.active.gold) {
 			Game.message("Not enough money to pay the training fee of $" + price
 					+ "!", Delay.NONE);
-			Game.getInput();
+			Game.input();
 			throw new RepeatTurn();
 		}
 		Game.message(
 				"Do you want to pay a fee of $" + price
 						+ " for a lesson?\nPress s to study or any other key to leave...",
 				Delay.NONE);
-		if (Game.getInput().getKeyChar() == 's') {
+		if (Game.input().getKeyChar() == 's') {
 			Squad.active.gold -= price;
 			return new TrainingSession(this);
 		}

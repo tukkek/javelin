@@ -1,4 +1,4 @@
-package javelin.controller.map.terrain.underground;
+package javelin.old.underground;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +31,7 @@ public class Maze extends Caves {
 			if (!map[x][y].blocked) {
 				continue;
 			}
-			int dx = RPG.d(2) == 1 ? RPG.r(2) * 2 - 1 : 0;
+			int dx = RPG.r(1, 2) == 1 ? RPG.r(2) * 2 - 1 : 0;
 			int dy = dx == 0 ? RPG.r(2) * 2 - 1 : 0;
 			int lx = x + dx * 2;
 			int ly = y + dy * 2;

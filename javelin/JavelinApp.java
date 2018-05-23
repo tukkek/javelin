@@ -32,7 +32,6 @@ import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
@@ -56,15 +55,12 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class JavelinApp extends QuestApp {
-	private static final long serialVersionUID = 1L;
 	static String[] ERRORQUOTES = new String[] { "A wild error appears!",
 			"You were eaten by a grue.", "So again it has come to pass...",
 			"Mamma mia!", };
 
 	/** Controller. */
 	static public WorldScreen context;
-	/** Last defeated enemies. */
-	public static ArrayList<Monster> lastenemies = new ArrayList<Monster>();
 
 	/**
 	 * Controller for active battle. Should be <code>null</code> at any point a
@@ -131,8 +127,9 @@ public class JavelinApp extends QuestApp {
 	 */
 	static public void handlefatalexception(RuntimeException e) {
 		e.printStackTrace();
+		String qupte = ERRORQUOTES[RPG.r(ERRORQUOTES.length)];
 		JOptionPane.showMessageDialog(Javelin.app,
-				RPG.pick(ERRORQUOTES) + "\n\nUnfortunately an error ocurred.\n"
+				qupte + "\n\nUnfortunately an error ocurred.\n"
 						+ "Please send a screenshot of the next message or the log file (error.txt)\n"
 						+ "to one of the channels below, so we can get this fixed on future releases.\n\n"
 						+ "If for any reason your current game fails to load when you restart Javelin\n"
@@ -143,7 +140,7 @@ public class JavelinApp extends QuestApp {
 						+ "Or write us an e-mail -- javelinrl@gmail.com\n");
 		String error = printstack(e);
 		Throwable t = e;
-		HashSet<Throwable> errors = new HashSet<Throwable>(2);
+		HashSet<Throwable> errors = new HashSet<>(2);
 		while (t.getCause() != null && errors.add(t)) {
 			t = t.getCause();
 			error += System.lineSeparator() + printstack(t);
@@ -220,7 +217,7 @@ public class JavelinApp extends QuestApp {
 		int nkits = Kit.KITS.size();
 		System.out.println(nupgrades + " upgrades, " + nspells + " spells, "
 				+ nskills + " skills, " + nkits + " kits");
-		HashSet<Class<? extends Actor>> locationtypes = new HashSet<Class<? extends Actor>>();
+		HashSet<Class<? extends Actor>> locationtypes = new HashSet<>();
 		int uniquelocations = 0;
 		for (Actor a : World.getactors()) {
 			if (!(a instanceof Location)) {
@@ -245,7 +242,7 @@ public class JavelinApp extends QuestApp {
 	static void printoptions() {
 		HashMap<String, HashSet<Upgrade>> allupgrades = UpgradeHandler.singleton
 				.getall();
-		ArrayList<Upgrade> upgradelist = new ArrayList<Upgrade>();
+		ArrayList<Upgrade> upgradelist = new ArrayList<>();
 		HashMap<String, ItemSelection> allitems = Item.getall();
 		List<String> primary = Arrays.asList(new String[] { "earth", "wind",
 				"fire", "water", "good", "evil", "magic" });
@@ -253,8 +250,7 @@ public class JavelinApp extends QuestApp {
 			printrealm(allupgrades, allitems, realm);
 			upgradelist.addAll(allupgrades.get(realm));
 		}
-		ArrayList<String> extrarealms = new ArrayList<String>(
-				allupgrades.keySet());
+		ArrayList<String> extrarealms = new ArrayList<>(allupgrades.keySet());
 		extrarealms.sort(null);
 		for (String realm : extrarealms) {
 			if (!primary.contains(realm)) {
@@ -311,9 +307,5 @@ public class JavelinApp extends QuestApp {
 				m.xp = new BigDecimal(Debug.xp / 100f);
 			}
 		}
-	}
-
-	@Override
-	public void setupScreen() {
 	}
 }

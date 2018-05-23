@@ -1,12 +1,12 @@
-//
-// Panel for displaying game status messages at the botton of the screen
-//
-
-package javelin.old;
+package javelin.old.messagepanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+
+import javelin.old.Game;
+import javelin.old.QuestApp;
+import javelin.old.TPanel;
 
 public class MessagePanel extends TPanel {
 	public final TextZone textzone = new TextZone();
@@ -15,17 +15,8 @@ public class MessagePanel extends TPanel {
 		setLayout(new BorderLayout());
 		textzone.setBackground(QuestApp.PANELCOLOUR);
 		textzone.setForeground(QuestApp.INFOTEXTCOLOUR);
-
 		add("Center", textzone);
 		Game.messagepanel = this;
-	}
-
-	private void setText(final String s) {
-		textzone.setText(s);
-	}
-
-	private String getText() {
-		return textzone.getText();
 	}
 
 	public void clear() {
@@ -37,24 +28,15 @@ public class MessagePanel extends TPanel {
 	}
 
 	public void add(final String s, final Color c) {
-		/*
-		 * textzone.setForeground(Color.BLACK); repaint();
-		 */
-		final String t = getText();
+		final String t = textzone.getText();
 		if (t.length() > 2000) {
-			setText(t.substring(t.length() - 2000, t.length()));
+			textzone.setText(t.substring(t.length() - 2000, t.length()));
 		}
-
-		final String newtext = getText() + s;
-		setText(newtext);
+		textzone.setText(textzone.getText() + s);
 	}
 
 	@Override
 	public Dimension getPreferredSize() {
 		return new Dimension(500, 120);
-	}
-
-	public TPanel getPanel() {
-		return this;
 	}
 }

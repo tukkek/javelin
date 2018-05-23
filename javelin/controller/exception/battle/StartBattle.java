@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import javelin.Debug;
 import javelin.Javelin;
-import javelin.JavelinApp;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.Minigame;
@@ -164,11 +163,7 @@ public class StartBattle extends BattleEvent {
 
 	/** TODO deduplicate originals */
 	static public void preparebattle(ArrayList<Combatant> opponents) {
-		JavelinApp.lastenemies.clear();
 		Fight.state.redTeam = opponents;
-		for (final Combatant m : Fight.state.redTeam) {
-			JavelinApp.lastenemies.add(m.source.clone());
-		}
 		Fight.originalblueteam = new ArrayList<>(Fight.state.blueTeam);
 		Fight.originalredteam = new ArrayList<>(Fight.state.redTeam);
 		for (int i = 0; i < Fight.state.blueTeam.size(); i++) {

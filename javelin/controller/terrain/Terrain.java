@@ -228,7 +228,7 @@ public abstract class Terrain implements Serializable {
 	 *         {@link #generatearea(World)} process proper.
 	 */
 	protected HashSet<Point> generatestartingarea(World world) {
-		return new HashSet<Point>();
+		return new HashSet<>();
 	}
 
 	/**
@@ -253,11 +253,11 @@ public abstract class Terrain implements Serializable {
 	 * @return A new point to be added to the area.
 	 */
 	protected Point expand(HashSet<Point> area, World world) {
-		List<Point> pool = new ArrayList<Point>(area);
+		List<Point> pool = new ArrayList<>(area);
 		Point p = new Point(RPG.pick(pool));
 		while (area.contains(p)) {
-			p.x += RPG.pick(STEPS);
-			p.y += RPG.pick(STEPS);
+			p.x += STEPS[RPG.r(STEPS.length)];
+			p.y += STEPS[RPG.r(STEPS.length)];
 			if (checkinvalid(world, p.x, p.y)) {
 				p = new Point(RPG.pick(pool));
 				WorldGenerator.retry();
@@ -348,7 +348,7 @@ public abstract class Terrain implements Serializable {
 	 * @return All points of this {@link World} where this terrain exists.
 	 */
 	protected HashSet<Point> gettiles(World world) {
-		HashSet<Point> area = new HashSet<Point>();
+		HashSet<Point> area = new HashSet<>();
 		for (int x = 0; x < World.scenario.size; x++) {
 			for (int y = 0; y < World.scenario.size; y++) {
 				if (world.map[x][y] == this) {
@@ -362,7 +362,7 @@ public abstract class Terrain implements Serializable {
 	public HashSet<Point> generate(World w) {
 		HashSet<Point> area = generatearea(w);
 		if (liquid) {
-			for (Point p : new HashSet<Point>(area)) {
+			for (Point p : new HashSet<>(area)) {
 				if (checkisolated(p, area)) {
 					area.remove(p);
 				}
@@ -421,7 +421,7 @@ public abstract class Terrain implements Serializable {
 	 * @see WorldMove
 	 */
 	public Set<Hazard> gethazards(boolean special) {
-		return new HashSet<Hazard>();
+		return new HashSet<>();
 	}
 
 	/**

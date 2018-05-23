@@ -1,4 +1,4 @@
-package javelin.controller.map.terrain.underground;
+package javelin.old.underground;
 
 import javelin.controller.Point;
 import javelin.model.state.Square;
@@ -20,17 +20,17 @@ public class BigCave extends Caves {
 		init();
 		for (int i = 0; i < SIZE * 2 / 3; i++) {
 			Point p = findfreesquare();
-			int x1 = RPG.rspread(1, SIZE - 2);
-			int y1 = RPG.rspread(1, SIZE - 2);
+			int x1 = BigCave.rspread(1, SIZE - 2);
+			int y1 = BigCave.rspread(1, SIZE - 2);
 			makerandompath(p.x, p.y, x1, y1, 1, 1, SIZE - 2, SIZE - 2, false);
 		}
 
 		for (int i = 0; i < SIZE * SIZE / 80; i++) {
 			Point p = findfreesquare();
-			int x1 = p.x - RPG.d(6);
-			int y1 = p.y - RPG.d(6);
-			int x2 = p.x + RPG.d(6);
-			int y2 = p.y + RPG.d(6);
+			int x1 = p.x - RPG.r(1, 6);
+			int y1 = p.y - RPG.r(1, 6);
+			int x2 = p.x + RPG.r(1, 6);
+			int y2 = p.y + RPG.r(1, 6);
 			if (x1 < 1 || x2 > SIZE - 2 || y1 < 1 || y2 > SIZE - 2) {
 				continue;
 			}
@@ -50,14 +50,14 @@ public class BigCave extends Caves {
 			map[x1][y1].blocked = false;
 			int dx;
 			int dy;
-			if (RPG.d(3) == 1) {
-				dx = RPG.sign(x2 - x1);
-				dy = RPG.sign(y2 - y1);
+			if (RPG.r(1, 3) == 1) {
+				dx = BigCave.sign(x2 - x1);
+				dy = BigCave.sign(y2 - y1);
 			} else {
 				dx = RPG.r(3) - 1;
 				dy = RPG.r(3) - 1;
 			}
-			switch (RPG.d(diagonals ? 3 : 2)) {
+			switch (RPG.r(1, diagonals ? 3 : 2)) {
 			case 1:
 				dx = 0;
 				break;
@@ -67,8 +67,8 @@ public class BigCave extends Caves {
 			}
 			x1 += dx;
 			y1 += dy;
-			x1 = RPG.middle(x3, x1, x4);
-			y1 = RPG.middle(y3, y1, y4);
+			x1 = BigCave.middle(x3, x1, x4);
+			y1 = BigCave.middle(y3, y1, y4);
 		}
 		map[x2][y2].blocked = false;
 	}
@@ -120,5 +120,39 @@ public class BigCave extends Caves {
 				}
 			}
 		}
+	}
+
+	public static final int sign(final int a) {
+		return a < 0 ? -1 : a > 0 ? 1 : 0;
+	}
+
+	// return integer evenly distributed in range
+	public static int rspread(int a, int b) {
+		if (a > b) {
+			final int t = a;
+			a = b;
+			b = t;
+		}
+		return RPG.rand.nextInt(b - a + 1) + a;
+	}
+
+	// return the middle value
+	public static final int middle(final int a, final int b, final int c) {
+		if (a > b) {
+			if (b > c) {
+				return b;
+			}
+			if (a > c) {
+				return c;
+			}
+			return a;
+		}
+		if (a > c) {
+			return a;
+		}
+		if (b > c) {
+			return c;
+		}
+		return b;
 	}
 }

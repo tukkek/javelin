@@ -23,7 +23,7 @@ public class DungeonWorldGenerator extends WorldGenerator {
 	}
 
 	HashSet<Point> getfreespace(World w) {
-		HashSet<Point> free = new HashSet<Point>(
+		HashSet<Point> free = new HashSet<>(
 				World.scenario.size * World.scenario.size);
 		int limit = World.scenario.size - 1;
 		for (int x = 0; x < World.scenario.size; x++) {
@@ -45,7 +45,7 @@ public class DungeonWorldGenerator extends WorldGenerator {
 
 	void generatenewareas(World w) {
 		int newareas = 3 + RPG.r(1, 4);
-		List<Terrain> terrains = new ArrayList<Terrain>(
+		List<Terrain> terrains = new ArrayList<>(
 				Arrays.asList(Terrain.ALL));
 		terrains.remove(Terrain.WATER);
 		terrains.remove(Terrain.UNDERGROUND);
@@ -61,8 +61,8 @@ public class DungeonWorldGenerator extends WorldGenerator {
 			return;
 		}
 		size += RPG.randomize(size) - 1;
-		Point source = RPG.pick(new ArrayList<Point>(region));
-		ArrayList<Point> newarea = new ArrayList<Point>(size);
+		Point source = RPG.pick(new ArrayList<>(region));
+		ArrayList<Point> newarea = new ArrayList<>(size);
 		newarea.add(source);
 		while (size > 0) {
 			newarea.add(expand(newarea, region));
@@ -92,8 +92,8 @@ public class DungeonWorldGenerator extends WorldGenerator {
 		int[] steps = new int[] { -1, 0, +1 };
 		Point p = new Point(RPG.pick(pool));
 		while (pool.contains(p)) {
-			p.x += RPG.pick(steps);
-			p.y += RPG.pick(steps);
+			p.x += steps[RPG.r(steps.length)];
+			p.y += steps[RPG.r(steps.length)];
 			if (region != null && !region.contains(p)) {
 				p = new Point(RPG.pick(pool));
 				WorldGenerator.retry();

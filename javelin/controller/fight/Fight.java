@@ -1,6 +1,5 @@
 package javelin.controller.fight;
 
-import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +33,6 @@ import javelin.model.unit.condition.Dominated;
 import javelin.model.unit.skill.Diplomacy;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.old.Game;
-import javelin.old.QuestApp;
 import javelin.old.Game.Delay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
@@ -47,8 +45,6 @@ public abstract class Fight {
 	public static BattleState state = null;
 	/** See {@link #win(BattleScreen)}. */
 	public static Boolean victory;
-
-	Image texture = QuestApp.DEFAULTTEXTURE;
 
 	/**
 	 * @return <code>true</code> if {@link Meld} should be generated.
@@ -164,8 +160,7 @@ public abstract class Fight {
 	 * @return Reward description.
 	 */
 	public String reward() {
-		List<Combatant> defeated = new ArrayList<Combatant>(
-				Fight.originalredteam);
+		List<Combatant> defeated = new ArrayList<>(Fight.originalredteam);
 		defeated.removeAll(Fight.state.fleeing);
 		if (defeated.isEmpty()) {
 			return "All enemies have fled...";
@@ -181,8 +176,7 @@ public abstract class Fight {
 		}
 		if (Javelin.app.fight.rewardgold) {
 			Squad.active.gold += bonus;
-			rewards += " Party receives $" + Javelin.format(bonus)
-					+ "!\n";
+			rewards += " Party receives $" + Javelin.format(bonus) + "!\n";
 		}
 		return rewards;
 	}
@@ -348,7 +342,7 @@ public abstract class Fight {
 	 */
 	public static ArrayList<Terrain> getdefaultterrains(Terrain t,
 			int floodlevel) {
-		ArrayList<Terrain> terrains = new ArrayList<Terrain>();
+		ArrayList<Terrain> terrains = new ArrayList<>();
 		if (Dungeon.active != null) {
 			terrains.add(Terrain.UNDERGROUND);
 			return terrains;
@@ -450,7 +444,7 @@ public abstract class Fight {
 			addmeld(c.location[0], c.location[1], c, s);
 			Game.message(c + " is removed from the battlefield!\n"
 					+ "Press ENTER to continue...", Delay.NONE);
-			while (Game.getInput().getKeyChar() != '\n') {
+			while (Game.input().getKeyChar() != '\n') {
 				// wait for enter
 			}
 			Game.messagepanel.clear();
@@ -467,7 +461,7 @@ public abstract class Fight {
 	 */
 	public void meld(Combatant hero, Meld m) {
 		Game.message(hero + " powers up!", Delay.BLOCK);
-		Javelin.getCombatant(hero.id).meld();
+		hero.meld();
 		Fight.state.meld.remove(m);
 	}
 
@@ -523,7 +517,7 @@ public abstract class Fight {
 		}
 		final String prompt = "Are you sure you want to escape? Press ENTER to confirm...\n";
 		Game.message(prompt, Delay.NONE);
-		if (Game.getInput().getKeyChar() != '\n') {
+		if (Game.input().getKeyChar() != '\n') {
 			throw new RepeatTurn();
 		}
 		combatant.escape(Fight.state);
@@ -536,8 +530,8 @@ public abstract class Fight {
 
 	void withdrawall() {
 		Game.message("Press w to cancel battle (debug feature)", Delay.NONE);
-		if (Game.getInput().getKeyChar() == 'w') {
-			for (Combatant c : new ArrayList<Combatant>(Fight.state.blueTeam)) {
+		if (Game.input().getKeyChar() == 'w') {
+			for (Combatant c : new ArrayList<>(Fight.state.blueTeam)) {
 				c.escape(Fight.state);
 			}
 			throw new EndBattle();

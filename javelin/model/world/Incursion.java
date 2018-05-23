@@ -47,6 +47,7 @@ public class Incursion extends Actor {
 	/** Move even if {@link Debug#disablecombat} is enabled. */
 	static final boolean FORCEMOVEMENT = false;
 	static final VictoryChance VICTORYCHANCES = new VictoryChance();
+	static final int[] DELTAS = new int[] { -1, 0, +1 };
 
 	static class VictoryChance {
 		HashMap<Integer, Integer> chances = new HashMap<>();
@@ -262,7 +263,7 @@ public class Incursion extends Actor {
 		int y = yp;
 		while (World.get(x, y, actors) != null
 				|| Terrain.get(x, y).equals(Terrain.WATER)) {
-			int delta = RPG.pick(new int[] { -1, 0, +1 });
+			int delta = DELTAS[RPG.r(DELTAS.length)];
 			if (RPG.chancein(2)) {
 				x += delta;
 			} else {

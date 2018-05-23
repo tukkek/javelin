@@ -20,8 +20,8 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 import javelin.old.Game;
-import javelin.old.RPG;
 import javelin.old.Game.Delay;
+import javelin.old.RPG;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -95,7 +95,7 @@ public abstract class Actor implements Serializable {
 		final World w = World.getseed();
 		ArrayList<Actor> list = w.actors.get(getClass());
 		if (list == null) {
-			list = new ArrayList<Actor>(1);
+			list = new ArrayList<>(1);
 			w.actors.put(getClass(), list);
 		}
 		if (!list.contains(this)) {
@@ -125,8 +125,8 @@ public abstract class Actor implements Serializable {
 		}
 		int deltax = 0, deltay = 0;
 		while (deltax == 0 && deltay == 0) {
-			deltax = RPG.pick(NUDGES);
-			deltay = RPG.pick(NUDGES);
+			deltax = NUDGES[RPG.r(NUDGES.length)];
+			deltay = NUDGES[RPG.r(NUDGES.length)];
 		}
 		int tox = x + deltax;
 		int toy = y + deltay;

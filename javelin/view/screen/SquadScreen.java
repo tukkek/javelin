@@ -19,7 +19,7 @@ import javelin.old.RPG;
  * @author alex
  */
 public class SquadScreen extends InfoScreen {
-	public static final ArrayList<Monster> CANDIDATES = new ArrayList<Monster>();
+	public static final ArrayList<Monster> CANDIDATES = new ArrayList<>();
 	public static final float[] SELECTABLE = { 1f, 1.25f, 1.5f };
 
 	static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
@@ -39,7 +39,7 @@ public class SquadScreen extends InfoScreen {
 		Collections.sort(CANDIDATES, MonstersByName.INSTANCE);
 	}
 
-	ArrayList<Combatant> squad = new ArrayList<Combatant>();
+	ArrayList<Combatant> squad = new ArrayList<>();
 
 	SquadScreen() {
 		super("");
@@ -100,7 +100,7 @@ public class SquadScreen extends InfoScreen {
 	}
 
 	private void recruit(Monster m) {
-		Combatant c = Javelin.recruit(m);
+		Combatant c = Squad.active.recruit(m);
 		c.hp = c.source.hd.maximize();
 		c.maxhp = c.hp;
 		squad.add(c);

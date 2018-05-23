@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -31,9 +32,8 @@ import javelin.model.world.location.Resource;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.MercenariesGuild;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
 import javelin.old.RPG;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.Images;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.BribingScreen;
@@ -245,14 +245,14 @@ public class Squad extends Actor implements Cloneable {
 			if (gold >= fee) {
 				gold -= fee;
 			} else {
-				Game.messagepanel.clear();
-				Game.message(
+				MessagePanel.active.clear();
+				Javelin.message(
 						c + " is not paid, abandons your ranks!\n\nPress ENTER to coninue...",
-						Delay.NONE);
-				while (Game.input().getKeyChar() != '\n') {
+						Javelin.Delay.NONE);
+				while (Javelin.input().getKeyChar() != '\n') {
 					// wait for enter
 				}
-				Game.messagepanel.clear();
+				MessagePanel.active.clear();
 				dismiss(c);
 			}
 		}

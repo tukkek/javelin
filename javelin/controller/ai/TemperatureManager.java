@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import javelin.controller.db.Preferences;
-import javelin.old.Game;
 import javelin.old.messagepanel.MessagePanel;
 
 /**
@@ -38,17 +37,17 @@ public class TemperatureManager {
 				ThreadManager.interrupt();
 				if (lasttemperature == null) {
 					lasttemperature = temperature;
-					MessagePanel mp = Game.messagepanel;
+					MessagePanel mp = MessagePanel.active;
 					String text = mp.textzone.getText();
 					if (!text.endsWith("\n")) {
-						Game.messagepanel.add("\n");
+						MessagePanel.active.add("\n");
 					}
-					Game.messagepanel.add("Cooling...");
-					Game.messagepanel.repaint();
+					MessagePanel.active.add("Cooling...");
+					MessagePanel.active.repaint();
 				} else if (temperature < lasttemperature) {
-					Game.messagepanel.add(" " + temperature + "°C...");
+					MessagePanel.active.add(" " + temperature + "°C...");
 					lasttemperature = temperature;
-					Game.messagepanel.repaint();
+					MessagePanel.active.repaint();
 				}
 				Thread.sleep(1000);
 				// Game.messagepanel.clear();

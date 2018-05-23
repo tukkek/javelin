@@ -13,8 +13,8 @@ import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.order.CraftingOrder;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
-import javelin.old.Game;
 import javelin.old.RPG;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.shopping.ArtificerScreen;
 import javelin.view.screen.town.PurchaseOption;
@@ -91,12 +91,12 @@ public class Artificer extends Fortification {
 			crafting = null;
 			return true;
 		}
-		Game.messagepanel.clear();
+		MessagePanel.active.clear();
 		Javelin.message("\"I still need "
 				+ crafting.geteta(Squad.active.hourselapsed) + " before your "
 				+ crafting.item.toString().toLowerCase() + " is completed.\"",
 				false);
-		Game.input();
+		Javelin.input();
 		return true;
 	}
 

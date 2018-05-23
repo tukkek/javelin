@@ -1,5 +1,7 @@
 package javelin.controller.action.maneuver;
 
+import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.action.Action;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
@@ -8,7 +10,6 @@ import javelin.model.unit.attack.Attack;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.feat.attack.expertise.CombatExpertise;
 import javelin.model.unit.skill.Skill;
-import javelin.old.Game.Delay;
 
 public class DefensiveAttack extends ExpertiseAction {
 	public static final Action INSTANCE = new DefensiveAttack();
@@ -74,7 +75,7 @@ public class DefensiveAttack extends ExpertiseAction {
 		combatant.addcondition(new DefensiveStance(combatant.ap + .1f,
 				combatant, defensiveamount(combatant)));
 		return new ChanceNode(battleState, chance, "Defensive attack misses...",
-				Delay.WAIT);
+				Javelin.Delay.WAIT);
 	}
 
 	int defensiveamount(Combatant c) {
@@ -93,7 +94,7 @@ public class DefensiveAttack extends ExpertiseAction {
 		target.damage(attack.getaveragedamage(), battleState, attack.energy
 				? target.source.energyresistance : target.source.dr);
 		return new ChanceNode(battleState, chance, "Defensive attack hits!\n"
-				+ target + " is " + target.getstatus() + ".", Delay.BLOCK);
+				+ target + " is " + target.getstatus() + ".", Javelin.Delay.BLOCK);
 	}
 
 	static public int amount(final Combatant combatant, int fallback) {

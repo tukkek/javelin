@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.RepeatTurn;
@@ -15,9 +16,8 @@ import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
 import javelin.old.RPG;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.SquadScreen;
 
 /**
@@ -88,18 +88,18 @@ public class TrainingHall extends UniqueLocation {
 	@Override
 	protected Siege fight() {
 		int price = getfee();
-		Game.messagepanel.clear();
+		MessagePanel.active.clear();
 		if (price > Squad.active.gold) {
-			Game.message("Not enough money to pay the training fee of $" + price
-					+ "!", Delay.NONE);
-			Game.input();
+			Javelin.message("Not enough money to pay the training fee of $" + price
+					+ "!", Javelin.Delay.NONE);
+			Javelin.input();
 			throw new RepeatTurn();
 		}
-		Game.message(
+		Javelin.message(
 				"Do you want to pay a fee of $" + price
 						+ " for a lesson?\nPress s to study or any other key to leave...",
-				Delay.NONE);
-		if (Game.input().getKeyChar() == 's') {
+				Javelin.Delay.NONE);
+		if (Javelin.input().getKeyChar() == 's') {
 			Squad.active.gold -= price;
 			return new TrainingSession(this);
 		}

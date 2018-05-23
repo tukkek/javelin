@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.TreeMap;
-import java.util.prefs.Preferences;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -22,9 +21,11 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import javelin.Javelin.Delay;
 import javelin.controller.Highscore;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.factor.SpellsFactor;
+import javelin.controller.db.Preferences;
 import javelin.controller.db.StateManager;
 import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.db.reader.fields.Organization;
@@ -38,8 +39,9 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.fortification.Academy;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
+import javelin.old.Interface;
+import javelin.old.messagepanel.MessagePanel;
+import javelin.old.messagepanel.TextZone;
 import javelin.view.Images;
 import javelin.view.ScenarioSelectionDialog;
 import javelin.view.screen.BattleScreen;
@@ -56,6 +58,10 @@ import javelin.view.screen.town.SelectScreen;
  * @author alex
  */
 public class Javelin {
+	public enum Delay {
+		NONE, WAIT, BLOCK
+	}
+
 	/**
 	 * Add -Ddebug=true to the java VM command line for easier debugging and
 	 * logging.
@@ -86,8 +92,6 @@ public class Javelin {
 	public static final List<Monster> ALLMONSTERS = new ArrayList<>();
 
 	static final String TITLE = "Javelin";
-	public static final Preferences RECORD = Preferences
-			.userNodeForPackage(Javelin.class);
 	static final DecimalFormat COSTFORMAT = new DecimalFormat("####,###,##0");
 
 	/** Singleton. */
@@ -142,7 +146,7 @@ public class Javelin {
 		f.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(final KeyEvent e) {
-				Game.userinterface.go(e);
+				Interface.userinterface.go(e);
 			}
 		});
 		app.setVisible(true);
@@ -271,7 +275,7 @@ public class Javelin {
 		StateManager.clear();
 		BattleScreen.active.messagepanel.clear();
 		String sadface = "You have lost all your units! Game over T_T\n\n";
-		Game.message(sadface + Highscore.record(), Delay.NONE);
+		Javelin.message(sadface + Highscore.record(), Javelin.Delay.NONE);
 		while (InfoScreen.feedback() != '\n') {
 			continue;
 		}
@@ -349,8 +353,8 @@ public class Javelin {
 			app.switchScreen(new InfoScreen(prompt));
 		} else {
 			app.switchScreen(BattleScreen.active);
-			Game.messagepanel.clear();
-			Game.message(prompt, Delay.NONE);
+			MessagePanel.active.clear();
+			Javelin.message(prompt, Javelin.Delay.NONE);
 		}
 		while (true) {
 			try {
@@ -381,14 +385,14 @@ public class Javelin {
 	 *         message.
 	 */
 	public static KeyEvent message(String text, boolean requireenter) {
-		Game.messagepanel.clear();
-		Game.message(text + "\nPress " + (requireenter ? "ENTER" : "any key")
-				+ " to continue...", Delay.NONE);
-		KeyEvent input = Game.input();
+		MessagePanel.active.clear();
+		Javelin.message(text + "\nPress " + (requireenter ? "ENTER" : "any key")
+				+ " to continue...", Javelin.Delay.NONE);
+		KeyEvent input = Javelin.input();
 		while (requireenter && input.getKeyChar() != '\n') {
-			input = Game.input();
+			input = Javelin.input();
 		}
-		Game.messagepanel.clear();
+		MessagePanel.active.clear();
 		return input;
 	}
 
@@ -400,9 +404,9 @@ public class Javelin {
 	 * @return Any {@link InfoScreen#feedback()}.
 	 */
 	static public Character prompt(final String prompt, boolean center) {
-		Game.messagepanel.clear();
+		MessagePanel.active.clear();
 		BattleScreen.active.center();
-		Game.message(prompt, Delay.NONE);
+		Javelin.message(prompt, Javelin.Delay.NONE);
 		if (center) {
 			BattleScreen.active.center();
 		}
@@ -525,4 +529,48 @@ public class Javelin {
 		ChallengeCalculator.calculatecr(monster);
 		return monster;
 	}
+
+	public static void redraw() {
+		BattleScreen.active.mappanel.refresh();
+		MessagePanel.active.repaint();
+	}
+
+	public static KeyEvent input() {
+		if (MessagePanel.active != null) {
+			MessagePanel.active.repaint();
+		}
+		Interface.userinterface.getinput();
+		return Interface.userinterface.keyevent;
+	}
+
+	/**
+	 * Main output function for {@link BattleScreen}s.
+	 *
+	 * @param message
+	 *            Text to be printed.
+	 * @param t
+	 *            TODO remove
+	 * @param See
+	 *            {@link Javelin.Delay}.
+	 */
+	public static void message(final String out, final Javelin.Delay d) {
+		MessagePanel.active.add(out);
+		switch (d) {
+		case WAIT:
+			try {
+				redraw();
+				Thread.sleep(Preferences.MESSAGEWAIT);
+			} catch (final InterruptedException e) {
+				e.printStackTrace();
+			}
+			MessagePanel.active.clear();
+			break;
+		case BLOCK:
+			MessagePanel.active.add("\n" + TextZone.BLACK + "-- ENTER --");
+			Javelin.delayblock = true;
+			break;
+		}
+	}
+
+	public static boolean delayblock = false;
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javelin.Debug;
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.JavelinApp;
 import javelin.controller.Weather;
 import javelin.controller.action.Action;
@@ -32,8 +33,7 @@ import javelin.model.unit.Squad;
 import javelin.model.unit.condition.Dominated;
 import javelin.model.unit.skill.Diplomacy;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 
@@ -424,7 +424,7 @@ public abstract class Fight {
 			cleanwounded(s.redTeam, s);
 			if (s.blueTeam.size() + s.redTeam.size() < ncombatants) {
 				Fight.state = s;
-				Game.redraw();
+				Javelin.redraw();
 			}
 		}
 	}
@@ -442,12 +442,12 @@ public abstract class Fight {
 				s.next();
 			}
 			addmeld(c.location[0], c.location[1], c, s);
-			Game.message(c + " is removed from the battlefield!\n"
-					+ "Press ENTER to continue...", Delay.NONE);
-			while (Game.input().getKeyChar() != '\n') {
+			Javelin.message(c + " is removed from the battlefield!\n"
+					+ "Press ENTER to continue...", Javelin.Delay.NONE);
+			while (Javelin.input().getKeyChar() != '\n') {
 				// wait for enter
 			}
-			Game.messagepanel.clear();
+			MessagePanel.active.clear();
 		}
 	}
 
@@ -460,7 +460,7 @@ public abstract class Fight {
 	 * @param meld2
 	 */
 	public void meld(Combatant hero, Meld m) {
-		Game.message(hero + " powers up!", Delay.BLOCK);
+		Javelin.message(hero + " powers up!", Javelin.Delay.BLOCK);
 		hero.meld();
 		Fight.state.meld.remove(m);
 	}
@@ -503,7 +503,7 @@ public abstract class Fight {
 	 */
 	public void withdraw(Combatant combatant, BattleScreen screen) {
 		if (!canflee) {
-			Game.message("Cannot flee!", Delay.BLOCK);
+			Javelin.message("Cannot flee!", Javelin.Delay.BLOCK);
 			BattleScreen.active.block();
 			throw new RepeatTurn();
 		}
@@ -511,13 +511,13 @@ public abstract class Fight {
 			withdrawall();
 		}
 		if (Fight.state.isengaged(combatant)) {
-			Game.message("Disengage first!", Delay.BLOCK);
+			Javelin.message("Disengage first!", Javelin.Delay.BLOCK);
 			InfoScreen.feedback();
 			throw new RepeatTurn();
 		}
 		final String prompt = "Are you sure you want to escape? Press ENTER to confirm...\n";
-		Game.message(prompt, Delay.NONE);
-		if (Game.input().getKeyChar() != '\n') {
+		Javelin.message(prompt, Javelin.Delay.NONE);
+		if (Javelin.input().getKeyChar() != '\n') {
 			throw new RepeatTurn();
 		}
 		combatant.escape(Fight.state);
@@ -529,14 +529,14 @@ public abstract class Fight {
 	}
 
 	void withdrawall() {
-		Game.message("Press w to cancel battle (debug feature)", Delay.NONE);
-		if (Game.input().getKeyChar() == 'w') {
+		Javelin.message("Press w to cancel battle (debug feature)", Javelin.Delay.NONE);
+		if (Javelin.input().getKeyChar() == 'w') {
 			for (Combatant c : new ArrayList<>(Fight.state.blueTeam)) {
 				c.escape(Fight.state);
 			}
 			throw new EndBattle();
 		}
-		Game.messagepanel.clear();
+		MessagePanel.active.clear();
 	}
 
 	/**

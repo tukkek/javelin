@@ -2,6 +2,7 @@ package javelin.model.item.key;
 
 import java.util.ArrayList;
 
+import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.model.Realm;
 import javelin.model.item.Item;
@@ -11,7 +12,6 @@ import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.temple.Temple;
-import javelin.old.Game;
 import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
 
@@ -59,7 +59,7 @@ public class TempleKey extends Item {
 	@Override
 	public boolean usepeacefully(Combatant m) {
 		new InfoScreen("").print("\"I wonder what this unlocks?\"");
-		Game.input();
+		Javelin.input();
 		return true;
 	}
 

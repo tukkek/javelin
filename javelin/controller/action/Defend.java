@@ -3,12 +3,13 @@ package javelin.controller.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Defending;
-import javelin.old.Game.Delay;
 
 /**
  * Full Defense action.
@@ -46,7 +47,7 @@ public class Defend extends Action implements AiAction {
 		final BattleState state = s.clone();
 		defend(state.clone(c));
 		final String message = c.toString() + " defends...";
-		node.add(new ChanceNode(state, 1f, message, Delay.WAIT));
+		node.add(new ChanceNode(state, 1f, message, Javelin.Delay.WAIT));
 		return node;
 	}
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.ai.cache.AiCache;
 import javelin.controller.fight.Fight;
@@ -20,8 +21,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.unique.MercenariesGuild;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
 
 /**
@@ -68,7 +68,7 @@ public class EndBattle extends BattleEvent {
 	 * @param prefix
 	 */
 	public static void showcombatresult() {
-		Game.messagepanel.clear();
+		MessagePanel.active.clear();
 		String combatresult;
 		if (Fight.victory) {
 			combatresult = Javelin.app.fight.reward();
@@ -92,8 +92,8 @@ public class EndBattle extends BattleEvent {
 				Squad.active.updateavatar();
 			}
 		}
-		Game.message(combatresult + "\nPress any key to continue...",
-				Delay.BLOCK);
+		Javelin.message(combatresult + "\nPress any key to continue...",
+				Javelin.Delay.BLOCK);
 		BattleScreen.active.getUserInput();
 	}
 

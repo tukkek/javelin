@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.comparator.ActorByDistance;
@@ -19,9 +20,8 @@ import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
 import javelin.old.RPG;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -300,8 +300,8 @@ public abstract class Actor implements Serializable {
 	 * adjacent to the currently active Squad.
 	 */
 	public void accessremotely() {
-		Game.messagepanel.clear();
-		Game.message("Too far away...", Delay.WAIT);
+		MessagePanel.active.clear();
+		Javelin.message("Too far away...", Javelin.Delay.WAIT);
 	}
 
 	/**

@@ -3,13 +3,15 @@ package javelin.view.mappanel.battle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
+import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.Point;
 import javelin.controller.action.Examine;
 import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
+import javelin.old.Interface;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.MoveOverlay;
@@ -42,7 +44,7 @@ public class BattleMouse extends Mouse {
 		if (overrideinput()) {
 			return;
 		}
-		if (!Game.userinterface.waiting) {
+		if (!Interface.userinterface.waiting) {
 			return;
 		}
 		final Tile t = gettile(e);
@@ -103,7 +105,7 @@ public class BattleMouse extends Mouse {
 			Examine.lastlooked = null;
 			BattleScreen.active.statuspanel.repaint();
 		}
-		if (!Game.userinterface.waiting) {
+		if (!Interface.userinterface.waiting) {
 			return;
 		}
 		if (MapPanel.overlay != null) {
@@ -127,7 +129,7 @@ public class BattleMouse extends Mouse {
 				BattleScreen.active.statuspanel.repaint();
 			}
 		} finally {
-			Game.messagepanel.repaint();
+			MessagePanel.active.repaint();
 		}
 	}
 
@@ -141,12 +143,12 @@ public class BattleMouse extends Mouse {
 		status += "\n\nConditions: ";
 		String list = c.printstatus(Fight.state);
 		status += list.isEmpty() ? "none" : list;
-		Game.message(status += ".", Delay.NONE);
+		Javelin.message(status += ".", Javelin.Delay.NONE);
 	}
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		if (!Game.userinterface.waiting) {
+		if (!Interface.userinterface.waiting) {
 			return;
 		}
 		super.mouseWheelMoved(e);

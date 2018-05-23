@@ -25,8 +25,8 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.world.location.unique.minigame.Arena;
-import javelin.old.Game;
 import javelin.old.RPG;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
 
 /**
@@ -400,9 +400,9 @@ public class ArenaFight extends Minigame {
 
 	void notify(String text, Point p) {
 		BattleScreen.active.center(p.x, p.y);
-		Game.redraw();
+		Javelin.redraw();
 		Javelin.message(text, true);
-		Game.messagepanel.clear();
+		MessagePanel.active.clear();
 	}
 
 	@Override

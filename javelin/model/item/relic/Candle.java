@@ -1,10 +1,10 @@
 package javelin.model.item.relic;
 
+import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.action.target.Target;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
 
 /** Brings a single creature to 1hp. */
 public class Candle extends Relic {
@@ -28,9 +28,9 @@ public class Candle extends Relic {
 			protected void attack(Combatant active, Combatant target,
 					BattleState s) {
 				target.hp = 1;
-				Game.message(
+				Javelin.message(
 						"A roaring column of flame engulfs " + target + "!",
-						Delay.BLOCK);
+						Javelin.Delay.BLOCK);
 			}
 		}.perform(user);
 		return true;

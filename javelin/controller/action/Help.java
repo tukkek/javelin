@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import javelin.Debug;
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
-import javelin.old.Game;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
@@ -71,7 +70,7 @@ public class Help extends Action {
 			text += isworld ? Debug.onworldhelp() : Debug.onbattlehelp();
 		}
 		Javelin.app.switchScreen(new InfoScreen(text));
-		Game.input();
+		Javelin.input();
 		Javelin.app.switchScreen(BattleScreen.active);
 	}
 

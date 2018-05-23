@@ -13,8 +13,8 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.old.Game;
 import javelin.old.RPG;
+import javelin.old.messagepanel.MessagePanel;
 
 /**
  * Represents all the resource types found in the game: gold, experience, keys,
@@ -52,7 +52,7 @@ public class Trove extends Fortification {
 		@Override
 		public String reward() {
 			String message = take();
-			Game.messagepanel.clear();
+			MessagePanel.active.clear();
 			return message;
 		}
 	}

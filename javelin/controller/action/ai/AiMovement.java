@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.Point;
 import javelin.controller.action.Action;
 import javelin.controller.action.ActionCost;
@@ -18,7 +19,6 @@ import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.unit.Combatant;
-import javelin.old.Game.Delay;
 import javelin.model.state.Meld;
 import javelin.view.Images;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
@@ -45,7 +45,7 @@ public class AiMovement extends Action implements AiAction {
 		public LongMove(Combatant c, BattleStep s, BattleWalker mover, Meld m,
 				Node n) {
 			super(n, 1, getmessage(c, m, s),
-					m == null ? Delay.WAIT : Delay.BLOCK);
+					m == null ? Javelin.Delay.WAIT : Javelin.Delay.BLOCK);
 			AiOverlay o = new AiOverlay(
 					mover.steps.subList(0, mover.steps.indexOf(s)));
 			o.affected.add(new Point(mover.fromx, mover.fromy));

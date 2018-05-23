@@ -3,6 +3,8 @@ package javelin.controller.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.Point;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.ai.AiMovement;
@@ -18,7 +20,6 @@ import javelin.model.unit.attack.Attack;
 import javelin.model.unit.condition.Charging;
 import javelin.model.unit.condition.Fatigued;
 import javelin.model.unit.feat.attack.BullRush;
-import javelin.old.Game.Delay;
 import javelin.view.mappanel.Overlay;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.battle.overlay.TargetOverlay;
@@ -90,7 +91,7 @@ public class Charge extends Fire implements AiAction {
 		final Overlay o = new ChargeOverlay(steps, new Point(target));
 		for (ChanceNode node : move) {
 			node.action = me + " charges!\n" + node.action;
-			node.delay = Delay.BLOCK;
+			node.delay = Javelin.Delay.BLOCK;
 			node.overlay = o;
 			if (bullrush) {
 				final BattleState post = (BattleState) node.n;

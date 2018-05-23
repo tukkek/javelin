@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.Point;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.area.Area;
@@ -25,8 +26,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.BreathWeapon.BreathArea;
 import javelin.model.unit.condition.Breathless;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 import javelin.view.mappanel.battle.overlay.BreathOverlay;
@@ -50,7 +50,7 @@ public class Breath extends Action implements AiAction {
 	static public class BreathNode extends ChanceNode {
 		public BreathNode(Node n, float chance, String action,
 				Collection<Point> area) {
-			super(n, chance, action, Delay.BLOCK);
+			super(n, chance, action, Javelin.Delay.BLOCK);
 			overlay = new AiOverlay(area);
 		}
 	}
@@ -107,7 +107,7 @@ public class Breath extends Action implements AiAction {
 	@Override
 	public boolean perform(Combatant hero) {
 		if (hero.hascondition(Breathless.class) != null) {
-			Game.message(hero + ": temporarily breathless...", Delay.WAIT);
+			Javelin.message(hero + ": temporarily breathless...", Javelin.Delay.WAIT);
 			throw new RepeatTurn();
 		}
 		BreathWeapon breath = null;
@@ -124,17 +124,17 @@ public class Breath extends Action implements AiAction {
 		BreathOverlay overlay = new BreathOverlay(area);
 		MapPanel.overlay = overlay;
 		clear();
-		Game.redraw();
-		Game.message(
+		Javelin.redraw();
+		Javelin.message(
 				targetinfo(state, area)
 						+ "Press ENTER or b to confirm, q to quit.",
-				Delay.NONE);
-		char confirm = Game.input().getKeyChar();
+				Javelin.Delay.NONE);
+		char confirm = Javelin.input().getKeyChar();
 		try {
 			quit(confirm);
 		} catch (RepeatTurn e) {
 			overlay.clear();
-			Game.messagepanel.clear();
+			MessagePanel.active.clear();
 			throw e;
 		}
 		if (confirm != '\n' && confirm != 'b') {
@@ -151,7 +151,7 @@ public class Breath extends Action implements AiAction {
 	}
 
 	Area selectarea(Combatant hero, BreathWeapon breath) {
-		Game.message("Select a direction or press q to quit.", Delay.NONE);
+		Javelin.message("Select a direction or press q to quit.", Javelin.Delay.NONE);
 		Area a = null;
 		while (a == null) {
 			a = (breath.type == BreathWeapon.BreathArea.CONE ? BURSTS : LINES)
@@ -176,7 +176,7 @@ public class Breath extends Action implements AiAction {
 	}
 
 	static void clear() {
-		Game.messagepanel.clear();
+		MessagePanel.active.clear();
 	}
 
 	static ArrayList<ChanceNode> breath(final BreathWeapon breath, final Area a,
@@ -260,7 +260,7 @@ public class Breath extends Action implements AiAction {
 	BreathWeapon selectbreath(Monster m) {
 		int size = m.breaths.size();
 		if (size == 0) {
-			Game.message("Monster doesn't have breath attacks...", Delay.WAIT);
+			Javelin.message("Monster doesn't have breath attacks...", Javelin.Delay.WAIT);
 			throw new RepeatTurn();
 		}
 		if (size == 1) {
@@ -275,7 +275,7 @@ public class Breath extends Action implements AiAction {
 	}
 
 	public Integer selectdirection(Combatant hero) {
-		KeyEvent direction = Game.input();
+		KeyEvent direction = Javelin.input();
 		int code = direction.getKeyCode();
 		char key = direction.getKeyChar();
 		quit(key);

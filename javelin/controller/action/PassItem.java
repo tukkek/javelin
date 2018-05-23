@@ -3,13 +3,12 @@ package javelin.controller.action;
 import java.util.ArrayList;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.model.item.Item;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
 import javelin.view.screen.BattleScreen;
 
 /**
@@ -31,7 +30,7 @@ public class PassItem extends Action {
 		final BattleState state = Fight.state;
 		final Combatant sameme = state.clone(me);
 		if (state.isengaged(sameme)) {
-			Game.message("Disengage first...", Delay.WAIT);
+			Javelin.message("Disengage first...", Javelin.Delay.WAIT);
 			return false;
 		}
 		final ArrayList<Combatant> surroudings = state.getsurroundings(sameme);
@@ -41,7 +40,7 @@ public class PassItem extends Action {
 			}
 		}
 		if (surroudings.isEmpty()) {
-			Game.message("No unthreatened allies nearby...", Delay.WAIT);
+			Javelin.message("No unthreatened allies nearby...", Javelin.Delay.WAIT);
 			return false;
 		}
 		final Item item = UseItem.queryforitemselection(me, false);

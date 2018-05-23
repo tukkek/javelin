@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -56,9 +57,8 @@ import javelin.model.world.location.dungeon.feature.npc.Broker;
 import javelin.model.world.location.dungeon.feature.npc.Leader;
 import javelin.model.world.location.dungeon.feature.npc.Prisoner;
 import javelin.model.world.location.dungeon.temple.TempleDungeon;
-import javelin.old.Game;
 import javelin.old.RPG;
-import javelin.old.Game.Delay;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.Images;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
@@ -201,8 +201,8 @@ public class Dungeon extends Location {
 	public void activate(boolean loading) {
 		active = this;
 		while (features.isEmpty()) {
-			Game.messagepanel.clear();
-			Game.message("Generating dungeon map...", Delay.NONE);
+			MessagePanel.active.clear();
+			Javelin.message("Generating dungeon map...", Javelin.Delay.NONE);
 			map();
 		}
 		regenerate(loading);

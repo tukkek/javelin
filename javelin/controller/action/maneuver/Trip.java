@@ -1,5 +1,7 @@
 package javelin.controller.action.maneuver;
 
+import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.action.Action;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
@@ -7,7 +9,6 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.condition.Prone;
 import javelin.model.unit.feat.attack.expertise.ImprovedTrip;
-import javelin.old.Game.Delay;
 
 public class Trip extends ExpertiseAction {
 
@@ -26,7 +27,7 @@ public class Trip extends ExpertiseAction {
 	ChanceNode miss(Combatant combatant, Combatant target,
 			BattleState battleState, float chance) {
 		return new ChanceNode(battleState, chance, "Trip attemp fails...",
-				Delay.WAIT);
+				Javelin.Delay.WAIT);
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class Trip extends ExpertiseAction {
 		current = s.clone(current);
 		target = s.clone(target);
 		target.addcondition(new Prone(target.ap + .1f, target));
-		return new ChanceNode(s, chance, target + " is prone!", Delay.BLOCK);
+		return new ChanceNode(s, chance, target + " is prone!", Javelin.Delay.BLOCK);
 	}
 
 	@Override

@@ -8,13 +8,12 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.action.world.ShowOptions;
 import javelin.controller.ai.cache.AiCache;
 import javelin.controller.db.Preferences;
 import javelin.model.state.BattleState;
-import javelin.old.Game;
 import javelin.old.RPG;
-import javelin.old.Game.Delay;
 import javelin.view.screen.BattleScreen;
 
 /**
@@ -79,7 +78,7 @@ public class ThreadManager {
 		} catch (Exception e) {
 			interrupt();
 			working = false;
-			Game.message("Fatal error: " + ERROR.getMessage(), Delay.NONE);
+			Javelin.message("Fatal error: " + ERROR.getMessage(), Javelin.Delay.NONE);
 			ERROR.printStackTrace();
 			throw new RuntimeException(ERROR);
 		}

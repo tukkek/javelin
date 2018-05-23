@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.action.Action;
 import javelin.controller.action.ActionMapping;
 import javelin.controller.action.Withdraw;
@@ -13,7 +14,6 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.old.Game.Delay;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 /**
@@ -66,7 +66,7 @@ public class Flee extends Action implements AiAction {
 		s = s.clone();
 		s.flee(active);
 		ArrayList<ChanceNode> chances = new ArrayList<ChanceNode>(1);
-		ChanceNode node = new ChanceNode(s, 1, active + " flees!", Delay.BLOCK);
+		ChanceNode node = new ChanceNode(s, 1, active + " flees!", Javelin.Delay.BLOCK);
 		AiOverlay overlay = new AiOverlay(active.location[0],
 				active.location[1]);
 		overlay.image = AiMovement.MOVEOVERLAY;

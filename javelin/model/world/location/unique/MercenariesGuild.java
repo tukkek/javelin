@@ -18,7 +18,6 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
-import javelin.old.Game;
 import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
@@ -125,7 +124,7 @@ public class MercenariesGuild extends Fortification {
 				Javelin.app.switchScreen(new InfoScreen(
 						"You don't have the money to pay today's advancement ($"
 								+ Javelin.format(advance) + ")!"));
-				Game.input();
+				Javelin.input();
 			}
 			return false;
 		}

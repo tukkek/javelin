@@ -11,6 +11,7 @@ import java.util.MissingResourceException;
 import java.util.Properties;
 
 import javelin.Debug;
+import javelin.Javelin.Delay;
 import javelin.controller.Weather;
 import javelin.controller.action.ActionDescription;
 import javelin.controller.ai.BattleAi;
@@ -21,7 +22,6 @@ import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.Season;
 import javelin.model.world.World;
-import javelin.old.Game.Delay;
 import javelin.old.messagepanel.TextZone;
 import javelin.view.KeysScreen;
 import javelin.view.frame.keys.BattleKeysScreen;

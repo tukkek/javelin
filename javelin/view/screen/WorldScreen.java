@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javelin.Debug;
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.Weather;
@@ -34,9 +35,9 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.Town;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
+import javelin.old.Interface;
 import javelin.old.RPG;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.Images;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
@@ -126,7 +127,7 @@ public class WorldScreen extends BattleScreen {
 	void move() {
 		try {
 			redraw();
-			Game.userinterface.waiting = true;
+			Interface.userinterface.waiting = true;
 			final KeyEvent updatableUserAction = getUserInput();
 			if (MapPanel.overlay != null) {
 				MapPanel.overlay.clear();
@@ -138,7 +139,7 @@ public class WorldScreen extends BattleScreen {
 				perform(updatableUserAction);
 			}
 		} catch (RepeatTurn e) {
-			Game.messagepanel.clear();
+			MessagePanel.active.clear();
 			updateplayerinformation();
 			move();
 		}
@@ -148,7 +149,7 @@ public class WorldScreen extends BattleScreen {
 		for (final WorldAction a : WorldAction.ACTIONS) {
 			for (final String s : a.morekeys) {
 				if (s.equals(Character.toString(keyEvent.getKeyChar()))) {
-					Game.messagepanel.clear();
+					MessagePanel.active.clear();
 					a.perform(this);
 					return;
 				}
@@ -157,7 +158,7 @@ public class WorldScreen extends BattleScreen {
 		for (final WorldAction a : WorldAction.ACTIONS) {
 			for (final int s : a.keys) {
 				if (s == keyEvent.getKeyCode()) {
-					Game.messagepanel.clear();
+					MessagePanel.active.clear();
 					a.perform(this);
 					return;
 				}
@@ -194,7 +195,7 @@ public class WorldScreen extends BattleScreen {
 		Point h = JavelinApp.context.getherolocation();
 		center(h.x, h.y);
 		view(h.x, h.y);
-		Game.redraw();
+		Javelin.redraw();
 	}
 
 	@Override
@@ -257,7 +258,7 @@ public class WorldScreen extends BattleScreen {
 
 	/** Show party/world status. */
 	public void updateplayerinformation() {
-		Game.messagepanel.clear();
+		MessagePanel.active.clear();
 		final ArrayList<String> infos = new ArrayList<>();
 		String period = Javelin.getDayPeriod();
 		String date = "Day " + currentday() + ", " + period.toLowerCase();
@@ -295,7 +296,7 @@ public class WorldScreen extends BattleScreen {
 			}
 			panel += hp + info + "\n";
 		}
-		Game.message(panel, Delay.NONE);
+		Javelin.message(panel, Javelin.Delay.NONE);
 	}
 
 	static String printgold() {
@@ -349,7 +350,7 @@ public class WorldScreen extends BattleScreen {
 	}
 
 	private void saywelcome() {
-		Game.message(Javelin.welcome(), Delay.NONE);
+		Javelin.message(Javelin.welcome(), Javelin.Delay.NONE);
 		InfoScreen.feedback();
 		messagepanel.clear();
 		WorldScreen.welcome = false;

@@ -19,7 +19,6 @@ import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.unique.MercenariesGuild;
-import javelin.old.Game;
 import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
@@ -156,7 +155,7 @@ public class Dwelling extends Fortification {
 		int xp = Math.round(dweller.source.cr * 100);
 		if (!canrecruit(xp)) {
 			s.print("Cannot afford a " + monstertype + " (" + xp + "XP)...");
-			Game.input();
+			Javelin.input();
 			return;
 		}
 		spend(dweller.source.cr);

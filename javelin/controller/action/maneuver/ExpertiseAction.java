@@ -3,6 +3,8 @@ package javelin.controller.action.maneuver;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.action.Action;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.ai.attack.MeleeAttack;
@@ -14,8 +16,6 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.feat.Feat;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 /**
@@ -58,7 +58,7 @@ public abstract class ExpertiseAction extends Target implements AiAction {
 	@Override
 	protected void checkhero(Combatant hero) {
 		if (!hero.source.hasfeat(prerequisite)) {
-			Game.message("Needs the " + prerequisite + " feat...", Delay.WAIT);
+			Javelin.message("Needs the " + prerequisite + " feat...", Javelin.Delay.WAIT);
 			throw new RepeatTurn();
 		}
 	}

@@ -42,6 +42,8 @@ public abstract class QuestApp extends Applet implements Runnable {
 	}
 
 	Component mainComponent = null;
+	// Thread for recieveing user input
+	public static Thread thread;
 
 	@Override
 	public Dimension getPreferredSize() {
@@ -62,9 +64,9 @@ public abstract class QuestApp extends Applet implements Runnable {
 		// "+KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner());
 
 		// set game in action
-		Game.userinterface = new Interface();
-		Game.thread = new Thread(this);
-		Game.thread.start();
+		Interface.userinterface = new Interface();
+		QuestApp.thread = new Thread(this);
+		QuestApp.thread.start();
 	}
 
 	// switches to a new screen, discarding the old one

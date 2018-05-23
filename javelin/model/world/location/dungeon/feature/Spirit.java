@@ -5,7 +5,6 @@ import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.GoodTemple;
-import javelin.old.Game;
 import javelin.old.RPG;
 import javelin.view.screen.BattleScreen;
 
@@ -30,7 +29,7 @@ public class Spirit extends Feature {
 		}
 		Dungeon.active.discover(show);
 		BattleScreen.active.center(show.x, show.y);
-		Game.redraw();
+		Javelin.redraw();
 		String navitext = RPG.chancein(2) ? "'Hey, look!'" : "'Hey, listen!'";
 		Javelin.message(navitext, false);
 		Point p = JavelinApp.context.getherolocation();

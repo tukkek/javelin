@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.CountingSet;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -19,9 +20,8 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.unique.minigame.Battlefield;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
 import javelin.old.RPG;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
 
 public class BattlefieldFight extends Minigame {
@@ -169,17 +169,17 @@ public class BattlefieldFight extends Minigame {
 		if (!redflagpoles.isEmpty() && elred < elblue
 				&& elred + redpoints >= elblue) {
 			ArrayList<Combatant> units = reinforceenemy();
-			Game.redraw();
+			Javelin.redraw();
 			Javelin.message("The enemy calls for reinforcements:\n"
 					+ Combatant.group(units) + "!\n", true);
-			Game.messagepanel.clear();
-			Game.messagepanel.repaint();
+			MessagePanel.active.clear();
+			MessagePanel.active.repaint();
 		}
 	}
 
 	void surrender(ArrayList<Combatant> team) {
 		team.clear();
-		Game.messagepanel.clear();
+		MessagePanel.active.clear();
 		String army = team == state.blueTeam ? "Your" : "The enemy";
 		Javelin.message(army + " army disbands and flees in defeat!", true);
 		throw new EndBattle();
@@ -279,9 +279,9 @@ public class BattlefieldFight extends Minigame {
 	}
 
 	void recruitbluearmy() {
-		Game.messagepanel.clear();
+		MessagePanel.active.clear();
 		if (bluepoints < 1) {
-			Game.message("You don't have army points yet...", Delay.WAIT);
+			Javelin.message("You don't have army points yet...", Javelin.Delay.WAIT);
 			return;
 		}
 		String prompt = "You have " + Math.round(bluepoints)

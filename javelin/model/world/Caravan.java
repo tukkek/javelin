@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
@@ -14,9 +15,8 @@ import javelin.model.item.key.TempleKey;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.basic.Growth;
-import javelin.old.Game;
 import javelin.old.RPG;
-import javelin.old.Game.Delay;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.Images;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.shopping.ShoppingScreen;
@@ -160,15 +160,15 @@ public class Caravan extends Actor {
 		if (Javelin.DEBUG) {
 			return;
 		}
-		Game.messagepanel.clear();
-		Game.message(
+		MessagePanel.active.clear();
+		Javelin.message(
 				"A merchant arrives at " + town
 						+ ", city grows! Press ENTER to continue...",
-				Delay.NONE);
-		while (Game.input().getKeyChar() != '\n') {
+				Javelin.Delay.NONE);
+		while (Javelin.input().getKeyChar() != '\n') {
 			// wait for ENTER
 		}
-		Game.messagepanel.clear();
+		MessagePanel.active.clear();
 	}
 
 	int calculatedelta(int from, int to) {

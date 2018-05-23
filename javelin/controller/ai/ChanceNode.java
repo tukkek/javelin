@@ -1,6 +1,7 @@
 package javelin.controller.ai;
 
-import javelin.old.Game.Delay;
+import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.view.mappanel.Overlay;
 
 /**
@@ -25,12 +26,12 @@ public class ChanceNode implements Cloneable {
 	/**
 	 * Delay for the outcome.
 	 */
-	public Delay delay;
+	public Javelin.Delay delay;
 
 	/** Allows a computer action to provide visual feedback. */
 	public Overlay overlay = null;
 
-	public ChanceNode(final Node n, final float chance, final String action, final Delay delay) {
+	public ChanceNode(final Node n, final float chance, final String action, final Javelin.Delay delay) {
 		super();
 		this.n = n;
 		this.chance = chance;

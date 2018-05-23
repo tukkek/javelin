@@ -3,6 +3,8 @@ package javelin.model.world.location;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.Point;
 import javelin.controller.generator.WorldGenerator;
 import javelin.controller.terrain.Terrain;
@@ -14,9 +16,8 @@ import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
-import javelin.old.Game;
 import javelin.old.RPG;
-import javelin.old.Game.Delay;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
 
@@ -166,8 +167,8 @@ public class Portal extends Location {
 	@Override
 	public boolean interact() {
 		if (invasion) {
-			Game.messagepanel.clear();
-			Game.message("You close the invasion portal!", Delay.NONE);
+			MessagePanel.active.clear();
+			Javelin.message("You close the invasion portal!", Javelin.Delay.NONE);
 			InfoScreen.feedback();
 			super.interact();
 			return true;
@@ -202,9 +203,9 @@ public class Portal extends Location {
 			}
 		}
 		if (!description.isEmpty()) {
-			Game.messagepanel.clear();
-			Game.message(description, Delay.BLOCK);
-			Game.input();
+			MessagePanel.active.clear();
+			Javelin.message(description, Javelin.Delay.BLOCK);
+			Javelin.input();
 		}
 	}
 

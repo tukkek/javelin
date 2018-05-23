@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.action.Action;
 import javelin.controller.action.CastSpell;
 import javelin.controller.action.ai.AiAction;
@@ -19,7 +20,6 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.skill.Bluff;
-import javelin.old.Game.Delay;
 
 /**
  * Base class for {@link MeleeAttack} and {@link RangedAttack}.
@@ -114,9 +114,9 @@ public abstract class AbstractAttack extends Action implements AiAction {
 		if (m != null) {
 			m.posthit(attacker, target, a, dc, s);
 		}
-		final Delay delay = target.source.passive
+		final Javelin.Delay delay = target.source.passive
 				&& target.getnumericstatus() > Combatant.STATUSUNCONSCIOUS
-						? Delay.WAIT : Delay.BLOCK;
+						? Javelin.Delay.WAIT : Javelin.Delay.BLOCK;
 		return new DamageNode(s, dc.chance, sb.toString(), delay, target);
 	}
 
@@ -264,13 +264,13 @@ public abstract class AbstractAttack extends Action implements AiAction {
 			Bluff.feign(attacker, target);
 		}
 		final String name;
-		final Delay wait;
+		final Javelin.Delay wait;
 		if (m == null) {
 			name = target.toString();
-			wait = Delay.WAIT;
+			wait = Javelin.Delay.WAIT;
 		} else {
 			name = m.name.toLowerCase();
-			wait = Delay.BLOCK;
+			wait = Javelin.Delay.BLOCK;
 		}
 		sb.append(" misses ").append(name).append(tohit);
 		return new DamageNode(s, dc.chance, sb.toString(), wait, target);

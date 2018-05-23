@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.Point;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.model.unit.Combatant;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
 
 public class AutoAttack extends Action {
 	private static final Comparator<Combatant> SORTBYSTATUS = new Comparator<Combatant>() {
@@ -46,7 +46,7 @@ public class AutoAttack extends Action {
 			active.meleeattacks(ranged.get(0), Fight.state);
 			return true;
 		}
-		Game.message("No targets in range...", Delay.WAIT);
+		Javelin.message("No targets in range...", Javelin.Delay.WAIT);
 		throw new RepeatTurn();
 	}
 

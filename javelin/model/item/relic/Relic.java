@@ -1,12 +1,11 @@
 package javelin.model.item.relic;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 
@@ -52,7 +51,7 @@ public abstract class Relic extends Item {
 				Javelin.app.switchScreen(BattleScreen.active);
 				Javelin.message(text, false);
 			} else {
-				Game.message(text, Delay.BLOCK);
+				Javelin.message(text, Javelin.Delay.BLOCK);
 			}
 			return true;
 		}

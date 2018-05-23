@@ -2,12 +2,12 @@ package javelin.model.item.relic;
 
 import java.util.ArrayList;
 
+import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.fight.Fight;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.old.Game;
 import javelin.old.RPG;
-import javelin.old.Game.Delay;
 
 /**
  * Damages all good creatures in battle (1-99% will save).
@@ -32,7 +32,7 @@ public class Skull extends Relic {
 			}
 		}
 		if (good.isEmpty()) {
-			Game.message("Nothing seems to happen...", Delay.BLOCK);
+			Javelin.message("Nothing seems to happen...", Javelin.Delay.BLOCK);
 			return true;
 		}
 		float dc = 0;
@@ -51,7 +51,7 @@ public class Skull extends Relic {
 				c.hp -= 1;
 			}
 		}
-		Game.message("Good creatures convulse in agony!", Delay.BLOCK);
+		Javelin.message("Good creatures convulse in agony!", Javelin.Delay.BLOCK);
 		return true;
 	}
 }

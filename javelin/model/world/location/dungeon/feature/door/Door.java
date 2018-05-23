@@ -27,7 +27,6 @@ import javelin.model.world.location.dungeon.feature.door.trap.Alarm;
 import javelin.model.world.location.dungeon.feature.door.trap.ArcaneLock;
 import javelin.model.world.location.dungeon.feature.door.trap.DoorTrap;
 import javelin.model.world.location.dungeon.feature.door.trap.HoldPortal;
-import javelin.old.Game;
 import javelin.old.RPG;
 
 public class Door extends Feature {
@@ -198,7 +197,7 @@ public class Door extends Feature {
 			Dungeon.active.map[x][y] = Template.FLOOR;
 			draw = true;
 			hidden = false;
-			Game.redraw();
+			Javelin.redraw();
 			if (searching != null) {
 				Javelin.message("You find a hidden door!", true);
 			}

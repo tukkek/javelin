@@ -3,6 +3,8 @@ package javelin.controller.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
@@ -10,8 +12,6 @@ import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
 
 /**
  * @see Monster#burrow
@@ -29,14 +29,14 @@ public class Dig extends Action implements AiAction {
 	@Override
 	public boolean perform(Combatant hero) {
 		if (hero.source.burrow == 0) {
-			Game.message("Cannot burrow!", Delay.WAIT);
+			Javelin.message("Cannot burrow!", Javelin.Delay.WAIT);
 			return false;
 		}
 		BattleState s = Fight.state;
 		if (flooded(hero, s)) {
 			return false;
 		}
-		Game.message(dig(hero, s), Delay.WAIT);
+		Javelin.message(dig(hero, s), Javelin.Delay.WAIT);
 		return true;
 	}
 
@@ -73,7 +73,7 @@ public class Dig extends Action implements AiAction {
 		ArrayList<ChanceNode> outcome = new ArrayList<ChanceNode>(1);
 		s = s.clone();
 		active = s.clone(active);
-		outcome.add(new ChanceNode(s, 1, dig(active, s), Delay.BLOCK));
+		outcome.add(new ChanceNode(s, 1, dig(active, s), Javelin.Delay.BLOCK));
 		return outcomes;
 	}
 
@@ -83,7 +83,7 @@ public class Dig extends Action implements AiAction {
 	 * @throws RepeatTurn
 	 */
 	public static void refuse() {
-		Game.message("Cannot do this while burrowed...", Delay.WAIT);
+		Javelin.message("Cannot do this while burrowed...", Javelin.Delay.WAIT);
 		throw new RepeatTurn();
 	}
 }

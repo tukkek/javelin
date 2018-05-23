@@ -17,7 +17,7 @@ public class TPanel extends Panel {
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				Game.userinterface.go(e);
+				Interface.userinterface.go(e);
 			}
 		});
 		setFocusTraversalKeysEnabled(false);

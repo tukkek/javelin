@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ActionProvider;
 import javelin.controller.ai.ChanceNode;
@@ -13,8 +14,7 @@ import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
+import javelin.old.messagepanel.MessagePanel;
 
 /**
  * Spells with attack rolls are supposed to have critical hits too but for the
@@ -34,7 +34,7 @@ public class CastSpell extends Fire implements AiAction {
 
 	@Override
 	public boolean perform(Combatant c) {
-		Game.messagepanel.clear();
+		MessagePanel.active.clear();
 		casting = null;
 		final ArrayList<Spell> castable = new ArrayList<Spell>();
 		final boolean engaged = Fight.state.isengaged(c);
@@ -47,7 +47,7 @@ public class CastSpell extends Fire implements AiAction {
 			}
 		}
 		if (castable.isEmpty()) {
-			Game.message("No spells can be cast right now.", Delay.WAIT);
+			Javelin.message("No spells can be cast right now.", Javelin.Delay.WAIT);
 			return false;
 		}
 		castable.sort(new Comparator<Spell>() {
@@ -108,7 +108,7 @@ public class CastSpell extends Fire implements AiAction {
 		} else {
 			misschance = bind(touchtarget / 20f);
 			chances.add(new ChanceNode(state, misschance,
-					prefix + caster + " misses touch attack.", Delay.BLOCK));
+					prefix + caster + " misses touch attack.", Javelin.Delay.BLOCK));
 		}
 		final float hitc = 1 - misschance;
 		final float affectchance = affect(caster, target, state, spell, chances,
@@ -149,7 +149,7 @@ public class CastSpell extends Fire implements AiAction {
 		final float resistchance = bind(
 				(target.source.sr - spell.casterlevel) / 20f) * hitchance;
 		chances.add(new ChanceNode(state, resistchance,
-				prefix + target + " resists spell!", Delay.BLOCK));
+				prefix + target + " resists spell!", Javelin.Delay.BLOCK));
 		return hitchance - resistchance;
 	}
 
@@ -169,7 +169,7 @@ public class CastSpell extends Fire implements AiAction {
 		state = state.clone();
 		active = state.clone(active);
 		target = state.cloneifdifferent(target, active);
-		ChanceNode cn = new ChanceNode(state, chance, null, Delay.BLOCK);
+		ChanceNode cn = new ChanceNode(state, chance, null, Javelin.Delay.BLOCK);
 		String message = spell.cast(active, target, saved, state, cn);
 		if (message == null || message.isEmpty()) {
 			prefix = prefix.substring(0, prefix.length() - 1);

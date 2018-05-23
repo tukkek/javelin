@@ -9,6 +9,8 @@ public class Interface {
 	private Object lock = new Object();
 	/** If <code>true</code> is waiting for a {@link BattleScreen} input. */
 	public boolean waiting = false;
+	// Interface helper object
+	public static Interface userinterface = new Interface();
 
 	public void go(KeyEvent k) {
 		keyevent = k;

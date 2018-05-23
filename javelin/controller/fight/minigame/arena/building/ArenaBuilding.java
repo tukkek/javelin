@@ -1,13 +1,13 @@
 package javelin.controller.fight.minigame.arena.building;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.arena.ArenaFight;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Building;
 import javelin.model.unit.Combatant;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.battle.action.BattleMouseAction;
 import javelin.view.screen.BattleScreen;
@@ -129,8 +129,8 @@ public abstract class ArenaBuilding extends Building {
 			@Override
 			public void onenter(Combatant current, Combatant target, Tile t,
 					BattleState s) {
-				Game.message(isdamaged() ? getrepairmessage()
-						: getactiondescription(current), Delay.NONE);
+				Javelin.message(isdamaged() ? getrepairmessage()
+						: getactiondescription(current), Javelin.Delay.NONE);
 			}
 
 			@Override
@@ -146,18 +146,18 @@ public abstract class ArenaBuilding extends Building {
 					@Override
 					public void run() {
 						if (!current.isadjacent(target)) {
-							Game.messagepanel.clear();
-							Game.message("Too far away...", Delay.WAIT);
+							MessagePanel.active.clear();
+							Javelin.message("Too far away...", Javelin.Delay.WAIT);
 						} else if (isdamaged()) {
 							if (repair()) {
-								Game.messagepanel.clear();
+								MessagePanel.active.clear();
 								String underrepair = source.customName
 										+ " is being repaired...";
-								Game.message(underrepair, Delay.WAIT);
+								Javelin.message(underrepair, Javelin.Delay.WAIT);
 								Fight.state.next.ap += 1;
 							} else {
-								Game.messagepanel.clear();
-								Game.message("Not enough gold...", Delay.WAIT);
+								MessagePanel.active.clear();
+								Javelin.message("Not enough gold...", Javelin.Delay.WAIT);
 							}
 						} else {
 							if (click(current)) {

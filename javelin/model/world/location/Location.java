@@ -7,6 +7,7 @@ import java.util.List;
 
 import javelin.Debug;
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
@@ -30,9 +31,8 @@ import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.unique.UniqueLocation;
-import javelin.old.Game;
 import javelin.old.RPG;
-import javelin.old.Game.Delay;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.Images;
 import javelin.view.mappanel.world.WorldMouse;
 import javelin.view.screen.InfoScreen;
@@ -281,10 +281,10 @@ public abstract class Location extends Actor {
 				return o1.toString().compareTo(o2.toString());
 			}
 		});
-		Game.messagepanel.clear();
+		MessagePanel.active.clear();
 		final String prompt = describe(opponents, description, showgarrison, a)
 				+ "\n\nPress s to storm or any other key to retreat.";
-		Game.message(prompt, Delay.NONE);
+		Javelin.message(prompt, Javelin.Delay.NONE);
 		if (InfoScreen.feedback() == 's') {
 			return true;
 		}

@@ -10,8 +10,8 @@ import javelin.controller.map.Map;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.old.Game;
 import javelin.old.RPG;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
 
 /**
@@ -44,7 +44,7 @@ public abstract class Minigame extends Fight {
 				+ "Press ENTER to confirm, any other key to cancel...") == '\n') {
 			throw new EndBattle();
 		}
-		Game.messagepanel.clear();
+		MessagePanel.active.clear();
 	}
 
 	@Override

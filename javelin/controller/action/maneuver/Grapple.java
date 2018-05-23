@@ -1,5 +1,7 @@
 package javelin.controller.action.maneuver;
 
+import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.action.Action;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
@@ -8,7 +10,6 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.Constrict;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.feat.attack.expertise.ImprovedGrapple;
-import javelin.old.Game.Delay;
 
 /**
  * TODO since one of the combatants can die while grappling due to constriction,
@@ -52,7 +53,7 @@ public class Grapple extends ExpertiseAction {
 	ChanceNode miss(Combatant combatant, Combatant target,
 			BattleState battleState, float chance) {
 		return new ChanceNode(battleState, chance, "Grapple attempt fails...",
-				Delay.WAIT);
+				Javelin.Delay.WAIT);
 	}
 
 	@Override
@@ -72,7 +73,7 @@ public class Grapple extends ExpertiseAction {
 		message += constrict(target, current, duration, s);
 		grapple(current, duration);
 		grapple(target, duration);
-		return new ChanceNode(s, chance, message, Delay.BLOCK);
+		return new ChanceNode(s, chance, message, Javelin.Delay.BLOCK);
 	}
 
 	void grapple(Combatant c, int duration) {

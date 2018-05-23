@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import javelin.Javelin;
-import javelin.old.Game;
 import javelin.view.screen.InfoScreen;
 
 /**
@@ -33,6 +32,6 @@ public class TextReader {
 
 	public static KeyEvent show(File f, String footer) {
 		Javelin.app.switchScreen(new InfoScreen(TextReader.read(f) + footer));
-		return Game.input();
+		return Javelin.input();
 	}
 }

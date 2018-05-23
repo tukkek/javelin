@@ -6,7 +6,6 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.old.Game;
 import javelin.view.screen.BattleScreen;
 
 /**
@@ -33,7 +32,7 @@ public class Potion extends Item {
 	@Override
 	public boolean use(Combatant user) {
 		String text = spell.cast(user, user, false, null, null);
-		Game.redraw();
+		Javelin.redraw();
 		/* TODO should be less awkward once Context are implemented (2.0) */
 		if (BattleScreen.active.getClass().equals(BattleScreen.class)) {
 			BattleScreen.active.center(user.location[0], user.location[1]);

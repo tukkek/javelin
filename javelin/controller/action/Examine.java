@@ -4,13 +4,13 @@ import java.awt.event.KeyEvent;
 import java.util.HashMap;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.Point;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.battle.overlay.TargetOverlay;
 import javelin.view.screen.BattleScreen;
@@ -55,7 +55,7 @@ public class Examine extends Action {
 		startlooking(start, s);
 		try {
 			while (true) {
-				final KeyEvent e = Game.input();
+				final KeyEvent e = Javelin.input();
 				if (e == null) {
 					continue;
 				}
@@ -81,7 +81,7 @@ public class Examine extends Action {
 			}
 		} finally {
 			lastlooked = null;
-			Game.messagepanel.clear();
+			MessagePanel.active.clear();
 		}
 	}
 
@@ -151,11 +151,11 @@ public class Examine extends Action {
 
 	static void lookmessage(final String string, BattleScreen s) {
 		s.messagepanel.clear();
-		Game.message(
+		Javelin.message(
 				"Examine: move the cursor over another combatant, press v to view character sheet.\n\n"
 						+ string,
-				Delay.NONE);
-		Game.redraw();
+				Javelin.Delay.NONE);
+		Javelin.redraw();
 	}
 
 	static String describestatus(final Combatant c, final BattleState s) {

@@ -5,12 +5,12 @@ import java.util.Collections;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.comparator.ItemsByName;
 import javelin.controller.fight.Fight;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
 
 /**
@@ -57,7 +57,7 @@ public class UseItem extends Action {
 		final List<Item> items = (List<Item>) Javelin.app.fight.getbag(c)
 				.clone();
 		if (items.isEmpty()) {
-			Game.message("Isn't carrying battle items!", Delay.WAIT);
+			Javelin.message("Isn't carrying battle items!", Javelin.Delay.WAIT);
 			return null;
 		}
 		if (validate) {
@@ -68,7 +68,7 @@ public class UseItem extends Action {
 			}
 		}
 		if (items.isEmpty()) {
-			Game.message("Can't use any of these items!", Delay.WAIT);
+			Javelin.message("Can't use any of these items!", Javelin.Delay.WAIT);
 			return null;
 		}
 		Collections.sort(items, ItemsByName.SINGLETON);
@@ -79,9 +79,9 @@ public class UseItem extends Action {
 			}
 		}
 		if (items.isEmpty()) {
-			Game.messagepanel.clear();
-			Game.message("Can't use any of these while threatened!",
-					Delay.WAIT);
+			MessagePanel.active.clear();
+			Javelin.message("Can't use any of these while threatened!",
+					Javelin.Delay.WAIT);
 			return null;
 		}
 		boolean fullscreen = items.size() > 4;

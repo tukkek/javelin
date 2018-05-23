@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -28,33 +28,33 @@ public class CastSpells extends WorldAction {
 	public void perform(WorldScreen screen) {
 		ArrayList<Combatant> casters = filtercasters();
 		if (casters.isEmpty()) {
-			Game.messagepanel.clear();
-			Game.message("No peaceful spells to cast right now...", Delay.WAIT);
+			MessagePanel.active.clear();
+			Javelin.message("No peaceful spells to cast right now...", Javelin.Delay.WAIT);
 			return;
 		}
 		int choice = Javelin.choose("Who?", casters, false, false);
 		if (choice == -1) {
-			Game.messagepanel.clear();
+			MessagePanel.active.clear();
 			return;
 		}
 		Combatant caster = casters.get(choice);
 		List<Spell> spells = new ArrayList<Spell>(caster.spells);
 		Spell s = selectspell(spells);
 		if (s == null) {
-			Game.messagepanel.clear();
+			MessagePanel.active.clear();
 			return;
 		}
 		Combatant target = null;
 		if (s.castonallies) {
 			int targetindex = selecttarget();
 			if (targetindex < 0) {
-				Game.messagepanel.clear();
+				MessagePanel.active.clear();
 				return;
 			}
 			target = Squad.active.members.get(targetindex);
 		}
 		if (!s.validate(caster, target)) {
-			Game.message("Can't cast this spell right now.", Delay.BLOCK);
+			Javelin.message("Can't cast this spell right now.", Javelin.Delay.BLOCK);
 			return;
 		}
 		String message = s.castpeacefully(caster, target);
@@ -79,9 +79,9 @@ public class CastSpells extends WorldAction {
 	private Spell selectspell(List<Spell> spells) {
 		ArrayList<String> spellnames = listspells(spells);
 		if (spellnames.size() == 0) {
-			Game.messagepanel.clear();
-			Game.message("All spells already cast! Rest to regain them.",
-					Delay.BLOCK);
+			MessagePanel.active.clear();
+			Javelin.message("All spells already cast! Rest to regain them.",
+					Javelin.Delay.BLOCK);
 			return null;
 		}
 		int input = Javelin.choose("Which spell?", spellnames, false, false);

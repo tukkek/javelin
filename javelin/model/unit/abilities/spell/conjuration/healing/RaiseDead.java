@@ -1,11 +1,11 @@
 package javelin.model.unit.abilities.spell.conjuration.healing;
 
+import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.InfoScreen;
 
 /**
@@ -33,10 +33,10 @@ public class RaiseDead extends Spell {
 
 	@Override
 	public boolean validate(Combatant caster, Combatant target) {
-		Game.messagepanel.clear();
+		MessagePanel.active.clear();
 		String prompt = "Revive " + target + "?\n"
 				+ "Press y to confirm or n to let go of this unit.";
-		Game.message(prompt, Delay.NONE);
+		Javelin.message(prompt, Javelin.Delay.NONE);
 		while (true) {
 			final Character feedback = InfoScreen.feedback();
 			if (feedback == 'y') {

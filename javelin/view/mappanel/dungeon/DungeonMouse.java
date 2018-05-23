@@ -4,7 +4,7 @@ import java.awt.event.MouseEvent;
 
 import javelin.controller.Point;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.old.Game;
+import javelin.old.Interface;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.MoveOverlay;
@@ -21,7 +21,7 @@ public class DungeonMouse extends Mouse {
 		if (overrideinput()) {
 			return;
 		}
-		if (!Game.userinterface.waiting) {
+		if (!Interface.userinterface.waiting) {
 			return;
 		}
 		final Tile t = gettile(e);
@@ -36,7 +36,7 @@ public class DungeonMouse extends Mouse {
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		if (!Game.userinterface.waiting) {
+		if (!Interface.userinterface.waiting) {
 			return;
 		}
 		if (MapPanel.overlay != null) {

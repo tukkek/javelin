@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.CountingSet;
 import javelin.controller.Point;
 import javelin.controller.SpellbookGenerator;
@@ -55,9 +56,8 @@ import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.unique.MercenariesGuild;
-import javelin.old.Game;
 import javelin.old.RPG;
-import javelin.old.Game.Delay;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.mappanel.battle.action.BattleMouseAction;
 import javelin.view.screen.BattleScreen;
 
@@ -278,8 +278,8 @@ public class Combatant implements Serializable, Cloneable {
 
 	public void checkAttackType(final boolean meleeOnly) {
 		if (!hasattacktype(meleeOnly)) {
-			Game.message("No " + (meleeOnly ? "mẽlée" : "ranged") + " attacks.",
-					Delay.WAIT);
+			Javelin.message("No " + (meleeOnly ? "mẽlée" : "ranged") + " attacks.",
+					Javelin.Delay.WAIT);
 			throw new RepeatTurn();
 		}
 	}
@@ -371,7 +371,7 @@ public class Combatant implements Serializable, Cloneable {
 			attackindex = Javelin.choose("Start which attack sequence?",
 					attacks, false, false);
 			if (attackindex == STATUSUNCONSCIOUS) {
-				Game.messagepanel.clear();
+				MessagePanel.active.clear();
 				throw new RepeatTurn();
 			}
 		}

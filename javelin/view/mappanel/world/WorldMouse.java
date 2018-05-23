@@ -2,6 +2,8 @@ package javelin.view.mappanel.world;
 
 import java.awt.event.MouseEvent;
 
+import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.Point;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.fight.RandomEncounter;
@@ -10,8 +12,8 @@ import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
+import javelin.old.Interface;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.MoveOverlay;
@@ -102,7 +104,7 @@ public class WorldMouse extends Mouse {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if (overrideinput() || !Game.userinterface.waiting) {
+		if (overrideinput() || !Interface.userinterface.waiting) {
 			return;
 		}
 		final WorldTile t = (WorldTile) gettile(e);
@@ -142,7 +144,7 @@ public class WorldMouse extends Mouse {
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		if (!Game.userinterface.waiting) {
+		if (!Interface.userinterface.waiting) {
 			return;
 		}
 		if (MapPanel.overlay != null) {
@@ -157,17 +159,17 @@ public class WorldMouse extends Mouse {
 		if (target == null) {
 			if (showingdescription) {
 				showingdescription = false;
-				Game.messagepanel.clear();
+				MessagePanel.active.clear();
 				((WorldScreen) BattleScreen.active).updateplayerinformation();
-				Game.messagepanel.repaint();
+				MessagePanel.active.repaint();
 			}
 			MoveOverlay.schedule(new MoveOverlay(
 					new WorldWalker(new Point(Squad.active.x, Squad.active.y),
 							new Point(t.x, t.y))));
 		} else {
-			Game.messagepanel.clear();
-			Game.message(target.describe(), Delay.NONE);
-			Game.messagepanel.repaint();
+			MessagePanel.active.clear();
+			Javelin.message(target.describe(), Javelin.Delay.NONE);
+			MessagePanel.active.repaint();
 			showingdescription = true;
 			if (target instanceof Town) {
 				MapPanel.overlay = new DistrictOverlay((Town) target);

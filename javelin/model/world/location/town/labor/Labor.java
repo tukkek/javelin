@@ -7,7 +7,6 @@ import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.governor.Governor;
-import javelin.old.Game;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -128,7 +127,7 @@ public abstract class Labor implements Serializable, Cloneable {
 		cancel();
 		if (!town.ishostile() && WorldScreen.current != null) {
 			WorldScreen.current.center(town.x, town.y);
-			Game.redraw();
+			Javelin.redraw();
 			Javelin.message(name + ", finished on " + town + "!", true);
 		}
 	}

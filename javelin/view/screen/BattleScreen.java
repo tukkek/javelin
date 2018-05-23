@@ -8,6 +8,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.Point;
 import javelin.controller.action.Action;
 import javelin.controller.action.ActionCost;
@@ -25,8 +26,7 @@ import javelin.controller.map.Map;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
+import javelin.old.Interface;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.old.QuestApp;
 import javelin.old.Screen;
@@ -132,7 +132,7 @@ public class BattleScreen extends Screen {
 		setFont(QuestApp.mainfont);
 		Javelin.app.switchScreen(this);
 		BattleScreen.active = this;
-		Game.delayblock = false;
+		Javelin.delayblock = false;
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class BattleScreen extends Screen {
 		javelin.controller.Point t = new Point(hero.location[0],
 				hero.location[1]);
 		mappanel.setposition(t.x, t.y);
-		Game.redraw();
+		Javelin.redraw();
 		mappanel.center(t.x, t.y, true);
 		mappanel.setVisible(true);
 		if (Fight.state != null) {
@@ -207,7 +207,7 @@ public class BattleScreen extends Screen {
 		center(current.location[0], current.location[1]);
 		mappanel.refresh();
 		statuspanel.repaint();
-		Game.userinterface.waiting = true;
+		Interface.userinterface.waiting = true;
 		final KeyEvent updatableUserAction = callback == null ? getUserInput()
 				: null;
 		if (MapPanel.overlay != null) {
@@ -225,7 +225,7 @@ public class BattleScreen extends Screen {
 						updatableUserAction.isShiftDown());
 			}
 		} catch (RepeatTurn e) {
-			Game.messagepanel.clear();
+			MessagePanel.active.clear();
 			humanmove();
 		}
 	}
@@ -235,11 +235,11 @@ public class BattleScreen extends Screen {
 			jointurns = false;
 		} else {
 			BattlePanel.current = current;
-			Game.messagepanel.clear();
+			MessagePanel.active.clear();
 			if (MapPanel.overlay != null) {
 				MapPanel.overlay.clear();
 			}
-			Game.message("Thinking...\n", Delay.NONE);
+			Javelin.message("Thinking...\n", Javelin.Delay.NONE);
 			messagepanel.repaint();
 			updatescreen();
 		}
@@ -249,7 +249,7 @@ public class BattleScreen extends Screen {
 			try {
 				Action.outcome(ThreadManager.think(Fight.state), true);
 			} catch (final RuntimeException e) {
-				Game.message("Fatal error: " + e.getMessage(), Delay.NONE);
+				Javelin.message("Fatal error: " + e.getMessage(), Javelin.Delay.NONE);
 				messagepanel.repaint();
 				throw e;
 			}
@@ -266,14 +266,14 @@ public class BattleScreen extends Screen {
 	 */
 	static public void perform(Runnable r) {
 		callback = r;
-		Game.userinterface.go(null);
+		Interface.userinterface.go(null);
 	}
 
-	/** Processes {@link Game#delayblock}. */
+	/** Processes {@link Javelin#delayblock}. */
 	public void block() {
-		if (Game.delayblock) {
-			Game.delayblock = false;
-			Game.input();
+		if (Javelin.delayblock) {
+			Javelin.delayblock = false;
+			Javelin.input();
 			messagepanel.clear();
 		}
 	}
@@ -308,7 +308,7 @@ public class BattleScreen extends Screen {
 			view(x, y);
 		}
 		statuspanel.repaint();
-		Game.redraw();
+		Javelin.redraw();
 	}
 
 	/**
@@ -327,17 +327,17 @@ public class BattleScreen extends Screen {
 		final BattleState s = (BattleState) state.n;
 		Fight.state = s;
 		if (lastwascomputermove == null) {
-			Game.redraw();
+			Javelin.redraw();
 		}
-		Delay delay = state.delay;
-		if (enableoverrun && delay == Delay.WAIT
+		Javelin.Delay delay = state.delay;
+		if (enableoverrun && delay == Javelin.Delay.WAIT
 				&& (s.redTeam.contains(s.next) || s.next.automatic)) {
-			delay = Delay.NONE;
+			delay = Javelin.Delay.NONE;
 			jointurns = true;
 		}
 		messagepanel.clear();
 		statuspanel.repaint();
-		Game.message(state.action, delay);
+		Javelin.message(state.action, delay);
 	}
 
 	/**
@@ -356,7 +356,7 @@ public class BattleScreen extends Screen {
 	 */
 	public KeyEvent getUserInput() {
 		// Game.instance().clearMessageList();
-		return Game.input();
+		return Javelin.input();
 	}
 
 	/**

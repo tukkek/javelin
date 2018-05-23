@@ -1,13 +1,13 @@
 package javelin.controller.fight.minigame.arena.building;
 
+import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.Point;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.arena.ArenaFight;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.old.Game;
 import javelin.old.RPG;
-import javelin.old.Game.Delay;
 
 public class ArenaGateway extends ArenaBuilding {
 	public ArenaGateway() {
@@ -47,12 +47,12 @@ public class ArenaGateway extends ArenaBuilding {
 	protected boolean click(Combatant current) {
 		if (Fight.state.redTeam.contains(this)) {
 			String red = "Convert the game to your team first!";
-			Game.message(red, Delay.WAIT);
+			Javelin.message(red, Javelin.Delay.WAIT);
 			return false;
 		}
 		if (getnumericstatus() < STATUSSCRATCHED) {
 			String damaged = "The gate is too damaged to pass through!";
-			Game.message(damaged, Delay.WAIT);
+			Javelin.message(damaged, Javelin.Delay.WAIT);
 			return false;
 		}
 		Fight.state.blueTeam.remove(current);

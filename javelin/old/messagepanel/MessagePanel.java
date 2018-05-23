@@ -4,19 +4,19 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 
-import javelin.old.Game;
 import javelin.old.QuestApp;
 import javelin.old.TPanel;
 
 public class MessagePanel extends TPanel {
 	public final TextZone textzone = new TextZone();
+	public static MessagePanel active;
 
 	public MessagePanel() {
 		setLayout(new BorderLayout());
 		textzone.setBackground(QuestApp.PANELCOLOUR);
 		textzone.setForeground(QuestApp.INFOTEXTCOLOUR);
 		add("Center", textzone);
-		Game.messagepanel = this;
+		MessagePanel.active = this;
 	}
 
 	public void clear() {

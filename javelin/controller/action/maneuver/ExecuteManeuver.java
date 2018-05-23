@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.action.Action;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
@@ -13,8 +14,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.discipline.Disciplines;
 import javelin.model.unit.abilities.discipline.Maneuver;
 import javelin.model.unit.abilities.discipline.Maneuvers;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.town.SelectScreen;
 
@@ -41,7 +41,7 @@ public class ExecuteManeuver extends Action implements AiAction {
 					final String feedback = c2 + " readies "
 							+ m2.name.toLowerCase() + "!";
 					final ChanceNode node = new ChanceNode(s2, 1, feedback,
-							Delay.BLOCK);
+							Javelin.Delay.BLOCK);
 					chance.add(node);
 					outcomes.add(chance);
 				} else {
@@ -57,7 +57,7 @@ public class ExecuteManeuver extends Action implements AiAction {
 	public boolean perform(Combatant c) {
 		final Disciplines disciplines = c.disciplines;
 		if (disciplines.isEmpty()) {
-			Game.message("No known manuevers...", Delay.WAIT);
+			Javelin.message("No known manuevers...", Javelin.Delay.WAIT);
 			BattleScreen.active.block();
 			throw new RepeatTurn();
 		}
@@ -83,8 +83,8 @@ public class ExecuteManeuver extends Action implements AiAction {
 				throw new RepeatTurn();
 			}
 			c.ready(m);
-			Game.messagepanel.clear();
-			Game.message(c + " readies " + name + "...", Delay.WAIT);
+			MessagePanel.active.clear();
+			Javelin.message(c + " readies " + name + "...", Javelin.Delay.WAIT);
 			return true;
 		}
 		try {

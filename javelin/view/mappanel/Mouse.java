@@ -7,7 +7,7 @@ import java.awt.event.MouseWheelEvent;
 
 import javelin.JavelinApp;
 import javelin.controller.Point;
-import javelin.old.Game;
+import javelin.old.Interface;
 import javelin.view.screen.BattleScreen;
 
 public abstract class Mouse extends MouseAdapter {
@@ -43,13 +43,13 @@ public abstract class Mouse extends MouseAdapter {
 	 *         action if <code>true</code>.
 	 */
 	public boolean overrideinput() {
-		if (Game.userinterface.waiting) {
+		if (Interface.userinterface.waiting) {
 			return false;
 		}
 		final KeyEvent k = new KeyEvent(BattleScreen.active.mappanel, 0,
 				System.currentTimeMillis(), 0, 0, 'c');
 		k.setKeyChar('\n');
-		Game.userinterface.go(k);
+		Interface.userinterface.go(k);
 		return true;
 	}
 }

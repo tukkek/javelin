@@ -3,13 +3,13 @@ package javelin.controller.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
 
 /**
  * An attack that reaches out only 5 feet, like from the Digester or Shocker
@@ -63,7 +63,7 @@ public class TouchAttack extends Fire implements AiAction {
 		target = gameState.clone(target);
 		target.damage(damage, gameState, target.source.energyresistance);
 		return new ChanceNode(gameState, chance,
-				action + target.getstatus() + ".", Delay.BLOCK);
+				action + target.getstatus() + ".", Javelin.Delay.BLOCK);
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public class TouchAttack extends Fire implements AiAction {
 	@Override
 	protected void checkhero(Combatant hero) {
 		if (hero.source.touch == null) {
-			Game.message("No touch attack known...", Delay.WAIT);
+			Javelin.message("No touch attack known...", Javelin.Delay.WAIT);
 			throw new RepeatTurn();
 		}
 	}

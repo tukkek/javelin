@@ -3,12 +3,13 @@ package javelin.model.unit.abilities.discipline;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.action.ActionCost;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
 
 public abstract class Boost extends Maneuver {
@@ -22,8 +23,8 @@ public abstract class Boost extends Maneuver {
 		boost(c);
 		c.ap += ap;
 		BattleScreen.active.center(c.location[0], c.location[1]);
-		Game.messagepanel.clear();
-		Game.message(getaction(c), Delay.WAIT);
+		MessagePanel.active.clear();
+		Javelin.message(getaction(c), Javelin.Delay.WAIT);
 		return true;
 	}
 
@@ -34,7 +35,7 @@ public abstract class Boost extends Maneuver {
 		boost(c);
 		c.ap += ap;
 		ArrayList<ChanceNode> chance = new ArrayList<ChanceNode>(1);
-		chance.add(new ChanceNode(s, 1, getaction(c), Delay.BLOCK));
+		chance.add(new ChanceNode(s, 1, getaction(c), Javelin.Delay.BLOCK));
 		ArrayList<List<ChanceNode>> out = new ArrayList<List<ChanceNode>>(1);
 		out.add(chance);
 		return out;

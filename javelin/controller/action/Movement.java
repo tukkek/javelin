@@ -1,6 +1,7 @@
 package javelin.controller.action;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.Point;
 import javelin.controller.action.ai.AiMovement;
 import javelin.controller.exception.RepeatTurn;
@@ -10,8 +11,6 @@ import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.skill.Acrobatics;
 import javelin.model.unit.skill.Skill;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
 import javelin.view.mappanel.battle.action.BattleMouseAction;
 import javelin.view.screen.BattleScreen;
 
@@ -109,7 +108,7 @@ public class Movement extends Action {
 			if (!Movement.lastmovewasattack) {
 				if (meld == null || meld.meldsat > c.ap) {
 					String action = disengaging ? "disengages" : "moves";
-					Game.message(c + " " + action + "...", Delay.WAIT);
+					Javelin.message(c + " " + action + "...", Javelin.Delay.WAIT);
 				} else {
 					Javelin.app.fight.meld(c, meld);
 				}

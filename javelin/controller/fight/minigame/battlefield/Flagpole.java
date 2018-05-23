@@ -3,12 +3,11 @@ package javelin.controller.fight.minigame.battlefield;
 import java.math.BigDecimal;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Building;
 import javelin.model.unit.Combatant;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.battle.action.BattleMouseAction;
 
@@ -74,7 +73,7 @@ public class Flagpole extends Building {
 						+ "%).\nIf it is captured by the enemy, attack it to recapture it for your team!\nYou currently have "
 						+ (currentpoints < 1 ? 0 : currentpoints)
 						+ " army points, click to recruit new units.";
-				Game.message(message, Delay.NONE);
+				Javelin.message(message, Javelin.Delay.NONE);
 			}
 
 			@Override

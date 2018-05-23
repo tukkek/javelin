@@ -7,6 +7,7 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.action.Action;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
@@ -15,8 +16,7 @@ import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Charging;
-import javelin.old.Game;
-import javelin.old.Game.Delay;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.battle.overlay.TargetOverlay;
 import javelin.view.screen.BattleScreen;
@@ -94,8 +94,8 @@ public abstract class Target extends Action {
 		checkhero(c);
 		final BattleState state = Fight.state.clone();
 		if (checkengaged(state, state.clone(c))) {
-			Game.messagepanel.clear();
-			Game.message("Disengage first...", Delay.WAIT);
+			MessagePanel.active.clear();
+			Javelin.message("Disengage first...", Javelin.Delay.WAIT);
 			throw new RepeatTurn();
 		}
 		final Combatant combatant = state.clone(c);
@@ -103,8 +103,8 @@ public abstract class Target extends Action {
 				state.getcombatants());
 		filtertargets(combatant, targets, state);
 		if (targets.isEmpty()) {
-			Game.messagepanel.clear();
-			Game.message("No valid targets...", Delay.WAIT);
+			MessagePanel.active.clear();
+			Javelin.message("No valid targets...", Javelin.Delay.WAIT);
 			throw new RepeatTurn();
 		}
 		Collections.sort(targets, new SelectTarget(c, state, this));
@@ -117,7 +117,7 @@ public abstract class Target extends Action {
 		int targeti = 0;
 		lockTarget(targets.get(0), combatant, state);
 		while (true) {
-			Game.redraw();
+			Javelin.redraw();
 			final Character key = InfoScreen.feedback();
 			if (Action.MOVE_W.isPressed(key) || key == '-') {
 				targeti -= 1;
@@ -125,14 +125,14 @@ public abstract class Target extends Action {
 				targeti += 1;
 			} else if (key == '\n' || key == confirmkey) {
 				MapPanel.overlay.clear();
-				Game.messagepanel.clear();
+				MessagePanel.active.clear();
 				attack(combatant, targets.get(targeti), state);
 				break;
 			} else if (key == 'v' && !targets.get(targeti).source.passive) {
 				new StatisticsScreen(targets.get(targeti));
 			} else {
 				MapPanel.overlay.clear();
-				Game.messagepanel.clear();
+				MessagePanel.active.clear();
 				throw new RepeatTurn();
 			}
 			final int max = targets.size() - 1;
@@ -187,11 +187,11 @@ public abstract class Target extends Action {
 			BattleState state) {
 		MapPanel.overlay = new TargetOverlay(target.location[0],
 				target.location[1]);
-		Game.messagepanel.clear();
+		MessagePanel.active.clear();
 		String prompt = "Use ← and → to select target, ENTER or " + confirmkey
 				+ " to confirm, v to view target's sheet, q to quit.\n\n";
 		prompt += describehitchance(active, target, state);
-		Game.message(prompt, Delay.NONE);
+		Javelin.message(prompt, Javelin.Delay.NONE);
 		BattleScreen.active.center(target.location[0], target.location[1]);
 	}
 

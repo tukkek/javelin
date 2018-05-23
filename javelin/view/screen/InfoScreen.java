@@ -7,7 +7,6 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
 import javelin.Javelin;
-import javelin.old.Game;
 import javelin.old.QuestApp;
 import javelin.old.Screen;
 import javelin.old.messagepanel.Text;
@@ -73,7 +72,7 @@ public class InfoScreen extends Screen {
 	 * @see #ESCAPE
 	 */
 	static public Character feedback() {
-		KeyEvent input = Game.input();
+		KeyEvent input = Javelin.input();
 		switch (input.getKeyCode()) {
 		case KeyEvent.VK_RIGHT:
 			return '→';

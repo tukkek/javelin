@@ -1,5 +1,7 @@
 package javelin.controller.action.maneuver;
 
+import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.action.Action;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
@@ -7,7 +9,6 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.feat.attack.expertise.ImprovedFeint;
-import javelin.old.Game.Delay;
 
 public class Feint extends ExpertiseAction {
 	public static final Action INSTANCE = new Feint();
@@ -47,7 +48,7 @@ public class Feint extends ExpertiseAction {
 		targetCombatant.addcondition(
 				new Feigned(targetCombatant.ap + .1f, targetCombatant));
 		return new ChanceNode(battleState, chance, "Feint succesfull!",
-				Delay.BLOCK);
+				Javelin.Delay.BLOCK);
 	}
 
 	@Override
@@ -64,6 +65,6 @@ public class Feint extends ExpertiseAction {
 	ChanceNode miss(Combatant combatant, Combatant target,
 			BattleState battleState, float chance) {
 		return new ChanceNode(battleState, chance, "Feint attemp fails...",
-				Delay.WAIT);
+				Javelin.Delay.WAIT);
 	}
 }

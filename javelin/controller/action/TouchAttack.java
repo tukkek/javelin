@@ -6,10 +6,10 @@ import java.util.List;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
+import javelin.old.Game;
+import javelin.old.Game.Delay;
 
 /**
  * An attack that reaches out only 5 feet, like from the Digester or Shocker

@@ -3,7 +3,7 @@ package javelin.controller.generator.dungeon.template.corridor;
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.VirtualMap;
 import javelin.controller.generator.dungeon.template.Template;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class StraightCorridor extends Template {
 	public StraightCorridor() {

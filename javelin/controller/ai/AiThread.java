@@ -8,18 +8,18 @@ import java.util.TreeMap;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.exception.StopThinking;
 import javelin.model.state.BattleState;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Efficiently uses a CPU core to run an {@link AlphaBetaSearch}. When the
  * search is done it starts a new one using the same thread, to avoid creating
  * more than threads than there are CPUs available.
- * 
+ *
  * @author alex
  */
 public class AiThread extends Thread {
-	public static final TreeMap<Integer, List<ChanceNode>> FINISHED = new TreeMap<Integer, List<ChanceNode>>();
-	static final ArrayList<Thread> STARTED = new ArrayList<Thread>();
+	public static final TreeMap<Integer, List<ChanceNode>> FINISHED = new TreeMap<>();
+	static final ArrayList<Thread> STARTED = new ArrayList<>();
 
 	public static ThreadGroup group = regroup();
 	/**
@@ -109,7 +109,7 @@ public class AiThread extends Thread {
 	 * proven to be internally reliable, it would allow the AI to know the
 	 * outcomes of dice rolls during the thinking phase, instead of having to
 	 * force it to think in possibilites instead.
-	 * 
+	 *
 	 * This is offered in the hopes that, as long as the same seed is given at
 	 * {@link AiThread#AiThread(BattleState, long)}, the same sequence of calls
 	 * to
@@ -117,11 +117,11 @@ public class AiThread extends Thread {
 	 * will produce reliable results. This, however, cannot be entirely
 	 * guaranteed given how prunning may work in different {@link #depth}
 	 * calculations.
-	 * 
+	 *
 	 * TODO this has not been guaranteed to produce deterministic results when
 	 * it comes to different {@link #depth}s and such but is a relatively
 	 * relaible tool that can be used for less important {@link AiAction}s.
-	 * 
+	 *
 	 * @return A RNG that is bound to the context of this thread. If called from
 	 *         outside an {@link AiThread}, returns {@link RPG#rand} isntead.
 	 */

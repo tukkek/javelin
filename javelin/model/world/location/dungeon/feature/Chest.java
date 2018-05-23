@@ -9,7 +9,7 @@ import javelin.model.item.ItemSelection;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Loot!

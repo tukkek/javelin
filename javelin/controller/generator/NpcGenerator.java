@@ -17,7 +17,7 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.classes.Commoner;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class NpcGenerator {
 	static final boolean DEBUG = Javelin.DEBUG && false;

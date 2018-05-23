@@ -5,10 +5,10 @@ import java.util.List;
 
 import javelin.controller.action.ActionCost;
 import javelin.controller.ai.ChanceNode;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
+import javelin.old.Game;
+import javelin.old.Game.Delay;
 import javelin.view.screen.BattleScreen;
 
 public abstract class Boost extends Maneuver {

@@ -21,8 +21,8 @@ import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.model.world.location.dungeon.feature.StairsDown;
 import javelin.model.world.location.dungeon.feature.StairsUp;
+import javelin.old.RPG;
 import javelin.view.screen.DungeonScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Unlike normal dungeons {@link Temple}s have many floors (levels), chests with

@@ -7,8 +7,8 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import javelin.controller.db.Preferences;
-import javelin.controller.old.Game;
-import javelin.controller.old.MessagePanel;
+import javelin.old.Game;
+import javelin.old.MessagePanel;
 
 /**
  * Uses {@value #LINUXTEMPARATUREFILE} on Linux to wait for cooldown if an

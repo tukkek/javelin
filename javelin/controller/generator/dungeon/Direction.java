@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.template.Template;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public abstract class Direction {
 	public static final Direction NORTH = new Direction("North", 0, +1) {

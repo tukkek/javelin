@@ -20,8 +20,6 @@ import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.Map;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.Underground;
@@ -35,9 +33,11 @@ import javelin.model.unit.Squad;
 import javelin.model.unit.condition.Dominated;
 import javelin.model.unit.skill.Diplomacy;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.old.Game;
+import javelin.old.QuestApp;
+import javelin.old.Game.Delay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
-import tyrant.mikera.tyrant.QuestApp;
 
 /**
  * A battle scenario.

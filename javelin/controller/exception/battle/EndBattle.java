@@ -7,8 +7,6 @@ import javelin.Javelin;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.ai.cache.AiCache;
 import javelin.controller.fight.Fight;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.controller.wish.Ressurect;
 import javelin.model.item.Item;
 import javelin.model.item.Scroll;
@@ -22,6 +20,8 @@ import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.unique.MercenariesGuild;
+import javelin.old.Game;
+import javelin.old.Game.Delay;
 import javelin.view.screen.BattleScreen;
 
 /**

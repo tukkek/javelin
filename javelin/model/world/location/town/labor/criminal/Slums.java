@@ -12,8 +12,8 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
+import javelin.old.RPG;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Slums buy and sell items depending on availabity and the district's

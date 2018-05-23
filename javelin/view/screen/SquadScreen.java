@@ -11,7 +11,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Squad selection screen when starting a new game.

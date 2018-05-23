@@ -11,7 +11,7 @@ import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.Actor;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Single creature that guards an {@link Item}.

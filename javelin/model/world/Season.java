@@ -4,7 +4,7 @@ import javelin.Javelin;
 import javelin.controller.Weather;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Four seasons. The starting season for a world is random and each seasons

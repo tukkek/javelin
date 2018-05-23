@@ -15,14 +15,14 @@ import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.map.Map;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.unique.minigame.Battlefield;
+import javelin.old.Game;
+import javelin.old.Game.Delay;
+import javelin.old.RPG;
 import javelin.view.screen.BattleScreen;
-import tyrant.mikera.engine.RPG;
 
 public class BattlefieldFight extends Minigame {
 	public static final boolean DEBUG = false;

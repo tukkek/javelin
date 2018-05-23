@@ -17,7 +17,7 @@ import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.unit.skill.Survival;
 import javelin.model.world.location.dungeon.Dungeon;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Similar to a {@link Chest} but requires someone with enough {@link Survival}

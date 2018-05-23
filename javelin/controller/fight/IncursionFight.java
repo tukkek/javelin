@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Incursion;
-import tyrant.mikera.tyrant.QuestApp;
+import javelin.old.QuestApp;
 
 /**
  * @see Incursion

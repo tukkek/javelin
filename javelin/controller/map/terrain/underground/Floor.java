@@ -1,11 +1,9 @@
 package javelin.controller.map.terrain.underground;
 
 import javelin.controller.Point;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
- * Adapted from the Dungeon map from Tyrant.
- *
  * @author alex
  */
 public class Floor extends Caves {

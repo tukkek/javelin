@@ -7,7 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import javelin.Javelin;
-import javelin.controller.old.Game;
+import javelin.old.Game;
 import javelin.view.screen.InfoScreen;
 
 /**

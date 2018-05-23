@@ -9,7 +9,7 @@ import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.necromancy.Poison;
 import javelin.model.unit.attack.Attack;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * http://www.d20pfsrd.com/path-of-war/disciplines-and-maneuvers/steel-serpent-maneuvers/#TOC-Iron-Fang

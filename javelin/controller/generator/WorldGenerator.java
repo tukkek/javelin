@@ -14,8 +14,8 @@ import javelin.model.Realm;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
+import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
-import tyrant.mikera.engine.RPG;
 
 public class WorldGenerator extends Thread {
 	public static final Terrain[] GENERATIONORDER = new Terrain[] {

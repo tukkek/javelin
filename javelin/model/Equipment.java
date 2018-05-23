@@ -9,7 +9,7 @@ import java.util.List;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Map of {@link Combatant#id} and a list of {@link Item}s. Also referred to as

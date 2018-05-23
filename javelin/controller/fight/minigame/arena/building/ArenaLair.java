@@ -12,10 +12,10 @@ import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.unique.MercenariesGuild;
+import javelin.old.RPG;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.PurchaseScreen;
-import tyrant.mikera.engine.RPG;
 
 public class ArenaLair extends ArenaBuilding {
 	public static final int OPTIONS = 9;

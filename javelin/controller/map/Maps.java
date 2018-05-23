@@ -2,7 +2,7 @@ package javelin.controller.map;
 
 import java.util.ArrayList;
 
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * @see #pick()

@@ -4,7 +4,7 @@ import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Fatigued;
 import javelin.model.world.Season;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Extreme heat. Happens during {@link Javelin#PERIODNOON} and also during

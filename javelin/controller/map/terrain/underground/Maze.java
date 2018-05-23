@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import javelin.model.state.Square;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
- * Adapted from {@link tyrant.mikera.tyrant.Maze}.
- *
  * @author alex
  */
 public class Maze extends Caves {
@@ -50,7 +48,7 @@ public class Maze extends Caves {
 	}
 
 	void poke() {
-		ArrayList<Square> walls = new ArrayList<Square>();
+		ArrayList<Square> walls = new ArrayList<>();
 		for (Square[] squares : map) {
 			for (Square s : squares) {
 				if (s.blocked) {

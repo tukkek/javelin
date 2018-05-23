@@ -14,8 +14,6 @@ import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Siege;
 import javelin.controller.generator.WorldGenerator;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
 import javelin.model.Realm;
@@ -32,11 +30,13 @@ import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.unique.UniqueLocation;
+import javelin.old.Game;
+import javelin.old.RPG;
+import javelin.old.Game.Delay;
 import javelin.view.Images;
 import javelin.view.mappanel.world.WorldMouse;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * A {@link Actor} that is actually a place that represent a location to be

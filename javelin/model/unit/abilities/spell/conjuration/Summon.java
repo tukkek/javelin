@@ -12,8 +12,8 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.old.RPG;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Brings an ally to fight with your team.

@@ -14,8 +14,8 @@ import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
+import javelin.old.RPG;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Monsters will inhabit the sewers periodically, can be upgraded for tougher

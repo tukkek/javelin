@@ -23,7 +23,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.productive.Mine;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Represent different types of {@link World} terrain.

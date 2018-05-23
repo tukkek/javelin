@@ -11,20 +11,20 @@ import javelin.Javelin;
 import javelin.controller.action.world.ShowOptions;
 import javelin.controller.ai.cache.AiCache;
 import javelin.controller.db.Preferences;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
+import javelin.old.Game;
+import javelin.old.RPG;
+import javelin.old.Game.Delay;
 import javelin.view.screen.BattleScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Managers{@link AiThread}s.
- * 
+ *
  * @author alex
  */
 public class ThreadManager {
 	static final Thread MAIN = Thread.currentThread();
-	static final ArrayList<Integer> BATTLERECORD = new ArrayList<Integer>();
+	static final ArrayList<Integer> BATTLERECORD = new ArrayList<>();
 
 	static final String PERFORMANCESOLUTION = "The maximum number of AI threads has been lowered to %1$d.\n"
 			+ "This reduces the AI thinking power but increases speed.\n"
@@ -89,7 +89,7 @@ public class ThreadManager {
 	}
 
 	static void analyze(final long start, int depth) {
-		float miliseconds = (now() - start);
+		float miliseconds = now() - start;
 		checkperformance(miliseconds);
 		final float elapsed = miliseconds / 1000f;
 		System.out.println(elapsed + " seconds elapsed. Depth: " + depth);
@@ -117,7 +117,7 @@ public class ThreadManager {
 			return;
 		}
 		String message = String.format(PERFORMANCENOTIFICATION,
-				(Preferences.MAXMILISECONDSTHINKING / 1000),
+				Preferences.MAXMILISECONDSTHINKING / 1000,
 				Math.round(miliseconds / 1000),
 				ShowOptions.getsingleton().morekeys[0].charAt(0));
 		int choice = JOptionPane.showConfirmDialog(BattleScreen.active, message,
@@ -145,7 +145,7 @@ public class ThreadManager {
 	public static void interrupt() {
 		interrupting = true;
 		AiThread.group.interrupt();
-		for (Thread t : new ArrayList<Thread>(AiThread.STARTED)) {
+		for (Thread t : new ArrayList<>(AiThread.STARTED)) {
 			try {
 				t.join();
 			} catch (InterruptedException e) {

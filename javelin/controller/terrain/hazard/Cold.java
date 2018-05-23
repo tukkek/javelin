@@ -5,7 +5,7 @@ import javelin.controller.Weather;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Fatigued;
 import javelin.model.world.Season;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Frostbite.

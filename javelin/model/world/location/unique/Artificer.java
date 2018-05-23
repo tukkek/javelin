@@ -3,7 +3,6 @@ package javelin.model.world.location.unique;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.old.Game;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.artifact.Artifact;
@@ -14,10 +13,11 @@ import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.order.CraftingOrder;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
+import javelin.old.Game;
+import javelin.old.RPG;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.shopping.ArtificerScreen;
 import javelin.view.screen.town.PurchaseOption;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Allows a player to forge and sell artifacts.

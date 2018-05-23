@@ -11,7 +11,7 @@ import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonTier;
 import javelin.model.world.location.dungeon.temple.Temple;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class DungeonWorld extends Campaign {
 	public DungeonWorld() {

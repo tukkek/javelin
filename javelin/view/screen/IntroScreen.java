@@ -3,7 +3,7 @@ package javelin.view.screen;
 import java.awt.Color;
 
 import javelin.Javelin;
-import tyrant.mikera.tyrant.Screen;
+import javelin.old.Screen;
 
 /**
  * Simple notice screen for when a player start the game for the first time.

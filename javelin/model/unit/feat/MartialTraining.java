@@ -10,7 +10,7 @@ import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.unit.abilities.discipline.Maneuver;
 import javelin.model.unit.abilities.discipline.Maneuvers;
 import javelin.model.unit.skill.Skill;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * TODO how to allow player to select the maneuvers to learn?

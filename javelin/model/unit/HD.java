@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.TreeMap;
 
 import javelin.model.Cloneable;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Represent the total hit dice of a {@link Monster}.

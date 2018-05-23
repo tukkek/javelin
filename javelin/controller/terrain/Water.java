@@ -17,7 +17,7 @@ import javelin.model.world.ParkedVehicle;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Can only be trespassed by flying or swimming units or boat.

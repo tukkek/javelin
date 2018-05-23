@@ -17,9 +17,9 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.World;
 import javelin.model.world.location.unique.minigame.Ziggurat;
+import javelin.old.RPG;
 import javelin.view.mappanel.Tile;
 import javelin.view.screen.BattleScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * {@link Ziggurat} match.

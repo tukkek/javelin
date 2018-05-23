@@ -13,7 +13,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.skill.Skill;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Levels up in an NPC class.

@@ -19,31 +19,31 @@ import javelin.controller.ai.Node;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.StopThinking;
 import javelin.controller.fight.Fight;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.BreathWeapon.BreathArea;
 import javelin.model.unit.condition.Breathless;
+import javelin.old.Game;
+import javelin.old.Game.Delay;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 import javelin.view.mappanel.battle.overlay.BreathOverlay;
 
 /**
  * Use {@link BreathWeapon}s.
- * 
+ *
  * TODO use visible {@link Combatant}s as targets instead of predefined bursts
  * and lines.
- * 
+ *
  * This class was causing problems so I streamlined it:
- * 
+ *
  * TODO removed d4 for delay and made it constatnt to streamline/quicken
  * calculation
- * 
+ *
  * TODO currently decides if saved if save chance >=50% for the same reasons.
- * 
+ *
  * @author alex
  */
 public class Breath extends Action implements AiAction {
@@ -58,8 +58,8 @@ public class Breath extends Action implements AiAction {
 	/** Unique instance for this class. */
 	public static final Action SINGLETON = new Breath();
 
-	static final HashMap<Integer, Area> BURSTS = new HashMap<Integer, Area>();
-	static final HashMap<Integer, Area> LINES = new HashMap<Integer, Area>();
+	static final HashMap<Integer, Area> BURSTS = new HashMap<>();
+	static final HashMap<Integer, Area> LINES = new HashMap<>();
 
 	static {
 		BURSTS.put(7, new Burst(-1, +1, -1, 0, -1, +1, 0, +1));
@@ -87,7 +87,7 @@ public class Breath extends Action implements AiAction {
 	@Override
 	public List<List<ChanceNode>> getoutcomes(final Combatant combatant,
 			final BattleState s) {
-		final ArrayList<List<ChanceNode>> chances = new ArrayList<List<ChanceNode>>();
+		final ArrayList<List<ChanceNode>> chances = new ArrayList<>();
 		if (combatant.hascondition(Breathless.class) != null) {
 			return chances;
 		}
@@ -181,8 +181,8 @@ public class Breath extends Action implements AiAction {
 
 	static ArrayList<ChanceNode> breath(final BreathWeapon breath, final Area a,
 			Combatant active, BattleState s) {
-		final ArrayList<ChanceNode> chances = new ArrayList<ChanceNode>();
-		final ArrayList<Combatant> targets = new ArrayList<Combatant>();
+		final ArrayList<ChanceNode> chances = new ArrayList<>();
+		final ArrayList<Combatant> targets = new ArrayList<>();
 		final Set<Point> area = a.fill(breath.range, active, s);
 		for (final Point p : area) {
 			final Combatant target = s.getcombatant(p.x, p.y);
@@ -254,8 +254,7 @@ public class Breath extends Action implements AiAction {
 
 	static String compound(String action, String affected) {
 		return affected.isEmpty() ? action
-				: (action + "\n"
-						+ affected.substring(0, affected.length() - 1));
+				: action + "\n" + affected.substring(0, affected.length() - 1);
 	}
 
 	BreathWeapon selectbreath(Monster m) {
@@ -275,9 +274,6 @@ public class Breath extends Action implements AiAction {
 		throw new RepeatTurn();
 	}
 
-	/**
-	 * Tyrant's screen Y axis is inverted :P
-	 */
 	public Integer selectdirection(Combatant hero) {
 		KeyEvent direction = Game.getInput();
 		int code = direction.getKeyCode();

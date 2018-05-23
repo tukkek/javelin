@@ -13,7 +13,7 @@ import javelin.controller.terrain.hazard.Flood;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Easiest and most even terrain type.

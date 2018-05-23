@@ -11,9 +11,9 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.town.Rank;
+import javelin.old.RPG;
 import javelin.view.screen.Option;
 import javelin.view.screen.upgrading.UpgradingScreen.UpgradeOption;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Lets you learn summoning spells. All monsters are theoretically possible but

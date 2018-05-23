@@ -9,7 +9,7 @@ import javelin.controller.upgrade.classes.Commoner;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.skill.Skill;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class Druid extends Kit {
 	public static final Kit INSTANCE = new Druid();

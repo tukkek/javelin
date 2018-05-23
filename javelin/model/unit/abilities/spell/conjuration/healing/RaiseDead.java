@@ -1,11 +1,11 @@
 package javelin.model.unit.abilities.spell.conjuration.healing;
 
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.old.Game;
+import javelin.old.Game.Delay;
 import javelin.view.screen.InfoScreen;
 
 /**

@@ -5,7 +5,7 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.Direction;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class Geometric extends Linear {
 	public Geometric() {

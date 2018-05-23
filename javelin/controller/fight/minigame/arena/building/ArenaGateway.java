@@ -3,11 +3,11 @@ package javelin.controller.fight.minigame.arena.building;
 import javelin.controller.Point;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.arena.ArenaFight;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import tyrant.mikera.engine.RPG;
+import javelin.old.Game;
+import javelin.old.RPG;
+import javelin.old.Game.Delay;
 
 public class ArenaGateway extends ArenaBuilding {
 	public ArenaGateway() {

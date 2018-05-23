@@ -11,7 +11,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Found next to {@link Water}. Always flooded.

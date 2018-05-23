@@ -10,7 +10,7 @@ import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.basic.Growth;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Converts a forest tile in the district into 50% extra labor (automatically

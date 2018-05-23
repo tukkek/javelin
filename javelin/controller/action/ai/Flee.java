@@ -11,9 +11,9 @@ import javelin.controller.ai.BattleAi;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
-import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
+import javelin.old.Game.Delay;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 /**

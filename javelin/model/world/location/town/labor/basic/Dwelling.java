@@ -9,7 +9,6 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.db.reader.fields.Organization;
-import javelin.controller.old.Game;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -20,9 +19,10 @@ import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.unique.MercenariesGuild;
+import javelin.old.Game;
+import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Allows a player to recruit one type of unit.

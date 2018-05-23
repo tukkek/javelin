@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.template.Iterator;
 import javelin.controller.generator.dungeon.template.Template;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class Irregular extends Template {
 	private static final Point[] ADJACENT = new Point[] { new Point(-1, 0),

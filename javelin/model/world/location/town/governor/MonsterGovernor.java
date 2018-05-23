@@ -7,8 +7,8 @@ import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.Trait;
 import javelin.model.world.location.town.labor.basic.Dwelling.BuildDwelling;
+import javelin.old.RPG;
 import javelin.model.world.location.town.labor.basic.Growth;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Governor for hostile towns.

@@ -6,7 +6,6 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.fight.Siege;
-import javelin.controller.old.Game;
 import javelin.model.item.Ruby;
 import javelin.model.item.key.TempleKey;
 import javelin.model.item.key.door.MasterKey;
@@ -14,7 +13,8 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import tyrant.mikera.engine.RPG;
+import javelin.old.Game;
+import javelin.old.RPG;
 
 /**
  * Represents all the resource types found in the game: gold, experience, keys,

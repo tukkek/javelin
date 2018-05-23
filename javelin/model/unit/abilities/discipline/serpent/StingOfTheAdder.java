@@ -8,7 +8,7 @@ import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.condition.abilitydamage.WisdomDamage;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class StingOfTheAdder extends Strike {
 	static final int DAMAGE = RPG.average(5, 6);

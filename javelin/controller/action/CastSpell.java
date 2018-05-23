@@ -10,11 +10,11 @@ import javelin.controller.ai.ActionProvider;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.old.Game;
+import javelin.old.Game.Delay;
 
 /**
  * Spells with attack rolls are supposed to have critical hits too but for the

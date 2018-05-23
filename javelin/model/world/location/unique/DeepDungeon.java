@@ -8,7 +8,7 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.item.Ruby;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.Location;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Offers increasingly difficult fights, starting at Level 1 and being removed

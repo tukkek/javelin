@@ -3,8 +3,8 @@ package javelin.view.mappanel.dungeon;
 import java.awt.event.MouseEvent;
 
 import javelin.controller.Point;
-import javelin.controller.old.Game;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.old.Game;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.MoveOverlay;

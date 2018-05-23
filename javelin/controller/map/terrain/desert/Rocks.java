@@ -2,8 +2,8 @@ package javelin.controller.map.terrain.desert;
 
 import javelin.controller.Point;
 import javelin.model.state.Square;
+import javelin.old.RPG;
 import javelin.view.Images;
-import tyrant.mikera.engine.RPG;
 
 public class Rocks extends Sandy {
 	public Rocks() {

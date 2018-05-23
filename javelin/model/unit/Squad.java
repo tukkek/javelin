@@ -17,8 +17,6 @@ import javelin.controller.comparator.SpellLevelComparator;
 import javelin.controller.db.reader.fields.Skills;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.IncursionFight;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Equipment;
 import javelin.model.item.Item;
@@ -33,12 +31,14 @@ import javelin.model.world.location.Resource;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.MercenariesGuild;
+import javelin.old.Game;
+import javelin.old.RPG;
+import javelin.old.Game.Delay;
 import javelin.view.Images;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.BribingScreen;
 import javelin.view.screen.NamingScreen;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * A group of units that the player controls as a overworld game unit. If a

@@ -7,7 +7,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.condition.Condition;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Attack that inflicts an additional 1d4 points of damage plus 1d4 damage the

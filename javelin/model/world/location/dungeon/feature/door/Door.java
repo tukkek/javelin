@@ -8,7 +8,6 @@ import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.template.Template;
-import javelin.controller.old.Game;
 import javelin.controller.table.Table;
 import javelin.controller.table.dungeon.DungeonFeatureModifier;
 import javelin.controller.table.dungeon.HiddenDoor;
@@ -28,7 +27,8 @@ import javelin.model.world.location.dungeon.feature.door.trap.Alarm;
 import javelin.model.world.location.dungeon.feature.door.trap.ArcaneLock;
 import javelin.model.world.location.dungeon.feature.door.trap.DoorTrap;
 import javelin.model.world.location.dungeon.feature.door.trap.HoldPortal;
-import tyrant.mikera.engine.RPG;
+import javelin.old.Game;
+import javelin.old.RPG;
 
 public class Door extends Feature {
 	public static final List<Class<? extends Door>> TYPES = new ArrayList<Class<? extends Door>>();

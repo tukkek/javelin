@@ -11,8 +11,8 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Applies class kits to low-level player units. A kit is usually a set of 3 to

@@ -5,8 +5,8 @@ import java.awt.Image;
 import javelin.controller.Weather;
 import javelin.controller.map.DndMap;
 import javelin.model.world.Season;
+import javelin.old.RPG;
 import javelin.view.Images;
-import tyrant.mikera.engine.RPG;
 
 /**
  * @see DndMap

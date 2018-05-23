@@ -16,9 +16,9 @@ import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.unique.MercenariesGuild;
+import javelin.old.RPG;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.SelectScreen;
-import tyrant.mikera.engine.RPG;
 
 public class Broker extends Inhabitant {
 	class InhabitantFight extends Fight {

@@ -22,10 +22,10 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.basic.Dwelling;
+import javelin.old.RPG;
 import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Sacrifice allies, experience and items for benefits.

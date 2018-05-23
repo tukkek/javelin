@@ -1,8 +1,8 @@
 package javelin.controller.map.location.haunt;
 
 import javelin.controller.map.location.LocationMap;
+import javelin.old.RPG;
 import javelin.view.Images;
-import tyrant.mikera.engine.RPG;
 
 public class OrcSettlementMap extends LocationMap {
 	public OrcSettlementMap() {

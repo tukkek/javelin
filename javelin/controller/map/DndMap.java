@@ -3,7 +3,7 @@ package javelin.controller.map;
 import java.util.HashSet;
 
 import javelin.controller.Point;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Generates a map based on the d20 SRD suggestions for terrain.

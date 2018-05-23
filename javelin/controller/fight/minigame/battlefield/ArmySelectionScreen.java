@@ -6,7 +6,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class ArmySelectionScreen {
 	BattleSize[] SIZES = new BattleSize[] { new BattleSize("Brawl", 1, 4),

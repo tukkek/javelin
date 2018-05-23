@@ -37,12 +37,12 @@ import javelin.model.world.location.town.labor.Deck;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.model.world.location.town.labor.basic.Growth;
+import javelin.old.RPG;
 import javelin.view.Images;
 import javelin.view.screen.NamingScreen;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.GovernorScreen;
 import javelin.view.screen.town.TownScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * A hub for upgrading units, resting, participating in tournament, renting

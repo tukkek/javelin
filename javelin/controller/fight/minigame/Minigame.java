@@ -7,12 +7,12 @@ import javelin.controller.Weather;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.map.Map;
-import javelin.controller.old.Game;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.old.Game;
+import javelin.old.RPG;
 import javelin.view.screen.BattleScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * A minigame is a battle totally independent from the normal game {@link Squad}

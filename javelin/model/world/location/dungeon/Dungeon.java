@@ -22,8 +22,6 @@ import javelin.controller.fight.RandomDungeonEncounter;
 import javelin.controller.generator.dungeon.DungeonGenerator;
 import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.generator.encounter.EncounterGenerator;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.controller.table.RareFeature;
 import javelin.controller.table.Table;
 import javelin.controller.table.Tables;
@@ -58,11 +56,13 @@ import javelin.model.world.location.dungeon.feature.npc.Broker;
 import javelin.model.world.location.dungeon.feature.npc.Leader;
 import javelin.model.world.location.dungeon.feature.npc.Prisoner;
 import javelin.model.world.location.dungeon.temple.TempleDungeon;
+import javelin.old.Game;
+import javelin.old.RPG;
+import javelin.old.Game.Delay;
 import javelin.view.Images;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * A dungeon is an underground area of the world where the combats are harder

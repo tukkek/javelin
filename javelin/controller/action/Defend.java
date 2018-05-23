@@ -5,10 +5,10 @@ import java.util.List;
 
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
-import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Defending;
+import javelin.old.Game.Delay;
 
 /**
  * Full Defense action.

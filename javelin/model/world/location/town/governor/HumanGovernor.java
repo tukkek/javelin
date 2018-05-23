@@ -10,7 +10,7 @@ import javelin.model.world.location.town.labor.Deck;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.Trait;
 import javelin.model.world.location.town.labor.basic.Growth;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Governor for human-captured towns. Auto-manage can be toggled on and off.

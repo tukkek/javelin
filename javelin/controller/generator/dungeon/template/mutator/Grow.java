@@ -1,7 +1,7 @@
 package javelin.controller.generator.dungeon.template.mutator;
 
 import javelin.controller.generator.dungeon.template.Template;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class Grow extends Mutator {
 	public static final Grow INSTANCE = new Grow();

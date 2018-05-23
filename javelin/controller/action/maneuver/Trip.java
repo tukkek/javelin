@@ -2,12 +2,12 @@ package javelin.controller.action.maneuver;
 
 import javelin.controller.action.Action;
 import javelin.controller.ai.ChanceNode;
-import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.condition.Prone;
 import javelin.model.unit.feat.attack.expertise.ImprovedTrip;
+import javelin.old.Game.Delay;
 
 public class Trip extends ExpertiseAction {
 

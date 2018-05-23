@@ -2,7 +2,7 @@ package javelin.model.item;
 
 import java.util.ArrayList;
 
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Collection for {@link Item}. Does not allow for more than one item of the

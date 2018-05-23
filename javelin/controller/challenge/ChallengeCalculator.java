@@ -26,7 +26,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Determines a {@link Monster#cr} according to the rules of Upper Krust's work,

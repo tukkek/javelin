@@ -7,12 +7,10 @@ import javelin.controller.map.Map;
 import javelin.model.state.Square;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.TempleDungeon;
+import javelin.old.RPG;
 import javelin.view.Images;
-import tyrant.mikera.engine.RPG;
 
 /**
- * Adaptation of {@link tyrant.mikera.tyrant.Caves}.
- *
  * @author alex
  */
 public class Caves extends Map {

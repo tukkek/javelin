@@ -7,16 +7,15 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
 import javelin.Javelin;
-import javelin.controller.old.Game;
-import tyrant.mikera.tyrant.QuestApp;
-import tyrant.mikera.tyrant.Screen;
-import tyrant.mikera.tyrant.util.Text;
+import javelin.old.Game;
+import javelin.old.QuestApp;
+import javelin.old.Screen;
+import javelin.old.Text;
 
 /**
  * Fullscreen text display. For hiding the current {@link BattleScreen} or
  * {@link WorldScreen} and interacting textually with the user.
- * 
- * @author Tyrant
+ *
  * @author alex
  */
 public class InfoScreen extends Screen {
@@ -109,10 +108,10 @@ public class InfoScreen extends Screen {
 	 *         it disappear.
 	 */
 	protected Character printmessage(String msg) {
-		String current = this.text;
+		String current = text;
 		print(current + "\n" + msg);
 		Character c = feedback();
-		this.text = current;
+		text = current;
 		return c;
 	}
 }

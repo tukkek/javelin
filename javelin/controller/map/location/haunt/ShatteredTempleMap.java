@@ -2,8 +2,8 @@ package javelin.controller.map.location.haunt;
 
 import javelin.controller.map.location.LocationMap;
 import javelin.model.state.Square;
+import javelin.old.RPG;
 import javelin.view.Images;
-import tyrant.mikera.engine.RPG;
 
 public class ShatteredTempleMap extends LocationMap {
 	public ShatteredTempleMap() {

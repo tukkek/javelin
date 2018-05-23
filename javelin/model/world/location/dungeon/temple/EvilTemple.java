@@ -15,7 +15,7 @@ import javelin.model.world.location.dungeon.feature.Altar;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.StairsDown;
 import javelin.model.world.location.dungeon.feature.StairsUp;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Found drowning in the {@link Marsh}. Good creatures are never found in the

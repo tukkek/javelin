@@ -3,7 +3,6 @@ package javelin.model.item.key;
 import java.util.ArrayList;
 
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.old.Game;
 import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
@@ -12,8 +11,9 @@ import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.temple.Temple;
+import javelin.old.Game;
+import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Keys are found in {@link Dungeon} {@link Chest}s. They unlock {@link Temple}

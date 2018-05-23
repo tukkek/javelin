@@ -2,12 +2,12 @@ package javelin.controller.action.maneuver;
 
 import javelin.controller.action.Action;
 import javelin.controller.ai.ChanceNode;
-import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.feat.attack.expertise.ImprovedFeint;
+import javelin.old.Game.Delay;
 
 public class Feint extends ExpertiseAction {
 	public static final Action INSTANCE = new Feint();

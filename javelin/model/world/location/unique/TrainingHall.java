@@ -9,16 +9,16 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Siege;
 import javelin.controller.fight.TrainingSession;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.old.Game;
+import javelin.old.RPG;
+import javelin.old.Game.Delay;
 import javelin.view.screen.SquadScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Designed as a manner of making the lower levels faster, this receives the

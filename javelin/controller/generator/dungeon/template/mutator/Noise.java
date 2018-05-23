@@ -6,7 +6,7 @@ import java.util.Collections;
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.template.Iterator;
 import javelin.controller.generator.dungeon.template.Template;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class Noise extends Mutator {
 	public Noise() {

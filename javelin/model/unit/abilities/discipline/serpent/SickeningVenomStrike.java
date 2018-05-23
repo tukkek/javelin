@@ -7,7 +7,7 @@ import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.condition.Sickened;
 import javelin.model.unit.condition.abilitydamage.ConstitutionDamage;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class SickeningVenomStrike extends Strike {
 	static final int SICKENDURATION = RPG.average(1, 4);

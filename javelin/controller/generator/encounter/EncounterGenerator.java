@@ -13,7 +13,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Generates an {@link Encounter}.

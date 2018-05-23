@@ -25,10 +25,10 @@ import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.unique.AdventurersGuild;
+import javelin.old.RPG;
 import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Found only on {@link Mountains}, mines allow a {@link Squad} to mine gold

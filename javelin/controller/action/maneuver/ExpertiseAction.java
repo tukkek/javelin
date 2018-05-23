@@ -9,13 +9,13 @@ import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.controller.action.target.Target;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.feat.Feat;
+import javelin.old.Game;
+import javelin.old.Game.Delay;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 /**

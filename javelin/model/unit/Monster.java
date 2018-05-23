@@ -44,7 +44,7 @@ import javelin.model.unit.feat.attack.focus.WeaponFocus;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.unique.MercenariesGuild;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * A Monster represents a stat-block (monster information) from the monster

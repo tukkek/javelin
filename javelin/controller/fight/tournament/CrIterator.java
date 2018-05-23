@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javelin.model.unit.Monster;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Picks a random enemy from each available challenge rating.

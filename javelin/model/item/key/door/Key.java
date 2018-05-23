@@ -6,7 +6,7 @@ import javelin.model.item.Item;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.door.Door;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class Key extends Item {
 	public Key(String name, int price) {

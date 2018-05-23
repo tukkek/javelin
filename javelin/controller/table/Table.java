@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Set;
 
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class Table implements Serializable, Cloneable {
 	class RowData implements Serializable, Cloneable {

@@ -6,7 +6,7 @@ import java.util.HashSet;
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.Direction;
 import javelin.controller.generator.dungeon.template.Template;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class Alcoves extends Mutator {
 	public Alcoves() {

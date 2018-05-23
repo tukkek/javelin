@@ -14,8 +14,8 @@ import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.generator.dungeon.template.corridor.StraightCorridor;
 import javelin.controller.generator.dungeon.template.mutator.Mutator;
 import javelin.controller.table.Tables;
+import javelin.old.RPG;
 import javelin.view.screen.town.SelectScreen;
-import tyrant.mikera.engine.RPG;
 
 public class DungeonGenerator {
 	public static final boolean DEBUG = false;

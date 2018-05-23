@@ -7,9 +7,9 @@ import java.util.List;
 import javelin.controller.Point;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.model.unit.Combatant;
+import javelin.old.Game;
+import javelin.old.Game.Delay;
 
 public class AutoAttack extends Action {
 	private static final Comparator<Combatant> SORTBYSTATUS = new Comparator<Combatant>() {

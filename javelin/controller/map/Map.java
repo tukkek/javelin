@@ -11,8 +11,8 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.state.Square;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.old.RPG;
 import javelin.view.Images;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Representation of a battle area.

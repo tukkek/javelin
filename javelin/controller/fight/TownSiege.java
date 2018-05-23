@@ -11,8 +11,8 @@ import javelin.controller.map.location.LocationMap;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.town.Town;
+import javelin.old.RPG;
 import javelin.view.Images;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Will place weaker monsters in front and stronger monsters in the back. For

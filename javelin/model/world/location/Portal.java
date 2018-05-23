@@ -5,8 +5,6 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.generator.WorldGenerator;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.key.TempleKey;
@@ -16,9 +14,11 @@ import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
+import javelin.old.Game;
+import javelin.old.RPG;
+import javelin.old.Game.Delay;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Portals take a {@link Squad} from a place to another. They can also be used

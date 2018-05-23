@@ -9,7 +9,7 @@ import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.condition.abilitydamage.StrengthDamage;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * TODO should allow combatant to be killed by secondary damage

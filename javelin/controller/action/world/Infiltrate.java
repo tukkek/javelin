@@ -13,8 +13,8 @@ import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.old.RPG;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Lets a unit go into an enemy {@link Location} unnoticed and perform sabotage

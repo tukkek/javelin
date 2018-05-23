@@ -10,8 +10,6 @@ import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.comparator.ActorByDistance;
 import javelin.controller.exception.RepeatTurn;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.controller.scenario.dungeonworld.DungeonWorld;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
@@ -21,8 +19,10 @@ import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
+import javelin.old.Game;
+import javelin.old.RPG;
+import javelin.old.Game.Delay;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * An independent overworld feature.

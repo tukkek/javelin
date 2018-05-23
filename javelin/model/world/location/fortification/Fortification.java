@@ -18,7 +18,7 @@ import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * A guarded place is a world feature that has a garrison army since the

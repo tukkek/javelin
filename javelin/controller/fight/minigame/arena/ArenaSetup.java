@@ -17,7 +17,7 @@ import javelin.controller.fight.setup.BattleSetup;
 import javelin.model.state.Square;
 import javelin.model.unit.Building;
 import javelin.model.unit.Combatant;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class ArenaSetup extends BattleSetup {
 	static final int MAPSIZE = 28;

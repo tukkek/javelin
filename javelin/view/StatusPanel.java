@@ -19,11 +19,11 @@ import javelin.model.unit.abilities.discipline.Maneuver;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.condition.Breathless;
+import javelin.old.QuestApp;
+import javelin.old.TPanel;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.tyrant.QuestApp;
-import tyrant.mikera.tyrant.TPanel;
 
 /**
  * Bottom panel for the {@link WorldScreen}.

@@ -9,7 +9,7 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.skill.Skill;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * http://www.d20pfsrd.com/path-of-war/disciplines-and-maneuvers/steel-serpent-maneuvers/#TOC-Tearing-Fang

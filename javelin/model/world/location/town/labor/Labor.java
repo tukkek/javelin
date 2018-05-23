@@ -3,11 +3,11 @@ package javelin.model.world.location.town.labor;
 import java.io.Serializable;
 
 import javelin.Javelin;
-import javelin.controller.old.Game;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.governor.Governor;
+import javelin.old.Game;
 import javelin.view.screen.WorldScreen;
 
 /**

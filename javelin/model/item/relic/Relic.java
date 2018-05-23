@@ -2,11 +2,11 @@ package javelin.model.item.relic;
 
 import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.old.Game;
+import javelin.old.Game.Delay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 

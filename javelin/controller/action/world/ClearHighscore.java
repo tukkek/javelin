@@ -1,8 +1,8 @@
 package javelin.controller.action.world;
 
 import javelin.Javelin;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
+import javelin.old.Game;
+import javelin.old.Game.Delay;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
 

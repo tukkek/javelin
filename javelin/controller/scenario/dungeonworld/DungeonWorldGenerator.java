@@ -12,7 +12,7 @@ import javelin.controller.generator.WorldGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.world.World;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class DungeonWorldGenerator extends WorldGenerator {
 	@Override

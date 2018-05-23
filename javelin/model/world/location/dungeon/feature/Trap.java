@@ -12,8 +12,8 @@ import javelin.model.unit.skill.DisableDevice;
 import javelin.model.unit.skill.Perception;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.old.RPG;
 import javelin.view.screen.DungeonScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * A trap is a semi-permanent strategic dungeon feature that deals subdual

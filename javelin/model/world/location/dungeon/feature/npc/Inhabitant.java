@@ -16,7 +16,7 @@ import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.temple.TempleDungeon;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * A friendly (or at least neutral) {@link Monster} living inside a

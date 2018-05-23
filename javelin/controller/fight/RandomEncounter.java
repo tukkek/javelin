@@ -7,7 +7,7 @@ import javelin.JavelinApp;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Fight that happens on the overworld map.

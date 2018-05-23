@@ -6,8 +6,8 @@ import java.util.HashMap;
 import javelin.controller.Point;
 import javelin.controller.map.DndMap;
 import javelin.controller.map.Map;
+import javelin.old.RPG;
 import javelin.view.Images;
-import tyrant.mikera.engine.RPG;
 
 public class Complex extends Map {
 	static final double SEED = .1;

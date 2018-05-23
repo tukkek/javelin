@@ -6,7 +6,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.condition.abilitydamage.StrengthDamage;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class WeakeningVenomPrana extends Strike {
 	static final int DAMAGE = RPG.average(1, 4);

@@ -22,20 +22,20 @@ import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.map.Map;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
-import javelin.controller.old.MessagePanel;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
+import javelin.old.Game;
+import javelin.old.MessagePanel;
+import javelin.old.QuestApp;
+import javelin.old.Screen;
+import javelin.old.Game.Delay;
 import javelin.view.StatusPanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.battle.BattleMouse;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.mappanel.battle.overlay.BattleWalker;
-import tyrant.mikera.tyrant.QuestApp;
-import tyrant.mikera.tyrant.Screen;
 
 /**
  * Screen context during battle.

@@ -6,7 +6,7 @@ import java.util.HashSet;
 import javelin.controller.Point;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.dungeon.Direction;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class WindingCorridor extends StraightCorridor {
 	protected ArrayList<Point> steps;

@@ -19,15 +19,15 @@ import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.fight.minigame.arena.building.ArenaFountain;
 import javelin.controller.fight.minigame.arena.building.ArenaGateway;
 import javelin.controller.generator.encounter.EncounterGenerator;
-import javelin.controller.old.Game;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.world.location.unique.minigame.Arena;
+import javelin.old.Game;
+import javelin.old.RPG;
 import javelin.view.screen.BattleScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * TODO would be cool if could generate heroes to fight against at some point

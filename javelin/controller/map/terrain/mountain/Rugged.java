@@ -3,8 +3,8 @@ package javelin.controller.map.terrain.mountain;
 import java.awt.Image;
 
 import javelin.controller.map.DndMap;
+import javelin.old.RPG;
 import javelin.view.Images;
-import tyrant.mikera.engine.RPG;
 
 /**
  * @see DndMap

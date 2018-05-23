@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.old.Game;
+import javelin.old.Game.Delay;
 import javelin.view.screen.WorldScreen;
 
 /**

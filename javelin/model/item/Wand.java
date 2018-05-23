@@ -7,7 +7,7 @@ import javelin.controller.action.CastSpell;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.skill.Skill;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * A wand is ideally a item that fires a ray. It has up to 50 charges and is

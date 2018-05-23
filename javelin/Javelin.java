@@ -27,8 +27,6 @@ import javelin.controller.db.StateManager;
 import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.fight.Fight;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
@@ -39,6 +37,9 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.fortification.Academy;
+import javelin.old.Game;
+import javelin.old.QuestApp;
+import javelin.old.Game.Delay;
 import javelin.view.Images;
 import javelin.view.ScenarioSelectionDialog;
 import javelin.view.screen.BattleScreen;
@@ -47,7 +48,6 @@ import javelin.view.screen.NamingScreen;
 import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
-import tyrant.mikera.tyrant.QuestApp;
 
 /**
  * Utility class for broad-level rules and game-behavior. Add the VM argument

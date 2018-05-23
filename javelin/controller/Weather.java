@@ -8,7 +8,7 @@ import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 import javelin.model.world.Season;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Manages game weather. Current types of weather are {@link #DRY},

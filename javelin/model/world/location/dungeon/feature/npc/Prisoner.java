@@ -8,7 +8,7 @@ import javelin.model.item.key.door.MasterKey;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class Prisoner extends Inhabitant {
 	public Prisoner(int xp, int yp) {

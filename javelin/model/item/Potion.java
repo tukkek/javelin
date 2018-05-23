@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.old.Game;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.old.Game;
 import javelin.view.screen.BattleScreen;
 
 /**

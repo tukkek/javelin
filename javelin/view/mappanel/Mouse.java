@@ -6,7 +6,7 @@ import java.awt.event.MouseWheelEvent;
 
 import javelin.JavelinApp;
 import javelin.controller.Point;
-import javelin.controller.old.Game;
+import javelin.old.Game;
 import javelin.view.screen.BattleScreen;
 
 public abstract class Mouse extends MouseAdapter {

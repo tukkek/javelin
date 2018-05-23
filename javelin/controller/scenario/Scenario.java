@@ -47,9 +47,9 @@ import javelin.model.world.location.town.labor.Deck;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.productive.Shop;
 import javelin.model.world.location.unique.UniqueLocation;
+import javelin.old.RPG;
 import javelin.view.mappanel.world.WorldTile;
 import javelin.view.screen.SquadScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Scenario mode is a much faster type of gameplay than the main

@@ -1,6 +1,6 @@
 package javelin.controller.ai;
 
-import javelin.controller.old.Game.Delay;
+import javelin.old.Game.Delay;
 import javelin.view.mappanel.Overlay;
 
 /**

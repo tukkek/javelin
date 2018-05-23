@@ -12,9 +12,9 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.labor.basic.Dwelling;
+import javelin.old.RPG;
 import javelin.view.screen.HauntScreen;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.engine.RPG;
 
 public abstract class Haunt extends Fortification {
 	static final int MAXIMUMAVAILABLE = 5;

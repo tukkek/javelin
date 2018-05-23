@@ -2,11 +2,9 @@ package javelin.controller.map.terrain.underground;
 
 import javelin.controller.Point;
 import javelin.model.state.Square;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
- * Adapted from {@link tyrant.mikera.tyrant.Caves#createBigCave(int, int, int)}.
- *
  * @author alex
  */
 public class BigCave extends Caves {

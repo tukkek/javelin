@@ -15,7 +15,7 @@ import javelin.model.state.BattleState.Vision;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Given a {@link Map}, a {@link Squad} and a {@link Fight} setups an initial

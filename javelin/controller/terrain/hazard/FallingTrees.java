@@ -3,7 +3,7 @@ package javelin.controller.terrain.hazard;
 import javelin.controller.Weather;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * During a storm a tree may fall - it's easy to avoid but causes massive damage

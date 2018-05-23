@@ -12,7 +12,7 @@ import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.classes.Warrior;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.town.Rank;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Allows a player to learn one upgrade set.

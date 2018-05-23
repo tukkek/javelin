@@ -4,7 +4,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.condition.Fatigued;
 import javelin.model.unit.skill.Skill;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Damages characters if Squad has no resource reserves (gold) left.

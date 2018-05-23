@@ -12,7 +12,7 @@ import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Deck;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.Trait;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Holds the {@link Labor} options for each {@link Town} and possibly

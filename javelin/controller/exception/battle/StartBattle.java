@@ -12,10 +12,10 @@ import javelin.controller.fight.setup.BattleSetup;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.old.RPG;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * A {@link Fight} has started.

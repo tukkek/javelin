@@ -9,7 +9,6 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.CombatantByCr;
 import javelin.controller.generator.NpcGenerator;
-import javelin.controller.old.Game;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -19,9 +18,10 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
+import javelin.old.Game;
+import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * The **Mercenaries guild** allows a player to hire mercenaries, which are paid

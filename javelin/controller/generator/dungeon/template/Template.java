@@ -28,7 +28,7 @@ import javelin.controller.generator.dungeon.template.mutator.Symmetry;
 import javelin.controller.generator.dungeon.template.mutator.VerticalMirror;
 import javelin.controller.generator.dungeon.template.mutator.Wall;
 import javelin.controller.table.dungeon.RoomSizeTable;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * TODO most templates should be read from file, not generated

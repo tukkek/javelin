@@ -37,7 +37,7 @@ import javelin.model.world.location.town.labor.basic.Lodge;
 import javelin.model.world.location.town.labor.cultural.MagesGuild;
 import javelin.model.world.location.town.labor.expansive.Hub;
 import javelin.model.world.location.town.labor.productive.Shop;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class ZoneGenerator extends FeatureGenerator {
 	static final double MINDISTANCE = 5;

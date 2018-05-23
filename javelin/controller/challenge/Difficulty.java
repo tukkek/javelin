@@ -5,7 +5,7 @@ import java.util.List;
 
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Describes an Encounter Level difference. For example: an encounter is

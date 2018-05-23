@@ -19,8 +19,6 @@ import javelin.controller.db.StateManager;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomEncounter;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.transport.Transport;
@@ -36,12 +34,14 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.Town;
+import javelin.old.Game;
+import javelin.old.QuestApp;
+import javelin.old.RPG;
+import javelin.old.Game.Delay;
 import javelin.view.Images;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.world.WorldPanel;
-import tyrant.mikera.engine.RPG;
-import tyrant.mikera.tyrant.QuestApp;
 
 /**
  * Shows and helps manage the overworld view.

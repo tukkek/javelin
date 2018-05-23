@@ -9,7 +9,7 @@ import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class Reinforcement {
 	public ArrayList<Combatant> commander = new ArrayList<Combatant>();

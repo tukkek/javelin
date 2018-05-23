@@ -2,7 +2,7 @@ package javelin.controller.generator.encounter;
 
 import javelin.controller.db.reader.fields.Organization;
 import javelin.model.unit.Monster;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * @see Organization#init()

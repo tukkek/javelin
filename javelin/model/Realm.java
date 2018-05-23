@@ -7,7 +7,7 @@ import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * A realm is an in-game faction, associated with d20 concepts in an arbitrary

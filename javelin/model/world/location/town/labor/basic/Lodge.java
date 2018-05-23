@@ -16,8 +16,8 @@ import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
+import javelin.old.RPG;
 import javelin.view.Images;
-import tyrant.mikera.engine.RPG;
 
 /***
  * Allows a {@link Squad} to rest outside of a {@link Town}.

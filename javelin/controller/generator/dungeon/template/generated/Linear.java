@@ -10,7 +10,7 @@ import javelin.controller.Point;
 import javelin.controller.generator.dungeon.Direction;
 import javelin.controller.generator.dungeon.DungeonGenerator;
 import javelin.controller.generator.dungeon.template.Template;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class Linear extends Template {
 	static final float MAXDISTANCE = 1 / 3f;

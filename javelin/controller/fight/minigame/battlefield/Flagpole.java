@@ -4,11 +4,11 @@ import java.math.BigDecimal;
 
 import javelin.Javelin;
 import javelin.controller.fight.Fight;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Building;
 import javelin.model.unit.Combatant;
+import javelin.old.Game;
+import javelin.old.Game.Delay;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.battle.action.BattleMouseAction;
 

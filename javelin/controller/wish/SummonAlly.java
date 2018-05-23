@@ -8,8 +8,8 @@ import javelin.controller.generator.NpcGenerator;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.old.RPG;
 import javelin.view.screen.SquadScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Summons a random, permanent ally, with number of rubies equal to

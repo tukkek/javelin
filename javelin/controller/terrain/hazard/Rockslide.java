@@ -5,7 +5,7 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Season;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Takes a single creature (or the whole vehicle) downhill. Can also be an

@@ -15,8 +15,8 @@ import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
+import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Will cast Rituals (certain {@link Spell}s) for gold.

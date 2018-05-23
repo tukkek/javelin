@@ -16,12 +16,13 @@ import javelin.controller.action.ActionDescription;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.ai.cache.AiCache;
-import javelin.controller.old.Game.Delay;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.Season;
 import javelin.model.world.World;
+import javelin.old.TextZone;
+import javelin.old.Game.Delay;
 import javelin.view.KeysScreen;
 import javelin.view.frame.keys.BattleKeysScreen;
 import javelin.view.frame.keys.PreferencesScreen;
@@ -29,7 +30,6 @@ import javelin.view.frame.keys.WorldKeysScreen;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.tyrant.TextZone;
 
 /**
  * Used to read the file "preferences.properties". See the file

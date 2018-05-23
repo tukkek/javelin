@@ -2,8 +2,8 @@ package javelin.controller.action.ai.attack;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.Node;
-import javelin.controller.old.Game.Delay;
 import javelin.model.unit.Combatant;
+import javelin.old.Game.Delay;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 public class DamageNode extends ChanceNode {

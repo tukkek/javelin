@@ -5,13 +5,13 @@ import javelin.controller.Point;
 import javelin.controller.action.ai.AiMovement;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.skill.Acrobatics;
 import javelin.model.unit.skill.Skill;
+import javelin.old.Game;
+import javelin.old.Game.Delay;
 import javelin.view.mappanel.battle.action.BattleMouseAction;
 import javelin.view.screen.BattleScreen;
 

@@ -5,7 +5,7 @@ import java.util.TreeMap;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.Spells;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class SpellbookGenerator {
 	static final TreeMap<Float, Spells> SPELLS = new TreeMap<Float, Spells>();

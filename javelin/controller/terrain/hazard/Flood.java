@@ -6,7 +6,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.Season;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Can happen during any storm or in spring time if it's raining.

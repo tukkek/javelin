@@ -14,7 +14,7 @@ import javelin.controller.upgrade.classes.Aristocrat;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.town.Rank;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Teaches spells from a certain school of magic or specialization.

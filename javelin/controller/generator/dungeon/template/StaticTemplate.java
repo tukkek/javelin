@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import javelin.controller.exception.GaveUp;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class StaticTemplate extends Template {
 	public static final boolean DEBUG = false;

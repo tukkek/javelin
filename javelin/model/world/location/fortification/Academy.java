@@ -28,9 +28,9 @@ import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
+import javelin.old.RPG;
 import javelin.view.screen.Option;
 import javelin.view.screen.upgrading.AcademyScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * A place where units can go to learn about a general topic - be it physical

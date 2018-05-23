@@ -25,9 +25,9 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.Portal;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.Town;
+import javelin.old.RPG;
 import javelin.view.Images;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * An attacking {@link Squad}, trying to destroy a {@link Town} or other

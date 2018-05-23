@@ -12,7 +12,7 @@ import javelin.model.Realm;
 import javelin.model.item.relic.Flute;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Found high on the {@link Mountains}. The wind can push you up to three

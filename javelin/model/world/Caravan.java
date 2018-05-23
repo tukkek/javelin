@@ -6,8 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
@@ -16,11 +14,13 @@ import javelin.model.item.key.TempleKey;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.basic.Growth;
+import javelin.old.Game;
+import javelin.old.RPG;
+import javelin.old.Game.Delay;
 import javelin.view.Images;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.PurchaseOption;
-import tyrant.mikera.engine.RPG;
 
 /**
  * A figure that travels from one city to a human (neutral) city. It can be

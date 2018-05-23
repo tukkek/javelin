@@ -13,10 +13,10 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.World;
+import javelin.old.RPG;
 import javelin.view.screen.GuildScreen;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.upgrading.AcademyScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * TODO all methods marked final to help with refactoring, may remove it

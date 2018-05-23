@@ -65,7 +65,7 @@ import javelin.model.world.location.unique.TrainingHall;
 import javelin.model.world.location.unique.minigame.Arena;
 import javelin.model.world.location.unique.minigame.Battlefield;
 import javelin.model.world.location.unique.minigame.Ziggurat;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
  * Responsible for generating those {@link Actor}s (mostly {@link Location}s

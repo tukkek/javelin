@@ -22,8 +22,6 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.db.reader.fields.Skills;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
@@ -57,9 +55,11 @@ import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.unique.MercenariesGuild;
+import javelin.old.Game;
+import javelin.old.RPG;
+import javelin.old.Game.Delay;
 import javelin.view.mappanel.battle.action.BattleMouseAction;
 import javelin.view.screen.BattleScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * A Combatant is an in-game unit, like the enemies in the battlefield or the

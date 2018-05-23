@@ -3,12 +3,12 @@ package javelin.controller.fight.minigame.arena.building;
 import javelin.Javelin;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.arena.ArenaFight;
-import javelin.controller.old.Game;
-import javelin.controller.old.Game.Delay;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Condition;
 import javelin.model.world.location.dungeon.feature.Fountain;
+import javelin.old.Game;
+import javelin.old.Game.Delay;
 
 public class ArenaFountain extends ArenaBuilding {
 	static final String REFILLING = "This fountain is refilling... be patient!";

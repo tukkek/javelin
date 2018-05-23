@@ -18,11 +18,11 @@ import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.Trait;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.model.world.location.unique.TrainingHall;
+import javelin.old.RPG;
 import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.option.ScreenOption;
 import javelin.view.screen.upgrading.AcademyScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * TODO How to offer a defined upgrade path so that it doesn't become to

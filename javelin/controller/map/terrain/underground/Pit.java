@@ -1,11 +1,9 @@
 package javelin.controller.map.terrain.underground;
 
 import javelin.model.state.Square;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 /**
- * Adapted from {@link tyrant.mikera.tyrant.Pit}.
- *
  * @author alex
  */
 public class Pit extends Caves {

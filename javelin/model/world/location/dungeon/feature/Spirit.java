@@ -3,11 +3,11 @@ package javelin.model.world.location.dungeon.feature;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
-import javelin.controller.old.Game;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.GoodTemple;
+import javelin.old.Game;
+import javelin.old.RPG;
 import javelin.view.screen.BattleScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * @see GoodTemple

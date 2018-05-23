@@ -1,7 +1,7 @@
 package javelin.controller.table.dungeon;
 
 import javelin.controller.table.Table;
-import tyrant.mikera.engine.RPG;
+import javelin.old.RPG;
 
 public class DungeonFeatureModifier extends Table {
 	enum Modifier {

@@ -24,8 +24,8 @@ import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.Town;
+import javelin.old.RPG;
 import javelin.view.screen.WorldScreen;
-import tyrant.mikera.engine.RPG;
 
 /**
  * Represents an item carried by a {@link Combatant}. Most often items are

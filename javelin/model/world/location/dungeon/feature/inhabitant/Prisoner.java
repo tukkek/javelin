@@ -11,15 +11,15 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.old.RPG;
 
 public class Prisoner extends Inhabitant {
-	public Prisoner(int xp, int yp) {
-		super(xp, yp, Dungeon.active.level + Difficulty.VERYEASY + 1,
+	public Prisoner() {
+		super(Dungeon.active.level + Difficulty.VERYEASY + 1,
 				Dungeon.active.level + Difficulty.EASY);
 	}
 
 	@Override
 	public boolean activate() {
 		MasterKey key = Squad.active.equipment.get(MasterKey.class);
-		String message = "There is a prisoner here (" + inhabitant + ").\n";
+		String message = "You find a is a " + inhabitant + " prisoner here.\n";
 		if (key == null) {
 			message += "If you had a master key you could free him...";
 			Javelin.message(message, false);

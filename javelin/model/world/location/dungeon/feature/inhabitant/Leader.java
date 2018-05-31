@@ -217,8 +217,8 @@ public class Leader extends Inhabitant {
 	Monster base;
 
 	/** Constructor. */
-	public Leader(int xp, int yp) {
-		super(xp, yp, Dungeon.active.level + Difficulty.MODERATE,
+	public Leader() {
+		super(Dungeon.active.level + Difficulty.MODERATE,
 				Dungeon.active.level + Difficulty.DEADLY);
 		base = Javelin.getmonster(inhabitant.source.name);
 		guards.add(inhabitant);

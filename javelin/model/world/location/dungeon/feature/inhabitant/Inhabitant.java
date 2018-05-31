@@ -53,8 +53,8 @@ public abstract class Inhabitant extends Feature {
 	 */
 	protected int diplomacydc;
 
-	public Inhabitant(int xp, int yp, float crmin, float crmax) {
-		super(xp, yp, null);
+	public Inhabitant(float crmin, float crmax) {
+		super(null);
 		this.crmin = crmin;
 		this.crmax = crmax;
 		remove = false;

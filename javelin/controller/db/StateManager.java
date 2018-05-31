@@ -35,7 +35,7 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class StateManager {
-	static final String SAVEFOLDER = System.getProperty("user.dir");
+	public static final String SAVEFOLDER = System.getProperty("user.dir");
 	/** Normal save file. */
 	public static final File SAVEFILE = new File(SAVEFOLDER,
 			World.scenario.getsaveprefix() + ".save");
@@ -70,9 +70,12 @@ public class StateManager {
 			}
 		};
 	};
+
+	static final int MINUTE = 60 * 1000;
+
 	public static boolean abandoned = false;
 	public static boolean nofile = false;
-	static Long lastsave = null;
+	static long lastsave = System.currentTimeMillis();
 
 	/**
 	 * This should only be called from one place during normal execution of the
@@ -87,9 +90,11 @@ public class StateManager {
 	 * @param to
 	 */
 	public static synchronized void save(boolean force, File to) {
-		if (!force && checkrecentsave()) {
+		long now = System.currentTimeMillis();
+		if (!force && now - lastsave < Preferences.SAVEINTERVAL * MINUTE) {
 			return;
 		}
+		lastsave = now;
 		try {
 			ObjectOutputStream writer = new ObjectOutputStream(
 					new FileOutputStream(to));
@@ -116,20 +121,6 @@ public class StateManager {
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	static boolean checkrecentsave() {
-		long now = System.currentTimeMillis();
-		if (lastsave == null) {
-			lastsave = now;
-			return true;
-		}
-		long elapsed = now - lastsave;
-		if (elapsed < Preferences.SAVEINTERVAL * 60 * 1000) {
-			return true;
-		}
-		lastsave = now;
-		return false;
 	}
 
 	/**

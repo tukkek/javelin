@@ -71,8 +71,8 @@ public class StateManager {
 		};
 	};
 	public static boolean abandoned = false;
-	static public boolean nofile = false;
-	private static int attempts = 0;
+	public static boolean nofile = false;
+	static Long lastsave = null;
 
 	/**
 	 * This should only be called from one place during normal execution of the
@@ -87,11 +87,9 @@ public class StateManager {
 	 * @param to
 	 */
 	public static synchronized void save(boolean force, File to) {
-		if (!force && attempts < Preferences.SAVEINTERVAL) {
-			attempts += 1;
+		if (!force && checkrecentsave()) {
 			return;
 		}
-		attempts = 0;
 		try {
 			ObjectOutputStream writer = new ObjectOutputStream(
 					new FileOutputStream(to));
@@ -118,6 +116,20 @@ public class StateManager {
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	static boolean checkrecentsave() {
+		long now = System.currentTimeMillis();
+		if (lastsave == null) {
+			lastsave = now;
+			return true;
+		}
+		long elapsed = now - lastsave;
+		if (elapsed < Preferences.SAVEINTERVAL * 60 * 1000) {
+			return true;
+		}
+		lastsave = now;
+		return false;
 	}
 
 	/**

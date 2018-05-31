@@ -3,12 +3,12 @@ package javelin.controller.table.dungeon;
 import javelin.controller.table.Table;
 import javelin.old.RPG;
 
-public class DungeonFeatureModifier extends Table {
+public class FeatureModifierTable extends Table {
 	enum Modifier {
 		VERYEASY, EASY, NORMAL, HARD, VERYHARD,
 	}
 
-	public DungeonFeatureModifier() {
+	public FeatureModifierTable() {
 		add(Modifier.VERYEASY, 2);
 		add(Modifier.EASY, 2);
 		add(Modifier.NORMAL, 4);

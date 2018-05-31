@@ -13,7 +13,9 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
+import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.WorldScreen;
 
@@ -71,7 +73,7 @@ public class Debug {
 			return s;
 		}
 
-		public static void freezeopponents() {
+		static void freezeopponents() {
 			for (Combatant c : Fight.state.redTeam) {
 				c.ap = Float.MAX_VALUE;
 			}
@@ -85,6 +87,23 @@ public class Debug {
 			Incursion i = new Incursion(l.x, l.y, members, r);
 			i.displace();
 			i.place();
+		}
+
+		static void teleport(Class<? extends Actor> type) {
+			if (Dungeon.active != null) {
+				return;
+			}
+			Actor to = null;
+			for (Actor a : World.getactors()) {
+				if (type.isInstance(a)) {
+					to = a;
+					break;
+				}
+			}
+			Squad.active.remove();
+			Squad.active.setlocation(to.x, to.y);
+			Squad.active.displace();
+			Squad.active.place();
 		}
 	}
 

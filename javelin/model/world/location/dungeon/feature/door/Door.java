@@ -9,11 +9,11 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.table.Table;
-import javelin.controller.table.dungeon.DungeonFeatureModifier;
-import javelin.controller.table.dungeon.HiddenDoor;
-import javelin.controller.table.dungeon.LockedDoor;
-import javelin.controller.table.dungeon.StuckDoor;
-import javelin.controller.table.dungeon.TrappedDoor;
+import javelin.controller.table.dungeon.FeatureModifierTable;
+import javelin.controller.table.dungeon.door.HiddenDoor;
+import javelin.controller.table.dungeon.door.LockedDoor;
+import javelin.controller.table.dungeon.door.StuckDoor;
+import javelin.controller.table.dungeon.door.TrappedDoor;
 import javelin.model.item.Item;
 import javelin.model.item.key.door.Key;
 import javelin.model.item.key.door.MasterKey;
@@ -30,7 +30,7 @@ import javelin.model.world.location.dungeon.feature.door.trap.HoldPortal;
 import javelin.old.RPG;
 
 public class Door extends Feature {
-	public static final List<Class<? extends Door>> TYPES = new ArrayList<Class<? extends Door>>();
+	public static final List<Class<? extends Door>> TYPES = new ArrayList<>();
 	static final List<DoorTrap> TRAPS = Arrays.asList(new DoorTrap[] {
 			Alarm.INSTANCE, ArcaneLock.INSTANCE, HoldPortal.INSTANCE });
 
@@ -49,7 +49,7 @@ public class Door extends Feature {
 	}
 
 	public int unlockdc = RPG.r(20, 30)
-			+ Dungeon.gettable(DungeonFeatureModifier.class).rollmodifier();
+			+ Dungeon.gettable(FeatureModifierTable.class).rollmodifier();
 
 	/** Used if {@link #hidden}. TODO */
 	public int searchdc = RPG.r(20, 30);
@@ -66,7 +66,6 @@ public class Door extends Feature {
 			Class<? extends Key> key) {
 		super(-1, -1, avatar);
 		enter = false;
-		stop = true;
 		breakdc = locked ? breakdclocked : breakdcstuck;
 		breakdc = Math.max(2, breakdc + RPG.randomize(5));
 		unlockdc = Math.max(2, unlockdc);
@@ -169,7 +168,7 @@ public class Door extends Feature {
 
 	public static Door generate(Dungeon dungeon, Point p) {
 		try {
-			Door d = RPG.pick(TYPES).newInstance();
+			Door d = RPG.pick(TYPES).getDeclaredConstructor().newInstance();
 			if (!d.stuck && !d.locked && !(d.trap instanceof Alarm)) {
 				return null;
 			}

@@ -17,9 +17,9 @@ import javelin.view.mappanel.dungeon.DungeonWalker;
  */
 public abstract class Feature implements Serializable {
 	/** X coordinate. */
-	public int x;
+	public int x = -1;
 	/** Y coordinate. */
-	public int y;
+	public int y = -1;
 	public String avatarfile;
 	/**
 	 * If <code>true</code> will {@link #remove()} this if {@link #activate()}
@@ -39,7 +39,7 @@ public abstract class Feature implements Serializable {
 	 *
 	 * @see DungeonWalker
 	 */
-	public boolean stop = false;
+	public boolean stop = true;
 
 	/**
 	 * @param xp
@@ -50,8 +50,12 @@ public abstract class Feature implements Serializable {
 	 *            File name for {@link Images#getImage(String)}.
 	 */
 	public Feature(int xp, int yp, String avatarfilep) {
+		this(avatarfilep);
 		x = xp;
 		y = yp;
+	}
+
+	public Feature(String avatarfilep) {
 		avatarfile = avatarfilep;
 	}
 

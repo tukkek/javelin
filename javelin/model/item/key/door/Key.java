@@ -19,7 +19,7 @@ public class Key extends Item {
 		if (RPG.chancein(10)) {
 			return new MasterKey();
 		}
-		ArrayList<Door> doors = new ArrayList<Door>();
+		ArrayList<Door> doors = new ArrayList<>();
 		for (Feature f : Dungeon.active.features) {
 			if (f instanceof Door) {
 				doors.add((Door) f);
@@ -29,7 +29,7 @@ public class Key extends Item {
 			return new WoodenKey();
 		}
 		try {
-			return RPG.pick(doors).key.newInstance();
+			return RPG.pick(doors).key.getDeclaredConstructor().newInstance();
 		} catch (ReflectiveOperationException e) {
 			throw new RuntimeException(e);
 		}

@@ -21,7 +21,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import javelin.Javelin.Delay;
 import javelin.controller.Highscore;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.factor.SpellsFactor;
@@ -197,14 +196,13 @@ public class Javelin {
 	}
 
 	/**
+	 * If {@link Squad#active} is <code>null</code> for any reason, will return
+	 * zero.
+	 *
 	 * @return Hour of the day, from 0 to 23.
 	 */
 	public static long getHour() {
-		if (Squad.active == null) {
-			/* all training */
-			return 0;
-		}
-		return Squad.active.hourselapsed % 24;
+		return Squad.active == null ? 0 : Squad.active.hourselapsed % 24;
 	}
 
 	/**

@@ -54,17 +54,16 @@ public class WorldGenerator extends Thread {
 
 	protected void generate() {
 		world = new World();
-		LinkedList<Realm> realms = new LinkedList<Realm>();
+		LinkedList<Realm> realms = new LinkedList<>();
 		for (Realm r : Realm.values()) {
 			realms.add(r);
 		}
 		Collections.shuffle(realms);
-		ArrayList<HashSet<Point>> regions = new ArrayList<HashSet<Point>>(
-				realms.size());
+		ArrayList<HashSet<Point>> regions = new ArrayList<>(realms.size());
 		generate(realms, regions, world);
 		try {
 			FeatureGenerator generator = World.scenario.featuregenerator
-					.newInstance();
+					.getDeclaredConstructor().newInstance();
 			world.featuregenerator = generator;
 			Town start = generator.generate(realms, regions, world);
 			finish(start, world);
@@ -134,7 +133,7 @@ public class WorldGenerator extends Thread {
 	}
 
 	void floodedge(Point from, Point to, int deltax, int deltay, World w) {
-		ArrayList<Point> edge = new ArrayList<Point>(World.scenario.size);
+		ArrayList<Point> edge = new ArrayList<>(World.scenario.size);
 		edge.add(from);
 		edge.add(to);
 		if (from.x != to.x) {
@@ -182,6 +181,7 @@ public class WorldGenerator extends Thread {
 	}
 
 	static void startthread() throws ReflectiveOperationException {
-		World.scenario.worldgenerator.newInstance().start();
+		Class<? extends WorldGenerator> generator = World.scenario.worldgenerator;
+		generator.getDeclaredConstructor().newInstance().start();
 	}
 }

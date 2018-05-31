@@ -40,7 +40,7 @@ public class AirTemple extends Temple {
 		if (!RPG.chancein(d.stepsperencounter)) {
 			return false;
 		}
-		ArrayList<Point> steps = new ArrayList<Point>();
+		ArrayList<Point> steps = new ArrayList<>();
 		Point hero = JavelinApp.context.getherolocation();
 		steps.add(new Point(hero.x, hero.y));
 		int nsteps = RPG.r(3, 7);
@@ -60,7 +60,7 @@ public class AirTemple extends Temple {
 
 	private Point push(ArrayList<Point> steps, Dungeon d) {
 		Point current = steps.get(steps.size() - 1);
-		ArrayList<Point> possibilities = new ArrayList<Point>();
+		ArrayList<Point> possibilities = new ArrayList<>();
 		for (int x = current.x - 1; x <= current.x + 1; x++) {
 			for (int y = current.y - 1; y <= current.y + 1; y++) {
 				try {
@@ -83,10 +83,5 @@ public class AirTemple extends Temple {
 			}
 		}
 		return possibilities.isEmpty() ? null : RPG.pick(possibilities);
-	}
-
-	@Override
-	public Feature createfeature(Point p, Dungeon d) {
-		return null;
 	}
 }

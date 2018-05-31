@@ -1,4 +1,4 @@
-package javelin.controller.table.dungeon;
+package javelin.controller.table.dungeon.door;
 
 import javelin.controller.table.Table;
 import javelin.old.RPG;

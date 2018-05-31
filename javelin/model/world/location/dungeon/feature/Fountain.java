@@ -12,8 +12,8 @@ import javelin.model.unit.abilities.spell.Spell;
  */
 public class Fountain extends Feature {
 	/** Constructor. */
-	public Fountain(int x, int y) {
-		super(x, y, "dungeonfountain");
+	public Fountain() {
+		super("dungeonfountain");
 	}
 
 	@Override

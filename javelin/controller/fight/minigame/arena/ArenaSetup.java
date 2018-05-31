@@ -63,8 +63,7 @@ public class ArenaSetup extends BattleSetup {
 
 	@Override
 	public void place() {
-		ArrayList<Combatant> gladiators = new ArrayList<Combatant>(
-				Fight.state.blueTeam);
+		ArrayList<Combatant> gladiators = new ArrayList<>(Fight.state.blueTeam);
 		placebuildings();
 		Point p = null;
 		while (p == null || !validate(p)) {
@@ -79,7 +78,7 @@ public class ArenaSetup extends BattleSetup {
 	}
 
 	void placebuildings() {
-		List<List<ArenaBuilding>> quadrants = new ArrayList<List<ArenaBuilding>>();
+		List<List<ArenaBuilding>> quadrants = new ArrayList<>();
 		for (int i = 0; i < 4; i++) {
 			quadrants.add(new ArrayList<ArenaBuilding>());
 		}
@@ -152,12 +151,11 @@ public class ArenaSetup extends BattleSetup {
 		quadrants.sort(SizeComparator.INSTANCE);
 		for (int i = 0; i < amount; i++) {
 			try {
-				ArenaBuilding b = building.newInstance();
+				ArenaBuilding b = building.getDeclaredConstructor()
+						.newInstance();
 				quadrants.get(i % 4).add(b);
-				ArenaFountain f = b instanceof ArenaFountain ? (ArenaFountain) b
-						: null;
-				if (f != null) {
-					f.refillchance = 1f / amount;
+				if (b instanceof ArenaFountain) {
+					((ArenaFountain) b).refillchance = 1f / amount;
 				}
 			} catch (ReflectiveOperationException e) {
 				throw new RuntimeException(e);

@@ -15,8 +15,8 @@ import javelin.view.screen.BattleScreen;
 public class Spirit extends Feature {
 
 	/** Constructor. */
-	public Spirit(int xp, int yp) {
-		super(xp, yp, "dungeonspirit");
+	public Spirit() {
+		super("dungeonspirit");
 	}
 
 	@Override

@@ -13,14 +13,14 @@ import javelin.model.world.location.dungeon.temple.EarthTemple;
  */
 public class FruitTree extends Feature {
 	/** Constructor. */
-	public FruitTree(int xp, int yp) {
-		super(xp, yp, "dungeontreefruit");
+	public FruitTree() {
+		super("dungeontreefruit");
 	}
 
 	@Override
 	public boolean activate() {
 		ArrayList<Combatant> squad = Squad.active.members;
-		ArrayList<String> names = new ArrayList<String>(squad.size());
+		ArrayList<String> names = new ArrayList<>(squad.size());
 		for (Combatant c : squad) {
 			names.add(c + " (" + c.getstatus() + ")");
 		}

@@ -104,8 +104,12 @@ public abstract class Temple extends UniqueLocation {
 	public String floor = null;
 	/** If not <code>null</code> will override {@link Dungeon#wall}. */
 	public String wall = null;
+	/** If <code>false</code>, draw doors without a wall behind them. */
 	public boolean doorbackground = true;
+	/** Module level. */
 	public int level;
+	/** {@link Dungeon} {@link Feature} most likely to be found here. */
+	public Class<? extends Feature> feature = null;
 
 	/**
 	 * @param r
@@ -253,8 +257,6 @@ public abstract class Temple extends UniqueLocation {
 			}
 		}
 	}
-
-	abstract public Feature createfeature(Point p, Dungeon d);
 
 	/**
 	 * See {@link Dungeon#hazard()}.

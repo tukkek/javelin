@@ -77,6 +77,6 @@ public class Fire extends Target {
 
 	@Override
 	protected void checkhero(Combatant hero) {
-		hero.checkAttackType(false);
+		hero.checkattacktype(false);
 	}
 }

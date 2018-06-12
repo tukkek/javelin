@@ -96,11 +96,11 @@ public class BattleState implements Node, TeamContainer {
 	public BattleState(Fight f) {
 		map = f.map == null ? null : f.map.map;
 		period = f.period;
-		fleeing = new ArrayList<Combatant>();
-		dead = new ArrayList<Combatant>();
-		blueTeam = new ArrayList<Combatant>();
-		redTeam = new ArrayList<Combatant>();
-		meld = new ArrayList<Meld>();
+		fleeing = new ArrayList<>();
+		dead = new ArrayList<>();
+		blueTeam = new ArrayList<>();
+		redTeam = new ArrayList<>();
+		meld = new ArrayList<>();
 		next();
 
 	}
@@ -159,7 +159,7 @@ public class BattleState implements Node, TeamContainer {
 	 * @return All units surrounding the given {@link Combatant}.
 	 */
 	public ArrayList<Combatant> getsurroundings(final Combatant surrounded) {
-		final ArrayList<Combatant> surroundings = new ArrayList<Combatant>();
+		final ArrayList<Combatant> surroundings = new ArrayList<>();
 		final int[] location = surrounded.location;
 		final ArrayList<Combatant> combatants = getcombatants();
 		location: for (final Combatant c : combatants) {
@@ -180,12 +180,12 @@ public class BattleState implements Node, TeamContainer {
 	}
 
 	@Override
-	public List<Combatant> getblueTeam() {
+	public List<Combatant> getblueteam() {
 		return blueTeam;
 	}
 
 	@Override
-	public List<Combatant> getredTeam() {
+	public List<Combatant> getredteam() {
 		return redTeam;
 	}
 
@@ -305,7 +305,7 @@ public class BattleState implements Node, TeamContainer {
 	 */
 	public List<Combatant> gettargets(Combatant combatant,
 			List<Combatant> team) {
-		final List<Combatant> targets = new ArrayList<Combatant>();
+		final List<Combatant> targets = new ArrayList<>();
 		for (final Combatant targetc : team) {
 			if (haslineofsight(combatant, targetc) != Vision.BLOCKED) {
 				targets.add(targetc);
@@ -329,31 +329,6 @@ public class BattleState implements Node, TeamContainer {
 		return haslineofsight(new Point(me.location[0], me.location[1]),
 				new Point(target.x, target.y), me.view(period),
 				me.perceive(period));
-	}
-
-	/**
-	 * @return <code>true</code> if there is another {@link Combatant} in the
-	 *         opposite side of the target (see d20 flanking rules).
-	 */
-	public boolean isflanked(final Combatant target, final Combatant attacker) {
-		if (attacker.burrowed || Walker.distance(target, attacker) >= 1.5) {
-			return false;
-		}
-		final ArrayList<Combatant> attackerteam = blueTeam.contains(attacker)
-				? blueTeam : redTeam;
-		final ArrayList<Combatant> defenderteam = blueTeam.contains(target)
-				? blueTeam : redTeam;
-		if (attackerteam == defenderteam) {
-			return false;
-		}
-		final int deltax = target.location[0] - attacker.location[0];
-		final int deltay = target.location[1] - attacker.location[1];
-		final int flankingx = target.location[0] + deltax;
-		final int flankingy = target.location[1] + deltay;
-		final Combatant flank = getcombatant(flankingx, flankingy);
-		return flank != null && !flank.burrowed
-				&& Walker.distance(target, flank) < 1.5
-				&& attackerteam.contains(flank);
 	}
 
 	/**
@@ -436,7 +411,7 @@ public class BattleState implements Node, TeamContainer {
 	 *         provided.
 	 */
 	public ArrayList<Combatant> getfleeing(List<Combatant> team) {
-		ArrayList<Combatant> fleeing = new ArrayList<Combatant>();
+		ArrayList<Combatant> fleeing = new ArrayList<>();
 		for (Combatant c : this.fleeing) {
 			if (team.contains(c)) {
 				fleeing.add(c);

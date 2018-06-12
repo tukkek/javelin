@@ -10,9 +10,9 @@ import javelin.model.unit.Combatant;
 
 /**
  * Extensible path-finding algorithm.
- * 
+ *
  * TODO improve documentation for all hierarchy.
- * 
+ *
  * @author alex
  */
 public class Walker {
@@ -27,7 +27,7 @@ public class Walker {
 	public Pathing pathing = BranchingPath.INSTANCE;
 
 	public Walker(Point from, Point to, BattleState s) {
-		this.state = s;
+		state = s;
 		fromx = from.x;
 		fromy = from.y;
 		tox = to.x;
@@ -94,5 +94,10 @@ public class Walker {
 		final int deltax = Math.abs(ax - bx);
 		final int deltay = Math.abs(ay - by);
 		return Math.sqrt(deltax * deltax + deltay * deltay);
+	}
+
+	public static int distanceinsteps(Combatant a, Combatant b) {
+		return distanceinsteps(a.location[0], a.location[1], b.location[0],
+				b.location[1]);
 	}
 }

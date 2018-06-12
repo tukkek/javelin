@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.Javelin.Delay;
 import javelin.controller.CountingSet;
 import javelin.controller.Point;
 import javelin.controller.SpellbookGenerator;
@@ -262,8 +261,8 @@ public class Combatant implements Serializable, Cloneable {
 	}
 
 	public List<Combatant> getteam(final TeamContainer tc) {
-		final List<Combatant> redTeam = tc.getredTeam();
-		return redTeam.contains(this) ? redTeam : tc.getblueTeam();
+		final List<Combatant> red = tc.getredteam();
+		return red.contains(this) ? red : tc.getblueteam();
 	}
 
 	@Override
@@ -272,13 +271,14 @@ public class Combatant implements Serializable, Cloneable {
 		return mercenary ? s + " mercenary" : s;
 	}
 
-	public boolean hasattacktype(final boolean meleeOnly) {
-		return !getattacks(meleeOnly).isEmpty();
+	public boolean hasattacktype(final boolean meleeonly) {
+		return !getattacks(meleeonly).isEmpty();
 	}
 
-	public void checkAttackType(final boolean meleeOnly) {
-		if (!hasattacktype(meleeOnly)) {
-			Javelin.message("No " + (meleeOnly ? "mẽlée" : "ranged") + " attacks.",
+	public void checkattacktype(final boolean meleeonly) {
+		if (!hasattacktype(meleeonly)) {
+			Javelin.message(
+					"No " + (meleeonly ? "mẽlée" : "ranged") + " attacks.",
 					Javelin.Delay.WAIT);
 			throw new RepeatTurn();
 		}
@@ -532,36 +532,43 @@ public class Combatant implements Serializable, Cloneable {
 		}
 	}
 
-	public ArrayList<String> liststatus(final BattleState state) {
+	public ArrayList<String> liststatus(final BattleState s) {
 		final ArrayList<String> statuslist = new ArrayList<>();
-		if (state.isengaged(this)) {
+		statuslist.add(getstatus());
+		if (s.isengaged(this)) {
 			statuslist.add("engaged");
-			for (Combatant c : Fight.state.blueTeam.contains(this)
-					? Fight.state.redTeam : Fight.state.blueTeam) {
-				// TODO clone probably unnecessary?
-				if (state.isflanked(state.clone(this), state.clone(c))) {
-					statuslist.add("flanked");
-					break;
-				}
+			if (isflanked(s)) {
+				statuslist.add("flanked");
 			}
 		}
 		if (surprise() != 0) {
 			statuslist.add("flat-footed");
 		}
-		Vision v = state.haslineofsight(state.next, this);
-		if (RangedAttack.iscovered(v, this, state)) {
+		Vision v = s.haslineofsight(s.next, this);
+		if (RangedAttack.iscovered(v, this, s)) {
 			statuslist.add("covered");
 		} else if (v == Vision.BLOCKED) {
 			statuslist.add("blocked");
 		}
-		if (source.fly == 0 && state.map[location[0]][location[1]].flooded) {
-			statuslist.add("knee-deep");
+		if (source.fly == 0 && s.map[location[0]][location[1]].flooded) {
+			statuslist.add("on water");
 		}
 		for (Condition c : conditions) {
 			statuslist.add(c.toString().toLowerCase());
 		}
 		statuslist.sort(null);
 		return statuslist;
+	}
+
+	boolean isflanked(BattleState s) {
+		ArrayList<Combatant> team = s.blueTeam.contains(this) ? s.redTeam
+				: s.blueTeam;
+		for (Combatant c : team) {
+			if (c.flank(this, s)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public boolean ispenalized(final BattleState s) {
@@ -720,7 +727,8 @@ public class Combatant implements Serializable, Cloneable {
 			return false;
 		}
 		postupgradeautomatic(upgrade instanceof ClassLevelUpgrade
-				? (ClassLevelUpgrade) upgrade : null);
+				? (ClassLevelUpgrade) upgrade
+				: null);
 		ChallengeCalculator.calculatecr(source);
 		source.elite = true;
 		return true;
@@ -1106,5 +1114,28 @@ public class Combatant implements Serializable, Cloneable {
 	 */
 	public int getac() {
 		return source.ac + acmodifier;
+	}
+
+	/**
+	 * See d20 flanking rules.
+	 *
+	 * @param target
+	 *            Unit that is potentially being flanked.
+	 * @return <code>true</code> if there is a third unit flanking the target.
+	 */
+	public boolean flank(final Combatant target, BattleState s) {
+		if (burrowed || Walker.distanceinsteps(this, target) != 1) {
+			return false;
+		}
+		List<Combatant> team = getteam(s);
+		if (team.contains(target)) {
+			return false;
+		}
+		int deltax = target.location[0] - location[0];
+		int deltay = target.location[1] - location[1];
+		int flankx = target.location[0] + deltax;
+		int flanky = target.location[1] + deltay;
+		Combatant flank = s.getcombatant(flankx, flanky);
+		return flank != null && !flank.burrowed && team.contains(flank);
 	}
 }

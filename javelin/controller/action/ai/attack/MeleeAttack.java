@@ -61,7 +61,7 @@ public class MeleeAttack extends AbstractAttack {
 	@Override
 	public int getpenalty(Combatant attacker, Combatant target, BattleState s) {
 		int penalty = super.getpenalty(attacker, target, s);
-		if (s.isflanked(target, attacker)) {
+		if (attacker.flank(target, s)) {
 			penalty -= 2;
 		}
 		if (target.hascondition(Prone.class) != null) {

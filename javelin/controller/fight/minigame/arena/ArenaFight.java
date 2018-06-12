@@ -200,7 +200,7 @@ public class ArenaFight extends Minigame {
 	}
 
 	void rewardxp(ArrayList<Combatant> group) {
-		List<Combatant> redteam = state.getredTeam();
+		List<Combatant> redteam = state.getredteam();
 		for (Combatant foe : group) {
 			if (redteam.contains(foe)) {
 				return;

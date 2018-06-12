@@ -34,11 +34,11 @@ public class BattleAi extends AlphaBetaSearch {
 	@Override
 	public float utility(final Node node) {
 		final BattleState state = (BattleState) node;
-		final float redTeam = BattleAi.ratechallenge(state.getredTeam());
+		final float redTeam = BattleAi.ratechallenge(state.getredteam());
 		if (redTeam == 0f) {
 			return LIMIT;
 		}
-		final float blueTeam = BattleAi.ratechallenge(state.getblueTeam());
+		final float blueTeam = BattleAi.ratechallenge(state.getblueteam());
 		if (blueTeam == 0f) {
 			return -LIMIT;
 		}

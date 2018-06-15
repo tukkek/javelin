@@ -3,7 +3,6 @@ package javelin.controller.fight.minigame.battlefield;
 import java.math.BigDecimal;
 
 import javelin.Javelin;
-import javelin.Javelin.Delay;
 import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Building;
@@ -85,12 +84,7 @@ public class Flagpole extends Building {
 			@Override
 			public Runnable act(Combatant current, Combatant target,
 					BattleState s) {
-				return new Runnable() {
-					@Override
-					public void run() {
-						fight.recruitbluearmy();
-					}
-				};
+				return () -> fight.recruitbluearmy();
 			}
 		};
 	}

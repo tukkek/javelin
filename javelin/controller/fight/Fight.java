@@ -5,7 +5,6 @@ import java.util.List;
 
 import javelin.Debug;
 import javelin.Javelin;
-import javelin.Javelin.Delay;
 import javelin.JavelinApp;
 import javelin.controller.Weather;
 import javelin.controller.action.Action;
@@ -30,7 +29,7 @@ import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
-import javelin.model.unit.condition.Dominated;
+import javelin.model.unit.abilities.spell.enchantment.compulsion.DominateMonster.Dominated;
 import javelin.model.unit.skill.Diplomacy;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.old.messagepanel.MessagePanel;
@@ -529,14 +528,15 @@ public abstract class Fight {
 	}
 
 	void withdrawall() {
-		Javelin.message("Press w to cancel battle (debug feature)", Javelin.Delay.NONE);
-		if (Javelin.input().getKeyChar() == 'w') {
-			for (Combatant c : new ArrayList<>(Fight.state.blueTeam)) {
-				c.escape(Fight.state);
-			}
-			throw new EndBattle();
+		String prompt = "Press w to cancel battle... (debug feature)";
+		if (Javelin.prompt(prompt) != 'w') {
+			MessagePanel.active.clear();
+			return;
 		}
-		MessagePanel.active.clear();
+		for (Combatant c : new ArrayList<>(Fight.state.blueTeam)) {
+			c.escape(Fight.state);
+		}
+		throw new EndBattle();
 	}
 
 	/**

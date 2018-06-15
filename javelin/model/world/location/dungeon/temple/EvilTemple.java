@@ -3,14 +3,12 @@ package javelin.model.world.location.dungeon.temple;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.Point;
 import javelin.controller.terrain.Marsh;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.relic.Skull;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
-import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Altar;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.StairsDown;
@@ -78,10 +76,5 @@ public class EvilTemple extends Temple {
 		dungeon.herolocation.y = target.y;
 		Javelin.message("A macabre force draws upon you...", true);
 		return true;
-	}
-
-	@Override
-	public Feature createfeature(Point p, Dungeon d) {
-		return null;
 	}
 }

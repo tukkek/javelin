@@ -11,13 +11,19 @@ import javelin.model.unit.abilities.spell.Spell;
  * @author alex
  */
 public class Fountain extends Feature {
+	static final String PROMPT = "Do you want to drink from the fountain?\n"
+			+ "Press ENTER to drink or any other key to cancel...";
+
 	/** Constructor. */
-	public Fountain(int x, int y) {
-		super(x, y, "dungeonfountain");
+	public Fountain() {
+		super("dungeonfountain");
 	}
 
 	@Override
 	public boolean activate() {
+		if (Javelin.prompt(PROMPT) != '\n') {
+			return false;
+		}
 		for (Combatant c : Squad.active.members) {
 			heal(c);
 		}

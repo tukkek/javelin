@@ -2,14 +2,11 @@ package javelin.model.world.location.dungeon.temple;
 
 import java.util.ArrayList;
 
-import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.terrain.Hill;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.relic.Amulet;
-import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Portal;
 
 /**
@@ -35,20 +32,16 @@ public class MagicTemple extends Temple {
 		terrain = Terrain.HILL;
 		floor = "terrainwoodfloor";
 		wall = "terrainwall";
+		feature = Portal.class;
 	}
 
 	@Override
 	public ArrayList<Terrain> getterrains() {
-		ArrayList<Terrain> terrains = new ArrayList<Terrain>();
+		ArrayList<Terrain> terrains = new ArrayList<>();
 		for (Terrain t : Terrain.NONUNDERGROUND) {
 			terrains.add(t);
 		}
 		terrains.add(Terrain.UNDERGROUND);
 		return terrains;
-	}
-
-	@Override
-	public Feature createfeature(Point p, Dungeon d) {
-		return new Portal(p.x, p.y);
 	}
 }

@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon.feature.npc;
+package javelin.model.world.location.dungeon.feature.inhabitant;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,7 +9,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.generator.NpcGenerator;
-import javelin.controller.table.dungeon.DungeonFeatureModifier;
+import javelin.controller.table.dungeon.FeatureModifierTable;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.skill.Skill;
@@ -53,8 +53,8 @@ public abstract class Inhabitant extends Feature {
 	 */
 	protected int diplomacydc;
 
-	public Inhabitant(int xp, int yp, float crmin, float crmax) {
-		super(xp, yp, null);
+	public Inhabitant(float crmin, float crmax) {
+		super(null);
 		this.crmin = crmin;
 		this.crmax = crmax;
 		remove = false;
@@ -62,7 +62,7 @@ public abstract class Inhabitant extends Feature {
 		avatarfile = inhabitant.source.avatarfile;
 		Skill.DIPLOMACY.getupgrade().upgrade(inhabitant);
 		diplomacydc = inhabitant.taketen(Skill.DIPLOMACY)
-				+ Dungeon.gettable(DungeonFeatureModifier.class).rollmodifier();
+				+ Dungeon.gettable(FeatureModifierTable.class).rollmodifier();
 		int d100 = RPG.r(0, 100);
 		gold = RewardCalculator.getgold(inhabitant.source.cr) * d100 / 100;
 	}
@@ -76,7 +76,7 @@ public abstract class Inhabitant extends Feature {
 	 *         in {@link Dungeon#encounters}, generates one instead.
 	 */
 	public Combatant select() {
-		HashSet<String> invalid = new HashSet<String>();
+		HashSet<String> invalid = new HashSet<>();
 		for (Combatant c : Dungeon.active.rasterizenecounters()) {
 			Monster m = c.source;
 			String name = m.name;
@@ -93,7 +93,7 @@ public abstract class Inhabitant extends Feature {
 	}
 
 	Monster generate(float crmin, float crmax) {
-		ArrayList<Monster> candidates = new ArrayList<Monster>();
+		ArrayList<Monster> candidates = new ArrayList<>();
 		for (Float cr : Javelin.MONSTERSBYCR.keySet()) {
 			if (crmin <= cr && cr <= crmax) {
 				candidates.addAll(Javelin.MONSTERSBYCR.get(cr));
@@ -116,8 +116,10 @@ public abstract class Inhabitant extends Feature {
 		if (!m.think(-1)) {
 			return false;
 		}
-		TempleDungeon td = (TempleDungeon) (Dungeon.active instanceof TempleDungeon
-				? Dungeon.active : null);
+		TempleDungeon td = null;
+		if (Dungeon.active instanceof TempleDungeon) {
+			td = (TempleDungeon) Dungeon.active;
+		}
 		List<Monster> aslist = Arrays.asList(new Monster[] { m });
 		return td == null || td.temple.validate(aslist);
 	}

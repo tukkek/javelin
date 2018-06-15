@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Set;
 
 import javelin.Javelin;
-import javelin.Javelin.Delay;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -23,15 +22,16 @@ import javelin.controller.fight.RandomDungeonEncounter;
 import javelin.controller.generator.dungeon.DungeonGenerator;
 import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.generator.encounter.EncounterGenerator;
-import javelin.controller.table.RareFeature;
 import javelin.controller.table.Table;
 import javelin.controller.table.Tables;
-import javelin.controller.table.dungeon.DoorExists;
-import javelin.controller.table.dungeon.DungeonFeatureModifier;
+import javelin.controller.table.dungeon.CommonFeatureTable;
+import javelin.controller.table.dungeon.FeatureModifierTable;
+import javelin.controller.table.dungeon.FeatureRarityTable;
+import javelin.controller.table.dungeon.RareFeatureTable;
+import javelin.controller.table.dungeon.door.DoorExists;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.item.Item;
-import javelin.model.item.key.door.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
@@ -41,22 +41,13 @@ import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.feature.Altar;
-import javelin.model.world.location.dungeon.feature.Brazier;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
-import javelin.model.world.location.dungeon.feature.Fountain;
-import javelin.model.world.location.dungeon.feature.FruitTree;
-import javelin.model.world.location.dungeon.feature.Herb;
-import javelin.model.world.location.dungeon.feature.Portal;
-import javelin.model.world.location.dungeon.feature.Spirit;
 import javelin.model.world.location.dungeon.feature.StairsDown;
 import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.Trap;
 import javelin.model.world.location.dungeon.feature.door.Door;
-import javelin.model.world.location.dungeon.feature.npc.Broker;
-import javelin.model.world.location.dungeon.feature.npc.Leader;
-import javelin.model.world.location.dungeon.feature.npc.Prisoner;
-import javelin.model.world.location.dungeon.temple.TempleDungeon;
+import javelin.model.world.location.dungeon.feature.inhabitant.Leader;
 import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.Images;
@@ -76,6 +67,7 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class Dungeon extends Location {
+	static final Class<? extends Feature> DEBUGFEATURE = null;
 	static final int MAXTRIES = 1000;
 	static final int[] DELTAS = { -1, 0, 1 };
 
@@ -357,13 +349,29 @@ public class Dungeon extends Location {
 		}
 	}
 
-	void createfeatures(int nfeatures) {
-		for (int i = 0; i < nfeatures; i++) {
-			boolean rare = gettable(RareFeature.class).rollboolean();
-			Feature f = createfeature(rare, findspot());
-			if (f != null) {
-				features.add(f);
+	protected void createfeatures(int nfeatures) {
+		int features = 0;
+		while (features < nfeatures) {
+			Feature f;
+			if (Javelin.DEBUG && DEBUGFEATURE != null) {
+				try {
+					f = DEBUGFEATURE.getDeclaredConstructor().newInstance();
+				} catch (ReflectiveOperationException e) {
+					throw new RuntimeException(e);
+				}
+			} else if (gettable(FeatureRarityTable.class).rollboolean()) {
+				f = tables.get(RareFeatureTable.class).rollfeature(this);
+			} else {
+				f = tables.get(CommonFeatureTable.class).rollfeature(this);
 			}
+			if (f == null) {
+				continue;
+			}
+			Point p = findspot();
+			f.x = p.x;
+			f.y = p.y;
+			this.features.add(f);
+			features += 1;
 		}
 	}
 
@@ -376,7 +384,7 @@ public class Dungeon extends Location {
 		int gold = 0;
 		for (int i = 0; i < ntraps; i++) {
 			int cr = level + Difficulty.get()
-					+ gettable(DungeonFeatureModifier.class).rollmodifier();
+					+ gettable(FeatureModifierTable.class).rollmodifier();
 			if (cr >= Trap.MINIMUMCR) {
 				Trap t = new Trap(cr, findspot());
 				features.add(t);
@@ -417,7 +425,7 @@ public class Dungeon extends Location {
 		pool += hidden;
 		for (int i = nchests; i > 0; i--) {
 			int gold = i == 1 ? pool : pool / RPG.r(2, i);
-			int percentmodifier = gettable(DungeonFeatureModifier.class)
+			int percentmodifier = gettable(FeatureModifierTable.class)
 					.rollmodifier() * 2;
 			gold = gold * (100 + percentmodifier) / 100;
 			Dungeon toplevel = this;
@@ -539,35 +547,6 @@ public class Dungeon extends Location {
 	public boolean hazard() {
 		// no hazards in normal dungeons
 		return false;
-	}
-
-	/**
-	 * Similar to {@link #placefeatures(Set, Set)} but usually reserved to
-	 * placing {@link TempleDungeon} {@link Feature}s.
-	 *
-	 * Called after placing all basic features.
-	 *
-	 * @return Extra features to be placed using {@link #build(Feature, Set)}.
-	 */
-	protected Feature createfeature(boolean rare, Point p) {
-		LinkedList<Feature> features = new LinkedList<>();
-		if (rare) {
-			features.add(new Fountain(p.x, p.y));
-			features.add(new Broker(p.x, p.y));
-			features.add(new Prisoner(p.x, p.y));
-			features.add(new Leader(p.x, p.y));
-			// features.add(new LearningStone(p.x, p.y));
-			if (level <= Herb.MAXLEVEL) {
-				features.add(new Herb(p.x, p.y));
-			}
-		} else {
-			features.add(new Chest(p.x, p.y, Key.generate()));
-			features.add(new Brazier(p.x, p.y));
-			features.add(new FruitTree(p.x, p.y));
-			features.add(new Portal(p.x, p.y));
-			features.add(new Spirit(p.x, p.y));
-		}
-		return RPG.pick(features);
 	}
 
 	@Override

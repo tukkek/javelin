@@ -1,6 +1,7 @@
 package javelin.controller.generator.feature;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.model.world.Actor;
@@ -89,13 +90,19 @@ public class GenerationData implements Serializable {
 
 	/**
 	 * @return By default a new instance of the given {@link Actor} clss, using
-	 *         {@link Class#newInstance()}.
+	 *         Java Reflection.
 	 */
 	public Actor generate(Class<? extends Actor> feature) {
 		try {
-			return feature.newInstance();
+			return feature.getDeclaredConstructor().newInstance();
 		} catch (RestartWorldGeneration e) {
 			throw e;
+		} catch (InvocationTargetException e) {
+			Throwable cause = e.getTargetException();
+			if (cause instanceof RestartWorldGeneration) {
+				throw (RestartWorldGeneration) cause;
+			}
+			throw new RuntimeException(e);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

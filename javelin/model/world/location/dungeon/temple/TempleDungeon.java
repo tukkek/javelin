@@ -8,6 +8,7 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
+import javelin.controller.table.dungeon.CommonFeatureTable;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Ruby;
 import javelin.model.unit.Combatant;
@@ -49,7 +50,6 @@ public class TempleDungeon extends Dungeon {
 		super(level, parent);
 		temple = t;
 		this.deepest = deepest;
-		doorbackground = t.doorbackground;
 		description = temple.descriptionknown;
 	}
 
@@ -65,6 +65,7 @@ public class TempleDungeon extends Dungeon {
 
 	@Override
 	public void activate(boolean loading) {
+		doorbackground = temple.doorbackground;
 		if (temple.floor != null) {
 			floor = temple.floor;
 		}
@@ -92,11 +93,11 @@ public class TempleDungeon extends Dungeon {
 			if (Temple.leavingfight) {
 				Temple.leavingfight = false;
 			} else {
-				Class<? extends Feature> reference = Temple.climbing
-						? StairsDown.class : StairsUp.class;
+				Class<? extends Feature> stairs;
+				stairs = Temple.climbing ? StairsDown.class : StairsUp.class;
 				Temple.climbing = false;
 				for (Feature f : features) {
-					if (reference.isInstance(f)) {
+					if (stairs.isInstance(f)) {
 						herolocation.x = f.x;
 						herolocation.y = f.y;
 						break;
@@ -147,12 +148,16 @@ public class TempleDungeon extends Dungeon {
 	}
 
 	@Override
-	protected Feature createfeature(boolean rare, Point p) {
-		if (rare) {
-			return super.createfeature(false, p);
+	protected void createfeatures(int nfeatures) {
+		if (this == temple.floors.get(0)) {
+			CommonFeatureTable table = tables.get(CommonFeatureTable.class);
+			int size = table.getchances();
+			table.add(Fountain.class, size);
+			if (temple.feature != null) {
+				table.add(temple.feature, size);
+			}
 		}
-		return RPG.chancein(6) ? new Fountain(p.x, p.y)
-				: temple.createfeature(p, this);
+		super.createfeatures(nfeatures);
 	}
 
 	@Override

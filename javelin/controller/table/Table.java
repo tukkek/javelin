@@ -28,18 +28,47 @@ public class Table implements Serializable, Cloneable {
 		}
 	}
 
-	HashMap<Object, Integer> rows = new HashMap<Object, Integer>();
-	HashMap<Object, RowData> data = new HashMap<Object, RowData>();
+	HashMap<Object, Integer> rows = new HashMap<>();
+	HashMap<Object, RowData> data = new HashMap<>();
 
+	/**
+	 * If adding a preexisting result, will instead raise its current chances
+	 * and ceiling by the given ceiling parameter.
+	 *
+	 * @param row
+	 *            Table result.
+	 * @param min
+	 *            Chance floor.
+	 * @param max
+	 *            Chance ceiling.
+	 * @param variance
+	 *            How much to vary in the given range on {@link #modify()}.
+	 */
 	public void add(Object row, int min, int max, int variance) {
-		rows.put(row, RPG.r(min, max));
-		data.put(row, new RowData(min, max, variance));
+		RowData previous = data.get(row);
+		if (previous == null) {
+			rows.put(row, RPG.r(min, max));
+			data.put(row, new RowData(min, max, variance));
+		} else {
+			rows.put(row, rows.get(row) + max);
+			previous.max += max;
+		}
 	}
 
+	/**
+	 * Adds with default variance.
+	 *
+	 * @see #add(Object, int, int, int)
+	 */
 	public void add(Object row, int min, int max) {
 		add(row, min, max, Math.max(1, (min + max) / 2));
 	}
 
+	/**
+	 * Adds with default minimum and variance.
+	 *
+	 * @see #add(Object, int, int, int)
+	 */
 	public void add(Object row, int max) {
 		add(row, 1, max);
 	}
@@ -48,8 +77,8 @@ public class Table implements Serializable, Cloneable {
 	public Table clone() {
 		try {
 			Table clone = (Table) super.clone();
-			clone.data = new HashMap<Object, Table.RowData>(data);
-			clone.rows = new HashMap<Object, Integer>(rows);
+			clone.data = new HashMap<>(data);
+			clone.rows = new HashMap<>(rows);
 			for (Object key : data.keySet()) {
 				clone.data.put(key, data.get(key).clone());
 			}
@@ -88,7 +117,7 @@ public class Table implements Serializable, Cloneable {
 		throw new RuntimeException("#brokentable " + this);
 	}
 
-	int getchances() {
+	public int getchances() {
 		int total = 0;
 		for (Integer chances : rows.values()) {
 			total += chances;
@@ -101,12 +130,14 @@ public class Table implements Serializable, Cloneable {
 		Set<Object> keys = rows.keySet();
 		int format = Integer.toString(getchances() + keys.size()).length();
 		int current = 1;
+		int chances = getchances();
 		String table = getClass().getSimpleName().toString() + "\n";
 		for (Object row : keys) {
 			Integer chance = rows.get(row);
 			int ceiling = current + chance - 1;
+			int percent = 100 * chance / chances;
 			table += format(current, format) + "-" + format(ceiling, format)
-					+ " " + row + " (#" + chance + ")\n";
+					+ " " + row + " (" + percent + "%)\n";
 			current = ceiling;
 			current += 1;
 		}

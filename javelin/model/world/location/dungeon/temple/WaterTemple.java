@@ -9,9 +9,7 @@ import javelin.model.Realm;
 import javelin.model.item.relic.Crown;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
-import javelin.old.RPG;
 
 /**
  * Found next to {@link Water}. Always flooded.
@@ -33,6 +31,7 @@ public class WaterTemple extends Temple {
 		floor = "terraindungeonfloor";
 		wall = "dungeonwalltemplewater";
 		doorbackground = false;
+		feature = Fountain.class;
 	}
 
 	@Override
@@ -48,10 +47,5 @@ public class WaterTemple extends Temple {
 				World.getseed()) == 0) {
 			super.generate();
 		}
-	}
-
-	@Override
-	public Feature createfeature(Point p, Dungeon d) {
-		return RPG.chancein(2) ? null : new Fountain(p.x, p.y);
 	}
 }

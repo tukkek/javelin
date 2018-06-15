@@ -2,13 +2,11 @@ package javelin.model.world.location.dungeon.temple;
 
 import java.util.List;
 
-import javelin.controller.Point;
 import javelin.controller.terrain.Plains;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.relic.Ankh;
 import javelin.model.unit.Monster;
-import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Spirit;
 
@@ -32,6 +30,7 @@ public class GoodTemple extends Temple {
 		terrain = Terrain.PLAIN;
 		floor = "terrainarena";
 		wall = "terraindungeonwall";
+		feature = Spirit.class;
 	}
 
 	@Override
@@ -42,10 +41,5 @@ public class GoodTemple extends Temple {
 			}
 		}
 		return true;
-	}
-
-	@Override
-	public Feature createfeature(Point p, Dungeon d) {
-		return new Spirit(p.x, p.y);
 	}
 }

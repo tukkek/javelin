@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon.feature.npc;
+package javelin.model.world.location.dungeon.feature.inhabitant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +82,7 @@ public class Leader extends Inhabitant {
 
 		void sign() {
 			ArrayList<Combatants> encounters = Dungeon.active.encounters;
-			for (Combatants encounter : new ArrayList<Combatants>(encounters)) {
+			for (Combatants encounter : new ArrayList<>(encounters)) {
 				if (encounters.size() == 1) {
 					return;
 				}
@@ -138,7 +138,7 @@ public class Leader extends Inhabitant {
 		@Override
 		public List<Option> getoptions() {
 			ATTACK.name = "Attack (" + Difficulty.describe(guards) + ")";
-			ArrayList<Option> options = new ArrayList<Option>();
+			ArrayList<Option> options = new ArrayList<>();
 			options.add(ATTACK);
 			int diplomacy = Squad.active.getbest(Skill.DIPLOMACY)
 					.taketen(Skill.DIPLOMACY);
@@ -217,8 +217,8 @@ public class Leader extends Inhabitant {
 	Monster base;
 
 	/** Constructor. */
-	public Leader(int xp, int yp) {
-		super(xp, yp, Dungeon.active.level + Difficulty.MODERATE,
+	public Leader() {
+		super(Dungeon.active.level + Difficulty.MODERATE,
 				Dungeon.active.level + Difficulty.DEADLY);
 		base = Javelin.getmonster(inhabitant.source.name);
 		guards.add(inhabitant);

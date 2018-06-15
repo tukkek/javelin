@@ -12,8 +12,8 @@ import javelin.view.screen.DungeonScreen;
  */
 public class Portal extends Feature {
 	/** Constructor. */
-	public Portal(int xp, int yp) {
-		super(xp, yp, "locationportal");
+	public Portal() {
+		super("locationportal");
 		remove = false;
 	}
 

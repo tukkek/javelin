@@ -1,4 +1,4 @@
-package javelin.model.world.location.dungeon.feature.npc;
+package javelin.model.world.location.dungeon.feature.inhabitant;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +33,7 @@ public class Broker extends Inhabitant {
 
 		@Override
 		public ArrayList<Combatant> getmonsters(Integer teamel) {
-			return new ArrayList<Combatant>(enemy);
+			return new ArrayList<>(enemy);
 		}
 
 		@Override
@@ -93,7 +93,7 @@ public class Broker extends Inhabitant {
 
 		@Override
 		public List<Option> getoptions() {
-			ArrayList<Option> options = new ArrayList<Option>();
+			ArrayList<Option> options = new ArrayList<>();
 			int diplomacy = Squad.active.getbest(Skill.DIPLOMACY)
 					.taketen(Skill.DIPLOMACY);
 			if (diplomacy >= diplomacydc + 5) {
@@ -173,11 +173,11 @@ public class Broker extends Inhabitant {
 		}
 	}
 
-	ArrayList<Key> keys = new ArrayList<Key>();
+	ArrayList<Key> keys = new ArrayList<>();
 	protected int hints = RPG.r(1, 10);
 
-	public Broker(int xp, int yp) {
-		super(xp, yp, Dungeon.active.level + Difficulty.DIFFICULT,
+	public Broker() {
+		super(Dungeon.active.level + Difficulty.DIFFICULT,
 				Dungeon.active.level + Difficulty.DEADLY);
 		int nkeys = RPG.r(1, 4) - 1;
 		for (int i = 0; i < nkeys; i++) {

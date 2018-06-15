@@ -1,13 +1,10 @@
 package javelin.model.world.location.dungeon.temple;
 
-import javelin.controller.Point;
 import javelin.controller.terrain.Desert;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.relic.Candle;
-import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Brazier;
-import javelin.model.world.location.dungeon.feature.Feature;
 
 /**
  * Found buried in the {@link Desert}. 1-3 pedestals light an area around the
@@ -29,10 +26,6 @@ public class FireTemple extends Temple {
 		floor = "dungeonfloortemplefire";
 		wall = "dungeonwalltemplefire";
 		doorbackground = false;
-	}
-
-	@Override
-	public Feature createfeature(Point p, Dungeon d) {
-		return new Brazier(p.x, p.y);
+		feature = Brazier.class;
 	}
 }

@@ -190,7 +190,7 @@ public class Lodge extends Fortification {
 	 * @param accomodation
 	 *            Level of the resting environment.
 	 */
-	public static void rest(int restperiods, long hours, boolean advancetime,
+	public static void rest(int restperiods, int hours, boolean advancetime,
 			Lodging a) {
 		for (int i = 0; i < restperiods; i++) {
 			Squad.active.quickheal();
@@ -210,7 +210,7 @@ public class Lodge extends Fortification {
 					final int detox = restperiods == 1 ? RPG.r(0, 1) : i % 2;
 					c.detox(Math.min(c.source.poison, detox));
 				}
-				c.terminateconditions((int) hours);
+				c.terminateconditions(hours);
 			}
 		}
 		if (advancetime) {

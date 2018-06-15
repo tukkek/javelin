@@ -1,12 +1,9 @@
 package javelin.model.world.location.dungeon.temple;
 
-import javelin.controller.Point;
 import javelin.controller.terrain.Forest;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.relic.Map;
-import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.FruitTree;
 
 /**
@@ -28,10 +25,6 @@ public class EarthTemple extends Temple {
 		floor = "terraindirt";
 		wall = "dungeonwalltempleearth";
 		doorbackground = false;
-	}
-
-	@Override
-	public Feature createfeature(Point p, Dungeon d) {
-		return new FruitTree(p.x, p.y);
+		feature = FruitTree.class;
 	}
 }

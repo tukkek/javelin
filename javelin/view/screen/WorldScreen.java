@@ -10,7 +10,6 @@ import java.util.Set;
 
 import javelin.Debug;
 import javelin.Javelin;
-import javelin.Javelin.Delay;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.Weather;
@@ -260,9 +259,9 @@ public class WorldScreen extends BattleScreen {
 	public void updateplayerinformation() {
 		MessagePanel.active.clear();
 		final ArrayList<String> infos = new ArrayList<>();
-		String period = Javelin.getDayPeriod();
-		String date = "Day " + currentday() + ", " + period.toLowerCase();
+		String date = "Day " + currentday();
 		if (Dungeon.active == null) {
+			date += ", " + Javelin.getDayPeriod().toLowerCase();
 			String weather = Terrain.current().getweather();
 			if (!weather.isEmpty()) {
 				date += " (" + weather + ")";
@@ -455,8 +454,10 @@ public class WorldScreen extends BattleScreen {
 	}
 
 	static WorldScreen getcurrentscreen() {
-		return BattleScreen.active instanceof WorldScreen
-				? (WorldScreen) BattleScreen.active : null;
+		if (BattleScreen.active instanceof WorldScreen) {
+			return (WorldScreen) BattleScreen.active;
+		}
+		return null;
 	}
 
 	/**

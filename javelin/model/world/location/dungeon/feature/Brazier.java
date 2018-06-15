@@ -18,8 +18,8 @@ public class Brazier extends Feature {
 	static final int RADIUS = 13;
 
 	/** Constructor. */
-	public Brazier(int xp, int yp) {
-		super(xp, yp, "dungeonbrazier");
+	public Brazier() {
+		super("dungeonbrazier");
 	}
 
 	@Override

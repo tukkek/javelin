@@ -9,7 +9,7 @@ import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.RandomDungeonEncounter;
-import javelin.controller.table.dungeon.DungeonFeatureModifier;
+import javelin.controller.table.dungeon.FeatureModifierTable;
 import javelin.model.item.Item;
 import javelin.model.item.Potion;
 import javelin.model.unit.Combatant;
@@ -52,12 +52,12 @@ public class Herb extends Feature {
 	}
 
 	int dc = 10 + Dungeon.active.level
-			+ Dungeon.gettable(DungeonFeatureModifier.class).rollmodifier();
+			+ Dungeon.gettable(FeatureModifierTable.class).rollmodifier();
 	List<Potion> loot = generate(Dungeon.active.level);
 
 	/** Constructor. */
-	public Herb(int xp, int yp) {
-		super(xp, yp, "dungeonherb");
+	public Herb() {
+		super("dungeonherb");
 		remove = false;
 	}
 

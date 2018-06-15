@@ -78,7 +78,7 @@ public class Preferences {
 	 * @see StateManager
 	 */
 	public static boolean BACKUP;
-	/** How often to save the game. */
+	/** How often to save the game, in minutes. */
 	public static int SAVEINTERVAL;
 	/** Tile size for {@link BattleScreen}. */
 	public static int TILESIZEBATTLE;

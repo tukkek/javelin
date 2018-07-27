@@ -2,7 +2,7 @@ package javelin.controller.walker.pathing;
 
 import java.util.ArrayList;
 
-import javelin.controller.walker.Step;
+import javelin.controller.Point;
 import javelin.controller.walker.Walker;
 import javelin.view.mappanel.MoveOverlay;
 
@@ -18,17 +18,16 @@ public class BranchingPath implements Pathing {
 	}
 
 	@Override
-	public ArrayList<Step> step(int x, int y, ArrayList<Step> steps, Walker w) {
-		final int stepx = x + (w.tox > x ? +1 : -1);
-		final int stepy = y + (w.toy > y ? +1 : -1);
-		if (y != w.toy) {
-			steps.add(new Step(x, stepy));
-		}
-		if (x != w.tox) {
-			steps.add(new Step(stepx, y));
-			if (y != w.toy) {
-				steps.add(new Step(stepx, stepy));
-			}
+	public ArrayList<Point> step(Point from, Walker w) {
+		final int stepx = from.x + (w.to.x > from.x ? +1 : -1);
+		final int stepy = from.y + (w.to.y > from.y ? +1 : -1);
+		ArrayList<Point> steps = new ArrayList<>(3);
+		if (from.y != w.to.y)
+			steps.add(new Point(from.x, stepy));
+		if (from.x != w.to.x) {
+			steps.add(new Point(stepx, from.y));
+			if (from.y != w.to.y)
+				steps.add(new Point(stepx, stepy));
 		}
 		return steps;
 	}

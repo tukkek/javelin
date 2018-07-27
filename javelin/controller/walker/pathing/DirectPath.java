@@ -3,59 +3,46 @@ package javelin.controller.walker.pathing;
 import java.util.ArrayList;
 
 import javelin.controller.Point;
-import javelin.controller.walker.Step;
 import javelin.controller.walker.Walker;
 
 public class DirectPath implements Pathing {
-	Float stepx = null;
-	Float stepy = null;
-	Float partialx = null;
-	Float partialy = null;
-	boolean first = true;
+    Float stepx = null;
+    Float stepy = null;
+    Float partialx = null;
+    Float partialy = null;
+    boolean first = true;
 
-	@Override
-	public ArrayList<Step> step(int x, int y, ArrayList<Step> steps, Walker w) {
-		// if (first) {
-		// first = false;
-		// Point first = takefirststep(w);
-		// if (first != null) {
-		// steps.add(new Step(first.x, first.y));
-		// calculatepath(first, w);
-		// }
-		// return steps;
-		// }
-		if (stepx == null) {
-			calculatepath(new Point(x, y), w);
-		}
-		partialx += stepx;
-		partialy += stepy;
-		steps.add(new Step(Math.round(partialx), Math.round(partialy)));
-		return steps;
+    @Override
+    public ArrayList<Point> step(Point from, Walker w) {
+	if (stepx == null) {
+	    calculatepath(from, w);
 	}
+	partialx += stepx;
+	partialy += stepy;
+	ArrayList<Point> step = new ArrayList<>(1);
+	step.add(new Point(Math.round(partialx), Math.round(partialy)));
+	return step;
+    }
 
-	void calculatepath(Point first, Walker w) {
-		float distancex = w.tox - first.x;
-		float distancey = w.toy - first.y;
-		float distance = Math.max(Math.abs(distancey), Math.abs(distancex));
-		stepx = distancex / distance;
-		stepy = distancey / distance;
-		partialx = new Float(first.x);
-		partialy = new Float(first.y);
-	}
+    void calculatepath(Point first, Walker w) {
+	float distancex = w.to.x - first.x;
+	float distancey = w.to.y - first.y;
+	float distance = Math.max(Math.abs(distancey), Math.abs(distancex));
+	stepx = distancex / distance;
+	stepy = distancey / distance;
+	partialx = (float) first.x;
+	partialy = (float) first.y;
+    }
 
-	Point takefirststep(Walker w) {
-		Point to = new Point(w.tox, w.toy);
-		Point closest = null;
-		for (Point p : Point.getadjacent()) {
-			p.x += w.fromx;
-			p.y += w.fromy;
-			if (!w.valid(p.x, p.y)) {
-				continue;
-			}
-			if (closest == null || p.distance(to) < closest.distance(to)) {
-				closest = p;
-			}
-		}
-		return closest;
+    Point takefirststep(Walker w) {
+	Point closest = null;
+	for (Point p : Point.getadjacent()) {
+	    p.x += w.from.x;
+	    p.y += w.from.y;
+	    if (w.validate(p, null) && (closest == null || p.distance(w.to) < closest.distance(w.to))) {
+		closest = p;
+	    }
 	}
+	return closest;
+    }
 }

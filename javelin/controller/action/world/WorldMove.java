@@ -7,19 +7,14 @@ import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.exception.RepeatTurn;
-import javelin.controller.exception.battle.StartBattle;
-import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
-import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.town.Town;
 import javelin.view.screen.BattleScreen;
-import javelin.view.screen.DungeonScreen;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -34,189 +29,120 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class WorldMove extends WorldAction {
-	/**
-	 * Represents time spent on resting, eating, sleeping, etc.
-	 *
-	 * TODO forced march
-	 */
-	public static final float NORMALMARCH = 4f / 5f;
-	/**
-	 * Ideally a move should always be 6 hours in a worst-case scenario (the
-	 * time of a period), so as to avoid a move taking longer than a period,
-	 * which could confuse {@link Hazard}s.
-	 *
-	 * @see #TIMECOST
-	 */
-	public static final float MOVETARGET = 6f;
-	/**
-	 * How much time it takes to walk a single square with speed 30 (~30mph,
-	 * normal human speed).
-	 *
-	 * Calculation of worst case scenario (which should take 6 hours): 6 *
-	 * 15/30ft (slow races) * .5 (bad terrain)
-	 *
-	 * @see Monster#gettopspeed()
-	 * @see #MOVETARGET
-	 * @see #NORMALMARCH
-	 */
-	public static final float TIMECOST = NORMALMARCH * (MOVETARGET * 15f / 30f)
-			/ 2f;
-	/** TODO remove, hack */
-	public static boolean isleavingplace = false;//
-	private final int deltax;
-	private final int deltay;
+    /**
+     * Represents time spent on resting, eating, sleeping, etc.
+     *
+     * TODO forced march
+     */
+    public static final float NORMALMARCH = 4f / 5f;
+    /**
+     * Ideally a move should always be 6 hours in a worst-case scenario (the time of
+     * a period), so as to avoid a move taking longer than a period, which could
+     * confuse {@link Hazard}s.
+     *
+     * @see #TIMECOST
+     */
+    public static final float MOVETARGET = 6f;
+    /**
+     * How much time it takes to walk a single square with speed 30 (~30mph, normal
+     * human speed).
+     *
+     * Calculation of worst case scenario (which should take 6 hours): 6 * 15/30ft
+     * (slow races) * .5 (bad terrain)
+     *
+     * @see Monster#gettopspeed()
+     * @see #MOVETARGET
+     * @see #NORMALMARCH
+     */
+    public static final float TIMECOST = NORMALMARCH * (MOVETARGET * 15f / 30f) / 2f;
+    /** TODO remove, hack */
+    private final int deltax;
+    private final int deltay;
+    /**
+     * Used when {@link WorldScreen#react(int, int)} returns <code>true</code> but
+     * we still want to stop moving.
+     */
+    public static boolean abort;
 
-	/**
-	 * Constructor
-	 *
-	 * @param keycodes
-	 *            Integer/char keys.
-	 * @param deltax
-	 *            Direction of x movement.
-	 * @param deltay
-	 *            Direction of y movement.
-	 * @param keys
-	 *            Text keys.
-	 */
-	public WorldMove(final int[] keycodes, final int deltax, final int deltay,
-			final String[] keys) {
-		super("Move (" + keys[1].charAt(0) + ")", keycodes, keys);
-		this.deltax = deltax;
-		this.deltay = deltay;
+    /**
+     * Constructor
+     *
+     * @param keycodes Integer/char keys.
+     * @param deltax   Direction of x movement.
+     * @param deltay   Direction of y movement.
+     * @param keys     Text keys.
+     */
+    public WorldMove(final int[] keycodes, final int deltax, final int deltay, final String[] keys) {
+	super("Move (" + keys[1].charAt(0) + ")", keycodes, keys);
+	this.deltax = deltax;
+	this.deltay = deltay;
+    }
+
+    @Override
+    public void perform(final WorldScreen s) {
+	final Point p = JavelinApp.context.getherolocation();
+	int x = p.x + deltax;
+	int y = p.y + deltay;
+	if (move(x, y)) {
+	    BattleScreen.active.mappanel.center(x, y, true);
 	}
+    }
 
-	@Override
-	public void perform(final WorldScreen s) {
-		final Point p = JavelinApp.context.getherolocation();
-		boolean dangerous = true;
-		for (Town t : Town.gettowns()) {
-			if (t.distanceinsteps(p.x, p.y) <= t.getdistrict().getradius()) {
-				dangerous = false;
-				break;
-			}
-		}
-		int x = p.x + deltax;
-		int y = p.y + deltay;
-		if (move(x, y, dangerous)) {
-			BattleScreen.active.mappanel.center(x, y, true);
-		}
+    /**
+     * @return <code>true</code> to continue moving, if relevant.
+     * @see BattleScreen
+     */
+    public static boolean move(int tox, int toy) {
+	if (!JavelinApp.context.validatepoint(tox, toy)) {
+	    throw new RepeatTurn();
 	}
-
-	/**
-	 * TODO needs to be rewritten from scratch using controller Contexts
-	 * instead.
-	 *
-	 * @see BattleScreen
-	 */
-	public static boolean move(int tox, int toy, boolean encounter) {
-		final WorldScreen s = (WorldScreen) BattleScreen.active;
-		if (Dungeon.active == null) {
-			Squad.active.lastterrain = Terrain.current();
-		}
-		if (!validatecoordinate(tox, toy) || Dungeon.active == null
-				&& !World.seed.map[tox][toy].enter(tox, toy)) {
-			throw new RepeatTurn();
-		}
-		float hours = Dungeon.active == null
-				? Squad.active.move(false, Terrain.current(), tox, toy) : 0;
-		try {
-			Actor actor = Dungeon.active == null ? World.get(tox, toy) : null;
-			Location l = actor instanceof Location ? (Location) actor : null;
-			try {
-				boolean indungeon = Dungeon.active != null;
-				if (JavelinApp.context.react(actor, tox, toy)) {
-					if (indungeon) {
-						if (DungeonScreen.dontenter) {
-							DungeonScreen.dontenter = false;
-						}
-						if (DungeonScreen.updatelocation) {
-							place(tox, toy);
-						} else {
-							DungeonScreen.updatelocation = true;
-						}
-						return !DungeonScreen.stopmovesequence;
-					} else if (l != null && l.allowentry && l.garrison.isEmpty()
-							&& !(l instanceof Dungeon)) {
-						place(tox, toy);
-					}
-					return true;
-				}
-				if (l != null && !l.allowentry) {
-					return false;
-				}
-			} catch (StartBattle e) {
-				if (l != null && l.allowentry) {
-					place(tox, toy);
-				}
-				throw e;
-			}
-			if (s instanceof DungeonScreen && DungeonScreen.dontenter) {
-				DungeonScreen.dontenter = false;
-				return false;// TODO hack
-			}
-			if (!place(tox, toy)) {
-				return false;
-			}
-			boolean stop = false;
-			if (WorldMove.walk(JavelinApp.context.getherolocation())) {
-				stop = JavelinApp.context.explore(hours, encounter);
-			}
-			heal();
-			return stop;
-		} finally
-
-		{
-			if (Squad.active != null) {
-				Squad.active.ellapse(Math.round(hours));
-			}
-		}
+	abort = false;
+	if (JavelinApp.context.react(tox, toy) || abort || !place(tox, toy)) {
+	    return false;
 	}
-
-	static boolean validatecoordinate(int tox, int toy) {
-		Dungeon d = Dungeon.active;
-		if (d == null) {
-			return World.validatecoordinate(tox, toy);
-		} else {
-			return new Point(tox, toy).validate(0, 0, d.size, d.size);
-		}
+	boolean stop = false;
+	if (walk(JavelinApp.context.getherolocation())) {
+	    stop = JavelinApp.context.explore(tox, toy);
 	}
+	heal();
+	return stop;
+    }
 
-	/**
-	 * @return <code>true</code> if moved current actor to the given location.
-	 */
-	public static boolean place(final int tox, final int toy) {
-		if (!JavelinApp.context.allowmove(tox, toy)
-				|| !JavelinApp.context.validatepoint(tox, toy)) {
-			return false;
-		}
-		JavelinApp.context.updatelocation(tox, toy);
-		JavelinApp.context.view(tox, toy);
-		return true;
+    /**
+     * @return <code>true</code> if moved current actor to the given location.
+     */
+    public static boolean place(final int tox, final int toy) {
+	if (!JavelinApp.context.allowmove(tox, toy) || !JavelinApp.context.validatepoint(tox, toy)) {
+	    return false;
 	}
+	JavelinApp.context.updatelocation(tox, toy);
+	JavelinApp.context.view(tox, toy);
+	return true;
+    }
 
-	static void heal() {
-		for (final Combatant c : Squad.active.members) {
-			if (c.source.fasthealing != 0) {
-				c.heal(c.maxhp, false);
-			}
-		}
+    static void heal() {
+	for (final Combatant c : Squad.active.members) {
+	    if (c.source.fasthealing != 0) {
+		c.heal(c.maxhp, false);
+	    }
 	}
+    }
 
-	static boolean walk(final Point t) {
-		if (Dungeon.active != null) {
-			return true;
-		}
-		final List<Squad> here = new ArrayList<Squad>();
-		for (final Actor p : World.getall(Squad.class)) {
-			Squad s = (Squad) p;
-			if (s.x == t.x && s.y == t.y) {
-				here.add(s);
-			}
-		}
-		if (here.size() <= 1) {
-			return true;
-		}
-		here.get(0).join(here.get(1));
-		return false;
+    static boolean walk(final Point t) {
+	if (Dungeon.active != null) {
+	    return true;
 	}
+	final List<Squad> here = new ArrayList<>();
+	for (final Actor p : World.getall(Squad.class)) {
+	    Squad s = (Squad) p;
+	    if (s.x == t.x && s.y == t.y) {
+		here.add(s);
+	    }
+	}
+	if (here.size() <= 1) {
+	    return true;
+	}
+	here.get(0).join(here.get(1));
+	return false;
+    }
 }

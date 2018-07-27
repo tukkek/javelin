@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.Javelin.Delay;
 import javelin.controller.CountingSet;
 import javelin.controller.Point;
 import javelin.controller.SpellbookGenerator;
@@ -71,1040 +70,998 @@ import javelin.view.screen.BattleScreen;
  * @author alex
  */
 public class Combatant implements Serializable, Cloneable {
-	/** TODO turn into {@link Enum}. */
-	public static final int STATUSDEAD = -2;
-	public static final int STATUSUNCONSCIOUS = -1;
-	public static final int STATUSDYING = 0;
-	public static final int STATUSINJURED = 1;
-	public static final int STATUSWOUNDED = 2;
-	public static final int STATUSHURT = 3;
-	public static final int STATUSSCRATCHED = 4;
-	public static final int STATUSUNHARMED = 5;
-	/** TODO proper dying process + healing phase at the end of combat */
-	public static final int DEADATHP = -8;
-	/** The statistics for this monster. */
-	public Monster source;
-	/**
-	 * Action points. 1 represent a full-round action, .5 a move-equivalent or
-	 * attack action and so on.
-	 */
-	public float ap = 0;
-	/**
-	 * XY coordenates. Better used as an array since this enables more
-	 * programmatic way of handling directions, like deltas.
-	 */
-	public int[] location = new int[2];
-	static private int ids = 1;
-	/** Last time {@link #refresh()} was invoked. */
-	public float lastrefresh = -Float.MAX_VALUE;
-	/** TODO implement this as a {@link Condition} instead. */
-	public float initialap;
-	/** Current hit points. */
-	public int hp;
-	/** Maxium hitpoints. */
-	public int maxhp;
-	/**
-	 * Unique identifier of unit. Several different units (with unique ids) can
-	 * share a same {@link #source} with a same id.
-	 */
-	public int id = STATUSUNCONSCIOUS;
-	/**
-	 * Which of the current melee attack sequences is being used and how far it
-	 * is in this sequence.
-	 */
-	public CurrentAttack currentmelee = new CurrentAttack();
-	/** See {@link #currentmelee}. */
-	public CurrentAttack currentranged = new CurrentAttack();
-	/** Temporary modifier to {@link Monster#ac}. */
-	public int acmodifier = 0;
-	/** List of current active {@link Condition}s on this unit. */
-	private Conditions conditions = new Conditions();
-	/** See {@link Discipline}. */
-	public Disciplines disciplines = new Disciplines();
-	/**
-	 * Canonical representation of the spells this unit has.
-	 *
-	 * @see Monster#spells
-	 * @see Monster#spellcr
-	 */
-	public Spells spells = new Spells();
-	/**
-	 * Experience points as unspent challenge rating value.
-	 *
-	 * @see #learn(float)
-	 * @see #gethumanxp()
-	 */
-	public BigDecimal xp = new BigDecimal(0);
-	/**
-	 * <code>true</code> if this unit is the result of a {@link Summon} spell.
-	 * This means it cannot summon other creatures.
-	 */
-	public boolean summoned = false;
-	/** Equipment this unit is currently wearing. */
-	public ArrayList<Artifact> equipped = new ArrayList<>(0);
-	/** See {@link MercenariesGuild} */
-	public boolean mercenary = false;
-	/** See {@link Monster#burrow}. */
-	public boolean burrowed = false;
-	/** Is a player unit that should be controlled by {@link BattleAi}. */
-	public boolean automatic = false;
-	/** Global {@link Skill} modifier. */
-	public int skillmodifier = 0;
+    /** TODO turn into {@link Enum}. */
+    public static final int STATUSDEAD = -2;
+    public static final int STATUSUNCONSCIOUS = -1;
+    public static final int STATUSDYING = 0;
+    public static final int STATUSINJURED = 1;
+    public static final int STATUSWOUNDED = 2;
+    public static final int STATUSHURT = 3;
+    public static final int STATUSSCRATCHED = 4;
+    public static final int STATUSUNHARMED = 5;
+    /** TODO proper dying process + healing phase at the end of combat */
+    public static final int DEADATHP = -8;
+    /** The statistics for this monster. */
+    public Monster source;
+    /**
+     * Action points. 1 represent a full-round action, .5 a move-equivalent or
+     * attack action and so on.
+     */
+    public float ap = 0;
+    /**
+     * XY coordenates. Better used as an array since this enables more programmatic
+     * way of handling directions, like deltas.
+     */
+    public int[] location = new int[2];
+    static private int ids = 1;
+    /** Last time {@link #refresh()} was invoked. */
+    public float lastrefresh = -Float.MAX_VALUE;
+    /** TODO implement this as a {@link Condition} instead. */
+    public float initialap;
+    /** Current hit points. */
+    public int hp;
+    /** Maxium hitpoints. */
+    public int maxhp;
+    /**
+     * Unique identifier of unit. Several different units (with unique ids) can
+     * share a same {@link #source} with a same id.
+     */
+    public int id = STATUSUNCONSCIOUS;
+    /**
+     * Which of the current melee attack sequences is being used and how far it is
+     * in this sequence.
+     */
+    public CurrentAttack currentmelee = new CurrentAttack();
+    /** See {@link #currentmelee}. */
+    public CurrentAttack currentranged = new CurrentAttack();
+    /** Temporary modifier to {@link Monster#ac}. */
+    public int acmodifier = 0;
+    /** List of current active {@link Condition}s on this unit. */
+    private Conditions conditions = new Conditions();
+    /** See {@link Discipline}. */
+    public Disciplines disciplines = new Disciplines();
+    /**
+     * Canonical representation of the spells this unit has.
+     *
+     * @see Monster#spells
+     * @see Monster#spellcr
+     */
+    public Spells spells = new Spells();
+    /**
+     * Experience points as unspent challenge rating value.
+     *
+     * @see #learn(float)
+     * @see #gethumanxp()
+     */
+    public BigDecimal xp = new BigDecimal(0);
+    /**
+     * <code>true</code> if this unit is the result of a {@link Summon} spell. This
+     * means it cannot summon other creatures.
+     */
+    public boolean summoned = false;
+    /** Equipment this unit is currently wearing. */
+    public ArrayList<Artifact> equipped = new ArrayList<>(0);
+    /** See {@link MercenariesGuild} */
+    public boolean mercenary = false;
+    /** See {@link Monster#burrow}. */
+    public boolean burrowed = false;
+    /** Is a player unit that should be controlled by {@link BattleAi}. */
+    public boolean automatic = false;
+    /** Global {@link Skill} modifier. */
+    public int skillmodifier = 0;
 
-	/**
-	 * @param generatespells
-	 *            if true will create spells for this monster based on his
-	 *            {@link Monster#spellcr}. This is essentially a temporary
-	 *            measure to allow 1.0 monster who would have spell powers to
-	 *            use the currently implemented spells TODO
-	 */
-	public Combatant(final Monster sourcep, boolean generatespells) {
-		super();
-		source = sourcep.clone();
-		newid();
-		ap = 0;
-		hp = source.hd.roll(source);
-		maxhp = hp;
-		for (Feat f : source.feats) {
-			f.update(this);
-		}
-		for (Spell s : source.spells) {
-			spells.add(s.clone());
-		}
-		if (generatespells && source.spellcr > 0) {
-			SpellbookGenerator.generate(this);
-		}
+    /**
+     * @param generatespells if true will create spells for this monster based on
+     *                       his {@link Monster#spellcr}. This is essentially a
+     *                       temporary measure to allow 1.0 monster who would have
+     *                       spell powers to use the currently implemented spells
+     *                       TODO
+     */
+    public Combatant(final Monster sourcep, boolean generatespells) {
+	super();
+	source = sourcep.clone();
+	newid();
+	ap = 0;
+	hp = source.hd.roll(source);
+	maxhp = hp;
+	for (Feat f : source.feats) {
+	    f.update(this);
 	}
-
-	/**
-	 * Generates an unique identity number for this Combatant.
-	 *
-	 * @see Actor#getcombatants()
-	 */
-	public void newid() {
-		ids += 1;
-		while (checkidcollision()) {
-			ids += 1;
-		}
-		id = ids;
+	for (Spell s : source.spells) {
+	    spells.add(s.clone());
 	}
-
-	/**
-	 * TODO add WorldActor#getcombatants to do this
-	 */
-	private boolean checkidcollision() {
-		if (World.seed == null) {
-			return false;
-		}
-		for (Actor a : World.getactors()) {
-			List<Combatant> combatants = a.getcombatants();
-			if (combatants != null) {
-				for (Combatant c : combatants) {
-					if (c.id == ids) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
+	if (generatespells && source.spellcr > 0) {
+	    SpellbookGenerator.generate(this);
 	}
+    }
 
-	@Override
-	public Combatant clone() {
-		try {
-			final Combatant c = (Combatant) super.clone();
-			c.currentmelee = currentmelee.clone();
-			c.currentranged = currentranged.clone();
-			c.location = location.clone();
-			c.conditions = conditions.clone();
-			c.spells = (Spells) spells.clone();
-			c.disciplines = disciplines.clone();
-			c.xp = c.xp.add(new BigDecimal(0));
-			if (c.equipped != null) {
-				c.equipped = (ArrayList<Artifact>) c.equipped.clone();
-			}
-			return c;
-		} catch (CloneNotSupportedException e) {
-			throw new RuntimeException(e);
-		}
+    /**
+     * Generates an unique identity number for this Combatant.
+     *
+     * @see Actor#getcombatants()
+     */
+    public void newid() {
+	ids += 1;
+	while (checkidcollision()) {
+	    ids += 1;
 	}
+	id = ids;
+    }
 
-	/**
-	 * Rolls for hit and applies damage.
-	 *
-	 * @param targetCombatant
-	 *            The monster being attacked.
-	 */
-	public void meleeattacks(Combatant targetCombatant, BattleState state) {
-		Combatant current = state.clone(this);
-		targetCombatant = state.clone(targetCombatant);
-		Action.outcome(MeleeAttack.SINGLETON.attack(state, this,
-				targetCombatant,
-				current.chooseattack(current.source.melee, targetCombatant),
-				0));
+    /**
+     * TODO add WorldActor#getcombatants to do this
+     */
+    private boolean checkidcollision() {
+	if (World.seed == null) {
+	    return false;
 	}
-
-	public void rangedattacks(Combatant targetCombatant, BattleState state) {
-		Combatant current = state.clone(this);
-		targetCombatant = state.clone(targetCombatant);
-		Action.outcome(RangedAttack.SINGLETON.attack(state, this,
-				targetCombatant,
-				current.chooseattack(current.source.ranged, targetCombatant),
-				0));
-	}
-
-	public List<AttackSequence> getattacks(final boolean melee) {
-		return melee ? source.melee : source.ranged;
-	}
-
-	public boolean isally(final Combatant c, final TeamContainer tc) {
-		return getteam(tc) == c.getteam(tc);
-	}
-
-	public List<Combatant> getteam(final TeamContainer tc) {
-		final List<Combatant> redTeam = tc.getredTeam();
-		return redTeam.contains(this) ? redTeam : tc.getblueTeam();
-	}
-
-	@Override
-	public String toString() {
-		String s = source.toString();
-		return mercenary ? s + " mercenary" : s;
-	}
-
-	public boolean hasattacktype(final boolean meleeOnly) {
-		return !getattacks(meleeOnly).isEmpty();
-	}
-
-	public void checkAttackType(final boolean meleeOnly) {
-		if (!hasattacktype(meleeOnly)) {
-			Javelin.message("No " + (meleeOnly ? "mẽlée" : "ranged") + " attacks.",
-					Javelin.Delay.WAIT);
-			throw new RepeatTurn();
-		}
-	}
-
-	public void refresh() {
-		if (lastrefresh == -Float.MAX_VALUE) {
-			lastrefresh = ap;
-		} else if (ap != lastrefresh) {
-			ap -= .01;
-			final float turns = ap - lastrefresh;
-			if (source.fasthealing > 0) {
-				heal(Math.round(source.fasthealing * turns), false);
-			}
-			/*
-			 * don't clone the list here or you'll be acting on different
-			 * Conditions than the ones on this Combatant instance!
-			 */
-			for (Condition c : new ArrayList<>(conditions)) {
-				/*
-				 * this second check is needed because some conditions like
-				 * Bleeding may remove other conditions during this loop
-				 */
-				if (conditions.contains(c)) {
-					c.expireinbattle(this);
-				}
-			}
-			lastrefresh = ap;
-		}
-	}
-
-	/**
-	 * @return If the unit is being affected by the given condition type,
-	 *         returns its instance - otherwise <code>null</code>.
-	 */
-	public Condition hascondition(Class<? extends Condition> clazz) {
-		for (Condition c : conditions) {
-			if (c.getClass().equals(clazz)) {
-				return c;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Theoretically total reduction should be allowed but since we're making
-	 * all energy resistance universal and all damage reduction impenetrable
-	 * this is a measure to avoid monsters from becoming invincible.
-	 */
-	public void damage(final int damagep, BattleState s, final int reduce) {
-		if (reduce == Integer.MAX_VALUE) {
-			return;
-		}
-		int damage = damagep - reduce;
-		if (damage < 1) {
-			damage = 1;
-		}
-		final int tenth = damagep / 10;
-		if (damage < tenth) {
-			damage = tenth;
-		}
-		hp -= damage;
-		if (hp <= 0) {
-			if (mercenary) {
-				hp = Math.min(hp, DEADATHP);
-			}
-			Javelin.app.fight.die(this, s);
-		}
-	}
-
-	public CurrentAttack getcurrentattack(List<AttackSequence> attacktype) {
-		return attacktype == source.melee ? currentmelee : currentranged;
-	}
-
-	/**
-	 * % are against AC only, no bonuses included except attack bonus
-	 */
-	public CurrentAttack chooseattack(List<AttackSequence> attacktype,
-			Combatant target) {
-		CurrentAttack currentattack = getcurrentattack(attacktype);
-		if (currentattack.continueattack()) {
-			return currentattack;
-		}
-		int attackindex = 0;
-		if (attacktype.size() > 1) {
-			ArrayList<String> attacks = new ArrayList<>();
-			for (AttackSequence sequence : attacktype) {
-				attacks.add(sequence.toString(target));
-			}
-			attackindex = Javelin.choose("Start which attack sequence?",
-					attacks, false, false);
-			if (attackindex == STATUSUNCONSCIOUS) {
-				MessagePanel.active.clear();
-				throw new RepeatTurn();
-			}
-		}
-		currentattack.setcurrent(attackindex, attacktype);
-		return currentattack;
-	}
-
-	/**
-	 * @return 0 if not surprised or the corresponding AC penalty if
-	 *         flat-footed.
-	 */
-	public int surprise() {
-		if (ap > initialap) {
-			return 0;
-		}
-		final int dexbonus = Monster.getbonus(source.dexterity);
-		return dexbonus > 0 ? -dexbonus : 0;
-	}
-
-	/**
-	 * Rolls a d20, sums {@link Monster#initiative} and initializes {@link #ap}
-	 * according to the result.
-	 *
-	 * This also adds a random positive or negative value (below 1% of an action
-	 * point) to help keep the initiative order stable by preventing collisions
-	 * (such as 2 units having exactly 0 {@link #ap}). Given that AP values are
-	 * padded to the user and that normal initiative works in 5% steps and
-	 * normal actions don't usually go finer than 10% AP cost, this is entirely
-	 * harmless when it comes to game balance.
-	 *
-	 * If you want an unit to enter battle mid-way, you can set a starting value
-	 * to {@link #ap} representing the current point in time and then call this
-	 * method.
-	 */
-	public void rollinitiative() {
-		ap += 10 / 20f - (RPG.r(1, 20) + source.initiative) / 20f;
-		ap += RPG.r(-444, +444) / 100000f;
-		initialap = ap;
-		lastrefresh = -Float.MAX_VALUE;
-	}
-
-	/**
-	 * @return Same as {@link #getstatus()} but returns a constant instead.
-	 * @see #STATUSUNHARMED
-	 */
-	public int getnumericstatus() {
-		int maxhp = getmaxhp();
-		if (hp >= maxhp) {
-			return STATUSUNHARMED;
-		}
-		if (hp > 1) {
-			return Math.round(4.0f * hp / maxhp);
-		}
-		if (hp == 1) {
-			return STATUSDYING;
-		}
-		return hp > Combatant.DEADATHP ? STATUSUNCONSCIOUS : STATUSDEAD;
-	}
-
-	/**
-	 * @return {@link #maxhp}, taking into consideration {@link Monster#poison}.
-	 */
-	public int getmaxhp() {
-		return maxhp + source.poison / 2 * source.hd.count();
-	}
-
-	/**
-	 * @return String describing {@link #hp} condition.
-	 * @see #getnumericstatus()
-	 */
-	public String getstatus() {
-		switch (getnumericstatus()) {
-		case STATUSUNHARMED:
-			return "unharmed";
-		case STATUSSCRATCHED:
-			return "scratched";
-		case STATUSHURT:
-			return "hurt";
-		case STATUSWOUNDED:
-			return "wounded";
-		case STATUSINJURED:
-			return "injured";
-		case STATUSDYING:
-			return "dying";
-		case STATUSUNCONSCIOUS:
-			return "unconscious";
-		case STATUSDEAD:
-			return "killed";
-		default:
-			throw new RuntimeException(
-					"Unknown possibility: " + getnumericstatus());
-		}
-	}
-
-	/**
-	 * Not to be confused with {@link Skills#perceive(Monster, boolean)}.
-	 *
-	 * @param period
-	 *            objective period of the day
-	 * @return subjective period of the day
-	 */
-	public String perceive(String period) {
-		switch (source.vision) {
-		case 0:
-			return period;
-		case 2:
-			return Javelin.app.fight.denydarkvision ? Javelin.PERIODEVENING
-					: Javelin.PERIODNOON;
-		case 1:
-			if (period == Javelin.PERIODNIGHT) {
-				return Javelin.PERIODEVENING;
-			}
-			if (period == Javelin.PERIODEVENING) {
-				return Javelin.app.fight.denydarkvision ? Javelin.PERIODEVENING
-						: Javelin.PERIODNOON;
-			}
-		}
-		return period;
-	}
-
-	/**
-	 * Not to be confused with {@link Skills#perceive(Monster, boolean)}.
-	 *
-	 * @param period
-	 *            Objective period.
-	 * @return monster's vision in squares (5 feet)
-	 * @see #perceive(String)
-	 */
-	public int view(String period) {
-		if (source.vision == 2
-				|| source.vision == 1 && period == Javelin.PERIODEVENING) {
-			return 12;
-		}
-		if (period == Javelin.PERIODEVENING || source.vision == 1) {
-			return 8;
-		}
-		if (period == Javelin.PERIODNIGHT) {
-			return 4;
-		}
-		return Integer.MAX_VALUE;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		return id == ((Combatant) obj).id;
-	}
-
-	@Override
-	public int hashCode() {
-		return id;
-	}
-
-	public void cleave(float ap) {
-		if (source.hasfeat(GreatCleave.SINGLETON)) {
-			this.ap -= ap;
-		} else if (source.hasfeat(Cleave.SINGLETON)) {
-			this.ap -= ap / 2f;
-		}
-	}
-
-	public ArrayList<String> liststatus(final BattleState state) {
-		final ArrayList<String> statuslist = new ArrayList<>();
-		if (state.isengaged(this)) {
-			statuslist.add("engaged");
-			for (Combatant c : Fight.state.blueTeam.contains(this)
-					? Fight.state.redTeam : Fight.state.blueTeam) {
-				// TODO clone probably unnecessary?
-				if (state.isflanked(state.clone(this), state.clone(c))) {
-					statuslist.add("flanked");
-					break;
-				}
-			}
-		}
-		if (surprise() != 0) {
-			statuslist.add("flat-footed");
-		}
-		Vision v = state.haslineofsight(state.next, this);
-		if (RangedAttack.iscovered(v, this, state)) {
-			statuslist.add("covered");
-		} else if (v == Vision.BLOCKED) {
-			statuslist.add("blocked");
-		}
-		if (source.fly == 0 && state.map[location[0]][location[1]].flooded) {
-			statuslist.add("knee-deep");
-		}
-		for (Condition c : conditions) {
-			statuslist.add(c.toString().toLowerCase());
-		}
-		statuslist.sort(null);
-		return statuslist;
-	}
-
-	public boolean ispenalized(final BattleState s) {
-		if (surprise() != 0 || s.map[location[0]][location[1]].flooded
-				&& source.swim() == 0) {
+	for (Actor a : World.getactors()) {
+	    List<Combatant> combatants = a.getcombatants();
+	    if (combatants != null) {
+		for (Combatant c : combatants) {
+		    if (c.id == ids) {
 			return true;
+		    }
 		}
-		for (Condition c : conditions) {
-			if (c.effect == Effect.NEGATIVE) {
-				return true;
-			}
+	    }
+	}
+	return false;
+    }
+
+    @Override
+    public Combatant clone() {
+	try {
+	    final Combatant c = (Combatant) super.clone();
+	    c.currentmelee = currentmelee.clone();
+	    c.currentranged = currentranged.clone();
+	    c.location = location.clone();
+	    c.conditions = conditions.clone();
+	    c.spells = (Spells) spells.clone();
+	    c.disciplines = disciplines.clone();
+	    c.xp = c.xp.add(new BigDecimal(0));
+	    if (c.equipped != null) {
+		c.equipped = (ArrayList<Artifact>) c.equipped.clone();
+	    }
+	    return c;
+	} catch (CloneNotSupportedException e) {
+	    throw new RuntimeException(e);
+	}
+    }
+
+    /**
+     * Rolls for hit and applies damage.
+     *
+     * @param targetCombatant The monster being attacked.
+     */
+    public void meleeattacks(Combatant targetCombatant, BattleState state) {
+	Combatant current = state.clone(this);
+	targetCombatant = state.clone(targetCombatant);
+	Action.outcome(MeleeAttack.SINGLETON.attack(state, this, targetCombatant,
+		current.chooseattack(current.source.melee, targetCombatant), 0));
+    }
+
+    public void rangedattacks(Combatant targetCombatant, BattleState state) {
+	Combatant current = state.clone(this);
+	targetCombatant = state.clone(targetCombatant);
+	Action.outcome(RangedAttack.SINGLETON.attack(state, this, targetCombatant,
+		current.chooseattack(current.source.ranged, targetCombatant), 0));
+    }
+
+    public List<AttackSequence> getattacks(final boolean melee) {
+	return melee ? source.melee : source.ranged;
+    }
+
+    public boolean isally(final Combatant c, final TeamContainer tc) {
+	return getteam(tc) == c.getteam(tc);
+    }
+
+    public List<Combatant> getteam(final TeamContainer tc) {
+	final List<Combatant> redTeam = tc.getredTeam();
+	return redTeam.contains(this) ? redTeam : tc.getblueTeam();
+    }
+
+    @Override
+    public String toString() {
+	String s = source.toString();
+	return mercenary ? s + " mercenary" : s;
+    }
+
+    public boolean hasattacktype(final boolean meleeOnly) {
+	return !getattacks(meleeOnly).isEmpty();
+    }
+
+    public void checkAttackType(final boolean meleeOnly) {
+	if (!hasattacktype(meleeOnly)) {
+	    Javelin.message("No " + (meleeOnly ? "mẽlée" : "ranged") + " attacks.", Javelin.Delay.WAIT);
+	    throw new RepeatTurn();
+	}
+    }
+
+    public void refresh() {
+	if (lastrefresh == -Float.MAX_VALUE) {
+	    lastrefresh = ap;
+	} else if (ap != lastrefresh) {
+	    ap -= .01;
+	    final float turns = ap - lastrefresh;
+	    if (source.fasthealing > 0) {
+		heal(Math.round(source.fasthealing * turns), false);
+	    }
+	    /*
+	     * don't clone the list here or you'll be acting on different Conditions than
+	     * the ones on this Combatant instance!
+	     */
+	    for (Condition c : new ArrayList<>(conditions)) {
+		/*
+		 * this second check is needed because some conditions like Bleeding may remove
+		 * other conditions during this loop
+		 */
+		if (conditions.contains(c)) {
+		    c.expireinbattle(this);
 		}
-		return false;
+	    }
+	    lastrefresh = ap;
 	}
+    }
 
-	public boolean isbuffed() {
-		for (Condition c : conditions) {
-			if (c.effect == Effect.POSITIVE) {
-				return true;
-			}
+    /**
+     * @return If the unit is being affected by the given condition type, returns
+     *         its instance - otherwise <code>null</code>.
+     */
+    public Condition hascondition(Class<? extends Condition> clazz) {
+	for (Condition c : conditions) {
+	    if (c.getClass().equals(clazz)) {
+		return c;
+	    }
+	}
+	return null;
+    }
+
+    /**
+     * Theoretically total reduction should be allowed but since we're making all
+     * energy resistance universal and all damage reduction impenetrable this is a
+     * measure to avoid monsters from becoming invincible.
+     */
+    public void damage(final int damagep, BattleState s, final int reduce) {
+	if (reduce == Integer.MAX_VALUE) {
+	    return;
+	}
+	int damage = damagep - reduce;
+	if (damage < 1) {
+	    damage = 1;
+	}
+	final int tenth = damagep / 10;
+	if (damage < tenth) {
+	    damage = tenth;
+	}
+	hp -= damage;
+	if (hp <= 0) {
+	    if (mercenary) {
+		hp = Math.min(hp, DEADATHP);
+	    }
+	    Javelin.app.fight.die(this, s);
+	}
+    }
+
+    public CurrentAttack getcurrentattack(List<AttackSequence> attacktype) {
+	return attacktype == source.melee ? currentmelee : currentranged;
+    }
+
+    /**
+     * % are against AC only, no bonuses included except attack bonus
+     */
+    public CurrentAttack chooseattack(List<AttackSequence> attacktype, Combatant target) {
+	CurrentAttack currentattack = getcurrentattack(attacktype);
+	if (currentattack.continueattack()) {
+	    return currentattack;
+	}
+	int attackindex = 0;
+	if (attacktype.size() > 1) {
+	    ArrayList<String> attacks = new ArrayList<>();
+	    for (AttackSequence sequence : attacktype) {
+		attacks.add(sequence.toString(target));
+	    }
+	    attackindex = Javelin.choose("Start which attack sequence?", attacks, false, false);
+	    if (attackindex == STATUSUNCONSCIOUS) {
+		MessagePanel.active.clear();
+		throw new RepeatTurn();
+	    }
+	}
+	currentattack.setcurrent(attackindex, attacktype);
+	return currentattack;
+    }
+
+    /**
+     * @return 0 if not surprised or the corresponding AC penalty if flat-footed.
+     */
+    public int surprise() {
+	if (ap > initialap) {
+	    return 0;
+	}
+	final int dexbonus = Monster.getbonus(source.dexterity);
+	return dexbonus > 0 ? -dexbonus : 0;
+    }
+
+    /**
+     * Rolls a d20, sums {@link Monster#initiative} and initializes {@link #ap}
+     * according to the result.
+     *
+     * This also adds a random positive or negative value (below 1% of an action
+     * point) to help keep the initiative order stable by preventing collisions
+     * (such as 2 units having exactly 0 {@link #ap}). Given that AP values are
+     * padded to the user and that normal initiative works in 5% steps and normal
+     * actions don't usually go finer than 10% AP cost, this is entirely harmless
+     * when it comes to game balance.
+     *
+     * If you want an unit to enter battle mid-way, you can set a starting value to
+     * {@link #ap} representing the current point in time and then call this method.
+     */
+    public void rollinitiative() {
+	ap += 10 / 20f - (RPG.r(1, 20) + source.initiative) / 20f;
+	ap += RPG.r(-444, +444) / 100000f;
+	initialap = ap;
+	lastrefresh = -Float.MAX_VALUE;
+    }
+
+    /**
+     * @return Same as {@link #getstatus()} but returns a constant instead.
+     * @see #STATUSUNHARMED
+     */
+    public int getnumericstatus() {
+	int maxhp = getmaxhp();
+	if (hp >= maxhp) {
+	    return STATUSUNHARMED;
+	}
+	if (hp > 1) {
+	    return Math.round(4.0f * hp / maxhp);
+	}
+	if (hp == 1) {
+	    return STATUSDYING;
+	}
+	return hp > Combatant.DEADATHP ? STATUSUNCONSCIOUS : STATUSDEAD;
+    }
+
+    /**
+     * @return {@link #maxhp}, taking into consideration {@link Monster#poison}.
+     */
+    public int getmaxhp() {
+	return maxhp + source.poison / 2 * source.hd.count();
+    }
+
+    /**
+     * @return String describing {@link #hp} condition.
+     * @see #getnumericstatus()
+     */
+    public String getstatus() {
+	switch (getnumericstatus()) {
+	case STATUSUNHARMED:
+	    return "unharmed";
+	case STATUSSCRATCHED:
+	    return "scratched";
+	case STATUSHURT:
+	    return "hurt";
+	case STATUSWOUNDED:
+	    return "wounded";
+	case STATUSINJURED:
+	    return "injured";
+	case STATUSDYING:
+	    return "dying";
+	case STATUSUNCONSCIOUS:
+	    return "unconscious";
+	case STATUSDEAD:
+	    return "killed";
+	default:
+	    throw new RuntimeException("Unknown possibility: " + getnumericstatus());
+	}
+    }
+
+    /**
+     * Not to be confused with {@link Skills#perceive(Monster, boolean)}.
+     *
+     * @param period objective period of the day
+     * @return subjective period of the day
+     */
+    public String perceive(String period) {
+	switch (source.vision) {
+	case 0:
+	    return period;
+	case 2:
+	    return Javelin.app.fight.denydarkvision ? Javelin.PERIODEVENING : Javelin.PERIODNOON;
+	case 1:
+	    if (period == Javelin.PERIODNIGHT) {
+		return Javelin.PERIODEVENING;
+	    }
+	    if (period == Javelin.PERIODEVENING) {
+		return Javelin.app.fight.denydarkvision ? Javelin.PERIODEVENING : Javelin.PERIODNOON;
+	    }
+	}
+	return period;
+    }
+
+    /**
+     * Not to be confused with {@link Skills#perceive(Monster, boolean)}.
+     *
+     * @param period Objective period.
+     * @return monster's vision in squares (5 feet)
+     * @see #perceive(String)
+     */
+    public int view(String period) {
+	if (source.vision == 2 || source.vision == 1 && period == Javelin.PERIODEVENING) {
+	    return 12;
+	}
+	if (period == Javelin.PERIODEVENING || source.vision == 1) {
+	    return 8;
+	}
+	if (period == Javelin.PERIODNIGHT) {
+	    return 4;
+	}
+	return Integer.MAX_VALUE;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	return id == ((Combatant) obj).id;
+    }
+
+    @Override
+    public int hashCode() {
+	return id;
+    }
+
+    public void cleave(float ap) {
+	if (source.hasfeat(GreatCleave.SINGLETON)) {
+	    this.ap -= ap;
+	} else if (source.hasfeat(Cleave.SINGLETON)) {
+	    this.ap -= ap / 2f;
+	}
+    }
+
+    public ArrayList<String> liststatus(final BattleState state) {
+	final ArrayList<String> statuslist = new ArrayList<>();
+	if (state.isengaged(this)) {
+	    statuslist.add("engaged");
+	    for (Combatant c : Fight.state.blueTeam.contains(this) ? Fight.state.redTeam : Fight.state.blueTeam) {
+		// TODO clone probably unnecessary?
+		if (state.isflanked(state.clone(this), state.clone(c))) {
+		    statuslist.add("flanked");
+		    break;
 		}
-		return false;
+	    }
 	}
-
-	/**
-	 * 1/5 HD to up one {@link #getstatus()}
-	 */
-	public void meld() {
-		addcondition(new Melding(this));
+	if (surprise() != 0) {
+	    statuslist.add("flat-footed");
 	}
-
-	public void escape(BattleState s) {
-		s.flee(this);
+	Vision v = state.haslineofsight(state.next, this);
+	if (RangedAttack.iscovered(v, this, state)) {
+	    statuslist.add("covered");
+	} else if (v == Vision.BLOCKED) {
+	    statuslist.add("blocked");
 	}
-
-	/**
-	 * Validates, merge (if necessary) and if everything checks add
-	 * {@link Condition}.
-	 */
-	public void addcondition(Condition c) {
-		if (!c.validate(this)) {
-			return;
-		}
-		Condition previous = hascondition(c.getClass());
-		if (previous == null || previous.stack) {
-			c.start(this);
-			conditions.add(c);
-		} else {
-			previous.merge(this, c);
-		}
+	if (source.fly == 0 && state.map[location[0]][location[1]].flooded) {
+	    statuslist.add("knee-deep");
 	}
-
-	public void terminateconditions(int timecost) {
-		for (Condition co : new ArrayList<>(conditions)) {
-			co.terminate(timecost, this);
-			if (hp <= DEADATHP) {
-				String s = this + " dies from being " + co.description + "!";
-				Javelin.message(s, true);
-				Squad.active.remove(this);
-				return;
-			}
-		}
-		if (hp <= 0) {
-			hp = 1;
-		}
+	for (Condition c : conditions) {
+	    statuslist.add(c.toString().toLowerCase());
 	}
+	statuslist.sort(null);
+	return statuslist;
+    }
 
-	/**
-	 * @param c
-	 *            Tries to remove this exact instance from {@link #conditions}
-	 *            first. If fails, resorts to {@link List#remove(Object)}, which
-	 *            will look for an equal object.
-	 */
-	public void removecondition(Condition c) {
-		c.end(this);
-		for (int i = 0; i < conditions.size(); i++) {
-			if (c == conditions.get(i)) {
-				conditions.remove(i);
-				return;
-			}
-		}
-		conditions.remove(c);
+    public boolean ispenalized(final BattleState s) {
+	if (surprise() != 0 || s.map[location[0]][location[1]].flooded && source.swim() == 0) {
+	    return true;
 	}
-
-	public void finishconditions(BattleState s, BattleScreen screen) {
-		for (Condition co : conditions) {
-			co.finish(s);
-			screen.block();
-		}
-	}
-
-	public void transferconditions(Combatant to) {
-		for (Condition c : conditions) {
-			if (c.longterm == null) {
-				continue;
-			}
-			c.transfer(this, to);
-			if (c.longterm == 0) {
-				c.end(to);
-			} else if (!to.conditions.contains(c)) {
-				to.conditions.add(c);
-			}
-		}
-	}
-
-	/**
-	 * @return a copy of the current conditions in effect.
-	 */
-	public ArrayList<Condition> getconditions() {
-		return new ArrayList<>(conditions);
-	}
-
-	/**
-	 * @param detox
-	 *            Remove this many points of {@link #poison} damage. Note that
-	 *            this receives a modifier (1 modifier = 2 ability points).
-	 */
-	public void detox(int detox) {
-		if (detox > 0 && source.poison > 0) {
-			detox = Math.min(detox * 2, source.poison);
-			source.poison -= detox;
-			source.changeconstitutionscore(this, +detox);
-		}
-	}
-
-	/**
-	 * Internally clones {@link #source}.
-	 *
-	 * @return this instance. To allow the following syntax:
-	 *         combatant.clone().clonesource()
-	 *
-	 * @see #clone()
-	 */
-	public Combatant clonesource() {
-		source = source.clone();
-		return this;
-	}
-
-	/**
-	 * Updates {@link Monster#cr} internally.
-	 *
-	 * @param r
-	 *            Applies one {@link Upgrade} from this set to the given
-	 *            {@link Combatant}.
-	 * @return
-	 * @return <code>true</code> if an upgrade has been successfully applied.
-	 * @see Upgrade#upgrade(Combatant)
-	 */
-	public boolean upgrade(Realm r) {
-		return upgrade(UpgradeHandler.singleton.getfullupgrades(r));
-	}
-
-	public boolean upgrade(Collection<? extends Upgrade> upgrades) {
-		Upgrade upgrade = RPG.pick(new ArrayList<Upgrade>(upgrades));
-		if (!upgrade.upgrade(this)) {
-			return false;
-		}
-		postupgradeautomatic(upgrade instanceof ClassLevelUpgrade
-				? (ClassLevelUpgrade) upgrade : null);
-		ChallengeCalculator.calculatecr(source);
-		source.elite = true;
+	for (Condition c : conditions) {
+	    if (c.effect == Effect.NEGATIVE) {
 		return true;
+	    }
 	}
+	return false;
+    }
 
-	/**
-	 * @param garrison
-	 *            Upgrades the weakest member of this group.
-	 * @see #upgrade(Realm)
-	 */
-	public static void upgradeweakest(List<Combatant> garrison,
-			Collection<Upgrade> r) {
-		Combatant weakest = null;
-		for (Combatant sensei : garrison) {
-			ChallengeCalculator.calculatecr(sensei.source);
-			if (weakest == null || sensei.source.cr < weakest.source.cr) {
-				weakest = sensei;
-			}
-		}
-		weakest.upgrade(r);
-	}
-
-	/**
-	 * @return All squares that are clearly visible by this unit.
-	 */
-	public HashSet<Point> calculatevision(BattleState s) {
-		final HashSet<Point> seen = new HashSet<>();
-		final String perception = perceive(s.period);
-		final int range = view(s.period);
-		final boolean forcevision = perception == Javelin.PERIODNOON
-				|| perception == Javelin.PERIODMORNING;
-		final Point here = new Point(location[0], location[1]);
-		Square[][] map = Javelin.app.fight.map.map;
-		for (int x = Math.max(0, here.x - range); x <= here.x + range
-				&& x < map.length; x++) {
-			for (int y = Math.max(0, here.y - range); y <= here.y + range
-					&& y < map[0].length; y++) {
-				if (forcevision || s.haslineofsight(here, new Point(x, y),
-						range, perception) != Vision.BLOCKED) {
-					seen.add(new Point(x, y));
-				}
-			}
-		}
-		return seen;
-	}
-
-	/**
-	 * TODO at some point update with reach attacks
-	 *
-	 * @return <code>true</code> if can reach the target with a mêlée attack.
-	 * @see Monster#melee
-	 */
-	public boolean isadjacent(Combatant target) {
-		return Math.abs(location[0] - target.location[0]) <= 1
-				&& Math.abs(location[1] - target.location[1]) <= 1;
-	}
-
-	/**
-	 * @return XP in human readeable format (ex: 150XP).
-	 */
-	public String gethumanxp() {
-		return xp.multiply(new BigDecimal(100)).setScale(0,
-				RoundingMode.HALF_UP) + "XP";
-	}
-
-	/**
-	 * Locates an enemy by sound during battle.
-	 *
-	 * @see Skills#perceive(Monster, boolean)
-	 */
-	public void detect() {
-		if (Fight.state.redTeam.contains(this)) {
-			return;
-		}
-		int listen = perceive(true, true, true);
-		for (Combatant c : Fight.state.redTeam) {
-			if (listen >= c.taketen(Skill.STEALTH)
-					+ (Walker.distance(this, c) - 1)) {
-				BattleScreen.active.mappanel.tiles[c.location[0]][c.location[1]].discovered = true;
-			}
-		}
-	}
-
-	public void setlocation(Point p) {
-		location[0] = p.x;
-		location[1] = p.y;
-	}
-
-	public String wastespells(float resourcesused) {
-		String cast = "";
-		for (Spell s : spells) {
-			int ncast = 0;
-			for (int i = s.used; i < s.perday; i++) {
-				if (RPG.random() < resourcesused) {
-					s.used += 1;
-					ncast += 1;
-				}
-			}
-			if (ncast > 0) {
-				cast += s.name + " (" + ncast + "x), ";
-			}
-		}
-		if (!cast.isEmpty()) {
-			cast = " Cast: " + cast.substring(0, cast.length() - 2) + ".";
-		}
-		return cast;
-	}
-
-	public void unequip(Item i) {
-		if (equipped.remove(i)) {
-			((Artifact) i).remove(this);
-		}
-	}
-
-	public boolean equip(Artifact a) {
-		return a.equip(this);
-	}
-
-	public static void upgradeweakest(List<Combatant> garrison, Realm random) {
-		upgradeweakest(garrison, random.getupgrades(UpgradeHandler.singleton));
-	}
-
-	/**
-	 * @param ismercenary
-	 *            Sets {@link #mercenary} and {@link #automatic} to this value.
-	 */
-	public void setmercenary(boolean ismercenary) {
-		mercenary = ismercenary;
-		automatic = ismercenary;
-	}
-
-	/**
-	 * @param xpgained
-	 *            Adds this amount to {@link #xp}.
-	 */
-	public void learn(double xpgained) {
-		if (!mercenary) {
-			xp = xp.add(new BigDecimal(xpgained));
-		}
-	}
-
-	public void ready(Maneuver m) {
-		ap += ActionCost.FULL;
-		m.spent = false;
-	}
-
-	/**
-	 * Adds this {@link Discipline}'s {@link Maneuver} to the given
-	 * {@link Combatant}.
-	 *
-	 * @param d
-	 *            TODO
-	 * @param m
-	 *            TODO
-	 * @param disciplines
-	 *            TODO
-	 * @return <code>false</code> if {@link Maneuver#validate(Combatant)} fails
-	 *         or <code>true</code> otherwise.
-	 */
-	public boolean addmaneuver(Discipline d, Maneuver m) {
-		if (!m.validate(this)) {
-			return false;
-		}
-		disciplines.add(d, m.clone());
+    public boolean isbuffed() {
+	for (Condition c : conditions) {
+	    if (c.effect == Effect.POSITIVE) {
 		return true;
+	    }
 	}
+	return false;
+    }
 
-	public String printstatus(BattleState s) {
-		final ArrayList<String> statuslist = liststatus(s);
-		if (statuslist.isEmpty()) {
-			return "";
-		}
-		String description = "";
-		CountingSet cs = new CountingSet();
-		for (String c : statuslist) {
-			cs.add(c);
-		}
-		for (String c : cs.getelements()) {
-			int n = cs.getcount(c);
-			String amount = n == 1 ? "" : " (x" + n + ")";
-			description += c + amount + ", ";
-		}
-		return description.substring(0, description.length() - 2) + "";
-	}
+    /**
+     * 1/5 HD to up one {@link #getstatus()}
+     */
+    public void meld() {
+	addcondition(new Melding(this));
+    }
 
-	/**
-	 * @param c
-	 *            Removes all {@link Condition} instances of this type.
-	 */
-	public void clearcondition(Class<? extends Condition> c) {
-		for (Condition co = hascondition(c); co != null; co = hascondition(c)) {
-			removecondition(co);
-		}
-	}
+    public void escape(BattleState s) {
+	s.flee(this);
+    }
 
-	public void heal(int amount, boolean magical) {
-		hp += amount;
-		if (hp > maxhp) {
-			hp = maxhp;
-		}
-		if (magical) {
-			clearcondition(Bleeding.class);
-		}
+    /**
+     * Validates, merge (if necessary) and if everything checks add
+     * {@link Condition}.
+     */
+    public void addcondition(Condition c) {
+	if (!c.validate(this)) {
+	    return;
 	}
+	Condition previous = hascondition(c.getClass());
+	if (previous == null || previous.stack) {
+	    c.start(this);
+	    conditions.add(c);
+	} else {
+	    previous.merge(this, c);
+	}
+    }
 
-	/**
-	 * Simpler version of {@link #damage(int, BattleState, int)}. Just takes the
-	 * given amount from {@link #hp} while making sure it stays positive.
-	 */
-	public void damage(int damage) {
-		hp -= damage;
-		if (hp < 1) {
-			hp = 1;
-		}
+    public void terminateconditions(int timecost) {
+	for (Condition co : new ArrayList<>(conditions)) {
+	    co.terminate(timecost, this);
+	    if (hp <= DEADATHP) {
+		String s = this + " dies from being " + co.description + "!";
+		Javelin.message(s, true);
+		Squad.active.remove(this);
+		return;
+	    }
 	}
+	if (hp <= 0) {
+	    hp = 1;
+	}
+    }
 
-	/**
-	 * Some {@link Upgrade}s need further interaction from a human after they
-	 * are applied. This method deals with all of these cleanups.
-	 *
-	 * @see #postupgradeautomatic(boolean, Upgrade)
-	 */
-	public void postupgrade(ClassLevelUpgrade classlevel) {
-		for (Feat f : source.feats) {
-			f.postupgrade(this);
-		}
+    /**
+     * @param c Tries to remove this exact instance from {@link #conditions} first.
+     *          If fails, resorts to {@link List#remove(Object)}, which will look
+     *          for an equal object.
+     */
+    public void removecondition(Condition c) {
+	c.end(this);
+	for (int i = 0; i < conditions.size(); i++) {
+	    if (c == conditions.get(i)) {
+		conditions.remove(i);
+		return;
+	    }
 	}
+	conditions.remove(c);
+    }
 
-	/**
-	 * Like {@link #postupgrade(boolean, Upgrade)} but this handles all of these
-	 * scenarios automatically - either because the player might not care enoug
-	 * to hand-pick the the outcome or because we are upgrading an NPC like with
-	 * {@link #upgrade(Collection)}.
-	 */
-	public void postupgradeautomatic(ClassLevelUpgrade upgrade) {
-		for (Feat f : source.feats) {
-			f.postupgradeautomatic(this);
-		}
+    public void finishconditions(BattleState s, BattleScreen screen) {
+	for (Condition co : conditions) {
+	    co.finish(s);
+	    screen.block();
 	}
+    }
 
-	/**
-	 * Passive {@link Monster}s don't rely on BattleAi, and use this instead.
-	 *
-	 * @see Monster#passive.
-	 *
-	 * @return Outcomes.
-	 */
-	public void act(BattleState s) {
-		// do nothing by default
+    public void transferconditions(Combatant to) {
+	for (Condition c : conditions) {
+	    if (c.longterm == null) {
+		continue;
+	    }
+	    c.transfer(this, to);
+	    if (c.longterm == 0) {
+		c.end(to);
+	    } else if (!to.conditions.contains(c)) {
+		to.conditions.add(c);
+	    }
 	}
+    }
 
-	public Point getlocation() {
-		return new Point(location[0], location[1]);
-	}
+    /**
+     * @return a copy of the current conditions in effect.
+     */
+    public ArrayList<Condition> getconditions() {
+	return new ArrayList<>(conditions);
+    }
 
-	public BattleMouseAction getmouseaction() {
-		return null;
+    /**
+     * @param detox Remove this many points of {@link #poison} damage. Note that
+     *              this receives a modifier (1 modifier = 2 ability points).
+     */
+    public void detox(int detox) {
+	if (detox > 0 && source.poison > 0) {
+	    detox = Math.min(detox * 2, source.poison);
+	    source.poison -= detox;
+	    source.changeconstitutionscore(this, +detox);
 	}
+    }
 
-	public static String group(List<?> foes) {
-		CountingSet count = new CountingSet();
-		count.casesensitive = true;
-		for (Object c : foes) {
-			count.add(c.toString());
-		}
-		String text = "";
-		for (String c : count.getorderedelements()) {
-			text += c;
-			int n = count.getcount(c);
-			if (n > 1) {
-				text += " (x" + n + ")";
-			}
-			text += ", ";
-		}
-		return text.substring(0, text.length() - 2);
-	}
+    /**
+     * Internally clones {@link #source}.
+     *
+     * @return this instance. To allow the following syntax:
+     *         combatant.clone().clonesource()
+     *
+     * @see #clone()
+     */
+    public Combatant clonesource() {
+	source = source.clone();
+	return this;
+    }
 
-	/**
-	 * @param s
-	 *            If not <code>null</code>, will verify the current position and
-	 *            if {@link Square#flooded}, returns {@link Monster#swim}. If
-	 *            <code>null</code>, will never return swimming speed.
-	 * @return The highest relevant spped available (in feet).
-	 *
-	 * @see Monster#burrow
-	 * @see Monster#fly
-	 * @see Monster#walk
-	 */
-	public int gettopspeed(BattleState s) {
-		if (burrowed) {
-			return source.burrow;
-		}
-		if (source.fly != 0) {
-			return source.fly;
-		}
-		if (s != null && s.map[location[0]][location[1]].flooded
-				&& source.swim != 0) {
-			return source.swim;
-		}
-		return source.walk;
-	}
+    /**
+     * Updates {@link Monster#cr} internally.
+     *
+     * @param r Applies one {@link Upgrade} from this set to the given
+     *          {@link Combatant}.
+     * @return
+     * @return <code>true</code> if an upgrade has been successfully applied.
+     * @see Upgrade#upgrade(Combatant)
+     */
+    public boolean upgrade(Realm r) {
+	return upgrade(UpgradeHandler.singleton.getfullupgrades(r));
+    }
 
-	/**
-	 * @return Rolls a d20 and adds the given
-	 *         {@link Skill#getbonus(Combatant)}.Returns 0 if cannot use this
-	 *         skill.
-	 *
-	 * @see Skill#canuse(Combatant)
-	 * @see #taketen(Skill)
-	 */
-	public int roll(Skill s) {
-		return s.canuse(this) ? RPG.r(1, 20) + s.getbonus(this) : 0;
+    public boolean upgrade(Collection<? extends Upgrade> upgrades) {
+	Upgrade upgrade = RPG.pick(new ArrayList<Upgrade>(upgrades));
+	if (!upgrade.upgrade(this)) {
+	    return false;
 	}
+	postupgradeautomatic(upgrade instanceof ClassLevelUpgrade ? (ClassLevelUpgrade) upgrade : null);
+	ChallengeCalculator.calculatecr(source);
+	source.elite = true;
+	return true;
+    }
 
-	/**
-	 * This should be preferred to {@link #roll(Skill)} on any circumstance
-	 * where retrying is possible. We don't want players to bore/game/grind
-	 * themselves by retrying an action 20 times until they reach the best
-	 * possible result.
-	 *
-	 * @return Takes an automatic 10 on a d20 ("take 10" rule) and adds the
-	 *         given {@link Skill#getbonus(Combatant)}. Returns 0 if cannot use
-	 *         this skill.
-	 *
-	 * @see Skill#canuse(Combatant)
-	 */
-	public int taketen(Skill s) {
-		return s.canuse(this) ? 10 + s.getbonus(this) : 0;
+    /**
+     * @param garrison Upgrades the weakest member of this group.
+     * @see #upgrade(Realm)
+     */
+    public static void upgradeweakest(List<Combatant> garrison, Collection<Upgrade> r) {
+	Combatant weakest = null;
+	for (Combatant sensei : garrison) {
+	    ChallengeCalculator.calculatecr(sensei.source);
+	    if (weakest == null || sensei.source.cr < weakest.source.cr) {
+		weakest = sensei;
+	    }
 	}
+	weakest.upgrade(r);
+    }
 
-	/**
-	 * @return <code>true</code> if can decioher a {@link Spell} from a
-	 *         {@link Scroll} or {@link Wand}.
-	 */
-	public boolean decipher(Spell s) {
-		if (taketen(Skill.USEMAGICDEVICE) >= 15 + s.level) {
-			return true;
+    /**
+     * @return All squares that are clearly visible by this unit.
+     */
+    public HashSet<Point> calculatevision(BattleState s) {
+	final HashSet<Point> seen = new HashSet<>();
+	final String perception = perceive(s.period);
+	final int range = view(s.period);
+	final boolean forcevision = perception == Javelin.PERIODNOON || perception == Javelin.PERIODMORNING;
+	final Point here = new Point(location[0], location[1]);
+	Square[][] map = Javelin.app.fight.map.map;
+	for (int x = Math.max(0, here.x - range); x <= here.x + range && x < map.length; x++) {
+	    for (int y = Math.max(0, here.y - range); y <= here.y + range && y < map[0].length; y++) {
+		Point p = new Point(x, y);
+		if (forcevision || s.haslineofsight(here, p, range, perception) != Vision.BLOCKED) {
+		    seen.add(p);
+		    seen.addAll(BattleState.lineofsight);
 		}
-		if (!source.think(-2)) {
-			return false;
-		}
-		int spellcraft = Skill.SPELLCRAFT.getranks(this);
-		int ability = Math.max(source.intelligence, source.wisdom);
-		ability = Math.max(ability, source.charisma);
-		return ability + spellcraft / 2 >= 10 + s.level;
+	    }
 	}
+	return seen;
+    }
 
-	public boolean concentrate(Spell s) {
-		return Skill.CONCENTRATION.getbonus(this) >= s.casterlevel;
-	}
+    /**
+     * TODO at some point update with reach attacks
+     *
+     * @return <code>true</code> if can reach the target with a mêlée attack.
+     * @see Monster#melee
+     */
+    public boolean isadjacent(Combatant target) {
+	return Math.abs(location[0] - target.location[0]) <= 1 && Math.abs(location[1] - target.location[1]) <= 1;
+    }
 
-	/**
-	 * @param flyingbonus
-	 *            <code>true</code> if flying creatures get a bonus for seeing
-	 *            farther.
-	 * @param weatherpenalty
-	 *            <code>true</code> if {@link Weather} should influence this
-	 *            roll.
-	 * @param periodpenalty
-	 *            Penalty according to {@link Monster#vision} and
-	 *            {@link Javelin#getDayPeriod()}.
-	 * @return Total {@link Perception} roll bonus modifier as in
-	 *         {@link Perception#getbonus(Combatant)}.
-	 */
-	public int perceive(boolean flyingbonus, boolean weatherpenalty,
-			boolean periodpenalty) {
-		int p = Skill.PERCEPTION.getbonus(this);
-		if (flyingbonus && source.fly > 0) {
-			p += 2;
-		}
-		if (weatherpenalty && Weather.current != Weather.DRY) {
-			p += Weather.current == Weather.STORM ? -4 : -2;
-		}
-		if (periodpenalty) {
-			/* half because they apply only to vision, not listening */
-			p += source.see() / 2;
-		}
-		return p;
-	}
+    /**
+     * @return XP in human readeable format (ex: 150XP).
+     */
+    public String gethumanxp() {
+	return xp.multiply(new BigDecimal(100)).setScale(0, RoundingMode.HALF_UP) + "XP";
+    }
 
-	/**
-	 * @return Effective armor class.
-	 */
-	public int getac() {
-		return source.ac + acmodifier;
+    /**
+     * Locates an enemy by sound during battle.
+     *
+     * @see Skills#perceive(Monster, boolean)
+     */
+    public void detect() {
+	if (Fight.state.redTeam.contains(this)) {
+	    return;
 	}
+	int listen = perceive(true, true, true);
+	for (Combatant c : Fight.state.redTeam) {
+	    if (listen >= c.taketen(Skill.STEALTH) + (Walker.distance(this, c) - 1)) {
+		BattleScreen.active.mappanel.tiles[c.location[0]][c.location[1]].discovered = true;
+	    }
+	}
+    }
+
+    public void setlocation(Point p) {
+	location[0] = p.x;
+	location[1] = p.y;
+    }
+
+    public String wastespells(float resourcesused) {
+	String cast = "";
+	for (Spell s : spells) {
+	    int ncast = 0;
+	    for (int i = s.used; i < s.perday; i++) {
+		if (RPG.random() < resourcesused) {
+		    s.used += 1;
+		    ncast += 1;
+		}
+	    }
+	    if (ncast > 0) {
+		cast += s.name + " (" + ncast + "x), ";
+	    }
+	}
+	if (!cast.isEmpty()) {
+	    cast = " Cast: " + cast.substring(0, cast.length() - 2) + ".";
+	}
+	return cast;
+    }
+
+    public void unequip(Item i) {
+	if (equipped.remove(i)) {
+	    ((Artifact) i).remove(this);
+	}
+    }
+
+    public boolean equip(Artifact a) {
+	return a.equip(this);
+    }
+
+    public static void upgradeweakest(List<Combatant> garrison, Realm random) {
+	upgradeweakest(garrison, random.getupgrades(UpgradeHandler.singleton));
+    }
+
+    /**
+     * @param ismercenary Sets {@link #mercenary} and {@link #automatic} to this
+     *                    value.
+     */
+    public void setmercenary(boolean ismercenary) {
+	mercenary = ismercenary;
+	automatic = ismercenary;
+    }
+
+    /**
+     * @param xpgained Adds this amount to {@link #xp}.
+     */
+    public void learn(double xpgained) {
+	if (!mercenary) {
+	    xp = xp.add(new BigDecimal(xpgained));
+	}
+    }
+
+    public void ready(Maneuver m) {
+	ap += ActionCost.FULL;
+	m.spent = false;
+    }
+
+    /**
+     * Adds this {@link Discipline}'s {@link Maneuver} to the given
+     * {@link Combatant}.
+     *
+     * @param d           TODO
+     * @param m           TODO
+     * @param disciplines TODO
+     * @return <code>false</code> if {@link Maneuver#validate(Combatant)} fails or
+     *         <code>true</code> otherwise.
+     */
+    public boolean addmaneuver(Discipline d, Maneuver m) {
+	if (!m.validate(this)) {
+	    return false;
+	}
+	disciplines.add(d, m.clone());
+	return true;
+    }
+
+    public String printstatus(BattleState s) {
+	final ArrayList<String> statuslist = liststatus(s);
+	if (statuslist.isEmpty()) {
+	    return "";
+	}
+	String description = "";
+	CountingSet cs = new CountingSet();
+	for (String c : statuslist) {
+	    cs.add(c);
+	}
+	for (String c : cs.getelements()) {
+	    int n = cs.getcount(c);
+	    String amount = n == 1 ? "" : " (x" + n + ")";
+	    description += c + amount + ", ";
+	}
+	return description.substring(0, description.length() - 2) + "";
+    }
+
+    /**
+     * @param c Removes all {@link Condition} instances of this type.
+     */
+    public void clearcondition(Class<? extends Condition> c) {
+	for (Condition co = hascondition(c); co != null; co = hascondition(c)) {
+	    removecondition(co);
+	}
+    }
+
+    public void heal(int amount, boolean magical) {
+	hp += amount;
+	if (hp > maxhp) {
+	    hp = maxhp;
+	}
+	if (magical) {
+	    clearcondition(Bleeding.class);
+	}
+    }
+
+    /**
+     * Simpler version of {@link #damage(int, BattleState, int)}. Just takes the
+     * given amount from {@link #hp} while making sure it stays positive.
+     */
+    public void damage(int damage) {
+	hp -= damage;
+	if (hp < 1) {
+	    hp = 1;
+	}
+    }
+
+    /**
+     * Some {@link Upgrade}s need further interaction from a human after they are
+     * applied. This method deals with all of these cleanups.
+     *
+     * @see #postupgradeautomatic(boolean, Upgrade)
+     */
+    public void postupgrade(ClassLevelUpgrade classlevel) {
+	for (Feat f : source.feats) {
+	    f.postupgrade(this);
+	}
+    }
+
+    /**
+     * Like {@link #postupgrade(boolean, Upgrade)} but this handles all of these
+     * scenarios automatically - either because the player might not care enoug to
+     * hand-pick the the outcome or because we are upgrading an NPC like with
+     * {@link #upgrade(Collection)}.
+     */
+    public void postupgradeautomatic(ClassLevelUpgrade upgrade) {
+	for (Feat f : source.feats) {
+	    f.postupgradeautomatic(this);
+	}
+    }
+
+    /**
+     * Passive {@link Monster}s don't rely on BattleAi, and use this instead.
+     *
+     * @see Monster#passive.
+     *
+     * @return Outcomes.
+     */
+    public void act(BattleState s) {
+	// do nothing by default
+    }
+
+    public Point getlocation() {
+	return new Point(location[0], location[1]);
+    }
+
+    public BattleMouseAction getmouseaction() {
+	return null;
+    }
+
+    public static String group(List<?> foes) {
+	CountingSet count = new CountingSet();
+	count.casesensitive = true;
+	for (Object c : foes) {
+	    count.add(c.toString());
+	}
+	String text = "";
+	for (String c : count.getorderedelements()) {
+	    text += c;
+	    int n = count.getcount(c);
+	    if (n > 1) {
+		text += " (x" + n + ")";
+	    }
+	    text += ", ";
+	}
+	return text.substring(0, text.length() - 2);
+    }
+
+    /**
+     * @param s If not <code>null</code>, will verify the current position and if
+     *          {@link Square#flooded}, returns {@link Monster#swim}. If
+     *          <code>null</code>, will never return swimming speed.
+     * @return The highest relevant spped available (in feet).
+     *
+     * @see Monster#burrow
+     * @see Monster#fly
+     * @see Monster#walk
+     */
+    public int gettopspeed(BattleState s) {
+	if (burrowed) {
+	    return source.burrow;
+	}
+	if (source.fly != 0) {
+	    return source.fly;
+	}
+	if (s != null && s.map[location[0]][location[1]].flooded && source.swim != 0) {
+	    return source.swim;
+	}
+	return source.walk;
+    }
+
+    /**
+     * @return Rolls a d20 and adds the given
+     *         {@link Skill#getbonus(Combatant)}.Returns 0 if cannot use this skill.
+     *
+     * @see Skill#canuse(Combatant)
+     * @see #taketen(Skill)
+     */
+    public int roll(Skill s) {
+	return s.canuse(this) ? RPG.r(1, 20) + s.getbonus(this) : 0;
+    }
+
+    /**
+     * This should be preferred to {@link #roll(Skill)} on any circumstance where
+     * retrying is possible. We don't want players to bore/game/grind themselves by
+     * retrying an action 20 times until they reach the best possible result.
+     *
+     * @return Takes an automatic 10 on a d20 ("take 10" rule) and adds the given
+     *         {@link Skill#getbonus(Combatant)}. Returns 0 if cannot use this
+     *         skill.
+     *
+     * @see Skill#canuse(Combatant)
+     */
+    public int taketen(Skill s) {
+	return s.canuse(this) ? 10 + s.getbonus(this) : 0;
+    }
+
+    /**
+     * @return <code>true</code> if can decioher a {@link Spell} from a
+     *         {@link Scroll} or {@link Wand}.
+     */
+    public boolean decipher(Spell s) {
+	if (taketen(Skill.USEMAGICDEVICE) >= 15 + s.level) {
+	    return true;
+	}
+	if (!source.think(-2)) {
+	    return false;
+	}
+	int spellcraft = Skill.SPELLCRAFT.getranks(this);
+	int ability = Math.max(source.intelligence, source.wisdom);
+	ability = Math.max(ability, source.charisma);
+	return ability + spellcraft / 2 >= 10 + s.level;
+    }
+
+    public boolean concentrate(Spell s) {
+	return Skill.CONCENTRATION.getbonus(this) >= s.casterlevel;
+    }
+
+    /**
+     * @param flyingbonus    <code>true</code> if flying creatures get a bonus for
+     *                       seeing farther.
+     * @param weatherpenalty <code>true</code> if {@link Weather} should influence
+     *                       this roll.
+     * @param periodpenalty  Penalty according to {@link Monster#vision} and
+     *                       {@link Javelin#getDayPeriod()}.
+     * @return Total {@link Perception} roll bonus modifier as in
+     *         {@link Perception#getbonus(Combatant)}.
+     */
+    public int perceive(boolean flyingbonus, boolean weatherpenalty, boolean periodpenalty) {
+	int p = Skill.PERCEPTION.getbonus(this);
+	if (flyingbonus && source.fly > 0) {
+	    p += 2;
+	}
+	if (weatherpenalty && Weather.current != Weather.DRY) {
+	    p += Weather.current == Weather.STORM ? -4 : -2;
+	}
+	if (periodpenalty) {
+	    /* half because they apply only to vision, not listening */
+	    p += source.see() / 2;
+	}
+	return p;
+    }
+
+    /**
+     * @return Effective armor class.
+     */
+    public int getac() {
+	return source.ac + acmodifier;
+    }
 }

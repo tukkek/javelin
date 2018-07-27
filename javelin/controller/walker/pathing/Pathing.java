@@ -1,10 +1,10 @@
 package javelin.controller.walker.pathing;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import javelin.controller.walker.Step;
+import javelin.controller.Point;
 import javelin.controller.walker.Walker;
 
 public interface Pathing {
-	ArrayList<Step> step(int x, int y, ArrayList<Step> steps, Walker w);
+	List<Point> step(Point from, Walker w);
 }

@@ -27,9 +27,9 @@ import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.old.Interface;
-import javelin.old.messagepanel.MessagePanel;
 import javelin.old.QuestApp;
 import javelin.old.Screen;
+import javelin.old.messagepanel.MessagePanel;
 import javelin.view.StatusPanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
@@ -149,6 +149,7 @@ public class BattleScreen extends Screen {
 	 * ensures that the rest of the map stays up to date <br>
 	 */
 	public void mainLoop() {
+		callback = null;
 		mappanel.setVisible(false);
 		Combatant hero = Fight.state.next;
 		javelin.controller.Point t = new Point(hero.location[0],
@@ -249,7 +250,8 @@ public class BattleScreen extends Screen {
 			try {
 				Action.outcome(ThreadManager.think(Fight.state), true);
 			} catch (final RuntimeException e) {
-				Javelin.message("Fatal error: " + e.getMessage(), Javelin.Delay.NONE);
+				Javelin.message("Fatal error: " + e.getMessage(),
+						Javelin.Delay.NONE);
 				messagepanel.repaint();
 				throw e;
 			}

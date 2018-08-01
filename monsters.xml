@@ -37975,6 +37975,7 @@ second. After that, will try to flank the enemy with the aid of others.</p>
   <Attacks></Attacks>
   <Damage></Damage>
   <FaceAndReach>5 ft. by 5 ft./5 ft.</FaceAndReach>
+  <SpecialQualities>Critical immunity, mind immunity, poison immunity, paralysis immunity</SpecialQualities>
   <Saves Fort="-20" Ref="-20" Will="-20">Fort -20, Ref -20, Will -20</Saves>
   <Abilities Str="1" Dex="1" Con="1" Int="0" Wis="1" Cha="1">Str 0, Dex 0, Con 0, Int 0, Wis 0, Cha 1</Abilities>
   <Skills></Skills>

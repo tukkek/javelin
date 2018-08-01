@@ -1,6 +1,7 @@
 package javelin.model.unit.abilities.spell.divination;
 
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.wish.RevealFloor;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -10,7 +11,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 
 /**
  * Reveals {@link Dungeon} map or nearby area on the WorldScreen.
- * 
+ *
  * @author alex
  */
 public class PryingEyes extends Spell {
@@ -29,11 +30,7 @@ public class PryingEyes extends Spell {
 					Outpost.VISIONRANGE);
 			return null;
 		}
-		for (int x = 0; x < Dungeon.active.visible.length; x++) {
-			for (int y = 0; y < Dungeon.active.visible[x].length; y++) {
-				Dungeon.active.setvisible(x, y);
-			}
-		}
+		RevealFloor.reveal(Dungeon.active);
 		return null;
 	}
 }

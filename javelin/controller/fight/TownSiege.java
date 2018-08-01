@@ -25,8 +25,8 @@ public class TownSiege extends Siege {
 	static final int LAYERSPERTEAM = 3;
 
 	public class TownSiegeMap extends LocationMap {
-		TreeMap<Integer, List<Point>> PLACEMENT = new TreeMap<Integer, List<Point>>();
-		int grassratio = RPG.r(3, 6);
+		TreeMap<Integer, List<Point>> PLACEMENT = new TreeMap<>();
+		int grassratio = RPG.r(2, 5);
 
 		public TownSiegeMap() {
 			super("town-hamlet");
@@ -74,13 +74,13 @@ public class TownSiege extends Siege {
 		}
 
 		void placeteam(ArrayList<Combatant> team, int layer) {
-			team = new ArrayList<Combatant>(team);
+			team = new ArrayList<>(team);
 			team.sort(CombatantByCr.SINGLETON);
 			for (int slice = LAYERSPERTEAM; slice > 0; slice--) {
 				if (team.isEmpty()) {
 					continue;
 				}
-				List<Combatant> view = new ArrayList<Combatant>(
+				List<Combatant> view = new ArrayList<>(
 						team.subList(0, team.size() / slice));
 				team.removeAll(view);
 				place(view, siegemap.PLACEMENT.get(layer));

@@ -116,6 +116,7 @@ public abstract class Wish extends Option {
 		public List<Option> getoptions() {
 			ArrayList<Option> options = new ArrayList<>();
 			options.add(new ChangeAvatar('c', this));
+			options.add(new RevealFloor('f', this));
 			options.add(new Gold('g', this));
 			options.add(new Heal('h', this));
 			options.add(new ConjureMasterKey('k', this));

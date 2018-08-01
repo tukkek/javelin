@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.Javelin.Delay;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.ai.cache.AiCache;
 import javelin.controller.fight.Fight;
@@ -137,21 +136,19 @@ public class EndBattle extends BattleEvent {
 		for (Combatant c : Fight.state.dead) {
 			if (c.hp > Combatant.DEADATHP && c.source.constitution > 0) {
 				c.hp = 1;
-				continue;
-			}
-			if (Fight.victory) {
-				if (revive(c, originalteam)) {
-					continue;
+			} else if (!Fight.victory || !revive(c, originalteam)) {
+				ArrayList<Item> bag = squad.equipment.get(c);
+				originalteam.remove(c);
+				squad.remove(c);
+				if (Fight.victory) {
+					for (Item i : bag) {
+						i.grab();
+					}
 				}
-				for (Item i : squad.equipment.get(c)) {
-					i.grab();
+				MercenariesGuild.die(c);
+				if (!c.summoned && !c.mercenary) {
+					Ressurect.dead = c;
 				}
-			}
-			originalteam.remove(c);
-			squad.remove(c);
-			MercenariesGuild.die(c);
-			if (!c.summoned && !c.mercenary) {
-				Ressurect.dead = c;
 			}
 		}
 		Fight.state.dead.clear();

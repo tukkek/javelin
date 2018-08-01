@@ -60,6 +60,9 @@ public class Door extends Feature {
 	boolean stuck = rolltable(StuckDoor.class);
 	boolean locked = rolltable(LockedDoor.class);
 	/** @see #searchdc */
+	/**
+	 * TODO use only #draw, remove
+	 */
 	boolean hidden = !Debug.bypassdoors && rolltable(HiddenDoor.class);
 
 	public Door(String avatar, int breakdcstuck, int breakdclocked,
@@ -81,7 +84,7 @@ public class Door extends Feature {
 		if (Debug.bypassdoors) {
 			return true;
 		}
-		if (hidden) {
+		if (hidden && !draw) {
 			return false;
 		}
 		Combatant unlocker = unlock();

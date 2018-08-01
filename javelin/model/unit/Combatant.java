@@ -766,9 +766,11 @@ public class Combatant implements Serializable, Cloneable {
 				&& x < map.length; x++) {
 			for (int y = Math.max(0, here.y - range); y <= here.y + range
 					&& y < map[0].length; y++) {
-				if (forcevision || s.haslineofsight(here, new Point(x, y),
-						range, perception) != Vision.BLOCKED) {
-					seen.add(new Point(x, y));
+				Point p = new Point(x, y);
+				if (forcevision || s.haslineofsight(here, p, range,
+						perception) != Vision.BLOCKED) {
+					seen.add(p);
+					seen.addAll(BattleState.lineofsight);
 				}
 			}
 		}
@@ -1124,7 +1126,8 @@ public class Combatant implements Serializable, Cloneable {
 	 * @return <code>true</code> if there is a third unit flanking the target.
 	 */
 	public boolean flank(final Combatant target, BattleState s) {
-		if (burrowed || Walker.distanceinsteps(this, target) != 1) {
+		if (burrowed
+				|| getlocation().distanceinsteps(target.getlocation()) != 1) {
 			return false;
 		}
 		List<Combatant> team = getteam(s);

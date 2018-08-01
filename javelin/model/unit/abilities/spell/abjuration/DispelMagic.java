@@ -1,6 +1,7 @@
 package javelin.model.unit.abilities.spell.abjuration;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -19,12 +20,11 @@ import javelin.model.unit.condition.Condition;
 public class DispelMagic extends Spell {
 	/** Constructor. */
 	public DispelMagic() {
-		super("Greater dispel magic", 6, ChallengeCalculator.ratespelllikeability(6),
-				Realm.MAGIC);
+		super("Greater dispel magic", 6,
+				ChallengeCalculator.ratespelllikeability(6), Realm.MAGIC);
 		isscroll = true;
 		castoutofbattle = true;
 		castinbattle = true;
-		castonallies = true;
 		isritual = true;
 	}
 
@@ -43,7 +43,7 @@ public class DispelMagic extends Spell {
 			s.remove(target);
 			return target + " goes back to its plane of existence!";
 		}
-		ArrayList<Condition> dispelled = new ArrayList<Condition>();
+		ArrayList<Condition> dispelled = new ArrayList<>();
 		for (Condition c : target.getconditions()) {
 			if (c.casterlevel != null && casterlevel > c.casterlevel) {
 				c.dispel();
@@ -73,5 +73,11 @@ public class DispelMagic extends Spell {
 	@Override
 	public String castpeacefully(Combatant caster, Combatant target) {
 		return cast(caster, target, true, null, null);
+	}
+
+	@Override
+	public void filtertargets(Combatant combatant, List<Combatant> targets,
+			BattleState s) {
+		// cast on all targets
 	}
 }

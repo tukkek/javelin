@@ -1,86 +1,71 @@
 package javelin.view.mappanel.world;
 
-import java.util.ArrayList;
+import java.awt.Color;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 import javelin.controller.Point;
 import javelin.controller.terrain.Terrain;
+import javelin.controller.walker.overlay.OverlayStep;
+import javelin.controller.walker.overlay.OverlayWalker;
 import javelin.model.unit.Squad;
-import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
-import javelin.view.mappanel.battle.overlay.BattleWalker;
 import javelin.view.screen.WorldScreen;
 
-public class WorldWalker extends BattleWalker {
-	HashSet<Point> safe = Town.getdistricts();
-	protected boolean checksafe = true;
+public class WorldWalker extends OverlayWalker {
+    public class WorldStep extends OverlayStep {
+	public float hours;
+	public boolean safe;
+	public float totalhours;
 
-	public WorldWalker(Point from, Point to) {
-		super(from, to, null, null);
+	WorldStep(Point p) {
+	    super(p);
 	}
+    }
 
-	@Override
-	protected boolean end(float totalcost, boolean engaged,
-			javelin.controller.walker.Step s) {
-		return totalcost >= 1;
-	}
+    HashSet<Point> safe = Town.getdistricts();
 
-	@Override
-	protected float getcost(boolean engaged, javelin.controller.walker.Step s) {
-		if (checksafe && safe.contains(new Point(s.x, s.y))) {
-			return 0;
-		}
-		return Squad.active.move(false, Terrain.get(s.x, s.y), s.x, s.y)
-				/ WorldScreen.HOURSPERENCOUNTER;
-	}
+    public WorldWalker(Point from, Point to) {
+	super(from, to);
+    }
 
-	@Override
-	protected boolean isengaged() {
-		return false;
+    @Override
+    protected Point step(Point p, LinkedList<Point> previous) {
+	float totalhours = previous.isEmpty() ? 0 : ((WorldStep) previous.getLast()).totalhours;
+	WorldStep step = new WorldStep(p);
+	step.hours = Squad.active.move(false, Terrain.get(p.x, p.y), p.x, p.y);
+	step.totalhours = step.hours + totalhours;
+	step.safe = safe.contains(p);
+	step.text = Math.round(step.totalhours) + "h";
+	if (step.safe) {
+	    step.color = Color.WHITE;
+	} else {
+	    step.color = step.totalhours >= WorldScreen.HOURSPERENCOUNTER / 2.0 ? Color.RED : Color.GREEN;
 	}
+	return step;
+    }
 
-	@Override
-	protected boolean validatefinal() {
-		if (WorldPanel.ACTORS.get(new Point(tox, toy)) != null) {
-			return steps.size() == 1;
-		}
-		return checkwater(tox, toy);
+    @Override
+    public boolean validate(Point step, LinkedList<Point> previous) {
+	WorldStep p = (WorldStep) step;
+	if (!checkwater(p)) {
+	    return false;
 	}
+	if (p.totalhours > WorldScreen.HOURSPERENCOUNTER) {
+	    return false;
+	}
+	if (p.equals(to)) {
+	    return WorldPanel.ACTORS.get(p) == null || previous.isEmpty();
+	}
+	return WorldPanel.ACTORS.get(p) == null && WorldScreen.current.mappanel.tiles[p.x][p.y].discovered;
+    }
 
-	@Override
-	public boolean valid(int x, int y) {
-		final Point p = new Point(x, y);
-		return WorldPanel.ACTORS.get(p) == null && checkwater(x, y)
-				&& WorldScreen.current.mappanel.tiles[x][y].discovered;
-	}
+    boolean checkwater(Point p) {
+	return !Terrain.get(p.x, p.y).equals(Terrain.WATER) || Squad.active.swim();
+    }
 
-	boolean checkwater(final int x, final int y) {
-		return !Terrain.get(x, y).equals(Terrain.WATER) || Squad.active.swim();
-	}
-
-	@Override
-	public String drawtext(float apcost) {
-		if (!World.scenario.worldencounters) {
-			return "";
-		}
-		return apcost > 1 ? "100%" : Math.round(apcost * 100) + "%";
-	}
-
-	@Override
-	public Point resetlocation() {
-		return new Point(Squad.active.x, Squad.active.y);
-	}
-
-	@Override
-	public ArrayList<javelin.controller.walker.Step> walk() {
-		ArrayList<javelin.controller.walker.Step> walk = super.walk();
-		if (checksafe) {
-			for (BattleStep s : steps) {
-				if (safe.contains(new Point(s.x, s.y))) {
-					s.safe = true;
-				}
-			}
-		}
-		return walk;
-	}
+    @Override
+    public Point resetlocation() { // TODO
+	return new Point(Squad.active.x, Squad.active.y);
+    }
 }

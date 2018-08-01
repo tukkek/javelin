@@ -6,7 +6,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javelin.Javelin;
-import javelin.Javelin.Delay;
 import javelin.controller.action.Action;
 import javelin.controller.action.CastSpell;
 import javelin.controller.action.ai.AiAction;
@@ -27,7 +26,7 @@ import javelin.model.unit.skill.Bluff;
  * @author alex
  */
 public abstract class AbstractAttack extends Action implements AiAction {
-	static final ConcurrentHashMap<Thread, Strike> CURRENTMANEUVER = new ConcurrentHashMap<Thread, Strike>();
+	static final ConcurrentHashMap<Thread, Strike> CURRENTMANEUVER = new ConcurrentHashMap<>();
 
 	/** @see Bluff#feign(Combatant) */
 	protected boolean feign = false;
@@ -61,7 +60,7 @@ public abstract class AbstractAttack extends Action implements AiAction {
 		if (m != null) {
 			m.preattacks(attacker, target, a, s);
 		}
-		final ArrayList<ChanceNode> nodes = new ArrayList<ChanceNode>();
+		final ArrayList<ChanceNode> nodes = new ArrayList<>();
 		for (final DamageChance dc : dealattack(attacker, target, a,
 				attackbonus, s)) {
 			if (dc.damage > 0) {
@@ -101,10 +100,11 @@ public abstract class AbstractAttack extends Action implements AiAction {
 		if (dc.damage == 0) {
 			sb.append("\nDamage absorbed!");
 		} else {
-			target.damage(dc.damage, s, a.energy
-					? target.source.energyresistance : target.source.dr);
+			int resistance = a.energy ? target.source.energyresistance
+					: target.source.dr;
+			target.damage(dc.damage, s, resistance);
 			if (target.source.customName == null) {
-				sb.append("\nThe ").append(target.source.name);
+				sb.append("\nThe ").append(target.source);
 			} else {
 				sb.append("\n").append(target.source.customName);
 			}
@@ -116,7 +116,8 @@ public abstract class AbstractAttack extends Action implements AiAction {
 		}
 		final Javelin.Delay delay = target.source.passive
 				&& target.getnumericstatus() > Combatant.STATUSUNCONSCIOUS
-						? Javelin.Delay.WAIT : Javelin.Delay.BLOCK;
+						? Javelin.Delay.WAIT
+						: Javelin.Delay.BLOCK;
 		return new DamageNode(s, dc.chance, sb.toString(), delay, target);
 	}
 
@@ -154,7 +155,7 @@ public abstract class AbstractAttack extends Action implements AiAction {
 		if (a.touch) {
 			bonus += target.source.armor;
 		}
-		final List<DamageChance> chances = new ArrayList<DamageChance>();
+		final List<DamageChance> chances = new ArrayList<>();
 		final float threatchance = (21 - a.threat) / 20f;
 		final float misschance = misschance(s, active, target, bonus);
 		final float hitchance = 1 - misschance;
@@ -240,7 +241,8 @@ public abstract class AbstractAttack extends Action implements AiAction {
 			final Combatant current) {
 		return current.source.swim() > 0
 				&& gameState.map[current.location[0]][current.location[1]].flooded
-						? 2 : 0;
+						? 2
+						: 0;
 	}
 
 	/**
@@ -302,16 +304,16 @@ public abstract class AbstractAttack extends Action implements AiAction {
 	List<Integer> getcurrentattack(final Combatant active) {
 		final List<AttackSequence> attacktype = getattacks(active);
 		if (attacktype.isEmpty()) {
-			return new ArrayList<Integer>(0);
+			return new ArrayList<>(0);
 		}
 		final CurrentAttack current = active.getcurrentattack(attacktype);
 		if (current.continueattack()) {
-			final ArrayList<Integer> attacks = new ArrayList<Integer>(1);
+			final ArrayList<Integer> attacks = new ArrayList<>(1);
 			attacks.add(current.sequenceindex);
 			return attacks;
 		}
 		final int nattacks = attacktype.size();
-		final ArrayList<Integer> attacks = new ArrayList<Integer>(nattacks);
+		final ArrayList<Integer> attacks = new ArrayList<>(nattacks);
 		for (int i = 0; i < nattacks; i++) {
 			attacks.add(i);
 		}

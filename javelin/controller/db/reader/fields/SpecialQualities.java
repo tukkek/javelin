@@ -10,29 +10,24 @@ import javelin.controller.quality.Quality;
  * to process them.
  */
 public class SpecialQualities extends FieldReader {
-
 	/** See {@link FieldReader#FieldReader(MonsterReader, String)}. */
-	public SpecialQualities(MonsterReader monsterReader,
-			final String fieldname) {
+	public SpecialQualities(MonsterReader monsterReader, String fieldname) {
 		super(monsterReader, fieldname);
 	}
 
 	@Override
-	public void read(final String value) {
-		// int ignored = 0;
-		String[] values = value.split(",");
-		ArrayList<String> qualities = new ArrayList<String>();
-		reading: for (final String quality : values) {
-			final String trim = quality.trim().toLowerCase();
-			for (final Quality q : Quality.qualities) {
-				if (q.apply(trim, reader.monster)) {
-					q.add(trim, reader.monster);
-					qualities.add(q.getClass().getSimpleName());
+	public void read(String value) {
+		ArrayList<Quality> qualities = new ArrayList<>(Quality.qualities);
+		reading: for (String quality : value.split(",")) {
+			quality = quality.trim().toLowerCase();
+			for (Quality q : new ArrayList<>(qualities)) {
+				if (q.apply(quality, reader.monster)) {
+					q.add(quality, reader.monster);
+					qualities.remove(q);
 					continue reading;
 				}
 			}
-			// ignored += 1;
-			reader.debugqualities.add(trim);
+			reader.unimplementedqualities.add(quality);
 		}
 	}
 }

@@ -52,7 +52,7 @@ public class MonsterReader extends DefaultHandler {
 	public static HashMap<String, PrintWriter> logs = new HashMap<String, PrintWriter>();
 
 	public ErrorHandler errorhandler = new ErrorHandler();
-	public CountingSet debugqualities = new CountingSet();
+	public CountingSet unimplementedqualities = new CountingSet();
 	public CountingSet sAtks = new CountingSet();
 	public CountingSet debugfeats = new CountingSet();
 	HashMap<Monster, String> spelldata = new HashMap<Monster, String>();
@@ -381,7 +381,7 @@ public class MonsterReader extends DefaultHandler {
 		super.endDocument();
 		debugSpecials(errorhandler.treeError, "Errors:");
 		debugSpecials(sAtks, "Special attacks:");
-		debugSpecials(debugqualities, "Special qualities:");
+		debugSpecials(unimplementedqualities, "Special qualities:");
 		debugSpecials(debugfeats, "Feats:");
 		postprocessspells();
 		int nMonsters = 0;

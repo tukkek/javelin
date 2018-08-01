@@ -1,12 +1,15 @@
 package javelin.model.unit.abilities.spell.enchantment.compulsion;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Ray;
-import javelin.model.unit.condition.Dominated;
+import javelin.model.unit.condition.Condition;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 /**
@@ -18,6 +21,31 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  * a lot easier.
  */
 public class DominateMonster extends Ray {
+	public class Dominated extends Condition {
+		Combatant target;
+
+		public Dominated(float expireatp, Combatant c, Integer casterlevelp) {
+			super(expireatp, c, Effect.NEGATIVE, "dominated", casterlevelp);
+			this.target = c;
+		}
+
+		@Override
+		public void start(Combatant c) {
+			/* can't access here so use #switchteams */
+		}
+
+		@Override
+		public void end(Combatant c) {
+			// see #finish
+		}
+
+		@Override
+		public void finish(BattleState s) {
+			target = s.clone(target);
+			switchteams(target, s);
+		}
+	}
+
 	/** Constructor. */
 	public DominateMonster() {
 		super("Dominate monster", 9,
@@ -36,9 +64,9 @@ public class DominateMonster extends Ray {
 		if (saved) {
 			return target + " resists!";
 		}
-		Dominated.switchteams(target, s);
-		target.addcondition(
-				new Dominated(Float.MAX_VALUE, target, casterlevel));
+		switchteams(target, s);
+		Dominated d = new Dominated(Float.MAX_VALUE, target, casterlevel);
+		target.addcondition(d);
 		return "Dominated " + target + "!";
 	}
 
@@ -47,4 +75,20 @@ public class DominateMonster extends Ray {
 		return calculatesavedc(target.source.will(), caster);
 	}
 
+	@Override
+	public void filtertargets(Combatant combatant, List<Combatant> targets,
+			BattleState s) {
+		super.filtertargets(combatant, targets, s);
+		for (Combatant c : new ArrayList<>(targets)) {
+			if (c.source.immunitytomind) {
+				targets.remove(c);
+			}
+		}
+	}
+
+	static void switchteams(Combatant target, BattleState s) {
+		ArrayList<Combatant> from = s.getteam(target);
+		from.remove(target);
+		(from == s.redTeam ? s.blueTeam : s.redTeam).add(target);
+	}
 }

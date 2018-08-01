@@ -1,11 +1,12 @@
 package javelin.controller.walker;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.walker.pathing.BranchingPath;
 import javelin.controller.walker.pathing.Pathing;
-import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 
 /**
@@ -17,61 +18,90 @@ import javelin.model.unit.Combatant;
  */
 public class Walker {
 	public static final int[] DELTAS = new int[] { 0, +1, -1 };
-	public ArrayList<Step> solution = null;
-	public final BattleState state;
-	public int fromx;
-	public int fromy;
-	public int tox;
-	public int toy;
-	public ArrayList<Step> partial = null;
-	public Pathing pathing = BranchingPath.INSTANCE;
 
-	public Walker(Point from, Point to, BattleState s) {
-		state = s;
-		fromx = from.x;
-		fromy = from.y;
-		tox = to.x;
-		toy = to.y;
-	}
+	class OptimalSteps extends ArrayList<Point> {
+		int distance = Integer.MAX_VALUE;
 
-	public Walker(Point from, Point to, Pathing p, BattleState s) {
-		this(from, to, s);
-		pathing = p;
-	}
-
-	public ArrayList<Step> walk() {
-		walk(fromx, fromy, new ArrayList<Step>());
-		return solution;
-	}
-
-	private void walk(int x, int y, ArrayList<Step> steps) {
-		if (solution != null && steps.size() >= solution.size()) {
-			return;
+		public OptimalSteps(List<Point> steps) {
+			super(steps);
 		}
-		if (x == tox && y == toy) {
-			solution = steps;
-			return;
-		}
-		if (!steps.isEmpty() && !valid(x, y)) {
-			steps.remove(steps.size() - 1);
-			partial = steps;
-			return;
-		}
-		ArrayList<Step> nextsteps = pathing.step(x, y, getsteplist(), this);
-		for (Step step : nextsteps) {
-			final ArrayList<Step> stepinto = (ArrayList<Step>) steps.clone();
-			if (step.x != tox || step.y != toy) {
-				stepinto.add(step);
+
+		@Override
+		public boolean add(Point step) {
+			if (isEmpty()) {
+				return super.add(step);
 			}
-			walk(step.x, step.y, stepinto);
+			final int d = to.distanceinsteps(step);
+			if (d > distance) {
+				return false;
+			}
+			if (d < distance) {
+				clear();
+			}
+			return super.add(step);
 		}
 	}
 
-	protected ArrayList<Step> getsteplist() {
-		return new NextMove(tox, toy);
+	public Pathing pathing = BranchingPath.INSTANCE;
+	public List<Point> solution = null;
+	public List<Point> partial = null;
+	public Point from;
+	public Point to;
+
+	protected boolean optimize = true;
+	protected boolean includetarget = false;
+	protected boolean acceptpartial = false;
+
+	public Walker(Point from, Point to) {
+		this.from = from;
+		this.to = to;
 	}
 
-	public boolean valid(int x, int y) {
+	public List<Point> walk() {
+		walk(from, new LinkedList<Point>());
+		if (solution != null) {
+			return solution;
+		}
+		return acceptpartial ? partial : null;
+	}
+
+	/**
+	 * @param x
+	 * @param y
+	 * @param walk
+	 */
+	private void walk(Point step, LinkedList<Point> walk) {
+		boolean istarget = step.equals(to);
+		if (!step.equals(from) && (!istarget || includetarget)) {
+			step = step(step, walk);
+			if (validate(step, walk)) {
+				walk.add(step);
+			} else {
+				partial = walk;
+				return;
+			}
+		}
+		if (solution != null && walk.size() >= solution.size()) {
+			return;
+		}
+		if (istarget) {
+			solution = walk;
+			return;
+		}
+		List<Point> next = pathing.step(step, this);
+		if (optimize) {
+			next = new OptimalSteps(next);
+		}
+		for (Point n : next) {
+			walk(n, (LinkedList<Point>) walk.clone());
+		}
+	}
+
+	protected Point step(Point step, LinkedList<Point> previous) {
+		return step;
+	}
+
+	public boolean validate(Point p, LinkedList<Point> previous) {
 		return true;
 	}
 
@@ -94,10 +124,5 @@ public class Walker {
 		final int deltax = Math.abs(ax - bx);
 		final int deltay = Math.abs(ay - by);
 		return Math.sqrt(deltax * deltax + deltay * deltay);
-	}
-
-	public static int distanceinsteps(Combatant a, Combatant b) {
-		return distanceinsteps(a.location[0], a.location[1], b.location[0],
-				b.location[1]);
 	}
 }

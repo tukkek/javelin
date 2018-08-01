@@ -10,11 +10,9 @@ import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.Node;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.Fight;
-import javelin.controller.walker.ClearPath;
-import javelin.controller.walker.ObstructedPath;
-import javelin.controller.walker.Step;
 import javelin.controller.walker.Walker;
-import javelin.controller.walker.pathing.DirectPath;
+import javelin.controller.walker.state.ClearPath;
+import javelin.controller.walker.state.ObstructedPath;
 import javelin.model.TeamContainer;
 import javelin.model.unit.Combatant;
 
@@ -35,13 +33,14 @@ public class BattleState implements Node, TeamContainer {
 	 * @author alex
 	 */
 	public enum Vision {
-		/** Full vision. */
-		CLEAR,
-		/** Partial vision. */
-		COVERED,
-		/** No vision */
-		BLOCKED,
+		CLEAR, COVERED, BLOCKED,
 	}
+
+	/**
+	 * Last LoS calculation. See
+	 * {@link #haslineofsight(Point, Point, int, String)}.
+	 */
+	static public List<Point> lineofsight = null;
 
 	/** Player units. */
 	public ArrayList<Combatant> blueTeam;
@@ -264,29 +263,28 @@ public class BattleState implements Node, TeamContainer {
 		if (Walker.distance(me.x, me.y, target.x, target.y) <= 1) {
 			return Vision.CLEAR;
 		}
-		final ArrayList<Step> clear = new ClearPath(me, target,
-				new DirectPath(), this).walk();
-		final ArrayList<Step> covered = periodperception == Javelin.PERIODEVENING
-				|| periodperception == Javelin.PERIODNIGHT ? null
-						: new ObstructedPath(me, target, new DirectPath(), this)
-								.walk();
+		final List<Point> clear = new ClearPath(me, target, this).walk();
+		List<Point> covered = null;
+		if (periodperception != Javelin.PERIODEVENING
+				&& periodperception != Javelin.PERIODNIGHT) {
+			covered = new ObstructedPath(me, target, this).walk();
+		}
 		if (clear == null && covered == null) {
 			return Vision.BLOCKED;
 		}
-		final ArrayList<Step> steps;
 		if (clear == null) {
-			steps = covered;
+			lineofsight = covered;
 		} else if (covered == null) {
-			steps = clear;
+			lineofsight = clear;
 		} else if (clear.size() <= covered.size()) {
-			steps = clear;
+			lineofsight = clear;
 		} else {
-			steps = covered;
+			lineofsight = covered;
 		}
-		if (steps.size() >= range) {
+		if (lineofsight.size() >= range) {
 			return Vision.BLOCKED;
 		}
-		return steps == clear ? Vision.CLEAR : Vision.COVERED;
+		return lineofsight == clear ? Vision.CLEAR : Vision.COVERED;
 	}
 
 	/**
@@ -329,6 +327,33 @@ public class BattleState implements Node, TeamContainer {
 		return haslineofsight(new Point(me.location[0], me.location[1]),
 				new Point(target.x, target.y), me.view(period),
 				me.perceive(period));
+	}
+
+	/**
+	 * @return <code>true</code> if there is another {@link Combatant} in the
+	 *         opposite side of the target (see d20 flanking rules).
+	 */
+	public boolean isflanked(final Combatant target, final Combatant attacker) {
+		if (attacker.burrowed || Walker.distance(target, attacker) >= 1.5) {
+			return false;
+		}
+		final ArrayList<Combatant> attackerteam = blueTeam.contains(attacker)
+				? blueTeam
+				: redTeam;
+		final ArrayList<Combatant> defenderteam = blueTeam.contains(target)
+				? blueTeam
+				: redTeam;
+		if (attackerteam == defenderteam) {
+			return false;
+		}
+		final int deltax = target.location[0] - attacker.location[0];
+		final int deltay = target.location[1] - attacker.location[1];
+		final int flankingx = target.location[0] + deltax;
+		final int flankingy = target.location[1] + deltay;
+		final Combatant flank = getcombatant(flankingx, flankingy);
+		return flank != null && !flank.burrowed
+				&& Walker.distance(target, flank) < 1.5
+				&& attackerteam.contains(flank);
 	}
 
 	/**

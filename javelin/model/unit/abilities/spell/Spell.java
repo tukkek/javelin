@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.action.CastSpell;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.factor.CrFactor;
 import javelin.controller.upgrade.Upgrade;
@@ -234,10 +235,10 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	 * By default is an automatic hit.
 	 *
 	 * @return Difficulty class target to be hit on a d20 roll or
-	 *         -Integer.MAX_VALUE for automatic hit.
+	 *         {@link Integer#MIN_VALUE} for automatic hit.
 	 */
 	public int hit(Combatant active, Combatant target, BattleState state) {
-		return -Integer.MAX_VALUE;
+		return Integer.MIN_VALUE;
 	}
 
 	/**
@@ -271,10 +272,10 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	 *         into the range: ]2,19] to allow the ensuing roll of 1 to always
 	 *         be an automatic miss and 20 an automatic hit.
 	 *
-	 * @see #calculatesavedc(int, Combatant)
+	 * @see #getsavetarget(int, Combatant)
 	 */
 	public int save(Combatant caster, Combatant target) {
-		return -Integer.MAX_VALUE;
+		return Integer.MIN_VALUE;
 	}
 
 	/**
@@ -340,16 +341,22 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	 *            Value for the defending unit's saving throw bonus (fortitude,
 	 *            reflexes or will).
 	 * @param caster
-	 *            Attacking spellcaster.
+	 *            Active spellcaster to save against.
 	 * @return Target number that needs to be hit on a d20 roll for the defender
 	 *         to succesfully save against this spell or
 	 *         {@link Integer#MIN_VALUE} If the monster is immune to this type
 	 *         of save.
+	 *
+	 * @see Monster#ref
+	 * @see Monster#getfortitude()
+	 * @see Monster#getwill()
 	 */
-	public int calculatesavedc(final int savingthrow, final Combatant caster) {
-		return savingthrow == Integer.MAX_VALUE ? Integer.MIN_VALUE
-				: 10 + level + Monster.getbonus(caster.source.charisma)
-						- savingthrow;
+	public int getsavetarget(final int savingthrow, final Combatant caster) {
+		if (savingthrow == Integer.MAX_VALUE) {
+			return Integer.MIN_VALUE;
+		}
+		int dc = 10 + level + Monster.getbonus(caster.source.charisma);
+		return dc - savingthrow;
 	}
 
 	/**
@@ -422,5 +429,15 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable {
 	 */
 	public boolean canheal(Combatant c) {
 		return false;
+	}
+
+	/**
+	 * @param active
+	 *            Caster.
+	 * @return The chance the target {@link Combatant} has of rolling a saving
+	 *         throw for resisting the current {@link Spell}.
+	 */
+	public float getsavechance(Combatant active, Combatant target) {
+		return CastSpell.converttochance(save(active, target));
 	}
 }

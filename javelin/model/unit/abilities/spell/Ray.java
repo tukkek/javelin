@@ -21,14 +21,14 @@ public abstract class Ray extends Spell {
 	@Override
 	public int hit(Combatant active, Combatant target, BattleState state) {
 		if (automatichit) {
-			return -Integer.MAX_VALUE;
+			return Integer.MIN_VALUE;
 		}
 		int bonus = active.source.getbab()
 				+ Monster.getbonus(active.source.dexterity);
 		int ac;
 		if (castonallies) {
 			if (Walker.distance(active, target) < 2) {
-				return -Integer.MAX_VALUE;
+				return Integer.MIN_VALUE;
 			}
 			ac = 10;
 		} else {

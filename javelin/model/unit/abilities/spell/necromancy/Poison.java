@@ -13,7 +13,7 @@ import javelin.model.unit.condition.Poisoned;
 /**
  * Deals 1d10 points of temporary Constitution damage immediately and another
  * 1d10 points of temporary Constitution damage 1 hour later.
- * 
+ *
  * @see Poisoned
  * @author alex
  */
@@ -25,7 +25,8 @@ public class Poison extends Touch {
 
 	/** Constructor. */
 	public Poison() {
-		super("Poison", 4, ChallengeCalculator.ratespelllikeability(4), Realm.EVIL);
+		super("Poison", 4, ChallengeCalculator.ratespelllikeability(4),
+				Realm.EVIL);
 		castinbattle = true;
 	}
 
@@ -36,7 +37,7 @@ public class Poison extends Touch {
 			return target + " resists!";
 		}
 		final int dc = getdc(caster);
-		float ratio = (dc - target.source.fortitude()) / new Float(dc);
+		float ratio = (dc - target.source.getfortitude()) / new Float(dc);
 		if (ratio < 0) {
 			ratio = 0;
 		} else if (ratio > 1) {
@@ -60,9 +61,9 @@ public class Poison extends Touch {
 
 	@Override
 	public int save(Combatant caster, Combatant target) {
-		int fort = target.source.fortitude();
+		int fort = target.source.getfortitude();
 		if (fort == Integer.MAX_VALUE || target.source.immunitytopoison) {
-			return -Integer.MAX_VALUE;
+			return Integer.MIN_VALUE;
 		}
 		return getdc(caster) - fort;
 	}

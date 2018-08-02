@@ -99,13 +99,13 @@ public class Monster implements Cloneable, Serializable {
 	public int charisma = -1;
 
 	/**
-	 * See {@link #fortitude()}
+	 * See {@link #getfortitude()}
 	 */
 	@Deprecated
 	public int fort;
 	public int ref;
 	/**
-	 * @deprecated See {@link #will()})
+	 * @deprecated See {@link #getwill()})
 	 */
 	@Deprecated
 	public int will;
@@ -383,7 +383,7 @@ public class Monster implements Cloneable, Serializable {
 	 * random this can only be used outside of {@link BattleAi} thinking.
 	 *
 	 * @param bonus
-	 *            {@link #fortitude()}, {@link #will()} or {@link #ref} bonus. A
+	 *            {@link #getfortitude()}, {@link #getwill()} or {@link #ref} bonus. A
 	 *            value of {@link Integer#MAX_VALUE} represents automatic
 	 *            success.
 	 * @param dc
@@ -635,7 +635,7 @@ public class Monster implements Cloneable, Serializable {
 	 * @return {@link Integer#MAX_VALUE} if immune, will saving throw bonus
 	 *         otherwise.
 	 */
-	public int will() {
+	public int getwill() {
 		return immunitytomind ? Integer.MAX_VALUE : will;
 	}
 
@@ -651,7 +651,7 @@ public class Monster implements Cloneable, Serializable {
 	/**
 	 * @param delta
 	 *            Adds this bonus to willpower saving throws, even if
-	 *            {@link #will()} returns {@link Integer#MAX_VALUE}.
+	 *            {@link #getwill()} returns {@link Integer#MAX_VALUE}.
 	 */
 	public void addwill(int delta) {
 		will += delta;
@@ -707,7 +707,7 @@ public class Monster implements Cloneable, Serializable {
 	 * @return The fortitude saving throw bonus of {@link Integer#MAX_VALUE} if
 	 *         immune.
 	 */
-	public int fortitude() {
+	public int getfortitude() {
 		return constitution == 0 ? Integer.MAX_VALUE : fort;
 	}
 

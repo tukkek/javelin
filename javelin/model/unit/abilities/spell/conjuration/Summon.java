@@ -106,7 +106,7 @@ public class Summon extends Spell {
 
 	@Override
 	public int hit(Combatant active, Combatant target, BattleState state) {
-		return -Integer.MAX_VALUE;
+		return Integer.MIN_VALUE;
 	}
 
 	@Override

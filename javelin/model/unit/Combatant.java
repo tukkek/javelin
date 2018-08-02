@@ -89,7 +89,7 @@ public class Combatant implements Serializable, Cloneable {
 	 */
 	public float ap = 0;
 	/**
-	 * XY coordenates. Better used as an array since this enables more
+	 * XY coordenates. Better used as an array since this enabl es more
 	 * programmatic way of handling directions, like deltas.
 	 */
 	public int[] location = new int[2];

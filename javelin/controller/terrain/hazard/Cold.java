@@ -16,7 +16,7 @@ public class Cold extends PartyHazard {
 	@Override
 	protected boolean save(int hoursellapsed, Combatant c) {
 		return c.hp == 1
-				|| c.source.save(c.source.fortitude(), 15 + hoursellapsed / 2);
+				|| c.source.save(c.source.getfortitude(), 15 + hoursellapsed / 2);
 	}
 
 	@Override

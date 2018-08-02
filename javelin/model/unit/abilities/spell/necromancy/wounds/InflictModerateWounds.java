@@ -49,7 +49,7 @@ public class InflictModerateWounds extends Touch {
 
 	@Override
 	public int save(final Combatant caster, final Combatant target) {
-		return calculatesavedc(target.source.will(), caster);
+		return getsavetarget(target.source.getwill(), caster);
 	}
 
 }

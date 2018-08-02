@@ -7,7 +7,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javelin.Javelin;
 import javelin.controller.action.Action;
-import javelin.controller.action.CastSpell;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
@@ -163,7 +162,7 @@ public abstract class AbstractAttack extends Action implements AiAction {
 				: threatchance * hitchance;
 		final Spell effect = target.source.passive ? null : a.geteffect();
 		final float savechance = effect == null ? 1
-				: CastSpell.savechance(active, target, effect);
+				: effect.getsavechance(active, target);
 		final float nosavechance = 1 - savechance;
 		chances.add(new DamageChance(misschance, 0, false, null));
 		hit(a, (hitchance - confirmchance) * savechance, 1, target, true,

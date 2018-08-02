@@ -9,7 +9,7 @@ import javelin.model.unit.Monster;
 /**
  * Reader and {@link Upgrade} for paralysis immunity.
  * 
- * @see Monster#will()
+ * @see Monster#getwill()
  */
 public class ParalysisImmunity extends Quality {
 	public static final float CR = 0.1f;

@@ -30,7 +30,7 @@ public abstract class Touch extends Spell {
 	@Override
 	public int hit(Combatant active, Combatant target, BattleState s) {
 		if (castonallies && active.isally(target, s)) {
-			return -Integer.MAX_VALUE;
+			return Integer.MIN_VALUE;
 		}
 		int touchac = target.getac() - target.source.armor;
 		int attackbonus = active.source.getbab()

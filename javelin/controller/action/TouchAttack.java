@@ -49,7 +49,7 @@ public class TouchAttack extends Fire implements AiAction {
 		String action = active + " uses " + attack.toString().toLowerCase()
 				+ "!\n";
 		float savechance = CastSpell
-				.convertsavedctochance(attack.savedc - active.source.ref);
+				.converttochance(attack.savedc - active.source.ref);
 		nodes.add(registerdamage(gameState, action + target + " resists, is ",
 				savechance, target, damage / 2, active));
 		nodes.add(registerdamage(gameState, action + target + " is ",

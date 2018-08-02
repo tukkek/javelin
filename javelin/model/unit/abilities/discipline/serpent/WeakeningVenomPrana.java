@@ -30,7 +30,7 @@ public class WeakeningVenomPrana extends Strike {
 	@Override
 	public void prehit(Combatant current, Combatant target, Attack a,
 			DamageChance dc, BattleState s) {
-		final int damage = save(target.source.fortitude(), 12, current)
+		final int damage = save(target.source.getfortitude(), 12, current)
 				? DAMAGE / 2 : DAMAGE;
 		target.addcondition(new StrengthDamage(damage, target));
 	}

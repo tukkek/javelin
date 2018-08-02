@@ -53,14 +53,14 @@ public class BreathWeapon implements Serializable, Cloneable {
 
 	public Integer save(final Combatant target) {
 		if (savethrow == SavingThrow.FORTITUDE) {
-			final int fortitude = target.source.fortitude();
+			final int fortitude = target.source.getfortitude();
 			return fortitude == Integer.MAX_VALUE ? null : fortitude;
 		}
 		if (savethrow == SavingThrow.REFLEXES) {
 			return target.source.ref;
 		}
 		if (savethrow == SavingThrow.WILLPOWER) {
-			final int will = target.source.will();
+			final int will = target.source.getwill();
 			return will == Integer.MAX_VALUE ? null : will;
 		}
 		if (savethrow == null) {

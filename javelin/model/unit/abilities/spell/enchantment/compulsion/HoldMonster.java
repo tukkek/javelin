@@ -24,7 +24,7 @@ public class HoldMonster extends Spell {
 		if (saved) {
 			return target + " resists.";
 		}
-		int turns = calculatesavedc(0, caster) - 10 - target.source.will();
+		int turns = getsavetarget(0, caster) - 10 - target.source.getwill();
 		if (turns > 9) {
 			turns = 9;
 		} else if (turns < 1) {
@@ -40,6 +40,6 @@ public class HoldMonster extends Spell {
 		if (target.source.immunitytoparalysis) {
 			return Integer.MIN_VALUE;
 		}
-		return calculatesavedc(target.source.will(), caster);
+		return getsavetarget(target.source.getwill(), caster);
 	}
 }

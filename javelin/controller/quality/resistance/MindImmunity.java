@@ -10,7 +10,7 @@ import javelin.model.unit.Monster;
  * This is not an official d20 SRD quality but represents the mind-effect
  * resistance many {@link Monster}s have.
  * 
- * @see Monster#will()
+ * @see Monster#getwill()
  */
 public class MindImmunity extends Quality {
 	public static final float CR = 0.5f;
@@ -22,7 +22,7 @@ public class MindImmunity extends Quality {
 
 		@Override
 		public String inform(Combatant c) {
-			return "Current will: " + c.source.will();
+			return "Current will: " + c.source.getwill();
 		}
 
 		@Override

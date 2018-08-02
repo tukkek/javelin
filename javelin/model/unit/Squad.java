@@ -463,7 +463,7 @@ public class Squad extends Actor implements Cloneable {
 		int highest = Integer.MIN_VALUE;
 		int dailyfee = 0;
 		for (Combatant foe : foes) {
-			int will = foe.source.will();
+			int will = foe.source.getwill();
 			if (RPG.r(1, 20) + will >= diplomac) {
 				return false;// no deal!
 			}

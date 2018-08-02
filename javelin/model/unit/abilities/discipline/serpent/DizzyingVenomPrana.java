@@ -17,7 +17,7 @@ public class DizzyingVenomPrana extends Strike {
 	public void prehit(Combatant active, Combatant target, Attack a,
 			DamageChance dc, BattleState s) {
 		target.ap += ActionCost.PARTIAL;
-		if (save(target.source.fortitude(), 11, active)) {
+		if (save(target.source.getfortitude(), 11, active)) {
 			target.addcondition(new WisdomDamage(2, target));
 		}
 	}

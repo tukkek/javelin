@@ -151,7 +151,7 @@ public class StartBattle extends BattleEvent {
 		}
 		if (killed) {
 			Squad.active.remove(c);
-			c.hp = -Integer.MAX_VALUE;
+			c.hp = Integer.MIN_VALUE;
 		} else {
 			if (c.hp <= 0) {
 				c.hp = 1;

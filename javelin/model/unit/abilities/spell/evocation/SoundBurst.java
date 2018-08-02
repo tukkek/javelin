@@ -39,7 +39,7 @@ public class SoundBurst extends Spell {
 			}
 			target = s.clone(c);
 			target.damage(8 / 2, s, 0);
-			if (calculatesavedc(target.source.fortitude(), caster) > 10) {
+			if (getsavetarget(target.source.getfortitude(), caster) > 10) {
 				target.addcondition(new Stunned(target, casterlevel));
 			}
 		}

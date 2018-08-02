@@ -3,6 +3,7 @@ package javelin.model.unit.abilities.spell.enchantment.compulsion;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.controller.action.Action;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
@@ -15,18 +16,21 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
 /**
  * Based on the spell Dominate Monster but trades the duration (1 day/level) to
  * a single battle and to maintain spell-level balance cuts out all the costs of
- * redirecting and commanding the enchanted target.
+ * redirecting and commanding the enchanted target. The second save (to act
+ * against your nature) at a +2 bonus is still granted though.
  *
  * It's not really a ray but we're abusing the existing logic here because it's
  * a lot easier.
  */
 public class DominateMonster extends Ray {
+	static final float CR = ChallengeCalculator.ratespelllikeability(9);
+
 	public class Dominated extends Condition {
 		Combatant target;
 
 		public Dominated(float expireatp, Combatant c, Integer casterlevelp) {
-			super(expireatp, c, Effect.NEGATIVE, "dominated", casterlevelp);
-			this.target = c;
+			super(expireatp, c, Effect.NEUTRAL, "dominated", casterlevelp);
+			target = c;
 		}
 
 		@Override
@@ -48,8 +52,7 @@ public class DominateMonster extends Ray {
 
 	/** Constructor. */
 	public DominateMonster() {
-		super("Dominate monster", 9,
-				ChallengeCalculator.ratespelllikeability(9), Realm.EVIL);
+		super("Dominate monster", 9, CR, Realm.EVIL);
 		automatichit = true;
 		apcost = 1;
 		castinbattle = true;
@@ -72,7 +75,21 @@ public class DominateMonster extends Ray {
 
 	@Override
 	public int save(final Combatant caster, final Combatant target) {
-		return calculatesavedc(target.source.will(), caster);
+		return getsavetarget(target.source.getwill(), caster);
+	}
+
+	@Override
+	public float getsavechance(Combatant caster, Combatant target) {
+		float first = super.getsavechance(caster, target);
+		if (first == 0 || first == 1) {
+			return first;
+		}
+		float second = Action.bind(first + .1f);
+		/*
+		 * chance of either passing the first or not passing the first but
+		 * passing the second:
+		 */
+		return first + second - first * second;
 	}
 
 	@Override

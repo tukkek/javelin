@@ -26,7 +26,7 @@ public class Bane extends Bless {
 		String result = "";
 		for (Combatant c : s.getcombatants()) {
 			if (!c.isally(caster, s)
-					&& calculatesavedc(c.source.will(), caster) > 10) {
+					&& getsavetarget(c.source.getwill(), caster) > 10) {
 				c.addcondition(new Baned(c));
 				result += c.toString() + ", ";
 			}

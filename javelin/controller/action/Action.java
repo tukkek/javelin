@@ -16,7 +16,7 @@ import javelin.view.screen.BattleScreen;
 
 /**
  * One of the game moves, to be used during battle.
- * 
+ *
  * @see AiAction
  * @see ActionMapping
  * @author alex
@@ -117,7 +117,7 @@ public abstract class Action implements Serializable, ActionDescription {
 				}
 			}
 		}
-		final TreeMap<Integer, Integer> results = new TreeMap<Integer, Integer>();
+		final TreeMap<Integer, Integer> results = new TreeMap<>();
 		for (final int[] combination : combinations) {
 			int sum = 0;
 			for (final int element : combination) {
@@ -127,7 +127,7 @@ public abstract class Action implements Serializable, ActionDescription {
 			results.put(sum, (ocurrences == null ? 0 : ocurrences) + 1);
 		}
 
-		final TreeMap<Integer, Float> distribution = new TreeMap<Integer, Float>();
+		final TreeMap<Integer, Float> distribution = new TreeMap<>();
 		for (final Entry<Integer, Integer> result : results.entrySet()) {
 			distribution.put(result.getKey(),
 					result.getValue() / (float) nCombinations);
@@ -192,7 +192,7 @@ public abstract class Action implements Serializable, ActionDescription {
 
 	/**
 	 * Performs an action as the human player.
-	 * 
+	 *
 	 * @param active
 	 *            Current unit.
 	 * @param m
@@ -213,6 +213,9 @@ public abstract class Action implements Serializable, ActionDescription {
 	}
 
 	/**
+	 * Emulates the fact that 1 in a d20 is always a fail and 20 is always a
+	 * success.
+	 *
 	 * @return The given chance, bound to a 5%-95% range.
 	 */
 	public static float bind(float chance) {

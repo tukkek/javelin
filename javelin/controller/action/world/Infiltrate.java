@@ -196,7 +196,7 @@ public class Infiltrate extends WorldAction {
 		if (damage >= target.hp) {
 			return true;
 		}
-		int fort = target.source.fortitude();
+		int fort = target.source.getfortitude();
 		return fort != Integer.MAX_VALUE && damage > fort;
 	}
 }

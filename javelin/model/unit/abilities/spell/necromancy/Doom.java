@@ -35,6 +35,6 @@ public class Doom extends Spell {
 
 	@Override
 	public int save(Combatant caster, Combatant target) {
-		return calculatesavedc(target.source.will(), caster);
+		return getsavetarget(target.source.getwill(), caster);
 	}
 }

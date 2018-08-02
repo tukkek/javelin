@@ -32,7 +32,7 @@ public class SickeningVenomStrike extends Strike {
 	public void prehit(Combatant current, Combatant target, Attack a,
 			DamageChance dc, BattleState s) {
 		target.addcondition(new ConstitutionDamage(2, current));
-		if (!save(target.source.fortitude(), 13, current)) {
+		if (!save(target.source.getfortitude(), 13, current)) {
 			final float expireat = current.ap + SICKENDURATION;
 			target.addcondition(new Sickened(expireat, target));
 		}

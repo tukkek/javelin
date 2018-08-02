@@ -9,7 +9,7 @@ import javelin.model.unit.abilities.spell.Spell;
 
 /**
  * Deals 1d4+1 points of force damage.
- * 
+ *
  * @author alex
  */
 public class MagicMissile extends Spell {
@@ -29,6 +29,6 @@ public class MagicMissile extends Spell {
 
 	@Override
 	public int save(Combatant caster, Combatant target) {
-		return -Integer.MAX_VALUE;
+		return Integer.MIN_VALUE;
 	}
 }

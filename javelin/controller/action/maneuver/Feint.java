@@ -53,7 +53,7 @@ public class Feint extends ExpertiseAction {
 
 	@Override
 	int getsavebonus(Combatant targetCombatant) {
-		return targetCombatant.source.will();
+		return targetCombatant.source.getwill();
 	}
 
 	@Override

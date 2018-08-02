@@ -59,7 +59,7 @@ public class StingOfTheAsp extends Strike {
 	public void prehit(Combatant active, Combatant target, Attack a,
 			DamageChance dc, BattleState s) {
 		dc.damage += EXTRADAMAGE;
-		boolean save = save(target.source.fortitude(), 12, active);
+		boolean save = save(target.source.getfortitude(), 12, active);
 		target.addcondition(new StrengthDamage(save ? 1 : 2, target));
 		if (!save || Javelin.DEBUG) {
 			target.addcondition(new AspString(active.ap + 1, target));

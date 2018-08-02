@@ -22,7 +22,7 @@ public class Dehydration extends PartyHazard {
 	@Override
 	protected boolean save(int hoursellapsed, Combatant c) {
 		return c.hp == 1
-				|| c.source.save(c.source.fortitude(), 10 + hoursellapsed / 2);
+				|| c.source.save(c.source.getfortitude(), 10 + hoursellapsed / 2);
 	}
 
 	@Override

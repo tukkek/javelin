@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.Javelin.Delay;
 import javelin.controller.CountingSet;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -162,9 +161,9 @@ public class BattlefieldFight extends Minigame {
 		float advantage = elblue + bluepoints / 2 - elred - redpoints / 2;
 		System.out.println();
 		if (advantage >= Math.abs(Difficulty.VERYEASY)) {
-			// surrender(state.redTeam);
+			surrender(state.redTeam);
 		} else if (advantage <= Difficulty.VERYEASY) {
-			// surrender(state.blueTeam);
+			surrender(state.blueTeam);
 		}
 		if (!redflagpoles.isEmpty() && elred < elblue
 				&& elred + redpoints >= elblue) {
@@ -281,7 +280,8 @@ public class BattlefieldFight extends Minigame {
 	void recruitbluearmy() {
 		MessagePanel.active.clear();
 		if (bluepoints < 1) {
-			Javelin.message("You don't have army points yet...", Javelin.Delay.WAIT);
+			Javelin.message("You don't have army points yet...",
+					Javelin.Delay.WAIT);
 			return;
 		}
 		String prompt = "You have " + Math.round(bluepoints)
@@ -293,7 +293,7 @@ public class BattlefieldFight extends Minigame {
 		state.blueTeam.addAll(units);
 		for (Combatant c : units) {
 			placeunit(c, RPG.pick(blueflagpoles));
-			c.setmercenary(units == r.footsoldiers);
+			c.setmercenary(false);
 		}
 		Javelin.app.switchScreen(BattleScreen.active);
 	}

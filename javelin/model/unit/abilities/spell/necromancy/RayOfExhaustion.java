@@ -37,6 +37,6 @@ public class RayOfExhaustion extends Ray {
 
 	@Override
 	public int save(Combatant caster, Combatant target) {
-		return calculatesavedc(target.source.fortitude(), caster);
+		return getsavetarget(target.source.getfortitude(), caster);
 	}
 }

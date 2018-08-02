@@ -39,7 +39,7 @@ public class GenerationData implements Serializable {
 	 * The starting number of instances of this feature to generate on the world
 	 * map.
 	 *
-	 * Make seed it's always at least 1 so that debug statistics won't botch.
+	 * Default seed is always at least 1 so that debug statistics won't botch.
 	 */
 	public Integer seeds = 1;
 
@@ -84,8 +84,8 @@ public class GenerationData implements Serializable {
 		this.seeds = Math.max(1, seeds);
 	}
 
-	public GenerationData(Integer object) {
-		max = object;
+	public GenerationData(Integer max) {
+		this.max = max;
 	}
 
 	/**

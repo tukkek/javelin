@@ -24,6 +24,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.Resource;
+import javelin.model.world.location.WildEvent;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.fortification.Academy;
@@ -96,6 +97,8 @@ public class FeatureGenerator implements Serializable {
 		register(Trove.class, new GenerationData(null));
 		register(Guardian.class, new GenerationData(null));
 		register(Dwelling.class, new GenerationData(null));
+
+		register(WildEvent.class, new GenerationData(2f)); // TODO
 
 		if (World.scenario.worlddistrict) {
 			register(Lodge.class, new GenerationData(.75f, 5, 1));
@@ -341,7 +344,8 @@ public class FeatureGenerator implements Serializable {
 		Terrain starton = RPG.r(1, 2) == 1 ? Terrain.PLAIN : Terrain.HILL;
 		ArrayList<Town> towns = Town.gettowns();
 		Town starting = World.scenario.easystartingtown
-				? gettown(starton, seed, towns) : RPG.pick(towns);
+				? gettown(starton, seed, towns)
+				: RPG.pick(towns);
 		if (Terrain.search(new Point(starting.x, starting.y), Terrain.WATER, 2,
 				seed) != 0) {
 			throw new RestartWorldGeneration();

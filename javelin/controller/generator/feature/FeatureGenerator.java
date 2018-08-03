@@ -3,6 +3,7 @@ package javelin.controller.generator.feature;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -149,7 +150,7 @@ public class FeatureGenerator implements Serializable {
 	 * @see Frequency#starting
 	 */
 	public void spawn(float chance, boolean generatingworld) {
-		if (World.getseed().actors.size() >= World.scenario.startingfeatures) {
+		if (count() >= World.scenario.startingfeatures) {
 			return;
 		}
 		if (!generatingworld && !World.scenario.respawnlocations) {
@@ -295,9 +296,18 @@ public class FeatureGenerator implements Serializable {
 			generators.get(feature).seed(feature);
 		}
 		int target = World.scenario.startingfeatures - Location.count();
-		while (World.getseed().actors.size() < target) {
+		while (count() < target) {
 			spawn(1, true);
 		}
+	}
+
+	int count() {
+		int count = 0;
+		Collection<ArrayList<Actor>> actors = World.getseed().actors.values();
+		for (ArrayList<Actor> instances : actors) {
+			count += instances.size();
+		}
+		return count;
 	}
 
 	static Town gettown(Terrain terrain, World seed, ArrayList<Town> towns) {

@@ -35,7 +35,6 @@ import javelin.model.world.location.town.governor.HumanGovernor;
 import javelin.model.world.location.town.governor.MonsterGovernor;
 import javelin.model.world.location.town.labor.Deck;
 import javelin.model.world.location.town.labor.Labor;
-import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.model.world.location.town.labor.basic.Growth;
 import javelin.old.RPG;
 import javelin.view.Images;
@@ -337,21 +336,21 @@ public class Town extends Location {
 	 * towns.
 	 */
 	public void populategarisson() {
+		int el;
 		if (World.scenario.statictowns) {
 			population = Scenario.getscenariochallenge();
-			int el = population;
-			Terrain t = Terrain.get(x, y);
-			while (garrison.isEmpty()) {
-				try {
-					garrison.addAll(EncounterGenerator.generate(el, t));
-				} catch (GaveUp e) {
-					el += 1;
-				}
-			}
+			el = population;
 		} else {
-			Dwelling d = (Dwelling) findnearest(Dwelling.class);
-			garrison.add(new Combatant(d.dweller.source.clone(), true));
 			replacegovernor(new MonsterGovernor(this));
+			el = RPG.r(1, 5);
+		}
+		Terrain t = Terrain.get(x, y);
+		while (garrison.isEmpty()) {
+			try {
+				garrison.addAll(EncounterGenerator.generate(el, t));
+			} catch (GaveUp e) {
+				el += 1;
+			}
 		}
 	}
 

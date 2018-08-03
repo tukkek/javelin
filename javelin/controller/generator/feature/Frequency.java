@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
+import javelin.view.screen.WorldScreen;
 
 /**
  * One of these per feature.
@@ -13,15 +14,29 @@ import javelin.model.world.World;
  * @see FeatureGenerator#spawn(float, boolean)
  * @author alex
  */
-public class GenerationData implements Serializable {
+public class Frequency implements Serializable {
+	/** {@link #absolute} (but probabilistic) value for {@link #chance}. */
+	public static final float DAILY = WorldScreen.SPAWNPERIOD;
+	/** {@link #absolute} (but probabilistic) value for {@link #chance}. */
+	public static final float WEEKLY = DAILY / 7;
+	/** {@link #absolute} (but probabilistic) value for {@link #chance}. */
+	public static final float MONTHLY = DAILY / 30;
+	/** {@link #absolute} (but probabilistic) value for {@link #chance}. */
+	public static final float SEASONALY = DAILY / 100;
+	/** {@link #absolute} (but probabilistic) value for {@link #chance}. */
+	public static final float YEARLY = DAILY / 400;
+
 	/**
 	 * When instantiated this is the relative chance of this feature being
-	 * spawned. This is later modified.
+	 * spawned. This is later modified to represent a percentage value relative
+	 * to all other non-{@link #absolute} entries.
 	 */
 	public float chance = 1;
 	/**
-	 * If <code>true</code> then {@link #chance} won't be altered by
-	 * {@link FeatureGenerator#convertchances()}.
+	 * If <code>true</code> then {@link #chance} won't be altered. That does not
+	 * make it an absolute per-day chance.
+	 *
+	 * @see FeatureGenerator#spawn(float, boolean)
 	 */
 	public boolean absolute = false;
 	/**
@@ -31,10 +46,10 @@ public class GenerationData implements Serializable {
 	 */
 	public boolean starting = true;
 	/**
-	 * If not <code>null</code> won't spawn any more of these feature if there
+	 * If not <code>null</code> won't spawn any more of these feature if their
 	 * maximum allowerd number per {@link World} has been reached already.
 	 */
-	public Integer max = 9;
+	public Integer max = null;
 	/**
 	 * The starting number of instances of this feature to generate on the world
 	 * map.
@@ -44,48 +59,31 @@ public class GenerationData implements Serializable {
 	public Integer seeds = 1;
 
 	/** Construct with default values. */
-	public GenerationData() {
-		return;
+	public Frequency() {
+		super();
 	}
 
 	/**
 	 * @param chance
 	 *            Overrides default {@link #chance} value.
 	 */
-	public GenerationData(float chance) {
+	public Frequency(float chance) {
 		this.chance = chance;
 	}
 
 	/**
-	 * @param chancep
-	 *            Overrides {@link #chance}
-	 * @param absolutep
-	 *            Overrides {@link #absolute}.
-	 * @param startingp
-	 *            Overrides {@link #starting}.
-	 */
-	public GenerationData(float chancep, boolean absolutep, boolean startingp) {
-		this(chancep);
-		absolute = absolutep;
-		starting = startingp;
-	}
-
-	/**
+	 * Constructor.
+	 *
 	 * @param chance
-	 *            Overrides {@link #chance}.
-	 * @param max
-	 *            Overrides {@link #max}.
-	 * @param seeds
-	 *            Overrides {@link #seeds}.
+	 *            See {@link #chance};
+	 * @param absolute
+	 *            See {@link #absolute}.
+	 * @param starting
 	 */
-	public GenerationData(float chance, Integer max, int seeds) {
+	public Frequency(float chance, boolean absolute, boolean starting) {
 		this(chance);
-		this.max = max;
-		this.seeds = Math.max(1, seeds);
-	}
-
-	public GenerationData(Integer max) {
-		this.max = max;
+		this.absolute = absolute;
+		this.starting = starting;
 	}
 
 	/**

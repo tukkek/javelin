@@ -7,7 +7,6 @@ import java.util.List;
 
 import javelin.Debug;
 import javelin.Javelin;
-import javelin.Javelin.Delay;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
@@ -66,7 +65,7 @@ public abstract class Location extends Actor {
 	/**
 	 * Represent a list of units positioned inside a world feature.
 	 */
-	public List<Combatant> garrison = new ArrayList<Combatant>();
+	public List<Combatant> garrison = new ArrayList<>();
 	/**
 	 * If <code>true</code>, the computer will destroy this instead of
 	 * positioning a {@link #garrison} here.
@@ -295,8 +294,7 @@ public abstract class Location extends Actor {
 			boolean showgarrison, Actor a) {
 		String description = name;
 		if (!opponents.isEmpty()) {
-			description += ". Forces: ("
-					+ Difficulty.describe(opponents)
+			description += ". Forces: (" + Difficulty.describe(opponents)
 					+ " fight)";
 			if (showgarrison) {
 				description += "\n\n" + Squad.active.spotenemies(opponents, a);
@@ -353,7 +351,7 @@ public abstract class Location extends Actor {
 	}
 
 	/**
-	 * @return Total number of places in the game {@link World}.
+	 * @return Total number of Locations in the game {@link World}.
 	 */
 	public static int count() {
 		int sum = 0;
@@ -413,7 +411,7 @@ public abstract class Location extends Actor {
 	 * @return Any upgrades this location may be improved with.
 	 */
 	public ArrayList<Labor> getupgrades(District d) {
-		return new ArrayList<Labor>(0);
+		return new ArrayList<>(0);
 	}
 
 	public void rename(String name) {

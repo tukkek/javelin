@@ -13,7 +13,7 @@ import javelin.controller.fight.RandomEncounter;
 import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.feature.FeatureGenerator;
-import javelin.controller.generator.feature.GenerationData;
+import javelin.controller.generator.feature.Frequency;
 import javelin.controller.kit.Kit;
 import javelin.controller.terrain.Desert;
 import javelin.controller.terrain.Terrain;
@@ -91,7 +91,7 @@ public class Scenario implements Serializable {
 	public boolean statictowns = true;
 	/**
 	 * If not <code>null</code>, this amount will be seeded during {@link World}
-	 * generation. It will also be the cap as per {@link GenerationData#max}.
+	 * generation. It will also be the cap as per {@link Frequency#max}.
 	 *
 	 * Number of starting dungeons in the {@link World} map. Since
 	 * {@link TempleKey}s are important to {@link Win}ning the game this should
@@ -256,7 +256,7 @@ public class Scenario implements Serializable {
 		return true;
 	}
 
-	public List<Location> generatelocations(World seed) {
+	public List<Location> generatestartinglocations(World seed) {
 		HashSet<Realm> realms = new HashSet<>(2);
 		for (Town t : Town.gettowns()) {
 			realms.add(t.originalrealm);

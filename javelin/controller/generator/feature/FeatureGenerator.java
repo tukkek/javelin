@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.exception.RestartWorldGeneration;
@@ -27,13 +28,11 @@ import javelin.model.world.location.Resource;
 import javelin.model.world.location.WildEvent;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
-import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.fortification.Guardian;
 import javelin.model.world.location.fortification.RealmAcademy;
 import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.haunt.AbandonedManor;
 import javelin.model.world.location.haunt.Graveyard;
-import javelin.model.world.location.haunt.Haunt;
 import javelin.model.world.location.haunt.OrcSettlement;
 import javelin.model.world.location.haunt.ShatteredTemple;
 import javelin.model.world.location.haunt.SunkenShip;
@@ -75,7 +74,7 @@ import javelin.old.RPG;
  * @author alex
  */
 public class FeatureGenerator implements Serializable {
-	final HashMap<Class<? extends Actor>, GenerationData> generators = new HashMap<>();
+	final HashMap<Class<? extends Actor>, Frequency> generators = new HashMap<>();
 
 	/**
 	 * The ultimate goal of this method is to try and make it so one feature
@@ -83,59 +82,52 @@ public class FeatureGenerator implements Serializable {
 	 * chance of being spawned this deals with these cases dynamically to avoid
 	 * manually-written methods from becoming too large.
 	 */
-	void init() {
-		GenerationData dungeons = new GenerationData(2f);
+	void setup() {
+		Frequency dungeons = new Frequency(2f);
 		Integer startingdungeons = World.scenario.startingdungeons;
 		if (startingdungeons != null) {
 			dungeons.seeds = startingdungeons;
 			dungeons.max = startingdungeons;
 		}
-		register(Dungeon.class, dungeons);
-		register(Outpost.class, new GenerationData(.25f, null, 0));
-		register(Resource.class, new GenerationData());
-
-		register(Trove.class, new GenerationData(null));
-		register(Guardian.class, new GenerationData(null));
-		register(Dwelling.class, new GenerationData(null));
-
-		register(WildEvent.class, new GenerationData(2f)); // TODO
-
+		generators.put(Dungeon.class, dungeons);
+		generators.put(Outpost.class, new Frequency(.25f));
+		generators.put(Resource.class, new Frequency());
+		generators.put(Trove.class, new Frequency());
+		generators.put(Guardian.class, new Frequency());
+		generators.put(Dwelling.class, new Frequency());
+		generators.put(WildEvent.class, new Frequency(2f));
 		if (World.scenario.worlddistrict) {
-			register(Lodge.class, new GenerationData(.75f, 5, 1));
-			register(Shrine.class, new GenerationData());
+			generators.put(Shrine.class, new Frequency());
+			Frequency lodge = new Frequency(.75f);
+			lodge.max = 5;
+			generators.put(Lodge.class, lodge);
 		}
-
 		if (Caravan.ALLOW) {
-			register(Caravan.class,
-					new GenerationData(1 / 4f, true, false)).seeds = 0;
+			Frequency caravan = new Frequency(Frequency.MONTHLY, true, false);
+			caravan.seeds = 0;
+			generators.put(Caravan.class, caravan);
 		}
 		convertchances();
 	}
 
 	/**
-	 * Will convert all relative (non-absolute) {@link GenerationData#chance} to
-	 * an absolute value so as to make them sum up to a 100%.
+	 * Will convert all relative (non-absolute) {@link Frequency#chance} to an
+	 * absolute value so as to make them sum up to a 100%.
 	 *
-	 * @see GenerationData#absolute
+	 * @see Frequency#absolute
 	 */
 	void convertchances() {
 		float total = 0;
-		for (GenerationData g : generators.values()) {
+		for (Frequency g : generators.values()) {
 			if (!g.absolute) {
 				total += g.chance;
 			}
 		}
-		for (GenerationData g : generators.values()) {
+		for (Frequency g : generators.values()) {
 			if (!g.absolute) {
 				g.chance = g.chance / total;
 			}
 		}
-	}
-
-	GenerationData register(Class<? extends Actor> class1,
-			GenerationData generator) {
-		generators.put(class1, generator);
-		return generator;
 	}
 
 	/**
@@ -154,15 +146,20 @@ public class FeatureGenerator implements Serializable {
 	 *            If <code>false</code> will limit spawning to only a starting
 	 *            set of actors. <code>true</code> is supposed to be used while
 	 *            the game is progressing to support the full feature set.
-	 * @see GenerationData#starting
+	 * @see Frequency#starting
 	 */
 	public void spawn(float chance, boolean generatingworld) {
-		if (countplaces() >= World.scenario.startingfeatures
-				|| !World.scenario.respawnlocations && !generatingworld) {
+		if (World.getseed().actors.size() >= World.scenario.startingfeatures) {
 			return;
 		}
-		for (Class<? extends Actor> feature : generators.keySet()) {
-			GenerationData g = generators.get(feature);
+		if (!generatingworld && !World.scenario.respawnlocations) {
+			return;
+		}
+		List<Class<? extends Actor>> features = new ArrayList<>(
+				generators.keySet());
+		Collections.shuffle(features);
+		for (Class<? extends Actor> feature : features) {
+			Frequency g = generators.get(feature);
 			if (generatingworld && !g.starting) {
 				continue;
 			}
@@ -198,20 +195,15 @@ public class FeatureGenerator implements Serializable {
 		}
 	}
 
-	void generatelocations(World w) {
+	void generatestartinglocations(World w) {
+		UpgradeHandler.singleton.gather();
 		ArrayList<Location> locations = new ArrayList<>();
 		generateuniquelocations(locations);
-		UpgradeHandler.singleton.gather();
 		if (World.scenario.worlddistrict) {
-			generatemageguilds(locations);
 			generateacademies(locations);
 		}
-		locations.addAll(World.scenario.generatelocations(w));
-		Collections.shuffle(locations);
-		int place = Math.min(locations.size(),
-				World.scenario.startingfeatures / 3 - countplaces());
-		for (int i = 0; i < place; i++) {
-			Location l = locations.get(i);
+		locations.addAll(World.scenario.generatestartinglocations(w));
+		for (Location l : locations) {
 			l.place();
 		}
 	}
@@ -221,13 +213,12 @@ public class FeatureGenerator implements Serializable {
 				new Arena(), new Battlefield(), new Ziggurat(),
 				new DeepDungeon() }));
 		if (World.scenario.worlddistrict) {
-			locations.addAll(
-					Arrays.asList(new Location[] { new MercenariesGuild(),
-							new Artificer(), new SummoningCircle(5, 15), }));
+			locations.addAll(List.of(new MercenariesGuild(), new Artificer(),
+					new SummoningCircle(5, 15)));
 		}
-		locations.addAll(Arrays.asList(new Haunt[] { new AbandonedManor(),
-				new SunkenShip(), new ShatteredTemple(), new WitchesHideout(),
-				new Graveyard(), new OrcSettlement() }));
+		locations.addAll(List.of(new AbandonedManor(), new SunkenShip(),
+				new ShatteredTemple(), new WitchesHideout(), new Graveyard(),
+				new OrcSettlement()));
 	}
 
 	void generatestartingarea(World seed, Town t) {
@@ -252,35 +243,19 @@ public class FeatureGenerator implements Serializable {
 	}
 
 	void generateacademies(ArrayList<Location> locations) {
+		for (MageGuildData g : MagesGuild.GUILDS) {
+			locations.add(g.generate());
+		}
 		for (MartialAcademyData g : MartialAcademy.ACADEMIES) {
 			locations.add(g.generate());
 		}
-		locations.addAll(Arrays.asList(new Academy[] { new ArcheryRange(),
-				new MeadHall(), new AssassinsGuild(), new Henge(),
-				new BardsGuild(), new ThievesGuild(), new Monastery(),
-				new Sanctuary() }));
+		locations.addAll(List.of(new ArcheryRange(), new MeadHall(),
+				new AssassinsGuild(), new Henge(), new BardsGuild(),
+				new ThievesGuild(), new Monastery(), new Sanctuary()));
 		for (Discipline d : Discipline.DISCIPLINES) {
 			if (d.hasacademy) {
 				locations.add(d.generateacademy());
 			}
-		}
-	}
-
-	int countplaces() {
-		int count = 0;
-		for (ArrayList<Actor> instances : World.getseed().actors.values()) {
-			if (instances.isEmpty()
-					|| !(instances.get(0) instanceof Location)) {
-				continue;
-			}
-			count += instances.size();
-		}
-		return count;
-	}
-
-	void generatemageguilds(ArrayList<Location> locations) {
-		for (MageGuildData g : MagesGuild.GUILDS) {
-			locations.add(g.generate());
 		}
 	}
 
@@ -312,15 +287,15 @@ public class FeatureGenerator implements Serializable {
 	}
 
 	void generatefeatures(World w, Town starting) {
-		init();
+		setup();
 		Temple.generatetemples();
 		generatestartingarea(w, starting);
-		generatelocations(w);
+		generatestartinglocations(w);
 		for (Class<? extends Actor> feature : generators.keySet()) {
 			generators.get(feature).seed(feature);
 		}
 		int target = World.scenario.startingfeatures - Location.count();
-		while (countplaces() < target) {
+		while (World.getseed().actors.size() < target) {
 			spawn(1, true);
 		}
 	}

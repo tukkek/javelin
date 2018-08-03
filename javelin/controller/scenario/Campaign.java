@@ -104,7 +104,7 @@ public class Campaign extends Scenario {
 	}
 
 	@Override
-	public List<Location> generatelocations(World seed) {
+	public List<Location> generatestartinglocations(World seed) {
 		return Collections.EMPTY_LIST;
 	}
 

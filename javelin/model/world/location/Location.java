@@ -137,9 +137,7 @@ public abstract class Location extends Actor {
 		actors.remove(p);
 		final World w = World.getseed();
 		int size = World.scenario.size - 1;
-		while (p.x == -1
-				|| !allowwater
-						&& World.getseed().map[p.x][p.y].equals(Terrain.WATER)
+		while (p.x == -1 || !allowwater && w.map[p.x][p.y].equals(Terrain.WATER)
 				|| World.get(p.x, p.y, actors) != null || neartown(p)
 				|| w.roads[p.x][p.y] || w.highways[p.x][p.y]) {
 			p.x = RPG.r(0, size);

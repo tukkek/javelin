@@ -84,6 +84,15 @@ public class FeatureGenerator implements Serializable {
 	 * manually-written methods from becoming too large.
 	 */
 	void setup() {
+		generators.put(Outpost.class, new Frequency(.25f));
+		generators.put(Trove.class, new Frequency());
+		generators.put(Guardian.class, new Frequency());
+		generators.put(Dwelling.class, new Frequency());
+		generators.put(WildEvent.class, new Frequency(2f));
+		Frequency resources = new Frequency();
+		resources.seeds = Realm.values().length * 2;
+		resources.max = Realm.values().length * 2;
+		generators.put(Resource.class, resources);
 		Frequency dungeons = new Frequency(2f);
 		Integer startingdungeons = World.scenario.startingdungeons;
 		if (startingdungeons != null) {
@@ -91,12 +100,6 @@ public class FeatureGenerator implements Serializable {
 			dungeons.max = startingdungeons;
 		}
 		generators.put(Dungeon.class, dungeons);
-		generators.put(Outpost.class, new Frequency(.25f));
-		generators.put(Resource.class, new Frequency());
-		generators.put(Trove.class, new Frequency());
-		generators.put(Guardian.class, new Frequency());
-		generators.put(Dwelling.class, new Frequency());
-		generators.put(WildEvent.class, new Frequency(2f));
 		if (World.scenario.worlddistrict) {
 			generators.put(Shrine.class, new Frequency());
 			Frequency lodge = new Frequency(.75f);

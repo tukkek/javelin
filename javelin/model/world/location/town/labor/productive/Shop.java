@@ -29,137 +29,131 @@ import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.PurchaseOption;
 import javelin.view.screen.town.SelectScreen;
 
-public class Shop extends Location {
-	public static final Option SELL = new Option("Sell items", 0, 's');
+public class Shop extends Location{
+	public static final Option SELL=new Option("Sell items",0,'s');
 
-	public class SellingScreen extends SelectScreen {
-		HashMap<Option, Item> selling = new HashMap<>();
-		int buylimit = 0;
+	public class SellingScreen extends SelectScreen{
+		HashMap<Option,Item> selling=new HashMap<>();
+		int buylimit=0;
 
-		public SellingScreen() {
-			super("Sell which items?", null);
-			District d = getdistrict();
-			if (d != null) {
-				buylimit = RewardCalculator.getgold(d.town.population);
-				buylimit = Javelin.round(buylimit);
+		public SellingScreen(){
+			super("Sell which items?",null);
+			District d=getdistrict();
+			if(d!=null){
+				buylimit=RewardCalculator.getgold(d.town.population);
+				buylimit=Javelin.round(buylimit);
 			}
 		}
 
 		@Override
-		public String getCurrency() {
+		public String getCurrency(){
 			return "$";
 		}
 
 		@Override
-		public String printinfo() {
-			return "The shop will pay at most $" + Javelin.format(buylimit)
-					+ " for an item.\n" + "Your squad has $"
-					+ Javelin.format(Squad.active.gold);
+		public String printinfo(){
+			return "The shop will pay at most $"+Javelin.format(buylimit)
+					+" for an item.\n"+"Your squad has $"
+					+Javelin.format(Squad.active.gold);
 		}
 
 		@Override
-		public List<Option> getoptions() {
-			ArrayList<Option> options = new ArrayList<>();
-			for (Combatant c : Squad.active.members) {
-				for (Item i : Squad.active.equipment.get(c)) {
-					if (i.sell()) {
-						String listing = "[" + c + "] " + i.describe(c);
-						int sellingprice = Math.min(buylimit, i.price / 2);
-						Option o = new Option(listing, sellingprice);
-						selling.put(o, i);
+		public List<Option> getoptions(){
+			ArrayList<Option> options=new ArrayList<>();
+			for(Combatant c:Squad.active.members)
+				for(Item i:Squad.active.equipment.get(c))
+					if(i.sell()){
+						String listing="["+c+"] "+i.describe(c);
+						int sellingprice=Math.min(buylimit,i.price/2);
+						Option o=new Option(listing,sellingprice);
+						selling.put(o,i);
 						options.add(o);
 					}
-				}
-			}
 			return options;
 		}
 
 		@Override
-		public boolean select(Option o) {
-			Squad.active.gold += o.price;
+		public boolean select(Option o){
+			Squad.active.gold+=o.price;
 			Squad.active.equipment.remove(selling.get(o));
 			return true;
 		}
 	}
 
-	public static class BuildShop extends Build {
-		public BuildShop() {
-			super("Build shop", 5, null, Rank.HAMLET);
+	public static class BuildShop extends Build{
+		public BuildShop(){
+			super("Build shop",5,null,Rank.HAMLET);
 		}
 
 		@Override
-		protected void define() {
+		protected void define(){
 			super.define();
-			cost = Math.min(cost, Item.getselection(town.originalrealm).size());
+			cost=Math.min(cost,Item.getselection(town.originalrealm).size());
 		}
 
 		@Override
-		public Location getgoal() {
-			return new Shop(town.originalrealm, false);
+		public Location getgoal(){
+			return new Shop(town.originalrealm,false);
 		}
 
 		@Override
-		public boolean validate(District d) {
-			return super.validate(d) && d.getlocationtype(Shop.class).isEmpty();
+		public boolean validate(District d){
+			return super.validate(d)&&d.getlocationtype(Shop.class).isEmpty();
 		}
 	}
 
-	class ShowShop extends ShoppingScreen {
+	class ShowShop extends ShoppingScreen{
 		Shop s;
 
-		ShowShop(Shop s) {
-			super("You enter the shop.", null);
-			this.s = s;
+		ShowShop(Shop s){
+			super("You enter the shop.",null);
+			this.s=s;
 		}
 
 		@Override
-		protected ItemSelection getitems() {
+		protected ItemSelection getitems(){
 			return selection;
 		}
 
 		@Override
-		protected void afterpurchase(PurchaseOption o) {
-			s.crafting.add(new CraftingOrder(o.i, crafting));
+		protected void afterpurchase(PurchaseOption o){
+			s.crafting.add(new CraftingOrder(o.i,crafting));
 		}
 
 		@Override
-		public String printinfo() {
-			return super.printinfo() + (crafting.queue.isEmpty() ? ""
-					: "\n\nCurrently crafting: " + crafting);
+		public String printinfo(){
+			String info=super.printinfo();
+			if(!crafting.queue.isEmpty())
+				info+="\n\nCurrently crafting: "+crafting+'.';
+			return info;
 		}
 
 		@Override
-		public String printpriceinfo(Option o) {
-			return o.price == 0 ? "" : super.printpriceinfo(o);
+		public String printpriceinfo(Option o){
+			return o.price==0?"":super.printpriceinfo(o);
 		}
 
 		@Override
-		public List<Option> getoptions() {
-			List<Option> options = super.getoptions();
-			if (cansell()) {
-				SELL.priority = 2;
+		public List<Option> getoptions(){
+			List<Option> options=super.getoptions();
+			if(cansell()){
+				SELL.priority=2;
 				options.add(SELL);
 			}
 			return options;
 		}
 
-		private boolean cansell() {
-			if (getdistrict() == null) {
-				return false;
-			}
-			for (ArrayList<Item> bag : Squad.active.equipment.values()) {
-				for (Item i : bag) {
-					if (i.sell()) {
-						return true;
-					}
-				}
-			}
+		private boolean cansell(){
+			if(getdistrict()==null) return false;
+			for(ArrayList<Item> bag:Squad.active.equipment.values())
+				for(Item i:bag)
+					if(i.sell()) return true;
 			return false;
 		}
 
 		@Override
-		public boolean select(Option o) {
-			if (o == SELL) {
+		public boolean select(Option o){
+			if(o==SELL){
 				new SellingScreen().show();
 				return true;
 			}
@@ -167,79 +161,73 @@ public class Shop extends Location {
 		}
 	}
 
-	class UpgradeShop extends BuildingUpgrade {
-		public UpgradeShop(Shop s, int newlevel) {
-			super("", newlevel - s.level, newlevel, s, Rank.HAMLET);
-			name = "Upgrade shop";
+	class UpgradeShop extends BuildingUpgrade{
+		public UpgradeShop(Shop s,int newlevel){
+			super("",newlevel-s.level,newlevel,s,Rank.HAMLET);
+			name="Upgrade shop";
 		}
 
 		@Override
-		public Location getgoal() {
+		public Location getgoal(){
 			return previous;
 		}
 
 		@Override
-		public boolean validate(District d) {
-			return cost > 0 && crafting.queue.isEmpty() && super.validate(d);
+		public boolean validate(District d){
+			return cost>0&&crafting.queue.isEmpty()&&super.validate(d);
 		}
 
 		@Override
-		public void done() {
+		public void done(){
 			super.done();
-			level = upgradelevel;
+			level=upgradelevel;
 			stock();
 		}
 	}
 
-	ItemSelection selection = new ItemSelection();
-	OrderQueue crafting = new OrderQueue();
-	int level = 0;
+	ItemSelection selection=new ItemSelection();
+	OrderQueue crafting=new OrderQueue();
+	int level=0;
 	Realm selectiontype;
 
-	public Shop(Realm r, boolean first) {
-		super(r.prefixate() + " shop");
-		allowentry = false;
-		discard = false;
-		gossip = true;
-		level = 5;
-		selectiontype = World.scenario.randomrealms ? Realm.random() : r;
-		if (first) {
-			selection.add(new Potion(new CureLightWounds()));
-		}
+	public Shop(Realm r,boolean first){
+		super(r.prefixate()+" shop");
+		allowentry=false;
+		discard=false;
+		gossip=true;
+		level=5;
+		selectiontype=World.scenario.randomrealms?Realm.random():r;
+		if(first) selection.add(new Potion(new CureLightWounds()));
 		stock();
 	}
 
-	void stock() {
-		ItemSelection items = getselection();
-		if (items.size() > 20 && level > 10) {
-			items = new ItemSelection(items);
+	void stock(){
+		ItemSelection items=getselection();
+		if(items.size()>20&&level>10){
+			items=new ItemSelection(items);
 			Collections.shuffle(items);
 		}
-		for (Item i : items) {
-			if (selection.size() >= level) {
-				break;
-			}
+		for(Item i:items){
+			if(selection.size()>=level) break;
 			selection.add(i.clone());
 		}
 	}
 
 	@Override
-	public Integer getel(int attackerel) {
+	public Integer getel(int attackerel){
 		return Integer.MIN_VALUE;
 	}
 
 	@Override
-	public List<Combatant> getcombatants() {
+	public List<Combatant> getcombatants(){
 		return null;
 	}
 
 	@Override
-	public boolean interact() {
-		if (!super.interact()) {
-			return false;
-		}
-		for (Order o : crafting.reclaim(Squad.active.hourselapsed)) {
-			CraftingOrder done = (CraftingOrder) o;
+	public boolean interact(){
+		if(!super.interact()) return false;
+		for(Order o:crafting.reclaim(Squad.active.hourselapsed)){
+			CraftingOrder done=(CraftingOrder)o;
 			done.item.grab();
 		}
 		new ShowShop(this).show();
@@ -247,32 +235,32 @@ public class Shop extends Location {
 	}
 
 	@Override
-	public boolean hascrafted() {
+	public boolean hascrafted(){
 		return crafting.reportanydone();
 	}
 
 	@Override
-	public ArrayList<Labor> getupgrades(District d) {
-		int newlevel = level + 5;
-		newlevel = Math.min(newlevel, d.town.getrank().maxpopulation);
-		newlevel = Math.min(newlevel, getselection().size());
-		newlevel = Math.min(newlevel, 20);
-		ArrayList<Labor> upgrades = super.getupgrades(d);
-		upgrades.add(new UpgradeShop(this, newlevel));
+	public ArrayList<Labor> getupgrades(District d){
+		int newlevel=level+5;
+		newlevel=Math.min(newlevel,d.town.getrank().maxpopulation);
+		newlevel=Math.min(newlevel,getselection().size());
+		newlevel=Math.min(newlevel,20);
+		ArrayList<Labor> upgrades=super.getupgrades(d);
+		upgrades.add(new UpgradeShop(this,newlevel));
 		return upgrades;
 	}
 
-	ItemSelection getselection() {
+	ItemSelection getselection(){
 		return Item.getselection(selectiontype);
 	}
 
 	@Override
-	public boolean isworking() {
-		return !crafting.queue.isEmpty() && !crafting.reportalldone();
+	public boolean isworking(){
+		return !crafting.queue.isEmpty()&&!crafting.reportalldone();
 	}
 
 	@Override
-	public boolean canupgrade() {
-		return super.canupgrade() && crafting.isempty();
+	public boolean canupgrade(){
+		return super.canupgrade()&&crafting.isempty();
 	}
 }

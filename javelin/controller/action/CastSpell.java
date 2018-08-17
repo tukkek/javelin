@@ -1,7 +1,6 @@
 package javelin.controller.action;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
@@ -21,132 +20,106 @@ import javelin.old.messagepanel.MessagePanel;
  *
  * @author alex
  */
-public class CastSpell extends Fire implements AiAction {
+public class CastSpell extends Fire implements AiAction{
 	/** Only instance of CastSpell to exist. */
-	public static final CastSpell SINGLETON = new CastSpell();
+	public static final CastSpell SINGLETON=new CastSpell();
 	/** Spell for {@link Fire} to perform. */
 	public Spell casting;
 
-	CastSpell() {
-		super("Cast spells", "s", 's');
+	CastSpell(){
+		super("Cast spells","s",'s');
 	}
 
 	@Override
-	public boolean perform(Combatant c) {
+	public boolean perform(Combatant c){
 		MessagePanel.active.clear();
-		casting = null;
-		final ArrayList<Spell> castable = new ArrayList<>();
-		final boolean engaged = Fight.state.isengaged(c);
-		for (Spell s : c.spells) {
-			if (engaged && s.provokeaoo && !c.concentrate(s)) {
-				continue;
-			}
-			if (s.canbecast(c)) {
-				castable.add(s);
-			}
+		casting=null;
+		final ArrayList<Spell> castable=new ArrayList<>();
+		final boolean engaged=Fight.state.isengaged(c);
+		for(Spell s:c.spells){
+			if(engaged&&s.provokeaoo&&!c.concentrate(s)) continue;
+			if(s.canbecast(c)) castable.add(s);
 		}
-		if (castable.isEmpty()) {
-			Javelin.message("No spells can be cast right now.",
-					Javelin.Delay.WAIT);
+		if(castable.isEmpty()){
+			Javelin.message("No spells can be cast right now.",Javelin.Delay.WAIT);
 			return false;
 		}
-		castable.sort(new Comparator<Spell>() {
-			@Override
-			public int compare(Spell o1, Spell o2) {
-				return o1.name.compareTo(o2.name);
-			}
-		});
-		int i = Javelin.choose("Choose a spell:", castable, castable.size() > 4,
-				false);
-		if (i == -1) {
-			throw new RepeatTurn();
-		}
-		return cast(castable.get(i), c);
+		castable.sort((o1,o2)->o1.name.compareTo(o2.name));
+		int i=Javelin.choose("Choose a spell:",castable,castable.size()>4,false);
+		if(i==-1) throw new RepeatTurn();
+		return cast(castable.get(i),c);
 	}
 
 	/**
 	 * Like {@link #perform(Combatant, BattleMap, Thing)} except skips the
 	 * selection UI step.
 	 */
-	public boolean cast(Spell spell, Combatant c) {
-		casting = spell;
+	public boolean cast(Spell spell,Combatant c){
+		casting=spell;
 		return super.perform(c);
 	}
 
 	@Override
-	protected void attack(Combatant combatant, Combatant targetCombatant,
-			BattleState s) {
-		Action.outcome(cast(combatant, targetCombatant,
-				combatant.spells.indexOf(casting), s));
+	protected void attack(Combatant combatant,Combatant targetCombatant,
+			BattleState s){
+		Action.outcome(
+				cast(combatant,targetCombatant,combatant.spells.indexOf(casting),s));
 	}
 
-	List<ChanceNode> cast(Combatant caster, Combatant target, int spellindex,
-			BattleState state) {
-		state = state.clone();
-		caster = state.clone(caster);
+	List<ChanceNode> cast(Combatant caster,Combatant target,int spellindex,
+			BattleState state){
+		state=state.clone();
+		caster=state.clone(caster);
 		caster.clonesource();
-		target = state.cloneifdifferent(target, caster);
-		if (target != caster) {
-			target.clonesource();
+		target=state.cloneifdifferent(target,caster);
+		if(target!=caster) target.clonesource();
+		Spell spell=null;
+		if(casting==null)
+			spell=caster.spells.get(spellindex);
+		else{
+			int i=caster.spells.indexOf(casting);
+			spell=i>=0?caster.spells.get(i):casting;
 		}
-		Spell spell = null;
-		if (casting == null) {
-			spell = caster.spells.get(spellindex);
-		} else {
-			int i = caster.spells.indexOf(casting);
-			spell = i >= 0 ? caster.spells.get(i) : casting;
-		}
-		caster.ap += spell.apcost;
-		spell.used += 1;
-		final List<ChanceNode> chances = new ArrayList<>();
-		final String prefix = caster + " casts " + spell.name.toLowerCase()
-				+ "!\n";
-		final int touchtarget = spell.hit(caster, target, state);
+		caster.ap+=spell.apcost;
+		spell.used+=1;
+		final List<ChanceNode> chances=new ArrayList<>();
+		final String prefix=caster+" casts "+spell.name.toLowerCase()+"!\n";
+		final int touchtarget=spell.hit(caster,target,state);
 		float misschance;
-		if (touchtarget == Integer.MIN_VALUE) {
-			misschance = 0;
-		} else {
-			misschance = bind(touchtarget / 20f);
-			chances.add(new ChanceNode(state, misschance,
-					prefix + caster + " misses touch attack.",
-					Javelin.Delay.BLOCK));
+		if(touchtarget==Integer.MIN_VALUE)
+			misschance=0;
+		else{
+			misschance=bind(touchtarget/20f);
+			chances.add(new ChanceNode(state,misschance,
+					prefix+caster+" misses touch attack.",Javelin.Delay.BLOCK));
 		}
-		final float hitc = 1 - misschance;
-		final float affectchance = affect(caster, target, state, spell, chances,
-				prefix, hitc);
-		final float savec = spell.getsavechance(caster, target);
-		if (savec != 0) {
-			chances.add(hit(caster, target, state, spell, savec * affectchance,
-					true, prefix));
-		}
-		if (savec != 1) {
-			chances.add(hit(caster, target, state, spell,
-					(1 - savec) * affectchance, false, prefix));
-		}
-		if (Javelin.DEBUG) {
-			ActionProvider.validate(chances);
-		}
+		final float hitc=1-misschance;
+		final float affectchance=affect(caster,target,state,spell,chances,prefix,
+				hitc);
+		final float savec=spell.getsavechance(caster,target);
+		if(savec!=0) chances
+				.add(hit(caster,target,state,spell,savec*affectchance,true,prefix));
+		if(savec!=1) chances.add(
+				hit(caster,target,state,spell,(1-savec)*affectchance,false,prefix));
+		if(Javelin.DEBUG) ActionProvider.validate(chances);
 		return chances;
 	}
 
-	static float affect(Combatant caster, Combatant target, BattleState state,
-			final Spell spell, final List<ChanceNode> chances,
-			final String prefix, float hitchance) {
-		if (spell.castonallies || target.source.sr == 0
-				|| caster.equals(target)) {
+	static float affect(Combatant caster,Combatant target,BattleState state,
+			final Spell spell,final List<ChanceNode> chances,final String prefix,
+			float hitchance){
+		if(spell.castonallies||target.source.sr==0||caster.equals(target))
 			return hitchance;
-		}
-		final float resistchance = bind(
-				(target.source.sr - spell.casterlevel) / 20f) * hitchance;
-		chances.add(new ChanceNode(state, resistchance,
-				prefix + target + " resists spell!", Javelin.Delay.BLOCK));
-		return hitchance - resistchance;
+		final float resistchance=bind((target.source.sr-spell.casterlevel)/20f)
+				*hitchance;
+		chances.add(new ChanceNode(state,resistchance,
+				prefix+target+" resists spell!",Javelin.Delay.BLOCK));
+		return hitchance-resistchance;
 	}
 
 	/**
-	 * @param target
-	 *            A d20 roll target such as the one provided by
-	 *            {@link Spell#getsavetarget(int, Combatant)}.
+	 * @param target A d20 roll target such as the one provided by
+	 *          {@link Spell#getsavetarget(int, Combatant)}.
 	 * @return A number between 0 and 1: 0% if target is
 	 *         {@link Integer#MAX_VALUE}, 100% if target is
 	 *         {@link Integer#MIN_VALUE}, or a number between 5% to 95% - higher
@@ -154,76 +127,62 @@ public class CastSpell extends Fire implements AiAction {
 	 *
 	 * @see #bind(float)
 	 */
-	public static float converttochance(final int target) {
-		if (target == Integer.MIN_VALUE) {
-			return 1;
-		}
-		if (target == Integer.MAX_VALUE) {
-			return 0;
-		}
-		return 1 - bind(target / 20f);
+	public static float converttochance(final int target){
+		if(target==Integer.MIN_VALUE) return 1;
+		if(target==Integer.MAX_VALUE) return 0;
+		return 1-bind(target/20f);
 	}
 
-	static ChanceNode hit(Combatant active, Combatant target, BattleState state,
-			final Spell spell, final float chance, final boolean saved,
-			String prefix) {
-		state = state.clone();
-		active = state.clone(active);
-		target = state.cloneifdifferent(target, active);
-		ChanceNode cn = new ChanceNode(state, chance, null,
-				Javelin.Delay.BLOCK);
-		String message = spell.cast(active, target, saved, state, cn);
-		if (message == null || message.isEmpty()) {
-			prefix = prefix.substring(0, prefix.length() - 1);
-		}
-		cn.action = prefix + message;
+	static ChanceNode hit(Combatant active,Combatant target,BattleState state,
+			final Spell spell,final float chance,final boolean saved,String prefix){
+		state=state.clone();
+		active=state.clone(active);
+		target=state.cloneifdifferent(target,active);
+		ChanceNode cn=new ChanceNode(state,chance,null,Javelin.Delay.BLOCK);
+		String message=spell.cast(active,target,saved,state,cn);
+		if(message==null||message.isEmpty())
+			prefix=prefix.substring(0,prefix.length()-1);
+		cn.action=prefix+message;
 		return cn;
 	}
 
 	@Override
-	protected void checkhero(Combatant hero) {
+	protected void checkhero(Combatant hero){
 		// no check
 	}
 
 	@Override
-	protected int calculatehitdc(Combatant active, Combatant target,
-			BattleState s) {
-		return casting.hit(active, target, s);
+	protected int calculatehitdc(Combatant active,Combatant target,BattleState s){
+		return casting.hit(active,target,s);
 	}
 
 	@Override
-	protected void filtertargets(Combatant combatant, List<Combatant> targets,
-			BattleState s) {
-		casting.filtertargets(combatant, targets, s);
+	protected void filtertargets(Combatant combatant,List<Combatant> targets,
+			BattleState s){
+		casting.filtertargets(combatant,targets,s);
 	}
 
 	@Override
-	protected boolean checkengaged(BattleState state, Combatant c) {
-		return casting.provokeaoo && !c.concentrate(casting)
-				&& state.isengaged(c);
+	protected boolean checkengaged(BattleState state,Combatant c){
+		return casting.provokeaoo&&!c.concentrate(casting)&&state.isengaged(c);
 	}
 
 	@Override
 	public List<List<ChanceNode>> getoutcomes(final Combatant active,
-			final BattleState gameState) {
-		casting = null;
-		final ArrayList<List<ChanceNode>> chances = new ArrayList<>();
-		boolean engaged = gameState.isengaged(active);
-		final ArrayList<Spell> spells = active.spells;
-		for (int i = 0; i < spells.size(); i++) {
-			final Spell s = spells.get(i);
-			if (s.provokeaoo && !active.concentrate(s) && engaged) {
-				continue;
-			}
-			if (!s.castinbattle || !s.canbecast(active)) {
-				continue;
-			}
-			final List<Combatant> targets = gameState.gettargets(active,
+			final BattleState gameState){
+		casting=null;
+		final ArrayList<List<ChanceNode>> chances=new ArrayList<>();
+		boolean engaged=gameState.isengaged(active);
+		final ArrayList<Spell> spells=active.spells;
+		for(int i=0;i<spells.size();i++){
+			final Spell s=spells.get(i);
+			if(s.provokeaoo&&!active.concentrate(s)&&engaged) continue;
+			if(!s.castinbattle||!s.canbecast(active)) continue;
+			final List<Combatant> targets=gameState.gettargets(active,
 					gameState.getcombatants());
-			s.filtertargets(active, targets, gameState);
-			for (Combatant target : targets) {
-				chances.add(cast(active, target, i, gameState));
-			}
+			s.filtertargets(active,targets,gameState);
+			for(Combatant target:targets)
+				chances.add(cast(active,target,i,gameState));
 		}
 		return chances;
 	}

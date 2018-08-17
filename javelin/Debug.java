@@ -31,131 +31,122 @@ import javelin.view.screen.WorldScreen;
  *
  * @author alex
  */
-public class Debug {
-    static class Helpers {
-	static void healteam() {
-	    for (Combatant c : Squad.active.members) {
-		c.hp = c.maxhp;
-		c.detox(c.source.poison);
-	    }
-	    if (Fight.state == null) {
-		return;
-	    }
-	    for (Combatant c : Fight.state.blueTeam) {
-		c.hp = c.maxhp;
-		c.detox(c.source.poison);
-	    }
-	}
-
-	static void healopponenets() {
-	    if (Fight.state == null) {
-		return;
-	    }
-	    for (Combatant c : Fight.state.redTeam) {
-		c.hp = c.maxhp;
-	    }
-	}
-
-	static void additems(Item[] items) {
-	    for (Item i : items) {
-		Squad.active.receiveitem(i);
-	    }
-	}
-
-	static String printtowninfo() {
-	    String s = "";
-	    for (Town t : Town.gettowns()) {
-		String el = t.ishostile() ? ", EL " + ChallengeCalculator.calculateel(t.garrison) : "";
-		s += t + " (" + t.getrank().title + el + ")\n";
-	    }
-	    return s;
-	}
-
-	static void freezeopponents() {
-	    for (Combatant c : Fight.state.redTeam) {
-		c.ap = Float.MAX_VALUE;
-	    }
-	}
-
-	static void generateincursion(Location l, Realm r, List<Combatant> members) {
-	    for (Actor a : Incursion.getincursions()) {
-		a.remove();
-	    }
-	    Incursion i = new Incursion(l.x, l.y, members, r);
-	    i.displace();
-	    i.place();
-	}
-
-	static void teleport(Class<? extends Actor> type) {
-	    if (Dungeon.active != null) {
-		return;
-	    }
-	    Actor to = null;
-	    for (Actor a : World.getactors()) {
-		if (type.isInstance(a)) {
-		    to = a;
-		    break;
+public class Debug{
+	static class Helpers{
+		static void healteam(){
+			for(Combatant c:Squad.active.members){
+				c.hp=c.maxhp;
+				c.detox(c.source.poison);
+			}
+			if(Fight.state==null) return;
+			for(Combatant c:Fight.state.blueTeam){
+				c.hp=c.maxhp;
+				c.detox(c.source.poison);
+			}
 		}
-	    }
-	    Squad.active.remove();
-	    Squad.active.setlocation(to.x, to.y);
-	    Squad.active.displace();
-	    Squad.active.place();
+
+		static void healopponenets(){
+			if(Fight.state==null) return;
+			for(Combatant c:Fight.state.redTeam)
+				c.hp=c.maxhp;
+		}
+
+		static void additems(Item[] items){
+			for(Item i:items)
+				Squad.active.receiveitem(i);
+		}
+
+		static String printtowninfo(){
+			String s="";
+			for(Town t:Town.gettowns()){
+				String el=t.ishostile()
+						?", EL "+ChallengeCalculator.calculateel(t.garrison)
+						:"";
+				s+=t+" ("+t.getrank().title+el+")\n";
+			}
+			return s;
+		}
+
+		static void freezeopponents(){
+			for(Combatant c:Fight.state.redTeam)
+				c.ap=Float.MAX_VALUE;
+		}
+
+		static void generateincursion(Location l,Realm r,List<Combatant> members){
+			for(Actor a:Incursion.getincursions())
+				a.remove();
+			Incursion i=new Incursion(l.x,l.y,members,r);
+			i.displace();
+			i.place();
+		}
+
+		static void teleport(Class<? extends Actor> type){
+			if(Dungeon.active!=null) return;
+			Actor to=null;
+			for(Actor a:World.getactors())
+				if(type.isInstance(a)){
+					to=a;
+					break;
+				}
+			Squad.active.remove();
+			Squad.active.setlocation(to.x,to.y);
+			Squad.active.displace();
+			Squad.active.place();
+		}
 	}
-    }
 
-    /** @see Preferences */
-    public static boolean disablecombat;
-    /** @see Preferences */
-    public static boolean showmap;
-    /** @see Preferences */
-    public static Integer xp;
-    /** @see Preferences */
-    public static Integer gold;
-    /** @see Preferences */
-    public static boolean labor;
-    /** @see Preferences */
-    public static String period;
-    /** @see Preferences */
-    public static String weather;
-    /** @see Preferences */
-    public static String season;
-    /** @see Preferences */
-    public static boolean unlcoktemples;
-    /** @see Preferences */
-    public static boolean bypassdoors;
+	/** @see Preferences */
+	public static boolean disablecombat;
+	/** @see Preferences */
+	public static boolean showmap;
+	/** @see Preferences */
+	public static Integer xp;
+	/** @see Preferences */
+	public static Integer gold;
+	/** @see Preferences */
+	public static boolean labor;
+	/** @see Preferences */
+	public static String period;
+	/** @see Preferences */
+	public static String weather;
+	/** @see Preferences */
+	public static String season;
+	/** @see Preferences */
+	public static boolean unlcoktemples;
+	/** @see Preferences */
+	public static boolean bypassdoors;
 
-    public static void onbattlestart() {
+	public static void onbattlestart(){
 
-    }
+	}
 
-    /** Called only once when a {@link Scenario} is initialized. */
-    public static void oncampaignstart() {
+	/** Called only once when a {@link Scenario} is initialized. */
+	public static void oncampaignstart(){
 
-    }
+	}
 
-    /**
-     * Called every time a game starts (roughly the first time the
-     * {@link WorldScreen} is shown.
-     */
-    public static void oninit() {
+	/**
+	 * Called every time a game starts (roughly the first time the
+	 * {@link WorldScreen} is shown.
+	 */
+	public static void oninit(){
 
-    }
+	}
 
-    public static String onbattlehelp() {
-	String s = "";
-	return s;
-    }
+	public static String onbattlehelp(){
+		String s="";
+		return s;
+	}
 
-    /**
-     * Called from {@link Help}. Useful for making changes during the course of a
-     * game or testing sequence, since Javelin doesn't have a developer console for
-     * debugging purposes.
-     *
-     * @return Any text will be printed below the usual help output.
-     */
-    public static String onworldhelp() {
-	String s = "";
-	return s;
-    }
+	/**
+	 * Called from {@link Help}. Useful for making changes during the course of a
+	 * game or testing sequence, since Javelin doesn't have a developer console
+	 * for debugging purposes.
+	 *
+	 * @return Any text will be printed below the usual help output.
+	 */
+	public static String onworldhelp(){
+		String s="";
+		return s;
+	}
 }

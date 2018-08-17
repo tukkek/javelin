@@ -16,108 +16,94 @@ import javelin.old.RPG;
 import javelin.view.screen.HauntScreen;
 import javelin.view.screen.WorldScreen;
 
-public abstract class Haunt extends Fortification {
-	static final int MAXIMUMAVAILABLE = 5;
+public abstract class Haunt extends Fortification{
+	static final int MAXIMUMAVAILABLE=5;
 
-	ArrayList<Monster> dwellers = new ArrayList<Monster>();
-	public ArrayList<Monster> available = new ArrayList<Monster>();
-	int delay = -1;
+	ArrayList<Monster> dwellers=new ArrayList<>();
+	public ArrayList<Monster> available=new ArrayList<>();
+	int delay=-1;
 	/**
 	 * Will be added in order to artifically modify the target encounter level.
 	 */
-	int elmodifier = 0;
+	int elmodifier=0;
 
 	/**
-	 * @param description
-	 *            Location name.
+	 * @param description Location name.
 	 * @param minel
 	 * @param maxel
-	 * @param tier
-	 *            A number from 1 to 4 (inclusive), determining the level range
-	 *            for this haunt (1-5, 6-10, 11-15, 16-20).
+	 * @param tier A number from 1 to 4 (inclusive), determining the level range
+	 *          for this haunt (1-5, 6-10, 11-15, 16-20).
 	 */
-	public Haunt(String description, int minel, int maxel, String[] monsters) {
-		super(description, description, Integer.MAX_VALUE, Integer.MIN_VALUE);
-		for (String name : monsters) {
+	public Haunt(String description,int minel,int maxel,String[] monsters){
+		super(description,description,Integer.MAX_VALUE,Integer.MIN_VALUE);
+		for(String name:monsters)
 			dwellers.add(Javelin.getmonster(name));
-		}
-		minlevel = minel;
-		maxlevel = maxel;
+		minlevel=minel;
+		maxlevel=maxel;
 	}
 
 	@Override
-	public List<Combatant> getcombatants() {
+	public List<Combatant> getcombatants(){
 		return garrison;
 	}
 
 	@Override
-	protected LocationFight fight() {
-		return new LocationFight(this, getmap());
+	protected LocationFight fight(){
+		return new LocationFight(this,getmap());
 	}
 
 	abstract LocationMap getmap();
 
 	@Override
-	protected void generategarrison(int minlevel, int maxlevel) {
-		int minel = minlevel + elmodifier;
-		int maxel = maxlevel + elmodifier;
-		int target = RPG.r(minel, maxel);
-		int el = Integer.MIN_VALUE;
-		List<List<Combatant>> possibilities = new ArrayList<List<Combatant>>();
-		while (el < target) {
-			garrison.add(new Combatant(RPG.pick(dwellers).clone(), true));
-			el = ChallengeCalculator.calculateel(garrison);
-			if (minel <= el && el <= maxel) {
-				possibilities.add(new ArrayList<Combatant>(garrison));
-			}
+	protected void generategarrison(int minlevel,int maxlevel){
+		int minel=minlevel+elmodifier;
+		int maxel=maxlevel+elmodifier;
+		int target=RPG.r(minel,maxel);
+		int el=Integer.MIN_VALUE;
+		List<List<Combatant>> possibilities=new ArrayList<>();
+		while(el<target){
+			garrison.add(new Combatant(RPG.pick(dwellers).clone(),true));
+			el=ChallengeCalculator.calculateel(garrison);
+			if(minel<=el&&el<=maxel)
+				possibilities.add(new ArrayList<>(garrison));
 		}
-		if (possibilities.isEmpty()) {
-			generategarrison(minlevel, maxlevel);
-		} else {
-			garrison = RPG.pick(possibilities);
-		}
+		if(possibilities.isEmpty())
+			generategarrison(minlevel,maxlevel);
+		else
+			garrison=RPG.pick(possibilities);
 	}
 
 	@Override
-	public void turn(long time, WorldScreen world) {
-		super.turn(time, world);
-		if (ishostile()) {
-			return;
-		}
-		delay -= 1;
-		if (delay > 0) {
-			return;
-		}
-		if (Javelin.DEBUG) {
-			System.out.println("Generate @" + descriptionknown);
-		}
-		if (available.size() + 1 > MAXIMUMAVAILABLE) {
+	public void turn(long time,WorldScreen world){
+		super.turn(time,world);
+		if(ishostile()) return;
+		delay-=1;
+		if(delay>0) return;
+		if(Javelin.DEBUG) System.out.println("Generate @"+descriptionknown);
+		if(available.size()+1>MAXIMUMAVAILABLE)
 			available.remove(RPG.pick(available));
-		}
-		Monster m = RPG.pick(dwellers);
+		Monster m=RPG.pick(dwellers);
 		available.add(m);
 		available.sort(MonstersByName.INSTANCE);
-		delay = Dwelling.getspawnrate(m.cr);
+		delay=Dwelling.getspawnrate(m);
 	}
 
 	@Override
-	public boolean interact() {
-		if (!super.interact()) {
-			return false;
-		}
+	public boolean interact(){
+		if(!super.interact()) return false;
 		new HauntScreen(this).show();
 		return true;
 	}
 
 	@Override
-	public void capture() {
+	public void capture(){
 		super.capture();
 		available.clear();
-		delay = RPG.r(1, 6) + RPG.r(1, 6);
+		delay=RPG.r(1,6)+RPG.r(1,6);
 	}
 
 	@Override
-	public boolean isworking() {
-		return !ishostile() && available.isEmpty();
+	public boolean isworking(){
+		return !ishostile()&&available.isEmpty();
 	}
 }

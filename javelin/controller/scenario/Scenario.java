@@ -70,88 +70,88 @@ import javelin.view.screen.SquadScreen;
  * There is only one enemy {@link Realm} per game and the starting features are
  * roughly made to be 1/3 neutral and 2/3 hostile.
  */
-public class Scenario implements Serializable {
+public class Scenario implements Serializable{
 	/** {@link World} size. */
-	public int size = 30;
+	public int size=30;
 	/**
 	 * Allow access to {@link Minigame}s or not.
 	 *
 	 * TODO may allow access but should fix them for scenario mode where their
 	 * {@link UniqueLocation}s aren't present.
 	 */
-	public boolean minigames = false;
+	public boolean minigames=false;
 	/**
 	 * Starting {@link Town} population. See {@link #statictowns}.
 	 */
-	public int startingpopulation = 6;
+	public int startingpopulation=6;
 	/**
 	 * If <code>true</code>, {@link Town}s will be overidden after {@link World}
 	 * generation according to {@link #getscenariochallenge()}.
 	 */
-	public boolean statictowns = true;
+	public boolean statictowns=true;
 	/**
 	 * If not <code>null</code>, this amount will be seeded during {@link World}
 	 * generation. It will also be the cap as per {@link Frequency#max}.
 	 *
 	 * Number of starting dungeons in the {@link World} map. Since
-	 * {@link TempleKey}s are important to {@link Win}ning the game this should
-	 * be a fair amount, otherwise the player will depend only on
-	 * {@link Caravan}s if too many dungeons are destroyed or if unable to find
-	 * the proper {@link Chest} inside the dungeons he does find. Not that
-	 * dungeons also spawn during the course of a game but since this is highly
-	 * randomized a late-game player who ran out of dungeons should not be
-	 * required to depend on that alone.
+	 * {@link TempleKey}s are important to {@link Win}ning the game this should be
+	 * a fair amount, otherwise the player will depend only on {@link Caravan}s if
+	 * too many dungeons are destroyed or if unable to find the proper
+	 * {@link Chest} inside the dungeons he does find. Not that dungeons also
+	 * spawn during the course of a game but since this is highly randomized a
+	 * late-game player who ran out of dungeons should not be required to depend
+	 * on that alone.
 	 *
 	 * @see Actor#destroy(Incursion)
 	 * @see FeatureGenerator
 	 */
-	public Integer startingdungeons = null;
-	public boolean respawnlocations = false;
-	public boolean normalizemap = true;
+	public Integer startingdungeons=null;
+	public boolean respawnlocations=false;
+	public boolean normalizemap=true;
 	/** Wheter {@link TempleKey}s should exist at all. */
-	public boolean lockedtemples = false;
+	public boolean lockedtemples=false;
 	/**
 	 * <code>true</code> if first {@link Town} should be located on
 	 * {@link Terrain#PLAIN} or {@link Terrain#HILL}.
 	 */
-	public boolean easystartingtown = false;
+	public boolean easystartingtown=false;
 	/** Minimum distance between {@link Desert} and {@link Water}. */
-	public int desertradius = 1;
+	public int desertradius=1;
 	/** Number of {@link Town}s in the {@link World}. */
-	public int towns = RPG.r(1 + 1, 1 + 3);
+	public int towns=RPG.r(1+1,1+3);
 	/**
 	 * Will clear locations as indicated by {@link Fortification#clear}.
 	 */
-	public boolean clearlocations = true;
+	public boolean clearlocations=true;
 	/** Wheter a full {@link Deck} should be allowed. */
-	public boolean allowlabor = false;
+	public boolean allowlabor=false;
 	/**
 	 * If <code>false</code>, only allow Actors marked as
 	 * {@link Actor#allowedinscenario}.
 	 */
-	public boolean allowallactors = false;
+	public boolean allowallactors=false;
 	/** Ask for {@link Monster} names on {@link SquadScreen}. */
-	public boolean asksquadnames = false;
+	public boolean asksquadnames=false;
 	/** Wheter to cover {@link WorldTile}s. */
-	public boolean fogofwar = false;
-	public boolean worldencounters = false;
-	public boolean worldhazards = false;
+	public boolean fogofwar=false;
+	public boolean worldencounters=false;
+	public boolean worldhazards=false;
 	/** File name for the F1 help {@link Guide}. */
-	public String helpfile = "Scenario";
+	public String helpfile="Scenario";
 	/**
 	 * TODO highscores should be scenario-agnostic
 	 */
-	public boolean record = false;
-	public boolean dominationwin = true;
+	public boolean record=false;
+	public boolean dominationwin=true;
 	/** Number of {@link Location}s to spawn. See {@link FeatureGenerator}. */
-	public int startingfeatures = size * size / 7;
+	public int startingfeatures=size*size/7;
 	/** {@link Trove}s will only offer gold and experience rewards. */
-	public boolean simpletroves = true;
+	public boolean simpletroves=true;
 	/**
 	 * Make random {@link RealmAcademy} and {@link Shop}s, insted of local
 	 * {@link Realm}.
 	 */
-	public boolean randomrealms = true;
+	public boolean randomrealms=true;
 	/**
 	 * Affect labor and training speeds and amounts for XP and gold rewards.
 	 *
@@ -159,12 +159,12 @@ public class Scenario implements Serializable {
 	 * @see RewardCalculator
 	 * @see Order
 	 */
-	public int boost = 3;
+	public int boost=3;
 	/**
 	 * If <code>true</code> will try to generate all possible {@link Location}s
 	 * around the world.
 	 */
-	public boolean worlddistrict = true;
+	public boolean worlddistrict=true;
 
 	/**
 	 * If <code>true</code>, hostile {@link Location}s will spawn more monsters
@@ -174,37 +174,36 @@ public class Scenario implements Serializable {
 	 * @see Location#spawn()
 	 * @see Incursion
 	 */
-	public boolean spawn = false;
-	public boolean expiredungeons = false;
-	public Class<? extends FeatureGenerator> featuregenerator = FeatureGenerator.class;
+	public boolean spawn=false;
+	public boolean expiredungeons=false;
+	public Class<? extends FeatureGenerator> featuregenerator=FeatureGenerator.class;
 	/** Multiplied to daily {@link Labor}. */
-	public float labormodifier = 1;
-	public Class<? extends WorldGenerator> worldgenerator = WorldGenerator.class;
-	public boolean roads = false;
-	public boolean boats = false;
+	public float labormodifier=1;
+	public Class<? extends WorldGenerator> worldgenerator=WorldGenerator.class;
+	public boolean roads=false;
+	public boolean boats=false;
 	/**
 	 * Adds this many squares to {@link District}s.
 	 *
 	 * @see District#getradius()
 	 */
-	public int districtmodifier = 0;
+	public int districtmodifier=0;
 	/**
-	 * Whether all-flying or all-swimming {@link Squad}s can cross
-	 * {@link Water}. Does not impede {@link Transport}s from doing so.
+	 * Whether all-flying or all-swimming {@link Squad}s can cross {@link Water}.
+	 * Does not impede {@link Transport}s from doing so.
 	 *
 	 * @see Squad#swim()
 	 * @see Monster#swim
 	 * @see Monster#fly
 	 */
-	public boolean crossrivers = true;
+	public boolean crossrivers=true;
 
 	/**
-	 * @return Starting encounter level for each hostile town in
-	 *         {@link #SCENARIO} mode. 20 for 1 hostile town, 15 for 2 or 10 for
-	 *         3.
+	 * @return Starting encounter level for each hostile town in {@link #SCENARIO}
+	 *         mode. 20 for 1 hostile town, 15 for 2 or 10 for 3.
 	 */
-	public static int getscenariochallenge() {
-		return new int[] { 20, 15, 10 }[Town.gettowns().size() - 2];
+	public static int getscenariochallenge(){
+		return new int[]{20,15,10}[Town.gettowns().size()-2];
 	}
 
 	/**
@@ -212,26 +211,23 @@ public class Scenario implements Serializable {
 	 *
 	 * @see SquadScreen
 	 */
-	public void upgradesquad(ArrayList<Combatant> squad) {
-		ArrayList<Combatant> members = new ArrayList<>(squad);
-		HashSet<Kit> chosen = new HashSet<>(members.size());
-		while (!members.isEmpty()) {
-			Combatant c = members.get(0);
-			Kit kit = null;
-			List<Kit> kits = Kit.getpreferred(c.source);
+	public void upgradesquad(ArrayList<Combatant> squad){
+		ArrayList<Combatant> members=new ArrayList<>(squad);
+		HashSet<Kit> chosen=new HashSet<>(members.size());
+		while(!members.isEmpty()){
+			Combatant c=members.get(0);
+			Kit kit=null;
+			List<Kit> kits=Kit.getpreferred(c.source);
 			Collections.shuffle(kits);
-			for (Kit k : kits) {
-				kit = k;
-				if (!chosen.contains(kit)) {
-					break;
-				}
+			for(Kit k:kits){
+				kit=k;
+				if(!chosen.contains(kit)) break;
 			}
 			chosen.add(kit);
-			c.source.customName = Character.toUpperCase(kit.name.charAt(0))
-					+ kit.name.substring(1);
-			while (c.source.cr < 6) {
+			c.source.customName=Character.toUpperCase(kit.name.charAt(0))
+					+kit.name.substring(1);
+			while(c.source.cr<6)
 				c.upgrade(kit.basic);
-			}
 			members.remove(0);
 		}
 	}
@@ -241,36 +237,29 @@ public class Scenario implements Serializable {
 	 *         game.
 	 * @see SquadScreen
 	 */
-	public boolean checkfullsquad(ArrayList<Combatant> squad) {
-		return squad.size() >= 4;
+	public boolean checkfullsquad(ArrayList<Combatant> squad){
+		return squad.size()>=4;
 	}
 
-	public boolean win() {
-		for (Town t : Town.gettowns()) {
-			if (t.ishostile()) {
-				return false;
-			}
-		}
-		String win = "Congratulations, you have won this scenario!\nThanks for playing!";
+	public boolean win(){
+		for(Town t:Town.gettowns())
+			if(t.ishostile()) return false;
+		String win="Congratulations, you have won this scenario!\nThanks for playing!";
 		Javelin.show(win);
 		return true;
 	}
 
-	public List<Location> generatestartinglocations(World seed) {
-		HashSet<Realm> realms = new HashSet<>(2);
-		for (Town t : Town.gettowns()) {
+	public List<Location> generatestartinglocations(World seed){
+		HashSet<Realm> realms=new HashSet<>(2);
+		for(Town t:Town.gettowns())
 			realms.add(t.originalrealm);
-		}
-		ArrayList<Location> shops = new ArrayList<>();
-		for (Realm r : Realm.values()) {
-			if (!realms.contains(r)) {
-				shops.add(new Shop(r, false));
-			}
-		}
+		ArrayList<Location> shops=new ArrayList<>();
+		for(Realm r:Realm.values())
+			if(!realms.contains(r)) shops.add(new Shop(r,false));
 		return shops;
 	}
 
-	public String getsaveprefix() {
+	public String getsaveprefix(){
 		return getClass().getSimpleName().toLowerCase();
 	}
 
@@ -280,7 +269,7 @@ public class Scenario implements Serializable {
 	 * @return Item inside the Chest.
 	 * @see #openaltar(Temple)
 	 */
-	public Item openspecialchest(Dungeon d) {
+	public Item openspecialchest(Dungeon d){
 		throw new UnsupportedOperationException();
 	}
 
@@ -291,16 +280,27 @@ public class Scenario implements Serializable {
 	 * @return Item inside the Altar.
 	 * @see #openspecialchest(Dungeon)
 	 */
-	public Item openaltar(Temple t) {
+	public Item openaltar(Temple t){
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * Called at the end of each day. Might be called several times in a row -
-	 * for example: if a lone {@link Squad} decides to rest for a week, it'll be
+	 * Called at the end of each day. Might be called several times in a row - for
+	 * example: if a lone {@link Squad} decides to rest for a week, it'll be
 	 * called 7 times in a row.
+	 *
+	 * @param day
 	 */
-	public void endday() {
+	public void endday(double day){
 		// nothing
+	}
+
+	/**
+	 * Setup or interact with the user before {@link World} generation starts.
+	 *
+	 * @see WorldGenerator
+	 */
+	public void setup(){
+		SquadScreen.open();
 	}
 }

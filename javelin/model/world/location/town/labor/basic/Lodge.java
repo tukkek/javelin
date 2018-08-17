@@ -8,6 +8,7 @@ import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.world.Actor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.District;
@@ -24,197 +25,177 @@ import javelin.view.Images;
  *
  * @author alex
  */
-public class Lodge extends Fortification {
-	public static final Lodging LODGE = new Lodging("lodge", 1, 0);
-	public static final Lodging HOTEL = new Lodging("hotel", 2, .5f);
-	public static final Lodging HOSPITAL = new Lodging("hospital", 4, 2);
-	public static final Lodging[] LODGING = new Lodging[] { LODGE, HOTEL,
-			HOSPITAL };
+public class Lodge extends Fortification{
+	public static final Lodging LODGE=new Lodging("lodge",1,0);
+	public static final Lodging HOTEL=new Lodging("hotel",2,.5f);
+	public static final Lodging HOSPITAL=new Lodging("hospital",4,2);
+	public static final Lodging[] LODGING=new Lodging[]{LODGE,HOTEL,HOSPITAL};
 
-	public static final String[] LEVELS = new String[] { "Traveller's lodge",
-			"Hotel", "Hospital" };
-	public static final String[] IMAGES = new String[] { "locationinn",
-			"locationinnhotel", "locationinnhospital" };
-	public static final int[] LABOR = new int[] { 5, 10, 15 };
+	public static final String[] LEVELS=new String[]{"Traveller's lodge","Hotel",
+			"Hospital"};
+	public static final String[] IMAGES=new String[]{"locationinn",
+			"locationinnhotel","locationinnhospital"};
+	public static final int[] LABOR=new int[]{5,10,15};
 
-	static final int RESTPERIOD = 8;
-	static final int WEEKLONGREST = 24 * 7 / RESTPERIOD;
-	static final int MAXLEVEL = LEVELS.length - 1;
+	static final int RESTPERIOD=8;
+	static final int WEEKLONGREST=24*7/RESTPERIOD;
+	static final int MAXLEVEL=LEVELS.length-1;
 
-	public static class Lodging {
+	public static class Lodging{
 		String name;
 		private float fee;
 		int quality;
 
-		public Lodging(String name, int quality, float fee) {
+		public Lodging(String name,int quality,float fee){
 			super();
-			this.name = name;
-			this.fee = fee;
-			this.quality = quality;
+			this.name=name;
+			this.fee=fee;
+			this.quality=quality;
 		}
 
-		public int getfee() {
-			return fee == 0 ? 0
-					: Math.round(Math.max(1, Squad.active.eat() * fee));
+		public int getfee(){
+			return fee==0?0:Math.round(Math.max(1,Squad.active.eat()*fee));
 		}
 	}
 
-	public static class BuildLodge extends Build {
-		public BuildLodge() {
-			super("Build " + Lodge.LEVELS[0].toLowerCase(), Lodge.LABOR[0],
-					null, Rank.HAMLET);
+	public static class BuildLodge extends Build{
+		public BuildLodge(){
+			super("Build "+Lodge.LEVELS[0].toLowerCase(),Lodge.LABOR[0],null,
+					Rank.HAMLET);
 		}
 
 		@Override
-		public Location getgoal() {
+		public Location getgoal(){
 			return new Lodge();
 		}
 
 		@Override
-		public boolean validate(District d) {
-			if (site == null && (d.getlocation(Lodge.class) != null
-					|| d.isbuilding(Lodge.class))) {
+		public boolean validate(District d){
+			if(site==null
+					&&(d.getlocation(Lodge.class)!=null||d.isbuilding(Lodge.class)))
 				return false;
-			}
 			return super.validate(d);
 		}
 	}
 
-	class UpgradeLodge extends BuildingUpgrade {
-		public UpgradeLodge(Lodge i) {
-			super(LEVELS[i.level + 1], LABOR[i.level + 1], 5, i,
-					Rank.RANKS[i.level + 1]);
+	class UpgradeLodge extends BuildingUpgrade{
+		public UpgradeLodge(Lodge i){
+			super(LEVELS[i.level+1],LABOR[i.level+1],5,i,Rank.RANKS[i.level+1]);
 		}
 
 		@Override
-		public Location getgoal() {
+		public Location getgoal(){
 			return previous;
 		}
 
 		@Override
-		public void done(Location l) {
-			Lodge i = (Lodge) l;
-			if (i.level < MAXLEVEL) {
-				i.level += 1;
+		public void done(Location l){
+			Lodge i=(Lodge)l;
+			if(i.level<MAXLEVEL){
+				i.level+=1;
 				i.rename(LEVELS[i.level]);
 			}
 			super.done(l);
 		}
 
 		@Override
-		public boolean validate(District d) {
-			Lodge i = (Lodge) previous;
-			return d != null && i.level < MAXLEVEL && super.validate(d);
+		public boolean validate(District d){
+			Lodge i=(Lodge)previous;
+			return d!=null&&i.level<MAXLEVEL&&super.validate(d);
 		}
 	}
 
-	int level = 0;
+	int level=0;
 
-	public Lodge() {
-		super(LEVELS[0], LEVELS[0], 1, 5);
-		gossip = true;
-		neutral = true;
+	public Lodge(){
+		super(LEVELS[0],LEVELS[0],1,5);
+		gossip=true;
+		neutral=true;
 	}
 
 	@Override
-	public boolean interact() {
-		if (!super.interact()) {
-			return false;
-		}
-		int price = LODGING[level].getfee();
-		int weekprice = WEEKLONGREST * price;
-		String s = "Do you want to rest at the " + LEVELS[level].toLowerCase()
-				+ "?\n";
-		s += "\nENTER or s to stay ($" + price + "), w to stay for a week ($"
-				+ weekprice + ")";
-		s += "\np to pillage ($" + Javelin.format(getspoils()) + ")";
-		s += "\nany other key to leave";
-		Character input = Javelin.prompt(s);
-		if (input == '\n' || input == 's') {
-			return rest(price, level + 1);
-		}
-		if (input == 'w') {
-			return rest(weekprice, WEEKLONGREST * (level + 1));
-		}
-		if (input == 'p') {
+	public boolean interact(){
+		if(!super.interact()) return false;
+		int price=LODGING[level].getfee();
+		int weekprice=WEEKLONGREST*price;
+		String s="Do you want to rest at the "+LEVELS[level].toLowerCase()+"?\n";
+		s+="\nENTER or s to stay ($"+price+"), w to stay for a week ($"+weekprice
+				+")";
+		s+="\np to pillage ($"+Javelin.format(getspoils())+")";
+		s+="\nany other key to leave";
+		Character input=Javelin.prompt(s);
+		if(input=='\n'||input=='s') return rest(price,level+1);
+		if(input=='w') return rest(weekprice,WEEKLONGREST*(level+1));
+		if(input=='p'){
 			pillage();
 			return true;
 		}
 		return false;
 	}
 
-	boolean rest(long price, int periods) {
-		if (Squad.active.gold < price) {
-			Javelin.message("You can't pay the $" + price + " fee!", false);
+	boolean rest(long price,int periods){
+		if(Squad.active.gold<price){
+			Javelin.message("You can't pay the $"+price+" fee!",false);
 			return false;
 		}
-		Squad.active.gold -= price;
-		rest(periods, RESTPERIOD * periods, true, LODGING[level]);
+		Squad.active.gold-=price;
+		rest(periods,RESTPERIOD*periods,true,LODGING[level]);
 		return true;
 	}
 
 	@Override
-	protected void generate() {
-		x = -1;
-		while (x == -1 || getdistrict() != null || findnearest(Lodge.class)
-				.distance(x, y) <= District.RADIUSMAX) {
+	protected void generate(){
+		x=-1;
+		while(x==-1||getdistrict()!=null||checkproximity())
 			generateawayfromtown();
-		}
+	}
+
+	public boolean checkproximity(){
+		Actor nearest=findnearest(Lodge.class);
+		return nearest!=null&&nearest.distance(x,y)<=District.RADIUSMAX;
 	}
 
 	@Override
-	public List<Combatant> getcombatants() {
+	public List<Combatant> getcombatants(){
 		return garrison;
 	}
 
 	@Override
-	public ArrayList<Labor> getupgrades(District d) {
-		ArrayList<Labor> upgrades = super.getupgrades(d);
-		if (level < MAXLEVEL) {
-			upgrades.add(new UpgradeLodge(this));
-		}
+	public ArrayList<Labor> getupgrades(District d){
+		ArrayList<Labor> upgrades=super.getupgrades(d);
+		if(level<MAXLEVEL) upgrades.add(new UpgradeLodge(this));
 		return upgrades;
 	}
 
 	@Override
-	public Image getimage() {
+	public Image getimage(){
 		return Images.getImage(IMAGES[level]);
 	}
 
 	/**
-	 * @param restperiods
-	 *            Normally 1 rest period equals to 8 hours of rest in normal
-	 *            conditions.
-	 * @param hours
-	 *            Number of hours elapsed.
-	 * @param accomodation
-	 *            Level of the resting environment.
+	 * @param restperiods Normally 1 rest period equals to 8 hours of rest in
+	 *          normal conditions.
+	 * @param hours Number of hours elapsed.
+	 * @param accomodation Level of the resting environment.
 	 */
-	public static void rest(int restperiods, int hours, boolean advancetime,
-			Lodging a) {
-		for (int i = 0; i < restperiods; i++) {
+	public static void rest(int restperiods,int hours,boolean advancetime,
+			Lodging a){
+		for(int i=0;i<restperiods;i++){
 			Squad.active.quickheal();
-			for (final Combatant c : Squad.active.members) {
-				int heal = c.source.hd.count();
-				if (!a.equals(HOSPITAL) && Squad.active.heal() >= 15) {
-					heal *= 2;
-				}
-				if (heal < 1) {
-					heal = 1;
-				}
-				c.heal(heal, false);
-				for (Spell p : c.spells) {
-					p.used = 0;
-				}
-				if (c.source.poison > 0) {
-					final int detox = restperiods == 1 ? RPG.r(0, 1) : i % 2;
-					c.detox(Math.min(c.source.poison, detox));
+			for(final Combatant c:Squad.active.members){
+				int heal=c.source.hd.count();
+				if(!a.equals(HOSPITAL)&&Squad.active.heal()>=15) heal*=2;
+				if(heal<1) heal=1;
+				c.heal(heal,false);
+				for(Spell p:c.spells)
+					p.used=0;
+				if(c.source.poison>0){
+					final int detox=restperiods==1?RPG.r(0,1):i%2;
+					c.detox(Math.min(c.source.poison,detox));
 				}
 				c.terminateconditions(hours);
 			}
 		}
-		if (advancetime) {
-			Squad.active.hourselapsed += hours;
-		}
+		if(advancetime) Squad.active.hourselapsed+=hours;
 	}
 }

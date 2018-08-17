@@ -13,57 +13,51 @@ import javelin.model.world.location.dungeon.DungeonTier;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.old.RPG;
 
-public class DungeonWorld extends Campaign {
-	public DungeonWorld() {
-		size = size * 2;
-		lockedtemples = false;
-		minigames = false;
-		record = false;
-		respawnlocations = false;
-		expiredungeons = true;
-		worldencounters = false;
-		worldhazards = false;
-		helpfile = "Dungeon World";
-		spawn = false;
-		labormodifier = 0;
-		featuregenerator = ZoneGenerator.class;
-		worldgenerator = DungeonWorldGenerator.class;
-		districtmodifier = 1;
-		crossrivers = false;
+public class DungeonWorld extends Campaign{
+	public DungeonWorld(){
+		size=size*2;
+		lockedtemples=false;
+		minigames=false;
+		record=false;
+		respawnlocations=false;
+		expiredungeons=true;
+		worldencounters=false;
+		worldhazards=false;
+		helpfile="Dungeon World";
+		spawn=false;
+		labormodifier=0;
+		featuregenerator=ZoneGenerator.class;
+		worldgenerator=DungeonWorldGenerator.class;
+		districtmodifier=1;
+		crossrivers=false;
 	}
 
 	@Override
-	public boolean win() {
-		for (Dungeon d : Dungeon.getdungeons()) {
-			if (d.gettier() == DungeonTier.HIGHEST) {
-				return false;
-			}
-		}
-		String success = "You have cleared all major dungeons! Congratulations!";
-		Javelin.message(success, true);
+	public boolean win(){
+		for(Dungeon d:Dungeon.getdungeons())
+			if(d.gettier()==DungeonTier.HIGHEST) return false;
+		String success="You have cleared all major dungeons! Congratulations!";
+		Javelin.message(success,true);
 		return true;
 	}
 
 	@Override
-	public Item openspecialchest(Dungeon d) {
+	public Item openspecialchest(Dungeon d){
 		return new MasterKey();
 	}
 
 	@Override
-	public Item openaltar(Temple t) {
+	public Item openaltar(Temple t){
 		return new TempleKey(t.realm);
 	}
 
 	@Override
-	public void endday() {
-		if (Debug.disablecombat) {
-			return;
-		}
-		for (Squad s : Squad.getsquads()) {
-			if (s.getdistrict() == null && RPG.chancein(7)) {
-				Squad.active = s;
+	public void endday(double day){
+		if(Debug.disablecombat) return;
+		for(Squad s:Squad.getsquads())
+			if(s.getdistrict()==null&&RPG.chancein(7)){
+				Squad.active=s;
 				throw new StartBattle(new DungeonWorldFight());
 			}
-		}
 	}
 }

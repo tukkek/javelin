@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -74,42 +73,42 @@ import javelin.old.RPG;
  *
  * @author alex
  */
-public class FeatureGenerator implements Serializable {
-	final HashMap<Class<? extends Actor>, Frequency> generators = new HashMap<>();
+public class FeatureGenerator implements Serializable{
+	final HashMap<Class<? extends Actor>,Frequency> generators=new HashMap<>();
 
 	/**
-	 * The ultimate goal of this method is to try and make it so one feature
-	 * only is generated per week. Since we want some features to have a higher
-	 * chance of being spawned this deals with these cases dynamically to avoid
+	 * The ultimate goal of this method is to try and make it so one feature only
+	 * is generated per week. Since we want some features to have a higher chance
+	 * of being spawned this deals with these cases dynamically to avoid
 	 * manually-written methods from becoming too large.
 	 */
-	void setup() {
-		generators.put(Outpost.class, new Frequency(.25f));
-		generators.put(Trove.class, new Frequency());
-		generators.put(Guardian.class, new Frequency());
-		generators.put(Dwelling.class, new Frequency());
-		generators.put(WildEvent.class, new Frequency(2f));
-		Frequency resources = new Frequency();
-		resources.seeds = Realm.values().length * 2;
-		resources.max = Realm.values().length * 2;
-		generators.put(Resource.class, resources);
-		Frequency dungeons = new Frequency(2f);
-		Integer startingdungeons = World.scenario.startingdungeons;
-		if (startingdungeons != null) {
-			dungeons.seeds = startingdungeons;
-			dungeons.max = startingdungeons;
+	void setup(){
+		generators.put(Outpost.class,new Frequency(.25f));
+		generators.put(Trove.class,new Frequency());
+		generators.put(Guardian.class,new Frequency());
+		generators.put(Dwelling.class,new Frequency());
+		generators.put(WildEvent.class,new Frequency(2f));
+		Frequency resources=new Frequency();
+		resources.seeds=Realm.values().length*2;
+		resources.max=Realm.values().length*2;
+		generators.put(Resource.class,resources);
+		Frequency dungeons=new Frequency(2f);
+		Integer startingdungeons=World.scenario.startingdungeons;
+		if(startingdungeons!=null){
+			dungeons.seeds=startingdungeons;
+			dungeons.max=startingdungeons;
 		}
-		generators.put(Dungeon.class, dungeons);
-		if (World.scenario.worlddistrict) {
-			generators.put(Shrine.class, new Frequency());
-			Frequency lodge = new Frequency(.75f);
-			lodge.max = 5;
-			generators.put(Lodge.class, lodge);
+		generators.put(Dungeon.class,dungeons);
+		if(World.scenario.worlddistrict){
+			generators.put(Shrine.class,new Frequency());
+			Frequency lodge=new Frequency(.75f);
+			lodge.max=5;
+			generators.put(Lodge.class,lodge);
 		}
-		if (Caravan.ALLOW) {
-			Frequency caravan = new Frequency(Frequency.MONTHLY, true, false);
-			caravan.seeds = 0;
-			generators.put(Caravan.class, caravan);
+		if(Caravan.ALLOW){
+			Frequency caravan=new Frequency(Frequency.MONTHLY,true,false);
+			caravan.seeds=0;
+			generators.put(Caravan.class,caravan);
 		}
 		convertchances();
 	}
@@ -120,147 +119,106 @@ public class FeatureGenerator implements Serializable {
 	 *
 	 * @see Frequency#absolute
 	 */
-	void convertchances() {
-		float total = 0;
-		for (Frequency g : generators.values()) {
-			if (!g.absolute) {
-				total += g.chance;
-			}
-		}
-		for (Frequency g : generators.values()) {
-			if (!g.absolute) {
-				g.chance = g.chance / total;
-			}
-		}
+	void convertchances(){
+		float total=0;
+		for(Frequency g:generators.values())
+			if(!g.absolute) total+=g.chance;
+		for(Frequency g:generators.values())
+			if(!g.absolute) g.chance=g.chance/total;
 	}
 
 	/**
 	 * Spawns {@link Actor}s into the game world. Used both during world
 	 * generation and during a game's progress.
 	 *
-	 * @param chance
-	 *            Used to modify the default spawning chances. For example: if
-	 *            this is called daily but the target is to spawn one feature
-	 *            per week then one would provide a 1/7f value here. The default
-	 *            spawning chances are calculated so as to sum up to 100% so
-	 *            using a value of 1 would be likely to spawn 1 random feature
-	 *            in the world map, but could spawn more or none depending on
-	 *            the random number generator results.
-	 * @param generatingworld
-	 *            If <code>false</code> will limit spawning to only a starting
-	 *            set of actors. <code>true</code> is supposed to be used while
-	 *            the game is progressing to support the full feature set.
+	 * @param chance Used to modify the default spawning chances. For example: if
+	 *          this is called daily but the target is to spawn one feature per
+	 *          week then one would provide a 1/7f value here. The default
+	 *          spawning chances are calculated so as to sum up to 100% so using a
+	 *          value of 1 would be likely to spawn 1 random feature in the world
+	 *          map, but could spawn more or none depending on the random number
+	 *          generator results.
+	 * @param generatingworld If <code>false</code> will limit spawning to only a
+	 *          starting set of actors. <code>true</code> is supposed to be used
+	 *          while the game is progressing to support the full feature set.
 	 * @see Frequency#starting
 	 */
-	public void spawn(float chance, boolean generatingworld) {
-		if (count() >= World.scenario.startingfeatures) {
-			return;
-		}
-		if (!generatingworld && !World.scenario.respawnlocations) {
-			return;
-		}
-		List<Class<? extends Actor>> features = new ArrayList<>(
-				generators.keySet());
+	public void spawn(float chance,boolean generatingworld){
+		if(count()>=World.scenario.startingfeatures) return;
+		if(!generatingworld&&!World.scenario.respawnlocations) return;
+		List<Class<? extends Actor>> features=new ArrayList<>(generators.keySet());
 		Collections.shuffle(features);
-		for (Class<? extends Actor> feature : features) {
-			Frequency g = generators.get(feature);
-			if (generatingworld && !g.starting) {
-				continue;
-			}
-			if (g.max != null && World.getall(feature).size() >= g.max) {
-				continue;
-			}
-			if (RPG.random() <= chance * g.chance) {
-				g.generate(feature).place();
-			}
+		for(Class<? extends Actor> feature:features){
+			Frequency g=generators.get(feature);
+			if(generatingworld&&!g.starting) continue;
+			if(g.max!=null&&World.getall(feature).size()>=g.max) continue;
+			if(RPG.random()<=chance*g.chance) g.generate(feature).place();
 		}
 	}
 
-	void spawnnear(Town t, Actor a, World w, int min, int max, boolean clear) {
-		Point p = null;
-		ArrayList<Actor> actors = World.getactors();
-		while (p == null || World.get(t.x + p.x, t.y + p.y, actors) != null
-				|| !World.validatecoordinate(t.x + p.x, t.y + p.y)
-				|| w.map[t.x + p.x][t.y + p.y].equals(Terrain.WATER)) {
-			p = new Point(RPG.r(min, max), RPG.r(min, max));
-			if (RPG.chancein(2)) {
-				p.x *= -1;
-			}
-			if (RPG.chancein(2)) {
-				p.y *= -1;
-			}
+	void spawnnear(Town t,Actor a,World w,int min,int max,boolean clear){
+		Point p=null;
+		ArrayList<Actor> actors=World.getactors();
+		while(p==null||World.get(t.x+p.x,t.y+p.y,actors)!=null
+				||!World.validatecoordinate(t.x+p.x,t.y+p.y)
+				||w.map[t.x+p.x][t.y+p.y].equals(Terrain.WATER)){
+			p=new Point(RPG.r(min,max),RPG.r(min,max));
+			if(RPG.chancein(2)) p.x*=-1;
+			if(RPG.chancein(2)) p.y*=-1;
 		}
-		a.x = p.x + t.x;
-		a.y = p.y + t.y;
-		Location l = a instanceof Location ? (Location) a : null;
+		a.x=p.x+t.x;
+		a.y=p.y+t.y;
+		Location l=a instanceof Location?(Location)a:null;
 		a.place();
-		if (l != null && clear) {
-			l.capture();
-		}
+		if(l!=null&&clear) l.capture();
 	}
 
-	void generatestartinglocations(World w) {
+	void generatestartinglocations(World w){
 		UpgradeHandler.singleton.gather();
-		ArrayList<Location> locations = new ArrayList<>();
+		ArrayList<Location> locations=new ArrayList<>();
 		generateuniquelocations(locations);
-		if (World.scenario.worlddistrict) {
-			generateacademies(locations);
-		}
+		if(World.scenario.worlddistrict) generateacademies(locations);
 		locations.addAll(World.scenario.generatestartinglocations(w));
-		for (Location l : locations) {
+		for(Location l:locations)
 			l.place();
-		}
 	}
 
-	void generateuniquelocations(ArrayList<Location> locations) {
-		locations.addAll(Arrays.asList(new Location[] { new PillarOfSkulls(),
-				new Arena(), new Battlefield(), new Ziggurat(),
-				new DeepDungeon() }));
-		if (World.scenario.worlddistrict) {
-			locations.addAll(List.of(new MercenariesGuild(), new Artificer(),
-					new SummoningCircle(5, 15)));
-		}
-		locations.addAll(List.of(new AbandonedManor(), new SunkenShip(),
-				new ShatteredTemple(), new WitchesHideout(), new Graveyard(),
-				new OrcSettlement()));
+	void generateuniquelocations(ArrayList<Location> locations){
+		locations.addAll(Arrays.asList(new Location[]{new PillarOfSkulls(),
+				new Arena(),new Battlefield(),new Ziggurat(),new DeepDungeon()}));
+		if(World.scenario.worlddistrict) locations.addAll(List
+				.of(new MercenariesGuild(),new Artificer(),new SummoningCircle(5,15)));
+		locations.addAll(
+				List.of(new AbandonedManor(),new SunkenShip(),new ShatteredTemple(),
+						new WitchesHideout(),new Graveyard(),new OrcSettlement()));
 	}
 
-	void generatestartingarea(World seed, Town t) {
-		spawnnear(t, new Lodge(), seed, 1, 2, true);
-		spawnnear(t, new Shop(t.realm, true), seed, 1, 2, true);
-		RealmAcademy academy = new RealmAcademy(t.originalrealm, true);
-		spawnnear(t, academy, seed, 1, 2, true);
-		ArrayList<Monster> recruits = t.getpossiblerecruits();
-		recruits.sort(new Comparator<Monster>() {
-			@Override
-			public int compare(Monster o1, Monster o2) {
-				float difference = o1.cr - o2.cr;
-				if (difference == 0) {
-					return 0;
-				}
-				return difference > 0 ? 1 : -1;
-			}
+	void generatestartingarea(World seed,Town t){
+		spawnnear(t,new Lodge(),seed,1,2,true);
+		spawnnear(t,new Shop(t.realm,true),seed,1,2,true);
+		RealmAcademy academy=new RealmAcademy(t.originalrealm,true);
+		spawnnear(t,academy,seed,1,2,true);
+		ArrayList<Monster> recruits=t.getpossiblerecruits();
+		recruits.sort((o1,o2)->{
+			float difference=o1.cr-o2.cr;
+			if(difference==0) return 0;
+			return difference>0?1:-1;
 		});
-		spawnnear(t, new Dwelling(recruits.get(RPG.r(1, 7))), seed, 1, 2, true);
-		spawnnear(t, new AdventurersGuild(), seed, 2, 3, true);
-		spawnnear(t, new TrainingHall(), seed, 2, 3, false);
+		spawnnear(t,new Dwelling(recruits.get(RPG.r(1,7))),seed,1,2,true);
+		spawnnear(t,new AdventurersGuild(),seed,2,3,true);
+		spawnnear(t,new TrainingHall(),seed,2,3,false);
 	}
 
-	void generateacademies(ArrayList<Location> locations) {
-		for (MageGuildData g : MagesGuild.GUILDS) {
+	void generateacademies(ArrayList<Location> locations){
+		for(MageGuildData g:MagesGuild.GUILDS)
 			locations.add(g.generate());
-		}
-		for (MartialAcademyData g : MartialAcademy.ACADEMIES) {
+		for(MartialAcademyData g:MartialAcademy.ACADEMIES)
 			locations.add(g.generate());
-		}
-		locations.addAll(List.of(new ArcheryRange(), new MeadHall(),
-				new AssassinsGuild(), new Henge(), new BardsGuild(),
-				new ThievesGuild(), new Monastery(), new Sanctuary()));
-		for (Discipline d : Discipline.DISCIPLINES) {
-			if (d.hasacademy) {
-				locations.add(d.generateacademy());
-			}
-		}
+		locations.addAll(List.of(new ArcheryRange(),new MeadHall(),
+				new AssassinsGuild(),new Henge(),new BardsGuild(),new ThievesGuild(),
+				new Monastery(),new Sanctuary()));
+		for(Discipline d:Discipline.DISCIPLINES)
+			if(d.hasacademy) locations.add(d.generateacademy());
 	}
 
 	/**
@@ -268,58 +226,47 @@ public class FeatureGenerator implements Serializable {
 	 *
 	 * TODO parameters should be a Map instead of 2 lists
 	 *
-	 * @param realms
-	 *            Shuffled list of realms.
-	 * @param regions
-	 *            Each area in the world, in the same order as the realms.
+	 * @param realms Shuffled list of realms.
+	 * @param regions Each area in the world, in the same order as the realms.
 	 *
 	 * @see Terrain
 	 */
-	public Town generate(LinkedList<Realm> realms,
-			ArrayList<HashSet<Point>> regions, World w) {
-		generatetowns(realms, regions);
-		Town starting = determinestartingtown(w);
+	public Location generate(LinkedList<Realm> realms,
+			ArrayList<HashSet<Point>> regions,World w){
+		generatetowns(realms,regions);
+		Town starting=determinestartingtown(w);
 		normalizemap(starting);
-		generatefeatures(w, starting);
+		generatefeatures(w,starting);
 		normalizemap(starting);
-		for (Town t : Town.gettowns()) {
-			if (t != starting) {
-				t.populategarisson();
-			}
-		}
+		for(Town t:Town.gettowns())
+			if(t!=starting) t.populategarisson();
 		return starting;
 	}
 
-	void generatefeatures(World w, Town starting) {
+	void generatefeatures(World w,Town starting){
 		setup();
 		Temple.generatetemples();
-		generatestartingarea(w, starting);
+		generatestartingarea(w,starting);
 		generatestartinglocations(w);
-		for (Class<? extends Actor> feature : generators.keySet()) {
+		for(Class<? extends Actor> feature:generators.keySet())
 			generators.get(feature).seed(feature);
-		}
-		int target = World.scenario.startingfeatures - Location.count();
-		while (count() < target) {
-			spawn(1, true);
-		}
+		int target=World.scenario.startingfeatures-Location.count();
+		while(count()<target)
+			spawn(1,true);
 	}
 
-	int count() {
-		int count = 0;
-		Collection<ArrayList<Actor>> actors = World.getseed().actors.values();
-		for (ArrayList<Actor> instances : actors) {
-			count += instances.size();
-		}
+	int count(){
+		int count=0;
+		Collection<ArrayList<Actor>> actors=World.getseed().actors.values();
+		for(ArrayList<Actor> instances:actors)
+			count+=instances.size();
 		return count;
 	}
 
-	static Town gettown(Terrain terrain, World seed, ArrayList<Town> towns) {
+	static Town gettown(Terrain terrain,World seed,ArrayList<Town> towns){
 		Collections.shuffle(towns);
-		for (Town town : towns) {
-			if (seed.map[town.x][town.y] == terrain) {
-				return town;
-			}
-		}
+		for(Town town:towns)
+			if(seed.map[town.x][town.y]==terrain) return town;
 		throw new RestartWorldGeneration();
 		/*
 		 * TODO there is a bug that is allowing the generation to fall here,
@@ -328,16 +275,13 @@ public class FeatureGenerator implements Serializable {
 		 */
 	}
 
-	Town determinestartingtown(World seed) {
-		Terrain starton = RPG.r(1, 2) == 1 ? Terrain.PLAIN : Terrain.HILL;
-		ArrayList<Town> towns = Town.gettowns();
-		Town starting = World.scenario.easystartingtown
-				? gettown(starton, seed, towns)
-				: RPG.pick(towns);
-		if (Terrain.search(new Point(starting.x, starting.y), Terrain.WATER, 2,
-				seed) != 0) {
+	Town determinestartingtown(World seed){
+		Terrain starton=RPG.r(1,2)==1?Terrain.PLAIN:Terrain.HILL;
+		ArrayList<Town> towns=Town.gettowns();
+		Town starting=World.scenario.easystartingtown?gettown(starton,seed,towns)
+				:RPG.pick(towns);
+		if(Terrain.search(new Point(starting.x,starting.y),Terrain.WATER,2,seed)!=0)
 			throw new RestartWorldGeneration();
-		}
 		return starting;
 	}
 
@@ -349,20 +293,18 @@ public class FeatureGenerator implements Serializable {
 	 *
 	 * @see Scenario#normalizemap
 	 */
-	void normalizemap(Town starting) {
-		if (!World.scenario.normalizemap) {
-			return;
-		}
-		ArrayList<Town> towns = Town.gettowns();
+	void normalizemap(Town starting){
+		if(!World.scenario.normalizemap) return;
+		ArrayList<Town> towns=Town.gettowns();
 		towns.remove(starting);
-		Realm r = towns.get(0).originalrealm;
-		for (Actor a : World.getactors()) {
-			Location l = a instanceof Location ? (Location) a : null;
-			if (l != null && l.realm != null) {
-				l.realm = r;
-				if (a instanceof Town) {
-					Town t = (Town) a;
-					t.originalrealm = r;
+		Realm r=towns.get(0).originalrealm;
+		for(Actor a:World.getactors()){
+			Location l=a instanceof Location?(Location)a:null;
+			if(l!=null&&l.realm!=null){
+				l.realm=r;
+				if(a instanceof Town){
+					Town t=(Town)a;
+					t.originalrealm=r;
 					t.replacegovernor(new MonsterGovernor(t));
 				}
 			}
@@ -370,13 +312,13 @@ public class FeatureGenerator implements Serializable {
 	}
 
 	void generatetowns(LinkedList<Realm> realms,
-			ArrayList<HashSet<Point>> regions) {
-		int towns = World.scenario.towns;
-		for (int i = 0; i < regions.size() && towns > 0; i++) {
-			Terrain t = WorldGenerator.GENERATIONORDER[i];
-			if (!t.equals(Terrain.WATER)) {
-				new Town(regions.get(i), realms.pop()).place();
-				towns -= 1;
+			ArrayList<HashSet<Point>> regions){
+		int towns=World.scenario.towns;
+		for(int i=0;i<regions.size()&&towns>0;i++){
+			Terrain t=WorldGenerator.GENERATIONORDER[i];
+			if(!t.equals(Terrain.WATER)){
+				new Town(regions.get(i),realms.pop()).place();
+				towns-=1;
 			}
 		}
 	}

@@ -7,6 +7,7 @@ import javelin.Javelin;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.ai.cache.AiCache;
 import javelin.controller.fight.Fight;
+import javelin.controller.terrain.Terrain;
 import javelin.controller.wish.Ressurect;
 import javelin.model.item.Item;
 import javelin.model.item.Scroll;
@@ -28,37 +29,33 @@ import javelin.view.screen.BattleScreen;
  *
  * @author alex
  */
-public class EndBattle extends BattleEvent {
+public class EndBattle extends BattleEvent{
 	/** Start after-{@link Fight} cleanup. */
-	public static void end() {
-		int nsquads = World.getall(Squad.class).size();
-		Fight.victory = Javelin.app.fight.win();
-		terminateconditions(Fight.state, BattleScreen.active);
-		if (Javelin.app.fight.onend()) {
-			if (Squad.active != null
-					&& nsquads == World.getall(Squad.class).size()) {
-				while (World.get(Squad.active.x, Squad.active.y,
-						Incursion.class) != null) {
-					Squad.active.displace();
-					Squad.active.place();
-				}
-				end(Fight.originalblueteam);
-				if (Dungeon.active != null) {
-					Temple.climbing = false;
-					Dungeon.active.activate(false);
-				}
+	public static void end(){
+		int nsquads=World.getall(Squad.class).size();
+		Fight.victory=Javelin.app.fight.win();
+		terminateconditions(Fight.state,BattleScreen.active);
+		if(Javelin.app.fight.onend())
+			if(Squad.active!=null&&nsquads==World.getall(Squad.class).size()){
+			while(World.get(Squad.active.x,Squad.active.y,Incursion.class)!=null){
+			Squad.active.displace();
+			Squad.active.place();
 			}
-		}
+			end(Fight.originalblueteam);
+			if(Dungeon.active!=null){
+			Temple.climbing=false;
+			Dungeon.active.activate(false);
+			}
+			}
 		AiCache.reset();
-		Javelin.app.fight = null;
-		Fight.state = null;
+		Javelin.app.fight=null;
+		Fight.state=null;
 	}
 
-	static void terminateconditions(BattleState s, BattleScreen screen) {
+	static void terminateconditions(BattleState s,BattleScreen screen){
 		screen.block();
-		for (Combatant c : Fight.state.getcombatants()) {
-			c.finishconditions(s, screen);
-		}
+		for(Combatant c:Fight.state.getcombatants())
+			c.finishconditions(s,screen);
 	}
 
 	/**
@@ -66,91 +63,80 @@ public class EndBattle extends BattleEvent {
 	 *
 	 * @param prefix
 	 */
-	public static void showcombatresult() {
+	public static void showcombatresult(){
 		MessagePanel.active.clear();
 		String combatresult;
-		if (Fight.victory) {
-			combatresult = Javelin.app.fight.reward();
-		} else if (Fight.state.getfleeing(Fight.originalblueteam).isEmpty()) {
+		if(Fight.victory)
+			combatresult=Javelin.app.fight.reward();
+		else if(Fight.state.getfleeing(Fight.originalblueteam).isEmpty()){
 			Squad.active.disband();
-			combatresult = "You lost!";
-		} else if (Javelin.app.fight.friendly) {
-			combatresult = "You lost!";
-		} else {
-			combatresult = "Fled from combat. No awards received.";
-			if (!Fight.victory && Fight.state.fleeing
-					.size() != Fight.originalblueteam.size()) {
-				combatresult += "\nFallen allies left behind are lost!";
-				for (Combatant abandoned : Fight.state.dead) {
-					abandoned.hp = Combatant.DEADATHP;
-				}
+			combatresult="You lost!";
+		}else if(Javelin.app.fight.friendly)
+			combatresult="You lost!";
+		else{
+			combatresult="Fled from combat. No awards received.";
+			if(!Fight.victory
+					&&Fight.state.fleeing.size()!=Fight.originalblueteam.size()){
+				combatresult+="\nFallen allies left behind are lost!";
+				for(Combatant abandoned:Fight.state.dead)
+					abandoned.hp=Combatant.DEADATHP;
 			}
-			if (Squad.active.transport != null && Dungeon.active == null) {
-				combatresult += " Vehicle lost!";
-				Squad.active.transport = null;
+			if(Squad.active.transport!=null&&Dungeon.active==null
+					&&!Terrain.current().equals(Terrain.WATER)){
+				combatresult+=" Vehicle lost!";
+				Squad.active.transport=null;
 				Squad.active.updateavatar();
 			}
 		}
-		Javelin.message(combatresult + "\nPress any key to continue...",
+		Javelin.message(combatresult+"\nPress any key to continue...",
 				Javelin.Delay.BLOCK);
 		BattleScreen.active.getUserInput();
 	}
 
-	static void updateoriginal(List<Combatant> originalteam) {
-		ArrayList<Combatant> update = new ArrayList<>(Fight.state.blueTeam);
+	static void updateoriginal(List<Combatant> originalteam){
+		ArrayList<Combatant> update=new ArrayList<>(Fight.state.blueTeam);
 		update.addAll(Fight.state.dead);
-		for (final Combatant inbattle : update) {
-			int originali = originalteam.indexOf(inbattle);
-			if (originali >= 0) {
-				update(inbattle, originalteam.get(originali));
-			}
+		for(final Combatant inbattle:update){
+			int originali=originalteam.indexOf(inbattle);
+			if(originali>=0) update(inbattle,originalteam.get(originali));
 		}
 	}
 
-	static void update(final Combatant from, final Combatant to) {
+	static void update(final Combatant from,final Combatant to){
 		from.transferconditions(to);
-		to.hp = from.hp;
-		if (to.hp > to.maxhp) {
-			to.hp = to.maxhp;
-		} else if (to.hp < 1) {
-			to.hp = 1;
-		}
-		copyspells(from, to);
+		to.hp=from.hp;
+		if(to.hp>to.maxhp)
+			to.hp=to.maxhp;
+		else if(to.hp<1) to.hp=1;
+		copyspells(from,to);
 	}
 
-	static void copyspells(final Combatant from, final Combatant to) {
-		for (int i = 0; i < from.spells.size(); i++) {
-			to.spells.get(i).used = from.spells.get(i).used;
-		}
+	static void copyspells(final Combatant from,final Combatant to){
+		for(int i=0;i<from.spells.size();i++)
+			to.spells.get(i).used=from.spells.get(i).used;
 	}
 
 	/**
 	 * Tries to {@link #revive(Combatant)} the combatant. If can't, remove him
 	 * from the game.
 	 *
-	 * TODO isn't updating {@link Ressurect#dead} when the entire Squad dies!
-	 * this probably isn't being called
+	 * TODO isn't updating {@link Ressurect#dead} when the entire Squad dies! this
+	 * probably isn't being called
 	 */
-	static void bury(List<Combatant> originalteam) {
-		Squad squad = Squad.active;
-		for (Combatant c : Fight.state.dead) {
-			if (c.hp > Combatant.DEADATHP && c.source.constitution > 0) {
-				c.hp = 1;
-			} else if (!Fight.victory || !revive(c, originalteam)) {
-				ArrayList<Item> bag = squad.equipment.get(c);
+	static void bury(List<Combatant> originalteam){
+		Squad squad=Squad.active;
+		for(Combatant c:Fight.state.dead)
+			if(c.hp>Combatant.DEADATHP&&c.source.constitution>0)
+				c.hp=1;
+			else if(!Fight.victory||!revive(c,originalteam)){
+				ArrayList<Item> bag=squad.equipment.get(c);
 				originalteam.remove(c);
 				squad.remove(c);
-				if (Fight.victory) {
-					for (Item i : bag) {
-						i.grab();
-					}
-				}
+				if(Fight.victory) for(Item i:bag)
+					i.grab();
 				MercenariesGuild.die(c);
-				if (!c.summoned && !c.mercenary) {
-					Ressurect.dead = c;
-				}
+				if(!c.summoned&&!c.mercenary) Ressurect.dead=c;
 			}
-		}
 		Fight.state.dead.clear();
 	}
 
@@ -159,73 +145,54 @@ public class EndBattle extends BattleEvent {
 	 * instance of nay of those nor between which characters to use it with. In
 	 * short, we need a screen for all that.
 	 */
-	static boolean revive(Combatant dead, List<Combatant> originalteam) {
-		List<Combatant> alive = new ArrayList<>(originalteam);
+	static boolean revive(Combatant dead,List<Combatant> originalteam){
+		List<Combatant> alive=new ArrayList<>(originalteam);
 		alive.removeAll(Fight.state.dead);
-		Spell spell = castrevive(alive);
-		Scroll scroll = null;
-		if (scroll == null) {
-			scroll = findressurectscroll(alive);
-			if (scroll != null) {
-				spell = scroll.spell;
-			}
+		Spell spell=castrevive(alive);
+		Scroll scroll=null;
+		if(scroll==null){
+			scroll=findressurectscroll(alive);
+			if(scroll!=null) spell=scroll.spell;
 		}
-		if (spell == null || !spell.validate(null, dead)) {
-			return false;
-		}
-		spell.castpeacefully(null, dead);
-		if (scroll == null) {
-			spell.used += 1;
-		} else {
+		if(spell==null||!spell.validate(null,dead)) return false;
+		spell.castpeacefully(null,dead);
+		if(scroll==null)
+			spell.used+=1;
+		else
 			Squad.active.equipment.remove(scroll);
-		}
 		return true;
 	}
 
-	static Scroll findressurectscroll(List<Combatant> alive) {
-		List<Scroll> ressurectscrolls = new ArrayList<>();
-		for (Scroll s : Squad.active.equipment.getall(Scroll.class)) {
-			if (s.spell instanceof RaiseDead) {
-				ressurectscrolls.add(s);
-			}
-		}
-		if (ressurectscrolls.isEmpty()) {
-			return null;
-		}
-		for (Combatant c : alive) {
-			for (Scroll s : ressurectscrolls) {
-				if (s.canuse(c) == null) {
-					return s;
-				}
-			}
-		}
+	static Scroll findressurectscroll(List<Combatant> alive){
+		List<Scroll> ressurectscrolls=new ArrayList<>();
+		for(Scroll s:Squad.active.equipment.getall(Scroll.class))
+			if(s.spell instanceof RaiseDead) ressurectscrolls.add(s);
+		if(ressurectscrolls.isEmpty()) return null;
+		for(Combatant c:alive)
+			for(Scroll s:ressurectscrolls)
+				if(s.canuse(c)==null) return s;
 		return null;
 	}
 
-	static Spell castrevive(List<Combatant> alive) {
-		for (Combatant c : alive) {
-			for (Spell s : c.spells) {
-				if (s instanceof RaiseDead && !s.exhausted()) {
-					return s;
-				}
-			}
-		}
+	static Spell castrevive(List<Combatant> alive){
+		for(Combatant c:alive)
+			for(Spell s:c.spells)
+				if(s instanceof RaiseDead&&!s.exhausted()) return s;
 		return null;
 	}
 
-	static void end(ArrayList<Combatant> originalteam) {
-		for (Combatant c : Fight.state.getcombatants()) {
-			if (c.summoned) {
+	static void end(ArrayList<Combatant> originalteam){
+		for(Combatant c:Fight.state.getcombatants())
+			if(c.summoned){
 				Fight.state.blueTeam.remove(c);
 				Fight.state.redTeam.remove(c);
 			}
-		}
 		updateoriginal(originalteam);
 		bury(originalteam);
-		Squad.active.members = originalteam;
-		for (Combatant member : Squad.active.members) {
-			member.currentmelee.sequenceindex = -1;
-			member.currentranged.sequenceindex = -1;
+		Squad.active.members=originalteam;
+		for(Combatant member:Squad.active.members){
+			member.currentmelee.sequenceindex=-1;
+			member.currentranged.sequenceindex=-1;
 		}
 		ThreadManager.printbattlerecord();
 	}

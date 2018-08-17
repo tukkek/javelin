@@ -1,9 +1,9 @@
 Javelin offers a few game modes:
 
-Scenario: a shorter mode, offering a challenge in which you have to capture all enemy towns. It has a reduced number of game features but is more suitable to play during a single session.
+Campaign: a long, epic quest to retrieve the seven Relics from deep inside their ancient Temples. It presents all of the game features, including town management, mini-games and a complex, always-evolving game world.
 
 Dungeon world: explore a predetermined game world while conquering increasingly difficult dungeons and unlocking new areas in a more traditional RPG experience.
 
-Campaign: a long, epic quest to retrieve the seven Relics from deep inside their ancient Temples. It presents all of the game features, including town management, mini-games and a complex, always-evolving game world.
+Art of war: a more straightforward game mode focusing on large battles. No upgrades, training, items or city management - just win battles, get stronger, hire more units and march onwards until all of your foes are vanquished!
 
 You can read more about each mode by pressing F1 after the game has started. Pressing h will list all help guides available in-game.

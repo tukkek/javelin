@@ -2,6 +2,7 @@ package javelin.controller.fight;
 
 import java.util.ArrayList;
 
+import javelin.controller.terrain.Terrain;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.Location;
@@ -15,7 +16,7 @@ import javelin.view.screen.BattleScreen;
  *
  * @author alex
  */
-public class Siege extends Fight {
+public class Siege extends Fight{
 	private Location place;
 	/**
 	 * If <code>false</code> will skip
@@ -23,45 +24,41 @@ public class Siege extends Fight {
 	 * {@link Fight#onEnd(BattleScreen, ArrayList, BattleState)}. This allows
 	 * subclasses to take control of after-fight consequences.
 	 */
-	protected boolean cleargarrison = true;
+	protected boolean cleargarrison=true;
 
 	/**
-	 * @param l
-	 *            Where this fight is occurring at.
+	 * @param l Where this fight is occurring at.
 	 */
-	public Siege(Location l) {
-		place = l;
-		hide = false;
-		meld = true;
+	public Siege(Location l){
+		place=l;
+		hide=false;
+		meld=true;
+		terrain=Terrain.get(l.x,l.y);
 	}
 
 	@Override
-	public ArrayList<Combatant> getmonsters(Integer teamel) {
-		ArrayList<Combatant> clones = new ArrayList<>(place.garrison);
-		for (int i = 0; i < clones.size(); i++) {
-			clones.set(i, clones.get(i).clone().clonesource());
-		}
+	public ArrayList<Combatant> getmonsters(Integer teamel){
+		ArrayList<Combatant> clones=new ArrayList<>(place.garrison);
+		for(int i=0;i<clones.size();i++)
+			clones.set(i,clones.get(i).clone().clonesource());
 		return clones;
 	}
 
 	@Override
-	public void bribe() {
+	public void bribe(){
 		afterwin();
-		place.realm = null;
+		place.realm=null;
 	}
 
 	@Override
-	public boolean onend() {
-		if (cleargarrison) {
-			if (Fight.victory) {
+	public boolean onend(){
+		if(cleargarrison){
+			if(Fight.victory)
 				afterwin();
-			} else {
+			else
 				afterlose();
-			}
 			/* TODO this should probably be inside afterwin() */
-			if (place.garrison.isEmpty()) {
-				place.capture();
-			}
+			if(place.garrison.isEmpty()) place.capture();
 		}
 		return super.onend();
 	}
@@ -74,16 +71,13 @@ public class Siege extends Fight {
 	 * would mean 100% recovery chance while -10 or less would be guaranteed
 	 * removal.
 	 */
-	protected void afterlose() {
-		ArrayList<Combatant> alive = state.getcombatants();
-		for (Combatant c : new ArrayList<>(place.garrison)) {
-			if (!alive.contains(c)) {
-				place.garrison.remove(c);
-			}
-		}
+	protected void afterlose(){
+		ArrayList<Combatant> alive=state.getcombatants();
+		for(Combatant c:new ArrayList<>(place.garrison))
+			if(!alive.contains(c)) place.garrison.remove(c);
 	}
 
-	protected void afterwin() {
+	protected void afterwin(){
 		place.garrison.clear();
 	}
 }

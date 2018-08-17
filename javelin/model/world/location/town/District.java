@@ -23,53 +23,43 @@ import javelin.model.world.location.Location;
  *
  * @author alex
  */
-public class District {
+public class District{
 	/**
 	 * Not really the maximum size but the maximum natural size if no other
 	 * district improvement are affecting it.
 	 */
-	public static final double RADIUSMAX = Rank.CITY.getradius();
+	public static final double RADIUSMAX=Rank.CITY.getradius()*2;
 
-	static final int MOSTNEIGHBORSALLOWED = 2;
+	static final int MOSTNEIGHBORSALLOWED=2;
 
 	public Town town;
-	ArrayList<Location> locations = null;
-	HashSet<Point> area = null;
-	ArrayList<Squad> squads = null;
+	ArrayList<Location> locations=null;
+	HashSet<Point> area=null;
+	ArrayList<Squad> squads=null;
 
-	public District(Town t) {
-		town = t;
+	public District(Town t){
+		town=t;
 	}
 
-	public ArrayList<Location> getlocations() {
-		if (locations != null) {
-			return locations;
-		}
-		locations = new ArrayList<>();
-		ArrayList<Actor> all = World.getactors();
-		for (Point p : getarea()) {
-			Actor a = World.get(p.x, p.y, all);
-			if (a instanceof Location) {
-				locations.add((Location) a);
-			}
+	public ArrayList<Location> getlocations(){
+		if(locations!=null) return locations;
+		locations=new ArrayList<>();
+		ArrayList<Actor> all=World.getactors();
+		for(Point p:getarea()){
+			Actor a=World.get(p.x,p.y,all);
+			if(a instanceof Location) locations.add((Location)a);
 		}
 		Collections.shuffle(locations);
 		return locations;
 	}
 
-	public HashSet<Point> getarea() {
-		if (area != null) {
-			return area;
-		}
-		int radius = getradius();
-		area = new HashSet<>();
-		for (int x = town.x - radius; x <= town.x + radius; x++) {
-			for (int y = town.y - radius; y <= town.y + radius; y++) {
-				if (World.validatecoordinate(x, y)) {
-					area.add(new Point(x, y));
-				}
-			}
-		}
+	public HashSet<Point> getarea(){
+		if(area!=null) return area;
+		int radius=getradius();
+		area=new HashSet<>();
+		for(int x=town.x-radius;x<=town.x+radius;x++)
+			for(int y=town.y-radius;y<=town.y+radius;y++)
+				if(World.validatecoordinate(x,y)) area.add(new Point(x,y));
 		return area;
 	}
 
@@ -77,46 +67,33 @@ public class District {
 	 * @return Number of squares away from a {@link Town} to consider its
 	 *         district.
 	 */
-	public int getradius() {
-		return town.getrank().getradius() + World.scenario.districtmodifier;
+	public int getradius(){
+		return town.getrank().getradius()+World.scenario.districtmodifier;
 	}
 
 	/**
-	 * @param type
-	 *            Will check for this exact class, not subclasses.
-	 * @return Location of the given type or <code>null</code> if none was
-	 *         found.
+	 * @param type Will check for this exact class, not subclasses.
+	 * @return Location of the given type or <code>null</code> if none was found.
 	 */
-	public Actor getlocation(Class<? extends Location> type) {
-		for (Actor l : getlocations()) {
-			if (l.getClass().equals(type)) {
-				return l;
-			}
-		}
+	public Actor getlocation(Class<? extends Location> type){
+		for(Actor l:getlocations())
+			if(l.getClass().equals(type)) return l;
 		return null;
 	}
 
-	public ArrayList<Location> getlocationtype(Class<? extends Location> type) {
-		ArrayList<Location> result = new ArrayList<>();
-		for (Location l : getlocations()) {
-			if (type.isInstance(l)) {
-				result.add(l);
-			}
-		}
+	public ArrayList<Location> getlocationtype(Class<? extends Location> type){
+		ArrayList<Location> result=new ArrayList<>();
+		for(Location l:getlocations())
+			if(type.isInstance(l)) result.add(l);
 		return result;
 	}
 
-	public ArrayList<Squad> getsquads() {
-		if (squads != null) {
-			return squads;
-		}
+	public ArrayList<Squad> getsquads(){
+		if(squads!=null) return squads;
 		getarea();
-		squads = new ArrayList<>();
-		for (Squad s : Squad.getsquads()) {
-			if (area.contains(new Point(s.x, s.y))) {
-				squads.add(s);
-			}
-		}
+		squads=new ArrayList<>();
+		for(Squad s:Squad.getsquads())
+			if(area.contains(new Point(s.x,s.y))) squads.add(s);
 		return squads;
 	}
 
@@ -125,47 +102,36 @@ public class District {
 	 *         (as to prevent the creation of "walls" {@link Squad}s will have
 	 *         trouble passing through). This list is shuffled by default.
 	 */
-	public ArrayList<Point> getfreespaces() {
-		ArrayList<Actor> actors = World.getactors();
-		ArrayList<Actor> locations = new ArrayList<>();
-		for (Actor a : actors) {
-			if (a instanceof Location) {
-				locations.add(a);
-			}
-		}
-		ArrayList<Point> free = new ArrayList<>();
-		final World w = World.getseed();
-		searching: for (Point p : getarea()) {
-			if (Terrain.get(p.x, p.y).equals(Terrain.WATER)
-					|| World.get(p.x, p.y, actors) != null) {
+	public ArrayList<Point> getfreespaces(){
+		ArrayList<Actor> actors=World.getactors();
+		ArrayList<Actor> locations=new ArrayList<>();
+		for(Actor a:actors)
+			if(a instanceof Location) locations.add(a);
+		ArrayList<Point> free=new ArrayList<>();
+		final World w=World.getseed();
+		searching:for(Point p:getarea()){
+			if(Terrain.get(p.x,p.y).equals(Terrain.WATER)
+					||World.get(p.x,p.y,actors)!=null)
 				continue searching;
-			}
-			int neighbors = 0;
-			for (int x = p.x - 1; x <= p.x + 1; x++) {
-				for (int y = p.y - 1; y <= p.y + 1; y++) {
-					if (x == p.x && y == p.y || !World.validatecoordinate(x, y)
-							|| w.roads[p.x][p.y] || w.highways[p.x][p.y]
-							|| World.get(x, y, locations) == null) {
+			int neighbors=0;
+			for(int x=p.x-1;x<=p.x+1;x++)
+				for(int y=p.y-1;y<=p.y+1;y++){
+					if(x==p.x&&y==p.y||!World.validatecoordinate(x,y)||w.roads[p.x][p.y]
+							||w.highways[p.x][p.y]||World.get(x,y,locations)==null)
 						continue;
-					}
-					neighbors += 1;
-					if (neighbors > MOSTNEIGHBORSALLOWED) {
-						continue searching;
-					}
+					neighbors+=1;
+					if(neighbors>MOSTNEIGHBORSALLOWED) continue searching;
 				}
-			}
 			free.add(p);
 		}
 		Collections.shuffle(free);
 		return free;
 	}
 
-	public boolean isbuilding(Class<? extends Location> site) {
-		for (Actor l : getlocationtype(ConstructionSite.class)) {
-			ConstructionSite c = (ConstructionSite) l;
-			if (site.isInstance(c.goal)) {
-				return true;
-			}
+	public boolean isbuilding(Class<? extends Location> site){
+		for(Actor l:getlocationtype(ConstructionSite.class)){
+			ConstructionSite c=(ConstructionSite)l;
+			if(site.isInstance(c.goal)) return true;
 		}
 		return false;
 	}

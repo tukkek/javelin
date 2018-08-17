@@ -1,0 +1,7 @@
+In the Art of War scenario, your only goal is to capture all the hostile locations in the world map. Cities, items and upgrades are non-existant - just amass an army big enough to win every battle and focus on keeping your units alive so they can fight another day!
+
+The only exception being that once at the end of each week, you'll be prompted if you want to let your eligible units upgrade on their own, immediately. This is useful if you want your commander to scale up to other higher-tier units, for example. You may choose to also skip the upgrade so you can use your experience points to hire new units instead, if you prefer.
+
+Note that only non-mercenary units with at least 100XP are eligible for an upgrade once the week ends. The only upgrade that is applied to any unit are Warrior class levels - so once an unit is already a level 20 warrior, it cannot be upgraded any further. A unit will upgrade as many levels as possible at once, as long as it has 100XP or more at the end of the week.
+
+You can also manually trigger an upgrade round by camping for a week anywhere on the world map. Since there aren't any random encounters or enemies spawning over time, that is safe to do at any moment. Keep in mind, however, that any mercenaries you have will still require their daily fees even while camping - so make sure to dismiss them before camping; wait until later in the week to camp for a day or two only or at least take their payments into account when camping!

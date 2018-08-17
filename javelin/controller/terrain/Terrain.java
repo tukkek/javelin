@@ -39,47 +39,50 @@ import javelin.old.RPG;
  *
  * @author alex
  */
-public abstract class Terrain implements Serializable {
+public abstract class Terrain implements Serializable{
 	/**
 	 * Description return by {@link #getweather()} in case of
 	 * {@link Season#WINTER} snow.
 	 */
-	public static final String SNOWING = "snowing";
+	public static final String SNOWING="snowing";
 
 	/**
 	 * 1 in chance in X of a special {@link #gethazards(int, boolean)} ocurring.
 	 */
-	public static final int HAZARDCHANCE = 100;
+	public static final int HAZARDCHANCE=100;
 
 	/** 2/16 Easy (el-5 to el-8) - plains */
-	public static final Terrain PLAIN = new Plains();
+	public static final Terrain PLAIN=new Plains();
 	/** Similar to plains. */
-	public static final Terrain HILL = new Hill();
+	public static final Terrain HILL=new Hill();
 	/** * 10/16 Moderate (el-4) - forest */
-	public static final Terrain FOREST = new Forest();
+	public static final Terrain FOREST=new Forest();
 	/** Similar to {@link #FOREST}. */
-	public static final Terrain WATER = new Water();
+	public static final Terrain WATER=new Water();
 
 	/** 3/16 Difficult (el-3 to el) - mountains */
-	public static final Terrain MOUNTAINS = new Mountains();
+	public static final Terrain MOUNTAINS=new Mountains();
 	/** Similar to mountain. Doubles as tundra in the winter. */
-	public static final Terrain DESERT = new Desert();
+	public static final Terrain DESERT=new Desert();
 	/** 1/16 Very difficult (el+1) - swamp */
-	public static final Terrain MARSH = new Marsh();
+	public static final Terrain MARSH=new Marsh();
 	/** Represent {@link Dungeon}s and {@link Mine}s. */
-	public static final Terrain UNDERGROUND = new Underground();
+	public static final Terrain UNDERGROUND=new Underground();
 
 	/** All terrain types. */
-	public static final Terrain[] ALL = new Terrain[] { PLAIN, HILL, FOREST,
-			MOUNTAINS, DESERT, MARSH, UNDERGROUND, WATER };
+	public static final Terrain[] ALL=new Terrain[]{PLAIN,HILL,FOREST,MOUNTAINS,
+			DESERT,MARSH,UNDERGROUND,WATER};
+	/** All terrain types except {@link #WATER} and {@link #UNDERGROUND}. */
+	public static final Terrain[] STANDARD=new Terrain[]{PLAIN,HILL,FOREST,
+			MOUNTAINS,DESERT,MARSH};
 	/** All terrain types except {@link #UNDERGROUND}. */
-	public static final Terrain[] NONUNDERGROUND = new Terrain[] { PLAIN, HILL,
-			FOREST, MOUNTAINS, DESERT, MARSH, WATER };
+	public static final Terrain[] NONUNDERGROUND=new Terrain[]{PLAIN,HILL,FOREST,
+			MOUNTAINS,DESERT,MARSH,WATER};
 	/** All terrain types except {@link #water}. */
-	public static final Terrain[] NONWATER = new Terrain[] { PLAIN, HILL,
-			FOREST, MOUNTAINS, DESERT, MARSH, UNDERGROUND };
+	public static final Terrain[] NONWATER=new Terrain[]{PLAIN,HILL,FOREST,
+			MOUNTAINS,DESERT,MARSH,UNDERGROUND};
 
-	static final int[] STEPS = new int[] { -1, 0, +1 };
+	static final int[] STEPS=new int[]{-1,0,+1};
 
 	/**
 	 * Encounter level adjustment.
@@ -92,66 +95,59 @@ public abstract class Terrain implements Serializable {
 	 *             veryunforgiving and hence no fun.
 	 */
 	@Deprecated
-	public Integer difficulty = null;
+	public Integer difficulty=null;
 
 	/** No road. */
-	public Float speedtrackless = null;
+	public Float speedtrackless=null;
 	/** Minor road. */
-	public Float speedroad = null;
+	public Float speedroad=null;
 	/** Major road. */
-	public Float speedhighway = null;
+	public Float speedhighway=null;
 	/** Used to determine tile. */
-	public String name = null;
+	public String name=null;
 
 	/**
-	 * Maximum encounter level delta allowed, in order to make some terrains
-	 * more noob friendly.
+	 * Maximum encounter level delta allowed, in order to make some terrains more
+	 * noob friendly.
 	 */
-	public Integer difficultycap = null;
+	public Integer difficultycap=null;
 	/** Used to see distant {@link World} terrain. */
-	public Integer visionbonus = null;
+	public Integer visionbonus=null;
 
 	private ArrayList<Actor> towns;
 
 	/** ASCII representation of terrain type for debugging purposes. */
-	public Character representation = null;
+	public Character representation=null;
 
 	/** Terrains that "overflow". They receive a "shore" visual. */
-	public boolean liquid = false;
+	public boolean liquid=false;
 
 	/**
 	 * Uses current terrain as base.
 	 *
-	 * @param mph
-	 *            Applies terrain penalty to base Squad speed.
-	 * @param x
-	 *            {@link World} coordinate.
-	 * @param y
-	 *            {@link World} coordinate.
+	 * @param mph Applies terrain penalty to base Squad speed.
+	 * @param x {@link World} coordinate.
+	 * @param y {@link World} coordinate.
 	 * @return Speed in miles per hour to traverse this terrain.
 	 *
 	 * @see Squad#move()
 	 * @see Terrain#current()
 	 */
-	public int speed(int mph, int x, int y) {
-		return Math.round(mph * getspeed(x, y));
+	public int speed(int mph,int x,int y){
+		return Math.round(mph*getspeed(x,y));
 	}
 
 	/**
-	 * @param x
-	 *            {@link World} coordinate.
-	 * @param y
-	 *            {@link World} coordinate.
+	 * @param x {@link World} coordinate.
+	 * @param y {@link World} coordinate.
 	 * @return A percentage value determining how fast it is to walk here, based
 	 *         on road status.
 	 * @see World#roads
 	 * @see World#highways
 	 */
-	public float getspeed(int x, int y) {
-		if (!World.seed.roads[x][y]) {
-			return speedtrackless;
-		}
-		return World.seed.highways[x][y] ? speedhighway : speedroad;
+	public float getspeed(int x,int y){
+		if(!World.seed.roads[x][y]) return speedtrackless;
+		return World.seed.highways[x][y]?speedhighway:speedroad;
 	}
 
 	/**
@@ -159,39 +155,34 @@ public abstract class Terrain implements Serializable {
 	 *
 	 * @return Current terrain difficulty. For example: {@link PLAIN}.
 	 */
-	static public Terrain current() {
-		if (JavelinApp.context == null) {
-			return null;
-		}
-		Point h = JavelinApp.context.getherolocation();
-		return h == null ? null : Terrain.get(h.x, h.y);
+	static public Terrain current(){
+		if(JavelinApp.context==null) return null;
+		Point h=JavelinApp.context.getherolocation();
+		return h==null?null:Terrain.get(h.x,h.y);
 	}
 
 	/**
-	 * @param x
-	 *            {@link World} coordinate.
-	 * @param y
-	 *            {@link World} coordinate.
+	 * @param x {@link World} coordinate.
+	 * @param y {@link World} coordinate.
 	 * @return Terrain difficulty. For example: {@link PLAIN}.
 	 */
-	public static Terrain get(int x, int y) {
-		return Dungeon.active == null ? World.getseed().map[x][y]
-				: Terrain.UNDERGROUND;
+	public static Terrain get(int x,int y){
+		return Dungeon.active==null?World.getseed().map[x][y]:Terrain.UNDERGROUND;
 	}
 
 	@Override
-	public String toString() {
+	public String toString(){
 		return name;
 	}
 
 	@Override
-	public int hashCode() {
+	public int hashCode(){
 		return name.hashCode();
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		return obj != null && name.equals(((Terrain) obj).name);
+	public boolean equals(Object obj){
+		return obj!=null&&name.equals(((Terrain)obj).name);
 	}
 
 	/**
@@ -200,14 +191,14 @@ public abstract class Terrain implements Serializable {
 	 */
 	abstract public Maps getmaps();
 
-	HashSet<Point> generatearea(World world) {
-		Point source = generatesource(world);
-		Point current = source;
-		HashSet<Point> area = generatestartingarea(world);
-		int size = getareasize();
-		while (area.size() < size) {
+	HashSet<Point> generatearea(World world){
+		Point source=generatesource(world);
+		Point current=source;
+		HashSet<Point> area=generatestartingarea(world);
+		int size=getareasize();
+		while(area.size()<size){
 			area.add(current);
-			current = expand(area, world);
+			current=expand(area,world);
 		}
 		return area;
 	}
@@ -215,19 +206,18 @@ public abstract class Terrain implements Serializable {
 	/**
 	 * @return Number of tiles the generated area for this terrain should have.
 	 */
-	protected int getareasize() {
-		return World.scenario.size * World.scenario.size
-				/ WorldGenerator.NREGIONS;
+	protected int getareasize(){
+		return World.scenario.size*World.scenario.size/WorldGenerator.NREGIONS;
 	}
 
 	/**
 	 * Usually returns an empty set.
 	 *
-	 * @return a set of points which will be considered as already included in
-	 *         the generated area, before starting the
-	 *         {@link #generatearea(World)} process proper.
+	 * @return a set of points which will be considered as already included in the
+	 *         generated area, before starting the {@link #generatearea(World)}
+	 *         process proper.
 	 */
-	protected HashSet<Point> generatestartingarea(World world) {
+	protected HashSet<Point> generatestartingarea(World world){
 		return new HashSet<>();
 	}
 
@@ -235,31 +225,27 @@ public abstract class Terrain implements Serializable {
 	 * Decides where to start the {@link #expand(HashSet, World, Point)} process
 	 * from.
 	 *
-	 * @param source
-	 *            The very starting point for this area.
-	 * @param current
-	 *            The last expanded point for this area.
+	 * @param source The very starting point for this area.
+	 * @param current The last expanded point for this area.
 	 * @return the source, by default. Subclasses may change this behavior.
 	 */
-	protected Point generatereference(Point source, Point current) {
+	protected Point generatereference(Point source,Point current){
 		return source;
 	}
 
 	/**
-	 * @param area
-	 *            Given the current generated area...
-	 * @param p
-	 *            and a point of reference...
+	 * @param area Given the current generated area...
+	 * @param p and a point of reference...
 	 * @return A new point to be added to the area.
 	 */
-	protected Point expand(HashSet<Point> area, World world) {
-		List<Point> pool = new ArrayList<>(area);
-		Point p = new Point(RPG.pick(pool));
-		while (area.contains(p)) {
-			p.x += STEPS[RPG.r(STEPS.length)];
-			p.y += STEPS[RPG.r(STEPS.length)];
-			if (checkinvalid(world, p.x, p.y)) {
-				p = new Point(RPG.pick(pool));
+	protected Point expand(HashSet<Point> area,World world){
+		List<Point> pool=new ArrayList<>(area);
+		Point p=new Point(RPG.pick(pool));
+		while(area.contains(p)){
+			p.x+=STEPS[RPG.r(STEPS.length)];
+			p.y+=STEPS[RPG.r(STEPS.length)];
+			if(checkinvalid(world,p.x,p.y)){
+				p=new Point(RPG.pick(pool));
 				WorldGenerator.retry();
 			}
 		}
@@ -267,160 +253,127 @@ public abstract class Terrain implements Serializable {
 	}
 
 	/**
-	 * @param x
-	 *            Coordinate.
-	 * @param y
-	 *            Coordinate.
-	 * @return <code>false</code> if for any reason the given coordinate
-	 *         shouldn't be added to this area.
+	 * @param x Coordinate.
+	 * @param y Coordinate.
+	 * @return <code>false</code> if for any reason the given coordinate shouldn't
+	 *         be added to this area.
 	 */
-	protected boolean checkinvalid(World world, int x, int y) {
-		return !World.validatecoordinate(x, y)
-				|| !generatetile(world.map[x][y], world) || checktown(x, y);
+	protected boolean checkinvalid(World world,int x,int y){
+		return !World.validatecoordinate(x,y)||!generatetile(world.map[x][y],world)
+				||checktown(x,y);
 	}
 
-	boolean checktown(int x, int y) {
-		for (Actor town : Town.gettowns()) {
-			if (town.x == x && town.y == y) {
-				return true;
-			}
-		}
+	boolean checktown(int x,int y){
+		for(Actor town:Town.gettowns())
+			if(town.x==x&&town.y==y) return true;
 		return false;
 	}
 
 	/**
 	 * @return The starting point for this area.
 	 */
-	protected Point generatesource(World world) {
-		return new Point(randomaxispoint(), randomaxispoint());
+	protected Point generatesource(World world){
+		return new Point(randomaxispoint(),randomaxispoint());
 	}
 
 	/**
-	 * @param p
-	 *            Given a point...
-	 * @param neighbor
-	 *            will check if there is such a terrain tile...
-	 * @param radius
-	 *            in the given radius around it.
-	 * @param World
-	 *            World instance.
+	 * @param p Given a point...
+	 * @param neighbor will check if there is such a terrain tile...
+	 * @param radius in the given radius around it.
+	 * @param World World instance.
 	 * @return Number of terrain tiles from the given type found in radius.
 	 */
-	public static int search(Point p, Terrain neighbor, int radius, World w) {
-		int found = 0;
-		for (int x = p.x - radius; x <= p.x + radius; x++) {
-			for (int y = p.y - radius; y <= p.y + radius; y++) {
-				if (x == p.x && y == p.y) {
-					continue;
-				}
-				if (!World.validatecoordinate(x, y)) {
-					continue;
-				}
-				if (w.map[x][y].equals(neighbor)) {
-					found += 1;
-				}
+	public static int search(Point p,Terrain neighbor,int radius,World w){
+		int found=0;
+		for(int x=p.x-radius;x<=p.x+radius;x++)
+			for(int y=p.y-radius;y<=p.y+radius;y++){
+				if(x==p.x&&y==p.y) continue;
+				if(!World.validatecoordinate(x,y)) continue;
+				if(w.map[x][y].equals(neighbor)) found+=1;
 			}
-		}
 		return found;
 	}
 
 	/**
 	 * Called at the end of the {@link #generatearea(World)} process.
 	 *
-	 * @param area
-	 *            The generated area.
+	 * @param area The generated area.
 	 */
-	public void generatesurroundings(HashSet<Point> area, World w) {
+	public void generatesurroundings(HashSet<Point> area,World w){
 		// nothing by default
 	}
 
 	/**
-	 * @param terrain
-	 *            Given the terrain this area is going to expand to...
-	 * @return <code>true</code> if OK to overried previous terrain and expand
-	 *         the current area into it.
+	 * @param terrain Given the terrain this area is going to expand to...
+	 * @return <code>true</code> if OK to overried previous terrain and expand the
+	 *         current area into it.
 	 */
-	protected boolean generatetile(Terrain terrain, World world) {
+	protected boolean generatetile(Terrain terrain,World world){
 		return Terrain.FOREST.equals(terrain);
 	}
 
 	/**
 	 * @return All points of this {@link World} where this terrain exists.
 	 */
-	protected HashSet<Point> gettiles(World world) {
-		HashSet<Point> area = new HashSet<>();
-		for (int x = 0; x < World.scenario.size; x++) {
-			for (int y = 0; y < World.scenario.size; y++) {
-				if (world.map[x][y] == this) {
-					area.add(new Point(x, y));
-				}
-			}
-		}
+	protected HashSet<Point> gettiles(World world){
+		HashSet<Point> area=new HashSet<>();
+		for(int x=0;x<World.scenario.size;x++)
+			for(int y=0;y<World.scenario.size;y++)
+				if(world.map[x][y]==this) area.add(new Point(x,y));
 		return area;
 	}
 
-	public HashSet<Point> generate(World w) {
-		HashSet<Point> area = generatearea(w);
-		if (liquid) {
-			for (Point p : new HashSet<>(area)) {
-				if (checkisolated(p, area)) {
-					area.remove(p);
-				}
-			}
-		}
-		for (Point p : area) {
-			w.map[p.x][p.y] = this;
-		}
-		generatesurroundings(area, w);
+	public HashSet<Point> generate(World w){
+		HashSet<Point> area=generatearea(w);
+		if(liquid) for(Point p:new HashSet<>(area))
+			if(checkisolated(p,area)) area.remove(p);
+		for(Point p:area)
+			w.map[p.x][p.y]=this;
+		generatesurroundings(area,w);
 		return area;
 	}
 
-	boolean checkisolated(Point p, HashSet<Point> area) {
-		for (Point adjacent : Point.getadjacentorthogonal()) {
-			adjacent.x += p.x;
-			adjacent.y += p.y;
-			if (area.contains(adjacent)) {
-				return false;
-			}
+	boolean checkisolated(Point p,HashSet<Point> area){
+		for(Point adjacent:Point.getadjacentorthogonal()){
+			adjacent.x+=p.x;
+			adjacent.y+=p.y;
+			if(area.contains(adjacent)) return false;
 		}
 		return true;
 	}
 
-	static int randomaxispoint() {
-		return RPG.r(1, World.scenario.size - 2);
+	static int randomaxispoint(){
+		return RPG.r(1,World.scenario.size-2);
 	}
 
 	/**
-	 * @return <code>true</code> if active {@link Squad} can enter this
-	 *         location.
+	 * @return <code>true</code> if active {@link Squad} can enter this location.
 	 */
-	public boolean enter(int x, int y) {
+	public boolean enter(int x,int y){
 		return true;
 	}
 
 	/**
 	 * Hazards are things like a sandstorm in a {@link Desert} or a storm in
 	 * {@link Water}, which can have dire implication for a {@link Squad}
-	 * travelling in that terrain, Somewhat of a misnomer, a hazard can also be
-	 * a more peaceful event like meeting a special character or such.
+	 * travelling in that terrain, Somewhat of a misnomer, a hazard can also be a
+	 * more peaceful event like meeting a special character or such.
 	 *
 	 * Almost all types of hazards are dependent upon {@link Season},
 	 * {@link Weather} and day period conditions. No one suffers a heatstroke on
 	 * the desert during the night, for example.
 	 *
-	 * Usually, even if the conditions for multiple types of hazards are met in
-	 * a certain time period, only one of them should actually trigger.
+	 * Usually, even if the conditions for multiple types of hazards are met in a
+	 * certain time period, only one of them should actually trigger.
 	 *
-	 * @param special
-	 *            <code>true</code> if may allow a special event to happen.
-	 *            Special events are rare occurances like a spontaneous
-	 *            avalanche.
+	 * @param special <code>true</code> if may allow a special event to happen.
+	 *          Special events are rare occurances like a spontaneous avalanche.
 	 * @return
 	 * @see #HAZARDCHANCE
 	 * @see Javelin#getDayPeriod()
 	 * @see WorldMove
 	 */
-	public Set<Hazard> gethazards(boolean special) {
+	public Set<Hazard> gethazards(boolean special){
 		return new HashSet<>();
 	}
 
@@ -428,23 +381,19 @@ public abstract class Terrain implements Serializable {
 	 * @return a string representation of the {@link Weather}.
 	 * @see Weather#current
 	 */
-	public String getweather() {
-		if (Weather.current == Weather.RAIN) {
-			return "raining";
-		}
-		if (Weather.current == Weather.STORM) {
-			return Season.current == Season.WINTER ? SNOWING : "storm";
-		}
+	public String getweather(){
+		if(Weather.current==Weather.RAIN) return "raining";
+		if(Weather.current==Weather.STORM)
+			return Season.current==Season.WINTER?SNOWING:"storm";
 		return "";
 	}
 
 	/**
-	 * @param teamel
-	 *            Added to the encounter level delta.
+	 * @param teamel Added to the encounter level delta.
 	 * @return Encounter level for a fight taking place in this type of terrain.
 	 */
-	public Integer getel(int teamel) {
-		final int delta = Difficulty.get() + Math.min(0, difficulty);
-		return teamel + Math.min(delta, difficultycap);
+	public Integer getel(int teamel){
+		final int delta=Difficulty.get()+Math.min(0,difficulty);
+		return teamel+Math.min(delta,difficultycap);
 	}
 }

@@ -1,6 +1,7 @@
 package javelin.model.world.location;
 
 import java.awt.Image;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +29,7 @@ import javelin.view.Images;
  * @author alex
  */
 public class Resource extends Location{
-	static class Type{
+	static class Type implements Serializable{
 		String name;
 		int amount;
 		String action;

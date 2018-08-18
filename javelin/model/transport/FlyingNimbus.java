@@ -1,13 +1,13 @@
 package javelin.model.transport;
 
-import javelin.controller.map.terrain.Water;
+import javelin.controller.map.terrain.water.DeepWaters;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.relic.Flute;
 import javelin.model.unit.Squad;
 
 /**
  * Vehicle like the {@link Airship} but 10x faster, lasts for a day but will not
- * disappear over {@link Water}. Restores previous vehicle when done (is also
+ * disappear over {@link DeepWaters}. Restores previous vehicle when done (is also
  * taken with the cloud).
  * 
  * @see Flute

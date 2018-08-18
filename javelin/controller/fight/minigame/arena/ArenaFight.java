@@ -135,7 +135,7 @@ public class ArenaFight extends Minigame {
 	}
 
 	@Override
-	public ArrayList<Combatant> getmonsters(Integer teamel) {
+	public ArrayList<Combatant> getfoes(Integer teamel) {
 		return null;
 	}
 

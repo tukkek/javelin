@@ -32,7 +32,7 @@ public class Broker extends Inhabitant {
 		}
 
 		@Override
-		public ArrayList<Combatant> getmonsters(Integer teamel) {
+		public ArrayList<Combatant> getfoes(Integer teamel) {
 			return new ArrayList<>(enemy);
 		}
 

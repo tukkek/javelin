@@ -23,7 +23,7 @@ public class MirrorMatch extends Match {
 	public void start() {
 		throw new StartBattle(new ExhibitionFight() {
 			@Override
-			public ArrayList<Combatant> getmonsters(Integer teamel) {
+			public ArrayList<Combatant> getfoes(Integer teamel) {
 				ArrayList<Combatant> monsters = new ArrayList<Combatant>();
 				for (Combatant c : Squad.active.members) {
 					c = c.clone();

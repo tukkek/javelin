@@ -58,7 +58,7 @@ public class Battle extends Minigame {
 	}
 
 	@Override
-	public ArrayList<Combatant> getmonsters(Integer teamel) {
+	public ArrayList<Combatant> getfoes(Integer teamel) {
 		return monsters;
 	}
 

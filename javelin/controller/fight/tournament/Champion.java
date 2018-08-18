@@ -24,7 +24,7 @@ public class Champion extends Exhibition {
 	public void start() {
 		throw new StartBattle(new ExhibitionFight() {
 			@Override
-			public ArrayList<Combatant> getmonsters(Integer teamel) {
+			public ArrayList<Combatant> getfoes(Integer teamel) {
 				for (Monster m : new CrIterator(Javelin.MONSTERSBYCR)) {
 					if (ChallengeCalculator.crtoel(m.cr) >= teamel) {
 						ArrayList<Combatant> opponents = new ArrayList<Combatant>();

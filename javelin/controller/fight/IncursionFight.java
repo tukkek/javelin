@@ -27,7 +27,7 @@ public class IncursionFight extends Fight {
 	}
 
 	@Override
-	public ArrayList<Combatant> getmonsters(Integer teamel) {
+	public ArrayList<Combatant> getfoes(Integer teamel) {
 		return Incursion.getsafeincursion(incursion.squad);
 	}
 

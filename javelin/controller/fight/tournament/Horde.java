@@ -26,7 +26,7 @@ public class Horde extends Exhibition {
 	public void start() {
 		throw new StartBattle(new ExhibitionFight() {
 			@Override
-			public ArrayList<Combatant> getmonsters(Integer teamel) {
+			public ArrayList<Combatant> getfoes(Integer teamel) {
 				crloop: for (Monster m : new CrIterator(
 						Javelin.MONSTERSBYCR.descendingMap())) {
 					ArrayList<Combatant> opponents = new ArrayList<Combatant>();

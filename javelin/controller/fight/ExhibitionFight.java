@@ -25,7 +25,7 @@ public class ExhibitionFight extends Fight {
 	}
 
 	@Override
-	public ArrayList<Combatant> getmonsters(Integer teamel) {
+	public ArrayList<Combatant> getfoes(Integer teamel) {
 		return null;
 	}
 

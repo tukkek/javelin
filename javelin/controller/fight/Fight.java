@@ -140,7 +140,7 @@ public abstract class Fight {
 	 *         If <code>null</code>, will then use
 	 *         {@link #getel(JavelinApp, int)}.
 	 */
-	public abstract ArrayList<Combatant> getmonsters(Integer teamel);
+	public abstract ArrayList<Combatant> getfoes(Integer teamel);
 
 	/**
 	 * Called in case of a successful bribe.
@@ -266,7 +266,7 @@ public abstract class Fight {
 		Integer el = getel(
 				ChallengeCalculator.calculateel(Fight.state.blueTeam));
 		ArrayList<Terrain> terrains = getterrains();
-		ArrayList<Combatant> foes = getmonsters(el);
+		ArrayList<Combatant> foes = getfoes(el);
 		if (foes == null) {
 			assert el != null;
 			foes = generate(el, terrains);

@@ -122,7 +122,7 @@ public class BattlefieldFight extends Minigame{
 	}
 
 	@Override
-	public ArrayList<Combatant> getmonsters(Integer teamel){
+	public ArrayList<Combatant> getfoes(Integer teamel){
 		return redarmy;
 	}
 

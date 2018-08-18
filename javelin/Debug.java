@@ -1,11 +1,14 @@
 package javelin;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.action.Help;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.db.Preferences;
+import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
+import javelin.controller.map.Map;
 import javelin.controller.scenario.Scenario;
 import javelin.model.Realm;
 import javelin.model.item.Item;
@@ -65,6 +68,28 @@ public class Debug{
 				s+=t+" ("+t.getrank().title+el+")\n";
 			}
 			return s;
+		}
+
+		static void fight(Map m){
+			Fight maptest=new Fight(){
+				@Override
+				public ArrayList<Combatant> getfoes(Integer teamel){
+					ArrayList<Combatant> monsters=new ArrayList<>(1);
+					Combatant c=new Combatant(Javelin.getmonster("Orc"),true);
+					c.source.initiative=-20;
+					monsters.add(c);
+					return monsters;
+				}
+
+				@Override
+				public Boolean win(){
+					return false;
+				}
+			};
+			maptest.map=m;
+			maptest.bribe=false;
+			maptest.hide=false;
+			throw new StartBattle(maptest);
 		}
 
 		static void freezeopponents(){

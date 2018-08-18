@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.ai.BattleAi;
-import javelin.controller.map.terrain.Water;
+import javelin.controller.map.terrain.water.DeepWaters;
 import javelin.controller.terrain.Terrain;
 import javelin.model.state.Square;
 import javelin.model.unit.Monster;
@@ -150,7 +150,7 @@ public abstract class Map {
 
 	/**
 	 * @return A random map, excluding ones that are usually not recommended for
-	 *         typical fights like {@link Water}.
+	 *         typical fights like {@link DeepWaters}.
 	 */
 	public static Map random() {
 		Terrain t = Terrain.NONWATER[RPG.r(0, Terrain.NONWATER.length - 1)];

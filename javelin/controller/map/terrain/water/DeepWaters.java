@@ -1,4 +1,4 @@
-package javelin.controller.map.terrain;
+package javelin.controller.map.terrain.water;
 
 import javelin.controller.map.DndMap;
 import javelin.view.Images;
@@ -8,9 +8,9 @@ import javelin.view.Images;
  * 
  * @author alex
  */
-public class Water extends DndMap {
+public class DeepWaters extends DndMap {
 	/** Constructor. */
-	public Water() {
+	public DeepWaters() {
 		super("Water", 0, 0, 1);
 		flooded = Images.getImage("terrainaquatic");
 		standard = false;

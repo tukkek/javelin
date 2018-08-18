@@ -101,7 +101,7 @@ public class Leader extends Inhabitant {
 			}
 
 			@Override
-			public ArrayList<Combatant> getmonsters(Integer teamel) {
+			public ArrayList<Combatant> getfoes(Integer teamel) {
 				return guards;
 			}
 		}

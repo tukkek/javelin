@@ -1,8 +1,8 @@
 Version 1.7
 
  * Mouse support!
- * 3 gameplay modes: campaign, dungeon world and scenario!
- * 4 mini-games: Arena, Battlefield, Dungeon Rush and Ziggurat!
+ * 3 gameplay modes: Campaign, Dungeon World and Art of War!
+ * 2 mini-games: Arena and Battlefield!
  * City management redesign, with 7 city traits and 36 projects!
  * Caster rings!
  * Improved battle AI!

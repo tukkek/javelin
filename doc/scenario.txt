@@ -1,3 +1,5 @@
+[Developer note: mode currenty disabled]
+
 Scenarios are a short mode of gameplay designed to be enjoyed over the course of a few hours to an afternoon of gaming. This is ideal if you want to enjoy an entire session in a single playthrough (even though saving and loading are still done as usual) or for players who do not enjoy the longer gameplay of the default campaign mode.
 
 Your objective in scenario mode is to capture all hostile towns in the world map.

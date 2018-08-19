@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javelin.controller.InfiniteList;
@@ -21,13 +22,18 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.haunt.Haunt;
+import javelin.model.world.location.haunt.WitchesHideout;
+import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.basic.Dwelling;
-import javelin.model.world.location.town.labor.basic.Lodge;
 import javelin.model.world.location.town.labor.expansive.Hub;
 import javelin.old.RPG;
 
 /** {@link FeatureGenerator} for {@link ArtOfWar}. */
 public class AowGenerator extends FeatureGenerator{
+	static final Set<Class<? extends Location>> BANNED=Set
+			.of(WitchesHideout.class);
+
 	@Override
 	public Location generate(LinkedList<Realm> realms,
 			ArrayList<HashSet<Point>> regions,World w){
@@ -40,11 +46,27 @@ public class AowGenerator extends FeatureGenerator{
 		InfiniteList<Terrain> terrains=new InfiniteList<>(
 				Arrays.asList(Terrain.ALL),true);
 		for(int el=ArtOfWar.COMMANDERCRMIN;!units.isEmpty();el++)
-			generatehostile(units,el,terrains.pop());
+			generatedwellings(units,el,terrains.pop());
+		for(Haunt h:generatehaunts())
+			if(!BANNED.contains(h.getClass())) h.place();
+		generatetowns(terrains);
 		return start;
 	}
 
-	void generatehostile(List<Monster> units,int el,Terrain target){
+	void generatetowns(InfiniteList<Terrain> terrains){
+		int el=ArtOfWar.COMMANDERCRMIN;
+		while(el<20){
+			Terrain t=terrains.pop();
+			if(t.equals(Terrain.WATER)||t.equals(Terrain.UNDERGROUND)) continue;
+			el+=RPG.r(1,10);
+			Town town=new Town(findterrain(t),null);
+			town.population=el;
+			town.place();
+			town.garrison.addAll(generatearmy(el,t));
+		}
+	}
+
+	void generatedwellings(List<Monster> units,int el,Terrain target){
 		List<Monster> tier=units.stream().filter(m->m.cr==el)
 				.collect(Collectors.toList());
 		if(tier.isEmpty()) return;
@@ -79,7 +101,6 @@ public class AowGenerator extends FeatureGenerator{
 
 	Location generatefriendly(List<Monster> fodder){
 		generatedock();
-		generatelodges(RPG.r(1,4));
 		Collections.shuffle(fodder);
 		Point spawn=findterrain(ArtOfWar.singleton.region);
 		Dwelling d=null;
@@ -91,11 +112,6 @@ public class AowGenerator extends FeatureGenerator{
 			d=generate(new Dwelling(m),p);
 		}
 		return d;
-	}
-
-	void generatelodges(int lodges){
-		for(int i=0;i<lodges;i++)
-			new Lodge().place();
 	}
 
 	void generatedock(){

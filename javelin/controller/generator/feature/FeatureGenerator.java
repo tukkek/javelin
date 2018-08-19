@@ -33,6 +33,7 @@ import javelin.model.world.location.fortification.RealmAcademy;
 import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.haunt.AbandonedManor;
 import javelin.model.world.location.haunt.Graveyard;
+import javelin.model.world.location.haunt.Haunt;
 import javelin.model.world.location.haunt.OrcSettlement;
 import javelin.model.world.location.haunt.ShatteredTemple;
 import javelin.model.world.location.haunt.SunkenShip;
@@ -188,9 +189,12 @@ public class FeatureGenerator implements Serializable{
 				new Arena(),new Battlefield(),new Ziggurat(),new DeepDungeon()}));
 		if(World.scenario.worlddistrict) locations.addAll(List
 				.of(new MercenariesGuild(),new Artificer(),new SummoningCircle(5,15)));
-		locations.addAll(
-				List.of(new AbandonedManor(),new SunkenShip(),new ShatteredTemple(),
-						new WitchesHideout(),new Graveyard(),new OrcSettlement()));
+		locations.addAll(generatehaunts());
+	}
+
+	protected List<Haunt> generatehaunts(){
+		return List.of(new AbandonedManor(),new SunkenShip(),new ShatteredTemple(),
+				new WitchesHideout(),new Graveyard(),new OrcSettlement());
 	}
 
 	void generatestartingarea(World seed,Town t){

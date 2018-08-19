@@ -33,12 +33,10 @@ public class ArtOfWar extends Scenario{
 
 	private ArtOfWar(){
 		statictowns=false;
-		startingdungeons=0;
-		towns=0;
-		startingfeatures=0;
-		worlddistrict=false;
 		featuregenerator=AowGenerator.class;
 		helpfile="artofwar";
+		labormodifier=0;
+		spawn=false;
 	}
 
 	@Override

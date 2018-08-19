@@ -55,10 +55,10 @@ public class AowGenerator extends FeatureGenerator{
 
 	void generatetowns(InfiniteList<Terrain> terrains){
 		int el=ArtOfWar.COMMANDERCRMIN;
-		while(el<20){
+		while(el<ArtOfWar.ENDGAME){
 			Terrain t=terrains.pop();
 			if(t.equals(Terrain.WATER)||t.equals(Terrain.UNDERGROUND)) continue;
-			el+=RPG.r(1,10);
+			el=Math.min(el+RPG.r(1,10),ArtOfWar.ENDGAME);
 			Town town=new Town(findterrain(t),null);
 			town.population=el;
 			town.place();

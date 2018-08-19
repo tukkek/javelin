@@ -13,9 +13,7 @@ import javelin.controller.upgrade.classes.Warrior;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
-import javelin.model.world.Actor;
-import javelin.model.world.World;
-import javelin.model.world.location.Location;
+import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 
 /**
@@ -26,6 +24,12 @@ import javelin.old.RPG;
 public class ArtOfWar extends Scenario{
 	static public ArtOfWar singleton=new ArtOfWar();
 
+	/**
+	 * Challenge Rating of the last game-world challenge.
+	 *
+	 * TODO using a conservative 20 to start, can be raised with playtesting
+	 */
+	static final int ENDGAME=20;
 	static final int COMMANDERCRMIN=6;
 	static final int COMMANDERCRMAX=10;
 
@@ -41,10 +45,8 @@ public class ArtOfWar extends Scenario{
 
 	@Override
 	public boolean win(){
-		for(Actor a:World.getactors()){
-			Location l=a instanceof Location?(Location)a:null;
-			if(l!=null&&l.ishostile()) return false;
-		}
+		for(Town t:Town.gettowns())
+			if(t.ishostile()) return false;
 		String win="Congratulations, you have won this scenario!\nThanks for playing!";
 		Javelin.message(win,true);
 		return true;

@@ -1,4 +1,4 @@
-In the Art of War scenario, your only goal is to capture all the hostile locations in the world map. Cities, items and upgrades are non-existant - just amass an army big enough to win every battle and focus on keeping your units alive so they can fight another day!
+In the Art of War scenario, your only goal is to capture all the hostile towns in the world map. City management, items and upgrades are non-existant - just progressively amass an army big enough to win each battle and focus on keeping your units alive so they can fight another day!
 
 The only exception being that once at the end of each week, you'll be prompted if you want to let your eligible units upgrade on their own, immediately. This is useful if you want your commander to scale up to other higher-tier units, for example. You may choose to also skip the upgrade so you can use your experience points to hire new units instead, if you prefer.
 

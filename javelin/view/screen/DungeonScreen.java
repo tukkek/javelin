@@ -25,134 +25,114 @@ import javelin.view.mappanel.dungeon.DungeonPanel;
  *
  * @author alex
  */
-public class DungeonScreen extends WorldScreen {
-    public static final int VIEWRADIUS = 4;
+public class DungeonScreen extends WorldScreen{
+	public static final int VIEWRADIUS=4;
 
-    Dungeon dungeon;
+	Dungeon dungeon;
 
-    public DungeonScreen(Dungeon dungeon) {
-	super(false);
-	this.dungeon = dungeon;
-	open();
-    }
-
-    /**
-     * If <code>false</code> skip updating the location this time. TODO is hack?
-     */
-    public static boolean updatelocation = true;
-
-    @Override
-    public boolean explore(int x, int y) {
-	try {
-	    RandomEncounter.encounter(1f / dungeon.stepsperencounter);
-	} catch (StartBattle e) {
-	    throw e;
+	public DungeonScreen(Dungeon dungeon){
+		super(false);
+		this.dungeon=dungeon;
+		open();
 	}
-	return !dungeon.hazard();
-    }
 
-    @Override
-    public boolean react(int x, int y) {
-	Combatant searching = Squad.active.getbest(Skill.PERCEPTION);
-	for (Feature f : dungeon.features.copy()) {
-	    if (Walker.distanceinsteps(x, y, f.x, f.y) == 1) {
-		f.discover(searching, searching.taketen(Skill.PERCEPTION));
-	    }
-	}
-	Feature f = dungeon.getfeature(x, y);
-	if (f == null) {
-	    return false;
-	}
-	boolean activated = f.activate();
-	if (activated && f.remove) {
-	    dungeon.features.remove(f);
-	}
-	if (!f.enter) {
-	    WorldMove.abort = true;
-	}
-	if (!activated) {
-	    return false;
-	}
-	if (!WorldMove.abort) {
-	    WorldMove.place(x, y);
-	}
-	return true;
-    }
+	/**
+	 * If <code>false</code> skip updating the location this time. TODO is hack?
+	 */
+	public static boolean updatelocation=true;
 
-    @Override
-    public boolean allowmove(int x, int y) {
-	return dungeon.map[x][y] != Template.WALL;
-    }
-
-    @Override
-    public void updatelocation(int x, int y) {
-	dungeon.herolocation.x = x;
-	dungeon.herolocation.y = y;
-    }
-
-    @Override
-    public void view(int xp, int yp) {
-	for (int x = -VIEWRADIUS; x <= +VIEWRADIUS; x++) {
-	    for (int y = -VIEWRADIUS; y <= +VIEWRADIUS; y++) {
-		try {
-		    Point hero = dungeon.herolocation;
-		    Point target = new Point(hero);
-		    target.x += x;
-		    target.y += y;
-		    if (checkclear(hero, target)) {
-			dungeon.setvisible(hero.x + x, hero.y + y);
-		    }
-		} catch (ArrayIndexOutOfBoundsException e) {
-		    continue;
+	@Override
+	public boolean explore(int x,int y){
+		try{
+			RandomEncounter.encounter(1f/dungeon.stepsperencounter);
+		}catch(StartBattle e){
+			throw e;
 		}
-	    }
+		return !dungeon.hazard();
 	}
-    }
 
-    boolean checkclear(Point hero, Point target) {
-	Point step = new Point(hero);
-	while (step.x != target.x || step.y != target.y) {
-	    if (step.x != target.x) {
-		step.x += step.x > target.x ? -1 : +1;
-	    }
-	    if (step.y != target.y) {
-		step.y += step.y > target.y ? -1 : +1;
-	    }
-	    if (!step.equals(target) && (dungeon.map[step.x][step.y] == Template.WALL
-		    || dungeon.getfeature(step.x, step.y) instanceof Door)) {
-		return false;
-	    }
+	@Override
+	public boolean react(int x,int y){
+		Combatant searching=Squad.active.getbest(Skill.PERCEPTION);
+		for(Feature f:dungeon.features.copy())
+			if(Walker.distanceinsteps(x,y,f.x,f.y)==1)
+				f.discover(searching,searching.taketen(Skill.PERCEPTION));
+		Feature f=dungeon.getfeature(x,y);
+		if(f==null) return false;
+		boolean activated=f.activate();
+		if(activated&&f.remove) dungeon.features.remove(f);
+		if(!f.enter) WorldMove.abort=true;
+		if(!activated) return false;
+		if(!WorldMove.abort) WorldMove.place(x,y);
+		return true;
 	}
-	return true;
-    }
 
-    @Override
-    public Image gettile(int x, int y) {
-	return Images.getImage(dungeon.map[x][y] == Template.WALL ? dungeon.wall : dungeon.floor);
-    }
+	@Override
+	public boolean allowmove(int x,int y){
+		return dungeon.map[x][y]!=Template.WALL;
+	}
 
-    @Override
-    public Fight encounter() {
-	return dungeon.encounter();
-    }
+	@Override
+	public void updatelocation(int x,int y){
+		dungeon.herolocation.x=x;
+		dungeon.herolocation.y=y;
+	}
 
-    @Override
-    protected MapPanel getmappanel() {
-	return new DungeonPanel(dungeon);
-    }
+	@Override
+	public void view(int xp,int yp){
+		for(int x=-VIEWRADIUS;x<=+VIEWRADIUS;x++)
+			for(int y=-VIEWRADIUS;y<=+VIEWRADIUS;y++)
+				try{
+					Point hero=dungeon.herolocation;
+					Point target=new Point(hero);
+					target.x+=x;
+					target.y+=y;
+					if(checkclear(hero,target)) dungeon.setvisible(hero.x+x,hero.y+y);
+				}catch(ArrayIndexOutOfBoundsException e){
+					continue;
+				}
+	}
 
-    @Override
-    public boolean validatepoint(int x, int y) {
-	return 0 <= x && x < dungeon.size && 0 <= y && y < dungeon.size;
-    }
+	boolean checkclear(Point hero,Point target){
+		Point step=new Point(hero);
+		while(step.x!=target.x||step.y!=target.y){
+			if(step.x!=target.x) step.x+=step.x>target.x?-1:+1;
+			if(step.y!=target.y) step.y+=step.y>target.y?-1:+1;
+			if(!step.equals(target)&&(dungeon.map[step.x][step.y]==Template.WALL
+					||dungeon.getfeature(step.x,step.y) instanceof Door))
+				return false;
+		}
+		return true;
+	}
 
-    @Override
-    public Point getherolocation() {
-	return dungeon.herolocation;
-    }
+	@Override
+	public Image gettile(int x,int y){
+		return Images
+				.getImage(dungeon.map[x][y]==Template.WALL?dungeon.wall:dungeon.floor);
+	}
 
-    @Override
-    protected HashSet<Point> getdiscoveredtiles() {
-	return dungeon.discovered;
-    }
+	@Override
+	public Fight encounter(){
+		return dungeon.encounter();
+	}
+
+	@Override
+	protected MapPanel getmappanel(){
+		return new DungeonPanel(dungeon);
+	}
+
+	@Override
+	public boolean validatepoint(int x,int y){
+		return 0<=x&&x<dungeon.size&&0<=y&&y<dungeon.size;
+	}
+
+	@Override
+	public Point getherolocation(){
+		return dungeon.herolocation;
+	}
+
+	@Override
+	protected HashSet<Point> getdiscoveredtiles(){
+		return dungeon.discovered;
+	}
 }

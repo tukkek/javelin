@@ -471,7 +471,6 @@ public class Combatant implements Serializable,Cloneable{
 
 	public ArrayList<String> liststatus(final BattleState s){
 		final ArrayList<String> statuslist=new ArrayList<>();
-		statuslist.add(getstatus());
 		if(s.isengaged(this)){
 			statuslist.add("engaged");
 			if(isflanked(s)) statuslist.add("flanked");
@@ -857,14 +856,7 @@ public class Combatant implements Serializable,Cloneable{
 		count.casesensitive=true;
 		for(Object c:foes)
 			count.add(c.toString());
-		String text="";
-		for(String c:count.getorderedelements()){
-			text+=c;
-			int n=count.getcount(c);
-			if(n>1) text+=" (x"+n+")";
-			text+=", ";
-		}
-		return text.substring(0,text.length()-2);
+		return count.toString();
 	}
 
 	/**

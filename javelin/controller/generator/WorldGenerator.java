@@ -149,9 +149,10 @@ public class WorldGenerator extends Thread{
 			for(int i=0;i<threads;i++)
 				startthread();
 			int lastdiscarded=-1;
+			InfoScreen screen=new InfoScreen("");
 			while(World.seed==null){
 				if(lastdiscarded!=discarded){
-					new InfoScreen("").print(info+discarded);
+					screen.print(info+discarded+'.');
 					lastdiscarded=discarded;
 				}
 				Thread.sleep(1000);

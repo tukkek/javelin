@@ -272,7 +272,7 @@ public class Town extends Location{
 
 	@Override
 	public Image getimage(){
-		String image="locationtown"+getrank().title;
+		String image="locationtown"+getrank().title.toLowerCase();
 		if(!ishostile()&&ishosting()) image+="festival";
 		return Images.getImage(image);
 	}
@@ -349,5 +349,10 @@ public class Town extends Location{
 			super.accessremotely();
 		else
 			new GovernorScreen(this).show();
+	}
+
+	@Override
+	public String describe(){
+		return getrank().title+" of "+description+'.';
 	}
 }

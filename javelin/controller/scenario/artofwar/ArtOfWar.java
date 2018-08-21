@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
+import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.classes.Warrior;
@@ -55,9 +56,13 @@ public class ArtOfWar extends Scenario{
 	@Override
 	public void setup(){
 		region=selectregion();
-		Combatant commander=selectcommander();
 		Squad.active=new Squad(0,0,8,null);
+		Combatant commander=selectcommander();
+		commander.maxhp=commander.source.hd.average();
+		commander.hp=commander.maxhp;
 		Squad.active.members.add(commander);
+		int gold=RewardCalculator.calculatepcequipment(COMMANDERCRMAX);
+		Squad.active.gold=Javelin.round(gold);
 	}
 
 	Combatant selectcommander(){

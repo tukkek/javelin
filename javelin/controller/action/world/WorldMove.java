@@ -99,7 +99,7 @@ public class WorldMove extends WorldAction{
 		if(walk(JavelinApp.context.getherolocation()))
 			stop=JavelinApp.context.explore(tox,toy);
 		heal();
-		return stop;
+		return !stop;
 	}
 
 	/**

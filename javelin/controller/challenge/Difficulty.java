@@ -19,19 +19,19 @@ public class Difficulty {
 	public static final int DIFFICULT = 0;
 	public static final int DEADLY = +4;
 
-	static final ArrayList<Integer> DIFFICULTIES = new ArrayList<Integer>(17);
+	static final ArrayList<Integer> DISTRIBUTION = new ArrayList<Integer>(17);
 
 	static {
-		DIFFICULTIES.add(-6);
-		DIFFICULTIES.add(-5);
+		DISTRIBUTION.add(-6);
+		DISTRIBUTION.add(-5);
 		for (int i = 0; i < 10; i++) {
-			DIFFICULTIES.add(-4);
+			DISTRIBUTION.add(-4);
 		}
-		DIFFICULTIES.add(-3);
-		DIFFICULTIES.add(-2);
-		DIFFICULTIES.add(-1);
-		DIFFICULTIES.add(+0);
-		DIFFICULTIES.add(+1);
+		DISTRIBUTION.add(-3);
+		DISTRIBUTION.add(-2);
+		DISTRIBUTION.add(-1);
+		DISTRIBUTION.add(+0);
+		DISTRIBUTION.add(+1);
 	}
 
 	public static String describe(int delta) {
@@ -64,7 +64,7 @@ public class Difficulty {
 	 * @return The EL modifier (-6 to +1).
 	 */
 	public static int get() {
-		return RPG.pick(DIFFICULTIES);
+		return RPG.pick(DISTRIBUTION);
 	}
 
 	/**

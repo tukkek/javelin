@@ -8,9 +8,9 @@ import javelin.view.Images;
 public class GraveyardMap extends LocationMap {
 	public GraveyardMap() {
 		super("graveyard");
-		wall = Images.getImage("terraintombstone");
-		obstacle = Images.getImage("terrainbush");
-		floor = Images.getImage("dungeonfloortempleevil");
+		wall = Images.get("terraintombstone");
+		obstacle = Images.get("terrainbush");
+		floor = Images.get("dungeonfloortempleevil");
 	}
 
 	@Override

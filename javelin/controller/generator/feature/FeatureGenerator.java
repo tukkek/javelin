@@ -2,7 +2,6 @@ package javelin.controller.generator.feature;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -63,9 +62,6 @@ import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.model.world.location.unique.PillarOfSkulls;
 import javelin.model.world.location.unique.SummoningCircle;
 import javelin.model.world.location.unique.TrainingHall;
-import javelin.model.world.location.unique.minigame.Arena;
-import javelin.model.world.location.unique.minigame.Battlefield;
-import javelin.model.world.location.unique.minigame.Ziggurat;
 import javelin.old.RPG;
 
 /**
@@ -185,8 +181,7 @@ public class FeatureGenerator implements Serializable{
 	}
 
 	void generateuniquelocations(ArrayList<Location> locations){
-		locations.addAll(Arrays.asList(new Location[]{new PillarOfSkulls(),
-				new Arena(),new Battlefield(),new Ziggurat(),new DeepDungeon()}));
+		locations.addAll(List.of(new PillarOfSkulls(),new DeepDungeon()));
 		if(World.scenario.worlddistrict) locations.addAll(List
 				.of(new MercenariesGuild(),new Artificer(),new SummoningCircle(5,15)));
 		locations.addAll(generatehaunts());

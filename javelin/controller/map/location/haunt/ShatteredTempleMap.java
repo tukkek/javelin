@@ -8,9 +8,9 @@ import javelin.view.Images;
 public class ShatteredTempleMap extends LocationMap {
 	public ShatteredTempleMap() {
 		super("Shattered temple");
-		floor = Images.getImage("dungeonfloortempleevil");
-		wall = Images.getImage("terrainrockwall2");
-		obstacle = Images.getImage("terrainbush");
+		floor = Images.get("dungeonfloortempleevil");
+		wall = Images.get("terrainrockwall2");
+		obstacle = Images.get("terrainbush");
 	}
 
 	@Override

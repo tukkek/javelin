@@ -32,21 +32,22 @@ import javelin.view.screen.BattleScreen;
 public class EndBattle extends BattleEvent{
 	/** Start after-{@link Fight} cleanup. */
 	public static void end(){
-		int nsquads=World.getall(Squad.class).size();
 		Fight.victory=Javelin.app.fight.win();
 		terminateconditions(Fight.state,BattleScreen.active);
-		if(Javelin.app.fight.onend())
+		if(Javelin.app.fight.onend()){
+			int nsquads=World.getall(Squad.class).size();
 			if(Squad.active!=null&&nsquads==World.getall(Squad.class).size()){
-			while(World.get(Squad.active.x,Squad.active.y,Incursion.class)!=null){
-			Squad.active.displace();
-			Squad.active.place();
+				while(World.get(Squad.active.x,Squad.active.y,Incursion.class)!=null){
+					Squad.active.displace();
+					Squad.active.place();
+				}
+				end(Fight.originalblueteam);
+				if(Dungeon.active!=null){
+					Temple.climbing=false;
+					Dungeon.active.activate(false);
+				}
 			}
-			end(Fight.originalblueteam);
-			if(Dungeon.active!=null){
-			Temple.climbing=false;
-			Dungeon.active.activate(false);
-			}
-			}
+		}
 		AiCache.reset();
 		Javelin.app.fight=null;
 		Fight.state=null;

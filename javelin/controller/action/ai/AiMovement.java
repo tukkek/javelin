@@ -38,7 +38,7 @@ public class AiMovement extends Action implements AiAction{
 	 */
 	static final int MOVES=8;
 	public static final AiMovement SINGLETON=new AiMovement();
-	public static final Image MOVEOVERLAY=Images.getImage("overlaymove");
+	public static final Image MOVEOVERLAY=Images.get("overlaymove");
 
 	public class LongMove extends ChanceNode{
 		public LongMove(Combatant c,BattleStep s,List<Point> steps,

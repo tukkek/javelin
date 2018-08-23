@@ -13,9 +13,9 @@ public class Gentle extends DndMap {
 	/** Constructor. */
 	public Gentle() {
 		super("Gentle hill", .1, .4, 0);
-		floor = Images.getImage("terrainforestfloor");
+		floor = Images.get("terrainforestfloor");
 		wallfloor = floor;
-		wall = Images.getImage("terraintree");
+		wall = Images.get("terraintree");
 	}
 
 	@Override

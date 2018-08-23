@@ -22,41 +22,34 @@ import javelin.view.screen.InfoScreen;
  * @see BattleSetup
  * @author alex
  */
-public class StartBattle extends BattleEvent {
+public class StartBattle extends BattleEvent{
 	/** Controller for the battle. */
 	public final Fight fight;
 
 	/** Constructor. */
-	public StartBattle(final Fight d) {
-		fight = d;
+	public StartBattle(final Fight d){
+		fight=d;
 	}
 
 	/** Prepares and switches to a {@link BattleScreen}. */
-	public void battle() {
-		ArrayList<Combatant> foes = fight.init();
-		if (fight.avoid(foes)) {
-			return;
-		}
+	public void battle(){
+		ArrayList<Combatant> foes=fight.init();
+		if(fight.avoid(foes)) return;
 		preparebattle(foes);
 		fight.setup.setup();
 		Fight.state.next();
 		fight.ready();
-		final int elred = ChallengeCalculator.calculateel(Fight.state.redTeam);
-		final int elblue = ChallengeCalculator
-				.calculateel(Squad.active.members);
-		int diffifculty = elred - elblue;
-		if (fight instanceof Minigame
-				|| !Squad.active.skipcombat(diffifculty)) {
-			if (Javelin.DEBUG) {
-				Debug.onbattlestart();
-			}
-			BattlePanel.current = Fight.state.next;
-			BattleScreen battleScreen = new BattleScreen(true, true);
+		final int elred=ChallengeCalculator.calculateel(Fight.state.redTeam);
+		final int elblue=ChallengeCalculator.calculateel(Fight.state.blueTeam);
+		int diffifculty=elred-elblue;
+		if(fight instanceof Minigame||!Squad.active.skipcombat(diffifculty)){
+			if(Javelin.DEBUG) Debug.onbattlestart();
+			BattlePanel.current=Fight.state.next;
+			BattleScreen battleScreen=new BattleScreen(true,true);
 			fight.draw();
 			battleScreen.mainLoop();
-		} else {
+		}else
 			quickbattle(diffifculty);
-		}
 	}
 
 	/**
@@ -69,115 +62,103 @@ public class StartBattle extends BattleEvent {
 	 *
 	 * @param difficulty
 	 */
-	public void quickbattle(int difficulty) {
-		difficulty += RPG.randomize(2);
-		float resourcesused = ChallengeCalculator.useresources(difficulty);
-		String report = "Battle report:\n\n";
-		ArrayList<Combatant> blueteam = new ArrayList<>(Squad.active.members);
-		ArrayList<Float> damage = damage(blueteam, resourcesused);
-		for (int i = 0; i < blueteam.size(); i++) {
-			report += strategicdamage(blueteam.get(i), damage.get(i)) + "\n\n";
-		}
-		if (Squad.active.equipment.count() == 0) {
-			report += Squad.active.wastegold(resourcesused);
-		}
-		InfoScreen s = new InfoScreen("");
-		s.print(report + "Press ENTER or s to continue...");
-		Character feedback = s.getInput();
-		while (feedback != '\n' && feedback != 's') {
+	public void quickbattle(int difficulty){
+		difficulty+=RPG.randomize(2);
+		float resourcesused=ChallengeCalculator.useresources(difficulty);
+		String report="Battle report:\n\n";
+		ArrayList<Combatant> blueteam=new ArrayList<>(Squad.active.members);
+		ArrayList<Float> damage=damage(blueteam,resourcesused);
+		for(int i=0;i<blueteam.size();i++)
+			report+=strategicdamage(blueteam.get(i),damage.get(i))+"\n\n";
+		if(Squad.active.equipment.count()==0)
+			report+=Squad.active.wastegold(resourcesused);
+		InfoScreen s=new InfoScreen("");
+		s.print(report+"Press ENTER or s to continue...");
+		Character feedback=s.getInput();
+		while(feedback!='\n'&&feedback!='s')
 			continue;
-		}
 		BattleScreen.active.center();
-		Squad.active.gold -= Squad.active.gold * (resourcesused / 10f);
-		if (Squad.active.members.isEmpty()) {
-			Javelin.message("Battle report: Squad lost in combat!", false);
+		Squad.active.gold-=Squad.active.gold*(resourcesused/10f);
+		if(Squad.active.members.isEmpty()){
+			Javelin.message("Battle report: Squad lost in combat!",false);
 			Squad.active.disband();
-		} else {
-			Fight.victory = true;
+		}else{
+			Fight.victory=true;
 			fight.onend();
 		}
-		Javelin.app.fight = null;
+		Javelin.app.fight=null;
 	}
 
 	private ArrayList<Float> damage(ArrayList<Combatant> blueteam,
-			float resourcesused) {
-		ArrayList<Float> damage = new ArrayList<>(blueteam.size());
-		while (damage.size() < blueteam.size()) {
+			float resourcesused){
+		ArrayList<Float> damage=new ArrayList<>(blueteam.size());
+		while(damage.size()<blueteam.size())
 			damage.add(0f);
-		}
-		float total = resourcesused * blueteam.size();
-		float dealt = 0;
-		float step = resourcesused / 2f;
-		while (dealt < total) {
-			int i = RPG.r(0, blueteam.size() - 1);
-			if (damage.get(i) <= 1) {
-				damage.set(i, damage.get(i) + step);
-				dealt += step;
+		float total=resourcesused*blueteam.size();
+		float dealt=0;
+		float step=resourcesused/2f;
+		while(dealt<total){
+			int i=RPG.r(0,blueteam.size()-1);
+			if(damage.get(i)<=1){
+				damage.set(i,damage.get(i)+step);
+				dealt+=step;
 			}
 		}
 		return damage;
 	}
 
 	/**
-	 * TODO this needs to be enhanced because currently fighting with full
-	 * health in a EL-1 battle will result in everyone surviving with 1% health
-	 * or something, making this very easy to abuse. A better option might be to
-	 * introduce some randomness on the difficulty used to calculate this or
-	 * think of a new system where the damage can be distributed randomly
-	 * between party members (instead of uniformly) or even "cancel" units of
-	 * same CR before doing calculations.
+	 * TODO this needs to be enhanced because currently fighting with full health
+	 * in a EL-1 battle will result in everyone surviving with 1% health or
+	 * something, making this very easy to abuse. A better option might be to
+	 * introduce some randomness on the difficulty used to calculate this or think
+	 * of a new system where the damage can be distributed randomly between party
+	 * members (instead of uniformly) or even "cancel" units of same CR before
+	 * doing calculations.
 	 *
 	 * @return
 	 */
-	static String strategicdamage(Combatant c, float resourcesused) {
-		c.hp -= c.maxhp * resourcesused;
-		boolean killed = c.hp <= Combatant.DEADATHP || //
-				c.hp <= 0 && RPG.random() < Math
-						.abs(c.hp / new Float(Combatant.DEADATHP));
-		String report = "";
-		ArrayList<Item> bag = Squad.active.equipment.get(c);
-		for (Item i : new ArrayList<>(bag)) {
-			String used = "";
-			if (i.waste) {
-				String wasted = i.waste(resourcesused, c, bag);
-				if (wasted != null) {
-					used += wasted + ", ";
-				}
+	static String strategicdamage(Combatant c,float resourcesused){
+		c.hp-=c.maxhp*resourcesused;
+		boolean killed=c.hp<=Combatant.DEADATHP|| //
+				c.hp<=0&&RPG.random()<Math.abs(c.hp/new Float(Combatant.DEADATHP));
+		String report="";
+		ArrayList<Item> bag=Squad.active.equipment.get(c);
+		for(Item i:new ArrayList<>(bag)){
+			String used="";
+			if(i.waste){
+				String wasted=i.waste(resourcesused,c,bag);
+				if(wasted!=null) used+=wasted+", ";
 			}
-			if (!used.isEmpty()) {
-				report += " Used: " + used.substring(0, used.length() - 2)
-						+ ".";
-			}
+			if(!used.isEmpty())
+				report+=" Used: "+used.substring(0,used.length()-2)+".";
 		}
-		if (killed) {
+		if(killed){
 			Squad.active.remove(c);
-			c.hp = Integer.MIN_VALUE;
-		} else {
-			if (c.hp <= 0) {
-				c.hp = 1;
-			}
-			report += c.wastespells(resourcesused);
+			c.hp=Integer.MIN_VALUE;
+		}else{
+			if(c.hp<=0) c.hp=1;
+			report+=c.wastespells(resourcesused);
 		}
-		return c + " is " + c.getstatus() + "." + report;
+		return c+" is "+c.getstatus()+"."+report;
 	}
 
 	/** TODO deduplicate originals */
-	static public void preparebattle(ArrayList<Combatant> opponents) {
-		Fight.state.redTeam = opponents;
-		Fight.originalblueteam = new ArrayList<>(Fight.state.blueTeam);
-		Fight.originalredteam = new ArrayList<>(Fight.state.redTeam);
-		for (int i = 0; i < Fight.state.blueTeam.size(); i++) {
-			Combatant c = Fight.state.blueTeam.get(i);
-			Fight.state.blueTeam.set(i, c.clone().clonesource());
+	static public void preparebattle(ArrayList<Combatant> opponents){
+		Fight.state.redTeam=opponents;
+		Fight.originalblueteam=new ArrayList<>(Fight.state.blueTeam);
+		Fight.originalredteam=new ArrayList<>(Fight.state.redTeam);
+		for(int i=0;i<Fight.state.blueTeam.size();i++){
+			Combatant c=Fight.state.blueTeam.get(i);
+			Fight.state.blueTeam.set(i,c.clone().clonesource());
 		}
 		Fight.state.next();
 	}
 
-	static ArrayList<Combatant> cloneteam(ArrayList<Combatant> team) {
-		ArrayList<Combatant> clone = new ArrayList<>(team.size());
-		for (Combatant c : team) {
+	static ArrayList<Combatant> cloneteam(ArrayList<Combatant> team){
+		ArrayList<Combatant> clone=new ArrayList<>(team.size());
+		for(Combatant c:team)
 			clone.add(c.clone());
-		}
 		return clone;
 	}
 }

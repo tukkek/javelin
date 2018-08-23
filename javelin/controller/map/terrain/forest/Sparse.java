@@ -11,6 +11,6 @@ public class Sparse extends DndMap {
 	public Sparse() {
 		super("Sparse forest", .3, 0, 0);
 		wallfloor = floor;
-		wall = Images.getImage("terraintreeforest");
+		wall = Images.get("terraintreeforest");
 	}
 }

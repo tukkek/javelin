@@ -129,7 +129,7 @@ public class Squad extends Actor implements Cloneable{
 	public void updateavatar(){
 		if(members.isEmpty()) return;
 		if(transport!=null&&Dungeon.active==null){
-			image=Images.getImage(transport.name.replaceAll(" ","").toLowerCase());
+			image=Images.get(transport.name.replaceAll(" ","").toLowerCase());
 			return;
 		}
 		ArrayList<Combatant> squad=new Combatants(members);
@@ -138,7 +138,7 @@ public class Squad extends Actor implements Cloneable{
 		Combatant leader=null;
 		for(Combatant c:squad)
 			if(leader==null||c.source.cr>leader.source.cr) leader=c;
-		image=Images.getImage(leader.source.avatarfile);
+		image=Images.get(leader.source.avatarfile);
 	}
 
 	@Override

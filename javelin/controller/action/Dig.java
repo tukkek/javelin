@@ -46,7 +46,7 @@ public class Dig extends Action implements AiAction {
 
 	String dig(Combatant hero, BattleState s) {
 		if (hero.burrowed) { // resurface
-			hero.ap += Movement.converttoap(hero.source.burrow);
+			hero.ap += Movement.toap(hero.source.burrow);
 			hero.burrowed = false;
 			hero.acmodifier -= 4;
 			return hero + " unburrows...";
@@ -56,7 +56,7 @@ public class Dig extends Action implements AiAction {
 			hero.acmodifier -= 4;
 			return hero + " disengages...";
 		} else { // burrow
-			hero.ap += Movement.converttoap(hero.source.burrow);
+			hero.ap += Movement.toap(hero.source.burrow);
 			hero.burrowed = true;
 			hero.acmodifier += 4;
 			return hero + " burrows...";

@@ -17,8 +17,8 @@ public class Complex extends Map {
 
 	public Complex() {
 		super("Underground complex", DndMap.SIZE, DndMap.SIZE);
-		floor = Images.getImage("terraindungeonfloor");
-		wall = Images.getImage("terraindungeonwall");
+		floor = Images.get("terraindungeonfloor");
+		wall = Images.get("terraindungeonwall");
 		area = map.length * map[0].length;
 		flying = false;
 	}

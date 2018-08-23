@@ -18,44 +18,42 @@ import javelin.model.world.World;
  *
  * @author alex
  */
-public class Marsh extends Terrain {
+public class Marsh extends Terrain{
 	/** Constructor. */
-	public Marsh() {
-		name = "marsh";
-		difficulty = +2;
-		difficultycap = -1;
-		speedtrackless = 1 / 2f;
-		speedroad = 3 / 4f;
-		speedhighway = 1f;
-		visionbonus = -2;
-		representation = 'm';
-		liquid = true;
+	public Marsh(){
+		name="marsh";
+		difficultycap=-1;
+		speedtrackless=1/2f;
+		speedroad=3/4f;
+		speedhighway=1f;
+		visionbonus=-2;
+		representation='m';
+		liquid=true;
 	}
 
 	@Override
-	public Maps getmaps() {
-		Maps m = new Maps();
+	public Maps getmaps(){
+		Maps m=new Maps();
 		m.add(new Moor());
 		m.add(new Swamp());
 		return m;
 	}
 
 	@Override
-	protected Point generatesource(World w) {
-		Point source = super.generatesource(w);
-		while (!w.map[source.x][source.y].equals(Terrain.FOREST)
-				&& search(source, WATER, 1, w) == 0) {
-			source = super.generatesource(w);
-		}
+	protected Point generatesource(World w){
+		Point source=super.generatesource(w);
+		while(!w.map[source.x][source.y].equals(Terrain.FOREST)
+				&&search(source,WATER,1,w)==0)
+			source=super.generatesource(w);
 		return source;
 	}
 
 	@Override
-	public Set<Hazard> gethazards(boolean special) {
-		Set<Hazard> hazards = super.gethazards(special);
+	public Set<Hazard> gethazards(boolean special){
+		Set<Hazard> hazards=super.gethazards(special);
 		hazards.add(new GettingLost(10));
 		hazards.add(new Cold());
-		if (special) {
+		if(special){
 			hazards.add(new Flood());
 			hazards.add(new Break());
 		}

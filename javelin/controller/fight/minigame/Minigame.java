@@ -20,35 +20,37 @@ import javelin.view.screen.BattleScreen;
  *
  * @author alex
  */
-public abstract class Minigame extends Fight {
+public abstract class Minigame extends Fight{
 	/** Constructor. */
-	public Minigame() {
-		bribe = false;
-		hide = false;
-		map = Map.random();
-		period = Javelin.PERIODS[RPG.r(Javelin.PERIODS.length)];
-		weather = Weather.DISTRIBUTION[RPG.r(Weather.DISTRIBUTION.length)];
+	public Minigame(){
+		bribe=false;
+		hide=false;
+		map=Map.random();
+		period=Javelin.PERIODS[RPG.r(Javelin.PERIODS.length)];
+		weather=Weather.DISTRIBUTION[RPG.r(Weather.DISTRIBUTION.length)];
 	}
 
 	@Override
-	public Integer getel(int teamel) {
+	public Integer getel(int teamel){
 		return null;
 	}
 
 	@Override
-	abstract public boolean onend();
+	public boolean onend(){
+		System.exit(0);
+		return false;
+	}
 
 	@Override
-	public void withdraw(Combatant combatant, BattleScreen screen) {
-		if (Javelin.prompt("Do you want to abandon this match?\n\n"
-				+ "Press ENTER to confirm, any other key to cancel...") == '\n') {
+	public void withdraw(Combatant combatant,BattleScreen screen){
+		if(Javelin.prompt("Do you want to abandon this match?\n\n"
+				+"Press ENTER to confirm, any other key to cancel...")=='\n')
 			throw new EndBattle();
-		}
 		MessagePanel.active.clear();
 	}
 
 	@Override
-	public ArrayList<Item> getbag(Combatant combatant) {
+	public ArrayList<Item> getbag(Combatant combatant){
 		return new ArrayList<>();
 	}
 }

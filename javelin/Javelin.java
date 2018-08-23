@@ -77,7 +77,7 @@ public class Javelin {
 	public static final String[] PERIODS = new String[] { PERIODMORNING,
 			PERIODNOON, PERIODEVENING, PERIODNIGHT };
 	public static final Image[] ICONS = new Image[] {
-			Images.getImage("javelin") };
+			Images.get("javelin") };
 	/**
 	 * Monster descriptions, separate from {@link Monster} data to avoid
 	 * duplication in memory when using {@link Monster#clone()}.

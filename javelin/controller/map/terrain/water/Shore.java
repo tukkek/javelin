@@ -50,9 +50,9 @@ public class Shore extends Map{
 	/** Constructor. */
 	public Shore(){
 		super("Shore",DndMap.SIZE,DndMap.SIZE);
-		flooded=Images.getImage("terrainaquatic");
-		floor=Images.getImage("terraindesert");
-		obstacle=Images.getImage("terrainrock");
+		flooded=Images.get("terrainaquatic");
+		floor=Images.get("terraindesert");
+		obstacle=Images.get("terrainrock");
 	}
 
 	@Override

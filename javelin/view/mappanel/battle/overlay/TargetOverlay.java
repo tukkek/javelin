@@ -9,7 +9,7 @@ import javelin.view.mappanel.Tile;
 import javelin.view.screen.BattleScreen;
 
 public class TargetOverlay extends Overlay {
-	public static final Image TARGET = Images.getImage("overlaytarget");
+	public static final Image TARGET = Images.get("overlaytarget");
 
 	public int x;
 	public int y;

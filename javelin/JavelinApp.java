@@ -54,12 +54,15 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class JavelinApp extends QuestApp{
+	/** Bootstrapper for minigames. */
+	public static Runnable minigame=null;
+	static public WorldScreen context;
+
 	static String[] ERRORQUOTES=new String[]{"A wild error appears!",
 			"You were eaten by a grue.","So again it has come to pass...",
 			"Mamma mia!",};
 
 	/** Controller. */
-	static public WorldScreen context;
 
 	/**
 	 * Controller for active battle. Should be <code>null</code> at any point a
@@ -73,14 +76,13 @@ public class JavelinApp extends QuestApp{
 	public void run(){
 		javelin.controller.db.Preferences.init();// pre
 		initialize();
-		if(!StateManager.load()){
+		if(minigame==null&&!StateManager.load()){
 			if(StateManager.nofile) disclaimer();
 			startcampaign();
 		}
 		javelin.controller.db.Preferences.init();// post
 		preparedebug();
-		if(Dungeon.active!=null) Dungeon.active.activate(true);
-		StateManager.save(true,StateManager.SAVEFILE);
+		//		StateManager.save(true,StateManager.SAVEFILE);
 		if(Javelin.DEBUG){
 			Debug.oninit();
 			while(true)
@@ -96,7 +98,11 @@ public class JavelinApp extends QuestApp{
 
 	void loop(){
 		try{
-			if(Dungeon.active==null) JavelinApp.context=new WorldScreen(true);
+			if(minigame!=null) minigame.run();
+			if(Dungeon.active==null)
+				JavelinApp.context=new WorldScreen(true);
+			else
+				Dungeon.active.activate(true);
 			while(true){
 				switchScreen(JavelinApp.context);
 				JavelinApp.context.turn();

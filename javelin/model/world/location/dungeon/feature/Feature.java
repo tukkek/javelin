@@ -36,7 +36,7 @@ public abstract class Feature implements Serializable {
     /**
      * @param xp          {@link #x}
      * @param yp          {@link #y}
-     * @param avatarfilep File name for {@link Images#getImage(String)}.
+     * @param avatarfilep File name for {@link Images#get(String)}.
      */
     public Feature(int xp, int yp, String avatarfilep) {
 	this(avatarfilep);

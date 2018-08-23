@@ -23,11 +23,11 @@ public class Caves extends Map {
 		super(namep, SIZE, SIZE);
 		maxflooding = Weather.DRY;
 		if (Dungeon.active instanceof TempleDungeon) {
-			floor = Images.getImage(Dungeon.active.floor);
-			wall = Images.getImage(Dungeon.active.wall);
+			floor = Images.get(Dungeon.active.floor);
+			wall = Images.get(Dungeon.active.wall);
 		} else {
-			floor = Images.getImage("terraindungeonfloor");
-			wall = Images.getImage("terraindungeonwall");
+			floor = Images.get("terraindungeonfloor");
+			wall = Images.get("terraindungeonwall");
 		}
 		obstacle = rock;
 		flying = false;

@@ -4,6 +4,7 @@ import java.awt.Button;
 import java.awt.Container;
 import java.awt.Frame;
 import java.awt.Label;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -15,7 +16,10 @@ import java.util.Map;
 import javax.swing.BoxLayout;
 
 import javelin.Javelin;
+import javelin.JavelinApp;
 import javelin.controller.TextReader;
+import javelin.controller.action.minigame.EnterArena;
+import javelin.controller.action.minigame.EnterBattlefield;
 import javelin.controller.scenario.Campaign;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.scenario.artofwar.ArtOfWar;
@@ -23,13 +27,15 @@ import javelin.controller.scenario.dungeonworld.DungeonWorld;
 import javelin.model.world.World;
 
 public class ScenarioSelectionDialog extends Frame{
-	static final Map<String,Scenario> MODES=new LinkedHashMap<>();
+	static final Map<String,Scenario> SCENARIOS=new LinkedHashMap<>();
+	static final Map<String,Runnable> MINIGAMES=new LinkedHashMap<>();
 
 	static{
-		//		MODES.put("Scenario",new Scenario());
-		MODES.put("Campaign",new Campaign());
-		MODES.put("Dungeon world",new DungeonWorld());
-		MODES.put("Art of war",ArtOfWar.singleton);
+		SCENARIOS.put("Campaign",new Campaign());
+		SCENARIOS.put("Dungeon world",new DungeonWorld());
+		SCENARIOS.put("Art of war",ArtOfWar.singleton);
+		MINIGAMES.put("Arena",new EnterArena());
+		MINIGAMES.put("Battlefield",new EnterBattlefield());
 	}
 
 	class Close extends WindowAdapter{
@@ -47,11 +53,27 @@ public class ScenarioSelectionDialog extends Frame{
 		setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
 		for(String s:preparetext())
 			addline(" "+s);
-		Container buttonarea=new Container();
-		buttonarea.setLayout(new BoxLayout(buttonarea,BoxLayout.X_AXIS));
-		add(buttonarea);
-		for(String mode:MODES.keySet())
-			addbutton(mode,MODES.get(mode),buttonarea);
+		Container scenarios=new Container();
+		scenarios.setLayout(new BoxLayout(scenarios,BoxLayout.X_AXIS));
+		add(scenarios);
+		for(String label:SCENARIOS.keySet()){
+			final Scenario s=SCENARIOS.get(label);
+			addbutton(label,scenarios,e->{
+				World.scenario=s;
+				dispose();
+			});
+		}
+		add(new Label(" Or a minigame:"));
+		Container minigames=new Container();
+		minigames.setLayout(new BoxLayout(minigames,BoxLayout.X_AXIS));
+		add(minigames);
+		for(String label:MINIGAMES.keySet()){
+			Runnable action=MINIGAMES.get(label);
+			addbutton(label,minigames,e->{
+				JavelinApp.minigame=action;
+				dispose();
+			});
+		}
 	}
 
 	void addline(String s){
@@ -79,13 +101,10 @@ public class ScenarioSelectionDialog extends Frame{
 		return lines;
 	}
 
-	void addbutton(String text,final Scenario s,Container buttonarea){
+	void addbutton(String text,Container buttonarea,ActionListener action){
 		Button b=new Button(text);
 		buttonarea.add(b);
-		b.addActionListener(e->{
-			World.scenario=s;
-			dispose();
-		});
+		b.addActionListener(action);
 	}
 
 	public static void choose(String[] args){
@@ -105,9 +124,9 @@ public class ScenarioSelectionDialog extends Frame{
 
 	static boolean choosefromcommandline(String[] args){
 		if(args.length==0) return false;
-		for(String mode:MODES.keySet())
+		for(String mode:SCENARIOS.keySet())
 			if(args[0].compareToIgnoreCase(mode.replaceAll(" ",""))==0){
-				World.scenario=MODES.get(mode);
+				World.scenario=SCENARIOS.get(mode);
 				break;
 			}
 		return World.scenario!=null;

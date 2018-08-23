@@ -28,41 +28,41 @@ public class Images {
 
 	/** @see {@link Combatant#ispenalized(javelin.model.state.BattleState)} */
 	public static final Image PENALIZED = Images.maketransparent(3 / 4f,
-			Images.getImage("overlaypenalized"));
+			Images.get("overlaypenalized"));
 	/** @see Location#hascrafted() */
-	public static final Image CRAFTING = Images.getImage("overlaycrafting");
+	public static final Image CRAFTING = Images.get("overlaycrafting");
 	/** @see Location#hasupgraded() */
-	public static final Image UPGRADING = Images.getImage("overlayupgrading");
+	public static final Image UPGRADING = Images.get("overlayupgrading");
 	/** @see Town#isworking() */
-	public static final Image LABOR = Images.getImage("overlaylabor");
+	public static final Image LABOR = Images.get("overlaylabor");
 	/** Show while a {@link Meld} is being generated. */
-	public static final Image DEAD = Images.getImage("overlaydead");
+	public static final Image DEAD = Images.get("overlaydead");
 	/** Show when a {@link Meld} is generated. */
-	public static final Image MELD = Images.getImage("overlaymeld");
+	public static final Image MELD = Images.get("overlaymeld");
 	/** @see Location#ishostile() */
-	public static final Image HOSTILE = Images.getImage("overlayhostile");
+	public static final Image HOSTILE = Images.get("overlayhostile");
 	/** @see Town#ishosting() */
 	public static final Image TOURNAMENT = Images
-			.getImage("locationtournament");
+			.get("locationtournament");
 	/** Distinguishes {@link Combatant#mercenary} units. */
-	public static final Image MERCENARY = Images.getImage("overlaymercenary");
-	public static final Image SUMMONED = Images.getImage("overlaysummoned");
-	public static final Image ELITE = Images.getImage("overlayelite");
-	public static final Image TEXTUREMAP = Images.getImage("texturemap");
+	public static final Image MERCENARY = Images.get("overlaymercenary");
+	public static final Image SUMMONED = Images.get("overlaysummoned");
+	public static final Image ELITE = Images.get("overlayelite");
+	public static final Image TEXTUREMAP = Images.get("texturemap");
 
 	/**
 	 * @param combatant
 	 *            Unit to be shown.
 	 * @return image resource.
 	 */
-	public static Image getImage(Combatant combatant) {
+	public static Image get(Combatant combatant) {
 		if (!combatant.burrowed) {
-			return getImage(combatant.source.avatarfile);
+			return get(combatant.source.avatarfile);
 		}
 		final String avatar = combatant.source.avatarfile;
 		Image buried = BURIEDCACHE.get(avatar);
 		if (buried == null) {
-			buried = maketransparent(1 / 3f, getImage(avatar));
+			buried = maketransparent(1 / 3f, get(avatar));
 			BURIEDCACHE.put(avatar, buried);
 		}
 		return buried;
@@ -76,7 +76,7 @@ public class Images {
 	 *            PNG extension is added.
 	 * @return An image from the avatar folder.
 	 */
-	synchronized public static Image getImage(final String file) {
+	synchronized public static Image get(final String file) {
 		Image i = CACHE.get(file);
 		if (i != null) {
 			return i;

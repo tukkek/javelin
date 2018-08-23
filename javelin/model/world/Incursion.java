@@ -375,7 +375,7 @@ public class Incursion extends Actor {
 				leader = c;
 			}
 		}
-		return Images.getImage(leader.source.avatarfile);
+		return Images.get(leader.source.avatarfile);
 	}
 
 	@Override

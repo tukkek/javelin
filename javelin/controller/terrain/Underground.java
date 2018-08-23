@@ -23,8 +23,6 @@ public class Underground extends Terrain{
 	/** Constructor. */
 	public Underground(){
 		name="underground";
-		difficulty=0;
-		difficultycap=Integer.MAX_VALUE;
 	}
 
 	@Override
@@ -34,8 +32,8 @@ public class Underground extends Terrain{
 				new Floor(),new Complex(),new Constructed())){
 			Dungeon d=Dungeon.active;
 			if(d!=null){
-				m.floor=Images.getImage(d.floor);
-				m.wall=Images.getImage(d.wall);
+				m.floor=Images.get(d.floor);
+				m.wall=Images.get(d.wall);
 			}
 			maps.add(m);
 		}

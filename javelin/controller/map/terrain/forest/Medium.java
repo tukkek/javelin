@@ -11,7 +11,7 @@ public class Medium extends DndMap {
 	public Medium() {
 		super("Forest", .3, .2, 0);
 		wallfloor = floor;
-		wall = Images.getImage("terraintreeforest");
+		wall = Images.get("terraintreeforest");
 	}
 
 }

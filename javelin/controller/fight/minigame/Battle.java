@@ -7,63 +7,48 @@ import javelin.controller.CountingSet;
 import javelin.controller.fight.Fight;
 import javelin.controller.map.terrain.plain.Field;
 import javelin.model.unit.Combatant;
-import javelin.model.world.World;
-import javelin.model.world.location.unique.minigame.Battlefield;
 
 /**
  * Not to be confused with the generic battle controller {@link Fight}.
- * 
+ *
  * @see Battlefield
  * @author alex
  */
-public class Battle extends Minigame {
+public class Battle extends Minigame{
 	ArrayList<Combatant> blueteam;
 	ArrayList<Combatant> monsters;
 
 	/**
-	 * @param blueteam
-	 *            Allied team.
-	 * @param monsters
-	 *            Opponents.
+	 * @param blueteam Allied team.
+	 * @param monsters Opponents.
 	 */
-	public Battle(ArrayList<Combatant> blueteam,
-			ArrayList<Combatant> monsters) {
-		this.blueteam = blueteam;
-		this.monsters = monsters;
-		this.map = new Field();
+	public Battle(ArrayList<Combatant> blueteam,ArrayList<Combatant> monsters){
+		this.blueteam=blueteam;
+		this.monsters=monsters;
+		map=new Field();
 	}
 
 	@Override
-	public boolean onend() {
-		if (!victory) {
-			Javelin.message("You lost...", true);
+	public boolean onend(){
+		if(!victory){
+			Javelin.message("You lost...",true);
 			return false;
 		}
-		CountingSet counter = new CountingSet();
-		counter.casesensitive = true;
-		for (Combatant c : state.blueTeam) {
-			if (!c.summoned) {
-				counter.add(c.source.toString());
-			}
-		}
-		Battlefield b = (Battlefield) World.getall(Battlefield.class).get(0);
-		b.survivors.clear();
-		for (String monstertype : counter.getelements()) {
-			b.survivors.put(monstertype, counter.getcount(monstertype));
-		}
-		final String text = "You won!\n"
-				+ "The survivors will be available for you to recruit at the battlefield location.";
-		Javelin.message(text, true);
+		CountingSet counter=new CountingSet();
+		counter.casesensitive=true;
+		for(Combatant c:state.blueTeam)
+			if(!c.summoned) counter.add(c.source.toString());
+		Javelin.message("You won!",true);
 		return false;
 	}
 
 	@Override
-	public ArrayList<Combatant> getfoes(Integer teamel) {
+	public ArrayList<Combatant> getfoes(Integer teamel){
 		return monsters;
 	}
 
 	@Override
-	public ArrayList<Combatant> getblueteam() {
+	public ArrayList<Combatant> getblueteam(){
 		return blueteam;
 	}
 }

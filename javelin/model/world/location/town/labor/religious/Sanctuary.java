@@ -85,7 +85,7 @@ public class Sanctuary extends Guild {
 
 	@Override
 	public Image getimage() {
-		return upgraded ? Images.getImage("locationcathedral")
+		return upgraded ? Images.get("locationcathedral")
 				: super.getimage();
 	}
 

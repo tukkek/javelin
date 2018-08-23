@@ -15,25 +15,24 @@ import javelin.model.world.World;
 
 /**
  * High altitude, snowy on winter.
- * 
+ *
  * @author alex
  */
-public class Mountains extends Terrain {
+public class Mountains extends Terrain{
 	/** Constructor. */
-	public Mountains() {
-		this.name = "mountains";
-		this.difficulty = +1;
-		this.difficultycap = -2;
-		this.speedtrackless = 1 / 2f;
-		this.speedroad = 3 / 4f;
-		this.speedhighway = 3 / 4f;
-		this.visionbonus = +4;
-		representation = 'M';
+	public Mountains(){
+		name="mountains";
+		difficultycap=-2;
+		speedtrackless=1/2f;
+		speedroad=3/4f;
+		speedhighway=3/4f;
+		visionbonus=+4;
+		representation='M';
 	}
 
 	@Override
-	public Maps getmaps() {
-		Maps m = new Maps();
+	public Maps getmaps(){
+		Maps m=new Maps();
 		m.add(new Meadow());
 		m.add(new Rugged());
 		m.add(new Forbidding());
@@ -41,20 +40,19 @@ public class Mountains extends Terrain {
 	}
 
 	@Override
-	protected Point generatesource(World w) {
-		Point source = super.generatesource(w);
-		while (!w.map[source.x][source.y].equals(Terrain.FOREST)
-				&& search(source, MOUNTAINS, 1, w) == 0) {
-			source = super.generatesource(w);
-		}
+	protected Point generatesource(World w){
+		Point source=super.generatesource(w);
+		while(!w.map[source.x][source.y].equals(Terrain.FOREST)
+				&&search(source,MOUNTAINS,1,w)==0)
+			source=super.generatesource(w);
 		return source;
 	}
 
 	@Override
-	public Set<Hazard> gethazards(boolean special) {
-		Set<Hazard> hazards = super.gethazards(special);
+	public Set<Hazard> gethazards(boolean special){
+		Set<Hazard> hazards=super.gethazards(special);
 		hazards.add(new Cold());
-		if (special) {
+		if(special){
 			hazards.add(new Rockslide());
 			hazards.add(new Break());
 		}

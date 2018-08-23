@@ -11,6 +11,6 @@ public class Arena extends DndMap {
 	/** Constructor. */
 	public Arena() {
 		super("Arena", 0, 0, 0);
-		floor = Images.getImage("terrainarena");
+		floor = Images.get("terrainarena");
 	}
 }

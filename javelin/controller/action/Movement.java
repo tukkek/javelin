@@ -58,7 +58,7 @@ public class Movement extends Action {
 				speed = c.source.swim() > 0 ? c.source.swim : speed / 2f;
 			}
 		}
-		return converttoap(speed);
+		return toap(speed);
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class Movement extends Action {
 	 *            Speed in feet (5 feet = 1 square).
 	 * @return Cost of 1 square of movement in action points.
 	 */
-	public static float converttoap(float speed) {
+	public static float toap(float speed) {
 		return .5f / (speed / 5f);
 	}
 

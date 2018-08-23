@@ -16,7 +16,7 @@ import javelin.view.mappanel.MapPanel;
 import javelin.view.screen.WorldScreen;
 
 public abstract class QuestApp extends Applet implements Runnable{
-	public static final Image DEFAULTTEXTURE=Images.getImage("texture");
+	public static final Image DEFAULTTEXTURE=Images.get("texture");
 	public static final Color TEXTCOLOUR=new Color(192,192,192);
 	public static final Color PANELCOLOUR=new Color(64,64,64);
 	public static final Color PANELHIGHLIGHT=new Color(120,80,20);

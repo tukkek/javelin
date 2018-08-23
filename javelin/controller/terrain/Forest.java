@@ -19,22 +19,21 @@ import javelin.model.world.World;
  *
  * @author alex
  */
-public class Forest extends Terrain {
+public class Forest extends Terrain{
 	/** Constructor. */
-	public Forest() {
-		name = "forest";
-		difficulty = 0;
-		difficultycap = -3;
-		speedtrackless = 1 / 2f;
-		speedroad = 1f;
-		speedhighway = 1f;
-		visionbonus = -4;
-		representation = 'F';
+	public Forest(){
+		name="forest";
+		difficultycap=-3;
+		speedtrackless=1/2f;
+		speedroad=1f;
+		speedhighway=1f;
+		visionbonus=-4;
+		representation='F';
 	}
 
 	@Override
-	public Maps getmaps() {
-		Maps m = new Maps();
+	public Maps getmaps(){
+		Maps m=new Maps();
 		m.add(new Sparse());
 		m.add(new Medium());
 		m.add(new Dense());
@@ -42,15 +41,15 @@ public class Forest extends Terrain {
 	}
 
 	@Override
-	HashSet<Point> generatearea(World world) {
+	HashSet<Point> generatearea(World world){
 		return gettiles(world);
 	}
 
 	@Override
-	public Set<Hazard> gethazards(boolean special) {
-		Set<Hazard> hazards = super.gethazards(special);
+	public Set<Hazard> gethazards(boolean special){
+		Set<Hazard> hazards=super.gethazards(special);
 		hazards.add(new GettingLost(16));
-		if (special) {
+		if(special){
 			hazards.add(new FallingTrees());
 			hazards.add(new Break());
 		}

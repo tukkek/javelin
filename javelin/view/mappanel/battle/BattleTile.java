@@ -88,7 +88,7 @@ public class BattleTile extends Tile {
 			g.setColor(isblueteam ? Color.GREEN : Color.ORANGE);
 			g.fillRect(p.x, p.y, MapPanel.tilesize, MapPanel.tilesize);
 		}
-		draw(g, Images.getImage(c));
+		draw(g, Images.get(c));
 		g.setColor(isblueteam ? Color.BLUE : Color.RED);
 		final int hp = MapPanel.tilesize
 				- MapPanel.tilesize * c.hp / c.getmaxhp();

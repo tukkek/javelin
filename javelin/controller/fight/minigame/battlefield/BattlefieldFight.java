@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.CountingSet;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
@@ -18,7 +17,6 @@ import javelin.controller.map.Map;
 import javelin.controller.terrain.Terrain;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.model.world.location.unique.minigame.Battlefield;
 import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
@@ -324,21 +322,15 @@ public class BattlefieldFight extends Minigame{
 	public boolean onend(){
 		state.blueTeam.removeAll(blueflagpoles);
 		state.redTeam.removeAll(redflagpoles);
-		if(state.blueTeam.isEmpty()){
-			Javelin.prompt("You've lost this match... Better luck next time!\n"
-					+"Press any key to continue...");
-			return false;
-		}
-		Javelin.prompt("Congratulations, you've won!\n"
-				+"Your surviving units will be available for hire at the Battlefiled location.\n"
-				+"Press any key to continue...");
-		Battlefield b=Battlefield.get();
-		b.survivors.clear();
-		CountingSet counter=new CountingSet();
-		for(Combatant c:state.blueTeam)
-			if(!c.summoned) counter.add(c.source.name);
-		for(String name:counter.getelements())
-			b.survivors.put(name,counter.getcount(name));
-		return DEBUG?false:false;
+		String message;
+		if(state.blueTeam.isEmpty())
+			message="You've lost this match... Better luck next time!\n"
+					+"Press any key to continue...";
+		else
+			message="Congratulations, you've won!\n"
+					+"Your surviving units will be available for hire at the Battlefiled location.\n"
+					+"Press any key to continue...";
+		Javelin.prompt(message);
+		return super.onend();
 	}
 }

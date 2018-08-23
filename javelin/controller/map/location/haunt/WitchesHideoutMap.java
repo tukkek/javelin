@@ -6,7 +6,7 @@ import javelin.view.Images;
 public class WitchesHideoutMap extends LocationMap {
 	public WitchesHideoutMap() {
 		super("witcheshideout");
-		wall = Images.getImage("terrainforest");
-		floor = Images.getImage("terrainwoodfloor");
+		wall = Images.get("terrainforest");
+		floor = Images.get("terrainwoodfloor");
 	}
 }

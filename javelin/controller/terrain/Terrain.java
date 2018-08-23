@@ -84,19 +84,6 @@ public abstract class Terrain implements Serializable{
 
 	static final int[] STEPS=new int[]{-1,0,+1};
 
-	/**
-	 * Encounter level adjustment.
-	 *
-	 * @deprecated This is being ignored for positive values. Currently the
-	 *             terrains are already more difficult due to travel speed
-	 *             variations. Besides that, {@link #difficultycap} should be
-	 *             enough to also make certain terrains lesser fatal - and is a
-	 *             rarer ocurrance instead of a fixed adjustment, which can be
-	 *             veryunforgiving and hence no fun.
-	 */
-	@Deprecated
-	public Integer difficulty=null;
-
 	/** No road. */
 	public Float speedtrackless=null;
 	/** Minor road. */
@@ -108,9 +95,13 @@ public abstract class Terrain implements Serializable{
 
 	/**
 	 * Maximum encounter level delta allowed, in order to make some terrains more
-	 * noob friendly.
+	 * noob-friendly.
+	 *
+	 * TODO do we really need this? isn't the random distribution enough? also:
+	 * isn't this making the game easier than it needs to be - and if it isn't,
+	 * should difficulty be addressed through some other means?
 	 */
-	public Integer difficultycap=null;
+	public Integer difficultycap=Integer.MAX_VALUE;
 	/** Used to see distant {@link World} terrain. */
 	public Integer visionbonus=null;
 
@@ -393,7 +384,6 @@ public abstract class Terrain implements Serializable{
 	 * @return Encounter level for a fight taking place in this type of terrain.
 	 */
 	public Integer getel(int teamel){
-		final int delta=Difficulty.get()+Math.min(0,difficulty);
-		return teamel+Math.min(delta,difficultycap);
+		return teamel+Math.min(Difficulty.get(),difficultycap);
 	}
 }

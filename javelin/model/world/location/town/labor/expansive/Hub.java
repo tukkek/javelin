@@ -213,7 +213,7 @@ public class Hub extends Location {
 
 	@Override
 	public Image getimage() {
-		return Images.getImage(
+		return Images.get(
 				"location" + getname().replaceAll(" ", "").toLowerCase());
 	}
 

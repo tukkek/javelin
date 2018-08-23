@@ -88,7 +88,7 @@ public class Resource extends Location{
 
 	@Override
 	public Image getimage(){
-		return Images.getImage("locationresource"+type.name.toLowerCase());
+		return Images.get("locationresource"+type.name.toLowerCase());
 	}
 
 	@Override

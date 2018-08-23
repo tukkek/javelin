@@ -58,7 +58,7 @@ public class ParkedVehicle extends Actor {
 
 	@Override
 	public Image getimage() {
-		return Images.getImage(transport.name.toLowerCase());
+		return Images.get(transport.name.toLowerCase());
 	}
 
 	@Override

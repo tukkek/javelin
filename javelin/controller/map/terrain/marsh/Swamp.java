@@ -11,11 +11,11 @@ public class Swamp extends DndMap {
 	/** Constructor. */
 	public Swamp() {
 		super("Swamp", .2, .2, .6);
-		floor = Images.getImage("terrainmarsh");
+		floor = Images.get("terrainmarsh");
 		wallfloor = floor;
 		maxflooding = Weather.DRY;
 		obstacle = rock;
-		wall = Images.getImage("terraintree");
+		wall = Images.get("terraintree");
 	}
 
 }

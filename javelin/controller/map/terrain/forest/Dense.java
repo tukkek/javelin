@@ -11,6 +11,6 @@ public class Dense extends DndMap {
 	public Dense() {
 		super("Dense forest", .4, .3, 0);
 		wallfloor = floor;
-		wall = Images.getImage("terraintreeforest");
+		wall = Images.get("terraintreeforest");
 	}
 }

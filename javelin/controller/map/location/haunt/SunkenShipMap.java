@@ -8,8 +8,8 @@ import javelin.view.Images;
 public class SunkenShipMap extends LocationMap {
 	public SunkenShipMap() {
 		super("Sunken ship");
-		floor = Images.getImage("terrainshipfloor");
-		flooded = Images.getImage("terrainaquatic");
+		floor = Images.get("terrainshipfloor");
+		flooded = Images.get("terrainaquatic");
 	}
 
 	@Override

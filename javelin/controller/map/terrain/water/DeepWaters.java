@@ -12,7 +12,7 @@ public class DeepWaters extends DndMap {
 	/** Constructor. */
 	public DeepWaters() {
 		super("Water", 0, 0, 1);
-		flooded = Images.getImage("terrainaquatic");
+		flooded = Images.get("terrainaquatic");
 		standard = false;
 	}
 }

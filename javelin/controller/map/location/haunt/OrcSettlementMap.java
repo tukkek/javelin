@@ -7,7 +7,7 @@ import javelin.view.Images;
 public class OrcSettlementMap extends LocationMap {
 	public OrcSettlementMap() {
 		super("Orc settlement");
-		wall = Images.getImage("terrainorcwall");
+		wall = Images.get("terrainorcwall");
 		flying = false;
 	}
 

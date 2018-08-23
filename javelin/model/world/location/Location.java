@@ -281,7 +281,7 @@ public abstract class Location extends Actor{
 
 	@Override
 	public Image getimage(){
-		return Images.getImage("location"+getClass().getSimpleName().toLowerCase());
+		return Images.get("location"+getClass().getSimpleName().toLowerCase());
 	}
 
 	/**

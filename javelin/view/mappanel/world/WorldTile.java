@@ -24,12 +24,12 @@ public class WorldTile extends Tile {
 
 	static {
 		COASTLINES.put(new Point(-1, 0),
-				Images.getImage("overlaycoastlineleft"));
+				Images.get("overlaycoastlineleft"));
 		COASTLINES.put(new Point(+1, 0),
-				Images.getImage("overlaycoastlineright"));
-		COASTLINES.put(new Point(0, -1), Images.getImage("overlaycoastlineup"));
+				Images.get("overlaycoastlineright"));
+		COASTLINES.put(new Point(0, -1), Images.get("overlaycoastlineup"));
 		COASTLINES.put(new Point(0, +1),
-				Images.getImage("overlaycoastlinedown"));
+				Images.get("overlaycoastlinedown"));
 	}
 
 	public WorldTile(int xp, int yp, WorldPanel p) {

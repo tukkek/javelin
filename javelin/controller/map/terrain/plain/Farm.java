@@ -10,10 +10,10 @@ public class Farm extends DndMap {
 	/** Constructor. */
 	public Farm() {
 		super("Farm", .1, .4, 0);
-		floor = Images.getImage("terrainforestfloor");
+		floor = Images.get("terrainforestfloor");
 		wallfloor = floor;
-		wall = Images.getImage("terraintree");
-		obstacle = Images.getImage("terrainbush2");
+		wall = Images.get("terraintree");
+		obstacle = Images.get("terrainbush2");
 	}
 
 }

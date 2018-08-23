@@ -9,7 +9,7 @@ public class Rocks extends Sandy {
 	public Rocks() {
 		super();
 		name = "Desert rocks";
-		wall = Images.getImage("terrainruggedwall");
+		wall = Images.get("terrainruggedwall");
 	}
 
 	@Override

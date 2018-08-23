@@ -37,7 +37,6 @@ public class Water extends Terrain{
 	/** Constructor. */
 	public Water(){
 		name="aquatic";
-		difficulty=0;
 		difficultycap=-3;
 		speedtrackless=1f;
 		speedroad=1f;

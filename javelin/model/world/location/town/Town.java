@@ -274,7 +274,7 @@ public class Town extends Location{
 	public Image getimage(){
 		String image="locationtown"+getrank().title.toLowerCase();
 		if(!ishostile()&&ishosting()) image+="festival";
-		return Images.getImage(image);
+		return Images.get(image);
 	}
 
 	/**

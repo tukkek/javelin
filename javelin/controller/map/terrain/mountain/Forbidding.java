@@ -13,7 +13,7 @@ public class Forbidding extends DndMap {
 	/** Constructor. */
 	public Forbidding() {
 		super("Forbidding mountain", .4, 0, 0);
-		floor = Images.getImage("terrainruggedwall");
-		wall = Images.getImage("terrainorcwall");
+		floor = Images.get("terrainruggedwall");
+		wall = Images.get("terrainorcwall");
 	}
 }

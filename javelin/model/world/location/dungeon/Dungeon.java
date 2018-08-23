@@ -533,7 +533,7 @@ public class Dungeon extends Location{
 
 	@Override
 	public Image getimage(){
-		return Images.getImage("location"+gettier().name.toLowerCase());
+		return Images.get("location"+gettier().name.toLowerCase());
 	}
 
 	public void discover(Feature f){

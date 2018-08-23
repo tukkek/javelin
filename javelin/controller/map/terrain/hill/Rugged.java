@@ -13,9 +13,9 @@ public class Rugged extends DndMap {
 	/** Constructor. */
 	public Rugged() {
 		super("Rugged hill", .1, .7, 0);
-		floor = Images.getImage("terrainforestfloor");
+		floor = Images.get("terrainforestfloor");
 		wallfloor = floor;
-		wall = Images.getImage("terraintree");
+		wall = Images.get("terraintree");
 	}
 
 	@Override

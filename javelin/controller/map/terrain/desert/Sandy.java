@@ -12,7 +12,7 @@ public class Sandy extends DndMap {
 	/** Constructor. */
 	public Sandy() {
 		super("Sandy desert", 0, .1, 0);
-		floor = Images.getImage("terraindesert");
+		floor = Images.get("terraindesert");
 		maxflooding = Weather.DRY;
 		obstacle = rock;
 	}

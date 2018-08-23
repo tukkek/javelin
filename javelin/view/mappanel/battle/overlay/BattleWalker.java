@@ -31,43 +31,42 @@ public class BattleWalker extends OverlayWalker{
 
 		public BattleStep(Point p,final float totalcost){
 			super(p);
-			engaged=BattleWalker.this.engaged||checkengaged(p);
+			engaged=isengaged||checkengaged(p);
 			apcost=getcost();
 			this.totalcost=totalcost+apcost;
-			color=engaged||this.totalcost>=.5?Color.RED:Color.GREEN;
+			color=engaged||this.totalcost>.5?Color.RED:Color.GREEN;
 			text=Float.toString(this.totalcost).substring(0,3);
 		}
 
 		protected float getcost(){
-			final float apcost;
-			if(engaged)
-				apcost=Movement.disengage(current);
-			else if(current.burrowed)
-				apcost=Movement.converttoap(current.source.burrow);
+			if(engaged) return Movement.disengage(current);
+			float speed;
+			if(current.burrowed)
+				speed=current.source.burrow;
 			else if(state.map[x][y].flooded){
-				int swim=current.source.swim();
-				apcost=Movement.converttoap(swim>0?swim:current.source.walk/2);
+				speed=current.source.swim();
+				if(speed==0) speed=current.source.walk/2;
 			}else
-				apcost=Movement.converttoap(current.gettopspeed(state));
-			return apcost;
+				speed=current.gettopspeed(state);
+			return Movement.toap(speed);
 		}
 	}
 
+	final boolean isengaged;
 	Combatant current;
 	BattleState state;
-	private boolean engaged;
 
 	public BattleWalker(Point from,Point to,Combatant current,BattleState state){
 		super(from,to);
+		isengaged=checkengaged(from);
 		this.current=current;
 		this.state=state;
-		engaged=checkengaged(from);
 	}
 
 	@Override
 	protected Point step(Point step,LinkedList<Point> previous){
-		float totalcost=previous.isEmpty()?BattleScreen.partialmove
-				:((BattleStep)previous.getLast()).totalcost;
+		BattleStep last=previous.isEmpty()?null:(BattleStep)previous.getLast();
+		float totalcost=last==null?BattleScreen.partialmove:last.totalcost;
 		return new BattleStep(step,totalcost);
 	}
 
@@ -80,8 +79,8 @@ public class BattleWalker extends OverlayWalker{
 				&&(current.source.fly==0||!Javelin.app.fight.map.flying))
 			return false;
 		boolean istarget=step.equals(to);
-		if(engaged&&(!previous.isEmpty()||!istarget)) return false;
-		if(step.totalcost>=1||state.getmeld(step.x,step.y)!=null) return false;
+		if(isengaged&&(!previous.isEmpty()||!istarget)) return false;
+		if(step.totalcost>1||state.getmeld(step.x,step.y)!=null) return false;
 		if(state.getcombatant(step.x,step.y)!=null) return false;
 		Meld m=state.getmeld(step.x,step.y);
 		if(m!=null) return istarget&&current.ap>=m.meldsat;
@@ -111,5 +110,19 @@ public class BattleWalker extends OverlayWalker{
 	@Override
 	public Point resetlocation(){ // TODO
 		return null;
+	}
+
+	@Override
+	public LinkedList<Point> walk(){
+		LinkedList<Point> walk=super.walk();
+		if(walk.size()>1){
+			BattleStep last=(BattleStep)walk.getLast();
+			if(last.engaged){
+				last.engaged=false;
+				last.totalcost-=Movement.disengage(current);
+				last.totalcost+=last.getcost();
+			}
+		}
+		return walk;
 	}
 }

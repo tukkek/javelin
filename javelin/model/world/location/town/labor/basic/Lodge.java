@@ -169,7 +169,7 @@ public class Lodge extends Fortification{
 
 	@Override
 	public Image getimage(){
-		return Images.getImage(IMAGES[level]);
+		return Images.get(IMAGES[level]);
 	}
 
 	/**

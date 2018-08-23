@@ -163,7 +163,7 @@ public abstract class Temple extends UniqueLocation {
 	@Override
 	public Image getimage() {
 		final String name = "locationtemple" + realm.getname().toLowerCase();
-		return Images.getImage(name);
+		return Images.get(name);
 	}
 
 	@Override

@@ -193,7 +193,7 @@ public class Caravan extends Actor {
 
 	@Override
 	public Image getimage() {
-		return Images.getImage("caravan");
+		return Images.get("caravan");
 	}
 
 	@Override

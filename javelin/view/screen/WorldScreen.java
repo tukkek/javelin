@@ -416,7 +416,7 @@ public class WorldScreen extends BattleScreen{
 
 	@Override
 	public Image gettile(int x,int y){
-		return Images.getImage("terrain"+Terrain.get(x,y).toString());
+		return Images.get("terrain"+Terrain.get(x,y).toString());
 	}
 
 	/**

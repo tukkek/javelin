@@ -116,7 +116,7 @@ public class Campaign extends Scenario{
 	}
 
 	@Override
-	public void endday(double day){
+	public void end(double day){
 		cover(2);
 	}
 

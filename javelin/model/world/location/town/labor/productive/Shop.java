@@ -52,9 +52,9 @@ public class Shop extends Location{
 
 		@Override
 		public String printinfo(){
-			return "The shop will pay at most $"+Javelin.format(buylimit)
-					+" for an item.\n"+"Your squad has $"
-					+Javelin.format(Squad.active.gold);
+			String limit=Javelin.format(buylimit);
+			String info="The shop will pay at most $"+limit+" for an item.\n";
+			return info+"Your squad has $"+Javelin.format(Squad.active.gold)+".";
 		}
 
 		@Override

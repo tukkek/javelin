@@ -74,7 +74,7 @@ public abstract class QuestApp extends Applet implements Runnable{
 	public void switchScreen(final Component s){
 		if(s==null) return;
 		if(mainComponent==s){
-			// alreay on correct component!
+			//TODO using switch to repaint is bad practice but done in many places
 			s.repaint();
 			return;
 		}

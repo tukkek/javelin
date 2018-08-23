@@ -10,33 +10,28 @@ import javelin.model.unit.abilities.spell.Spell;
  *
  * @author alex
  */
-public class Fountain extends Feature {
-	static final String PROMPT = "Do you want to drink from the fountain?\n"
-			+ "Press ENTER to drink or any other key to cancel...";
+public class Fountain extends Feature{
+	static final String PROMPT="Do you want to drink from the fountain?\n"
+			+"Press ENTER to drink or any other key to cancel...";
 
 	/** Constructor. */
-	public Fountain() {
+	public Fountain(){
 		super("dungeonfountain");
 	}
 
 	@Override
-	public boolean activate() {
-		if (Javelin.prompt(PROMPT) != '\n') {
-			return false;
-		}
-		for (Combatant c : Squad.active.members) {
+	public boolean activate(){
+		if(Javelin.prompt(PROMPT)!='\n') return false;
+		for(Combatant c:Squad.active.members)
 			heal(c);
-		}
-		Javelin.message("Party totally recovered!", false);
+		Javelin.message("Party totally recovered!",false);
 		return true;
 	}
 
-	public static void heal(Combatant c) {
+	public static void heal(Combatant c){
 		c.detox(c.source.poison);
-		c.heal(c.maxhp, true);
-		for (Spell s : c.spells) {
-			s.used = 0;
-		}
+		c.heal(c.maxhp,true);
+		for(Spell s:c.spells)
+			s.used=0;
 	}
-
 }

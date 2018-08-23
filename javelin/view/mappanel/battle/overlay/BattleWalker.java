@@ -58,9 +58,9 @@ public class BattleWalker extends OverlayWalker{
 
 	public BattleWalker(Point from,Point to,Combatant current,BattleState state){
 		super(from,to);
-		isengaged=checkengaged(from);
 		this.current=current;
 		this.state=state;
+		isengaged=checkengaged(from);
 	}
 
 	@Override

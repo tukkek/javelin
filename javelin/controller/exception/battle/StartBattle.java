@@ -11,6 +11,7 @@ import javelin.controller.fight.setup.BattleSetup;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.World;
 import javelin.old.RPG;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.screen.BattleScreen;
@@ -39,6 +40,8 @@ public class StartBattle extends BattleEvent{
 		fight.setup.setup();
 		Fight.state.next();
 		fight.ready();
+		if(World.scenario!=null)
+			World.scenario.start(fight,Fight.originalblueteam,Fight.originalredteam);
 		final int elred=ChallengeCalculator.calculateel(Fight.state.redTeam);
 		final int elblue=ChallengeCalculator.calculateel(Fight.state.blueTeam);
 		int diffifculty=elred-elblue;

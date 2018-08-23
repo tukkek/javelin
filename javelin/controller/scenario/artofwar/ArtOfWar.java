@@ -1,21 +1,27 @@
 package javelin.controller.scenario.artofwar;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.comparator.MonstersByName;
+import javelin.controller.fight.Fight;
+import javelin.controller.fight.Siege;
+import javelin.controller.fight.minigame.battlefield.Reinforcement;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
+import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.classes.Warrior;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
+import javelin.view.screen.SquadScreen;
 
 /**
  * See scenarios.txt.
@@ -23,16 +29,18 @@ import javelin.old.RPG;
  * @author alex
  */
 public class ArtOfWar extends Scenario{
-	static public ArtOfWar singleton=new ArtOfWar();
+	static public final ArtOfWar singleton=new ArtOfWar();
 
 	/**
 	 * Challenge Rating of the last game-world challenge.
 	 *
 	 * TODO using a conservative 20 to start, can be raised with playtesting
 	 */
-	static final int ENDGAME=20;
-	static final int COMMANDERCRMIN=6;
-	static final int COMMANDERCRMAX=10;
+	static final int ENDGAME=20+4;
+	static final int INITIALEL=6+4;
+	static final String RANDOMTERRAIN="random";
+
+	static transient int fightel;
 
 	Terrain region=null;
 
@@ -42,6 +50,7 @@ public class ArtOfWar extends Scenario{
 		helpfile="artofwar";
 		labormodifier=0;
 		spawn=false;
+		asksquadnames=false;
 	}
 
 	@Override
@@ -56,41 +65,31 @@ public class ArtOfWar extends Scenario{
 	@Override
 	public void setup(){
 		region=selectregion();
-		Squad.active=new Squad(0,0,8,null);
-		Combatant commander=selectcommander();
-		commander.maxhp=commander.source.hd.average();
-		commander.hp=commander.maxhp;
-		Squad.active.members.add(commander);
-		int gold=RewardCalculator.calculatepcequipment(COMMANDERCRMAX);
-		Squad.active.gold=Javelin.round(gold);
+		selectarmy();
 	}
 
-	Combatant selectcommander(){
-		List<Monster> commanders=sort(filtercommanders());
-		int i=Javelin.choose("Select your commander:",commanders,true,false);
-		Monster m=i>=0?commanders.get(i):RPG.pick(commanders);
-		Combatant commander=new Combatant(m,true);
-		commander.source.elite=true;
-		commander.xp=new BigDecimal(COMMANDERCRMAX-m.cr);
-		return commander;
-	}
-
-	List<Monster> filtercommanders(){
-		return getunits(region).stream()
-				.filter(m->COMMANDERCRMIN<=m.cr&&m.cr<=COMMANDERCRMAX&&m.think(+1))
-				.collect(Collectors.toList());
+	void selectarmy(){
+		List<Monster> units=getunits(region);
+		units=units.stream().filter(m->m.cr<=5).collect(Collectors.toList());
+		new SquadScreen(units).open();
 	}
 
 	List<Monster> getunits(Terrain t){
-		return Javelin.ALLMONSTERS.stream()
+		List<Monster> units=Javelin.ALLMONSTERS.stream()
 				.filter(m->m.getterrains().contains(t.toString()))
 				.collect(Collectors.toList());
+		units.sort(MonstersByName.INSTANCE);
+		return units;
 	}
 
 	Terrain selectregion(){
 		List<Terrain> regions=sort(Arrays.asList(Terrain.NONWATER));
-		int i=Javelin.choose("Select your region:",regions,true,false);
-		return i>=0?regions.get(i):RPG.pick(regions);
+		ArrayList<Object> choices=new ArrayList<>(regions);
+		choices.add(RANDOMTERRAIN);
+		int i=Javelin.choose("Select your region:",choices,true,false);
+		if(i==-1) System.exit(0);
+		Object choice=choices.get(i);
+		return choice==RANDOMTERRAIN?RPG.pick(regions):(Terrain)choice;
 	}
 
 	<K> List<K> sort(List<K> l){
@@ -99,21 +98,48 @@ public class ArtOfWar extends Scenario{
 	}
 
 	@Override
-	public void endday(double day){
-		if(day%7!=0) return;
-		ArrayList<Combatant> eligible=new ArrayList<>();
+	public void start(Fight f,List<Combatant> blue,List<Combatant> red){
+		fightel=ChallengeCalculator.calculateel(red);
+		f.rewardgold=false;
+	}
+
+	@Override
+	public void end(Fight f,boolean victory){
+		if(!victory) return;
+		levelup();
+		reinforce();
+		Siege s=(Siege)f;
+		s.location.remove();
+	}
+
+	void reinforce(){
+		fightel=fightel-4;
+		if(fightel<1) fightel=1;
+		List<Combatants> choices=new Reinforcement(fightel,List.of(region))
+				.getchoices();
+		String prompt="Select your reinforcements:";
+		Combatants choice=choices.get(Javelin.choose(prompt,choices,true,true));
+		for(Combatant c:choice)
+			c.setmercenary(false);
+		Squad.active.members.addAll(choice);
+	}
+
+	void levelup(){
 		for(Squad s:Squad.getsquads())
 			for(Combatant c:s.members)
-				if(c.xp.floatValue()>=1) eligible.add(c);
-		if(eligible.isEmpty()) return;
-		int week=Math.round(Math.round(day/7));
-		String prompt="Week "+week+": do you want to upgrade your units?\n"
-				+"Press u to upgrade or ENTER to cancel...";
-		Character confirm=' ';
-		while(confirm!='u'&&confirm!='\n')
-			confirm=Javelin.prompt(prompt);
-		if(confirm=='u') for(Combatant c:eligible)
-			while(c.upgrade(Warrior.SINGLETON))
-				continue;
+				if(c.xp.floatValue()>=1) while(c.upgrade(Warrior.SINGLETON))
+					continue;
+	}
+
+	@Override
+	public boolean checkfullsquad(ArrayList<Combatant> squad){
+		return ChallengeCalculator.calculateel(squad)>=INITIALEL;
+	}
+
+	@Override
+	public void upgradesquad(ArrayList<Combatant> squad){
+		List<Upgrade> upgrades=List.of(Warrior.SINGLETON);
+		while(ChallengeCalculator.calculateel(squad)<INITIALEL)
+			Combatant.upgradeweakest(squad,upgrades);
 	}
 }

@@ -161,6 +161,7 @@ public class WorldScreen extends BattleScreen{
 					a.perform(this);
 					return;
 				}
+		throw new RepeatTurn();
 	}
 
 	@Override
@@ -224,7 +225,7 @@ public class WorldScreen extends BattleScreen{
 			Season.change(day);
 			Weather.weather();
 			World.seed.featuregenerator.spawn(1f/SPAWNPERIOD,false);
-			World.scenario.endday(WorldScreen.lastday);
+			World.scenario.end(WorldScreen.lastday);
 			ArrayList<Actor> actors=World.getactors();
 			ArrayList<Incursion> incursions=Incursion.getincursions();
 			actors.removeAll(incursions);

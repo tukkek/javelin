@@ -52,7 +52,7 @@ public class DungeonWorld extends Campaign{
 	}
 
 	@Override
-	public void endday(double day){
+	public void end(double day){
 		if(Debug.disablecombat) return;
 		for(Squad s:Squad.getsquads())
 			if(s.getdistrict()==null&&RPG.chancein(7)){

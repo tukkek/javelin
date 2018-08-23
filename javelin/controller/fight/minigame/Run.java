@@ -169,7 +169,7 @@ public class Run extends Minigame{
 	}
 
 	@Override
-	public Boolean win(){
+	public boolean win(){
 		return super.win()&&segments[NSEGMENTS-1][NSEGMENTS-1].captured;
 	}
 

@@ -854,8 +854,15 @@ public class Combatant implements Serializable,Cloneable{
 	public static String group(List<?> foes){
 		CountingSet count=new CountingSet();
 		count.casesensitive=true;
-		for(Object c:foes)
-			count.add(c.toString());
+		boolean hasunknown=false;
+		for(Object c:foes){
+			String foe=c.toString();
+			if(foe.equals("?")){
+				if(hasunknown) continue;
+				hasunknown=true;
+			}
+			count.add(foe);
+		}
 		return count.toString();
 	}
 

@@ -17,7 +17,7 @@ import javelin.view.screen.BattleScreen;
  * @author alex
  */
 public class Siege extends Fight{
-	private Location place;
+	public Location location;
 	/**
 	 * If <code>false</code> will skip
 	 * {@link #onEnd(BattleScreen, ArrayList, BattleState)} but still call
@@ -30,7 +30,7 @@ public class Siege extends Fight{
 	 * @param l Where this fight is occurring at.
 	 */
 	public Siege(Location l){
-		place=l;
+		location=l;
 		hide=false;
 		meld=true;
 		terrain=Terrain.get(l.x,l.y);
@@ -38,7 +38,7 @@ public class Siege extends Fight{
 
 	@Override
 	public ArrayList<Combatant> getfoes(Integer teamel){
-		ArrayList<Combatant> clones=new ArrayList<>(place.garrison);
+		ArrayList<Combatant> clones=new ArrayList<>(location.garrison);
 		for(int i=0;i<clones.size();i++)
 			clones.set(i,clones.get(i).clone().clonesource());
 		return clones;
@@ -47,7 +47,7 @@ public class Siege extends Fight{
 	@Override
 	public void bribe(){
 		afterwin();
-		place.realm=null;
+		location.realm=null;
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class Siege extends Fight{
 			else
 				afterlose();
 			/* TODO this should probably be inside afterwin() */
-			if(place.garrison.isEmpty()) place.capture();
+			if(location.garrison.isEmpty()) location.capture();
 		}
 		return super.onend();
 	}
@@ -73,11 +73,11 @@ public class Siege extends Fight{
 	 */
 	protected void afterlose(){
 		ArrayList<Combatant> alive=state.getcombatants();
-		for(Combatant c:new ArrayList<>(place.garrison))
-			if(!alive.contains(c)) place.garrison.remove(c);
+		for(Combatant c:new ArrayList<>(location.garrison))
+			if(!alive.contains(c)) location.garrison.remove(c);
 	}
 
 	protected void afterwin(){
-		place.garrison.clear();
+		location.garrison.clear();
 	}
 }

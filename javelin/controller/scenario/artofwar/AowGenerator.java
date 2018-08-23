@@ -2,15 +2,14 @@ package javelin.controller.scenario.artofwar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javelin.controller.InfiniteList;
 import javelin.controller.Point;
+import javelin.controller.challenge.Difficulty;
 import javelin.controller.fight.minigame.battlefield.Reinforcement;
 import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.terrain.Terrain;
@@ -19,7 +18,7 @@ import javelin.controller.terrain.Water;
 import javelin.model.Realm;
 import javelin.model.item.Tier;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Monster;
+import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.haunt.Haunt;
@@ -37,24 +36,23 @@ public class AowGenerator extends FeatureGenerator{
 	@Override
 	public Location generate(LinkedList<Realm> realms,
 			ArrayList<HashSet<Point>> regions,World w){
-		List<Monster> units=ArtOfWar.singleton.getunits(ArtOfWar.singleton.region);
-		List<Monster> fodder=units.stream().filter(m->m.cr<=5)
-				.collect(Collectors.toList());
-		Location start=generatefriendly(fodder);
-		units=units.stream().filter(m->m.cr>=ArtOfWar.COMMANDERCRMIN)
-				.collect(Collectors.toList());
 		InfiniteList<Terrain> terrains=new InfiniteList<>(
 				Arrays.asList(Terrain.ALL),true);
-		for(int el=ArtOfWar.COMMANDERCRMIN;!units.isEmpty();el++)
-			generatedwellings(units,el,terrains.pop());
+		for(int el=ArtOfWar.INITIALEL+Difficulty.MODERATE
+				+1;el<=ArtOfWar.ENDGAME;el++)
+			generatedwellings(el,terrains.pop());
 		for(Haunt h:generatehaunts())
 			if(!BANNED.contains(h.getClass())) h.place();
 		generatetowns(terrains);
-		return start;
+		ArrayList<Actor> actors=World.getactors();
+		Actor start=null;
+		while(!(start instanceof Location))
+			start=RPG.pick(actors);
+		return (Location)start;
 	}
 
 	void generatetowns(InfiniteList<Terrain> terrains){
-		int el=ArtOfWar.COMMANDERCRMIN;
+		int el=ArtOfWar.INITIALEL;
 		while(el<ArtOfWar.ENDGAME){
 			Terrain t=terrains.pop();
 			if(t.equals(Terrain.WATER)||t.equals(Terrain.UNDERGROUND)) continue;
@@ -66,13 +64,8 @@ public class AowGenerator extends FeatureGenerator{
 		}
 	}
 
-	void generatedwellings(List<Monster> units,int el,Terrain target){
-		List<Monster> tier=units.stream().filter(m->m.cr==el)
-				.collect(Collectors.toList());
-		if(tier.isEmpty()) return;
-		units.removeAll(tier);
-		Monster m=RPG.pick(tier);
-		Dwelling d=new Dwelling(m);
+	void generatedwellings(int el,Terrain target){
+		Dwelling d=new Dwelling(); //TODO change to simple fight icon
 		generate(d,findterrain(target));
 		d.garrison.addAll(generatearmy(el,target));
 	}
@@ -97,21 +90,6 @@ public class AowGenerator extends FeatureGenerator{
 			army.addAll(ranks.get(ranksi.pop()));
 		}
 		return army;
-	}
-
-	Location generatefriendly(List<Monster> fodder){
-		generatedock();
-		Collections.shuffle(fodder);
-		Point spawn=findterrain(ArtOfWar.singleton.region);
-		Dwelling d=null;
-		for(int i=0;i<fodder.size()&&i<5;i++){
-			Monster m=fodder.get(i);
-			Point p=null;
-			while(!validate(p))
-				p=new Point(spawn.x+RPG.r(-5,+5),spawn.y+RPG.r(-5,+5));
-			d=generate(new Dwelling(m),p);
-		}
-		return d;
 	}
 
 	void generatedock(){

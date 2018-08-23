@@ -11,6 +11,7 @@ import java.util.TreeSet;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.challenge.Difficulty;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.fight.Siege;
@@ -353,6 +354,8 @@ public class Town extends Location{
 
 	@Override
 	public String describe(){
-		return getrank().title+" of "+description+'.';
+		String difficulty="";
+		if(ishostile()) difficulty=" ("+Difficulty.describe(garrison)+" fight)";
+		return getrank().title+" of "+description+difficulty+'.';
 	}
 }

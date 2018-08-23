@@ -9,6 +9,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.action.world.Guide;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomEncounter;
 import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.generator.WorldGenerator;
@@ -291,7 +292,7 @@ public class Scenario implements Serializable{
 	 *
 	 * @param day
 	 */
-	public void endday(double day){
+	public void end(double day){
 		// nothing
 	}
 
@@ -301,6 +302,16 @@ public class Scenario implements Serializable{
 	 * @see WorldGenerator
 	 */
 	public void setup(){
-		SquadScreen.open();
+		new SquadScreen().open();
+	}
+
+	/** Called when a Fight starts. */
+	public void start(Fight f,List<Combatant> blue,List<Combatant> red){
+		// nothing by default
+	}
+
+	/** Called when a Fight ends. */
+	public void end(Fight f,boolean victory){
+		// nothing by default
 	}
 }

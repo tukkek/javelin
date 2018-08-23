@@ -82,7 +82,7 @@ public class Debug{
 				}
 
 				@Override
-				public Boolean win(){
+				public boolean win(){
 					return false;
 				}
 			};

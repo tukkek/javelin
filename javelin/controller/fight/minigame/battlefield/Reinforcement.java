@@ -1,6 +1,5 @@
 package javelin.controller.fight.minigame.battlefield;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
@@ -9,13 +8,14 @@ import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.old.RPG;
 
 public class Reinforcement{
-	public ArrayList<Combatant> commander=new ArrayList<>();
-	public ArrayList<Combatant> elites;
-	public ArrayList<Combatant> footsoldiers=new ArrayList<>();
+	public Combatants commander=new Combatants();
+	public Combatants elites;
+	public Combatants footsoldiers=new Combatants();
 	List<Terrain> terrains;
 
 	public Reinforcement(int el,List<Terrain> t){
@@ -50,7 +50,7 @@ public class Reinforcement{
 	void generatefootsoldiers(int elp){
 		int el=elp+(RPG.chancein(2)?-2:-3);
 		if(el<-1) el=RPG.chancein(2)?-1:0;
-		ArrayList<Combatant> footsoldiers=null;
+		Combatants footsoldiers=null;
 		while(footsoldiers==null||footsoldiers.size()>9)
 			try{
 				footsoldiers=EncounterGenerator.generate(el,terrains);
@@ -62,5 +62,13 @@ public class Reinforcement{
 			Combatant c=RPG.pick(footsoldiers);
 			this.footsoldiers.add(new Combatant(c.source,true));
 		}
+	}
+
+	/**
+	 * @return List with {@link #commander}, {@link #elites} and
+	 *         {@link #footsoldiers}.
+	 */
+	public List<Combatants> getchoices(){
+		return List.of(commander,elites,footsoldiers);
 	}
 }

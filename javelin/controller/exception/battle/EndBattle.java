@@ -49,6 +49,8 @@ public class EndBattle extends BattleEvent{
 			}
 		}
 		AiCache.reset();
+		if(World.scenario!=null)
+			World.scenario.end(Javelin.app.fight,Fight.victory);
 		Javelin.app.fight=null;
 		Fight.state=null;
 	}

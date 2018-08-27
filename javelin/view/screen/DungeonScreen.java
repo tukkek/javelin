@@ -56,7 +56,7 @@ public class DungeonScreen extends WorldScreen{
 		Combatant searching=Squad.active.getbest(Skill.PERCEPTION);
 		for(Feature f:dungeon.features.copy())
 			if(Walker.distanceinsteps(x,y,f.x,f.y)==1)
-				f.discover(searching,searching.taketen(Skill.PERCEPTION));
+				f.discover(searching,searching.roll(Skill.PERCEPTION));
 		Feature f=dungeon.getfeature(x,y);
 		if(f==null) return false;
 		boolean activated=f.activate();

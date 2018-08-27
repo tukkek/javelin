@@ -5,8 +5,8 @@ import javelin.Javelin;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.scenario.Campaign;
 import javelin.model.item.Item;
+import javelin.model.item.Ruby;
 import javelin.model.item.key.TempleKey;
-import javelin.model.item.key.door.MasterKey;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonTier;
@@ -43,7 +43,7 @@ public class DungeonWorld extends Campaign{
 
 	@Override
 	public Item openspecialchest(Dungeon d){
-		return new MasterKey();
+		return new Ruby();
 	}
 
 	@Override

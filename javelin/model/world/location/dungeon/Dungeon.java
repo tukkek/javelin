@@ -288,10 +288,17 @@ public class Dungeon extends Location{
 				}
 	}
 
+	/**
+	 * Tries to come up with a number roughly similar to what you'd have if you
+	 * explored all rooms, fought all monsters and then left (plus random
+	 * encounters).
+	 */
 	void calculateencounterfrequency(int nrooms){
-		int tilesperroom=countfloor()/nrooms;
+		float encounters=nrooms*1.1f*ratiomonster;
+		float tilesperroom=countfloor()/nrooms;
 		int vision=DungeonScreen.VIEWRADIUS*2+1;
-		stepsperencounter=Math.round(ratiomonster*tilesperroom/vision);
+		float steps=encounters*tilesperroom/vision;
+		stepsperencounter=Math.round(steps/2);
 	}
 
 	int countfloor(){

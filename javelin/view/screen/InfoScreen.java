@@ -93,7 +93,7 @@ public class InfoScreen extends Screen{
 	 */
 	public void print(String string){
 		text=string;
-		repaint();
+		Javelin.app.switchScreen(this);
 	}
 
 	/**

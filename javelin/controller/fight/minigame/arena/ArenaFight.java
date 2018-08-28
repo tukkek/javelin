@@ -14,10 +14,8 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.battle.EndBattle;
-import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.fight.minigame.arena.building.ArenaFountain;
-import javelin.controller.fight.minigame.arena.building.ArenaGateway;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.Arena;
 import javelin.controller.terrain.Terrain;
@@ -65,16 +63,9 @@ import javelin.view.screen.BattleScreen;
  * @author alex
  */
 public class ArenaFight extends Minigame{
-
 	public static final float BOOST=4; // 3,5 talvez?
 
 	static final boolean SPAWN=true;
-	/**
-	 * Each level up is supposed to take 13.3_ moderate fights. Each Arena bout is
-	 * supposed to take a tier up (5 levels). Take {@link #BOOST} into
-	 * consideration to lower the resulting value.
-	 */
-	static final float NFIGHTS=.8f*13*5/BOOST;
 	static final int TENSIONMIN=-5;
 	static final int TENSIONMAX=0;
 	static final int ELMIN=-12;
@@ -141,13 +132,6 @@ public class ArenaFight extends Minigame{
 
 	@Override
 	public void startturn(Combatant acting){
-		//		if(state.redTeam.isEmpty()){
-		//			while(state.next.automatic){
-		//				state.next.ap+=.5f;
-		//				state.next();
-		//			}
-		//			acting=state.next;
-		//		}
 		super.startturn(acting);
 		for(ArrayList<Combatant> group:new ArrayList<>(foes))
 			rewardxp(group);
@@ -223,24 +207,16 @@ public class ArenaFight extends Minigame{
 	}
 
 	void raisetension(int elblue){
-		Integer el=placefoes(elblue);
-		if(el==null) return;
-		float open=ChallengeCalculator.useresources(el-elblue)/NFIGHTS;
-		if(RPG.random()<=open){
-			ArenaGateway g=new ArenaGateway();
-			g.place();
-			notify("A gateway to victory apears!",g.getlocation());
-		}
-		refillfountains();
+		if(placefoes(elblue)!=null) refillfountains();
 	}
 
 	void refillfountains(){
-		ArrayList<ArenaFountain> fountains=getfountains();
+		ArrayList<ArenaFountain> fountains=ArenaFountain.get();
 		if(check==-Float.MAX_VALUE||fountains.isEmpty()) return;
 		int refilled=0;
 		Point p=null;
 		for(ArenaFountain f:fountains)
-			if(f.spent&&!f.isdamaged()&&RPG.random()<f.refillchance){
+			if(f.spent&&RPG.random()<f.refillchance){
 				f.setspent(false);
 				refilled+=1;
 				p=f.getlocation();
@@ -295,15 +271,6 @@ public class ArenaFight extends Minigame{
 		for(Combatant c:gladiators)
 			ap+=c.ap;
 		return ap/gladiators.size();
-	}
-
-	ArrayList<ArenaFountain> getfountains(){
-		ArrayList<ArenaFountain> fountains=new ArrayList<>();
-		for(Combatant c:state.blueTeam){
-			ArenaFountain f=c instanceof ArenaFountain?(ArenaFountain)c:null;
-			if(f!=null/* && !f.isdamaged() */) fountains.add(f);
-		}
-		return fountains;
 	}
 
 	void enter(ArrayList<Combatant> entering,List<Combatant> team,Point entry){
@@ -371,8 +338,7 @@ public class ArenaFight extends Minigame{
 	}
 
 	public static ArenaFight get(){
-		Fight f=Javelin.app.fight;
-		return f!=null&&f instanceof ArenaFight?(ArenaFight)f:null;
+		return (ArenaFight)Javelin.app.fight;
 	}
 
 	List<Combatant> getallies(){

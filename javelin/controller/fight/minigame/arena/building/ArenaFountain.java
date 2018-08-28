@@ -1,9 +1,9 @@
 package javelin.controller.fight.minigame.arena.building;
 
+import java.util.ArrayList;
+
 import javelin.Javelin;
 import javelin.controller.fight.Fight;
-import javelin.controller.fight.minigame.arena.ArenaFight;
-import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Condition;
 import javelin.model.world.location.dungeon.feature.Fountain;
@@ -13,7 +13,8 @@ public class ArenaFountain extends ArenaBuilding{
 	static final String REFILLING="This fountain is refilling... be patient!";
 
 	public boolean spent=true;
-	public float refillchance;
+	/** TODO playtest */
+	public float refillchance=.25f;
 
 	public ArenaFountain(){
 		super("Fountain","dungeonfountain",
@@ -23,37 +24,16 @@ public class ArenaFountain extends ArenaBuilding{
 
 	@Override
 	protected boolean click(Combatant current){
-		if(spent) return promptupgrade();
+		if(spent){
+			Javelin.prompt("This fountain is empty...");
+			return false;
+		}
 		for(Combatant c:Fight.state.blueTeam)
 			if(c.getlocation().distanceinsteps(getlocation())==1) restore(c);
 		setspent(true);
 		MessagePanel.active.clear();
 		Javelin.message("Nearby allies are completely restored!",
 				Javelin.Delay.BLOCK);
-		return true;
-	}
-
-	private boolean promptupgrade(){
-		Integer cost=getupgradecost();
-		if(cost==null){
-			Javelin.prompt(REFILLING+" (already at max level)");
-			return false;
-		}
-		String priceformat=Javelin.format(cost);
-		int gold=ArenaFight.get().gold;
-		if(gold<cost){
-			Javelin.prompt("You can upgrade this fountain for $"+priceformat
-					+" (you currently have $"+Javelin.format(gold)
-					+").\n\nPress any key to continue...");
-			return false;
-		}
-		if(Javelin.prompt("Do you want to upgrade this fountain for $"+priceformat
-				+"?\nPress ENTER to proceed, any other key to cancel...")!='\n'){
-			MessagePanel.active.clear();
-			return false;
-		}
-		ArenaFight.get().gold-=cost;
-		new BuildingUpgradeOption().upgrade();
 		return true;
 	}
 
@@ -83,12 +63,10 @@ public class ArenaFountain extends ArenaBuilding{
 				:super.getactiondescription(current);
 	}
 
-	@Override
-	public void damage(int damagep,BattleState s,int reduce){
-		super.damage(damagep,s,reduce);
-		// ArenaFountain f = (ArenaFountain) s.clone(this);
-		// if (f != null && f.isdamaged()) {
-		if(isdamaged()) // f.clonesource();
-			setspent(true);
+	public static final ArrayList<ArenaFountain> get(){
+		ArrayList<ArenaFountain> fountains=new ArrayList<>();
+		for(Combatant c:Fight.state.blueTeam)
+			if(c instanceof ArenaFountain) fountains.add((ArenaFountain)c);
+		return fountains;
 	}
 }

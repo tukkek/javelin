@@ -20,10 +20,10 @@ import javelin.view.screen.town.PurchaseOption;
 public class ArenaShop extends ArenaBuilding{
 	private static final int STOCKSIZE=9;
 
-	public class ArenaShoppingScreen extends ShoppingScreen{
+	public class ArenaShopScreen extends ShoppingScreen{
 		protected Combatant buyer;
 
-		public ArenaShoppingScreen(Combatant c){
+		public ArenaShopScreen(Combatant c){
 			super("What will you buy, "+c+"?",null);
 			buyer=c;
 		}
@@ -58,12 +58,6 @@ public class ArenaShop extends ArenaBuilding{
 		protected ItemSelection getitems(){
 			return stock;
 		}
-
-		@Override
-		public List<Option> getoptions(){
-			List<Option> options=super.getoptions();
-			return options;
-		}
 	}
 
 	public ItemSelection stock=new ItemSelection();
@@ -89,7 +83,7 @@ public class ArenaShop extends ArenaBuilding{
 
 	@Override
 	protected boolean click(Combatant current){
-		new ArenaShoppingScreen(current).show();
+		new ArenaShopScreen(current).show();
 		return true;
 	}
 

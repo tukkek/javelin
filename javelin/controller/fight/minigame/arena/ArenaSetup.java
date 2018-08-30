@@ -2,12 +2,13 @@ package javelin.controller.fight.minigame.arena;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.arena.building.ArenaBuilding;
-import javelin.controller.fight.minigame.arena.building.ArenaLair;
+import javelin.controller.fight.minigame.arena.building.ArenaGateway;
 import javelin.controller.fight.minigame.arena.building.ArenaTown;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.model.state.Square;
@@ -55,10 +56,10 @@ public class ArenaSetup extends BattleSetup{
 	@Override
 	public void place(){
 		ArrayList<Combatant> gladiators=new ArrayList<>(Fight.state.blueTeam);
-		placebuildings();
+		ArenaTown home=placebuildings();
 		Point p=null;
 		while(p==null||!validate(p))
-			p=getcenterpoint();
+			p=ArenaFight.displace(home.getlocation());
 		fight.enter(gladiators,Fight.state.blueTeam,p);
 	}
 
@@ -66,18 +67,51 @@ public class ArenaSetup extends BattleSetup{
 		return new Point(RPG.r(AREA[0].x,AREA[1].x),RPG.r(AREA[0].y,AREA[1].y));
 	}
 
-	void placebuildings(){
+	ArenaTown placebuildings(){
 		List<List<ArenaBuilding>> quadrants=new ArrayList<>();
 		for(int i=0;i<4;i++)
 			quadrants.add(new ArrayList<ArenaBuilding>());
-		List<ArenaBuilding> home=RPG.pick(quadrants);
-		//TODO randomize starting
-		home.add(new ArenaTown());
-		for(List<ArenaBuilding> quadrant:quadrants)
-			if(quadrant!=home) quadrant.add(new ArenaLair());
+		int homei=RPG.r(0,3);
+		List<ArenaBuilding> home=quadrants.get(homei);
+		ArenaTown t=new ArenaTown(homei);
+		home.add(t);
+		//		home.add(new ArenaLair());
+		//		home.add(new ArenaShop());
+		//		home.add(new ArenaAcademy());
+		for(ArenaBuilding b:home)
+			Fight.state.blueTeam.add(b);
+		addgateways(home,quadrants);
 		for(int i=0;i<quadrants.size();i++)
 			for(Building b:quadrants.get(i))
 				place(b,i);
+		definegateways(t);
+		return t;
+	}
+
+	void definegateways(ArenaTown t){
+		List<Combatant> gateways=Fight.state.redTeam;
+		Point home=t.getlocation();
+		gateways.sort((a,b)->{
+			return 100*a.getlocation().distanceinsteps(home)
+					-b.getlocation().distanceinsteps(home);
+		});
+		for(int i=0;i<4;i++){
+			ArenaGateway g=(ArenaGateway)gateways.get(i);
+			g.setlevel(ArenaBuilding.LEVELS[i]);
+			g.hp=g.maxhp;
+		}
+	}
+
+	void addgateways(List<ArenaBuilding> home,
+			List<List<ArenaBuilding>> quadrants){
+		quadrants=new ArrayList<>(quadrants);
+		quadrants.remove(home);
+		Collections.shuffle(quadrants);
+		for(int i=0;i<4;i++){
+			ArenaGateway g=new ArenaGateway();
+			quadrants.get(i%quadrants.size()).add(g);
+			Fight.state.redTeam.add(g);
+		}
 	}
 
 	static public void place(Building b,int quadrant){
@@ -109,7 +143,6 @@ public class ArenaSetup extends BattleSetup{
 			for(int y=p.y-1;y<=p.y+1;y++)
 				Fight.state.map[x][y].clear();
 		b.setlocation(p);
-		Fight.state.blueTeam.add(b);
 	}
 
 	static public boolean validatesurroundings(Point p){
@@ -119,18 +152,9 @@ public class ArenaSetup extends BattleSetup{
 		return true;
 	}
 
-	boolean validate(Point p){
+	static boolean validate(Point p){
 		return p.validate(AREA[0].x,AREA[0].y,AREA[1].x,AREA[1].y)
 				&&!Fight.state.map[p.x][p.y].blocked
 				&&Fight.state.getcombatant(p.x,p.y)==null;
-	}
-
-	static Point getmonsterentry(){
-		Point p=new Point(RPG.r(MAPSIZE),RPG.r(MAPSIZE));
-		if(RPG.chancein(2))
-			p.x=RPG.chancein(2)?AREA[0].x:AREA[1].x-1;
-		else
-			p.y=RPG.chancein(2)?AREA[0].y:AREA[1].y-1;
-		return p;
 	}
 }

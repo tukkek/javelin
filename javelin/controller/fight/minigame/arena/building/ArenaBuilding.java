@@ -16,10 +16,37 @@ import javelin.view.screen.BattleScreen;
  * @author alex
  */
 public abstract class ArenaBuilding extends Building{
+	public static BuildingLevel[] LEVELS=new BuildingLevel[]{
+			new BuildingLevel(0,5,70,60,5,0),
+			new BuildingLevel(1,10,110,90,7,7500*ArenaFight.BOOST),
+			new BuildingLevel(2,15,240,180,8,25000*ArenaFight.BOOST),
+			new BuildingLevel(3,20,600,540,8,60000*ArenaFight.BOOST),};
+
+	public static class BuildingLevel{
+		int level;
+		int repair;
+		int hp;
+		int damagethresold;
+		int hardness;
+		int cost;
+
+		public BuildingLevel(int level,int repair,int hp,int damagethresold,
+				int hardness,float cost){
+			super();
+			this.level=level;
+			this.repair=repair;
+			this.repair=level; //TODO
+			this.hp=hp;
+			this.damagethresold=damagethresold;
+			this.hardness=hardness;
+			this.cost=Math.round(cost);
+		}
+	}
+
 	final protected String actiondescription;
 
 	/** Building level from 0 to 4. */
-	int level;
+	public int level=0;
 
 	public ArenaBuilding(String name,String avatar,String description){
 		super(Javelin.getmonster("Building"),false);
@@ -27,11 +54,11 @@ public abstract class ArenaBuilding extends Building{
 		source.customName=name;
 		source.avatarfile=avatar;
 		source.passive=true;
-		setlevel(BuildingLevel.LEVELS[0]);
+		setlevel(ArenaBuilding.LEVELS[0]);
 		hp=maxhp;
 	}
 
-	void setlevel(BuildingLevel level){
+	public void setlevel(BuildingLevel level){
 		this.level=level.level;
 		maxhp=level.hp;
 		source.dr=level.hardness;
@@ -40,9 +67,8 @@ public abstract class ArenaBuilding extends Building{
 
 	@Override
 	public void act(BattleState s){
-		// ArenaBuilding c = (ArenaBuilding) s.clone(this);
 		ap+=1;
-		int repair=BuildingLevel.LEVELS[level].repair;
+		int repair=ArenaBuilding.LEVELS[level].repair;
 		hp=Math.min(hp+repair,maxhp);
 	}
 

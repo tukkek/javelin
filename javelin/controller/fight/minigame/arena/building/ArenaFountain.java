@@ -14,12 +14,18 @@ public class ArenaFountain extends ArenaBuilding{
 
 	public boolean spent=true;
 	/** TODO playtest */
-	public float refillchance=.25f;
+	public float refillchance;
 
 	public ArenaFountain(){
 		super("Fountain","dungeonfountain",
 				"Click this fountain to fully restore the active unit!");
 		setspent(spent);
+	}
+
+	@Override
+	public void setlevel(BuildingLevel level){
+		super.setlevel(level);
+		refillchance=(level.level+1)/4f;
 	}
 
 	@Override

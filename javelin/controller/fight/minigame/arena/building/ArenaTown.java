@@ -1,47 +1,106 @@
 package javelin.controller.fight.minigame.arena.building;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.arena.ArenaFight;
+import javelin.controller.fight.minigame.arena.ArenaSetup;
 import javelin.model.unit.Combatant;
-import javelin.view.screen.InfoScreen;
 import javelin.view.screen.Option;
+import javelin.view.screen.town.PurchaseScreen;
 
 public class ArenaTown extends ArenaBuilding{
-	protected class BuildingUpgradeOption extends Option{
+	static final List<Class<? extends ArenaBuilding>> BUILDINGTYPES=List.of(
+			ArenaAcademy.class,ArenaFountain.class,ArenaLair.class,ArenaShop.class);
+
+	static public int kingdomlevel=1;
+
+	abstract class TownOption extends Option{
+		public TownOption(String name,int price){
+			super(name,price);
+		}
+
+		abstract void buy();
+	}
+
+	class Upgrade extends TownOption{
 		ArenaBuilding building;
 
-		protected BuildingUpgradeOption(ArenaBuilding b){
-			super("Upgrade "+b.toString().toLowerCase(),
-					RewardCalculator.getgold(level+1),'u');
+		Upgrade(ArenaBuilding b,int price){
+			super("Upgrade "+b.toString().toLowerCase()+" (level "+(b.level+1)+")",
+					price);
 			building=b;
 			priority=2;
 		}
 
-		protected void upgrade(){
-			building.setlevel(BuildingLevel.LEVELS[building.level+1]);
+		@Override
+		public void buy(){
+			building.setlevel(ArenaBuilding.LEVELS[building.level+1]);
 			building.upgradebuilding();
-		}
-
-		public boolean buy(InfoScreen s){
-			ArenaFight f=ArenaFight.get();
-			if(f.gold>=price){
-				f.gold-=price;
-				upgrade();
-				return true;
-			}
-			String gold=Javelin.format(f.gold);
-			s.print("Not enough gold (you currently have $"+gold+").\n\n"
-					+"Press any key to continue....");
-			return false;
 		}
 	}
 
-	public int level=1;
+	class Build extends TownOption{
+		ArenaBuilding building;
 
-	public ArenaTown(){
-		super("Town","locationtownhamlet","Manage your buildings.");
+		Build(ArenaBuilding b,int price){
+			super("Build "+b.toString().toLowerCase(),price);
+			building=b;
+			priority=3;
+		}
+
+		@Override
+		void buy(){
+			ArenaSetup.place(building,quadrant);
+			Fight.state.blueTeam.add(building);
+		}
+	}
+
+	public class ArenaTownScreen extends PurchaseScreen{
+		public ArenaTownScreen(){
+			super("What to build?",null);
+		}
+
+		@Override
+		public List<Option> getoptions(){
+			ArrayList<Option> options=new ArrayList<>();
+			int price=Javelin.round(RewardCalculator.getgold(kingdomlevel));
+			for(Combatant c:Fight.state.blueTeam){
+				ArenaBuilding b=c instanceof ArenaBuilding?(ArenaBuilding)c:null;
+				if(b!=null&&b.level!=LEVELS.length-1) options.add(new Upgrade(b,price));
+			}
+			try{
+				for(Class<? extends ArenaBuilding> type:BUILDINGTYPES){
+					ArenaBuilding b=type.getDeclaredConstructor().newInstance();
+					options.add(new Build(b,price));
+				}
+			}catch(ReflectiveOperationException e){
+				throw new RuntimeException(e);
+			}
+			return options;
+		}
+
+		@Override
+		protected int getgold(){
+			return ArenaFight.get().gold;
+		}
+
+		@Override
+		protected void spend(Option o){
+			ArenaFight.get().gold-=o.price;
+			((TownOption)o).buy();
+			kingdomlevel+=1;
+		}
+	}
+
+	int quadrant;
+
+	public ArenaTown(int quadrant){
+		super("Town","locationtowncity","Manage your buildings.");
+		this.quadrant=quadrant;
 	}
 
 	@Override
@@ -51,12 +110,19 @@ public class ArenaTown extends ArenaBuilding{
 
 	@Override
 	protected boolean click(Combatant current){
-		return false;
+		new ArenaTownScreen().show();
+		return true;
 	}
 
 	public static ArenaTown get(){
 		for(Combatant c:Fight.state.blueTeam)
 			if(c instanceof ArenaTown) return (ArenaTown)c;
 		return null;
+	}
+
+	@Override
+	public String getactiondescription(Combatant current){
+		String price=Javelin.format(Javelin.round(ArenaFight.get().gold));
+		return super.getactiondescription(current)+"\n\nNext project: $"+price+".";
 	}
 }

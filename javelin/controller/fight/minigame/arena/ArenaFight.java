@@ -16,6 +16,7 @@ import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.fight.minigame.arena.building.ArenaFountain;
+import javelin.controller.fight.minigame.arena.building.ArenaGateway;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.Arena;
 import javelin.controller.terrain.Terrain;
@@ -65,7 +66,7 @@ import javelin.view.screen.BattleScreen;
 public class ArenaFight extends Minigame{
 	public static final float BOOST=4; // 3,5 talvez?
 
-	static final boolean SPAWN=true;
+	static final boolean SPAWN=false;
 	static final int TENSIONMIN=-5;
 	static final int TENSIONMAX=0;
 	static final int ELMIN=-12;
@@ -74,7 +75,6 @@ public class ArenaFight extends Minigame{
 	/** {@link Item} bag for {@link #gladiators}. */
 	public HashMap<Integer,ArrayList<Item>> items=new HashMap<>();
 	public int gold=0;
-	public Combatants victors=new Combatants();
 
 	/**
 	 * Non-mercenary units, live and dead.
@@ -137,18 +137,24 @@ public class ArenaFight extends Minigame{
 			rewardxp(group);
 		awaken();
 		if(!state.blueTeam.contains(state.next)) return;
-		if(acting.ap<check) if(state.redTeam.isEmpty())
+		if(acting.ap<check) if(getopponents().isEmpty())
 			reward(state.dead);
 		else
 			return;
 		int elblue=ChallengeCalculator.calculateel(getgladiators());
-		int elred=ChallengeCalculator.calculateel(state.redTeam);
-		if(state.redTeam.isEmpty()||elred-elblue<tension){
+		int elred=ChallengeCalculator.calculateel(getopponents());
+		if(getopponents().isEmpty()||elred-elblue<tension){
 			raisetension(elblue);
 			tension=RPG.r(TENSIONMIN,TENSIONMAX);
 			reward(state.dead);
 		}
 		check=acting.ap+RPG.r(10,40)/10f;
+	}
+
+	ArrayList<Combatant> getopponents(){
+		ArrayList<Combatant> opponents=new ArrayList<>(state.redTeam);
+		opponents.removeAll(getflagpoles());
+		return opponents;
 	}
 
 	void reward(ArrayList<Combatant> dead){
@@ -167,9 +173,8 @@ public class ArenaFight extends Minigame{
 	}
 
 	void rewardxp(ArrayList<Combatant> group){
-		List<Combatant> redteam=state.getredteam();
 		for(Combatant foe:group)
-			if(redteam.contains(foe)) return;
+			if(state.redTeam.contains(foe)) return;
 		RewardCalculator.rewardxp(getallies(),group,BOOST);
 		foes.remove(group);
 	}
@@ -225,16 +230,17 @@ public class ArenaFight extends Minigame{
 	}
 
 	Integer placefoes(int elblue){
+		if(getflagpoles().isEmpty()) return null;
 		ArrayList<Combatant> last=null;
 		int min=Math.max(elblue+ELMIN,baseline);
 		baseline=min;
-		ArrayList<Combatant> redteam=new ArrayList<>();
-		for(Combatant c:state.redTeam)
-			if(!c.summoned) redteam.add(c);
+		ArrayList<Combatant> opponents=new ArrayList<>();
+		for(Combatant c:getopponents())
+			if(!c.summoned) opponents.add(c);
 		for(int el=min;el<=elblue+ELMAX;el+=1){
 			ArrayList<Combatant> group=generatefoes(el);
 			if(group==null) continue;
-			ArrayList<Combatant> newteam=new ArrayList<>(redteam);
+			ArrayList<Combatant> newteam=new ArrayList<>(opponents);
 			newteam.addAll(group);
 			int tension=ChallengeCalculator.calculateel(newteam)-elblue;
 			if(tension==this.tension){
@@ -250,6 +256,14 @@ public class ArenaFight extends Minigame{
 		return null;
 	}
 
+	ArrayList<ArenaGateway> getflagpoles(){
+		ArrayList<ArenaGateway> flags=new ArrayList<>(4);
+		for(Combatant c:state.redTeam)
+			if(c instanceof ArenaGateway) flags.add((ArenaGateway)c);
+		flags.sort((a,b)->a.level-b.level);
+		return flags;
+	}
+
 	ArrayList<Combatant> generatefoes(int el){
 		try{
 			return EncounterGenerator.generate(el,Arrays.asList(Terrain.ALL));
@@ -260,8 +274,9 @@ public class ArenaFight extends Minigame{
 
 	public void enter(ArrayList<Combatant> group,ArrayList<Combatant> team){
 		Point entrance=null;
-		while(entrance==null||!arenasetup.validate(entrance))
-			entrance=ArenaSetup.getmonsterentry();
+		ArrayList<ArenaGateway> flags=getflagpoles();
+		while(entrance==null||!ArenaSetup.validate(entrance))
+			entrance=displace(RPG.pick(flags).getlocation());
 		enter(group,team,entrance);
 	}
 
@@ -304,9 +319,9 @@ public class ArenaFight extends Minigame{
 		}
 	}
 
-	Point displace(Point reference){
+	public static Point displace(Point reference){
 		Point p=null;
-		while(p==null||!arenasetup.validate(p)){
+		while(p==null||!ArenaSetup.validate(p)){
 			p=new Point(reference);
 			p.x+=RPG.r(-1,+1)+RPG.randomize(2);
 			p.y+=RPG.r(-1,+1)+RPG.randomize(2);
@@ -323,18 +338,15 @@ public class ArenaFight extends Minigame{
 
 	@Override
 	public void checkend(){
-		List<Combatant> gladiators=getgladiators();
-		if(!gladiators.isEmpty()) return;
-		if(victors.isEmpty()){
-			state.blueTeam.clear();
+		if(getallies().isEmpty()){
 			String loss="You've lost this match... better luck next time!";
 			Javelin.message(loss,true);
-		}else{
-			Javelin.message("You have beaten this level of the arena!",true);
-			for(Combatant c:gladiators)
-				ArenaFountain.heal(c);
+			throw new EndBattle();
 		}
-		throw new EndBattle();
+		if(state.redTeam.isEmpty()){
+			Javelin.message("You have beaten the arena :D",true);
+			throw new EndBattle();
+		}
 	}
 
 	public static ArenaFight get(){

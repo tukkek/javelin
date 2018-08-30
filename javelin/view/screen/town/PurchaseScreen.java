@@ -10,58 +10,57 @@ import javelin.view.screen.Option;
  *
  * @author alex
  */
-public abstract class PurchaseScreen extends SelectScreen {
+public abstract class PurchaseScreen extends SelectScreen{
 	/** <code>true</code> if transaction was finalized. */
 	protected boolean bought;
 
 	/** Constructor. See {@link SelectScreen#SelectScreen(String, Town)}. */
-	public PurchaseScreen(final String s, final Town t) {
-		super(s, t);
+	public PurchaseScreen(final String s,final Town t){
+		super(s,t);
 	}
 
 	@Override
-	public boolean select(final Option o) {
-		bought = canbuy(o);
-		if (bought) {
+	public boolean select(final Option o){
+		bought=canbuy(o);
+		if(bought){
 			spend(o);
 			return true;
 		}
-		text += "\nToo expensive!";
+		text+="\nToo expensive!";
 		Javelin.app.switchScreen(this);
 		return false;
 	}
 
 	/**
-	 * @param o
-	 *            Make the payment for this selection.
+	 * @param o Make the payment for this selection.
 	 */
-	protected void spend(final Option o) {
-		Squad.active.gold -= o.price;
+	protected void spend(final Option o){
+		Squad.active.gold-=o.price;
 	}
 
 	/**
 	 * @return <code>true</code> if can pay for the current {@link Option}.
 	 */
-	protected boolean canbuy(final Option o) {
-		return getgold() >= o.price;
+	protected boolean canbuy(final Option o){
+		return getgold()>=o.price;
 	}
 
 	@Override
-	public String printinfo() {
-		return "Your squad has $" + Javelin.format(getgold());
+	public String printinfo(){
+		return "Your squad has $"+Javelin.format(getgold())+".";
 	}
 
-	protected int getgold() {
+	protected int getgold(){
 		return Squad.active.gold;
 	}
 
 	@Override
-	public String getCurrency() {
+	public String getCurrency(){
 		return "$";
 	}
 
 	@Override
-	public void roundcost(final Option o) {
-		o.price = Math.round(o.price);
+	public void roundcost(final Option o){
+		o.price=Math.round(o.price);
 	}
 }

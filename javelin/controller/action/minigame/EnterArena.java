@@ -25,7 +25,7 @@ public class EnterArena implements Runnable{
 		double crmin=Integer.MIN_VALUE;
 		double crmax=SquadScreen.SELECTABLE[SquadScreen.SELECTABLE.length-1];
 		float targetel=Campaign.INITIALEL;
-		choosegladiators(crmin,crmax,targetel,gladiators);
+		if(!choosegladiators(crmin,crmax,targetel,gladiators)) System.exit(0);
 		throw new StartBattle(new ArenaFight(gladiators));
 	}
 

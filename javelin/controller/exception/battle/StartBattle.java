@@ -48,9 +48,9 @@ public class StartBattle extends BattleEvent{
 		if(fight instanceof Minigame||!Squad.active.skipcombat(diffifculty)){
 			if(Javelin.DEBUG) Debug.onbattlestart();
 			BattlePanel.current=Fight.state.next;
-			BattleScreen battleScreen=new BattleScreen(true,true);
+			BattleScreen screen=new BattleScreen(true,true);
 			fight.draw();
-			battleScreen.mainLoop();
+			screen.mainLoop();
 		}else
 			quickbattle(diffifculty);
 	}

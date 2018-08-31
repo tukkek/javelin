@@ -25,17 +25,14 @@ public class ArenaSetup extends BattleSetup{
 
 	final ArenaFight fight;
 
-	/**
-	 * @param arenaFight
-	 */
-	ArenaSetup(ArenaFight arenaFight){
-		fight=arenaFight;
+	ArenaSetup(ArenaFight f){
+		fight=f;
 	}
 
 	@Override
 	public void generatemap(Fight f){
 		super.generatemap(f);
-		f.map.flying=false;
+		//		f.map.flying=false;
 		Square[][] original=f.map.map;
 		Square[][] map=new Square[MAPSIZE][];
 		f.map.map=map;

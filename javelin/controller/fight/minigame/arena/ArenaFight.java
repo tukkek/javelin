@@ -66,7 +66,7 @@ import javelin.view.screen.BattleScreen;
 public class ArenaFight extends Minigame{
 	public static final float BOOST=4; // 3,5 talvez?
 
-	static final boolean SPAWN=false;
+	static final boolean SPAWN=true;
 	static final int TENSIONMIN=-5;
 	static final int TENSIONMAX=0;
 	static final int ELMIN=-12;
@@ -143,7 +143,7 @@ public class ArenaFight extends Minigame{
 			return;
 		int elblue=ChallengeCalculator.calculateel(getgladiators());
 		int elred=ChallengeCalculator.calculateel(getopponents());
-		if(getopponents().isEmpty()||elred-elblue<tension){
+		if(elred-elblue<tension){
 			raisetension(elblue);
 			tension=RPG.r(TENSIONMIN,TENSIONMAX);
 			reward(state.dead);

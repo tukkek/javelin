@@ -24,7 +24,7 @@ public class BattleWalker extends OverlayWalker{
 	 * @author alex
 	 */
 	public class BattleStep extends OverlayStep{
-		public final float apcost;
+		public float apcost;
 		public boolean engaged;
 		public boolean safe=false;
 		public float totalcost;
@@ -34,8 +34,12 @@ public class BattleWalker extends OverlayWalker{
 			engaged=isengaged||checkengaged(p);
 			apcost=getcost();
 			this.totalcost=totalcost+apcost;
-			color=engaged||this.totalcost>.5?Color.RED:Color.GREEN;
-			text=Float.toString(this.totalcost).substring(0,3);
+			update();
+		}
+
+		void update(){
+			color=engaged||totalcost>.5?Color.RED:Color.GREEN;
+			text=Float.toString(totalcost).substring(0,3);
 		}
 
 		protected float getcost(){
@@ -102,7 +106,7 @@ public class BattleWalker extends OverlayWalker{
 		for(int x=Math.max(p.x-1,0);x<=maxx;x++)
 			for(int y=Math.max(p.y-1,0);y<=maxy;y++){
 				final Combatant c=state.getcombatant(x,y);
-				if(c!=null&&!c.isally(current,state)) return true;
+				if(c!=null&&!c.source.passive&&!c.isally(current,state)) return true;
 			}
 		return false;
 	}
@@ -114,13 +118,16 @@ public class BattleWalker extends OverlayWalker{
 
 	@Override
 	public LinkedList<Point> walk(){
+		/*TODO this is a very unelegant hack */
 		LinkedList<Point> walk=super.walk();
 		if(walk.size()>1){
 			BattleStep last=(BattleStep)walk.getLast();
 			if(last.engaged){
 				last.engaged=false;
+				last.apcost=last.getcost();
 				last.totalcost-=Movement.disengage(current);
-				last.totalcost+=last.getcost();
+				last.totalcost+=last.apcost;
+				last.update();
 			}
 		}
 		return walk;

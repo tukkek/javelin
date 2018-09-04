@@ -8,7 +8,7 @@ import java.util.List;
 import javelin.controller.Point;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.arena.building.ArenaBuilding;
-import javelin.controller.fight.minigame.arena.building.ArenaGateway;
+import javelin.controller.fight.minigame.arena.building.ArenaFlagpole;
 import javelin.controller.fight.minigame.arena.building.ArenaTown;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.model.state.Square;
@@ -93,7 +93,7 @@ public class ArenaSetup extends BattleSetup{
 					-b.getlocation().distanceinsteps(home);
 		});
 		for(int i=0;i<4;i++){
-			ArenaGateway g=(ArenaGateway)gateways.get(i);
+			ArenaFlagpole g=(ArenaFlagpole)gateways.get(i);
 			g.setlevel(ArenaBuilding.LEVELS[i]);
 			g.hp=g.maxhp;
 		}
@@ -105,7 +105,7 @@ public class ArenaSetup extends BattleSetup{
 		quadrants.remove(home);
 		Collections.shuffle(quadrants);
 		for(int i=0;i<4;i++){
-			ArenaGateway g=new ArenaGateway();
+			ArenaFlagpole g=new ArenaFlagpole();
 			quadrants.get(i%quadrants.size()).add(g);
 			Fight.state.redTeam.add(g);
 		}

@@ -16,7 +16,7 @@ import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.fight.minigame.arena.building.ArenaFountain;
-import javelin.controller.fight.minigame.arena.building.ArenaGateway;
+import javelin.controller.fight.minigame.arena.building.ArenaFlagpole;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.Arena;
 import javelin.controller.terrain.Terrain;
@@ -256,10 +256,10 @@ public class ArenaFight extends Minigame{
 		return null;
 	}
 
-	ArrayList<ArenaGateway> getflagpoles(){
-		ArrayList<ArenaGateway> flags=new ArrayList<>(4);
+	ArrayList<ArenaFlagpole> getflagpoles(){
+		ArrayList<ArenaFlagpole> flags=new ArrayList<>(4);
 		for(Combatant c:state.redTeam)
-			if(c instanceof ArenaGateway) flags.add((ArenaGateway)c);
+			if(c instanceof ArenaFlagpole) flags.add((ArenaFlagpole)c);
 		flags.sort((a,b)->a.level-b.level);
 		return flags;
 	}
@@ -274,7 +274,7 @@ public class ArenaFight extends Minigame{
 
 	public void enter(ArrayList<Combatant> group,ArrayList<Combatant> team){
 		Point entrance=null;
-		ArrayList<ArenaGateway> flags=getflagpoles();
+		ArrayList<ArenaFlagpole> flags=getflagpoles();
 		while(entrance==null||!ArenaSetup.validate(entrance))
 			entrance=displace(RPG.pick(flags).getlocation());
 		enter(group,team,entrance);
@@ -288,7 +288,8 @@ public class ArenaFight extends Minigame{
 		return ap/gladiators.size();
 	}
 
-	void enter(ArrayList<Combatant> entering,List<Combatant> team,Point entry){
+	public void enter(ArrayList<Combatant> entering,List<Combatant> team,
+			Point entry){
 		if(team==state.redTeam){
 			if(!SPAWN) return;
 			foes.add(entering);

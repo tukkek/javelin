@@ -123,7 +123,7 @@ public class ArenaTown extends ArenaBuilding{
 	@Override
 	public String getactiondescription(Combatant current){
 		int price=Javelin.round(RewardCalculator.getgold(kingdomlevel));
-		String gold=Javelin.format(Javelin.round(ArenaFight.get().gold));
+		String gold=Javelin.format(ArenaFight.get().gold);
 		return super.getactiondescription(current)+"\n\n"+"Next project: $"+price
 				+". You have $"+gold+".";
 	}

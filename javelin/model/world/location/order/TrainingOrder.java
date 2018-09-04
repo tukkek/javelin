@@ -11,12 +11,12 @@ import javelin.view.screen.upgrading.UpgradingScreen;
 
 /**
  * Represent a {@link Combatant} in training.
- * 
+ *
  * @see Upgrade
  * @see UpgradingScreen
  * @author alex
  */
-public class TrainingOrder extends Order {
+public class TrainingOrder extends Order{
 	/**
 	 * How many days it takes to upgrade per full level (100XP). The official
 	 * rules say one week per character level. However, Javelin's goal is to
@@ -26,7 +26,7 @@ public class TrainingOrder extends Order {
 	 * overarching design (slower). Currently, it's jusst a median between the
 	 * tow.
 	 */
-	public static final float UPGRADETIME = (400 / 20 + 7) / 2;
+	public static final float UPGRADETIME=(400/20+7)/2;
 
 	/** * The upgraded unit. */
 	final public Combatant trained;
@@ -38,13 +38,14 @@ public class TrainingOrder extends Order {
 	public Combatant untrained;
 
 	/** Constructor. See {@link Order#Order(long, String)}. */
-	public TrainingOrder(Combatant trained, ArrayList<Item> equipment,
-			String namep, float xpcostp, Combatant original) {
-		super(Math.round(xpcostp * 24 * UPGRADETIME / World.scenario.boost),
+	public TrainingOrder(Combatant trained,ArrayList<Item> equipment,String namep,
+			float xpcostp,Combatant original){
+		super(Math.round(
+				xpcostp*24*UPGRADETIME/(World.scenario==null?1:World.scenario.boost)),
 				namep);
-		this.trained = trained;
-		this.equipment = equipment;
-		this.xpcost = xpcostp;
-		this.untrained = original;
+		this.trained=trained;
+		this.equipment=equipment;
+		xpcost=xpcostp;
+		untrained=original;
 	}
 }

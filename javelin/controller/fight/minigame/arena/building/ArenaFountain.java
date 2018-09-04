@@ -7,6 +7,7 @@ import javelin.controller.fight.Fight;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Condition;
 import javelin.model.world.location.dungeon.feature.Fountain;
+import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
 
 public class ArenaFountain extends ArenaBuilding{
@@ -19,7 +20,7 @@ public class ArenaFountain extends ArenaBuilding{
 	public ArenaFountain(){
 		super("Fountain","dungeonfountain",
 				"Click this fountain to fully restore the active unit!");
-		setspent(spent);
+		setspent(RPG.random()>refillchance);
 	}
 
 	@Override

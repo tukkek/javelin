@@ -6,6 +6,7 @@ mkdir package/javelin
 cp javelin.jar package/javelin
 cp -r doc package/javelin
 rm package/javelin/doc/.*~
+echo "`git log --oneline -1 --decorate`">package/javelin/doc/VERSION.txt
 cp -r avatars/ package/javelin
 cp -r maps/ package/javelin
 cp monsters.xml package/javelin

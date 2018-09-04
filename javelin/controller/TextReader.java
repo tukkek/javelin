@@ -11,27 +11,28 @@ import javelin.view.screen.InfoScreen;
 
 /**
  * Outputs the content of a text file to the screen.
- * 
+ *
  * @author alex
  */
-public class TextReader {
-	static public String read(File text) {
-		try {
-			String out = "";
-			BufferedReader reader = new BufferedReader(new FileReader(text));
-			String line = reader.readLine();
-			while (line != null) {
-				out += line + "\n";
-				line = reader.readLine();
+public class TextReader{
+	static public String read(File text){
+		try{
+			String out="";
+			BufferedReader reader=new BufferedReader(new FileReader(text));
+			String line=reader.readLine();
+			while(line!=null){
+				out+=line+"\n";
+				line=reader.readLine();
 			}
+			reader.close();
 			return out;
-		} catch (IOException e) {
+		}catch(IOException e){
 			throw new RuntimeException(e);
 		}
 	}
 
-	public static KeyEvent show(File f, String footer) {
-		Javelin.app.switchScreen(new InfoScreen(TextReader.read(f) + footer));
+	public static KeyEvent show(File f,String footer){
+		Javelin.app.switchScreen(new InfoScreen(TextReader.read(f)+footer));
 		return Javelin.input();
 	}
 }

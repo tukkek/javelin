@@ -1,9 +1,7 @@
 package javelin;
 
 import java.awt.event.KeyEvent;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -72,6 +70,8 @@ public class JavelinApp extends QuestApp{
 	/** Root window. */
 	public JFrame frame;
 
+	static String version="Version: ?";
+
 	@Override
 	public void run(){
 		javelin.controller.db.Preferences.init();// pre
@@ -82,18 +82,18 @@ public class JavelinApp extends QuestApp{
 		}
 		javelin.controller.db.Preferences.init();// post
 		preparedebug();
-		//		StateManager.save(true,StateManager.SAVEFILE);
 		if(Javelin.DEBUG){
 			Debug.oninit();
 			while(true)
 				loop();
-		}else
-			while(true)
-				try{
-					loop();
-				}catch(RuntimeException e){
-					handlefatalexception(e);
-				}
+		}
+		/*if non-debug*/
+		while(true)
+			try{
+				loop();
+			}catch(RuntimeException e){
+				handlefatalexception(e);
+			}
 	}
 
 	void loop(){
@@ -121,7 +121,6 @@ public class JavelinApp extends QuestApp{
 	 * @param e Show this error to the user and log it.
 	 */
 	static public void handlefatalexception(RuntimeException e){
-		e.printStackTrace();
 		String qupte=ERRORQUOTES[RPG.r(ERRORQUOTES.length)];
 		JOptionPane.showMessageDialog(Javelin.app,qupte
 				+"\n\nUnfortunately an error ocurred.\n"
@@ -133,7 +132,10 @@ public class JavelinApp extends QuestApp{
 				+"Post to our reddit forum -- http://www.reddit.com/r/javelinrl\n"
 				+"Leave a comment on our website -- http://javelinrl.wordpress.com\n"
 				+"Or write us an e-mail -- javelinrl@gmail.com\n");
-		String error=printstack(e);
+		if(!version.endsWith("\n")) version+="\n";
+		System.err.print(version);
+		e.printStackTrace();
+		String error=version+printstack(e);
 		Throwable t=e;
 		HashSet<Throwable> errors=new HashSet<>(2);
 		while(t.getCause()!=null&&errors.add(t)){
@@ -167,17 +169,12 @@ public class JavelinApp extends QuestApp{
 	}
 
 	private void initialize(){
+		String readme=TextReader.read(new File("README.txt"));
+		System.out.println(readme.replaceAll("\n\n","\n"));
 		try{
-			BufferedReader reader=new BufferedReader(
-					new FileReader(new File("README.txt")));
-			String line=reader.readLine();
-			while(line!=null){
-				if(!line.trim().isEmpty()) System.out.println(line);
-				line=reader.readLine();
-			}
-			reader.close();
-		}catch(IOException e){
-			throw new RuntimeException(e);
+			version=TextReader.read(new File("doc","VERSION.txt"));
+		}catch(RuntimeException e){
+			//file is generated, might not be there at all
 		}
 		ThreadManager.determineprocessors();
 	}

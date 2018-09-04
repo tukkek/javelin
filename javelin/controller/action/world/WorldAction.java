@@ -33,7 +33,7 @@ public abstract class WorldAction implements ActionDescription{
 			new Abandon(), // Q
 			Guide.HOWTO,Guide.MINIGAMES,Guide.ARTIFACTS,Guide.CONDITIONS,Guide.ITEMS,
 			Guide.SKILLS,Guide.SPELLS,Guide.UGRADES,Guide.DISTRICT,Guide.KITS,
-			Guide.DISCIPLINES,
+			Guide.DISCIPLINES,Guide.QUESTIONS,
 			new WorldMove(new int[]{KeyEvent.VK_NUMPAD7,},-1,-1,
 					new String[]{"U","↖ or 7 or U"}),
 			new WorldMove(new int[]{KeyEvent.VK_UP,KeyEvent.VK_NUMPAD8},0,-1,

@@ -52,6 +52,9 @@ public class Guide extends WorldAction implements SimpleAction{
 	/** Guide. */
 	public static final Guide DISCIPLINES=new Guide(KeyEvent.VK_F11,
 			"Martial disciplines","F11");
+	/** Guide. */
+	public static final Guide QUESTIONS=new Guide(KeyEvent.VK_F12,"Questions",
+			"F12");
 
 	class GuideWindow extends Frame{
 		public GuideWindow(){

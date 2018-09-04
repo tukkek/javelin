@@ -1,0 +1,85 @@
+This guide contains answers to some frequently and not-so-frequently asked questions about the game. It's possible to learn and beat the game without reading this guide, as it might contain what some hardcore gamers would consider spoilers - however, players who prefer to have all the information up-front or simply do not have the time or desire to learn by trial-and-error will enjoy it.
+
+This section assumes you have read the other in-game guides and is familiar with all available in-game actions. It will not attempt to answer questions that can be found in those other guides or by simply checking all available actions.
+
+If you have any question that isn't in any of the guides (including this) or if you find any information in them that is outdated or incorrect, please contact the development team so that the documentation can be improved (contact information available in the How to Play guide and Javelin's websites).
+
+HOW DO I DO ACTION X OR Y?
+
+All available in-game actions are listed on the help screen, which can be accessed by pressing h by default on both the battle and world screens.
+
+ARE THERE GOING TO BE MORE THAN 4 CLASSES IN THE GAME?
+
+The problem with using traditional d20 character classes is that every class has many distinct features, sometimes at pretty much every level so it’s a terrible amount of work, especially considering how some of these can be quite complicated. So it’s usually easier to create something as an individual upgrade and let the player create their own characters as they level up.
+
+WHAT’S THE MAXIMUM PARTY SIZE?
+
+There isn't a hard limit to party size or number of simultaneous parties in a game.
+
+HOW CAN I DEPOSIT PARTY MEMBERS SOMEWHERE FOR LATER RETRIEVAL?
+
+Find a Lodge and rest in it for the desired amount of time. If you don't want to spend the money for it, use the Camp action to set up camp in the wilderness instead - however depending on the game mode, this might open you up to being attacked during that period. Note that a certain amount of upkeep is still spent daily while camping (the Survival skill will diminish this cost and you can Camp even without money, unlike resting at a Lodge). Depending on game mode, other world locations may allow you to achieve similar results (Academies, Mines, etc).
+
+WHAT EQUIPMENT SLOTS EXIST FOR EACH CHARACTER?
+
+Head, eyes, hand, finger (one per hand), collar, torso, arms, waist, feet and back.
+
+HOW TO OBTAIN ITEMS?
+
+As treasure in Dungeons and Troves. You can also buy items in many District Locations (such as Shops) and Caravans. These are just examples.
+
+IS EXPERIENCE SPLIT SO EACH SURVIVING PARTY MEMBER GETS AN EQUAL SHARE?
+
+Experience is awarded through a method that awards experience to lower-level characters in greater amount, so that they "catch up" faster. It also considers unspent experience as actual levels for that purpose. It may look "random" from battle to battle but it is designed to smooth out in the long run.
+
+DO CREATURES OF THE SAME CHALLENGE RATING ALWAYS GIVE THE SAME MONEY AND EXPERIENCE?
+
+A creature of a given Challenge Rating will award the same amount of gold every time. Experience rewards are always calculated relative to your squad size and level, so a single level 2 hero who happens to down a grown dragon will gain much more experience than a level-20 army who does the same, given the much higher difficulty faced. Each particular Location and Fight may also apply particular rules to its own rewards.
+
+HOW MUCH EXPERIENCE IS NEEDED PER LEVEL?
+
+A hundred experience points (100XP) is roughly equivalent to 1 character level after it's been used to upgrade an unit. Each individual upgrade will inform you of its cost in experience points as you select it - which is relative to several factors, including the current upgrade set of the given unit being upgraded. More information can be found on Upper Krust's "Challenge Challenge Ratings", which is included with Javelin.
+
+WHAT IS THE MAX CHARACTER LEVEL?
+
+There isn't any hard limit on levels. The end-game is mostly balanced around a party of 4 or 5 characters at level 20 but that is not by any means a hard limit and parties above that power level will still be accommodated through dynamic game content. Players are even expected to rise above it before finishing the game.
+
+WHAT ARE THE PREREQUISITES FOR LEARNING AND USING ABILITIES LIKE SPELLS?
+
+Each upgrade has its own set of prerequisites. Javelin 2.0 should be able to inform these much better than 1.0 does at the moment. As much as possible. prerequisites are listed in each available Upgrade Guide.
+
+WHY CAN'T I USE SPELL X?
+
+As much as possible, you should always see a message informing you why. You can also check the spell entry on the Spell Guide to see if any particular conditions apply.
+
+WHAT DEFINES EACH CATEGORY OF ACCURACY LIKE EASY TO HIT OR UNLIKELY TO HIT?
+
+Each category represents a 20% increase in chance to hit ("unlikely", "hard", "fair", "easy" and "effortless"). A hit chance will be capped at a minimum of 5% and maximum of 95% so rolls should never be impossible to hit or miss.
+
+WHY DOES FLEEING COMBAT KILL OFF ANY UNCONSCIOUS PARTY MEMBERS?
+
+Because they are being left behind in the field of battle while the survivors flee from danger into safety. You can still use Wish Rubies to revive allies lost in these circumstances (as long they're not summoned or mercenaries). You can also use Wish Rubies during a losing battle to summon temporary allies and greatly increase your odds of winning (instead of recurring to fleeing and losing anyone left behind) - be careful not to wait until it's too late!
+
+WHY DO HIRELINGS CHARGE PER SQUARE MOVED?
+
+They don't - mercenary fees are paid daily. If your squad happens to take an entire day to cross a single world tile, chances are that you have an extremely slow unit in your party (such as an aquatic-based creature trying to move overland) - you might want to consider dismissing it.
+
+AT THE ADVENTURERS GUILD, WHY NOT JUST HIRE YOUR GROUP OUT AS UNDERLINGS FOR MONTHS AT A TIME TO GET ARBITRARY AMOUNTS OF MONEY?
+
+You can but it will net you a pretty small amount of gold compared to adventuring in the game world - while adventuring will also grant you experience, information about the world, free treasure, etc. Depending on the game mode, not using your time efficiently might affect you negatively as well.
+
+WHY DOES OUR GROUP SO FREQUENTLY GET LOST?
+
+You'll probably benefit from training at least one of your squad members in the Survival skill, if none of them are naturally proficient with it. If you can't at the very start, you may want to stay away from wilderness areas that you fail to navigate and accrue some experience and gold before moving onward.
+
+WHY CAN’T I SET MY PARTY’S DEFAULT FORMATION BEFORE ENTERING BATTLE?
+
+Battles in Javelin aren't staged, they happen as unexpected encounters during world exploration for the most part. Investing in Initiative abilities, feats, items and spells will allow you to act first to counteract this mechanic, allowing you to act first and setup your battles in advance to a certain degree.
+
+WHY DO ITEMS COST SO MUCH? WHY IS ACQUIRING EXPERIENCE AND GOLD SO SLOW?
+
+Javelin follows the rules from the open-gaming System Reference Document (included with every copy of Javelin) so you'd have to ask the original designers. Millions of people enjoyed these rules as-is since they were published back in the year 2000 and they are still being used in many upcoming video- and tabletop-games to this day! They are quite alright, which is why Javelin is based on them :) If they don't suit your personal tastes, maybe try a different game mode or mini-game instead.
+
+WHY CAN’T I JUST PLAN AND BUILD CHARACTERS LIKE IN MOST RPGS? WHY CAN'T I FIGHT USING FIXED TURNS LIKE IN MOST RPGS?
+
+Javelin envisions a class-less progression mechanic, with hundreds of free-form upgrades available instead of fixed tables. The battles use an action-point system to achieve more granular, complex, dynamic and engaging tactical possibilities. If you prefer traditional RPG mechanics, you can find hundreds of traditional RPG titles on online stores such as Steam, Good Old Games, Humble Bundle and also community websites like Rogue Basin and the Libre Game Wiki - if you ever grow tired of them, maybe come back and give Javelin another try!

@@ -14,7 +14,8 @@ import javelin.old.Interface;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
-import javelin.view.mappanel.MoveOverlay;
+import javelin.view.mappanel.overlay.DrawMoveOverlay;
+import javelin.view.mappanel.overlay.MoveOverlay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
 import javelin.view.screen.WorldScreen;
@@ -133,7 +134,7 @@ public class WorldMouse extends Mouse{
 			}
 			Point from=new Point(Squad.active.x,Squad.active.y);
 			Point to=new Point(t.x,t.y);
-			MoveOverlay.schedule(new MoveOverlay(new WorldWalker(from,to)));
+			DrawMoveOverlay.draw(new MoveOverlay(new WorldWalker(from,to)));
 		}else{
 			MessagePanel.active.clear();
 			Javelin.message(target.describe(),Javelin.Delay.NONE);

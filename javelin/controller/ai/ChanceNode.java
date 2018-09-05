@@ -2,7 +2,7 @@ package javelin.controller.ai;
 
 import javelin.Javelin;
 import javelin.Javelin.Delay;
-import javelin.view.mappanel.Overlay;
+import javelin.view.mappanel.overlay.Overlay;
 
 /**
  * Some action results are determined by chance, like if an attack succeeds at

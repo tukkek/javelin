@@ -8,8 +8,8 @@ import javax.swing.BorderFactory;
 import javelin.controller.Point;
 import javelin.model.world.location.town.Town;
 import javelin.view.mappanel.MapPanel;
-import javelin.view.mappanel.Overlay;
 import javelin.view.mappanel.Tile;
+import javelin.view.mappanel.overlay.Overlay;
 import javelin.view.screen.BattleScreen;
 
 public class DistrictOverlay extends Overlay {

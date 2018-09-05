@@ -9,8 +9,8 @@ import javax.swing.border.Border;
 
 import javelin.controller.Point;
 import javelin.view.mappanel.MapPanel;
-import javelin.view.mappanel.Overlay;
 import javelin.view.mappanel.Tile;
+import javelin.view.mappanel.overlay.Overlay;
 import javelin.view.screen.BattleScreen;
 
 public class BreathOverlay extends Overlay {

@@ -1,4 +1,4 @@
-package javelin.view.mappanel;
+package javelin.view.mappanel.overlay;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -11,6 +11,8 @@ import javax.swing.border.Border;
 import javelin.controller.Point;
 import javelin.controller.walker.overlay.OverlayStep;
 import javelin.controller.walker.overlay.OverlayWalker;
+import javelin.view.mappanel.MapPanel;
+import javelin.view.mappanel.Tile;
 import javelin.view.screen.BattleScreen;
 
 public class MoveOverlay extends Overlay{
@@ -52,14 +54,6 @@ public class MoveOverlay extends Overlay{
 			g.setColor(s.color);
 			g.drawString(s.text,p.x+5,p.y+MapPanel.tilesize-5);
 		}
-	}
-
-	public static void schedule(final MoveOverlay overlay){
-		if(MapPanel.overlay!=null) MapPanel.overlay.clear();
-		MapPanel.overlay=overlay;
-		overlay.walk();
-		for(Point p:MapPanel.overlay.affected)
-			BattleScreen.active.mappanel.tiles[p.x][p.y].repaint();
 	}
 
 	public void reset(){

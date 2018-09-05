@@ -9,6 +9,7 @@ import java.awt.ScrollPane;
 
 import javelin.controller.db.Preferences;
 import javelin.view.Images;
+import javelin.view.mappanel.overlay.Overlay;
 
 public abstract class MapPanel extends Panel {
 	public static int tilesize = Preferences.TILESIZEWORLD;

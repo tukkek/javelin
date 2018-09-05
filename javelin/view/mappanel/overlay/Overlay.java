@@ -1,9 +1,12 @@
-package javelin.view.mappanel;
+package javelin.view.mappanel.overlay;
 
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import javelin.controller.Point;
+import javelin.view.mappanel.MapPanel;
+import javelin.view.mappanel.Tile;
 import javelin.view.screen.BattleScreen;
 
 public abstract class Overlay{
@@ -11,15 +14,27 @@ public abstract class Overlay{
 
 	abstract public void overlay(Tile t);
 
+	/**
+	 * Here we clear not only the {@link #affected} tiles but all neighbors - this
+	 * is necessary because depending on zoom scale, text might "bleed" into
+	 * nearby tiles. Not ideal but still better than redrawing the whole
+	 * {@link MapPanel}.
+	 */
 	public void clear(){
 		MapPanel.overlay=null;
 		final Tile[][] tiles=BattleScreen.active.mappanel.tiles;
-		for(Point p:new ArrayList<>(affected))
-			try{
-				tiles[p.x][p.y].repaint();
-			}catch(IndexOutOfBoundsException e){
-				continue;// TODO
+		HashSet<Point> affected=new HashSet<>();
+		for(Point p:this.affected){
+			affected.add(p);
+			for(Point neighbor:Point.getadjacentorthogonal()){
+				neighbor.x+=p.x;
+				neighbor.y+=p.y;
+				affected.add(neighbor);
 			}
+		}
+		for(Point p:affected)
+			if(p.validate(0,0,tiles.length,tiles[0].length))
+				tiles[p.x][p.y].repaint();
 		BattleScreen.active.mappanel.refresh();
 	}
 

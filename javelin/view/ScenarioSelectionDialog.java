@@ -10,6 +10,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -124,11 +125,17 @@ public class ScenarioSelectionDialog extends Frame{
 
 	static boolean choosefromcommandline(String[] args){
 		if(args.length==0) return false;
-		for(String mode:SCENARIOS.keySet())
+		Map<String,Object> scenarios=new HashMap<>(SCENARIOS);
+		scenarios.putAll(MINIGAMES);
+		for(String mode:scenarios.keySet())
 			if(args[0].compareToIgnoreCase(mode.replaceAll(" ",""))==0){
-				World.scenario=SCENARIOS.get(mode);
-				break;
+				Object target=scenarios.get(mode);
+				if(target instanceof Scenario)
+					World.scenario=(Scenario)target;
+				else
+					JavelinApp.minigame=(Runnable)target;
+				return true;
 			}
-		return World.scenario!=null;
+		return false;
 	}
 }

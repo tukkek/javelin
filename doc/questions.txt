@@ -76,6 +76,10 @@ WHY CAN’T I SET MY PARTY’S DEFAULT FORMATION BEFORE ENTERING BATTLE?
 
 Battles in Javelin aren't staged, they happen as unexpected encounters during world exploration for the most part. Investing in Initiative abilities, feats, items and spells will allow you to act first to counteract this mechanic, allowing you to act first and setup your battles in advance to a certain degree.
 
+IS IT POSSIBLE TO STATION TOWN GUARDS WHILE YOU ARE OUT EXPLORING?
+
+If a friendly actor is attacked inside the area of a friendly town's district, any of your squads present inside the district will automatically jump in to defend it - this means you can have a group of units sleep in a Lodge, for example and they'll act as a defence army if the district comes under attack.
+
 WHY DO ITEMS COST SO MUCH? WHY IS ACQUIRING EXPERIENCE AND GOLD SO SLOW?
 
 Javelin follows the rules from the open-gaming System Reference Document (included with every copy of Javelin) so you'd have to ask the original designers. Millions of people enjoyed these rules as-is since they were published back in the year 2000 and they are still being used in many upcoming video- and tabletop-games to this day! They are quite alright, which is why Javelin is based on them :) If they don't suit your personal tastes, maybe try a different game mode or mini-game instead.

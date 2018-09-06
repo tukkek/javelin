@@ -98,7 +98,7 @@ public class Debug{
 		}
 
 		static void generateincursion(Location l,Realm r,List<Combatant> members){
-			for(Actor a:Incursion.getincursions())
+			for(Actor a:Incursion.getall())
 				a.remove();
 			Incursion i=new Incursion(l.x,l.y,members,r);
 			i.displace();

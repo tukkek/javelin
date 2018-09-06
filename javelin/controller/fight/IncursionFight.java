@@ -1,6 +1,7 @@
 package javelin.controller.fight;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javelin.model.unit.Combatant;
 import javelin.model.world.Incursion;
@@ -28,7 +29,7 @@ public class IncursionFight extends Fight {
 
 	@Override
 	public ArrayList<Combatant> getfoes(Integer teamel) {
-		return Incursion.getsafeincursion(incursion.squad);
+		return IncursionFight.getsafeincursion(incursion.squad);
 	}
 
 	@Override
@@ -61,7 +62,21 @@ public class IncursionFight extends Fight {
 	@Override
 	public ArrayList<Combatant> generate() {
 		ArrayList<Combatant> foes = super.generate();
-		incursion.squad = Incursion.getsafeincursion(foes);
+		incursion.squad = IncursionFight.getsafeincursion(foes);
 		return foes;
+	}
+
+	/**
+	 * @param from Clones the {@link Combatant}s here into...
+	 * @return a new list.
+	 * @see Combatant#clone()
+	 * @see Combatant#clonesource()
+	 */
+	static public ArrayList<Combatant> getsafeincursion(List<Combatant> from){
+		int size=from.size();
+		ArrayList<Combatant> to=new ArrayList<>(size);
+		for(int i=0;i<size;i++)
+			to.add(from.get(i).clone().clonesource());
+		return to;
 	}
 }

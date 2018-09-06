@@ -202,12 +202,6 @@ public class Town extends Location{
 
 	@Override
 	public void captureforai(Incursion attacker){
-		ArrayList<Squad> defending=getdistrict().getsquads();
-		if(!defending.isEmpty()){
-			RPG.pick(defending).destroy(attacker);
-			throw new RuntimeException(
-					"Squad#destroy() is supposed to throw StartBattle #town");
-		}
 		super.captureforai(attacker);
 		garrison.clear();
 		garrison.addAll(attacker.squad);

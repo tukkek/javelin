@@ -31,7 +31,7 @@ public abstract class UniqueLocation extends Fortification {
 
 	@Override
 	public Boolean destroy(Incursion attacker) {
-		return impermeable ? Incursion.ignoreincursion(attacker)
+		return impermeable ? Incursion.ignore(attacker)
 				: super.destroy(attacker);
 	}
 

@@ -227,7 +227,7 @@ public class WorldScreen extends BattleScreen{
 			World.seed.featuregenerator.spawn(1f/SPAWNPERIOD,false);
 			World.scenario.end(WorldScreen.lastday);
 			ArrayList<Actor> actors=World.getactors();
-			ArrayList<Incursion> incursions=Incursion.getincursions();
+			ArrayList<Incursion> incursions=Incursion.getall();
 			actors.removeAll(incursions);
 			Collections.shuffle(actors);
 			for(Actor a:actors){

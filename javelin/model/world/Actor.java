@@ -79,7 +79,7 @@ public abstract class Actor implements Serializable {
 	/**
 	 * Called when an incursion reaches this actor's location.
 	 *
-	 * @see Incursion#ignoreincursion(Incursion)
+	 * @see Incursion#ignore(Incursion)
 	 * @see Incursion#fight(int, int)
 	 *
 	 * @param incursion

@@ -525,7 +525,7 @@ public class Combatant implements Serializable,Cloneable{
 	 * {@link Condition}.
 	 */
 	public void addcondition(Condition c){
-		if(!c.validate(this)) return;
+		if(source.passive||!c.validate(this)) return;
 		Condition previous=hascondition(c.getClass());
 		if(previous==null||previous.stack){
 			c.start(this);

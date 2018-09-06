@@ -61,6 +61,7 @@ public abstract class ArenaBuilding extends Building{
 	public void setlevel(BuildingLevel level){
 		this.level=level.level;
 		maxhp=level.hp;
+		hp=maxhp;
 		source.dr=level.hardness;
 		source.cr=(level.level+1)*5f;
 	}
@@ -69,7 +70,7 @@ public abstract class ArenaBuilding extends Building{
 	public void act(BattleState s){
 		ap+=1;
 		int repair=ArenaBuilding.LEVELS[level].repair;
-		hp=Math.min(hp+repair,maxhp);
+		//		hp=Math.min(hp+repair,maxhp);
 	}
 
 	abstract protected void upgradebuilding();

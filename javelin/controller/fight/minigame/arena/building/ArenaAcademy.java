@@ -72,7 +72,10 @@ public class ArenaAcademy extends ArenaBuilding{
 
 		@Override
 		public String printinfo(){
-			return "Your gladiators have $"+Javelin.format(ArenaFight.get().gold);
+			Combatant trainee=Fight.state.next;
+			int xp=Math.round(trainee.xp.floatValue()*100);
+			return trainee+" has "+xp+"XP.\n"+"You have $"
+					+Javelin.format(ArenaFight.get().gold)+".";
 		}
 	}
 

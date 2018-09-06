@@ -15,8 +15,8 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.minigame.Minigame;
-import javelin.controller.fight.minigame.arena.building.ArenaFountain;
 import javelin.controller.fight.minigame.arena.building.ArenaFlagpole;
+import javelin.controller.fight.minigame.arena.building.ArenaFountain;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.Arena;
 import javelin.controller.terrain.Terrain;
@@ -158,6 +158,7 @@ public class ArenaFight extends Minigame{
 	}
 
 	void reward(ArrayList<Combatant> dead){
+		int gold=0;
 		ArrayList<Combatant> defeated=new ArrayList<>(dead.size());
 		for(Combatant c:new ArrayList<>(dead))
 			if(c.mercenary||c.summoned)
@@ -170,6 +171,11 @@ public class ArenaFight extends Minigame{
 					gold+=RewardCalculator.getgold(cr)*BOOST;
 				}
 			}
+		if(gold==0) return;
+		gold=Javelin.round(gold);
+		this.gold+=gold;
+		Javelin.message("You have earned $"+Javelin.format(gold)+".\n"
+				+"You now have $"+Javelin.format(this.gold)+".",false);
 	}
 
 	void rewardxp(ArrayList<Combatant> group){
@@ -266,7 +272,7 @@ public class ArenaFight extends Minigame{
 
 	ArrayList<Combatant> generatefoes(int el){
 		try{
-			return EncounterGenerator.generate(el,Arrays.asList(Terrain.ALL));
+			return EncounterGenerator.generate(el,Arrays.asList(Terrain.NONWATER));
 		}catch(GaveUp e){
 			return null;
 		}

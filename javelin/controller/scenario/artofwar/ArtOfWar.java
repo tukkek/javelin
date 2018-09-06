@@ -101,6 +101,8 @@ public class ArtOfWar extends Scenario{
 	public void start(Fight f,List<Combatant> blue,List<Combatant> red){
 		fightel=ChallengeCalculator.calculateel(red);
 		f.rewardgold=false;
+		f.bribe=false;
+		f.hide=false;
 	}
 
 	@Override
@@ -113,8 +115,7 @@ public class ArtOfWar extends Scenario{
 	}
 
 	void reinforce(){
-		fightel=fightel-4;
-		if(fightel<1) fightel=1;
+		fightel=Math.max(1,fightel-4);
 		List<Combatants> choices=new Reinforcement(fightel,List.of(region))
 				.getchoices();
 		String prompt="Select your reinforcements:";

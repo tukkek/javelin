@@ -48,10 +48,6 @@ WHAT ARE THE PREREQUISITES FOR LEARNING AND USING ABILITIES LIKE SPELLS?
 
 Each upgrade has its own set of prerequisites. Javelin 2.0 should be able to inform these much better than 1.0 does at the moment. As much as possible. prerequisites are listed in each available Upgrade Guide.
 
-WHY CAN'T I USE SPELL X?
-
-As much as possible, you should always see a message informing you why. You can also check the spell entry on the Spell Guide to see if any particular conditions apply.
-
 WHAT DEFINES EACH CATEGORY OF ACCURACY LIKE EASY TO HIT OR UNLIKELY TO HIT?
 
 Each category represents a 20% increase in chance to hit ("unlikely", "hard", "fair", "easy" and "effortless"). A hit chance will be capped at a minimum of 5% and maximum of 95% so rolls should never be impossible to hit or miss.

@@ -2,8 +2,7 @@ package javelin.controller.map.terrain.water;
 
 import java.util.ArrayList;
 import java.util.Collections;
-
-import com.sun.tools.javac.util.List;
+import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.fight.minigame.Minigame;

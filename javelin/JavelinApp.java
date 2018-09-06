@@ -56,7 +56,16 @@ public class JavelinApp extends QuestApp{
 	public static Runnable minigame=null;
 	static public WorldScreen context;
 
-	static String[] ERRORQUOTES=new String[]{"A wild error appears!",
+	static final String CRASHMESSAGE="\n\nUnfortunately an error ocurred.\n"
+			+"Please send a screenshot of the next message or the log file (error.txt)\n"
+			+"to one of the channels below, so we can get this fixed on future releases.\n\n"
+			+"If for any reason your current game fails to load when you restart Javelin\n"
+			+"you can find backups on the \"backup\" folder. Just move one of them to the\n"
+			+"main folder and rename it to \"javelin.save\" to restore your progress.\n\n"
+			+"Post to our reddit forum -- http://www.reddit.com/r/javelinrl\n"
+			+"Leave a comment on our website -- http://javelinrl.wordpress.com\n"
+			+"Or write us an e-mail -- javelinrl@gmail.com\n";
+	static final String[] CRASHQUOTES=new String[]{"A wild error appears!",
 			"You were eaten by a grue.","So again it has come to pass...",
 			"Mamma mia!",};
 
@@ -121,21 +130,16 @@ public class JavelinApp extends QuestApp{
 	 * @param e Show this error to the user and log it.
 	 */
 	static public void handlefatalexception(RuntimeException e){
-		String qupte=ERRORQUOTES[RPG.r(ERRORQUOTES.length)];
-		JOptionPane.showMessageDialog(Javelin.app,qupte
-				+"\n\nUnfortunately an error ocurred.\n"
-				+"Please send a screenshot of the next message or the log file (error.txt)\n"
-				+"to one of the channels below, so we can get this fixed on future releases.\n\n"
-				+"If for any reason your current game fails to load when you restart Javelin\n"
-				+"you can find backups on the \"backup\" folder. Just move one of them to the\n"
-				+"main folder and rename it to \"javelin.save\" to restore your progress.\n\n"
-				+"Post to our reddit forum -- http://www.reddit.com/r/javelinrl\n"
-				+"Leave a comment on our website -- http://javelinrl.wordpress.com\n"
-				+"Or write us an e-mail -- javelinrl@gmail.com\n");
+		String quote=CRASHQUOTES[RPG.r(CRASHQUOTES.length)];
+		JOptionPane.showMessageDialog(Javelin.app,quote+CRASHMESSAGE);
 		if(!version.endsWith("\n")) version+="\n";
 		System.err.print(version);
 		e.printStackTrace();
-		String error=version+printstack(e);
+		String system="System: ";
+		for(String info:new String[]{"os.name","os.version","os.arch"})
+			system+=System.getProperty(info)+" ";
+		system+="\n";
+		String error=version+system+"\n"+printstack(e);
 		Throwable t=e;
 		HashSet<Throwable> errors=new HashSet<>(2);
 		while(t.getCause()!=null&&errors.add(t)){

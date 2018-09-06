@@ -2,12 +2,13 @@ package javelin.controller.action;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ActionProvider;
 import javelin.controller.ai.ChanceNode;
-import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
@@ -34,19 +35,30 @@ public class CastSpell extends Fire implements AiAction{
 	public boolean perform(Combatant c){
 		MessagePanel.active.clear();
 		casting=null;
-		final ArrayList<Spell> castable=new ArrayList<>();
-		final boolean engaged=Fight.state.isengaged(c);
-		for(Spell s:c.spells){
-			if(engaged&&s.provokeaoo&&!c.concentrate(s)) continue;
-			if(s.canbecast(c)) castable.add(s);
-		}
+		List<Spell> castable=c.spells.stream().filter(s->s.castinbattle)
+				.collect(Collectors.toList());
 		if(castable.isEmpty()){
-			Javelin.message("No spells can be cast right now.",Javelin.Delay.WAIT);
+			Javelin.message(c+" doesn't know any battle spells...",Delay.WAIT);
 			return false;
+		}
+		castable=castable.stream().filter(s->s.canbecast(c))
+				.collect(Collectors.toList());
+		if(castable.isEmpty()){
+			Javelin.message("All battle spells are spent...",Delay.WAIT);
+			return false;
+		}
+		if(Fight.state.isengaged(c)){
+			castable=castable.stream().filter(s->!s.provokeaoo||c.concentrate(s))
+					.collect(Collectors.toList());
+			if(castable.isEmpty()){
+				String message="Not enough Concentration to cast any of your current spells while engaged...";
+				Javelin.message(message,Delay.WAIT);
+				return false;
+			}
 		}
 		castable.sort((o1,o2)->o1.name.compareTo(o2.name));
 		int i=Javelin.choose("Choose a spell:",castable,castable.size()>4,false);
-		if(i==-1) throw new RepeatTurn();
+		if(i==-1) return false;
 		return cast(castable.get(i),c);
 	}
 

@@ -1,20 +1,9 @@
 Each minigame is a different gameplay mode with different rules that can be initiated from anywhere in the world map (check the help screen to verify their respective keys). The combatants in these matches are not your normal units either so you don't have to worry about losing your carefully upgraded heroes. The minigames also take a more predictable amount of time, making them perfect for when you're taking a break or have a certain amount of time to waste but are not in the mood for progressing your campaign or scenario! Despite all that, the minigames also offer rewards to your main quest, making them worthwhile to progress your overall game as well!
 
 ARENA
-A number of battles taking place in the same map, also offering buildings that will let you restore and upgrade your units, buy items and recruit allies! Gold and experience rewards are increased so that the tension is always ramping up as the match goes on!
-
-Surviving gladiators will be available for recruitment at the Arena's location after a match is won.
+A sequence of battles taking place in the same map, also offering buildings that will let you restore and upgrade your units, buy items, recruit allies and more! Gold and experience rewards are increased so that the tension is always ramping up as the match goes on! Take down all enemy rally points to win!
 
 BATTLEFIELD
-The purpose of the Battlefield is to pit large armies against each other. You start by selecting a commander and different tiers of units, while the computer opponent does the same.
+The purpose of the Battlefield is to pit large armies against each other. There are strategic points placed around the map, assigned to both teams - each generating army points, every turn, that can be used to summon more units into battle! Capture your enemy's control points while fighting for survival!
 
-There are strategic points placed around the map, assigned to both teams - each generating army points, every turn, that can be used to summon more units into the battle. One thing to note is that summoning an army worth 10 points is much better than summong an army of 5 points twice - so it pays to use your points intelligently!
-
-Once the battle finishes you'll be able to visit the Battlefield to recruit any survivors to help you!
-
-ZIGGURAT
-The Ziggurat map is divided into several segments, each representing a type of creature. You start at the bottom-left of the map with weaker units and must advance and conquer the segment in the very top-right in order to achieve victory. As you conquer new segments along the way you'll be able to recruit units from these and grow in power with each step!
-
-Every time you enter an unconquered segment a new battle will begin with opponents from all nearby unconquered segments (north, east, south and west) possibly joining in the fight. You'll be able to determine which monster came from which segment by their placement on the borders of the current disputed segment - with monsters from the current segment being placed in the center. This should help you decide how to move towards the final battle, acquiring the best possible army composition along the way!
-
-Winning a Ziggurat run will spawn a Key to be retrieved from it on the world map. The Ziggurat can also be used as a teleportation device.
+One thing to note is that summoning an army worth 10 points is much better than summong an army of 5 points twice - so it pays to use your points intelligently!

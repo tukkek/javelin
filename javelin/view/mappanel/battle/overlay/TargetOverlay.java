@@ -4,8 +4,8 @@ import java.awt.Image;
 
 import javelin.controller.Point;
 import javelin.view.Images;
-import javelin.view.mappanel.Overlay;
 import javelin.view.mappanel.Tile;
+import javelin.view.mappanel.overlay.Overlay;
 import javelin.view.screen.BattleScreen;
 
 public class TargetOverlay extends Overlay {

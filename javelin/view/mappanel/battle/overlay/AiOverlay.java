@@ -6,8 +6,8 @@ import java.util.Collection;
 import javelin.controller.Point;
 import javelin.controller.action.ai.AiAction;
 import javelin.model.unit.Combatant;
-import javelin.view.mappanel.Overlay;
 import javelin.view.mappanel.Tile;
+import javelin.view.mappanel.overlay.Overlay;
 
 /**
  * Used to simply allow {@link AiAction}s to present some visual feedback. Takes

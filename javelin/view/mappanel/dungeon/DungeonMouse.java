@@ -7,8 +7,9 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.old.Interface;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
-import javelin.view.mappanel.MoveOverlay;
 import javelin.view.mappanel.Tile;
+import javelin.view.mappanel.overlay.DrawMoveOverlay;
+import javelin.view.mappanel.overlay.MoveOverlay;
 import javelin.view.mappanel.world.WorldMouse;
 
 public class DungeonMouse extends Mouse {
@@ -46,7 +47,7 @@ public class DungeonMouse extends Mouse {
 	if (!t.discovered) {
 	    return;
 	}
-	MoveOverlay.schedule(new MoveOverlay(new DungeonWalker(
+	DrawMoveOverlay.draw(new MoveOverlay(new DungeonWalker(
 		new Point(Dungeon.active.herolocation.x, Dungeon.active.herolocation.y), new Point(t.x, t.y))));
     }
 }

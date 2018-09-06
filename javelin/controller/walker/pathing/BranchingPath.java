@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javelin.controller.Point;
 import javelin.controller.walker.Walker;
-import javelin.view.mappanel.MoveOverlay;
+import javelin.view.mappanel.overlay.MoveOverlay;
 
 /**
  * TODO This probably can be overloaded by {@link MoveOverlay} to take more

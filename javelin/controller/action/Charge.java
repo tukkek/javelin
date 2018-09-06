@@ -18,9 +18,9 @@ import javelin.model.unit.attack.Attack;
 import javelin.model.unit.condition.Charging;
 import javelin.model.unit.condition.Fatigued;
 import javelin.model.unit.feat.attack.BullRush;
-import javelin.view.mappanel.Overlay;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.battle.overlay.TargetOverlay;
+import javelin.view.mappanel.overlay.Overlay;
 
 /**
  * Charging is a special full-round action that allows you to move up to twice

@@ -8,6 +8,7 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
+import javelin.controller.generator.WorldGenerator;
 import javelin.controller.map.Map;
 import javelin.controller.scenario.Scenario;
 import javelin.model.Realm;
@@ -20,6 +21,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
+import javelin.view.TextWindow;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -117,6 +119,15 @@ public class Debug{
 			Squad.active.setlocation(to.x,to.y);
 			Squad.active.displace();
 			Squad.active.place();
+		}
+
+		public static void printworldresets(){
+			String text="";
+			for(String reset:WorldGenerator.RESETS.getinvertedelements()){
+				text+="Count: "+WorldGenerator.RESETS.getcount(reset)+"\n";
+				text+=reset+"\n\n";
+			}
+			new TextWindow("World generation resets",text).show();
 		}
 	}
 

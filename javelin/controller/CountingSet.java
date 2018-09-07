@@ -49,7 +49,13 @@ public class CountingSet{
 
 	public List<String> getorderedelements(){
 		ArrayList<String> elements=new ArrayList<>(getelements());
-		elements.sort(null);
+		elements.sort((a,b)->getcount(a)-getcount(b));
+		return elements;
+	}
+
+	public List<String> getinvertedelements(){
+		ArrayList<String> elements=new ArrayList<>(getelements());
+		elements.sort((a,b)->getcount(b)-getcount(a));
 		return elements;
 	}
 

@@ -1,22 +1,13 @@
 package javelin.controller.action.world;
 
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Panel;
 import java.awt.event.KeyEvent;
 import java.io.File;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.ScrollPaneConstants;
 
 import javelin.JavelinApp;
 import javelin.controller.TextReader;
 import javelin.controller.action.SimpleAction;
 import javelin.model.world.World;
-import javelin.view.frame.Frame;
+import javelin.view.TextWindow;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -56,33 +47,6 @@ public class Guide extends WorldAction implements SimpleAction{
 	public static final Guide QUESTIONS=new Guide(KeyEvent.VK_F12,"Questions",
 			"F12");
 
-	class GuideWindow extends Frame{
-		public GuideWindow(){
-			super(name+" guide");
-		}
-
-		@Override
-		protected Container generate(){
-			Container parent=new Panel();
-			parent.setLayout(new BoxLayout(parent,BoxLayout.Y_AXIS));
-			JTextArea text=new JTextArea(TextReader
-					.read(new File("doc",name.replaceAll(" ","").toLowerCase()+".txt")));
-			text.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-			text.setEditable(false);
-			text.setWrapStyleWord(true);
-			text.setLineWrap(true);
-			Dimension size=getscreensize();
-			parent
-					.add(new JScrollPane(text,
-							ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-							ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED))
-					.setPreferredSize(new Dimension(size.width*3/4,size.height/2));
-			newbutton("Close",parent,e->frame.dispose());
-
-			return parent;
-		}
-	}
-
 	/** Constructor. */
 	public Guide(int vk,String name,String descriptive){
 		super(name,new int[]{vk},new String[]{descriptive});
@@ -95,7 +59,9 @@ public class Guide extends WorldAction implements SimpleAction{
 
 	@Override
 	public void perform(){
-		GuideWindow window=new GuideWindow();
+		String filename=name.replaceAll(" ","").toLowerCase()+".txt";
+		String text=TextReader.read(new File("doc",filename));
+		TextWindow window=new TextWindow(name+" guide",text);
 		window.show();
 		window.defer();
 	}

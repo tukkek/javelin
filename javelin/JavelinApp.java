@@ -139,12 +139,12 @@ public class JavelinApp extends QuestApp{
 		for(String info:new String[]{"os.name","os.version","os.arch"})
 			system+=System.getProperty(info)+" ";
 		system+="\n";
-		String error=version+system+"\n"+printstack(e);
+		String error=version+system+"\n"+printstacktrace(e);
 		Throwable t=e;
 		HashSet<Throwable> errors=new HashSet<>(2);
 		while(t.getCause()!=null&&errors.add(t)){
 			t=t.getCause();
-			error+=System.lineSeparator()+printstack(t);
+			error+=System.lineSeparator()+printstacktrace(t);
 		}
 		try{
 			Preferences.write(error,"error.txt");
@@ -155,7 +155,7 @@ public class JavelinApp extends QuestApp{
 		System.exit(1);
 	}
 
-	static String printstack(Throwable e){
+	public static String printstacktrace(Throwable e){
 		String error=e.getMessage()+" ("+e.getClass()+")";
 		error+="\n";
 		for(StackTraceElement stack:e.getStackTrace())

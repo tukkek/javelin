@@ -5,6 +5,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 
+import javelin.Debug;
+import javelin.Javelin;
+import javelin.JavelinApp;
+import javelin.controller.CountingSet;
 import javelin.controller.Point;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.RestartWorldGeneration;
@@ -26,11 +30,14 @@ public class WorldGenerator extends Thread{
 	 * Arbitrary number to serve as guideline for {@link Terrain} generation.
 	 */
 	public static final int NREGIONS=16;
+	/** @see Debug */
+	public static final CountingSet RESETS=Javelin.DEBUG?new CountingSet():null;
 
 	static final int MAXRETRIES=100000;
 	static final int NOISEAMOUNT=World.scenario.size*World.scenario.size/10;
 	static final Terrain[] NOISE=new Terrain[]{Terrain.PLAIN,Terrain.HILL,
 			Terrain.FOREST,Terrain.MOUNTAINS};
+
 	static int discarded=0;
 
 	public int retries=0;
@@ -83,15 +90,17 @@ public class WorldGenerator extends Thread{
 	 *
 	 * @throws RestartWorldGeneration
 	 */
-	public final void bumpretry(){
+	public synchronized final void bumpretry(){
 		retries+=1;
-		if(retries>MAXRETRIES){
-			retries=0;
-			synchronized(this){
-				discarded+=1;
-			}
-			throw new RestartWorldGeneration();
+		if(retries<=MAXRETRIES) return;
+		retries=0;
+		discarded+=1;
+		if(Javelin.DEBUG){
+			RuntimeException e=new RuntimeException("Reset");
+			e.fillInStackTrace();
+			RESETS.add(JavelinApp.printstacktrace(e));
 		}
+		throw new RestartWorldGeneration();
 	}
 
 	public static void retry(){

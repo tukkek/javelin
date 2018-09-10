@@ -1,6 +1,7 @@
-package javelin.controller.table.dungeon;
+package javelin.controller.table.dungeon.feature;
 
 import javelin.controller.table.Table;
+import javelin.controller.table.dungeon.InhabitantTable;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Campfire;
 import javelin.model.world.location.dungeon.feature.Feature;

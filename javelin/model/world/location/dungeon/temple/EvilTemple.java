@@ -9,6 +9,7 @@ import javelin.model.Realm;
 import javelin.model.item.relic.Skull;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Altar;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.StairsDown;
@@ -50,7 +51,7 @@ public class EvilTemple extends Temple {
 	}
 
 	@Override
-	public boolean hazard(TempleDungeon dungeon) {
+	public boolean hazard(Dungeon dungeon) {
 		if (!RPG.chancein(dungeon.stepsperencounter * 10)) {
 			return false;
 		}

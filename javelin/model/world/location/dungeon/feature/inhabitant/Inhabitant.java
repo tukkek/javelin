@@ -9,7 +9,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.generator.NpcGenerator;
-import javelin.controller.table.dungeon.FeatureModifierTable;
+import javelin.controller.table.dungeon.feature.FeatureModifierTable;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.skill.Skill;

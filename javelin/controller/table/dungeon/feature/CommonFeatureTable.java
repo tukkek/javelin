@@ -1,4 +1,4 @@
-package javelin.controller.table.dungeon;
+package javelin.controller.table.dungeon.feature;
 
 import javelin.controller.table.Table;
 import javelin.model.item.key.door.Key;

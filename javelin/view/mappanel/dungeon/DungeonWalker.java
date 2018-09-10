@@ -9,7 +9,7 @@ import javelin.controller.walker.overlay.OverlayStep;
 import javelin.controller.walker.overlay.OverlayWalker;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
-import javelin.model.world.location.dungeon.feature.Trap;
+import javelin.model.world.location.dungeon.feature.trap.MechanicalTrap;
 import javelin.view.screen.BattleScreen;
 
 public class DungeonWalker extends OverlayWalker {
@@ -52,7 +52,7 @@ public class DungeonWalker extends OverlayWalker {
 	    return false;
 	}
 	final Feature f = Dungeon.active.getfeature(p.x, p.y);
-	return f == null || f instanceof Trap;
+	return f == null || f instanceof MechanicalTrap;
     }
 
     @Override

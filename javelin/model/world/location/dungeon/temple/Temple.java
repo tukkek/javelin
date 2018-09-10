@@ -263,7 +263,7 @@ public abstract class Temple extends UniqueLocation {
 	 *
 	 * @return <code>true</code> if a hazard happens.
 	 */
-	public boolean hazard(TempleDungeon templeDungeon) {
+	public boolean hazard(Dungeon templeDungeon) {
 		return false;
 	}
 

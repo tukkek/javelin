@@ -12,6 +12,7 @@ import java.util.Set;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
+import javelin.controller.action.world.WorldMove;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
@@ -24,11 +25,12 @@ import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.table.Table;
 import javelin.controller.table.Tables;
-import javelin.controller.table.dungeon.CommonFeatureTable;
-import javelin.controller.table.dungeon.FeatureModifierTable;
-import javelin.controller.table.dungeon.FeatureRarityTable;
-import javelin.controller.table.dungeon.RareFeatureTable;
 import javelin.controller.table.dungeon.door.DoorExists;
+import javelin.controller.table.dungeon.feature.CommonFeatureTable;
+import javelin.controller.table.dungeon.feature.FeatureModifierTable;
+import javelin.controller.table.dungeon.feature.FeatureRarityTable;
+import javelin.controller.table.dungeon.feature.RareFeatureTable;
+import javelin.controller.table.dungeon.feature.SpecialTrapTable;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.item.Item;
@@ -44,9 +46,9 @@ import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.StairsDown;
 import javelin.model.world.location.dungeon.feature.StairsUp;
-import javelin.model.world.location.dungeon.feature.Trap;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.model.world.location.dungeon.feature.inhabitant.Leader;
+import javelin.model.world.location.dungeon.feature.trap.Trap;
 import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.Images;
@@ -67,6 +69,7 @@ import javelin.view.screen.WorldScreen;
  */
 public class Dungeon extends Location{
 	static final Class<? extends Feature> DEBUGFEATURE=null;
+
 	static final int MAXTRIES=1000;
 	static final int[] DELTAS={-1,0,1};
 
@@ -359,11 +362,11 @@ public class Dungeon extends Location{
 		for(int i=0;i<ntraps;i++){
 			int cr=level+Difficulty.get()
 					+gettable(FeatureModifierTable.class).rollmodifier();
-			if(cr>=Trap.MINIMUMCR){
-				Trap t=new Trap(cr,findspot());
-				features.add(t);
-				gold+=RewardCalculator.getgold(t.cr);
-			}
+			boolean special=gettable(SpecialTrapTable.class).rollboolean();
+			Trap t=Trap.generate(cr,special,findspot());
+			if(t==null) continue;
+			features.add(t);
+			if(cr>0) gold+=RewardCalculator.getgold(t.cr);
 		}
 		return gold;
 	}
@@ -576,5 +579,14 @@ public class Dungeon extends Location{
 		for(Feature f:features)
 			if(feature.isInstance(f)) return (K)f;
 		return null;
+	}
+
+	/**
+	 * @param to Moves {@link Squad} location to these coordinates.
+	 */
+	public void teleport(Point to){
+		herolocation=to;
+		JavelinApp.context.view(to.x,to.y);
+		WorldMove.abort=true;
 	}
 }

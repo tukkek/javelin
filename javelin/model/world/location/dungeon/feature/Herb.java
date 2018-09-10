@@ -9,7 +9,7 @@ import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.RandomDungeonEncounter;
-import javelin.controller.table.dungeon.FeatureModifierTable;
+import javelin.controller.table.dungeon.feature.FeatureModifierTable;
 import javelin.model.item.Item;
 import javelin.model.item.Potion;
 import javelin.model.unit.Combatant;

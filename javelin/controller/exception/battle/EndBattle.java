@@ -158,7 +158,7 @@ public class EndBattle extends BattleEvent{
 			if(scroll!=null) spell=scroll.spell;
 		}
 		if(spell==null||!spell.validate(null,dead)) return false;
-		spell.castpeacefully(null,dead);
+		spell.castpeacefully(null,dead,originalteam);
 		if(scroll==null)
 			spell.used+=1;
 		else

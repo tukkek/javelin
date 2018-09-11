@@ -1,6 +1,7 @@
 package javelin.controller.fight.minigame.arena.building;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javelin.Javelin;
@@ -14,9 +15,10 @@ import javelin.view.screen.town.PurchaseScreen;
 
 public class ArenaTown extends ArenaBuilding{
 	static final List<Class<? extends ArenaBuilding>> BUILDINGTYPES=List.of(
-			ArenaAcademy.class,ArenaFountain.class,ArenaLair.class,ArenaShop.class);
+			ArenaAcademy.class,ArenaFountain.class,ArenaLair.class,ArenaShop.class,
+			ArenaShrine.class,ArenaMine.class);
 
-	static public int kingdomlevel=1;
+	public static int kingdomlevel=1;
 
 	abstract class TownOption extends Option{
 		public TownOption(String name,int price){
@@ -33,7 +35,7 @@ public class ArenaTown extends ArenaBuilding{
 			super("Upgrade "+b.toString().toLowerCase()+" (level "+(b.level+1)+")",
 					price);
 			building=b;
-			priority=2;
+			priority=1;
 		}
 
 		@Override
@@ -49,7 +51,7 @@ public class ArenaTown extends ArenaBuilding{
 		Build(ArenaBuilding b,int price){
 			super("Build "+b.toString().toLowerCase(),price);
 			building=b;
-			priority=3;
+			priority=2;
 		}
 
 		@Override
@@ -93,6 +95,12 @@ public class ArenaTown extends ArenaBuilding{
 			ArenaFight.get().gold-=o.price;
 			((TownOption)o).buy();
 			kingdomlevel+=1;
+		}
+
+		@Override
+		protected Comparator<Option> sort(){
+			return (a,b)->a.priority==b.priority?a.name.compareTo(b.name)
+					:Float.compare(a.priority,b.priority);
 		}
 	}
 

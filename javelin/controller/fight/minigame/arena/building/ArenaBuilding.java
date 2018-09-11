@@ -43,10 +43,9 @@ public abstract class ArenaBuilding extends Building{
 		}
 	}
 
-	final protected String actiondescription;
-
 	/** Building level from 0 to 4. */
 	public int level=0;
+	protected String actiondescription;
 
 	public ArenaBuilding(String name,String avatar,String description){
 		super(Javelin.getmonster("Building"),false);

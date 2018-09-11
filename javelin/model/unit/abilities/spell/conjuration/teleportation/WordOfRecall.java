@@ -1,5 +1,7 @@
 package javelin.model.unit.abilities.spell.conjuration.teleportation;
 
+import java.util.List;
+
 import javelin.Javelin;
 import javelin.controller.action.world.UseItems;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -11,6 +13,7 @@ import javelin.model.transport.Transport;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.world.Actor;
 import javelin.model.world.location.dungeon.Dungeon;
 
 /**
@@ -25,49 +28,47 @@ import javelin.model.world.location.dungeon.Dungeon;
  *
  * http://paizo.com/pathfinderRPG/prd/coreRulebook/spells/wordOfRecall.html
  */
-public class WordOfRecall extends Spell {
+public class WordOfRecall extends Spell{
 	/** Constructor. */
-	public WordOfRecall() {
-		super("Word of recall", 6, ChallengeCalculator.ratespelllikeability(6, 20),
+	public WordOfRecall(){
+		super("Word of recall",6,ChallengeCalculator.ratespelllikeability(6,20),
 				Realm.MAGIC);
-		casterlevel = 20;
-		castoutofbattle = true;
-		isritual = false;
-		isscroll = true;
+		casterlevel=20;
+		castoutofbattle=true;
+		isritual=false;
+		isscroll=true;
 	}
 
 	@Override
-	public boolean validate(Combatant caster, Combatant target) {
-		if (Squad.active.lasttown == null) {
-			return false;
-		}
-		UseItems.skiperror = true;
-		String message = "Do you want to recall to " + Squad.active.lasttown
-				+ "?\nPress ENTER to confirm or any other key to abort...";
-		return Javelin.prompt(message, true) == '\n';
+	public boolean validate(Combatant caster,Combatant target){
+		if(Squad.active.lasttown==null) return false;
+		UseItems.skiperror=true;
+		String message="Do you want to recall to "+Squad.active.lasttown
+				+"?\nPress ENTER to confirm or any other key to abort...";
+		return Javelin.prompt(message,true)=='\n';
 	}
 
 	@Override
-	public String castpeacefully(Combatant caster, Combatant combatant) {
-		teleport(Squad.active.lasttown.x, Squad.active.lasttown.y);
+	public String castpeacefully(Combatant caster,Combatant combatant,
+			List<Combatant> squad){
+		Actor town=Squad.active.lasttown;
+		teleport(town.x,town.y);
 		return null;
 	}
 
-	static public void teleport(int x, int y) {
-		Squad s = Squad.active;
-		Transport t = s.transport;
-		if (Dungeon.active != null) {
+	static public void teleport(int x,int y){
+		Squad s=Squad.active;
+		Transport t=s.transport;
+		if(Dungeon.active!=null){
 			Dungeon.active.leave();
-			s.transport = null;
-		} else if (t != null) {
-			try {
-				t.park();
-			} catch (RepeatTurn e) {
-				s.transport = null;
-			}
+			s.transport=null;
+		}else if(t!=null) try{
+			t.park();
+		}catch(RepeatTurn e){
+			s.transport=null;
 		}
-		s.x = x;
-		s.y = y;
+		s.x=x;
+		s.y=y;
 		s.displace();
 		s.place();
 	}

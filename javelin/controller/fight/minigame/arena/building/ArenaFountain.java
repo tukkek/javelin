@@ -1,14 +1,17 @@
 package javelin.controller.fight.minigame.arena.building;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.fight.Fight;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Condition;
 import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.old.RPG;
-import javelin.old.messagepanel.MessagePanel;
+import javelin.view.screen.BattleScreen;
 
 public class ArenaFountain extends ArenaBuilding{
 	static final String REFILLING="This fountain is refilling... be patient!";
@@ -17,10 +20,20 @@ public class ArenaFountain extends ArenaBuilding{
 	/** TODO playtest */
 	public float refillchance;
 
-	public ArenaFountain(){
-		super("Fountain","dungeonfountain",
-				"Click this fountain to fully restore the active unit!");
+	String avatarfull;
+	String avatarempty;
+
+	public ArenaFountain(String name,String avatar,String avatarempty,
+			String description){
+		super(name,avatar,description);
+		avatarfull=avatar;
+		this.avatarempty=avatarempty;
 		setspent(RPG.random()>refillchance);
+	}
+
+	public ArenaFountain(){
+		this("Fountain","dungeonfountain","dungeonfountaindry",
+				"Click this fountain to fully restore the active unit!");
 	}
 
 	@Override
@@ -32,25 +45,27 @@ public class ArenaFountain extends ArenaBuilding{
 	@Override
 	protected boolean click(Combatant current){
 		if(spent){
-			Javelin.prompt("This fountain is empty...");
+			Javelin.message("It's empty...",Delay.WAIT);
 			return false;
 		}
-		for(Combatant c:Fight.state.blueTeam)
-			if(c.getlocation().distanceinsteps(getlocation())==1) restore(c);
 		setspent(true);
-		MessagePanel.active.clear();
-		Javelin.message("Nearby allies are completely restored!",
-				Javelin.Delay.BLOCK);
+		List<Combatant> nearby=Fight.state.blueTeam.stream()
+				.filter(c->c.getlocation().distanceinsteps(getlocation())==1)
+				.collect(Collectors.toList());
+		Javelin.prompt(activate(current,nearby)+"\nPress any key to continue...");
+		BattleScreen.active.messagepanel.clear();
 		return true;
+	}
+
+	protected String activate(Combatant current,List<Combatant> nearby){
+		for(Combatant c:nearby)
+			heal(Fight.state.clone(c));
+		return "Nearby allies are completely restored!";
 	}
 
 	@Override
 	protected void upgradebuilding(){
 		// does nothing, just gets stronger
-	}
-
-	void restore(Combatant current){
-		heal(Fight.state.clone(current));
 	}
 
 	public static void heal(Combatant c){
@@ -61,7 +76,7 @@ public class ArenaFountain extends ArenaBuilding{
 
 	public void setspent(boolean spent){
 		this.spent=spent;
-		source.avatarfile=spent?"dungeonfountaindry":"dungeonfountain";
+		source.avatarfile=spent?avatarempty:avatarfull;
 	}
 
 	@Override

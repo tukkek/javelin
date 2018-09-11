@@ -14,46 +14,41 @@ import javelin.view.screen.BattleScreen;
  *
  * @author alex
  */
-public class Potion extends Item {
+public class Potion extends Item{
 	javelin.model.unit.abilities.spell.Spell spell;
 
 	/**
-	 * @param s
-	 *            One-use spell effect of drinking this potion.
+	 * @param s One-use spell effect of drinking this potion.
 	 */
-	public Potion(Spell s) {
-		super("Potion of " + s.name.toLowerCase(), s.level * s.casterlevel * 50,
+	public Potion(Spell s){
+		super("Potion of "+s.name.toLowerCase(),s.level*s.casterlevel*50,
 				s.realm.getitems());
-		usedinbattle = s.castinbattle;
-		usedoutofbattle = s.castoutofbattle;
-		spell = s;
+		usedinbattle=s.castinbattle;
+		usedoutofbattle=s.castoutofbattle;
+		spell=s;
 	}
 
 	@Override
-	public boolean use(Combatant user) {
-		String text = spell.cast(user, user, false, null, null);
+	public boolean use(Combatant user){
+		String text=spell.cast(user,user,false,null,null);
 		Javelin.redraw();
 		/* TODO should be less awkward once Context are implemented (2.0) */
-		if (BattleScreen.active.getClass().equals(BattleScreen.class)) {
-			BattleScreen.active.center(user.location[0], user.location[1]);
-		}
-		Javelin.message(text, false);
+		if(BattleScreen.active.getClass().equals(BattleScreen.class))
+			BattleScreen.active.center(user.location[0],user.location[1]);
+		Javelin.message(text,false);
 		return true;
 	}
 
 	@Override
-	public boolean usepeacefully(Combatant user) {
-		spell.castpeacefully(user, user);
+	public boolean usepeacefully(Combatant user){
+		spell.castpeacefully(user,user,null);
 		return true;
 	}
 
-	public static List<Potion> getpotions() {
-		ArrayList<Potion> potions = new ArrayList<>();
-		for (Item i : ALL) {
-			if (i instanceof Potion) {
-				potions.add((Potion) i);
-			}
-		}
+	public static List<Potion> getpotions(){
+		ArrayList<Potion> potions=new ArrayList<>();
+		for(Item i:ALL)
+			if(i instanceof Potion) potions.add((Potion)i);
 		return potions;
 	}
 }

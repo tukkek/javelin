@@ -615,7 +615,7 @@ public class Squad extends Actor implements Cloneable{
 		for(Spell s:spells)
 			for(Combatant c:members)
 				while(s.canheal(c)&&!s.exhausted()){
-					s.castpeacefully(null,c);
+					s.castpeacefully(null,c,members);
 					s.used+=1;
 				}
 	}

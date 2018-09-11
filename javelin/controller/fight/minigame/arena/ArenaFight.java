@@ -66,7 +66,7 @@ import javelin.view.screen.BattleScreen;
 public class ArenaFight extends Minigame{
 	public static final float BOOST=4; // 3,5 talvez?
 
-	static final boolean SPAWN=true;
+	static final boolean SPAWN=false;
 	static final int TENSIONMIN=-5;
 	static final int TENSIONMAX=0;
 	static final int ELMIN=-12;
@@ -151,7 +151,7 @@ public class ArenaFight extends Minigame{
 		check=acting.ap+RPG.r(10,40)/10f;
 	}
 
-	ArrayList<Combatant> getopponents(){
+	public ArrayList<Combatant> getopponents(){
 		ArrayList<Combatant> opponents=new ArrayList<>(state.redTeam);
 		opponents.removeAll(getflagpoles());
 		return opponents;
@@ -224,15 +224,17 @@ public class ArenaFight extends Minigame{
 	void refillfountains(){
 		ArrayList<ArenaFountain> fountains=ArenaFountain.get();
 		if(check==-Float.MAX_VALUE||fountains.isEmpty()) return;
-		int refilled=0;
+		List<String> messages=new ArrayList<>(0);
 		Point p=null;
-		for(ArenaFountain f:fountains)
-			if(f.spent&&RPG.random()<f.refillchance){
+		for(ArenaFountain f:fountains){
+			if(!f.spent) continue;
+			if(RPG.random()<f.refillchance){
 				f.setspent(false);
-				refilled+=1;
+				messages.add("A "+f.toString().toLowerCase()+" is replenished!");
 				p=f.getlocation();
 			}
-		if(refilled>0) notify(refilled+" fountain(s) refilled!",p);
+		}
+		if(!messages.isEmpty()) notify(String.join("\n",messages),p);
 	}
 
 	Integer placefoes(int elblue){
@@ -360,7 +362,7 @@ public class ArenaFight extends Minigame{
 		return (ArenaFight)Javelin.app.fight;
 	}
 
-	List<Combatant> getallies(){
+	public List<Combatant> getallies(){
 		ArrayList<Combatant> allies=new ArrayList<>();
 		for(Combatant c:state.blueTeam)
 			if(!c.source.passive) allies.add(c);

@@ -196,7 +196,9 @@ public class FeatureGenerator implements Serializable{
 		spawnnear(t,new Shop(t.realm,true),seed,1,2,true);
 		RealmAcademy academy=new RealmAcademy(t.originalrealm,true);
 		spawnnear(t,academy,seed,1,2,true);
-		ArrayList<Monster> recruits=t.getpossiblerecruits();
+		Point p=t.getlocation();
+		ArrayList<Monster> recruits=Terrain.get(p.x,p.y).getmonsters();
+		Collections.shuffle(recruits);
 		recruits.sort((o1,o2)->{
 			float difference=o1.cr-o2.cr;
 			if(difference==0) return 0;

@@ -16,6 +16,7 @@ import javelin.controller.generator.WorldGenerator;
 import javelin.controller.map.Map;
 import javelin.controller.map.Maps;
 import javelin.controller.terrain.hazard.Hazard;
+import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.Season;
@@ -385,5 +386,15 @@ public abstract class Terrain implements Serializable{
 	 */
 	public Integer getel(int teamel){
 		return teamel+Math.min(Difficulty.get(),difficultycap);
+	}
+
+	/**
+	 * @return All valid monsters for this terrain type.
+	 */
+	public ArrayList<Monster> getmonsters(){
+		ArrayList<Monster> recruits=new ArrayList<>();
+		for(Monster m:Javelin.ALLMONSTERS)
+			if(m.getterrains().contains(name)) recruits.add(m);
+		return recruits;
 	}
 }

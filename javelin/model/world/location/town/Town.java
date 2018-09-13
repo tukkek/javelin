@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
@@ -24,7 +23,6 @@ import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
@@ -53,12 +51,11 @@ import javelin.view.screen.town.TownScreen;
  * @author alex
  */
 public class Town extends Location{
-
-	public static final int MINIMUMDISTANCE=Math
+	static final int MINIMUMTOWNDISTANCE=Math
 			.round(Math.round(District.RADIUSMAX*1.5));
 
 	/**
-	 * How much {@link #labor} a single work produces in one day (
+	 * How much {@link Labor} a single work produces in one day (
 	 * {@value #DAILYLABOR}). The goal here is to have a {@link Town} controlled
 	 * by a {@link Governor} be around {@link #population} 20 by the end of 1
 	 * year.
@@ -69,10 +66,11 @@ public class Town extends Location{
 	 */
 	public static final float DAILYLABOR=.11f;
 
+	/** @see #ishosting() */
 	public ArrayList<Exhibition> events=new ArrayList<>();
 	/**
-	 * Represent 10 working citizens that will produce 1 {@link #labor} every 10
-	 * days.
+	 * Represent 10 working citizens that will produce 1 unit of {@link Labor}
+	 * every 10 days.
 	 *
 	 * An arbitrary decision is to try to fit the game-span of a normal game into
 	 * a 1-year period, which puts a town max size roughly at 10 if it does
@@ -91,18 +89,14 @@ public class Town extends Location{
 	/** Remains the same even after capture. */
 	public Realm originalrealm;
 
-	/**
-	 * @param x Location.
-	 * @param y Location.
-	 * @param r Type of town.
-	 */
-	public Town(Point location,Realm r){
+	/** @param p Spot to place town in the {@link World}. */
+	public Town(Point p,Realm r){
 		super(World.getseed().townnames.isEmpty()?null
 				:World.getseed().townnames.remove(0));
 		allowentry=false;
-		if(location!=null){
-			x=location.x;
-			y=location.y;
+		if(p!=null){
+			x=p.x;
+			y=p.y;
 		}
 		realm=r;
 		originalrealm=r;
@@ -111,40 +105,44 @@ public class Town extends Location{
 		vision=getdistrict().getradius();
 	}
 
+	/**
+	 * @param list Selects a valid location from there.
+	 * @throws RestartWorldGeneration If no valid location is found.
+	 */
 	public Town(HashSet<Point> list,Realm r){
 		this(getvalidlocation(list),r);
 	}
 
-	private static Point getvalidlocation(HashSet<Point> region){
+	static Point getvalidlocation(HashSet<Point> region){
 		ArrayList<Point> list=new ArrayList<>(region);
 		Collections.shuffle(list);
-		for(Point p:list){
-			if(Terrain.get(p.x,p.y)==Terrain.WATER||checktooclose(p)) continue;
-			if(Terrain.search(new Point(p.x,p.y),Terrain.WATER,1,World.getseed())>4)
-				continue;
-			return p;
-		}
+		int maxradius=Rank.CITY.getradius();
+		World w=World.getseed();
+		for(Point p:list)
+			if(Terrain.get(p.x,p.y)!=Terrain.WATER&&checkboundary(p,maxradius,w.map)
+					&&checksurroundings(p)&&Terrain.search(p,Terrain.WATER,1,w)<=4)
+				return p;
 		throw new RestartWorldGeneration();
 	}
 
-	static boolean checktooclose(Point p){
+	static boolean checkboundary(Point p,int maxdistrictradius,Terrain[][] world){
+		for(Point check:Point.getadjacentorthogonal()){
+			check.x=p.x+check.x*maxdistrictradius;
+			check.y=p.y+check.y*maxdistrictradius;
+			if(!check.validate(0,0,world.length,world[0].length)) return false;
+		}
+		return true;
+	}
+
+	static boolean checksurroundings(Point p){
 		for(Actor town:World.getall(Town.class))
-			if(town.distance(p.x,p.y)<MINIMUMDISTANCE) return true;
-		return false;
+			if(town.distance(p.x,p.y)<MINIMUMTOWNDISTANCE) return false;
+		return true;
 	}
 
 	@Override
 	protected void generate(){
 		// location is given in the constructor
-	}
-
-	public ArrayList<Monster> getpossiblerecruits(){
-		ArrayList<Monster> recruits=new ArrayList<>();
-		String terrain=Terrain.get(x,y).toString();
-		for(Monster m:Javelin.ALLMONSTERS)
-			if(m.getterrains().contains(terrain)) recruits.add(m);
-		Collections.shuffle(recruits);
-		return recruits;
 	}
 
 	/**

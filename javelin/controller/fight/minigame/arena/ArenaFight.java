@@ -64,9 +64,9 @@ import javelin.view.screen.BattleScreen;
  * @author alex
  */
 public class ArenaFight extends Minigame{
-	public static final float BOOST=4; // 3,5 talvez?
+	public static final float BOOST=4; // 3,5 maybe?
 
-	static final boolean SPAWN=false;
+	static final boolean SPAWN=true;
 	static final int TENSIONMIN=-5;
 	static final int TENSIONMAX=0;
 	static final int ELMIN=-12;
@@ -299,7 +299,7 @@ public class ArenaFight extends Minigame{
 	public void enter(ArrayList<Combatant> entering,List<Combatant> team,
 			Point entry){
 		if(team==state.redTeam){
-			if(!SPAWN) return;
+			if(Javelin.DEBUG&&!SPAWN) return;
 			foes.add(entering);
 		}
 		LinkedList<Combatant> place=new LinkedList<>(entering);

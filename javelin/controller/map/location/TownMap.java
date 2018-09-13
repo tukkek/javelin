@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+import javelin.Debug;
 import javelin.controller.Point;
 import javelin.controller.fight.Siege;
 import javelin.controller.map.DndMap;
@@ -76,10 +77,21 @@ public class TownMap extends Map{
 		}
 	}
 
+	class Crates extends Building{
+		@Override
+		void draw(int xp,int yp,int width,int height){
+			//TODO could turn this into Obstacles, when added
+			float density=RPG.r(25,50)/100f;
+			for(int x=xp;x<=xp+width;x++)
+				for(int y=yp;y<=yp+height;y++)
+					map[x][y].blocked=RPG.random()<density;
+		}
+	}
+
 	static final int PLACEMENTS=10_000;
 
 	final Building COMMON=new Building();
-	final List<Building> UNCOMMON=List.of(new RuinedBuilding());
+	final List<Building> UNCOMMON=List.of(new RuinedBuilding(),new Crates());
 	final List<Building> RARE=List.of(new Pond(),new Park(),new Empty());
 
 	HashSet<Point> used=new HashSet<>();
@@ -90,10 +102,20 @@ public class TownMap extends Map{
 	float density;
 	float foliage;
 
+	/**
+	 * @param t Generates a Town {@link Siege} map.
+	 */
 	public TownMap(Town t){
 		this(t.getrank().rank);
 	}
 
+	/**
+	 * Used for {@link Debug}ging purposes.
+	 *
+	 * @param rank See {@link Rank#rank}.
+	 *
+	 * @see Town#getrank()
+	 */
 	public TownMap(int rank){
 		super("Town map",DndMap.SIZE,DndMap.SIZE);
 		floor=Images.get("terraintowngrass");
@@ -173,7 +195,7 @@ public class TownMap extends Map{
 		selectbuilding().draw(xp,yp,width,height);
 	}
 
-	public Building selectbuilding(){
+	Building selectbuilding(){
 		int type=RPG.r(1,6);
 		if(type==1) return RPG.pick(RARE);
 		if(type==2||type==3) return RPG.pick(UNCOMMON);

@@ -293,9 +293,9 @@ public class ZoneGenerator extends FeatureGenerator {
 		TRAITS.get(zones.indexOf(z)).addto(t);
 		size = Math.min(15, size);
 		while (t.population < size) {
-			t.governor.work(1, t.getdistrict());
+			t.getgovernor().work(1, t.getdistrict());
 		}
-		for (Labor l : new ArrayList<>(t.governor.getprojects())) {
+		for (Labor l : new ArrayList<>(t.getgovernor().getprojects())) {
 			l.cancel();
 		}
 		return t;

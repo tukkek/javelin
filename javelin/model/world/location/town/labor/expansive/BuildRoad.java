@@ -2,7 +2,8 @@ package javelin.model.world.location.town.labor.expansive;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.comparator.DistanceComparator;
@@ -21,34 +22,31 @@ import javelin.model.world.location.town.labor.Labor;
  *
  * @author alex
  */
-public class BuildRoad extends Labor {
+public class BuildRoad extends Labor{
 	/**
 	 * To prevent too lengthy searches since the algorhitm is currently
 	 * unoptimized.
 	 *
 	 * TODO
 	 */
-	static final int MAXSEARCHDEPTH = 9;
+	static final int MAXSEARCHDEPTH=9;
 
-	public class PathSearch {
+	class PathSearch{
 		Point from;
 		Town to;
-		ArrayList<Point> result = null;
-		ArrayList<Actor> locations = new ArrayList<>();
+		LinkedList<Point> result=null;
+		ArrayList<Actor> locations=new ArrayList<>();
 
-		PathSearch(Town from, Town to) {
-			if (swap(from, to)) {
-				this.from = from.getlocation();
-				this.to = to;
-			} else {
-				this.from = to.getlocation();
-				this.to = from;
+		PathSearch(Town from,Town to){
+			if(swap(from,to)){
+				this.from=from.getlocation();
+				this.to=to;
+			}else{
+				this.from=to.getlocation();
+				this.to=from;
 			}
-			for (Actor a : World.getactors()) {
-				if (a instanceof Location && !(a instanceof Portal)) {
-					locations.add(a);
-				}
-			}
+			for(Actor a:World.getactors())
+				if(a instanceof Location&&!(a instanceof Portal)) locations.add(a);
 		}
 
 		/**
@@ -59,217 +57,187 @@ public class BuildRoad extends Labor {
 		 *
 		 * The path is reversed in {@link #search()} as needed.
 		 */
-		boolean swap(Town from, Town to) {
-			return from.x == to.x ? from.y > to.y : from.x > to.x;
+		boolean swap(Town from,Town to){
+			return from.x==to.x?from.y>to.y:from.x>to.x;
 		}
 
-		ArrayList<Point> search() {
-			search(from, new ArrayList<Point>());
-			if (result == null || result.isEmpty()) {
-				return null;
-			}
-			if (town.distanceinsteps(result.get(0)) > town
-					.distanceinsteps(result.get(result.size() - 1))) {
+		LinkedList<Point> search(){
+			search(from,new LinkedList<Point>());
+			if(result==null||result.isEmpty()) return null;
+			Point p=town.getlocation();
+			if(p.distanceinsteps(result.get(0))>p.distanceinsteps(result.getLast()))
 				Collections.reverse(result);
-			}
 			return result;
 		}
 
-		void search(Point p, ArrayList<Point> partialpath) {
-			if (result != null) {
+		void search(Point p,LinkedList<Point> partialpath){
+			if(result!=null) return;
+			if(p.equals(to.getlocation())){
+				result=partialpath;
 				return;
 			}
-			if (p.equals(to.getlocation())) {
-				result = partialpath;
-				return;
-			}
-			if (partialpath.size() > MAXSEARCHDEPTH) {
-				return;
-			}
-			if (p != from) {
-				partialpath = new ArrayList<>(partialpath);
+			if(partialpath.size()>MAXSEARCHDEPTH) return;
+			if(p!=from){
+				partialpath=new LinkedList<>(partialpath);
 				partialpath.add(p);
 			}
-			for (Point step : getsteps(p)) {
-				search(step, partialpath);
-			}
+			for(Point step:getsteps(p))
+				search(step,partialpath);
 		}
 
 		/**
 		 * TODO this is a really lazy brute-force implementation
 		 */
-		ArrayList<Point> getsteps(Point current) {
-			final int currentdistance = to.distanceinsteps(current.x,
-					current.y);
-			final ArrayList<Point> steps = new ArrayList<>();
-			for (int x = -1; x <= +1; x++) {
-				for (int y = -1; y <= +1; y++) {
-					if (x == 0 && y == 0) {
-						continue;
-					}
-					final Point step = new Point(current.x + x, current.y + y);
-					if (validate(step, currentdistance)) {
-						steps.add(step);
-					}
+		ArrayList<Point> getsteps(Point current){
+			final int currentdistance=to.distanceinsteps(current.x,current.y);
+			final ArrayList<Point> steps=new ArrayList<>();
+			for(int x=-1;x<=+1;x++)
+				for(int y=-1;y<=+1;y++){
+					if(x==0&&y==0) continue;
+					final Point step=new Point(current.x+x,current.y+y);
+					if(validate(step,currentdistance)) steps.add(step);
 				}
-			}
-			steps.sort(new Comparator<Point>() {
-				@Override
-				public int compare(Point o1, Point o2) {
-					return new Double(to.distance(o1.x, o1.y))
-							.compareTo(to.distance(o2.x, o2.y));
-				}
-			});
+			steps.sort((o1,o2)->Double.compare(to.distance(o1.x,o1.y),
+					to.distance(o2.x,o2.y)));
 			return steps;
 		}
 
-		boolean validate(Point step, int currentdistance) {
-			if (!World.validatecoordinate(step.x, step.y)
-					|| Terrain.get(step.x, step.y).equals(Terrain.WATER)
-					|| to.distanceinsteps(step.x, step.y) >= currentdistance) {
+		boolean validate(Point step,int currentdistance){
+			if(!World.validatecoordinate(step.x,step.y)
+					||Terrain.get(step.x,step.y).equals(Terrain.WATER)
+					||to.distanceinsteps(step.x,step.y)>=currentdistance)
 				return false;
-			}
-			final Actor location = World.get(step.x, step.y, locations);
-			return location == null || location == to;
+			final Actor location=World.get(step.x,step.y,locations);
+			return location==null||location==to;
 		}
 	}
 
-	Town target = null;
+	Town target=null;
+	/** "Road" by default. */
+	protected String type="road";
 
-	public BuildRoad() {
+	/** Public constructor. */
+	public BuildRoad(){
 		this("Build road");
 	}
 
-	public BuildRoad(String name) {
-		super(name, 0, Rank.TOWN);
+	/** Protected constructor. */
+	protected BuildRoad(String name){
+		super(name,0,Rank.TOWN);
 	}
 
 	@Override
-	protected void define() {
-		if (!World.scenario.roads) {
-			return;
-		}
-		ArrayList<Town> towns = Town.gettowns();
+	protected void define(){
+		if(!World.scenario.roads) return;
+		ArrayList<Town> towns=Town.gettowns();
 		towns.remove(town);
 		towns.sort(new DistanceComparator(town));
-		for (Town t : towns) {
-			if (getpath(t) != null && !pathcomplete(t)) {
-				target = t;
+		for(Town t:towns)
+			if(getpath(t)!=null&&!pathcomplete(t)){
+				target=t;
 				break;
 			}
-		}
-		if (target != null) {
-			name = name(target);
-			cost = getcost();
+		if(target!=null){
+			name="Build "+type+" to "+target;
+			cost=getcost();
 		}
 	}
 
-	int getcost() {
-		int cost = 0;
-		for (Point p : getpath(target)) {
-			if (!hasroad(p)) {
-				cost += getcost(p);
-			}
-		}
+	int getcost(){
+		int cost=0;
+		for(Point p:getpath(target))
+			if(!hasroad(p)) cost+=getcost(p);
 		return cost;
 	}
 
-	protected boolean hasroad(Point p) {
-		return World.seed.roads[p.x][p.y] || World.seed.highways[p.x][p.y];
+	/**
+	 * @return <code>true</code> if this point is registered in
+	 *         {@link World#roads} or {@link World#highways}.
+	 */
+	protected boolean hasroad(Point p){
+		return World.seed.roads[p.x][p.y]||World.seed.highways[p.x][p.y];
 	}
 
-	protected String name(Town target) {
-		return "Build road to " + target;
+	List<Point> getpath(Town target){
+		return new PathSearch(town,target).search();
 	}
 
-	ArrayList<Point> getpath(Town target) {
-		return new PathSearch(town, target).search();
+	boolean pathcomplete(Town t){
+		return currenttile(t)==null;
 	}
 
-	boolean pathcomplete(Town t) {
-		return currenttile(t) == null;
-	}
-
-	Point currenttile(Town target) {
-		ArrayList<Point> path = getpath(target);
-		if (path != null) {
-			for (Point p : path) {
-				if (!hasroad(p)) {
-					return p;
-				}
-			}
-		}
+	Point currenttile(Town target){
+		List<Point> path=getpath(target);
+		if(path!=null) for(Point p:path)
+			if(!hasroad(p)) return p;
 		return null;
 	}
 
 	@Override
-	public void done() {
-		Point current = currenttile(target);
-		while (current != null) {
+	public void done(){
+		Point current=currenttile(target);
+		while(current!=null){
 			build(current);
-			current = currenttile(target);
+			current=currenttile(target);
 		}
 	}
 
-	protected void build(Point p) {
-		World.seed.roads[p.x][p.y] = true;
+	/**
+	 * @param p Mark this point as having a road.
+	 */
+	protected void build(Point p){
+		World.seed.roads[p.x][p.y]=true;
 	}
 
 	@Override
-	public boolean validate(District d) {
-		if (!World.scenario.roads || town.population * 100 < cost
-				|| !super.validate(d)) {
+	public boolean validate(District d){
+		if(!World.scenario.roads||town.population*100<cost||!super.validate(d))
 			return false;
-		}
-		for (Labor l : d.town.governor.getprojects()) {
-			BuildRoad road = l != this && l instanceof BuildRoad ? (BuildRoad) l
-					: null;
-			if (road != null && road.target == target) {
-				/* A road or highway is already being built to this town */
+		for(Labor l:d.town.getgovernor().getprojects()){
+			BuildRoad road=l!=this&&l instanceof BuildRoad?(BuildRoad)l:null;
+			if(road!=null
+					&&road.target==target) /* A road or highway is already being built to this town */
 				return false;
-			}
 		}
-		if (target == null || World.get(target.x, target.y, Town.class) == null
-				|| getpath(target) == null || pathcomplete(target)) {
+		if(target==null||World.get(target.x,target.y,Town.class)==null
+				||getpath(target)==null||pathcomplete(target))
 			return false;
-		}
-		cost = getcost();
+		cost=getcost();
 		return true;
 	}
 
 	@Override
-	public void work(float step) {
-		progress += step;
-		Point p = currenttile(target);
-		if (p == null) {
+	public void work(float step){
+		progress+=step;
+		Point p=currenttile(target);
+		if(p==null){
 			ready();
 			return;
 		}
-		float cost = getcost(p);
-		if (progress >= cost) {
+		float cost=getcost(p);
+		if(progress>=cost){
 			build(p);
-			progress -= cost;
+			progress-=cost;
 		}
 	}
 
 	@Override
-	public int getprogress() {
-		ArrayList<Point> path = getpath(target);
-		if (path == null) {
-			return 100;
-		}
-		int built = 0;
-		for (Point step : path) {
-			if (hasroad(step)) {
-				built += 1;
-			} else {
+	public int getprogress(){
+		List<Point> path=getpath(target);
+		if(path==null) return 100;
+		int built=0;
+		for(Point step:path)
+			if(hasroad(step))
+				built+=1;
+			else
 				break;
-			}
-		}
-		return 100 * built / path.size();
+		return 100*built/path.size();
 	}
 
-	protected float getcost(Point p) {
-		return 7 / Terrain.get(p.x, p.y).getspeed(p.x, p.y);
+	/**
+	 * @return {@link Labor} cost to build a road at this point.
+	 */
+	protected float getcost(Point p){
+		return 7/Terrain.get(p.x,p.y).getspeed(p.x,p.y);
 	}
 }

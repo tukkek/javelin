@@ -49,7 +49,7 @@ public class GovernorScreen extends SelectScreen {
 		Labor l = ((LaborOption) o).l;
 		if (Debug.labor) {
 			l.start();
-			while (town.governor.getprojects().contains(l)) {
+			while (town.getgovernor().getprojects().contains(l)) {
 				l.work(1);
 			}
 			return true;
@@ -64,7 +64,7 @@ public class GovernorScreen extends SelectScreen {
 
 	@Override
 	public List<Option> getoptions() {
-		ArrayList<Labor> hand = town.governor.gethand();
+		ArrayList<Labor> hand = town.getgovernor().gethand();
 		ArrayList<Option> labors = new ArrayList<Option>();
 		if (!hand.isEmpty()) {
 			for (int i = 0; i < hand.size(); i++) {
@@ -111,8 +111,8 @@ public class GovernorScreen extends SelectScreen {
 	@Override
 	public void printoptions(List<Option> options) {
 		text = String.format(TEMPLATE, printcityinfo(town),
-				printcurrent(town.governor.getprojects())) + "\n";
-		if (town.governor.gethand().isEmpty()) {
+				printcurrent(town.getgovernor().getprojects())) + "\n";
+		if (town.getgovernor().gethand().isEmpty()) {
 			text += "  (no labor projects available right now)\n";
 		} else {
 			super.printoptions(options);

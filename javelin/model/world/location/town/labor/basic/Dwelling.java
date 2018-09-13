@@ -16,7 +16,9 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Build;
+import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
@@ -28,11 +30,12 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class Dwelling extends Fortification{
+	/** {@link Town} {@link Labor} project. */
 	public static class BuildDwelling extends Build{
-		public static final int CRMULTIPLIER=1;
 
 		Dwelling goal=null;
 
+		/** Constructor. */
 		public BuildDwelling(){
 			super("Build dwelling",0,null,Rank.HAMLET);
 		}
@@ -44,7 +47,7 @@ public class Dwelling extends Fortification{
 
 		@Override
 		protected void define(){
-			ArrayList<Monster> candidates=Dwelling.getcandidates(town.x,town.y);
+			ArrayList<Monster> candidates=Terrain.get(town.x,town.y).getmonsters();
 			Collections.shuffle(candidates);
 			for(Monster m:candidates)
 				if(m.cr<=town.population+2){
@@ -55,8 +58,8 @@ public class Dwelling extends Fortification{
 				}
 		}
 
-		public static int getcost(Monster m){
-			return Math.max(1,Math.round(m.cr*CRMULTIPLIER));
+		static int getcost(Monster m){
+			return Math.max(1,Math.round(m.cr));
 		}
 
 		@Override
@@ -71,6 +74,7 @@ public class Dwelling extends Fortification{
 		}
 	}
 
+	/** Type of {@link Monster} available. */
 	public Combatant dweller;
 	int volunteers=1;
 
@@ -79,6 +83,7 @@ public class Dwelling extends Fortification{
 		this(null);
 	}
 
+	/** @param m See {@link #dweller}. */
 	public Dwelling(Monster m){
 		super(null,null,0,0);
 		if(m!=null) setdweller(m);
@@ -91,24 +96,12 @@ public class Dwelling extends Fortification{
 
 	@Override
 	protected void generategarrison(int minel,int maxel){
-		if(dweller==null) setdweller(RPG.pick(getcandidates(x,y)));
+		if(dweller==null) setdweller(RPG.pick(Terrain.get(x,y).getmonsters()));
 		gossip=dweller.source.intelligence>8;
 		garrison.addAll(RPG
 				.pick(Organization.ENCOUNTERSBYMONSTER.get(dweller.source.name)).group);
 		targetel=ChallengeCalculator.calculateel(garrison);
 		generategarrison=false;
-	}
-
-	static public ArrayList<Monster> getcandidates(int x,int y){
-		ArrayList<Monster> candidates=new ArrayList<>();
-		monsters:for(Monster m:Javelin.ALLMONSTERS){
-			String terrain=Terrain.get(x,y).toString();
-			if(m.getterrains().contains(terrain)){
-				candidates.add(m);
-				continue monsters;
-			}
-		}
-		return candidates;
 	}
 
 	void setdweller(Monster m){
@@ -185,8 +178,7 @@ public class Dwelling extends Fortification{
 	}
 
 	/**
-	 * @param cr Given this challenge rating...
-	 * @return a monster should spawn once every x days.
+	 * @return a new {@link Monster} should spawn every this many days.
 	 */
 	public static int getspawnrate(Monster m){
 		return Math.max(1,Math.round(m.cr*100/20));
@@ -215,7 +207,8 @@ public class Dwelling extends Fortification{
 	 * @param cr Spend this much CR in recruiting a rookie (1CR = 100XP).
 	 */
 	static public void spend(double cr){
-		double percapita=cr/new Float(Squad.active.members.size());
+		double nmembers=Squad.active.members.size();
+		double percapita=cr/nmembers;
 		boolean buyfromall=true;
 		for(Combatant c:Squad.active.members)
 			if(percapita>c.xp.doubleValue()){
@@ -229,9 +222,9 @@ public class Dwelling extends Fortification{
 			ArrayList<Combatant> squad=new ArrayList<>(Squad.active.members);
 			ChallengeCalculator.calculateel(squad);
 			Collections.sort(squad,(o1,o2)->{
-				final float cr1=o2.xp.floatValue()+o2.source.cr;
-				final float cr2=o1.xp.floatValue()+o1.source.cr;
-				return new Float(cr1).compareTo(cr2);
+				final Float cr1=o2.xp.floatValue()+o2.source.cr;
+				final Float cr2=o1.xp.floatValue()+o1.source.cr;
+				return cr1.compareTo(cr2);
 			});
 			for(Combatant c:squad){
 				if(c.xp.doubleValue()>=cr){
@@ -256,6 +249,7 @@ public class Dwelling extends Fortification{
 		return true;
 	}
 
+	/** Bump population to maximum size. */
 	public void maximize(){
 		volunteers=getmaximumpopulation();
 	}

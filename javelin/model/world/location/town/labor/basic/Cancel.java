@@ -20,12 +20,12 @@ public class Cancel extends Labor {
 
 	@Override
 	public boolean validate(District d) {
-		return super.validate(d) && !d.town.governor.getprojects().isEmpty();
+		return super.validate(d) && !d.town.getgovernor().getprojects().isEmpty();
 	}
 
 	@Override
 	public void done() {
-		for (Labor l : new ArrayList<Labor>(town.governor.getprojects())) {
+		for (Labor l : new ArrayList<Labor>(town.getgovernor().getprojects())) {
 			l.cancel();
 		}
 	}

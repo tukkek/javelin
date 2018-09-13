@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.TreeSet;
 
 import javelin.controller.Point;
@@ -20,7 +19,6 @@ import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.location.TownMap;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
-import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -78,7 +76,7 @@ public class Town extends Location{
 	 */
 	public int population=World.scenario.startingpopulation;
 	/** See {@link Governor}. */
-	public Governor governor=new HumanGovernor(this);
+	private Governor governor=new HumanGovernor(this);
 	/**
 	 * Alphabetically ordered set of urban traits.
 	 *
@@ -182,7 +180,7 @@ public class Town extends Location{
 		else if(!ishostile()&&RPG.chancein(100)) host();
 		float labor=population+RPG.randomize(population)/10f;
 		labor*=World.scenario.boost*World.scenario.labormodifier;
-		if(labor>0) governor.work(labor*DAILYLABOR,getdistrict());
+		if(labor>0) getgovernor().work(labor*DAILYLABOR,getdistrict());
 	}
 
 	/**
@@ -194,7 +192,7 @@ public class Town extends Location{
 	 */
 	public void captureforhuman(boolean showsurroundings){
 		garrison.clear();
-		replacegovernor(new HumanGovernor(this));
+		setgovernor(new HumanGovernor(this));
 		if(showsurroundings) Outpost.discover(x,y,Outpost.VISIONRANGE);
 	}
 
@@ -207,11 +205,12 @@ public class Town extends Location{
 		if(realm!=null) realm=attacker.realm;
 		int damage=RPG.randomize(4)+attacker.getel()/2;
 		if(damage>0) population-=Math.max(1,population-damage);
-		replacegovernor(new MonsterGovernor(this));
+		setgovernor(new MonsterGovernor(this));
 	}
 
-	public void replacegovernor(Governor g){
-		for(Labor l:new ArrayList<>(governor.getprojects()))
+	/** Cancels any projects and replaces the {@link Governor}. */
+	public void setgovernor(Governor g){
+		if(governor!=null) for(Labor l:new ArrayList<>(governor.getprojects()))
 			l.cancel();
 		governor=g;
 	}
@@ -226,7 +225,7 @@ public class Town extends Location{
 	public boolean interact(){
 		if(!super.interact()) return false;
 		Squad.active.lasttown=this;
-		new TownScreen(this);
+		new TownScreen(this).show();
 		for(final Combatant c:Squad.active.members)
 			if(c.source.fasthealing>0) c.heal(c.maxhp,false);
 		return true;
@@ -246,16 +245,9 @@ public class Town extends Location{
 		return garrison;
 	}
 
-	/**
-	 * @return <code>true</code> if it's probably a good idea for a player to
-	 *         return here and manager this town.
-	 * @see #automanage
-	 * @see #labor
-	 * @see TownManager
-	 */
 	@Override
 	public boolean isworking(){
-		return !ishostile()&&governor.getprojectssize()>1;
+		return !ishostile()&&getgovernor().getprojectssize()>1;
 	}
 
 	@Override
@@ -298,7 +290,7 @@ public class Town extends Location{
 			population=Scenario.getscenariochallenge();
 			el=population;
 		}else{
-			replacegovernor(new MonsterGovernor(this));
+			setgovernor(new MonsterGovernor(this));
 			el=RPG.r(1,5);
 		}
 		Terrain t=Terrain.get(x,y);
@@ -310,16 +302,15 @@ public class Town extends Location{
 			}
 	}
 
+	/**
+	 * @return All {@link World} towns.
+	 */
 	public static ArrayList<Town> gettowns(){
 		ArrayList<Actor> actors=World.getall(Town.class);
 		ArrayList<Town> towns=new ArrayList<>(actors.size());
 		for(Actor a:actors)
 			towns.add((Town)a);
 		return towns;
-	}
-
-	public int distanceinsteps(Point p){
-		return distanceinsteps(p.x,p.y);
 	}
 
 	/**
@@ -330,10 +321,6 @@ public class Town extends Location{
 		for(Town t:Town.gettowns())
 			districts.addAll(t.getdistrict().getarea());
 		return districts;
-	}
-
-	public static Set<Hazard> gethazards(boolean special){
-		return new HashSet<>();
 	}
 
 	@Override
@@ -349,5 +336,10 @@ public class Town extends Location{
 		String difficulty="";
 		if(ishostile()) difficulty=" ("+Difficulty.describe(garrison)+" fight)";
 		return getrank().title+" of "+description+difficulty+'.';
+	}
+
+	/** @see #setgovernor(Governor) */
+	public Governor getgovernor(){
+		return governor;
 	}
 }

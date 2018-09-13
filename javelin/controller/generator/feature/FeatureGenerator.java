@@ -305,7 +305,7 @@ public class FeatureGenerator implements Serializable{
 				if(a instanceof Town){
 					Town t=(Town)a;
 					t.originalrealm=r;
-					t.replacegovernor(new MonsterGovernor(t));
+					t.setgovernor(new MonsterGovernor(t));
 				}
 			}
 		}

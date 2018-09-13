@@ -49,7 +49,7 @@ public class Deforestate extends Labor {
 	@Override
 	public void work(float step) {
 		float work = Math.min(cost - progress, step) * 1.5f;
-		ArrayList<Labor> projects = town.governor.getprojects();
+		ArrayList<Labor> projects = town.getgovernor().getprojects();
 		if (projects.size() == 1) { // only this labor project
 			Labor growth = new Growth().generate(town);
 			if (growth.validate(town.getdistrict())) {

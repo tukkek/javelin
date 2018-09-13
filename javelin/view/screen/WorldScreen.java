@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javelin.Debug;
 import javelin.Javelin;
@@ -337,25 +336,23 @@ public class WorldScreen extends BattleScreen{
 	 * every move strategically meaningful (no no-brainers) while still keeping
 	 * the world scre en smal enough to fit in just a few screens worth of size.
 	 *
-	 * @param hoursellapsed
 	 * @return <code>true</code> if exploration was uneventful, <code>false</code>
 	 *         if something happened.
 	 */
 	public boolean explore(int x,int y){
-		float hoursellapsed=Squad.active.move(false,Terrain.current(),x,y);
-		if(World.scenario.worldencounters
-				&&(Squad.active.transport==null||Squad.active.transport.battle())
+		Squad s=Squad.active;
+		float hoursellapsed=s.move(false,Terrain.current(),x,y);
+		if(World.scenario.worldencounters&&(s.transport==null||s.transport.battle())
 				&&!Town.getdistricts().contains(new Point(x,y)))
 			RandomEncounter.encounter(hoursellapsed/HOURSPERENCOUNTER);
 		if(!World.scenario.worldhazards) return false;
 		boolean special=RPG.r(1,Terrain.HAZARDCHANCE)==1;
-		Set<Hazard> hazards=Squad.active.getdistrict()==null
-				?Terrain.current().gethazards(special)
-				:Town.gethazards(special);
-		for(Hazard h:new ArrayList<>(hazards))
-			if(!h.validate()) hazards.remove(h);
+		if(s.getdistrict()!=null) return true;
+		ArrayList<Hazard> hazards=new ArrayList<>();
+		for(Hazard h:Terrain.get(x,y).gethazards(special))
+			if(h.validate()) hazards.add(h);
 		if(hazards.isEmpty()) return true;
-		RPG.pick(new ArrayList<>(hazards)).hazard(Math.round(hoursellapsed));
+		RPG.pick(hazards).hazard(Math.round(hoursellapsed));
 		return false;
 	}
 

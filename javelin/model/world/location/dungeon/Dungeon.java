@@ -44,6 +44,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.Spirit;
 import javelin.model.world.location.dungeon.feature.StairsDown;
 import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.door.Door;
@@ -551,6 +552,10 @@ public class Dungeon extends Location{
 		f.discover(null,9000);
 	}
 
+	/**
+	 * TODO return a list so that {@link Spirit} can show the closest one. It'd be
+	 * more versatile anyway.
+	 */
 	public Feature getundiscoveredfeature(){
 		ArrayList<Feature> features=this.features.copy();
 		Collections.shuffle(features);

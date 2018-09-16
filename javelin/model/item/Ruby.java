@@ -3,12 +3,10 @@ package javelin.model.item;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.action.world.UseItems;
 import javelin.controller.exception.GaveUp;
-import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
@@ -56,17 +54,13 @@ public class Ruby extends Item{
 
 	@Override
 	public boolean use(Combatant user){
-		if(Javelin.prompt(PROMPT)!='\n') throw new RepeatTurn();
-		ArrayList<Item> bag=Squad.active.equipment.get(user);
-		List<Item> rubies=bag.stream().filter(i->i instanceof Ruby)
-				.collect(Collectors.toList());
-		bag.removeAll(rubies);
 		try{
-			int el=rubies.size();
 			List<Terrain> terrains=Arrays.asList(Terrain.NONWATER);
+			int el=Math.max(1,Math.round(user.source.cr));
 			Combatants summoned=EncounterGenerator.generate(el,terrains);
 			for(Combatant c:summoned)
 				Summon.place(user,c,Fight.state.blueTeam,Fight.state);
+			Javelin.redraw();
 			String feedback="Summoned: "+Combatant.group(summoned).toLowerCase()+"!";
 			Javelin.message(feedback,false);
 			return true;

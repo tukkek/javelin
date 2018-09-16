@@ -64,7 +64,9 @@ public class BattleSetup{
 				queueb=new ArrayList<>(queueb);
 				final Combatant seeda=RPG.pick(queuea);
 				final Combatant seedb=RPG.pick(queueb);
-				add(seeda,getrandompoint(s,0,s.map.length-1,0,s.map[0].length-1));
+				int width=s.map.length;
+				int height=s.map[0].length;
+				add(seeda,getrandompoint(s,width/2,width-1,height/2,height-1));
 				placecombatant(seedb,seeda,s);
 				final ArrayList<Combatant> placeda=new ArrayList<>();
 				final ArrayList<Combatant> placedb=new ArrayList<>();

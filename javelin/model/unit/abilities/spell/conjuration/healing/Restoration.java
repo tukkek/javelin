@@ -14,6 +14,7 @@ import javelin.model.unit.condition.Condition;
 import javelin.model.unit.condition.Exhausted;
 import javelin.model.unit.condition.Fatigued;
 import javelin.model.unit.condition.Poisoned;
+import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 /**
  * http://www.d20srd.org/srd/spells/restorationLesser.htm
@@ -42,6 +43,7 @@ public class Restoration extends Touch{
 	@Override
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
+		cn.overlay=new AiOverlay(target);
 		return castpeacefully(caster,target,null);
 	}
 

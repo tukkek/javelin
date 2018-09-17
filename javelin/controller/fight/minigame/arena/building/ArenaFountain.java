@@ -40,6 +40,7 @@ public class ArenaFountain extends ArenaBuilding{
 	public void setlevel(BuildingLevel level){
 		super.setlevel(level);
 		refillchance=(level.level+1)/4f;
+		if(spent&&RPG.random()<refillchance) setspent(false);
 	}
 
 	@Override

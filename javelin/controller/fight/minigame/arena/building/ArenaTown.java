@@ -18,7 +18,7 @@ public class ArenaTown extends ArenaBuilding{
 			ArenaAcademy.class,ArenaFountain.class,ArenaLair.class,ArenaShop.class,
 			ArenaShrine.class,ArenaMine.class);
 
-	public static int kingdomlevel=1;
+	public static int kingdomlevel=2;
 
 	abstract class TownOption extends Option{
 		public TownOption(String name,int price){

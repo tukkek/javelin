@@ -97,7 +97,7 @@ public class ArenaLair extends ArenaBuilding{
 		return true;
 	}
 
-	static double calculateprice(ArrayList<Combatant> group){
+	static int calculateprice(ArrayList<Combatant> group){
 		int fee=0;
 		for(Combatant c:group)
 			fee+=MercenariesGuild.getfee(c);
@@ -106,7 +106,13 @@ public class ArenaLair extends ArenaBuilding{
 
 	@Override
 	public String getactiondescription(Combatant current){
-		return super.getactiondescription(current)+getgoldinfo();
+		String cheapest="";
+		if(!hires.isEmpty()){
+			int price=hires.stream().map(hire->calculateprice(hire))
+					.min((a,b)->Integer.compare(a,b)).get();
+			cheapest=" The minimum hire goes for $"+price+".";
+		}
+		return super.getactiondescription(current)+getgoldinfo()+cheapest;
 	}
 
 	public static String getgoldinfo(){

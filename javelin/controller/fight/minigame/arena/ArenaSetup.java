@@ -7,8 +7,10 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.fight.Fight;
+import javelin.controller.fight.minigame.arena.building.ArenaAcademy;
 import javelin.controller.fight.minigame.arena.building.ArenaBuilding;
 import javelin.controller.fight.minigame.arena.building.ArenaFlagpole;
+import javelin.controller.fight.minigame.arena.building.ArenaFountain;
 import javelin.controller.fight.minigame.arena.building.ArenaTown;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.model.state.Square;
@@ -32,7 +34,6 @@ public class ArenaSetup extends BattleSetup{
 	@Override
 	public void generatemap(Fight f){
 		super.generatemap(f);
-		//		f.map.flying=false;
 		Square[][] original=f.map.map;
 		Square[][] map=new Square[MAPSIZE][];
 		f.map.map=map;
@@ -72,9 +73,11 @@ public class ArenaSetup extends BattleSetup{
 		List<ArenaBuilding> home=quadrants.get(homei);
 		ArenaTown t=new ArenaTown(homei);
 		home.add(t);
-		//		home.add(new ArenaLair());
+		ArenaFountain fountain=new ArenaFountain();
+		fountain.setspent(false);
+		home.add(fountain);
 		//		home.add(new ArenaShop());
-		//		home.add(new ArenaAcademy());
+		home.add(new ArenaAcademy());
 		for(ArenaBuilding b:home)
 			Fight.state.blueTeam.add(b);
 		addgateways(home,quadrants);

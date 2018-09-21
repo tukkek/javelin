@@ -3,15 +3,16 @@ package javelin.model.unit.abilities.spell;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
+import javelin.controller.Point;
 import javelin.controller.action.CastSpell;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.factor.CrFactor;
 import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.controller.walker.Walker;
 import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.item.Potion;
@@ -298,17 +299,20 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 	}
 
 	/**
+	 * TODO needs a "hostile" parameter to see whether check {@link Monster#sr} or
+	 * not. Might move SR check to {@link Combatant}.
+	 *
 	 * @param spell Used for {@link Monster#sr} verification.
 	 * @return Combatant in radius distance using the target as a point of
 	 *         reference.
 	 */
-	public static List<Combatant> getradius(Combatant target,int radius,
+	public static List<Combatant> getradius(Combatant source,int radius,
 			Spell spell,BattleState state){
-		ArrayList<Combatant> targets=new ArrayList<>();
-		for(Combatant c:state.getcombatants())
-			if(Walker.distance(c,target)<=radius&&10+spell.casterlevel>=c.source.sr)
-				targets.add(c);
-		return targets;
+		Point p=source.getlocation();
+		return state.getcombatants().stream()
+				.filter(c->c.getlocation().distanceinsteps(p)<=radius
+						&&10+spell.casterlevel>=c.source.sr)
+				.collect(Collectors.toList());
 	}
 
 	/**

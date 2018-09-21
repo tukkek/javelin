@@ -111,7 +111,8 @@ public abstract class Wish extends Option{
 			wishes.add(new RevealFloor('f',this));
 			wishes.add(new Gold('g',this));
 			wishes.add(new Heal('h',this));
-			wishes.add(new ConjureMasterKey('k',this));
+			//TODO replaced by Open Doors
+			//			wishes.add(new ConjureMasterKey('k',this));
 			wishes.add(new Ressurect('r',this));
 			wishes.add(new SummonAlly('s',this));
 			wishes.add(new Teleport('t',this));

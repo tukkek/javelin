@@ -127,19 +127,20 @@ public class EndBattle extends BattleEvent{
 	 * probably isn't being called
 	 */
 	static void bury(List<Combatant> originalteam){
-		Squad squad=Squad.active;
-		for(Combatant c:Fight.state.dead)
+		for(Combatant c:Fight.state.dead){
+			if(!originalteam.contains(c)) continue;
 			if(c.hp>Combatant.DEADATHP&&c.source.constitution>0)
 				c.hp=1;
 			else if(!Fight.victory||!revive(c,originalteam)){
-				ArrayList<Item> bag=squad.equipment.get(c);
+				ArrayList<Item> bag=Squad.active.equipment.get(c);
 				originalteam.remove(c);
-				squad.remove(c);
+				Squad.active.remove(c);
 				if(Fight.victory) for(Item i:bag)
 					i.grab();
 				MercenariesGuild.die(c);
 				if(!c.summoned&&!c.mercenary) Ressurect.dead=c;
 			}
+		}
 		Fight.state.dead.clear();
 	}
 

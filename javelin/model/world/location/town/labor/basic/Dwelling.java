@@ -9,6 +9,8 @@ import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.terrain.Terrain;
+import javelin.model.Equipment;
+import javelin.model.item.Ruby;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -32,7 +34,6 @@ import javelin.view.screen.WorldScreen;
 public class Dwelling extends Fortification{
 	/** {@link Town} {@link Labor} project. */
 	public static class BuildDwelling extends Build{
-
 		Dwelling goal=null;
 
 		/** Constructor. */
@@ -130,13 +131,17 @@ public class Dwelling extends Fortification{
 	}
 
 	void draft(InfoScreen s,String monstertype){
-		int xp=Math.round(dweller.source.cr*100);
-		if(!canrecruit(xp)){
-			s.print("Cannot afford a "+monstertype+" ("+xp+"XP)...");
+		int rubycost=Math.max(1,Math.round(dweller.source.cr));
+		Equipment e=Squad.active.equipment;
+		if(e.getall(Ruby.class).size()<rubycost){
+			s.print("Cannot afford it...");
 			Javelin.input();
 			return;
 		}
-		spend(dweller.source.cr);
+		while(rubycost>0){
+			e.pop(Ruby.class);
+			rubycost-=1;
+		}
 		Squad.active.recruit(dweller.source.clone());
 		volunteers-=1;
 	}
@@ -150,9 +155,9 @@ public class Dwelling extends Fortification{
 		String text="You enter a "+monstertype
 				+" dwelling. What do you want to do?\n\n";
 		if(volunteers>0){
+			int rubycost=Math.max(1,Math.round(dweller.source.cr));
 			text+="There are "+volunteers+" available units here.\n\n";
-			text+="d - draft as volunteer ("+Math.round(100*dweller.source.cr)
-					+"XP)\n";
+			text+="d - draft as volunteer ("+rubycost+" rubies)\n";
 			text+="h - hire as "+monstertype+" mercenary ($"
 					+Javelin.format(MercenariesGuild.getfee(dweller))+"/day)\n";
 		}else

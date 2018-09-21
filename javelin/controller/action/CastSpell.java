@@ -52,7 +52,7 @@ public class CastSpell extends Fire implements AiAction{
 					.collect(Collectors.toList());
 			if(castable.isEmpty()){
 				String message="Not enough Concentration to cast any of your current spells while engaged...";
-				Javelin.message(message,Delay.WAIT);
+				Javelin.prompt(message+"\nPress any key to continue...");
 				return false;
 			}
 		}

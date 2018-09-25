@@ -1,7 +1,6 @@
 package javelin.controller.fight.minigame.arena;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -10,16 +9,14 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.Weather;
-import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.exception.GaveUp;
+import javelin.controller.challenge.TensionDirector;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.fight.minigame.arena.building.ArenaFlagpole;
 import javelin.controller.fight.minigame.arena.building.ArenaFountain;
-import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.Arena;
-import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
@@ -67,10 +64,6 @@ public class ArenaFight extends Minigame{
 	public static final float BOOST=4; // 3,5 maybe?
 
 	static final boolean SPAWN=true;
-	static final int TENSIONMIN=-5;
-	static final int TENSIONMAX=0;
-	static final int ELMIN=-12;
-	static final int ELMAX=0;
 
 	/** {@link Item} bag for {@link #gladiators}. */
 	public HashMap<Integer,ArrayList<Item>> items=new HashMap<>();
@@ -82,16 +75,10 @@ public class ArenaFight extends Minigame{
 	 * @see #getgladiators()
 	 */
 	Combatants gladiators;
-	int tension=RPG.r(TENSIONMIN,TENSIONMAX);
-	float check=-Float.MAX_VALUE;
-	/**
-	 * Ensures that new waves are never becoming less dangerous (pressuring the
-	 * player to upgrade and not just sit around).
-	 */
-	int baseline=Integer.MIN_VALUE;
-	ArrayList<ArrayList<Combatant>> foes=new ArrayList<>();
-	int goal=6;
-	ArenaSetup arenasetup=new ArenaSetup(this);
+	public TensionDirector director=new TensionDirector(Difficulty.EASY,
+			Difficulty.DIFFICULT);
+
+	ArrayList<List<Combatant>> foes=new ArrayList<>();
 
 	/** Constructor. */
 	public ArenaFight(Combatants gladiatorsp){
@@ -99,7 +86,7 @@ public class ArenaFight extends Minigame{
 		meld=true;
 		weather=Weather.DRY;
 		period=Javelin.PERIODNOON;
-		setup=arenasetup;
+		setup=new ArenaSetup(this);
 		meld=false;
 		canflee=false;
 		endless=true;
@@ -133,31 +120,26 @@ public class ArenaFight extends Minigame{
 	@Override
 	public void startturn(Combatant acting){
 		super.startturn(acting);
-		for(ArrayList<Combatant> group:new ArrayList<>(foes))
+		for(List<Combatant> group:new ArrayList<>(foes))
 			rewardxp(group);
 		awaken();
 		if(!state.blueTeam.contains(state.next)) return;
-		if(acting.ap<check) if(getopponents().isEmpty())
-			reward(state.dead);
-		else
-			return;
-		int elblue=ChallengeCalculator.calculateel(getgladiators());
-		int elred=ChallengeCalculator.calculateel(getopponents());
-		if(elred-elblue<tension){
-			raisetension(elblue);
-			tension=RPG.r(TENSIONMIN,TENSIONMAX);
-			reward(state.dead);
+		if(getopponents().isEmpty()) rewardgold(state.dead);
+		if(director.raise(getallies(),getopponents(),acting.ap)){
+			rewardgold(state.dead);
+			if(!ArenaFlagpole.getflags().isEmpty()&&director.monsters!=null)
+				enter(director.monsters,state.redTeam);
+			refillfountains();
 		}
-		check=acting.ap+RPG.r(10,40)/10f;
 	}
 
 	public ArrayList<Combatant> getopponents(){
 		ArrayList<Combatant> opponents=new ArrayList<>(state.redTeam);
-		opponents.removeAll(getflagpoles());
+		opponents.removeAll(ArenaFlagpole.getflags());
 		return opponents;
 	}
 
-	void reward(ArrayList<Combatant> dead){
+	void rewardgold(ArrayList<Combatant> dead){
 		int gold=0;
 		ArrayList<Combatant> defeated=new ArrayList<>(dead.size());
 		for(Combatant c:new ArrayList<>(dead))
@@ -178,7 +160,7 @@ public class ArenaFight extends Minigame{
 				+"You now have $"+Javelin.format(this.gold)+".",false);
 	}
 
-	void rewardxp(ArrayList<Combatant> group){
+	void rewardxp(List<Combatant> group){
 		for(Combatant foe:group)
 			if(state.redTeam.contains(foe)) return;
 		RewardCalculator.rewardxp(getallies(),group,BOOST);
@@ -217,13 +199,9 @@ public class ArenaFight extends Minigame{
 		}
 	}
 
-	void raisetension(int elblue){
-		if(placefoes(elblue)!=null) refillfountains();
-	}
-
 	void refillfountains(){
 		ArrayList<ArenaFountain> fountains=ArenaFountain.get();
-		if(check==-Float.MAX_VALUE||fountains.isEmpty()) return;
+		if(director.monsters==null||fountains.isEmpty()) return;
 		List<String> messages=new ArrayList<>(0);
 		Point p=null;
 		for(ArenaFountain f:fountains){
@@ -237,52 +215,9 @@ public class ArenaFight extends Minigame{
 		if(!messages.isEmpty()) notify(String.join("\n",messages),p);
 	}
 
-	Integer placefoes(int elblue){
-		if(getflagpoles().isEmpty()) return null;
-		ArrayList<Combatant> last=null;
-		int min=Math.max(elblue+ELMIN,baseline);
-		baseline=min;
-		ArrayList<Combatant> opponents=new ArrayList<>();
-		for(Combatant c:getopponents())
-			if(!c.summoned) opponents.add(c);
-		for(int el=min;el<=elblue+ELMAX;el+=1){
-			ArrayList<Combatant> group=generatefoes(el);
-			if(group==null) continue;
-			ArrayList<Combatant> newteam=new ArrayList<>(opponents);
-			newteam.addAll(group);
-			int tension=ChallengeCalculator.calculateel(newteam)-elblue;
-			if(tension==this.tension){
-				enter(group,state.redTeam);
-				return el;
-			}
-			if(tension>this.tension){
-				enter(last==null?group:last,state.redTeam);
-				return el;
-			}
-			last=group;
-		}
-		return null;
-	}
-
-	ArrayList<ArenaFlagpole> getflagpoles(){
-		ArrayList<ArenaFlagpole> flags=new ArrayList<>(4);
-		for(Combatant c:state.redTeam)
-			if(c instanceof ArenaFlagpole) flags.add((ArenaFlagpole)c);
-		flags.sort((a,b)->a.level-b.level);
-		return flags;
-	}
-
-	ArrayList<Combatant> generatefoes(int el){
-		try{
-			return EncounterGenerator.generate(el,Arrays.asList(Terrain.NONWATER));
-		}catch(GaveUp e){
-			return null;
-		}
-	}
-
-	public void enter(ArrayList<Combatant> group,ArrayList<Combatant> team){
+	public void enter(List<Combatant> group,ArrayList<Combatant> team){
 		Point entrance=null;
-		ArrayList<ArenaFlagpole> flags=getflagpoles();
+		ArrayList<ArenaFlagpole> flags=ArenaFlagpole.getflags();
 		while(entrance==null||!ArenaSetup.validate(entrance))
 			entrance=displace(RPG.pick(flags).getlocation());
 		enter(group,team,entrance);
@@ -296,8 +231,7 @@ public class ArenaFight extends Minigame{
 		return ap/gladiators.size();
 	}
 
-	public void enter(ArrayList<Combatant> entering,List<Combatant> team,
-			Point entry){
+	public void enter(List<Combatant> entering,List<Combatant> team,Point entry){
 		if(team==state.redTeam){
 			if(Javelin.DEBUG&&!SPAWN) return;
 			foes.add(entering);
@@ -311,7 +245,7 @@ public class ArenaFight extends Minigame{
 			team.addAll(entering);
 			for(Combatant c:entering){
 				c.rollinitiative();
-				if(check!=-Float.MAX_VALUE){
+				if(director.monsters!=null){
 					c.ap+=ap;
 					c.initialap=c.ap;
 				}

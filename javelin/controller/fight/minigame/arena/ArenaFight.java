@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.Point;
@@ -62,23 +63,21 @@ import javelin.view.screen.BattleScreen;
  */
 public class ArenaFight extends Minigame{
 	public static final float BOOST=4; // 3,5 maybe?
-
 	static final boolean SPAWN=true;
 
 	/** {@link Item} bag for {@link #gladiators}. */
 	public HashMap<Integer,ArrayList<Item>> items=new HashMap<>();
 	public int gold=0;
 
+	TensionDirector director=new TensionDirector(Difficulty.EASY,
+			Difficulty.DIFFICULT);
+	ArrayList<List<Combatant>> foes=new ArrayList<>();
 	/**
 	 * Non-mercenary units, live and dead.
 	 *
 	 * @see #getgladiators()
 	 */
 	Combatants gladiators;
-	public TensionDirector director=new TensionDirector(Difficulty.EASY,
-			Difficulty.DIFFICULT);
-
-	ArrayList<List<Combatant>> foes=new ArrayList<>();
 
 	/** Constructor. */
 	public ArenaFight(Combatants gladiatorsp){
@@ -122,37 +121,36 @@ public class ArenaFight extends Minigame{
 		super.startturn(acting);
 		for(List<Combatant> group:new ArrayList<>(foes))
 			rewardxp(group);
-		awaken();
+		for(Combatant c:gladiators)
+			if(state.dead.contains(c)) awaken(c);
 		if(!state.blueTeam.contains(state.next)) return;
-		if(getopponents().isEmpty()) rewardgold(state.dead);
-		if(director.raise(getallies(),getopponents(),acting.ap)){
-			rewardgold(state.dead);
-			if(!ArenaFlagpole.getflags().isEmpty()&&director.monsters!=null)
-				enter(director.monsters,state.redTeam);
-			refillfountains();
-		}
+		List<Combatant> opponents=getopponents();
+		if(opponents.isEmpty()) rewardgold();
+		if(!director.raise(getallies(),opponents,acting.ap)) return;
+		rewardgold();
+		if(!ArenaFlagpole.getflags().isEmpty()&&director.monsters!=null)
+			enter(director.monsters,state.redTeam);
+		refillfountains();
 	}
 
-	public ArrayList<Combatant> getopponents(){
-		ArrayList<Combatant> opponents=new ArrayList<>(state.redTeam);
-		opponents.removeAll(ArenaFlagpole.getflags());
-		return opponents;
+	public List<Combatant> getopponents(){
+		return state.redTeam.stream().filter(c->!c.source.passive)
+				.collect(Collectors.toList());
 	}
 
-	void rewardgold(ArrayList<Combatant> dead){
+	void rewardgold(){
 		int gold=0;
-		ArrayList<Combatant> defeated=new ArrayList<>(dead.size());
-		for(Combatant c:new ArrayList<>(dead))
-			if(c.mercenary||c.summoned)
+		ArrayList<Combatant> dead=state.dead;
+		for(Combatant c:new ArrayList<>(dead)){
+			if(c.mercenary||c.summoned){
 				dead.remove(c);
-			else if(!gladiators.contains(c)){
-				defeated.add(c);
-				dead.remove(c);
-				if(!c.summoned){
-					Float cr=c.source.cr;
-					gold+=RewardCalculator.getgold(cr)*BOOST;
-				}
+				continue;
 			}
+			if(gladiators.contains(c)) continue;
+			dead.remove(c);
+			Float cr=c.source.cr;
+			gold+=RewardCalculator.getgold(cr)*BOOST;
+		}
 		if(gold==0) return;
 		gold=Javelin.round(gold);
 		this.gold+=gold;
@@ -179,24 +177,20 @@ public class ArenaFight extends Minigame{
 		return gladiators;
 	}
 
-	void awaken(){
-		for(Combatant c:new ArrayList<>(state.dead)){
-			if(c.mercenary||!gladiators.contains(c)) continue;
-			if(c.getnumericstatus()==Combatant.STATUSDEAD){
-				state.dead.remove(c);
-				gladiators.remove(c);
-				continue;
-			}
-			if(c.ap>=state.next.ap) continue;
-			c.ap+=1;
-			if(state.getcombatant(c.location[0],c.location[1])!=null) continue;
-			if(RPG.r(1,10)>Math.abs(c.hp)){
-				state.dead.remove(c);
-				c.hp=1;
-				state.blueTeam.add(c);
-				notify(c+" awakens!",c.getlocation());
-			}
+	void awaken(Combatant c){
+		if(c.getnumericstatus()==Combatant.STATUSDEAD){
+			state.dead.remove(c);
+			gladiators.remove(c);
+			return;
 		}
+		if(c.ap>=state.next.ap) return;
+		c.ap+=1;
+		if(state.getcombatant(c.location[0],c.location[1])!=null) return;
+		if(RPG.r(1,10)<=Math.abs(c.hp)) return;
+		c.hp=1;
+		state.dead.remove(c);
+		state.blueTeam.add(c);
+		notify(c+" awakens!",c.getlocation());
 	}
 
 	void refillfountains(){
@@ -224,11 +218,8 @@ public class ArenaFight extends Minigame{
 	}
 
 	float getbaseap(){
-		float ap=0;
-		List<Combatant> gladiators=getgladiators();
-		for(Combatant c:gladiators)
-			ap+=c.ap;
-		return ap/gladiators.size();
+		return getgladiators().stream().collect(Collectors.averagingDouble(c->c.ap))
+				.floatValue();
 	}
 
 	public void enter(List<Combatant> entering,List<Combatant> team,Point entry){
@@ -297,9 +288,7 @@ public class ArenaFight extends Minigame{
 	}
 
 	public List<Combatant> getallies(){
-		ArrayList<Combatant> allies=new ArrayList<>();
-		for(Combatant c:state.blueTeam)
-			if(!c.source.passive) allies.add(c);
-		return allies;
+		return state.blueTeam.stream().filter(c->!c.source.passive)
+				.collect(Collectors.toList());
 	}
 }

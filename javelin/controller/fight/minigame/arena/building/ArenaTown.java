@@ -123,9 +123,8 @@ public class ArenaTown extends ArenaBuilding{
 	}
 
 	public static ArenaTown get(){
-		for(Combatant c:Fight.state.blueTeam)
-			if(c instanceof ArenaTown) return (ArenaTown)c;
-		return null;
+		return (ArenaTown)Fight.state.blueTeam.stream()
+				.filter(c->c instanceof ArenaTown).findAny().orElse(null);
 	}
 
 	@Override

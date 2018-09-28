@@ -21,6 +21,10 @@ import javelin.old.RPG;
  * @author alex
  */
 public class TensionDirector{
+	public enum TensionAction{
+		LOWER,KEEP,RAISE
+	}
+
 	/**
 	 * A group of units that fulfills the next tension requirement. May be empty
 	 * if {@link EncounterGenerator} had trouble coming up with
@@ -29,7 +33,7 @@ public class TensionDirector{
 	 * Starts as <code>null</code> and is never reset, only replaced. This can be
 	 * used by consumers to identify whether the first group has been generated.
 	 *
-	 * @see #raise(List, ArrayList, float)
+	 * @see #check(List, ArrayList, float)
 	 */
 	public List<Combatant> monsters=null;
 
@@ -60,15 +64,23 @@ public class TensionDirector{
 	 * @return <code>false</code> if doesn't need to raise {@link Fight} tension,
 	 *         otherwise <code>true</code> and updates {@link #monsters}.
 	 */
-	public boolean raise(List<Combatant> blue,List<Combatant> red,float ap){
-		if(ap<raiseat) return false;
+	public TensionAction check(List<Combatant> blue,List<Combatant> red,float ap){
+		if(ap<raiseat) return TensionAction.KEEP;
 		raiseat=ap+RPG.r(10,40)/10f;
 		int elblue=ChallengeCalculator.calculateel(blue);
 		int elred=ChallengeCalculator.calculateel(red);
-		if(elblue-elred>=tension) return false;
-		monsters=generate(elblue,red);
+		int current=elblue-elred;
+		if(current==tension) return TensionAction.KEEP;
+		TensionAction r;
+		if(current<tension){
+			r=TensionAction.RAISE;
+			monsters=generate(elblue,red);
+		}else{
+			r=TensionAction.LOWER;
+			monsters=generate(elred,blue);
+		}
 		tension=RPG.r(tensionmin,tensionmax);
-		return true;
+		return r;
 	}
 
 	/**

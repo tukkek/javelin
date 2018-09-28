@@ -13,10 +13,12 @@ import javelin.controller.Weather;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.challenge.TensionDirector;
+import javelin.controller.challenge.TensionDirector.TensionAction;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.fight.minigame.arena.building.ArenaFlagpole;
 import javelin.controller.fight.minigame.arena.building.ArenaFountain;
+import javelin.controller.fight.minigame.arena.building.ArenaTown;
 import javelin.controller.map.Arena;
 import javelin.model.item.Item;
 import javelin.model.state.BattleState;
@@ -126,11 +128,22 @@ public class ArenaFight extends Minigame{
 		if(!state.blueTeam.contains(state.next)) return;
 		List<Combatant> opponents=getopponents();
 		if(opponents.isEmpty()) rewardgold();
-		if(!director.raise(getallies(),opponents,acting.ap)) return;
+		TensionAction tension=director.check(getallies(),opponents,acting.ap);
+		if(tension==TensionAction.KEEP) return;
 		rewardgold();
-		if(!ArenaFlagpole.getflags().isEmpty()&&director.monsters!=null)
-			enter(director.monsters,state.redTeam);
+		spawn(tension);
 		refillfountains();
+	}
+
+	void spawn(TensionAction tension){
+		if(tension==TensionAction.RAISE){
+			List<ArenaFlagpole> flags=ArenaFlagpole.getflags();
+			if(!flags.isEmpty())
+				enter(director.monsters,state.redTeam,RPG.pick(flags).getlocation());
+		}else{
+			ArenaTown town=ArenaTown.get();
+			if(town!=null) enter(director.monsters,state.blueTeam,town.getlocation());
+		}
 	}
 
 	public List<Combatant> getopponents(){
@@ -171,10 +184,8 @@ public class ArenaFight extends Minigame{
 	 * @see BattleState#dead
 	 */
 	public List<Combatant> getgladiators(){
-		ArrayList<Combatant> gladiators=new ArrayList<>(this.gladiators.size());
-		for(Combatant c:state.blueTeam)
-			if(this.gladiators.contains(c)) gladiators.add(c);
-		return gladiators;
+		return gladiators.stream().filter(c->state.blueTeam.contains(c))
+				.collect(Collectors.toList());
 	}
 
 	void awaken(Combatant c){
@@ -195,7 +206,7 @@ public class ArenaFight extends Minigame{
 
 	void refillfountains(){
 		ArrayList<ArenaFountain> fountains=ArenaFountain.get();
-		if(director.monsters==null||fountains.isEmpty()) return;
+		if(fountains.isEmpty()) return;
 		List<String> messages=new ArrayList<>(0);
 		Point p=null;
 		for(ArenaFountain f:fountains){
@@ -209,14 +220,6 @@ public class ArenaFight extends Minigame{
 		if(!messages.isEmpty()) notify(String.join("\n",messages),p);
 	}
 
-	public void enter(List<Combatant> group,ArrayList<Combatant> team){
-		Point entrance=null;
-		ArrayList<ArenaFlagpole> flags=ArenaFlagpole.getflags();
-		while(entrance==null||!ArenaSetup.validate(entrance))
-			entrance=displace(RPG.pick(flags).getlocation());
-		enter(group,team,entrance);
-	}
-
 	float getbaseap(){
 		return getgladiators().stream().collect(Collectors.averagingDouble(c->c.ap))
 				.floatValue();
@@ -227,6 +230,8 @@ public class ArenaFight extends Minigame{
 			if(Javelin.DEBUG&&!SPAWN) return;
 			foes.add(entering);
 		}
+		while(!ArenaSetup.validate(entry))
+			entry=displace(entry);
 		LinkedList<Combatant> place=new LinkedList<>(entering);
 		Collections.shuffle(place);
 		Combatant last=place.pop();
@@ -236,10 +241,8 @@ public class ArenaFight extends Minigame{
 			team.addAll(entering);
 			for(Combatant c:entering){
 				c.rollinitiative();
-				if(director.monsters!=null){
-					c.ap+=ap;
-					c.initialap=c.ap;
-				}
+				c.ap+=ap;
+				c.initialap=c.ap;
 			}
 		}
 		while(!place.isEmpty()){

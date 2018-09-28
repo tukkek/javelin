@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.Point;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.arena.ArenaFight;
@@ -57,8 +56,7 @@ public class ArenaLair extends ArenaBuilding{
 			super.onexit();
 			if(hired!=null){
 				Javelin.app.switchScreen(BattleScreen.active);
-				Point here=ArenaFight.displace(getlocation());
-				ArenaFight.get().enter(hired,Fight.state.blueTeam,here);
+				ArenaFight.get().enter(hired,Fight.state.blueTeam,getlocation());
 			}
 		}
 

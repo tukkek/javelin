@@ -1,11 +1,14 @@
 package javelin.controller.fight.minigame.arena.building;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.controller.fight.Fight;
 import javelin.model.unit.Combatant;
 
 public class ArenaFlagpole extends ArenaBuilding{
+	public static final int STARTING=4;
+
 	public ArenaFlagpole(){
 		super("Flagpole","flagpolered","Flagpole.");
 	}
@@ -20,11 +23,9 @@ public class ArenaFlagpole extends ArenaBuilding{
 		throw new UnsupportedOperationException();
 	}
 
-	static public ArrayList<ArenaFlagpole> getflags(){
-		ArrayList<ArenaFlagpole> flags=new ArrayList<>(4);
-		for(Combatant c:Fight.state.redTeam)
-			if(c instanceof ArenaFlagpole) flags.add((ArenaFlagpole)c);
-		flags.sort((a,b)->a.level-b.level);
-		return flags;
+	static public List<ArenaFlagpole> getflags(){
+		return Fight.state.redTeam.stream().filter(c->c instanceof ArenaFlagpole)
+				.map(c->(ArenaFlagpole)c).sorted((a,b)->a.level-b.level)
+				.collect(Collectors.toList());
 	}
 }

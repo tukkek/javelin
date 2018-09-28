@@ -55,10 +55,7 @@ public class ArenaSetup extends BattleSetup{
 	public void place(){
 		ArrayList<Combatant> gladiators=new ArrayList<>(Fight.state.blueTeam);
 		ArenaTown home=placebuildings();
-		Point p=null;
-		while(p==null||!validate(p))
-			p=ArenaFight.displace(home.getlocation());
-		fight.enter(gladiators,Fight.state.blueTeam,p);
+		fight.enter(gladiators,Fight.state.blueTeam,home.getlocation());
 	}
 
 	Point getcenterpoint(){
@@ -80,7 +77,7 @@ public class ArenaSetup extends BattleSetup{
 		home.add(new ArenaAcademy());
 		for(ArenaBuilding b:home)
 			Fight.state.blueTeam.add(b);
-		addgateways(home,quadrants);
+		addflags(home,quadrants);
 		for(int i=0;i<quadrants.size();i++)
 			for(Building b:quadrants.get(i))
 				place(b,i);
@@ -102,12 +99,11 @@ public class ArenaSetup extends BattleSetup{
 		}
 	}
 
-	void addgateways(List<ArenaBuilding> home,
-			List<List<ArenaBuilding>> quadrants){
+	void addflags(List<ArenaBuilding> home,List<List<ArenaBuilding>> quadrants){
 		quadrants=new ArrayList<>(quadrants);
 		quadrants.remove(home);
 		Collections.shuffle(quadrants);
-		for(int i=0;i<4;i++){
+		for(int i=0;i<ArenaFlagpole.STARTING;i++){
 			ArenaFlagpole g=new ArenaFlagpole();
 			quadrants.get(i%quadrants.size()).add(g);
 			Fight.state.redTeam.add(g);

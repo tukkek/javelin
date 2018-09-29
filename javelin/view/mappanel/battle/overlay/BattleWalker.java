@@ -100,15 +100,9 @@ public class BattleWalker extends OverlayWalker{
 	}
 
 	boolean checkengaged(Point p){
-		if(current.burrowed) return false;
-		final int maxx=Math.min(p.x+1,state.map.length);
-		final int maxy=Math.min(p.y+1,state.map[0].length);
-		for(int x=Math.max(p.x-1,0);x<=maxx;x++)
-			for(int y=Math.max(p.y-1,0);y<=maxy;y++){
-				final Combatant c=state.getcombatant(x,y);
-				if(c!=null&&!c.source.passive&&!c.isally(current,state)) return true;
-			}
-		return false;
+		return !current.burrowed&&state.getopponents(current).stream()
+				.filter(c->!c.source.passive&&p.distanceinsteps(c.getlocation())==1)
+				.findAny().isPresent();
 	}
 
 	@Override
@@ -120,9 +114,9 @@ public class BattleWalker extends OverlayWalker{
 	public LinkedList<Point> walk(){
 		/*TODO this is a very unelegant hack */
 		LinkedList<Point> walk=super.walk();
-		if(walk.size()>1){
+		if(!walk.isEmpty()){
 			BattleStep last=(BattleStep)walk.getLast();
-			if(last.engaged){
+			if(last.engaged&&!isengaged){
 				last.engaged=false;
 				last.apcost=last.getcost();
 				last.totalcost-=Movement.disengage(current);

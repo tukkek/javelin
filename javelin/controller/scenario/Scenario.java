@@ -302,7 +302,7 @@ public class Scenario implements Serializable{
 	 * @see WorldGenerator
 	 */
 	public void setup(){
-		new SquadScreen().open();
+		Squad.active=new SquadScreen().open();
 	}
 
 	/** Called when a Fight starts. */

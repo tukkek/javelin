@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.Weather;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.challenge.TensionDirector;
@@ -20,13 +21,17 @@ import javelin.controller.fight.minigame.arena.building.ArenaFlagpole;
 import javelin.controller.fight.minigame.arena.building.ArenaFountain;
 import javelin.controller.fight.minigame.arena.building.ArenaTown;
 import javelin.controller.map.Arena;
+import javelin.controller.scenario.Campaign;
 import javelin.model.item.Item;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
+import javelin.model.unit.Monster;
+import javelin.model.unit.Squad;
 import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
+import javelin.view.screen.SquadScreen;
 
 /**
  * TODO would be cool if could generate heroes to fight against at some point
@@ -64,6 +69,9 @@ import javelin.view.screen.BattleScreen;
  * @author alex
  */
 public class ArenaFight extends Minigame{
+	static final double GLADIATORMAXCR=SquadScreen.SELECTABLE[SquadScreen.SELECTABLE.length
+			-1];
+	static final float SQUADEL=Campaign.INITIALEL;
 	public static final float BOOST=4; // 3,5 maybe?
 	static final boolean SPAWN=true;
 
@@ -82,8 +90,8 @@ public class ArenaFight extends Minigame{
 	Combatants gladiators;
 
 	/** Constructor. */
-	public ArenaFight(Combatants gladiatorsp){
-		gladiators=gladiatorsp;
+	public ArenaFight(){
+		gladiators=choosegladiators();
 		meld=true;
 		weather=Weather.DRY;
 		period=Javelin.PERIODNOON;
@@ -91,6 +99,19 @@ public class ArenaFight extends Minigame{
 		meld=false;
 		canflee=false;
 		endless=true;
+	}
+
+	Combatants choosegladiators(){
+		List<Monster> candidates=Javelin.ALLMONSTERS.stream()
+				.filter(m->!m.internal&&m.cr<=GLADIATORMAXCR)
+				.collect(Collectors.toList());
+		Squad s=new SquadScreen(candidates){
+			@Override
+			protected boolean checkifsquadfull(){
+				return ChallengeCalculator.calculateel(squad.members)>=SQUADEL;
+			}
+		}.open();
+		return new Combatants(s.members);
 	}
 
 	@Override

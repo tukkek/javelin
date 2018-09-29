@@ -69,7 +69,7 @@ public class TensionDirector{
 		raiseat=ap+RPG.r(10,40)/10f;
 		int elblue=ChallengeCalculator.calculateel(blue);
 		int elred=ChallengeCalculator.calculateel(red);
-		int current=elblue-elred;
+		int current=elred-elblue;
 		if(current==tension) return TensionAction.KEEP;
 		TensionAction r;
 		if(current<tension){

@@ -34,8 +34,10 @@ public class SquadScreen extends InfoScreen{
 		Collections.sort(CANDIDATES,MonstersByName.INSTANCE);
 	}
 
-	ArrayList<Combatant> squad=new ArrayList<>();
+	protected Squad squad=new Squad(0,0,8,null);
+
 	List<Monster> candidates;
+	boolean first=true;
 
 	public SquadScreen(List<Monster> candidates){
 		super("");
@@ -46,17 +48,16 @@ public class SquadScreen extends InfoScreen{
 		this(CANDIDATES);
 	}
 
-	ArrayList<Combatant> select(){
+	void select(){
 		page(0);
-		World.scenario.upgradesquad(squad);
-		Squad.active.gold=getstartinggold();
-		Squad.active.sort();
-		return squad;
+		if(World.scenario!=null) World.scenario.upgradesquad(squad.members);
+		squad.gold=getstartinggold();
+		squad.sort();
 	}
 
 	public int getstartinggold(){
 		int gold=0;
-		for(Combatant c:squad){
+		for(Combatant c:squad.members){
 			float level=c.source.cr-1;
 			if(level>=1)
 				gold+=RewardCalculator.calculatepcequipment(Math.round(level));
@@ -75,12 +76,12 @@ public class SquadScreen extends InfoScreen{
 		else if(input=='z')
 			fillwithrandom:while(!checkifsquadfull()){
 				Monster candidate=RPG.pick(candidates);
-				for(Combatant m:squad)
+				for(Combatant m:squad.members)
 					if(m.source.name.equals(candidate.name)) continue fillwithrandom;
 				recruit(candidate);
 			}
 		else if(input=='\n'){
-			if(squad.isEmpty()) page(index);
+			if(squad.members.isEmpty()) page(index);
 		}else{
 			int selection=ALPHABET.indexOf(input);
 			if(selection>=0&&selection<letter){
@@ -92,15 +93,14 @@ public class SquadScreen extends InfoScreen{
 	}
 
 	private void recruit(Monster m){
-		Combatant c=Squad.active.recruit(m);
+		Combatant c=squad.recruit(m);
 		c.hp=c.source.hd.maximize();
 		c.maxhp=c.hp;
-		squad.add(c);
 		if(Javelin.DEBUG) adddebugdata(c);
 	}
 
-	boolean checkifsquadfull(){
-		return World.scenario.checkfullsquad(squad);
+	protected boolean checkifsquadfull(){
+		return World.scenario.checkfullsquad(squad.members);
 	}
 
 	int printpage(int index,int next){
@@ -117,18 +117,15 @@ public class SquadScreen extends InfoScreen{
 		text+="\n";
 		text+="\nYour team:";
 		text+="\n";
-		for(Combatant m:squad)
+		for(Combatant m:squad.members)
 			text+="\n"+m.source.toString();
 		return letter;
 	}
 
-	/** Start first squad in the morning */
-	public void open(){
-		Squad.active=new Squad(0,0,8,null);
+	public Squad open(){
 		select();
+		return squad;
 	}
-
-	boolean first=true;
 
 	void adddebugdata(Combatant c){}
 }

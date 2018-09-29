@@ -682,7 +682,8 @@ public class Squad extends Actor implements Cloneable{
 	}
 
 	public Combatant recruit(Combatant c){
-		if(World.scenario.asksquadnames&&!Javelin.DEBUG)
+		boolean askname=World.scenario!=null&&World.scenario.asksquadnames;
+		if(askname&&!Javelin.DEBUG)
 			c.source.customName=NamingScreen.getname(c.toString());
 		add(c);
 		/*

@@ -65,13 +65,13 @@ public class ArtOfWar extends Scenario{
 	@Override
 	public void setup(){
 		region=selectregion();
-		selectarmy();
+		Squad.active=selectarmy();
 	}
 
-	void selectarmy(){
-		List<Monster> units=getunits(region);
-		units=units.stream().filter(m->m.cr<=5).collect(Collectors.toList());
-		new SquadScreen(units).open();
+	Squad selectarmy(){
+		List<Monster> units=getunits(region).stream().filter(m->m.cr<=5)
+				.collect(Collectors.toList());
+		return new SquadScreen(units).open();
 	}
 
 	List<Monster> getunits(Terrain t){

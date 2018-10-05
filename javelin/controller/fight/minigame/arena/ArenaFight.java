@@ -144,8 +144,8 @@ public class ArenaFight extends Minigame{
 		super.startturn(acting);
 		for(List<Combatant> group:new ArrayList<>(foes))
 			rewardxp(group);
-		for(Combatant c:gladiators)
-			if(state.dead.contains(c)) awaken(c);
+		for(Combatant c:new ArrayList<>(state.dead))
+			if(gladiators.contains(c)) awaken(c);
 		if(!state.blueTeam.contains(state.next)) return;
 		List<Combatant> opponents=getopponents();
 		if(opponents.isEmpty()) rewardgold();
@@ -163,6 +163,7 @@ public class ArenaFight extends Minigame{
 				enter(director.monsters,state.redTeam,RPG.pick(flags).getlocation());
 		}else{
 			ArenaTown town=ArenaTown.get();
+			director.monsters.forEach(c->c.setmercenary(true));
 			if(town!=null) enter(director.monsters,state.blueTeam,town.getlocation());
 		}
 	}
@@ -217,7 +218,8 @@ public class ArenaFight extends Minigame{
 		}
 		if(c.ap>=state.next.ap) return;
 		c.ap+=1;
-		if(state.getcombatant(c.location[0],c.location[1])!=null) return;
+		Point p=c.getlocation();
+		if(state.getcombatant(p.x,p.y)!=null||state.getmeld(p.x,p.y)!=null) return;
 		if(RPG.r(1,10)<=Math.abs(c.hp)) return;
 		c.hp=1;
 		state.dead.remove(c);
@@ -271,10 +273,10 @@ public class ArenaFight extends Minigame{
 			last=place.pop();
 			last.setlocation(p);
 		}
-		if(team==state.redTeam){
-			String msg="New enemies enter the arena:\n"+Combatant.group(entering)+"!";
-			notify(msg,last.getlocation());
-		}
+		if(entering.get(0).equals(gladiators.get(0))) return;
+		String title=team==state.redTeam?"Enemies":"Allies";
+		String msg=title+" enter the arena:\n"+Combatant.group(entering)+"!";
+		notify(msg,last.getlocation());
 	}
 
 	public static Point displace(Point reference){

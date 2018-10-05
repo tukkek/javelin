@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import javelin.controller.fight.Fight;
 import javelin.model.unit.Combatant;
+import javelin.view.mappanel.battle.action.BattleMouseAction;
 
 public class ArenaFlagpole extends ArenaBuilding{
 	public static final int STARTING=4;
@@ -27,5 +28,10 @@ public class ArenaFlagpole extends ArenaBuilding{
 		return Fight.state.redTeam.stream().filter(c->c instanceof ArenaFlagpole)
 				.map(c->(ArenaFlagpole)c).sorted((a,b)->a.level-b.level)
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public BattleMouseAction getmouseaction(){
+		return null;
 	}
 }

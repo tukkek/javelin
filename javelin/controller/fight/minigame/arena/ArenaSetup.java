@@ -53,9 +53,8 @@ public class ArenaSetup extends BattleSetup{
 
 	@Override
 	public void place(){
-		ArrayList<Combatant> gladiators=new ArrayList<>(Fight.state.blueTeam);
 		ArenaTown home=placebuildings();
-		fight.enter(gladiators,Fight.state.blueTeam,home.getlocation());
+		fight.enter(Fight.state.blueTeam,Fight.state.blueTeam,home.getlocation());
 	}
 
 	Point getcenterpoint(){

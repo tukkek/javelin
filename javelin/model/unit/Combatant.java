@@ -379,7 +379,8 @@ public class Combatant implements Serializable,Cloneable{
 		if(hp>=maxhp) return STATUSUNHARMED;
 		if(hp>1) return Math.round(4.0f*hp/maxhp);
 		if(hp==1) return STATUSDYING;
-		return hp>Combatant.DEADATHP?STATUSUNCONSCIOUS:STATUSDEAD;
+		if(hp>Combatant.DEADATHP) return STATUSUNCONSCIOUS;
+		return STATUSDEAD;
 	}
 
 	/**

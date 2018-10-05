@@ -1,6 +1,7 @@
 package javelin.view.mappanel.battle.action;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.Point;
 import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
@@ -41,6 +42,7 @@ public class MoveMouseAction extends BattleMouseAction{
 			c.ap+=to.totalcost-BattleScreen.partialmove;
 			Meld m=move.getmeld(to.x,to.y);
 			if(m!=null&&c.ap>=m.meldsat) Javelin.app.fight.meld(c,m);
+			if(to.engaged) Javelin.message(c+" disengages...",Delay.WAIT);
 		};
 	}
 

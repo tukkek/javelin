@@ -81,6 +81,9 @@ public class Combatant implements Serializable,Cloneable{
 	public static final int STATUSUNHARMED=5;
 	/** TODO proper dying process + healing phase at the end of combat */
 	public static final int DEADATHP=-8;
+
+	static final BigDecimal XPFORMAT=new BigDecimal(100);
+
 	/** The statistics for this monster. */
 	public Monster source;
 	/**
@@ -687,8 +690,7 @@ public class Combatant implements Serializable,Cloneable{
 	 * @return XP in human readeable format (ex: 150XP).
 	 */
 	public String gethumanxp(){
-		return xp.multiply(new BigDecimal(100)).setScale(0,RoundingMode.HALF_UP)
-				+"XP";
+		return xp.multiply(XPFORMAT).setScale(0,RoundingMode.HALF_UP)+"XP";
 	}
 
 	/**

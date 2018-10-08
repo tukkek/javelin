@@ -9,6 +9,7 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.arena.ArenaFight;
 import javelin.controller.fight.minigame.arena.ArenaSetup;
+import javelin.model.unit.Building;
 import javelin.model.unit.Combatant;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.PurchaseScreen;
@@ -40,15 +41,15 @@ public class ArenaTown extends ArenaBuilding{
 
 		@Override
 		public void buy(){
-			building.setlevel(ArenaBuilding.LEVELS[building.level+1]);
+			building.setlevel(Building.LEVELS[building.level+1]);
 			building.upgradebuilding();
 		}
 	}
 
 	class Build extends TownOption{
-		ArenaBuilding building;
+		Building building;
 
-		Build(ArenaBuilding b,int price){
+		Build(Building b,int price){
 			super("Build "+b.toString().toLowerCase(),price);
 			building=b;
 			priority=2;
@@ -69,14 +70,14 @@ public class ArenaTown extends ArenaBuilding{
 		@Override
 		public List<Option> getoptions(){
 			ArrayList<Option> options=new ArrayList<>();
-			int price=Javelin.round(RewardCalculator.getgold(kingdomlevel));
+			int price=getprojectprice();
 			for(Combatant c:Fight.state.blueTeam){
 				ArenaBuilding b=c instanceof ArenaBuilding?(ArenaBuilding)c:null;
 				if(b!=null&&b.level!=LEVELS.length-1) options.add(new Upgrade(b,price));
 			}
 			try{
 				for(Class<? extends ArenaBuilding> type:BUILDINGTYPES){
-					ArenaBuilding b=type.getDeclaredConstructor().newInstance();
+					Building b=type.getDeclaredConstructor().newInstance();
 					options.add(new Build(b,price));
 				}
 			}catch(ReflectiveOperationException e){
@@ -107,7 +108,7 @@ public class ArenaTown extends ArenaBuilding{
 	int quadrant;
 
 	public ArenaTown(int quadrant){
-		super("Town","locationtowncity","Manage your buildings.");
+		super("Keep","locationtowncity","Manage your buildings.");
 		this.quadrant=quadrant;
 	}
 
@@ -122,6 +123,10 @@ public class ArenaTown extends ArenaBuilding{
 		return true;
 	}
 
+	/**
+	 * @return A town instance for the current {@link ArenaFight} or
+	 *         <code>null</code> if it's destroyed.
+	 */
 	public static ArenaTown get(){
 		return (ArenaTown)Fight.state.blueTeam.stream()
 				.filter(c->c instanceof ArenaTown).findAny().orElse(null);
@@ -129,9 +134,13 @@ public class ArenaTown extends ArenaBuilding{
 
 	@Override
 	public String getactiondescription(Combatant current){
-		int price=Javelin.round(RewardCalculator.getgold(kingdomlevel));
+		int price=getprojectprice();
 		String gold=Javelin.format(ArenaFight.get().gold);
 		return super.getactiondescription(current)+"\n\n"+"Next project: $"+price
 				+". You have $"+gold+".";
+	}
+
+	public int getprojectprice(){
+		return Javelin.round(RewardCalculator.getgold(kingdomlevel));
 	}
 }

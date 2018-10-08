@@ -19,8 +19,11 @@ import javax.swing.BoxLayout;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.TextReader;
-import javelin.controller.action.minigame.EnterArena;
-import javelin.controller.action.minigame.EnterBattlefield;
+import javelin.controller.exception.battle.StartBattle;
+import javelin.controller.fight.minigame.MonsterMadness;
+import javelin.controller.fight.minigame.arena.ArenaFight;
+import javelin.controller.fight.minigame.battlefield.ArmySelectionScreen;
+import javelin.controller.fight.minigame.battlefield.BattlefieldFight;
 import javelin.controller.scenario.Campaign;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.scenario.artofwar.ArtOfWar;
@@ -35,8 +38,16 @@ public class ScenarioSelectionDialog extends Frame{
 		SCENARIOS.put("Campaign",new Campaign());
 		SCENARIOS.put("Dungeon world",new DungeonWorld());
 		SCENARIOS.put("Art of war",ArtOfWar.singleton);
-		MINIGAMES.put("Arena",new EnterArena());
-		MINIGAMES.put("Battlefield",new EnterBattlefield());
+		MINIGAMES.put("Arena",()->{
+			throw new StartBattle(new ArenaFight());
+		});
+		MINIGAMES.put("Battlefield",()->{
+			BattlefieldFight f=new BattlefieldFight();
+			if(new ArmySelectionScreen().selectarmy(f)) throw new StartBattle(f);
+		});
+		MINIGAMES.put("Monster madness",()->{
+			throw new StartBattle(new MonsterMadness());
+		});
 	}
 
 	class Close extends WindowAdapter{

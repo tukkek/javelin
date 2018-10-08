@@ -80,7 +80,7 @@ public class ArenaFight extends Minigame{
 	public int gold=0;
 
 	TensionDirector director=new TensionDirector(Difficulty.EASY,
-			Difficulty.DIFFICULT);
+			Difficulty.DIFFICULT,true);
 	ArrayList<List<Combatant>> foes=new ArrayList<>();
 	/**
 	 * Non-mercenary units, live and dead.
@@ -92,7 +92,6 @@ public class ArenaFight extends Minigame{
 	/** Constructor. */
 	public ArenaFight(){
 		gladiators=choosegladiators();
-		meld=true;
 		weather=Weather.DRY;
 		period=Javelin.PERIODNOON;
 		setup=new ArenaSetup(this);
@@ -177,7 +176,7 @@ public class ArenaFight extends Minigame{
 		int gold=0;
 		ArrayList<Combatant> dead=state.dead;
 		for(Combatant c:new ArrayList<>(dead)){
-			if(c.mercenary||c.summoned){
+			if(c.mercenary||c.summoned||c.source.passive){
 				dead.remove(c);
 				continue;
 			}
@@ -189,15 +188,25 @@ public class ArenaFight extends Minigame{
 		if(gold==0) return;
 		gold=Javelin.round(gold);
 		this.gold+=gold;
-		Javelin.message("You have earned $"+Javelin.format(gold)+".\n"
-				+"You now have $"+Javelin.format(this.gold)+".",false);
+		ArenaTown town=ArenaTown.get();
+		String project=town==null?""
+				:"\nNext project is $"+town.getprojectprice()+".";
+		Javelin.message("You have earned $"+Javelin.format(gold)+". You now have $"
+				+Javelin.format(this.gold)+"."+project,false);
+		BattleScreen.active.messagepanel.clear();
 	}
 
 	void rewardxp(List<Combatant> group){
 		for(Combatant foe:group)
 			if(state.redTeam.contains(foe)) return;
-		RewardCalculator.rewardxp(getallies(),group,BOOST);
+		List<Combatant> allies=getallies();
+		RewardCalculator.rewardxp(allies,group,BOOST);
 		foes.remove(group);
+		String xps=allies.stream().filter(c->!c.mercenary)
+				.map(c->c+" has "+c.gethumanxp()).collect(Collectors.joining(", "));
+		if(xps.isEmpty()) return;
+		Javelin.message("You gain experience!\n"+xps,false);
+		BattleScreen.active.messagepanel.clear();
 	}
 
 	/**
@@ -206,7 +215,7 @@ public class ArenaFight extends Minigame{
 	 * @see BattleState#dead
 	 */
 	public List<Combatant> getgladiators(){
-		return gladiators.stream().filter(c->state.blueTeam.contains(c))
+		return state.blueTeam.stream().filter(c->gladiators.contains(c))
 				.collect(Collectors.toList());
 	}
 
@@ -283,8 +292,7 @@ public class ArenaFight extends Minigame{
 		Point p=null;
 		while(p==null||!ArenaSetup.validate(p)){
 			p=new Point(reference);
-			p.x+=RPG.r(-1,+1)+RPG.randomize(2);
-			p.y+=RPG.r(-1,+1)+RPG.randomize(2);
+			p.displace();
 		}
 		return p;
 	}

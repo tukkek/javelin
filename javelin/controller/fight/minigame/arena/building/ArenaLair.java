@@ -3,6 +3,7 @@ package javelin.controller.fight.minigame.arena.building;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.exception.GaveUp;
@@ -104,13 +105,16 @@ public class ArenaLair extends ArenaBuilding{
 
 	@Override
 	public String getactiondescription(Combatant current){
-		String cheapest="";
-		if(!hires.isEmpty()){
-			int price=hires.stream().map(hire->calculateprice(hire))
-					.min((a,b)->Integer.compare(a,b)).get();
-			cheapest=" The minimum hire goes for $"+price+".";
+		String info;
+		if(hires.isEmpty())
+			info="Currently empty";
+		else{
+			List<Integer> prices=hires.stream().map(hire->calculateprice(hire))
+					.collect(Collectors.toList());
+			info="\nHires between $"+prices.stream().reduce(Math::min)+" and $"
+					+prices.stream().reduce(Math::max)+".";
 		}
-		return super.getactiondescription(current)+getgoldinfo()+cheapest;
+		return super.getactiondescription(current)+getgoldinfo()+info;
 	}
 
 	public static String getgoldinfo(){

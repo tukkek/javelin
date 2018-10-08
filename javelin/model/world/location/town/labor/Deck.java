@@ -46,103 +46,91 @@ import javelin.model.world.location.unique.SummoningCircle.BuildSummoningCircle;
  *
  * @author alex
  */
-public class Deck extends ArrayList<Labor> {
-	public static final List<Trait> TRAITS = new ArrayList<Trait>(7);
+public class Deck extends ArrayList<Labor>{
+	public static final List<Trait> TRAITS=new ArrayList<>(7);
 
-	static final Labor[] BASE = new Labor[] { new BuildDwelling(),
-			new BuildLodge(), new Cancel(), new Growth(), new Redraw(),
-			new BuildShop(), new BuildRealmAcademy() };
-	static final Labor[] CRIMINAL = new Labor[] { new BuildAssassinsGuild(),
-			new BuildSewers(), new BuildSlums(), new BuildThievesGuild() };
-	static final Labor[] CULTURAL = new Labor[] { new BuildMagesGuild(),
-			new BuildArtificer(), new BuildSummoningCircle(),
-			new BuildBardsGuild() };
-	static final Labor[] ECOLOGICAL = new Labor[] { new BuildHenge(),
-			new BuildArcheryRange(), new BuildMeadHall(), SteelSerpent.LABOR };
-	static final Labor[] EXPANSIVE = new Labor[] { new BuildRoad(),
-			new BuildHighway(), new BuildTransportHub() };
-	static final Labor[] MILITARY = new Labor[] { new BuildMartialAcademy(),
-			new BuildMercenariesGuild(), new BuildMonastery() };
-	static final Labor[] PRODUCTIVE = new Labor[] { new BuildMine(),
-			new Deforestate() };
-	static final Labor[] RELIGIOUS = new Labor[] { new BuildShrine(),
-			new BuildSanctuary() };
+	static final Labor[] BASE=new Labor[]{new BuildDwelling(),new BuildLodge(),
+			new Cancel(),new Growth(),new Redraw(),new BuildShop(),
+			new BuildRealmAcademy()};
+	static final Labor[] CRIMINAL=new Labor[]{new BuildAssassinsGuild(),
+			new BuildSewers(),new BuildSlums(),new BuildThievesGuild()};
+	static final Labor[] CULTURAL=new Labor[]{new BuildMagesGuild(),
+			new BuildArtificer(),new BuildSummoningCircle(),new BuildBardsGuild()};
+	static final Labor[] ECOLOGICAL=new Labor[]{new BuildHenge(),
+			new BuildArcheryRange(),new BuildMeadHall(),SteelSerpent.LABOR};
+	static final Labor[] EXPANSIVE=new Labor[]{new BuildRoad(),new BuildHighway(),
+			new BuildTransportHub()};
+	static final Labor[] MILITARY=new Labor[]{new BuildMartialAcademy(),
+			new BuildMercenariesGuild(),new BuildMonastery()};
+	static final Labor[] PRODUCTIVE=new Labor[]{new BuildMine(),
+			new Deforestate()};
+	static final Labor[] RELIGIOUS=new Labor[]{new BuildShrine(),
+			new BuildSanctuary()};
 
-	static final HashMap<String, Deck> DECKS = new HashMap<String, Deck>();
-	static final Deck DEFAULT = new Deck();
+	public static final HashMap<String,Deck> DECKS=new HashMap<>();
+	static final Deck DEFAULT=new Deck();
 
-	static {
-		populate(DEFAULT, null, BASE);
-		if (World.scenario.allowlabor) {
-			populate(new Deck(), "expansive", EXPANSIVE);
-			populate(new Deck(), "productive", PRODUCTIVE);
-			populate(new Deck(), "military", MILITARY);
-			populate(new Deck(), "cultural", CULTURAL);
-			populate(new Deck(), "criminal", CRIMINAL);
-			populate(new Deck(), "religious", RELIGIOUS);
-			populate(new Deck(), "ecological", ECOLOGICAL);
-			for (String title : new ArrayList<String>(DECKS.keySet())) {
+	static{
+		populate(DEFAULT,null,BASE);
+		if(World.scenario.allowlabor){
+			populate(new Deck(),"expansive",EXPANSIVE);
+			populate(new Deck(),"productive",PRODUCTIVE);
+			populate(new Deck(),"military",MILITARY);
+			populate(new Deck(),"cultural",CULTURAL);
+			populate(new Deck(),"criminal",CRIMINAL);
+			populate(new Deck(),"religious",RELIGIOUS);
+			populate(new Deck(),"ecological",ECOLOGICAL);
+			for(String title:new ArrayList<>(DECKS.keySet())){
 				/*
 				 * TODO just a placeholder to get rid on unused sets during
 				 * development:
 				 */
-				if (DECKS.get(title).isEmpty()) {
+				if(DECKS.get(title).isEmpty()){
 					DECKS.remove(title);
 					continue;
 				}
-				Trait t = new Trait(title, DECKS.get(title));
+				Trait t=new Trait(title,DECKS.get(title));
 				TRAITS.add(t);
 				DEFAULT.add(t);
 			}
 		}
 	}
 
-	public static ArrayList<Labor> generate(Town t) {
-		Deck d = new Deck();
+	public static ArrayList<Labor> generate(Town t){
+		Deck d=new Deck();
 		d.addAll(DEFAULT);
-		for (String trait : t.traits) {
+		for(String trait:t.traits)
 			d.addAll(DECKS.get(trait));
-		}
 		Collections.shuffle(d);
-		if (Javelin.DEBUG && !t.ishostile()) {
-			d.add(0, new Redraw());
-		}
+		if(Javelin.DEBUG&&!t.ishostile()) d.add(0,new Redraw());
 		return d;
 	}
 
-	static void populate(Deck d, String title, Labor[] cards) {
-		for (Labor l : cards) {
+	static void populate(Deck d,String title,Labor[] cards){
+		for(Labor l:cards)
 			d.add(l);
-		}
-		if (title != null) {
-			DECKS.put(title, d);
-		}
+		if(title!=null) DECKS.put(title,d);
 	}
 
-	public static boolean isbasic(Labor card) {
-		for (Labor l : DEFAULT) {
-			if (card.getClass().equals(l.getClass())) {
-				return true;
-			}
-		}
+	public static boolean isbasic(Labor card){
+		for(Labor l:DEFAULT)
+			if(card.getClass().equals(l.getClass())) return true;
 		return false;
 	}
 
-	public static int getntraits() {
+	public static int getntraits(){
 		return DECKS.size();
 	}
 
-	public static void printstats() {
-		int nprojects = DEFAULT.size();
-		int min = Integer.MAX_VALUE;
-		for (Deck d : DECKS.values()) {
-			int n = d.size();
-			nprojects += n;
-			if (n < min) {
-				min = n;
-			}
+	public static void printstats(){
+		int nprojects=DEFAULT.size();
+		int min=Integer.MAX_VALUE;
+		for(Deck d:DECKS.values()){
+			int n=d.size();
+			nprojects+=n;
+			if(n<min) min=n;
 		}
-		System.out.println(Deck.getntraits() + " town traits, " + nprojects
-				+ " district projects (minimum deck size: " + min + ")");
+		System.out.println(Deck.getntraits()+" town traits, "+nprojects
+				+" district projects (minimum deck size: "+min+")");
 	}
 }

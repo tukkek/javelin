@@ -39,6 +39,7 @@ public class TensionDirector{
 
 	int tensionmin;
 	int tensionmax;
+	boolean raising;
 	float raiseat=-Float.MAX_VALUE;
 	int tension=RPG.r(tensionmin,tensionmax);
 	/**
@@ -53,10 +54,18 @@ public class TensionDirector{
 	 *
 	 * @param min Minimum {@link Difficulty}.
 	 * @param max Maximum {@link Difficulty}.
+	 * @param raising If set to <code>true</code>, will ensure new waves are never
+	 *          less challenging than previous ones.
 	 */
-	public TensionDirector(int min,int max){
+	public TensionDirector(int min,int max,boolean raising){
 		tensionmin=min;
 		tensionmax=max;
+		this.raising=raising;
+	}
+
+	/** Default director, suitable to {@link Haunt}s, for example. */
+	public TensionDirector(){
+		this(Difficulty.MODERATE,Difficulty.DIFFICULT,false);
 	}
 
 	/**
@@ -75,10 +84,11 @@ public class TensionDirector{
 		if(current<tension){
 			r=TensionAction.RAISE;
 			monsters=generate(elblue,red);
-		}else{
+		}else if(current>tensionmax){
 			r=TensionAction.LOWER;
 			monsters=generate(elred,blue);
-		}
+		}else
+			return TensionAction.KEEP;
 		tension=RPG.r(tensionmin,tensionmax);
 		return r;
 	}
@@ -91,9 +101,13 @@ public class TensionDirector{
 	 *         one.
 	 */
 	protected List<Combatant> generate(int elblue,List<Combatant> red){
-		baseline=Math.max(elblue+tensionmin,baseline);
+		int el=elblue+tensionmin;
+		if(raising){
+			baseline=Math.max(el,baseline);
+			el=baseline;
+		}
 		ArrayList<Combatant> last=null;
-		for(int el=baseline;el<=elblue+tensionmax;el++)
+		for(;el<=elblue+tensionmax;el++)
 			try{
 				ArrayList<Combatant> group=EncounterGenerator.generate(el,
 						Arrays.asList(Terrain.NONWATER));

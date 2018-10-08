@@ -74,7 +74,7 @@ public class ArenaSetup extends BattleSetup{
 		home.add(fountain);
 		//		home.add(new ArenaShop());
 		home.add(new ArenaAcademy());
-		for(ArenaBuilding b:home)
+		for(Building b:home)
 			Fight.state.blueTeam.add(b);
 		addflags(home,quadrants);
 		for(int i=0;i<quadrants.size();i++)
@@ -93,7 +93,7 @@ public class ArenaSetup extends BattleSetup{
 		});
 		for(int i=0;i<4;i++){
 			ArenaFlagpole g=(ArenaFlagpole)gateways.get(i);
-			g.setlevel(ArenaBuilding.LEVELS[i]);
+			g.setlevel(Building.LEVELS[i]);
 			g.hp=g.maxhp;
 		}
 	}

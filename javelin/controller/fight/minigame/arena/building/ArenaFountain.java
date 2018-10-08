@@ -60,8 +60,9 @@ public class ArenaFountain extends ArenaBuilding{
 
 	protected String activate(Combatant current,List<Combatant> nearby){
 		for(Combatant c:nearby)
-			heal(Fight.state.clone(c));
-		return "Nearby allies are completely restored!";
+			if(!c.mercenary) heal(Fight.state.clone(c));
+		Javelin.redraw();
+		return "Nearby gladiators are fully restored!";
 	}
 
 	@Override

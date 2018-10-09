@@ -97,7 +97,7 @@ public class Floor extends Caves {
 
 	boolean makeCorridorToRoom(int x, int y, int dx, int dy) {
 		// random dimesions and offset
-		int cl = RPG.d(2, 10);
+		int cl = RPG.rolldice(2, 10);
 		// check corridor is clear (3 wide)
 		if (isBlank(x - dy, y - dx, x + cl * dx + dy, y + cl * dy + dx)) {
 			return false;
@@ -123,7 +123,7 @@ public class Floor extends Caves {
 
 	// make a long corridor
 	boolean makeCorridor(int x, int y, int dx, int dy) {
-		int l = RPG.d(2, 8);
+		int l = RPG.rolldice(2, 8);
 		if (!isBlank(x, y, x + dx * l, y + dy * l)) {
 			return false;
 		}
@@ -145,10 +145,10 @@ public class Floor extends Caves {
 
 	boolean makeRoom(int x, int y, int dx, int dy) {
 		// random dimesions and offset
-		int x1 = x - RPG.d(Floor.abs(dx - 1), 5);
-		int y1 = y - RPG.d(Floor.abs(dy - 1), 5);
-		int x2 = x + RPG.d(Floor.abs(dx + 1), 5);
-		int y2 = y + RPG.d(Floor.abs(dy + 1), 5);
+		int x1 = x - RPG.rolldice(Floor.abs(dx - 1), 5);
+		int y1 = y - RPG.rolldice(Floor.abs(dy - 1), 5);
+		int x2 = x + RPG.rolldice(Floor.abs(dx + 1), 5);
+		int y2 = y + RPG.rolldice(Floor.abs(dy + 1), 5);
 		if (x2 - x1 < 3 || y2 - y1 < 3 || !isBlank(x1, y1, x2, y2)) {
 			return false;
 		}

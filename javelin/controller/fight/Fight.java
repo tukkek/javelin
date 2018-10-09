@@ -2,6 +2,7 @@ package javelin.controller.fight;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Debug;
 import javelin.Javelin;
@@ -487,5 +488,16 @@ public abstract class Fight{
 		if(meld||Meld.DEBUG) addmeld(c.location[0],c.location[1],c,s);
 		s.remove(c);
 		s.dead.add(c);
+	}
+
+	/**
+	 * @param exclude A list of Combatants to ignore, may be <code>null</code>.
+	 * @return The average {@link Combatant#ap} for all units in the fight.
+	 */
+	protected float getaverageap(List<Combatant> exclude){
+		List<Combatant> combatants=state.getcombatants();
+		if(exclude!=null) combatants.removeAll(exclude);
+		return combatants.stream().collect(Collectors.averagingDouble(c->c.ap))
+				.floatValue();
 	}
 }

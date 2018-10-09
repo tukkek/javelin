@@ -252,11 +252,6 @@ public class ArenaFight extends Minigame{
 		if(!messages.isEmpty()) notify(String.join("\n",messages),p);
 	}
 
-	float getbaseap(){
-		return getgladiators().stream().collect(Collectors.averagingDouble(c->c.ap))
-				.floatValue();
-	}
-
 	public void enter(List<Combatant> entering,List<Combatant> team,Point entry){
 		if(team==state.redTeam){
 			if(Javelin.DEBUG&&!SPAWN) return;
@@ -268,14 +263,11 @@ public class ArenaFight extends Minigame{
 		Collections.shuffle(place);
 		Combatant last=place.pop();
 		last.setlocation(entry);
-		float ap=getbaseap();
+		float ap=getaverageap(null);
 		if(!team.contains(last)){
 			team.addAll(entering);
-			for(Combatant c:entering){
-				c.rollinitiative();
-				c.ap+=ap;
-				c.initialap=c.ap;
-			}
+			for(Combatant c:entering)
+				c.rollinitiative(ap);
 		}
 		while(!place.isEmpty()){
 			Point p=displace(last.getlocation());

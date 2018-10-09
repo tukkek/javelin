@@ -39,6 +39,7 @@ public class MoveOverlay extends Overlay{
 
 	@Override
 	public void overlay(Tile t){
+		if(steps==null) return;
 		Graphics g=BattleScreen.active.mappanel.getdrawgraphics();
 		Point p=t.getposition();
 		for(Point step:steps){

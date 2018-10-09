@@ -12,18 +12,17 @@ import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.db.reader.fields.Organization;
-import javelin.controller.fight.minigame.arena.ArenaFight;
+import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.model.unit.Building;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.old.RPG;
+import javelin.view.screen.BattleScreen;
 
 /**
- * TODO proper ap as in {@link ArenaFight}
- *
- * TODO win condition
+ * See minigames.txt
  *
  * @author alex
  */
@@ -36,9 +35,9 @@ public class MonsterMadness extends Minigame{
 			generateblue();
 			generatered();
 			super.rollinitiative();
-			check=state.getcombatants().stream()
-					.collect(Collectors.averagingDouble(c->c.ap)).floatValue()
-					+RPG.r(0,20)/10f;
+			float baseap=getaverageap(null);
+			spawnblue=baseap+RPG.r(0,20)/10f;
+			spawnred=baseap+RPG.r(0,20);
 		}
 
 		@Override
@@ -49,8 +48,11 @@ public class MonsterMadness extends Minigame{
 
 	static final List<Monster> ENEMIES=new ArrayList<>();
 	static final List<Encounter> ARMY=new ArrayList<>();
-	float check;
 
+	float spawnblue;
+	float spawnred;
+
+	/** Constructor. */
 	public MonsterMadness(){
 		Organization.ENCOUNTERS.stream().filter(e->e.el>10&&e.group.size()==1)
 				.forEach(e->ENEMIES.add(e.group.get(0).source));
@@ -60,6 +62,7 @@ public class MonsterMadness extends Minigame{
 		meld=false;
 		canflee=false;
 		setup=new Setup();
+		period=Javelin.PERIODNOON;
 	}
 
 	@Override
@@ -73,9 +76,7 @@ public class MonsterMadness extends Minigame{
 	}
 
 	ArrayList<Combatant> generatered(){
-		int amount=1;
-		while(RPG.chancein(2))
-			amount+=1;
+		int amount=RPG.rolldice(2,4);
 		ArrayList<Combatant> red=new ArrayList<>(amount);
 		int width=state.map.length-1;
 		int height=state.map[0].length-1;
@@ -114,7 +115,7 @@ public class MonsterMadness extends Minigame{
 	}
 
 	ArrayList<Combatant> generatebuildings(){
-		int nbuildings=RPG.d(5,4);
+		int nbuildings=RPG.rolldice(5,4);
 		ArrayList<Combatant> buildings=new ArrayList<>();
 		List<File> avatars=Arrays.asList(new File("avatars").listFiles(
 				(dir,name)->name.startsWith("location")&&!name.contains("resource")));
@@ -123,7 +124,6 @@ public class MonsterMadness extends Minigame{
 		for(;nbuildings>0;nbuildings--){
 			Building b=new Building("Building",
 					RPG.pick(avatars).getName().replaceAll(".png",""));
-			b.setlevel(Building.LEVELS[RPG.r(0,3)]);
 			buildings.add(b);
 			Point p=null;
 			while(p==null||isblocked(p.x,p.y))
@@ -146,22 +146,42 @@ public class MonsterMadness extends Minigame{
 	@Override
 	public void startturn(Combatant acting){
 		super.startturn(acting);
-		if(acting.ap<check) return;
-		check+=RPG.r(0,20)/10f;
+		float ap=acting.ap;
+		if(ap<spawnblue&&ap<spawnred) return;
 		List<Combatant> blue=state.blueTeam.stream().filter(c->!c.source.passive)
 				.collect(Collectors.toList());
 		int tension=ChallengeCalculator.calculateel(state.redTeam)
 				-ChallengeCalculator.calculateel(blue);
-		if(tension<Difficulty.DIFFICULT){
-			ArrayList<Combatant> enemies=generatered();
-			Javelin.redraw();
-			Javelin.message("More enemies arrive!\n"+Combatant.group(enemies),true);
-		}else if(tension>=Difficulty.DEADLY){
-			ArrayList<Combatant> reinforcements=generateblue();
-			if(reinforcements.isEmpty()) return;
-			Javelin.redraw();
-			Javelin.message(
-					"Reinforcements arrive!\n"+Combatant.group(reinforcements),true);
+		ArrayList<Combatant> reinforcements=null;
+		String message=null;
+		if(ap>=spawnred&&tension<Difficulty.DIFFICULT){
+			spawnblue+=RPG.r(0,20);
+			reinforcements=generatered();
+			message="More enemies arrive!";
+		}else if(ap>=spawnblue&&tension>Difficulty.DEADLY){
+			spawnblue+=RPG.r(0,20)/10f;
+			reinforcements=generateblue();
+			message="Reinforcements arrive!";
+		}
+		if(reinforcements==null||reinforcements.isEmpty()) return;
+		for(Combatant c:reinforcements)
+			c.rollinitiative(ap);
+		Javelin.redraw();
+		Point p=reinforcements.get(0).getlocation();
+		BattleScreen.active.center(p.x,p.y);
+		Javelin.message(message+"\n"+Combatant.group(reinforcements),true);
+	}
+
+	@Override
+	public void checkend(){
+		if(state.redTeam.isEmpty()){
+			Javelin.message("You have defeated all mosnters! Congratulations!",true);
+			throw new EndBattle();
+		}
+		if(!state.blueTeam.stream().filter(c->c instanceof Building).findAny()
+				.isPresent()){
+			Javelin.message("You have lost all your buildings :( game over!",true);
+			throw new EndBattle();
 		}
 	}
 }

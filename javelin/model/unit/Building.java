@@ -53,6 +53,7 @@ public class Building extends Combatant{
 		source.immunitytomind=true;
 		source.immunitytoparalysis=true;
 		source.immunitytopoison=true;
+		setlevel(Building.LEVELS[0]);
 	}
 
 	@Override
@@ -88,7 +89,7 @@ public class Building extends Combatant{
 
 	@Override
 	public void act(BattleState s){
-	ap+=1;
-		}
+		ap+=1;
+	}
 
 }

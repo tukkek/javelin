@@ -996,4 +996,14 @@ public class Combatant implements Serializable,Cloneable{
 		ChallengeCalculator.calculatecr(source);
 		return true;
 	}
+
+	/**
+	 * @param ap Rolls initative on top of this Action Point value then updates
+	 *          {@link #ap} and {@link #initialap}.
+	 */
+	public void rollinitiative(float ap){
+		rollinitiative();
+		this.ap+=ap;
+		initialap=this.ap;
+	}
 }

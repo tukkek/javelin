@@ -28,7 +28,7 @@ public class HoldMonster extends Spell{
 			turns=9;
 		else if(turns<1) turns=1;
 		target.addcondition(new Paralyzed(caster.ap+turns,target,casterlevel));
-		cn.overlay=new AiOverlay(target);
+		if(cn!=null) cn.overlay=new AiOverlay(target);
 		return target+" is paralyzed for "+turns+" turns!";
 	}
 

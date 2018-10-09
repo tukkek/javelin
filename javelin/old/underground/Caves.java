@@ -163,7 +163,7 @@ public class Caves extends Map {
 		map[x - dy][y + dx].blocked = true;
 
 		map[x][y].blocked = false;
-		if (RPG.d(1, 10) <= 2) {
+		if (RPG.rolldice(1, 10) <= 2) {
 			makeOvalRoom(x + dx, y + dy, dx, dy);
 		}
 	}
@@ -180,8 +180,8 @@ public class Caves extends Map {
 	}
 
 	void makeOvalRoom(int x, int y, int dx, int dy) {
-		int w = RPG.d(2, 3);
-		int h = RPG.d(2, 3);
+		int w = RPG.rolldice(2, 3);
+		int h = RPG.rolldice(2, 3);
 		int x1 = x + (dx - 1) * w;
 		int y1 = y + (dy - 1) * h;
 		int x2 = x + (dx + 1) * w;
@@ -210,7 +210,7 @@ public class Caves extends Map {
 
 	private void makeThinPassage(int x, int y, int dx, int dy,
 			boolean diagonals) {
-		int len = RPG.d(2, 12);
+		int len = RPG.rolldice(2, 12);
 		int size = RPG.r(1, 4);
 		if (!isBlank(x + size * dy, y - size * dx, x - size * dy + len * dx,
 				y + size * dx + len * dy)) {

@@ -35,7 +35,7 @@ public class RPG {
 				+ rand.nextInt(Math.max(n1, n2) - Math.min(n1, n2) + 1);
 	}
 
-	public static int d(final int number, final int sides) {
+	public static int rolldice(final int number, final int sides) {
 		int total = 0;
 		for (int i = 0; i < number; i++) {
 			total += r(1, sides);

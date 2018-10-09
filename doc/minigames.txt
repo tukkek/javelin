@@ -7,3 +7,7 @@ BATTLEFIELD
 The purpose of the Battlefield is to pit large armies against each other. There are strategic points placed around the map, assigned to both teams - each generating army points, every turn, that can be used to summon more units into battle! Capture your enemy's control points while fighting for survival!
 
 One thing to note is that summoning an army worth 10 points is much better than summong an army of 5 points twice - so it pays to use your points intelligently!
+
+MONSTER MADNESS
+
+A lighthearted but challenging game where you're at a constant disadvantage against powerful enemies. Protect all your buildings as reinforcements slowly join the fight!

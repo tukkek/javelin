@@ -33,6 +33,7 @@ import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Monster.MonsterType;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.Actor;
@@ -402,10 +403,10 @@ public class Javelin{
 	/**
 	 * TODO a collection would make more sense
 	 */
-	public static List<Monster> getmonsterbytype(String type){
+	public static List<Monster> getmonsterbytype(MonsterType type){
 		ArrayList<Monster> monsters=new ArrayList<>();
 		for(Monster m:Javelin.ALLMONSTERS)
-			if(m.type.equalsIgnoreCase(type)) monsters.add(m);
+			if(m.type==type) monsters.add(m);
 		return monsters;
 	}
 

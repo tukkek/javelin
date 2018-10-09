@@ -70,7 +70,8 @@ public class StatisticsScreen extends InfoScreen{
 		String monstername=m.name;
 		if(!m.group.isEmpty()) monstername+=" ("+m.group+")";
 		lines.add(monstername);
-		lines.add(capitalize(Monster.SIZES[m.size])+" "+m.type);
+		String type=m.type.toString().replaceAll("_"," ").toLowerCase();
+		lines.add(capitalize(Monster.SIZES[m.size])+" "+type);
 		lines.add("");
 		if(c.mercenary) lines
 				.add("Mercenary ($"+Javelin.format(MercenariesGuild.getfee(c))+"/day)");

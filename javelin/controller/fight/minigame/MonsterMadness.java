@@ -1,8 +1,6 @@
 package javelin.controller.fight.minigame;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,20 +27,16 @@ import javelin.view.screen.BattleScreen;
 public class MonsterMadness extends Minigame{
 	class Setup extends BattleSetup{
 		@Override
-		public void rollinitiative(){
-			ArrayList<Combatant> buildings=generatebuildings();
-			state.blueTeam.addAll(buildings);
-			generateblue();
-			generatered();
-			super.rollinitiative();
-			float baseap=getaverageap(null);
-			spawnblue=baseap+RPG.r(0,20)/10f;
-			spawnred=baseap+RPG.r(0,20);
+		public void place(){
+			//
 		}
 
 		@Override
-		public void place(){
-			//
+		public void setup(){
+			super.setup();
+			float baseap=getaverageap(null);
+			spawnblue=baseap+delayblue();
+			spawnred=baseap+delayred();
 		}
 	}
 
@@ -66,17 +60,17 @@ public class MonsterMadness extends Minigame{
 	}
 
 	@Override
-	public ArrayList<Combatant> getfoes(Integer teamel){
-		return new ArrayList<>(0);
+	public ArrayList<Combatant> getblueteam(){
+		state.blueTeam.addAll(generatebuildings());
+		return generateblue();
 	}
 
 	@Override
-	public ArrayList<Combatant> getblueteam(){
-		return new ArrayList<>(0);
+	public ArrayList<Combatant> getfoes(Integer teamel){
+		return generatered(RPG.rolldice(2,4));
 	}
 
-	ArrayList<Combatant> generatered(){
-		int amount=RPG.rolldice(2,4);
+	ArrayList<Combatant> generatered(int amount){
 		ArrayList<Combatant> red=new ArrayList<>(amount);
 		int width=state.map.length-1;
 		int height=state.map[0].length-1;
@@ -92,8 +86,8 @@ public class MonsterMadness extends Minigame{
 				p.displace();
 			c.setlocation(p);
 			red.add(c);
-			state.redTeam.add(c);
 		}
+		state.redTeam.addAll(red);
 		return red;
 	}
 
@@ -109,21 +103,18 @@ public class MonsterMadness extends Minigame{
 					||isblocked(p.x,p.y))
 				p.displace();
 			c.setlocation(p);
-			state.blueTeam.add(c);
 		});
+		state.blueTeam.addAll(blue);
 		return blue;
 	}
 
 	ArrayList<Combatant> generatebuildings(){
 		int nbuildings=RPG.rolldice(5,4);
 		ArrayList<Combatant> buildings=new ArrayList<>();
-		List<File> avatars=Arrays.asList(new File("avatars").listFiles(
-				(dir,name)->name.startsWith("location")&&!name.contains("resource")));
 		int width=map.map.length-1;
 		int height=map.map[0].length-1;
 		for(;nbuildings>0;nbuildings--){
-			Building b=new Building("Building",
-					RPG.pick(avatars).getName().replaceAll(".png",""));
+			Building b=new Building("Building","flagpoleblue");
 			buildings.add(b);
 			Point p=null;
 			while(p==null||isblocked(p.x,p.y))
@@ -155,13 +146,13 @@ public class MonsterMadness extends Minigame{
 		ArrayList<Combatant> reinforcements=null;
 		String message=null;
 		if(ap>=spawnred&&tension<Difficulty.DIFFICULT){
-			spawnblue+=RPG.r(0,20);
-			reinforcements=generatered();
 			message="More enemies arrive!";
+			reinforcements=generatered(1);
+			spawnred+=delayred();
 		}else if(ap>=spawnblue&&tension>Difficulty.DEADLY){
-			spawnblue+=RPG.r(0,20)/10f;
-			reinforcements=generateblue();
 			message="Reinforcements arrive!";
+			reinforcements=generateblue();
+			spawnblue+=delayblue();
 		}
 		if(reinforcements==null||reinforcements.isEmpty()) return;
 		for(Combatant c:reinforcements)
@@ -183,5 +174,13 @@ public class MonsterMadness extends Minigame{
 			Javelin.message("You have lost all your buildings :( game over!",true);
 			throw new EndBattle();
 		}
+	}
+
+	float delayred(){
+		return RPG.r(0,100)/10f;
+	}
+
+	float delayblue(){
+		return RPG.r(0,20)/10f;
 	}
 }

@@ -38,7 +38,7 @@ public class AutoAttack extends Action{
 				return p.distanceinsteps(o1.getlocation())
 						-p.distanceinsteps(o2.getlocation());
 			});
-			active.meleeattacks(ranged.get(0),s);
+			active.rangedattacks(ranged.get(0),s);
 			return true;
 		}
 		Javelin.message("No targets in range...",Javelin.Delay.WAIT);

@@ -8,6 +8,7 @@ import javelin.Javelin;
 import javelin.Javelin.Delay;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ActionProvider;
+import javelin.controller.ai.AiThread;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
@@ -195,6 +196,7 @@ public class CastSpell extends Fire implements AiAction{
 			s.filtertargets(active,targets,gameState);
 			for(Combatant target:targets)
 				chances.add(cast(active,target,i,gameState));
+			AiThread.checkinterrupted();
 		}
 		return chances;
 	}

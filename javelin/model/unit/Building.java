@@ -92,4 +92,8 @@ public class Building extends Combatant{
 		ap+=1;
 	}
 
+	@Override
+	public void rollinitiative(){
+		// don't
+	}
 }

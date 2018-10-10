@@ -33,6 +33,9 @@ public class MonsterMadness extends Minigame{
 
 		@Override
 		public void setup(){
+			state.blueTeam.addAll(generatebuildings());
+			generateblue();
+			generatered(RPG.rolldice(2,4));
 			super.setup();
 			float baseap=getaverageap(null);
 			spawnblue=baseap+delayblue();
@@ -61,13 +64,12 @@ public class MonsterMadness extends Minigame{
 
 	@Override
 	public ArrayList<Combatant> getblueteam(){
-		state.blueTeam.addAll(generatebuildings());
-		return generateblue();
+		return new ArrayList<>(0);
 	}
 
 	@Override
 	public ArrayList<Combatant> getfoes(Integer teamel){
-		return generatered(RPG.rolldice(2,4));
+		return new ArrayList<>(0);
 	}
 
 	ArrayList<Combatant> generatered(int amount){

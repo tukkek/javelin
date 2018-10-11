@@ -11,3 +11,5 @@ javelin.jar
 nohup.out
 backup
 error.txt
+build/jdk/
+build/output/

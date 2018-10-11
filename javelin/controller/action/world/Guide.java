@@ -39,7 +39,7 @@ public class Guide extends WorldAction implements SimpleAction{
 	/** Guide. */
 	public static final Guide DISTRICT=new Guide(KeyEvent.VK_F9,"District","F9");
 	/** Guide. */
-	public static final Guide KITS=new Guide(KeyEvent.VK_F10,"Kits","F10");;
+	public static final Guide KITS=new Guide(KeyEvent.VK_F10,"Kits","F10");
 	/** Guide. */
 	public static final Guide DISCIPLINES=new Guide(KeyEvent.VK_F11,
 			"Martial disciplines","F11");

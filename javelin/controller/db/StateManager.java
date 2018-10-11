@@ -65,7 +65,7 @@ public class StateManager{
 				JavelinApp.handlefatalexception(exception);
 				System.exit(0);
 			}
-		};
+		}
 	};
 
 	static final int MINUTE=60*1000;

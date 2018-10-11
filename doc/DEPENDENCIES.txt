@@ -1,0 +1,5 @@
+Javelin's code style and development options are based on the Eclipse IDE. Although not necessary to develop and build the project, it is recommended for contributors. Eclipse can be found at:
+    * http://eclipse.org/
+
+If you are using Eclipse version 2018-09, this drag-and-drop Eclipse Marketpace plugin supports Java 11 (required):
+    * https://marketplace.eclipse.org/content/java-11-support-eclipse-2018-09-49

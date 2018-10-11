@@ -5,7 +5,6 @@ javelin.controller.action.ai
 javelin.controller.action.ai.attack
 javelin.controller.action.area
 javelin.controller.action.maneuver
-javelin.controller.action.minigame
 javelin.controller.action.target
 javelin.controller.action.world
 javelin.controller.ai
@@ -58,6 +57,7 @@ javelin.controller.scenario.dungeonworld
 javelin.controller.table
 javelin.controller.table.dungeon
 javelin.controller.table.dungeon.door
+javelin.controller.table.dungeon.feature
 javelin.controller.terrain
 javelin.controller.terrain.hazard
 javelin.controller.upgrade
@@ -116,6 +116,7 @@ javelin.model.world.location.dungeon.feature
 javelin.model.world.location.dungeon.feature.door
 javelin.model.world.location.dungeon.feature.door.trap
 javelin.model.world.location.dungeon.feature.inhabitant
+javelin.model.world.location.dungeon.feature.trap
 javelin.model.world.location.dungeon.temple
 javelin.model.world.location.fortification
 javelin.model.world.location.haunt

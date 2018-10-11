@@ -1,26 +1,31 @@
 #!/bin/bash
-# simple assembly system to package a .zip file for distribution
+git diff --exit-code preferences.properties > /dev/null
+if [ $? -eq 1 ]; then echo "Unclean preferences file."; exit; fi
+rm -rf "build/output/"
+
+# version input
 version=`git log --oneline -1 --decorate`
 read -e -i "$version" -p "Edit version name: " version
-ant
-mkdir package
-mkdir package/javelin
-cp javelin.jar package/javelin
-cp -r doc package/javelin
-rm package/javelin/doc/.*~
-echo $version>package/javelin/doc/VERSION.txt
-cp -r avatars/ package/javelin
-cp -r maps/ package/javelin
-cp monsters.xml package/javelin
-cp javelin.bat package/javelin
-cp preferences.properties package/javelin
-cp README.txt package/javelin
-rm javelin.zip
-cd package
-rm -r javelin/doc/javadoc
-zip ../javelin.zip javelin -r > /dev/null
-cd ..
-rm -r package
-rm javelin.jar
-git diff preferences.properties
 
+# javadoc
+echo "Generating Javadoc..."
+rm -r doc/javadoc
+javadoc -d doc/javadoc/ javelin  -subpackages javelin &>/dev/null
+
+#jlink
+function build() {
+    java=$1
+    system=$2
+    output="build/output/${system}/javelin"
+    echo "Building Javelin for $system (Java $java)..."
+    jlink --module-path .:build/jdk/${java}/${system}/jmods --add-modules javelin --output "$output/java"
+    cp -r build/launcher/$system/* doc avatars maps monsters.xml preferences.properties README.txt $output
+    echo $version>$output/doc/VERSION.txt
+    pushd $output/.. > /dev/null
+    zip "../javelin-${system}.zip" . -r > /dev/null
+    popd > /dev/null
+    rm -rf "build/output/${system}"
+}
+build "11" "linux"
+build "11" "windows"
+build "11" "mac"

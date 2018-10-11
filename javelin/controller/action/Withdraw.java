@@ -7,20 +7,20 @@ import javelin.view.screen.BattleScreen;
 
 /**
  * Fless from battle at any time if not engaged.
- * 
+ *
  * @see Flee
  * @author alex
  */
-public class Withdraw extends Action {
+public class Withdraw extends Action{
 
 	/** Constructor. */
-	public Withdraw() {
-		super("Withdraw (flee from combat)", "W");
+	public Withdraw(){
+		super("Withdraw (flee from combat)","W");
 	}
 
 	@Override
-	public boolean perform(Combatant active) {
-		Javelin.app.fight.withdraw(active, BattleScreen.active);
+	public boolean perform(Combatant active){
+		Javelin.app.fight.withdraw(active,BattleScreen.active);
 		return true;
 	}
 }

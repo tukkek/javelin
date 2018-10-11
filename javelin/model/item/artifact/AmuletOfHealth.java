@@ -8,23 +8,23 @@ import javelin.model.unit.Monster;
  *
  * @author alex
  */
-public class AmuletOfHealth extends Artifact {
+public class AmuletOfHealth extends Artifact{
 	int bonus;
 
 	/** Constructor. */
-	public AmuletOfHealth(int bonus, int price) {
-		super("Amulet of health +" + bonus, price, Slot.COLLAR);
-		this.bonus = bonus;
+	public AmuletOfHealth(int bonus,int price){
+		super("Amulet of health +"+bonus,price,Slot.COLLAR);
+		this.bonus=bonus;
 	}
 
 	@Override
-	protected void apply(Combatant c) {
-		c.source.changeconstitutionmodifier(c, bonus / 2);
+	protected void apply(Combatant c){
+		c.source.changeconstitutionmodifier(c,bonus/2);
 	}
 
 	@Override
-	protected void negate(Combatant c) {
-		c.source.changeconstitutionmodifier(c, -bonus / 2);
+	protected void negate(Combatant c){
+		c.source.changeconstitutionmodifier(c,-bonus/2);
 	}
 
 }

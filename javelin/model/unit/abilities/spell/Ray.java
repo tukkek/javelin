@@ -12,29 +12,24 @@ import javelin.model.unit.Monster;
  *
  * @author alex
  */
-public abstract class Ray extends Spell {
+public abstract class Ray extends Spell{
 
-	public Ray(String name, int level, float incrementcost, Realm realmp) {
-		super(name, level, incrementcost, realmp);
+	public Ray(String name,int level,float incrementcost,Realm realmp){
+		super(name,level,incrementcost,realmp);
 	}
 
 	@Override
-	public int hit(Combatant active, Combatant target, BattleState state) {
-		if (automatichit) {
-			return Integer.MIN_VALUE;
-		}
-		int bonus = active.source.getbab()
-				+ Monster.getbonus(active.source.dexterity);
+	public int hit(Combatant active,Combatant target,BattleState state){
+		if(automatichit) return Integer.MIN_VALUE;
+		int bonus=active.source.getbab()+Monster.getbonus(active.source.dexterity);
 		int ac;
-		if (castonallies) {
-			if (Walker.distance(active, target) < 2) {
-				return Integer.MIN_VALUE;
-			}
-			ac = 10;
-		} else {
-			ac = target.source.getrawac() - target.source.armor;
-			bonus -= RangedAttack.SINGLETON.getpenalty(active, target, state);
+		if(castonallies){
+			if(Walker.distance(active,target)<2) return Integer.MIN_VALUE;
+			ac=10;
+		}else{
+			ac=target.source.getrawac()-target.source.armor;
+			bonus-=RangedAttack.SINGLETON.getpenalty(active,target,state);
 		}
-		return ac - bonus;
+		return ac-bonus;
 	}
 }

@@ -12,24 +12,24 @@ import javelin.model.unit.abilities.spell.Spell;
 /**
  * See the d20 SRD for more info.
  */
-public class DayLight extends Spell {
+public class DayLight extends Spell{
 
-	public DayLight() {
-		super("Daylight", 3, .15f, Realm.GOOD);
-		castinbattle = true;
-		isscroll = true;
+	public DayLight(){
+		super("Daylight",3,.15f,Realm.GOOD);
+		castinbattle=true;
+		isscroll=true;
 	}
 
 	@Override
-	public String cast(Combatant caster, Combatant target, boolean saved,
-			BattleState s, ChanceNode cn) {
-		s.period = Javelin.PERIODNOON;
+	public String cast(Combatant caster,Combatant target,boolean saved,
+			BattleState s,ChanceNode cn){
+		s.period=Javelin.PERIODNOON;
 		return "The area brightens!";
 	}
 
 	@Override
 	public void filtertargets(final Combatant combatant,
-			final List<Combatant> targets, final BattleState s) {
-		targetself(combatant, targets);
+			final List<Combatant> targets,final BattleState s){
+		targetself(combatant,targets);
 	}
 }

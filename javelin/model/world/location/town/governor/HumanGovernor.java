@@ -17,55 +17,38 @@ import javelin.old.RPG;
  *
  * @author alex
  */
-public class HumanGovernor extends Governor {
-	static final Comparator<Labor> SORTBYCOST = new Comparator<Labor>() {
-		@Override
-		public int compare(Labor o1, Labor o2) {
-			return o1.cost - o2.cost;
-		}
-	};
+public class HumanGovernor extends Governor{
+	static final Comparator<Labor> SORTBYCOST=(o1,o2)->o1.cost-o2.cost;
 
 	/** Constructor. */
-	public HumanGovernor(Town t) {
+	public HumanGovernor(Town t){
 		super(t);
 	}
 
 	@Override
-	public void manage() {
-		ArrayList<Labor> hand = new ArrayList<Labor>();
-		for (Labor l : gethand()) {
-			if (l.automatic) {
-				hand.add(l);
-			}
-		}
-		if (hand.isEmpty()) {
+	public void manage(){
+		ArrayList<Labor> hand=new ArrayList<>();
+		for(Labor l:gethand())
+			if(l.automatic) hand.add(l);
+		if(hand.isEmpty()){
 			hand.clear();
 			redraw();
 			return;
 		}
-		if (hand.size() > 1 && town.getrank().rank >= getseason()) {
+		if(hand.size()>1&&town.getrank().rank>=getseason())
 			hand.remove(Growth.INSTANCE);
+		Labor selected=null;
+		if(nexttrait(hand)) selected=picktrait(hand);
+		if(selected==null){
+			ArrayList<Labor> nontraits=new ArrayList<>(hand);
+			for(Labor l:new ArrayList<>(nontraits))
+				if(l instanceof Trait) nontraits.remove(l);
+			selected=pick(nontraits);
 		}
-		Labor selected = null;
-		if (nexttrait(hand)) {
-			selected = picktrait(hand);
-		}
-		if (selected == null) {
-			ArrayList<Labor> nontraits = new ArrayList<Labor>(hand);
-			for (Labor l : new ArrayList<Labor>(nontraits)) {
-				if (l instanceof Trait) {
-					nontraits.remove(l);
-				}
-			}
-			selected = pick(nontraits);
-		}
-		if (selected == null) {
-			/* no smart choice? then any choice! */
-			selected = RPG.pick(hand);
-		}
-		if (selected == null && Javelin.DEBUG) {
+		if(selected==null) /* no smart choice? then any choice! */
+			selected=RPG.pick(hand);
+		if(selected==null&&Javelin.DEBUG)
 			throw new RuntimeException("No trait to pick! #humangovernor");
-		}
 		selected.start();
 	}
 
@@ -74,25 +57,17 @@ public class HumanGovernor extends Governor {
 	 *         option in our hand is basic (and we should thus expand the
 	 *         possibilities).
 	 */
-	private boolean nexttrait(ArrayList<Labor> hand) {
-		if (town.traits.isEmpty()) {
-			return true;
-		}
-		for (Labor l : hand) {
-			if (!Deck.isbasic(l)) {
-				return false;
-			}
-		}
+	private boolean nexttrait(ArrayList<Labor> hand){
+		if(town.traits.isEmpty()) return true;
+		for(Labor l:hand)
+			if(!Deck.isbasic(l)) return false;
 		return true;
 	}
 
-	public Labor picktrait(ArrayList<Labor> hand) {
+	public Labor picktrait(ArrayList<Labor> hand){
 		Collections.shuffle(hand);
-		for (Labor l : hand) {
-			if (l instanceof Trait) {
-				return l;
-			}
-		}
+		for(Labor l:hand)
+			if(l instanceof Trait) return l;
 		return null;
 	}
 }

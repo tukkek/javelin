@@ -9,7 +9,7 @@ import javelin.view.screen.town.SelectScreen;
  *
  * @author alex
  */
-public class Option implements Serializable {
+public class Option implements Serializable{
 	/** Cost. */
 	public double price;
 	/** Description. */
@@ -17,19 +17,19 @@ public class Option implements Serializable {
 	/** Corresponding input. */
 	public Character key;
 	/**
-	 * This is the first sorting consideration. Lower number will appear first
-	 * on the {@link SelectScreen} list.
+	 * This is the first sorting consideration. Lower number will appear first on
+	 * the {@link SelectScreen} list.
 	 *
 	 * @see #sort()
 	 */
-	public float priority = 1;
+	public float priority=1;
 
 	/** Constructor. */
-	public Option(String name, double price, Character keyp) {
+	public Option(String name,double price,Character keyp){
 		super();
-		this.name = name;
-		this.price = price;
-		key = keyp;
+		this.name=name;
+		this.price=price;
+		key=keyp;
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class Option implements Serializable {
 	 *
 	 * @return A value that is then fed to {@link Double#compareTo(Double)}.
 	 */
-	public double sort() {
+	public double sort(){
 		return price;
 	}
 
@@ -46,27 +46,27 @@ public class Option implements Serializable {
 	 * Same as {@link #Option(String, double, Character)} but handles input
 	 * internally.
 	 */
-	public Option(String name, double price) {
-		this(name, price, null);
+	public Option(String name,double price){
+		this(name,price,null);
 	}
 
-	public Option(String name, double price, Character keyp, float priority) {
-		this(name, price, keyp);
-		this.priority = priority;
+	public Option(String name,double price,Character keyp,float priority){
+		this(name,price,keyp);
+		this.priority=priority;
 	}
 
 	@Override
-	public String toString() {
+	public String toString(){
 		return name;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		return name.equals(((Option) obj).name);
+	public boolean equals(Object obj){
+		return name.equals(((Option)obj).name);
 	}
 
 	@Override
-	public int hashCode() {
+	public int hashCode(){
 		return name.hashCode();
 	}
 }

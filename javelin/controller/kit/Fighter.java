@@ -6,22 +6,22 @@ import javelin.controller.upgrade.classes.Warrior;
 import javelin.controller.upgrade.damage.MeleeDamage;
 import javelin.model.unit.skill.Skill;
 
-public class Fighter extends Kit {
-	public static final Kit INSTANCE = new Fighter();
+public class Fighter extends Kit{
+	public static final Kit INSTANCE=new Fighter();
 
-	private Fighter() {
-		super("fighter", Warrior.SINGLETON, RaiseStrength.SINGLETON,
-				"Swashbuckler", "Veteran", "Fighter", "Champion");
+	private Fighter(){
+		super("fighter",Warrior.SINGLETON,RaiseStrength.SINGLETON,"Swashbuckler",
+				"Veteran","Fighter","Champion");
 	}
 
 	@Override
-	protected void define() {
+	protected void define(){
 		basic.add(new MeleeDamage());
 		basic.addAll(UpgradeHandler.singleton.powerattack);
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h) {
+	protected void extend(UpgradeHandler h){
 		extension.add(Skill.SENSEMOTIVE.getupgrade());
 		extension.addAll(h.fire);
 		extension.addAll(h.earth);

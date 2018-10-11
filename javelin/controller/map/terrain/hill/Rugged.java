@@ -9,17 +9,17 @@ import javelin.view.Images;
 /**
  * @see DndMap
  */
-public class Rugged extends DndMap {
+public class Rugged extends DndMap{
 	/** Constructor. */
-	public Rugged() {
-		super("Rugged hill", .1, .7, 0);
-		floor = Images.get("terrainforestfloor");
-		wallfloor = floor;
-		wall = Images.get("terraintree");
+	public Rugged(){
+		super("Rugged hill",.1,.7,0);
+		floor=Images.get("terrainforestfloor");
+		wallfloor=floor;
+		wall=Images.get("terraintree");
 	}
 
 	@Override
-	public Image getobstacle() {
-		return RPG.r(1, 7) <= 2 ? obstacle : rock;
+	public Image getobstacle(){
+		return RPG.r(1,7)<=2?obstacle:rock;
 	}
 }

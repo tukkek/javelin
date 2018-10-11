@@ -93,8 +93,7 @@ public class CastSpells extends WorldAction{
 	ArrayList<Combatant> filtercasters(){
 		ArrayList<Combatant> casters=new ArrayList<>(Squad.active.members);
 		for(Combatant m:new ArrayList<>(casters))
-			if(listspells(new ArrayList<>(m.spells)).size()==0)
-				casters.remove(m);
+			if(listspells(new ArrayList<>(m.spells)).size()==0) casters.remove(m);
 		return casters;
 	}
 

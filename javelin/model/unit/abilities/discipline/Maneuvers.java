@@ -5,28 +5,28 @@ import javelin.model.unit.CloneableList;
 /**
  * Note that the natural ordering of {@link Maneuver}s are from highest level to
  * lowest level.
- * 
+ *
  * @author alex
  */
-public class Maneuvers extends CloneableList<Maneuver> {
-	public Maneuvers() {
+public class Maneuvers extends CloneableList<Maneuver>{
+	public Maneuvers(){
 		super();
 	}
 
-	public Maneuvers(Maneuvers m) {
+	public Maneuvers(Maneuvers m){
 		super(m);
 	}
 
-	public Maneuvers(int size) {
+	public Maneuvers(int size){
 		super(size);
 	}
 
 	@Override
-	public Maneuvers clone() {
-		return (Maneuvers) super.clone();
+	public Maneuvers clone(){
+		return (Maneuvers)super.clone();
 	}
 
-	public void sort() {
+	public void sort(){
 		super.sort(null);
 	}
 }

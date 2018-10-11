@@ -13,14 +13,14 @@ import javelin.model.world.location.town.Rank;
  *
  * @author alex
  */
-public class ThievesGuild extends Guild {
-	public static class BuildThievesGuild extends BuildAcademy {
-		public BuildThievesGuild() {
+public class ThievesGuild extends Guild{
+	public static class BuildThievesGuild extends BuildAcademy{
+		public BuildThievesGuild(){
 			super(Rank.TOWN);
 		}
 
 		@Override
-		protected Academy generateacademy() {
+		protected Academy generateacademy(){
 			return new ThievesGuild();
 		}
 	}
@@ -30,14 +30,13 @@ public class ThievesGuild extends Guild {
 	 *
 	 * @param raise
 	 */
-	public ThievesGuild() {
-		super("Thieves guild", Rogue.INSTANCE);
+	public ThievesGuild(){
+		super("Thieves guild",Rogue.INSTANCE);
 	}
 
 	@Override
-	protected void generate() {
-		while (x == -1 || Terrain.get(x, y).equals(Terrain.DESERT)) {
+	protected void generate(){
+		while(x==-1||Terrain.get(x,y).equals(Terrain.DESERT))
 			super.generate();
-		}
 	}
 }

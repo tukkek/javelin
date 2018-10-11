@@ -6,32 +6,32 @@ import javelin.model.unit.Monster;
 /**
  * @see RaiseAbility
  */
-public class RaiseIntelligence extends RaiseAbility {
+public class RaiseIntelligence extends RaiseAbility{
 	/** Singleton instance. */
-	public static final RaiseAbility SINGLETON = new RaiseIntelligence();
+	public static final RaiseAbility SINGLETON=new RaiseIntelligence();
 
-	RaiseIntelligence() {
+	RaiseIntelligence(){
 		super("intelligence");
 	}
 
 	@Override
-	int getabilityvalue(Monster m) {
+	int getabilityvalue(Monster m){
 		return m.intelligence;
 	}
 
 	@Override
-	boolean setattribute(Combatant m, int l) {
+	boolean setattribute(Combatant m,int l){
 		m.source.changeintelligencescore(+2);
 		return true;
 	}
 
 	@Override
-	public boolean apply(Combatant c) {
-		return c.source.intelligence != 0 && super.apply(c);
+	public boolean apply(Combatant c){
+		return c.source.intelligence!=0&&super.apply(c);
 	}
 
 	@Override
-	public int getattribute(Monster source) {
+	public int getattribute(Monster source){
 		return source.intelligence;
 	}
 }

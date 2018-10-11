@@ -4,12 +4,12 @@ import javelin.controller.Point;
 import javelin.controller.walker.Walker;
 import javelin.model.state.BattleState;
 
-public class StateWalker extends Walker {
+public class StateWalker extends Walker{
 	protected BattleState state;
 
-	public StateWalker(Point from, Point to, BattleState s) {
-		super(from, to);
-		this.state = s;
+	public StateWalker(Point from,Point to,BattleState s){
+		super(from,to);
+		state=s;
 	}
 
 }

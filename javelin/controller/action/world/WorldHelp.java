@@ -8,15 +8,15 @@ import javelin.view.screen.WorldScreen;
  *
  * @author alex
  */
-public class WorldHelp extends WorldAction {
+public class WorldHelp extends WorldAction{
 
 	/** Constructor. */
-	public WorldHelp() {
-		super("Help", new int[] {}, new String[] { "h", "?" });
+	public WorldHelp(){
+		super("Help",new int[]{},new String[]{"h","?"});
 	}
 
 	@Override
-	public void perform(final WorldScreen screen) {
+	public void perform(final WorldScreen screen){
 		Help.help(WorldAction.ACTIONS);
 	}
 }

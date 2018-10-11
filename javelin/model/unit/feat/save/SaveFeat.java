@@ -6,34 +6,31 @@ import javelin.model.unit.feat.Feat;
 
 /**
  * A feat that enhances one of your saving throws.
- * 
+ *
  * @author alex
  */
-abstract public class SaveFeat extends Feat {
-	SaveFeat(String namep) {
+abstract public class SaveFeat extends Feat{
+	SaveFeat(String namep){
 		super(namep);
 	}
 
 	@Override
-	public String inform(final Combatant m) {
-		return "Current " + getname() + ": " + getbonus(m.source);
+	public String inform(final Combatant m){
+		return "Current "+getname()+": "+getbonus(m.source);
 	}
 
 	@Override
-	public boolean upgrade(final Combatant m) {
-		if (m.source.hasfeat(this)) {
-			return false;
-		}
+	public boolean upgrade(final Combatant m){
+		if(m.source.hasfeat(this)) return false;
 		super.upgrade(m);
-		setbonus(m.source, getbonus(m.source) + 2);
+		setbonus(m.source,getbonus(m.source)+2);
 		return true;
 	}
 
 	/**
-	 * @param value
-	 *            Sets the {@link Monster}'s save to its new value.
+	 * @param value Sets the {@link Monster}'s save to its new value.
 	 */
-	abstract protected void setbonus(final Monster m, int value);
+	abstract protected void setbonus(final Monster m,int value);
 
 	/**
 	 * @return Current {@link Monster}'s save bonus.

@@ -15,29 +15,24 @@ import javelin.old.RPG;
  *
  * @author alex
  */
-public class Flood extends Hazard {
-	static final int DC = (15 + 20) / 2;
+public class Flood extends Hazard{
+	static final int DC=(15+20)/2;
 
 	@Override
-	public void hazard(int hoursellapsed) {
-		for (Combatant c : Squad.active.members) {
-			if (RPG.r(1, 20) + Monster.getbonus(c.source.dexterity) < DC) {
-				GettingLost.getlost("Squad is taken by a flash flood!", 0);
+	public void hazard(int hoursellapsed){
+		for(Combatant c:Squad.active.members)
+			if(RPG.r(1,20)+Monster.getbonus(c.source.dexterity)<DC){
+				GettingLost.getlost("Squad is taken by a flash flood!",0);
 				return;
 			}
-		}
 	}
 
 	@Override
-	public boolean validate() {
-		if (Squad.active.fly()) {
+	public boolean validate(){
+		if(Squad.active.fly()) return false;
+		if(Squad.active.getbest(Skill.SURVIVAL).roll(Skill.SURVIVAL)>=DC)
 			return false;
-		}
-		if (Squad.active.getbest(Skill.SURVIVAL).roll(Skill.SURVIVAL) >= DC) {
-			return false;
-		}
-		return Weather.current == Weather.STORM
-				|| Weather.current == Weather.RAIN
-						&& Season.current == Season.SPRING;
+		return Weather.current==Weather.STORM
+				||Weather.current==Weather.RAIN&&Season.current==Season.SPRING;
 	}
 }

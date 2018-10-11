@@ -8,16 +8,16 @@ import javelin.model.world.location.dungeon.Dungeon;
  *
  * @author alex
  */
-public class StairsUp extends Feature {
+public class StairsUp extends Feature{
 	/** Cosntructor. */
-	public StairsUp(String thing, Point p) {
-		super(p.x, p.y, "dungeonstairsup");
-		remove = false;
-		enter = false;
+	public StairsUp(String thing,Point p){
+		super(p.x,p.y,"dungeonstairsup");
+		remove=false;
+		enter=false;
 	}
 
 	@Override
-	public boolean activate() {
+	public boolean activate(){
 		Dungeon.active.goup();
 		return false;
 	}

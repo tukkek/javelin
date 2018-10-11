@@ -8,19 +8,19 @@ import javelin.view.screen.town.SelectScreen;
  * @see SelectScreen
  * @author alex
  */
-abstract public class ScreenOption extends Option {
+abstract public class ScreenOption extends Option{
 	/** Helper object since screen options often are used in towns. */
 	protected final Town t;
 
 	/** Constructor with null {@link #t}. */
-	public ScreenOption(String name, Town t) {
-		this(name, t, null);
+	public ScreenOption(String name,Town t){
+		this(name,t,null);
 	}
 
 	/** Constructor. */
-	public ScreenOption(String string, Town town, Character c) {
-		super(string, 0, c);
-		this.t = town;
+	public ScreenOption(String string,Town town,Character c){
+		super(string,0,c);
+		t=town;
 	}
 
 	/**

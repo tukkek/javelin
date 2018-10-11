@@ -9,23 +9,23 @@ import javelin.model.unit.feat.Feat;
  * @see ImprovedGrapple
  * @author alex
  */
-public class ImprovedFeint extends ExpertiseFeat {
+public class ImprovedFeint extends ExpertiseFeat{
 	/** Unique instance of this {@link Feat}. */
-	public static final ImprovedFeint SINGLETON = new ImprovedFeint();
+	public static final ImprovedFeint SINGLETON=new ImprovedFeint();
 
 	/** Constructor. */
-	private ImprovedFeint() {
+	private ImprovedFeint(){
 		super("Improved feint");
-		prerequisite = CombatExpertise.SINGLETON;
+		prerequisite=CombatExpertise.SINGLETON;
 	}
 
 	@Override
-	public String inform(Combatant c) {
+	public String inform(Combatant c){
 		return "";
 	}
 
 	@Override
-	protected CombatExpertiseManeuver getmaneuver() {
+	protected CombatExpertiseManeuver getmaneuver(){
 		return new FeintManeuver();
 	}
 }

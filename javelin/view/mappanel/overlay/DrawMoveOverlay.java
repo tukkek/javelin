@@ -31,7 +31,7 @@ public class DrawMoveOverlay extends TimerTask{
 	MoveOverlay overlay;
 
 	public DrawMoveOverlay(MoveOverlay o){
-		this.overlay=o;
+		overlay=o;
 	}
 
 	@Override

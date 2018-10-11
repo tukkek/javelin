@@ -13,16 +13,16 @@ import javelin.model.world.location.town.Rank;
  *
  * @author alex
  */
-public class BardsGuild extends Guild {
-	private static final String DESCRIPTION = "Bards guild";
+public class BardsGuild extends Guild{
+	private static final String DESCRIPTION="Bards guild";
 
-	public static class BuildBardsGuild extends BuildAcademy {
-		public BuildBardsGuild() {
+	public static class BuildBardsGuild extends BuildAcademy{
+		public BuildBardsGuild(){
 			super(Rank.TOWN);
 		}
 
 		@Override
-		protected Academy generateacademy() {
+		protected Academy generateacademy(){
 			return new BardsGuild();
 		}
 	}
@@ -32,15 +32,14 @@ public class BardsGuild extends Guild {
 	 *
 	 * @param raise
 	 */
-	public BardsGuild() {
-		super(DESCRIPTION, Bard.INSTANCE);
+	public BardsGuild(){
+		super(DESCRIPTION,Bard.INSTANCE);
 	}
 
 	@Override
-	protected void generate() {
-		while (x == -1 || !(Terrain.get(x, y).equals(Terrain.PLAIN)
-				|| Terrain.get(x, y).equals(Terrain.HILL))) {
+	protected void generate(){
+		while(x==-1||!(Terrain.get(x,y).equals(Terrain.PLAIN)
+				||Terrain.get(x,y).equals(Terrain.HILL)))
 			super.generate();
-		}
 	}
 }

@@ -9,38 +9,38 @@ import javelin.model.unit.condition.Sickened;
 import javelin.model.unit.condition.abilitydamage.ConstitutionDamage;
 import javelin.old.RPG;
 
-public class SickeningVenomStrike extends Strike {
-	static final int SICKENDURATION = RPG.average(1, 4);
+public class SickeningVenomStrike extends Strike{
+	static final int SICKENDURATION=RPG.average(1,4);
 
-	public SickeningVenomStrike() {
-		super("Sickening Venom Strike", 3);
+	public SickeningVenomStrike(){
+		super("Sickening Venom Strike",3);
 	}
 
 	@Override
-	public void preattacks(Combatant current, Combatant target, Attack a,
-			BattleState s) {
+	public void preattacks(Combatant current,Combatant target,Attack a,
+			BattleState s){
 		// nothing
 	}
 
 	@Override
-	public void postattacks(Combatant current, Combatant target, Attack a,
-			BattleState s) {
+	public void postattacks(Combatant current,Combatant target,Attack a,
+			BattleState s){
 		// nothing
 	}
 
 	@Override
-	public void prehit(Combatant current, Combatant target, Attack a,
-			DamageChance dc, BattleState s) {
-		target.addcondition(new ConstitutionDamage(2, current));
-		if (!save(target.source.getfortitude(), 13, current)) {
-			final float expireat = current.ap + SICKENDURATION;
-			target.addcondition(new Sickened(expireat, target));
+	public void prehit(Combatant current,Combatant target,Attack a,
+			DamageChance dc,BattleState s){
+		target.addcondition(new ConstitutionDamage(2,current));
+		if(!save(target.source.getfortitude(),13,current)){
+			final float expireat=current.ap+SICKENDURATION;
+			target.addcondition(new Sickened(expireat,target));
 		}
 	}
 
 	@Override
-	public void posthit(Combatant current, Combatant target, Attack a,
-			DamageChance dc, BattleState s) {
+	public void posthit(Combatant current,Combatant target,Attack a,
+			DamageChance dc,BattleState s){
 		// nothing
 	}
 }

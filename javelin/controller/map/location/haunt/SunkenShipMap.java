@@ -5,19 +5,19 @@ import javelin.controller.map.location.LocationMap;
 import javelin.model.state.Square;
 import javelin.view.Images;
 
-public class SunkenShipMap extends LocationMap {
-	public SunkenShipMap() {
+public class SunkenShipMap extends LocationMap{
+	public SunkenShipMap(){
 		super("Sunken ship");
-		floor = Images.get("terrainshipfloor");
-		flooded = Images.get("terrainaquatic");
+		floor=Images.get("terrainshipfloor");
+		flooded=Images.get("terrainaquatic");
 	}
 
 	@Override
-	protected Square processtile(int x, int y, char c) {
-		Square s = super.processtile(x, y, c);
-		if (c == '3') {
-			s.flooded = true;
-			startingareared.add(new Point(x, y));
+	protected Square processtile(int x,int y,char c){
+		Square s=super.processtile(x,y,c);
+		if(c=='3'){
+			s.flooded=true;
+			startingareared.add(new Point(x,y));
 		}
 		return s;
 	}

@@ -11,16 +11,16 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.feat.skill.Deceitful;
 import javelin.model.unit.skill.Skill;
 
-public class Assassin extends Kit {
-	public static final Kit INSTANCE = new Assassin();
+public class Assassin extends Kit{
+	public static final Kit INSTANCE=new Assassin();
 
-	private Assassin() {
-		super("assassin", Expert.SINGLETON, RaiseDexterity.SINGLETON, "Thug",
-				"Cutthroat", "Assassin", "Ninja");
+	private Assassin(){
+		super("assassin",Expert.SINGLETON,RaiseDexterity.SINGLETON,"Thug",
+				"Cutthroat","Assassin","Ninja");
 	}
 
 	@Override
-	protected void define() {
+	protected void define(){
 		basic.add(Skill.DISGUISE.getupgrade());
 		basic.add(Skill.STEALTH.getupgrade());
 		basic.add(RaiseCharisma.SINGLETON);
@@ -30,15 +30,14 @@ public class Assassin extends Kit {
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h) {
+	protected void extend(UpgradeHandler h){
 		extension.addAll(h.evil);
 		extension.addAll(h.wind);
 		extension.addAll(h.combatexpertise);
 	}
 
 	@Override
-	public boolean allow(int bestability, int secondbest, Monster m) {
-		return Boolean.FALSE.equals(m.good)
-				&& super.allow(bestability, secondbest, m);
+	public boolean allow(int bestability,int secondbest,Monster m){
+		return Boolean.FALSE.equals(m.good)&&super.allow(bestability,secondbest,m);
 	}
 }

@@ -17,19 +17,19 @@ import javelin.controller.table.Tables;
 import javelin.old.RPG;
 import javelin.view.screen.town.SelectScreen;
 
-public class DungeonGenerator {
-	public static final boolean DEBUG = false;
-	public static final Template DEBUGTEMPLATE = DEBUG ? null : null;
-	public static final Template DEBUGCORRIDOR = DEBUG ? null : null;
-	public static final Mutator DEBUGMUTATOR = DEBUG ? null : null;
-	static final boolean DEBUGROOMS = true;
-	static final int DEBUGSIZE = 1;
+public class DungeonGenerator{
+	public static final boolean DEBUG=false;
+	public static final Template DEBUGTEMPLATE=DEBUG?null:null;
+	public static final Template DEBUGCORRIDOR=DEBUG?null:null;
+	public static final Mutator DEBUGMUTATOR=DEBUG?null:null;
+	static final boolean DEBUGROOMS=true;
+	static final int DEBUGSIZE=1;
 
 	/**
-	 * TODO temporary: will need to be refactored when more than one level can
-	 * be generated (with one set of tables/parameters per level) and/or for
-	 * multithreading. Should be as simple as passing an instance of this or of
-	 * a new class GeneratorLevel to Templates.
+	 * TODO temporary: will need to be refactored when more than one level can be
+	 * generated (with one set of tables/parameters per level) and/or for
+	 * multithreading. Should be as simple as passing an instance of this or of a
+	 * new class GeneratorLevel to Templates.
 	 */
 	public static DungeonGenerator instance;
 
@@ -37,18 +37,18 @@ public class DungeonGenerator {
 	static int ntemplates;
 
 	public Tables tables;
-	public VirtualMap map = new VirtualMap();
+	public VirtualMap map=new VirtualMap();
 	public char[][] grid;
 	public String ascii;
 
-	LinkedList<Segment> segments = new LinkedList<Segment>();
-	ArrayList<Template> pool = new ArrayList<Template>();
-	String templatesused = "";
+	LinkedList<Segment> segments=new LinkedList<>();
+	ArrayList<Template> pool=new ArrayList<>();
+	String templatesused="";
 	private int minrooms;
 	private int maxrooms;
 	private int nrooms;
 
-	static {
+	static{
 		setupparameters();
 	}
 
@@ -56,199 +56,167 @@ public class DungeonGenerator {
 	 * @param maxrooms
 	 * @param minrooms
 	 * @param tables2
-	 * @param sizehint
-	 *            TOOD would be cool to have this handled built-in, not on
-	 *            {@link #generate(int, int)}.
+	 * @param sizehint TOOD would be cool to have this handled built-in, not on
+	 *          {@link #generate(int, int)}.
 	 */
-	private DungeonGenerator(int minrooms, int maxrooms, Tables tables) {
-		this.minrooms = minrooms;
-		this.maxrooms = maxrooms;
-		this.tables = tables == null ? new Tables() : tables.clone();
-		instance = this;
+	private DungeonGenerator(int minrooms,int maxrooms,Tables tables){
+		this.minrooms=minrooms;
+		this.maxrooms=maxrooms;
+		this.tables=tables==null?new Tables():tables.clone();
+		instance=this;
 		generatepool();
 		draw();
 		/* TODO make this a Table 5±10 */
-		int connectionattempts = map.rooms.size() * RPG.r(0, 10);
-		for (int i = 0; i < connectionattempts; i++) {
+		int connectionattempts=map.rooms.size()*RPG.r(0,10);
+		for(int i=0;i<connectionattempts;i++)
 			createconnection();
-		}
 		finish();
 	}
 
-	Template generateroom() {
-		Template t = null;
-		while (t == null) {
-			t = RPG.pick(pool).create();
-		}
+	Template generateroom(){
+		Template t=null;
+		while(t==null)
+			t=RPG.pick(pool).create();
 		return t;
 	}
 
 	/**
 	 * TODO doesn't need necesarily to create only based on rooms
 	 */
-	void createconnection() {
-		Room r = RPG.pick(map.rooms);
-		Direction d = Direction.getrandom();
-		Point exit = RPG.pick(d.getborder(r));
-		if (map.countadjacent(Template.FLOOR, exit) == 0) {
-			return;
-		}
-		ArrayList<Point> connection = new ArrayList<Point>();
-		int length = RPG.r(1, 4) + RPG.r(1, 4) + 1;
-		boolean connected = false;
-		for (int i = 0; i < length; i++) {
-			Point step = new Point(exit);
-			step.x -= d.reverse.x * i;
-			step.y -= d.reverse.y * i;
-			if (map.countadjacent(Template.DOOR, step) > 0) {
-				return;
-			}
+	void createconnection(){
+		Room r=RPG.pick(map.rooms);
+		Direction d=Direction.getrandom();
+		Point exit=RPG.pick(d.getborder(r));
+		if(map.countadjacent(Template.FLOOR,exit)==0) return;
+		ArrayList<Point> connection=new ArrayList<>();
+		int length=RPG.r(1,4)+RPG.r(1,4)+1;
+		boolean connected=false;
+		for(int i=0;i<length;i++){
+			Point step=new Point(exit);
+			step.x-=d.reverse.x*i;
+			step.y-=d.reverse.y*i;
+			if(map.countadjacent(Template.DOOR,step)>0) return;
 			connection.add(step);
-			Character tile = map.get(step);
-			if (connection.size() > 1
-					&& map.countadjacent(Template.FLOOR, step) == 1) {
-				connected = true;
+			Character tile=map.get(step);
+			if(connection.size()>1&&map.countadjacent(Template.FLOOR,step)==1){
+				connected=true;
 				break;
 			}
-			if (Template.WALL.equals(tile) || tile == null) {
-				continue;
-			}
+			if(Template.WALL.equals(tile)||tile==null) continue;
 			return;
 		}
-		drawconnection(connection, connected);
+		drawconnection(connection,connected);
 	}
 
-	void drawconnection(ArrayList<Point> connection, boolean connected) {
-		if (connected && connection.size() > 2) {
-			for (Point step : connection) {
-				map.set(Template.FLOOR, step);
-			}
-			Point door = connection.get(connection.size() - 1);
-			map.set(Template.DOOR, door);
+	void drawconnection(ArrayList<Point> connection,boolean connected){
+		if(connected&&connection.size()>2){
+			for(Point step:connection)
+				map.set(Template.FLOOR,step);
+			Point door=connection.get(connection.size()-1);
+			map.set(Template.DOOR,door);
 		}
 	}
 
-	public void finish() {
-		ascii = map.rasterize(true).replaceAll(" ",
-				Character.toString(Template.WALL));
-		String[] grid = ascii.split("\n");
-		this.grid = new char[grid.length][];
-		for (int i = 0; i < grid.length; i++) {
-			this.grid[i] = grid[i].toCharArray();
-		}
+	public void finish(){
+		ascii=map.rasterize(true).replaceAll(" ",Character.toString(Template.WALL));
+		String[] grid=ascii.split("\n");
+		this.grid=new char[grid.length][];
+		for(int i=0;i<grid.length;i++)
+			this.grid[i]=grid[i].toCharArray();
 	}
 
-	void draw() {
-		Template start = generateroom();
-		segments.add(new Segment(start, new Point(0, 0)));
-		map.draw(start, 0, 0);
-		nrooms = RPG.r(minrooms, maxrooms);
-		while (nrooms > 0 && !segments.isEmpty()) {
-			Segment s = RPG.pick(segments);
+	void draw(){
+		Template start=generateroom();
+		segments.add(new Segment(start,new Point(0,0)));
+		map.draw(start,0,0);
+		nrooms=RPG.r(minrooms,maxrooms);
+		while(nrooms>0&&!segments.isEmpty()){
+			Segment s=RPG.pick(segments);
 			segments.remove(s);
-			LinkedList<Point> doors = new LinkedList<Point>(s.room.getdoors());
+			LinkedList<Point> doors=new LinkedList<>(s.room.getdoors());
 			Collections.shuffle(doors);
-			placingdoors: while (!doors.isEmpty()) {
-				Point door = doors.pop();
-				for (int i = 0; i < 10; i++) {
-					if (expandroom(door, s)) {
-						continue placingdoors;
-					}
-				}
-				if (map.get(s.cursor, door).equals(Template.DOOR)) {
-					map.set(Template.WALL, s.cursor, door);
-				}
+			placingdoors:while(!doors.isEmpty()){
+				Point door=doors.pop();
+				for(int i=0;i<10;i++)
+					if(expandroom(door,s)) continue placingdoors;
+				if(map.get(s.cursor,door).equals(Template.DOOR))
+					map.set(Template.WALL,s.cursor,door);
 			}
 		}
-		for (Segment s : segments) {
-			for (Point door : s.room.getdoors()) {
-				if (map.get(s.cursor, door).equals(Template.DOOR)) {
-					map.set(Template.WALL, s.cursor, door);
-				}
-			}
-		}
+		for(Segment s:segments)
+			for(Point door:s.room.getdoors())
+				if(map.get(s.cursor,door).equals(Template.DOOR))
+					map.set(Template.WALL,s.cursor,door);
 	}
 
-	boolean expandroom(Point door, Segment s) {
-		Template next = generateroom();
-		Direction going = s.room.inborder(door.x, door.y);
-		if (going == null) {
+	boolean expandroom(Point door,Segment s){
+		Template next=generateroom();
+		Direction going=s.room.inborder(door.x,door.y);
+		if(going==null){
 			/* static template with internal door */
-			map.set(Template.FLOOR, door.x, door.y);
+			map.set(Template.FLOOR,door.x,door.y);
 			return true;
 		}
-		Direction coming = Direction.opposite(going);
-		Point doorb = next.rotate(coming);
-		Point cursorb = new Point(s.cursor);
-		cursorb = going.connect(cursorb, s.room, next, door, doorb);
-		StraightCorridor.clear(s.room, s.cursor, door, next, doorb, map);
-		if (!map.draw(next, cursorb.x, cursorb.y)) {
-			return false;
-		}
-		map.set(Template.FLOOR, cursorb, doorb);
-		segments.add(new Segment(next, cursorb));
-		nrooms -= 1;
+		Direction coming=Direction.opposite(going);
+		Point doorb=next.rotate(coming);
+		Point cursorb=new Point(s.cursor);
+		cursorb=going.connect(cursorb,s.room,next,door,doorb);
+		StraightCorridor.clear(s.room,s.cursor,door,next,doorb,map);
+		if(!map.draw(next,cursorb.x,cursorb.y)) return false;
+		map.set(Template.FLOOR,cursorb,doorb);
+		segments.add(new Segment(next,cursorb));
+		nrooms-=1;
 		return true;
 	}
 
-	void generatepool() {
+	void generatepool(){
 		pool.addAll(selectrooms());
 		pool.addAll(selectcorridors());
-		if (RPG.chancein(2) && DEBUGTEMPLATE == null) {
-			pool.add(StaticTemplate.FACTORY);
-		}
-		for (Template t : pool) {
-			templatesused += t.getClass().getSimpleName() + " ";
-		}
+		if(RPG.chancein(2)&&DEBUGTEMPLATE==null) pool.add(StaticTemplate.FACTORY);
+		for(Template t:pool)
+			templatesused+=t.getClass().getSimpleName()+" ";
 	}
 
-	List<Template> selectrooms() {
+	List<Template> selectrooms(){
 		List<Template> templates;
-		if (DEBUGTEMPLATE != null) {
-			templates = new ArrayList<Template>(1);
+		if(DEBUGTEMPLATE!=null){
+			templates=new ArrayList<>(1);
 			templates.add(DEBUGTEMPLATE);
 			return templates;
 		}
-		templates = new ArrayList<Template>(Arrays.asList(Template.GENERATED));
+		templates=new ArrayList<>(Arrays.asList(Template.GENERATED));
 		Collections.shuffle(templates);
-		return templates.subList(0, Math.min(ntemplates, templates.size()));
+		return templates.subList(0,Math.min(ntemplates,templates.size()));
 	}
 
-	List<Template> selectcorridors() {
-		ArrayList<Template> corridors = new ArrayList<Template>();
-		if (DEBUGCORRIDOR != null) {
+	List<Template> selectcorridors(){
+		ArrayList<Template> corridors=new ArrayList<>();
+		if(DEBUGCORRIDOR!=null){
 			corridors.add(DEBUGCORRIDOR);
 			return corridors;
 		}
-		if (ncorridors == 0) {
-			return corridors;
-		}
+		if(ncorridors==0) return corridors;
 		corridors.addAll(Arrays.asList(Template.CORRIDORS));
 		Collections.shuffle(corridors);
-		return corridors.subList(0, Math.min(ncorridors, corridors.size()));
+		return corridors.subList(0,Math.min(ncorridors,corridors.size()));
 	}
 
-	void print() {
-		String[] lines = ascii.split("\n");
-		char[][] map = new char[lines.length][];
-		for (int i = 0; i < lines.length; i++) {
-			map[i] = lines[i].toCharArray();
-		}
-		if (DEBUGROOMS) {
-			ArrayList<Room> rooms = this.map.rooms;
-			for (int i = 0; i < rooms.size(); i++) {
-				Room r = rooms.get(i);
-				for (int x = r.x; x < r.x + r.width; x++) {
-					for (int y = r.y; y < r.y + r.height; y++) {
-						if (map[x][y] == Template.FLOOR) {
-							map[x][y] = SelectScreen.getkey(i);
-						}
-					}
-				}
+	void print(){
+		String[] lines=ascii.split("\n");
+		char[][] map=new char[lines.length][];
+		for(int i=0;i<lines.length;i++)
+			map[i]=lines[i].toCharArray();
+		if(DEBUGROOMS){
+			ArrayList<Room> rooms=this.map.rooms;
+			for(int i=0;i<rooms.size();i++){
+				Room r=rooms.get(i);
+				for(int x=r.x;x<r.x+r.width;x++)
+					for(int y=r.y;y<r.y+r.height;y++)
+						if(map[x][y]==Template.FLOOR) map[x][y]=SelectScreen.getkey(i);
 			}
 		}
-		StringBuilder builder = new StringBuilder();
-		for (char[] line : map) {
+		StringBuilder builder=new StringBuilder();
+		for(char[] line:map){
 			builder.append(line);
 			builder.append('\n');
 		}
@@ -263,13 +231,12 @@ public class DungeonGenerator {
 	 * naturally select "easy" parameters. This way parameters are "set" and the
 	 * generator needs to rety as many times as necesar to achieve them.
 	 */
-	public static void setupparameters() {
-		ntemplates = RPG.r(1, 4);
-		ncorridors = 0;
-		while (RPG.chancein(2)) {
-			ncorridors += 1;
-		}
-		ncorridors = Math.min(ncorridors, ntemplates);
+	public static void setupparameters(){
+		ntemplates=RPG.r(1,4);
+		ncorridors=0;
+		while(RPG.chancein(2))
+			ncorridors+=1;
+		ncorridors=Math.min(ncorridors,ntemplates);
 	}
 
 	/**
@@ -278,32 +245,30 @@ public class DungeonGenerator {
 	 * @see VirtualMap#rooms
 	 * @see #setupparameters()
 	 */
-	public static DungeonGenerator generate(int minrooms, int maxrooms,
-			Tables tables) {
+	public static DungeonGenerator generate(int minrooms,int maxrooms,
+			Tables tables){
 		StaticTemplate.load();
-		DungeonGenerator dungeon = null;
-		while (dungeon == null) {
-			dungeon = new DungeonGenerator(minrooms, maxrooms, tables);
-			int size = dungeon.map.rooms.size();
-			if (!(minrooms <= size && size <= maxrooms)) {
-				dungeon = null;
-			}
+		DungeonGenerator dungeon=null;
+		while(dungeon==null){
+			dungeon=new DungeonGenerator(minrooms,maxrooms,tables);
+			int size=dungeon.map.rooms.size();
+			if(!(minrooms<=size&&size<=maxrooms)) dungeon=null;
 		}
 		return dungeon;
 	}
 
-	public static void main(String[] args) throws IOException {
-		int minrooms = 3;
-		int maxrooms = 7;
-		minrooms = 13;
-		maxrooms = 13 * 2;
-		DungeonGenerator dungeon = generate(minrooms, maxrooms, null);
+	public static void main(String[] args) throws IOException{
+		int minrooms=3;
+		int maxrooms=7;
+		minrooms=13;
+		maxrooms=13*2;
+		DungeonGenerator dungeon=generate(minrooms,maxrooms,null);
 		dungeon.print();
 		System.out.println(dungeon.templatesused);
 	}
 
 	@Override
-	public String toString() {
+	public String toString(){
 		return map.toString();
 	}
 }

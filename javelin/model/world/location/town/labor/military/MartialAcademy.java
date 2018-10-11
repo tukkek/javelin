@@ -19,49 +19,49 @@ import javelin.old.RPG;
  *
  * @author alex
  */
-public class MartialAcademy extends Academy {
-	public static final ArrayList<MartialAcademyData> ACADEMIES = new ArrayList<MartialAcademy.MartialAcademyData>();
+public class MartialAcademy extends Academy{
+	public static final ArrayList<MartialAcademyData> ACADEMIES=new ArrayList<>();
 
-	static {
-		UpgradeHandler uh = UpgradeHandler.singleton;
-		MartialAcademyData expertise = new MartialAcademyData(uh.combatexpertise,
-				"Academy (combat expertise)", RaiseIntelligence.SINGLETON);
+	static{
+		UpgradeHandler uh=UpgradeHandler.singleton;
+		MartialAcademyData expertise=new MartialAcademyData(uh.combatexpertise,
+				"Academy (combat expertise)",RaiseIntelligence.SINGLETON);
 		expertise.upgrades.add(RaiseDexterity.SINGLETON);
 		ACADEMIES.add(expertise);
-		ACADEMIES.add(new MartialAcademyData(uh.powerattack, "Academy (power attack)",
-				RaiseStrength.SINGLETON));
+		ACADEMIES.add(new MartialAcademyData(uh.powerattack,
+				"Academy (power attack)",RaiseStrength.SINGLETON));
 	}
 
-	public static class BuildMartialAcademy extends BuildAcademies {
-		public BuildMartialAcademy() {
+	public static class BuildMartialAcademy extends BuildAcademies{
+		public BuildMartialAcademy(){
 			super(Rank.HAMLET);
 		}
 
 		@Override
-		protected Academy generateacademy() {
+		protected Academy generateacademy(){
 			return RPG.pick(getacademies()).generate();
 		}
 
-		protected ArrayList<MartialAcademyData> getacademies() {
+		protected ArrayList<MartialAcademyData> getacademies(){
 			return ACADEMIES;
 		}
 	}
 
-	public static class MartialAcademyData {
+	public static class MartialAcademyData{
 		String name;
 		HashSet<Upgrade> upgrades;
 		RaiseAbility ability;
 
-		public MartialAcademyData(HashSet<Upgrade> upgrades, String name,
-				RaiseAbility ability) {
+		public MartialAcademyData(HashSet<Upgrade> upgrades,String name,
+				RaiseAbility ability){
 			super();
-			this.name = name;
-			this.upgrades = upgrades;
-			this.ability = ability;
+			this.name=name;
+			this.upgrades=upgrades;
+			this.ability=ability;
 		}
 
-		public MartialAcademy generate() {
-			return new MartialAcademy(upgrades, name, ability);
+		public MartialAcademy generate(){
+			return new MartialAcademy(upgrades,name,ability);
 		}
 	}
 
@@ -70,9 +70,8 @@ public class MartialAcademy extends Academy {
 	 *
 	 * @param raise
 	 */
-	public MartialAcademy(HashSet<Upgrade> upgrades, String descriptionknownp,
-			RaiseAbility raise) {
-		super(descriptionknownp, "An academy", 6, 10, upgrades, raise,
-				Warrior.SINGLETON);
+	public MartialAcademy(HashSet<Upgrade> upgrades,String descriptionknownp,
+			RaiseAbility raise){
+		super(descriptionknownp,"An academy",6,10,upgrades,raise,Warrior.SINGLETON);
 	}
 }

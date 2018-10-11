@@ -12,19 +12,19 @@ import javelin.model.world.location.dungeon.temple.Temple;
  *
  * @author alex
  */
-public class TempleEncounter extends RandomDungeonEncounter {
+public class TempleEncounter extends RandomDungeonEncounter{
 	Temple temple;
 
 	/** Constructor. */
-	public TempleEncounter(Temple temple, Dungeon d) {
+	public TempleEncounter(Temple temple,Dungeon d){
 		super(d);
-		this.temple = temple;
+		this.temple=temple;
 	}
 
 	@Override
-	public boolean onend() {
+	public boolean onend(){
 		super.onend();
-		Temple.leavingfight = true;
+		Temple.leavingfight=true;
 		return true;
 	}
 }

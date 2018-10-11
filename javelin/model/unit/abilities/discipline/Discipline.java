@@ -29,9 +29,9 @@ import javelin.model.world.location.town.labor.military.DisciplineAcademy.BuildD
  * @author alex
  * @see Disciplines#ALL
  */
-public abstract class Discipline implements Serializable {
-	public static final Discipline[] DISCIPLINES = new Discipline[] {
-			SteelSerpent.INSTANCE };
+public abstract class Discipline implements Serializable{
+	public static final Discipline[] DISCIPLINES=new Discipline[]{
+			SteelSerpent.INSTANCE};
 
 	/**
 	 * Whether {@link FeatureGenerator} should generate a DisciplineAcademy or
@@ -47,78 +47,72 @@ public abstract class Discipline implements Serializable {
 	 * @see FeatureGenerator
 	 * @see #generateacademy()
 	 */
-	public boolean hasacademy = true;
+	public boolean hasacademy=true;
 
 	public String name;
 	/**
 	 * This is supposed to always be {@link Warrior} due to balancing reasons.
 	 */
-	final public ClassLevelUpgrade classupgrade = Warrior.SINGLETON;
-	final public Skill knowledgeupgrade = Skill.KNOWLEDGE;
+	final public ClassLevelUpgrade classupgrade=Warrior.SINGLETON;
+	final public Skill knowledgeupgrade=Skill.KNOWLEDGE;
 	public Upgrade trainingupgrade;
 	public Skill skillupgrade;
 	public RaiseAbility abilityupgrade;
 
-	public Discipline(String name, RaiseAbility abilityupgrade,
-			Skill skillupgrade) {
+	public Discipline(String name,RaiseAbility abilityupgrade,Skill skillupgrade){
 		this(name);
-		this.abilityupgrade = abilityupgrade;
-		this.skillupgrade = skillupgrade;
-		trainingupgrade = new FeatUpgrade(new MartialTraining(this));
+		this.abilityupgrade=abilityupgrade;
+		this.skillupgrade=skillupgrade;
+		trainingupgrade=new FeatUpgrade(new MartialTraining(this));
 	}
 
 	/** Use only for emulated {@link Discipline}s. */
-	public Discipline(String name) {
-		this.name = name;
+	public Discipline(String name){
+		this.name=name;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		return name.equals(((Maneuver) obj).name);
+	public boolean equals(Object obj){
+		return name.equals(((Maneuver)obj).name);
 	}
 
 	@Override
-	public int hashCode() {
+	public int hashCode(){
 		return name.hashCode();
 	}
 
 	/** See {@link #hasacademy}. */
-	public DisciplineAcademy generateacademy() {
+	public DisciplineAcademy generateacademy(){
 		return new DisciplineAcademy(this);
 	}
 
-	public BuildDisciplineAcademy buildacademy() {
+	public BuildDisciplineAcademy buildacademy(){
 		return new BuildDisciplineAcademy(this);
 	}
 
 	/**
-	 * @return A static, non-serializable list of {@link Maneuver}s that are
-	 *         part of this martial path. This is to reduce the number of bugs,
-	 *         prevent duplication of these lists when each new instance of the
-	 *         game is opened and to make debug easier without losing game
-	 *         state.
+	 * @return A static, non-serializable list of {@link Maneuver}s that are part
+	 *         of this martial path. This is to reduce the number of bugs, prevent
+	 *         duplication of these lists when each new instance of the game is
+	 *         opened and to make debug easier without losing game state.
 	 */
 	protected abstract Maneuver[] getmaneuvers();
 
 	/**
-	 * @param maxlevel
-	 *            Any {@link Maneuver} higher than this level will not be
-	 *            returned. If <code>null</code>, return all {@link Maneuver}s.
+	 * @param maxlevel Any {@link Maneuver} higher than this level will not be
+	 *          returned. If <code>null</code>, return all {@link Maneuver}s.
 	 * @return A new list with the filtered maneuvers from this discipline.
 	 */
-	public Maneuvers getmaneuvers(Integer maxlevel) {
-		Maneuvers maneuvers = new Maneuvers(maxlevel * 2);
-		for (Maneuver m : getmaneuvers()) {
-			if (maxlevel == null || m.level <= maxlevel) {
-				maneuvers.add(m);
-			}
-		}
+	public Maneuvers getmaneuvers(Integer maxlevel){
+		Maneuvers maneuvers=new Maneuvers(maxlevel*2);
+		for(Maneuver m:getmaneuvers())
+			if(maxlevel==null||m.level<=maxlevel) maneuvers.add(m);
 		maneuvers.sort();
 		return maneuvers;
 	}
 
 	@Override
-	public String toString() {
+	public String toString(){
 		return name;
 	}
 
@@ -126,8 +120,8 @@ public abstract class Discipline implements Serializable {
 	 * @return All of the upgrades that are part of the discipline, in the order
 	 *         they should be applied to get the most out of training under it.
 	 */
-	public Upgrade[] getupgrades() {
-		return new Upgrade[] { trainingupgrade, knowledgeupgrade.getupgrade(),
-				classupgrade, abilityupgrade, skillupgrade.getupgrade(), };
+	public Upgrade[] getupgrades(){
+		return new Upgrade[]{trainingupgrade,knowledgeupgrade.getupgrade(),
+				classupgrade,abilityupgrade,skillupgrade.getupgrade(),};
 	}
 }

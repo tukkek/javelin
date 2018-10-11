@@ -15,82 +15,74 @@ import javelin.old.RPG;
 
 /**
  * Single creature that guards an {@link Item}.
- * 
+ *
  * @author alex
  */
-public class Guardian extends Fortification {
+public class Guardian extends Fortification{
 	private Item loot;
 
 	/** Constructor. */
-	public Guardian() {
-		super(null, null, 0, 0);
+	public Guardian(){
+		super(null,null,0,0);
 		generate();
-		generategarrison(0, 0);
-		descriptionknown = "A guardian (" + loot.toString().toLowerCase() + ")";
-		descriptionunknown = "A guardian";
-		discard = true;
-		link = false;
-		vision = 0;
+		generategarrison(0,0);
+		descriptionknown="A guardian ("+loot.toString().toLowerCase()+")";
+		descriptionunknown="A guardian";
+		discard=true;
+		link=false;
+		vision=0;
 	}
 
 	@Override
-	protected void generategarrison(int minel, int maxel) {
-		while (garrison.isEmpty()) {
-			loot = RPG.pick(Item.randomize(Item.ALL));
-			int cr = ChallengeCalculator.goldtocr(loot.price);
-			Combatant c = findnativemonster(cr, this);
-			if (c != null) {
+	protected void generategarrison(int minel,int maxel){
+		while(garrison.isEmpty()){
+			loot=RPG.pick(Item.randomize(Item.ALL));
+			int cr=ChallengeCalculator.goldtocr(loot.price);
+			Combatant c=findnativemonster(cr,this);
+			if(c!=null){
 				garrison.add(c);
-				targetel = new Integer(ChallengeCalculator.crtoel(cr));
+				targetel=new Integer(ChallengeCalculator.crtoel(cr));
 			}
 		}
 	}
 
 	/**
-	 * @param cr
-	 *            Given a challenge rating target...
-	 * @param spot
-	 *            and a world location...
+	 * @param cr Given a challenge rating target...
+	 * @param spot and a world location...
 	 * @return a monster from that location and that challenge rating or
 	 *         <code>null</code> if couldn't find one.
 	 */
-	static public Combatant findnativemonster(float cr, Actor spot) {
-		String terrain = Terrain.get(spot.x, spot.y).toString();
-		while (true) {
-			if (Javelin.MONSTERSBYCR.descendingKeySet().first() < cr) {
-				return null;
-			}
-			List<Monster> candidates = Javelin.MONSTERSBYCR.get(cr);
-			if (candidates != null) {
+	static public Combatant findnativemonster(float cr,Actor spot){
+		String terrain=Terrain.get(spot.x,spot.y).toString();
+		while(true){
+			if(Javelin.MONSTERSBYCR.descendingKeySet().first()<cr) return null;
+			List<Monster> candidates=Javelin.MONSTERSBYCR.get(cr);
+			if(candidates!=null){
 				Collections.shuffle(candidates);
-				for (Monster m : candidates) {
-					if (m.getterrains().contains(terrain)) {
-						return new Combatant(m.clone(), true);
-					}
-				}
+				for(Monster m:candidates)
+					if(m.getterrains().contains(terrain))
+						return new Combatant(m.clone(),true);
 			}
-			cr += 1;
+			cr+=1;
 		}
 	}
 
 	@Override
-	protected Siege fight() {
-		Siege fight = new Siege(this);
-		fight.rewardgold = false;
+	protected Siege fight(){
+		Siege fight=new Siege(this);
+		fight.rewardgold=false;
 		return fight;
 	}
 
 	@Override
-	public boolean interact() {
-		if (!super.interact()) {
-			return false;
-		}
+	public boolean interact(){
+		if(!super.interact()) return false;
 		loot.grab();
 		return true;
 	}
 
 	@Override
-	public List<Combatant> getcombatants() {
+	public List<Combatant> getcombatants(){
 		return garrison;
 	}
 }

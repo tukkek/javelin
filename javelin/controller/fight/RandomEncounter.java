@@ -14,28 +14,25 @@ import javelin.old.RPG;
  *
  * @author alex
  */
-public class RandomEncounter extends Fight {
+public class RandomEncounter extends Fight{
 	@Override
-	public Integer getel(int teamel) {
+	public Integer getel(int teamel){
 		return Terrain.current().getel(teamel);
 	}
 
 	@Override
-	public ArrayList<Combatant> getfoes(Integer teamel) {
+	public ArrayList<Combatant> getfoes(Integer teamel){
 		return null;
 	}
 
 	/**
-	 * @param chance
-	 *            % chance of starting a battle.
+	 * @param chance % chance of starting a battle.
 	 * @throws StartBattle
 	 */
-	static public void encounter(double chance) {
-		if (!Debug.disablecombat && RPG.random() < chance) {
-			Fight f = JavelinApp.context.encounter();
-			if (f != null) {
-				throw new StartBattle(f);
-			}
+	static public void encounter(double chance){
+		if(!Debug.disablecombat&&RPG.random()<chance){
+			Fight f=JavelinApp.context.encounter();
+			if(f!=null) throw new StartBattle(f);
 		}
 	}
 }

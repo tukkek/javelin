@@ -15,20 +15,18 @@ import javelin.model.unit.feat.skill.Alertness;
  * @see Squad#perceive(boolean, boolean, boolean)
  * @see Combatant#perceive(boolean, boolean, boolean)
  */
-public class Perception extends Skill {
-	static final String[] NAMES = new String[] { "Perception", "listen", "spot",
-			"search" };
+public class Perception extends Skill{
+	static final String[] NAMES=new String[]{"Perception","listen","spot",
+			"search"};
 
-	public Perception() {
-		super(NAMES, Ability.WISDOM, Realm.AIR);
+	public Perception(){
+		super(NAMES,Ability.WISDOM,Realm.AIR);
 	}
 
 	@Override
-	public int getbonus(Combatant c) {
-		int bonus = super.getbonus(c);
-		if (c.source.hasfeat(Alertness.SINGLETON)) {
-			bonus += Alertness.BONUS;
-		}
+	public int getbonus(Combatant c){
+		int bonus=super.getbonus(c);
+		if(c.source.hasfeat(Alertness.SINGLETON)) bonus+=Alertness.BONUS;
 		return bonus;
 	}
 }

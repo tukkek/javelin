@@ -9,16 +9,16 @@ import javelin.model.unit.abilities.spell.conjuration.teleportation.GreaterTelep
  *
  * @author alex
  */
-public class Teleport extends Wish {
+public class Teleport extends Wish{
 	/** Constructor. */
-	public Teleport(Character keyp, WishScreen s) {
-		super("teleport", keyp, Squad.active.members.size(), false, s);
+	public Teleport(Character keyp,WishScreen s){
+		super("teleport",keyp,Squad.active.members.size(),false,s);
 	}
 
 	@Override
-	boolean wish(Combatant target) {
-		GreaterTeleport spell = new GreaterTeleport();
-		spell.showterrain = true;
+	boolean wish(Combatant target){
+		GreaterTeleport spell=new GreaterTeleport();
+		spell.showterrain=true;
 		spell.castpeacefully(null);
 		return true;
 	}

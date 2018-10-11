@@ -7,9 +7,9 @@ import javelin.model.world.World;
  * to just give up when too many tries are reached, and just try a best-effort
  * algorhitm. It's OK to try to generate the world a few times every time a game
  * is started if the process doesn't take more than a few seconds.
- * 
+ *
  * @author alex
  */
-public class RestartWorldGeneration extends RuntimeException {
+public class RestartWorldGeneration extends RuntimeException{
 
 }

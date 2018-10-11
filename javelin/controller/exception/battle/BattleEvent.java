@@ -8,9 +8,9 @@ import javelin.JavelinApp;
  * @see JavelinApp
  * @author alex
  */
-public class BattleEvent extends RuntimeException {
+public class BattleEvent extends RuntimeException{
 	@Override
-	public synchronized Throwable fillInStackTrace() {
+	public synchronized Throwable fillInStackTrace(){
 		/* default implemntation is very inneficient */
 		return this;
 	}

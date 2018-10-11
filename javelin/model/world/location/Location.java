@@ -190,8 +190,7 @@ public abstract class Location extends Actor{
 
 	@Override
 	public Boolean destroy(Incursion attacker){
-		if(impermeable||attacker.realm==realm)
-			return Incursion.ignore(attacker);
+		if(impermeable||attacker.realm==realm) return Incursion.ignore(attacker);
 		if(sacrificeable){
 			int el=attacker.getel();
 			return Incursion.fight(el,getel(el));

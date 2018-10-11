@@ -7,10 +7,10 @@ import javelin.model.Realm;
  *
  * @author alex
  */
-public class SenseMotive extends Skill {
+public class SenseMotive extends Skill{
 	/** Constructor. */
-	public SenseMotive() {
-		super("Sense motive", Ability.WISDOM, Realm.EARTH);
-		usedincombat = true;
+	public SenseMotive(){
+		super("Sense motive",Ability.WISDOM,Realm.EARTH);
+		usedincombat=true;
 	}
 }

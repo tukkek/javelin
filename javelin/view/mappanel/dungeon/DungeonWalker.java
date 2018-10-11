@@ -12,51 +12,44 @@ import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.trap.MechanicalTrap;
 import javelin.view.screen.BattleScreen;
 
-public class DungeonWalker extends OverlayWalker {
-    class DungeonStep extends OverlayStep {
-	public float encounterchance;
+public class DungeonWalker extends OverlayWalker{
+	class DungeonStep extends OverlayStep{
+		public float encounterchance;
 
-	public DungeonStep(Point p) {
-	    super(p);
+		public DungeonStep(Point p){
+			super(p);
+		}
 	}
-    }
 
-    public DungeonWalker(Point from, Point to) {
-	super(from, to);
-    }
+	public DungeonWalker(Point from,Point to){
+		super(from,to);
+	}
 
-    @Override
-    protected Point step(Point p, LinkedList<Point> previous) {
-	DungeonStep step = new DungeonStep(p);
-	float chance = previous.isEmpty() ? 0 : ((DungeonStep) previous.getLast()).encounterchance;
-	chance += 1f / Dungeon.active.stepsperencounter;//
-	step.encounterchance = chance;
-	step.text = Math.round((chance > 1 ? 1 : chance) * 100) + "%";
-	step.color = chance >= .5 ? Color.RED : Color.GREEN;
-	return step;
-    }
+	@Override
+	protected Point step(Point p,LinkedList<Point> previous){
+		DungeonStep step=new DungeonStep(p);
+		float chance=previous.isEmpty()?0
+				:((DungeonStep)previous.getLast()).encounterchance;
+		chance+=1f/Dungeon.active.stepsperencounter;//
+		step.encounterchance=chance;
+		step.text=Math.round((chance>1?1:chance)*100)+"%";
+		step.color=chance>=.5?Color.RED:Color.GREEN;
+		return step;
+	}
 
-    @Override
-    public boolean validate(Point step, LinkedList<Point> previous) {
-	DungeonStep p = (DungeonStep) step;
-	if (Dungeon.active.map[p.x][p.y] == Template.WALL) {
-	    return false;
+	@Override
+	public boolean validate(Point step,LinkedList<Point> previous){
+		DungeonStep p=(DungeonStep)step;
+		if(Dungeon.active.map[p.x][p.y]==Template.WALL) return false;
+		if(p.encounterchance>1) return false;
+		if(p.equals(to)) return !Dungeon.active.herolocation.equals(step);
+		if(!BattleScreen.active.mappanel.tiles[p.x][p.y].discovered) return false;
+		final Feature f=Dungeon.active.getfeature(p.x,p.y);
+		return f==null||f instanceof MechanicalTrap;
 	}
-	if (p.encounterchance > 1) {
-	    return false;
-	}
-	if (p.equals(to)) {
-	    return !Dungeon.active.herolocation.equals(step);
-	}
-	if (!BattleScreen.active.mappanel.tiles[p.x][p.y].discovered) {
-	    return false;
-	}
-	final Feature f = Dungeon.active.getfeature(p.x, p.y);
-	return f == null || f instanceof MechanicalTrap;
-    }
 
-    @Override
-    public Point resetlocation() { // TODO
-	return Dungeon.active == null ? null : Dungeon.active.herolocation;
-    }
+	@Override
+	public Point resetlocation(){ // TODO
+		return Dungeon.active==null?null:Dungeon.active.herolocation;
+	}
 }

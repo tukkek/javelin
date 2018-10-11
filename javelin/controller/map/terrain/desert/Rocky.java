@@ -11,21 +11,21 @@ import javelin.view.Images;
 /**
  * @see DndMap
  */
-public class Rocky extends DndMap {
+public class Rocky extends DndMap{
 	/** Constructor. */
-	public Rocky() {
-		super("Rocky desert", 0, .6, 0);
-		floor = Images.get("terraindesert");
-		maxflooding = Weather.DRY;
+	public Rocky(){
+		super("Rocky desert",0,.6,0);
+		floor=Images.get("terraindesert");
+		maxflooding=Weather.DRY;
 	}
 
 	@Override
-	public Image getobstacle() {
-		return RPG.r(1, 6) <= 1 ? obstacle : rock;
+	public Image getobstacle(){
+		return RPG.r(1,6)<=1?obstacle:rock;
 	}
 
 	@Override
-	public boolean validate() {
-		return Season.current != Season.WINTER;
+	public boolean validate(){
+		return Season.current!=Season.WINTER;
 	}
 }

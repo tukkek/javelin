@@ -16,57 +16,50 @@ import javelin.model.unit.condition.Prone;
  * @see MeleeTarget
  * @author alex
  */
-public class MeleeAttack extends AbstractAttack {
-	static final public MeleeAttack SINGLETON = new MeleeAttack();
+public class MeleeAttack extends AbstractAttack{
+	static final public MeleeAttack SINGLETON=new MeleeAttack();
 
-	MeleeAttack() {
+	MeleeAttack(){
 		super("Melee attack");
-		feign = true;
+		feign=true;
 	}
 
 	@Override
-	protected boolean isMelee() {
+	protected boolean isMelee(){
 		return true;
 	}
 
 	@Override
-	List<AttackSequence> getattacks(final Combatant active) {
+	List<AttackSequence> getattacks(final Combatant active){
 		return active.source.melee;
 	}
 
 	@Override
 	public List<List<ChanceNode>> getoutcomes(final Combatant active,
-			final BattleState gameState) {
-		final ArrayList<List<ChanceNode>> successors = new ArrayList<List<ChanceNode>>();
-		for (final Combatant target : gameState.getsurroundings(active)) {
-			for (final Integer attack : getcurrentattack(active)) {
-				if (!target.isally(active, gameState)) {
-					final BattleState newstate = gameState.clone();
-					final Combatant newactive = newstate.clone(active);
-					newactive.currentmelee.setcurrent(attack,
-							newactive.source.melee);
-					successors.add(attack(newstate, newactive, target,
-							newactive.currentmelee, 0));
+			final BattleState gameState){
+		final ArrayList<List<ChanceNode>> successors=new ArrayList<>();
+		for(final Combatant target:gameState.getsurroundings(active))
+			for(final Integer attack:getcurrentattack(active))
+				if(!target.isally(active,gameState)){
+					final BattleState newstate=gameState.clone();
+					final Combatant newactive=newstate.clone(active);
+					newactive.currentmelee.setcurrent(attack,newactive.source.melee);
+					successors
+							.add(attack(newstate,newactive,target,newactive.currentmelee,0));
 				}
-			}
-		}
 		return successors;
 	}
 
 	@Override
-	public boolean cleave() {
+	public boolean cleave(){
 		return true;
 	}
 
 	@Override
-	public int getpenalty(Combatant attacker, Combatant target, BattleState s) {
-		int penalty = super.getpenalty(attacker, target, s);
-		if (attacker.flank(target, s)) {
-			penalty -= 2;
-		}
-		if (target.hascondition(Prone.class) != null) {
-			penalty -= 2;
-		}
+	public int getpenalty(Combatant attacker,Combatant target,BattleState s){
+		int penalty=super.getpenalty(attacker,target,s);
+		if(attacker.flank(target,s)) penalty-=2;
+		if(target.hascondition(Prone.class)!=null) penalty-=2;
 		return penalty;
 	}
 }

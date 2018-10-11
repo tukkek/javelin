@@ -10,24 +10,21 @@ import javelin.view.KeysScreen;
 
 /**
  * Configures battle keys.
- * 
+ *
  * @author alex
  */
-public class BattleKeysScreen extends KeysScreen {
+public class BattleKeysScreen extends KeysScreen{
 	/** Constructor. */
-	public BattleKeysScreen() {
-		super("Battle keys", "keys.battle");
+	public BattleKeysScreen(){
+		super("Battle keys","keys.battle");
 	}
 
 	@Override
-	public ArrayList<ActionDescription> getactions() {
-		ArrayList<ActionDescription> list =
-				new ArrayList<ActionDescription>(ActionMapping.ACTIONS.length);
-		for (Action c : ActionMapping.ACTIONS) {
-			if (!(c instanceof ActionAdapter) && c.getMainKey() != null) {
-				list.add(c);
-			}
-		}
+	public ArrayList<ActionDescription> getactions(){
+		ArrayList<ActionDescription> list=new ArrayList<>(
+				ActionMapping.ACTIONS.length);
+		for(Action c:ActionMapping.ACTIONS)
+			if(!(c instanceof ActionAdapter)&&c.getMainKey()!=null) list.add(c);
 		return list;
 	}
 

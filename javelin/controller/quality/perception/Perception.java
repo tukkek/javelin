@@ -10,30 +10,30 @@ import javelin.model.unit.skill.Skill;
  *
  * @author alex
  */
-public class Perception extends Quality {
+public class Perception extends Quality{
 	/** Constructor. */
-	public Perception() {
+	public Perception(){
 		super("Tremorsense");
 	}
 
 	@Override
-	public void add(String declaration, Monster m) {
-		Skill.PERCEPTION.raise(10, m);
+	public void add(String declaration,Monster m){
+		Skill.PERCEPTION.raise(10,m);
 	}
 
 	@Override
-	public boolean has(Monster m) {
+	public boolean has(Monster m){
 		return false;
 	}
 
 	@Override
-	public float rate(Monster m) {
+	public float rate(Monster m){
 		/* rated as a skill */
 		return 0;
 	}
 
 	@Override
-	public boolean apply(String text, Monster m) {
-		return super.apply(text, m) || text.contains("scent");
+	public boolean apply(String text,Monster m){
+		return super.apply(text,m)||text.contains("scent");
 	}
 }

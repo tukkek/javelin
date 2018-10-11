@@ -6,10 +6,10 @@ import javelin.model.unit.Combatant;
 
 /**
  * Anything that has blue and red opposing teams.
- * 
+ *
  * @author alex
  */
-public interface TeamContainer {
+public interface TeamContainer{
 	List<Combatant> getblueteam();
 
 	List<Combatant> getredteam();

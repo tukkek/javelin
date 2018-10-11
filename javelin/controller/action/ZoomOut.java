@@ -10,21 +10,21 @@ import javelin.view.screen.BattleScreen;
  *
  * @author alex
  */
-public class ZoomOut extends Action {
+public class ZoomOut extends Action{
 
 	/** Constructor. */
-	public ZoomOut() {
-		super("Zoom out", new String[] { "-", "_" });
-		allowburrowed = true;
+	public ZoomOut(){
+		super("Zoom out",new String[]{"-","_"});
+		allowburrowed=true;
 	}
 
 	@Override
-	public boolean perform(Combatant active) {
+	public boolean perform(Combatant active){
 		zoom(active.getlocation());
 		throw new RepeatTurn();
 	}
 
-	public static void zoom(Point p) {
-		BattleScreen.active.mappanel.zoom(-1, true, p.x, p.y);
+	public static void zoom(Point p){
+		BattleScreen.active.mappanel.zoom(-1,true,p.x,p.y);
 	}
 }

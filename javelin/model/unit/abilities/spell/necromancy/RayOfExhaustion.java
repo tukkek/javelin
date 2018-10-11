@@ -12,31 +12,31 @@ import javelin.model.unit.condition.Fatigued;
 
 /**
  * Makes a creature exhausted or fatigued on a successful save.
- * 
+ *
  * @author alex
  */
-public class RayOfExhaustion extends Ray {
+public class RayOfExhaustion extends Ray{
 
 	/** Constructor. */
-	public RayOfExhaustion() {
-		super("Ray of exhaustion", 3, ChallengeCalculator.ratespelllikeability(3),
+	public RayOfExhaustion(){
+		super("Ray of exhaustion",3,ChallengeCalculator.ratespelllikeability(3),
 				Realm.EVIL);
-		castinbattle = true;
-		iswand = true;
+		castinbattle=true;
+		iswand=true;
 	}
 
 	@Override
-	public String cast(Combatant caster, Combatant target, boolean saved,
-			BattleState s, ChanceNode cn) {
-		Condition c = !saved || target.hascondition(Fatigued.class) != null
-				? new Exhausted(target, casterlevel)
-				: new Fatigued(target, casterlevel, 0);
+	public String cast(Combatant caster,Combatant target,boolean saved,
+			BattleState s,ChanceNode cn){
+		Condition c=!saved||target.hascondition(Fatigued.class)!=null
+				?new Exhausted(target,casterlevel)
+				:new Fatigued(target,casterlevel,0);
 		target.addcondition(c);
-		return target + " is " + c.description + ".";
+		return target+" is "+c.description+".";
 	}
 
 	@Override
-	public int save(Combatant caster, Combatant target) {
-		return getsavetarget(target.source.getfortitude(), caster);
+	public int save(Combatant caster,Combatant target){
+		return getsavetarget(target.source.getfortitude(),caster);
 	}
 }

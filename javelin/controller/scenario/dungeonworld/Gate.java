@@ -11,46 +11,46 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 
-public class Gate extends Location {
+public class Gate extends Location{
 	public Realm key;
 	public transient Zone to;
 
-	public Gate(Realm r, Zone to) {
+	public Gate(Realm r,Zone to){
 		super(null);
-		this.to = to;
+		this.to=to;
 		setkey(r);
-		allowentry = false;
-		sacrificeable = false;
+		allowentry=false;
+		sacrificeable=false;
 	}
 
 	@Override
-	public List<Combatant> getcombatants() {
+	public List<Combatant> getcombatants(){
 		return null;
 	}
 
 	@Override
-	public Integer getel(int attackerel) {
+	public Integer getel(int attackerel){
 		return null;
 	}
 
-	public void setkey(Realm r) {
-		key = r;
-		description = r + " gate";
-		realm = r;
+	public void setkey(Realm r){
+		key=r;
+		description=r+" gate";
+		realm=r;
 	}
 
 	@Override
-	public boolean interact() {
-		if (Debug.bypassdoors) {
+	public boolean interact(){
+		if(Debug.bypassdoors){
 			remove();
 			return true;
 		}
-		TempleKey key = new TempleKey(this.key);
-		if (Squad.active.equipment.get(key) == null) {
-			String fail = "Only the " + key + " will unlock this gate...";
-			Javelin.message(fail, false);
-		} else {
-			Javelin.message("You unlock the " + description + "!", false);
+		TempleKey key=new TempleKey(this.key);
+		if(Squad.active.equipment.get(key)==null){
+			String fail="Only the "+key+" will unlock this gate...";
+			Javelin.message(fail,false);
+		}else{
+			Javelin.message("You unlock the "+description+"!",false);
 			remove();
 		}
 		return true;

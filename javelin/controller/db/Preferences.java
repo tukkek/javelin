@@ -41,19 +41,19 @@ import javelin.view.screen.WorldScreen;
  * @see PreferencesScreen
  * @author alex
  */
-public class Preferences {
+public class Preferences{
 	/** Configuration file key for {@link #MONITORPERFORMANCE}. */
-	public static final String KEYCHECKPERFORMANCE = "ai.checkperformance";
+	public static final String KEYCHECKPERFORMANCE="ai.checkperformance";
 	/** Configuration file key for {@link #MAXTHREADS}. */
-	public static final String KEYMAXTHREADS = "ai.maxthreads";
-	static final String FILE = "preferences.properties";
+	public static final String KEYMAXTHREADS="ai.maxthreads";
+	static final String FILE="preferences.properties";
 	/** Key for {@link #TILESIZEBATTLE}. */
-	public static final String KEYTILEBATTLE = "ui.battletile";
+	public static final String KEYTILEBATTLE="ui.battletile";
 	/** Key for {@link #TILESIZEWORLD}. */
-	public static final String KEYTILEWORLD = "ui.worldtile";
+	public static final String KEYTILEWORLD="ui.worldtile";
 	/** Key for {@link #TILESIZEDUNGEON}. */
-	public static final String KEYTILEDUNGEON = "ui.dungeontile";
-	static Properties PROPERTIES = new Properties();
+	public static final String KEYTILEDUNGEON="ui.dungeontile";
+	static Properties PROPERTIES=new Properties();
 
 	/** If <code>true</code> will use {@link AiCache}. */
 	public static boolean AICACHEENABLED;
@@ -87,84 +87,79 @@ public class Preferences {
 	/** Tile size for {@link DungeonScreen}. */
 	public static int TILESIZEDUNGEON;
 
-	static {
+	static{
 		load();
 	}
 
-	synchronized static void load() {
-		try {
+	synchronized static void load(){
+		try{
 			PROPERTIES.clear();
 			PROPERTIES.load(new FileReader(FILE));
-		} catch (IOException e) {
+		}catch(IOException e){
 			throw new RuntimeException(e);
 		}
 	}
 
-	static String getstring(String key) {
-		try {
+	static String getstring(String key){
+		try{
 			return PROPERTIES.getProperty(key);
-		} catch (MissingResourceException e) {
+		}catch(MissingResourceException e){
 			return null;
 		}
 	}
 
-	static Integer getinteger(String key, Integer fallback) {
-		String value = getstring(key);
+	static Integer getinteger(String key,Integer fallback){
+		String value=getstring(key);
 		/* Don't inline. */
-		if (value == null) {
-			return fallback;
-		}
+		if(value==null) return fallback;
 		return Integer.parseInt(value);
 	}
 
 	/**
 	 * @return the entire text of the properties file.
 	 */
-	synchronized public static String getfile() {
-		try {
-			String s = "";
-			BufferedReader reader = new BufferedReader(new FileReader(FILE));
-			String line = reader.readLine();
-			while (line != null) {
-				s += line + "\n";
-				line = reader.readLine();
+	synchronized public static String getfile(){
+		try{
+			String s="";
+			BufferedReader reader=new BufferedReader(new FileReader(FILE));
+			String line=reader.readLine();
+			while(line!=null){
+				s+=line+"\n";
+				line=reader.readLine();
 			}
 			reader.close();
 			return s;
-		} catch (IOException e) {
+		}catch(IOException e){
 			throw new RuntimeException(e);
 		}
 	}
 
 	/**
 	 * TODO would be better to have an option #setpreference(String key,String
-	 * value) that would read the file, replace a line with the given key and
-	 * save it in the proper order instead of forever appending to the file. It
-	 * could be used in a few places this is being used instead.
+	 * value) that would read the file, replace a line with the given key and save
+	 * it in the proper order instead of forever appending to the file. It could
+	 * be used in a few places this is being used instead.
 	 *
-	 * @param content
-	 *            Overwrite the properties file with this content and reloads
-	 *            all options.
+	 * @param content Overwrite the properties file with this content and reloads
+	 *          all options.
 	 */
-	synchronized public static void savefile(String content) {
-		try {
-			write(content, FILE);
+	synchronized public static void savefile(String content){
+		try{
+			write(content,FILE);
 			load();
 			init();
-		} catch (Exception e) {
+		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
 	}
 
 	/**
-	 * @param content
-	 *            Write content...
-	 * @param f
-	 *            to this file.
+	 * @param content Write content...
+	 * @param f to this file.
 	 * @throws IOException
 	 */
-	public static void write(String content, String f) throws IOException {
-		FileWriter writer = new FileWriter(f);
+	public static void write(String content,String f) throws IOException{
+		FileWriter writer=new FileWriter(f);
 		writer.write(content);
 		writer.close();
 	}
@@ -172,140 +167,113 @@ public class Preferences {
 	/**
 	 * Initializes or reloads all preferences.
 	 */
-	public static void init() {
-		AICACHEENABLED = getstring("ai.cache").equals("true");
-		MAXTEMPERATURE = getinteger("ai.maxtemperature", 0);
-		MAXMILISECONDSTHINKING = Math
-				.round(1000 * getFloat("ai.maxsecondsthinking"));
-		int cpus = Runtime.getRuntime().availableProcessors();
-		MAXTHREADS = Preferences.getinteger(KEYMAXTHREADS, cpus);
-		if (MAXTHREADS > cpus) {
-			MAXTHREADS = cpus;
-		}
-		MONITORPERFORMANCE = Preferences.getstring(KEYCHECKPERFORMANCE)
+	public static void init(){
+		AICACHEENABLED=getstring("ai.cache").equals("true");
+		MAXTEMPERATURE=getinteger("ai.maxtemperature",0);
+		MAXMILISECONDSTHINKING=Math.round(1000*getFloat("ai.maxsecondsthinking"));
+		int cpus=Runtime.getRuntime().availableProcessors();
+		MAXTHREADS=Preferences.getinteger(KEYMAXTHREADS,cpus);
+		if(MAXTHREADS>cpus) MAXTHREADS=cpus;
+		MONITORPERFORMANCE=Preferences.getstring(KEYCHECKPERFORMANCE)
 				.equals("true");
-		if (MONITORPERFORMANCE) {
-			if (ThreadManager.performance == Integer.MIN_VALUE) {
-				ThreadManager.performance = 0;
-			}
-		} else {
-			ThreadManager.performance = Integer.MIN_VALUE;
+		if(MONITORPERFORMANCE){
+			if(ThreadManager.performance==Integer.MIN_VALUE)
+				ThreadManager.performance=0;
+		}else
+			ThreadManager.performance=Integer.MIN_VALUE;
+
+		BACKUP=getstring("fs.backup").equals("true");
+		SAVEINTERVAL=getinteger("fs.saveinterval",9);
+
+		TILESIZEWORLD=getinteger(KEYTILEWORLD,32);
+		TILESIZEBATTLE=getinteger(KEYTILEBATTLE,32);
+		TILESIZEDUNGEON=getinteger(KEYTILEDUNGEON,32);
+		MESSAGEWAIT=Math.round(1000*getFloat("ui.messagedelay"));
+		TEXTCOLOR=getstring("ui.textcolor").toUpperCase();
+		try{
+			TextZone.fontcolor=(Color)Color.class.getField(Preferences.TEXTCOLOR)
+					.get(null);
+		}catch(Exception e){
+			TextZone.fontcolor=Color.BLACK;
 		}
 
-		BACKUP = getstring("fs.backup").equals("true");
-		SAVEINTERVAL = getinteger("fs.saveinterval", 9);
-
-		TILESIZEWORLD = getinteger(KEYTILEWORLD, 32);
-		TILESIZEBATTLE = getinteger(KEYTILEBATTLE, 32);
-		TILESIZEDUNGEON = getinteger(KEYTILEDUNGEON, 32);
-		MESSAGEWAIT = Math.round(1000 * getFloat("ui.messagedelay"));
-		TEXTCOLOR = getstring("ui.textcolor").toUpperCase();
-		try {
-			TextZone.fontcolor = (Color) Color.class
-					.getField(Preferences.TEXTCOLOR).get(null);
-		} catch (Exception e) {
-			TextZone.fontcolor = Color.BLACK;
-		}
-
-		initkeys("keys.world", new WorldKeysScreen());
-		initkeys("keys.battle", new BattleKeysScreen());
+		initkeys("keys.world",new WorldKeysScreen());
+		initkeys("keys.battle",new BattleKeysScreen());
 
 		readdebug();
 	}
 
-	private static void initkeys(String propertyname,
-			KeysScreen worldKeyScreen) {
-		String keys = getstring(propertyname);
-		if (keys == null) {
-			return;
-		}
-		ArrayList<ActionDescription> actions = worldKeyScreen.getactions();
-		for (int i = 0; i < keys.length(); i++) {
+	private static void initkeys(String propertyname,KeysScreen worldKeyScreen){
+		String keys=getstring(propertyname);
+		if(keys==null) return;
+		ArrayList<ActionDescription> actions=worldKeyScreen.getactions();
+		for(int i=0;i<keys.length();i++)
 			actions.get(i).setMainKey(Character.toString(keys.charAt(i)));
-		}
 	}
 
-	static void readdebug() {
-		Debug.disablecombat = "false".equals(getstring("cheat.combat"));
-		Debug.xp = getinteger("cheat.xp", null);
-		Debug.gold = getinteger("cheat.gold", null);
-		Debug.labor = getboolean("cheat.labor");
-		Debug.showmap = getboolean("cheat.world");
-		Debug.period = getstring("cheat.period");
-		Debug.weather = getstring("cheat.weather");
-		Debug.season = getstring("cheat.season");
-		Debug.unlcoktemples = getboolean("cheat.temples");
-		Debug.bypassdoors = getboolean("cheat.doors");
+	static void readdebug(){
+		Debug.disablecombat="false".equals(getstring("cheat.combat"));
+		Debug.xp=getinteger("cheat.xp",null);
+		Debug.gold=getinteger("cheat.gold",null);
+		Debug.labor=getboolean("cheat.labor");
+		Debug.showmap=getboolean("cheat.world");
+		Debug.period=getstring("cheat.period");
+		Debug.weather=getstring("cheat.weather");
+		Debug.season=getstring("cheat.season");
+		Debug.unlcoktemples=getboolean("cheat.temples");
+		Debug.bypassdoors=getboolean("cheat.doors");
 		initdebug();
 	}
 
-	private static boolean getboolean(String key) {
-		String value = getstring(key);
-		return value != null && !value.equals("false");
+	private static boolean getboolean(String key){
+		String value=getstring(key);
+		return value!=null&&!value.equals("false");
 	}
 
-	static void initdebug() {
-		if (Debug.showmap && BattleScreen.active != null
-				&& BattleScreen.active.getClass().equals(WorldScreen.class)) {
-			for (int x = 0; x < World.scenario.size; x++) {
-				for (int y = 0; y < World.scenario.size; y++) {
-					WorldScreen.setVisible(x, y);
-				}
-			}
-		}
-		if (World.seed != null) {
-			for (Actor a : World.getall(Squad.class)) {
-				initsquaddebug((Squad) a);
-			}
-		}
-		if (Debug.weather != null) {
-			Debug.weather = Debug.weather.toLowerCase();
+	static void initdebug(){
+		if(Debug.showmap&&BattleScreen.active!=null
+				&&BattleScreen.active.getClass().equals(WorldScreen.class))
+			for(int x=0;x<World.scenario.size;x++)
+			for(int y=0;y<World.scenario.size;y++)
+			WorldScreen.setVisible(x,y);
+		if(World.seed!=null) for(Actor a:World.getall(Squad.class))
+			initsquaddebug((Squad)a);
+		if(Debug.weather!=null){
+			Debug.weather=Debug.weather.toLowerCase();
 			Weather.read(0); // tests cheat.weather value
 		}
-		if (Debug.season != null) {
-			Season.current = Season.valueOf(Debug.season.toUpperCase());
-		}
+		if(Debug.season!=null)
+			Season.current=Season.valueOf(Debug.season.toUpperCase());
 	}
 
-	static void initsquaddebug(Squad s) {
-		if (Debug.gold != null) {
-			s.gold = Debug.gold;
-		}
-		if (Debug.xp != null) {
-			for (Combatant c : s.members) {
-				c.xp = new BigDecimal(Debug.xp / 100f);
-			}
-		}
+	static void initsquaddebug(Squad s){
+		if(Debug.gold!=null) s.gold=Debug.gold;
+		if(Debug.xp!=null) for(Combatant c:s.members)
+			c.xp=new BigDecimal(Debug.xp/100f);
 	}
 
-	private static float getFloat(String key) {
+	private static float getFloat(String key){
 		return Float.parseFloat(getstring(key));
 	}
 
 	/**
 	 * Reads and writes to actual file.
 	 *
-	 * @param key
-	 *            Replaces the line with this option or creates a new line at
-	 *            the end of the properties file.
-	 * @param value
-	 *            Option value.
+	 * @param key Replaces the line with this option or creates a new line at the
+	 *          end of the properties file.
+	 * @param value Option value.
 	 */
-	synchronized static public void setoption(String key, Object value) {
-		String from = getfile();
-		String to = "";
-		boolean replaced = false;
-		for (String line : from.split("\n")) {
-			if (line.startsWith(key)) {
-				to += key + "=" + value + "\n";
-				replaced = true;
-			} else {
-				to += line + "\n";
-			}
-		}
-		if (!replaced) {
-			to += "\n" + key + "=" + value + "\n";
-		}
+	synchronized static public void setoption(String key,Object value){
+		String from=getfile();
+		String to="";
+		boolean replaced=false;
+		for(String line:from.split("\n"))
+			if(line.startsWith(key)){
+				to+=key+"="+value+"\n";
+				replaced=true;
+			}else
+				to+=line+"\n";
+		if(!replaced) to+="\n"+key+"="+value+"\n";
 		savefile(to);
 	}
 }

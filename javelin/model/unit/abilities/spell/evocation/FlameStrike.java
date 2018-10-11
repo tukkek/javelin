@@ -11,31 +11,29 @@ import javelin.model.unit.abilities.spell.Spell;
 
 /**
  * Produces a vertical column of divine fire.
- * 
+ *
  * @author alex
  */
-public class FlameStrike extends Spell {
+public class FlameStrike extends Spell{
 	/** Constructor. */
-	public FlameStrike() {
-		super("Flame strike", 5, ChallengeCalculator.ratespelllikeability(5),
+	public FlameStrike(){
+		super("Flame strike",5,ChallengeCalculator.ratespelllikeability(5),
 				Realm.FIRE);
-		castinbattle = true;
-		isscroll = true;
+		castinbattle=true;
+		isscroll=true;
 	}
 
 	@Override
-	public String cast(Combatant caster, Combatant target, boolean saved,
-			BattleState s, ChanceNode cn) {
-		for (Combatant c : getradius(target, 2, this, s)) {
-			s.clone(c).damage(casterlevel * 6 / 2, s,
-					c.source.energyresistance);
-		}
-		return "A roaring column of fire descends around " + target + "!";
+	public String cast(Combatant caster,Combatant target,boolean saved,
+			BattleState s,ChanceNode cn){
+		for(Combatant c:getradius(target,2,this,s))
+			s.clone(c).damage(casterlevel*6/2,s,c.source.energyresistance);
+		return "A roaring column of fire descends around "+target+"!";
 	}
 
 	@Override
-	public void filtertargets(Combatant combatant, List<Combatant> targets,
-			BattleState s) {
+	public void filtertargets(Combatant combatant,List<Combatant> targets,
+			BattleState s){
 		// all targets is fine
 	}
 }

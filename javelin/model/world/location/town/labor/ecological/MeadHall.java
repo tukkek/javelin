@@ -6,27 +6,26 @@ import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.town.Rank;
 
-public class MeadHall extends Guild {
-	public static class BuildMeadHall extends BuildAcademy {
-		public BuildMeadHall() {
+public class MeadHall extends Guild{
+	public static class BuildMeadHall extends BuildAcademy{
+		public BuildMeadHall(){
 			super(Rank.HAMLET);
 		}
 
 		@Override
-		protected Academy generateacademy() {
+		protected Academy generateacademy(){
 			return new MeadHall();
 		}
 	}
 
-	public MeadHall() {
-		super("Mead hall", Barbarian.INSTANCE);
+	public MeadHall(){
+		super("Mead hall",Barbarian.INSTANCE);
 	}
 
 	@Override
-	protected void generate() {
-		while (x == -1 || !(Terrain.get(x, y).equals(Terrain.PLAIN)
-				|| Terrain.get(x, y).equals(Terrain.HILL))) {
+	protected void generate(){
+		while(x==-1||!(Terrain.get(x,y).equals(Terrain.PLAIN)
+				||Terrain.get(x,y).equals(Terrain.HILL)))
 			super.generate();
-		}
 	}
 }

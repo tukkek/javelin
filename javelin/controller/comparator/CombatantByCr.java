@@ -7,26 +7,27 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
 /**
- * Compares combatants by their {@link Monster#cr}. This doesn't
- * update {@link Monster#cr} as the comparison goes on since the
- * comparison isn't a linear operation - if you need to, use
- * {@link ChallengeCalculator#updatecr(java.util.ArrayList)} before sorting with this.
- * 
+ * Compares combatants by their {@link Monster#cr}. This doesn't update
+ * {@link Monster#cr} as the comparison goes on since the comparison isn't a
+ * linear operation - if you need to, use
+ * {@link ChallengeCalculator#updatecr(java.util.ArrayList)} before sorting with
+ * this.
+ *
  * @see ChallengeCalculator#calculatecr(Monster)
  * @author alex
  */
-public class CombatantByCr implements Comparator<Combatant> {
+public class CombatantByCr implements Comparator<Combatant>{
 	/** Trusts {@link Monster#cr}. */
-	public static final CombatantByCr SINGLETON = new CombatantByCr(false);
+	public static final CombatantByCr SINGLETON=new CombatantByCr(false);
 
-	private CombatantByCr(boolean update) {
+	private CombatantByCr(boolean update){
 		// prevents instantiation
 	}
 
 	@Override
-	public int compare(Combatant o1, Combatant o2) {
-		final Float cr1 = o1.source.cr;
-		final Float cr2 = o2.source.cr;
-		return Float.compare(cr1, cr2);
+	public int compare(Combatant o1,Combatant o2){
+		final Float cr1=o1.source.cr;
+		final Float cr2=o2.source.cr;
+		return Float.compare(cr1,cr2);
 	}
 }

@@ -10,25 +10,23 @@ import javelin.model.unit.condition.Condition;
  *
  * @author alex
  */
-public class Amulet extends Relic {
+public class Amulet extends Relic{
 
 	/** Constructor. */
-	public Amulet(Integer level) {
-		super("Amulet of Mana", level);
-		usedinbattle = false;
-		usedoutofbattle = true;
+	public Amulet(Integer level){
+		super("Amulet of Mana",level);
+		usedinbattle=false;
+		usedoutofbattle=true;
 	}
 
 	@Override
-	protected boolean activate(Combatant user) {
-		for (Combatant c : Squad.active.members) {
-			for (Condition co : c.getconditions()) {
+	protected boolean activate(Combatant user){
+		for(Combatant c:Squad.active.members){
+			for(Condition co:c.getconditions())
 				c.removecondition(co);
-			}
-			c.heal(c.maxhp, true);
-			for (Spell s : c.spells) {
-				s.used = 0;
-			}
+			c.heal(c.maxhp,true);
+			for(Spell s:c.spells)
+				s.used=0;
 		}
 		return true;
 	}

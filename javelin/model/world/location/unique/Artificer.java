@@ -24,114 +24,103 @@ import javelin.view.screen.town.PurchaseOption;
  *
  * @author alex
  */
-public class Artificer extends Fortification {
-	static final String DESCRIPTION = "An artificer";
-	static final boolean DEBUG = false;
+public class Artificer extends Fortification{
+	static final String DESCRIPTION="An artificer";
+	static final boolean DEBUG=false;
 
-	public static class BuildArtificer extends Build {
-		public BuildArtificer() {
-			super("Build artificer", 20, null, Rank.CITY);
+	public static class BuildArtificer extends Build{
+		public BuildArtificer(){
+			super("Build artificer",20,null,Rank.CITY);
 		}
 
 		@Override
-		public Location getgoal() {
+		public Location getgoal(){
 			return new Artificer();
 		}
 	}
 
 	/**
-	 * {@link Artifact}s this artificer can craft. This generically represents
-	 * the base components the Artificer has at the moment to create this
-	 * selection of magic items. Will randomly replace an item once per month,
-	 * representing not only a possible sell but also getting new alchemical
-	 * components, old ones spoiling, etc.
+	 * {@link Artifact}s this artificer can craft. This generically represents the
+	 * base components the Artificer has at the moment to create this selection of
+	 * magic items. Will randomly replace an item once per month, representing not
+	 * only a possible sell but also getting new alchemical components, old ones
+	 * spoiling, etc.
 	 */
-	public ItemSelection selection = new ItemSelection();
-	CraftingOrder crafting = null;
+	public ItemSelection selection=new ItemSelection();
+	CraftingOrder crafting=null;
 
 	/** Constructor. */
-	public Artificer() {
-		super(DESCRIPTION, DESCRIPTION, 11, 15);
-		vision = 1;
-		gossip = true;
-		while (selection.size() < 9) {
+	public Artificer(){
+		super(DESCRIPTION,DESCRIPTION,11,15);
+		vision=1;
+		gossip=true;
+		while(selection.size()<9)
 			stock();
-		}
-		if (DEBUG) {
-			garrison.clear();
-		}
+		if(DEBUG) garrison.clear();
 	}
 
-	void stock() {
-		int i = 0;
-		while (!selection.add(RPG.pick(Item.ARTIFACT))) {
+	void stock(){
+		int i=0;
+		while(!selection.add(RPG.pick(Item.ARTIFACT))){
 			// wait until 1 item enters
-			i += 1;
-			if (i >= 10000) {
-				if (Javelin.DEBUG) {
-					throw new RuntimeException(
-							"Cannot generate artificer item!");
-				}
+			i+=1;
+			if(i>=10000){
+				if(Javelin.DEBUG)
+					throw new RuntimeException("Cannot generate artificer item!");
 				break; // tough luck :/
 			}
 		}
 	}
 
 	@Override
-	public boolean interact() {
-		if (!super.interact()) {
-			return false;
-		}
-		if (crafting == null) {
+	public boolean interact(){
+		if(!super.interact()) return false;
+		if(crafting==null){
 			new ArtificerScreen(this).show();
 			return true;
 		}
-		if (crafting.completed(Squad.active.hourselapsed)) {
+		if(crafting.completed(Squad.active.hourselapsed)){
 			crafting.item.grab();
-			crafting = null;
+			crafting=null;
 			return true;
 		}
 		MessagePanel.active.clear();
-		Javelin.message("\"I still need "
-				+ crafting.geteta(Squad.active.hourselapsed) + " before your "
-				+ crafting.item.toString().toLowerCase() + " is completed.\"",
-				false);
+		Javelin.message("\"I still need "+crafting.geteta(Squad.active.hourselapsed)
+				+" before your "+crafting.item.toString().toLowerCase()
+				+" is completed.\"",false);
 		Javelin.input();
 		return true;
 	}
 
 	@Override
-	public void turn(long time, WorldScreen world) {
-		if (RPG.random() <= 1 / 30f) {
+	public void turn(long time,WorldScreen world){
+		if(RPG.random()<=1/30f){
 			selection.remove(RPG.pick(selection));
 			stock();
 		}
 	}
 
 	@Override
-	public boolean hascrafted() {
-		return crafting != null
-				&& crafting.completed(Squad.active.hourselapsed);
+	public boolean hascrafted(){
+		return crafting!=null&&crafting.completed(Squad.active.hourselapsed);
 	}
 
 	/**
-	 * @param o
-	 *            Start crafting this {@link PurchaseOption#i} .
+	 * @param o Start crafting this {@link PurchaseOption#i} .
 	 */
-	public void craft(PurchaseOption o) {
+	public void craft(PurchaseOption o){
 		selection.remove(o.i);
-		crafting = new CraftingOrder(o.i, null);
+		crafting=new CraftingOrder(o.i,null);
 		stock();
 	}
 
 	@Override
-	public List<Combatant> getcombatants() {
+	public List<Combatant> getcombatants(){
 		return garrison;
 	}
 
 	@Override
-	public boolean isworking() {
-		return crafting != null
-				&& !crafting.completed(Squad.active.hourselapsed);
+	public boolean isworking(){
+		return crafting!=null&&!crafting.completed(Squad.active.hourselapsed);
 	}
 }

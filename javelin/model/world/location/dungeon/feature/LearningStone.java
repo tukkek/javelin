@@ -19,17 +19,17 @@ import javelin.model.world.location.dungeon.Dungeon;
  *
  * @author alex
  */
-public class LearningStone extends Feature {
+public class LearningStone extends Feature{
 	/** {@link Difficulty#MODERATE} value in gold. */
-	int value = RewardCalculator.getgold(Math.max(1, Dungeon.active.level - 4));
+	int value=RewardCalculator.getgold(Math.max(1,Dungeon.active.level-4));
 
 	/** Constructor. */
-	public LearningStone(int xp, int yp) {
-		super(xp, yp, "dungeonlearningstone");
+	public LearningStone(int xp,int yp){
+		super(xp,yp,"dungeonlearningstone");
 	}
 
 	@Override
-	public boolean activate() {
+	public boolean activate(){
 		return false;
 	}
 }

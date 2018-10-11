@@ -8,36 +8,36 @@ import javelin.model.unit.attack.Attack;
 import javelin.model.unit.condition.abilitydamage.StrengthDamage;
 import javelin.old.RPG;
 
-public class WeakeningVenomPrana extends Strike {
-	static final int DAMAGE = RPG.average(1, 4);
+public class WeakeningVenomPrana extends Strike{
+	static final int DAMAGE=RPG.average(1,4);
 
-	public WeakeningVenomPrana() {
-		super("Weakening venom prana", 2);
+	public WeakeningVenomPrana(){
+		super("Weakening venom prana",2);
 	}
 
 	@Override
-	public void preattacks(Combatant current, Combatant target, Attack a,
-			BattleState s) {
+	public void preattacks(Combatant current,Combatant target,Attack a,
+			BattleState s){
 		// nothing
 	}
 
 	@Override
-	public void postattacks(Combatant current, Combatant target, Attack a,
-			BattleState s) {
+	public void postattacks(Combatant current,Combatant target,Attack a,
+			BattleState s){
 		// nothing
 	}
 
 	@Override
-	public void prehit(Combatant current, Combatant target, Attack a,
-			DamageChance dc, BattleState s) {
-		final int damage = save(target.source.getfortitude(), 12, current)
-				? DAMAGE / 2 : DAMAGE;
-		target.addcondition(new StrengthDamage(damage, target));
+	public void prehit(Combatant current,Combatant target,Attack a,
+			DamageChance dc,BattleState s){
+		final int damage=save(target.source.getfortitude(),12,current)?DAMAGE/2
+				:DAMAGE;
+		target.addcondition(new StrengthDamage(damage,target));
 	}
 
 	@Override
-	public void posthit(Combatant current, Combatant target, Attack a,
-			DamageChance dc, BattleState s) {
+	public void posthit(Combatant current,Combatant target,Attack a,
+			DamageChance dc,BattleState s){
 		// nothing
 	}
 }

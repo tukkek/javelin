@@ -12,6 +12,6 @@ package javelin.controller.exception;
  *
  * @author alex
  */
-public class UnbalancedTeams extends Exception {
+public class UnbalancedTeams extends Exception{
 
 }

@@ -15,48 +15,38 @@ import javelin.view.screen.BattleScreen;
  *
  * @author alex
  */
-public class Map extends Relic {
-	static final int RADIUS = 2;
+public class Map extends Relic{
+	static final int RADIUS=2;
 
 	/** Constructor. */
-	public Map(Integer level) {
-		super("Map of Creation", level);
-		usedinbattle = false;
-		usedoutofbattle = true;
+	public Map(Integer level){
+		super("Map of Creation",level);
+		usedinbattle=false;
+		usedoutofbattle=true;
 	}
 
 	@Override
-	protected boolean activate(Combatant user) {
-		if (Dungeon.active != null) {
+	protected boolean activate(Combatant user){
+		if(Dungeon.active!=null){
 			Javelin.app.switchScreen(BattleScreen.active);
 			Javelin.message(
 					"You draw on the map but nothing happens. Try it outside next time!",
 					false);
 			return true;
 		}
-		ArrayList<Terrain> terrains = new ArrayList<Terrain>(
-				Terrain.NONUNDERGROUND.length - 1);
-		for (Terrain t : Terrain.NONUNDERGROUND) {
-			if (!t.equals(Terrain.WATER)) {
-				terrains.add(t);
-			}
-		}
-		int i = Javelin.choose("Transform the surrounding terrain into what?",
-				terrains, true, false);
-		if (i == -1) {
-			return false;
-		}
-		Terrain terrain = terrains.get(i);
-		for (int x = Squad.active.x - RADIUS; x <= Squad.active.x
-				+ RADIUS; x++) {
-			for (int y = Squad.active.y - RADIUS; y <= Squad.active.y
-					+ RADIUS; y++) {
-				if (World.validatecoordinate(x, y)
-						&& !Terrain.get(x, y).equals(Terrain.WATER)) {
-					World.getseed().map[x][y] = terrain;
-				}
-			}
-		}
+		ArrayList<Terrain> terrains=new ArrayList<>(
+				Terrain.NONUNDERGROUND.length-1);
+		for(Terrain t:Terrain.NONUNDERGROUND)
+			if(!t.equals(Terrain.WATER)) terrains.add(t);
+		int i=Javelin.choose("Transform the surrounding terrain into what?",
+				terrains,true,false);
+		if(i==-1) return false;
+		Terrain terrain=terrains.get(i);
+		for(int x=Squad.active.x-RADIUS;x<=Squad.active.x+RADIUS;x++)
+			for(int y=Squad.active.y-RADIUS;y<=Squad.active.y+RADIUS;y++)
+				if(World.validatecoordinate(x,y)
+						&&!Terrain.get(x,y).equals(Terrain.WATER))
+					World.getseed().map[x][y]=terrain;
 		return true;
 	}
 }

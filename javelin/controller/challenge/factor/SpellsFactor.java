@@ -60,17 +60,17 @@ import javelin.model.unit.abilities.spell.transmutation.Longstrider;
 
 /**
  * TODO {@link Monster#spellcr}
- * 
+ *
  * @see CrFactor
  */
-public class SpellsFactor extends CrFactor {
+public class SpellsFactor extends CrFactor{
 	@Override
-	public float calculate(Monster monster) {
+	public float calculate(Monster monster){
 		return monster.spellcr;
 	}
 
 	@Override
-	public void registerupgrades(UpgradeHandler handler) {
+	public void registerupgrades(UpgradeHandler handler){
 		handler.schoolhealwounds.add(new CureLightWounds());// conjuration
 		handler.schoolhealwounds.add(new CureModerateWounds());
 		handler.schoolhealwounds.add(new CureSeriousWounds());
@@ -142,24 +142,17 @@ public class SpellsFactor extends CrFactor {
 	 * {@link #registerupgrades(UpgradeHandler)} is called before monster are
 	 * loaded.
 	 */
-	static public void init() {
-		for (Monster m : Javelin.ALLMONSTERS) {
-			if (!m.passive) {
-				UpgradeHandler.singleton.schoolsummoning
-						.add(new Summon(m.name, 1));
-			}
-		}
+	static public void init(){
+		for(Monster m:Javelin.ALLMONSTERS)
+			if(!m.passive)
+				UpgradeHandler.singleton.schoolsummoning.add(new Summon(m.name,1));
 	}
 
 	@Override
-	public String log(Monster m) {
-		String log = "";
-		if (m.spellcr != 0) {
-			log += "#spellbook " + m.spellcr + " ";
-		}
-		if (!m.spells.isEmpty()) {
-			log += "#" + m.spells + " ";
-		}
+	public String log(Monster m){
+		String log="";
+		if(m.spellcr!=0) log+="#spellbook "+m.spellcr+" ";
+		if(!m.spells.isEmpty()) log+="#"+m.spells+" ";
 		return log;
 	}
 }

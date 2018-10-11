@@ -13,19 +13,19 @@ import javelin.model.world.location.dungeon.feature.Brazier;
  * @see Temple
  * @author alex
  */
-public class FireTemple extends Temple {
-	private static final String FLUFF = "This mighty construction isn't like anything you've ever seen in the desert.\n"
-			+ "It stands tall among the dunes and somehow seems even older than they are, yet abandoned for maybe just as long.\n"
-			+ "This was clearly built as a strong defensive outpost - the walls are tall and strong, the towers full of small openings for defense.\n"
-			+ "As you creep in you can't help but wonder who have built these halls, why'd they leave it and where could they be now.";
+public class FireTemple extends Temple{
+	private static final String FLUFF="This mighty construction isn't like anything you've ever seen in the desert.\n"
+			+"It stands tall among the dunes and somehow seems even older than they are, yet abandoned for maybe just as long.\n"
+			+"This was clearly built as a strong defensive outpost - the walls are tall and strong, the towers full of small openings for defense.\n"
+			+"As you creep in you can't help but wonder who have built these halls, why'd they leave it and where could they be now.";
 
 	/** Constructor. */
-	public FireTemple(int level) {
-		super(Realm.FIRE, level, new Candle(level), FLUFF);
-		terrain = Terrain.DESERT;
-		floor = "dungeonfloortemplefire";
-		wall = "dungeonwalltemplefire";
-		doorbackground = false;
-		feature = Brazier.class;
+	public FireTemple(int level){
+		super(Realm.FIRE,level,new Candle(level),FLUFF);
+		terrain=Terrain.DESERT;
+		floor="dungeonfloortemplefire";
+		wall="dungeonwalltemplefire";
+		doorbackground=false;
+		feature=Brazier.class;
 	}
 }

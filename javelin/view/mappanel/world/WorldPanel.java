@@ -13,75 +13,67 @@ import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.Tile;
 
-public class WorldPanel extends MapPanel {
+public class WorldPanel extends MapPanel{
 
-	static final HashMap<Point, Actor> ACTORS = new HashMap<>();
-	public static final HashMap<Point, Location> DESTINATIONS = new HashMap<>();
+	static final HashMap<Point,Actor> ACTORS=new HashMap<>();
+	public static final HashMap<Point,Location> DESTINATIONS=new HashMap<>();
 
-	public WorldPanel() {
-		super(World.getseed().map.length, World.getseed().map[0].length,
+	public WorldPanel(){
+		super(World.getseed().map.length,World.getseed().map[0].length,
 				Preferences.KEYTILEWORLD);
 	}
 
 	@Override
-	protected Mouse getmouselistener() {
+	protected Mouse getmouselistener(){
 		return new WorldMouse(this);
 	}
 
 	@Override
-	protected int gettilesize() {
+	protected int gettilesize(){
 		return Preferences.TILESIZEWORLD;
 	}
 
 	@Override
-	protected Tile newtile(int x, int y) {
-		return new WorldTile(x, y, this);
+	protected Tile newtile(int x,int y){
+		return new WorldTile(x,y,this);
 	}
 
 	@Override
-	public void paint(Graphics g) {
+	public void paint(Graphics g){
 		updateactors();
 		super.paint(g);
 	}
 
-	void updateactors() {
+	void updateactors(){
 		DESTINATIONS.clear();
 		ACTORS.clear();
-		for (Actor a : World.getactors()) {
-			ACTORS.put(new Point(a.x, a.y), a);
-			if (!(a instanceof Location)) {
-				continue;
-			}
-			Location l = (Location) a;
-			if (l.link) {
-				DESTINATIONS.put(new Point(l.x, l.y), l);
-			}
+		for(Actor a:World.getactors()){
+			ACTORS.put(new Point(a.x,a.y),a);
+			if(!(a instanceof Location)) continue;
+			Location l=(Location)a;
+			if(l.link) DESTINATIONS.put(new Point(l.x,l.y),l);
 		}
 	}
 
 	@Override
-	public void refresh() {
-		if (initial) {
-			resize(this, Squad.active.x, Squad.active.y);
-		}
+	public void refresh(){
+		if(initial) resize(this,Squad.active.x,Squad.active.y);
 		super.refresh();
 		updateactors();
-		for (Tile[] ts : tiles) {
-			for (Tile t : ts) {
+		for(Tile[] ts:tiles)
+			for(Tile t:ts)
 				t.repaint();
-			}
-		}
 	}
 
-	static public void resize(MapPanel p, int x, int y) {
+	static public void resize(MapPanel p,int x,int y){
 		p.scroll.setSize(p.getBounds().getSize());
-		p.zoom(0, true, x, y);
-		p.center(x, y, true);
+		p.zoom(0,true,x,y);
+		p.center(x,y,true);
 		p.scroll.setVisible(true);
 	}
 
 	@Override
-	public void repaint() {
+	public void repaint(){
 		/*
 		 * For some reasone super.repaint() isn't calling #paint at all, so
 		 * let's do it manually
@@ -90,7 +82,7 @@ public class WorldPanel extends MapPanel {
 	}
 
 	@Override
-	public void init() {
+	public void init(){
 		super.init();
 		scroll.setVisible(false);
 	}

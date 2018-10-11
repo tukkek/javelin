@@ -7,27 +7,27 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureModerateWounds;
 import javelin.model.unit.skill.Skill;
 
-public class Cleric extends Kit {
+public class Cleric extends Kit{
 	/**
-	 * TODO might be intesteing to separate into Good and Evil clerc. Evil
-	 * Cleric academies could only be buitl on criminal + religious cities.
+	 * TODO might be intesteing to separate into Good and Evil clerc. Evil Cleric
+	 * academies could only be buitl on criminal + religious cities.
 	 */
-	public static final Kit INSTANCE = new Cleric();
+	public static final Kit INSTANCE=new Cleric();
 
-	private Cleric() {
-		super("cleric", Aristocrat.SINGLETON, RaiseWisdom.SINGLETON, "Initiate",
-				"Priest", "Cleric", "Pathiarch");
+	private Cleric(){
+		super("cleric",Aristocrat.SINGLETON,RaiseWisdom.SINGLETON,"Initiate",
+				"Priest","Cleric","Pathiarch");
 	}
 
 	@Override
-	protected void define() {
+	protected void define(){
 		basic.add(new CureModerateWounds());
 		basic.add(Skill.KNOWLEDGE.getupgrade());
 		basic.add(Skill.HEAL.getupgrade());
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h) {
+	protected void extend(UpgradeHandler h){
 		extension.addAll(h.good);
 		extension.addAll(h.schoolhealwounds);
 		extension.addAll(h.schoolrestoration);
@@ -36,8 +36,8 @@ public class Cleric extends Kit {
 	}
 
 	@Override
-	public boolean allow(int bestability, int secondbest, Monster m) {
-		return !Boolean.FALSE.equals(m.lawful) && !Boolean.FALSE.equals(m.good)
-				&& super.allow(bestability, secondbest, m);
+	public boolean allow(int bestability,int secondbest,Monster m){
+		return !Boolean.FALSE.equals(m.lawful)&&!Boolean.FALSE.equals(m.good)
+				&&super.allow(bestability,secondbest,m);
 	}
 }

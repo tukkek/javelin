@@ -8,16 +8,16 @@ import javelin.model.world.location.dungeon.Dungeon;
  *
  * @author alex
  */
-public class StairsDown extends Feature {
+public class StairsDown extends Feature{
 	/** Constructor. */
-	public StairsDown(Point p) {
-		super(p.x, p.y, "dungeonstairsdown");
-		remove = false;
-		enter = false;
+	public StairsDown(Point p){
+		super(p.x,p.y,"dungeonstairsdown");
+		remove=false;
+		enter=false;
 	}
 
 	@Override
-	public boolean activate() {
+	public boolean activate(){
 		Dungeon.active.godown();
 		return false;
 	}

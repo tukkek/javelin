@@ -18,28 +18,25 @@ import javelin.model.world.location.dungeon.feature.Spirit;
  * @see Monster#good
  * @author alex
  */
-public class GoodTemple extends Temple {
-	private static final String FLUFF = "The bizarre and tall complex seems to be carved entirely out of ivory and white stones.\n"
-			+ "Despite being in no place of particular importance the common animals seem to avoid it.\n"
-			+ "In fact, the eerie silence around the entire place makes you wonder if this is truly happening or only a fleeting dream.\n"
-			+ "You enter the holy ground, daring say nothing as you breath deeply in anticipation of the vistas inside.";
+public class GoodTemple extends Temple{
+	private static final String FLUFF="The bizarre and tall complex seems to be carved entirely out of ivory and white stones.\n"
+			+"Despite being in no place of particular importance the common animals seem to avoid it.\n"
+			+"In fact, the eerie silence around the entire place makes you wonder if this is truly happening or only a fleeting dream.\n"
+			+"You enter the holy ground, daring say nothing as you breath deeply in anticipation of the vistas inside.";
 
 	/** Constructor. */
-	public GoodTemple(Integer level) {
-		super(Realm.GOOD, level, new Ankh(level), FLUFF);
-		terrain = Terrain.PLAIN;
-		floor = "terrainarena";
-		wall = "terraindungeonwall";
-		feature = Spirit.class;
+	public GoodTemple(Integer level){
+		super(Realm.GOOD,level,new Ankh(level),FLUFF);
+		terrain=Terrain.PLAIN;
+		floor="terrainarena";
+		wall="terraindungeonwall";
+		feature=Spirit.class;
 	}
 
 	@Override
-	public boolean validate(List<Monster> foes) {
-		for (Monster m : foes) {
-			if (Boolean.TRUE.equals(m.good)) {
-				return false;
-			}
-		}
+	public boolean validate(List<Monster> foes){
+		for(Monster m:foes)
+			if(Boolean.TRUE.equals(m.good)) return false;
 		return true;
 	}
 }

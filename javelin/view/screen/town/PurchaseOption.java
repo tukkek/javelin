@@ -9,28 +9,28 @@ import javelin.view.screen.shopping.ShoppingScreen;
  *
  * @author alex
  */
-public class PurchaseOption extends Option {
+public class PurchaseOption extends Option{
 	/** Item to be acquired. */
 	public final Item i;
 
 	/** Constructor. */
-	public PurchaseOption(final Item i) {
-		super(i.name, i.price);
-		this.i = i;
+	public PurchaseOption(final Item i){
+		super(i.name,i.price);
+		this.i=i;
 	}
 
 	@Override
-	public String toString() {
+	public String toString(){
 		return i.toString();
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj){
 		return i.equals(obj);
 	}
 
 	@Override
-	public int hashCode() {
+	public int hashCode(){
 		return i.hashCode();
 	}
 }

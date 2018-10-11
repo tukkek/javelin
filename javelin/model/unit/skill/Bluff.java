@@ -20,53 +20,50 @@ import javelin.model.unit.feat.skill.Deceitful;
  *
  * @author alex
  */
-public class Bluff extends Skill {
-	public static class Feigned extends Condition {
-		static final float DURATION = ActionCost.FULL;
-		int acpenalty = 1;
+public class Bluff extends Skill{
+	public static class Feigned extends Condition{
+		static final float DURATION=ActionCost.FULL;
+		int acpenalty=1;
 
-		public Feigned(Combatant attacker, Combatant target) {
-			super(attacker.ap + DURATION, target, Effect.NEUTRAL, "feigned",
-					null);
+		public Feigned(Combatant attacker,Combatant target){
+			super(attacker.ap+DURATION,target,Effect.NEUTRAL,"feigned",null);
 		}
 
 		@Override
-		public void start(Combatant c) {
-			c.acmodifier -= 1;
+		public void start(Combatant c){
+			c.acmodifier-=1;
 		}
 
 		@Override
-		public void end(Combatant c) {
-			c.acmodifier += acpenalty;
+		public void end(Combatant c){
+			c.acmodifier+=acpenalty;
 		}
 
 		@Override
-		public void merge(Combatant c, Condition condition) {
-			super.merge(c, condition);
-			if (acpenalty < Monster.getbonus(c.source.dexterity)) {
-				acpenalty += 1;
-				c.acmodifier -= 1;
+		public void merge(Combatant c,Condition condition){
+			super.merge(c,condition);
+			if(acpenalty<Monster.getbonus(c.source.dexterity)){
+				acpenalty+=1;
+				c.acmodifier-=1;
 			}
 		}
 
 		@Override
-		public String toString() {
-			String times = acpenalty == 1 ? "" : " x" + acpenalty;
-			return description + times;
+		public String toString(){
+			String times=acpenalty==1?"":" x"+acpenalty;
+			return description+times;
 		}
 	}
 
-	public Bluff() {
-		super("Bluff", Ability.CHARISMA, Realm.EVIL);
-		usedincombat = true;
+	public Bluff(){
+		super("Bluff",Ability.CHARISMA,Realm.EVIL);
+		usedincombat=true;
 	}
 
 	@Override
-	public int getbonus(Combatant c) {
-		int bonus = super.getbonus(c);
-		if (c.source.hasfeat(Deceitful.SINGLETON)) {
-			bonus += Deceitful.BONUS;
-		}
+	public int getbonus(Combatant c){
+		int bonus=super.getbonus(c);
+		if(c.source.hasfeat(Deceitful.SINGLETON)) bonus+=Deceitful.BONUS;
 		return bonus;
 	}
 
@@ -75,23 +72,19 @@ public class Bluff extends Skill {
 	 * Does nothing if the target doesn't have a dexterity bonus.
 	 *
 	 * Really shouldn't use {@link Combatant#roll(Skill)} here since this is
-	 * called from {@link BattleAi} but it's such a minor effect which at the
-	 * same time helps so much with the early levels miss-fest, that we might as
-	 * well just keep it.
+	 * called from {@link BattleAi} but it's such a minor effect which at the same
+	 * time helps so much with the early levels miss-fest, that we might as well
+	 * just keep it.
 	 *
-	 * @param target
-	 *            Uses {@link Bluff} against this target.
+	 * @param target Uses {@link Bluff} against this target.
 	 * @author alex
 	 */
-	public static void feign(Combatant attacker, Combatant target) {
-		if (target.source.dexterity < 12) {
-			return;
-		}
-		int wisdom = Monster.getbonus(target.source.wisdom);
-		int sensemotive = Math.max(target.taketen(Skill.SENSEMOTIVE),
-				10 + target.source.getbab() + wisdom);
-		if (attacker.roll(Skill.BLUFF) >= sensemotive) {
-			target.addcondition(new Feigned(attacker, target));
-		}
+	public static void feign(Combatant attacker,Combatant target){
+		if(target.source.dexterity<12) return;
+		int wisdom=Monster.getbonus(target.source.wisdom);
+		int sensemotive=Math.max(target.taketen(Skill.SENSEMOTIVE),
+				10+target.source.getbab()+wisdom);
+		if(attacker.roll(Skill.BLUFF)>=sensemotive)
+			target.addcondition(new Feigned(attacker,target));
 	}
 }

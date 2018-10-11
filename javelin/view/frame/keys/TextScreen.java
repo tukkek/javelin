@@ -3,8 +3,6 @@ package javelin.view.frame.keys;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.TextArea;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 
@@ -12,20 +10,19 @@ import javelin.view.frame.Frame;
 
 /**
  * Opens a window which mostly consists of a {@link TextArea}.
- * 
+ *
  * @author alex
  */
-public abstract class TextScreen extends Frame {
-	final TextArea text = new TextArea(loadtext(), 30, 80);
+public abstract class TextScreen extends Frame{
+	final TextArea text=new TextArea(loadtext(),30,80);
 
 	/** Constructor. */
-	public TextScreen(String title) {
+	public TextScreen(String title){
 		super(title);
 	}
 
 	/**
-	 * @param string
-	 *            Saves the given text.
+	 * @param string Saves the given text.
 	 */
 	protected abstract void savetext(final String string);
 
@@ -35,23 +32,18 @@ public abstract class TextScreen extends Frame {
 	protected abstract String loadtext();
 
 	@Override
-	protected Container generate() {
-		JPanel panel = new JPanel(new BorderLayout());
-		panel.add(text, BorderLayout.CENTER);
-		java.awt.Button save = new java.awt.Button();
+	protected Container generate(){
+		JPanel panel=new JPanel(new BorderLayout());
+		panel.add(text,BorderLayout.CENTER);
+		java.awt.Button save=new java.awt.Button();
 		save.setLabel("Save");
-		save.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				enter();
-			}
-		});
-		panel.add(save, BorderLayout.SOUTH);
+		save.addActionListener(e->enter());
+		panel.add(save,BorderLayout.SOUTH);
 		return panel;
 	}
 
 	@Override
-	protected void enter() {
+	protected void enter(){
 		savetext(text.getText());
 		frame.dispose();
 	}

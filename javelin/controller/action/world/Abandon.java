@@ -10,19 +10,19 @@ import javelin.view.screen.WorldScreen;
  *
  * @author alex
  */
-public class Abandon extends WorldAction {
+public class Abandon extends WorldAction{
 	/** Constructor. */
-	public Abandon() {
-		super("Abandon current game", new int[] {}, new String[] { "Q" });
+	public Abandon(){
+		super("Abandon current game",new int[]{},new String[]{"Q"});
 	}
 
 	@Override
-	public void perform(final WorldScreen screen) {
-		String prompt = "Are you sure you want to permanently abandon the current game?\n"
-				+ "Press c to confirm or any other key to cancel...";
-		if (Javelin.prompt(prompt) == 'c') {
-			StateManager.abandoned = true;
-			StateManager.save(true, StateManager.SAVEFILE);
+	public void perform(final WorldScreen screen){
+		String prompt="Are you sure you want to permanently abandon the current game?\n"
+				+"Press c to confirm or any other key to cancel...";
+		if(Javelin.prompt(prompt)=='c'){
+			StateManager.abandoned=true;
+			StateManager.save(true,StateManager.SAVEFILE);
 			System.exit(0);
 		}
 	}

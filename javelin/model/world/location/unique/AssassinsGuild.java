@@ -15,35 +15,34 @@ import javelin.model.world.location.town.Rank;
  *
  * @author alex
  */
-public class AssassinsGuild extends Guild {
-	static final String DESCRITPION = "Assassins guild";
+public class AssassinsGuild extends Guild{
+	static final String DESCRITPION="Assassins guild";
 
-	public static class BuildAssassinsGuild extends BuildAcademy {
-		public BuildAssassinsGuild() {
+	public static class BuildAssassinsGuild extends BuildAcademy{
+		public BuildAssassinsGuild(){
 			super(Rank.HAMLET);
 		}
 
 		@Override
-		protected Academy generateacademy() {
+		protected Academy generateacademy(){
 			return new AssassinsGuild();
 		}
 	}
 
 	/** Constructor. */
-	public AssassinsGuild() {
-		super(DESCRITPION, Assassin.INSTANCE);
+	public AssassinsGuild(){
+		super(DESCRITPION,Assassin.INSTANCE);
 	}
 
 	@Override
-	protected void generate() {
-		while (x < 0 || Terrain.get(x, y).equals(Terrain.PLAIN)
-				|| Terrain.get(x, y).equals(Terrain.HILL)) {
+	protected void generate(){
+		while(x<0||Terrain.get(x,y).equals(Terrain.PLAIN)
+				||Terrain.get(x,y).equals(Terrain.HILL))
 			super.generate();
-		}
 	}
 
-	public static AssassinsGuild get() {
-		ArrayList<Actor> guild = World.getall(AssassinsGuild.class);
-		return guild.isEmpty() ? null : (AssassinsGuild) guild.get(0);
+	public static AssassinsGuild get(){
+		ArrayList<Actor> guild=World.getall(AssassinsGuild.class);
+		return guild.isEmpty()?null:(AssassinsGuild)guild.get(0);
 	}
 }

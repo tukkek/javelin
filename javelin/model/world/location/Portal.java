@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.Javelin.Delay;
 import javelin.controller.Point;
 import javelin.controller.generator.WorldGenerator;
 import javelin.controller.terrain.Terrain;
@@ -29,10 +28,10 @@ import javelin.view.screen.WorldScreen;
  *
  * @author alex
  */
-public class Portal extends Location {
-	private static final String DESCRIPTION = "A portal";
+public class Portal extends Location{
+	private static final String DESCRIPTION="A portal";
 
-	private static final int NFEATURES = 6;
+	private static final int NFEATURES=6;
 
 	final Actor to;
 	final Actor from;
@@ -47,128 +46,115 @@ public class Portal extends Location {
 	public Long expiresat;
 	final boolean wandering;
 	/**
-	 * An invasion portal is used by incoming {@link Incursion}s as an entry
-	 * point to the {@link World}.
+	 * An invasion portal is used by incoming {@link Incursion}s as an entry point
+	 * to the {@link World}.
 	 */
 	public boolean invasion;
 
 	/**
-	 * @param fromp
-	 *            Source town.
-	 * @param top
-	 *            Destination town.
-	 * @param bidirectional
-	 *            If <code>true</code> will allow travel back.
-	 * @param wanderingp
-	 *            If <code>true</code> the portal moves with time.
-	 * @param safep
-	 *            If <code>false</code> deals damage upon entering.
-	 * @param instantaneousp
-	 *            If <code>false</code> will take some time to get to the other
-	 *            side.
-	 * @param expiresatp
-	 *            See {@link #expiresat}.
-	 * @param invasionp
-	 *            If <code>true</code> will periodically bring creatures from
-	 *            the other side until closed.
+	 * @param fromp Source town.
+	 * @param top Destination town.
+	 * @param bidirectional If <code>true</code> will allow travel back.
+	 * @param wanderingp If <code>true</code> the portal moves with time.
+	 * @param safep If <code>false</code> deals damage upon entering.
+	 * @param instantaneousp If <code>false</code> will take some time to get to
+	 *          the other side.
+	 * @param expiresatp See {@link #expiresat}.
+	 * @param invasionp If <code>true</code> will periodically bring creatures
+	 *          from the other side until closed.
 	 */
-	public Portal(Actor fromp, Actor top, boolean bidirectional,
-			boolean wanderingp, boolean safep, boolean instantaneousp,
-			Long expiresatp, boolean invasionp) {
+	public Portal(Actor fromp,Actor top,boolean bidirectional,boolean wanderingp,
+			boolean safep,boolean instantaneousp,Long expiresatp,boolean invasionp){
 		super(DESCRIPTION);
-		allowedinscenario = false;
-		link = false;
-		from = fromp;
-		to = top;
-		Point p = null;
-		while (p == null) {
-			try {
-				p = spawn(from);
-			} catch (StackOverflowError e) {
+		allowedinscenario=false;
+		link=false;
+		from=fromp;
+		to=top;
+		Point p=null;
+		while(p==null)
+			try{
+				p=spawn(from);
+			}catch(StackOverflowError e){
 				continue;
 			}
-		}
-		x = p.x;
-		y = p.y;
-		if (bidirectional && !invasionp) {
-			new Portal(to, from, false, wanderingp, safep, instantaneousp,
-					expiresatp, false).place();
-		}
-		wandering = wanderingp;
-		instantaneous = instantaneousp;
-		expiresat = expiresatp;
-		safe = safep;
+		x=p.x;
+		y=p.y;
+		if(bidirectional&&!invasionp)
+			new Portal(to,from,false,wanderingp,safep,instantaneousp,expiresatp,false)
+					.place();
+		wandering=wanderingp;
+		instantaneous=instantaneousp;
+		expiresat=expiresatp;
+		safe=safep;
 		setinvasion(invasionp);
 	}
 
 	/**
-	 * @param invasionp
-	 *            Changes all relevant field values according to this.
+	 * @param invasionp Changes all relevant field values according to this.
 	 * @see #invasion
 	 */
-	public void setinvasion(boolean invasionp) {
-		invasion = invasionp;
-		impermeable = !invasion;
-		allowentry = invasion;
-		if (invasion) {
-			realm = Realm.random();
-			description = "Invasion portal";
-		} else {
-			realm = null;
-			description = DESCRIPTION;
+	public void setinvasion(boolean invasionp){
+		invasion=invasionp;
+		impermeable=!invasion;
+		allowentry=invasion;
+		if(invasion){
+			realm=Realm.random();
+			description="Invasion portal";
+		}else{
+			realm=null;
+			description=DESCRIPTION;
 		}
 	}
 
-	public Portal(Actor from, Actor to) {
-		this(from, to, Portal.activatefeature(), Portal.activatefeature(),
-				!Portal.activatefeature(), !Portal.activatefeature(),
-				Portal.activatefeature()
-						? Squad.active.hourselapsed + RPG.r(7, 30) * 24 : null,
+	public Portal(Actor from,Actor to){
+		this(from,to,Portal.activatefeature(),Portal.activatefeature(),
+				!Portal.activatefeature(),!Portal.activatefeature(),
+				Portal.activatefeature()?Squad.active.hourselapsed+RPG.r(7,30)*24:null,
 				Portal.activatefeature());
 	}
 
-	static boolean activatefeature() {
-		return RPG.r(1, NFEATURES + 1) == 1;
+	static boolean activatefeature(){
+		return RPG.r(1,NFEATURES+1)==1;
 	}
 
 	@Override
-	protected void generate() {
+	protected void generate(){
 		// do nothing
 	}
 
-	private Point spawn(Actor t) {
-		Point p = new Point(t.x, t.y);
-		int size = World.scenario.size;
-		ArrayList<Actor> actors = World.getactors();
-		while (World.get(p.x, p.y, actors) != null) {
-			p = new Point(determinedistance(t.x), determinedistance(t.y));
-			if (p.x < 0 || p.x >= size || p.y < 0 || p.y >= size
-					|| World.getseed().map[p.x][p.y].equals(Terrain.WATER)) {
+	private Point spawn(Actor t){
+		Point p=new Point(t.x,t.y);
+		int size=World.scenario.size;
+		ArrayList<Actor> actors=World.getactors();
+		while(World.get(p.x,p.y,actors)!=null){
+			p=new Point(determinedistance(t.x),determinedistance(t.y));
+			if(p.x<0||p.x>=size||p.y<0||p.y>=size
+					||World.getseed().map[p.x][p.y].equals(Terrain.WATER)){
 				WorldGenerator.retry();
-				p = new Point(t.x, t.y);
+				p=new Point(t.x,t.y);
 			}
 		}
 		return p;
 	}
 
-	private int determinedistance(int coordinate) {
+	private int determinedistance(int coordinate){
 		int deltamin;
 		int deltamax;
-		if (RPG.r(1, 2) == 2) {
-			deltamin = +3;
-			deltamax = +5;
-		} else {
-			deltamin = -5;
-			deltamax = -3;
+		if(RPG.r(1,2)==2){
+			deltamin=+3;
+			deltamax=+5;
+		}else{
+			deltamin=-5;
+			deltamax=-3;
 		}
-		return RPG.r(coordinate + deltamin, coordinate + deltamax);
+		return RPG.r(coordinate+deltamin,coordinate+deltamax);
 	}
 
 	@Override
-	public boolean interact() {
-		if (invasion) {
+	public boolean interact(){
+		if(invasion){
 			MessagePanel.active.clear();
-			Javelin.message("You close the invasion portal!", Javelin.Delay.NONE);
+			Javelin.message("You close the invasion portal!",Javelin.Delay.NONE);
 			InfoScreen.feedback();
 			super.interact();
 			return true;
@@ -179,82 +165,78 @@ public class Portal extends Location {
 		// throw new StartBattle(new PlanarFight(haskey));
 		// }
 		travel();
-		if (expiresat == null) {
-			super.interact();// remove
-		}
+		if(expiresat==null) super.interact();// remove
 		return true;
 	}
 
-	void travel() {
-		Point p = spawn(to);
-		Squad.active.x = p.x;
-		Squad.active.y = p.y;
+	void travel(){
+		Point p=spawn(to);
+		Squad.active.x=p.x;
+		Squad.active.y=p.y;
 		Squad.active.displace();
 		Squad.active.place();
-		String description = "";
-		if (!instantaneous) {
-			description += "It didn't seem that long on the way in...\n";
-			Squad.active.hourselapsed += RPG.r(1, 7) * 24;
+		String description="";
+		if(!instantaneous){
+			description+="It didn't seem that long on the way in...\n";
+			Squad.active.hourselapsed+=RPG.r(1,7)*24;
 		}
-		if (!safe) {
-			description += "Ouch!";
-			for (Combatant c : Squad.active.members) {
-				c.damage(Math.round(c.hp * RPG.r(1, 3) / 10f));
-			}
+		if(!safe){
+			description+="Ouch!";
+			for(Combatant c:Squad.active.members)
+				c.damage(Math.round(c.hp*RPG.r(1,3)/10f));
 		}
-		if (!description.isEmpty()) {
+		if(!description.isEmpty()){
 			MessagePanel.active.clear();
-			Javelin.message(description, Javelin.Delay.BLOCK);
+			Javelin.message(description,Javelin.Delay.BLOCK);
 			Javelin.input();
 		}
 	}
 
-	public static Portal open() {
-		ArrayList<Actor> towns = World.getall(Town.class);
-		Actor from = RPG.pick(towns);
-		Actor to = RPG.pick(towns);
-		while (to == from) {
-			to = RPG.pick(towns);
-		}
-		return new Portal(from, to);
+	public static Portal open(){
+		ArrayList<Actor> towns=World.getall(Town.class);
+		Actor from=RPG.pick(towns);
+		Actor to=RPG.pick(towns);
+		while(to==from)
+			to=RPG.pick(towns);
+		return new Portal(from,to);
 	}
 
 	@Override
-	public void turn(long time, WorldScreen world) {
-		if (expiresat != null && Squad.active != null
-				&& Squad.active.hourselapsed >= expiresat) {
+	public void turn(long time,WorldScreen world){
+		if(expiresat!=null&&Squad.active!=null
+				&&Squad.active.hourselapsed>=expiresat){
 			super.interact();
 			return;
 		}
-		if (wandering) {
+		if(wandering){
 			displace();
 			place();
 		}
 	}
 
 	@Override
-	public Integer getel(int attackerel) {
+	public Integer getel(int attackerel){
 		assert !impermeable;
-		return attackerel - 4;
+		return attackerel-4;
 	}
 
 	/**
 	 * Opens a portal that a {@link TempleKey} can be safely used upon.
 	 */
-	public static void opensafe() {
-		Portal p = Portal.open();
+	public static void opensafe(){
+		Portal p=Portal.open();
 		p.setinvasion(false);
-		p.expiresat = null;
+		p.expiresat=null;
 		p.place();
 	}
 
 	@Override
-	public List<Combatant> getcombatants() {
+	public List<Combatant> getcombatants(){
 		return null;
 	}
 
 	@Override
-	protected boolean cancross(int tox, int toy) {
+	protected boolean cancross(int tox,int toy){
 		return true;
 	}
 }

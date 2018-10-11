@@ -17,64 +17,51 @@ import javelin.model.unit.condition.Poisoned;
  * @see Poisoned
  * @author alex
  */
-public class Poison extends Touch {
+public class Poison extends Touch{
 
-	public static Poison instance = new Poison();
-	boolean nonmagical = false;
-	public int dcbonus = 0;
+	public static Poison instance=new Poison();
+	boolean nonmagical=false;
+	public int dcbonus=0;
 
 	/** Constructor. */
-	public Poison() {
-		super("Poison", 4, ChallengeCalculator.ratespelllikeability(4),
-				Realm.EVIL);
-		castinbattle = true;
+	public Poison(){
+		super("Poison",4,ChallengeCalculator.ratespelllikeability(4),Realm.EVIL);
+		castinbattle=true;
 	}
 
 	@Override
-	public String cast(Combatant caster, Combatant target, boolean saved,
-			BattleState s, ChanceNode cn) {
-		if (saved) {
-			return target + " resists!";
-		}
-		final int dc = getdc(caster);
-		float ratio = (dc - target.source.getfortitude()) / new Float(dc);
-		if (ratio < 0) {
-			ratio = 0;
-		} else if (ratio > 1) {
-			ratio = 1;
-		}
-		final int damage = Math.round(3 * ratio);
-		if (damage <= 0) {
-			return target + " resists the poison!";
-		}
-		Poisoned p = new Poisoned(Float.MAX_VALUE, target, Effect.NEGATIVE,
-				damage, dc, nonmagical ? null : casterlevel);
-		if (p.neutralized) {
-			return target + " is immune to poison.";
-		}
+	public String cast(Combatant caster,Combatant target,boolean saved,
+			BattleState s,ChanceNode cn){
+		if(saved) return target+" resists!";
+		final int dc=getdc(caster);
+		float ratio=(dc-target.source.getfortitude())/new Float(dc);
+		if(ratio<0)
+			ratio=0;
+		else if(ratio>1) ratio=1;
+		final int damage=Math.round(3*ratio);
+		if(damage<=0) return target+" resists the poison!";
+		Poisoned p=new Poisoned(Float.MAX_VALUE,target,Effect.NEGATIVE,damage,dc,
+				nonmagical?null:casterlevel);
+		if(p.neutralized) return target+" is immune to poison.";
 		target.addcondition(p);
-		if (target.hp < 1) {
-			target.hp = 1;
-		}
-		return target + " is poisoned!";
+		if(target.hp<1) target.hp=1;
+		return target+" is poisoned!";
 	}
 
 	@Override
-	public int save(Combatant caster, Combatant target) {
-		int fort = target.source.getfortitude();
-		if (fort == Integer.MAX_VALUE || target.source.immunitytopoison) {
+	public int save(Combatant caster,Combatant target){
+		int fort=target.source.getfortitude();
+		if(fort==Integer.MAX_VALUE||target.source.immunitytopoison)
 			return Integer.MIN_VALUE;
-		}
-		return getdc(caster) - fort;
+		return getdc(caster)-fort;
 	}
 
-	int getdc(Combatant caster) {
-		return 10 + casterlevel / 2 + Monster.getbonus(caster.source.wisdom)
-				+ dcbonus;
+	int getdc(Combatant caster){
+		return 10+casterlevel/2+Monster.getbonus(caster.source.wisdom)+dcbonus;
 	}
 
 	@Override
-	public void setdamageeffect() {
-		nonmagical = true;
+	public void setdamageeffect(){
+		nonmagical=true;
 	}
 }

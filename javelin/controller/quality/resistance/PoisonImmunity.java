@@ -8,55 +8,53 @@ import javelin.model.unit.Monster;
 
 /**
  * Reader and {@link Upgrade} for poison immunity.
- * 
+ *
  * @see Monster#getwill()
  */
-public class PoisonImmunity extends Quality {
-	public static final float CR = 0.2f;
+public class PoisonImmunity extends Quality{
+	public static final float CR=0.2f;
 
-	static class PoisonImmunityUpgrade extends Upgrade {
-		PoisonImmunityUpgrade() {
+	static class PoisonImmunityUpgrade extends Upgrade{
+		PoisonImmunityUpgrade(){
 			super("Poison immunity");
 		}
 
 		@Override
-		public String inform(Combatant c) {
+		public String inform(Combatant c){
 			return "";
 		}
 
 		@Override
-		protected boolean apply(Combatant c) {
-			if (c.source.immunitytopoison) {
-				return false;
-			}
-			c.source.immunitytopoison = true;
+		protected boolean apply(Combatant c){
+			if(c.source.immunitytopoison) return false;
+			c.source.immunitytopoison=true;
 			return true;
 		}
 
 	}
 
 	/** Constructor. */
-	public PoisonImmunity() {
+	public PoisonImmunity(){
 		super("poison immunity");
 	}
 
 	@Override
-	public void add(String declaration, Monster m) {
-		m.immunitytopoison = true;
+	public void add(String declaration,Monster m){
+		m.immunitytopoison=true;
 	}
 
 	@Override
-	public boolean has(Monster monster) {
+	public boolean has(Monster monster){
 		return monster.immunitytopoison;
 	}
 
 	@Override
-	public float rate(Monster monster) {
+	public float rate(Monster monster){
 		return CR;
 	}
 
 	@Override
-	public void listupgrades(UpgradeHandler handler) {
+	public void listupgrades(UpgradeHandler handler){
 		handler.good.add(new PoisonImmunityUpgrade());
 	}
 }

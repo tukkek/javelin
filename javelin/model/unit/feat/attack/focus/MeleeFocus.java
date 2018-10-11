@@ -10,16 +10,16 @@ import javelin.model.unit.feat.Feat;
  * @see WeaponFocus
  * @author alex
  */
-public class MeleeFocus extends WeaponFocus {
+public class MeleeFocus extends WeaponFocus{
 	/** Unique instance of this {@link Feat}. */
-	public static final MeleeFocus SINGLETON = new MeleeFocus();
+	public static final MeleeFocus SINGLETON=new MeleeFocus();
 
-	private MeleeFocus() {
+	private MeleeFocus(){
 		super("Melee focus");
 	}
 
 	@Override
-	protected List<AttackSequence> getattacks(final Monster m) {
+	protected List<AttackSequence> getattacks(final Monster m){
 		return m.melee;
 	}
 

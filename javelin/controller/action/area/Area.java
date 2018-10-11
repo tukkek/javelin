@@ -12,7 +12,7 @@ import javelin.model.unit.Combatant;
 /**
  * Controller class to fill a certain region of the map by shape and a source
  * point.
- * 
+ *
  * TODO instead of taking an initial direction make {@link Breath} a
  * {@link Fire} and take a {@link Combatant} as `target`. This would be faster
  * since currently this requires 8 area calculations per turn and it would also
@@ -20,10 +20,10 @@ import javelin.model.unit.Combatant;
  * monster in sight and range not only those aligned horizontally, vertically or
  * diagonally. This would also be an interesting way to be able to cast Area
  * spells.
- * 
+ *
  * @author alex
  */
-public abstract class Area {
+public abstract class Area{
 	/**
 	 * Relative initial square of the area in relation to the source
 	 * {@link Combatant}.
@@ -33,31 +33,29 @@ public abstract class Area {
 	/**
 	 * @see #direction
 	 */
-	public Area(final int sourcex, final int sourcey) {
-		direction = new Point(sourcex, sourcey);
+	public Area(final int sourcex,final int sourcey){
+		direction=new Point(sourcex,sourcey);
 	}
 
 	/**
-	 * @param range
-	 *            Dimension of area in feet (5 feet equals 1 square).
+	 * @param range Dimension of area in feet (5 feet equals 1 square).
 	 * @return Points that area filled by this area.
 	 */
-	abstract public Set<Point> fill(final int range, Combatant active,
+	abstract public Set<Point> fill(final int range,Combatant active,
 			BattleState state);
 
 	/**
 	 * @return
 	 */
-	public Point initiate(Combatant m) {
-		return new Point(m.location[0] + direction.x,
-				m.location[1] + direction.y);
+	public Point initiate(Combatant m){
+		return new Point(m.location[0]+direction.x,m.location[1]+direction.y);
 	}
 
 	/**
 	 * Used to also check for {@link Square#obstructed} but it wasn't much fun.
 	 */
-	static public boolean checkclear(final BattleState state, final Point p) {
-		return p.x >= 0 && p.y >= 0 && p.x < state.map.length
-				&& p.y < state.map[0].length && !state.map[p.x][p.y].blocked;
+	static public boolean checkclear(final BattleState state,final Point p){
+		return p.x>=0&&p.y>=0&&p.x<state.map.length&&p.y<state.map[0].length
+				&&!state.map[p.x][p.y].blocked;
 	}
 }

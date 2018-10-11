@@ -5,19 +5,19 @@ import javelin.model.unit.abilities.discipline.Maneuver;
 
 /**
  * A discipline adapter for {@link CombatExpertiseManeuver}s.
- * 
+ *
  * @author alex
  */
-public class CombatExpertiseDiscipline extends Discipline {
-	public static final CombatExpertiseDiscipline INSTANCE = new CombatExpertiseDiscipline();
+public class CombatExpertiseDiscipline extends Discipline{
+	public static final CombatExpertiseDiscipline INSTANCE=new CombatExpertiseDiscipline();
 
-	private CombatExpertiseDiscipline() {
+	private CombatExpertiseDiscipline(){
 		super("Combat expertise");
-		hasacademy = false;
+		hasacademy=false;
 	}
 
 	@Override
-	protected Maneuver[] getmaneuvers() {
+	protected Maneuver[] getmaneuvers(){
 		throw new UnsupportedOperationException();
 	}
 }

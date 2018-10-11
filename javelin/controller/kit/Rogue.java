@@ -8,16 +8,16 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.feat.skill.Deceitful;
 import javelin.model.unit.skill.Skill;
 
-public class Rogue extends Kit {
-	public static final Kit INSTANCE = new Rogue();
+public class Rogue extends Kit{
+	public static final Kit INSTANCE=new Rogue();
 
-	private Rogue() {
-		super("rogue", Expert.SINGLETON, RaiseDexterity.SINGLETON, "Cutpurse",
-				"Burglar", "Rogue", "Shadow");
+	private Rogue(){
+		super("rogue",Expert.SINGLETON,RaiseDexterity.SINGLETON,"Cutpurse",
+				"Burglar","Rogue","Shadow");
 	}
 
 	@Override
-	protected void define() {
+	protected void define(){
 		basic.add(Skill.BLUFF.getupgrade());
 		basic.add(Skill.DISABLEDEVICE.getupgrade());
 		basic.add(Skill.SENSEMOTIVE.getupgrade());
@@ -26,7 +26,7 @@ public class Rogue extends Kit {
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h) {
+	protected void extend(UpgradeHandler h){
 		basic.add(new FeatUpgrade(Deceitful.SINGLETON));
 		extension.addAll(h.wind);
 		extension.addAll(h.evil);
@@ -35,9 +35,8 @@ public class Rogue extends Kit {
 	}
 
 	@Override
-	public boolean allow(int bestability, int secondbest, Monster m) {
-		return super.allow(bestability, secondbest, m)
-				&& !Boolean.TRUE.equals(m.good)
-				&& !Boolean.TRUE.equals(m.lawful);
+	public boolean allow(int bestability,int secondbest,Monster m){
+		return super.allow(bestability,secondbest,m)&&!Boolean.TRUE.equals(m.good)
+				&&!Boolean.TRUE.equals(m.lawful);
 	}
 }

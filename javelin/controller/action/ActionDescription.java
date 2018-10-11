@@ -2,29 +2,28 @@ package javelin.controller.action;
 
 /**
  * Describes an action.
- * 
+ *
  * @author alex
  */
-public interface ActionDescription {
+public interface ActionDescription{
 
 	/**
 	 * @return Keys as strings.
 	 */
-	abstract String[] getDescriptiveKeys();
+	String[] getDescriptiveKeys();
 
 	/**
 	 * @return Action name.
 	 */
-	abstract String getDescriptiveName();
+	String getDescriptiveName();
 
 	/**
 	 * @return Usually the first of {@link #getDescriptiveKeys()}.
 	 */
-	abstract String getMainKey();
+	String getMainKey();
 
 	/**
-	 * @param key
-	 *            Replaces the key given by {@link #getMainKey()}.
+	 * @param key Replaces the key given by {@link #getMainKey()}.
 	 */
 	void setMainKey(String key);
 

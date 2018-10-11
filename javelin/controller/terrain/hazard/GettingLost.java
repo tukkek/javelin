@@ -12,53 +12,43 @@ import javelin.model.world.World;
  *
  * @author alex
  */
-public class GettingLost extends Hazard {
-	static final boolean ANNOY = false;
+public class GettingLost extends Hazard{
+	static final boolean ANNOY=false;
 
 	int dc;
 
 	/**
-	 * @param dc
-	 *            Survival check difficulty class.
+	 * @param dc Survival check difficulty class.
 	 */
-	public GettingLost(int dc) {
-		this.dc = dc;
+	public GettingLost(int dc){
+		this.dc=dc;
 	}
 
 	@Override
-	public boolean validate() {
-		if (Squad.active.fly()) {
+	public boolean validate(){
+		if(Squad.active.fly()) return false;
+		if(!Squad.active.lastterrain.equals(Terrain.current())) return false;
+		if(World.seed.roads[Squad.active.x][Squad.active.y]
+				&&Terrain.current().getweather()!=Desert.SANDSTORM)
 			return false;
-		}
-		if (!Squad.active.lastterrain.equals(Terrain.current())) {
-			return false;
-		}
-		if (World.seed.roads[Squad.active.x][Squad.active.y]
-				&& Terrain.current().getweather() != Desert.SANDSTORM) {
-			return false;
-		}
-		return Squad.active.getbest(Skill.SURVIVAL).roll(Skill.SURVIVAL) < dc;
+		return Squad.active.getbest(Skill.SURVIVAL).roll(Skill.SURVIVAL)<dc;
 	}
 
 	@Override
-	public void hazard(int hoursellapsed) {
-		getlost(ANNOY ? "Squad got lost!" : null, hoursellapsed);
+	public void hazard(int hoursellapsed){
+		getlost(ANNOY?"Squad got lost!":null,hoursellapsed);
 	}
 
 	/**
 	 * {@link Squad#displace()} on the active squad.
 	 *
-	 * @param message
-	 *            Shows this message in a prompt.
-	 * @param hoursellapsed
-	 *            This many more hours will be spent.
+	 * @param message Shows this message in a prompt.
+	 * @param hoursellapsed This many more hours will be spent.
 	 */
-	public static void getlost(String message, int hoursellapsed) {
+	public static void getlost(String message,int hoursellapsed){
 		Squad.active.displace();
 		Squad.active.place();
-		Squad.active.hourselapsed += hoursellapsed;
-		if (message != null) {
-			Javelin.message(message, false);
-		}
+		Squad.active.hourselapsed+=hoursellapsed;
+		if(message!=null) Javelin.message(message,false);
 	}
 }

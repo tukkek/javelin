@@ -37,45 +37,36 @@ import javelin.model.unit.attack.AttackSequence;
  *
  * @author alex
  */
-public class FullAttackFactor extends CrFactor {
+public class FullAttackFactor extends CrFactor{
 	@Override
-	public float calculate(final Monster monster) {
-		final List<Attack> attks = new ArrayList<Attack>();
-		final ArrayList<List<AttackSequence>> attacktypes = new ArrayList<List<AttackSequence>>();
+	public float calculate(final Monster monster){
+		final List<Attack> attks=new ArrayList<>();
+		final ArrayList<List<AttackSequence>> attacktypes=new ArrayList<>();
 		attacktypes.add(monster.melee);
 		attacktypes.add(monster.ranged);
-		for (final List<AttackSequence> attacktype : attacktypes) {
-			for (final AttackSequence a : attacktype) {
-				if (!a.rapid && !a.powerful) {
-					attks.addAll(a);
-				}
-			}
-		}
-		if (attks.size() == 0) {
-			return -1;
-		}
-		final HashSet<String> effects = new HashSet<String>();
-		float sum = 0;
-		Attack last = null;
-		for (final Attack a : attks) {
-			sum += a.getAverageDamageNoBonus()
-					* (last != null && last.name.equals(a.name) ? .05f : .1f);
-			last = a;
-			Spell effect = a.geteffect();
-			if (effect != null && effects.add(effect.name)) {
-				sum += .1 * effect.level;
-			}
+		for(final List<AttackSequence> attacktype:attacktypes)
+			for(final AttackSequence a:attacktype)
+				if(!a.rapid&&!a.powerful) attks.addAll(a);
+		if(attks.size()==0) return -1;
+		final HashSet<String> effects=new HashSet<>();
+		float sum=0;
+		Attack last=null;
+		for(final Attack a:attks){
+			sum+=a.getAverageDamageNoBonus()
+					*(last!=null&&last.name.equals(a.name)?.05f:.1f);
+			last=a;
+			Spell effect=a.geteffect();
+			if(effect!=null&&effects.add(effect.name)) sum+=.1*effect.level;
 		}
 		return sum;
 	}
 
 	@Override
-	public void registerupgrades(UpgradeHandler handler) {
+	public void registerupgrades(UpgradeHandler handler){
 		handler.fire.add(new MeleeDamage());
 		handler.wind.add(new RangedDamage());
 		DamageEffect.init();
-		for (DamageEffect e : DamageEffect.EFFECTS) {
+		for(DamageEffect e:DamageEffect.EFFECTS)
 			e.realm.getupgrades(handler).add(new EffectUpgrade(e));
-		}
 	}
 }

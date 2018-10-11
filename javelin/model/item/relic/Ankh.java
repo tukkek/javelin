@@ -9,19 +9,19 @@ import javelin.model.unit.condition.Heroic;
  *
  * @author alex
  */
-public class Ankh extends Relic {
+public class Ankh extends Relic{
 	/** Constructor. */
-	public Ankh(Integer level) {
-		super("Ankh of Life", level);
-		usedinbattle = false;
-		usedoutofbattle = true;
+	public Ankh(Integer level){
+		super("Ankh of Life",level);
+		usedinbattle=false;
+		usedoutofbattle=true;
 	}
 
 	@Override
-	protected boolean activate(Combatant user) {
-		for (Combatant c : Squad.active.members) {
-			c.heal(c.maxhp, true);
-			c.addcondition(new Heroic(c, 20, 24));
+	protected boolean activate(Combatant user){
+		for(Combatant c:Squad.active.members){
+			c.heal(c.maxhp,true);
+			c.addcondition(new Heroic(c,20,24));
 		}
 		return true;
 	}

@@ -12,21 +12,21 @@ import javelin.model.unit.skill.Skill;
  * @see Acrobatics
  * @author alex
  */
-public class Alertness extends Feat {
+public class Alertness extends Feat{
 	/** Single instance. */
-	public static final Feat SINGLETON = new Alertness();
+	public static final Feat SINGLETON=new Alertness();
 	/** +1 since we don't support Sense Motive in the game. */
-	public static final int BONUS = +4;
+	public static final int BONUS=+4;
 
 	/** Constructor. */
-	private Alertness() {
+	private Alertness(){
 		super("alertness");
-		arena = false;
+		arena=false;
 	}
 
 	@Override
-	public void read(Monster m) {
+	public void read(Monster m){
 		super.read(m);
-		Acrobatic.normalize(Skill.PERCEPTION, BONUS, m);
+		Acrobatic.normalize(Skill.PERCEPTION,BONUS,m);
 	}
 }

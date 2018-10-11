@@ -7,39 +7,39 @@ import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.world.WorldPanel;
 
-public class DungeonPanel extends MapPanel {
+public class DungeonPanel extends MapPanel{
 	Dungeon dungeon;
 
-	public DungeonPanel(Dungeon d) {
-		super(d.size, d.size, Preferences.KEYTILEDUNGEON);
-		this.dungeon = d;
+	public DungeonPanel(Dungeon d){
+		super(d.size,d.size,Preferences.KEYTILEDUNGEON);
+		dungeon=d;
 	}
 
 	@Override
-	protected Mouse getmouselistener() {
+	protected Mouse getmouselistener(){
 		return new DungeonMouse(this);
 	}
 
 	@Override
-	protected int gettilesize() {
+	protected int gettilesize(){
 		return Preferences.TILESIZEDUNGEON;
 	}
 
 	@Override
-	protected Tile newtile(int x, int y) {
-		return new DungeonTile(x, y, this);
+	protected Tile newtile(int x,int y){
+		return new DungeonTile(x,y,this);
 	}
 
 	@Override
-	public void init() {
+	public void init(){
 		super.init();
 		scroll.setVisible(false);
 	}
 
 	@Override
-	public void refresh() {
-		if (initial) {
-			WorldPanel.resize(this, Dungeon.active.herolocation.x,
+	public void refresh(){
+		if(initial){
+			WorldPanel.resize(this,Dungeon.active.herolocation.x,
 					Dungeon.active.herolocation.y);
 			scroll.setVisible(true);
 		}
@@ -48,15 +48,11 @@ public class DungeonPanel extends MapPanel {
 	}
 
 	@Override
-	public void repaint() {
+	public void repaint(){
 		// super.repaint();
-		for (Tile[] ts : tiles) {
-			for (Tile t : ts) {
-				if (t.discovered) {
-					t.repaint();
-				}
-			}
-		}
+		for(Tile[] ts:tiles)
+			for(Tile t:ts)
+				if(t.discovered) t.repaint();
 	}
 
 	// @Override

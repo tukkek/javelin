@@ -9,54 +9,52 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.condition.Condition;
-import javelin.model.unit.condition.Heroic;
 
 /**
  * http://www.d20pfsrd.com/magic/all-spells/b/bless/
- * 
+ *
  * @author alex
  */
-public class Bless extends Spell {
-	public class Blessed extends Condition {
-		int bonus = +1;
+public class Bless extends Spell{
+	public class Blessed extends Condition{
+		int bonus=+1;
 
-		public Blessed(Combatant c) {
-			super(Float.MAX_VALUE, c, Effect.POSITIVE, "blessed", 1);
+		public Blessed(Combatant c){
+			super(Float.MAX_VALUE,c,Effect.POSITIVE,"blessed",1);
 		}
 
 		@Override
-		public void start(Combatant c) {
-			c.source = c.source.clone();
-			Heroic.raiseallattacks(c.source, bonus, 0);
+		public void start(Combatant c){
+			c.source=c.source.clone();
+			Condition.raiseallattacks(c.source,bonus,0);
 		}
 
 		@Override
-		public void end(Combatant c) {
-			c.source = c.source.clone();
-			Heroic.raiseallattacks(c.source, -bonus, 0);
+		public void end(Combatant c){
+			c.source=c.source.clone();
+			Condition.raiseallattacks(c.source,-bonus,0);
 		}
 	}
 
-	public Bless() {
-		super("Bless", 1, ChallengeCalculator.ratespelllikeability(1), Realm.GOOD);
-		castonallies = true;
-		castinbattle = true;
-		isscroll = true;
+	public Bless(){
+		super("Bless",1,ChallengeCalculator.ratespelllikeability(1),Realm.GOOD);
+		castonallies=true;
+		castinbattle=true;
+		isscroll=true;
 	}
 
 	@Override
-	public String cast(Combatant caster, Combatant target, boolean saved,
-			BattleState s, ChanceNode cn) {
-		s = s.clone();
-		for (Combatant c : s.getteam(caster)) {
+	public String cast(Combatant caster,Combatant target,boolean saved,
+			BattleState s,ChanceNode cn){
+		s=s.clone();
+		for(Combatant c:s.getteam(caster))
 			c.addcondition(new Blessed(c));
-		}
 		return "All allies are blessed!";
 	}
 
 	@Override
-	public void filtertargets(Combatant combatant, List<Combatant> targets,
-			BattleState s) {
-		targetself(combatant, targets);
+	public void filtertargets(Combatant combatant,List<Combatant> targets,
+			BattleState s){
+		targetself(combatant,targets);
 	}
 }

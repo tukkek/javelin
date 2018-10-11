@@ -13,7 +13,7 @@ import javelin.controller.ai.Entry;
  *
  * @author Alex Henry
  */
-public class MaxValueSelector extends ValueSelector {
+public class MaxValueSelector extends ValueSelector{
 	/**
 	 * @see MaxValueSelector#MaxValueSelector(AlphaBetaSearch)
 	 *
@@ -24,37 +24,35 @@ public class MaxValueSelector extends ValueSelector {
 	/**
 	 * Construtor.
 	 *
-	 * @param search
-	 *            Busca atual sendo realizada.
+	 * @param search Busca atual sendo realizada.
 	 * @author Alex Henry
 	 */
-	public MaxValueSelector(final AlphaBetaSearch search) {
+	public MaxValueSelector(final AlphaBetaSearch search){
 		super(-Float.MAX_VALUE);
-		this.search = search;
+		this.search=search;
 	}
 
 	@Override
-	protected Entry processCurrent(final Entry node, final int depth,
-			final float alpha, final float beta,
-			final ArrayList<Integer> index) {
+	protected Entry processCurrent(final Entry node,final int depth,
+			final float alpha,final float beta,final ArrayList<Integer> index){
 		return search.minValueSelector.getValue(
-				new Entry(node.node, Float.MAX_VALUE, node.cns), search, depth,
-				alpha, beta, index);
+				new Entry(node.node,Float.MAX_VALUE,node.cns),search,depth,alpha,beta,
+				index);
 	}
 
 	@Override
-	protected Entry returnBest(final Entry currentBest, final Entry processed) {
-		return currentBest.value > processed.value ? currentBest : processed;
+	protected Entry returnBest(final Entry currentBest,final Entry processed){
+		return currentBest.value>processed.value?currentBest:processed;
 	}
 
 	@Override
-	protected float newAlpha(final float current, final float alpha) {
-		return alpha < current ? current : alpha;
+	protected float newAlpha(final float current,final float alpha){
+		return alpha<current?current:alpha;
 	}
 
 	@Override
-	protected boolean testPod(final float current, final float alpha,
-			final float beta) {
-		return current >= beta;
+	protected boolean testPod(final float current,final float alpha,
+			final float beta){
+		return current>=beta;
 	}
 }

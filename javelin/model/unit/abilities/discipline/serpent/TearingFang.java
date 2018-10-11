@@ -16,32 +16,32 @@ import javelin.old.RPG;
  *
  * @author alex
  */
-public class TearingFang extends Boost {
-	static final int EXTRADAMAGE = RPG.average(2, 6);
-	static final int BLEEDDURATION = RPG.average(1, 4);
-	static final int HEALDC = 15;
-	static final int BLEEDDAMAGE = 2;
+public class TearingFang extends Boost{
+	static final int EXTRADAMAGE=RPG.average(2,6);
+	static final int BLEEDDURATION=RPG.average(1,4);
+	static final int HEALDC=15;
+	static final int BLEEDDAMAGE=2;
 
-	class Tearing extends Condition {
-		public Tearing(Combatant c) {
-			super(c.ap + 1, c, Effect.POSITIVE, "tearing", null);
+	class Tearing extends Condition{
+		public Tearing(Combatant c){
+			super(c.ap+1,c,Effect.POSITIVE,"tearing",null);
 		}
 
 		@Override
-		public void start(Combatant c) {
-			c.source = c.source.clone();
-			for (Attack a : c.source.getattacks()) {
-				a.damage[2] += EXTRADAMAGE;
-				a.temporaryeffect = new Bleed();
+		public void start(Combatant c){
+			c.source=c.source.clone();
+			for(Attack a:c.source.getattacks()){
+				a.damage[2]+=EXTRADAMAGE;
+				a.temporaryeffect=new Bleed();
 			}
 		}
 
 		@Override
-		public void end(Combatant c) {
-			c.source = c.source.clone();
-			for (Attack a : c.source.getattacks()) {
-				a.damage[2] -= EXTRADAMAGE;
-				a.temporaryeffect = null;
+		public void end(Combatant c){
+			c.source=c.source.clone();
+			for(Attack a:c.source.getattacks()){
+				a.damage[2]-=EXTRADAMAGE;
+				a.temporaryeffect=null;
 			}
 		}
 	}
@@ -50,32 +50,32 @@ public class TearingFang extends Boost {
 	 * @see Attack#temporaryeffect
 	 * @author alex
 	 */
-	class Bleed extends Spell {
-		public Bleed() {
-			super("Bleed", 0, 0, null);
+	class Bleed extends Spell{
+		public Bleed(){
+			super("Bleed",0,0,null);
 		}
 
 		@Override
-		public String cast(Combatant caster, Combatant target, boolean saved,
-				BattleState s, ChanceNode cn) {
+		public String cast(Combatant caster,Combatant target,boolean saved,
+				BattleState s,ChanceNode cn){
 			target.addcondition(new Bleeding(target));
-			return target + " is bleeding!";
+			return target+" is bleeding!";
 		}
 	}
 
-	public class Bleeding extends Condition {
+	public class Bleeding extends Condition{
 		int ticks;
 		float lastbleed;
 
-		Bleeding(Combatant c) {
-			super(Float.MAX_VALUE, c, Effect.NEGATIVE, "bleeding", null);
-			stack = true;
-			ticks = BLEEDDURATION;
-			lastbleed = c.ap;
+		Bleeding(Combatant c){
+			super(Float.MAX_VALUE,c,Effect.NEGATIVE,"bleeding",null);
+			stack=true;
+			ticks=BLEEDDURATION;
+			lastbleed=c.ap;
 		}
 
 		@Override
-		public void start(Combatant c) {
+		public void start(Combatant c){
 			/*
 			 * don't do anything right away, give a chance of having multiple
 			 * attacks done in sequence before trying to heal them, otherwise
@@ -84,10 +84,10 @@ public class TearingFang extends Boost {
 			 */
 		}
 
-		boolean tick(Combatant c) {
+		boolean tick(Combatant c){
 			c.damage(BLEEDDAMAGE);
-			ticks -= 1;
-			if (ticks == 0) {
+			ticks-=1;
+			if(ticks==0){
 				c.removecondition(this);
 				return false;
 			}
@@ -95,42 +95,38 @@ public class TearingFang extends Boost {
 		}
 
 		/** TODO ideally would also check if enganged. */
-		boolean heal(final Combatant c) {
-			return c.taketen(Skill.HEAL) >= HEALDC;
+		boolean heal(final Combatant c){
+			return c.taketen(Skill.HEAL)>=HEALDC;
 		}
 
 		@Override
-		public boolean expireinbattle(Combatant c) {
-			while (c.ap - lastbleed >= 1) {
-				if (heal(c)) {
-					c.ap += ActionCost.STANDARD;
+		public boolean expireinbattle(Combatant c){
+			while(c.ap-lastbleed>=1){
+				if(heal(c)){
+					c.ap+=ActionCost.STANDARD;
 					c.clearcondition(Bleeding.class);
 					return true;
 				}
-				lastbleed += 1;
-				if (!tick(c)) {
-					return true;
-				}
+				lastbleed+=1;
+				if(!tick(c)) return true;
 			}
 			return false;
 		}
 
 		@Override
-		public void end(Combatant c) {
-			if (ticks > 0 && !heal(c)) {
-				while (tick(c)) {
-					// tick until over
-				}
+		public void end(Combatant c){
+			if(ticks>0&&!heal(c)) while(tick(c)){
+				// tick until over
 			}
 		}
 	}
 
-	public TearingFang() {
-		super("Tearing fang", 4);
+	public TearingFang(){
+		super("Tearing fang",4);
 	}
 
 	@Override
-	protected void boost(Combatant c) {
+	protected void boost(Combatant c){
 		c.addcondition(new Tearing(c));
 	}
 }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.Javelin.Delay;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.RepeatTurn;
@@ -30,135 +29,124 @@ import javelin.view.screen.SquadScreen;
  *
  * @author alex
  */
-public class TrainingHall extends UniqueLocation {
-	static final boolean DEBUG = false;
-	private static final String DESCRIPTION = "The Training Hall";
-	public final static ArrayList<Monster> CANDIDATES = new ArrayList<>();
+public class TrainingHall extends UniqueLocation{
+	static final boolean DEBUG=false;
+	private static final String DESCRIPTION="The Training Hall";
+	public final static ArrayList<Monster> CANDIDATES=new ArrayList<>();
 
-	static {
-		for (Monster sensei : SquadScreen.CANDIDATES) {
-			if (sensei.think(0)) {
-				CANDIDATES.add(sensei);
-			}
-		}
+	static{
+		for(Monster sensei:SquadScreen.CANDIDATES)
+			if(sensei.think(0)) CANDIDATES.add(sensei);
 	}
 	/**
 	 * Actual encounter level for each {@link TrainingSession}, by using the
 	 * shifted-to-zero index. Supposed to be difficult (EL-1) encounter party of
 	 * levels 1 to 4.
 	 */
-	public static int[] EL = new int[] { 4, 8, 10, 12 };
+	public static int[] EL=new int[]{4,8,10,12};
 	/**
 	 * From 1 upwards, the current training session difficulty, supposed to
 	 * represent different floors.
 	 *
 	 * TODO this is being initialized in 2 places
 	 */
-	public Integer currentlevel = 1;
+	public Integer currentlevel=1;
 
 	/** Constructor. */
-	public TrainingHall() {
-		super(DESCRIPTION, DESCRIPTION, 0, 0);
-		discard = false;
-		impermeable = true;
-		vision = 2;
-		allowedinscenario = false;
-		realm = null;
+	public TrainingHall(){
+		super(DESCRIPTION,DESCRIPTION,0,0);
+		discard=false;
+		impermeable=true;
+		vision=2;
+		allowedinscenario=false;
+		realm=null;
 	}
 
 	@Override
-	protected void generategarrison(int minel, int maxel) {
-		if (currentlevel == null) {
-			currentlevel = 1;
-		}
-		int nstudents = Squad.active.members.size();
-		int nsenseis = RPG.r(Math.min(3, nstudents), Math.max(nstudents, 5));
-		while (isweak() && garrison.size() < nsenseis) {
-			garrison.add(new Combatant(RPG.pick(CANDIDATES).clone(), true));
-		}
-		while (isweak()) {
-			Combatant.upgradeweakest(garrison, Realm.random());
-		}
+	protected void generategarrison(int minel,int maxel){
+		if(currentlevel==null) currentlevel=1;
+		int nstudents=Squad.active.members.size();
+		int nsenseis=RPG.r(Math.min(3,nstudents),Math.max(nstudents,5));
+		while(isweak()&&garrison.size()<nsenseis)
+			garrison.add(new Combatant(RPG.pick(CANDIDATES).clone(),true));
+		while(isweak())
+			Combatant.upgradeweakest(garrison,Realm.random());
 	}
 
-	boolean isweak() {
-		return ChallengeCalculator.calculateel(garrison) < EL[currentlevel - 1];
+	boolean isweak(){
+		return ChallengeCalculator.calculateel(garrison)<EL[currentlevel-1];
 	}
 
 	@Override
-	protected Siege fight() {
-		int price = getfee();
+	protected Siege fight(){
+		int price=getfee();
 		MessagePanel.active.clear();
-		if (price > Squad.active.gold) {
-			Javelin.message("Not enough money to pay the training fee of $" + price
-					+ "!", Javelin.Delay.NONE);
+		if(price>Squad.active.gold){
+			Javelin.message("Not enough money to pay the training fee of $"+price+"!",
+					Javelin.Delay.NONE);
 			Javelin.input();
 			throw new RepeatTurn();
 		}
 		Javelin.message(
-				"Do you want to pay a fee of $" + price
-						+ " for a lesson?\nPress s to study or any other key to leave...",
+				"Do you want to pay a fee of $"+price
+						+" for a lesson?\nPress s to study or any other key to leave...",
 				Javelin.Delay.NONE);
-		if (Javelin.input().getKeyChar() == 's') {
-			Squad.active.gold -= price;
+		if(Javelin.input().getKeyChar()=='s'){
+			Squad.active.gold-=price;
 			return new TrainingSession(this);
 		}
 		throw new RepeatTurn();
 	}
 
-	public int getfee() {
+	public int getfee(){
 		return RewardCalculator.receivegold(garrison);
 	}
 
 	@Override
-	public boolean drawgarisson() {
+	public boolean drawgarisson(){
 		return false;
 	}
 
 	@Override
-	public List<Combatant> getcombatants() {
+	public List<Combatant> getcombatants(){
 		return garrison;
 	}
 
 	/** Bumps the {@link #currentlevel}. */
-	public void level() {
-		currentlevel += 1;
-		boolean done = currentlevel - 1 >= EL.length;
+	public void level(){
+		currentlevel+=1;
+		boolean done=currentlevel-1>=EL.length;
 		String prefix;
-		if (done) {
-			prefix = "This has been the final lesson.\n\n";
-		} else {
-			prefix = "Congratulations, you've graduated this level!\n\n";
-		}
-		Combatant student = Squad.active.members
-				.get(Javelin.choose(prefix + "Which student will learn a feat?",
-						Squad.active.members, true, true));
-		ArrayList<FeatUpgrade> feats = UpgradeHandler.singleton.getfeats();
-		ArrayList<FeatUpgrade> options = new ArrayList<>();
-		while (options.size() < 3 && !feats.isEmpty()) {
-			FeatUpgrade f = RPG.pick(feats);
+		if(done)
+			prefix="This has been the final lesson.\n\n";
+		else
+			prefix="Congratulations, you've graduated this level!\n\n";
+		Combatant student=Squad.active.members
+				.get(Javelin.choose(prefix+"Which student will learn a feat?",
+						Squad.active.members,true,true));
+		ArrayList<FeatUpgrade> feats=UpgradeHandler.singleton.getfeats();
+		ArrayList<FeatUpgrade> options=new ArrayList<>();
+		while(options.size()<3&&!feats.isEmpty()){
+			FeatUpgrade f=RPG.pick(feats);
 			feats.remove(f);
-			if (!options.contains(f)
-					&& f.upgrade(student.clone().clonesource())) {
+			if(!options.contains(f)&&f.upgrade(student.clone().clonesource()))
 				options.add(f);
-			}
 		}
-		options.get(Javelin.choose("Learn which feat?", options, true, true))
+		options.get(Javelin.choose("Learn which feat?",options,true,true))
 				.upgrade(student);
-		if (done) {
+		if(done)
 			remove();
-		} else {
-			generategarrison(0, 0);
-		}
+		else
+			generategarrison(0,0);
 	}
 
 	@Override
-	public String toString() {
-		return super.toString() + " ($" + Javelin.format(getfee()) + ")";
+	public String toString(){
+		return super.toString()+" ($"+Javelin.format(getfee())+")";
 	}
 
 	@Override
-	public boolean view() {
+	public boolean view(){
 		return true;
 	}
 }

@@ -6,29 +6,28 @@ import javelin.model.unit.Monster;
 
 /**
  * Alias for fire and cold subtypes. Currently only adds {@link EnergyImmunity}.
- * 
+ *
  * @author alex
  */
-public class Subtype extends Quality {
+public class Subtype extends Quality{
 
-	public Subtype() {
+	public Subtype(){
 		super("subtype");
 	}
 
 	@Override
-	public void add(String declaration, Monster m) {
-		if (declaration.contains("fire") || declaration.contains("cold")) {
-			m.energyresistance = Integer.MAX_VALUE;
-		}
+	public void add(String declaration,Monster m){
+		if(declaration.contains("fire")||declaration.contains("cold"))
+			m.energyresistance=Integer.MAX_VALUE;
 	}
 
 	@Override
-	public boolean has(Monster m) {
+	public boolean has(Monster m){
 		return false;
 	}
 
 	@Override
-	public float rate(Monster m) {
+	public float rate(Monster m){
 		return 0;
 	}
 

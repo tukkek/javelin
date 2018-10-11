@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.Javelin.Delay;
 import javelin.controller.action.Action;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.ai.attack.MeleeAttack;
@@ -32,53 +31,52 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  *
  * @author alex
  */
-public abstract class ExpertiseAction extends Target implements AiAction {
+public abstract class ExpertiseAction extends Target implements AiAction{
 	private final Feat prerequisite;
 	private int featbonus;
 
-	public ExpertiseAction(String name, String key, Feat prerequisite,
-			int featbonus) {
+	public ExpertiseAction(String name,String key,Feat prerequisite,
+			int featbonus){
 		super(name);
-		this.prerequisite = prerequisite;
-		this.featbonus = featbonus;
-		confirmkey = 'm';
+		this.prerequisite=prerequisite;
+		this.featbonus=featbonus;
+		confirmkey='m';
 	}
 
 	@Override
-	protected boolean checkengaged(BattleState state, Combatant c) {
+	protected boolean checkengaged(BattleState state,Combatant c){
 		return false;// engaged is fine
 	}
 
 	@Override
-	protected void attack(Combatant combatant, Combatant targetCombatant,
-			BattleState battleState) {
-		Action.outcome(maneuver(combatant, targetCombatant, battleState));
+	protected void attack(Combatant combatant,Combatant targetCombatant,
+			BattleState battleState){
+		Action.outcome(maneuver(combatant,targetCombatant,battleState));
 	}
 
 	@Override
-	protected void checkhero(Combatant hero) {
-		if (!hero.source.hasfeat(prerequisite)) {
-			Javelin.message("Needs the " + prerequisite + " feat...", Javelin.Delay.WAIT);
+	protected void checkhero(Combatant hero){
+		if(!hero.source.hasfeat(prerequisite)){
+			Javelin.message("Needs the "+prerequisite+" feat...",Javelin.Delay.WAIT);
 			throw new RepeatTurn();
 		}
 	}
 
 	@Override
-	protected void filtertargets(Combatant combatant, List<Combatant> targets,
-			BattleState s) {
-		super.filtertargets(combatant, targets, s);
-		for (final Combatant target : new ArrayList<Combatant>(targets)) {
-			if (target.source.passive) {
+	protected void filtertargets(Combatant combatant,List<Combatant> targets,
+			BattleState s){
+		super.filtertargets(combatant,targets,s);
+		for(final Combatant target:new ArrayList<>(targets)){
+			if(target.source.passive){
 				targets.remove(target);
 				continue;
 			}
-			final int deltax = combatant.location[0] - target.location[0];
-			final int deltay = combatant.location[1] - target.location[1];
-			if (-1 <= deltax && deltax <= +1 && //
-					-1 <= deltay && deltay <= +1 && //
-					validatetarget(target)) {
+			final int deltax=combatant.location[0]-target.location[0];
+			final int deltay=combatant.location[1]-target.location[1];
+			if(-1<=deltax&&deltax<=+1&& //
+					-1<=deltay&&deltay<=+1&& //
+					validatetarget(target))
 				continue;
-			}
 			targets.remove(target);
 		}
 	}
@@ -92,71 +90,67 @@ public abstract class ExpertiseAction extends Target implements AiAction {
 
 	@Override
 	public List<List<ChanceNode>> getoutcomes(final Combatant combatant,
-			final BattleState gameState) {
-		final ArrayList<List<ChanceNode>> outcomes = new ArrayList<List<ChanceNode>>();
-		if (!combatant.source.hasfeat(prerequisite)) {
-			return outcomes;
-		}
-		final ArrayList<Combatant> targets = gameState.getcombatants();
-		filtertargets(combatant, targets, gameState);
-		for (final Combatant target : targets) {
-			outcomes.add(maneuver(combatant, target, gameState));
-		}
+			final BattleState gameState){
+		final ArrayList<List<ChanceNode>> outcomes=new ArrayList<>();
+		if(!combatant.source.hasfeat(prerequisite)) return outcomes;
+		final ArrayList<Combatant> targets=gameState.getcombatants();
+		filtertargets(combatant,targets,gameState);
+		for(final Combatant target:targets)
+			outcomes.add(maneuver(combatant,target,gameState));
 		return outcomes;
 	}
 
-	List<ChanceNode> maneuver(Combatant combatant, Combatant target,
-			BattleState s) {
-		s = s.clone();
-		combatant = s.clone(combatant);
-		target = s.clone(target);
-		combatant.ap += .5f;
-		final float savechance = calculatesavechance(combatant,
+	List<ChanceNode> maneuver(Combatant combatant,Combatant target,BattleState s){
+		s=s.clone();
+		combatant=s.clone(combatant);
+		target=s.clone(target);
+		combatant.ap+=.5f;
+		final float savechance=calculatesavechance(combatant,
 				calculatesavebonus(target));
-		final float misschance = calculatemisschance(combatant, target, s,
-				Math.max(0, Monster.getbonus(target.source.dexterity)));
-		final ArrayList<ChanceNode> chances = new ArrayList<ChanceNode>();
-		final float failurechance = savechance + (1 - savechance) * misschance;
-		chances.add(mark(miss(combatant, target, s, failurechance), target));
-		chances.add(mark(hit(combatant, target, s, 1 - failurechance), target));
+		final float misschance=calculatemisschance(combatant,target,s,
+				Math.max(0,Monster.getbonus(target.source.dexterity)));
+		final ArrayList<ChanceNode> chances=new ArrayList<>();
+		final float failurechance=savechance+(1-savechance)*misschance;
+		chances.add(mark(miss(combatant,target,s,failurechance),target));
+		chances.add(mark(hit(combatant,target,s,1-failurechance),target));
 		return chances;
 	}
 
-	private ChanceNode mark(ChanceNode hit, Combatant target) {
-		hit.overlay = new AiOverlay(target.location[0], target.location[1]);
+	private ChanceNode mark(ChanceNode hit,Combatant target){
+		hit.overlay=new AiOverlay(target.location[0],target.location[1]);
 		return hit;
 	}
 
-	public float calculatesavechance(Combatant current, final int savebonus) {
-		int dc = 10 + current.source.getbab() / 2 + getattackerbonus(current)
-				+ size(current) + featbonus;
-		return calculatesavechance(dc, savebonus);
+	public float calculatesavechance(Combatant current,final int savebonus){
+		int dc=10+current.source.getbab()/2+getattackerbonus(current)+size(current)
+				+featbonus;
+		return calculatesavechance(dc,savebonus);
 	}
 
-	public int calculatesavebonus(Combatant target) {
-		return getsavebonus(target) - size(target);
+	public int calculatesavebonus(Combatant target){
+		return getsavebonus(target)-size(target);
 	}
 
-	abstract ChanceNode miss(Combatant combatant, Combatant target,
-			BattleState battleState, float chance);
+	abstract ChanceNode miss(Combatant combatant,Combatant target,
+			BattleState battleState,float chance);
 
-	abstract ChanceNode hit(Combatant combatant, Combatant targetCombatant,
-			BattleState battleState, float chance);
+	abstract ChanceNode hit(Combatant combatant,Combatant targetCombatant,
+			BattleState battleState,float chance);
 
-	public float calculatesavechance(final int dc, final int bonus) {
-		return Action.bind(1 - (dc - bonus) / 20f);
+	public float calculatesavechance(final int dc,final int bonus){
+		return Action.bind(1-(dc-bonus)/20f);
 	}
 
 	float calculatemisschance(final Combatant combatant,
-			final Combatant targetCombatant, final BattleState battleState,
-			final int touchattackbonus) {
-		return MeleeAttack.SINGLETON.misschance(battleState, combatant,
+			final Combatant targetCombatant,final BattleState battleState,
+			final int touchattackbonus){
+		return MeleeAttack.SINGLETON.misschance(battleState,combatant,
 				targetCombatant,
-				touchattackbonus + combatant.source.melee.get(0).get(0).bonus);
+				touchattackbonus+combatant.source.melee.get(0).get(0).bonus);
 	}
 
-	static int size(final Combatant combatant) {
-		return combatant.source.size - Monster.MEDIUM;
+	static int size(final Combatant combatant){
+		return combatant.source.size-Monster.MEDIUM;
 	}
 
 	abstract int getsavebonus(Combatant targetCombatant);
@@ -164,9 +158,7 @@ public abstract class ExpertiseAction extends Target implements AiAction {
 	abstract int getattackerbonus(Combatant combatant);
 
 	@Override
-	protected int calculatehitdc(Combatant active, Combatant target,
-			BattleState s) {
-		return Math.round(
-				20 - (1 - calculatemisschance(target, active, s, 0)) * 20);
+	protected int calculatehitdc(Combatant active,Combatant target,BattleState s){
+		return Math.round(20-(1-calculatemisschance(target,active,s,0))*20);
 	}
 }

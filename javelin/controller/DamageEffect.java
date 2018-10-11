@@ -13,24 +13,23 @@ import javelin.model.world.location.town.Town;
 
 /**
  * A spell-like effect to be applied after damage.
- * 
+ *
  * @see Attack
  * @author alex
  */
-public class DamageEffect {
-	public static final DamageEffect POISON = new DamageEffect("poison",
-			new Poison(), Realm.EVIL);
+public class DamageEffect{
+	public static final DamageEffect POISON=new DamageEffect("poison",
+			new Poison(),Realm.EVIL);
 	/** All supported damage effects */
-	public static final ArrayList<DamageEffect> EFFECTS = new ArrayList<DamageEffect>();
+	public static final ArrayList<DamageEffect> EFFECTS=new ArrayList<>();
 
 	/**
 	 * Call before using {@link #EFFECTS}.
 	 */
-	static public void init() {
-		if (EFFECTS.isEmpty()) {
-			EFFECTS.add(new DamageEffect("paralysis", new HoldMonster(),
-					Realm.EARTH));
-			EFFECTS.add(new DamageEffect("fear", new Doom(), Realm.EVIL));
+	static public void init(){
+		if(EFFECTS.isEmpty()){
+			EFFECTS.add(new DamageEffect("paralysis",new HoldMonster(),Realm.EARTH));
+			EFFECTS.add(new DamageEffect("fear",new Doom(),Realm.EVIL));
 			EFFECTS.add(POISON);
 		}
 	}
@@ -38,9 +37,8 @@ public class DamageEffect {
 	/** Name of the {@link Spell}-like effect. */
 	public String name;
 	/**
-	 * @see Spell#cast(javelin.model.unit.Combatant,
-	 *      javelin.model.unit.Combatant, javelin.model.state.BattleState,
-	 *      boolean).
+	 * @see Spell#cast(javelin.model.unit.Combatant, javelin.model.unit.Combatant,
+	 *      javelin.model.state.BattleState, boolean).
 	 */
 	public Spell spell;
 	/**
@@ -49,14 +47,14 @@ public class DamageEffect {
 	public Realm realm;
 
 	/** Constructor. */
-	DamageEffect(String name, Spell s, Realm r) {
-		this.name = name;
-		this.spell = s;
-		this.realm = r;
+	DamageEffect(String name,Spell s,Realm r){
+		this.name=name;
+		spell=s;
+		realm=r;
 	}
 
 	@Override
-	public String toString() {
+	public String toString(){
 		return name;
 	}
 }

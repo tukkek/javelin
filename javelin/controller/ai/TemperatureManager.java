@@ -17,52 +17,49 @@ import javelin.old.messagepanel.MessagePanel;
  *
  * @author alex
  */
-public class TemperatureManager {
+public class TemperatureManager{
 
-	private static final String LINUXTEMPARATUREFILE = "/sys/class/thermal/thermal_zone0/temp";
-	static int CPU_COOLING = 0;
+	private static final String LINUXTEMPARATUREFILE="/sys/class/thermal/thermal_zone0/temp";
+	static int CPU_COOLING=0;
 
-	public static void init() {
-		CPU_COOLING = new File(LINUXTEMPARATUREFILE).exists()
-				? Preferences.MAXTEMPERATURE : 0;
+	public static void init(){
+		CPU_COOLING=new File(LINUXTEMPARATUREFILE).exists()
+				?Preferences.MAXTEMPERATURE
+				:0;
 	}
 
-	public static void cooldown() {
-		if (CPU_COOLING == 0) {
-			return;
-		}
-		try {
-			Integer lasttemperature = null;
-			for (int temperature = sense(); temperature > CPU_COOLING; temperature = sense()) {
+	public static void cooldown(){
+		if(CPU_COOLING==0) return;
+		try{
+			Integer lasttemperature=null;
+			for(int temperature=sense();temperature>CPU_COOLING;temperature=sense()){
 				ThreadManager.interrupt();
-				if (lasttemperature == null) {
-					lasttemperature = temperature;
-					MessagePanel mp = MessagePanel.active;
-					String text = mp.textzone.getText();
-					if (!text.endsWith("\n")) {
-						MessagePanel.active.add("\n");
-					}
+				if(lasttemperature==null){
+					lasttemperature=temperature;
+					MessagePanel mp=MessagePanel.active;
+					String text=mp.textzone.getText();
+					if(!text.endsWith("\n")) MessagePanel.active.add("\n");
 					MessagePanel.active.add("Cooling...");
 					MessagePanel.active.repaint();
-				} else if (temperature < lasttemperature) {
-					MessagePanel.active.add(" " + temperature + "°C...");
-					lasttemperature = temperature;
+				}else if(temperature<lasttemperature){
+					MessagePanel.active.add(" "+temperature+"°C...");
+					lasttemperature=temperature;
 					MessagePanel.active.repaint();
 				}
 				Thread.sleep(1000);
 				// Game.messagepanel.clear();
 				// Game.messagepanel.add(text);
 			}
-		} catch (Exception e) {
-			System.err.println("TemperatureManager: " + e.getMessage());
+		}catch(Exception e){
+			System.err.println("TemperatureManager: "+e.getMessage());
 			return;
 		}
 	}
 
-	public static int sense() throws IOException, FileNotFoundException {
-		final BufferedReader reader = new BufferedReader(
+	public static int sense() throws IOException,FileNotFoundException{
+		final BufferedReader reader=new BufferedReader(
 				new FileReader(LINUXTEMPARATUREFILE));
-		final int temperature = Integer.parseInt(reader.readLine()) / 1000;
+		final int temperature=Integer.parseInt(reader.readLine())/1000;
 		reader.close();
 		return temperature;
 	}

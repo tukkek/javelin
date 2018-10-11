@@ -5,23 +5,23 @@ import javelin.model.unit.Combatant;
 
 /**
  * @see Charge
- * 
+ *
  * @author alex
  */
-public class Charging extends Condition {
+public class Charging extends Condition{
 
-	public Charging(float expireat, Combatant c) {
-		super(expireat, c, Effect.NEGATIVE, "charging", null);
+	public Charging(float expireat,Combatant c){
+		super(expireat,c,Effect.NEGATIVE,"charging",null);
 	}
 
 	@Override
-	public void start(Combatant c) {
-		c.acmodifier -= 2;
+	public void start(Combatant c){
+		c.acmodifier-=2;
 	}
 
 	@Override
-	public void end(Combatant c) {
-		c.acmodifier += 2;
+	public void end(Combatant c){
+		c.acmodifier+=2;
 	}
 
 }

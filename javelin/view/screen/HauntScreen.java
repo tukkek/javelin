@@ -13,67 +13,62 @@ import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.town.SelectScreen;
 
-public class HauntScreen extends SelectScreen {
-	static final Option PILLAGE = new Option("Pillage this location for 1 ruby",
-			0, 'p');
+public class HauntScreen extends SelectScreen{
+	static final Option PILLAGE=new Option("Pillage this location for 1 ruby",0,
+			'p');
 
-	class RecruitOption extends Option {
+	class RecruitOption extends Option{
 		Monster m;
 
-		public RecruitOption(Monster m) {
-			super("Recruit " + m.name.toLowerCase(), 0);
-			this.m = m;
+		public RecruitOption(Monster m){
+			super("Recruit "+m.name.toLowerCase(),0);
+			this.m=m;
 			addprice();
 		}
 
-		void addprice() {
-			name += " (" + Math.round(m.cr * 100) + "XP)";
+		void addprice(){
+			name+=" ("+Math.round(m.cr*100)+"XP)";
 		}
 	}
 
-	class HireOption extends RecruitOption {
-		public HireOption(Monster m) {
+	class HireOption extends RecruitOption{
+		public HireOption(Monster m){
 			super(m);
-			name = "Hire " + m.name.toLowerCase();
+			name="Hire "+m.name.toLowerCase();
 			addprice();
 		}
 
 		@Override
-		void addprice() {
-			final String fee = Javelin
-					.format(MercenariesGuild.getfee(m));
-			name += " ($" + fee + "/day)";
+		void addprice(){
+			final String fee=Javelin.format(MercenariesGuild.getfee(m));
+			name+=" ($"+fee+"/day)";
 		}
 	}
 
 	Haunt haunt;
-	String extrainfo = "";
+	String extrainfo="";
 
-	public HauntScreen(Haunt haunt) {
-		super("You enter the " + haunt.descriptionknown.toLowerCase() + ".",
-				null);
-		this.haunt = haunt;
+	public HauntScreen(Haunt haunt){
+		super("You enter the "+haunt.descriptionknown.toLowerCase()+".",null);
+		this.haunt=haunt;
 	}
 
 	@Override
-	public String printinfo() {
+	public String printinfo(){
 		String info;
-		if (haunt.available.isEmpty()) {
-			info = "This location is empty right now. You should come back later.";
-		} else {
-			info = "You have $" + Javelin.format(Squad.active.gold)
-					+ " and " + Squad.active.sumxp() + "XP.";
-		}
-		if (!extrainfo.isEmpty()) {
-			info += "\n\n" + extrainfo;
-		}
+		if(haunt.available.isEmpty())
+			info="This location is empty right now. You should come back later.";
+		else
+			info="You have $"+Javelin.format(Squad.active.gold)+" and "
+					+Squad.active.sumxp()+"XP.";
+		if(!extrainfo.isEmpty()) info+="\n\n"+extrainfo;
 		return info;
 	}
 
 	@Override
-	public List<Option> getoptions() {
-		ArrayList<Option> options = new ArrayList<Option>();
-		for (Monster m : haunt.available) {
+	public List<Option> getoptions(){
+		ArrayList<Option> options=new ArrayList<>();
+		for(Monster m:haunt.available){
 			options.add(new HireOption(m));
 			options.add(new RecruitOption(m));
 		}
@@ -82,42 +77,39 @@ public class HauntScreen extends SelectScreen {
 	}
 
 	@Override
-	public boolean select(Option o) {
-		if (o == PILLAGE) {
+	public boolean select(Option o){
+		if(o==PILLAGE){
 			haunt.remove();
 			new Ruby().grab();
-			stayopen = false;
+			stayopen=false;
 			return true;
 		}
-		Class<? extends Option> optiontype = o.getClass();
-		Monster m = ((RecruitOption) o).m;
-		if (optiontype.equals(HireOption.class)) {
-			if (MercenariesGuild.recruit(new Combatant(m.clone(), true),
-					false)) {
+		Class<? extends Option> optiontype=o.getClass();
+		Monster m=((RecruitOption)o).m;
+		if(optiontype.equals(HireOption.class)){
+			if(MercenariesGuild.recruit(new Combatant(m.clone(),true),false))
 				haunt.available.remove(m);
-			} else {
-				extrainfo = "You don't have enough gold...";
-			}
+			else
+				extrainfo="You don't have enough gold...";
 			return true;
 		}
-		if (optiontype.equals(RecruitOption.class)) {
-			if (Dwelling.recruit(m)) {
+		if(optiontype.equals(RecruitOption.class)){
+			if(Dwelling.recruit(m))
 				haunt.available.remove(m);
-			} else {
-				extrainfo = "You don't have enough XP...";
-			}
+			else
+				extrainfo="You don't have enough XP...";
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public String getCurrency() {
+	public String getCurrency(){
 		return null; // see #printpriceinfo
 	}
 
 	@Override
-	public String printpriceinfo(Option o) {
+	public String printpriceinfo(Option o){
 		return "";
 	}
 }

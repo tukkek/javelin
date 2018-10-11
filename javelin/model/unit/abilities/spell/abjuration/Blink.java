@@ -13,18 +13,18 @@ import javelin.model.unit.abilities.spell.illusion.Displacement;
  * only affect self and doesn't cause AoO as a way to simulate the blink Special
  * Quality.
  */
-public class Blink extends Displacement {
+public class Blink extends Displacement{
 
-	public Blink() {
-		super("Blink", 2, ChallengeCalculator.ratespelllikeability(2), Realm.MAGIC);
-		ispotion = true;
-		turns = 4;
-		provokeaoo = false;
+	public Blink(){
+		super("Blink",2,ChallengeCalculator.ratespelllikeability(2),Realm.MAGIC);
+		ispotion=true;
+		turns=4;
+		provokeaoo=false;
 	}
 
 	@Override
-	public void filtertargets(Combatant combatant, List<Combatant> targets,
-			BattleState s) {
-		targetself(combatant, targets);
+	public void filtertargets(Combatant combatant,List<Combatant> targets,
+			BattleState s){
+		targetself(combatant,targets);
 	}
 }

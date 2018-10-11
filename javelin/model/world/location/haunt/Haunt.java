@@ -64,8 +64,7 @@ public abstract class Haunt extends Fortification{
 		while(el<target){
 			garrison.add(new Combatant(RPG.pick(dwellers).clone(),true));
 			el=ChallengeCalculator.calculateel(garrison);
-			if(minel<=el&&el<=maxel)
-				possibilities.add(new ArrayList<>(garrison));
+			if(minel<=el&&el<=maxel) possibilities.add(new ArrayList<>(garrison));
 		}
 		if(possibilities.isEmpty())
 			generategarrison(minlevel,maxlevel);

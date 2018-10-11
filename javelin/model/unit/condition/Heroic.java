@@ -9,31 +9,30 @@ import javelin.model.unit.abilities.spell.enchantment.compulsion.Heroism;
  * @see Heroism
  * @author alex
  */
-public class Heroic extends Condition {
-	public Heroic(final Combatant c, Integer casterlevelp, Integer longtermp) {
-		super(Float.MAX_VALUE, c, Effect.POSITIVE, "heroic", casterlevelp,
-				longtermp);
+public class Heroic extends Condition{
+	public Heroic(final Combatant c,Integer casterlevelp,Integer longtermp){
+		super(Float.MAX_VALUE,c,Effect.POSITIVE,"heroic",casterlevelp,longtermp);
 	}
 
-	public Heroic(Combatant c, Integer casterlevelp) {
-		this(c, casterlevelp, 1);
-	}
-
-	@Override
-	public void start(final Combatant c) {
-		final Monster m = c.source;
-		c.source = m.clone();
-		raiseallattacks(m, +2, +0);
-		raisesaves(m, +2);
+	public Heroic(Combatant c,Integer casterlevelp){
+		this(c,casterlevelp,1);
 	}
 
 	@Override
-	public void end(final Combatant c) {
-		final Monster m = c.source;
-		c.source = m.clone();
-		raiseallattacks(m, -2, -0);
-		m.fort -= 2;
-		m.ref -= 2;
+	public void start(final Combatant c){
+		final Monster m=c.source;
+		c.source=m.clone();
+		raiseallattacks(m,+2,+0);
+		raisesaves(m,+2);
+	}
+
+	@Override
+	public void end(final Combatant c){
+		final Monster m=c.source;
+		c.source=m.clone();
+		raiseallattacks(m,-2,-0);
+		m.fort-=2;
+		m.ref-=2;
 		m.addwill(-2);
 	}
 }

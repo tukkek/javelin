@@ -39,82 +39,77 @@ import javelin.model.unit.feat.skill.Deceitful;
 /**
  * @see CrFactor
  */
-public class FeatsFactor extends CrFactor {
-	public static final float CR = .2f;
+public class FeatsFactor extends CrFactor{
+	public static final float CR=.2f;
 
-	static final Feat[] EVIL = new Feat[] { Deceitful.SINGLETON };
+	static final Feat[] EVIL=new Feat[]{Deceitful.SINGLETON};
 
-	static final Feat[] GOOD = new Feat[] { Alertness.SINGLETON };
+	static final Feat[] GOOD=new Feat[]{Alertness.SINGLETON};
 
-	static final Feat[] FIRE = new Feat[] { IronWill.SINGLETON,
-			MeleeFocus.SINGLETON };
+	static final Feat[] FIRE=new Feat[]{IronWill.SINGLETON,MeleeFocus.SINGLETON};
 
-	static final Feat[] WIND = new Feat[] { RangedFocus.SINGLETON,
-			LightningReflexes.SINGLETON, ImprovedInitiative.SINGLETON };
+	static final Feat[] WIND=new Feat[]{RangedFocus.SINGLETON,
+			LightningReflexes.SINGLETON,ImprovedInitiative.SINGLETON};
 
-	static final Feat[] EARTH = new Feat[] { Toughness.SINGLETON,
-			GreatFortitude.SINGLETON, CombatCasting.SINGLETON };
+	static final Feat[] EARTH=new Feat[]{Toughness.SINGLETON,
+			GreatFortitude.SINGLETON,CombatCasting.SINGLETON};
 
-	static final Feat[] WATER = new Feat[] { Acrobatic.SINGLETON };
+	static final Feat[] WATER=new Feat[]{Acrobatic.SINGLETON};
 
-	static final Feat[] EXPERTISE = new Feat[] { CombatExpertise.SINGLETON,
-			ImprovedFeint.SINGLETON, ImprovedGrapple.SINGLETON,
-			ImprovedTrip.SINGLETON };
+	static final Feat[] EXPERTISE=new Feat[]{CombatExpertise.SINGLETON,
+			ImprovedFeint.SINGLETON,ImprovedGrapple.SINGLETON,ImprovedTrip.SINGLETON};
 
-	static final Feat[] POWER = new Feat[] { PowerAttack.SINGLETON,
-			BullRush.SINGLETON, Cleave.SINGLETON, GreatCleave.SINGLETON };
+	static final Feat[] POWER=new Feat[]{PowerAttack.SINGLETON,BullRush.SINGLETON,
+			Cleave.SINGLETON,GreatCleave.SINGLETON};
 
-	static final Feat[] SHOTS = new Feat[] { PointBlankShot.SINGLETON,
-			PreciseShot.SINGLETON, ImprovedPreciseShot.SINGLETON,
-			RapidShot.SINGLETON };
+	static final Feat[] SHOTS=new Feat[]{PointBlankShot.SINGLETON,
+			PreciseShot.SINGLETON,ImprovedPreciseShot.SINGLETON,RapidShot.SINGLETON};
 
-	static final Feat[] INTERNAL = new Feat[] { WeaponFocus.SINGLETON,
-			ExoticWeaponProficiency.SINGLETON, Multiattack.SINGLETON,
-			MultiweaponFighting.SINGLETON, WeaponFinesse.SINGLETON };
+	static final Feat[] INTERNAL=new Feat[]{WeaponFocus.SINGLETON,
+			ExoticWeaponProficiency.SINGLETON,Multiattack.SINGLETON,
+			MultiweaponFighting.SINGLETON,WeaponFinesse.SINGLETON};
 
-	static {
+	static{
 		/*
 		 * TODO need a similar field for internal, which can then go to null
 		 * #arena as well by default. this is necessary for example to filter
 		 * useless feats from the Academy. Alternatively, make it a list and
 		 * just use contains().
 		 */
-		for (Feat f : INTERNAL) {
-			f.arena = false;
-		}
+		for(Feat f:INTERNAL)
+			f.arena=false;
 	}
 
 	@Override
-	public float calculate(final Monster m) {
-		return m.feats.count() * CR - getnormalprogression(m) * CR;
+	public float calculate(final Monster m){
+		return m.feats.count()*CR-getnormalprogression(m)*CR;
 	}
 
-	static public int getnormalprogression(final Monster m) {
-		return 1 + Math.round(Math.round(Math.floor(m.hd.count() / 3f)));
+	static public int getnormalprogression(final Monster m){
+		return 1+Math.round(Math.round(Math.floor(m.hd.count()/3f)));
 	}
 
 	@Override
-	public void registerupgrades(UpgradeHandler handler) {
-		register(handler.earth, EARTH);
-		register(handler.wind, WIND);
-		register(handler.fire, FIRE);
-		register(handler.water, WATER);
-		register(handler.good, GOOD);
-		register(handler.evil, EVIL);
-		register(handler.shots, SHOTS);
-		register(handler.powerattack, POWER);
-		register(handler.combatexpertise, EXPERTISE);
-		register(handler.internal, INTERNAL);
+	public void registerupgrades(UpgradeHandler handler){
+		register(handler.earth,EARTH);
+		register(handler.wind,WIND);
+		register(handler.fire,FIRE);
+		register(handler.water,WATER);
+		register(handler.good,GOOD);
+		register(handler.evil,EVIL);
+		register(handler.shots,SHOTS);
+		register(handler.powerattack,POWER);
+		register(handler.combatexpertise,EXPERTISE);
+		register(handler.internal,INTERNAL);
 	}
 
-	private void register(HashSet<Upgrade> upgrades, Feat[] feats) {
-		for (Feat f : feats) {
+	private void register(HashSet<Upgrade> upgrades,Feat[] feats){
+		for(Feat f:feats)
 			upgrades.add(new FeatUpgrade(f));
-		}
 	}
 
 	@Override
-	public String log(Monster m) {
-		return m.feats.isEmpty() ? "" : m.feats.toString();
+	public String log(Monster m){
+		return m.feats.isEmpty()?"":m.feats.toString();
 	}
 }

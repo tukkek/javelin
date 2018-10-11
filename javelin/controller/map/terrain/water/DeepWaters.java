@@ -5,14 +5,14 @@ import javelin.view.Images;
 
 /**
  * 100% water map.
- * 
+ *
  * @author alex
  */
-public class DeepWaters extends DndMap {
+public class DeepWaters extends DndMap{
 	/** Constructor. */
-	public DeepWaters() {
-		super("Water", 0, 0, 1);
-		flooded = Images.get("terrainaquatic");
-		standard = false;
+	public DeepWaters(){
+		super("Water",0,0,1);
+		flooded=Images.get("terrainaquatic");
+		standard=false;
 	}
 }

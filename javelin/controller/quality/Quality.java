@@ -25,16 +25,16 @@ import javelin.model.unit.Monster;
 
 /**
  * Represents a {@link Monster}'s special attack or special ability.
- * 
+ *
  * Note that not at specialties are implemented as a {@link Quality}. For
  * example {@link Monster#breaths}.
- * 
+ *
  * TODO make Quality a subclass of Upgrade as well? For example: MindImmunity is
  * not being offered as upgrade.
- * 
+ *
  * @author alex
  */
-public abstract class Quality {
+public abstract class Quality{
 
 	/**
 	 * Should always be lowercase.
@@ -42,43 +42,36 @@ public abstract class Quality {
 	public final String name;
 
 	/**
-	 * @param name
-	 *            Will be converted to lower-case.
+	 * @param name Will be converted to lower-case.
 	 */
-	public Quality(final String name) {
-		this.name = name.toLowerCase();
+	public Quality(final String name){
+		this.name=name.toLowerCase();
 	}
 
-	public static final ArrayList<Quality> qualities = new ArrayList<Quality>();
+	public static final ArrayList<Quality> qualities=new ArrayList<>();
 
-	static {
-		for (final Quality q : new Quality[] { new FastHealing("fast healing"),
-				new LowLightVision("low-light vision", Monster.VISION_LOWLIGHT),
-				new Darkvision("darkvision", Monster.VISION_DARK),
-				new DamageReduction(), new EnergyResistance(),
-				new SpellResistance(), new SpellImmunity(),
-				new EnergyImmunity(), new MindImmunity(), new Perception(),
-				new CriticalImmunity(), new ImprovedGrab(), new Elemental(),
-				new Subtype(), new SunlightVulnerability(), new Undead(),
-				new Construct(), new Ooze(), new FrightfulPresence(),
-				new ParalysisImmunity(), new PoisonImmunity(), new Poison(),
-				new NoHealing(), new Constrict() }) {
+	static{
+		for(final Quality q:new Quality[]{new FastHealing("fast healing"),
+				new LowLightVision("low-light vision",Monster.VISION_LOWLIGHT),
+				new Darkvision("darkvision",Monster.VISION_DARK),new DamageReduction(),
+				new EnergyResistance(),new SpellResistance(),new SpellImmunity(),
+				new EnergyImmunity(),new MindImmunity(),new Perception(),
+				new CriticalImmunity(),new ImprovedGrab(),new Elemental(),new Subtype(),
+				new SunlightVulnerability(),new Undead(),new Construct(),new Ooze(),
+				new FrightfulPresence(),new ParalysisImmunity(),new PoisonImmunity(),
+				new Poison(),new NoHealing(),new Constrict()})
 			qualities.add(q);
-		}
 	}
 
 	/**
-	 * @param declaration
-	 *            Textual parameters from monsters.xml.
-	 * @param m
-	 *            Apply quality.
+	 * @param declaration Textual parameters from monsters.xml.
+	 * @param m Apply quality.
 	 */
-	public abstract void add(String declaration, Monster m);
+	public abstract void add(String declaration,Monster m);
 
 	/**
-	 * This is used only in order to decide if uses {@link #rate(Monster)} or
-	 * not.
-	 * 
+	 * This is used only in order to decide if uses {@link #rate(Monster)} or not.
+	 *
 	 * @return <code>true</code> if given {@link Monster} has this quality.
 	 * @see #apply(String)
 	 */
@@ -90,32 +83,30 @@ public abstract class Quality {
 	abstract public float rate(Monster m);
 
 	/** Lets subclasses register upgrades. */
-	public void listupgrades(UpgradeHandler handler) {
+	public void listupgrades(UpgradeHandler handler){
 		// do nothing by default
 	}
 
 	/**
 	 * @return A description of this {@link Monster}s ability if it's one he
-	 *         {@link #has(Monster)}. May return <code>null</code> in order to
-	 *         be ignored.
+	 *         {@link #has(Monster)}. May return <code>null</code> in order to be
+	 *         ignored.
 	 */
-	public String describe(Monster m) {
+	public String describe(Monster m){
 		return name;
 	}
 
 	/**
-	 * This is used only in order to decide if uses {@link #add(Monster)} or
-	 * not.
-	 * 
-	 * @param monster
-	 *            Monster being examined. Note that this entry is still being
-	 *            read by {@link MonsterReader} and could be incomplete.
-	 * 
+	 * This is used only in order to decide if uses {@link #add(Monster)} or not.
+	 *
+	 * @param monster Monster being examined. Note that this entry is still being
+	 *          read by {@link MonsterReader} and could be incomplete.
+	 *
 	 * @return <code>true</code> if given lowercase {@link String} is describing
 	 *         this quality.
 	 * @see #has(Monster)
 	 */
-	public boolean apply(String text, Monster m) {
+	public boolean apply(String text,Monster m){
 		return text.contains(name);
 	}
 }

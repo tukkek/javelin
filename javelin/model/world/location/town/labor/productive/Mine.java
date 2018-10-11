@@ -38,298 +38,261 @@ import javelin.view.screen.town.SelectScreen;
  *
  * @author alex
  */
-public class Mine extends Fortification {
-	static final String DESCRIPTION = "Gold mine";
-	static final Option MINEDAY = new Option("", 0, 'd');
-	static final Option MINEWEEK = new Option("", 0, 'w');
-	static final Option PLACEMINER = new Option(
-			"Assign an unit to work on this mine", 0, 'a');
-	static final Option RECALLMINER = new Option("Recall a miner", 0, 'r');
+public class Mine extends Fortification{
+	static final String DESCRIPTION="Gold mine";
+	static final Option MINEDAY=new Option("",0,'d');
+	static final Option MINEWEEK=new Option("",0,'w');
+	static final Option PLACEMINER=new Option(
+			"Assign an unit to work on this mine",0,'a');
+	static final Option RECALLMINER=new Option("Recall a miner",0,'r');
 
-	public static class BuildMine extends Build {
-		public BuildMine() {
-			super("Build mine", 10, null, Rank.HAMLET);
+	public static class BuildMine extends Build{
+		public BuildMine(){
+			super("Build mine",10,null,Rank.HAMLET);
 		}
 
 		@Override
-		public Location getgoal() {
+		public Location getgoal(){
 			return new Mine();
 		}
 
 		@Override
-		public boolean validate(District d) {
-			return super.validate(d) && d.getlocationtype(Mine.class).isEmpty()
-					&& getsitelocation() != null;
+		public boolean validate(District d){
+			return super.validate(d)&&d.getlocationtype(Mine.class).isEmpty()
+					&&getsitelocation()!=null;
 		}
 
 		@Override
-		protected Point getsitelocation() {
-			ArrayList<Point> free = town.getdistrict().getfreespaces();
-			for (Point p : free) {
-				if (Terrain.get(p.x, p.y).equals(Terrain.MOUNTAINS)) {
-					return p;
-				}
-			}
+		protected Point getsitelocation(){
+			ArrayList<Point> free=town.getdistrict().getfreespaces();
+			for(Point p:free)
+				if(Terrain.get(p.x,p.y).equals(Terrain.MOUNTAINS)) return p;
 			return null;
 		}
 	}
 
-	public class UpgradeMine extends BuildingUpgrade {
-		public UpgradeMine(Mine mine) {
-			super("Ruby mine", Math.max(0, 10 - mine.miners.size()), 5, mine,
-					Rank.VILLAGE);
+	public class UpgradeMine extends BuildingUpgrade{
+		public UpgradeMine(Mine mine){
+			super("Ruby mine",Math.max(0,10-mine.miners.size()),5,mine,Rank.VILLAGE);
 		}
 
 		@Override
-		public Location getgoal() {
+		public Location getgoal(){
 			return previous;
 		}
 
 		@Override
-		public void done(Location l) {
+		public void done(Location l){
 			super.done(l);
-			Mine m = (Mine) l;
+			Mine m=(Mine)l;
 			m.rename("Ruby mine");
-			m.minesrubies = true;
+			m.minesrubies=true;
 		}
 
 		@Override
-		public boolean validate(District d) {
-			return !((Mine) previous).minesrubies && super.validate(d);
+		public boolean validate(District d){
+			return !((Mine)previous).minesrubies&&super.validate(d);
 		}
 	}
 
-	class MineScreen extends SelectScreen {
-		MineScreen() {
+	class MineScreen extends SelectScreen{
+		MineScreen(){
 			super("You find yourself at the entrance of a "
-					+ descriptionknown.toLowerCase() + ".", null);
-			stayopen = false;
+					+descriptionknown.toLowerCase()+".",null);
+			stayopen=false;
 		}
 
 		@Override
-		public String getCurrency() {
+		public String getCurrency(){
 			return "";
 		}
 
 		@Override
-		public String printinfo() {
+		public String printinfo(){
 			return "";
 		}
 
 		@Override
-		public boolean select(Option o) {
-			if (o == MINEDAY) {
-				Squad.active.gold += mine(1);
-				Squad.active.hourselapsed += 24;
+		public boolean select(Option o){
+			if(o==MINEDAY){
+				Squad.active.gold+=mine(1);
+				Squad.active.hourselapsed+=24;
 				return true;
 			}
-			if (o == MINEWEEK) {
-				Squad.active.gold += mine(7);
-				Squad.active.hourselapsed += 7 * 24;
+			if(o==MINEWEEK){
+				Squad.active.gold+=mine(7);
+				Squad.active.hourselapsed+=7*24;
 				return true;
 			}
-			if (o == PLACEMINER) {
-				ArrayList<Combatant> eligible = geteligible();
-				int choice = Javelin.choose(
+			if(o==PLACEMINER){
+				ArrayList<Combatant> eligible=geteligible();
+				int choice=Javelin.choose(
 						"Note that only rational, non-mercenary units in decent health can be stationed.\n\n"
-								+ "Which unit will stay mining?",
-						eligible, true, false);
-				if (choice >= 0) {
-					assign(eligible.get(choice), Squad.active.members, miners,
-							Squad.active.equipment, equipment);
-				}
+								+"Which unit will stay mining?",
+						eligible,true,false);
+				if(choice>=0) assign(eligible.get(choice),Squad.active.members,miners,
+						Squad.active.equipment,equipment);
 				return false;
 			}
-			if (o == RECALLMINER) {
-				int choice = Javelin.choose("Recall which miner?", miners, true,
-						false);
-				if (choice >= 0) {
-					assign(miners.get(choice), miners, Squad.active.members,
-							equipment, Squad.active.equipment);
-				}
+			if(o==RECALLMINER){
+				int choice=Javelin.choose("Recall which miner?",miners,true,false);
+				if(choice>=0) assign(miners.get(choice),miners,Squad.active.members,
+						equipment,Squad.active.equipment);
 				return false;
 			}
-			throw new RuntimeException(o.name + " #unknownmineoption");
+			throw new RuntimeException(o.name+" #unknownmineoption");
 		}
 
-		public int mine(int days) {
-			return Math
-					.round(AdventurersGuild.pay(0, days, Squad.active.members));
+		public int mine(int days){
+			return Math.round(AdventurersGuild.pay(0,days,Squad.active.members));
 		}
 
-		void assign(Combatant recruit, List<Combatant> from, List<Combatant> to,
-				Equipment fromequipment, Equipment toequipment) {
-			toequipment.put(recruit, fromequipment.get(recruit));
+		void assign(Combatant recruit,List<Combatant> from,List<Combatant> to,
+				Equipment fromequipment,Equipment toequipment){
+			toequipment.put(recruit,fromequipment.get(recruit));
 			fromequipment.remove(recruit);
 			from.remove(recruit);
 			to.add(recruit);
 		}
 
 		@Override
-		public List<Option> getoptions() {
-			ArrayList<Option> options = new ArrayList<>();
-			MINEDAY.name = "Mine for a day ($" + mine(1) + ")";
-			MINEWEEK.name = "Mine for a week ($" + mine(7) + ")";
+		public List<Option> getoptions(){
+			ArrayList<Option> options=new ArrayList<>();
+			MINEDAY.name="Mine for a day ($"+mine(1)+")";
+			MINEWEEK.name="Mine for a week ($"+mine(7)+")";
 			options.add(MINEDAY);
 			options.add(MINEWEEK);
-			if (Squad.active.members.size() > 1) {
-				options.add(PLACEMINER);
-			}
-			if (!miners.isEmpty()) {
-				options.add(RECALLMINER);
-			}
+			if(Squad.active.members.size()>1) options.add(PLACEMINER);
+			if(!miners.isEmpty()) options.add(RECALLMINER);
 			return options;
 		}
 
 		@Override
-		protected Comparator<Option> sort() {
-			return new Comparator<Option>() {
-				@Override
-				public int compare(Option o1, Option o2) {
-					return o1.name.compareTo(o2.name);
-				}
-			};
+		protected Comparator<Option> sort(){
+			return (o1,o2)->o1.name.compareTo(o2.name);
 		}
 
 		@Override
-		public String printpriceinfo(Option o) {
+		public String printpriceinfo(Option o){
 			return "";
 		}
 	}
 
-	List<Combatant> miners = new ArrayList<>();
-	float gold = 0;
+	List<Combatant> miners=new ArrayList<>();
+	float gold=0;
 	/** TODO should use a normal map instead */
-	Equipment equipment = new Equipment(null);
-	boolean minesrubies = false;
-	int rubies = 0;
+	Equipment equipment=new Equipment(null);
+	boolean minesrubies=false;
+	int rubies=0;
 
 	/** Constructor. */
-	public Mine() {
-		super(DESCRIPTION, DESCRIPTION, 6, 10);
-		terrain = Terrain.UNDERGROUND;
-		allowedinscenario = false;
-		gossip = true;
+	public Mine(){
+		super(DESCRIPTION,DESCRIPTION,6,10);
+		terrain=Terrain.UNDERGROUND;
+		allowedinscenario=false;
+		gossip=true;
 	}
 
 	/**
 	 * Avoids {@link #generate()}. Use this for when a player is building a mine
 	 * via {@link Work}.
 	 */
-	public Mine(int x, int y) {
+	public Mine(int x,int y){
 		this();
-		this.x = x;
-		this.y = y;
+		this.x=x;
+		this.y=y;
 	}
 
-	ArrayList<Combatant> geteligible() {
-		ArrayList<Combatant> eligible = new ArrayList<>();
-		for (Combatant c : Squad.active.members) {
-			if (!c.mercenary && c.getnumericstatus() >= Combatant.STATUSHURT
-					&& c.source.think(-1)) {
+	ArrayList<Combatant> geteligible(){
+		ArrayList<Combatant> eligible=new ArrayList<>();
+		for(Combatant c:Squad.active.members)
+			if(!c.mercenary&&c.getnumericstatus()>=Combatant.STATUSHURT
+					&&c.source.think(-1))
 				eligible.add(c);
-			}
-		}
 		return eligible;
 	}
 
 	@Override
-	public Integer getel(int attackerel) {
-		return miners.isEmpty() ? Integer.MIN_VALUE
-				: ChallengeCalculator.calculateel(miners);
+	public Integer getel(int attackerel){
+		return miners.isEmpty()?Integer.MIN_VALUE
+				:ChallengeCalculator.calculateel(miners);
 	}
 
 	@Override
-	public void turn(long time, WorldScreen world) {
-		if (ishostile()) {
-			return;
-		}
-		gold += AdventurersGuild.pay(0, 1, miners);
-		if (minesrubies && RPG.random() < 1 / 30f) {
-			rubies += 1;
-		}
+	public void turn(long time,WorldScreen world){
+		if(ishostile()) return;
+		gold+=AdventurersGuild.pay(0,1,miners);
+		if(minesrubies&&RPG.random()<1/30f) rubies+=1;
 	}
 
 	@Override
-	public boolean hasupgraded() {
-		return gold >= 1;
+	public boolean hasupgraded(){
+		return gold>=1;
 	}
 
 	@Override
-	public boolean hascrafted() {
-		return rubies > 0;
+	public boolean hascrafted(){
+		return rubies>0;
 	}
 
 	@Override
-	public boolean isworking() {
+	public boolean isworking(){
 		return !miners.isEmpty();
 	}
 
 	@Override
-	public boolean interact() {
-		if (!super.interact()) {
-			return false;
+	public boolean interact(){
+		if(!super.interact()) return false;
+		String collected="";
+		if(gold>=1){
+			int g=Math.round(Math.round(Math.ceil(gold)));
+			Squad.active.gold+=g;
+			gold=0;
+			collected+="You collect $"+Javelin.format(g)+" from the mine!\n";
 		}
-		String collected = "";
-		if (gold >= 1) {
-			int g = Math.round(Math.round(Math.ceil(gold)));
-			Squad.active.gold += g;
-			gold = 0;
-			collected += "You collect $" + Javelin.format(g)
-					+ " from the mine!\n";
-		}
-		if (rubies > 0) {
-			collected += "You collect " + rubies + " rubies from the mine!\n";
-			for (int i = 0; i < rubies; i++) {
+		if(rubies>0){
+			collected+="You collect "+rubies+" rubies from the mine!\n";
+			for(int i=0;i<rubies;i++)
 				new Ruby().grab();
-			}
-			rubies = 0;
+			rubies=0;
 		}
-		if (!collected.isEmpty()) {
-			Javelin.message(collected, false);
-		}
+		if(!collected.isEmpty()) Javelin.message(collected,false);
 		new MineScreen().show();
 		return true;
 	}
 
 	@Override
-	protected void generate() {
-		if (x != -1) {
-			return;
-		}
-		while (x == -1 || !Terrain.get(x, y).equals(Terrain.MOUNTAINS)
-				|| !validatedistance()) {
+	protected void generate(){
+		if(x!=-1) return;
+		while(x==-1||!Terrain.get(x,y).equals(Terrain.MOUNTAINS)
+				||!validatedistance())
 			super.generate();
-		}
 	}
 
-	boolean validatedistance() {
-		for (Actor mine : World.getall(Mine.class)) {
-			if (mine != this
-					&& distance(mine.x, mine.y) < Outpost.VISIONRANGE * 2) {
+	boolean validatedistance(){
+		for(Actor mine:World.getall(Mine.class))
+			if(mine!=this&&distance(mine.x,mine.y)<Outpost.VISIONRANGE*2)
 				return false;
-			}
-		}
 		return true;
 	}
 
 	@Override
-	protected Siege fight() {
-		Siege s = super.fight();
-		s.terrain = Terrain.UNDERGROUND;
+	protected Siege fight(){
+		Siege s=super.fight();
+		s.terrain=Terrain.UNDERGROUND;
 		return s;
 	}
 
 	@Override
-	public List<Combatant> getcombatants() {
-		ArrayList<Combatant> combatants = new ArrayList<>(garrison);
+	public List<Combatant> getcombatants(){
+		ArrayList<Combatant> combatants=new ArrayList<>(garrison);
 		combatants.addAll(miners);
 		return combatants;
 	}
 
 	@Override
-	public ArrayList<Labor> getupgrades(District d) {
-		ArrayList<Labor> upgrades = super.getupgrades(d);
+	public ArrayList<Labor> getupgrades(District d){
+		ArrayList<Labor> upgrades=super.getupgrades(d);
 		upgrades.add(new UpgradeMine(this));
 		return upgrades;
 	}

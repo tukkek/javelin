@@ -21,10 +21,10 @@ import javelin.view.screen.WorldScreen;
  * @see WorldGenerator#makemap()
  * @author alex
  */
-public class Outpost extends Fortification {
+public class Outpost extends Fortification{
 	/** How many squares away to help vision with. */
-	public static final int VISIONRANGE = 3;
-	private static final String DESCRIPTION = "Outpost";
+	public static final int VISIONRANGE=3;
+	private static final String DESCRIPTION="Outpost";
 
 	// public static class BuildOutpost extends Build {
 	// public BuildOutpost() {
@@ -73,29 +73,26 @@ public class Outpost extends Fortification {
 	// }
 
 	/** Constructor. */
-	public Outpost() {
-		super(DESCRIPTION, DESCRIPTION, 1, 5);
-		gossip = true;
-		vision = VISIONRANGE;
-		allowedinscenario = false;
+	public Outpost(){
+		super(DESCRIPTION,DESCRIPTION,1,5);
+		gossip=true;
+		vision=VISIONRANGE;
+		allowedinscenario=false;
 	}
 
 	/** Puts a new instance in the {@link World} map. */
-	public static void build() {
+	public static void build(){
 		new Outpost().place();
 	}
 
 	@Override
-	public boolean interact() {
-		if (!super.interact()) {
-			return false;
-		}
+	public boolean interact(){
+		if(!super.interact()) return false;
 		// Squad.active.view(Squad.active.perceive(false, true) + 10);
-		if (Javelin
+		if(Javelin
 				.prompt("This outpost grants you vision of the surrounding area.\n"
-						+ "Do you want to pillage it for $" + getspoils()
-						+ "?\n\n"
-						+ "Press p to pillage it and any other key to leave...") == 'p') {
+						+"Do you want to pillage it for $"+getspoils()+"?\n\n"
+						+"Press p to pillage it and any other key to leave...")=='p'){
 			pillage();
 			return true;
 		}
@@ -105,30 +102,25 @@ public class Outpost extends Fortification {
 	/**
 	 * Given a coordinate shows a big amount of land around that.
 	 *
-	 * @param range
-	 *            How far squares away will become visible.
+	 * @param range How far squares away will become visible.
 	 * @see WorldScreen#discovered
 	 */
-	static public void discover(int xp, int yp, int range) {
-		for (int x = xp - range; x <= xp + range; x++) {
-			for (int y = yp - range; y <= yp + range; y++) {
-				WorldScreen.setVisible(x, y);
-			}
-		}
+	static public void discover(int xp,int yp,int range){
+		for(int x=xp-range;x<=xp+range;x++)
+			for(int y=yp-range;y<=yp+range;y++)
+				WorldScreen.setVisible(x,y);
 	}
 
 	@Override
-	protected void generate() {
-		x = -1;
-		while (x == -1 || findnearest(Outpost.class) != null
-				&& findnearest(Outpost.class).distance(x, y) <= VISIONRANGE
-						* 2) {
+	protected void generate(){
+		x=-1;
+		while(x==-1||findnearest(Outpost.class)!=null
+				&&findnearest(Outpost.class).distance(x,y)<=VISIONRANGE*2)
 			generateawayfromtown();
-		}
 	}
 
 	@Override
-	public List<Combatant> getcombatants() {
+	public List<Combatant> getcombatants(){
 		return garrison;
 	}
 }

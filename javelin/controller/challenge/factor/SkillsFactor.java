@@ -17,50 +17,47 @@ import javelin.model.unit.skill.Skill;
  *
  * @author alex
  */
-public class SkillsFactor extends CrFactor {
+public class SkillsFactor extends CrFactor{
 	/** Challenge rating cost per skill rank. */
-	public static float COST = .02f;
+	public static float COST=.02f;
 
 	@Override
-	public float calculate(Monster m) {
-		int ranks = 0;
-		for (int skill : m.ranks.values()) {
-			ranks += skill;
-		}
-		return COST * ranks;
+	public float calculate(Monster m){
+		int ranks=0;
+		for(int skill:m.ranks.values())
+			ranks+=skill;
+		return COST*ranks;
 	}
 
 	@Override
-	public void registerupgrades(UpgradeHandler handler) {
+	public void registerupgrades(UpgradeHandler handler){
 		Skill.init();
 	}
 
 	/**
-	 * @param progression
-	 *            How many skills are gained per class level or monster hit die.
-	 * @param m
-	 *            Applies {@link Monster#intelligence} to sum
-	 * @return the challenge rating value for how much should be gained in
-	 *         skills each level.
+	 * @param progression How many skills are gained per class level or monster
+	 *          hit die.
+	 * @param m Applies {@link Monster#intelligence} to sum
+	 * @return the challenge rating value for how much should be gained in skills
+	 *         each level.
 	 */
-	public static float levelupcost(int progression, Monster m) {
-		return levelup(progression, m) * COST;
+	public static float levelupcost(int progression,Monster m){
+		return levelup(progression,m)*COST;
 	}
 
 	/**
-	 * Same as {@link #levelupcost(int, Monster)} but returns skill points
-	 * instead of challenge rating.
+	 * Same as {@link #levelupcost(int, Monster)} but returns skill points instead
+	 * of challenge rating.
 	 */
-	public static int levelup(int progression, Monster m) {
-		return Math.max(1, progression + Monster.getbonus(m.intelligence));
+	public static int levelup(int progression,Monster m){
+		return Math.max(1,progression+Monster.getbonus(m.intelligence));
 	}
 
 	@Override
-	public String log(Monster m) {
-		TreeSet<String> skills = new TreeSet<String>();
-		for (String skill : m.ranks.keySet()) {
+	public String log(Monster m){
+		TreeSet<String> skills=new TreeSet<>();
+		for(String skill:m.ranks.keySet())
 			skills.add(skill);
-		}
 		return skills.toString();
 	}
 }

@@ -13,39 +13,37 @@ import javelin.model.unit.feat.save.LightningReflexes;
 import javelin.model.unit.feat.skill.Acrobatic;
 import javelin.model.unit.skill.Skill;
 
-public class Monk extends Kit {
-	public static final Kit INSTANCE = new Monk();
+public class Monk extends Kit{
+	public static final Kit INSTANCE=new Monk();
 
-	private Monk() {
-		super("monk", Warrior.SINGLETON, RaiseStrength.SINGLETON, "Novice",
-				"Disciple", "Monk", "Master");
+	private Monk(){
+		super("monk",Warrior.SINGLETON,RaiseStrength.SINGLETON,"Novice","Disciple",
+				"Monk","Master");
 	}
 
 	@Override
-	protected void define() {
+	protected void define(){
 		basic.add(RaiseWisdom.SINGLETON);
 		basic.add(Skill.ACROBATICS.getupgrade());
-		for (Feat f : new Feat[] { Acrobatic.SINGLETON,
-				ImprovedInitiative.SINGLETON, LightningReflexes.SINGLETON }) {
+		for(Feat f:new Feat[]{Acrobatic.SINGLETON,ImprovedInitiative.SINGLETON,
+				LightningReflexes.SINGLETON})
 			basic.add(new FeatUpgrade(f));
-		}
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h) {
+	protected void extend(UpgradeHandler h){
 		extension.add(Skill.BLUFF.getupgrade());
 		extension.add(Skill.SENSEMOTIVE.getupgrade());
 		extension.addAll(h.water);
 		extension.addAll(h.earth);
 		extension.addAll(h.combatexpertise);
-		for (Discipline d : Discipline.DISCIPLINES) {
+		for(Discipline d:Discipline.DISCIPLINES)
 			extension.add(d.trainingupgrade);
-		}
 	}
 
 	@Override
-	public boolean allow(int bestability, int secondbest, Monster m) {
+	public boolean allow(int bestability,int secondbest,Monster m){
 		return !Boolean.FALSE.equals(m.lawful)
-				&& super.allow(bestability, secondbest, m);
+				&&super.allow(bestability,secondbest,m);
 	}
 }

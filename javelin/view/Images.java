@@ -22,91 +22,80 @@ import javelin.model.world.location.town.Town;
  *
  * @author alex
  */
-public class Images {
-	static final TreeMap<String, Image> CACHE = new TreeMap<String, Image>();
-	static final TreeMap<String, Image> BURIEDCACHE = new TreeMap<String, Image>();
+public class Images{
+	static final TreeMap<String,Image> CACHE=new TreeMap<>();
+	static final TreeMap<String,Image> BURIEDCACHE=new TreeMap<>();
 
 	/** @see {@link Combatant#ispenalized(javelin.model.state.BattleState)} */
-	public static final Image PENALIZED = Images.maketransparent(3 / 4f,
+	public static final Image PENALIZED=Images.maketransparent(3/4f,
 			Images.get("overlaypenalized"));
 	/** @see Location#hascrafted() */
-	public static final Image CRAFTING = Images.get("overlaycrafting");
+	public static final Image CRAFTING=Images.get("overlaycrafting");
 	/** @see Location#hasupgraded() */
-	public static final Image UPGRADING = Images.get("overlayupgrading");
+	public static final Image UPGRADING=Images.get("overlayupgrading");
 	/** @see Town#isworking() */
-	public static final Image LABOR = Images.get("overlaylabor");
+	public static final Image LABOR=Images.get("overlaylabor");
 	/** Show while a {@link Meld} is being generated. */
-	public static final Image DEAD = Images.get("overlaydead");
+	public static final Image DEAD=Images.get("overlaydead");
 	/** Show when a {@link Meld} is generated. */
-	public static final Image MELD = Images.get("overlaymeld");
+	public static final Image MELD=Images.get("overlaymeld");
 	/** @see Location#ishostile() */
-	public static final Image HOSTILE = Images.get("overlayhostile");
+	public static final Image HOSTILE=Images.get("overlayhostile");
 	/** @see Town#ishosting() */
-	public static final Image TOURNAMENT = Images
-			.get("locationtournament");
+	public static final Image TOURNAMENT=Images.get("locationtournament");
 	/** Distinguishes {@link Combatant#mercenary} units. */
-	public static final Image MERCENARY = Images.get("overlaymercenary");
-	public static final Image SUMMONED = Images.get("overlaysummoned");
-	public static final Image ELITE = Images.get("overlayelite");
-	public static final Image TEXTUREMAP = Images.get("texturemap");
+	public static final Image MERCENARY=Images.get("overlaymercenary");
+	public static final Image SUMMONED=Images.get("overlaysummoned");
+	public static final Image ELITE=Images.get("overlayelite");
+	public static final Image TEXTUREMAP=Images.get("texturemap");
 
 	/**
-	 * @param combatant
-	 *            Unit to be shown.
+	 * @param combatant Unit to be shown.
 	 * @return image resource.
 	 */
-	public static Image get(Combatant combatant) {
-		if (!combatant.burrowed) {
-			return get(combatant.source.avatarfile);
-		}
-		final String avatar = combatant.source.avatarfile;
-		Image buried = BURIEDCACHE.get(avatar);
-		if (buried == null) {
-			buried = maketransparent(1 / 3f, get(avatar));
-			BURIEDCACHE.put(avatar, buried);
+	public static Image get(Combatant combatant){
+		if(!combatant.burrowed) return get(combatant.source.avatarfile);
+		final String avatar=combatant.source.avatarfile;
+		Image buried=BURIEDCACHE.get(avatar);
+		if(buried==null){
+			buried=maketransparent(1/3f,get(avatar));
+			BURIEDCACHE.put(avatar,buried);
 		}
 		return buried;
 	}
 
 	/**
-	 * This should be the preferred method of loading images because this way
-	 * it's friendlier for modding purposes.
+	 * This should be the preferred method of loading images because this way it's
+	 * friendlier for modding purposes.
 	 *
-	 * @param file
-	 *            PNG extension is added.
+	 * @param file PNG extension is added.
 	 * @return An image from the avatar folder.
 	 */
-	synchronized public static Image get(final String file) {
-		Image i = CACHE.get(file);
-		if (i != null) {
+	synchronized public static Image get(final String file){
+		Image i=CACHE.get(file);
+		if(i!=null) return i;
+		try{
+			i=ImageIO.read(new File("avatars"+File.separator+file+".png"));
+			CACHE.put(file,i);
 			return i;
-		}
-		try {
-			i = ImageIO
-					.read(new File("avatars" + File.separator + file + ".png"));
-			CACHE.put(file, i);
-			return i;
-		} catch (IOException e) {
-			throw new RuntimeException(file, e);
+		}catch(IOException e){
+			throw new RuntimeException(file,e);
 		}
 	}
 
 	/**
-	 * @param alpha
-	 *            Alpha level. 1 is 100% opaque, 0 is 100% transparent.
+	 * @param alpha Alpha level. 1 is 100% opaque, 0 is 100% transparent.
 	 */
-	public static Image maketransparent(float alpha, Image image) {
-		BufferedImage transparent = new BufferedImage(32, 32,
-				Transparency.TRANSLUCENT);
-		Graphics2D g = transparent.createGraphics();
-		g.setComposite(
-				AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-		g.drawImage(image, 0, 0, null);
+	public static Image maketransparent(float alpha,Image image){
+		BufferedImage transparent=new BufferedImage(32,32,Transparency.TRANSLUCENT);
+		Graphics2D g=transparent.createGraphics();
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha));
+		g.drawImage(image,0,0,null);
 		g.dispose();
 		return transparent;
 	}
 
-	public static void clearcache() {
+	public static void clearcache(){
 		CACHE.clear();
 		BURIEDCACHE.clear();
 	}

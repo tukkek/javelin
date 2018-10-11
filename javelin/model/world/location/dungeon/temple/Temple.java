@@ -50,22 +50,21 @@ import javelin.view.Images;
  * @see TempleDungeon#createspecialchest(Point)
  * @author alex
  */
-public abstract class Temple extends UniqueLocation {
+public abstract class Temple extends UniqueLocation{
 	/**
 	 * TODO there's gotta be a better way to do this
 	 */
-	public static boolean climbing = false;
+	public static boolean climbing=false;
 	/** TODO same as {@link #climbing} */
-	public static boolean leavingfight = false;
+	public static boolean leavingfight=false;
 
 	/**
 	 * Create the temples during world generation.
 	 */
-	public static void generatetemples() {
-		LinkedList<Integer> els = new LinkedList<>();
-		for (int el : new int[] { 3, 5, 8, 10, 13, 15, 18 }) {
+	public static void generatetemples(){
+		LinkedList<Integer> els=new LinkedList<>();
+		for(int el:new int[]{3,5,8,10,13,15,18})
 			els.add(el);
-		}
 		Collections.shuffle(els);
 		new AirTemple(els.pop()).place();
 		new EarthTemple(els.pop()).place();
@@ -91,171 +90,159 @@ public abstract class Temple extends UniqueLocation {
 	 * @see TempleKey
 	 * @see Scenario#lockedtemples
 	 */
-	public boolean open = !World.scenario.lockedtemples;
+	public boolean open=!World.scenario.lockedtemples;
 	/**
 	 * Each floor has a {@link Chest} with a ruby in it and there is also an
 	 * {@link Altar} on the deepest level.
 	 */
-	public List<TempleDungeon> floors = new ArrayList<>();
+	public List<TempleDungeon> floors=new ArrayList<>();
 	/** Encounter level equivalent for {@link #level}. */
 	public int el;
 	String fluff;
 	/** If not <code>null</code> will override {@link Dungeon#floor}. */
-	public String floor = null;
+	public String floor=null;
 	/** If not <code>null</code> will override {@link Dungeon#wall}. */
-	public String wall = null;
+	public String wall=null;
 	/** If <code>false</code>, draw doors without a wall behind them. */
-	public boolean doorbackground = true;
+	public boolean doorbackground=true;
 	/** Module level. */
 	public int level;
 	/** {@link Dungeon} {@link Feature} most likely to be found here. */
-	public Class<? extends Feature> feature = null;
+	public Class<? extends Feature> feature=null;
 
 	/**
-	 * @param r
-	 *            Temple's defining characteristic.
-	 * @param fluffp
-	 *            Text description of temple and surrounding area.
+	 * @param r Temple's defining characteristic.
+	 * @param fluffp Text description of temple and surrounding area.
 	 */
-	public Temple(Realm r, int level, Relic relicp, String fluffp) {
-		super("Temple of " + r.getname(), "Temple of " + r.getname(), level,
-				level);
-		allowedinscenario = false;
-		realm = r;
-		this.level = level;
-		el = level;
-		relic = relicp;
-		fluff = fluffp;
-		link = true;
+	public Temple(Realm r,int level,Relic relicp,String fluffp){
+		super("Temple of "+r.getname(),"Temple of "+r.getname(),level,level);
+		allowedinscenario=false;
+		realm=r;
+		this.level=level;
+		el=level;
+		relic=relicp;
+		fluff=fluffp;
+		link=true;
 		generatefloors(level);
 	}
 
-	void generatefloors(int level) {
-		Tier tier = Tier.get(level);
+	void generatefloors(int level){
+		Tier tier=Tier.get(level);
 		int nfloors;
-		if (tier == Tier.LOW) {
-			nfloors = 2;
-		} else if (tier == Tier.PARAGON) {
-			nfloors = 4;
-		} else {
-			nfloors = 3;
-		}
-		TempleDungeon parent = null;
-		for (int i = 0; i < nfloors; i++) {
-			boolean deepest = i == nfloors - 1;
-			parent = new TempleDungeon(el + i, deepest, parent, this);
+		if(tier==Tier.LOW)
+			nfloors=2;
+		else if(tier==Tier.PARAGON)
+			nfloors=4;
+		else
+			nfloors=3;
+		TempleDungeon parent=null;
+		for(int i=0;i<nfloors;i++){
+			boolean deepest=i==nfloors-1;
+			parent=new TempleDungeon(el+i,deepest,parent,this);
 			floors.add(parent);
 		}
 	}
 
 	@Override
-	protected void generategarrison(int minlevel, int maxlevel) {
+	protected void generategarrison(int minlevel,int maxlevel){
 		// no outside garrison
 	}
 
 	@Override
-	public void place() {
-		Realm r = realm;
+	public void place(){
+		Realm r=realm;
 		super.place();
-		realm = r;
+		realm=r;
 	}
 
 	@Override
-	public Image getimage() {
-		final String name = "locationtemple" + realm.getname().toLowerCase();
+	public Image getimage(){
+		final String name="locationtemple"+realm.getname().toLowerCase();
 		return Images.get(name);
 	}
 
 	@Override
-	public boolean interact() {
-		if (open) {
+	public boolean interact(){
+		if(open)
 			floors.get(0).activate(false);
-		} else {
-			if (!Debug.unlcoktemples && !open()) {
-				return true;
-			}
-			open = true;
-			Javelin.message(fluff, true);
+		else{
+			if(!Debug.unlcoktemples&&!open()) return true;
+			open=true;
+			Javelin.message(fluff,true);
 		}
 		return true;
 	}
 
-	boolean open() {
+	boolean open(){
 		@SuppressWarnings("deprecation")
-		TempleKey key = new TempleKey(realm);
-		if (Squad.active.equipment.pop(key) != null) {
-			Javelin.message("Temple entrance opened by the "
-					+ key.toString().toLowerCase() + "!", true);
-			return true;
-		}
-		Combatant unlock = unlock();
-		if (unlock != null) {
-			Javelin.message("Temple entrance unlocked by " + unlock + "!",
+		TempleKey key=new TempleKey(realm);
+		if(Squad.active.equipment.pop(key)!=null){
+			Javelin.message(
+					"Temple entrance opened by the "+key.toString().toLowerCase()+"!",
 					true);
 			return true;
 		}
-		Combatant force = force();
-		if (force != null) {
-			Javelin.message("Temple entrance forced by " + force + "!", true);
+		Combatant unlock=unlock();
+		if(unlock!=null){
+			Javelin.message("Temple entrance unlocked by "+unlock+"!",true);
 			return true;
 		}
-		Javelin.message("The " + descriptionknown + " is locked.", true);
+		Combatant force=force();
+		if(force!=null){
+			Javelin.message("Temple entrance forced by "+force+"!",true);
+			return true;
+		}
+		Javelin.message("The "+descriptionknown+" is locked.",true);
 		return false;
 	}
 
-	Combatant force() {
-		Combatant best = null;
-		for (Combatant c : Squad.active.members) {
-			int roll = Monster.getbonus(c.source.strength);
-			if (roll < level) {
-				continue;
-			}
-			if (best == null || roll > Monster.getbonus(best.source.strength)) {
-				best = c;
-			}
+	Combatant force(){
+		Combatant best=null;
+		for(Combatant c:Squad.active.members){
+			int roll=Monster.getbonus(c.source.strength);
+			if(roll<level) continue;
+			if(best==null||roll>Monster.getbonus(best.source.strength)) best=c;
 		}
 		return best;
 	}
 
-	Combatant unlock() {
-		Combatant best = Squad.active.getbest(Skill.DISABLEDEVICE);
-		return best.taketen(Skill.DISABLEDEVICE) >= 10 + level ? best : null;
+	Combatant unlock(){
+		Combatant best=Squad.active.getbest(Skill.DISABLEDEVICE);
+		return best.taketen(Skill.DISABLEDEVICE)>=10+level?best:null;
 	}
 
 	@Override
-	public Realm getrealmoverlay() {
+	public Realm getrealmoverlay(){
 		return null;
 	}
 
 	/**
 	 * @return Starts a {@link TempleEncounter}.
 	 */
-	public Fight encounter(Dungeon d) {
-		return new TempleEncounter(this, d);
+	public Fight encounter(Dungeon d){
+		return new TempleEncounter(this,d);
 	}
 
 	/** See {@link Fight#validate(ArrayList)}. */
-	public boolean validate(List<Monster> foes) {
+	public boolean validate(List<Monster> foes){
 		return true;
 	}
 
 	/** See {@link Fight#getterrains(Terrain)}; */
-	public ArrayList<Terrain> getterrains() {
-		ArrayList<Terrain> terrains = new ArrayList<>();
+	public ArrayList<Terrain> getterrains(){
+		ArrayList<Terrain> terrains=new ArrayList<>();
 		terrains.add(Terrain.UNDERGROUND);
 		terrains.add(terrain);
 		return terrains;
 	}
 
 	@Override
-	protected void generate() {
-		if (terrain == null || terrain.equals(Terrain.WATER)) {
+	protected void generate(){
+		if(terrain==null||terrain.equals(Terrain.WATER))
 			super.generate();
-		} else {
-			while (x == -1 || !Terrain.get(x, y).equals(terrain)) {
+		else
+			while(x==-1||!Terrain.get(x,y).equals(terrain))
 				super.generate();
-			}
-		}
 	}
 
 	/**
@@ -263,29 +250,26 @@ public abstract class Temple extends UniqueLocation {
 	 *
 	 * @return <code>true</code> if a hazard happens.
 	 */
-	public boolean hazard(Dungeon templeDungeon) {
+	public boolean hazard(Dungeon templeDungeon){
 		return false;
 	}
 
 	@Override
-	public List<Combatant> getcombatants() {
+	public List<Combatant> getcombatants(){
 		return null;
 	}
 
-	public static ArrayList<Temple> gettemples() {
-		ArrayList<Temple> temples = new ArrayList<>(7);
-		for (Actor a : World.getactors()) {
-			if (a instanceof Temple) {
-				temples.add((Temple) a);
-			}
-		}
+	public static ArrayList<Temple> gettemples(){
+		ArrayList<Temple> temples=new ArrayList<>(7);
+		for(Actor a:World.getactors())
+			if(a instanceof Temple) temples.add((Temple)a);
 		return temples;
 	}
 
 	@Override
-	public String describe() {
-		int squad = ChallengeCalculator.calculateel(Squad.active.members);
-		String difficulty = Difficulty.describe(level - squad);
-		return descriptionknown + " (" + difficulty + ")";
+	public String describe(){
+		int squad=ChallengeCalculator.calculateel(Squad.active.members);
+		String difficulty=Difficulty.describe(level-squad);
+		return descriptionknown+" ("+difficulty+")";
 	}
 }

@@ -12,28 +12,27 @@ import javelin.view.screen.BattleScreen;
  * @see GoodTemple
  * @author alex
  */
-public class Spirit extends Feature {
+public class Spirit extends Feature{
 
 	/** Constructor. */
-	public Spirit() {
+	public Spirit(){
 		super("dungeonspirit");
 	}
 
 	@Override
-	public boolean activate() {
-		Feature show = Dungeon.active.getundiscoveredfeature();
-		if (show == null) {
-			Javelin.message("The spirit flees from your presence in shame...",
-					false);
+	public boolean activate(){
+		Feature show=Dungeon.active.getundiscoveredfeature();
+		if(show==null){
+			Javelin.message("The spirit flees from your presence in shame...",false);
 			return true;
 		}
 		Dungeon.active.discover(show);
-		BattleScreen.active.center(show.x, show.y);
+		BattleScreen.active.center(show.x,show.y);
 		Javelin.redraw();
-		String navitext = RPG.chancein(2) ? "'Hey, look!'" : "'Hey, listen!'";
-		Javelin.message(navitext, false);
-		Point p = JavelinApp.context.getherolocation();
-		JavelinApp.context.view(p.x, p.y);
+		String navitext=RPG.chancein(2)?"'Hey, look!'":"'Hey, listen!'";
+		Javelin.message(navitext,false);
+		Point p=JavelinApp.context.getherolocation();
+		JavelinApp.context.view(p.x,p.y);
 		return true;
 	}
 }

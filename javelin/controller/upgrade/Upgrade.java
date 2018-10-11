@@ -20,19 +20,18 @@ import javelin.model.world.location.town.Town;
  * @see Combatant#postupgradeautomatic(boolean, Upgrade)
  * @author alex
  */
-public abstract class Upgrade implements Serializable {
+public abstract class Upgrade implements Serializable{
 	/** Short description. */
 	public String name;
 	/**
-	 * Indicates that this upgrade is immediately relevant during
-	 * {@link Fight}s.
+	 * Indicates that this upgrade is immediately relevant during {@link Fight}s.
 	 */
-	public boolean usedincombat = true;
+	public boolean usedincombat=true;
 
 	/** Constructor. */
-	public Upgrade(final String name) {
+	public Upgrade(final String name){
 		super();
-		this.name = name;
+		this.name=name;
 	}
 
 	/**
@@ -47,8 +46,7 @@ public abstract class Upgrade implements Serializable {
 	public abstract String inform(final Combatant c);
 
 	/**
-	 * @param c
-	 *            Given an unit apply the upgrade on it.
+	 * @param c Given an unit apply the upgrade on it.
 	 * @return <code>false</code> if this is not a valid update. For example:
 	 *         already reached the maximum level on a class, cannot learn this
 	 *         spell level yet.
@@ -56,36 +54,33 @@ public abstract class Upgrade implements Serializable {
 	abstract protected boolean apply(final Combatant c);
 
 	@Override
-	public boolean equals(Object obj) {
-		return name.equals(((Upgrade) obj).name);
+	public boolean equals(Object obj){
+		return name.equals(((Upgrade)obj).name);
 	}
 
 	@Override
-	public int hashCode() {
+	public int hashCode(){
 		return name.hashCode();
 	}
 
 	@Override
-	public String toString() {
+	public String toString(){
 		return name;
 	}
 
 	/**
-	 * @param c
-	 *            Removes and reapplies his equipment before and after applying
-	 *            the upgrade.
+	 * @param c Removes and reapplies his equipment before and after applying the
+	 *          upgrade.
 	 * @return See {@link #apply(Combatant)}.
 	 * @see Combatant#equipped
 	 */
-	public boolean upgrade(Combatant c) {
-		ArrayList<Artifact> equipment = new ArrayList<Artifact>(c.equipped);
-		for (Artifact a : equipment) {
+	public boolean upgrade(Combatant c){
+		ArrayList<Artifact> equipment=new ArrayList<>(c.equipped);
+		for(Artifact a:equipment)
 			a.remove(c);
-		}
-		boolean applied = apply(c);
-		for (Artifact a : equipment) {
+		boolean applied=apply(c);
+		for(Artifact a:equipment)
 			a.usepeacefully(c);
-		}
 		return applied;
 	}
 }

@@ -5,32 +5,27 @@ import javelin.model.unit.Combatant;
 
 /**
  * Used to create an in-battle {@link Action} from a {@link WorldAction}.
- * 
+ *
  * TODO at this point we're probably close enough to unify {@link WorldAction}
  * and {@link Action}.
- * 
+ *
  * @author alex
  */
-public class ActionAdapter extends Action {
+public class ActionAdapter extends Action{
 	SimpleAction action;
 
 	/**
-	 * @param a
-	 *            Converts this to an action.
+	 * @param a Converts this to an action.
 	 */
-	public ActionAdapter(SimpleAction a) {
+	public ActionAdapter(SimpleAction a){
 		super(a.getname());
-		action = a;
-		if (a.getcodes() != null) {
-			keycodes = a.getcodes();
-		}
-		if (a.getkeys() != null) {
-			keys = a.getkeys();
-		}
+		action=a;
+		if(a.getcodes()!=null) keycodes=a.getcodes();
+		if(a.getkeys()!=null) keys=a.getkeys();
 	}
 
 	@Override
-	public boolean perform(Combatant hero) {
+	public boolean perform(Combatant hero){
 		action.perform();
 		return false;
 	}

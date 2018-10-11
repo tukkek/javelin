@@ -18,34 +18,33 @@ import javelin.model.world.location.dungeon.feature.Fountain;
  * @see Fight#weather
  * @author alex
  */
-public class WaterTemple extends Temple {
-	private static final String FLUFF = "As you march towards the coastal construction you marvel at the sight of the waves crashing below you.\n"
-			+ "You recall a bard's song telling about how one day the entire earth would be swallowed by the rising oceans.\n"
-			+ "The air is moist and salty. You watch the motion of the nearby body of water as it dances back and forth patiently.\n"
-			+ "You hear a distant sound, unsure if it was a gull's cry, the wind hitting the wall besides you or the invitation of a hidden mermaid.";
+public class WaterTemple extends Temple{
+	private static final String FLUFF="As you march towards the coastal construction you marvel at the sight of the waves crashing below you.\n"
+			+"You recall a bard's song telling about how one day the entire earth would be swallowed by the rising oceans.\n"
+			+"The air is moist and salty. You watch the motion of the nearby body of water as it dances back and forth patiently.\n"
+			+"You hear a distant sound, unsure if it was a gull's cry, the wind hitting the wall besides you or the invitation of a hidden mermaid.";
 
 	/** Constructor. */
-	public WaterTemple(Integer level) {
-		super(Realm.WATER, level, new Crown(level), FLUFF);
-		terrain = Terrain.WATER;
-		floor = "terraindungeonfloor";
-		wall = "dungeonwalltemplewater";
-		doorbackground = false;
-		feature = Fountain.class;
+	public WaterTemple(Integer level){
+		super(Realm.WATER,level,new Crown(level),FLUFF);
+		terrain=Terrain.WATER;
+		floor="terraindungeonfloor";
+		wall="dungeonwalltemplewater";
+		doorbackground=false;
+		feature=Fountain.class;
 	}
 
 	@Override
-	public Fight encounter(Dungeon d) {
-		Fight f = super.encounter(d);
-		f.weather = Weather.STORM;
+	public Fight encounter(Dungeon d){
+		Fight f=super.encounter(d);
+		f.weather=Weather.STORM;
 		return f;
 	}
 
 	@Override
-	protected void generate() {
-		while (x == -1 || Terrain.search(new Point(x, y), Terrain.WATER, 1,
-				World.getseed()) == 0) {
+	protected void generate(){
+		while(x==-1
+				||Terrain.search(new Point(x,y),Terrain.WATER,1,World.getseed())==0)
 			super.generate();
-		}
 	}
 }

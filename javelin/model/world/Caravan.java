@@ -32,182 +32,167 @@ import javelin.view.screen.town.PurchaseOption;
  *
  * @author alex
  */
-public class Caravan extends Actor {
-	public static final boolean ALLOW = true;
+public class Caravan extends Actor{
+	public static final boolean ALLOW=true;
 
-	static final int NUMBEROFITEMS = 6;
-	static final int MINARTIFACTS = 1;
-	static final int MAXARTIFACTS = 3;
+	static final int NUMBEROFITEMS=6;
+	static final int MINARTIFACTS=1;
+	static final int MAXARTIFACTS=3;
 
-	class CaravanScreen extends ShoppingScreen {
+	class CaravanScreen extends ShoppingScreen{
 		/** Constructor. */
-		public CaravanScreen() {
-			super("You reach a trading caravan:", null);
+		public CaravanScreen(){
+			super("You reach a trading caravan:",null);
 		}
 
 		@Override
-		protected void afterpurchase(PurchaseOption o) {
+		protected void afterpurchase(PurchaseOption o){
 			inventory.remove(o.i);
 			o.i.clone().grab();
 		}
 
 		@Override
-		protected ItemSelection getitems() {
+		protected ItemSelection getitems(){
 			return inventory;
 		}
 	}
 
 	/** Selection of {@link Item}s available for purchase. */
-	public ItemSelection inventory = new ItemSelection();
+	public ItemSelection inventory=new ItemSelection();
 
-	int tox = -1;
-	int toy = -1;
+	int tox=-1;
+	int toy=-1;
 	/** Merchants are slow, act once very other turn. */
-	boolean ignoreturn = true;
+	boolean ignoreturn=true;
 	int el;
 
 	/** Creates a merchant in the world map but doesn't {@link #place()} it. */
-	public Caravan() {
-		allowedinscenario = false;
-		ArrayList<Actor> towns = World.getall(Town.class);
+	public Caravan(){
+		allowedinscenario=false;
+		ArrayList<Actor> towns=World.getall(Town.class);
 		Collections.shuffle(towns);
-		Town from = (Town) towns.get(0);
-		x = from.x;
-		y = from.y;
-		el = from.population;
+		Town from=(Town)towns.get(0);
+		x=from.x;
+		y=from.y;
+		el=from.population;
 		displace();
 		determinedestination(towns);
-		while (inventory.size() < NUMBEROFITEMS) {
-			Item i = RPG.pick(Item.ALL);
-			if (!(i instanceof Artifact)) {
-				i = i.clone();
+		while(inventory.size()<NUMBEROFITEMS){
+			Item i=RPG.pick(Item.ALL);
+			if(!(i instanceof Artifact)){
+				i=i.clone();
 				inventory.add(i);
 			}
 		}
-		int withartifacts = inventory.size()
-				+ RPG.r(MINARTIFACTS, MAXARTIFACTS);
-		while (inventory.size() < withartifacts) {
-			Item i = RPG.pick(Item.ARTIFACT);
+		int withartifacts=inventory.size()+RPG.r(MINARTIFACTS,MAXARTIFACTS);
+		while(inventory.size()<withartifacts){
+			Item i=RPG.pick(Item.ARTIFACT);
 			inventory.add(i);
 		}
-		if (World.scenario.lockedtemples) {
-			TempleKey k = TempleKey.generate();
-			if (k.price > 0) {
-				inventory.add(k);
-			}
+		if(World.scenario.lockedtemples){
+			TempleKey k=TempleKey.generate();
+			if(k.price>0) inventory.add(k);
 		}
 	}
 
-	void determinedestination(ArrayList<Actor> towns) {
-		Actor to = null;
-		if (towns != null) {
-			for (int i = 1; i < towns.size(); i++) {
-				Town t = (Town) towns.get(i);
-				if (t.garrison.isEmpty()
-						&& !Incursion.crosseswater(this, t.x, t.y)) {
-					to = t;
-					break;
-				}
+	void determinedestination(ArrayList<Actor> towns){
+		Actor to=null;
+		if(towns!=null) for(int i=1;i<towns.size();i++){
+			Town t=(Town)towns.get(i);
+			if(t.garrison.isEmpty()&&!Incursion.crosseswater(this,t.x,t.y)){
+				to=t;
+				break;
 			}
 		}
-		if (to == null) {
-			while (tox == -1 || Incursion.crosseswater(this, tox, toy)) {
-				tox = RPG.r(0, World.scenario.size - 1);
-				toy = RPG.r(0, World.scenario.size - 1);
+		if(to==null)
+			while(tox==-1||Incursion.crosseswater(this,tox,toy)){
+				tox=RPG.r(0,World.scenario.size-1);
+				toy=RPG.r(0,World.scenario.size-1);
 			}
-		} else {
-			tox = to.x;
-			toy = to.y;
+		else{
+			tox=to.x;
+			toy=to.y;
 		}
 	}
 
 	@Override
-	public void turn(long time, WorldScreen world) {
-		if (ignoreturn) {
-			ignoreturn = false;
+	public void turn(long time,WorldScreen world){
+		if(ignoreturn){
+			ignoreturn=false;
 			return;
 		}
-		ignoreturn = true;
-		int x = this.x + calculatedelta(this.x, tox);
-		int y = this.y + calculatedelta(this.y, toy);
-		if (Terrain.get(x, y).equals(Terrain.WATER)) {
-			tox = -1;
+		ignoreturn=true;
+		int x=this.x+calculatedelta(this.x,tox);
+		int y=this.y+calculatedelta(this.y,toy);
+		if(Terrain.get(x,y).equals(Terrain.WATER)){
+			tox=-1;
 			determinedestination(null);
 			return;
 		}
-		Actor here = World.get(x, y);
-		this.x = x;
-		this.y = y;
+		Actor here=World.get(x,y);
+		this.x=x;
+		this.y=y;
 		place();
-		if (x == tox && y == toy) {
-			if (here instanceof Town) {
-				Town town = (Town) here;
-				if (town.garrison.isEmpty()
-						&& town.population < Growth.MAXPOPULATION) {
-					town.population += 1;
+		if(x==tox&&y==toy){
+			if(here instanceof Town){
+				Town town=(Town)here;
+				if(town.garrison.isEmpty()&&town.population<Growth.MAXPOPULATION){
+					town.population+=1;
 					announce(town);
 				}
 			}
 			remove();
-		} else if (here != null) {
-			ignoreturn = false;
-			turn(0, null);// jump over other Actors
+		}else if(here!=null){
+			ignoreturn=false;
+			turn(0,null);// jump over other Actors
 		}
 	}
 
-	void announce(Town town) {
-		if (Javelin.DEBUG) {
-			return;
-		}
+	void announce(Town town){
+		if(Javelin.DEBUG) return;
 		MessagePanel.active.clear();
-		Javelin.message(
-				"A merchant arrives at " + town
-						+ ", city grows! Press ENTER to continue...",
-				Javelin.Delay.NONE);
-		while (Javelin.input().getKeyChar() != '\n') {
+		Javelin.message("A merchant arrives at "+town
+				+", city grows! Press ENTER to continue...",Javelin.Delay.NONE);
+		while(Javelin.input().getKeyChar()!='\n'){
 			// wait for ENTER
 		}
 		MessagePanel.active.clear();
 	}
 
-	int calculatedelta(int from, int to) {
-		if (to > from) {
-			return +1;
-		}
-		if (to < from) {
-			return -1;
-		}
+	int calculatedelta(int from,int to){
+		if(to>from) return +1;
+		if(to<from) return -1;
 		return 0;
 	}
 
 	@Override
-	public Boolean destroy(Incursion attacker) {
+	public Boolean destroy(Incursion attacker){
 		return true;
 	}
 
 	@Override
-	public boolean interact() {
+	public boolean interact(){
 		new CaravanScreen().show();
 		return true;
 	}
 
 	@Override
-	public Image getimage() {
+	public Image getimage(){
 		return Images.get("caravan");
 	}
 
 	@Override
-	public List<Combatant> getcombatants() {
+	public List<Combatant> getcombatants(){
 		return null;
 	}
 
 	@Override
-	public String describe() {
+	public String describe(){
 		return "Caravan.";
 	}
 
 	@Override
-	public Integer getel(int attackerel) {
+	public Integer getel(int attackerel){
 		return el;
 	}
 }

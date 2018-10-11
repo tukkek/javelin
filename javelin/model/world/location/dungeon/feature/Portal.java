@@ -10,25 +10,23 @@ import javelin.model.world.location.dungeon.temple.MagicTemple;
  * @see MagicTemple
  * @author alex
  */
-public class Portal extends Feature {
-    private static final String PROMPT = "Do you want to enter the portal?\n"
-	    + "Press enter to cross it, any other key to cancel...";
+public class Portal extends Feature{
+	private static final String PROMPT="Do you want to enter the portal?\n"
+			+"Press enter to cross it, any other key to cancel...";
 
-    /** Constructor. */
-    public Portal() {
-	super("locationportal");
-	remove = false;
-    }
-
-    @Override
-    public boolean activate() {
-	if (Javelin.prompt(PROMPT) != '\n') {
-	    return true;
+	/** Constructor. */
+	public Portal(){
+		super("locationportal");
+		remove=false;
 	}
-	Dungeon d = Dungeon.active;
-	StairsUp stairs = d.find(StairsUp.class);
-	d.herolocation = new Point(stairs.x - 1, stairs.y);
-	WorldMove.abort = true;
-	return true;
-    }
+
+	@Override
+	public boolean activate(){
+		if(Javelin.prompt(PROMPT)!='\n') return true;
+		Dungeon d=Dungeon.active;
+		StairsUp stairs=d.find(StairsUp.class);
+		d.herolocation=new Point(stairs.x-1,stairs.y);
+		WorldMove.abort=true;
+		return true;
+	}
 }

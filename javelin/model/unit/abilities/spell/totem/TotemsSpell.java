@@ -13,19 +13,19 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  *
  * @author alex
  */
-public abstract class TotemsSpell extends Touch {
+public abstract class TotemsSpell extends Touch{
 
-	public TotemsSpell(String name, Realm realmp) {
-		super(name, 2, ChallengeCalculator.ratespelllikeability(2), realmp);
-		castonallies = true;
-		castinbattle = true;
-		ispotion = true;
+	public TotemsSpell(String name,Realm realmp){
+		super(name,2,ChallengeCalculator.ratespelllikeability(2),realmp);
+		castonallies=true;
+		castinbattle=true;
+		ispotion=true;
 	}
 
 	@Override
-	public String cast(Combatant caster, Combatant target, boolean saved,
-			BattleState s, ChanceNode cn) {
-		cn.overlay = new AiOverlay(target.getlocation());
-		return super.cast(caster, target, saved, s, cn);
+	public String cast(Combatant caster,Combatant target,boolean saved,
+			BattleState s,ChanceNode cn){
+		cn.overlay=new AiOverlay(target.getlocation());
+		return super.cast(caster,target,saved,s,cn);
 	}
 }

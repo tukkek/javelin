@@ -12,23 +12,23 @@ import javelin.model.unit.abilities.spell.Spell;
  *
  * @author alex
  */
-public class MagicMissile extends Spell {
-	public MagicMissile() {
-		super("Magic missile", 1, ChallengeCalculator.ratespelllikeability(1),
+public class MagicMissile extends Spell{
+	public MagicMissile(){
+		super("Magic missile",1,ChallengeCalculator.ratespelllikeability(1),
 				Realm.FIRE);
-		castinbattle = true;
-		iswand = true;
+		castinbattle=true;
+		iswand=true;
 	}
 
 	@Override
-	public String cast(Combatant caster, Combatant target, boolean saved,
-			BattleState s, ChanceNode cn) {
-		target.damage(1 * 4 / 2 + 1, s, 0);
-		return target + " is " + target.getstatus() + "!";
+	public String cast(Combatant caster,Combatant target,boolean saved,
+			BattleState s,ChanceNode cn){
+		target.damage(1*4/2+1,s,0);
+		return target+" is "+target.getstatus()+"!";
 	}
 
 	@Override
-	public int save(Combatant caster, Combatant target) {
+	public int save(Combatant caster,Combatant target){
 		return Integer.MIN_VALUE;
 	}
 }

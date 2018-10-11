@@ -13,62 +13,61 @@ import javelin.old.RPG;
 
 /**
  * TODO should allow combatant to be killed by secondary damage
- * 
+ *
  * @author alex
  */
-public class StingOfTheAsp extends Strike {
-	static final int EXTRADAMAGE = RPG.average(1, 6);
+public class StingOfTheAsp extends Strike{
+	static final int EXTRADAMAGE=RPG.average(1,6);
 
-	public class AspString extends Condition {
-		public AspString(float expireatp, Combatant c) {
-			super(expireatp, c, Effect.NEGATIVE, "Asp sting", null);
-			stack = true;
+	public class AspString extends Condition{
+		public AspString(float expireatp,Combatant c){
+			super(expireatp,c,Effect.NEGATIVE,"Asp sting",null);
+			stack=true;
 		}
 
 		@Override
-		public void start(Combatant c) {
+		public void start(Combatant c){
 			// nothing at first
 		}
 
 		@Override
-		public void end(Combatant c) {
+		public void end(Combatant c){
 			c.damage(EXTRADAMAGE);
-			c.source = c.source.clone();
-			c.addcondition(new StrengthDamage(2, c));
+			c.source=c.source.clone();
+			c.addcondition(new StrengthDamage(2,c));
 		}
 	}
 
-	public StingOfTheAsp() {
-		super("Sting of the asp", 2);
-		ap = ActionCost.STANDARD;
+	public StingOfTheAsp(){
+		super("Sting of the asp",2);
+		ap=ActionCost.STANDARD;
 	}
 
 	@Override
-	public void preattacks(Combatant current, Combatant target, Attack a,
-			BattleState s) {
-
-	}
-
-	@Override
-	public void postattacks(Combatant current, Combatant target, Attack a,
-			BattleState s) {
+	public void preattacks(Combatant current,Combatant target,Attack a,
+			BattleState s){
 
 	}
 
 	@Override
-	public void prehit(Combatant active, Combatant target, Attack a,
-			DamageChance dc, BattleState s) {
-		dc.damage += EXTRADAMAGE;
-		boolean save = save(target.source.getfortitude(), 12, active);
-		target.addcondition(new StrengthDamage(save ? 1 : 2, target));
-		if (!save || Javelin.DEBUG) {
-			target.addcondition(new AspString(active.ap + 1, target));
-		}
+	public void postattacks(Combatant current,Combatant target,Attack a,
+			BattleState s){
+
 	}
 
 	@Override
-	public void posthit(Combatant current, Combatant target, Attack a,
-			DamageChance dc, BattleState s) {
+	public void prehit(Combatant active,Combatant target,Attack a,DamageChance dc,
+			BattleState s){
+		dc.damage+=EXTRADAMAGE;
+		boolean save=save(target.source.getfortitude(),12,active);
+		target.addcondition(new StrengthDamage(save?1:2,target));
+		if(!save||Javelin.DEBUG)
+			target.addcondition(new AspString(active.ap+1,target));
+	}
+
+	@Override
+	public void posthit(Combatant current,Combatant target,Attack a,
+			DamageChance dc,BattleState s){
 
 	}
 }

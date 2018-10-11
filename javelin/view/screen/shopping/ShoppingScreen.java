@@ -20,15 +20,14 @@ import javelin.view.screen.town.PurchaseScreen;
  *
  * @author alex
  */
-public abstract class ShoppingScreen extends PurchaseScreen {
+public abstract class ShoppingScreen extends PurchaseScreen{
 	/** Constructor. */
-	public ShoppingScreen(String s, Town t) {
-		super(s, t);
+	public ShoppingScreen(String s,Town t){
+		super(s,t);
 	}
 
 	/**
-	 * @param o
-	 *            Called after an option has been acquired.
+	 * @param o Called after an option has been acquired.
 	 */
 	protected abstract void afterpurchase(final PurchaseOption o);
 
@@ -38,72 +37,66 @@ public abstract class ShoppingScreen extends PurchaseScreen {
 	protected abstract ItemSelection getitems();
 
 	@Override
-	public List<Option> getoptions() {
-		final ArrayList<Option> list = new ArrayList<Option>();
-		for (final Item i : getitems()) {
+	public List<Option> getoptions(){
+		final ArrayList<Option> list=new ArrayList<>();
+		for(final Item i:getitems())
 			list.add(new PurchaseOption(i));
-		}
 		return list;
 	}
 
 	@Override
-	public boolean select(final Option op) {
-		if (!canbuy(op)) {
-			text += "Not enough gold...\n";
+	public boolean select(final Option op){
+		if(!canbuy(op)){
+			text+="Not enough gold...\n";
 			return false;
 		}
-		final PurchaseOption o = (PurchaseOption) op;
+		final PurchaseOption o=(PurchaseOption)op;
 		spend(o);
 		afterpurchase(o);
 		return true;
 	}
 
 	@Override
-	protected boolean canbuy(Option o) {
-		return getgold() >= ((PurchaseOption) o).i.price;
+	protected boolean canbuy(Option o){
+		return getgold()>=((PurchaseOption)o).i.price;
 	}
 
 	@Override
-	protected void spend(final Option o) {
-		Squad.active.gold -= ((PurchaseOption) o).i.price;
+	protected void spend(final Option o){
+		Squad.active.gold-=((PurchaseOption)o).i.price;
 	}
 
 	@Override
-	public String printpriceinfo(Option o) {
-		Item i = ((PurchaseOption) o).i;
-		String useinfo = "";
-		if (i instanceof Wand || i instanceof Scroll) {
-			ArrayList<Combatant> members = new ArrayList<Combatant>(
-					getbuyers());
-			for (Combatant c : new ArrayList<Combatant>(members)) {
-				if (i.canuse(c) != null) {
-					members.remove(c);
-				}
-			}
-			if (members.isEmpty()) {
-				useinfo = " - can't use";
-			} else {
-				useinfo = " - can use: ";
-				for (Combatant c : members) {
-					useinfo += c + ", ";
-				}
-				useinfo = useinfo.substring(0, useinfo.length() - 2);
+	public String printpriceinfo(Option o){
+		Item i=((PurchaseOption)o).i;
+		String useinfo="";
+		if(i instanceof Wand||i instanceof Scroll){
+			ArrayList<Combatant> members=new ArrayList<>(getbuyers());
+			for(Combatant c:new ArrayList<>(members))
+				if(i.canuse(c)!=null) members.remove(c);
+			if(members.isEmpty())
+				useinfo=" - can't use";
+			else{
+				useinfo=" - can use: ";
+				for(Combatant c:members)
+					useinfo+=c+", ";
+				useinfo=useinfo.substring(0,useinfo.length()-2);
 			}
 		}
-		return " (" + super.printpriceinfo(o).substring(1) + ")" + useinfo;
+		return " ("+super.printpriceinfo(o).substring(1)+")"+useinfo;
 	}
 
-	protected List<Combatant> getbuyers() {
+	protected List<Combatant> getbuyers(){
 		return Squad.active.members;
 	}
 
 	@Override
-	public String printinfo() {
-		return "You squad has $" + Javelin.format(getgold()) + ".";
+	public String printinfo(){
+		return "You squad has $"+Javelin.format(getgold())+".";
 	}
 
 	@Override
-	protected int getgold() {
+	protected int getgold(){
 		return Squad.active.gold;
 	}
 }

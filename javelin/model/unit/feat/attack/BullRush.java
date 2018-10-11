@@ -8,21 +8,21 @@ import javelin.model.unit.feat.Feat;
  * charge it automatically pushes the opponent back 5 feet, causing no attacks
  * of opportunity. Not otherwise available to prevent overloading the AI with
  * options.
- * 
+ *
  * @author alex
  */
-public class BullRush extends Feat {
+public class BullRush extends Feat{
 	/** Unique instance of this {@link Feat}. */
-	public static final BullRush SINGLETON = new BullRush();
+	public static final BullRush SINGLETON=new BullRush();
 
 	/** Constructor. */
-	private BullRush() {
+	private BullRush(){
 		super("Improved bull rush");
-		prerequisite = PowerAttack.SINGLETON;
+		prerequisite=PowerAttack.SINGLETON;
 	}
 
 	@Override
-	public String inform(Combatant c) {
+	public String inform(Combatant c){
 		return "";
 	}
 }

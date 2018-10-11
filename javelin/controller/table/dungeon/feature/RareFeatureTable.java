@@ -17,31 +17,28 @@ import javelin.model.world.location.dungeon.feature.inhabitant.Inhabitant;
  * @see InhabitantTable
  * @see FeatureRarityTable
  */
-public class RareFeatureTable extends Table {
-	public RareFeatureTable() {
-		add(Fountain.class, CommonFeatureTable.MAX);
-		add(Campfire.class, CommonFeatureTable.MAX);
+public class RareFeatureTable extends Table{
+	public RareFeatureTable(){
+		add(Fountain.class,CommonFeatureTable.MAX);
+		add(Campfire.class,CommonFeatureTable.MAX);
 		// add(LearningStone.class, MAX);
-		add(Herb.class, CommonFeatureTable.MAX);
-		add(Inhabitant.class, CommonFeatureTable.MAX);
+		add(Herb.class,CommonFeatureTable.MAX);
+		add(Inhabitant.class,CommonFeatureTable.MAX);
 	}
 
 	/**
-	 * Semantically identical to
-	 * {@link CommonFeatureTable#rollfeature(Dungeon)}.
+	 * Semantically identical to {@link CommonFeatureTable#rollfeature(Dungeon)}.
 	 */
-	public Feature rollfeature(Dungeon d) {
-		Class<? extends Feature> type = (Class<? extends Feature>) roll();
-		if (type.equals(Herb.class) && d.level > Herb.MAXLEVEL) {
-			return null;
+	public Feature rollfeature(Dungeon d){
+		Class<? extends Feature> type=(Class<? extends Feature>)roll();
+		if(type.equals(Herb.class)&&d.level>Herb.MAXLEVEL) return null;
+		if(type.equals(Inhabitant.class)){
+			InhabitantTable npctable=d.tables.get(InhabitantTable.class);
+			type=(Class<? extends Feature>)npctable.roll();
 		}
-		if (type.equals(Inhabitant.class)) {
-			InhabitantTable npctable = d.tables.get(InhabitantTable.class);
-			type = (Class<? extends Feature>) npctable.roll();
-		}
-		try {
+		try{
 			return type.getDeclaredConstructor().newInstance();
-		} catch (ReflectiveOperationException e) {
+		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);
 		}
 	}

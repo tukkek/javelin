@@ -27,67 +27,62 @@ import javelin.model.world.location.unique.AdventurersGuild;
  *
  * @author alex
  */
-public abstract class Kit implements Serializable {
-	static {
+public abstract class Kit implements Serializable{
+	static{
 		UpgradeHandler.singleton.gather();
 	}
 
-	public static final List<Kit> KITS = Arrays
-			.asList(new Kit[] { Assassin.INSTANCE, Barbarian.INSTANCE,
-					Bard.INSTANCE, Cleric.INSTANCE, Druid.INSTANCE,
-					Fighter.INSTANCE, Monk.INSTANCE, Paladin.INSTANCE,
-					Ranger.INSTANCE, Rogue.INSTANCE, Wizard.INSTANCE, });
+	public static final List<Kit> KITS=Arrays
+			.asList(new Kit[]{Assassin.INSTANCE,Barbarian.INSTANCE,Bard.INSTANCE,
+					Cleric.INSTANCE,Druid.INSTANCE,Fighter.INSTANCE,Monk.INSTANCE,
+					Paladin.INSTANCE,Ranger.INSTANCE,Rogue.INSTANCE,Wizard.INSTANCE,});
 
 	public String name;
-	public HashSet<Upgrade> basic = new HashSet<Upgrade>();
-	public HashSet<Upgrade> extension = new HashSet<Upgrade>();
+	public HashSet<Upgrade> basic=new HashSet<>();
+	public HashSet<Upgrade> extension=new HashSet<>();
 	public ClassLevelUpgrade classlevel;
 
 	String[] titles;
 
-	public Kit(String name, ClassLevelUpgrade classadvancement,
-			RaiseAbility raiseability, String title1, String title2,
-			String title3, String title4) {
-		this.name = name;
-		classlevel = classadvancement;
+	public Kit(String name,ClassLevelUpgrade classadvancement,
+			RaiseAbility raiseability,String title1,String title2,String title3,
+			String title4){
+		this.name=name;
+		classlevel=classadvancement;
 		basic.add(classadvancement);
 		basic.add(raiseability);
 		define();
-		int nupgrades = basic.size();
-		if (!(3 <= nupgrades && nupgrades <= 7) && Javelin.DEBUG) {
-			String error = "Kit " + name + " has " + nupgrades + " upgrades";
+		int nupgrades=basic.size();
+		if(!(3<=nupgrades&&nupgrades<=7)&&Javelin.DEBUG){
+			String error="Kit "+name+" has "+nupgrades+" upgrades";
 			throw new RuntimeException(error);
 		}
 		extend(UpgradeHandler.singleton);
-		titles = new String[] { title1, title2, title3, title4, };
+		titles=new String[]{title1,title2,title3,title4,};
 	}
 
 	protected abstract void extend(UpgradeHandler h);
 
 	abstract protected void define();
 
-	public boolean ispreffered(int i) {
+	public boolean ispreffered(int i){
 		return false;
 	}
 
-	public int getpreferredability(Monster m) {
-		int preferred = Integer.MIN_VALUE;
-		for (Upgrade u : basic) {
-			if (u instanceof RaiseAbility) {
-				int ability = ((RaiseAbility) u).getattribute(m);
-				if (ability > preferred) {
-					preferred = ability;
-				}
+	public int getpreferredability(Monster m){
+		int preferred=Integer.MIN_VALUE;
+		for(Upgrade u:basic)
+			if(u instanceof RaiseAbility){
+				int ability=((RaiseAbility)u).getattribute(m);
+				if(ability>preferred) preferred=ability;
 			}
-		}
-		if (preferred == Integer.MIN_VALUE) {
-			throw new RuntimeException("Attribute not found for kit " + name);
-		}
+		if(preferred==Integer.MIN_VALUE)
+			throw new RuntimeException("Attribute not found for kit "+name);
 		return preferred;
 	}
 
 	@Override
-	public String toString() {
+	public String toString(){
 		return name;
 	}
 
@@ -97,13 +92,13 @@ public abstract class Kit implements Serializable {
 	 *         given ability scores to this class
 	 *         {@link #getpreferredability(Monster)}.
 	 */
-	public boolean allow(int bestability, int secondbest, Monster m) {
-		int score = getpreferredability(m);
-		return score == bestability || score == secondbest;
+	public boolean allow(int bestability,int secondbest,Monster m){
+		int score=getpreferredability(m);
+		return score==bestability||score==secondbest;
 	}
 
-	public static List<Kit> getpreferred(Monster m) {
-		ArrayList<Integer> attributes = new ArrayList<Integer>(6);
+	public static List<Kit> getpreferred(Monster m){
+		ArrayList<Integer> attributes=new ArrayList<>(6);
 		attributes.add(m.strength);
 		attributes.add(m.dexterity);
 		attributes.add(m.constitution);
@@ -111,24 +106,21 @@ public abstract class Kit implements Serializable {
 		attributes.add(m.wisdom);
 		attributes.add(m.charisma);
 		attributes.sort(null);
-		int[] best = new int[] { attributes.get(4), attributes.get(5) };
-		ArrayList<Kit> kits = new ArrayList<Kit>(1);
-		for (Kit k : KITS) {
-			if (k.allow(best[0], best[1], m)) {
-				kits.add(k);
-			}
-		}
+		int[] best=new int[]{attributes.get(4),attributes.get(5)};
+		ArrayList<Kit> kits=new ArrayList<>(1);
+		for(Kit k:KITS)
+			if(k.allow(best[0],best[1],m)) kits.add(k);
 		return kits;
 	}
 
-	public HashSet<Upgrade> getupgrades() {
-		HashSet<Upgrade> upgrades = new HashSet<Upgrade>(basic);
+	public HashSet<Upgrade> getupgrades(){
+		HashSet<Upgrade> upgrades=new HashSet<>(basic);
 		upgrades.addAll(extension);
 		return upgrades;
 	}
 
-	public String gettitle(Monster m) {
-		int index = Tier.get(Math.round(m.cr)).ordinal();
-		return titles[Math.min(index, titles.length - 1)];
+	public String gettitle(Monster m){
+		int index=Tier.get(Math.round(m.cr)).ordinal();
+		return titles[Math.min(index,titles.length-1)];
 	}
 }

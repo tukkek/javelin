@@ -25,57 +25,48 @@ import javelin.old.RPG;
  * @see Monster#good
  * @author alex
  */
-public class EvilTemple extends Temple {
-	private static final String FLUFF = "You have heard of this fort once before, upon a dark stormy night.\n"
-			+ "You recognize the looming towers from that tale. It was related to you as the Fortress of Regrets.\n"
-			+ "It is said that a once powerful king oversaw his domain from his throne here but bad tidings befell him.\n"
-			+ "The once great castle became a prison, torture chamber and hall of twisted pleasures as the kingdom's honor slowly faded into oblivion.";
+public class EvilTemple extends Temple{
+	private static final String FLUFF="You have heard of this fort once before, upon a dark stormy night.\n"
+			+"You recognize the looming towers from that tale. It was related to you as the Fortress of Regrets.\n"
+			+"It is said that a once powerful king oversaw his domain from his throne here but bad tidings befell him.\n"
+			+"The once great castle became a prison, torture chamber and hall of twisted pleasures as the kingdom's honor slowly faded into oblivion.";
 
 	/** Constructor. */
-	public EvilTemple(Integer level) {
-		super(Realm.EVIL, level, new Skull(level), FLUFF);
-		terrain = Terrain.MARSH;
-		floor = "dungeonfloortempleevil";
-		wall = "dungeonwalltempleevil";
-		doorbackground = false;
+	public EvilTemple(Integer level){
+		super(Realm.EVIL,level,new Skull(level),FLUFF);
+		terrain=Terrain.MARSH;
+		floor="dungeonfloortempleevil";
+		wall="dungeonwalltempleevil";
+		doorbackground=false;
 	}
 
 	@Override
-	public boolean validate(List<Monster> foes) {
-		for (Monster m : foes) {
-			if (Boolean.FALSE.equals(m.good)) {
-				return false;
-			}
-		}
+	public boolean validate(List<Monster> foes){
+		for(Monster m:foes)
+			if(Boolean.FALSE.equals(m.good)) return false;
 		return true;
 	}
 
 	@Override
-	public boolean hazard(Dungeon dungeon) {
-		if (!RPG.chancein(dungeon.stepsperencounter * 10)) {
-			return false;
-		}
+	public boolean hazard(Dungeon dungeon){
+		if(!RPG.chancein(dungeon.stepsperencounter*10)) return false;
 		Class<? extends Feature> targettype;
-		if (Squad.active.equipment.get(Skull.class) == null) {
-			targettype = StairsUp.class;
-		} else if (dungeon.hasfeature(Altar.class)) {
-			targettype = Altar.class;
-		} else {
-			targettype = StairsDown.class;
-		}
-		Feature target = null;
-		for (Feature f : dungeon.features) {
-			if (targettype.isInstance(f)) {
-				target = f;
+		if(Squad.active.equipment.get(Skull.class)==null)
+			targettype=StairsUp.class;
+		else if(dungeon.hasfeature(Altar.class))
+			targettype=Altar.class;
+		else
+			targettype=StairsDown.class;
+		Feature target=null;
+		for(Feature f:dungeon.features)
+			if(targettype.isInstance(f)){
+				target=f;
 				break;
 			}
-		}
-		if (target == null) {
-			return false;
-		}
-		dungeon.herolocation.x = target.x;
-		dungeon.herolocation.y = target.y;
-		Javelin.message("A macabre force draws upon you...", true);
+		if(target==null) return false;
+		dungeon.herolocation.x=target.x;
+		dungeon.herolocation.y=target.y;
+		Javelin.message("A macabre force draws upon you...",true);
 		return true;
 	}
 }

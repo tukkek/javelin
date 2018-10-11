@@ -7,31 +7,29 @@ import javelin.model.world.location.unique.TrainingHall;
 
 /**
  * A {@link Fight} that happens inside the {@link TrainingHall}.
- * 
+ *
  * @author alex
  */
-public class TrainingSession extends Siege {
+public class TrainingSession extends Siege{
 	TrainingHall hall;
 
 	/** See {@link Siege#Siege(Location)}. */
-	public TrainingSession(TrainingHall hall) {
+	public TrainingSession(TrainingHall hall){
 		super(hall);
-		this.hall = hall;
-		friendly = true;
-		rewardgold = false;
-		bribe = false;
-		hide = false;
-		cleargarrison = false;
-		map = new Arena();
-		map.maxflooding = Weather.DRY;
+		this.hall=hall;
+		friendly=true;
+		rewardgold=false;
+		bribe=false;
+		hide=false;
+		cleargarrison=false;
+		map=new Arena();
+		map.maxflooding=Weather.DRY;
 	}
 
 	@Override
-	public boolean onend() {
+	public boolean onend(){
 		super.onend();
-		if (Fight.victory) {
-			hall.level();
-		}
+		if(Fight.victory) hall.level();
 		return true;
 	}
 }

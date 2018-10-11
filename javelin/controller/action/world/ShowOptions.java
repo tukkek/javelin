@@ -6,52 +6,50 @@ import javelin.view.screen.WorldScreen;
 
 /**
  * Opens up a configuration dialog where the user can adjust his preferences.
- * 
+ *
  * TODO rename to ShowOptions
- * 
+ *
  * @author alex
  */
-public class ShowOptions extends WorldAction implements SimpleAction {
+public class ShowOptions extends WorldAction implements SimpleAction{
 	/** Unique instance of this class. */
-	private static ShowOptions singleton = null;
+	private static ShowOptions singleton=null;
 
 	/** Constructor. */
-	private ShowOptions() {
-		super("Configure options", new int[] { 'o' }, new String[] { "o" });
+	private ShowOptions(){
+		super("Configure options",new int[]{'o'},new String[]{"o"});
 	}
 
 	@Override
-	public void perform(WorldScreen screen) {
+	public void perform(WorldScreen screen){
 		new PreferencesScreen().show();
 	}
 
 	@Override
-	public void perform() {
+	public void perform(){
 		perform(null);
 	}
 
 	@Override
-	public int[] getcodes() {
+	public int[] getcodes(){
 		return keys;
 	}
 
 	@Override
-	public String getname() {
+	public String getname(){
 		return name;
 	}
 
 	@Override
-	public String[] getkeys() {
+	public String[] getkeys(){
 		return morekeys;
 	}
 
 	/**
 	 * @return Unique instance for this class.
 	 */
-	public static ShowOptions getsingleton() {
-		if (singleton == null) {
-			singleton = new ShowOptions();
-		}
+	public static ShowOptions getsingleton(){
+		if(singleton==null) singleton=new ShowOptions();
 		return singleton;
 	}
 }

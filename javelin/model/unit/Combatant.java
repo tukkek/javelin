@@ -26,7 +26,6 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.walker.Walker;
-import javelin.model.Cloneable;
 import javelin.model.Realm;
 import javelin.model.TeamContainer;
 import javelin.model.item.Item;

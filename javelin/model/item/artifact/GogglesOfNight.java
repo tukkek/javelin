@@ -9,24 +9,24 @@ import javelin.model.unit.Monster;
  * @see Monster#vision
  * @author alex
  */
-public class GogglesOfNight extends Artifact {
+public class GogglesOfNight extends Artifact{
 
 	private int originalvision;
 
 	/** Constructor. */
-	public GogglesOfNight(int price) {
-		super("Googles of night", price, Slot.EYES);
+	public GogglesOfNight(int price){
+		super("Googles of night",price,Slot.EYES);
 	}
 
 	@Override
-	protected void apply(Combatant c) {
-		originalvision = c.source.vision;
-		c.source.vision = Monster.VISION_DARK;
+	protected void apply(Combatant c){
+		originalvision=c.source.vision;
+		c.source.vision=Monster.VISION_DARK;
 	}
 
 	@Override
-	protected void negate(Combatant c) {
-		c.source.vision = originalvision;
+	protected void negate(Combatant c){
+		c.source.vision=originalvision;
 	}
 
 }

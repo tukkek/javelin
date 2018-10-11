@@ -12,28 +12,27 @@ import javelin.view.screen.BattleScreen;
  *
  * @author alex
  */
-public class Flute extends Relic {
+public class Flute extends Relic{
 	/** Constructor. */
-	public Flute(Integer level) {
-		super("Flute of Wind", level);
-		usedinbattle = false;
-		usedoutofbattle = true;
+	public Flute(Integer level){
+		super("Flute of Wind",level);
+		usedinbattle=false;
+		usedoutofbattle=true;
 	}
 
 	@Override
-	protected boolean activate(Combatant user) {
-		if (Dungeon.active != null) {
+	protected boolean activate(Combatant user){
+		if(Dungeon.active!=null){
 			Javelin.app.switchScreen(BattleScreen.active);
 			Javelin.message(
 					"You play the flute but nothing happens. Try it outside next time!",
 					false);
 			return true;
 		}
-		Squad.active.transport = new FlyingNimbus(Squad.active.transport);
+		Squad.active.transport=new FlyingNimbus(Squad.active.transport);
 		Squad.active.updateavatar();
 		Javelin.app.switchScreen(BattleScreen.active);
-		Javelin.message("You are taken by a " + Squad.active.transport + "!",
-				false);
+		Javelin.message("You are taken by a "+Squad.active.transport+"!",false);
 		return true;
 	}
 

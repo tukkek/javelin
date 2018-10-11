@@ -8,29 +8,29 @@ import javelin.model.unit.Combatant;
 
 /**
  * Tournament event.
- * 
+ *
  * @see Exhibition
- * 
+ *
  * @author alex
  */
-public class ExhibitionFight extends Fight {
+public class ExhibitionFight extends Fight{
 	/** Constructor. */
-	public ExhibitionFight() {
-		map = new Arena();
-		meld = true;
-		friendly = true;
-		hide = false;
-		bribe = false;
-		canflee = false;
+	public ExhibitionFight(){
+		map=new Arena();
+		meld=true;
+		friendly=true;
+		hide=false;
+		bribe=false;
+		canflee=false;
 	}
 
 	@Override
-	public ArrayList<Combatant> getfoes(Integer teamel) {
+	public ArrayList<Combatant> getfoes(Integer teamel){
 		return null;
 	}
 
 	@Override
-	public Integer getel(int teamel) {
+	public Integer getel(int teamel){
 		return teamel;
 	}
 }

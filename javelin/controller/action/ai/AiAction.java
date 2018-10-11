@@ -12,15 +12,14 @@ import javelin.model.unit.Combatant;
  * Use this if you want {@link ActionProvider} to use your {@link Action} as a
  * possible AI move.
  */
-public interface AiAction {
+public interface AiAction{
 
 	/**
 	 * Lists the possible results of an action.
-	 * @param active
-	 *            Current unit.
-	 * @param s
-	 *            Current battle state.
-	 * 
+	 *
+	 * @param active Current unit.
+	 * @param s Current battle state.
+	 *
 	 * @see BattleState#next
 	 */
 	List<List<ChanceNode>> getoutcomes(final Combatant active,

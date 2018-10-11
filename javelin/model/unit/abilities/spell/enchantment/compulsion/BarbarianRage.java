@@ -7,21 +7,21 @@ import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 
-public class BarbarianRage extends Rage {
-	public BarbarianRage() {
-		super("Barbarian rage", 1,
-				ChallengeCalculator.ratespelllikeability(1), Realm.FIRE);
-		ispotion = false;
+public class BarbarianRage extends Rage{
+	public BarbarianRage(){
+		super("Barbarian rage",1,ChallengeCalculator.ratespelllikeability(1),
+				Realm.FIRE);
+		ispotion=false;
 	}
 
 	@Override
-	float getduration(Combatant target) {
-		return super.getduration(target) / 2f;
+	float getduration(Combatant target){
+		return super.getduration(target)/2f;
 	}
 
 	@Override
-	public void filtertargets(Combatant combatant, List<Combatant> targets,
-			BattleState s) {
-		targetself(combatant, targets);
+	public void filtertargets(Combatant combatant,List<Combatant> targets,
+			BattleState s){
+		targetself(combatant,targets);
 	}
 }

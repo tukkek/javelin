@@ -13,87 +13,66 @@ import javelin.old.RPG;
 /**
  * Manages game weather. Current types of weather are {@link #DRY},
  * {@link #RAIN} and {@link #STORM}.
- * 
+ *
  * @author alex
  */
-public class Weather {
-	public static final int DRY = 0;
-	public static final int RAIN = 1;
-	public static final int STORM = 2;
-	public static final Integer[] DISTRIBUTION =
-			new Integer[] { DRY, DRY, RAIN, STORM };
+public class Weather{
+	public static final int DRY=0;
+	public static final int RAIN=1;
+	public static final int STORM=2;
+	public static final Integer[] DISTRIBUTION=new Integer[]{DRY,DRY,RAIN,STORM};
 
-	static final double[] RATIO = new double[] { 0.0, .1, .5 };
+	static final double[] RATIO=new double[]{0.0,.1,.5};
 
 	public static int current;
 
-	static {
+	static{
 		read(0);
 	}
 
 	/**
 	 * Changes the weather, possibly.
-	 * 
+	 *
 	 * @see Season#getweather()
 	 */
-	public static void weather() {
-		if (Debug.weather != null) {
-			current = read(0);
+	public static void weather(){
+		if(Debug.weather!=null){
+			current=read(0);
 			return;
 		}
-		int roll =
-				RPG.r(0, DISTRIBUTION.length - 1) + Season.current.getweather();
-		if (roll < 0) {
-			roll = 0;
-		} else if (roll >= DISTRIBUTION.length) {
-			roll = DISTRIBUTION.length - 1;
-		}
-		roll = DISTRIBUTION[roll];
-		if (roll > current) {
-			current += 1;
-		} else if (roll < current) {
-			current -= 1;
-		}
+		int roll=RPG.r(0,DISTRIBUTION.length-1)+Season.current.getweather();
+		if(roll<0)
+			roll=0;
+		else if(roll>=DISTRIBUTION.length) roll=DISTRIBUTION.length-1;
+		roll=DISTRIBUTION[roll];
+		if(roll>current)
+			current+=1;
+		else if(roll<current) current-=1;
 	}
 
-	public static void flood() {
-		int level = Javelin.app.fight.flood();
-		final double r = RATIO[level];
-		if (r == 0.0) {
-			return;
-		}
-		final ArrayList<Square> clear = new ArrayList<Square>();
-		final BattleState state = Fight.state;
-		for (Square[] line : state.map) {
-			for (Square s : line) {
-				if (!s.obstructed && !s.blocked) {
-					clear.add(s);
-				}
-			}
-		}
-		double spots = clear.size() * r;
-		for (double i = 0.0; i < spots && !clear.isEmpty(); i += 1.0) {
-			final int index = RPG.r(1, clear.size()) - 1;
-			Square s = clear.get(index);
+	public static void flood(){
+		int level=Javelin.app.fight.flood();
+		final double r=RATIO[level];
+		if(r==0.0) return;
+		final ArrayList<Square> clear=new ArrayList<>();
+		final BattleState state=Fight.state;
+		for(Square[] line:state.map)
+			for(Square s:line)
+				if(!s.obstructed&&!s.blocked) clear.add(s);
+		double spots=clear.size()*r;
+		for(double i=0.0;i<spots&&!clear.isEmpty();i+=1.0){
+			final int index=RPG.r(1,clear.size())-1;
+			Square s=clear.get(index);
 			clear.remove(index);
-			s.flooded = true;
+			s.flooded=true;
 		}
 	}
 
-	public static int read(int nowp) {
-		if (Debug.weather == null) {
-			return nowp;
-		}
-		if (Debug.weather.equals("dry")) {
-			return DRY;
-		}
-		if (Debug.weather.equals("rain")) {
-			return RAIN;
-		}
-		if (Debug.weather.equals("storm")) {
-			return STORM;
-		}
-		throw new RuntimeException(
-				"Unknown weather: " + Debug.weather);
+	public static int read(int nowp){
+		if(Debug.weather==null) return nowp;
+		if(Debug.weather.equals("dry")) return DRY;
+		if(Debug.weather.equals("rain")) return RAIN;
+		if(Debug.weather.equals("storm")) return STORM;
+		throw new RuntimeException("Unknown weather: "+Debug.weather);
 	}
 }

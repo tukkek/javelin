@@ -8,23 +8,23 @@ import javelin.model.unit.Monster;
  *
  * @author alex
  */
-public class HeadbandOfIntellect extends Artifact {
+public class HeadbandOfIntellect extends Artifact{
 
 	private int bonus;
 
 	/** Constructor. */
-	public HeadbandOfIntellect(int bonus, int price) {
-		super("Headband of intellect +" + bonus, price, Slot.HEAD);
-		this.bonus = bonus;
+	public HeadbandOfIntellect(int bonus,int price){
+		super("Headband of intellect +"+bonus,price,Slot.HEAD);
+		this.bonus=bonus;
 	}
 
 	@Override
-	protected void apply(Combatant c) {
+	protected void apply(Combatant c){
 		c.source.changeintelligencescore(bonus);
 	}
 
 	@Override
-	protected void negate(Combatant c) {
+	protected void negate(Combatant c){
 		c.source.changeintelligencescore(-bonus);
 	}
 

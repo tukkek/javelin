@@ -9,26 +9,26 @@ import javelin.model.unit.Squad;
 
 /**
  * Fight against your own squad.
- * 
+ *
  * @author alex
  */
-public class MirrorMatch extends Match {
+public class MirrorMatch extends Match{
 	/** Constructor. */
-	public MirrorMatch() {
+	public MirrorMatch(){
 		super();
-		name = "Mirror match";
+		name="Mirror match";
 	}
 
 	@Override
-	public void start() {
-		throw new StartBattle(new ExhibitionFight() {
+	public void start(){
+		throw new StartBattle(new ExhibitionFight(){
 			@Override
-			public ArrayList<Combatant> getfoes(Integer teamel) {
-				ArrayList<Combatant> monsters = new ArrayList<Combatant>();
-				for (Combatant c : Squad.active.members) {
-					c = c.clone();
+			public ArrayList<Combatant> getfoes(Integer teamel){
+				ArrayList<Combatant> monsters=new ArrayList<>();
+				for(Combatant c:Squad.active.members){
+					c=c.clone();
 					c.clonesource();
-					c.source.customName = null;
+					c.source.customName=null;
 					c.newid();
 					monsters.add(c);
 				}

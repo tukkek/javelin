@@ -5,29 +5,27 @@ import javelin.model.unit.Combatant;
 /**
  * See the d20 SRD for more info.
  */
-public class Toughness extends Feat {
+public class Toughness extends Feat{
 	/** Unique instance of this {@link Feat}. */
-	public static final Toughness SINGLETON = new Toughness();
-	public static final int HP = 3;
+	public static final Toughness SINGLETON=new Toughness();
+	public static final int HP=3;
 
-	private Toughness() {
+	private Toughness(){
 		super("toughness");
-		stack = true;
+		stack=true;
 	}
 
 	@Override
-	public String inform(final Combatant m) {
-		return "Max HP: " + m.maxhp;
+	public String inform(final Combatant m){
+		return "Max HP: "+m.maxhp;
 	}
 
 	@Override
-	public boolean upgrade(final Combatant m) {
-		if (!super.upgrade(m)) {
-			return false;
-		}
-		m.maxhp += 3;
-		m.hp += 3;
-		m.source.hd.extrahp += HP;
+	public boolean upgrade(final Combatant m){
+		if(!super.upgrade(m)) return false;
+		m.maxhp+=3;
+		m.hp+=3;
+		m.source.hd.extrahp+=HP;
 		return true;
 	}
 }

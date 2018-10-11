@@ -13,41 +13,37 @@ import javelin.model.unit.Monster;
 
 /**
  * Exhibition against many opponents.
- * 
+ *
  * @author alex
  */
-public class Horde extends Exhibition {
+public class Horde extends Exhibition{
 	/** Constructor. */
-	public Horde() {
+	public Horde(){
 		super("Horde");
 	}
 
 	@Override
-	public void start() {
-		throw new StartBattle(new ExhibitionFight() {
+	public void start(){
+		throw new StartBattle(new ExhibitionFight(){
 			@Override
-			public ArrayList<Combatant> getfoes(Integer teamel) {
-				crloop: for (Monster m : new CrIterator(
-						Javelin.MONSTERSBYCR.descendingMap())) {
-					ArrayList<Combatant> opponents = new ArrayList<Combatant>();
-					int el = 0;
-					for (int i = 0; i < EncounterGenerator
-							.getmaxenemynumber(); i++) {
-						opponents.add(new Combatant(m.clone(), true));
-						try {
-							el = ChallengeCalculator.calculateelsafe(opponents);
-						} catch (UnbalancedTeams e) {
+			public ArrayList<Combatant> getfoes(Integer teamel){
+				crloop:for(Monster m:new CrIterator(
+						Javelin.MONSTERSBYCR.descendingMap())){
+					ArrayList<Combatant> opponents=new ArrayList<>();
+					int el=0;
+					for(int i=0;i<EncounterGenerator.getmaxenemynumber();i++){
+						opponents.add(new Combatant(m.clone(),true));
+						try{
+							el=ChallengeCalculator.calculateelsafe(opponents);
+						}catch(UnbalancedTeams e){
 							continue crloop;
 						}
-						if (el > teamel) {
+						if(el>teamel)
 							continue crloop;
-						} else if (el == teamel) {
-							return opponents;
-						}
+						else if(el==teamel) return opponents;
 					}
 				}
-				throw new RuntimeException(
-						"Couldn't generate Horde exhibition");
+				throw new RuntimeException("Couldn't generate Horde exhibition");
 			}
 		});
 	}

@@ -1,6 +1,6 @@
 package javelin.controller.generator.dungeon;
 
-public interface DungeonArea {
+public interface DungeonArea{
 
 	int getwidth();
 

@@ -7,17 +7,17 @@ import javelin.controller.fight.RandomEncounter;
 /**
  * Similar to a {@link RandomEncounter} but has higher difficulty to compensate
  * for {@link ExhibitionFight}s not being fatal.
- * 
+ *
  * @author alex
  */
-public class Match extends Exhibition {
+public class Match extends Exhibition{
 	/** Constructor. */
-	public Match() {
+	public Match(){
 		super("Match");
 	}
 
 	@Override
-	public void start() {
+	public void start(){
 		throw new StartBattle(new ExhibitionFight());
 	}
 }

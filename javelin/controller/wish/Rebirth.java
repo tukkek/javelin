@@ -15,28 +15,26 @@ import javelin.model.unit.Squad;
  *
  * @author alex
  */
-public class Rebirth extends Wish {
+public class Rebirth extends Wish{
 	/** Constructor. */
-	public Rebirth(Character keyp, WishScreen s) {
-		super("rebirth to base form", keyp, 1, true, s);
+	public Rebirth(Character keyp,WishScreen s){
+		super("rebirth to base form",keyp,1,true,s);
 	}
 
 	@Override
-	boolean wish(Combatant target) {
-		Monster m = Javelin.getmonster(target.source.name);
-		Combatant reborn = new Combatant(m, true);
+	boolean wish(Combatant target){
+		Monster m=Javelin.getmonster(target.source.name);
+		Combatant reborn=new Combatant(m,true);
 		Squad.active.members.remove(target);
 		Squad.active.members.add(reborn);
-		reborn.source.customName = target.source.name;
+		reborn.source.customName=target.source.name;
 		Squad.active.sort();
-		float xp = target.source.cr - reborn.source.cr;
-		if (xp > 0) {
-			reborn.learn(xp);
-		}
-		ArrayList<Item> equipment = Squad.active.equipment.get(target);
+		float xp=target.source.cr-reborn.source.cr;
+		if(xp>0) reborn.learn(xp);
+		ArrayList<Item> equipment=Squad.active.equipment.get(target);
 		Squad.active.equipment.remove(target);
-		Squad.active.equipment.add(reborn, equipment);
-		for (Artifact a : new ArrayList<>(target.equipped)) {
+		Squad.active.equipment.add(reborn,equipment);
+		for(Artifact a:new ArrayList<>(target.equipped)){
 			target.unequip(a);
 			reborn.equip(a);
 		}

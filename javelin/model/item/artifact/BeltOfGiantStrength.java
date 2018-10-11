@@ -8,24 +8,24 @@ import javelin.model.unit.Monster;
  *
  * @author alex
  */
-public class BeltOfGiantStrength extends Artifact {
+public class BeltOfGiantStrength extends Artifact{
 
 	private int bonus;
 
 	/** Constructor. */
-	public BeltOfGiantStrength(int bonus, int price) {
-		super("Belt of giant strength +" + bonus, price, Slot.WAIST);
-		this.bonus = bonus;
+	public BeltOfGiantStrength(int bonus,int price){
+		super("Belt of giant strength +"+bonus,price,Slot.WAIST);
+		this.bonus=bonus;
 	}
 
 	@Override
-	protected void apply(Combatant c) {
-		c.source.changestrengthmodifier(bonus / 2);
+	protected void apply(Combatant c){
+		c.source.changestrengthmodifier(bonus/2);
 	}
 
 	@Override
-	protected void negate(Combatant c) {
-		c.source.changestrengthmodifier(-bonus / 2);
+	protected void negate(Combatant c){
+		c.source.changestrengthmodifier(-bonus/2);
 	}
 
 }

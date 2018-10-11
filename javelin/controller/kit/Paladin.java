@@ -8,23 +8,23 @@ import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureLightWo
 import javelin.model.unit.abilities.spell.enchantment.compulsion.Bless;
 import javelin.model.unit.skill.Skill;
 
-public class Paladin extends Kit {
-	public static final Kit INSTANCE = new Paladin();
+public class Paladin extends Kit{
+	public static final Kit INSTANCE=new Paladin();
 
-	Paladin() {
-		super("paladin", Warrior.SINGLETON, RaiseCharisma.SINGLETON, "Keeper",
-				"Guardian", "Paladin", "Justicar");
+	Paladin(){
+		super("paladin",Warrior.SINGLETON,RaiseCharisma.SINGLETON,"Keeper",
+				"Guardian","Paladin","Justicar");
 	}
 
 	@Override
-	protected void define() {
+	protected void define(){
 		basic.add(new CureLightWounds());
 		basic.add(new Bless());
 		basic.add(Skill.SENSEMOTIVE.getupgrade());
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h) {
+	protected void extend(UpgradeHandler h){
 		extension.addAll(h.good);
 		extension.addAll(h.magic);
 		extension.addAll(h.schoolhealwounds);
@@ -32,8 +32,8 @@ public class Paladin extends Kit {
 	}
 
 	@Override
-	public boolean allow(int bestability, int secondbest, Monster m) {
+	public boolean allow(int bestability,int secondbest,Monster m){
 		return Boolean.TRUE.equals(m.good)
-				&& Cleric.INSTANCE.allow(bestability, secondbest, m);
+				&&Cleric.INSTANCE.allow(bestability,secondbest,m);
 	}
 }

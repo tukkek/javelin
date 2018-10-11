@@ -6,23 +6,23 @@ import javelin.controller.upgrade.classes.Aristocrat;
 import javelin.model.unit.abilities.spell.evocation.MagicMissile;
 import javelin.model.unit.skill.Skill;
 
-public class Wizard extends Kit {
-	public static final Kit INSTANCE = new Wizard();
+public class Wizard extends Kit{
+	public static final Kit INSTANCE=new Wizard();
 
-	private Wizard() {
-		super("wizard", Aristocrat.SINGLETON, RaiseIntelligence.SINGLETON,
-				"Trickster", "Adept", "Wizard", "Warlock");
+	private Wizard(){
+		super("wizard",Aristocrat.SINGLETON,RaiseIntelligence.SINGLETON,"Trickster",
+				"Adept","Wizard","Warlock");
 	}
 
 	@Override
-	protected void define() {
+	protected void define(){
 		basic.add(new MagicMissile());
 		basic.add(Skill.CONCENTRATION.getupgrade());
 		basic.add(Skill.SPELLCRAFT.getupgrade());
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h) {
+	protected void extend(UpgradeHandler h){
 		extension.addAll(h.magic);
 		extension.addAll(h.schoolabjuration);
 		extension.addAll(h.schoolconjuration);

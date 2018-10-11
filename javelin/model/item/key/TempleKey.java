@@ -23,7 +23,7 @@ import javelin.view.screen.InfoScreen;
  * @see Temple#open
  * @author alex
  */
-public class TempleKey extends Item {
+public class TempleKey extends Item{
 	/** Color/realm of this key. */
 	public Realm color;
 
@@ -32,32 +32,30 @@ public class TempleKey extends Item {
 	 *
 	 * @see #generate()
 	 */
-	public TempleKey(Realm color) {
-		super(color.getname() + " key", determineprice(color), null);
-		this.color = color;
-		usedinbattle = false;
-		waste = false;
+	public TempleKey(Realm color){
+		super(color.getname()+" key",determineprice(color),null);
+		this.color=color;
+		usedinbattle=false;
+		waste=false;
 	}
 
-	private static int determineprice(Realm r) {
-		for (Actor a : World.getactors()) {
-			if (a instanceof Temple) {
-				Temple temple = (Temple) a;
-				if (temple.realm.equals(r)) {
-					return 4 * RewardCalculator.getgold(temple.level);
-				}
+	private static int determineprice(Realm r){
+		for(Actor a:World.getactors())
+			if(a instanceof Temple){
+				Temple temple=(Temple)a;
+				if(temple.realm.equals(r))
+					return 4*RewardCalculator.getgold(temple.level);
 			}
-		}
 		return 0;
 	}
 
 	@Override
-	public boolean use(Combatant user) {
+	public boolean use(Combatant user){
 		return false;
 	}
 
 	@Override
-	public boolean usepeacefully(Combatant m) {
+	public boolean usepeacefully(Combatant m){
 		new InfoScreen("").print("\"I wonder what this unlocks?\"");
 		Javelin.input();
 		return true;
@@ -68,37 +66,33 @@ public class TempleKey extends Item {
 	 *         currently possess. If none fits the description, a random key,
 	 *         instead.
 	 */
-	public static TempleKey generate() {
-		ArrayList<Realm> realms = new ArrayList<Realm>();
-		for (Realm r : Realm.values()) {
+	public static TempleKey generate(){
+		ArrayList<Realm> realms=new ArrayList<>();
+		for(Realm r:Realm.values())
 			realms.add(r);
-		}
-		for (Actor a : World.getactors()) {
-			Temple temple = a instanceof Temple ? (Temple) a : null;
-			if (temple != null && temple.open) {
+		for(Actor a:World.getactors()){
+			Temple temple=a instanceof Temple?(Temple)a:null;
+			if(temple!=null&&temple.open){
 				realms.remove(temple.realm);
 				continue;
 			}
 		}
-		for (Item i : Item.getplayeritems()) {
-			TempleKey key = i instanceof TempleKey ? (TempleKey) i : null;
-			if (key != null && realms.contains(key.color)) {
-				realms.remove(key.color);
-			}
+		for(Item i:Item.getplayeritems()){
+			TempleKey key=i instanceof TempleKey?(TempleKey)i:null;
+			if(key!=null&&realms.contains(key.color)) realms.remove(key.color);
 		}
-		return new TempleKey(
-				realms.isEmpty() ? Realm.random() : RPG.pick(realms));
+		return new TempleKey(realms.isEmpty()?Realm.random():RPG.pick(realms));
 	}
 
 	@Override
-	public void expend() {
+	public void expend(){
 		// isn't used in the traditional manner
 	}
 
 	/**
 	 * @see #expend()
 	 */
-	public void unlock() {
+	public void unlock(){
 		super.expend();
 	}
 }

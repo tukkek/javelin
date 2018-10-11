@@ -18,31 +18,29 @@ import javelin.view.mappanel.battle.BattleMouse;
  *
  * @author alex
  */
-public class RangedTarget extends Fire {
-	AbstractAttack attacktype = RangedAttack.SINGLETON;
+public class RangedTarget extends Fire{
+	AbstractAttack attacktype=RangedAttack.SINGLETON;
 	Attack a;
 	float ap;
 
-	public RangedTarget(Attack a, float ap, char confirmkey) {
-		super("Manual targetting", "", confirmkey);
-		this.a = a;
-		this.ap = ap;
+	public RangedTarget(Attack a,float ap,char confirmkey){
+		super("Manual targetting","",confirmkey);
+		this.a=a;
+		this.ap=ap;
 	}
 
 	@Override
-	protected void attack(Combatant active, Combatant target, BattleState s) {
-		Action.outcome(
-				attacktype.attack(active, target, a, 0, 0, ap, Fight.state));
+	protected void attack(Combatant active,Combatant target,BattleState s){
+		Action.outcome(attacktype.attack(active,target,a,0,0,ap,Fight.state));
 	}
 
 	@Override
-	protected void checkhero(Combatant hero) {
+	protected void checkhero(Combatant hero){
 		// assumes you've already given a valid Attack
 	}
 
 	@Override
-	protected int calculatehitdc(Combatant active, Combatant target,
-			BattleState s) {
-		return calculatehiddc(active, target, a, RangedAttack.SINGLETON, s);
+	protected int calculatehitdc(Combatant active,Combatant target,BattleState s){
+		return calculatehiddc(active,target,a,RangedAttack.SINGLETON,s);
 	}
 }

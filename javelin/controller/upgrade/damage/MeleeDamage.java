@@ -7,21 +7,21 @@ import javelin.model.unit.attack.AttackSequence;
 
 /**
  * Upgrades mêlée damage.
- * 
+ *
  * @author alex
  */
-public class MeleeDamage extends Damage {
-	public MeleeDamage() {
+public class MeleeDamage extends Damage{
+	public MeleeDamage(){
 		super("More mêlée damage");
 	}
 
 	@Override
-	protected List<AttackSequence> getattacktype(final Monster m) {
+	protected List<AttackSequence> getattacktype(final Monster m){
 		return m.melee;
 	}
 
 	@Override
-	public void incrementupgradecount(final Monster m) {
-		m.meleedamageupgrades += 1;
+	public void incrementupgradecount(final Monster m){
+		m.meleedamageupgrades+=1;
 	}
 }

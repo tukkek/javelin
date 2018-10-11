@@ -5,21 +5,21 @@ import javelin.model.unit.abilities.discipline.expertise.CombatExpertiseDiscipli
 import javelin.model.unit.abilities.discipline.expertise.CombatExpertiseManeuver;
 import javelin.model.unit.feat.Feat;
 
-public abstract class ExpertiseFeat extends Feat {
-	public ExpertiseFeat(String namep) {
+public abstract class ExpertiseFeat extends Feat{
+	public ExpertiseFeat(String namep){
 		super(namep);
-		update = true;
+		update=true;
 	}
 
 	@Override
-	public boolean upgrade(Combatant c) {
-		return super.upgrade(c) && add(c);
+	public boolean upgrade(Combatant c){
+		return super.upgrade(c)&&add(c);
 	}
 
 	protected abstract CombatExpertiseManeuver getmaneuver();
 
 	@Override
-	public boolean add(Combatant c) {
-		return c.addmaneuver(CombatExpertiseDiscipline.INSTANCE, getmaneuver());
+	public boolean add(Combatant c){
+		return c.addmaneuver(CombatExpertiseDiscipline.INSTANCE,getmaneuver());
 	}
 }

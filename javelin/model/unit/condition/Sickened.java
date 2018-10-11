@@ -9,25 +9,25 @@ import javelin.model.unit.Combatant;
  *
  * @author alex
  */
-public class Sickened extends Condition {
+public class Sickened extends Condition{
 
-	public Sickened(float expireatp, Combatant c) {
-		super(expireatp, c, Effect.NEGATIVE, "sickened", null);
+	public Sickened(float expireatp,Combatant c){
+		super(expireatp,c,Effect.NEGATIVE,"sickened",null);
 	}
 
 	@Override
-	public void start(Combatant c) {
-		c = c.clone().clonesource();
-		Condition.raiseallattacks(c.source, -2, -2);
-		Condition.raisesaves(c.source, -2);
-		c.skillmodifier -= 2;
+	public void start(Combatant c){
+		c=c.clone().clonesource();
+		Condition.raiseallattacks(c.source,-2,-2);
+		Condition.raisesaves(c.source,-2);
+		c.skillmodifier-=2;
 	}
 
 	@Override
-	public void end(Combatant c) {
-		c = c.clone().clonesource();
-		Condition.raiseallattacks(c.source, +2, +2);
-		Condition.raisesaves(c.source, +2);
-		c.skillmodifier += 2;
+	public void end(Combatant c){
+		c=c.clone().clonesource();
+		Condition.raiseallattacks(c.source,+2,+2);
+		Condition.raisesaves(c.source,+2);
+		c.skillmodifier+=2;
 	}
 }

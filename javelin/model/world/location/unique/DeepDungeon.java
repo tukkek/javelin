@@ -13,65 +13,64 @@ import javelin.old.RPG;
 /**
  * Offers increasingly difficult fights, starting at Level 1 and being removed
  * at {@link #MAXLEVEL}.
- * 
+ *
  * @author alex
  */
-public class DeepDungeon extends UniqueLocation {
-	class DeepDungeonFight extends Siege {
-		public DeepDungeonFight(Location l) {
+public class DeepDungeon extends UniqueLocation{
+	class DeepDungeonFight extends Siege{
+		public DeepDungeonFight(Location l){
 			super(l);
-			terrain = Terrain.UNDERGROUND;
+			terrain=Terrain.UNDERGROUND;
 		}
 
 		@Override
-		protected void afterlose() {
+		protected void afterlose(){
 			garrison.clear();
-			generategarrison(minlevel, maxlevel);
+			generategarrison(minlevel,maxlevel);
 		}
 
 		@Override
-		protected void afterwin() {
+		protected void afterwin(){
 			capture();
 		}
 	}
 
-	private static final int MAXLEVEL = 20;
-	static final String DESCRIPTION = "Deep dungeon";
+	private static final int MAXLEVEL=20;
+	static final String DESCRIPTION="Deep dungeon";
 
-	public DeepDungeon() {
-		super(DESCRIPTION, DESCRIPTION, 1, 1);
-		terrain = Terrain.UNDERGROUND;
-		showgarrison = false;
+	public DeepDungeon(){
+		super(DESCRIPTION,DESCRIPTION,1,1);
+		terrain=Terrain.UNDERGROUND;
+		showgarrison=false;
 	}
 
 	@Override
-	public List<Combatant> getcombatants() {
+	public List<Combatant> getcombatants(){
 		return garrison;
 	}
 
-	public void clear() {
+	public void clear(){
 		garrison.clear();
-		minlevel += 1;
-		maxlevel += 1;
-		if (minlevel > MAXLEVEL) {
+		minlevel+=1;
+		maxlevel+=1;
+		if(minlevel>MAXLEVEL){
 			remove();
-			Javelin.message("You have vanquished the deep dungeon!", true);
-		} else {
-			generategarrison(minlevel, maxlevel);
-		}
+			Javelin.message("You have vanquished the deep dungeon!",true);
+		}else
+			generategarrison(minlevel,maxlevel);
 	}
 
 	@Override
-	protected Siege fight() {
+	protected Siege fight(){
 		return new DeepDungeonFight(this);
 	}
 
 	@Override
-	public void capture() {
+	public void capture(){
 		clear();
-		if (RPG.chancein(5)) {
-			String text = "You find a ruby after vanquishing this layer of the Deep Dungeon!";
-			Javelin.message(text, true);
+		if(RPG.chancein(5)){
+			String text="You find a ruby after vanquishing this layer of the Deep Dungeon!";
+			Javelin.message(text,true);
 			new Ruby().grab();
 		}
 	}

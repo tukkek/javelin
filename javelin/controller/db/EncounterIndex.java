@@ -11,26 +11,24 @@ import javelin.controller.generator.encounter.Encounter;
  *
  * @author alex
  */
-public class EncounterIndex extends TreeMap<Integer, List<Encounter>> {
+public class EncounterIndex extends TreeMap<Integer,List<Encounter>>{
 
 	/**
-	 * @param e
-	 *            Register this with the given Encounter Level.
+	 * @param e Register this with the given Encounter Level.
 	 */
-	public void put(int el, Encounter e) {
-		List<Encounter> tier = get(el);
-		if (tier == null) {
-			tier = new ArrayList<Encounter>();
-			put(el, tier);
+	public void put(int el,Encounter e){
+		List<Encounter> tier=get(el);
+		if(tier==null){
+			tier=new ArrayList<>();
+			put(el,tier);
 		}
 		tier.add(e);
 	}
 
-	public int count() {
-		int count = 0;
-		for (List<Encounter> encounters : values()) {
-			count += encounters.size();
-		}
+	public int count(){
+		int count=0;
+		for(List<Encounter> encounters:values())
+			count+=encounters.size();
 		return count;
 	}
 

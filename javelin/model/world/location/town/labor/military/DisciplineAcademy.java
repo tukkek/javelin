@@ -32,204 +32,180 @@ import javelin.view.screen.upgrading.AcademyScreen;
  *
  * @author alex
  */
-public class DisciplineAcademy extends Academy {
-	static final int LEVERSTUDENT = 9;
-	static final int LEVELTEACHER = 12;
-	static final int LEVERMASTER = 16;
+public class DisciplineAcademy extends Academy{
+	static final int LEVERSTUDENT=9;
+	static final int LEVELTEACHER=12;
+	static final int LEVERMASTER=16;
 
 	/**
-	 * TODO use one per {@link Discipline} so the {@link Labor}s don't have to
-	 * be all at one {@link Trait}.
+	 * TODO use one per {@link Discipline} so the {@link Labor}s don't have to be
+	 * all at one {@link Trait}.
 	 */
-	public static class BuildDisciplineAcademy extends BuildAcademies {
+	public static class BuildDisciplineAcademy extends BuildAcademies{
 		Discipline d;
 
-		public BuildDisciplineAcademy(Discipline d) {
+		public BuildDisciplineAcademy(Discipline d){
 			super(Rank.VILLAGE);
-			this.d = d;
+			this.d=d;
 		}
 
 		@Override
-		protected Academy generateacademy() {
+		protected Academy generateacademy(){
 			return d.generateacademy();
 		}
 	}
 
-	public class HireOption extends Option {
+	public class HireOption extends Option{
 		Combatant c;
 
-		public HireOption(Combatant c) {
-			super("Hire " + c + " ($"
-					+ Javelin.format(MercenariesGuild.getfee(c)) + "/day)", 0);
-			this.c = c;
+		public HireOption(Combatant c){
+			super("Hire "+c+" ($"+Javelin.format(MercenariesGuild.getfee(c))+"/day)",
+					0);
+			this.c=c;
 		}
 
 		@Override
-		public double sort() {
+		public double sort(){
 			return c.source.cr;
 		}
 	}
 
-	public class DisciplineAcademyScreen extends AcademyScreen {
-		public DisciplineAcademyScreen(Academy academy) {
-			super(academy, null);
+	public class DisciplineAcademyScreen extends AcademyScreen{
+		public DisciplineAcademyScreen(Academy academy){
+			super(academy,null);
 		}
 
 		@Override
-		public List<Option> getoptions() {
-			List<Option> options = super.getoptions();
-			for (Combatant c : new Combatant[] { student, teacher, master }) {
-				if (c != null) {
-					options.add(new HireOption(c));
-				}
-			}
+		public List<Option> getoptions(){
+			List<Option> options=super.getoptions();
+			for(Combatant c:new Combatant[]{student,teacher,master})
+				if(c!=null) options.add(new HireOption(c));
 			return options;
 		}
 
 		@Override
-		public boolean select(Option op) {
-			HireOption hire = op instanceof HireOption ? (HireOption) op : null;
-			if (hire != null) {
-				if (!MercenariesGuild.recruit(hire.c, false)) {
-					final String error = "You don't have enough money to pay today's advance!\n"
-							+ "Press any key to continue...";
+		public boolean select(Option op){
+			HireOption hire=op instanceof HireOption?(HireOption)op:null;
+			if(hire!=null){
+				if(!MercenariesGuild.recruit(hire.c,false)){
+					final String error="You don't have enough money to pay today's advance!\n"
+							+"Press any key to continue...";
 					printmessage(error);
 					return false;
-				} else if (hire.c == student) {
-					student = null;
-				} else if (hire.c == teacher) {
-					teacher = null;
-				} else if (hire.c == master) {
-					master = null;
-				}
+				}else if(hire.c==student)
+					student=null;
+				else if(hire.c==teacher)
+					teacher=null;
+				else if(hire.c==master) master=null;
 				return true;
 			}
 			return super.select(op);
 		}
 
 		@Override
-		protected boolean upgrade(UpgradeOption o, Combatant c) {
-			MartialTraining mt = getmartialtrainingfeat(o);
-			if (mt != null) {
-				float cr = ChallengeCalculator.calculaterawcr(c.source)[1];
-				train(c, c.xp.floatValue(), cr, d.getupgrades());
-				return ChallengeCalculator.calculaterawcr(c.source)[1] > cr;
+		protected boolean upgrade(UpgradeOption o,Combatant c){
+			MartialTraining mt=getmartialtrainingfeat(o);
+			if(mt!=null){
+				float cr=ChallengeCalculator.calculaterawcr(c.source)[1];
+				train(c,c.xp.floatValue(),cr,d.getupgrades());
+				return ChallengeCalculator.calculaterawcr(c.source)[1]>cr;
 			}
-			return super.upgrade(o, c);
+			return super.upgrade(o,c);
 		}
 
-		MartialTraining getmartialtrainingfeat(UpgradeOption o) {
-			if (!(o.u instanceof FeatUpgrade)) {
-				return null;
-			}
-			final FeatUpgrade fu = (FeatUpgrade) o.u;
-			return fu.feat instanceof MartialTraining
-					? (MartialTraining) fu.feat : null;
+		MartialTraining getmartialtrainingfeat(UpgradeOption o){
+			if(!(o.u instanceof FeatUpgrade)) return null;
+			final FeatUpgrade fu=(FeatUpgrade)o.u;
+			return fu.feat instanceof MartialTraining?(MartialTraining)fu.feat:null;
 		}
 	}
 
 	/** CR 5 mercenary. */
-	Combatant student = null;
+	Combatant student=null;
 	/** CR 10 mercenary. */
-	Combatant teacher = null;
+	Combatant teacher=null;
 	/** CR 15 mercenary. */
-	Combatant master = null;
+	Combatant master=null;
 	Discipline d;
 
-	public DisciplineAcademy(Discipline d) {
-		super(d.name + " academy", null, 5, 15, Collections.EMPTY_SET,
-				d.abilityupgrade, d.classupgrade);
-		this.d = d;
-		descriptionunknown = descriptionknown;
+	public DisciplineAcademy(Discipline d){
+		super(d.name+" academy",null,5,15,Collections.EMPTY_SET,d.abilityupgrade,
+				d.classupgrade);
+		this.d=d;
+		descriptionunknown=descriptionknown;
 		upgrades.add(d.skillupgrade.getupgrade());
 		upgrades.add(d.knowledgeupgrade.getupgrade());
 		upgrades.add(d.trainingupgrade);
-		student = train(student, LEVERSTUDENT, 1);
-		teacher = train(teacher, LEVELTEACHER, 2);
-		master = train(master, LEVERMASTER, 4);
+		student=train(student,LEVERSTUDENT,1);
+		teacher=train(teacher,LEVELTEACHER,2);
+		master=train(master,LEVERMASTER,4);
 	}
 
 	@Override
-	public List<Combatant> getcombatants() {
-		List<Combatant> combatants = super.getcombatants();
-		for (Combatant c : new Combatant[] { student, teacher, master }) {
-			if (c != null) {
-				combatants.add(c);
-			}
-		}
+	public List<Combatant> getcombatants(){
+		List<Combatant> combatants=super.getcombatants();
+		for(Combatant c:new Combatant[]{student,teacher,master})
+			if(c!=null) combatants.add(c);
 		return combatants;
 	}
 
 	@Override
-	public void turn(long time, WorldScreen world) {
-		super.turn(time, world);
-		student = train(student, LEVERSTUDENT, Calendar.MONTH);
-		teacher = train(teacher, LEVELTEACHER, Calendar.SEASON);
-		master = train(master, LEVERMASTER, Calendar.YEAR);
+	public void turn(long time,WorldScreen world){
+		super.turn(time,world);
+		student=train(student,LEVERSTUDENT,Calendar.MONTH);
+		teacher=train(teacher,LEVELTEACHER,Calendar.SEASON);
+		master=train(master,LEVERMASTER,Calendar.YEAR);
 	}
 
-	Combatant train(Combatant c, int level, int period) {
-		if (c != null || !RPG.chancein(period)) {
-			return c;
-		}
-		c = new Combatant(RPG.pick(TrainingHall.CANDIDATES), true);
+	Combatant train(Combatant c,int level,int period){
+		if(c!=null||!RPG.chancein(period)) return c;
+		c=new Combatant(RPG.pick(TrainingHall.CANDIDATES),true);
 		c.setmercenary(true);
-		train(c, level, ChallengeCalculator.calculaterawcr(c.source)[1],
+		train(c,level,ChallengeCalculator.calculaterawcr(c.source)[1],
 				d.getupgrades());
 		c.postupgradeautomatic(d.classupgrade);
 		name(c);
 		return c;
 	}
 
-	void name(Combatant c) {
-		c.source.customName = d.name + " initiate";
-		for (Feat f : c.source.feats) {
-			if (f instanceof MartialTraining) {
-				final MartialTraining mt = (MartialTraining) f;
-				c.source.customName = d.name + " " + mt.getrank().toLowerCase();
+	void name(Combatant c){
+		c.source.customName=d.name+" initiate";
+		for(Feat f:c.source.feats)
+			if(f instanceof MartialTraining){
+				final MartialTraining mt=(MartialTraining)f;
+				c.source.customName=d.name+" "+mt.getrank().toLowerCase();
 				return;
 			}
-		}
 	}
 
 	/**
-	 * @param c
-	 *            Train a combatant...
-	 * @param xp
-	 *            ... up to this amount of XP (not removed form
-	 *            {@link Combatant#xp}) ...
-	 * @param cr
-	 *            ... and this amount of raw CR (with golden rule applied)...
-	 * @param upgrades
-	 *            in these Upgrades...
+	 * @param c Train a combatant...
+	 * @param xp ... up to this amount of XP (not removed form
+	 *          {@link Combatant#xp}) ...
+	 * @param cr ... and this amount of raw CR (with golden rule applied)...
+	 * @param upgrades in these Upgrades...
 	 * @see ChallengeCalculator#calculaterawcr(javelin.model.unit.Monster)
 	 */
-	public static void train(Combatant c, float xp, float cr,
-			Upgrade[] upgrades) {
-		for (Upgrade u : upgrades) {
-			Combatant c2 = c.clone().clonesource();
-			if (!u.upgrade(c2)) {
-				continue;
-			}
-			final float newcr = ChallengeCalculator
-					.calculaterawcr(c2.source)[1];
-			if (newcr - cr > xp) {
-				continue;
-			}
-			c.source = c.source.clone();
+	public static void train(Combatant c,float xp,float cr,Upgrade[] upgrades){
+		for(Upgrade u:upgrades){
+			Combatant c2=c.clone().clonesource();
+			if(!u.upgrade(c2)) continue;
+			final float newcr=ChallengeCalculator.calculaterawcr(c2.source)[1];
+			if(newcr-cr>xp) continue;
+			c.source=c.source.clone();
 			u.upgrade(c);
-			train(c, xp, cr, upgrades);
+			train(c,xp,cr,upgrades);
 			return;
 		}
 	}
 
 	@Override
-	public int getlabor() {
+	public int getlabor(){
 		return 10;
 	}
 
 	@Override
-	protected AcademyScreen getscreen() {
+	protected AcademyScreen getscreen(){
 		return new DisciplineAcademyScreen(this);
 	}
 }

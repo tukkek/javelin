@@ -9,24 +9,21 @@ import javelin.view.KeysScreen;
 
 /**
  * Configures world screen keys.
- * 
+ *
  * @author alex
  */
-public class WorldKeysScreen extends KeysScreen {
+public class WorldKeysScreen extends KeysScreen{
 	/** Constructor. */
-	public WorldKeysScreen() {
-		super("World keys", "keys.world");
+	public WorldKeysScreen(){
+		super("World keys","keys.world");
 	}
 
 	@Override
-	public ArrayList<ActionDescription> getactions() {
-		ArrayList<ActionDescription> list =
-				new ArrayList<ActionDescription>(WorldAction.ACTIONS.length);
-		for (WorldAction a : WorldAction.ACTIONS) {
-			if (!(a instanceof Guide)) {
-				list.add(a);
-			}
-		}
+	public ArrayList<ActionDescription> getactions(){
+		ArrayList<ActionDescription> list=new ArrayList<>(
+				WorldAction.ACTIONS.length);
+		for(WorldAction a:WorldAction.ACTIONS)
+			if(!(a instanceof Guide)) list.add(a);
 		return list;
 	}
 

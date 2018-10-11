@@ -9,74 +9,70 @@ import javelin.model.unit.abilities.spell.Spell;
  * will remove a daily number of uses when unequipped (in order to prevend
  * players from removing and putting the item again in order to cheat their way
  * into "free" uses of the spell).
- * 
+ *
  * @author alex
  */
-public class CasterRing extends Artifact {
+public class CasterRing extends Artifact{
 	/**
 	 * Available number of {@link #uses} tiers in the game. Higher than 5 is
 	 * discouraged since 5 equals to "at will" in the Challenging Challenge
 	 * Ratings document.
 	 *
-	 * TODO this is currently artifically limited but could be converted to
-	 * [1,5] at most at any point in time. The reason for this is we don't want
-	 * 95% of the {@link Artifact}s in the game to be Caster Rings. Right now,
-	 * 60% of the Artifacts are CasterRings, which is much more acceptable, with
-	 * around 50% or less being the current goal.
+	 * TODO this is currently artifically limited but could be converted to [1,5]
+	 * at most at any point in time. The reason for this is we don't want 95% of
+	 * the {@link Artifact}s in the game to be Caster Rings. Right now, 60% of the
+	 * Artifacts are CasterRings, which is much more acceptable, with around 50%
+	 * or less being the current goal.
 	 */
-	public static int[] POWERLEVELS = new int[] { 2 };
+	public static int[] POWERLEVELS=new int[]{2};
 
 	int uses;
 	Spell spell;
 
-	public CasterRing(Spell s, int uses) {
-		super(getname(s, uses), s.casterlevel * s.level * 400 * uses,
-				Slot.FINGER);
-		spell = s;
-		this.uses = uses;
-		waste = false; // wasted as Spell
+	public CasterRing(Spell s,int uses){
+		super(getname(s,uses),s.casterlevel*s.level*400*uses,Slot.FINGER);
+		spell=s;
+		this.uses=uses;
+		waste=false; // wasted as Spell
 	}
 
-	static String getname(Spell s, int uses) {
+	static String getname(Spell s,int uses){
 		String prefix;
-		if (uses == 1) {
-			prefix = "Minor ring";
-		} else if (uses == 2) {
-			prefix = "Ring";
-		} else if (uses == 3) {
-			prefix = "Major ring";
-		} else if (uses == 4) {
-			prefix = "Greater ring";
-		} else if (uses == 5) {
-			prefix = "Epic ring";
-		} else {
+		if(uses==1)
+			prefix="Minor ring";
+		else if(uses==2)
+			prefix="Ring";
+		else if(uses==3)
+			prefix="Major ring";
+		else if(uses==4)
+			prefix="Greater ring";
+		else if(uses==5)
+			prefix="Epic ring";
+		else
 			throw new RuntimeException("Invalid number of uses #casterring");
-		}
-		return prefix + " of " + s.name.toLowerCase();
+		return prefix+" of "+s.name.toLowerCase();
 	}
 
 	@Override
-	protected void apply(Combatant c) {
-		Spell s = c.spells.has(spell);
-		if (s == null) {
-			s = spell.clone();
-			s.perday = uses;
-			s.used = uses;
+	protected void apply(Combatant c){
+		Spell s=c.spells.has(spell);
+		if(s==null){
+			s=spell.clone();
+			s.perday=uses;
+			s.used=uses;
 			c.spells.add(s);
-		} else {
-			s.perday += uses;
-			s.used += uses;
+		}else{
+			s.perday+=uses;
+			s.used+=uses;
 		}
 	}
 
 	@Override
-	protected void negate(Combatant c) {
-		Spell s = c.spells.has(spell);
-		s.perday -= uses;
-		if (s.perday <= 0) {
+	protected void negate(Combatant c){
+		Spell s=c.spells.has(spell);
+		s.perday-=uses;
+		if(s.perday<=0)
 			c.spells.remove(s);
-		} else if (s.used > s.perday) {
-			s.used = s.perday;
-		}
+		else if(s.used>s.perday) s.used=s.perday;
 	}
 }

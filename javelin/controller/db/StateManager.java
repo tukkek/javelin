@@ -149,14 +149,13 @@ public class StateManager{
 			return true;
 		}catch(final Throwable e1){
 			e1.printStackTrace(System.out);
-			System.out.println("Your save game could not be loaded\n"
-					+"It has been deleted so you can restart the game with a new save\n"
-					+"If this is happening constantly please inform us of the error message above");
+			System.out.println("Your save file could not be loaded.\n"
+					+"It has been deleted so you can start a new game instead.\n"
+					+"If this is happening constantly please inform us of the error message above.");
 			StateManager.clear();
 			if(!Javelin.DEBUG){
 				Window.getWindows()[0].dispose();
 				System.out.println("\nPress any key to exit...");
-				// Game.getInput();
 				try{
 					System.in.read();
 				}catch(IOException e){

@@ -157,7 +157,8 @@ public class Dwelling extends Fortification{
 		if(volunteers>0){
 			int rubycost=Math.max(1,Math.round(dweller.source.cr));
 			text+="There are "+volunteers+" available units here.\n\n";
-			text+="d - draft as volunteer ("+rubycost+" rubies)\n";
+			text+="d - draft as volunteer ("+rubycost+" "
+					+(rubycost==1?"ruby":"rubies")+")\n";
 			text+="h - hire as "+monstertype+" mercenary ($"
 					+Javelin.format(MercenariesGuild.getfee(dweller))+"/day)\n";
 		}else
@@ -166,7 +167,8 @@ public class Dwelling extends Fortification{
 		text+="p - pillage this dwelling ($"+spoils+")\n";
 		text+="q - quit\n";
 		text+="\nCurrent gold: $"+Javelin.format(Squad.active.gold)+".\n";
-		if(volunteers>0) text+="Current XP: "+Squad.active.sumxp()+"XP.\n";
+		if(volunteers>0)
+			text+="Rubies: "+Squad.active.equipment.getall(Ruby.class).size()+".\n";
 		return text;
 	}
 

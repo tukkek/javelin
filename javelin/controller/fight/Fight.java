@@ -162,7 +162,7 @@ public abstract class Fight{
 		final int gold=RewardCalculator.receivegold(defeated);
 		final float food=Squad.active.eat()/2;
 		/* should at least serve as food for 1 day */
-		final int bonus=Math.round(Math.max(food,gold));
+		final int bonus=Javelin.round(Math.round(Math.max(food,gold)));
 		String rewards="Congratulations! ";
 		if(Javelin.app.fight.rewardxp)
 			rewards+=RewardCalculator.rewardxp(Fight.originalblueteam,defeated,1);

@@ -1,12 +1,14 @@
 package javelin.controller.action.world;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.JavelinApp;
+import javelin.controller.CountingSet;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
@@ -140,29 +142,35 @@ public class UseItems extends WorldAction{
 	 */
 	static public String listitems(ArrayList<Item> allitems,boolean showkeys){
 		String s="";
-		int i=0;
-		ArrayList<Combatant> members=filtermercenaries(Squad.active.members);
-		for(int j=0;j<members.size();j++){
-			Combatant c=members.get(j);
-			String output="";
-			if(!showkeys) output+=KEYS.get(j)+" - ";
-			output=c.toString();
+		var keys=KEYS.iterator();
+		for(Combatant c:filtermercenaries(Squad.active.members)){
+			s+="\n"+c+":\n";
+			ArrayList<Item> bag=Squad.active.equipment.get(c);
+			s+=listbag(allitems,showkeys,bag,c,keys);
+		}
+		return s;
+	}
+
+	static String listbag(ArrayList<Item> allitems,boolean showkeys,
+			ArrayList<Item> bag,Combatant c,Iterator<Character> keys){
+		if(bag.isEmpty()) return "  carrying no items.\n";
+		CountingSet count=new CountingSet();
+		count.casesensitive=true;
+		var map=new TreeMap<String,Item>();
+		for(Item i:bag){
+			String description=i.describe(c);
+			count.add(description);
+			map.put(description,i);
+		}
+		String s="";
+		for(String d:map.keySet()){
+			Item i=map.get(d);
+			if(allitems!=null) allitems.add(i);
+			if(showkeys) s+="  ["+keys.next()+"]";
+			s+=" "+d;
+			int n=count.getcount(d);
+			if(n>1) s+=" x"+n;
 			s+="\n";
-			s+=output+":\n";
-			boolean none=true;
-			ArrayList<Item> bag=new ArrayList<>(Squad.active.equipment.get(c));
-			Collections.sort(bag,(o1,o2)->o1.name.compareTo(o2.name));
-			for(Item it:bag){
-				if(allitems!=null) allitems.add(it);
-				if(showkeys){
-					Character key=i>=KEYS.size()?'?':KEYS.get(i);
-					s+="  ["+key+"]";
-				}
-				s+=" "+it.describe(c)+"\n";
-				i+=1;
-				none=false;
-			}
-			if(none) s+="  carrying no items.\n";
 		}
 		return s;
 	}

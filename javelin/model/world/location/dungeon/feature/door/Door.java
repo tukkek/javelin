@@ -88,7 +88,7 @@ public class Door extends Feature{
 			else if(forcer!=null)
 				Javelin.message(forcer+" forces the lock!",false);
 			else if(getkey()==null){
-				Javelin.message("The lock is too complex...",false);
+				Javelin.message("The lock is too complex to pick...",false);
 				return false;
 			}else if(!usekey()) // feedback alredy shown as prompt
 				return false;

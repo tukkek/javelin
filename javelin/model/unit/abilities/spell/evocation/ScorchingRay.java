@@ -6,6 +6,7 @@ import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Ray;
+import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 /**
  * Deals 4d6 points of fire damage.
@@ -25,6 +26,7 @@ public class ScorchingRay extends Ray{
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
 		target.damage(4*6/2,s,target.source.energyresistance);
+		if(cn!=null) cn.overlay=new AiOverlay(target);
 		return target+" is "+target.getstatus()+".";
 	}
 }

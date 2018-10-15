@@ -8,8 +8,10 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import javelin.Javelin;
+import javelin.controller.CountingSet;
 import javelin.controller.action.Examine;
 import javelin.controller.fight.Fight;
 import javelin.model.item.Item;
@@ -71,14 +73,23 @@ public class StatusPanel extends TPanel{
 	}
 
 	private String itemdata(Combatant combatant){
-		List<Item> equipment=Javelin.app.fight.getbag(combatant);
-		ArrayList<String> listing=new ArrayList<>();
-		for(Item i:equipment){
-			if(!i.usedinbattle) continue;
-			String extra=i.canuse(combatant);
-			String name=i.name.replaceAll("Potion of","");
-			if(name.length()>19) name=name.substring(0,19).trim();
-			listing.add(name+(extra==null?"":"*"));
+		CountingSet count=new CountingSet();
+		ArrayList<Item> bag=Javelin.app.fight.getbag(combatant);
+		bag.stream().filter(i->i.usedinbattle&&i.canuse(combatant)==null)
+				.forEach(i->{
+					String name=i.name.replaceAll("Potion of","");
+					if(name.length()>19) name=name.substring(0,19).trim();
+					count.add(name);
+				});
+		Set<String> items=count.getelements();
+		ArrayList<String> listing=new ArrayList<>(items.size());
+		for(String i:items){
+			int n=count.getcount(i);
+			if(n>1){
+				if(i.length()>15) i=i.substring(0,15);
+				i+=" x"+n;
+			}
+			listing.add(i);
 		}
 		return listlist("Items",listing);
 	}

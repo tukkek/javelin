@@ -101,10 +101,9 @@ public class UseItems extends WorldAction{
 		if(i==null) return;
 		Combatant owner=findowner(i);
 		owner.unequip(i);
-		Squad.active.equipment.get(owner).remove(i);
-		Squad.active.equipment
-				.get(selectmember(Squad.active.members,i,"Transfer "+i+" to who?"))
-				.add(i);
+		Squad s=Squad.active;
+		s.equipment.get(owner).remove(i);
+		s.equipment.get(selectmember(s.members,i,"Transfer "+i+" to who?")).add(i);
 	}
 
 	Item select(ArrayList<Item> allitems,InfoScreen infoscreen){

@@ -135,6 +135,7 @@ public class EndBattle extends BattleEvent{
 				ArrayList<Item> bag=Squad.active.equipment.get(c);
 				originalteam.remove(c);
 				Squad.active.remove(c);
+				//TODO expire all effects
 				//TODO unequip artifacts as well
 				if(Fight.victory) for(Item i:bag)
 					i.grab();

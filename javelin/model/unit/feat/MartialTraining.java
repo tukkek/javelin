@@ -1,6 +1,8 @@
 package javelin.model.unit.feat;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.challenge.factor.FeatsFactor;
@@ -88,10 +90,13 @@ public class MartialTraining extends Feat{
 			int pick=2;
 			while(pick>0){
 				ArrayList<Maneuver> trainable=gettrainable(c,pick);
+				trainable.sort((a,b)->a.level-b.level);
 				String prompt="You have advanced to being a "+getrank().toLowerCase()
 						+" in the path of the "+discipline+"!\n"+"You can now select "+pick
 						+" extra maneuver(s). What will you learn?";
-				int choice=Javelin.choose(prompt,trainable,true,true);
+				List<String> options=trainable.stream().map(m->m+" (level "+m.level+")")
+						.collect(Collectors.toList());
+				int choice=Javelin.choose(prompt,options,true,true);
 				c.addmaneuver(discipline,trainable.get(choice));
 				pick-=1;
 				slots-=1;

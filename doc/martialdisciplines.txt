@@ -18,4 +18,4 @@ Sickening venom strike (level 3): deal 2 Constitution damage. Also sickens targe
 
 Sting of the Adder (level 4): deals 5d6 extra damage and 1d4 Wisdom damage (Fortitude save for half). A failed save results in another 1d6 damage and 2 Wisdom damage in the following turn. Save DC: 14 + initiation level.
 
-Tearing fang: for 1 turn, all attacks deal an extra 2d6 damage and will cause the target to bleed, taking 2 damage per turn for 1d4 turns. A bleeding unit will automatically apply first-aid to itself if it can take-ten on a Heal check against DC15 (instead of taking any damage). Any magical effect that heals a unit will also stop all bleeding immediately.
+Tearing fang (level 4): for 1 turn, all attacks deal an extra 2d6 damage and will cause the target to bleed, taking 2 damage per turn for 1d4 turns. A bleeding unit will automatically apply first-aid to itself if it can take-ten on a Heal check against DC15 (instead of taking any damage). Any magical effect that heals a unit will also stop all bleeding immediately.

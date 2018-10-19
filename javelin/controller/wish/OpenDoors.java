@@ -10,7 +10,7 @@ import javelin.model.world.location.dungeon.feature.door.Door;
 
 public class OpenDoors extends Wish{
 	public OpenDoors(Character keyp,WishScreen screen){
-		super("Open doors",keyp,getprice(),false,screen);
+		super("open doors",keyp,getprice(),false,screen);
 	}
 
 	static int getprice(){

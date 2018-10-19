@@ -1,13 +1,12 @@
 package javelin.model.unit.feat.attack;
 
-import javelin.controller.action.ai.attack.AbstractAttack;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.feat.Feat;
 
 /**
  * See the d20 SRD for more info.
  *
- * @see AbstractAttack#cleave()
+ * @see GreatCleave
  */
 public class Cleave extends Feat{
 	/** Unique instance of this {@link Feat}. */

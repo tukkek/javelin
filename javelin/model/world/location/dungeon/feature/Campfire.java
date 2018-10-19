@@ -1,6 +1,7 @@
 package javelin.model.world.location.dungeon.feature;
 
 import javelin.Javelin;
+import javelin.controller.action.world.WorldMove;
 import javelin.model.world.location.town.labor.basic.Lodge;
 import javelin.old.RPG;
 
@@ -17,6 +18,7 @@ public class Campfire extends Feature{
 	@Override
 	public boolean activate(){
 		if(Javelin.prompt(PROMPT)!='c') return false;
+		WorldMove.abort=true;
 		Lodge.rest(1,8,true,Lodge.LODGE);
 		uses-=1;
 		if(uses==0) remove();

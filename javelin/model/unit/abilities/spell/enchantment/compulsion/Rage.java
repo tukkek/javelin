@@ -37,14 +37,14 @@ public class Rage extends Spell{
 	}
 
 	public Rage(){
-		super("Rage",3,ChallengeCalculator.ratespelllikeability(3),Realm.FIRE);
-		castinbattle=true;
-		castonallies=true;
-		ispotion=true;
+		this("Rage",3,ChallengeCalculator.ratespelllikeability(3),Realm.FIRE);
 	}
 
 	public Rage(String name,int levelp,float incrementcost,Realm realmp){
 		super(name,levelp,incrementcost,realmp);
+		castinbattle=true;
+		castonallies=true;
+		ispotion=true;
 	}
 
 	@Override

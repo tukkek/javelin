@@ -47,7 +47,7 @@ public abstract class Guild extends Academy{
 
 	@Override
 	public final boolean isworking(){
-		return super.isworking()||!hashire()&&!ishostile();
+		return super.isworking()&&!ishostile();
 	}
 
 	boolean hashire(){

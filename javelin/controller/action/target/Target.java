@@ -121,7 +121,7 @@ public abstract class Target extends Action{
 			else if(Action.MOVE_E.isPressed(key)||key=='+')
 				targeti+=1;
 			else if(key=='\n'||key==confirmkey){
-				MapPanel.overlay.clear();
+				if(MapPanel.overlay!=null) MapPanel.overlay.clear();
 				MessagePanel.active.clear();
 				attack(combatant,targets.get(targeti),state);
 				break;
@@ -182,6 +182,7 @@ public abstract class Target extends Action{
 				+" to confirm, v to view target's sheet, q to quit.\n\n";
 		prompt+=describehitchance(active,target,state);
 		Javelin.message(prompt,Javelin.Delay.NONE);
+		Javelin.app.switchScreen(BattleScreen.active);
 		BattleScreen.active.center(target.location[0],target.location[1]);
 	}
 

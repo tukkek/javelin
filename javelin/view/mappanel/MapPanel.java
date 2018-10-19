@@ -125,7 +125,7 @@ public abstract class MapPanel extends Panel{
 	public void zoom(int factor,boolean save,int x,int y){
 		tilesize+=factor*4;
 		updatetilesize();
-		center(x,y,false);
+		center(x,y,true);
 		Preferences.setoption(configurationkey,tilesize);
 	}
 

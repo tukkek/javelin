@@ -1,11 +1,8 @@
 package javelin.view.mappanel.battle.action;
 
-import java.util.List;
-
 import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.attack.Attack;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.battle.BattleMouse;
 
@@ -24,12 +21,8 @@ public class MeleeMouseAction extends BattleMouseAction{
 
 	@Override
 	public void onenter(Combatant current,Combatant target,Tile t,BattleState s){
-		final List<Attack> attack=current.currentmelee.next==null
-				||current.currentmelee.next.isEmpty()?current.source.melee.get(0)
-						:current.currentmelee.next;
-		final String chance=MeleeAttack.SINGLETON.getchance(current,target,
-				attack.get(0),s);
-		final String status=target+" ("+target.getstatus()+", "+chance+" to hit)";
+		final String chance=MeleeAttack.SINGLETON.getchance(current,target,s);
+		final String status=target+" ("+target.getstatus()+", "+chance+")";
 		BattleMouse.showstatus(status,target,true);
 	}
 }

@@ -35,11 +35,6 @@ public class RangedAttack extends AbstractAttack{
 	}
 
 	@Override
-	protected boolean isMelee(){
-		return false;
-	}
-
-	@Override
 	List<AttackSequence> getattacks(final Combatant active){
 		return active.source.ranged;
 	}
@@ -83,11 +78,6 @@ public class RangedAttack extends AbstractAttack{
 						.add(attack(newstate,newactive,target,newactive.currentranged,0));
 			}
 		return successors;
-	}
-
-	@Override
-	public boolean cleave(){
-		return false;
 	}
 
 	@Override

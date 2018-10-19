@@ -419,4 +419,9 @@ public class BattleState implements Node,TeamContainer{
 			blueTeam.add(c);
 		}
 	}
+
+	/** @return <code>true</code> if given tile is occupied. */
+	public boolean isblocked(int x,int y){
+		return map[x][y].blocked||getmeld(x,y)!=null||getcombatant(x,y)!=null;
+	}
 }

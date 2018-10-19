@@ -22,11 +22,7 @@ public class MeleeAttack extends AbstractAttack{
 	MeleeAttack(){
 		super("Melee attack");
 		feign=true;
-	}
-
-	@Override
-	protected boolean isMelee(){
-		return true;
+		cleave=true;
 	}
 
 	@Override
@@ -48,11 +44,6 @@ public class MeleeAttack extends AbstractAttack{
 							.add(attack(newstate,newactive,target,newactive.currentmelee,0));
 				}
 		return successors;
-	}
-
-	@Override
-	public boolean cleave(){
-		return true;
 	}
 
 	@Override

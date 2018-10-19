@@ -17,6 +17,7 @@ import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
+import javelin.model.unit.feat.attack.Cleave;
 import javelin.model.unit.skill.Bluff;
 
 /**
@@ -29,12 +30,12 @@ public abstract class AbstractAttack extends Action implements AiAction{
 
 	/** @see Bluff#feign(Combatant) */
 	protected boolean feign=false;
+	/** @see Cleave */
+	protected boolean cleave=false;
 
 	public AbstractAttack(final String name){
 		super(name);
 	}
-
-	protected abstract boolean isMelee();
 
 	public List<ChanceNode> attack(final BattleState s,final Combatant current,
 			final Combatant target,CurrentAttack attacks,int bonus){
@@ -69,7 +70,7 @@ public abstract class AbstractAttack extends Action implements AiAction{
 
 	ChanceNode createnode(Combatant attacker,Combatant target,final Attack a,
 			float ap,final Strike m,final DamageChance dc,BattleState s){
-		final String tohit=" ("+getchance(attacker,target,a,s)+" to hit)...";
+		final String tohit=" ("+getchance(attacker,target,a,s)+")...";
 		StringBuilder sb=new StringBuilder(attacker.toString());
 		if(dc.damage==0) return miss(attacker,target,m,dc,s,sb,tohit);
 		s=s.clone();
@@ -233,7 +234,7 @@ public abstract class AbstractAttack extends Action implements AiAction{
 	void posthit(Combatant active,Combatant target,final Attack a,float ap,
 			final DamageChance dc,final BattleState s,StringBuilder sb){
 		if(target.hp<=0){
-			if(cleave()) active.cleave(ap);
+			if(cleave) active.cleave(ap);
 		}else if(dc.save!=null){
 			target.source=target.source.clone();
 			active.source=active.source.clone();
@@ -241,8 +242,6 @@ public abstract class AbstractAttack extends Action implements AiAction{
 			sb.append("\n").append(effect);
 		}
 	}
-
-	public abstract boolean cleave();
 
 	abstract List<AttackSequence> getattacks(Combatant active);
 
@@ -271,10 +270,23 @@ public abstract class AbstractAttack extends Action implements AiAction{
 		return false;
 	}
 
-	public String getchance(Combatant current,Combatant target,Attack attack,
-			BattleState s){
-		return Javelin.translatetochance(
-				Math.round(20*misschance(s,current,target,attack.bonus)));
+	/** @return An estimate of the chance of hitting an attack ("easy to hit"). */
+	public String getchance(Combatant c,Combatant target,Attack a,BattleState s){
+		float misschance=misschance(s,c,target,a.bonus);
+		return Javelin.translatetochance(Math.round(20*misschance))+" to hit";
+	}
+
+	/**
+	 * @return Same as
+	 *         {@link #getchance(Combatant, Combatant, Attack, BattleState)} but
+	 *         predicts {@link CurrentAttack}.
+	 */
+	public String getchance(Combatant c,Combatant target,BattleState s){
+		CurrentAttack current=c.getcurrentattack(getattacks(c));
+		final List<Attack> attack=current.next==null||current.next.isEmpty()
+				?c.source.melee.get(0)
+				:current.next;
+		return MeleeAttack.SINGLETON.getchance(c,target,attack.get(0),s);
 	}
 
 	static Strike getmaneuver(){

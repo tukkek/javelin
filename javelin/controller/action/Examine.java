@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
@@ -150,6 +151,10 @@ public class Examine extends Action{
 	static String describestatus(final Combatant c,final BattleState s){
 		String status=c.toString();
 		String list=c.printstatus(s);
+		Combatant current=Fight.state.next;
+		if(current.getlocation().distanceinsteps(c.getlocation())==1){
+			list+=", "+MeleeAttack.SINGLETON.getchance(current,c,s);
+		}
 		if(!list.isEmpty()) status+=" ("+list+")";
 		return status;
 	}

@@ -3,7 +3,6 @@ package javelin.model.unit.abilities.discipline;
 import java.io.Serializable;
 import java.util.List;
 
-import javelin.Javelin;
 import javelin.controller.action.Action;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.maneuver.ExecuteManeuver;
@@ -34,7 +33,7 @@ public abstract class Maneuver
 	}
 
 	public void spend(){
-		if(!Javelin.DEBUG) spent=true;
+		spent=true;
 	}
 
 	@Override

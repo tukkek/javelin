@@ -21,13 +21,13 @@ public class Brazier extends Feature{
 
 	@Override
 	public boolean activate(){
-		Javelin.message("You light up the brazier!",false);
 		DungeonCrawler crawler=new DungeonCrawler(new Point(x,y),RADIUS,
 				Dungeon.active);
 		for(Point p:crawler.crawl())
 			brighten(p);
 		Point p=JavelinApp.context.getherolocation();
 		JavelinApp.context.view(p.x,p.y);
+		Javelin.message("You light up the brazier!",false);
 		return true;
 	}
 

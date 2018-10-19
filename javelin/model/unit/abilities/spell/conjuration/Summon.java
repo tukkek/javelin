@@ -10,7 +10,6 @@ import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.old.RPG;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
@@ -19,8 +18,18 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  * Brings an ally to fight with your team.
  *
  * Upper Krust's method is not followed here since it makes no sense for a
- * Gelugon (CR21) that could summon another Gelugon to be CR21.4. More
- * discussion on {@link #ratechallenge(int, String, float)}.
+ * Gelugon (CR21) that could summon another Gelugon to be CR21.4.
+ *
+ * The next attempt has been to have Spell CR equal Summoned CR/5 - the
+ * rationale being that a summoned ally would only participate in one fight out
+ * of 5 moderate encounters before resting. This has also proved naive.
+ *
+ * The current method averages the result of the previous one with that of the
+ * spell being cast on round 1 by an enemy (who will always have the spell
+ * available, unlike a party member). Instead of applying full CR, uses 50% of
+ * it instead - first because a monster summoning a copy of itself doesn't
+ * double its CR; second because it's not a guarantee that the monster will be
+ * able to cast it before being engaged, killed, etc.
  *
  * TODO This should not be a {@link Spell}. See
  * {@link #cast(Combatant, Combatant, boolean, BattleState, ChanceNode)}
@@ -37,7 +46,7 @@ public class Summon extends Spell{
 
 	public Summon(String monstername,float chance){
 		super("Summon "+monstername.toLowerCase(),0,0,Realm.MAGIC);
-		assert chance==1;// TODO cannot be a Spell
+		assert chance==1;// cannot be a Spell if random
 		this.monstername=monstername;
 		this.chance=chance;
 		castinbattle=true;
@@ -50,23 +59,14 @@ public class Summon extends Spell{
 	}
 
 	/**
-	 * Rationale behind CR calculation: {@link Monster} counts as its own CR but
-	 * divided by 5. 5 is the number of fights a {@link Squad} is supposed to be
-	 * able to survive before resting according to the Dungeon Master's Guide. So
-	 * a summonable counts as an ally of his CR that will participate in only 1
-	 * battle.
-	 *
 	 * Chance is applied as a normal %.
 	 *
 	 * TODO isn't taking into account summoning a group.
 	 */
 	public static float ratechallenge(String monster,float chance){
 		Monster m=Javelin.getmonster(monster);
-		return chance*m.cr/5f;
-	}
-
-	public static int gemonstertcr(int targetcr,float chance){
-		return Math.round(CRFACTOR*targetcr/chance);
+		float cr=m.cr/((5+2)/2f);
+		return chance*cr;
 	}
 
 	@Override

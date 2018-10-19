@@ -180,4 +180,9 @@ public class Door extends Feature{
 	public String toString(){
 		return getClass().getSimpleName();
 	}
+
+	@Override
+	public void remove(){
+		Dungeon.active.map[x][y]=Template.FLOOR; //make sure path is clear
+	}
 }

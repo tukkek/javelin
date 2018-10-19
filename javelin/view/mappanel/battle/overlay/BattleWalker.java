@@ -84,10 +84,9 @@ public class BattleWalker extends OverlayWalker{
 			return false;
 		boolean istarget=step.equals(to);
 		if(isengaged&&(!previous.isEmpty()||!istarget)) return false;
-		if(step.totalcost>1||state.getmeld(step.x,step.y)!=null) return false;
-		if(state.getcombatant(step.x,step.y)!=null) return false;
+		if(step.totalcost>1||state.getcombatant(step.x,step.y)!=null) return false;
 		Meld m=state.getmeld(step.x,step.y);
-		if(m!=null) return istarget&&current.ap>=m.meldsat;
+		if(m!=null) return istarget&&m.crystalize(state);
 		try{
 			BattleTile t=(BattleTile)BattleScreen.active.mappanel.tiles[p.x][p.y];
 			return ((BattlePanel)BattleScreen.active.mappanel).daylight

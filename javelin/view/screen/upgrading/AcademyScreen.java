@@ -81,7 +81,7 @@ public class AcademyScreen extends UpgradingScreen{
 	@Override
 	public String printinfo(){
 		String training=academy.training.queue.isEmpty()?""
-				:"Currently training: "+academy.training;
+				:"Currently training: "+academy.training+".";
 		return "Your squad currently has $"+Javelin.format(Squad.active.gold)+". "
 				+training;
 	}

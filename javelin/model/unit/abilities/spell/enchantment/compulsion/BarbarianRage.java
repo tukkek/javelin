@@ -12,6 +12,7 @@ public class BarbarianRage extends Rage{
 		super("Barbarian rage",1,ChallengeCalculator.ratespelllikeability(1),
 				Realm.FIRE);
 		ispotion=false;
+		provokeaoo=false;
 	}
 
 	@Override

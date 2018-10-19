@@ -99,7 +99,7 @@ public class Door extends Feature{
 			return false;
 		}
 		enter=true;
-		Dungeon.active.features.remove(this);
+		remove();
 		spring(unlocker==null?forcer:unlocker);
 		return true;
 	}
@@ -183,6 +183,7 @@ public class Door extends Feature{
 
 	@Override
 	public void remove(){
+		super.remove();
 		Dungeon.active.map[x][y]=Template.FLOOR; //make sure path is clear
 	}
 }

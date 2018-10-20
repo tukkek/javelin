@@ -333,4 +333,9 @@ public class BattlefieldFight extends Minigame{
 		Javelin.prompt(message);
 		return super.onend();
 	}
+
+	@Override
+	public void run(){
+		if(new ArmySelectionScreen().selectarmy(this)) super.run();
+	}
 }

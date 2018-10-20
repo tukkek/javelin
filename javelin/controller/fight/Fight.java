@@ -1,12 +1,15 @@
 package javelin.controller.fight;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Debug;
 import javelin.Javelin;
 import javelin.JavelinApp;
+import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.action.Action;
 import javelin.controller.action.world.WorldMove;
@@ -17,6 +20,7 @@ import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.minigame.Minigame;
+import javelin.controller.fight.minigame.arena.ArenaSetup;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.Map;
@@ -340,7 +344,7 @@ public abstract class Fight{
 	/**
 	 * @return Inventory for the given unit..
 	 */
-	public ArrayList<Item> getbag(Combatant combatant){
+	public List<Item> getbag(Combatant combatant){
 		return Squad.active.equipment.get(combatant);
 	}
 
@@ -499,5 +503,35 @@ public abstract class Fight{
 		if(exclude!=null) combatants.removeAll(exclude);
 		return combatants.stream().collect(Collectors.averagingDouble(c->c.ap))
 				.floatValue();
+	}
+
+	public void enter(List<Combatant> entering,List<Combatant> team,Point entry){
+		if(entering.isEmpty()) return;
+		while(!ArenaSetup.validate(entry))
+			entry=displace(entry);
+		LinkedList<Combatant> place=new LinkedList<>(entering);
+		Collections.shuffle(place);
+		Combatant last=place.pop();
+		last.setlocation(entry);
+		float ap=getaverageap(null);
+		if(!team.contains(last)){
+			team.addAll(entering);
+			for(Combatant c:entering)
+				c.rollinitiative(ap);
+		}
+		while(!place.isEmpty()){
+			Point p=displace(last.getlocation());
+			last=place.pop();
+			last.setlocation(p);
+		}
+	}
+
+	static Point displace(Point reference){
+		Point p=null;
+		while(p==null||!ArenaSetup.validate(p)){
+			p=new Point(reference);
+			p.displace();
+		}
+		return p;
 	}
 }

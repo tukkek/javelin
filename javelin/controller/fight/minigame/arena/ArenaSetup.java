@@ -147,9 +147,8 @@ public class ArenaSetup extends BattleSetup{
 		return true;
 	}
 
-	static boolean validate(Point p){
+	public static boolean validate(Point p){
 		return p.validate(AREA[0].x,AREA[0].y,AREA[1].x,AREA[1].y)
-				&&!Fight.state.map[p.x][p.y].blocked
-				&&Fight.state.getcombatant(p.x,p.y)==null;
+				&&!Fight.state.isblocked(p.x,p.y);
 	}
 }

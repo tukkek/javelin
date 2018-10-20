@@ -1,10 +1,12 @@
 package javelin.controller.fight.minigame;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.Weather;
 import javelin.controller.exception.battle.EndBattle;
+import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.map.Map;
 import javelin.model.item.Item;
@@ -20,7 +22,7 @@ import javelin.view.screen.BattleScreen;
  *
  * @author alex
  */
-public abstract class Minigame extends Fight{
+public abstract class Minigame extends Fight implements Runnable{
 	/** Constructor. */
 	public Minigame(){
 		bribe=false;
@@ -50,7 +52,13 @@ public abstract class Minigame extends Fight{
 	}
 
 	@Override
-	public ArrayList<Item> getbag(Combatant combatant){
+	public List<Item> getbag(Combatant combatant){
 		return new ArrayList<>();
+	}
+
+	/** Launches this minigame. */
+	@Override
+	public void run(){
+		throw new StartBattle(this);
 	}
 }

@@ -74,7 +74,7 @@ public class StatusPanel extends TPanel{
 
 	private String itemdata(Combatant combatant){
 		CountingSet count=new CountingSet();
-		ArrayList<Item> bag=Javelin.app.fight.getbag(combatant);
+		List<Item> bag=Javelin.app.fight.getbag(combatant);
 		bag.stream().filter(i->i.usedinbattle&&i.canuse(combatant)==null)
 				.forEach(i->{
 					String name=i.name.replaceAll("Potion of","");

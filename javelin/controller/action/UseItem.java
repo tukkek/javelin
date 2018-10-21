@@ -48,7 +48,7 @@ public class UseItem extends Action{
 	 *         right now, canceled... Otherwise the selected item.
 	 */
 	public static Item queryforitemselection(final Combatant c,boolean validate){
-		final List<Item> items=(List<Item>)Javelin.app.fight.getbag(c).clone();
+		final List<Item> items=new ArrayList<>(Javelin.app.fight.getbag(c));
 		if(items.isEmpty()){
 			Javelin.message("Isn't carrying battle items!",Javelin.Delay.WAIT);
 			return null;

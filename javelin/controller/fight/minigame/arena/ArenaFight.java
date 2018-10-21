@@ -1,9 +1,7 @@
 package javelin.controller.fight.minigame.arena;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -124,7 +122,7 @@ public class ArenaFight extends Minigame{
 	}
 
 	@Override
-	public ArrayList<Item> getbag(Combatant c){
+	public List<Item> getbag(Combatant c){
 		ArrayList<Item> bag=items.get(c.id);
 		if(bag==null){
 			bag=new ArrayList<>();
@@ -252,41 +250,17 @@ public class ArenaFight extends Minigame{
 		if(!messages.isEmpty()) notify(String.join("\n",messages),p);
 	}
 
+	@Override
 	public void enter(List<Combatant> entering,List<Combatant> team,Point entry){
 		if(team==state.redTeam){
 			if(Javelin.DEBUG&&!SPAWN) return;
 			foes.add(entering);
 		}
-		while(!ArenaSetup.validate(entry))
-			entry=displace(entry);
-		LinkedList<Combatant> place=new LinkedList<>(entering);
-		Collections.shuffle(place);
-		Combatant last=place.pop();
-		last.setlocation(entry);
-		float ap=getaverageap(null);
-		if(!team.contains(last)){
-			team.addAll(entering);
-			for(Combatant c:entering)
-				c.rollinitiative(ap);
-		}
-		while(!place.isEmpty()){
-			Point p=displace(last.getlocation());
-			last=place.pop();
-			last.setlocation(p);
-		}
+		super.enter(entering,team,entry);
 		if(entering.get(0).equals(gladiators.get(0))) return;
 		String title=team==state.redTeam?"Enemies":"Allies";
 		String msg=title+" enter the arena:\n"+Combatant.group(entering)+"!";
-		notify(msg,last.getlocation());
-	}
-
-	public static Point displace(Point reference){
-		Point p=null;
-		while(p==null||!ArenaSetup.validate(p)){
-			p=new Point(reference);
-			p.displace();
-		}
-		return p;
+		notify(msg,entering.get(0).getlocation());
 	}
 
 	void notify(String text,Point p){

@@ -19,10 +19,10 @@ import javax.swing.BoxLayout;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.TextReader;
-import javelin.controller.exception.battle.StartBattle;
+import javelin.controller.fight.minigame.CrimsonWar;
+import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.fight.minigame.MonsterMadness;
 import javelin.controller.fight.minigame.arena.ArenaFight;
-import javelin.controller.fight.minigame.battlefield.ArmySelectionScreen;
 import javelin.controller.fight.minigame.battlefield.BattlefieldFight;
 import javelin.controller.scenario.Campaign;
 import javelin.controller.scenario.Scenario;
@@ -38,16 +38,10 @@ public class ScenarioSelectionDialog extends Frame{
 		SCENARIOS.put("Campaign",new Campaign());
 		SCENARIOS.put("Dungeon world",new DungeonWorld());
 		SCENARIOS.put("Art of war",ArtOfWar.singleton);
-		MINIGAMES.put("Arena",()->{
-			throw new StartBattle(new ArenaFight());
-		});
-		MINIGAMES.put("Battlefield",()->{
-			BattlefieldFight f=new BattlefieldFight();
-			if(new ArmySelectionScreen().selectarmy(f)) throw new StartBattle(f);
-		});
-		MINIGAMES.put("Monster madness",()->{
-			throw new StartBattle(new MonsterMadness());
-		});
+		MINIGAMES.put("Arena",()->new ArenaFight().run());
+		MINIGAMES.put("Battlefield",()->new BattlefieldFight().run());
+		MINIGAMES.put("Crimson war",()->new CrimsonWar().run());
+		MINIGAMES.put("Monster madness",()->new MonsterMadness().run());
 	}
 
 	class Close extends WindowAdapter{
@@ -144,7 +138,7 @@ public class ScenarioSelectionDialog extends Frame{
 				if(target instanceof Scenario)
 					World.scenario=(Scenario)target;
 				else
-					JavelinApp.minigame=(Runnable)target;
+					JavelinApp.minigame=(Minigame)target;
 				return true;
 			}
 		return false;

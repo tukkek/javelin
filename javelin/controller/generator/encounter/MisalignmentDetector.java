@@ -1,6 +1,6 @@
 package javelin.controller.generator.encounter;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javelin.model.unit.Combatant;
 
@@ -10,15 +10,15 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class MisalignmentDetector{
-	boolean good=false;
-	boolean evil=false;
-	boolean lawful=false;
-	boolean chaotic=false;
+	public boolean good=false;
+	public boolean evil=false;
+	public boolean lawful=false;
+	public boolean chaotic=false;
 
 	/**
 	 * @param foes All combatants that need to be compatible.
 	 */
-	public MisalignmentDetector(ArrayList<Combatant> foes){
+	public MisalignmentDetector(List<Combatant> foes){
 		for(Combatant c:foes)
 			register(c);
 	}
@@ -43,5 +43,4 @@ public class MisalignmentDetector{
 		if(lawful&&chaotic) return false;
 		return true;
 	}
-
 }

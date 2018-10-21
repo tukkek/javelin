@@ -40,7 +40,7 @@ public class TensionDirector{
 	int tensionmin;
 	int tensionmax;
 	boolean raising;
-	float raiseat=-Float.MAX_VALUE;
+	float next=-Float.MAX_VALUE;
 	int tension=RPG.r(tensionmin,tensionmax);
 	/**
 	 * Ensures that new waves are never becoming less dangerous (pressuring the
@@ -74,8 +74,8 @@ public class TensionDirector{
 	 *         otherwise <code>true</code> and updates {@link #monsters}.
 	 */
 	public TensionAction check(List<Combatant> blue,List<Combatant> red,float ap){
-		if(ap<raiseat) return TensionAction.KEEP;
-		raiseat=ap+RPG.r(10,40)/10f;
+		if(ap<next) return TensionAction.KEEP;
+		next=ap+RPG.r(10,40)/10f;
 		int elblue=ChallengeCalculator.calculateel(blue);
 		int elred=ChallengeCalculator.calculateel(red);
 		int current=elred-elblue;
@@ -94,6 +94,9 @@ public class TensionDirector{
 	}
 
 	/**
+	 * Calls {@link #generate(int)} systematically to produce an appropriate gruop
+	 * of {@link #monsters}.
+	 *
 	 * @param elblue Blue team Encounter Level.
 	 * @param red Red team.
 	 * @return List of monsters that tries to fulfill the {@link #tension}
@@ -106,12 +109,11 @@ public class TensionDirector{
 			baseline=Math.max(el,baseline);
 			el=baseline;
 		}
-		ArrayList<Combatant> last=null;
+		List<Combatant> last=null;
 		for(;el<=elblue+tensionmax;el++)
 			try{
-				ArrayList<Combatant> group=EncounterGenerator.generate(el,
-						Arrays.asList(Terrain.NONWATER));
-				ArrayList<Combatant> monsters=new ArrayList<>(red);
+				List<Combatant> group=generate(el);
+				List<Combatant> monsters=new ArrayList<>(red);
 				monsters.addAll(group);
 				int tension=ChallengeCalculator.calculateel(monsters)-elblue;
 				if(tension==this.tension) return group;
@@ -120,6 +122,24 @@ public class TensionDirector{
 			}catch(GaveUp e){
 				continue;
 			}
-		return Collections.emptyList();
+		return last==null?Collections.emptyList():last;
+	}
+
+	/**
+	 * @return Given an Encounter Level, an appropriate gruop of
+	 *         {@link #monsters}.
+	 * @throws GaveUp If cannot fulfill this condition.
+	 */
+	@SuppressWarnings("static-method")
+	protected List<Combatant> generate(int el) throws GaveUp{
+		return EncounterGenerator.generate(el,Arrays.asList(Terrain.NONWATER));
+	}
+
+	/**
+	 * Makes sure next call to {@link #check(List, List, float)} will go through
+	 * regardless of the Action Point parameter.
+	 */
+	public void force(){
+		next=-Float.MAX_VALUE;
 	}
 }

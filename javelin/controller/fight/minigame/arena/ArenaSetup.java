@@ -25,9 +25,9 @@ public class ArenaSetup extends BattleSetup{
 			new Point((MAPSIZE-ARENASIZE[0])/2,(MAPSIZE-ARENASIZE[1])/2),
 			new Point((MAPSIZE+ARENASIZE[0])/2,(MAPSIZE+ARENASIZE[1])/2)};
 
-	final ArenaFight fight;
+	final Arena fight;
 
-	ArenaSetup(ArenaFight f){
+	ArenaSetup(Arena f){
 		fight=f;
 	}
 

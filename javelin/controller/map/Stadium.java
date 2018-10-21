@@ -7,9 +7,9 @@ import javelin.view.Images;
  *
  * @author alex
  */
-public class Arena extends DndMap{
+public class Stadium extends DndMap{
 	/** Constructor. */
-	public Arena(){
+	public Stadium(){
 		super("Arena",0,0,0);
 		floor=Images.get("terrainarena");
 	}

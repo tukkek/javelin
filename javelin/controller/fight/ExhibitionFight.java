@@ -3,7 +3,7 @@ package javelin.controller.fight;
 import java.util.ArrayList;
 
 import javelin.controller.fight.tournament.Exhibition;
-import javelin.controller.map.Arena;
+import javelin.controller.map.Stadium;
 import javelin.model.unit.Combatant;
 
 /**
@@ -16,7 +16,7 @@ import javelin.model.unit.Combatant;
 public class ExhibitionFight extends Fight{
 	/** Constructor. */
 	public ExhibitionFight(){
-		map=new Arena();
+		map=new Stadium();
 		meld=true;
 		friendly=true;
 		hide=false;

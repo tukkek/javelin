@@ -20,7 +20,7 @@ public class Reinforcement{
 
 	public Reinforcement(int el,List<Terrain> t){
 		terrains=t;
-		el=Math.min(el,BattlefieldFight.HIGHESTEL);
+		el=Math.min(el,Battlefield.HIGHESTEL);
 		generatecommander(el);
 		generateelites(el);
 		generatefootsoldiers(el);

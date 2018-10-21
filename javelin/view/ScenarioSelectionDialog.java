@@ -23,8 +23,8 @@ import javelin.controller.TextReader;
 import javelin.controller.fight.minigame.CrimsonWar;
 import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.fight.minigame.MonsterMadness;
-import javelin.controller.fight.minigame.arena.ArenaFight;
-import javelin.controller.fight.minigame.battlefield.BattlefieldFight;
+import javelin.controller.fight.minigame.arena.Arena;
+import javelin.controller.fight.minigame.battlefield.Battlefield;
 import javelin.controller.scenario.Campaign;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.scenario.artofwar.ArtOfWar;
@@ -39,8 +39,8 @@ public class ScenarioSelectionDialog extends Frame{
 		SCENARIOS.put("Campaign",Campaign.class);
 		SCENARIOS.put("Dungeon world",DungeonWorld.class);
 		SCENARIOS.put("Art of war",ArtOfWar.class);
-		MINIGAMES.put("Arena",ArenaFight.class);
-		MINIGAMES.put("Battlefield",BattlefieldFight.class);
+		MINIGAMES.put("Arena",Arena.class);
+		MINIGAMES.put("Battlefield",Battlefield.class);
 		MINIGAMES.put("Crimson war",CrimsonWar.class);
 		MINIGAMES.put("Monster madness",MonsterMadness.class);
 	}

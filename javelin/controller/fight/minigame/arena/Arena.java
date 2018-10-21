@@ -18,7 +18,7 @@ import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.fight.minigame.arena.building.ArenaFlagpole;
 import javelin.controller.fight.minigame.arena.building.ArenaFountain;
 import javelin.controller.fight.minigame.arena.building.ArenaTown;
-import javelin.controller.map.Arena;
+import javelin.controller.map.Stadium;
 import javelin.controller.scenario.Campaign;
 import javelin.model.item.Item;
 import javelin.model.state.BattleState;
@@ -62,11 +62,11 @@ import javelin.view.screen.SquadScreen;
  * TODO to make space for new structures, altering fountains to heal everyone in
  * an area instead of just the user would be great.
  *
- * @see Arena
+ * @see Stadium
  *
  * @author alex
  */
-public class ArenaFight extends Minigame{
+public class Arena extends Minigame{
 	static final double GLADIATORMAXCR=SquadScreen.SELECTABLE[SquadScreen.SELECTABLE.length
 			-1];
 	static final float SQUADEL=Campaign.INITIALEL;
@@ -88,7 +88,7 @@ public class ArenaFight extends Minigame{
 	Combatants gladiators;
 
 	/** Constructor. */
-	public ArenaFight(){
+	public Arena(){
 		gladiators=choosegladiators();
 		weather=Weather.DRY;
 		period=Javelin.PERIODNOON;
@@ -283,8 +283,8 @@ public class ArenaFight extends Minigame{
 		}
 	}
 
-	public static ArenaFight get(){
-		return (ArenaFight)Javelin.app.fight;
+	public static Arena get(){
+		return (Arena)Javelin.app.fight;
 	}
 
 	public List<Combatant> getallies(){

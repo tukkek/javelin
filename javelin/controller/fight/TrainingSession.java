@@ -1,7 +1,7 @@
 package javelin.controller.fight;
 
 import javelin.controller.Weather;
-import javelin.controller.map.Arena;
+import javelin.controller.map.Stadium;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.unique.TrainingHall;
 
@@ -22,7 +22,7 @@ public class TrainingSession extends Siege{
 		bribe=false;
 		hide=false;
 		cleargarrison=false;
-		map=new Arena();
+		map=new Stadium();
 		map.maxflooding=Weather.DRY;
 	}
 

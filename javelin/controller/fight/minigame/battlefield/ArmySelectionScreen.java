@@ -33,7 +33,7 @@ public class ArmySelectionScreen{
 		}
 	}
 
-	public boolean selectarmy(BattlefieldFight f){
+	public boolean selectarmy(Battlefield f){
 		BattleSize size=choosesize();
 		if(size==null) return false;
 		List<Integer> els=rollels(size);
@@ -45,7 +45,7 @@ public class ArmySelectionScreen{
 		return true;
 	}
 
-	boolean pick(boolean bluepick,int el,BattlefieldFight f){
+	boolean pick(boolean bluepick,int el,Battlefield f){
 		if(!bluepick){
 			String pick=pickred(el,f);
 			Javelin.promptscreen(
@@ -63,7 +63,7 @@ public class ArmySelectionScreen{
 				squads+=RPG.r(1,s.faces);
 			els=new ArrayList<>(squads);
 			for(int i=0;i<squads;i++)
-				els.add(RPG.r(1,BattlefieldFight.HIGHESTEL));
+				els.add(RPG.r(1,Battlefield.HIGHESTEL));
 			String prompt="Proceed with these army points for each squad?\n"
 					+"Press ENTER to confirm, q to quit or any other key to reroll...\n\n";
 			Collections.sort(els);
@@ -84,7 +84,7 @@ public class ArmySelectionScreen{
 		return choice>=0?SIZES[choice]:null;
 	}
 
-	public String describearmies(BattlefieldFight f){
+	public String describearmies(Battlefield f){
 		String prompt=describearmy("Your army",f.bluearmy);
 		prompt+=describearmy("Opponent's army",f.redarmy);
 		return prompt;
@@ -96,16 +96,16 @@ public class ArmySelectionScreen{
 		return header+".\n\n";
 	}
 
-	String pickred(int el,BattlefieldFight f){
+	String pickred(int el,Battlefield f){
 		ArrayList<Combatant> squad=f.recruitredsquad(el);
 		f.redsquads.add(squad);
 		f.redarmy.addAll(squad);
 		return "Your opponent's choice: "+Combatant.group(squad)+".";
 	}
 
-	boolean pickblue(String prompt,int el,BattlefieldFight f){
-		Reinforcement r=new Reinforcement(el,BattlefieldFight.TERRAINS);
-		ArrayList<Combatant> squad=BattlefieldFight.recruitbluesquad(
+	boolean pickblue(String prompt,int el,Battlefield f){
+		Reinforcement r=new Reinforcement(el,Battlefield.TERRAINS);
+		ArrayList<Combatant> squad=Battlefield.recruitbluesquad(
 				prompt+"Choose your next squad ("+el+" army points):",r,false);
 		if(squad==null) return false;
 		if(squad==r.footsoldiers) for(Combatant c:squad)

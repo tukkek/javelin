@@ -11,11 +11,11 @@ import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.battle.action.BattleMouseAction;
 
 public class Flagpole extends Building{
-	BattlefieldFight fight;
+	Battlefield fight;
 	boolean blueteam;
 	float rank;
 
-	public Flagpole(BattlefieldFight battlefieldFight,float rank,
+	public Flagpole(Battlefield battlefieldFight,float rank,
 			boolean blueteam){
 		super("Flagpole",null);
 		fight=battlefieldFight;
@@ -55,7 +55,7 @@ public class Flagpole extends Building{
 			@Override
 			public void onenter(Combatant current,Combatant target,Tile t,
 					BattleState s){
-				BigDecimal points=new BigDecimal(rank*BattlefieldFight.POINTSPERTURN);
+				BigDecimal points=new BigDecimal(rank*Battlefield.POINTSPERTURN);
 				points.setScale(2);
 				fight.updateflagpoles();
 				int upkeep=Math.round(

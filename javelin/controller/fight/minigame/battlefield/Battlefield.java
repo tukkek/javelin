@@ -21,7 +21,7 @@ import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
 
-public class BattlefieldFight extends Minigame{
+public class Battlefield extends Minigame{
 	public static final boolean DEBUG=false;
 	public static final int HIGHESTEL=ChallengeCalculator
 			.crtoel(RPG.pick(Javelin.MONSTERSBYCR
@@ -58,7 +58,7 @@ public class BattlefieldFight extends Minigame{
 				placesquads(redsquads,redflagpoles);
 			}catch(GaveUp e){
 				map=Map.random();
-				generatemap(BattlefieldFight.this);
+				generatemap(Battlefield.this);
 				place();
 			}
 		}
@@ -87,7 +87,7 @@ public class BattlefieldFight extends Minigame{
 					p.y+=spot.y;
 					if(checkblocked(p)) continue placing;
 				}
-				Flagpole flag=new Flagpole(BattlefieldFight.this,4/flagpoles,blueteam);
+				Flagpole flag=new Flagpole(Battlefield.this,4/flagpoles,blueteam);
 				flag.setlocation(spot);
 				if(blueteam)
 					state.blueTeam.add(flag);
@@ -115,7 +115,7 @@ public class BattlefieldFight extends Minigame{
 	float redpoints=0;
 	float bluepoints=0;
 
-	public BattlefieldFight(){
+	public Battlefield(){
 		setup=new BattlefieldSetup();
 	}
 

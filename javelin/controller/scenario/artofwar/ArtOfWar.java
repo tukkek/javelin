@@ -29,8 +29,6 @@ import javelin.view.screen.SquadScreen;
  * @author alex
  */
 public class ArtOfWar extends Scenario{
-	static public final ArtOfWar singleton=new ArtOfWar();
-
 	/**
 	 * Challenge Rating of the last game-world challenge.
 	 *

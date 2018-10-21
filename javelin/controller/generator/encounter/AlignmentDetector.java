@@ -9,7 +9,7 @@ import javelin.model.unit.Combatant;
  *
  * @author alex
  */
-public class MisalignmentDetector{
+public class AlignmentDetector{
 	public boolean good=false;
 	public boolean evil=false;
 	public boolean lawful=false;
@@ -18,7 +18,7 @@ public class MisalignmentDetector{
 	/**
 	 * @param foes All combatants that need to be compatible.
 	 */
-	public MisalignmentDetector(List<Combatant> foes){
+	public AlignmentDetector(List<Combatant> foes){
 		for(Combatant c:foes)
 			register(c);
 	}

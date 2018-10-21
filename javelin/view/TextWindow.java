@@ -3,6 +3,7 @@ package javelin.view;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Panel;
+import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -10,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
+import javelin.controller.TextReader;
 import javelin.view.frame.Frame;
 
 public class TextWindow extends Frame{
@@ -37,5 +39,11 @@ public class TextWindow extends Frame{
 		parent.add(scrollPane).setPreferredSize(size);
 		newbutton("Close",parent,e->frame.dispose());
 		return parent;
+	}
+
+	static public TextWindow open(String name){
+		String filename=name.replaceAll(" ","").toLowerCase()+".txt";
+		String text=TextReader.read(new File("doc",filename));
+		return new TextWindow(filename,text);
 	}
 }

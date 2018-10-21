@@ -6,7 +6,6 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.Weather;
 import javelin.controller.exception.battle.EndBattle;
-import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.map.Map;
 import javelin.model.item.Item;
@@ -22,7 +21,7 @@ import javelin.view.screen.BattleScreen;
  *
  * @author alex
  */
-public abstract class Minigame extends Fight implements Runnable{
+public abstract class Minigame extends Fight{
 	/** Constructor. */
 	public Minigame(){
 		bribe=false;
@@ -56,9 +55,14 @@ public abstract class Minigame extends Fight implements Runnable{
 		return new ArrayList<>();
 	}
 
-	/** Launches this minigame. */
-	@Override
-	public void run(){
-		throw new StartBattle(this);
+	/**
+	 * Launches this minigame, offering a chance for it to do some setup actions.
+	 *
+	 * @return <code>false</code> if failed to start and should quit the
+	 *         application.
+	 */
+	@SuppressWarnings("static-method")
+	public boolean start(){
+		return true;
 	}
 }

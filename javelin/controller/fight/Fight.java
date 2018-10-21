@@ -527,11 +527,10 @@ public abstract class Fight{
 	}
 
 	static Point displace(Point reference){
-		Point p=null;
-		while(p==null||!ArenaSetup.validate(p)){
-			p=new Point(reference);
+		Point p=new Point(reference);
+		while(!p.validate(0,0,state.map.length,state.map[0].length)
+				||state.isblocked(p.x,p.y))
 			p.displace();
-		}
 		return p;
 	}
 }

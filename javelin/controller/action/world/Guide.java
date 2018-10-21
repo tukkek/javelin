@@ -1,10 +1,7 @@
 package javelin.controller.action.world;
 
 import java.awt.event.KeyEvent;
-import java.io.File;
 
-import javelin.JavelinApp;
-import javelin.controller.TextReader;
 import javelin.controller.action.SimpleAction;
 import javelin.model.world.World;
 import javelin.view.TextWindow;
@@ -18,7 +15,7 @@ import javelin.view.screen.WorldScreen;
 public class Guide extends WorldAction implements SimpleAction{
 	/** Guide. */
 	public static final Guide HOWTO=new Guide(KeyEvent.VK_F1,
-			JavelinApp.minigame==null?World.scenario.helpfile:"Minigames","F1");
+			World.scenario==null?"Minigames":World.scenario.helpfile,"F1");
 	/** Guide. */
 	public static final Guide MINIGAMES=new Guide(KeyEvent.VK_F2,"Minigames",
 			"F2");
@@ -59,9 +56,7 @@ public class Guide extends WorldAction implements SimpleAction{
 
 	@Override
 	public void perform(){
-		String filename=name.replaceAll(" ","").toLowerCase()+".txt";
-		String text=TextReader.read(new File("doc",filename));
-		TextWindow window=new TextWindow(name+" guide",text);
+		TextWindow window=TextWindow.open(name);
 		window.show();
 		window.defer();
 	}

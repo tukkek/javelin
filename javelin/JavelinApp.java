@@ -21,6 +21,7 @@ import javelin.controller.db.StateManager;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
+import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.generator.WorldGenerator;
 import javelin.controller.kit.Kit;
 import javelin.controller.scenario.Campaign;
@@ -53,7 +54,7 @@ import javelin.view.screen.WorldScreen;
  */
 public class JavelinApp extends QuestApp{
 	/** Bootstrapper for minigames. */
-	public static Runnable minigame=null;
+	public static Minigame minigame=null;
 	static public WorldScreen context;
 
 	static final String CRASHMESSAGE="\n\nUnfortunately an error ocurred.\n"
@@ -107,7 +108,10 @@ public class JavelinApp extends QuestApp{
 
 	void loop(){
 		try{
-			if(minigame!=null) minigame.run();
+			if(minigame!=null){
+				if(!minigame.start()) System.exit(1);
+				throw new StartBattle(minigame);
+			}
 			if(Dungeon.active==null)
 				JavelinApp.context=new WorldScreen(true);
 			else

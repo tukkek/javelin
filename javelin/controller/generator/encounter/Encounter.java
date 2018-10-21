@@ -1,7 +1,6 @@
 package javelin.controller.generator.encounter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javelin.controller.challenge.ChallengeCalculator;
@@ -35,12 +34,7 @@ public class Encounter{
 
 	@Override
 	public String toString(){
-		final HashMap<String,Integer> count=new HashMap<>();
-		for(final Combatant m:group){
-			final Integer n=count.get(m.source.toString());
-			count.put(m.source.toString(),n==null?1:n+1);
-		}
-		return count.toString();
+		return Combatant.group(group)+" EL "+el+"";
 	}
 
 	/**

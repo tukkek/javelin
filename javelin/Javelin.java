@@ -130,8 +130,8 @@ public class Javelin{
 	 */
 	public static void main(final String[] args){
 		Thread.currentThread().setName("Javelin");
-		ScenarioSelectionDialog.choose(args);
 		app=new JavelinApp();
+		ScenarioSelectionDialog.choose(args);
 		final JFrame f=new JFrame(TITLE);
 		f.setBackground(java.awt.Color.black);
 		f.addWindowListener(StateManager.SAVEONCLOSE);

@@ -1,13 +1,13 @@
-Each minigame is a different gameplay mode with different rules that can be initiated from anywhere in the world map (check the help screen to verify their respective keys). The combatants in these matches are not your normal units either so you don't have to worry about losing your carefully upgraded heroes. The minigames also take a more predictable amount of time, making them perfect for when you're taking a break or have a certain amount of time to waste but are not in the mood for progressing your campaign or scenario! Despite all that, the minigames also offer rewards to your main quest, making them worthwhile to progress your overall game as well!
-
 ARENA
-A sequence of battles taking place in the same map, also offering buildings that will let you restore and upgrade your units, buy items, recruit allies and more! Gold and experience rewards are increased so that the tension is always ramping up as the match goes on! Take down all enemy rally points to win!
+A sequence of battles taking place in the same map - offering buildings that will let you restore and upgrade your units, buy items, recruit allies and more! Gold and experience rewards are increased so that the tension is always ramping up as the match goes on! Take down all enemy rally points to win!
 
 BATTLEFIELD
 The purpose of the Battlefield is to pit large armies against each other. There are strategic points placed around the map, assigned to both teams - each generating army points, every turn, that can be used to summon more units into battle! Capture your enemy's control points while fighting for survival!
 
-One thing to note is that summoning an army worth 10 points is much better than summong an army of 5 points twice - so it pays to use your points intelligently!
+(Hint: summoning an army worth 10 points is much better than summoning a 5-point army twice - use your points well!)
+
+CRIMSON WAR
+Become the rising leader of a small contingent - lead them into battle as you benefit from a simple progression system and reinforcements join both sides!
 
 MONSTER MADNESS
-
-A lighthearted but challenging game where you're at a constant disadvantage against powerful enemies. Protect all your buildings as reinforcements slowly join the fight!
+A lighthearted but challenging game where you're at a constant disadvantage against powerful enemies. Protect all of your buildings as reinforcements slowly join the fight!

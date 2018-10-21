@@ -58,8 +58,14 @@ public class Difficulty{
 	 *         to {@link Squad#active}.
 	 */
 	public static String describe(List<Combatant> opponents){
-		return describe(ChallengeCalculator.calculateel(opponents)
-				-ChallengeCalculator.calculateel(Squad.active.members));
+		return describe(calculate(Squad.active.members,opponents));
 	}
 
+	/**
+	 * @return A {@link Difficulty}.
+	 */
+	public static int calculate(List<Combatant> squad,List<Combatant> opponents){
+		return ChallengeCalculator.calculateel(opponents)
+				-ChallengeCalculator.calculateel(squad);
+	}
 }

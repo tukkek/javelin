@@ -113,14 +113,13 @@ public class AowGenerator extends FeatureGenerator{
 	}
 
 	boolean validate(Point p){
-		return p!=null
-				&&p.validate(0,0,ArtOfWar.singleton.size,ArtOfWar.singleton.size)
+		return p!=null&&p.validate(0,0,World.scenario.size,World.scenario.size)
 				&&World.get(p.x,p.y,World.getactors())==null
 				&&!Terrain.get(p.x,p.y).equals(Terrain.WATER);
 	}
 
 	Point findterrain(Terrain t){
-		int max=ArtOfWar.singleton.size-1;
+		int max=World.scenario.size-1;
 		if(t instanceof Underground)
 			return findterrain(RPG.pick(List.of(Terrain.NONWATER)));
 		Point p=null;

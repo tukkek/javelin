@@ -37,9 +37,10 @@ public class TensionDirector{
 	 */
 	public List<Combatant> monsters=null;
 
+	protected boolean escalating;
+
 	int tensionmin;
 	int tensionmax;
-	boolean raising;
 	float next=-Float.MAX_VALUE;
 	int tension=RPG.r(tensionmin,tensionmax);
 	/**
@@ -60,7 +61,7 @@ public class TensionDirector{
 	public TensionDirector(int min,int max,boolean raising){
 		tensionmin=min;
 		tensionmax=max;
-		this.raising=raising;
+		escalating=raising;
 	}
 
 	/** Default director, suitable to {@link Haunt}s, for example. */
@@ -75,7 +76,7 @@ public class TensionDirector{
 	 */
 	public TensionAction check(List<Combatant> blue,List<Combatant> red,float ap){
 		if(ap<next) return TensionAction.KEEP;
-		next=ap+RPG.r(10,40)/10f;
+		delay(ap);
 		int elblue=ChallengeCalculator.calculateel(blue);
 		int elred=ChallengeCalculator.calculateel(red);
 		int current=elred-elblue;
@@ -94,6 +95,16 @@ public class TensionDirector{
 	}
 
 	/**
+	 * Default implementation adds 1d4 turns (with .1ap granurality).
+	 *
+	 * @param currentap Will add a certain delay to this given value and not allow
+	 *          a {@link #check(List, List, float)} before that.
+	 */
+	public void delay(float currentap){
+		next=currentap+RPG.r(10,40)/10f;
+	}
+
+	/**
 	 * Calls {@link #generate(int)} systematically to produce an appropriate gruop
 	 * of {@link #monsters}.
 	 *
@@ -105,7 +116,7 @@ public class TensionDirector{
 	 */
 	protected List<Combatant> generate(int elblue,List<Combatant> red){
 		int el=elblue+tensionmin;
-		if(raising){
+		if(escalating){
 			baseline=Math.max(el,baseline);
 			el=baseline;
 		}

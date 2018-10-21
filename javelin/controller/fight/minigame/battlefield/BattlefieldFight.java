@@ -335,7 +335,7 @@ public class BattlefieldFight extends Minigame{
 	}
 
 	@Override
-	public void run(){
-		if(new ArmySelectionScreen().selectarmy(this)) super.run();
+	public boolean start(){
+		return super.start()&&new ArmySelectionScreen().selectarmy(this);
 	}
 }

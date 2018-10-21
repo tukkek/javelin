@@ -72,7 +72,7 @@ public class EncounterGenerator{
 			for(Combatant invitee:group)
 				foes.add(invitee);
 		}
-		if(!new MisalignmentDetector(foes).check()) return null;
+		if(!new AlignmentDetector(foes).check()) return null;
 		return foes.size()>getmaxenemynumber()?null:foes;
 	}
 

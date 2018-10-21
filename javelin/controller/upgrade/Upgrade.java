@@ -69,8 +69,7 @@ public abstract class Upgrade implements Serializable{
 	}
 
 	/**
-	 * @param c Removes and reapplies his equipment before and after applying the
-	 *          upgrade.
+	 * @param c Removes/reapplies equipment before/after applying the upgrade.
 	 * @return See {@link #apply(Combatant)}.
 	 * @see Combatant#equipped
 	 */
@@ -82,5 +81,14 @@ public abstract class Upgrade implements Serializable{
 		for(Artifact a:equipment)
 			a.usepeacefully(c);
 		return applied;
+	}
+
+	/**
+	 * @param c Uses a deep clone of this unit.
+	 * @return <code>true</code> if can {@link #apply(Combatant)} this upgrade.
+	 */
+	public final boolean validate(Combatant c){
+		c=c.clone().clonesource();
+		return upgrade(c);
 	}
 }

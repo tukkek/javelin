@@ -89,7 +89,6 @@ public class Arena extends Minigame{
 
 	/** Constructor. */
 	public Arena(){
-		gladiators=choosegladiators();
 		weather=Weather.DRY;
 		period=Javelin.PERIODNOON;
 		setup=new ArenaSetup(this);
@@ -290,5 +289,11 @@ public class Arena extends Minigame{
 	public List<Combatant> getallies(){
 		return state.blueTeam.stream().filter(c->!c.source.passive)
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public boolean start(){
+		gladiators=choosegladiators();
+		return super.start();
 	}
 }

@@ -33,7 +33,7 @@ import javelin.view.mappanel.battle.overlay.BattleWalker.BattleStep;
  */
 public class AiMovement extends Action implements AiAction{
 	/**
-	 * Target value for number of outcome nodes.We want to limit the nu,ber of
+	 * Target value for number of outcome nodes.We want to limit the number of
 	 * node outcomes so that the AI doesn't become to slow.
 	 */
 	static final int MOVES=8;

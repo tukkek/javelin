@@ -43,7 +43,7 @@ import javelin.old.Interface;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.old.messagepanel.TextZone;
 import javelin.view.Images;
-import javelin.view.ScenarioSelectionDialog;
+import javelin.view.LauncherDialog;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.Option;
@@ -131,7 +131,7 @@ public class Javelin{
 	public static void main(final String[] args){
 		Thread.currentThread().setName("Javelin");
 		app=new JavelinApp();
-		ScenarioSelectionDialog.choose(args);
+		LauncherDialog.choose(args);
 		final JFrame f=new JFrame(TITLE);
 		f.setBackground(java.awt.Color.black);
 		f.addWindowListener(StateManager.SAVEONCLOSE);

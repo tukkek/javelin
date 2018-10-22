@@ -4,7 +4,7 @@ A sequence of battles taking place in the same map - offering buildings that wil
 BATTLEFIELD
 The purpose of the Battlefield is to pit large armies against each other. There are strategic points placed around the map, assigned to both teams - each generating army points, every turn, that can be used to summon more units into battle! Capture your enemy's control points while fighting for survival!
 
-(Hint: summoning an army worth 10 points is much better than summoning a 5-point army twice - use your points well!)
+(Hint: summoning an army worth 10 points is much better than summoning a 5-point army twice - use your points wisely!)
 
 CRIMSON WAR
 Become the rising leader of a small contingent - lead them into battle as you benefit from a simple progression system and reinforcements join both sides!

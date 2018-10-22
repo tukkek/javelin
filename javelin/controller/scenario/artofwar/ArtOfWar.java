@@ -42,7 +42,7 @@ public class ArtOfWar extends Scenario{
 
 	Terrain region=null;
 
-	private ArtOfWar(){
+	public ArtOfWar(){
 		statictowns=false;
 		featuregenerator=AowGenerator.class;
 		helpfile="artofwar";

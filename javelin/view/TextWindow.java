@@ -44,6 +44,6 @@ public class TextWindow extends Frame{
 	static public TextWindow open(String name){
 		String filename=name.replaceAll(" ","").toLowerCase()+".txt";
 		String text=TextReader.read(new File("doc",filename));
-		return new TextWindow(filename,text);
+		return new TextWindow(name,text);
 	}
 }

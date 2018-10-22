@@ -64,7 +64,7 @@ public class BattleTile extends Tile{
 				if(meld.x==x&&meld.y==y) draw(g,meld.getimage(Fight.state));
 		if(shrouded){
 			Point p=getposition();
-			g.setColor(new Color(0,0,0,0.5f));
+			g.setColor(new Color(0,0,0,1/3f));
 			g.fillRect(p.x,p.y,MapPanel.tilesize,MapPanel.tilesize);
 		}
 		if(MapPanel.overlay!=null) MapPanel.overlay.overlay(this);

@@ -1,21 +1,26 @@
 package javelin.view;
 
+import java.awt.BorderLayout;
 import java.awt.Button;
+import java.awt.Canvas;
 import java.awt.Container;
-import java.awt.Frame;
-import java.awt.Label;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import javelin.Javelin;
 import javelin.JavelinApp;
@@ -31,7 +36,13 @@ import javelin.controller.scenario.artofwar.ArtOfWar;
 import javelin.controller.scenario.dungeonworld.DungeonWorld;
 import javelin.model.world.World;
 
-public class ScenarioSelectionDialog extends Frame{
+/**
+ * First dialog the player sees, allowing him to start or load a
+ * {@link Scenario} or play a {@link Minigame}.
+ *
+ * @author alex
+ */
+public class LauncherDialog extends JFrame{
 	static final Map<String,Class<? extends Scenario>> SCENARIOS=new LinkedHashMap<>();
 	static final Map<String,Class<? extends Minigame>> MINIGAMES=new LinkedHashMap<>();
 
@@ -85,51 +96,90 @@ public class ScenarioSelectionDialog extends Frame{
 		}
 	}
 
+	JPanel north=new JPanel();
+	JPanel center=new JPanel();
+	JPanel south=new JPanel();
+
 	void draw(){
 		setTitle("Welcome to Javelin!");
-		setSize(400,400);
 		setIconImages(Arrays.asList(Javelin.ICONS));
 		addWindowListener(new Close());
-		setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-		for(String s:preparetext())
-			addline(" "+s);
-		Container scenarios=new Container();
-		scenarios.setLayout(new BoxLayout(scenarios,BoxLayout.X_AXIS));
-		add(scenarios);
-		for(String label:SCENARIOS.keySet())
-			addbutton(label,scenarios,new RunScenario(label));
-		add(new Label(" Or a minigame:"));
-		Container minigames=new Container();
-		minigames.setLayout(new BoxLayout(minigames,BoxLayout.X_AXIS));
-		add(minigames);
-		addbutton("About",minigames,e->TextWindow.open("Minigames").show());
-		for(String label:MINIGAMES.keySet())
-			addbutton(label,minigames,new RunMinigame(label));
+		setPreferredSize(new Dimension(600,500));
+		setLayout(new BorderLayout(10,10));
+		north.setLayout(new BoxLayout(north,BoxLayout.X_AXIS));
+		add(north,BorderLayout.NORTH);
+		BoxLayout mgr=new BoxLayout(center,BoxLayout.Y_AXIS);
+		center.setLayout(mgr);
+		add(center,BorderLayout.CENTER);
+		south.setLayout(new BoxLayout(south,BoxLayout.X_AXIS));
+		add(south,BorderLayout.SOUTH);
+		addmodetoggle();
+		addlogo();
+		printmodes(SCENARIOS);
 	}
 
-	void addline(String s){
-		Label l=new Label();
-		l.setText(s);
-		add(l);
+	void addmodetoggle(){
+		addbutton("Scenarios",north,e->printmodes(SCENARIOS));
+		addbutton("Minigames",north,e->printmodes(MINIGAMES));
 	}
 
-	ArrayList<String> preparetext(){
-		ArrayList<String> lines=new ArrayList<>();
-		String file=TextReader.read(new File("doc","scenarios.txt"));
-		for(String s:file.trim().split("\n")){
-			String line="";
-			for(String word:s.split(" ")){
-				line+=word+" ";
-				if(line.length()>80){
-					lines.add(line);
-					line="";
-				}
+	void printmodes(Map<String,?> modes){
+		center.removeAll();
+		south.removeAll();
+		String filename=modes==SCENARIOS?"scenarios":"minigames";
+		JLabel text=write(TextReader.read(new File("doc",filename+".txt")).trim()
+				.replaceAll("\n","<br>"));
+		center.add(text);
+		for(String mode:modes.keySet())
+			addbutton(mode,south,
+					modes==SCENARIOS?new RunScenario(mode):new RunMinigame(mode));
+		pack();
+		setLocationRelativeTo(null);
+		center.repaint();
+		south.repaint();
+	}
+
+	//	void draw(){
+	//		setTitle("Welcome to Javelin!");
+	//		setSize(400,400);
+	//		setIconImages(Arrays.asList(Javelin.ICONS));
+	//		addWindowListener(new Close());
+	//		setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+	//		addlogo();
+	//		for(String s:preparetext())
+	//			addline(" "+s);
+	//		Container scenarios=new Container();
+	//		scenarios.setLayout(new BoxLayout(scenarios,BoxLayout.X_AXIS));
+	//		add(scenarios);
+	//		for(String label:SCENARIOS.keySet())
+	//			addbutton(label,scenarios,new RunScenario(label));
+	//		add(new Label(" Or a minigame:"));
+	//		Container minigames=new Container();
+	//		minigames.setLayout(new BoxLayout(minigames,BoxLayout.X_AXIS));
+	//		add(minigames);
+	//		addbutton("About",minigames,e->TextWindow.open("Minigames").show());
+	//		for(String label:MINIGAMES.keySet())
+	//			addbutton(label,minigames,new RunMinigame(label));
+	//	}
+
+	void addlogo(){
+		Image i=Images.get("javelin");
+		Canvas c=new Canvas(){
+			@Override
+			public void paint(Graphics g){
+				super.paint(g);
+				g.drawImage(i,10,10,null);
 			}
-			if(line!="") lines.add(line);
-		}
-		lines.add("");
-		lines.add("Select a game mode:");
-		return lines;
+		};
+		c.setSize(i.getWidth(null)+10,i.getHeight(null)+10);
+		add(c,BorderLayout.WEST);
+	}
+
+	JLabel write(String s){
+		JLabel l=new JLabel();
+		l.setText("<html>"+s+"<html>");
+		//		l.setMaximumSize(new Dimension(400,1000));
+		return l;
 	}
 
 	void addbutton(String text,Container buttonarea,ActionListener action){
@@ -140,7 +190,7 @@ public class ScenarioSelectionDialog extends Frame{
 
 	public static void choose(String[] args){
 		if(choosefromcommandline(args)) return;
-		ScenarioSelectionDialog s=new ScenarioSelectionDialog();
+		LauncherDialog s=new LauncherDialog();
 		s.draw();
 		s.pack();
 		s.setLocationRelativeTo(null);

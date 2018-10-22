@@ -53,6 +53,7 @@ public class CrimsonWar extends Minigame{
 	static final List<Item> ITEMS=new ArrayList<>();
 	static final int MAPSIZE=25;
 
+	/*Goods is taking neutrals as well to balance and optimize the number of options. Ideally wouldn't have to.*/
 	static{
 		for(Encounter e:Organization.ENCOUNTERS){
 			if(e.group.size()<2) continue;
@@ -60,9 +61,10 @@ public class CrimsonWar extends Minigame{
 				if(c.source.elite) continue;
 			var alignment=new AlignmentDetector(e.group);
 			if(!alignment.check()) continue;
-			if(alignment.good)
+			if(alignment.evil)
+				EVIL.add(e);
+			else
 				GOOD.add(e);
-			else if(alignment.evil) EVIL.add(e);
 		}
 		UpgradeHandler.singleton.gather();
 		for(var upgrade:UpgradeHandler.singleton.getalluncategorized())
@@ -147,8 +149,7 @@ public class CrimsonWar extends Minigame{
 			enemies=swap;
 		}
 		hero=selecthero();
-		if(hero==null) return false;
-		return super.start();
+		return hero!=null&&super.start();
 	}
 
 	Combatant selecthero(){
@@ -156,7 +157,7 @@ public class CrimsonWar extends Minigame{
 		for(Encounter e:allies.pool)
 			for(var combatant:e.group){
 				Monster m=combatant.source;
-				if(2<=m.cr&&m.cr<=10) set.add(m.name);
+				if(2<=m.cr&&m.cr<=10&&m.think(-1)) set.add(m.name);
 			}
 		var list=new ArrayList<>(set);
 		list.sort(null);
@@ -167,6 +168,8 @@ public class CrimsonWar extends Minigame{
 		String name=list.get(choice);
 		Combatant hero=new Combatant(Javelin.getmonster(name),true);
 		hero.source.elite=true;
+		hero.maxhp=hero.source.hd.maximize();
+		hero.hp=hero.maxhp;
 		return hero;
 	}
 
@@ -187,6 +190,7 @@ public class CrimsonWar extends Minigame{
 	@Override
 	public void startturn(Combatant acting){
 		super.startturn(acting);
+		if(!acting.equals(hero)) return;
 		hero=state.clone(hero);
 		ArrayList<Combatant> blue=state.blueTeam;
 		ArrayList<Combatant> red=state.redTeam;

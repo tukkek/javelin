@@ -8,6 +8,7 @@ import java.awt.Label;
 import java.awt.Panel;
 import java.util.ArrayList;
 
+import javelin.JavelinApp;
 import javelin.controller.action.SimpleAction;
 import javelin.controller.fight.Fight;
 import javelin.model.unit.Combatant;
@@ -53,7 +54,8 @@ public class Automate extends WorldAction implements SimpleAction{
 				container.add(strategic);
 			}else{
 				strategic=null;
-				container.add(new Label("Changes are reset after battle."));
+				if(JavelinApp.minigame==null)
+					container.add(new Label("Changes are reset after battle."));
 			}
 			return container;
 		}

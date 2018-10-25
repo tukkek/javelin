@@ -69,25 +69,22 @@ public class UseItems extends WorldAction{
 		return selected!=null&&selected.usedoutofbattle&&use(infoscreen,selected);
 	}
 
-	boolean use(InfoScreen infoscreen,Item selected){
-		Combatant target;
-		if(selected instanceof Artifact)
-			target=findowner(selected);
-		else if(selected.targeted)
-			target=inputmember(
-					"Which member will use the "+selected.toString().toLowerCase()+"?");
-		else
-			target=null;
-		if(!selected.usepeacefully(target)){
-			if(!skiperror){
-				String error=selected.describefailure();
-				infoscreen.print(infoscreen.text+"\n\n"+error);
-				InfoScreen.feedback();
-			}
-			return false;
+	boolean use(InfoScreen infoscreen,Item i){
+		boolean isartifact=i instanceof Artifact;
+		Combatant target=null;
+		if(isartifact)
+			target=findowner(i);
+		else if(i.targeted) target=inputmember(
+				"Which member will use the "+i.toString().toLowerCase()+"?");
+		if(i.usepeacefully(target)){
+			if(i.consumable) i.expend();
+			return !isartifact;
 		}
-		if(selected.consumable) selected.expend();
-		return true;
+		if(skiperror) return false;
+		String error=i.describefailure();
+		infoscreen.print(infoscreen.text+"\n\n"+error);
+		InfoScreen.feedback();
+		return false;
 	}
 
 	Item select(ArrayList<Item> allitems,Character input){

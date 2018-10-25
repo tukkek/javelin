@@ -15,6 +15,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
+import javelin.view.screen.BattleScreen;
 
 public class Ruby extends Item{
 	private static final String PROMPT="Do you want to spend all of your rubies to summon allies?\n"
@@ -61,6 +62,7 @@ public class Ruby extends Item{
 			for(Combatant c:summoned)
 				Summon.place(user,c,Fight.state.blueTeam,Fight.state);
 			Javelin.redraw();
+			BattleScreen.active.center(user.location[0],user.location[1]);
 			String feedback="Summoned: "+Combatant.group(summoned).toLowerCase()+"!";
 			Javelin.message(feedback,false);
 			return true;

@@ -157,6 +157,11 @@ public class BattleScreen extends Screen{
 			Point center=Fight.state.next.getlocation();
 			mappanel.zoom(0,true,center.x,center.y);
 		}
+		try{
+			Thread.sleep(1000);
+		}catch(InterruptedException e){
+			//continue
+		}
 		while(true)
 			turn();
 	}

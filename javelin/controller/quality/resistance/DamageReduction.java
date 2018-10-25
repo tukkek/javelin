@@ -47,11 +47,12 @@ public class DamageReduction extends Quality{
 
 		@Override
 		public boolean apply(Combatant m){
-			m.source.dr+=5/3;
-			// design parameter
 			final int hd=m.source.hd.count();
-			final long max=5+Math.round(Math.floor(hd/2f));
-			return m.source.dr<=max/3;
+			double designparameter=5+Math.floor(hd/2f);
+			final int max=Math.round(Math.round(designparameter/3));
+			if(m.source.dr>=max) return false;
+			m.source.dr=max;
+			return true;
 		}
 	}
 

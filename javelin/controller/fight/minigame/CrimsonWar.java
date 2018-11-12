@@ -190,10 +190,10 @@ public class CrimsonWar extends Minigame{
 	@Override
 	public void startturn(Combatant acting){
 		super.startturn(acting);
-		if(!acting.equals(hero)) return;
-		hero=state.clone(hero);
 		ArrayList<Combatant> blue=state.blueTeam;
 		ArrayList<Combatant> red=state.redTeam;
+		if(!acting.equals(hero)&&!red.isEmpty()) return;
+		hero=state.clone(hero);
 		if(blue.size()==1) allies.force();
 		if(enter(allies,blue,red,acting.ap,JOINBLUE))
 			for(var combatant:allies.monsters)

@@ -35,6 +35,7 @@ public class AcademyScreen extends UpgradingScreen{
 		super(academy.descriptionknown,t);
 		this.academy=academy;
 		stayopen=true;
+		//TODO skip confirmation since it's always 1 hero
 	}
 
 	@Override

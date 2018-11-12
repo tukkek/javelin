@@ -12,6 +12,7 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.mappanel.MapPanel;
+import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.mappanel.battle.overlay.TargetOverlay;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.StatisticsScreen;
@@ -128,10 +129,16 @@ public class Examine extends Action{
 		lookmessage("",s);
 		lastlooked=null;
 		final BattleState state=Fight.state;
-		final Combatant combatant=Fight.state.getcombatant(p.x,p.y);
+		final Combatant combatant=state.getcombatant(p.x,p.y);
 		if(combatant!=null){
-			lookmessage(describestatus(combatant,state),s);
-			lastlooked=combatant;
+			var customaction=combatant.getmouseaction();
+			if(customaction!=null)
+				customaction.onenter(state.next,combatant,
+						BattleScreen.active.mappanel.tiles[p.x][p.y],state);
+			else{
+				lookmessage(describestatus(combatant,state),s);
+				lastlooked=combatant;
+			}
 		}else if(state.map[p.x][p.y].flooded)
 			lookmessage("Flooded",s);
 		else if(Javelin.app.fight.map.map[p.x][p.y].blocked)
@@ -139,22 +146,19 @@ public class Examine extends Action{
 		s.statuspanel.repaint();
 	}
 
-	static void lookmessage(final String string,BattleScreen s){
+	static void lookmessage(final String status,BattleScreen s){
 		s.messagepanel.clear();
-		Javelin.message(
-				"Examine: move the cursor over another combatant, press v to view character sheet.\n\n"
-						+string,
-				Javelin.Delay.NONE);
+		String message="Examine: move the cursor over another combatant, press v to view character sheet.\n\n";
+		Javelin.message(message+status,Javelin.Delay.NONE);
 		Javelin.redraw();
 	}
 
 	static String describestatus(final Combatant c,final BattleState s){
 		String status=c.toString();
 		String list=c.printstatus(s);
-		Combatant current=Fight.state.next;
-		if(current.getlocation().distanceinsteps(c.getlocation())==1){
+		var current=BattlePanel.current;
+		if(c!=current&&current.getlocation().distanceinsteps(c.getlocation())==1)
 			list+=", "+MeleeAttack.SINGLETON.getchance(current,c,s);
-		}
 		if(!list.isEmpty()) status+=" ("+list+")";
 		return status;
 	}

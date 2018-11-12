@@ -187,7 +187,7 @@ public class Arena extends Minigame{
 		this.gold+=gold;
 		ArenaTown town=ArenaTown.get();
 		String project=town==null?""
-				:"\nNext project is $"+town.getprojectprice()+".";
+				:"\nNext project is $"+Javelin.format(town.getprojectprice())+".";
 		Javelin.message("You have earned $"+Javelin.format(gold)+". You now have $"
 				+Javelin.format(this.gold)+"."+project,false);
 		BattleScreen.active.messagepanel.clear();

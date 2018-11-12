@@ -8,7 +8,6 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.comparator.OptionsByPriority;
 import javelin.model.unit.Squad;
-import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.InfoScreen;
@@ -76,9 +75,12 @@ public abstract class SelectScreen extends InfoScreen{
 			IntroScreen.configurescreen(this);
 			processinput(options);
 		}
-		ArrayList<Actor> squads=World.scenario==null?null:World.getall(Squad.class);
-		if(squads!=null&&squads.isEmpty()) squads=null;
-		if(stayopen&&squads!=null)
+		var stayopen=this.stayopen;
+		if(World.scenario!=null){ //TODO workaround
+			var squads=World.getall(Squad.class);
+			if(squads!=null&&squads.isEmpty()) stayopen=false;
+		}
+		if(stayopen)
 			show();
 		else
 			onexit();

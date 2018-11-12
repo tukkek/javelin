@@ -190,7 +190,6 @@ public class JavelinApp extends QuestApp{
 	void startcampaign(){
 		World.scenario.setup();
 		WorldGenerator.build();
-		UpgradeHandler.singleton.gather();
 		if(Javelin.DEBUG){
 			JavelinApp.printstatistics();
 			Debug.oncampaignstart();
@@ -206,9 +205,11 @@ public class JavelinApp extends QuestApp{
 		System.out.println(Item.ALL.size()-Item.ARTIFACT.size()+" items, "
 				+Item.ARTIFACT.size()+" artifacts, 7 relics");
 		Collection<Spell> spells=Spell.SPELLS.values();
-		int nupgrades=UpgradeHandler.singleton.count()-spells.size();
+		var upgrades=UpgradeHandler.singleton;
+		upgrades.gather();
+		int nupgrades=upgrades.count()-spells.size();
 		int nspells=spells.size()-countsummon(spells)+1;
-		int nskills=UpgradeHandler.singleton.countskills();
+		int nskills=upgrades.countskills();
 		int nkits=Kit.KITS.size();
 		System.out.println(nupgrades+" upgrades, "+nspells+" spells, "+nskills
 				+" skills, "+nkits+" kits");

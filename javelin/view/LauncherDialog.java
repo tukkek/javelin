@@ -33,6 +33,7 @@ import javelin.controller.fight.minigame.battlefield.Battlefield;
 import javelin.controller.scenario.Campaign;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.scenario.artofwar.ArtOfWar;
+import javelin.controller.scenario.dungeondelve.DungeonDelve;
 import javelin.controller.scenario.dungeonworld.DungeonWorld;
 import javelin.model.world.World;
 
@@ -48,6 +49,7 @@ public class LauncherDialog extends JFrame{
 
 	static{
 		SCENARIOS.put("Campaign",Campaign.class);
+		SCENARIOS.put("Dungeon delve",DungeonDelve.class);
 		SCENARIOS.put("Dungeon world",DungeonWorld.class);
 		SCENARIOS.put("Art of war",ArtOfWar.class);
 		MINIGAMES.put("Arena",Arena.class);

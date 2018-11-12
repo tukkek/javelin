@@ -16,9 +16,9 @@ import javelin.old.RPG;
 
 public class DungeonWorldGenerator extends WorldGenerator{
 	@Override
-	public void generate(LinkedList<Realm> realms,
+	public void generategeography(LinkedList<Realm> realms,
 			ArrayList<HashSet<Point>> regions,World w){
-		super.generate(realms,regions,w);
+		super.generategeography(realms,regions,w);
 		generatenewareas(w);
 	}
 

@@ -1,12 +1,15 @@
 Javelin offers a few game modes:
 
 CAMPAIGN
-a long, epic quest to retrieve the seven Relics from deep inside their ancient Temples. It presents all of the game features and a complex, constantly-evolving game world.
+A long, epic quest to retrieve the seven Relics from deep inside their ancient Temples. It presents all of the game features and a complex, constantly-evolving game world.
+
+DUNGEON DELVE
+One mega-dungeon stands before you. Can you return from its depths with the ultimate object of power in this roguelike adventure?
 
 DUNGEON WORLD
-explore a static game world while conquering increasingly difficult dungeons and unlocking new areas in a more traditional RPG experience.
+Explore a static game world while conquering increasingly difficult dungeons and unlocking new areas in a more traditional RPG experience.
 
 ART OF WAR
-a more straightforward game mode focusing on larger battles. No upgrades, training, items or city management - just win battles, get stronger, hire more units and march onwards until all of your foes are vanquished!
+A more straightforward game mode focusing on larger battles. No upgrades, training, items or city management - just win battles, get stronger, hire more units and march onwards until all of your foes are vanquished!
 
 You can read more about each mode by pressing F1 after the game has started. Pressing h will list all help guides available in-game.

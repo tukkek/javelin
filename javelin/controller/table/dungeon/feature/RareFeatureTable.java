@@ -1,6 +1,5 @@
 package javelin.controller.table.dungeon.feature;
 
-import javelin.controller.table.Table;
 import javelin.controller.table.dungeon.InhabitantTable;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Campfire;
@@ -17,7 +16,7 @@ import javelin.model.world.location.dungeon.feature.inhabitant.Inhabitant;
  * @see InhabitantTable
  * @see FeatureRarityTable
  */
-public class RareFeatureTable extends Table{
+public class RareFeatureTable extends CommonFeatureTable{
 	public RareFeatureTable(){
 		add(Fountain.class,CommonFeatureTable.MAX);
 		add(Campfire.class,CommonFeatureTable.MAX);
@@ -29,6 +28,7 @@ public class RareFeatureTable extends Table{
 	/**
 	 * Semantically identical to {@link CommonFeatureTable#rollfeature(Dungeon)}.
 	 */
+	@Override
 	public Feature rollfeature(Dungeon d){
 		Class<? extends Feature> type=(Class<? extends Feature>)roll();
 		if(type.equals(Herb.class)&&d.level>Herb.MAXLEVEL) return null;

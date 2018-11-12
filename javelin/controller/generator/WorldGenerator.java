@@ -63,7 +63,7 @@ public class WorldGenerator extends Thread{
 			realms.add(r);
 		Collections.shuffle(realms);
 		ArrayList<HashSet<Point>> regions=new ArrayList<>(realms.size());
-		generate(realms,regions,world);
+		generategeography(realms,regions,world);
 		try{
 			FeatureGenerator generator=World.scenario.featuregenerator
 					.getDeclaredConstructor().newInstance();
@@ -83,6 +83,7 @@ public class WorldGenerator extends Thread{
 		Squad.active.displace();
 		Squad.active.place();
 		if(start instanceof Town) Squad.active.lasttown=(Town)start;
+		World.scenario.ready(w);
 	}
 
 	/**
@@ -112,7 +113,7 @@ public class WorldGenerator extends Thread{
 		}
 	}
 
-	protected void generate(LinkedList<Realm> realms,
+	protected void generategeography(LinkedList<Realm> realms,
 			ArrayList<HashSet<Point>> regions,World w){
 		int size=World.scenario.size;
 		for(int i=0;i<size;i++)

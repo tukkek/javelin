@@ -74,7 +74,10 @@ public class Dungeon extends Location{
 	static final int MAXTRIES=1000;
 	static final int[] DELTAS={-1,0,1};
 
-	/** Current {@link Dungeon} or <code>null</code> if not in one. */
+	/**
+	 * Current {@link Dungeon} or <code>null</code> if not in one. During a
+	 * {@link #map()} operation, this can be set to any one instance being mapped.
+	 */
 	public static Dungeon active=null;
 
 	/** All of this dungeon's {@link Feature}s. */
@@ -97,7 +100,7 @@ public class Dungeon extends Location{
 	public String wall;
 	/** Tiles already revealed. */
 	public HashSet<Point> discovered=new HashSet<>();
-	public char[][] map;
+	public char[][] map=null;
 	public int size;
 	public int stepsperencounter;
 	public int level=-1;
@@ -232,7 +235,10 @@ public class Dungeon extends Location{
 	 * your way back to town safely, so this naturally makes the dungeon more
 	 * challenging (hopefully being offset by the rewards inside).
 	 */
-	void map(){
+	public void map(){
+		if(map!=null) return;
+		var previous=Dungeon.active;
+		Dungeon.active=this;
 		DungeonTier tier=gettier();
 		DungeonGenerator generator=DungeonGenerator.generate(tier.minrooms,
 				tier.maxrooms,parent==null?null:parent.tables);
@@ -248,6 +254,7 @@ public class Dungeon extends Location{
 		for(int x=0;x<size;x++)
 			for(int y=0;y<size;y++)
 				visible[x][y]=false;
+		Dungeon.active=previous;
 	}
 
 	void generateencounters(){
@@ -333,17 +340,7 @@ public class Dungeon extends Location{
 	protected void createfeatures(int nfeatures){
 		int features=0;
 		while(features<nfeatures){
-			Feature f;
-			if(Javelin.DEBUG&&DEBUGFEATURE!=null)
-				try{
-					f=DEBUGFEATURE.getDeclaredConstructor().newInstance();
-				}catch(ReflectiveOperationException e){
-					throw new RuntimeException(e);
-				}
-			else if(gettable(FeatureRarityTable.class).rollboolean())
-				f=tables.get(RareFeatureTable.class).rollfeature(this);
-			else
-				f=tables.get(CommonFeatureTable.class).rollfeature(this);
+			Feature f=createfeature();
 			if(f==null) continue;
 			Point p=findspot();
 			f.x=p.x;
@@ -351,6 +348,18 @@ public class Dungeon extends Location{
 			this.features.add(f);
 			features+=1;
 		}
+	}
+
+	protected Feature createfeature(){
+		if(Javelin.DEBUG&&DEBUGFEATURE!=null) try{
+			return DEBUGFEATURE.getDeclaredConstructor().newInstance();
+		}catch(ReflectiveOperationException e){
+			throw new RuntimeException(e);
+		}
+		var table=gettable(FeatureRarityTable.class).rollboolean()
+				?RareFeatureTable.class
+				:CommonFeatureTable.class;
+		return tables.get(table).rollfeature(this);
 	}
 
 	static int getfeaturequantity(int rooms,float ratio){

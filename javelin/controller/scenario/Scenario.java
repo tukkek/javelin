@@ -314,4 +314,15 @@ public class Scenario implements Serializable{
 	public void end(Fight f,boolean victory){
 		// nothing by default
 	}
+
+	/**
+	 * Called only once, after {@link World} generation ends.
+	 * 
+	 * @param w
+	 *
+	 * @see WorldGenerator#finish(Location, World)
+	 */
+	public void ready(World w){
+		//nothing by default
+	}
 }

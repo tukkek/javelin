@@ -62,7 +62,8 @@ public abstract class Maneuver
 	 *
 	 * @see ExecuteManeuver
 	 */
-	abstract public List<List<ChanceNode>> getoutcomes(Combatant c,BattleState s);
+	abstract public List<List<ChanceNode>> getoutcomes(Combatant c,
+			BattleState s);
 
 	@Override
 	public boolean equals(Object obj){

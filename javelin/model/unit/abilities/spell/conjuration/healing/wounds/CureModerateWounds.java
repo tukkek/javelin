@@ -9,6 +9,7 @@ import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Touch;
+import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 /**
  * See the d20 SRD for more info.
@@ -48,6 +49,7 @@ public class CureModerateWounds extends Touch{
 			final boolean saved,final BattleState s,ChanceNode cn){
 		final int heal=rolldata[0]*rolldata[1]/2+rolldata[2];
 		target.heal(heal,true);
+		if(cn!=null) cn.overlay=new AiOverlay(target);
 		return target+" is now "+target.getstatus()+".";
 	}
 

@@ -123,8 +123,8 @@ public class TempleDungeon extends Dungeon{
 
 	@Override
 	protected void createstairs(Point p){
-		if(!deepest) features.add(new StairsDown(findspot()));
 		super.createstairs(p);
+		if(!deepest) features.add(new StairsDown(findspot()));
 	}
 
 	@Override

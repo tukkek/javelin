@@ -6,6 +6,7 @@ import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 /**
  * Deals 1d4+1 points of force damage.
@@ -24,6 +25,7 @@ public class MagicMissile extends Spell{
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
 		target.damage(1*4/2+1,s,0);
+		if(cn!=null) cn.overlay=new AiOverlay(target);
 		return target+" is "+target.getstatus()+"!";
 	}
 

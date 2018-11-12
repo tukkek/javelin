@@ -11,6 +11,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Combatant;
@@ -57,6 +58,19 @@ public abstract class UpgradingScreen extends SelectScreen{
 	final HashMap<Integer,Combatant> original=new HashMap<>();
 	final HashSet<Combatant> upgraded=new HashSet<>();
 	protected boolean showmoneyinfo=true;
+	/**
+	 * When <code>true</code> and if possible, will use the only eligible trainee
+	 * instead of showing the selection prompt. This is OK for {@link Minigame}s
+	 * but other than that, the prompt is useful to see XP and gold prices,
+	 * upgrade details, etc.
+	 *
+	 * TODO shouldn't be necessary with 2.0
+	 *
+	 * @see Upgrade#inform(Combatant)
+	 */
+	protected boolean skipselection=false;
+	boolean returntoselection;
+	boolean quitselection;
 
 	/**
 	 * Constructor.
@@ -96,36 +110,52 @@ public abstract class UpgradingScreen extends SelectScreen{
 	@Override
 	public boolean select(final Option op){
 		final UpgradeOption o=(UpgradeOption)op;
-		final String parenttext=text;
 		final List<Combatant> eligible=new ArrayList<>();
 		String listeligible=listeligible(o,eligible);
 		if(eligible.isEmpty()){
 			print(text+"\nNone can learn this right now...\n");
 			return false;
 		}
-		text+=listeligible;
+		Combatant c;
+		if(eligible.size()==1&&skipselection)
+			c=eligible.get(0);
+		else{
+			c=selecttrainee(eligible,listeligible);
+			if(returntoselection) return false;
+			if(quitselection) return true;
+		}
+		finishpurchase(o,c);
+		return true;
+	}
+
+	Combatant selecttrainee(final List<Combatant> eligible,String prompt){
+		returntoselection=false;
+		quitselection=false;
+		final String parenttext=text;
+		text+=prompt;
 		if(showmoneyinfo)
 			text+="Your squad has $"+Javelin.format(getgold())+".\n\n";
 		text+="Which squad member? Press r to return to upgrade selection.";
-		Combatant c=null;
-		while(c==null){
+		while(true){
 			Javelin.app.switchScreen(this);
 			try{
 				final Character input=InfoScreen.feedback();
 				if(input=='r'){
 					text=parenttext;
-					return false;
+					returntoselection=true;
+					return null;
 				}
-				if(input==PROCEED) return true;
-				c=eligible.get(Integer.parseInt(input.toString())-1);
+				if(input==PROCEED){
+					quitselection=true;
+					return null;
+				}
+				return eligible.get(Integer.parseInt(input.toString())-1);
 			}catch(final NumberFormatException e){
 				continue;
 			}catch(final IndexOutOfBoundsException e){
 				continue;
 			}
 		}
-		finishpurchase(o,c);
-		return true;
 	}
 
 	void finishpurchase(final UpgradeOption o,Combatant c){

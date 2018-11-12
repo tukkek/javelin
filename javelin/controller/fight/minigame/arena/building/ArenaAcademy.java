@@ -19,14 +19,13 @@ import javelin.model.world.location.order.TrainingOrder;
 import javelin.view.screen.upgrading.UpgradingScreen;
 
 public class ArenaAcademy extends ArenaBuilding{
-	static final int NOPTIONS=9;
-
 	class ArenaAcademyScreen extends UpgradingScreen{
 		Combatant trainee;
 
 		public ArenaAcademyScreen(Combatant c){
 			super("What will you learn, "+c+"?",null);
 			trainee=c;
+			skipselection=true;
 			restock(trainee);
 		}
 
@@ -78,7 +77,7 @@ public class ArenaAcademy extends ArenaBuilding{
 		}
 	}
 
-	HashSet<Upgrade> upgrades=new HashSet<>(NOPTIONS);
+	HashSet<Upgrade> upgrades=new HashSet<>(9);
 
 	public ArenaAcademy(){
 		super("Academy","locationrealmacademy",

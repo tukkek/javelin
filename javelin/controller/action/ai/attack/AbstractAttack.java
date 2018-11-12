@@ -9,6 +9,7 @@ import javelin.Javelin;
 import javelin.controller.action.Action;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
+import javelin.controller.ai.Node;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.CurrentAttack;
@@ -19,6 +20,7 @@ import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.feat.attack.Cleave;
 import javelin.model.unit.skill.Bluff;
+import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 /**
  * Base class for {@link MeleeAttack} and {@link RangedAttack}.
@@ -27,6 +29,17 @@ import javelin.model.unit.skill.Bluff;
  */
 public abstract class AbstractAttack extends Action implements AiAction{
 	static final ConcurrentHashMap<Thread,Strike> CURRENTMANEUVER=new ConcurrentHashMap<>();
+
+	class DamageNode extends ChanceNode{
+		public DamageChance damage;
+
+		DamageNode(Node n,DamageChance damage,String action,Javelin.Delay delay,
+				Combatant target){
+			super(n,damage.chance,action,delay);
+			this.damage=damage;
+			overlay=new AiOverlay(target.location[0],target.location[1]);
+		}
+	}
 
 	/** @see Bluff#feign(Combatant) */
 	protected boolean feign=false;
@@ -68,7 +81,7 @@ public abstract class AbstractAttack extends Action implements AiAction{
 		return nodes;
 	}
 
-	ChanceNode createnode(Combatant attacker,Combatant target,final Attack a,
+	DamageNode createnode(Combatant attacker,Combatant target,final Attack a,
 			float ap,final Strike m,final DamageChance dc,BattleState s){
 		final String tohit=" ("+getchance(attacker,target,a,s)+")...";
 		StringBuilder sb=new StringBuilder(attacker.toString());
@@ -94,11 +107,10 @@ public abstract class AbstractAttack extends Action implements AiAction{
 			posthit(attacker,target,a,ap,dc,s,sb);
 		}
 		if(m!=null) m.posthit(attacker,target,a,dc,s);
-		final Javelin.Delay delay=target.source.passive
-				&&target.getnumericstatus()>Combatant.STATUSUNCONSCIOUS
-						?Javelin.Delay.WAIT
-						:Javelin.Delay.BLOCK;
-		return new DamageNode(s,dc.chance,sb.toString(),delay,target);
+		boolean wait=target.source.passive
+				&&target.getnumericstatus()>Combatant.STATUSUNCONSCIOUS;
+		final Javelin.Delay delay=wait?Javelin.Delay.WAIT:Javelin.Delay.BLOCK;
+		return new DamageNode(s,dc,sb.toString(),delay,target);
 	}
 
 	/**
@@ -228,7 +240,7 @@ public abstract class AbstractAttack extends Action implements AiAction{
 			wait=Javelin.Delay.BLOCK;
 		}
 		sb.append(" misses ").append(name).append(tohit);
-		return new DamageNode(s,dc.chance,sb.toString(),wait,target);
+		return new DamageNode(s,dc,sb.toString(),wait,target);
 	}
 
 	void posthit(Combatant active,Combatant target,final Attack a,float ap,

@@ -7,7 +7,6 @@ import javelin.Javelin;
 import javelin.controller.action.ActionCost;
 import javelin.controller.action.ai.attack.AbstractAttack;
 import javelin.controller.action.ai.attack.DamageChance;
-import javelin.controller.action.ai.attack.DamageNode;
 import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.controller.action.ai.attack.RangedAttack;
 import javelin.controller.action.target.MeleeTarget;

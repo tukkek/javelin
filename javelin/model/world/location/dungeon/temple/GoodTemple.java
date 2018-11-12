@@ -7,6 +7,7 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.relic.Ankh;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Monster.MonsterType;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Spirit;
 
@@ -35,8 +36,8 @@ public class GoodTemple extends Temple{
 
 	@Override
 	public boolean validate(List<Monster> foes){
-		for(Monster m:foes)
-			if(Boolean.TRUE.equals(m.good)) return false;
-		return true;
+		var search=foes.stream().filter(
+				m->!Boolean.TRUE.equals(m.good)||MonsterType.UNDEAD.equals(m.type));
+		return !search.findAny().isPresent();
 	}
 }

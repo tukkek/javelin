@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.action.target.RangedTarget;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.walker.Walker;
@@ -29,6 +30,13 @@ import javelin.model.unit.feat.attack.shot.PreciseShot;
  */
 public class RangedAttack extends AbstractAttack{
 	static final public RangedAttack SINGLETON=new RangedAttack();
+	/**
+	 * Currently if the AI sees an infinitesimal chance to hit, it'll rather
+	 * damage any unit for immediate utility. This is very statoc, with units
+	 * always attacking from far away if they have ranged attacks. Let's disable
+	 * this for {@link #getoutcomes(Combatant, BattleState)} for now.
+	 */
+	static final boolean AISKIPUNLIKELY=true;
 
 	private RangedAttack(){
 		super("Ranged attack");
@@ -68,14 +76,19 @@ public class RangedAttack extends AbstractAttack{
 	public List<List<ChanceNode>> getoutcomes(final Combatant active,
 			final BattleState gameState){
 		if(gameState.isengaged(active)) return Collections.EMPTY_LIST;
-		final ArrayList<List<ChanceNode>> successors=new ArrayList<>();
+		final var successors=new ArrayList<List<ChanceNode>>();
 		for(final Combatant target:gameState.gettargets(active))
 			for(final Integer attack:getcurrentattack(active)){
 				final BattleState newstate=gameState.clone();
 				final Combatant newactive=newstate.clone(active);
 				newactive.currentranged.setcurrent(attack,newactive.source.ranged);
-				successors
-						.add(attack(newstate,newactive,target,newactive.currentranged,0));
+				var outcome=attack(newstate,newactive,target,newactive.currentranged,0);
+				if(AISKIPUNLIKELY){
+					var miss=outcome.get(0);
+					if(Javelin.DEBUG) assert ((DamageNode)miss).damage.damage==0;
+					if(miss.chance>Javelin.HARD/20f) continue;
+				}
+				successors.add(outcome);
 			}
 		return successors;
 	}

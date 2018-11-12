@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.TreeMap;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 
 import org.xml.sax.InputSource;
@@ -58,8 +57,6 @@ import javelin.view.screen.town.SelectScreen;
  * @author alex
  */
 public class Javelin{
-	private static final int JAVA=9;
-
 	public enum Delay{
 		NONE,WAIT,BLOCK
 	}
@@ -91,6 +88,10 @@ public class Javelin{
 	public static final TreeMap<Float,List<Monster>> MONSTERSBYCR=new TreeMap<>();
 	/** All loaded XML {@link Monster}s. See {@link MonsterReader}. */
 	public static final List<Monster> ALLMONSTERS=new ArrayList<>();
+	public static final int HARD=16;
+	public static final int FAIR=12;
+	public static final int EASY=8;
+	public static final int EFFORTLESS=4;
 
 	static final String TITLE="Javelin";
 	static final DecimalFormat COSTFORMAT=new DecimalFormat("####,###,##0");
@@ -100,7 +101,6 @@ public class Javelin{
 
 	static{
 		try{
-			checkjava();
 			UpgradeHandler.singleton.gather();
 			Spell.init();
 			final MonsterReader monsterdb=new MonsterReader();
@@ -152,23 +152,6 @@ public class Javelin{
 		app.setVisible(true);
 		f.setVisible(true);
 		app.init();
-	}
-
-	private static void checkjava(){
-		String[] version=System.getProperty("java.version").split("\\.");
-		if(Integer.parseInt(
-				version[0])!=1) /* java 2.x? Don't even try to guess what to do... */
-			return;
-		int major=Integer.parseInt(version[1]);
-		if(major>=JAVA) return;
-		String error;
-		error="Javelin needs Java "+JAVA+" or newer to run properly.";
-		error+="\nYou currently have Java "+major+" installed.";
-		error+="\nPlease update Java in order play Javelin and to install the newest security updates.";
-		error+="\n\nThe following webpage has further information on updating Java on all major operating systems:";
-		error+="\nwww.techhelpkb.com/how-to-update-java-on-your-computer";
-		JOptionPane.showMessageDialog(null,error);
-		System.exit(1);
 	}
 
 	/**
@@ -271,10 +254,10 @@ public class Javelin{
 	 *         achieve.
 	 */
 	static public String translatetochance(int rolltohit){
-		if(rolltohit<=4) return "effortless";
-		if(rolltohit<=8) return "easy";
-		if(rolltohit<=12) return "fair";
-		if(rolltohit<=16) return "hard";
+		if(rolltohit<=EFFORTLESS) return "effortless";
+		if(rolltohit<=EASY) return "easy";
+		if(rolltohit<=FAIR) return "fair";
+		if(rolltohit<=HARD) return "hard";
 		return "unlikely";
 	}
 

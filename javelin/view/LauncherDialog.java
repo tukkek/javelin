@@ -139,29 +139,6 @@ public class LauncherDialog extends JFrame{
 		south.repaint();
 	}
 
-	//	void draw(){
-	//		setTitle("Welcome to Javelin!");
-	//		setSize(400,400);
-	//		setIconImages(Arrays.asList(Javelin.ICONS));
-	//		addWindowListener(new Close());
-	//		setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-	//		addlogo();
-	//		for(String s:preparetext())
-	//			addline(" "+s);
-	//		Container scenarios=new Container();
-	//		scenarios.setLayout(new BoxLayout(scenarios,BoxLayout.X_AXIS));
-	//		add(scenarios);
-	//		for(String label:SCENARIOS.keySet())
-	//			addbutton(label,scenarios,new RunScenario(label));
-	//		add(new Label(" Or a minigame:"));
-	//		Container minigames=new Container();
-	//		minigames.setLayout(new BoxLayout(minigames,BoxLayout.X_AXIS));
-	//		add(minigames);
-	//		addbutton("About",minigames,e->TextWindow.open("Minigames").show());
-	//		for(String label:MINIGAMES.keySet())
-	//			addbutton(label,minigames,new RunMinigame(label));
-	//	}
-
 	void addlogo(){
 		Image i=Images.get("javelin");
 		Canvas c=new Canvas(){

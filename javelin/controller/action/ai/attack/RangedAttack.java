@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.Point;
 import javelin.controller.action.target.RangedTarget;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.walker.Walker;
@@ -83,14 +84,33 @@ public class RangedAttack extends AbstractAttack{
 				final Combatant newactive=newstate.clone(active);
 				newactive.currentranged.setcurrent(attack,newactive.source.ranged);
 				var outcome=attack(newstate,newactive,target,newactive.currentranged,0);
-				if(AISKIPUNLIKELY){
-					var miss=outcome.get(0);
-					if(Javelin.DEBUG) assert ((DamageNode)miss).damage.damage==0;
-					if(miss.chance>Javelin.HARD/20f) continue;
-				}
+				if(skip(active,(DamageNode)outcome.get(0),gameState)) continue;
 				successors.add(outcome);
 			}
 		return successors;
+	}
+
+	/**
+	 * @return <code>true</code> if this ranged attack has a very unlikely chance
+	 *         to hit and only as long as the active {@link Combatant} cannot
+	 *         potentially move to reposition himself for a mêlée attack.
+	 *
+	 * @see #AISKIPUNLIKELY
+	 */
+	static boolean skip(Combatant active,DamageNode miss,BattleState previous){
+		if(!AISKIPUNLIKELY) return false;
+		if(Javelin.DEBUG) assert miss.damage.damage==0;
+		if(miss.chance<=Javelin.HARD/20f||active.source.melee.isEmpty())
+			return false;
+		for(Point p:Point.getadjacent()){
+			p.x+=active.location[0];
+			p.y+=active.location[1];
+			var map=previous.map;
+			if(!p.validate(0,0,map.length,map[0].length)) continue;
+			if(previous.getcombatant(p.x,p.y)!=null) continue;
+			if(!map[p.x][p.y].blocked||active.source.fly>0) return false;
+		}
+		return true;
 	}
 
 	@Override

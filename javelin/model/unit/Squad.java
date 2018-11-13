@@ -478,7 +478,7 @@ public class Squad extends Actor implements Cloneable{
 	 * @see Squad#perceive(boolean)
 	 */
 	public void seesurroundings(int vision){
-		Outpost.discover(Squad.active.x,Squad.active.y,Math.max(1,vision/5));
+		Outpost.discover(x,y,Math.max(1,vision/5));
 	}
 
 	@Override
@@ -520,9 +520,13 @@ public class Squad extends Actor implements Cloneable{
 	}
 
 	public void seesurroudings(){
-		seesurroundings(Squad.active.perceive(true,true,true)
-				+(Squad.active.transport==Transport.AIRSHIP?+4
-						:Terrain.current().visionbonus));
+		boolean onairship=Transport.AIRSHIP.equals(transport);
+		int vision=perceive(!onairship,true,true);
+		if(onairship)
+			vision+=+4;
+		else
+			vision+=Terrain.get(x,y).visionbonus;
+		seesurroundings(vision);
 	}
 
 	public static void updatevision(){

@@ -16,7 +16,7 @@ import javelin.model.world.location.dungeon.feature.Spirit;
  * @author alex
  * @see FeatureRarityTable
  */
-public class CommonFeatureTable extends Table{
+public class CommonFeatureTable extends Table implements DungeonFeatureTable{
 	/** Default number of chances per {@link Feature}. */
 	public static final int MAX=10;
 
@@ -33,6 +33,7 @@ public class CommonFeatureTable extends Table{
 	 * @return <code>null</code> if an invalid feature has been rolled, otherwise,
 	 *         a Feature that hasn't been positioned or placed yet.
 	 */
+	@Override
 	public Feature rollfeature(@SuppressWarnings("unused") Dungeon d){
 		Class<? extends Feature> type=(Class<? extends Feature>)roll();
 		if(type.equals(Chest.class)) return new Chest(-1,-1,Key.generate());

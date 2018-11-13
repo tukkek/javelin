@@ -23,7 +23,11 @@ public class DungeonDelveGenerator extends FeatureGenerator{
 		for(int level=1;level<=DungeonDelve.LEVELS;level++){
 			var d=new Megadungeon(level,parent);
 			dungeons.put(level,d);
-			if(level==1) d.place();
+			if(level==1){
+				d.x=World.scenario.size/2;
+				d.y=d.x;
+				d.place();
+			}
 			parent=d;
 		}
 		var d=dungeons.get(1);

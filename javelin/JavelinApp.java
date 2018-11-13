@@ -190,6 +190,7 @@ public class JavelinApp extends QuestApp{
 	void startcampaign(){
 		World.scenario.setup();
 		WorldGenerator.build();
+		World.scenario.ready(World.seed);
 		if(Javelin.DEBUG){
 			JavelinApp.printstatistics();
 			Debug.oncampaignstart();

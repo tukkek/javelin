@@ -83,7 +83,6 @@ public class WorldGenerator extends Thread{
 		Squad.active.displace();
 		Squad.active.place();
 		if(start instanceof Town) Squad.active.lasttown=(Town)start;
-		World.scenario.ready(w);
 	}
 
 	/**

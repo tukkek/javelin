@@ -76,7 +76,7 @@ public class LauncherDialog extends JFrame{
 		}
 
 		void run() throws ReflectiveOperationException{
-			World.scenario=SCENARIOS.get(label).getConstructor().newInstance();
+			runscenario(label);
 		}
 	}
 
@@ -87,7 +87,7 @@ public class LauncherDialog extends JFrame{
 
 		@Override
 		void run() throws ReflectiveOperationException{
-			JavelinApp.minigame=MINIGAMES.get(label).getConstructor().newInstance();
+			runminigame(label);
 		}
 	}
 
@@ -167,6 +167,14 @@ public class LauncherDialog extends JFrame{
 		b.addActionListener(action);
 	}
 
+	static void runscenario(Object label) throws ReflectiveOperationException{
+		World.scenario=SCENARIOS.get(label).getConstructor().newInstance();
+	}
+
+	static void runminigame(String label) throws ReflectiveOperationException{
+		JavelinApp.minigame=MINIGAMES.get(label).getConstructor().newInstance();
+	}
+
 	public static void choose(String[] args){
 		if(choosefromcommandline(args)) return;
 		LauncherDialog s=new LauncherDialog();
@@ -184,16 +192,17 @@ public class LauncherDialog extends JFrame{
 
 	static boolean choosefromcommandline(String[] args){
 		if(args.length==0) return false;
-		Map<String,Object> scenarios=new HashMap<>(SCENARIOS);
-		scenarios.putAll(MINIGAMES);
-		for(String mode:scenarios.keySet())
-			if(args[0].compareToIgnoreCase(mode.replaceAll(" ",""))==0){
-				Object target=scenarios.get(mode);
-				if(target instanceof Scenario)
-					World.scenario=(Scenario)target;
+		Map<String,Object> modes=new HashMap<>(SCENARIOS);
+		modes.putAll(MINIGAMES);
+		for(String mode:modes.keySet())
+			if(args[0].compareToIgnoreCase(mode.replaceAll(" ",""))==0) try{
+				if(SCENARIOS.containsKey(mode))
+					runscenario(mode);
 				else
-					JavelinApp.minigame=(Minigame)target;
+					runminigame(mode);
 				return true;
+			}catch(ReflectiveOperationException e){
+				throw new RuntimeException(e);
 			}
 		return false;
 	}

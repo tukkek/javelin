@@ -1,11 +1,13 @@
 package javelin.controller.table.dungeon.feature;
 
+import javelin.controller.table.Table;
 import javelin.controller.table.dungeon.InhabitantTable;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Campfire;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.model.world.location.dungeon.feature.Herb;
+import javelin.model.world.location.dungeon.feature.LearningStone;
 import javelin.model.world.location.dungeon.feature.inhabitant.Inhabitant;
 
 /**
@@ -16,17 +18,17 @@ import javelin.model.world.location.dungeon.feature.inhabitant.Inhabitant;
  * @see InhabitantTable
  * @see FeatureRarityTable
  */
-public class RareFeatureTable extends CommonFeatureTable{
+public class RareFeatureTable extends Table implements DungeonFeatureTable{
 	public RareFeatureTable(){
 		add(Fountain.class,CommonFeatureTable.MAX);
 		add(Campfire.class,CommonFeatureTable.MAX);
-		// add(LearningStone.class, MAX);
+		add(LearningStone.class,CommonFeatureTable.MAX);
 		add(Herb.class,CommonFeatureTable.MAX);
 		add(Inhabitant.class,CommonFeatureTable.MAX);
 	}
 
-	/**
-	 * Semantically identical to {@link CommonFeatureTable#rollfeature(Dungeon)}.
+	/* (non-Javadoc)
+	 * @see javelin.controller.table.dungeon.feature.DungeonFeatureTable#rollfeature(javelin.model.world.location.dungeon.Dungeon)
 	 */
 	@Override
 	public Feature rollfeature(Dungeon d){

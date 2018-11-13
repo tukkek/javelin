@@ -410,4 +410,9 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 	public float getsavechance(Combatant active,Combatant target){
 		return CastSpell.converttochance(save(active,target));
 	}
+
+	@Override
+	public String getname(){
+		return "Spell: "+super.getname();
+	}
 }

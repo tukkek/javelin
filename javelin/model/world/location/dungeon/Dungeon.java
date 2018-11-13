@@ -44,6 +44,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.LearningStone;
 import javelin.model.world.location.dungeon.feature.Spirit;
 import javelin.model.world.location.dungeon.feature.StairsDown;
 import javelin.model.world.location.dungeon.feature.StairsUp;
@@ -69,7 +70,7 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class Dungeon extends Location{
-	static final Class<? extends Feature> DEBUGFEATURE=null;
+	static final Class<? extends Feature> DEBUGFEATURE=LearningStone.class;
 
 	static final int MAXTRIES=1000;
 	static final int[] DELTAS={-1,0,1};
@@ -341,6 +342,11 @@ public class Dungeon extends Location{
 		int features=0;
 		while(features<nfeatures){
 			Feature f=createfeature();
+			if(Javelin.DEBUG&&DEBUGFEATURE!=null) try{
+				f=DEBUGFEATURE.getDeclaredConstructor().newInstance();
+			}catch(ReflectiveOperationException e){
+				throw new RuntimeException(e);
+			}
 			if(f==null) continue;
 			Point p=findspot();
 			f.x=p.x;
@@ -351,11 +357,6 @@ public class Dungeon extends Location{
 	}
 
 	protected Feature createfeature(){
-		if(Javelin.DEBUG&&DEBUGFEATURE!=null) try{
-			return DEBUGFEATURE.getDeclaredConstructor().newInstance();
-		}catch(ReflectiveOperationException e){
-			throw new RuntimeException(e);
-		}
 		var table=gettable(FeatureRarityTable.class).rollboolean()
 				?RareFeatureTable.class
 				:CommonFeatureTable.class;

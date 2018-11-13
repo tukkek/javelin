@@ -3,6 +3,7 @@ package javelin.controller.upgrade;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.fight.Fight;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
@@ -21,7 +22,12 @@ import javelin.model.world.location.town.Town;
  * @author alex
  */
 public abstract class Upgrade implements Serializable{
-	/** Short description. */
+	/**
+	 * Short description.
+	 *
+	 * @deprecated See {@link #getname()}
+	 */
+	@Deprecated
 	public String name;
 	/**
 	 * Indicates that this upgrade is immediately relevant during {@link Fight}s.
@@ -90,5 +96,26 @@ public abstract class Upgrade implements Serializable{
 	public final boolean validate(Combatant c){
 		c=c.clone().clonesource();
 		return upgrade(c);
+	}
+
+	/**
+	 * 1 CR = 100 XP.
+	 *
+	 * @return The CR cost to upgrade this {@link Combatant} or <code>null</code>
+	 *         if cannot {@link #apply(Combatant)}.
+	 */
+	public Float getcost(Combatant c){
+		final Combatant clone=c.clone().clonesource();
+		if(!upgrade(clone)) return null;
+		float oldcr=ChallengeCalculator.calculaterawcr(c.source)[1];
+		float newcr=ChallengeCalculator.calculaterawcr(clone.source)[1];
+		return newcr-oldcr;
+	}
+
+	/**
+	 * @return Name of this upgrade.
+	 */
+	public String getname(){
+		return name;
 	}
 }

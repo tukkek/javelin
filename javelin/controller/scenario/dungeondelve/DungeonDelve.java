@@ -31,6 +31,7 @@ public class DungeonDelve extends Campaign{
 		allowallactors=true;
 		worldencounters=false;
 		worldhazards=false;
+		fogofwar=false;
 	}
 
 	@Override

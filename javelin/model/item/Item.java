@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
+import javelin.Javelin;
 import javelin.controller.action.UseItem;
 import javelin.controller.action.world.UseItems;
 import javelin.controller.comparator.ItemsByPrice;
@@ -97,7 +98,7 @@ public abstract class Item implements Serializable,Cloneable{
 	 */
 	public Item(final String name,final int price,final ItemSelection upgradeset){
 		this.name=name;
-		this.price=price;
+		this.price=Javelin.round(price);
 		if(upgradeset!=null){
 			ALL.add(this);
 			upgradeset.add(this);
@@ -221,8 +222,8 @@ public abstract class Item implements Serializable,Cloneable{
 	 * item and updates {@link Squad#equipment}.
 	 */
 	public void grab(Squad s){
-		final String list=UseItems.listitems(null,false)+"\nWho will take the "
-				+toString().toLowerCase()+"?";
+		String list=UseItems.listitems(null,false)+"\n";
+		list+="Who will take the "+toString().toLowerCase()+"?";
 		s.equipment.get(UseItems.selectmember(s.members,this,list)).add(this);
 	}
 
@@ -347,5 +348,15 @@ public abstract class Item implements Serializable,Cloneable{
 			description+=" ("+prohibited+")";
 		else if(c.equipped.contains(this)) description+=" (equipped)";
 		return description;
+	}
+
+	/**
+	 * @return <code>true</code> if any of the {@link Combatant}s can use this.
+	 * @see #canuse(Combatant)
+	 */
+	public boolean canuse(List<Combatant> members){
+		for(var member:members)
+			if(canuse(member)==null) return true;
+		return false;
 	}
 }

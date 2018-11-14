@@ -11,5 +11,6 @@ public class InhabitantTable extends Table{
 		add(Broker.class,CommonFeatureTable.MAX);
 		add(Prisoner.class,CommonFeatureTable.MAX);
 		add(Leader.class,CommonFeatureTable.MAX);
+		add(Trader.class,CommonFeatureTable.MAX);
 	}
 }

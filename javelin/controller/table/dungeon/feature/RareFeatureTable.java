@@ -27,9 +27,7 @@ public class RareFeatureTable extends Table implements DungeonFeatureTable{
 		add(Inhabitant.class,CommonFeatureTable.MAX);
 	}
 
-	/* (non-Javadoc)
-	 * @see javelin.controller.table.dungeon.feature.DungeonFeatureTable#rollfeature(javelin.model.world.location.dungeon.Dungeon)
-	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Feature rollfeature(Dungeon d){
 		Class<? extends Feature> type=(Class<? extends Feature>)roll();

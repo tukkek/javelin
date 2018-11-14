@@ -44,7 +44,6 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
-import javelin.model.world.location.dungeon.feature.LearningStone;
 import javelin.model.world.location.dungeon.feature.Spirit;
 import javelin.model.world.location.dungeon.feature.StairsDown;
 import javelin.model.world.location.dungeon.feature.StairsUp;
@@ -70,7 +69,7 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class Dungeon extends Location{
-	static final Class<? extends Feature> DEBUGFEATURE=LearningStone.class;
+	static final Class<? extends Feature> DEBUGFEATURE=null;
 
 	static final int MAXTRIES=1000;
 	static final int[] DELTAS={-1,0,1};

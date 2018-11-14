@@ -94,6 +94,9 @@ public class Equipment implements Serializable{
 		}
 	}
 
+	/**
+	 * @return Total number of {@link Item}s this squad possesses.
+	 */
 	public int count(){
 		int count=0;
 		for(ArrayList<Item> bag:equipment.values())

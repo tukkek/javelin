@@ -4,6 +4,7 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.fight.Fight;
+import javelin.controller.table.dungeon.Trader;
 import javelin.model.item.Ruby;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -34,7 +35,7 @@ public class Megadungeon extends Dungeon{
 	 * TODO add merchant {@link Inhabitant}, learning stones
 	 */
 	public static final List<Class<? extends Feature>> FEATURES=List
-			.of(Fountain.class,Chest.class);
+			.of(Fountain.class,Chest.class,Trader.class);
 	/**
 	 * The fraction of {@link Dungeon} {@link Feature}s that will be normal,
 	 * compared to the ones provided by {@link #FEATURES}.

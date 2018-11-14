@@ -24,8 +24,8 @@ public class RPG{
 	}
 
 	/**
-	 * Returns random number uniformly distributed in [n1, n2] range. It is
-	 * allowed to have to n1 > n2, or n1 < n2, or n1 == n2.
+	 * @return A random number uniformly distributed in [n1, n2] range. It is
+	 *         allowed to have so n1 > n2, or n1 < n2, or n1 == n2.
 	 */
 	public static final int r(final int n1,final int n2){
 		return Math.min(n1,n2)+rand.nextInt(Math.max(n1,n2)-Math.min(n1,n2)+1);

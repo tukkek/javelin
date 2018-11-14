@@ -142,7 +142,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 		int hitdice=c.source.hd.count();
 		if(!checkcasterlevel(hitdice,c)||c.spells.count()>=hitdice) // design parameters
 			return false;
-		Spell s=c.spells.has(getClass());
+		Spell s=c.spells.get(getClass());
 		if(s==null){
 			s=clone();
 			s.name=s.name.replaceAll("Spell: ","");
@@ -165,7 +165,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 	}
 
 	private int count(Combatant source){
-		Spell s=source.spells.has(getClass());
+		Spell s=source.spells.get(getClass());
 		return s==null?0:s.perday;
 	}
 

@@ -55,7 +55,7 @@ public class CasterRing extends Artifact{
 
 	@Override
 	protected void apply(Combatant c){
-		Spell s=c.spells.has(spell.getClass());
+		Spell s=c.spells.get(spell.getClass());
 		if(s==null){
 			s=spell.clone();
 			s.perday=uses;
@@ -69,7 +69,7 @@ public class CasterRing extends Artifact{
 
 	@Override
 	protected void negate(Combatant c){
-		Spell s=c.spells.has(spell.getClass());
+		Spell s=c.spells.get(spell.getClass());
 		s.perday-=uses;
 		if(s.perday<=0)
 			c.spells.remove(s);

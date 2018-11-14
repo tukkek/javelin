@@ -13,7 +13,7 @@ public class Spells extends CloneableList<Spell>{
 	 * @param type Given a spell class...
 	 * @return the instance of such spell or <code>null</code> if none is found.
 	 */
-	public <K extends Spell> K has(Class<K> type){
+	public <K extends Spell> K get(Class<K> type){
 		for(var spell:this)
 			if(type.isInstance(spell)) return (K)spell;
 		return null;

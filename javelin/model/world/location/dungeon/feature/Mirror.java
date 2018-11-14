@@ -52,7 +52,7 @@ public class Mirror extends Feature{
 
 		@Override
 		public void start(Combatant c){
-			var reflection=c.spells.has(Reflection.class);
+			var reflection=c.spells.get(Reflection.class);
 			if(reflection==null){
 				reflection=new Reflection();
 				c.spells.add(reflection);
@@ -62,7 +62,7 @@ public class Mirror extends Feature{
 
 		@Override
 		public void end(Combatant c){
-			var reflection=c.spells.has(Reflection.class);
+			var reflection=c.spells.get(Reflection.class);
 			if(reflection==null) return;
 			if(reflection.perday==1)
 				c.spells.remove(reflection);
@@ -73,7 +73,7 @@ public class Mirror extends Feature{
 		@Override
 		public void transfer(Combatant from,Combatant to){
 			super.transfer(from,to);
-			var reflection=from.spells.has(Reflection.class);
+			var reflection=from.spells.get(Reflection.class);
 			if(reflection!=null&&reflection.exhausted()){
 				to.spells.remove(reflection);
 				to.removecondition(this);

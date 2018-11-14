@@ -292,7 +292,7 @@ public class Scenario implements Serializable{
 	 *
 	 * @param day
 	 */
-	public void end(double day){
+	public void endday(double day){
 		// nothing
 	}
 
@@ -317,12 +317,17 @@ public class Scenario implements Serializable{
 
 	/**
 	 * Called only once, after {@link World} generation ends.
-	 * 
+	 *
 	 * @param w
 	 *
 	 * @see WorldGenerator#finish(Location, World)
 	 */
 	public void ready(World w){
 		//nothing by default
+	}
+
+	/** Called at the end of @link World} or {@link Dungeon} actions. */
+	public void endturn(){
+		// nothing by default
 	}
 }

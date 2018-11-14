@@ -4,15 +4,17 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.fight.Fight;
+import javelin.controller.fight.RandomDungeonEncounter;
 import javelin.controller.table.dungeon.Trader;
 import javelin.model.item.Ruby;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.feature.Campfire;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
+import javelin.model.world.location.dungeon.feature.LearningStone;
 import javelin.model.world.location.dungeon.feature.StairsDown;
-import javelin.model.world.location.dungeon.feature.inhabitant.Inhabitant;
 import javelin.model.world.location.town.District;
 import javelin.old.RPG;
 
@@ -26,16 +28,18 @@ import javelin.old.RPG;
 public class Megadungeon extends Dungeon{
 	/**
 	 * Since {@link DungeonDelve} characters cannot rely on usual
-	 * {@link District}s to train and spend money on, these features are
+	 * {@link District}s to train, spend money on and heal, these features are
 	 * artifically boosted on the {@link Megadungeon}. Note that {@link Chest}s
 	 * here will be turned into special chests with a Wish {@link Ruby} inside, to
 	 * make up for the aggravated lack of balancing for {@link Dungeon}-only play
 	 * in Javelin.
 	 *
-	 * TODO add merchant {@link Inhabitant}, learning stones
+	 * Roughly half of it should be resting/healing features since that's the most
+	 * important for basic survival.
 	 */
-	public static final List<Class<? extends Feature>> FEATURES=List
-			.of(Fountain.class,Chest.class,Trader.class);
+	public static final List<Class<? extends Feature>> FEATURES=List.of(
+			Fountain.class,Campfire.class,LearningStone.class,Chest.class,
+			Trader.class);
 	/**
 	 * The fraction of {@link Dungeon} {@link Feature}s that will be normal,
 	 * compared to the ones provided by {@link #FEATURES}.
@@ -78,8 +82,11 @@ public class Megadungeon extends Dungeon{
 
 	@Override
 	public Fight encounter(){
-		if(!DungeonDelve.hasmcguffin()) return super.encounter();
-		return DungeonDelve.getdungeons().get(DungeonDelve.LEVELS).encounter();
+		if(DungeonDelve.get().climbmode){
+			var deepest=DungeonDelve.getdungeons().get(DungeonDelve.LEVELS);
+			return new RandomDungeonEncounter(deepest);
+		}
+		return super.encounter();
 	}
 
 	@Override

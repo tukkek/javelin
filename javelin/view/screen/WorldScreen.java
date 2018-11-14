@@ -214,17 +214,18 @@ public class WorldScreen extends BattleScreen{
 	 * @see Squad#hourselapsed
 	 */
 	void endturn(){
+		World.scenario.endturn();
 		if(Dungeon.active!=null) return;
 		Squad act=Javelin.act();
 		long time=act.hourselapsed;
-		final int day=new Double(Math.ceil(time/24.0)).intValue();
+		final int day=Double.valueOf(Math.ceil(time/24.0)).intValue();
 		List<Actor> squads=World.getall(Squad.class);
 		while(day>WorldScreen.lastday||squads.isEmpty()){
 			WorldScreen.lastday+=1;
 			Season.change(day);
 			Weather.weather();
 			World.seed.featuregenerator.spawn(1f/SPAWNPERIOD,false);
-			World.scenario.end(WorldScreen.lastday);
+			World.scenario.endday(WorldScreen.lastday);
 			ArrayList<Actor> actors=World.getactors();
 			ArrayList<Incursion> incursions=Incursion.getall();
 			actors.removeAll(incursions);

@@ -2,6 +2,7 @@ package javelin.model.world.location.dungeon.feature;
 
 import java.io.Serializable;
 
+import javelin.controller.Point;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Perception;
@@ -86,5 +87,10 @@ public abstract class Feature implements Serializable{
 
 	public void remove(){
 		Dungeon.active.features.remove(this);
+	}
+
+	/** @return A point representing this feature. */
+	public Point getlocation(){
+		return new Point(x,y);
 	}
 }

@@ -21,7 +21,7 @@ public class Spirit extends Feature{
 
 	@Override
 	public boolean activate(){
-		Feature show=Dungeon.active.getundiscoveredfeature();
+		Feature show=Dungeon.active.features.getundiscovered();
 		if(show==null){
 			Javelin.message("The spirit flees from your presence in shame...",false);
 			return true;

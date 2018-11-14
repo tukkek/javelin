@@ -346,7 +346,7 @@ public class WorldScreen extends BattleScreen{
 		if(World.scenario.worldencounters&&(s.transport==null||s.transport.battle())
 				&&!Town.getdistricts().contains(new Point(x,y)))
 			RandomEncounter.encounter(hoursellapsed/HOURSPERENCOUNTER);
-		if(!World.scenario.worldhazards) return false;
+		if(!World.scenario.worldhazards) return true;
 		boolean special=RPG.r(1,Terrain.HAZARDCHANCE)==1;
 		if(s.getdistrict()!=null) return true;
 		ArrayList<Hazard> hazards=new ArrayList<>();

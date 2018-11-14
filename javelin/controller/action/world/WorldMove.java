@@ -97,7 +97,7 @@ public class WorldMove extends WorldAction{
 		if(JavelinApp.context.react(tox,toy)||abort||!place(tox,toy)) return false;
 		boolean stop=false;
 		if(walk(JavelinApp.context.getherolocation()))
-			stop=JavelinApp.context.explore(tox,toy);
+			stop=!JavelinApp.context.explore(tox,toy);
 		heal();
 		return !stop;
 	}

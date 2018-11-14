@@ -41,7 +41,7 @@ public class UseItems extends WorldAction{
 			InfoScreen infoscreen=new InfoScreen("");
 			String actions;
 			actions="Press number to use an item\n";
-			actions+="Press d to drop an item\n";
+			actions+="Press d to discard an item\n";
 			actions+="Press e to exchange an item\n";
 			actions+="Press q to quit the inventory\n";
 			ArrayList<Item> allitems=new ArrayList<>();

@@ -121,6 +121,7 @@ public class JavelinApp extends QuestApp{
 				JavelinApp.context.turn();
 			}
 		}catch(final StartBattle e){
+			if(Debug.disablecombat) return;
 			fight=e.fight;
 			try{
 				e.battle();

@@ -16,6 +16,7 @@ import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonTier;
+import javelin.model.world.location.dungeon.DungeonZoner;
 import javelin.model.world.location.dungeon.feature.Altar;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
@@ -122,20 +123,20 @@ public class TempleDungeon extends Dungeon{
 	}
 
 	@Override
-	protected void createstairs(Point p){
-		super.createstairs(p);
-		if(!deepest) features.add(new StairsDown(findspot()));
+	protected void createstairs(DungeonZoner zoner){
+		super.createstairs(zoner);
+		if(!deepest) features.add(new StairsDown(zoner.getpoint()));
 	}
 
 	@Override
-	protected void createfeatures(int nfeatures){
+	protected void createfeatures(int nfeatures,DungeonZoner zoner){
 		if(this==temple.floors.get(0)){
 			CommonFeatureTable table=tables.get(CommonFeatureTable.class);
 			int size=table.getchances();
 			table.add(Fountain.class,size);
 			if(temple.feature!=null) table.add(temple.feature,size);
 		}
-		super.createfeatures(nfeatures);
+		super.createfeatures(nfeatures,zoner);
 	}
 
 	@Override

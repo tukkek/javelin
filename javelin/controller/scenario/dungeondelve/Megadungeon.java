@@ -9,6 +9,7 @@ import javelin.controller.table.dungeon.Trader;
 import javelin.model.item.Ruby;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonZoner;
 import javelin.model.world.location.dungeon.feature.Campfire;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
@@ -51,9 +52,10 @@ public class Megadungeon extends Dungeon{
 	}
 
 	@Override
-	protected void createstairs(Point p){
-		super.createstairs(p);
-		if(level!=DungeonDelve.LEVELS) features.add(new StairsDown(findspot()));
+	protected void createstairs(DungeonZoner zoner){
+		super.createstairs(zoner);
+		if(level!=DungeonDelve.LEVELS)
+			features.add(new StairsDown(zoner.getpoint()));
 	}
 
 	@Override

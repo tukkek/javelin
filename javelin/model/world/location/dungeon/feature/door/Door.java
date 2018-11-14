@@ -7,6 +7,7 @@ import java.util.List;
 import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.table.Table;
 import javelin.controller.table.dungeon.door.HiddenDoor;
@@ -55,9 +56,9 @@ public class Door extends Feature{
 	public int breakdc;
 	public Class<? extends Key> key;
 
-	DoorTrap trap=rolltable(TrappedDoor.class)?RPG.pick(TRAPS):null;
-	boolean stuck=rolltable(StuckDoor.class);
-	boolean locked=rolltable(LockedDoor.class);
+	public DoorTrap trap=rolltable(TrappedDoor.class)?RPG.pick(TRAPS):null;
+	public boolean stuck=rolltable(StuckDoor.class);
+	public boolean locked=rolltable(LockedDoor.class);
 	/** @see #searchdc */
 	/**
 	 * TODO use only #draw, remove
@@ -80,28 +81,55 @@ public class Door extends Feature{
 	public boolean activate(){
 		if(Debug.bypassdoors) return true;
 		if(hidden&&!draw) return false;
-		Combatant unlocker=unlock();
-		Combatant forcer=force();
-		if(locked){
-			if(unlocker!=null)
-				Javelin.message(unlocker+" unlocks the door!",false);
-			else if(forcer!=null)
-				Javelin.message(forcer+" forces the lock!",false);
-			else if(getkey()==null){
-				Javelin.message("The lock is too complex to pick...",false);
-				return false;
-			}else if(!usekey()) // feedback alredy shown as prompt
-				return false;
-		}else if(stuck) if(forcer!=null)
-			Javelin.message(forcer+" breaks the door open!",false);
-		else{
-			Javelin.message("The door is too heavy to open...",false);
+		Combatant unlocker=getunlocker();
+		Combatant forcer=getforcer();
+		int strength=Monster.getbonus(forcer.source.strength);
+		if(locked) if(unlocker!=null)
+			Javelin.message(unlocker+" unlocks the door!",false);
+		else if(10+strength>breakdc)
+			Javelin.message(forcer+" forces the lock!",false);
+		else if(getkey()==null){
+			Javelin.message("The lock is too complex to pick...",false);
 			return false;
+		}else if(!usekey()) // feedback alredy shown as prompt
+			return false;
+		locked=false;
+		if(stuck){
+			String prompt="The door is too heavy to open... Do you want to force it?\n";
+			prompt+="Press ENTER to force or any other key to cancel...";
+			if(Javelin.prompt(prompt)!='\n'||!force(forcer,strength)) return false;
 		}
 		enter=true;
 		remove();
 		spring(unlocker==null?forcer:unlocker);
 		return true;
+	}
+
+	boolean force(Combatant forcer,int strength){
+		boolean forced=false;
+		boolean alerted=false;
+		while(!forced&&!alerted){
+			forced=attemptbreak(strength);
+			alerted=RPG.chancein(10);
+		}
+		String result;
+		if(forced){
+			result=forcer+" kicks the door down!";
+			stuck=false;
+		}else
+			result=forcer+" could not break the door in this attempt...";
+		if(alerted) result+="\nThe noise draws someone's attention!";
+		Javelin.message(result,false);
+		if(alerted) throw new StartBattle(Dungeon.active.encounter());
+		return !stuck;
+	}
+
+	public boolean attemptbreak(int strength){
+		if(10+strength>=breakdc) return true;
+		int roll=RPG.r(1,20);
+		if(roll==20) return true;
+		if(roll==1) return false;
+		return roll+strength>=breakdc;
 	}
 
 	boolean usekey(){
@@ -127,18 +155,16 @@ public class Door extends Feature{
 		trap.activate(opening);
 	}
 
-	Combatant unlock(){
+	Combatant getunlocker(){
 		Combatant expert=Squad.active.getbest(Skill.DISABLEDEVICE);
 		return expert.taketen(Skill.DISABLEDEVICE)>=unlockdc?expert:null;
 	}
 
-	Combatant force(){
-		Combatant strongest=null;
+	Combatant getforcer(){
+		Combatant strongest=Squad.active.members.get(0);
 		for(Combatant c:Squad.active.members)
-			if(strongest==null||c.source.strength>strongest.source.strength)
-				strongest=c;
-		int force=10+Monster.getbonus(strongest.source.strength);
-		return force>=breakdc?strongest:null;
+			if(c.source.strength>strongest.source.strength) strongest=c;
+		return strongest;
 	}
 
 	public static Door generate(Dungeon dungeon,Point p){

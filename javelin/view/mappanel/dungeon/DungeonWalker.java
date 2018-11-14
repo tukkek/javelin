@@ -44,7 +44,7 @@ public class DungeonWalker extends OverlayWalker{
 		if(p.encounterchance>1) return false;
 		if(p.equals(to)) return !Dungeon.active.herolocation.equals(step);
 		if(!BattleScreen.active.mappanel.tiles[p.x][p.y].discovered) return false;
-		final Feature f=Dungeon.active.getfeature(p.x,p.y);
+		final Feature f=Dungeon.active.features.get(p.x, p.y);
 		return f==null||f instanceof MechanicalTrap;
 	}
 

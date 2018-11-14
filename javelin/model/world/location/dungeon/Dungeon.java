@@ -26,6 +26,7 @@ import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.table.Table;
 import javelin.controller.table.Tables;
 import javelin.controller.table.dungeon.door.DoorExists;
+import javelin.controller.table.dungeon.door.KeyPresenceTable;
 import javelin.controller.table.dungeon.feature.CommonFeatureTable;
 import javelin.controller.table.dungeon.feature.FeatureModifierTable;
 import javelin.controller.table.dungeon.feature.FeatureRarityTable;
@@ -37,14 +38,12 @@ import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
-import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
-import javelin.model.world.location.dungeon.feature.Spirit;
 import javelin.model.world.location.dungeon.feature.StairsDown;
 import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.door.Door;
@@ -200,25 +199,14 @@ public class Dungeon extends Location{
 		BattleScreen.active=JavelinApp.context;
 		Squad.active.updateavatar();
 		BattleScreen.active.mappanel.center(herolocation.x,herolocation.y,true);
-		knowfeatures();
-	}
-
-	void knowfeatures(){
-		int knowledge=Squad.active.getbest(Skill.KNOWLEDGE)
-				.taketen(Skill.KNOWLEDGE);
-		int reveal=knowledge-(10+level);
-		while(revealed<reveal){
-			revealed+=1;
-			Feature f=getundiscoveredfeature();
-			if(f!=null) discover(f);
-		}
+		features.getknown();
 	}
 
 	/**
 	 * This function generates the dungeon map using {@link DungeonGenerator} and
-	 * then {@link #placefeatures()}. One notable thing that happens here is the
-	 * determination of how many {@link RandomDungeonEncounter}s should take for
-	 * the player to explore the whole level.
+	 * then {@link #createfeatures(int)}. One notable thing that happens here is
+	 * the determination of how many {@link RandomDungeonEncounter}s should take
+	 * for the player to explore the whole level.
 	 *
 	 * Currently, the calculation is done by setting a goal of one fight per room
 	 * on average (so naturally, larger {@link DungeonTier}s will have more fights
@@ -323,35 +311,70 @@ public class Dungeon extends Location{
 	}
 
 	protected void populatedungeon(int nrooms){
-		herolocation=findspot();
-		createstairs(herolocation);
+		herolocation=getrandompoint();
+		var zoner=new DungeonZoner(this,herolocation);
+		createstairs(zoner);
+		createkeychests(zoner);
 		int goldpool=createtraps(getfeaturequantity(nrooms,ratiotraps));
-		createchests(getfeaturequantity(nrooms,ratiotreasure),goldpool);
-		createfeatures(getfeaturequantity(nrooms,ratiofeatures));
+		createchests(getfeaturequantity(nrooms,ratiotreasure),goldpool,zoner);
+		createfeatures(getfeaturequantity(nrooms,ratiofeatures),zoner);
 	}
 
-	protected void createstairs(Point p){
-		features.add(new StairsUp("stairs up",p));
-		for(int x=p.x-1;x<=p.x+1;x++)
-			for(int y=p.y-1;y<=p.y+1;y++)
-				map[x][y]=Template.FLOOR;
-	}
-
-	protected void createfeatures(int nfeatures){
-		int features=0;
-		while(features<nfeatures){
-			Feature f=createfeature();
-			if(Javelin.DEBUG&&DEBUGFEATURE!=null) try{
-				f=DEBUGFEATURE.getDeclaredConstructor().newInstance();
-			}catch(ReflectiveOperationException e){
-				throw new RuntimeException(e);
+	private void createkeychests(DungeonZoner zoner){
+		try{
+			var generated=new ArrayList<Door>();
+			var area=new ArrayList<Point>();
+			for(var zone:zoner.zones){
+				area.addAll(zone.area);
+				for(var door:zone.doors){
+					if(!door.locked||generated.contains(door)) continue;
+					generated.add(door);
+					var keys=tables.get(KeyPresenceTable.class).rollnumber();
+					while(keys>0){
+						Point p=null;
+						while(p==null||isoccupied(p))
+							p=RPG.pick(area);
+						var key=door.key.getConstructor().newInstance();
+						features.add(new Chest(p.x,p.y,key));
+						keys-=1;
+					}
+				}
 			}
-			if(f==null) continue;
-			Point p=findspot();
-			f.x=p.x;
-			f.y=p.y;
-			this.features.add(f);
-			features+=1;
+		}catch(ReflectiveOperationException e){
+			throw new RuntimeException(e);
+		}
+	}
+
+	public Point getrandompoint(){
+		Point p=null;
+		while(p==null||isoccupied(p))
+			p=new Point(RPG.r(0,size-1),RPG.r(0,size-1));
+		return p;
+	}
+
+	protected void createstairs(DungeonZoner zoner){
+		features.add(new StairsUp("stairs up",herolocation));
+		for(int x=herolocation.x-1;x<=herolocation.x+1;x++)
+			for(int y=herolocation.y-1;y<=herolocation.y+1;y++)
+				map[x][y]=Template.FLOOR;
+
+	}
+
+	protected void createfeatures(int nfeatures,DungeonZoner zoner){
+		try{
+			while(nfeatures>0){
+				Feature f=Javelin.DEBUG&&DEBUGFEATURE!=null
+						?DEBUGFEATURE.getDeclaredConstructor().newInstance()
+						:createfeature();
+				if(f==null) continue;
+				Point p=zoner.getpoint();
+				f.x=p.x;
+				f.y=p.y;
+				features.add(f);
+				nfeatures-=1;
+			}
+		}catch(ReflectiveOperationException e){
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -373,7 +396,7 @@ public class Dungeon extends Location{
 			int cr=level+Difficulty.get()
 					+gettable(FeatureModifierTable.class).rollmodifier();
 			boolean special=gettable(SpecialTrapTable.class).rollboolean();
-			Trap t=Trap.generate(cr,special,findspot());
+			Trap t=Trap.generate(cr,special,getrandompoint());
 			if(t==null) continue;
 			features.add(t);
 			if(cr>0) gold+=RewardCalculator.getgold(t.cr);
@@ -388,18 +411,10 @@ public class Dungeon extends Location{
 		return 0<=coordinate&&coordinate<=size;
 	}
 
-	/*
-	 * TODO would be cool to generate a flood-map to see which chest is more distant
-	 * before deciding which one is the special one. Would probably need to generate
-	 * points frist, chests later.
-	 *
-	 * AFter introducing Doors, actually would have to have some sort of zoning in
-	 * there too.
-	 */
-	void createchests(int nchests,int pool){
+	void createchests(int nchests,int pool,DungeonZoner zoner){
 		for(int i=0;i<nchests;i++)
 			if(RPG.chancein(10)) nchests+=1;
-		features.add(createspecialchest(findspot()));
+		features.add(createspecialchest(zoner.getpoint()));
 		int hidden=RewardCalculator.getgold(level)*nchests;
 		if(pool>0)
 			nchests+=1;
@@ -412,7 +427,7 @@ public class Dungeon extends Location{
 			Dungeon toplevel=this;
 			while(toplevel.parent!=null)
 				toplevel=toplevel.parent;
-			features.add(new Chest(gold,findspot(),toplevel.forbidden));
+			features.add(new Chest(gold,zoner.getpoint(),toplevel.forbidden));
 			pool-=gold;
 		}
 	}
@@ -426,16 +441,6 @@ public class Dungeon extends Location{
 		Chest c=new Chest(p.x,p.y,i);
 		c.setspecial();
 		return c;
-	}
-
-	/**
-	 * @return Free spot on the dungeon floor (no walls or features).
-	 */
-	public Point findspot(){
-		Point p=null;
-		while(p==null||isoccupied(p))
-			p=new Point(RPG.r(0,size-1),RPG.r(0,size-1));
-		return p;
 	}
 
 	public boolean isoccupied(Point p){
@@ -519,12 +524,6 @@ public class Dungeon extends Location{
 		return null;
 	}
 
-	public Feature getfeature(int x,int y){
-		for(Feature f:features)
-			if(f.x==x&&f.y==y) return f;
-		return null;
-	}
-
 	public void setvisible(int x,int y){
 		visible[x][y]=true;
 		BattleScreen.active.mappanel.tiles[x][y].discovered=true;
@@ -561,18 +560,6 @@ public class Dungeon extends Location{
 		f.discover(null,9000);
 	}
 
-	/**
-	 * TODO return a list so that {@link Spirit} can show the closest one. It'd be
-	 * more versatile anyway.
-	 */
-	public Feature getundiscoveredfeature(){
-		ArrayList<Feature> features=this.features.copy();
-		Collections.shuffle(features);
-		for(Feature f:features)
-			if(!visible[f.x][f.y]||!f.draw) return f;
-		return null;
-	}
-
 	public static <K extends Table> K gettable(Class<K> table){
 		return Dungeon.active.tables.get(table);
 	}
@@ -583,16 +570,6 @@ public class Dungeon extends Location{
 			enemies.addAll(encounter);
 		Collections.shuffle(enemies);
 		return enemies;
-	}
-
-	public boolean hasfeature(Class<? extends Feature> feature){
-		return find(feature)!=null;
-	}
-
-	public <K extends Feature> K find(Class<K> feature){
-		for(Feature f:features)
-			if(feature.isInstance(f)) return (K)f;
-		return null;
 	}
 
 	/**

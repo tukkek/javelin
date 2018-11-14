@@ -33,7 +33,7 @@ public class Brazier extends Feature{
 
 	void brighten(Point p){
 		Dungeon.active.setvisible(p.x,p.y);
-		Feature f=Dungeon.active.getfeature(p.x,p.y);
+		Feature f=Dungeon.active.features.get(p.x, p.y);
 		if(f!=null) f.discover(null,9000);
 	}
 }

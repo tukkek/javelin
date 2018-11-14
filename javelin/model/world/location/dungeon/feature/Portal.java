@@ -24,7 +24,7 @@ public class Portal extends Feature{
 	public boolean activate(){
 		if(Javelin.prompt(PROMPT)!='\n') return true;
 		Dungeon d=Dungeon.active;
-		StairsUp stairs=d.find(StairsUp.class);
+		StairsUp stairs=d.features.get(StairsUp.class);
 		d.herolocation=new Point(stairs.x-1,stairs.y);
 		WorldMove.abort=true;
 		return true;

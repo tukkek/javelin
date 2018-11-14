@@ -67,7 +67,7 @@ public class DungeonCrawler{
 
 	void crawl(Point p,int depth){
 		if(depth>this.depth||visited.contains(p)||!validate(p)) return;
-		Feature f=dungeon.getfeature(p.x,p.y);
+		Feature f=dungeon.features.get(p.x, p.y);
 		if(!validate(f)) return;
 		visited.add(p);
 		if(proceed(p,f)) for(Point adjacent:Point.getadjacent()){

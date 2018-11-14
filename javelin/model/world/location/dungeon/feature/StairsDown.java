@@ -1,6 +1,8 @@
 package javelin.model.world.location.dungeon.feature;
 
+import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.action.world.WorldMove;
 import javelin.model.world.location.dungeon.Dungeon;
 
 /**
@@ -9,16 +11,21 @@ import javelin.model.world.location.dungeon.Dungeon;
  * @author alex
  */
 public class StairsDown extends Feature{
+	static final String CONFIRM="Go down the stairs?\nPress ENTER to confirm, any other key to cancel...";
+
 	/** Constructor. */
 	public StairsDown(Point p){
 		super(p.x,p.y,"dungeonstairsdown");
 		remove=false;
-		enter=false;
+		enter=true;
 	}
 
 	@Override
 	public boolean activate(){
-		Dungeon.active.godown();
+		if(Javelin.prompt(CONFIRM)=='\n'){
+			WorldMove.abort=true;
+			Dungeon.active.godown();
+		}
 		return false;
 	}
 }

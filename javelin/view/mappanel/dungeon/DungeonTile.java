@@ -24,7 +24,7 @@ public class DungeonTile extends Tile{
 		}
 		draw(g,JavelinApp.context.gettile(x,y));
 		if(Dungeon.active==null) return;
-		final Feature f=Dungeon.active.getfeature(x,y);
+		final Feature f=Dungeon.active.features.get(x, y);
 		if(f!=null&&f.draw){
 			if(f instanceof Door&&Dungeon.active.doorbackground)
 				draw(g,Images.get(Dungeon.active.wall));

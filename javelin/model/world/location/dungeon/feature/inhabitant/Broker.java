@@ -137,7 +137,7 @@ public class Broker extends Inhabitant{
 
 		boolean getinformation(){
 			for(int i=0;i<hints;i++){
-				Feature f=Dungeon.active.getundiscoveredfeature();
+				Feature f=Dungeon.active.features.getundiscovered();
 				if(f!=null) Dungeon.active.discover(f);
 			}
 			hints=0;

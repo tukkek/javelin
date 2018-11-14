@@ -86,16 +86,11 @@ public class Summon extends Spell{
 		team.add(summoned);
 		summoned.summoned=true;
 		summoned.automatic=true;
-		/*
-		 * TODO test if this is called after the CastSpell AP has already been
-		 * spent
-		 */
-		summoned.ap=summoner.ap;
-		summoned.initialap=summoned.ap;
+		summoned.rollinitiative(summoner.ap);
 		final Square[][] map=s.map;
 		int x=summoner.location[0];
 		int y=summoner.location[1];
-		while(s.getcombatant(x,y)!=null||map[x][y].blocked){
+		while(s.isblocked(x,y)){
 			x+=DISPLACE[RPG.r(DISPLACE.length)];
 			y+=DISPLACE[RPG.r(DISPLACE.length)];
 			if(x<0||y<0||x>=map.length||y>=map.length){

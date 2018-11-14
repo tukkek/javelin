@@ -10,14 +10,12 @@ import javelin.model.unit.Combatant;
  */
 public class Spells extends CloneableList<Spell>{
 	/**
-	 * @param spell Given a spell class...
+	 * @param type Given a spell class...
 	 * @return the instance of such spell or <code>null</code> if none is found.
 	 */
-	public Spell has(Spell spell){
-		for(Object sp:this){
-			Spell s=(Spell)sp;
-			if(s.equals(spell)) return s;
-		}
+	public <K extends Spell> K has(Class<K> type){
+		for(var spell:this)
+			if(type.isInstance(spell)) return (K)spell;
 		return null;
 	}
 

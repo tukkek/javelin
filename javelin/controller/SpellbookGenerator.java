@@ -31,7 +31,7 @@ public class SpellbookGenerator{
 				if(s.castinbattle&&s.cr<=crremaining
 						&&combatant.source.hd.count()>=s.casterlevel
 						&&s.apply(combatant.clone().clonesource())){
-					Spell learned=combatant.spells.has(s);
+					Spell learned=combatant.spells.has(s.getClass());
 					if(learned==null)
 						combatant.spells.add(s.clone());
 					else{

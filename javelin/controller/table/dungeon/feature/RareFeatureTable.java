@@ -8,6 +8,7 @@ import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.model.world.location.dungeon.feature.Herb;
 import javelin.model.world.location.dungeon.feature.LearningStone;
+import javelin.model.world.location.dungeon.feature.Mirror;
 import javelin.model.world.location.dungeon.feature.inhabitant.Inhabitant;
 
 /**
@@ -25,6 +26,7 @@ public class RareFeatureTable extends Table implements DungeonFeatureTable{
 		add(LearningStone.class,CommonFeatureTable.MAX);
 		add(Herb.class,CommonFeatureTable.MAX);
 		add(Inhabitant.class,CommonFeatureTable.MAX);
+		add(Mirror.class,CommonFeatureTable.MAX);
 	}
 
 	@SuppressWarnings("unchecked")

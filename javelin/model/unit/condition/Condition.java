@@ -158,7 +158,6 @@ public abstract class Condition
 	 * Condition is transferred to the original {@link Combatant}.
 	 *
 	 * @param to The original combatant.
-	 * @param to2
 	 */
 	public void transfer(Combatant from,Combatant to){
 		// nothing by default

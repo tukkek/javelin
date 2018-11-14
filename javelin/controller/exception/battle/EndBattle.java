@@ -115,8 +115,10 @@ public class EndBattle extends BattleEvent{
 	}
 
 	static void copyspells(final Combatant from,final Combatant to){
-		for(int i=0;i<from.spells.size();i++)
-			to.spells.get(i).used=from.spells.get(i).used;
+		for(var spell:from.spells){
+			var original=to.spells.has(spell.getClass());
+			if(original!=null) original.used=spell.used;
+		}
 	}
 
 	/**

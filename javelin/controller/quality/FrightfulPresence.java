@@ -22,7 +22,7 @@ public class FrightfulPresence extends Quality{
 	@Override
 	public void add(String declaration,Monster m){
 		Spell doom=new Doom();
-		Spell previous=m.spells.has(doom);
+		Spell previous=m.spells.has(doom.getClass());
 		if(previous==null)
 			m.spells.add(doom);
 		else

@@ -24,7 +24,7 @@ public class NaturalArmor extends Upgrade{
 		Monster m=c.source;
 		int from=m.getrawac();
 		int to=from+target-m.armor;
-		if(target<m.armor||to>from+10||to>m.dexterity+m.constitution) return false;
+		if(target<=m.armor||to>from+10||to>m.dexterity+m.constitution) return false;
 		m.armor=target;
 		m.setrawac(to);
 		return true;

@@ -367,10 +367,7 @@ public class Dungeon extends Location{
 						?DEBUGFEATURE.getDeclaredConstructor().newInstance()
 						:createfeature();
 				if(f==null) continue;
-				Point p=zoner.getpoint();
-				f.x=p.x;
-				f.y=p.y;
-				features.add(f);
+				zoner.place(f);
 				nfeatures-=1;
 			}
 		}catch(ReflectiveOperationException e){

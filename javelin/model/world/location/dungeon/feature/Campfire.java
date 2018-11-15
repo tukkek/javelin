@@ -7,7 +7,7 @@ import javelin.old.RPG;
 
 public class Campfire extends Feature{
 	static final String PROMPT="This room seems safe to rest in. Do you want to set up camp?\n"
-			+"Press c to camp, any other key to cancel...";
+			+"Press ENTER to camp, any other key to cancel...";
 	int uses=RPG.r(1,4);
 
 	public Campfire(){
@@ -17,7 +17,7 @@ public class Campfire extends Feature{
 
 	@Override
 	public boolean activate(){
-		if(Javelin.prompt(PROMPT)!='c') return false;
+		if(Javelin.prompt(PROMPT)!='\n') return false;
 		WorldMove.abort=true;
 		Lodge.rest(1,8,true,Lodge.LODGE);
 		uses-=1;

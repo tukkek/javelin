@@ -61,6 +61,9 @@ public class Herb extends Feature{
 
 	@Override
 	public boolean activate(){
+		if(Javelin.prompt("Do you want to check these herbs?\n"
+				+"Press ENTER to continue, any other key to cancel...")!='\n')
+			return false;
 		String description=describe(loot);
 		Squad s=Squad.active;
 		Combatant survivalist=s.getbest(Skill.SURVIVAL);

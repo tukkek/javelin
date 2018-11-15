@@ -66,7 +66,8 @@ public class LearningStone extends Feature{
 		if(!upgrades.isEmpty()) return;
 		UpgradeHandler handler=UpgradeHandler.singleton;
 		handler.gather();
-		var allupgrades=new LinkedList<>(handler.getalluncategorized());
+		var allupgrades=new LinkedList<>(handler.getalluncategorized().stream()
+				.filter(u->u.isusedincombat()).collect(Collectors.toList()));
 		Collections.shuffle(allupgrades);
 		var target=RPG.r(3,7);
 		while(upgrades.size()<target&&!allupgrades.isEmpty()){

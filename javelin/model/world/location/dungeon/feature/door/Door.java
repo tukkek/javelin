@@ -108,16 +108,19 @@ public class Door extends Feature{
 	boolean force(Combatant forcer,int strength){
 		boolean forced=false;
 		boolean alerted=false;
+		var attempts=0;
 		while(!forced&&!alerted){
 			forced=attemptbreak(strength);
 			alerted=RPG.chancein(10);
+			attempts+=1;
 		}
 		String result;
 		if(forced){
 			result=forcer+" kicks the door down!";
 			stuck=false;
 		}else
-			result=forcer+" could not break the door in this attempt...";
+			result=forcer+" could not break the door after "+attempts
+					+" attempt(s)...";
 		if(alerted) result+="\nThe noise draws someone's attention!";
 		Javelin.message(result,false);
 		if(alerted) throw new StartBattle(Dungeon.active.encounter());

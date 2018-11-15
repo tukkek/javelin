@@ -41,11 +41,6 @@ public class Megadungeon extends Dungeon{
 	public static final List<Class<? extends Feature>> FEATURES=List.of(
 			Fountain.class,Campfire.class,LearningStone.class,Chest.class,
 			Trader.class);
-	/**
-	 * The fraction of {@link Dungeon} {@link Feature}s that will be normal,
-	 * compared to the ones provided by {@link #FEATURES}.
-	 */
-	public static final int NORMALFEATURES=3;
 
 	public Megadungeon(Integer level,Dungeon parent){
 		super(level,parent);
@@ -92,16 +87,19 @@ public class Megadungeon extends Dungeon{
 	}
 
 	@Override
-	protected Feature createfeature(){
-		if(RPG.chancein(NORMALFEATURES)) return super.createfeature();
+	protected void createfeatures(int nfeatures,DungeonZoner zoner){
+		super.createfeatures(nfeatures,zoner);
 		try{
-			Class<? extends Feature> type=RPG.pick(FEATURES);
-			if(Chest.class.equals(type)){
-				var c=new Chest(-1,-1,new Ruby());
-				c.setspecial();
-				return c;
+			nfeatures+=RPG.randomize(nfeatures);
+			for(;nfeatures>0;nfeatures--){
+				Class<? extends Feature> type=RPG.pick(FEATURES);
+				if(Chest.class.equals(type)){
+					var c=new Chest(-1,-1,new Ruby());
+					c.setspecial();
+					zoner.place(c);
+				}else
+					zoner.place(type.getConstructor().newInstance());
 			}
-			return type.getConstructor().newInstance();
 		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);
 		}

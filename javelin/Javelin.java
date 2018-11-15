@@ -322,10 +322,13 @@ public class Javelin{
 	 * @return the key pressed by the user as confirmation for seeing the message.
 	 */
 	public static KeyEvent message(String text,boolean requireenter){
+		if(WorldScreen.current!=null){
+			app.switchScreen(WorldScreen.current);
+			WorldScreen.current.center();
+		}
 		MessagePanel.active.clear();
-		Javelin.message(
-				text+"\nPress "+(requireenter?"ENTER":"any key")+" to continue...",
-				Javelin.Delay.NONE);
+		text+="\nPress "+(requireenter?"ENTER":"any key")+" to continue...";
+		Javelin.message(text,Javelin.Delay.NONE);
 		KeyEvent input=Javelin.input();
 		while(requireenter&&input.getKeyChar()!='\n')
 			input=Javelin.input();

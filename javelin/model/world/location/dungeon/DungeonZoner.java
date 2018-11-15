@@ -8,6 +8,7 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.template.Template;
+import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.old.RPG;
 
@@ -117,5 +118,12 @@ public class DungeonZoner{
 		List<Point> adjacent=Arrays.asList(Point.getadjacent());
 		Collections.shuffle(adjacent);
 		return adjacent;
+	}
+
+	public void place(Feature f){
+		Point p=getpoint();
+		f.x=p.x;
+		f.y=p.y;
+		dungeon.features.add(f);
 	}
 }

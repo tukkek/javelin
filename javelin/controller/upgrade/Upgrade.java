@@ -32,7 +32,7 @@ public abstract class Upgrade implements Serializable{
 	/**
 	 * Indicates that this upgrade is immediately relevant during {@link Fight}s.
 	 */
-	public boolean usedincombat=true;
+	protected boolean usedincombat=true;
 
 	/** Constructor. */
 	public Upgrade(final String name){
@@ -117,5 +117,13 @@ public abstract class Upgrade implements Serializable{
 	 */
 	public String getname(){
 		return name;
+	}
+
+	/**
+	 * TODO currently necessary due to {@link Upgrade#usedincombat} and
+	 * {@link Spell#castinbattle}. Unify.
+	 */
+	public boolean isusedincombat(){
+		return usedincombat;
 	}
 }

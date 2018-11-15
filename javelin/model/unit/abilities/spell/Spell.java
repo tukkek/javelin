@@ -118,7 +118,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 	 */
 	public Spell(String name,int levelp,float incrementcost,Realm realmp){
 		super(name);
-		casterlevel=calculatecasterlevel(levelp);
+		casterlevel=getcasterlevel(levelp);
 		cr=incrementcost;
 		level=levelp;
 		realm=realmp;
@@ -128,8 +128,13 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 	 * @return the minimum necessary caster level to cast a spell of given spell
 	 *         level.
 	 */
-	public static int calculatecasterlevel(int level){
+	public static int getcasterlevel(int level){
 		return level==0?1:level*2-1;
+	}
+
+	/** This is the inverse operation of {@link #getcasterlevel(int)}. */
+	public static int getmaxlevel(int casterlevel){
+		return Math.min(9,(casterlevel+1)/2);
 	}
 
 	@Override
@@ -228,7 +233,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 	 *         before it's {@link Combatant} caster rests.
 	 */
 	public boolean exhausted(){
-		return used==perday;
+		return used>=perday;
 	}
 
 	@Override
@@ -414,5 +419,10 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 	@Override
 	public String getname(){
 		return "Spell: "+super.getname();
+	}
+
+	@Override
+	public boolean isusedincombat(){
+		return castinbattle;
 	}
 }

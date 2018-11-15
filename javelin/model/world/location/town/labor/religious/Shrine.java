@@ -45,7 +45,7 @@ public class Shrine extends Fortification{
 		}
 	}
 
-	static final List<Spell> RITUALS=new ArrayList<>();
+	public static final List<Spell> RITUALS=new ArrayList<>();
 
 	static{
 		UpgradeHandler.singleton.gather();

@@ -13,7 +13,6 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
 import javelin.view.screen.upgrading.UpgradingScreen;
@@ -93,9 +92,7 @@ public class ArenaAcademy extends ArenaBuilding{
 		while(upgrades.size()<3+level&&!all.isEmpty()){
 			Upgrade u=all.pop();
 			Combatant clone=trainee.clone().clonesource();
-			Spell s=u instanceof Spell?(Spell)u:null;
-			if(s!=null&&!s.castinbattle) continue;
-			if(u.usedincombat&&u.upgrade(clone)) upgrades.add(u);
+			if(u.isusedincombat()&&u.upgrade(clone)) upgrades.add(u);
 		}
 	}
 

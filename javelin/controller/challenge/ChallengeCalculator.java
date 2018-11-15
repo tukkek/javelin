@@ -372,7 +372,7 @@ public class ChallengeCalculator{
 	 */
 	public static float ratespelllikeability(int spelllevel){
 		return ChallengeCalculator.ratespelllikeability(spelllevel,
-				Spell.calculatecasterlevel(spelllevel));
+				Spell.getcasterlevel(spelllevel));
 	}
 
 	/**

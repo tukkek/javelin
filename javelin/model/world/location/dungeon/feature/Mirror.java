@@ -10,7 +10,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
-import javelin.model.unit.condition.Condition;
+import javelin.model.unit.condition.TemporarySpell;
 
 /**
  * A magic mirror that grants a one-time use of summoning a copy of yourself
@@ -44,40 +44,9 @@ public class Mirror extends Feature{
 		}
 	}
 
-	class Mirrorbound extends Condition{
+	class Mirrorbound extends TemporarySpell{
 		Mirrorbound(Combatant c){
-			super(Float.MAX_VALUE,c,Effect.NEUTRAL,"Mirrorbound",null,24);
-			stack=true;
-		}
-
-		@Override
-		public void start(Combatant c){
-			var reflection=c.spells.get(Reflection.class);
-			if(reflection==null){
-				reflection=new Reflection();
-				c.spells.add(reflection);
-			}else
-				reflection.perday+=1;
-		}
-
-		@Override
-		public void end(Combatant c){
-			var reflection=c.spells.get(Reflection.class);
-			if(reflection==null) return;
-			if(reflection.perday==1)
-				c.spells.remove(reflection);
-			else
-				reflection.perday-=1;
-		}
-
-		@Override
-		public void transfer(Combatant from,Combatant to){
-			super.transfer(from,to);
-			var reflection=from.spells.get(Reflection.class);
-			if(reflection!=null&&reflection.exhausted()){
-				to.spells.remove(reflection);
-				to.removecondition(this);
-			}
+			super("Mirrorbound",new Reflection(),c);
 		}
 	}
 
@@ -93,7 +62,7 @@ public class Mirror extends Feature{
 		var prompt="Do you want to look into the magic mirror?\n";
 		prompt+="Press ENTER to confirm or any other key to cancel...";
 		if(Javelin.prompt(prompt)!='\n') return false;
-		var combatant=selectmember();
+		var combatant=selectmember("Who will look into the mirror?");
 		if(combatant==null){
 			WorldMove.abort=true;
 			return false;
@@ -102,11 +71,10 @@ public class Mirror extends Feature{
 		return true;
 	}
 
-	static Combatant selectmember(){
+	public static Combatant selectmember(String prompt){
 		var squad=Squad.active.members;
 		if(squad.size()==1) return squad.get(0);
-		var choice=Javelin.choose("Who will look into the mirror?",squad,true,
-				false);
+		var choice=Javelin.choose(prompt,squad,true,false);
 		return choice>=0?squad.get(choice):null;
 	}
 }

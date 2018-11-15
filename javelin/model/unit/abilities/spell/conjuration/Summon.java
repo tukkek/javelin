@@ -123,7 +123,7 @@ public class Summon extends Spell{
 	public void postloadmonsters(){
 		cr=ratechallenge(monstername,chance);
 		level=Math.round(Javelin.getmonster(monstername).cr/2);
-		casterlevel=calculatecasterlevel(level);
+		casterlevel=getcasterlevel(level);
 	}
 
 	@Override

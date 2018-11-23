@@ -44,7 +44,6 @@ public class PointOfInterest extends Actor{
 
 	@Override
 	public boolean interact(){
-		if(!super.interact()) return false;
 		if(card==null){
 			int el=ChallengeCalculator.calculateel(Squad.active.members);
 			card=(WildEvent)WildEvents.instance.generate(Squad.active,el,this);
@@ -81,7 +80,7 @@ public class PointOfInterest extends Actor{
 
 	@Override
 	public void place(){
-		Location.generate(this,false);
+		if(x==-1) Location.generate(this,false);
 		super.place();
 	}
 }

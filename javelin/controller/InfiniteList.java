@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Taking a collection of items during or after construction, will serve those
@@ -62,7 +61,7 @@ public class InfiniteList<T> implements Serializable{
 	}
 
 	/** @param list Items are added to the content pool. */
-	public void addcontent(List<T> list){
+	public void addcontent(Collection<T> list){
 		content.addAll(list);
 	}
 
@@ -74,5 +73,10 @@ public class InfiniteList<T> implements Serializable{
 	/** * @param e Added to the content pool. */
 	public void addcontent(T e){
 		content.add(e);
+	}
+
+	@Override
+	public String toString(){
+		return "Current pool: "+current;
 	}
 }

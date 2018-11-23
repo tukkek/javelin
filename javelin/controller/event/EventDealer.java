@@ -1,8 +1,7 @@
 package javelin.controller.event;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import javelin.controller.InfiniteList;
@@ -21,21 +20,21 @@ import javelin.old.RPG;
  * @author alex
  */
 public abstract class EventDealer implements Serializable{
-	class EventDeck extends InfiniteList<Class<? extends EventCard>>{
-		EventDeck(Collection<Class<? extends EventCard>> cards){
-			super(cards,true);
+	protected class EventDeck extends InfiniteList<Class<? extends EventCard>>{
+		EventDeck(){
+			super(null,true);
 		}
 	}
 
 	/** Events that benefit the {@link Squad}. */
-	EventDeck positive=new EventDeck(List.of());
+	protected EventDeck positive=new EventDeck();
 	/**
 	 * Events that aren't clearly {@link positive} or
 	 * {@link EventDealer#negative}.
 	 */
-	EventDeck neutral=new EventDeck(List.of());
+	protected EventDeck neutral=new EventDeck();
 	/** Events that detriment the {@link Squad}. */
-	EventDeck negative=new EventDeck(List.of());
+	protected EventDeck negative=new EventDeck();
 
 	/**
 	 * @param s Usually {@link Squad#active}.
@@ -45,7 +44,8 @@ public abstract class EventDealer implements Serializable{
 	 *         positive, neutral or negative.
 	 */
 	public EventCard generate(Squad s,int el,PointOfInterest l){
-		EventCard card=draw(s,el,l,RPG.pick(List.of(positive,neutral,negative)));
+		var deck=RPG.pick(List.of(positive,neutral,negative));
+		var card=draw(s,el,l,deck);
 		card.define(s,el,l);
 		return card;
 	}
@@ -56,17 +56,15 @@ public abstract class EventDealer implements Serializable{
 	 */
 	static EventCard draw(Squad s,int el,PointOfInterest l,EventDeck deck){
 		try{
-			var drawn=new ArrayList<Class<? extends EventCard>>();
+			var drawn=new HashSet<Class<? extends EventCard>>();
 			EventCard card=null;
 			while(card==null){
+				if(deck.isempty()) drawn.clear();
 				Class<? extends EventCard> type=deck.pop();
-				if(deck.isempty())
-					drawn.clear();
-				else
-					drawn.add(type);
 				card=type.getDeclaredConstructor().newInstance();
 				if(!card.validate(s,el,l)){
 					card=null;
+					drawn.add(type);
 					continue;
 				}
 			}

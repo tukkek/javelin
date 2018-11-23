@@ -1,5 +1,7 @@
 package javelin.controller.event.wild;
 
+import java.util.List;
+
 import javelin.Javelin;
 import javelin.controller.db.StateManager;
 import javelin.controller.event.EventCard;
@@ -15,8 +17,13 @@ import javelin.model.world.location.PointOfInterest;
 public class WildEvents extends EventDealer{
 	/** @see StateManager */
 	public static WildEvents instance=new WildEvents();
-
 	static final Class<? extends WildEvent> DEBUG=null;
+
+	public WildEvents(){
+		positive.addcontent(List.of());
+		neutral.addcontent(List.of());
+		negative.addcontent(List.of());
+	}
 
 	@Override
 	public EventCard generate(Squad s,int el,PointOfInterest l){

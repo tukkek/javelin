@@ -33,9 +33,9 @@ import javelin.view.screen.WorldScreen;
  */
 public abstract class Actor implements Serializable{
 	static final int[] NUDGES=new int[]{-1,0,+1};
-	/** x coordinate. */
+	/** x coordinate (-1 when uninitialized). */
 	public int x=-1;
-	/** y coordinate. */
+	/** y coordinate (-1 when uninitialized). */
 	public int y=-1;
 	/**
 	 * Which team this actor belongs to or <code>null</code> if neutral. If

@@ -4,7 +4,9 @@ import java.awt.Image;
 import java.util.List;
 
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.event.wild.WildEventCard;
+import javelin.controller.event.EventCard;
+import javelin.controller.event.wild.WildEvent;
+import javelin.controller.event.wild.WildEvents;
 import javelin.controller.fight.Fight;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.unit.Combatant;
@@ -18,24 +20,23 @@ import javelin.view.Images;
  * A mostly ad-hoc (scaled) type of Location meant to make the regions of the
  * game {@link World} more interesting to explore regardless of a
  * {@link Squad}'s current level. It also adds variety to the rest of the mostly
- * {@link Fight}-oriented encounters with lighter strategic decision making and
- * subquests. For that same reason, avoid designing {@link Fight}-based events.
+ * {@link Fight}-oriented encounters, with light strategic decision making and
+ * subquests. For that reason, avoid designing {@link Fight}-based events.
  *
  * Events and {@link Hazard}s have a litte overlap but Events are more of a
  * one-in-a-lifetime occurence (at least stylistically) while hazards represent
- * the daily struggles of naviagting a certain type of terrain.
+ * the daily struggles of navigating a certain type of terrain.
  *
- * TODO should probably be an {@link Actor}, not a location.
- *
- * @see WildEventCard
+ * @see EventCard
  * @author alex
  */
-public class WildEvent extends Actor{
+public class PointOfInterest extends Actor{
 	static final String DESCRIPTION="A point of interest.";
-	WildEventCard card=null;
+
+	WildEvent card=null;
 
 	/** Constructor. */
-	public WildEvent(){
+	public PointOfInterest(){
 		super();
 		allowedinscenario=false;
 		impermeable=true;
@@ -46,7 +47,7 @@ public class WildEvent extends Actor{
 		if(!super.interact()) return false;
 		if(card==null){
 			int el=ChallengeCalculator.calculateel(Squad.active.members);
-			card=WildEventCard.generate(Squad.active,el,this);
+			card=(WildEvent)WildEvents.instance.generate(Squad.active,el,this);
 		}
 		card.happen(Squad.active,this);
 		if(card.remove) remove();
@@ -65,7 +66,7 @@ public class WildEvent extends Actor{
 
 	@Override
 	public Image getimage(){
-		return Images.get("locationwildevent");
+		return Images.get("locationpointofinterest");
 	}
 
 	@Override
@@ -76,5 +77,11 @@ public class WildEvent extends Actor{
 	@Override
 	public Integer getel(int attackerel){
 		return null;
+	}
+
+	@Override
+	public void place(){
+		Location.generate(this,false);
+		super.place();
 	}
 }

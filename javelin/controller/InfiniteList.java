@@ -1,29 +1,41 @@
 package javelin.controller;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class InfiniteList<T>{
-	ArrayList<T> original=new ArrayList<>();
-	LinkedList<T> pool=new LinkedList<>();
+/**
+ * Taking a collection of items during or after construction, will serve those
+ * items until exhausted, at which point will refill itself with the same items
+ * - thus providing a seemingly inexhaustible stream of content.
+ *
+ * Internally, this class contains two pools: the content pool (the original
+ * items, to be served indefinitely) and the current pool (or temporary pool,
+ * which is the current state of items to be delivered). Whenever an item is
+ * requested and the current pool is empty, it is first transparently refilled
+ * with the items from the content pool.
+ *
+ * @author alex
+ */
+public class InfiniteList<T> implements Serializable{
+	ArrayList<T> content=new ArrayList<>(0);
+	LinkedList<T> current=new LinkedList<>();
 	boolean shuffle;
 
-	public InfiniteList(){
-		this(null);
-	}
-
-	public InfiniteList(Collection<T> original){
-		this(original,true);
-	}
-
+	/**
+	 * @param original Initial content pool.
+	 * @param shuffle If <code>true</code>, will randomize the pool's order
+	 *          whenever a refill happens.
+	 */
 	public InfiniteList(Collection<T> original,boolean shuffle){
-		if(original!=null) this.original.addAll(original);
+		if(original!=null) this.content.addAll(original);
 		this.shuffle=shuffle;
 	}
 
+	/** Removes and returns a given amount of items from the current pool. */
 	public ArrayList<T> pop(int amount){
 		ArrayList<T> list=new ArrayList<>(amount);
 		for(int i=0;i<amount;i++)
@@ -31,23 +43,36 @@ public class InfiniteList<T>{
 		return list;
 	}
 
-	public T pop(){
-		if(pool.isEmpty()){
-			if(shuffle) Collections.shuffle(original);
-			pool.addAll(original);
+	void refill(){
+		if(isempty()){
+			if(shuffle) Collections.shuffle(content);
+			current.addAll(content);
 		}
-		return pool.pop();
 	}
 
-	public void add(List<T> list){
-		original.addAll(list);
+	/** @return <code>true</code> if the current pool is empty. */
+	public boolean isempty(){
+		return current.isEmpty();
 	}
 
-	public void remove(T choice){
-		original.remove(choice);
+	/** @return First item, removed from the current pool. */
+	public T pop(){
+		refill();
+		return current.pop();
 	}
 
-	public void add(T e){
-		original.add(e);
+	/** @param list Items are added to the content pool. */
+	public void addcontent(List<T> list){
+		content.addAll(list);
+	}
+
+	/** * @param choice Item is removed from the content pool. */
+	public void removecontent(T choice){
+		content.remove(choice);
+	}
+
+	/** * @param e Added to the content pool. */
+	public void addcontent(T e){
+		content.add(e);
 	}
 }

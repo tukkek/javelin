@@ -24,6 +24,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.Resource;
+import javelin.model.world.location.PointOfInterest;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.fortification.Guardian;
@@ -83,7 +84,7 @@ public class FeatureGenerator implements Serializable{
 		generators.put(Trove.class,new Frequency());
 		generators.put(Guardian.class,new Frequency());
 		generators.put(Dwelling.class,new Frequency());
-		//		generators.put(WildEvent.class,new Frequency(2f));
+		generators.put(PointOfInterest.class,new Frequency(2f));
 		Frequency resources=new Frequency();
 		resources.seeds=Realm.values().length*2;
 		resources.max=Realm.values().length*2;

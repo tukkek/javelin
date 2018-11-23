@@ -19,6 +19,7 @@ import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Weather;
 import javelin.controller.action.world.OpenJournal;
+import javelin.controller.event.wild.WildEvents;
 import javelin.controller.wish.Ressurect;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Actor;
@@ -102,6 +103,7 @@ public class StateManager{
 			writer.writeObject(Season.current);
 			writer.writeObject(Season.endsat);
 			writer.writeObject(OpenJournal.content);
+			writer.writeObject(WildEvents.instance);
 			writer.flush();
 			writer.close();
 		}catch(final NotSerializableException e){
@@ -143,6 +145,7 @@ public class StateManager{
 			Season.current=(Season)stream.readObject();
 			Season.endsat=(Integer)stream.readObject();
 			OpenJournal.content=(String)stream.readObject();
+			WildEvents.instance=(WildEvents)stream.readObject();
 			stream.close();
 			filestream.close();
 			backup();

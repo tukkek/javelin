@@ -236,7 +236,7 @@ public abstract class Terrain implements Serializable{
 		while(area.contains(p)){
 			p.x+=STEPS[RPG.r(STEPS.length)];
 			p.y+=STEPS[RPG.r(STEPS.length)];
-			if(checkinvalid(world,p.x,p.y)){
+			if(checkinvalid(p.x,p.y,world)){
 				p=new Point(RPG.pick(pool));
 				WorldGenerator.retry();
 			}
@@ -250,7 +250,7 @@ public abstract class Terrain implements Serializable{
 	 * @return <code>false</code> if for any reason the given coordinate shouldn't
 	 *         be added to this area.
 	 */
-	protected boolean checkinvalid(World world,int x,int y){
+	protected boolean checkinvalid(int x,int y,World world){
 		return !World.validatecoordinate(x,y)||!generatetile(world.map[x][y],world)
 				||checktown(x,y);
 	}

@@ -121,7 +121,7 @@ public class Debug{
 			Squad.active.place();
 		}
 
-		public static void printworldresets(){
+		static void printworldresets(){
 			String text="";
 			for(String reset:WorldGenerator.RESETS.getinvertedelements()){
 				text+="Count: "+WorldGenerator.RESETS.getcount(reset)+"\n";

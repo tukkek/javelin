@@ -1,12 +1,12 @@
 package javelin.controller.terrain;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javelin.controller.Point;
-import javelin.controller.generator.WorldGenerator;
+import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.map.Maps;
 import javelin.controller.map.terrain.water.DeepWaters;
 import javelin.controller.map.terrain.water.Shore;
@@ -31,7 +31,6 @@ import javelin.old.RPG;
  * @author alex
  */
 public class Water extends Terrain{
-	private static final int[] DELTAS=new int[]{+1,-1};
 	private Point currentheight;
 
 	/** Constructor. */
@@ -79,29 +78,31 @@ public class Water extends Terrain{
 	}
 
 	@Override
-	protected Point expand(HashSet<Point> area,World world){
-		List<Point> pool=new ArrayList<>(area);
-		Point to=null;
-		while(to==null){
-			to=expandto(RPG.pick(pool),world);
-			WorldGenerator.retry();
-		}
-		currentheight=to;
+	protected Point expand(HashSet<Point> area,World w){
+		Point expand=expand(new ArrayList<>(area),w);
+		if(expand==null) throw new RestartWorldGeneration();
+		currentheight=expand;
 		return currentheight;
 	}
 
-	Point expandto(Point p,World w){
-		Point to=new Point(p);
-		if(RPG.chancein(2))
-			to.x+=DELTAS[RPG.r(DELTAS.length)];
-		else
-			to.y+=DELTAS[RPG.r(DELTAS.length)];
-		if(checkinvalid(w,to.x,to.y)
-				||search(to,DESERT,World.scenario.desertradius,w)>0)
-			return null;
+	Point expand(ArrayList<Point> pool,World w){
+		var visited=new HashSet<>(pool);
+		var adjacent=Arrays.asList(Point.getadjacent());
+		for(var point:RPG.shuffle(pool))
+			for(var near:RPG.shuffle(adjacent)){
+				var candidate=new Point(point.x+near.x,point.y+near.y);
+				if(visited.add(candidate)&&verify(candidate,w)) return candidate;
+			}
+		return null;
+	}
+
+	boolean verify(Point p,World w){
+		if(checkinvalid(p.x,p.y,w)
+				||search(p,DESERT,World.scenario.desertradius,w)>0)
+			return false;
 		for(Town t:Town.gettowns())
-			if(t.distance(to.x,to.y)<=2) return null;
-		return to;
+			if(t.distance(p.x,p.y)<=2) return false;
+		return true;
 	}
 
 	@Override

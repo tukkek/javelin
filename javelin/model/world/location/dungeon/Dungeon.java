@@ -357,7 +357,6 @@ public class Dungeon extends Location{
 		for(int x=herolocation.x-1;x<=herolocation.x+1;x++)
 			for(int y=herolocation.y-1;y<=herolocation.y+1;y++)
 				map[x][y]=Template.FLOOR;
-
 	}
 
 	protected void createfeatures(int nfeatures,DungeonZoner zoner){

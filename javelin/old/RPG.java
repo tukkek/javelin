@@ -1,5 +1,6 @@
 package javelin.old;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -72,5 +73,14 @@ public class RPG{
 	public static int average(float dice,float size){
 		size+=1;
 		return Math.round(dice*(size/2f));
+	}
+
+	/**
+	 * @return The same input list, but shuffled with
+	 *         {@link Collections#shuffle(List)}.
+	 */
+	public static <K extends List> K shuffle(K list){
+		Collections.shuffle(list);
+		return list;
 	}
 }

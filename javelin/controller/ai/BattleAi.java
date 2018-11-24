@@ -57,7 +57,12 @@ public class BattleAi extends AlphaBetaSearch{
 		return challenge;
 	}
 
-	static float measuredistances(List<Combatant> us,List<Combatant> them){
+	/**
+	 * @return A total score composed of how many steps each unit is from its
+	 *         closest opponent (geometrically). An arbitrary factor is applied to
+	 *         the final result.
+	 */
+	public static float measuredistances(List<Combatant> us,List<Combatant> them){
 		int score=0;
 		for(Combatant mate:us){
 			int minimum=Integer.MAX_VALUE;

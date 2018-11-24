@@ -56,7 +56,7 @@ public class Chest extends Feature{
 				forbidden.add(i.getClass());
 			}
 		}
-		if(!items.isEmpty()) gold=0;
+		gold=items.isEmpty()?Javelin.round(gold):0;
 	}
 
 	public Chest(int x,int y,Item i){

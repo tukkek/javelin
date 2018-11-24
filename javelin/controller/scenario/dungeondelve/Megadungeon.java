@@ -44,6 +44,7 @@ public class Megadungeon extends Dungeon{
 
 	public Megadungeon(Integer level,Dungeon parent){
 		super(level,parent);
+		description="Megadungeon, level "+level;
 	}
 
 	@Override

@@ -30,9 +30,7 @@ public class DungeonDelveGenerator extends FeatureGenerator{
 			}
 			parent=d;
 		}
-		var d=dungeons.get(1);
-		d.description="Megadungeon";
-		return d;
+		return dungeons.get(1);
 	}
 
 	@Override

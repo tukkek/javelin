@@ -102,15 +102,15 @@ public class RangedAttack extends AbstractAttack{
 		if(Javelin.DEBUG) assert miss.damage.damage==0;
 		if(miss.chance<=Javelin.HARD/20f||active.source.melee.isEmpty())
 			return false;
+		var map=previous.map;
 		for(Point p:Point.getadjacent()){
 			p.x+=active.location[0];
 			p.y+=active.location[1];
-			var map=previous.map;
 			if(!p.validate(0,0,map.length,map[0].length)) continue;
 			if(previous.getcombatant(p.x,p.y)!=null) continue;
-			if(!map[p.x][p.y].blocked||active.source.fly>0) return false;
+			if(!map[p.x][p.y].blocked||active.source.fly>0) return true;
 		}
-		return true;
+		return false;
 	}
 
 	@Override

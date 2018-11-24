@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -70,12 +71,12 @@ public class AiMovement extends Action implements AiAction{
 			add(move(c,from,interest,s),outcomes);
 		if(outcomes.size()>=MOVES) return outcomes;
 		ArrayList<List<ChanceNode>> extra=new ArrayList<>(MOVES);
-		for(var destination:getdestinations(c,s))
+		Random r=AiThread.getrandom();
+		for(var destination:getdestinations(c,s,r))
 			add(move(c,from,destination,s),extra);
 		if(extra.isEmpty()) return outcomes;
 		extra.sort((a,b)->Float.compare(((LongMove)a.get(0)).score,
 				((LongMove)b.get(0)).score));
-		Random r=AiThread.getrandom();
 		while(outcomes.size()<MOVES&&!extra.isEmpty()){
 			int max=extra.size()-1;
 			int index;
@@ -129,34 +130,29 @@ public class AiMovement extends Action implements AiAction{
 		return (BattleStep)steps.get(steps.size()-1);
 	}
 
-	/**
-	 * TODO this can still be optimized, most likely
-	 *
-	 * 1. costly calculations (namerly haslineofsight), can be deferred, so that
-	 * we don't have to calculate it dozens of times even if only {@link #MOVES}
-	 * at most will be selected.
-	 *
-	 * 2. since this can produce a considerable number of results, might want
-	 * instead to take the Random parameter and pick random points until we have
-	 * {@link #MOVES}x2 or something like that.
-	 */
-	static HashSet<Point> getdestinations(Combatant c,BattleState s){
+	static HashSet<Point> getdestinations(Combatant c,BattleState s,Random r){
 		var destinations=new HashSet<Point>();
-		var f=Javelin.app.fight;
-		var flies=f.map.flying&&c.source.fly>0;
 		var range=s.isengaged(c)?1:c.gettopspeed(s)/5;
 		Point from=c.getlocation();
 		for(var x=from.x-range;x<=from.x+range;x++)
-			for(var y=from.y-range;y<=from.y+range;y++){
-				var point=new Point(x,y);
-				if(!point.validate(0,0,s.map.length,s.map[0].length)) continue;
-				if(s.map[point.x][point.y].blocked&&!flies) continue;
-				if(s.getcombatant(point.x,point.y)!=null) continue;
-				Meld m=s.getmeld(point.x,point.y);
-				if(m!=null&&!m.crystalize(s)) continue;
-				if(s.haslineofsight(c,point)==Vision.BLOCKED) continue;
-				destinations.add(point);
-			}
+			for(var y=from.y-range;y<=from.y+range;y++)
+				destinations.add(new Point(x,y));
+		destinations.remove(c.getlocation());
+		var flies=Javelin.app.fight.map.flying&&c.source.fly>0;
+		var target=MOVES*MOVES;
+		var result=new ArrayList<Point>(target);
+		var queue=new LinkedList<>(destinations);
+		while(target>0&&!queue.isEmpty()){
+			var point=queue.remove(r.nextInt(queue.size()));
+			if(!point.validate(0,0,s.map.length,s.map[0].length)) continue;
+			if(!flies&&s.map[point.x][point.y].blocked) continue;
+			if(s.getcombatant(point.x,point.y)!=null) continue;
+			Meld m=s.getmeld(point.x,point.y);
+			if(m!=null&&!m.crystalize(s)) continue;
+			if(s.haslineofsight(c,point)==Vision.BLOCKED) continue;
+			result.add(point);
+			target-=1;
+		}
 		return destinations;
 	}
 

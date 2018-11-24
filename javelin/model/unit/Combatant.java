@@ -24,7 +24,6 @@ import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.walker.Walker;
 import javelin.model.Realm;
 import javelin.model.TeamContainer;
@@ -630,8 +629,7 @@ public class Combatant implements Serializable,Cloneable{
 	public boolean upgrade(Collection<? extends Upgrade> upgrades){
 		Upgrade upgrade=RPG.pick(new ArrayList<Upgrade>(upgrades));
 		if(!upgrade.upgrade(this)) return false;
-		postupgradeautomatic(
-				upgrade instanceof ClassLevelUpgrade?(ClassLevelUpgrade)upgrade:null);
+		postupgradeautomatic();
 		ChallengeCalculator.calculatecr(source);
 		source.elite=true;
 		return true;
@@ -818,7 +816,7 @@ public class Combatant implements Serializable,Cloneable{
 	 *
 	 * @see #postupgradeautomatic(boolean, Upgrade)
 	 */
-	public void postupgrade(ClassLevelUpgrade classlevel){
+	public void postupgrade(){
 		for(Feat f:source.feats)
 			f.postupgrade(this);
 	}
@@ -829,7 +827,7 @@ public class Combatant implements Serializable,Cloneable{
 	 * hand-pick the the outcome or because we are upgrading an NPC like with
 	 * {@link #upgrade(Collection)}.
 	 */
-	public void postupgradeautomatic(ClassLevelUpgrade upgrade){
+	public void postupgradeautomatic(){
 		for(Feat f:source.feats)
 			f.postupgradeautomatic(this);
 	}

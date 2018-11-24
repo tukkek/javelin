@@ -7,8 +7,10 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.factor.CrFactor;
+import javelin.controller.kit.Kit;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.Realm;
 import javelin.model.unit.abilities.spell.Spell;
@@ -26,90 +28,90 @@ import javelin.model.world.location.unique.SummoningCircle;
  */
 public class UpgradeHandler{
 	/** The class can be accessed through here. */
-	public final static UpgradeHandler singleton=new UpgradeHandler();
+	public static final UpgradeHandler singleton=new UpgradeHandler();
 
-	private UpgradeHandler(){
-		// prevents instantiation
+	/** A named set of upgrades. */
+	public class UpgradeSet extends HashSet<Upgrade>{
+		/** Descriptive name for this set of upgrades. */
+		public String name;
+		boolean hidden;
+
+		UpgradeSet(String name,boolean hidden){
+			this.name=name;
+			this.hidden=hidden;
+			if(all.put(name,this)!=null&&Javelin.DEBUG)
+				throw new RuntimeException("Name clash on #UpgradeHandler");
+		}
+
+		UpgradeSet(String name){
+			this(name,false);
+		}
 	}
+
+	/** All {@link UpgradeSet}s except those explicitly marked as internal. */
+	HashMap<String,UpgradeSet> all=new HashMap<>();
 
 	LinkedList<Town> townqueue=new LinkedList<>();
 
 	/** Linked to a {@link Town}'s realm. */
-	public HashSet<Upgrade> fire=new HashSet<>();
+	public UpgradeSet fire=new UpgradeSet("Fire");
 	/** Linked to a {@link Town}'s realm. */
-	public HashSet<Upgrade> earth=new HashSet<>();
+	public UpgradeSet earth=new UpgradeSet("Earth");
 	/** Linked to a {@link Town}'s realm. */
-	public HashSet<Upgrade> water=new HashSet<>();
+	public UpgradeSet water=new UpgradeSet("Water");
 	/** Linked to a {@link Town}'s realm. */
-	public HashSet<Upgrade> wind=new HashSet<>();
+	public UpgradeSet wind=new UpgradeSet("Wind");
 	/** Linked to a {@link Town}'s realm. */
-	public HashSet<Upgrade> good=new HashSet<>();
+	public UpgradeSet good=new UpgradeSet("Good");
 	/** Linked to a {@link Town}'s realm. */
-	public HashSet<Upgrade> evil=new HashSet<>();
+	public UpgradeSet evil=new UpgradeSet("Evil");
 	/** Linked HashSet a {@link Town}'s realm. */
-	public HashSet<Upgrade> magic=new HashSet<>();
+	public UpgradeSet magic=new UpgradeSet("Magic");
 
 	/** Linked to an {@link MartialAcademy}. */
-	public HashSet<Upgrade> combatexpertise=new HashSet<>();
+	public UpgradeSet combatexpertise=new UpgradeSet("Expertise");
 	/** Linked to an {@link MartialAcademy}. */
-	public HashSet<Upgrade> powerattack=new HashSet<>();
+	public UpgradeSet powerattack=new UpgradeSet("Power");
 	/** Linked to an {@link MartialAcademy}. */
-	public HashSet<Upgrade> shots=new HashSet<>();
+	public UpgradeSet shots=new UpgradeSet("Shots");
 
 	/** Spell school. */
-	public HashSet<Upgrade> schooltotem=new HashSet<>();
+	public UpgradeSet schooltotem=new UpgradeSet("Totem magic");
 	/** Spell school. */
-	public HashSet<Upgrade> schoolcompulsion=new HashSet<>();
+	public UpgradeSet schoolcompulsion=new UpgradeSet("Compulsion magic");
 	/** Spell school. */
-	public HashSet<Upgrade> schoolnecromancy=new HashSet<>();
+	public UpgradeSet schoolnecromancy=new UpgradeSet("Necromancy magic");
 	/** Spell school. */
-	public HashSet<Upgrade> schoolconjuration=new HashSet<>();
+	public UpgradeSet schoolconjuration=new UpgradeSet("Conjuration magic");
 	/** Spell school. */
-	public HashSet<Upgrade> schoolevocation=new HashSet<>();
+	public UpgradeSet schoolevocation=new UpgradeSet("Evocation magic");
 	/** Subdomain of conjuration. */
-	public HashSet<Upgrade> schoolrestoration=new HashSet<>();
+	public UpgradeSet schoolrestoration=new UpgradeSet("Restorarion magic");
 	/** Subdomain of necromancy. */
-	public HashSet<Upgrade> schoolwounding=new HashSet<>();
+	public UpgradeSet schoolwounding=new UpgradeSet("Wounding magic");
 	/** Spell school; */
-	public HashSet<Upgrade> schoolabjuration=new HashSet<>();
+	public UpgradeSet schoolabjuration=new UpgradeSet("Abjuration magic");
 	/** Spell school; */
-	public HashSet<Upgrade> schoolhealwounds=new HashSet<>();
+	public UpgradeSet schoolhealwounds=new UpgradeSet("Healing magic");
 	/** Spell school; */
-	public HashSet<Upgrade> schooltransmutation=new HashSet<>();
+	public UpgradeSet schooltransmutation=new UpgradeSet("Transmutation magic");
 	/** Spell school; */
-	public HashSet<Upgrade> schooldivination=new HashSet<>();
+	public UpgradeSet schooldivination=new UpgradeSet("Divination magic");
 	/**
 	 * Used internally for summon spells. For learning {@link Summon}s see
 	 * {@link SummoningCircle}.
 	 */
-	public HashSet<Upgrade> schoolsummoning=new HashSet<>();
+	public UpgradeSet schoolsummoning=new UpgradeSet("Summoning magic",true);
 
 	/** Internal upgrades. */
-	public HashSet<Upgrade> internal=new HashSet<>();
+	public UpgradeSet internal=new UpgradeSet("Internal",true);
 
-	// /**
-	// * Gives a starting selection of upgrades to each {@link Town}.
-	// */
-	// public void distribute() {
-	// gather();
-	// for (WorldActor p : Town.getall(Town.class)) {
-	// Town t = (Town) p;
-	// Realm r = t.realm;
-	// t.upgrades.add(getclass(r));
-	// final List<Upgrade> upgrades =
-	// new ArrayList<Upgrade>(getupgrades(r));
-	// Collections.shuffle(upgrades);
-	// int i = 0;
-	// int limit = RPG.r(3, 5);
-	// while (t.upgrades.size() < limit && i < upgrades.size()) {
-	// t.upgrades.add(upgrades.get(i));
-	// i += 1;
-	// }
-	// }
-	// }
+	/** @see ClassLevelUpgrade#classes */
+	public UpgradeSet classes=new UpgradeSet("Classes",true);
 
-	// ClassAdvancement getclass(Realm r) {
-	// }
+	private UpgradeHandler(){
+		// prevents instantiation
+	}
 
 	/**
 	 * @param r Given a realm...
@@ -136,51 +138,14 @@ public class UpgradeHandler{
 
 	/** Initializes class, if needed. */
 	public void gather(){
-		/*
-		 * TODO could initialize #getall map here instead of #isempty
-		 */
-		if(fire.isEmpty()) for(final CrFactor factor:ChallengeCalculator.CR_FACTORS)
+		if(!fire.isEmpty()) return;
+		for(CrFactor factor:ChallengeCalculator.CR_FACTORS)
 			factor.registerupgrades(this);
-	}
-
-	/**
-	 * @return all upgrades.
-	 */
-	public HashMap<String,HashSet<Upgrade>> getall(){
-		HashMap<String,HashSet<Upgrade>> all=new HashMap<>();
-		addall(fire,all,"fire");
-		addall(earth,all,"earth");
-		addall(water,all,"water");
-		addall(wind,all,"wind");
-
-		addall(good,all,"good");
-		addall(evil,all,"evil");
-		addall(magic,all,"magic");
-
-		addall(powerattack,all,"power");
-		addall(combatexpertise,all,"expertise");
-		addall(shots,all,"shots");
-
-		addall(schoolcompulsion,all,"schoolcompulsion");
-		addall(schoolrestoration,all,"schoolrestoration");
-		addall(schoolnecromancy,all,"schoolnecromancy");
-		addall(schooltotem,all,"schooltotem");
-		addall(schoolwounding,all,"schoolwounding");
-		addall(schoolconjuration,all,"schoolconjuration");
-		addall(schoolabjuration,all,"schoolabjuration");
-		addall(schoolevocation,all,"schoolevocation");
-		addall(schoolhealwounds,all,"schoolhealwounds");
-		addall(schooltransmutation,all,"schooltransmutation");
-		addall(schooldivination,all,"schooldivination");
-		addall(internal,all,"internal");
-
-		HashSet<Upgrade> classes=new HashSet<>();
 		ClassLevelUpgrade.init();
-		for(ClassLevelUpgrade ca:ClassLevelUpgrade.classes)
-			classes.add(ca);
-		addall(classes,all,"classlevels");
-
-		return all;
+		for(var classlevel:ClassLevelUpgrade.classes)
+			classes.add(classlevel);
+		for(var kit:Kit.KITS)
+			new UpgradeSet(kit.name).addAll(kit.getupgrades());
 	}
 
 	static void addall(HashSet<Upgrade> fire2,
@@ -195,9 +160,22 @@ public class UpgradeHandler{
 	 */
 	public int count(){
 		int i=0;
-		for(HashSet<Upgrade> l:getall().values())
+		for(HashSet<Upgrade> l:getall(true).values())
 			i+=l.size();
 		return i-countskills();
+	}
+
+	/**
+	 * @param hidden if <code>true</code>, all {@link UpgradeSet}s. If
+	 *          <code>false</code>, will filter out those that are marked as
+	 *          hidden.
+	 */
+	public HashMap<String,UpgradeSet> getall(boolean hidden){
+		if(hidden) return all;
+		var all=new HashMap<>(this.all);
+		for(var set:this.all.values())
+			if(set.hidden) all.remove(set.name);
+		return all;
 	}
 
 	/**
@@ -205,7 +183,7 @@ public class UpgradeHandler{
 	 */
 	public int countskills(){
 		int i=0;
-		for(HashSet<Upgrade> l:getall().values())
+		for(HashSet<Upgrade> l:getall(true).values())
 			for(Upgrade u:l)
 				if(u instanceof SkillUpgrade) i+=1;
 		return i;
@@ -217,7 +195,7 @@ public class UpgradeHandler{
 	public ArrayList<FeatUpgrade> getfeats(){
 		ArrayList<FeatUpgrade> feats=new ArrayList<>();
 		ArrayList<Upgrade> all=new ArrayList<>();
-		for(HashSet<Upgrade> realm:getall().values())
+		for(HashSet<Upgrade> realm:getall(true).values())
 			all.addAll(realm);
 		for(Upgrade u:all)
 			if(u instanceof FeatUpgrade) feats.add((FeatUpgrade)u);
@@ -229,7 +207,7 @@ public class UpgradeHandler{
 	 */
 	public List<Spell> getspells(){
 		ArrayList<Spell> spells=new ArrayList<>();
-		for(HashSet<Upgrade> category:getall().values())
+		for(HashSet<Upgrade> category:getall(true).values())
 			for(Upgrade u:category)
 				if(u instanceof Spell) spells.add((Spell)u);
 		return spells;
@@ -246,9 +224,9 @@ public class UpgradeHandler{
 		return upgrades;
 	}
 
-	public HashSet<Upgrade> getalluncategorized(){
+	public HashSet<Upgrade> getalluncategorized(boolean hidden){
 		HashSet<Upgrade> all=new HashSet<>();
-		for(HashSet<Upgrade> upgrades:getall().values())
+		for(HashSet<Upgrade> upgrades:getall(hidden).values())
 			all.addAll(upgrades);
 		return all;
 	}

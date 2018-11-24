@@ -8,7 +8,6 @@ import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.kit.Kit;
 import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.old.RPG;
@@ -22,10 +21,9 @@ import javelin.view.screen.InfoScreen;
  * @author alex
  */
 public class AdventurersGuild extends UniqueLocation{
+	static final String TITLE="Adventurers guild";
+	static final float TARGETLEVEL=2;
 
-	private static final String TITLE="Adventurers guild";
-
-	private static final float TARGETLEVEL=2;
 	static final String[] TITLES=new String[]{"underlings","teachers","masters",
 			"legends"};
 	static final char[] KEYS="1234567890abcdefghijklnoprsuvxyz/*-+.?!@#$%&()_=[]{}<>;:\"\\|"
@@ -140,26 +138,45 @@ public class AdventurersGuild extends UniqueLocation{
 			Kit kit=selection.get(i);
 			if(kit==null) continue;
 			Combatant student=students.get(i);
-			String training=student+" learns:\n\n";
-			float cr=ChallengeCalculator.calculatecr(student.source);
-			float original=cr;
-			ClassLevelUpgrade classlevel=null;
-			ArrayList<Upgrade> upgrades=new ArrayList<>(kit.basic);
-			while(cr<TARGETLEVEL){
-				Upgrade u=RPG.pick(upgrades);
-				if(u.upgrade(student)) training+=u.name+"\n";
-				cr=ChallengeCalculator.calculatecr(student.source);
-				if(u instanceof ClassLevelUpgrade) classlevel=(ClassLevelUpgrade)u;
-			}
-			student.xp=student.xp.subtract(new BigDecimal(cr-original));
-			training+="\nPress ENTER to continue...";
-			InfoScreen screen=new InfoScreen(training);
-			Javelin.app.switchScreen(screen);
-			while(screen.getInput()!='\n'){
-				// wait
-			}
-			student.postupgrade(classlevel);
+			var xp=TARGETLEVEL-ChallengeCalculator.calculaterawcr(student.source)[1];
+			train(student,new ArrayList<>(kit.basic),xp);
 		}
+	}
+
+	/**
+	 * @param upgrades Randomly applies these upgrades to the given
+	 *          {@link Combatant}, until all possibilities are exhausted (if any).
+	 * @param xp How much experience to spend at most. Will also be subtracted
+	 *          from {@link Combatant#xp}.
+	 */
+	static public void train(Combatant student,List<Upgrade> upgrades,float xp){
+		var learned=new ArrayList<Upgrade>();
+		while(xp>0){
+			float fromcr=ChallengeCalculator.calculatecr(student.source);
+			Upgrade applied=RPG.shuffle(upgrades).stream().sequential()
+					.filter(u->u.upgrade(student)).findAny().orElse(null);
+			if(applied==null) break;
+			learned.add(applied);
+			float tocr=ChallengeCalculator.calculaterawcr(student.source)[1];
+			var cost=tocr-fromcr;
+			student.xp=student.xp.subtract(new BigDecimal(cost));
+			xp-=cost;
+		}
+		String training;
+		if(learned.isEmpty())
+			training=student+" was unable to learn anything at this time...\n";
+		else{
+			training=student+" learns:\n\n";
+			learned.sort((a,b)->a.getname().compareTo(b.getname()));
+			for(Upgrade u:learned)
+				training+=u.getname()+"\n";
+		}
+		training+="\nPress ENTER to continue...";
+		InfoScreen screen=new InfoScreen(training);
+		Javelin.app.switchScreen(screen);
+		while(screen.getInput()!='\n')
+			continue;
+		if(!learned.isEmpty()) student.postupgrade();
 	}
 
 	public boolean validateselection(ArrayList<Combatant> students){

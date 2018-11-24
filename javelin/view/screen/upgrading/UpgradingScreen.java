@@ -13,7 +13,6 @@ import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
@@ -162,8 +161,7 @@ public abstract class UpgradingScreen extends SelectScreen{
 		if(buy(o,c,false)!=null){
 			update(c);
 			upgraded.add(c);
-			c.postupgrade(
-					o.u instanceof ClassLevelUpgrade?(ClassLevelUpgrade)o.u:null);
+			c.postupgrade();
 		}
 	}
 

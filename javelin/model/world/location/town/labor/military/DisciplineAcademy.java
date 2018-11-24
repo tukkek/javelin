@@ -163,7 +163,7 @@ public class DisciplineAcademy extends Academy{
 		c.setmercenary(true);
 		train(c,level,ChallengeCalculator.calculaterawcr(c.source)[1],
 				d.getupgrades());
-		c.postupgradeautomatic(d.classupgrade);
+		c.postupgradeautomatic();
 		name(c);
 		return c;
 	}

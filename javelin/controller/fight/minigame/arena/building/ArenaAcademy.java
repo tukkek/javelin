@@ -87,7 +87,7 @@ public class ArenaAcademy extends ArenaBuilding{
 		upgrades.clear();
 		upgrades.add(ClassLevelUpgrade.getpreferred(trainee));
 		LinkedList<Upgrade> all=new LinkedList<>(
-				UpgradeHandler.singleton.getalluncategorized());
+				UpgradeHandler.singleton.getalluncategorized(false));
 		Collections.shuffle(all);
 		while(upgrades.size()<3+level&&!all.isEmpty()){
 			Upgrade u=all.pop();

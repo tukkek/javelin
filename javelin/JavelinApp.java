@@ -28,6 +28,7 @@ import javelin.controller.scenario.Campaign;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
+import javelin.controller.upgrade.UpgradeHandler.UpgradeSet;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;
@@ -232,8 +233,7 @@ public class JavelinApp extends QuestApp{
 	}
 
 	static void printoptions(){
-		HashMap<String,HashSet<Upgrade>> allupgrades=UpgradeHandler.singleton
-				.getall();
+		var allupgrades=UpgradeHandler.singleton.getall(false);
 		ArrayList<Upgrade> upgradelist=new ArrayList<>();
 		HashMap<String,ItemSelection> allitems=Item.getall();
 		List<String> primary=Arrays.asList(
@@ -255,7 +255,7 @@ public class JavelinApp extends QuestApp{
 					throw new RuntimeException("Unregistered upgrade: "+u);
 	}
 
-	static void printrealm(HashMap<String,HashSet<Upgrade>> allupgrades,
+	static void printrealm(HashMap<String,UpgradeSet> allupgrades,
 			HashMap<String,ItemSelection> allitems,String realm){
 		HashSet<Upgrade> upgrades=allupgrades.get(realm);
 		int count=1;

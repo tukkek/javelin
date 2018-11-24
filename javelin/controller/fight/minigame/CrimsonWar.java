@@ -67,7 +67,7 @@ public class CrimsonWar extends Minigame{
 				GOOD.add(e);
 		}
 		UpgradeHandler.singleton.gather();
-		for(var upgrade:UpgradeHandler.singleton.getalluncategorized())
+		for(var upgrade:UpgradeHandler.singleton.getalluncategorized(false))
 			if(upgrade.isusedincombat()) UPGRADES.add(upgrade);
 		for(var item:Item.ALL)
 			if(!(item instanceof Artifact)&&item.usedinbattle) ITEMS.add(item);

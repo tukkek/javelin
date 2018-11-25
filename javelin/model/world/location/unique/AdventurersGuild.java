@@ -138,12 +138,13 @@ public class AdventurersGuild extends UniqueLocation{
 			Kit kit=selection.get(i);
 			if(kit==null) continue;
 			Combatant student=students.get(i);
-			var xp=TARGETLEVEL-ChallengeCalculator.calculaterawcr(student.source)[1];
-			train(student,new ArrayList<>(kit.basic),xp);
+			train(student,new ArrayList<>(kit.basic),1);
 		}
 	}
 
 	/**
+	 * Will also show a summary screen after done.
+	 *
 	 * @param upgrades Randomly applies these upgrades to the given
 	 *          {@link Combatant}, until all possibilities are exhausted (if any).
 	 * @param xp How much experience to spend at most. Will also be subtracted
@@ -152,16 +153,29 @@ public class AdventurersGuild extends UniqueLocation{
 	static public void train(Combatant student,List<Upgrade> upgrades,float xp){
 		var learned=new ArrayList<Upgrade>();
 		while(xp>0){
-			float fromcr=ChallengeCalculator.calculatecr(student.source);
-			Upgrade applied=RPG.shuffle(upgrades).stream().sequential()
-					.filter(u->u.upgrade(student)).findAny().orElse(null);
-			if(applied==null) break;
+			Upgrade applied=null;
+			Float cost=null;
+			for(var upgrade:RPG.shuffle(upgrades)){
+				cost=upgrade.getcost(student);
+				if(cost!=null&&0<cost&&cost<=xp){
+					applied=upgrade;
+					break;
+				}
+			}
+			if(applied==null||cost==null) break;
+			applied.upgrade(student);
 			learned.add(applied);
-			float tocr=ChallengeCalculator.calculaterawcr(student.source)[1];
-			var cost=tocr-fromcr;
 			student.xp=student.xp.subtract(new BigDecimal(cost));
 			xp-=cost;
 		}
+		if(!learned.isEmpty()){
+			student.postupgrade();
+			ChallengeCalculator.calculatecr(student.source);
+		}
+		printresult(student,learned);
+	}
+
+	static void printresult(Combatant student,ArrayList<Upgrade> learned){
 		String training;
 		if(learned.isEmpty())
 			training=student+" was unable to learn anything at this time...\n";
@@ -176,7 +190,6 @@ public class AdventurersGuild extends UniqueLocation{
 		Javelin.app.switchScreen(screen);
 		while(screen.getInput()!='\n')
 			continue;
-		if(!learned.isEmpty()) student.postupgrade();
 	}
 
 	public boolean validateselection(ArrayList<Combatant> students){

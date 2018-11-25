@@ -4,16 +4,12 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import javelin.controller.ContentSummary;
 import javelin.controller.TextReader;
 import javelin.controller.ai.ThreadManager;
 import javelin.controller.db.Preferences;
@@ -23,24 +19,10 @@ import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.generator.WorldGenerator;
-import javelin.controller.kit.Kit;
-import javelin.controller.scenario.Campaign;
-import javelin.controller.terrain.Terrain;
-import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.UpgradeHandler;
-import javelin.controller.upgrade.UpgradeHandler.UpgradeSet;
-import javelin.model.item.Item;
-import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.unit.abilities.spell.conjuration.Summon;
-import javelin.model.world.Actor;
 import javelin.model.world.World;
-import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.town.labor.Deck;
-import javelin.model.world.location.unique.UniqueLocation;
 import javelin.old.QuestApp;
 import javelin.old.RPG;
 import javelin.view.screen.WorldScreen;
@@ -194,94 +176,11 @@ public class JavelinApp extends QuestApp{
 		WorldGenerator.build();
 		World.scenario.ready(World.seed);
 		if(Javelin.DEBUG){
-			JavelinApp.printstatistics();
+			new ContentSummary().produce();
 			Debug.oncampaignstart();
 		}
 	}
 
-	/** stats */
-	static void printstatistics(){
-		if(!(World.scenario instanceof Campaign)) return;
-		System.out.println();
-		printoptions();
-		System.out.println(Javelin.ALLMONSTERS.size()+" monsters");
-		System.out.println(Item.ALL.size()-Item.ARTIFACT.size()+" items, "
-				+Item.ARTIFACT.size()+" artifacts, 7 relics");
-		Collection<Spell> spells=Spell.SPELLS.values();
-		var upgrades=UpgradeHandler.singleton;
-		upgrades.gather();
-		int nupgrades=upgrades.count()-spells.size();
-		int nspells=spells.size()-countsummon(spells)+1;
-		int nskills=upgrades.countskills();
-		int nkits=Kit.KITS.size();
-		System.out.println(nupgrades+" upgrades, "+nspells+" spells, "+nskills
-				+" skills, "+nkits+" kits");
-		HashSet<Class<? extends Actor>> locationtypes=new HashSet<>();
-		int uniquelocations=0;
-		for(Actor a:World.getactors()){
-			if(!(a instanceof Location)) continue;
-			locationtypes.add(a.getClass());
-			if(a instanceof UniqueLocation) uniquelocations+=1;
-		}
-		System.out.println(locationtypes.size()-uniquelocations
-				+" world location types, "+uniquelocations+" unique locations");
-		Deck.printstats();
-		int maps=Terrain.UNDERGROUND.getmaps().size();
-		for(Terrain t:Terrain.NONUNDERGROUND)
-			maps+=t.getmaps().size();
-		System.out.println(maps+" battle maps");
-	}
-
-	static void printoptions(){
-		var allupgrades=UpgradeHandler.singleton.getall(false);
-		ArrayList<Upgrade> upgradelist=new ArrayList<>();
-		HashMap<String,ItemSelection> allitems=Item.getall();
-		List<String> primary=Arrays.asList(
-				new String[]{"earth","wind","fire","water","good","evil","magic"});
-		for(String realm:primary){
-			printrealm(allupgrades,allitems,realm);
-			upgradelist.addAll(allupgrades.get(realm));
-		}
-		ArrayList<String> extrarealms=new ArrayList<>(allupgrades.keySet());
-		extrarealms.sort(null);
-		for(String realm:extrarealms)
-			if(!primary.contains(realm)){
-				printrealm(allupgrades,allitems,realm);
-				upgradelist.addAll(allupgrades.get(realm));
-			}
-		for(Kit k:Kit.KITS)
-			for(Upgrade u:k.basic)
-				if(!(u instanceof Summon)&&!upgradelist.contains(u))
-					throw new RuntimeException("Unregistered upgrade: "+u);
-	}
-
-	static void printrealm(HashMap<String,UpgradeSet> allupgrades,
-			HashMap<String,ItemSelection> allitems,String realm){
-		HashSet<Upgrade> upgrades=allupgrades.get(realm);
-		int count=1;
-		System.out.println(realm);
-		for(Upgrade u:upgrades){
-			System.out.println("\t"+count+" - "+u);
-			count+=1;
-		}
-		System.out.println();
-		ItemSelection inventory=allitems.get(realm);
-		for(int i=0;inventory!=null&&i<inventory.size();i++){
-			Item item=inventory.get(i).clone();
-			System.out.println("\t"+count+" - "+item+" ($"+item.price+")");
-			count+=1;
-		}
-		System.out.println();
-	}
-
-	static int countsummon(Collection<Spell> spells){
-		int summon=0;
-		for(Spell s:spells)
-			if(s instanceof Summon) summon+=1;
-		return summon;
-	}
-
-	@SuppressWarnings("deprecation")
 	void preparedebug(){
 		if(Debug.gold!=null) Squad.active.gold=Debug.gold;
 		if(Debug.xp!=null) for(final Combatant m:Squad.active.members)

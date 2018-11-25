@@ -118,19 +118,15 @@ public class Deck extends ArrayList<Labor>{
 		return false;
 	}
 
-	public static int getntraits(){
-		return DECKS.size();
-	}
-
-	public static void printstats(){
-		int nprojects=DEFAULT.size();
+	public static String getsummary(){
+		int nprojects=Deck.DEFAULT.size();
 		int min=Integer.MAX_VALUE;
-		for(Deck d:DECKS.values()){
+		for(Deck d:Deck.DECKS.values()){
 			int n=d.size();
 			nprojects+=n;
 			if(n<min) min=n;
 		}
-		System.out.println(Deck.getntraits()+" town traits, "+nprojects
-				+" district projects (minimum deck size: "+min+")");
+		return DECKS.size()+" town traits, "+nprojects
+				+" district projects (minimum deck size: "+min+")";
 	}
 }

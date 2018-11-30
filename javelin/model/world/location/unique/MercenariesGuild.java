@@ -17,6 +17,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Build;
 import javelin.old.RPG;
 import javelin.view.screen.InfoScreen;
@@ -33,7 +34,13 @@ public class MercenariesGuild extends Fortification{
 	private static final int STARTINGMERCENARIES=9;
 	static final boolean DEBUG=false;
 
+	/**
+	 * Builds a Mercenary Guild in a {@link Town}.
+	 *
+	 * @author alex
+	 */
 	public static class BuildMercenariesGuild extends Build{
+		/** Constructor. */
 		public BuildMercenariesGuild(){
 			super("Build mercenaries guild",15,null,Rank.TOWN);
 		}
@@ -127,18 +134,7 @@ public class MercenariesGuild extends Fortification{
 	 *         value).
 	 */
 	public static int getfee(Monster m){
-		float value=RewardCalculator.getgold(ChallengeCalculator.calculatecr(m));
-		int roundto;
-		if(value>1000)
-			roundto=1000;
-		else if(value>100)
-			roundto=100;
-		else if(value>10)
-			roundto=10;
-		else
-			roundto=1;
-		int fee=Math.round(value/roundto);
-		return fee*roundto;
+		return Javelin.round(RewardCalculator.getgold(m.cr));
 	}
 
 	/**
@@ -155,6 +151,9 @@ public class MercenariesGuild extends Fortification{
 		return combatants;
 	}
 
+	/**
+	 * @return All existings instances of Mercenary Guilds.
+	 */
 	public static List<MercenariesGuild> getguilds(){
 		ArrayList<Actor> all=World.getall(MercenariesGuild.class);
 		ArrayList<MercenariesGuild> guilds=new ArrayList<>(all.size());
@@ -163,9 +162,12 @@ public class MercenariesGuild extends Fortification{
 		return guilds;
 	}
 
+	/**
+	 * @param c Removes this unit from any guilds it might be listed in.
+	 */
 	public static void die(Combatant c){
 		for(MercenariesGuild g:getguilds())
-			if(g.all.contains(c)) g.all.remove(c);
+			g.all.remove(c);
 	}
 
 	@Override

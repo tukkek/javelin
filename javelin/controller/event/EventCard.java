@@ -19,6 +19,8 @@ public abstract class EventCard{
 	 * and revisited later so mutable conditions such as time of day shouldn't be
 	 * used for validation unless this is an instantaneous event.
 	 *
+	 * This is called before {@link #define(Squad, int, PointOfInterest)}.
+	 *
 	 * Parameters are the same as
 	 * {@link EventDealer#generate(Squad, int, Location)}.
 	 *
@@ -36,6 +38,10 @@ public abstract class EventCard{
 	 *
 	 * Some events are not instantaneous and as such they may be defined once and
 	 * activated many times later.
+	 *
+	 * This is called after {@link #validate(Squad, int, PointOfInterest)} and is
+	 * meant to contain any slower operations, as it's only called once when a
+	 * valid card is selected.
 	 *
 	 * Parameters are the same as
 	 * {@link EventDealer#generate(Squad, int, Location)}.

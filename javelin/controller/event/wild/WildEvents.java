@@ -6,6 +6,7 @@ import javelin.Javelin;
 import javelin.controller.db.StateManager;
 import javelin.controller.event.EventCard;
 import javelin.controller.event.EventDealer;
+import javelin.controller.event.wild.neutral.FindMercenary;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.PointOfInterest;
 
@@ -19,9 +20,10 @@ public class WildEvents extends EventDealer{
 	public static WildEvents instance=new WildEvents();
 	static final Class<? extends WildEvent> DEBUG=null;
 
+	/** Constructor. */
 	public WildEvents(){
 		positive.addcontent(List.of());
-		neutral.addcontent(List.of());
+		neutral.addcontent(List.of(FindMercenary.class));
 		negative.addcontent(List.of());
 	}
 

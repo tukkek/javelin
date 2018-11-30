@@ -69,7 +69,7 @@ public class DiscernLocation extends Spell{
 						closest.x,closest.y)){
 					x=p.x;
 					y=p.y;
-					WorldScreen.setVisible(x,y);
+					WorldScreen.discover(x,y);
 					continue walk;
 				}
 			throw new RuntimeException(

@@ -200,9 +200,8 @@ public class WorldScreen extends BattleScreen{
 	/**
 	 * Marks coordinate as permanently visible.
 	 */
-	static public void setVisible(int x,int y){
+	static public void discover(int x,int y){
 		if(!World.validatecoordinate(x,y)) return;
-		// StateManager.DISCOVERED.add(new Point(x, y));
 		WorldScreen s=getcurrentscreen();
 		if(s!=null) s.gettiles()[x][y].discovered=true;
 	}
@@ -420,7 +419,8 @@ public class WorldScreen extends BattleScreen{
 	}
 
 	/**
-	 * @return <code>true</code> if this {@link World} coordinate can be seen.
+	 * @return <code>true</code> if this {@link World} coordinate has been and
+	 *         still is discovered.
 	 */
 	public static boolean see(Point p){
 		return World.validatecoordinate(p.x,p.y)

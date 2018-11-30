@@ -235,7 +235,7 @@ public class Preferences{
 				&&BattleScreen.active.getClass().equals(WorldScreen.class))
 			for(int x=0;x<World.scenario.size;x++)
 			for(int y=0;y<World.scenario.size;y++)
-			WorldScreen.setVisible(x,y);
+			WorldScreen.discover(x,y);
 		if(World.seed!=null) for(Actor a:World.getall(Squad.class))
 			initsquaddebug((Squad)a);
 		if(Debug.weather!=null){

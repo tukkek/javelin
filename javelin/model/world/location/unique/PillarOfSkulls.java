@@ -143,7 +143,7 @@ public class PillarOfSkulls extends UniqueLocation{
 			if(closest==null)
 				print(text+"\nWe have nothing more to show you!");
 			else
-				WorldScreen.setVisible(closest.x,closest.y);
+				WorldScreen.discover(closest.x,closest.y);
 			return true;
 		}
 

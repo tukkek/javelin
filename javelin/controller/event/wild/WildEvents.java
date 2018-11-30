@@ -9,6 +9,8 @@ import javelin.controller.event.EventDealer;
 import javelin.controller.event.wild.negative.FindIncursion;
 import javelin.controller.event.wild.neutral.FindMercenary;
 import javelin.controller.event.wild.neutral.WeatherChange;
+import javelin.controller.event.wild.positive.RevealLocation;
+import javelin.controller.event.wild.positive.WanderingPriest;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.PointOfInterest;
 
@@ -24,7 +26,7 @@ public class WildEvents extends EventDealer{
 
 	/** Constructor. */
 	public WildEvents(){
-		positive.addcontent(List.of());
+		positive.addcontent(List.of(WanderingPriest.class,RevealLocation.class));
 		neutral.addcontent(List.of(FindMercenary.class,WeatherChange.class));
 		negative.addcontent(List.of(FindIncursion.class));
 	}

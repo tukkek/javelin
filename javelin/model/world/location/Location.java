@@ -185,7 +185,7 @@ public abstract class Location extends Actor{
 		int diplomacy=Squad.active.getbest(Skill.DIPLOMACY)
 				.taketen(Skill.DIPLOMACY);
 		if(diplomacy>=10+closest.distance(here.x,here.y))
-			WorldScreen.setVisible(closest.x,closest.y);
+			WorldScreen.discover(closest.x,closest.y);
 	}
 
 	@Override

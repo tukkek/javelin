@@ -108,7 +108,7 @@ public class Outpost extends Fortification{
 	static public void discover(int xp,int yp,int range){
 		for(int x=xp-range;x<=xp+range;x++)
 			for(int y=yp-range;y<=yp+range;y++)
-				WorldScreen.setVisible(x,y);
+				WorldScreen.discover(x,y);
 	}
 
 	@Override

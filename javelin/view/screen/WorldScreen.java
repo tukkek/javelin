@@ -248,13 +248,11 @@ public class WorldScreen extends BattleScreen{
 		final ArrayList<String> infos=new ArrayList<>();
 		String date="Day "+currentday();
 		if(Dungeon.active==null){
-			date+=", "+Javelin.getDayPeriod().toLowerCase();
+			infos.add(date+", "+Javelin.getDayPeriod().toLowerCase());
+			String season=Season.current.toString();
 			String weather=Terrain.current().getweather();
-			if(!weather.isEmpty()) date+=" ("+weather+")";
-		}
-		if(Dungeon.active==null){
-			infos.add(Season.current.toString());
-			infos.add(date);
+			if(!weather.isEmpty()) season+=", "+weather+"";
+			infos.add(season);
 		}else
 			infos.add(Dungeon.active.description);
 		infos.add("");

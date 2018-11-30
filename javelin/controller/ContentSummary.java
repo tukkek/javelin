@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
+import javelin.controller.event.wild.WildEvents;
 import javelin.controller.kit.Kit;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
@@ -130,6 +131,7 @@ public class ContentSummary{
 		print(locationtypes.size()-uniquelocations+" world location types, "
 				+uniquelocations+" unique locations");
 		print(Deck.getsummary());
+		print("Wilderness events: "+WildEvents.instance.printsummary());
 		int maps=Terrain.UNDERGROUND.getmaps().size();
 		for(Terrain t:Terrain.NONUNDERGROUND)
 			maps+=t.getmaps().size();

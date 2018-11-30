@@ -57,7 +57,7 @@ public class DungeonScreen extends WorldScreen{
 		for(Feature f:dungeon.features.copy())
 			if(Walker.distanceinsteps(x,y,f.x,f.y)==1)
 				f.discover(searching,searching.roll(Skill.PERCEPTION));
-		Feature f=dungeon.features.get(x, y);
+		Feature f=dungeon.features.get(x,y);
 		if(f==null) return false;
 		boolean activated=f.activate();
 		if(activated&&f.remove) dungeon.features.remove(f);
@@ -99,7 +99,7 @@ public class DungeonScreen extends WorldScreen{
 			if(step.x!=target.x) step.x+=step.x>target.x?-1:+1;
 			if(step.y!=target.y) step.y+=step.y>target.y?-1:+1;
 			if(!step.equals(target)&&(dungeon.map[step.x][step.y]==Template.WALL
-					||dungeon.features.get(step.x, step.y) instanceof Door))
+					||dungeon.features.get(step.x,step.y) instanceof Door))
 				return false;
 		}
 		return true;
@@ -132,7 +132,7 @@ public class DungeonScreen extends WorldScreen{
 	}
 
 	@Override
-	protected HashSet<Point> getdiscoveredtiles(){
+	protected HashSet<Point> getdiscovered(){
 		return dungeon.discovered;
 	}
 }

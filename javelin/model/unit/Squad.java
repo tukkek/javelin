@@ -642,9 +642,11 @@ public class Squad extends Actor implements Cloneable{
 
 	public Combatant getbest(Skill s){
 		Combatant best=null;
-		for(Combatant c:Squad.active.members)
+		for(Combatant c:members){
+			if(!s.canuse(c)) continue;
 			if(best==null||s.getbonus(c)>s.getbonus(best)) best=c;
-		return best;
+		}
+		return best==null?members.get(0):best;
 	}
 
 	public Combatant getworst(Skill s){

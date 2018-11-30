@@ -141,7 +141,6 @@ public class TensionDirector{
 	 *         {@link #monsters}.
 	 * @throws GaveUp If cannot fulfill this condition.
 	 */
-	@SuppressWarnings("static-method")
 	protected List<Combatant> generate(int el) throws GaveUp{
 		return EncounterGenerator.generate(el,Arrays.asList(Terrain.NONWATER));
 	}

@@ -79,4 +79,8 @@ public class InfiniteList<T> implements Serializable{
 	public String toString(){
 		return "Current pool: "+current;
 	}
+
+	public int getcontentsize(){
+		return content.size();
+	}
 }

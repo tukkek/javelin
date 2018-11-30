@@ -460,16 +460,22 @@ public class WorldScreen extends BattleScreen{
 	}
 
 	void showdiscovered(Tile[][] tiles){
-		for(Point p:getdiscoveredtiles())
+		for(Point p:getdiscovered())
 			tiles[p.x][p.y].discovered=true;
 	}
 
-	protected HashSet<Point> getdiscoveredtiles(){
+	/**
+	 * This is intended for use by {@link StateManager} and does not maintain a
+	 * live set. Prefer using {@link Tile#discovered} directly.
+	 *
+	 * @return Discoveed tiles.
+	 */
+	protected HashSet<Point> getdiscovered(){
 		return World.seed.discovered;
 	}
 
 	public void savediscovered(){
-		adddiscovered(getdiscoveredtiles());
+		adddiscovered(getdiscovered());
 	}
 
 	@Override

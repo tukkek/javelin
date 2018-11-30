@@ -26,7 +26,6 @@ public abstract class EventCard{
 	 *
 	 * @return <code>true</code> if this particular card can be used.
 	 */
-	@SuppressWarnings("static-method")
 	public boolean validate(Squad s,int squadel,PointOfInterest l){
 		return true;
 	}
@@ -46,7 +45,6 @@ public abstract class EventCard{
 	 * Parameters are the same as
 	 * {@link EventDealer#generate(Squad, int, Location)}.
 	 */
-	@SuppressWarnings("static-method")
 	public void define(Squad s,int squadel,PointOfInterest l){
 		return;
 	}

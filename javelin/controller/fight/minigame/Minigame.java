@@ -61,7 +61,6 @@ public abstract class Minigame extends Fight{
 	 * @return <code>false</code> if failed to start and should quit the
 	 *         application.
 	 */
-	@SuppressWarnings("static-method")
 	public boolean start(){
 		return true;
 	}

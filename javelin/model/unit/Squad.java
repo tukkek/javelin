@@ -3,6 +3,7 @@ package javelin.model.unit;
 import java.awt.Image;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javelin.Javelin;
@@ -49,7 +50,7 @@ import javelin.view.screen.WorldScreen;
  *
  * @author alex
  */
-public class Squad extends Actor implements Cloneable{
+public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	/**
 	 * See {@link Javelin#act()}.
 	 */
@@ -474,11 +475,14 @@ public class Squad extends Actor implements Cloneable{
 	 * Discover a {@link World} area in a radius around current position.
 	 *
 	 * @param vision Perceive roll with circumstance bonuses.
+	 * @return Distance the Squad was able to see (minimum of 1).
 	 * @see WorldScreen#discovered
 	 * @see Squad#perceive(boolean)
 	 */
-	public void seesurroundings(int vision){
-		Outpost.discover(x,y,Math.max(1,vision/5));
+	public int seesurroundings(int vision){
+		vision=Math.max(1,vision/5);
+		Outpost.discover(x,y,vision);
+		return vision;
 	}
 
 	@Override
@@ -714,5 +718,10 @@ public class Squad extends Actor implements Cloneable{
 		if(this==Squad.active||Squad.active.distanceinsteps(x,y)!=1) return false;
 		join(Squad.active);
 		return true;
+	}
+
+	@Override
+	public Iterator<Combatant> iterator(){
+		return members.iterator();
 	}
 }

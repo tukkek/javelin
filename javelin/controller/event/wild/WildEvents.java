@@ -11,6 +11,7 @@ import javelin.controller.event.wild.negative.FindIncursion;
 import javelin.controller.event.wild.neutral.FindMercenary;
 import javelin.controller.event.wild.neutral.WeatherChange;
 import javelin.controller.event.wild.positive.FindRuby;
+import javelin.controller.event.wild.positive.PegasusRide;
 import javelin.controller.event.wild.positive.RevealLocation;
 import javelin.controller.event.wild.positive.RevealRegion;
 import javelin.controller.event.wild.positive.WanderingPriest;
@@ -25,12 +26,12 @@ import javelin.model.world.location.PointOfInterest;
 public class WildEvents extends EventDealer{
 	/** @see StateManager */
 	public static EventDealer instance=new WildEvents();
-	static final Class<? extends WildEvent> DEBUG=FindRuby.class;
+	static final Class<? extends WildEvent> DEBUG=null;
 
 	/** Constructor. */
 	public WildEvents(){
 		positive.addcontent(List.of(WanderingPriest.class,RevealLocation.class,
-				RevealRegion.class,FindRuby.class));
+				RevealRegion.class,FindRuby.class,PegasusRide.class));
 		neutral.addcontent(List.of(FindMercenary.class,WeatherChange.class));
 		negative.addcontent(List.of(FindIncursion.class,ConfusingFairies.class));
 	}

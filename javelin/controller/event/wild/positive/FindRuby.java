@@ -1,5 +1,7 @@
 package javelin.controller.event.wild.positive;
 
+import java.util.Set;
+
 import javelin.Javelin;
 import javelin.controller.event.wild.WildEvent;
 import javelin.controller.terrain.Terrain;
@@ -24,9 +26,7 @@ public class FindRuby extends WildEvent{
 
 	@Override
 	public void happen(Squad s,PointOfInterest l){
-		Character input=' ';
-		while(input!='e'&&input!='i')
-			input=Javelin.prompt(PROMPT);
+		Character input=Javelin.prompt(PROMPT,Set.of('e','i'));
 		if(input=='i') return;
 		remove=true;
 		s.hourselapsed+=RPG.rolldice(2,4);

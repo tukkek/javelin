@@ -10,6 +10,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.swing.JFrame;
@@ -98,6 +99,7 @@ public class Javelin{
 
 	/** Singleton. */
 	public static JavelinApp app;
+	public static boolean delayblock=false;
 
 	static{
 		try{
@@ -477,5 +479,17 @@ public class Javelin{
 		}
 	}
 
-	public static boolean delayblock=false;
+	/**
+	 * Calls {@link #prompt(String)}p until the user presses one of the allowed
+	 * {@link Character}s.
+	 *
+	 * @param allowed <code>null</code> should never be included.
+	 * @return User input, guaranteed to be among the allowed ones.
+	 */
+	public static Character prompt(String prompt,Set<Character> allowed){
+		Character input=null;
+		while(input==null||!allowed.contains(input))
+			input=prompt(prompt);
+		return input;
+	}
 }

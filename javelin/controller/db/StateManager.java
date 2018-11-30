@@ -19,6 +19,7 @@ import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Weather;
 import javelin.controller.action.world.OpenJournal;
+import javelin.controller.event.EventDealer;
 import javelin.controller.event.wild.WildEvents;
 import javelin.controller.wish.Ressurect;
 import javelin.model.unit.Combatant;
@@ -145,7 +146,7 @@ public class StateManager{
 			Season.current=(Season)stream.readObject();
 			Season.endsat=(Integer)stream.readObject();
 			OpenJournal.content=(String)stream.readObject();
-			WildEvents.instance=(WildEvents)stream.readObject();
+			WildEvents.instance=(EventDealer)stream.readObject();
 			stream.close();
 			filestream.close();
 			backup();

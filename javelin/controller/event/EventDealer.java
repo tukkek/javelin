@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 
+import javelin.controller.ContentSummary;
 import javelin.controller.InfiniteList;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.PointOfInterest;
@@ -48,6 +49,18 @@ public abstract class EventDealer implements Serializable{
 		var card=draw(s,el,l,deck);
 		card.define(s,el,l);
 		return card;
+	}
+
+	/** @see ContentSummary */
+	public String printsummary(){
+		int npositive=positive.getcontentsize();
+		int nneutral=neutral.getcontentsize();
+		int nnegative=negative.getcontentsize();
+		var summary=npositive+" positive, ";
+		summary+=nneutral+" neutral, ";
+		summary+=nnegative+" negative";
+		summary+=" ("+(npositive+nneutral+nnegative)+" total).";
+		return summary;
 	}
 
 	/**

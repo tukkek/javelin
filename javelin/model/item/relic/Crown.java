@@ -13,7 +13,7 @@ public class Crown extends Relic{
 	public class Knowledgeable extends Condition{
 		/** Constructor. */
 		public Knowledgeable(Combatant c){
-			super(Float.MAX_VALUE,c,Effect.NEUTRAL,"all-knowing",20,24*7);
+			super(c,"all-knowing",Effect.NEUTRAL,20,Float.MAX_VALUE,24*7);
 		}
 
 		@Override

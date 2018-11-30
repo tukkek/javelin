@@ -1,7 +1,7 @@
 package javelin.controller.event.wild.positive;
 
 import javelin.Javelin;
-import javelin.controller.event.wild.WildEvent;
+import javelin.controller.event.Wanderer;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.PointOfInterest;
 
@@ -10,7 +10,7 @@ import javelin.model.world.location.PointOfInterest;
  *
  * @author alex
  */
-public class WanderingPriest extends WildEvent{
+public class WanderingPriest extends Wanderer{
 	static final String MESSAGE="You come accross a wandering priest, who heals all your wounds before continuing his journey!";
 
 	public WanderingPriest(){

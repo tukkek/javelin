@@ -1,6 +1,5 @@
 package javelin.controller.event.wild.neutral;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.stream.Collectors;
 import javelin.Javelin;
 import javelin.controller.event.wild.WildEvent;
 import javelin.controller.exception.battle.StartBattle;
-import javelin.controller.fight.Fight;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -40,24 +38,6 @@ public class FindMercenary extends WildEvent{
 		}
 	}
 
-	class MercenaryFight extends Fight{
-		Combatant c;
-
-		MercenaryFight(Combatant mercenary){
-			c=mercenary;
-			terrain=FindMercenary.this.terrain;
-			hide=false;
-			bribe=false;
-		}
-
-		@Override
-		public ArrayList<Combatant> getfoes(Integer teamel){
-			var foes=new ArrayList<Combatant>(1);
-			foes.add(c);
-			return foes;
-		}
-	}
-
 	Monster mercenary;
 	Terrain terrain;
 
@@ -75,7 +55,7 @@ public class FindMercenary extends WildEvent{
 		var choice=options.get(Javelin.choose(prompt,options,true,true));
 		if(choice==DECLINE) return;
 		var mercenary=new Combatant(this.mercenary,true);
-		if(choice==ATTACK) throw new StartBattle(new MercenaryFight(mercenary));
+		if(choice==ATTACK) throw new StartBattle(new EventFight(mercenary,l));
 		if(choice==HIRE){
 			mercenary.setmercenary(true);
 			s.add(mercenary);

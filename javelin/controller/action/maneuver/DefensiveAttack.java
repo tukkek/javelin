@@ -18,7 +18,7 @@ public class DefensiveAttack extends ExpertiseAction{
 		private int acbonus;
 
 		public DefensiveStance(float expireatp,Combatant c,int acbonus){
-			super(expireatp,c,Effect.POSITIVE,"defensive stance",null);
+			super(c,"defensive stance",Effect.POSITIVE,null,expireatp);
 			this.acbonus=acbonus;
 		}
 

@@ -24,7 +24,7 @@ public class TearingFang extends Boost{
 
 	class Tearing extends Condition{
 		public Tearing(Combatant c){
-			super(c.ap+1,c,Effect.POSITIVE,"tearing",null);
+			super(c,"tearing",Effect.POSITIVE,null,c.ap+1);
 		}
 
 		@Override
@@ -68,7 +68,7 @@ public class TearingFang extends Boost{
 		float lastbleed;
 
 		Bleeding(Combatant c){
-			super(Float.MAX_VALUE,c,Effect.NEGATIVE,"bleeding",null);
+			super(c,"bleeding",Effect.NEGATIVE,null,Float.MAX_VALUE);
 			stack=true;
 			ticks=BLEEDDURATION;
 			lastbleed=c.ap;

@@ -91,14 +91,14 @@ public abstract class Condition
 	 */
 	public boolean stack=false;
 
-	public Condition(float expireatp,final Combatant c,final Effect effectp,
-			String description,Integer casterlevel){
-		this(expireatp,c,effectp,description,casterlevel,null);
+	public Condition(final Combatant c,String description,final Effect effectp,
+			Integer casterlevel,float expireatp){
+		this(c,description,effectp,casterlevel,expireatp,null);
 	}
 
 	/** See fields. */
-	public Condition(float expireatp,Combatant c,Effect effectp,
-			String descriptionp,Integer casterlevel,Integer longtermp){
+	public Condition(Combatant c,String descriptionp,Effect effectp,
+			Integer casterlevel,float expireatp,Integer longtermp){
 		expireat=expireatp;
 		effect=effectp;
 		description=descriptionp;

@@ -19,7 +19,7 @@ public class FoxsCunning extends TotemsSpell{
 		 * @param casterlevelp
 		 */
 		public Cunning(Combatant c,Integer casterlevelp){
-			super(Float.MAX_VALUE,c,Effect.POSITIVE,"cunning",casterlevelp);
+			super(c,"cunning",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE);
 		}
 
 		@Override

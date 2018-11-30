@@ -25,7 +25,7 @@ public class ResistEnergy extends Touch{
 		 * @param casterlevelp
 		 */
 		public Resistant(Combatant c,int resistance,Integer casterlevelp){
-			super(Float.MAX_VALUE,c,Effect.POSITIVE,"resistant",casterlevelp,1);
+			super(c,"resistant",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE,1);
 			r=resistance;
 		}
 

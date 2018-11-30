@@ -12,7 +12,7 @@ public class Paralyzed extends Condition{
 	private int delta;
 
 	public Paralyzed(float expireatp,Combatant c,Integer casterlevelp){
-		super(expireatp,c,Effect.NEGATIVE,"paralyzed",casterlevelp);
+		super(c,"paralyzed",Effect.NEGATIVE,casterlevelp,expireatp);
 	}
 
 	@Override

@@ -25,7 +25,7 @@ public class FindTraps extends Spell{
 		 * @param casterlevelp
 		 */
 		public FindingTraps(Combatant c,Integer casterlevelp){
-			super(Float.MAX_VALUE,c,Effect.NEUTRAL,"finding traps",casterlevelp,1);
+			super(c,"finding traps",Effect.NEUTRAL,casterlevelp,Float.MAX_VALUE,1);
 		}
 
 		@Override

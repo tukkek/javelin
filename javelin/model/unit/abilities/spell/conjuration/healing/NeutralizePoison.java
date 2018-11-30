@@ -29,7 +29,7 @@ public class NeutralizePoison extends Touch{
 		 * @param casterlevelp
 		 */
 		public Neutralized(Combatant c,Integer casterlevelp){
-			super(Float.MAX_VALUE,c,Effect.POSITIVE,"immune to poison",casterlevelp,
+			super(c,"immune to poison",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE,
 					1);
 		}
 

@@ -13,7 +13,7 @@ import javelin.model.unit.condition.Condition;
 public class BearsEndurance extends TotemsSpell{
 	public class Enduring extends Condition{
 		public Enduring(Combatant c,Integer casterlevelp){
-			super(Float.MAX_VALUE,c,Effect.POSITIVE,"enduring",casterlevelp);
+			super(c,"enduring",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE);
 		}
 
 		@Override

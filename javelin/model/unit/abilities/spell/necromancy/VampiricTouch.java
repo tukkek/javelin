@@ -17,7 +17,7 @@ public class VampiricTouch extends Touch{
 
 		public Vampiric(float expireat,Combatant caster,int steal,
 				Integer casterlevelp){
-			super(expireat,caster,Effect.POSITIVE,"vampiric",casterlevelp,1);
+			super(caster,"vampiric",Effect.POSITIVE,casterlevelp,expireat,1);
 			this.steal=steal;
 		}
 

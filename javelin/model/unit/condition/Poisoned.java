@@ -35,7 +35,7 @@ public class Poisoned extends Condition{
 	 */
 	public Poisoned(float expireatp,Combatant c,Effect effectp,int secondary,
 			int dcp,Integer casterlevelp){
-		super(expireatp,c,effectp,"poisoned",casterlevelp,1);
+		super(c,"poisoned",effectp,casterlevelp,expireatp,1);
 		this.secondary=secondary;
 		dc=dcp;
 		neutralized=c.hascondition(Neutralized.class)!=null;

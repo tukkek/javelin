@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.event.wild.WildEvent;
+import javelin.controller.event.Wanderer;
 import javelin.controller.terrain.Hill;
 import javelin.controller.terrain.Plains;
 import javelin.controller.terrain.Terrain;
@@ -21,19 +21,19 @@ import javelin.model.world.location.PointOfInterest;
  *
  * @author alex
  */
-public class PegasusRide extends WildEvent{
+public class WanderingPegasusHerd extends Wanderer{
 	private static final String PROMPT="A herd of Pegasus is grazing nearby. They seem pretty docile.\n"
 			+"Do you want to try to ride them?\n"
 			+"Press r to ride and i to ignore the herd...";
 
 	/** Reflection-friendly constructor. */
-	public PegasusRide(){
+	public WanderingPegasusHerd(){
 		super("Pegasus ride");
 	}
 
 	@Override
 	public boolean validate(Squad s,int squadel,PointOfInterest l){
-		if(s.members.size()>10) return false;
+		if(!super.validate(s,squadel,l)||s.members.size()>10) return false;
 		var terrain=Terrain.get(l.x,l.y);
 		if(!(terrain.equals(Terrain.HILL)||terrain.equals(Terrain.PLAIN)))
 			return false;

@@ -11,7 +11,7 @@ import javelin.model.unit.condition.Condition;
 public class Displacement extends Touch{
 	public class Blinking extends Condition{
 		public Blinking(float expireatp,Combatant c,Integer casterlevelp){
-			super(expireatp,c,Effect.POSITIVE,"blinking",casterlevelp);
+			super(c,"blinking",Effect.POSITIVE,casterlevelp,expireatp);
 		}
 
 		@Override

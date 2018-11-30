@@ -14,7 +14,7 @@ import javelin.model.unit.attack.AttackSequence;
 public class Shaken extends Condition{
 
 	public Shaken(float expireatp,Combatant c,Integer casterlevel){
-		super(expireatp,c,Effect.NEGATIVE,"shaken",casterlevel,1);
+		super(c,"shaken",Effect.NEGATIVE,casterlevel,expireatp,1);
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import javelin.model.unit.Monster;
 public class Stunned extends Condition{
 
 	public Stunned(Combatant c,Integer casterlevelp){
-		super(c.ap+1,c,Effect.NEGATIVE,"stunned",casterlevelp);
+		super(c,"stunned",Effect.NEGATIVE,casterlevelp,c.ap+1);
 	}
 
 	@Override

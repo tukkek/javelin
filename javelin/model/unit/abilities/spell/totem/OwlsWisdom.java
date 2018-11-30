@@ -13,7 +13,7 @@ import javelin.model.unit.condition.Condition;
 public class OwlsWisdom extends TotemsSpell{
 	public class Wise extends Condition{
 		public Wise(Combatant c,Integer casterlevelp){
-			super(Float.MAX_VALUE,c,Effect.POSITIVE,"wise",casterlevelp);
+			super(c,"wise",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE);
 		}
 
 		@Override

@@ -21,7 +21,7 @@ public class StingOfTheAsp extends Strike{
 
 	public class AspString extends Condition{
 		public AspString(float expireatp,Combatant c){
-			super(expireatp,c,Effect.NEGATIVE,"Asp sting",null);
+			super(c,"Asp sting",Effect.NEGATIVE,null,expireatp);
 			stack=true;
 		}
 

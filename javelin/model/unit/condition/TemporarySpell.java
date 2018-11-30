@@ -14,7 +14,7 @@ public class TemporarySpell extends Condition{
 	Spell spell;
 
 	public TemporarySpell(String name,Spell s,Combatant c){
-		super(Float.MAX_VALUE,c,Effect.NEUTRAL,name,null,24);
+		super(c,name,Effect.NEUTRAL,null,Float.MAX_VALUE,24);
 		spell=s;
 		stack=true;
 	}

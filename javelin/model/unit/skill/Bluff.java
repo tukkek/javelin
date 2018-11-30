@@ -26,7 +26,7 @@ public class Bluff extends Skill{
 		int acpenalty=1;
 
 		public Feigned(Combatant attacker,Combatant target){
-			super(attacker.ap+DURATION,target,Effect.NEUTRAL,"feigned",null);
+			super(target,"feigned",Effect.NEUTRAL,null,attacker.ap+DURATION);
 		}
 
 		@Override

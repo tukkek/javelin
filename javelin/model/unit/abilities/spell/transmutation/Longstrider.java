@@ -23,7 +23,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 public class Longstrider extends Spell{
 	public class Strider extends Condition{
 		public Strider(Combatant c,Integer casterlevelp){
-			super(Float.MAX_VALUE,c,Effect.POSITIVE,"striding",casterlevelp,1);
+			super(c,"striding",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE,1);
 		}
 
 		@Override

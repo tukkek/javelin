@@ -29,7 +29,7 @@ public class DominateMonster extends Ray{
 		Combatant target;
 
 		public Dominated(float expireatp,Combatant c,Integer casterlevelp){
-			super(expireatp,c,Effect.NEUTRAL,"dominated",casterlevelp);
+			super(c,"dominated",Effect.NEUTRAL,casterlevelp,expireatp);
 			target=c;
 		}
 

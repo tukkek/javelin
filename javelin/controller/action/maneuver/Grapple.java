@@ -25,7 +25,7 @@ public class Grapple extends ExpertiseAction{
 
 	public class Grappling extends Condition{
 		public Grappling(float expireatp,Combatant c){
-			super(expireatp,c,Effect.NEGATIVE,"grappling",null);
+			super(c,"grappling",Effect.NEGATIVE,null,expireatp);
 		}
 
 		@Override

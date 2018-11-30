@@ -18,7 +18,7 @@ public class StingOfTheAdder extends Strike{
 
 	class AdderSting extends Condition{
 		public AdderSting(float expireatp,Combatant c){
-			super(expireatp,c,Effect.NEGATIVE,"adder sting",null);
+			super(c,"adder sting",Effect.NEGATIVE,null,expireatp);
 		}
 
 		@Override

@@ -13,7 +13,7 @@ public class Fatigued extends Condition{
 
 	protected Fatigued(Combatant c,String descriptionp,Integer casterlevelp,
 			Integer hours){
-		super(Float.MAX_VALUE,c,Effect.NEGATIVE,descriptionp,casterlevelp,hours);
+		super(c,descriptionp,Effect.NEGATIVE,casterlevelp,Float.MAX_VALUE,hours);
 	}
 
 	public Fatigued(Combatant c,Integer casterlevelp,Integer hours){

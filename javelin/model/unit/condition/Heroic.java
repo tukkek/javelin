@@ -11,7 +11,7 @@ import javelin.model.unit.abilities.spell.enchantment.compulsion.Heroism;
  */
 public class Heroic extends Condition{
 	public Heroic(final Combatant c,Integer casterlevelp,Integer longtermp){
-		super(Float.MAX_VALUE,c,Effect.POSITIVE,"heroic",casterlevelp,longtermp);
+		super(c,"heroic",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE,longtermp);
 	}
 
 	public Heroic(Combatant c,Integer casterlevelp){

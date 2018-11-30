@@ -20,7 +20,7 @@ public class Bless extends Spell{
 		int bonus=+1;
 
 		public Blessed(Combatant c){
-			super(Float.MAX_VALUE,c,Effect.POSITIVE,"blessed",1);
+			super(c,"blessed",Effect.POSITIVE,1,Float.MAX_VALUE);
 		}
 
 		@Override

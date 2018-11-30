@@ -24,7 +24,7 @@ public class Darkvision extends Touch{
 		 * @param casterlevelp
 		 */
 		public DarkvisionCondition(Combatant c,Integer casterlevelp){
-			super(Float.MAX_VALUE,c,Effect.NEUTRAL,"darkvision",casterlevelp,3);
+			super(c,"darkvision",Effect.NEUTRAL,casterlevelp,Float.MAX_VALUE,3);
 		}
 
 		@Override

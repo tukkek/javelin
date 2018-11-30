@@ -67,16 +67,13 @@ public class Caravan extends Actor{
 	int el;
 
 	/** Creates a merchant in the world map but doesn't {@link #place()} it. */
-	public Caravan(){
+	public Caravan(int x,int y,int el){
 		allowedinscenario=false;
-		ArrayList<Actor> towns=World.getall(Town.class);
-		Collections.shuffle(towns);
-		Town from=(Town)towns.get(0);
-		x=from.x;
-		y=from.y;
-		el=from.population;
+		this.x=x;
+		this.y=y;
+		this.el=el;
 		displace();
-		determinedestination(towns);
+		determinedestination(Town.gettowns());
 		while(inventory.size()<NUMBEROFITEMS){
 			Item i=RPG.pick(Item.ALL);
 			if(!(i instanceof Artifact)){
@@ -95,23 +92,31 @@ public class Caravan extends Actor{
 		}
 	}
 
-	void determinedestination(ArrayList<Actor> towns){
-		Actor to=null;
-		if(towns!=null) for(int i=1;i<towns.size();i++){
-			Town t=(Town)towns.get(i);
-			if(t.garrison.isEmpty()&&!Incursion.crosseswater(this,t.x,t.y)){
-				to=t;
-				break;
+	/** Creates a caravan near a {@link Town}. */
+	public Caravan(Town t){
+		this(t.x,t.y,t.population);
+	}
+
+	/** Reflection-friendly constructor. */
+	public Caravan(){
+		this(RPG.pick(Town.gettowns()));
+	}
+
+	void determinedestination(ArrayList<Town> towns){
+		if(towns!=null){
+			Collections.shuffle(towns);
+			for(var t:towns){
+				if(t.x==x&&t.y==y) continue;
+				if(t.garrison.isEmpty()&&!Incursion.crosseswater(this,t.x,t.y)){
+					tox=t.x;
+					toy=t.y;
+					return;
+				}
 			}
 		}
-		if(to==null)
-			while(tox==-1||Incursion.crosseswater(this,tox,toy)){
-				tox=RPG.r(0,World.scenario.size-1);
-				toy=RPG.r(0,World.scenario.size-1);
-			}
-		else{
-			tox=to.x;
-			toy=to.y;
+		while(tox==-1||Incursion.crosseswater(this,tox,toy)){
+			tox=RPG.r(0,World.scenario.size-1);
+			toy=RPG.r(0,World.scenario.size-1);
 		}
 	}
 

@@ -12,7 +12,7 @@ import javelin.model.unit.Combatant;
 public class Sickened extends Condition{
 
 	public Sickened(float expireatp,Combatant c){
-		super(expireatp,c,Effect.NEGATIVE,"sickened",null);
+		super(c,"sickened",Effect.NEGATIVE,null,expireatp);
 	}
 
 	@Override

@@ -21,7 +21,7 @@ public class Fly extends Touch{
 		 * @param casterlevelp
 		 */
 		public Flying(Combatant c,Integer casterlevelp){
-			super(Float.MAX_VALUE,c,Effect.POSITIVE,"flying",casterlevelp);
+			super(c,"flying",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE);
 		}
 
 		@Override

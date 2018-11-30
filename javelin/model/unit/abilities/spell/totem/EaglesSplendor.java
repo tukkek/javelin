@@ -13,7 +13,7 @@ import javelin.model.unit.condition.Condition;
 public class EaglesSplendor extends TotemsSpell{
 	public class Splendid extends Condition{
 		public Splendid(Combatant c,Integer casterlevelp){
-			super(Float.MAX_VALUE,c,Effect.POSITIVE,"splendid",casterlevelp);
+			super(c,"splendid",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE);
 		}
 
 		@Override

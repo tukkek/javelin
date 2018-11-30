@@ -1,7 +1,14 @@
 package javelin.controller.event;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javelin.controller.fight.Fight;
 import javelin.controller.terrain.Desert;
+import javelin.controller.terrain.Terrain;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.Actor;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.PointOfInterest;
 
@@ -12,6 +19,36 @@ import javelin.model.world.location.PointOfInterest;
  */
 @SuppressWarnings("rawtypes")
 public abstract class EventCard{
+	/**
+	 * A fight to be triggered from an {@link EventCard}.
+	 *
+	 * @author alex
+	 */
+	protected class EventFight extends Fight{
+		ArrayList<Combatant> foes=new ArrayList<>(1);
+
+		protected EventFight(Actor l){
+			terrain=Terrain.get(l.x,l.y);
+			hide=false;
+			bribe=false;
+		}
+
+		public EventFight(Combatant mercenary,Actor l){
+			this(l);
+			foes.add(mercenary);
+		}
+
+		public EventFight(List<Combatant> foes,Actor l){
+			this(l);
+			this.foes.addAll(foes);
+		}
+
+		@Override
+		public ArrayList<Combatant> getfoes(Integer teamel){
+			return foes;
+		}
+	}
+
 	/**
 	 * Most cards don't require validation but for example, you may want to make
 	 * sure the current {@link Location} is a {@link Desert} if this event only

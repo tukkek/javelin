@@ -13,7 +13,7 @@ import javelin.model.unit.condition.Condition;
 public class CatsGrace extends TotemsSpell{
 	public class Graceful extends Condition{
 		public Graceful(Combatant c,Integer casterlevelp){
-			super(Float.MAX_VALUE,c,Effect.POSITIVE,"graceful",casterlevelp);
+			super(c,"graceful",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE);
 		}
 
 		@Override

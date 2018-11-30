@@ -12,7 +12,7 @@ import javelin.model.unit.condition.Condition;
 public class Rage extends Spell{
 	public class Raging extends Condition{
 		public Raging(float expireatp,Combatant c,Integer casterlevel){
-			super(expireatp,c,Effect.POSITIVE,"raging",casterlevel);
+			super(c,"raging",Effect.POSITIVE,casterlevel,expireatp);
 		}
 
 		@Override

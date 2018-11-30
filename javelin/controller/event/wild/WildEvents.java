@@ -6,6 +6,7 @@ import javelin.Javelin;
 import javelin.controller.db.StateManager;
 import javelin.controller.event.EventCard;
 import javelin.controller.event.EventDealer;
+import javelin.controller.event.wild.negative.FindIncursion;
 import javelin.controller.event.wild.neutral.FindMercenary;
 import javelin.controller.event.wild.neutral.WeatherChange;
 import javelin.model.unit.Squad;
@@ -25,20 +26,20 @@ public class WildEvents extends EventDealer{
 	public WildEvents(){
 		positive.addcontent(List.of());
 		neutral.addcontent(List.of(FindMercenary.class,WeatherChange.class));
-		negative.addcontent(List.of());
+		negative.addcontent(List.of(FindIncursion.class));
 	}
 
 	@Override
-	public EventCard generate(Squad s,int el,PointOfInterest l){
+	public EventCard generate(Squad s,int squadel,PointOfInterest l){
 		if(Javelin.DEBUG&&WildEvents.DEBUG!=null) try{
 			var card=DEBUG.getDeclaredConstructor().newInstance();
-			if(!card.validate(s,el,l))
+			if(!card.validate(s,squadel,l))
 				throw new UnsupportedOperationException("Invalid #wildevent card ");
-			card.define(s,el,l);
+			card.define(s,squadel,l);
 			return card;
 		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);
 		}
-		return super.generate(s,el,l);
+		return super.generate(s,squadel,l);
 	}
 }

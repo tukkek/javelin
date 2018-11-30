@@ -27,7 +27,7 @@ public class WeatherChange extends WildEvent{
 		while(Weather.current==previous)
 			Weather.current=RPG.pick(options);
 		String result;
-		if(Weather.current==Weather.DRY)
+		if(Weather.current==Weather.CLEAR)
 			result="The sky seems to clear, finally...";
 		else if(Weather.current==Weather.RAIN)
 			result="A light rain takes over...";

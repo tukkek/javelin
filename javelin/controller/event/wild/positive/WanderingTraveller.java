@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.event.wild.WildEvent;
+import javelin.controller.event.Wanderer;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
@@ -17,11 +17,11 @@ import javelin.view.screen.WorldScreen;
  *
  * @author alex
  */
-public class RevealLocation extends WildEvent{
+public class WanderingTraveller extends Wanderer{
 	List<Actor> undiscovered;
 
 	/** Constructor. */
-	public RevealLocation(){
+	public WanderingTraveller(){
 		super("Reveal location");
 	}
 

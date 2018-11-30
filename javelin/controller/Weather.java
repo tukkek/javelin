@@ -11,16 +11,16 @@ import javelin.model.world.Season;
 import javelin.old.RPG;
 
 /**
- * Manages game weather. Current types of weather are {@link #DRY},
+ * Manages game weather. Current types of weather are {@link #CLEAR},
  * {@link #RAIN} and {@link #STORM}.
  *
  * @author alex
  */
 public class Weather{
-	public static final int DRY=0;
+	public static final int CLEAR=0;
 	public static final int RAIN=1;
 	public static final int STORM=2;
-	public static final Integer[] DISTRIBUTION=new Integer[]{DRY,DRY,RAIN,STORM};
+	public static final Integer[] DISTRIBUTION=new Integer[]{CLEAR,CLEAR,RAIN,STORM};
 
 	static final double[] RATIO=new double[]{0.0,.1,.5};
 
@@ -70,7 +70,7 @@ public class Weather{
 
 	public static int read(int nowp){
 		if(Debug.weather==null) return nowp;
-		if(Debug.weather.equals("dry")) return DRY;
+		if(Debug.weather.equals("dry")) return CLEAR;
 		if(Debug.weather.equals("rain")) return RAIN;
 		if(Debug.weather.equals("storm")) return STORM;
 		throw new RuntimeException("Unknown weather: "+Debug.weather);

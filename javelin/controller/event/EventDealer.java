@@ -21,7 +21,12 @@ import javelin.old.RPG;
  * @author alex
  */
 public abstract class EventDealer implements Serializable{
-	protected class EventDeck extends InfiniteList<Class<? extends EventCard>>{
+	/**
+	 * An infinitely-drawing deck of {@link EventCard}s.
+	 *
+	 * @author alex
+	 */
+	public class EventDeck extends InfiniteList<Class<? extends EventCard>>{
 		EventDeck(){
 			super(null,true);
 		}

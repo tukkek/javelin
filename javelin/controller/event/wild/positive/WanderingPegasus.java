@@ -21,13 +21,13 @@ import javelin.model.world.location.PointOfInterest;
  *
  * @author alex
  */
-public class WanderingPegasusHerd extends Wanderer{
+public class WanderingPegasus extends Wanderer{
 	private static final String PROMPT="A herd of Pegasus is grazing nearby. They seem pretty docile.\n"
 			+"Do you want to try to ride them?\n"
 			+"Press r to ride and i to ignore the herd...";
 
 	/** Reflection-friendly constructor. */
-	public WanderingPegasusHerd(){
+	public WanderingPegasus(){
 		super("Pegasus ride");
 	}
 

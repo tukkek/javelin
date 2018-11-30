@@ -16,7 +16,7 @@ public class Rocky extends DndMap{
 	public Rocky(){
 		super("Rocky desert",0,.6,0);
 		floor=Images.get("terraindesert");
-		maxflooding=Weather.DRY;
+		maxflooding=Weather.CLEAR;
 	}
 
 	@Override

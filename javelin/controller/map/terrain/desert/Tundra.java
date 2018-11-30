@@ -16,7 +16,7 @@ public class Tundra extends DndMap{
 	public Tundra(){
 		super("Tundra",0,.4,0);
 		floor=Images.get("terrainice");
-		maxflooding=Weather.DRY;
+		maxflooding=Weather.CLEAR;
 	}
 
 	@Override

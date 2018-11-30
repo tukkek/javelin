@@ -89,7 +89,7 @@ public class Arena extends Minigame{
 
 	/** Constructor. */
 	public Arena(){
-		weather=Weather.DRY;
+		weather=Weather.CLEAR;
 		period=Javelin.PERIODNOON;
 		setup=new ArenaSetup(this);
 		meld=false;

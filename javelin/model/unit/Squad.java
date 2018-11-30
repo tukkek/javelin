@@ -724,4 +724,16 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	public Iterator<Combatant> iterator(){
 		return members.iterator();
 	}
+
+	/**
+	 * @param s Rolls this skill for all members, returning the highest result.
+	 * @return
+	 * @see Combatant#roll(Skill)
+	 */
+	public int roll(Skill s){
+		var highest=Integer.MIN_VALUE;
+		for(var member:members)
+			highest=Math.max(highest,member.roll(s));
+		return highest;
+	}
 }

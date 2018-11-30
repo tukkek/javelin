@@ -942,7 +942,7 @@ public class Combatant implements Serializable,Cloneable{
 			boolean periodpenalty){
 		int p=Skill.PERCEPTION.getbonus(this);
 		if(flyingbonus&&source.fly>0) p+=2;
-		if(weatherpenalty&&Weather.current!=Weather.DRY)
+		if(weatherpenalty&&Weather.current!=Weather.CLEAR)
 			p+=Weather.current==Weather.STORM?-4:-2;
 		if(periodpenalty) /* half because they apply only to vision, not listening */
 			p+=source.see()/2;

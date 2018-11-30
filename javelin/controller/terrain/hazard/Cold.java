@@ -32,7 +32,7 @@ public class Cold extends PartyHazard{
 		if(Season.current==Season.WINTER)
 			level+=2;
 		else if(Season.current==Season.SUMMER) level-=2;
-		if(Weather.current!=Weather.DRY) level+=1;
+		if(Weather.current!=Weather.CLEAR) level+=1;
 		if(Javelin.getDayPeriod()==Javelin.PERIODNIGHT)
 			level+=1;
 		else if(Javelin.getDayPeriod()==Javelin.PERIODNOON) level-=1;

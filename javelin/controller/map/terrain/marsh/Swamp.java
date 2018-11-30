@@ -13,7 +13,7 @@ public class Swamp extends DndMap{
 		super("Swamp",.2,.2,.6);
 		floor=Images.get("terrainmarsh");
 		wallfloor=floor;
-		maxflooding=Weather.DRY;
+		maxflooding=Weather.CLEAR;
 		obstacle=rock;
 		wall=Images.get("terraintree");
 	}

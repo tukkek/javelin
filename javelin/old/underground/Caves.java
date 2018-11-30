@@ -21,7 +21,7 @@ public class Caves extends Map{
 	/** Constructor. */
 	public Caves(String namep){
 		super(namep,SIZE,SIZE);
-		maxflooding=Weather.DRY;
+		maxflooding=Weather.CLEAR;
 		if(Dungeon.active instanceof TempleDungeon){
 			floor=Images.get(Dungeon.active.floor);
 			wall=Images.get(Dungeon.active.wall);

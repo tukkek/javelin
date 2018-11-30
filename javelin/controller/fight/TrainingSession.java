@@ -23,7 +23,7 @@ public class TrainingSession extends Siege{
 		hide=false;
 		cleargarrison=false;
 		map=new Stadium();
-		map.maxflooding=Weather.DRY;
+		map.maxflooding=Weather.CLEAR;
 	}
 
 	@Override

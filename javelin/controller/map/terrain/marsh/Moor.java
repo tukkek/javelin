@@ -13,7 +13,7 @@ public class Moor extends DndMap{
 		super("Moor",.1,.3,.3);
 		floor=Images.get("terrainmarsh");
 		wallfloor=floor;
-		maxflooding=Weather.DRY;
+		maxflooding=Weather.CLEAR;
 		wall=Images.get("terraintree");
 	}
 

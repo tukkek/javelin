@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.event.wild.WildEvent;
+import javelin.controller.event.Wanderer;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
@@ -20,7 +20,7 @@ import javelin.model.world.location.unique.MercenariesGuild;
  *
  * @author alex
  */
-public class FindMercenary extends WildEvent{
+public class WanderingMercenary extends Wanderer{
 	static final String HIRE="Hire";
 	static final String DECLINE="Decline";
 	static final String ATTACK="Attack!";
@@ -42,7 +42,7 @@ public class FindMercenary extends WildEvent{
 	Terrain terrain;
 
 	/** Reflection-friendly constructor. */
-	public FindMercenary(){
+	public WanderingMercenary(){
 		super("Mercenary");
 	}
 
@@ -65,6 +65,7 @@ public class FindMercenary extends WildEvent{
 
 	@Override
 	public boolean validate(Squad s,int el,PointOfInterest l){
+		if(!super.validate(s,el,l)) return false;
 		var squadcr=Squad.active.members.stream()
 				.collect(Collectors.averagingDouble(c->c.source.cr));
 		var location=l.getlocation();
@@ -103,7 +104,7 @@ public class FindMercenary extends WildEvent{
 		for(var terrain:Terrain.ALL){
 			result+=terrain.toString().toUpperCase()+"\n";
 			for(var level=1;level<=20;level++){
-				var mercenary=FindMercenary.select(level,terrain);
+				var mercenary=WanderingMercenary.select(level,terrain);
 				result+="Level "+level+": "+mercenary+" (CR "+mercenary.cr+")\n";
 				var difference=Math.max(maxdifference,Math.abs(mercenary.cr-level));
 				maxdifference=difference;

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javelin.Javelin;
+
 public class Combatants extends ArrayList<Combatant>
 		implements Cloneable,Serializable{
 	public Combatants(){
@@ -26,7 +28,7 @@ public class Combatants extends ArrayList<Combatant>
 
 	@Override
 	public String toString(){
-		return Combatant.group(this);
+		return Javelin.group(this);
 	}
 
 	@Override

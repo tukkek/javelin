@@ -9,7 +9,7 @@ import javelin.model.unit.feat.skill.Alertness;
 
 /**
  * A mix of Search, Spot and Listen. Only use directly for basic perception
- * rolls that don't depent on {@link Weather}, {@link Javelin#getDayPeriod()},
+ * rolls that don't depent on {@link Weather}, {@link Javelin#getperiod()},
  * flying or similar modifiers.
  *
  * @see Squad#perceive(boolean, boolean, boolean)

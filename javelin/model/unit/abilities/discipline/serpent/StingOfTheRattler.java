@@ -34,7 +34,7 @@ public class StingOfTheRattler extends Strike{
 
 		@Override
 		public void end(Combatant c){
-			c.damage(DAMAGEBONUS);
+			c.damage(DAMAGEBONUS,0);
 		}
 	}
 

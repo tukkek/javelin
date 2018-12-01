@@ -678,7 +678,7 @@ public class Monster implements Cloneable,Serializable{
 	 * @return a -0, -2 or -4 skill check penalty depending on time of day and
 	 *         {@link Monster} vision.
 	 *
-	 * @see Javelin#getDayPeriod()
+	 * @see Javelin#getperiod()
 	 * @see #vision
 	 * @see Combatant#perceive(String)
 	 * @see Combatant#view(String)
@@ -686,7 +686,7 @@ public class Monster implements Cloneable,Serializable{
 	 */
 	public int see(){
 		if(vision==VISION_DARK) return 0;
-		String period=Javelin.getDayPeriod();
+		String period=Javelin.getperiod();
 		boolean verydark=period==Javelin.PERIODNIGHT
 				||Weather.current==Weather.STORM;
 		if(vision==VISION_LOWLIGHT){

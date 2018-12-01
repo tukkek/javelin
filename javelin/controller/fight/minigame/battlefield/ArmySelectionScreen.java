@@ -92,7 +92,7 @@ public class ArmySelectionScreen{
 
 	public String describearmy(String header,ArrayList<Combatant> army){
 		header+=":\n";
-		header+=army.isEmpty()?"Empty":Combatant.group(army);
+		header+=army.isEmpty()?"Empty":Javelin.group(army);
 		return header+".\n\n";
 	}
 
@@ -100,7 +100,7 @@ public class ArmySelectionScreen{
 		ArrayList<Combatant> squad=f.recruitredsquad(el);
 		f.redsquads.add(squad);
 		f.redarmy.addAll(squad);
-		return "Your opponent's choice: "+Combatant.group(squad)+".";
+		return "Your opponent's choice: "+Javelin.group(squad)+".";
 	}
 
 	boolean pickblue(String prompt,int el,Battlefield f){

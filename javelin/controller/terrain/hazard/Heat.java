@@ -19,9 +19,9 @@ public class Heat extends PartyHazard{
 		if(Season.current==Season.SUMMER)
 			level+=2;
 		else if(Season.current==Season.WINTER) level-=2;
-		if(Javelin.getDayPeriod()==Javelin.PERIODNOON)
+		if(Javelin.getperiod()==Javelin.PERIODNOON)
 			level+=1;
-		else if(Javelin.getDayPeriod()!=Javelin.PERIODMORNING) level-=1;
+		else if(Javelin.getperiod()!=Javelin.PERIODMORNING) level-=1;
 		/* doesn't rain on the desert so don't consider weather */
 		return level>=2;
 	}
@@ -33,7 +33,7 @@ public class Heat extends PartyHazard{
 
 	@Override
 	protected String affect(Combatant c,int hoursellapsed){
-		c.damage(RPG.r(1,4)*hoursellapsed);
+		c.damage(RPG.r(1,4)*hoursellapsed,0);
 		c.addcondition(new Fatigued(c,null,8));
 		return c+" is suffering from heatstroke";
 	}

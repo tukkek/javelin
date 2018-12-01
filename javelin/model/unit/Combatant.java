@@ -804,8 +804,13 @@ public class Combatant implements Serializable,Cloneable{
 	/**
 	 * Simpler version of {@link #damage(int, BattleState, int)}. Just takes the
 	 * given amount from {@link #hp} while making sure it stays positive.
+	 *
+	 * @param reduction Usually {@link Monster#dr} or
+	 *          {@link Monster#energyresistance}, or 0 to ignore.
 	 */
-	public void damage(int damage){
+	public void damage(int damage,int reduction){
+		damage-=reduction;
+		if(damage<1) damage=1;
 		hp-=damage;
 		if(hp<1) hp=1;
 	}
@@ -849,21 +854,6 @@ public class Combatant implements Serializable,Cloneable{
 
 	public BattleMouseAction getmouseaction(){
 		return null;
-	}
-
-	public static String group(List<?> foes){
-		CountingSet count=new CountingSet();
-		count.casesensitive=true;
-		boolean hasunknown=false;
-		for(Object c:foes){
-			String foe=c.toString();
-			if(foe.equals("?")){
-				if(hasunknown) continue;
-				hasunknown=true;
-			}
-			count.add(foe);
-		}
-		return count.toString();
 	}
 
 	/**
@@ -934,7 +924,7 @@ public class Combatant implements Serializable,Cloneable{
 	 * @param weatherpenalty <code>true</code> if {@link Weather} should influence
 	 *          this roll.
 	 * @param periodpenalty Penalty according to {@link Monster#vision} and
-	 *          {@link Javelin#getDayPeriod()}.
+	 *          {@link Javelin#getperiod()}.
 	 * @return Total {@link Perception} roll bonus modifier as in
 	 *         {@link Perception#getbonus(Combatant)}.
 	 */

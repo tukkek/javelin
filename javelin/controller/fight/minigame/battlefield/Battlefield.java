@@ -150,7 +150,7 @@ public class Battlefield extends Minigame{
 			ArrayList<Combatant> units=reinforceenemy();
 			Javelin.redraw();
 			Javelin.message(
-					"The enemy calls for reinforcements:\n"+Combatant.group(units)+"!\n",
+					"The enemy calls for reinforcements:\n"+Javelin.group(units)+"!\n",
 					true);
 			MessagePanel.active.clear();
 			MessagePanel.active.repaint();
@@ -273,7 +273,7 @@ public class Battlefield extends Minigame{
 	}
 
 	static String group(ArrayList<Combatant> group){
-		String s=Combatant.group(group);
+		String s=Javelin.group(group);
 		if(Javelin.DEBUG) s+=" (EL"+ChallengeCalculator.calculateel(group)+")";
 		return s;
 	}

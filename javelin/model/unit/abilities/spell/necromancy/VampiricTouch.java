@@ -26,7 +26,7 @@ public class VampiricTouch extends Touch{
 
 		@Override
 		public void end(Combatant c){
-			c.damage(steal);
+			c.damage(steal,c.source.energyresistance);
 		}
 
 		@Override

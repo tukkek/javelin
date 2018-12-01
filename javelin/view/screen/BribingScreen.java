@@ -61,7 +61,7 @@ public class BribingScreen{
 			boolean canhire){
 		String text="You are able to parley with the opponents ("
 				+Difficulty.describe(foes)+"):\n\n";
-		text+=Combatant.group(foes)+'.';
+		text+=Javelin.group(foes)+'.';
 		text+="\n\nWhat do you want to do? You have $"
 				+Javelin.format(Squad.active.gold)+".";
 		text+="\n";

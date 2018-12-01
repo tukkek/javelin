@@ -66,7 +66,7 @@ public class BattleState implements Node,TeamContainer{
 	 * Period of the day, affecting visibility.
 	 *
 	 * @see Fight#period
-	 * @see Javelin#getDayPeriod()
+	 * @see Javelin#getperiod()
 	 */
 	public String period;
 

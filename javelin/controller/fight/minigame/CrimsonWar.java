@@ -218,7 +218,7 @@ public class CrimsonWar extends Minigame{
 		Point p=director.monsters.get(0).getlocation();
 		Javelin.redraw();
 		BattleScreen.active.center(p.x,p.y);
-		Javelin.message(message+" "+Combatant.group(director.monsters)+".",true);
+		Javelin.message(message+" "+Javelin.group(director.monsters)+".",true);
 		return true;
 	}
 

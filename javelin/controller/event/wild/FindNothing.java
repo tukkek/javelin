@@ -44,7 +44,7 @@ public class FindNothing extends WildEvent{
 	@Override
 	public void happen(Squad s,PointOfInterest l){
 		ArrayList<String> messages=new ArrayList<>(MESSAGES);
-		String period=Javelin.getDayPeriod();
+		String period=Javelin.getperiod();
 		if(period==Javelin.PERIODNOON) period="afternoon";
 		messages.add("You suddenly notice how this is such a beatiful "
 				+period.toLowerCase()+".");

@@ -25,7 +25,7 @@ public class ArenaLair extends ArenaBuilding{
 		ArrayList<Combatant> group;
 
 		public HireOption(ArrayList<Combatant> group){
-			super(Combatant.group(group),calculateprice(group));
+			super(Javelin.group(group),calculateprice(group));
 			this.group=group;
 		}
 	}

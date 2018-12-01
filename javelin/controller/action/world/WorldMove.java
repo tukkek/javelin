@@ -25,7 +25,7 @@ import javelin.view.screen.WorldScreen;
  *
  * TODO {@link #perform(WorldScreen)} needs refactoring after 2.0
  *
- * @see Javelin#getDayPeriod()
+ * @see Javelin#getperiod()
  * @author alex
  */
 public class WorldMove extends WorldAction{

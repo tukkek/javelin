@@ -362,7 +362,7 @@ public abstract class Terrain implements Serializable{
 	 *          Special events are rare occurances like a spontaneous avalanche.
 	 * @return
 	 * @see #HAZARDCHANCE
-	 * @see Javelin#getDayPeriod()
+	 * @see Javelin#getperiod()
 	 * @see WorldMove
 	 */
 	public Set<Hazard> gethazards(boolean special){

@@ -14,7 +14,7 @@ import javelin.old.RPG;
  * {@link Terrain} hazards and events.
  *
  * @author alex
- * @see Javelin#getDayPeriod()
+ * @see Javelin#getperiod()
  */
 public enum Season{
 	/** Season of blooming nature. */

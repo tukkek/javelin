@@ -14,7 +14,7 @@ import javelin.old.RPG;
 public class Dehydration extends PartyHazard{
 	@Override
 	protected String affect(Combatant c,int hoursellapsed){
-		c.damage(RPG.r(1,6));
+		c.damage(RPG.r(1,6),0);
 		c.addcondition(new Fatigued(c,null,8));
 		return c+" is dehydratading";
 	}

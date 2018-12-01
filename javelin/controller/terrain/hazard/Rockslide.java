@@ -40,7 +40,7 @@ public class Rockslide extends Hazard{
 		for(int i=0;i<this.damage;i++)
 			damage+=RPG.r(1,6);
 		if(c.source.save(c.source.ref,16)) damage=damage/2;
-		c.damage(damage);
+		c.damage(damage,c.source.dr);
 	}
 
 	@Override

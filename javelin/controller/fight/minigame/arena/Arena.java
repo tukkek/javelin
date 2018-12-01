@@ -258,7 +258,7 @@ public class Arena extends Minigame{
 		super.enter(entering,team,entry);
 		if(entering.get(0).equals(gladiators.get(0))) return;
 		String title=team==state.redTeam?"Enemies":"Allies";
-		String msg=title+" enter the arena:\n"+Combatant.group(entering)+"!";
+		String msg=title+" enter the arena:\n"+Javelin.group(entering)+"!";
 		notify(msg,entering.get(0).getlocation());
 	}
 

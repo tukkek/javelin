@@ -26,7 +26,7 @@ public class FallingTrees extends PartyHazard{
 	@Override
 	protected String affect(Combatant c,int hoursellapsed){
 		for(int i=0;i<6;i++)
-			c.damage(RPG.r(1,6));
+			c.damage(RPG.r(1,6),c.source.dr);
 		return c+" gets hit by a falling tree";
 	}
 

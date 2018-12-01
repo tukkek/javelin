@@ -107,9 +107,9 @@ public abstract class Fight{
 	 * instead of the period after the {@link WorldMove} or similar has been
 	 * completed.
 	 *
-	 * @see Javelin#getDayPeriod()
+	 * @see Javelin#getperiod()
 	 */
-	public String period=Javelin.getDayPeriod();
+	public String period=Javelin.getperiod();
 
 	/** Status to remove {@link Combatant} from a {@link #friendly} battle. */
 	public int friendlylevel=Combatant.STATUSWOUNDED;

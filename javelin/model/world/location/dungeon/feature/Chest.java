@@ -4,12 +4,11 @@ import java.util.Set;
 
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.challenge.RewardCalculator;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
-import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.old.RPG;
 
 /**
  * Loot!
@@ -43,20 +42,8 @@ public class Chest extends Feature{
 	 */
 	public Chest(int pool,Point p,Set<Class<? extends Item>> forbidden){
 		this(p.x,p.y);
-		gold=pool;
-		boolean allowartifact=RPG.chancein(2);
-		int floor=allowartifact?pool*3/4:pool/RPG.r(3,5);
-		for(Item i:Item.randomize(Item.ALL)){
-			if(forbidden.contains(i.getClass())) continue;
-			if(!(floor<=i.price&&i.price<pool)) continue;
-			if(i instanceof Artifact&&!allowartifact) continue;
-			while(gold>i.price){
-				gold-=i.price;
-				items.add(i.clone());
-				forbidden.add(i.getClass());
-			}
-		}
-		gold=items.isEmpty()?Javelin.round(gold):0;
+		items.addAll(RewardCalculator.generateloot(pool,forbidden));
+		gold=items.isEmpty()?Javelin.round(pool):0;
 	}
 
 	public Chest(int x,int y,Item i){

@@ -79,7 +79,7 @@ public class EncounterGenerator{
 	private static boolean validatecreature(Combatant invitee,
 			ArrayList<Combatant> foes){
 		if(foes.indexOf(invitee)>=0) return false;
-		final String period=Javelin.getDayPeriod();
+		final String period=Javelin.getperiod();
 		final boolean underground=Dungeon.active!=null;
 		if(invitee.source.nightonly&&!underground
 				&&(period==Javelin.PERIODMORNING||period==Javelin.PERIODNOON))

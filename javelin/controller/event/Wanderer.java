@@ -15,7 +15,7 @@ public abstract class Wanderer extends WildEvent{
 	@Override
 	public boolean validate(Squad s,int squadel,PointOfInterest l){
 		return Weather.current!=Weather.STORM
-				&&Javelin.getDayPeriod()!=Javelin.PERIODNIGHT;
+				&&Javelin.getperiod()!=Javelin.PERIODNIGHT;
 	}
 
 }

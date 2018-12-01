@@ -162,7 +162,7 @@ public class MonsterMadness extends Minigame{
 		Javelin.redraw();
 		Point p=reinforcements.get(0).getlocation();
 		BattleScreen.active.center(p.x,p.y);
-		Javelin.message(message+"\n"+Combatant.group(reinforcements),true);
+		Javelin.message(message+"\n"+Javelin.group(reinforcements),true);
 	}
 
 	@Override

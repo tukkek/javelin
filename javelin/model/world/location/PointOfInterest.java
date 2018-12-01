@@ -31,7 +31,7 @@ import javelin.view.Images;
  * @author alex
  */
 public class PointOfInterest extends Actor{
-	static final String DESCRIPTION="A point of interest.";
+	static final String DESCRIPTION="A point of interest";
 
 	WildEvent card=null;
 
@@ -73,7 +73,9 @@ public class PointOfInterest extends Actor{
 
 	@Override
 	public String describe(){
-		return card==null?DESCRIPTION:card.name;
+		var description=DESCRIPTION;
+		if(card!=null) description+=" ("+card.name.toLowerCase()+")";
+		return description+".";
 	}
 
 	@Override

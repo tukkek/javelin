@@ -1,5 +1,7 @@
 package javelin.controller.event.wild;
 
+import java.io.Serializable;
+
 import javelin.controller.event.EventCard;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
@@ -11,7 +13,7 @@ import javelin.model.world.location.PointOfInterest;
  *
  * @author alex
  */
-public abstract class WildEvent extends EventCard{
+public abstract class WildEvent extends EventCard implements Serializable{
 	/** Used as the {@link PointOfInterest}'s description after being visited. */
 	public String name;
 

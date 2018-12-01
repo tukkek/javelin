@@ -63,7 +63,7 @@ public class Ruby extends Item{
 				Summon.place(user,c,Fight.state.blueTeam,Fight.state);
 			Javelin.redraw();
 			BattleScreen.active.center(user.location[0],user.location[1]);
-			String feedback="Summoned: "+Combatant.group(summoned).toLowerCase()+"!";
+			String feedback="Summoned: "+Javelin.group(summoned).toLowerCase()+"!";
 			Javelin.message(feedback,false);
 			return true;
 		}catch(GaveUp e){

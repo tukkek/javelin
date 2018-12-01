@@ -183,7 +183,7 @@ public class Portal extends Location{
 		if(!safe){
 			description+="Ouch!";
 			for(Combatant c:Squad.active.members)
-				c.damage(Math.round(c.hp*RPG.r(1,3)/10f));
+				c.damage(Math.round(c.hp*RPG.r(1,3)/10f),c.source.energyresistance);
 		}
 		if(!description.isEmpty()){
 			MessagePanel.active.clear();

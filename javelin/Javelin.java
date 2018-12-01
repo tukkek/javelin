@@ -21,6 +21,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import javelin.controller.CountingSet;
 import javelin.controller.Highscore;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.factor.SpellsFactor;
@@ -162,7 +163,7 @@ public class Javelin{
 	 * @return {@link #PERIODEVENING}, {@link #PERIODMORNING},
 	 *         {@link #PERIODNIGHT} or {@value #PERIODNOON}.
 	 */
-	public static String getDayPeriod(){
+	public static String getperiod(){
 		if(Javelin.app.fight!=null) return Javelin.app.fight.period;
 		final long hourofday=getHour();
 		if(hourofday<6) return PERIODNIGHT;
@@ -216,7 +217,7 @@ public class Javelin{
 	 *         day.
 	 */
 	public static String welcome(){
-		final String period=getDayPeriod();
+		final String period=getperiod();
 		String flavor;
 		if(period==PERIODMORNING)
 			flavor="What dangers lie ahead..?";
@@ -491,5 +492,20 @@ public class Javelin{
 		while(input==null||!allowed.contains(input))
 			input=prompt(prompt);
 		return input;
+	}
+
+	public static String group(List<?> foes){
+		CountingSet count=new CountingSet();
+		count.casesensitive=true;
+		boolean hasunknown=false;
+		for(Object c:foes){
+			String foe=c.toString();
+			if(foe.equals("?")){
+				if(hasunknown) continue;
+				hasunknown=true;
+			}
+			count.add(foe);
+		}
+		return count.toString();
 	}
 }

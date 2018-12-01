@@ -3,6 +3,7 @@ package javelin.controller.generator.encounter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.unit.Combatant;
 
@@ -34,7 +35,7 @@ public class Encounter{
 
 	@Override
 	public String toString(){
-		return Combatant.group(group)+" EL "+el+"";
+		return Javelin.group(group)+" EL "+el+"";
 	}
 
 	/**

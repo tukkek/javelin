@@ -21,7 +21,7 @@ public class Cold extends PartyHazard{
 	@Override
 	protected String affect(Combatant c,int hoursellapsed){
 		for(int i=0;i<hoursellapsed;i++)
-			c.damage(RPG.r(1,6));
+			c.damage(RPG.r(1,6),0);
 		c.addcondition(new Fatigued(c,null,8));
 		return c+" is suffering from frostbite";
 	}
@@ -33,9 +33,9 @@ public class Cold extends PartyHazard{
 			level+=2;
 		else if(Season.current==Season.SUMMER) level-=2;
 		if(Weather.current!=Weather.CLEAR) level+=1;
-		if(Javelin.getDayPeriod()==Javelin.PERIODNIGHT)
+		if(Javelin.getperiod()==Javelin.PERIODNIGHT)
 			level+=1;
-		else if(Javelin.getDayPeriod()==Javelin.PERIODNOON) level-=1;
+		else if(Javelin.getperiod()==Javelin.PERIODNOON) level-=1;
 		return level>=2;
 	}
 

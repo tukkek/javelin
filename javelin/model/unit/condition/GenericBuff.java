@@ -1,7 +1,6 @@
-package javelin.controller.event.wild.positive;
+package javelin.model.unit.condition;
 
 import javelin.model.unit.Combatant;
-import javelin.model.unit.condition.Condition;
 
 /**
  * Buffs or debuffs all attack rolls, saving throws and armor class.

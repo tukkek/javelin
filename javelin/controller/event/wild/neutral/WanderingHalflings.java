@@ -1,4 +1,4 @@
-package javelin.controller.event.wild.positive;
+package javelin.controller.event.wild.neutral;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import javelin.controller.event.wild.Wanderer;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.unit.condition.GenericBuff;
 import javelin.model.world.location.PointOfInterest;
 import javelin.old.RPG;
 

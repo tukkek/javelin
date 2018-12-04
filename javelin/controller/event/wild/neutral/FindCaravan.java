@@ -1,4 +1,4 @@
-package javelin.controller.event.wild.positive;
+package javelin.controller.event.wild.neutral;
 
 import javelin.Javelin;
 import javelin.controller.event.wild.WildEvent;

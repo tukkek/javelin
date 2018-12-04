@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.CountingSet;
@@ -637,11 +638,8 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	 * @return A new list contianing all mercenaries in this squad.
 	 * @see Combatant#mercenary
 	 */
-	public ArrayList<Combatant> getmercenaries(){
-		ArrayList<Combatant> mercenaries=new ArrayList<>();
-		for(Combatant c:members)
-			if(c.mercenary) mercenaries.add(c);
-		return mercenaries;
+	public List<Combatant> getmercenaries(){
+		return members.stream().filter(c->c.mercenary).collect(Collectors.toList());
 	}
 
 	public Combatant getbest(Skill s){

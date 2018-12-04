@@ -2,6 +2,7 @@ package javelin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import javelin.controller.action.Help;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -13,8 +14,10 @@ import javelin.controller.map.Map;
 import javelin.controller.scenario.Scenario;
 import javelin.model.Realm;
 import javelin.model.item.Item;
+import javelin.model.item.Potion;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureLightWounds;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
@@ -183,6 +186,12 @@ public class Debug{
 	 */
 	public static String onworldhelp(){
 		String s="";
+		IntStream.range(0,5).forEach(i->{
+			Combatant c=new Combatant(Javelin.getmonster("kobold"),false);
+			c.setmercenary(true);
+			Squad.active.add(c);
+			Squad.active.equipment.get(c).add(new Potion(new CureLightWounds()));
+		});
 		return s;
 	}
 }

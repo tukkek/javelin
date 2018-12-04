@@ -8,6 +8,7 @@ import javelin.controller.event.EventCard;
 import javelin.controller.event.EventDealer;
 import javelin.controller.event.wild.negative.ConfusingFairies;
 import javelin.controller.event.wild.negative.FindIncursion;
+import javelin.controller.event.wild.negative.MercenariesLeave;
 import javelin.controller.event.wild.neutral.FindMob;
 import javelin.controller.event.wild.neutral.WanderingMercenary;
 import javelin.controller.event.wild.neutral.WeatherChange;
@@ -34,19 +35,19 @@ import javelin.model.world.location.PointOfInterest;
 public class WildEvents extends EventDealer{
 	/** @see StateManager */
 	public static EventDealer instance=new WildEvents();
-	static final Class<? extends WildEvent> DEBUG=FindAlly.class;
+	static final Class<? extends WildEvent> DEBUG=null;
 
 	/** Constructor. */
 	public WildEvents(){
 		positive.addcontent(List.of(FindNothing.class,WanderingPriest.class,
 				WanderingTraveller.class,RevealRegion.class,FindRuby.class,
 				WanderingPegasus.class,FindSignpost.class,RockClimb.class,
-				MysticLock.class,FindWounded.class));
+				MysticLock.class,FindWounded.class,FindAlly.class));
 		neutral.addcontent(
 				List.of(FindNothing.class,WanderingMercenary.class,WeatherChange.class,
 						FindCaravan.class,WanderingHalflings.class,FindMob.class));
-		negative.addcontent(
-				List.of(FindNothing.class,FindIncursion.class,ConfusingFairies.class));
+		negative.addcontent(List.of(FindNothing.class,FindIncursion.class,
+				ConfusingFairies.class,MercenariesLeave.class));
 	}
 
 	@Override

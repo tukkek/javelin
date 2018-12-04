@@ -15,9 +15,11 @@ import javelin.controller.challenge.Difficulty;
 import javelin.controller.generator.WorldGenerator;
 import javelin.controller.map.Map;
 import javelin.controller.map.Maps;
+import javelin.controller.terrain.hazard.Hail;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.model.unit.skill.Survival;
 import javelin.model.world.Actor;
 import javelin.model.world.Season;
 import javelin.model.world.World;
@@ -113,6 +115,9 @@ public abstract class Terrain implements Serializable{
 
 	/** Terrains that "overflow". They receive a "shore" visual. */
 	public boolean liquid=false;
+
+	/** A bonus to be added manually to {@link Survival} rolls. */
+	public int survivalbonus=0;
 
 	/**
 	 * Uses current terrain as base.
@@ -360,13 +365,14 @@ public abstract class Terrain implements Serializable{
 	 *
 	 * @param special <code>true</code> if may allow a special event to happen.
 	 *          Special events are rare occurances like a spontaneous avalanche.
-	 * @return
 	 * @see #HAZARDCHANCE
 	 * @see Javelin#getperiod()
 	 * @see WorldMove
 	 */
 	public Set<Hazard> gethazards(boolean special){
-		return new HashSet<>();
+		var hazards=new HashSet<Hazard>();
+		if(special) hazards.add(new Hail());
+		return hazards;
 	}
 
 	/**

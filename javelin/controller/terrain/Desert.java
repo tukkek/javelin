@@ -41,6 +41,7 @@ public class Desert extends Terrain{
 		visionbonus=0;
 		representation='d';
 		liquid=true;
+		survivalbonus=-4;
 	}
 
 	@Override

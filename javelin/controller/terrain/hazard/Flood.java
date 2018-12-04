@@ -1,6 +1,7 @@
 package javelin.controller.terrain.hazard;
 
 import javelin.controller.Weather;
+import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -30,8 +31,9 @@ public class Flood extends Hazard{
 	@Override
 	public boolean validate(){
 		if(Squad.active.fly()) return false;
-		if(Squad.active.getbest(Skill.SURVIVAL).roll(Skill.SURVIVAL)>=DC)
-			return false;
+		int survival=Squad.active.getbest(Skill.SURVIVAL).roll(Skill.SURVIVAL);
+		survival+=Terrain.get(Squad.active.x,Squad.active.y).survivalbonus;
+		if(survival>=DC) return false;
 		return Weather.current==Weather.STORM
 				||Weather.current==Weather.RAIN&&Season.current==Season.SPRING;
 	}

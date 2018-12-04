@@ -23,6 +23,7 @@ public class Underground extends Terrain{
 	/** Constructor. */
 	public Underground(){
 		name="underground";
+		survivalbonus=-2;
 	}
 
 	@Override

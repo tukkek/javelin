@@ -36,7 +36,7 @@ public class Dismiss extends WorldAction{
 			if(c.mercenary) fee=", "+MercenariesGuild.getformattedfee(c);
 			members.add(c+" ("+c.getstatus()+fee+")");
 		}
-		ArrayList<Combatant> mercenaries=Squad.active.getmercenaries();
+		List<Combatant> mercenaries=Squad.active.getmercenaries();
 		int dismissmercenaries=Integer.MIN_VALUE;
 		if(mercenaries.size()>1){
 			dismissmercenaries=squad.indexOf(mercenaries.get(0));
@@ -53,7 +53,7 @@ public class Dismiss extends WorldAction{
 		}
 	}
 
-	void dismissmercenaries(ArrayList<Combatant> mercenaries){
+	void dismissmercenaries(List<Combatant> mercenaries){
 		if(confirm("Do you want to dismiss all of your mercenaries?"))
 			for(Combatant c:mercenaries)
 			Squad.active.dismiss(c);

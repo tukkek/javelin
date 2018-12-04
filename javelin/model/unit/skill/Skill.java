@@ -38,6 +38,30 @@ public class Skill implements Serializable{
 	}
 
 	/**
+	 * Guideline DC values, from the SRD.
+	 *
+	 * @author alex
+	 */
+	public static class DifficultyClass{
+		/** Diffculty class guideline. */
+		public static final int DCVERYEASY=0;
+		/** Diffculty class guideline. */
+		public static final int DCEASY=5;
+		/** Diffculty class guideline. */
+		public static final int DCAVERAGE=10;
+		/** Diffculty class guideline. */
+		public static final int DCTOUGH=15;
+		/** Diffculty class guideline. */
+		public static final int DCCHALLENGING=20;
+		/** Diffculty class guideline. */
+		public static final int DCFORMIDABLE=25;
+		/** Diffculty class guideline. */
+		public static final int DCHEROIC=30;
+		/** Diffculty class guideline. */
+		public static final int DCNEARLYIMPOSSIBLE=40;
+	}
+
+	/**
 	 * Prefer using {@link Skill#getupgrade()}.
 	 */
 	public static final HashMap<Skill,SkillUpgrade> UPGRADES=new HashMap<>();

@@ -43,6 +43,7 @@ public class Water extends Terrain{
 		visionbonus=0;
 		representation='~';
 		liquid=true;
+		survivalbonus=-3;
 	}
 
 	@Override

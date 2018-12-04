@@ -29,6 +29,7 @@ public class Forest extends Terrain{
 		speedhighway=1f;
 		visionbonus=-4;
 		representation='F';
+		survivalbonus=+4;
 	}
 
 	@Override

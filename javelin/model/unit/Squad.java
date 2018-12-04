@@ -196,8 +196,9 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	@Override
 	public void turn(long time,WorldScreen world){
 		paymercenaries();
-		int surival=Skill.SURVIVAL.getbonus(getbest(Skill.SURVIVAL));
-		float foodfound=surival/(4f*members.size());
+		int survival=Skill.SURVIVAL.getbonus(getbest(Skill.SURVIVAL));
+		survival+=Terrain.get(x,y).survivalbonus;
+		float foodfound=survival/(4f*members.size());
 		if(foodfound>1)
 			foodfound=1;
 		else if(foodfound<0) foodfound=0;

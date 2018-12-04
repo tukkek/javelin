@@ -29,6 +29,7 @@ public class Marsh extends Terrain{
 		visionbonus=-2;
 		representation='m';
 		liquid=true;
+		survivalbonus=-2;
 	}
 
 	@Override

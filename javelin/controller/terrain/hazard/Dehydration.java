@@ -1,5 +1,6 @@
 package javelin.controller.terrain.hazard;
 
+import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.condition.Fatigued;
@@ -26,7 +27,9 @@ public class Dehydration extends PartyHazard{
 
 	@Override
 	public boolean validate(){
-		return Squad.active.gold==0
-				&&Squad.active.getbest(Skill.SURVIVAL).roll(Skill.SURVIVAL)<25;
+		if(Squad.active.gold>0) return false;
+		int survival=Squad.active.getbest(Skill.SURVIVAL).roll(Skill.SURVIVAL);
+		survival+=Terrain.get(Squad.active.x,Squad.active.y).survivalbonus;
+		return survival<25;
 	}
 }

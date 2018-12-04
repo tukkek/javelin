@@ -28,6 +28,7 @@ public class Mountains extends Terrain{
 		speedhighway=3/4f;
 		visionbonus=+4;
 		representation='M';
+		survivalbonus=-2;
 	}
 
 	@Override

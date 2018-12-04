@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.event.Wanderer;
+import javelin.controller.event.wild.Wanderer;
 import javelin.controller.terrain.Hill;
 import javelin.controller.terrain.Plains;
 import javelin.controller.terrain.Terrain;

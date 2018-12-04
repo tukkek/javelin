@@ -1,8 +1,7 @@
-package javelin.controller.event;
+package javelin.controller.event.wild;
 
 import javelin.Javelin;
 import javelin.controller.Weather;
-import javelin.controller.event.wild.WildEvent;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.PointOfInterest;
 

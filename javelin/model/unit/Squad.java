@@ -691,6 +691,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 		return false;
 	}
 
+	/** @return Recuirts the supplised unit permanently and asks for a name. */
 	public Combatant recruit(Combatant c){
 		boolean askname=World.scenario!=null&&World.scenario.asksquadnames;
 		if(askname&&!Javelin.DEBUG)

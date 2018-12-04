@@ -11,6 +11,7 @@ import javelin.controller.event.wild.negative.FindIncursion;
 import javelin.controller.event.wild.neutral.FindMob;
 import javelin.controller.event.wild.neutral.WanderingMercenary;
 import javelin.controller.event.wild.neutral.WeatherChange;
+import javelin.controller.event.wild.positive.FindAlly;
 import javelin.controller.event.wild.positive.FindCaravan;
 import javelin.controller.event.wild.positive.FindRuby;
 import javelin.controller.event.wild.positive.FindSignpost;
@@ -33,7 +34,7 @@ import javelin.model.world.location.PointOfInterest;
 public class WildEvents extends EventDealer{
 	/** @see StateManager */
 	public static EventDealer instance=new WildEvents();
-	static final Class<? extends WildEvent> DEBUG=null;
+	static final Class<? extends WildEvent> DEBUG=FindAlly.class;
 
 	/** Constructor. */
 	public WildEvents(){

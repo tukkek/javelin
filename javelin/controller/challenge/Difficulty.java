@@ -12,11 +12,17 @@ import javelin.old.RPG;
  * irrelevant if it's of {@value #IRRELEVANT} of lower.
  */
 public class Difficulty{
+	/** @see Difficulty */
 	public static final int IRRELEVANT=-13;
+	/** @see Difficulty */
 	public static final int VERYEASY=-9;
+	/** @see Difficulty */
 	public static final int EASY=-5;
+	/** @see Difficulty */
 	public static final int MODERATE=-4;
+	/** @see Difficulty */
 	public static final int DIFFICULT=0;
+	/** @see Difficulty */
 	public static final int DEADLY=+4;
 
 	static final ArrayList<Integer> DISTRIBUTION=new ArrayList<>(17);

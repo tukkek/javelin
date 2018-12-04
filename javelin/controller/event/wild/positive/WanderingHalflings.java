@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.event.Wanderer;
+import javelin.controller.event.wild.Wanderer;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;

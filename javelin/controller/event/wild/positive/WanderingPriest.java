@@ -1,7 +1,7 @@
 package javelin.controller.event.wild.positive;
 
 import javelin.Javelin;
-import javelin.controller.event.Wanderer;
+import javelin.controller.event.wild.Wanderer;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.PointOfInterest;
 

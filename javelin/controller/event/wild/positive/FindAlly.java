@@ -6,7 +6,9 @@ import java.util.stream.Collectors;
 import javelin.Javelin;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.event.wild.Wanderer;
+import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.terrain.Terrain;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.PointOfInterest;
@@ -40,7 +42,11 @@ public class FindAlly extends Wanderer{
 	public void happen(Squad s,PointOfInterest l){
 		var prompt="A friendly "+ally.toString().toLowerCase()
 				+" wants to join your ranks!";
-		var options=List.of("Welcome aboard!","Decline");
-		if(Javelin.choose(prompt,options,false,true)==0) s.recruit(ally);
+		var options=List.of("Welcome aboard!","Decline","Attack");
+		int choice=Javelin.choose(prompt,options,false,true);
+		if(choice==0)
+			s.recruit(ally);
+		else if(choice==2)
+			throw new StartBattle(new EventFight(new Combatant(ally,true),l));
 	}
 }

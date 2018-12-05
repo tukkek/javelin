@@ -9,6 +9,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.action.world.Guide;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.db.StateManager;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomEncounter;
 import javelin.controller.fight.minigame.Minigame;
@@ -25,6 +26,7 @@ import javelin.controller.wish.Win;
 import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.item.key.TempleKey;
+import javelin.model.transport.Ship;
 import javelin.model.transport.Transport;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -46,7 +48,9 @@ import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Deck;
 import javelin.model.world.location.town.labor.Labor;
+import javelin.model.world.location.town.labor.expansive.Hub;
 import javelin.model.world.location.town.labor.productive.Shop;
+import javelin.model.world.location.town.quest.Quest;
 import javelin.model.world.location.unique.UniqueLocation;
 import javelin.old.RPG;
 import javelin.view.mappanel.world.WorldTile;
@@ -107,7 +111,16 @@ public class Scenario implements Serializable{
 	 * @see FeatureGenerator
 	 */
 	public Integer startingdungeons=null;
+	/**
+	 * Whether {@link FeatureGenerator} should continue placing features after
+	 * initial world generation.
+	 */
 	public boolean respawnlocations=false;
+	/**
+	 * If <code>true</code>, all hostile {@link Realm}s will be converted into a
+	 * single one. Mostly for use on scenarios without {@link Incursion}s anyway,
+	 * to make it easier to process visually.
+	 */
 	public boolean normalizemap=true;
 	/** Wheter {@link TempleKey}s should exist at all. */
 	public boolean lockedtemples=false;
@@ -135,7 +148,9 @@ public class Scenario implements Serializable{
 	public boolean asksquadnames=false;
 	/** Wheter to cover {@link WorldTile}s. */
 	public boolean fogofwar=false;
+	/** If <code>false</code>, there will be no {@link RandomEncounter}s. */
 	public boolean worldencounters=false;
+	/** If <code>false</code>, there will be no {@link Hazard}s. */
 	public boolean worldhazards=false;
 	/** File name for the F1 help {@link Guide}. */
 	public String helpfile="Scenario";
@@ -143,6 +158,12 @@ public class Scenario implements Serializable{
 	 * TODO highscores should be scenario-agnostic
 	 */
 	public boolean record=false;
+	/**
+	 * If <code>true</code>, will finish the game once there are no hostile
+	 * {@link Town}s.
+	 *
+	 * @see Town#ishostile()
+	 */
 	public boolean dominationwin=true;
 	/** Number of {@link Location}s to spawn. See {@link FeatureGenerator}. */
 	public int startingfeatures=size*size/7;
@@ -176,12 +197,33 @@ public class Scenario implements Serializable{
 	 * @see Incursion
 	 */
 	public boolean spawn=false;
+	/**
+	 * If <code>true</code>, will remove dungoens once their special chests are
+	 * taken.
+	 *
+	 * @see Scenario#openspecialchest(Dungeon)
+	 */
 	public boolean expiredungeons=false;
+	/**
+	 * Generates {@link Actor}s and {@link Location}s during world generation and
+	 * during play.
+	 *
+	 * @see WorldGenerator
+	 * @see #respawnlocations
+	 */
 	public Class<? extends FeatureGenerator> featuregenerator=FeatureGenerator.class;
 	/** Multiplied to daily {@link Labor}. */
 	public float labormodifier=1;
+	/** Responsible for generation a {@link World} map. */
 	public Class<? extends WorldGenerator> worldgenerator=WorldGenerator.class;
+	/**
+	 * Whether to allow roads.
+	 *
+	 * @see World#roads
+	 * @see World#highways
+	 */
 	public boolean roads=false;
+	/** Whether to allow {@link Hub}s to spawn {@link Ship}s. */
 	public boolean boats=false;
 	/**
 	 * Adds this many squares to {@link District}s.
@@ -198,6 +240,8 @@ public class Scenario implements Serializable{
 	 * @see Monster#fly
 	 */
 	public boolean crossrivers=true;
+	/** If <code>true</code> will generate {@link Quest}s. */
+	public boolean quests=false;
 
 	/**
 	 * @return Starting encounter level for each hostile town in {@link #SCENARIO}
@@ -224,6 +268,7 @@ public class Scenario implements Serializable{
 				kit=k;
 				if(!chosen.contains(kit)) break;
 			}
+			assert kit!=null;
 			chosen.add(kit);
 			c.source.customName=Character.toUpperCase(kit.name.charAt(0))
 					+kit.name.substring(1);
@@ -242,6 +287,9 @@ public class Scenario implements Serializable{
 		return squad.size()>=4;
 	}
 
+	/**
+	 * @return <code>true</code> if the game has completed the mode's objective.
+	 */
 	public boolean win(){
 		for(Town t:Town.gettowns())
 			if(t.ishostile()) return false;
@@ -250,7 +298,13 @@ public class Scenario implements Serializable{
 		return true;
 	}
 
-	public List<Location> generatestartinglocations(World seed){
+	/**
+	 * Called from {@link FeatureGenerator} to allow each scenario to place their
+	 * own loactions. By default places shops near {@link Town}s.
+	 *
+	 * @return A list of unplaced locations.
+	 */
+	public List<Location> generatestartinglocations(){
 		HashSet<Realm> realms=new HashSet<>(2);
 		for(Town t:Town.gettowns())
 			realms.add(t.originalrealm);
@@ -260,6 +314,10 @@ public class Scenario implements Serializable{
 		return shops;
 	}
 
+	/**
+	 * @return A prefix for the save game file.
+	 * @see StateManager
+	 */
 	public String getsaveprefix(){
 		return getClass().getSimpleName().toLowerCase();
 	}
@@ -270,7 +328,8 @@ public class Scenario implements Serializable{
 	 * @return Item inside the Chest.
 	 * @see #openaltar(Temple)
 	 */
-	public Item openspecialchest(Dungeon d){
+	@SuppressWarnings("static-method")
+	public Item openspecialchest(){
 		throw new UnsupportedOperationException();
 	}
 
@@ -281,6 +340,7 @@ public class Scenario implements Serializable{
 	 * @return Item inside the Altar.
 	 * @see #openspecialchest(Dungeon)
 	 */
+	@SuppressWarnings("unused")
 	public Item openaltar(Temple t){
 		throw new UnsupportedOperationException();
 	}
@@ -292,7 +352,7 @@ public class Scenario implements Serializable{
 	 *
 	 * @param day
 	 */
-	public void endday(double day){
+	public void endday(){
 		// nothing
 	}
 
@@ -306,11 +366,13 @@ public class Scenario implements Serializable{
 	}
 
 	/** Called when a Fight starts. */
+	@SuppressWarnings("unused")
 	public void start(Fight f,List<Combatant> blue,List<Combatant> red){
 		// nothing by default
 	}
 
 	/** Called when a Fight ends. */
+	@SuppressWarnings("unused")
 	public void end(Fight f,boolean victory){
 		// nothing by default
 	}
@@ -322,7 +384,8 @@ public class Scenario implements Serializable{
 	 *
 	 * @see WorldGenerator#finish(Location, World)
 	 */
-	public void ready(World w){
+	@SuppressWarnings("unused")
+	public void ready(){
 		//nothing by default
 	}
 

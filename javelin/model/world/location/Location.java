@@ -206,7 +206,8 @@ public abstract class Location extends Actor{
 	}
 
 	/**
-	 * @return <code>true</code> if this place needs to be conquered.
+	 * @return <code>true</code> if this place has a hostle {@link #garrison}
+	 *         presence.
 	 */
 	public boolean ishostile(){
 		return !garrison.isEmpty();

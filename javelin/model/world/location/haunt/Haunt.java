@@ -6,6 +6,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.comparator.MonstersByName;
+import javelin.controller.fight.Fight;
 import javelin.controller.fight.LocationFight;
 import javelin.controller.map.location.LocationMap;
 import javelin.model.unit.Combatant;
@@ -16,11 +17,19 @@ import javelin.old.RPG;
 import javelin.view.screen.HauntScreen;
 import javelin.view.screen.WorldScreen;
 
+/**
+ * A unique location in the game world, inteded to provide a {@link Fight} with
+ * a particular theme.
+ *
+ * @author alex
+ */
 public abstract class Haunt extends Fortification{
 	static final int MAXIMUMAVAILABLE=5;
 
-	ArrayList<Monster> dwellers=new ArrayList<>();
+	/** Available hires. */
 	public ArrayList<Monster> available=new ArrayList<>();
+
+	ArrayList<Monster> dwellers=new ArrayList<>();
 	int delay=-1;
 	/**
 	 * Will be added in order to artifically modify the target encounter level.

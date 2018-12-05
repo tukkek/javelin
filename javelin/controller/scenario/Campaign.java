@@ -19,13 +19,17 @@ import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.world.WorldTile;
 import javelin.view.screen.WorldScreen;
 
+/**
+ * Main game mode, full on strategy-RPG.
+ *
+ * @author alex
+ */
 public class Campaign extends Scenario{
 	/** Minimum starting party encounter level. */
 	public static final float INITIALEL;
@@ -43,6 +47,7 @@ public class Campaign extends Scenario{
 		}
 	}
 
+	/** Constructor. */
 	public Campaign(){
 		allowallactors=true;
 		lockedtemples=true;
@@ -70,6 +75,7 @@ public class Campaign extends Scenario{
 		randomrealms=false;
 		worlddistrict=false;
 		spawn=true;
+		quests=true;
 	}
 
 	@Override
@@ -101,12 +107,12 @@ public class Campaign extends Scenario{
 	}
 
 	@Override
-	public List<Location> generatestartinglocations(World seed){
+	public List<Location> generatestartinglocations(){
 		return Collections.EMPTY_LIST;
 	}
 
 	@Override
-	public Item openspecialchest(Dungeon d){
+	public Item openspecialchest(){
 		return TempleKey.generate();
 	}
 
@@ -116,7 +122,7 @@ public class Campaign extends Scenario{
 	}
 
 	@Override
-	public void endday(double day){
+	public void endday(){
 		cover(2);
 	}
 

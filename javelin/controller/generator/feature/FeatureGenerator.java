@@ -23,8 +23,8 @@ import javelin.model.world.Caravan;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
-import javelin.model.world.location.Resource;
 import javelin.model.world.location.PointOfInterest;
+import javelin.model.world.location.Resource;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.fortification.Guardian;
@@ -170,12 +170,12 @@ public class FeatureGenerator implements Serializable{
 		if(l!=null&&clear) l.capture();
 	}
 
-	void generatestartinglocations(World w){
+	void generatestartinglocations(){
 		UpgradeHandler.singleton.gather();
 		ArrayList<Location> locations=new ArrayList<>();
 		generateuniquelocations(locations);
 		if(World.scenario.worlddistrict) generateacademies(locations);
-		locations.addAll(World.scenario.generatestartinglocations(w));
+		locations.addAll(World.scenario.generatestartinglocations());
 		for(Location l:locations)
 			l.place();
 	}
@@ -187,7 +187,8 @@ public class FeatureGenerator implements Serializable{
 		locations.addAll(generatehaunts());
 	}
 
-	protected List<Haunt> generatehaunts(){
+	/** @return An instance of each haunt type. */
+	public static List<Haunt> generatehaunts(){
 		return List.of(new AbandonedManor(),new SunkenShip(),new ShatteredTemple(),
 				new WitchesHideout(),new Graveyard(),new OrcSettlement());
 	}
@@ -239,6 +240,7 @@ public class FeatureGenerator implements Serializable{
 		normalizemap(starting);
 		generatefeatures(w,starting);
 		normalizemap(starting);
+		starting.updatequests();
 		for(Town t:Town.gettowns())
 			if(t!=starting) t.populategarisson();
 		return starting;
@@ -248,7 +250,7 @@ public class FeatureGenerator implements Serializable{
 		setup();
 		Temple.generatetemples();
 		generatestartingarea(w,starting);
-		generatestartinglocations(w);
+		generatestartinglocations();
 		for(Class<? extends Actor> feature:generators.keySet())
 			generators.get(feature).seed(feature);
 		int target=World.scenario.startingfeatures-Location.count();

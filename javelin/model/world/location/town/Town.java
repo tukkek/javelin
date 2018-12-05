@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.TreeSet;
 
+import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
@@ -33,6 +34,7 @@ import javelin.model.world.location.town.governor.MonsterGovernor;
 import javelin.model.world.location.town.labor.Deck;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.basic.Growth;
+import javelin.model.world.location.town.quest.Quest;
 import javelin.old.RPG;
 import javelin.view.Images;
 import javelin.view.screen.NamingScreen;
@@ -86,6 +88,9 @@ public class Town extends Location{
 
 	/** Remains the same even after capture. */
 	public Realm originalrealm;
+
+	/** Active quests. Updated daily. */
+	public List<Quest> quests=new ArrayList<>(1);
 
 	/** @param p Spot to place town in the {@link World}. */
 	public Town(Point p,Realm r){
@@ -181,6 +186,7 @@ public class Town extends Location{
 		float labor=population+RPG.randomize(population)/10f;
 		labor*=World.scenario.boost*World.scenario.labormodifier;
 		if(labor>0) getgovernor().work(labor*DAILYLABOR,getdistrict());
+		updatequests();
 	}
 
 	/**
@@ -206,6 +212,7 @@ public class Town extends Location{
 		int damage=RPG.randomize(4)+attacker.getel()/2;
 		if(damage>0) population-=Math.max(1,population-damage);
 		setgovernor(new MonsterGovernor(this));
+		quests.clear();
 	}
 
 	/** Cancels any projects and replaces the {@link Governor}. */
@@ -224,6 +231,15 @@ public class Town extends Location{
 	@Override
 	public boolean interact(){
 		if(!super.interact()) return false;
+		for(var q:new ArrayList<>(quests)){
+			if(!q.complete()) continue;
+			Squad.active.gold+=q.reward;
+			String notification="You have completed a quest ("+q+")!\n";
+			notification+="You are rewarded for your efforts with: $"
+					+Javelin.format(q.reward)+"!";
+			Javelin.message(notification,true);
+			quests.remove(q);
+		}
 		Squad.active.lasttown=this;
 		new TownScreen(this).show();
 		for(final Combatant c:Squad.active.members)
@@ -341,5 +357,20 @@ public class Town extends Location{
 	/** @see #setgovernor(Governor) */
 	public Governor getgovernor(){
 		return governor;
+	}
+
+	/** Ticks a day off active quests and generates new ones. */
+	public void updatequests(){
+		if(!World.scenario.quests||ishostile()) return;
+		for(var q:new ArrayList<>(quests)){
+			q.daysleft-=1;
+			if(q.daysleft==0||q.cancel()) quests.remove(q);
+		}
+		var rank=getrank().rank;
+		while(quests.size()<rank){
+			var quest=Quest.generate(this);
+			if(quest==null) return;
+			quests.add(quest);
+		}
 	}
 }

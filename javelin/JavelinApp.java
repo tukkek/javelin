@@ -38,6 +38,7 @@ import javelin.view.screen.WorldScreen;
 public class JavelinApp extends QuestApp{
 	/** Bootstrapper for minigames. */
 	public static Minigame minigame=null;
+	/** TODO change into actual context (separate from UI code). */
 	static public WorldScreen context;
 
 	static final String CRASHMESSAGE="\n\nUnfortunately an error ocurred.\n"
@@ -143,6 +144,7 @@ public class JavelinApp extends QuestApp{
 		System.exit(1);
 	}
 
+	/** @return A pretty-printed stack trace. */
 	public static String printstacktrace(Throwable e){
 		String error=e.getMessage()+" ("+e.getClass()+")";
 		error+="\n";
@@ -160,7 +162,7 @@ public class JavelinApp extends QuestApp{
 		}
 	}
 
-	private void initialize(){
+	static void initialize(){
 		String readme=TextReader.read(new File("README.txt"));
 		System.out.println(readme.replaceAll("\n\n","\n"));
 		try{
@@ -174,7 +176,7 @@ public class JavelinApp extends QuestApp{
 	void startcampaign(){
 		World.scenario.setup();
 		WorldGenerator.build();
-		World.scenario.ready(World.seed);
+		World.scenario.ready();
 		if(Javelin.DEBUG){
 			new ContentSummary().produce();
 			Debug.oncampaignstart();

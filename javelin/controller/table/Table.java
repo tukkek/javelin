@@ -4,8 +4,39 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Set;
 
+import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.feature.door.Door;
+import javelin.model.world.location.dungeon.feature.trap.Trap;
 import javelin.old.RPG;
 
+/**
+ * Inspired by traditional tabletop RPG "random tables", a Table holds a number
+ * of rows - one of which being picked randomly when the table is used. These
+ * tables are self-mutation for two purposed: 1. so that each instances of the
+ * table are never pre-defined but instead only descrived as general guidelines
+ * to what their contents should be and 2. so that they can be copied and
+ * mutated (for example, between levels of the same {@link Dungeon}) - which
+ * will in turn keep a cohesive theme while still having mutation between
+ * levels.
+ *
+ * For example: a table describiing how many {@link Trap}s (or serets
+ * {@link Door}s) should be in a dungeon starts as a guideline but upon being
+ * instantiated, could result in a high or low amount of these features. Further
+ * copying and mutating these tables inside the same dungeon would continue the
+ * trend, but still providing a chance that traps and secret doors could beecome
+ * more or less present in later levels, while still wokring under the confines
+ * of a balanced experience.
+ *
+ * This system produces a very high amount of variability while keeping
+ * consistency to predefined boundaries and for the same family of tables (being
+ * very unlikely but póssible that a dungeon floor with no traps, for example,
+ * would lead to a floor below with an extreme amount of traps).
+ *
+ * The implementation of these tables is highly generic and can be used to
+ * deliver any sort of object, including primitives.
+ *
+ * @author alex
+ */
 public class Table implements Serializable,Cloneable{
 	class RowData implements Serializable,Cloneable{
 		int min;
@@ -82,6 +113,7 @@ public class Table implements Serializable,Cloneable{
 		}
 	}
 
+	/** Mutates a table. */
 	public void modify(){
 		for(Object key:data.keySet()){
 			RowData d=data.get(key);
@@ -95,6 +127,7 @@ public class Table implements Serializable,Cloneable{
 		}
 	}
 
+	/** @return One of the table rows, randomly selected. */
 	public Object roll(){
 		int roll=RPG.r(1,getchances());
 		for(Object row:rows.keySet()){
@@ -104,6 +137,7 @@ public class Table implements Serializable,Cloneable{
 		throw new RuntimeException("#brokentable "+this);
 	}
 
+	/** @return The total amount of rows in this table. */
 	public int getchances(){
 		int total=0;
 		for(Integer chances:rows.values())
@@ -134,10 +168,12 @@ public class Table implements Serializable,Cloneable{
 		return String.format("%0"+length+"d",chances);
 	}
 
+	/** As {@link #roll()} but to be used for numeric tables. */
 	public Integer rollnumber(){
 		return (Integer)roll();
 	}
 
+	/** As {@link #roll()} but to be used for boolean tables. */
 	public boolean rollboolean(){
 		return (Boolean)roll();
 	}

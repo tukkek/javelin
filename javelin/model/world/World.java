@@ -16,6 +16,8 @@ import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.town.labor.expansive.BuildHighway;
+import javelin.model.world.location.town.labor.expansive.BuildRoad;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.world.WorldTile;
 import javelin.view.screen.WorldScreen;
@@ -38,9 +40,9 @@ public class World implements Serializable{
 	 * @see #getseed()
 	 */
 	public static World seed=null;
-	/** Facilitate movement. */
+	/** @see BuildRoad */
 	public boolean[][] roads;
-	/** Upgraded {@link #roads}. */
+	/** @see BuildHighway */
 	public boolean[][] highways;
 	/** Map of terrain tiles by [x][y] coordinates. */
 	public Terrain[][] map;
@@ -56,6 +58,7 @@ public class World implements Serializable{
 	 * irrelevant and definitely not worth the trouble of get it working right.
 	 */
 	public final HashMap<Point,Location> locations=new HashMap<>();
+	/** A persistent queue of Town names. */
 	public final ArrayList<String> townnames=new ArrayList<>();
 	/**
 	 * Intermediary for {@link WorldTile} while loading.
@@ -84,8 +87,10 @@ public class World implements Serializable{
 					"Michiru Yamane","Sid Meier","William Gibson","Julie Bell",
 					"Boris Vallejo","Lee Salzman","Johannes Bonitz"}));
 
+	/** Generator to be used during play. */
 	public FeatureGenerator featuregenerator;
 
+	/** Constructor. */
 	public World(){
 		map=new Terrain[scenario.size][scenario.size];
 		initroads();

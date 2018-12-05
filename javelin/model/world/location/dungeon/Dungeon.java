@@ -99,11 +99,25 @@ public class Dungeon extends Location{
 	public String wall;
 	/** Tiles already revealed. */
 	public HashSet<Point> discovered=new HashSet<>();
+	/**
+	 * A grid of characters representing dungeon objects.
+	 *
+	 * @see Template
+	 */
 	public char[][] map=null;
+	/**
+	 * {@link #map} size (width and height).
+	 *
+	 * TODO support non-square maps
+	 */
 	public int size;
+	/** Chance for a {@link RandomDungeonEncounter}. */
 	public int stepsperencounter;
+	/** Dungeon encounter level. -1 if not initialized. */
 	public int level=-1;
+	/** <code>false</code> if doors should be drawn without background. */
 	public boolean doorbackground=true;
+	/** @see Table */
 	public Tables tables;
 	/**
 	 * Table of encounters to roll from when generating
@@ -433,7 +447,7 @@ public class Dungeon extends Location{
 	 * @return Most special chest here.
 	 */
 	protected Feature createspecialchest(Point p){
-		Item i=World.scenario.openspecialchest(this);
+		Item i=World.scenario.openspecialchest();
 		Chest c=new Chest(p.x,p.y,i);
 		c.setspecial();
 		return c;

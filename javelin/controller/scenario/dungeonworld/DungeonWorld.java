@@ -13,7 +13,13 @@ import javelin.model.world.location.dungeon.DungeonTier;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.old.RPG;
 
+/**
+ * Game mode which provides a JRPG like experience.
+ *
+ * @author alex
+ */
 public class DungeonWorld extends Campaign{
+	/** Constructor. */
 	public DungeonWorld(){
 		size=size*2;
 		lockedtemples=false;
@@ -30,6 +36,7 @@ public class DungeonWorld extends Campaign{
 		worldgenerator=DungeonWorldGenerator.class;
 		districtmodifier=1;
 		crossrivers=false;
+		quests=false;
 	}
 
 	@Override
@@ -42,7 +49,7 @@ public class DungeonWorld extends Campaign{
 	}
 
 	@Override
-	public Item openspecialchest(Dungeon d){
+	public Item openspecialchest(){
 		return new Ruby();
 	}
 
@@ -52,7 +59,7 @@ public class DungeonWorld extends Campaign{
 	}
 
 	@Override
-	public void endday(double day){
+	public void endday(){
 		if(Debug.disablecombat) return;
 		for(Squad s:Squad.getsquads())
 			if(s.getdistrict()==null&&RPG.chancein(7)){

@@ -26,10 +26,12 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class DungeonDelve extends Campaign{
+	/** Amount of levels the {@link Megadungeon} should have. */
 	public final static int LEVELS=20;
 	/** Becomes true when the player takes hold of the {@link McGuffin}. */
 	public boolean climbmode=false;
 
+	/** Constructor. */
 	public DungeonDelve(){
 		featuregenerator=DungeonDelveGenerator.class;
 		worldgenerator=DungeonDelveWorld.class;
@@ -37,10 +39,11 @@ public class DungeonDelve extends Campaign{
 		worldencounters=false;
 		worldhazards=false;
 		fogofwar=false;
+		quests=false;
 	}
 
 	@Override
-	public void ready(World w){
+	public void ready(){
 		for(Dungeon d:getdungeons().values())
 			d.map();
 	}
@@ -64,7 +67,7 @@ public class DungeonDelve extends Campaign{
 	}
 
 	@Override
-	public Item openspecialchest(Dungeon d){
+	public Item openspecialchest(){
 		return new Ruby();
 	}
 

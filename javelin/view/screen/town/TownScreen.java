@@ -3,6 +3,7 @@ package javelin.view.screen.town;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
@@ -125,7 +126,14 @@ public class TownScreen extends PurchaseScreen{
 
 	@Override
 	public String printinfo(){
-		return "Your squad has $"+Javelin.format(Squad.active.gold);
+		var info="Your squad has $"+Javelin.format(Squad.active.gold)+".";
+		if(!town.quests.isEmpty()){
+			info+="\n\nActive quests:\n";
+			var quests=town.quests.stream().map(q->" - "+q+" ("+q.getdeadline()+", $"
+					+Javelin.format(q.reward)+" bounty)");
+			info+=String.join("\n",quests.collect(Collectors.toList()));
+		}
+		return info;
 	}
 
 	@Override

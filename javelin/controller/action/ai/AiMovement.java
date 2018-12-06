@@ -33,7 +33,7 @@ import javelin.view.mappanel.battle.overlay.BattleWalker.BattleStep;
  */
 public class AiMovement extends Action implements AiAction{
 	/**
-	 * Target value for number of outcome nodes.We want to limit the number of
+	 * Target value for number of outcome nodes. We want to limit the number of
 	 * node outcomes so that the AI doesn't become to slow.
 	 */
 	static final int MOVES=4;
@@ -130,7 +130,7 @@ public class AiMovement extends Action implements AiAction{
 		return (BattleStep)steps.get(steps.size()-1);
 	}
 
-	static HashSet<Point> getdestinations(Combatant c,BattleState s,Random r){
+	static List<Point> getdestinations(Combatant c,BattleState s,Random r){
 		var destinations=new HashSet<Point>();
 		var range=s.isengaged(c)?1:c.gettopspeed(s)/5;
 		Point from=c.getlocation();
@@ -153,7 +153,7 @@ public class AiMovement extends Action implements AiAction{
 			result.add(point);
 			target-=1;
 		}
-		return destinations;
+		return result;
 	}
 
 	@Override

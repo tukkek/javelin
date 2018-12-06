@@ -28,8 +28,8 @@ public abstract class Haunt extends Fortification{
 
 	/** Available hires. */
 	public ArrayList<Monster> available=new ArrayList<>();
-
-	ArrayList<Monster> dwellers=new ArrayList<>();
+	/** All possible monsters to inhabit this haunt. */
+	public ArrayList<Monster> dwellers=new ArrayList<>();
 	int delay=-1;
 	/**
 	 * Will be added in order to artifically modify the target encounter level.

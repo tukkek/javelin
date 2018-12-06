@@ -68,6 +68,6 @@ public class CountingSet{
 			if(n>1) text+=" (x"+n+")";
 			text+=", ";
 		}
-		return text.substring(0,text.length()-2);
+		return text.isEmpty()?"(empty)":text.substring(0,text.length()-2);
 	}
 }

@@ -14,7 +14,6 @@ import javelin.controller.fight.minigame.battlefield.Reinforcement;
 import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.Underground;
-import javelin.controller.terrain.Water;
 import javelin.model.Realm;
 import javelin.model.item.Tier;
 import javelin.model.unit.Combatant;
@@ -22,22 +21,25 @@ import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.haunt.Haunt;
+import javelin.model.world.location.haunt.SunkenShip;
 import javelin.model.world.location.haunt.WitchesHideout;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.basic.Dwelling;
-import javelin.model.world.location.town.labor.expansive.Hub;
 import javelin.old.RPG;
 
 /** {@link FeatureGenerator} for {@link ArtOfWar}. */
 public class AowGenerator extends FeatureGenerator{
 	static final Set<Class<? extends Location>> BANNED=Set
-			.of(WitchesHideout.class);
+			.of(WitchesHideout.class,SunkenShip.class);
 
 	@Override
 	public Location generate(LinkedList<Realm> realms,
 			ArrayList<HashSet<Point>> regions,World w){
+		for(int x=0;x<World.scenario.size;x++)
+			for(int y=0;y<World.scenario.size;y++)
+				if(w.map[x][y]==Terrain.WATER) w.map[x][y]=Terrain.DESERT;
 		InfiniteList<Terrain> terrains=new InfiniteList<>(
-				Arrays.asList(Terrain.ALL),true);
+				Arrays.asList(Terrain.NONWATER),true);
 		for(int el=ArtOfWar.INITIALEL+Difficulty.MODERATE
 				+1;el<=ArtOfWar.ENDGAME;el++)
 			generatedwellings(el,terrains.pop());
@@ -70,7 +72,7 @@ public class AowGenerator extends FeatureGenerator{
 		d.garrison.addAll(generatearmy(el,target));
 	}
 
-	List<Combatant> generatearmy(float el,Terrain t){
+	static List<Combatant> generatearmy(float el,Terrain t){
 		List<Float> squads=new ArrayList<>();
 		squads.add(el);
 		int tier=Tier.get(Math.round(el)).ordinal()+1;
@@ -92,18 +94,6 @@ public class AowGenerator extends FeatureGenerator{
 		return army;
 	}
 
-	void generatedock(){
-		Point p=null;
-		while(p==null){
-			p=findterrain(Terrain.WATER);
-			p=checkshore(p,Terrain.WATER);
-		}
-		Hub h=new Hub();
-		h.level=2;
-		h.setlocation(p);
-		h.place();
-	}
-
 	public Dwelling generate(Dwelling d,Point p){
 		d.setlocation(p);
 		d.place();
@@ -114,8 +104,7 @@ public class AowGenerator extends FeatureGenerator{
 
 	boolean validate(Point p){
 		return p!=null&&p.validate(0,0,World.scenario.size,World.scenario.size)
-				&&World.get(p.x,p.y,World.getactors())==null
-				&&!Terrain.get(p.x,p.y).equals(Terrain.WATER);
+				&&World.get(p.x,p.y,World.getactors())==null;
 	}
 
 	Point findterrain(Terrain t){
@@ -124,20 +113,8 @@ public class AowGenerator extends FeatureGenerator{
 			return findterrain(RPG.pick(List.of(Terrain.NONWATER)));
 		Point p=null;
 		while(p==null||!Terrain.get(p.x,p.y).equals(t)
-				||World.get(p.x,p.y,World.getactors())!=null||checkshore(p,t)==null)
+				||World.get(p.x,p.y,World.getactors())!=null)
 			p=new Point(RPG.r(0,max),RPG.r(0,max));
 		return p;
-	}
-
-	Point checkshore(Point p,Terrain t){
-		if(!(t instanceof Water)) return p;
-		for(Point a:Point.getadjacent()){
-			a.x+=p.x;
-			a.y+=p.y;
-			if(a.validate(0,0,World.scenario.size,World.scenario.size)
-					&&!(Terrain.get(a.x,a.y) instanceof Water))
-				return a;
-		}
-		return null;
 	}
 }

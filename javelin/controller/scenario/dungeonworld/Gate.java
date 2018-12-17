@@ -29,7 +29,7 @@ public class Gate extends Location{
 	}
 
 	@Override
-	public Integer getel(int attackerel){
+	public Integer getel(Integer attackerel){
 		return null;
 	}
 

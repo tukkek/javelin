@@ -281,10 +281,11 @@ public abstract class Actor implements Serializable{
 	}
 
 	/**
-	 * Called when an {@link Incursion}.reaches its target (and for selecting
+	 * Called when an {@link Incursion} reaches its target (and for selecting
 	 * targets).
 	 *
-	 * @param attackerel Given an attacking encounter level...
+	 * @param attackerel Given an attacking encounter level... (may pass
+	 *          <code>null</code> to locations which should be "absolute" EL)
 	 * @return the defending encounter level. A <code>null</code> value is allowed
 	 *         for places that should not be conquered. {@link Integer#MIN_VALUE}
 	 *         means an automatic victory for the attacker.
@@ -292,5 +293,5 @@ public abstract class Actor implements Serializable{
 	 * @see Incursion#fight(int, int)
 	 * @see ChallengeCalculator#calculateel(List)
 	 */
-	public abstract Integer getel(int attackerel);
+	public abstract Integer getel(Integer attackerel);
 }

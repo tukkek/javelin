@@ -261,7 +261,7 @@ public class Incursion extends Actor{
 	}
 
 	@Override
-	public Integer getel(int attackerel){
+	public Integer getel(Integer attackerel){
 		return getel();
 	}
 

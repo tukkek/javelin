@@ -197,7 +197,7 @@ public class Caravan extends Actor{
 	}
 
 	@Override
-	public Integer getel(int attackerel){
+	public Integer getel(Integer attackerel){
 		return el;
 	}
 }

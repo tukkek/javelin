@@ -631,7 +631,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	}
 
 	@Override
-	public Integer getel(int attackerel){
+	public Integer getel(Integer attackerel){
 		return ChallengeCalculator.calculateel(members);
 	}
 

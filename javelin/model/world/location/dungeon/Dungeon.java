@@ -496,7 +496,7 @@ public class Dungeon extends Location{
 	protected void setlocation(boolean loading){}
 
 	@Override
-	public Integer getel(int attackel){
+	public Integer getel(Integer attackel){
 		return attackel-3;
 	}
 

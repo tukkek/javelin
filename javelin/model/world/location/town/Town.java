@@ -223,7 +223,7 @@ public class Town extends Location{
 	}
 
 	@Override
-	public Integer getel(int attackerel){
+	public Integer getel(Integer attackerel){
 		return garrison.isEmpty()?Integer.MIN_VALUE
 				:ChallengeCalculator.calculateel(garrison);
 	}

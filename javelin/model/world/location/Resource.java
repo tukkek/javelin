@@ -77,7 +77,7 @@ public class Resource extends Location{
 	}
 
 	@Override
-	public Integer getel(int attackerel){
+	public Integer getel(Integer attackerel){
 		return Integer.MIN_VALUE;
 	}
 

@@ -273,7 +273,7 @@ public abstract class Academy extends Fortification{
 	}
 
 	@Override
-	public Integer getel(int attackerel){
+	public Integer getel(Integer attackerel){
 		return ChallengeCalculator.calculateel(getcombatants());
 	}
 

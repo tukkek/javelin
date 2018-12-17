@@ -25,7 +25,7 @@ public class ConstructionSite extends Location{
 	}
 
 	@Override
-	public Integer getel(int attackerel){
+	public Integer getel(Integer attackerel){
 		District d=getdistrict();
 		int townsize=d!=null&&d.town!=null?d.town.population:0;
 		float labor=progress==null?0:progress.progress;

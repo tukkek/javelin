@@ -213,7 +213,7 @@ public class Mine extends Fortification{
 	}
 
 	@Override
-	public Integer getel(int attackerel){
+	public Integer getel(Integer attackerel){
 		return miners.isEmpty()?Integer.MIN_VALUE
 				:ChallengeCalculator.calculateel(miners);
 	}

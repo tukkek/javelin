@@ -79,7 +79,7 @@ public class PointOfInterest extends Actor{
 	}
 
 	@Override
-	public Integer getel(int attackerel){
+	public Integer getel(Integer attackerel){
 		return null;
 	}
 

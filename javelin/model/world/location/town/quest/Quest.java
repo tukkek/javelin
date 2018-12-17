@@ -21,7 +21,7 @@ import javelin.old.RPG;
  */
 public abstract class Quest implements Serializable{
 	/** All available quest templates. */
-	public final static List<Class<? extends Quest>> QUESTS=List.of();
+	public final static List<Class<? extends Quest>> QUESTS=List.of(Kill.class);
 
 	/** Town this quest was generated for. */
 	public final Town town;
@@ -40,6 +40,10 @@ public abstract class Quest implements Serializable{
 	 * @see #reward()
 	 */
 	public int reward;
+	/**
+	 * Utility value for maximum distance quests should be from their Town.
+	 */
+	protected int distance;
 
 	/**
 	 * For Reflection compatibility, all subclasses should respect this
@@ -51,6 +55,7 @@ public abstract class Quest implements Serializable{
 		town=t;
 		el=t.population;
 		daysleft=Javelin.round(RPG.r(7,100));
+		distance=town.getdistrict().getradius()*2;
 	}
 
 	/**
@@ -60,8 +65,12 @@ public abstract class Quest implements Serializable{
 	 * @return If <code>false</code>, don't use this object as a quest.
 	 */
 	public boolean validate(){
-		return !town.quests.stream().filter(q->q.equals(this)).findAny()
-				.isPresent();
+		return !town.quests.contains(this);
+	}
+
+	/** A chance to further define details after validation. */
+	protected void define(){
+
 	}
 
 	/**
@@ -134,9 +143,10 @@ public abstract class Quest implements Serializable{
 		try{
 			for(var quest:quests){
 				var candidate=quest.getConstructor(Town.class).newInstance(t);
+				if(!candidate.validate()) continue;
 				candidate.name=candidate.getname();
 				candidate.reward=candidate.reward();
-				if(candidate.validate()) return candidate;
+				return candidate;
 			}
 		}catch(ReflectiveOperationException e){
 			if(Javelin.DEBUG)

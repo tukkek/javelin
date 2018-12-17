@@ -159,10 +159,10 @@ public class UpgradeHandler{
 	 * @return Total number of {@link Upgrade}s available.
 	 */
 	public int count(){
-		int i=0;
-		for(HashSet<Upgrade> l:getall(true).values())
-			i+=l.size();
-		return i-countskills();
+		var all=new HashSet<Upgrade>();
+		for(HashSet<Upgrade> set:getall(true).values())
+			all.addAll(set);
+		return all.size();
 	}
 
 	/**
@@ -182,11 +182,11 @@ public class UpgradeHandler{
 	 * @return Total number of {@link Upgrade}s available.
 	 */
 	public int countskills(){
-		int i=0;
+		var skills=new HashSet<Upgrade>();
 		for(HashSet<Upgrade> l:getall(true).values())
 			for(Upgrade u:l)
-				if(u instanceof SkillUpgrade) i+=1;
-		return i;
+				if(u instanceof SkillUpgrade) skills.add(u);
+		return skills.size();
 	}
 
 	/**

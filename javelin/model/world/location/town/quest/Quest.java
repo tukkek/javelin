@@ -7,8 +7,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
+import javelin.controller.ContentSummary;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Town;
@@ -27,7 +29,7 @@ public abstract class Quest implements Serializable{
 	/** All available quest templates. */
 	public final static Map<String,List<Class<? extends Quest>>> QUESTS=new HashMap<>();
 	static final Class<? extends Quest> DEBUG=null;
-	static final String BASIC="Basic";
+	static final String BASIC="basic";
 
 	static{
 		QUESTS.put(BASIC,List.of(Kill.class,Fetch.class,Discovery.class));
@@ -194,5 +196,18 @@ public abstract class Quest implements Serializable{
 			unit=amount==1?"day":"days";
 		}
 		return "expires in "+amount+" "+unit;
+	}
+
+	/** @see ContentSummary */
+	public static String printsummary(){
+		var total=QUESTS.values().stream()
+				.collect(Collectors.summingInt(l->l.size()));
+		var traits=new ArrayList<>(QUESTS.keySet());
+		traits.remove(BASIC);
+		traits.sort(null);
+		traits.add(0,BASIC);
+		var detailed=traits.stream().map(t->QUESTS.get(t).size()+" "+t)
+				.collect(Collectors.joining(", "));
+		return total+" town quests ("+detailed+")";
 	}
 }

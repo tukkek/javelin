@@ -24,6 +24,7 @@ import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.labor.Deck;
+import javelin.model.world.location.town.quest.Quest;
 import javelin.model.world.location.unique.UniqueLocation;
 
 /**
@@ -50,8 +51,9 @@ public class ContentSummary{
 		if(!Javelin.DEBUG) return;
 		try{
 			out=new FileWriter("content.log");
-			printoptions();
 			printmisc();
+			print();
+			printoptions();
 			out.close();
 		}catch(IOException e){
 			throw new RuntimeException(e);
@@ -115,12 +117,13 @@ public class ContentSummary{
 		Collection<Spell> spells=Spell.SPELLS.values();
 		var upgrades=UpgradeHandler.singleton;
 		upgrades.gather();
-		int nupgrades=upgrades.count()-spells.size();
-		int nspells=spells.size()-countsummon(spells)+1;
 		int nskills=upgrades.countskills();
+		int nupgrades=upgrades.count()-spells.size()-nskills;
+		int nspells=spells.size()-countsummon(spells)+1;
 		int nkits=Kit.KITS.size();
 		print(nupgrades+" upgrades, "+nspells+" spells, "+nskills+" skills, "+nkits
 				+" kits");
+		printmaps();
 		HashSet<Class<? extends Actor>> locationtypes=new HashSet<>();
 		int uniquelocations=0;
 		for(Actor a:World.getactors()){
@@ -131,8 +134,8 @@ public class ContentSummary{
 		print(locationtypes.size()-uniquelocations+" world location types, "
 				+uniquelocations+" unique locations");
 		print(Deck.getsummary());
+		print(Quest.printsummary());
 		print(WildEvents.instance.printsummary("wilderness events"));
-		printmaps();
 	}
 
 	void printmaps() throws IOException{

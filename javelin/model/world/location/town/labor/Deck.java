@@ -123,9 +123,10 @@ public class Deck extends ArrayList<Labor>{
 		int count=DEFAULT.size();
 		for(Deck d:DECKS.values())
 			count+=d.size();
-		var bydeck=DECKS.keySet().stream().sorted()
+		var detailed=DECKS.keySet().stream().sorted()
 				.map(t->DECKS.get(t).size()+" "+t).collect(Collectors.joining(", "));
-		return DECKS.size()+" town traits, "+count+" district projects ("+bydeck
+		detailed=BASE.length+" basic, "+detailed;
+		return DECKS.size()+" town traits, "+count+" district projects ("+detailed
 				+")";
 	}
 }

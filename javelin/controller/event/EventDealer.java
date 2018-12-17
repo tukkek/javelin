@@ -57,14 +57,15 @@ public abstract class EventDealer implements Serializable{
 	}
 
 	/** @see ContentSummary */
-	public String printsummary(){
-		int npositive=positive.getcontentsize();
-		int nneutral=neutral.getcontentsize();
-		int nnegative=negative.getcontentsize();
-		var summary=npositive+" positive, ";
-		summary+=nneutral+" neutral, ";
-		summary+=nnegative+" negative";
-		summary+=" ("+(npositive+nneutral+nnegative)+" total).";
+	public String printsummary(String title){
+		var positive=this.positive.getcontentsize();
+		var neutral=this.neutral.getcontentsize();
+		var negative=this.negative.getcontentsize();
+		var total=positive+neutral+negative;
+		var summary=total+" "+title.toLowerCase()+" ";
+		summary+="("+positive+" positive, ";
+		summary+=neutral+" neutral, ";
+		summary+=negative+" negative)";
 		return summary;
 	}
 

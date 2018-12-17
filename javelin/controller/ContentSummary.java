@@ -131,10 +131,16 @@ public class ContentSummary{
 		print(locationtypes.size()-uniquelocations+" world location types, "
 				+uniquelocations+" unique locations");
 		print(Deck.getsummary());
-		print("Wilderness events: "+WildEvents.instance.printsummary());
-		int maps=Terrain.UNDERGROUND.getmaps().size();
-		for(Terrain t:Terrain.NONUNDERGROUND)
-			maps+=t.getmaps().size();
-		print(maps+" battle maps");
+		print(WildEvents.instance.printsummary("wilderness events"));
+		printmaps();
+	}
+
+	void printmaps() throws IOException{
+		var total=Arrays.stream(Terrain.ALL)
+				.collect(Collectors.summingInt(t->t.getmaps().size()));
+		var byterrain=Arrays.stream(Terrain.ALL)
+				.sorted((a,b)->a.name.compareTo(b.name))
+				.map(t->t.getmaps().size()+" "+t).collect(Collectors.joining(", "));
+		print(total+" battle maps ("+byterrain+")");
 	}
 }

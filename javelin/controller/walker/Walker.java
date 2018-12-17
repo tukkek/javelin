@@ -42,8 +42,8 @@ public class Walker{
 	public Point from;
 	public Point to;
 
+	public boolean includetarget=false;
 	protected boolean optimize=true;
-	protected boolean includetarget=false;
 	protected boolean acceptpartial=false;
 
 	public Walker(Point from,Point to){

@@ -8,17 +8,9 @@ import javelin.controller.map.Map;
  * @author alex
  */
 public class Square{
-	public boolean blocked;
-	public boolean obstructed;
-	public boolean flooded;
-
-	public Square(final boolean blocked,final boolean obstructed,
-			boolean floodedp){
-		super();
-		this.blocked=blocked;
-		this.obstructed=obstructed;
-		flooded=floodedp;
-	}
+	public boolean blocked=false;
+	public boolean obstructed=false;
+	public boolean flooded=false;
 
 	@Override
 	public String toString(){

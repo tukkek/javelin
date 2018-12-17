@@ -81,7 +81,7 @@ public abstract class Map{
 		map=new Square[width][height];
 		for(int x=0;x<width;x++)
 			for(int y=0;y<height;y++)
-				map[x][y]=new Square(false,false,false);
+				map[x][y]=new Square();
 	}
 
 	/**
@@ -157,7 +157,7 @@ public abstract class Map{
 	public String toString(){
 		String map="";
 		for(Square[] element:this.map){
-			for(Square s:element){
+			for(Square s:element)
 				if(s.blocked)
 					map+='#';
 				else if(s.obstructed)
@@ -166,7 +166,6 @@ public abstract class Map{
 					map+='~';
 				else
 					map+=' ';
-			}
 			map+="\n";
 		}
 		return map;

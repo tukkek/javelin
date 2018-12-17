@@ -6,6 +6,7 @@ import java.util.Set;
 import javelin.controller.Point;
 import javelin.controller.map.Maps;
 import javelin.controller.map.terrain.forest.Dense;
+import javelin.controller.map.terrain.forest.ForestPath;
 import javelin.controller.map.terrain.forest.Medium;
 import javelin.controller.map.terrain.forest.Sparse;
 import javelin.controller.terrain.hazard.Break;
@@ -38,6 +39,7 @@ public class Forest extends Terrain{
 		m.add(new Sparse());
 		m.add(new Medium());
 		m.add(new Dense());
+		m.add(new ForestPath());
 		return m;
 	}
 

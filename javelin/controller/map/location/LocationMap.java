@@ -41,7 +41,7 @@ public class LocationMap extends Map{
 	}
 
 	protected Square processtile(int x,int y,char c){
-		Square tile=new Square(false,false,false);
+		Square tile=new Square();
 		map[x][y]=tile;
 		if(c=='~')
 			tile.flooded=true;

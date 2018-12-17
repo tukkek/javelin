@@ -2,12 +2,17 @@ package javelin.model.world.location.town.quest;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.Trait;
 import javelin.old.RPG;
 
 /**
@@ -20,9 +25,20 @@ import javelin.old.RPG;
  */
 public abstract class Quest implements Serializable{
 	/** All available quest templates. */
-	public final static List<Class<? extends Quest>> QUESTS=List.of(Kill.class,
-			Fetch.class,Discovery.class);
-	final static Class<? extends Quest> DEBUG=null;
+	public final static Map<String,List<Class<? extends Quest>>> QUESTS=new HashMap<>();
+	static final Class<? extends Quest> DEBUG=null;
+	static final String BASIC="Basic";
+
+	static{
+		QUESTS.put(BASIC,List.of(Kill.class,Fetch.class,Discovery.class));
+		QUESTS.put(Trait.CRIMINAL,List.of());
+		QUESTS.put(Trait.MAGICAL,List.of());
+		QUESTS.put(Trait.EXPANSIVE,List.of());
+		QUESTS.put(Trait.MERCANTILE,List.of());
+		QUESTS.put(Trait.MILITARY,List.of());
+		QUESTS.put(Trait.NATURAL,List.of());
+		QUESTS.put(Trait.RELIGIOUS,List.of());
+	}
 
 	/** Town this quest was generated for. */
 	public final Town town;
@@ -66,7 +82,7 @@ public abstract class Quest implements Serializable{
 	 * @return If <code>false</code>, don't use this object as a quest.
 	 */
 	public boolean validate(){
-		return !town.quests.contains(this);
+		return true;
 	}
 
 	/** A chance to further define details after validation. */
@@ -139,15 +155,22 @@ public abstract class Quest implements Serializable{
 	 *         any.
 	 */
 	public static Quest generate(Town t){
-		var quests=Javelin.DEBUG&&DEBUG!=null?List.of(DEBUG)
-				:RPG.shuffle(new ArrayList<>(Quest.QUESTS));
+		Set<Class<? extends Quest>> quests;
+		if(Javelin.DEBUG&&DEBUG!=null)
+			quests=Set.of(DEBUG);
+		else{
+			quests=new HashSet<>(QUESTS.get(BASIC));
+			for(var trait:t.traits)
+				quests.addAll(QUESTS.get(trait));
+		}
 		try{
-			for(var quest:quests){
-				var candidate=quest.getConstructor(Town.class).newInstance(t);
-				if(!candidate.validate()) continue;
-				candidate.name=candidate.getname();
-				candidate.reward=candidate.reward();
-				return candidate;
+			for(var quest:RPG.shuffle(new ArrayList<>(quests))){
+				var q=quest.getConstructor(Town.class).newInstance(t);
+				if(!q.validate()) continue;
+				q.name=q.getname();
+				if(t.quests.contains(q)) continue;
+				q.reward=q.reward();
+				return q;
 			}
 		}catch(ReflectiveOperationException e){
 			if(Javelin.DEBUG)

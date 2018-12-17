@@ -370,9 +370,8 @@ public class Town extends Location{
 		}
 		var rank=getrank().rank;
 		while(quests.size()<rank){
-			var quest=Quest.generate(this);
-			if(quest==null) return;
-			quests.add(quest);
+			var q=Quest.generate(this);
+			if(q!=null) quests.add(q);
 		}
 	}
 }

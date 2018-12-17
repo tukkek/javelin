@@ -5,6 +5,21 @@ import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 
 public class Trait extends Labor{
+	/** Trait name. */
+	public static final String EXPANSIVE="expansive";
+	/** Trait name. */
+	public static final String MERCANTILE="mercantile";
+	/** Trait name. */
+	public static final String MILITARY="military";
+	/** Trait name. */
+	public static final String MAGICAL="magical";
+	/** Trait name. */
+	public static final String CRIMINAL="criminal";
+	/** Trait name. */
+	public static final String RELIGIOUS="religious";
+	/** Trait name. */
+	public static final String NATURAL="natural";
+
 	String trait;
 
 	public Trait(String trait,Deck deck){

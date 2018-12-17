@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
@@ -54,15 +55,15 @@ public class Deck extends ArrayList<Labor>{
 			new BuildRealmAcademy()};
 	static final Labor[] CRIMINAL=new Labor[]{new BuildAssassinsGuild(),
 			new BuildSewers(),new BuildSlums(),new BuildThievesGuild()};
-	static final Labor[] CULTURAL=new Labor[]{new BuildMagesGuild(),
+	static final Labor[] MAGICAL=new Labor[]{new BuildMagesGuild(),
 			new BuildArtificer(),new BuildSummoningCircle(),new BuildBardsGuild()};
-	static final Labor[] ECOLOGICAL=new Labor[]{new BuildHenge(),
+	static final Labor[] NATURAL=new Labor[]{new BuildHenge(),
 			new BuildArcheryRange(),new BuildMeadHall(),SteelSerpent.LABOR};
 	static final Labor[] EXPANSIVE=new Labor[]{new BuildRoad(),new BuildHighway(),
 			new BuildTransportHub()};
 	static final Labor[] MILITARY=new Labor[]{new BuildMartialAcademy(),
 			new BuildMercenariesGuild(),new BuildMonastery()};
-	static final Labor[] PRODUCTIVE=new Labor[]{new BuildMine(),
+	static final Labor[] MERCANTILE=new Labor[]{new BuildMine(),
 			new Deforestate()};
 	static final Labor[] RELIGIOUS=new Labor[]{new BuildShrine(),
 			new BuildSanctuary()};
@@ -73,13 +74,13 @@ public class Deck extends ArrayList<Labor>{
 	static{
 		populate(DEFAULT,null,BASE);
 		if(World.scenario.allowlabor){
-			populate(new Deck(),"expansive",EXPANSIVE);
-			populate(new Deck(),"productive",PRODUCTIVE);
-			populate(new Deck(),"military",MILITARY);
-			populate(new Deck(),"cultural",CULTURAL);
-			populate(new Deck(),"criminal",CRIMINAL);
-			populate(new Deck(),"religious",RELIGIOUS);
-			populate(new Deck(),"ecological",ECOLOGICAL);
+			populate(new Deck(),Trait.EXPANSIVE,EXPANSIVE);
+			populate(new Deck(),Trait.MERCANTILE,MERCANTILE);
+			populate(new Deck(),Trait.MILITARY,MILITARY);
+			populate(new Deck(),Trait.MAGICAL,MAGICAL);
+			populate(new Deck(),Trait.CRIMINAL,CRIMINAL);
+			populate(new Deck(),Trait.RELIGIOUS,RELIGIOUS);
+			populate(new Deck(),Trait.NATURAL,NATURAL);
 			for(String title:new ArrayList<>(DECKS.keySet())){
 				/*
 				 * TODO just a placeholder to get rid on unused sets during
@@ -119,14 +120,12 @@ public class Deck extends ArrayList<Labor>{
 	}
 
 	public static String getsummary(){
-		int nprojects=Deck.DEFAULT.size();
-		int min=Integer.MAX_VALUE;
-		for(Deck d:Deck.DECKS.values()){
-			int n=d.size();
-			nprojects+=n;
-			if(n<min) min=n;
-		}
-		return DECKS.size()+" town traits, "+nprojects
-				+" district projects (minimum deck size: "+min+")";
+		int count=DEFAULT.size();
+		for(Deck d:DECKS.values())
+			count+=d.size();
+		var bydeck=DECKS.keySet().stream().sorted()
+				.map(t->DECKS.get(t).size()+" "+t).collect(Collectors.joining(", "));
+		return DECKS.size()+" town traits, "+count+" district projects ("+bydeck
+				+")";
 	}
 }

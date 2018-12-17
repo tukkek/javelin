@@ -67,6 +67,8 @@ public class ResourceSite extends Location{
 		}
 	}
 
+	/** All existing resources. */
+	public static final HashMap<Terrain,Resource> RESOURCES=new HashMap<>();
 	static final Resource CRYSTAL=new Resource("Crystal",Terrain.MOUNTAINS);
 	static final Resource FISH=new Resource("Fish",Terrain.WATER);
 	static final Resource FRUIT=new Resource("Fruits",Terrain.FOREST);
@@ -74,7 +76,6 @@ public class ResourceSite extends Location{
 	static final Resource GRAIN=new Resource("Grains",Terrain.PLAIN);
 	static final Resource MERCURY=new Resource("Mercury",Terrain.MARSH);
 	static final Resource STONE=new Resource("Stone",Terrain.HILL);
-	static final HashMap<Terrain,Resource> RESOURCES=new HashMap<>();
 
 	static{
 		for(Resource t:new Resource[]{CRYSTAL,FISH,FRUIT,GEMS,GRAIN,MERCURY,STONE})

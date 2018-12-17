@@ -1,8 +1,7 @@
 package javelin.model.world.location.town.quest;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
@@ -21,7 +20,9 @@ import javelin.old.RPG;
  */
 public abstract class Quest implements Serializable{
 	/** All available quest templates. */
-	public final static List<Class<? extends Quest>> QUESTS=List.of(Kill.class);
+	public final static List<Class<? extends Quest>> QUESTS=List.of(Kill.class,
+			Fetch.class);
+	final static Class<? extends Quest> DEBUG=Fetch.class;
 
 	/** Town this quest was generated for. */
 	public final Town town;
@@ -138,8 +139,8 @@ public abstract class Quest implements Serializable{
 	 *         any.
 	 */
 	public static Quest generate(Town t){
-		var quests=new LinkedList<>(Quest.QUESTS);
-		Collections.shuffle(quests);
+		var quests=Javelin.DEBUG&&DEBUG!=null?List.of(DEBUG)
+				:RPG.shuffle(new ArrayList<>(Quest.QUESTS));
 		try{
 			for(var quest:quests){
 				var candidate=quest.getConstructor(Town.class).newInstance(t);

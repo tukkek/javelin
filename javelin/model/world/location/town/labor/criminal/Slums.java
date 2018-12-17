@@ -49,11 +49,6 @@ public class Slums extends Location{
 	}
 
 	@Override
-	public Integer getel(Integer attackerel){
-		return Integer.MIN_VALUE;
-	}
-
-	@Override
 	public List<Combatant> getcombatants(){
 		return null;
 	}

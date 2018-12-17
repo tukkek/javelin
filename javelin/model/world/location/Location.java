@@ -399,4 +399,10 @@ public abstract class Location extends Actor{
 		reinforce.garrison.add(new Combatant(spawn.source,true));
 		Incursion.raid(reinforce);
 	}
+
+	@Override
+	public Integer getel(Integer attackerel){
+		return garrison.isEmpty()?Integer.MIN_VALUE
+				:ChallengeCalculator.calculateel(garrison);
+	}
 }

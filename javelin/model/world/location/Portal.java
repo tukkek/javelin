@@ -5,6 +5,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.generator.WorldGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
@@ -216,6 +217,7 @@ public class Portal extends Location{
 
 	@Override
 	public Integer getel(Integer attackerel){
+		if(!garrison.isEmpty()) return ChallengeCalculator.calculateel(garrison);
 		assert !impermeable;
 		return attackerel-4;
 	}

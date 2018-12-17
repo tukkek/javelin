@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.RestartWorldGeneration;
@@ -28,6 +28,7 @@ import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
+import javelin.model.world.location.ResourceSite.Resource;
 import javelin.model.world.location.town.governor.Governor;
 import javelin.model.world.location.town.governor.HumanGovernor;
 import javelin.model.world.location.town.governor.MonsterGovernor;
@@ -91,6 +92,13 @@ public class Town extends Location{
 
 	/** Active quests. Updated daily. */
 	public List<Quest> quests=new ArrayList<>(1);
+
+	/**
+	 * All natural resources linked to this town.
+	 *
+	 * TODO is not actually affecting economy right now
+	 */
+	public Set<Resource> resources=new HashSet<>(0);
 
 	/** @param p Spot to place town in the {@link World}. */
 	public Town(Point p,Realm r){
@@ -220,12 +228,6 @@ public class Town extends Location{
 		if(governor!=null) for(Labor l:new ArrayList<>(governor.getprojects()))
 			l.cancel();
 		governor=g;
-	}
-
-	@Override
-	public Integer getel(Integer attackerel){
-		return garrison.isEmpty()?Integer.MIN_VALUE
-				:ChallengeCalculator.calculateel(garrison);
 	}
 
 	@Override

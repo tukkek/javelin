@@ -30,7 +30,7 @@ import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Outpost;
-import javelin.model.world.location.Resource;
+import javelin.model.world.location.ResourceSite;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.unique.MercenariesGuild;
@@ -88,7 +88,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 
 	transient private Image image=null;
 
-	/** @see Resource */
+	/** @see ResourceSite */
 	public int resources=0;
 
 	/**

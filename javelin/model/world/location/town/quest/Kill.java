@@ -22,7 +22,11 @@ public class Kill extends Quest{
 	/** Reflection-friendly constructor. */
 	public Kill(Town t){
 		super(t);
-		target=findtarget();
+		var radius=t.getdistrict().getradius();
+		for(var i=1;i<=4&&target==null;i++){
+			distance=radius*i;
+			target=findtarget();
+		}
 	}
 
 	Fortification findtarget(){
@@ -55,7 +59,7 @@ public class Kill extends Quest{
 
 	@Override
 	protected String getname(){
-		return "Capture: "+target.toString().toLowerCase();
+		return "Capture: "+target.descriptionknown.toLowerCase();
 	}
 
 	@Override

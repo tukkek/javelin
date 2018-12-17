@@ -51,6 +51,11 @@ public abstract class Actor implements Serializable{
 	 * TODO probably better to handle this the way {@link DungeonWorld} does.
 	 */
 	public boolean allowedinscenario=true;
+	/**
+	 * Unique actors are those whose names are very unlikely to appear twice in
+	 * the same {@link World}.
+	 */
+	public boolean unique=false;
 
 	/** Constructor. */
 	public Actor(){

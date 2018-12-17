@@ -27,6 +27,7 @@ public abstract class UniqueLocation extends Fortification{
 		gossip=true;
 		vision=0;
 		allowedinscenario=false;
+		unique=true;
 	}
 
 	@Override

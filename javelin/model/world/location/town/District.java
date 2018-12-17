@@ -28,7 +28,7 @@ public class District{
 	 * Not really the maximum size but the maximum natural size if no other
 	 * district improvement are affecting it.
 	 */
-	public static final double RADIUSMAX=Rank.CITY.getradius()*2;
+	public static final int RADIUSMAX=Rank.CITY.getradius()*2;
 
 	static final int MOSTNEIGHBORSALLOWED=2;
 

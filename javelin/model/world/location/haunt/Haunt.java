@@ -49,6 +49,7 @@ public abstract class Haunt extends Fortification{
 			dwellers.add(Javelin.getmonster(name));
 		minlevel=minel;
 		maxlevel=maxel;
+		unique=true;
 	}
 
 	@Override

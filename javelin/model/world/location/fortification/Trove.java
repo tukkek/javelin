@@ -102,7 +102,7 @@ public class Trove extends Fortification{
 		if(reward==Reward.EXPERIENCE)
 			return RewardCalculator.rewardxp(Squad.active.members,originalgarrison,2);
 		if(reward==Reward.GOLD){
-			int gold=RewardCalculator.receivegold(originalgarrison)*2;
+			int gold=Javelin.round(RewardCalculator.receivegold(originalgarrison)*2);
 			Squad.active.gold+=gold;
 			return "Party receives $"+Javelin.format(gold)+"!";
 		}

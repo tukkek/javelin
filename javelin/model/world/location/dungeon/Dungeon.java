@@ -165,6 +165,7 @@ public class Dungeon extends Location{
 		floor=tier.floor;
 		description=baptize(tier);
 		allowentry=false;
+		unique=true;
 	}
 
 	protected String baptize(DungeonTier tier){

@@ -21,8 +21,8 @@ import javelin.old.RPG;
 public abstract class Quest implements Serializable{
 	/** All available quest templates. */
 	public final static List<Class<? extends Quest>> QUESTS=List.of(Kill.class,
-			Fetch.class);
-	final static Class<? extends Quest> DEBUG=Fetch.class;
+			Fetch.class,Discovery.class);
+	final static Class<? extends Quest> DEBUG=null;
 
 	/** Town this quest was generated for. */
 	public final Town town;
@@ -131,7 +131,7 @@ public abstract class Quest implements Serializable{
 
 	@Override
 	public String toString(){
-		return name.toLowerCase();
+		return name;
 	}
 
 	/**

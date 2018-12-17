@@ -15,7 +15,6 @@ import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
-import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.old.RPG;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.SelectScreen;
@@ -68,7 +67,7 @@ public class Broker extends Inhabitant{
 		Option sellinformation=new Option("Buy information",
 				hints*RewardCalculator.getgold(Dungeon.active.level)/10);
 		Option attack=new Option("Attack ("+Difficulty.describe(enemy)+")",0);
-		Option hire=new Option("Hire",MercenariesGuild.getfee(inhabitant));
+		Option hire=new Option("Hire",inhabitant.pay());
 
 		public InhabitantScreen(){
 			super("You encounter a friendly "+inhabitant+"!",null);

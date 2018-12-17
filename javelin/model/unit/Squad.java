@@ -210,7 +210,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	void paymercenaries(){
 		for(Combatant c:new ArrayList<>(members)){
 			if(!c.mercenary) continue;
-			int fee=MercenariesGuild.getfee(c);
+			int fee=c.pay();
 			if(gold>=fee)
 				gold-=fee;
 			else{
@@ -402,7 +402,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 			int will=foe.source.getwill();
 			if(RPG.r(1,20)+will>=diplomac) return false;// no deal!
 			if(will>highest) highest=will;
-			dailyfee+=MercenariesGuild.getfee(foe);
+			dailyfee+=foe.pay();
 		}
 		final int bribe=Math.max(1,RewardCalculator.receivegold(foes)/2);
 		final boolean canhire=diplomac>=highest+5;
@@ -575,7 +575,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	public int getupkeep(){
 		int upkeep=0;
 		for(Combatant c:members)
-			if(c.mercenary) upkeep+=MercenariesGuild.getfee(c);
+			if(c.mercenary) upkeep+=c.pay();
 		return upkeep;
 	}
 

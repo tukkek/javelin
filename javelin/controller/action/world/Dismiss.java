@@ -61,7 +61,7 @@ public class Dismiss extends WorldAction{
 
 	void dismiss(Combatant chosen){
 		float dailyupkeep=chosen.source.eat();
-		if(chosen.mercenary) dailyupkeep+=MercenariesGuild.getfee(chosen);
+		if(chosen.mercenary) dailyupkeep+=chosen.pay();
 		final String formattedcost=Javelin.format(Math.round(dailyupkeep));
 		if(confirm("Are you sure you want to dismiss "+chosen
 				+", with a daily cost of $"+formattedcost+"?"))

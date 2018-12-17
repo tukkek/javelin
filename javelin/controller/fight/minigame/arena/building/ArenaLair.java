@@ -12,7 +12,6 @@ import javelin.controller.fight.minigame.arena.Arena;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
-import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.old.RPG;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.Option;
@@ -99,7 +98,7 @@ public class ArenaLair extends ArenaBuilding{
 	static int calculateprice(ArrayList<Combatant> group){
 		int fee=0;
 		for(Combatant c:group)
-			fee+=MercenariesGuild.getfee(c);
+			fee+=c.pay();
 		return fee*10;
 	}
 

@@ -21,10 +21,12 @@ import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.db.reader.fields.Skills;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.walker.Walker;
+import javelin.controller.wish.Ressurect;
 import javelin.model.Realm;
 import javelin.model.TeamContainer;
 import javelin.model.item.Item;
@@ -992,5 +994,33 @@ public class Combatant implements Serializable,Cloneable{
 		rollinitiative();
 		this.ap+=ap;
 		initialap=this.ap;
+	}
+
+	/**
+	 * Note that this does not deduct from {@link Squad#gold} at all.
+	 *
+	 * @return How much to pay daily if this is a {@link #mercenary}. 0 otherwise.
+	 *
+	 * @see MercenariesGuild#getfee(Monster)
+	 * @see Squad#paymercenaries()
+	 */
+	public int pay(){
+		return mercenary?MercenariesGuild.getfee(source):0;
+	}
+
+	/**
+	 * Called when unit dies in battle.
+	 * 
+	 * @see EndBattle
+	 */
+	public void bury(){
+		ArrayList<Item> bag=Squad.active.equipment.get(this);
+		Squad.active.remove(this);
+		//TODO expire all effects
+		//TODO unequip artifacts as well
+		if(Fight.victory) for(Item i:bag)
+			i.grab();
+		MercenariesGuild.die(this);
+		if(!summoned&&!mercenary) Ressurect.dead=this;
 	}
 }

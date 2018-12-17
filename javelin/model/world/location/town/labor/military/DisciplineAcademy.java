@@ -59,8 +59,7 @@ public class DisciplineAcademy extends Academy{
 		Combatant c;
 
 		public HireOption(Combatant c){
-			super("Hire "+c+" ($"+Javelin.format(MercenariesGuild.getfee(c))+"/day)",
-					0);
+			super("Hire "+c+" ($"+Javelin.format(c.pay())+"/day)",0);
 			this.c=c;
 		}
 

@@ -9,7 +9,6 @@ import javelin.controller.ai.cache.AiCache;
 import javelin.controller.fight.Fight;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.wish.Ressurect;
-import javelin.model.item.Item;
 import javelin.model.item.Scroll;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
@@ -20,7 +19,6 @@ import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
-import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
 
@@ -134,15 +132,8 @@ public class EndBattle extends BattleEvent{
 			if(c.hp>Combatant.DEADATHP&&c.source.constitution>0)
 				c.hp=1;
 			else if(!Fight.victory||!revive(c,originalteam)){
-				ArrayList<Item> bag=Squad.active.equipment.get(c);
 				originalteam.remove(c);
-				Squad.active.remove(c);
-				//TODO expire all effects
-				//TODO unequip artifacts as well
-				if(Fight.victory) for(Item i:bag)
-					i.grab();
-				MercenariesGuild.die(c);
-				if(!c.summoned&&!c.mercenary) Ressurect.dead=c;
+				c.bury();
 			}
 		}
 		Fight.state.dead.clear();

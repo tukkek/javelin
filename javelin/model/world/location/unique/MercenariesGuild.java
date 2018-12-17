@@ -86,7 +86,7 @@ public class MercenariesGuild extends Fortification{
 		mercenaries.sort(Collections.reverseOrder(CombatantByCr.SINGLETON));
 		ArrayList<String> prices=new ArrayList<>(mercenaries.size());
 		for(Combatant c:mercenaries)
-			prices.add(c+" ($"+Javelin.format(getfee(c))+")");
+			prices.add(c+" ($"+Javelin.format(c.pay())+")");
 		int index=Javelin.choose(
 				"\"Welcome to the guild! Do you want to hire one of our mercenaries for a modest daily fee?\"\n\nYou have $"
 						+Javelin.format(Squad.active.gold),
@@ -106,8 +106,8 @@ public class MercenariesGuild extends Fortification{
 	 *          <code>false</code> to warn in another manner.
 	 * @return <code>false</code> if doesn't have enough money to pay in advance.
 	 */
-	static public boolean recruit(Combatant combatant,boolean message){
-		long advance=Math.max(1,Javelin.getHour()*getfee(combatant)/24);
+	static public boolean recruit(Combatant c,boolean message){
+		long advance=Math.max(1,Javelin.getHour()*c.pay()/24);
 		if(Squad.active.gold<advance){
 			if(message){
 				Javelin.app.switchScreen(new InfoScreen(
@@ -117,16 +117,11 @@ public class MercenariesGuild extends Fortification{
 			}
 			return false;
 		}
-		combatant=combatant.clone().clonesource();
-		combatant.setmercenary(true);
+		c=c.clone().clonesource();
+		c.setmercenary(true);
 		Squad.active.gold-=advance;
-		Squad.active.add(combatant);
+		Squad.active.add(c);
 		return true;
-	}
-
-	/** See {@link #getfee(Monster)}. */
-	public static int getfee(Combatant c){
-		return getfee(c.source);
 	}
 
 	/**
@@ -181,6 +176,6 @@ public class MercenariesGuild extends Fortification{
 	 * @return its daily fee as in "$40/day".
 	 */
 	public static String getformattedfee(Combatant c){
-		return "$"+Javelin.format(getfee(c))+"/day";
+		return "$"+Javelin.format(c.pay())+"/day";
 	}
 }

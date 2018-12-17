@@ -1,4 +1,4 @@
-package javelin.model.world.location.town.quest;
+package javelin.model.world.location.town.quest.basic;
 
 import java.util.stream.Collectors;
 
@@ -6,6 +6,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.quest.Quest;
 import javelin.old.RPG;
 import javelin.view.screen.WorldScreen;
 
@@ -47,7 +48,7 @@ public class Kill extends Quest{
 
 	@Override
 	public boolean validate(){
-		return super.validate()&&target!=null;
+		return target!=null;
 	}
 
 	@Override

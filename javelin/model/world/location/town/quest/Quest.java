@@ -15,6 +15,9 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Trait;
+import javelin.model.world.location.town.quest.basic.Discovery;
+import javelin.model.world.location.town.quest.basic.Fetch;
+import javelin.model.world.location.town.quest.basic.Kill;
 import javelin.old.RPG;
 
 /**
@@ -28,7 +31,7 @@ import javelin.old.RPG;
 public abstract class Quest implements Serializable{
 	/** All available quest templates. */
 	public final static Map<String,List<Class<? extends Quest>>> QUESTS=new HashMap<>();
-	static final Class<? extends Quest> DEBUG=null;
+	static final Class<? extends Quest> DEBUG=War.class;
 	static final String BASIC="basic";
 
 	static{
@@ -37,9 +40,9 @@ public abstract class Quest implements Serializable{
 		QUESTS.put(Trait.MAGICAL,List.of());
 		QUESTS.put(Trait.EXPANSIVE,List.of());
 		QUESTS.put(Trait.MERCANTILE,List.of());
-		QUESTS.put(Trait.MILITARY,List.of());
+		QUESTS.put(Trait.MILITARY,List.of(War.class));
 		QUESTS.put(Trait.NATURAL,List.of());
-		QUESTS.put(Trait.RELIGIOUS,List.of());
+		QUESTS.put(Trait.RELIGIOUS,List.of(Pilgrimage.class));
 	}
 
 	/** Town this quest was generated for. */
@@ -77,15 +80,8 @@ public abstract class Quest implements Serializable{
 		distance=town.getdistrict().getradius()*2;
 	}
 
-	/**
-	 * The default implementation checks if this would be a duplicate quest for
-	 * the town and should usually not be skipped.
-	 *
-	 * @return If <code>false</code>, don't use this object as a quest.
-	 */
-	public boolean validate(){
-		return true;
-	}
+	/** @return If <code>false</code>, don't use this object as a quest. */
+	public abstract boolean validate();
 
 	/** A chance to further define details after validation. */
 	protected void define(){

@@ -1,8 +1,9 @@
-package javelin.model.world.location.town.quest;
+package javelin.model.world.location.town.quest.basic;
 
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.quest.Quest;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -27,7 +28,7 @@ public class Discovery extends Quest{
 
 	@Override
 	public boolean validate(){
-		return super.validate()&&target!=null;
+		return target!=null;
 	}
 
 	@Override

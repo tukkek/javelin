@@ -1,10 +1,11 @@
-package javelin.model.world.location.town.quest;
+package javelin.model.world.location.town.quest.basic;
 
 import java.util.ArrayList;
 
 import javelin.model.world.location.ResourceSite;
 import javelin.model.world.location.ResourceSite.Resource;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.quest.Quest;
 import javelin.old.RPG;
 
 /**

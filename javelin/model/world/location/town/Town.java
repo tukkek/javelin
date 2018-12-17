@@ -369,7 +369,7 @@ public class Town extends Location{
 			if(q.daysleft==0||q.cancel()) quests.remove(q);
 		}
 		var rank=getrank().rank;
-		while(quests.size()<rank){
+		if(quests.size()<rank){
 			var q=Quest.generate(this);
 			if(q!=null) quests.add(q);
 		}

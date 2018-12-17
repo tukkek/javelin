@@ -6,7 +6,6 @@ import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.fortification.Guild;
-import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.upgrading.AcademyScreen;
 
 public class GuildScreen extends AcademyScreen{
@@ -43,7 +42,7 @@ public class GuildScreen extends AcademyScreen{
 
 	Hire createoption(Combatant c){
 		Hire h=new Hire(c);
-		h.price=MercenariesGuild.getfee(c);
+		h.price=c.pay();
 		h.name="Hire: "+c.toString().toLowerCase()+" ($"+Javelin.format(h.price)
 				+"/day)";
 		return h;

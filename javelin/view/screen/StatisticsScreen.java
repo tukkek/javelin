@@ -16,7 +16,6 @@ import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.skill.Skill;
-import javelin.model.world.location.unique.MercenariesGuild;
 
 /**
  * Shows unit information.
@@ -73,8 +72,7 @@ public class StatisticsScreen extends InfoScreen{
 		String type=m.type.toString().replaceAll("_"," ").toLowerCase();
 		lines.add(capitalize(Monster.SIZES[m.size])+" "+type);
 		lines.add("");
-		if(c.mercenary) lines
-				.add("Mercenary ($"+Javelin.format(MercenariesGuild.getfee(c))+"/day)");
+		if(c.mercenary) lines.add("Mercenary ($"+Javelin.format(c.pay())+"/day)");
 		lines.add(
 				"Challenge rating "+Math.round(ChallengeCalculator.calculatecr(m)));
 		for(ClassLevelUpgrade classlevels:ClassLevelUpgrade.classes){

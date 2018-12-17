@@ -160,7 +160,7 @@ public class Dwelling extends Fortification{
 			text+="d - draft as volunteer ("+rubycost+" "
 					+(rubycost==1?"ruby":"rubies")+")\n";
 			text+="h - hire as "+monstertype+" mercenary ($"
-					+Javelin.format(MercenariesGuild.getfee(dweller))+"/day)\n";
+					+Javelin.format(dweller.pay())+"/day)\n";
 		}else
 			text+="There are currently no available units here.\n\n";
 		String spoils=Javelin.format(getspoils());

@@ -1010,7 +1010,7 @@ public class Combatant implements Serializable,Cloneable{
 
 	/**
 	 * Called when unit dies in battle.
-	 * 
+	 *
 	 * @see EndBattle
 	 */
 	public void bury(){
@@ -1022,5 +1022,21 @@ public class Combatant implements Serializable,Cloneable{
 			i.grab();
 		MercenariesGuild.die(this);
 		if(!summoned&&!mercenary) Ressurect.dead=this;
+	}
+
+	/**
+	 * Removes a squad member and returns it to the {@link MercenariesGuild} if a
+	 * mercenary.
+	 */
+	public void dismiss(Squad s){
+		s.members.remove(this);
+		for(Item i:s.equipment.get(this))
+			i.grab();
+		s.remove(this);
+		for(MercenariesGuild g:s.sortbydistance(MercenariesGuild.getguilds()))
+			if(g.all.contains(this)){
+				g.receive(this);
+				return;
+			}
 	}
 }

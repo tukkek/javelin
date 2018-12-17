@@ -2,6 +2,7 @@ package javelin.controller.scenario;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import javelin.Debug;
@@ -20,6 +21,7 @@ import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.temple.Temple;
+import javelin.old.RPG;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.world.WorldTile;
@@ -130,35 +132,27 @@ public class Campaign extends Scenario{
 	void cover(int amount){
 		if(Debug.showmap) return;
 		if(ALLTILES.isEmpty()) ALLTILES.addAll(Point.getrange(0,0,size,size));
-		Collections.shuffle(ALLTILES);
-		ArrayList<Location> locations=new ArrayList<>();
-		ArrayList<Location> friendlylocations=new ArrayList<>();
+		var stayrevealed=new HashSet<Point>();
 		MapPanel mappanel=WorldScreen.current.mappanel;
 		for(Actor a:World.getactors()){
+			if(!mappanel.tiles[a.x][a.y].discovered) continue;
+			var point=a.getlocation();
+			stayrevealed.add(point);
 			Location l=a instanceof Location?(Location)a:null;
-			if(l!=null&&mappanel.tiles[a.x][a.y].discovered){
-				locations.add(l);
-				if(l.view()) friendlylocations.add(l);
-			}
+			if(l==null) continue;
+			var vision=l.view();
+			if(vision>0) for(var x=point.x-vision;x<=point.x+vision;x++)
+				for(var y=point.y-vision;y<=point.y+vision;y++)
+					stayrevealed.add(new Point(x,y));
 		}
-		for(Point p:ALLTILES){
+		for(Point p:RPG.shuffle(ALLTILES)){
 			Tile t=mappanel.tiles[p.x][p.y];
-			if(checkcoverable(t,locations,friendlylocations)){
-				t.cover();
-				amount-=1;
-				if(amount==0) break;
-			}
+			if(!t.discovered||World.seed.roads[t.x][t.y]||stayrevealed.contains(p))
+				continue;
+			t.cover();
+			amount-=1;
+			if(amount==0) break;
 		}
 		Squad.updatevision();
-	}
-
-	boolean checkcoverable(Tile t,ArrayList<Location> locations,
-			ArrayList<Location> friendlylocations){
-		if(!t.discovered||World.seed.roads[t.x][t.y]) return false;
-		for(Location l:locations)
-			if(t.x==l.x&&t.y==l.y
-					||friendlylocations.contains(l)&&l.distanceinsteps(t.x,t.y)<=l.vision)
-				return false;
-		return true;
 	}
 }

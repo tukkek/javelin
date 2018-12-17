@@ -33,7 +33,6 @@ import javelin.model.world.location.Outpost;
 import javelin.model.world.location.ResourceSite;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.Images;
@@ -222,25 +221,9 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 					// wait for enter
 				}
 				MessagePanel.active.clear();
-				dismiss(c);
+				c.dismiss(this);
 			}
 		}
-	}
-
-	/**
-	 * Removes a squad member and returns it to the {@link MercenariesGuild} if a
-	 * mercenary.
-	 */
-	public void dismiss(Combatant c){
-		members.remove(c);
-		for(Item i:equipment.get(c))
-			i.grab();
-		remove(c);
-		for(MercenariesGuild g:sortbydistance(MercenariesGuild.getguilds()))
-			if(g.all.contains(c)){
-				g.receive(c);
-				return;
-			}
 	}
 
 	/**

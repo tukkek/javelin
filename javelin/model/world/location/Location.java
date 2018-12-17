@@ -91,7 +91,7 @@ public abstract class Location extends Actor{
 	 * the benchmark for 2. {@link UniqueLocation}s usually have none since
 	 * they're minding their own business.
 	 */
-	public int vision=0;
+	protected int vision=0;
 
 	/** Link with a road if nearby. */
 	public boolean link=true;
@@ -347,8 +347,8 @@ public abstract class Location extends Actor{
 		super.place();
 	}
 
-	public boolean view(){
-		return !ishostile()&&vision>0;
+	public int view(){
+		return ishostile()?0:vision;
 	}
 
 	/**

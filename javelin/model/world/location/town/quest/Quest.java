@@ -31,7 +31,7 @@ import javelin.old.RPG;
 public abstract class Quest implements Serializable{
 	/** All available quest templates. */
 	public final static Map<String,List<Class<? extends Quest>>> QUESTS=new HashMap<>();
-	static final Class<? extends Quest> DEBUG=War.class;
+	static final Class<? extends Quest> DEBUG=Pilgrimage.class;
 	static final String BASIC="basic";
 
 	static{
@@ -121,7 +121,7 @@ public abstract class Quest implements Serializable{
 	 *         removed by some external force.
 	 */
 	public boolean cancel(){
-		return false;
+		return daysleft<=0;
 	}
 
 	/**
@@ -167,6 +167,7 @@ public abstract class Quest implements Serializable{
 				if(!q.validate()) continue;
 				q.name=q.getname();
 				if(t.quests.contains(q)) continue;
+				q.define();
 				q.reward=q.reward();
 				return q;
 			}

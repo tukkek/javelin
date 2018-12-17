@@ -146,7 +146,7 @@ public class TrainingHall extends UniqueLocation{
 	}
 
 	@Override
-	public boolean view(){
-		return true;
+	public int view(){
+		return vision;
 	}
 }

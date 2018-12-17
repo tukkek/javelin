@@ -56,7 +56,7 @@ public class Dismiss extends WorldAction{
 	void dismissmercenaries(List<Combatant> mercenaries){
 		if(confirm("Do you want to dismiss all of your mercenaries?"))
 			for(Combatant c:mercenaries)
-			Squad.active.dismiss(c);
+			c.dismiss(Squad.active);
 	}
 
 	void dismiss(Combatant chosen){
@@ -65,7 +65,7 @@ public class Dismiss extends WorldAction{
 		final String formattedcost=Javelin.format(Math.round(dailyupkeep));
 		if(confirm("Are you sure you want to dismiss "+chosen
 				+", with a daily cost of $"+formattedcost+"?"))
-			Squad.active.dismiss(chosen);
+			chosen.dismiss(Squad.active);
 	}
 
 	boolean confirm(String prompt){

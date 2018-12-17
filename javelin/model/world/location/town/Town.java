@@ -220,6 +220,8 @@ public class Town extends Location{
 		int damage=RPG.randomize(4)+attacker.getel()/2;
 		if(damage>0) population-=Math.max(1,population-damage);
 		setgovernor(new MonsterGovernor(this));
+		for(var q:quests)
+			q.cancel();
 		quests.clear();
 	}
 
@@ -233,20 +235,28 @@ public class Town extends Location{
 	@Override
 	public boolean interact(){
 		if(!super.interact()) return false;
+		if(completequests()) return true;
+		Squad.active.lasttown=this;
+		new TownScreen(this).show();
+		for(final Combatant c:Squad.active.members)
+			if(c.source.fasthealing>0) c.heal(c.maxhp,false);
+		return true;
+	}
+
+	boolean completequests(){
+		var s=Squad.active;
+		var completed=false;
 		for(var q:new ArrayList<>(quests)){
 			if(!q.complete()) continue;
-			Squad.active.gold+=q.reward;
+			completed=true;
+			s.gold+=q.reward;
 			String notification="You have completed a quest ("+q+")!\n";
 			notification+="You are rewarded for your efforts with: $"
 					+Javelin.format(q.reward)+"!";
 			Javelin.message(notification,true);
 			quests.remove(q);
 		}
-		Squad.active.lasttown=this;
-		new TownScreen(this).show();
-		for(final Combatant c:Squad.active.members)
-			if(c.source.fasthealing>0) c.heal(c.maxhp,false);
-		return true;
+		return completed;
 	}
 
 	@Override
@@ -366,7 +376,7 @@ public class Town extends Location{
 		if(!World.scenario.quests||ishostile()) return;
 		for(var q:new ArrayList<>(quests)){
 			q.daysleft-=1;
-			if(q.daysleft==0||q.cancel()) quests.remove(q);
+			if(q.cancel()) quests.remove(q);
 		}
 		var rank=getrank().rank;
 		if(quests.size()<rank){

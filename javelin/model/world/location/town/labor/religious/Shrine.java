@@ -12,6 +12,7 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
@@ -25,7 +26,7 @@ import javelin.view.screen.InfoScreen;
  * @author alex
  */
 public class Shrine extends Fortification{
-	public class UpgradeShrine extends BuildingUpgrade{
+	class UpgradeShrine extends BuildingUpgrade{
 		public UpgradeShrine(Shrine s){
 			super("",5,+5,s,Rank.VILLAGE);
 			name="Upgrade shrine";
@@ -45,6 +46,11 @@ public class Shrine extends Fortification{
 		}
 	}
 
+	/**
+	 * Spells that are castable on shrines.
+	 *
+	 * @see Spell#isritual
+	 */
 	public static final List<Spell> RITUALS=new ArrayList<>();
 
 	static{
@@ -53,11 +59,17 @@ public class Shrine extends Fortification{
 			if(p.isritual) RITUALS.add(p);
 	}
 
+	/**
+	 * {@link Town} {@link Labor}.
+	 *
+	 * @author alex
+	 */
 	public static class BuildShrine extends Build{
 		Shrine s;
 
+		/** Constructor. */
 		public BuildShrine(){
-			super(null,5,null,Rank.HAMLET);
+			super(null,5,Rank.HAMLET,null);
 		}
 
 		@Override
@@ -84,6 +96,7 @@ public class Shrine extends Fortification{
 	final ArrayList<Spell> rituals=new ArrayList<>(2);
 	int level=1;
 
+	/** Constructor. */
 	public Shrine(){
 		this(2);
 		allowedinscenario=false;
@@ -177,11 +190,6 @@ public class Shrine extends Fortification{
 	private int price(int i){
 		Spell ritual=rituals.get(i);
 		return ritual.level*ritual.casterlevel*10+ritual.components;
-	}
-
-	public static void fail(InfoScreen screen,String string){
-		screen.print(string);
-		InfoScreen.feedback();
 	}
 
 	@Override

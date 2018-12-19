@@ -12,6 +12,8 @@ import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.classes.Warrior;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.Labor;
 import javelin.old.RPG;
 
 /**
@@ -20,6 +22,7 @@ import javelin.old.RPG;
  * @author alex
  */
 public class MartialAcademy extends Academy{
+	/** All martial academies. */
 	public static final ArrayList<MartialAcademyData> ACADEMIES=new ArrayList<>();
 
 	static{
@@ -32,26 +35,34 @@ public class MartialAcademy extends Academy{
 				"Academy (power attack)",RaiseStrength.SINGLETON));
 	}
 
+	/**
+	 * {@link Town} {@link Labor}.
+	 *
+	 * @author alex
+	 */
 	public static class BuildMartialAcademy extends BuildAcademies{
+		/** Constructor. */
 		public BuildMartialAcademy(){
 			super(Rank.HAMLET);
 		}
 
 		@Override
 		protected Academy generateacademy(){
-			return RPG.pick(getacademies()).generate();
-		}
-
-		protected ArrayList<MartialAcademyData> getacademies(){
-			return ACADEMIES;
+			return RPG.pick(ACADEMIES).generate();
 		}
 	}
 
+	/** An abstract representation of a martial academy type. */
 	public static class MartialAcademyData{
 		String name;
 		HashSet<Upgrade> upgrades;
 		RaiseAbility ability;
 
+		/**
+		 * @param upgrades Upgrades taught at the {@link Academy}.
+		 * @param name Name of this type of martial academy.
+		 * @param ability Ability that governs this martial school.
+		 */
 		public MartialAcademyData(HashSet<Upgrade> upgrades,String name,
 				RaiseAbility ability){
 			super();
@@ -60,6 +71,7 @@ public class MartialAcademy extends Academy{
 			this.ability=ability;
 		}
 
+		/** @return An actual instance of this type of academy. */
 		public MartialAcademy generate(){
 			return new MartialAcademy(upgrades,name,ability);
 		}

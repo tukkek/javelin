@@ -11,7 +11,9 @@ import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Build;
+import javelin.model.world.location.town.labor.Labor;
 import javelin.old.RPG;
 import javelin.view.screen.WorldScreen;
 
@@ -22,9 +24,15 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class Slums extends Location{
+	/**
+	 * {@link Town} {@link Labor}.
+	 *
+	 * @author alex
+	 */
 	public static class BuildSlums extends Build{
+		/** Constructor. */
 		public BuildSlums(){
-			super("Build slums",5,null,Rank.VILLAGE);
+			super("Build slums",5,Rank.VILLAGE,null);
 		}
 
 		@Override
@@ -41,6 +49,7 @@ public class Slums extends Location{
 
 	Item item=null;
 
+	/** Constructor. */
 	public Slums(){
 		super("Slums");
 		allowentry=false;

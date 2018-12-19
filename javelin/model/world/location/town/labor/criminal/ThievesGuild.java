@@ -7,6 +7,8 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.Labor;
 
 /**
  * Allows a player to learn one upgrade set.
@@ -14,7 +16,13 @@ import javelin.model.world.location.town.Rank;
  * @author alex
  */
 public class ThievesGuild extends Guild{
+	/**
+	 * {@link Town} {@link Labor}.
+	 *
+	 * @author alex
+	 */
 	public static class BuildThievesGuild extends BuildAcademy{
+		/** Constructor. */
 		public BuildThievesGuild(){
 			super(Rank.TOWN);
 		}

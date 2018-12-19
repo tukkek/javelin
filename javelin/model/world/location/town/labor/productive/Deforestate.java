@@ -19,6 +19,7 @@ import javelin.old.RPG;
  * @author alex
  */
 public class Deforestate extends Labor{
+	/** Constructor. */
 	public Deforestate(){
 		super("Deforestate",7,Rank.HAMLET);
 	}

@@ -21,6 +21,7 @@ import javelin.model.world.location.Outpost;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
@@ -46,9 +47,15 @@ public class Mine extends Fortification{
 			"Assign an unit to work on this mine",0,'a');
 	static final Option RECALLMINER=new Option("Recall a miner",0,'r');
 
+	/**
+	 * {@link Town} {@link Labor}.
+	 *
+	 * @author alex
+	 */
 	public static class BuildMine extends Build{
+		/** Constructor. */
 		public BuildMine(){
-			super("Build mine",10,null,Rank.HAMLET);
+			super("Build mine",10,Rank.HAMLET,null);
 		}
 
 		@Override
@@ -71,7 +78,7 @@ public class Mine extends Fortification{
 		}
 	}
 
-	public class UpgradeMine extends BuildingUpgrade{
+	class UpgradeMine extends BuildingUpgrade{
 		public UpgradeMine(Mine mine){
 			super("Ruby mine",Math.max(0,10-mine.miners.size()),5,mine,Rank.VILLAGE);
 		}

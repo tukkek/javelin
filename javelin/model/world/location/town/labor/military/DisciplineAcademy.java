@@ -44,6 +44,7 @@ public class DisciplineAcademy extends Academy{
 	public static class BuildDisciplineAcademy extends BuildAcademies{
 		Discipline d;
 
+		/** @param d Discipline taught. */
 		public BuildDisciplineAcademy(Discipline d){
 			super(Rank.VILLAGE);
 			this.d=d;
@@ -55,9 +56,11 @@ public class DisciplineAcademy extends Academy{
 		}
 	}
 
+	/** Hires an upgraded mercenary. */
 	public class HireOption extends Option{
 		Combatant c;
 
+		/** @param c Mercenary. */
 		public HireOption(Combatant c){
 			super("Hire "+c+" ($"+Javelin.format(c.pay())+"/day)",0);
 			this.c=c;
@@ -69,7 +72,9 @@ public class DisciplineAcademy extends Academy{
 		}
 	}
 
+	/** User interface for the discipline academies. */
 	public class DisciplineAcademyScreen extends AcademyScreen{
+		/** @param academy Instance to represent. */
 		public DisciplineAcademyScreen(Academy academy){
 			super(academy,null);
 		}
@@ -127,6 +132,7 @@ public class DisciplineAcademy extends Academy{
 	Combatant master=null;
 	Discipline d;
 
+	/** @param d Discipline taught. */
 	public DisciplineAcademy(Discipline d){
 		super(d.name+" academy",null,5,15,Collections.EMPTY_SET,d.abilityupgrade,
 				d.classupgrade);

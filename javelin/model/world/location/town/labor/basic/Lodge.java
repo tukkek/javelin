@@ -23,30 +23,39 @@ import javelin.view.Images;
 /***
  * Allows a {@link Squad} to rest outside of a {@link Town}.
  *
+ * TODO the constants are a mess, push {@link #TITLES} and {@link #IMAGES} and
+ * {@link #LABOR} to {@link Lodging}
+ *
  * @author alex
  */
 public class Lodge extends Fortification{
+	/** Smaller-tier lodge. */
 	public static final Lodging LODGE=new Lodging("lodge",1,0);
+	/** Medium-tier lodge. */
 	public static final Lodging HOTEL=new Lodging("hotel",2,.5f);
+	/** Highest-tier lodge. */
 	public static final Lodging HOSPITAL=new Lodging("hospital",4,2);
+	/** All tiers from lowest to biggest. */
 	public static final Lodging[] LODGING=new Lodging[]{LODGE,HOTEL,HOSPITAL};
-
-	public static final String[] LEVELS=new String[]{"Traveller's lodge","Hotel",
+	/** More descriptive titles for {@link #LODGING} entries. */
+	public static final String[] TITLES=new String[]{"Traveller's lodge","Hotel",
 			"Hospital"};
+	/** Avatar filenames for {@link #LODGING} tiers (without extension). */
 	public static final String[] IMAGES=new String[]{"locationinn",
 			"locationinnhotel","locationinnhospital"};
+	/** Labor cost for each {@link #LODGING} tier. */
 	public static final int[] LABOR=new int[]{5,10,15};
 
 	static final int RESTPERIOD=8;
 	static final int WEEKLONGREST=24*7/RESTPERIOD;
-	static final int MAXLEVEL=LEVELS.length-1;
+	static final int MAXLEVEL=TITLES.length-1;
 
-	public static class Lodging{
+	static class Lodging{
 		String name;
 		private float fee;
 		int quality;
 
-		public Lodging(String name,int quality,float fee){
+		Lodging(String name,int quality,float fee){
 			super();
 			this.name=name;
 			this.fee=fee;
@@ -58,10 +67,16 @@ public class Lodge extends Fortification{
 		}
 	}
 
+	/**
+	 * {@link Town} project.
+	 *
+	 * @author alex
+	 */
 	public static class BuildLodge extends Build{
+		/** Constructor. */
 		public BuildLodge(){
-			super("Build "+Lodge.LEVELS[0].toLowerCase(),Lodge.LABOR[0],null,
-					Rank.HAMLET);
+			super("Build "+Lodge.TITLES[0].toLowerCase(),Lodge.LABOR[0],Rank.HAMLET,
+					null);
 		}
 
 		@Override
@@ -80,7 +95,7 @@ public class Lodge extends Fortification{
 
 	class UpgradeLodge extends BuildingUpgrade{
 		public UpgradeLodge(Lodge i){
-			super(LEVELS[i.level+1],LABOR[i.level+1],5,i,Rank.RANKS[i.level+1]);
+			super(TITLES[i.level+1],LABOR[i.level+1],5,i,Rank.RANKS[i.level+1]);
 		}
 
 		@Override
@@ -93,7 +108,7 @@ public class Lodge extends Fortification{
 			Lodge i=(Lodge)l;
 			if(i.level<MAXLEVEL){
 				i.level+=1;
-				i.rename(LEVELS[i.level]);
+				i.rename(TITLES[i.level]);
 			}
 			super.done(l);
 		}
@@ -107,8 +122,9 @@ public class Lodge extends Fortification{
 
 	int level=0;
 
+	/** Consstructor. */
 	public Lodge(){
-		super(LEVELS[0],LEVELS[0],1,5);
+		super(TITLES[0],TITLES[0],1,5);
 		gossip=true;
 		neutral=true;
 	}
@@ -118,7 +134,7 @@ public class Lodge extends Fortification{
 		if(!super.interact()) return false;
 		int price=LODGING[level].getfee();
 		int weekprice=WEEKLONGREST*price;
-		String s="Do you want to rest at the "+LEVELS[level].toLowerCase()+"?\n";
+		String s="Do you want to rest at the "+TITLES[level].toLowerCase()+"?\n";
 		s+="\nENTER or s to stay ($"+price+"), w to stay for a week ($"+weekprice
 				+")";
 		s+="\np to pillage ($"+Javelin.format(getspoils())+")";
@@ -150,6 +166,7 @@ public class Lodge extends Fortification{
 			generateawayfromtown();
 	}
 
+	/** @return <code>true</code> if there is another lodge nearby. */
 	public boolean checkproximity(){
 		Actor nearest=findnearest(Lodge.class);
 		return nearest!=null&&nearest.distance(x,y)<=District.RADIUSMAX;

@@ -1,22 +1,42 @@
 package javelin.model.world.location.town.labor;
 
 import javelin.controller.Point;
+import javelin.model.world.World;
 import javelin.model.world.location.ConstructionSite;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 
+/**
+ * A labor that places a {@link ConstructionSite} site and replaces it with the
+ * actual structure once it's {@link #done()}.
+ *
+ * @author alex
+ */
 public abstract class Build extends Labor{
+	/** The in-progress construction site. */
 	protected ConstructionSite site;
+	/**
+	 * Previous building, in case of an upgrade. <code>null</code> if this is the
+	 * first contruction project.
+	 */
 	protected Location previous;
 
-	public abstract Location getgoal();
-
-	public Build(String name,int cost,Location previous,Rank minimumrank){
+	/**
+	 * @param previous See {@link #previous}.
+	 *
+	 * @see Labor#Labor(String, int, Rank)
+	 */
+	public Build(String name,int cost,Rank minimumrank,Location previous){
 		super(name,cost,minimumrank);
 		this.previous=previous;
-		construction=true;
 	}
+
+	/**
+	 * @return Actual structure to be placed once {@link #work(float)} is
+	 *         {@link #done()}.
+	 */
+	public abstract Location getgoal();
 
 	@Override
 	protected void define(){
@@ -32,10 +52,15 @@ public abstract class Build extends Labor{
 		done(site.goal);
 	}
 
+	/** Called after {@link #done()}. */
 	protected void done(Location goal){
 
 	}
 
+	/**
+	 * @return {@link World} coordinate where to place the
+	 *         {@link ConstructionSite}.
+	 */
 	protected Point getsitelocation(){
 		return town.getdistrict().getfreespaces().get(0);
 	}

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import javelin.Javelin;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Deck;
 import javelin.model.world.location.town.labor.Labor;
@@ -47,8 +46,8 @@ public class HumanGovernor extends Governor{
 		}
 		if(selected==null) /* no smart choice? then any choice! */
 			selected=RPG.pick(hand);
-		if(selected==null&&Javelin.DEBUG)
-			throw new RuntimeException("No trait to pick! #humangovernor");
+		//		if(selected==null&&Javelin.DEBUG)
+		//			throw new RuntimeException("No trait to pick! #humangovernor");
 		selected.start();
 	}
 
@@ -64,7 +63,10 @@ public class HumanGovernor extends Governor{
 		return true;
 	}
 
-	public Labor picktrait(ArrayList<Labor> hand){
+	/**
+	 * @return A {@link Trait} at random or <code>null</code> if none on hand.
+	 */
+	static public Labor picktrait(ArrayList<Labor> hand){
 		Collections.shuffle(hand);
 		for(Labor l:hand)
 			if(l instanceof Trait) return l;

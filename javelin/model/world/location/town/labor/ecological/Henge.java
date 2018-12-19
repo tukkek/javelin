@@ -13,11 +13,24 @@ import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.Labor;
 
+/**
+ * {@link Druid} {@link Academy}.
+ *
+ * @author alex
+ */
 public class Henge extends Guild{
 	static final String DESCRIPTIION="Henge";
 
+	/**
+	 * {@link Town} {@link Labor}.
+	 *
+	 * @author alex
+	 */
 	public static class BuildHenge extends BuildAcademy{
+		/** Constructor. */
 		public BuildHenge(){
 			super(Rank.HAMLET);
 		}
@@ -28,6 +41,7 @@ public class Henge extends Guild{
 		}
 	}
 
+	/** Constructor. */
 	public Henge(){
 		super(DESCRIPTIION,Druid.INSTANCE);
 	}

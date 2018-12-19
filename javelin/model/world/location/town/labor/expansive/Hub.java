@@ -15,6 +15,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
@@ -96,9 +97,15 @@ public class Hub extends Location{
 		}
 	}
 
+	/**
+	 * {@link Town} {@link Labor}.
+	 *
+	 * @author alex
+	 */
 	public static class BuildTransportHub extends Build{
+		/** Constructor. */
 		public BuildTransportHub(){
-			super("Build stables",2,null,Rank.HAMLET);
+			super("Build stables",2,Rank.HAMLET,null);
 		}
 
 		@Override
@@ -178,6 +185,7 @@ public class Hub extends Location{
 		return null;
 	}
 
+	/** @return Name of the current tier ("Magic dock"). */
 	public String getname(){
 		return NAMES[level];
 	}

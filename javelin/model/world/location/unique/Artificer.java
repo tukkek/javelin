@@ -30,7 +30,7 @@ public class Artificer extends Fortification{
 
 	public static class BuildArtificer extends Build{
 		public BuildArtificer(){
-			super("Build artificer",20,null,Rank.CITY);
+			super("Build artificer",20,Rank.CITY,null);
 		}
 
 		@Override

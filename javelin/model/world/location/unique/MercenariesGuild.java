@@ -42,7 +42,7 @@ public class MercenariesGuild extends Fortification{
 	public static class BuildMercenariesGuild extends Build{
 		/** Constructor. */
 		public BuildMercenariesGuild(){
-			super("Build mercenaries guild",15,null,Rank.TOWN);
+			super("Build mercenaries guild",15,Rank.TOWN,null);
 		}
 
 		@Override

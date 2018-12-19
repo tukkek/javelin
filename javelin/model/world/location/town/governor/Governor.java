@@ -39,6 +39,11 @@ public abstract class Governor implements Serializable{
 		town=t;
 	}
 
+	/**
+	 * Draws cards until hand is full.
+	 *
+	 * @return Total of drawn cards (0 for none drawn).
+	 */
 	public int redraw(){
 		int drawn=0;
 		while(!isfull()&&draw())
@@ -46,6 +51,11 @@ public abstract class Governor implements Serializable{
 		return drawn;
 	}
 
+	/**
+	 * Draw a single card. Does not check {@link #isfull()}.
+	 *
+	 * @return <code>false</code> if couldn't generate any valid {@link Labor}.
+	 */
 	public boolean draw(){
 		District d=town.getdistrict();
 		for(Labor l:Deck.generate(town)){
@@ -59,12 +69,12 @@ public abstract class Governor implements Serializable{
 	}
 
 	/**
-	 * Processes the current {@link #projects}.
+	 * May {@link #manage()} as necessary after work is performed.
 	 *
-	 * @param labor Labor to be distributed among the {@link #projects}.
-	 * @param d
+	 * @param Divides this amount of work between all active {@link #nprojects}.
+	 * @param d {@link Town} district.
 	 *
-	 * @return <code>false</code> if there is no current project.
+	 * @see Labor#work(float)
 	 */
 	public void work(float labor,District d){
 		float step=labor/projects.size();
@@ -79,13 +89,12 @@ public abstract class Governor implements Serializable{
 		}
 	}
 
-	protected void always(ArrayList<Labor> hand2){
+	/** Governors can add Labor cards. Called whenever work is performed. */
+	protected void always(ArrayList<Labor> hand){
 
 	}
 
-	/**
-	 * Selects next task for {@link #projects}.
-	 */
+	/** Selects next task for {@link #projects}. */
 	public abstract void manage();
 
 	/**
@@ -99,10 +108,20 @@ public abstract class Governor implements Serializable{
 		return hand.size()>=gethandsize();
 	}
 
+	/**
+	 * Doesn't include fixed types of labor (like
+	 * {@link Location#getupgrades(District)}.
+	 *
+	 * @return Maximum regular hand size.
+	 */
 	public int gethandsize(){
 		return town.getrank().rank-1+STARTINGHAND;
 	}
 
+	/**
+	 * Performs validation on {@link #hand} and {@link #projects} then
+	 * {@link #redraw()}s.
+	 */
 	public void validate(District d){
 		for(Labor l:new ArrayList<>(hand))
 			if(!l.validate(d)) hand.remove(l);
@@ -139,18 +158,22 @@ public abstract class Governor implements Serializable{
 		return projects;
 	}
 
+	/** @param labor Removes this from active {@link #projects}. */
 	public void removeproject(Labor labor){
 		projects.remove(labor);
 	}
 
+	/** @param l Removes this from {@link #hand}. */
 	public void removefromhand(Labor l){
 		hand.remove(l);
 	}
 
+	/** @param l Adds to active {@link #projects}. */
 	public void addproject(Labor l){
 		projects.add(l);
 	}
 
+	/** @return Number of active {@link #projects}. */
 	public int getprojectssize(){
 		return projects.size();
 	}

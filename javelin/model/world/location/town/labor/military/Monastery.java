@@ -5,9 +5,22 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.Labor;
 
+/**
+ * {@link Monk} {@link Academy}.
+ *
+ * @author alex
+ */
 public class Monastery extends Guild{
+	/**
+	 * {@link Town} {@link Labor}.
+	 *
+	 * @author alex
+	 */
 	public static class BuildMonastery extends BuildAcademy{
+		/** Constructor. */
 		public BuildMonastery(){
 			super(Rank.HAMLET);
 		}
@@ -18,6 +31,7 @@ public class Monastery extends Guild{
 		}
 	}
 
+	/** Constructor. */
 	public Monastery(){
 		super("Monastery",Monk.INSTANCE);
 	}

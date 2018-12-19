@@ -21,6 +21,7 @@ import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.OrderQueue;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
@@ -29,10 +30,17 @@ import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.PurchaseOption;
 import javelin.view.screen.town.SelectScreen;
 
+/**
+ * A {@link World} location where you can buy and sell a selection of
+ * {@link Item}s.
+ *
+ * @see ShoppingScreen
+ * @author alex
+ */
 public class Shop extends Location{
-	public static final Option SELL=new Option("Sell items",0,'s');
+	static final Option SELL=new Option("Sell items",0,'s');
 
-	public class SellingScreen extends SelectScreen{
+	class SellingScreen extends SelectScreen{
 		HashMap<Option,Item> selling=new HashMap<>();
 		int buylimit=0;
 
@@ -80,9 +88,15 @@ public class Shop extends Location{
 		}
 	}
 
+	/**
+	 * {@link Town} {@link Labor}.
+	 *
+	 * @author alex
+	 */
 	public static class BuildShop extends Build{
+		/** Constructor. */
 		public BuildShop(){
-			super("Build shop",5,null,Rank.HAMLET);
+			super("Build shop",5,Rank.HAMLET,null);
 		}
 
 		@Override
@@ -190,6 +204,13 @@ public class Shop extends Location{
 	int level=0;
 	Realm selectiontype;
 
+	/**
+	 * @param r Determines selection of {@link Item}s sold.
+	 * @param first If <code>true</code>, will add {@link Potion}s of
+	 *          {@link CureLightWounds} to the inventory. Meant to be used at the
+	 *          starting {@link Town} as an early-game helper.
+	 * @see Realm#getitems()
+	 */
 	public Shop(Realm r,boolean first){
 		super(r.prefixate()+" shop");
 		allowentry=false;

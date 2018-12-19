@@ -13,6 +13,8 @@ import javelin.controller.upgrade.classes.Aristocrat;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.Labor;
 import javelin.old.RPG;
 
 /**
@@ -21,9 +23,16 @@ import javelin.old.RPG;
  * @author alex
  */
 public class MagesGuild extends Academy{
+	/** All mage guild data. */
 	public static final ArrayList<MageGuildData> GUILDS=new ArrayList<>();
 
+	/**
+	 * {@link Town} {@link Labor}.
+	 *
+	 * @author alex
+	 */
 	public static class BuildMagesGuild extends BuildAcademies{
+		/** Constructor. */
 		public BuildMagesGuild(){
 			super(Rank.VILLAGE);
 		}
@@ -34,6 +43,7 @@ public class MagesGuild extends Academy{
 		}
 	}
 
+	/** Representation of a type of Mage Guild. */
 	public static class MageGuildData{
 		String name;
 		HashSet<Upgrade> upgrades;
@@ -45,6 +55,7 @@ public class MagesGuild extends Academy{
 			this.ability=ability;
 		}
 
+		/** @return An actual instance from this representation. */
 		public MagesGuild generate(){
 			return new MagesGuild(name,upgrades,ability);
 		}

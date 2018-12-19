@@ -7,13 +7,25 @@ import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 
+/**
+ * Upgrades a {@link District} {@link Location} into a higher tier.
+ *
+ * @author alex
+ */
 public abstract class BuildingUpgrade extends Build{
+	/** Tier to upgrade to. */
 	protected int upgradelevel;
 
+	/**
+	 * @param previous Previous {@link Location}.
+	 * @param newname Name of new tier.
+	 * @param upgradelevel See {@link #upgradelevel}.
+	 * @see Build#Build(String, int, Rank, Location)
+	 */
 	public BuildingUpgrade(String newname,int cost,int upgradelevel,
 			Location previous,Rank minimumrank){
 		super("Upgrade "+previous.toString().toLowerCase()+" to "
-				+newname.toLowerCase(),cost,previous,minimumrank);
+				+newname.toLowerCase(),cost,minimumrank,previous);
 		this.upgradelevel=upgradelevel;
 	}
 

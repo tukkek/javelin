@@ -11,6 +11,7 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
@@ -26,9 +27,15 @@ import javelin.view.screen.WorldScreen;
 public class Sewers extends Fortification{
 	static final String SEWERS="Sewers";
 
+	/**
+	 * {@link Town} laabor.
+	 *
+	 * @author alex
+	 */
 	public static class BuildSewers extends Build{
+		/** Constructor. */
 		public BuildSewers(){
-			super("Build sewers",5,null,Rank.HAMLET);
+			super("Build sewers",5,Rank.HAMLET,null);
 		}
 
 		@Override
@@ -49,7 +56,7 @@ public class Sewers extends Fortification{
 		}
 	}
 
-	public class UpgradeSewers extends BuildingUpgrade{
+	class UpgradeSewers extends BuildingUpgrade{
 		Sewers s;
 
 		public UpgradeSewers(Sewers s){
@@ -78,6 +85,7 @@ public class Sewers extends Fortification{
 
 	int level=0;
 
+	/** Constructor. */
 	public Sewers(){
 		super(SEWERS,SEWERS,1,5);
 		terrain=Terrain.UNDERGROUND;

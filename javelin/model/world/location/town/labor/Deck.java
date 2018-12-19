@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
+import javelin.controller.ContentSummary;
 import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
 import javelin.model.world.World;
 import javelin.model.world.location.fortification.RealmAcademy.BuildRealmAcademy;
@@ -48,6 +49,7 @@ import javelin.model.world.location.unique.SummoningCircle.BuildSummoningCircle;
  * @author alex
  */
 public class Deck extends ArrayList<Labor>{
+	/** All {@link Town} {@link Trait}s. */
 	public static final List<Trait> TRAITS=new ArrayList<>(7);
 
 	static final Labor[] BASE=new Labor[]{new BuildDwelling(),new BuildLodge(),
@@ -68,6 +70,7 @@ public class Deck extends ArrayList<Labor>{
 	static final Labor[] RELIGIOUS=new Labor[]{new BuildShrine(),
 			new BuildSanctuary()};
 
+	/** List of {@link Deck}s by {@link Trait} names. */
 	public static final HashMap<String,Deck> DECKS=new HashMap<>();
 	static final Deck DEFAULT=new Deck();
 
@@ -97,6 +100,11 @@ public class Deck extends ArrayList<Labor>{
 		}
 	}
 
+	/**
+	 * @return A {@link Labor} deck with all of the {@link Town} {@link Trait}
+	 *         decks shuffled into tt. If the town has no {@link Trait}s, will
+	 *         only have the {@link #DEFAULT} {@link Labor} cards.
+	 */
 	public static ArrayList<Labor> generate(Town t){
 		Deck d=new Deck();
 		d.addAll(DEFAULT);
@@ -113,12 +121,17 @@ public class Deck extends ArrayList<Labor>{
 		if(title!=null) DECKS.put(title,d);
 	}
 
+	/**
+	 * @return <code>true</code> if {@link Labor} is from the {@link #DEFAULT}
+	 *         deck.
+	 */
 	public static boolean isbasic(Labor card){
 		for(Labor l:DEFAULT)
 			if(card.getClass().equals(l.getClass())) return true;
 		return false;
 	}
 
+	/** @see ContentSummary */
 	public static String getsummary(){
 		int count=DEFAULT.size();
 		for(Deck d:DECKS.values())

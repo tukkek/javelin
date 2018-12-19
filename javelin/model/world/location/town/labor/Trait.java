@@ -4,6 +4,16 @@ import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 
+/**
+ * A trait represents one of the "personality" qualities of a town. for example,
+ * a Town can be mercantile (interested in commerce), natural
+ * (ecologically-oriented), both or neither.
+ *
+ * Each Trait comes with its own {@link Deck} of {@link Labor} projects. This is
+ * the basis for the deck-building town-management game loop.
+ *
+ * @author alex
+ */
 public class Trait extends Labor{
 	/** Trait name. */
 	public static final String EXPANSIVE="expansive";
@@ -20,11 +30,15 @@ public class Trait extends Labor{
 	/** Trait name. */
 	public static final String NATURAL="natural";
 
-	String trait;
+	String traitname;
 
-	public Trait(String trait,Deck deck){
-		super("Trait: "+trait.toLowerCase(),deck.size(),Rank.HAMLET);
-		this.trait=trait;
+	/**
+	 * @param name Trait name.
+	 * @param deck {@link Labor}s this trait unlocks.
+	 */
+	public Trait(String name,Deck deck){
+		super("Trait: "+name.toLowerCase(),deck.size(),Rank.HAMLET);
+		traitname=name;
 	}
 
 	@Override
@@ -39,11 +53,12 @@ public class Trait extends Labor{
 
 	@Override
 	public boolean validate(District d){
-		return super.validate(d)&&!town.traits.contains(trait)
+		return super.validate(d)&&!town.traits.contains(traitname)
 				&&town.traits.size()<town.getrank().rank;
 	}
 
+	/** @param t Add this trait to {@link Town#traits}. */
 	public void addto(Town t){
-		t.traits.add(trait);
+		t.traits.add(traitname);
 	}
 }

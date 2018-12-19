@@ -38,7 +38,7 @@ public class Dwelling extends Fortification{
 
 		/** Constructor. */
 		public BuildDwelling(){
-			super("Build dwelling",0,null,Rank.HAMLET);
+			super("Build dwelling",0,Rank.HAMLET,null);
 		}
 
 		@Override

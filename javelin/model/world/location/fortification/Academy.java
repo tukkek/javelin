@@ -50,7 +50,7 @@ public abstract class Academy extends Fortification{
 		public Academy goal;
 
 		public BuildAcademy(Rank minimumrank){
-			super("",0,null,minimumrank);
+			super("",0,minimumrank,null);
 		}
 
 		@Override

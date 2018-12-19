@@ -12,16 +12,28 @@ import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.old.RPG;
 import javelin.view.Images;
 
+/**
+ * {@link Academy} for {@link Cleric} and (after upgraded) {@link Paladin}s.
+ *
+ * @author alex
+ */
 public class Sanctuary extends Guild{
 	static final String CATHEDRAL="Cathedral";
 	static final int MAXUPGRADES=15;
 
+	/**
+	 * {@link Town} {@link Labor}.
+	 *
+	 * @author alex
+	 */
 	public static class BuildSanctuary extends BuildAcademy{
+		/** Constructor. */
 		public BuildSanctuary(){
 			super(Rank.VILLAGE);
 		}
@@ -32,8 +44,7 @@ public class Sanctuary extends Guild{
 		}
 	}
 
-	public static class UpǵradeSanctuary extends BuildingUpgrade{
-
+	static class UpǵradeSanctuary extends BuildingUpgrade{
 		public UpǵradeSanctuary(Location previous){
 			super(CATHEDRAL,getupgradecost(previous),getupgradecost(previous),
 					previous,Rank.TOWN);
@@ -68,6 +79,7 @@ public class Sanctuary extends Guild{
 
 	boolean upgraded=false;
 
+	/** Constructor. */
 	public Sanctuary(){
 		super("Sanctuary",Cleric.INSTANCE);
 	}

@@ -20,6 +20,7 @@ import javelin.model.world.location.town.labor.Labor;
 /**
  * TODO need to consider A->B and B->A
  *
+ * @see BuildHighway
  * @author alex
  */
 public class BuildRoad extends Labor{

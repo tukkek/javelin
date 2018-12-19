@@ -23,11 +23,10 @@ import javelin.model.world.location.town.Town;
  */
 public abstract class Upgrade implements Serializable{
 	/**
-	 * Short description.
+	 * Upgrade name.
 	 *
-	 * @deprecated See {@link #getname()}
+	 * @see #getname()
 	 */
-	@Deprecated
 	public String name;
 	/**
 	 * Indicates that this upgrade is immediately relevant during {@link Fight}s.
@@ -112,9 +111,7 @@ public abstract class Upgrade implements Serializable{
 		return newcr-oldcr;
 	}
 
-	/**
-	 * @return Name of this upgrade.
-	 */
+	/** @return Name of this upgrade, possibly formatted or enhanced. */
 	public String getname(){
 		return name;
 	}

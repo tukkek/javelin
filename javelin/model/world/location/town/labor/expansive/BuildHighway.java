@@ -4,8 +4,15 @@ import javelin.controller.Point;
 import javelin.model.world.World;
 import javelin.model.world.location.town.Rank;
 
+/**
+ * Builds an upgraded version of the road.
+ *
+ * @see World#highways
+ * @see BuildRoad
+ * @author alex
+ */
 public class BuildHighway extends BuildRoad{
-
+	/** Constructor. */
 	public BuildHighway(){
 		super("Build highway");
 		type="highway";

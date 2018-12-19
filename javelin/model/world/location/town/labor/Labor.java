@@ -29,12 +29,26 @@ public abstract class Labor implements Serializable,Cloneable{
 	 * @see Town#labor
 	 */
 	public int cost;
+	/**
+	 * Amount of labor already put into this project.
+	 *
+	 * @see #work(float)
+	 */
 	public float progress;
+	/**
+	 * If <code>false</code>, {@link Governor}s won't start this labor without
+	 * direct player action.
+	 */
 	public boolean automatic=true;
+	/** Town this labor is being worked for. */
 	public Town town;
 	/** <code>true</code> to return to {@link WorldScreen} after selection. */
 	public boolean closescreen=false;
-	public boolean construction=false;
+	/**
+	 * Minimum {@link Town} {@link Rank} needed to start working on this project.
+	 *
+	 * @see #validate(District)
+	 */
 	protected Rank minimumrank;
 
 	/**
@@ -50,6 +64,12 @@ public abstract class Labor implements Serializable,Cloneable{
 		minimumrank=minimumsize;
 	}
 
+	/**
+	 * Clones and {@link #define()}s a project, so that it can go from a
+	 * {@link Deck} to actually being worked on by a {@link Town}.
+	 *
+	 * @return the clone, which should be used from here onwards.
+	 */
 	public Labor generate(Town t){
 		Labor clone=clone();
 		clone.town=t;
@@ -143,10 +163,16 @@ public abstract class Labor implements Serializable,Cloneable{
 		work(0);
 	}
 
+	/**
+	 * Remove this project from the active projects in a {@link Town}.
+	 *
+	 * @see Governor
+	 */
 	public void cancel(){
 		town.getgovernor().removeproject(this);
 	}
 
+	/** Remove this project from a {@link Governor} hand of available projects. */
 	public void discard(){
 		town.getgovernor().removefromhand(this);
 	}

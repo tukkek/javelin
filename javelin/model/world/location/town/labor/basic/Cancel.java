@@ -6,8 +6,13 @@ import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Labor;
 
+/**
+ * Cancel ongoing labor projects.
+ *
+ * @author alex
+ */
 public class Cancel extends Labor{
-
+	/** Constructor. */
 	public Cancel(){
 		super("Cancel projects",0,Rank.HAMLET);
 		automatic=false;

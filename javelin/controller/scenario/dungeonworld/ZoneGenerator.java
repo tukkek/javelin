@@ -39,6 +39,12 @@ import javelin.model.world.location.town.labor.expansive.Hub;
 import javelin.model.world.location.town.labor.productive.Shop;
 import javelin.old.RPG;
 
+/**
+ * Generates the {@link DungeonWorld} towns, {@link Gate}s and {@link District}
+ * {@link Location}s.
+ *
+ * @author alex
+ */
 public class ZoneGenerator extends FeatureGenerator{
 	static final double MINDISTANCE=5;
 	static final ArrayList<Trait> TRAITS=new ArrayList<>(Deck.TRAITS);

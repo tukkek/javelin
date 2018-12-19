@@ -1,29 +1,25 @@
 package javelin.model.world.location.town.quest;
 
-import java.awt.Image;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.kit.Cleric;
+import javelin.controller.kit.Monk;
+import javelin.controller.kit.Paladin;
 import javelin.controller.terrain.Terrain;
+import javelin.controller.upgrade.Upgrade;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
-import javelin.model.world.Actor;
-import javelin.model.world.Incursion;
-import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
-import javelin.view.Images;
-import javelin.view.screen.WorldScreen;
 
 /**
  * Visit holy sites and bring the faithful back to safety.
@@ -31,7 +27,7 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class Pilgrimage extends Quest{
-	private static final String DISBAND="Pilgrimage deadline expired, all pilgrims disband...";
+	static final String DISBAND="Pilgrimage deadline expired, all pilgrims disband...";
 
 	class Pilgrim extends Combatant{
 		Pilgrim(Monster m){
@@ -62,48 +58,12 @@ public class Pilgrimage extends Quest{
 		}
 	}
 
-	class HolySite extends Actor{
+	class HolySite extends QuestMarker{
 		static final String ESCORT="Do you want to escort the pilgrims leaving this holy site?\n"
 				+"Press ENTER to confirm or any other key to cancel...";
 
-		@Override
-		public Boolean destroy(Incursion attacker){
-			return null;
-		}
-
-		@Override
-		public List<Combatant> getcombatants(){
-			return null;
-		}
-
-		@Override
-		public Image getimage(){
-			return Images.get("locationquestmarker");
-		}
-
-		@Override
-		public String describe(){
-			return "Quest marker (holy site).";
-		}
-
-		@Override
-		public Integer getel(Integer attackerel){
-			return null;
-		}
-
-		@Override
-		public void place(){
-			x=-1;
-			var actors=World.getactors();
-			HashSet<Point> districts=Town.getdistricts();
-			while(x==-1||!World.validatecoordinate(x,y)
-					||Terrain.get(x,y).equals(Terrain.WATER)||World.get(x,y,actors)!=null
-					||districts.contains(getlocation())){
-				x=RPG.r(town.x-distance,town.x+distance);
-				y=RPG.r(town.y-distance,town.y+distance);
-			}
-			super.place();
-			WorldScreen.current.mappanel.tiles[x][y].discovered=true;
+		public HolySite(){
+			super("holy site");
 		}
 
 		@Override
@@ -114,12 +74,12 @@ public class Pilgrimage extends Quest{
 			followers.addAll(pilgrims);
 			var result="A group of pilgrims joins you for protection.\n";
 			remove();
-			site=null;
+			next=null;
 			if(remaining==0)
 				result+="Bring them back safely to "+town+".";
 			else{
-				site=new HolySite();
-				site.place();
+				next=new HolySite();
+				next.place();
 				remaining-=1;
 				result+="They indicate the way to their next holy site.";
 			}
@@ -128,30 +88,41 @@ public class Pilgrimage extends Quest{
 		}
 	}
 
+	static HashSet<Upgrade> upgrades=new HashSet<>();
+
+	static{
+		upgrades.addAll(Cleric.INSTANCE.getupgrades());
+		upgrades.addAll(Paladin.INSTANCE.getupgrades());
+		upgrades.addAll(Monk.INSTANCE.getupgrades());
+	}
+
 	List<Combatant> followers=new ArrayList<>(0);
-	HolySite site=null;
+	HolySite next=null;
 	int remaining;
 	int targetpilgrimel;
+	List<Monster> candidates;
 
 	/** Reflection constructor. */
 	public Pilgrimage(Town t){
 		super(t);
 		remaining=t.getrank().rank;
 		remaining+=RPG.randomize(remaining);
-		if(Javelin.DEBUG) remaining=4;
 		targetpilgrimel=Math.max(2,town.population+4+Difficulty.VERYEASY);
+		distance=t.getdistrict().getradius()*3;
+		candidates=Terrain.get(town.x,town.y).getmonsters().stream().filter(
+				m->m.cr<=targetpilgrimel&&!Boolean.FALSE.equals(m.good)&&m.think(-1))
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	protected void define(){
 		super.define();
 		remaining-=1;
-		site=new HolySite();
-		site.place();
+		next=new HolySite();
+		next.place();
 	}
 
 	List<Combatant> generatepilgrims(){
-		var candidates=getpilgrims();
 		var npilgrims=RPG.rolldice(2,4);
 		var group=new ArrayList<Combatant>(npilgrims);
 		while(group.isEmpty()
@@ -160,21 +131,14 @@ public class Pilgrimage extends Quest{
 			npilgrims-=1;
 			if(npilgrims==0) break;
 		}
-		var upgrades=Cleric.INSTANCE.getupgrades();
 		while(ChallengeCalculator.calculateel(group)<targetpilgrimel)
 			Combatant.upgradeweakest(group,upgrades);
 		return group;
 	}
 
-	List<Monster> getpilgrims(){
-		return Terrain.get(town.x,town.y).getmonsters().stream().filter(
-				m->m.cr<=targetpilgrimel&&!Boolean.FALSE.equals(m.good)&&m.think(-1))
-				.collect(Collectors.toList());
-	}
-
 	@Override
 	public boolean validate(){
-		return !getpilgrims().isEmpty();
+		return !candidates.isEmpty();
 	}
 
 	@Override
@@ -184,23 +148,18 @@ public class Pilgrimage extends Quest{
 
 	@Override
 	public boolean complete(){
-		if(remaining>0) return false;
-		var returning=false;
-		for(var c:new ArrayList<>(Squad.active.members))
-			if(followers.contains(c)){
-				returning=true;
-				break;
-			}
-		if(!returning) return false;
+		if(next!=null) return false;
+		for(var c:followers)
+			if(!Squad.active.members.contains(c)) return false;
 		removepilgrims();
 		return true;
 	}
 
 	@Override
 	public boolean cancel(){
-		var cancelled=super.cancel()||site==null&&followers.isEmpty();
+		var cancelled=super.cancel()||next==null&&followers.isEmpty();
 		if(cancelled){
-			if(site!=null) site.remove();
+			if(next!=null) next.remove();
 			if(removepilgrims()) Javelin.message(DISBAND,true);
 		}
 		return cancelled;

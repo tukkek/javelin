@@ -1,5 +1,6 @@
 package javelin.model.world.location.town.quest;
 
+import java.awt.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,14 +12,23 @@ import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.ContentSummary;
+import javelin.controller.Point;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.terrain.Terrain;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.Actor;
+import javelin.model.world.Incursion;
+import javelin.model.world.World;
+import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Trait;
 import javelin.model.world.location.town.quest.basic.Discovery;
 import javelin.model.world.location.town.quest.basic.Fetch;
 import javelin.model.world.location.town.quest.basic.Kill;
 import javelin.old.RPG;
+import javelin.view.Images;
+import javelin.view.screen.WorldScreen;
 
 /**
  * A task that can be completed for money and reputation. Non-hostile towns will
@@ -31,7 +41,7 @@ import javelin.old.RPG;
 public abstract class Quest implements Serializable{
 	/** All available quest templates. */
 	public final static Map<String,List<Class<? extends Quest>>> QUESTS=new HashMap<>();
-	static final Class<? extends Quest> DEBUG=Pilgrimage.class;
+	static final Class<? extends Quest> DEBUG=null;
 	static final String BASIC="basic";
 
 	static{
@@ -43,6 +53,71 @@ public abstract class Quest implements Serializable{
 		QUESTS.put(Trait.MILITARY,List.of(War.class));
 		QUESTS.put(Trait.NATURAL,List.of());
 		QUESTS.put(Trait.RELIGIOUS,List.of(Pilgrimage.class));
+	}
+
+	/**
+	 * Simple generic {@link World} actor to use with quests. Ideally subclasses
+	 * need only override {@link #interact()}.
+	 *
+	 * Sharing a same image, reduces cognitive overload and dependency on art
+	 * assets while providing a simple, standard "this is related to a
+	 * {@link Town} quest and nothing more" visual feedback.
+	 *
+	 * Obviously, not all quests need to employ markers. Many, for example, target
+	 * existing {@link Location}s in the world map.
+	 *
+	 * @author alex
+	 */
+	protected abstract class QuestMarker extends Actor{
+		String markername;
+
+		/**
+		 * @param name Represented as "Quest marker (given name)."
+		 * @see #describe()
+		 */
+		protected QuestMarker(String name){
+			markername=name;
+		}
+
+		@Override
+		public Boolean destroy(Incursion attacker){
+			return null;
+		}
+
+		@Override
+		public List<Combatant> getcombatants(){
+			return null;
+		}
+
+		@Override
+		public Image getimage(){
+			return Images.get("locationquestmarker");
+		}
+
+		@Override
+		public String describe(){
+			return "Quest marker ("+markername+").";
+		}
+
+		@Override
+		public Integer getel(Integer attackerel){
+			return null;
+		}
+
+		@Override
+		public void place(){
+			x=-1;
+			var actors=World.getactors();
+			HashSet<Point> districts=Town.getdistricts();
+			while(x==-1||!World.validatecoordinate(x,y)
+					||Terrain.get(x,y).equals(Terrain.WATER)||World.get(x,y,actors)!=null
+					||districts.contains(getlocation())){
+				x=RPG.r(town.x-distance,town.x+distance);
+				y=RPG.r(town.y-distance,town.y+distance);
+			}
+			super.place();
+			WorldScreen.current.mappanel.tiles[x][y].discovered=true;
+		}
 	}
 
 	/** Town this quest was generated for. */
@@ -101,8 +176,10 @@ public abstract class Quest implements Serializable{
 	 *         {@link #el} (capped by city size).
 	 */
 	protected int reward(){
-		var gold=RewardCalculator.getgold(Math.min(town.population,el));
-		return Javelin.round(gold);
+		int target=Math.min(town.population,el);
+		var min=RewardCalculator.getgold(target-1);
+		var max=RewardCalculator.getgold(target+1);
+		return Math.max(1,Javelin.round(RPG.r(min,max)));
 	}
 
 	/**

@@ -247,6 +247,10 @@ public class Town extends Location{
 		var s=Squad.active;
 		var completed=false;
 		for(var q:new ArrayList<>(quests)){
+			if(q.cancel()){
+				quests.remove(q);
+				continue;
+			}
 			if(!q.complete()) continue;
 			completed=true;
 			s.gold+=q.reward;

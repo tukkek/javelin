@@ -167,9 +167,7 @@ public abstract class Actor implements Serializable{
 	 *         interaction.
 	 * @throws RepeatTurn
 	 */
-	public boolean interact(){
-		return false;
-	}
+	public abstract boolean interact();
 
 	/**
 	 * Note that this doesn't {@link #place()} or update the actor in any way.

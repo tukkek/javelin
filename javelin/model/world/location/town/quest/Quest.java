@@ -41,7 +41,7 @@ import javelin.view.screen.WorldScreen;
 public abstract class Quest implements Serializable{
 	/** All available quest templates. */
 	public final static Map<String,List<Class<? extends Quest>>> QUESTS=new HashMap<>();
-	static final Class<? extends Quest> DEBUG=DiscoverTown.class;
+	static final Class<? extends Quest> DEBUG=null;
 	static final String BASIC="basic";
 
 	static{
@@ -51,7 +51,7 @@ public abstract class Quest implements Serializable{
 		QUESTS.put(Trait.EXPANSIVE,List.of(DiscoverTown.class));
 		QUESTS.put(Trait.MERCANTILE,List.of());
 		QUESTS.put(Trait.MILITARY,List.of(War.class));
-		QUESTS.put(Trait.NATURAL,List.of());
+		QUESTS.put(Trait.NATURAL,List.of(DiscoverTerrain.class));
 		QUESTS.put(Trait.RELIGIOUS,List.of(Pilgrimage.class));
 	}
 

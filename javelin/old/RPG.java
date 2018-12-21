@@ -50,13 +50,18 @@ public class RPG{
 	/**
 	 * Used to return numbers that average 0, useful for adding a small random
 	 * factor to things that would otherwise be boring and 100% predictable. For
-	 * example, if you input 4, it will return 1d4-1d4, which strongly tends to 0
-	 * but could actually return anywhere in the range [-3,+3].
+	 * example, if you input 4, it will return 1d4-1d4, which tends to 0 but could
+	 * actually return anywhere in the range [-3,+3].
+	 *
+	 * A negative value provided is turned into a positive one for all intents and
+	 * purposes. An input of zero will also return zero.
 	 *
 	 * @param sides Given a die X...
 	 * @return the result of 1dX - 1dX.
 	 */
 	public static int randomize(int sides){
+		if(sides==0) return sides;
+		if(sides<0) sides=Math.abs(sides);
 		return r(1,sides)-r(1,sides);
 	}
 

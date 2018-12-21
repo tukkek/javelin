@@ -13,6 +13,7 @@ import javelin.controller.exception.UnbalancedTeams;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.classes.Commoner;
 import javelin.model.Realm;
+import javelin.model.diplomacy.Diplomacy;
 import javelin.model.item.Item;
 import javelin.model.item.key.TempleKey;
 import javelin.model.unit.Combatant;
@@ -21,6 +22,7 @@ import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.temple.Temple;
+import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
@@ -48,6 +50,9 @@ public class Campaign extends Scenario{
 			throw new RuntimeException(e);
 		}
 	}
+
+	/** <code>true</code> to allow {@link Diplomacy}. */
+	protected boolean diplomacy=true;
 
 	/** Constructor. */
 	public Campaign(){
@@ -78,6 +83,7 @@ public class Campaign extends Scenario{
 		worlddistrict=false;
 		spawn=true;
 		quests=true;
+		diplomacy=true;
 	}
 
 	@Override
@@ -124,8 +130,14 @@ public class Campaign extends Scenario{
 	}
 
 	@Override
+	public void ready(){
+		if(diplomacy) Diplomacy.instance=new Diplomacy(Town.gettowns());
+	}
+
+	@Override
 	public void endday(){
 		cover(2);
+		if(Diplomacy.instance!=null) Diplomacy.instance.turn();
 	}
 
 	/** Covers an amount of {@link WorldTile} per day with fog of war. */

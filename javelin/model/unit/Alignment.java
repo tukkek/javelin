@@ -1,6 +1,9 @@
 package javelin.model.unit;
 
 import java.io.Serializable;
+import java.util.Arrays;
+
+import javelin.old.RPG;
 
 /**
  * Lawful-chaotic and good-evil alignment data, as per the SRD.
@@ -35,10 +38,10 @@ public class Alignment implements Serializable{
 	public Morality morals;
 
 	/** Creates a custom instance. */
-	public Alignment(Ethics lawful,Morality good){
+	public Alignment(Ethics ethicsp,Morality moralsp){
 		super();
-		this.ethics=lawful;
-		this.morals=good;
+		ethics=ethicsp;
+		morals=moralsp;
 	}
 
 	/** Creates a true neutral instance. */
@@ -82,5 +85,12 @@ public class Alignment implements Serializable{
 	/** @return <code>true</code> if {@link Morality#EVIL}. */
 	public boolean isevil(){
 		return morals.equals(Morality.EVIL);
+	}
+
+	/** @return A randomly assigned alignment. */
+	public static Alignment random(){
+		var ethics=RPG.pick(Arrays.asList(Ethics.values()));
+		var morals=RPG.pick(Arrays.asList(Morality.values()));
+		return new Alignment(ethics,morals);
 	}
 }

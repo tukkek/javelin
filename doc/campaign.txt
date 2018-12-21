@@ -1,8 +1,10 @@
 Javelin is a complex game with simple rules. You can learn everything just by playing so go ahead and try! Don't be upset if something unexpected happens or you die, since it can be a difficult game, especially on the early levels and when you're just starting. This guide leaves a lot unexplained on purpose. 
 
-You control one or more squads explore the world around you. Towns have shops, let you rest to recover health and also upgrade your units when they have enough experience points (XP). You can manage how towns grow (labor projects) or let the game do that for you.
+You control one or more squads and explore the world at large. Towns have shops, let you rest to recover health and also upgrade your units when they have enough experience points (XP). You can manage how towns grow (labor projects) or let the game do that for you.
 
-Towns will post quests, which you can see on the town screen . After a quest is done, come back to claim your reward. Completing or failing quests will raise or lower happiness accordingly - which in turn translates to a small bonus or penalty to how fast towns work.
+Towns will post quests, which you can see on the town screen. After a quest is done, come back to claim your reward. Completing or failing quests will raise or lower happiness accordingly - which in turn translates to a small bonus or penalty to how fast work gets done.
+
+Towns can slowly improve your reputation, especially if they're happy and have access to natural resources - unlocking diplomatic actions.
 
 Every time you start a new game a new world is generated! If you don't like the world you're in, you can press SHIFT+q to quit and start a new game. If you want to keep your current progress and continue later on just close the game window.
 

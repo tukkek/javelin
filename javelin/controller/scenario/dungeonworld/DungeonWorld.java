@@ -37,6 +37,7 @@ public class DungeonWorld extends Campaign{
 		districtmodifier=1;
 		crossrivers=false;
 		quests=false;
+		diplomacy=false;
 	}
 
 	@Override

@@ -21,6 +21,7 @@ import javelin.controller.map.location.TownMap;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
+import javelin.model.unit.Alignment;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
@@ -110,6 +111,13 @@ public class Town extends Location{
 	 * @see Governor#work(float, District)
 	 */
 	public float happiness=0;
+
+	/**
+	 * Each Town has an initial random alignment.
+	 *
+	 * @see Alignment#random()
+	 */
+	public Alignment alignment=Alignment.random();
 
 	/** @param p Spot to place town in the {@link World}. */
 	public Town(Point p,Realm r){
@@ -205,11 +213,7 @@ public class Town extends Location{
 		float labor=population+RPG.randomize(population)/10f;
 		labor*=World.scenario.boost*World.scenario.labormodifier;
 		if(labor>0){
-			var happiness=this.happiness;
-			if(happiness>HAPPINESSMAX)
-				happiness=HAPPINESSMAX;
-			else if(happiness<-HAPPINESSMAX) happiness=-HAPPINESSMAX;
-			labor*=DAILYLABOR*(1+happiness);
+			labor*=DAILYLABOR*(1+gethappiness());
 			getgovernor().work(labor,getdistrict());
 		}
 		if(happiness!=0) happiness+=happiness>0?-HAPPINESSDECAY:+HAPPINESSDECAY;
@@ -274,8 +278,8 @@ public class Town extends Location{
 			String notification="You have completed a quest ("+q+")!\n";
 			notification+="You are rewarded for your efforts with: $"
 					+Javelin.format(q.reward)+"!\n";
-			notification+="Current mood in "+this+": "+gethappiness().toLowerCase()
-					+".";
+			notification+="Current mood in "+this+": "
+					+describehappiness().toLowerCase()+".";
 			Javelin.message(notification,true);
 			quests.remove(q);
 		}
@@ -416,11 +420,29 @@ public class Town extends Location{
 	}
 
 	/** @return Human representation of {@link #happiness}. */
-	public String gethappiness(){
+	public String describehappiness(){
 		if(happiness>=HAPPINESSMAX) return "Happy";
 		if(happiness>=HAPPINESSSTEP) return "Content";
-		if(happiness<=-HAPPINESSMAX) return "Revolting!";
+		if(happiness<=-HAPPINESSMAX) return "Revolting";
 		if(happiness<=-HAPPINESSSTEP) return "Unhappy";
 		return "Neutral";
+	}
+
+	/**
+	 * @return {@link #happiness} but bound to {@link #HAPPINESSMAX} either way.
+	 */
+	float gethappiness(){
+		if(happiness>HAPPINESSMAX) return HAPPINESSMAX;
+		if(happiness<-HAPPINESSMAX) return -HAPPINESSMAX;
+		return happiness;
+	}
+
+	/**
+	 * @return 0 or more reputation points based on {@link #happiness} and
+	 *         {@link #resources}.
+	 */
+	public int generatereputation(){
+		var reputation=resources.size()+Math.round(gethappiness()/HAPPINESSSTEP);
+		return Math.max(0,reputation);
 	}
 }

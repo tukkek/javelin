@@ -2,6 +2,7 @@ package javelin.view.screen.town;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Debug;
 import javelin.controller.action.world.Guide;
@@ -83,23 +84,30 @@ public class GovernorScreen extends SelectScreen{
 	}
 
 	String printcityinfo(Town t){
-		String info="\n\nCity information for "+t.description+":";
+		String info="\n\n"+t.description+":";
 		info+="\n  Population: "+t.population+" ("+t.getrank().title.toLowerCase()
-				+")";
+				+").";
 		info+="\n  Traits: ";
 		if(t.traits.isEmpty())
-			info+="none";
+			info+="none.";
 		else{
 			String traits="";
 			for(String trait:t.traits)
 				traits+=trait+", ";
-			info+=traits.substring(0,traits.length()-2);
+			info+=traits.substring(0,traits.length()-2)+".";
 		}
 		float production=t.population*Town.DAILYLABOR;
 		info+="\n  Production: "
 				+String.format(production>=1?"%1.0f":"%.1f",production)
-				+" labor per day, on average";
-		info+="\n  Mood: "+t.gethappiness().toLowerCase();
+				+" labor per day (on average).";
+		info+="\n  Resources: ";
+		if(town.resources.isEmpty())
+			info+="none.";
+		else
+			info+=town.resources.stream().map(r->r.name.toLowerCase()).sorted()
+					.collect(Collectors.joining(", "))+".";
+		info+="\n  Mood: "+t.describehappiness().toLowerCase()+".";
+		info+="\n  Reputation: "+t.generatereputation()+" per day (on average).";
 		return info;
 	}
 

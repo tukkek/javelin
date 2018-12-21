@@ -127,11 +127,6 @@ public class TownScreen extends PurchaseScreen{
 	@Override
 	public String printinfo(){
 		var info="Your squad has $"+Javelin.format(Squad.active.gold)+".";
-		if(!town.resources.isEmpty()){
-			var resources=town.resources.stream().map(r->r.name.toLowerCase())
-					.sorted().collect(Collectors.joining(", "));
-			info+="\n\nConnected resources: "+resources+".";
-		}
 		if(!town.quests.isEmpty()){
 			info+="\n\nActive quests:\n";
 			var quests=town.quests.stream().sorted((a,b)->a.daysleft-b.daysleft)

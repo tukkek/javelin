@@ -40,6 +40,7 @@ public class DungeonDelve extends Campaign{
 		worldhazards=false;
 		fogofwar=false;
 		quests=false;
+		diplomacy=false;
 	}
 
 	@Override

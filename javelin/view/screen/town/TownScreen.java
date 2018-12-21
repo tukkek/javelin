@@ -24,7 +24,6 @@ import javelin.view.screen.town.option.TournamentScreenOption;
  * @author alex
  */
 public class TownScreen extends PurchaseScreen{
-	static final Option UNLOAD=new Option("",0,'U');
 	static final Option SETTLE=new Option("Settle worker",0,'s');
 	static final boolean DEBUGMANAGEMENT=false;
 	static final Option RENAME=new Option("Rename town",0,'r');
@@ -65,11 +64,6 @@ public class TownScreen extends PurchaseScreen{
 			return true;
 		}
 		if(o==SETTLE) return retire(town);
-		if(o==UNLOAD){
-			town.getgovernor().work(Squad.active.resources,town.getdistrict());
-			Squad.active.resources=0;
-			return true;
-		}
 		if(o==PILLAGE){
 			Squad.active.gold+=Fortification.getspoils(town.population);
 			town.remove();
@@ -100,10 +94,6 @@ public class TownScreen extends PurchaseScreen{
 		if(World.scenario.labormodifier>0) list.add(new Manage(town));
 		list.add(RENAME);
 		list.add(SETTLE);
-		if(Squad.active.resources>0){
-			UNLOAD.name="Unload "+Squad.active.resources+" resources into town";
-			list.add(UNLOAD);
-		}
 		if(town.ishosting())
 			list.add(new TournamentScreenOption("Enter tournament",town,'t'));
 		if(town.getrank().rank<Rank.CITY.rank){

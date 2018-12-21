@@ -30,7 +30,6 @@ import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Outpost;
-import javelin.model.world.location.ResourceSite;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
@@ -86,9 +85,6 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	public Terrain lastterrain=null;
 
 	transient private Image image=null;
-
-	/** @see ResourceSite */
-	public int resources=0;
 
 	/**
 	 * @param xp Starting location (x).
@@ -172,7 +168,6 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 		members.addAll(s.members);
 		sort();
 		gold+=s.gold;
-		resources+=s.resources;
 		hourselapsed=Math.max(hourselapsed,s.hourselapsed);
 		for(final Combatant c:s.members)
 			equipment.put(c,s.equipment.get(c));

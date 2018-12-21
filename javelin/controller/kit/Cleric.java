@@ -37,7 +37,7 @@ public class Cleric extends Kit{
 
 	@Override
 	public boolean allow(int bestability,int secondbest,Monster m){
-		return !Boolean.FALSE.equals(m.lawful)&&!Boolean.FALSE.equals(m.good)
-				&&super.allow(bestability,secondbest,m);
+		if(!super.allow(bestability,secondbest,m)) return false;
+		return !m.alignment.ischaotic()&&!m.alignment.isevil();
 	}
 }

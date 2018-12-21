@@ -38,6 +38,6 @@ public class Assassin extends Kit{
 
 	@Override
 	public boolean allow(int bestability,int secondbest,Monster m){
-		return Boolean.FALSE.equals(m.good)&&super.allow(bestability,secondbest,m);
+		return m.alignment.isevil()&&super.allow(bestability,secondbest,m);
 	}
 }

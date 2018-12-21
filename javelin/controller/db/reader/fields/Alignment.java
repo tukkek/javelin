@@ -3,6 +3,8 @@ package javelin.controller.db.reader.fields;
 import java.beans.PropertyVetoException;
 
 import javelin.controller.db.reader.MonsterReader;
+import javelin.model.unit.Alignment.Morality;
+import javelin.model.unit.Alignment.Ethics;
 import javelin.model.unit.Monster;
 
 /**
@@ -10,8 +12,8 @@ import javelin.model.unit.Monster;
  * Monsters of opposite alignement in either axes won't be fighting together,
  * neutral ones will fight with anyone.
  *
- * @see Monster#good
- * @see Monster#lawful
+ * @see Monster#morals
+ * @see Monster#ethics
  * @see Monster#conflict
  * @author alex
  */
@@ -25,11 +27,12 @@ public class Alignment extends FieldReader{
 	public void read(String value)
 			throws NumberFormatException,PropertyVetoException{
 		value=value.toLowerCase();
+		var a=reader.monster.alignment;
 		if(value.contains("good"))
-			reader.monster.good=true;
-		else if(value.contains("evil")) reader.monster.good=false;
+			a.morals=Morality.GOOD;
+		else if(value.contains("evil")) a.morals=Morality.EVIL;
 		if(value.contains("lawful"))
-			reader.monster.lawful=true;
-		else if(value.contains("chaotic")) reader.monster.lawful=false;
+			a.ethics=Ethics.LAWFUL;
+		else if(value.contains("chaotic")) a.ethics=Ethics.CHAOTIC;
 	}
 }

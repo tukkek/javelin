@@ -79,7 +79,7 @@ public class StatisticsScreen extends InfoScreen{
 			int level=classlevels.getlevel(m);
 			if(level>0) lines.add(classlevels.descriptivename+" level "+level);
 		}
-		lines.add(describealignment(m));
+		lines.add(m.alignment.toString());
 		lines.add("");
 	}
 
@@ -162,23 +162,6 @@ public class StatisticsScreen extends InfoScreen{
 		if(output.isEmpty()) return;
 		output=output.substring(0,output.length()-2);
 		lines.add("Skills: "+output+".\n");
-	}
-
-	static String describealignment(Monster m){
-		String alignment;
-		if(m.lawful==null){
-			if(m.good==null) return "True neutral";
-			alignment="Neutral";
-		}else if(m.lawful)
-			alignment="Lawful";
-		else
-			alignment="Chaotic";
-		if(m.good==null)
-			return alignment+=" neutral";
-		else if(m.good)
-			return alignment+" good";
-		else
-			return alignment+" evil";
 	}
 
 	private static String save(int x){

@@ -33,7 +33,7 @@ public class Paladin extends Kit{
 
 	@Override
 	public boolean allow(int bestability,int secondbest,Monster m){
-		return Boolean.TRUE.equals(m.good)
+		return m.alignment.isgood()
 				&&Cleric.INSTANCE.allow(bestability,secondbest,m);
 	}
 }

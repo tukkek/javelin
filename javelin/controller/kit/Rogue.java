@@ -36,7 +36,7 @@ public class Rogue extends Kit{
 
 	@Override
 	public boolean allow(int bestability,int secondbest,Monster m){
-		return super.allow(bestability,secondbest,m)&&!Boolean.TRUE.equals(m.good)
-				&&!Boolean.TRUE.equals(m.lawful);
+		return super.allow(bestability,secondbest,m)&&!m.alignment.isgood()
+				&&!m.alignment.islawful();
 	}
 }

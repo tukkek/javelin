@@ -22,7 +22,7 @@ import javelin.old.RPG;
  * stairs down if you have the {@link Skull}).
  *
  * @see Temple
- * @see Monster#good
+ * @see Monster#morals
  * @author alex
  */
 public class EvilTemple extends Temple{
@@ -43,7 +43,7 @@ public class EvilTemple extends Temple{
 	@Override
 	public boolean validate(List<Monster> foes){
 		for(Monster m:foes)
-			if(Boolean.FALSE.equals(m.good)) return false;
+			if(m.alignment.isgood()) return false;
 		return true;
 	}
 

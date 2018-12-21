@@ -244,16 +244,7 @@ public class Monster implements Cloneable,Serializable{
 	 * spell resistance."
 	 */
 	public int sr=0;
-	/**
-	 * Alignment. <code>true</code> if lawful, <code>null</code> if neutral,
-	 * <code>false</code> if chaotic.
-	 */
-	public Boolean lawful=null;
-	/**
-	 * Alignment. <code>true</code> if good, <code>null</code> if neutral,
-	 * <code>false</code> if evil.
-	 */
-	public Boolean good=null;
+
 	/**
 	 * A monster is humanoid if it can use most of it's {@link Slot}s to wear
 	 * {@link Artifact}s. Humanoid and monstrous humanoid monster types are
@@ -326,8 +317,9 @@ public class Monster implements Cloneable,Serializable{
 	 */
 	public HashSet<String> trained=new HashSet<>(0);
 	public boolean elite=false;
-
 	int ac;
+	/** Lawful/chaotic and good/evil axis. */
+	public Alignment alignment=new Alignment();
 
 	@Override
 	public Monster clone(){

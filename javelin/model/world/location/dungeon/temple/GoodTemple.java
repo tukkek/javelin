@@ -16,7 +16,7 @@ import javelin.model.world.location.dungeon.feature.Spirit;
  * spirits can tell show you the location of an undiscovered {@link Feature}.
  *
  * @see Temple
- * @see Monster#good
+ * @see Monster#morals
  * @author alex
  */
 public class GoodTemple extends Temple{
@@ -36,8 +36,9 @@ public class GoodTemple extends Temple{
 
 	@Override
 	public boolean validate(List<Monster> foes){
-		var search=foes.stream().filter(
-				m->!Boolean.TRUE.equals(m.good)||MonsterType.UNDEAD.equals(m.type));
-		return !search.findAny().isPresent();
+		for(var foe:foes)
+			if(foe.alignment.isevil()||MonsterType.UNDEAD.equals(foe.type))
+				return false;
+		return true;
 	}
 }

@@ -30,7 +30,6 @@ public class Barbarian extends Kit{
 
 	@Override
 	public boolean allow(int bestability,int secondbest,Monster m){
-		return !Boolean.TRUE.equals(m.lawful)
-				&&super.allow(bestability,secondbest,m);
+		return !m.alignment.islawful()&&super.allow(bestability,secondbest,m);
 	}
 }

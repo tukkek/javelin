@@ -38,7 +38,7 @@ public class WanderingPegasus extends Wanderer{
 		if(!(terrain.equals(Terrain.HILL)||terrain.equals(Terrain.PLAIN)))
 			return false;
 		for(var member:s)
-			if(Boolean.FALSE.equals(member.source.good)) return false;
+			if(member.source.alignment.isevil()) return false;
 		return true;
 	}
 

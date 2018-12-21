@@ -86,7 +86,7 @@ public class Pursue extends Quest{
 	public Pursue(Town t){
 		super(t);
 		var candidates=Terrain.get(t.x,t.y).getmonsters().stream()
-				.filter(m->m.cr<=el&&m.think(-1)&&!Boolean.TRUE.equals(m.good))
+				.filter(m->m.cr<=el&&m.think(-1)&&!m.alignment.isgood())
 				.collect(Collectors.toList());
 		if(candidates.isEmpty()) return;
 		var band=new Combatants();

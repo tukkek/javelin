@@ -26,7 +26,7 @@ public class Skull extends Relic{
 		ArrayList<Combatant> good=new ArrayList<>();
 		for(Combatant c:Fight.state.getcombatants()){
 			Monster m=c.source;
-			if(Boolean.TRUE.equals(m.good)) good.add(c);
+			if(m.alignment.isgood()) good.add(c);
 		}
 		if(good.isEmpty()){
 			Javelin.message("Nothing seems to happen...",Javelin.Delay.BLOCK);

@@ -43,7 +43,6 @@ public class Monk extends Kit{
 
 	@Override
 	public boolean allow(int bestability,int secondbest,Monster m){
-		return !Boolean.FALSE.equals(m.lawful)
-				&&super.allow(bestability,secondbest,m);
+		return !m.alignment.ischaotic()&&super.allow(bestability,secondbest,m);
 	}
 }

@@ -9,6 +9,8 @@ import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
+import javelin.model.unit.Alignment.Morality;
+import javelin.model.unit.Alignment.Ethics;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
@@ -24,11 +26,11 @@ public class Leader extends Inhabitant{
 	static final Option HIRE=new Option("",0,'h',2);
 
 	class Treaty extends Option{
-		String monster=null;
-		Boolean lawful=null;
-		Boolean good=null;
+		final String monster;
+		final Ethics lawful;
+		final Morality good;
 
-		Treaty(int price,String monster,Boolean lawful,Boolean good){
+		Treaty(int price,String monster,Ethics lawful,Morality good){
 			super("Make treaty with all ",price);
 			this.monster=monster;
 			this.lawful=lawful;
@@ -36,18 +38,19 @@ public class Leader extends Inhabitant{
 			if(monster!=null)
 				name+=monster;
 			else if(lawful!=null)
-				name+=(lawful?"lawful":"chaotic")+" inhabitants";
-			else if(good!=null) name+=(good?"good":"evil")+" inhabitants";
+				name+=(lawful==Ethics.LAWFUL?"lawful":"chaotic")+" inhabitants";
+			else if(good!=null)
+				name+=(good==Morality.GOOD?"good":"evil")+" inhabitants";
 		}
 
 		boolean applies(Combatants encounter){
 			if(encounter==null) return false;
-			for(Combatant c:encounter)
-				if(monster!=null){
-					if(monster.equals(c.source.name)) return true;
-				}else if(lawful!=null){
-					if(lawful.equals(c.source.lawful)) return true;
-				}else if(lawful!=null&&good.equals(c.source.good)) return true;
+			for(Combatant c:encounter){
+				var m=c.source;
+				var a=m.alignment;
+				if(m.name.equals(monster)||a.ethics.equals(lawful)||a.morals.equals(good))
+					return true;
+			}
 			return false;
 		}
 
@@ -58,8 +61,9 @@ public class Leader extends Inhabitant{
 		}
 
 		void register(ArrayList<Combatants> encounters,ArrayList<Option> options){
-			if((lawful==null||lawful.equals(base.lawful))
-					&&(good==null||good.equals(base.good))&&applies(encounters))
+			var a=base.alignment;
+			if((lawful==null||lawful.equals(a.ethics))
+					&&(good==null||good.equals(a.morals))&&applies(encounters))
 				options.add(this);
 		}
 
@@ -108,8 +112,7 @@ public class Leader extends Inhabitant{
 				debug+="Your diplomacy: "
 						+Squad.active.getbest(Skill.DIPLOMACY).taketen(Skill.DIPLOMACY)
 						+"\n";
-				debug+="Alignment: "+base.lawful+" "+base.good;
-				debug+="\n\n";
+				debug+="Alignment: "+base.alignment+"\n\n";
 			}
 			return debug+"Your squad has $"+Javelin.format(Squad.active.gold)+".";
 		}
@@ -139,9 +142,10 @@ public class Leader extends Inhabitant{
 			new Treaty(treatyprice,base.name,null,null).register(encounters,options);
 			if(diplomacy<diplomacydc+5) return options;
 			treatyprice*=5+Dungeon.active.gettier().tier;
-			new Treaty(treatyprice,null,base.lawful,null).register(encounters,
+			new Treaty(treatyprice,null,base.alignment.ethics,null)
+					.register(encounters,options);
+			new Treaty(treatyprice,null,null,base.alignment.morals).register(encounters,
 					options);
-			new Treaty(treatyprice,null,null,base.good).register(encounters,options);
 			return options;
 		}
 

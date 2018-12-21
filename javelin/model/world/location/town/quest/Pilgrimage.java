@@ -109,8 +109,8 @@ public class Pilgrimage extends Quest{
 		remaining+=RPG.randomize(remaining);
 		targetpilgrimel=Math.max(2,town.population+4+Difficulty.VERYEASY);
 		distance=t.getdistrict().getradius()*3;
-		candidates=Terrain.get(town.x,town.y).getmonsters().stream().filter(
-				m->m.cr<=targetpilgrimel&&!Boolean.FALSE.equals(m.good)&&m.think(-1))
+		candidates=Terrain.get(town.x,town.y).getmonsters().stream()
+				.filter(m->m.cr<=targetpilgrimel&&!m.alignment.isevil()&&m.think(-1))
 				.collect(Collectors.toList());
 	}
 

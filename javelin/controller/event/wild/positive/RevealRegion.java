@@ -33,7 +33,7 @@ public class RevealRegion extends WildEvent{
 	public boolean validate(Squad s,int squadel,PointOfInterest l){
 		var here=l.getlocation();
 		var friendly=Terrain.get(here.x,here.y).getmonsters().stream()
-				.filter(m->Boolean.TRUE.equals(m.good)&&m.think(-1))
+				.filter(m->m.alignment.isgood()&&m.think(-1))
 				.collect(Collectors.toList());
 		if(friendly.isEmpty()) return false;
 		friend=RPG.pick(friendly).toString().toLowerCase();

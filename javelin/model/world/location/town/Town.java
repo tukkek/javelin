@@ -54,6 +54,10 @@ import javelin.view.screen.town.TownScreen;
 public class Town extends Location{
 	static final int MINIMUMTOWNDISTANCE=Math
 			.round(Math.round(District.RADIUSMAX*1.5));
+	static final float HAPPINESSMAX=.1f;
+	static final float HAPPINESSMIN=-HAPPINESSMAX;
+	static final float HAPPINESSSTEP=.05f;
+	static final float HAPPINESSDECAY=.001f;
 
 	/**
 	 * How much {@link Labor} a single work produces in one day (
@@ -99,6 +103,13 @@ public class Town extends Location{
 	 * TODO is not actually affecting economy right now
 	 */
 	public Set<Resource> resources=new HashSet<>(0);
+
+	/**
+	 * Percent value to apply to work done.
+	 *
+	 * @see Governor#work(float, District)
+	 */
+	public float happiness=0;
 
 	/** @param p Spot to place town in the {@link World}. */
 	public Town(Point p,Realm r){
@@ -193,7 +204,15 @@ public class Town extends Location{
 		else if(!ishostile()&&RPG.chancein(100)) host();
 		float labor=population+RPG.randomize(population)/10f;
 		labor*=World.scenario.boost*World.scenario.labormodifier;
-		if(labor>0) getgovernor().work(labor*DAILYLABOR,getdistrict());
+		if(labor>0){
+			var happiness=this.happiness;
+			if(happiness>HAPPINESSMAX)
+				happiness=HAPPINESSMAX;
+			else if(happiness<-HAPPINESSMAX) happiness=-HAPPINESSMAX;
+			labor*=DAILYLABOR*(1+happiness);
+			getgovernor().work(labor,getdistrict());
+		}
+		if(happiness!=0) happiness+=happiness>0?-HAPPINESSDECAY:+HAPPINESSDECAY;
 		updatequests();
 	}
 
@@ -247,20 +266,27 @@ public class Town extends Location{
 		var s=Squad.active;
 		var completed=false;
 		for(var q:new ArrayList<>(quests)){
-			if(q.cancel()){
-				quests.remove(q);
-				continue;
-			}
+			if(cancel(q)) continue;
 			if(!q.complete()) continue;
+			happiness+=HAPPINESSSTEP;
 			completed=true;
 			s.gold+=q.reward;
 			String notification="You have completed a quest ("+q+")!\n";
 			notification+="You are rewarded for your efforts with: $"
-					+Javelin.format(q.reward)+"!";
+					+Javelin.format(q.reward)+"!\n";
+			notification+="Current mood in "+this+": "+gethappiness().toLowerCase()
+					+".";
 			Javelin.message(notification,true);
 			quests.remove(q);
 		}
 		return completed;
+	}
+
+	boolean cancel(Quest q){
+		if(!q.cancel()) return false;
+		quests.remove(q);
+		happiness-=HAPPINESSSTEP;
+		return true;
 	}
 
 	@Override
@@ -380,12 +406,21 @@ public class Town extends Location{
 		if(!World.scenario.quests||ishostile()) return;
 		for(var q:new ArrayList<>(quests)){
 			q.daysleft-=1;
-			if(q.cancel()) quests.remove(q);
+			cancel(q);
 		}
 		var rank=getrank().rank;
 		if(quests.size()<rank){
 			var q=Quest.generate(this);
 			if(q!=null) quests.add(q);
 		}
+	}
+
+	/** @return Human representation of {@link #happiness}. */
+	public String gethappiness(){
+		if(happiness>=HAPPINESSMAX) return "Happy";
+		if(happiness>=HAPPINESSSTEP) return "Content";
+		if(happiness<=-HAPPINESSMAX) return "Revolting!";
+		if(happiness<=-HAPPINESSSTEP) return "Unhappy";
+		return "Neutral";
 	}
 }

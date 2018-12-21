@@ -84,20 +84,22 @@ public class GovernorScreen extends SelectScreen{
 
 	String printcityinfo(Town t){
 		String info="\n\nCity information for "+t.description+":";
-		info+="\n  Population: "+t.population+" ("+t.getrank().title+")";
+		info+="\n  Population: "+t.population+" ("+t.getrank().title.toLowerCase()
+				+")";
 		info+="\n  Traits: ";
 		if(t.traits.isEmpty())
-			info+="none.";
+			info+="none";
 		else{
 			String traits="";
 			for(String trait:t.traits)
 				traits+=trait+", ";
-			info+=traits.substring(0,traits.length()-2)+".";
+			info+=traits.substring(0,traits.length()-2);
 		}
 		float production=t.population*Town.DAILYLABOR;
 		info+="\n  Production: "
 				+String.format(production>=1?"%1.0f":"%.1f",production)
-				+" labor per day";
+				+" labor per day, on average";
+		info+="\n  Mood: "+t.gethappiness().toLowerCase();
 		return info;
 	}
 

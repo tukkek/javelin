@@ -34,6 +34,7 @@ public class Siege extends Fight{
 		hide=false;
 		meld=true;
 		terrain=Terrain.get(l.x,l.y);
+		rewardreputation=true;
 	}
 
 	@Override

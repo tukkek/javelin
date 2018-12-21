@@ -22,6 +22,7 @@ public class ExhibitionFight extends Fight{
 		hide=false;
 		bribe=false;
 		canflee=false;
+		rewardreputation=true;
 	}
 
 	@Override

@@ -15,6 +15,7 @@ import javelin.controller.action.Action;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.RepeatTurn;
@@ -37,6 +38,7 @@ import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.DominateMonster.Dominated;
 import javelin.model.unit.skill.Diplomacy;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
@@ -49,49 +51,45 @@ public abstract class Fight{
 	public static BattleState state=null;
 	/** See {@link #win(BattleScreen)}. */
 	public static Boolean victory;
-
 	/**
 	 * @return <code>true</code> if {@link Meld} should be generated.
 	 */
 	public boolean meld=false;
-
 	/**
 	 * Map this battle is to happen on or <code>null</code> for one to be
 	 * generated according to current tile's terrain.
 	 */
 	public Map map=null;
-
 	/**
 	 * If <code>true</code> will remove opponents at first sign of blood instead
 	 * of at negative hit points.
 	 */
 	public boolean friendly=false;
-
 	/**
 	 * If <code>false</code> will not reward experience points after victory.
 	 */
 	public boolean rewardxp=true;
-
 	/**
 	 * If <code>false</code> will not reward gold after victory.
 	 */
 	public boolean rewardgold=true;
-
+	/**
+	 * If <code>true</code> will reward reputation according to
+	 * {@link Difficulty}.
+	 */
+	public boolean rewardreputation=false;
 	/**
 	 * <code>true</code> if there is a chance for the {@link Squad} to hide and
 	 * avoid this combat. This doesn't make sense for {@link Siege}s for example
 	 * since they are actually engaging the enemy.
 	 */
 	public boolean hide=true;
-
 	/**
 	 * <code>true</code> if this fight is susceptible to {@link Diplomacy}.
 	 */
 	public boolean bribe=true;
-
 	/** If not <code>null</code> will use this terrain when generating a map. */
 	public Terrain terrain=null;
-
 	/**
 	 * If not <code>null</code> will override any other flooding level.
 	 *
@@ -99,7 +97,6 @@ public abstract class Fight{
 	 * @see Map#maxflooding
 	 */
 	public Integer weather=null;
-
 	/**
 	 * Since {@link Squad#hourselapsed} is always ticking and needs to be updated
 	 * even when fights do happen this by default holds the period at the moment
@@ -110,16 +107,13 @@ public abstract class Fight{
 	 * @see Javelin#getperiod()
 	 */
 	public String period=Javelin.getperiod();
-
 	/** Status to remove {@link Combatant} from a {@link #friendly} battle. */
 	public int friendlylevel=Combatant.STATUSWOUNDED;
-
 	/** Delegates some setup details.TODO */
 	public BattleSetup setup=new BattleSetup();
 	public boolean denydarkvision=false;
 	public boolean canflee=true;
 	public boolean endless=false;
-
 	/** Red team at the moment the {@link Fight} begins. */
 	public static ArrayList<Combatant> originalredteam;
 	/** Blue team at the moment the {@link Fight} begins. */
@@ -168,13 +162,25 @@ public abstract class Fight{
 		/* should at least serve as food for 1 day */
 		final int bonus=Javelin.round(Math.round(Math.max(food,gold)));
 		String rewards="Congratulations! ";
-		if(Javelin.app.fight.rewardxp)
+		if(rewardxp)
 			rewards+=RewardCalculator.rewardxp(Fight.originalblueteam,defeated,1);
-		if(Javelin.app.fight.rewardgold){
+		if(rewardgold){
 			Squad.active.gold+=bonus;
-			rewards+=" Party receives $"+Javelin.format(bonus)+"!\n";
+			rewards+=" Party receives $"+Javelin.format(bonus)+"!";
 		}
-		return rewards;
+		var d=javelin.model.diplomacy.Diplomacy.instance;
+		if(rewardreputation&&d!=null){
+			var blueel=ChallengeCalculator.calculateel(Fight.originalblueteam);
+			var redel=ChallengeCalculator.calculateel(Fight.originalredteam);
+			var fightel=getel(blueel);
+			if(fightel!=null&&fightel>redel) redel=fightel;
+			var reputation=redel-blueel-Difficulty.MODERATE;
+			if(reputation>0){
+				d.reputation+=reputation+RPG.randomize(reputation);
+				rewards+=" You gain "+reputation+" reputation!";
+			}
+		}
+		return rewards+"\n";
 	}
 
 	/**

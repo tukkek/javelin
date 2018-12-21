@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javelin.Javelin;
 import javelin.controller.db.StateManager;
 import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
+import javelin.view.frame.DiplomacyScreen;
 
 /**
  * Offers long-term card-game-like actions to pursue.
@@ -20,10 +22,20 @@ import javelin.old.RPG;
  * @see Town#ishostile()
  */
 public class Diplomacy implements Serializable{
+	static final int TRIGGER=100;
+	static final String PROMPT="You have earned enough reputation to warrant a diplomatic action.\n"
+			+"Do you want to consider your options now? Note that no further reputation will be gained until you do so.\n"
+			+"Press ENTER to open the diplomacy screen or any other key to postpone...";
+
 	/** Generated at campaign start of set by {@link StateManager#load()}. */
 	public static Diplomacy instance=null;
 
-	class Relationship implements Serializable{
+	/**
+	 * Represents the player's relationship to a given {@link Town}.
+	 *
+	 * @author alex
+	 */
+	public class Relationship implements Serializable{
 		boolean showethics=false;
 		boolean showmorals=false;
 		int status=0;
@@ -66,5 +78,9 @@ public class Diplomacy implements Serializable{
 				var reputation=t.generatereputation();
 				this.reputation+=reputation+RPG.randomize(reputation);
 			}
+		if(reputation>=TRIGGER&&Javelin.prompt(PROMPT)=='\n'){
+			reputation=0;
+			DiplomacyScreen.open();
+		}
 	}
 }

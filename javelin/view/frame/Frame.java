@@ -172,6 +172,16 @@ public abstract class Frame{
 		parent.block(this);
 	}
 
+	/** Block main game window while this {@link #frame} is being displayed. */
+	public void blockbackground(){
+		while(frame.isDisplayable()&&frame.isVisible())
+			try{
+				Thread.sleep(100);
+			}catch(InterruptedException e){
+				// keep waiting
+			}
+	}
+
 	/** Adds a button with the given action to the parent. */
 	protected static Button newbutton(String label,Container parent,
 			ActionListener action){

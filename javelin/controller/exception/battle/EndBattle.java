@@ -89,6 +89,7 @@ public class EndBattle extends BattleEvent{
 				Squad.active.updateavatar();
 			}
 		}
+		if(combatresult==null) return;
 		Javelin.message(combatresult+"\nPress any key to continue...",
 				Javelin.Delay.BLOCK);
 		BattleScreen.active.getUserInput();

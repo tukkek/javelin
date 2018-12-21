@@ -24,6 +24,7 @@ public class TrainingSession extends Siege{
 		cleargarrison=false;
 		map=new Stadium();
 		map.maxflooding=Weather.CLEAR;
+		rewardreputation=false;
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import javelin.controller.action.SimpleAction;
 import javelin.controller.fight.Fight;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.view.frame.Frame;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 
@@ -105,13 +106,8 @@ public class Automate extends WorldAction implements SimpleAction{
 
 	@Override
 	public void perform(){
-		AutomateWindow w=new AutomateWindow();
+		Frame w=new AutomateWindow();
 		w.show();
-		while(w.frame.isDisplayable()&&w.frame.isVisible())
-			try{
-				Thread.sleep(100);
-			}catch(InterruptedException e){
-				// keep waiting
-			}
+		w.blockbackground();
 	}
 }

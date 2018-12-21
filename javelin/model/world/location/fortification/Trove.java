@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.fight.Siege;
+import javelin.model.diplomacy.Diplomacy;
 import javelin.model.item.Ruby;
 import javelin.model.item.key.TempleKey;
 import javelin.model.item.key.door.MasterKey;
@@ -13,6 +15,8 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.ResourceSite;
+import javelin.model.world.location.ResourceSite.Resource;
 import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
 
@@ -34,7 +38,7 @@ import javelin.old.messagepanel.MessagePanel;
  */
 public class Trove extends Fortification{
 	enum Reward{
-		GOLD,EXPERIENCE,TEMPLEKEY,RUBY,KEY;
+		GOLD,EXPERIENCE,TEMPLEKEY,RUBY,KEY,REPUTATION,RESOURCE;
 
 		static Reward getrandom(){
 			Reward[] all=values();
@@ -61,6 +65,7 @@ public class Trove extends Fortification{
 	TempleKey key=null;
 	Reward[] rewards=new Reward[2];
 	List<Combatant> originalgarrison=new ArrayList<>();
+	Resource resource=RPG.pick(new ArrayList<>(ResourceSite.RESOURCES.values()));
 
 	/** Constructor. */
 	public Trove(){
@@ -82,7 +87,12 @@ public class Trove extends Fortification{
 	}
 
 	String describe(Reward reward){
-		Object o=reward==Reward.TEMPLEKEY?key:reward;
+		Object o;
+		if(reward==Reward.TEMPLEKEY) o=key;
+		if(reward==Reward.RESOURCE)
+			o="Natural resource: "+resource;
+		else
+			o=reward;
 		return o.toString().toLowerCase();
 	}
 
@@ -118,6 +128,15 @@ public class Trove extends Fortification{
 			new MasterKey().grab();
 			return null;
 		}
+		if(reward==Reward.REPUTATION){
+			int reputation=ChallengeCalculator.calculateel(originalgarrison);
+			Diplomacy.instance.reputation+=reputation;
+			return "You gain "+reputation+" reputation!";
+		}
+		if(reward==Reward.RESOURCE){
+			new ResourceSite.ResourceLink(resource,null).grab();
+			return null;
+		}
 		throw new RuntimeException(reward+" #unknownreward");
 	}
 
@@ -140,7 +159,8 @@ public class Trove extends Fortification{
 	public boolean interact(){
 		if(!Javelin.DEBUG) return super.interact();
 		if(!super.interact()) return false;
-		Javelin.message(take(),false);
+		var message=take();
+		if(message!=null) Javelin.message(message,false);
 		return true;
 	}
 }

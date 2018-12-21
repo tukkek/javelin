@@ -11,6 +11,8 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.world.Actor;
+import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 import javelin.view.Images;
@@ -37,7 +39,9 @@ public class ResourceSite extends Location{
 	 * @author alex
 	 */
 	public static class Resource implements Serializable{
+		/** Name of this natural resource. */
 		public String name;
+		/** Type of terrain the relevant {@link ResourceSite} can be found on. */
 		public Terrain terrain;
 
 		/**
@@ -82,11 +86,26 @@ public class ResourceSite extends Location{
 			RESOURCES.put(t.terrain,t);
 	}
 
-	static class ResourceLink extends Item{
+	/**
+	 * A map that connects a {@link Resource} to a town.
+	 *
+	 * @author alex
+	 */
+	public static class ResourceLink extends Item{
 		ResourceSite site;
+		Resource type;
 
-		public ResourceLink(ResourceSite site){
-			super("Map to "+site.type.name.toLowerCase()+" site",0,null);
+		/**
+		 * @param type Type of resource this link points to.
+		 * @param site If not <code>null</code>, will make sure the resource hasn't
+		 *          been previously claimed (scumming a {@link ResourceSite} for
+		 *          several {@link ResourceLink}s) and will properly remove it from
+		 *          the game {@link World} after it is linked to a {@link Town}.
+		 * @see Actor#remove()
+		 */
+		public ResourceLink(Resource type,ResourceSite site){
+			super("Map to "+type.name.toLowerCase()+" site",0,null);
+			this.type=type;
 			this.site=site;
 			usedinbattle=false;
 			usedoutofbattle=true;
@@ -96,7 +115,9 @@ public class ResourceSite extends Location{
 
 		@Override
 		public int hashCode(){
-			return (site.type.toString()+site.x+":"+site.y).hashCode();
+			String s=type.toString();
+			if(site!=null) s+=site.x+":"+site.y;
+			return s.hashCode();
 		}
 
 		@Override
@@ -107,7 +128,7 @@ public class ResourceSite extends Location{
 
 		@Override
 		public boolean usepeacefully(Combatant user){
-			if(site.claimed!=null){
+			if(site!=null&&site.claimed!=null){
 				expend();
 				var claimed="This resource site has already been claimed by "
 						+site.claimed+"...";
@@ -121,15 +142,17 @@ public class ResourceSite extends Location{
 				return true;
 			}
 			var t=d.town;
-			var name=site.type.name.toLowerCase();
-			if(t.resources.contains(site.type)){
+			var name=type.name.toLowerCase();
+			if(t.resources.contains(type)){
 				var duplicate=t+" is already linked to a source of "+name+"...";
 				Javelin.message(duplicate,true);
 				return true;
 			}
-			t.resources.add(site.type);
-			site.claimed=t;
-			site.remove();
+			t.resources.add(type);
+			if(site!=null){
+				site.claimed=t;
+				site.remove();
+			}
 			expend();
 			Javelin.message("You connect a "+name+" site to "+t+"!",true);
 			return true;
@@ -170,7 +193,7 @@ public class ResourceSite extends Location{
 
 	@Override
 	public boolean interact(){
-		var link=new ResourceLink(this);
+		var link=new ResourceLink(type,this);
 		var existing=Squad.active.equipment.get(link);
 		if(existing!=null){
 			var duplicate="You already have a link to this "+type.name.toLowerCase()

@@ -20,6 +20,7 @@ public class IncursionFight extends Fight{
 		meld=true;
 		hide=false;
 		canflee=true;
+		rewardreputation=true;
 	}
 
 	@Override

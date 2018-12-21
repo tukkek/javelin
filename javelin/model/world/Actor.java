@@ -297,4 +297,13 @@ public abstract class Actor implements Serializable{
 	 * @see ChallengeCalculator#calculateel(List)
 	 */
 	public abstract Integer getel(Integer attackerel);
+
+	/**
+	 * @return <code>true</code> if this actor actually exists at its
+	 *         {@link #x}:{@link #y} coordinate. If not, it has probably been
+	 *         {@link #remove()}d from the {@link World} map.
+	 */
+	public boolean exists(){
+		return World.get(x,y,World.getactors())==this;
+	}
 }

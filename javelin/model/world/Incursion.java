@@ -85,7 +85,16 @@ public class Incursion extends Actor{
 	/** @see #getel() */
 	public List<Combatant> squad=new ArrayList<>();
 
-	Actor target=null;
+	/**
+	 * Current target to move towards and attack.
+	 *
+	 * @see #choosetarget()
+	 * @see Location#destroy(Incursion)
+	 */
+	public Actor target=null;
+
+	/** @see #describe() */
+	protected String description="Enemy incursion";
 
 	/**
 	 * @param x {@link World} coordinate.
@@ -165,7 +174,7 @@ public class Incursion extends Actor{
 	 * the {@link #PREFERREDVICTORYCHANCE} of winning. If none is available, will
 	 * use the nearest valid target.
 	 */
-	void choosetarget(){
+	protected void choosetarget(){
 		final ArrayList<Actor> actors=World.getactors();
 		List<Actor> targets=new ArrayList<>();
 		int vision=Math.max(1,
@@ -289,7 +298,7 @@ public class Incursion extends Actor{
 
 	@Override
 	public String toString(){
-		return "An incursion";
+		return description;
 	}
 
 	@Override
@@ -314,7 +323,7 @@ public class Incursion extends Actor{
 
 	@Override
 	public String describe(){
-		return "Enemy incursion ("+Difficulty.describe(squad)+" fight):\n\n"
+		return " ("+Difficulty.describe(squad)+" fight):\n\n"
 				+Squad.active.spotenemies(squad,this);
 	}
 

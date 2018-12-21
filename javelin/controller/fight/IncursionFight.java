@@ -19,7 +19,7 @@ public class IncursionFight extends Fight{
 		this.incursion=incursion;
 		meld=true;
 		hide=false;
-		canflee=false;
+		canflee=true;
 	}
 
 	@Override

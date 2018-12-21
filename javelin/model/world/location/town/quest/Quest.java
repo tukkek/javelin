@@ -46,7 +46,7 @@ public abstract class Quest implements Serializable{
 
 	static{
 		QUESTS.put(BASIC,List.of(Kill.class,Fetch.class,Discovery.class));
-		QUESTS.put(Trait.CRIMINAL,List.of());
+		QUESTS.put(Trait.CRIMINAL,List.of(Pursue.class));
 		QUESTS.put(Trait.MAGICAL,List.of());
 		QUESTS.put(Trait.EXPANSIVE,List.of());
 		QUESTS.put(Trait.MERCANTILE,List.of());
@@ -222,7 +222,7 @@ public abstract class Quest implements Serializable{
 
 	@Override
 	public String toString(){
-		return name;
+		return name.toLowerCase();
 	}
 
 	/**

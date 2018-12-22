@@ -132,7 +132,8 @@ public class WorldScreen extends BattleScreen{
 			if(callback!=null){
 				callback.run();
 				callback=null;
-				throw new RepeatTurn();
+				Javelin.redraw();
+				return;
 			}
 			redraw();
 			Interface.userinterface.waiting=true;

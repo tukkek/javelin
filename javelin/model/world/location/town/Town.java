@@ -448,11 +448,12 @@ public class Town extends Location{
 	 *         {@link #resources}. Reputation never goes down so negative values
 	 *         are returned as zero.
 	 * @see #ishostile()
+	 * @see Diplomacy#getdiscovered()
 	 */
 	public int generatereputation(){
-		var r=Diplomacy.instance.relationships.get(this);
-		if(!r.isdiscovered()) return 0;
-		var reputation=r.status;
+		var r=Diplomacy.instance.getdiscovered().get(this);
+		if(r==null) return 0;
+		var reputation=r.getstatus();
 		if(!ishostile())
 			reputation+=resources.size()+Math.round(gethappiness()/HAPPINESSSTEP);
 		return Math.max(0,reputation);

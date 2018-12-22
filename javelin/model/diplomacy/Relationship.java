@@ -2,8 +2,6 @@ package javelin.model.diplomacy;
 
 import java.io.Serializable;
 
-import javelin.model.unit.Alignment.Ethics;
-import javelin.model.unit.Alignment.Morality;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.WorldScreen;
 
@@ -24,12 +22,15 @@ public class Relationship implements Serializable{
 	/** Most negative relationship {@link #status}. */
 	public static final int HOSTILE=-2;
 
-	/** If <code>true</code>, town's {@link Ethics} is known. */
-	public boolean showethics=false;
-	/** If <code>true</code>, town's {@link Morality} is known. */
-	public boolean showmorals=false;
-	/** A measure of how well the player stands with this faction. */
-	public int status=0;
+	/** If <code>true</code>, show {@link Town#alignment}. */
+	public boolean showalignment=false;
+	/**
+	 * A measure of how well the player stands with this faction.
+	 *
+	 * @see #changestatus(int)
+	 * @see #getstatus()
+	 */
+	int status=0;
 	/** Faction in question. */
 	public Town town;
 
@@ -48,11 +49,23 @@ public class Relationship implements Serializable{
 		throw new RuntimeException("Out-of-bounds status #diplomacy: "+status);
 	}
 
-	void changestatus(int delta){
+	/**
+	 * @param delta Applies bonus or penalty to status.
+	 */
+	public void changestatus(int delta){
 		status+=delta;
-		if(status>2)
-			status=2;
-		else if(status<-2) status=-2;
+		if(status>=ALLY){
+			status=ALLY;
+			showalignment=true;
+		}else if(status<HOSTILE) status=HOSTILE;
+	}
+
+	/**
+	 * @return Current diplomatic status between player and faction, from
+	 *         {@link #HOSTILE} to {@link #ALLY}.
+	 */
+	public int getstatus(){
+		return status;
 	}
 
 	@Override
@@ -61,14 +74,11 @@ public class Relationship implements Serializable{
 	}
 
 	/**
-	 * @return A description of {@link Town#alignment}, taking {@link #showethics}
-	 *         and {@link #showmorals} into account.
+	 * @return A description of {@link Town#alignment}, taking
+	 *         {@link #showalignment} and {@link #showmorals} into account.
 	 */
 	public String describealignment(){
-		if(showethics&&showmorals) return town.alignment.toString();
-		if(showethics) return town.alignment.ethics+" ???";
-		if(showmorals) return "??? "+town.alignment.morals.toString().toLowerCase();
-		return "Unknown alignment";
+		return showalignment?town.alignment.toString():"Unknown alignment";
 	}
 
 	/**

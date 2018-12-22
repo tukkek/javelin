@@ -1,9 +1,16 @@
 package javelin.model.diplomacy.mandate;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.diplomacy.Relationship;
+import javelin.model.diplomacy.mandate.influence.ImproveRelationship;
+import javelin.model.diplomacy.mandate.influence.Insult;
+import javelin.model.diplomacy.mandate.meta.RaiseHandSize;
+import javelin.model.diplomacy.mandate.meta.Redraw;
+import javelin.model.diplomacy.mandate.unit.RequestMercenaries;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.District;
 import javelin.old.RPG;
@@ -14,6 +21,12 @@ import javelin.old.RPG;
  * @author alex
  */
 public abstract class Mandate implements Serializable,Comparable<Mandate>{
+	/** All types of mandates. */
+	public static final List<Class<? extends Mandate>> MANDATES=new ArrayList<>(
+			List.of(RaiseHandSize.class,Redraw.class,RequestGold.class,
+					RequestMercenaries.class,RevealAlignment.class,
+					ImproveRelationship.class,Insult.class));
+
 	/**
 	 * Used for equality as well.
 	 *

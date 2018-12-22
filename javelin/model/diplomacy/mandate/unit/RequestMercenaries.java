@@ -23,7 +23,7 @@ public class RequestMercenaries extends Mandate{
 
 	@Override
 	public boolean validate(Diplomacy d){
-		return target.status>=Relationship.INDIFFERENT&&getsquad()!=null
+		return target.getstatus()>=Relationship.INDIFFERENT&&getsquad()!=null
 				&&getmercenaries()!=null;
 	}
 

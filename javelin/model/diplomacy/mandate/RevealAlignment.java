@@ -1,9 +1,8 @@
-package javelin.model.diplomacy.mandate.alignment;
+package javelin.model.diplomacy.mandate;
 
 import javelin.Javelin;
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.diplomacy.Relationship;
-import javelin.model.diplomacy.mandate.Mandate;
 import javelin.model.unit.Alignment;
 import javelin.model.world.location.town.Town;
 
@@ -12,20 +11,20 @@ import javelin.model.world.location.town.Town;
  *
  * @author alex
  */
-public class RequestEthics extends Mandate{
+public class RevealAlignment extends Mandate{
 	/** Reflection constructor. */
-	public RequestEthics(Relationship r){
+	public RevealAlignment(Relationship r){
 		super(r);
 	}
 
 	@Override
 	public boolean validate(Diplomacy d){
-		return !target.showethics;
+		return !target.showalignment;
 	}
 
 	@Override
 	public String getname(){
-		return "Reveal ethical alignment for "+target;
+		return "Reveal alignment for "+target;
 	}
 
 	@Override
@@ -37,9 +36,9 @@ public class RequestEthics extends Mandate{
 	}
 
 	/**
-	 * Sets {@link Relationship#showethics} or {@link Relationship#showmorals}.
+	 * Sets {@link Relationship#showalignment} or {@link Relationship#showmorals}.
 	 */
 	protected void changealignment(){
-		target.showethics=true;
+		target.showalignment=true;
 	}
 }

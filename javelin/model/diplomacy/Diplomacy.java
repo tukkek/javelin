@@ -10,12 +10,6 @@ import java.util.TreeSet;
 import javelin.Javelin;
 import javelin.controller.db.StateManager;
 import javelin.model.diplomacy.mandate.Mandate;
-import javelin.model.diplomacy.mandate.RequestGold;
-import javelin.model.diplomacy.mandate.alignment.RequestEthics;
-import javelin.model.diplomacy.mandate.alignment.RequestMorals;
-import javelin.model.diplomacy.mandate.meta.RaiseHandSize;
-import javelin.model.diplomacy.mandate.meta.Redraw;
-import javelin.model.diplomacy.mandate.unit.RequestMercenaries;
 import javelin.model.unit.Alignment;
 import javelin.model.world.World;
 import javelin.model.world.location.ResourceSite.Resource;
@@ -64,12 +58,11 @@ public class Diplomacy implements Serializable{
 
 	static final String NOTIFICATION="You have earned enough reputation to warrant a diplomatic action.\n"
 			+"Press d at any time to consider your options. Note that no further reputation will be gained until you perform an action.";
-	static final List<Class<? extends Mandate>> MANDATES=new ArrayList<>(
-			List.of(RaiseHandSize.class,Redraw.class,RequestGold.class,
-					RequestMercenaries.class,RequestEthics.class,RequestMorals.class));
-
-	/** Map of town by relationship data. */
-	public Map<Town,Relationship> relationships=new HashMap<>();
+	/**
+	 * Map of town by relationship data. Always prefer using
+	 * {@link #getdiscovered()}.
+	 */
+	Map<Town,Relationship> relationships=new HashMap<>();
 	/**
 	 * On reaching 100, enables a diplomatic action. Surplus is lost and should
 	 * never be reduced, only increased.
@@ -139,7 +132,7 @@ public class Diplomacy implements Serializable{
 
 	boolean generate(List<Town> discovered){
 		try{
-			for(var type:RPG.shuffle(MANDATES))
+			for(var type:RPG.shuffle(Mandate.MANDATES))
 				for(var town:RPG.shuffle(discovered)){
 					var card=type.getConstructor(Relationship.class)
 							.newInstance(relationships.get(town));
@@ -160,8 +153,10 @@ public class Diplomacy implements Serializable{
 	 */
 	public HashMap<Town,Relationship> getdiscovered(){
 		var discovered=new HashMap<Town,Relationship>(relationships.size());
-		for(var r:relationships.values())
+		for(var t:Town.gettowns()){
+			var r=relationships.get(t);
 			if(r.isdiscovered()) discovered.put(r.town,r);
+		}
 		return discovered;
 	}
 }

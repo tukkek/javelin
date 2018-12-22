@@ -21,13 +21,13 @@ public class RequestGold extends Mandate{
 	int getgold(){
 		var population=target.town.population;
 		int gold=RewardCalculator.getgold(population-1,population+1);
-		if(target.status==Relationship.INDIFFERENT) gold/=2;
+		if(target.getstatus()==Relationship.INDIFFERENT) gold/=2;
 		return gold;
 	}
 
 	@Override
 	public boolean validate(Diplomacy d){
-		return target.status>=Relationship.INDIFFERENT&&getgold()!=0
+		return target.getstatus()>=Relationship.INDIFFERENT&&getgold()!=0
 				&&getsquad()!=null;
 	}
 

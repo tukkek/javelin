@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -17,6 +18,8 @@ import javax.swing.JFrame;
 import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
+
+import javelin.Javelin;
 
 /**
  * Represents an AWT window.
@@ -102,6 +105,7 @@ public abstract class Frame{
 
 	/** Open dialog. */
 	public void show(){
+		frame.setIconImages(Arrays.asList(Javelin.ICONS));
 		frame.setContentPane(generate());
 		frame.pack();
 		position(frame);

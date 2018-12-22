@@ -41,6 +41,7 @@ public class DungeonDelve extends Campaign{
 		fogofwar=false;
 		quests=false;
 		diplomacy=false;
+		helpfile="Dungeon delve";
 	}
 
 	@Override

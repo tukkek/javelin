@@ -26,10 +26,12 @@ public abstract class WorldAction implements ActionDescription{
 			new CastSpells(), // s
 			new ShowStatistics(), // v
 			new ClearHighscore(), // C
-			new Infiltrate(),new Dismiss(), // D
+			new ShowDiplomacy(), //D
+			new Infiltrate(), //I
+			new ConfigureWorldKeys(), // K
+			new Retire(), // R
 			new ZoomWorldIn(), // +
 			new ZoomWorldOut(), // +
-			new ConfigureWorldKeys(), // K
 			new Abandon(), // Q
 			Guide.HOWTO,Guide.MINIGAMES,Guide.ARTIFACTS,Guide.CONDITIONS,Guide.ITEMS,
 			Guide.SKILLS,Guide.SPELLS,Guide.UGRADES,Guide.DISTRICT,Guide.KITS,

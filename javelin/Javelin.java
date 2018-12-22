@@ -508,4 +508,9 @@ public class Javelin{
 		}
 		return count.toString();
 	}
+
+	/** @return A "Capitalized" version of the input. */
+	public static String capitalize(String s){
+		return Character.toUpperCase(s.charAt(0))+s.substring(1).toLowerCase();
+	}
 }

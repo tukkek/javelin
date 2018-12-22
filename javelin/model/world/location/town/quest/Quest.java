@@ -106,14 +106,15 @@ public abstract class Quest implements Serializable{
 
 		@Override
 		public void place(){
-			x=-1;
-			var actors=World.getactors();
-			HashSet<Point> districts=Town.getdistricts();
-			while(x==-1||!World.validatecoordinate(x,y)
-					||Terrain.get(x,y).equals(Terrain.WATER)||World.get(x,y,actors)!=null
-					||districts.contains(getlocation())){
-				x=RPG.r(town.x-distance,town.x+distance);
-				y=RPG.r(town.y-distance,town.y+distance);
+			if(x==-1){
+				var actors=World.getactors();
+				HashSet<Point> districts=Town.getdistricts();
+				while(x==-1||!World.validatecoordinate(x,y)
+						||Terrain.get(x,y).equals(Terrain.WATER)
+						||World.get(x,y,actors)!=null||districts.contains(getlocation())){
+					x=RPG.r(town.x-distance,town.x+distance);
+					y=RPG.r(town.y-distance,town.y+distance);
+				}
 			}
 			super.place();
 			WorldScreen.current.mappanel.tiles[x][y].discovered=true;

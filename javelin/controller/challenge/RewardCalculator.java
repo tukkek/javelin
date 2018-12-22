@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import javelin.Javelin;
 import javelin.controller.comparator.DescendingLevelComparator;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
@@ -213,5 +214,38 @@ public class RewardCalculator{
 			}
 		}
 		return items;
+	}
+
+	/**
+	 * {@link #getgold(float)} is "correct", however it always returns the exact
+	 * value in gold for a given input. To mitigate this, this method will return
+	 * a range, usually between <code>gold(cr-1)</code> and
+	 * <code>gold(cr+1)</code>.
+	 *
+	 * Since d20 progresson rules are exponential, this method goes through an
+	 * extra layer to provide fairness since a naive approach between cr-1 and
+	 * cr+1 is more likely to provide results higher than lower. This is decided
+	 * by a prior 50% chance of giving either a "lower" or "higher" result and
+	 * then proceeds from there to determine it (for example: either
+	 * <code>[cr-1,cr]</code> or <code>[cr,cr+1]</code>.
+	 *
+	 * @param cr As in {@link #getgold(float)}.
+	 * @param delta How much leeway to grant the given CR, up or down (use more
+	 *          than 1 with caution).
+	 * @return A random, rounded amount of gold.
+	 * @see Javelin#round(int)
+	 */
+	public static int getgold(int cr,int delta){
+		assert delta>0;
+		int min;
+		int max;
+		if(RPG.chancein(2)){
+			min=cr-RPG.r(1,delta);
+			max=cr;
+		}else{
+			min=cr;
+			max=cr+RPG.r(1,delta);
+		}
+		return Javelin.round(RPG.r(getgold(min),getgold(max)));
 	}
 }

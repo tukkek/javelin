@@ -44,7 +44,7 @@ public class ArtOfWar extends Scenario{
 	public ArtOfWar(){
 		statictowns=false;
 		featuregenerator=AowGenerator.class;
-		helpfile="artofwar";
+		helpfile="Art of war";
 		labormodifier=0;
 		spawn=false;
 		asksquadnames=false;

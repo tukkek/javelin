@@ -15,14 +15,14 @@ import javelin.view.screen.WorldScreen;
  *
  * @author alex
  */
-public class Dismiss extends WorldAction{
-	static final String ALLMERCENARIES="Dismiss all mercenaries";
+public class Retire extends WorldAction{
+	static final String ALLMERCENARIES="Retire all mercenaries";
 	static List<String> CONFIRM=Arrays
 			.asList(new String[]{"Yes, I am sure.","Not really, keep unit."});
 
 	/** Constructor. */
-	public Dismiss(){
-		super("Dismiss squad member",new int[]{'D'},new String[]{"D"});
+	public Retire(){
+		super("Retire squad member",new int[]{'R'},new String[]{"R"});
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class Dismiss extends WorldAction{
 			dismissmercenaries=squad.indexOf(mercenaries.get(0));
 			members.add(dismissmercenaries,ALLMERCENARIES);
 		}
-		String prompt="Which squad member do you want to dismiss?";
+		String prompt="Which squad member do you want to retire?";
 		int choice=Javelin.choose(prompt,members,true,false);
 		if(choice==dismissmercenaries)
 			dismissmercenaries(mercenaries);
@@ -54,7 +54,7 @@ public class Dismiss extends WorldAction{
 	}
 
 	void dismissmercenaries(List<Combatant> mercenaries){
-		if(confirm("Do you want to dismiss all of your mercenaries?"))
+		if(confirm("Do you want to retire all of your mercenaries?"))
 			for(Combatant c:mercenaries)
 			c.dismiss(Squad.active);
 	}
@@ -63,7 +63,7 @@ public class Dismiss extends WorldAction{
 		float dailyupkeep=chosen.source.eat();
 		if(chosen.mercenary) dailyupkeep+=chosen.pay();
 		final String formattedcost=Javelin.format(Math.round(dailyupkeep));
-		if(confirm("Are you sure you want to dismiss "+chosen
+		if(confirm("Are you sure you want to retire "+chosen
 				+", with a daily cost of $"+formattedcost+"?"))
 			chosen.dismiss(Squad.active);
 	}

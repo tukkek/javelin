@@ -157,11 +157,10 @@ public class LauncherDialog extends JFrame{
 	JLabel write(String s){
 		JLabel l=new JLabel();
 		l.setText("<html>"+s+"<html>");
-		//		l.setMaximumSize(new Dimension(400,1000));
 		return l;
 	}
 
-	void addbutton(String text,Container buttonarea,ActionListener action){
+	static void addbutton(String text,Container buttonarea,ActionListener action){
 		Button b=new Button(text);
 		buttonarea.add(b);
 		b.addActionListener(action);

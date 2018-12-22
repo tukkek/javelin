@@ -129,15 +129,16 @@ public class WorldScreen extends BattleScreen{
 
 	void move(){
 		try{
+			if(callback!=null){
+				callback.run();
+				callback=null;
+				throw new RepeatTurn();
+			}
 			redraw();
 			Interface.userinterface.waiting=true;
 			final KeyEvent updatableUserAction=getUserInput();
 			if(MapPanel.overlay!=null) MapPanel.overlay.clear();
-			if(updatableUserAction==null){
-				callback.run();
-				callback=null;
-			}else
-				perform(updatableUserAction);
+			perform(updatableUserAction);
 		}catch(RepeatTurn e){
 			MessagePanel.active.clear();
 			updateplayerinformation();
@@ -146,6 +147,7 @@ public class WorldScreen extends BattleScreen{
 	}
 
 	void perform(KeyEvent keyEvent){
+		if(keyEvent==null) return;
 		for(final WorldAction a:WorldAction.ACTIONS)
 			for(final String s:a.morekeys)
 				if(s.equals(Character.toString(keyEvent.getKeyChar()))){

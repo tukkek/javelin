@@ -34,7 +34,7 @@ public enum Realm{
 			case FIRE:
 				return java.awt.Color.RED;
 			case EARTH:
-				return java.awt.Color.GREEN;
+				return java.awt.Color.GREEN.darker();
 			case EVIL:
 				return java.awt.Color.BLACK;
 			case AIR:

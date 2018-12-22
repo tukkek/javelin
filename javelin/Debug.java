@@ -6,12 +6,14 @@ import java.util.List;
 import javelin.controller.action.Help;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.db.Preferences;
+import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.generator.WorldGenerator;
 import javelin.controller.map.Map;
 import javelin.controller.scenario.Scenario;
 import javelin.model.Realm;
+import javelin.model.diplomacy.Diplomacy;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -128,6 +130,13 @@ public class Debug{
 				text+=reset+"\n\n";
 			}
 			new TextWindow("World generation resets",text).show();
+		}
+
+		static void fillreputation(){
+			var d=Diplomacy.instance;
+			d.reputation=Diplomacy.TRIGGER;
+			d.turn();
+			throw new RepeatTurn();
 		}
 	}
 

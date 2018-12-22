@@ -2,7 +2,10 @@ package javelin.model.unit;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.TreeSet;
 
+import javelin.Debug;
+import javelin.Javelin;
 import javelin.old.RPG;
 
 /**
@@ -19,7 +22,12 @@ public class Alignment implements Serializable{
 		/** In-between {@link #LAWFUL} and {@link #CHAOTIC}. */
 		NEUTRAL,
 		/** Random, instinctual, baser. */
-		CHAOTIC
+		CHAOTIC;
+
+		@Override
+		public String toString(){
+			return tostring(this);
+		}
 	}
 
 	/** Good, neutral or evil. */
@@ -29,7 +37,12 @@ public class Alignment implements Serializable{
 		/** Neither {@link #GOOD} nor {@link #EVIL}. */
 		NEUTRAL,
 		/** Antisocial, harmful, cruel. */
-		EVIL
+		EVIL;
+
+		@Override
+		public String toString(){
+			return tostring(this);
+		}
 	}
 
 	/** @see Ethics */
@@ -92,5 +105,62 @@ public class Alignment implements Serializable{
 		var ethics=RPG.pick(Arrays.asList(Ethics.values()));
 		var morals=RPG.pick(Arrays.asList(Morality.values()));
 		return new Alignment(ethics,morals);
+	}
+
+	static String tostring(Enum<?> e){
+		return Javelin.capitalize(e.name());
+	}
+
+	/**
+	 * @return A positive number if both alignments are similar, a negative number
+	 *         if they are incompatible or zero if neutral to each other.
+	 */
+	int align(Alignment a){
+		var aligned=0;
+		if(ethics.equals(a.ethics))
+			aligned+=1;
+		else if(islawful()&&a.ischaotic())
+			aligned-=1;
+		else if(ischaotic()&&a.islawful()) aligned-=1;
+		if(morals.equals(a.morals))
+			aligned+=1;
+		else if(isgood()&&a.isevil())
+			aligned-=1;
+		else if(isevil()&&a.isgood()) aligned-=1;
+		return aligned;
+	}
+
+	/** @return <code>true</code> if both alignments are mostly compatible. */
+	public boolean iscompatible(Alignment a){
+		return align(a)>0;
+	}
+
+	/** @return <code>true</code> if both alignments are mostly incompatible. */
+	public boolean isincompatible(Alignment a){
+		return align(a)<0;
+	}
+
+	/**
+	 * Tests compatiblity methods.
+	 *
+	 * @see #iscompatible(Alignment)
+	 * @see #isincompatible(Alignment)
+	 * @see Debug
+	 */
+	static public String testcompatibility(){
+		var result=new TreeSet<String>();
+		for(int i=0;i<1000;i++){
+			var a=random();
+			var b=random();
+			String s=a+" vs "+b+":";
+			if(a.iscompatible(b))
+				s+=" compatible";
+			else if(a.isincompatible(b))
+				s+=" incompatible";
+			else
+				s+=" neutral";
+			result.add(s);
+		}
+		return String.join("\n",result);
 	}
 }

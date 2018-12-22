@@ -393,4 +393,9 @@ public class Scenario implements Serializable{
 	public void endturn(){
 		// nothing by default
 	}
+
+	@Override
+	public String toString(){
+		return helpfile;
+	}
 }

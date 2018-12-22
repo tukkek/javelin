@@ -29,7 +29,7 @@ public class DungeonWorld extends Campaign{
 		expiredungeons=true;
 		worldencounters=false;
 		worldhazards=false;
-		helpfile="Dungeon World";
+		helpfile="Dungeon world";
 		spawn=false;
 		labormodifier=0;
 		featuregenerator=ZoneGenerator.class;

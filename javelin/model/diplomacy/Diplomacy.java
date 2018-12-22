@@ -10,7 +10,6 @@ import java.util.TreeSet;
 import javelin.Javelin;
 import javelin.controller.db.StateManager;
 import javelin.model.diplomacy.mandate.Mandate;
-import javelin.model.unit.Alignment;
 import javelin.model.world.World;
 import javelin.model.world.location.ResourceSite.Resource;
 import javelin.model.world.location.town.Town;
@@ -26,9 +25,6 @@ import javelin.view.screen.WorldScreen;
  * before diplomatic actions are allowed on it.
  *
  * TODO
- *
- * influence positive and negative (50% of influencing
- * {@link Alignment#iscompatible(Alignment)}
  *
  * RequestTrade {@link Resource}s (requires ally), giving resource to second
  * target and increasing status too

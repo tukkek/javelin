@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javelin.Debug;
 import javelin.controller.action.world.Guide;
+import javelin.model.diplomacy.Diplomacy;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.view.screen.Option;
@@ -107,7 +108,12 @@ public class GovernorScreen extends SelectScreen{
 			info+=town.resources.stream().map(r->r.name.toLowerCase()).sorted()
 					.collect(Collectors.joining(", "))+".";
 		info+="\n  Mood: "+t.describehappiness().toLowerCase()+".";
-		info+="\n  Reputation: "+t.generatereputation()+" per day (on average).";
+		if(Diplomacy.instance!=null){
+			var status=Diplomacy.instance.getdiscovered().get(town).describestatus()
+					.toLowerCase();
+			info+="\n  Diplomatic status: "+status;
+			info+="\n  Reputation: "+t.generatereputation()+" per day (on average).";
+		}
 		return info;
 	}
 

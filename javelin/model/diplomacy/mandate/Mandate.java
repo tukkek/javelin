@@ -25,7 +25,7 @@ public abstract class Mandate implements Serializable,Comparable<Mandate>{
 	public static final List<Class<? extends Mandate>> MANDATES=new ArrayList<>(
 			List.of(RaiseHandSize.class,Redraw.class,RequestGold.class,
 					RequestMercenaries.class,RevealAlignment.class,
-					ImproveRelationship.class,Insult.class));
+					ImproveRelationship.class,Insult.class,RequestTrade.class));
 
 	/**
 	 * Used for equality as well.

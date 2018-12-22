@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javelin.model.unit.Alignment.Ethics;
 import javelin.model.unit.Alignment.Morality;
 import javelin.model.world.location.town.Town;
+import javelin.view.screen.WorldScreen;
 
 /**
  * Represents the player's relationship to a given {@link Town}.
@@ -57,5 +58,24 @@ public class Relationship implements Serializable{
 	@Override
 	public String toString(){
 		return town.toString();
+	}
+
+	/**
+	 * @return A description of {@link Town#alignment}, taking {@link #showethics}
+	 *         and {@link #showmorals} into account.
+	 */
+	public String describealignment(){
+		if(showethics&&showmorals) return town.alignment.toString();
+		if(showethics) return town.alignment.ethics+" ???";
+		if(showmorals) return "??? "+town.alignment.morals.toString().toLowerCase();
+		return "Unknown alignment";
+	}
+
+	/**
+	 * @return <code>false</code> if {@link Town} hasn't been discovered yet.
+	 *         Undiscovered factions are largely ignored by {@link Diplomacy}.
+	 */
+	public boolean isdiscovered(){
+		return WorldScreen.see(town.getlocation());
 	}
 }

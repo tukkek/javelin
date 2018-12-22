@@ -21,7 +21,7 @@ public abstract class Mandate implements Serializable,Comparable<Mandate>{
 	 */
 	public String name;
 	/** May be ignored by cards that have no target. */
-	Relationship target;
+	protected Relationship target;
 
 	/** Reflection constructor. */
 	public Mandate(Relationship r){

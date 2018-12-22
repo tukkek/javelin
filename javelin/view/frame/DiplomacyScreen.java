@@ -114,12 +114,7 @@ public class DiplomacyScreen extends Frame{
 		rank.setToolTipText(t.population+" population");
 		info.add(rank);
 		info.add(r.describestatus());
-		if(r.showethics&&r.showmorals)
-			info.add(t.alignment.toString());
-		else if(r.showethics)
-			info.add(t.alignment.ethics+" ???");
-		else if(r.showmorals)
-			info.add("??? "+t.alignment.morals.toString().toLowerCase());
+		info.add(r.describealignment());
 		if(t.ishostile()){
 			var l=new JLabel("Hostile ("+Difficulty.describe(t.garrison)+")");
 			l.setForeground(Color.RED);

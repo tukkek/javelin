@@ -21,6 +21,8 @@ import javelin.controller.map.location.TownMap;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
+import javelin.model.diplomacy.Diplomacy;
+import javelin.model.diplomacy.Relationship;
 import javelin.model.unit.Alignment;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -438,11 +440,21 @@ public class Town extends Location{
 	}
 
 	/**
+	 * Each town generates {@link Diplomacy#reputation} according to three
+	 * factors: number of {@link #resources} and {@link #happiness} (both of which
+	 * only count if the town is not hostile) and its {@link Relationship#status}.
+	 *
 	 * @return 0 or more reputation points based on {@link #happiness} and
-	 *         {@link #resources}.
+	 *         {@link #resources}. Reputation never goes down so negative values
+	 *         are returned as zero.
+	 * @see #ishostile()
 	 */
 	public int generatereputation(){
-		var reputation=resources.size()+Math.round(gethappiness()/HAPPINESSSTEP);
+		var r=Diplomacy.instance.relationships.get(this);
+		if(!r.isdiscovered()) return 0;
+		var reputation=r.status;
+		if(!ishostile())
+			reputation+=resources.size()+Math.round(gethappiness()/HAPPINESSSTEP);
 		return Math.max(0,reputation);
 	}
 }

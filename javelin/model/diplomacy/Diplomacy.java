@@ -12,8 +12,10 @@ import javelin.controller.db.StateManager;
 import javelin.model.diplomacy.mandate.Mandate;
 import javelin.model.diplomacy.mandate.RaiseHandSize;
 import javelin.model.diplomacy.mandate.Redraw;
+import javelin.model.diplomacy.mandate.RequestEthics;
 import javelin.model.diplomacy.mandate.RequestGold;
 import javelin.model.diplomacy.mandate.RequestMercenaries;
+import javelin.model.diplomacy.mandate.RequestMorals;
 import javelin.model.unit.Alignment;
 import javelin.model.world.World;
 import javelin.model.world.location.ResourceSite.Resource;
@@ -31,8 +33,6 @@ import javelin.view.screen.WorldScreen;
  *
  * TODO
  *
- * 2x show alignment (influencing to Ally will show both)
- *
  * influence positive and negative (50% of influencing
  * {@link Alignment#iscompatible(Alignment)}
  *
@@ -44,8 +44,12 @@ import javelin.view.screen.WorldScreen;
  * RequestMap (reveals area equal to District#radius+Town#rank, if not entirely
  * revealed already) - requires Friendly
  *
+ * TODO with 2.0, when we have html documentation instead of F1-F12, include
+ * overview and card documentation
+ *
  * @author alex
  * @see Town#ishostile()
+ * @see Town#generatereputation()
  */
 public class Diplomacy implements Serializable{
 	/** Amount of {@link #reputation} to unlock a diplomatic action. */
@@ -60,9 +64,9 @@ public class Diplomacy implements Serializable{
 
 	static final String NOTIFICATION="You have earned enough reputation to warrant a diplomatic action.\n"
 			+"Press d at any time to consider your options. Note that no further reputation will be gained until you perform an action.";
-	static List<Class<? extends Mandate>> MANDATES=new ArrayList<>(
+	static final List<Class<? extends Mandate>> MANDATES=new ArrayList<>(
 			List.of(RaiseHandSize.class,Redraw.class,RequestGold.class,
-					RequestMercenaries.class));
+					RequestMercenaries.class,RequestEthics.class,RequestMorals.class));
 
 	/** Map of town by relationship data. */
 	public Map<Town,Relationship> relationships=new HashMap<>();
@@ -93,6 +97,7 @@ public class Diplomacy implements Serializable{
 	}
 
 	/**
+	 *
 	 * @param randomize Whether to randomize the result or not.
 	 * @return Amount of {@link #reputation} garnered in a day.
 	 * @see RPG#randomize(int)
@@ -154,10 +159,9 @@ public class Diplomacy implements Serializable{
 	 * @see WorldScreen#see(javelin.controller.Point)
 	 */
 	public HashMap<Town,Relationship> getdiscovered(){
-		var discovered=new HashMap<Town,Relationship>();
-		for(Town t:Town.gettowns())
-			if(WorldScreen.see(t.getlocation()))
-				discovered.put(t,relationships.get(t));
+		var discovered=new HashMap<Town,Relationship>(relationships.size());
+		for(var r:relationships.values())
+			if(r.isdiscovered()) discovered.put(r.town,r);
 		return discovered;
 	}
 }

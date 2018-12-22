@@ -1,10 +1,11 @@
-package javelin.model.diplomacy.mandate;
+package javelin.model.diplomacy.mandate.unit;
 
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.terrain.Terrain;
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.diplomacy.Relationship;
+import javelin.model.diplomacy.mandate.Mandate;
 import javelin.model.world.location.town.District;
 import javelin.old.RPG;
 

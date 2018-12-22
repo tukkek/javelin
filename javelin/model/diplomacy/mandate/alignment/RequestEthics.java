@@ -1,8 +1,9 @@
-package javelin.model.diplomacy.mandate;
+package javelin.model.diplomacy.mandate.alignment;
 
 import javelin.Javelin;
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.diplomacy.Relationship;
+import javelin.model.diplomacy.mandate.Mandate;
 import javelin.model.unit.Alignment;
 import javelin.model.world.location.town.Town;
 

@@ -1,4 +1,4 @@
-package javelin.model.diplomacy.mandate;
+package javelin.model.diplomacy.mandate.alignment;
 
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.diplomacy.Relationship;

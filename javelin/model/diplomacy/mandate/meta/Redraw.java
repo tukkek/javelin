@@ -1,7 +1,8 @@
-package javelin.model.diplomacy.mandate;
+package javelin.model.diplomacy.mandate.meta;
 
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.diplomacy.Relationship;
+import javelin.model.diplomacy.mandate.Mandate;
 
 /**
  * Clears {@link Diplomacy#hand}.

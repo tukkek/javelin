@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Taking a collection of items during or after construction, will serve those
@@ -80,7 +81,13 @@ public class InfiniteList<T> implements Serializable{
 		return "Current pool: "+current;
 	}
 
+	/** @return How many elements define the content set. */
 	public int getcontentsize(){
 		return content.size();
+	}
+
+	/** @return A copy of {@link #content}. */
+	public List<T> getcontent(){
+		return new ArrayList<>(content);
 	}
 }

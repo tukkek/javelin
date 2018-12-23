@@ -1,5 +1,6 @@
 package javelin.controller.event.urban;
 
+import javelin.controller.ContentSummary;
 import javelin.controller.event.EventCard;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Rank;
@@ -27,15 +28,17 @@ public abstract class UrbanEvent extends EventCard{
 	protected boolean notify;
 
 	/**
-	 * @param t See {@link #town}.
+	 * @param t See {@link #town}. Should only be <code>null</code> during
+	 *          {@link ContentSummary} analysis.
 	 * @param trait See {@link #trait}.
 	 * @param minimum See {@link #minimumrank}.
+	 * @see UrbanEvents#printsummary(String)
 	 */
 	public UrbanEvent(Town t,String trait,Rank minimum){
 		town=t;
 		this.trait=trait;
 		minimumrank=minimum;
-		notify=!town.ishostile();
+		notify=town!=null&&!town.ishostile();
 	}
 
 	@Override

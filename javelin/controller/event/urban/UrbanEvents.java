@@ -1,5 +1,7 @@
 package javelin.controller.event.urban;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javelin.controller.db.StateManager;
@@ -10,6 +12,7 @@ import javelin.controller.event.urban.basic.ImproveRelationship;
 import javelin.controller.event.urban.basic.NothingHappens;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.Trait;
 import javelin.old.RPG;
 
 /**
@@ -64,5 +67,31 @@ public class UrbanEvents extends EventDealer{
 		else
 			throw new RuntimeException("Unknown happines: "+happiness);
 		return RPG.pick(choices);
+	}
+
+	@Override
+	public String printsummary(String title){
+		var info=new ArrayList<String>();
+		info.add(positive.getcontentsize()+" positive");
+		info.add(neutral.getcontentsize()+" neutral");
+		info.add(negative.getcontentsize()+" negative");
+		var types=new HashSet<Class<? extends EventCard>>();
+		types.addAll(positive.getcontent());
+		types.addAll(neutral.getcontent());
+		types.addAll(negative.getcontent());
+		var cards=new ArrayList<UrbanEvent>(types.size());
+		var unknown=0;
+		generating=null;
+		for(var t:types)
+			try{
+				cards.add((UrbanEvent)newinstance(t));
+			}catch(Exception e){
+				unknown+=1;
+			}
+		info.add(cards.stream().filter(c->c.trait==null).count()+" basic");
+		for(var t:Trait.ALL)
+			info.add(cards.stream().filter(c->t.equals(c.trait)).count()+" "+t);
+		info.add(unknown+" unknown");
+		return types.size()+" "+title.toLowerCase()+" ("+String.join(", ",info)+")";
 	}
 }

@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
+import javelin.controller.event.urban.UrbanEvents;
 import javelin.controller.event.wild.WildEvents;
 import javelin.controller.kit.Kit;
 import javelin.controller.terrain.Terrain;
@@ -135,6 +136,7 @@ public class ContentSummary{
 		print(Deck.getsummary());
 		print(Quest.printsummary());
 		print(WildEvents.instance.printsummary("wilderness events"));
+		print(UrbanEvents.instance.printsummary("Urban events"));
 		print(Mandate.printsummary());
 	}
 

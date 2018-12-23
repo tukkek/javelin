@@ -1,5 +1,8 @@
 package javelin.model.world.location.town.labor;
 
+import java.util.List;
+import java.util.TreeSet;
+
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
@@ -29,6 +32,9 @@ public class Trait extends Labor{
 	public static final String RELIGIOUS="religious";
 	/** Trait name. */
 	public static final String NATURAL="natural";
+	/** Ordered set of all {@link Trait} names. */
+	public static final TreeSet<String> ALL=new TreeSet<>(List.of(EXPANSIVE,
+			MERCANTILE,MILITARY,MAGICAL,CRIMINAL,RELIGIOUS,NATURAL));
 
 	String traitname;
 

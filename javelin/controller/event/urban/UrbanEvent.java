@@ -6,8 +6,11 @@ import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 
+/**
+ * @see UrbanEvents
+ * @author alex
+ */
 public abstract class UrbanEvent extends EventCard{
-
 	/**
 	 * If not-<code>null</code>, requires this {@link Town} trait to be valid.
 	 *

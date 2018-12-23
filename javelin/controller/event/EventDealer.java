@@ -1,11 +1,14 @@
 package javelin.controller.event;
 
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.util.HashSet;
 import java.util.List;
 
 import javelin.controller.ContentSummary;
 import javelin.controller.InfiniteList;
+import javelin.controller.event.urban.UrbanEvents;
+import javelin.controller.event.wild.WildEvents;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.PointOfInterest;
 import javelin.old.RPG;
@@ -103,6 +106,18 @@ public abstract class EventDealer implements Serializable{
 		}
 	}
 
+	/**
+	 * Given a type of card, instantiate it. Subclasses may have different
+	 * {@link Constructor}s so this allows the execution of the proper reflection
+	 * operations.
+	 *
+	 * This is only responsible for returning a
+	 * {@link Constructor#newInstance(Object...)}. Other operations, such as
+	 * validation are performed elsewhere.
+	 *
+	 * @see WildEvents#generating
+	 * @see UrbanEvents#generating
+	 */
 	protected EventCard newinstance(Class<? extends EventCard> type)
 			throws ReflectiveOperationException{
 		return type.getDeclaredConstructor().newInstance();

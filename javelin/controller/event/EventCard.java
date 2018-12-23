@@ -17,7 +17,6 @@ import javelin.model.world.location.PointOfInterest;
  *
  * @author alex
  */
-@SuppressWarnings("rawtypes")
 public abstract class EventCard{
 	/**
 	 * A fight to be triggered from an {@link EventCard}.
@@ -27,17 +26,20 @@ public abstract class EventCard{
 	protected class EventFight extends Fight{
 		ArrayList<Combatant> foes=new ArrayList<>(1);
 
+		/** Constructor. */
 		protected EventFight(Actor l){
 			terrain=Terrain.get(l.x,l.y);
 			hide=false;
 			bribe=false;
 		}
 
+		/** Constructor. */
 		public EventFight(Combatant mercenary,Actor l){
 			this(l);
 			foes.add(mercenary);
 		}
 
+		/** Constructor. */
 		public EventFight(List<Combatant> foes,Actor l){
 			this(l);
 			this.foes.addAll(foes);
@@ -75,9 +77,9 @@ public abstract class EventCard{
 	 * Some events are not instantaneous and as such they may be defined once and
 	 * activated many times later.
 	 *
-	 * This is called after {@link #validate(Squad, int)} and is
-	 * meant to contain any slower operations, as it's only called once when a
-	 * valid card is selected.
+	 * This is called after {@link #validate(Squad, int)} and is meant to contain
+	 * any slower operations, as it's only called once when a valid card is
+	 * selected.
 	 *
 	 * Parameters are the same as
 	 * {@link EventDealer#generate(Squad, int, Location)}.

@@ -10,6 +10,7 @@ import java.util.TreeSet;
 import javelin.Javelin;
 import javelin.controller.db.StateManager;
 import javelin.model.diplomacy.mandate.Mandate;
+import javelin.model.diplomacy.mandate.meta.RaiseHandSize;
 import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
@@ -17,15 +18,21 @@ import javelin.view.frame.DiplomacyScreen;
 import javelin.view.screen.WorldScreen;
 
 /**
- * Offers long-term card-game-like actions to pursue.
+ * Offers long-term card-game-like actions to pursue towards {@link Town}s. Each
+ * {@link Town} is treated as an independent entity from the player, regardless
+ * of it being hostile or not. A town must be discovered, however, before
+ * diplomatic actions are allowed on it.
  *
- * Each {@link Town} is treated as an independent entity from the player,
- * regardless of it being hostile or not. A town must be discovered, however,
- * before diplomatic actions are allowed on it.
+ * Reputation is generated daily by {@link Town#generatereputation()} and upon
+ * hitting a certain {@link #TRIGGER} will allow a {@link Mandate} to be chosen.
+ * If an action is not taken immediately, reputation will still be generated but
+ * is reset to 0 once a card is played, meaning that it's a suboptimal play to
+ * way too long to choose. The game will remind the player of this daily.
  *
- * TODO
- *
- * RequestAlly (adds a creature pf given EL to squad in district, requires ally)
+ * A {@link #hand} of {@link Mandate} cards is persistent and will be fully
+ * replenished to {@link #handsize} once {@link #TRIGGER} is hit. Invalid cards
+ * will be removed on demand but not replenished immediately to prevent
+ * scumming.
  *
  * TODO with 2.0, when we have html documentation instead of F1-F12, include
  * overview and card documentation
@@ -33,6 +40,8 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  * @see Town#ishostile()
  * @see Town#generatereputation()
+ * @see Mandate#validate(Diplomacy)
+ * @see RaiseHandSize
  */
 public class Diplomacy implements Serializable{
 	/** Amount of {@link #reputation} to unlock a diplomatic action. */

@@ -126,6 +126,6 @@ public abstract class Mandate implements Serializable,Comparable<Mandate>{
 
 	/** @see ContentSummary */
 	public static String printsummary(){
-		return MANDATES.size()+" diplomatic actions.";
+		return MANDATES.size()+" diplomatic actions";
 	}
 }

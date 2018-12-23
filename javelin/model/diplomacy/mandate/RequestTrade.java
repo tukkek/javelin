@@ -2,6 +2,7 @@ package javelin.model.diplomacy.mandate;
 
 import java.util.ArrayList;
 
+import javelin.Javelin;
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.diplomacy.Relationship;
 import javelin.model.world.location.ResourceSite.Resource;
@@ -48,5 +49,13 @@ public class RequestTrade extends Mandate{
 	@Override
 	public void act(Diplomacy d){
 		destination.resources.add(type);
+		var relationship=Diplomacy.instance.getdiscovered().get(destination);
+		String message="Trade route established, "+target+" gets "
+				+type.toString().toLowerCase()+"!";
+		if(relationship!=null&&relationship.changestatus(+1)){
+			var status=relationship.describestatus().toLowerCase();
+			message+="\nNew relationship status with "+target+": "+status+".";
+		}
+		Javelin.message(message,true);
 	}
 }

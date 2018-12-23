@@ -2,8 +2,10 @@ package javelin.model.diplomacy.mandate;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.diplomacy.Relationship;
 import javelin.model.diplomacy.mandate.influence.ImproveRelationship;
@@ -13,6 +15,7 @@ import javelin.model.diplomacy.mandate.meta.Redraw;
 import javelin.model.diplomacy.mandate.unit.RequestMercenaries;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 
 /**
@@ -22,10 +25,15 @@ import javelin.old.RPG;
  */
 public abstract class Mandate implements Serializable,Comparable<Mandate>{
 	/** All types of mandates. */
-	public static final List<Class<? extends Mandate>> MANDATES=new ArrayList<>(
+	static final List<Class<? extends Mandate>> MANDATES=new ArrayList<>(
 			List.of(RaiseHandSize.class,Redraw.class,RequestGold.class,
 					RequestMercenaries.class,RevealAlignment.class,
 					ImproveRelationship.class,Insult.class,RequestTrade.class));
+	/**
+	 * If {@link Javelin#DEBUG} and not-<code>null</code>, will prioritize this
+	 * card type over others.
+	 */
+	static final Class<? extends Mandate> DEBUG=null;
 
 	/**
 	 * Used for equality as well.
@@ -85,5 +93,33 @@ public abstract class Mandate implements Serializable,Comparable<Mandate>{
 	protected Squad getsquad(){
 		var squads=target.town.getdistrict().getsquads();
 		return squads.isEmpty()?null:RPG.pick(squads);
+	}
+
+	/**
+	 * @return <code>true</code> if added a valid, non-repeated mandate card to
+	 *         {@link Diplomacy#hand}.
+	 */
+	public static boolean generate(Diplomacy d){
+		try{
+			HashMap<Town,Relationship> relationships=d.getdiscovered();
+			var discovered=new ArrayList<>(relationships.keySet());
+			var deck=RPG.shuffle(MANDATES);
+			if(Javelin.DEBUG&&DEBUG!=null){
+				deck=new ArrayList<>(deck);
+				deck.remove(DEBUG);
+				deck.add(0,DEBUG);
+			}
+			for(var type:deck)
+				for(var town:RPG.shuffle(discovered)){
+					var card=type.getConstructor(Relationship.class)
+							.newInstance(relationships.get(town));
+					if(!card.validate(d)) continue;
+					card.define();
+					if(d.hand.add(card)) return true;
+				}
+			return false;
+		}catch(ReflectiveOperationException e){
+			throw new RuntimeException(e);
+		}
 	}
 }

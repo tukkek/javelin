@@ -51,13 +51,16 @@ public class Relationship implements Serializable{
 
 	/**
 	 * @param delta Applies bonus or penalty to status.
+	 * @return <code>true</code> if there was any effective change applied.
 	 */
-	public void changestatus(int delta){
+	public boolean changestatus(int delta){
+		var original=status;
 		status+=delta;
 		if(status>=ALLY){
 			status=ALLY;
 			showalignment=true;
 		}else if(status<HOSTILE) status=HOSTILE;
+		return original!=status;
 	}
 
 	/**

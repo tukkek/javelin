@@ -11,7 +11,6 @@ import javelin.Javelin;
 import javelin.controller.db.StateManager;
 import javelin.model.diplomacy.mandate.Mandate;
 import javelin.model.world.World;
-import javelin.model.world.location.ResourceSite.Resource;
 import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 import javelin.view.frame.DiplomacyScreen;
@@ -25,9 +24,6 @@ import javelin.view.screen.WorldScreen;
  * before diplomatic actions are allowed on it.
  *
  * TODO
- *
- * RequestTrade {@link Resource}s (requires ally), giving resource to second
- * target and increasing status too
  *
  * RequestAlly (adds a creature pf given EL to squad in district, requires ally)
  *
@@ -111,8 +107,7 @@ public class Diplomacy implements Serializable{
 	 */
 	public void draw(){
 		validate();
-		ArrayList<Town> discovered=new ArrayList<>(getdiscovered().keySet());
-		while(hand.size()<handsize&&generate(discovered))
+		while(hand.size()<handsize&&Mandate.generate(this))
 			continue;
 	}
 
@@ -124,22 +119,6 @@ public class Diplomacy implements Serializable{
 	public void validate(){
 		for(var card:new ArrayList<>(hand))
 			if(!card.validate(this)) hand.remove(card);
-	}
-
-	boolean generate(List<Town> discovered){
-		try{
-			for(var type:RPG.shuffle(Mandate.MANDATES))
-				for(var town:RPG.shuffle(discovered)){
-					var card=type.getConstructor(Relationship.class)
-							.newInstance(relationships.get(town));
-					if(!card.validate(this)) continue;
-					card.define();
-					if(hand.add(card)) return true;
-				}
-			return false;
-		}catch(ReflectiveOperationException e){
-			throw new RuntimeException(e);
-		}
 	}
 
 	/**

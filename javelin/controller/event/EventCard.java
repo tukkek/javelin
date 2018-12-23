@@ -56,14 +56,14 @@ public abstract class EventCard{
 	 * and revisited later so mutable conditions such as time of day shouldn't be
 	 * used for validation unless this is an instantaneous event.
 	 *
-	 * This is called before {@link #define(Squad, int, PointOfInterest)}.
+	 * This is called before {@link #define(Squad, int)}.
 	 *
 	 * Parameters are the same as
 	 * {@link EventDealer#generate(Squad, int, Location)}.
 	 *
 	 * @return <code>true</code> if this particular card can be used.
 	 */
-	public boolean validate(Squad s,int squadel,PointOfInterest l){
+	public boolean validate(Squad s,int squadel){
 		return true;
 	}
 
@@ -75,14 +75,14 @@ public abstract class EventCard{
 	 * Some events are not instantaneous and as such they may be defined once and
 	 * activated many times later.
 	 *
-	 * This is called after {@link #validate(Squad, int, PointOfInterest)} and is
+	 * This is called after {@link #validate(Squad, int)} and is
 	 * meant to contain any slower operations, as it's only called once when a
 	 * valid card is selected.
 	 *
 	 * Parameters are the same as
 	 * {@link EventDealer#generate(Squad, int, Location)}.
 	 */
-	public void define(Squad s,int squadel,PointOfInterest l){
+	public void define(Squad s,int squadel){
 		return;
 	}
 
@@ -91,9 +91,6 @@ public abstract class EventCard{
 	 *
 	 * @param s Usually {@link Squad#active}. Note that this might not be the same
 	 *          Squad as the one used to validate and define this card.
-	 * @param l The location in question. Always the same one used for validation
-	 *          and definition. Need not be removed manually, use {@link #remove}
-	 *          instead.
 	 */
-	abstract public void happen(Squad s,PointOfInterest l);
+	abstract public void happen(Squad s);
 }

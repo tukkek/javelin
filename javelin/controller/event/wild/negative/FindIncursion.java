@@ -19,12 +19,12 @@ public class FindIncursion extends WildEvent{
 
 	ArrayList<Incursion> incursions=new ArrayList<>();
 
-	public FindIncursion(){
-		super("Find incursion");
+	public FindIncursion(PointOfInterest l){
+		super("Find incursion",l);
 	}
 
 	@Override
-	public void happen(Squad s,PointOfInterest l){
+	public void happen(Squad s){
 		for(var incursion:incursions){
 			incursion.displace();
 			incursion.place();
@@ -34,7 +34,7 @@ public class FindIncursion extends WildEvent{
 	}
 
 	@Override
-	public boolean validate(Squad s,int squadel,PointOfInterest l){
+	public boolean validate(Squad s,int squadel){
 		var nincursions=1;
 		while(RPG.chancein(2))
 			nincursions+=1;
@@ -43,9 +43,9 @@ public class FindIncursion extends WildEvent{
 		while(incursions.size()<nincursions)
 			try{
 				var el=squadel+Difficulty.get();
-				var terrain=Terrain.get(l.x,l.y);
+				var terrain=Terrain.get(location.x,location.y);
 				var group=EncounterGenerator.generate(el,terrain);
-				incursions.add(new Incursion(l.x,l.y,group,realm));
+				incursions.add(new Incursion(location.x,location.y,group,realm));
 			}catch(GaveUp e){
 				tries-=1;
 				if(tries==0) return false;

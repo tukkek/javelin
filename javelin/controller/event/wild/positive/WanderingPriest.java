@@ -13,12 +13,12 @@ import javelin.model.world.location.PointOfInterest;
 public class WanderingPriest extends Wanderer{
 	static final String MESSAGE="You come accross a wandering priest, who heals all your wounds before continuing his journey!";
 
-	public WanderingPriest(){
-		super("Wandering priest");
+	public WanderingPriest(PointOfInterest l){
+		super("Wandering priest",l);
 	}
 
 	@Override
-	public void happen(Squad s,PointOfInterest l){
+	public void happen(Squad s){
 		for(var member:Squad.active.members)
 			member.heal(member.maxhp,true);
 		Javelin.message(MESSAGE,true);

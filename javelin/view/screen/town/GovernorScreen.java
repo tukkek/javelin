@@ -111,7 +111,7 @@ public class GovernorScreen extends SelectScreen{
 		if(Diplomacy.instance!=null){
 			var status=Diplomacy.instance.getdiscovered().get(town).describestatus()
 					.toLowerCase();
-			info+="\n  Diplomatic status: "+status;
+			info+="\n  Diplomatic status: "+status+".";
 			info+="\n  Reputation: "+t.generatereputation()+" per day (on average).";
 		}
 		return info;

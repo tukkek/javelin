@@ -31,12 +31,12 @@ public class WanderingHalflings extends Wanderer{
 	}
 
 	/** Reflection-frienndly constructor. */
-	public WanderingHalflings(){
-		super("Wandering halfling");
+	public WanderingHalflings(PointOfInterest l){
+		super("Wandering halfling",l);
 	}
 
 	@Override
-	public void happen(Squad s,PointOfInterest l){
+	public void happen(Squad s){
 		var nhalflings=RPG.rolldice(4,4);
 		var halfling=Javelin.getmonster("lightfoot");
 		var price=Javelin.round(Math.round(halfling.eat()*nhalflings))+s.eat();
@@ -51,7 +51,7 @@ public class WanderingHalflings extends Wanderer{
 			var foes=new ArrayList<Combatant>(nhalflings);
 			while(foes.size()<nhalflings)
 				foes.add(new Combatant(halfling,true));
-			throw new StartBattle(new EventFight(foes,l));
+			throw new StartBattle(new EventFight(foes,location));
 		}
 		if(s.gold<price){
 			Javelin.message("You don't have enough food to share...",false);

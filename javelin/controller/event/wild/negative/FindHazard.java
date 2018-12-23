@@ -18,13 +18,13 @@ public class FindHazard extends WildEvent{
 	Hazard hazard;
 
 	/** Reflection-friendly constructor. */
-	public FindHazard(){
-		super("Find hazard");
+	public FindHazard(PointOfInterest l){
+		super("Find hazard",l);
 	}
 
 	@Override
-	public boolean validate(Squad s,int squadel,PointOfInterest l){
-		var hazards=new ArrayList<>(Terrain.get(l.x,l.y).gethazards(true));
+	public boolean validate(Squad s,int squadel){
+		var hazards=new ArrayList<>(Terrain.get(location.x,location.y).gethazards(true));
 		for(var h:RPG.shuffle(hazards))
 			if(h.validate()){
 				hazard=h;
@@ -34,7 +34,7 @@ public class FindHazard extends WildEvent{
 	}
 
 	@Override
-	public void happen(Squad s,PointOfInterest l){
-		hazard.hazard(Math.round(s.move(false,Terrain.current(),l.x,l.y)));
+	public void happen(Squad s){
+		hazard.hazard(Math.round(s.move(false,Terrain.current(),location.x,location.y)));
 	}
 }

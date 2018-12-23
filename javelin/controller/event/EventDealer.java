@@ -26,7 +26,8 @@ public abstract class EventDealer implements Serializable{
 	 *
 	 * @author alex
 	 */
-	public class EventDeck extends InfiniteList<Class<? extends EventCard>>{
+	public static class EventDeck
+			extends InfiniteList<Class<? extends EventCard>>{
 		EventDeck(){
 			super(null,true);
 		}
@@ -49,11 +50,19 @@ public abstract class EventDealer implements Serializable{
 	 * @return A valid, defined event ready to be used with equal chances of being
 	 *         positive, neutral or negative.
 	 */
-	public EventCard generate(Squad s,int el,PointOfInterest l){
-		var deck=RPG.pick(List.of(positive,neutral,negative));
-		var card=draw(s,el,l,deck);
-		card.define(s,el,l);
+	public EventCard generate(Squad s,int el){
+		var deck=choosedeck();
+		var card=draw(s,el,deck);
+		card.define(s,el);
 		return card;
+	}
+
+	/**
+	 * @return By default, equal chances of {@link #positive}, {@link #neutral}
+	 *         and {@link #negative}.
+	 */
+	protected EventDeck choosedeck(){
+		return RPG.pick(List.of(positive,neutral,negative));
 	}
 
 	/** @see ContentSummary */
@@ -73,15 +82,15 @@ public abstract class EventDealer implements Serializable{
 	 * Draws until a valid card is found. Returns any invalid cards to the deck
 	 * or, whenever spent, reshuffles the entire deck.
 	 */
-	static EventCard draw(Squad s,int el,PointOfInterest l,EventDeck deck){
+	EventCard draw(Squad s,int el,EventDeck deck){
 		try{
 			var drawn=new HashSet<Class<? extends EventCard>>();
 			EventCard card=null;
 			while(card==null){
 				if(deck.isempty()) drawn.clear();
 				Class<? extends EventCard> type=deck.pop();
-				card=type.getDeclaredConstructor().newInstance();
-				if(!card.validate(s,el,l)){
+				card=newinstance(type);
+				if(!card.validate(s,el)){
 					card=null;
 					drawn.add(type);
 					continue;
@@ -92,5 +101,10 @@ public abstract class EventDealer implements Serializable{
 		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);
 		}
+	}
+
+	protected EventCard newinstance(Class<? extends EventCard> type)
+			throws ReflectiveOperationException{
+		return type.getDeclaredConstructor().newInstance();
 	}
 }

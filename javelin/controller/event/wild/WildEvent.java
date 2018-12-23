@@ -24,17 +24,19 @@ public abstract class WildEvent extends EventCard implements Serializable{
 	 * this must be flagged as <code>true</code> so that the {@link WildEvent} can
 	 * be completed and removed from the {@link World}.
 	 *
-	 * If this is <code>false</code>,
-	 * {@link #happen(Squad, javelin.model.world.location.PointOfInterest)} might
-	 * be called more than once for the same instance of this card.
+	 * If this is <code>false</code>, {@link #happen(Squad)} might be called more
+	 * than once for the same instance of this card.
 	 */
 	public boolean remove=true;
+
+	protected PointOfInterest location;
 
 	/**
 	 * Creates a named card. Subclasses should have zero-argument,
 	 * reflection-friendly constructors.
 	 */
-	public WildEvent(String name){
+	public WildEvent(String name,PointOfInterest l){
 		this.name=name;
+		this.location=l;
 	}
 }

@@ -37,12 +37,12 @@ public class FindNothing extends WildEvent{
 			"You have a sudden feeling of deja-vu!");
 
 	/** Reflection-friendly constructor. */
-	public FindNothing(){
-		super("Nothing");
+	public FindNothing(PointOfInterest l){
+		super("Nothing",l);
 	}
 
 	@Override
-	public void happen(Squad s,PointOfInterest l){
+	public void happen(Squad s){
 		ArrayList<String> messages=new ArrayList<>(MESSAGES);
 		String period=Javelin.getperiod();
 		if(period==Javelin.PERIODNOON) period="afternoon";
@@ -52,7 +52,7 @@ public class FindNothing extends WildEvent{
 			messages.add("It sure is raining a lot, isn't it..?");
 		if(s.members.size()>=3) messages.add(
 				RPG.pick(s.members)+" farts and everyone else gets upset about it.");
-		var terrain=Terrain.get(l.x,l.y).toString().toLowerCase();
+		var terrain=Terrain.get(location.x,location.y).toString().toLowerCase();
 		messages.add("For some reason, looking at the "+terrain
 				+" around you fills you with determination!");
 		Javelin.message(RPG.pick(messages),true);

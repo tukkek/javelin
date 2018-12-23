@@ -46,10 +46,11 @@ public class PointOfInterest extends Actor{
 	public boolean interact(){
 		if(card==null){
 			int el=ChallengeCalculator.calculateel(Squad.active.members);
-			card=(WildEvent)WildEvents.instance.generate(Squad.active,el,this);
+			WildEvents.generating=this;
+			card=(WildEvent)WildEvents.instance.generate(Squad.active,el);
 		}
 		try{
-			card.happen(Squad.active,this);
+			card.happen(Squad.active);
 		}finally{
 			if(card.remove) remove();
 		}

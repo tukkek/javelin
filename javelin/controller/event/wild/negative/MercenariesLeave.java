@@ -19,12 +19,12 @@ public class MercenariesLeave extends WildEvent{
 	Combatants leaving=new Combatants(0);
 
 	/** Reflection-friendly constructor. */
-	public MercenariesLeave(){
-		super("Mercenaries leave");
+	public MercenariesLeave(PointOfInterest l){
+		super("Mercenaries leave",l);
 	}
 
 	@Override
-	public boolean validate(Squad s,int squadel,PointOfInterest l){
+	public boolean validate(Squad s,int squadel){
 		var mercenaries=s.getmercenaries();
 		if(mercenaries.isEmpty()) return false;
 		var stay=s.getbest(Skill.DIPLOMACY).roll(Skill.DIPLOMACY);
@@ -36,7 +36,7 @@ public class MercenariesLeave extends WildEvent{
 	}
 
 	@Override
-	public void happen(Squad s,PointOfInterest l){
+	public void happen(Squad s){
 		Javelin.message("After an argument, some mercenaries abandon the ranks:\n"
 				+Javelin.group(leaving)+"...",true);
 		var items=new ArrayList<Item>(0);

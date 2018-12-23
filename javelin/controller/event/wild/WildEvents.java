@@ -36,10 +36,11 @@ import javelin.model.world.location.PointOfInterest;
 public class WildEvents extends EventDealer{
 	/** @see StateManager */
 	public static EventDealer instance=new WildEvents();
+	public static PointOfInterest generating;
 	static final Class<? extends WildEvent> DEBUG=null;
 
 	/** Constructor. */
-	public WildEvents(){
+	private WildEvents(){
 		positive.addcontent(List.of(FindNothing.class,WanderingPriest.class,
 				WanderingTraveller.class,RevealRegion.class,FindRuby.class,
 				WanderingPegasus.class,FindSignpost.class,RockClimb.class,
@@ -52,16 +53,23 @@ public class WildEvents extends EventDealer{
 	}
 
 	@Override
-	public EventCard generate(Squad s,int squadel,PointOfInterest l){
+	public EventCard generate(Squad s,int squadel){
 		if(Javelin.DEBUG&&WildEvents.DEBUG!=null) try{
-			var card=DEBUG.getDeclaredConstructor().newInstance();
-			if(!card.validate(s,squadel,l))
+			var card=newinstance(DEBUG);
+			if(!card.validate(s,squadel))
 				throw new UnsupportedOperationException("Invalid #wildevent card ");
-			card.define(s,squadel,l);
+			card.define(s,squadel);
 			return card;
 		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);
 		}
-		return super.generate(s,squadel,l);
+		return super.generate(s,squadel);
+	}
+
+	@Override
+	protected EventCard newinstance(Class<? extends EventCard> type)
+			throws ReflectiveOperationException{
+		return type.getDeclaredConstructor(PointOfInterest.class)
+				.newInstance(generating);
 	}
 }

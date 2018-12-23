@@ -26,32 +26,33 @@ public abstract class SkillEvent extends WildEvent{
 	 * @param confirm Confrmation key to proceed.
 	 * @param cancel Confirmation key to cancel.
 	 */
-	public SkillEvent(String name,String prompt,char confirm,char cancel){
-		super(name);
+	public SkillEvent(String name,PointOfInterest l,String prompt,char confirm,
+			char cancel){
+		super(name,l);
 		this.prompt=prompt;
 		this.confirm=confirm;
 		this.cancel=cancel;
 	}
 
 	@Override
-	public void define(Squad s,int squadel,PointOfInterest l){
-		super.define(s,squadel,l);
+	public void define(Squad s,int squadel){
+		super.define(s,squadel);
 		level=Math.round(RPG.pick(s.members).source.cr);
 		dc=10+level+RPG.randomize(10);
 	}
 
 	@Override
-	public void happen(Squad s,PointOfInterest l){
+	public void happen(Squad s){
 		var input=Javelin.prompt(prompt,Set.of(confirm,cancel));
 		if(input==cancel) return;
 		var active=getbest(s);
 		var fumble=RPG.r(1,20)==1||Javelin.DEBUG&&DEBUGFUMBLE;
-		if(fumble&&fumble(active,l)) return;
+		if(fumble&&fumble(active,location)) return;
 		if(!attempt(active)){
 			Javelin.message(fail(active),true);
 			return;
 		}
-		l.remove();
+		location.remove();
 		Javelin.message(succeed(active,givereward(s,active)),true);
 	}
 

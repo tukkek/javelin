@@ -15,17 +15,17 @@ import javelin.model.world.location.PointOfInterest;
  * @author alex
  */
 public class ConfusingFairies extends WildEvent{
-	public ConfusingFairies(){
-		super("Confusing fairies");
+	public ConfusingFairies(PointOfInterest l){
+		super("Confusing fairies",l);
 	}
 
 	@Override
-	public boolean validate(Squad s,int squadel,PointOfInterest l){
-		return Terrain.get(l.x,l.y).equals(Terrain.FOREST);
+	public boolean validate(Squad s,int squadel){
+		return Terrain.get(location.x,location.y).equals(Terrain.FOREST);
 	}
 
 	@Override
-	public void happen(Squad s,PointOfInterest l){
+	public void happen(Squad s){
 		int timelost=30-s.getbest(Skill.CONCENTRATION).roll(Skill.CONCENTRATION);
 		if(timelost<1) timelost=1;
 		Squad.active.hourselapsed+=timelost;

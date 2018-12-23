@@ -61,27 +61,25 @@ public class FindMob extends SkillEvent{
 	Combatants mob=new Combatants();
 	Terrain terrain;
 	Monster victim;
-	PointOfInterest location;
 	private String victimname;
 
 	/** Reflection-friendly constructor. */
-	public FindMob(){
-		super("Find mob",null,'t','w');
+	public FindMob(PointOfInterest l){
+		super("Find mob",l,null,'t','w');
 	}
 
 	@Override
-	public boolean validate(Squad s,int squadel,PointOfInterest l){
-		location=l;
+	public boolean validate(Squad s,int squadel){
 		if(Season.current==Season.WINTER) return false;
 		var period=Javelin.getperiod();
 		if(period!=Javelin.PERIODNOON&&period!=Javelin.PERIODEVENING) return false;
-		terrain=Terrain.get(l.x,l.y);
+		terrain=Terrain.get(location.x,location.y);
 		return terrain.equals(Terrain.HILL)||terrain.equals(Terrain.PLAIN);
 	}
 
 	@Override
-	public void define(Squad s,int squadel,PointOfInterest l){
-		victim=FindWounded.selectwounded(s,l,-1);
+	public void define(Squad s,int squadel){
+		victim=FindWounded.selectwounded(s,location,-1);
 		while(mob.isEmpty()||ChallengeCalculator.calculateel(mob)<squadel)
 			mob.add(new Combatant(victim,true));
 		victimname=victim.toString().toLowerCase();
@@ -89,7 +87,7 @@ public class FindMob extends SkillEvent{
 				+"The mob is composed of "+mob.size()+" "+victimname+".\n"
 				+"Do you want to try to calm the mob down?\n"
 				+"Press t to talk the mob down or w to walk away from it...";
-		super.define(s,squadel,l);
+		super.define(s,squadel);
 	}
 
 	@Override

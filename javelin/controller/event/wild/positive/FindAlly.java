@@ -23,13 +23,13 @@ public class FindAlly extends Wanderer{
 	Monster ally;
 
 	/** Reflection-friendly constructor. */
-	public FindAlly(){
-		super("Find ally");
+	public FindAlly(PointOfInterest l){
+		super("Find ally",l);
 	}
 
 	@Override
-	public boolean validate(Squad s,int squadel,PointOfInterest l){
-		var terrain=Terrain.get(l.x,l.y);
+	public boolean validate(Squad s,int squadel){
+		var terrain=Terrain.get(location.x,location.y);
 		var candidates=terrain.getmonsters().stream().filter(m->m.think(-1)).filter(
 				m->squadel+Difficulty.IRRELEVANT+1<=m.cr&&m.cr<=squadel+Difficulty.EASY)
 				.collect(Collectors.toList());
@@ -39,7 +39,7 @@ public class FindAlly extends Wanderer{
 	}
 
 	@Override
-	public void happen(Squad s,PointOfInterest l){
+	public void happen(Squad s){
 		var prompt="A friendly "+ally.toString().toLowerCase()
 				+" wants to join your ranks!";
 		var options=List.of("Welcome aboard!","Decline","Attack");
@@ -47,6 +47,6 @@ public class FindAlly extends Wanderer{
 		if(choice==0)
 			s.recruit(ally);
 		else if(choice==2)
-			throw new StartBattle(new EventFight(new Combatant(ally,true),l));
+			throw new StartBattle(new EventFight(new Combatant(ally,true),location));
 	}
 }

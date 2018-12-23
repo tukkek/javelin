@@ -25,20 +25,20 @@ public class RevealRegion extends WildEvent{
 	String friend=null;
 
 	/** Reflection-friendly constructor. */
-	public RevealRegion(){
-		super("Reveal region");
+	public RevealRegion(PointOfInterest l){
+		super("Reveal region",l);
 	}
 
 	@Override
-	public boolean validate(Squad s,int squadel,PointOfInterest l){
-		var here=l.getlocation();
+	public boolean validate(Squad s,int squadel){
+		var here=location.getlocation();
 		var friendly=Terrain.get(here.x,here.y).getmonsters().stream()
 				.filter(m->m.alignment.isgood()&&m.think(-1))
 				.collect(Collectors.toList());
 		if(friendly.isEmpty()) return false;
 		friend=RPG.pick(friendly).toString().toLowerCase();
-		var terrain=Terrain.get(l.x,l.y);
-		scan(l.getlocation(),terrain);
+		var terrain=Terrain.get(location.x,location.y);
+		scan(location.getlocation(),terrain);
 		for(var tile:new ArrayList<>(undiscovered))
 			if(WorldScreen.current.mappanel.tiles[tile.x][tile.y].discovered)
 				undiscovered.remove(tile);
@@ -58,11 +58,11 @@ public class RevealRegion extends WildEvent{
 	}
 
 	@Override
-	public void happen(Squad s,PointOfInterest l){
+	public void happen(Squad s){
 		var success=s.getbest(Skill.DIPLOMACY).roll(Skill.DIPLOMACY);
 		if(success<1) success=1;
 		var undiscovered=new ArrayList<>(this.undiscovered);
-		var here=l.getlocation();
+		var here=location.getlocation();
 		undiscovered.sort((a,b)->Double.compare(a.distance(here),b.distance(here)));
 		for(var i=0;i<undiscovered.size()&&i<success;i++){
 			var tile=undiscovered.get(i);

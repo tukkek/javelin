@@ -16,12 +16,12 @@ import javelin.old.RPG;
  * @author alex
  */
 public class WeatherChange extends WildEvent{
-	public WeatherChange(){
-		super("Weather change");
+	public WeatherChange(PointOfInterest l){
+		super("Weather change",l);
 	}
 
 	@Override
-	public void happen(Squad s,PointOfInterest l){
+	public void happen(Squad s){
 		var previous=Weather.current;
 		List<Integer> options=Arrays.asList(Weather.DISTRIBUTION);
 		while(Weather.current==previous)

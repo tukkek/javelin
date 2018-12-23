@@ -15,17 +15,17 @@ public class FindRuby extends WildEvent{
 	static final String PROMPT="You come across a small set of ruins. Do you want to explore them?\n"
 			+"Press e to explore or i to ignore and move along...";
 
-	public FindRuby(){
-		super("Find ruby");
+	public FindRuby(PointOfInterest l){
+		super("Find ruby",l);
 	}
 
 	@Override
-	public boolean validate(Squad s,int squadel,PointOfInterest l){
-		return Terrain.get(l.x,l.y).equals(Terrain.DESERT);
+	public boolean validate(Squad s,int squadel){
+		return Terrain.get(location.x,location.y).equals(Terrain.DESERT);
 	}
 
 	@Override
-	public void happen(Squad s,PointOfInterest l){
+	public void happen(Squad s){
 		Character input=Javelin.prompt(PROMPT,Set.of('e','i'));
 		if(input=='i') return;
 		remove=true;

@@ -13,13 +13,13 @@ import javelin.model.world.location.PointOfInterest;
  */
 public class FindCaravan extends WildEvent{
 	/** Reflection-friendly constructor. */
-	public FindCaravan(){
-		super("Find caravan");
+	public FindCaravan(PointOfInterest l){
+		super("Find caravan",l);
 	}
 
 	@Override
-	public void happen(Squad s,PointOfInterest l){
-		new Caravan(l.x,l.y,s.getel()).place();
+	public void happen(Squad s){
+		new Caravan(location.x,location.y,s.getel()).place();
 		Javelin.redraw();
 		Javelin.message("You come across a caravan of merchants!",true);
 	}

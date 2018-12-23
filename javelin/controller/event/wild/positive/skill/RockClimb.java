@@ -25,14 +25,14 @@ public class RockClimb extends SkillEvent{
 			+"Press c to try to climb or w to walk away from it...";
 
 	/** Reflection-friendly constructor. */
-	public RockClimb(){
-		super("Rock climb",PROMPT,'c','w');
+	public RockClimb(PointOfInterest l){
+		super("Rock climb",l,PROMPT,'c','w');
 		remove=false;
 	}
 
 	@Override
-	public boolean validate(Squad s,int squadel,PointOfInterest l){
-		return Terrain.get(l.x,l.y).equals(Terrain.MOUNTAINS);
+	public boolean validate(Squad s,int squadel){
+		return Terrain.get(location.x,location.y).equals(Terrain.MOUNTAINS);
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class RockClimb extends SkillEvent{
 	}
 
 	@Override
-	protected boolean fumble(Combatant active, PointOfInterest location){
+	protected boolean fumble(Combatant active,PointOfInterest location){
 		Javelin.message(active+" falls down in the middle of the climb!",true);
 		active.damage(RPG.r(1,(dc-10)*2),active.source.dr);
 		return true;

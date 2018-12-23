@@ -27,14 +27,14 @@ public class WanderingPegasus extends Wanderer{
 			+"Press r to ride and i to ignore the herd...";
 
 	/** Reflection-friendly constructor. */
-	public WanderingPegasus(){
-		super("Pegasus ride");
+	public WanderingPegasus(PointOfInterest l){
+		super("Pegasus ride",l);
 	}
 
 	@Override
-	public boolean validate(Squad s,int squadel,PointOfInterest l){
-		if(!super.validate(s,squadel,l)||s.members.size()>10) return false;
-		var terrain=Terrain.get(l.x,l.y);
+	public boolean validate(Squad s,int squadel){
+		if(!super.validate(s,squadel)||s.members.size()>10) return false;
+		var terrain=Terrain.get(location.x,location.y);
 		if(!(terrain.equals(Terrain.HILL)||terrain.equals(Terrain.PLAIN)))
 			return false;
 		for(var member:s)
@@ -43,14 +43,14 @@ public class WanderingPegasus extends Wanderer{
 	}
 
 	@Override
-	public void happen(Squad s,PointOfInterest l){
+	public void happen(Squad s){
 		var input=Javelin.prompt(PROMPT,Set.of('r','i'));
 		if(input=='i') return;
 		var vision=s.seesurroundings(s.perceive(true,true,true)+4);
 		Javelin.redraw();
 		Javelin.message("Your group shoots up into the air!",true);
 		var destinations=new ArrayList<>(World.getactors().stream()
-				.filter(a->a instanceof Location&&a.distanceinsteps(l.x,l.y)<=vision)
+				.filter(a->a instanceof Location&&a.distanceinsteps(location.x,location.y)<=vision)
 				.collect(Collectors.toList()));
 		destinations.add(0,s);
 		var names=destinations.stream().map(a->"Nearby to: "+a.describe()).map(

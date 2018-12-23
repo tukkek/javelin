@@ -42,12 +42,12 @@ public class WanderingMercenary extends Wanderer{
 	Terrain terrain;
 
 	/** Reflection-friendly constructor. */
-	public WanderingMercenary(){
-		super("Mercenary");
+	public WanderingMercenary(PointOfInterest l){
+		super("Mercenary",l);
 	}
 
 	@Override
-	public void happen(Squad s,PointOfInterest l){
+	public void happen(Squad s){
 		var fee=Javelin.format(MercenariesGuild.getfee(mercenary));
 		var prompt="A wandering "+mercenary.toString().toLowerCase()
 				+" mercenary is willing to join you for $"+fee+"/day. Do you accept?";
@@ -55,7 +55,7 @@ public class WanderingMercenary extends Wanderer{
 		var choice=options.get(Javelin.choose(prompt,options,true,true));
 		if(choice==DECLINE) return;
 		var mercenary=new Combatant(this.mercenary,true);
-		if(choice==ATTACK) throw new StartBattle(new EventFight(mercenary,l));
+		if(choice==ATTACK) throw new StartBattle(new EventFight(mercenary,location));
 		if(choice==HIRE){
 			mercenary.setmercenary(true);
 			s.add(mercenary);
@@ -64,12 +64,11 @@ public class WanderingMercenary extends Wanderer{
 	}
 
 	@Override
-	public boolean validate(Squad s,int el,PointOfInterest l){
-		if(!super.validate(s,el,l)) return false;
+	public boolean validate(Squad s,int el){
+		if(!super.validate(s,el)) return false;
 		var squadcr=Squad.active.members.stream()
 				.collect(Collectors.averagingDouble(c->c.source.cr));
-		var location=l.getlocation();
-		terrain=Terrain.get(location.x,location.y);
+		terrain=Terrain.get(location.getlocation().x,location.getlocation().y);
 		mercenary=select(squadcr,terrain);
 		return mercenary!=null;
 	}

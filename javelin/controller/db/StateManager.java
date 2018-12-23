@@ -20,6 +20,7 @@ import javelin.JavelinApp;
 import javelin.controller.Weather;
 import javelin.controller.action.world.OpenJournal;
 import javelin.controller.event.EventDealer;
+import javelin.controller.event.urban.UrbanEvents;
 import javelin.controller.event.wild.WildEvents;
 import javelin.controller.wish.Ressurect;
 import javelin.model.diplomacy.Diplomacy;
@@ -106,6 +107,7 @@ public class StateManager{
 			writer.writeObject(Season.endsat);
 			writer.writeObject(OpenJournal.content);
 			writer.writeObject(WildEvents.instance);
+			writer.writeObject(UrbanEvents.instance);
 			writer.writeObject(Diplomacy.instance);
 			writer.flush();
 			writer.close();
@@ -149,6 +151,7 @@ public class StateManager{
 			Season.endsat=(Integer)stream.readObject();
 			OpenJournal.content=(String)stream.readObject();
 			WildEvents.instance=(EventDealer)stream.readObject();
+			UrbanEvents.instance=(UrbanEvents)stream.readObject();
 			Diplomacy.instance=(Diplomacy)stream.readObject();
 			stream.close();
 			filestream.close();

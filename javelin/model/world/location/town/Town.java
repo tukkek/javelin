@@ -11,6 +11,7 @@ import java.util.TreeSet;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.Difficulty;
+import javelin.controller.event.urban.UrbanEvents;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.fight.Siege;
@@ -55,6 +56,16 @@ import javelin.view.screen.town.TownScreen;
  * @author alex
  */
 public class Town extends Location{
+	/** @see #describehappiness() */
+	public static final String NEUTRAL="Neutral";
+	/** @see #describehappiness() */
+	public static final String UNHAPPY="Unhappy";
+	/** @see #describehappiness() */
+	public static final String REVOLTING="Revolting";
+	/** @see #describehappiness() */
+	public static final String CONTENT="Content";
+	/** @see #describehappiness() */
+	public static final String HAPPY="Happy";
 	static final int MINIMUMTOWNDISTANCE=Math
 			.round(Math.round(District.RADIUSMAX*1.5));
 	static final float HAPPINESSMAX=.1f;
@@ -112,7 +123,7 @@ public class Town extends Location{
 	 *
 	 * @see Governor#work(float, District)
 	 */
-	public float happiness=0;
+	float happiness=0;
 
 	/**
 	 * Each Town has an initial random alignment.
@@ -220,6 +231,7 @@ public class Town extends Location{
 		}
 		if(happiness!=0) happiness+=happiness>0?-HAPPINESSDECAY:+HAPPINESSDECAY;
 		updatequests();
+		dealevent();
 	}
 
 	/**
@@ -423,11 +435,11 @@ public class Town extends Location{
 
 	/** @return Human representation of {@link #happiness}. */
 	public String describehappiness(){
-		if(happiness>=HAPPINESSMAX) return "Happy";
-		if(happiness>=HAPPINESSSTEP) return "Content";
-		if(happiness<=-HAPPINESSMAX) return "Revolting";
-		if(happiness<=-HAPPINESSSTEP) return "Unhappy";
-		return "Neutral";
+		if(happiness>=HAPPINESSMAX) return HAPPY;
+		if(happiness>=HAPPINESSSTEP) return CONTENT;
+		if(happiness<=-HAPPINESSMAX) return REVOLTING;
+		if(happiness<=-HAPPINESSSTEP) return UNHAPPY;
+		return NEUTRAL;
 	}
 
 	/**
@@ -457,5 +469,13 @@ public class Town extends Location{
 		if(!ishostile())
 			reputation+=resources.size()+Math.round(gethappiness()/HAPPINESSSTEP);
 		return Math.max(0,reputation);
+	}
+
+	void dealevent(){
+		if(!RPG.chancein(30)) return;
+		var squads=getdistrict().getsquads();
+		var s=squads.isEmpty()?null:RPG.pick(squads);
+		UrbanEvents.generating=this;
+		UrbanEvents.instance.generate(s,population).happen(s);
 	}
 }

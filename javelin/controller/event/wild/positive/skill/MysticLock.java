@@ -29,14 +29,14 @@ public class MysticLock extends SkillEvent{
 			Skill.USEMAGICDEVICE,Skill.DISABLEDEVICE);
 
 	/** Reflection-friendly contructor. */
-	public MysticLock(){
-		super("Mystic lock",PROMPT,'s','w');
+	public MysticLock(PointOfInterest l){
+		super("Mystic lock",l,PROMPT,'s','w');
 		remove=false;
 	}
 
 	@Override
-	public boolean validate(Squad s,int squadel,PointOfInterest l){
-		var terrain=Terrain.get(l.x,l.y);
+	public boolean validate(Squad s,int squadel){
+		var terrain=Terrain.get(location.x,location.y);
 		return terrain.equals(Terrain.DESERT)||terrain.equals(Terrain.FOREST)
 				||terrain.equals(Terrain.MOUNTAINS);
 	}
@@ -54,7 +54,7 @@ public class MysticLock extends SkillEvent{
 	}
 
 	@Override
-	protected boolean fumble(Combatant active, PointOfInterest location){
+	protected boolean fumble(Combatant active,PointOfInterest location){
 		Javelin.message("The door vanishes completely!",true);
 		remove=true;
 		return true;

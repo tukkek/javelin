@@ -56,18 +56,18 @@ public class FindWounded extends SkillEvent{
 	String name=null;
 
 	/** Reflection-friendly operation. */
-	public FindWounded(){
-		super("Find wounded",null,'h','w');
+	public FindWounded(PointOfInterest l){
+		super("Find wounded",l,null,'h','w');
 	}
 
 	@Override
-	public void define(Squad s,int squadel,PointOfInterest l){
-		wounded=selectwounded(s,l,0);
+	public void define(Squad s,int squadel){
+		wounded=selectwounded(s,location,0);
 		name=wounded.toString().toLowerCase();
 		prompt="You find a wounded "+name+".\n"
 				+"Do you want to stop and treat the wounded creature?\n"
 				+"Press h to heal the "+name+" or w to walk away...";
-		super.define(s,squadel,l);
+		super.define(s,squadel);
 	}
 
 	/**

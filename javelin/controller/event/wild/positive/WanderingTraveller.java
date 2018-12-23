@@ -21,13 +21,13 @@ public class WanderingTraveller extends Wanderer{
 	List<Actor> undiscovered;
 
 	/** Constructor. */
-	public WanderingTraveller(){
-		super("Reveal location");
+	public WanderingTraveller(PointOfInterest l){
+		super("Reveal location",l);
 	}
 
 	@Override
-	public void happen(Squad s,PointOfInterest l){
-		var here=l.getlocation();
+	public void happen(Squad s){
+		var here=location.getlocation();
 		undiscovered.sort((a,b)->Double.compare(a.getlocation().distance(here),
 				b.getlocation().distance(here)));
 		var show=undiscovered.get(0);
@@ -38,7 +38,7 @@ public class WanderingTraveller extends Wanderer{
 	}
 
 	@Override
-	public boolean validate(Squad s,int squadel,PointOfInterest l){
+	public boolean validate(Squad s,int squadel){
 		undiscovered=World.getactors().stream()
 				.filter(a->a instanceof Location&&!WorldScreen.see(a.getlocation()))
 				.collect(Collectors.toList());

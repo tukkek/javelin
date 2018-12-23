@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.ContentSummary;
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.diplomacy.Relationship;
 import javelin.model.diplomacy.mandate.influence.ImproveRelationship;
@@ -28,7 +29,7 @@ public abstract class Mandate implements Serializable,Comparable<Mandate>{
 	static final List<Class<? extends Mandate>> MANDATES=new ArrayList<>(List.of(
 			RaiseHandSize.class,Redraw.class,RequestGold.class,
 			RequestMercenaries.class,RevealAlignment.class,ImproveRelationship.class,
-			Insult.class,RequestTrade.class,RequestMap.class));
+			Insult.class,RequestTrade.class,RequestMap.class,RequestAlly.class));
 	/**
 	 * If {@link Javelin#DEBUG} and not-<code>null</code>, will prioritize this
 	 * card type over others.
@@ -121,5 +122,10 @@ public abstract class Mandate implements Serializable,Comparable<Mandate>{
 		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);
 		}
+	}
+
+	/** @see ContentSummary */
+	public static String printsummary(){
+		return MANDATES.size()+" diplomatic actions.";
 	}
 }

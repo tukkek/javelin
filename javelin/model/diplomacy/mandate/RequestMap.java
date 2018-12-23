@@ -30,9 +30,13 @@ public class RequestMap extends Mandate{
 			}
 	}
 
+	long countundiscovered(){
+		return area.stream().filter(p->!WorldScreen.see(p)).count();
+	}
+
 	@Override
 	public boolean validate(Diplomacy d){
-		return target.getstatus()>=Relationship.FRIENDLY;
+		return target.getstatus()>=Relationship.FRIENDLY&&countundiscovered()>0;
 	}
 
 	@Override

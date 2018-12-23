@@ -16,6 +16,7 @@ import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.Realm;
+import javelin.model.diplomacy.mandate.Mandate;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.unit.abilities.spell.Spell;
@@ -35,8 +36,6 @@ import javelin.model.world.location.unique.UniqueLocation;
  */
 public class ContentSummary{
 	FileWriter out;
-
-	public ContentSummary(){}
 
 	void print(String line) throws IOException{
 		out.write(line+"\n");
@@ -136,6 +135,7 @@ public class ContentSummary{
 		print(Deck.getsummary());
 		print(Quest.printsummary());
 		print(WildEvents.instance.printsummary("wilderness events"));
+		print(Mandate.printsummary());
 	}
 
 	void printmaps() throws IOException{

@@ -25,10 +25,10 @@ import javelin.old.RPG;
  */
 public abstract class Mandate implements Serializable,Comparable<Mandate>{
 	/** All types of mandates. */
-	static final List<Class<? extends Mandate>> MANDATES=new ArrayList<>(
-			List.of(RaiseHandSize.class,Redraw.class,RequestGold.class,
-					RequestMercenaries.class,RevealAlignment.class,
-					ImproveRelationship.class,Insult.class,RequestTrade.class));
+	static final List<Class<? extends Mandate>> MANDATES=new ArrayList<>(List.of(
+			RaiseHandSize.class,Redraw.class,RequestGold.class,
+			RequestMercenaries.class,RevealAlignment.class,ImproveRelationship.class,
+			Insult.class,RequestTrade.class,RequestMap.class));
 	/**
 	 * If {@link Javelin#DEBUG} and not-<code>null</code>, will prioritize this
 	 * card type over others.

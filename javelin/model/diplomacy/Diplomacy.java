@@ -27,9 +27,6 @@ import javelin.view.screen.WorldScreen;
  *
  * RequestAlly (adds a creature pf given EL to squad in district, requires ally)
  *
- * RequestMap (reveals area equal to District#radius+Town#rank, if not entirely
- * revealed already) - requires Friendly
- *
  * TODO with 2.0, when we have html documentation instead of F1-F12, include
  * overview and card documentation
  *

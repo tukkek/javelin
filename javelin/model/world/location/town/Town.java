@@ -12,6 +12,7 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.event.urban.UrbanEvents;
+import javelin.controller.event.urban.negative.Riot;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.exception.battle.StartBattle;
@@ -28,6 +29,7 @@ import javelin.model.diplomacy.Relationship;
 import javelin.model.unit.Alignment;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
@@ -132,6 +134,13 @@ public class Town extends Location{
 	 * @see Alignment#random()
 	 */
 	public Alignment alignment=Alignment.random();
+	/**
+	 * Days where the town will do no work. @
+	 *
+	 * @see Labor
+	 * @see Riot
+	 */
+	public int strike=0;
 
 	/** @param p Spot to place town in the {@link World}. */
 	public Town(Point p,Realm r){
@@ -224,14 +233,23 @@ public class Town extends Location{
 		if(ishosting())
 			events.remove(0);
 		else if(!ishostile()&&RPG.chancein(100)) host();
-		float labor=population+RPG.randomize(population)/10f;
-		labor*=World.scenario.boost*World.scenario.labormodifier;
-		if(labor>0){
-			labor*=DAILYLABOR*(1+gethappiness());
-			getgovernor().work(labor,getdistrict());
-		}
+		work();
 		if(happiness!=0) happiness+=happiness>0?-HAPPINESSDECAY:+HAPPINESSDECAY;
 		updatequests();
+	}
+
+	void work(){
+		if(strike>0){
+			strike-=1;
+			if(strike==0&&notifyplayer())
+				Javelin.message(this+" resumes its normal labors.",true);
+			return;
+		}
+		float labor=population+RPG.randomize(population)/10f;
+		labor*=World.scenario.boost*World.scenario.labormodifier;
+		if(labor<=0) return;
+		labor*=DAILYLABOR*(1+gethappiness());
+		getgovernor().work(labor,getdistrict());
 	}
 
 	/**
@@ -274,7 +292,17 @@ public class Town extends Location{
 		if(!super.interact()) return false;
 		if(completequests()) return true;
 		Squad.active.lasttown=this;
-		new TownScreen(this).show();
+		if(strike>0){
+			String riots=this+" is rioting!";
+			var d=Skill.DIPLOMACY.getbonus(Squad.active.getbest(Skill.DIPLOMACY));
+			var k=Skill.KNOWLEDGE.getbonus(Squad.active.getbest(Skill.KNOWLEDGE));
+			if(Math.max(d,k)>=strike){
+				var eta=Math.max(1,strike+RPG.randomize(population));
+				riots+="\nThe situation should resolve in around "+eta+" day(s).";
+			}
+			Javelin.message(riots,false);
+		}else
+			new TownScreen(this).show();
 		for(final Combatant c:Squad.active.members)
 			if(c.source.fasthealing>0) c.heal(c.maxhp,false);
 		return true;
@@ -489,5 +517,15 @@ public class Town extends Location{
 		var s=squads.isEmpty()?null:RPG.pick(squads);
 		UrbanEvents.generating=this;
 		UrbanEvents.instance.generate(s,population).happen(s);
+	}
+
+	/**
+	 * @return <code>true</code> if the player should receive full information on
+	 *         the happenings of this town, <code>false</code> if it isn't
+	 *         conceivable that he would have access to these.
+	 * @see #ishostile()
+	 */
+	public boolean notifyplayer(){
+		return !ishostile();
 	}
 }

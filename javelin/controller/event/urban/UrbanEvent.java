@@ -54,7 +54,7 @@ public abstract class UrbanEvent extends EventCard{
 		el=town.population;
 		this.traits=traits;
 		minimumrank=minimum;
-		notify=town.ishostile();
+		notify=town.notifyplayer();
 	}
 
 	@Override

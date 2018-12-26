@@ -62,4 +62,10 @@ public class ConstructionSite extends Location{
 	public boolean isworking(){
 		return true;
 	}
+
+	/** {@link #remove()} this site and also any {@link #previous} location */
+	public void abort(){
+		previous=null;
+		remove(true);
+	}
 }

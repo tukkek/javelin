@@ -40,8 +40,8 @@ public class UrbanEvents extends EventDealer{
 		positive
 				.addcontent(List.of(ImproveRelationship.class,NothingHappens.class));
 		neutral.addcontent(List.of(NothingHappens.class));
-		negative
-				.addcontent(List.of(DegradeRelationship.class,NothingHappens.class));
+		negative.addcontent(
+				List.of(DegradeRelationship.class,NothingHappens.class,Suspects.class));
 	}
 
 	@Override
@@ -88,9 +88,11 @@ public class UrbanEvents extends EventDealer{
 			}catch(Exception e){
 				unknown+=1;
 			}
-		info.add(cards.stream().filter(c->c.trait==null).count()+" basic");
-		for(var t:Trait.ALL)
-			info.add(cards.stream().filter(c->t.equals(c.trait)).count()+" "+t);
+		info.add(cards.stream().filter(c->c.traits==null).count()+" basic");
+		for(var t:Trait.ALL){
+			var valid=cards.stream().filter(c->c.traits!=null&&c.traits.contains(t));
+			info.add(valid.count()+" "+t);
+		}
 		info.add(unknown+" unknown");
 		return types.size()+" "+title.toLowerCase()+" ("+String.join(", ",info)+")";
 	}

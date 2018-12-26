@@ -6,6 +6,8 @@ import java.util.List;
 import javelin.controller.action.Help;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.db.Preferences;
+import javelin.controller.event.urban.UrbanEvent;
+import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.generator.WorldGenerator;
@@ -22,6 +24,7 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.view.TextWindow;
+import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -129,6 +132,36 @@ public class Debug{
 			}
 			new TextWindow("World generation resets",text).show();
 		}
+
+		/**
+		 * @return Town instance to be changed, so it's easier to make the event in
+		 *         question valid. Will throw a {@link RepeatTurn} instead of
+		 *         returning <code>null</code> to avoid
+		 *         {@link NullPointerException}s.
+		 */
+		static Town doevent(Class<? extends UrbanEvent> type){
+			try{
+				var s=Squad.active;
+				var d=s.getdistrict();
+				if(d==null){
+					Javelin.message("Not in town...",false);
+					throw new RepeatTurn();
+				}
+				var t=d.town;
+				var e=type.getConstructor(Town.class).newInstance(t);
+				var el=s.getel();
+				if(!e.validate(s,el)){
+					Javelin.message("Invalid event: "+type.getSimpleName()+"...",false);
+					return t;
+				}
+				e.define(s,el);
+				e.happen(s);
+				return t;
+			}catch(ReflectiveOperationException exception){
+				Javelin.message("Error: "+exception,false);
+				throw new RepeatTurn();
+			}
+		}
 	}
 
 	/** @see Preferences */
@@ -169,9 +202,11 @@ public class Debug{
 
 	}
 
+	/**
+	 * Similar to {@link #onworldhelp()} but called from the {@link BattleScreen}.
+	 */
 	public static String onbattlehelp(){
-		String s="";
-		return s;
+		throw new RepeatTurn();
 	}
 
 	/**
@@ -182,7 +217,6 @@ public class Debug{
 	 * @return Any text will be printed below the usual help output.
 	 */
 	public static String onworldhelp(){
-		String s="";
-		return s;
+		throw new RepeatTurn();
 	}
 }

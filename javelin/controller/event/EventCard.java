@@ -31,6 +31,7 @@ public abstract class EventCard{
 			terrain=Terrain.get(l.x,l.y);
 			hide=false;
 			bribe=false;
+			rewardreputation=true;
 		}
 
 		/** Constructor. */
@@ -63,6 +64,8 @@ public abstract class EventCard{
 	 * Parameters are the same as
 	 * {@link EventDealer#generate(Squad, int, Location)}.
 	 *
+	 * @param squad A relevant squad to the event or <code>null</code>.
+	 *
 	 * @return <code>true</code> if this particular card can be used.
 	 */
 	public boolean validate(Squad s,int squadel){
@@ -81,8 +84,10 @@ public abstract class EventCard{
 	 * any slower operations, as it's only called once when a valid card is
 	 * selected.
 	 *
-	 * Parameters are the same as
-	 * {@link EventDealer#generate(Squad, int, Location)}.
+	 * @param squad A relevant squad to the event or <code>null</code>.
+	 *
+	 *          Parameters are the same as
+	 *          {@link EventDealer#generate(Squad, int, Location)}.
 	 */
 	public void define(Squad s,int squadel){
 		return;
@@ -91,8 +96,7 @@ public abstract class EventCard{
 	/**
 	 * Activates this event, after validation and definition.
 	 *
-	 * @param s Usually {@link Squad#active}. Note that this might not be the same
-	 *          Squad as the one used to validate and define this card.
+	 * @param squad A relevant squad to the event or <code>null</code>.
 	 */
 	abstract public void happen(Squad s);
 }

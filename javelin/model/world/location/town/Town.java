@@ -14,6 +14,7 @@ import javelin.controller.challenge.Difficulty;
 import javelin.controller.event.urban.UrbanEvents;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.RestartWorldGeneration;
+import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Siege;
 import javelin.controller.fight.tournament.Exhibition;
 import javelin.controller.fight.tournament.Match;
@@ -231,7 +232,6 @@ public class Town extends Location{
 		}
 		if(happiness!=0) happiness+=happiness>0?-HAPPINESSDECAY:+HAPPINESSDECAY;
 		updatequests();
-		dealevent();
 	}
 
 	/**
@@ -471,7 +471,13 @@ public class Town extends Location{
 		return Math.max(0,reputation);
 	}
 
-	void dealevent(){
+	/**
+	 * Generates and process {@link UrbanEvents}, if any. It should be unlikely
+	 * but entirely possible that two towns have an event on the same day.
+	 *
+	 * @throws StartBattle For some events.
+	 */
+	public void dealevent(){
 		if(!RPG.chancein(30)) return;
 		var squads=getdistrict().getsquads();
 		var s=squads.isEmpty()?null:RPG.pick(squads);

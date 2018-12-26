@@ -39,6 +39,10 @@ public class Difficulty{
 		DISTRIBUTION.add(+1);
 	}
 
+	/**
+	 * @param delta Given an Encounter Level difference...
+	 * @return A description of how tought a fight should be.
+	 */
 	public static String describe(int delta){
 		if(delta<=IRRELEVANT) return "irrelevant";
 		if(delta<=VERYEASY) return "very easy";
@@ -64,7 +68,17 @@ public class Difficulty{
 	 *         to {@link Squad#active}.
 	 */
 	public static String describe(List<Combatant> opponents){
-		return describe(calculate(Squad.active.members,opponents));
+		return describe(Squad.active.members,opponents);
+	}
+
+	/**
+	 * @param squad Player team.
+	 * @param opponents Enemy team.
+	 * @return As {@link #describe(int)}.
+	 */
+	public static String describe(ArrayList<Combatant> squad,
+			List<Combatant> opponents){
+		return describe(calculate(squad,opponents));
 	}
 
 	/**

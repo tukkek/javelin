@@ -2,10 +2,12 @@ package javelin.controller.event.wild;
 
 import java.util.List;
 
+import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.db.StateManager;
 import javelin.controller.event.EventCard;
 import javelin.controller.event.EventDealer;
+import javelin.controller.event.urban.UrbanEvent;
 import javelin.controller.event.wild.negative.ConfusingFairies;
 import javelin.controller.event.wild.negative.FindHazard;
 import javelin.controller.event.wild.negative.FindIncursion;
@@ -37,6 +39,7 @@ public class WildEvents extends EventDealer{
 	/** @see StateManager */
 	public static EventDealer instance=new WildEvents();
 	public static PointOfInterest generating;
+	/** TODO use something similar to {@link Debug}'s {@link UrbanEvent}. */
 	static final Class<? extends WildEvent> DEBUG=null;
 
 	/** Constructor. */

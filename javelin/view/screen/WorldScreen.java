@@ -20,6 +20,7 @@ import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomEncounter;
 import javelin.controller.generator.feature.FeatureGenerator;
+import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.transport.Transport;
@@ -237,11 +238,21 @@ public class WorldScreen extends BattleScreen{
 				Location l=a instanceof Location?(Location)a:null;
 				if(l!=null&&World.scenario.spawn) l.spawn();
 			}
-			Collections.shuffle(incursions);
-			for(Incursion i:incursions)
-				/* may throw StartBattle */
-				i.turn(time,this);
+			dofights(time,incursions);
 		}
+	}
+
+	/**
+	 * Called from {@link #endturn()}, these daily activiities may throw a
+	 * {@link StartBattle} and break normal code flow, so we leave them for last.
+	 * If an exception is throw, nothing here should have been important to the
+	 * {@link Scenario} in question.
+	 */
+	void dofights(long time,ArrayList<Incursion> incursions){
+		for(var i:RPG.shuffle(incursions))
+			i.turn(time,this);
+		for(var t:RPG.shuffle(Town.gettowns()))
+			t.dealevent();
 	}
 
 	/** Show party/world status. */

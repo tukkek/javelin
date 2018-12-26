@@ -21,7 +21,7 @@ public class RequestGold extends Mandate{
 	int getgold(){
 		var population=target.town.population;
 		int gold=RewardCalculator.getgold(population-1,population+1);
-		if(target.getstatus()==Relationship.INDIFFERENT) gold/=2;
+		if(target.getstatus()==Relationship.INDIFFERENT) gold=Javelin.round(gold/2);
 		return gold;
 	}
 
@@ -42,7 +42,8 @@ public class RequestGold extends Mandate{
 		while(gold==0)
 			gold=getgold();
 		getsquad().gold+=gold;
-		String result=target+" gives $"+gold+" to a squad in their district!";
+		String result=target+" gives $"+Javelin.format(gold)
+				+" to a squad in their district!";
 		Javelin.message(result,true);
 	}
 }

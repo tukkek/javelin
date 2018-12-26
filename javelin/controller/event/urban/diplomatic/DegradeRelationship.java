@@ -1,4 +1,4 @@
-package javelin.controller.event.urban.basic;
+package javelin.controller.event.urban.diplomatic;
 
 import javelin.model.diplomacy.Relationship;
 import javelin.model.world.location.town.Town;

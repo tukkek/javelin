@@ -1,8 +1,6 @@
-package javelin.controller.event.urban.basic;
+package javelin.controller.event.urban;
 
 import javelin.Javelin;
-import javelin.controller.event.urban.UrbanEvent;
-import javelin.controller.event.urban.UrbanEvents;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;

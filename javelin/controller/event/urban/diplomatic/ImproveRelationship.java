@@ -1,7 +1,6 @@
-package javelin.controller.event.urban.basic;
+package javelin.controller.event.urban.diplomatic;
 
 import javelin.Javelin;
-import javelin.controller.event.urban.UrbanEvent;
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.diplomacy.Relationship;
 import javelin.model.unit.Squad;
@@ -13,7 +12,7 @@ import javelin.model.world.location.town.Town;
  *
  * @author alex
  */
-public class ImproveRelationship extends UrbanEvent{
+public class ImproveRelationship extends DiplomaticEvent{
 	/**
 	 * Will invalidate if current {@link Relationship} status sits at this level.
 	 */

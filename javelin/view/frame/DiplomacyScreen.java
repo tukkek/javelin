@@ -83,16 +83,15 @@ public class DiplomacyScreen extends Frame{
 	}
 
 	void showprogress(JPanel p){
-		var percent=Math.round(100*d.reputation/Diplomacy.TRIGGER);
 		var progress=Diplomacy.getdailyprogress(false);
 		var estimate="";
 		if(progress!=0){
 			var left=Diplomacy.TRIGGER-d.reputation;
 			var eta=left/progress;
-			estimate=" (estimate: "+Math.max(eta,1)+" days)";
+			estimate=" (next action estimate: "+Math.max(eta,1)+" days)";
 		}
-		var b=new JButton("You have "+percent
-				+"% of the reputation needed to unlock the next action"+estimate+".");
+		var b=new JButton(
+				"Gaining around "+progress+" reputation daily"+estimate+".");
 		b.addActionListener(e->frame.dispose());
 		b.setMaximumSize(new Dimension(1000,20));
 		p.add(b);

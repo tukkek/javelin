@@ -7,9 +7,11 @@ import java.util.List;
 import javelin.controller.db.StateManager;
 import javelin.controller.event.EventCard;
 import javelin.controller.event.EventDealer;
-import javelin.controller.event.urban.basic.DegradeRelationship;
-import javelin.controller.event.urban.basic.ImproveRelationship;
-import javelin.controller.event.urban.basic.NothingHappens;
+import javelin.controller.event.urban.diplomatic.Badmouth;
+import javelin.controller.event.urban.diplomatic.DegradeRelationship;
+import javelin.controller.event.urban.diplomatic.ImproveRelationship;
+import javelin.controller.event.urban.diplomatic.Praise;
+import javelin.controller.event.urban.negative.Suspects;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Trait;
@@ -37,11 +39,11 @@ public class UrbanEvents extends EventDealer{
 	public static Town generating;
 
 	private UrbanEvents(){
-		positive
-				.addcontent(List.of(ImproveRelationship.class,NothingHappens.class));
+		positive.addcontent(
+				List.of(NothingHappens.class,ImproveRelationship.class,Praise.class));
 		neutral.addcontent(List.of(NothingHappens.class));
-		negative.addcontent(
-				List.of(DegradeRelationship.class,NothingHappens.class,Suspects.class));
+		negative.addcontent(List.of(NothingHappens.class,DegradeRelationship.class,
+				Suspects.class,Badmouth.class));
 	}
 
 	@Override
@@ -80,20 +82,18 @@ public class UrbanEvents extends EventDealer{
 		types.addAll(neutral.getcontent());
 		types.addAll(negative.getcontent());
 		var cards=new ArrayList<UrbanEvent>(types.size());
-		var unknown=0;
-		generating=null;
+		generating=Town.gettowns().get(0);
 		for(var t:types)
 			try{
 				cards.add((UrbanEvent)newinstance(t));
-			}catch(Exception e){
-				unknown+=1;
+			}catch(ReflectiveOperationException e){
+				throw new RuntimeException(e);
 			}
 		info.add(cards.stream().filter(c->c.traits==null).count()+" basic");
 		for(var t:Trait.ALL){
 			var valid=cards.stream().filter(c->c.traits!=null&&c.traits.contains(t));
 			info.add(valid.count()+" "+t);
 		}
-		info.add(unknown+" unknown");
 		return types.size()+" "+title.toLowerCase()+" ("+String.join(", ",info)+")";
 	}
 }

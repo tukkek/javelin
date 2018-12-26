@@ -451,6 +451,12 @@ public class Town extends Location{
 		return happiness;
 	}
 
+	/** Should only be used for debug purposes. */
+	@Deprecated
+	public void sethappiness(float happiness){
+		this.happiness=happiness;
+	}
+
 	/**
 	 * Each town generates {@link Diplomacy#reputation} according to three
 	 * factors: number of {@link #resources} and {@link #happiness} (both of which

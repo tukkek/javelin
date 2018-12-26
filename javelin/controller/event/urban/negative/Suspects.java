@@ -1,4 +1,4 @@
-package javelin.controller.event.urban;
+package javelin.controller.event.urban.negative;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.event.urban.UrbanEvent;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.map.location.TownMap;
 import javelin.controller.terrain.Terrain;

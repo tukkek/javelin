@@ -12,7 +12,7 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class ShowDiplomacy extends WorldAction{
-	static final boolean DEBUG=true;
+	static final boolean DEBUG=false;
 
 	/** Constructor. */
 	public ShowDiplomacy(){

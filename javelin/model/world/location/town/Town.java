@@ -13,12 +13,12 @@ import javelin.controller.Point;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.event.urban.UrbanEvents;
 import javelin.controller.event.urban.negative.Riot;
+import javelin.controller.event.urban.neutral.HostTournament;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Siege;
 import javelin.controller.fight.tournament.Exhibition;
-import javelin.controller.fight.tournament.Match;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.location.TownMap;
 import javelin.controller.scenario.Scenario;
@@ -88,7 +88,7 @@ public class Town extends Location{
 	 */
 	public static final float DAILYLABOR=.11f;
 
-	/** @see #ishosting() */
+	/** @see HostTournament */
 	public ArrayList<Exhibition> events=new ArrayList<>();
 	/**
 	 * Represent 10 working citizens that will produce 1 unit of {@link Labor}
@@ -211,28 +211,15 @@ public class Town extends Location{
 	}
 
 	/**
-	 * @return <code>true</code> if a flag icon is to be displayed.
-	 * @see #events
+	 * @return <code>true</code> if the town is hosting {@link #events}.
 	 */
 	public boolean ishosting(){
 		return !events.isEmpty();
 	}
 
-	/**
-	 * Possibly starts a tournament in this town.
-	 */
-	public void host(){
-		if(ishostile()) return;
-		int nevents=RPG.r(3,7);
-		for(int i=0;i<nevents;i++)
-			events.add(RPG.r(1,2)==1?RPG.pick(Exhibition.SPECIALEVENTS):new Match());
-	}
-
 	@Override
 	public void turn(long time,WorldScreen screen){
-		if(ishosting())
-			events.remove(0);
-		else if(!ishostile()&&RPG.chancein(100)) host();
+		if(ishosting()) events.remove(0);
 		work();
 		if(happiness!=0) happiness+=happiness>0?-HAPPINESSDECAY:+HAPPINESSDECAY;
 		updatequests();

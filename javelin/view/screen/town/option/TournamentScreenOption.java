@@ -49,7 +49,7 @@ public class TournamentScreenOption extends ScreenOption{
 
 			@Override
 			public String printinfo(){
-				return "You currently have $"+Javelin.format(Squad.active.gold);
+				return "You currently have $"+Javelin.format(Squad.active.gold)+".";
 			}
 
 			@Override

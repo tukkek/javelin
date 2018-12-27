@@ -12,6 +12,7 @@ import javelin.controller.event.urban.diplomatic.DegradeRelationship;
 import javelin.controller.event.urban.diplomatic.ImproveRelationship;
 import javelin.controller.event.urban.diplomatic.Praise;
 import javelin.controller.event.urban.negative.Fire;
+import javelin.controller.event.urban.negative.Revolt;
 import javelin.controller.event.urban.negative.Riot;
 import javelin.controller.event.urban.negative.Sabotage;
 import javelin.controller.event.urban.negative.Suspects;
@@ -47,8 +48,9 @@ public class UrbanEvents extends EventDealer{
 		positive.addcontent(List.of(NothingHappens.class,ImproveRelationship.class,
 				Praise.class,CollectiveEffort.class));
 		neutral.addcontent(List.of(NothingHappens.class,HostTournament.class));
-		negative.addcontent(List.of(NothingHappens.class,DegradeRelationship.class,
-				Suspects.class,Badmouth.class,Riot.class,Fire.class,Sabotage.class));
+		negative.addcontent(
+				List.of(NothingHappens.class,DegradeRelationship.class,Suspects.class,
+						Badmouth.class,Riot.class,Fire.class,Sabotage.class,Revolt.class));
 	}
 
 	@Override

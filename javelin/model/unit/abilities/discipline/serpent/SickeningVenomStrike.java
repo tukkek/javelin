@@ -34,7 +34,7 @@ public class SickeningVenomStrike extends Strike{
 		target.addcondition(new ConstitutionDamage(2,current));
 		if(!save(target.source.getfortitude(),13,current)){
 			final float expireat=current.ap+SICKENDURATION;
-			target.addcondition(new Sickened(expireat,target));
+			target.addcondition(new Sickened(expireat,target,null));
 		}
 	}
 

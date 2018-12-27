@@ -15,7 +15,8 @@ import javelin.view.Images;
 /**
  * A twisted city of lanes, alleys and structures.
  *
- * TODO better suited as a high-ranking cold-based {@link Haunt}
+ * TODO better suited as a high-ranking cold-based {@link Haunt} (actually
+ * better to keep as-is plus add a haunt based on this map)
  *
  * @author alex
  */

@@ -33,9 +33,8 @@ public class Poisoned extends Condition{
 	 *
 	 * @see Monster#changeconstitutionmodifier(Combatant, int)
 	 */
-	public Poisoned(float expireatp,Combatant c,Effect effectp,int secondary,
-			int dcp,Integer casterlevelp){
-		super(c,"poisoned",effectp,casterlevelp,expireatp,1);
+	public Poisoned(Combatant c,int secondary,int dcp,Integer casterlevelp){
+		super(c,"poisoned",Effect.NEGATIVE,casterlevelp,Float.MAX_VALUE,1);
 		this.secondary=secondary;
 		dc=dcp;
 		neutralized=c.hascondition(Neutralized.class)!=null;

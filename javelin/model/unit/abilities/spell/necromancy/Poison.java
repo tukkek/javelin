@@ -7,7 +7,6 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Touch;
-import javelin.model.unit.condition.Condition.Effect;
 import javelin.model.unit.condition.Poisoned;
 
 /**
@@ -34,14 +33,13 @@ public class Poison extends Touch{
 			BattleState s,ChanceNode cn){
 		if(saved) return target+" resists!";
 		final int dc=getdc(caster);
-		float ratio=(dc-target.source.getfortitude())/new Float(dc);
+		float ratio=(dc-target.source.getfortitude())/Float.valueOf(dc);
 		if(ratio<0)
 			ratio=0;
 		else if(ratio>1) ratio=1;
 		final int damage=Math.round(3*ratio);
 		if(damage<=0) return target+" resists the poison!";
-		Poisoned p=new Poisoned(Float.MAX_VALUE,target,Effect.NEGATIVE,damage,dc,
-				nonmagical?null:casterlevel);
+		Poisoned p=new Poisoned(target,damage,dc,nonmagical?null:casterlevel);
 		if(p.neutralized) return target+" is immune to poison.";
 		target.addcondition(p);
 		if(target.hp<1) target.hp=1;

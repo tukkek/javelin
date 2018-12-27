@@ -147,7 +147,7 @@ public class StartBattle extends BattleEvent{
 	}
 
 	/** TODO deduplicate originals */
-	static public void preparebattle(ArrayList<Combatant> opponents){
+	public void preparebattle(ArrayList<Combatant> opponents){
 		Fight.state.redTeam=opponents;
 		var blue=Fight.state.blueTeam;
 		Fight.originalblueteam=new ArrayList<>(blue);
@@ -156,6 +156,8 @@ public class StartBattle extends BattleEvent{
 			var c=blue.get(i);
 			blue.set(i,c.clone().clonesource());
 		}
+		for(var p:fight.onprepare)
+			p.run();
 		Fight.state.next();
 	}
 

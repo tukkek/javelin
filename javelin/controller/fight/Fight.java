@@ -118,6 +118,20 @@ public abstract class Fight{
 	public static ArrayList<Combatant> originalredteam;
 	/** Blue team at the moment the {@link Fight} begins. */
 	public static ArrayList<Combatant> originalblueteam;
+	/**
+	 * These callbacks are called at the last opportunity for changing this fight
+	 * before actual battle begins. At this point the entire stack should be
+	 * setup.
+	 *
+	 * @see BattleSetup
+	 */
+	public List<Runnable> onready=new ArrayList<>(0);
+	/**
+	 * Called after {@value #originalblueteam} and {@value #originalredteam} team
+	 * are set but before they are placed, allowing for temporary combatants to be
+	 * included.
+	 */
+	public List<Runnable> onprepare=new ArrayList<>(0);
 
 	/**
 	 * @return an encounter level for which an appropriate challenge should be
@@ -354,14 +368,10 @@ public abstract class Fight{
 		return Squad.active.equipment.get(combatant);
 	}
 
-	/**
-	 * Last opportunity for changing this fight before battle begins. At this
-	 * point the entire stack should be setup.
-	 *
-	 * @see BattleSetup
-	 */
-	public void ready(){
-		// see javadoc
+	/** @see #onready */
+	public final void ready(){
+		for(var r:onready)
+			r.run();
 	}
 
 	/**

@@ -3,7 +3,7 @@ package javelin.controller.db.reader.fields;
 import java.beans.PropertyVetoException;
 
 import javelin.controller.db.reader.MonsterReader;
-import javelin.model.unit.Alignment.Morality;
+import javelin.model.unit.Alignment.Morals;
 import javelin.model.unit.Alignment.Ethics;
 import javelin.model.unit.Monster;
 
@@ -29,8 +29,8 @@ public class Alignment extends FieldReader{
 		value=value.toLowerCase();
 		var a=reader.monster.alignment;
 		if(value.contains("good"))
-			a.morals=Morality.GOOD;
-		else if(value.contains("evil")) a.morals=Morality.EVIL;
+			a.morals=Morals.GOOD;
+		else if(value.contains("evil")) a.morals=Morals.EVIL;
 		if(value.contains("lawful"))
 			a.ethics=Ethics.LAWFUL;
 		else if(value.contains("chaotic")) a.ethics=Ethics.CHAOTIC;

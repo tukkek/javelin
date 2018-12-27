@@ -31,7 +31,7 @@ public class Alignment implements Serializable{
 	}
 
 	/** Good, neutral or evil. */
-	public enum Morality{
+	public enum Morals{
 		/** Collective-oriented, pious. */
 		GOOD,
 		/** Neither {@link #GOOD} nor {@link #EVIL}. */
@@ -47,11 +47,11 @@ public class Alignment implements Serializable{
 
 	/** @see Ethics */
 	public Ethics ethics;
-	/** @see Morality */
-	public Morality morals;
+	/** @see Morals */
+	public Morals morals;
 
 	/** Creates a custom instance. */
-	public Alignment(Ethics ethicsp,Morality moralsp){
+	public Alignment(Ethics ethicsp,Morals moralsp){
 		super();
 		ethics=ethicsp;
 		morals=moralsp;
@@ -59,22 +59,22 @@ public class Alignment implements Serializable{
 
 	/** Creates a true neutral instance. */
 	public Alignment(){
-		this(Ethics.NEUTRAL,Morality.NEUTRAL);
+		this(Ethics.NEUTRAL,Morals.NEUTRAL);
 	}
 
 	@Override
 	public String toString(){
 		String alignment;
 		if(ethics==Ethics.NEUTRAL){
-			if(morals==Morality.NEUTRAL) return "True neutral";
+			if(morals==Morals.NEUTRAL) return "True neutral";
 			alignment="Neutral";
 		}else if(ethics==Ethics.LAWFUL)
 			alignment="Lawful";
 		else
 			alignment="Chaotic";
-		if(morals==Morality.NEUTRAL)
+		if(morals==Morals.NEUTRAL)
 			return alignment+=" neutral";
-		else if(morals==Morality.GOOD)
+		else if(morals==Morals.GOOD)
 			return alignment+" good";
 		else
 			return alignment+" evil";
@@ -90,20 +90,20 @@ public class Alignment implements Serializable{
 		return ethics.equals(Ethics.CHAOTIC);
 	}
 
-	/** @return <code>true</code> if {@link Morality#GOOD}. */
+	/** @return <code>true</code> if {@link Morals#GOOD}. */
 	public boolean isgood(){
-		return morals.equals(Morality.GOOD);
+		return morals.equals(Morals.GOOD);
 	}
 
-	/** @return <code>true</code> if {@link Morality#EVIL}. */
+	/** @return <code>true</code> if {@link Morals#EVIL}. */
 	public boolean isevil(){
-		return morals.equals(Morality.EVIL);
+		return morals.equals(Morals.EVIL);
 	}
 
 	/** @return A randomly assigned alignment. */
 	public static Alignment random(){
 		var ethics=RPG.pick(Arrays.asList(Ethics.values()));
-		var morals=RPG.pick(Arrays.asList(Morality.values()));
+		var morals=RPG.pick(Arrays.asList(Morals.values()));
 		return new Alignment(ethics,morals);
 	}
 

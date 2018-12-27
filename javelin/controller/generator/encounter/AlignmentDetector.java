@@ -2,7 +2,7 @@ package javelin.controller.generator.encounter;
 
 import java.util.List;
 
-import javelin.model.unit.Alignment.Morality;
+import javelin.model.unit.Alignment.Morals;
 import javelin.model.unit.Alignment.Ethics;
 import javelin.model.unit.Combatant;
 
@@ -27,7 +27,7 @@ public class AlignmentDetector{
 
 	void register(Combatant c){
 		var a=c.source.alignment;
-		if(a.morals!=Morality.NEUTRAL) if(a.isgood())
+		if(a.morals!=Morals.NEUTRAL) if(a.isgood())
 			good=true;
 		else
 			evil=true;

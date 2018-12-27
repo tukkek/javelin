@@ -9,7 +9,7 @@ import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
-import javelin.model.unit.Alignment.Morality;
+import javelin.model.unit.Alignment.Morals;
 import javelin.model.unit.Alignment.Ethics;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
@@ -28,9 +28,9 @@ public class Leader extends Inhabitant{
 	class Treaty extends Option{
 		final String monster;
 		final Ethics lawful;
-		final Morality good;
+		final Morals good;
 
-		Treaty(int price,String monster,Ethics lawful,Morality good){
+		Treaty(int price,String monster,Ethics lawful,Morals good){
 			super("Make treaty with all ",price);
 			this.monster=monster;
 			this.lawful=lawful;
@@ -40,7 +40,7 @@ public class Leader extends Inhabitant{
 			else if(lawful!=null)
 				name+=(lawful==Ethics.LAWFUL?"lawful":"chaotic")+" inhabitants";
 			else if(good!=null)
-				name+=(good==Morality.GOOD?"good":"evil")+" inhabitants";
+				name+=(good==Morals.GOOD?"good":"evil")+" inhabitants";
 		}
 
 		boolean applies(Combatants encounter){

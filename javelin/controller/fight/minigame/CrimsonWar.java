@@ -106,6 +106,10 @@ public class CrimsonWar extends Minigame{
 				f.map.map=map;
 			}
 		};
+		onready.add(()->{
+			allies.delay(hero.ap);
+			enemies.delay(hero.ap);
+		});
 	}
 
 	@Override
@@ -277,10 +281,4 @@ public class CrimsonWar extends Minigame{
 		return null;
 	}
 
-	@Override
-	public void ready(){
-		super.ready();
-		allies.delay(hero.ap);
-		enemies.delay(hero.ap);
-	}
 }

@@ -11,13 +11,14 @@ import javelin.controller.event.urban.diplomatic.Badmouth;
 import javelin.controller.event.urban.diplomatic.DegradeRelationship;
 import javelin.controller.event.urban.diplomatic.ImproveRelationship;
 import javelin.controller.event.urban.diplomatic.Praise;
+import javelin.controller.event.urban.encounter.Guards;
+import javelin.controller.event.urban.encounter.Robbers;
 import javelin.controller.event.urban.negative.Fire;
 import javelin.controller.event.urban.negative.Flood;
 import javelin.controller.event.urban.negative.FoodShortage;
 import javelin.controller.event.urban.negative.Revolt;
 import javelin.controller.event.urban.negative.Riot;
 import javelin.controller.event.urban.negative.Sabotage;
-import javelin.controller.event.urban.negative.Suspects;
 import javelin.controller.event.urban.neutral.HostTournament;
 import javelin.controller.event.urban.neutral.Migration;
 import javelin.controller.event.urban.positive.CollectiveEffort;
@@ -54,8 +55,8 @@ public class UrbanEvents extends EventDealer{
 		neutral.addcontent(
 				List.of(NothingHappens.class,HostTournament.class,Migration.class));
 		negative.addcontent(List.of(NothingHappens.class,DegradeRelationship.class,
-				Suspects.class,Badmouth.class,Riot.class,Fire.class,Sabotage.class,
-				Revolt.class,Flood.class,FoodShortage.class));
+				Guards.class,Badmouth.class,Riot.class,Fire.class,Sabotage.class,
+				Revolt.class,Flood.class,FoodShortage.class,Robbers.class));
 	}
 
 	@Override

@@ -152,7 +152,7 @@ public class Campaign extends Scenario{
 			stayrevealed.add(point);
 			Location l=a instanceof Location?(Location)a:null;
 			if(l==null) continue;
-			var vision=l.view();
+			var vision=l.watch();
 			if(vision>0) for(var x=point.x-vision;x<=point.x+vision;x++)
 				for(var y=point.y-vision;y<=point.y+vision;y++)
 					stayrevealed.add(new Point(x,y));

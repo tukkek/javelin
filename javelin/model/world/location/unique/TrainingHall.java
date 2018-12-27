@@ -146,7 +146,7 @@ public class TrainingHall extends UniqueLocation{
 	}
 
 	@Override
-	public int view(){
+	public int watch(){
 		return vision;
 	}
 }

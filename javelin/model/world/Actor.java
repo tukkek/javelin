@@ -306,4 +306,9 @@ public abstract class Actor implements Serializable{
 	public boolean exists(){
 		return World.get(x,y,World.getactors())==this;
 	}
+
+	/** @return See {@link WorldScreen#see(Point)}. */
+	public boolean see(){
+		return WorldScreen.see(getlocation());
+	}
 }

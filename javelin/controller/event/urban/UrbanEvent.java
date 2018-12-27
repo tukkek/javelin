@@ -33,6 +33,12 @@ public abstract class UrbanEvent extends EventCard{
 	 * @see Javelin#DEBUG
 	 */
 	protected int el;
+	/**
+	 * Available for subclasses to override as needed.
+	 * 
+	 * @see #notify(String)
+	 */
+	protected boolean notify;
 
 	/**
 	 * @param t See {@link #town}. Should only be <code>null</code> during
@@ -46,6 +52,7 @@ public abstract class UrbanEvent extends EventCard{
 		el=town.population;
 		this.traits=traits;
 		minimumrank=minimum;
+		notify=town.notifyplayer()||town.getdistrict().getsquads().size()>0;
 	}
 
 	@Override
@@ -64,7 +71,6 @@ public abstract class UrbanEvent extends EventCard{
 	 * @see Town#ishostile()
 	 */
 	protected void notify(String message){
-		if(town.notifyplayer()||town.getdistrict().getsquads().size()>0)
-			Javelin.message(message,true);
+		if(notify) Javelin.message(message,true);
 	}
 }

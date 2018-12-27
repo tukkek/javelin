@@ -24,7 +24,7 @@ public class Sabotage extends UrbanEvent{
 
 	@Override
 	public boolean validate(Squad s,int squadel){
-		return town.getgovernor().getprojectssize()>0&&super.validate(s,squadel);
+		return town.getgovernor().countprojects()>0&&super.validate(s,squadel);
 	}
 
 	@Override

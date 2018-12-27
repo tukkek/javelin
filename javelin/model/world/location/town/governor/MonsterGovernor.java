@@ -50,7 +50,7 @@ public class MonsterGovernor extends Governor{
 		if(rank<=season&&start(filter(Growth.class,hand))) return;
 		if(rank>=season&&start(filter(BuildDwelling.class,hand))) return;
 		if(rank>=Rank.TOWN.rank&&town.traits.isEmpty()&&startttrait(traits)) return;
-		if(getprojectssize()<nprojects) if(start(hand)||startttrait(traits)) return;
+		if(countprojects()<nprojects) if(start(hand)||startttrait(traits)) return;
 	}
 
 	boolean startttrait(ArrayList<Labor> traits){

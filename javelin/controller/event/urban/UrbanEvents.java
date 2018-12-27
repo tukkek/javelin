@@ -16,6 +16,7 @@ import javelin.controller.event.urban.negative.Riot;
 import javelin.controller.event.urban.negative.Sabotage;
 import javelin.controller.event.urban.negative.Suspects;
 import javelin.controller.event.urban.neutral.HostTournament;
+import javelin.controller.event.urban.positive.CollectiveEffort;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Trait;
@@ -43,8 +44,8 @@ public class UrbanEvents extends EventDealer{
 	public static Town generating;
 
 	private UrbanEvents(){
-		positive.addcontent(
-				List.of(NothingHappens.class,ImproveRelationship.class,Praise.class));
+		positive.addcontent(List.of(NothingHappens.class,ImproveRelationship.class,
+				Praise.class,CollectiveEffort.class));
 		neutral.addcontent(List.of(NothingHappens.class,HostTournament.class));
 		negative.addcontent(List.of(NothingHappens.class,DegradeRelationship.class,
 				Suspects.class,Badmouth.class,Riot.class,Fire.class,Sabotage.class));

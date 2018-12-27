@@ -338,7 +338,7 @@ public class Town extends Location{
 
 	@Override
 	public boolean isworking(){
-		return !ishostile()&&getgovernor().getprojectssize()>1;
+		return !ishostile()&&getgovernor().countprojects()>1;
 	}
 
 	@Override

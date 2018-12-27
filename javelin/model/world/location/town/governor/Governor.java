@@ -174,7 +174,7 @@ public abstract class Governor implements Serializable{
 	}
 
 	/** @return Number of active {@link #projects}. */
-	public int getprojectssize(){
+	public int countprojects(){
 		return projects.size();
 	}
 

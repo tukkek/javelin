@@ -133,34 +133,28 @@ public class Debug{
 			new TextWindow("World generation resets",text).show();
 		}
 
-		/**
-		 * @return Town instance to be changed, so it's easier to make the event in
-		 *         question valid. Will throw a {@link RepeatTurn} instead of
-		 *         returning <code>null</code> to avoid
-		 *         {@link NullPointerException}s.
-		 */
-		static Town doevent(Class<? extends UrbanEvent> type){
+		static void doevent(Class<? extends UrbanEvent> type){
 			try{
+				var e=type.getConstructor(Town.class).newInstance(gettown());
 				var s=Squad.active;
-				var d=s.getdistrict();
-				if(d==null){
-					Javelin.message("Not in town...",false);
-					throw new RepeatTurn();
-				}
-				var t=d.town;
-				var e=type.getConstructor(Town.class).newInstance(t);
 				var el=s.getel();
 				if(!e.validate(s,el)){
 					Javelin.message("Invalid event: "+type.getSimpleName()+"...",false);
-					return t;
+					throw new RepeatTurn();
 				}
 				e.define(s,el);
 				e.happen(s);
-				return t;
 			}catch(ReflectiveOperationException exception){
 				Javelin.message("Error: "+exception,false);
 				throw new RepeatTurn();
 			}
+		}
+
+		static Town gettown(){
+			var d=Squad.active.getdistrict();
+			if(d!=null) return d.town;
+			Javelin.message("Not in town...",false);
+			throw new RepeatTurn();
 		}
 	}
 

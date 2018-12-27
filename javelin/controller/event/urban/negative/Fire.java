@@ -18,8 +18,9 @@ import javelin.model.world.location.town.labor.Trait;
 import javelin.old.RPG;
 
 /**
- * A fire destroys a {@link District} {@link Location}. {@link Trait#NATURAL}
- * {@link Town}s are savvy enough to prevent fires.
+ * A fire destroys one or more {@link District} {@link Location}s, requiring
+ * them to be repaired. {@link Trait#NATURAL} {@link Town}s are savvy enough to
+ * prevent fires.
  *
  * @author alex
  */
@@ -54,8 +55,7 @@ public class Fire extends UrbanEvent{
 	public Fire(Town t){
 		super(t,null,Rank.HAMLET);
 		targets=t.getdistrict().getlocations().stream()
-				.filter(l->!(l instanceof Town)&&!(l instanceof ConstructionSite))
-				.collect(Collectors.toList());
+				.filter(l->!(l instanceof Town)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -66,13 +66,23 @@ public class Fire extends UrbanEvent{
 
 	@Override
 	public void happen(Squad s){
-		var target=RPG.pick(targets);
-		String name=target.toString().toLowerCase();
-		if(notify)
-			Javelin.message("The "+name+" in "+town+" is ruined in a fire!",true);
-		target.remove();
-		var labor=town.population+RPG.randomize(town.population);
-		var r=new Repair("Repair: "+name,labor,target);
-		r.generate(town).start();
+		var rank=town.getrank().rank;
+		var targets=RPG.shuffle(this.targets).subList(0,
+				Math.min(this.targets.size(),rank+RPG.randomize(rank)));
+		var damage=Math.max(1,town.population/targets.size());
+		for(var t:targets){
+			t.remove();
+			if(t instanceof ConstructionSite) continue;
+			var name="Repair: "+t.toString().toLowerCase();
+			var labor=damage+RPG.randomize(damage);
+			var r=new Repair(name,labor,t);
+			r.generate(town).start();
+		}
+		if(notify){
+			var affected=targets.stream().map(t->t.toString())
+					.collect(Collectors.joining(", "));
+			Javelin.message("A fire rages across "+town
+					+"! The following locations were damaged:\n"+affected+".",true);
+		}
 	}
 }

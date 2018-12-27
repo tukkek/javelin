@@ -1,6 +1,5 @@
 package javelin.controller.event.urban.diplomatic;
 
-import javelin.Javelin;
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.diplomacy.Relationship;
 import javelin.model.unit.Squad;
@@ -45,10 +44,8 @@ public class ImproveRelationship extends DiplomaticEvent{
 	@Override
 	public void happen(Squad s){
 		relationship.changestatus(change);
-		if(notify){
-			var status=relationship.describestatus().toLowerCase();
-			Javelin.message("Relationship with "+town+" spontaneously "+description
-					+" to: "+status+"!",true);
-		}
+		var status=relationship.describestatus().toLowerCase();
+		notify("Relationship with "+town+" spontaneously "+description+" to: "
+				+status+"!");
 	}
 }

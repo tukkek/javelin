@@ -1,7 +1,7 @@
 package javelin.controller.event.urban.negative;
 
-import javelin.Javelin;
 import javelin.controller.event.urban.UrbanEvent;
+import javelin.controller.event.urban.positive.FoodSurplus;
 import javelin.model.unit.Squad;
 import javelin.model.world.Season;
 import javelin.model.world.location.town.Rank;
@@ -13,6 +13,7 @@ import javelin.model.world.location.town.labor.Trait;
  * {@link Trait#NATURAL} immune to it.
  *
  * @author alex
+ * @see FoodSurplus
  */
 public class FoodShortage extends UrbanEvent{
 	/** Reflection constructor. */
@@ -29,7 +30,6 @@ public class FoodShortage extends UrbanEvent{
 	@Override
 	public void happen(Squad s){
 		town.population-=1;
-		if(notify) Javelin
-				.message("The rough winter causes a food shortage in "+town+"...",true);
+		notify("The rough winter causes a food shortage in "+town+"...");
 	}
 }

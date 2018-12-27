@@ -3,7 +3,6 @@ package javelin.controller.event.urban.negative;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javelin.Javelin;
 import javelin.controller.event.urban.UrbanEvent;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.generator.encounter.EncounterGenerator;
@@ -47,8 +46,7 @@ public class Revolt extends UrbanEvent{
 	public void happen(Squad s){
 		var target=RPG.pick(targets);
 		target.garrison.addAll(mob);
-		if(notify) Javelin.message(
-				"A group of revolting inhabitants take over "+target+" in "+town+"!",
-				true);
+		notify(
+				"A group of revolting inhabitants take over "+target+" in "+town+"!");
 	}
 }

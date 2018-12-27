@@ -53,7 +53,7 @@ public class Suspects extends UrbanEvent{
 		int nguards=RPG.rolldice(rank,4);
 		var guards=new ArrayList<Combatant>(nguards);
 		while(guards.size()<nguards&&ChallengeCalculator.calculateel(guards)<el)
-			guards.add(new Combatant(RPG.pick(this.guards),notify));
+			guards.add(new Combatant(RPG.pick(this.guards),true));
 		while(ChallengeCalculator.calculateel(guards)<el)
 			Combatant.upgradeweakest(guards,
 					List.of(Commoner.SINGLETON,Warrior.SINGLETON));
@@ -102,7 +102,6 @@ public class Suspects extends UrbanEvent{
 	void surrender(int rank){
 		var days=RPG.rolldice(rank,8)-rank;
 		Squad.active.hourselapsed+=days*24;
-		String mesasge="You spend "+days+" days in jail before being cleared.";
-		Javelin.message(mesasge,notify);
+		notify("You spend "+days+" days in jail before being cleared.");
 	}
 }

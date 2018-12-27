@@ -19,7 +19,6 @@ public class NothingHappens extends UrbanEvent{
 
 	@Override
 	public void happen(Squad s){
-		if(notify&&Javelin.DEBUG)
-			Javelin.message("Nothing happens at "+town+".",true);
+		if(Javelin.DEBUG) notify("Nothing happens at "+town+".");
 	}
 }

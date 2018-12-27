@@ -27,14 +27,6 @@ public abstract class UrbanEvent extends EventCard{
 	/** Town this event is happening in. */
 	protected Town town;
 	/**
-	 * Whether to notify players of the event or not. If <code>false</code>,
-	 * should not present output of input request.
-	 *
-	 * If it is impossible to run the event without player interaction, make it
-	 * invalid.
-	 */
-	protected boolean notify;
-	/**
 	 * Alis for {@link Town#population} - also makes it easier to debug by
 	 * overriding in a constructor.
 	 *
@@ -54,7 +46,6 @@ public abstract class UrbanEvent extends EventCard{
 		el=town.population;
 		this.traits=traits;
 		minimumrank=minimum;
-		notify=town.notifyplayer()||!town.getdistrict().getsquads().isEmpty();
 	}
 
 	@Override
@@ -65,5 +56,15 @@ public abstract class UrbanEvent extends EventCard{
 		for(var t:town.traits)
 			if(traits.contains(t)) return true;
 		return false;
+	}
+
+	/**
+	 * @param message Print this message to the player only as long as there is a
+	 *          {@link Squad} in {@link #town} or if it isn't hostile.
+	 * @see Town#ishostile()
+	 */
+	protected void notify(String message){
+		if(town.notifyplayer()||town.getdistrict().getsquads().size()>0)
+			Javelin.message(message,true);
 	}
 }

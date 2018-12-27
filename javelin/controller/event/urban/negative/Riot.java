@@ -1,6 +1,5 @@
 package javelin.controller.event.urban.negative;
 
-import javelin.Javelin;
 import javelin.controller.event.urban.UrbanEvent;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Rank;
@@ -30,6 +29,6 @@ public class Riot extends UrbanEvent{
 	public void happen(Squad s){
 		var action=town.strike==0?"start":"are renewed";
 		town.strike=strike;
-		if(notify) Javelin.message("Riots "+action+" in "+town+"!",true);
+		notify("Riots "+action+" in "+town+"!");
 	}
 }

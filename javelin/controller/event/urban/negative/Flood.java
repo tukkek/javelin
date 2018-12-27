@@ -1,6 +1,5 @@
 package javelin.controller.event.urban.negative;
 
-import javelin.Javelin;
 import javelin.controller.Weather;
 import javelin.controller.event.urban.UrbanEvent;
 import javelin.controller.terrain.Terrain;
@@ -40,7 +39,6 @@ public class Flood extends UrbanEvent{
 		var message=town
 				+" is caught in a massive flood, causing major fatalities!\n";
 		if(s!=null){
-			notify=true;
 			var damaged=false;
 			var toxic=town.getrank().rank>=Rank.TOWN.rank;
 			for(var squad:town.getdistrict().getsquads())
@@ -53,7 +51,7 @@ public class Flood extends UrbanEvent{
 			}
 		}
 		if(town.population>1) town.population-=1;
-		if(notify) Javelin.message(message,true);
+		notify(message);
 	}
 
 	boolean affect(Combatant member,boolean toxic){

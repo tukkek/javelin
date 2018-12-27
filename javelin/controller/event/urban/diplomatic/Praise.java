@@ -1,6 +1,5 @@
 package javelin.controller.event.urban.diplomatic;
 
-import javelin.Javelin;
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Rank;
@@ -31,12 +30,10 @@ public class Praise extends DiplomaticEvent{
 	public void happen(Squad s){
 		var reputation=town.population+RPG.randomize(town.population);
 		Diplomacy.instance.reputation+=reputation;
-		if(notify){
-			String message="People in "+town+" are celebrating you!\n"+"You gain "
-					+reputation+" reputation.";
-			if(Diplomacy.instance.reputation>=Diplomacy.TRIGGER)
-				message+=" You can now make a diplomatic action!";
-			Javelin.message(message,true);
-		}
+		String message="People in "+town+" are celebrating you!\n"+"You gain "
+				+reputation+" reputation.";
+		if(Diplomacy.instance.reputation>=Diplomacy.TRIGGER)
+			message+=" You can now make a diplomatic action!";
+		notify(message);
 	}
 }

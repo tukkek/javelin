@@ -2,7 +2,6 @@ package javelin.controller.event.urban.negative;
 
 import java.util.List;
 
-import javelin.Javelin;
 import javelin.controller.event.urban.UrbanEvent;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Rank;
@@ -31,7 +30,7 @@ public class Sabotage extends UrbanEvent{
 	public void happen(Squad s){
 		var p=RPG.pick(town.getgovernor().getprojects());
 		p.cancel();
-		if(notify) Javelin.message("A project in "+town
-				+" falls victim to sabotage ("+p.toString().toLowerCase()+")!",true);
+		notify("A project in "+town+" falls victim to sabotage ("
+				+p.toString().toLowerCase()+")!");
 	}
 }

@@ -113,9 +113,10 @@ public class District{
 	public ArrayList<Squad> getsquads(){
 		if(squads!=null) return squads;
 		getarea();
-		squads=new ArrayList<>();
-		for(Squad s:Squad.getsquads())
-			if(area.contains(new Point(s.x,s.y))) squads.add(s);
+		var all=Squad.getsquads();
+		squads=new ArrayList<>(all.size());
+		for(Squad s:all)
+			if(area.contains(s.getlocation())) squads.add(s);
 		return squads;
 	}
 

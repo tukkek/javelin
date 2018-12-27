@@ -1,6 +1,5 @@
 package javelin.controller.event.urban.diplomatic;
 
-import javelin.Javelin;
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Rank;
@@ -32,7 +31,7 @@ public class Badmouth extends DiplomaticEvent{
 		var reputation=town.population+RPG.randomize(town.population);
 		reputation=Math.min(reputation,Diplomacy.instance.reputation);
 		Diplomacy.instance.reputation-=reputation;
-		if(notify) Javelin.message("Someone in "+town+" is badmouthing you!\n"
-				+"You lose "+reputation+" reputation.",true);
+		notify("Someone in "+town+" is badmouthing you!\n"+"You lose "+reputation
+				+" reputation.");
 	}
 }

@@ -3,7 +3,6 @@ package javelin.controller.event.urban.negative;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.event.urban.UrbanEvent;
@@ -78,11 +77,9 @@ public class Fire extends UrbanEvent{
 			var r=new Repair(name,labor,t);
 			r.generate(town).start();
 		}
-		if(notify){
-			var affected=targets.stream().map(t->t.toString())
-					.collect(Collectors.joining(", "));
-			Javelin.message("A fire rages across "+town
-					+"! The following locations were damaged:\n"+affected+".",true);
-		}
+		var affected=targets.stream().map(t->t.toString())
+				.collect(Collectors.joining(", "));
+		notify("A fire rages across "+town
+				+"! The following locations were damaged:\n"+affected+".");
 	}
 }

@@ -7,7 +7,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.terrain.Desert;
+import javelin.controller.terrain.Forest;
+import javelin.controller.terrain.Hill;
+import javelin.controller.terrain.Marsh;
+import javelin.controller.terrain.Mountains;
+import javelin.controller.terrain.Plains;
 import javelin.controller.terrain.Terrain;
+import javelin.controller.terrain.Water;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -73,13 +80,21 @@ public class ResourceSite extends Location{
 
 	/** All existing resources. */
 	public static final HashMap<Terrain,Resource> RESOURCES=new HashMap<>();
-	static final Resource CRYSTAL=new Resource("Crystal",Terrain.MOUNTAINS);
-	static final Resource FISH=new Resource("Fish",Terrain.WATER);
-	static final Resource FRUIT=new Resource("Fruits",Terrain.FOREST);
-	static final Resource GEMS=new Resource("Gems",Terrain.DESERT);
-	static final Resource GRAIN=new Resource("Grains",Terrain.PLAIN);
-	static final Resource MERCURY=new Resource("Mercury",Terrain.MARSH);
-	static final Resource STONE=new Resource("Stone",Terrain.HILL);
+	/** {@link Mountains} resource. */
+	public static final Resource CRYSTAL=new Resource("Crystal",
+			Terrain.MOUNTAINS);
+	/** {@link Water} resource. */
+	public static final Resource FISH=new Resource("Fish",Terrain.WATER);
+	/** {@link Forest} resource. */
+	public static final Resource FRUIT=new Resource("Fruits",Terrain.FOREST);
+	/** {@link Desert} resource. */
+	public static final Resource GEMS=new Resource("Gems",Terrain.DESERT);
+	/** {@link Plains} resource. */
+	public static final Resource GRAIN=new Resource("Grains",Terrain.PLAIN);
+	/** {@link Marsh} resource. */
+	public static final Resource MERCURY=new Resource("Mercury",Terrain.MARSH);
+	/** {@link Hill} resource. */
+	public static final Resource STONE=new Resource("Stone",Terrain.HILL);
 
 	static{
 		for(Resource t:new Resource[]{CRYSTAL,FISH,FRUIT,GEMS,GRAIN,MERCURY,STONE})

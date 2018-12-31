@@ -1,8 +1,10 @@
 package javelin.old;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import javelin.controller.ai.BattleAi;
 
@@ -87,5 +89,10 @@ public class RPG{
 	public static <K extends List> K shuffle(K list){
 		Collections.shuffle(list);
 		return list;
+	}
+
+	/** @return Same as {@link #pick(List)}. */
+	public static <K> K pick(Set<K> set){
+		return pick(new ArrayList<>(set));
 	}
 }

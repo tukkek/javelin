@@ -16,6 +16,7 @@ import javelin.controller.event.urban.encounter.Robbers;
 import javelin.controller.event.urban.negative.Fire;
 import javelin.controller.event.urban.negative.Flood;
 import javelin.controller.event.urban.negative.FoodShortage;
+import javelin.controller.event.urban.negative.LoseResource;
 import javelin.controller.event.urban.negative.Revolt;
 import javelin.controller.event.urban.negative.Riot;
 import javelin.controller.event.urban.negative.Sabotage;
@@ -23,6 +24,7 @@ import javelin.controller.event.urban.neutral.HostTournament;
 import javelin.controller.event.urban.neutral.Migration;
 import javelin.controller.event.urban.positive.CollectiveEffort;
 import javelin.controller.event.urban.positive.FoodSurplus;
+import javelin.controller.event.urban.positive.GainResource;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Trait;
@@ -50,13 +52,15 @@ public class UrbanEvents extends EventDealer{
 	public static Town generating;
 
 	private UrbanEvents(){
-		positive.addcontent(List.of(NothingHappens.class,ImproveRelationship.class,
-				Praise.class,CollectiveEffort.class,FoodSurplus.class));
+		positive.addcontent(
+				List.of(NothingHappens.class,ImproveRelationship.class,Praise.class,
+						CollectiveEffort.class,FoodSurplus.class,GainResource.class));
 		neutral.addcontent(
 				List.of(NothingHappens.class,HostTournament.class,Migration.class));
-		negative.addcontent(List.of(NothingHappens.class,DegradeRelationship.class,
-				Guards.class,Badmouth.class,Riot.class,Fire.class,Sabotage.class,
-				Revolt.class,Flood.class,FoodShortage.class,Robbers.class));
+		negative.addcontent(
+				List.of(NothingHappens.class,DegradeRelationship.class,Guards.class,
+						Badmouth.class,Riot.class,Fire.class,Sabotage.class,Revolt.class,
+						Flood.class,FoodShortage.class,Robbers.class,LoseResource.class));
 	}
 
 	@Override

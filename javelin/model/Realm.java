@@ -148,10 +148,4 @@ public enum Realm{
 		String name=name();
 		return name.charAt(0)+name().substring(1).toLowerCase();
 	}
-
-	public static boolean equals(Object a,Object b){
-		if(a==null&&b==null) return true;
-		if(a==null||b==null) return false;
-		return a.equals(b);
-	}
 }

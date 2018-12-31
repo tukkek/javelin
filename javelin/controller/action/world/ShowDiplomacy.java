@@ -12,8 +12,6 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class ShowDiplomacy extends WorldAction{
-	static final boolean DEBUG=false;
-
 	/** Constructor. */
 	public ShowDiplomacy(){
 		super("Diplomacy",new int[]{'D'},new String[]{"D"});
@@ -26,10 +24,6 @@ public class ShowDiplomacy extends WorldAction{
 			var mode=World.scenario.toString().toLowerCase();
 			Javelin.message("Diplomacy not enabled on "+mode+" mode...",false);
 			return;
-		}
-		if(Javelin.DEBUG&&DEBUG){
-			d.reputation=Diplomacy.TRIGGER;
-			d.draw();
 		}
 		DiplomacyScreen.open();
 	}

@@ -1,7 +1,6 @@
 package javelin.model.world.location.town.labor;
 
 import javelin.controller.Point;
-import javelin.model.Realm;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.District;
@@ -41,8 +40,6 @@ public abstract class BuildingUpgrade extends Build{
 	@Override
 	public boolean validate(District d){
 		if(previous==null||!previous.canupgrade()) return false;
-		if(site!=null&&site.ishostile()&&d.town.ishostile())
-			Realm.equals(site.realm,d.town.realm);
 		return super.validate(d)&&(site!=null||d.getlocations().contains(previous));
 	}
 

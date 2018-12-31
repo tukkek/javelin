@@ -66,6 +66,7 @@ public class Relationship implements Serializable{
 	/**
 	 * @return Current diplomatic status between player and faction, from
 	 *         {@link #HOSTILE} to {@link #ALLY}.
+	 * @see #getabsolutestatus()
 	 */
 	public int getstatus(){
 		return status;
@@ -90,5 +91,13 @@ public class Relationship implements Serializable{
 	 */
 	public boolean isdiscovered(){
 		return WorldScreen.see(town.getlocation());
+	}
+
+	/**
+	 * @return Similar to {@link #getstatus()} but {@link #HOSTILE} is 1 and
+	 *         values increment by 1 from there.
+	 */
+	public int getabsolutestatus(){
+		return status+Relationship.ALLY+1;
 	}
 }

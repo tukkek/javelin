@@ -10,6 +10,7 @@ import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.comparator.ActorByDistance;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.scenario.Scenario;
 import javelin.controller.scenario.dungeonworld.DungeonWorld;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
@@ -307,8 +308,24 @@ public abstract class Actor implements Serializable{
 		return World.get(x,y,World.getactors())==this;
 	}
 
-	/** @return See {@link WorldScreen#see(Point)}. */
+	/**
+	 * @return See {@link WorldScreen#see(Point)}.
+	 * @see Scenario#fogofwar
+	 * @see #reveal()
+	 */
 	public boolean see(){
 		return WorldScreen.see(getlocation());
+	}
+
+	/**
+	 * Reveals this actor's tile to the player, making it visible on the
+	 * {@link WorldScreen}. Note that a non-stationary actor may again become
+	 * hidden if it moves into a obscured tile.
+	 *
+	 * @see #see()
+	 * @see Scenario#fogofwar
+	 */
+	public void reveal(){
+		WorldScreen.current.mappanel.tiles[x][y].discovered=true;
 	}
 }

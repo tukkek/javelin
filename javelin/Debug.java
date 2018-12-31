@@ -14,6 +14,7 @@ import javelin.controller.generator.WorldGenerator;
 import javelin.controller.map.Map;
 import javelin.controller.scenario.Scenario;
 import javelin.model.Realm;
+import javelin.model.diplomacy.Diplomacy;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -24,6 +25,7 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.view.TextWindow;
+import javelin.view.frame.DiplomacyScreen;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.WorldScreen;
 
@@ -155,6 +157,14 @@ public class Debug{
 			if(d!=null) return d.town;
 			Javelin.message("Not in town...",false);
 			throw new RepeatTurn();
+		}
+
+		static void dodiplomacy(){
+			var d=Diplomacy.instance;
+			d.reputation=Diplomacy.TRIGGER;
+			d.hand.clear();
+			d.draw();
+			DiplomacyScreen.open();
 		}
 	}
 

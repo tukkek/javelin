@@ -22,7 +22,7 @@ public class RequestMap extends Mandate{
 	public RequestMap(Relationship r){
 		super(r);
 		var t=r.town;
-		var radius=t.getdistrict().getradius()+t.getrank().rank;
+		var radius=t.getdistrict().getradius()+target.getabsolutestatus()-1;
 		for(var x=t.x-radius;x<=t.x+radius;x++)
 			for(var y=t.y-radius;y<=t.y+radius;y++){
 				var p=new Point(x,y);

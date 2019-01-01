@@ -153,7 +153,7 @@ public class FeatureGenerator implements Serializable{
 		}
 	}
 
-	void spawnnear(Town t,Actor a,World w,int min,int max,boolean clear){
+	static void spawnnear(Town t,Actor a,World w,int min,int max,boolean clear){
 		Point p=null;
 		ArrayList<Actor> actors=World.getactors();
 		while(p==null||World.get(t.x+p.x,t.y+p.y,actors)!=null
@@ -180,7 +180,7 @@ public class FeatureGenerator implements Serializable{
 			l.place();
 	}
 
-	void generateuniquelocations(ArrayList<Location> locations){
+	static void generateuniquelocations(ArrayList<Location> locations){
 		locations.addAll(List.of(new PillarOfSkulls(),new DeepDungeon()));
 		if(World.scenario.worlddistrict) locations.addAll(List
 				.of(new MercenariesGuild(),new Artificer(),new SummoningCircle(5,15)));
@@ -193,7 +193,7 @@ public class FeatureGenerator implements Serializable{
 				new WitchesHideout(),new Graveyard(),new OrcSettlement());
 	}
 
-	void generatestartingarea(World seed,Town t){
+	static void generatestartingarea(World seed,Town t){
 		spawnnear(t,new Lodge(),seed,1,2,true);
 		spawnnear(t,new Shop(t.realm,true),seed,1,2,true);
 		RealmAcademy academy=new RealmAcademy(t.originalrealm,true);
@@ -211,7 +211,7 @@ public class FeatureGenerator implements Serializable{
 		spawnnear(t,new TrainingHall(),seed,2,3,false);
 	}
 
-	void generateacademies(ArrayList<Location> locations){
+	static void generateacademies(ArrayList<Location> locations){
 		for(MageGuildData g:MagesGuild.GUILDS)
 			locations.add(g.generate());
 		for(MartialAcademyData g:MartialAcademy.ACADEMIES)
@@ -241,7 +241,7 @@ public class FeatureGenerator implements Serializable{
 		generatefeatures(w,starting);
 		normalizemap(starting);
 		for(Town t:Town.gettowns())
-			if(t!=starting) t.populategarisson();
+			World.scenario.populate(t,t==starting);
 		return starting;
 	}
 

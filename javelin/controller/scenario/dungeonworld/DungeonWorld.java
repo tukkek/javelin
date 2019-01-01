@@ -4,6 +4,7 @@ import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.scenario.Campaign;
+import javelin.controller.scenario.Scenario;
 import javelin.model.item.Item;
 import javelin.model.item.Ruby;
 import javelin.model.item.key.TempleKey;
@@ -15,6 +16,8 @@ import javelin.old.RPG;
 
 /**
  * Game mode which provides a JRPG like experience.
+ *
+ * TODO make depend on {@link Scenario}
  *
  * @author alex
  */
@@ -38,6 +41,7 @@ public class DungeonWorld extends Campaign{
 		crossrivers=false;
 		quests=false;
 		diplomacy=false;
+		urbanevents=false;
 	}
 
 	@Override

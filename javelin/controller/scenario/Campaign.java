@@ -23,6 +23,8 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.governor.HumanGovernor;
+import javelin.model.world.location.town.governor.MonsterGovernor;
 import javelin.old.RPG;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Tile;
@@ -70,7 +72,6 @@ public class Campaign extends Scenario{
 		respawnlocations=true;
 		size=30;
 		startingdungeons=20;
-		startingpopulation=1;
 		statictowns=false;
 		towns=Realm.values().length;
 		worldencounters=true;
@@ -84,6 +85,7 @@ public class Campaign extends Scenario{
 		spawn=true;
 		quests=true;
 		diplomacy=true;
+		urbanevents=true;
 	}
 
 	@Override
@@ -166,5 +168,11 @@ public class Campaign extends Scenario{
 			if(amount==0) break;
 		}
 		Squad.updatevision();
+	}
+
+	@Override
+	public void populate(Town t,boolean starting){
+		t.setgovernor(starting?new HumanGovernor(t):new MonsterGovernor(t));
+		if(!starting) t.populate(RPG.r(1,4));
 	}
 }

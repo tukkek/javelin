@@ -10,6 +10,7 @@ import javelin.Javelin;
 import javelin.controller.action.world.Guide;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.db.StateManager;
+import javelin.controller.event.urban.UrbanEvents;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomEncounter;
 import javelin.controller.fight.minigame.Minigame;
@@ -74,6 +75,8 @@ import javelin.view.screen.SquadScreen;
  *
  * There is only one enemy {@link Realm} per game and the starting features are
  * roughly made to be 1/3 neutral and 2/3 hostile.
+ *
+ * @see World#scenario
  */
 public class Scenario implements Serializable{
 	/** {@link World} size. */
@@ -86,12 +89,8 @@ public class Scenario implements Serializable{
 	 */
 	public boolean minigames=false;
 	/**
-	 * Starting {@link Town} population. See {@link #statictowns}.
-	 */
-	public int startingpopulation=6;
-	/**
 	 * If <code>true</code>, {@link Town}s will be overidden after {@link World}
-	 * generation according to {@link #getscenariochallenge()}.
+	 * generation according to {@link #gettownel()}.
 	 */
 	public boolean statictowns=true;
 	/**
@@ -132,7 +131,7 @@ public class Scenario implements Serializable{
 	/** Minimum distance between {@link Desert} and {@link Water}. */
 	public int desertradius=1;
 	/** Number of {@link Town}s in the {@link World}. */
-	public int towns=RPG.r(1+1,1+3);
+	public int towns=RPG.r(1,3)+1;
 	/**
 	 * Will clear locations as indicated by {@link Fortification#clear}.
 	 */
@@ -242,14 +241,8 @@ public class Scenario implements Serializable{
 	public boolean crossrivers=true;
 	/** If <code>true</code> will generate {@link Quest}s. */
 	public boolean quests=false;
-
-	/**
-	 * @return Starting encounter level for each hostile town in {@link #SCENARIO}
-	 *         mode. 20 for 1 hostile town, 15 for 2 or 10 for 3.
-	 */
-	public static int getscenariochallenge(){
-		return new int[]{20,15,10}[Town.gettowns().size()-2];
-	}
+	/** Whether to allow {@link UrbanEvents} in {@link Town}s. */
+	public boolean urbanevents=false;
 
 	/**
 	 * {@link Upgrade} or not the starting squad after it's been selected.
@@ -397,5 +390,15 @@ public class Scenario implements Serializable{
 	@Override
 	public String toString(){
 		return helpfile;
+	}
+
+	/**
+	 * @param t Given to set things like {@link Town#population} and its garrison.
+	 * @param starting <code>true</code> if this is the player's starting town.
+	 * @see Town#populate(int)
+	 */
+	public void populate(Town t,boolean starting){
+		t.population=new int[]{20,15,10}[towns-2];
+		t.populate(t.population);
 	}
 }

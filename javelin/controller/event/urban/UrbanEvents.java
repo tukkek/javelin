@@ -26,6 +26,7 @@ import javelin.controller.event.urban.positive.CollectiveEffort;
 import javelin.controller.event.urban.positive.FoodSurplus;
 import javelin.controller.event.urban.positive.GainResource;
 import javelin.model.unit.Squad;
+import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Trait;
 import javelin.old.RPG;
@@ -90,6 +91,7 @@ public class UrbanEvents extends EventDealer{
 
 	@Override
 	public String printsummary(String title){
+		if(!World.scenario.urbanevents) return "(Urban events disabled)";
 		var info=new ArrayList<String>();
 		info.add(positive.getcontentsize()+" positive");
 		info.add(neutral.getcontentsize()+" neutral");

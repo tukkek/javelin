@@ -11,6 +11,7 @@ import java.util.TreeSet;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.Difficulty;
+import javelin.controller.event.urban.UrbanEvent;
 import javelin.controller.event.urban.UrbanEvents;
 import javelin.controller.event.urban.negative.Riot;
 import javelin.controller.event.urban.neutral.HostTournament;
@@ -21,6 +22,7 @@ import javelin.controller.fight.Siege;
 import javelin.controller.fight.tournament.Exhibition;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.location.TownMap;
+import javelin.controller.scenario.Campaign;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
@@ -41,7 +43,6 @@ import javelin.model.world.location.town.governor.HumanGovernor;
 import javelin.model.world.location.town.governor.MonsterGovernor;
 import javelin.model.world.location.town.labor.Deck;
 import javelin.model.world.location.town.labor.Labor;
-import javelin.model.world.location.town.labor.basic.Growth;
 import javelin.model.world.location.town.quest.Quest;
 import javelin.old.RPG;
 import javelin.view.Images;
@@ -91,16 +92,12 @@ public class Town extends Location{
 	/** @see HostTournament */
 	public ArrayList<Exhibition> events=new ArrayList<>();
 	/**
-	 * Represent 10 working citizens that will produce 1 unit of {@link Labor}
-	 * every 10 days.
+	 * Represents the size of a town. In {@link Campaign} games this is expected
+	 * to go from roughly 1 to 20 in the span of a year. Default is 1
 	 *
-	 * An arbitrary decision is to try to fit the game-span of a normal game into
-	 * a 1-year period, which puts a town max size roughly at 10 if it does
-	 * nothing but {@link Growth}.
+	 * @see Scenario#populate(Town, boolean)
 	 */
-	public int population=World.scenario.startingpopulation;
-	/** See {@link Governor}. */
-	private Governor governor=new HumanGovernor(this);
+	public int population=1;
 	/**
 	 * Alphabetically ordered set of urban traits.
 	 *
@@ -141,6 +138,8 @@ public class Town extends Location{
 	 * @see Riot
 	 */
 	public int strike=0;
+	/** See {@link Governor}. */
+	Governor governor=null;
 
 	/** @param p Spot to place town in the {@link World}. */
 	public Town(Point p,Realm r){
@@ -372,28 +371,6 @@ public class Town extends Location{
 	}
 
 	/**
-	 * Creates the initial {@link Location#garrison} for computer-controlled
-	 * towns.
-	 */
-	public void populategarisson(){
-		int el;
-		if(World.scenario.statictowns){
-			population=Scenario.getscenariochallenge();
-			el=population;
-		}else{
-			setgovernor(new MonsterGovernor(this));
-			el=RPG.r(1,5);
-		}
-		Terrain t=Terrain.get(x,y);
-		while(garrison.isEmpty())
-			try{
-				garrison.addAll(EncounterGenerator.generate(el,t));
-			}catch(GaveUp e){
-				el+=1;
-			}
-	}
-
-	/**
 	 * @return All {@link World} towns.
 	 */
 	public static ArrayList<Town> gettowns(){
@@ -501,7 +478,7 @@ public class Town extends Location{
 	 * @throws StartBattle For some events.
 	 */
 	public void dealevent(){
-		if(!RPG.chancein(30)) return;
+		if(!World.scenario.urbanevents||!RPG.chancein(UrbanEvent.CHANCE)) return;
 		var squads=getdistrict().getsquads();
 		var s=squads.isEmpty()?null:RPG.pick(squads);
 		UrbanEvents.generating=this;
@@ -516,5 +493,20 @@ public class Town extends Location{
 	 */
 	public boolean notifyplayer(){
 		return !ishostile();
+	}
+
+	/**
+	 * @param el Generates an initial {@link Location#garrison} from this
+	 *          suggested Encounter Level.
+	 * @see Scenario#populate(Town, boolean)
+	 */
+	public void populate(int el){
+		var terrain=Terrain.get(x,y);
+		while(garrison.isEmpty())
+			try{
+				garrison.addAll(EncounterGenerator.generate(el,terrain));
+			}catch(GaveUp e){
+				el+=1;
+			}
 	}
 }

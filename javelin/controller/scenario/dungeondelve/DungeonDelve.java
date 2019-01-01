@@ -23,6 +23,8 @@ import javelin.view.screen.WorldScreen;
  *
  * - Learning Stones so players can spend XP
  *
+ * TODO make depend on {@link Scenario}
+ *
  * @author alex
  */
 public class DungeonDelve extends Campaign{
@@ -42,6 +44,7 @@ public class DungeonDelve extends Campaign{
 		quests=false;
 		diplomacy=false;
 		helpfile="Dungeon delve";
+		urbanevents=false;
 	}
 
 	@Override
@@ -93,5 +96,10 @@ public class DungeonDelve extends Campaign{
 	/** @return The active Dungeon Delve {@link Scenario}. */
 	static public DungeonDelve get(){
 		return (DungeonDelve)World.scenario;
+	}
+
+	@Override
+	public void endday(){
+		//nothing
 	}
 }

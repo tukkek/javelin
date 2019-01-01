@@ -8,12 +8,19 @@ import javelin.controller.event.EventCard;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
+import javelin.old.RPG;
 
 /**
  * @see UrbanEvents
  * @author alex
  */
 public abstract class UrbanEvent extends EventCard{
+	/**
+	 * How many days until a {@link Town} has an event happen.
+	 * 
+	 * @see RPG#chancein(int)
+	 */
+	public static final int CHANCE=30;
 	/**
 	 * At least one element here must be in {@link Town#traits} for an event to be
 	 * valid. If <code>null</code> or empty, will bypass this check.
@@ -35,7 +42,7 @@ public abstract class UrbanEvent extends EventCard{
 	protected int el;
 	/**
 	 * Available for subclasses to override as needed.
-	 * 
+	 *
 	 * @see #notify(String)
 	 */
 	protected boolean notify;

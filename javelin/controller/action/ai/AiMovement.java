@@ -105,6 +105,7 @@ public class AiMovement extends Action implements AiAction{
 	}
 
 	LongMove move(Combatant c,Point from,Point to,BattleState s){
+		AiThread.checkinterrupted();
 		BattleWalker mover=new BattleWalker(from,to,c,s);
 		List<Point> steps=mover.walk();
 		if(steps.isEmpty()) return null;

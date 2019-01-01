@@ -1,11 +1,14 @@
 package javelin.model.unit.feat.skill;
 
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.feat.Feat;
 import javelin.model.unit.skill.Disguise;
 import javelin.model.unit.skill.Skill;
 
 /**
+ * TODO validate {@link Monster#think(int)}
+ *
  * @see Disguise
  * @author alex
  */
@@ -28,5 +31,10 @@ public class Deceitful extends Feat{
 		super.read(m);
 		Acrobatic.normalize(Skill.BLUFF,BONUS,m);
 		Acrobatic.normalize(Skill.DISGUISE,BONUS,m);
+	}
+
+	@Override
+	public boolean upgrade(Combatant c){
+		return c.source.think(-1)&&super.upgrade(c);
 	}
 }

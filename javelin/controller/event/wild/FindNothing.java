@@ -50,8 +50,8 @@ public class FindNothing extends WildEvent{
 				+period.toLowerCase()+".");
 		if(Weather.current!=Weather.CLEAR)
 			messages.add("It sure is raining a lot, isn't it..?");
-		if(s.members.size()>=3) messages.add(
-				RPG.pick(s.members)+" farts and everyone else gets upset about it.");
+		if(s.members.size()>=3) messages.add(RPG.pick(s.members)
+				+" falls down and everyone else has a good laugh about it!");
 		var terrain=Terrain.get(location.x,location.y).toString().toLowerCase();
 		messages.add("For some reason, looking at the "+terrain
 				+" around you fills you with determination!");

@@ -20,6 +20,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
+import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 import javelin.view.Images;
@@ -35,6 +36,11 @@ import javelin.view.Images;
  * 3. A {@link ResourceLink}, which there can be multiple of for a given
  * {@link Resource} site. However, as soon as a link is used to establish a
  * connection to a {@link Town}, the site and all other links are invalidated.
+ *
+ * 
+ * TODO add an instantaneous
+ * {@link #getupgrades(javelin.model.world.location.town.District)} to connect
+ * resources in the {@link District}.
  *
  * @see Squad#resources
  * @author alex

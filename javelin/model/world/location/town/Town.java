@@ -260,7 +260,7 @@ public class Town extends Location{
 		attacker.remove();
 		if(realm!=null) realm=attacker.realm;
 		int damage=RPG.randomize(4)+attacker.getel()/2;
-		if(damage>0) population-=Math.max(1,population-damage);
+		if(damage>0) population=Math.max(1,population-damage);
 		setgovernor(new MonsterGovernor(this));
 		for(var q:quests)
 			q.cancel();
@@ -305,9 +305,9 @@ public class Town extends Location{
 			completed=true;
 			s.gold+=q.reward;
 			String notification="You have completed a quest ("+q+")!\n";
-			notification+="You are rewarded for your efforts with: $"
+			notification+="You are rewarded for your efforts with $"
 					+Javelin.format(q.reward)+"!\n";
-			notification+="Current mood in "+this+": "
+			notification+="Mood in "+this+" is now: "
 					+describehappiness().toLowerCase()+".";
 			Javelin.message(notification,true);
 			quests.remove(q);
@@ -418,8 +418,10 @@ public class Town extends Location{
 	public void accessremotely(){
 		if(ishostile())
 			super.accessremotely();
-		else
+		else{
 			new GovernorScreen(this).show();
+			Javelin.app.switchScreen(WorldScreen.current);
+		}
 	}
 
 	@Override

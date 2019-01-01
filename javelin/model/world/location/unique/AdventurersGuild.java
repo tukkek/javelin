@@ -124,9 +124,9 @@ public class AdventurersGuild extends UniqueLocation{
 			t+="t - begin training\n";
 		}
 		t+="w - work as "+TITLES[rank(mostpowerful)]+" for a week ($"
-				+Javelin.format(pay/7)+" minus expenses)\n";
+				+Javelin.format(pay/7)+" minus living expenses)\n";
 		t+="m - work as "+TITLES[rank(mostpowerful)]+" for a month ($"
-				+Javelin.format(Math.round(pay))+" minus expenses)\n";
+				+Javelin.format(Math.round(pay))+" minus living expenses)\n";
 		t+="q - quit";
 		return t;
 	}

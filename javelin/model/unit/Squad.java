@@ -108,7 +108,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 		ArrayList<Actor> squads=World.getall(Squad.class);
 		squads.remove(this);
 		if(squads.isEmpty()) Javelin.lose();
-		if(Squad.active==this) Squad.active=Javelin.nexttoact();
+		//		if(Squad.active==this) Squad.active=Javelin.nexttoact();
 		if(Dungeon.active!=null) Dungeon.active.leave();
 	}
 
@@ -706,7 +706,6 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 
 	/**
 	 * @param s Rolls this skill for all members, returning the highest result.
-	 * @return
 	 * @see Combatant#roll(Skill)
 	 */
 	public int roll(Skill s){

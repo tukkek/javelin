@@ -9,7 +9,6 @@ import java.util.List;
 import javelin.Debug;
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.TempleEncounter;
@@ -192,7 +191,9 @@ public abstract class Temple extends UniqueLocation{
 			Javelin.message("Temple entrance forced by "+force+"!",true);
 			return true;
 		}
-		Javelin.message("The "+descriptionknown+" is locked.",true);
+		var difficulty=Difficulty.describe(level-Squad.active.getel());
+		var locked="The "+descriptionknown+" is locked ("+difficulty+").";
+		Javelin.message(locked,true);
 		return false;
 	}
 
@@ -268,8 +269,7 @@ public abstract class Temple extends UniqueLocation{
 
 	@Override
 	public String describe(){
-		int squad=ChallengeCalculator.calculateel(Squad.active.members);
-		String difficulty=Difficulty.describe(level-squad);
-		return descriptionknown+" ("+difficulty+")";
+		String difficulty=Difficulty.describe(level-Squad.active.getel());
+		return descriptionknown+" ("+difficulty+").";
 	}
 }

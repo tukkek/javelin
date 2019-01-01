@@ -6,8 +6,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
-import javelin.controller.exception.RepeatTurn;
-import javelin.controller.fight.Siege;
+import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.TrainingSession;
 import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
@@ -16,7 +15,6 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.old.RPG;
-import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.SquadScreen;
 
 /**
@@ -78,28 +76,23 @@ public class TrainingHall extends UniqueLocation{
 	}
 
 	@Override
-	protected Siege fight(){
-		int price=getfee();
-		MessagePanel.active.clear();
+	public boolean interact(){
+		var price=getfee();
 		if(price>Squad.active.gold){
-			Javelin.message("Not enough money to pay the training fee of $"+price+"!",
-					Javelin.Delay.NONE);
-			Javelin.input();
-			throw new RepeatTurn();
+			var m="Not enough money to pay the training fee ($"+Javelin.format(price)
+					+")...";
+			Javelin.message(m,false);
+			return false;
 		}
-		Javelin.message(
-				"Do you want to pay a fee of $"+price
-						+" for a lesson?\nPress s to study or any other key to leave...",
-				Javelin.Delay.NONE);
-		if(Javelin.input().getKeyChar()=='s'){
-			Squad.active.gold-=price;
-			return new TrainingSession(this);
-		}
-		throw new RepeatTurn();
+		var prompt="Do you want to pay a fee of $"+Javelin.format(price)
+				+" for a lesson?\n"+"Press s to study or any other key to leave...";
+		if(Javelin.prompt(prompt)!='s') return false;
+		Squad.active.gold-=price;
+		throw new StartBattle(new TrainingSession(this));
 	}
 
 	public int getfee(){
-		return RewardCalculator.receivegold(garrison);
+		return Javelin.round(RewardCalculator.receivegold(garrison));
 	}
 
 	@Override
@@ -142,7 +135,7 @@ public class TrainingHall extends UniqueLocation{
 
 	@Override
 	public String toString(){
-		return super.toString()+" ($"+Javelin.format(getfee())+")";
+		return super.toString()/*+" ($"+Javelin.format(getfee())+")"*/;
 	}
 
 	@Override

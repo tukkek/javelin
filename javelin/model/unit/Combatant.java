@@ -1005,7 +1005,7 @@ public class Combatant implements Serializable,Cloneable{
 	 * @see Squad#paymercenaries()
 	 */
 	public int pay(){
-		return mercenary?MercenariesGuild.getfee(source):0;
+		return MercenariesGuild.getfee(source);
 	}
 
 	/**

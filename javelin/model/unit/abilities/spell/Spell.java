@@ -418,7 +418,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 
 	@Override
 	public String getname(){
-		return "Spell: "+super.getname();
+		return "Spell: "+super.getname().toLowerCase();
 	}
 
 	@Override

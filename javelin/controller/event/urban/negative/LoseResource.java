@@ -12,6 +12,9 @@ import javelin.old.RPG;
  * {@link Town} loses access to a {@link Resource}. Does not happen to
  * {@link Trait#NATURAL} towns.
  *
+ * TODO since this is kinda offputting, maybe at least balance it with
+ * generating the same resource somewhere in the map?
+ *
  * @see Town#resources
  * @author alex
  */

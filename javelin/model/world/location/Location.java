@@ -263,8 +263,9 @@ public abstract class Location extends Actor{
 			description+=" ("+Difficulty.describe(opponents)+" fight).";
 			if(showgarrison)
 				description+="\n\n"+Squad.active.spotenemies(opponents,a);
-			return description;
+			//			return description;
 		}
+		description=description.trim();
 		if(!description.endsWith(".")) description+=".";
 		return description;
 	}

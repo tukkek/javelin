@@ -18,6 +18,8 @@ import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.generator.feature.Frequency;
 import javelin.controller.kit.Kit;
+import javelin.controller.scenario.dungeondelve.DungeonDelve;
+import javelin.controller.scenario.dungeonworld.DungeonWorld;
 import javelin.controller.terrain.Desert;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.Water;
@@ -58,6 +60,12 @@ import javelin.view.mappanel.world.WorldTile;
 import javelin.view.screen.SquadScreen;
 
 /**
+ * TODO scenario mode has been supplanted and disabled, might consider making
+ * this an abstract class with {@link DungeonDelve} and {@link DungeonWorld}
+ * depending on it instead to greatly simplify things. Scenario mode would be
+ * nice as well but there's already 4 game modes, not to count {@link Minigame}s
+ * and that's way too much feature creep to maintain.
+ *
  * Scenario mode is a much faster type of gameplay than the main
  * {@link Campaign} mode. It's supposed to be finished on anywhere from 2 hours
  * of play to an afternoon (but of course it can be saved an resumed too).

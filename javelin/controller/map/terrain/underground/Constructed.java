@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.old.RPG;
 import javelin.old.underground.Caves;
@@ -83,8 +82,8 @@ public class Constructed extends Caves{
 					map[x][y].blocked=true;
 	}
 
-	boolean checkblocking(Point expand,Set<Point> occupied){
-		if(Javelin.DEBUG) return false;
+	static boolean checkblocking(Point expand,Set<Point> occupied){
+		//		if(Javelin.DEBUG) return false;
 		for(Point p:Point.getadjacentorthogonal()){
 			p.x+=expand.x;
 			p.y+=expand.y;

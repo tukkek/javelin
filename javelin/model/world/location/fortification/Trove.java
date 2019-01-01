@@ -37,6 +37,9 @@ import javelin.old.messagepanel.MessagePanel;
  * @author alex
  */
 public class Trove extends Fortification{
+	static final String DESCRIPTION="A treasure trove";
+	static final boolean DEBUG=false;
+
 	enum Reward{
 		GOLD,EXPERIENCE,TEMPLEKEY,RUBY,KEY,REPUTATION,RESOURCE;
 
@@ -46,7 +49,7 @@ public class Trove extends Fortification{
 		}
 	}
 
-	public class TroveFight extends Siege{
+	class TroveFight extends Siege{
 		public TroveFight(Location l){
 			super(l);
 			rewardgold=false;
@@ -61,7 +64,6 @@ public class Trove extends Fortification{
 		}
 	}
 
-	static final String DESCRIPTION="A treasure trove";
 	TempleKey key=null;
 	Reward[] rewards=new Reward[2];
 	List<Combatant> originalgarrison=new ArrayList<>();
@@ -155,12 +157,15 @@ public class Trove extends Fortification{
 		return reward(rewards[choice]);
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public boolean interact(){
-		if(!Javelin.DEBUG) return super.interact();
-		if(!super.interact()) return false;
-		var message=take();
-		if(message!=null) Javelin.message(message,false);
-		return true;
+		if(Javelin.DEBUG&&DEBUG){
+			if(!super.interact()) return false;
+			var message=take();
+			if(message!=null) Javelin.message(message,false);
+			return true;
+		}
+		return super.interact();
 	}
 }

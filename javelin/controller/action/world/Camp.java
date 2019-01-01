@@ -19,8 +19,6 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class Camp extends WorldAction{
-	static final boolean DEBUG=Javelin.DEBUG&&true;
-
 	static final String WARNING="Are you sure you want to try to set up camp in this wild area?\n"
 			+"Monsters may interrupt you.\n\n";
 	static final String PROMPT="Press c to set camp, w to camp for a week or any other key to cancel...";
@@ -35,7 +33,7 @@ public class Camp extends WorldAction{
 		final int day=24;
 		PERIODS.put('c',new int[]{8,2});
 		PERIODS.put('w',new int[]{7*day,12});
-		if(DEBUG){
+		if(Javelin.DEBUG){
 			PERIODS.put('d',new int[]{1*day,12});
 			PERIODS.put('m',new int[]{30*day,12});
 			PERIODS.put('s',new int[]{100*day,12});
@@ -57,7 +55,7 @@ public class Camp extends WorldAction{
 			return;
 		}
 		String prompt;
-		if(DEBUG)
+		if(Javelin.DEBUG)
 			prompt=PROMPTDEBUG;
 		else if(World.scenario.worldencounters)
 			prompt=WARNING+PROMPT;

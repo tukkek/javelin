@@ -96,7 +96,6 @@ public class SquadScreen extends InfoScreen{
 		Combatant c=squad.recruit(m);
 		c.hp=c.source.hd.maximize();
 		c.maxhp=c.hp;
-		if(Javelin.DEBUG) adddebugdata(c);
 	}
 
 	protected boolean checkifsquadfull(){
@@ -126,6 +125,4 @@ public class SquadScreen extends InfoScreen{
 		select();
 		return squad;
 	}
-
-	void adddebugdata(Combatant c){}
 }

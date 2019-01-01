@@ -42,7 +42,7 @@ import javelin.view.screen.WorldScreen;
  */
 public class Incursion extends Actor{
 	/** Only taken into account if running {@link Javelin#DEBUG}. */
-	static final boolean SPAWN=false;
+	static final boolean SPAWN=true;
 	static final int PREFERREDVICTORYCHANCE=5+2;
 	/** Move even if {@link Debug#disablecombat} is enabled. */
 	static final boolean FORCEMOVEMENT=false;
@@ -232,6 +232,7 @@ public class Incursion extends Actor{
 	 * @param squadp See {@link Incursion#squad}.
 	 * @see Actor#place()
 	 */
+	@SuppressWarnings("unused")
 	static Incursion place(Realm r,int xp,int yp,List<Combatant> squadp){
 		if(Javelin.DEBUG&&!SPAWN) return null;
 		int size=World.scenario.size;

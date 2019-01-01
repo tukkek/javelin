@@ -128,7 +128,7 @@ public class MartialTraining extends Feat{
 		Maneuver m=RPG.pick(tier);
 		boolean failed=!c.addmaneuver(discipline,m);
 		if(Javelin.DEBUG&&failed){
-			final String error="Invalid maneuver "+m+" for "+c;
+			var error="Invalid maneuver "+m+" for "+c;
 			throw new RuntimeException(error);
 		}
 		return true;

@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -111,9 +110,6 @@ public class StateManager{
 			writer.writeObject(Diplomacy.instance);
 			writer.flush();
 			writer.close();
-		}catch(final NotSerializableException e){
-			if(Javelin.DEBUG) /* fail when it's debug */
-				throw new RuntimeException(e);
 		}catch(final IOException e){
 			throw new RuntimeException(e);
 		}
@@ -163,15 +159,6 @@ public class StateManager{
 					+"It has been deleted so you can start a new game instead.\n"
 					+"If this is happening constantly please inform us of the error message above.");
 			StateManager.clear();
-			if(!Javelin.DEBUG){
-				Window.getWindows()[0].dispose();
-				System.out.println("\nPress any key to exit...");
-				try{
-					System.in.read();
-				}catch(IOException e){
-					// die gracefully
-				}
-			}
 			System.exit(20140406);
 			return false;
 		}

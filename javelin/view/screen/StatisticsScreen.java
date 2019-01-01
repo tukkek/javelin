@@ -23,6 +23,8 @@ import javelin.model.unit.skill.Skill;
  * @author alex
  */
 public class StatisticsScreen extends InfoScreen{
+	static final boolean DEBUG=false;
+
 	/**
 	 * @param c Shows statistic for this unit.
 	 */
@@ -120,11 +122,12 @@ public class StatisticsScreen extends InfoScreen{
 		lines.add("");
 	}
 
+	@SuppressWarnings("unused")
 	static String showhp(Combatant c,Monster m){
 		boolean isally=Fight.state==null?Squad.active.members.contains(c)
 				:Fight.state.blueTeam.contains(c);
 		final String hp;
-		if(Javelin.DEBUG)
+		if(Javelin.DEBUG&&DEBUG)
 			hp=Integer.toString(c.hp);
 		else if(isally)
 			hp=Integer.toString(c.maxhp);

@@ -88,7 +88,6 @@ public abstract class Haunt extends Fortification{
 		if(ishostile()) return;
 		delay-=1;
 		if(delay>0) return;
-		if(Javelin.DEBUG) System.out.println("Generate @"+descriptionknown);
 		if(available.size()+1>MAXIMUMAVAILABLE)
 			available.remove(RPG.pick(available));
 		Monster m=RPG.pick(dwellers);

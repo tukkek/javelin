@@ -154,7 +154,7 @@ public class Caravan extends Actor{
 	}
 
 	void announce(Town town){
-		if(Javelin.DEBUG) return;
+		//		if(Javelin.DEBUG) return;
 		MessagePanel.active.clear();
 		Javelin.message("A merchant arrives at "+town
 				+", city grows! Press ENTER to continue...",Javelin.Delay.NONE);

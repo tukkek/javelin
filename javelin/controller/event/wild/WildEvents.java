@@ -57,6 +57,7 @@ public class WildEvents extends EventDealer{
 
 	@Override
 	public EventCard generate(Squad s,int squadel){
+		/*TODO use a Debug Helper for this instead, like UrbanEvents*/
 		if(Javelin.DEBUG&&WildEvents.DEBUG!=null) try{
 			var card=newinstance(DEBUG);
 			if(!card.validate(s,squadel))

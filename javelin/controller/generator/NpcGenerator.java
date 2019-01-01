@@ -20,17 +20,18 @@ import javelin.model.unit.Monster;
 import javelin.old.RPG;
 
 public class NpcGenerator{
-	static final boolean DEBUG=Javelin.DEBUG&&false;
+	static final boolean DEBUG=false;
 	static final int MAXCR=25;
 	static final double RATIO=.1;
 
 	ArrayList<Monster> candidates=new ArrayList<>();
 	int totalregistered=0;
 
+	@SuppressWarnings("unused")
 	public void generate(){
 		generatenpcs();
 		generateelites();
-		if(DEBUG){
+		if(Javelin.DEBUG&&DEBUG){
 			float total=0;
 			for(EncounterIndex encounters:Organization.ENCOUNTERSBYTERRAIN.values())
 				total+=encounters.count();

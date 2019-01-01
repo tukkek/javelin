@@ -5,7 +5,6 @@ import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.FileReader;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,11 +14,10 @@ import java.util.TreeMap;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import javelin.controller.CountingSet;
 import javelin.controller.Highscore;
@@ -103,27 +101,26 @@ public class Javelin{
 	public static boolean delayblock=false;
 
 	static{
+		UpgradeHandler.singleton.gather();
+		Spell.init();
 		try{
-			UpgradeHandler.singleton.gather();
-			Spell.init();
 			final MonsterReader monsterdb=new MonsterReader();
-			final XMLReader xml=XMLReaderFactory.createXMLReader();
+			final XMLReader xml=SAXParserFactory.newInstance().newSAXParser()
+					.getXMLReader();
 			xml.setContentHandler(monsterdb);
 			xml.setErrorHandler(monsterdb);
 			FileReader filereader=new FileReader("monsters.xml");
 			xml.parse(new InputSource(filereader));
 			filereader.close();
-			Organization.init();
-			monsterdb.closelogs();
-			SpellsFactor.init();
-			Spell.init();
-			Artifact.init();
-			Item.init();
-		}catch(final IOException e){
-			e.printStackTrace();
-		}catch(final SAXException e){
-			e.printStackTrace();
+		}catch(final Exception e){
+			throw new RuntimeException(e);
 		}
+		Organization.init();
+		MonsterReader.closelogs();
+		SpellsFactor.init();
+		Spell.init();
+		Artifact.init();
+		Item.init();
 	}
 
 	/**

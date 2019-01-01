@@ -87,11 +87,11 @@ public class MonsterReader extends DefaultHandler{
 	public void startElement(final String uri,final String localName,
 			final String name,final Attributes attributes) throws SAXException{
 		if(!Javelin.DEBUG&&errorhandler.isinvalid()) return;
-		if(description) if(localName.equals("p"))
+		if(description){
+			if(!name.equals("p")) return;
 			section="Paragraph";
-		else
-			return;
-		if(localName.equals("Monster")){
+		}
+		if(name.equals("Monster")){
 			monster=new Monster();
 			total++;
 			String disabled=attributes.getValue("disabled");
@@ -100,39 +100,39 @@ public class MonsterReader extends DefaultHandler{
 			String passive=attributes.getValue("passive");
 			monster.passive=passive!=null&&Boolean.parseBoolean(passive);
 			if(monster.passive) monster.cr=0f;
-		}else if("feats".equals(localName.toLowerCase()))
+		}else if("feats".equals(name.toLowerCase()))
 			section="Feats";
-		else if(localName.equals("Skills"))
+		else if(name.equals("Skills"))
 			section="Skills";
-		else if(localName.equals("SpecialAttacks"))
+		else if(name.equals("SpecialAttacks"))
 			section="SpecialAttacks";
-		else if(localName.equals("SpecialQualities"))
+		else if(name.equals("SpecialQualities"))
 			section="SpecialQualities";
-		else if(localName.equals("FaceAndReach"))
+		else if(name.equals("FaceAndReach"))
 			section="FaceAndReach";
-		else if(localName.equals("Attacks"))
+		else if(name.equals("Attacks"))
 			section="Attacks";
-		else if(localName.equals("Damage"))
+		else if(name.equals("Damage"))
 			section="Damage";
-		else if(localName.equals("ArmorClass"))
+		else if(name.equals("ArmorClass"))
 			section="ArmorClass";
-		else if(localName.equals("Name"))
+		else if(name.equals("Name"))
 			section="Name";
-		else if(localName.equals("Speed"))
+		else if(name.equals("Speed"))
 			section="Speed";
-		else if(localName.equals("Initiative"))
+		else if(name.equals("Initiative"))
 			section="Initiative";
-		else if(localName.equals("HitDice"))
+		else if(name.equals("HitDice"))
 			section="HitDice";
-		else if(localName.equalsIgnoreCase("Organization"))
+		else if(name.equalsIgnoreCase("Organization"))
 			section="Organization";
-		else if(localName.equalsIgnoreCase("Alignment"))
+		else if(name.equalsIgnoreCase("Alignment"))
 			section="Alignment";
-		else if(localName.equals("Saves")){
+		else if(name.equals("Saves")){
 			monster.fort=getIntAttributeValue(attributes,"Fort");
 			monster.ref=getIntAttributeValue(attributes,"Ref");
 			monster.setwill(getIntAttributeValue(attributes,"Will"));
-		}else if(localName.equals("Abilities")){
+		}else if(name.equals("Abilities")){
 			monster.strength=parseability(attributes,"Str",false);
 			monster.dexterity=parseability(attributes,"Dex",false);
 			monster.constitution=parseability(attributes,"Con",true);
@@ -145,7 +145,7 @@ public class MonsterReader extends DefaultHandler{
 				monster.immunitytopoison=true;
 				monster.immunitytoparalysis=true;
 			}
-		}else if(localName.equals("SizeAndType")){
+		}else if(name.equals("SizeAndType")){
 			final int size=getSize(attributes.getValue("Size"));
 			if(size==-1) errorhandler.setInvalid("Size");
 			monster.size=size;
@@ -174,9 +174,9 @@ public class MonsterReader extends DefaultHandler{
 					default:
 						break;
 				}
-		}else if(localName.equalsIgnoreCase("avatar"))
+		}else if(name.equalsIgnoreCase("avatar"))
 			monster.avatarfile=attributes.getValue("Image");
-		else if(localName.equalsIgnoreCase("Climateandterrain")){
+		else if(name.equalsIgnoreCase("Climateandterrain")){
 			ArrayList<String> terrains=new ArrayList<>();
 			for(String terrain:attributes.getValue("Terrain").toLowerCase()
 					.split(",")){
@@ -192,28 +192,28 @@ public class MonsterReader extends DefaultHandler{
 			}
 			Monster.TERRAINDATA.put(monster.name,terrains);
 			if(terrains.isEmpty()) monster.internal=true;
-		}else if(localName.equalsIgnoreCase("Breath"))
+		}else if(name.equalsIgnoreCase("Breath"))
 			/* TODO */
 			// if (attributes.getValue("effect") == null) {
 			parsebreath(attributes,monster);
 		// }
-		else if(localName.equalsIgnoreCase("Touch")){
+		else if(name.equalsIgnoreCase("Touch")){
 			String[] damage=attributes.getValue("damage").split("d");
 			monster.touch=new TouchAttack(attributes.getValue("name"),
 					Integer.parseInt(damage[0]),Integer.parseInt(damage[1]),
 					Integer.parseInt(attributes.getValue("save")));
-		}else if(localName.equalsIgnoreCase("Spells")){
+		}else if(name.equalsIgnoreCase("Spells")){
 			String known=attributes.getValue("known");
 			if(known!=null) registerspells(known,monster);
 			String spellcr=attributes.getValue("cr");
 			if(spellcr!=null) monster.spellcr=Float.parseFloat(spellcr);
-		}else if(localName.equalsIgnoreCase("description"))
+		}else if(name.equalsIgnoreCase("description"))
 			description=true;
-		else if(monster!=null&&!localName.equals("StatBlock")){
+		else if(monster!=null&&!name.equals("StatBlock")){
 			for(final String tagName:new String[]{"General","Terrain","Treasure",
 					"Alignment","Advancement","specialabilities","specialability","p",
 					"combat","characters","li","ul","CarryingCapacity","ChallengeRating"})
-				if(localName.equalsIgnoreCase(tagName)) return;
+				if(name.equalsIgnoreCase(tagName)) return;
 			errorhandler.setInvalid(name);
 		}
 	}
@@ -255,7 +255,7 @@ public class MonsterReader extends DefaultHandler{
 		}
 	}
 
-	static public void parsebreath(final Attributes attributes,final Monster m){
+	static void parsebreath(final Attributes attributes,final Monster m){
 		final String format=attributes.getValue("format").toLowerCase();
 		final String damage=attributes.getValue("damage").toLowerCase();
 		final int d=damage.indexOf('d');
@@ -287,7 +287,7 @@ public class MonsterReader extends DefaultHandler{
 				attributes.getValue("delay").equals("yes")));
 	}
 
-	public static float parsebreatsaveeffect(final String save){
+	static float parsebreatsaveeffect(final String save){
 		final float saveeffect;
 		if(save.contains("half"))
 			saveeffect=.5f;
@@ -298,14 +298,14 @@ public class MonsterReader extends DefaultHandler{
 		return saveeffect;
 	}
 
-	public static SavingThrow parsebreathsavingthrow(final String save){
+	static SavingThrow parsebreathsavingthrow(final String save){
 		if(save.contains("ref")) return SavingThrow.REFLEXES;
 		if(save.contains("fort")) return SavingThrow.FORTITUDE;
 		if(save.contains("will")) return SavingThrow.WILLPOWER;
 		return null;
 	}
 
-	public static int getSize(final String size){
+	static int getSize(final String size){
 		int result=-1;
 		for(int i=0;i<Monster.SIZES.length;i++)
 			if(size.compareTo(Monster.SIZES[i])==0) result=i;
@@ -362,7 +362,8 @@ public class MonsterReader extends DefaultHandler{
 		log(nMonsters+"/"+total+" monsters succesfully loaded.","organization.log");
 	}
 
-	public void closelogs(){
+	/** Close all <code>monsters.xml</code>-related logs. */
+	static public void closelogs(){
 		for(PrintWriter log:logs.values())
 			log.close();
 		logs=null;
@@ -433,22 +434,22 @@ public class MonsterReader extends DefaultHandler{
 			}
 	}
 
-	public String cleanArmor(final String speedType){
-		final int beginArmor=speedType.lastIndexOf("(");
-
-		if(beginArmor==-1) return speedType;
-
-		return speedType.substring(0,beginArmor).trim();
+	/**
+	 * @return The given string, removing any information in parenthesis.
+	 */
+	public static String clean(final String armor){
+		final int from=armor.lastIndexOf("(");
+		return from==-1?armor:armor.substring(0,from).trim();
 	}
 
 	@Override
 	public void endElement(final String uri,final String localName,
 			final String name) throws SAXException{
-		if(description&&localName.equals("Description")){
+		if(description&&name.equals("Description")){
 			description=false;
 			return;
 		}
-		if(localName.equals("Monster")){
+		if(name.equals("Monster")){
 			validate();
 			if(errorhandler.isinvalid()){
 				errorhandler.informInvalid(this);
@@ -456,7 +457,7 @@ public class MonsterReader extends DefaultHandler{
 			}else
 				registermonster();
 		}
-		if("p".equalsIgnoreCase(localName)) describe("\n\n");
+		if("p".equalsIgnoreCase(name)) describe("\n\n");
 		section=null;
 	}
 
@@ -475,13 +476,12 @@ public class MonsterReader extends DefaultHandler{
 	}
 
 	void registermonster(){
-		if(monster.humanoid==null) /*
-																* TODO ideally this would be integrated with the #invalid error
-																* system here but this would just give positive to most monsters
-																* since this is a custom field for Javelin. It'd be better to take
-																* the time and fill all remaining entries first with the correct
-																* values.
-																*/
+		if(monster.humanoid==null)
+			/* TODO ideally this would be integrated with the #invalid error
+			 * system here but this would just give positive to most monsters
+			 * since this is a custom field for Javelin. It'd be better to take
+			 * the time and fill all remaining entries first with the correct
+			 * values. */
 			throw new RuntimeException(
 					monster+" humanoid tag missing #monsterreader");
 		try{
@@ -492,8 +492,10 @@ public class MonsterReader extends DefaultHandler{
 		Javelin.ALLMONSTERS.add(monster);
 	}
 
+	/** To be used to log <code>monsters.xml</xml> processing. */
 	public static void log(final String string,String file){
 		if(!Javelin.DEBUG) return;
+		@SuppressWarnings("resource")
 		PrintWriter log=logs.get(file);
 		if(log==null) try{
 			log=new PrintWriter(file);

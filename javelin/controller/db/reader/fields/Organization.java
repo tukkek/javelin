@@ -85,23 +85,30 @@ public class Organization extends FieldReader{
 			for(final Encounter e:prepareexpansion(group.queue,monstersbyname))
 				register(e);
 		new NpcGenerator().generate();
-		if(Javelin.DEBUG){
-			inform("");
-			inform("");
-			int i=0;
-			for(String terrain:ENCOUNTERSBYTERRAIN.keySet())
-				for(int el:ENCOUNTERSBYTERRAIN.get(terrain).keySet()){
-					for(Encounter e:ENCOUNTERSBYTERRAIN.get(terrain).get(el)){
-						inform("    "+terrain+" EL"+el+": "+e);
-						i+=1;
-					}
-					inform("");
-				}
-			inform("\nTotal encounters: "+i);
-		}
-		/* Mark for garbage collection */
+		writelog();
+		clean();
+	}
+
+	static void clean(){
 		data=null;
 		monstersbyname=null;
+		System.gc();
+	}
+
+	static void writelog(){
+		if(!Javelin.DEBUG) return;
+		inform("");
+		inform("");
+		int i=0;
+		for(var terrain:ENCOUNTERSBYTERRAIN.keySet())
+			for(var el:ENCOUNTERSBYTERRAIN.get(terrain).keySet()){
+				for(var e:ENCOUNTERSBYTERRAIN.get(terrain).get(el)){
+					inform("    "+terrain+" EL"+el+": "+e);
+					i+=1;
+				}
+				inform("");
+			}
+		inform("\nTotal encounters: "+i);
 	}
 
 	static void register(final Encounter e){

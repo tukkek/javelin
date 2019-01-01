@@ -53,8 +53,8 @@ public abstract class Kit implements Serializable{
 		basic.add(raiseability);
 		define();
 		int nupgrades=basic.size();
-		if(!(3<=nupgrades&&nupgrades<=7)&&Javelin.DEBUG){
-			String error="Kit "+name+" has "+nupgrades+" upgrades";
+		if(Javelin.DEBUG&&!(3<=nupgrades&&nupgrades<=7)){
+			String error="Kit has "+nupgrades+" upgrades: "+name;
 			throw new RuntimeException(error);
 		}
 		extend(UpgradeHandler.singleton);

@@ -9,8 +9,8 @@ import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
-import javelin.model.unit.Alignment.Morals;
 import javelin.model.unit.Alignment.Ethics;
+import javelin.model.unit.Alignment.Morals;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
@@ -22,6 +22,7 @@ import javelin.view.screen.Option;
 import javelin.view.screen.town.SelectScreen;
 
 public class Leader extends Inhabitant{
+	static final boolean DEBUG=false;
 	static final Option ATTACK=new Option("",0,'a',2);
 	static final Option HIRE=new Option("",0,'h',2);
 
@@ -48,7 +49,8 @@ public class Leader extends Inhabitant{
 			for(Combatant c:encounter){
 				var m=c.source;
 				var a=m.alignment;
-				if(m.name.equals(monster)||a.ethics.equals(lawful)||a.morals.equals(good))
+				if(m.name.equals(monster)||a.ethics.equals(lawful)
+						||a.morals.equals(good))
 					return true;
 			}
 			return false;
@@ -104,10 +106,11 @@ public class Leader extends Inhabitant{
 			return o.price==0?"":" $"+Javelin.format(o.price);
 		}
 
+		@SuppressWarnings("unused")
 		@Override
 		public String printinfo(){
 			String debug="";
-			if(Javelin.DEBUG){
+			if(Javelin.DEBUG&&DEBUG){
 				debug="Diplomacy DC "+diplomacydc+"\n";
 				debug+="Your diplomacy: "
 						+Squad.active.getbest(Skill.DIPLOMACY).taketen(Skill.DIPLOMACY)
@@ -144,8 +147,8 @@ public class Leader extends Inhabitant{
 			treatyprice*=5+Dungeon.active.gettier().tier;
 			new Treaty(treatyprice,null,base.alignment.ethics,null)
 					.register(encounters,options);
-			new Treaty(treatyprice,null,null,base.alignment.morals).register(encounters,
-					options);
+			new Treaty(treatyprice,null,null,base.alignment.morals)
+					.register(encounters,options);
 			return options;
 		}
 

@@ -64,7 +64,8 @@ public abstract class ClassLevelUpgrade extends Upgrade{
 		descriptivename=name;
 		babprogression=bab;
 		table=tablep;
-		if(Javelin.DEBUG&&table.length!=21) System.out.println("#>20levels");
+		if(Javelin.DEBUG&&table.length!=21)
+			throw new RuntimeException("#>20levels");
 		hd=hdp;
 		skillrate=skillratep;
 		crperlevel=crperlevelp;

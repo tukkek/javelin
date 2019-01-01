@@ -44,7 +44,6 @@ public class CollectiveEffort extends UrbanEvent{
 		Squad.active.hourselapsed+=24;
 		var total=0;
 		var r=town.getrank().rank;
-		if(Javelin.DEBUG) r=4;
 		for(var c:s){
 			var labor=1;
 			var con=Monster.getbonus(c.source.constitution);

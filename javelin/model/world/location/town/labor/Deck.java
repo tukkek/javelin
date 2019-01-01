@@ -51,6 +51,7 @@ import javelin.model.world.location.unique.SummoningCircle.BuildSummoningCircle;
 public class Deck extends ArrayList<Labor>{
 	/** All {@link Town} {@link Trait}s. */
 	public static final List<Trait> TRAITS=new ArrayList<>(7);
+	static final boolean DEBUG=false;
 
 	static final Labor[] BASE=new Labor[]{new BuildDwelling(),new BuildLodge(),
 			new Cancel(),new Growth(),new Redraw(),new BuildShop(),
@@ -111,7 +112,7 @@ public class Deck extends ArrayList<Labor>{
 		for(String trait:t.traits)
 			d.addAll(DECKS.get(trait));
 		Collections.shuffle(d);
-		if(Javelin.DEBUG&&!t.ishostile()) d.add(0,new Redraw());
+		if(Javelin.DEBUG&&DEBUG&&!t.ishostile()) d.add(0,new Redraw());
 		return d;
 	}
 

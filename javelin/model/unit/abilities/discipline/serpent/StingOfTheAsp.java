@@ -1,6 +1,5 @@
 package javelin.model.unit.abilities.discipline.serpent;
 
-import javelin.Javelin;
 import javelin.controller.action.ActionCost;
 import javelin.controller.action.ai.attack.DamageChance;
 import javelin.model.state.BattleState;
@@ -61,8 +60,7 @@ public class StingOfTheAsp extends Strike{
 		dc.damage+=EXTRADAMAGE;
 		boolean save=save(target.source.getfortitude(),12,active);
 		target.addcondition(new StrengthDamage(save?1:2,target));
-		if(!save||Javelin.DEBUG)
-			target.addcondition(new AspString(active.ap+1,target));
+		if(!save) target.addcondition(new AspString(active.ap+1,target));
 	}
 
 	@Override

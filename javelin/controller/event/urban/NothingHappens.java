@@ -1,6 +1,5 @@
 package javelin.controller.event.urban;
 
-import javelin.Javelin;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
@@ -19,6 +18,6 @@ public class NothingHappens extends UrbanEvent{
 
 	@Override
 	public void happen(Squad s){
-		if(Javelin.DEBUG) notify("Nothing happens at "+town+".");
+		//literally nothing happens yo
 	}
 }

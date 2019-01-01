@@ -48,13 +48,13 @@ public class Speed extends FieldReader{
 						.replace(" ("+maneuverability+")","").trim());
 			}else if(speedType.contains("swim "))
 				m.swim=Integer
-						.parseInt(reader.cleanArmor(speedType).replace("swim ",""));
+						.parseInt(reader.clean(speedType).replace("swim ",""));
 			else if(speedType.contains("burrow "))
 				m.burrow=Integer.parseInt(speedType.replace("burrow ",""));
 			else if(speedType.contains("base")) // ignores base value
 				continue;
 			else
-				m.walk=Integer.parseInt(reader.cleanArmor(speedType));
+				m.walk=Integer.parseInt(reader.clean(speedType));
 		}
 		if(m.fly>0) m.walk=0;
 		m.walk=limit(m.walk);

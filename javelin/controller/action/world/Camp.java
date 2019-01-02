@@ -31,7 +31,7 @@ public class Camp extends WorldAction{
 
 	static{
 		final int day=24;
-		PERIODS.put('c',new int[]{8,2});
+		PERIODS.put('c',new int[]{12,12});
 		PERIODS.put('w',new int[]{7*day,12});
 		if(Javelin.DEBUG){
 			PERIODS.put('d',new int[]{1*day,12});

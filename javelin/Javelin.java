@@ -1,6 +1,7 @@
 package javelin;
 
 import java.awt.BorderLayout;
+import java.awt.Frame;
 import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -151,6 +152,7 @@ public class Javelin{
 		});
 		app.setVisible(true);
 		f.setVisible(true);
+		f.setExtendedState(Frame.MAXIMIZED_BOTH);
 		app.init();
 	}
 

@@ -2,6 +2,7 @@ package javelin.controller.fight;
 
 import java.util.ArrayList;
 
+import javelin.controller.map.location.TownMap;
 import javelin.controller.terrain.Terrain;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
@@ -35,6 +36,8 @@ public class Siege extends Fight{
 		meld=true;
 		terrain=Terrain.get(l.x,l.y);
 		rewardreputation=true;
+		var d=l.getdistrict();
+		if(d!=null) map=new TownMap(d.town);
 	}
 
 	@Override

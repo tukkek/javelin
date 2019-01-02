@@ -47,6 +47,6 @@ public class TouchAttack extends Upgrade implements Cloneable,Serializable{
 
 	@Override
 	public String toString(){
-		return name;
+		return name+" ("+damage[0]+"d"+damage[1]+" energy)";
 	}
 }

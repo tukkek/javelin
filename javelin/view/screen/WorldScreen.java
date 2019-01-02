@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Debug;
 import javelin.Javelin;
@@ -22,7 +23,6 @@ import javelin.controller.fight.RandomEncounter;
 import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
-import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.transport.Transport;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -363,9 +363,8 @@ public class WorldScreen extends BattleScreen{
 		if(!World.scenario.worldhazards) return true;
 		boolean special=RPG.r(1,Terrain.HAZARDCHANCE)==1;
 		if(s.getdistrict()!=null) return true;
-		ArrayList<Hazard> hazards=new ArrayList<>();
-		for(Hazard h:Terrain.get(x,y).gethazards(special))
-			if(h.validate()) hazards.add(h);
+		var hazards=Terrain.get(x,y).gethazards(special).stream()
+				.filter(h->h.validate()).collect(Collectors.toList());
 		if(hazards.isEmpty()) return true;
 		RPG.pick(hazards).hazard(Math.round(hoursellapsed));
 		return false;
@@ -389,7 +388,6 @@ public class WorldScreen extends BattleScreen{
 		}
 		Squad s=Squad.active;
 		s.lastterrain=Terrain.current();
-		s.ellapse(Math.round(s.move(false,Terrain.current(),x,y)));
 		Actor actor=World.get(x,y,World.getactors());
 		if(actor==null) return false;
 		Location l=actor instanceof Location?(Location)actor:null;

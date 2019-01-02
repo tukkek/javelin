@@ -54,6 +54,7 @@ public class Trove extends Fortification{
 			super(l);
 			rewardgold=false;
 			rewardxp=false;
+			bribe=false;
 		}
 
 		@Override
@@ -160,7 +161,7 @@ public class Trove extends Fortification{
 	@SuppressWarnings("unused")
 	@Override
 	public boolean interact(){
-		if(Javelin.DEBUG&&DEBUG){
+		if(!ishostile()||Javelin.DEBUG&&DEBUG){
 			if(!super.interact()) return false;
 			var message=take();
 			if(message!=null) Javelin.message(message,false);

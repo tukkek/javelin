@@ -68,7 +68,8 @@ public class AiMovement extends Action implements AiAction{
 		ArrayList<List<ChanceNode>> outcomes=new ArrayList<>(MOVES);
 		Point from=c.getlocation();
 		for(Point interest:getpointsofinterest(c,s))
-			add(move(c,from,interest,s),outcomes);
+			if(from.distanceinsteps(interest)<=c.gettopspeed(s)/5)
+				add(move(c,from,interest,s),outcomes);
 		if(outcomes.size()>=MOVES) return outcomes;
 		ArrayList<List<ChanceNode>> extra=new ArrayList<>(MOVES);
 		Random r=AiThread.getrandom();

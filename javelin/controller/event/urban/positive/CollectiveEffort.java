@@ -38,7 +38,7 @@ public class CollectiveEffort extends UrbanEvent{
 				.collect(Collectors.joining(", "));
 		var input=Javelin.prompt("The citizens of "+town
 				+" ask you for help witht their labors. Do you want to spend the day helping?\n"
-				+"They are working on "+labors+".\n"
+				+"They are working on: "+labors+".\n"
 				+"Press h to help or i to ignore their request...",Set.of('h','i'));
 		if(input!='h') return;
 		Squad.active.hourselapsed+=24;

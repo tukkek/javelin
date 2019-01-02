@@ -57,6 +57,9 @@ import javelin.view.screen.town.TownScreen;
  *
  * Each town has it's own profile which is predetermined.
  *
+ * TODO maybe override {@link #getel(Integer)} to return at least
+ * {@link #population} so that weak {@link Incursion}s won't take big towns
+ *
  * @author alex
  */
 public class Town extends Location{
@@ -497,10 +500,12 @@ public class Town extends Location{
 
 	/**
 	 * @param el Generates an initial {@link Location#garrison} from this
-	 *          suggested Encounter Level.
+	 *          suggested Encounter Level. This will be convered from a base EL to
+	 *          a party-equivalent EL.
 	 * @see Scenario#populate(Town, boolean)
 	 */
 	public void populate(int el){
+		el+=4;
 		var terrain=Terrain.get(x,y);
 		while(garrison.isEmpty())
 			try{

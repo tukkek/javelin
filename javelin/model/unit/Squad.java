@@ -354,7 +354,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 		final String prompt="You have hidden from a "+Difficulty.describe(foes)
 				+" group of enemies!\n"
 				+"Press s to storm them or w to wait for them to go away...\n\n"
-				+"Enemies: "+Squad.active.spotenemies(foes,null);
+				+"Enemies: "+Squad.active.spotenemies(foes,null)+".";
 		while(input!='w'&&input!='s')
 			input=Javelin.prompt(prompt);
 		return input=='w';

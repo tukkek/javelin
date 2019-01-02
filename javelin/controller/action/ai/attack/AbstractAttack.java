@@ -100,7 +100,7 @@ public abstract class AbstractAttack extends Action implements AiAction{
 			int resistance=a.energy?target.source.energyresistance:target.source.dr;
 			target.damage(dc.damage,s,resistance);
 			if(target.source.customName==null)
-				sb.append("\nThe ").append(target.toString());
+				sb.append("\n").append(target.toString());
 			else
 				sb.append("\n").append(target.toString());
 			sb.append(" is ").append(target.getstatus()).append(".");

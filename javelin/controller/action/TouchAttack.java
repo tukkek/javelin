@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
@@ -35,18 +36,23 @@ public class TouchAttack extends Fire implements AiAction{
 	}
 
 	private List<ChanceNode> touchattack(Combatant active,final Combatant target,
-			BattleState gameState){
-		gameState=gameState.clone();
-		active=gameState.clone(active);
+			BattleState s){
+		s=s.clone();
+		active=s.clone(active);
 		active.ap+=.5;
-		javelin.model.unit.abilities.TouchAttack attack=active.source.touch;
+		var attack=active.source.touch;
+		var name=attack.name.toLowerCase();
+		var rolltarget=calculatehitdc(active,target,s);
+		var miss=Action.bind(rolltarget/20f);
+		List<ChanceNode> nodes=new ArrayList<>(3);
+		nodes.add(new ChanceNode(s,miss,active+" misses "+name+"...",Delay.WAIT));
+		var hit=1-miss;
 		int damage=attack.damage[0]*attack.damage[1]/2;
-		List<ChanceNode> nodes=new ArrayList<>();
-		String action=active+" uses "+attack.toString().toLowerCase()+"!\n";
+		String action=active+" hits "+name+"!\n";
 		float savechance=CastSpell.converttochance(attack.savedc-active.source.ref);
-		nodes.add(registerdamage(gameState,action+target+" resists, is ",savechance,
+		nodes.add(registerdamage(s,action+target+" resists, is ",hit*savechance,
 				target,damage/2,active));
-		nodes.add(registerdamage(gameState,action+target+" is ",1-savechance,target,
+		nodes.add(registerdamage(s,action+target+" is ",1-hit*savechance,target,
 				damage,active));
 		return nodes;
 	}
@@ -81,7 +87,8 @@ public class TouchAttack extends Fire implements AiAction{
 	@Override
 	protected void checkhero(Combatant hero){
 		if(hero.source.touch==null){
-			Javelin.message("No touch attack known...",Javelin.Delay.WAIT);
+			Javelin.message(hero+" doesn't have a touch attack...",
+					Javelin.Delay.WAIT);
 			throw new RepeatTurn();
 		}
 	}
@@ -93,7 +100,6 @@ public class TouchAttack extends Fire implements AiAction{
 
 	@Override
 	protected int calculatehitdc(Combatant active,Combatant target,BattleState s){
-		/* should be ignored */
-		return 1;
+		return target.getac()-target.source.armor-active.source.getbab();
 	}
 }

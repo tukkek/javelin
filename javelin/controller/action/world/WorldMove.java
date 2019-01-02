@@ -7,6 +7,7 @@ import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -94,12 +95,17 @@ public class WorldMove extends WorldAction{
 	public static boolean move(int tox,int toy){
 		if(!JavelinApp.context.validatepoint(tox,toy)) throw new RepeatTurn();
 		abort=false;
-		if(JavelinApp.context.react(tox,toy)||abort||!place(tox,toy)) return false;
-		boolean stop=false;
-		if(walk(JavelinApp.context.getherolocation()))
-			stop=!JavelinApp.context.explore(tox,toy);
-		heal();
-		return !stop;
+		try{
+			if(JavelinApp.context.react(tox,toy)||abort||!place(tox,toy))
+				return false;
+			boolean stop=false;
+			if(walk(JavelinApp.context.getherolocation()))
+				stop=!JavelinApp.context.explore(tox,toy);
+			heal();
+			return !stop;
+		}finally{
+			Squad.active.move(true,Terrain.current(),tox,toy);
+		}
 	}
 
 	/**

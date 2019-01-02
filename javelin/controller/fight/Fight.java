@@ -93,6 +93,9 @@ public abstract class Fight{
 	/**
 	 * If not <code>null</code> will override any other flooding level.
 	 *
+	 * TODO should set from {@link Weather#current} and then allow it to be
+	 * overriden.
+	 *
 	 * @see Weather#current
 	 * @see Map#maxflooding
 	 */

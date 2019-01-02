@@ -1,5 +1,6 @@
 package javelin.controller.terrain.hazard;
 
+import javelin.controller.action.world.WorldMove;
 import javelin.controller.terrain.Terrain;
 
 /**
@@ -11,7 +12,7 @@ public abstract class Hazard{
 	/**
 	 * Called when a hazard happens.
 	 *
-	 * @param hoursellapsed
+	 * @param hoursellapsed How many hours passed in the last {@link WorldMove}.
 	 */
 	public abstract void hazard(int hoursellapsed);
 

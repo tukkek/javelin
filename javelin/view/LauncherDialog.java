@@ -132,13 +132,17 @@ public class LauncherDialog extends JFrame{
 		JLabel text=write(TextReader.read(new File("doc",filename+".txt")).trim()
 				.replaceAll("\n","<br>"));
 		center.add(text);
-		for(String mode:modes.keySet())
-			addbutton(mode,south,
+		Button focus=null;
+		for(String mode:modes.keySet()){
+			var b=addbutton(mode,south,
 					modes==SCENARIOS?new RunScenario(mode):new RunMinigame(mode));
+			if(focus==null) focus=b;
+		}
 		pack();
 		setLocationRelativeTo(null);
 		center.repaint();
 		south.repaint();
+		if(focus!=null) focus.requestFocus();
 	}
 
 	void addlogo(){
@@ -160,10 +164,12 @@ public class LauncherDialog extends JFrame{
 		return l;
 	}
 
-	static void addbutton(String text,Container buttonarea,ActionListener action){
-		Button b=new Button(text);
+	static Button addbutton(String text,Container buttonarea,
+			ActionListener action){
+		var b=new Button(text);
 		buttonarea.add(b);
 		b.addActionListener(action);
+		return b;
 	}
 
 	static void runscenario(Object label) throws ReflectiveOperationException{

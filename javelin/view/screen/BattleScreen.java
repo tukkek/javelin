@@ -172,8 +172,8 @@ public class BattleScreen extends Screen{
 			for(Combatant c:Fight.state.getcombatants())
 				c.refresh();
 			Fight.state.next();
-			Javelin.app.fight.startturn(Fight.state.next);
 			current=Fight.state.next;
+			Javelin.app.fight.startturn(Fight.state.next);
 			Examine.lastlooked=null;
 			partialmove=0;
 			checkai();

@@ -60,6 +60,10 @@ import javelin.view.screen.town.TownScreen;
  * TODO maybe override {@link #getel(Integer)} to return at least
  * {@link #population} so that weak {@link Incursion}s won't take big towns
  *
+ * TODO keeping track of city names is pretty bad when it comes to diplomacy -
+ * instead just have it be fire hamlet/water city and print their colors on the
+ * world map
+ *
  * @author alex
  */
 public class Town extends Location{
@@ -398,10 +402,8 @@ public class Town extends Location{
 	public void accessremotely(){
 		if(ishostile())
 			super.accessremotely();
-		else{
+		else
 			new GovernorScreen(this).show();
-			Javelin.app.switchScreen(WorldScreen.current);
-		}
 	}
 
 	@Override

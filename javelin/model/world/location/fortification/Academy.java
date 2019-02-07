@@ -304,7 +304,7 @@ public abstract class Academy extends Fortification{
 			Javelin.message("No one is training here right now...",false);
 			return;
 		}
-		String s="Training period left::\n\n";
+		String s="Training period left:\n\n";
 		boolean anydone=false;
 		for(Order o:training.queue){
 			s+=o+"\n";

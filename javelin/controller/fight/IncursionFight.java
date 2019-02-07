@@ -3,6 +3,7 @@ package javelin.controller.fight;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.controller.map.location.TownMap;
 import javelin.model.unit.Combatant;
 import javelin.model.world.Incursion;
 
@@ -21,6 +22,8 @@ public class IncursionFight extends Fight{
 		hide=false;
 		canflee=true;
 		rewardreputation=true;
+		var d=incursion.getdistrict();
+		if(d!=null) map=new TownMap(d.town);
 	}
 
 	@Override

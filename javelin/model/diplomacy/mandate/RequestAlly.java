@@ -2,6 +2,7 @@ package javelin.model.diplomacy.mandate;
 
 import java.util.stream.Collectors;
 
+import javelin.Javelin;
 import javelin.controller.terrain.Terrain;
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.diplomacy.Relationship;
@@ -27,16 +28,20 @@ public class RequestAlly extends Mandate{
 
 	Monster getally(){
 		var l=target.town.getlocation();
-		var p=target.town.population;
-		var candidates=Terrain.get(l.x,l.y).getmonsters().stream()
-				.filter(m->p-4<=m.cr&&m.cr<=p).collect(Collectors.toList());
-		return candidates.isEmpty()?null:RPG.pick(candidates);
+		var all=Terrain.get(l.x,l.y).getmonsters();
+		var el=target.town.population+target.getstatus()-Relationship.ALLY;
+		for(;el>0;el--){
+			final var cr=el;
+			var candidates=all.stream().filter(m->m.cr==cr)
+					.collect(Collectors.toList());
+			if(!candidates.isEmpty()) return RPG.pick(candidates);
+		}
+		return null;
 	}
 
 	@Override
 	public boolean validate(Diplomacy d){
-		return target.getstatus()==Relationship.ALLY&&getsquad()!=null
-				&&getally()!=null;
+		return getsquad()!=null&&getally()!=null;
 	}
 
 	@Override
@@ -46,6 +51,8 @@ public class RequestAlly extends Mandate{
 
 	@Override
 	public void act(Diplomacy d){
-		getsquad().add(new Combatant(getally(),true));
+		var ally=getally();
+		getsquad().recruit(ally);
+		Javelin.message(ally+" joins your ranks!",true);
 	}
 }

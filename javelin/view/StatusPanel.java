@@ -147,7 +147,7 @@ public class StatusPanel extends TPanel{
 		s+="\n";
 		if(!c.source.breaths.isEmpty())
 			s+=c.hascondition(Breathless.class)==null?"Breath\n":"Breathless\n";
-		if(c.source.touch!=null) s+=c.source.touch+"\n";
+		if(c.source.touch!=null) s+=c.source.touch.name+"\n";
 		ArrayList<Maneuver> maneuvers=c.disciplines.getmaneuvers();
 		if(!maneuvers.isEmpty()){
 			s+="Maneveurs\n";

@@ -63,6 +63,7 @@ public class WorldMouse extends Mouse{
 		public void run(){
 			if(!target.isadjacent(Squad.active)){
 				target.accessremotely();
+				Javelin.app.switchScreen(WorldScreen.current);
 				return;
 			}
 			Squad s=target instanceof Squad?(Squad)target:null;

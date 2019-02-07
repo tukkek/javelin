@@ -211,6 +211,7 @@ public class RewardCalculator{
 				pool-=i.price;
 				items.add(i.clone());
 				forbidden.add(i.getClass());
+				if(i instanceof Artifact) break;
 			}
 		}
 		return items;

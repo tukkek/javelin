@@ -200,7 +200,7 @@ public class Arena extends Minigame{
 		RewardCalculator.rewardxp(allies,group,BOOST);
 		foes.remove(group);
 		String xps=allies.stream().filter(c->!c.mercenary)
-				.map(c->c+" has "+c.gethumanxp()).collect(Collectors.joining(", "));
+				.map(c->c+" has "+c.gethumanxp()).collect(Collectors.joining(", "))+".";
 		if(xps.isEmpty()) return;
 		Javelin.message("You gain experience!\n"+xps,false);
 		BattleScreen.active.messagepanel.clear();

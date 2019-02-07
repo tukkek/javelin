@@ -43,9 +43,12 @@ public class EnergyResistance extends Quality{
 		}
 
 		@Override
-		public boolean apply(Combatant m){
-			if(m.source.energyresistance==Integer.MAX_VALUE) return false;
-			m.source.energyresistance+=1;
+		public boolean apply(Combatant c){
+			var m=c.source;
+			if(m.energyresistance==Integer.MAX_VALUE
+					||m.energyresistance+1>m.hd.count())
+				return false;
+			m.energyresistance+=1;
 			return true;
 		}
 

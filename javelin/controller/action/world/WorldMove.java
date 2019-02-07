@@ -95,6 +95,7 @@ public class WorldMove extends WorldAction{
 	public static boolean move(int tox,int toy){
 		if(!JavelinApp.context.validatepoint(tox,toy)) throw new RepeatTurn();
 		abort=false;
+		var t=Terrain.get(tox,toy);
 		try{
 			if(JavelinApp.context.react(tox,toy)||abort||!place(tox,toy))
 				return false;
@@ -104,7 +105,7 @@ public class WorldMove extends WorldAction{
 			heal();
 			return !stop;
 		}finally{
-			Squad.active.move(true,Terrain.current(),tox,toy);
+			if(t!=Terrain.UNDERGROUND) Squad.active.move(true,t,tox,toy);
 		}
 	}
 

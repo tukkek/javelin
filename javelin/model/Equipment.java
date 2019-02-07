@@ -110,13 +110,15 @@ public class Equipment implements Serializable{
 	 */
 	public Item remove(Item target){
 		for(Combatant c:squad.members){
-			ArrayList<Item> bag=get(c);
-			for(final Item i:bag)
-				if(target==i){
+			var bag=get(c);
+			for(int i=0;i<bag.size();i++){
+				var holding=bag.get(i);
+				if(target==holding){
+					c.unequip(holding);
 					bag.remove(i);
-					c.unequip(i);
-					return i;
+					return holding;
 				}
+			}
 		}
 		return null;
 	}

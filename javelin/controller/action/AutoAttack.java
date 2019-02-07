@@ -3,6 +3,7 @@ package javelin.controller.action;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.Point;
@@ -19,19 +20,26 @@ public class AutoAttack extends Action{
 		super("Auto-attack nearest visible enemy",new String[]{"\t"});
 	}
 
+	static void filterpassive(List<Combatant> melee){
+		var passive=melee.stream().filter(c->c.source.passive)
+				.collect(Collectors.toList());
+		if(passive.size()!=melee.size()) melee.removeAll(passive);
+	}
+
 	@Override
 	public boolean perform(Combatant active){
-		//TODO create a comparator that sorts passive first then other methods
 		BattleState s=Fight.state;
 		ArrayList<Combatant> melee=s.getsurroundings(active);
 		melee.removeAll(active.getteam(s));
 		if(!melee.isEmpty()&&!active.source.melee.isEmpty()){
+			filterpassive(melee);
 			melee.sort(SORTBYSTATUS);
 			active.meleeattacks(melee.get(0),s);
 			return true;
 		}
 		List<Combatant> ranged=s.gettargets(active);
 		ranged.removeAll(melee);
+		filterpassive(ranged);
 		if(!ranged.isEmpty()&&!active.source.ranged.isEmpty()){
 			ranged.sort((o1,o2)->{
 				Point p=active.getlocation();

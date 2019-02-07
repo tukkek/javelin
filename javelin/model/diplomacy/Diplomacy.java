@@ -77,6 +77,7 @@ public class Diplomacy implements Serializable{
 			relationships.put(t,new Relationship(t));
 	}
 
+	//TODO add a "lastnotice" to only bother the player once per week
 	/** To be called once a day to generate {@link #reputation}. */
 	public void turn(){
 		var total=getdailyprogress(true);

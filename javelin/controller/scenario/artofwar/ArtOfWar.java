@@ -3,7 +3,6 @@ package javelin.controller.scenario.artofwar;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,17 +11,14 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.fight.Fight;
-import javelin.controller.fight.Siege;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
+import javelin.model.world.Actor;
 import javelin.model.world.World;
-import javelin.model.world.location.Location;
-import javelin.model.world.location.haunt.Haunt;
-import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 
 /**
@@ -31,14 +27,16 @@ import javelin.old.RPG;
  * @author alex
  */
 public class ArtOfWar extends Scenario{
+	static final int INITIALEL=6+4;
 	/**
 	 * Challenge Rating of the last game-world challenge.
 	 *
 	 * TODO using a conservative 20 to start, can be raised with playtesting
 	 */
-	static final int ENDGAME=20+4;
-	static final int INITIALEL=6+4;
+	static final int ENDGAME=INITIALEL+20;
 	static final int NHIRES=5;
+
+	int el=INITIALEL;
 
 	/** Constructor. */
 	public ArtOfWar(){
@@ -52,11 +50,12 @@ public class ArtOfWar extends Scenario{
 
 	@Override
 	public boolean win(){
-		for(Town t:Town.gettowns())
-			if(t.ishostile()) return false;
-		String win="Congratulations, you have won this scenario!\n"
-				+"Thanks for playing!";
-		Javelin.message(win,true);
+		for(Actor a:World.getactors()){
+			WarLocation wl=a instanceof WarLocation?(WarLocation)a:null;
+			if(wl!=null&&wl.win&&wl.ishostile()) return false;
+		}
+		Javelin.message("You have captured the strongest garisson!\n"
+				+"Congratulations, you win!",true);
 		return true;
 	}
 
@@ -69,15 +68,16 @@ public class ArtOfWar extends Scenario{
 			if(el<INITIALEL) encounters.addAll(index.get(el));
 		int targetel=INITIALEL;
 		Squad.active=new Squad(-1,-1,0,null);
-		reinforce("Recruit a "+region+" squad.",targetel,encounters);
+		reinforce("Recruit a "+region+" squad.",targetel,encounters.stream()
+				.map(e->new Combatants(e.group)).collect(Collectors.toList()));
 	}
 
-	static void reinforce(String title,int targetel,List<Encounter> encounters){
+	static void reinforce(String title,int targetel,List<Combatants> available){
 		var s=Squad.active;
 		while(ChallengeCalculator.calculateel(s.members)<targetel){
-			var hires=selecthires(encounters,s,targetel);
+			var hires=selecthires(available,s,targetel);
 			if(hires.isEmpty()) break;
-			var options=hires.stream().map(e->Javelin.group(e.group))
+			var options=hires.stream().map(e->Javelin.group(e))
 					.collect(Collectors.toList());
 			String prompt=title+"\n\nCurrently:\n"
 					+Javelin.group(Squad.active.members);
@@ -86,19 +86,19 @@ public class ArtOfWar extends Scenario{
 		}
 	}
 
-	static List<Encounter> selecthires(List<Encounter> encounters,Squad s,
+	static List<Combatants> selecthires(List<Combatants> encounters,Squad s,
 			int targetel){
 		Collections.shuffle(encounters);
-		var hires=new ArrayList<Encounter>(NHIRES);
+		var hires=new ArrayList<Combatants>(NHIRES);
 		for(var e:encounters){
-			var group=new Combatants(e.group);
+			var group=new Combatants(e);
 			group.addAll(s.members);
-			if(ChallengeCalculator.calculateel(group)<targetel){
+			if(ChallengeCalculator.calculateel(group)<=targetel){
 				hires.add(e);
 				if(hires.size()==NHIRES) break;
 			}
 		}
-		hires.sort((a,b)->Javelin.group(a.group).compareTo(Javelin.group(b.group)));
+		hires.sort((a,b)->Javelin.group(a).compareTo(Javelin.group(b)));
 		return hires;
 	}
 
@@ -124,27 +124,27 @@ public class ArtOfWar extends Scenario{
 
 	@Override
 	public void end(Fight f,boolean victory){
-		if(!victory) return;
-		Location l=((Siege)f).location;
-		l.remove();
-		var targetel=World.getactors().stream().filter(a->a instanceof Location)
-				.map(a->ChallengeCalculator.calculateel(((Location)a).garrison))
-				.min(Comparator.naturalOrder()).orElse(null);
-		if(targetel==null) return;
-		var ishaunt=l instanceof Haunt;
-		if(!ishaunt) targetel=Math.max(targetel,Squad.active.getel()+RPG.r(1,4));
-		List<Encounter> reinforcements;
-		if(ishaunt)
-			reinforcements=((Haunt)l).dwellers.stream()
-					.map(m->new Encounter(List.of(new Combatant(m,true))))
-					.collect(Collectors.toList());
-		else{
-			reinforcements=new ArrayList<>();
-			var terrain=Terrain.get(l.x,l.y);
-			var index=Organization.ENCOUNTERSBYTERRAIN.get(terrain.name);
-			for(int el:index.keySet())
-				if(el<targetel) reinforcements.addAll(index.get(el));
+		if(!victory){
+			el-=1;
+			reinforce("You have lost reputation...");
+			return;
 		}
-		reinforce("Select reinforcements: ",targetel,reinforcements);
+		var elblue=ChallengeCalculator.calculateel(Fight.originalblueteam);
+		var elred=ChallengeCalculator.calculateel(Fight.originalredteam);
+		if(elred>=elblue){
+			el+=1;
+			reinforce("You have increased your reputation!");
+		}else
+			reinforce("Your reputation remains unchanged.");
+	}
+
+	void reinforce(String title){
+		List<Combatants> available=new ArrayList<>();
+		for(Actor a:World.getactors()){
+			WarLocation wl=a instanceof WarLocation?(WarLocation)a:null;
+			if(wl!=null&&!wl.ishostile()) available.addAll(wl.hires);
+		}
+		if(!available.isEmpty())
+			reinforce(title+"\nSelect reinforcements.",el,available);
 	}
 }

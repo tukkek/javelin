@@ -35,13 +35,13 @@ public class StartBattle extends BattleEvent{
 	/** Prepares and switches to a {@link BattleScreen}. */
 	public void battle(){
 		ArrayList<Combatant> foes=fight.init();
+		if(World.scenario!=null)
+			World.scenario.start(fight,Fight.originalblueteam,Fight.originalredteam);
 		if(fight.avoid(foes)) return;
 		preparebattle(foes);
 		fight.setup.setup();
 		Fight.state.next();
 		fight.ready();
-		if(World.scenario!=null)
-			World.scenario.start(fight,Fight.originalblueteam,Fight.originalredteam);
 		final int elred=ChallengeCalculator.calculateel(Fight.state.redTeam);
 		final int elblue=ChallengeCalculator.calculateel(Fight.state.blueTeam);
 		int diffifculty=elred-elblue;

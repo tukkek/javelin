@@ -189,6 +189,7 @@ public class Debug{
 	/** @see Preferences */
 	public static boolean bypassdoors;
 
+	/** @see StartBattle */
 	public static void onbattlestart(){
 
 	}

@@ -300,6 +300,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 
 	public static int perceive(boolean flyingbonus,boolean weatherpenalty,
 			boolean periodbonus,List<Combatant> squad){
+		if(Javelin.DEBUG) assert !squad.isEmpty();
 		int best=Integer.MIN_VALUE;
 		for(Combatant c:squad){
 			int roll=10+c.perceive(flyingbonus,weatherpenalty,periodbonus);

@@ -6,25 +6,16 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import javelin.controller.InfiniteList;
 import javelin.controller.Point;
-import javelin.controller.challenge.Difficulty;
-import javelin.controller.fight.minigame.battlefield.Reinforcement;
 import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.terrain.Terrain;
-import javelin.controller.terrain.Underground;
 import javelin.model.Realm;
-import javelin.model.item.Tier;
-import javelin.model.unit.Combatant;
-import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.haunt.Haunt;
 import javelin.model.world.location.haunt.SunkenShip;
 import javelin.model.world.location.haunt.WitchesHideout;
-import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.old.RPG;
 
 /** {@link FeatureGenerator} for {@link ArtOfWar}. */
@@ -32,89 +23,86 @@ public class AowGenerator extends FeatureGenerator{
 	static final Set<Class<? extends Location>> BANNED=Set
 			.of(WitchesHideout.class,SunkenShip.class);
 
+	class Territory{
+		Set<Point> area=new HashSet<>();
+		Point center=null;
+		WarLocation location=null;
+
+		Territory(){
+			var size=World.scenario.size;
+			while(center==null||!validate())
+				center=new Point(RPG.r(0,size-1),RPG.r(0,size-1));
+			area.add(center);
+		}
+
+		boolean validate(){
+			World w=World.getseed();
+			if(Terrain.search(center,Terrain.WATER,1,w)>0) return false;
+			for(var t:territories)
+				if(t.center.distanceinsteps(center)<=2) return false;
+			return true;
+		}
+
+		void expand(){
+			var p=new Point(RPG.pick(area));
+			while(area.contains(p))
+				p.displace();
+			if(!World.validatecoordinate(p.x,p.y)||territories.stream()
+					.filter(t->t!=this&&t.center.distanceinsteps(p)<=1).limit(1)
+					.count()==1)
+				return;
+			for(var t:territories)
+				if(t!=this) t.area.remove(p);
+			area.add(p);
+		}
+
+		void fill(){
+			var terrains=new ArrayList<>(Arrays.asList(Terrain.STANDARD));
+			var neighbors=territories.stream().sorted((a,
+					b)->a.center.distanceinsteps(center)-b.center.distanceinsteps(center))
+					.limit(terrains.size()-1);
+			terrains.removeAll(neighbors.map(t->Terrain.get(t.center.x,t.center.y))
+					.collect(Collectors.toList()));
+			var t=RPG.pick(terrains);
+			for(var point:area)
+				if(!Terrain.get(point.x,point.y).equals(Terrain.WATER))
+					World.getseed().map[point.x][point.y]=t;
+		}
+
+		public void place(WarLocation l){
+			location=l;
+			l.x=center.x;
+			l.y=center.y;
+			l.place();
+		}
+	}
+
+	transient final List<Territory> territories=new ArrayList<>();
+
 	@Override
 	public Location generate(LinkedList<Realm> realms,
 			ArrayList<HashSet<Point>> regions,World w){
-		for(int x=0;x<World.scenario.size;x++)
-			for(int y=0;y<World.scenario.size;y++)
-				if(w.map[x][y]==Terrain.WATER) w.map[x][y]=Terrain.DESERT;
-		InfiniteList<Terrain> terrains=new InfiniteList<>(
-				Arrays.asList(Terrain.NONWATER),true);
-		for(int el=ArtOfWar.INITIALEL+Difficulty.MODERATE
-				+1;el<=ArtOfWar.ENDGAME;el++)
-			generatedwellings(el,terrains.pop());
-		for(Haunt h:generatehaunts())
-			if(!BANNED.contains(h.getClass())) h.place();
-		generatetowns(terrains);
-		ArrayList<Actor> actors=World.getactors();
-		Actor start=null;
-		while(!(start instanceof Location))
-			start=RPG.pick(actors);
-		return (Location)start;
-	}
-
-	void generatetowns(InfiniteList<Terrain> terrains){
-		int el=ArtOfWar.INITIALEL;
-		while(el<ArtOfWar.ENDGAME){
-			Terrain t=terrains.pop();
-			if(t.equals(Terrain.WATER)||t.equals(Terrain.UNDERGROUND)) continue;
-			el=Math.min(el+RPG.r(1,10),ArtOfWar.ENDGAME);
-			Town town=new Town(findterrain(t),null);
-			town.population=el;
-			town.place();
-			town.garrison.addAll(generatearmy(el,t));
+		int area=World.scenario.size*World.scenario.size;
+		var locations=ArtOfWar.ENDGAME-ArtOfWar.INITIALEL;
+		for(;locations>0;locations--)
+			territories.add(new Territory());
+		while(territories.stream()
+				.collect(Collectors.summingInt(t->t.area.size()))<area)
+			for(var t:RPG.shuffle(territories))
+				t.expand();
+		for(var t:territories)
+			t.fill();
+		var start=RPG.pick(territories);
+		var sorted=territories.stream()
+				.sorted((a,b)->start.center.distanceinsteps(a.center)
+						-start.center.distanceinsteps(b.center))
+				.collect(Collectors.toList());
+		var el=ArtOfWar.INITIALEL;
+		for(var t:sorted){
+			t.place(new WarLocation(el));
+			el+=1;
 		}
-	}
-
-	void generatedwellings(int el,Terrain target){
-		Dwelling d=new Dwelling(); //TODO change to simple fight icon
-		generate(d,findterrain(target));
-		d.garrison.addAll(generatearmy(el,target));
-	}
-
-	static List<Combatant> generatearmy(float el,Terrain t){
-		List<Float> squads=new ArrayList<>();
-		squads.add(el);
-		int tier=Tier.get(Math.round(el)).ordinal()+1;
-		while(squads.size()<tier*1.5||RPG.r(1,tier)!=1){
-			Float squad=RPG.pick(squads);
-			if(squad<=2) break;
-			squads.remove(squad);
-			squad-=1.6f;
-			squads.add(squad);
-			squads.add(squad);
-		}
-		InfiniteList<Integer> ranksi=new InfiniteList<>(List.of(0,1,2),true);
-		List<Combatant> army=new ArrayList<>();
-		for(float squad:squads){
-			Reinforcement r=new Reinforcement(squad,List.of(t));
-			List<List<Combatant>> ranks=List.of(r.commander,r.elites,r.footsoldiers);
-			army.addAll(ranks.get(ranksi.pop()));
-		}
-		return army;
-	}
-
-	public Dwelling generate(Dwelling d,Point p){
-		d.setlocation(p);
-		d.place();
-		d.maximize();
-		d.garrison.clear();
-		return d;
-	}
-
-	boolean validate(Point p){
-		return p!=null&&p.validate(0,0,World.scenario.size,World.scenario.size)
-				&&World.get(p.x,p.y,World.getactors())==null;
-	}
-
-	Point findterrain(Terrain t){
-		int max=World.scenario.size-1;
-		if(t instanceof Underground)
-			return findterrain(RPG.pick(List.of(Terrain.NONWATER)));
-		Point p=null;
-		while(p==null||!Terrain.get(p.x,p.y).equals(t)
-				||World.get(p.x,p.y,World.getactors())!=null)
-			p=new Point(RPG.r(0,max),RPG.r(0,max));
-		return p;
+		sorted.get(sorted.size()-1).location.win=true;
+		return start.location;
 	}
 }

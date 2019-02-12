@@ -136,9 +136,13 @@ public class UpgradeHandler{
 			throw new RuntimeException("Uknown town!");
 	}
 
-	/** Initializes class, if needed. */
-	public void gather(){
-		if(!fire.isEmpty()) return;
+	/**
+	 * Initializes class, if needed.
+	 * 
+	 * @return This object, for call-chaining.
+	 */
+	public UpgradeHandler gather(){
+		if(!fire.isEmpty()) return this;
 		for(CrFactor factor:ChallengeCalculator.CR_FACTORS)
 			factor.registerupgrades(this);
 		ClassLevelUpgrade.init();
@@ -146,6 +150,7 @@ public class UpgradeHandler{
 			classes.add(classlevel);
 		for(var kit:Kit.KITS)
 			new UpgradeSet(kit.name).addAll(kit.getupgrades());
+		return this;
 	}
 
 	static void addall(HashSet<Upgrade> fire2,

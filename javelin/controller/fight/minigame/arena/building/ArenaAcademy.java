@@ -78,7 +78,8 @@ public class ArenaAcademy extends ArenaBuilding{
 
 	HashSet<Upgrade> upgrades=new HashSet<>(9);
 
-	public ArenaAcademy(){
+	/** TODO currently disabled */
+	private ArenaAcademy(){
 		super("Academy","locationrealmacademy",
 				"Click this academy to upgrade the active unit!");
 	}

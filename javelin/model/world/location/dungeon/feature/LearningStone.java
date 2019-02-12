@@ -97,7 +97,7 @@ public class LearningStone extends Feature{
 
 	static boolean accept(Upgrade u){
 		for(var c:Squad.active.members)
-			if(u.validate(c)) return true;
+			if(u.validate(c,false)) return true;
 		return false;
 	}
 }

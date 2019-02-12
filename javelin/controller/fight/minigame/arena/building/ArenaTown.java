@@ -16,8 +16,9 @@ import javelin.view.screen.town.PurchaseScreen;
 
 public class ArenaTown extends ArenaBuilding{
 	static final List<Class<? extends ArenaBuilding>> BUILDINGTYPES=List.of(
-			ArenaAcademy.class,ArenaFountain.class,ArenaLair.class,ArenaShop.class,
-			ArenaShrine.class,ArenaMine.class);
+			//			ArenaAcademy.class,
+			ArenaFountain.class,ArenaLair.class,ArenaShop.class,ArenaShrine.class,
+			ArenaMine.class);
 
 	public static int kingdomlevel=2;
 
@@ -57,7 +58,7 @@ public class ArenaTown extends ArenaBuilding{
 
 		@Override
 		void buy(){
-			ArenaSetup.place(building,quadrant);
+			ArenaSetup.place(building);
 			Fight.state.blueTeam.add(building);
 		}
 	}
@@ -105,11 +106,11 @@ public class ArenaTown extends ArenaBuilding{
 		}
 	}
 
-	int quadrant;
+	//	int quadrant;
 
-	public ArenaTown(int quadrant){
+	public ArenaTown(){
 		super("Keep","locationtowncity","Manage your buildings.");
-		this.quadrant=quadrant;
+		//		this.quadrant=quadrant;
 	}
 
 	@Override
@@ -124,8 +125,8 @@ public class ArenaTown extends ArenaBuilding{
 	}
 
 	/**
-	 * @return A town instance for the current {@link Arena} or
-	 *         <code>null</code> if it's destroyed.
+	 * @return A town instance for the current {@link Arena} or <code>null</code>
+	 *         if it's destroyed.
 	 */
 	public static ArenaTown get(){
 		return (ArenaTown)Fight.state.blueTeam.stream()

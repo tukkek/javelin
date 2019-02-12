@@ -21,7 +21,6 @@ import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.minigame.Minigame;
-import javelin.controller.fight.minigame.arena.ArenaSetup;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.map.Map;
@@ -526,7 +525,9 @@ public abstract class Fight{
 
 	public void enter(List<Combatant> entering,List<Combatant> team,Point entry){
 		if(entering.isEmpty()) return;
-		while(!ArenaSetup.validate(entry))
+		var s=Fight.state;
+		while(!entry.validate(0,0,s.map.length,s.map.length)
+				||s.isblocked(entry.x,entry.y))
 			entry=displace(entry);
 		LinkedList<Combatant> place=new LinkedList<>(entering);
 		Collections.shuffle(place);

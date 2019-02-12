@@ -327,7 +327,7 @@ public class Javelin{
 		var screen=BattleScreen.active==null?WorldScreen.current
 				:BattleScreen.active;
 		app.switchScreen(screen);
-		screen.center();
+		//		screen.center();
 		MessagePanel.active.clear();
 		text+="\nPress "+(requireenter?"ENTER":"any key")+" to continue...";
 		Javelin.message(text,Javelin.Delay.NONE);

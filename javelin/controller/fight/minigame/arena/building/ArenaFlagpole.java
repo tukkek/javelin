@@ -8,8 +8,6 @@ import javelin.model.unit.Combatant;
 import javelin.view.mappanel.battle.action.BattleMouseAction;
 
 public class ArenaFlagpole extends ArenaBuilding{
-	public static final int STARTING=4;
-
 	public ArenaFlagpole(){
 		super("Flagpole","flagpolered","Flagpole.");
 	}

@@ -567,7 +567,7 @@ public class Monster implements Cloneable,Serializable{
 	 * @return Ability bonus.
 	 */
 	static public int getbonus(int ability){
-		return new Long(Math.round(Math.floor(ability/2.0-5.0))).intValue();
+		return Long.valueOf(Math.round(Math.floor(ability/2.0-5.0))).intValue();
 	}
 
 	@Override

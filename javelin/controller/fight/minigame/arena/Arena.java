@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
+import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.Weather;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -15,11 +16,14 @@ import javelin.controller.challenge.TensionDirector;
 import javelin.controller.challenge.TensionDirector.TensionAction;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.minigame.Minigame;
+import javelin.controller.fight.minigame.arena.building.ArenaAcademy;
 import javelin.controller.fight.minigame.arena.building.ArenaFlagpole;
 import javelin.controller.fight.minigame.arena.building.ArenaFountain;
 import javelin.controller.fight.minigame.arena.building.ArenaTown;
 import javelin.controller.map.Stadium;
 import javelin.controller.scenario.Campaign;
+import javelin.controller.upgrade.Upgrade;
+import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.item.Item;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
@@ -62,6 +66,13 @@ import javelin.view.screen.SquadScreen;
  * TODO to make space for new structures, altering fountains to heal everyone in
  * an area instead of just the user would be great.
  *
+ * TODO now that leveling up is intrinsic, might want to make
+ * {@link ArenaAcademy} instances just grant bonus options to
+ * {@link #upgrade(Combatant, List)}.
+ *
+ * TODO ArenaGate allows friendly units to teleport between distant locations in
+ * the arena.
+ *
  * @see Stadium
  *
  * @author alex
@@ -70,11 +81,13 @@ public class Arena extends Minigame{
 	static final double GLADIATORMAXCR=SquadScreen.SELECTABLE[SquadScreen.SELECTABLE.length
 			-1];
 	static final float SQUADEL=Campaign.INITIALEL;
-	public static final float BOOST=4; // 3,5 maybe?
+	/** Progression pace. */
+	public static final float BOOST=9;
 	static final boolean SPAWN=true;
 
 	/** {@link Item} bag for {@link #gladiators}. */
 	public HashMap<Integer,ArrayList<Item>> items=new HashMap<>();
+	/** Current amount of gold */
 	public int gold=0;
 
 	TensionDirector director=new TensionDirector(Difficulty.EASY,
@@ -193,17 +206,44 @@ public class Arena extends Minigame{
 		BattleScreen.active.messagepanel.clear();
 	}
 
+	static final List<Upgrade> UPGRADES=UpgradeHandler.singleton.gather()
+			.getalluncategorized(false).stream().filter(u->u.isusedincombat())
+			.collect(Collectors.toList());
+
 	void rewardxp(List<Combatant> group){
 		for(Combatant foe:group)
 			if(state.redTeam.contains(foe)) return;
-		List<Combatant> allies=getallies();
+		var allies=getallies();
 		RewardCalculator.rewardxp(allies,group,BOOST);
 		foes.remove(group);
-		String xps=allies.stream().filter(c->!c.mercenary)
-				.map(c->c+" has "+c.gethumanxp()).collect(Collectors.joining(", "))+".";
-		if(xps.isEmpty()) return;
-		Javelin.message("You gain experience!\n"+xps,false);
-		BattleScreen.active.messagepanel.clear();
+		for(var unit:allies)
+			upgrade(unit,UPGRADES);
+		Javelin.app.switchScreen(BattleScreen.active);
+	}
+
+	/**
+	 * Shows a screen where the player can select one of multiple upgrades
+	 * (quantity based on {@link Monster#intelligence}), which will be applied to
+	 * the given {@link Combatant}.
+	 *
+	 * Don't forget to {@link JavelinApp#switchScreen(java.awt.Component)} after
+	 * all upgrade operations are finished.
+	 *
+	 * @param upgrades Of all these, only those that pass
+	 *          {@link Upgrade#validate(Combatant, boolean)} will be consirered.
+	 *          If none is valid, will ignore this unit.
+	 */
+	public static void upgrade(Combatant c,List<Upgrade> upgrades){
+		var prompt=c+" has gained a level! Pick your next upgrade:";
+		while(c.xp.floatValue()>=1){
+			var nchoices=Math.max(2,4+Monster.getbonus(c.source.intelligence));
+			var choices=RPG.shuffle(upgrades).stream().filter(u->u.validate(c,true))
+					.limit(nchoices).collect(Collectors.toList());
+			if(choices.isEmpty()) break;
+			var selection=Javelin.choose(prompt,choices,true,true);
+			if(selection==-1) break;
+			choices.get(selection).upgrade(c,true);
+		}
 	}
 
 	/**

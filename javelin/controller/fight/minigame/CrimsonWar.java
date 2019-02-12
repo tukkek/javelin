@@ -250,7 +250,7 @@ public class CrimsonWar extends Minigame{
 		var upgrades=new ArrayList<Upgrade>(CHOICESUPGRADES);
 		for(int i=0;i<UPGRADES.size()&&upgrades.size()<CHOICESUPGRADES;i++){
 			var upgrade=UPGRADES.get(i);
-			if(upgrade.validate(hero)) upgrades.add(upgrade);
+			if(upgrade.validate(hero,true)) upgrades.add(upgrade);
 		}
 		upgrades.sort((a,b)->a.name.compareTo(b.name));
 		var names=upgrades.stream().map(u->u.name).collect(Collectors.toList());

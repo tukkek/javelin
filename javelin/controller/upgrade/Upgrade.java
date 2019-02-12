@@ -1,12 +1,12 @@
 package javelin.controller.upgrade;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.fight.Fight;
 import javelin.model.item.Item;
-import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Spell;
@@ -75,26 +75,43 @@ public abstract class Upgrade implements Serializable{
 
 	/**
 	 * @param c Removes/reapplies equipment before/after applying the upgrade.
+	 * @param spendxp If <code>true</code>, will update {@link Combatant#xp} if
+	 *          applied.
 	 * @return See {@link #apply(Combatant)}.
 	 * @see Combatant#equipped
 	 */
-	public boolean upgrade(Combatant c){
-		ArrayList<Artifact> equipment=new ArrayList<>(c.equipped);
-		for(Artifact a:equipment)
-			a.remove(c);
-		boolean applied=apply(c);
-		for(Artifact a:equipment)
-			a.usepeacefully(c);
+	public boolean upgrade(Combatant c,boolean spendxp){
+		var oldcr=spendxp?ChallengeCalculator.calculaterawcr(c.source)[1]:0;
+		var equipment=new ArrayList<>(c.equipped);
+		for(var e:equipment)
+			e.remove(c);
+		var applied=apply(c);
+		for(var e:equipment)
+			e.usepeacefully(c);
+		if(applied&&spendxp){
+			var newcr=ChallengeCalculator.calculaterawcr(c.source)[1];
+			c.xp=c.xp.subtract(new BigDecimal(newcr-oldcr));
+		}
 		return applied;
 	}
 
 	/**
+	 * @return As {@link #upgrade(Combatant, boolean)} but does not update
+	 *         {@link Combatant#xp}.
+	 */
+	public boolean upgrade(Combatant c){
+		return upgrade(c,false);
+	}
+
+	/**
 	 * @param c Uses a deep clone of this unit.
+	 * @param checkxp <code>true</code> to check if given enough has enough
+	 *          {@link Combatant#xp} to aplly this.
 	 * @return <code>true</code> if can {@link #apply(Combatant)} this upgrade.
 	 */
-	public final boolean validate(Combatant c){
-		c=c.clone().clonesource();
-		return upgrade(c);
+	public final boolean validate(Combatant c,boolean checkxp){
+		var cost=getcost(c);
+		return cost!=null&&(!checkxp||cost<=c.xp.floatValue());
 	}
 
 	/**

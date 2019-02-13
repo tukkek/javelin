@@ -10,6 +10,7 @@ import javelin.controller.action.Action;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.Node;
+import javelin.controller.audio.Audio;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.CurrentAttack;
@@ -34,10 +35,11 @@ public abstract class AbstractAttack extends Action implements AiAction{
 		public DamageChance damage;
 
 		DamageNode(Node n,DamageChance damage,String action,Javelin.Delay delay,
-				Combatant target){
+				Combatant active,Combatant target,String audio){
 			super(n,damage.chance,action,delay);
 			this.damage=damage;
 			overlay=new AiOverlay(target.location[0],target.location[1]);
+			this.audio=new Audio(audio,active.source);
 		}
 	}
 
@@ -45,9 +47,11 @@ public abstract class AbstractAttack extends Action implements AiAction{
 	protected boolean feign=false;
 	/** @see Cleave */
 	protected boolean cleave=false;
+	String hitsound;
 
-	public AbstractAttack(final String name){
+	public AbstractAttack(final String name,String hitsound){
 		super(name);
+		this.hitsound=hitsound;
 	}
 
 	public List<ChanceNode> attack(final BattleState s,final Combatant current,
@@ -110,7 +114,7 @@ public abstract class AbstractAttack extends Action implements AiAction{
 		boolean wait=target.source.passive
 				&&target.getnumericstatus()>Combatant.STATUSUNCONSCIOUS;
 		final Javelin.Delay delay=wait?Javelin.Delay.WAIT:Javelin.Delay.BLOCK;
-		return new DamageNode(s,dc,sb.toString(),delay,target);
+		return new DamageNode(s,dc,sb.toString(),delay,attacker,target,hitsound);
 	}
 
 	/**
@@ -240,7 +244,7 @@ public abstract class AbstractAttack extends Action implements AiAction{
 			wait=Javelin.Delay.BLOCK;
 		}
 		sb.append(" misses ").append(name).append(tohit);
-		return new DamageNode(s,dc,sb.toString(),wait,target);
+		return new DamageNode(s,dc,sb.toString(),wait,attacker,target,"miss");
 	}
 
 	void posthit(Combatant active,Combatant target,final Attack a,float ap,

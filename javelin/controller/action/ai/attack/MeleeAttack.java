@@ -20,7 +20,7 @@ public class MeleeAttack extends AbstractAttack{
 	static final public MeleeAttack SINGLETON=new MeleeAttack();
 
 	MeleeAttack(){
-		super("Melee attack");
+		super("Melee attack","melee");
 		feign=true;
 		cleave=true;
 	}

@@ -149,9 +149,9 @@ public class MonsterReader extends DefaultHandler{
 			final int size=getSize(attributes.getValue("Size"));
 			if(size==-1) errorhandler.setInvalid("Size");
 			monster.size=size;
-			String type=attributes.getValue("Type").replaceAll(" ","_").toUpperCase();
+			String type=attributes.getValue("Type").replaceAll(" ","").toUpperCase();
 			monster.type=!type.equals("BEAST")?MonsterType.valueOf(type)
-					:MonsterType.MAGICAL_BEAST;
+					:MonsterType.MAGICALBEAST;
 			String humanoid=attributes.getValue("Humanoid");
 			if(humanoid!=null){
 				if("true".equalsIgnoreCase(humanoid))
@@ -160,7 +160,7 @@ public class MonsterReader extends DefaultHandler{
 			}else
 				switch(monster.type){
 					case HUMANOID:
-					case MONSTROUS_HUMANOID:
+					case MONSTROUSHUMANOID:
 						monster.humanoid=true;
 						break;
 					case ANIMAL:

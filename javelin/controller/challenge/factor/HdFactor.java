@@ -44,9 +44,9 @@ public class HdFactor extends CrFactor{
 		final MonsterType type=monster.type;
 		if(type==MonsterType.DRAGON) return new TypeData(.75f,6);
 		if(type==MonsterType.OUTSIDER) return new TypeData(.7f,8);
-		if(type==MonsterType.MAGICAL_BEAST||type==MonsterType.SHAPECHANGER)
+		if(type==MonsterType.MAGICALBEAST||type==MonsterType.SHAPECHANGER)
 			return new TypeData(.65f,2);
-		if(type==MonsterType.MONSTROUS_HUMANOID) return new TypeData(.6f,2);
+		if(type==MonsterType.MONSTROUSHUMANOID) return new TypeData(.6f,2);
 		if(type==MonsterType.ABERRATION||type==MonsterType.ANIMAL
 				||type==MonsterType.ELEMENTAL||type==MonsterType.GIANT
 				||type==MonsterType.HUMANOID||andIntelligent(MonsterType.PLANT,monster)

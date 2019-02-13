@@ -136,6 +136,7 @@ public abstract class Action implements Serializable,ActionDescription{
 		for(final ChanceNode cn:list){
 			roll-=cn.chance;
 			if(roll<=0){
+				if(cn.audio!=null) cn.audio.play();
 				BattleScreen.active.setstate(cn,enableoverrun);
 				return;
 			}

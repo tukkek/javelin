@@ -1,6 +1,7 @@
 package javelin.controller.ai;
 
 import javelin.Javelin;
+import javelin.controller.audio.Audio;
 import javelin.view.mappanel.overlay.Overlay;
 
 /**
@@ -29,6 +30,8 @@ public class ChanceNode implements Cloneable{
 
 	/** Allows a computer action to provide visual feedback. */
 	public Overlay overlay=null;
+
+	public Audio audio=null;
 
 	public ChanceNode(final Node n,final float chance,final String action,
 			final Javelin.Delay delay){

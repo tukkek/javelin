@@ -32,9 +32,9 @@ public class WeaponFocus extends Feat{
 		BAB.put(MonsterType.FEY,1.0/2.0);
 		BAB.put(MonsterType.GIANT,3.0/4.0);
 		BAB.put(MonsterType.HUMANOID,3.0/4.0);
-		BAB.put(MonsterType.MAGICAL_BEAST,1.0);
+		BAB.put(MonsterType.MAGICALBEAST,1.0);
 		BAB.put(MonsterType.SHAPECHANGER,1.0);
-		BAB.put(MonsterType.MONSTROUS_HUMANOID,1.0);
+		BAB.put(MonsterType.MONSTROUSHUMANOID,1.0);
 		BAB.put(MonsterType.OOZE,3.0/4.0);
 		BAB.put(MonsterType.OUTSIDER,1.0);
 		BAB.put(MonsterType.PLANT,3.0/4.0);

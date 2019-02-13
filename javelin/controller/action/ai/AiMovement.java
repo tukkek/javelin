@@ -15,6 +15,7 @@ import javelin.controller.action.ActionCost;
 import javelin.controller.ai.AiThread;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.ai.ChanceNode;
+import javelin.controller.audio.Audio;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.state.Meld;
@@ -54,6 +55,7 @@ public class AiMovement extends Action implements AiAction{
 			o.image=AiMovement.MOVEOVERLAY;
 			overlay=o;
 			score=BattleAi.measuredistances(n.getteam(c),n.getopponents(c));
+			audio=new Audio("move",c.source);
 		}
 	}
 

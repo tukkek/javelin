@@ -10,6 +10,7 @@ import javelin.controller.action.ai.AiAction;
 import javelin.controller.ai.ActionProvider;
 import javelin.controller.ai.AiThread;
 import javelin.controller.ai.ChanceNode;
+import javelin.controller.audio.Audio;
 import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
@@ -115,6 +116,9 @@ public class CastSpell extends Fire implements AiAction{
 		if(savec!=1) chances.add(
 				hit(caster,target,state,spell,(1-savec)*affectchance,false,prefix));
 		if(Javelin.DEBUG) ActionProvider.validate(chances);
+		var audio=new Audio("cast",caster.source);
+		for(var chance:chances)
+			chance.audio=audio;
 		return chances;
 	}
 

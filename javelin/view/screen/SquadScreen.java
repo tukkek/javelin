@@ -31,7 +31,6 @@ public class SquadScreen extends InfoScreen{
 			if(tier!=null) for(Monster candidate:tier)
 				if(candidate.isalive()) CANDIDATES.add(candidate);
 		}
-		Collections.sort(CANDIDATES,MonstersByName.INSTANCE);
 	}
 
 	protected Squad squad=new Squad(0,0,8,null);
@@ -42,6 +41,7 @@ public class SquadScreen extends InfoScreen{
 	public SquadScreen(List<Monster> candidates){
 		super("");
 		this.candidates=candidates;
+		Collections.sort(candidates,MonstersByName.INSTANCE);
 	}
 
 	public SquadScreen(){

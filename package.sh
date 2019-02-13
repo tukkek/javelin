@@ -19,7 +19,7 @@ function build() {
     output="build/output/${system}/javelin"
     echo "Building Javelin for $system (Java $java)..."
     jlink --module-path .:build/jdk/${java}/${system}/jmods --add-modules javelin --output "$output/java"
-    cp -r build/launcher/$system/* doc avatars maps monsters.xml preferences.properties README.txt $output
+    cp -r build/launcher/$system/* doc avatars maps monsters.xml preferences.properties README.txt audio $output
     echo $version>$output/doc/VERSION.txt
     pushd $output/.. > /dev/null
     zip "../javelin-${system}.zip" . -r > /dev/null

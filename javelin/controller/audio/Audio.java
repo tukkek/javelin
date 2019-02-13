@@ -26,7 +26,11 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public class Audio{
-	static final List<String> EXTENSIONS=List.of(".ogg",".mp3",".wav");
+	/**
+	 * Cannot easily support cross-platform MP3 and OGG with any up-to-date.
+	 * Tritonus doesn't seem to work with Linux 64b. TODO JaveFX
+	 */
+	static final List<String> EXTENSIONS=List.of(".wav");
 	static final Map<String,Clip> CACHE=new HashMap<>();
 
 	class NoAudio extends IOException{
@@ -63,10 +67,12 @@ public class Audio{
 
 	/** @param action Play this sound loop. */
 	void load(){
+		File f=null;
 		try{
 			clip=CACHE.get(action+monster);
 			if(clip==null){
-				try(var stream=AudioSystem.getAudioInputStream(lookup())){
+				f=lookup();
+				try(var stream=AudioSystem.getAudioInputStream(f)){
 					clip=AudioSystem.getClip();
 					clip.open(stream);
 				}
@@ -74,7 +80,7 @@ public class Audio{
 			}
 		}catch(UnsupportedAudioFileException|LineUnavailableException
 				|IOException e){
-			if(Javelin.DEBUG) throw new RuntimeException(e);
+			if(Javelin.DEBUG) throw new RuntimeException(f.getPath(),e);
 			e.printStackTrace();
 		}
 	}

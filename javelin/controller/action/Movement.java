@@ -3,6 +3,7 @@ package javelin.controller.action;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.action.ai.AiMovement;
+import javelin.controller.audio.Audio;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
@@ -92,6 +93,7 @@ public class Movement extends Action{
 			final boolean finishmove=meld!=null||disengaging
 					||Movement.lastmovewasattack||BattleScreen.partialmove>=.5f;
 			if(!finishmove) throw new RepeatTurn();
+			new Audio("move",c).play();
 			BattleScreen.partialmove=0;
 			if(!Movement.lastmovewasattack) if(meld==null||meld.meldsat>c.ap){
 				String action=disengaging?"disengages":"moves";

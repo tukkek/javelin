@@ -39,7 +39,7 @@ public abstract class AbstractAttack extends Action implements AiAction{
 			super(n,damage.chance,action,delay);
 			this.damage=damage;
 			overlay=new AiOverlay(target.location[0],target.location[1]);
-			this.audio=new Audio(audio,active.source);
+			this.audio=target.hp<=0?new Audio("die",target):new Audio(audio,active);
 		}
 	}
 
@@ -48,10 +48,12 @@ public abstract class AbstractAttack extends Action implements AiAction{
 	/** @see Cleave */
 	protected boolean cleave=false;
 	String hitsound;
+	String misssound;
 
-	public AbstractAttack(final String name,String hitsound){
+	public AbstractAttack(final String name,String hitsound,String misssound){
 		super(name);
 		this.hitsound=hitsound;
+		this.misssound=misssound;
 	}
 
 	public List<ChanceNode> attack(final BattleState s,final Combatant current,
@@ -244,7 +246,7 @@ public abstract class AbstractAttack extends Action implements AiAction{
 			wait=Javelin.Delay.BLOCK;
 		}
 		sb.append(" misses ").append(name).append(tohit);
-		return new DamageNode(s,dc,sb.toString(),wait,attacker,target,"miss");
+		return new DamageNode(s,dc,sb.toString(),wait,attacker,target,misssound);
 	}
 
 	void posthit(Combatant active,Combatant target,final Attack a,float ap,

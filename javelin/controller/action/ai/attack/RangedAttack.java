@@ -40,7 +40,7 @@ public class RangedAttack extends AbstractAttack{
 	static final boolean AISKIPUNLIKELY=true;
 
 	private RangedAttack(){
-		super("Ranged attack","ranged");
+		super("Ranged attack","ranged-hit","ranged-miss");
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import javelin.Javelin;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
 /**
@@ -52,6 +53,10 @@ public class Audio{
 		monster=m;
 	}
 
+	public Audio(String action,Combatant c){
+		this(action,c.source);
+	}
+
 	File lookup() throws NoAudio{
 		var byname=action+"-"+monster.name.replaceAll(" ","");
 		var bytype=action+"-"+monster.type;
@@ -65,18 +70,18 @@ public class Audio{
 		throw new NoAudio("Cannot find audio for "+this);
 	}
 
-	/** @param action Play this sound loop. */
 	void load(){
 		File f=null;
 		try{
-			clip=CACHE.get(action+monster);
+			var key=action+monster.name;
+			clip=CACHE.get(key);
 			if(clip==null){
 				f=lookup();
 				try(var stream=AudioSystem.getAudioInputStream(f)){
 					clip=AudioSystem.getClip();
 					clip.open(stream);
 				}
-				CACHE.put(action+monster,clip);
+				CACHE.put(key,clip);
 			}
 		}catch(UnsupportedAudioFileException|LineUnavailableException
 				|IOException e){

@@ -2,7 +2,6 @@ package javelin.controller.scenario.artofwar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +18,7 @@ import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
+import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.old.RPG;
 
 /**
@@ -37,6 +37,8 @@ public class ArtOfWar extends Scenario{
 	static final int NHIRES=5;
 
 	int el=INITIALEL;
+
+	List<Combatants> original=new ArrayList<>();
 
 	/** Constructor. */
 	public ArtOfWar(){
@@ -72,30 +74,33 @@ public class ArtOfWar extends Scenario{
 				.map(e->new Combatants(e.group)).collect(Collectors.toList()));
 	}
 
-	static void reinforce(String title,int targetel,List<Combatants> available){
+	void reinforce(String title,int targetel,List<Combatants> available){
 		var s=Squad.active;
 		while(ChallengeCalculator.calculateel(s.members)<targetel){
-			var hires=selecthires(available,s,targetel);
+			var hires=selecthires(available,s,targetel,NHIRES);
 			if(hires.isEmpty()) break;
 			var options=hires.stream().map(e->Javelin.group(e))
 					.collect(Collectors.toList());
-			String prompt=title+"\n\nCurrently:\n"
-					+Javelin.group(Squad.active.members);
+			var random="Random";
+			options.add(random);
+			var prompt=title+"\n\nCurrently:\n"+Javelin.group(Squad.active.members);
 			var choice=Javelin.choose(prompt,options,true,true);
-			s.members.addAll(hires.get(choice).generate());
+			if(choice==options.size()-1) choice=RPG.r(0,hires.size()-1);
+			var reinforcements=hires.get(choice);
+			original.add(reinforcements);
+			s.members.addAll(reinforcements.generate());
 		}
 	}
 
 	static List<Combatants> selecthires(List<Combatants> encounters,Squad s,
-			int targetel){
-		Collections.shuffle(encounters);
-		var hires=new ArrayList<Combatants>(NHIRES);
-		for(var e:encounters){
+			int targetel,int max){
+		var hires=new ArrayList<Combatants>();
+		for(var e:RPG.shuffle(encounters)){
 			var group=new Combatants(e);
 			group.addAll(s.members);
 			if(ChallengeCalculator.calculateel(group)<=targetel){
 				hires.add(e);
-				if(hires.size()==NHIRES) break;
+				if(hires.size()==max) break;
 			}
 		}
 		hires.sort((a,b)->Javelin.group(a).compareTo(Javelin.group(b)));
@@ -124,6 +129,8 @@ public class ArtOfWar extends Scenario{
 
 	@Override
 	public void end(Fight f,boolean victory){
+		for(var c:Squad.active)
+			Fountain.heal(c);
 		if(!victory){
 			el-=1;
 			reinforce("You have lost reputation...");
@@ -139,12 +146,18 @@ public class ArtOfWar extends Scenario{
 	}
 
 	void reinforce(String title){
-		List<Combatants> available=new ArrayList<>();
-		for(Actor a:World.getactors()){
-			WarLocation wl=a instanceof WarLocation?(WarLocation)a:null;
-			if(wl!=null&&!wl.ishostile()) available.addAll(wl.hires);
+		var available=new ArrayList<List<Combatants>>();
+		available.add(original);
+		for(var actor:World.getactors()){
+			var location=actor instanceof WarLocation?(WarLocation)actor:null;
+			if(location!=null&&!location.ishostile()) available.add(location.hires);
 		}
-		if(!available.isEmpty())
-			reinforce(title+"\nSelect reinforcements.",el,available);
+		var options=new ArrayList<Combatants>(available.size());
+		for(var hires:available){
+			var squad=selecthires(hires,Squad.active,el,1);
+			if(!squad.isEmpty()) options.add(squad.get(0));
+		}
+		if(!options.isEmpty())
+			reinforce(title+"\nSelect reinforcements.",el,options);
 	}
 }

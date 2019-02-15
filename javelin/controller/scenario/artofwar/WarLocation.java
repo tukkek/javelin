@@ -58,11 +58,6 @@ public class WarLocation extends Fortification{
 			garrison.addAll(reinforcement);
 			hires.add(new Combatants(reinforcement));
 		}
-		RPG.shuffle(hires);
-		var nhires=RPG.r(1,4);
-		while(hires.size()>nhires)
-			hires.remove(0);
-		hires.sort((a,b)->a.toString().compareTo(b.toString()));
 	}
 
 	@Override
@@ -73,6 +68,7 @@ public class WarLocation extends Fortification{
 	@Override
 	public boolean interact(){
 		if(!super.interact()) return false;
+		hires.sort((a,b)->a.toString().compareTo(b.toString()));
 		var s=new InfoScreen("");
 		var message="This is a previously conquered garisson.\n"
 				+"It may provide access to the following reinforcements after a battle:\n\n";

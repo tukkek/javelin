@@ -28,6 +28,7 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public class Audio{
+	static final boolean DEBUG=Javelin.DEBUG&&false;
 	/**
 	 * Cannot easily support cross-platform MP3 and OGG with any up-to-date.
 	 * Tritonus doesn't seem to work with Linux 64b. TODO JaveFX
@@ -88,8 +89,7 @@ public class Audio{
 			}
 		}catch(UnsupportedAudioFileException|LineUnavailableException
 				|IOException e){
-			if(Javelin.DEBUG)
-				throw new RuntimeException(f==null?"null file":f.getPath(),e);
+			if(DEBUG) throw new RuntimeException(f==null?"null file":f.getPath(),e);
 			e.printStackTrace();
 		}
 	}
@@ -112,7 +112,7 @@ public class Audio{
 			var path=lookup().getCanonicalPath();
 			Runtime.getRuntime().exec(Preferences.player+" "+path);
 		}catch(Exception e){
-			if(Javelin.DEBUG) throw new RuntimeException(e);
+			if(DEBUG) throw new RuntimeException(e);
 		}
 	}
 

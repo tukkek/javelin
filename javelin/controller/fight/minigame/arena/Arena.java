@@ -82,7 +82,7 @@ public class Arena extends Minigame{
 			-1];
 	static final float SQUADEL=Campaign.INITIALEL;
 	/** Progression pace. */
-	public static final float BOOST=9;
+	public static final float BOOST=4;
 	static final boolean SPAWN=true;
 
 	/** {@link Item} bag for {@link #gladiators}. */

@@ -151,7 +151,7 @@ public class WorldGenerator extends Thread{
 	}
 
 	public static void build(){
-		int threads=Math.max(1,Preferences.MAXTHREADS);
+		int threads=Math.max(1,Preferences.maxthreads);
 		final String info="Building world, using "+threads
 				+" thread(s)...\n\nWorlds discarded: ";
 		try{

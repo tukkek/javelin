@@ -22,7 +22,7 @@ public class DungeonPanel extends MapPanel{
 
 	@Override
 	protected int gettilesize(){
-		return Preferences.TILESIZEDUNGEON;
+		return Preferences.tilesizedungeons;
 	}
 
 	@Override

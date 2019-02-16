@@ -12,7 +12,7 @@ import javelin.view.Images;
 import javelin.view.mappanel.overlay.Overlay;
 
 public abstract class MapPanel extends Panel{
-	public static int tilesize=Preferences.TILESIZEWORLD;
+	public static int tilesize=Preferences.tilesizeworld;
 
 	public static Overlay overlay=null;
 

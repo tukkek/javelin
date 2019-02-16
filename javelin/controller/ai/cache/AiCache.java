@@ -25,7 +25,7 @@ public class AiCache{
 	public static Cache utilitycache=new Cache();
 
 	public static void clear(){
-		if(!Preferences.AICACHEENABLED) return;
+		if(!Preferences.aicacheenabled) return;
 		if(DEBUG){
 			nodecache._findlargest();
 			utilitycache._findlargest();
@@ -36,7 +36,7 @@ public class AiCache{
 
 	public static Iterable<List<ChanceNode>> getcache(final Node previousState,
 			List<Integer> index){
-		if(!Preferences.AICACHEENABLED) return previousState.getsucessors();
+		if(!Preferences.aicacheenabled) return previousState.getsucessors();
 		List<List<ChanceNode>> sucessors=(List<List<ChanceNode>>)nodecache
 				.get(index);
 		if(sucessors==null){
@@ -62,7 +62,7 @@ public class AiCache{
 
 	public static Float getutility(ArrayList<Integer> index,
 			final AlphaBetaSearch ai,final List<ChanceNode> cns){
-		if(!Preferences.AICACHEENABLED) return ai.utility(cns);
+		if(!Preferences.aicacheenabled) return ai.utility(cns);
 		Float utility=(Float)utilitycache.get(index);
 		if(utility==null){
 			utility=ai.utility(cns);

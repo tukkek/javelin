@@ -30,7 +30,7 @@ public class WorldPanel extends MapPanel{
 
 	@Override
 	protected int gettilesize(){
-		return Preferences.TILESIZEWORLD;
+		return Preferences.tilesizeworld;
 	}
 
 	@Override

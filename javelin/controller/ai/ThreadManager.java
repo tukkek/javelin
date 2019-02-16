@@ -38,8 +38,8 @@ public class ThreadManager{
 			+"You can also press %3$c after closing this dialog to configure your preferences manually.";
 
 	static public void determineprocessors(){
-		String message="\n\nThe AI will use "+Preferences.MAXTHREADS+" cores";
-		if(Preferences.AICACHEENABLED) message+=" (cache enabled)";
+		String message="\n\nThe AI will use "+Preferences.maxthreads+" cores";
+		if(Preferences.aicacheenabled) message+=" (cache enabled)";
 		System.out.println(message);
 		System.out.println();
 	}
@@ -48,7 +48,7 @@ public class ThreadManager{
 	public static boolean working;
 	/**
 	 * Increment by 1 if computation was done within proximity of
-	 * {@link Preferences#MAXMILISECONDSTHINKING} or decrement by 1 otherwise.
+	 * {@link Preferences#maxmilisecondsthinking} or decrement by 1 otherwise.
 	 * {@link Integer#MIN_VALUE} means no performance monitoring.
 	 */
 	public static int performance=0;
@@ -63,7 +63,7 @@ public class ThreadManager{
 			AiCache.clear();
 			AiThread.depthincremeneter=1;
 			AiThread.reset();
-			int nthreads=Preferences.MAXTHREADS;
+			int nthreads=Preferences.maxthreads;
 			long seed=RPG.rand.nextLong();
 			for(int i=0;i<nthreads;i++)
 				AiThread.STARTED.add(new AiThread(state,seed));
@@ -91,7 +91,7 @@ public class ThreadManager{
 	}
 
 	static void sleep(final long start) throws InterruptedException,Exception{
-		long sleepfor=Preferences.MAXMILISECONDSTHINKING-(now()-start);
+		long sleepfor=Preferences.maxmilisecondsthinking-(now()-start);
 		Thread.sleep(sleepfor>=0?sleepfor:0);
 		while(AiThread.FINISHED.isEmpty()){
 			if(ThreadManager.ERROR!=null) throw ThreadManager.ERROR;
@@ -100,17 +100,17 @@ public class ThreadManager{
 	}
 
 	static void checkperformance(float miliseconds){
-		if(performance==Integer.MIN_VALUE||Preferences.MAXTHREADS==1) return;
-		performance+=miliseconds<Preferences.MAXMILISECONDSTHINKING+1000?+1:-1;
+		if(performance==Integer.MIN_VALUE||Preferences.maxthreads==1) return;
+		performance+=miliseconds<Preferences.maxmilisecondsthinking+1000?+1:-1;
 		if(performance>=-9) return;
 		String message=String.format(PERFORMANCENOTIFICATION,
-				Preferences.MAXMILISECONDSTHINKING/1000,Math.round(miliseconds/1000),
+				Preferences.maxmilisecondsthinking/1000,Math.round(miliseconds/1000),
 				ShowOptions.getsingleton().morekeys[0].charAt(0));
 		int choice=JOptionPane.showConfirmDialog(BattleScreen.active,message,
 				"Performance problem detected",JOptionPane.YES_NO_CANCEL_OPTION);
 		if(choice==JOptionPane.YES_OPTION){
 			performance=0;
-			int to=Preferences.MAXTHREADS-1;
+			int to=Preferences.maxthreads-1;
 			Preferences.setoption(Preferences.KEYMAXTHREADS,to);
 			JOptionPane.showMessageDialog(BattleScreen.active,
 					String.format(PERFORMANCESOLUTION,to));

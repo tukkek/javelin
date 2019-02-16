@@ -24,7 +24,7 @@ public class TemperatureManager{
 
 	public static void init(){
 		CPU_COOLING=new File(LINUXTEMPARATUREFILE).exists()
-				?Preferences.MAXTEMPERATURE
+				?Preferences.maxtemperature
 				:0;
 	}
 

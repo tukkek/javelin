@@ -466,7 +466,7 @@ public class Javelin{
 			case WAIT:
 				try{
 					redraw();
-					Thread.sleep(Preferences.MESSAGEWAIT);
+					Thread.sleep(Preferences.messagewait);
 				}catch(final InterruptedException e){
 					e.printStackTrace();
 				}

@@ -90,7 +90,7 @@ public class StateManager{
 	 */
 	public static synchronized void save(boolean force,File to){
 		long now=System.currentTimeMillis();
-		if(!force&&now-lastsave<Preferences.SAVEINTERVAL*MINUTE) return;
+		if(!force&&now-lastsave<Preferences.saveinterval*MINUTE) return;
 		lastsave=now;
 		try{
 			ObjectOutputStream writer=new ObjectOutputStream(
@@ -165,7 +165,7 @@ public class StateManager{
 	}
 
 	private static void backup(){
-		if(!Preferences.BACKUP) return;
+		if(!Preferences.backup) return;
 		Calendar now=Calendar.getInstance();
 		String timestamp="";
 		timestamp+=now.get(Calendar.YEAR)+"-";

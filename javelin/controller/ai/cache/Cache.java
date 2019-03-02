@@ -56,9 +56,9 @@ public class Cache{
 		while(root.cache[used]!=null)
 			used+=1;
 		final int perthread=(int)Math
-				.round(Math.ceil(used/(float)Preferences.MAXTHREADS));
-		final Thread[] pool=new Thread[Preferences.MAXTHREADS];
-		for(int i=0;i<Preferences.MAXTHREADS;i++){
+				.round(Math.ceil(used/(float)Preferences.maxthreads));
+		final Thread[] pool=new Thread[Preferences.maxthreads];
+		for(int i=0;i<Preferences.maxthreads;i++){
 			final int start=i*perthread;
 			final int end=start+perthread-1;
 			pool[i]=new CacheClearThread(root,start,end>used?used:end);

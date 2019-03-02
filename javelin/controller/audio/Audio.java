@@ -12,6 +12,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import javelin.Javelin;
+import javelin.controller.db.Preferences;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -27,6 +28,7 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public class Audio{
+	static final boolean DEBUG=Javelin.DEBUG&&false;
 	/**
 	 * Cannot easily support cross-platform MP3 and OGG with any up-to-date.
 	 * Tritonus doesn't seem to work with Linux 64b. TODO JaveFX
@@ -48,11 +50,13 @@ public class Audio{
 	Monster monster;
 	Clip clip=null;
 
+	/** Constructor. */
 	public Audio(String action,Monster m){
 		this.action=action;
 		monster=m;
 	}
 
+	/** Constructor. */
 	public Audio(String action,Combatant c){
 		this(action,c.source);
 	}
@@ -85,17 +89,30 @@ public class Audio{
 			}
 		}catch(UnsupportedAudioFileException|LineUnavailableException
 				|IOException e){
-			if(Javelin.DEBUG) throw new RuntimeException(f.getPath(),e);
+			if(DEBUG) throw new RuntimeException(f==null?"null file":f.getPath(),e);
 			e.printStackTrace();
 		}
 	}
 
 	/** Loads (possibly from cache) and playes this audio. */
 	public void play(){
+		if(Preferences.player!=null){
+			playexternal();
+			return;
+		}
 		load();
 		if(clip!=null){
 			clip.setFramePosition(0);
 			clip.start();
+		}
+	}
+
+	void playexternal(){
+		try{
+			var path=lookup().getCanonicalPath();
+			Runtime.getRuntime().exec(Preferences.player+" "+path);
+		}catch(Exception e){
+			if(DEBUG) throw new RuntimeException(e);
 		}
 	}
 

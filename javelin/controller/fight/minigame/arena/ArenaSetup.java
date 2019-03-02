@@ -52,7 +52,8 @@ public class ArenaSetup extends BattleSetup{
 
 	ArenaTown placebuildings(){
 		var buildings=new ArrayList<ArenaBuilding>();
-		buildings.add(new ArenaTown());
+		var town=new ArenaTown();
+		buildings.add(town);
 		var f=new ArenaFountain();
 		f.setspent(false);
 		buildings.add(f);
@@ -66,8 +67,8 @@ public class ArenaSetup extends BattleSetup{
 			Fight.state.redTeam.add(g);
 			place(g);
 		}
-		definegateways(new ArenaTown());
-		return new ArenaTown();
+		definegateways(town);
+		return town;
 	}
 
 	void definegateways(ArenaTown t){

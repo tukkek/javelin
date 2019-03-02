@@ -42,50 +42,57 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class Preferences{
-	/** Configuration file key for {@link #MONITORPERFORMANCE}. */
+	/** Configuration file key for {@link #monitorperformance}. */
 	public static final String KEYCHECKPERFORMANCE="ai.checkperformance";
-	/** Configuration file key for {@link #MAXTHREADS}. */
+	/** Configuration file key for {@link #maxthreads}. */
 	public static final String KEYMAXTHREADS="ai.maxthreads";
 	static final String FILE="preferences.properties";
-	/** Key for {@link #TILESIZEBATTLE}. */
+	/** Key for {@link #tilesizebattle}. */
 	public static final String KEYTILEBATTLE="ui.battletile";
-	/** Key for {@link #TILESIZEWORLD}. */
+	/** Key for {@link #tilesizeworld}. */
 	public static final String KEYTILEWORLD="ui.worldtile";
-	/** Key for {@link #TILESIZEDUNGEON}. */
+	/** Key for {@link #tilesizedungeons}. */
 	public static final String KEYTILEDUNGEON="ui.dungeontile";
-	static Properties PROPERTIES=new Properties();
+
+	static Properties properties=new Properties();
 
 	/** If <code>true</code> will use {@link AiCache}. */
-	public static boolean AICACHEENABLED;
+	public static boolean aicacheenabled;
 	/**
 	 * In some system will prevent the CPU temperature from going above this
 	 * value.
 	 */
-	public static Integer MAXTEMPERATURE;
+	public static Integer maxtemperature;
 	/** Max {@link BattleAi} thinking time. */
-	public static int MAXMILISECONDSTHINKING;
+	public static int maxmilisecondsthinking;
 	/** Thread limit for {@link ThreadManager}. */
-	public static int MAXTHREADS;
+	public static int maxthreads;
 	/** If <code>true</code> {@link ThreadManager} will be self-monitoring. */
-	public static boolean MONITORPERFORMANCE;
+	public static boolean monitorperformance;
 	/** Time to wait for {@link Delay#WAIT}. */
-	public static int MESSAGEWAIT;
+	public static int messagewait;
 	/** Font color. */
-	public static String TEXTCOLOR;
+	public static String textcolor;
 	/**
 	 * If <code>true</code> backups the game on initialization.
 	 *
 	 * @see StateManager
 	 */
-	public static boolean BACKUP;
+	public static boolean backup;
 	/** How often to save the game, in minutes. */
-	public static int SAVEINTERVAL;
+	public static int saveinterval;
 	/** Tile size for {@link BattleScreen}. */
-	public static int TILESIZEBATTLE;
+	public static int tilesizebattle;
 	/** Tile size for {@link WorldScreen}. */
-	public static int TILESIZEWORLD;
+	public static int tilesizeworld;
 	/** Tile size for {@link DungeonScreen}. */
-	public static int TILESIZEDUNGEON;
+	public static int tilesizedungeons;
+	/**
+	 * External audio player (command).
+	 *
+	 * TODO shouldn't be necessary if and when using JavaFX
+	 */
+	public static String player;
 
 	static{
 		load();
@@ -93,8 +100,8 @@ public class Preferences{
 
 	synchronized static void load(){
 		try{
-			PROPERTIES.clear();
-			PROPERTIES.load(new FileReader(FILE));
+			properties.clear();
+			properties.load(new FileReader(FILE));
 		}catch(IOException e){
 			throw new RuntimeException(e);
 		}
@@ -102,7 +109,7 @@ public class Preferences{
 
 	static String getstring(String key){
 		try{
-			return PROPERTIES.getProperty(key);
+			return properties.getProperty(key);
 		}catch(MissingResourceException e){
 			return null;
 		}
@@ -168,34 +175,35 @@ public class Preferences{
 	 * Initializes or reloads all preferences.
 	 */
 	public static void init(){
-		AICACHEENABLED=getstring("ai.cache").equals("true");
-		MAXTEMPERATURE=getinteger("ai.maxtemperature",0);
-		MAXMILISECONDSTHINKING=Math.round(1000*getFloat("ai.maxsecondsthinking"));
+		aicacheenabled=getstring("ai.cache").equals("true");
+		maxtemperature=getinteger("ai.maxtemperature",0);
+		maxmilisecondsthinking=Math.round(1000*getFloat("ai.maxsecondsthinking"));
 		int cpus=Runtime.getRuntime().availableProcessors();
-		MAXTHREADS=Preferences.getinteger(KEYMAXTHREADS,cpus);
-		if(MAXTHREADS>cpus) MAXTHREADS=cpus;
-		MONITORPERFORMANCE=Preferences.getstring(KEYCHECKPERFORMANCE)
+		maxthreads=Preferences.getinteger(KEYMAXTHREADS,cpus);
+		if(maxthreads>cpus) maxthreads=cpus;
+		monitorperformance=Preferences.getstring(KEYCHECKPERFORMANCE)
 				.equals("true");
-		if(MONITORPERFORMANCE){
+		if(monitorperformance){
 			if(ThreadManager.performance==Integer.MIN_VALUE)
 				ThreadManager.performance=0;
 		}else
 			ThreadManager.performance=Integer.MIN_VALUE;
 
-		BACKUP=getstring("fs.backup").equals("true");
-		SAVEINTERVAL=getinteger("fs.saveinterval",9);
+		backup=getstring("fs.backup").equals("true");
+		saveinterval=getinteger("fs.saveinterval",9);
 
-		TILESIZEWORLD=getinteger(KEYTILEWORLD,32);
-		TILESIZEBATTLE=getinteger(KEYTILEBATTLE,32);
-		TILESIZEDUNGEON=getinteger(KEYTILEDUNGEON,32);
-		MESSAGEWAIT=Math.round(1000*getFloat("ui.messagedelay"));
-		TEXTCOLOR=getstring("ui.textcolor").toUpperCase();
+		tilesizeworld=getinteger(KEYTILEWORLD,32);
+		tilesizebattle=getinteger(KEYTILEBATTLE,32);
+		tilesizedungeons=getinteger(KEYTILEDUNGEON,32);
+		messagewait=Math.round(1000*getFloat("ui.messagedelay"));
+		textcolor=getstring("ui.textcolor").toUpperCase();
 		try{
-			TextZone.fontcolor=(Color)Color.class.getField(Preferences.TEXTCOLOR)
+			TextZone.fontcolor=(Color)Color.class.getField(Preferences.textcolor)
 					.get(null);
 		}catch(Exception e){
 			TextZone.fontcolor=Color.BLACK;
 		}
+		player=getstring("io.player");
 
 		initkeys("keys.world",new WorldKeysScreen());
 		initkeys("keys.battle",new BattleKeysScreen());

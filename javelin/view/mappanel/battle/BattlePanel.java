@@ -122,6 +122,6 @@ public class BattlePanel extends MapPanel{
 
 	@Override
 	protected int gettilesize(){
-		return Preferences.TILESIZEBATTLE;
+		return Preferences.tilesizebattle;
 	}
 }

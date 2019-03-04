@@ -2,6 +2,7 @@ package javelin.controller.map;
 
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import javelin.controller.Point;
 import javelin.controller.Weather;
@@ -169,5 +170,29 @@ public abstract class Map{
 			map+="\n";
 		}
 		return map;
+	}
+
+	/**
+	 * Seals off the outer border of the map.
+	 *
+	 * @return Squares borded off.
+	 */
+	protected HashSet<Point> close(){
+		var width=map.length;
+		var height=map[0].length;
+		var border=new HashSet<Point>((width+height)*2-4);
+		for(int x=0;x<width;x++){
+			map[x][0].blocked=true;
+			border.add(new Point(x,0));
+			map[x][width-1].blocked=true;
+			border.add(new Point(x,width-1));
+		}
+		for(int y=0;y<height;y++){
+			map[0][y].blocked=true;
+			border.add(new Point(0,y));
+			map[height-1][y].blocked=true;
+			border.add(new Point(height-1,y));
+		}
+		return border;
 	}
 }

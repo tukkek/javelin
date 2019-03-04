@@ -4,6 +4,7 @@ import java.util.List;
 
 import javelin.controller.map.Map;
 import javelin.controller.map.Maps;
+import javelin.controller.map.terrain.underground.AncientCave;
 import javelin.controller.map.terrain.underground.Constructed;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.old.underground.BigCave;
@@ -30,7 +31,7 @@ public class Underground extends Terrain{
 	public Maps getmaps(){
 		Maps maps=new Maps();
 		for(Map m:List.of(new Caves(),new BigCave(),new Maze(),new Pit(),
-				new Floor(),new Complex(),new Constructed())){
+				new Floor(),new Complex(),new Constructed(),new AncientCave())){
 			Dungeon d=Dungeon.active;
 			if(d!=null){
 				m.floor=Images.get(d.floor);

@@ -14,7 +14,7 @@ import javelin.view.Images;
  * @author alex
  */
 public class Caves extends Map{
-	static final int SIZE=DndMap.SIZE;
+	protected static final int SIZE=DndMap.SIZE;
 	static final int[] DELTAS=new int[]{-1,0,+1};
 	int coresize=1;
 
@@ -50,20 +50,6 @@ public class Caves extends Map{
 			s.obstructed=true;
 		}
 		close();
-	}
-
-	/**
-	 * Selas off the outer border of the map.
-	 */
-	protected void close(){
-		for(int x=0;x<SIZE;x++){
-			map[x][0].blocked=true;
-			map[x][SIZE-1].blocked=true;
-		}
-		for(int y=0;y<SIZE;y++){
-			map[0][y].blocked=true;
-			map[SIZE-1][y].blocked=true;
-		}
 	}
 
 	/**

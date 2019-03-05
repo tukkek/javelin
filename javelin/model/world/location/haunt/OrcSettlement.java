@@ -11,6 +11,7 @@ public class OrcSettlement extends Haunt{
 	}
 
 	@Override
+	public
 	LocationMap getmap(){
 		return new OrcSettlementMap();
 	}

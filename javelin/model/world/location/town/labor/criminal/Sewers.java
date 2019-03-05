@@ -52,7 +52,7 @@ public class Sewers extends Fortification{
 		protected void done(Location goal){
 			super.done(goal);
 			Sewers s=(Sewers)goal;
-			s.generategarrison();
+			s.populate();
 		}
 	}
 
@@ -69,7 +69,7 @@ public class Sewers extends Fortification{
 		public void done(){
 			super.done();
 			s.level+=1;
-			s.generategarrison();
+			s.populate();
 		}
 
 		@Override
@@ -92,7 +92,7 @@ public class Sewers extends Fortification{
 		sacrificeable=false;
 	}
 
-	void generategarrison(){
+	void populate(){
 		int level=1+this.level*5;
 		generategarrison(level,level+4);
 	}
@@ -100,7 +100,7 @@ public class Sewers extends Fortification{
 	@Override
 	public void turn(long time,WorldScreen world){
 		super.turn(time,world);
-		if(garrison.isEmpty()&&RPG.chancein(30)) generategarrison();
+		if(garrison.isEmpty()&&RPG.chancein(30)) populate();
 	}
 
 	@Override

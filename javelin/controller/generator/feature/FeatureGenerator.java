@@ -27,6 +27,7 @@ import javelin.model.world.location.PointOfInterest;
 import javelin.model.world.location.ResourceSite;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
+import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.fortification.Guardian;
 import javelin.model.world.location.fortification.RealmAcademy;
 import javelin.model.world.location.fortification.Trove;
@@ -149,7 +150,14 @@ public class FeatureGenerator implements Serializable{
 			Frequency g=generators.get(feature);
 			if(generatingworld&&!g.starting) continue;
 			if(g.max!=null&&World.getall(feature).size()>=g.max) continue;
-			if(RPG.random()<=chance*g.chance) g.generate(feature).place();
+			if(RPG.random()<=chance*g.chance){
+				var f=g.generate(feature);
+				f.place();
+				if(f.realm!=null&&f instanceof Fortification&&generatingworld){
+					Actor town=((Fortification)f).findclosest(Town.class);
+					f.realm=town==null?null:((Town)town).realm;
+				}
+			}
 		}
 	}
 

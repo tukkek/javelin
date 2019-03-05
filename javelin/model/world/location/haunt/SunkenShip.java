@@ -11,6 +11,7 @@ public class SunkenShip extends Haunt{
 	}
 
 	@Override
+	public
 	LocationMap getmap(){
 		return new SunkenShipMap();
 	}

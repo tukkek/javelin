@@ -12,6 +12,7 @@ public class Graveyard extends Haunt{
 	}
 
 	@Override
+	public
 	LocationMap getmap(){
 		return new GraveyardMap();
 	}

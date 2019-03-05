@@ -20,6 +20,7 @@ import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.old.RPG;
+import javelin.view.screen.WorldScreen;
 
 /**
  * See scenarios.txt.
@@ -36,7 +37,7 @@ public class ArtOfWar extends Scenario{
 	static final int ENDGAME=INITIALEL+20;
 	static final int NHIRES=5;
 
-	int el=INITIALEL;
+	//	int el=INITIALEL;
 
 	List<Combatants> original=new ArrayList<>();
 
@@ -54,10 +55,9 @@ public class ArtOfWar extends Scenario{
 	public boolean win(){
 		for(Actor a:World.getactors()){
 			WarLocation wl=a instanceof WarLocation?(WarLocation)a:null;
-			if(wl!=null&&wl.win&&wl.ishostile()) return false;
+			if(wl!=null&&wl.town&&wl.realm!=null) return false;
 		}
-		Javelin.message("You have captured the strongest garisson!\n"
-				+"Congratulations, you win!",true);
+		Javelin.message("You have captured all towns, congratulations!",true);
 		return true;
 	}
 
@@ -131,33 +131,102 @@ public class ArtOfWar extends Scenario{
 	public void end(Fight f,boolean victory){
 		for(var c:Squad.active)
 			Fountain.heal(c);
-		if(!victory){
-			el-=1;
-			reinforce("You have lost reputation...");
-			return;
-		}
-		var elblue=ChallengeCalculator.calculateel(Fight.originalblueteam);
-		var elred=ChallengeCalculator.calculateel(Fight.originalredteam);
-		if(elred>=elblue){
-			el+=1;
-			reinforce("You have increased your reputation!");
-		}else
-			reinforce("Your reputation remains unchanged.");
+		//		if(!victory){
+		//			el-=1;
+		//			reinforce("You have lost reputation...");
+		//			return;
+		//		}
+		//		var elblue=ChallengeCalculator.calculateel(Fight.originalblueteam);
+		//		var elred=ChallengeCalculator.calculateel(Fight.originalredteam);
+		//		if(elred>=elblue){
+		//			el+=1;
+		//			reinforce("You have increased your reputation!");
+		//		}else
+		//			reinforce("Your reputation remains unchanged.");
 	}
 
-	void reinforce(String title){
-		var available=new ArrayList<List<Combatants>>();
-		available.add(original);
-		for(var actor:World.getactors()){
-			var location=actor instanceof WarLocation?(WarLocation)actor:null;
-			if(location!=null&&!location.ishostile()) available.add(location.hires);
+	//	void reinforce(String title){
+	//		var available=new ArrayList<List<Combatants>>();
+	//		available.add(original);
+	//		for(var actor:World.getactors()){
+	//			var location=actor instanceof WarLocation?(WarLocation)actor:null;
+	//			if(location!=null&&!location.ishostile()) available.add(location.hires);
+	//		}
+	//		var options=new ArrayList<Combatants>(available.size());
+	//		for(var hires:available){
+	//			var squad=selecthires(hires,Squad.active,el,1);
+	//			if(!squad.isEmpty()) options.add(squad.get(0));
+	//		}
+	//		if(!options.isEmpty())
+	//			reinforce(title+"\nSelect reinforcements.",el,options);
+	//	}
+
+	@Override
+	public void endday(){
+		super.endday();
+		var actors=World.getactors();
+		var armies=actors.stream().filter(a->a instanceof Army).map(a->(Army)a)
+				.collect(Collectors.toList());
+		for(var a:armies)
+			move(a,actors);
+		if(WorldScreen.lastday%7!=0&&WorldScreen.lastday!=1) return;
+		reinforceplayer(actors);
+		var towns=actors.stream().filter(a->a instanceof WarLocation)
+				.map(a->(WarLocation)a).filter(wl->wl.town&&wl.realm!=null)
+				.collect(Collectors.toList());
+		for(var town:towns){
+			var army=armies.stream().filter(a->a.realm==town.realm).findAny()
+					.orElse(null);
+			reinforceai(actors,town,army);
 		}
-		var options=new ArrayList<Combatants>(available.size());
-		for(var hires:available){
-			var squad=selecthires(hires,Squad.active,el,1);
-			if(!squad.isEmpty()) options.add(squad.get(0));
+	}
+
+	void reinforceplayer(ArrayList<Actor> actors){
+		var captured=actors.stream()
+				.filter(a->a instanceof WarLocation&&a.realm==null)
+				.map(a->(WarLocation)a).collect(Collectors.toList());
+		for(var c:captured){
+			var choice=Javelin.choose("Choose your weekly reinforcements:",c.hires,
+					true,true);
+			Squad.active.members.addAll(c.hires.get(choice).generate());
 		}
-		if(!options.isEmpty())
-			reinforce(title+"\nSelect reinforcements.",el,options);
+	}
+
+	void reinforceai(ArrayList<Actor> actors,WarLocation town,Army army){
+		var captured=actors.stream()
+				.filter(a->a instanceof WarLocation&&a.realm==town.realm)
+				.map(a->(WarLocation)a).collect(Collectors.toList());
+		List<Combatant> reinforcements=new ArrayList<>();
+		for(var c:captured)
+			reinforcements.addAll(RPG.pick(c.hires).generate());
+		if(army==null){
+			army=new Army(town.x,town.y,reinforcements,town.realm);
+			while(World.get(army.x,army.y,actors)!=null)
+				army.displace();
+			army.place();
+		}else
+			army.squad.addAll(reinforcements);
+	}
+
+	void move(Army army,ArrayList<Actor> actors){
+		var target=actors.stream()
+				.filter(a->a instanceof WarLocation&&a.realm!=army.realm
+						&&army.getel()>=a.getel(null))
+				.map(a->(WarLocation)a).sorted((a,b)->a.distanceinsteps(army.x,army.y)
+						-b.distanceinsteps(army.x,army.y))
+				.findFirst().orElse(null);
+		if(target==null) return;
+		if(target.distanceinsteps(army.x,army.y)==1){
+			target.realm=army.realm;
+			target.garrison.clear();
+			target.garrison.addAll(army.squad);
+			army.remove();
+		}
+		if(target.x>army.x)
+			army.x+=1;
+		else if(target.x<army.x) army.x-=1;
+		if(target.y>army.y)
+			army.y+=1;
+		else if(target.y<army.y) army.y-=1;
 	}
 }

@@ -17,7 +17,6 @@ import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.town.Town;
 import javelin.old.RPG;
 
 /**
@@ -129,7 +128,7 @@ public abstract class Fortification extends Location{
 		targetel=RPG.r(minlevel,maxlevel);
 	}
 
-	private Actor findclosest(Class<? extends Actor> type){
+	public Actor findclosest(Class<? extends Actor> type){
 		Actor closest=null;
 		for(Actor a:World.getall(type))
 			if(closest==null||Walker.distance(a.x,a.y,x,y)<Walker.distance(closest.x,
@@ -183,16 +182,19 @@ public abstract class Fortification extends Location{
 	@Override
 	public void place(){
 		super.place();
-		if(realm!=null){
-			Actor town=findclosest(Town.class);
-			realm=town==null?null:((Town)town).realm;
-		}
 		if(generategarrison&&garrison.isEmpty()){
-			generategarrison(minlevel,maxlevel);
+			generategarrison();
 			generategarrison=false;
 			if(World.scenario.clearlocations&&clear) capture();
 		}
 		if(!ishostile()) realm=null;
+	}
+
+	/**
+	 * TODO change invoked method to be this one without parameters.
+	 */
+	public void generategarrison(){
+		generategarrison(minlevel,maxlevel);
 	}
 
 	@Override

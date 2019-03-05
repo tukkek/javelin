@@ -10,6 +10,7 @@ public class ShatteredTemple extends Haunt{
 	}
 
 	@Override
+	public
 	LocationMap getmap(){
 		return new ShatteredTempleMap();
 	}

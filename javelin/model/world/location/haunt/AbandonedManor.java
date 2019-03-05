@@ -12,6 +12,7 @@ public class AbandonedManor extends Haunt{
 	}
 
 	@Override
+	public
 	LocationMap getmap(){
 		return new AbandonedManorMap();
 	}

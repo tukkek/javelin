@@ -33,4 +33,14 @@ public class DungeonTier{
 		floor="dungeonfloor"+tilesuffix;
 		wall="dungeonwall"+tilesuffix;
 	}
+
+	static public DungeonTier get(int level){
+		for(var t:TIERS)
+			if(level<=t.maxlevel) return t;
+		return KEEP;
+	}
+
+	public String getimagename(){
+		return "location"+name.toLowerCase();
+	}
 }

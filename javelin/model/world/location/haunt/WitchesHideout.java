@@ -11,6 +11,7 @@ public class WitchesHideout extends Haunt{
 	}
 
 	@Override
+	public
 	LocationMap getmap(){
 		return new WitchesHideoutMap();
 	}

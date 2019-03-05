@@ -8,6 +8,7 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.comparator.MonstersByName;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.LocationFight;
+import javelin.controller.fight.Siege;
 import javelin.controller.map.location.LocationMap;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -62,7 +63,8 @@ public abstract class Haunt extends Fortification{
 		return new LocationFight(this,getmap());
 	}
 
-	abstract LocationMap getmap();
+	/** @return Map to be used in a {@link Siege}. */
+	public abstract LocationMap getmap();
 
 	@Override
 	protected void generategarrison(int minlevel,int maxlevel){

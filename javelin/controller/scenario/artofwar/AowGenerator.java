@@ -14,6 +14,8 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.dungeon.DungeonTier;
+import javelin.model.world.location.haunt.Haunt;
 import javelin.model.world.location.haunt.SunkenShip;
 import javelin.model.world.location.haunt.WitchesHideout;
 import javelin.old.RPG;
@@ -69,22 +71,80 @@ public class AowGenerator extends FeatureGenerator{
 					World.getseed().map[point.x][point.y]=t;
 		}
 
-		public void place(WarLocation l){
+		public Location place(WarLocation l){
 			location=l;
 			l.x=center.x;
 			l.y=center.y;
 			l.place();
+			if(l.hires.isEmpty()) l.generategarrison();
+			return l;
 		}
 	}
 
 	transient final List<Territory> territories=new ArrayList<>();
 
 	@Override
-	public Location generate(LinkedList<Realm> realms,
+	public Location generate(LinkedList<Realm> realmsp,
 			ArrayList<HashSet<Point>> regions,World w){
+		var realms=realmsp.subList(0,RPG.r(2,realmsp.size()));
+		List<Haunt> haunts=generatehaunts();
+		var nlocations=ArtOfWar.ENDGAME-ArtOfWar.INITIALEL+realms.size()
+				+haunts.size()-BANNED.size();
+		var dungeons=nlocations/10;
+		nlocations+=dungeons;
+		buildterritories(nlocations);
+		var start=generatelocations(realms,haunts,dungeons);
+		maprealms();
+		return start;
+	}
+
+	void maprealms(){
+		var towns=territories.stream().filter(t->t.location.town)
+				.collect(Collectors.toList());
+		var territories=this.territories.stream().filter(t->!t.location.town)
+				.collect(Collectors.toList());
+		for(var t:territories){
+			var p=t.location.getlocation();
+			towns.sort((a,b)->a.location.getlocation().distanceinsteps(p)
+					-b.location.getlocation().distanceinsteps(p));
+			t.location.realm=towns.get(0).location.realm;
+		}
+	}
+
+	Location generatelocations(List<Realm> realms,List<Haunt> haunts,
+			int dungeons){
+		var territories=RPG.shuffle(new LinkedList<>(this.territories));
+		realms.forEach(r->{
+			var town=new WarLocation(ArtOfWar.ENDGAME,"locationtowncity");
+			town.town=true;
+			territories.pop().place(town).realm=r;
+		});
+		for(var h:haunts)
+			if(!BANNED.contains(h.getClass())){
+				h.generategarrison();
+				territories.pop().place(new WarLocation(h));
+			}
+		for(var i=0;i<dungeons;i++){
+			var el=RPG.r(ArtOfWar.INITIALEL,ArtOfWar.ENDGAME);
+			var dungeon=new WarLocation(el,DungeonTier.get(el).getimagename());
+			dungeon.setdungeon();
+			territories.pop().place(dungeon);
+		}
+		var el=ArtOfWar.INITIALEL;
+		var high=(ArtOfWar.INITIALEL+ArtOfWar.ENDGAME)/2;
+		Location start=null;
+		while(!territories.isEmpty()){
+			var l=new WarLocation(el,el>=high?"flagpolered":"flagpoleblue");
+			territories.pop().place(l);
+			el+=1;
+			if(start==null) start=l;
+		}
+		return start;
+	}
+
+	void buildterritories(int nlocations){
 		int area=World.scenario.size*World.scenario.size;
-		var locations=ArtOfWar.ENDGAME-ArtOfWar.INITIALEL;
-		for(;locations>0;locations--)
+		for(;nlocations>0;nlocations--)
 			territories.add(new Territory());
 		while(territories.stream()
 				.collect(Collectors.summingInt(t->t.area.size()))<area)
@@ -92,17 +152,5 @@ public class AowGenerator extends FeatureGenerator{
 				t.expand();
 		for(var t:territories)
 			t.fill();
-		var start=RPG.pick(territories);
-		var sorted=territories.stream()
-				.sorted((a,b)->start.center.distanceinsteps(a.center)
-						-start.center.distanceinsteps(b.center))
-				.collect(Collectors.toList());
-		var el=ArtOfWar.INITIALEL;
-		for(var t:sorted){
-			t.place(new WarLocation(el));
-			el+=1;
-		}
-		sorted.get(sorted.size()-1).location.win=true;
-		return start.location;
 	}
 }

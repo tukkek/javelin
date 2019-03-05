@@ -109,7 +109,7 @@ public class Door extends Feature{
 		boolean forced=false;
 		boolean alerted=false;
 		var attempts=0;
-		while(!forced&&!alerted){
+		while(!forced&&!alerted&&attempts<10){
 			forced=attemptbreak(strength);
 			alerted=RPG.chancein(10);
 			attempts+=1;

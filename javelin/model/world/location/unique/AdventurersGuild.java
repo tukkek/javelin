@@ -149,8 +149,10 @@ public class AdventurersGuild extends UniqueLocation{
 	 *          {@link Combatant}, until all possibilities are exhausted (if any).
 	 * @param xp How much experience to spend at most. Will also be subtracted
 	 *          from {@link Combatant#xp}.
+	 * @return <code>true</code> if at least one {@link Upgrade} has been applied.
 	 */
-	static public void train(Combatant student,List<Upgrade> upgrades,float xp){
+	static public boolean train(Combatant student,List<Upgrade> upgrades,
+			float xp){
 		var learned=new ArrayList<Upgrade>();
 		while(xp>0){
 			Upgrade applied=null;
@@ -168,11 +170,13 @@ public class AdventurersGuild extends UniqueLocation{
 			student.xp=student.xp.subtract(new BigDecimal(cost));
 			xp-=cost;
 		}
-		if(!learned.isEmpty()){
+		var haslearned=!learned.isEmpty();
+		if(haslearned){
 			student.postupgrade();
 			ChallengeCalculator.calculatecr(student.source);
 		}
 		printresult(student,learned);
+		return haslearned;
 	}
 
 	static void printresult(Combatant student,ArrayList<Upgrade> learned){

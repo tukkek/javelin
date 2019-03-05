@@ -60,7 +60,7 @@ public class Kill extends Quest{
 
 	@Override
 	protected String getname(){
-		return "Capture: "+target.descriptionknown.toLowerCase();
+		return "Capture: "+target;
 	}
 
 	@Override

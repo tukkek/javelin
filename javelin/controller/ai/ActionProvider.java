@@ -37,7 +37,8 @@ public final class ActionProvider
 		float sum=0;
 		for(final ChanceNode cn:newsucessors)
 			sum+=cn.chance;
-		if(.95>=sum||sum>=1.05f) throw new RuntimeException("Invalid chances");
+		if(.95>=sum||sum>=1.05f) //
+			throw new RuntimeException("Invalid chances");
 	}
 
 	final BattleState battleState;

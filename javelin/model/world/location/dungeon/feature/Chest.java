@@ -59,9 +59,7 @@ public class Chest extends Feature{
 			Javelin.message(message,false);
 			Squad.active.gold+=gold;
 		}else{
-			String message="Party receives "+items+"!";
-			int quantity=items.size();
-			if(quantity!=1) message+=" (x"+quantity+")";
+			String message="Party receives "+Javelin.group(items)+"!";
 			Javelin.message(message,false);
 			for(Item i:items)
 				i.grab();

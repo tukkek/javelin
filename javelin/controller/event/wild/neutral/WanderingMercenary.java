@@ -50,12 +50,14 @@ public class WanderingMercenary extends Wanderer{
 	public void happen(Squad s){
 		var fee=Javelin.format(MercenariesGuild.getfee(mercenary));
 		var prompt="A wandering "+mercenary.toString().toLowerCase()
-				+" mercenary is willing to join you for $"+fee+"/day. Do you accept?";
+				+" mercenary is willing to join you for $"+fee+"/day. "+"You have $"
+				+Javelin.format(Squad.active.gold)+". "+"Do you accept?";
 		List<String> options=List.of(HIRE,DECLINE,ATTACK);
 		var choice=options.get(Javelin.choose(prompt,options,true,true));
 		if(choice==DECLINE) return;
 		var mercenary=new Combatant(this.mercenary,true);
-		if(choice==ATTACK) throw new StartBattle(new EventFight(mercenary,location));
+		if(choice==ATTACK)
+			throw new StartBattle(new EventFight(mercenary,location));
 		if(choice==HIRE){
 			mercenary.setmercenary(true);
 			s.add(mercenary);

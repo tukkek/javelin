@@ -11,6 +11,7 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.scenario.dungeondelve.DungeonDelve;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
+import javelin.controller.upgrade.classes.Aristocrat;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -64,6 +65,7 @@ public class LearningStone extends Feature{
 		var set=RPG.pick(new ArrayList<>(upgrades.values()));
 		this.upgrades.addAll(set);
 		type=set.name.toLowerCase();
+		if(type.contains("magic")) this.upgrades.add(Aristocrat.SINGLETON);
 	}
 
 	@Override
@@ -73,8 +75,8 @@ public class LearningStone extends Feature{
 			return false;
 		revealed=true;
 		WorldMove.abort=true;
-		var options=Squad.active.members.stream().map(c->c+" ("+c.gethumanxp()+")")
-				.collect(Collectors.toList());
+		var options=Squad.active.members.stream().filter(c->!c.mercenary)
+				.map(c->c+" ("+c.gethumanxp()+")").collect(Collectors.toList());
 		options.add(TAKE);
 		var prompt="This is a "+getname()+". Who will touch from it?";
 		var choice=Javelin.choose(prompt,options,true,false);
@@ -85,7 +87,8 @@ public class LearningStone extends Feature{
 			return true;
 		}
 		var student=Squad.active.members.get(choice);
-		AdventurersGuild.train(student,upgrades,student.xp.floatValue());
+		if(AdventurersGuild.train(student,upgrades,student.xp.floatValue()))
+			remove();
 		return true;
 	}
 

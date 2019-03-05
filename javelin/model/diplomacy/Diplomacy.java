@@ -37,6 +37,8 @@ import javelin.view.screen.WorldScreen;
  * TODO with 2.0, when we have html documentation instead of F1-F12, include
  * overview and card documentation
  *
+ * TODO "spontaneous change alignment" mandates
+ *
  * @author alex
  * @see Town#ishostile()
  * @see Town#generatereputation()

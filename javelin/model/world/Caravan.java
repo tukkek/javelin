@@ -155,8 +155,7 @@ public class Caravan extends Actor{
 
 	void announce(Town town){
 		MessagePanel.active.clear();
-		var notification="A caravan arrives at "+town
-				+", city grows! Press ENTER to continue...";
+		var notification="A caravan arrives at "+town+", city grows!";
 		Javelin.message(notification,true);
 		MessagePanel.active.clear();
 	}

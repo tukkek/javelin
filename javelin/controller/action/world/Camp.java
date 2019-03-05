@@ -65,7 +65,7 @@ public class Camp extends WorldAction{
 		if(period==null) return;
 		final int hours=period[0];
 		final int rest=period[1];
-		for(int i=0;i<hours;i++){
+		for(int i=0;i<=hours;i++){
 			Squad.active.hourselapsed+=1;
 			if(World.scenario.worldencounters)
 				RandomEncounter.encounter(1/WorldScreen.HOURSPERENCOUNTER);

@@ -21,7 +21,7 @@ import javelin.model.world.location.dungeon.feature.Spirit;
  */
 public class GoodTemple extends Temple{
 	private static final String FLUFF="The bizarre and tall complex seems to be carved entirely out of ivory and white stones.\n"
-			+"Despite being in no place of particular importance the common animals seem to avoid it.\n"
+			+"Despite being in no place of particular importance, the common animals seem to avoid it.\n"
 			+"In fact, the eerie silence around the entire place makes you wonder if this is truly happening or only a fleeting dream.\n"
 			+"You enter the holy ground, daring say nothing as you breath deeply in anticipation of the vistas inside.";
 

@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import javelin.Javelin;
 import javelin.controller.comparator.DescendingLevelComparator;
 import javelin.model.item.Item;
+import javelin.model.item.Wand;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.world.World;
@@ -211,7 +212,7 @@ public class RewardCalculator{
 				pool-=i.price;
 				items.add(i.clone());
 				forbidden.add(i.getClass());
-				if(i instanceof Artifact) break;
+				if(i instanceof Artifact||i instanceof Wand) break;
 			}
 		}
 		return items;

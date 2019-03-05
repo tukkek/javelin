@@ -103,24 +103,28 @@ public class Trader extends Inhabitant{
 	}
 
 	void sell(){
-		var bags=Squad.active.equipment;
-		var size=bags.count();
-		var items=new ArrayList<Item>(size);
-		var options=new ArrayList<String>(size);
-		for(var member:Squad.active.members)
-			for(var item:bags.get(member)){
-				items.add(item);
-				var value=Javelin.format(Math.min(item.price,sell));
-				options.add("["+member+"] "+item+" ($"+value+")");
-			}
-		String prompt="Which item to sell?\n\n";
-		prompt+=inhabitant+" will pay up to $"+Javelin.format(sell)+" for an item.";
-		var choice=Javelin.choose(prompt,options,true,false);
-		if(choice<0) return;
-		var sold=items.get(choice);
-		bags.remove(sold);
-		inventory.add(sold);
-		sort();
-		Squad.active.gold+=Math.min(sold.price,sell);
+		var choice=0;
+		while(choice>=0){
+			var bags=Squad.active.equipment;
+			var size=bags.count();
+			var items=new ArrayList<Item>(size);
+			var options=new ArrayList<String>(size);
+			for(var member:Squad.active.members)
+				for(var item:bags.get(member)){
+					items.add(item);
+					var value=Javelin.format(Math.min(item.price,sell));
+					options.add("["+member+"] "+item+" ($"+value+")");
+				}
+			String prompt="Which item to sell?\n\n";
+			prompt+=inhabitant+" will pay up to $"+Javelin.format(sell)
+					+" for an item.";
+			choice=Javelin.choose(prompt,options,true,false);
+			if(choice<0) return;
+			var sold=items.get(choice);
+			bags.remove(sold);
+			inventory.add(sold);
+			sort();
+			Squad.active.gold+=Math.min(sold.price,sell);
+		}
 	}
 }

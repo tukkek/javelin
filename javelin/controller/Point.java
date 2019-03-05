@@ -113,4 +113,14 @@ public class Point implements Cloneable,Serializable{
 		x+=RPG.r(-1,+1);
 		y+=RPG.r(-1,+1);
 	}
+
+	/**
+	 * Like {@link #displace()} but only on one axis at a time.
+	 */
+	public void displaceaxis(){
+		if(RPG.chancein(2))
+			x+=RPG.chancein(2)?+1:-1;
+		else
+			y+=RPG.chancein(2)?+1:-1;
+	}
 }

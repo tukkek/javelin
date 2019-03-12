@@ -304,6 +304,10 @@ public class Incursion extends Actor{
 
 	@Override
 	public boolean interact(){
+		if(Debug.disablecombat){
+			remove();
+			return true;
+		}
 		if(!Location.headsup(squad,toString(),true,this)) return false;
 		throw new StartBattle(new IncursionFight(this));
 	}

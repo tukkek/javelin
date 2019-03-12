@@ -169,43 +169,48 @@ public class ArtOfWar extends Scenario{
 				.collect(Collectors.toList());
 		for(var a:armies)
 			move(a,actors);
-		if(WorldScreen.lastday%7!=0&&WorldScreen.lastday!=1) return;
+		if(WorldScreen.lastday<7||WorldScreen.lastday%7!=0) return;
 		reinforceplayer(actors);
 		var towns=actors.stream().filter(a->a instanceof WarLocation)
 				.map(a->(WarLocation)a).filter(wl->wl.town&&wl.realm!=null)
 				.collect(Collectors.toList());
-		for(var town:towns){
-			var army=armies.stream().filter(a->a.realm==town.realm).findAny()
-					.orElse(null);
-			reinforceai(actors,town,army);
-		}
+		for(var town:towns)
+			reinforceai(actors,town);
 	}
 
 	void reinforceplayer(ArrayList<Actor> actors){
-		var captured=actors.stream()
-				.filter(a->a instanceof WarLocation&&a.realm==null)
+		var all=actors.stream().filter(a->a instanceof WarLocation)
 				.map(a->(WarLocation)a).collect(Collectors.toList());
+		var captured=all.stream().filter(wl->wl.realm==null&&wl.canhire)
+				.sorted((a,b)->Float.compare(a.el,b.el)).collect(Collectors.toList());
+		if(captured.isEmpty()) return;
+		var from=captured.get(captured.size()-1).getlocation();
+		while(!World.validatecoordinate(from.x,from.y)
+				||World.get(from.x,from.y,actors)!=null
+				||Terrain.get(from.x,from.y).equals(Terrain.WATER))
+			from.displace();
+		var s=new Squad(from.x,from.y,Squad.active.hourselapsed,null);
+		s.place();
 		for(var c:captured){
 			var choice=Javelin.choose("Choose your weekly reinforcements:",c.hires,
 					true,true);
-			Squad.active.members.addAll(c.hires.get(choice).generate());
+			s.members.addAll(c.hires.get(choice).generate());
 		}
+		all.forEach(wl->wl.canhire=true);
 	}
 
-	void reinforceai(ArrayList<Actor> actors,WarLocation town,Army army){
+	void reinforceai(ArrayList<Actor> actors,WarLocation town){
 		var captured=actors.stream()
 				.filter(a->a instanceof WarLocation&&a.realm==town.realm)
 				.map(a->(WarLocation)a).collect(Collectors.toList());
 		List<Combatant> reinforcements=new ArrayList<>();
 		for(var c:captured)
 			reinforcements.addAll(RPG.pick(c.hires).generate());
-		if(army==null){
-			army=new Army(town.x,town.y,reinforcements,town.realm);
-			while(World.get(army.x,army.y,actors)!=null)
-				army.displace();
-			army.place();
-		}else
-			army.squad.addAll(reinforcements);
+		var army=new Army(town.x,town.y,reinforcements,town.realm);
+		while(!World.validatecoordinate(army.x,army.y)
+				||World.get(army.x,army.y,actors)!=null)
+			army.displace();
+		army.place();
 	}
 
 	void move(Army army,ArrayList<Actor> actors){

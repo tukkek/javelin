@@ -4,8 +4,8 @@ import java.awt.Image;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import javelin.Javelin;
 import javelin.controller.InfiniteList;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.minigame.battlefield.Reinforcement;
@@ -14,19 +14,24 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.item.Tier;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
+import javelin.model.unit.Squad;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.haunt.Haunt;
 import javelin.old.RPG;
 import javelin.view.Images;
-import javelin.view.screen.InfoScreen;
 
 public class WarLocation extends Fortification{
+	static final String PRODUCING="This location has already produced units for this week...";
+	static final String PROMPT="Select reinforcements to hire.\n"
+			+"Note that locations utilized this way will not automatically produce units at the end of the week.";
 	static final String DESCRIPTION="A battlefield";
 	float el;
 	public List<Combatants> hires=new ArrayList<>();
 	public String avatar;
 	Class<? extends Map> map;
 	public boolean town=false;
+	/** False if already produced units for this week. */
+	public boolean canhire=true;
 
 	public WarLocation(float el,String avatar){
 		super(DESCRIPTION,DESCRIPTION,0,0);
@@ -89,18 +94,25 @@ public class WarLocation extends Fortification{
 					}
 			throw b;
 		}
+		if(!canhire){
+			Javelin.message(PRODUCING,false);
+			return false;
+		}
 		hires.sort((a,b)->a.toString().compareTo(b.toString()));
-		var s=new InfoScreen("");
-		var message="This is a previously conquered garisson.\n"
-				+"It may provide access to the following reinforcements after a battle:\n\n";
-		s.print(message
-				+hires.stream().map(h->"- "+h).collect(Collectors.joining("\n")));
-		s.getInput();
+		var choice=Javelin.choose(PROMPT,hires,true,false);
+		if(choice<0) return true;
+		Squad.active.members.addAll(hires.get(choice).generate());
+		canhire=false;
 		return true;
 	}
 
 	public void setdungeon(){
 		terrain=Terrain.UNDERGROUND;
 		map=RPG.pick(terrain.getmaps()).getClass();
+	}
+
+	@Override
+	public boolean isworking(){
+		return !canhire;
 	}
 }

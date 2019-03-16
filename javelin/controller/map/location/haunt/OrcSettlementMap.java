@@ -24,7 +24,7 @@ public class OrcSettlementMap extends LocationMap{
 			for(int deltay=-1;deltay<=+1;deltay++){
 				int x=originx+deltax;
 				int y=originy+deltay;
-				if(validatecoordinate(x,y)&&map[x][y].blocked) return true;
+				if(validate(x,y)&&map[x][y].blocked) return true;
 			}
 		return false;
 	}

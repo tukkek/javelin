@@ -43,7 +43,7 @@ public class LocationFightSetup extends BattleSetup{
 				for(Point delta:DELTAS){
 					int x=p.x+delta.x;
 					int y=p.y+delta.y;
-					if(map.validatecoordinate(x,y)&&place(c,x,y)){
+					if(map.validate(x,y)&&place(c,x,y)){
 						startingarea.add(new Point(x,y));
 						continue teamplacement;
 					}

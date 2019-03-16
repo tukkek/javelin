@@ -141,8 +141,8 @@ public abstract class Map{
 		return name.hashCode();
 	}
 
-	public boolean validatecoordinate(int x,int y){
-		return 0<=Math.min(x,y)&&Math.max(x,y)<map.length;
+	public boolean validate(int x,int y){
+		return 0<=x&&x<map.length&&0<=y&&y<map[0].length;
 	}
 
 	/**
@@ -194,5 +194,15 @@ public abstract class Map{
 			border.add(new Point(height-1,y));
 		}
 		return border;
+	}
+
+	/** @return Any random point in this map. */
+	protected Point getrandompoint(){
+		return new Point(RPG.r(0,map.length-1),RPG.r(0,map[0].length-1));
+	}
+
+	/** @return Total map area in tiles (width times height). */
+	protected int getarea(){
+		return map.length*map[0].length;
 	}
 }

@@ -25,16 +25,12 @@ import javax.swing.JPanel;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.TextReader;
-import javelin.controller.fight.minigame.CrimsonWar;
 import javelin.controller.fight.minigame.Minigame;
-import javelin.controller.fight.minigame.MonsterMadness;
 import javelin.controller.fight.minigame.arena.Arena;
-import javelin.controller.fight.minigame.battlefield.Battlefield;
 import javelin.controller.scenario.Campaign;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.scenario.artofwar.ArtOfWar;
 import javelin.controller.scenario.dungeondelve.DungeonDelve;
-import javelin.controller.scenario.dungeonworld.DungeonWorld;
 import javelin.model.world.World;
 
 /**
@@ -50,12 +46,12 @@ public class LauncherDialog extends JFrame{
 	static{
 		SCENARIOS.put("Campaign",Campaign.class);
 		SCENARIOS.put("Dungeon delve",DungeonDelve.class);
-		SCENARIOS.put("Dungeon world",DungeonWorld.class);
+		//		SCENARIOS.put("Dungeon world",DungeonWorld.class); //TODO
 		SCENARIOS.put("Art of war",ArtOfWar.class);
 		MINIGAMES.put("Arena",Arena.class);
-		MINIGAMES.put("Battlefield",Battlefield.class);
-		MINIGAMES.put("Crimson war",CrimsonWar.class);
-		MINIGAMES.put("Monster madness",MonsterMadness.class);
+		//		MINIGAMES.put("Battlefield",Battlefield.class); //TODO
+		//		MINIGAMES.put("Crimson war",CrimsonWar.class); //TODO
+		//		MINIGAMES.put("Monster madness",MonsterMadness.class); //TODO
 	}
 
 	class RunScenario implements ActionListener{

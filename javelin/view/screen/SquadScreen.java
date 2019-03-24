@@ -73,14 +73,11 @@ public class SquadScreen extends InfoScreen{
 		Character input=InfoScreen.feedback();
 		if(input.equals(' '))
 			page(next<candidates.size()?next:0);
-		else if(input=='z')
-			fillwithrandom:while(!checkifsquadfull()){
-				Monster candidate=RPG.pick(candidates);
-				for(Combatant m:squad.members)
-					if(m.source.name.equals(candidate.name)) continue fillwithrandom;
-				recruit(candidate);
-			}
-		else if(input=='\n'){
+		else if(input=='z'){
+			while(!pickrandom())
+				continue;
+			if(!checkifsquadfull()) page(index);
+		}else if(input=='\n'){
 			if(squad.members.isEmpty()) page(index);
 		}else{
 			int selection=ALPHABET.indexOf(input);
@@ -90,6 +87,14 @@ public class SquadScreen extends InfoScreen{
 			}
 			page(index);
 		}
+	}
+
+	boolean pickrandom(){
+		Monster candidate=RPG.pick(candidates);
+		for(Combatant m:squad.members)
+			if(m.source.name.equals(candidate.name)) return false;
+		recruit(candidate);
+		return true;
 	}
 
 	private void recruit(Monster m){
@@ -111,7 +116,7 @@ public class SquadScreen extends InfoScreen{
 		text+="\n";
 		text+="\nPress letter to select character";
 		if(candidates.size()>MONSTERPERPAGE) text+="\nPress SPACE to switch pages";
-		text+="\nPress z for a random team";
+		text+="\nPress z to pick a random unit";
 		text+="\nPress ENTER to coninue with current selection";
 		text+="\n";
 		text+="\nYour team:";

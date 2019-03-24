@@ -58,12 +58,11 @@ public class Chest extends Feature{
 			String message="Party receives $"+Javelin.format(gold)+"!";
 			Javelin.message(message,false);
 			Squad.active.gold+=gold;
-		}else{
-			String message="Party receives "+Javelin.group(items)+"!";
-			Javelin.message(message,false);
+		}else
+			//			String message="Party receives "+Javelin.group(items)+"!";
+			//			Javelin.message(message,false);
 			for(Item i:items)
 				i.grab();
-		}
 		return true;
 	}
 

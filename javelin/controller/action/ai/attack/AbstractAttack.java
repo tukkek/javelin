@@ -2,7 +2,6 @@ package javelin.controller.action.ai.attack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javelin.Javelin;
@@ -29,6 +28,19 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  * @author alex
  */
 public abstract class AbstractAttack extends Action implements AiAction{
+	/**
+	 * Inspired by (but deals minimum damage instead of half)
+	 * https://dnd-wiki.org/wiki/Graze_Damage_(3.5e_Variant_Rule)#dynamic_user_navbox
+	 *
+	 * Found the link when looking for a less miss-prone variant combat rules.
+	 */
+	static final boolean GRAZE=true;
+	/**
+	 * If <code>true</code>, always applies average damage. Disabled because there
+	 * doesn't seem to be any drastic performance improvement from it.
+	 */
+	static final boolean FLATDAMAGE=false;
+
 	static final ConcurrentHashMap<Thread,Strike> CURRENTMANEUVER=new ConcurrentHashMap<>();
 
 	class DamageNode extends ChanceNode{
@@ -90,14 +102,14 @@ public abstract class AbstractAttack extends Action implements AiAction{
 	DamageNode createnode(Combatant attacker,Combatant target,final Attack a,
 			float ap,final Strike m,final DamageChance dc,BattleState s){
 		final String tohit=" ("+getchance(attacker,target,a,s)+")...";
-		StringBuilder sb=new StringBuilder(attacker.toString());
+		final StringBuilder sb=new StringBuilder(attacker.toString());
 		if(dc.damage==0) return miss(attacker,target,m,dc,s,sb,tohit);
 		s=s.clone();
 		attacker=s.clone(attacker);
 		target=s.clone(target);
 		if(m!=null) m.prehit(attacker,target,a,dc,s);
 		final String name=m==null?a.name:m.name.toLowerCase();
-		sb.append(" attacks ").append(target).append(" with ").append(name)
+		sb.append(" "+dc.message+" ").append(target).append(" with ").append(name)
 				.append(tohit);
 		if(dc.critical) sb.append("\nCritical hit!");
 		if(dc.damage==0)
@@ -148,13 +160,19 @@ public abstract class AbstractAttack extends Action implements AiAction{
 		final List<DamageChance> chances=new ArrayList<>();
 		final float threatchance=(21-a.threat)/20f;
 		final float misschance=misschance(s,active,target,bonus);
-		final float hitchance=1-misschance;
+		final float grazechance=GRAZE?target.getac()-target.gettouchac()/20f:0;
+		final float hitchance=1-misschance-grazechance;
 		final float confirmchance=target.source.immunitytocritical?0
 				:threatchance*hitchance;
 		final Spell effect=target.source.passive?null:a.geteffect();
 		final float savechance=effect==null?1:effect.getsavechance(active,target);
 		final float nosavechance=1-savechance;
 		chances.add(new DamageChance(misschance,0,false,null));
+		if(grazechance>0){
+			var graze=new DamageChance(grazechance,a.getminimumdamage(),false,null);
+			graze.message="grazes";
+			chances.add(graze);
+		}
 		hit(a,(hitchance-confirmchance)*savechance,1,target,true,chances);
 		hit(a,(hitchance-confirmchance)*nosavechance,1,target,false,chances);
 		hit(a,confirmchance*savechance,a.multiplier,target,true,chances);
@@ -186,15 +204,19 @@ public abstract class AbstractAttack extends Action implements AiAction{
 	}
 
 	static void hit(final Attack a,final float hitchance,final int multiplier,
-			Combatant target,boolean save,final List<DamageChance> chances){
+			Combatant target,Boolean save,final List<DamageChance> chances){
 		if(hitchance==0) return;
-		for(final Entry<Integer,Float> roll:Action
-				.distributeroll(a.damage[0],a.damage[1]).entrySet()){
-			int damage=(roll.getKey()+a.damage[2])*multiplier;
-			if(damage<1) damage=1;
+		if(a.geteffect()==null) save=null;
+		if(FLATDAMAGE){
+			var damage=a.getaveragedamage();
+			chances.add(new DamageChance(hitchance,damage,multiplier!=1,save));
+			return;
+		}
+		var damagerolls=Action.distributeroll(a.damage[0],a.damage[1]).entrySet();
+		for(var roll:damagerolls){
+			int damage=Math.max(1,(roll.getKey()+a.damage[2])*multiplier);
 			final float chance=hitchance*roll.getValue();
-			chances.add(new DamageChance(chance,damage,multiplier!=1,
-					a.geteffect()==null?null:save));
+			chances.add(new DamageChance(chance,damage,multiplier!=1,save));
 		}
 	}
 

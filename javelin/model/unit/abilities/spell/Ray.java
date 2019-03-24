@@ -27,7 +27,7 @@ public abstract class Ray extends Spell{
 			if(Walker.distance(active,target)<2) return Integer.MIN_VALUE;
 			ac=10;
 		}else{
-			ac=target.source.getrawac()-target.source.armor;
+			ac=target.gettouchac();
 			bonus-=RangedAttack.SINGLETON.getpenalty(active,target,state);
 		}
 		return ac-bonus;

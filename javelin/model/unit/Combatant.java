@@ -1039,4 +1039,13 @@ public class Combatant implements Serializable,Cloneable{
 				return;
 			}
 	}
+
+	/**
+	 * Depends on {@link Monster#armor} being kept up-to-date.
+	 *
+	 * @return Armor Class disregarding any armour.
+	 */
+	public int gettouchac(){
+		return getac()-source.armor;
+	}
 }

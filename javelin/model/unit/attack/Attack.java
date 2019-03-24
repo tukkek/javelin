@@ -129,4 +129,11 @@ public class Attack implements Serializable,javelin.model.Cloneable{
 	public void seteffect(Spell effect){
 		this.effect=effect.clone();
 	}
+
+	/**
+	 * @return Minimum possible rolled damage (never less than zero).
+	 */
+	public int getminimumdamage(){
+		return Math.max(0,damage[0]+damage[2]);
+	}
 }

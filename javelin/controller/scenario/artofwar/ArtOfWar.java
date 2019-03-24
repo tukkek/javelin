@@ -43,7 +43,7 @@ public class ArtOfWar extends Scenario{
 
 	/** Constructor. */
 	public ArtOfWar(){
-		statictowns=false;
+		//		statictowns=false;
 		featuregenerator=AowGenerator.class;
 		helpfile="Art of war";
 		labormodifier=0;
@@ -129,8 +129,7 @@ public class ArtOfWar extends Scenario{
 
 	@Override
 	public void end(Fight f,boolean victory){
-		for(var c:Squad.active)
-			Fountain.heal(c);
+		heal();
 		//		if(!victory){
 		//			el-=1;
 		//			reinforce("You have lost reputation...");
@@ -163,6 +162,7 @@ public class ArtOfWar extends Scenario{
 
 	@Override
 	public void endday(){
+		heal();
 		super.endday();
 		var actors=World.getactors();
 		var armies=actors.stream().filter(a->a instanceof Army).map(a->(Army)a)
@@ -176,6 +176,15 @@ public class ArtOfWar extends Scenario{
 				.collect(Collectors.toList());
 		for(var town:towns)
 			reinforceai(actors,town);
+	}
+
+	/**
+	 *
+	 */
+	protected void heal(){
+		for(var squad:Squad.getsquads())
+			for(var unit:squad)
+				Fountain.heal(unit);
 	}
 
 	void reinforceplayer(ArrayList<Actor> actors){

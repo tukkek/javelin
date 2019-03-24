@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javelin.controller.Point;
+import javelin.controller.challenge.Difficulty;
 import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
@@ -138,6 +139,11 @@ public class AowGenerator extends FeatureGenerator{
 			territories.pop().place(l);
 			el+=1;
 			if(start==null) start=l;
+		}
+		for(var minor=RPG.rolldice(4,4);minor>0;minor-=1){
+			var minorel=RPG.r(ArtOfWar.INITIALEL+Difficulty.EASY,
+					ArtOfWar.INITIALEL+Difficulty.MODERATE);
+			new WarLocation(minorel,"locationdwelling").place();
 		}
 		return start;
 	}

@@ -116,7 +116,7 @@ public class Door extends Feature{
 		}
 		String result;
 		if(forced){
-			result=forcer+" kicks the door down!";
+			result=forcer+" breaks the door down!";
 			stuck=false;
 		}else
 			result=forcer+" could not break the door after "+attempts

@@ -160,7 +160,7 @@ public abstract class AbstractAttack extends Action implements AiAction{
 		final List<DamageChance> chances=new ArrayList<>();
 		final float threatchance=(21-a.threat)/20f;
 		final float misschance=misschance(s,active,target,bonus);
-		final float grazechance=GRAZE?target.getac()-target.gettouchac()/20f:0;
+		final float grazechance=GRAZE?(target.getac()-target.gettouchac())/20f:0;
 		final float hitchance=1-misschance-grazechance;
 		final float confirmchance=target.source.immunitytocritical?0
 				:threatchance*hitchance;

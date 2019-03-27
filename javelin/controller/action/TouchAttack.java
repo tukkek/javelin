@@ -52,7 +52,7 @@ public class TouchAttack extends Fire implements AiAction{
 		float savechance=CastSpell.converttochance(attack.savedc-active.source.ref);
 		nodes.add(registerdamage(s,action+target+" resists, is ",hit*savechance,
 				target,damage/2,active));
-		nodes.add(registerdamage(s,action+target+" is ",1-hit*savechance,target,
+		nodes.add(registerdamage(s,action+target+" is ",hit*(1-savechance),target,
 				damage,active));
 		return nodes;
 	}

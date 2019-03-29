@@ -1,7 +1,7 @@
 package javelin.controller.fight.setup;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 
 import javelin.Javelin;
 import javelin.controller.Point;
@@ -31,7 +31,11 @@ public class BattleSetup{
 		rollinitiative();
 		Fight f=Javelin.app.fight;
 		generatemap(f);
-		place();
+		try{
+			place();
+		}catch(GaveUp e){
+			throw new RuntimeException("Could not place combatants!",e);
+		}
 		Weather.flood();
 	}
 
@@ -51,36 +55,45 @@ public class BattleSetup{
 		Fight.state.map=f.map.map;
 	}
 
-	/** Sets each combatant in a sensible location. */
-	public void place(){
-		BattleState s=Fight.state;
-		ArrayList<Combatant> blue=s.blueTeam;
-		ArrayList<Combatant> red=s.redTeam;
+	/**
+	 * Sets each {@link Combatant} in a sensible starting location.
+	 *
+	 * @throws GaveUp If exceeded maximum allowed attempts.
+	 */
+	public void place() throws GaveUp{
+		var state=Fight.state;
+		var width=state.map.length;
+		var height=state.map[0].length;
 		for(int i=0;i<1000;i++)
 			try{
-				List<Combatant> queuea=RPG.r(1,2)==1?blue:red;
-				List<Combatant> queueb=queuea==blue?red:blue;
-				queuea=new ArrayList<>(queuea);
-				queueb=new ArrayList<>(queueb);
-				final Combatant seeda=RPG.pick(queuea);
-				final Combatant seedb=RPG.pick(queueb);
-				int width=s.map.length;
-				int height=s.map[0].length;
-				add(seeda,getrandompoint(s,0,width-1,0,height-1));
-				placecombatant(seedb,seeda,s);
-				final ArrayList<Combatant> placeda=new ArrayList<>();
-				final ArrayList<Combatant> placedb=new ArrayList<>();
-				markplaced(seeda,queuea,placeda);
-				markplaced(seedb,queueb,placedb);
-				while(!queuea.isEmpty()||!queueb.isEmpty()){
-					placeteammate(queuea,placeda,s);
-					placeteammate(queueb,placedb,s);
-				}
+				place(state,width,height);
 				return;
 			}catch(GaveUp e){
 				continue;
 			}
-		throw new RuntimeException("Gave up on trying to place parties.");
+		throw new GaveUp();
+	}
+
+	void place(BattleState s,int width,int height) throws GaveUp{
+		var redseed=RPG.chancein(2);
+		var a=RPG.shuffle(new LinkedList<>(redseed?s.blueTeam:s.redTeam));
+		var b=RPG.shuffle(new LinkedList<>(redseed?s.redTeam:s.blueTeam));
+		var placeda=new ArrayList<Combatant>();
+		var placedb=new ArrayList<Combatant>();
+		var seeda=a.pop();
+		var seedb=b.pop();
+		add(seeda,getrandompoint(s,0,width-1,0,height-1));
+		placeda.add(seeda);
+		placecombatant(seedb,seeda,s);
+		placedb.add(seedb);
+		while(!a.isEmpty()||!b.isEmpty()){
+			var queue=RPG.chancein(2)?a:b;
+			if(queue.isEmpty()) continue;
+			var unit=queue.pop();
+			var placed=queue==a?placeda:placedb;
+			placecombatant(unit,RPG.pick(placed),s);
+			placed.add(unit);
+		}
 	}
 
 	/** Rolls initiative for each {@link Combatant}. */
@@ -89,21 +102,6 @@ public class BattleSetup{
 			c.ap=0;
 			c.rollinitiative();
 		}
-	}
-
-	void placeteammate(final List<Combatant> queue,
-			final ArrayList<Combatant> placed,final BattleState s) throws GaveUp{
-		if(!queue.isEmpty()){
-			Combatant c=RPG.pick(queue);
-			placecombatant(c,RPG.pick(placed),s);
-			markplaced(c,queue,placed);
-		}
-	}
-
-	void markplaced(final Combatant seeda,final List<Combatant> queue,
-			final ArrayList<Combatant> placed){
-		queue.remove(seeda);
-		placed.add(seeda);
 	}
 
 	void placecombatant(final Combatant placing,final Combatant reference,
@@ -147,7 +145,7 @@ public class BattleSetup{
 	/**
 	 * @param c Sets location to given {@link Point}.
 	 */
-	public static void add(final Combatant c,final Point p){
+	void add(final Combatant c,final Point p){
 		c.location[0]=p.x;
 		c.location[1]=p.y;
 	}

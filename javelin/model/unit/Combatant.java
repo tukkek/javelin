@@ -651,25 +651,25 @@ public class Combatant implements Serializable,Cloneable{
 		weakest.upgrade(r);
 	}
 
-	/**
-	 * @return All squares that are clearly visible by this unit.
-	 */
+	/** @return All squares that are visible by this unit. */
 	public HashSet<Point> calculatevision(BattleState s){
-		final HashSet<Point> seen=new HashSet<>();
-		final String perception=perceive(s.period);
-		final int range=view(s.period);
-		final boolean forcevision=perception==Javelin.PERIODNOON
-				||perception==Javelin.PERIODMORNING;
-		final Point here=new Point(location[0],location[1]);
-		Square[][] map=Javelin.app.fight.map.map;
-		for(int x=Math.max(0,here.x-range);x<=here.x+range&&x<map.length;x++)
-			for(int y=Math.max(0,here.y-range);y<=here.y+range&&y<map[0].length;y++){
+		var seen=new HashSet<Point>();
+		var perception=perceive(s.period);
+		var range=view(s.period);
+		var map=Javelin.app.fight.map.map;
+		if(range==Integer.MAX_VALUE) range=Math.max(map.length,map[0].length);
+		var here=new Point(location[0],location[1]);
+		var fromx=Math.max(0,here.x-range);
+		var fromy=Math.max(0,here.y-range);
+		var tox=Math.min(here.x+range,map.length-1);
+		var toy=Math.min(here.x+range,map[0].length-1);
+		for(var x=fromx;x<=tox;x++)
+			for(var y=fromy;y<=toy;y++){
 				Point p=new Point(x,y);
-				if(forcevision
-						||s.haslineofsight(here,p,range,perception)!=Vision.BLOCKED){
-					seen.add(p);
-					seen.addAll(BattleState.lineofsight);
-				}
+				if(seen.contains(p)) continue;
+				if(s.haslineofsight(here,p,range,perception)==Vision.BLOCKED) continue;
+				seen.add(p);
+				if(BattleState.lineofsight!=null) seen.addAll(BattleState.lineofsight);
 			}
 		return seen;
 	}

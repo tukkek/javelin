@@ -662,7 +662,7 @@ public class Combatant implements Serializable,Cloneable{
 		var fromx=Math.max(0,here.x-range);
 		var fromy=Math.max(0,here.y-range);
 		var tox=Math.min(here.x+range,map.length-1);
-		var toy=Math.min(here.x+range,map[0].length-1);
+		var toy=Math.min(here.y+range,map[0].length-1);
 		for(var x=fromx;x<=tox;x++)
 			for(var y=fromy;y<=toy;y++){
 				Point p=new Point(x,y);
@@ -774,19 +774,19 @@ public class Combatant implements Serializable,Cloneable{
 		return true;
 	}
 
-	public String printstatus(BattleState s){
-		final ArrayList<String> statuslist=liststatus(s);
-		if(statuslist.isEmpty()) return "";
-		String description="";
-		CountingSet cs=new CountingSet();
-		for(String c:statuslist)
-			cs.add(c);
-		for(String c:cs.getelements()){
-			int n=cs.getcount(c);
-			String amount=n==1?"":" (x"+n+")";
-			description+=c+amount+", ";
+	public String printstatus(BattleState state){
+		var statuslist=liststatus(state);
+		var output=new ArrayList<String>();
+		var count=new CountingSet();
+		for(var s:statuslist)
+			count.add(s);
+		for(var status:count.getelements()){
+			int n=count.getcount(status);
+			if(n>1) status+=" (x"+n+")";
+			output.add(status);
 		}
-		return description.substring(0,description.length()-2)+"";
+		output.add(0,getstatus());
+		return String.join(", ",output);
 	}
 
 	/**

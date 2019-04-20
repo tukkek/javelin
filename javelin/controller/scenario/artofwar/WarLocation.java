@@ -65,7 +65,8 @@ public class WarLocation extends Fortification{
 			squads.add(squad);
 		}
 		InfiniteList<Integer> ranksi=new InfiniteList<>(List.of(0,1,2),true);
-		var t=terrain==null?Terrain.get(x,y):terrain;
+		var t=terrain;
+		if(t==null) t=Terrain.get(x,y);
 		for(float squad:squads){
 			Reinforcement r=new Reinforcement(squad,List.of(t));
 			List<List<Combatant>> ranks=List.of(r.commander,r.elites,r.footsoldiers);

@@ -97,6 +97,11 @@ public abstract class Kit implements Serializable{
 		return score==bestability||score==secondbest;
 	}
 
+	/**
+	 * @return A list of kits that should be well suited for the given
+	 *         {@link Monster}. Current Kit selection has been set up so that this
+	 *         should never be empty.
+	 */
 	public static List<Kit> getpreferred(Monster m){
 		ArrayList<Integer> attributes=new ArrayList<>(6);
 		attributes.add(m.strength);

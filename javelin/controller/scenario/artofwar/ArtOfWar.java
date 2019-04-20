@@ -2,6 +2,8 @@ package javelin.controller.scenario.artofwar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,11 +12,13 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.db.EncounterIndex;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.fight.Fight;
+import javelin.controller.generator.NpcGenerator;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
+import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
@@ -129,7 +133,9 @@ public class ArtOfWar extends Scenario{
 
 	@Override
 	public void end(Fight f,boolean victory){
-		heal();
+		//		heal();
+		//		Squad.active.hourselapsed+=24;
+
 		//		if(!victory){
 		//			el-=1;
 		//			reinforce("You have lost reputation...");
@@ -192,6 +198,7 @@ public class ArtOfWar extends Scenario{
 				.map(a->(WarLocation)a).collect(Collectors.toList());
 		var captured=all.stream().filter(wl->wl.realm==null&&wl.canhire)
 				.sorted((a,b)->Float.compare(a.el,b.el)).collect(Collectors.toList());
+		all.forEach(wl->wl.canhire=true);
 		if(captured.isEmpty()) return;
 		var from=captured.get(captured.size()-1).getlocation();
 		while(!World.validatecoordinate(from.x,from.y)
@@ -201,11 +208,31 @@ public class ArtOfWar extends Scenario{
 		var s=new Squad(from.x,from.y,Squad.active.hourselapsed,null);
 		s.place();
 		for(var c:captured){
-			var choice=Javelin.choose("Choose your weekly reinforcements:",c.hires,
-					true,true);
-			s.members.addAll(c.hires.get(choice).generate());
+			var hires=new ArrayList<>(c.hires);
+			var npc=generatenpc(c.hires);
+			if(npc!=null) hires.add(npc);
+			String prompt="Choose your weekly reinforcements:";
+			var choice=Javelin.choose(prompt,hires,true,true);
+			s.members.addAll(hires.get(choice).generate());
 		}
 		all.forEach(wl->wl.canhire=true);
+	}
+
+	Combatants generatenpc(List<Combatants> hires){
+		var monsters=new HashSet<Monster>();
+		for(var h:hires)
+			for(var unit:h)
+				monsters.add(unit.source);
+		var npc=RPG.pick(monsters);
+		var el=ChallengeCalculator.calculateel(RPG.pick(hires));
+		var targetcr=ChallengeCalculator.eltocr(el);
+		if(npc.cr>=targetcr) return null;
+		return new Combatants(List.of(NpcGenerator.generatenpc(npc,targetcr))){
+			@Override
+			public Collection<? extends Combatant> generate(){
+				return this; //no need to generate new Combatant instances
+			}
+		};
 	}
 
 	void reinforceai(ArrayList<Actor> actors,WarLocation town){

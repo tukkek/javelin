@@ -42,37 +42,40 @@ public class Megadungeon extends Dungeon{
 			Fountain.class,Campfire.class,LearningStone.class,Chest.class,
 			Trader.class);
 
-	public Megadungeon(Integer level,Dungeon parent){
+	int floor;
+
+	public Megadungeon(int floor,Integer level,Dungeon parent){
 		super(level,parent);
-		description="Megadungeon, level "+level;
+		this.floor=floor;
+		description="Mega-dungeon, floor "+floor;
 	}
 
 	@Override
 	protected void createstairs(DungeonZoner zoner){
 		super.createstairs(zoner);
-		if(level!=DungeonDelve.LEVELS)
+		if(floor!=DungeonDelve.FLOORS)
 			features.add(new StairsDown(zoner.getpoint()));
 	}
 
 	@Override
 	public void goup(){
-		if(level==1){
+		if(floor==1){
 			super.goup();
 			return;
 		}
 		Squad.active.ellapse(1);
-		DungeonDelve.getdungeons().get(level-1).activate(false);
+		DungeonDelve.getdungeons().get(floor-1).activate(false);
 	}
 
 	@Override
 	public void godown(){
 		Squad.active.ellapse(1);
-		DungeonDelve.getdungeons().get(level+1).activate(false);
+		DungeonDelve.getdungeons().get(floor+1).activate(false);
 	}
 
 	@Override
 	protected Feature createspecialchest(Point p){
-		if(level!=DungeonDelve.LEVELS) return super.createspecialchest(p);
+		if(floor!=DungeonDelve.FLOORS) return super.createspecialchest(p);
 		var c=new Chest(p.x,p.y,new McGuffin());
 		c.setspecial();
 		return c;
@@ -81,7 +84,7 @@ public class Megadungeon extends Dungeon{
 	@Override
 	public Fight encounter(){
 		if(DungeonDelve.get().climbmode){
-			var deepest=DungeonDelve.getdungeons().get(DungeonDelve.LEVELS);
+			var deepest=DungeonDelve.getdungeons().get(DungeonDelve.FLOORS);
 			return new RandomDungeonEncounter(deepest);
 		}
 		return super.encounter();

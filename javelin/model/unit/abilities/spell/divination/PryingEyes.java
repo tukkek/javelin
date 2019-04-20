@@ -2,14 +2,17 @@ package javelin.model.unit.abilities.spell.divination;
 
 import java.util.List;
 
+import javelin.controller.DungeonCrawler;
+import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.wish.RevealFloor;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.door.Door;
 
 /**
  * Reveals {@link Dungeon} map or nearby area on the WorldScreen.
@@ -28,10 +31,19 @@ public class PryingEyes extends Spell{
 	@Override
 	public String castpeacefully(Combatant caster,Combatant target,
 			List<Combatant> squad){
-		if(Dungeon.active==null)
+		var dungeon=Dungeon.active;
+		if(dungeon==null)
 			Outpost.discover(Squad.active.x,Squad.active.y,Outpost.VISIONRANGE);
-		else
-			RevealFloor.reveal(Dungeon.active);
+		else{
+			var crawler=new DungeonCrawler(dungeon.herolocation,9000,dungeon){
+				@Override
+				protected boolean validate(Feature f){
+					return !(f instanceof Door);
+				}
+			};
+			for(Point p:crawler.crawl())
+				dungeon.setvisible(p.x,p.y);
+		}
 		return null;
 	}
 }

@@ -20,10 +20,11 @@ public class DungeonDelveGenerator extends FeatureGenerator{
 	public Location generate(LinkedList<Realm> realms,
 			ArrayList<HashSet<Point>> regions,World w){
 		Dungeon parent=null;
-		for(int level=1;level<=DungeonDelve.LEVELS;level++){
-			var d=new Megadungeon(level,parent);
-			dungeons.put(level,d);
-			if(level==1){
+		for(int floor=1;floor<=DungeonDelve.FLOORS;floor++){
+			var level=Math.round(Math.ceil(floor/2.0));
+			var d=new Megadungeon(floor,(int)level,parent);
+			dungeons.put(floor,d);
+			if(floor==1){
 				d.x=World.scenario.size/2;
 				d.y=d.x;
 				d.place();

@@ -10,6 +10,7 @@ import javelin.controller.ai.ChanceNode;
 import javelin.controller.exception.RepeatTurn;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
+import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 /**
  * An attack that reaches out only 5 feet, like from the Digester or Shocker
@@ -62,8 +63,10 @@ public class TouchAttack extends Fire implements AiAction{
 		gameState=gameState.clone();
 		target=gameState.clone(target);
 		target.damage(damage,gameState,target.source.energyresistance);
-		return new ChanceNode(gameState,chance,action+target.getstatus()+".",
-				Javelin.Delay.BLOCK);
+		action+=action+target.getstatus()+".";
+		var n=new ChanceNode(gameState,chance,action,Javelin.Delay.BLOCK);
+		n.overlay=new AiOverlay(target);
+		return n;
 	}
 
 	@Override

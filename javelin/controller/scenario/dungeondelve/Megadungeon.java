@@ -5,12 +5,10 @@ import java.util.List;
 import javelin.controller.Point;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
-import javelin.controller.table.dungeon.Trader;
 import javelin.model.item.Ruby;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonZoner;
-import javelin.model.world.location.dungeon.feature.Campfire;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
@@ -38,9 +36,10 @@ public class Megadungeon extends Dungeon{
 	 * Roughly half of it should be resting/healing features since that's the most
 	 * important for basic survival.
 	 */
-	public static final List<Class<? extends Feature>> FEATURES=List.of(
-			Fountain.class,Campfire.class,LearningStone.class,Chest.class,
-			Trader.class);
+	public static final List<Class<? extends Feature>> FEATURES=List
+			.of(Fountain.class,LearningStone.class,Chest.class
+			//			Campfire.class,Trader.class
+			);
 
 	int floor;
 

@@ -8,6 +8,7 @@ import javelin.Javelin;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.kit.Kit;
 import javelin.controller.scenario.dungeondelve.DungeonDelve;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
@@ -61,11 +62,17 @@ public class LearningStone extends Feature{
 	public LearningStone(){
 		super(-1,-1,"dungeonlearningstone");
 		remove=false;
-		var upgrades=UpgradeHandler.singleton.getall(false);
-		var set=RPG.pick(new ArrayList<>(upgrades.values()));
-		this.upgrades.addAll(set);
-		type=set.name.toLowerCase();
-		if(type.contains("magic")) this.upgrades.add(Aristocrat.SINGLETON);
+		if(RPG.chancein(2)){
+			var kit=RPG.pick(Kit.KITS);
+			upgrades.addAll(kit.getupgrades());
+			type=kit.name.toLowerCase();
+		}else{
+			var allupgrades=UpgradeHandler.singleton.getall(false).values();
+			var set=RPG.pick(new ArrayList<>(allupgrades));
+			upgrades.addAll(set);
+			type=set.name.toLowerCase();
+			if(type.contains("magic")) upgrades.add(Aristocrat.SINGLETON);
+		}
 	}
 
 	@Override

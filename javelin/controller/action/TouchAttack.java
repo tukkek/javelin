@@ -16,6 +16,8 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  * An attack that reaches out only 5 feet, like from the Digester or Shocker
  * Lizard.
  *
+ * TODO add hit/miss sound
+ *
  * @author alex
  */
 public class TouchAttack extends Fire implements AiAction{

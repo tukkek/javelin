@@ -56,13 +56,13 @@ public class Leader extends Inhabitant{
 			return false;
 		}
 
-		boolean applies(ArrayList<Combatants> encounters){
+		boolean applies(List<Combatants> encounters){
 			for(Combatants encounter:encounters)
 				if(applies(encounter)) return true;
 			return false;
 		}
 
-		void register(ArrayList<Combatants> encounters,ArrayList<Option> options){
+		void register(List<Combatants> encounters,ArrayList<Option> options){
 			var a=base.alignment;
 			if((lawful==null||lawful.equals(a.ethics))
 					&&(good==null||good.equals(a.morals))&&applies(encounters))
@@ -70,7 +70,7 @@ public class Leader extends Inhabitant{
 		}
 
 		void sign(){
-			ArrayList<Combatants> encounters=Dungeon.active.encounters;
+			var encounters=Dungeon.active.encounters;
 			for(Combatants encounter:new ArrayList<>(encounters)){
 				if(encounters.size()==1) return;
 				if(applies(encounter))
@@ -138,7 +138,7 @@ public class Leader extends Inhabitant{
 
 		List<Option> addtreaties(ArrayList<Option> options,int diplomacy){
 			if(diplomacy<diplomacydc) return options;
-			ArrayList<Combatants> encounters=Dungeon.active.encounters;
+			var encounters=Dungeon.active.encounters;
 			if(encounters.size()<2) return options;
 			int treatyprice=10
 					*Javelin.round(RewardCalculator.getgold(inhabitant.source.cr));

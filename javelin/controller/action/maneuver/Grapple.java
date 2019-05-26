@@ -18,6 +18,11 @@ import javelin.model.unit.feat.attack.expertise.ImprovedGrapple;
  * just when applying the damagein
  * {@link #hit(Combatant, Combatant, BattleState, float)}.
  *
+ * TODO now that Conditions are more flexible, make a turn-by-turn grapple
+ * dynamic. for now just making grapple last a turn because it can becomes
+ * pretty silly when a single monster grapples for 9 turns and dies doing
+ * nothing.
+ *
  * @author alex
  */
 public class Grapple extends ExpertiseAction{
@@ -60,9 +65,10 @@ public class Grapple extends ExpertiseAction{
 		s=s.clone();
 		current=s.clone(current);
 		target=s.clone(target);
-		int duration=Math
-				.round(1/calculatesavechance(current,calculatesavebonus(target)));
-		if(duration<1) duration=1;
+		//		int duration=Math
+		//				.round(1/calculatesavechance(current,calculatesavebonus(target)));
+		//		if(duration<1) duration=1;
+		var duration=1;
 		String message=current+" grapples "+target+" for "+duration+" turn(s)!";
 		message+=constrict(current,target,duration,s);
 		message+=constrict(target,current,duration,s);

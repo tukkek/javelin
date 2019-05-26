@@ -37,7 +37,8 @@ public class Megadungeon extends Dungeon{
 	 * important for basic survival.
 	 */
 	public static final List<Class<? extends Feature>> FEATURES=List
-			.of(Fountain.class,LearningStone.class,Chest.class
+			.of(Fountain.class,LearningStone.class
+			//					,Chest.class
 			//			Campfire.class,Trader.class
 			);
 
@@ -91,10 +92,11 @@ public class Megadungeon extends Dungeon{
 
 	@Override
 	protected void createfeatures(int nfeatures,DungeonZoner zoner){
+		var special=RPG.r(0,nfeatures);
+		nfeatures-=special;
 		super.createfeatures(nfeatures,zoner);
 		try{
-			nfeatures+=RPG.randomize(nfeatures);
-			for(;nfeatures>0;nfeatures--){
+			for(;special>0;special--){
 				Class<? extends Feature> type=RPG.pick(FEATURES);
 				if(Chest.class.equals(type)){
 					var c=new Chest(-1,-1,new Ruby());

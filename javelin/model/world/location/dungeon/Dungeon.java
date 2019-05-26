@@ -130,7 +130,7 @@ public class Dungeon extends Location{
 	 *
 	 * @see Leader
 	 */
-	public ArrayList<Combatants> encounters=new ArrayList<>();
+	public List<Combatants> encounters=new ArrayList<>();
 
 	float ratiomonster=RPG.r(25,50)/100f;
 	float ratiofeatures=RPG.r(50,95)/100f;
@@ -261,31 +261,26 @@ public class Dungeon extends Location{
 	}
 
 	void generateencounters(){
-		int target=3+RPG.r(1,4)+gettier().tier;
+		var target=3+RPG.r(1,4)+gettier().tier;
 		if(parent!=null){
 			encounters=new ArrayList<>(parent.encounters);
 			while(encounters.contains(null))
 				encounters.remove(null);
 			encounters.sort(EncountersByEl.INSTANCE);
-			int crop=RPG.r(1,4);
-			for(int i=0;i<crop&&!encounters.isEmpty();i++)
+			var crop=RPG.r(1,encounters.size());
+			for(;crop>0&&!encounters.isEmpty();crop--)
 				encounters.remove(0);
 		}
-		int attempts=0;
-		int level=this.level;
-		List<Terrain> terrains=Arrays.asList(new Terrain[]{Terrain.UNDERGROUND});
-		while(encounters.size()<target){
-			attempts+=1;
-			if(attempts%100==0) level+=1;
+		var terrains=Arrays.asList(new Terrain[]{Terrain.UNDERGROUND});
+		while(encounters.size()<target)
 			try{
-				int el=level+Difficulty.get();
-				Combatants encounter=generateencounter(el,terrains);
+				var el=level+Difficulty.get();
+				var encounter=generateencounter(el,terrains);
 				if(encounter!=null&&!encounters.contains(encounter))
 					encounters.add(encounter);
 			}catch(GaveUp e){
 				continue;
 			}
-		}
 	}
 
 	protected Combatants generateencounter(int level,List<Terrain> terrains)
@@ -494,7 +489,8 @@ public class Dungeon extends Location{
 	 *          starting the application (loading up a save game with an active
 	 *          dungeon).
 	 */
-	protected void setlocation(boolean loading){}
+	protected void setlocation(boolean loading){
+	}
 
 	@Override
 	public Integer getel(Integer attackel){

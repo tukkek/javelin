@@ -29,7 +29,7 @@ import javelin.view.screen.WorldScreen;
  */
 public class DungeonDelve extends Campaign{
 	/** Amount of physical levels the {@link Megadungeon} should have. */
-	public final static int FLOORS=40;
+	public final static int FLOORS=20;
 	/** Becomes true when the player takes hold of the {@link McGuffin}. */
 	public boolean climbmode=false;
 

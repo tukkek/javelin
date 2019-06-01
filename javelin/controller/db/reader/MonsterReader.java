@@ -169,7 +169,7 @@ public class MonsterReader extends DefaultHandler{
 					case ELEMENTAL:
 					case OOZE:
 					case DRAGON:
-						monster.humanoid=true;
+						monster.humanoid=false;
 						break;
 					default:
 						break;

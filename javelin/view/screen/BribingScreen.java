@@ -68,7 +68,7 @@ public class BribingScreen{
 		text+="\nf - fight!";
 		text+="\nb - bribe them ($"+Javelin.format(bribe)+")";
 		if(canhire)
-			text+="\nh - hire as mercenaries ($"+Javelin.format(dailyfee)+"/day)";
+			text+="\nh - hire as mercenaries ($"+Javelin.format(dailyfee)+")";
 		text+="\n";
 		return text;
 	}

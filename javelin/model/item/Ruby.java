@@ -17,6 +17,11 @@ import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.view.screen.BattleScreen;
 
+/**
+ * TODO deactivate trap (rubies = dungeon level)
+ *
+ * @author alex
+ */
 public class Ruby extends Item{
 	private static final String PROMPT="Do you want to spend all of your rubies to summon allies?\n"
 			+"Press ENTER to confirm or any other key to cancel...";

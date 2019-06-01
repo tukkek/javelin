@@ -31,7 +31,7 @@ public abstract class Trap extends Feature{
 	/** Challenge rating. */
 	public final int cr;
 	/** Difficulty class to save against. */
-	public float savedc;
+	public int savedc;
 	/** See {@link DisableDevice}. */
 	public int disarmdc;
 	/** See {@link Perception}. */

@@ -37,7 +37,7 @@ public class Megadungeon extends Dungeon{
 	 * important for basic survival.
 	 */
 	public static final List<Class<? extends Feature>> FEATURES=List
-			.of(Fountain.class,LearningStone.class
+			.of(Fountain.class,LearningStone.class,LearningStone.class
 			//					,Chest.class
 			//			Campfire.class,Trader.class
 			);

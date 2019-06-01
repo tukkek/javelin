@@ -365,6 +365,15 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	 * The squad tries to parley with the enemy {@link Combatant}s, possibly
 	 * bribing or hirimg them to avoid the fight.
 	 *
+	 * Hiring mercenaries this way in a {@link Dungeon} costs 10 times more,
+	 * because since a dungeon crawl occurs in a much faster time frame, Javelin
+	 * doesn't bother applying daily fees while in there and that is very
+	 * exploitable. The in-game reasoning is that since dungeon encounters occur
+	 * on a fixed per-level table, that would mean a group of intelligent monsters
+	 * agreeing to turn on their fellows for money, which obviously takes more
+	 * incentive... Note than that's only for hiring them on-the-spot, once you're
+	 * outside, fees are calculated normally.
+	 *
 	 * @return <code>false</code> if the fight is to proceed.
 	 */
 	public boolean bribe(List<Combatant> foes){
@@ -384,6 +393,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 			if(will>highest) highest=will;
 			dailyfee+=foe.pay();
 		}
+		if(Dungeon.active!=null) dailyfee*=10;
 		final int bribe=Math.max(1,RewardCalculator.receivegold(foes)/2);
 		final boolean canhire=diplomac>=highest+5;
 		boolean b=new BribingScreen().bribe(foes,dailyfee,bribe,canhire);

@@ -7,6 +7,8 @@ import javelin.Javelin;
 import javelin.controller.DungeonCrawler;
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.template.Template;
+import javelin.model.unit.Combatant;
+import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.old.RPG;
@@ -43,7 +45,14 @@ public class TeleporterTrap extends Trap{
 
 	@Override
 	protected void spring(){
-		Javelin.message("You enter a teleportation trap!",false);
+		Combatant victim=null;
+		for(var m:RPG.shuffle(new ArrayList<>(Squad.active.members)))
+			if(RPG.r(1,20)+m.source.ref<savedc){
+				victim=m;
+				break;
+			}
+		if(victim==null) return;
+		Javelin.message(victim+" activates the teleportation trap!",false);
 		HashSet<Point> targets=new TeleportCrawl().crawl();
 		targets.remove(new Point(x,y));
 		targets.remove(Dungeon.active.herolocation);

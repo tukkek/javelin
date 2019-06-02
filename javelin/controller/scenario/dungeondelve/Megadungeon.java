@@ -1,7 +1,5 @@
 package javelin.controller.scenario.dungeondelve;
 
-import java.util.List;
-
 import javelin.controller.Point;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
@@ -36,11 +34,11 @@ public class Megadungeon extends Dungeon{
 	 * Roughly half of it should be resting/healing features since that's the most
 	 * important for basic survival.
 	 */
-	public static final List<Class<? extends Feature>> FEATURES=List
-			.of(Fountain.class,LearningStone.class,LearningStone.class
-			//					,Chest.class
-			//			Campfire.class,Trader.class
-			);
+	//	public static final List<Class<? extends Feature>> FEATURES=List
+	//			.of(Fountain.class,LearningStone.class,LearningStone.class
+	//			//					,Chest.class
+	//			//			Campfire.class,Trader.class
+	//			);
 
 	int floor;
 
@@ -92,21 +90,25 @@ public class Megadungeon extends Dungeon{
 
 	@Override
 	protected void createfeatures(int nfeatures,DungeonZoner zoner){
-		var special=RPG.r(0,nfeatures);
-		nfeatures-=special;
+		//		var special=RPG.r(0,nfeatures);
+		//		nfeatures-=special;
 		super.createfeatures(nfeatures,zoner);
-		try{
-			for(;special>0;special--){
-				Class<? extends Feature> type=RPG.pick(FEATURES);
-				if(Chest.class.equals(type)){
-					var c=new Chest(-1,-1,new Ruby());
-					c.setspecial();
-					zoner.place(c);
-				}else
-					zoner.place(type.getConstructor().newInstance());
-			}
-		}catch(ReflectiveOperationException e){
-			throw new RuntimeException(e);
-		}
+		for(int i=1+RPG.randomize(2);i>=0;i++)
+			zoner.place(new Fountain());
+		for(int i=1+RPG.randomize(2);i>=0;i++)
+			zoner.place(new LearningStone());
+		//		try{
+		//			for(;special>0;special--){
+		//				Class<? extends Feature> type=RPG.pick(FEATURES);
+		//				if(Chest.class.equals(type)){
+		//					var c=new Chest(-1,-1,new Ruby());
+		//					c.setspecial();
+		//					zoner.place(c);
+		//				}else
+		//					zoner.place(type.getConstructor().newInstance());
+		//			}
+		//		}catch(ReflectiveOperationException e){
+		//			throw new RuntimeException(e);
+		//		}
 	}
 }

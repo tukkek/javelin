@@ -29,8 +29,7 @@ public class FruitTree extends Feature{
 			names.add(c+" ("+c.getstatus()+")");
 		int choice=Javelin.choose("Who will eat the fruit?",names,true,false);
 		if(choice<0) return false;
-		Combatant target=squad.get(choice);
-		target.heal(target.maxhp,true);
+		Fountain.heal(squad.get(choice));
 		return true;
 	}
 

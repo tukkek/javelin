@@ -11,6 +11,10 @@ import javelin.old.RPG;
 import javelin.view.Images;
 
 /**
+ * TODO should probably extract a DungeonMap out of this
+ *
+ * TODO make light levels one lower always
+ *
  * @author alex
  */
 public class Caves extends Map{

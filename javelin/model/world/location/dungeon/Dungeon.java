@@ -92,7 +92,7 @@ public class Dungeon extends Location{
 	 *
 	 * TODO is this needed?
 	 */
-	public Point herolocation;
+	public Point herolocation=null;
 	/** File to use under 'avatar' folder. */
 	public String floortile;
 	/** File to use under 'avatar' folder. */
@@ -326,8 +326,12 @@ public class Dungeon extends Location{
 		return floortiles;
 	}
 
-	protected void populatedungeon(int nrooms){
-		herolocation=getrandompoint();
+	void populatedungeon(int nrooms){
+		while(herolocation==null){
+			herolocation=getrandompoint();
+			/*if placed too close to the edge, the carving in #createstairs() will make it look weird as the edge will look empty without walls */
+			if(!herolocation.validate(2,2,size-3,size-3)) herolocation=null;
+		}
 		var zoner=new DungeonZoner(this,herolocation);
 		createstairs(zoner);
 		createkeys(zoner);
@@ -356,7 +360,7 @@ public class Dungeon extends Location{
 		}
 	}
 
-	public Point getrandompoint(){
+	Point getrandompoint(){
 		Point p=null;
 		while(p==null||isoccupied(p))
 			p=new Point(RPG.r(0,size-1),RPG.r(0,size-1));

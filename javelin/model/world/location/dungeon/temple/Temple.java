@@ -98,9 +98,9 @@ public abstract class Temple extends UniqueLocation{
 	/** Encounter level equivalent for {@link #level}. */
 	public int el;
 	String fluff;
-	/** If not <code>null</code> will override {@link Dungeon#floor}. */
+	/** If not <code>null</code> will override {@link Dungeon#floortile}. */
 	public String floor=null;
-	/** If not <code>null</code> will override {@link Dungeon#wall}. */
+	/** If not <code>null</code> will override {@link Dungeon#walltile}. */
 	public String wall=null;
 	/** If <code>false</code>, draw doors without a wall behind them. */
 	public boolean doorbackground=true;

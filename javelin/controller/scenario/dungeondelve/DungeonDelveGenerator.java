@@ -21,7 +21,7 @@ public class DungeonDelveGenerator extends FeatureGenerator{
 			ArrayList<HashSet<Point>> regions,World w){
 		Dungeon parent=null;
 		for(int floor=1;floor<=DungeonDelve.FLOORS;floor++){
-			var d=new Megadungeon(floor,floor,parent);
+			var d=new Megadungeon(floor,parent);
 			dungeons.put(floor,d);
 			if(floor==1){
 				d.x=World.scenario.size/2;

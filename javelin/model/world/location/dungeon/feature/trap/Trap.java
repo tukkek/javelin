@@ -22,6 +22,7 @@ import javelin.model.world.location.dungeon.feature.Feature;
  * partly because since the traps are permanent (so as to be strategic) it would
  * be easy to continually step on traps to plunder XP.
  *
+ * @see DisableDevice
  * @author alex
  */
 public abstract class Trap extends Feature{

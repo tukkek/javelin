@@ -27,7 +27,7 @@ public class DungeonTile extends Tile{
 		final Feature f=Dungeon.active.features.get(x, y);
 		if(f!=null&&f.draw){
 			if(f instanceof Door&&Dungeon.active.doorbackground)
-				draw(g,Images.get(Dungeon.active.wall));
+				draw(g,Images.get(Dungeon.active.walltile));
 			draw(g,Images.get(f.avatarfile));
 		}
 		if(Dungeon.active.herolocation.x==x&&Dungeon.active.herolocation.y==y){

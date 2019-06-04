@@ -26,7 +26,6 @@ import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.table.Table;
 import javelin.controller.table.Tables;
 import javelin.controller.table.dungeon.door.DoorExists;
-import javelin.controller.table.dungeon.door.KeyPresenceTable;
 import javelin.controller.table.dungeon.feature.CommonFeatureTable;
 import javelin.controller.table.dungeon.feature.FeatureModifierTable;
 import javelin.controller.table.dungeon.feature.FeatureRarityTable;
@@ -35,6 +34,7 @@ import javelin.controller.table.dungeon.feature.SpecialTrapTable;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.item.Item;
+import javelin.model.item.key.door.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
@@ -94,9 +94,9 @@ public class Dungeon extends Location{
 	 */
 	public Point herolocation;
 	/** File to use under 'avatar' folder. */
-	public String floor;
+	public String floortile;
 	/** File to use under 'avatar' folder. */
-	public String wall;
+	public String walltile;
 	/** Tiles already revealed. */
 	public HashSet<Point> discovered=new HashSet<>();
 	/**
@@ -150,19 +150,25 @@ public class Dungeon extends Location{
 
 	transient boolean generated=false;
 
+	/** Depth of dungeon (1 for the first floor, 2 for the second, etc). */
+	public int floor=1;
+
 	/** Constructor. */
 	public Dungeon(Integer level,Dungeon parent){
 		super(null);
 		this.parent=parent;
-		if(parent==null) forbidden=new HashSet<>();
+		if(parent==null)
+			forbidden=new HashSet<>();
+		else
+			floor=parent.floor+1;
 		link=false;
 		discard=false;
 		impermeable=true;
 		allowedinscenario=false;
 		this.level=level==null?determineel():level;
 		DungeonTier tier=gettier();
-		wall=tier.wall;
-		floor=tier.floor;
+		walltile=tier.wall;
+		floortile=tier.floor;
 		description=baptize(tier);
 		allowentry=false;
 		unique=true;
@@ -324,30 +330,25 @@ public class Dungeon extends Location{
 		herolocation=getrandompoint();
 		var zoner=new DungeonZoner(this,herolocation);
 		createstairs(zoner);
-		createkeychests(zoner);
+		createkeys(zoner);
 		int goldpool=createtraps(getfeaturequantity(nrooms,ratiotraps));
 		createchests(getfeaturequantity(nrooms,ratiotreasure),goldpool,zoner);
 		createfeatures(getfeaturequantity(nrooms,ratiofeatures),zoner);
 	}
 
-	private void createkeychests(DungeonZoner zoner){
+	void createkeys(DungeonZoner zoner){
 		try{
-			var generated=new ArrayList<Door>();
+			var generated=new HashSet<Class<? extends Key>>();
 			var area=new ArrayList<Point>();
 			for(var zone:zoner.zones){
 				area.addAll(zone.area);
 				for(var door:zone.doors){
-					if(!door.locked||generated.contains(door)) continue;
-					generated.add(door);
-					var keys=tables.get(KeyPresenceTable.class).rollnumber();
-					while(keys>0){
-						Point p=null;
-						while(p==null||isoccupied(p))
-							p=RPG.pick(area);
-						var key=door.key.getConstructor().newInstance();
-						features.add(new Chest(p.x,p.y,key));
-						keys-=1;
-					}
+					if(!door.locked||!generated.add(door.key)) continue;
+					Point p=null;
+					while(p==null||isoccupied(p))
+						p=RPG.pick(area);
+					var key=door.key.getConstructor(Dungeon.class).newInstance(this);
+					features.add(new Chest(p.x,p.y,key));
 				}
 			}
 		}catch(ReflectiveOperationException e){

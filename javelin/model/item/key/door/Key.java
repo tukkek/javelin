@@ -1,30 +1,41 @@
 package javelin.model.item.key.door;
 
-import java.util.ArrayList;
-
+import javelin.controller.scenario.dungeondelve.Megadungeon;
 import javelin.model.item.Item;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.DungeonZoner;
 import javelin.model.world.location.dungeon.feature.door.Door;
-import javelin.old.RPG;
+import javelin.model.world.location.dungeon.feature.door.IronDoor;
 
+/**
+ * Keys open {@link Dungeon} {@link Door}s. Like in Resident Evil games, a
+ * single key can open all the doors of the given type - reducing item
+ * management and making a bigger deal out of finding an individual key.
+ *
+ * The particular Key subtype and {@link #dungeon} define what doors it can
+ * open. For example, an {@link IronKey} found at level 1 of the
+ * {@link Megadungeon} will open any {@link IronDoor}s in that particular level.
+ *
+ * @see MasterKey
+ * @see DungeonZoner
+ * @author alex
+ */
 public class Key extends Item{
-	public Key(String name,int price){
-		super(name,price,null);
+	/** Particular dungeon floor this key is tied to. */
+	public Dungeon dungeon;
+
+	/** Constructor. */
+	public Key(String name,Dungeon d){
+		super(name,0,null);
 		usedinbattle=false;
 		usedoutofbattle=false;
+		dungeon=d;
 	}
 
-	public static Key generate(){
-		if(RPG.chancein(10)) return new MasterKey();
-		ArrayList<Door> doors=new ArrayList<>();
-		for(Feature f:Dungeon.active.features)
-			if(f instanceof Door) doors.add((Door)f);
-		if(doors.isEmpty()) return new WoodenKey();
-		try{
-			return RPG.pick(doors).key.getDeclaredConstructor().newInstance();
-		}catch(ReflectiveOperationException e){
-			throw new RuntimeException(e);
-		}
+	@Override
+	public String toString(){
+		var s=super.toString();
+		if(dungeon!=null) s+=" ("+dungeon.description+", level "+dungeon.floor+")";
+		return s;
 	}
 }

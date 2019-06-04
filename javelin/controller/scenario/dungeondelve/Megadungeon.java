@@ -3,7 +3,6 @@ package javelin.controller.scenario.dungeondelve;
 import javelin.controller.Point;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
-import javelin.model.item.Ruby;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonZoner;
@@ -12,7 +11,6 @@ import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.model.world.location.dungeon.feature.LearningStone;
 import javelin.model.world.location.dungeon.feature.StairsDown;
-import javelin.model.world.location.town.District;
 import javelin.old.RPG;
 
 /**
@@ -23,29 +21,9 @@ import javelin.old.RPG;
  * @author alex
  */
 public class Megadungeon extends Dungeon{
-	/**
-	 * Since {@link DungeonDelve} characters cannot rely on usual
-	 * {@link District}s to train, spend money on and heal, these features are
-	 * artifically boosted on the {@link Megadungeon}. Note that {@link Chest}s
-	 * here will be turned into special chests with a Wish {@link Ruby} inside, to
-	 * make up for the aggravated lack of balancing for {@link Dungeon}-only play
-	 * in Javelin.
-	 *
-	 * Roughly half of it should be resting/healing features since that's the most
-	 * important for basic survival.
-	 */
-	//	public static final List<Class<? extends Feature>> FEATURES=List
-	//			.of(Fountain.class,LearningStone.class,LearningStone.class
-	//			//					,Chest.class
-	//			//			Campfire.class,Trader.class
-	//			);
-
-	int floor;
-
-	public Megadungeon(int floor,Integer level,Dungeon parent){
+	public Megadungeon(Integer level,Dungeon parent){
 		super(level,parent);
-		this.floor=floor;
-		description="Mega-dungeon, floor "+floor;
+		description="Megadungeon";
 	}
 
 	@Override
@@ -90,25 +68,10 @@ public class Megadungeon extends Dungeon{
 
 	@Override
 	protected void createfeatures(int nfeatures,DungeonZoner zoner){
-		//		var special=RPG.r(0,nfeatures);
-		//		nfeatures-=special;
 		super.createfeatures(nfeatures,zoner);
-		for(int i=1+RPG.randomize(2);i>=0;i++)
+		for(int i=1+RPG.randomize(2);i>0;i--)
 			zoner.place(new Fountain());
-		for(int i=1+RPG.randomize(2);i>=0;i++)
+		for(int i=1+RPG.randomize(2);i>0;i--)
 			zoner.place(new LearningStone());
-		//		try{
-		//			for(;special>0;special--){
-		//				Class<? extends Feature> type=RPG.pick(FEATURES);
-		//				if(Chest.class.equals(type)){
-		//					var c=new Chest(-1,-1,new Ruby());
-		//					c.setspecial();
-		//					zoner.place(c);
-		//				}else
-		//					zoner.place(type.getConstructor().newInstance());
-		//			}
-		//		}catch(ReflectiveOperationException e){
-		//			throw new RuntimeException(e);
-		//		}
 	}
 }

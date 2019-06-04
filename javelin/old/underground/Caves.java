@@ -27,8 +27,8 @@ public class Caves extends Map{
 		super(namep,SIZE,SIZE);
 		maxflooding=Weather.CLEAR;
 		if(Dungeon.active instanceof TempleDungeon){
-			floor=Images.get(Dungeon.active.floor);
-			wall=Images.get(Dungeon.active.wall);
+			floor=Images.get(Dungeon.active.floortile);
+			wall=Images.get(Dungeon.active.walltile);
 		}else{
 			floor=Images.get("terraindungeonfloor");
 			wall=Images.get("terraindungeonwall");

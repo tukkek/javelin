@@ -62,8 +62,8 @@ public class TempleDungeon extends Dungeon{
 	@Override
 	public void activate(boolean loading){
 		doorbackground=temple.doorbackground;
-		if(temple.floor!=null) floor=temple.floor;
-		if(temple.wall!=null) wall=temple.wall;
+		if(temple.floor!=null) floortile=temple.floor;
+		if(temple.wall!=null) walltile=temple.wall;
 		if(loading||Dungeon.active!=null){
 			super.activate(loading);
 			return;

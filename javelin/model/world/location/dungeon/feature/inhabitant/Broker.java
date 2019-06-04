@@ -10,11 +10,13 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.model.item.key.door.Key;
+import javelin.model.item.key.door.MasterKey;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.old.RPG;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.SelectScreen;
@@ -157,8 +159,23 @@ public class Broker extends Inhabitant{
 		super(Dungeon.active.level+Difficulty.DIFFICULT,
 				Dungeon.active.level+Difficulty.DEADLY);
 		int nkeys=RPG.r(1,4)-1;
-		for(int i=0;i<nkeys;i++)
-			keys.add(Key.generate());
+		for(int i=0;i<nkeys;i++){
+			var key=generatekey();
+			if(key==null) break;
+			keys.add(key);
+		}
+	}
+
+	Key generatekey(){
+		var doors=Dungeon.active.features.getall(Door.class);
+		if(doors.isEmpty()) return null;
+		if(RPG.chancein(doors.size()+1)) return new MasterKey();
+		try{
+			return RPG.pick(doors).key.getDeclaredConstructor(Dungeon.class)
+					.newInstance(Dungeon.active);
+		}catch(ReflectiveOperationException e){
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override

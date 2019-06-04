@@ -25,10 +25,9 @@ import javelin.old.QuestApp;
 import javelin.old.TPanel;
 import javelin.view.mappanel.battle.BattlePanel;
 import javelin.view.screen.BattleScreen;
-import javelin.view.screen.WorldScreen;
 
 /**
- * Bottom panel for the {@link WorldScreen}.
+ * Bottom panel for the {@link BattleScreen}.
  *
  * @author alex
  */
@@ -201,9 +200,7 @@ public class StatusPanel extends TPanel{
 	static int paintLabel(final Graphics g,final String s,final int x,
 			final int y){
 		g.setColor(QuestApp.INFOTEXTCOLOUR);
-
 		g.drawString(s,x,y+charmaxascent-charheight/2);
-
 		return charwidth*s.length();
 	}
 

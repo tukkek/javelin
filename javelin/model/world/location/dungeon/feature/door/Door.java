@@ -15,12 +15,12 @@ import javelin.controller.table.dungeon.door.LockedDoor;
 import javelin.controller.table.dungeon.door.StuckDoor;
 import javelin.controller.table.dungeon.door.TrappedDoor;
 import javelin.controller.table.dungeon.feature.FeatureModifierTable;
-import javelin.model.item.Item;
 import javelin.model.item.key.door.Key;
 import javelin.model.item.key.door.MasterKey;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
+import javelin.model.unit.skill.DisableDevice;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Feature;
@@ -30,10 +30,20 @@ import javelin.model.world.location.dungeon.feature.door.trap.DoorTrap;
 import javelin.model.world.location.dungeon.feature.door.trap.HoldPortal;
 import javelin.old.RPG;
 
+/**
+ * A {@link Dungeon} door, which may be {@link #locked}, {@link #stuck}, contain
+ * a {@link #trap} or not. If none of these are true, it may as well be
+ * discarded.
+ *
+ * @see Key
+ * @author alex
+ */
 public class Door extends Feature{
-	public static final List<Class<? extends Door>> TYPES=new ArrayList<>();
+	static final List<Class<? extends Door>> TYPES=new ArrayList<>();
 	static final List<DoorTrap> TRAPS=Arrays.asList(
 			new DoorTrap[]{Alarm.INSTANCE,ArcaneLock.INSTANCE,HoldPortal.INSTANCE});
+	static final String SPENDMASTERKEY="Do you want to spend a master key to open this door?\n"
+			+"Press ENTER to confirm or any other key to cancel...";
 
 	static{
 		registerdoortype(WoodenDoor.class,3);
@@ -48,16 +58,21 @@ public class Door extends Feature{
 			TYPES.add(d);
 	}
 
+	/** DC of {@link DisableDevice} to unlock. */
 	public int unlockdc=RPG.r(20,30)
 			+Dungeon.gettable(FeatureModifierTable.class).rollmodifier();
 
 	/** Used if {@link #hidden}. TODO */
 	public int searchdc=RPG.r(20,30);
+	/** DC of {@link Monster#strength} to break down. */
 	public int breakdc;
+	/** Type of key used to unlock. */
 	public Class<? extends Key> key;
-
+	/** Trap present or <code>null</code>. */
 	public DoorTrap trap=rolltable(TrappedDoor.class)?RPG.pick(TRAPS):null;
+	/** <code>true</code> if stuck. */
 	public boolean stuck=rolltable(StuckDoor.class);
+	/** <code>true</code> if locked. */
 	public boolean locked=rolltable(LockedDoor.class);
 	/** @see #searchdc */
 	/**
@@ -65,7 +80,7 @@ public class Door extends Feature{
 	 */
 	boolean hidden=!Debug.bypassdoors&&rolltable(HiddenDoor.class);
 
-	public Door(String avatar,int breakdcstuck,int breakdclocked,
+	Door(String avatar,int breakdcstuck,int breakdclocked,
 			Class<? extends Key> key){
 		super(-1,-1,avatar);
 		enter=false;
@@ -88,11 +103,12 @@ public class Door extends Feature{
 			Javelin.message(unlocker+" unlocks the door!",false);
 		else if(10+strength>breakdc)
 			Javelin.message(forcer+" forces the lock!",false);
-		else if(getkey()==null){
+		else if(usekey()){
+			//fall through
+		}else{
 			Javelin.message("The lock is too complex to pick...",false);
 			return false;
-		}else if(!usekey()) // feedback alredy shown as prompt
-			return false;
+		}
 		locked=false;
 		if(stuck){
 			String prompt="The door is too heavy to open... Do you want to force it?\n";
@@ -127,7 +143,7 @@ public class Door extends Feature{
 		return !stuck;
 	}
 
-	public boolean attemptbreak(int strength){
+	boolean attemptbreak(int strength){
 		if(10+strength>=breakdc) return true;
 		int roll=RPG.r(1,20);
 		if(roll==20) return true;
@@ -136,19 +152,24 @@ public class Door extends Feature{
 	}
 
 	boolean usekey(){
-		Item k=getkey();
-		if(k==null) return false;
-		if(Javelin.prompt("Do you want to use a "+k.name.toLowerCase()+"?\n"
-				+"Press ENTER to use or any other key to cancel...",false)!='\n')
-			return false;
-		Squad.active.equipment.remove(k);
-		return true;
-	}
-
-	Item getkey(){
-		Item k=Squad.active.equipment.get(key);
-		if(k==null) k=Squad.active.equipment.get(MasterKey.class);
-		return k;
+		Key key=null;
+		for(var k:Squad.active.equipment.getall(this.key))
+			if(k.dungeon==Dungeon.active){
+				key=k;
+				break;
+			}
+		if(key!=null){
+			var message="You unlock the door with the "+key.toString().toLowerCase()
+					+"!";
+			Javelin.message(message,false);
+			return true;
+		}
+		key=Squad.active.equipment.get(MasterKey.class);
+		if(key!=null&&Javelin.prompt(SPENDMASTERKEY)=='\n'){
+			key.expend();
+			return true;
+		}
+		return false;
 	}
 
 	void spring(Combatant opening){
@@ -170,6 +191,11 @@ public class Door extends Feature{
 		return strongest;
 	}
 
+	/**
+	 * @param dungeon Dungeon to place door in.
+	 * @param p Position of the door.
+	 * @return A randomly-chosen type of door.
+	 */
 	public static Door generate(Dungeon dungeon,Point p){
 		try{
 			Door d=RPG.pick(TYPES).getDeclaredConstructor().newInstance();

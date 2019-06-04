@@ -1,9 +1,11 @@
 package javelin.model.item.key.door;
 
-import javelin.controller.challenge.RewardCalculator;
+import javelin.model.world.location.dungeon.Dungeon;
 
+/** @see Key */
 public class StoneKey extends Key{
-	public StoneKey(){
-		super("Stone key",RewardCalculator.getgold(2));
+	/** Constructor. */
+	public StoneKey(Dungeon d){
+		super("Stone key",d);
 	}
 }

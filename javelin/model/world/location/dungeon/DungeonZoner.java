@@ -81,7 +81,11 @@ public class DungeonZoner{
 		}
 	}
 
-	/** All the zones scanned in the given {@link Dungeon}. */
+	/**
+	 * All the zones scanned in the given {@link Dungeon}. The first item is where
+	 * the Dungeon entrance is located. Subsequent zones are added breadth-first,
+	 * which means deeper zones will be generally found at the end of the list.
+	 */
 	public List<Zone> zones=new ArrayList<>();
 	ArrayList<Point> result=new ArrayList<>();
 	Dungeon dungeon;
@@ -120,6 +124,9 @@ public class DungeonZoner{
 		return adjacent;
 	}
 
+	/**
+	 * @param f Places this on a point given by {@link #getpoint()}.
+	 */
 	public void place(Feature f){
 		Point p=getpoint();
 		f.x=p.x;

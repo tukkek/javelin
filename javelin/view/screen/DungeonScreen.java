@@ -108,7 +108,7 @@ public class DungeonScreen extends WorldScreen{
 	@Override
 	public Image gettile(int x,int y){
 		return Images
-				.get(dungeon.map[x][y]==Template.WALL?dungeon.wall:dungeon.floor);
+				.get(dungeon.map[x][y]==Template.WALL?dungeon.walltile:dungeon.floortile);
 	}
 
 	@Override

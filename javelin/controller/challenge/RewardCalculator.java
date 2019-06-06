@@ -4,18 +4,14 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.comparator.DescendingLevelComparator;
 import javelin.model.item.Item;
-import javelin.model.item.Wand;
-import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.world.World;
 import javelin.old.RPG;
@@ -198,22 +194,13 @@ public class RewardCalculator{
 	 *          interanlly.
 	 * @return Empty list if could not generate any items.
 	 */
-	static public ArrayList<Item> generateloot(int pool,
-			Set<Class<? extends Item>> forbidden){
-		if(forbidden==null) forbidden=new HashSet<>();
+	static public ArrayList<Item> generateloot(int pool){
 		var items=new ArrayList<Item>(0);
-		var artifacts=RPG.chancein(2);
-		var floor=artifacts?pool*3/4:pool/RPG.r(3,5);
+		var floor=pool/RPG.r(1,4);
 		for(Item i:Item.randomize(Item.ALL)){
-			if(forbidden.contains(i.getClass())) continue;
 			if(!(floor<=i.price&&i.price<pool)) continue;
-			if(i instanceof Artifact&&!artifacts) continue;
-			while(pool>i.price){
-				pool-=i.price;
-				items.add(i.clone());
-				forbidden.add(i.getClass());
-				if(i instanceof Artifact||i instanceof Wand) break;
-			}
+			pool-=i.price;
+			items.add(i.clone());
 		}
 		return items;
 	}

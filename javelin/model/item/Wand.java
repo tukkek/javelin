@@ -113,7 +113,7 @@ public class Wand extends Item{
 	}
 
 	@Override
-	protected Item randomize(){
+	public Item randomize(){
 		Wand clone=(Wand)super.randomize();
 		clone.recharge(RPG.r(1,50));
 		return clone;

@@ -1,7 +1,5 @@
 package javelin.model.world.location.dungeon.feature;
 
-import java.util.Set;
-
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.RewardCalculator;
@@ -40,12 +38,13 @@ public class Chest extends Feature{
 	 * @param p {@link Dungeon} coordinate.
 	 * @param forbidden Do not generate these item types.
 	 */
-	public Chest(int pool,Point p,Set<Class<? extends Item>> forbidden){
+	public Chest(int pool,Point p){
 		this(p.x,p.y);
-		items.addAll(RewardCalculator.generateloot(pool,forbidden));
+		items.addAll(RewardCalculator.generateloot(pool));
 		gold=items.isEmpty()?Javelin.round(pool):0;
 	}
 
+	/** Constructor. */
 	public Chest(int x,int y,Item i){
 		this(x,y);
 		items.add(i);
@@ -59,8 +58,6 @@ public class Chest extends Feature{
 			Javelin.message(message,false);
 			Squad.active.gold+=gold;
 		}else
-			//			String message="Party receives "+Javelin.group(items)+"!";
-			//			Javelin.message(message,false);
 			for(Item i:items)
 				i.grab();
 		return true;
@@ -69,5 +66,11 @@ public class Chest extends Feature{
 	public void setspecial(){
 		special=true;
 		avatarfile="dungeonchestspecial";
+	}
+
+	@Override
+	public String toString(){
+		return "Floor "+Dungeon.active.floor+" chest: "
+				+(items.isEmpty()?"$"+Javelin.format(gold):items);
 	}
 }

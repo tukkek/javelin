@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import javelin.Javelin;
 import javelin.JavelinApp;
@@ -137,14 +136,6 @@ public class Dungeon extends Location{
 	float ratiotraps=RPG.r(10,25)/100f;
 	float ratiotreasure=RPG.r(5,10)/100f;
 
-	/**
-	 * Prevent generating the same type of item for different {@link Chest}s.
-	 * Since we're dealing with similar amounts of gold, this ends up happening to
-	 * often if left to randomness.
-	 *
-	 * If a dungeon floor has a {@link #parent}, refer to it instead.
-	 */
-	Set<Class<? extends Item>> forbidden=null;
 	int revealed=0;
 	Dungeon parent;
 
@@ -157,10 +148,7 @@ public class Dungeon extends Location{
 	public Dungeon(Integer level,Dungeon parent){
 		super(null);
 		this.parent=parent;
-		if(parent==null)
-			forbidden=new HashSet<>();
-		else
-			floor=parent.floor+1;
+		if(parent!=null) floor=parent.floor+1;
 		link=false;
 		discard=false;
 		impermeable=true;
@@ -422,23 +410,24 @@ public class Dungeon extends Location{
 		return 0<=coordinate&&coordinate<=size;
 	}
 
-	void createchests(int nchests,int pool,DungeonZoner zoner){
-		for(int i=0;i<nchests;i++)
-			if(RPG.chancein(10)) nchests+=1;
+	void createchests(int chests,int pool,DungeonZoner zoner){
+		for(int i=0;i<chests;i++)
+			if(RPG.chancein(10)) chests+=1;
 		features.add(createspecialchest(zoner.getpoint()));
-		int hidden=RewardCalculator.getgold(level)*nchests;
+		int hidden=RewardCalculator.getgold(level)*chests;
 		if(pool>0)
-			nchests+=1;
-		else if(nchests==0) return;
+			chests+=1;
+		else if(chests==0) return;
 		pool+=hidden;
-		for(int i=nchests;i>0;i--){
-			int gold=i==1?pool:pool/RPG.r(2,i);
+		for(;chests>0;chests--){
+			int gold=chests==1?pool:pool/RPG.r(2,chests);
 			int percentmodifier=gettable(FeatureModifierTable.class).rollmodifier()*2;
 			gold=gold*(100+percentmodifier)/100;
 			Dungeon toplevel=this;
 			while(toplevel.parent!=null)
 				toplevel=toplevel.parent;
-			features.add(new Chest(gold,zoner.getpoint(),toplevel.forbidden));
+			var chest=new Chest(gold,zoner.getpoint());
+			features.add(chest);
 			pool-=gold;
 		}
 	}

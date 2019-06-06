@@ -16,11 +16,14 @@ import javelin.controller.exception.battle.StartBattle;
 import javelin.model.Realm;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.item.artifact.CasterRing;
+import javelin.model.item.precious.ArtPiece;
+import javelin.model.item.precious.Gem;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
+import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
@@ -60,6 +63,8 @@ public abstract class Item implements Serializable,Cloneable{
 	public static final ItemSelection MAGIC=new ItemSelection();
 	/** @see Artifact */
 	public static final ItemSelection ARTIFACT=new ItemSelection();
+	/** Price of the cheapest {@link Artifact} after loot registration. */
+	public static Integer cheapestartifact=null;
 
 	/** Name to show the player. */
 	public String name;
@@ -105,7 +110,14 @@ public abstract class Item implements Serializable,Cloneable{
 		}
 	}
 
-	protected Item randomize(){
+	/**
+	 * @return A clone of this item (base implementation), with randomized
+	 *         parameters, meant for generating a new item to be found in a
+	 *         {@link Chest}, for example. Examples being: a used {@link Wand}
+	 *         with a certain amount of charges or a {@link Gem} with a random
+	 *         sell value.
+	 */
+	public Item randomize(){
 		return clone();
 	}
 
@@ -260,6 +272,10 @@ public abstract class Item implements Serializable,Cloneable{
 			if(s.isring) for(int uses:CasterRing.POWERLEVELS)
 				new CasterRing(s,uses).register();
 		}
+		ALL.addAll(Gem.generate());
+		ALL.addAll(ArtPiece.generate());
+		cheapestartifact=ALL.stream().filter(i->i instanceof Artifact)
+				.map(i->i.price).min(Integer::compare).get();
 		mapbyprice();
 	}
 
@@ -324,6 +340,7 @@ public abstract class Item implements Serializable,Cloneable{
 	 * @return The same items but with randomized parameters, from cheapest to
 	 *         most expensive (previously shuffled to introduce order randomness
 	 *         for items with exact same price).
+	 * @see Item#randomize()
 	 */
 	public static List<Item> randomize(Collection<Item> from){
 		ArrayList<Item> randomized=new ArrayList<>(from.size());

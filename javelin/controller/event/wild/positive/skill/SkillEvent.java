@@ -59,7 +59,7 @@ public abstract class SkillEvent extends WildEvent{
 	String givereward(Squad s,Combatant active){
 		var gold=RPG.r(RewardCalculator.getgold(Math.min(1,level-1)),
 				RewardCalculator.getgold(level+1));
-		var items=RewardCalculator.generateloot(gold,null);
+		var items=RewardCalculator.generateloot(gold);
 		String reward;
 		if(items.isEmpty()){
 			gold=Javelin.round(gold);

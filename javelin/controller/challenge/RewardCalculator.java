@@ -195,8 +195,11 @@ public class RewardCalculator{
 	 * @return Empty list if could not generate any items.
 	 */
 	static public ArrayList<Item> generateloot(int pool){
-		var items=new ArrayList<Item>(0);
-		var floor=pool/RPG.r(1,4);
+		var items=new ArrayList<Item>(1);
+		var maxitems=2;
+		while(RPG.chancein(2))
+			maxitems+=1;
+		var floor=pool/maxitems;
 		for(Item i:Item.randomize(Item.ALL)){
 			if(!(floor<=i.price&&i.price<pool)) continue;
 			pool-=i.price;

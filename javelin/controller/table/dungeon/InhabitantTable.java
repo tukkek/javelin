@@ -5,6 +5,7 @@ import javelin.controller.table.dungeon.feature.CommonFeatureTable;
 import javelin.model.world.location.dungeon.feature.inhabitant.Broker;
 import javelin.model.world.location.dungeon.feature.inhabitant.Leader;
 import javelin.model.world.location.dungeon.feature.inhabitant.Prisoner;
+import javelin.model.world.location.dungeon.feature.inhabitant.Trader;
 
 public class InhabitantTable extends Table{
 	public InhabitantTable(){

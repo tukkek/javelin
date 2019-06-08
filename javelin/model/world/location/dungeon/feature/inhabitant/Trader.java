@@ -1,4 +1,4 @@
-package javelin.controller.table.dungeon;
+package javelin.model.world.location.dungeon.feature.inhabitant;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,9 +11,9 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.ItemsByName;
 import javelin.controller.comparator.ItemsByPrice;
 import javelin.model.item.Item;
+import javelin.model.item.precious.PreciousObject;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.feature.inhabitant.Inhabitant;
 import javelin.model.world.location.town.labor.productive.Shop;
 import javelin.old.RPG;
 import javelin.view.screen.BattleScreen;
@@ -27,8 +27,8 @@ import javelin.view.screen.BattleScreen;
  * @author alex
  */
 public class Trader extends Inhabitant{
-	static final int OPTIONSMIN=1;
-	static final int OPTIONSMAX=3;
+	static final int OPTIONSMIN=3;
+	static final int OPTIONSMAX=7;
 
 	List<Item> inventory=new ArrayList<>(7);
 	int sell=0;
@@ -50,7 +50,7 @@ public class Trader extends Inhabitant{
 		sort();
 	}
 
-	public void sort(){
+	void sort(){
 		Collections.sort(inventory,ItemsByName.SINGLETON);
 		Collections.sort(inventory,ItemsByPrice.SINGLETON);
 	}
@@ -61,7 +61,7 @@ public class Trader extends Inhabitant{
 		final var maxgold=RewardCalculator.getgold(maxcr);
 		var inventory=Item.randomize(Item.ALL).stream()
 				.filter(i->mingold<=i.price&&i.price<=maxgold)
-				.collect(Collectors.toList());
+				.filter(i->!(i instanceof PreciousObject)).collect(Collectors.toList());
 		int inventorysize=RPG.r(OPTIONSMIN,OPTIONSMAX);
 		if(inventory.size()<=inventorysize) return inventory;
 		Collections.shuffle(inventory);
@@ -126,5 +126,10 @@ public class Trader extends Inhabitant{
 			sort();
 			Squad.active.gold+=Math.min(sold.price,sell);
 		}
+	}
+
+	@Override
+	public String toString(){
+		return "Vendor: "+inventory;
 	}
 }

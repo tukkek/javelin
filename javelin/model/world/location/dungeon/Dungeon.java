@@ -384,8 +384,8 @@ public class Dungeon extends Location{
 		return tables.get(table).rollfeature(this);
 	}
 
-	static int getfeaturequantity(int rooms,float ratio){
-		int quantity=Math.round(rooms*ratio);
+	static int getfeaturequantity(int quantity,float ratio){
+		quantity=Math.round(quantity*ratio);
 		return quantity+RPG.randomize(quantity);
 	}
 
@@ -411,25 +411,41 @@ public class Dungeon extends Location{
 	}
 
 	void createchests(int chests,int pool,DungeonZoner zoner){
-		for(int i=0;i<chests;i++)
-			if(RPG.chancein(10)) chests+=1;
+		System.out.println("\nFloor "+floor+": "+chests+" chests.");
 		features.add(createspecialchest(zoner.getpoint()));
-		int hidden=RewardCalculator.getgold(level)*chests;
-		if(pool>0)
-			chests+=1;
-		else if(chests==0) return;
-		pool+=hidden;
+		var hiddenchests=0;
+		for(int i=0;i<chests;i++)
+			if(RPG.chancein(10)) hiddenchests+=1;
+		int hiddenpool=RewardCalculator.getgold(level)*chests;
+		hiddenchests=0; //TODO have actually hidden chests
+		chests+=hiddenchests; //TODO have actually hidden chests
+		chests+=RPG.r(-1,+1);
+		if(hiddenchests==0) pool+=hiddenpool;
 		for(;chests>0;chests--){
 			int gold=chests==1?pool:pool/RPG.r(2,chests);
-			int percentmodifier=gettable(FeatureModifierTable.class).rollmodifier()*2;
-			gold=gold*(100+percentmodifier)/100;
-			Dungeon toplevel=this;
-			while(toplevel.parent!=null)
-				toplevel=toplevel.parent;
-			var chest=new Chest(gold,zoner.getpoint());
-			features.add(chest);
 			pool-=gold;
+			createchest(gold,zoner,false);
 		}
+		for(;hiddenchests>0;hiddenchests--){
+			int gold=hiddenchests==1?hiddenpool:hiddenpool/RPG.r(2,chests);
+			hiddenpool-=gold;
+			createchest(gold,zoner,true);
+		}
+	}
+
+	/**
+	 * TODO hidden chests would probably require copious amounts of decoration to
+	 * hide the actual chests as.
+	 */
+	void createchest(int gold,DungeonZoner zoner,boolean hidden){
+		int percentmodifier=gettable(FeatureModifierTable.class).rollmodifier()*2;
+		gold=gold*(100+percentmodifier)/100;
+		Dungeon toplevel=this;
+		while(toplevel.parent!=null)
+			toplevel=toplevel.parent;
+		var chest=new Chest(gold,zoner.getpoint());
+		features.add(chest);
+		System.out.println(chest);
 	}
 
 	/**

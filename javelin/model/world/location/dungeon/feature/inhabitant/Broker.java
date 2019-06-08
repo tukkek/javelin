@@ -21,6 +21,11 @@ import javelin.old.RPG;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.SelectScreen;
 
+/**
+ * Information broker.
+ *
+ * @author alex
+ */
 public class Broker extends Inhabitant{
 	class InhabitantFight extends Fight{
 		List<Combatant> enemy;
@@ -153,12 +158,13 @@ public class Broker extends Inhabitant{
 	}
 
 	ArrayList<Key> keys=new ArrayList<>();
-	protected int hints=RPG.r(1,10);
+	int hints=RPG.r(1,10);
 
+	/** Constructor. */
 	public Broker(){
 		super(Dungeon.active.level+Difficulty.DIFFICULT,
 				Dungeon.active.level+Difficulty.DEADLY);
-		int nkeys=RPG.r(1,4)-1;
+		int nkeys=RPG.r(1,4);
 		for(int i=0;i<nkeys;i++){
 			var key=generatekey();
 			if(key==null) break;

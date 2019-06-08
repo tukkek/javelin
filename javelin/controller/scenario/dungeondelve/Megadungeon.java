@@ -11,6 +11,7 @@ import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.model.world.location.dungeon.feature.LearningStone;
 import javelin.model.world.location.dungeon.feature.StairsDown;
+import javelin.model.world.location.dungeon.feature.inhabitant.Trader;
 import javelin.old.RPG;
 
 /**
@@ -21,6 +22,13 @@ import javelin.old.RPG;
  * @author alex
  */
 public class Megadungeon extends Dungeon{
+	/**
+	 * Ideally once per tier (1/5) but that is cutting it too close and entire
+	 * tiers would often end up without a single trader. Giving it a little boost
+	 * seems to soft-guarantee at least one vendor per tier.
+	 */
+	static final int TRADERCHANCE=4;
+
 	public Megadungeon(Integer level,Dungeon parent){
 		super(level,parent);
 		description="Megadungeon";
@@ -73,5 +81,8 @@ public class Megadungeon extends Dungeon{
 			zoner.place(new Fountain());
 		for(int i=1+RPG.randomize(2);i>0;i--)
 			zoner.place(new LearningStone());
+		if(RPG.chancein(TRADERCHANCE)) zoner.place(new Trader());
+		for(var f:features)
+			if(f instanceof Trader) System.out.println(f);
 	}
 }

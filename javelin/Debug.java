@@ -10,7 +10,9 @@ import javelin.controller.event.urban.UrbanEvent;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
+import javelin.controller.generator.NpcGenerator;
 import javelin.controller.generator.WorldGenerator;
+import javelin.controller.kit.Kit;
 import javelin.controller.map.Map;
 import javelin.controller.scenario.Scenario;
 import javelin.model.Realm;
@@ -165,6 +167,22 @@ public class Debug{
 			d.hand.clear();
 			d.draw();
 			DiplomacyScreen.open();
+		}
+
+		static void testkit(Kit kit){
+			Squad.active.members.clear();
+			var human=Javelin.getmonster("human");
+			for(var level:new int[]{3,8,13,18}){
+				var npc=NpcGenerator.generatenpc(human,kit,level);
+				if(npc!=null) Squad.active.members.add(npc);
+			}
+			if(BattleScreen.active.getClass()==WorldScreen.class){
+				var guild=kit.createguild();
+				guild.x=Squad.active.x;
+				guild.y=Squad.active.y;
+				guild.place();
+				Squad.active.displace();
+			}
 		}
 	}
 

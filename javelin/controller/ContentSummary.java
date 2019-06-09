@@ -78,10 +78,6 @@ public class ContentSummary{
 				print(set,items,name);
 				allupgrades.addAll(set);
 			}
-		for(Kit k:Kit.KITS)
-			for(Upgrade u:k.basic)
-				if(!(u instanceof Summon)&&!allupgrades.contains(u))
-					throw new RuntimeException("Unregistered upgrade: "+u);
 	}
 
 	void print(HashSet<Upgrade> upgrades,HashMap<String,ItemSelection> items,

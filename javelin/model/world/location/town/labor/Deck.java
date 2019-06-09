@@ -28,7 +28,6 @@ import javelin.model.world.location.town.labor.ecological.MeadHall.BuildMeadHall
 import javelin.model.world.location.town.labor.expansive.BuildHighway;
 import javelin.model.world.location.town.labor.expansive.BuildRoad;
 import javelin.model.world.location.town.labor.expansive.Hub.BuildTransportHub;
-import javelin.model.world.location.town.labor.military.MartialAcademy.BuildMartialAcademy;
 import javelin.model.world.location.town.labor.military.Monastery.BuildMonastery;
 import javelin.model.world.location.town.labor.productive.Deforestate;
 import javelin.model.world.location.town.labor.productive.Mine.BuildMine;
@@ -64,8 +63,8 @@ public class Deck extends ArrayList<Labor>{
 			new BuildArcheryRange(),new BuildMeadHall(),SteelSerpent.LABOR};
 	static final Labor[] EXPANSIVE=new Labor[]{new BuildRoad(),new BuildHighway(),
 			new BuildTransportHub()};
-	static final Labor[] MILITARY=new Labor[]{new BuildMartialAcademy(),
-			new BuildMercenariesGuild(),new BuildMonastery()};
+	static final Labor[] MILITARY=new Labor[]{new BuildMercenariesGuild(),
+			new BuildMonastery()};
 	static final Labor[] MERCANTILE=new Labor[]{new BuildMine(),
 			new Deforestate()};
 	static final Labor[] RELIGIOUS=new Labor[]{new BuildShrine(),

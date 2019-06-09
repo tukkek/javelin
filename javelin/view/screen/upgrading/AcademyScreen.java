@@ -13,7 +13,6 @@ import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.labor.military.MartialAcademy;
 import javelin.view.screen.Option;
 
 /**

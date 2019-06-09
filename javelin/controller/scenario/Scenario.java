@@ -189,11 +189,6 @@ public class Scenario implements Serializable{
 	 * @see Order
 	 */
 	public int boost=3;
-	/**
-	 * If <code>true</code> will try to generate all possible {@link Location}s
-	 * around the world.
-	 */
-	public boolean worlddistrict=true;
 
 	/**
 	 * If <code>true</code>, hostile {@link Location}s will spawn more monsters

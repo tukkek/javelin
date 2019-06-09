@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 
 import javelin.Javelin;
@@ -16,7 +15,6 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.skill.Skill.SkillUpgrade;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.cultural.MagesGuild;
-import javelin.model.world.location.town.labor.military.MartialAcademy;
 
 /**
  * Collects and distributes {@link Upgrade}s from different subsystems.
@@ -48,8 +46,6 @@ public class UpgradeHandler{
 	/** All {@link UpgradeSet}s except those explicitly marked as internal. */
 	HashMap<String,UpgradeSet> all=new HashMap<>();
 
-	LinkedList<Town> townqueue=new LinkedList<>();
-
 	/** Linked to a {@link Town}'s realm. */
 	public UpgradeSet fire=new UpgradeSet("Fire");
 	/** Linked to a {@link Town}'s realm. */
@@ -66,33 +62,31 @@ public class UpgradeHandler{
 	public UpgradeSet magic=new UpgradeSet("Magic");
 
 	/** Linked to an {@link MartialAcademy}. */
-	public UpgradeSet combatexpertise=new UpgradeSet("Tactician");
-	/** Linked to an {@link MartialAcademy}. */
 	public UpgradeSet powerattack=new UpgradeSet("Powerhead");
 	/** Linked to an {@link MartialAcademy}. */
 	public UpgradeSet shots=new UpgradeSet("Shots");
 
-	/** Spell school. */
+	/** Spell school. Wisdom. */
 	public UpgradeSet schooltotem=new UpgradeSet("Totem magic");
-	/** Spell school. */
+	/** charisma */
 	public UpgradeSet schoolcompulsion=new UpgradeSet("Compulsion magic");
-	/** Spell school. */
+	/** Spell school. Intelligence. */
 	public UpgradeSet schoolnecromancy=new UpgradeSet("Necromancy magic");
-	/** Spell school. */
+	/** charisma */
 	public UpgradeSet schoolconjuration=new UpgradeSet("Conjuration magic");
-	/** Spell school. */
+	/** Spell school. Inteliggence. */
 	public UpgradeSet schoolevocation=new UpgradeSet("Evocation magic");
-	/** Subdomain of conjuration. */
+	/** Subdomain of conjuration. Wisdom. */
 	public UpgradeSet schoolrestoration=new UpgradeSet("Restorarion magic");
-	/** Subdomain of necromancy. */
+	/** Subdomain of necromancy. Intelligence. */
 	public UpgradeSet schoolwounding=new UpgradeSet("Wounding magic");
-	/** Spell school; */
+	/** charisma */
 	public UpgradeSet schoolabjuration=new UpgradeSet("Abjuration magic");
-	/** Spell school; */
+	/** Spell school; Wisdom. */
 	public UpgradeSet schoolhealwounds=new UpgradeSet("Healing magic");
-	/** Spell school; */
+	/** Spell school; Inteligence. */
 	public UpgradeSet schooltransmutation=new UpgradeSet("Transmutation magic");
-	/** Spell school; */
+	/** Spell school. Wisdom. */
 	public UpgradeSet schooldivination=new UpgradeSet("Divination magic");
 
 	/** Internal upgrades. */

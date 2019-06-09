@@ -36,7 +36,6 @@ public class Monk extends Kit{
 		extension.add(Skill.SENSEMOTIVE.getupgrade());
 		extension.addAll(h.water);
 		extension.addAll(h.earth);
-		extension.addAll(h.combatexpertise);
 		for(Discipline d:Discipline.DISCIPLINES)
 			extension.add(d.trainingupgrade);
 	}

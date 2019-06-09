@@ -30,7 +30,6 @@ public class Rogue extends Kit{
 		basic.add(new FeatUpgrade(Deceitful.SINGLETON));
 		extension.addAll(h.wind);
 		extension.addAll(h.evil);
-		extension.addAll(h.combatexpertise);
 		extension.addAll(h.shots);
 	}
 

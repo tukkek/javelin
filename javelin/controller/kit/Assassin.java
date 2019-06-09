@@ -33,7 +33,6 @@ public class Assassin extends Kit{
 	protected void extend(UpgradeHandler h){
 		extension.addAll(h.evil);
 		extension.addAll(h.wind);
-		extension.addAll(h.combatexpertise);
 	}
 
 	@Override

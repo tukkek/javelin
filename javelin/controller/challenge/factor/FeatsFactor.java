@@ -18,10 +18,6 @@ import javelin.model.unit.feat.attack.Multiattack;
 import javelin.model.unit.feat.attack.MultiweaponFighting;
 import javelin.model.unit.feat.attack.PowerAttack;
 import javelin.model.unit.feat.attack.WeaponFinesse;
-import javelin.model.unit.feat.attack.expertise.CombatExpertise;
-import javelin.model.unit.feat.attack.expertise.ImprovedFeint;
-import javelin.model.unit.feat.attack.expertise.ImprovedGrapple;
-import javelin.model.unit.feat.attack.expertise.ImprovedTrip;
 import javelin.model.unit.feat.attack.focus.MeleeFocus;
 import javelin.model.unit.feat.attack.focus.RangedFocus;
 import javelin.model.unit.feat.attack.focus.WeaponFocus;
@@ -55,9 +51,6 @@ public class FeatsFactor extends CrFactor{
 			GreatFortitude.SINGLETON,CombatCasting.SINGLETON};
 
 	static final Feat[] WATER=new Feat[]{Acrobatic.SINGLETON};
-
-	static final Feat[] EXPERTISE=new Feat[]{CombatExpertise.SINGLETON,
-			ImprovedFeint.SINGLETON,ImprovedGrapple.SINGLETON,ImprovedTrip.SINGLETON};
 
 	static final Feat[] POWER=new Feat[]{PowerAttack.SINGLETON,BullRush.SINGLETON,
 			Cleave.SINGLETON,GreatCleave.SINGLETON};
@@ -99,7 +92,6 @@ public class FeatsFactor extends CrFactor{
 		register(handler.evil,EVIL);
 		register(handler.shots,SHOTS);
 		register(handler.powerattack,POWER);
-		register(handler.combatexpertise,EXPERTISE);
 		register(handler.internal,INTERNAL);
 	}
 

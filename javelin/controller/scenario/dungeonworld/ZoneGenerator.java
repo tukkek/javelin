@@ -34,7 +34,7 @@ import javelin.model.world.location.town.labor.Deck;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.Trait;
 import javelin.model.world.location.town.labor.basic.Lodge;
-import javelin.model.world.location.town.labor.cultural.MagesGuild;
+import javelin.model.world.location.town.labor.cultural.MagesGuild.BuildMagesGuild;
 import javelin.model.world.location.town.labor.expansive.Hub;
 import javelin.model.world.location.town.labor.productive.Shop;
 import javelin.old.RPG;
@@ -254,7 +254,7 @@ public class ZoneGenerator extends FeatureGenerator{
 		if(towns.isEmpty()){
 			size=11;
 			District d=t.getdistrict();
-			placeintown(RPG.pick(MagesGuild.GUILDS).generate(),d,z);
+			placeintown(new BuildMagesGuild().generateacademy(),d,z);
 			placeintown(new RealmAcademy(z.realm,false),d,z);
 			placeintown(new Shop(z.realm,true),d,z);
 			placeintown(new Lodge(),d,z);

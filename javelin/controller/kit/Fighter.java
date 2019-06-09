@@ -1,15 +1,20 @@
 package javelin.controller.kit;
 
+import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.classes.Warrior;
 import javelin.controller.upgrade.damage.MeleeDamage;
+import javelin.model.unit.feat.attack.expertise.CombatExpertise;
+import javelin.model.unit.feat.attack.expertise.ImprovedFeint;
+import javelin.model.unit.feat.attack.expertise.ImprovedGrapple;
+import javelin.model.unit.feat.attack.expertise.ImprovedTrip;
 import javelin.model.unit.skill.Skill;
 
 public class Fighter extends Kit{
 	public static final Kit INSTANCE=new Fighter();
 
-	private Fighter(){
+	Fighter(){
 		super("fighter",Warrior.SINGLETON,RaiseStrength.SINGLETON,"Swashbuckler",
 				"Veteran","Fighter","Champion");
 	}
@@ -17,7 +22,7 @@ public class Fighter extends Kit{
 	@Override
 	protected void define(){
 		basic.add(new MeleeDamage());
-		basic.addAll(UpgradeHandler.singleton.powerattack);
+		basic.add(new FeatUpgrade(CombatExpertise.SINGLETON));
 	}
 
 	@Override
@@ -25,7 +30,9 @@ public class Fighter extends Kit{
 		extension.add(Skill.SENSEMOTIVE.getupgrade());
 		extension.addAll(h.fire);
 		extension.addAll(h.earth);
-		extension.addAll(h.combatexpertise);
 		extension.addAll(h.shots);
+		basic.add(new FeatUpgrade(ImprovedFeint.SINGLETON));
+		basic.add(new FeatUpgrade(ImprovedGrapple.SINGLETON));
+		basic.add(new FeatUpgrade(ImprovedTrip.SINGLETON));
 	}
 }

@@ -17,7 +17,6 @@ import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.Realm;
 import javelin.model.unit.Monster;
-import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.world.Actor;
 import javelin.model.world.Caravan;
 import javelin.model.world.World;
@@ -42,26 +41,10 @@ import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.governor.MonsterGovernor;
 import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.model.world.location.town.labor.basic.Lodge;
-import javelin.model.world.location.town.labor.criminal.ThievesGuild;
-import javelin.model.world.location.town.labor.cultural.BardsGuild;
-import javelin.model.world.location.town.labor.cultural.MagesGuild;
-import javelin.model.world.location.town.labor.cultural.MagesGuild.MageGuildData;
-import javelin.model.world.location.town.labor.ecological.ArcheryRange;
-import javelin.model.world.location.town.labor.ecological.Henge;
-import javelin.model.world.location.town.labor.ecological.MeadHall;
-import javelin.model.world.location.town.labor.military.MartialAcademy;
-import javelin.model.world.location.town.labor.military.MartialAcademy.MartialAcademyData;
-import javelin.model.world.location.town.labor.military.Monastery;
 import javelin.model.world.location.town.labor.productive.Shop;
-import javelin.model.world.location.town.labor.religious.Sanctuary;
-import javelin.model.world.location.town.labor.religious.Shrine;
 import javelin.model.world.location.unique.AdventurersGuild;
-import javelin.model.world.location.unique.Artificer;
-import javelin.model.world.location.unique.AssassinsGuild;
 import javelin.model.world.location.unique.DeepDungeon;
-import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.model.world.location.unique.PillarOfSkulls;
-import javelin.model.world.location.unique.SummoningCircle;
 import javelin.model.world.location.unique.TrainingHall;
 import javelin.old.RPG;
 
@@ -97,12 +80,6 @@ public class FeatureGenerator implements Serializable{
 			dungeons.max=startingdungeons;
 		}
 		generators.put(Dungeon.class,dungeons);
-		if(World.scenario.worlddistrict){
-			generators.put(Shrine.class,new Frequency());
-			Frequency lodge=new Frequency(.75f);
-			lodge.max=5;
-			generators.put(Lodge.class,lodge);
-		}
 		if(Caravan.ALLOW){
 			Frequency caravan=new Frequency(Frequency.MONTHLY,true,false);
 			caravan.seeds=0;
@@ -182,7 +159,6 @@ public class FeatureGenerator implements Serializable{
 		UpgradeHandler.singleton.gather();
 		ArrayList<Location> locations=new ArrayList<>();
 		generateuniquelocations(locations);
-		if(World.scenario.worlddistrict) generateacademies(locations);
 		locations.addAll(World.scenario.generatestartinglocations());
 		for(Location l:locations)
 			l.place();
@@ -190,8 +166,6 @@ public class FeatureGenerator implements Serializable{
 
 	static void generateuniquelocations(ArrayList<Location> locations){
 		locations.addAll(List.of(new PillarOfSkulls(),new DeepDungeon()));
-		if(World.scenario.worlddistrict) locations.addAll(List
-				.of(new MercenariesGuild(),new Artificer(),new SummoningCircle(5,15)));
 		locations.addAll(generatehaunts());
 	}
 
@@ -217,18 +191,6 @@ public class FeatureGenerator implements Serializable{
 		spawnnear(t,new Dwelling(recruits.get(RPG.r(1,7))),seed,1,2,true);
 		spawnnear(t,new AdventurersGuild(),seed,2,3,true);
 		spawnnear(t,new TrainingHall(),seed,2,3,false);
-	}
-
-	static void generateacademies(ArrayList<Location> locations){
-		for(MageGuildData g:MagesGuild.GUILDS)
-			locations.add(g.generate());
-		for(MartialAcademyData g:MartialAcademy.ACADEMIES)
-			locations.add(g.generate());
-		locations.addAll(List.of(new ArcheryRange(),new MeadHall(),
-				new AssassinsGuild(),new Henge(),new BardsGuild(),new ThievesGuild(),
-				new Monastery(),new Sanctuary()));
-		for(Discipline d:Discipline.DISCIPLINES)
-			if(d.hasacademy) locations.add(d.generateacademy());
 	}
 
 	/**

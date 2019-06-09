@@ -41,6 +41,7 @@ public abstract class Kit implements Serializable{
 	public HashSet<Upgrade> basic=new HashSet<>();
 	public HashSet<Upgrade> extension=new HashSet<>();
 	public ClassLevelUpgrade classlevel;
+	public RaiseAbility ability;
 
 	String[] titles;
 
@@ -50,11 +51,12 @@ public abstract class Kit implements Serializable{
 		this.name=name;
 		classlevel=classadvancement;
 		basic.add(classadvancement);
-		basic.add(raiseability);
+		ability=raiseability;
+		basic.add(ability);
 		define();
-		int nupgrades=basic.size();
+		var nupgrades=basic.size();
 		if(Javelin.DEBUG&&!(3<=nupgrades&&nupgrades<=7)){
-			String error="Kit has "+nupgrades+" upgrades: "+name;
+			String error=name+" has "+nupgrades+" basic upgrades!";
 			throw new RuntimeException(error);
 		}
 		extend(UpgradeHandler.singleton);

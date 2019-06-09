@@ -81,7 +81,6 @@ public class Campaign extends Scenario{
 		simpletroves=false;
 		boost=1;
 		randomrealms=false;
-		worlddistrict=false;
 		spawn=true;
 		quests=true;
 		diplomacy=true;

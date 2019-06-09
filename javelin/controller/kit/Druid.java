@@ -10,6 +10,8 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.skill.Skill;
+import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.town.labor.ecological.Henge;
 import javelin.old.RPG;
 
 public class Druid extends Kit{
@@ -51,5 +53,10 @@ public class Druid extends Kit{
 			Monster m=RPG.pick(summons);
 			extension.add(new Summon(m.name));
 		}
+	}
+
+	@Override
+	public Academy createguild(){
+		return new Henge();
 	}
 }

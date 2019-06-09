@@ -12,6 +12,8 @@ import javelin.model.unit.feat.ImprovedInitiative;
 import javelin.model.unit.feat.save.LightningReflexes;
 import javelin.model.unit.feat.skill.Acrobatic;
 import javelin.model.unit.skill.Skill;
+import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.town.labor.military.Monastery;
 
 public class Monk extends Kit{
 	public static final Kit INSTANCE=new Monk();
@@ -43,5 +45,10 @@ public class Monk extends Kit{
 	@Override
 	public boolean allow(int bestability,int secondbest,Monster m){
 		return !m.alignment.ischaotic()&&super.allow(bestability,secondbest,m);
+	}
+
+	@Override
+	public Academy createguild(){
+		return new Monastery();
 	}
 }

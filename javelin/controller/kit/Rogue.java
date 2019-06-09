@@ -7,6 +7,8 @@ import javelin.controller.upgrade.classes.Expert;
 import javelin.model.unit.Monster;
 import javelin.model.unit.feat.skill.Deceitful;
 import javelin.model.unit.skill.Skill;
+import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.town.labor.criminal.ThievesGuild;
 
 public class Rogue extends Kit{
 	public static final Kit INSTANCE=new Rogue();
@@ -37,5 +39,10 @@ public class Rogue extends Kit{
 	public boolean allow(int bestability,int secondbest,Monster m){
 		return super.allow(bestability,secondbest,m)&&!m.alignment.isgood()
 				&&!m.alignment.islawful();
+	}
+
+	@Override
+	public Academy createguild(){
+		return new ThievesGuild();
 	}
 }

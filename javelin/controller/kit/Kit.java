@@ -14,7 +14,9 @@ import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.item.Tier;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.town.District;
 import javelin.model.world.location.unique.AdventurersGuild;
 
 /**
@@ -137,5 +139,10 @@ public abstract class Kit implements Serializable{
 	public String gettitle(Monster m){
 		int index=Tier.get(Math.round(m.cr)).ordinal();
 		return titles[Math.min(index,titles.length-1)];
+	}
+
+	/** A {@link District} {@link Location} to learn this kit. */
+	public Academy createguild(){
+		throw new RuntimeException("not implemented"); //TODO
 	}
 }

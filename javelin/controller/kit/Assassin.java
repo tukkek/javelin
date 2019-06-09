@@ -10,6 +10,8 @@ import javelin.controller.upgrade.damage.EffectUpgrade;
 import javelin.model.unit.Monster;
 import javelin.model.unit.feat.skill.Deceitful;
 import javelin.model.unit.skill.Skill;
+import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.unique.AssassinsGuild;
 
 public class Assassin extends Kit{
 	public static final Kit INSTANCE=new Assassin();
@@ -38,5 +40,10 @@ public class Assassin extends Kit{
 	@Override
 	public boolean allow(int bestability,int secondbest,Monster m){
 		return m.alignment.isevil()&&super.allow(bestability,secondbest,m);
+	}
+
+	@Override
+	public Academy createguild(){
+		return new AssassinsGuild();
 	}
 }

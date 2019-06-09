@@ -4,6 +4,8 @@ import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.controller.upgrade.classes.Expert;
 import javelin.model.unit.skill.Skill;
+import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.unique.AssassinsGuild;
 
 public class Bard extends Kit{
 	public static final Kit INSTANCE=new Bard();
@@ -29,5 +31,10 @@ public class Bard extends Kit{
 		extension.addAll(h.schoolabjuration);
 		extension.addAll(h.schooltotem);
 		extension.addAll(h.schoolcompulsion);
+	}
+
+	@Override
+	public Academy createguild(){
+		return new AssassinsGuild();
 	}
 }

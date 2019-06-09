@@ -5,6 +5,8 @@ import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.controller.upgrade.classes.Aristocrat;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.skill.Skill;
+import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.town.labor.cultural.MagesGuild;
 
 public abstract class Wizard extends Kit{
 	protected Wizard(String name,RaiseAbility ability,String title1){
@@ -18,5 +20,10 @@ public abstract class Wizard extends Kit{
 	protected void define(){
 		basic.add(Skill.CONCENTRATION.getupgrade());
 		basic.add(Skill.SPELLCRAFT.getupgrade());
+	}
+
+	@Override
+	public Academy createguild(){
+		return new MagesGuild(this);
 	}
 }

@@ -6,6 +6,8 @@ import javelin.controller.upgrade.classes.Warrior;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.BarbarianRage;
 import javelin.model.unit.skill.Skill;
+import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.town.labor.ecological.MeadHall;
 
 public class Barbarian extends Kit{
 	public static final Kit INSTANCE=new Barbarian();
@@ -31,5 +33,10 @@ public class Barbarian extends Kit{
 	@Override
 	public boolean allow(int bestability,int secondbest,Monster m){
 		return !m.alignment.islawful()&&super.allow(bestability,secondbest,m);
+	}
+
+	@Override
+	public Academy createguild(){
+		return new MeadHall();
 	}
 }

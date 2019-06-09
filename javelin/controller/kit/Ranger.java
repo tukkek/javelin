@@ -5,6 +5,8 @@ import javelin.controller.upgrade.ability.RaiseDexterity;
 import javelin.controller.upgrade.classes.Warrior;
 import javelin.model.unit.Monster;
 import javelin.model.unit.skill.Skill;
+import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.town.labor.ecological.ArcheryRange;
 
 public class Ranger extends Kit{
 	public static final Kit INSTANCE=new Ranger();
@@ -32,5 +34,10 @@ public class Ranger extends Kit{
 		extension.addAll(h.shots);
 		extension.addAll(h.schoolabjuration);
 		extension.addAll(h.schoolevocation);
+	}
+
+	@Override
+	public Academy createguild(){
+		return new ArcheryRange();
 	}
 }

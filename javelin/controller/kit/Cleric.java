@@ -6,6 +6,8 @@ import javelin.controller.upgrade.classes.Aristocrat;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureModerateWounds;
 import javelin.model.unit.skill.Skill;
+import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.town.labor.religious.Sanctuary;
 
 public class Cleric extends Kit{
 	/**
@@ -39,5 +41,10 @@ public class Cleric extends Kit{
 	public boolean allow(int bestability,int secondbest,Monster m){
 		if(!super.allow(bestability,secondbest,m)) return false;
 		return !m.alignment.ischaotic()&&!m.alignment.isevil();
+	}
+
+	@Override
+	public Academy createguild(){
+		return new Sanctuary();
 	}
 }

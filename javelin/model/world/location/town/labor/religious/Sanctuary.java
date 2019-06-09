@@ -65,15 +65,7 @@ public class Sanctuary extends Guild{
 		protected void done(Location goal){
 			super.done(goal);
 			Sanctuary s=(Sanctuary)goal;
-			s.upgrades.addAll(Paladin.INSTANCE.getupgrades());
-			while(s.upgrades.size()>MAXUPGRADES){
-				Upgrade u=RPG.pick(new ArrayList<>(s.upgrades));
-				if(u instanceof ClassLevelUpgrade) continue;
-				s.upgrades.remove(u);
-			}
-			s.upgraded=true;
-			s.descriptionknown=CATHEDRAL;
-			s.descriptionunknown=CATHEDRAL;
+			s.upgrade();
 		}
 	}
 
@@ -82,6 +74,19 @@ public class Sanctuary extends Guild{
 	/** Constructor. */
 	public Sanctuary(){
 		super("Sanctuary",Cleric.INSTANCE);
+	}
+
+	/** Turn sanctuary into cathedral. */
+	public void upgrade(){
+		upgrades.addAll(Paladin.INSTANCE.getupgrades());
+		while(upgrades.size()>MAXUPGRADES){
+			Upgrade u=RPG.pick(new ArrayList<>(upgrades));
+			if(u instanceof ClassLevelUpgrade) continue;
+			upgrades.remove(u);
+		}
+		upgraded=true;
+		descriptionknown=CATHEDRAL;
+		descriptionunknown=CATHEDRAL;
 	}
 
 	@Override

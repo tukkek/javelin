@@ -16,6 +16,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.unique.AdventurersGuild;
 
@@ -30,6 +31,17 @@ import javelin.model.world.location.unique.AdventurersGuild;
  * @author alex
  */
 public abstract class Kit implements Serializable{
+	class SimpleGuild extends Guild{
+		SimpleGuild(String string,Kit k){
+			super(string,k);
+		}
+
+		@Override
+		public String getimagename(){
+			return "locationmartialacademy";
+		}
+	}
+
 	static{
 		UpgradeHandler.singleton.gather();
 	}
@@ -143,6 +155,6 @@ public abstract class Kit implements Serializable{
 
 	/** A {@link District} {@link Location} to learn this kit. */
 	public Academy createguild(){
-		throw new RuntimeException("not implemented"); //TODO
+		return new SimpleGuild(name+"s guild",this);
 	}
 }

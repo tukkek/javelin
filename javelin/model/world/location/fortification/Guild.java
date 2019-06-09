@@ -126,5 +126,4 @@ public abstract class Guild extends Academy{
 			if(!hires.isEmpty()) clearhire(hires.get(0));
 		}
 	}
-
 }

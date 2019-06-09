@@ -2,11 +2,11 @@ package javelin.controller.kit;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.kit.wizard.Summoner;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseAbility;
@@ -32,10 +32,10 @@ public abstract class Kit implements Serializable{
 		UpgradeHandler.singleton.gather();
 	}
 
-	public static final List<Kit> KITS=Arrays
-			.asList(new Kit[]{Assassin.INSTANCE,Barbarian.INSTANCE,Bard.INSTANCE,
-					Cleric.INSTANCE,Druid.INSTANCE,Fighter.INSTANCE,Monk.INSTANCE,
-					Paladin.INSTANCE,Ranger.INSTANCE,Rogue.INSTANCE,Wizard.INSTANCE,});
+	public static final List<Kit> KITS=List.of(Assassin.INSTANCE,
+			Barbarian.INSTANCE,Bard.INSTANCE,Cleric.INSTANCE,Druid.INSTANCE,
+			Fighter.INSTANCE,Monk.INSTANCE,Paladin.INSTANCE,Ranger.INSTANCE,
+			Rogue.INSTANCE,Summoner.INSTANCE);
 
 	public String name;
 	public HashSet<Upgrade> basic=new HashSet<>();
@@ -61,9 +61,17 @@ public abstract class Kit implements Serializable{
 		titles=new String[]{title1,title2,title3,title4,};
 	}
 
-	protected abstract void extend(UpgradeHandler h);
-
+	/**
+	 * Registers around 3-5 {@link Upgrade}s that all (or most) members of this
+	 * Kit should share. Usually for CRs around 1-5.
+	 */
 	abstract protected void define();
+
+	/**
+	 * Add any other {@link Upgrade}s that extend this Kit into middle, high and
+	 * epic levels.
+	 */
+	protected abstract void extend(UpgradeHandler h);
 
 	public boolean ispreffered(int i){
 		return false;

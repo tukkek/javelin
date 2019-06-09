@@ -10,16 +10,13 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.factor.CrFactor;
-import javelin.controller.kit.Kit;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.Realm;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.skill.Skill.SkillUpgrade;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.cultural.MagesGuild;
 import javelin.model.world.location.town.labor.military.MartialAcademy;
-import javelin.model.world.location.unique.SummoningCircle;
 
 /**
  * Collects and distributes {@link Upgrade}s from different subsystems.
@@ -69,9 +66,9 @@ public class UpgradeHandler{
 	public UpgradeSet magic=new UpgradeSet("Magic");
 
 	/** Linked to an {@link MartialAcademy}. */
-	public UpgradeSet combatexpertise=new UpgradeSet("Expertise");
+	public UpgradeSet combatexpertise=new UpgradeSet("Tactician");
 	/** Linked to an {@link MartialAcademy}. */
-	public UpgradeSet powerattack=new UpgradeSet("Power");
+	public UpgradeSet powerattack=new UpgradeSet("Powerhead");
 	/** Linked to an {@link MartialAcademy}. */
 	public UpgradeSet shots=new UpgradeSet("Shots");
 
@@ -97,11 +94,6 @@ public class UpgradeHandler{
 	public UpgradeSet schooltransmutation=new UpgradeSet("Transmutation magic");
 	/** Spell school; */
 	public UpgradeSet schooldivination=new UpgradeSet("Divination magic");
-	/**
-	 * Used internally for summon spells. For learning {@link Summon}s see
-	 * {@link SummoningCircle}.
-	 */
-	public UpgradeSet schoolsummoning=new UpgradeSet("Summoning magic",true);
 
 	/** Internal upgrades. */
 	public UpgradeSet internal=new UpgradeSet("Internal",true);
@@ -138,7 +130,7 @@ public class UpgradeHandler{
 
 	/**
 	 * Initializes class, if needed.
-	 * 
+	 *
 	 * @return This object, for call-chaining.
 	 */
 	public UpgradeHandler gather(){
@@ -148,8 +140,8 @@ public class UpgradeHandler{
 		ClassLevelUpgrade.init();
 		for(var classlevel:ClassLevelUpgrade.classes)
 			classes.add(classlevel);
-		for(var kit:Kit.KITS)
-			new UpgradeSet(kit.name).addAll(kit.getupgrades());
+		//		for(var kit:Kit.KITS)
+		//			new UpgradeSet(kit.name).addAll(kit.getupgrades());
 		return this;
 	}
 

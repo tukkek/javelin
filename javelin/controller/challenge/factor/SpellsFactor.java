@@ -1,6 +1,5 @@
 package javelin.controller.challenge.factor;
 
-import javelin.Javelin;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.abjuration.Barkskin;
@@ -8,7 +7,6 @@ import javelin.model.unit.abilities.spell.abjuration.Blink;
 import javelin.model.unit.abilities.spell.abjuration.DispelMagic;
 import javelin.model.unit.abilities.spell.abjuration.ResistEnergy;
 import javelin.model.unit.abilities.spell.conjuration.SecureShelter;
-import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.abilities.spell.conjuration.healing.NeutralizePoison;
 import javelin.model.unit.abilities.spell.conjuration.healing.RaiseDead;
 import javelin.model.unit.abilities.spell.conjuration.healing.Ressurect;
@@ -135,17 +133,6 @@ public class SpellsFactor extends CrFactor{
 		handler.schoolevocation.add(new PolarRay());
 		handler.schoolevocation.add(new SoundBurst());
 		handler.schoolevocation.add(new FlameStrike());
-	}
-
-	/**
-	 * To be called post monster initialization.
-	 * {@link #registerupgrades(UpgradeHandler)} is called before monster are
-	 * loaded.
-	 */
-	static public void init(){
-		for(Monster m:Javelin.ALLMONSTERS)
-			if(!m.passive)
-				UpgradeHandler.singleton.schoolsummoning.add(new Summon(m.name,1));
 	}
 
 	@Override

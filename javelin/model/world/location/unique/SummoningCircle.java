@@ -26,6 +26,11 @@ public class SummoningCircle extends Academy{
 	static final String DESCRIPTION="Summoning circle";
 	static final int MAXSPELLS=9;
 
+	/**
+	 * Builds a {@link SummoningCircle}.
+	 *
+	 * @author alex
+	 */
 	public static class BuildSummoningCircle extends BuildAcademy{
 		public BuildSummoningCircle(){
 			super(Rank.VILLAGE);
@@ -37,12 +42,7 @@ public class SummoningCircle extends Academy{
 		}
 	}
 
-	/**
-	 * Constructor.
-	 *
-	 * @param minlevelp
-	 * @param maxlevelp
-	 */
+	/** Constructor. */
 	public SummoningCircle(int minlevelp,int maxlevelp){
 		super(DESCRIPTION,DESCRIPTION,new HashSet<Upgrade>());
 		minlevel=minlevelp;
@@ -64,7 +64,7 @@ public class SummoningCircle extends Academy{
 		List<Monster> monsters=Javelin.MONSTERSBYCR.get(cr);
 		Collections.shuffle(monsters);
 		for(Monster m:monsters)
-			if(m.type.equals("outsider")) return m;
+			if(m.type.equals(MonsterType.OUTSIDER)) return m;
 		return null;
 	}
 

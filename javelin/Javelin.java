@@ -23,7 +23,6 @@ import org.xml.sax.XMLReader;
 import javelin.controller.CountingSet;
 import javelin.controller.Highscore;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.controller.db.Preferences;
 import javelin.controller.db.StateManager;
 import javelin.controller.db.reader.MonsterReader;
@@ -118,7 +117,6 @@ public class Javelin{
 		}
 		Organization.init();
 		MonsterReader.closelogs();
-		SpellsFactor.init();
 		Spell.init();
 		Artifact.init();
 		Item.init();

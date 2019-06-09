@@ -16,8 +16,11 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.fortification.Academy.BuildAcademy;
 import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.unique.AdventurersGuild;
 
 /**
@@ -31,8 +34,33 @@ import javelin.model.world.location.unique.AdventurersGuild;
  * @author alex
  */
 public abstract class Kit implements Serializable{
-	class SimpleGuild extends Guild{
-		SimpleGuild(String string,Kit k){
+	/**
+	 * TODO temporaty class to help transtition from {@link UpgradeHandler} to a
+	 * pure {@link Kit}-based system.
+	 *
+	 * @author alex
+	 */
+	protected class BuildSimpleGuild extends BuildAcademy{
+		/** Constructor. */
+		protected BuildSimpleGuild(Rank minimumrank){
+			super(minimumrank);
+		}
+
+		@Override
+		protected Academy generateacademy(){
+			return createguild();
+		}
+	}
+
+	/**
+	 * TODO temporaty class to help transtition from {@link UpgradeHandler} to a
+	 * pure {@link Kit}-based system.
+	 *
+	 * @author alex
+	 */
+	protected class SimpleGuild extends Guild{
+		/** Constructor. */
+		protected SimpleGuild(String string,Kit k){
 			super(string,k);
 		}
 
@@ -153,8 +181,22 @@ public abstract class Kit implements Serializable{
 		return titles[Math.min(index,titles.length-1)];
 	}
 
-	/** A {@link District} {@link Location} to learn this kit. */
+	/**
+	 * A {@link District} {@link Location} to learn this kit.
+	 *
+	 * TODO the default implemtation is temporary, see {@link BuildSimpleGuild} -
+	 * move to abstract ASAP
+	 */
 	public Academy createguild(){
 		return new SimpleGuild(name+"s guild",this);
+	}
+
+	/**
+	 * @deprecated temporaty class to help transtition from {@link UpgradeHandler}
+	 *             to a pure {@link Kit}-based system.
+	 */
+	@Deprecated
+	public Labor buildguild(){
+		return new BuildSimpleGuild(Rank.HAMLET);
 	}
 }

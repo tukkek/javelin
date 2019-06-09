@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.ContentSummary;
+import javelin.controller.kit.Fighter;
 import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
 import javelin.model.world.World;
 import javelin.model.world.location.fortification.RealmAcademy.BuildRealmAcademy;
@@ -64,7 +65,7 @@ public class Deck extends ArrayList<Labor>{
 	static final Labor[] EXPANSIVE=new Labor[]{new BuildRoad(),new BuildHighway(),
 			new BuildTransportHub()};
 	static final Labor[] MILITARY=new Labor[]{new BuildMercenariesGuild(),
-			new BuildMonastery()};
+			new BuildMonastery(),Fighter.INSTANCE.buildguild()};
 	static final Labor[] MERCANTILE=new Labor[]{new BuildMine(),
 			new Deforestate()};
 	static final Labor[] RELIGIOUS=new Labor[]{new BuildShrine(),

@@ -9,7 +9,7 @@ import javelin.model.unit.skill.Concentration;
  * @author alex
  */
 public class CombatCasting extends Feat{
-	public static final CombatCasting SINGLETON=new CombatCasting();
+	public static final Feat SINGLETON=new CombatCasting();
 
 	private CombatCasting(){
 		super("Combat casting");

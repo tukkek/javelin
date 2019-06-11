@@ -10,21 +10,13 @@ import javelin.model.unit.feat.CombatCasting;
 import javelin.model.unit.feat.Feat;
 import javelin.model.unit.feat.ImprovedInitiative;
 import javelin.model.unit.feat.Toughness;
-import javelin.model.unit.feat.attack.BullRush;
-import javelin.model.unit.feat.attack.Cleave;
 import javelin.model.unit.feat.attack.ExoticWeaponProficiency;
-import javelin.model.unit.feat.attack.GreatCleave;
 import javelin.model.unit.feat.attack.Multiattack;
 import javelin.model.unit.feat.attack.MultiweaponFighting;
-import javelin.model.unit.feat.attack.PowerAttack;
 import javelin.model.unit.feat.attack.WeaponFinesse;
 import javelin.model.unit.feat.attack.focus.MeleeFocus;
 import javelin.model.unit.feat.attack.focus.RangedFocus;
 import javelin.model.unit.feat.attack.focus.WeaponFocus;
-import javelin.model.unit.feat.attack.shot.ImprovedPreciseShot;
-import javelin.model.unit.feat.attack.shot.PointBlankShot;
-import javelin.model.unit.feat.attack.shot.PreciseShot;
-import javelin.model.unit.feat.attack.shot.RapidShot;
 import javelin.model.unit.feat.save.GreatFortitude;
 import javelin.model.unit.feat.save.IronWill;
 import javelin.model.unit.feat.save.LightningReflexes;
@@ -51,12 +43,6 @@ public class FeatsFactor extends CrFactor{
 			GreatFortitude.SINGLETON,CombatCasting.SINGLETON};
 
 	static final Feat[] WATER=new Feat[]{Acrobatic.SINGLETON};
-
-	static final Feat[] POWER=new Feat[]{PowerAttack.SINGLETON,BullRush.SINGLETON,
-			Cleave.SINGLETON,GreatCleave.SINGLETON};
-
-	static final Feat[] SHOTS=new Feat[]{PointBlankShot.SINGLETON,
-			PreciseShot.SINGLETON,ImprovedPreciseShot.SINGLETON,RapidShot.SINGLETON};
 
 	static final Feat[] INTERNAL=new Feat[]{WeaponFocus.SINGLETON,
 			ExoticWeaponProficiency.SINGLETON,Multiattack.SINGLETON,
@@ -90,8 +76,6 @@ public class FeatsFactor extends CrFactor{
 		register(handler.water,WATER);
 		register(handler.good,GOOD);
 		register(handler.evil,EVIL);
-		register(handler.shots,SHOTS);
-		register(handler.powerattack,POWER);
 		register(handler.internal,INTERNAL);
 	}
 

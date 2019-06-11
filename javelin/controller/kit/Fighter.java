@@ -15,13 +15,12 @@ public class Fighter extends Kit{
 	public static final Kit INSTANCE=new Fighter();
 
 	Fighter(){
-		super("fighter",Warrior.SINGLETON,RaiseStrength.SINGLETON,"Swashbuckler",
-				"Veteran","Fighter","Champion");
+		super("fighter",Warrior.SINGLETON,RaiseStrength.SINGLETON);
 	}
 
 	@Override
 	protected void define(){
-		basic.add(new MeleeDamage());
+		basic.add(MeleeDamage.INSTANCE);
 		basic.add(new FeatUpgrade(CombatExpertise.SINGLETON));
 	}
 
@@ -30,7 +29,6 @@ public class Fighter extends Kit{
 		extension.add(Skill.SENSEMOTIVE.getupgrade());
 		extension.addAll(h.fire);
 		extension.addAll(h.earth);
-		extension.addAll(h.shots);
 		basic.add(new FeatUpgrade(ImprovedFeint.SINGLETON));
 		basic.add(new FeatUpgrade(ImprovedGrapple.SINGLETON));
 		basic.add(new FeatUpgrade(ImprovedTrip.SINGLETON));

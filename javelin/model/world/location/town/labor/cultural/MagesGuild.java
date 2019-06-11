@@ -48,6 +48,7 @@ public class MagesGuild extends Academy{
 	public MagesGuild(Wizard kit){
 		super(kit.name+"s guild","Mages guild",0,0,kit.getupgrades(),kit.ability,
 				Aristocrat.SINGLETON);
+		kit.validate();
 		while(upgrades.size()>20){
 			var u=RPG.pick(upgrades);
 			if(u instanceof Spell) upgrades.remove(u);

@@ -55,8 +55,8 @@ public class Shrine extends Fortification{
 
 	static{
 		UpgradeHandler.singleton.gather();
-		for(Spell p:UpgradeHandler.singleton.getspells())
-			if(p.isritual) RITUALS.add(p);
+		for(var s:Spell.ALL)
+			if(s.isritual) RITUALS.add(s);
 	}
 
 	/**

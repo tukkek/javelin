@@ -11,7 +11,10 @@ import javelin.model.unit.attack.AttackSequence;
  * @author alex
  */
 public class RangedDamage extends Damage{
-	public RangedDamage(){
+	/** Singleton. */
+	public static final RangedDamage INSTANCE=new RangedDamage();
+
+	RangedDamage(){
 		super("More ranged damage");
 	}
 

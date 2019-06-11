@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javelin.controller.challenge.factor.FeatsFactor;
 import javelin.controller.db.reader.MonsterReader;
+import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -143,5 +144,9 @@ public abstract class Feat implements Serializable,javelin.model.Cloneable{
 	 */
 	public void read(Monster m){
 		// nothing unless overriden
+	}
+
+	public Upgrade getupgrade(){
+		return new FeatUpgrade(this);
 	}
 }

@@ -11,8 +11,8 @@ import javelin.controller.action.CastSpell;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.factor.CrFactor;
 import javelin.controller.fight.minigame.Minigame;
+import javelin.controller.kit.Kit;
 import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.item.Potion;
@@ -46,12 +46,19 @@ import javelin.model.world.location.town.labor.religious.Shrine;
  */
 public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 	/** Canonical list of all spells by lower-case name. */
-	public static final HashMap<String,Spell> SPELLS=new HashMap<>();
+	public static final HashMap<String,Spell> BYNAME=new HashMap<>();
+	/** All spells. */
+	public static final List<Spell> ALL=new ArrayList<>();
 
 	/** Load spells. */
 	static public void init(){
-		for(Spell s:UpgradeHandler.singleton.getspells())
-			SPELLS.put(s.name.toLowerCase(),s);
+		for(var k:Kit.KITS)
+			for(Upgrade u:k.getupgrades())
+				if(u instanceof Spell){
+					var s=(Spell)u;
+					BYNAME.put(s.name.toLowerCase(),s);
+					ALL.add(s);
+				}
 	}
 
 	/**

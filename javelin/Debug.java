@@ -170,6 +170,7 @@ public class Debug{
 		}
 
 		static void testkit(Kit kit){
+			kit.validate();
 			Squad.active.members.clear();
 			var human=Javelin.getmonster("human");
 			for(var level:new int[]{3,8,13,18}){

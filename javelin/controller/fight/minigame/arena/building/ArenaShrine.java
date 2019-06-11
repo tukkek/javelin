@@ -15,7 +15,7 @@ import javelin.old.RPG;
  * @author alex
  */
 public class ArenaShrine extends ArenaFountain{
-	static final List<Spell> RITUALS=Spell.SPELLS.values().stream()
+	static final List<Spell> RITUALS=Spell.BYNAME.values().stream()
 			.filter(s->s.castonallies&&s.castinbattle).collect(Collectors.toList());
 
 	Spell ritual=RPG.pick(RITUALS);

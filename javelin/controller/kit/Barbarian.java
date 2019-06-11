@@ -1,10 +1,15 @@
 package javelin.controller.kit;
 
+import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.classes.Warrior;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.BarbarianRage;
+import javelin.model.unit.feat.attack.BullRush;
+import javelin.model.unit.feat.attack.Cleave;
+import javelin.model.unit.feat.attack.GreatCleave;
+import javelin.model.unit.feat.attack.PowerAttack;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.town.labor.ecological.MeadHall;
@@ -13,8 +18,7 @@ public class Barbarian extends Kit{
 	public static final Kit INSTANCE=new Barbarian();
 
 	private Barbarian(){
-		super("barbarian",Warrior.SINGLETON,RaiseStrength.SINGLETON,"Whelp",
-				"Savage","Barbarian","Chieftain");
+		super("barbarian",Warrior.SINGLETON,RaiseStrength.SINGLETON);
 	}
 
 	@Override
@@ -27,7 +31,10 @@ public class Barbarian extends Kit{
 	protected void extend(UpgradeHandler h){
 		extension.addAll(h.earth);
 		extension.addAll(h.fire);
-		extension.addAll(h.powerattack);
+		extension.add(new FeatUpgrade(PowerAttack.SINGLETON));
+		extension.add(new FeatUpgrade(BullRush.SINGLETON));
+		extension.add(new FeatUpgrade(Cleave.SINGLETON));
+		extension.add(new FeatUpgrade(GreatCleave.SINGLETON));
 	}
 
 	@Override

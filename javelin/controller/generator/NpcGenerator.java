@@ -109,15 +109,14 @@ public class NpcGenerator{
 		float base=c.source.cr+targetcr/2;
 		while(c.source.cr<base&&k.classlevel.apply(c))
 			ChallengeCalculator.calculatecr(c.source);
-		HashSet<Upgrade> upgrades=new HashSet<>(k.basic);
-		upgrades.addAll(k.extension);
+		HashSet<Upgrade> upgrades=k.getupgrades();
 		while(c.source.cr<targetcr){
 			c.upgrade(upgrades);
 			tries-=1;
 			if(tries==0) return null;
 		}
 		if(c.source.cr<=originalcr) return null;
-		c.source.customName=c.source.name+" "+k.gettitle(c.source).toLowerCase();
+		k.rename(c.source);
 		return c;
 	}
 

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -60,34 +59,6 @@ public class UpgradeHandler{
 	public UpgradeSet evil=new UpgradeSet("Evil");
 	/** Linked HashSet a {@link Town}'s realm. */
 	public UpgradeSet magic=new UpgradeSet("Magic");
-
-	/** Linked to an {@link MartialAcademy}. */
-	public UpgradeSet powerattack=new UpgradeSet("Powerhead");
-	/** Linked to an {@link MartialAcademy}. */
-	public UpgradeSet shots=new UpgradeSet("Shots");
-
-	/** Spell school. Wisdom. */
-	public UpgradeSet schooltotem=new UpgradeSet("Totem magic");
-	/** charisma */
-	public UpgradeSet schoolcompulsion=new UpgradeSet("Compulsion magic");
-	/** Spell school. Intelligence. */
-	public UpgradeSet schoolnecromancy=new UpgradeSet("Necromancy magic");
-	/** charisma */
-	public UpgradeSet schoolconjuration=new UpgradeSet("Conjuration magic");
-	/** Spell school. Inteliggence. */
-	public UpgradeSet schoolevocation=new UpgradeSet("Evocation magic");
-	/** Subdomain of conjuration. Wisdom. */
-	public UpgradeSet schoolrestoration=new UpgradeSet("Restorarion magic");
-	/** Subdomain of necromancy. Intelligence. */
-	public UpgradeSet schoolwounding=new UpgradeSet("Wounding magic");
-	/** charisma */
-	public UpgradeSet schoolabjuration=new UpgradeSet("Abjuration magic");
-	/** Spell school; Wisdom. */
-	public UpgradeSet schoolhealwounds=new UpgradeSet("Healing magic");
-	/** Spell school; Inteligence. */
-	public UpgradeSet schooltransmutation=new UpgradeSet("Transmutation magic");
-	/** Spell school. Wisdom. */
-	public UpgradeSet schooldivination=new UpgradeSet("Divination magic");
 
 	/** Internal upgrades. */
 	public UpgradeSet internal=new UpgradeSet("Internal",true);
@@ -194,23 +165,12 @@ public class UpgradeHandler{
 	}
 
 	/**
-	 * @return All spells available in the game.
-	 */
-	public List<Spell> getspells(){
-		ArrayList<Spell> spells=new ArrayList<>();
-		for(HashSet<Upgrade> category:getall(true).values())
-			for(Upgrade u:category)
-				if(u instanceof Spell) spells.add((Spell)u);
-		return spells;
-	}
-
-	/**
 	 * @return All normal upgrades for the given {@link Realm} plus the relevant
 	 *         {@link Spell}s which can only be found on {@link MagesGuild}s.
 	 */
 	public Collection<? extends Upgrade> getfullupgrades(Realm r){
-		HashSet<Upgrade> upgrades=new HashSet<>(getupgrades(r));
-		for(Spell s:getspells())
+		var upgrades=new HashSet<>(getupgrades(r));
+		for(var s:Spell.ALL)
 			if(s.realm.equals(r)) upgrades.add(s);
 		return upgrades;
 	}

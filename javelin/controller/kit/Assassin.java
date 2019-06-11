@@ -17,8 +17,7 @@ public class Assassin extends Kit{
 	public static final Kit INSTANCE=new Assassin();
 
 	private Assassin(){
-		super("assassin",Expert.SINGLETON,RaiseDexterity.SINGLETON,"Thug",
-				"Cutthroat","Assassin","Ninja");
+		super("assassin",Expert.SINGLETON,RaiseDexterity.SINGLETON);
 	}
 
 	@Override

@@ -4,9 +4,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.kit.wizard.Summoner;
+import javelin.controller.kit.wizard.Abjurer;
+import javelin.controller.kit.wizard.Conjurer;
+import javelin.controller.kit.wizard.Diviner;
+import javelin.controller.kit.wizard.Enchanter;
+import javelin.controller.kit.wizard.Evoker;
+import javelin.controller.kit.wizard.Necromancer;
+import javelin.controller.kit.wizard.Transmuter;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseAbility;
@@ -14,6 +21,7 @@ import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.item.Tier;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.fortification.Academy.BuildAcademy;
@@ -31,9 +39,25 @@ import javelin.model.world.location.unique.AdventurersGuild;
  *
  * Kits are usually created by piecing together 3 to 7 lowest-level upgrades.
  *
+ * TODO at some point should reference all kits by Class and keep an internal
+ * Map - instead, currently when we save and load, new instance are generated
+ * needlessly.
+ *
  * @author alex
  */
 public abstract class Kit implements Serializable{
+	/**
+	 * All kits available in game.
+	 *
+	 * @see #validate()
+	 */
+	public static final List<Kit> KITS=List.of(Assassin.INSTANCE,
+			Barbarian.INSTANCE,Bard.INSTANCE,Cleric.INSTANCE,Druid.INSTANCE,
+			Fighter.INSTANCE,Monk.INSTANCE,Paladin.INSTANCE,Ranger.INSTANCE,
+			Rogue.INSTANCE,Transmuter.INSTANCE,Enchanter.INSTANCE,
+			Necromancer.INSTANCE,Conjurer.INSTANCE,Evoker.INSTANCE,Abjurer.INSTANCE,
+			Diviner.INSTANCE);
+
 	/**
 	 * TODO temporaty class to help transtition from {@link UpgradeHandler} to a
 	 * pure {@link Kit}-based system.
@@ -74,35 +98,32 @@ public abstract class Kit implements Serializable{
 		UpgradeHandler.singleton.gather();
 	}
 
-	public static final List<Kit> KITS=List.of(Assassin.INSTANCE,
-			Barbarian.INSTANCE,Bard.INSTANCE,Cleric.INSTANCE,Druid.INSTANCE,
-			Fighter.INSTANCE,Monk.INSTANCE,Paladin.INSTANCE,Ranger.INSTANCE,
-			Rogue.INSTANCE,Summoner.INSTANCE);
-
 	public String name;
 	public HashSet<Upgrade> basic=new HashSet<>();
 	public HashSet<Upgrade> extension=new HashSet<>();
 	public ClassLevelUpgrade classlevel;
 	public RaiseAbility ability;
 
-	String[] titles;
+	/**
+	 * One title per {@link Tier}. A $ should be replaced by the
+	 * {@link Monster#name}.
+	 *
+	 * @see #rename(Monster)
+	 */
+	protected String[] titles;
 
 	public Kit(String name,ClassLevelUpgrade classadvancement,
-			RaiseAbility raiseability,String title1,String title2,String title3,
-			String title4){
+			RaiseAbility raiseability){
 		this.name=name;
 		classlevel=classadvancement;
 		basic.add(classadvancement);
 		ability=raiseability;
 		basic.add(ability);
 		define();
-		var nupgrades=basic.size();
-		if(Javelin.DEBUG&&!(3<=nupgrades&&nupgrades<=7)){
-			String error=name+" has "+nupgrades+" basic upgrades!";
-			throw new RuntimeException(error);
-		}
 		extend(UpgradeHandler.singleton);
-		titles=new String[]{title1,title2,title3,title4,};
+		var lower=name.toLowerCase();
+		titles=new String[]{"Inept $ "+lower,"Rookie $ "+lower,"$ "+lower,
+				"Veteran $ "+lower};
 	}
 
 	/**
@@ -176,9 +197,15 @@ public abstract class Kit implements Serializable{
 		return upgrades;
 	}
 
-	public String gettitle(Monster m){
-		int index=Tier.get(Math.round(m.cr)).ordinal();
-		return titles[Math.min(index,titles.length-1)];
+	/**
+	 * Sets {@link Monster#customName} to one of the appropriate {@link #titles}.
+	 */
+	public void rename(Monster m){
+		var index=Tier.get(Math.round(m.cr)).ordinal();
+		var title=titles[Math.min(index,titles.length-1)];
+		var name=m.name;
+		if(title.charAt(0)!='$') name=name.toLowerCase();
+		m.customName=title.replace("$",name);
 	}
 
 	/**
@@ -198,5 +225,25 @@ public abstract class Kit implements Serializable{
 	@Deprecated
 	public Labor buildguild(){
 		return new BuildSimpleGuild(Rank.HAMLET);
+	}
+
+	/** Does a few sanity and design checks if in {@link Javelin#DEBUG} mode. */
+	public void validate(){
+		if(!Javelin.DEBUG) return;
+		if(!Kit.KITS.contains(this))
+			throw new RuntimeException("Kit not registered: "+name);
+		var nupgrades=basic.size();
+		if(!(3<=nupgrades&&nupgrades<=7)){
+			String error=name+" has "+nupgrades+" basic upgrades!";
+			throw new RuntimeException(error);
+		}
+	}
+
+	/**
+	 * @return All {@link Spell}s that are part of this kit. May be empty.
+	 */
+	public List<Spell> getspells(){
+		return getupgrades().stream().filter(u->u instanceof Spell).map(u->(Spell)u)
+				.collect(Collectors.toList());
 	}
 }

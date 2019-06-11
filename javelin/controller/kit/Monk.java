@@ -19,8 +19,7 @@ public class Monk extends Kit{
 	public static final Kit INSTANCE=new Monk();
 
 	private Monk(){
-		super("monk",Warrior.SINGLETON,RaiseStrength.SINGLETON,"Novice","Disciple",
-				"Monk","Master");
+		super("monk",Warrior.SINGLETON,RaiseStrength.SINGLETON);
 	}
 
 	@Override

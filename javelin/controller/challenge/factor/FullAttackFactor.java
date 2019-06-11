@@ -63,8 +63,8 @@ public class FullAttackFactor extends CrFactor{
 
 	@Override
 	public void registerupgrades(UpgradeHandler handler){
-		handler.fire.add(new MeleeDamage());
-		handler.wind.add(new RangedDamage());
+		handler.fire.add(MeleeDamage.INSTANCE);
+		handler.wind.add(RangedDamage.INSTANCE);
 		DamageEffect.init();
 		for(DamageEffect e:DamageEffect.EFFECTS)
 			e.realm.getupgrades(handler).add(new EffectUpgrade(e));

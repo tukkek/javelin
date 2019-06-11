@@ -1,5 +1,6 @@
 package javelin.controller.kit;
 
+import javelin.controller.kit.wizard.Conjurer;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.controller.upgrade.classes.Warrior;
@@ -14,8 +15,7 @@ public class Paladin extends Kit{
 	public static final Kit INSTANCE=new Paladin();
 
 	Paladin(){
-		super("paladin",Warrior.SINGLETON,RaiseCharisma.SINGLETON,"Keeper",
-				"Guardian","Paladin","Justicar");
+		super("paladin",Warrior.SINGLETON,RaiseCharisma.SINGLETON);
 	}
 
 	@Override
@@ -29,8 +29,7 @@ public class Paladin extends Kit{
 	protected void extend(UpgradeHandler h){
 		extension.addAll(h.good);
 		extension.addAll(h.magic);
-		extension.addAll(h.schoolhealwounds);
-		extension.addAll(h.schoolcompulsion);
+		extension.addAll(Conjurer.HEALING);
 	}
 
 	@Override

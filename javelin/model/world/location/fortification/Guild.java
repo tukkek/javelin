@@ -29,6 +29,7 @@ public abstract class Guild extends Academy{
 
 	public Guild(String string,Kit k){
 		super(string,string,getselection(k));
+		k.validate();
 		kit=k;
 		while(!hashire())
 			generatehires();

@@ -35,6 +35,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.fortification.Academy;
@@ -117,6 +118,7 @@ public class Javelin{
 		}
 		Organization.init();
 		MonsterReader.closelogs();
+		Summon.init();
 		Spell.init();
 		Artifact.init();
 		Item.init();

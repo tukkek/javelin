@@ -110,7 +110,7 @@ public class ContentSummary{
 		print(Javelin.ALLMONSTERS.size()+" monsters");
 		print(Item.ALL.size()-Item.ARTIFACT.size()+" items, "+Item.ARTIFACT.size()
 				+" artifacts, 7 relics");
-		Collection<Spell> spells=Spell.SPELLS.values();
+		Collection<Spell> spells=Spell.BYNAME.values();
 		var upgrades=UpgradeHandler.singleton;
 		upgrades.gather();
 		int nskills=upgrades.countskills();

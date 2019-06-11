@@ -1,5 +1,8 @@
 package javelin.controller.kit;
 
+import javelin.controller.kit.wizard.Abjurer;
+import javelin.controller.kit.wizard.Enchanter;
+import javelin.controller.kit.wizard.Transmuter;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.controller.upgrade.classes.Expert;
@@ -11,8 +14,7 @@ public class Bard extends Kit{
 	public static final Kit INSTANCE=new Bard();
 
 	private Bard(){
-		super("bard",Expert.SINGLETON,RaiseCharisma.SINGLETON,"Joker","Minstrel",
-				"Bard","Maestro");
+		super("bard",Expert.SINGLETON,RaiseCharisma.SINGLETON);
 	}
 
 	@Override
@@ -28,9 +30,9 @@ public class Bard extends Kit{
 	protected void extend(UpgradeHandler h){
 		extension.addAll(h.wind);
 		extension.addAll(h.magic);
-		extension.addAll(h.schoolabjuration);
-		extension.addAll(h.schooltotem);
-		extension.addAll(h.schoolcompulsion);
+		extension.addAll(Transmuter.INSTANCE.getspells());
+		extension.addAll(Enchanter.INSTANCE.getspells());
+		extension.addAll(Abjurer.INSTANCE.getspells());
 	}
 
 	@Override

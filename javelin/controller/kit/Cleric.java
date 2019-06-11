@@ -1,5 +1,8 @@
 package javelin.controller.kit;
 
+import javelin.controller.kit.wizard.Conjurer;
+import javelin.controller.kit.wizard.Diviner;
+import javelin.controller.kit.wizard.Enchanter;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.controller.upgrade.classes.Aristocrat;
@@ -17,8 +20,7 @@ public class Cleric extends Kit{
 	public static final Kit INSTANCE=new Cleric();
 
 	private Cleric(){
-		super("cleric",Aristocrat.SINGLETON,RaiseWisdom.SINGLETON,"Initiate",
-				"Priest","Cleric","Pathiarch");
+		super("cleric",Aristocrat.SINGLETON,RaiseWisdom.SINGLETON);
 	}
 
 	@Override
@@ -31,10 +33,9 @@ public class Cleric extends Kit{
 	@Override
 	protected void extend(UpgradeHandler h){
 		extension.addAll(h.good);
-		extension.addAll(h.schoolhealwounds);
-		extension.addAll(h.schoolrestoration);
-		extension.addAll(h.schooldivination);
-		extension.addAll(h.schoolcompulsion);
+		extension.addAll(Conjurer.INSTANCE.getupgrades());
+		extension.addAll(Enchanter.INSTANCE.getspells());
+		extension.addAll(Diviner.INSTANCE.getspells());
 	}
 
 	@Override

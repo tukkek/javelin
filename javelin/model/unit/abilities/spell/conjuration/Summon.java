@@ -5,12 +5,18 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.db.reader.MonsterReader;
+import javelin.controller.kit.Kit;
+import javelin.controller.kit.wizard.Conjurer;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.Monster.MonsterType;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.world.location.town.labor.ecological.Henge;
+import javelin.model.world.location.unique.SummoningCircle;
 import javelin.old.RPG;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 
@@ -34,11 +40,16 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  * TODO This should not be a {@link Spell}. See
  * {@link #cast(Combatant, Combatant, boolean, BattleState, ChanceNode)}
  *
+ * Since we can't possibly add all {@link Summon} spell to the proper
+ * {@link Conjurer} {@link Kit}, other locations are avialable for different
+ * {@link MonsterType} summon spells, such as the {@link SummoningCircle} and
+ * the {@link Henge}.
+ *
+ * @see Conjurer#SUMMON
  * @author alex
  */
 public class Summon extends Spell{
 	static final int[] DISPLACE=new int[]{-1,0,+1};
-
 	static final float CRFACTOR=5f;
 
 	public String monstername;
@@ -135,5 +146,16 @@ public class Summon extends Spell{
 	@Override
 	public boolean equals(Object obj){
 		return super.equals(obj)&&monstername.equals(((Summon)obj).monstername);
+	}
+
+	/**
+	 * Unlike most Kits, {@link Summon} spells need to be created after all
+	 * {@link Monster}s are loaded.
+	 *
+	 * @see MonsterReader
+	 */
+	public static void init(){
+		Javelin.ALLMONSTERS.stream().filter(m->!m.passive)
+				.map(m->new Summon(m.name,1)).forEach(s->Conjurer.SUMMON.add(s));
 	}
 }

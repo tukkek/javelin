@@ -240,7 +240,7 @@ public class MonsterReader extends DefaultHandler{
 			if(spellname.contains("summon"))
 				s=new Summon(spellname.replace("summon ",""),1);
 			else{
-				s=Spell.SPELLS.get(spellname);
+				s=Spell.BYNAME.get(spellname);
 				if(s==null) throw new RuntimeException("Uknown spell: "+spellname);
 			}
 			var existing=monster.spells.get(s.getClass());

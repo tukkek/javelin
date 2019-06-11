@@ -265,7 +265,7 @@ public abstract class Item implements Serializable,Cloneable{
 
 	/** Creates {@link Item}s from {@link Spell}s. */
 	public static void init(){
-		for(Spell s:Spell.SPELLS.values()){
+		for(Spell s:Spell.BYNAME.values()){
 			if(s.isscroll) new Scroll(s).register();
 			if(s.iswand) new Wand(s).register();
 			if(s.ispotion) new Potion(s).register();

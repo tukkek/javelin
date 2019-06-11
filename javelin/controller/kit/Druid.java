@@ -3,6 +3,9 @@ package javelin.controller.kit;
 import java.util.LinkedList;
 
 import javelin.Javelin;
+import javelin.controller.kit.wizard.Conjurer;
+import javelin.controller.kit.wizard.Diviner;
+import javelin.controller.kit.wizard.Transmuter;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.controller.upgrade.classes.Commoner;
@@ -18,8 +21,7 @@ public class Druid extends Kit{
 	public static final Kit INSTANCE=new Druid();
 
 	private Druid(){
-		super("druid",Commoner.SINGLETON,RaiseWisdom.SINGLETON,"Herder","Elder",
-				"Druid","Archdruid");
+		super("druid",Commoner.SINGLETON,RaiseWisdom.SINGLETON);
 	}
 
 	@Override
@@ -36,10 +38,9 @@ public class Druid extends Kit{
 		extension.addAll(h.fire);
 		extension.addAll(h.water);
 		extension.addAll(h.wind);
-		extension.addAll(h.schoolhealwounds);
-		extension.addAll(h.schooltotem);
-		extension.addAll(h.schooltransmutation);
-		extension.addAll(h.schooldivination);
+		extension.addAll(Conjurer.HEALING);
+		extension.addAll(Transmuter.INSTANCE.getspells());
+		extension.addAll(Diviner.INSTANCE.getspells());
 		addsummons(extension.size());
 	}
 

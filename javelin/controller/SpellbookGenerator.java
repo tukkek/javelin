@@ -11,7 +11,7 @@ public class SpellbookGenerator{
 	static final TreeMap<Float,Spells> SPELLS=new TreeMap<>();
 
 	static{
-		for(final Spell s:Spell.SPELLS.values()){
+		for(final Spell s:Spell.BYNAME.values()){
 			Spells list=SPELLS.get(s.cr);
 			if(list==null){
 				list=new Spells();

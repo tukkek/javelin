@@ -11,7 +11,10 @@ import javelin.model.unit.attack.AttackSequence;
  * @author alex
  */
 public class MeleeDamage extends Damage{
-	public MeleeDamage(){
+	/** Singleon. */
+	public static final MeleeDamage INSTANCE=new MeleeDamage();
+
+	MeleeDamage(){
 		super("More mêlée damage");
 	}
 

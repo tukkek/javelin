@@ -14,8 +14,7 @@ public class Rogue extends Kit{
 	public static final Kit INSTANCE=new Rogue();
 
 	private Rogue(){
-		super("rogue",Expert.SINGLETON,RaiseDexterity.SINGLETON,"Cutpurse",
-				"Burglar","Rogue","Shadow");
+		super("rogue",Expert.SINGLETON,RaiseDexterity.SINGLETON);
 	}
 
 	@Override
@@ -29,10 +28,9 @@ public class Rogue extends Kit{
 
 	@Override
 	protected void extend(UpgradeHandler h){
-		basic.add(new FeatUpgrade(Deceitful.SINGLETON));
+		extension.add(new FeatUpgrade(Deceitful.SINGLETON));
 		extension.addAll(h.wind);
 		extension.addAll(h.evil);
-		extension.addAll(h.shots);
 	}
 
 	@Override

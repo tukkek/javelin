@@ -5,7 +5,9 @@ import javelin.controller.kit.wizard.Enchanter;
 import javelin.controller.kit.wizard.Transmuter;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseCharisma;
-import javelin.controller.upgrade.classes.Expert;
+import javelin.controller.upgrade.ability.RaiseIntelligence;
+import javelin.controller.upgrade.classes.Aristocrat;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.unique.AssassinsGuild;
@@ -14,7 +16,8 @@ public class Bard extends Kit{
 	public static final Kit INSTANCE=new Bard();
 
 	private Bard(){
-		super("bard",Expert.SINGLETON,RaiseCharisma.SINGLETON);
+		super("bard",Aristocrat.SINGLETON,RaiseCharisma.SINGLETON,
+				RaiseIntelligence.SINGLETON);
 	}
 
 	@Override
@@ -30,9 +33,9 @@ public class Bard extends Kit{
 	protected void extend(UpgradeHandler h){
 		extension.addAll(h.wind);
 		extension.addAll(h.magic);
-		extension.addAll(Transmuter.INSTANCE.getspells());
-		extension.addAll(Enchanter.INSTANCE.getspells());
-		extension.addAll(Abjurer.INSTANCE.getspells());
+		extension.addAll(Transmuter.INSTANCE.filter(Spell.class));
+		extension.addAll(Enchanter.INSTANCE.filter(Spell.class));
+		extension.addAll(Abjurer.INSTANCE.filter(Spell.class));
 	}
 
 	@Override

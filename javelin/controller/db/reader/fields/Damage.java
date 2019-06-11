@@ -3,8 +3,8 @@ package javelin.controller.db.reader.fields;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.controller.DamageEffect;
 import javelin.controller.db.reader.MonsterReader;
+import javelin.controller.upgrade.damage.effect.DamageEffect;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;

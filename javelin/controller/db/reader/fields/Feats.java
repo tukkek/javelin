@@ -1,24 +1,29 @@
 package javelin.controller.db.reader.fields;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
+import javelin.controller.challenge.factor.FeatsFactor;
 import javelin.controller.db.reader.MonsterReader;
+import javelin.controller.kit.Kit;
 import javelin.controller.upgrade.FeatUpgrade;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.feat.Feat;
 
 /**
  * @see FieldReader
  */
 public class Feats extends FieldReader{
-	static HashMap<String,Feat> FEATS=new HashMap<>();
-	static{
-		for(FeatUpgrade f:UpgradeHandler.singleton.getfeats())
-			FEATS.put(f.feat.name.toLowerCase(),f.feat);
-	}
+	HashMap<String,Feat> FEATS=new HashMap<>();
 
+	/** Constructor. */
 	public Feats(MonsterReader reader,final String fieldname){
 		super(reader,fieldname);
+		var feats=new HashSet<>(FeatsFactor.INTERNAL);
+		for(var k:Kit.KITS)
+			for(var f:k.filter(FeatUpgrade.class))
+				feats.add(f.feat);
+		for(var f:feats)
+			FEATS.put(f.name.toLowerCase(),f);
 	}
 
 	@Override

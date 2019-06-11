@@ -1,24 +1,24 @@
 package javelin.controller.challenge.factor;
 
 import java.util.HashSet;
+import java.util.List;
 
 import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
+import javelin.model.unit.HD;
 import javelin.model.unit.Monster;
 import javelin.model.unit.feat.CombatCasting;
 import javelin.model.unit.feat.Feat;
 import javelin.model.unit.feat.ImprovedInitiative;
 import javelin.model.unit.feat.Toughness;
-import javelin.model.unit.feat.attack.ExoticWeaponProficiency;
-import javelin.model.unit.feat.attack.Multiattack;
-import javelin.model.unit.feat.attack.MultiweaponFighting;
-import javelin.model.unit.feat.attack.WeaponFinesse;
-import javelin.model.unit.feat.attack.focus.MeleeFocus;
 import javelin.model.unit.feat.attack.focus.RangedFocus;
 import javelin.model.unit.feat.attack.focus.WeaponFocus;
+import javelin.model.unit.feat.internal.ExoticWeaponProficiency;
+import javelin.model.unit.feat.internal.Multiattack;
+import javelin.model.unit.feat.internal.MultiweaponFighting;
+import javelin.model.unit.feat.internal.WeaponFinesse;
 import javelin.model.unit.feat.save.GreatFortitude;
-import javelin.model.unit.feat.save.IronWill;
 import javelin.model.unit.feat.save.LightningReflexes;
 import javelin.model.unit.feat.skill.Acrobatic;
 import javelin.model.unit.feat.skill.Alertness;
@@ -28,25 +28,23 @@ import javelin.model.unit.feat.skill.Deceitful;
  * @see CrFactor
  */
 public class FeatsFactor extends CrFactor{
-	public static final float CR=.2f;
+	static final float CR=.2f;
 
 	static final Feat[] EVIL=new Feat[]{Deceitful.SINGLETON};
-
 	static final Feat[] GOOD=new Feat[]{Alertness.SINGLETON};
-
-	static final Feat[] FIRE=new Feat[]{IronWill.SINGLETON,MeleeFocus.SINGLETON};
-
 	static final Feat[] WIND=new Feat[]{RangedFocus.SINGLETON,
 			LightningReflexes.SINGLETON,ImprovedInitiative.SINGLETON};
-
 	static final Feat[] EARTH=new Feat[]{Toughness.SINGLETON,
 			GreatFortitude.SINGLETON,CombatCasting.SINGLETON};
-
 	static final Feat[] WATER=new Feat[]{Acrobatic.SINGLETON};
-
-	static final Feat[] INTERNAL=new Feat[]{WeaponFocus.SINGLETON,
+	/**
+	 * Internal feats are mostly used to map feats that should be considered for
+	 * {@link #CR} purposes but whose effects come pre-calculated on the stat
+	 * sheets. They basically only need to be "acknowledged" by Javelin.
+	 */
+	public static final List<Feat> INTERNAL=List.of(WeaponFocus.SINGLETON,
 			ExoticWeaponProficiency.SINGLETON,Multiattack.SINGLETON,
-			MultiweaponFighting.SINGLETON,WeaponFinesse.SINGLETON};
+			MultiweaponFighting.SINGLETON,WeaponFinesse.SINGLETON);
 
 	static{
 		/*
@@ -64,6 +62,10 @@ public class FeatsFactor extends CrFactor{
 		return m.feats.count()*CR-getnormalprogression(m)*CR;
 	}
 
+	/**
+	 * @return The number of {@link Feat}s this monster should/could have based on
+	 *         its {@link HD#count()}.
+	 */
 	static public int getnormalprogression(final Monster m){
 		return 1+Math.round(Math.round(Math.floor(m.hd.count()/3f)));
 	}
@@ -72,14 +74,12 @@ public class FeatsFactor extends CrFactor{
 	public void registerupgrades(UpgradeHandler handler){
 		register(handler.earth,EARTH);
 		register(handler.wind,WIND);
-		register(handler.fire,FIRE);
 		register(handler.water,WATER);
 		register(handler.good,GOOD);
 		register(handler.evil,EVIL);
-		register(handler.internal,INTERNAL);
 	}
 
-	private void register(HashSet<Upgrade> upgrades,Feat[] feats){
+	void register(HashSet<Upgrade> upgrades,Feat[] feats){
 		for(Feat f:feats)
 			upgrades.add(new FeatUpgrade(f));
 	}

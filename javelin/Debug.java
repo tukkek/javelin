@@ -177,11 +177,14 @@ public class Debug{
 				var npc=NpcGenerator.generatenpc(human,kit,level);
 				if(npc!=null) Squad.active.members.add(npc);
 			}
+			place(kit.createguild());
+		}
+
+		static void place(Location l){
 			if(BattleScreen.active.getClass()==WorldScreen.class){
-				var guild=kit.createguild();
-				guild.x=Squad.active.x;
-				guild.y=Squad.active.y;
-				guild.place();
+				l.x=Squad.active.x;
+				l.y=Squad.active.y;
+				l.place();
 				Squad.active.displace();
 			}
 		}

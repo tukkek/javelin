@@ -1,4 +1,4 @@
-package javelin.model.unit.feat.attack;
+package javelin.model.unit.feat.internal;
 
 import javelin.model.unit.feat.Feat;
 

@@ -1,6 +1,7 @@
 package javelin.controller.upgrade.movement;
 
 import javelin.controller.challenge.factor.SpeedFactor;
+import javelin.controller.db.reader.fields.Speed;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -13,7 +14,7 @@ public class WalkingSpeed extends Upgrade{
 
 	public WalkingSpeed(final String name,final int target){
 		super(name);
-		this.target=target;
+		this.target=Math.min(target,Speed.MAXSPEED);
 	}
 
 	@Override

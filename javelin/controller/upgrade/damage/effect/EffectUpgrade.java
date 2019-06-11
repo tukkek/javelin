@@ -1,8 +1,7 @@
-package javelin.controller.upgrade.damage;
+package javelin.controller.upgrade.damage.effect;
 
 import java.util.HashSet;
 
-import javelin.controller.DamageEffect;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
@@ -15,7 +14,6 @@ import javelin.model.unit.attack.AttackSequence;
  * @author alex
  */
 public class EffectUpgrade extends Upgrade{
-
 	private Spell effect;
 
 	/**
@@ -53,5 +51,4 @@ public class EffectUpgrade extends Upgrade{
 				a.seteffect(effect);
 		return true;
 	}
-
 }

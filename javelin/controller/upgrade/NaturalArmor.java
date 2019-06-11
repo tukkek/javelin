@@ -7,10 +7,26 @@ import javelin.model.unit.Monster;
  * See the d20 SRD for more information.
  */
 public class NaturalArmor extends Upgrade{
-	private final int target;
+	/** +2 armor. */
+	public static final NaturalArmor LEATHER=new NaturalArmor("leather",2);
+	/** +4 armor. */
+	public static final NaturalArmor SCALES=new NaturalArmor("scales",4);
+	/** +8 armor. */
+	public static final NaturalArmor PLATES=new NaturalArmor("plates",8);
 
+	//	/** +14 armor. */
+	//	public static final NaturalArmor CLAYGOLEM=new NaturalArmor("clay golem",14);
+	//	/** +18 armor. */
+	//	public static final NaturalArmor STONEGOLEM=new NaturalArmor("stone golem",
+	//			18);
+	//	/** +22 armor. */
+	//	public static final NaturalArmor IRONGOLEM=new NaturalArmor("iron golem",22);
+
+	final int target;
+
+	/** Constructor. */
 	public NaturalArmor(final String name,int target){
-		super(name);
+		super("Natural armor: "+name);
 		this.target=target;
 	}
 

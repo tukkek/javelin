@@ -3,8 +3,10 @@ package javelin.controller.kit;
 import java.util.List;
 
 import javelin.controller.upgrade.FeatUpgrade;
+import javelin.controller.upgrade.NaturalArmor;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseDexterity;
+import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.controller.upgrade.classes.Warrior;
 import javelin.controller.upgrade.damage.RangedDamage;
 import javelin.model.unit.Monster;
@@ -20,7 +22,8 @@ public class Ranger extends Kit{
 	public static final Kit INSTANCE=new Ranger();
 
 	private Ranger(){
-		super("ranger",Warrior.SINGLETON,RaiseDexterity.SINGLETON);
+		super("ranger",Warrior.SINGLETON,RaiseDexterity.SINGLETON,
+				RaiseWisdom.SINGLETON);
 	}
 
 	@Override
@@ -29,6 +32,7 @@ public class Ranger extends Kit{
 		for(var feat:List.of(PointBlankShot.SINGLETON,PreciseShot.SINGLETON,
 				RapidShot.SINGLETON))
 			basic.add(new FeatUpgrade(feat));
+		extension.add(NaturalArmor.LEATHER);
 	}
 
 	@Override

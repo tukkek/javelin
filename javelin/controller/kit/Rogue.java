@@ -1,8 +1,11 @@
 package javelin.controller.kit;
 
+import javelin.controller.quality.resistance.CriticalImmunity;
 import javelin.controller.upgrade.FeatUpgrade;
+import javelin.controller.upgrade.NaturalArmor;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseDexterity;
+import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.classes.Expert;
 import javelin.model.unit.Monster;
 import javelin.model.unit.feat.skill.Deceitful;
@@ -14,7 +17,8 @@ public class Rogue extends Kit{
 	public static final Kit INSTANCE=new Rogue();
 
 	private Rogue(){
-		super("rogue",Expert.SINGLETON,RaiseDexterity.SINGLETON);
+		super("rogue",Expert.SINGLETON,RaiseDexterity.SINGLETON,
+				RaiseIntelligence.SINGLETON);
 	}
 
 	@Override
@@ -31,6 +35,8 @@ public class Rogue extends Kit{
 		extension.add(new FeatUpgrade(Deceitful.SINGLETON));
 		extension.addAll(h.wind);
 		extension.addAll(h.evil);
+		extension.add(NaturalArmor.LEATHER);
+		extension.add(CriticalImmunity.UPGRADE);
 	}
 
 	@Override

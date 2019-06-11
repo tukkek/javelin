@@ -1,9 +1,9 @@
 package javelin.controller.challenge.factor;
 
-import javelin.controller.upgrade.Swimming;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.movement.Burrow;
 import javelin.controller.upgrade.movement.Flying;
+import javelin.controller.upgrade.movement.Swimming;
 import javelin.controller.upgrade.movement.WalkingSpeed;
 import javelin.model.unit.Monster;
 
@@ -57,10 +57,7 @@ public class SpeedFactor extends CrFactor{
 		if(speed==0) throw new RuntimeException("No speed for "+m);
 		int typical=(m.fly>0?TYPICAL_FLIGHT_SPEED:TYPICAL_SPEED)[m.size];
 		if(speed==typical) return cr;
-		if(speed>typical)
-			return cr+.2f*(speed/typical)/2f;
-		else
-			return cr-.2f*(typical/speed)/2f;
+		return speed>typical?cr+.2f*(speed/typical)/2f:cr-.2f*(typical/speed)/2f;
 	}
 
 	@Override

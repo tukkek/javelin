@@ -1,17 +1,16 @@
 package javelin.controller.upgrade.ability;
 
-import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
 /**
  * @see RaiseAbility
  */
-public class RaiseConsitution extends RaiseAbility{
+public class RaiseConstitution extends RaiseAbility{
+	/** Singleton instance. */
+	public static final RaiseConstitution SINGLETON=new RaiseConstitution();
 
-	public static final Upgrade SINGLETON=new RaiseConsitution();
-
-	private RaiseConsitution(){
+	private RaiseConstitution(){
 		super("constitution");
 	}
 

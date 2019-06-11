@@ -6,11 +6,14 @@ import javelin.Javelin;
 import javelin.controller.kit.wizard.Conjurer;
 import javelin.controller.kit.wizard.Diviner;
 import javelin.controller.kit.wizard.Transmuter;
+import javelin.controller.upgrade.NaturalArmor;
 import javelin.controller.upgrade.UpgradeHandler;
+import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.controller.upgrade.classes.Commoner;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
+import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.fortification.Academy;
@@ -21,7 +24,8 @@ public class Druid extends Kit{
 	public static final Kit INSTANCE=new Druid();
 
 	private Druid(){
-		super("druid",Commoner.SINGLETON,RaiseWisdom.SINGLETON);
+		super("druid",Commoner.SINGLETON,RaiseWisdom.SINGLETON,
+				RaiseCharisma.SINGLETON);
 	}
 
 	@Override
@@ -35,13 +39,13 @@ public class Druid extends Kit{
 	@Override
 	protected void extend(UpgradeHandler h){
 		extension.addAll(h.earth);
-		extension.addAll(h.fire);
 		extension.addAll(h.water);
 		extension.addAll(h.wind);
 		extension.addAll(Conjurer.HEALING);
-		extension.addAll(Transmuter.INSTANCE.getspells());
-		extension.addAll(Diviner.INSTANCE.getspells());
+		extension.addAll(Transmuter.INSTANCE.filter(Spell.class));
+		extension.addAll(Diviner.INSTANCE.filter(Spell.class));
 		addsummons(extension.size());
+		extension.add(NaturalArmor.LEATHER);
 	}
 
 	void addsummons(int nsummons){

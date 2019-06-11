@@ -283,10 +283,9 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	 */
 	public boolean fly(){
 		if(Squad.active.transport!=null&&Squad.active.transport.flies) return true;
-		int fliers=0;
 		for(Combatant c:members)
-			if(c.source.fly>0) fliers+=1;
-		return fliers==members.size();
+			if(c.source.fly==0) return false;
+		return true;
 	}
 
 	/**

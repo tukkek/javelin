@@ -7,11 +7,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import javelin.controller.DamageEffect;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.controller.upgrade.damage.EffectUpgrade;
-import javelin.controller.upgrade.damage.MeleeDamage;
 import javelin.controller.upgrade.damage.RangedDamage;
+import javelin.controller.upgrade.damage.effect.DamageEffect;
+import javelin.controller.upgrade.damage.effect.EffectUpgrade;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Attack;
@@ -63,7 +62,6 @@ public class FullAttackFactor extends CrFactor{
 
 	@Override
 	public void registerupgrades(UpgradeHandler handler){
-		handler.fire.add(MeleeDamage.INSTANCE);
 		handler.wind.add(RangedDamage.INSTANCE);
 		DamageEffect.init();
 		for(DamageEffect e:DamageEffect.EFFECTS)

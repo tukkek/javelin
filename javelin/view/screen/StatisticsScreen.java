@@ -68,10 +68,11 @@ public class StatisticsScreen extends InfoScreen{
 	}
 
 	static void showheader(Combatant c,Monster m,ArrayList<String> lines){
-		String monstername=m.name;
-		if(!m.group.isEmpty()) monstername+=" ("+m.group+")";
+		String monstername=m.toString();
+		if(m.name!=monstername) monstername+=" ("+m.name.toLowerCase()+")";
 		lines.add(monstername);
 		String type=m.type.toString().replaceAll("_"," ").toLowerCase();
+		if(!m.group.isEmpty()) type+=" ("+m.group+")";
 		lines.add(capitalize(Monster.SIZES[m.size])+" "+type);
 		lines.add("");
 		if(c.mercenary) lines.add("Mercenary ($"+Javelin.format(c.pay())+"/day)");

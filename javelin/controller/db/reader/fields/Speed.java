@@ -15,8 +15,9 @@ public class Speed extends FieldReader{
 	 * squares in a single move-action. Perhaps this could be later tweaked in
 	 * {@link BattleAi}.
 	 */
-	private static final int MAXSPEED=50;
+	public static final int MAXSPEED=50;
 
+	/** Constructor. */
 	public Speed(MonsterReader monsterReader,final String fieldname){
 		super(monsterReader,fieldname);
 	}
@@ -48,13 +49,13 @@ public class Speed extends FieldReader{
 						.replace(" ("+maneuverability+")","").trim());
 			}else if(speedType.contains("swim "))
 				m.swim=Integer
-						.parseInt(reader.clean(speedType).replace("swim ",""));
+						.parseInt(MonsterReader.clean(speedType).replace("swim ",""));
 			else if(speedType.contains("burrow "))
 				m.burrow=Integer.parseInt(speedType.replace("burrow ",""));
 			else if(speedType.contains("base")) // ignores base value
 				continue;
 			else
-				m.walk=Integer.parseInt(reader.clean(speedType));
+				m.walk=Integer.parseInt(MonsterReader.clean(speedType));
 		}
 		if(m.fly>0) m.walk=0;
 		m.walk=limit(m.walk);

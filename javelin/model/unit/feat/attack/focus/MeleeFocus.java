@@ -12,7 +12,7 @@ import javelin.model.unit.feat.Feat;
  */
 public class MeleeFocus extends WeaponFocus{
 	/** Unique instance of this {@link Feat}. */
-	public static final MeleeFocus SINGLETON=new MeleeFocus();
+	public static final MeleeFocus UPGRADE=new MeleeFocus();
 
 	private MeleeFocus(){
 		super("Melee focus");

@@ -7,6 +7,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
+import javelin.controller.kit.dragoon.BlackDragoon;
+import javelin.controller.kit.dragoon.BlueDragoon;
+import javelin.controller.kit.dragoon.GreenDragoon;
+import javelin.controller.kit.dragoon.RedDragoon;
+import javelin.controller.kit.dragoon.WhiteDragoon;
 import javelin.controller.kit.wizard.Abjurer;
 import javelin.controller.kit.wizard.Conjurer;
 import javelin.controller.kit.wizard.Diviner;
@@ -59,7 +64,9 @@ public abstract class Kit implements Serializable{
 			Fighter.INSTANCE,Monk.INSTANCE,Paladin.INSTANCE,Ranger.INSTANCE,
 			Rogue.INSTANCE,Transmuter.INSTANCE,Enchanter.INSTANCE,
 			Necromancer.INSTANCE,Conjurer.INSTANCE,Evoker.INSTANCE,Abjurer.INSTANCE,
-			Diviner.INSTANCE,SteelSerpent.INSTANCE);
+			Diviner.INSTANCE,SteelSerpent.INSTANCE,BlackDragoon.INSTANCE,
+			BlueDragoon.INSTANCE,GreenDragoon.INSTANCE,RedDragoon.INSTANCE,
+			WhiteDragoon.INSTANCE);
 
 	/**
 	 * TODO temporaty class to help transtition from {@link UpgradeHandler} to a
@@ -101,10 +108,18 @@ public abstract class Kit implements Serializable{
 		UpgradeHandler.singleton.gather();
 	}
 
+	/** Name of the kit, also used for {@link #titles}. */
 	public String name;
+	/** @see #define() */
 	public HashSet<Upgrade> basic=new HashSet<>();
+	/** @see #extend() */
 	public HashSet<Upgrade> extension=new HashSet<>();
+	/** Class progression. */
 	public ClassLevelUpgrade classlevel;
+	/**
+	 * Primary ability. A secondary is also taken by the constructor and added to
+	 * {@link #extension} if not <code>null</code>.
+	 */
 	public RaiseAbility ability;
 
 	/**
@@ -115,21 +130,26 @@ public abstract class Kit implements Serializable{
 	 */
 	protected String[] titles;
 
+	/**
+	 * A prestige kit is usually not suitable for starting characters, but only
+	 * for mid or high level ones.
+	 */
+	public boolean prestige=false;
+
 	/** Constructor. */
-	public Kit(String name,ClassLevelUpgrade classadvancement,
-			RaiseAbility raiseability){
+	public Kit(String name,ClassLevelUpgrade classlevel,RaiseAbility primary,
+			RaiseAbility secondary){
 		this.name=name;
-		classlevel=classadvancement;
-		basic.add(classadvancement);
-		ability=raiseability;
+		this.classlevel=classlevel;
+		basic.add(classlevel);
+		ability=primary;
 		basic.add(ability);
+		if(secondary!=null) extension.add(secondary);
 		define();
 		extend(UpgradeHandler.singleton);
 		var lower=name.toLowerCase();
 		titles=new String[]{"Inept $ "+lower,"Rookie $ "+lower,"$ "+lower,
 				"Veteran $ "+lower};
-		if(Javelin.DEBUG) for(var u:getupgrades())
-			if(u==null) throw new RuntimeException("Null upgrade for Kit "+name);
 	}
 
 	/**
@@ -155,20 +175,16 @@ public abstract class Kit implements Serializable{
 	 */
 	protected abstract void extend(UpgradeHandler h);
 
-	public boolean ispreffered(int i){
-		return false;
-	}
-
+	/**
+	 * TODO would be better to have the game concept of Ability as a programming
+	 * unit.
+	 *
+	 * @return The value of the {@link #ability} favored by this class. As such,
+	 *         it can be measured against the highest ability values of a unit to
+	 *         determine if that unit would be a good candidate for this kit.
+	 */
 	public int getpreferredability(Monster m){
-		int preferred=Integer.MIN_VALUE;
-		for(Upgrade u:basic)
-			if(u instanceof RaiseAbility){
-				int ability=((RaiseAbility)u).getattribute(m);
-				if(ability>preferred) preferred=ability;
-			}
-		if(preferred==Integer.MIN_VALUE)
-			throw new RuntimeException("Attribute not found for kit "+name);
-		return preferred;
+		return ability.getattribute(m);
 	}
 
 	@Override
@@ -188,14 +204,14 @@ public abstract class Kit implements Serializable{
 	}
 
 	/**
-	 * @param allowdiscipline {@link Discipline}s are hardly suited for beginning
+	 * @param allowprestige {@link Discipline}s are hardly suited for beginning
 	 *          characters so in some bases you may want not to include those as
 	 *          part of the result.
 	 * @return A list of kits that should be well suited for the given
 	 *         {@link Monster}. Current Kit selection has been set up so that this
 	 *         should never be empty.
 	 */
-	public static List<Kit> getpreferred(Monster m,boolean allowdiscipline){
+	public static List<Kit> getpreferred(Monster m,boolean allowprestige){
 		ArrayList<Integer> attributes=new ArrayList<>(6);
 		attributes.add(m.strength);
 		attributes.add(m.dexterity);
@@ -207,12 +223,16 @@ public abstract class Kit implements Serializable{
 		int[] best=new int[]{attributes.get(4),attributes.get(5)};
 		ArrayList<Kit> preferred=new ArrayList<>(1);
 		for(Kit k:Kit.KITS){
-			if(k instanceof Discipline&&!allowdiscipline) continue;
+			if(k.prestige&&!allowprestige) continue;
 			if(k.allow(best[0],best[1],m)) preferred.add(k);
 		}
 		return preferred;
 	}
 
+	/**
+	 * @return All upgrades, from {@link #basic} and {@link #extension} on a new
+	 *         set.
+	 */
 	public HashSet<Upgrade> getupgrades(){
 		HashSet<Upgrade> upgrades=new HashSet<>(basic);
 		upgrades.addAll(extension);
@@ -259,13 +279,16 @@ public abstract class Kit implements Serializable{
 			String error=name+" has "+nupgrades+" basic upgrades!";
 			throw new RuntimeException(error);
 		}
+		for(var u:getupgrades())
+			if(u==null) throw new RuntimeException("Null upgrade for Kit "+name);
 	}
 
 	/**
 	 * @return All {@link Spell}s that are part of this kit. May be empty.
 	 */
-	public List<Spell> getspells(){
-		return getupgrades().stream().filter(u->u instanceof Spell).map(u->(Spell)u)
+	@SuppressWarnings("unchecked")
+	public <K extends Upgrade> List<K> filter(Class<K> type){
+		return getupgrades().stream().filter(u->type.isInstance(u)).map(u->(K)u)
 				.collect(Collectors.toList());
 	}
 }

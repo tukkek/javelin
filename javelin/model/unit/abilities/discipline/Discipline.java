@@ -1,7 +1,5 @@
 package javelin.model.unit.abilities.discipline;
 
-import java.io.Serializable;
-
 import javelin.controller.action.maneuver.ExecuteManeuver;
 import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.kit.Kit;
@@ -30,7 +28,7 @@ import javelin.model.world.location.town.labor.military.DisciplineAcademy.BuildD
  * @author alex
  * @see Disciplines#ALL
  */
-public abstract class Discipline extends Kit implements Serializable{
+public abstract class Discipline extends Kit{
 	/**
 	 * Whether {@link FeatureGenerator} should generate a DisciplineAcademy or
 	 * not. Useful for emulating abilities that are not {@link Maneuvers} as
@@ -47,7 +45,11 @@ public abstract class Discipline extends Kit implements Serializable{
 	 */
 	public boolean hasacademy=true;
 
-	/** Human-readable discipline name. */
+	/**
+	 * Human-readable discipline name.
+	 *
+	 * TODO fix collison with {@link Kit#name}
+	 */
 	public String name;
 	/**
 	 * Particular knowledge skill to apply. Currently there is only
@@ -62,13 +64,14 @@ public abstract class Discipline extends Kit implements Serializable{
 	/** Constructor. */
 	public Discipline(String name,String kitname,RaiseAbility ability,
 			Skill skill){
-		super(kitname,Warrior.SINGLETON,ability);
+		super(kitname,Warrior.SINGLETON,ability,null);
 		this.name=name;
 		skillupgrade=skill;
 		trainingupgrade=new FeatUpgrade(new MartialTraining(this));
 		basic.add(skillupgrade.getupgrade());
 		basic.add(knowledgeupgrade.getupgrade());
 		extension.add(trainingupgrade);
+		prestige=true;
 	}
 
 	/**

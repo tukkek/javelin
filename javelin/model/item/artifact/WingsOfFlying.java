@@ -1,5 +1,6 @@
 package javelin.model.item.artifact;
 
+import javelin.controller.db.reader.fields.Speed;
 import javelin.model.unit.Combatant;
 
 /**
@@ -8,6 +9,8 @@ import javelin.model.unit.Combatant;
  * @author alex
  */
 public class WingsOfFlying extends Artifact{
+	static final int FLIGHT=Math.min(60,Speed.MAXSPEED);
+
 	int originalfly;
 	int originalwalk;
 
@@ -20,7 +23,7 @@ public class WingsOfFlying extends Artifact{
 	protected void apply(Combatant c){
 		originalfly=c.source.fly;
 		originalwalk=c.source.walk;
-		c.source.fly=60;
+		c.source.fly=Math.max(originalfly,FLIGHT);
 		c.source.walk=0;
 	}
 

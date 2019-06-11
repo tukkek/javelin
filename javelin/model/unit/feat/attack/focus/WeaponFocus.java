@@ -13,6 +13,9 @@ import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.feat.Feat;
 
 /**
+ * The base Weapon Focus class is used to process XML entries, while the
+ * subclasses {@link MeleeFocus} and {@link RangedFocus} are upgrades.
+ *
  * See the d20 SRD for more info.
  */
 public class WeaponFocus extends Feat{
@@ -21,7 +24,7 @@ public class WeaponFocus extends Feat{
 	 */
 	public static final TreeMap<MonsterType,Double> BAB=new TreeMap<>();
 	/** Unique instance of this {@link Feat}. */
-	public static final Feat SINGLETON=new WeaponFocus();
+	public static final Feat SINGLETON=new WeaponFocus("Weaoon focus");
 
 	static{
 		BAB.put(MonsterType.ABERRATION,3.0/4.0);
@@ -44,11 +47,6 @@ public class WeaponFocus extends Feat{
 
 	WeaponFocus(String name){
 		super(name);
-	}
-
-	/** Constructor. */
-	private WeaponFocus(){
-		super("Weapon focus");
 	}
 
 	@Override

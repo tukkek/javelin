@@ -73,8 +73,6 @@ public enum Realm{
 		switch(this){
 			case WATER:
 				return handler.water;
-			case FIRE:
-				return handler.fire;
 			case EARTH:
 				return handler.earth;
 			case AIR:
@@ -86,7 +84,7 @@ public enum Realm{
 			case MAGIC:
 				return handler.magic;
 			default:
-				throw new RuntimeException("#unknownColor");
+				return new HashSet<>(0);
 		}
 	}
 

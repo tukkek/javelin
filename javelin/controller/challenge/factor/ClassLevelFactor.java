@@ -1,11 +1,7 @@
 package javelin.controller.challenge.factor;
 
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.controller.upgrade.classes.Aristocrat;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
-import javelin.controller.upgrade.classes.Commoner;
-import javelin.controller.upgrade.classes.Expert;
-import javelin.controller.upgrade.classes.Warrior;
 import javelin.model.unit.Monster;
 
 /**
@@ -38,12 +34,5 @@ public class ClassLevelFactor extends CrFactor{
 
 	@Override
 	public void registerupgrades(UpgradeHandler handler){
-		handler.wind.add(Expert.SINGLETON);
-		handler.fire.add(Warrior.SINGLETON);
-		handler.water.add(Aristocrat.SINGLETON);
-		handler.earth.add(Commoner.SINGLETON);
-		handler.good.add(Aristocrat.SINGLETON);
-		handler.evil.add(Commoner.SINGLETON);
-		handler.magic.add(Aristocrat.SINGLETON);
 	}
 }

@@ -19,7 +19,7 @@ public class Perception extends Skill{
 	static final String[] NAMES=new String[]{"Perception","listen","spot",
 			"search"};
 
-	public Perception(){
+	Perception(){
 		super(NAMES,Ability.WISDOM,Realm.AIR);
 	}
 

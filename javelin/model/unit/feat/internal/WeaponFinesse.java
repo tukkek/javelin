@@ -1,4 +1,4 @@
-package javelin.model.unit.feat.attack;
+package javelin.model.unit.feat.internal;
 
 import java.util.ArrayList;
 import java.util.List;

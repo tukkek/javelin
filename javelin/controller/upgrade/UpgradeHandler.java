@@ -45,8 +45,6 @@ public class UpgradeHandler{
 	HashMap<String,UpgradeSet> all=new HashMap<>();
 
 	/** Linked to a {@link Town}'s realm. */
-	public UpgradeSet fire=new UpgradeSet("Fire");
-	/** Linked to a {@link Town}'s realm. */
 	public UpgradeSet earth=new UpgradeSet("Earth");
 	/** Linked to a {@link Town}'s realm. */
 	public UpgradeSet water=new UpgradeSet("Water");
@@ -59,10 +57,7 @@ public class UpgradeHandler{
 	/** Linked HashSet a {@link Town}'s realm. */
 	public UpgradeSet magic=new UpgradeSet("Magic");
 
-	/** Internal upgrades. */
-	public UpgradeSet internal=new UpgradeSet("Internal",true);
-
-	private UpgradeHandler(){
+	UpgradeHandler(){
 		// prevents instantiation
 	}
 
@@ -73,8 +68,6 @@ public class UpgradeHandler{
 	public HashSet<Upgrade> getupgrades(Realm r){
 		if(r==javelin.model.Realm.AIR)
 			return wind;
-		else if(r==Realm.FIRE)
-			return fire;
 		else if(r==Realm.WATER)
 			return water;
 		else if(r==Realm.EARTH)
@@ -86,7 +79,7 @@ public class UpgradeHandler{
 		else if(r==Realm.MAGIC)
 			return magic;
 		else
-			throw new RuntimeException("Uknown town!");
+			return new HashSet<>();
 	}
 
 	/**
@@ -95,7 +88,7 @@ public class UpgradeHandler{
 	 * @return This object, for call-chaining.
 	 */
 	public UpgradeHandler gather(){
-		if(!fire.isEmpty()) return this;
+		if(!magic.isEmpty()) return this;
 		for(CrFactor factor:ChallengeCalculator.CR_FACTORS)
 			factor.registerupgrades(this);
 		return this;

@@ -3,7 +3,6 @@
  */
 package javelin.controller.challenge.factor;
 
-import javelin.controller.upgrade.NaturalArmor;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
 
@@ -18,13 +17,5 @@ public class ArmorClassFactor extends CrFactor{
 
 	@Override
 	public void registerupgrades(UpgradeHandler handler){
-		handler.earth.add(new NaturalArmor("Natural armor: leather",2));
-		handler.earth.add(new NaturalArmor("Natural armor: scales",4));
-
-		handler.fire.add(new NaturalArmor("Natural armor: plates",8));
-		handler.fire.add(new NaturalArmor("Natural armor: iron golem",22));
-
-		handler.earth.add(new NaturalArmor("Natural armor: clay golem",14));
-		handler.earth.add(new NaturalArmor("Natural armor: stone golem",18));
 	}
 }

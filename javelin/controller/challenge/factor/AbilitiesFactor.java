@@ -5,12 +5,6 @@ package javelin.controller.challenge.factor;
 
 import javelin.controller.quality.resistance.MindImmunity;
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.controller.upgrade.ability.RaiseCharisma;
-import javelin.controller.upgrade.ability.RaiseConsitution;
-import javelin.controller.upgrade.ability.RaiseDexterity;
-import javelin.controller.upgrade.ability.RaiseIntelligence;
-import javelin.controller.upgrade.ability.RaiseStrength;
-import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.model.unit.Monster;
 
 /**
@@ -43,11 +37,5 @@ public class AbilitiesFactor extends CrFactor{
 
 	@Override
 	public void registerupgrades(UpgradeHandler handler){
-		handler.earth.add(RaiseConsitution.SINGLETON);
-		handler.fire.add(RaiseStrength.SINGLETON);
-		handler.wind.add(RaiseDexterity.SINGLETON);
-		handler.water.add(RaiseWisdom.SINGLETON);
-		handler.magic.add(RaiseIntelligence.SINGLETON);
-		handler.good.add(RaiseCharisma.SINGLETON);
 	}
 }

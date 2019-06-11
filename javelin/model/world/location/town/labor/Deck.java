@@ -9,6 +9,11 @@ import java.util.stream.Collectors;
 import javelin.Javelin;
 import javelin.controller.ContentSummary;
 import javelin.controller.kit.Fighter;
+import javelin.controller.kit.dragoon.BlackDragoon;
+import javelin.controller.kit.dragoon.BlueDragoon;
+import javelin.controller.kit.dragoon.GreenDragoon;
+import javelin.controller.kit.dragoon.RedDragoon;
+import javelin.controller.kit.dragoon.WhiteDragoon;
 import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
 import javelin.model.world.World;
 import javelin.model.world.location.fortification.RealmAcademy.BuildRealmAcademy;
@@ -57,15 +62,19 @@ public class Deck extends ArrayList<Labor>{
 			new Cancel(),new Growth(),new Redraw(),new BuildShop(),
 			new BuildRealmAcademy()};
 	static final Labor[] CRIMINAL=new Labor[]{new BuildAssassinsGuild(),
-			new BuildSewers(),new BuildSlums(),new BuildThievesGuild()};
+			new BuildSewers(),new BuildSlums(),new BuildThievesGuild(),
+			BlackDragoon.INSTANCE.buildguild()};
 	static final Labor[] MAGICAL=new Labor[]{new BuildMagesGuild(),
 			new BuildArtificer(),new BuildSummoningCircle(),new BuildBardsGuild()};
 	static final Labor[] NATURAL=new Labor[]{new BuildHenge(),
-			new BuildArcheryRange(),new BuildMeadHall(),SteelSerpent.LABOR};
+			new BuildArcheryRange(),new BuildMeadHall(),SteelSerpent.LABOR,
+			GreenDragoon.INSTANCE.buildguild(),BlueDragoon.INSTANCE.buildguild(),
+			WhiteDragoon.INSTANCE.buildguild()};
 	static final Labor[] EXPANSIVE=new Labor[]{new BuildRoad(),new BuildHighway(),
 			new BuildTransportHub()};
 	static final Labor[] MILITARY=new Labor[]{new BuildMercenariesGuild(),
-			new BuildMonastery(),Fighter.INSTANCE.buildguild()};
+			new BuildMonastery(),Fighter.INSTANCE.buildguild(),
+			RedDragoon.INSTANCE.buildguild()};
 	static final Labor[] MERCANTILE=new Labor[]{new BuildMine(),
 			new Deforestate()};
 	static final Labor[] RELIGIOUS=new Labor[]{new BuildShrine(),

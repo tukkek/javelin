@@ -258,7 +258,7 @@ public class Scenario implements Serializable{
 		while(!members.isEmpty()){
 			Combatant c=members.get(0);
 			Kit kit=null;
-			List<Kit> kits=Kit.getpreferred(c.source);
+			List<Kit> kits=Kit.getpreferred(c.source,false);
 			Collections.shuffle(kits);
 			for(Kit k:kits){
 				kit=k;

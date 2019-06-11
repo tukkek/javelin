@@ -83,7 +83,7 @@ public class AdventurersGuild extends UniqueLocation{
 		return -1;
 	}
 
-	public float filterstudents(ArrayList<Combatant> students){
+	float filterstudents(ArrayList<Combatant> students){
 		float mostpowerful=0;
 		for(Combatant c:Squad.active.members){
 			if(c.mercenary) continue;
@@ -102,7 +102,7 @@ public class AdventurersGuild extends UniqueLocation{
 	}
 
 	List<Kit> getcourses(int index){
-		return Kit.getpreferred(students.get(index).source);
+		return Kit.getpreferred(students.get(index).source,false);
 	}
 
 	String show(ArrayList<Combatant> students,float mostpowerful,float pay){
@@ -118,7 +118,7 @@ public class AdventurersGuild extends UniqueLocation{
 			for(int i=0;i<students.size();i++){
 				Kit k=selection.get(i);
 				t+=KEYS[i]+" - "+students.get(i)+" ("
-						+(k==null?"don't study":k.toString())+")\n";
+						+(k==null?"don't study":k.toString().toLowerCase())+")\n";
 			}
 			t+="\nPress the respective number to change careers.\n\n";
 			t+="t - begin training\n";
@@ -196,7 +196,7 @@ public class AdventurersGuild extends UniqueLocation{
 			continue;
 	}
 
-	public boolean validateselection(ArrayList<Combatant> students){
+	boolean validateselection(ArrayList<Combatant> students){
 		for(int i=0;i<students.size();i++)
 			if(selection.get(i)!=null) return true;
 		return false;

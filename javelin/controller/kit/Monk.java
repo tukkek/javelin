@@ -6,7 +6,6 @@ import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.controller.upgrade.classes.Warrior;
 import javelin.model.unit.Monster;
-import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.unit.feat.Feat;
 import javelin.model.unit.feat.ImprovedInitiative;
 import javelin.model.unit.feat.save.LightningReflexes;
@@ -37,8 +36,6 @@ public class Monk extends Kit{
 		extension.add(Skill.SENSEMOTIVE.getupgrade());
 		extension.addAll(h.water);
 		extension.addAll(h.earth);
-		for(Discipline d:Discipline.DISCIPLINES)
-			extension.add(d.trainingupgrade);
 	}
 
 	@Override

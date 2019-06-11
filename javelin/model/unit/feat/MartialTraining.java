@@ -42,7 +42,7 @@ public class MartialTraining extends Feat{
 	 * @see Combatant#postupgradeautomatic(boolean,
 	 *      javelin.controller.upgrade.Upgrade)
 	 */
-	int slots=2;
+	public int slots=2;
 
 	public MartialTraining(Discipline d){
 		super(d.name+" training");

@@ -6,6 +6,10 @@ import javelin.model.unit.abilities.discipline.Maneuver;
 /**
  * A discipline adapter for {@link CombatExpertiseManeuver}s.
  *
+ * TODO would be good to completely give away with the concept of "Virtual
+ * disciplines" like this but right now {@link Maneuver}s need to be tied to a
+ * {@link Discipline}.
+ *
  * @author alex
  */
 public class CombatExpertiseDiscipline extends Discipline{
@@ -13,7 +17,6 @@ public class CombatExpertiseDiscipline extends Discipline{
 
 	private CombatExpertiseDiscipline(){
 		super("Combat expertise");
-		hasacademy=false;
 	}
 
 	@Override

@@ -15,7 +15,7 @@ public class SteelSerpent extends Discipline{
 	public static final BuildDisciplineAcademy LABOR=INSTANCE.buildacademy();
 
 	public SteelSerpent(){
-		super("Steel serpent",RaiseWisdom.SINGLETON,Skill.HEAL);
+		super("Steel serpent","Steel serpent",RaiseWisdom.SINGLETON,Skill.HEAL);
 	}
 
 	@Override

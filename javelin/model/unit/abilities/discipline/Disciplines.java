@@ -5,13 +5,8 @@ import java.util.TreeMap;
 
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.abilities.discipline.expertise.CombatExpertiseDiscipline;
-import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
 
 public class Disciplines extends TreeMap<String,Maneuvers>{
-	public static final Discipline[] ALL=new Discipline[]{
-			CombatExpertiseDiscipline.INSTANCE,SteelSerpent.INSTANCE};
-
 	public Disciplines(){
 		super();
 	}

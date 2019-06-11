@@ -555,11 +555,27 @@ public class Monster implements Cloneable,Serializable{
 		charisma=AbilityModification.modify(charisma,scorechange).newscore;
 	}
 
+	/**
+	 * @return All {@link Feat}s that are {@link Feat#equals(Object)} to the given
+	 *         parameter.
+	 * @see #getfeat(Feat)
+	 */
 	public <K extends Feat> ArrayList<K> getfeats(K search){
 		ArrayList<K> found=new ArrayList<>(0);
 		for(Feat f:feats)
 			if(f.equals(search)) found.add((K)f);
 		return found;
+	}
+
+	/**
+	 * @return The first {@link Feat} that is {@link Feat#equals(Object)} to the
+	 *         given parameter.
+	 * @see #getfeats(Feat)
+	 */
+	public <K extends Feat> K getfeat(K search){
+		for(Feat f:feats)
+			if(f.equals(search)) return (K)f;
+		return null;
 	}
 
 	/**

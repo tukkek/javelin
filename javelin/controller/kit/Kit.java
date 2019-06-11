@@ -21,6 +21,9 @@ import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.item.Tier;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.abilities.discipline.Discipline;
+import javelin.model.unit.abilities.discipline.expertise.CombatExpertiseDiscipline;
+import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Academy;
@@ -56,7 +59,7 @@ public abstract class Kit implements Serializable{
 			Fighter.INSTANCE,Monk.INSTANCE,Paladin.INSTANCE,Ranger.INSTANCE,
 			Rogue.INSTANCE,Transmuter.INSTANCE,Enchanter.INSTANCE,
 			Necromancer.INSTANCE,Conjurer.INSTANCE,Evoker.INSTANCE,Abjurer.INSTANCE,
-			Diviner.INSTANCE);
+			Diviner.INSTANCE,SteelSerpent.INSTANCE);
 
 	/**
 	 * TODO temporaty class to help transtition from {@link UpgradeHandler} to a
@@ -112,6 +115,7 @@ public abstract class Kit implements Serializable{
 	 */
 	protected String[] titles;
 
+	/** Constructor. */
 	public Kit(String name,ClassLevelUpgrade classadvancement,
 			RaiseAbility raiseability){
 		this.name=name;
@@ -124,6 +128,19 @@ public abstract class Kit implements Serializable{
 		var lower=name.toLowerCase();
 		titles=new String[]{"Inept $ "+lower,"Rookie $ "+lower,"$ "+lower,
 				"Veteran $ "+lower};
+		if(Javelin.DEBUG) for(var u:getupgrades())
+			if(u==null) throw new RuntimeException("Null upgrade for Kit "+name);
+	}
+
+	/**
+	 * Used only for "virtual" kits, ones that should never be used as proper
+	 * kits.
+	 *
+	 * @deprecated
+	 * @see CombatExpertiseDiscipline
+	 */
+	@Deprecated
+	public Kit(){
 	}
 
 	/**
@@ -171,11 +188,14 @@ public abstract class Kit implements Serializable{
 	}
 
 	/**
+	 * @param allowdiscipline {@link Discipline}s are hardly suited for beginning
+	 *          characters so in some bases you may want not to include those as
+	 *          part of the result.
 	 * @return A list of kits that should be well suited for the given
 	 *         {@link Monster}. Current Kit selection has been set up so that this
 	 *         should never be empty.
 	 */
-	public static List<Kit> getpreferred(Monster m){
+	public static List<Kit> getpreferred(Monster m,boolean allowdiscipline){
 		ArrayList<Integer> attributes=new ArrayList<>(6);
 		attributes.add(m.strength);
 		attributes.add(m.dexterity);
@@ -185,10 +205,12 @@ public abstract class Kit implements Serializable{
 		attributes.add(m.charisma);
 		attributes.sort(null);
 		int[] best=new int[]{attributes.get(4),attributes.get(5)};
-		ArrayList<Kit> kits=new ArrayList<>(1);
-		for(Kit k:KITS)
-			if(k.allow(best[0],best[1],m)) kits.add(k);
-		return kits;
+		ArrayList<Kit> preferred=new ArrayList<>(1);
+		for(Kit k:Kit.KITS){
+			if(k instanceof Discipline&&!allowdiscipline) continue;
+			if(k.allow(best[0],best[1],m)) preferred.add(k);
+		}
+		return preferred;
 	}
 
 	public HashSet<Upgrade> getupgrades(){

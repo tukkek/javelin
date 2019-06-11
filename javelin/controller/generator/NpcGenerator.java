@@ -98,7 +98,7 @@ public class NpcGenerator{
 	}
 
 	public static final Combatant generatenpc(Monster m,float cr){
-		Kit k=RPG.pick(Kit.getpreferred(m));
+		Kit k=RPG.pick(Kit.getpreferred(m,true));
 		return generatenpc(m,k,cr);
 	}
 

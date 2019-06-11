@@ -8,7 +8,6 @@ import java.util.HashSet;
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.factor.CrFactor;
-import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.Realm;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.skill.Skill.SkillUpgrade;
@@ -63,9 +62,6 @@ public class UpgradeHandler{
 	/** Internal upgrades. */
 	public UpgradeSet internal=new UpgradeSet("Internal",true);
 
-	/** @see ClassLevelUpgrade#classes */
-	public UpgradeSet classes=new UpgradeSet("Classes",true);
-
 	private UpgradeHandler(){
 		// prevents instantiation
 	}
@@ -102,11 +98,6 @@ public class UpgradeHandler{
 		if(!fire.isEmpty()) return this;
 		for(CrFactor factor:ChallengeCalculator.CR_FACTORS)
 			factor.registerupgrades(this);
-		ClassLevelUpgrade.init();
-		for(var classlevel:ClassLevelUpgrade.classes)
-			classes.add(classlevel);
-		//		for(var kit:Kit.KITS)
-		//			new UpgradeSet(kit.name).addAll(kit.getupgrades());
 		return this;
 	}
 

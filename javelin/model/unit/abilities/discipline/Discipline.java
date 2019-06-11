@@ -4,16 +4,17 @@ import java.io.Serializable;
 
 import javelin.controller.action.maneuver.ExecuteManeuver;
 import javelin.controller.generator.feature.FeatureGenerator;
+import javelin.controller.kit.Kit;
 import javelin.controller.upgrade.FeatUpgrade;
-import javelin.controller.upgrade.Upgrade;
+import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseAbility;
-import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.controller.upgrade.classes.Warrior;
-import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
 import javelin.model.unit.feat.MartialTraining;
 import javelin.model.unit.feat.attack.expertise.CombatExpertise;
+import javelin.model.unit.skill.Knowledge;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.military.DisciplineAcademy;
 import javelin.model.world.location.town.labor.military.DisciplineAcademy.BuildDisciplineAcademy;
 
@@ -29,10 +30,7 @@ import javelin.model.world.location.town.labor.military.DisciplineAcademy.BuildD
  * @author alex
  * @see Disciplines#ALL
  */
-public abstract class Discipline implements Serializable{
-	public static final Discipline[] DISCIPLINES=new Discipline[]{
-			SteelSerpent.INSTANCE};
-
+public abstract class Discipline extends Kit implements Serializable{
 	/**
 	 * Whether {@link FeatureGenerator} should generate a DisciplineAcademy or
 	 * not. Useful for emulating abilities that are not {@link Maneuvers} as
@@ -49,31 +47,45 @@ public abstract class Discipline implements Serializable{
 	 */
 	public boolean hasacademy=true;
 
+	/** Human-readable discipline name. */
 	public String name;
 	/**
-	 * This is supposed to always be {@link Warrior} due to balancing reasons.
+	 * Particular knowledge skill to apply. Currently there is only
+	 * {@link Knowledge}.
 	 */
-	final public ClassLevelUpgrade classupgrade=Warrior.SINGLETON;
 	final public Skill knowledgeupgrade=Skill.KNOWLEDGE;
-	public Upgrade trainingupgrade;
+	/** Upgrade that embodies the training in this discipline. */
+	public FeatUpgrade trainingupgrade;
+	/** Skill related to this discipline, often used in its {@link Maneuver}s. */
 	public Skill skillupgrade;
-	public RaiseAbility abilityupgrade;
 
-	public Discipline(String name,RaiseAbility abilityupgrade,Skill skillupgrade){
-		this(name);
-		this.abilityupgrade=abilityupgrade;
-		this.skillupgrade=skillupgrade;
+	/** Constructor. */
+	public Discipline(String name,String kitname,RaiseAbility ability,
+			Skill skill){
+		super(kitname,Warrior.SINGLETON,ability);
+		this.name=name;
+		skillupgrade=skill;
 		trainingupgrade=new FeatUpgrade(new MartialTraining(this));
+		basic.add(skillupgrade.getupgrade());
+		basic.add(knowledgeupgrade.getupgrade());
+		extension.add(trainingupgrade);
 	}
 
-	/** Use only for emulated {@link Discipline}s. */
+	/**
+	 * Used for emulated Disciplines.
+	 *
+	 * @deprecated
+	 */
+	@Deprecated
 	public Discipline(String name){
+		super();
 		this.name=name;
+		hasacademy=false;
 	}
 
 	@Override
 	public boolean equals(Object obj){
-		return name.equals(((Maneuver)obj).name);
+		return obj instanceof Discipline&&name.equals(((Discipline)obj).name);
 	}
 
 	@Override
@@ -86,6 +98,9 @@ public abstract class Discipline implements Serializable{
 		return new DisciplineAcademy(this);
 	}
 
+	/**
+	 * @return {@link Academy} {@link Labor}.
+	 */
 	public BuildDisciplineAcademy buildacademy(){
 		return new BuildDisciplineAcademy(this);
 	}
@@ -104,9 +119,9 @@ public abstract class Discipline implements Serializable{
 	 * @return A new list with the filtered maneuvers from this discipline.
 	 */
 	public Maneuvers getmaneuvers(Integer maxlevel){
-		Maneuvers maneuvers=new Maneuvers(maxlevel*2);
-		for(Maneuver m:getmaneuvers())
-			if(maxlevel==null||m.level<=maxlevel) maneuvers.add(m);
+		var maneuvers=new Maneuvers(maxlevel*2);
+		for(var m:getmaneuvers())
+			if(m.level<=maxlevel) maneuvers.add(m);
 		maneuvers.sort();
 		return maneuvers;
 	}
@@ -116,12 +131,13 @@ public abstract class Discipline implements Serializable{
 		return name;
 	}
 
-	/**
-	 * @return All of the upgrades that are part of the discipline, in the order
-	 *         they should be applied to get the most out of training under it.
-	 */
-	public Upgrade[] getupgrades(){
-		return new Upgrade[]{trainingupgrade,knowledgeupgrade.getupgrade(),
-				classupgrade,abilityupgrade,skillupgrade.getupgrade(),};
+	@Override
+	protected void define(){
+		//see constructor
+	}
+
+	@Override
+	protected void extend(UpgradeHandler h){
+		//see constructor
 	}
 }

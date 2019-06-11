@@ -38,7 +38,7 @@ public abstract class Guild extends Academy{
 	static HashSet<Upgrade> getselection(Kit k){
 		HashSet<Upgrade> upgrades=new HashSet<>(k.basic);
 		LinkedList<Upgrade> extension=new LinkedList<>(k.extension);
-		while(upgrades.size()<9){
+		while(upgrades.size()<9&&!extension.isEmpty()){
 			Upgrade u=RPG.pick(extension);
 			extension.remove(u);
 			upgrades.add(u);
@@ -66,7 +66,7 @@ public abstract class Guild extends Academy{
 	Monster getcandidate(int level){
 		ArrayList<Monster> candidates=new ArrayList<>();
 		for(Monster m:Javelin.ALLMONSTERS)
-			if(m.cr<=level/2&&m.think(-1)&&Kit.getpreferred(m).contains(kit))
+			if(m.cr<=level/2&&m.think(-1)&&Kit.getpreferred(m,true).contains(kit))
 				candidates.add(m);
 		return candidates.isEmpty()?null:RPG.pick(candidates);
 	}

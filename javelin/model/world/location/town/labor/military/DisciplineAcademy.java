@@ -7,7 +7,6 @@ import javelin.Javelin;
 import javelin.controller.Calendar;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.upgrade.FeatUpgrade;
-import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.unit.feat.Feat;
@@ -108,10 +107,13 @@ public class DisciplineAcademy extends Academy{
 
 		@Override
 		protected boolean upgrade(UpgradeOption o,Combatant c){
-			MartialTraining mt=getmartialtrainingfeat(o);
+			var mt=getmartialtrainingfeat(o);
 			if(mt!=null){
-				float cr=ChallengeCalculator.calculaterawcr(c.source)[1];
-				train(c,c.xp.floatValue(),cr,d.getupgrades());
+				var cr=ChallengeCalculator.calculaterawcr(c.source)[1];
+				train(c,c.xp.floatValue(),cr);
+				MartialTraining training=(MartialTraining)c.source
+						.getfeat(d.trainingupgrade.feat);
+				if(training==null||training.slots==0) return false;
 				return ChallengeCalculator.calculaterawcr(c.source)[1]>cr;
 			}
 			return super.upgrade(o,c);
@@ -134,8 +136,8 @@ public class DisciplineAcademy extends Academy{
 
 	/** @param d Discipline taught. */
 	public DisciplineAcademy(Discipline d){
-		super(d.name+" academy",null,5,15,Collections.EMPTY_SET,d.abilityupgrade,
-				d.classupgrade);
+		super(d.name+" academy",null,5,15,Collections.EMPTY_SET,d.ability,
+				d.classlevel);
 		this.d=d;
 		descriptionunknown=descriptionknown;
 		upgrades.add(d.skillupgrade.getupgrade());
@@ -166,8 +168,7 @@ public class DisciplineAcademy extends Academy{
 		if(c!=null||!RPG.chancein(period)) return c;
 		c=new Combatant(RPG.pick(TrainingHall.CANDIDATES),true);
 		c.setmercenary(true);
-		train(c,level,ChallengeCalculator.calculaterawcr(c.source)[1],
-				d.getupgrades());
+		train(c,level,ChallengeCalculator.calculaterawcr(c.source)[1]);
 		c.postupgradeautomatic();
 		name(c);
 		return c;
@@ -188,18 +189,22 @@ public class DisciplineAcademy extends Academy{
 	 * @param xp ... up to this amount of XP (not removed form
 	 *          {@link Combatant#xp}) ...
 	 * @param cr ... and this amount of raw CR (with golden rule applied)...
+	 * @param applied Used for recursion, pass as <code>null</code> initially.
 	 * @param upgrades in these Upgrades...
+	 * @return All applied upgrades.
 	 * @see ChallengeCalculator#calculaterawcr(javelin.model.unit.Monster)
 	 */
-	public static void train(Combatant c,float xp,float cr,Upgrade[] upgrades){
-		for(Upgrade u:upgrades){
+	public void train(Combatant c,float xp,float cr){
+		var upgrades=List.of(d.trainingupgrade,d.knowledgeupgrade.getupgrade(),
+				d.skillupgrade.getupgrade(),d.classlevel,d.ability);
+		for(var u:upgrades){
 			Combatant c2=c.clone().clonesource();
 			if(!u.upgrade(c2)) continue;
 			final float newcr=ChallengeCalculator.calculaterawcr(c2.source)[1];
 			if(newcr-cr>xp) continue;
 			c.source=c.source.clone();
 			u.upgrade(c);
-			train(c,xp,cr,upgrades);
+			train(c,xp,cr);
 			return;
 		}
 	}

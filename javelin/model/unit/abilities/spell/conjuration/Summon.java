@@ -5,7 +5,6 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.kit.Kit;
 import javelin.controller.kit.wizard.Conjurer;
 import javelin.model.Realm;
@@ -146,16 +145,5 @@ public class Summon extends Spell{
 	@Override
 	public boolean equals(Object obj){
 		return super.equals(obj)&&monstername.equals(((Summon)obj).monstername);
-	}
-
-	/**
-	 * Unlike most Kits, {@link Summon} spells need to be created after all
-	 * {@link Monster}s are loaded.
-	 *
-	 * @see MonsterReader
-	 */
-	public static void init(){
-		Javelin.ALLMONSTERS.stream().filter(m->!m.passive)
-				.map(m->new Summon(m.name,1)).forEach(s->Conjurer.SUMMON.add(s));
 	}
 }

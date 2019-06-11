@@ -42,7 +42,7 @@ public abstract class QuestApp extends Applet implements Runnable{
 		}
 	}
 
-	Component mainComponent=null;
+	public Component mainComponent=null;
 	// Thread for recieveing user input
 	public static Thread thread;
 

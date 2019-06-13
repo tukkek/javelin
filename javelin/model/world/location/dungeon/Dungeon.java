@@ -411,7 +411,6 @@ public class Dungeon extends Location{
 	}
 
 	void createchests(int chests,int pool,DungeonZoner zoner){
-		System.out.println("\nFloor "+floor+": "+chests+" chests.");
 		features.add(createspecialchest(zoner.getpoint()));
 		var hiddenchests=0;
 		for(int i=0;i<chests;i++)
@@ -445,7 +444,6 @@ public class Dungeon extends Location{
 			toplevel=toplevel.parent;
 		var chest=new Chest(gold,zoner.getpoint());
 		features.add(chest);
-		System.out.println(chest);
 	}
 
 	/**
@@ -499,8 +497,7 @@ public class Dungeon extends Location{
 	 *          starting the application (loading up a save game with an active
 	 *          dungeon).
 	 */
-	protected void setlocation(boolean loading){
-	}
+	protected void setlocation(boolean loading){}
 
 	@Override
 	public Integer getel(Integer attackel){

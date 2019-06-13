@@ -12,14 +12,19 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public class Vision extends Quality{
+	/** Provides {@link Monster#VISION_LOWLIGHT}. */
+	public static final Upgrade LOWLIGHTVISION=new VisionUpgrade(
+			"Low-light vision",1);
+	/** Provides {@link Monster#VISION_DARK}. */
+	public static final Upgrade DARKVISION=new VisionUpgrade("Darkvision",2);
+
 	/**
 	 * See the d20 SRD for more info.
 	 */
 	static class VisionUpgrade extends Upgrade{
+		int target;
 
-		final private int target;
-
-		public VisionUpgrade(String name,int targetp){
+		VisionUpgrade(String name,int targetp){
 			super(name);
 			target=targetp;
 		}
@@ -71,8 +76,6 @@ public class Vision extends Quality{
 
 	@Override
 	public void listupgrades(UpgradeHandler handler){
-		handler.evil.add(new VisionUpgrade("Low-light vision",1));
-		handler.evil.add(new VisionUpgrade("Darkvision",2));
 	}
 
 	@Override

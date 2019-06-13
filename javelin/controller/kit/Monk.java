@@ -1,6 +1,13 @@
 package javelin.controller.kit;
 
+import javelin.controller.quality.perception.Vision;
 import javelin.controller.quality.resistance.CriticalImmunity;
+import javelin.controller.quality.resistance.DamageReduction;
+import javelin.controller.quality.resistance.EnergyImmunity;
+import javelin.controller.quality.resistance.EnergyResistance;
+import javelin.controller.quality.resistance.MindImmunity;
+import javelin.controller.quality.resistance.ParalysisImmunity;
+import javelin.controller.quality.resistance.PoisonImmunity;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseDexterity;
 import javelin.controller.upgrade.ability.RaiseStrength;
@@ -62,6 +69,13 @@ public class Monk extends Kit{
 		extension.add(LightningReflexes.SINGLETON.toupgrade());
 		extension.add(GreatFortitude.SINGLETON.toupgrade());
 		extension.add(Alertness.SINGLETON.toupgrade());
+		extension.add(DamageReduction.UPGRADE);
+		extension.add(EnergyImmunity.UPGRADE);
+		extension.add(MindImmunity.UPGRADE);
+		extension.add(ParalysisImmunity.UPGRADE);
+		extension.add(PoisonImmunity.UPGRADE);
+		extension.add(EnergyResistance.UPGRADE);
+		extension.add(Vision.DARKVISION);
 	}
 
 	@Override

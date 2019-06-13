@@ -12,7 +12,10 @@ import javelin.model.unit.Monster;
  * @see Monster#getwill()
  */
 public class ParalysisImmunity extends Quality{
+	/** {@link Monster#cr} factor. */
 	public static final float CR=0.1f;
+	/** Applies {@link Monster#immunitytoparalysis}. */
+	public static final Upgrade UPGRADE=new ParalysisImmunityUpgrade();
 
 	static class ParalysisImmunityUpgrade extends Upgrade{
 		ParalysisImmunityUpgrade(){
@@ -55,6 +58,5 @@ public class ParalysisImmunity extends Quality{
 
 	@Override
 	public void listupgrades(UpgradeHandler handler){
-		handler.good.add(new ParalysisImmunityUpgrade());
 	}
 }

@@ -37,12 +37,9 @@ public abstract class Guild extends Academy{
 
 	static HashSet<Upgrade> getselection(Kit k){
 		HashSet<Upgrade> upgrades=new HashSet<>(k.basic);
-		LinkedList<Upgrade> extension=new LinkedList<>(k.extension);
-		while(upgrades.size()<9&&!extension.isEmpty()){
-			Upgrade u=RPG.pick(extension);
-			extension.remove(u);
-			upgrades.add(u);
-		}
+		LinkedList<Upgrade> extension=RPG.shuffle(new LinkedList<>(k.extension));
+		while(upgrades.size()<9&&!extension.isEmpty())
+			upgrades.add(extension.pop());
 		return upgrades;
 	}
 

@@ -5,6 +5,9 @@ import java.util.stream.Collectors;
 import javelin.controller.kit.wizard.Conjurer;
 import javelin.controller.kit.wizard.Diviner;
 import javelin.controller.kit.wizard.Transmuter;
+import javelin.controller.quality.FastHealing;
+import javelin.controller.quality.resistance.ParalysisImmunity;
+import javelin.controller.quality.resistance.PoisonImmunity;
 import javelin.controller.upgrade.NaturalArmor;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseCharisma;
@@ -19,6 +22,12 @@ import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.town.labor.ecological.Henge;
 
+/**
+ * Summons {@link MonsterType#ANIMAL}S, {@link MonsterType#VERMIN},
+ * {@link MonsterType#FEY} and {@link MonsterType#ELEMENTAL}S,
+ *
+ * @author alex
+ */
 public class Druid extends Kit{
 	public static final Kit INSTANCE=new Druid();
 
@@ -29,9 +38,6 @@ public class Druid extends Kit{
 
 	@Override
 	protected void define(){
-		//		basic.add(new Summon("Small monstrous centipede",1));
-		//		basic.add(new Summon("Dire rat",1));
-		//		basic.add(new Summon("Eagle",1));
 		basic.add(Skill.SURVIVAL.getupgrade());
 	}
 
@@ -42,6 +48,9 @@ public class Druid extends Kit{
 		extension.addAll(Diviner.INSTANCE.filter(Spell.class));
 		extension.add(NaturalArmor.LEATHER);
 		extension.add(Burrow.BADGER);
+		extension.add(FastHealing.UPGRADE);
+		extension.add(ParalysisImmunity.UPGRADE);
+		extension.add(PoisonImmunity.UPGRADE);
 	}
 
 	boolean filtersummon(String monstername){

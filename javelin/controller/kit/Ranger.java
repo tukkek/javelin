@@ -1,5 +1,6 @@
 package javelin.controller.kit;
 
+import javelin.controller.quality.perception.Vision;
 import javelin.controller.upgrade.NaturalArmor;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseDexterity;
@@ -45,6 +46,7 @@ public class Ranger extends Kit{
 		extension.add(RangedDamage.INSTANCE);
 		extension.add(Alertness.SINGLETON.toupgrade());
 		extension.add(WalkingSpeed.HUMAN);
+		extension.add(Vision.LOWLIGHTVISION);
 	}
 
 	@Override

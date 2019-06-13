@@ -54,7 +54,6 @@ public class Damage extends FieldReader{
 		String attack=attackp.replace(" or","").replace("or ","")
 				.replaceAll("  "," ").trim();
 		Spell effect=null;
-		DamageEffect.setup();
 		for(DamageEffect e:DamageEffect.EFFECTS)
 			if(attack.contains(e.name)){
 				attack=removeeffect(attack,e.name);

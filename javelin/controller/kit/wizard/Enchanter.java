@@ -1,5 +1,6 @@
 package javelin.controller.kit.wizard;
 
+import javelin.controller.quality.resistance.MindImmunity;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.Bane;
@@ -34,5 +35,6 @@ public class Enchanter extends Wizard{
 		extension.add(new Bane());
 		extension.add(new Rage());
 		extension.add(new BarbarianRage());
+		extension.add(MindImmunity.UPGRADE);
 	}
 }

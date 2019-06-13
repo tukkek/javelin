@@ -1,5 +1,6 @@
 package javelin.controller.kit.wizard;
 
+import javelin.controller.quality.perception.Vision;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.model.unit.abilities.spell.divination.DiscernLocation;
@@ -27,5 +28,6 @@ public class Diviner extends Wizard{
 		extension.add(new PryingEyes());
 		extension.add(new DiscernLocation());
 		extension.add(new FindTraps());
+		extension.add(Vision.LOWLIGHTVISION);
 	}
 }

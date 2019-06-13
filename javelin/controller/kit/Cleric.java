@@ -39,7 +39,6 @@ public class Cleric extends Kit{
 
 	@Override
 	protected void extend(UpgradeHandler h){
-		extension.addAll(h.good);
 		extension.addAll(Conjurer.INSTANCE.getupgrades());
 		extension.addAll(Enchanter.INSTANCE.filter(Spell.class));
 		extension.addAll(Diviner.INSTANCE.filter(Spell.class));

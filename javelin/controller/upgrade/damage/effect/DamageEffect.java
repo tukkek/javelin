@@ -1,6 +1,5 @@
 package javelin.controller.upgrade.damage.effect;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javelin.model.Realm;
@@ -27,15 +26,7 @@ public class DamageEffect{
 	/** @see Poison */
 	public static final DamageEffect POISON=new DamageEffect("poison",
 			new Poison(),Realm.EVIL);
-	/** All supported damage effects */
-	public static final ArrayList<DamageEffect> EFFECTS=new ArrayList<>();
-
-	/**
-	 * Call before using {@link #EFFECTS}.
-	 */
-	static public void setup(){
-		if(EFFECTS.isEmpty()) EFFECTS.addAll(List.of(PARALYSIS,FEAR,POISON));
-	}
+	public static final List<DamageEffect> EFFECTS=List.of(PARALYSIS,FEAR,POISON);
 
 	/** Name of the {@link Spell}-like effect. */
 	public String name;

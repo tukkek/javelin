@@ -11,7 +11,6 @@ import javelin.controller.challenge.factor.CrFactor;
 import javelin.model.Realm;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.skill.Skill.SkillUpgrade;
-import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.cultural.MagesGuild;
 
 /**
@@ -44,17 +43,6 @@ public class UpgradeHandler{
 	/** All {@link UpgradeSet}s except those explicitly marked as internal. */
 	HashMap<String,UpgradeSet> all=new HashMap<>();
 
-	/** Linked to a {@link Town}'s realm. */
-	public UpgradeSet water=new UpgradeSet("Water");
-	/** Linked to a {@link Town}'s realm. */
-	public UpgradeSet wind=new UpgradeSet("Wind");
-	/** Linked to a {@link Town}'s realm. */
-	public UpgradeSet good=new UpgradeSet("Good");
-	/** Linked to a {@link Town}'s realm. */
-	public UpgradeSet evil=new UpgradeSet("Evil");
-	/** Linked HashSet a {@link Town}'s realm. */
-	public UpgradeSet magic=new UpgradeSet("Magic");
-
 	UpgradeHandler(){
 		// prevents instantiation
 	}
@@ -64,18 +52,6 @@ public class UpgradeHandler{
 	 * @return the upgrades that belong to it.
 	 */
 	public HashSet<Upgrade> getupgrades(Realm r){
-		if(r==javelin.model.Realm.AIR)
-			return wind;
-		else if(r==Realm.WATER)
-			return water;
-		else if(r==Realm.GOOD)
-			return good;
-		else if(r==Realm.EVIL)
-			return evil;
-		else if(r==Realm.MAGIC)
-			return magic;
-		else
-			return new HashSet<>();
 	}
 
 	/**

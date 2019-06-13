@@ -1,5 +1,7 @@
 package javelin.controller.kit;
 
+import javelin.controller.quality.perception.Vision;
+import javelin.controller.quality.resistance.PoisonImmunity;
 import javelin.controller.upgrade.NaturalArmor;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseCharisma;
@@ -55,6 +57,8 @@ public class Ninja extends Kit{
 		extension.add(RaiseCharisma.SINGLETON);
 		extension.add(Deceitful.SINGLETON.toupgrade());
 		extension.add(Acrobatic.SINGLETON.toupgrade());
+		extension.add(PoisonImmunity.UPGRADE);
+		extension.add(Vision.DARKVISION);
 	}
 
 	@Override

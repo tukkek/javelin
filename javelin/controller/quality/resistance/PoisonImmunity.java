@@ -12,7 +12,10 @@ import javelin.model.unit.Monster;
  * @see Monster#getwill()
  */
 public class PoisonImmunity extends Quality{
+	/** {@link Monster#cr} value. */
 	public static final float CR=0.2f;
+	/** Applies {@link Monster#immunitytopoison}. */
+	public static final Upgrade UPGRADE=new PoisonImmunityUpgrade();
 
 	static class PoisonImmunityUpgrade extends Upgrade{
 		PoisonImmunityUpgrade(){
@@ -55,6 +58,5 @@ public class PoisonImmunity extends Quality{
 
 	@Override
 	public void listupgrades(UpgradeHandler handler){
-		handler.good.add(new PoisonImmunityUpgrade());
 	}
 }

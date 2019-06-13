@@ -13,7 +13,10 @@ import javelin.model.unit.Monster;
  * @see Monster#getwill()
  */
 public class MindImmunity extends Quality{
+	/** {@link Monster#cr} value. */
 	public static final float CR=0.5f;
+	/** Applies {@link Monster#immunitytomind}. */
+	public static final Upgrade UPGRADE=new MindImmunityUpgrade();
 
 	static class MindImmunityUpgrade extends Upgrade{
 		MindImmunityUpgrade(){
@@ -56,6 +59,5 @@ public class MindImmunity extends Quality{
 
 	@Override
 	public void listupgrades(UpgradeHandler handler){
-		handler.good.add(new MindImmunityUpgrade());
 	}
 }

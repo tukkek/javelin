@@ -10,11 +10,14 @@ import javelin.model.unit.Monster;
  * See more info on the d20 SRD.
  */
 public class SpellResistance extends Quality{
+	/** Applies {@link Monster#sr}. */
+	public static final Upgrade UPGRADE=new SpellResistanceUpgrade();
+
 	/**
 	 * See the d20 SRD for more info.
 	 */
 	static class SpellResistanceUpgrade extends Upgrade{
-		public SpellResistanceUpgrade(){
+		SpellResistanceUpgrade(){
 			super("Spell resistance");
 		}
 
@@ -59,7 +62,6 @@ public class SpellResistance extends Quality{
 
 	@Override
 	public void listupgrades(UpgradeHandler handler){
-		handler.magic.add(new SpellResistanceUpgrade());
 	}
 
 	@Override

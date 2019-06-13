@@ -2,6 +2,8 @@ package javelin.controller.kit.wizard;
 
 import java.util.stream.Collectors;
 
+import javelin.controller.quality.perception.Vision;
+import javelin.controller.quality.resistance.PoisonImmunity;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.model.unit.Monster;
@@ -42,6 +44,8 @@ public class Necromancer extends Wizard{
 		extension.add(new InflictModerateWounds());
 		extension.add(new InflictSeriousWounds());
 		extension.add(new InflictCriticalWounds());
+		extension.add(PoisonImmunity.UPGRADE);
+		extension.add(Vision.DARKVISION);
 	}
 
 	@Override

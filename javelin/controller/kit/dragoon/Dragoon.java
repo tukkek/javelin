@@ -3,6 +3,7 @@ package javelin.controller.kit.dragoon;
 import javelin.controller.kit.Fighter;
 import javelin.controller.kit.Kit;
 import javelin.controller.kit.Monk;
+import javelin.controller.quality.resistance.ParalysisImmunity;
 import javelin.controller.upgrade.BreathUpgrade;
 import javelin.controller.upgrade.NaturalArmor;
 import javelin.controller.upgrade.UpgradeHandler;
@@ -69,6 +70,7 @@ public abstract class Dragoon extends Kit{
 		extension.add(LightningReflexes.SINGLETON.toupgrade());
 		extension.add(Acrobatic.SINGLETON.toupgrade());
 		extension.add(Alertness.SINGLETON.toupgrade());
+		extension.add(ParalysisImmunity.UPGRADE);
 	}
 
 	@Override

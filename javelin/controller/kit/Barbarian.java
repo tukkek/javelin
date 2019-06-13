@@ -1,5 +1,6 @@
 package javelin.controller.kit;
 
+import javelin.controller.quality.resistance.DamageReduction;
 import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseConstitution;
@@ -45,6 +46,7 @@ public class Barbarian extends Kit{
 		extension.add(MeleeDamage.INSTANCE);
 		extension.add(Toughness.SINGLETON.toupgrade());
 		extension.add(GreatFortitude.SINGLETON.toupgrade());
+		extension.add(DamageReduction.UPGRADE);
 	}
 
 	@Override

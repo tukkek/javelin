@@ -1,5 +1,11 @@
 package javelin.controller.kit.wizard;
 
+import javelin.controller.quality.resistance.DamageReduction;
+import javelin.controller.quality.resistance.EnergyImmunity;
+import javelin.controller.quality.resistance.EnergyResistance;
+import javelin.controller.quality.resistance.MindImmunity;
+import javelin.controller.quality.resistance.ParalysisImmunity;
+import javelin.controller.quality.resistance.PoisonImmunity;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.model.unit.abilities.spell.abjuration.Barkskin;
@@ -29,5 +35,11 @@ public class Abjurer extends Wizard{
 		extension.add(new ResistEnergy());
 		extension.add(new DispelMagic());
 		extension.add(new Displacement()); // TODO illusion
+		extension.add(DamageReduction.UPGRADE);
+		extension.add(EnergyImmunity.UPGRADE);
+		extension.add(MindImmunity.UPGRADE);
+		extension.add(ParalysisImmunity.UPGRADE);
+		extension.add(PoisonImmunity.UPGRADE);
+		extension.add(EnergyResistance.UPGRADE);
 	}
 }

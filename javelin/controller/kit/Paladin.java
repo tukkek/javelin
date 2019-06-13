@@ -1,6 +1,9 @@
 package javelin.controller.kit;
 
 import javelin.controller.kit.wizard.Conjurer;
+import javelin.controller.quality.resistance.MindImmunity;
+import javelin.controller.quality.resistance.PoisonImmunity;
+import javelin.controller.quality.resistance.SpellResistance;
 import javelin.controller.upgrade.NaturalArmor;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseCharisma;
@@ -38,8 +41,6 @@ public class Paladin extends Kit{
 
 	@Override
 	protected void extend(UpgradeHandler h){
-		extension.addAll(h.good);
-		extension.addAll(h.magic);
 		extension.addAll(Conjurer.HEALING);
 		extension.add(NaturalArmor.PLATES);
 		extension.add(IronWill.SINGLETON.toupgrade());
@@ -48,6 +49,9 @@ public class Paladin extends Kit{
 		extension.add(Toughness.SINGLETON.toupgrade());
 		extension.add(GreatFortitude.SINGLETON.toupgrade());
 		extension.add(Alertness.SINGLETON.toupgrade());
+		extension.add(MindImmunity.UPGRADE);
+		extension.add(PoisonImmunity.UPGRADE);
+		extension.add(SpellResistance.UPGRADE);
 	}
 
 	@Override

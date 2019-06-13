@@ -22,17 +22,20 @@ public class EnergyResistance extends Quality{
 	 * document) times 5 (since it applies to any of the five energy types).
 	 */
 	public static final float CR=.02f*5;
+	/** All types of energy (currently being consolidated as "energy damage"). */
 	public static final String[] ENERGYTYPES=new String[]{"cold","fire","acid",
 			"electricity","sonic"};
+	/** Applies {@link Monster#energyresistance}. */
+	public static final Upgrade UPGRADE=new EnergyResistanceUpgrade();
+
 	static final String[] BLACKLIST=new String[]{"turn resistance",
 			"resistance to ranged attacks","charm resistance"};
 
 	/**
 	 * See the d20 SRD for more info.
 	 */
-	static public class EnergyResistanceUpgrade extends Upgrade{
-
-		public EnergyResistanceUpgrade(){
+	static class EnergyResistanceUpgrade extends Upgrade{
+		EnergyResistanceUpgrade(){
 			super("Energy resistance");
 		}
 
@@ -54,6 +57,7 @@ public class EnergyResistance extends Quality{
 
 	}
 
+	/** Constructor. */
 	public EnergyResistance(){
 		super("resistance");
 	}
@@ -85,7 +89,6 @@ public class EnergyResistance extends Quality{
 
 	@Override
 	public void listupgrades(UpgradeHandler handler){
-		handler.magic.add(new EnergyResistanceUpgrade());
 	}
 
 	@Override

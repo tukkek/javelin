@@ -31,12 +31,14 @@ import javelin.model.unit.Monster;
  * http://www.d20srd.org/srd/specialAbilities.htm#damageReduction
  */
 public class DamageReduction extends Quality{
+	/** Applies {@link Monster#dr}. */
+	public static final Upgrade UPGRADE=new DamageReductionUpgrade();
 
 	/**
 	 * See the d20 SRD for more info.
 	 */
 	static class DamageReductionUpgrade extends Upgrade{
-		public DamageReductionUpgrade(){
+		DamageReductionUpgrade(){
 			super("Damage reduction");
 		}
 
@@ -81,7 +83,6 @@ public class DamageReduction extends Quality{
 
 	@Override
 	public void listupgrades(UpgradeHandler handler){
-		handler.good.add(new DamageReductionUpgrade());
 	}
 
 	@Override

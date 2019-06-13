@@ -9,13 +9,16 @@ import javelin.model.unit.Monster;
  * See more info on the d20 SRD.
  */
 public class FastHealing extends Quality{
+	/** {@link Monster#cr} per point of fast healing. */
 	public static final float CR=.075f;
+	/** Upgrade that applies {@link Monster#fasthealing}. */
+	public static final FastHealingUpgrade UPGRADE=new FastHealingUpgrade();
 
 	/**
 	 * See the d20 SRD for more info.
 	 */
 	static class FastHealingUpgrade extends Upgrade{
-		public FastHealingUpgrade(){
+		FastHealingUpgrade(){
 			super("Fast healing");
 		}
 
@@ -36,6 +39,7 @@ public class FastHealing extends Quality{
 
 	}
 
+	/** Constructor. */
 	public FastHealing(String name){
 		super(name);
 	}
@@ -62,6 +66,5 @@ public class FastHealing extends Quality{
 
 	@Override
 	public void listupgrades(UpgradeHandler handler){
-		handler.water.add(new FastHealingUpgrade());
 	}
 }

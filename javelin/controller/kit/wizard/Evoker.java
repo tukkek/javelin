@@ -1,5 +1,7 @@
 package javelin.controller.kit.wizard;
 
+import javelin.controller.quality.resistance.EnergyImmunity;
+import javelin.controller.quality.resistance.EnergyResistance;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.model.unit.abilities.spell.evocation.FlameStrike;
@@ -28,5 +30,7 @@ public class Evoker extends Wizard{
 		extension.add(new PolarRay());
 		extension.add(new SoundBurst());
 		extension.add(new FlameStrike());
+		extension.add(EnergyImmunity.UPGRADE);
+		extension.add(EnergyResistance.UPGRADE);
 	}
 }

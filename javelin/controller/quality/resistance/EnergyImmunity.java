@@ -22,6 +22,9 @@ import javelin.model.unit.Monster;
  * @see EnergyResistance
  */
 public class EnergyImmunity extends Quality{
+	/** Applies {@link Monster#energyresistance}. */
+	public static final Upgrade UPGRADE=new EnergyImmunityUpgrade();
+
 	/**
 	 * See the d20 SRD for more info.
 	 */
@@ -69,7 +72,6 @@ public class EnergyImmunity extends Quality{
 
 	@Override
 	public void listupgrades(UpgradeHandler handler){
-		handler.good.add(new EnergyImmunityUpgrade());
 	}
 
 	@Override

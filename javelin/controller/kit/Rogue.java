@@ -1,5 +1,6 @@
 package javelin.controller.kit;
 
+import javelin.controller.quality.perception.Vision;
 import javelin.controller.quality.resistance.CriticalImmunity;
 import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.NaturalArmor;
@@ -37,13 +38,12 @@ public class Rogue extends Kit{
 	@Override
 	protected void extend(UpgradeHandler h){
 		extension.add(new FeatUpgrade(Deceitful.SINGLETON));
-		extension.addAll(h.wind);
-		extension.addAll(h.evil);
 		extension.add(NaturalArmor.LEATHER);
 		extension.add(CriticalImmunity.UPGRADE);
 		extension.add(Deceitful.SINGLETON.toupgrade());
 		extension.add(Alertness.SINGLETON.toupgrade());
 		extension.add(LightningReflexes.SINGLETON.toupgrade());
+		extension.add(Vision.LOWLIGHTVISION);
 	}
 
 	@Override

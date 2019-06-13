@@ -10,12 +10,14 @@ import javelin.model.unit.Monster;
  * See more info on the d20 SRD.
  */
 public class SpellImmunity extends Quality{
+	/** Applies 100% {@link Monster#sr}. */
+	public static final Upgrade UPGRADE=new SpellImmunityUpgrade();
+
 	/**
 	 * See the d20 SRD for more info.
 	 */
 	static class SpellImmunityUpgrade extends Upgrade{
-
-		public SpellImmunityUpgrade(){
+		SpellImmunityUpgrade(){
 			super("Spell immunity");
 		}
 
@@ -33,6 +35,7 @@ public class SpellImmunity extends Quality{
 
 	}
 
+	/** Constructor. */
 	public SpellImmunity(){
 		super("spell immunity");
 	}
@@ -54,7 +57,6 @@ public class SpellImmunity extends Quality{
 
 	@Override
 	public void listupgrades(UpgradeHandler handler){
-		handler.good.add(new SpellImmunityUpgrade());
 	}
 
 	@Override

@@ -17,6 +17,7 @@ import javelin.controller.upgrade.movement.WalkingSpeed;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
 import javelin.model.unit.abilities.BreathWeapon;
+import javelin.model.unit.feat.ImprovedInitiative;
 import javelin.model.unit.feat.Toughness;
 import javelin.model.unit.feat.attack.focus.MeleeFocus;
 import javelin.model.unit.feat.save.LightningReflexes;
@@ -58,6 +59,7 @@ public abstract class Dragoon extends Kit{
 	protected void define(){
 		basic.add(MeleeFocus.UPGRADE.toupgrade());
 		basic.add(Skill.ACROBATICS.getupgrade());
+		basic.add(ImprovedInitiative.SINGLETON.toupgrade());
 	}
 
 	@Override

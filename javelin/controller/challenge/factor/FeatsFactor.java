@@ -9,15 +9,11 @@ import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.HD;
 import javelin.model.unit.Monster;
 import javelin.model.unit.feat.Feat;
-import javelin.model.unit.feat.ImprovedInitiative;
-import javelin.model.unit.feat.attack.focus.RangedFocus;
 import javelin.model.unit.feat.attack.focus.WeaponFocus;
 import javelin.model.unit.feat.internal.ExoticWeaponProficiency;
 import javelin.model.unit.feat.internal.Multiattack;
 import javelin.model.unit.feat.internal.MultiweaponFighting;
 import javelin.model.unit.feat.internal.WeaponFinesse;
-import javelin.model.unit.feat.save.LightningReflexes;
-import javelin.model.unit.feat.skill.Acrobatic;
 
 /**
  * @see CrFactor
@@ -25,9 +21,6 @@ import javelin.model.unit.feat.skill.Acrobatic;
 public class FeatsFactor extends CrFactor{
 	static final float CR=.2f;
 
-	static final Feat[] WIND=new Feat[]{RangedFocus.SINGLETON,
-			LightningReflexes.SINGLETON,ImprovedInitiative.SINGLETON};
-	static final Feat[] WATER=new Feat[]{Acrobatic.SINGLETON};
 	/**
 	 * Internal feats are mostly used to map feats that should be considered for
 	 * {@link #CR} purposes but whose effects come pre-calculated on the stat
@@ -63,8 +56,6 @@ public class FeatsFactor extends CrFactor{
 
 	@Override
 	public void registerupgrades(UpgradeHandler handler){
-		register(handler.wind,WIND);
-		register(handler.water,WATER);
 	}
 
 	void register(HashSet<Upgrade> upgrades,Feat[] feats){

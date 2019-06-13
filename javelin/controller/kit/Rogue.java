@@ -9,6 +9,7 @@ import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.classes.Expert;
 import javelin.controller.upgrade.movement.WalkingSpeed;
 import javelin.model.unit.Monster;
+import javelin.model.unit.feat.save.LightningReflexes;
 import javelin.model.unit.feat.skill.Alertness;
 import javelin.model.unit.feat.skill.Deceitful;
 import javelin.model.unit.skill.Skill;
@@ -42,6 +43,7 @@ public class Rogue extends Kit{
 		extension.add(CriticalImmunity.UPGRADE);
 		extension.add(Deceitful.SINGLETON.toupgrade());
 		extension.add(Alertness.SINGLETON.toupgrade());
+		extension.add(LightningReflexes.SINGLETON.toupgrade());
 	}
 
 	@Override

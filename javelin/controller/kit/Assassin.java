@@ -1,6 +1,5 @@
 package javelin.controller.kit;
 
-import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.NaturalArmor;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseCharisma;
@@ -11,8 +10,11 @@ import javelin.controller.upgrade.damage.effect.DamageEffect;
 import javelin.controller.upgrade.damage.effect.EffectUpgrade;
 import javelin.controller.upgrade.movement.WalkingSpeed;
 import javelin.model.unit.Monster;
+import javelin.model.unit.feat.ImprovedInitiative;
 import javelin.model.unit.feat.save.GreatFortitude;
 import javelin.model.unit.feat.save.IronWill;
+import javelin.model.unit.feat.save.LightningReflexes;
+import javelin.model.unit.feat.skill.Acrobatic;
 import javelin.model.unit.feat.skill.Alertness;
 import javelin.model.unit.feat.skill.Deceitful;
 import javelin.model.unit.skill.Skill;
@@ -31,20 +33,21 @@ public class Assassin extends Kit{
 	protected void define(){
 		basic.add(Skill.DISGUISE.getupgrade());
 		basic.add(Skill.STEALTH.getupgrade());
-		basic.add(RaiseCharisma.SINGLETON);
-		basic.add(new FeatUpgrade(Deceitful.SINGLETON));
+		basic.add(ImprovedInitiative.SINGLETON.toupgrade());
 		basic.add(new EffectUpgrade(DamageEffect.POISON));
+		basic.add(WalkingSpeed.CHEETAH);
 	}
 
 	@Override
 	protected void extend(UpgradeHandler h){
-		extension.addAll(h.evil);
-		extension.addAll(h.wind);
 		extension.add(NaturalArmor.LEATHER);
 		extension.add(IronWill.SINGLETON.toupgrade());
 		extension.add(GreatFortitude.SINGLETON.toupgrade());
-		extension.add(WalkingSpeed.CHEETAH);
 		extension.add(Alertness.SINGLETON.toupgrade());
+		extension.add(LightningReflexes.SINGLETON.toupgrade());
+		extension.add(RaiseCharisma.SINGLETON);
+		extension.add(Deceitful.SINGLETON.toupgrade());
+		extension.add(Acrobatic.SINGLETON.toupgrade());
 	}
 
 	@Override

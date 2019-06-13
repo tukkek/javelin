@@ -8,6 +8,7 @@ import javelin.controller.upgrade.classes.Warrior;
 import javelin.controller.upgrade.damage.RangedDamage;
 import javelin.controller.upgrade.movement.WalkingSpeed;
 import javelin.model.unit.Monster;
+import javelin.model.unit.feat.attack.focus.RangedFocus;
 import javelin.model.unit.feat.attack.shot.ImprovedPreciseShot;
 import javelin.model.unit.feat.attack.shot.PointBlankShot;
 import javelin.model.unit.feat.attack.shot.PreciseShot;
@@ -30,7 +31,7 @@ public class Ranger extends Kit{
 		basic.add(PreciseShot.SINGLETON.toupgrade());
 		basic.add(RapidShot.SINGLETON.toupgrade());
 		basic.add(NaturalArmor.LEATHER);
-		basic.add(WalkingSpeed.HUMAN);
+		basic.add(RangedFocus.SINGLETON.toupgrade());
 	}
 
 	@Override
@@ -43,6 +44,7 @@ public class Ranger extends Kit{
 		extension.add(ImprovedPreciseShot.SINGLETON.toupgrade());
 		extension.add(RangedDamage.INSTANCE);
 		extension.add(Alertness.SINGLETON.toupgrade());
+		extension.add(WalkingSpeed.HUMAN);
 	}
 
 	@Override

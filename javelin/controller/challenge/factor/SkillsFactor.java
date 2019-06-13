@@ -31,7 +31,7 @@ public class SkillsFactor extends CrFactor{
 
 	@Override
 	public void registerupgrades(UpgradeHandler handler){
-		Skill.init();
+		Skill.setup();
 	}
 
 	/**

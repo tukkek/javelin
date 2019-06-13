@@ -2,7 +2,6 @@ package javelin.controller.wish;
 
 import java.util.ArrayList;
 
-import javelin.Javelin;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
@@ -23,7 +22,7 @@ public class Rebirth extends Wish{
 
 	@Override
 	boolean wish(Combatant target){
-		Monster m=Javelin.getmonster(target.source.name);
+		Monster m=Monster.get(target.source.name);
 		Combatant reborn=new Combatant(m,true);
 		Squad.active.members.remove(target);
 		Squad.active.members.add(reborn);

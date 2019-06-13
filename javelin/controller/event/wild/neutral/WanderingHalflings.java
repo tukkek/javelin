@@ -7,6 +7,7 @@ import javelin.Javelin;
 import javelin.controller.event.wild.Wanderer;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.condition.GenericBuff;
 import javelin.model.world.location.PointOfInterest;
@@ -38,7 +39,7 @@ public class WanderingHalflings extends Wanderer{
 	@Override
 	public void happen(Squad s){
 		var nhalflings=RPG.rolldice(4,4);
-		var halfling=Javelin.getmonster("lightfoot");
+		var halfling=Monster.get("lightfoot");
 		var price=Javelin.round(Math.round(halfling.eat()*nhalflings))+s.eat();
 		if(price<1) price=1;
 		var feed="Feed them for $"+Javelin.format(price)+" (you have $"

@@ -17,6 +17,7 @@ import javelin.model.unit.feat.save.GreatFortitude;
 import javelin.model.unit.feat.save.IronWill;
 import javelin.model.unit.feat.save.LightningReflexes;
 import javelin.model.unit.feat.skill.Acrobatic;
+import javelin.model.unit.feat.skill.Alertness;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.town.labor.military.Monastery;
@@ -60,6 +61,7 @@ public class Monk extends Kit{
 		extension.add(IronWill.SINGLETON.toupgrade());
 		extension.add(LightningReflexes.SINGLETON.toupgrade());
 		extension.add(GreatFortitude.SINGLETON.toupgrade());
+		extension.add(Alertness.SINGLETON.toupgrade());
 	}
 
 	@Override

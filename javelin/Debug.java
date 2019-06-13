@@ -19,6 +19,7 @@ import javelin.model.Realm;
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
@@ -84,7 +85,7 @@ public class Debug{
 				@Override
 				public ArrayList<Combatant> getfoes(Integer teamel){
 					ArrayList<Combatant> monsters=new ArrayList<>(1);
-					Combatant c=new Combatant(Javelin.getmonster("Orc"),true);
+					Combatant c=new Combatant(Monster.get("Orc"),true);
 					c.source.initiative=-20;
 					monsters.add(c);
 					return monsters;
@@ -172,7 +173,7 @@ public class Debug{
 		static void testkit(Kit kit){
 			kit.validate();
 			Squad.active.members.clear();
-			var human=Javelin.getmonster("human");
+			var human=Monster.get("human");
 			for(var level:new int[]{3,8,13,18}){
 				var npc=NpcGenerator.generatenpc(human,kit,level);
 				if(npc!=null) Squad.active.members.add(npc);

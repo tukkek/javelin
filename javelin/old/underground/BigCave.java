@@ -17,7 +17,7 @@ public class BigCave extends Caves{
 
 	@Override
 	public void generate(){
-		init();
+		setup();
 		for(int i=0;i<SIZE*2/3;i++){
 			Point p=findfreesquare();
 			int x1=BigCave.rspread(1,SIZE-2);
@@ -79,7 +79,7 @@ public class BigCave extends Caves{
 	}
 
 	@Override
-	protected void init(){
+	protected void setup(){
 		for(Square[] squares:map)
 			for(Square s:squares)
 				s.blocked=true;

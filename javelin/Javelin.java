@@ -22,21 +22,19 @@ import org.xml.sax.XMLReader;
 
 import javelin.controller.CountingSet;
 import javelin.controller.Highscore;
-import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.db.Preferences;
 import javelin.controller.db.StateManager;
 import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.db.reader.fields.Organization;
-import javelin.controller.kit.wizard.Conjurer;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.Monster.MonsterType;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.fortification.Academy;
@@ -104,7 +102,7 @@ public class Javelin{
 
 	static{
 		UpgradeHandler.singleton.gather();
-		ClassLevelUpgrade.init();
+		ClassLevelUpgrade.setup();
 		Spell.init();
 		try{
 			final MonsterReader monsterdb=new MonsterReader();
@@ -118,9 +116,9 @@ public class Javelin{
 		}catch(final Exception e){
 			throw new RuntimeException(e);
 		}
-		Organization.init();
+		Organization.setup();
 		MonsterReader.closelogs();
-		Conjurer.initsummons();
+		Summon.setupsummons();
 		Spell.init();
 		Artifact.init();
 		Item.init();
@@ -391,16 +389,6 @@ public class Javelin{
 	}
 
 	/**
-	 * TODO a collection would make more sense
-	 */
-	public static List<Monster> getmonsterbytype(MonsterType type){
-		ArrayList<Monster> monsters=new ArrayList<>();
-		for(Monster m:Javelin.ALLMONSTERS)
-			if(m.type==type) monsters.add(m);
-		return monsters;
-	}
-
-	/**
 	 * @return Textual representation of the givne {@link Option#price}.
 	 */
 	static public String format(double gold){
@@ -424,24 +412,6 @@ public class Javelin{
 		while(roundto*100<gold)
 			roundto=roundto*10;
 		return roundto*Math.round((float)gold/roundto);
-	}
-
-	/**
-	 * @param name Monster type. Example: orc, kobold, young white dragon... Case
-	 *          insensitive.
-	 * @return A clone.
-	 * @see Monster#clone()
-	 */
-	public static Monster getmonster(String name){
-		Monster monster=null;
-		for(Monster m:ALLMONSTERS)
-			if(m.name.equalsIgnoreCase(name)){
-				monster=m.clone();
-				break;
-			}
-		if(monster==null) return null;
-		ChallengeCalculator.calculatecr(monster);
-		return monster;
 	}
 
 	public static void redraw(){

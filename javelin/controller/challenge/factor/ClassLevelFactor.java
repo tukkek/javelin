@@ -23,7 +23,7 @@ public class ClassLevelFactor extends CrFactor{
 	@Override
 	public float calculate(Monster monster){
 		float cr=0;
-		ClassLevelUpgrade.init();
+		ClassLevelUpgrade.setup();
 		for(ClassLevelUpgrade c:ClassLevelUpgrade.classes){
 			final float perlevel=ABILITY+c.crperlevel
 					-SkillsFactor.levelupcost(c.skillrate,monster);

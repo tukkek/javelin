@@ -3,7 +3,6 @@ package javelin.model.world.location.haunt;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.comparator.MonstersByName;
 import javelin.controller.fight.Fight;
@@ -47,7 +46,7 @@ public abstract class Haunt extends Fortification{
 	public Haunt(String description,int minel,int maxel,String[] monsters){
 		super(description,description,Integer.MAX_VALUE,Integer.MIN_VALUE);
 		for(String name:monsters)
-			dwellers.add(Javelin.getmonster(name));
+			dwellers.add(Monster.get(name));
 		minlevel=minel;
 		maxlevel=maxel;
 		unique=true;

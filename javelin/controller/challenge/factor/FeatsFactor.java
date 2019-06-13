@@ -18,8 +18,6 @@ import javelin.model.unit.feat.internal.MultiweaponFighting;
 import javelin.model.unit.feat.internal.WeaponFinesse;
 import javelin.model.unit.feat.save.LightningReflexes;
 import javelin.model.unit.feat.skill.Acrobatic;
-import javelin.model.unit.feat.skill.Alertness;
-import javelin.model.unit.feat.skill.Deceitful;
 
 /**
  * @see CrFactor
@@ -27,8 +25,6 @@ import javelin.model.unit.feat.skill.Deceitful;
 public class FeatsFactor extends CrFactor{
 	static final float CR=.2f;
 
-	static final Feat[] EVIL=new Feat[]{Deceitful.SINGLETON};
-	static final Feat[] GOOD=new Feat[]{Alertness.SINGLETON};
 	static final Feat[] WIND=new Feat[]{RangedFocus.SINGLETON,
 			LightningReflexes.SINGLETON,ImprovedInitiative.SINGLETON};
 	static final Feat[] WATER=new Feat[]{Acrobatic.SINGLETON};
@@ -69,8 +65,6 @@ public class FeatsFactor extends CrFactor{
 	public void registerupgrades(UpgradeHandler handler){
 		register(handler.wind,WIND);
 		register(handler.water,WATER);
-		register(handler.good,GOOD);
-		register(handler.evil,EVIL);
 	}
 
 	void register(HashSet<Upgrade> upgrades,Feat[] feats){

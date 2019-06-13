@@ -52,7 +52,7 @@ public class SummoningCircle extends Academy{
 	}
 
 	void populate(){
-		List<Monster> summons=Javelin.getmonsterbytype(MonsterType.OUTSIDER);
+		List<Monster> summons=Monster.get(MonsterType.OUTSIDER);
 		while(upgrades.size()<MAXSPELLS&&!summons.isEmpty()){
 			Monster m=RPG.pick(summons);
 			summons.remove(m);

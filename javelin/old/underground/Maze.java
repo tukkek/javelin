@@ -20,7 +20,7 @@ public class Maze extends Caves{
 
 	@Override
 	public void generate(){
-		init();
+		setup();
 		int center=(SIZE+1)/2;
 		map[2*RPG.r(center)][2*RPG.r(center)].blocked=false;
 		int finishedCount=0;

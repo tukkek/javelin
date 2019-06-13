@@ -1,8 +1,7 @@
 package javelin.controller.kit;
 
-import java.util.LinkedList;
+import java.util.stream.Collectors;
 
-import javelin.Javelin;
 import javelin.controller.kit.wizard.Conjurer;
 import javelin.controller.kit.wizard.Diviner;
 import javelin.controller.kit.wizard.Transmuter;
@@ -19,7 +18,6 @@ import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.town.labor.ecological.Henge;
-import javelin.old.RPG;
 
 public class Druid extends Kit{
 	public static final Kit INSTANCE=new Druid();
@@ -31,9 +29,9 @@ public class Druid extends Kit{
 
 	@Override
 	protected void define(){
-		basic.add(new Summon("Small monstrous centipede",1));
-		basic.add(new Summon("Dire rat",1));
-		basic.add(new Summon("Eagle",1));
+		//		basic.add(new Summon("Small monstrous centipede",1));
+		//		basic.add(new Summon("Dire rat",1));
+		//		basic.add(new Summon("Eagle",1));
 		basic.add(Skill.SURVIVAL.getupgrade());
 	}
 
@@ -42,21 +40,21 @@ public class Druid extends Kit{
 		extension.addAll(Conjurer.HEALING);
 		extension.addAll(Transmuter.INSTANCE.filter(Spell.class));
 		extension.addAll(Diviner.INSTANCE.filter(Spell.class));
-		addsummons(extension.size());
 		extension.add(NaturalArmor.LEATHER);
 		extension.add(Burrow.BADGER);
 	}
 
-	void addsummons(int nsummons){
-		LinkedList<Monster> summons=new LinkedList<>();
-		summons.addAll(Javelin.getmonsterbytype(MonsterType.VERMIN));
-		summons.addAll(Javelin.getmonsterbytype(MonsterType.ANIMAL));
-		summons.addAll(Javelin.getmonsterbytype(MonsterType.FEY));
-		summons.addAll(Javelin.getmonsterbytype(MonsterType.ELEMENTAL));
-		for(int i=0;i<nsummons&&!summons.isEmpty();i++){
-			Monster m=RPG.pick(summons);
-			extension.add(new Summon(m.name));
-		}
+	boolean filtersummon(String monstername){
+		var m=Monster.get(monstername);
+		return MonsterType.VERMIN.equals(m.type)||MonsterType.ANIMAL.equals(m.type)
+				||MonsterType.FEY.equals(m.type)||MonsterType.ELEMENTAL.equals(m.type);
+	}
+
+	@Override
+	public void finish(){
+		extension.addAll(findsummons(Summon.ALLSUMMONS.stream()
+				.filter(s->filtersummon(s.monstername)).collect(Collectors.toList())));
+		super.finish();
 	}
 
 	@Override

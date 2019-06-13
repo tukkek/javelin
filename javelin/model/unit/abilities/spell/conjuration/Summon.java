@@ -1,12 +1,15 @@
 package javelin.model.unit.abilities.spell.conjuration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
+import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.kit.Kit;
 import javelin.controller.kit.wizard.Conjurer;
+import javelin.controller.upgrade.Upgrade;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
@@ -44,7 +47,7 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  * {@link MonsterType} summon spells, such as the {@link SummoningCircle} and
  * the {@link Henge}.
  *
- * @see Conjurer#SUMMON
+ * @see Conjurer#ALLSUMMONS
  * @author alex
  */
 public class Summon extends Spell{
@@ -53,6 +56,14 @@ public class Summon extends Spell{
 
 	public String monstername;
 	float chance;
+	/**
+	 * Every summoning {@link Spell}, for each {@link Monster} available.
+	 *
+	 * Since we don't want these to completely overwhelm the kit, only one per
+	 * {@link Spell#casterlevel} is registered with the kit iself. More can be
+	 * accessed through {@link SummoningCircle}s.
+	 */
+	public static final List<Summon> ALLSUMMONS=new ArrayList<>();
 
 	public Summon(String monstername,float chance){
 		super("Summon "+monstername.toLowerCase(),0,0,Realm.MAGIC);
@@ -74,7 +85,7 @@ public class Summon extends Spell{
 	 * TODO isn't taking into account summoning a group.
 	 */
 	public static float ratechallenge(String monster,float chance){
-		Monster m=Javelin.getmonster(monster);
+		Monster m=Monster.get(monster);
 		float cr=m.cr/((5+2)/2f);
 		return chance*cr;
 	}
@@ -83,7 +94,7 @@ public class Summon extends Spell{
 	public String cast(Combatant caster2,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
 		List<Combatant> team=target.getteam(s);
-		Monster m=Javelin.getmonster(monstername);
+		Monster m=Monster.get(monstername);
 		m.name="Summoned "+m.name.toLowerCase();
 		Combatant summoned=new Combatant(m,true);
 		place(target,summoned,team,s);
@@ -119,7 +130,7 @@ public class Summon extends Spell{
 
 	@Override
 	public boolean apply(Combatant c){
-		Monster m=Javelin.getmonster(monstername);
+		Monster m=Monster.get(monstername);
 		if(m==null) throw new RuntimeException("Unknown summon: "+monstername);
 		return ChallengeCalculator.calculatecr(c.source)>=m.cr&&super.apply(c);
 	}
@@ -132,7 +143,7 @@ public class Summon extends Spell{
 	@Override
 	public void postloadmonsters(){
 		cr=ratechallenge(monstername,chance);
-		level=Math.round(Javelin.getmonster(monstername).cr/2);
+		level=Math.round(Monster.get(monstername).cr/2);
 		casterlevel=getcasterlevel(level);
 	}
 
@@ -145,5 +156,18 @@ public class Summon extends Spell{
 	@Override
 	public boolean equals(Object obj){
 		return super.equals(obj)&&monstername.equals(((Summon)obj).monstername);
+	}
+
+	/**
+	 * Unlike most {@link Upgrade}s, {@link Summon} {@link Spell}s need to be
+	 * created after all {@link Monster}s are loaded.
+	 *
+	 * @see MonsterReader
+	 */
+	public static void setupsummons(){
+		Javelin.ALLMONSTERS.stream().filter(m->!m.passive)
+				.map(m->new Summon(m.name,1)).forEach(s->ALLSUMMONS.add(s));
+		for(var k:Kit.KITS)
+			k.finish();
 	}
 }

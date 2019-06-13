@@ -5,7 +5,6 @@ import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.classes.Aristocrat;
-import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.feat.CombatCasting;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.fortification.Academy;
@@ -20,8 +19,6 @@ public abstract class Wizard extends Kit{
 	/** Constructor. */
 	protected Wizard(String name,RaiseAbility ability){
 		super(name,Aristocrat.SINGLETON,ability,RaiseIntelligence.SINGLETON);
-		extension.stream().filter(u->u instanceof Spell).map(u->(Spell)u)
-				.filter(s->s.casterlevel==1).forEach(s->basic.add(s));
 		var lower=name.toLowerCase();
 		titles=new String[]{"Fledgling $ "+lower,"Apprentice $ "+lower,"$ "+lower,
 				"$ grand-"+lower};

@@ -773,4 +773,32 @@ public class Monster implements Cloneable,Serializable{
 	public void setrawac(int ac){
 		this.ac=ac;
 	}
+
+	/**
+	 * @param name Monster type. Example: orc, kobold, young white dragon... Case
+	 *          insensitive.
+	 * @return A clone.
+	 * @see Monster#clone()
+	 */
+	public static Monster get(String name){
+		Monster monster=null;
+		for(Monster m:Javelin.ALLMONSTERS)
+			if(m.name.equalsIgnoreCase(name)){
+				monster=m.clone();
+				break;
+			}
+		if(monster==null) return null;
+		ChallengeCalculator.calculatecr(monster);
+		return monster;
+	}
+
+	/**
+	 * TODO a collection would make more sense
+	 */
+	public static List<Monster> get(MonsterType type){
+		ArrayList<Monster> monsters=new ArrayList<>();
+		for(Monster m:Javelin.ALLMONSTERS)
+			if(m.type==type) monsters.add(m);
+		return monsters;
+	}
 }

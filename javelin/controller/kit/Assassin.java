@@ -13,6 +13,7 @@ import javelin.controller.upgrade.movement.WalkingSpeed;
 import javelin.model.unit.Monster;
 import javelin.model.unit.feat.save.GreatFortitude;
 import javelin.model.unit.feat.save.IronWill;
+import javelin.model.unit.feat.skill.Alertness;
 import javelin.model.unit.feat.skill.Deceitful;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.fortification.Academy;
@@ -33,7 +34,6 @@ public class Assassin extends Kit{
 		basic.add(RaiseCharisma.SINGLETON);
 		basic.add(new FeatUpgrade(Deceitful.SINGLETON));
 		basic.add(new EffectUpgrade(DamageEffect.POISON));
-		basic.add(WalkingSpeed.CHEETAH);
 	}
 
 	@Override
@@ -43,6 +43,8 @@ public class Assassin extends Kit{
 		extension.add(NaturalArmor.LEATHER);
 		extension.add(IronWill.SINGLETON.toupgrade());
 		extension.add(GreatFortitude.SINGLETON.toupgrade());
+		extension.add(WalkingSpeed.CHEETAH);
+		extension.add(Alertness.SINGLETON.toupgrade());
 	}
 
 	@Override

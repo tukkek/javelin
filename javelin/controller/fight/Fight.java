@@ -381,7 +381,7 @@ public abstract class Fight{
 	 *
 	 * @return Opponent units.
 	 */
-	public ArrayList<Combatant> init(){
+	public ArrayList<Combatant> setup(){
 		if(Debug.period!=null) period=Debug.period;
 		Fight.state=new BattleState(this);
 		Fight.state.blueTeam=getblueteam();

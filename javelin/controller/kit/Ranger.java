@@ -1,8 +1,5 @@
 package javelin.controller.kit;
 
-import java.util.List;
-
-import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.NaturalArmor;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseDexterity;
@@ -15,7 +12,7 @@ import javelin.model.unit.feat.attack.shot.ImprovedPreciseShot;
 import javelin.model.unit.feat.attack.shot.PointBlankShot;
 import javelin.model.unit.feat.attack.shot.PreciseShot;
 import javelin.model.unit.feat.attack.shot.RapidShot;
-import javelin.model.unit.skill.Skill;
+import javelin.model.unit.feat.skill.Alertness;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.town.labor.ecological.ArcheryRange;
 
@@ -29,10 +26,9 @@ public class Ranger extends Kit{
 
 	@Override
 	protected void define(){
-		basic.add(Skill.SURVIVAL.getupgrade());
-		for(var feat:List.of(PointBlankShot.SINGLETON,PreciseShot.SINGLETON,
-				RapidShot.SINGLETON))
-			basic.add(new FeatUpgrade(feat));
+		basic.add(PointBlankShot.SINGLETON.toupgrade());
+		basic.add(PreciseShot.SINGLETON.toupgrade());
+		basic.add(RapidShot.SINGLETON.toupgrade());
 		basic.add(NaturalArmor.LEATHER);
 		basic.add(WalkingSpeed.HUMAN);
 	}
@@ -44,8 +40,9 @@ public class Ranger extends Kit{
 
 	@Override
 	protected void extend(UpgradeHandler h){
-		extension.add(new FeatUpgrade(ImprovedPreciseShot.SINGLETON));
+		extension.add(ImprovedPreciseShot.SINGLETON.toupgrade());
 		extension.add(RangedDamage.INSTANCE);
+		extension.add(Alertness.SINGLETON.toupgrade());
 	}
 
 	@Override

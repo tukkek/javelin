@@ -43,7 +43,7 @@ public class Caves extends Map{
 
 	@Override
 	public void generate(){
-		init();
+		setup();
 		for(int buildloop=0;buildloop<200;buildloop++)
 			build();
 		// now do some decoration
@@ -60,7 +60,7 @@ public class Caves extends Map{
 	 * Makes all map {@link Square} blocked and creates an inner room according to
 	 * {@link #coresize}.
 	 */
-	protected void init(){
+	protected void setup(){
 		for(Square[] squares:map)
 			for(Square s:squares)
 				s.blocked=true;

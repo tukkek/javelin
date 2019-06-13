@@ -34,7 +34,7 @@ public class StartBattle extends BattleEvent{
 
 	/** Prepares and switches to a {@link BattleScreen}. */
 	public void battle(){
-		ArrayList<Combatant> foes=fight.init();
+		ArrayList<Combatant> foes=fight.setup();
 		if(World.scenario!=null)
 			World.scenario.start(fight,Fight.originalblueteam,Fight.originalredteam);
 		if(fight.avoid(foes)) return;

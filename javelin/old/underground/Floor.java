@@ -17,7 +17,7 @@ public class Floor extends Caves{
 
 	@Override
 	public void generate(){
-		init();
+		setup();
 		// create a central room
 		int from=(0+SIZE-1)/2-RPG.r(1,3);
 		int to=(0+SIZE-1)/2+RPG.r(1,3);

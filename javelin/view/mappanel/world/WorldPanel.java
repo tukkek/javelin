@@ -82,8 +82,8 @@ public class WorldPanel extends MapPanel{
 	}
 
 	@Override
-	public void init(){
-		super.init();
+	public void setup(){
+		super.setup();
 		scroll.setVisible(false);
 	}
 }

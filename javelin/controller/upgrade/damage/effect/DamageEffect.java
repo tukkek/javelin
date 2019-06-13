@@ -33,7 +33,7 @@ public class DamageEffect{
 	/**
 	 * Call before using {@link #EFFECTS}.
 	 */
-	static public void init(){
+	static public void setup(){
 		if(EFFECTS.isEmpty()) EFFECTS.addAll(List.of(PARALYSIS,FEAR,POISON));
 	}
 

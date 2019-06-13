@@ -298,7 +298,7 @@ public class Skill implements Serializable{
 	 *
 	 * @see #getupgrade()
 	 */
-	public static void init(){
+	public static void setup(){
 		// does nothing, just ensures class is fully loaded
 	}
 }

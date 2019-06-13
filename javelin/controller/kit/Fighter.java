@@ -13,6 +13,7 @@ import javelin.model.unit.feat.attack.expertise.ImprovedFeint;
 import javelin.model.unit.feat.attack.expertise.ImprovedGrapple;
 import javelin.model.unit.feat.attack.expertise.ImprovedTrip;
 import javelin.model.unit.feat.attack.focus.MeleeFocus;
+import javelin.model.unit.feat.skill.Alertness;
 import javelin.model.unit.skill.Skill;
 
 public class Fighter extends Kit{
@@ -39,5 +40,6 @@ public class Fighter extends Kit{
 		extension.add(NaturalArmor.PLATES);
 		extension.add(MeleeFocus.UPGRADE.toupgrade());
 		extension.add(Toughness.SINGLETON.toupgrade());
+		extension.add(Alertness.SINGLETON.toupgrade());
 	}
 }

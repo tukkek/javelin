@@ -30,6 +30,7 @@ import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.unit.abilities.discipline.expertise.CombatExpertiseDiscipline;
 import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.fortification.Academy.BuildAcademy;
@@ -292,4 +293,47 @@ public abstract class Kit implements Serializable{
 		return getupgrades().stream().filter(u->type.isInstance(u)).map(u->(K)u)
 				.collect(Collectors.toList());
 	}
+
+	Summon findsummon(int casterlevel,List<Summon> pool){
+		for(var s:pool)
+			if(s.casterlevel==casterlevel) return s;
+		return null;
+	}
+
+	/**
+	 * Since there's one {@link Summon}s per {@link Monster} in the game, this
+	 * method helps summoning kits to offer a sensible selection of spell choices.
+	 *
+	 * @return Tries to find one summon for {@link Spell#casterlevel} 1 through 9
+	 *         from the given pool and return them on a list.
+	 * @see Summon#ALLSUMMONS
+	 */
+	protected ArrayList<Summon> findsummons(List<Summon> pool){
+		var summons=new ArrayList<Summon>(9);
+		for(var casterlevel=1;casterlevel<=9;casterlevel++){
+			var s=findsummon(casterlevel,pool);
+			if(s!=null) summons.add(s);
+		}
+		return summons;
+	}
+
+	/**
+	 * Allows to complete a Kit after any external pendencies are resolved, such
+	 * as {@link Summon} {@link Spell}s.
+	 *
+	 * The default implementation will transfer any Spells with
+	 * {@link Spell#casterlevel} 1 to {@link #basic} from {@link #basic} to
+	 * {@link #extension} so it should be invoked at the end of a subclass'
+	 * implementaion.
+	 *
+	 * @see Summon#setupsummons()
+	 */
+	public void finish(){
+		var transfer=extension.stream().filter(u->u instanceof Spell)
+				.map(u->(Spell)u).filter(s->s.casterlevel==1)
+				.collect(Collectors.toList());
+		extension.removeAll(transfer);
+		basic.addAll(transfer);
+	}
+
 }

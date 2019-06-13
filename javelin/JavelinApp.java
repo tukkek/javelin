@@ -68,13 +68,13 @@ public class JavelinApp extends QuestApp{
 
 	@Override
 	public void run(){
-		Preferences.init();// pre
+		Preferences.setup();// pre
 		initialize();
 		if(minigame==null&&!StateManager.load()){
 			if(StateManager.nofile) disclaimer();
 			startcampaign();
 		}
-		Preferences.init();// post
+		Preferences.setup();// post
 		preparedebug();
 		if(Javelin.DEBUG){
 			Debug.oninit();

@@ -154,7 +154,7 @@ public class Preferences{
 		try{
 			write(content,FILE);
 			load();
-			init();
+			setup();
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
@@ -174,7 +174,7 @@ public class Preferences{
 	/**
 	 * Initializes or reloads all preferences.
 	 */
-	public static void init(){
+	public static void setup(){
 		aicacheenabled=getstring("ai.cache").equals("true");
 		maxtemperature=getinteger("ai.maxtemperature",0);
 		maxmilisecondsthinking=Math.round(1000*getFloat("ai.maxsecondsthinking"));

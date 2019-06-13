@@ -5,7 +5,7 @@ import javelin.model.unit.Monster;
 import javelin.old.RPG;
 
 /**
- * @see Organization#init()
+ * @see Organization#setup()
  */
 public class EncounterPossibilities{
 	/** Minimum quantity. */

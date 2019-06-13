@@ -170,7 +170,7 @@ public class CrimsonWar extends Minigame{
 		if(choice==-1) return null;
 		if(choice==0) choice=RPG.r(1,list.size()-1);
 		String name=list.get(choice);
-		Combatant hero=new Combatant(Javelin.getmonster(name),true);
+		Combatant hero=new Combatant(Monster.get(name),true);
 		hero.source.elite=true;
 		hero.maxhp=hero.source.hd.maximize();
 		hero.hp=hero.maxhp;
@@ -226,7 +226,8 @@ public class CrimsonWar extends Minigame{
 		return true;
 	}
 
-	void boost(){}
+	void boost(){
+	}
 
 	void loot(){
 		var gold=RewardCalculator

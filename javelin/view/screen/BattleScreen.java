@@ -118,7 +118,7 @@ public class BattleScreen extends Screen{
 		messagepanel=new MessagePanel();
 		add(messagepanel,"South");
 		mappanel=getmappanel();
-		mappanel.init();
+		mappanel.setup();
 		add(mappanel,"Center");
 		final Panel cp=new Panel();
 		cp.setLayout(new BorderLayout());

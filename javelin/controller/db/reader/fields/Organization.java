@@ -17,7 +17,7 @@ import javelin.model.unit.Monster;
 
 /**
  * @see FieldReader
- * @see #init()
+ * @see #setup()
  */
 public class Organization extends FieldReader{
 	class EncounterData{
@@ -77,7 +77,7 @@ public class Organization extends FieldReader{
 	/**
 	 * Uses organization data to create {@link Encounter}s.
 	 */
-	static public void init(){
+	static public void setup(){
 		for(Monster m:Javelin.ALLMONSTERS)
 			monstersbyname.put(m.toString().toLowerCase(),m);
 		inform("\n== Encounters==");

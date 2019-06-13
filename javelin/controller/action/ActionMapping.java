@@ -66,13 +66,13 @@ public class ActionMapping{
 	final Map<String,Action> mappings=new HashMap<>();
 
 	private ActionMapping(){
-		init();
+		setup();
 	}
 
 	/**
 	 * Register {@link Action#keys} and {@link Action#keycodes}.
 	 */
-	public void init(){
+	public void setup(){
 		for(final Action a:ACTIONS){
 			for(final String key:a.keys)
 				if(mappings.put(key,a)!=null) throw new RuntimeException(
@@ -89,7 +89,7 @@ public class ActionMapping{
 	public Action getaction(final KeyEvent keyEvent){
 		if(ActionMapping.reset){
 			mappings.clear();
-			init();
+			setup();
 		}
 		final char keyChar=keyEvent.getKeyChar();
 		if(keyChar==KeyEvent.CHAR_UNDEFINED){

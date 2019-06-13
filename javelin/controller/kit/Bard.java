@@ -8,6 +8,7 @@ import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.classes.Aristocrat;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.feat.skill.Alertness;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.unique.AssassinsGuild;
@@ -31,11 +32,10 @@ public class Bard extends Kit{
 
 	@Override
 	protected void extend(UpgradeHandler h){
-		extension.addAll(h.wind);
-		extension.addAll(h.magic);
 		extension.addAll(Transmuter.INSTANCE.filter(Spell.class));
 		extension.addAll(Enchanter.INSTANCE.filter(Spell.class));
 		extension.addAll(Abjurer.INSTANCE.filter(Spell.class));
+		extension.add(Alertness.SINGLETON.toupgrade());
 	}
 
 	@Override

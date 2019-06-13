@@ -23,11 +23,11 @@ import javelin.old.RPG;
 public abstract class ClassLevelUpgrade extends Upgrade{
 	/**
 	 * Contains all full-fledged (20 level) classes found in the game. Needs to be
-	 * initialized with {@link #init()} to prevent racy initialization.
+	 * initialized with {@link #setup()} to prevent racy initialization.
 	 */
 	public static ClassLevelUpgrade[] classes=null;
 
-	public static void init(){
+	public static void setup(){
 		if(classes==null) classes=new ClassLevelUpgrade[]{Commoner.SINGLETON,
 				Aristocrat.SINGLETON,Warrior.SINGLETON,Expert.SINGLETON};
 	}
@@ -155,7 +155,7 @@ public abstract class ClassLevelUpgrade extends Upgrade{
 	}
 
 	public static ClassLevelUpgrade getpreferred(Combatant c){
-		init();
+		setup();
 		ArrayList<ClassLevelUpgrade> preferred=new ArrayList<>(1);
 		for(ClassLevelUpgrade u:classes)
 			if(u.prefer(c)) preferred.add(u);

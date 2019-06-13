@@ -15,6 +15,7 @@ import javelin.model.unit.feat.Toughness;
 import javelin.model.unit.feat.attack.focus.MeleeFocus;
 import javelin.model.unit.feat.save.GreatFortitude;
 import javelin.model.unit.feat.save.IronWill;
+import javelin.model.unit.feat.skill.Alertness;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.town.labor.religious.Sanctuary;
@@ -46,6 +47,7 @@ public class Paladin extends Kit{
 		extension.add(MeleeDamage.INSTANCE);
 		extension.add(Toughness.SINGLETON.toupgrade());
 		extension.add(GreatFortitude.SINGLETON.toupgrade());
+		extension.add(Alertness.SINGLETON.toupgrade());
 	}
 
 	@Override

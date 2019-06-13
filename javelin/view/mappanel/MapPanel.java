@@ -80,7 +80,7 @@ public abstract class MapPanel extends Panel{
 		}
 	}
 
-	public void init(){
+	public void setup(){
 		tilesize=gettilesize();
 		scroll.setVisible(false);
 		updatesize();

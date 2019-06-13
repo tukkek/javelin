@@ -129,6 +129,7 @@ public class BattleScreen extends Screen{
 		Javelin.app.switchScreen(this);
 		BattleScreen.active=this;
 		Javelin.delayblock=false;
+		partialmove=0;
 	}
 
 	/**

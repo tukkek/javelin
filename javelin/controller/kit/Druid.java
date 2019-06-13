@@ -52,7 +52,7 @@ public class Druid extends Kit{
 
 	@Override
 	public void finish(){
-		extension.addAll(findsummons(Summon.ALLSUMMONS.stream()
+		extension.addAll(findsummons(Summon.SUMMONS.stream()
 				.filter(s->filtersummon(s.monstername)).collect(Collectors.toList())));
 		super.finish();
 	}

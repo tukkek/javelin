@@ -170,7 +170,7 @@ public class Debug{
 			DiplomacyScreen.open();
 		}
 
-		static void testkit(Kit kit){
+		static void test(Kit kit){
 			kit.validate();
 			Squad.active.members.clear();
 			var human=Monster.get("human");

@@ -61,7 +61,7 @@ public abstract class Kit implements Serializable{
 	 *
 	 * @see #validate()
 	 */
-	public static final List<Kit> KITS=List.of(Assassin.INSTANCE,
+	public static final List<Kit> KITS=List.of(Ninja.INSTANCE,
 			Barbarian.INSTANCE,Bard.INSTANCE,Cleric.INSTANCE,Druid.INSTANCE,
 			Fighter.INSTANCE,Monk.INSTANCE,Paladin.INSTANCE,Ranger.INSTANCE,
 			Rogue.INSTANCE,Transmuter.INSTANCE,Enchanter.INSTANCE,

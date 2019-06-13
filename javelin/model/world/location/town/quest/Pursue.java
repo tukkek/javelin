@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.exception.battle.StartBattle;
-import javelin.controller.kit.Assassin;
 import javelin.controller.kit.Barbarian;
 import javelin.controller.kit.Fighter;
 import javelin.controller.kit.Kit;
@@ -26,8 +25,8 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class Pursue extends Quest{
-	static final List<Kit> KITS=List.of(Assassin.INSTANCE,Barbarian.INSTANCE,
-			Rogue.INSTANCE,Fighter.INSTANCE);
+	static final List<Kit> KITS=List.of(Barbarian.INSTANCE,Rogue.INSTANCE,
+			Fighter.INSTANCE);
 	static final HashSet<Upgrade> UPGRADES=new HashSet<>();
 
 	static{

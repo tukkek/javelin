@@ -1,7 +1,12 @@
 package javelin.controller.kit.wizard;
 
+import java.util.stream.Collectors;
+
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
+import javelin.model.unit.Monster;
+import javelin.model.unit.Monster.MonsterType;
+import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.abilities.spell.necromancy.Doom;
 import javelin.model.unit.abilities.spell.necromancy.Poison;
 import javelin.model.unit.abilities.spell.necromancy.RayOfExhaustion;
@@ -37,5 +42,14 @@ public class Necromancer extends Wizard{
 		extension.add(new InflictModerateWounds());
 		extension.add(new InflictSeriousWounds());
 		extension.add(new InflictCriticalWounds());
+	}
+
+	@Override
+	public void finish(){
+		var undead=Summon.SUMMONS.stream()
+				.filter(s->Monster.get(s.monstername).type.equals(MonsterType.UNDEAD))
+				.collect(Collectors.toList());
+		extension.addAll(findsummons(undead));
+		super.finish();
 	}
 }

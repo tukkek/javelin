@@ -47,7 +47,7 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  * {@link MonsterType} summon spells, such as the {@link SummoningCircle} and
  * the {@link Henge}.
  *
- * @see Conjurer#ALLSUMMONS
+ * @see Conjurer#SUMMONS
  * @author alex
  */
 public class Summon extends Spell{
@@ -63,7 +63,7 @@ public class Summon extends Spell{
 	 * {@link Spell#casterlevel} is registered with the kit iself. More can be
 	 * accessed through {@link SummoningCircle}s.
 	 */
-	public static final List<Summon> ALLSUMMONS=new ArrayList<>();
+	public static final List<Summon> SUMMONS=new ArrayList<>();
 
 	public Summon(String monstername,float chance){
 		super("Summon "+monstername.toLowerCase(),0,0,Realm.MAGIC);
@@ -166,7 +166,7 @@ public class Summon extends Spell{
 	 */
 	public static void setupsummons(){
 		Javelin.ALLMONSTERS.stream().filter(m->!m.passive)
-				.map(m->new Summon(m.name,1)).forEach(s->ALLSUMMONS.add(s));
+				.map(m->new Summon(m.name,1)).forEach(s->SUMMONS.add(s));
 		for(var k:Kit.KITS)
 			k.finish();
 	}

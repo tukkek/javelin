@@ -1,14 +1,24 @@
 Some units naturally know a certain set of spells or a random amount of spells. Others can learn spells by visiting a Mages Guild or similar location.
 
-Rules:
+Rules
 * To learn each spell you need to have a certain minimum amount of class levels ("caster level").
 * Every hero starts at class level 1 and receives an extra class level when upgrading in a class.
 * You can learn and cast as many spells per day as you have class levels. After a period of rest you can cast these again.
 * Most spells cannot be cast while engaged in close combat, while more offensive ones generally can. High enough Concentration will bypass that for all spells.
 
-Qualifiers:
+Qualifiers
 * Touch spells can only be targeted at those immediately adjacent to the spellcaster or the spellcaster himself.
 * Safe spells are those that can be cast even while engaged in close combat.
+
+The schools of magic
+* Abjuration: protective spells.
+* Conjuration: spells that deal with creation, healing, teleportation and the summoning of allies.
+* Divination: spells that reveal secrets and predict the future.
+* Enchantment: spells that affect the minds of others, influencing or controlling their behavior. 
+* Evocation: spells that manipulate energy or tap unseen sources of power, usually to create mayhem!
+* Illusion: spells that deceive the senses or minds of others
+* Necromancy: spells manipulate the power of death, including the summoning of undead allies!
+* Transmutation: school focused on changing the properties of creatures and objects.
 
 Level 1 (caster level 1)
   Bane: all enemies have -1 to attack rolls.

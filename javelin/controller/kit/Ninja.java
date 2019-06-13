@@ -19,13 +19,20 @@ import javelin.model.unit.feat.skill.Alertness;
 import javelin.model.unit.feat.skill.Deceitful;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.fortification.Academy;
-import javelin.model.world.location.unique.AssassinsGuild;
+import javelin.model.world.location.unique.NinjaDojo;
 
-public class Assassin extends Kit{
-	public static final Kit INSTANCE=new Assassin();
+/**
+ * A mix of {@link Rogue} and {@link Monk}: a melee fighter with decent mobility
+ * and {@link DamageEffect#POISON} damage.
+ *
+ * @author alex
+ */
+public class Ninja extends Kit{
+	/** Singleton. */
+	public static final Kit INSTANCE=new Ninja();
 
-	private Assassin(){
-		super("assassin",Expert.SINGLETON,RaiseDexterity.SINGLETON,
+	Ninja(){
+		super("Ninja",Expert.SINGLETON,RaiseDexterity.SINGLETON,
 				RaiseIntelligence.SINGLETON);
 	}
 
@@ -57,6 +64,6 @@ public class Assassin extends Kit{
 
 	@Override
 	public Academy createguild(){
-		return new AssassinsGuild();
+		return new NinjaDojo();
 	}
 }

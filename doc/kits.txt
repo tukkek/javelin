@@ -1,25 +1,29 @@
-Kits are sets of upgrades that develop a certain type of build for your units. Experienced players will notice they are mostly equivalent to standard d20 classes - however, they are only used as inpiration and don't follow the exact same rules. The reason for this is that Javelin allows for much more free-form character development, with kits being used as a starting point, if at all, for developing your units.
+Kits are sets of upgrades that develop a certain type of build for your units. Experienced players will notice they are mostly equivalent to standard d20 classes - however, they are only used as inspiration and don't follow the exact same rules. The reason for this is that Javelin allows for much more free-form character development, with kits being used as a starting point, if at all, for developing your units.
 
-Kits are initially found as starting options in the Adventurers Guild, in the early game. Later on, they can be upgraded (and sometimes found for hire or recruitment) on several world and district locations, indicated in parenthesis. Note, however, that even though it can be a good choice for a character to focus on a single kit, nothing prevents you from branching into two or more of these (also known as "multiclassing").
+Kits are initially found as starting options in the Adventurers Guild, in the early game. Later on, they can be upgraded (and sometimes found for hire or recruitment) on several world and district locations, indicated in parenthesis. Note, however, that even though it can be a good choice for a character to focus on a single kit, nothing prevents you from branching into as many as you want ("multiclassing").
 
-Assassin (Assassins guild): a master of deceit and stealth, an infiltration expert.
-
-Bard (Bards guild): a social expert, performer and often found in supportive and leadership roles, well suited as a front-man and magic item user.
+Some kits are "prestige kits" and are not usually available or useful for low-level characters.
 
 Barbarian (Mead hall): focused on close-combat, often able to enter a temporary battle lust known as berserker rage.
 
+Bard (Bards guild): a social expert, performer and often found in supportive and leadership roles, well suited as a front-man and magic item user.
+
 Cleric (Sanctuary): a healing and support powerhouse, being able to care for his allies both inside and outside battle.
+
+Dragoon (Dragoons guild, prestige): a highly mobile close-quarters elite warrior, inheriting supernatural abilities from a certain type of dragon - from flight to terrifying breath weapons!
 
 Druid (Henge): ally to the wildlife, able to summon animals to fight by his side.
 
 Fighter (Martial academies): the ultimate mêlée fighter.
 
-Monk (Monastery): as skilled on the battlefield with his raw attack power as with his grace and mobility.
+Monk (Monastery): as skilled on the battlefield with his raw close-quarters attack power as with his grace and mobility.
+
+Ninja (Ninja dojo): a master of deceit and stealth, an infiltration expert with poison on his weapons. Highly mobile.
 
 Paladin (upgraded Sanctuary): a more battle-focused Cleric, with lesser healing abilities, standing against evil and chaos.
 
 Ranger (Archery range): the ultimate ranged shooter.
 
-Rogue (Thieves guild): master of stealth, skilled with traps and ranged combat.
+Rogue (Thieves guild): master of stealth, skilled with traps and ranged combat. A versatile combatant.
 
-Wizard (Mage guilds): the ultimate spellcaster.
+Wizard (Mage guilds): the ultimate spellcaster. Each Wizard kit focuses on a particular school of magic. See the spell guide for a brief description of each school.

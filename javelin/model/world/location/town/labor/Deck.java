@@ -41,7 +41,7 @@ import javelin.model.world.location.town.labor.productive.Shop.BuildShop;
 import javelin.model.world.location.town.labor.religious.Sanctuary.BuildSanctuary;
 import javelin.model.world.location.town.labor.religious.Shrine.BuildShrine;
 import javelin.model.world.location.unique.Artificer.BuildArtificer;
-import javelin.model.world.location.unique.AssassinsGuild.BuildAssassinsGuild;
+import javelin.model.world.location.unique.NinjaDojo.BuildNinjaDojo;
 import javelin.model.world.location.unique.MercenariesGuild.BuildMercenariesGuild;
 import javelin.model.world.location.unique.SummoningCircle.BuildSummoningCircle;
 
@@ -61,7 +61,7 @@ public class Deck extends ArrayList<Labor>{
 	static final Labor[] BASE=new Labor[]{new BuildDwelling(),new BuildLodge(),
 			new Cancel(),new Growth(),new Redraw(),new BuildShop(),
 			new BuildRealmAcademy()};
-	static final Labor[] CRIMINAL=new Labor[]{new BuildAssassinsGuild(),
+	static final Labor[] CRIMINAL=new Labor[]{new BuildNinjaDojo(),
 			new BuildSewers(),new BuildSlums(),new BuildThievesGuild(),
 			BlackDragoon.INSTANCE.buildguild()};
 	static final Labor[] MAGICAL=new Labor[]{new BuildMagesGuild(),

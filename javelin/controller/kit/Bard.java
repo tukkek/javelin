@@ -11,9 +11,19 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.feat.skill.Alertness;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.fortification.Academy;
-import javelin.model.world.location.unique.AssassinsGuild;
+import javelin.model.world.location.town.labor.cultural.BardsGuild;
 
+/**
+ * a social expert, performer and often found in supportive and leadership
+ * roles, well suited as a front-man and magic item user.
+ *
+ * TODO should be an instrument-based spell caster in the future. Update docs.
+ *
+ * @author alex
+ *
+ */
 public class Bard extends Kit{
+	/** Singleton. */
 	public static final Kit INSTANCE=new Bard();
 
 	private Bard(){
@@ -40,6 +50,6 @@ public class Bard extends Kit{
 
 	@Override
 	public Academy createguild(){
-		return new AssassinsGuild();
+		return new BardsGuild();
 	}
 }

@@ -9,6 +9,7 @@ import javelin.controller.upgrade.ability.RaiseDexterity;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.controller.upgrade.classes.Warrior;
 import javelin.controller.upgrade.damage.RangedDamage;
+import javelin.controller.upgrade.movement.WalkingSpeed;
 import javelin.model.unit.Monster;
 import javelin.model.unit.feat.attack.shot.ImprovedPreciseShot;
 import javelin.model.unit.feat.attack.shot.PointBlankShot;
@@ -32,7 +33,8 @@ public class Ranger extends Kit{
 		for(var feat:List.of(PointBlankShot.SINGLETON,PreciseShot.SINGLETON,
 				RapidShot.SINGLETON))
 			basic.add(new FeatUpgrade(feat));
-		extension.add(NaturalArmor.LEATHER);
+		basic.add(NaturalArmor.LEATHER);
+		basic.add(WalkingSpeed.HUMAN);
 	}
 
 	@Override
@@ -42,8 +44,6 @@ public class Ranger extends Kit{
 
 	@Override
 	protected void extend(UpgradeHandler h){
-		extension.addAll(h.earth);
-		extension.addAll(h.magic);
 		extension.add(new FeatUpgrade(ImprovedPreciseShot.SINGLETON));
 		extension.add(RangedDamage.INSTANCE);
 	}

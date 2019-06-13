@@ -11,6 +11,7 @@ import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.controller.upgrade.classes.Commoner;
+import javelin.controller.upgrade.movement.Burrow;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
 import javelin.model.unit.abilities.spell.Spell;
@@ -38,14 +39,12 @@ public class Druid extends Kit{
 
 	@Override
 	protected void extend(UpgradeHandler h){
-		extension.addAll(h.earth);
-		extension.addAll(h.water);
-		extension.addAll(h.wind);
 		extension.addAll(Conjurer.HEALING);
 		extension.addAll(Transmuter.INSTANCE.filter(Spell.class));
 		extension.addAll(Diviner.INSTANCE.filter(Spell.class));
 		addsummons(extension.size());
 		extension.add(NaturalArmor.LEATHER);
+		extension.add(Burrow.BADGER);
 	}
 
 	void addsummons(int nsummons){

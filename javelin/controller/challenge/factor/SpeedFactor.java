@@ -1,10 +1,6 @@
 package javelin.controller.challenge.factor;
 
 import javelin.controller.upgrade.UpgradeHandler;
-import javelin.controller.upgrade.movement.Burrow;
-import javelin.controller.upgrade.movement.Flying;
-import javelin.controller.upgrade.movement.Swimming;
-import javelin.controller.upgrade.movement.WalkingSpeed;
 import javelin.model.unit.Monster;
 
 /**
@@ -62,10 +58,5 @@ public class SpeedFactor extends CrFactor{
 
 	@Override
 	public void registerupgrades(UpgradeHandler handler){
-		handler.good.add(new WalkingSpeed("Speed: human",30));
-		handler.earth.add(new WalkingSpeed("Speed: cheetah",50));
-		handler.wind.add(new Flying("Flying: raven",40));
-		handler.water.add(new Swimming("Swimming: snake",20));
-		handler.earth.add(new Burrow("Burrow: badger",10));
 	}
 }

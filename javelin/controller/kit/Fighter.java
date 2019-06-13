@@ -7,6 +7,7 @@ import javelin.controller.upgrade.ability.RaiseConstitution;
 import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.classes.Warrior;
 import javelin.controller.upgrade.damage.MeleeDamage;
+import javelin.model.unit.feat.Toughness;
 import javelin.model.unit.feat.attack.expertise.CombatExpertise;
 import javelin.model.unit.feat.attack.expertise.ImprovedFeint;
 import javelin.model.unit.feat.attack.expertise.ImprovedGrapple;
@@ -32,11 +33,11 @@ public class Fighter extends Kit{
 	@Override
 	protected void extend(UpgradeHandler h){
 		extension.add(Skill.SENSEMOTIVE.getupgrade());
-		extension.addAll(h.earth);
 		extension.add(new FeatUpgrade(ImprovedFeint.SINGLETON));
 		extension.add(new FeatUpgrade(ImprovedGrapple.SINGLETON));
 		extension.add(new FeatUpgrade(ImprovedTrip.SINGLETON));
 		extension.add(NaturalArmor.PLATES);
-		extension.add(MeleeFocus.UPGRADE.getupgrade());
+		extension.add(MeleeFocus.UPGRADE.toupgrade());
+		extension.add(Toughness.SINGLETON.toupgrade());
 	}
 }

@@ -10,7 +10,10 @@ import javelin.controller.upgrade.damage.MeleeDamage;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureLightWounds;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.Bless;
+import javelin.model.unit.feat.CombatCasting;
+import javelin.model.unit.feat.Toughness;
 import javelin.model.unit.feat.attack.focus.MeleeFocus;
+import javelin.model.unit.feat.save.GreatFortitude;
 import javelin.model.unit.feat.save.IronWill;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.fortification.Academy;
@@ -29,6 +32,7 @@ public class Paladin extends Kit{
 		basic.add(new CureLightWounds());
 		basic.add(new Bless());
 		basic.add(Skill.SENSEMOTIVE.getupgrade());
+		basic.add(CombatCasting.SINGLETON.toupgrade());
 	}
 
 	@Override
@@ -37,9 +41,11 @@ public class Paladin extends Kit{
 		extension.addAll(h.magic);
 		extension.addAll(Conjurer.HEALING);
 		extension.add(NaturalArmor.PLATES);
-		extension.add(IronWill.SINGLETON.getupgrade());
-		extension.add(MeleeFocus.UPGRADE.getupgrade());
+		extension.add(IronWill.SINGLETON.toupgrade());
+		extension.add(MeleeFocus.UPGRADE.toupgrade());
 		extension.add(MeleeDamage.INSTANCE);
+		extension.add(Toughness.SINGLETON.toupgrade());
+		extension.add(GreatFortitude.SINGLETON.toupgrade());
 	}
 
 	@Override

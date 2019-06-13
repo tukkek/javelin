@@ -11,6 +11,8 @@ import javelin.controller.upgrade.classes.Aristocrat;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureModerateWounds;
+import javelin.model.unit.feat.CombatCasting;
+import javelin.model.unit.feat.Toughness;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.town.labor.religious.Sanctuary;
@@ -32,7 +34,7 @@ public class Cleric extends Kit{
 		basic.add(new CureModerateWounds());
 		basic.add(Skill.KNOWLEDGE.getupgrade());
 		basic.add(Skill.HEAL.getupgrade());
-		extension.add(NaturalArmor.SCALES);
+		basic.add(NaturalArmor.SCALES);
 	}
 
 	@Override
@@ -41,6 +43,8 @@ public class Cleric extends Kit{
 		extension.addAll(Conjurer.INSTANCE.getupgrades());
 		extension.addAll(Enchanter.INSTANCE.filter(Spell.class));
 		extension.addAll(Diviner.INSTANCE.filter(Spell.class));
+		extension.add(Toughness.SINGLETON.toupgrade());
+		extension.add(CombatCasting.SINGLETON.toupgrade());
 	}
 
 	@Override

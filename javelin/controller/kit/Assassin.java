@@ -9,7 +9,9 @@ import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.classes.Expert;
 import javelin.controller.upgrade.damage.effect.DamageEffect;
 import javelin.controller.upgrade.damage.effect.EffectUpgrade;
+import javelin.controller.upgrade.movement.WalkingSpeed;
 import javelin.model.unit.Monster;
+import javelin.model.unit.feat.save.GreatFortitude;
 import javelin.model.unit.feat.save.IronWill;
 import javelin.model.unit.feat.skill.Deceitful;
 import javelin.model.unit.skill.Skill;
@@ -31,6 +33,7 @@ public class Assassin extends Kit{
 		basic.add(RaiseCharisma.SINGLETON);
 		basic.add(new FeatUpgrade(Deceitful.SINGLETON));
 		basic.add(new EffectUpgrade(DamageEffect.POISON));
+		basic.add(WalkingSpeed.CHEETAH);
 	}
 
 	@Override
@@ -38,7 +41,8 @@ public class Assassin extends Kit{
 		extension.addAll(h.evil);
 		extension.addAll(h.wind);
 		extension.add(NaturalArmor.LEATHER);
-		extension.add(IronWill.SINGLETON.getupgrade());
+		extension.add(IronWill.SINGLETON.toupgrade());
+		extension.add(GreatFortitude.SINGLETON.toupgrade());
 	}
 
 	@Override

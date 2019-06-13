@@ -7,6 +7,7 @@ import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseDexterity;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.classes.Expert;
+import javelin.controller.upgrade.movement.WalkingSpeed;
 import javelin.model.unit.Monster;
 import javelin.model.unit.feat.skill.Deceitful;
 import javelin.model.unit.skill.Skill;
@@ -28,6 +29,7 @@ public class Rogue extends Kit{
 		basic.add(Skill.SENSEMOTIVE.getupgrade());
 		basic.add(Skill.STEALTH.getupgrade());
 		basic.add(Skill.PERCEPTION.getupgrade());
+		basic.add(WalkingSpeed.HUMAN);
 	}
 
 	@Override

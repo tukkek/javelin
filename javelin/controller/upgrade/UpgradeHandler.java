@@ -45,8 +45,6 @@ public class UpgradeHandler{
 	HashMap<String,UpgradeSet> all=new HashMap<>();
 
 	/** Linked to a {@link Town}'s realm. */
-	public UpgradeSet earth=new UpgradeSet("Earth");
-	/** Linked to a {@link Town}'s realm. */
 	public UpgradeSet water=new UpgradeSet("Water");
 	/** Linked to a {@link Town}'s realm. */
 	public UpgradeSet wind=new UpgradeSet("Wind");
@@ -70,8 +68,6 @@ public class UpgradeHandler{
 			return wind;
 		else if(r==Realm.WATER)
 			return water;
-		else if(r==Realm.EARTH)
-			return earth;
 		else if(r==Realm.GOOD)
 			return good;
 		else if(r==Realm.EVIL)

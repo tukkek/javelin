@@ -56,17 +56,17 @@ public abstract class Dragoon extends Kit{
 
 	@Override
 	protected void define(){
-		basic.add(MeleeFocus.UPGRADE.getupgrade());
+		basic.add(MeleeFocus.UPGRADE.toupgrade());
 		basic.add(Skill.ACROBATICS.getupgrade());
 	}
 
 	@Override
 	protected void extend(UpgradeHandler h){
-		extension.add(Toughness.SINGLETON.getupgrade());
+		extension.add(Toughness.SINGLETON.toupgrade());
 		extension.add(MeleeDamage.INSTANCE);
-		extension.add(LightningReflexes.SINGLETON.getupgrade());
-		extension.add(Acrobatic.SINGLETON.getupgrade());
-		extension.add(Alertness.SINGLETON.getupgrade());
+		extension.add(LightningReflexes.SINGLETON.toupgrade());
+		extension.add(Acrobatic.SINGLETON.toupgrade());
+		extension.add(Alertness.SINGLETON.toupgrade());
 	}
 
 	@Override

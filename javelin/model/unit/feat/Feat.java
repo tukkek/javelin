@@ -146,7 +146,8 @@ public abstract class Feat implements Serializable,javelin.model.Cloneable{
 		// nothing unless overriden
 	}
 
-	public Upgrade getupgrade(){
+	/** @return An {@link Upgrade} that will apply this feat. */
+	public FeatUpgrade toupgrade(){
 		return new FeatUpgrade(this);
 	}
 }

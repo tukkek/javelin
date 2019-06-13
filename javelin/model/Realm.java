@@ -73,8 +73,6 @@ public enum Realm{
 		switch(this){
 			case WATER:
 				return handler.water;
-			case EARTH:
-				return handler.earth;
 			case AIR:
 				return handler.wind;
 			case GOOD:

@@ -6,7 +6,11 @@ import javelin.model.unit.Monster;
 /**
  * See the d20 SRD for more info.
  */
-public class Swimming extends WalkingSpeed{
+public class Swimming extends SpeedUpgrade{
+	/** 20 feet upgrade. */
+	public static final Swimming SNAKE=new Swimming("Swimming: snake",20);
+
+	/** Constructor. */
 	public Swimming(String name,int target){
 		super(name,target);
 	}
@@ -24,12 +28,12 @@ public class Swimming extends WalkingSpeed{
 	}
 
 	@Override
-	protected long getSpeed(Monster m){
+	protected long getspeed(Monster m){
 		return m.swim;
 	}
 
 	@Override
-	protected void setSpeed(Monster m){
+	protected void setspeed(Monster m){
 		m.swim=target;
 	}
 }

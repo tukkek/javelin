@@ -49,7 +49,8 @@ import javelin.model.world.location.unique.AdventurersGuild;
  *
  * TODO at some point should reference all kits by Class and keep an internal
  * Map - instead, currently when we save and load, new instance are generated
- * needlessly.
+ * needlessly. a good way to enforce that would be to make kits
+ * non-serializable.
  *
  * @author alex
  */

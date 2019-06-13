@@ -7,19 +7,22 @@ import javelin.model.unit.Monster;
  *
  * @see Monster#burrow
  */
-public class Burrow extends WalkingSpeed{
+public class Burrow extends SpeedUpgrade{
+	/** 10 feet upgrade. */
+	public static final Burrow BADGER=new Burrow("Burrow: badger",10);
+
 	/** See {@link WalkingSpeed#WalkingSpeed(String, int).} */
 	public Burrow(String name,int target){
 		super(name,target);
 	}
 
 	@Override
-	protected long getSpeed(Monster m){
+	protected long getspeed(Monster m){
 		return m.burrow;
 	}
 
 	@Override
-	protected void setSpeed(Monster m){
+	protected void setspeed(Monster m){
 		m.burrow=target;
 	}
 }

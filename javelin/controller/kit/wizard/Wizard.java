@@ -1,6 +1,7 @@
 package javelin.controller.kit.wizard;
 
 import javelin.controller.kit.Kit;
+import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.classes.Aristocrat;
@@ -30,7 +31,11 @@ public abstract class Wizard extends Kit{
 	protected void define(){
 		basic.add(Skill.CONCENTRATION.getupgrade());
 		basic.add(Skill.SPELLCRAFT.getupgrade());
-		basic.add(CombatCasting.SINGLETON.getupgrade());
+	}
+
+	@Override
+	protected void extend(UpgradeHandler h){
+		extension.add(CombatCasting.SINGLETON.toupgrade());
 	}
 
 	@Override

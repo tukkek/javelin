@@ -8,17 +8,14 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.HD;
 import javelin.model.unit.Monster;
-import javelin.model.unit.feat.CombatCasting;
 import javelin.model.unit.feat.Feat;
 import javelin.model.unit.feat.ImprovedInitiative;
-import javelin.model.unit.feat.Toughness;
 import javelin.model.unit.feat.attack.focus.RangedFocus;
 import javelin.model.unit.feat.attack.focus.WeaponFocus;
 import javelin.model.unit.feat.internal.ExoticWeaponProficiency;
 import javelin.model.unit.feat.internal.Multiattack;
 import javelin.model.unit.feat.internal.MultiweaponFighting;
 import javelin.model.unit.feat.internal.WeaponFinesse;
-import javelin.model.unit.feat.save.GreatFortitude;
 import javelin.model.unit.feat.save.LightningReflexes;
 import javelin.model.unit.feat.skill.Acrobatic;
 import javelin.model.unit.feat.skill.Alertness;
@@ -34,8 +31,6 @@ public class FeatsFactor extends CrFactor{
 	static final Feat[] GOOD=new Feat[]{Alertness.SINGLETON};
 	static final Feat[] WIND=new Feat[]{RangedFocus.SINGLETON,
 			LightningReflexes.SINGLETON,ImprovedInitiative.SINGLETON};
-	static final Feat[] EARTH=new Feat[]{Toughness.SINGLETON,
-			GreatFortitude.SINGLETON,CombatCasting.SINGLETON};
 	static final Feat[] WATER=new Feat[]{Acrobatic.SINGLETON};
 	/**
 	 * Internal feats are mostly used to map feats that should be considered for
@@ -72,7 +67,6 @@ public class FeatsFactor extends CrFactor{
 
 	@Override
 	public void registerupgrades(UpgradeHandler handler){
-		register(handler.earth,EARTH);
 		register(handler.wind,WIND);
 		register(handler.water,WATER);
 		register(handler.good,GOOD);

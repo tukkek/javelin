@@ -82,7 +82,5 @@ public class Megadungeon extends Dungeon{
 		for(int i=1+RPG.randomize(2);i>0;i--)
 			zoner.place(new LearningStone());
 		if(RPG.chancein(TRADERCHANCE)) zoner.place(new Trader());
-		for(var f:features)
-			if(f instanceof Trader) System.out.println(f);
 	}
 }

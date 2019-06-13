@@ -1,5 +1,6 @@
 package javelin.model.unit.abilities.spell.enchantment.compulsion;
 
+import javelin.controller.action.Action;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
@@ -12,7 +13,7 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  * See the d20 SRD for more info.
  */
 public class HoldMonster extends Spell{
-
+	/** Constructor. */
 	public HoldMonster(){
 		super("Hold monster",5,.45f,Realm.MAGIC);
 		castinbattle=true;
@@ -23,13 +24,14 @@ public class HoldMonster extends Spell{
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
 		if(saved) return target+" resists.";
-		int turns=getsavetarget(0,caster)-10-target.source.getwill();
-		if(turns>9)
-			turns=9;
-		else if(turns<1) turns=1;
-		target.addcondition(new Paralyzed(caster.ap+turns,target,casterlevel));
+		var dc=getsavetarget(target.source.getwill(),caster);
+		var savechance=Action.bind(1-dc/20f);
+		int turnstosave=Math.round(Math.round(1/savechance));
+		if(turnstosave<1) turnstosave=1;
+		int duration=Math.min(turnstosave,casterlevel);
+		target.addcondition(new Paralyzed(caster.ap+duration,target,casterlevel));
 		if(cn!=null) cn.overlay=new AiOverlay(target);
-		return target+" is paralyzed for "+turns+" turns!";
+		return target+" is paralyzed for "+duration+" turns!";
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package javelin.controller.upgrade.classes;
 
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -15,14 +14,10 @@ public class Expert extends ClassLevelUpgrade{
 			new Level(4,4,8),new Level(4,4,9),new Level(5,5,9),new Level(5,5,10),
 			new Level(05,5,10),new Level(6,6,11),new Level(6,6,11),
 			new Level(6,6,12),};
+	/** Singleton instance. */
 	public static final ClassLevelUpgrade SINGLETON=new Expert();
 
-	static{
-		UpgradeHandler.singleton.gather();
-		/* so we can use SkillUpgrade#ALL */
-	}
-
-	private Expert(){
+	Expert(){
 		super("Expert",.72f,TABLE,6,6,.65f);
 	}
 

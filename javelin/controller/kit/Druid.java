@@ -3,20 +3,15 @@ package javelin.controller.kit;
 import java.util.stream.Collectors;
 
 import javelin.controller.kit.wizard.Conjurer;
-import javelin.controller.kit.wizard.Diviner;
-import javelin.controller.kit.wizard.Transmuter;
 import javelin.controller.quality.FastHealing;
 import javelin.controller.quality.resistance.ParalysisImmunity;
 import javelin.controller.quality.resistance.PoisonImmunity;
-import javelin.controller.upgrade.NaturalArmor;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.controller.upgrade.classes.Commoner;
 import javelin.controller.upgrade.movement.Burrow;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
-import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.fortification.Academy;
@@ -32,7 +27,7 @@ public class Druid extends Kit{
 	public static final Kit INSTANCE=new Druid();
 
 	private Druid(){
-		super("druid",Commoner.SINGLETON,RaiseWisdom.SINGLETON,
+		super("Druid",Commoner.SINGLETON,RaiseWisdom.SINGLETON,
 				RaiseCharisma.SINGLETON);
 	}
 
@@ -42,13 +37,11 @@ public class Druid extends Kit{
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h){
+	protected void extend(){
 		extension.addAll(Conjurer.HEALING);
-		extension.addAll(Transmuter.INSTANCE.filter(Spell.class));
-		extension.addAll(Diviner.INSTANCE.filter(Spell.class));
-		extension.add(NaturalArmor.LEATHER);
 		extension.add(Burrow.BADGER);
 		extension.add(FastHealing.UPGRADE);
+		extension.add(Skill.HEAL.getupgrade());
 		extension.add(ParalysisImmunity.UPGRADE);
 		extension.add(PoisonImmunity.UPGRADE);
 	}

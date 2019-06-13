@@ -1,12 +1,11 @@
 package javelin.model.unit.skill;
 
-import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.feat.skill.Deceitful;
 
 public class Disguise extends Skill{
 	public Disguise(){
-		super("Disguise",Ability.CHARISMA,Realm.EVIL);
+		super("Disguise",Ability.CHARISMA);
 		intelligent=true;
 	}
 

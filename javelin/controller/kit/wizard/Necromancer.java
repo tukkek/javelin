@@ -4,7 +4,6 @@ import java.util.stream.Collectors;
 
 import javelin.controller.quality.perception.Vision;
 import javelin.controller.quality.resistance.PoisonImmunity;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
@@ -34,7 +33,7 @@ public class Necromancer extends Wizard{
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h){
+	protected void extend(){
 		extension.add(new SlayLiving());
 		extension.add(new VampiricTouch());
 		extension.add(new Doom());

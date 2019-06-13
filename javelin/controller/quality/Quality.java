@@ -20,7 +20,6 @@ import javelin.controller.quality.subtype.Elemental;
 import javelin.controller.quality.subtype.Ooze;
 import javelin.controller.quality.subtype.Subtype;
 import javelin.controller.quality.subtype.Undead;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
 
 /**
@@ -81,11 +80,6 @@ public abstract class Quality{
 	 * @return Challenge rating factor fot the given {@link Monster}.
 	 */
 	abstract public float rate(Monster m);
-
-	/** Lets subclasses register upgrades. */
-	public void listupgrades(UpgradeHandler handler){
-		// do nothing by default
-	}
 
 	/**
 	 * @return A description of this {@link Monster}s ability if it's one he

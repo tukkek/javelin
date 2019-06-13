@@ -2,7 +2,6 @@ package javelin.model.unit.skill;
 
 import javelin.controller.action.Movement;
 import javelin.controller.action.maneuver.DefensiveAttack;
-import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.condition.Defending;
 import javelin.model.unit.feat.skill.Acrobatic;
@@ -20,7 +19,7 @@ public class Acrobatics extends Skill{
 
 	/** Constructor. */
 	Acrobatics(){
-		super(NAMES,Ability.DEXTERITY,Realm.AIR);
+		super(NAMES,Ability.DEXTERITY);
 		usedincombat=true;
 	}
 

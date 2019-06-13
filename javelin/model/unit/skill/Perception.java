@@ -2,7 +2,6 @@ package javelin.model.unit.skill;
 
 import javelin.Javelin;
 import javelin.controller.Weather;
-import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.feat.skill.Alertness;
@@ -20,7 +19,7 @@ public class Perception extends Skill{
 			"search"};
 
 	Perception(){
-		super(NAMES,Ability.WISDOM,Realm.AIR);
+		super(NAMES,Ability.WISDOM);
 	}
 
 	@Override

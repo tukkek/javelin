@@ -24,7 +24,6 @@ import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.generator.encounter.AlignmentDetector;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.state.Square;
@@ -66,8 +65,7 @@ public class CrimsonWar extends Minigame{
 			else
 				GOOD.add(e);
 		}
-		UpgradeHandler.singleton.gather();
-		for(var upgrade:UpgradeHandler.singleton.getalluncategorized(false))
+		for(var upgrade:Upgrade.getall())
 			if(upgrade.isusedincombat()) UPGRADES.add(upgrade);
 		for(var item:Item.ALL)
 			if(!(item instanceof Artifact)&&item.usedinbattle) ITEMS.add(item);

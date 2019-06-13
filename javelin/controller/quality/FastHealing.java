@@ -1,7 +1,6 @@
 package javelin.controller.quality;
 
 import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -62,9 +61,5 @@ public class FastHealing extends Quality{
 	@Override
 	public float rate(Monster monster){
 		return monster.fasthealing*CR;
-	}
-
-	@Override
-	public void listupgrades(UpgradeHandler handler){
 	}
 }

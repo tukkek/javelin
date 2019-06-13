@@ -2,7 +2,6 @@ package javelin.controller.quality.perception;
 
 import javelin.controller.quality.Quality;
 import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -72,10 +71,6 @@ public class Vision extends Quality{
 		if(monster.vision==2) return .2f;
 		if(monster.vision==1) return .1f;
 		return 0;
-	}
-
-	@Override
-	public void listupgrades(UpgradeHandler handler){
 	}
 
 	@Override

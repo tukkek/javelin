@@ -70,7 +70,7 @@ public class ArenaShop extends ArenaBuilding{
 
 	void restock(){
 		ArrayList<Item> selection=new ArrayList<>(
-				Tier.ITEMS.get(Tier.values()[level]));
+				Item.BYTIER.get(Tier.TIERS.get(level)));
 		for(Item i:new ArrayList<>(selection))
 			if(!i.usedinbattle||i instanceof Artifact) selection.remove(i);
 		Collections.shuffle(selection);

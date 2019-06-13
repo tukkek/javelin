@@ -12,9 +12,9 @@ import java.util.List;
 import javelin.controller.Point;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.generator.WorldGenerator;
+import javelin.controller.kit.Kit;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.Realm;
 import javelin.model.unit.Monster;
 import javelin.model.world.Actor;
@@ -28,7 +28,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.fortification.Guardian;
-import javelin.model.world.location.fortification.RealmAcademy;
+import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.haunt.AbandonedManor;
 import javelin.model.world.location.haunt.Graveyard;
@@ -138,7 +138,15 @@ public class FeatureGenerator implements Serializable{
 		}
 	}
 
-	static void spawnnear(Town t,Actor a,World w,int min,int max,boolean clear){
+	/**
+	 * @param a Spawns this actor near the given {@link Town}.
+	 * @param min Minimum distance.
+	 * @param max Maximum distance.
+	 * @param clear Whether to capture the garrison, if the given actor is a
+	 *          {@link Location}.
+	 */
+	public static void spawnnear(Town t,Actor a,World w,int min,int max,
+			boolean clear){
 		Point p=null;
 		ArrayList<Actor> actors=World.getactors();
 		while(p==null||World.get(t.x+p.x,t.y+p.y,actors)!=null
@@ -156,7 +164,6 @@ public class FeatureGenerator implements Serializable{
 	}
 
 	void generatestartinglocations(){
-		UpgradeHandler.singleton.gather();
 		ArrayList<Location> locations=new ArrayList<>();
 		generateuniquelocations(locations);
 		locations.addAll(World.scenario.generatestartinglocations());
@@ -175,11 +182,14 @@ public class FeatureGenerator implements Serializable{
 				new WitchesHideout(),new Graveyard(),new OrcSettlement());
 	}
 
+	/**
+	 * Will later add one random {@link Guild} near each {@link Town}.
+	 *
+	 * @see Kit#createguild()
+	 */
 	static void generatestartingarea(World seed,Town t){
 		spawnnear(t,new Lodge(),seed,1,2,true);
 		spawnnear(t,new Shop(t.realm,true),seed,1,2,true);
-		RealmAcademy academy=new RealmAcademy(t.originalrealm,true);
-		spawnnear(t,academy,seed,1,2,true);
 		Point p=t.getlocation();
 		ArrayList<Monster> recruits=Terrain.get(p.x,p.y).getmonsters();
 		Collections.shuffle(recruits);
@@ -289,7 +299,10 @@ public class FeatureGenerator implements Serializable{
 		for(int i=0;i<regions.size()&&towns>0;i++){
 			Terrain t=WorldGenerator.GENERATIONORDER[i];
 			if(!t.equals(Terrain.WATER)){
-				new Town(regions.get(i),realms.pop()).place();
+				var town=new Town(regions.get(i),realms.pop());
+				town.place();
+				var guild=RPG.pick(Kit.KITS).createguild();
+				spawnnear(town,guild,World.getseed(),1,2,true);
 				towns-=1;
 			}
 		}

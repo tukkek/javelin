@@ -1,6 +1,5 @@
 package javelin.controller.challenge.factor;
 
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.TouchAttack;
 
@@ -15,9 +14,5 @@ public class TouchAttackFactor extends CrFactor{
 	public float calculate(Monster monster){
 		if(monster.touch==null) return 0;
 		return .03f*monster.touch.damage[0]*monster.touch.damage[1]/2f;
-	}
-
-	@Override
-	public void registerupgrades(UpgradeHandler handler){
 	}
 }

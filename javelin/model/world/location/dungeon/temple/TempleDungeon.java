@@ -11,7 +11,6 @@ import javelin.controller.fight.Fight;
 import javelin.controller.table.dungeon.feature.CommonFeatureTable;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Ruby;
-import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -162,7 +161,7 @@ public class TempleDungeon extends Dungeon{
 		Combatants encounter=super.generateencounter(level-RPG.r(1,4),terrains);
 		if(!temple.validate(encounter.getmonsters())) return null;
 		while(ChallengeCalculator.calculateel(encounter)<level)
-			Combatant.upgradeweakest(encounter,temple.realm);
+			encounter.getweakest().upgrade();
 		return encounter;
 	}
 

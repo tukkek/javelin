@@ -1,6 +1,5 @@
 package javelin.controller.challenge.factor;
 
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Monster;
 
@@ -30,9 +29,5 @@ public class ClassLevelFactor extends CrFactor{
 			cr+=c.getlevel(monster)*perlevel;
 		}
 		return cr;
-	}
-
-	@Override
-	public void registerupgrades(UpgradeHandler handler){
 	}
 }

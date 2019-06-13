@@ -17,6 +17,7 @@ import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Diplomacy;
 import javelin.model.unit.skill.Knowledge;
@@ -64,7 +65,7 @@ public abstract class Location extends Actor{
 	/**
 	 * Represent a list of units positioned inside a world feature.
 	 */
-	public List<Combatant> garrison=new ArrayList<>();
+	public Combatants garrison=new Combatants();
 	/**
 	 * If <code>true</code>, the computer will destroy this instead of positioning
 	 * a {@link #garrison} here.

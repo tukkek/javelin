@@ -4,7 +4,6 @@ import javelin.controller.action.maneuver.ExecuteManeuver;
 import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.kit.Kit;
 import javelin.controller.upgrade.FeatUpgrade;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.controller.upgrade.classes.Warrior;
 import javelin.model.unit.feat.MartialTraining;
@@ -140,7 +139,7 @@ public abstract class Discipline extends Kit{
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h){
+	protected void extend(){
 		//see constructor
 	}
 }

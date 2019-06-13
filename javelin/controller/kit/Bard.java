@@ -1,9 +1,6 @@
 package javelin.controller.kit;
 
-import javelin.controller.kit.wizard.Abjurer;
 import javelin.controller.kit.wizard.Enchanter;
-import javelin.controller.kit.wizard.Transmuter;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.classes.Aristocrat;
@@ -27,25 +24,25 @@ public class Bard extends Kit{
 	public static final Kit INSTANCE=new Bard();
 
 	private Bard(){
-		super("bard",Aristocrat.SINGLETON,RaiseCharisma.SINGLETON,
+		super("Bard",Aristocrat.SINGLETON,RaiseCharisma.SINGLETON,
 				RaiseIntelligence.SINGLETON);
 	}
 
 	@Override
 	protected void define(){
-		basic.add(Skill.DIPLOMACY.getupgrade());
-		basic.add(Skill.KNOWLEDGE.getupgrade());
-		basic.add(Skill.USEMAGICDEVICE.getupgrade());
-		basic.add(Skill.BLUFF.getupgrade());
-		basic.add(Skill.SENSEMOTIVE.getupgrade());
+		//let finish() transfer spells
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h){
-		extension.addAll(Transmuter.INSTANCE.filter(Spell.class));
+	protected void extend(){
+		extension.add(Skill.DIPLOMACY.getupgrade());
+		extension.add(Skill.KNOWLEDGE.getupgrade());
+		extension.add(Skill.USEMAGICDEVICE.getupgrade());
+		extension.add(Skill.BLUFF.getupgrade());
+		extension.add(Skill.SENSEMOTIVE.getupgrade());
 		extension.addAll(Enchanter.INSTANCE.filter(Spell.class));
-		extension.addAll(Abjurer.INSTANCE.filter(Spell.class));
 		extension.add(Alertness.SINGLETON.toupgrade());
+		extension.add(Skill.PERCEPTION.getupgrade());
 	}
 
 	@Override

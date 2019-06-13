@@ -1,6 +1,5 @@
 package javelin.model.world.location.town.quest;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,7 +10,6 @@ import javelin.controller.kit.Fighter;
 import javelin.controller.kit.Kit;
 import javelin.controller.kit.Rogue;
 import javelin.controller.terrain.Terrain;
-import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.world.Incursion;
@@ -27,12 +25,6 @@ import javelin.view.screen.WorldScreen;
 public class Pursue extends Quest{
 	static final List<Kit> KITS=List.of(Barbarian.INSTANCE,Rogue.INSTANCE,
 			Fighter.INSTANCE);
-	static final HashSet<Upgrade> UPGRADES=new HashSet<>();
-
-	static{
-		for(var k:KITS)
-			UPGRADES.addAll(k.getupgrades());
-	}
 
 	class Fugitives extends Incursion{
 		Town from=null;
@@ -94,7 +86,7 @@ public class Pursue extends Quest{
 			if(ChallengeCalculator.calculateel(band)>=el) break;
 		}
 		while(ChallengeCalculator.calculateel(band)<el)
-			Combatant.upgradeweakest(band,UPGRADES);
+			RPG.pick(KITS).upgrade(band.getweakest());
 		fugitives=new Fugitives(t.x,t.y,band,t);
 	}
 

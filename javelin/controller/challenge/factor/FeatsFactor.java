@@ -5,7 +5,6 @@ import java.util.List;
 
 import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.HD;
 import javelin.model.unit.Monster;
 import javelin.model.unit.feat.Feat;
@@ -52,10 +51,6 @@ public class FeatsFactor extends CrFactor{
 	 */
 	static public int getnormalprogression(final Monster m){
 		return 1+Math.round(Math.round(Math.floor(m.hd.count()/3f)));
-	}
-
-	@Override
-	public void registerupgrades(UpgradeHandler handler){
 	}
 
 	void register(HashSet<Upgrade> upgrades,Feat[] feats){

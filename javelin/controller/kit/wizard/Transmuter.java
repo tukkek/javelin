@@ -1,6 +1,5 @@
 package javelin.controller.kit.wizard;
 
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.model.unit.abilities.spell.totem.BearsEndurance;
 import javelin.model.unit.abilities.spell.totem.BullsStrength;
@@ -27,7 +26,7 @@ public class Transmuter extends Wizard{
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h){
+	protected void extend(){
 		extension.add(new BearsEndurance());
 		extension.add(new BullsStrength());
 		extension.add(new CatsGrace());

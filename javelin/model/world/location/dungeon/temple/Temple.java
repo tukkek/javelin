@@ -130,7 +130,7 @@ public abstract class Temple extends UniqueLocation{
 		int nfloors;
 		if(tier==Tier.LOW)
 			nfloors=2;
-		else if(tier==Tier.PARAGON)
+		else if(tier==Tier.EPIC)
 			nfloors=4;
 		else
 			nfloors=3;

@@ -2,7 +2,6 @@ package javelin.controller.quality.resistance;
 
 import javelin.controller.quality.Quality;
 import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -85,10 +84,6 @@ public class EnergyResistance extends Quality{
 	@Override
 	public float rate(Monster monster){
 		return monster.energyresistance*CR;
-	}
-
-	@Override
-	public void listupgrades(UpgradeHandler handler){
 	}
 
 	@Override

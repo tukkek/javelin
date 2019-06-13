@@ -10,7 +10,6 @@ import javelin.Javelin;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.minigame.arena.Arena;
 import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.order.Order;
@@ -87,8 +86,7 @@ public class ArenaAcademy extends ArenaBuilding{
 	void restock(Combatant trainee){
 		upgrades.clear();
 		upgrades.add(ClassLevelUpgrade.getpreferred(trainee));
-		LinkedList<Upgrade> all=new LinkedList<>(
-				UpgradeHandler.singleton.getalluncategorized(false));
+		var all=new LinkedList<>(Upgrade.getall());
 		Collections.shuffle(all);
 		while(upgrades.size()<3+level&&!all.isEmpty()){
 			Upgrade u=all.pop();

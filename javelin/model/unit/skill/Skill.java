@@ -6,8 +6,6 @@ import java.util.HashSet;
 
 import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.UpgradeHandler;
-import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.feat.Feat;
@@ -156,19 +154,18 @@ public class Skill implements Serializable{
 	 */
 	public boolean intelligent=false;
 
-	Skill(String[] names,Ability a,Realm realm){
+	Skill(String[] names,Ability a){
 		name=names[0].toLowerCase();
 		ability=a;
 		SkillUpgrade upgrade=new SkillUpgrade();
-		realm.getupgrades(UpgradeHandler.singleton).add(upgrade);
 		ALL.add(this);
 		UPGRADES.put(this,upgrade);
 		for(String name:names)
 			BYNAME.put(name.toLowerCase(),this);
 	}
 
-	Skill(String name,Ability a,Realm realm){
-		this(new String[]{name},a,realm);
+	Skill(String name,Ability a){
+		this(new String[]{name},a);
 	}
 
 	@Override
@@ -291,14 +288,5 @@ public class Skill implements Serializable{
 	 */
 	public static String getsigned(int bonus){
 		return bonus>=0?"+"+bonus:Integer.toString(bonus);
-	}
-
-	/**
-	 * Loads all skills and register their upgrades.
-	 *
-	 * @see #getupgrade()
-	 */
-	public static void setup(){
-		// does nothing, just ensures class is fully loaded
 	}
 }

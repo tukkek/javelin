@@ -2,7 +2,6 @@ package javelin.controller.generator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -13,7 +12,6 @@ import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.generator.encounter.Encounter;
 import javelin.controller.kit.Kit;
 import javelin.controller.terrain.Terrain;
-import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.classes.Commoner;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -109,9 +107,8 @@ public class NpcGenerator{
 		float base=c.source.cr+targetcr/2;
 		while(c.source.cr<base&&k.classlevel.apply(c))
 			ChallengeCalculator.calculatecr(c.source);
-		HashSet<Upgrade> upgrades=k.getupgrades();
 		while(c.source.cr<targetcr){
-			c.upgrade(upgrades);
+			k.upgrade(c);
 			tries-=1;
 			if(tries==0) return null;
 		}

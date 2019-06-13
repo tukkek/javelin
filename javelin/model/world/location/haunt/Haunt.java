@@ -10,6 +10,7 @@ import javelin.controller.fight.LocationFight;
 import javelin.controller.fight.Siege;
 import javelin.controller.map.location.LocationMap;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.labor.basic.Dwelling;
@@ -71,11 +72,11 @@ public abstract class Haunt extends Fortification{
 		int maxel=maxlevel+elmodifier;
 		int target=RPG.r(minel,maxel);
 		int el=Integer.MIN_VALUE;
-		List<List<Combatant>> possibilities=new ArrayList<>();
+		List<Combatants> possibilities=new ArrayList<>();
 		while(el<target){
 			garrison.add(new Combatant(RPG.pick(dwellers).clone(),true));
 			el=ChallengeCalculator.calculateel(garrison);
-			if(minel<=el&&el<=maxel) possibilities.add(new ArrayList<>(garrison));
+			if(minel<=el&&el<=maxel) possibilities.add(new Combatants(garrison));
 		}
 		if(possibilities.isEmpty())
 			generategarrison(minlevel,maxlevel);

@@ -20,10 +20,10 @@ import javelin.controller.fight.minigame.arena.building.ArenaAcademy;
 import javelin.controller.fight.minigame.arena.building.ArenaFlagpole;
 import javelin.controller.fight.minigame.arena.building.ArenaFountain;
 import javelin.controller.fight.minigame.arena.building.ArenaTown;
+import javelin.controller.kit.Kit;
 import javelin.controller.map.Stadium;
 import javelin.controller.scenario.Campaign;
 import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.item.Item;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
@@ -206,10 +206,6 @@ public class Arena extends Minigame{
 		BattleScreen.active.messagepanel.clear();
 	}
 
-	static final List<Upgrade> UPGRADES=UpgradeHandler.singleton.gather()
-			.getalluncategorized(false).stream().filter(u->u.isusedincombat())
-			.collect(Collectors.toList());
-
 	void rewardxp(List<Combatant> group){
 		for(Combatant foe:group)
 			if(state.redTeam.contains(foe)) return;
@@ -217,7 +213,7 @@ public class Arena extends Minigame{
 		RewardCalculator.rewardxp(allies,group,BOOST);
 		foes.remove(group);
 		for(var unit:allies)
-			upgrade(unit,UPGRADES);
+			upgrade(unit);
 		Javelin.app.switchScreen(BattleScreen.active);
 	}
 
@@ -228,13 +224,14 @@ public class Arena extends Minigame{
 	 *
 	 * Don't forget to {@link JavelinApp#switchScreen(java.awt.Component)} after
 	 * all upgrade operations are finished.
-	 *
-	 * @param upgrades Of all these, only those that pass
-	 *          {@link Upgrade#validate(Combatant, boolean)} will be consirered.
-	 *          If none is valid, will ignore this unit.
 	 */
-	public static void upgrade(Combatant c,List<Upgrade> upgrades){
+	public static void upgrade(Combatant c){
 		var prompt=c+" has gained a level! Pick your next upgrade:";
+		var kits=Kit.getpreferred(c.source,c.source.cr>=5);
+		var upgrades=new ArrayList<Upgrade>();
+		for(var k:kits)
+			for(var u:k.getupgrades())
+				if(u.isusedincombat()) upgrades.add(u);
 		while(c.xp.floatValue()>=1){
 			var nchoices=Math.max(2,4+Monster.getbonus(c.source.intelligence));
 			var choices=RPG.shuffle(upgrades).stream().filter(u->u.validate(c,true))

@@ -56,7 +56,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	static public Squad active;
 
 	/** Which units are in this squad. */
-	public ArrayList<Combatant> members=new ArrayList<>();
+	public Combatants members=new Combatants();
 	/** Gold pieces (currency). 1GP = 10 silver pieces. 1SP=10 copper pieces. */
 	public int gold=0;
 	/**

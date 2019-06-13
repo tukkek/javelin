@@ -1,7 +1,5 @@
 package javelin.model.unit.skill;
 
-import javelin.model.Realm;
-
 /**
  * Opposed roll to {@link Bluff}.
  *
@@ -10,7 +8,7 @@ import javelin.model.Realm;
 public class SenseMotive extends Skill{
 	/** Constructor. */
 	public SenseMotive(){
-		super("Sense motive",Ability.WISDOM,Realm.EARTH);
+		super("Sense motive",Ability.WISDOM);
 		usedincombat=true;
 	}
 }

@@ -26,7 +26,6 @@ import javelin.controller.db.Preferences;
 import javelin.controller.db.StateManager;
 import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.db.reader.fields.Organization;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
@@ -101,7 +100,6 @@ public class Javelin{
 	public static boolean delayblock=false;
 
 	static{
-		UpgradeHandler.singleton.gather();
 		ClassLevelUpgrade.setup();
 		Spell.init();
 		try{

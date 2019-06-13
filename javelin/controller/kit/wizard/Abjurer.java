@@ -6,7 +6,6 @@ import javelin.controller.quality.resistance.EnergyResistance;
 import javelin.controller.quality.resistance.MindImmunity;
 import javelin.controller.quality.resistance.ParalysisImmunity;
 import javelin.controller.quality.resistance.PoisonImmunity;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.model.unit.abilities.spell.abjuration.Barkskin;
 import javelin.model.unit.abilities.spell.abjuration.Blink;
@@ -29,7 +28,13 @@ public class Abjurer extends Wizard{
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h){
+	protected void define(){
+		super.define();
+		basic.add(EnergyResistance.UPGRADE);
+	}
+
+	@Override
+	protected void extend(){
 		extension.add(new Blink());
 		extension.add(new Barkskin());
 		extension.add(new ResistEnergy());
@@ -40,6 +45,5 @@ public class Abjurer extends Wizard{
 		extension.add(MindImmunity.UPGRADE);
 		extension.add(ParalysisImmunity.UPGRADE);
 		extension.add(PoisonImmunity.UPGRADE);
-		extension.add(EnergyResistance.UPGRADE);
 	}
 }

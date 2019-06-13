@@ -12,6 +12,7 @@ import javelin.controller.wish.Ressurect;
 import javelin.model.item.Scroll;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.healing.RaiseDead;
@@ -181,7 +182,7 @@ public class EndBattle extends BattleEvent{
 		return null;
 	}
 
-	static void end(ArrayList<Combatant> originalteam){
+	static void end(Combatants originalteam){
 		for(Combatant c:Fight.state.getcombatants())
 			if(c.summoned){
 				Fight.state.blueTeam.remove(c);

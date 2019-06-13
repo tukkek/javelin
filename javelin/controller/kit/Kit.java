@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
+import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.kit.dragoon.BlackDragoon;
 import javelin.controller.kit.dragoon.BlueDragoon;
 import javelin.controller.kit.dragoon.GreenDragoon;
@@ -20,7 +21,6 @@ import javelin.controller.kit.wizard.Evoker;
 import javelin.controller.kit.wizard.Necromancer;
 import javelin.controller.kit.wizard.Transmuter;
 import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.item.Tier;
@@ -39,6 +39,7 @@ import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.unique.AdventurersGuild;
+import javelin.old.RPG;
 
 /**
  * Kits represent sets of {@link Upgrade}s that constitute a role a character
@@ -61,14 +62,13 @@ public abstract class Kit implements Serializable{
 	 *
 	 * @see #validate()
 	 */
-	public static final List<Kit> KITS=List.of(Ninja.INSTANCE,
-			Barbarian.INSTANCE,Bard.INSTANCE,Cleric.INSTANCE,Druid.INSTANCE,
-			Fighter.INSTANCE,Monk.INSTANCE,Paladin.INSTANCE,Ranger.INSTANCE,
-			Rogue.INSTANCE,Transmuter.INSTANCE,Enchanter.INSTANCE,
-			Necromancer.INSTANCE,Conjurer.INSTANCE,Evoker.INSTANCE,Abjurer.INSTANCE,
-			Diviner.INSTANCE,SteelSerpent.INSTANCE,BlackDragoon.INSTANCE,
-			BlueDragoon.INSTANCE,GreenDragoon.INSTANCE,RedDragoon.INSTANCE,
-			WhiteDragoon.INSTANCE);
+	public static final List<Kit> KITS=List.of(Ninja.INSTANCE,Barbarian.INSTANCE,
+			Bard.INSTANCE,Cleric.INSTANCE,Druid.INSTANCE,Fighter.INSTANCE,
+			Monk.INSTANCE,Paladin.INSTANCE,Ranger.INSTANCE,Rogue.INSTANCE,
+			Transmuter.INSTANCE,Enchanter.INSTANCE,Necromancer.INSTANCE,
+			Conjurer.INSTANCE,Evoker.INSTANCE,Abjurer.INSTANCE,Diviner.INSTANCE,
+			SteelSerpent.INSTANCE,BlackDragoon.INSTANCE,BlueDragoon.INSTANCE,
+			GreenDragoon.INSTANCE,RedDragoon.INSTANCE,WhiteDragoon.INSTANCE);
 
 	/**
 	 * TODO temporaty class to help transtition from {@link UpgradeHandler} to a
@@ -104,10 +104,6 @@ public abstract class Kit implements Serializable{
 		public String getimagename(){
 			return "locationmartialacademy";
 		}
-	}
-
-	static{
-		UpgradeHandler.singleton.gather();
 	}
 
 	/** Name of the kit, also used for {@link #titles}. */
@@ -148,7 +144,7 @@ public abstract class Kit implements Serializable{
 		basic.add(ability);
 		if(secondary!=null) extension.add(secondary);
 		define();
-		extend(UpgradeHandler.singleton);
+		extend();
 		var lower=name.toLowerCase();
 		titles=new String[]{"Inept $ "+lower,"Rookie $ "+lower,"$ "+lower,
 				"Veteran $ "+lower};
@@ -175,7 +171,7 @@ public abstract class Kit implements Serializable{
 	 * Add any other {@link Upgrade}s that extend this Kit into middle, high and
 	 * epic levels.
 	 */
-	protected abstract void extend(UpgradeHandler h);
+	protected abstract void extend();
 
 	/**
 	 * TODO would be better to have the game concept of Ability as a programming
@@ -245,7 +241,7 @@ public abstract class Kit implements Serializable{
 	 * Sets {@link Monster#customName} to one of the appropriate {@link #titles}.
 	 */
 	public void rename(Monster m){
-		var index=Tier.get(Math.round(m.cr)).ordinal();
+		var index=Tier.TIERS.indexOf(Tier.get(Math.round(m.cr)));
 		var title=titles[Math.min(index,titles.length-1)];
 		var name=m.name;
 		if(title.charAt(0)!='$') name=name.toLowerCase();
@@ -334,6 +330,15 @@ public abstract class Kit implements Serializable{
 				.collect(Collectors.toList());
 		extension.removeAll(transfer);
 		basic.addAll(transfer);
+		validate();
 	}
 
+	public boolean upgrade(Combatant c){
+		Upgrade upgrade=RPG.pick(getupgrades());
+		if(!upgrade.upgrade(c)) return false;
+		c.postupgradeautomatic();
+		ChallengeCalculator.calculatecr(c.source);
+		c.source.elite=true;
+		return true;
+	}
 }

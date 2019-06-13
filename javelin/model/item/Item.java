@@ -47,6 +47,8 @@ public abstract class Item implements Serializable,Cloneable{
 	public static final ItemSelection ALL=new ItemSelection();
 	/** Map of items by price in gold coins ($). */
 	public static final TreeMap<Integer,ItemSelection> BYPRICE=new TreeMap<>();
+	/** Map of items by price {@link Tier} */
+	public static final HashMap<Tier,ItemSelection> BYTIER=new HashMap<>();
 	/** @see Item#getselection(Realm) */
 	public static final ItemSelection FIRE=new ItemSelection();
 	/** @see Item#getselection(Realm) */
@@ -65,6 +67,11 @@ public abstract class Item implements Serializable,Cloneable{
 	public static final ItemSelection ARTIFACT=new ItemSelection();
 	/** Price of the cheapest {@link Artifact} after loot registration. */
 	public static Integer cheapestartifact=null;
+
+	static{
+		for(Tier t:Tier.TIERS)
+			BYTIER.put(t,new ItemSelection());
+	}
 
 	/** Name to show the player. */
 	public String name;
@@ -122,7 +129,7 @@ public abstract class Item implements Serializable,Cloneable{
 	}
 
 	public void register(){
-		Tier.ITEMS.get(Tier.get(getlevel())).add(this);
+		BYTIER.get(Tier.get(getlevel())).add(this);
 	}
 
 	public int getlevel(){

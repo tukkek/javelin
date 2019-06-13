@@ -1,6 +1,5 @@
 package javelin.controller.challenge.factor;
 
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
 
 /**
@@ -54,9 +53,5 @@ public class SpeedFactor extends CrFactor{
 		int typical=(m.fly>0?TYPICAL_FLIGHT_SPEED:TYPICAL_SPEED)[m.size];
 		if(speed==typical) return cr;
 		return speed>typical?cr+.2f*(speed/typical)/2f:cr-.2f*(typical/speed)/2f;
-	}
-
-	@Override
-	public void registerupgrades(UpgradeHandler handler){
 	}
 }

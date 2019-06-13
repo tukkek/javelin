@@ -10,6 +10,7 @@ import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.old.RPG;
@@ -150,8 +151,8 @@ public class StartBattle extends BattleEvent{
 	public void preparebattle(ArrayList<Combatant> opponents){
 		Fight.state.redTeam=opponents;
 		var blue=Fight.state.blueTeam;
-		Fight.originalblueteam=new ArrayList<>(blue);
-		Fight.originalredteam=new ArrayList<>(Fight.state.redTeam);
+		Fight.originalblueteam=new Combatants(blue);
+		Fight.originalredteam=new Combatants(Fight.state.redTeam);
 		for(int i=0;i<blue.size();i++){
 			var c=blue.get(i);
 			blue.set(i,c.clone().clonesource());

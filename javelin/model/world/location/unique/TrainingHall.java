@@ -9,8 +9,7 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.TrainingSession;
 import javelin.controller.upgrade.FeatUpgrade;
-import javelin.controller.upgrade.UpgradeHandler;
-import javelin.model.Realm;
+import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -68,7 +67,7 @@ public class TrainingHall extends UniqueLocation{
 		while(isweak()&&garrison.size()<nsenseis)
 			garrison.add(new Combatant(RPG.pick(CANDIDATES).clone(),true));
 		while(isweak())
-			Combatant.upgradeweakest(garrison,Realm.random());
+			garrison.getweakest().upgrade();
 	}
 
 	boolean isweak(){
@@ -117,7 +116,7 @@ public class TrainingHall extends UniqueLocation{
 		Combatant student=Squad.active.members
 				.get(Javelin.choose(prefix+"Which student will learn a feat?",
 						Squad.active.members,true,true));
-		ArrayList<FeatUpgrade> feats=UpgradeHandler.singleton.getfeats();
+		var feats=Upgrade.getall(FeatUpgrade.class);
 		ArrayList<FeatUpgrade> options=new ArrayList<>();
 		while(options.size()<3&&!feats.isEmpty()){
 			FeatUpgrade f=RPG.pick(feats);

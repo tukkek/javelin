@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.action.world.WorldMove;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -36,7 +35,6 @@ public class Throne extends Feature{
 		super("dungeonthrone");
 		enter=true;
 		remove=false;
-		UpgradeHandler.singleton.gather();
 		for(var level=dungeonlevel;spell==null;level--){
 			var eligible=filterspells(level);
 			if(!eligible.isEmpty()) spell=RPG.pick(eligible);

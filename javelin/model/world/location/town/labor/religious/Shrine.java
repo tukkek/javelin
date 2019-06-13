@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
@@ -54,7 +53,6 @@ public class Shrine extends Fortification{
 	public static final List<Spell> RITUALS=new ArrayList<>();
 
 	static{
-		UpgradeHandler.singleton.gather();
 		for(var s:Spell.ALL)
 			if(s.isritual) RITUALS.add(s);
 	}

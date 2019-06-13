@@ -2,9 +2,7 @@ package javelin.controller.kit;
 
 import javelin.controller.kit.wizard.Conjurer;
 import javelin.controller.kit.wizard.Diviner;
-import javelin.controller.kit.wizard.Enchanter;
 import javelin.controller.upgrade.NaturalArmor;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.controller.upgrade.classes.Aristocrat;
@@ -25,22 +23,23 @@ public class Cleric extends Kit{
 	public static final Kit INSTANCE=new Cleric();
 
 	private Cleric(){
-		super("cleric",Aristocrat.SINGLETON,RaiseWisdom.SINGLETON,
+		super("Cleric",Aristocrat.SINGLETON,RaiseWisdom.SINGLETON,
 				RaiseStrength.SINGLETON);
 	}
 
 	@Override
 	protected void define(){
 		basic.add(new CureModerateWounds());
-		basic.add(Skill.KNOWLEDGE.getupgrade());
-		basic.add(Skill.HEAL.getupgrade());
-		basic.add(NaturalArmor.SCALES);
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h){
-		extension.addAll(Conjurer.INSTANCE.getupgrades());
-		extension.addAll(Enchanter.INSTANCE.filter(Spell.class));
+	protected void extend(){
+		extension.add(Skill.KNOWLEDGE.getupgrade());
+		extension.add(Skill.HEAL.getupgrade());
+		extension.add(Skill.CONCENTRATION.getupgrade());
+		extension.add(NaturalArmor.SCALES);
+		extension.addAll(Conjurer.HEALING);
+		extension.addAll(Conjurer.RESTORATION);
 		extension.addAll(Diviner.INSTANCE.filter(Spell.class));
 		extension.add(Toughness.SINGLETON.toupgrade());
 		extension.add(CombatCasting.SINGLETON.toupgrade());

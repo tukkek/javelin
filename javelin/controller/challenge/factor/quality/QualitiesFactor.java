@@ -4,7 +4,6 @@ import java.util.HashSet;
 
 import javelin.controller.challenge.factor.CrFactor;
 import javelin.controller.quality.Quality;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
 
 /**
@@ -20,12 +19,6 @@ public class QualitiesFactor extends CrFactor{
 			if(calculated.add(q.getClass().getTypeName())&&q.has(monster))
 				rate+=q.rate(monster);
 		return rate;
-	}
-
-	@Override
-	public void registerupgrades(UpgradeHandler handler){
-		for(Quality q:Quality.qualities)
-			q.listupgrades(handler);
 	}
 
 	@Override

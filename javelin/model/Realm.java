@@ -1,9 +1,5 @@
 package javelin.model;
 
-import java.util.HashSet;
-
-import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;
@@ -63,26 +59,6 @@ public enum Realm{
 				return "Magic";
 			default:
 				throw new RuntimeException("#unknownColor");
-		}
-	}
-
-	/**
-	 * @return the proper upgrade set in this {@link UpgradeHandler}.
-	 */
-	public HashSet<Upgrade> getupgrades(UpgradeHandler handler){
-		switch(this){
-			case WATER:
-				return handler.water;
-			case AIR:
-				return handler.wind;
-			case GOOD:
-				return handler.good;
-			case EVIL:
-				return handler.evil;
-			case MAGIC:
-				return handler.magic;
-			default:
-				return new HashSet<>(0);
 		}
 	}
 

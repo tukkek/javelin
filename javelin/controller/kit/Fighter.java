@@ -2,7 +2,6 @@ package javelin.controller.kit;
 
 import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.NaturalArmor;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseConstitution;
 import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.classes.Warrior;
@@ -20,7 +19,7 @@ public class Fighter extends Kit{
 	public static final Kit INSTANCE=new Fighter();
 
 	Fighter(){
-		super("fighter",Warrior.SINGLETON,RaiseStrength.SINGLETON,
+		super("Fighter",Warrior.SINGLETON,RaiseStrength.SINGLETON,
 				RaiseConstitution.SINGLETON);
 	}
 
@@ -32,7 +31,7 @@ public class Fighter extends Kit{
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h){
+	protected void extend(){
 		extension.add(Skill.SENSEMOTIVE.getupgrade());
 		extension.add(new FeatUpgrade(ImprovedFeint.SINGLETON));
 		extension.add(new FeatUpgrade(ImprovedGrapple.SINGLETON));

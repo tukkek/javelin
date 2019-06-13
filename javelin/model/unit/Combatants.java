@@ -61,4 +61,10 @@ public class Combatants extends ArrayList<Combatant>
 			encounter.add(new Combatant(m.source,true));
 		return encounter;
 	}
+
+	/** @return Lowest {@link Monster#cr}. */
+	public Combatant getweakest(){
+		return stream().sorted((a,b)->Float.compare(a.source.cr,b.source.cr))
+				.findFirst().orElse(null);
+	}
 }

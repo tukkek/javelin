@@ -1,7 +1,6 @@
 package javelin.controller.challenge.factor.quality;
 
 import javelin.controller.challenge.factor.CrFactor;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.BreathWeapon;
 import javelin.model.unit.abilities.BreathWeapon.BreathArea;
@@ -32,10 +31,6 @@ public class BreathFactor extends CrFactor{
 			total+=breathcr;
 		}
 		return total;
-	}
-
-	@Override
-	public void registerupgrades(UpgradeHandler handler){
 	}
 
 	@Override

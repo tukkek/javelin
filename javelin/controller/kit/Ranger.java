@@ -2,7 +2,6 @@ package javelin.controller.kit;
 
 import javelin.controller.quality.perception.Vision;
 import javelin.controller.upgrade.NaturalArmor;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseDexterity;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.controller.upgrade.classes.Warrior;
@@ -15,6 +14,7 @@ import javelin.model.unit.feat.attack.shot.PointBlankShot;
 import javelin.model.unit.feat.attack.shot.PreciseShot;
 import javelin.model.unit.feat.attack.shot.RapidShot;
 import javelin.model.unit.feat.skill.Alertness;
+import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.town.labor.ecological.ArcheryRange;
 
@@ -22,7 +22,7 @@ public class Ranger extends Kit{
 	public static final Kit INSTANCE=new Ranger();
 
 	private Ranger(){
-		super("ranger",Warrior.SINGLETON,RaiseDexterity.SINGLETON,
+		super("Ranger",Warrior.SINGLETON,RaiseDexterity.SINGLETON,
 				RaiseWisdom.SINGLETON);
 	}
 
@@ -41,12 +41,13 @@ public class Ranger extends Kit{
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h){
+	protected void extend(){
 		extension.add(ImprovedPreciseShot.SINGLETON.toupgrade());
 		extension.add(RangedDamage.INSTANCE);
 		extension.add(Alertness.SINGLETON.toupgrade());
 		extension.add(WalkingSpeed.HUMAN);
 		extension.add(Vision.LOWLIGHTVISION);
+		extension.add(Skill.PERCEPTION.getupgrade());
 	}
 
 	@Override

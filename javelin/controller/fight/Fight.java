@@ -32,6 +32,7 @@ import javelin.model.item.Item;
 import javelin.model.state.BattleState;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.DominateMonster.Dominated;
@@ -117,9 +118,9 @@ public abstract class Fight{
 	public boolean canflee=true;
 	public boolean endless=false;
 	/** Red team at the moment the {@link Fight} begins. */
-	public static ArrayList<Combatant> originalredteam;
+	public static Combatants originalredteam;
 	/** Blue team at the moment the {@link Fight} begins. */
-	public static ArrayList<Combatant> originalblueteam;
+	public static Combatants originalblueteam;
 	/**
 	 * These callbacks are called at the last opportunity for changing this fight
 	 * before actual battle begins. At this point the entire stack should be

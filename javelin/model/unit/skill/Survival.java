@@ -1,7 +1,6 @@
 package javelin.model.unit.skill;
 
 import javelin.controller.terrain.Terrain;
-import javelin.model.Realm;
 
 /**
  * A skill measuring the ability to have the {@link Terrain} around you help -
@@ -13,6 +12,6 @@ import javelin.model.Realm;
 public class Survival extends Skill{
 	/** Constructor. */
 	public Survival(){
-		super("Survival",Ability.WISDOM,Realm.EARTH);
+		super("Survival",Ability.WISDOM);
 	}
 }

@@ -55,7 +55,7 @@ public class WarLocation extends Fortification{
 		var pregenerated=!garrison.isEmpty();
 		List<Float> squads=new ArrayList<>();
 		squads.add(el);
-		int tier=Tier.get(Math.round(el)).ordinal()+1;
+		int tier=Tier.TIERS.indexOf(Tier.get(Math.round(el)))+1;
 		while(squads.size()<tier*1.5||RPG.r(1,tier)!=1){
 			Float squad=RPG.pick(squads);
 			if(squad<=2) break;

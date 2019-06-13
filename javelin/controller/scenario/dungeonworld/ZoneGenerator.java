@@ -12,6 +12,7 @@ import javelin.controller.Point;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.generator.WorldGenerator;
 import javelin.controller.generator.feature.FeatureGenerator;
+import javelin.controller.kit.Kit;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.transport.Airship;
@@ -27,7 +28,6 @@ import javelin.model.world.location.dungeon.temple.GoodTemple;
 import javelin.model.world.location.dungeon.temple.MagicTemple;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.dungeon.temple.WaterTemple;
-import javelin.model.world.location.fortification.RealmAcademy;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Deck;
@@ -255,7 +255,7 @@ public class ZoneGenerator extends FeatureGenerator{
 			size=11;
 			District d=t.getdistrict();
 			placeintown(new BuildMagesGuild().generateacademy(),d,z);
-			placeintown(new RealmAcademy(z.realm,false),d,z);
+			placeintown(RPG.pick(Kit.KITS).createguild(),d,z);
 			placeintown(new Shop(z.realm,true),d,z);
 			placeintown(new Lodge(),d,z);
 		}

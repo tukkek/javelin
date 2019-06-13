@@ -10,13 +10,13 @@ import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.UnbalancedTeams;
-import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.classes.Commoner;
 import javelin.model.Realm;
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.item.Item;
 import javelin.model.item.key.TempleKey;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
@@ -88,13 +88,10 @@ public class Campaign extends Scenario{
 	}
 
 	@Override
-	public void upgradesquad(ArrayList<Combatant> squad){
+	public void upgradesquad(Combatants squad){
 		float startingcr=totalcr(squad);
-		while(ChallengeCalculator.calculateel(squad)<INITIALEL){
-			ArrayList<Upgrade> u=new ArrayList<>();
-			u.add(Commoner.SINGLETON);
-			Combatant.upgradeweakest(squad,u);
-		}
+		while(ChallengeCalculator.calculateel(squad)<INITIALEL)
+			Commoner.SINGLETON.upgrade(squad.getweakest());
 		Squad.active.gold=RewardCalculator.getgold(totalcr(squad)-startingcr);
 	}
 

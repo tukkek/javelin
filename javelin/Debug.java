@@ -171,7 +171,6 @@ public class Debug{
 		}
 
 		static void test(Kit kit){
-			kit.validate();
 			Squad.active.members.clear();
 			var human=Monster.get("human");
 			for(var level:new int[]{3,8,13,18}){

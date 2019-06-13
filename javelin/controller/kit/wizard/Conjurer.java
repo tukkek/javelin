@@ -2,7 +2,6 @@ package javelin.controller.kit.wizard;
 
 import java.util.List;
 
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.SecureShelter;
@@ -42,7 +41,7 @@ public class Conjurer extends Wizard{
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h){
+	protected void extend(){
 		extension.add(new WordOfRecall()); // teleportation
 		extension.add(new GreaterTeleport()); // teleportation
 		extension.add(new SecureShelter()); // teleportation

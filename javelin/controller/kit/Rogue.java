@@ -4,7 +4,6 @@ import javelin.controller.quality.perception.Vision;
 import javelin.controller.quality.resistance.CriticalImmunity;
 import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.NaturalArmor;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseDexterity;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.classes.Expert;
@@ -21,7 +20,7 @@ public class Rogue extends Kit{
 	public static final Kit INSTANCE=new Rogue();
 
 	private Rogue(){
-		super("rogue",Expert.SINGLETON,RaiseDexterity.SINGLETON,
+		super("Rogue",Expert.SINGLETON,RaiseDexterity.SINGLETON,
 				RaiseIntelligence.SINGLETON);
 	}
 
@@ -32,11 +31,11 @@ public class Rogue extends Kit{
 		basic.add(Skill.SENSEMOTIVE.getupgrade());
 		basic.add(Skill.STEALTH.getupgrade());
 		basic.add(Skill.PERCEPTION.getupgrade());
-		basic.add(WalkingSpeed.HUMAN);
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h){
+	protected void extend(){
+		extension.add(WalkingSpeed.HUMAN);
 		extension.add(new FeatUpgrade(Deceitful.SINGLETON));
 		extension.add(NaturalArmor.LEATHER);
 		extension.add(CriticalImmunity.UPGRADE);
@@ -44,6 +43,7 @@ public class Rogue extends Kit{
 		extension.add(Alertness.SINGLETON.toupgrade());
 		extension.add(LightningReflexes.SINGLETON.toupgrade());
 		extension.add(Vision.LOWLIGHTVISION);
+		extension.add(Skill.USEMAGICDEVICE.getupgrade());
 	}
 
 	@Override

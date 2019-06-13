@@ -2,7 +2,6 @@ package javelin.controller.kit;
 
 import javelin.controller.quality.resistance.DamageReduction;
 import javelin.controller.upgrade.FeatUpgrade;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseConstitution;
 import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.classes.Warrior;
@@ -25,7 +24,7 @@ public class Barbarian extends Kit{
 	public static final Kit INSTANCE=new Barbarian();
 
 	private Barbarian(){
-		super("barbarian",Warrior.SINGLETON,RaiseStrength.SINGLETON,
+		super("Barbarian",Warrior.SINGLETON,RaiseStrength.SINGLETON,
 				RaiseConstitution.SINGLETON);
 	}
 
@@ -38,7 +37,7 @@ public class Barbarian extends Kit{
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h){
+	protected void extend(){
 		extension.add(new FeatUpgrade(PowerAttack.SINGLETON));
 		extension.add(new FeatUpgrade(BullRush.SINGLETON));
 		extension.add(new FeatUpgrade(Cleave.SINGLETON));

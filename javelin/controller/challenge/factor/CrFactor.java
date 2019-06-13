@@ -4,7 +4,6 @@
 package javelin.controller.challenge.factor;
 
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
 
 /**
@@ -26,10 +25,6 @@ public abstract class CrFactor implements Comparable<CrFactor>{
 	@Override
 	public String toString(){
 		return getClass().getSimpleName();
-	}
-
-	public void registerupgrades(UpgradeHandler handler){
-		return;
 	}
 
 	public String log(Monster m){

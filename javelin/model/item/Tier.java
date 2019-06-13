@@ -1,30 +1,43 @@
 package javelin.model.item;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 
-public enum Tier{
-	LOW,MID,HIGH,PARAGON,EPIC,DEMIGOD,GOD,DEITY;
+/**
+ *
+ *
+ * TODO in the distant future, can expand this to Paragon (up to 40), Demigod
+ * (up to 50), God (up to 55) and Deity (up to 60). Actually Paragon should be
+ * what is now considered Epic and vice-versa.
+ *
+ * @author alex
+ */
+public class Tier{
+	public static final Tier LOW=new Tier("Low",1,5);
+	public static final Tier MID=new Tier("Mid",6,10);
+	public static final Tier HIGH=new Tier("High",11,15);
+	public static final Tier EPIC=new Tier("Epic",16,Integer.MAX_VALUE);
 
-	public static final HashMap<Tier,HashSet<Item>> ITEMS=new HashMap<>(
-			Tier.values().length);
+	public static List<Tier> TIERS=List.of(LOW,MID,HIGH,EPIC);
 
-	public static Tier[] INTENDED=new Tier[]{LOW,MID,HIGH,PARAGON};
+	String name;
+	int minlevel;
+	int maxlevel;
 
-	static{
-		for(Tier t:Tier.values())
-			ITEMS.put(t,new HashSet<Item>());
+	/** Constructor. */
+	public Tier(String name,int minlevel,int maxlevel){
+		this.name=name;
+		this.minlevel=minlevel;
+		this.maxlevel=maxlevel;
 	}
 
 	public static Tier get(int level){
-		if(level<=5) return LOW;
-		if(level<=10) return MID;
-		if(level<=15) return HIGH;
-		if(level<=20) return PARAGON;
-		if(level<=40) return EPIC;
-		if(level<=50) return DEMIGOD;
-		if(level<=55) return GOD;
-		if(level<=60) return DEITY;
-		throw new RuntimeException("Tier level is over nine thousaaaand!");
+		for(var t:TIERS)
+			if(t.minlevel<=level&&level<=t.maxlevel) return t;
+		throw new RuntimeException("Error determining tier for level "+level);
+	}
+
+	@Override
+	public String toString(){
+		return name;
 	}
 }

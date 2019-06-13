@@ -1,7 +1,6 @@
 package javelin.controller.kit.wizard;
 
 import javelin.controller.quality.perception.Vision;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.model.unit.abilities.spell.divination.DiscernLocation;
 import javelin.model.unit.abilities.spell.divination.FindTraps;
@@ -20,14 +19,14 @@ public class Diviner extends Wizard{
 	/** Constructor. */
 	public Diviner(){
 		super("Diviner",RaiseWisdom.SINGLETON);
+		basic.add(Vision.LOWLIGHTVISION);
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h){
+	protected void extend(){
 		extension.add(new LocateObject());
 		extension.add(new PryingEyes());
 		extension.add(new DiscernLocation());
 		extension.add(new FindTraps());
-		extension.add(Vision.LOWLIGHTVISION);
 	}
 }

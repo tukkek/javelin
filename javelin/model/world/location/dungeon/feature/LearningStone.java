@@ -11,8 +11,6 @@ import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.kit.Kit;
 import javelin.controller.scenario.dungeondelve.DungeonDelve;
 import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.UpgradeHandler;
-import javelin.controller.upgrade.classes.Aristocrat;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -33,10 +31,6 @@ import javelin.old.RPG;
  */
 public class LearningStone extends Feature{
 	static final String TAKE="Take the stone as treasure";
-
-	static{
-		UpgradeHandler.singleton.gather();
-	}
 
 	/**
 	 * Once a learning stone is removed from its pedestal, it can be sold as
@@ -62,17 +56,9 @@ public class LearningStone extends Feature{
 	public LearningStone(){
 		super(-1,-1,"dungeonlearningstone");
 		remove=false;
-		if(RPG.chancein(2)){
-			var kit=RPG.pick(Kit.KITS);
-			upgrades.addAll(kit.getupgrades());
-			type=kit.name.toLowerCase();
-		}else{
-			var allupgrades=UpgradeHandler.singleton.getall(false).values();
-			var set=RPG.pick(new ArrayList<>(allupgrades));
-			upgrades.addAll(set);
-			type=set.name.toLowerCase();
-			if(type.contains("magic")) upgrades.add(Aristocrat.SINGLETON);
-		}
+		var kit=RPG.pick(Kit.KITS);
+		upgrades.addAll(kit.getupgrades());
+		type=kit.name.toLowerCase();
 	}
 
 	@Override

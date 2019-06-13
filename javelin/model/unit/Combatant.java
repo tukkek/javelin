@@ -23,11 +23,10 @@ import javelin.controller.db.reader.fields.Skills;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.fight.Fight;
+import javelin.controller.kit.Kit;
 import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.walker.Walker;
 import javelin.controller.wish.Ressurect;
-import javelin.model.Realm;
 import javelin.model.TeamContainer;
 import javelin.model.item.Item;
 import javelin.model.item.Scroll;
@@ -620,35 +619,12 @@ public class Combatant implements Serializable,Cloneable{
 	 *
 	 * @param r Applies one {@link Upgrade} from this set to the given
 	 *          {@link Combatant}.
-	 * @return
 	 * @return <code>true</code> if an upgrade has been successfully applied.
 	 * @see Upgrade#upgrade(Combatant)
 	 */
-	public boolean upgrade(Realm r){
-		return upgrade(UpgradeHandler.singleton.getfullupgrades(r));
-	}
-
-	public boolean upgrade(Collection<? extends Upgrade> upgrades){
-		Upgrade upgrade=RPG.pick(new ArrayList<Upgrade>(upgrades));
-		if(!upgrade.upgrade(this)) return false;
-		postupgradeautomatic();
-		ChallengeCalculator.calculatecr(source);
-		source.elite=true;
-		return true;
-	}
-
-	/**
-	 * @param garrison Upgrades the weakest member of this group.
-	 * @see #upgrade(Realm)
-	 */
-	public static void upgradeweakest(List<Combatant> garrison,
-			Collection<Upgrade> r){
-		Combatant weakest=null;
-		for(Combatant sensei:garrison){
-			ChallengeCalculator.calculatecr(sensei.source);
-			if(weakest==null||sensei.source.cr<weakest.source.cr) weakest=sensei;
-		}
-		weakest.upgrade(r);
+	public boolean upgrade(){
+		var kit=RPG.pick(Kit.getpreferred(source,source.cr>=5));
+		return kit.upgrade(this);
 	}
 
 	/** @return All squares that are visible by this unit. */
@@ -731,10 +707,6 @@ public class Combatant implements Serializable,Cloneable{
 
 	public boolean equip(Artifact a){
 		return a.equip(this);
-	}
-
-	public static void upgradeweakest(List<Combatant> garrison,Realm random){
-		upgradeweakest(garrison,random.getupgrades(UpgradeHandler.singleton));
 	}
 
 	/**

@@ -32,6 +32,7 @@ import javelin.model.item.key.TempleKey;
 import javelin.model.transport.Ship;
 import javelin.model.transport.Transport;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
@@ -44,7 +45,6 @@ import javelin.model.world.location.dungeon.feature.Altar;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.fortification.Fortification;
-import javelin.model.world.location.fortification.RealmAcademy;
 import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.town.District;
@@ -252,7 +252,7 @@ public class Scenario implements Serializable{
 	 *
 	 * @see SquadScreen
 	 */
-	public void upgradesquad(ArrayList<Combatant> squad){
+	public void upgradesquad(Combatants squad){
 		ArrayList<Combatant> members=new ArrayList<>(squad);
 		HashSet<Kit> chosen=new HashSet<>(members.size());
 		while(!members.isEmpty()){
@@ -269,7 +269,7 @@ public class Scenario implements Serializable{
 			c.source.customName=Character.toUpperCase(kit.name.charAt(0))
 					+kit.name.substring(1);
 			while(c.source.cr<6)
-				c.upgrade(kit.basic);
+				kit.upgrade(c);
 			members.remove(0);
 		}
 	}

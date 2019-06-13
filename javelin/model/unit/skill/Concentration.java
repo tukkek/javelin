@@ -1,12 +1,11 @@
 package javelin.model.unit.skill;
 
-import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.feat.CombatCasting;
 
 public class Concentration extends Skill{
 	public Concentration(){
-		super("Concentration",Ability.CONSTITUTION,Realm.WATER);
+		super("Concentration",Ability.CONSTITUTION);
 		usedincombat=true;
 		intelligent=true;
 	}

@@ -44,14 +44,12 @@ public abstract class UrbanEncounter extends UrbanEvent{
 	int price=RewardCalculator.getgold(town.population,1);
 	List<Monster> candidates=Terrain.get(town.x,town.y).getmonsters().stream()
 			.filter(m->validate(m)).collect(Collectors.toList());
-	Set<Upgrade> upgrades;
 	String intro;
 
 	/** Constructor. */
 	public UrbanEncounter(Town t,List<String> traits,Rank minimum,
 			Set<Upgrade> upgrades,String intro){
 		super(t,traits,minimum);
-		this.upgrades=upgrades;
 		this.intro=intro;
 	}
 
@@ -76,7 +74,7 @@ public abstract class UrbanEncounter extends UrbanEvent{
 		while(foes.size()<nfoes&&ChallengeCalculator.calculateel(foes)<el)
 			foes.add(new Combatant(RPG.pick(candidates),true));
 		while(ChallengeCalculator.calculateel(foes)<el)
-			Combatant.upgradeweakest(foes,upgrades);
+			foes.getweakest().upgrade();
 		return foes;
 	}
 

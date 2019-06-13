@@ -11,10 +11,8 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.comparator.OptionsByPriority;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
-import javelin.model.Realm;
 import javelin.model.transport.Transport;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -283,10 +281,6 @@ public abstract class Academy extends Fortification{
 		training.clear();
 		stash=0;
 		parking=null;
-	}
-
-	protected static HashSet<Upgrade> getupgrades(Realm r){
-		return UpgradeHandler.singleton.getupgrades(r);
 	}
 
 	@Override

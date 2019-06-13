@@ -1,6 +1,5 @@
 package javelin.model.unit.skill;
 
-import javelin.model.Realm;
 import javelin.model.item.key.door.Key;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonZoner;
@@ -20,7 +19,7 @@ import javelin.model.world.location.dungeon.feature.trap.Trap;
 public class DisableDevice extends Skill{
 	/** Constructor. */
 	public DisableDevice(){
-		super("Disable device",Ability.DEXTERITY,Realm.AIR);
+		super("Disable device",Ability.DEXTERITY);
 		intelligent=true;
 	}
 }

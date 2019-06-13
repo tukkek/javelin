@@ -3,9 +3,13 @@ package javelin.controller.upgrade;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.fight.Fight;
+import javelin.controller.kit.Kit;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -139,5 +143,20 @@ public abstract class Upgrade implements Serializable{
 	 */
 	public boolean isusedincombat(){
 		return usedincombat;
+	}
+
+	/** @return All available upgrades (found through {@link Kit}. */
+	public static Set<Upgrade> getall(){
+		var all=new HashSet<Upgrade>(Kit.KITS.size()*9);
+		for(var k:Kit.KITS)
+			all.addAll(k.getupgrades());
+		return all;
+	}
+
+	/** @return Same as {@link #getall()} but filters by instance type. */
+	@SuppressWarnings("unchecked")
+	public static <K extends Upgrade> Set<K> getall(Class<K> type){
+		return getall().stream().filter(u->type.isInstance(u)).map(u->(K)u)
+				.collect(Collectors.toSet());
 	}
 }

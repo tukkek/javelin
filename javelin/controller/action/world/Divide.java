@@ -10,6 +10,7 @@ import javelin.controller.exception.RepeatTurn;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
@@ -66,10 +67,9 @@ public class Divide extends WorldAction{
 				+"To join two squads later just place them in the same square.\n";
 		Javelin.promptscreen(in);
 		char input=' ';
-		final ArrayList<Combatant> indexreference=new ArrayList<>(
-				Squad.active.members);
-		final ArrayList<Combatant> oldsquad=new ArrayList<>(Squad.active.members);
-		final ArrayList<Combatant> newsquad=new ArrayList<>();
+		ArrayList<Combatant> indexreference=new ArrayList<>(Squad.active.members);
+		Combatants oldsquad=new Combatants(Squad.active.members);
+		Combatants newsquad=new Combatants();
 		while(input!='\n'){
 			clear();
 			final ArrayList<String> oldcolumn=new ArrayList<>();
@@ -86,8 +86,7 @@ public class Divide extends WorldAction{
 		spawn(oldsquad,newsquad,gold);
 	}
 
-	void spawn(final ArrayList<Combatant> oldsquad,
-			final ArrayList<Combatant> newsquad,int gold){
+	void spawn(final Combatants oldsquad,Combatants newsquad,int gold){
 		Actor nearto=findtown(Squad.active.x,Squad.active.y);
 		int x,y;
 		Squad s=new Squad(0,0,Squad.active.hourselapsed,Squad.active.lasttown);

@@ -6,7 +6,6 @@ import javelin.controller.kit.Monk;
 import javelin.controller.quality.resistance.ParalysisImmunity;
 import javelin.controller.upgrade.BreathUpgrade;
 import javelin.controller.upgrade.NaturalArmor;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseDexterity;
 import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.classes.Warrior;
@@ -64,13 +63,14 @@ public abstract class Dragoon extends Kit{
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h){
+	protected void extend(){
 		extension.add(Toughness.SINGLETON.toupgrade());
 		extension.add(MeleeDamage.INSTANCE);
 		extension.add(LightningReflexes.SINGLETON.toupgrade());
 		extension.add(Acrobatic.SINGLETON.toupgrade());
 		extension.add(Alertness.SINGLETON.toupgrade());
 		extension.add(ParalysisImmunity.UPGRADE);
+		extension.add(Skill.PERCEPTION.getupgrade());
 	}
 
 	@Override

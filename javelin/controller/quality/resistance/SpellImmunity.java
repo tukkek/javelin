@@ -2,7 +2,6 @@ package javelin.controller.quality.resistance;
 
 import javelin.controller.quality.Quality;
 import javelin.controller.upgrade.Upgrade;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
@@ -53,10 +52,6 @@ public class SpellImmunity extends Quality{
 	@Override
 	public float rate(Monster m){
 		return 5;
-	}
-
-	@Override
-	public void listupgrades(UpgradeHandler handler){
 	}
 
 	@Override

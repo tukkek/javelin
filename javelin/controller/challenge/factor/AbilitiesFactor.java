@@ -4,7 +4,6 @@
 package javelin.controller.challenge.factor;
 
 import javelin.controller.quality.resistance.MindImmunity;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
 
 /**
@@ -33,9 +32,5 @@ public class AbilitiesFactor extends CrFactor{
 				sum-=0.1*m.hd.count();
 		}
 		return sum;
-	}
-
-	@Override
-	public void registerupgrades(UpgradeHandler handler){
 	}
 }

@@ -5,7 +5,6 @@ import javelin.controller.quality.resistance.MindImmunity;
 import javelin.controller.quality.resistance.PoisonImmunity;
 import javelin.controller.quality.resistance.SpellResistance;
 import javelin.controller.upgrade.NaturalArmor;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.controller.upgrade.ability.RaiseConstitution;
 import javelin.controller.upgrade.classes.Warrior;
@@ -27,7 +26,7 @@ public class Paladin extends Kit{
 	public static final Kit INSTANCE=new Paladin();
 
 	Paladin(){
-		super("paladin",Warrior.SINGLETON,RaiseCharisma.SINGLETON,
+		super("Paladin",Warrior.SINGLETON,RaiseCharisma.SINGLETON,
 				RaiseConstitution.SINGLETON);
 	}
 
@@ -40,7 +39,7 @@ public class Paladin extends Kit{
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h){
+	protected void extend(){
 		extension.addAll(Conjurer.HEALING);
 		extension.add(NaturalArmor.PLATES);
 		extension.add(IronWill.SINGLETON.toupgrade());
@@ -52,6 +51,7 @@ public class Paladin extends Kit{
 		extension.add(MindImmunity.UPGRADE);
 		extension.add(PoisonImmunity.UPGRADE);
 		extension.add(SpellResistance.UPGRADE);
+		extension.add(Skill.HEAL.getupgrade());
 	}
 
 	@Override

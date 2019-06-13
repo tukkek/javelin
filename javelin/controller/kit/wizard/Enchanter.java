@@ -1,7 +1,6 @@
 package javelin.controller.kit.wizard;
 
 import javelin.controller.quality.resistance.MindImmunity;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.Bane;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.BarbarianRage;
@@ -26,7 +25,7 @@ public class Enchanter extends Wizard{
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h){
+	protected void extend(){
 		//compulsion magic
 		extension.add(new Heroism());// enchantment
 		extension.add(new HoldMonster());

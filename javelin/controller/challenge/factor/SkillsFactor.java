@@ -2,9 +2,7 @@ package javelin.controller.challenge.factor;
 
 import java.util.TreeSet;
 
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
-import javelin.model.unit.skill.Skill;
 
 /**
  * Calculates a challenge rating value based on the skills a character has. To
@@ -27,11 +25,6 @@ public class SkillsFactor extends CrFactor{
 		for(int skill:m.ranks.values())
 			ranks+=skill;
 		return COST*ranks;
-	}
-
-	@Override
-	public void registerupgrades(UpgradeHandler handler){
-		Skill.setup();
 	}
 
 	/**

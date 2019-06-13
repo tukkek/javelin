@@ -1,7 +1,6 @@
 package javelin.model.world.location.town.quest;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,13 +8,14 @@ import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.kit.Cleric;
+import javelin.controller.kit.Kit;
 import javelin.controller.kit.Monk;
 import javelin.controller.kit.Paladin;
 import javelin.controller.terrain.Terrain;
-import javelin.controller.upgrade.Upgrade;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.town.Town;
@@ -88,13 +88,7 @@ public class Pilgrimage extends Quest{
 		}
 	}
 
-	static HashSet<Upgrade> upgrades=new HashSet<>();
-
-	static{
-		upgrades.addAll(Cleric.INSTANCE.getupgrades());
-		upgrades.addAll(Paladin.INSTANCE.getupgrades());
-		upgrades.addAll(Monk.INSTANCE.getupgrades());
-	}
+	static List<Kit> kits=List.of(Cleric.INSTANCE,Paladin.INSTANCE,Monk.INSTANCE);
 
 	List<Combatant> followers=new ArrayList<>(0);
 	HolySite next=null;
@@ -124,7 +118,7 @@ public class Pilgrimage extends Quest{
 
 	List<Combatant> generatepilgrims(){
 		var npilgrims=RPG.rolldice(2,4);
-		var group=new ArrayList<Combatant>(npilgrims);
+		var group=new Combatants(npilgrims);
 		while(group.isEmpty()
 				||ChallengeCalculator.calculateel(group)<targetpilgrimel){
 			group.add(new Pilgrim(RPG.pick(candidates)));
@@ -132,7 +126,7 @@ public class Pilgrimage extends Quest{
 			if(npilgrims==0) break;
 		}
 		while(ChallengeCalculator.calculateel(group)<targetpilgrimel)
-			Combatant.upgradeweakest(group,upgrades);
+			RPG.pick(kits).upgrade(group.getweakest());
 		return group;
 	}
 

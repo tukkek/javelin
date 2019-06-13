@@ -3,7 +3,6 @@ package javelin.controller.kit.wizard;
 import javelin.controller.kit.Kit;
 import javelin.controller.quality.resistance.SpellImmunity;
 import javelin.controller.quality.resistance.SpellResistance;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseAbility;
 import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.classes.Aristocrat;
@@ -33,7 +32,7 @@ public abstract class Wizard extends Kit{
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h){
+	protected void extend(){
 		extension.add(Skill.CONCENTRATION.getupgrade());
 		extension.add(Skill.SPELLCRAFT.getupgrade());
 		extension.add(CombatCasting.SINGLETON.toupgrade());

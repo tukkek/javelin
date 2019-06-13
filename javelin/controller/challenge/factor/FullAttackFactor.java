@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.attack.Attack;
@@ -55,9 +54,5 @@ public class FullAttackFactor extends CrFactor{
 			if(effect!=null&&effects.add(effect.name)) sum+=.1*effect.level;
 		}
 		return sum;
-	}
-
-	@Override
-	public void registerupgrades(UpgradeHandler handler){
 	}
 }

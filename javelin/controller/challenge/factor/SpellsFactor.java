@@ -1,6 +1,5 @@
 package javelin.controller.challenge.factor;
 
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.model.unit.Monster;
 
 /**
@@ -12,11 +11,6 @@ public class SpellsFactor extends CrFactor{
 	@Override
 	public float calculate(Monster monster){
 		return monster.spellcr;
-	}
-
-	@Override
-	public void registerupgrades(UpgradeHandler handler){
-
 	}
 
 	@Override

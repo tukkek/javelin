@@ -2,18 +2,15 @@ package javelin.controller.kit;
 
 import javelin.controller.quality.perception.Vision;
 import javelin.controller.quality.resistance.CriticalImmunity;
-import javelin.controller.quality.resistance.DamageReduction;
 import javelin.controller.quality.resistance.EnergyImmunity;
 import javelin.controller.quality.resistance.EnergyResistance;
 import javelin.controller.quality.resistance.MindImmunity;
 import javelin.controller.quality.resistance.ParalysisImmunity;
 import javelin.controller.quality.resistance.PoisonImmunity;
-import javelin.controller.upgrade.UpgradeHandler;
 import javelin.controller.upgrade.ability.RaiseDexterity;
 import javelin.controller.upgrade.ability.RaiseStrength;
 import javelin.controller.upgrade.ability.RaiseWisdom;
 import javelin.controller.upgrade.classes.Warrior;
-import javelin.controller.upgrade.damage.MeleeDamage;
 import javelin.controller.upgrade.movement.Flying;
 import javelin.controller.upgrade.movement.SpeedUpgrade;
 import javelin.controller.upgrade.movement.Swimming;
@@ -43,7 +40,7 @@ public class Monk extends Kit{
 	public static final Kit INSTANCE=new Monk();
 
 	private Monk(){
-		super("monk",Warrior.SINGLETON,RaiseStrength.SINGLETON,
+		super("Monk",Warrior.SINGLETON,RaiseStrength.SINGLETON,
 				RaiseDexterity.SINGLETON);
 	}
 
@@ -57,25 +54,23 @@ public class Monk extends Kit{
 	}
 
 	@Override
-	protected void extend(UpgradeHandler h){
+	protected void extend(){
 		extension.add(Skill.BLUFF.getupgrade());
 		extension.add(Skill.SENSEMOTIVE.getupgrade());
 		extension.add(RaiseWisdom.SINGLETON);
-		extension.add(MeleeDamage.INSTANCE);
-		extension.add(CriticalImmunity.UPGRADE);
-		extension.add(RaiseWisdom.SINGLETON);
 		extension.add(Flying.RAVEN);
+		extension.add(Alertness.SINGLETON.toupgrade());
 		extension.add(IronWill.SINGLETON.toupgrade());
 		extension.add(LightningReflexes.SINGLETON.toupgrade());
 		extension.add(GreatFortitude.SINGLETON.toupgrade());
-		extension.add(Alertness.SINGLETON.toupgrade());
-		extension.add(DamageReduction.UPGRADE);
+		extension.add(Vision.DARKVISION);
+		extension.add(CriticalImmunity.UPGRADE);
 		extension.add(EnergyImmunity.UPGRADE);
 		extension.add(MindImmunity.UPGRADE);
 		extension.add(ParalysisImmunity.UPGRADE);
 		extension.add(PoisonImmunity.UPGRADE);
 		extension.add(EnergyResistance.UPGRADE);
-		extension.add(Vision.DARKVISION);
+		extension.add(Skill.PERCEPTION.getupgrade());
 	}
 
 	@Override

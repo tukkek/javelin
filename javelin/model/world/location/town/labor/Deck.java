@@ -16,7 +16,6 @@ import javelin.controller.kit.dragoon.RedDragoon;
 import javelin.controller.kit.dragoon.WhiteDragoon;
 import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
 import javelin.model.world.World;
-import javelin.model.world.location.fortification.RealmAcademy.BuildRealmAcademy;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.basic.Cancel;
 import javelin.model.world.location.town.labor.basic.Dwelling.BuildDwelling;
@@ -41,8 +40,8 @@ import javelin.model.world.location.town.labor.productive.Shop.BuildShop;
 import javelin.model.world.location.town.labor.religious.Sanctuary.BuildSanctuary;
 import javelin.model.world.location.town.labor.religious.Shrine.BuildShrine;
 import javelin.model.world.location.unique.Artificer.BuildArtificer;
-import javelin.model.world.location.unique.NinjaDojo.BuildNinjaDojo;
 import javelin.model.world.location.unique.MercenariesGuild.BuildMercenariesGuild;
+import javelin.model.world.location.unique.NinjaDojo.BuildNinjaDojo;
 import javelin.model.world.location.unique.SummoningCircle.BuildSummoningCircle;
 
 /**
@@ -59,8 +58,7 @@ public class Deck extends ArrayList<Labor>{
 	static final boolean DEBUG=false;
 
 	static final Labor[] BASE=new Labor[]{new BuildDwelling(),new BuildLodge(),
-			new Cancel(),new Growth(),new Redraw(),new BuildShop(),
-			new BuildRealmAcademy()};
+			new Cancel(),new Growth(),new Redraw(),new BuildShop()};
 	static final Labor[] CRIMINAL=new Labor[]{new BuildNinjaDojo(),
 			new BuildSewers(),new BuildSlums(),new BuildThievesGuild(),
 			BlackDragoon.INSTANCE.buildguild()};

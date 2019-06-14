@@ -6,6 +6,7 @@ import javelin.controller.Point;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.GoodTemple;
 import javelin.old.RPG;
+import javelin.view.mappanel.dungeon.DungeonTile;
 import javelin.view.screen.BattleScreen;
 
 /**
@@ -26,13 +27,20 @@ public class Spirit extends Feature{
 			Javelin.message("The spirit flees from your presence in shame...",false);
 			return true;
 		}
-		Dungeon.active.discover(show);
-		BattleScreen.active.center(show.x,show.y);
+		reveal(RPG.chancein(2)?"'Hey, look!'":"'Hey, listen!'",show);
+		return true;
+	}
+
+	/**
+	 * Fully reveals a {@link Feature} and {@link DungeonTile}, along with an
+	 * appropriate messsage.
+	 */
+	static public void reveal(String message,Feature f){
+		Dungeon.active.discover(f);
+		BattleScreen.active.center(f.x,f.y);
 		Javelin.redraw();
-		String navitext=RPG.chancein(2)?"'Hey, look!'":"'Hey, listen!'";
-		Javelin.message(navitext,false);
+		Javelin.message(message,false);
 		Point p=JavelinApp.context.getherolocation();
 		JavelinApp.context.view(p.x,p.y);
-		return true;
 	}
 }

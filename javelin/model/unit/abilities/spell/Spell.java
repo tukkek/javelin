@@ -385,7 +385,8 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 			if(targeti==-1) return false;
 			target=s.members.get(targeti);
 		}
-		castpeacefully(c,target,s.members);
+		var message=castpeacefully(c,target,s.members);
+		if(message!=null) Javelin.message(message,true);
 		return true;
 	}
 

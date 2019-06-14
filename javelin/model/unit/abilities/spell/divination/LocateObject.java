@@ -1,6 +1,7 @@
 package javelin.model.unit.abilities.spell.divination;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.JavelinApp;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -10,9 +11,11 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.Spirit;
 
 /**
- * Allows player to find nearest treasure chest in a {@link Dungeon}.
+ * Allows player to find nearest treasure chest in a {@link Dungeon}. If no
+ * chest is present, reveals the closest {@link Feature}.
  */
 public class LocateObject extends Spell{
 	/** Constructor. */
@@ -31,19 +34,24 @@ public class LocateObject extends Spell{
 	@Override
 	public String castpeacefully(Combatant caster,Combatant target,
 			List<Combatant> squad){
-		Feature closest=findtreasure();
-		if(closest==null) return "No treasure left.";
-		Dungeon.active.setvisible(closest.x,closest.y);
+		Feature closest=find();
+		if(closest==null)
+			return "There doesn't seem to be anything else of interest here...";
+		Spirit.reveal("A point of interest is revealed!",closest);
 		return null;
 	}
 
 	/** @return Closest treasure chest. */
-	public static Chest findtreasure(){
-		//TODO test
+	public static Feature find(){
 		var hero=JavelinApp.context.getherolocation();
-		return (Chest)Dungeon.active.features.stream().filter(f->f instanceof Chest)
-				.min((a,b)->(int)(Walker.distance(hero.x,hero.y,a.x,a.y)
-						-Walker.distance(hero.x,hero.y,b.x,b.y)))
-				.orElse(null);
+		var undiscovered=Dungeon.active.features.getallundiscovered().stream()
+				.sorted((a,
+						b)->(int)(Walker.distance(hero.x,hero.y,a.x,a.y)
+								-Walker.distance(hero.x,hero.y,b.x,b.y)))
+				.collect(Collectors.toList());
+		if(undiscovered.isEmpty()) return null;
+		for(var f:undiscovered)
+			if(f instanceof Chest) return f;
+		return undiscovered.get(0);
 	}
 }

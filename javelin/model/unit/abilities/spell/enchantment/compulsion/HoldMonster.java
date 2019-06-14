@@ -2,7 +2,6 @@ package javelin.model.unit.abilities.spell.enchantment.compulsion;
 
 import javelin.controller.action.Action;
 import javelin.controller.ai.ChanceNode;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
@@ -15,7 +14,7 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
 public class HoldMonster extends Spell{
 	/** Constructor. */
 	public HoldMonster(){
-		super("Hold monster",5,.45f,Realm.MAGIC);
+		super("Hold monster",5,.45f);
 		castinbattle=true;
 		isscroll=true;
 	}

@@ -10,7 +10,7 @@ public class McGuffin extends Item{
 			+"It sure is pretty to look at, isn't it? ^^";
 
 	public McGuffin(){
-		super("The McGuffin",0,null);
+		super("The McGuffin",0,false);
 		usedinbattle=false;
 		usedoutofbattle=true;
 		consumable=false;

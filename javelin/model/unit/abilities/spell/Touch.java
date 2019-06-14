@@ -23,7 +23,7 @@ public abstract class Touch extends Spell{
 	 * @param realmp
 	 */
 	public Touch(String name,int level,float incrementcost,Realm realmp){
-		super(name,level,incrementcost,realmp);
+		super(name,level,incrementcost);
 		castinbattle=true;
 	}
 

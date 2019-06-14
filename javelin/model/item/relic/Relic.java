@@ -19,7 +19,7 @@ public abstract class Relic extends Item{
 
 	/** Constructor. */
 	public Relic(String name,int templelevel){
-		super(name,RewardCalculator.getgold(templelevel),null);
+		super(name,RewardCalculator.getgold(templelevel),false);
 		consumable=false;
 		waste=false;
 		provokesaoo=false;

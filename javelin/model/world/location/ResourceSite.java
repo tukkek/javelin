@@ -37,7 +37,7 @@ import javelin.view.Images;
  * {@link Resource} site. However, as soon as a link is used to establish a
  * connection to a {@link Town}, the site and all other links are invalidated.
  *
- * 
+ *
  * TODO add an instantaneous
  * {@link #getupgrades(javelin.model.world.location.town.District)} to connect
  * resources in the {@link District}.
@@ -125,7 +125,7 @@ public class ResourceSite extends Location{
 		 * @see Actor#remove()
 		 */
 		public ResourceLink(Resource type,ResourceSite site){
-			super("Map to "+type.name.toLowerCase()+" site",0,null);
+			super("Map to "+type.name.toLowerCase()+" site",0,false);
 			this.type=type;
 			this.site=site;
 			usedinbattle=false;

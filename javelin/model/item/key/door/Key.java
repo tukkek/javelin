@@ -26,7 +26,7 @@ public class Key extends Item{
 
 	/** Constructor. */
 	public Key(String name,Dungeon d){
-		super(name,0,null);
+		super(name,0,false);
 		usedinbattle=false;
 		usedoutofbattle=false;
 		dungeon=d;

@@ -5,7 +5,6 @@ import java.util.List;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
@@ -20,8 +19,7 @@ import javelin.model.unit.condition.Condition;
 public class DispelMagic extends Spell{
 	/** Constructor. */
 	public DispelMagic(){
-		super("Greater dispel magic",6,ChallengeCalculator.ratespelllikeability(6),
-				Realm.MAGIC);
+		super("Greater dispel magic",6,ChallengeCalculator.ratespelllikeability(6));
 		isscroll=true;
 		castoutofbattle=true;
 		castinbattle=true;

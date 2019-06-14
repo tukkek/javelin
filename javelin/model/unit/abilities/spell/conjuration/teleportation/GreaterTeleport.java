@@ -7,7 +7,6 @@ import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.comparator.ActorsByName;
 import javelin.controller.terrain.Terrain;
-import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
@@ -35,8 +34,7 @@ public class GreaterTeleport extends Spell{
 
 	/** Constructor. */
 	public GreaterTeleport(){
-		super("Greater teleport",7,ChallengeCalculator.ratespelllikeability(7,20),
-				Realm.MAGIC);
+		super("Greater teleport",7,ChallengeCalculator.ratespelllikeability(7,20));
 		casterlevel=20;
 		castinbattle=false;
 		castonallies=false;

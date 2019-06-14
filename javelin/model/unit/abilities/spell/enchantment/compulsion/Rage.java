@@ -2,7 +2,6 @@ package javelin.model.unit.abilities.spell.enchantment.compulsion;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -37,11 +36,11 @@ public class Rage extends Spell{
 	}
 
 	public Rage(){
-		this("Rage",3,ChallengeCalculator.ratespelllikeability(3),Realm.FIRE);
+		this("Rage",3,ChallengeCalculator.ratespelllikeability(3));
 	}
 
-	public Rage(String name,int levelp,float incrementcost,Realm realmp){
-		super(name,levelp,incrementcost,realmp);
+	public Rage(String name,int levelp,float incrementcost){
+		super(name,levelp,incrementcost);
 		castinbattle=true;
 		castonallies=true;
 		ispotion=true;

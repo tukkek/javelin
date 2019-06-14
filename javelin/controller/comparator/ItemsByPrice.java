@@ -1,11 +1,12 @@
 package javelin.controller.comparator;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 
 import javelin.model.item.Item;
 
-public class ItemsByPrice implements Comparator<Item>{
+public class ItemsByPrice implements Comparator<Item>,Serializable{
 	/**
 	 * Organizes a {@link List} from cheapest to most expensive Item.
 	 *

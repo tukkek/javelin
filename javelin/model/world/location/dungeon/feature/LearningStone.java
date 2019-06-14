@@ -40,7 +40,7 @@ public class LearningStone extends Feature{
 	 */
 	public class InertLearningStone extends Item{
 		InertLearningStone(){
-			super("Inert learning stone",gold,null);
+			super("Inert learning stone",gold,false);
 			usedinbattle=false;
 			usedoutofbattle=false;
 		}

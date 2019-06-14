@@ -13,7 +13,6 @@ import javelin.controller.challenge.factor.CrFactor;
 import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.kit.Kit;
 import javelin.controller.upgrade.Upgrade;
-import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.item.Potion;
 import javelin.model.item.Scroll;
@@ -115,20 +114,17 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 	public float cr;
 	/** Material components cost. */
 	public int components=0;
-	/** Used to determine where each {@link Scroll} will be sold. */
-	public Realm realm;
 
 	/**
 	 * @param name Upgrade name.
 	 * @param levelp level, from which caster level is calculated.
 	 * @param incrementcost Challenge rating factor.
 	 */
-	public Spell(String name,int levelp,float incrementcost,Realm realmp){
+	public Spell(String name,int levelp,float incrementcost){
 		super(name);
 		casterlevel=getcasterlevel(levelp);
 		cr=incrementcost;
 		level=levelp;
-		realm=realmp;
 	}
 
 	/**

@@ -7,7 +7,6 @@ import javelin.Javelin;
 import javelin.controller.Weather;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.terrain.Terrain;
-import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 
@@ -22,8 +21,7 @@ import javelin.model.unit.abilities.spell.Spell;
 public class ControlWeather extends Spell{
 	/** Constructor. */
 	public ControlWeather(){
-		super("Control weather",7,ChallengeCalculator.ratespelllikeability(7),
-				Realm.AIR);
+		super("Control weather",7,ChallengeCalculator.ratespelllikeability(7));
 		isscroll=true;
 		isritual=true;
 		castinbattle=false;

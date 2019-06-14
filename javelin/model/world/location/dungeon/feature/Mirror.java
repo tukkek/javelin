@@ -21,7 +21,7 @@ import javelin.model.unit.condition.TemporarySpell;
 public class Mirror extends Feature{
 	class Reflection extends Spell{
 		Reflection(){
-			super("Summon reflection",5,0,null);
+			super("Summon reflection",5,0);
 			castinbattle=true;
 			castoutofbattle=false;
 		}

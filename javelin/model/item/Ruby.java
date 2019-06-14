@@ -27,7 +27,7 @@ public class Ruby extends Item{
 			+"Press ENTER to confirm or any other key to cancel...";
 
 	public Ruby(){
-		super("Wish ruby",0,null);
+		super("Wish ruby",0,false);
 		consumable=true;
 		waste=false;
 		usedinbattle=true;

@@ -4,7 +4,6 @@ import java.util.List;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
@@ -17,8 +16,7 @@ import javelin.model.unit.abilities.spell.Spell;
 public class FlameStrike extends Spell{
 	/** Constructor. */
 	public FlameStrike(){
-		super("Flame strike",5,ChallengeCalculator.ratespelllikeability(5),
-				Realm.FIRE);
+		super("Flame strike",5,ChallengeCalculator.ratespelllikeability(5));
 		castinbattle=true;
 		isscroll=true;
 	}

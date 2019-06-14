@@ -4,7 +4,6 @@ import java.util.List;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
@@ -40,8 +39,7 @@ public class Longstrider extends Spell{
 
 	/** Constructor. */
 	public Longstrider(){
-		super("Longstrider",1,ChallengeCalculator.ratespelllikeability(1),
-				Realm.EARTH);
+		super("Longstrider",1,ChallengeCalculator.ratespelllikeability(1));
 		ispotion=true;
 		castinbattle=true;
 		castonallies=false;

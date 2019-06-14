@@ -7,7 +7,6 @@ import java.util.List;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.walker.Walker;
-import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
@@ -25,8 +24,7 @@ import javelin.view.screen.WorldScreen;
 public class DiscernLocation extends Spell{
 	/** Constructor. */
 	public DiscernLocation(){
-		super("Discern location",8,ChallengeCalculator.ratespelllikeability(8),
-				Realm.MAGIC);
+		super("Discern location",8,ChallengeCalculator.ratespelllikeability(8));
 		castoutofbattle=true;
 		isritual=true;
 		isscroll=true;

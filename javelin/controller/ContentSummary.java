@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.comparator.ItemsByPrice;
 import javelin.controller.event.urban.UrbanEvents;
 import javelin.controller.event.wild.WildEvents;
 import javelin.controller.kit.Kit;
@@ -49,8 +48,7 @@ public class ContentSummary{
 		for(var t:Tier.TIERS){
 			var items=Item.BYTIER.get(t);
 			print(t+"-tier items ("+items.size()+")");
-			items.sort(ItemsByPrice.SINGLETON);
-			for(var i:items)
+			for(var i:items.sort())
 				print(" - "+i+" ($"+Javelin.format(i.price)+")");
 			print();
 		}

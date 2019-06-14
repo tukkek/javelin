@@ -86,7 +86,7 @@ public class RPG{
 	 * @return The same input list, but shuffled with
 	 *         {@link Collections#shuffle(List)}.
 	 */
-	public static <K extends List> K shuffle(K list){
+	public static <K extends List<?>> K shuffle(K list){
 		Collections.shuffle(list);
 		return list;
 	}

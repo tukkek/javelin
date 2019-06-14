@@ -4,7 +4,6 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.old.messagepanel.MessagePanel;
@@ -14,21 +13,20 @@ import javelin.view.screen.InfoScreen;
  * Also features "restoration", implicitly. See the d20 SRD for more info.
  */
 public class RaiseDead extends Spell{
-
 	protected static final float RESTORATIONCR=ChallengeCalculator
 			.ratespelllikeability(4);
 
 	/** Constructor. */
 	public RaiseDead(){
 		super("Raise dead",5,
-				ChallengeCalculator.ratespelllikeability(5)+RESTORATIONCR,Realm.GOOD);
+				ChallengeCalculator.ratespelllikeability(5)+RESTORATIONCR);
 		components=5000;
 		isscroll=true;
 		castinbattle=false;
 	}
 
-	public RaiseDead(String name,int levelp,float incrementcost,Realm realmp){
-		super(name,levelp,incrementcost,realmp);
+	public RaiseDead(String name,int levelp,float incrementcost){
+		super(name,levelp,incrementcost);
 	}
 
 	@Override

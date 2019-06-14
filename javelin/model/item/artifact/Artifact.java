@@ -69,7 +69,8 @@ public abstract class Artifact extends Item{
 	Combatant owner=null;
 
 	public Artifact(String name,int price,Slot slotp){
-		super(name,price,Item.ARTIFACT);
+		super(name,price,true);
+		ARTIFACT.add(this);
 		usedinbattle=false;
 		consumable=false;
 		slot=slotp;
@@ -132,11 +133,6 @@ public abstract class Artifact extends Item{
 	public boolean equals(Object obj){
 		Artifact other=obj instanceof Artifact?(Artifact)obj:null;
 		return other!=null&&name.equals(other.name);
-	}
-
-	@Override
-	public int hashCode(){
-		return name.hashCode();
 	}
 
 	@Override

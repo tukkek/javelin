@@ -10,7 +10,6 @@ import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.kit.Kit;
 import javelin.controller.kit.wizard.Conjurer;
 import javelin.controller.upgrade.Upgrade;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.state.Square;
 import javelin.model.unit.Combatant;
@@ -66,7 +65,7 @@ public class Summon extends Spell{
 	public static final List<Summon> SUMMONS=new ArrayList<>();
 
 	public Summon(String monstername,float chance){
-		super("Summon "+monstername.toLowerCase(),0,0,Realm.MAGIC);
+		super("Summon "+monstername.toLowerCase(),0,0);
 		assert chance==1;// cannot be a Spell if random
 		this.monstername=monstername;
 		this.chance=chance;

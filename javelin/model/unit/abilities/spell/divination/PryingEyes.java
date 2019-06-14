@@ -5,7 +5,6 @@ import java.util.List;
 import javelin.controller.DungeonCrawler;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
@@ -22,8 +21,7 @@ import javelin.model.world.location.dungeon.feature.door.Door;
 public class PryingEyes extends Spell{
 	/** Constructor. */
 	public PryingEyes(){
-		super("Prying eyes",5,ChallengeCalculator.ratespelllikeability(5),
-				Realm.MAGIC);
+		super("Prying eyes",5,ChallengeCalculator.ratespelllikeability(5));
 		castoutofbattle=true;
 		isscroll=true;
 	}

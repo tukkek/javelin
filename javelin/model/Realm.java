@@ -1,7 +1,5 @@
 package javelin.model;
 
-import javelin.model.item.Item;
-import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;
 import javelin.old.RPG;
 
@@ -57,30 +55,6 @@ public enum Realm{
 				return "Cursed";
 			case MAGIC:
 				return "Magic";
-			default:
-				throw new RuntimeException("#unknownColor");
-		}
-	}
-
-	/**
-	 * @return The canonical list of items for this realm.
-	 */
-	public ItemSelection getitems(){
-		switch(this){
-			case WATER:
-				return Item.WATER;
-			case MAGIC:
-				return Item.MAGIC;
-			case GOOD:
-				return Item.GOOD;
-			case FIRE:
-				return Item.FIRE;
-			case EARTH:
-				return Item.EARTH;
-			case EVIL:
-				return Item.EVIL;
-			case AIR:
-				return Item.WIND;
 			default:
 				throw new RuntimeException("#unknownColor");
 		}

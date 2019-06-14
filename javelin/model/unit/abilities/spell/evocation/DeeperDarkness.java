@@ -4,7 +4,6 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.ai.ChanceNode;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
@@ -15,7 +14,7 @@ import javelin.model.unit.abilities.spell.Spell;
 public class DeeperDarkness extends Spell{
 
 	public DeeperDarkness(){
-		super("Deeper darkness",3,.15f,Realm.EVIL);
+		super("Deeper darkness",3,.15f);
 		castinbattle=true;
 		isscroll=true;
 	}

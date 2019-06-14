@@ -21,8 +21,7 @@ public class Potion extends Item{
 	 * @param s One-use spell effect of drinking this potion.
 	 */
 	public Potion(Spell s){
-		super("Potion of "+s.name.toLowerCase(),s.level*s.casterlevel*50,
-				s.realm.getitems());
+		super("Potion of "+s.name.toLowerCase(),s.level*s.casterlevel*50,true);
 		usedinbattle=s.castinbattle;
 		usedoutofbattle=s.castoutofbattle;
 		spell=s;

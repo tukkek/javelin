@@ -1,18 +1,18 @@
 package javelin.controller.fight.minigame.arena.building;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.comparator.ItemsByPrice;
 import javelin.controller.fight.minigame.arena.Arena;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.Tier;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
+import javelin.old.RPG;
 import javelin.view.screen.Option;
 import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.PurchaseOption;
@@ -69,16 +69,15 @@ public class ArenaShop extends ArenaBuilding{
 	}
 
 	void restock(){
-		ArrayList<Item> selection=new ArrayList<>(
-				Item.BYTIER.get(Tier.TIERS.get(level)));
-		for(Item i:new ArrayList<>(selection))
-			if(!i.usedinbattle||i instanceof Artifact) selection.remove(i);
-		Collections.shuffle(selection);
-		for(int i=0;i<STOCKSIZE&&i<selection.size();i++){
-			if(stock.size()<=i) stock.add(null);
-			stock.set(i,selection.get(i));
-		}
-		stock.sort(ItemsByPrice.SINGLETON);
+		var selection=Item.BYTIER.get(Tier.TIERS.get(level)).stream()
+				.filter(i->i.usedinbattle&&!(i instanceof Artifact))
+				.collect(Collectors.toList());
+		RPG.shuffle(selection);
+		var replace=Math.min(stock.size(),selection.size());
+		var ascendingprice=stock.sort();
+		for(int i=0;i<replace;i++)
+			stock.remove(ascendingprice.get(i));
+		stock.addAll(selection);
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
@@ -86,5 +87,10 @@ public class Features implements Iterable<Feature>,Serializable{
 			Feature f=getundiscovered();
 			if(f!=null) dungeon.discover(f);
 		}
+	}
+
+	/** @return A stream for functional processing. */
+	public Stream<Feature> stream(){
+		return features.stream();
 	}
 }

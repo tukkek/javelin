@@ -3,10 +3,8 @@ package javelin.model.unit.abilities.spell.divination;
 import java.util.List;
 
 import javelin.JavelinApp;
-import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.walker.Walker;
-import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -19,8 +17,7 @@ import javelin.model.world.location.dungeon.feature.Feature;
 public class LocateObject extends Spell{
 	/** Constructor. */
 	public LocateObject(){
-		super("Locate object",2,ChallengeCalculator.ratespelllikeability(2),
-				Realm.MAGIC);
+		super("Locate object",2,ChallengeCalculator.ratespelllikeability(2));
 		castinbattle=false;
 		castoutofbattle=true;
 		isscroll=true;
@@ -40,21 +37,13 @@ public class LocateObject extends Spell{
 		return null;
 	}
 
-	/**
-	 * @return Closest treasure chest.
-	 */
+	/** @return Closest treasure chest. */
 	public static Chest findtreasure(){
-		Chest closest=null;
-		Point hero=JavelinApp.context.getherolocation();
-		for(Feature f:Dungeon.active.features)
-			if(f instanceof Chest){
-				Chest t=(Chest)f;
-				if(closest==null)
-					closest=t;
-				else if(Walker.distance(hero.x,hero.y,t.x,t.y)<Walker.distance(hero.x,
-						hero.y,closest.x,closest.y)){}
-
-			}
-		return closest;
+		//TODO test
+		var hero=JavelinApp.context.getherolocation();
+		return (Chest)Dungeon.active.features.stream().filter(f->f instanceof Chest)
+				.min((a,b)->(int)(Walker.distance(hero.x,hero.y,a.x,a.y)
+						-Walker.distance(hero.x,hero.y,b.x,b.y)))
+				.orElse(null);
 	}
 }

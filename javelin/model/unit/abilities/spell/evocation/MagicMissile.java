@@ -2,7 +2,6 @@ package javelin.model.unit.abilities.spell.evocation;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
@@ -15,8 +14,7 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  */
 public class MagicMissile extends Spell{
 	public MagicMissile(){
-		super("Magic missile",1,ChallengeCalculator.ratespelllikeability(1),
-				Realm.FIRE);
+		super("Magic missile",1,ChallengeCalculator.ratespelllikeability(1));
 		castinbattle=true;
 		iswand=true;
 	}

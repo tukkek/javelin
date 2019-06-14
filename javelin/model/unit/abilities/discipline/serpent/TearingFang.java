@@ -52,7 +52,7 @@ public class TearingFang extends Boost{
 	 */
 	class Bleed extends Spell{
 		public Bleed(){
-			super("Bleed",0,0,null);
+			super("Bleed",0,0);
 		}
 
 		@Override

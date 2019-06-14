@@ -33,7 +33,7 @@ public class TempleKey extends Item{
 	 * @see #generate()
 	 */
 	public TempleKey(Realm color){
-		super(color.getname()+" key",determineprice(color),null);
+		super(color.getname()+" key",determineprice(color),false);
 		this.color=color;
 		usedinbattle=false;
 		waste=false;

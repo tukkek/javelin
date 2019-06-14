@@ -13,7 +13,6 @@ import javelin.controller.action.UseItem;
 import javelin.controller.action.world.UseItems;
 import javelin.controller.comparator.ItemsByPrice;
 import javelin.controller.exception.battle.StartBattle;
-import javelin.model.Realm;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.item.artifact.CasterRing;
 import javelin.model.item.precious.ArtPiece;
@@ -49,20 +48,6 @@ public abstract class Item implements Serializable,Cloneable{
 	public static final TreeMap<Integer,ItemSelection> BYPRICE=new TreeMap<>();
 	/** Map of items by price {@link Tier} */
 	public static final HashMap<Tier,ItemSelection> BYTIER=new HashMap<>();
-	/** @see Item#getselection(Realm) */
-	public static final ItemSelection FIRE=new ItemSelection();
-	/** @see Item#getselection(Realm) */
-	public static final ItemSelection WIND=new ItemSelection();
-	/** @see Item#getselection(Realm) */
-	public static final ItemSelection EARTH=new ItemSelection();
-	/** @see Item#getselection(Realm) */
-	public static final ItemSelection WATER=new ItemSelection();
-	/** @see Item#getselection(Realm) */
-	public static final ItemSelection GOOD=new ItemSelection();
-	/** @see Item#getselection(Realm) */
-	public static final ItemSelection EVIL=new ItemSelection();
-	/** @see Item#getselection(Realm) */
-	public static final ItemSelection MAGIC=new ItemSelection();
 	/** @see Artifact */
 	public static final ItemSelection ARTIFACT=new ItemSelection();
 	/** Price of the cheapest {@link Artifact} after loot registration. */
@@ -108,13 +93,10 @@ public abstract class Item implements Serializable,Cloneable{
 	 * @param upgradeset One the static constants in this class, like
 	 *          {@link #MAGIC}.
 	 */
-	public Item(final String name,final int price,final ItemSelection upgradeset){
+	public Item(final String name,final int price,boolean register){
 		this.name=name;
 		this.price=Javelin.round(price);
-		if(upgradeset!=null){
-			ALL.add(this);
-			upgradeset.add(this);
-		}
+		if(register) if(!ALL.add(this)) System.out.println("Discarded: "+this);
 	}
 
 	/**
@@ -161,7 +143,7 @@ public abstract class Item implements Serializable,Cloneable{
 
 	@Override
 	public boolean equals(final Object obj){
-		return obj instanceof Item?name.equals(((Item)obj).name):false;
+		return obj instanceof Item&&name.equals(((Item)obj).name);
 	}
 
 	@Override
@@ -176,33 +158,6 @@ public abstract class Item implements Serializable,Cloneable{
 		}catch(CloneNotSupportedException e){
 			throw new RuntimeException(e);
 		}
-	}
-
-	/**
-	 * Each {@link Item} is assigned a {@link Realm} on creation. This determines
-	 * what type of item each {@link Town} can produce.
-	 *
-	 * @see Item#Item(String, int, ItemSelection)
-	 * @param r Given a realm...
-	 * @return all {@link Item}s assigned to that realm.
-	 */
-	public static ItemSelection getselection(Realm r){
-		if(r==Realm.AIR)
-			return WIND;
-		else if(r==Realm.FIRE)
-			return FIRE;
-		else if(r==Realm.EARTH)
-			return EARTH;
-		else if(r==Realm.WATER)
-			return WATER;
-		else if(r==Realm.GOOD)
-			return GOOD;
-		else if(r==Realm.EVIL)
-			return EVIL;
-		else if(r==Realm.MAGIC)
-			return MAGIC;
-		else
-			throw new RuntimeException("Unknown realm!");
 	}
 
 	/**
@@ -283,31 +238,6 @@ public abstract class Item implements Serializable,Cloneable{
 		ALL.addAll(ArtPiece.generate());
 		cheapestartifact=ALL.stream().filter(i->i instanceof Artifact)
 				.map(i->i.price).min(Integer::compare).get();
-		mapbyprice();
-	}
-
-	/** Sorts {@link #ALL} by price. */
-	public static void mapbyprice(){
-		Collections.shuffle(ALL);
-		Collections.sort(ALL,ItemsByPrice.SINGLETON);
-	}
-
-	/**
-	 * @return All items types mapped by realm.
-	 */
-	public static HashMap<String,ItemSelection> getall(){
-		HashMap<String,ItemSelection> all=new HashMap<>();
-		addall(FIRE,all,"fire");
-		addall(EARTH,all,"earth");
-		addall(WATER,all,"water");
-		addall(WIND,all,"wind");
-
-		addall(GOOD,all,"good");
-		addall(EVIL,all,"evil");
-		addall(MAGIC,all,"magic");
-
-		addall(ARTIFACT,all,"artifact");
-		return all;
 	}
 
 	static void addall(ItemSelection fire2,HashMap<String,ItemSelection> all,

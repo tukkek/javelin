@@ -6,7 +6,6 @@ import javelin.Javelin;
 import javelin.controller.action.world.UseItems;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.exception.RepeatTurn;
-import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.item.Scroll;
 import javelin.model.transport.Transport;
@@ -31,8 +30,7 @@ import javelin.model.world.location.dungeon.Dungeon;
 public class WordOfRecall extends Spell{
 	/** Constructor. */
 	public WordOfRecall(){
-		super("Word of recall",6,ChallengeCalculator.ratespelllikeability(6,20),
-				Realm.MAGIC);
+		super("Word of recall",6,ChallengeCalculator.ratespelllikeability(6,20));
 		casterlevel=20;
 		castoutofbattle=true;
 		isritual=false;

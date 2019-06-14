@@ -15,7 +15,7 @@ import javelin.model.unit.Monster;
 public abstract class Ray extends Spell{
 
 	public Ray(String name,int level,float incrementcost,Realm realmp){
-		super(name,level,incrementcost,realmp);
+		super(name,level,incrementcost);
 	}
 
 	@Override

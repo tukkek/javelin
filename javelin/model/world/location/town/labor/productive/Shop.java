@@ -1,7 +1,6 @@
 package javelin.model.world.location.town.labor.productive;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,6 +10,7 @@ import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.Potion;
+import javelin.model.item.Tier;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureLightWounds;
@@ -25,6 +25,7 @@ import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.BuildingUpgrade;
 import javelin.model.world.location.town.labor.Labor;
+import javelin.old.RPG;
 import javelin.view.screen.Option;
 import javelin.view.screen.shopping.ShoppingScreen;
 import javelin.view.screen.town.PurchaseOption;
@@ -100,12 +101,6 @@ public class Shop extends Location{
 		}
 
 		@Override
-		protected void define(){
-			super.define();
-			cost=Math.min(cost,Item.getselection(town.originalrealm).size());
-		}
-
-		@Override
 		public Location getgoal(){
 			return new Shop(town.originalrealm,false);
 		}
@@ -177,7 +172,7 @@ public class Shop extends Location{
 
 	class UpgradeShop extends BuildingUpgrade{
 		public UpgradeShop(Shop s,int newlevel){
-			super("",newlevel-s.level,newlevel,s,Rank.HAMLET);
+			super("",5,newlevel,s,Rank.HAMLET);
 			name="Upgrade shop";
 		}
 
@@ -201,7 +196,7 @@ public class Shop extends Location{
 
 	ItemSelection selection=new ItemSelection();
 	OrderQueue crafting=new OrderQueue();
-	int level=0;
+	int level=1;
 	Realm selectiontype;
 
 	/**
@@ -216,22 +211,16 @@ public class Shop extends Location{
 		allowentry=false;
 		discard=false;
 		gossip=true;
-		level=5;
 		selectiontype=World.scenario.randomrealms?Realm.random():r;
 		if(first) selection.add(new Potion(new CureLightWounds()));
 		stock();
 	}
 
 	void stock(){
-		ItemSelection items=getselection();
-		if(items.size()>20&&level>10){
-			items=new ItemSelection(items);
-			Collections.shuffle(items);
-		}
-		for(Item i:items){
-			if(selection.size()>=level) break;
-			selection.add(i.clone());
-		}
+		var tier=Tier.TIERS.get(level-1);
+		var items=RPG.shuffle(new ArrayList<>(Item.BYTIER.get(tier)));
+		for(int i=0;i<items.size()&&i<5;i++)
+			selection.add(items.get(i));
 	}
 
 	@Override
@@ -257,17 +246,9 @@ public class Shop extends Location{
 
 	@Override
 	public ArrayList<Labor> getupgrades(District d){
-		int newlevel=level+5;
-		newlevel=Math.min(newlevel,d.town.getrank().maxpopulation);
-		newlevel=Math.min(newlevel,getselection().size());
-		newlevel=Math.min(newlevel,20);
-		ArrayList<Labor> upgrades=super.getupgrades(d);
-		upgrades.add(new UpgradeShop(this,newlevel));
+		var upgrades=super.getupgrades(d);
+		if(d.town.getrank().rank>level) upgrades.add(new UpgradeShop(this,level+1));
 		return upgrades;
-	}
-
-	ItemSelection getselection(){
-		return Item.getselection(selectiontype);
 	}
 
 	@Override

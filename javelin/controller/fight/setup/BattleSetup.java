@@ -25,8 +25,14 @@ import javelin.old.RPG;
  * @author alex
  */
 public class BattleSetup{
-	private static final Point NOTPLACED=new Point(-1,-1);
-	private static final int MAXDISTANCE=6;
+	static final Point NOTPLACED=new Point(-1,-1);
+	static final int MAXDISTANCE=6;
+	/**
+	 * Improving battle placement by not allowing more than 1 adjacent ally at a
+	 * time (otherwise it's too easy to cramp an entire army together so that each
+	 * army won't see each other and then fulfill the other position requirements)
+	 */
+	static final int MAXADJACENT=1;
 
 	/** Starts the setup steps. */
 	public void setup(){
@@ -94,27 +100,27 @@ public class BattleSetup{
 		var seedb=b.pop();
 		seeda.setlocation(getrandompoint(s));
 		placeda.add(seeda);
-		placecombatant(seedb,seeda,null,s);
+		placecombatant(seedb,seeda,null,null,s);
 		placedb.add(seedb);
 		while(!a.isEmpty()||!b.isEmpty()){
 			var queue=RPG.chancein(2)?a:b;
 			if(queue.isEmpty()) continue;
 			var unit=queue.pop();
-			var placed=queue==a?placeda:placedb;
+			var allies=queue==a?placeda:placedb;
 			var enemies=queue==a?placedb:placeda;
 			var success=false;
-			for(var ally:RPG.shuffle(placed))
-				if(placecombatant(unit,ally,enemies,s)){
+			for(var ally:RPG.shuffle(allies))
+				if(placecombatant(unit,ally,allies,enemies,s)){
 					success=true;
 					break;
 				}
 			if(!success) throw new GaveUp();
-			placed.add(unit);
+			allies.add(unit);
 		}
 	}
 
 	boolean placecombatant(Combatant c,Combatant reference,
-			List<Combatant> enemies,BattleState s) throws GaveUp{
+			ArrayList<Combatant> allies,List<Combatant> enemies,BattleState s){
 		var source=reference.getlocation();
 		var vision=reference.calculatevision(s);
 		var all=s.getcombatants();
@@ -122,6 +128,10 @@ public class BattleSetup{
 			vision.remove(combatant.getlocation());
 		for(var p:RPG.shuffle(new ArrayList<>(vision))){
 			if(p.distanceinsteps(source)>MAXDISTANCE||s.map[p.x][p.y].blocked)
+				continue;
+			if(allies!=null
+					&&allies.stream().filter(a->a.getlocation().distanceinsteps(p)==1)
+							.limit(MAXADJACENT+1).count()==MAXADJACENT)
 				continue;
 			if(enemies!=null&&cansee(enemies,p)) continue;
 			c.setlocation(p);

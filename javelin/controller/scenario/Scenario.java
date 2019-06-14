@@ -306,7 +306,7 @@ public class Scenario implements Serializable{
 			realms.add(t.originalrealm);
 		ArrayList<Location> shops=new ArrayList<>();
 		for(Realm r:Realm.values())
-			if(!realms.contains(r)) shops.add(new Shop(r,false));
+			if(!realms.contains(r)) shops.add(new Shop(false));
 		return shops;
 	}
 

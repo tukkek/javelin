@@ -256,7 +256,7 @@ public class ZoneGenerator extends FeatureGenerator{
 			District d=t.getdistrict();
 			placeintown(new BuildMagesGuild().generateacademy(),d,z);
 			placeintown(RPG.pick(Kit.KITS).createguild(),d,z);
-			placeintown(new Shop(z.realm,true),d,z);
+			placeintown(new Shop(true),d,z);
 			placeintown(new Lodge(),d,z);
 		}
 		towns.add(t);

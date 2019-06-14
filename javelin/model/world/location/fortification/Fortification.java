@@ -39,7 +39,9 @@ public abstract class Fortification extends Location{
 	 * {@link #Fortification(String, String, int, int)}.
 	 */
 	public Integer targetel=null;
+	/** Minimum {@link Location#garrison} level. */
 	public int minlevel;
+	/** Minimum {@link Location#garrison} level. */
 	public int maxlevel;
 	/** TODO There is certainly a better way to do this. */
 	public boolean generategarrison=true;

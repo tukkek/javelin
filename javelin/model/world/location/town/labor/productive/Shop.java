@@ -102,7 +102,7 @@ public class Shop extends Location{
 
 		@Override
 		public Location getgoal(){
-			return new Shop(town.originalrealm,false);
+			return new Shop(false);
 		}
 
 		@Override
@@ -197,7 +197,6 @@ public class Shop extends Location{
 	ItemSelection selection=new ItemSelection();
 	OrderQueue crafting=new OrderQueue();
 	int level=1;
-	Realm selectiontype;
 
 	/**
 	 * @param r Determines selection of {@link Item}s sold.
@@ -206,12 +205,11 @@ public class Shop extends Location{
 	 *          starting {@link Town} as an early-game helper.
 	 * @see Realm#getitems()
 	 */
-	public Shop(Realm r,boolean first){
-		super(r.prefixate()+" shop");
+	public Shop(boolean first){
+		super("Shop");
 		allowentry=false;
 		discard=false;
 		gossip=true;
-		selectiontype=World.scenario.randomrealms?Realm.random():r;
 		if(first) selection.add(new Potion(new CureLightWounds()));
 		stock();
 	}

@@ -12,7 +12,6 @@ import java.util.List;
 import javelin.controller.Point;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.generator.WorldGenerator;
-import javelin.controller.kit.Kit;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
@@ -28,7 +27,6 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.fortification.Guardian;
-import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.haunt.AbandonedManor;
 import javelin.model.world.location.haunt.Graveyard;
@@ -39,6 +37,7 @@ import javelin.model.world.location.haunt.SunkenShip;
 import javelin.model.world.location.haunt.WitchesHideout;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.governor.MonsterGovernor;
+import javelin.model.world.location.town.labor.basic.BasicAcademy;
 import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.model.world.location.town.labor.basic.Lodge;
 import javelin.model.world.location.town.labor.productive.Shop;
@@ -182,14 +181,10 @@ public class FeatureGenerator implements Serializable{
 				new WitchesHideout(),new Graveyard(),new OrcSettlement());
 	}
 
-	/**
-	 * Will later add one random {@link Guild} near each {@link Town}.
-	 *
-	 * @see Kit#createguild()
-	 */
 	static void generatestartingarea(World seed,Town t){
 		spawnnear(t,new Lodge(),seed,1,2,true);
-		spawnnear(t,new Shop(t.realm,true),seed,1,2,true);
+		spawnnear(t,new Shop(true),seed,1,2,true);
+		spawnnear(t,new BasicAcademy(),seed,1,2,true);
 		Point p=t.getlocation();
 		ArrayList<Monster> recruits=Terrain.get(p.x,p.y).getmonsters();
 		Collections.shuffle(recruits);
@@ -299,10 +294,7 @@ public class FeatureGenerator implements Serializable{
 		for(int i=0;i<regions.size()&&towns>0;i++){
 			Terrain t=WorldGenerator.GENERATIONORDER[i];
 			if(!t.equals(Terrain.WATER)){
-				var town=new Town(regions.get(i),realms.pop());
-				town.place();
-				var guild=RPG.pick(Kit.KITS).createguild();
-				spawnnear(town,guild,World.getseed(),1,2,true);
+				new Town(regions.get(i),realms.pop()).place();
 				towns-=1;
 			}
 		}

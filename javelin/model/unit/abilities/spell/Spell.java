@@ -50,7 +50,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 	public static final List<Spell> ALL=new ArrayList<>();
 
 	/** Load spells. */
-	static public void init(){
+	static public void setup(){
 		for(var k:Kit.KITS)
 			for(Upgrade u:k.getupgrades())
 				if(u instanceof Spell){

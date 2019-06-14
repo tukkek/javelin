@@ -226,7 +226,7 @@ public abstract class Item implements Serializable,Cloneable{
 	}
 
 	/** Creates {@link Item}s from {@link Spell}s. */
-	public static void init(){
+	public static void setup(){
 		for(Spell s:Spell.BYNAME.values()){
 			if(s.isscroll) new Scroll(s).register();
 			if(s.iswand) new Wand(s).register();
@@ -234,8 +234,8 @@ public abstract class Item implements Serializable,Cloneable{
 			if(s.isring) for(int uses:CasterRing.POWERLEVELS)
 				new CasterRing(s,uses).register();
 		}
-		ALL.addAll(Gem.generate());
-		ALL.addAll(ArtPiece.generate());
+		Gem.generate();
+		ArtPiece.generate();
 		cheapestartifact=ALL.stream().filter(i->i instanceof Artifact)
 				.map(i->i.price).min(Integer::compare).get();
 	}

@@ -29,7 +29,7 @@ import javelin.model.world.location.town.Town;
  * @author alex
  */
 public abstract class Artifact extends Item{
-	public static void init(){
+	public static void setup(){
 		new AmuletOfHealth(+2,4000);
 		new AmuletOfHealth(+4,16000);
 		new AmuletOfHealth(+6,36000);

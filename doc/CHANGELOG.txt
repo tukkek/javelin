@@ -9,6 +9,7 @@ Version 1.7
  * First martial discipline: Steel Serpent!
  * Dungeon redesign (templated-based maps, 4 tiers, new features)!
  * Introducing 6 Haunt locations!
+ * New kits: 8 Wizards (one per school of magic) and 5 Dragoons (one per chromatic dragon)!
  * New locations: natural resources, Assassins Guild and Deep Dungeon
  * New skills: Bluff and Sense Motive
  * Infiltrate hostile locations
@@ -18,6 +19,8 @@ Version 1.7
  * New character kits
  * Auto-attack using the Tab key
  * Improved artwork
+ * Items and Upgrades no longer tied to Realms (all upgrades now entirely based on kits)
+ * Gems and Art Objects as treasure
 
 Version 1.6 (2016-07-15) 
 

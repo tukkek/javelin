@@ -101,7 +101,7 @@ public class Javelin{
 
 	static{
 		ClassLevelUpgrade.setup();
-		Spell.init();
+		Spell.setup();
 		try{
 			final MonsterReader monsterdb=new MonsterReader();
 			final XMLReader xml=SAXParserFactory.newInstance().newSAXParser()
@@ -117,9 +117,9 @@ public class Javelin{
 		Organization.setup();
 		MonsterReader.closelogs();
 		Summon.setupsummons();
-		Spell.init();
-		Artifact.init();
-		Item.init();
+		Spell.setup();
+		Artifact.setup();
+		Item.setup();
 	}
 
 	/**

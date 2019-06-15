@@ -145,7 +145,7 @@ public class BattleState implements Node,TeamContainer{
 
 	@Override
 	public ArrayList<Combatant> getcombatants(){
-		final ArrayList<Combatant> list=(ArrayList<Combatant>)blueTeam.clone();
+		final ArrayList<Combatant> list=new ArrayList<>(blueTeam);
 		list.addAll(redTeam);
 		return list;
 	}

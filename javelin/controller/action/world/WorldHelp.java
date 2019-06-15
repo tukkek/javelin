@@ -1,7 +1,6 @@
 package javelin.controller.action.world;
 
 import javelin.controller.action.Help;
-import javelin.model.unit.abilities.spell.divination.LocateObject;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -10,7 +9,6 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class WorldHelp extends WorldAction{
-
 	/** Constructor. */
 	public WorldHelp(){
 		super("Help",new int[]{},new String[]{"h","?"});
@@ -18,7 +16,6 @@ public class WorldHelp extends WorldAction{
 
 	@Override
 	public void perform(final WorldScreen screen){
-		new LocateObject().castpeacefully(null);
 		Help.help(WorldAction.ACTIONS);
 	}
 }

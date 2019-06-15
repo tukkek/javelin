@@ -24,7 +24,7 @@ public class Ressurect extends Wish{
 
 	@Override
 	boolean wish(Combatant target){
-		dead.hp=dead.maxhp;
+		dead.hp=dead.maxhp/2;
 		Squad.active.add(dead);
 		dead=null;
 		return true;

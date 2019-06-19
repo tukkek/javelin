@@ -11,7 +11,6 @@ import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.Potion;
 import javelin.model.item.Tier;
-import javelin.model.item.precious.PreciousObject;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureLightWounds;
@@ -69,15 +68,13 @@ public class Shop extends Location{
 
 		@Override
 		public List<Option> getoptions(){
-			ArrayList<Option> options=new ArrayList<>();
-			for(Combatant c:Squad.active.members)
-				for(Item i:Squad.active.equipment.get(c))
+			var options=new ArrayList<Option>();
+			for(var c:Squad.active.members)
+				for(var i:Squad.active.equipment.get(c))
 					if(i.sell()){
-						String listing="["+c+"] "+i.describe(c);
-						/*TODO instead of have #sell(), have a field, with 0 being no-sell, 0.5 the default and 1 for precious objects.*/
-						int sellingprice=Math.min(buylimit,
-								i.price/(i instanceof PreciousObject?1:2));
-						Option o=new Option(listing,sellingprice);
+						var listing="["+c+"] "+i.describe(c);
+						var sellingprice=Math.round(Math.min(buylimit,i.price*i.sellvalue));
+						var o=new Option(listing,sellingprice);
 						selling.put(o,i);
 						options.add(o);
 					}

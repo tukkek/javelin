@@ -86,6 +86,13 @@ public abstract class Item implements Serializable,Cloneable{
 	/** Whether to select a {@link Combatant} to use this on. */
 	public boolean targeted=true;
 
+	/**
+	 * A value between 0 and 1 signifying how much this item should be (re)sold
+	 * for. A value of zero means the item can't be sold.
+	 *
+	 * Default is 50% original {@link #price}.
+	 */
+	public double sellvalue=.5f;
 	/** If not <code>null</code> will be used for {@link #describefailure()}. */
 	volatile protected String failure=null;
 
@@ -292,9 +299,10 @@ public abstract class Item implements Serializable,Cloneable{
 	 * @return <code>true</code> if this item can be currently sold.
 	 */
 	public boolean sell(){
-		return true;
+		return sellvalue>0;
 	}
 
+	/** @return A human-readable description of this item. */
 	public String describe(Combatant c){
 		String description=toString();
 		String prohibited=canuse(c);

@@ -5,7 +5,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.fight.Siege;
 import javelin.controller.terrain.Terrain;
-import javelin.model.item.Ruby;
+import javelin.model.item.consumable.Ruby;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.Location;
 import javelin.old.RPG;

@@ -11,7 +11,7 @@ import javelin.controller.fight.Siege;
 import javelin.controller.terrain.Mountains;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Equipment;
-import javelin.model.item.Ruby;
+import javelin.model.item.consumable.Ruby;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;

@@ -158,8 +158,7 @@ public abstract class Kit implements Serializable{
 	 * @see CombatExpertiseDiscipline
 	 */
 	@Deprecated
-	public Kit(){
-	}
+	public Kit(){}
 
 	/**
 	 * Registers around 3-5 {@link Upgrade}s that all (or most) members of this
@@ -288,29 +287,6 @@ public abstract class Kit implements Serializable{
 	public <K extends Upgrade> List<K> filter(Class<K> type){
 		return getupgrades().stream().filter(u->type.isInstance(u)).map(u->(K)u)
 				.collect(Collectors.toList());
-	}
-
-	Summon findsummon(int casterlevel,List<Summon> pool){
-		for(var s:pool)
-			if(s.casterlevel==casterlevel) return s;
-		return null;
-	}
-
-	/**
-	 * Since there's one {@link Summon}s per {@link Monster} in the game, this
-	 * method helps summoning kits to offer a sensible selection of spell choices.
-	 *
-	 * @return Tries to find one summon for {@link Spell#casterlevel} 1 through 9
-	 *         from the given pool and return them on a list.
-	 * @see Summon#ALLSUMMONS
-	 */
-	protected ArrayList<Summon> findsummons(List<Summon> pool){
-		var summons=new ArrayList<Summon>(9);
-		for(var casterlevel=1;casterlevel<=9;casterlevel++){
-			var s=findsummon(casterlevel,pool);
-			if(s!=null) summons.add(s);
-		}
-		return summons;
 	}
 
 	/**

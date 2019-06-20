@@ -147,6 +147,6 @@ public abstract class Artifact extends Item{
 
 	@Override
 	public boolean sell(){
-		return owner==null;
+		return owner==null&&super.sell();
 	}
 }

@@ -9,7 +9,7 @@ import javelin.controller.ai.cache.AiCache;
 import javelin.controller.fight.Fight;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.wish.Ressurect;
-import javelin.model.item.Scroll;
+import javelin.model.item.consumable.Scroll;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;

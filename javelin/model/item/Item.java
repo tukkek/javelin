@@ -15,6 +15,9 @@ import javelin.controller.comparator.ItemsByPrice;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.item.artifact.CasterRing;
+import javelin.model.item.consumable.Eidolon;
+import javelin.model.item.consumable.Potion;
+import javelin.model.item.consumable.Scroll;
 import javelin.model.item.precious.ArtPiece;
 import javelin.model.item.precious.Gem;
 import javelin.model.unit.Combatant;
@@ -103,7 +106,10 @@ public abstract class Item implements Serializable,Cloneable{
 	public Item(final String name,final int price,boolean register){
 		this.name=name;
 		this.price=Javelin.round(price);
-		if(register) if(!ALL.add(this)) System.out.println("Discarded: "+this);
+		if(register){
+			ALL.add(this);
+			BYTIER.get(Tier.get(getlevel())).add(this);
+		}
 	}
 
 	/**
@@ -115,10 +121,6 @@ public abstract class Item implements Serializable,Cloneable{
 	 */
 	public Item randomize(){
 		return clone();
-	}
-
-	public void register(){
-		BYTIER.get(Tier.get(getlevel())).add(this);
 	}
 
 	public int getlevel(){
@@ -225,24 +227,23 @@ public abstract class Item implements Serializable,Cloneable{
 	 * @see StartBattle
 	 */
 	public String waste(float resourcesused,Combatant c,ArrayList<Item> bag){
-		if(RPG.random()<resourcesused&&canuse(c)==null){
-			bag.remove(this);
-			return name;
-		}
-		return null;
+		if(RPG.random()>=resourcesused||canuse(c)!=null) return null;
+		bag.remove(this);
+		return name;
 	}
 
 	/** Creates {@link Item}s from {@link Spell}s. */
 	public static void setup(){
 		for(Spell s:Spell.BYNAME.values()){
-			if(s.isscroll) new Scroll(s).register();
-			if(s.iswand) new Wand(s).register();
-			if(s.ispotion) new Potion(s).register();
+			if(s.isscroll) new Scroll(s);
+			if(s.iswand) new Wand(s);
+			if(s.ispotion) new Potion(s);
 			if(s.isring) for(int uses:CasterRing.POWERLEVELS)
-				new CasterRing(s,uses).register();
+				new CasterRing(s,uses);
 		}
 		Gem.generate();
 		ArtPiece.generate();
+		Eidolon.generate();
 		cheapestartifact=ALL.stream().filter(i->i instanceof Artifact)
 				.map(i->i.price).min(Integer::compare).get();
 	}

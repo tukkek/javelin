@@ -10,7 +10,7 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.db.reader.fields.Organization;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Equipment;
-import javelin.model.item.Ruby;
+import javelin.model.item.consumable.Ruby;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;

@@ -5,7 +5,7 @@ import java.util.Set;
 import javelin.Javelin;
 import javelin.controller.event.wild.WildEvent;
 import javelin.controller.terrain.Terrain;
-import javelin.model.item.Ruby;
+import javelin.model.item.consumable.Ruby;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.PointOfInterest;

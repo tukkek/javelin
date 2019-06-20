@@ -8,7 +8,7 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.fight.Siege;
 import javelin.model.diplomacy.Diplomacy;
-import javelin.model.item.Ruby;
+import javelin.model.item.consumable.Ruby;
 import javelin.model.item.key.TempleKey;
 import javelin.model.item.key.door.MasterKey;
 import javelin.model.unit.Combatant;

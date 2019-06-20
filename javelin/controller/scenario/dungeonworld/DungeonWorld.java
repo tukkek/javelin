@@ -6,7 +6,7 @@ import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.scenario.Campaign;
 import javelin.controller.scenario.Scenario;
 import javelin.model.item.Item;
-import javelin.model.item.Ruby;
+import javelin.model.item.consumable.Ruby;
 import javelin.model.item.key.TempleKey;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;

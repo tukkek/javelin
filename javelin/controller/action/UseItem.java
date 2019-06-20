@@ -56,7 +56,7 @@ public class UseItem extends Action{
 		if(validate) for(final Item i:new ArrayList<>(items))
 			if(!i.usedinbattle||i.canuse(c)!=null) items.remove(i);
 		if(items.isEmpty()){
-			Javelin.message("Can't use any of these items!",Javelin.Delay.WAIT);
+			Javelin.message("Can't use any of these items!",false);
 			return null;
 		}
 		Collections.sort(items,ItemsByName.SINGLETON);
@@ -65,8 +65,7 @@ public class UseItem extends Action{
 			if(threatened&&it.provokesaoo) items.remove(it);
 		if(items.isEmpty()){
 			MessagePanel.active.clear();
-			Javelin.message("Can't use any of these while threatened!",
-					Javelin.Delay.WAIT);
+			Javelin.message("Can't use any of these items while engaged!",false);
 			return null;
 		}
 		boolean fullscreen=items.size()>4;

@@ -52,7 +52,7 @@ public class Necromancer extends Wizard{
 		var undead=Summon.SUMMONS.stream()
 				.filter(s->Monster.get(s.monstername).type.equals(MonsterType.UNDEAD))
 				.collect(Collectors.toList());
-		extension.addAll(findsummons(undead));
+		extension.addAll(Summon.select(undead, 1));
 		super.finish();
 	}
 }

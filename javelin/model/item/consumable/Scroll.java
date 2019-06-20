@@ -1,8 +1,10 @@
-package javelin.model.item;
+package javelin.model.item.consumable;
 
 import java.util.HashSet;
 
 import javelin.controller.action.CastSpell;
+import javelin.model.item.Item;
+import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;

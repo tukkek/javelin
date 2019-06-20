@@ -2,6 +2,7 @@ package javelin.model.unit.abilities.spell.conjuration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.ai.ChanceNode;
@@ -83,22 +84,32 @@ public class Summon extends Spell{
 	 *
 	 * TODO isn't taking into account summoning a group.
 	 */
-	public static float ratechallenge(String monster,float chance){
-		Monster m=Monster.get(monster);
+	public static float ratechallenge(Monster m,float chance){
 		float cr=m.cr/((5+2)/2f);
 		return chance*cr;
 	}
 
 	@Override
-	public String cast(Combatant caster2,Combatant target,boolean saved,
+	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
-		List<Combatant> team=target.getteam(s);
-		Monster m=Monster.get(monstername);
-		m.name="Summoned "+m.name.toLowerCase();
-		Combatant summoned=new Combatant(m,true);
-		place(target,summoned,team,s);
+		var m=Monster.get(monstername);
+		var summoned=summon(m,caster,s);
 		cn.overlay=new AiOverlay(summoned.getlocation());
 		return "";// default message is enough
+	}
+
+	/**
+	 * Summons a {@link Monster} near the caster. Does not provide player
+	 * feedback.
+	 *
+	 * @return The location the monster was summone at.
+	 */
+	static public Combatant summon(Monster m,Combatant caster,BattleState s){
+		List<Combatant> team=caster.getteam(s);
+		m.customName="Summoned "+m.name.toLowerCase();
+		Combatant summoned=new Combatant(m,true);
+		place(caster,summoned,team,s);
+		return summoned;
 	}
 
 	static public void place(Combatant summoner,Combatant summoned,
@@ -141,8 +152,10 @@ public class Summon extends Spell{
 
 	@Override
 	public void postloadmonsters(){
-		cr=ratechallenge(monstername,chance);
-		level=Math.round(Monster.get(monstername).cr/2);
+		var m=Monster.get(monstername);
+		cr=ratechallenge(m,chance);
+		level=Math.round(m.cr/2f);
+		if(level<1) level=1;
 		casterlevel=getcasterlevel(level);
 	}
 
@@ -155,6 +168,31 @@ public class Summon extends Spell{
 	@Override
 	public boolean equals(Object obj){
 		return super.equals(obj)&&monstername.equals(((Summon)obj).monstername);
+	}
+
+	/**
+	 * Since there's one {@link Summon}s per {@link Monster} in the game, this
+	 * method helps summoning kits to offer a sensible selection of spell choices.
+	 *
+	 * @param perlevel How many spells sintances to return, for each level. Note
+	 *          that this is the maximum limit, as it may not find enough spells
+	 *          to fulfill this target.
+	 * @return Tries to find one summon for {@link Spell#casterlevel} 1 through 9
+	 *         from the given pool and return them on a list.
+	 * @see Summon#ALLSUMMONS
+	 */
+	public static ArrayList<Summon> select(List<Summon> pool,int perlevel){
+		var summons=new ArrayList<Summon>(9*perlevel);
+		for(var casterlevel=1;casterlevel<=9;casterlevel++){
+			final var level=casterlevel;
+			var tier=pool.stream().filter(s->s.level==level)
+					.collect(Collectors.toList());
+			if(tier.isEmpty()) continue;
+			tier=RPG.shuffle(new ArrayList<>(tier));
+			for(var i=0;i<tier.size()&&i<perlevel;i++)
+				summons.add(tier.get(i));
+		}
+		return summons;
 	}
 
 	/**

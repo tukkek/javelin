@@ -25,7 +25,7 @@ public class DeepDungeon extends Location{
 		super("Deep dungeon");
 		for(var level=Tier.LOW.minlevel;level<=Tier.EPIC.maxlevel;level++){
 			var parent=floors.isEmpty()?null:floors.get(floors.size()-1);
-			floors.add(new Dungeon(level,"Deep dungeon",parent,floors));
+			floors.add(new Dungeon("Deep dungeon",level,parent,floors));
 		}
 	}
 

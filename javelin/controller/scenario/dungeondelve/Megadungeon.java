@@ -34,7 +34,7 @@ public class Megadungeon extends Dungeon{
 
 	/** Constructor. */
 	public Megadungeon(Integer level,Dungeon parent){
-		super(level,DESCRIPTION,parent,DungeonDelve.getdungeons());
+		super(DESCRIPTION,level,parent,DungeonDelve.getdungeons());
 		description=DESCRIPTION;
 	}
 

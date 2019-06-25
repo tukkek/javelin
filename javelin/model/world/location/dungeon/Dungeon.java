@@ -145,7 +145,7 @@ public class Dungeon extends Location{
 	protected List<? extends Dungeon> floors;
 
 	/** Constructor. */
-	public Dungeon(Integer level,String name,Dungeon parent,
+	public Dungeon(String name,Integer level,Dungeon parent,
 			List<? extends Dungeon> floors){
 		super(null);
 		this.level=level;
@@ -595,13 +595,13 @@ public class Dungeon extends Location{
 	 */
 	public static Dungeon generate(int level){
 		var floors=new ArrayList<Dungeon>();
-		var top=new Dungeon(level,null,null,floors);
+		var top=new Dungeon(null,level,null,floors);
 		floors.add(top);
 		var tier=DungeonTier.get(level);
 		var maxdepth=DungeonTier.TIERS.indexOf(tier)+1;
 		var parent=top;
 		while(floors.size()<maxdepth&&RPG.chancein(2)){
-			var floor=new Dungeon(parent.level+1,null,parent,floors);
+			var floor=new Dungeon(null,parent.level+1,parent,floors);
 			floors.add(floor);
 			parent=floor;
 		}

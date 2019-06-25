@@ -38,7 +38,7 @@ public class TempleDungeon extends Dungeon{
 	 * @param t Temple this floor is a part of.
 	 */
 	public TempleDungeon(int level,Dungeon parent,Temple t){
-		super(level,t.description,parent,t.floors);
+		super(t.description,level,parent,t.floors);
 		temple=t;
 		description=temple.descriptionknown;
 	}

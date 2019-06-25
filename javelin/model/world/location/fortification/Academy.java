@@ -244,7 +244,7 @@ public abstract class Academy extends Fortification{
 		ArrayList<Point> free=new ArrayList<>();
 		ArrayList<Actor> actors=World.getactors();
 		HashSet<Point> district=getdistrict()==null?null:getdistrict().getarea();
-		for(Point p:Point.getadjacent()){
+		for(Point p:Point.getadjacent2()){
 			p.x+=x;
 			p.y+=y;
 			if(!World.validatecoordinate(p.x,p.y)

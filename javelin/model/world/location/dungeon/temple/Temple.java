@@ -50,10 +50,10 @@ import javelin.view.Images;
  * @author alex
  */
 public abstract class Temple extends UniqueLocation{
-	/**
-	 * TODO there's gotta be a better way to do this
-	 */
-	public static boolean climbing=false;
+	//	/**
+	//	 * TODO there's gotta be a better way to do this
+	//	 */
+	//	public static boolean climbing=false;
 	/** TODO same as {@link #climbing} */
 	public static boolean leavingfight=false;
 
@@ -136,8 +136,7 @@ public abstract class Temple extends UniqueLocation{
 			nfloors=3;
 		TempleDungeon parent=null;
 		for(int i=0;i<nfloors;i++){
-			boolean deepest=i==nfloors-1;
-			parent=new TempleDungeon(el+i,deepest,parent,this);
+			parent=new TempleDungeon(el+i,parent,this);
 			floors.add(parent);
 		}
 	}

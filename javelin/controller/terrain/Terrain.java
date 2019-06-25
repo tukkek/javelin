@@ -2,7 +2,6 @@ package javelin.controller.terrain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -236,19 +235,16 @@ public abstract class Terrain implements Serializable{
 	 * @return A new point to be added to the area.
 	 */
 	protected Point expand(HashSet<Point> area,World world){
-		var adjacent=new ArrayList<>(Arrays.asList(Point.getadjacent()));
 		Point result=null;
 		while(result==null){
 			var p=RPG.pick(area);
-			for(Point next:RPG.shuffle(adjacent)){
-				next.x+=p.x;
-				next.y+=p.y;
+			for(var next:RPG.shuffle(p.getadjacent())){
 				if(!checkinvalid(next.x,next.y,world)){
 					result=next;
 					break;
 				}
+				WorldGenerator.retry();
 			}
-			WorldGenerator.retry();
 		}
 		return result;
 	}

@@ -4,7 +4,9 @@
 package javelin.controller;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 
 import javelin.controller.walker.Walker;
@@ -77,7 +79,11 @@ public class Point implements Cloneable,Serializable{
 		return Walker.distanceinsteps(x,y,p.x,p.y);
 	}
 
-	static public Point[] getadjacent(){
+	/**
+	 * @deprecated Use {@link #getadjacent()}
+	 */
+	@Deprecated
+	static public Point[] getadjacent2(){
 		Point[] adjacent=new Point[8];
 		int i=0;
 		for(int x=-1;x<=+1;x++)
@@ -89,6 +95,30 @@ public class Point implements Cloneable,Serializable{
 		return adjacent;
 	}
 
+	/**
+	 * @return 8 points adjacent to this point (neighbors).
+	 */
+	public List<Point> getadjacent(){
+		var adjacent=new ArrayList<Point>(8);
+		for(int x=-1;x<=+1;x++)
+			for(int y=-1;y<=+1;y++)
+				if(x!=0||y!=0) adjacent.add(new Point(this.x+x,this.y+y));
+		return adjacent;
+	}
+
+	/**
+	 * @return 4 points orthogonally adjacent to this point (straight up, down,
+	 *         left and right).
+	 */
+	public List<Point> getorthogonallyadjacent(){
+		return List.of(new Point(x-1,y),new Point(x+1,y),new Point(x,y-1),
+				new Point(x,y+1));
+	}
+
+	/**
+	 * @deprecated Use {@link #getorthogonallyadjacent()}.
+	 */
+	@Deprecated
 	static public Point[] getadjacentorthogonal(){
 		return new Point[]{new Point(-1,0),new Point(+1,0),new Point(0,-1),
 				new Point(0,+1)};

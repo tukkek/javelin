@@ -70,7 +70,7 @@ public class DungeonCrawler{
 		Feature f=dungeon.features.get(p.x, p.y);
 		if(!validate(f)) return;
 		visited.add(p);
-		if(proceed(p,f)) for(Point adjacent:Point.getadjacent()){
+		if(proceed(p,f)) for(Point adjacent:Point.getadjacent2()){
 			adjacent.x+=p.x;
 			adjacent.y+=p.y;
 			crawl(adjacent,depth+1);

@@ -398,4 +398,27 @@ public class ChallengeCalculator{
 			throw new RuntimeException(e);
 		}
 	}
+
+	/**
+	 * Sadly throughout Javelin's code not all variables and fields are properly
+	 * named between "level" (average character level in a {@link Squad}) and "el"
+	 * (Encounter Level, which is a measure of a group's party). "Level" is the
+	 * most common way to describe the overall intended audience for a piece of
+	 * content ("this adventure is for characters of level 1-5") while EL is by
+	 * definition what should be used for most internal calculations, since it
+	 * takes the exact number and challenge rating of each {@link Combatant} into
+	 * consideration to get an exact power description.
+	 *
+	 * "Party level" and "encounter level" can easily be translated from one to
+	 * another but they are not equivalent, since passing a party level to a
+	 * parameter expecting an ecounter level will produce unintended results 100%
+	 * of the time. As such, variables and fields should be named "level" and "el"
+	 * to clearly distinguish between each.
+	 *
+	 * @return Given an average party level, the corresponding Encounter Level for
+	 *         a standard party of 3-5 characters.
+	 */
+	public static int getel(int level){
+		return level+4;
+	}
 }

@@ -1,6 +1,6 @@
 package javelin.controller.scenario.dungeondelve;
 
-import java.util.Map;
+import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.db.StateManager;
@@ -49,7 +49,7 @@ public class DungeonDelve extends Campaign{
 
 	@Override
 	public void ready(){
-		for(Dungeon d:getdungeons().values())
+		for(Dungeon d:getdungeons())
 			d.map();
 	}
 
@@ -66,7 +66,7 @@ public class DungeonDelve extends Campaign{
 	/**
 	 * @return {@link DungeonDelveGenerator#dungeons}.
 	 */
-	public static Map<Integer,Dungeon> getdungeons(){
+	public static List<Dungeon> getdungeons(){
 		DungeonDelveGenerator fg=(DungeonDelveGenerator)World.seed.featuregenerator;
 		return fg.dungeons;
 	}

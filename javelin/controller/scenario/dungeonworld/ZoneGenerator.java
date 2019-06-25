@@ -20,6 +20,7 @@ import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonTier;
 import javelin.model.world.location.dungeon.temple.AirTemple;
 import javelin.model.world.location.dungeon.temple.EarthTemple;
 import javelin.model.world.location.dungeon.temple.EvilTemple;
@@ -102,7 +103,7 @@ public class ZoneGenerator extends FeatureGenerator{
 		HashSet<Point> enclose(){
 			HashSet<Point> frontier=new HashSet<>();
 			for(Point territory:area)
-				for(Point p:Point.getadjacent()){
+				for(Point p:Point.getadjacent2()){
 					p.x+=territory.x;
 					p.y+=territory.y;
 					if(World.validatecoordinate(p.x,p.y)&&!frontier.contains(p)
@@ -237,7 +238,7 @@ public class ZoneGenerator extends FeatureGenerator{
 		createtown(z);
 		while(tiers>0){
 			Dungeon d=placefeature(createdungeon(z),z);
-			tiers-=d.gettier().tier+1;
+			tiers-=DungeonTier.TIERS.indexOf(d.gettier())+1;
 		}
 	}
 
@@ -245,7 +246,7 @@ public class ZoneGenerator extends FeatureGenerator{
 		int level=-1;
 		while(level<1||level>20)
 			level=z.level+RPG.randomize(6);
-		return new Dungeon(level,null);
+		return Dungeon.generate(level);
 	}
 
 	Town createtown(Zone z){
@@ -293,7 +294,7 @@ public class ZoneGenerator extends FeatureGenerator{
 
 	boolean checkclutter(Point target,ArrayList<Actor> actors){
 		int worldsize=World.scenario.size;
-		for(Point p:Point.getadjacent()){
+		for(Point p:Point.getadjacent2()){
 			p.x+=target.x;
 			p.y+=target.y;
 			if(!p.validate(0,0,worldsize,worldsize)
@@ -344,7 +345,7 @@ public class ZoneGenerator extends FeatureGenerator{
 			}
 			boolean reacha=false;
 			boolean reachb=false;
-			for(Point p:Point.getadjacent()){
+			for(Point p:Point.getadjacent2()){
 				p.x+=gate.x;
 				p.y+=gate.y;
 				if(world.map[p.x][p.y]==Terrain.WATER) continue;
@@ -364,7 +365,7 @@ public class ZoneGenerator extends FeatureGenerator{
 	}
 
 	void clearterrain(Point gate){
-		List<Point> ajacent=Arrays.asList(Point.getadjacent());
+		List<Point> ajacent=Arrays.asList(Point.getadjacent2());
 		Collections.shuffle(ajacent);
 		for(Point p:ajacent){
 			p.x+=+gate.x;

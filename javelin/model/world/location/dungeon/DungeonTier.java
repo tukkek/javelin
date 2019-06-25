@@ -1,42 +1,39 @@
 package javelin.model.world.location.dungeon;
 
-public class DungeonTier{
-	public static final DungeonTier CAVE=new DungeonTier("Cave",0,5,5,7,"cave");
-	public static final DungeonTier DUNGEON=new DungeonTier("Dungeon",1,10,5,10,
-			"");
-	public static final DungeonTier RUINS=new DungeonTier("Ruins",2,15,10,15,
-			"ruins");
-	public static final DungeonTier KEEP=new DungeonTier("Keep",3,20,10,20,
-			"keep");
+import java.util.List;
 
-	public static final DungeonTier HIGHEST=KEEP;
-	public static final DungeonTier[] TIERS=new DungeonTier[]{CAVE,DUNGEON,RUINS,
-			KEEP,};
+import javelin.model.item.Tier;
+
+public class DungeonTier{
+	public static final DungeonTier CAVE=new DungeonTier("Cave",Tier.LOW,"cave");
+	public static final DungeonTier DUNGEON=new DungeonTier("Dungeon",Tier.MID,
+			"");
+	public static final DungeonTier KEEP=new DungeonTier("Keep",Tier.HIGH,"keep");
+	public static final DungeonTier RUINS=new DungeonTier("Ruins",Tier.EPIC,
+			"ruins");
+
+	public static final List<DungeonTier> TIERS=List.of(CAVE,DUNGEON,KEEP,RUINS);
+	public static final DungeonTier HIGHEST=RUINS;
 
 	public String name;
-	public int minlevel;
-	public int maxlevel;
 	public int minrooms;
 	public int maxrooms;
 	public String floor;
 	public String wall;
-	public int tier;
+	public Tier tier;
 
-	public DungeonTier(String name,int tier,int level,int minrooms,int maxrooms,
-			String tilesuffix){
+	public DungeonTier(String name,Tier tier,String tilesuffix){
 		this.name=name;
 		this.tier=tier;
-		minlevel=level-4;
-		maxlevel=level;
-		this.minrooms=minrooms;
-		this.maxrooms=maxrooms;
+		minrooms=tier.maxlevel;
+		maxrooms=tier.maxlevel*4;
 		floor="dungeonfloor"+tilesuffix;
 		wall="dungeonwall"+tilesuffix;
 	}
 
 	static public DungeonTier get(int level){
 		for(var t:TIERS)
-			if(level<=t.maxlevel) return t;
+			if(level<=t.tier.maxlevel) return t;
 		return KEEP;
 	}
 

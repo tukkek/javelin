@@ -17,6 +17,7 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.DungeonTier;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.Option;
 import javelin.view.screen.town.SelectScreen;
@@ -144,7 +145,7 @@ public class Leader extends Inhabitant{
 					*Javelin.round(RewardCalculator.getgold(inhabitant.source.cr));
 			new Treaty(treatyprice,base.name,null,null).register(encounters,options);
 			if(diplomacy<diplomacydc+5) return options;
-			treatyprice*=5+Dungeon.active.gettier().tier;
+			treatyprice*=5+DungeonTier.TIERS.indexOf(Dungeon.active.gettier());
 			new Treaty(treatyprice,null,base.alignment.ethics,null)
 					.register(encounters,options);
 			new Treaty(treatyprice,null,null,base.alignment.morals)

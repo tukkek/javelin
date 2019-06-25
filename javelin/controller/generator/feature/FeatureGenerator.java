@@ -15,6 +15,7 @@ import javelin.controller.generator.WorldGenerator;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
+import javelin.model.item.Tier;
 import javelin.model.unit.Monster;
 import javelin.model.world.Actor;
 import javelin.model.world.Caravan;
@@ -26,8 +27,6 @@ import javelin.model.world.location.ResourceSite;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.fortification.Fortification;
-import javelin.model.world.location.fortification.Guardian;
-import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.haunt.AbandonedManor;
 import javelin.model.world.location.haunt.Graveyard;
 import javelin.model.world.location.haunt.Haunt;
@@ -63,22 +62,22 @@ public class FeatureGenerator implements Serializable{
 	 * manually-written methods from becoming too large.
 	 */
 	void setup(){
-		generators.put(Outpost.class,new Frequency(.25f));
-		generators.put(Trove.class,new Frequency());
-		generators.put(Guardian.class,new Frequency());
+		generators.put(Outpost.class,new Frequency(.1f));
+		//		generators.put(Trove.class,new Frequency());
+		//		generators.put(Guardian.class,new Frequency());
 		generators.put(Dwelling.class,new Frequency());
 		generators.put(PointOfInterest.class,new Frequency(2f));
-		Frequency resources=new Frequency();
+		var resources=new Frequency(.5f);
 		resources.seeds=Realm.values().length*2;
 		resources.max=Realm.values().length*2;
 		generators.put(ResourceSite.class,resources);
-		Frequency dungeons=new Frequency(2f);
-		Integer startingdungeons=World.scenario.startingdungeons;
-		if(startingdungeons!=null){
-			dungeons.seeds=startingdungeons;
-			dungeons.max=startingdungeons;
-		}
-		generators.put(Dungeon.class,dungeons);
+		//		Frequency dungeons=new Frequency(2f);
+		//		Integer startingdungeons=World.scenario.startingdungeons;
+		//		if(startingdungeons!=null){
+		//			dungeons.seeds=startingdungeons;
+		//			dungeons.max=startingdungeons;
+		//		}
+		//		generators.put(Dungeon.class,dungeons);
 		if(Caravan.ALLOW){
 			Frequency caravan=new Frequency(Frequency.MONTHLY,true,false);
 			caravan.seeds=0;
@@ -163,10 +162,13 @@ public class FeatureGenerator implements Serializable{
 	}
 
 	void generatestartinglocations(){
-		ArrayList<Location> locations=new ArrayList<>();
-		generateuniquelocations(locations);
-		locations.addAll(World.scenario.generatestartinglocations());
-		for(Location l:locations)
+		ArrayList<Location> starting=new ArrayList<>();
+		generateuniquelocations(starting);
+		for(var level=Tier.LOW.minlevel;level<=Tier.EPIC.maxlevel;level++){
+			starting.add(Dungeon.generate(level));
+			starting.add(Dungeon.generate(level)); //TODO make wilderness
+		}
+		for(Location l:starting)
 			l.place();
 	}
 

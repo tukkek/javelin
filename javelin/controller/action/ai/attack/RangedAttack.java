@@ -103,7 +103,7 @@ public class RangedAttack extends AbstractAttack{
 		if(miss.chance<=Javelin.HARD/20f||active.source.melee.isEmpty())
 			return false;
 		var map=previous.map;
-		for(Point p:Point.getadjacent()){
+		for(Point p:Point.getadjacent2()){
 			p.x+=active.location[0];
 			p.y+=active.location[1];
 			if(!p.validate(0,0,map.length,map[0].length)) continue;

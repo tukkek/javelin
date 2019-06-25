@@ -49,7 +49,7 @@ public class RevealRegion extends WildEvent{
 		if(!undiscovered.contains(p)&&World.validatecoordinate(p.x,p.y)
 				&&t.equals(Terrain.get(p.x,p.y))){
 			undiscovered.add(p);
-			for(Point near:Point.getadjacent()){
+			for(Point near:Point.getadjacent2()){
 				near.x+=p.x;
 				near.y+=p.y;
 				scan(near,t);

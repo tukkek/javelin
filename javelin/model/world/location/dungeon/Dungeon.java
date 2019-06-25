@@ -141,20 +141,20 @@ public class Dungeon extends Location{
 
 	transient boolean generated=false;
 
-	/** Depth of dungeon (1 for the first floor, 2 for the second, etc). */
-	public int floor=1;
+	/** All floors that make part of this dungeon. */
+	protected List<? extends Dungeon> floors;
 
 	/** Constructor. */
-	public Dungeon(Integer level,Dungeon parent){
+	public Dungeon(Integer level,Dungeon parent,List<? extends Dungeon> floors){
 		super(null);
+		this.level=level;
 		this.parent=parent;
-		if(parent!=null) floor=parent.floor+1;
+		this.floors=floors;
 		link=false;
 		discard=false;
 		impermeable=true;
 		allowedinscenario=false;
-		this.level=level==null?determineel():level;
-		DungeonTier tier=gettier();
+		var tier=gettier();
 		walltile=tier.wall;
 		floortile=tier.floor;
 		description=baptize(tier);
@@ -170,20 +170,6 @@ public class Dungeon extends Location{
 		name=name.substring(name.lastIndexOf(" ")+1,name.length());
 		name+=name.charAt(name.length()-1)=='s'?"'":"'s";
 		return name+" "+type;
-	}
-
-	public Dungeon(){
-		this(null,null);
-	}
-
-	protected int determineel(){
-		List<Dungeon> dungeons=getdungeons();
-		HashSet<Integer> els=new HashSet<>(dungeons.size());
-		for(Dungeon d:dungeons)
-			els.add(d.level);
-		for(int i=1;i<=20;i++)
-			if(!els.contains(i)) return i;
-		return RPG.r(1,20);
 	}
 
 	@Override
@@ -237,9 +223,9 @@ public class Dungeon extends Location{
 		var previous=Dungeon.active;
 		Dungeon.active=this;
 		DungeonTier tier=gettier();
-		DungeonGenerator generator=DungeonGenerator.generate(tier.minrooms,
-				tier.maxrooms,parent==null?null:parent.tables);
-		tables=generator.tables;
+		var tables=parent==null?null:parent.tables;
+		var generator=DungeonGenerator.generate(tier.minrooms,tier.maxrooms,tables);
+		this.tables=generator.tables;
 		map=generator.grid;
 		size=map.length;
 		createdoors();
@@ -255,7 +241,7 @@ public class Dungeon extends Location{
 	}
 
 	void generateencounters(){
-		var target=3+RPG.r(1,4)+gettier().tier;
+		var target=3+RPG.r(1,4)+DungeonTier.TIERS.indexOf(gettier());
 		if(parent!=null){
 			encounters=new ArrayList<>(parent.encounters);
 			while(encounters.contains(null))
@@ -355,11 +341,13 @@ public class Dungeon extends Location{
 		return p;
 	}
 
-	protected void createstairs(DungeonZoner zoner){
+	void createstairs(DungeonZoner zoner){
 		features.add(new StairsUp("stairs up",herolocation));
 		for(int x=herolocation.x-1;x<=herolocation.x+1;x++)
 			for(int y=herolocation.y-1;y<=herolocation.y+1;y++)
 				map[x][y]=Template.FLOOR;
+		if(floors.indexOf(this)<floors.size()-1)
+			features.add(new StairsDown(zoner.getpoint()));
 	}
 
 	protected void createfeatures(int nfeatures,DungeonZoner zoner){
@@ -482,22 +470,12 @@ public class Dungeon extends Location{
 	}
 
 	void regenerate(boolean loading){
-		setlocation(loading);
 		if(!generated){
 			for(Feature f:features)
 				f.generate();
 			generated=true;
 		}
 	}
-
-	/**
-	 * Responsible for deciding where the player should be.
-	 *
-	 * @param loading <code>true</code> if activating this {@link Dungeon} when
-	 *          starting the application (loading up a save game with an active
-	 *          dungeon).
-	 */
-	protected void setlocation(boolean loading){}
 
 	@Override
 	public Integer getel(Integer attackel){
@@ -508,14 +486,20 @@ public class Dungeon extends Location{
 	 * Called when reaching {@link StairsUp}
 	 */
 	public void goup(){
-		Dungeon.active.leave();
+		Squad.active.ellapse(1);
+		int floor=floors.indexOf(this);
+		if(floor==0)
+			Dungeon.active.leave();
+		else
+			floors.get(floor-1).activate(false);
 	}
 
 	/**
 	 * Called when reaching {@link StairsDown}.
 	 */
 	public void godown(){
-		// typical dungeons have 1 level only
+		Squad.active.ellapse(1);
+		floors.get(floors.indexOf(this)+1).activate(false);
 	}
 
 	/** See {@link WorldScreen#encounter()}. */
@@ -553,8 +537,8 @@ public class Dungeon extends Location{
 
 	public DungeonTier gettier(){
 		for(DungeonTier t:DungeonTier.TIERS)
-			if(level<=t.maxlevel) return t;
-		return DungeonTier.TIERS[3];
+			if(level<=t.tier.maxlevel) return t;
+		return DungeonTier.HIGHEST;
 	}
 
 	@Override
@@ -593,5 +577,32 @@ public class Dungeon extends Location{
 		herolocation=to;
 		JavelinApp.context.view(to.x,to.y);
 		WorldMove.abort=true;
+	}
+
+	/**
+	 * @return A human-intended count of how deep this floor is (1 for first, 2
+	 *         for the one below that, etc).
+	 * @see #floors
+	 */
+	public int getfloor(){
+		return floors.indexOf(this)+1;
+	}
+
+	/**
+	 * @return Builds a baseline dungeon with one or more {@link #floors} based on
+	 *         its {@link DungeonTier}.
+	 */
+	public static Dungeon generate(int level){
+		var floors=new ArrayList<Dungeon>();
+		var top=new Dungeon(level,null,floors);
+		var tier=DungeonTier.get(level);
+		var tieri=DungeonTier.TIERS.indexOf(tier);
+		var parent=top;
+		while(floors.size()<tieri&&RPG.chancein(2)){
+			var floor=new Dungeon(parent.level+1,parent,floors);
+			floors.add(floor);
+			parent=floor;
+		}
+		return top;
 	}
 }

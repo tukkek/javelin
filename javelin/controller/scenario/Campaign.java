@@ -1,9 +1,7 @@
 package javelin.controller.scenario;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 
 import javelin.Debug;
 import javelin.controller.Point;
@@ -110,11 +108,6 @@ public class Campaign extends Scenario{
 	@Override
 	public boolean win(){
 		return false;
-	}
-
-	@Override
-	public List<Location> generatestartinglocations(){
-		return Collections.EMPTY_LIST;
 	}
 
 	@Override

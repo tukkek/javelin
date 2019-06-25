@@ -295,22 +295,6 @@ public class Scenario implements Serializable{
 	}
 
 	/**
-	 * Called from {@link FeatureGenerator} to allow each scenario to place their
-	 * own loactions. By default places shops near {@link Town}s.
-	 *
-	 * @return A list of unplaced locations.
-	 */
-	public List<Location> generatestartinglocations(){
-		HashSet<Realm> realms=new HashSet<>(2);
-		for(Town t:Town.gettowns())
-			realms.add(t.originalrealm);
-		ArrayList<Location> shops=new ArrayList<>();
-		for(Realm r:Realm.values())
-			if(!realms.contains(r)) shops.add(new Shop(false));
-		return shops;
-	}
-
-	/**
 	 * @return A prefix for the save game file.
 	 * @see StateManager
 	 */

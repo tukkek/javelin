@@ -53,6 +53,6 @@ public class Wall extends Mutator{
 	}
 
 	protected Point[] getpossiblesteps(){
-		return Point.getadjacent();
+		return Point.getadjacent2();
 	}
 }

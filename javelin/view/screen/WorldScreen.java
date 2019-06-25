@@ -267,7 +267,8 @@ public class WorldScreen extends BattleScreen{
 			if(!weather.isEmpty()) season+=", "+weather+"";
 			infos.add(season);
 		}else
-			infos.add(Dungeon.active.description+", floor "+Dungeon.active.floor);
+			infos
+					.add(Dungeon.active.description+", floor "+Dungeon.active.getfloor());
 		infos.add("");
 		if(Dungeon.active==null){
 			final int mph=Squad.active.speed(Terrain.current(),Squad.active.x,

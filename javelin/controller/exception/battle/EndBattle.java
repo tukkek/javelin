@@ -19,7 +19,6 @@ import javelin.model.unit.abilities.spell.conjuration.healing.RaiseDead;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
 
@@ -41,10 +40,7 @@ public class EndBattle extends BattleEvent{
 					Squad.active.place();
 				}
 				end(Fight.originalblueteam);
-				if(Dungeon.active!=null){
-					Temple.climbing=false;
-					Dungeon.active.activate(false);
-				}
+				if(Dungeon.active!=null) Dungeon.active.activate(false);
 			}
 		}
 		AiCache.reset();

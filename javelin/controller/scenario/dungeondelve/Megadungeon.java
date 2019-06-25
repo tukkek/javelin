@@ -3,14 +3,12 @@ package javelin.controller.scenario.dungeondelve;
 import javelin.controller.Point;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
-import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.DungeonZoner;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.model.world.location.dungeon.feature.LearningStone;
-import javelin.model.world.location.dungeon.feature.StairsDown;
 import javelin.model.world.location.dungeon.feature.inhabitant.Trader;
 import javelin.old.RPG;
 
@@ -30,36 +28,14 @@ public class Megadungeon extends Dungeon{
 	static final int TRADERCHANCE=4;
 
 	public Megadungeon(Integer level,Dungeon parent){
-		super(level,parent);
+		super(level,parent,DungeonDelve.getdungeons());
 		description="Megadungeon";
 	}
 
 	@Override
-	protected void createstairs(DungeonZoner zoner){
-		super.createstairs(zoner);
-		if(floor!=DungeonDelve.FLOORS)
-			features.add(new StairsDown(zoner.getpoint()));
-	}
-
-	@Override
-	public void goup(){
-		if(floor==1){
-			super.goup();
-			return;
-		}
-		Squad.active.ellapse(1);
-		DungeonDelve.getdungeons().get(floor-1).activate(false);
-	}
-
-	@Override
-	public void godown(){
-		Squad.active.ellapse(1);
-		DungeonDelve.getdungeons().get(floor+1).activate(false);
-	}
-
-	@Override
 	protected Feature createspecialchest(Point p){
-		if(floor!=DungeonDelve.FLOORS) return super.createspecialchest(p);
+		if(floors.indexOf(this)!=floors.size()-1)
+			return super.createspecialchest(p);
 		var c=new Chest(p.x,p.y,new McGuffin());
 		c.setspecial();
 		return c;

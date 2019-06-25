@@ -20,8 +20,6 @@ import javelin.model.world.location.dungeon.feature.Altar;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
-import javelin.model.world.location.dungeon.feature.StairsDown;
-import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.old.RPG;
 
 /**
@@ -32,8 +30,6 @@ import javelin.old.RPG;
  */
 public class TempleDungeon extends Dungeon{
 	public Temple temple;
-	/** <code>true</code> if last dungeon level. */
-	public boolean deepest;
 
 	/**
 	 * @param level Encounter level.
@@ -41,10 +37,9 @@ public class TempleDungeon extends Dungeon{
 	 * @param parent Previous dungeon level.
 	 * @param t Temple this floor is a part of.
 	 */
-	public TempleDungeon(int level,boolean deepest,Dungeon parent,Temple t){
-		super(level,parent);
+	public TempleDungeon(int level,Dungeon parent,Temple t){
+		super(level,parent,t.floors);
 		temple=t;
-		this.deepest=deepest;
 		description=temple.descriptionknown;
 	}
 
@@ -77,54 +72,12 @@ public class TempleDungeon extends Dungeon{
 	}
 
 	@Override
-	protected void setlocation(boolean loading){
-		if(!loading) if(Temple.leavingfight)
-			Temple.leavingfight=false;
-		else{
-			Class<? extends Feature> stairs;
-			stairs=Temple.climbing?StairsDown.class:StairsUp.class;
-			Temple.climbing=false;
-			for(Feature f:features)
-				if(stairs.isInstance(f)){
-					herolocation.x=f.x;
-					herolocation.y=f.y;
-					break;
-				}
-		}
-		super.setlocation(loading);
-	}
-
-	@Override
 	protected Feature createspecialchest(Point p){
-		if(deepest) return new Altar(p,temple);
+		if(floors.indexOf(this)==floors.size()-1) return new Altar(p,temple);
 		Chest c=new Chest(p.x,p.y);
 		c.items.add(new Ruby());
 		c.setspecial();
 		return c;
-	}
-
-	@Override
-	public void goup(){
-		int level=temple.floors.indexOf(this);
-		if(level==0)
-			super.goup();
-		else{
-			Squad.active.ellapse(1);
-			Temple.climbing=true;
-			temple.floors.get(level-1).activate(false);
-		}
-	}
-
-	@Override
-	public void godown(){
-		Squad.active.ellapse(1);
-		temple.floors.get(temple.floors.indexOf(this)+1).activate(false);
-	}
-
-	@Override
-	protected void createstairs(DungeonZoner zoner){
-		super.createstairs(zoner);
-		if(!deepest) features.add(new StairsDown(zoner.getpoint()));
 	}
 
 	@Override

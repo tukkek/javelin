@@ -3,8 +3,7 @@ package javelin.controller.scenario.dungeondelve;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.generator.feature.FeatureGenerator;
@@ -14,7 +13,7 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 
 public class DungeonDelveGenerator extends FeatureGenerator{
-	public final Map<Integer,Dungeon> dungeons=new TreeMap<>();
+	public final List<Dungeon> dungeons=new ArrayList<>();
 
 	@Override
 	public Location generate(LinkedList<Realm> realms,
@@ -22,7 +21,7 @@ public class DungeonDelveGenerator extends FeatureGenerator{
 		Dungeon parent=null;
 		for(int floor=1;floor<=DungeonDelve.FLOORS;floor++){
 			var d=new Megadungeon(floor,parent);
-			dungeons.put(floor,d);
+			dungeons.add(d);
 			if(floor==1){
 				d.x=World.scenario.size/2;
 				d.y=d.x;

@@ -174,7 +174,7 @@ public abstract class Template implements Cloneable,DungeonArea{
 
 	void walk(Point tile,HashSet<Point> free){
 		if(!free.add(tile)) return;
-		for(Point step:Point.getadjacent()){
+		for(Point step:Point.getadjacent2()){
 			step.x+=tile.x;
 			step.y+=tile.y;
 			if(step.validate(0,0,width,height)&&tiles[step.x][step.y]!=WALL)

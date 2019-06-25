@@ -156,7 +156,7 @@ public class Charge extends Fire implements AiAction{
 				?state.redTeam
 				:state.blueTeam;
 		for(Point s:threatened)
-			for(Point p:Point.getadjacent()){
+			for(Point p:Point.getadjacent2()){
 				p.x+=s.x;
 				p.y+=s.y;
 				for(Combatant neighbor:opponents)

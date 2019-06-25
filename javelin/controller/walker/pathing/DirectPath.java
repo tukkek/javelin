@@ -34,7 +34,7 @@ public class DirectPath implements Pathing{
 
 	Point takefirststep(Walker w){
 		Point closest=null;
-		for(Point p:Point.getadjacent()){
+		for(Point p:Point.getadjacent2()){
 			p.x+=w.from.x;
 			p.y+=w.from.y;
 			if(w.validate(p,null)

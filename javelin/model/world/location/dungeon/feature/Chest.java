@@ -70,7 +70,7 @@ public class Chest extends Feature{
 
 	@Override
 	public String toString(){
-		return "Floor "+Dungeon.active.floor+" chest: "
+		return "Floor "+Dungeon.active.getfloor()+" chest: "
 				+(items.isEmpty()?"$"+Javelin.format(gold):items);
 	}
 }

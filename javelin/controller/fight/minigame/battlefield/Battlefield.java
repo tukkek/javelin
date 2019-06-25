@@ -82,7 +82,7 @@ public class Battlefield extends Minigame{
 				if(tries>1000) throw new GaveUp();
 				Point spot=new Point(RPG.r(fromx,tox),RPG.r(fromy,toy));
 				if(checkblocked(spot)) continue placing;
-				for(Point p:Point.getadjacent()){
+				for(Point p:Point.getadjacent2()){
 					p.x+=spot.x;
 					p.y+=spot.y;
 					if(checkblocked(p)) continue placing;

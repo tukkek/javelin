@@ -119,7 +119,7 @@ public class DungeonZoner{
 	 * Add randomness so that Chest->Key->Door routes don't become predicatable.
 	 */
 	static List<Point> getadjacent(){
-		List<Point> adjacent=Arrays.asList(Point.getadjacent());
+		List<Point> adjacent=Arrays.asList(Point.getadjacent2());
 		Collections.shuffle(adjacent);
 		return adjacent;
 	}

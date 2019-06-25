@@ -57,7 +57,7 @@ public class Water extends Terrain{
 	boolean checkshore(){
 		if(Squad.active==null) return false;
 		Point current=Squad.active.getlocation();
-		for(Point p:Point.getadjacent()){
+		for(Point p:Point.getadjacent2()){
 			p.x+=current.x;
 			p.y+=current.y;
 			if(p.validate(0,0,World.scenario.size,World.scenario.size)
@@ -88,7 +88,7 @@ public class Water extends Terrain{
 
 	Point expand(ArrayList<Point> pool,World w){
 		var visited=new HashSet<>(pool);
-		var adjacent=Arrays.asList(Point.getadjacent());
+		var adjacent=Arrays.asList(Point.getadjacent2());
 		for(var point:RPG.shuffle(pool))
 			for(var near:RPG.shuffle(adjacent)){
 				var candidate=new Point(point.x+near.x,point.y+near.y);

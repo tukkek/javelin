@@ -96,7 +96,7 @@ public abstract class Item implements Serializable,Cloneable{
 	public Item(final String name,final int price,boolean register){
 		this.name=name;
 		this.price=Javelin.round(price);
-		if(register) if(!ALL.add(this)) System.out.println("Discarded: "+this);
+		if(register) ALL.add(this);
 	}
 
 	/**

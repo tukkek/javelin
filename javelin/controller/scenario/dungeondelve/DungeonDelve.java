@@ -49,8 +49,11 @@ public class DungeonDelve extends Campaign{
 
 	@Override
 	public void ready(){
-		for(Dungeon d:getdungeons())
+		var floors=getdungeons();
+		for(Dungeon d:floors)
 			d.map();
+		Squad.active.setlocation(floors.get(0).getlocation());
+		Squad.active.displace();
 	}
 
 	@Override
@@ -67,8 +70,9 @@ public class DungeonDelve extends Campaign{
 	 * @return {@link DungeonDelveGenerator#dungeons}.
 	 */
 	public static List<Dungeon> getdungeons(){
-		DungeonDelveGenerator fg=(DungeonDelveGenerator)World.seed.featuregenerator;
-		return fg.dungeons;
+		var dungeonDelveGenerator=(DungeonDelveGenerator)World
+				.getseed().featuregenerator;
+		return dungeonDelveGenerator.dungeons;
 	}
 
 	@Override

@@ -19,7 +19,12 @@ import javelin.old.RPG;
  *
  * @author alex
  */
+/**
+ * @author alex
+ *
+ */
 public class Megadungeon extends Dungeon{
+	static final String DESCRIPTION="Megadungeon";
 	/**
 	 * Ideally once per tier (1/5) but that is cutting it too close and entire
 	 * tiers would often end up without a single trader. Giving it a little boost
@@ -27,9 +32,10 @@ public class Megadungeon extends Dungeon{
 	 */
 	static final int TRADERCHANCE=4;
 
+	/** Constructor. */
 	public Megadungeon(Integer level,Dungeon parent){
-		super(level,parent,DungeonDelve.getdungeons());
-		description="Megadungeon";
+		super(level,DESCRIPTION,parent,DungeonDelve.getdungeons());
+		description=DESCRIPTION;
 	}
 
 	@Override

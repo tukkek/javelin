@@ -10,7 +10,7 @@ import javelin.model.unit.condition.Condition;
  * @author alex
  */
 public class Crown extends Relic{
-	public class Knowledgeable extends Condition{
+	class Knowledgeable extends Condition{
 		/** Constructor. */
 		public Knowledgeable(Combatant c){
 			super(c,"all-knowing",Effect.NEUTRAL,20,Float.MAX_VALUE,24*7);
@@ -37,7 +37,7 @@ public class Crown extends Relic{
 	@Override
 	protected boolean activate(Combatant user){
 		user.addcondition(new Knowledgeable(user));
-		Javelin.message(user+" becomes knowledgeable",false);
+		Javelin.message(user+" becomes knowledgeable!",false);
 		return true;
 	}
 }

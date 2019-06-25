@@ -9,6 +9,7 @@ public class McGuffin extends Item{
 	static final String DESCRIPTION="This is the artifact you've been looking for, bring it back to the surface!\n\n"
 			+"It sure is pretty to look at, isn't it? ^^";
 
+	/** Constructor. */
 	public McGuffin(){
 		super("The McGuffin",0,false);
 		usedinbattle=false;

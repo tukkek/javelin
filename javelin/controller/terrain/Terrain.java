@@ -2,8 +2,8 @@ package javelin.controller.terrain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javelin.Javelin;
@@ -236,17 +236,21 @@ public abstract class Terrain implements Serializable{
 	 * @return A new point to be added to the area.
 	 */
 	protected Point expand(HashSet<Point> area,World world){
-		List<Point> pool=new ArrayList<>(area);
-		Point p=new Point(RPG.pick(pool));
-		while(area.contains(p)){
-			p.x+=STEPS[RPG.r(STEPS.length)];
-			p.y+=STEPS[RPG.r(STEPS.length)];
-			if(checkinvalid(p.x,p.y,world)){
-				p=new Point(RPG.pick(pool));
-				WorldGenerator.retry();
+		var adjacent=new ArrayList<>(Arrays.asList(Point.getadjacent()));
+		Point result=null;
+		while(result==null){
+			var p=RPG.pick(area);
+			for(Point next:RPG.shuffle(adjacent)){
+				next.x+=p.x;
+				next.y+=p.y;
+				if(!checkinvalid(next.x,next.y,world)){
+					result=next;
+					break;
+				}
 			}
+			WorldGenerator.retry();
 		}
-		return p;
+		return result;
 	}
 
 	/**
@@ -255,7 +259,7 @@ public abstract class Terrain implements Serializable{
 	 * @return <code>false</code> if for any reason the given coordinate shouldn't
 	 *         be added to this area.
 	 */
-	protected boolean checkinvalid(int x,int y,World world){
+	boolean checkinvalid(int x,int y,World world){
 		return !World.validatecoordinate(x,y)||!generatetile(world.map[x][y],world)
 				||checktown(x,y);
 	}

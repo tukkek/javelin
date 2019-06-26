@@ -1,7 +1,7 @@
 package javelin.model.world.location.order;
 
 import javelin.model.item.Item;
-import javelin.model.item.Potion;
+import javelin.model.item.consumable.Potion;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 

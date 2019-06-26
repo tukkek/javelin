@@ -46,11 +46,6 @@ public class Henge extends Guild{
 		super(DESCRIPTIION,Druid.INSTANCE);
 	}
 
-	void addsummons(ArrayList<Monster> fill){
-		for(Monster m:fill)
-			upgrades.add(new Summon(m.name));
-	}
-
 	ArrayList<Monster> fill(int newlevel){
 		ArrayList<Monster> animals=new ArrayList<>();
 		for(Float tier:Javelin.MONSTERSBYCR.keySet()){

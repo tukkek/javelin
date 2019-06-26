@@ -8,7 +8,7 @@ import javelin.controller.fight.Fight;
 import javelin.controller.scenario.Campaign;
 import javelin.controller.scenario.Scenario;
 import javelin.model.item.Item;
-import javelin.model.item.Ruby;
+import javelin.model.item.consumable.Ruby;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
 import javelin.model.world.location.dungeon.Dungeon;

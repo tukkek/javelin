@@ -1,4 +1,4 @@
-package javelin.model.item;
+package javelin.model.item.consumable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +11,7 @@ import javelin.controller.fight.Fight;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.wish.Wish.WishScreen;
+import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
@@ -34,11 +35,7 @@ public class Ruby extends Item{
 		usedoutofbattle=true;
 		targeted=false;
 		provokesaoo=true;
-	}
-
-	@Override
-	public void register(){
-		// don't
+		sellvalue=0;
 	}
 
 	@Override

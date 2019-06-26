@@ -6,7 +6,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.scenario.Campaign;
-import javelin.model.item.Ruby;
+import javelin.model.item.consumable.Ruby;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;

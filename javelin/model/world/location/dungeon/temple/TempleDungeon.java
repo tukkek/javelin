@@ -10,7 +10,7 @@ import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.table.dungeon.feature.CommonFeatureTable;
 import javelin.controller.terrain.Terrain;
-import javelin.model.item.Ruby;
+import javelin.model.item.consumable.Ruby;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;

@@ -1,6 +1,14 @@
+EIDOLON
+
+A magic stone that, when spent summons an ally for the duration of the battle.
+
 POTIONS
 
 Potions are one-use items that produce a spell-like effect on the user. Their effect is automatic - no prerequisites or rolls are needed. 
+
+PRECIOUS ITEMS
+
+Do not have any use other than selling them for their full value in gold - but if you're lucky some of these objects can sell for very high prices indeed!
 
 SCROLLS
 

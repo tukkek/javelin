@@ -53,7 +53,7 @@ public class Conjurer extends Wizard{
 
 	@Override
 	public void finish(){
-		extension.addAll(findsummons(Summon.SUMMONS));
+		extension.addAll(Summon.select(Summon.SUMMONS, 1));
 		super.finish();
 	}
 }

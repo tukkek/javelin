@@ -7,7 +7,7 @@ import javelin.controller.action.world.UseItems;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.exception.RepeatTurn;
 import javelin.model.item.Item;
-import javelin.model.item.Scroll;
+import javelin.model.item.consumable.Scroll;
 import javelin.model.transport.Transport;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;

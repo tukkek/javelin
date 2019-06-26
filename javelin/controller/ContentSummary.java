@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
@@ -17,6 +18,12 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.model.diplomacy.mandate.Mandate;
 import javelin.model.item.Item;
 import javelin.model.item.Tier;
+import javelin.model.item.Wand;
+import javelin.model.item.artifact.CasterRing;
+import javelin.model.item.consumable.Eidolon;
+import javelin.model.item.consumable.Potion;
+import javelin.model.item.consumable.Scroll;
+import javelin.model.item.precious.PreciousObject;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.skill.Skill.SkillUpgrade;
@@ -34,6 +41,9 @@ import javelin.model.world.location.unique.UniqueLocation;
  * @author alex
  */
 public class ContentSummary{
+	static final List<Class<? extends Item>> ITEMTYPES=List.of(CasterRing.class,
+			Eidolon.class,Potion.class,PreciousObject.class,Scroll.class,Wand.class);
+
 	FileWriter out;
 
 	void print(String line) throws IOException{
@@ -45,6 +55,13 @@ public class ContentSummary{
 	}
 
 	void printitems() throws IOException{
+		print("Items by type:");
+		int all=Item.ALL.size();
+		for(var type:ITEMTYPES){
+			var count=Item.ALL.stream().filter(i->type.isInstance(i)).count();
+			print("  "+type.getSimpleName()+" "+count+" ("+100*count/all+"%)");
+		}
+		print();
 		for(var t:Tier.TIERS){
 			var items=Item.BYTIER.get(t);
 			print(t+"-tier items ("+items.size()+")");
@@ -102,8 +119,8 @@ public class ContentSummary{
 		int nupgrades=upgrades.size()-spells.size()-nskills;
 		int nspells=spells.size()-countsummon(spells)+1;
 		int nkits=Kit.KITS.size();
-		print(nupgrades+" upgrades, "+nspells+" spells, "+nskills+" skills, "+nkits
-				+" kits");
+		print(nkits+" kits, "+nupgrades+" upgrades, "+nspells+" spells, "+nskills
+				+" skills");
 		printmaps();
 		HashSet<Class<? extends Actor>> locationtypes=new HashSet<>();
 		int uniquelocations=0;

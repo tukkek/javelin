@@ -1,5 +1,7 @@
 package javelin.model.item.artifact;
 
+import java.util.List;
+
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 
@@ -24,7 +26,7 @@ public class CasterRing extends Artifact{
 	 * Artifacts are CasterRings, which is much more acceptable, with around 50%
 	 * or less being the current goal.
 	 */
-	public static int[] POWERLEVELS=new int[]{2};
+	public static List<Integer> POWERLEVELS=List.of(2);
 
 	int uses;
 	Spell spell;
@@ -41,7 +43,7 @@ public class CasterRing extends Artifact{
 		if(uses==1)
 			prefix="Minor ring";
 		else if(uses==2)
-			prefix="Ring";
+			prefix="Caster ring";
 		else if(uses==3)
 			prefix="Major ring";
 		else if(uses==4)
@@ -50,7 +52,7 @@ public class CasterRing extends Artifact{
 			prefix="Epic ring";
 		else
 			throw new RuntimeException("Invalid number of uses #casterring");
-		return prefix+" of "+s.name.toLowerCase();
+		return prefix+" ["+s.name.toLowerCase()+"]";
 	}
 
 	@Override

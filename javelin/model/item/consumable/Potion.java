@@ -1,9 +1,11 @@
-package javelin.model.item;
+package javelin.model.item.consumable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.ContentSummary;
+import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.view.screen.BattleScreen;
@@ -11,6 +13,11 @@ import javelin.view.screen.BattleScreen;
 /**
  * Represent a consumable potion to be used in-battle. Any monster can use a
  * potion.
+ *
+ * TODO if it's ever necessary to increase the number of potions compared to
+ * other items, Flasks can be added, which refresh their content every 24 hours.
+ * Same can be repeated with Big flasks (2x/day), ad aeternum. See
+ * {@link ContentSummary}.
  *
  * @author alex
  */

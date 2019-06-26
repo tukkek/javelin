@@ -32,7 +32,6 @@ import javelin.model.item.key.TempleKey;
 import javelin.model.transport.Ship;
 import javelin.model.transport.Transport;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
@@ -252,7 +251,8 @@ public class Scenario implements Serializable{
 	 *
 	 * @see SquadScreen
 	 */
-	public void upgradesquad(Combatants squad){
+	public void upgradesquad(Squad squadp){
+		var squad=squadp.members;
 		ArrayList<Combatant> members=new ArrayList<>(squad);
 		HashSet<Kit> chosen=new HashSet<>(members.size());
 		while(!members.isEmpty()){

@@ -1,20 +1,20 @@
 package javelin.controller.scenario;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 import javelin.Debug;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.exception.UnbalancedTeams;
-import javelin.controller.upgrade.classes.Commoner;
 import javelin.model.Realm;
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.item.Item;
 import javelin.model.item.key.TempleKey;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
@@ -86,18 +86,18 @@ public class Campaign extends Scenario{
 	}
 
 	@Override
-	public void upgradesquad(Combatants squad){
-		float startingcr=totalcr(squad);
-		while(ChallengeCalculator.calculateel(squad)<INITIALEL)
-			Commoner.SINGLETON.upgrade(squad.getweakest());
-		Squad.active.gold=RewardCalculator.getgold(totalcr(squad)-startingcr);
-	}
-
-	static float totalcr(ArrayList<Combatant> squad){
-		int cr=0;
-		for(Combatant c:squad)
-			cr+=ChallengeCalculator.calculatecr(c.source);
-		return cr;
+	public void upgradesquad(Squad squad){
+		var members=squad.members;
+		var crsum=Math.round(Math.round(
+				members.stream().collect(Collectors.summingDouble(c->c.source.cr))));
+		while(ChallengeCalculator.calculateelfromcrs(
+				members.stream().map(c->c.source.cr+c.xp.floatValue())
+						.collect(Collectors.toList()))<INITIALEL){
+			var boost=1f/members.size();
+			for(var unit:members)
+				unit.xp=unit.xp.add(new BigDecimal(boost));
+		}
+		squad.gold+=RewardCalculator.getgold(4-crsum);
 	}
 
 	@Override

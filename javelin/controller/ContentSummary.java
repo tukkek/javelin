@@ -43,6 +43,11 @@ import javelin.model.world.location.unique.UniqueLocation;
 public class ContentSummary{
 	static final List<Class<? extends Item>> ITEMTYPES=List.of(CasterRing.class,
 			Eidolon.class,Potion.class,PreciousObject.class,Scroll.class,Wand.class);
+	/**
+	 * Whether to include or not non-functional objects when listing by
+	 * {@link Tier}.
+	 */
+	static final boolean SHOWPRECIOUS=true;
 
 	FileWriter out;
 
@@ -66,7 +71,8 @@ public class ContentSummary{
 			var items=Item.BYTIER.get(t);
 			print(t+"-tier items ("+items.size()+")");
 			for(var i:items.sort())
-				print(" - "+i+" ($"+Javelin.format(i.price)+")");
+				if(SHOWPRECIOUS||!(i instanceof PreciousObject))
+					print(" - "+i+" ($"+Javelin.format(i.price)+")");
 			print();
 		}
 	}

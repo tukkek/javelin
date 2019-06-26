@@ -50,8 +50,9 @@ public class SquadScreen extends InfoScreen{
 
 	void select(){
 		page(0);
-		if(World.scenario!=null) World.scenario.upgradesquad(squad.members);
-		squad.gold=getstartinggold();
+		if(World.scenario!=null) World.scenario.upgradesquad(squad);
+		squad.gold+=getstartinggold();
+		squad.gold=Javelin.round(squad.gold);
 		squad.sort();
 	}
 

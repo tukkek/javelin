@@ -1,26 +1,30 @@
 Version 1.7
 
  * Mouse support!
+ * Game sounds!
  * 3 gameplay modes: Campaign, Dungeon World and Art of War!
  * 2 mini-games: Arena and Battlefield!
  * City management redesign, with 7 city traits and 36 projects!
- * Caster rings!
- * Improved battle AI!
- * First martial discipline: Steel Serpent!
- * Dungeon redesign (templated-based maps, 4 tiers, new features)!
+ * New systems for town quests, diplomacy, urban and wilderness events!
+ * New items: caster rings (grants spells) and Eidolons (summons allies)!
+ * Dungeon redesign (templated-based maps, 4 tiers, keys, NPCs and more)!
  * Introducing 6 Haunt locations!
- * New kits: 8 Wizards (one per school of magic) and 5 Dragoons (one per chromatic dragon)!
+ * New kits: 8 wizards (one per school of magic), 5 dragoons and more!
+ * Items and Upgrades no longer tied to Realms (upgrades now fully kit-based)
+ * Hostile monsters and mercenaries can now be Elite or kit-based NPCs
+ * Martial disciplines (Steel Serpent)
+ * Hostile towns now spawn incursions that can capture locations (campaign)
  * New locations: natural resources, Assassins Guild and Deep Dungeon
  * New skills: Bluff and Sense Motive
- * Infiltrate hostile locations
+ * New world action: Infiltrate hostile locations
  * World map fog-of-war
  * More responsive user-interface during battles
+ * Improved battle AI
  * Multi-threaded world generation
- * New character kits
- * Auto-attack using the Tab key
+ * Auto-attack using the Tab key (for both close and ranged combat)
  * Improved artwork
- * Items and Upgrades no longer tied to Realms (all upgrades now entirely based on kits)
  * Gems and Art Objects as treasure
+ * Downloads now come with self-contained, optmized Java runtimes, per OS
 
 Version 1.6 (2016-07-15) 
 

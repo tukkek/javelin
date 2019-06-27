@@ -46,7 +46,7 @@ public abstract class Item implements Serializable,Cloneable{
 	/**
 	 * All available item types from cheapest to most expensive.
 	 */
-	public static final ItemSelection ALL=new ItemSelection();
+	public static final ItemSelection ITEMS=new ItemSelection();
 	/** Map of items by price in gold coins ($). */
 	public static final TreeMap<Integer,ItemSelection> BYPRICE=new TreeMap<>();
 	/** Map of items by price {@link Tier} */
@@ -107,7 +107,7 @@ public abstract class Item implements Serializable,Cloneable{
 		this.name=name;
 		this.price=Javelin.round(price);
 		if(register){
-			ALL.add(this);
+			ITEMS.add(this);
 			BYTIER.get(Tier.get(getlevel())).add(this);
 		}
 	}
@@ -244,7 +244,7 @@ public abstract class Item implements Serializable,Cloneable{
 		Gem.generate();
 		ArtPiece.generate();
 		Eidolon.generate();
-		cheapestartifact=ALL.stream().filter(i->i instanceof Artifact)
+		cheapestartifact=ITEMS.stream().filter(i->i instanceof Artifact)
 				.map(i->i.price).min(Integer::compare).get();
 	}
 
@@ -280,8 +280,8 @@ public abstract class Item implements Serializable,Cloneable{
 	}
 
 	/**
-	 * @param from A sample of items (like {@link #ALL} or from
-	 *          {@link Tier#ITEMS}).
+	 * @param from A sample of items (like {@link #ITEMS} or from
+	 *          {@link #BYTIER}).
 	 * @return The same items but with randomized parameters, from cheapest to
 	 *         most expensive (previously shuffled to introduce order randomness
 	 *         for items with exact same price).

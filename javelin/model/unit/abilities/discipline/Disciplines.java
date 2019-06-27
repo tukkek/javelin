@@ -6,6 +6,12 @@ import java.util.TreeMap;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 
+/**
+ * A collection of learned {@link Maneuver}s by their {@link Discipline#name}s.
+ *
+ * @see Combatant#disciplines
+ * @author alex
+ */
 public class Disciplines extends TreeMap<String,Maneuvers>{
 	public Disciplines(){
 		super();

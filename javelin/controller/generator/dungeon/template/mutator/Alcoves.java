@@ -17,7 +17,7 @@ public class Alcoves extends Mutator{
 	public void apply(Template t){
 		HashSet<Direction> directions=new HashSet<>();
 		while(directions.isEmpty())
-			for(Direction d:Direction.ALL)
+			for(Direction d:Direction.DIRECTIONS)
 				if(RPG.chancein(4)) directions.add(d);
 		for(Direction d:directions){
 			int depth=1;

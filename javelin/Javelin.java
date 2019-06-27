@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeMap;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
@@ -30,7 +29,6 @@ import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
@@ -65,6 +63,7 @@ public class Javelin{
 	 * logging.
 	 */
 	public static final boolean DEBUG=System.getProperty("debug")!=null;
+
 	/** TODO turn into {@link Enum} */
 	public static final String PERIODMORNING="Morning";
 	/** TODO turn into {@link Enum} */
@@ -75,21 +74,16 @@ public class Javelin{
 	public static final String PERIODNIGHT="Night";
 	public static final String[] PERIODS=new String[]{PERIODMORNING,PERIODNOON,
 			PERIODEVENING,PERIODNIGHT};
+
 	public static final Image[] ICONS=new Image[]{Images.get("javelin")};
-	/**
-	 * Monster descriptions, separate from {@link Monster} data to avoid
-	 * duplication in memory when using {@link Monster#clone()}.
-	 *
-	 * @see Combatant#clonedeeply()
-	 */
-	public static final TreeMap<String,String> DESCRIPTIONS=new TreeMap<>();
-	/** All loaded monster mapped by challenge rating. */
-	public static final TreeMap<Float,List<Monster>> MONSTERSBYCR=new TreeMap<>();
-	/** All loaded XML {@link Monster}s. See {@link MonsterReader}. */
-	public static final List<Monster> ALLMONSTERS=new ArrayList<>();
+
+	/** Roll target on a d20. */
 	public static final int HARD=16;
+	/** Roll target on a d20. */
 	public static final int FAIR=12;
+	/** Roll target on a d20. */
 	public static final int EASY=8;
+	/** Roll target on a d20. */
 	public static final int EFFORTLESS=4;
 
 	static final String TITLE="Javelin";

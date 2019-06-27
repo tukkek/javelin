@@ -25,7 +25,6 @@ import javelin.model.world.location.town.labor.military.DisciplineAcademy.BuildD
  * Maneuvers is enough to get a discipline to level 4 (even if not ideal).
  *
  * @author alex
- * @see Disciplines#ALL
  */
 public abstract class Discipline extends Kit{
 	/**

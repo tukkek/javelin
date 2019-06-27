@@ -68,7 +68,7 @@ public class Skill implements Serializable{
 	 */
 	public static final HashMap<String,Skill> BYNAME=new HashMap<>();
 	/** All skills available in Javelin. */
-	public static final HashSet<Skill> ALL=new HashSet<>();
+	public static final HashSet<Skill> SKILLS=new HashSet<>();
 
 	/** Singleton. */
 	public static final Skill ACROBATICS=new Acrobatics();
@@ -158,7 +158,7 @@ public class Skill implements Serializable{
 		name=names[0].toLowerCase();
 		ability=a;
 		SkillUpgrade upgrade=new SkillUpgrade();
-		ALL.add(this);
+		SKILLS.add(this);
 		UPGRADES.put(this,upgrade);
 		for(String name:names)
 			BYNAME.put(name.toLowerCase(),this);

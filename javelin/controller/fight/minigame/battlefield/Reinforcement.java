@@ -32,7 +32,7 @@ public class Reinforcement{
 
 	void generatecommander(int el){
 		for(float cr=ChallengeCalculator.eltocr(el);commander.isEmpty();cr--){
-			List<Monster> tier=Javelin.MONSTERSBYCR.get(cr);
+			List<Monster> tier=Monster.BYCR.get(cr);
 			if(tier!=null) commander.add(new Combatant(RPG.pick(tier),true));
 		}
 	}

@@ -47,7 +47,7 @@ public class SummonAlly extends Wish{
 	}
 
 	Monster getcandidate(int cr){
-		List<Monster> candidates=Javelin.MONSTERSBYCR.get(new Float(cr));
+		List<Monster> candidates=Monster.BYCR.get(new Float(cr));
 		if(candidates==null) return null;
 		Collections.shuffle(candidates);
 		for(Monster candidate:candidates)
@@ -57,7 +57,7 @@ public class SummonAlly extends Wish{
 
 	Float findnextlowercr(Float cr){
 		Float newcr=-Float.MAX_VALUE;
-		for(Float c:Javelin.MONSTERSBYCR.keySet())
+		for(Float c:Monster.BYCR.keySet())
 			if(c<cr) newcr=c;
 		return newcr;
 	}

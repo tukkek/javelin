@@ -17,6 +17,7 @@ import javelin.controller.map.Map;
 import javelin.controller.terrain.Terrain;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
 import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
@@ -24,8 +25,8 @@ import javelin.view.screen.BattleScreen;
 public class Battlefield extends Minigame{
 	public static final boolean DEBUG=false;
 	public static final int HIGHESTEL=ChallengeCalculator
-			.crtoel(RPG.pick(Javelin.MONSTERSBYCR
-					.get(Javelin.MONSTERSBYCR.descendingKeySet().first())).cr);
+			.crtoel(RPG.pick(Monster.BYCR
+					.get(Monster.BYCR.descendingKeySet().first())).cr);
 
 	/** This is used as a come-back mechanic (negative feedback loop). */
 	static final float MAXARMY=30;

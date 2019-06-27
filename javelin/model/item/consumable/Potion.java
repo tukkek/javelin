@@ -54,7 +54,7 @@ public class Potion extends Item{
 
 	public static List<Potion> getpotions(){
 		ArrayList<Potion> potions=new ArrayList<>();
-		for(Item i:ALL)
+		for(Item i:ITEMS)
 			if(i instanceof Potion) potions.add((Potion)i);
 		return potions;
 	}

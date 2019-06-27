@@ -61,7 +61,7 @@ public abstract class Guild extends Academy{
 
 	Monster getcandidate(int level){
 		ArrayList<Monster> candidates=new ArrayList<>();
-		for(Monster m:Javelin.ALLMONSTERS)
+		for(Monster m:Monster.MONSTERS)
 			if(m.cr<=level/2&&m.think(-1)&&Kit.getpreferred(m,true).contains(kit))
 				candidates.add(m);
 		return candidates.isEmpty()?null:RPG.pick(candidates);

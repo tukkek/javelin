@@ -47,7 +47,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 	/** Canonical list of all spells by lower-case name. */
 	public static final HashMap<String,Spell> BYNAME=new HashMap<>();
 	/** All spells. */
-	public static final List<Spell> ALL=new ArrayList<>();
+	public static final List<Spell> SPELLS=new ArrayList<>();
 
 	/** Load spells. */
 	static public void setup(){
@@ -56,7 +56,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 				if(u instanceof Spell){
 					var s=(Spell)u;
 					BYNAME.put(s.name.toLowerCase(),s);
-					ALL.add(s);
+					SPELLS.add(s);
 				}
 	}
 

@@ -75,7 +75,7 @@ public class Caravan extends Actor{
 		displace();
 		determinedestination(Town.gettowns());
 		while(inventory.size()<NUMBEROFITEMS){
-			Item i=RPG.pick(Item.ALL);
+			Item i=RPG.pick(Item.ITEMS);
 			if(!(i instanceof Artifact)){
 				i=i.clone();
 				inventory.add(i);

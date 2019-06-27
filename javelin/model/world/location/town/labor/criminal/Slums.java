@@ -73,7 +73,7 @@ public class Slums extends Location{
 	Item generateitem(){
 		int limit=getlimit();
 		List<Item> items=new ArrayList<>();
-		for(Item i:Item.ALL){
+		for(Item i:Item.ITEMS){
 			if(i.price>limit) break;
 			items.add(i.clone());
 		}

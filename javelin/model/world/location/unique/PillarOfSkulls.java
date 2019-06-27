@@ -109,10 +109,10 @@ public class PillarOfSkulls extends UniqueLocation{
 			ArrayList<Combatant> mock=new ArrayList<>();
 			float targetcr=ChallengeCalculator.goldtocr(i.price);
 			while(mock.isEmpty()){
-				List<Monster> tier=Javelin.MONSTERSBYCR.get(targetcr);
+				List<Monster> tier=Monster.BYCR.get(targetcr);
 				if(tier==null){
 					targetcr-=1;
-					if(targetcr<Javelin.MONSTERSBYCR.firstKey()) return false;
+					if(targetcr<Monster.BYCR.firstKey()) return false;
 					continue;
 				}
 				mock.add(new Combatant(RPG.pick(tier),false));

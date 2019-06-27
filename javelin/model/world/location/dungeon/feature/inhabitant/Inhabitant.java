@@ -92,8 +92,8 @@ public abstract class Inhabitant extends Feature{
 
 	Monster generate(float crmin,float crmax){
 		ArrayList<Monster> candidates=new ArrayList<>();
-		for(Float cr:Javelin.MONSTERSBYCR.keySet())
-			if(crmin<=cr&&cr<=crmax) candidates.addAll(Javelin.MONSTERSBYCR.get(cr));
+		for(Float cr:Monster.BYCR.keySet())
+			if(crmin<=cr&&cr<=crmax) candidates.addAll(Monster.BYCR.get(cr));
 		Collections.shuffle(candidates);
 		for(Monster m:candidates)
 			if(validate(m)) return m;

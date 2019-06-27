@@ -200,7 +200,7 @@ public class RewardCalculator{
 		while(RPG.chancein(2))
 			maxitems+=1;
 		var floor=pool/maxitems;
-		for(Item i:Item.randomize(Item.ALL)){
+		for(Item i:Item.randomize(Item.ITEMS)){
 			if(!(floor<=i.price&&i.price<pool)) continue;
 			pool-=i.price;
 			items.add(i.clone());

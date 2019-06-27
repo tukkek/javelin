@@ -69,8 +69,8 @@ public class MercenariesGuild extends Fortification{
 	void generatemercenary(){
 		int cr=RPG.r(11,20);
 		List<Monster> candidates=new ArrayList<>();
-		for(Float tier:Javelin.MONSTERSBYCR.keySet())
-			if(cr/2<=tier&&tier<cr) for(Monster m:Javelin.MONSTERSBYCR.get(tier))
+		for(Float tier:Monster.BYCR.keySet())
+			if(cr/2<=tier&&tier<cr) for(Monster m:Monster.BYCR.get(tier))
 				if(m.think(-1)&&m.humanoid) candidates.add(m);
 		Monster m=RPG.pick(candidates);
 		Combatant c=NpcGenerator.generatenpc(m,cr);

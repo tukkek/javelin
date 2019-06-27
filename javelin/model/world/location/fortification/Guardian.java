@@ -55,8 +55,8 @@ public class Guardian extends Fortification{
 	static public Combatant findnativemonster(float cr,Actor spot){
 		String terrain=Terrain.get(spot.x,spot.y).toString();
 		while(true){
-			if(Javelin.MONSTERSBYCR.descendingKeySet().first()<cr) return null;
-			List<Monster> candidates=Javelin.MONSTERSBYCR.get(cr);
+			if(Monster.BYCR.descendingKeySet().first()<cr) return null;
+			List<Monster> candidates=Monster.BYCR.get(cr);
 			if(candidates!=null){
 				Collections.shuffle(candidates);
 				for(Monster m:candidates)

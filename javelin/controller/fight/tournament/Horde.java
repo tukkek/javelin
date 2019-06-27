@@ -28,7 +28,7 @@ public class Horde extends Exhibition{
 			@Override
 			public ArrayList<Combatant> getfoes(Integer teamel){
 				crloop:for(Monster m:new CrIterator(
-						Javelin.MONSTERSBYCR.descendingMap())){
+						Monster.BYCR.descendingMap())){
 					ArrayList<Combatant> opponents=new ArrayList<>();
 					int el=0;
 					for(int i=0;i<EncounterGenerator.getmaxenemynumber();i++){

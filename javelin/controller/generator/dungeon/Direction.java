@@ -75,7 +75,7 @@ public abstract class Direction{
 			return cursor;
 		}
 	};
-	public static final Direction[] ALL=new Direction[]{NORTH,SOUTH,WEST,EAST};
+	public static final Direction[] DIRECTIONS=new Direction[]{NORTH,SOUTH,WEST,EAST};
 
 	public String name;
 	public Point reverse;
@@ -90,7 +90,7 @@ public abstract class Direction{
 	public abstract ArrayList<Point> getborder(DungeonArea t);
 
 	public static Direction getrandom(){
-		return ALL[RPG.r(0,3)];
+		return DIRECTIONS[RPG.r(0,3)];
 	}
 
 	@Override

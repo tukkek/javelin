@@ -48,9 +48,9 @@ public class Henge extends Guild{
 
 	ArrayList<Monster> fill(int newlevel){
 		ArrayList<Monster> animals=new ArrayList<>();
-		for(Float tier:Javelin.MONSTERSBYCR.keySet()){
+		for(Float tier:Monster.BYCR.keySet()){
 			if(tier>level) break;
-			for(Monster m:Javelin.MONSTERSBYCR.get(tier))
+			for(Monster m:Monster.BYCR.get(tier))
 				if(m.type==MonsterType.ANIMAL&&!contains(m)) animals.add(m);
 		}
 		if(animals.isEmpty()) return animals;

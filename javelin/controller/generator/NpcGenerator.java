@@ -43,7 +43,7 @@ public class NpcGenerator{
 		List<Monster> last=null;
 		for(float cr:getcrs()){
 			if(cr>=5) return;
-			List<Monster> tier=Javelin.MONSTERSBYCR.get(cr);
+			List<Monster> tier=Monster.BYCR.get(cr);
 			if(tier==null) continue;
 			if(last!=null){
 				double elites=gettarget(tier);
@@ -65,7 +65,7 @@ public class NpcGenerator{
 
 	void generatenpcs(){
 		for(float cr:getcrs()){
-			List<Monster> tier=Javelin.MONSTERSBYCR.get(cr);
+			List<Monster> tier=Monster.BYCR.get(cr);
 			if(1<=cr&&cr<=MAXCR&&!candidates.isEmpty()){
 				double npcs=gettarget(tier);
 				for(int i=0;i<npcs;i++){
@@ -89,7 +89,7 @@ public class NpcGenerator{
 	}
 
 	TreeSet<Float> getcrs(){
-		TreeSet<Float> crs=new TreeSet<>(Javelin.MONSTERSBYCR.keySet());
+		TreeSet<Float> crs=new TreeSet<>(Monster.BYCR.keySet());
 		for(int cr=1;cr<=MAXCR;cr++)
 			crs.add(new Float(cr));
 		return crs;

@@ -38,7 +38,7 @@ public class Linear extends Template{
 
 	List<Point> getdots(){
 		List<Point> borders=new ArrayList<>();
-		for(Direction d:Direction.ALL)
+		for(Direction d:Direction.DIRECTIONS)
 			borders.addAll(d.getborder(this));
 		int sides=Integer.MAX_VALUE;
 		sides=RPG.r(Math.min(width,height),width+height);
@@ -62,7 +62,7 @@ public class Linear extends Template{
 	}
 
 	void fill(){
-		for(Direction d:Direction.ALL)
+		for(Direction d:Direction.DIRECTIONS)
 			for(Point outer:d.getborder(this))
 				while(outer.validate(0,0,width,height)&&tiles[outer.x][outer.y]==FLOOR){
 					tiles[outer.x][outer.y]=WALL;

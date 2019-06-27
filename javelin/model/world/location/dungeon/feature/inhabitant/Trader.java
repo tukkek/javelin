@@ -59,7 +59,7 @@ public class Trader extends Inhabitant{
 		if(mincr<1) mincr=1;
 		final var mingold=RewardCalculator.getgold(mincr);
 		final var maxgold=RewardCalculator.getgold(maxcr);
-		var inventory=Item.randomize(Item.ALL).stream()
+		var inventory=Item.randomize(Item.ITEMS).stream()
 				.filter(i->mingold<=i.price&&i.price<=maxgold)
 				.filter(i->!(i instanceof PreciousObject)).collect(Collectors.toList());
 		int inventorysize=RPG.r(OPTIONSMIN,OPTIONSMAX);

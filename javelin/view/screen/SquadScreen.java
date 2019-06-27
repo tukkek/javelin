@@ -27,7 +27,7 @@ public class SquadScreen extends InfoScreen{
 
 	static{
 		for(float cr:SELECTABLE){
-			List<Monster> tier=Javelin.MONSTERSBYCR.get(cr);
+			List<Monster> tier=Monster.BYCR.get(cr);
 			if(tier!=null) for(Monster candidate:tier)
 				if(candidate.isalive()) CANDIDATES.add(candidate);
 		}

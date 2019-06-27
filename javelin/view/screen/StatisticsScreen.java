@@ -33,7 +33,7 @@ public class StatisticsScreen extends InfoScreen{
 		text=gettext(c,true);
 		if(updatescreens().equals('v')){
 			text="(The text below is taken from the d20 SRD and doesn't necessarily reflect the in-game enemy)\n\n"
-					+Javelin.DESCRIPTIONS.get(c.source.name);
+					+Monster.DESCRIPTIONS.get(c.source.name);
 			updatescreens();
 		}
 		Javelin.app.switchScreen(BattleScreen.active);
@@ -158,7 +158,7 @@ public class StatisticsScreen extends InfoScreen{
 		if(c.source.ranks.isEmpty()) return;
 		Monster m=c.source;
 		String output="";
-		for(Skill s:Skill.ALL){
+		for(Skill s:Skill.SKILLS){
 			if(s.getranks(c)==0) continue;
 			String trained=m.trained.contains(s.name)?"":" (untrained)";
 			output+=s.name+" "+s.getsignedbonus(c)+trained+", ";

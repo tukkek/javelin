@@ -23,7 +23,7 @@ public class Geometric extends Linear{
 			dotpool+=dotsperborder;
 			int ndots=Math.round(Math.round(Math.floor(dotpool)));
 			dotpool-=ndots;
-			placedots(ndots,Direction.ALL[i],dots);
+			placedots(ndots,Direction.DIRECTIONS[i],dots);
 			sides-=ndots;
 		}
 		return dots;

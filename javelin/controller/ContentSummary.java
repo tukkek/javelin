@@ -24,6 +24,7 @@ import javelin.model.item.consumable.Eidolon;
 import javelin.model.item.consumable.Potion;
 import javelin.model.item.consumable.Scroll;
 import javelin.model.item.precious.PreciousObject;
+import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.skill.Skill.SkillUpgrade;
@@ -61,9 +62,9 @@ public class ContentSummary{
 
 	void printitems() throws IOException{
 		print("Items by type:");
-		int all=Item.ALL.size();
+		int all=Item.ITEMS.size();
 		for(var type:ITEMTYPES){
-			var count=Item.ALL.stream().filter(i->type.isInstance(i)).count();
+			var count=Item.ITEMS.stream().filter(i->type.isInstance(i)).count();
 			print("  "+type.getSimpleName()+" "+count+" ("+100*count/all+"%)");
 		}
 		print();
@@ -116,8 +117,8 @@ public class ContentSummary{
 	}
 
 	void printmisc() throws IOException{
-		print(Javelin.ALLMONSTERS.size()+" monsters");
-		print(Item.ALL.size()-Item.ARTIFACT.size()+" items, "+Item.ARTIFACT.size()
+		print(Monster.MONSTERS.size()+" monsters");
+		print(Item.ITEMS.size()-Item.ARTIFACT.size()+" items, "+Item.ARTIFACT.size()
 				+" artifacts, 7 relics");
 		Collection<Spell> spells=Spell.BYNAME.values();
 		var upgrades=Upgrade.getall();

@@ -221,9 +221,9 @@ public class MonsterReader extends DefaultHandler{
 	public void describe(String value){
 		if(monster==null) return;
 		final String monstername=monster.name;
-		String previous=Javelin.DESCRIPTIONS.get(monstername);
+		String previous=Monster.DESCRIPTIONS.get(monstername);
 		if(previous==null) previous="";
-		Javelin.DESCRIPTIONS.put(monstername,previous+value);
+		Monster.DESCRIPTIONS.put(monstername,previous+value);
 	}
 
 	void registerspells(String known,Monster monster){
@@ -340,16 +340,16 @@ public class MonsterReader extends DefaultHandler{
 		debugSpecials(debugfeats,"Feats:");
 		postprocessspells();
 		int nMonsters=0;
-		for(Monster m:Javelin.ALLMONSTERS){
+		for(Monster m:Monster.MONSTERS){
 			if(m.passive) continue;
-			List<Monster> list=Javelin.MONSTERSBYCR.get(m.cr);
+			List<Monster> list=Monster.BYCR.get(m.cr);
 			if(list==null){
 				list=new ArrayList<>();
-				Javelin.MONSTERSBYCR.put(m.cr,list);
+				Monster.BYCR.put(m.cr,list);
 			}
 			list.add(m);
 		}
-		for(Entry<Float,List<Monster>> e:Javelin.MONSTERSBYCR.entrySet()){
+		for(Entry<Float,List<Monster>> e:Monster.BYCR.entrySet()){
 			final List<Monster> value=e.getValue();
 			final int n=value.size();
 			nMonsters+=n;
@@ -377,7 +377,7 @@ public class MonsterReader extends DefaultHandler{
 		ArrayList<Summon> summonspell=new ArrayList<>();
 		ArrayList<Monster> summoncaster=new ArrayList<>();
 		ArrayList<Monster> updated=new ArrayList<>();
-		for(Monster m:Javelin.ALLMONSTERS){
+		for(Monster m:Monster.MONSTERS){
 			if(m.spells.isEmpty()) continue;
 			updated.add(m);
 			for(Spell s:m.spells)
@@ -489,7 +489,7 @@ public class MonsterReader extends DefaultHandler{
 		}catch(final Exception e){
 			throw new RuntimeException("Challenge rating issue "+monster.name,e);
 		}
-		Javelin.ALLMONSTERS.add(monster);
+		Monster.MONSTERS.add(monster);
 	}
 
 	/** To be used to log <code>monsters.xml</xml> processing. */

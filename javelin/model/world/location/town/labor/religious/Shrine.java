@@ -53,7 +53,7 @@ public class Shrine extends Fortification{
 	public static final List<Spell> RITUALS=new ArrayList<>();
 
 	static{
-		for(var s:Spell.ALL)
+		for(var s:Spell.SPELLS)
 			if(s.isritual) RITUALS.add(s);
 	}
 

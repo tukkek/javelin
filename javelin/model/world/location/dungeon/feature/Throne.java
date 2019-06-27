@@ -56,7 +56,7 @@ public class Throne extends Feature{
 	 * @see Spell#castinbattle
 	 */
 	public static List<Spell> filterspells(final int level){
-		return Spell.ALL.stream()
+		return Spell.SPELLS.stream()
 				.filter(s->s.castinbattle&&s.level==Spell.getmaxlevel(level))
 				.collect(Collectors.toList());
 

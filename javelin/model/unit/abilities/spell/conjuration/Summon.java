@@ -72,7 +72,7 @@ public class Summon extends Spell{
 		this.monstername=monstername;
 		this.chance=chance;
 		castinbattle=true;
-		if(!Javelin.MONSTERSBYCR.isEmpty()) postloadmonsters();
+		if(!Monster.BYCR.isEmpty()) postloadmonsters();
 		isring=false;
 	}
 
@@ -210,7 +210,7 @@ public class Summon extends Spell{
 	 * @see MonsterReader
 	 */
 	public static void setupsummons(){
-		Javelin.ALLMONSTERS.stream().filter(m->!m.passive)
+		Monster.MONSTERS.stream().filter(m->!m.passive)
 				.map(m->new Summon(m.name,1)).forEach(s->SUMMONS.add(s));
 		for(var k:Kit.KITS)
 			k.finish();

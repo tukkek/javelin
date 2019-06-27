@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.TreeMap;
 
 import javelin.Javelin;
 import javelin.controller.AbilityModification;
@@ -20,6 +21,7 @@ import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.factor.SpellsFactor;
 import javelin.controller.comparator.FeatByNameComparator;
+import javelin.controller.db.reader.MonsterReader;
 import javelin.controller.db.reader.fields.Skills;
 import javelin.controller.map.Map;
 import javelin.controller.quality.subtype.Construct;
@@ -61,6 +63,18 @@ import javelin.old.RPG;
  * @author alex
  */
 public class Monster implements Cloneable,Serializable{
+	/**
+	 * Monster descriptions, separate from {@link Monster} data to avoid
+	 * duplication in memory when using {@link Monster#clone()}.
+	 *
+	 * @see Combatant#clonedeeply()
+	 */
+	public static final TreeMap<String,String> DESCRIPTIONS=new TreeMap<>();
+	/** All loaded XML {@link Monster}s. See {@link MonsterReader}. */
+	public static final List<Monster> MONSTERS=new ArrayList<>();
+	/** All loaded monster mapped by challenge rating. */
+	public static final TreeMap<Float,List<Monster>> BYCR=new TreeMap<>();
+
 	/**
 	 * Monster types as per the SRD.
 	 *
@@ -782,7 +796,7 @@ public class Monster implements Cloneable,Serializable{
 	 */
 	public static Monster get(String name){
 		Monster monster=null;
-		for(Monster m:Javelin.ALLMONSTERS)
+		for(Monster m:Monster.MONSTERS)
 			if(m.name.equalsIgnoreCase(name)){
 				monster=m.clone();
 				break;
@@ -797,7 +811,7 @@ public class Monster implements Cloneable,Serializable{
 	 */
 	public static List<Monster> get(MonsterType type){
 		ArrayList<Monster> monsters=new ArrayList<>();
-		for(Monster m:Javelin.ALLMONSTERS)
+		for(Monster m:Monster.MONSTERS)
 			if(m.type==type) monsters.add(m);
 		return monsters;
 	}

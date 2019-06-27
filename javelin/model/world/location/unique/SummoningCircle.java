@@ -60,7 +60,7 @@ public class SummoningCircle extends Academy{
 	}
 
 	Monster pickmonster(float cr){
-		List<Monster> monsters=Javelin.MONSTERSBYCR.get(cr);
+		List<Monster> monsters=Monster.BYCR.get(cr);
 		Collections.shuffle(monsters);
 		for(Monster m:monsters)
 			if(m.type.equals(MonsterType.OUTSIDER)) return m;

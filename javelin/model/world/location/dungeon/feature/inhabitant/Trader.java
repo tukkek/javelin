@@ -14,7 +14,7 @@ import javelin.model.item.Item;
 import javelin.model.item.precious.PreciousObject;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.town.labor.productive.Shop;
+import javelin.model.world.location.town.labor.basic.Shop;
 import javelin.old.RPG;
 import javelin.view.screen.BattleScreen;
 

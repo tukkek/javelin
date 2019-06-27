@@ -2,6 +2,7 @@ package javelin.model.item.artifact;
 
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 
@@ -31,8 +32,10 @@ public class CasterRing extends Artifact{
 	int uses;
 	Spell spell;
 
+	/** Constructor. */
 	public CasterRing(Spell s,int uses){
 		super(getname(s,uses),s.casterlevel*s.level*400*uses,Slot.FINGER);
+		if(Javelin.DEBUG) assert s.isring;
 		spell=s;
 		this.uses=uses;
 		waste=false; // wasted as Spell

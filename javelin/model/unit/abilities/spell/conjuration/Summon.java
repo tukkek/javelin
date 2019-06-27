@@ -3,6 +3,7 @@ package javelin.model.unit.abilities.spell.conjuration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javelin.Javelin;
 import javelin.controller.ai.ChanceNode;
@@ -171,27 +172,34 @@ public class Summon extends Spell{
 	}
 
 	/**
-	 * Since there's one {@link Summon}s per {@link Monster} in the game, this
-	 * method helps summoning kits to offer a sensible selection of spell choices.
+	 * Since there's one {@link Summon} per {@link Monster} in the game, this
+	 * method helps summoning kits to offer a sensible amount of spell choices.
 	 *
-	 * @param perlevel How many spells sintances to return, for each level. Note
-	 *          that this is the maximum limit, as it may not find enough spells
-	 *          to fulfill this target.
-	 * @return Tries to find one summon for {@link Spell#casterlevel} 1 through 9
-	 *         from the given pool and return them on a list.
-	 * @see Summon#ALLSUMMONS
+	 * @param pool What pool of Summons to choose from - usually
+	 *          {@link Summon#ALLSUMMONS} or a filtered version of it.
+	 * @param perlevel How many spell instances to return, for each level. Note
+	 *          that this is the maximum limit, as it may not find enough (or any)
+	 *          spells to fulfill this target.
+	 * @param casterlevel Only gather summons of this given
+	 *          {@link Spell#casterlevel}.
+	 *
+	 * @see Stream#filter(java.util.function.Predicate)
+	 */
+	public static List<Summon> select(List<Summon> pool,int perlevel,
+			final int casterlevel){
+		var tier=pool.stream().filter(s->s.level==casterlevel)
+				.collect(Collectors.toList());
+		return tier.subList(0,Math.min(perlevel,tier.size()));
+	}
+
+	/**
+	 * @return The result of calling {@link #select(List, int, int)} with
+	 *         {@link Spell#casterlevel} 1 through 9.
 	 */
 	public static ArrayList<Summon> select(List<Summon> pool,int perlevel){
 		var summons=new ArrayList<Summon>(9*perlevel);
-		for(var casterlevel=1;casterlevel<=9;casterlevel++){
-			final var level=casterlevel;
-			var tier=pool.stream().filter(s->s.level==level)
-					.collect(Collectors.toList());
-			if(tier.isEmpty()) continue;
-			tier=RPG.shuffle(new ArrayList<>(tier));
-			for(var i=0;i<tier.size()&&i<perlevel;i++)
-				summons.add(tier.get(i));
-		}
+		for(var casterlevel=1;casterlevel<=9;casterlevel++)
+			summons.addAll(select(pool,perlevel,casterlevel));
 		return summons;
 	}
 

@@ -9,7 +9,7 @@ import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.abilities.spell.conjuration.healing.NeutralizePoison;
 import javelin.model.unit.abilities.spell.conjuration.healing.RaiseDead;
 import javelin.model.unit.abilities.spell.conjuration.healing.Ressurect;
-import javelin.model.unit.abilities.spell.conjuration.healing.Restoration;
+import javelin.model.unit.abilities.spell.conjuration.healing.LesserRestoration;
 import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureCriticalWounds;
 import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureLightWounds;
 import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureModerateWounds;
@@ -29,9 +29,9 @@ public class Conjurer extends Wizard{
 	public static final List<Spell> HEALING=List.of(new CureLightWounds(),
 			new CureModerateWounds(),new CureSeriousWounds(),
 			new CureCriticalWounds());
-	/** Restoration spells like {@link Ressurect} and {@link Restoration}. */
+	/** Restoration spells like {@link Ressurect} and {@link LesserRestoration}. */
 	public static final List<Spell> RESTORATION=List.of(new NeutralizePoison(),
-			new RaiseDead(),new Ressurect(),new Restoration());
+			new RaiseDead(),new Ressurect(),new LesserRestoration());
 	/** Singleton. */
 	public static final Conjurer INSTANCE=new Conjurer();
 

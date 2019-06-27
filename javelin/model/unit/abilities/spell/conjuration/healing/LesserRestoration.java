@@ -21,7 +21,7 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  *
  * @author alex
  */
-public class Restoration extends Touch{
+public class LesserRestoration extends Touch{
 	static final ArrayList<Class<? extends Condition>> CONDITIONS=new ArrayList<>();
 
 	static{
@@ -30,7 +30,7 @@ public class Restoration extends Touch{
 	}
 
 	/** Constructor. */
-	public Restoration(){
+	public LesserRestoration(){
 		super("Lesser restoration",2,ChallengeCalculator.ratespelllikeability(2),
 				Realm.WATER);
 		ispotion=true;

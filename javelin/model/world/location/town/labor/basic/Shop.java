@@ -1,4 +1,4 @@
-package javelin.model.world.location.town.labor.productive;
+package javelin.model.world.location.town.labor.basic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,10 +10,8 @@ import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.item.Tier;
-import javelin.model.item.consumable.Potion;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureLightWounds;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.order.CraftingOrder;
@@ -102,7 +100,7 @@ public class Shop extends Location{
 
 		@Override
 		public Location getgoal(){
-			return new Shop(false);
+			return new Shop();
 		}
 
 		@Override
@@ -194,27 +192,29 @@ public class Shop extends Location{
 		}
 	}
 
-	ItemSelection selection=new ItemSelection();
+	/** Items for sale. */
+	protected ItemSelection selection=new ItemSelection();
+
 	OrderQueue crafting=new OrderQueue();
 	int level=1;
 
 	/**
 	 * @param r Determines selection of {@link Item}s sold.
-	 * @param first If <code>true</code>, will add {@link Potion}s of
-	 *          {@link CureLightWounds} to the inventory. Meant to be used at the
-	 *          starting {@link Town} as an early-game helper.
 	 * @see Realm#getitems()
 	 */
-	public Shop(boolean first){
+	public Shop(){
 		super("Shop");
 		allowentry=false;
 		discard=false;
 		gossip=true;
-		if(first) selection.add(new Potion(new CureLightWounds()));
 		stock();
 	}
 
-	void stock(){
+	/**
+	 * Adds more items to this shop's {@link #selection} when first built or when
+	 * upgrading.
+	 */
+	protected void stock(){
 		var tier=Tier.TIERS.get(level-1);
 		var items=RPG.shuffle(new ArrayList<>(Item.BYTIER.get(tier)));
 		for(int i=0;i<items.size()&&i<5;i++)

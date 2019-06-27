@@ -31,8 +31,7 @@ public class Wand extends Item{
 	public Wand(Spell s){
 		super("Wand of "+s.name.toLowerCase(),s.level*s.casterlevel*15+s.components,
 				true);
-		if(Javelin.DEBUG&&s.level>4)
-			throw new RuntimeException("Cannot be a wand (level too high): "+s);
+		if(Javelin.DEBUG) assert s.iswand&&s.level>4;
 		if(name.contains("ray of ")) name=name.replace("ray of ","");
 		spell=s.clone();
 		spell.provokeaoo=false;

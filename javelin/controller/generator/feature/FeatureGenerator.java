@@ -36,10 +36,10 @@ import javelin.model.world.location.haunt.SunkenShip;
 import javelin.model.world.location.haunt.WitchesHideout;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.governor.MonsterGovernor;
-import javelin.model.world.location.town.labor.basic.BasicAcademy;
 import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.model.world.location.town.labor.basic.Lodge;
-import javelin.model.world.location.town.labor.productive.Shop;
+import javelin.model.world.location.town.labor.basic.starting.BasicAcademy;
+import javelin.model.world.location.town.labor.basic.starting.BasicShop;
 import javelin.model.world.location.unique.AdventurersGuild;
 import javelin.model.world.location.unique.DeepDungeon;
 import javelin.model.world.location.unique.PillarOfSkulls;
@@ -185,7 +185,7 @@ public class FeatureGenerator implements Serializable{
 
 	static void generatestartingarea(World seed,Town t){
 		spawnnear(t,new Lodge(),seed,1,2,true);
-		spawnnear(t,new Shop(true),seed,1,2,true);
+		spawnnear(t,new BasicShop(),seed,1,2,true);
 		spawnnear(t,new BasicAcademy(),seed,1,2,true);
 		Point p=t.getlocation();
 		ArrayList<Monster> recruits=Terrain.get(p.x,p.y).getmonsters();

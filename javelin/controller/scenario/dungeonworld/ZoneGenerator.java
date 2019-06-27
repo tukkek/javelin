@@ -31,13 +31,13 @@ import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.dungeon.temple.WaterTemple;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.labor.LaborDeck;
 import javelin.model.world.location.town.labor.Labor;
+import javelin.model.world.location.town.labor.LaborDeck;
 import javelin.model.world.location.town.labor.Trait;
 import javelin.model.world.location.town.labor.basic.Lodge;
+import javelin.model.world.location.town.labor.basic.starting.BasicShop;
 import javelin.model.world.location.town.labor.cultural.MagesGuild.BuildMagesGuild;
 import javelin.model.world.location.town.labor.expansive.Hub;
-import javelin.model.world.location.town.labor.productive.Shop;
 import javelin.old.RPG;
 
 /**
@@ -257,7 +257,7 @@ public class ZoneGenerator extends FeatureGenerator{
 			District d=t.getdistrict();
 			placeintown(new BuildMagesGuild().generateacademy(),d,z);
 			placeintown(RPG.pick(Kit.KITS).createguild(),d,z);
-			placeintown(new Shop(true),d,z);
+			placeintown(new BasicShop(),d,z);
 			placeintown(new Lodge(),d,z);
 		}
 		towns.add(t);

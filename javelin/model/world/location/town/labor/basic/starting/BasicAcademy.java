@@ -1,9 +1,8 @@
-package javelin.model.world.location.town.labor.basic;
+package javelin.model.world.location.town.labor.basic.starting;
 
 import java.util.ArrayList;
 import java.util.Set;
 
-import javelin.controller.kit.Kit;
 import javelin.controller.scenario.Campaign;
 import javelin.controller.upgrade.NaturalArmor;
 import javelin.controller.upgrade.Upgrade;
@@ -52,7 +51,7 @@ import javelin.model.world.location.town.labor.Labor;
  * all their unit's desired builds while still largely relying on the randomness
  * of building more interesting in-depth Guilds to further advance those builds.
  *
- * @see Kit#basic #see {@link Kit#prestige}
+ * @see BasicShop
  * @author alex
  */
 public class BasicAcademy extends Academy{

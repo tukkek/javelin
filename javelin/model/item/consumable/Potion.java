@@ -29,6 +29,7 @@ public class Potion extends Item{
 	 */
 	public Potion(Spell s){
 		super("Potion of "+s.name.toLowerCase(),s.level*s.casterlevel*50,true);
+		if(Javelin.DEBUG) assert s.ispotion;
 		usedinbattle=s.castinbattle;
 		usedoutofbattle=s.castoutofbattle;
 		spell=s;

@@ -41,7 +41,7 @@ import javelin.model.world.location.ResourceSite.Resource;
 import javelin.model.world.location.town.governor.Governor;
 import javelin.model.world.location.town.governor.HumanGovernor;
 import javelin.model.world.location.town.governor.MonsterGovernor;
-import javelin.model.world.location.town.labor.Deck;
+import javelin.model.world.location.town.labor.LaborDeck;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.quest.Quest;
 import javelin.old.RPG;
@@ -108,7 +108,7 @@ public class Town extends Location{
 	/**
 	 * Alphabetically ordered set of urban traits.
 	 *
-	 * @see Deck
+	 * @see LaborDeck
 	 */
 	public TreeSet<String> traits=new TreeSet<>();
 

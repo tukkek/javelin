@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.labor.Deck;
+import javelin.model.world.location.town.labor.LaborDeck;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.Trait;
 import javelin.model.world.location.town.labor.basic.Growth;
@@ -59,7 +59,7 @@ public class HumanGovernor extends Governor{
 	private boolean nexttrait(ArrayList<Labor> hand){
 		if(town.traits.isEmpty()) return true;
 		for(Labor l:hand)
-			if(!Deck.isbasic(l)) return false;
+			if(!LaborDeck.isbasic(l)) return false;
 		return true;
 	}
 

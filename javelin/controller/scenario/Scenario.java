@@ -48,7 +48,7 @@ import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.labor.Deck;
+import javelin.model.world.location.town.labor.LaborDeck;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.expansive.Hub;
 import javelin.model.world.location.town.labor.productive.Shop;
@@ -143,7 +143,7 @@ public class Scenario implements Serializable{
 	 * Will clear locations as indicated by {@link Fortification#clear}.
 	 */
 	public boolean clearlocations=true;
-	/** Wheter a full {@link Deck} should be allowed. */
+	/** Wheter a full {@link LaborDeck} should be allowed. */
 	public boolean allowlabor=false;
 	/**
 	 * If <code>false</code>, only allow Actors marked as

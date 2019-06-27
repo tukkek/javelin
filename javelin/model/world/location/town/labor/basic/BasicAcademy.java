@@ -1,94 +1,81 @@
 package javelin.model.world.location.town.labor.basic;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Set;
 
 import javelin.controller.kit.Kit;
+import javelin.controller.scenario.Campaign;
+import javelin.controller.upgrade.NaturalArmor;
 import javelin.controller.upgrade.Upgrade;
+import javelin.controller.upgrade.ability.RaiseCharisma;
+import javelin.controller.upgrade.ability.RaiseConstitution;
+import javelin.controller.upgrade.ability.RaiseDexterity;
+import javelin.controller.upgrade.ability.RaiseIntelligence;
+import javelin.controller.upgrade.ability.RaiseStrength;
+import javelin.controller.upgrade.ability.RaiseWisdom;
+import javelin.controller.upgrade.classes.Aristocrat;
+import javelin.controller.upgrade.classes.Commoner;
+import javelin.controller.upgrade.classes.Expert;
+import javelin.controller.upgrade.classes.Warrior;
+import javelin.controller.upgrade.damage.MeleeDamage;
+import javelin.controller.upgrade.damage.RangedDamage;
 import javelin.model.Realm;
 import javelin.model.item.Item;
+import javelin.model.item.Tier;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.fortification.Academy;
 import javelin.model.world.location.fortification.Guild;
 import javelin.model.world.location.town.District;
-import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.labor.Build;
 import javelin.model.world.location.town.labor.Labor;
-import javelin.model.world.location.town.labor.Trait;
-import javelin.old.RPG;
 
 /**
- * An {@link Academy} that any {@link Town} can build regardless of
- * {@link Trait}s. Will offer basic upgrades from non-prestige {@link Kit}s
- * only.
+ * A non-{@link Labor} location that is spawned in the starting area of a
+ * {@link Campaign}. The {@link Upgrade}s within are fixed and hand-selected to
+ * be of most value for a starting, low-level player. It cannot be further
+ * upgraded.
  *
- * This is a solution to the problem of players needing to have {@link Upgrade}
- * options as soon as possible in their games. The initial solution was Realm
- * academies, which are now unfeasible without {@link Realm}s being linked to
- * {@link Item}s or {@link Upgrade}s. The next solution was to just put a random
- * {@link Guild} in each {@link Town} but that would mean only being able to
- * level up a single play style for the player's whole {@link Squad}. This
- * approach allows us to mix-and-match and offer more variety but still keeping
- * options simple and limited, incentivizing the player to build a proper
- * variety of {@link Guild}s accross {@link Town}s.
+ * The main benefit of a {@link BasicAcademy} over {@link Realm} Academies (or a
+ * random {@link Guild}) is that it prevents, to a reasonable extent, players
+ * from feeling like they need to start a new game repeatedly until they get the
+ * most optimal set of circunstances, thus giving incentives for them to bore
+ * themselves.
  *
- * Another benefit of a {@link BasicAcademy} over Relam Academies or a random
- * Guild is that it prevents, to a reasonable extent, players from feeling like
- * they need to start a new game repeatedly until they get the most optimal set
- * of circunstances. While the {@link Upgrade} of a basic academy is still
- * random, it has been designed to offer a decent variety and quantity of
- * choices in the vast majority of cases.
+ * This {@link Location} also tackles the problem of players needing to have
+ * {@link Upgrade} options as soon as possible in their games. The initial
+ * solution was Realm academies, which are now unfeasible without {@link Realm}s
+ * being linked to {@link Item}s or {@link Upgrade}s. The next solution was to
+ * just put a random {@link Guild} in each {@link Town} but that would mean only
+ * being able to level up a single play style for the player's whole
+ * {@link Squad}. This approach allows for players to quickly start working on
+ * all their unit's desired builds while still largely relying on the randomness
+ * of building more interesting in-depth Guilds to further advance those builds.
  *
  * @see Kit#basic #see {@link Kit#prestige}
  * @author alex
  */
 public class BasicAcademy extends Academy{
-	/**
-	 * {@link Town} project for {@link BasicAcademy}.
-	 *
-	 * TODO this is currenlty not bieng used, in the hopes that having a single
-	 * {@link BasicAcademy} in the starting area will be enough to provide a
-	 * player with an initial selection of {@link Upgrade}. Ideally, the player
-	 * would go on to {@link Build} and find a wider selection of {@link Guild}s
-	 * in other {@link Town}s as the game progresses.
-	 *
-	 * Since the {@link BasicAcademy} content is largely random, lacking theme and
-	 * identity (even visually), it should be used to the minimal extent possible.
-	 *
-	 * TODO if playtesting shows that not needing a {@link Labor} is a decent
-	 * solution, remove it and {@link BuildBasicAcademy} altogether.
-	 */
-	static final Labor BUILD=new BuildBasicAcademy();
-
-	static class BuildBasicAcademy extends Build{
-		BuildBasicAcademy(){
-			super("Build academy",5,Rank.HAMLET,null);
-		}
-
-		@Override
-		public Location getgoal(){
-			return new BasicAcademy();
-		}
-
-		@Override
-		public boolean validate(District d){
-			return super.validate(d)&&d.getlocation(BasicAcademy.class)==null;
-		}
-	}
-
 	static final String DESCRIPTION="Academy";
 
 	/** Constructor. */
 	public BasicAcademy(){
-		super(DESCRIPTION,DESCRIPTION,getbasicupgrades());
+		super(DESCRIPTION,DESCRIPTION,Tier.LOW.minlevel,Tier.LOW.maxlevel,Set.of(),
+				null,null);
+		/*TODO raise damage isn't "proper" for low-level characters but there's
+		 * not any other good "generic" alternatives for now. It's not intended
+		 * that players should return to the basic academy during mid- and late-
+		 * game to raise damage.*/
+		upgrades.addAll(Set.of(RaiseStrength.SINGLETON,RaiseDexterity.SINGLETON,
+				RaiseConstitution.SINGLETON,RaiseIntelligence.SINGLETON,
+				RaiseWisdom.SINGLETON,RaiseCharisma.SINGLETON,Commoner.SINGLETON,
+				Warrior.SINGLETON,Expert.SINGLETON,Aristocrat.SINGLETON,
+				NaturalArmor.LEATHER,NaturalArmor.SCALES,NaturalArmor.PLATES,
+				MeleeDamage.INSTANCE,RangedDamage.INSTANCE));
 	}
 
-	static HashSet<Upgrade> getbasicupgrades(){
-		HashSet<Upgrade> upgrades=new HashSet<>();
-		RPG.shuffle(new ArrayList<>(Kit.KITS)).stream().filter(k->!k.prestige)
-				.limit(3).forEach(k->upgrades.addAll(k.basic));
-		return upgrades;
+	@Override
+	public ArrayList<Labor> getupgrades(District d){
+		return new ArrayList<>(0);
 	}
 }

@@ -11,7 +11,7 @@ import javelin.view.screen.WorldScreen;
 
 /**
  * Represents a card that can be used to progress a {@link Town}'s district.
- * Initially each labor is an empty placeholder inside a {@link Deck}. Upon
+ * Initially each labor is an empty placeholder inside a {@link LaborDeck}. Upon
  * drawing they are cloned and the clones defined as actual cards via
  * {@link #define(Town)}.
  *
@@ -66,7 +66,7 @@ public abstract class Labor implements Serializable,Cloneable{
 
 	/**
 	 * Clones and {@link #define()}s a project, so that it can go from a
-	 * {@link Deck} to actually being worked on by a {@link Town}.
+	 * {@link LaborDeck} to actually being worked on by a {@link Town}.
 	 *
 	 * @return the clone, which should be used from here onwards.
 	 */

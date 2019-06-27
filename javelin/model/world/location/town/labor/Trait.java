@@ -12,7 +12,7 @@ import javelin.model.world.location.town.Town;
  * a Town can be mercantile (interested in commerce), natural
  * (ecologically-oriented), both or neither.
  *
- * Each Trait comes with its own {@link Deck} of {@link Labor} projects. This is
+ * Each Trait comes with its own {@link LaborDeck} of {@link Labor} projects. This is
  * the basis for the deck-building town-management game loop.
  *
  * @author alex
@@ -42,7 +42,7 @@ public class Trait extends Labor{
 	 * @param name Trait name.
 	 * @param deck {@link Labor}s this trait unlocks.
 	 */
-	public Trait(String name,Deck deck){
+	public Trait(String name,LaborDeck deck){
 		super("Trait: "+name.toLowerCase(),deck.size(),Rank.HAMLET);
 		traitname=name;
 	}

@@ -52,7 +52,7 @@ import javelin.model.world.location.unique.SummoningCircle.BuildSummoningCircle;
  *
  * @author alex
  */
-public class Deck extends ArrayList<Labor>{
+public class LaborDeck extends ArrayList<Labor>{
 	/** All {@link Town} {@link Trait}s. */
 	public static final List<Trait> TRAITS=new ArrayList<>(7);
 	static final boolean DEBUG=false;
@@ -78,20 +78,20 @@ public class Deck extends ArrayList<Labor>{
 	static final Labor[] RELIGIOUS=new Labor[]{new BuildShrine(),
 			new BuildSanctuary()};
 
-	/** List of {@link Deck}s by {@link Trait} names. */
-	public static final HashMap<String,Deck> DECKS=new HashMap<>();
-	static final Deck DEFAULT=new Deck();
+	/** List of {@link LaborDeck}s by {@link Trait} names. */
+	public static final HashMap<String,LaborDeck> DECKS=new HashMap<>();
+	static final LaborDeck DEFAULT=new LaborDeck();
 
 	static{
 		populate(DEFAULT,null,BASE);
 		if(World.scenario.allowlabor){
-			populate(new Deck(),Trait.EXPANSIVE,EXPANSIVE);
-			populate(new Deck(),Trait.MERCANTILE,MERCANTILE);
-			populate(new Deck(),Trait.MILITARY,MILITARY);
-			populate(new Deck(),Trait.MAGICAL,MAGICAL);
-			populate(new Deck(),Trait.CRIMINAL,CRIMINAL);
-			populate(new Deck(),Trait.RELIGIOUS,RELIGIOUS);
-			populate(new Deck(),Trait.NATURAL,NATURAL);
+			populate(new LaborDeck(),Trait.EXPANSIVE,EXPANSIVE);
+			populate(new LaborDeck(),Trait.MERCANTILE,MERCANTILE);
+			populate(new LaborDeck(),Trait.MILITARY,MILITARY);
+			populate(new LaborDeck(),Trait.MAGICAL,MAGICAL);
+			populate(new LaborDeck(),Trait.CRIMINAL,CRIMINAL);
+			populate(new LaborDeck(),Trait.RELIGIOUS,RELIGIOUS);
+			populate(new LaborDeck(),Trait.NATURAL,NATURAL);
 			for(String title:new ArrayList<>(DECKS.keySet())){
 				/*
 				 * TODO just a placeholder to get rid on unused sets during
@@ -114,7 +114,7 @@ public class Deck extends ArrayList<Labor>{
 	 *         only have the {@link #DEFAULT} {@link Labor} cards.
 	 */
 	public static ArrayList<Labor> generate(Town t){
-		Deck d=new Deck();
+		var d=new LaborDeck();
 		d.addAll(DEFAULT);
 		for(String trait:t.traits)
 			d.addAll(DECKS.get(trait));
@@ -123,7 +123,7 @@ public class Deck extends ArrayList<Labor>{
 		return d;
 	}
 
-	static void populate(Deck d,String title,Labor[] cards){
+	static void populate(LaborDeck d,String title,Labor[] cards){
 		for(Labor l:cards)
 			d.add(l);
 		if(title!=null) DECKS.put(title,d);
@@ -142,7 +142,7 @@ public class Deck extends ArrayList<Labor>{
 	/** @see ContentSummary */
 	public static String getsummary(){
 		int count=DEFAULT.size();
-		for(Deck d:DECKS.values())
+		for(var d:DECKS.values())
 			count+=d.size();
 		var detailed=DECKS.keySet().stream().sorted()
 				.map(t->DECKS.get(t).size()+" "+t).collect(Collectors.joining(", "));

@@ -9,7 +9,7 @@ import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.labor.Deck;
+import javelin.model.world.location.town.labor.LaborDeck;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.Trait;
 import javelin.old.RPG;
@@ -58,7 +58,7 @@ public abstract class Governor implements Serializable{
 	 */
 	public boolean draw(){
 		District d=town.getdistrict();
-		for(Labor l:Deck.generate(town)){
+		for(Labor l:LaborDeck.generate(town)){
 			l=l.generate(town);
 			if(!hand.contains(l)&&!projects.contains(l)&&l.validate(d)){
 				hand.add(l);

@@ -105,8 +105,6 @@ public abstract class Academy extends Fortification{
 	public int stash;
 	/** Upgrades that can be learned here. */
 	public HashSet<Upgrade> upgrades;
-	/** If <code>true</code> will allow the academy to be pillaged for money. */
-	public boolean pillage=true;
 	/** If a single unit parks with a vehicle here it is stored. */
 	public Transport parking=null;
 	public int level=0;
@@ -131,6 +129,7 @@ public abstract class Academy extends Fortification{
 		gossip=true;
 	}
 
+	/** Constructor. */
 	public Academy(String descriptionknown,String descriptionunknown,
 			HashSet<Upgrade> upgrades){
 		this(descriptionknown,descriptionunknown,Math.max(1,upgrades.size()-1),

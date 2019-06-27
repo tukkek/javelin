@@ -31,7 +31,7 @@ import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.dungeon.temple.WaterTemple;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.labor.Deck;
+import javelin.model.world.location.town.labor.LaborDeck;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.Trait;
 import javelin.model.world.location.town.labor.basic.Lodge;
@@ -48,7 +48,7 @@ import javelin.old.RPG;
  */
 public class ZoneGenerator extends FeatureGenerator{
 	static final double MINDISTANCE=5;
-	static final ArrayList<Trait> TRAITS=new ArrayList<>(Deck.TRAITS);
+	static final ArrayList<Trait> TRAITS=new ArrayList<>(LaborDeck.TRAITS);
 	static final ArrayList<Realm> REALMS=new ArrayList<>(
 			Arrays.asList(Realm.values()));
 

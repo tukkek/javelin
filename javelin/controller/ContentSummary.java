@@ -30,7 +30,7 @@ import javelin.model.unit.skill.Skill.SkillUpgrade;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.town.labor.Deck;
+import javelin.model.world.location.town.labor.LaborDeck;
 import javelin.model.world.location.town.quest.Quest;
 import javelin.model.world.location.unique.UniqueLocation;
 
@@ -137,7 +137,7 @@ public class ContentSummary{
 		}
 		print(locationtypes.size()-uniquelocations+" world location types, "
 				+uniquelocations+" unique locations");
-		print(Deck.getsummary());
+		print(LaborDeck.getsummary());
 		print(Quest.printsummary());
 		print(WildEvents.instance.printsummary("wilderness events"));
 		print(UrbanEvents.instance.printsummary("Urban events"));

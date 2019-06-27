@@ -47,7 +47,6 @@ public class SummoningCircle extends Academy{
 		super(DESCRIPTION,DESCRIPTION,new HashSet<Upgrade>());
 		minlevel=minlevelp;
 		maxlevel=maxlevelp;
-		pillage=false;
 		populate();
 	}
 

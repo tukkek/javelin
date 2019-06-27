@@ -1,10 +1,8 @@
 package javelin.view.screen.upgrading;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -58,15 +56,6 @@ public class AcademyScreen extends UpgradingScreen{
 	@Override
 	protected ArrayList<Upgrade> getupgrades(){
 		return new ArrayList<>(academy.upgrades);
-	}
-
-	@Override
-	public List<Option> getoptions(){
-		List<Option> options=super.getoptions();
-		if(academy.pillage&&ChallengeCalculator
-				.calculateel(Squad.active.members)>academy.targetel)
-			options.add(new Pillage(academy));
-		return options;
 	}
 
 	@Override

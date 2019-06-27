@@ -24,7 +24,7 @@ Version 1.7
  * Auto-attack using the Tab key (for both close and ranged combat)
  * Improved artwork
  * Gems and Art Objects as treasure
- * Downloads now come with self-contained, optmized Java runtimes, per OS
+ * Downloads now come with self-contained, optmized per-OS Java 12 runtimes
 
 Version 1.6 (2016-07-15) 
 

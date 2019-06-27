@@ -1,3 +1,5 @@
+JAVA=12
+
 #!/bin/bash
 git diff --exit-code preferences.properties > /dev/null
 if [ $? -eq 1 ]; then echo "Unclean preferences file."; exit; fi
@@ -26,6 +28,6 @@ function build() {
     popd > /dev/null
     rm -rf "build/output/${system}"
 }
-build "11" "linux"
-build "11" "windows"
-build "11" "mac"
+build "$JAVA" "linux"
+build "$JAVA" "windows"
+build "$JAVA" "mac"

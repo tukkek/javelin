@@ -10,6 +10,7 @@ javelin.controller.action.world
 javelin.controller.ai
 javelin.controller.ai.cache
 javelin.controller.ai.valueselector
+javelin.controller.audio
 javelin.controller.challenge
 javelin.controller.challenge.factor
 javelin.controller.challenge.factor.quality
@@ -17,7 +18,18 @@ javelin.controller.comparator
 javelin.controller.db
 javelin.controller.db.reader
 javelin.controller.db.reader.fields
+javelin.controller.event
+javelin.controller.event.urban
+javelin.controller.event.urban.diplomatic
+javelin.controller.event.urban.encounter
+javelin.controller.event.urban.negative
+javelin.controller.event.urban.neutral
+javelin.controller.event.urban.positive
 javelin.controller.event.wild
+javelin.controller.event.wild.negative
+javelin.controller.event.wild.neutral
+javelin.controller.event.wild.positive
+javelin.controller.event.wild.positive.skill
 javelin.controller.exception
 javelin.controller.exception.battle
 javelin.controller.fight
@@ -36,6 +48,8 @@ javelin.controller.generator.dungeon.template.mutator
 javelin.controller.generator.encounter
 javelin.controller.generator.feature
 javelin.controller.kit
+javelin.controller.kit.dragoon
+javelin.controller.kit.wizard
 javelin.controller.map
 javelin.controller.map.location
 javelin.controller.map.location.haunt
@@ -53,6 +67,7 @@ javelin.controller.quality.resistance
 javelin.controller.quality.subtype
 javelin.controller.scenario
 javelin.controller.scenario.artofwar
+javelin.controller.scenario.dungeondelve
 javelin.controller.scenario.dungeonworld
 javelin.controller.table
 javelin.controller.table.dungeon
@@ -64,6 +79,7 @@ javelin.controller.upgrade
 javelin.controller.upgrade.ability
 javelin.controller.upgrade.classes
 javelin.controller.upgrade.damage
+javelin.controller.upgrade.damage.effect
 javelin.controller.upgrade.movement
 javelin.controller.walker
 javelin.controller.walker.overlay
@@ -71,11 +87,18 @@ javelin.controller.walker.pathing
 javelin.controller.walker.state
 javelin.controller.wish
 javelin.model
+javelin.model.diplomacy
+javelin.model.diplomacy.mandate
+javelin.model.diplomacy.mandate.influence
+javelin.model.diplomacy.mandate.meta
+javelin.model.diplomacy.mandate.unit
 javelin.model.item
 javelin.model.item.artifact
+javelin.model.item.consumable
 javelin.model.item.instrument
 javelin.model.item.key
 javelin.model.item.key.door
+javelin.model.item.precious
 javelin.model.item.relic
 javelin.model.state
 javelin.model.transport
@@ -106,6 +129,7 @@ javelin.model.unit.feat.attack
 javelin.model.unit.feat.attack.expertise
 javelin.model.unit.feat.attack.focus
 javelin.model.unit.feat.attack.shot
+javelin.model.unit.feat.internal
 javelin.model.unit.feat.save
 javelin.model.unit.feat.skill
 javelin.model.unit.skill
@@ -125,6 +149,7 @@ javelin.model.world.location.town
 javelin.model.world.location.town.governor
 javelin.model.world.location.town.labor
 javelin.model.world.location.town.labor.basic
+javelin.model.world.location.town.labor.basic.starting
 javelin.model.world.location.town.labor.criminal
 javelin.model.world.location.town.labor.cultural
 javelin.model.world.location.town.labor.ecological
@@ -132,6 +157,8 @@ javelin.model.world.location.town.labor.expansive
 javelin.model.world.location.town.labor.military
 javelin.model.world.location.town.labor.productive
 javelin.model.world.location.town.labor.religious
+javelin.model.world.location.town.quest
+javelin.model.world.location.town.quest.basic
 javelin.model.world.location.unique
 javelin.old
 javelin.old.messagepanel

@@ -2,6 +2,8 @@ package javelin.view;
 
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
@@ -11,6 +13,7 @@ import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 
+import javelin.Debug;
 import javelin.model.state.Meld;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -23,6 +26,9 @@ import javelin.model.world.location.town.Town;
  * @author alex
  */
 public class Images{
+	static GraphicsConfiguration ENVIRONMENT=GraphicsEnvironment
+			.getLocalGraphicsEnvironment().getDefaultScreenDevice()
+			.getDefaultConfiguration();
 	static final TreeMap<String,Image> CACHE=new TreeMap<>();
 	static final TreeMap<String,Image> BURIEDCACHE=new TreeMap<>();
 
@@ -75,8 +81,12 @@ public class Images{
 		Image i=CACHE.get(file);
 		if(i!=null) return i;
 		try{
-			i=ImageIO.read(new File("avatars"+File.separator+file+".png"));
-			CACHE.put(file,i);
+			var raw=ImageIO.read(new File("avatars"+File.separator+file+".png"));
+			var w=raw.getWidth(null);
+			var h=raw.getHeight(null);
+			i=ENVIRONMENT.createCompatibleImage(w,h,Transparency.TRANSLUCENT);
+			i.getGraphics().drawImage(raw,0,0,null);
+			CACHE.put(file,raw);
 			return i;
 		}catch(IOException e){
 			throw new RuntimeException(file,e);
@@ -87,7 +97,8 @@ public class Images{
 	 * @param alpha Alpha level. 1 is 100% opaque, 0 is 100% transparent.
 	 */
 	public static Image maketransparent(float alpha,Image image){
-		BufferedImage transparent=new BufferedImage(32,32,Transparency.TRANSLUCENT);
+		BufferedImage transparent=ENVIRONMENT.createCompatibleImage(32,32,
+				Transparency.TRANSLUCENT);
 		Graphics2D g=transparent.createGraphics();
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha));
 		g.drawImage(image,0,0,null);
@@ -95,6 +106,7 @@ public class Images{
 		return transparent;
 	}
 
+	/** @see Debug */
 	public static void clearcache(){
 		CACHE.clear();
 		BURIEDCACHE.clear();

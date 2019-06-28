@@ -259,16 +259,6 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 		return members.toString();
 	}
 
-	/**
-	 * Use {@link Item#grab()} instead
-	 *
-	 * @param key Adds this item to a random {@link #equipment} bag.
-	 */
-	@Deprecated
-	public void receiveitem(Item key){
-		equipment.add(key);
-	}
-
 	@Override
 	public Boolean destroy(Incursion i){
 		Javelin.message("You are attacked by: "+i.toString().toLowerCase()+"!",

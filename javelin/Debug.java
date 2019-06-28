@@ -6,7 +6,7 @@ import java.util.List;
 import javelin.controller.action.Help;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.db.Preferences;
-import javelin.controller.event.urban.UrbanEvent;
+import javelin.controller.event.EventCard;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
@@ -27,6 +27,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
+import javelin.view.Images;
 import javelin.view.TextWindow;
 import javelin.view.frame.DiplomacyScreen;
 import javelin.view.screen.BattleScreen;
@@ -37,7 +38,7 @@ import javelin.view.screen.WorldScreen;
  * Entry-points start with "on", such as {@link #oncampaignstart()} and should
  * never be called from other parts of the game unless {@link Javelin#DEBUG} is
  * <code>true</code>. Other methods are helpers to be used within the class,
- * such as {@link #additems(Item[])}.
+ * such as {@link #grab(Item[])}.
  *
  * Ideally changes to this class should never be commited unless when expanding
  * debug functionalities (such adding new entry or helper methods).
@@ -64,9 +65,9 @@ public class Debug{
 				c.hp=c.maxhp;
 		}
 
-		static void additems(Item[] items){
+		static void grab(Item[] items){
 			for(Item i:items)
-				Squad.active.receiveitem(i);
+				Squad.active.equipment.add(i);
 		}
 
 		static String printtowninfo(){
@@ -138,7 +139,7 @@ public class Debug{
 			new TextWindow("World generation resets",text).show();
 		}
 
-		static void doevent(Class<? extends UrbanEvent> type){
+		static void happen(Class<? extends EventCard> type){
 			try{
 				var e=type.getConstructor(Town.class).newInstance(gettown());
 				var s=Squad.active;
@@ -187,6 +188,10 @@ public class Debug{
 				l.place();
 				Squad.active.displace();
 			}
+		}
+
+		static void reloadimages(){
+			Images.clearcache();
 		}
 	}
 

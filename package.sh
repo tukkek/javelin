@@ -2,8 +2,8 @@
 JAVA=12
 JLINK=build/jdk/$JAVA/linux/bin/jlink
 
+echo "Checking if preferences.properties is modified..."
 git diff --exit-code preferences.properties > /dev/null
-if [ $? -eq 1 ]; then echo "Unclean preferences file."; exit; fi
 rm -rf "build/output/"
 
 # version input
@@ -11,9 +11,11 @@ version=`git log --oneline -1 --decorate`
 read -e -i "$version" -p "Edit version name: " version
 
 # javadoc
-echo "Generating Javadoc..."
-if [ -d doc/javadoc ]; then rm -r doc/javadoc; fi
-javadoc -d doc/javadoc/ javelin  -subpackages javelin &>/dev/null
+if [ `true` ]; then
+  echo "Generating Javadoc..."
+  if [ -d doc/javadoc ]; then rm -r doc/javadoc; fi
+  javadoc -d doc/javadoc/ javelin  -subpackages javelin &>/dev/null
+fi
 
 #jlink
 function build() {

@@ -90,7 +90,6 @@ public class Audio{
 		}catch(UnsupportedAudioFileException|LineUnavailableException
 				|IOException e){
 			if(DEBUG) throw new RuntimeException(f==null?"null file":f.getPath(),e);
-			e.printStackTrace();
 		}
 	}
 

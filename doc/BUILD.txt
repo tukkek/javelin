@@ -1,25 +1,19 @@
-This document describes the process of building platform-specific builds of Javelin, intended for distribution. If you only want to modify and play the game, you don't need to read this - any Java IDE automatic build system should be enough to handle compiling and running the game (Eclipse in particular should work out-of-the-box without any extra setup).
+This document describes the process of building all platform-specific builds of Javelin intended for distribution, from any supported platform. If you only want to modify and play the game, you don't need to read this - any Java IDE should be enough to automatically handle compiling and running the game (Eclipse in particular should work out-of-the-box after importing the project).
 
-This process is mostly automated through the "package.sh" script, with a few manual setup steps.
+This process is mostly automated through Make, with a few manual setup steps. Javelin's Makefile is written for Linux but should work on MacOS (or Windows with MinGW). Like any Makefile, you can run the default action (all targets), or one or more targets as desired (targets are: javadoc windows mac linux).
 
 Prerequisites:
-    * BASh (usually the default terminal for Linux and Mac, on Windows install MinGW)
-    * Any standard, up-to-date Java Development Kit installation (OpenJDK recommeded)
+    * BASh (usually the default terminal for Linux and Mac, on Windows it is provided by MinGW)
+    * GNU make (also included on a full insall of MinGW)
+    * Any standard, up-to-date Java Development Kit installation (OpenJDK recommended, at http://openjdk.java.net/projects/jdk/)
     * git (and a proper clone of the Javelin repository)
-    * zip command-line utility (on Windows, install the MinGW version)
+    * zip command-line utility (also included on a full insall of MinGW)
 
-The "package.sh" script is written for Linux but should work fine on MacOS (or Windows with MinGW). It should be easy to modify the script to skip certain steps and thus not require some tools (like git or zip) - the omitted steps can then be done manually instead.
-
-The build script uses jlink to produce one ZIP file for each operating system, which has become the standard procedure for Java (for better or worse). To achieve this, you will need to have the appropriate copy of each platform-specific JDK located under the "build/jdk/VERSION/SYSTEM directory" - for example:
-    * build/jdk/11/windows
-    * build/jdk/11/linux
-    * build/jdk/11/mac
-
-The latest versions of OpenJDK for all platforms can be found at:
-    * http://openjdk.java.net/projects/jdk/
+The build script uses jlink to produce one ZIP file for each operating system. To achieve this, you'll need each system JDK as below:
+    * build/jdk/windows
+    * build/jdk/linux
+    * build/jdk/mac
     
-If you want to build for more or less platforms, or for a different version of Java, you will need to modify the build script accordingly (which should be easy and self-explanatory).
+If you don't have Java installed on your system or if your installed Java version is not the one you're building for, you may need to edit the JLINK variable inside the Makefile. You can configure it to use any target JDK by setting it to something like "build/jdk/linux/bin/jlink".
 
-Note that, as of Java 11, the macOS OpenJDK build has a slightly different directory structure to Windows and Linux. To work around this issue, extract only the appropriate folder (Home) so that the resulting JDK directory becomes equivalent to the other ones. This is trivial to accomplish manually as well.
-
-FUTURE BUILD VERSIONS: ideally Javelin would adopt Gradle as the build system at some point but as of now it doesn't have core support for jlink and it really isn't clear whether a Gradle solution would actually minimize any of the required setup described here or make the process simpler/faster - the exception being skipping the MinGW installation step on Windows. Any help in this regard is welcome.
+Notice that as of Java 12 the macOS OpenJDK package has a slightly different directory structure to Windows and Linux. To work around this issue, extract only the appropriate folder (Home) so that the resulting JDK directory becomes equivalent to the other ones.

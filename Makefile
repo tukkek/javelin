@@ -1,12 +1,11 @@
 SHELL=/bin/bash
 .SILENT:
 
-JAVA=12
-JLINK=build/jdk/$(JAVA)/linux/bin/jlink
+JLINK=jlink
 
 define jlink
-	echo "Building Javelin for $(1) (Java $(JAVA))..."
-	$(JLINK) --module-path .:build/jdk/$(JAVA)/$(1)/jmods --add-modules javelin --output "build/output/$(1)/javelin/java"
+	echo "Building Javelin for $(1)..."
+	$(JLINK) --module-path .:build/jdk/$(1)/jmods --add-modules javelin --output "build/output/$(1)/javelin/java"
 	cp -r build/launcher/$(1)/* doc avatars maps monsters.xml preferences.properties README.txt audio build/output/$(1)/javelin
 	cp /tmp/VERSION.txt build/output/$(1)/javelin/doc/VERSION.txt
 	cd build/output/$(1)/;zip -v "../javelin-$(1).zip" . -r > /dev/null
@@ -14,6 +13,11 @@ define jlink
 endef
 
 default: checkdirty askversion javadoc windows mac linux
+
+javadoc:
+	echo "Generating Javadoc..."
+	if [ -d doc/javadoc ]; then rm -r doc/javadoc; fi
+	javadoc -d doc/javadoc/ javelin  -subpackages javelin &>/dev/null
 	
 checkdirty:
 	echo "Checking for dirty preferences.properties..."
@@ -24,17 +28,15 @@ clean:
 
 askversion:
 	read -e -i "$(shell git log --oneline -1 --decorate)" -p "Edit release name: " version;echo $$version > /tmp/VERSION.txt
-	
-javadoc:
-	echo "Generating Javadoc..."
-	if [ -d doc/javadoc ]; then rm -r doc/javadoc; fi
-	javadoc -d doc/javadoc/ javelin  -subpackages javelin &>/dev/null
 
-windows: checkdirty clean askversion
+showjavaversion:
+	echo "Using jlink: ${shell $(JLINK) --version}"
+
+windows: checkdirty clean askversion showjavaversion
 	$(call jlink,windows)
 
-mac: checkdirty clean askversion
+mac: checkdirty clean askversion showjavaversion
 	$(call jlink,mac)
 
-linux: checkdirty clean askversion
+linux: checkdirty clean askversion showjavaversion
 	$(call jlink,linux)

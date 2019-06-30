@@ -14,7 +14,6 @@ import javelin.model.item.consumable.Ruby;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
-import javelin.model.world.location.dungeon.DungeonTier;
 import javelin.model.world.location.dungeon.DungeonZoner;
 import javelin.model.world.location.dungeon.feature.Altar;
 import javelin.model.world.location.dungeon.feature.Chest;
@@ -38,7 +37,7 @@ public class TempleDungeon extends Dungeon{
 	 * @param t Temple this floor is a part of.
 	 */
 	public TempleDungeon(int level,Dungeon parent,Temple t){
-		super(t.description,level,parent,t.floors);
+		super(t.descriptionknown,level,parent,t.floors);
 		temple=t;
 		description=temple.descriptionknown;
 	}
@@ -56,8 +55,8 @@ public class TempleDungeon extends Dungeon{
 	@Override
 	public void activate(boolean loading){
 		doorbackground=temple.doorbackground;
-		if(temple.floor!=null) floortile=temple.floor;
-		if(temple.wall!=null) walltile=temple.wall;
+		if(temple.floor!=null) tilefloor=temple.floor;
+		if(temple.wall!=null) tilewall=temple.wall;
 		if(loading||Dungeon.active!=null){
 			super.activate(loading);
 			return;
@@ -92,7 +91,7 @@ public class TempleDungeon extends Dungeon{
 	}
 
 	@Override
-	public Fight encounter(){
+	public Fight fight(){
 		return temple.encounter(this);
 	}
 
@@ -116,10 +115,5 @@ public class TempleDungeon extends Dungeon{
 		while(ChallengeCalculator.calculateel(encounter)<level)
 			encounter.getweakest().upgrade();
 		return encounter;
-	}
-
-	@Override
-	protected String baptize(DungeonTier tier){
-		return null;
 	}
 }

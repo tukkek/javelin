@@ -11,6 +11,7 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.StartBattle;
+import javelin.controller.fight.Fight;
 import javelin.controller.fight.Siege;
 import javelin.controller.generator.WorldGenerator;
 import javelin.controller.terrain.Terrain;
@@ -234,7 +235,7 @@ public abstract class Location extends Actor{
 	 * @return Battle controller.
 	 * @throws RepeatTurn
 	 */
-	protected Siege fight(){
+	protected Fight fight(){
 		return new Siege(this);
 	}
 

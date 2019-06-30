@@ -52,5 +52,14 @@ public abstract class DndMap extends Map{
 				water-=1;
 			}
 		}
+		closeborders();
+	}
+
+	void closeborders(){
+		var width=map.length;
+		var height=map[0].length;
+		for(var x=0;x<width;x++)
+			for(var y=0;y<height;y++)
+				if(x==0||y==0||x==width-1||y==height-1) putwall(x,y);
 	}
 }

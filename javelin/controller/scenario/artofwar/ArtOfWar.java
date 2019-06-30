@@ -2,7 +2,6 @@ package javelin.controller.scenario.artofwar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -229,7 +228,7 @@ public class ArtOfWar extends Scenario{
 		if(npc.cr>=targetcr) return null;
 		return new Combatants(List.of(NpcGenerator.generatenpc(npc,targetcr))){
 			@Override
-			public Collection<? extends Combatant> generate(){
+			public Combatants generate(){
 				return this; //no need to generate new Combatant instances
 			}
 		};

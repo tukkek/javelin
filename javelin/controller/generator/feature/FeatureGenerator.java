@@ -25,6 +25,7 @@ import javelin.model.world.location.Outpost;
 import javelin.model.world.location.PointOfInterest;
 import javelin.model.world.location.ResourceSite;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.Wilderness;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.haunt.AbandonedManor;
@@ -166,7 +167,7 @@ public class FeatureGenerator implements Serializable{
 		generateuniquelocations(starting);
 		for(var level=Tier.LOW.minlevel;level<=Tier.EPIC.maxlevel;level++){
 			starting.add(Dungeon.generate(level));
-			starting.add(Dungeon.generate(level)); //TODO make wilderness
+			starting.add(new Wilderness(level)); //TODO make wilderness
 		}
 		for(Location l:starting)
 			l.place();

@@ -11,10 +11,10 @@ import javelin.model.world.location.dungeon.Dungeon;
  * @author alex
  */
 public class StairsUp extends Feature{
-	static final String CONFIRM="Go up the stairs?\nPress ENTER to confirm, any other key to cancel...";
+	static final String PROMPT="Go up the stairs?";
 
 	/** Cosntructor. */
-	public StairsUp(String thing,Point p){
+	public StairsUp(Point p){
 		super(p.x,p.y,"dungeonstairsup");
 		remove=false;
 		enter=true;
@@ -22,10 +22,16 @@ public class StairsUp extends Feature{
 
 	@Override
 	public boolean activate(){
-		if(Javelin.prompt(CONFIRM)=='\n'){
+		var prompt=prompt()+"\n"
+				+"Press ENTER to confirm, any other key to cancel...";
+		if(Javelin.prompt(prompt)=='\n'){
 			WorldMove.abort=true;
 			Dungeon.active.goup();
 		}
 		return false;
+	}
+
+	protected String prompt(){
+		return PROMPT;
 	}
 }

@@ -34,14 +34,16 @@ public class Chest extends Feature{
 
 	/**
 	 * @param pool Value to be added in gold or {@link Item}s, preferrring
-	 *          generated items.
+	 *          generated items. If zero, will not generate anything.
 	 * @param p {@link Dungeon} coordinate.
 	 * @param forbidden Do not generate these item types.
 	 */
 	public Chest(int pool,Point p){
 		this(p.x,p.y);
-		items.addAll(RewardCalculator.generateloot(pool));
-		gold=items.isEmpty()?Javelin.round(pool):0;
+		if(pool>0){
+			items.addAll(RewardCalculator.generateloot(pool));
+			gold=items.isEmpty()?Javelin.round(pool):0;
+		}
 	}
 
 	/** Constructor. */

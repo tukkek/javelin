@@ -160,7 +160,8 @@ public abstract class Terrain implements Serializable{
 	/**
 	 * @param x {@link World} coordinate.
 	 * @param y {@link World} coordinate.
-	 * @return Terrain difficulty. For example: {@link PLAIN}.
+	 * @return {@link Underground} if there is a {@link Dungeon#active} or the
+	 *         {@link World} terrain.
 	 */
 	public static Terrain get(int x,int y){
 		return Dungeon.active==null?World.getseed().map[x][y]:Terrain.UNDERGROUND;

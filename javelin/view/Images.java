@@ -9,6 +9,8 @@ import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
@@ -26,7 +28,13 @@ import javelin.model.world.location.town.Town;
  * @author alex
  */
 public class Images{
-	static GraphicsConfiguration ENVIRONMENT=GraphicsEnvironment
+	/**
+	 * Reverse of {@link #CACHE}, holds an Image's base filename (no extension or
+	 * dir).
+	 */
+	public static final Map<Image,String> NAMES=new HashMap<>();
+
+	static final GraphicsConfiguration ENVIRONMENT=GraphicsEnvironment
 			.getLocalGraphicsEnvironment().getDefaultScreenDevice()
 			.getDefaultConfiguration();
 	static final TreeMap<String,Image> CACHE=new TreeMap<>();
@@ -86,7 +94,8 @@ public class Images{
 			var h=raw.getHeight(null);
 			i=ENVIRONMENT.createCompatibleImage(w,h,Transparency.TRANSLUCENT);
 			i.getGraphics().drawImage(raw,0,0,null);
-			CACHE.put(file,raw);
+			CACHE.put(file,i);
+			NAMES.put(i,file);
 			return i;
 		}catch(IOException e){
 			throw new RuntimeException(file,e);

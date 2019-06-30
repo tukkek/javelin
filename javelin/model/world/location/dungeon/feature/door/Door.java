@@ -139,7 +139,7 @@ public class Door extends Feature{
 					+" attempt(s)...";
 		if(alerted) result+="\nThe noise draws someone's attention!";
 		Javelin.message(result,false);
-		if(alerted) throw new StartBattle(Dungeon.active.encounter());
+		if(alerted) throw new StartBattle(Dungeon.active.fight());
 		return !stuck;
 	}
 
@@ -210,8 +210,8 @@ public class Door extends Feature{
 	}
 
 	@Override
-	public void place(Dungeon d){
-		super.place(d);
+	public void place(Dungeon d,Point p){
+		super.place(d,p);
 		if(hidden) d.map[x][y]=Template.WALL;
 	}
 

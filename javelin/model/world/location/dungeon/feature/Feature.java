@@ -54,7 +54,8 @@ public abstract class Feature implements Serializable{
 	 *
 	 * @param map Adds itself to this map.
 	 */
-	public void generate(){}
+	public void generate(){
+	}
 
 	/**
 	 * Called when a {@link Squad} reaches this location.
@@ -81,8 +82,10 @@ public abstract class Feature implements Serializable{
 		// nothing by default
 	}
 
-	public void place(Dungeon d){
-		// nothing by default
+	public void place(Dungeon d,Point p){
+		x=p.x;
+		y=p.y;
+		d.features.add(this);
 	}
 
 	public void remove(){

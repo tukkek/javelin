@@ -2,7 +2,6 @@ package javelin.controller.fight;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javelin.controller.Weather;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -12,6 +11,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.Wilderness;
 import javelin.old.RPG;
 
 /**
@@ -20,25 +20,34 @@ import javelin.old.RPG;
  * @author alex
  */
 public class RandomDungeonEncounter extends RandomEncounter{
-	Dungeon dungeon;
+	List<Combatants> encounters;
+
+	RandomDungeonEncounter(){
+		meld=true;
+	}
 
 	/** Constructor. */
 	public RandomDungeonEncounter(Dungeon d){
-		dungeon=d;
-		meld=true;
+		this();
 		map=Terrain.UNDERGROUND.getmaps().pick();
 		weather=Math.max(0,Weather.current-1);
+		encounters=d.encounters;
+	}
+
+	/** Constructor. */
+	public RandomDungeonEncounter(Wilderness w){
+		this();
+		map=RPG.pick(w.type.getmaps());
+		encounters=w.encounters;
 	}
 
 	@Override
 	public ArrayList<Combatant> generate(){
-		Combatants encounter=RPG.pick(dungeon.encounters);
-		if(encounter==null) return null;
-		int el=ChallengeCalculator.calculateel(encounter);
-		if(el-Squad.active.getel()<=Difficulty.VERYEASY) return null;
-		//TODO change return to List to skip new instance
-		return new ArrayList<>(encounter.clone().stream()
-				.map(c->new Combatant(c.source,true)).collect(Collectors.toList()));
+		Combatants encounter=RPG.pick(encounters);
+		/*TODO once there is a better strategical skip for encounters, this won't be
+		* encessary anymore.*/
+		return encounter!=null&&ChallengeCalculator.calculateel(encounter)
+				-Squad.active.getel()>Difficulty.VERYEASY?encounter.generate():null;
 	}
 
 	@Override

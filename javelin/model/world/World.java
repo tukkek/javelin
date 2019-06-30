@@ -2,7 +2,6 @@ package javelin.model.world;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -69,23 +68,22 @@ public class World implements Serializable{
 	 */
 	public final HashSet<Point> discovered=new HashSet<>();
 	/** Tribute to masters in of tabletop RPGs, literature, video games... */
-	public final LinkedList<String> dungeonnames=new LinkedList<>(Arrays.asList(
-			new String[]{"Frank Herbert","Lao Tze","Robert Monroe","Gary Gygax",
-					"Dave Arneson","Ed Greenwood","Tracy Hickman","Margaret Weis",
-					"Monte Cook","Tony DiTerlizzi","Brian Fargo","Tim Cain","John Romero",
-					"Chris Avellone","Feargus Urquhart","Jon Van Caneghem","John Carmack",
-					"Richard Garriott","Guido Henkel","Mark Rein Hagen","Norman Sirotek",
-					"George Lucas","Mark Morgan","Colin McComb","Jordan Weisman",
-					"Nobue Uematsu","Michiel van den Bos","Alexander Brandon",
-					"Hironobu Sakaguchi","Shinji Mikami","Ben Houge","Jeremy Soule",
-					"Yoshitaka Amano","Takashi Tokita","Koji Kondo","Katsuhiro Otomo",
-					"Shigeru Miyamoto","Yoshinori Kitase","Hiroyuki Ito","Robert Howard",
-					"Érica Awano","André Vazzios","Marcelo Cassaro","J. M. Trevisan",
-					"Rogério Saladino","Marcelo Del Debbio","Evandro Gregório",
-					"Steve Jackson","Clyde Caldwell","Jeff Easley","Sandy Petersen",
-					"Stan Lee","Hideaki Anno","Patrick Wyatt","Bill Roper",
-					"Michiru Yamane","Sid Meier","William Gibson","Julie Bell",
-					"Boris Vallejo","Lee Salzman","Johannes Bonitz"}));
+	public final LinkedList<String> dungeonnames=new LinkedList<>(List.of(
+			"Frank Herbert","Lao Tze","Robert Monroe","Gary Gygax","Dave Arneson",
+			"Ed Greenwood","Tracy Hickman","Margaret Weis","Monte Cook",
+			"Tony DiTerlizzi","Brian Fargo","Tim Cain","John Romero","Chris Avellone",
+			"Feargus Urquhart","Jon Van Caneghem","John Carmack","Richard Garriott",
+			"Guido Henkel","Mark Rein Hagen","Norman Sirotek","George Lucas",
+			"Mark Morgan","Colin McComb","Jordan Weisman","Nobue Uematsu",
+			"Michiel van den Bos","Alexander Brandon","Hironobu Sakaguchi",
+			"Shinji Mikami","Ben Houge","Jeremy Soule","Yoshitaka Amano",
+			"Takashi Tokita","Koji Kondo","Katsuhiro Otomo","Shigeru Miyamoto",
+			"Yoshinori Kitase","Hiroyuki Ito","Robert Howard","Érica Awano",
+			"André Vazzios","Marcelo Cassaro","J. M. Trevisan","Rogério Saladino",
+			"Marcelo Del Debbio","Evandro Gregório","Steve Jackson","Clyde Caldwell",
+			"Jeff Easley","Sandy Petersen","Stan Lee","Hideaki Anno","Patrick Wyatt",
+			"Bill Roper","Michiru Yamane","Sid Meier","William Gibson","Julie Bell",
+			"Boris Vallejo","Lee Salzman","Johannes Bonitz"));
 
 	/** Generator to be used during play. */
 	public FeatureGenerator featuregenerator;

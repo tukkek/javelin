@@ -14,7 +14,7 @@ import javelin.model.world.location.dungeon.feature.Spirit;
 import javelin.old.RPG;
 
 public class Features implements Iterable<Feature>,Serializable{
-	List<Feature> features=new ArrayList<>();
+	List<Feature> list=new ArrayList<>();
 	Dungeon dungeon;
 
 	public Features(Dungeon d){
@@ -24,24 +24,23 @@ public class Features implements Iterable<Feature>,Serializable{
 
 	@Override
 	public Iterator<Feature> iterator(){
-		return features.iterator();
+		return list.iterator();
 	}
 
 	public boolean isEmpty(){
-		return features.isEmpty();
+		return list.isEmpty();
 	}
 
 	public void add(Feature f){
-		features.add(f);
-		f.place(dungeon);
+		list.add(f);
 	}
 
 	public ArrayList<Feature> copy(){
-		return new ArrayList<>(features);
+		return new ArrayList<>(list);
 	}
 
 	public void remove(Feature f){
-		features.remove(f);
+		list.remove(f);
 	}
 
 	public <K extends Feature> K get(Class<K> type){
@@ -50,7 +49,7 @@ public class Features implements Iterable<Feature>,Serializable{
 	}
 
 	public <K extends Feature> List<K> getall(Class<K> type){
-		return features.stream().filter(f->type.isInstance(f)).map(f->(K)f)
+		return list.stream().filter(f->type.isInstance(f)).map(f->(K)f)
 				.collect(Collectors.toList());
 	}
 
@@ -61,7 +60,7 @@ public class Features implements Iterable<Feature>,Serializable{
 	}
 
 	public List<Feature> getallundiscovered(){
-		return features.stream().filter(f->!dungeon.visible[f.x][f.y]||!f.draw)
+		return list.stream().filter(f->!dungeon.visible[f.x][f.y]||!f.draw)
 				.collect(Collectors.toList());
 	}
 
@@ -91,6 +90,10 @@ public class Features implements Iterable<Feature>,Serializable{
 
 	/** @return A stream for functional processing. */
 	public Stream<Feature> stream(){
-		return features.stream();
+		return list.stream();
+	}
+
+	public int size(){
+		return list.size();
 	}
 }

@@ -3,6 +3,7 @@ package javelin.model.world.location.dungeon.feature;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.action.world.WorldMove;
+import javelin.controller.generator.dungeon.template.Template;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -10,6 +11,12 @@ import javelin.model.world.location.dungeon.temple.MagicTemple;
 import javelin.old.RPG;
 
 /**
+ * Transports you from somewhere to somewhere else in (or out) of a
+ * {@link Dungeon}.
+ *
+ * TODO would be neat to have a portal that transports to another portal (maybe
+ * generating a new one).
+ *
  * @see MagicTemple
  * @author alex
  */
@@ -48,7 +55,11 @@ public class Portal extends Feature{
 			d.leave();
 		else{
 			var stairs=d.features.get(StairsUp.class);
-			d.herolocation=new Point(stairs.x-1,stairs.y);
+			for(var p:stairs.getlocation().getadjacent())
+				if(d.map[p.x][p.y]==Template.FLOOR){
+					d.herolocation=new Point(p.x,p.y);
+					break;
+				}
 		}
 		return true;
 	}

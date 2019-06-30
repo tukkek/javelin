@@ -55,7 +55,7 @@ public class Combatants extends ArrayList<Combatant>
 	 * Unlike {@link #clone()}, this returns a new group of {@link Combatant}s,
 	 * with new {@link Combatant#id}s.
 	 */
-	public Collection<? extends Combatant> generate(){
+	public Combatants generate(){
 		var encounter=new Combatants(size());
 		for(final Combatant m:this)
 			encounter.add(new Combatant(m.source,true));

@@ -7,7 +7,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.controller.fight.Siege;
+import javelin.controller.fight.Fight;
 import javelin.controller.terrain.Mountains;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Equipment;
@@ -284,8 +284,8 @@ public class Mine extends Fortification{
 	}
 
 	@Override
-	protected Siege fight(){
-		Siege s=super.fight();
+	protected Fight fight(){
+		var s=super.fight();
 		s.terrain=Terrain.UNDERGROUND;
 		return s;
 	}

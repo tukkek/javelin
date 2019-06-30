@@ -51,7 +51,7 @@ public class DungeonDelve extends Campaign{
 	public void ready(){
 		var floors=getdungeons();
 		for(Dungeon d:floors)
-			d.map();
+			d.define();
 		Squad.active.setlocation(floors.get(0).getlocation());
 		Squad.active.displace();
 	}

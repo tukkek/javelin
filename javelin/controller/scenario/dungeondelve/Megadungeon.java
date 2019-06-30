@@ -48,21 +48,21 @@ public class Megadungeon extends Dungeon{
 	}
 
 	@Override
-	public Fight encounter(){
+	public Fight fight(){
 		if(DungeonDelve.get().climbmode){
 			var deepest=DungeonDelve.getdungeons().get(DungeonDelve.FLOORS);
 			return new RandomDungeonEncounter(deepest);
 		}
-		return super.encounter();
+		return super.fight();
 	}
 
 	@Override
 	protected void createfeatures(int nfeatures,DungeonZoner zoner){
 		super.createfeatures(nfeatures,zoner);
 		for(int i=1+RPG.randomize(2);i>0;i--)
-			zoner.place(new Fountain());
+			new Fountain().place(this,zoner.getpoint());
 		for(int i=1+RPG.randomize(2);i>0;i--)
-			zoner.place(new LearningStone());
-		if(RPG.chancein(TRADERCHANCE)) zoner.place(new Trader());
+			new LearningStone().place(this,zoner.getpoint());
+		if(RPG.chancein(TRADERCHANCE)) new Trader().place(this,zoner.getpoint());
 	}
 }

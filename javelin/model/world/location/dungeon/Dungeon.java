@@ -1,6 +1,5 @@
 package javelin.model.world.location.dungeon;
 
-import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -50,7 +49,7 @@ import javelin.model.world.location.dungeon.feature.inhabitant.Leader;
 import javelin.model.world.location.dungeon.feature.trap.Trap;
 import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
-import javelin.view.Images;
+import javelin.view.mappanel.dungeon.DungeonTile;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.DungeonScreen;
 import javelin.view.screen.WorldScreen;
@@ -68,13 +67,19 @@ import javelin.view.screen.WorldScreen;
  */
 public class Dungeon extends Location{
 	static final Class<? extends Feature> DEBUGFEATURE=null;
-
 	static final int MAXTRIES=1000;
 	static final int[] DELTAS={-1,0,1};
 
 	/**
+	 * A loose approximation of how many {@link DungeonTile}s are revealed with
+	 * each step. Multiply by {@link #vision}.
+	 */
+	protected static final int DISCOVEREDPERSTEP=4;
+
+	/**
 	 * Current {@link Dungeon} or <code>null</code> if not in one. During a
-	 * {@link #map()} operation, this can be set to any one instance being mapped.
+	 * {@link #define()} operation, this can be set to any one instance being
+	 * mapped.
 	 */
 	public static Dungeon active=null;
 
@@ -93,9 +98,9 @@ public class Dungeon extends Location{
 	 */
 	public Point herolocation=null;
 	/** File to use under 'avatar' folder. */
-	public String floortile;
+	public String tilefloor;
 	/** File to use under 'avatar' folder. */
-	public String walltile;
+	public String tilewall;
 	/** Tiles already revealed. */
 	public HashSet<Point> discovered=new HashSet<>();
 	/**
@@ -130,6 +135,8 @@ public class Dungeon extends Location{
 	 * @see Leader
 	 */
 	public List<Combatants> encounters=new ArrayList<>();
+	/** How far a {@link Squad} can see inside a {@link Dungeon}. */
+	public int vision=4;
 
 	float ratiomonster=RPG.r(25,50)/100f;
 	float ratiofeatures=RPG.r(50,95)/100f;
@@ -144,6 +151,8 @@ public class Dungeon extends Location{
 	/** All floors that make part of this dungeon. */
 	protected List<? extends Dungeon> floors;
 
+	transient int nrooms;
+
 	/** Constructor. */
 	public Dungeon(String name,Integer level,Dungeon parent,
 			List<? extends Dungeon> floors){
@@ -156,21 +165,29 @@ public class Dungeon extends Location{
 		impermeable=true;
 		allowedinscenario=false;
 		var tier=gettier();
-		walltile=tier.wall;
-		floortile=tier.floor;
-		description=name==null?baptize(tier):null;
+		tilewall=tier.wall;
+		tilefloor=tier.floor;
+		description=name==null?baptize(tier.name):name;
 		allowentry=false;
 		unique=true;
 	}
 
-	protected String baptize(DungeonTier tier){
+	/**
+	 * @return Generates a name from {@link World#dungeonnames}, where a name will
+	 *         be removed from permanently.
+	 * @throws RuntimeException When out of names.
+	 */
+	protected String baptize(String suffix){
 		LinkedList<String> names=World.getseed().dungeonnames;
-		String type=tier.name.toLowerCase();
-		if(names.isEmpty()) return "Nameless "+type;
+		suffix=" "+suffix.toLowerCase();
+		if(names.isEmpty()){
+			if(Javelin.DEBUG) throw new RuntimeException("Out of dungeon names!");
+			return "Nameless"+suffix;
+		}
 		String name=names.pop();
 		name=name.substring(name.lastIndexOf(" ")+1,name.length());
 		name+=name.charAt(name.length()-1)=='s'?"'":"'s";
-		return name+" "+type;
+		return name+suffix;
 	}
 
 	@Override
@@ -188,7 +205,7 @@ public class Dungeon extends Location{
 		while(features.isEmpty()){
 			MessagePanel.active.clear();
 			Javelin.message("Generating dungeon map...",Javelin.Delay.NONE);
-			map();
+			define();
 		}
 		regenerate(loading);
 		JavelinApp.context=new DungeonScreen(this);
@@ -219,21 +236,17 @@ public class Dungeon extends Location{
 	 * your way back to town safely, so this naturally makes the dungeon more
 	 * challenging (hopefully being offset by the rewards inside).
 	 */
-	public void map(){
+	public void define(){
 		if(map!=null) return;
 		var previous=Dungeon.active;
 		Dungeon.active=this;
-		DungeonTier tier=gettier();
-		var tables=parent==null?null:parent.tables;
-		var generator=DungeonGenerator.generate(tier.minrooms,tier.maxrooms,tables);
-		this.tables=generator.tables;
-		map=generator.grid;
+		map=map();
 		size=map.length;
-		createdoors();
-		int nrooms=generator.map.rooms.size();
-		calculateencounterfrequency(nrooms);
+		stepsperencounter=calculateencounterfrequency();
+		if(stepsperencounter<2) stepsperencounter=2;
 		generateencounters();
-		populatedungeon(nrooms);
+		populatedungeon();
+		size=map.length;
 		visible=new boolean[size][size];
 		for(int x=0;x<size;x++)
 			for(int y=0;y<size;y++)
@@ -241,7 +254,23 @@ public class Dungeon extends Location{
 		Dungeon.active=previous;
 	}
 
-	void generateencounters(){
+	/**
+	 * Generates Dungeon area.
+	 *
+	 * @return {@link #map}.
+	 */
+	protected char[][] map(){
+		DungeonTier tier=gettier();
+		var tables=parent==null?null:parent.tables;
+		var generator=DungeonGenerator.generate(tier.minrooms,tier.maxrooms,tables);
+		this.tables=generator.tables;
+		createdoors();
+		nrooms=generator.map.rooms.size();
+		return generator.grid;
+	}
+
+	/** Define {@link #encounters}. */
+	protected void generateencounters(){
 		var target=3+RPG.r(1,4)+DungeonTier.TIERS.indexOf(gettier());
 		if(parent!=null){
 			encounters=new ArrayList<>(parent.encounters);
@@ -274,7 +303,7 @@ public class Dungeon extends Location{
 			for(int y=0;y<size;y++)
 				if(map[x][y]==Template.DOOR&&gettable(DoorExists.class).rollboolean()){
 					Door d=Door.generate(this,new Point(x,y));
-					if(d!=null) features.add(d);
+					if(d!=null) d.place(this,d.getlocation());
 				}
 	}
 
@@ -282,31 +311,32 @@ public class Dungeon extends Location{
 	 * Tries to come up with a number roughly similar to what you'd have if you
 	 * explored all rooms, fought all monsters and then left (plus random
 	 * encounters).
+	 *
+	 * @return {@link #stepsperencounter}.
 	 */
-	void calculateencounterfrequency(int nrooms){
+	protected int calculateencounterfrequency(){
 		float encounters=nrooms*1.1f*ratiomonster;
 		float tilesperroom=countfloor()/nrooms;
-		int vision=DungeonScreen.VIEWRADIUS*2+1;
-		float steps=encounters*tilesperroom/vision;
-		stepsperencounter=Math.round(steps/2);
+		float steps=encounters*tilesperroom/(DISCOVEREDPERSTEP*vision);
+		return Math.round(steps/2);
 	}
 
 	int countfloor(){
 		int floortiles=0;
 		for(int x=0;x<size;x++)
-			for(int y=0;y<size;y++){
-				char tile=map[x][y];
-				if(tile==Template.WALL||tile==Template.DECORATION) floortiles+=1;
-			}
+			for(int y=0;y<size;y++)
+				if(map[x][y]==Template.FLOOR) floortiles+=1;
 		return floortiles;
 	}
 
-	void populatedungeon(int nrooms){
-		while(herolocation==null){
+	/**
+	 * Place {@link StairsUp}, deifne {@link #herolocation} and create
+	 * {@link Features}.
+	 */
+	protected void populatedungeon(){
+		/*if placed too close to the edge, the carving in #createstairs() will make it look weird as the edge will look empty without walls */
+		while(herolocation==null||!herolocation.validate(2,2,size-3,size-3))
 			herolocation=getrandompoint();
-			/*if placed too close to the edge, the carving in #createstairs() will make it look weird as the edge will look empty without walls */
-			if(!herolocation.validate(2,2,size-3,size-3)) herolocation=null;
-		}
 		var zoner=new DungeonZoner(this,herolocation);
 		createstairs(zoner);
 		createkeys(zoner);
@@ -327,7 +357,7 @@ public class Dungeon extends Location{
 					while(p==null||isoccupied(p))
 						p=RPG.pick(area);
 					var key=door.key.getConstructor(Dungeon.class).newInstance(this);
-					features.add(new Chest(p.x,p.y,key));
+					new Chest(p.x,p.y,key).place(this,p);
 				}
 			}
 		}catch(ReflectiveOperationException e){
@@ -343,30 +373,37 @@ public class Dungeon extends Location{
 	}
 
 	void createstairs(DungeonZoner zoner){
-		features.add(new StairsUp("stairs up",herolocation));
+		new StairsUp(herolocation).place(this,herolocation);
 		for(int x=herolocation.x-1;x<=herolocation.x+1;x++)
 			for(int y=herolocation.y-1;y<=herolocation.y+1;y++)
 				map[x][y]=Template.FLOOR;
-		if(floors.indexOf(this)<floors.size()-1)
-			features.add(new StairsDown(zoner.getpoint()));
+		if(floors.indexOf(this)<floors.size()-1){
+			var p=zoner.getpoint();
+			new StairsDown(p).place(this,p);
+		}
 	}
 
 	protected void createfeatures(int nfeatures,DungeonZoner zoner){
 		try{
 			while(nfeatures>0){
-				Feature f=Javelin.DEBUG&&DEBUGFEATURE!=null
-						?DEBUGFEATURE.getDeclaredConstructor().newInstance()
-						:createfeature();
-				if(f==null) continue;
-				zoner.place(f);
-				nfeatures-=1;
+				Feature f=createfeature();
+				if(f!=null){
+					f.place(this,zoner.getpoint());
+					nfeatures-=1;
+				}
 			}
 		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);
 		}
 	}
 
-	protected Feature createfeature(){
+	/**
+	 * @return A feature chosen from {@link #DEBUGFEATURE},
+	 *         {@link RareFeatureTable} or {@link CommonFeatureTable}.
+	 */
+	protected Feature createfeature() throws ReflectiveOperationException{
+		if(Javelin.DEBUG&&DEBUGFEATURE!=null)
+			return DEBUGFEATURE.getDeclaredConstructor().newInstance();
 		var table=gettable(FeatureRarityTable.class).rollboolean()
 				?RareFeatureTable.class
 				:CommonFeatureTable.class;
@@ -384,9 +421,10 @@ public class Dungeon extends Location{
 			int cr=level+Difficulty.get()
 					+gettable(FeatureModifierTable.class).rollmodifier();
 			boolean special=gettable(SpecialTrapTable.class).rollboolean();
-			Trap t=Trap.generate(cr,special,getrandompoint());
+			var p=getrandompoint();
+			Trap t=Trap.generate(cr,special,p);
 			if(t==null) continue;
-			features.add(t);
+			t.place(this,p);
 			if(cr>0) gold+=RewardCalculator.getgold(t.cr);
 		}
 		return gold;
@@ -400,7 +438,8 @@ public class Dungeon extends Location{
 	}
 
 	void createchests(int chests,int pool,DungeonZoner zoner){
-		features.add(createspecialchest(zoner.getpoint()));
+		var p=zoner.getpoint();
+		createspecialchest(p).place(this,p);
 		var hiddenchests=0;
 		for(int i=0;i<chests;i++)
 			if(RPG.chancein(10)) hiddenchests+=1;
@@ -432,7 +471,7 @@ public class Dungeon extends Location{
 		while(toplevel.parent!=null)
 			toplevel=toplevel.parent;
 		var chest=new Chest(gold,zoner.getpoint());
-		features.add(chest);
+		chest.place(this,chest.getlocation());
 	}
 
 	/**
@@ -504,7 +543,8 @@ public class Dungeon extends Location{
 	}
 
 	/** See {@link WorldScreen#encounter()}. */
-	public Fight encounter(){
+	@Override
+	public Fight fight(){
 		return new RandomDungeonEncounter(this);
 	}
 
@@ -550,8 +590,8 @@ public class Dungeon extends Location{
 	}
 
 	@Override
-	public Image getimage(){
-		return Images.get("location"+gettier().name.toLowerCase());
+	public String getimagename(){
+		return "location"+gettier().name.toLowerCase();
 	}
 
 	public void discover(Feature f){

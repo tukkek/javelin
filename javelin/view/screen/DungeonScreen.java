@@ -26,8 +26,6 @@ import javelin.view.mappanel.dungeon.DungeonPanel;
  * @author alex
  */
 public class DungeonScreen extends WorldScreen{
-	public static final int VIEWRADIUS=4;
-
 	Dungeon dungeon;
 
 	public DungeonScreen(Dungeon dungeon){
@@ -80,8 +78,9 @@ public class DungeonScreen extends WorldScreen{
 
 	@Override
 	public void view(int xp,int yp){
-		for(int x=-VIEWRADIUS;x<=+VIEWRADIUS;x++)
-			for(int y=-VIEWRADIUS;y<=+VIEWRADIUS;y++)
+		var vision=dungeon.vision;
+		for(int x=-vision;x<=+vision;x++)
+			for(int y=-vision;y<=+vision;y++)
 				try{
 					Point hero=dungeon.herolocation;
 					Point target=new Point(hero);
@@ -107,13 +106,13 @@ public class DungeonScreen extends WorldScreen{
 
 	@Override
 	public Image gettile(int x,int y){
-		return Images
-				.get(dungeon.map[x][y]==Template.WALL?dungeon.walltile:dungeon.floortile);
+		return Images.get(
+				dungeon.map[x][y]==Template.WALL?dungeon.tilewall:dungeon.tilefloor);
 	}
 
 	@Override
 	public Fight encounter(){
-		return dungeon.encounter();
+		return dungeon.fight();
 	}
 
 	@Override

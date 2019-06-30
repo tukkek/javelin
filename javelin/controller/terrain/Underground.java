@@ -34,8 +34,8 @@ public class Underground extends Terrain{
 				new Floor(),new Complex(),new Constructed(),new AncientCave())){
 			Dungeon d=Dungeon.active;
 			if(d!=null){
-				m.floor=Images.get(d.floortile);
-				m.wall=Images.get(d.walltile);
+				m.floor=Images.get(d.tilefloor);
+				m.wall=Images.get(d.tilewall);
 				if(m.wall==m.obstacle) m.obstacle=Images.get("terrainrock2");
 			}
 			maps.add(m);

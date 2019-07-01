@@ -17,6 +17,10 @@ import javelin.old.RPG;
  * TODO would be neat to have a portal that transports to another portal (maybe
  * generating a new one).
  *
+ * TODO portals leading {@link Destination#OUTSIDE} could also functions as
+ * entries, prompted once you enter a {@link Dungeon}. Especially good for
+ * deeper dungeons.
+ *
  * @see MagicTemple
  * @author alex
  */

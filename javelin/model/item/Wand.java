@@ -13,6 +13,10 @@ import javelin.old.RPG;
  * A wand is ideally a item that fires a ray. It has up to 50 charges and is
  * spent when empty.
  *
+ * TODO an easy way to double the number of Wands (much needed as they're the
+ * least common item type) would be also offering them as Rods - they would work
+ * like wands but fully recharge every 24 hours, with 1d4+1 charges per day.
+ *
  * @author alex
  */
 public class Wand extends Item{

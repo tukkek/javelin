@@ -16,6 +16,10 @@ import javelin.view.screen.WorldScreen;
 /**
  * Rest in the {@link WorldScreen}. High chance of finding a monster instead.
  *
+ * TODO there could be a 1/6 of having a special camp encounter happen instead
+ * of a fight
+ * http://chaudronchromatique.blogspot.com/2014/09/pc-camp-events.html
+ *
  * @author alex
  */
 public class Camp extends WorldAction{

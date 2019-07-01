@@ -14,6 +14,7 @@ import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.table.Tables;
 import javelin.controller.terrain.Terrain;
+import javelin.controller.terrain.hazard.Hazard;
 import javelin.model.item.Tier;
 import javelin.model.unit.Squad;
 import javelin.model.world.World;
@@ -42,6 +43,9 @@ import javelin.view.Images;
  * challenge that isn't rewarded per-se. Other features however, are fully
  * operational which can either give decent boons (like a {@link LearningStone})
  * or an even unfairer advantage in exploring the area.
+ *
+ * TODO could {@link Hazard}s be used here instead of a {@link #fight()} some of
+ * the time?
  *
  * @author alex
  */

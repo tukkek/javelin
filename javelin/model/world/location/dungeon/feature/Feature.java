@@ -3,15 +3,26 @@ package javelin.model.world.location.dungeon.feature;
 import java.io.Serializable;
 
 import javelin.controller.Point;
+import javelin.controller.table.Table;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Perception;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.Features;
 import javelin.view.Images;
 import javelin.view.mappanel.dungeon.DungeonTile;
 
 /**
  * An interactive dungeon tile.
+ *
+ * TODO there could be a "lore" feature that is simply a point of interest with
+ * a short description of something interesting. there are thousands of random
+ * {@link Table}s out there that could be used for that. Decorations should
+ * probably come through first though, especially because they can conceal
+ * hidden {@link Features}. A cool way to implement those would be to have sets
+ * of decorations (images) per theme - each dungeon would have 1 theme (+1 per
+ * 50% chance, cumulative, maybe max of tierIndex-1) in order to allow themes to
+ * mix-and-match and tickela player's imagination of what this place must be.
  *
  * @author alex
  */

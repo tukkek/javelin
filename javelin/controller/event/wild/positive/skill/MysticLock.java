@@ -62,7 +62,7 @@ public class MysticLock extends SkillEvent{
 
 	@Override
 	protected boolean attempt(Combatant active){
-		Squad.active.hourselapsed+=RPG.r(1,4);
+		Squad.active.delay(RPG.r(1,4));
 		return decipher(active)>=dc;
 	}
 

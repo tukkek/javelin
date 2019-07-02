@@ -18,7 +18,7 @@ public class CraftingOrder extends Order{
 		super(i instanceof Potion?24:Math.max(24,24*i.price/1000),i.name);
 		item=i.clone();
 		if(queue!=null&&!queue.queue.isEmpty()){
-			long hours=queue.last().completionat-Squad.active.hourselapsed;
+			long hours=queue.last().completionat-Squad.active.gettime();
 			completionat+=hours/World.scenario.boost;
 		}
 	}

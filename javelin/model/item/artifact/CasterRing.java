@@ -1,5 +1,6 @@
 package javelin.model.item.artifact;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 
 import javelin.Javelin;
@@ -35,7 +36,7 @@ public class CasterRing extends Artifact{
 	/** Constructor. */
 	public CasterRing(Spell s,int uses){
 		super(getname(s,uses),s.casterlevel*s.level*400*uses,Slot.FINGER);
-		if(Javelin.DEBUG) assert s.isring;
+		if(Javelin.DEBUG&&!s.isring) throw new InvalidParameterException();
 		spell=s;
 		this.uses=uses;
 		waste=false; // wasted as Spell

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.model.item.consumable.Ruby;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
@@ -14,9 +13,6 @@ import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.view.screen.town.SelectScreen;
 
 public class HauntScreen extends SelectScreen{
-	static final Option PILLAGE=new Option("Pillage this location for 1 ruby",0,
-			'p');
-
 	class RecruitOption extends Option{
 		Monster m;
 
@@ -72,18 +68,11 @@ public class HauntScreen extends SelectScreen{
 			options.add(new HireOption(m));
 			options.add(new RecruitOption(m));
 		}
-		options.add(PILLAGE);
 		return options;
 	}
 
 	@Override
 	public boolean select(Option o){
-		if(o==PILLAGE){
-			haunt.remove();
-			new Ruby().grab();
-			stayopen=false;
-			return true;
-		}
 		Class<? extends Option> optiontype=o.getClass();
 		Monster m=((RecruitOption)o).m;
 		if(optiontype.equals(HireOption.class)){

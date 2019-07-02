@@ -101,7 +101,7 @@ public abstract class Fight{
 	 */
 	public Integer weather=null;
 	/**
-	 * Since {@link Squad#hourselapsed} is always ticking and needs to be updated
+	 * Since {@link Squad#time} is always ticking and needs to be updated
 	 * even when fights do happen this by default holds the period at the moment
 	 * of instantiation, so we can be more faithful to what appears on screen
 	 * instead of the period after the {@link WorldMove} or similar has been

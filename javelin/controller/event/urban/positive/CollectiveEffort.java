@@ -41,7 +41,7 @@ public class CollectiveEffort extends UrbanEvent{
 				+"They are working on: "+labors+".\n"
 				+"Press h to help or i to ignore their request...",Set.of('h','i'));
 		if(input!='h') return;
-		Squad.active.hourselapsed+=24;
+		Squad.active.delay(24);
 		var total=0;
 		var r=town.getrank().rank;
 		for(var c:s){

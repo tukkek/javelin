@@ -59,7 +59,7 @@ public class WanderingHalflings extends Wanderer{
 			return;
 		}
 		s.gold-=price;
-		s.hourselapsed+=4;
+		s.delay(4);
 		Javelin.message(TEXT,false);
 		for(var member:s)
 			member.addcondition(new Joyful(member));

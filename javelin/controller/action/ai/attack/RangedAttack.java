@@ -99,7 +99,8 @@ public class RangedAttack extends AbstractAttack{
 	 */
 	static boolean skip(Combatant active,DamageNode miss,BattleState previous){
 		if(!AISKIPUNLIKELY) return false;
-		if(Javelin.DEBUG) assert miss.damage.damage==0;
+		if(Javelin.DEBUG&&miss.damage.damage!=0)
+			throw new RuntimeException("Miss damage != 0");
 		if(miss.chance<=Javelin.HARD/20f||active.source.melee.isEmpty())
 			return false;
 		var map=previous.map;

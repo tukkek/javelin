@@ -20,6 +20,8 @@ import javelin.model.item.consumable.Potion;
 import javelin.model.item.consumable.Scroll;
 import javelin.model.item.precious.ArtPiece;
 import javelin.model.item.precious.Gem;
+import javelin.model.item.wand.Rod;
+import javelin.model.item.wand.Wand;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
@@ -106,10 +108,12 @@ public abstract class Item implements Serializable,Cloneable{
 	public Item(final String name,final int price,boolean register){
 		this.name=name;
 		this.price=Javelin.round(price);
-		if(register){
-			ITEMS.add(this);
-			BYTIER.get(Tier.get(getlevel())).add(this);
-		}
+		if(register) register();
+	}
+
+	/** Register this item as a generation/purhcase option. */
+	protected void register(){
+		if(ITEMS.add(this)) BYTIER.get(Tier.get(getlevel())).add(this);
 	}
 
 	/**
@@ -170,18 +174,17 @@ public abstract class Item implements Serializable,Cloneable{
 	}
 
 	/**
-	 * Use this to remove this item from the active {@link Squad}'s inventory.
+	 * Use this to remove a particular instance from the active
+	 * {@link Squad#equipment} (not an equivalent item, ie
+	 * {@link #equals(Object)}).
 	 */
 	public void expend(){
-		/*
-		 * needs to catch actual instance not just any item of the same type
-		 */
-		spend:for(final Combatant owner:Squad.active.members){
-			List<Item> items=Squad.active.equipment.get(owner);
-			for(Item used:new ArrayList<>(items))
-				if(used==this){
-					items.remove(used);
-					break spend;
+		for(var c:Squad.active.members){
+			var bag=Squad.active.equipment.get(c);
+			for(var i:new ArrayList<>(bag))
+				if(i==this){
+					bag.remove(i);
+					return;
 				}
 		}
 	}
@@ -232,11 +235,19 @@ public abstract class Item implements Serializable,Cloneable{
 		return name;
 	}
 
-	/** Creates {@link Item}s from {@link Spell}s. */
+	/**
+	 * Creates {@link Item}s from {@link Spell}s. Base constructor will add to
+	 * {@link #ITEMS}.
+	 */
+	@SuppressWarnings("unused")
 	public static void setup(){
 		for(Spell s:Spell.BYNAME.values()){
 			if(s.isscroll) new Scroll(s);
-			if(s.iswand) new Wand(s);
+			if(s.iswand){
+				if(s.level<=Wand.MAXLEVEL) new Wand(s);
+				for(var charges=1;charges<=Rod.VARIATIONS;charges++)
+					new Rod(s,charges);
+			}
 			if(s.ispotion) new Potion(s);
 			if(s.isring) for(int uses:CasterRing.POWERLEVELS)
 				new CasterRing(s,uses);
@@ -321,5 +332,14 @@ public abstract class Item implements Serializable,Cloneable{
 		for(var member:members)
 			if(canuse(member)==null) return true;
 		return false;
+	}
+
+	/**
+	 * Items with daily uses may refresh charges.
+	 *
+	 * @param hours Hours ellapsed.
+	 */
+	public void refresh(int hours){
+		//most items do not refresh
 	}
 }

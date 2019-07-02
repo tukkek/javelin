@@ -39,7 +39,7 @@ public enum Season{
 	 * Changes the season, if necessary. Should be called once per day at least.
 	 *
 	 * @param day Current day, starting from day 1.
-	 * @see Squad#hourselapsed
+	 * @see Squad#time
 	 */
 	public static void change(int day){
 		if(day>=endsat){

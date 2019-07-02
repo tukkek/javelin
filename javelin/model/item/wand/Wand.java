@@ -1,9 +1,11 @@
-package javelin.model.item;
+package javelin.model.item.wand;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
 import javelin.Javelin;
 import javelin.controller.action.CastSpell;
+import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.skill.Skill;
@@ -20,31 +22,41 @@ import javelin.old.RPG;
  * @author alex
  */
 public class Wand extends Item{
+	/** Wands should not be higher than level 4, subclasses may vary. */
+	public static final int MAXLEVEL=4;
+	static final int FULL=50;
+
+	/** {@link #spell} uses left. */
 	public int charges;
-	int baseprice;
+
+	int pricepercharge;
 	Spell spell;
 	boolean shop=false;
 	int maxcharges;
 
 	/**
-	 * Constructor.
-	 *
-	 * @param s Spell to be cast.
-	 * @param upgradeset
+	 * Internal constructor for subclasses. Defers registration until the proper
+	 * {@link #price} can be determined .
 	 */
-	public Wand(Spell s){
-		super("Wand of "+s.name.toLowerCase(),s.level*s.casterlevel*15+s.components,
-				true);
-		if(Javelin.DEBUG) assert s.iswand&&s.level>4;
+	protected Wand(String type,Spell s){
+		super(type+" of "+s.name.toLowerCase(),0,false);
+		if(Javelin.DEBUG&&!s.iswand) throw new InvalidParameterException();
 		if(name.contains("ray of ")) name=name.replace("ray of ","");
 		spell=s.clone();
 		spell.provokeaoo=false;
 		provokesaoo=false;
-		baseprice=price;
-		recharge(null);
 		usedinbattle=s.castinbattle;
 		usedoutofbattle=s.castoutofbattle;
 		apcost=s.apcost;
+	}
+
+	/** Constructor. */
+	public Wand(Spell s){
+		this("Wand",s);
+		if(Javelin.DEBUG&&s.level>MAXLEVEL) throw new InvalidParameterException();
+		pricepercharge=s.level*s.casterlevel*(750/FULL)+s.components;
+		recharge(null);
+		register();
 	}
 
 	/**
@@ -54,7 +66,7 @@ public class Wand extends Item{
 	void recharge(Integer charges){
 		maxcharges=charges==null?50:charges;
 		this.charges=maxcharges;
-		price=baseprice*this.charges;
+		price=pricepercharge*this.charges;
 	}
 
 	@Override
@@ -64,9 +76,10 @@ public class Wand extends Item{
 		return discharge();
 	}
 
-	boolean discharge(){
+	/** @return <code>true</code> if empty. */
+	protected boolean discharge(){
 		charges-=1;
-		price=baseprice*charges;
+		price=pricepercharge*charges;
 		return charges==0;
 	}
 
@@ -103,16 +116,16 @@ public class Wand extends Item{
 
 	@Override
 	public String waste(float resourcesused,Combatant c,ArrayList<Item> bag){
-		if(canuse(c)!=null) return null;
+		if(canuse(c)!=null||charges==0) return null;
 		int used=Math.round(maxcharges*resourcesused);
 		if(used==0) return null;
 		used=Math.min(used,Math.max(1,maxcharges/5));
-		charges-=used;
-		if(charges<=0){
-			bag.remove(this);
-			return "exhausted "+name.toLowerCase();
-		}
-		return name.toLowerCase()+" ("+used+" times)";
+		if(used>charges) used=charges;
+		for(var i=0;i<used;i++)
+			discharge();
+		if(charges>0) return name.toLowerCase()+" ("+used+" times)";
+		if(consumable) bag.remove(this);
+		return "exhausted "+name.toLowerCase();
 	}
 
 	@Override

@@ -22,7 +22,7 @@ import javelin.model.unit.Monster;
  * absolute DR values to 1/3 (the "single element" equivalent from the CCR
  * document, by far the most common found in monsters.xml).
  *
- * At some point it may be necessary to more assertively apply the modifiers
+ * At some point it may be necessary to more deliberately apply the modifiers
  * from the CCR document, not just x1/3, but currently 100% of the monsters used
  * are single-element-only (either silver or magic).
  *

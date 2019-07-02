@@ -7,24 +7,15 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Academy;
-import javelin.model.world.location.Fortification;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.TrainingOrder;
 import javelin.model.world.location.town.Town;
-import javelin.view.screen.Option;
 
 /**
  * @see MartialAcademy
  * @author alex
  */
 public class AcademyScreen extends UpgradingScreen{
-	class Pillage extends Option{
-		Pillage(Fortification f){
-			super("Pillage ($"+Javelin.format(f.getspoils())+")",0,'p');
-			priority=4;
-		}
-	}
-
 	protected Academy academy;
 
 	/** Constructor. */
@@ -56,15 +47,6 @@ public class AcademyScreen extends UpgradingScreen{
 	@Override
 	protected ArrayList<Upgrade> getupgrades(){
 		return new ArrayList<>(academy.upgrades);
-	}
-
-	@Override
-	public boolean select(Option op){
-		if(op instanceof Pillage){
-			academy.pillage();
-			return true;
-		}
-		return super.select(op);
 	}
 
 	@Override

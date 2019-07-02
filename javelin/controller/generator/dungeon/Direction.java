@@ -75,7 +75,8 @@ public abstract class Direction{
 			return cursor;
 		}
 	};
-	public static final Direction[] DIRECTIONS=new Direction[]{NORTH,SOUTH,WEST,EAST};
+	public static final Direction[] DIRECTIONS=new Direction[]{NORTH,SOUTH,WEST,
+			EAST};
 
 	public String name;
 	public Point reverse;
@@ -99,7 +100,7 @@ public abstract class Direction{
 	}
 
 	public static Direction opposite(Direction d){
-		assert d!=null;
+		if(d==null) throw new RuntimeException("Opposite of null?");
 		if(d==NORTH) return SOUTH;
 		if(d==SOUTH) return NORTH;
 		if(d==EAST) return WEST;

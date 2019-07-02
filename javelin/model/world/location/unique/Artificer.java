@@ -79,13 +79,13 @@ public class Artificer extends Fortification{
 			new ArtificerScreen(this).show();
 			return true;
 		}
-		if(crafting.completed(Squad.active.hourselapsed)){
+		if(crafting.completed(Squad.active.gettime())){
 			crafting.item.grab();
 			crafting=null;
 			return true;
 		}
 		MessagePanel.active.clear();
-		Javelin.message("\"I still need "+crafting.geteta(Squad.active.hourselapsed)
+		Javelin.message("\"I still need "+crafting.geteta(Squad.active.gettime())
 				+" before your "+crafting.item.toString().toLowerCase()
 				+" is completed.\"",false);
 		Javelin.input();
@@ -102,7 +102,7 @@ public class Artificer extends Fortification{
 
 	@Override
 	public boolean hascrafted(){
-		return crafting!=null&&crafting.completed(Squad.active.hourselapsed);
+		return crafting!=null&&crafting.completed(Squad.active.gettime());
 	}
 
 	/**
@@ -121,6 +121,6 @@ public class Artificer extends Fortification{
 
 	@Override
 	public boolean isworking(){
-		return crafting!=null&&!crafting.completed(Squad.active.hourselapsed);
+		return crafting!=null&&!crafting.completed(Squad.active.gettime());
 	}
 }

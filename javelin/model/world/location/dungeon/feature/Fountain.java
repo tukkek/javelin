@@ -28,6 +28,7 @@ public class Fountain extends Feature{
 		if(Javelin.prompt(PROMPT)!='\n') return false;
 		for(Combatant c:Squad.active.members)
 			heal(c);
+		Squad.active.equipment.refresh(24);
 		Javelin.message("Party fully recovered!",false);
 		return true;
 	}

@@ -2,7 +2,6 @@ package javelin.model.world.location;
 
 import java.util.List;
 
-import javelin.Javelin;
 import javelin.controller.generator.WorldGenerator;
 import javelin.model.unit.Combatant;
 import javelin.model.world.World;
@@ -87,14 +86,6 @@ public class Outpost extends Fortification{
 	@Override
 	public boolean interact(){
 		if(!super.interact()) return false;
-		// Squad.active.view(Squad.active.perceive(false, true) + 10);
-		if(Javelin
-				.prompt("This outpost grants you vision of the surrounding area.\n"
-						+"Do you want to pillage it for $"+getspoils()+"?\n\n"
-						+"Press p to pillage it and any other key to leave...")=='p'){
-			pillage();
-			return true;
-		}
 		return false;
 	}
 

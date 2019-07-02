@@ -8,9 +8,14 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Touch;
 import javelin.model.unit.condition.Condition;
 
+/**
+ * See SRD;
+ *
+ * @author alex
+ */
 public class Displacement extends Touch{
-	public class Blinking extends Condition{
-		public Blinking(float expireatp,Combatant c,Integer casterlevelp){
+	class Blinking extends Condition{
+		Blinking(float expireatp,Combatant c,Integer casterlevelp){
 			super(c,"blinking",Effect.POSITIVE,casterlevelp,expireatp);
 		}
 
@@ -29,12 +34,15 @@ public class Displacement extends Touch{
 
 	protected int turns=6;
 
+	/** Constructor. */
 	public Displacement(){
 		this("Displacement",3,ChallengeCalculator.ratespelllikeability(3),
 				Realm.MAGIC);
 		iswand=true;
+		continuous=4;
 	}
 
+	/** Constructor. */
 	public Displacement(String name,int levelp,float incrementcost,Realm realmp){
 		super(name,levelp,incrementcost,realmp);
 		castinbattle=true;

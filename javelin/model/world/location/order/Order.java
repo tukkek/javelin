@@ -15,7 +15,7 @@ public class Order implements Serializable{
 	/**
 	 * The time at which this order will be ready.
 	 *
-	 * @see Squad#hourselapsed
+	 * @see Squad#time
 	 */
 	public long completionat;
 	/** Description. */
@@ -27,7 +27,7 @@ public class Order implements Serializable{
 	 * @param namep See {@link #name}.
 	 */
 	public Order(long eta,String namep){
-		long time=Squad.active==null?0:Squad.active.hourselapsed;
+		long time=Squad.active==null?0:Squad.active.gettime();
 		completionat=eta+time;
 		name=namep;
 	}
@@ -42,7 +42,7 @@ public class Order implements Serializable{
 
 	@Override
 	public String toString(){
-		return name+" ("+geteta(Squad.active.hourselapsed)+")";
+		return name+" ("+geteta(Squad.active.gettime())+")";
 	}
 
 	public String geteta(long now){

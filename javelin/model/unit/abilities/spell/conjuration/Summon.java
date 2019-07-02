@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javelin.Javelin;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.db.reader.MonsterReader;
@@ -68,7 +67,7 @@ public class Summon extends Spell{
 
 	public Summon(String monstername,float chance){
 		super("Summon "+monstername.toLowerCase(),0,0);
-		assert chance==1;// cannot be a Spell if random
+		if(chance!=1) throw new RuntimeException("Cannot be a Spell if random!");
 		this.monstername=monstername;
 		this.chance=chance;
 		castinbattle=true;
@@ -210,8 +209,8 @@ public class Summon extends Spell{
 	 * @see MonsterReader
 	 */
 	public static void setupsummons(){
-		Monster.MONSTERS.stream().filter(m->!m.passive)
-				.map(m->new Summon(m.name,1)).forEach(s->SUMMONS.add(s));
+		Monster.MONSTERS.stream().filter(m->!m.passive).map(m->new Summon(m.name,1))
+				.forEach(s->SUMMONS.add(s));
 		for(var k:Kit.KITS)
 			k.finish();
 	}

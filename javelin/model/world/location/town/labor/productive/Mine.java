@@ -123,12 +123,12 @@ public class Mine extends Fortification{
 		public boolean select(Option o){
 			if(o==MINEDAY){
 				Squad.active.gold+=mine(1);
-				Squad.active.hourselapsed+=24;
+				Squad.active.delay(24);
 				return true;
 			}
 			if(o==MINEWEEK){
 				Squad.active.gold+=mine(7);
-				Squad.active.hourselapsed+=7*24;
+				Squad.active.delay(7*24);
 				return true;
 			}
 			if(o==PLACEMINER){

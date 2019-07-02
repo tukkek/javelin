@@ -18,12 +18,12 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.model.diplomacy.mandate.Mandate;
 import javelin.model.item.Item;
 import javelin.model.item.Tier;
-import javelin.model.item.Wand;
 import javelin.model.item.artifact.CasterRing;
 import javelin.model.item.consumable.Eidolon;
 import javelin.model.item.consumable.Potion;
 import javelin.model.item.consumable.Scroll;
 import javelin.model.item.precious.PreciousObject;
+import javelin.model.item.wand.Wand;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
@@ -42,6 +42,7 @@ import javelin.model.world.location.unique.UniqueLocation;
  * @author alex
  */
 public class ContentSummary{
+	/** Will catch subclasses too. */
 	static final List<Class<? extends Item>> ITEMTYPES=List.of(CasterRing.class,
 			Eidolon.class,Potion.class,PreciousObject.class,Scroll.class,Wand.class);
 	/**

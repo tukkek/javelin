@@ -1,5 +1,6 @@
 package javelin.model.item.consumable;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class Potion extends Item{
 	 */
 	public Potion(Spell s){
 		super("Potion of "+s.name.toLowerCase(),s.level*s.casterlevel*50,true);
-		if(Javelin.DEBUG) assert s.ispotion;
+		if(Javelin.DEBUG&&!s.ispotion) throw new InvalidParameterException();
 		usedinbattle=s.castinbattle;
 		usedoutofbattle=s.castoutofbattle;
 		spell=s;

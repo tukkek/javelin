@@ -55,7 +55,7 @@ public class Guards extends UrbanEncounter{
 	protected void surrender(){
 		var rank=town.getrank().rank;
 		var days=RPG.rolldice(rank,8)-rank;
-		Squad.active.hourselapsed+=days*24;
+		Squad.active.delay(days*24);
 		notify("You spend "+days+" days in jail before being cleared.");
 	}
 }

@@ -214,13 +214,13 @@ public class WorldScreen extends BattleScreen{
 	 * Player acts and ends turn, allowing time to pass.
 	 *
 	 * @see Javelin#act()
-	 * @see Squad#hourselapsed
+	 * @see Squad#time
 	 */
 	void endturn(){
 		World.scenario.endturn();
 		if(Dungeon.active!=null) return;
 		Squad act=Javelin.act();
-		long time=act.hourselapsed;
+		long time=act.gettime();
 		final int day=Double.valueOf(Math.ceil(time/24.0)).intValue();
 		List<Actor> squads=World.getall(Squad.class);
 		while(day>WorldScreen.lastday||squads.isEmpty()){

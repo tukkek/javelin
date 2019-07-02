@@ -144,15 +144,15 @@ public abstract class Academy extends Fortification{
 	 * @return <code>false</code> if there was no unit in {@link #training}.
 	 */
 	public static boolean train(){
-		boolean trained=false;
-		for(Actor actor:World.getactors())
+		var trained=false;
+		for(var actor:World.getactors())
 			if(actor instanceof Academy){
-				Academy a=(Academy)actor;
+				var a=(Academy)actor;
 				/* don't inline */
-				for(Order order:a.training.queue){
-					TrainingOrder o=(TrainingOrder)order;
-					a.completetraining(o).hourselapsed=Math.max(o.completionat,
-							Squad.active.hourselapsed);
+				for(var order:a.training.queue){
+					var o=(TrainingOrder)order;
+					var done=Math.max(o.completionat,Squad.active.gettime());
+					a.completetraining(o).settime(done);
 					trained=true;
 				}
 				a.training.clear();
@@ -180,7 +180,7 @@ public abstract class Academy extends Fortification{
 	}
 
 	void completetraining(){
-		for(Order o:training.reclaim(Squad.active.hourselapsed))
+		for(Order o:training.reclaim(Squad.active.gettime()))
 			completetraining((TrainingOrder)o);
 	}
 
@@ -300,7 +300,7 @@ public abstract class Academy extends Fortification{
 		boolean anydone=false;
 		for(Order o:training.queue){
 			s+=o+"\n";
-			anydone=anydone||o.completed(Squad.active.hourselapsed);
+			anydone=anydone||o.completed(Squad.active.gettime());
 		}
 		s+="\n";
 		if(anydone)

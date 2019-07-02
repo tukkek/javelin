@@ -222,21 +222,22 @@ public class RewardCalculator{
 	 * <code>[cr-1,cr]</code> or <code>[cr,cr+1]</code>.
 	 *
 	 * @param cr As in {@link #getgold(float)}.
-	 * @param delta How much leeway to grant the given CR, up or down (use more
+	 * @param variance How much leeway to grant the given CR, up or down (use more
 	 *          than 1 with caution).
 	 * @return A random, rounded amount of gold.
 	 * @see Javelin#round(int)
 	 */
-	public static int getgold(int cr,int delta){
-		assert delta>0;
+	public static int getgold(int cr,int variance){
+		if(Javelin.DEBUG&&variance<=0)
+			throw new RuntimeException("Negative variance!");
 		int min;
 		int max;
 		if(RPG.chancein(2)){
-			min=cr-RPG.r(1,delta);
+			min=cr-RPG.r(1,variance);
 			max=cr;
 		}else{
 			min=cr;
-			max=cr+RPG.r(1,delta);
+			max=cr+RPG.r(1,variance);
 		}
 		return Javelin.round(RPG.r(getgold(min),getgold(max)));
 	}

@@ -60,12 +60,12 @@ public class AdventurersGuild extends UniqueLocation{
 				continue;
 			}
 			if(input=='w'){
-				Squad.active.hourselapsed+=24*5;
+				Squad.active.delay(24*5);
 				Squad.active.gold+=salary/7;
 				return true;
 			}
 			if(input=='m'){
-				Squad.active.hourselapsed+=24*30;
+				Squad.active.delay(24*30);
 				Squad.active.gold+=Math.round(salary);
 				return true;
 			}
@@ -133,7 +133,7 @@ public class AdventurersGuild extends UniqueLocation{
 
 	void train(ArrayList<Combatant> students){
 		if(!validateselection(students)) return;
-		Squad.active.hourselapsed+=24*7;
+		Squad.active.delay(24*7);
 		for(int i=0;i<students.size();i++){
 			Kit kit=selection.get(i);
 			if(kit==null) continue;
@@ -207,7 +207,7 @@ public class AdventurersGuild extends UniqueLocation{
 	 *
 	 * @param bonus Each unit here means an entire dayworth of food bonus to the
 	 *          paycheck per day.
-	 * @param days This method does not update {@link Squad#hourselapsed}.
+	 * @param days This method does not update {@link Squad#time}.
 	 * @return Amount in gold pieces ($).
 	 */
 	public static float pay(int bonus,float days,List<Combatant> workers){

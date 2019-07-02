@@ -37,7 +37,7 @@ public class UseItem extends Action{
 		if(item==null) return false;
 		c.ap+=item.apcost;
 		c.source=c.source.clone();
-		if(item.use(c)) Javelin.app.fight.getbag(c).remove(item);
+		if(item.use(c)&&item.consumable) item.expend();
 		return true;
 	}
 
@@ -49,14 +49,15 @@ public class UseItem extends Action{
 	 */
 	public static Item queryforitemselection(final Combatant c,boolean validate){
 		final List<Item> items=new ArrayList<>(Javelin.app.fight.getbag(c));
+		var noeligible=c+" doesn't have any usabla battle items right now...";
 		if(items.isEmpty()){
-			Javelin.message("Isn't carrying battle items!",Javelin.Delay.WAIT);
+			Javelin.message(noeligible,false);
 			return null;
 		}
 		if(validate) for(final Item i:new ArrayList<>(items))
 			if(!i.usedinbattle||i.canuse(c)!=null) items.remove(i);
 		if(items.isEmpty()){
-			Javelin.message("Can't use any of these items!",false);
+			Javelin.message(noeligible,false);
 			return null;
 		}
 		Collections.sort(items,ItemsByName.SINGLETON);
@@ -65,7 +66,7 @@ public class UseItem extends Action{
 			if(threatened&&it.provokesaoo) items.remove(it);
 		if(items.isEmpty()){
 			MessagePanel.active.clear();
-			Javelin.message("Can't use any of these items while engaged!",false);
+			Javelin.message("Can't use any of these items while engaged...",false);
 			return null;
 		}
 		boolean fullscreen=items.size()>4;

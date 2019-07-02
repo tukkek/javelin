@@ -497,7 +497,7 @@ public class Dungeon extends Location{
 	 * Called when reaching {@link StairsUp}
 	 */
 	public void goup(){
-		Squad.active.ellapse(1);
+		Squad.active.delay(1);
 		int floor=floors.indexOf(this);
 		if(floor==0)
 			Dungeon.active.leave();
@@ -509,7 +509,7 @@ public class Dungeon extends Location{
 	 * Called when reaching {@link StairsDown}.
 	 */
 	public void godown(){
-		Squad.active.ellapse(1);
+		Squad.active.delay(1);
 		floors.get(floors.indexOf(this)+1).activate(false);
 	}
 

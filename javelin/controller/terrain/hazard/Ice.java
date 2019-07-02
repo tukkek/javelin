@@ -13,7 +13,7 @@ public class Ice extends Hazard{
 
 	@Override
 	public void hazard(int hoursellapsed){
-		Squad.active.hourselapsed+=24;
+		Squad.active.delay(24);
 		Javelin.message("Your ship gets stuck on ice!",true);
 	}
 

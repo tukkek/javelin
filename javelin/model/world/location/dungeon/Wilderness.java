@@ -144,6 +144,9 @@ public class Wilderness extends Dungeon{
 	@Override
 	public Fight fight(){
 		var e=new RandomDungeonEncounter(this);
+		if(Difficulty.calculate(Squad.active.members,
+				Fight.originalredteam)<=Difficulty.VERYEASY)
+			return null;
 		e.map.wall=Images.get(tilewall);
 		e.map.floor=Images.get(tilefloor);
 		return e;

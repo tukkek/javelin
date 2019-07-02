@@ -170,7 +170,7 @@ public class Javelin{
 	 * @return Hour of the day, from 0 to 23.
 	 */
 	public static long getHour(){
-		return Squad.active==null?0:Squad.active.hourselapsed%24;
+		return Squad.active==null?0:Squad.active.gettime()%24;
 	}
 
 	/**
@@ -184,19 +184,19 @@ public class Javelin{
 		Squad next=nexttoact();
 		Squad.active=next;
 		if(WorldScreen.lastday==-1)
-			WorldScreen.lastday=Math.ceil(Squad.active.hourselapsed/24.0);
+			WorldScreen.lastday=Math.ceil(Squad.active.gettime()/24.0);
 		return next;
 	}
 
 	/**
 	 * @return Next squad to act.
-	 * @see Squad#hourselapsed
+	 * @see Squad#time
 	 */
 	public static Squad nexttoact(){
 		Squad next=null;
 		for(final Actor a:World.getall(Squad.class)){
 			Squad s=(Squad)a;
-			if(next==null||s.hourselapsed<next.hourselapsed) next=s;
+			if(next==null||s.gettime()<next.gettime()) next=s;
 		}
 		return next;
 	}

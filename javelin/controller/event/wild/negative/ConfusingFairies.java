@@ -28,7 +28,7 @@ public class ConfusingFairies extends WildEvent{
 	public void happen(Squad s){
 		int timelost=30-s.getbest(Skill.CONCENTRATION).roll(Skill.CONCENTRATION);
 		if(timelost<1) timelost=1;
-		Squad.active.hourselapsed+=timelost;
+		Squad.active.delay(timelost);
 		Javelin.message("A group of fairies decides to play a trick on you.\n"
 				+"You lose "+timelost+" hours while confused by their glamours.",true);
 	}

@@ -48,7 +48,7 @@ public class GettingLost extends Hazard{
 	public static void getlost(String message,int hoursellapsed){
 		Squad.active.displace();
 		Squad.active.place();
-		Squad.active.hourselapsed+=hoursellapsed;
+		Squad.active.delay(hoursellapsed);
 		if(message!=null) Javelin.message(message,false);
 	}
 }

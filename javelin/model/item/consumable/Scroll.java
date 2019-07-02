@@ -1,5 +1,6 @@
 package javelin.model.item.consumable;
 
+import java.security.InvalidParameterException;
 import java.util.HashSet;
 
 import javelin.Javelin;
@@ -31,7 +32,7 @@ public class Scroll extends Item{
 	public Scroll(final Spell s){
 		super("Scroll of "+s.name.toLowerCase(),
 				s.level*s.casterlevel*50+s.components,true);
-		if(Javelin.DEBUG) assert s.isscroll;
+		if(Javelin.DEBUG&&!s.isscroll) throw new InvalidParameterException();
 		spell=s.clone();
 		usedinbattle=s.castinbattle;
 		usedoutofbattle=s.castoutofbattle;

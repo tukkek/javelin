@@ -137,15 +137,10 @@ public class Lodge extends Fortification{
 		String s="Do you want to rest at the "+TITLES[level].toLowerCase()+"?\n";
 		s+="\nENTER or s to stay ($"+price+"), w to stay for a week ($"+weekprice
 				+")";
-		s+="\np to pillage ($"+Javelin.format(getspoils())+")";
 		s+="\nany other key to leave";
 		Character input=Javelin.prompt(s);
 		if(input=='\n'||input=='s') return rest(price,level+1);
 		if(input=='w') return rest(weekprice,WEEKLONGREST*(level+1));
-		if(input=='p'){
-			pillage();
-			return true;
-		}
 		return false;
 	}
 
@@ -213,6 +208,6 @@ public class Lodge extends Fortification{
 				c.terminateconditions(hours);
 			}
 		}
-		if(advancetime) Squad.active.hourselapsed+=hours;
+		if(advancetime) Squad.active.delay(hours);
 	}
 }

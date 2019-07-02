@@ -118,7 +118,8 @@ public abstract class ValueSelector{
 				b=different(b,newBeta(chosen.value,b));
 			}
 		}
-		if(Javelin.DEBUG) assert chosen!=null;
+		if(Javelin.DEBUG&&chosen==null)
+			throw new RuntimeException("Node not chosen!");
 		return chosen;
 	}
 

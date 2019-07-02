@@ -10,8 +10,6 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
-import javelin.model.world.location.Fortification;
-import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.Option;
@@ -27,7 +25,6 @@ public class TownScreen extends PurchaseScreen{
 	static final Option SETTLE=new Option("Settle worker",0,'s');
 	static final boolean DEBUGMANAGEMENT=false;
 	static final Option RENAME=new Option("Rename town",0,'r');
-	static final Option PILLAGE=new Option("Pillage",0,'P');
 
 	class Manage extends ScreenOption{
 		public Manage(Town town){
@@ -64,12 +61,6 @@ public class TownScreen extends PurchaseScreen{
 			return true;
 		}
 		if(o==SETTLE) return retire(town);
-		if(o==PILLAGE){
-			Squad.active.gold+=Fortification.getspoils(town.population);
-			town.remove();
-			stayopen=false;
-			return true;
-		}
 		stayopen=false;
 		return true;
 	}
@@ -96,11 +87,6 @@ public class TownScreen extends PurchaseScreen{
 		list.add(SETTLE);
 		if(town.ishosting())
 			list.add(new TournamentScreenOption("Enter tournament",town,'t'));
-		if(town.getrank().rank<Rank.CITY.rank){
-			int spoils=Fortification.getspoils(town.population-1);
-			PILLAGE.name="Pillage ($"+Javelin.format(spoils)+")";
-			list.add(PILLAGE);
-		}
 		return list;
 	}
 

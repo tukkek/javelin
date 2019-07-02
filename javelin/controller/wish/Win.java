@@ -67,7 +67,7 @@ public class Win extends Wish{
 			if(a instanceof Temple) a.remove();
 		for(Squad squad:Squad.getsquads()){
 			WorldScreen.lastday*=10;
-			squad.hourselapsed=Math.round(WorldScreen.lastday*24);
+			squad.settime(Math.round(WorldScreen.lastday*24));
 		}
 		for(String win:Win.WINMESSAGES){
 			screen.text=win;

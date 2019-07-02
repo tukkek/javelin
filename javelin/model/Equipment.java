@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
@@ -83,15 +84,11 @@ public class Equipment implements Serializable{
 		get(RPG.pick(squad.members)).add(i);
 	}
 
-	/**
-	 * TODO ideally should never to a "dirty" state
-	 */
+	/** TODO ideally should never be in a "dirty" state */
 	public void clean(){
-		keyloop:for(Integer key:new ArrayList<>(equipment.keySet())){
-			for(Combatant c:squad.members)
-				if(c.id==key) continue keyloop;
-			equipment.remove(key);
-		}
+		var current=squad.members.stream().map(c->c.id).collect(Collectors.toSet());
+		for(var id:new ArrayList<>(equipment.keySet()))
+			if(!current.contains(id)) equipment.remove(id);
 	}
 
 	/**
@@ -157,5 +154,19 @@ public class Equipment implements Serializable{
 			for(Item i:bag)
 				if(type.isInstance(i)) list.add((K)i);
 		return list;
+	}
+
+	/** @return All Items in all bags. */
+	public List<Item> getall(){
+		clean();
+		var all=new ArrayList<Item>();
+		for(var bag:values())
+			all.addAll(bag);
+		return all;
+	}
+
+	/** Calls {@link Item#refresh(int)} for all items in the bag. */
+	public void refresh(int hours){
+		getall().forEach(i->i.refresh(hours));
 	}
 }

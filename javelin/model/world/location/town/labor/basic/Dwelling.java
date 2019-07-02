@@ -118,10 +118,6 @@ public class Dwelling extends Fortification{
 		while(choice!='q'){
 			screen.print(prompt(monstertype));
 			choice=InfoScreen.feedback();
-			if(choice=='p'){
-				pillage();
-				break;
-			}
 			if(volunteers==0) continue;
 			if(choice=='h')
 				hire();
@@ -163,8 +159,6 @@ public class Dwelling extends Fortification{
 					+Javelin.format(dweller.pay())+"/day)\n";
 		}else
 			text+="There are currently no available units here.\n\n";
-		String spoils=Javelin.format(getspoils());
-		text+="p - pillage this dwelling ($"+spoils+")\n";
 		text+="q - quit\n";
 		text+="\nCurrent gold: $"+Javelin.format(Squad.active.gold)+".\n";
 		if(volunteers>0)

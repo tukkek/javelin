@@ -29,7 +29,7 @@ public class FindRuby extends WildEvent{
 		Character input=Javelin.prompt(PROMPT,Set.of('e','i'));
 		if(input=='i') return;
 		remove=true;
-		s.hourselapsed+=RPG.rolldice(2,4);
+		s.delay(RPG.rolldice(2,4));
 		if(s.getbest(Skill.PERCEPTION).roll(Skill.PERCEPTION)<20){
 			Javelin.message("They're empty. You only waste your time...",true);
 			return;

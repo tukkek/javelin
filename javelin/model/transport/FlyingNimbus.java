@@ -30,7 +30,7 @@ public class FlyingNimbus extends Airship{
 		maintenance=0;
 		parkeable=false;
 		oldtransport=oldtransportp;
-		expireat=Squad.active.hourselapsed+24;
+		expireat=Squad.active.gettime()+24;
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class FlyingNimbus extends Airship{
 			s.gold-=oldtransport.maintenance;
 			if(s.gold<0) s.gold=0;
 		}
-		if(s.hourselapsed>=expireat&&!Terrain.get(s.x,s.y).equals(Terrain.WATER))
+		if(s.gettime()>=expireat&&!Terrain.get(s.x,s.y).equals(Terrain.WATER))
 			Squad.active.transport=oldtransport;
 	}
 }

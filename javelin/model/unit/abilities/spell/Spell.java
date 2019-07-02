@@ -14,10 +14,10 @@ import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.kit.Kit;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.item.Item;
-import javelin.model.item.Wand;
 import javelin.model.item.artifact.CasterRing;
 import javelin.model.item.consumable.Potion;
 import javelin.model.item.consumable.Scroll;
+import javelin.model.item.wand.Wand;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -114,6 +114,17 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 	public float cr;
 	/** Material components cost. */
 	public int components=0;
+	/**
+	 * If a continuous item has an effect based on a {@link Spell} with a duration
+	 * measured in rounds, multiply the cost by 4. If the duration of the spell is
+	 * 1 minute/level, multiply the cost by 2, and if the duration is 10
+	 * minutes/level, multiply the cost by 1.5. If the spell has a 24-hour
+	 * duration or greater, multiply the cost by 0.5. [Adapted from SRD].
+	 *
+	 * If no continuous duration, multiply by 1. Default is -1 in order to detect
+	 * cases where it hasn't been properly defined.
+	 */
+	public int continuous=-1;
 
 	/**
 	 * @param name Upgrade name.

@@ -65,7 +65,7 @@ public class CacheClearThread extends Thread{
 	static int check=0;
 
 	static private void checkclean(Link l){
-		if(l.payload!=null) assert false;
+		if(l.payload!=null) throw new RuntimeException("Payload != null");
 		Link[] cache=l.cache;
 		for(Link m:cache)
 			if(m!=null) checkclean(m);

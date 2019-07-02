@@ -152,32 +152,11 @@ public abstract class Fortification extends Location{
 	}
 
 	/**
-	 * @return The amount of gold that should be given if this in case of a
-	 *         {@link #pillage()}.
-	 */
-	public int getspoils(){
-		return getspoils(targetel);
-	}
-
-	/**
 	 * @param el Will use an encounter level 1 higher than this.
 	 * @return See {@link #getspoils()}.
 	 */
 	static public int getspoils(Integer el){
 		return RewardCalculator.getgold(ChallengeCalculator.eltocr(el+1));
-	}
-
-	/**
-	 * Destroys this place, adding a certain amount of gold to the active
-	 * {@link Squad}. This is mostly allowed as to allow a less strategic gameplay
-	 * for players who want to just pillage and move on, without using locations
-	 * for their strategic value.
-	 *
-	 * @see #getspoils()
-	 */
-	public void pillage(){
-		Squad.active.gold+=getspoils();
-		remove();
 	}
 
 	@Override

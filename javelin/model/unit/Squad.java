@@ -2,6 +2,7 @@ package javelin.model.unit;
 
 import java.awt.Image;
 import java.math.BigDecimal;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -65,10 +66,6 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	 * choice performance-wise.
 	 */
 	public Equipment equipment=new Equipment(this);
-	/**
-	 * Start at morning.
-	 */
-	public long hourselapsed;
 	/** See {@link Transport}. */
 	public Transport transport=null;
 	/**
@@ -84,19 +81,20 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	/** Terrain type this squad is coming from after movement. */
 	public Terrain lastterrain=null;
 
-	transient private Image image=null;
+	transient Image image=null;
+	long time;
 
 	/**
 	 * @param xp Starting location (x).
 	 * @param yp Starting location (y).
-	 * @param hourselapsedp See {@link #hourselapsed}.
+	 * @param hourselapsedp See {@link #time}.
 	 * @param lasttownp See {@link #lasttown}.
 	 */
 	public Squad(final int xp,final int yp,final long hourselapsedp,
 			Town lasttownp){
 		x=xp;
 		y=yp;
-		hourselapsed=hourselapsedp;
+		time=hourselapsedp;
 		if(Squad.active==null) Squad.active=this;
 		lasttown=lasttownp;
 	}
@@ -168,7 +166,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 		members.addAll(s.members);
 		sort();
 		gold+=s.gold;
-		hourselapsed=Math.max(hourselapsed,s.hourselapsed);
+		time=Math.max(time,s.time);
 		for(final Combatant c:s.members)
 			equipment.put(c,s.equipment.get(c));
 		if(transport==null||s.transport!=null&&s.transport.speed>transport.speed)
@@ -289,7 +287,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 
 	public static int perceive(boolean flyingbonus,boolean weatherpenalty,
 			boolean periodbonus,List<Combatant> squad){
-		if(Javelin.DEBUG) assert !squad.isEmpty();
+		if(Javelin.DEBUG&&squad.isEmpty()) throw new InvalidParameterException();
 		int best=Integer.MIN_VALUE;
 		for(Combatant c:squad){
 			int roll=10+c.perceive(flyingbonus,weatherpenalty,periodbonus);
@@ -391,24 +389,14 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	}
 
 	/**
-	 * @param timecost Updates {@link #hourselapsed} and any side-effects.
-	 */
-	public void ellapse(int timecost){
-		if(timecost==0) return;
-		hourselapsed+=timecost;
-		for(Combatant c:new ArrayList<>(members))
-			c.terminateconditions(timecost);
-	}
-
-	/**
 	 * @param x {@link World} coordinate.
 	 * @param y {@link World} coordinate.
 	 * @return Like {@link #speed()} but return time in hours.
 	 */
 	public float move(boolean ellapse,Terrain t,int x,int y){
-		float hours=WorldMove.TIMECOST*(30f*WorldMove.NORMALMARCH)/speed(t,x,y);
+		var hours=WorldMove.TIMECOST*(30f*WorldMove.NORMALMARCH)/speed(t,x,y);
 		if(hours<1) hours=1;
-		if(ellapse) ellapse(Math.round(hours));
+		if(ellapse) delay(Math.round(hours));
 		return hours;
 	}
 
@@ -713,5 +701,28 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 		for(var member:members)
 			highest=Math.max(highest,member.roll(s));
 		return highest;
+	}
+
+	/**
+	 * @return Time, used as game clock for each Squad, not only determining who
+	 *         should act first and for how long but also current {@link World}
+	 *         time.
+	 */
+	public long gettime(){
+		return time;
+	}
+
+	/** @param Advances time by this many hours. */
+	public void delay(long hours){
+		if(hours<=0) return;
+		time+=hours;
+		for(var c:new ArrayList<>(members))
+			c.terminateconditions((int)hours);
+		equipment.refresh((int)hours);
+	}
+
+	/** @see #gettime() */
+	public void settime(long time){
+		this.time=time;
 	}
 }

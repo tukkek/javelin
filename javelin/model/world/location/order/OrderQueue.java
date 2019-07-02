@@ -23,11 +23,11 @@ public class OrderQueue implements Serializable{
 	public ArrayList<Order> queue=new ArrayList<>(0);
 
 	public boolean reportalldone(){
-		return queue.isEmpty()||last().completed(Squad.active.hourselapsed);
+		return queue.isEmpty()||last().completed(Squad.active.gettime());
 	}
 
 	public boolean reportanydone(){
-		return !queue.isEmpty()&&Squad.active.hourselapsed>=next().completionat;
+		return !queue.isEmpty()&&Squad.active.gettime()>=next().completionat;
 	}
 
 	public Order last(){
@@ -35,7 +35,7 @@ public class OrderQueue implements Serializable{
 	}
 
 	public long getnextslot(){
-		return queue.isEmpty()?Squad.active.hourselapsed:last().completionat;
+		return queue.isEmpty()?Squad.active.gettime():last().completionat;
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class OrderQueue implements Serializable{
 	 * @see #reclaim(long)
 	 */
 	public boolean ready(){
-		return !queue.isEmpty()&&queue.get(0).completed(Squad.active.hourselapsed);
+		return !queue.isEmpty()&&queue.get(0).completed(Squad.active.gettime());
 	}
 
 	@Override

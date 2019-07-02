@@ -1,9 +1,11 @@
 package javelin.controller.table;
 
 import java.io.Serializable;
+import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Set;
 
+import javelin.Javelin;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.door.Door;
 import javelin.model.world.location.dungeon.feature.trap.Trap;
@@ -45,10 +47,10 @@ public class Table implements Serializable,Cloneable{
 
 		public RowData(int min,int max,int variance){
 			super();
+			if(Javelin.DEBUG&&min>max) throw new InvalidParameterException();
 			this.min=min;
 			this.max=max;
 			this.variance=variance;
-			if(javelin.Javelin.DEBUG) assert min<=max;
 		}
 
 		@Override

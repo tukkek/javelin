@@ -80,7 +80,7 @@ public class Herb extends Feature{
 			Javelin.message(interupted,false);
 			throw new StartBattle(new RandomDungeonEncounter(Dungeon.active));
 		}
-		s.hourselapsed+=1;
+		s.delay(1);
 		String success="You extract "+description+" from the herbs!";
 		Javelin.message(success,false);
 		for(Potion p:loot)

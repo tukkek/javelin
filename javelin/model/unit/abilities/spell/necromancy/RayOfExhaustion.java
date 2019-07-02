@@ -23,6 +23,7 @@ public class RayOfExhaustion extends Ray{
 				Realm.EVIL);
 		castinbattle=true;
 		iswand=true;
+		continuous=2;
 	}
 
 	@Override

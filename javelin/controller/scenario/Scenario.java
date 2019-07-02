@@ -256,7 +256,6 @@ public class Scenario implements Serializable{
 				kit=k;
 				if(!chosen.contains(kit)) break;
 			}
-			assert kit!=null;
 			chosen.add(kit);
 			c.source.customName=Character.toUpperCase(kit.name.charAt(0))
 					+kit.name.substring(1);

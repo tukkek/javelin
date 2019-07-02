@@ -2,7 +2,6 @@ package javelin.model.world.location.dungeon.temple;
 
 import java.awt.Image;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,6 +31,7 @@ import javelin.model.world.location.dungeon.feature.Altar;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.unique.UniqueLocation;
+import javelin.old.RPG;
 import javelin.view.Images;
 
 /**
@@ -61,10 +61,7 @@ public abstract class Temple extends UniqueLocation{
 	 * Create the temples during world generation.
 	 */
 	public static void generatetemples(){
-		LinkedList<Integer> els=new LinkedList<>();
-		for(int el:new int[]{3,5,8,10,13,15,18})
-			els.add(el);
-		Collections.shuffle(els);
+		var els=RPG.shuffle(new LinkedList<>(List.of(3,5,8,10,13,15,18)));
 		new AirTemple(els.pop()).place();
 		new EarthTemple(els.pop()).place();
 		new FireTemple(els.pop()).place();
@@ -72,7 +69,8 @@ public abstract class Temple extends UniqueLocation{
 		new EvilTemple(els.pop()).place();
 		new GoodTemple(els.pop()).place();
 		new MagicTemple(els.pop()).place();
-		assert els.isEmpty();
+		if(Javelin.DEBUG&&!els.isEmpty())
+			throw new RuntimeException("Didn't generate all temples.");
 	}
 
 	/**

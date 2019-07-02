@@ -145,7 +145,6 @@ public class Shrine extends Fortification{
 				+(RPG.r(1,2)==1?"priest":"priestess")+".\n";
 		output+="\n1 - "+rituals.get(0).name+" ($"+price(0)+")";
 		if(level>1) output+="\n2 - "+rituals.get(1).name+" ($"+price(1)+")";
-		output+="\np - Pillage this temple ($"+Javelin.format(getspoils())+")";
 		output+="\nq - Quit for now ";
 		output+="\n\nSelect an option.";
 		InfoScreen screen=new InfoScreen(output);
@@ -160,8 +159,6 @@ public class Shrine extends Fortification{
 			service(0);
 		else if(input=='2'&&level>1)
 			service(1);
-		else if(input=='p')
-			pillage();
 		else if(input=='q')
 			return;
 		else

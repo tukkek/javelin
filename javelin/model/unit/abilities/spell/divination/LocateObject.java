@@ -20,10 +20,9 @@ import javelin.model.world.location.dungeon.feature.Spirit;
 public class LocateObject extends Spell{
 	/** Constructor. */
 	public LocateObject(){
-		super("Locate object",2,ChallengeCalculator.ratespelllikeability(2));
+		super("Locate object",2,ChallengeCalculator.ratespell(2));
 		castinbattle=false;
 		castoutofbattle=true;
-		isscroll=true;
 	}
 
 	@Override

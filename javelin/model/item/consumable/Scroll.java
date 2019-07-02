@@ -8,14 +8,13 @@ import javelin.controller.action.CastSpell;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.skill.Skill;
 
 /**
- * Can only be used out-of-combat. The lore concept is that there is actually a
- * non-combatant able spellcaster (or at least spellreader) accompanying each
- * {@link Squad}.
+ * {@link Scroll}s are a catch-all, spell-completion item type for
+ * non-{@link #iswand} {@link Spell}s. Scrolls provoke attacks of opportunity
+ * and require spell-completion capabilities.
  *
  * @author alex
  */

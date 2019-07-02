@@ -12,8 +12,9 @@ import javelin.model.unit.condition.Heroic;
  * See the d20 SRD for more info.
  */
 public class Heroism extends Touch{
+	/** Constructor. */
 	public Heroism(){
-		super("Heroism",3,ChallengeCalculator.ratespelllikeability(3),Realm.FIRE);
+		super("Heroism",3,ChallengeCalculator.ratespell(3),Realm.FIRE);
 		castonallies=true;
 		castinbattle=true;
 		ispotion=true;

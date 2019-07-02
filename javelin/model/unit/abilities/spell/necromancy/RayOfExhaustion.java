@@ -19,11 +19,10 @@ public class RayOfExhaustion extends Ray{
 
 	/** Constructor. */
 	public RayOfExhaustion(){
-		super("Ray of exhaustion",3,ChallengeCalculator.ratespelllikeability(3),
-				Realm.EVIL);
+		super("Ray of exhaustion",3,ChallengeCalculator.ratespell(3),Realm.EVIL);
 		castinbattle=true;
 		iswand=true;
-		continuous=2;
+		isrod=true;
 	}
 
 	@Override

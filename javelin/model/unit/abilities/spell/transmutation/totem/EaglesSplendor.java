@@ -1,4 +1,4 @@
-package javelin.model.unit.abilities.spell.totem;
+package javelin.model.unit.abilities.spell.transmutation.totem;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.model.Realm;
@@ -11,8 +11,8 @@ import javelin.model.unit.condition.Condition;
  * See the d20 SRD for more info.
  */
 public class EaglesSplendor extends TotemsSpell{
-	public class Splendid extends Condition{
-		public Splendid(Combatant c,Integer casterlevelp){
+	class Splendid extends Condition{
+		Splendid(Combatant c,Integer casterlevelp){
 			super(c,"splendid",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE);
 		}
 
@@ -27,6 +27,7 @@ public class EaglesSplendor extends TotemsSpell{
 		}
 	}
 
+	/** Constructor. */
 	public EaglesSplendor(){
 		super("Eagle's splendor",Realm.AIR);
 	}
@@ -38,5 +39,4 @@ public class EaglesSplendor extends TotemsSpell{
 		return target+"'s charisma is now "
 				+Monster.getsignedbonus(target.source.charisma)+"!";
 	}
-
 }

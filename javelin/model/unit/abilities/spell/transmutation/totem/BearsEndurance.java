@@ -1,4 +1,4 @@
-package javelin.model.unit.abilities.spell.totem;
+package javelin.model.unit.abilities.spell.transmutation.totem;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.model.Realm;
@@ -11,8 +11,8 @@ import javelin.model.unit.condition.Condition;
  * See the d20 SRD for more info.
  */
 public class BearsEndurance extends TotemsSpell{
-	public class Enduring extends Condition{
-		public Enduring(Combatant c,Integer casterlevelp){
+	class Enduring extends Condition{
+		Enduring(Combatant c,Integer casterlevelp){
 			super(c,"enduring",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE);
 		}
 
@@ -27,6 +27,7 @@ public class BearsEndurance extends TotemsSpell{
 		}
 	}
 
+	/** Constructor. */
 	public BearsEndurance(){
 		super("Bear's endurance",Realm.EARTH);
 	}

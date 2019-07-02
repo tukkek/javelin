@@ -1,4 +1,4 @@
-package javelin.model.unit.abilities.spell.totem;
+package javelin.model.unit.abilities.spell.transmutation.totem;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.model.Realm;
@@ -11,8 +11,8 @@ import javelin.model.unit.condition.Condition;
  * See the d20 SRD for more info.
  */
 public class CatsGrace extends TotemsSpell{
-	public class Graceful extends Condition{
-		public Graceful(Combatant c,Integer casterlevelp){
+	class Graceful extends Condition{
+		Graceful(Combatant c,Integer casterlevelp){
 			super(c,"graceful",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE);
 		}
 
@@ -27,6 +27,7 @@ public class CatsGrace extends TotemsSpell{
 		}
 	}
 
+	/** Constructor. */
 	public CatsGrace(){
 		super("Cat's grace",Realm.WATER);
 	}

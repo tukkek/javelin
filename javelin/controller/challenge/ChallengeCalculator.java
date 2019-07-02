@@ -359,25 +359,31 @@ public class ChallengeCalculator{
 	}
 
 	/**
+	 * Rates a {@link Spell} or Spell-like ability. Multiple uses
+	 * {@link Spell#perday} should be multiplied externally.
+	 *
 	 * I'm not sure if it's a typo or on purpose but .001 seems to be too low a
-	 * factor, I'm using .01
+	 * factor, I'm using .01 instead.
+	 *
+	 * @return challenge rating factor for the given spell level cast at the given
+	 *         caster level.
 	 */
-	public static float ratespelllikeability(int spelllevel,int casterlevel){
+	public static float ratespell(int spelllevel,int casterlevel){
 		return casterlevel*spelllevel*.01f;
 	}
 
 	/**
-	 * @return challenge rating factor for the given spell level cast at the
-	 *         minimum possible caster level.
+	 * @return As {@link #ratespell(int, int)} but with the minimum possible
+	 *         caster level.
 	 */
-	public static float ratespelllikeability(int spelllevel){
-		return ChallengeCalculator.ratespelllikeability(spelllevel,
-				Spell.getcasterlevel(spelllevel));
+	public static float ratespell(int spelllevel){
+		var casterlevel=Spell.getcasterlevel(spelllevel);
+		return ChallengeCalculator.ratespell(spelllevel,casterlevel);
 	}
 
 	/**
-	 * Same as {@link ChallengeCalculator#ratespelllikeability(int)} but to be
-	 * used in case a touch spell is being used as a ray spell instead.
+	 * Same as {@link ChallengeCalculator#ratespell(int)} but to be used in case a
+	 * touch spell is being used as a ray spell instead.
 	 */
 	public static float ratetouchspellconvertedtoray(int spelllevel){
 		return .4f*spelllevel;

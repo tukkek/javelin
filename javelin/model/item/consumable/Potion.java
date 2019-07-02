@@ -12,8 +12,8 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.view.screen.BattleScreen;
 
 /**
- * Represent a consumable potion to be used in-battle. Any monster can use a
- * potion.
+ * Represents a consumable potion to be used in-battle. Any monster can use a
+ * potion. Any self-affecting, benefitial {@link Spell} can be a potion.
  *
  * TODO if it's ever necessary to increase the number of potions compared to
  * other items, Flasks can be added, which refresh their content every 24 hours.

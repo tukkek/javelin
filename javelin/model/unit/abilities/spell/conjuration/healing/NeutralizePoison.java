@@ -22,15 +22,19 @@ import javelin.model.unit.condition.Poisoned;
  * @author alex
  */
 public class NeutralizePoison extends Touch{
+	/**
+	 * Affected by {@link NeutralizePoison}.
+	 *
+	 * @author alex
+	 */
 	public class Neutralized extends Condition{
 		/**
 		 * Constructor.
 		 *
-		 * @param casterlevelp
+		 * @param casterlevel
 		 */
-		public Neutralized(Combatant c,Integer casterlevelp){
-			super(c,"immune to poison",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE,
-					1);
+		public Neutralized(Combatant c,Integer casterlevel){
+			super(c,"poison-neutral",Effect.POSITIVE,casterlevel,Float.MAX_VALUE,1);
 		}
 
 		@Override
@@ -50,8 +54,7 @@ public class NeutralizePoison extends Touch{
 
 	/** Constructor. */
 	public NeutralizePoison(){
-		super("Neutralize poison",4,ChallengeCalculator.ratespelllikeability(4),
-				Realm.WATER);
+		super("Neutralize poison",4,ChallengeCalculator.ratespell(4),Realm.WATER);
 		ispotion=true;
 		isritual=true;
 		castinbattle=true;

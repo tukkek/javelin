@@ -17,14 +17,14 @@ import javelin.model.unit.condition.Condition;
  * @see Monster#energyresistance
  */
 public class ResistEnergy extends Touch{
-	public class Resistant extends Condition{
+	class Resistant extends Condition{
 		int r;
 
 		/**
 		 * @param resistance Number of {@link Monster#energyresistance} points.
 		 * @param casterlevelp
 		 */
-		public Resistant(Combatant c,int resistance,Integer casterlevelp){
+		Resistant(Combatant c,int resistance,Integer casterlevelp){
 			super(c,"resistant",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE,1);
 			r=resistance;
 		}
@@ -44,8 +44,7 @@ public class ResistEnergy extends Touch{
 
 	/** Constructor. */
 	public ResistEnergy(){
-		super("Resist energy",2,ChallengeCalculator.ratespelllikeability(2,7),
-				Realm.GOOD);
+		super("Resist energy",2,ChallengeCalculator.ratespell(2,7),Realm.GOOD);
 		resistance=20/5;
 		casterlevel=7;
 		castinbattle=true;

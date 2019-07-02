@@ -12,6 +12,6 @@ public class CureSeriousWounds extends CureModerateWounds{
 	}
 
 	public CureSeriousWounds(){
-		this("Cure serious wounds",ChallengeCalculator.ratespelllikeability(3));
+		this("Cure serious wounds",ChallengeCalculator.ratespell(3));
 	}
 }

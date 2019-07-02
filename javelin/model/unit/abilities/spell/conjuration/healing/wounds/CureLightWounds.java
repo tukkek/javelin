@@ -9,7 +9,7 @@ public class CureLightWounds extends
 		javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureModerateWounds{
 
 	public CureLightWounds(){
-		super("Cure light wounds",ChallengeCalculator.ratespelllikeability(1),
+		super("Cure light wounds",ChallengeCalculator.ratespell(1),
 				new int[]{1,8,1},1);
 	}
 }

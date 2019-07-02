@@ -12,7 +12,7 @@ public class CureCriticalWounds extends CureModerateWounds{
 	}
 
 	public CureCriticalWounds(){
-		this("Cure critical wounds",ChallengeCalculator.ratespelllikeability(4));
+		this("Cure critical wounds",ChallengeCalculator.ratespell(4));
 	}
 
 }

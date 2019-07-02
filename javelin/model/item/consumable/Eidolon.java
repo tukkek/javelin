@@ -12,6 +12,9 @@ import javelin.model.unit.abilities.spell.conjuration.Summon;
  * A one-use crystal that carries the essence of a creature (acts as a
  * {@link Summon} {@link Monster} item).
  *
+ * TODO a major eidolon could be used once per day (actually Eidolon should be
+ * the name of the major one)
+ *
  * @author alex
  */
 public class Eidolon extends Item{
@@ -21,7 +24,7 @@ public class Eidolon extends Item{
 	 *
 	 * @see ContentSummary
 	 */
-	static final int PERLEVEL=2;
+	static final int PERLEVEL=5;
 
 	Monster m;
 

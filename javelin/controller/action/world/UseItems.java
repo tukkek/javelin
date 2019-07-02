@@ -82,7 +82,7 @@ public class UseItems extends WorldAction{
 		}
 		if(skiperror) return false;
 		String error=i.describefailure();
-		infoscreen.print(infoscreen.text+"\n\n"+error);
+		infoscreen.print(infoscreen.text+"\n\n"+error+"...");
 		InfoScreen.feedback();
 		return false;
 	}
@@ -100,7 +100,8 @@ public class UseItems extends WorldAction{
 		owner.unequip(i);
 		Squad s=Squad.active;
 		s.equipment.get(owner).remove(i);
-		s.equipment.get(selectmember(s.members,i,"Transfer "+i+" to who?")).add(i);
+		var prompt="Transfer "+i.name+" to who?";
+		s.equipment.get(selectmember(s.members,i,prompt)).add(i);
 	}
 
 	Item select(ArrayList<Item> allitems,InfoScreen infoscreen){
@@ -198,7 +199,7 @@ public class UseItems extends WorldAction{
 		for(Combatant c:members){
 			String option=c.toString();
 			String invalid=i.canuse(c);
-			if(invalid!=null) option+=" ("+invalid+")";
+			if(invalid!=null) option+=" ("+invalid.toLowerCase()+")";
 			options.add(option);
 		}
 

@@ -2,11 +2,14 @@ package javelin.model.unit.abilities.spell;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.action.Action;
 import javelin.controller.action.CastSpell;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.factor.CrFactor;
@@ -17,12 +20,14 @@ import javelin.model.item.Item;
 import javelin.model.item.artifact.CasterRing;
 import javelin.model.item.consumable.Potion;
 import javelin.model.item.consumable.Scroll;
-import javelin.model.item.wand.Wand;
+import javelin.model.item.focus.Rod;
+import javelin.model.item.focus.Wand;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.unit.attack.Attack;
+import javelin.model.unit.condition.Condition;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.town.labor.religious.Shrine;
 
@@ -47,7 +52,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 	/** Canonical list of all spells by lower-case name. */
 	public static final HashMap<String,Spell> BYNAME=new HashMap<>();
 	/** All spells. */
-	public static final List<Spell> SPELLS=new ArrayList<>();
+	public static final Set<Spell> SPELLS=new HashSet<>();
 
 	/** Load spells. */
 	static public void setup(){
@@ -82,14 +87,16 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 	public boolean automatichit=false;
 	/** Rituals are cast by NPCs in Shrines. */
 	public boolean isritual=false;
-	/** Generates a {@link Scroll} if <code>true</code>. */
-	public boolean isscroll=false;
-	/** Generates a {@link Potion} if <code>true</code>. */
-	public boolean ispotion=false;
-	/** Generates a {@link Wand} if <code>true</code>. */
-	public boolean iswand=false;
-	/** Generates a {@link CasterRing} if <code>true</code> (default). */
+	/** When not {@link #iswand}, is {@link Scroll} by default. */
+	public boolean isscroll=true;
+	/** When not {@link #isrod}, is {@link CasterRing} by default. */
 	public boolean isring=true;
+	/** @see Potion */
+	public boolean ispotion=false;
+	/** @see Wand */
+	public boolean iswand=false;
+	/** @see Rod */
+	public boolean isrod=false;
 
 	/**
 	 * If <code>false</code> will not consider this threatening (ignores attacks
@@ -114,17 +121,6 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 	public float cr;
 	/** Material components cost. */
 	public int components=0;
-	/**
-	 * If a continuous item has an effect based on a {@link Spell} with a duration
-	 * measured in rounds, multiply the cost by 4. If the duration of the spell is
-	 * 1 minute/level, multiply the cost by 2, and if the duration is 10
-	 * minutes/level, multiply the cost by 1.5. If the spell has a 24-hour
-	 * duration or greater, multiply the cost by 0.5. [Adapted from SRD].
-	 *
-	 * If no continuous duration, multiply by 1. Default is -1 in order to detect
-	 * cases where it hasn't been properly defined.
-	 */
-	public int continuous=-1;
 
 	/**
 	 * @param name Upgrade name.
@@ -439,5 +435,23 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 	@Override
 	public boolean isusedincombat(){
 		return castinbattle;
+	}
+
+	/**
+	 * Until a better {@link Condition}s approach is developer to save every turn,
+	 * this function helps calculate duration for ongoing efects.
+	 *
+	 * @param save Target's save bonus.
+	 * @param caster {@link Spell} caster.
+	 * @return Average of turns before the target will pass a saving throw. Will
+	 *         not return less than 1 so that the effect will be in place for at
+	 *         least some amount of time.
+	 */
+	protected int calculateduration(int save,Combatant caster){
+		var rolltarget=getsavetarget(save,caster);
+		if(rolltarget==Integer.MIN_VALUE) rolltarget=1;
+		var savechance=Action.bind(1-rolltarget/20f);
+		var turnstosave=Math.round(Math.round(1/savechance));
+		return Math.max(1,turnstosave);
 	}
 }

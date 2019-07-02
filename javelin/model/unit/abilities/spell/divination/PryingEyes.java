@@ -21,9 +21,8 @@ import javelin.model.world.location.dungeon.feature.door.Door;
 public class PryingEyes extends Spell{
 	/** Constructor. */
 	public PryingEyes(){
-		super("Prying eyes",5,ChallengeCalculator.ratespelllikeability(5));
+		super("Prying eyes",5,ChallengeCalculator.ratespell(5));
 		castoutofbattle=true;
-		isscroll=true;
 	}
 
 	@Override

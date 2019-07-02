@@ -1,16 +1,16 @@
 package javelin.controller.kit.wizard;
 
 import javelin.controller.upgrade.ability.RaiseWisdom;
-import javelin.model.unit.abilities.spell.totem.BearsEndurance;
-import javelin.model.unit.abilities.spell.totem.BullsStrength;
-import javelin.model.unit.abilities.spell.totem.CatsGrace;
-import javelin.model.unit.abilities.spell.totem.EaglesSplendor;
-import javelin.model.unit.abilities.spell.totem.FoxsCunning;
-import javelin.model.unit.abilities.spell.totem.OwlsWisdom;
 import javelin.model.unit.abilities.spell.transmutation.ControlWeather;
 import javelin.model.unit.abilities.spell.transmutation.Darkvision;
 import javelin.model.unit.abilities.spell.transmutation.Fly;
 import javelin.model.unit.abilities.spell.transmutation.Longstrider;
+import javelin.model.unit.abilities.spell.transmutation.totem.BearsEndurance;
+import javelin.model.unit.abilities.spell.transmutation.totem.BullsStrength;
+import javelin.model.unit.abilities.spell.transmutation.totem.CatsGrace;
+import javelin.model.unit.abilities.spell.transmutation.totem.EaglesSplendor;
+import javelin.model.unit.abilities.spell.transmutation.totem.FoxsCunning;
+import javelin.model.unit.abilities.spell.transmutation.totem.OwlsWisdom;
 
 /**
  * Transmutation wizard.

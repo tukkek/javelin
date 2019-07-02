@@ -40,7 +40,7 @@ public class FindTraps extends Spell{
 
 	/** Constructor. */
 	public FindTraps(){
-		super("Find traps",3,ChallengeCalculator.ratespelllikeability(3));
+		super("Find traps",3,ChallengeCalculator.ratespell(3));
 		ispotion=true;
 		castinbattle=false;
 		castonallies=false;

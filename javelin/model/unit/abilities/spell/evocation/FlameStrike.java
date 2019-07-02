@@ -16,9 +16,10 @@ import javelin.model.unit.abilities.spell.Spell;
 public class FlameStrike extends Spell{
 	/** Constructor. */
 	public FlameStrike(){
-		super("Flame strike",5,ChallengeCalculator.ratespelllikeability(5));
+		super("Flame strike",5,ChallengeCalculator.ratespell(5));
 		castinbattle=true;
-		isscroll=true;
+		iswand=true;
+		isrod=true;
 	}
 
 	@Override

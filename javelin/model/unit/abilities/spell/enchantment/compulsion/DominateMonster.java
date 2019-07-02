@@ -9,6 +9,7 @@ import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Ray;
 import javelin.model.unit.condition.Condition;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
@@ -16,18 +17,24 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
 /**
  * Based on the spell Dominate Monster but trades the duration (1 day/level) to
  * a single battle and to maintain spell-level balance cuts out all the costs of
- * redirecting and commanding the enchanted target. The second save (to act
- * against your nature) at a +2 bonus is still granted though.
+ * redirecting and commanding the enchanted target.
+ *
+ * The enchanted {@link Monster} still gets its +2 saving throw every round,
+ * represented by {@link #calculateduration(int, Combatant)}.
  *
  * It's not really a ray but we're abusing the existing logic here because it's
  * a lot easier.
  */
 public class DominateMonster extends Ray{
-	static final float CR=ChallengeCalculator.ratespelllikeability(9);
-
+	/**
+	 * A {@link Monster} controlled by {@link HoldMonster}.
+	 *
+	 * @author alex
+	 */
 	public class Dominated extends Condition{
 		Combatant target;
 
+		/** Constructor. */
 		public Dominated(float expireatp,Combatant c,Integer casterlevelp){
 			super(c,"dominated",Effect.NEUTRAL,casterlevelp,expireatp);
 			target=c;
@@ -52,12 +59,13 @@ public class DominateMonster extends Ray{
 
 	/** Constructor. */
 	public DominateMonster(){
-		super("Dominate monster",9,CR,Realm.EVIL);
+		super("Dominate monster",9,ChallengeCalculator.ratespell(9),Realm.EVIL);
 		automatichit=true;
 		apcost=1;
 		castinbattle=true;
-		isscroll=true;
 		apcost=1;
+		iswand=true;
+		isrod=true;
 	}
 
 	@Override
@@ -66,9 +74,10 @@ public class DominateMonster extends Ray{
 		cn.overlay=new AiOverlay(target.getlocation());
 		if(saved) return target+" resists!";
 		switchteams(target,s);
-		Dominated d=new Dominated(Float.MAX_VALUE,target,casterlevel);
+		int duration=calculateduration(target.source.getwill()+2,caster);
+		var d=new Dominated(duration,target,casterlevel);
 		target.addcondition(d);
-		return "Dominated "+target+"!";
+		return "Dominated "+target+" for "+duration+" round(s)!";
 	}
 
 	@Override

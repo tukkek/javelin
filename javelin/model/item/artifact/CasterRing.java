@@ -9,10 +9,15 @@ import javelin.model.unit.abilities.spell.Spell;
 
 /**
  * Provides a {@link Combatant} with a certain number of daily {@link #uses} of
- * a {@link Spell}. It requires a rest period before conceding actual uses and
- * will remove a daily number of uses when unequipped (in order to prevend
- * players from removing and putting the item again in order to cheat their way
- * into "free" uses of the spell).
+ * a {@link Spell}.
+ *
+ * It requires a rest period before conceding actual uses and will remove a
+ * daily number of uses when unequipped (in order to prevend players from
+ * removing and putting the item again in order to cheat their way into "free"
+ * uses of the spell). TODO this can re resolved with {@link #refresh(int)}
+ *
+ * {@link CasterRing}s are catch-all use-activated item type for
+ * non-{@link #isrod} {@link Spell}s.
  *
  * @author alex
  */
@@ -28,21 +33,21 @@ public class CasterRing extends Artifact{
 	 * Artifacts are CasterRings, which is much more acceptable, with around 50%
 	 * or less being the current goal.
 	 */
-	public static List<Integer> POWERLEVELS=List.of(2);
+	public static List<Integer> VARIATIONS=List.of(4);
 
 	int uses;
 	Spell spell;
 
 	/** Constructor. */
 	public CasterRing(Spell s,int uses){
-		super(getname(s,uses),s.casterlevel*s.level*400*uses,Slot.FINGER);
+		super(name(s,uses),s.casterlevel*s.level*400*uses,Slot.FINGER);
 		if(Javelin.DEBUG&&!s.isring) throw new InvalidParameterException();
 		spell=s;
 		this.uses=uses;
 		waste=false; // wasted as Spell
 	}
 
-	static String getname(Spell s,int uses){
+	static String name(Spell s,int uses){
 		String prefix;
 		if(uses==1)
 			prefix="Minor ring";
@@ -56,6 +61,7 @@ public class CasterRing extends Artifact{
 			prefix="Epic ring";
 		else
 			throw new RuntimeException("Invalid number of uses #casterring");
+		if(VARIATIONS.size()==1) prefix="Caster ring";
 		return prefix+" ["+s.name.toLowerCase()+"]";
 	}
 

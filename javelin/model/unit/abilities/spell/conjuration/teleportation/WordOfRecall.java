@@ -30,11 +30,10 @@ import javelin.model.world.location.dungeon.Dungeon;
 public class WordOfRecall extends Spell{
 	/** Constructor. */
 	public WordOfRecall(){
-		super("Word of recall",6,ChallengeCalculator.ratespelllikeability(6,20));
+		super("Word of recall",6,ChallengeCalculator.ratespell(6,20));
 		casterlevel=20;
 		castoutofbattle=true;
 		isritual=false;
-		isscroll=true;
 	}
 
 	@Override

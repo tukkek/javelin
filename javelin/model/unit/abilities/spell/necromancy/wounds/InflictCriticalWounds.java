@@ -12,7 +12,7 @@ public class InflictCriticalWounds extends InflictModerateWounds{
 	}
 
 	public InflictCriticalWounds(){
-		this("Inflict critical wounds",ChallengeCalculator.ratespelllikeability(4));
+		this("Inflict critical wounds",ChallengeCalculator.ratespell(4));
 	}
 
 }

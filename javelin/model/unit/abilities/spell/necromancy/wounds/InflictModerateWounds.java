@@ -22,7 +22,7 @@ public class InflictModerateWounds extends Touch{
 	}
 
 	public InflictModerateWounds(){
-		this("Inflict moderate wounds",ChallengeCalculator.ratespelllikeability(2),
+		this("Inflict moderate wounds",ChallengeCalculator.ratespell(2),
 				new int[]{2,8,3},2);
 		castinbattle=true;
 	}

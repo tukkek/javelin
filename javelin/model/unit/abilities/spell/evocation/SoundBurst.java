@@ -8,6 +8,7 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.condition.Stunned;
+import javelin.old.RPG;
 
 /**
  * Blasts an area with a tremendous cacophony.
@@ -17,9 +18,8 @@ import javelin.model.unit.condition.Stunned;
 public class SoundBurst extends Spell{
 	/** Constructor. */
 	public SoundBurst(){
-		super("Sound burst",2,ChallengeCalculator.ratespelllikeability(2));
+		super("Sound burst",2,ChallengeCalculator.ratespell(2));
 		castinbattle=true;
-		isscroll=true;
 	}
 
 	@Override
@@ -31,12 +31,11 @@ public class SoundBurst extends Spell{
 	@Override
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
-		for(Combatant c:getradius(target,2,this,s)){
-			if(c.equals(caster)) continue;
-			target=s.clone(c);
-			target.damage(8/2,s,0);
-			if(getsavetarget(target.source.getfortitude(),caster)>10)
-				target.addcondition(new Stunned(target,casterlevel));
+		for(Combatant c:getradius(caster,2,this,s)){
+			c=s.clone(c);
+			c.damage(RPG.average(1,8),s,0);
+			if(getsavetarget(c.source.getfortitude(),caster)>10)
+				c.addcondition(new Stunned(c,casterlevel));
 		}
 		return caster+" bursts out a tremendous wall of sound!";
 	}

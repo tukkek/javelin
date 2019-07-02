@@ -19,11 +19,12 @@ import javelin.model.unit.condition.Condition;
 public class DispelMagic extends Spell{
 	/** Constructor. */
 	public DispelMagic(){
-		super("Greater dispel magic",6,ChallengeCalculator.ratespelllikeability(6));
-		isscroll=true;
+		super("Greater dispel magic",6,ChallengeCalculator.ratespell(6));
 		castoutofbattle=true;
 		castinbattle=true;
 		isritual=true;
+		ispotion=true;
+		iswand=true;
 	}
 
 	@Override

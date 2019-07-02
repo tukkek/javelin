@@ -13,15 +13,12 @@ import javelin.view.screen.InfoScreen;
  * Also features "restoration", implicitly. See the d20 SRD for more info.
  */
 public class RaiseDead extends Spell{
-	protected static final float RESTORATIONCR=ChallengeCalculator
-			.ratespelllikeability(4);
+	protected static final float RESTORATIONCR=ChallengeCalculator.ratespell(4);
 
 	/** Constructor. */
 	public RaiseDead(){
-		super("Raise dead",5,
-				ChallengeCalculator.ratespelllikeability(5)+RESTORATIONCR);
+		super("Raise dead",5,ChallengeCalculator.ratespell(5)+RESTORATIONCR);
 		components=5000;
-		isscroll=true;
 		castinbattle=false;
 	}
 

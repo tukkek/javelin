@@ -22,8 +22,12 @@ import javelin.model.item.artifact.CasterRing;
 import javelin.model.item.consumable.Eidolon;
 import javelin.model.item.consumable.Potion;
 import javelin.model.item.consumable.Scroll;
+import javelin.model.item.focus.Rod;
+import javelin.model.item.focus.Staff;
+import javelin.model.item.focus.Wand;
+import javelin.model.item.precious.ArtPiece;
+import javelin.model.item.precious.Gem;
 import javelin.model.item.precious.PreciousObject;
-import javelin.model.item.wand.Wand;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
@@ -44,12 +48,13 @@ import javelin.model.world.location.unique.UniqueLocation;
 public class ContentSummary{
 	/** Will catch subclasses too. */
 	static final List<Class<? extends Item>> ITEMTYPES=List.of(CasterRing.class,
-			Eidolon.class,Potion.class,PreciousObject.class,Scroll.class,Wand.class);
+			Eidolon.class,Potion.class,Scroll.class,Wand.class,Staff.class,Rod.class,
+			ArtPiece.class,Gem.class);
 	/**
 	 * Whether to include or not non-functional objects when listing by
 	 * {@link Tier}.
 	 */
-	static final boolean SHOWPRECIOUS=true;
+	static final boolean SHOWPRECIOUS=false;
 
 	FileWriter out;
 
@@ -61,20 +66,22 @@ public class ContentSummary{
 		print("");
 	}
 
+	@SuppressWarnings("unused")
 	void printitems() throws IOException{
 		print("Items by type:");
 		int all=Item.ITEMS.size();
 		for(var type:ITEMTYPES){
-			var count=Item.ITEMS.stream().filter(i->type.isInstance(i)).count();
-			print("  "+type.getSimpleName()+" "+count+" ("+100*count/all+"%)");
+			var n=Item.ITEMS.stream().filter(i->type.equals(i.getClass())).count();
+			print("  "+type.getSimpleName()+" "+n+" ("+100*n/all+"%)");
 		}
 		print();
 		for(var t:Tier.TIERS){
 			var items=Item.BYTIER.get(t);
 			print(t+"-tier items ("+items.size()+")");
-			for(var i:items.sort())
-				if(SHOWPRECIOUS||!(i instanceof PreciousObject))
-					print(" - "+i+" ($"+Javelin.format(i.price)+")");
+			for(var i:items.sort()){
+				if(i instanceof PreciousObject&&!SHOWPRECIOUS) continue;
+				print(" - "+i+" ($"+Javelin.format(i.price)+")");
+			}
 			print();
 		}
 	}

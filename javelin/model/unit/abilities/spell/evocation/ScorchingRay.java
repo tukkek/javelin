@@ -16,11 +16,10 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
 public class ScorchingRay extends Ray{
 	/** Constructor. */
 	public ScorchingRay(){
-		super("Scorching ray",2,ChallengeCalculator.ratespelllikeability(2),
-				Realm.FIRE);
+		super("Scorching ray",2,ChallengeCalculator.ratespell(2),Realm.FIRE);
 		castinbattle=true;
 		iswand=true;
-		continuous=1;
+		isrod=true;
 	}
 
 	@Override

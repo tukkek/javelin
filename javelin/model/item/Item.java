@@ -18,10 +18,11 @@ import javelin.model.item.artifact.CasterRing;
 import javelin.model.item.consumable.Eidolon;
 import javelin.model.item.consumable.Potion;
 import javelin.model.item.consumable.Scroll;
+import javelin.model.item.focus.Rod;
+import javelin.model.item.focus.Staff;
+import javelin.model.item.focus.Wand;
 import javelin.model.item.precious.ArtPiece;
 import javelin.model.item.precious.Gem;
-import javelin.model.item.wand.Rod;
-import javelin.model.item.wand.Wand;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
@@ -58,9 +59,40 @@ public abstract class Item implements Serializable,Cloneable{
 	/** Price of the cheapest {@link Artifact} after loot registration. */
 	public static Integer cheapestartifact=null;
 
+	/** If not <code>null</code> will be used for {@link #describefailure()}. */
+	static protected String failure=null;
+
 	static{
 		for(Tier t:Tier.TIERS)
 			BYTIER.put(t,new ItemSelection());
+	}
+
+	/**
+	 * Creates {@link Item}s from {@link Spell}s. Base constructor will add to
+	 * {@link #ITEMS}.
+	 */
+	@SuppressWarnings("unused")
+	public static void setup(){
+		for(Spell s:Spell.BYNAME.values()){
+			if(s.ispotion) new Potion(s);
+			//spell-completion
+			if(s.iswand)
+				if(s.level<=Wand.MAXLEVEL)
+					new Wand(s);
+				else
+					new Staff(s);
+			else if(s.isscroll) new Scroll(s);
+			//use-activated
+			if(s.isrod)
+				new Rod(s);
+			else if(s.isring) for(int uses:CasterRing.VARIATIONS)
+				new CasterRing(s,uses);
+		}
+		Gem.generate();
+		ArtPiece.generate();
+		Eidolon.generate();
+		cheapestartifact=ITEMS.stream().filter(i->i instanceof Artifact)
+				.map(i->i.price).min(Integer::compare).get();
 	}
 
 	/** Name to show the player. */
@@ -98,8 +130,6 @@ public abstract class Item implements Serializable,Cloneable{
 	 * Default is 50% original {@link #price}.
 	 */
 	public double sellvalue=.5f;
-	/** If not <code>null</code> will be used for {@link #describefailure()}. */
-	volatile protected String failure=null;
 
 	/**
 	 * @param upgradeset One the static constants in this class, like
@@ -235,30 +265,6 @@ public abstract class Item implements Serializable,Cloneable{
 		return name;
 	}
 
-	/**
-	 * Creates {@link Item}s from {@link Spell}s. Base constructor will add to
-	 * {@link #ITEMS}.
-	 */
-	@SuppressWarnings("unused")
-	public static void setup(){
-		for(Spell s:Spell.BYNAME.values()){
-			if(s.isscroll) new Scroll(s);
-			if(s.iswand){
-				if(s.level<=Wand.MAXLEVEL) new Wand(s);
-				for(var charges=1;charges<=Rod.VARIATIONS;charges++)
-					new Rod(s,charges);
-			}
-			if(s.ispotion) new Potion(s);
-			if(s.isring) for(int uses:CasterRing.POWERLEVELS)
-				new CasterRing(s,uses);
-		}
-		Gem.generate();
-		ArtPiece.generate();
-		Eidolon.generate();
-		cheapestartifact=ITEMS.stream().filter(i->i instanceof Artifact)
-				.map(i->i.price).min(Integer::compare).get();
-	}
-
 	static void addall(ItemSelection fire2,HashMap<String,ItemSelection> all,
 			String string){
 		all.put(string,fire2);
@@ -319,7 +325,7 @@ public abstract class Item implements Serializable,Cloneable{
 		String description=toString();
 		String prohibited=canuse(c);
 		if(prohibited!=null)
-			description+=" ("+prohibited+")";
+			description+=" ("+prohibited.toLowerCase()+")";
 		else if(c.equipped.contains(this)) description+=" (equipped)";
 		return description;
 	}

@@ -1,4 +1,4 @@
-package javelin.model.unit.abilities.spell.totem;
+package javelin.model.unit.abilities.spell.transmutation.totem;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.model.Realm;
@@ -12,13 +12,13 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  * See the d20 SRD for more info.
  */
 public class FoxsCunning extends TotemsSpell{
-	public class Cunning extends Condition{
+	class Cunning extends Condition{
 		/**
 		 * Constructor.
 		 *
 		 * @param casterlevelp
 		 */
-		public Cunning(Combatant c,Integer casterlevelp){
+		Cunning(Combatant c,Integer casterlevelp){
 			super(c,"cunning",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE);
 		}
 
@@ -33,6 +33,7 @@ public class FoxsCunning extends TotemsSpell{
 		}
 	}
 
+	/** Constructor. */
 	public FoxsCunning(){
 		super("Fox's cunning",Realm.EVIL);
 	}

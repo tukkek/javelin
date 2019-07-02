@@ -1,4 +1,4 @@
-package javelin.model.item.wand;
+package javelin.model.item.focus;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -8,17 +8,21 @@ import javelin.controller.action.CastSpell;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
+import javelin.model.unit.abilities.spell.Touch;
 import javelin.model.unit.skill.Skill;
+import javelin.model.world.location.town.labor.basic.Shop;
 import javelin.old.RPG;
 
 /**
- * A wand is ideally a item that fires a ray. It has up to 50 charges and is
- * spent when empty.
+ * Generates both {@link Wand}s and {@link Staff}s. Any single-target,
+ * non-{@link Touch} {@link Spell} can be a wand, even if it produces an area of
+ * effect.
  *
- * TODO an easy way to double the number of Wands (much needed as they're the
- * least common item type) would be also offering them as Rods - they would work
- * like wands but fully recharge every 24 hours, with 1d4+1 charges per day.
+ * Each wand has up to 50 charges and is spent when empty. Wands found through
+ * exploration may have less {@link #charges} while wands bought brand-new on
+ * {@link Shop}s should be {@link #FULL}.
  *
+ * @see Spell#iswand
  * @author alex
  */
 public class Wand extends Item{
@@ -30,42 +34,49 @@ public class Wand extends Item{
 	public int charges;
 
 	int pricepercharge;
-	Spell spell;
-	boolean shop=false;
 	int maxcharges;
+	Spell spell;
+
+	/**
+	 * @return A name in the format Name of Spell, cleaning any common prefixes
+	 *         like "ray of".
+	 */
+	public static String name(String name,Spell s){
+		name=name+" of "+s.name.toLowerCase();
+		if(name.contains("ray of ")) name=name.replace("ray of ","");
+		return name;
+	}
 
 	/**
 	 * Internal constructor for subclasses. Defers registration until the proper
 	 * {@link #price} can be determined .
 	 */
-	protected Wand(String type,Spell s){
-		super(type+" of "+s.name.toLowerCase(),0,false);
-		if(Javelin.DEBUG&&!s.iswand) throw new InvalidParameterException();
-		if(name.contains("ray of ")) name=name.replace("ray of ","");
+	Wand(Spell s,boolean checklevel){
+		super(name("Wand",s),0,false);
+		if(Javelin.DEBUG&&checklevel&(!s.iswand||s.level>MAXLEVEL))
+			throw new InvalidParameterException();
 		spell=s.clone();
 		spell.provokeaoo=false;
 		provokesaoo=false;
 		usedinbattle=s.castinbattle;
 		usedoutofbattle=s.castoutofbattle;
 		apcost=s.apcost;
+		pricepercharge=s.level*s.casterlevel*750/FULL+s.components;
+		define(FULL);
+		register();
 	}
 
-	/** Constructor. */
 	public Wand(Spell s){
-		this("Wand",s);
-		if(Javelin.DEBUG&&s.level>MAXLEVEL) throw new InvalidParameterException();
-		pricepercharge=s.level*s.casterlevel*(750/FULL)+s.components;
-		recharge(null);
-		register();
+		this(s,true);
 	}
 
 	/**
 	 * Offer a new charge/price for this item instead of always having a fixed
 	 * price and full charges.
 	 */
-	void recharge(Integer charges){
-		maxcharges=charges==null?50:charges;
-		this.charges=maxcharges;
+	void define(Integer charges){
+		maxcharges=charges;
+		this.charges=charges;
 		price=pricepercharge*this.charges;
 	}
 
@@ -87,7 +98,7 @@ public class Wand extends Item{
 		failure=null;
 		if(user.taketen(Skill.USEMAGICDEVICE)>=20||user.decipher(spell))
 			return true;
-		failure="Cannot currently decipher this spell.";
+		failure="Can't decipher";
 		return false;
 	}
 
@@ -105,7 +116,7 @@ public class Wand extends Item{
 
 	@Override
 	public String canuse(Combatant c){
-		return c.decipher(spell)?null:"can't decipher";
+		return c.decipher(spell)?null:"Can't decipher";
 	}
 
 	@Override
@@ -124,14 +135,14 @@ public class Wand extends Item{
 		for(var i=0;i<used;i++)
 			discharge();
 		if(charges>0) return name.toLowerCase()+" ("+used+" times)";
-		if(consumable) bag.remove(this);
+		bag.remove(this);
 		return "exhausted "+name.toLowerCase();
 	}
 
 	@Override
 	public Item randomize(){
 		Wand clone=(Wand)super.randomize();
-		clone.recharge(RPG.r(1,50));
+		clone.define(RPG.r(1,50));
 		return clone;
 	}
 }

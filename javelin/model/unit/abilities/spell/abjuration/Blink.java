@@ -16,11 +16,10 @@ import javelin.model.unit.abilities.spell.illusion.Displacement;
 public class Blink extends Displacement{
 	/** Constructor. */
 	public Blink(){
-		super("Blink",2,ChallengeCalculator.ratespelllikeability(2),Realm.MAGIC);
-		ispotion=true;
+		super("Blink",2,ChallengeCalculator.ratespell(2),Realm.MAGIC);
 		turns=4;
 		provokeaoo=false;
-		continuous=4;
+		ispotion=true;
 	}
 
 	@Override

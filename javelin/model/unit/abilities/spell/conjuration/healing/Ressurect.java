@@ -12,9 +12,8 @@ public class Ressurect extends RaiseDead{
 	/** Constructor. */
 	public Ressurect(){
 		super("Ressurection",7,
-				ChallengeCalculator.ratespelllikeability(7)+RaiseDead.RESTORATIONCR);
+				ChallengeCalculator.ratespell(7)+RaiseDead.RESTORATIONCR);
 		components=10000;
-		isscroll=true;
 		castinbattle=false;
 	}
 

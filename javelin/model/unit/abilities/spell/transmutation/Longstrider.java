@@ -20,8 +20,8 @@ import javelin.model.world.location.dungeon.Dungeon;
  * @author alex
  */
 public class Longstrider extends Spell{
-	public class Strider extends Condition{
-		public Strider(Combatant c,Integer casterlevelp){
+	class Strider extends Condition{
+		Strider(Combatant c,Integer casterlevelp){
 			super(c,"striding",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE,1);
 		}
 
@@ -39,10 +39,10 @@ public class Longstrider extends Spell{
 
 	/** Constructor. */
 	public Longstrider(){
-		super("Longstrider",1,ChallengeCalculator.ratespelllikeability(1));
-		ispotion=true;
+		super("Longstrider",1,ChallengeCalculator.ratespell(1));
 		castinbattle=true;
 		castonallies=false;
+		ispotion=true;
 	}
 
 	@Override

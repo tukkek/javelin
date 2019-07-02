@@ -15,10 +15,10 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
 public class MagicMissile extends Spell{
 	/** Constructor. */
 	public MagicMissile(){
-		super("Magic missile",1,ChallengeCalculator.ratespelllikeability(1));
+		super("Magic missile",1,ChallengeCalculator.ratespell(1));
 		castinbattle=true;
 		iswand=true;
-		continuous=1;
+		isrod=true;
 	}
 
 	@Override

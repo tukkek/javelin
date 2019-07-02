@@ -21,8 +21,7 @@ import javelin.model.unit.abilities.spell.Spell;
 public class ControlWeather extends Spell{
 	/** Constructor. */
 	public ControlWeather(){
-		super("Control weather",7,ChallengeCalculator.ratespelllikeability(7));
-		isscroll=true;
+		super("Control weather",7,ChallengeCalculator.ratespell(7));
 		isritual=true;
 		castinbattle=false;
 		castonallies=false;

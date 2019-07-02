@@ -24,10 +24,9 @@ import javelin.view.screen.WorldScreen;
 public class DiscernLocation extends Spell{
 	/** Constructor. */
 	public DiscernLocation(){
-		super("Discern location",8,ChallengeCalculator.ratespelllikeability(8));
+		super("Discern location",8,ChallengeCalculator.ratespell(8));
 		castoutofbattle=true;
 		isritual=true;
-		isscroll=true;
 	}
 
 	@Override

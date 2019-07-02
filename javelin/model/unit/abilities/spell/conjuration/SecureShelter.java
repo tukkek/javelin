@@ -12,10 +12,10 @@ import javelin.model.world.location.town.labor.basic.Lodge;
  * See the d20 SRD for more info.
  */
 public class SecureShelter extends Spell{
+	/** Constructor. */
 	public SecureShelter(){
-		super("Secure shelter",4,ChallengeCalculator.ratespelllikeability(4));
+		super("Secure shelter",4,ChallengeCalculator.ratespell(4));
 		castoutofbattle=true;
-		isscroll=true;
 	}
 
 	@Override

@@ -34,13 +34,12 @@ public class GreaterTeleport extends Spell{
 
 	/** Constructor. */
 	public GreaterTeleport(){
-		super("Greater teleport",7,ChallengeCalculator.ratespelllikeability(7,20));
+		super("Greater teleport",7,ChallengeCalculator.ratespell(7,20));
 		casterlevel=20;
 		castinbattle=false;
 		castonallies=false;
 		castoutofbattle=true;
 		isritual=true;
-		isscroll=true;
 	}
 
 	@Override

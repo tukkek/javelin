@@ -513,7 +513,6 @@ public class Dungeon extends Location{
 		floors.get(floors.indexOf(this)+1).activate(false);
 	}
 
-	/** See {@link WorldScreen#encounter()}. */
 	@Override
 	public Fight fight(){
 		return new RandomDungeonEncounter(this);

@@ -4,9 +4,14 @@ import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 
+/**
+ * See SRD.
+ *
+ * @author alex
+ */
 public class Bane extends Bless{
-	public class Baned extends Blessed{
-		public Baned(Combatant c){
+	class Baned extends Blessed{
+		Baned(Combatant c){
 			super(c);
 			description="baned";
 			bonus=-1;
@@ -14,6 +19,7 @@ public class Bane extends Bless{
 		}
 	}
 
+	/** Constructor. */
 	public Bane(){
 		name="Bane";
 	}

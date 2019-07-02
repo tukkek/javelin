@@ -31,8 +31,7 @@ public class LesserRestoration extends Touch{
 
 	/** Constructor. */
 	public LesserRestoration(){
-		super("Lesser restoration",2,ChallengeCalculator.ratespelllikeability(2),
-				Realm.WATER);
+		super("Lesser restoration",2,ChallengeCalculator.ratespell(2),Realm.WATER);
 		ispotion=true;
 		castinbattle=true;
 		castoutofbattle=true;

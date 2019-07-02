@@ -3,7 +3,6 @@ package javelin.controller.kit.wizard;
 import javelin.controller.quality.resistance.MindImmunity;
 import javelin.controller.upgrade.ability.RaiseCharisma;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.Bane;
-import javelin.model.unit.abilities.spell.enchantment.compulsion.BarbarianRage;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.Bless;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.DominateMonster;
 import javelin.model.unit.abilities.spell.enchantment.compulsion.Heroism;
@@ -33,7 +32,6 @@ public class Enchanter extends Wizard{
 		extension.add(new Bless());
 		extension.add(new Bane());
 		extension.add(new Rage());
-		extension.add(new BarbarianRage());
 		extension.add(MindImmunity.UPGRADE);
 	}
 }

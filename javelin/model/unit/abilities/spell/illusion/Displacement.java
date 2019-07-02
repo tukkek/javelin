@@ -36,17 +36,16 @@ public class Displacement extends Touch{
 
 	/** Constructor. */
 	public Displacement(){
-		this("Displacement",3,ChallengeCalculator.ratespelllikeability(3),
-				Realm.MAGIC);
-		iswand=true;
-		continuous=4;
+		this("Displacement",3,ChallengeCalculator.ratespell(3),Realm.MAGIC);
 	}
 
 	/** Constructor. */
-	public Displacement(String name,int levelp,float incrementcost,Realm realmp){
+	protected Displacement(String name,int levelp,float incrementcost,
+			Realm realmp){
 		super(name,levelp,incrementcost,realmp);
 		castinbattle=true;
 		castonallies=true;
+		/*potion is Blink*/
 	}
 
 	@Override

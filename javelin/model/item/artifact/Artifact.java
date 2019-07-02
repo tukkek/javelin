@@ -68,13 +68,17 @@ public abstract class Artifact extends Item{
 	public Slot slot;
 	Combatant owner=null;
 
-	public Artifact(String name,int price,Slot slotp){
-		super(name,price,true);
+	protected Artifact(String name,int price,Slot slotp,boolean register){
+		super(name,price,register);
 		ARTIFACT.add(this);
 		usedinbattle=false;
 		consumable=false;
 		slot=slotp;
 		waste=false;
+	}
+
+	protected Artifact(String name,int price,Slot slotp){
+		this(name,price,slotp,true);
 	}
 
 	@Override
@@ -97,7 +101,8 @@ public abstract class Artifact extends Item{
 	 *         the operation is aborted.
 	 */
 	public boolean equip(Combatant c){
-		if(canuse(c)!=null) return false;
+		failure=canuse(c);
+		if(failure!=null) return false;
 		if(c.equipped.contains(this)){// unequip
 			remove(c);
 			return true;
@@ -109,6 +114,7 @@ public abstract class Artifact extends Item{
 		return true;
 	}
 
+	/** Unequip. */
 	public void remove(Combatant c){
 		negate(c);
 		c.equipped.remove(this);
@@ -137,12 +143,12 @@ public abstract class Artifact extends Item{
 
 	@Override
 	public String describefailure(){
-		return "Only humanoids can equip artifacts!";
+		return failure;
 	}
 
 	@Override
 	public String canuse(Combatant c){
-		return c.source.humanoid?null:"can't equip";
+		return c.source.humanoid?null:"mot humanoid";
 	}
 
 	@Override

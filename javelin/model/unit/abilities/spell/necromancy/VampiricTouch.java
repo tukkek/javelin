@@ -12,17 +12,17 @@ import javelin.model.unit.condition.Condition;
  * See the d20 SRD for more info.
  */
 public class VampiricTouch extends Touch{
-	public class Vampiric extends Condition{
+	class Vampiric extends Condition{
 		int steal;
 
-		public Vampiric(float expireat,Combatant caster,int steal,
-				Integer casterlevelp){
+		Vampiric(float expireat,Combatant caster,int steal,Integer casterlevelp){
 			super(caster,"vampiric",Effect.POSITIVE,casterlevelp,expireat,1);
 			this.steal=steal;
 		}
 
 		@Override
-		public void start(Combatant c){}
+		public void start(Combatant c){
+		}
 
 		@Override
 		public void end(Combatant c){
@@ -30,7 +30,8 @@ public class VampiricTouch extends Touch{
 		}
 
 		@Override
-		public void finish(BattleState s){}
+		public void finish(BattleState s){
+		}
 
 		@Override
 		public void merge(Combatant c,Condition condition){
@@ -40,28 +41,26 @@ public class VampiricTouch extends Touch{
 
 	/** Constructor. */
 	public VampiricTouch(){
-		super("Vampiric touch",3,ChallengeCalculator.ratespelllikeability(3),
-				Realm.EVIL);
+		super("Vampiric touch",3,ChallengeCalculator.ratespell(3),Realm.EVIL);
 		castinbattle=true;
 		provokeaoo=false;
 	}
 
 	@Override
-	public String cast(final Combatant caster,final Combatant target,
-			final boolean saved,final BattleState s,ChanceNode cn){
-		int steal=21;
-		final int max=target.hp+10;
+	public String cast(Combatant caster,Combatant target,boolean saved,
+			BattleState s,ChanceNode cn){
+		var steal=21;
+		var max=target.hp+10;
 		if(steal>max) steal=max;
 		target.damage(steal,s,target.source.energyresistance);
-		final int originalhp=caster.hp;
+		var originalhp=caster.hp;
 		caster.heal(steal,true);
-		caster.addcondition(
-				new Vampiric(Float.MAX_VALUE,caster,caster.hp-originalhp,casterlevel));
+		var c=new Vampiric(Float.MAX_VALUE,caster,caster.hp-originalhp,casterlevel);
+		caster.addcondition(c);
 		return describe(target)+"\n"+describe(caster);
 	}
 
-	public String describe(final Combatant c){
+	String describe(Combatant c){
 		return c+" is "+c.getstatus()+".";
 	}
-
 }

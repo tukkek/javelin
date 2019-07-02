@@ -1,4 +1,4 @@
-package javelin.model.unit.abilities.spell.totem;
+package javelin.model.unit.abilities.spell.transmutation.totem;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -14,9 +14,9 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  * @author alex
  */
 public abstract class TotemsSpell extends Touch{
-
+	/** Constructor. */
 	public TotemsSpell(String name,Realm realmp){
-		super(name,2,ChallengeCalculator.ratespelllikeability(2),realmp);
+		super(name,2,ChallengeCalculator.ratespell(2),realmp);
 		castonallies=true;
 		castinbattle=true;
 		ispotion=true;

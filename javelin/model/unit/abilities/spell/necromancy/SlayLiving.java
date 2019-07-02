@@ -10,13 +10,11 @@ import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Touch;
 
-/**
- * See the d20 SRD for more info.
- */
+/** See the d20 SRD for more info. */
 public class SlayLiving extends Touch{
+	/** Constructor. */
 	public SlayLiving(){
-		super("Slay living",5,ChallengeCalculator.ratespelllikeability(5),
-				Realm.EVIL);
+		super("Slay living",5,ChallengeCalculator.ratespell(5),Realm.EVIL);
 		castinbattle=true;
 		provokeaoo=false;
 	}

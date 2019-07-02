@@ -15,10 +15,10 @@ import javelin.model.unit.condition.Condition;
  * @author alex
  */
 public class Bless extends Spell{
-	public class Blessed extends Condition{
+	class Blessed extends Condition{
 		int bonus=+1;
 
-		public Blessed(Combatant c){
+		Blessed(Combatant c){
 			super(c,"blessed",Effect.POSITIVE,1,Float.MAX_VALUE);
 		}
 
@@ -35,11 +35,11 @@ public class Bless extends Spell{
 		}
 	}
 
+	/** Constructor. */
 	public Bless(){
-		super("Bless",1,ChallengeCalculator.ratespelllikeability(1));
+		super("Bless",1,ChallengeCalculator.ratespell(1));
 		castonallies=true;
 		castinbattle=true;
-		isscroll=true;
 	}
 
 	@Override

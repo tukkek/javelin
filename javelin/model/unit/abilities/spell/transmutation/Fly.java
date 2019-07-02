@@ -12,7 +12,7 @@ import javelin.model.unit.condition.Condition;
  * See the d20 SRD for more info.
  */
 public class Fly extends Touch{
-	public class Flying extends Condition{
+	class Flying extends Condition{
 		int original;
 
 		/**
@@ -38,7 +38,7 @@ public class Fly extends Touch{
 
 	/** Constructor. */
 	public Fly(){
-		super("Fly",3,ChallengeCalculator.ratespelllikeability(3),Realm.AIR);
+		super("Fly",3,ChallengeCalculator.ratespell(3),Realm.AIR);
 		castinbattle=true;
 		castonallies=true;
 		ispotion=true;

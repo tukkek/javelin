@@ -77,9 +77,9 @@ public class RPG{
 	 * @param size ...and this number of faces per dice...
 	 * @return ... the most likely outcome of this roll.
 	 */
-	public static int average(float dice,float size){
+	public static int average(float dice,int size){
 		size+=1;
-		return Math.round(dice*(size/2f));
+		return Math.round(dice*size/2);
 	}
 
 	/**

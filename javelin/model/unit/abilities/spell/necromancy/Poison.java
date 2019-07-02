@@ -17,14 +17,13 @@ import javelin.model.unit.condition.Poisoned;
  * @author alex
  */
 public class Poison extends Touch{
-
 	public static Poison instance=new Poison();
 	boolean nonmagical=false;
 	public int dcbonus=0;
 
 	/** Constructor. */
 	public Poison(){
-		super("Poison",4,ChallengeCalculator.ratespelllikeability(4),Realm.EVIL);
+		super("Poison",4,ChallengeCalculator.ratespell(4),Realm.EVIL);
 		castinbattle=true;
 	}
 

@@ -8,9 +8,14 @@ import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.condition.Condition;
 
+/**
+ * +2 to strengh, constitution, AC and +1 to will.
+ *
+ * @author alex
+ */
 public class Rage extends Spell{
-	public class Raging extends Condition{
-		public Raging(float expireatp,Combatant c,Integer casterlevel){
+	class Raging extends Condition{
+		Raging(float expireatp,Combatant c,Integer casterlevel){
 			super(c,"raging",Effect.POSITIVE,casterlevel,expireatp);
 		}
 
@@ -35,15 +40,18 @@ public class Rage extends Spell{
 		}
 	}
 
+	/** Constructor. */
 	public Rage(){
-		this("Rage",3,ChallengeCalculator.ratespelllikeability(3));
+		this("Rage",3,ChallengeCalculator.ratespell(3));
+		ispotion=true;
+		iswand=true;
 	}
 
-	public Rage(String name,int levelp,float incrementcost){
+	/** Subclass constructor. */
+	protected Rage(String name,int levelp,float incrementcost){
 		super(name,levelp,incrementcost);
 		castinbattle=true;
 		castonallies=true;
-		ispotion=true;
 	}
 
 	@Override

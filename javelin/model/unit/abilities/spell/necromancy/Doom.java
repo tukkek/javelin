@@ -8,14 +8,14 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.condition.Shaken;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 
-/**
- * See the d20 SRD for more info.
- */
+/** See the d20 SRD for more info. */
 public class Doom extends Spell{
+	/** Constructor. */
 	public Doom(){
-		super("Doom",1,ChallengeCalculator.ratespelllikeability(1));
+		super("Doom",1,ChallengeCalculator.ratespell(1));
 		castinbattle=true;
-		isscroll=true;
+		iswand=true;
+		isrod=true;
 	}
 
 	@Override

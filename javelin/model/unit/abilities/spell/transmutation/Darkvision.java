@@ -15,7 +15,7 @@ import javelin.model.unit.condition.Condition;
  * See the d20 SRD for more info.
  */
 public class Darkvision extends Touch{
-	public class DarkvisionCondition extends Condition{
+	class DarkvisionCondition extends Condition{
 		int original;
 
 		/**
@@ -41,8 +41,7 @@ public class Darkvision extends Touch{
 
 	/** Constructor. */
 	public Darkvision(){
-		super("Darkvision",2,ChallengeCalculator.ratespelllikeability(2),
-				Realm.EVIL);
+		super("Darkvision",2,ChallengeCalculator.ratespell(2),Realm.EVIL);
 		castinbattle=true;
 		castonallies=true;
 		castoutofbattle=true;

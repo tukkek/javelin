@@ -32,7 +32,7 @@ public class CureModerateWounds extends Touch{
 	}
 
 	public CureModerateWounds(){
-		this("Cure moderate wounds",ChallengeCalculator.ratespelllikeability(2),
+		this("Cure moderate wounds",ChallengeCalculator.ratespell(2),
 				new int[]{2,8,4},2);
 	}
 

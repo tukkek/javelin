@@ -73,6 +73,7 @@ public class Summon extends Spell{
 		castinbattle=true;
 		if(!Monster.BYCR.isEmpty()) postloadmonsters();
 		isring=false;
+		isscroll=false;
 	}
 
 	public Summon(String name){

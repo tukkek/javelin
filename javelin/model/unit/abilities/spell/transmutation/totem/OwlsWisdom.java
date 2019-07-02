@@ -1,4 +1,4 @@
-package javelin.model.unit.abilities.spell.totem;
+package javelin.model.unit.abilities.spell.transmutation.totem;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.model.Realm;
@@ -11,8 +11,8 @@ import javelin.model.unit.condition.Condition;
  * See the d20 SRD for more info.
  */
 public class OwlsWisdom extends TotemsSpell{
-	public class Wise extends Condition{
-		public Wise(Combatant c,Integer casterlevelp){
+	class Wise extends Condition{
+		Wise(Combatant c,Integer casterlevelp){
 			super(c,"wise",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE);
 		}
 
@@ -27,6 +27,7 @@ public class OwlsWisdom extends TotemsSpell{
 		}
 	}
 
+	/** Constructor. */
 	public OwlsWisdom(){
 		super("Owl's wisdom",Realm.GOOD);
 	}

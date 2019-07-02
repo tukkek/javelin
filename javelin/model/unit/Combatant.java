@@ -31,7 +31,7 @@ import javelin.model.TeamContainer;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.item.consumable.Scroll;
-import javelin.model.item.wand.Wand;
+import javelin.model.item.focus.Wand;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.state.Square;

@@ -12,11 +12,10 @@ import javelin.model.unit.abilities.spell.Spell;
  * See the d20 SRD for more info.
  */
 public class DeeperDarkness extends Spell{
-
+	/** Constructor. */
 	public DeeperDarkness(){
 		super("Deeper darkness",3,.15f);
 		castinbattle=true;
-		isscroll=true;
 	}
 
 	@Override

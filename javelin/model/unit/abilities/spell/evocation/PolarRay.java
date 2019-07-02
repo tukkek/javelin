@@ -6,6 +6,7 @@ import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Ray;
+import javelin.old.RPG;
 
 /**
  * A blue-white ray of freezing air and ice springs from your hand. The ray
@@ -16,16 +17,16 @@ import javelin.model.unit.abilities.spell.Ray;
 public class PolarRay extends Ray{
 	/** Constructor. */
 	public PolarRay(){
-		super("Polar ray",8,ChallengeCalculator.ratespelllikeability(8),Realm.AIR);
+		super("Polar ray",8,ChallengeCalculator.ratespell(8),Realm.AIR);
 		castinbattle=true;
-		isscroll=true;
+		iswand=true;
+		isrod=true;
 	}
 
 	@Override
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
-		target.damage(15*6/2,s,target.source.energyresistance);
-		return target+" is "+target.getstatus();
+		target.damage(RPG.average(15,6),s,target.source.energyresistance);
+		return target+" is "+target.getstatus()+"!";
 	}
-
 }

@@ -1,4 +1,4 @@
-package javelin.model.unit.abilities.spell.totem;
+package javelin.model.unit.abilities.spell.transmutation.totem;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.model.Realm;
@@ -11,8 +11,8 @@ import javelin.model.unit.condition.Condition;
  * See the d20 SRD for more info.
  */
 public class BullsStrength extends TotemsSpell{
-	public class Strong extends Condition{
-		public Strong(Combatant c,Integer casterlevelp){
+	class Strong extends Condition{
+		Strong(Combatant c,Integer casterlevelp){
 			super(c,"strong",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE);
 		}
 
@@ -27,6 +27,7 @@ public class BullsStrength extends TotemsSpell{
 		}
 	}
 
+	/** Constructor. */
 	public BullsStrength(){
 		super("Bull's strength",Realm.FIRE);
 	}

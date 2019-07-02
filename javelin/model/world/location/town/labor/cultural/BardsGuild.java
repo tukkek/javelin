@@ -4,8 +4,8 @@ import java.util.HashSet;
 
 import javelin.controller.kit.Bard;
 import javelin.controller.terrain.Terrain;
-import javelin.model.world.location.fortification.Academy;
-import javelin.model.world.location.fortification.Guild;
+import javelin.model.world.location.Academy;
+import javelin.model.world.location.Guild;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;

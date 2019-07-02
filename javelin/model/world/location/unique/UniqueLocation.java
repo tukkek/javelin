@@ -2,8 +2,8 @@ package javelin.model.world.location.unique;
 
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
+import javelin.model.world.location.Fortification;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.fortification.Fortification;
 
 /**
  * An unique location is a {@link Location} that is only featured in a single

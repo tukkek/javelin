@@ -34,7 +34,7 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
-import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.Academy;
 import javelin.old.Interface;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.old.messagepanel.TextZone;

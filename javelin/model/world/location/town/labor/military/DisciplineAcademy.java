@@ -11,7 +11,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.unit.feat.Feat;
 import javelin.model.unit.feat.MartialTraining;
-import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.Academy;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.Trait;

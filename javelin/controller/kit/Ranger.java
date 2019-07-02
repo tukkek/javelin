@@ -15,7 +15,7 @@ import javelin.model.unit.feat.attack.shot.PreciseShot;
 import javelin.model.unit.feat.attack.shot.RapidShot;
 import javelin.model.unit.feat.skill.Alertness;
 import javelin.model.unit.skill.Skill;
-import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.Academy;
 import javelin.model.world.location.town.labor.ecological.ArcheryRange;
 
 public class Ranger extends Kit{

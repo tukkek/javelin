@@ -10,7 +10,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
-import javelin.model.world.location.fortification.Fortification;
+import javelin.model.world.location.Fortification;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.view.screen.BattleScreen;

@@ -26,7 +26,6 @@ import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
-import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;

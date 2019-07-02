@@ -6,7 +6,6 @@ import javelin.Javelin;
 import javelin.controller.generator.WorldGenerator;
 import javelin.model.unit.Combatant;
 import javelin.model.world.World;
-import javelin.model.world.location.fortification.Fortification;
 import javelin.view.screen.WorldScreen;
 
 /**

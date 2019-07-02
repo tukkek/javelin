@@ -1,4 +1,4 @@
-package javelin.model.world.location.fortification;
+package javelin.model.world.location;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,7 +19,6 @@ import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
-import javelin.model.world.location.Location;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.order.OrderQueue;
 import javelin.model.world.location.order.TrainingOrder;

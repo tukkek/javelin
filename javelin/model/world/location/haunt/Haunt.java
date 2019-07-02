@@ -12,7 +12,7 @@ import javelin.controller.map.location.LocationMap;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
-import javelin.model.world.location.fortification.Fortification;
+import javelin.model.world.location.Fortification;
 import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.old.RPG;
 import javelin.view.screen.HauntScreen;

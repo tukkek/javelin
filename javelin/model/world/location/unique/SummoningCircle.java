@@ -10,7 +10,7 @@ import javelin.controller.upgrade.Upgrade;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
-import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.Academy;
 import javelin.model.world.location.town.Rank;
 import javelin.old.RPG;
 import javelin.view.screen.Option;

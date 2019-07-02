@@ -1,8 +1,8 @@
 package javelin.model.world.location.town.labor;
 
 import javelin.controller.Point;
+import javelin.model.world.location.Fortification;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 

@@ -1,4 +1,4 @@
-package javelin.model.world.location.fortification;
+package javelin.model.world.location;
 
 import java.util.ArrayList;
 
@@ -16,7 +16,6 @@ import javelin.model.unit.skill.Knowledge;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
-import javelin.model.world.location.Location;
 import javelin.old.RPG;
 
 /**

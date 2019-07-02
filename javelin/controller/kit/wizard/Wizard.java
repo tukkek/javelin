@@ -8,7 +8,7 @@ import javelin.controller.upgrade.ability.RaiseIntelligence;
 import javelin.controller.upgrade.classes.Aristocrat;
 import javelin.model.unit.feat.CombatCasting;
 import javelin.model.unit.skill.Skill;
-import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.Academy;
 import javelin.model.world.location.town.labor.cultural.MagesGuild;
 
 /**

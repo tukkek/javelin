@@ -2,8 +2,8 @@ package javelin.model.world.location.unique;
 
 import javelin.controller.kit.Ninja;
 import javelin.controller.terrain.Terrain;
-import javelin.model.world.location.fortification.Academy;
-import javelin.model.world.location.fortification.Guild;
+import javelin.model.world.location.Academy;
+import javelin.model.world.location.Guild;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Labor;
 

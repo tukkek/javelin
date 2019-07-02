@@ -12,7 +12,7 @@ import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureModerat
 import javelin.model.unit.feat.CombatCasting;
 import javelin.model.unit.feat.Toughness;
 import javelin.model.unit.skill.Skill;
-import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.Academy;
 import javelin.model.world.location.town.labor.religious.Sanctuary;
 
 public class Cleric extends Kit{

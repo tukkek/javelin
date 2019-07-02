@@ -5,7 +5,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.location.fortification.Guild;
+import javelin.model.world.location.Guild;
 import javelin.view.screen.upgrading.AcademyScreen;
 
 public class GuildScreen extends AcademyScreen{

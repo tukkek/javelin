@@ -10,7 +10,7 @@ import javelin.model.unit.feat.MartialTraining;
 import javelin.model.unit.feat.attack.expertise.CombatExpertise;
 import javelin.model.unit.skill.Knowledge;
 import javelin.model.unit.skill.Skill;
-import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.Academy;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.military.DisciplineAcademy;
 import javelin.model.world.location.town.labor.military.DisciplineAcademy.BuildDisciplineAcademy;

@@ -17,7 +17,7 @@ import javelin.model.unit.feat.attack.PowerAttack;
 import javelin.model.unit.feat.attack.focus.MeleeFocus;
 import javelin.model.unit.feat.save.GreatFortitude;
 import javelin.model.unit.skill.Skill;
-import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.Academy;
 import javelin.model.world.location.town.labor.ecological.MeadHall;
 
 public class Barbarian extends Kit{

@@ -15,7 +15,7 @@ import javelin.model.item.Tier;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Squad;
-import javelin.model.world.location.fortification.Fortification;
+import javelin.model.world.location.Fortification;
 import javelin.model.world.location.haunt.Haunt;
 import javelin.old.RPG;
 import javelin.view.Images;

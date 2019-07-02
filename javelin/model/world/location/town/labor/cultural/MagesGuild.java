@@ -9,7 +9,7 @@ import javelin.controller.kit.wizard.Wizard;
 import javelin.controller.upgrade.Upgrade;
 import javelin.controller.upgrade.classes.Aristocrat;
 import javelin.model.unit.abilities.spell.Spell;
-import javelin.model.world.location.fortification.Academy;
+import javelin.model.world.location.Academy;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;

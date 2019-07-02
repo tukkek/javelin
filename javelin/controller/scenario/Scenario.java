@@ -48,9 +48,9 @@ import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
+import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.LaborDeck;
 import javelin.model.world.location.town.labor.basic.Shop;
-import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.expansive.Hub;
 import javelin.model.world.location.town.quest.Quest;
 import javelin.model.world.location.unique.UniqueLocation;
@@ -198,13 +198,6 @@ public class Scenario implements Serializable{
 	 * @see Incursion
 	 */
 	public boolean spawn=false;
-	/**
-	 * If <code>true</code>, will remove dungoens once their special chests are
-	 * taken.
-	 *
-	 * @see Scenario#openspecialchest(Dungeon)
-	 */
-	public boolean expiredungeons=false;
 	/**
 	 * Generates {@link Actor}s and {@link Location}s during world generation and
 	 * during play.

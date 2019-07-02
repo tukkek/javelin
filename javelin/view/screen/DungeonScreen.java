@@ -72,17 +72,17 @@ public class DungeonScreen extends WorldScreen{
 
 	@Override
 	public void updatelocation(int x,int y){
-		dungeon.herolocation.x=x;
-		dungeon.herolocation.y=y;
+		dungeon.squadlocation.x=x;
+		dungeon.squadlocation.y=y;
 	}
 
 	@Override
 	public void view(int xp,int yp){
-		var vision=dungeon.vision;
+		var vision=dungeon.squadvision;
 		for(int x=-vision;x<=+vision;x++)
 			for(int y=-vision;y<=+vision;y++)
 				try{
-					Point hero=dungeon.herolocation;
+					Point hero=dungeon.squadlocation;
 					Point target=new Point(hero);
 					target.x+=x;
 					target.y+=y;
@@ -126,8 +126,8 @@ public class DungeonScreen extends WorldScreen{
 	}
 
 	@Override
-	public Point getherolocation(){
-		return dungeon.herolocation;
+	public Point getsquadlocation(){
+		return dungeon.squadlocation;
 	}
 
 	@Override

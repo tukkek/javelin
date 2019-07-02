@@ -31,7 +31,6 @@ import javelin.controller.table.dungeon.feature.RareFeatureTable;
 import javelin.controller.table.dungeon.feature.SpecialTrapTable;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.terrain.hazard.Hazard;
-import javelin.model.item.Item;
 import javelin.model.item.key.door.Key;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
@@ -72,7 +71,7 @@ public class Dungeon extends Location{
 
 	/**
 	 * A loose approximation of how many {@link DungeonTile}s are revealed with
-	 * each step. Multiply by {@link #vision}.
+	 * each step. Multiply by {@link #squadvision}.
 	 */
 	protected static final int DISCOVEREDPERSTEP=4;
 
@@ -91,12 +90,10 @@ public class Dungeon extends Location{
 	 * TODO why is there this and also {@link #discovered}?
 	 */
 	public boolean[][] visible;
-	/**
-	 * Current {@link Squad} location.
-	 *
-	 * TODO is this needed?
-	 */
-	public Point herolocation=null;
+	/** Current {@link Squad} location. */
+	public Point squadlocation=null;
+	/** How far a {@link Squad} can see inside a {@link Dungeon}. */
+	public int squadvision=4;
 	/** File to use under 'avatar' folder. */
 	public String tilefloor;
 	/** File to use under 'avatar' folder. */
@@ -135,8 +132,6 @@ public class Dungeon extends Location{
 	 * @see Leader
 	 */
 	public List<Combatants> encounters=new ArrayList<>();
-	/** How far a {@link Squad} can see inside a {@link Dungeon}. */
-	public int vision=4;
 
 	float ratiomonster=RPG.r(25,50)/100f;
 	float ratiofeatures=RPG.r(50,95)/100f;
@@ -145,8 +140,6 @@ public class Dungeon extends Location{
 
 	int revealed=0;
 	Dungeon parent;
-
-	transient boolean generated=false;
 
 	/** All floors that make part of this dungeon. */
 	protected List<? extends Dungeon> floors;
@@ -200,18 +193,17 @@ public class Dungeon extends Location{
 	}
 
 	/** Create or recreate dungeon. */
-	public void activate(boolean loading){
+	public void activate(@SuppressWarnings("unused") boolean loading){
 		active=this;
 		while(features.isEmpty()){
 			MessagePanel.active.clear();
 			Javelin.message("Generating dungeon map...",Javelin.Delay.NONE);
 			define();
 		}
-		regenerate(loading);
 		JavelinApp.context=new DungeonScreen(this);
 		BattleScreen.active=JavelinApp.context;
 		Squad.active.updateavatar();
-		BattleScreen.active.mappanel.center(herolocation.x,herolocation.y,true);
+		BattleScreen.active.mappanel.center(squadlocation.x,squadlocation.y,true);
 		features.getknown();
 	}
 
@@ -242,7 +234,7 @@ public class Dungeon extends Location{
 		Dungeon.active=this;
 		map=map();
 		size=map.length;
-		stepsperencounter=calculateencounterfrequency();
+		stepsperencounter=calculateencounterrate();
 		if(stepsperencounter<2) stepsperencounter=2;
 		generateencounters();
 		populatedungeon();
@@ -260,7 +252,7 @@ public class Dungeon extends Location{
 	 * @return {@link #map}.
 	 */
 	protected char[][] map(){
-		DungeonTier tier=gettier();
+		var tier=gettier();
 		var tables=parent==null?null:parent.tables;
 		var generator=DungeonGenerator.generate(tier.minrooms,tier.maxrooms,tables);
 		this.tables=generator.tables;
@@ -314,10 +306,10 @@ public class Dungeon extends Location{
 	 *
 	 * @return {@link #stepsperencounter}.
 	 */
-	protected int calculateencounterfrequency(){
-		float encounters=nrooms*1.1f*ratiomonster;
-		float tilesperroom=countfloor()/nrooms;
-		float steps=encounters*tilesperroom/(DISCOVEREDPERSTEP*vision);
+	protected int calculateencounterrate(){
+		var encounters=nrooms*1.1f*ratiomonster;
+		var tilesperroom=countfloor()/nrooms;
+		var steps=encounters*tilesperroom/(DISCOVEREDPERSTEP*squadvision);
 		return Math.round(steps/2);
 	}
 
@@ -330,14 +322,14 @@ public class Dungeon extends Location{
 	}
 
 	/**
-	 * Place {@link StairsUp}, deifne {@link #herolocation} and create
+	 * Place {@link StairsUp}, deifne {@link #squadlocation} and create
 	 * {@link Features}.
 	 */
 	protected void populatedungeon(){
 		/*if placed too close to the edge, the carving in #createstairs() will make it look weird as the edge will look empty without walls */
-		while(herolocation==null||!herolocation.validate(2,2,size-3,size-3))
-			herolocation=getrandompoint();
-		var zoner=new DungeonZoner(this,herolocation);
+		while(squadlocation==null||!squadlocation.validate(2,2,size-3,size-3))
+			squadlocation=getunnocupied();
+		var zoner=new DungeonZoner(this,squadlocation);
 		createstairs(zoner);
 		createkeys(zoner);
 		int goldpool=createtraps(getfeaturequantity(nrooms,ratiotraps));
@@ -357,7 +349,7 @@ public class Dungeon extends Location{
 					while(p==null||isoccupied(p))
 						p=RPG.pick(area);
 					var key=door.key.getConstructor(Dungeon.class).newInstance(this);
-					new Chest(p.x,p.y,key).place(this,p);
+					new Chest(key,false).place(this,p);
 				}
 			}
 		}catch(ReflectiveOperationException e){
@@ -365,7 +357,7 @@ public class Dungeon extends Location{
 		}
 	}
 
-	Point getrandompoint(){
+	Point getunnocupied(){
 		Point p=null;
 		while(p==null||isoccupied(p))
 			p=new Point(RPG.r(0,size-1),RPG.r(0,size-1));
@@ -373,37 +365,40 @@ public class Dungeon extends Location{
 	}
 
 	void createstairs(DungeonZoner zoner){
-		new StairsUp(herolocation).place(this,herolocation);
-		for(int x=herolocation.x-1;x<=herolocation.x+1;x++)
-			for(int y=herolocation.y-1;y<=herolocation.y+1;y++)
+		new StairsUp(squadlocation).place(this,squadlocation);
+		for(int x=squadlocation.x-1;x<=squadlocation.x+1;x++)
+			for(int y=squadlocation.y-1;y<=squadlocation.y+1;y++)
 				map[x][y]=Template.FLOOR;
 		if(floors.indexOf(this)<floors.size()-1){
 			var p=zoner.getpoint();
-			new StairsDown(p).place(this,p);
+			new StairsDown().place(this,p);
 		}
 	}
 
+	/** @param nfeatures Target quantity of Features to place. */
 	protected void createfeatures(int nfeatures,DungeonZoner zoner){
-		try{
-			while(nfeatures>0){
-				Feature f=createfeature();
-				if(f!=null){
-					f.place(this,zoner.getpoint());
-					nfeatures-=1;
-				}
+		while(nfeatures>0){
+			var f=createfeature();
+			if(f!=null){
+				f.place(this,zoner.getpoint());
+				nfeatures-=1;
 			}
-		}catch(ReflectiveOperationException e){
-			throw new RuntimeException(e);
 		}
 	}
 
 	/**
 	 * @return A feature chosen from {@link #DEBUGFEATURE},
-	 *         {@link RareFeatureTable} or {@link CommonFeatureTable}.
+	 *         {@link RareFeatureTable} or {@link CommonFeatureTable}. May return
+	 *         <code>null</code>, in which case it should usually be possible to
+	 *         try again.
 	 */
-	protected Feature createfeature() throws ReflectiveOperationException{
-		if(Javelin.DEBUG&&DEBUGFEATURE!=null)
+	protected Feature createfeature(){
+		if(Javelin.DEBUG&&DEBUGFEATURE!=null) try{
 			return DEBUGFEATURE.getDeclaredConstructor().newInstance();
+		}catch(ReflectiveOperationException e){
+			if(Javelin.DEBUG) throw new RuntimeException(e);
+			return null;
+		}
 		var table=gettable(FeatureRarityTable.class).rollboolean()
 				?RareFeatureTable.class
 				:CommonFeatureTable.class;
@@ -416,16 +411,16 @@ public class Dungeon extends Location{
 	}
 
 	int createtraps(int ntraps){
-		int gold=0;
-		for(int i=0;i<ntraps;i++){
-			int cr=level+Difficulty.get()
-					+gettable(FeatureModifierTable.class).rollmodifier();
-			boolean special=gettable(SpecialTrapTable.class).rollboolean();
-			var p=getrandompoint();
-			Trap t=Trap.generate(cr,special,p);
-			if(t==null) continue;
-			t.place(this,p);
-			if(cr>0) gold+=RewardCalculator.getgold(t.cr);
+		var gold=0;
+		var modifier=gettable(FeatureModifierTable.class);
+		var special=gettable(SpecialTrapTable.class);
+		for(var i=0;i<ntraps;i++){
+			var cr=level+Difficulty.get()+modifier.rollmodifier();
+			var t=Trap.generate(cr,special.rollboolean());
+			if(t!=null){
+				t.place(this,getunnocupied());
+				gold+=RewardCalculator.getgold(t.cr);
+			}
 		}
 		return gold;
 	}
@@ -438,8 +433,7 @@ public class Dungeon extends Location{
 	}
 
 	void createchests(int chests,int pool,DungeonZoner zoner){
-		var p=zoner.getpoint();
-		createspecialchest(p).place(this,p);
+		createspecialchest().place(this,zoner.getpoint());
 		var hiddenchests=0;
 		for(int i=0;i<chests;i++)
 			if(RPG.chancein(10)) hiddenchests+=1;
@@ -465,24 +459,18 @@ public class Dungeon extends Location{
 	 * hide the actual chests as.
 	 */
 	void createchest(int gold,DungeonZoner zoner,boolean hidden){
-		int percentmodifier=gettable(FeatureModifierTable.class).rollmodifier()*2;
+		var percentmodifier=gettable(FeatureModifierTable.class).rollmodifier()*2;
 		gold=gold*(100+percentmodifier)/100;
-		Dungeon toplevel=this;
+		var toplevel=this;
 		while(toplevel.parent!=null)
 			toplevel=toplevel.parent;
-		var chest=new Chest(gold,zoner.getpoint());
-		chest.place(this,chest.getlocation());
+		new Chest(gold,true).place(this,zoner.getpoint());
 	}
 
-	/**
-	 * @param p Chest's location.
-	 * @return Most special chest here.
-	 */
-	protected Feature createspecialchest(Point p){
-		Item i=World.scenario.openspecialchest();
-		Chest c=new Chest(p.x,p.y,i);
-		c.setspecial();
-		return c;
+	/** @return Most special chest here. */
+	protected Feature createspecialchest(){
+		var item=World.scenario.openspecialchest();
+		return new Chest(item,true);
 	}
 
 	public boolean isoccupied(Point p){
@@ -498,23 +486,6 @@ public class Dungeon extends Location{
 		BattleScreen.active=JavelinApp.context;
 		Squad.active.place();
 		Dungeon.active=null;
-		if(World.scenario.expiredungeons&&expire()) remove();
-	}
-
-	protected boolean expire(){
-		for(Feature f:features){
-			Chest c=f instanceof Chest?(Chest)f:null;
-			if(c!=null&&c.special) return false;
-		}
-		return true;
-	}
-
-	void regenerate(boolean loading){
-		if(!generated){
-			for(Feature f:features)
-				f.generate();
-			generated=true;
-		}
 	}
 
 	@Override
@@ -615,7 +586,7 @@ public class Dungeon extends Location{
 	 * @param to Moves {@link Squad} location to these coordinates.
 	 */
 	public void teleport(Point to){
-		herolocation=to;
+		squadlocation=to;
 		JavelinApp.context.view(to.x,to.y);
 		WorldMove.abort=true;
 	}

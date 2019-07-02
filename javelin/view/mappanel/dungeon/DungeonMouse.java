@@ -34,7 +34,7 @@ public class DungeonMouse extends Mouse{
 		final Tile t=gettile(e);
 		if(!t.discovered) return;
 		DrawMoveOverlay.draw(new MoveOverlay(new DungeonWalker(
-				new Point(Dungeon.active.herolocation.x,Dungeon.active.herolocation.y),
+				new Point(Dungeon.active.squadlocation.x,Dungeon.active.squadlocation.y),
 				new Point(t.x,t.y))));
 	}
 }

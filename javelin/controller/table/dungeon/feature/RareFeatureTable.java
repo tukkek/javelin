@@ -33,8 +33,8 @@ public class RareFeatureTable extends Table implements DungeonFeatureTable{
 	@SuppressWarnings("unchecked")
 	@Override
 	public Feature rollfeature(Dungeon d){
-		Class<? extends Feature> type=(Class<? extends Feature>)roll();
 		try{
+			var type=(Class<? extends Feature>)roll();
 			return type.getDeclaredConstructor().newInstance();
 		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);

@@ -153,7 +153,7 @@ public abstract class Terrain implements Serializable{
 	 */
 	static public Terrain current(){
 		if(JavelinApp.context==null) return null;
-		Point h=JavelinApp.context.getherolocation();
+		Point h=JavelinApp.context.getsquadlocation();
 		return h==null?null:Terrain.get(h.x,h.y);
 	}
 

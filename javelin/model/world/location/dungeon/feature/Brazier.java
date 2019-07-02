@@ -25,7 +25,7 @@ public class Brazier extends Feature{
 				Dungeon.active);
 		for(Point p:crawler.crawl())
 			brighten(p);
-		Point p=JavelinApp.context.getherolocation();
+		Point p=JavelinApp.context.getsquadlocation();
 		JavelinApp.context.view(p.x,p.y);
 		Javelin.message("You light up the brazier!",false);
 		return true;

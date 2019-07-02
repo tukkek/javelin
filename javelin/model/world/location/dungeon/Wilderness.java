@@ -3,7 +3,6 @@ package javelin.model.world.location.dungeon;
 import java.util.List;
 import java.util.Set;
 
-import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
@@ -28,6 +27,7 @@ import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.Throne;
 import javelin.old.RPG;
 import javelin.view.Images;
+import javelin.view.mappanel.Tile;
 
 /**
  * A type of {@link Location} that plays like a {@link Dungeon} but is instead
@@ -46,6 +46,11 @@ import javelin.view.Images;
  *
  * TODO could {@link Hazard}s be used here instead of a {@link #fight()} some of
  * the time?
+ *
+ * TODO a cool Feature would be "boss" encouners, probably signified by a skull.
+ * could also have a RareTable for Dungeons and other for Wilderness, with a
+ * small change of taking from the other instead, giving each more personality.
+ * Common would be common to both.
  *
  * @author alex
  */
@@ -69,77 +74,54 @@ public class Wilderness extends Dungeon{
 
 	/** Terrain type (not {@link Terrain#WATER} or {@link Terrain#UNDERGROUND}. */
 	public Terrain type;
-	public int attemptstoclear;
-
-	static int determinelevel(){
-		var i=0;
-		while(RPG.chancein(2))
-			i+=1;
-		i=Math.min(i,Tier.TIERS.size()-1);
-		var t=Tier.TIERS.get(i);
-		return RPG.r(t.minlevel,t.maxlevel);
-	}
 
 	/** Constructor. */
-	public Wilderness(int level){
-		super(DESCRIPTION,determinelevel(),null,null);
+	public Wilderness(){
+		super(DESCRIPTION,-1,null,null);
 		floors=List.of(this);
-		vision*=2;
+		squadvision*=2;
 		tables=new Tables();
+		var tieri=0;
+		var last=Tier.TIERS.size()-1;
+		while(RPG.chancein(2)&&tieri<last)
+			tieri+=1;
+		var t=Tier.TIERS.get(tieri);
+		level=RPG.r(t.minlevel,t.maxlevel);
 	}
 
-	//	List<Point> getborder(char[][] map){
-	//		var edge=new ArrayList<Point>(size*4);
-	//		var width=map.length;
-	//		var height=map[0].length;
-	//		for(var x=0;x<width;x++)
-	//			for(var y=0;y<height;y++)
-	//				if(x==0||y==0||x==width-1||y==height-1) edge.add(new Point(x,y));
-	//		return edge;
-	//	}
-
-	void generateentrance(char[][] map) throws GaveUp{
-		//		var border=RPG.shuffle(getborder(map));
-		//		var entrance=border.stream().filter(p->map[p.x][p.y]==Template.FLOOR)
-		//				.findAny().orElse(null);
-		//		if(entrance==null) throw new GaveUp();
-		//		border.remove(entrance);
-		//		border.forEach(p->map[p.x][p.y]=Template.WALL);
-		herolocation=new Point(RPG.r(0,map.length-1),RPG.r(0,map[0].length-1));
+	/** Places {@link Entrance} and {@link Squad} on a border {@link Tile}. */
+	void generateentrance(char[][] map){
+		squadlocation=new Point(RPG.r(0,map.length-1),RPG.r(0,map[0].length-1));
 		if(RPG.chancein(2))
-			herolocation.x=RPG.chancein(2)?0:map.length-1;
+			squadlocation.x=RPG.chancein(2)?0:map.length-1;
 		else
-			herolocation.y=RPG.chancein(2)?0:map[0].length-1;
-		map[herolocation.x][herolocation.y]=Template.FLOOR;
-		new Entrance(herolocation).place(this,herolocation);
+			squadlocation.y=RPG.chancein(2)?0:map[0].length-1;
+		map[squadlocation.x][squadlocation.y]=Template.FLOOR;
+		new Entrance(squadlocation).place(this,squadlocation);
 	}
 
 	@Override
 	protected char[][] map(){
 		type=World.seed.map[x][y];
-		try{
-			var map=RPG.pick(type.getmaps());
-			map.generate();
-			var width=map.map.length;
-			int height=map.map[0].length;
-			var dmap=new char[width][height];
-			for(var x=0;x<width;x++)
-				for(var y=0;y<height;y++)
-					dmap[x][y]=map.map[x][y].blocked?Template.WALL:Template.FLOOR;
-			generateentrance(dmap);
-			tilefloor=Images.NAMES.get(map.floor);
-			tilewall=Images.NAMES.get(map.wall);
-			description=baptize(map.name);
-			return dmap;
-		}catch(GaveUp e){
-			return map();
-		}
+		var fightmap=RPG.pick(type.getmaps());
+		fightmap.generate();
+		var width=fightmap.map.length;
+		int height=fightmap.map[0].length;
+		var map=new char[width][height];
+		for(var x=0;x<width;x++)
+			for(var y=0;y<height;y++)
+				map[x][y]=fightmap.map[x][y].blocked?Template.WALL:Template.FLOOR;
+		generateentrance(map);
+		tilefloor=Images.NAMES.get(fightmap.floor);
+		tilewall=Images.NAMES.get(fightmap.wall);
+		description=baptize(fightmap.name);
+		return map;
 	}
 
 	@Override
-	protected int calculateencounterfrequency(){
-		var totalsteps=countfloor()/(DISCOVEREDPERSTEP*vision);
-		attemptstoclear=RPG.r(1,4);
+	protected int calculateencounterrate(){
+		var totalsteps=countfloor()/(DISCOVEREDPERSTEP*squadvision);
+		var attemptstoclear=RPG.r(1,4);
 		return totalsteps/attemptstoclear;
 	}
 
@@ -172,25 +154,22 @@ public class Wilderness extends Dungeon{
 		return "locationwilderness";
 	}
 
+	void makechest(){
+		var gold=RewardCalculator.getgold(level+makeeasy());
+		new Chest(gold,RPG.chancein(2)).place(this,getunnocupied());
+	}
+
 	@Override
 	protected void populatedungeon(){
 		var target=RPG.rolldice(2,10);
 		while(features.size()<target){
-			var p=getrandompoint();
 			if(RPG.chancein(6)){
-				var justgold=RPG.chancein(2);
-				var gold=RewardCalculator.getgold(level+makeeasy());
-				var c=new Chest(justgold?0:gold,p);
-				if(justgold) c.gold=Javelin.round(gold);
-				c.place(this,p);
+				makechest();
 				continue;
 			}
-			try{
-				var f=createfeature();
-				if(f!=null&&!FORBIDDEN.contains(f.getClass())) f.place(this,p);
-			}catch(ReflectiveOperationException e){
-				if(Javelin.DEBUG) throw new RuntimeException(e);
-			}
+			var f=createfeature();
+			if(f!=null&&!FORBIDDEN.contains(f.getClass()))
+				f.place(this,getunnocupied());
 		}
 	}
 }

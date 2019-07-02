@@ -3,7 +3,6 @@ package javelin.model.world.location.dungeon.temple;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.exception.GaveUp;
@@ -71,12 +70,9 @@ public class TempleDungeon extends Dungeon{
 	}
 
 	@Override
-	protected Feature createspecialchest(Point p){
-		if(floors.indexOf(this)==floors.size()-1) return new Altar(p,temple);
-		Chest c=new Chest(p.x,p.y);
-		c.items.add(new Ruby());
-		c.setspecial();
-		return c;
+	protected Feature createspecialchest(){
+		if(floors.indexOf(this)==floors.size()-1) return new Altar(temple);
+		return new Chest(new Ruby(),true);
 	}
 
 	@Override
@@ -98,12 +94,6 @@ public class TempleDungeon extends Dungeon{
 	@Override
 	public boolean hazard(){
 		return temple.hazard(this);
-	}
-
-	@Override
-	protected boolean expire(){
-		/* Temples expiring is handled by the Altar feature */
-		return false;
 	}
 
 	@Override

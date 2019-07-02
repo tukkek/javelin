@@ -1,7 +1,6 @@
 package javelin.model.world.location.dungeon.feature.trap;
 
 import javelin.Javelin;
-import javelin.controller.Point;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.table.dungeon.feature.TrapVisibilityTable;
 import javelin.model.unit.Combatant;
@@ -38,8 +37,8 @@ public abstract class Trap extends Feature{
 	/** See {@link Perception}. */
 	public int searchdc;
 
-	public Trap(int cr,int xp,int yp,String avatarfilep){
-		super(xp,yp,avatarfilep);
+	public Trap(int cr,String avatarfilep){
+		super(avatarfilep);
 		this.cr=cr;
 		draw=!Dungeon.gettable(TrapVisibilityTable.class).rollboolean();
 		remove=false;
@@ -83,16 +82,13 @@ public abstract class Trap extends Feature{
 			}
 			success=searchroll>=searchdc;
 		}
-		if(success){
-			draw=true;
-			generate();
-		}
+		if(success) draw=true;
 	}
 
 	protected abstract void spring();
 
-	public static Trap generate(int cr,boolean special,Point p){
-		return special||cr<MechanicalTrap.MINIMUMCR?new TeleporterTrap(cr,p)
-				:new MechanicalTrap(cr,p);
+	public static Trap generate(int cr,boolean special){
+		return special||cr<MechanicalTrap.MINIMUMCR?new TeleporterTrap(cr)
+				:new MechanicalTrap(cr);
 	}
 }

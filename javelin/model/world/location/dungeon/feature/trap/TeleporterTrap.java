@@ -39,8 +39,8 @@ public class TeleporterTrap extends Trap{
 		}
 	}
 
-	public TeleporterTrap(int cr,Point p){
-		super(cr,p.x,p.y,"dungeontrap");
+	public TeleporterTrap(int cr){
+		super(cr,"dungeontrap");
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class TeleporterTrap extends Trap{
 		Javelin.message(victim+" activates the teleportation trap!",false);
 		HashSet<Point> targets=new TeleportCrawl().crawl();
 		targets.remove(new Point(x,y));
-		targets.remove(Dungeon.active.herolocation);
+		targets.remove(Dungeon.active.squadlocation);
 		if(targets.isEmpty()) return;
 		Point to=RPG.pick(new ArrayList<>(targets));
 		Dungeon.active.teleport(to);

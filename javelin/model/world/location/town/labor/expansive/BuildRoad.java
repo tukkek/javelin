@@ -11,7 +11,6 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.Portal;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
@@ -47,7 +46,7 @@ public class BuildRoad extends Labor{
 				this.to=from;
 			}
 			for(Actor a:World.getactors())
-				if(a instanceof Location&&!(a instanceof Portal)) locations.add(a);
+				if(a instanceof Location) locations.add(a);
 		}
 
 		/**

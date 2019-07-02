@@ -15,7 +15,7 @@ public class StairsUp extends Feature{
 
 	/** Cosntructor. */
 	public StairsUp(Point p){
-		super(p.x,p.y,"dungeonstairsup");
+		super("dungeonstairsup");
 		remove=false;
 		enter=true;
 	}

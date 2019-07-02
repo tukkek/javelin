@@ -35,7 +35,7 @@ public abstract class Mouse extends MouseAdapter{
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e){
 		Point p=JavelinApp.context==null?BattlePanel.current.getlocation()
-				:JavelinApp.context.getherolocation();
+				:JavelinApp.context.getsquadlocation();
 		panel.zoom(-e.getWheelRotation(),false,p.x,p.y);
 	}
 

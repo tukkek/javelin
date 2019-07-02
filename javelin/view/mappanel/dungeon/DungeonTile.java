@@ -31,7 +31,7 @@ public class DungeonTile extends Tile{
 				draw(g,Images.get(Dungeon.active.tilewall));
 			draw(g,Images.get(f.avatarfile));
 		}
-		if(Dungeon.active.herolocation.x==x&&Dungeon.active.herolocation.y==y){
+		if(Dungeon.active.squadlocation.x==x&&Dungeon.active.squadlocation.y==y){
 			Squad.active.updateavatar();
 			draw(g,Squad.active.getimage());
 		}

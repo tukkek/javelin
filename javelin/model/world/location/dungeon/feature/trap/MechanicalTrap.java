@@ -3,7 +3,6 @@ package javelin.model.world.location.dungeon.feature.trap;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.controller.Point;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.old.RPG;
@@ -30,8 +29,8 @@ public class MechanicalTrap extends Trap{
 	/**
 	 * @param p Creates a trap at this point.
 	 */
-	public MechanicalTrap(int cr,Point p){
-		super(cr,p.x,p.y,"dungeontrap");
+	public MechanicalTrap(int cr){
+		super(cr,"dungeontrap");
 		int currentcr=-1;// doesn't kill ("subdual damage", kinda)
 		while(currentcr!=cr||damagedie<1){
 			savedc=RPG.r(10,35);

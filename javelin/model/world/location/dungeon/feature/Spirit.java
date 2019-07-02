@@ -40,7 +40,7 @@ public class Spirit extends Feature{
 		BattleScreen.active.center(f.x,f.y);
 		Javelin.redraw();
 		Javelin.message(message,false);
-		Point p=JavelinApp.context.getherolocation();
+		Point p=JavelinApp.context.getsquadlocation();
 		JavelinApp.context.view(p.x,p.y);
 	}
 }

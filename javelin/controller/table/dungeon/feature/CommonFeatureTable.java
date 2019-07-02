@@ -33,12 +33,13 @@ public class CommonFeatureTable extends Table implements DungeonFeatureTable{
 	 * @return <code>null</code> if an invalid feature has been rolled, otherwise,
 	 *         a Feature that hasn't been positioned or placed yet.
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Feature rollfeature(@SuppressWarnings("unused") Dungeon d){
-		Class<? extends Feature> type=(Class<? extends Feature>)roll();
+		var type=(Class<? extends Feature>)roll();
 		if(type.equals(Herb.class)&&d.level>Herb.MAXLEVEL) return null;
 		if(type.equals(Inhabitant.class)){
-			InhabitantTable npctable=d.tables.get(InhabitantTable.class);
+			var npctable=d.tables.get(InhabitantTable.class);
 			type=(Class<? extends Feature>)npctable.roll();
 		}
 		try{

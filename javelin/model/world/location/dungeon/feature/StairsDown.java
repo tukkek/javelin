@@ -1,7 +1,6 @@
 package javelin.model.world.location.dungeon.feature;
 
 import javelin.Javelin;
-import javelin.controller.Point;
 import javelin.controller.action.world.WorldMove;
 import javelin.model.world.location.dungeon.Dungeon;
 
@@ -14,8 +13,8 @@ public class StairsDown extends Feature{
 	static final String CONFIRM="Go down the stairs?\nPress ENTER to confirm, any other key to cancel...";
 
 	/** Constructor. */
-	public StairsDown(Point p){
-		super(p.x,p.y,"dungeonstairsdown");
+	public StairsDown(){
+		super("dungeonstairsdown");
 		remove=false;
 		enter=true;
 	}

@@ -21,7 +21,7 @@ import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
-import javelin.model.world.location.Portal;
+import javelin.model.world.location.dungeon.feature.Portal;
 import javelin.model.world.location.fortification.Fortification;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;

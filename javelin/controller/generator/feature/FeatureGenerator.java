@@ -167,7 +167,7 @@ public class FeatureGenerator implements Serializable{
 		generateuniquelocations(starting);
 		for(var level=Tier.LOW.minlevel;level<=Tier.EPIC.maxlevel;level++){
 			starting.add(Dungeon.generate(level));
-			starting.add(new Wilderness(level)); //TODO make wilderness
+			starting.add(new Wilderness());
 		}
 		for(Location l:starting)
 			l.place();

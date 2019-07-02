@@ -1,7 +1,6 @@
 package javelin.model.world.location.dungeon.feature;
 
 import javelin.Javelin;
-import javelin.controller.Point;
 import javelin.model.item.Item;
 import javelin.model.item.relic.Relic;
 import javelin.model.world.World;
@@ -17,8 +16,8 @@ public class Altar extends Feature{
 	Temple temple;
 
 	/** Constructor. */
-	public Altar(Point p,Temple temple){
-		super(p.x,p.y,"dungeonchestrelic");
+	public Altar(Temple temple){
+		super("dungeonchestrelic");
 		this.temple=temple;
 		remove=false;
 	}

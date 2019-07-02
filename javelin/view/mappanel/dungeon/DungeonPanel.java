@@ -39,8 +39,8 @@ public class DungeonPanel extends MapPanel{
 	@Override
 	public void refresh(){
 		if(initial){
-			WorldPanel.resize(this,Dungeon.active.herolocation.x,
-					Dungeon.active.herolocation.y);
+			WorldPanel.resize(this,Dungeon.active.squadlocation.x,
+					Dungeon.active.squadlocation.y);
 			scroll.setVisible(true);
 		}
 		super.refresh();
@@ -54,13 +54,4 @@ public class DungeonPanel extends MapPanel{
 			for(Tile t:ts)
 				if(t.discovered) t.repaint();
 	}
-
-	// @Override
-	// protected void ensureminimumsize() {
-	// /* don't */
-	// /*
-	// * TODO would be cool to have larger dungeons to make use of the entire
-	// * screen
-	// */
-	// }
 }

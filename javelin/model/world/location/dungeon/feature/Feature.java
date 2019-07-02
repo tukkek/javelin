@@ -45,27 +45,9 @@ public abstract class Feature implements Serializable{
 	 */
 	public boolean enter=true;
 
-	/**
-	 * @param xp {@link #x}
-	 * @param yp {@link #y}
-	 * @param avatarfilep File name for {@link Images#get(String)}.
-	 */
-	public Feature(int xp,int yp,String avatarfilep){
-		this(avatarfilep);
-		x=xp;
-		y=yp;
-	}
-
-	public Feature(String avatarfilep){
-		avatarfile=avatarfilep;
-	}
-
-	/**
-	 * TODO evolve on 2.0+
-	 *
-	 * @param map Adds itself to this map.
-	 */
-	public void generate(){
+	/** @param avatar File name for {@link Images#get(String)}. */
+	public Feature(String avatar){
+		avatarfile=avatar;
 	}
 
 	/**

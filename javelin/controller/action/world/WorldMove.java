@@ -82,7 +82,7 @@ public class WorldMove extends WorldAction{
 
 	@Override
 	public void perform(final WorldScreen s){
-		final Point p=JavelinApp.context.getherolocation();
+		final Point p=JavelinApp.context.getsquadlocation();
 		int x=p.x+deltax;
 		int y=p.y+deltay;
 		if(move(x,y)) BattleScreen.active.mappanel.center(x,y,true);
@@ -100,7 +100,7 @@ public class WorldMove extends WorldAction{
 			if(JavelinApp.context.react(tox,toy)||abort||!place(tox,toy))
 				return false;
 			boolean stop=false;
-			if(walk(JavelinApp.context.getherolocation()))
+			if(walk(JavelinApp.context.getsquadlocation()))
 				stop=!JavelinApp.context.explore(tox,toy);
 			heal();
 			return !stop;

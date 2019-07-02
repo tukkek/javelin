@@ -43,7 +43,7 @@ public class LocateObject extends Spell{
 
 	/** @return Closest treasure chest. */
 	public static Feature find(){
-		var hero=JavelinApp.context.getherolocation();
+		var hero=JavelinApp.context.getsquadlocation();
 		var undiscovered=Dungeon.active.features.getallundiscovered().stream()
 				.sorted((a,
 						b)->(int)(Walker.distance(hero.x,hero.y,a.x,a.y)

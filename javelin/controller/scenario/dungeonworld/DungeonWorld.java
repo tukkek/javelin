@@ -29,7 +29,6 @@ public class DungeonWorld extends Campaign{
 		minigames=false;
 		record=false;
 		respawnlocations=false;
-		expiredungeons=true;
 		worldencounters=false;
 		worldhazards=false;
 		helpfile="Dungeon world";

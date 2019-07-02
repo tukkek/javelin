@@ -1,6 +1,5 @@
 package javelin.controller.scenario.dungeondelve;
 
-import javelin.controller.Point;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -39,12 +38,9 @@ public class Megadungeon extends Dungeon{
 	}
 
 	@Override
-	protected Feature createspecialchest(Point p){
-		if(floors.indexOf(this)!=floors.size()-1)
-			return super.createspecialchest(p);
-		var c=new Chest(p.x,p.y,new McGuffin());
-		c.setspecial();
-		return c;
+	protected Feature createspecialchest(){
+		return floors.indexOf(this)==floors.size()-1?new Chest(new McGuffin(),true)
+				:super.createspecialchest();
 	}
 
 	@Override

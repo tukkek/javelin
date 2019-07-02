@@ -48,24 +48,19 @@ public class EvilTemple extends Temple{
 	}
 
 	@Override
-	public boolean hazard(Dungeon dungeon){
-		if(!RPG.chancein(dungeon.stepsperencounter*10)) return false;
+	public boolean hazard(Dungeon d){
+		if(!RPG.chancein(d.stepsperencounter*10)) return false;
 		Class<? extends Feature> targettype;
 		if(Squad.active.equipment.get(Skull.class)==null)
 			targettype=StairsUp.class;
-		else if(dungeon.features.has(Altar.class))
+		else if(d.features.has(Altar.class))
 			targettype=Altar.class;
 		else
 			targettype=StairsDown.class;
-		Feature target=null;
-		for(Feature f:dungeon.features)
-			if(targettype.isInstance(f)){
-				target=f;
-				break;
-			}
+		var target=d.features.stream().filter(f->targettype.isInstance(f)).findAny()
+				.orElse(null);
 		if(target==null) return false;
-		dungeon.herolocation.x=target.x;
-		dungeon.herolocation.y=target.y;
+		d.squadlocation=target.getlocation();
 		Javelin.message("A macabre force draws upon you...",true);
 		return true;
 	}

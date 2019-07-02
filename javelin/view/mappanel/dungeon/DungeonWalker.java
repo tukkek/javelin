@@ -42,7 +42,7 @@ public class DungeonWalker extends OverlayWalker{
 		DungeonStep p=(DungeonStep)step;
 		if(Dungeon.active.map[p.x][p.y]==Template.WALL) return false;
 		if(p.encounterchance>1) return false;
-		if(p.equals(to)) return !Dungeon.active.herolocation.equals(step);
+		if(p.equals(to)) return !Dungeon.active.squadlocation.equals(step);
 		if(!BattleScreen.active.mappanel.tiles[p.x][p.y].discovered) return false;
 		final Feature f=Dungeon.active.features.get(p.x, p.y);
 		return f==null||f instanceof MechanicalTrap;
@@ -50,6 +50,6 @@ public class DungeonWalker extends OverlayWalker{
 
 	@Override
 	public Point resetlocation(){ // TODO
-		return Dungeon.active==null?null:Dungeon.active.herolocation;
+		return Dungeon.active==null?null:Dungeon.active.squadlocation;
 	}
 }

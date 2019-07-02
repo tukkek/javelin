@@ -21,7 +21,7 @@ public class OpenDoors extends Wish{
 		ArrayList<Door> doors=new ArrayList<>(0);
 		for(Feature d:Dungeon.active.features)
 			if(d instanceof Door&&d.draw
-					&&new Point(d.x,d.y).distanceinsteps(Dungeon.active.herolocation)==1)
+					&&new Point(d.x,d.y).distanceinsteps(Dungeon.active.squadlocation)==1)
 				doors.add((Door)d);
 		return doors;
 	}

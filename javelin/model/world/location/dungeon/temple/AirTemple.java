@@ -39,7 +39,7 @@ public class AirTemple extends Temple{
 	public boolean hazard(Dungeon d){
 		if(!RPG.chancein(d.stepsperencounter)) return false;
 		ArrayList<Point> steps=new ArrayList<>();
-		steps.add(JavelinApp.context.getherolocation());
+		steps.add(JavelinApp.context.getsquadlocation());
 		int nsteps=RPG.r(3,7);
 		for(int i=0;i<nsteps;i++){
 			Point p=push(steps,d);

@@ -33,7 +33,7 @@ public class PryingEyes extends Spell{
 		if(dungeon==null)
 			Outpost.discover(Squad.active.x,Squad.active.y,Outpost.VISIONRANGE);
 		else{
-			var crawler=new DungeonCrawler(dungeon.herolocation,9000,dungeon){
+			var crawler=new DungeonCrawler(dungeon.squadlocation,9000,dungeon){
 				@Override
 				protected boolean validate(Feature f){
 					return !(f instanceof Door);

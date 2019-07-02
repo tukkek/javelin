@@ -1,9 +1,11 @@
 package javelin.model.world.location.dungeon.feature;
 
+import java.io.Serializable;
+
 import javelin.Javelin;
-import javelin.controller.Point;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.generator.dungeon.template.Template;
+import javelin.controller.table.dungeon.feature.FeatureModifierTable;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -25,13 +27,41 @@ import javelin.old.RPG;
  * @author alex
  */
 public class Portal extends Feature{
-	static final String CONFIRM="Press ENTER to cross the portal or any other key to cancel...";
+	abstract static class Destination implements Serializable{
+		String description;
 
-	enum Destination{
-		OUTSIDE,STAIRSUP
+		Destination(String description){
+			this.description=description;
+		}
+
+		abstract void go();
 	}
 
-	Destination target=RPG.chancein(4)?Destination.OUTSIDE:Destination.STAIRSUP;
+	static final Destination OUTSIDE=new Destination("outside"){
+		@Override
+		void go(){
+			Dungeon.active.leave();
+		}
+	};
+	static final Destination STAIRSUP=new Destination("to the level entrance"){
+		@Override
+		void go(){
+			var d=Dungeon.active;
+			var stairs=d.features.get(StairsUp.class);
+			var to=RPG.shuffle(stairs.getlocation().getadjacent()).stream()
+					.filter(p->d.map[p.x][p.y]==Template.FLOOR).findAny().orElse(null);
+			if(to!=null)
+				d.squadlocation=to;
+			else if(Javelin.DEBUG)
+				throw new RuntimeException("Cannot teleport to entrance!");
+		}
+	};
+	static final String CONFIRM="Press ENTER to cross the portal or any other key to cancel...";
+	static final String UNKNOWN="You are unable to determine the portal's destination...";
+
+	int knowledgedc=10+Dungeon.active.level
+			+Dungeon.active.tables.get(FeatureModifierTable.class).rollmodifier();
+	Destination destination=RPG.chancein(4)?OUTSIDE:STAIRSUP;
 	boolean revealed=false;
 
 	/** Constructor. */
@@ -42,29 +72,14 @@ public class Portal extends Feature{
 
 	@Override
 	public boolean activate(){
-		var d=Dungeon.active;
 		var known=revealed||Squad.active.getbest(Skill.KNOWLEDGE)
-				.taketen(Skill.KNOWLEDGE)>=10+d.level;
-		String info;
-		if(known){
-			var destination=target==Destination.OUTSIDE?"outside"
-					:"to the level entrance";
-			info="This is a portal leading "+destination+".";
-		}else
-			info="You are unable to determine the portal's destination...";
+				.taketen(Skill.KNOWLEDGE)>=knowledgedc;
+		var info=known?"This is a portal leading "+destination.description+"."
+				:UNKNOWN;
 		if(Javelin.prompt(info+"\n"+CONFIRM)!='\n') return false;
 		revealed=true;
 		WorldMove.abort=true;
-		if(target==Destination.OUTSIDE)
-			d.leave();
-		else{
-			var stairs=d.features.get(StairsUp.class);
-			for(var p:stairs.getlocation().getadjacent())
-				if(d.map[p.x][p.y]==Template.FLOOR){
-					d.herolocation=new Point(p.x,p.y);
-					break;
-				}
-		}
+		destination.go();
 		return true;
 	}
 }

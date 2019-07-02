@@ -15,8 +15,8 @@ import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomEncounter;
 import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.generator.WorldGenerator;
-import javelin.controller.generator.feature.LocationGenerator;
 import javelin.controller.generator.feature.Frequency;
+import javelin.controller.generator.feature.LocationGenerator;
 import javelin.controller.kit.Kit;
 import javelin.controller.scenario.dungeondelve.DungeonDelve;
 import javelin.controller.scenario.dungeonworld.DungeonWorld;
@@ -44,7 +44,6 @@ import javelin.model.world.location.dungeon.feature.Altar;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.fortification.Fortification;
-import javelin.model.world.location.fortification.Trove;
 import javelin.model.world.location.order.Order;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
@@ -74,11 +73,11 @@ import javelin.view.screen.SquadScreen;
  * overworld map and {@link Hazard}s. The only "moving pieces" in the world map
  * are yourself and {@link Incursion}s.
  *
- * The {@link LocationGenerator} is disabled after the original world is created,
- * meaning that, wuthout random encounters and other infinite means of gaining
- * experience and loot, you are on a race against time to conquer all hostile
- * {@link Town}s - 1 to 3, with varying degress of power according to the
- * quantity in each game.
+ * The {@link LocationGenerator} is disabled after the original world is
+ * created, meaning that, wuthout random encounters and other infinite means of
+ * gaining experience and loot, you are on a race against time to conquer all
+ * hostile {@link Town}s - 1 to 3, with varying degress of power according to
+ * the quantity in each game.
  *
  * There is only one enemy {@link Realm} per game and the starting features are
  * roughly made to be 1/3 neutral and 2/3 hostile.

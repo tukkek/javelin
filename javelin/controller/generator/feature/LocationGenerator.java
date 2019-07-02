@@ -64,8 +64,6 @@ public class LocationGenerator implements Serializable{
 	 */
 	void setup(){
 		generators.put(Outpost.class,new Frequency(.1f));
-		//		generators.put(Trove.class,new Frequency());
-		//		generators.put(Guardian.class,new Frequency());
 		generators.put(Dwelling.class,new Frequency());
 		generators.put(PointOfInterest.class,new Frequency(2f));
 		var resources=new Frequency(.5f);

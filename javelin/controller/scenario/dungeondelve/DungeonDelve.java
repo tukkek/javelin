@@ -35,7 +35,7 @@ public class DungeonDelve extends Campaign{
 
 	/** Constructor. */
 	public DungeonDelve(){
-		featuregenerator=DungeonDelveGenerator.class;
+		locationgenerator=DungeonDelveGenerator.class;
 		worldgenerator=DungeonDelveWorld.class;
 		allowallactors=true;
 		worldencounters=false;

@@ -15,7 +15,7 @@ import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomEncounter;
 import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.generator.WorldGenerator;
-import javelin.controller.generator.feature.FeatureGenerator;
+import javelin.controller.generator.feature.LocationGenerator;
 import javelin.controller.generator.feature.Frequency;
 import javelin.controller.kit.Kit;
 import javelin.controller.scenario.dungeondelve.DungeonDelve;
@@ -74,7 +74,7 @@ import javelin.view.screen.SquadScreen;
  * overworld map and {@link Hazard}s. The only "moving pieces" in the world map
  * are yourself and {@link Incursion}s.
  *
- * The {@link FeatureGenerator} is disabled after the original world is created,
+ * The {@link LocationGenerator} is disabled after the original world is created,
  * meaning that, wuthout random encounters and other infinite means of gaining
  * experience and loot, you are on a race against time to conquer all hostile
  * {@link Town}s - 1 to 3, with varying degress of power according to the
@@ -114,11 +114,11 @@ public class Scenario implements Serializable{
 	 * on that alone.
 	 *
 	 * @see Actor#destroy(Incursion)
-	 * @see FeatureGenerator
+	 * @see LocationGenerator
 	 */
 	public Integer startingdungeons=null;
 	/**
-	 * Whether {@link FeatureGenerator} should continue placing features after
+	 * Whether {@link LocationGenerator} should continue placing features after
 	 * initial world generation.
 	 */
 	public boolean respawnlocations=false;
@@ -171,7 +171,7 @@ public class Scenario implements Serializable{
 	 * @see Town#ishostile()
 	 */
 	public boolean dominationwin=true;
-	/** Number of {@link Location}s to spawn. See {@link FeatureGenerator}. */
+	/** Number of {@link Location}s to spawn. See {@link LocationGenerator}. */
 	public int startingfeatures=size*size/7;
 	/** {@link Trove}s will only offer gold and experience rewards. */
 	public boolean simpletroves=true;
@@ -205,7 +205,7 @@ public class Scenario implements Serializable{
 	 * @see WorldGenerator
 	 * @see #respawnlocations
 	 */
-	public Class<? extends FeatureGenerator> featuregenerator=FeatureGenerator.class;
+	public Class<? extends LocationGenerator> locationgenerator=LocationGenerator.class;
 	/** Multiplied to daily {@link Labor}. */
 	public float labormodifier=1;
 	/** Responsible for generation a {@link World} map. */

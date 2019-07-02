@@ -11,7 +11,7 @@ import javelin.view.screen.WorldScreen;
 /**
  * One of these per feature.
  *
- * @see FeatureGenerator#spawn(float, boolean)
+ * @see LocationGenerator#spawn(float, boolean)
  * @author alex
  */
 public class Frequency implements Serializable{
@@ -36,7 +36,7 @@ public class Frequency implements Serializable{
 	 * If <code>true</code> then {@link #chance} won't be altered. That does not
 	 * make it an absolute per-day chance.
 	 *
-	 * @see FeatureGenerator#spawn(float, boolean)
+	 * @see LocationGenerator#spawn(float, boolean)
 	 */
 	public boolean absolute=false;
 	/**

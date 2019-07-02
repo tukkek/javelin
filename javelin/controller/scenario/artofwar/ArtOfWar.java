@@ -47,7 +47,7 @@ public class ArtOfWar extends Scenario{
 	/** Constructor. */
 	public ArtOfWar(){
 		//		statictowns=false;
-		featuregenerator=AowGenerator.class;
+		locationgenerator=AowGenerator.class;
 		helpfile="Art of war";
 		labormodifier=0;
 		spawn=false;

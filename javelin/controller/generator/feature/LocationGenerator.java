@@ -53,7 +53,7 @@ import javelin.old.RPG;
  *
  * @author alex
  */
-public class FeatureGenerator implements Serializable{
+public class LocationGenerator implements Serializable{
 	final HashMap<Class<? extends Actor>,Frequency> generators=new HashMap<>();
 
 	/**
@@ -72,13 +72,6 @@ public class FeatureGenerator implements Serializable{
 		resources.seeds=Realm.values().length*2;
 		resources.max=Realm.values().length*2;
 		generators.put(ResourceSite.class,resources);
-		//		Frequency dungeons=new Frequency(2f);
-		//		Integer startingdungeons=World.scenario.startingdungeons;
-		//		if(startingdungeons!=null){
-		//			dungeons.seeds=startingdungeons;
-		//			dungeons.max=startingdungeons;
-		//		}
-		//		generators.put(Dungeon.class,dungeons);
 		if(Caravan.ALLOW){
 			Frequency caravan=new Frequency(Frequency.MONTHLY,true,false);
 			caravan.seeds=0;
@@ -162,20 +155,16 @@ public class FeatureGenerator implements Serializable{
 		if(l!=null&&clear) l.capture();
 	}
 
-	void generatestartinglocations(){
-		ArrayList<Location> starting=new ArrayList<>();
-		generateuniquelocations(starting);
-		for(var level=Tier.LOW.minlevel;level<=Tier.EPIC.maxlevel;level++){
-			starting.add(Dungeon.generate(level));
-			starting.add(new Wilderness());
-		}
-		for(Location l:starting)
-			l.place();
-	}
-
-	static void generateuniquelocations(ArrayList<Location> locations){
+	void generatestaticlocations(){
+		var locations=new ArrayList<Location>();
 		locations.addAll(List.of(new PillarOfSkulls(),new DeepDungeon()));
 		locations.addAll(generatehaunts());
+		for(var level=Tier.LOW.minlevel;level<=Tier.EPIC.maxlevel;level++)
+			locations.add(Dungeon.generate(level));
+		for(var i=0;i<10;i++)
+			locations.add(new Wilderness());
+		for(Location l:locations)
+			l.place();
 	}
 
 	/** @return An instance of each haunt type. */
@@ -227,7 +216,7 @@ public class FeatureGenerator implements Serializable{
 		setup();
 		Temple.generatetemples();
 		generatestartingarea(w,starting);
-		generatestartinglocations();
+		generatestaticlocations();
 		for(Class<? extends Actor> feature:generators.keySet())
 			generators.get(feature).seed(feature);
 		int target=World.scenario.startingfeatures-Location.count();

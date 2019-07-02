@@ -11,7 +11,7 @@ import java.util.List;
 import javelin.controller.Point;
 import javelin.controller.exception.RestartWorldGeneration;
 import javelin.controller.generator.WorldGenerator;
-import javelin.controller.generator.feature.FeatureGenerator;
+import javelin.controller.generator.feature.LocationGenerator;
 import javelin.controller.kit.Kit;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
@@ -46,7 +46,7 @@ import javelin.old.RPG;
  *
  * @author alex
  */
-public class ZoneGenerator extends FeatureGenerator{
+public class ZoneGenerator extends LocationGenerator{
 	static final double MINDISTANCE=5;
 	static final ArrayList<Trait> TRAITS=new ArrayList<>(LaborDeck.TRAITS);
 	static final ArrayList<Realm> REALMS=new ArrayList<>(

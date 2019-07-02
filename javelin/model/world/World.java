@@ -10,7 +10,7 @@ import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.generator.WorldGenerator;
-import javelin.controller.generator.feature.FeatureGenerator;
+import javelin.controller.generator.feature.LocationGenerator;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Squad;
@@ -86,7 +86,7 @@ public class World implements Serializable{
 			"Boris Vallejo","Lee Salzman","Johannes Bonitz"));
 
 	/** Generator to be used during play. */
-	public FeatureGenerator featuregenerator;
+	public LocationGenerator featuregenerator;
 
 	/** Constructor. */
 	public World(){

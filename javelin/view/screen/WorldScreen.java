@@ -20,7 +20,7 @@ import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomEncounter;
-import javelin.controller.generator.feature.FeatureGenerator;
+import javelin.controller.generator.feature.LocationGenerator;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.model.transport.Transport;
@@ -56,7 +56,7 @@ public class WorldScreen extends BattleScreen{
 	/**
 	 * Probabilisticaly, spawns a new {@link Actor} every this many days.
 	 *
-	 * @see FeatureGenerator
+	 * @see LocationGenerator
 	 */
 	public static final int SPAWNPERIOD=14;
 	/**

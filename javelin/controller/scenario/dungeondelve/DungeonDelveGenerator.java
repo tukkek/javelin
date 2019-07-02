@@ -6,13 +6,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javelin.controller.Point;
-import javelin.controller.generator.feature.FeatureGenerator;
+import javelin.controller.generator.feature.LocationGenerator;
 import javelin.model.Realm;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 
-public class DungeonDelveGenerator extends FeatureGenerator{
+public class DungeonDelveGenerator extends LocationGenerator{
 	public final List<Dungeon> dungeons=new ArrayList<>();
 
 	@Override

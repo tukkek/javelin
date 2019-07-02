@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import javelin.controller.Point;
 import javelin.controller.challenge.Difficulty;
-import javelin.controller.generator.feature.FeatureGenerator;
+import javelin.controller.generator.feature.LocationGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.world.World;
@@ -21,8 +21,8 @@ import javelin.model.world.location.haunt.SunkenShip;
 import javelin.model.world.location.haunt.WitchesHideout;
 import javelin.old.RPG;
 
-/** {@link FeatureGenerator} for {@link ArtOfWar}. */
-public class AowGenerator extends FeatureGenerator{
+/** {@link LocationGenerator} for {@link ArtOfWar}. */
+public class AowGenerator extends LocationGenerator{
 	static final Set<Class<? extends Location>> BANNED=Set
 			.of(WitchesHideout.class,SunkenShip.class);
 

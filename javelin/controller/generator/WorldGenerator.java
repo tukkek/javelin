@@ -1,7 +1,7 @@
 package javelin.controller.generator;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -12,7 +12,6 @@ import javelin.controller.CountingSet;
 import javelin.controller.Point;
 import javelin.controller.db.Preferences;
 import javelin.controller.exception.RestartWorldGeneration;
-import javelin.controller.generator.feature.FeatureGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.unit.Squad;
@@ -56,19 +55,16 @@ public class WorldGenerator extends Thread{
 		}
 	}
 
+	/** Creates {@link World} geography and {@link Location}s. */
 	protected void generate(){
-		world=new World();
-		LinkedList<Realm> realms=new LinkedList<>();
-		for(Realm r:Realm.values())
-			realms.add(r);
-		Collections.shuffle(realms);
-		ArrayList<HashSet<Point>> regions=new ArrayList<>(realms.size());
-		generategeography(realms,regions,world);
 		try{
-			FeatureGenerator generator=World.scenario.featuregenerator
+			world=new World();
+			var realms=RPG.shuffle(new LinkedList<>(Arrays.asList(Realm.values())));
+			var regions=new ArrayList<HashSet<Point>>(realms.size());
+			generategeography(realms,regions,world);
+			world.featuregenerator=World.scenario.locationgenerator
 					.getDeclaredConstructor().newInstance();
-			world.featuregenerator=generator;
-			Location start=generator.generate(realms,regions,world);
+			var start=world.featuregenerator.generate(realms,regions,world);
 			finish(start,world);
 		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);

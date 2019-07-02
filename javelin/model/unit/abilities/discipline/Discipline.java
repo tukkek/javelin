@@ -1,7 +1,7 @@
 package javelin.model.unit.abilities.discipline;
 
 import javelin.controller.action.maneuver.ExecuteManeuver;
-import javelin.controller.generator.feature.FeatureGenerator;
+import javelin.controller.generator.feature.LocationGenerator;
 import javelin.controller.kit.Kit;
 import javelin.controller.upgrade.FeatUpgrade;
 import javelin.controller.upgrade.ability.RaiseAbility;
@@ -28,7 +28,7 @@ import javelin.model.world.location.town.labor.military.DisciplineAcademy.BuildD
  */
 public abstract class Discipline extends Kit{
 	/**
-	 * Whether {@link FeatureGenerator} should generate a DisciplineAcademy or
+	 * Whether {@link LocationGenerator} should generate a DisciplineAcademy or
 	 * not. Useful for emulating abilities that are not {@link Maneuvers} as
 	 * disciplines for the sake of using the existing {@link ExecuteManeuver}
 	 * integrated user interface.
@@ -38,7 +38,7 @@ public abstract class Discipline extends Kit{
 	 * and are generateed in some other way. In these cases, {@link #hasacademy}
 	 * would always be <code>false</code>.
 	 *
-	 * @see FeatureGenerator
+	 * @see LocationGenerator
 	 * @see #generateacademy()
 	 */
 	public boolean hasacademy=true;

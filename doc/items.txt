@@ -22,3 +22,8 @@ Carriage: reduces chance of battle, costs $2/day.
 
 Ship: avoids combat on water, very slow on land.
 
+WANDS, STAVES AND RODS
+
+Each of those items allow certain types of spells to be cast. Wands don't need to be equiped and can be used at any time straight out of the inventory, and contain a limited number of charges. Staves are higher-level wands that need to be equiped, prior to battle, before they can be used. Both Wands and Staves have a limited number of uses and become worthless after these charges are spent. A player also needs to have enough knowledge to be able to use these items - usually either through the Spellcraft or Use Magic Device skills.
+
+Rods are similar to staves in that they need to be equipped before being used - but they don't have a limited number of charges nor they require magical expertise to be used. Note that each squad member can only have one Rod or Staff equipped at once at any given time.

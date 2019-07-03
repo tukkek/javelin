@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
@@ -20,11 +22,12 @@ import javelin.model.item.Item;
 import javelin.model.item.Tier;
 import javelin.model.item.artifact.CasterRing;
 import javelin.model.item.consumable.Eidolon;
-import javelin.model.item.consumable.Potion;
 import javelin.model.item.consumable.Scroll;
 import javelin.model.item.focus.Rod;
 import javelin.model.item.focus.Staff;
 import javelin.model.item.focus.Wand;
+import javelin.model.item.potion.Flask;
+import javelin.model.item.potion.Potion;
 import javelin.model.item.precious.ArtPiece;
 import javelin.model.item.precious.Gem;
 import javelin.model.item.precious.PreciousObject;
@@ -47,9 +50,18 @@ import javelin.model.world.location.unique.UniqueLocation;
  */
 public class ContentSummary{
 	/** Will catch subclasses too. */
-	static final List<Class<? extends Item>> ITEMTYPES=List.of(CasterRing.class,
-			Eidolon.class,Potion.class,Scroll.class,Wand.class,Staff.class,Rod.class,
-			ArtPiece.class,Gem.class);
+	static final List<Class<? extends Item>> ITEMTYPES=List.of(Potion.class,
+			Flask.class,Scroll.class,Wand.class,Staff.class,Rod.class,
+			CasterRing.class,Eidolon.class,ArtPiece.class,Gem.class);
+
+	static final Map<Class<? extends Item>,String> NAMES=new HashMap<>();
+
+	static{
+		for(var type:ITEMTYPES)
+			NAMES.put(type,type.getSimpleName().toLowerCase()+"s");
+		NAMES.put(CasterRing.class,"caster rings");
+		NAMES.put(ArtPiece.class,"art pieces");
+	}
 	/**
 	 * Whether to include or not non-functional objects when listing by
 	 * {@link Tier}.
@@ -68,13 +80,6 @@ public class ContentSummary{
 
 	@SuppressWarnings("unused")
 	void printitems() throws IOException{
-		print("Items by type:");
-		int all=Item.ITEMS.size();
-		for(var type:ITEMTYPES){
-			var n=Item.ITEMS.stream().filter(i->type.equals(i.getClass())).count();
-			print("  "+type.getSimpleName()+" "+n+" ("+100*n/all+"%)");
-		}
-		print();
 		for(var t:Tier.TIERS){
 			var items=Item.BYTIER.get(t);
 			print(t+"-tier items ("+items.size()+")");
@@ -126,16 +131,22 @@ public class ContentSummary{
 
 	void printmisc() throws IOException{
 		print(Monster.MONSTERS.size()+" monsters");
+		var itemtypes="";
+		for(var type:ITEMTYPES){
+			var n=Item.ITEMS.stream().filter(i->type.equals(i.getClass())).count();
+			itemtypes+=n+" "+NAMES.get(type)+", ";
+		}
+		itemtypes=itemtypes.substring(0,itemtypes.length()-2);
 		print(Item.ITEMS.size()-Item.ARTIFACT.size()+" items, "+Item.ARTIFACT.size()
-				+" artifacts, 7 relics");
+				+" artifacts, 7 relics ("+itemtypes+")");
 		Collection<Spell> spells=Spell.BYNAME.values();
 		var upgrades=Upgrade.getall();
 		int nskills=Upgrade.getall(SkillUpgrade.class).size();
 		int nupgrades=upgrades.size()-spells.size()-nskills;
 		int nspells=spells.size()-countsummon(spells)+1;
 		int nkits=Kit.KITS.size();
-		print(nkits+" kits, "+nupgrades+" upgrades, "+nspells+" spells, "+nskills
-				+" skills");
+		print(nkits+" kits ("+nupgrades+" upgrades, "+nspells+" spells, "+nskills
+				+" skills)");
 		printmaps();
 		HashSet<Class<? extends Actor>> locationtypes=new HashSet<>();
 		int uniquelocations=0;

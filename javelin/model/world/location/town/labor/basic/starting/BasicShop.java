@@ -4,8 +4,8 @@ import java.util.List;
 
 import javelin.model.item.Tier;
 import javelin.model.item.consumable.Eidolon;
-import javelin.model.item.consumable.Potion;
 import javelin.model.item.consumable.Scroll;
+import javelin.model.item.potion.Potion;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.abilities.spell.conjuration.healing.LesserRestoration;
 import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureLightWounds;

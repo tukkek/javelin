@@ -16,11 +16,12 @@ import javelin.controller.exception.battle.StartBattle;
 import javelin.model.item.artifact.Artifact;
 import javelin.model.item.artifact.CasterRing;
 import javelin.model.item.consumable.Eidolon;
-import javelin.model.item.consumable.Potion;
 import javelin.model.item.consumable.Scroll;
 import javelin.model.item.focus.Rod;
 import javelin.model.item.focus.Staff;
 import javelin.model.item.focus.Wand;
+import javelin.model.item.potion.Flask;
+import javelin.model.item.potion.Potion;
 import javelin.model.item.precious.ArtPiece;
 import javelin.model.item.precious.Gem;
 import javelin.model.unit.Combatant;
@@ -74,7 +75,11 @@ public abstract class Item implements Serializable,Cloneable{
 	@SuppressWarnings("unused")
 	public static void setup(){
 		for(Spell s:Spell.BYNAME.values()){
-			if(s.ispotion) new Potion(s);
+			if(s.ispotion){
+				new Potion(s);
+				for(int dailyuses:Flask.VARIATIONS)
+					new Flask(s,dailyuses);
+			}
 			//spell-completion
 			if(s.iswand)
 				if(s.level<=Wand.MAXLEVEL)

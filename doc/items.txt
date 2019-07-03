@@ -1,10 +1,10 @@
-EIDOLON
+EIDOLONS
 
 A magic stone that, when spent summons an ally for the duration of the battle.
 
-POTIONS
+POTIONS AND FLASKS
 
-Potions are one-use items that produce a spell-like effect on the user. Their effect is automatic - no prerequisites or rolls are needed. 
+Potions are one-use items that produce a spell-like effect on the user. Their effect is automatic - no prerequisites or rolls are needed. Flasks are like potions but they aren't discarded after use: they will slowly refill (especially while you rest) and need not be discarded.
 
 PRECIOUS ITEMS
 

@@ -11,7 +11,7 @@ import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.RandomDungeonEncounter;
 import javelin.controller.table.dungeon.feature.FeatureModifierTable;
 import javelin.model.item.Item;
-import javelin.model.item.consumable.Potion;
+import javelin.model.item.potion.Potion;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Skill;

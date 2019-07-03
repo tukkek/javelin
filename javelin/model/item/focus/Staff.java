@@ -64,8 +64,8 @@ public class Staff extends Rod{
 	@Override
 	public Item randomize(){
 		var clone=(Staff)super.randomize();
-		clone.wand.randomize();
-		clone.price=wand.price;
+		clone.wand=(Wand)clone.wand.randomize();
+		clone.price=clone.wand.price;
 		return clone;
 	}
 

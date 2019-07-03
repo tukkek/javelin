@@ -1,8 +1,8 @@
-package javelin.model.item.consumable;
+package javelin.model.item.potion;
 
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
 import javelin.controller.ContentSummary;
@@ -25,11 +25,14 @@ import javelin.view.screen.BattleScreen;
 public class Potion extends Item{
 	javelin.model.unit.abilities.spell.Spell spell;
 
-	/**
-	 * @param s One-use spell effect of drinking this potion.
-	 */
+	/** Constructor. */
 	public Potion(Spell s){
-		super("Potion of "+s.name.toLowerCase(),s.level*s.casterlevel*50,true);
+		this("Potion",s,s.level*s.casterlevel*50,true);
+	}
+
+	/** Subclass constructor. */
+	protected Potion(String name,Spell s,int price,boolean register){
+		super(name+" of "+s.name.toLowerCase(),price,register);
 		if(Javelin.DEBUG&&!s.ispotion) throw new InvalidParameterException();
 		usedinbattle=s.castinbattle;
 		usedoutofbattle=s.castoutofbattle;
@@ -38,11 +41,9 @@ public class Potion extends Item{
 
 	@Override
 	public boolean use(Combatant user){
-		String text=spell.cast(user,user,false,null,null);
+		var text=spell.cast(user,user,false,null,null);
 		Javelin.redraw();
-		/* TODO should be less awkward once Context are implemented (2.0) */
-		if(BattleScreen.active.getClass().equals(BattleScreen.class))
-			BattleScreen.active.center(user.location[0],user.location[1]);
+		BattleScreen.active.center();
 		Javelin.message(text,false);
 		return true;
 	}
@@ -53,10 +54,9 @@ public class Potion extends Item{
 		return true;
 	}
 
+	/** @return All potion types in the game. */
 	public static List<Potion> getpotions(){
-		ArrayList<Potion> potions=new ArrayList<>();
-		for(Item i:ITEMS)
-			if(i instanceof Potion) potions.add((Potion)i);
-		return potions;
+		return ITEMS.stream().filter(i->i instanceof Potion).map(i->(Potion)i)
+				.collect(Collectors.toList());
 	}
 }

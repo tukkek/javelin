@@ -2,7 +2,6 @@ package javelin.model.unit.abilities.spell.necromancy.wounds;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Touch;
@@ -15,7 +14,7 @@ public class InflictModerateWounds extends Touch{
 
 	public InflictModerateWounds(final String name,final float incrementcost,
 			final int[] spelldatap,final int level){
-		super(name,level,incrementcost,Realm.EVIL);
+		super(name,level,incrementcost);
 		spelldata=spelldatap;
 		castinbattle=true;
 		provokeaoo=false;

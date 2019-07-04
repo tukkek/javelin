@@ -2,7 +2,6 @@ package javelin.model.unit.abilities.spell.transmutation;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Touch;
@@ -38,7 +37,7 @@ public class Fly extends Touch{
 
 	/** Constructor. */
 	public Fly(){
-		super("Fly",3,ChallengeCalculator.ratespell(3),Realm.AIR);
+		super("Fly",3,ChallengeCalculator.ratespell(3));
 		castinbattle=true;
 		castonallies=true;
 		ispotion=true;

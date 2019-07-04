@@ -2,7 +2,6 @@ package javelin.model.unit.abilities.spell.necromancy;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -23,7 +22,7 @@ public class Poison extends Touch{
 
 	/** Constructor. */
 	public Poison(){
-		super("Poison",4,ChallengeCalculator.ratespell(4),Realm.EVIL);
+		super("Poison",4,ChallengeCalculator.ratespell(4));
 		castinbattle=true;
 	}
 

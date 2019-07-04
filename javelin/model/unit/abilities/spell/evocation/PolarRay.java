@@ -2,7 +2,6 @@ package javelin.model.unit.abilities.spell.evocation;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Ray;
@@ -17,7 +16,7 @@ import javelin.old.RPG;
 public class PolarRay extends Ray{
 	/** Constructor. */
 	public PolarRay(){
-		super("Polar ray",8,ChallengeCalculator.ratespell(8),Realm.AIR);
+		super("Polar ray",8,ChallengeCalculator.ratespell(8));
 		castinbattle=true;
 		iswand=true;
 		isrod=true;

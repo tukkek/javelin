@@ -5,7 +5,6 @@ import java.util.List;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
@@ -49,7 +48,7 @@ public class NeutralizePoison extends Touch{
 
 	/** Constructor. */
 	public NeutralizePoison(){
-		super("Neutralize poison",4,ChallengeCalculator.ratespell(4),Realm.WATER);
+		super("Neutralize poison",4,ChallengeCalculator.ratespell(4));
 		ispotion=true;
 		isritual=true;
 		castinbattle=true;

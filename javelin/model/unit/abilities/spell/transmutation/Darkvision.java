@@ -4,7 +4,6 @@ import java.util.List;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -41,7 +40,7 @@ public class Darkvision extends Touch{
 
 	/** Constructor. */
 	public Darkvision(){
-		super("Darkvision",2,ChallengeCalculator.ratespell(2),Realm.EVIL);
+		super("Darkvision",2,ChallengeCalculator.ratespell(2));
 		castinbattle=true;
 		castonallies=true;
 		castoutofbattle=true;

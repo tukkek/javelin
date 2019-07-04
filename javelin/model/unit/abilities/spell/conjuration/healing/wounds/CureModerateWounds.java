@@ -5,7 +5,6 @@ import java.util.List;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Touch;
@@ -20,9 +19,10 @@ public class CureModerateWounds extends Touch{
 	 */
 	final int[] rolldata;
 
-	public CureModerateWounds(final String name,final float incrementcost,
+	/** Subclass constructor. */
+	protected CureModerateWounds(final String name,final float incrementcost,
 			int[] rolldatap,int levelp){
-		super(name,levelp,incrementcost,Realm.WATER);
+		super(name,levelp,incrementcost);
 		rolldata=rolldatap;
 		castonallies=true;
 		castoutofbattle=true;
@@ -31,6 +31,7 @@ public class CureModerateWounds extends Touch{
 		ispotion=true;
 	}
 
+	/** Constructor. */
 	public CureModerateWounds(){
 		this("Cure moderate wounds",ChallengeCalculator.ratespell(2),
 				new int[]{2,8,4},2);

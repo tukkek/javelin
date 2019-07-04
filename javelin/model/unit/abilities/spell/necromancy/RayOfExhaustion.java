@@ -2,7 +2,6 @@ package javelin.model.unit.abilities.spell.necromancy;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Ray;
@@ -19,7 +18,7 @@ public class RayOfExhaustion extends Ray{
 
 	/** Constructor. */
 	public RayOfExhaustion(){
-		super("Ray of exhaustion",3,ChallengeCalculator.ratespell(3),Realm.EVIL);
+		super("Ray of exhaustion",3,ChallengeCalculator.ratespell(3));
 		castinbattle=true;
 		iswand=true;
 		isrod=true;

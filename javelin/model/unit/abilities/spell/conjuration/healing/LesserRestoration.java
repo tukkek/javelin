@@ -5,7 +5,6 @@ import java.util.List;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Touch;
@@ -31,7 +30,7 @@ public class LesserRestoration extends Touch{
 
 	/** Constructor. */
 	public LesserRestoration(){
-		super("Lesser restoration",2,ChallengeCalculator.ratespell(2),Realm.WATER);
+		super("Lesser restoration",2,ChallengeCalculator.ratespell(2));
 		ispotion=true;
 		castinbattle=true;
 		castoutofbattle=true;

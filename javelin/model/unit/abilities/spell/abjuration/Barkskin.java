@@ -33,8 +33,7 @@ public class Barkskin extends Touch{
 
 	/** Constructor */
 	public Barkskin(){
-		super("Barkskin",3,ChallengeCalculator.ratespell(2,6),
-				javelin.model.Realm.EARTH);
+		super("Barkskin",3,ChallengeCalculator.ratespell(2,6));
 		casterlevel=6;
 		castinbattle=true;
 		castoutofbattle=true;

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.Point;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -16,13 +15,8 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public abstract class Touch extends Spell{
-
-	/**
-	 * Constructor.
-	 *
-	 * @param realmp
-	 */
-	public Touch(String name,int level,float incrementcost,Realm realmp){
+	/** Constructor. */
+	public Touch(String name,int level,float incrementcost){
 		super(name,level,incrementcost);
 		castinbattle=true;
 	}

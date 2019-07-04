@@ -1,7 +1,6 @@
 package javelin.model.unit.abilities.spell.transmutation.totem;
 
 import javelin.controller.ai.ChanceNode;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -29,7 +28,7 @@ public class OwlsWisdom extends TotemsSpell{
 
 	/** Constructor. */
 	public OwlsWisdom(){
-		super("Owl's wisdom",Realm.GOOD);
+		super("Owl's wisdom");
 	}
 
 	@Override

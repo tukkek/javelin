@@ -6,7 +6,6 @@ import java.util.List;
 import javelin.controller.action.Action;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -59,7 +58,7 @@ public class DominateMonster extends Ray{
 
 	/** Constructor. */
 	public DominateMonster(){
-		super("Dominate monster",9,ChallengeCalculator.ratespell(9),Realm.EVIL);
+		super("Dominate monster",9,ChallengeCalculator.ratespell(9));
 		automatichit=true;
 		apcost=1;
 		castinbattle=true;

@@ -2,7 +2,6 @@ package javelin.model.unit.abilities.spell;
 
 import javelin.controller.action.ai.attack.RangedAttack;
 import javelin.controller.walker.Walker;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -14,7 +13,7 @@ import javelin.model.unit.Monster;
  */
 public abstract class Ray extends Spell{
 
-	public Ray(String name,int level,float incrementcost,Realm realmp){
+	public Ray(String name,int level,float incrementcost){
 		super(name,level,incrementcost);
 	}
 

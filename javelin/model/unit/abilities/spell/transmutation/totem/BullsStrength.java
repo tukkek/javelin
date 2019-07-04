@@ -1,7 +1,6 @@
 package javelin.model.unit.abilities.spell.transmutation.totem;
 
 import javelin.controller.ai.ChanceNode;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -29,7 +28,7 @@ public class BullsStrength extends TotemsSpell{
 
 	/** Constructor. */
 	public BullsStrength(){
-		super("Bull's strength",Realm.FIRE);
+		super("Bull's strength");
 	}
 
 	@Override

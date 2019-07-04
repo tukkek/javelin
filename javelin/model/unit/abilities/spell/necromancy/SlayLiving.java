@@ -5,7 +5,6 @@ import java.util.List;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Touch;
@@ -14,7 +13,7 @@ import javelin.model.unit.abilities.spell.Touch;
 public class SlayLiving extends Touch{
 	/** Constructor. */
 	public SlayLiving(){
-		super("Slay living",5,ChallengeCalculator.ratespell(5),Realm.EVIL);
+		super("Slay living",5,ChallengeCalculator.ratespell(5));
 		castinbattle=true;
 		provokeaoo=false;
 	}

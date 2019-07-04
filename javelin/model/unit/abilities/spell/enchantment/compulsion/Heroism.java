@@ -2,7 +2,6 @@ package javelin.model.unit.abilities.spell.enchantment.compulsion;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Touch;
@@ -14,7 +13,7 @@ import javelin.model.unit.condition.Heroic;
 public class Heroism extends Touch{
 	/** Constructor. */
 	public Heroism(){
-		super("Heroism",3,ChallengeCalculator.ratespell(3),Realm.FIRE);
+		super("Heroism",3,ChallengeCalculator.ratespell(3));
 		castonallies=true;
 		castinbattle=true;
 		ispotion=true;

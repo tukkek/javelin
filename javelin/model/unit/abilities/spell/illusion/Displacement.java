@@ -2,7 +2,6 @@ package javelin.model.unit.abilities.spell.illusion;
 
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
-import javelin.model.Realm;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Touch;
@@ -36,13 +35,12 @@ public class Displacement extends Touch{
 
 	/** Constructor. */
 	public Displacement(){
-		this("Displacement",3,ChallengeCalculator.ratespell(3),Realm.MAGIC);
+		this("Displacement",3,ChallengeCalculator.ratespell(3));
 	}
 
 	/** Constructor. */
-	protected Displacement(String name,int levelp,float incrementcost,
-			Realm realmp){
-		super(name,levelp,incrementcost,realmp);
+	protected Displacement(String name,int levelp,float incrementcost){
+		super(name,levelp,incrementcost);
 		castinbattle=true;
 		castonallies=true;
 		/*potion is Blink*/

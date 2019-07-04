@@ -101,11 +101,10 @@ public abstract class Fight{
 	 */
 	public Integer weather=null;
 	/**
-	 * Since {@link Squad#time} is always ticking and needs to be updated
-	 * even when fights do happen this by default holds the period at the moment
-	 * of instantiation, so we can be more faithful to what appears on screen
-	 * instead of the period after the {@link WorldMove} or similar has been
-	 * completed.
+	 * Since {@link Squad#time} is always ticking and needs to be updated even
+	 * when fights do happen this by default holds the period at the moment of
+	 * instantiation, so we can be more faithful to what appears on screen instead
+	 * of the period after the {@link WorldMove} or similar has been completed.
 	 *
 	 * @see Javelin#getperiod()
 	 */
@@ -470,29 +469,35 @@ public abstract class Fight{
 			BattleScreen.active.block();
 			throw new RepeatTurn();
 		}
-		if(Javelin.DEBUG) withdrawall();
+		if(Javelin.DEBUG) withdrawall(true);
 		if(Fight.state.isengaged(combatant)){
 			Javelin.message("Disengage first!",Javelin.Delay.BLOCK);
 			InfoScreen.feedback();
 			throw new RepeatTurn();
 		}
-		final String prompt="Are you sure you want to escape? Press ENTER to confirm...\n";
+		var prompt="Are you sure you want to escape? Press ENTER to confirm...\n";
 		Javelin.message(prompt,Javelin.Delay.NONE);
 		if(Javelin.input().getKeyChar()!='\n') throw new RepeatTurn();
 		combatant.escape(Fight.state);
-		if(Fight.state.blueTeam.isEmpty())
-			throw new EndBattle();
-		else
-			throw new RepeatTurn();
+		throw Fight.state.blueTeam.isEmpty()?new EndBattle():new RepeatTurn();
 	}
 
-	void withdrawall(){
-		String prompt="Press w to cancel battle... (debug feature)";
-		if(Javelin.prompt(prompt)!='w'){
-			MessagePanel.active.clear();
-			return;
+	/**
+	 * Removes all {@link Combatant}s from a {@link Fight}. Intended for
+	 * debugging.
+	 *
+	 * @param prompt If <code>true</code>, will ask for user confirmation.
+	 * @throws EndBattle
+	 */
+	public static void withdrawall(boolean prompt){
+		if(prompt){
+			var message="Press w to cancel battle... (debug feature)";
+			if(Javelin.prompt(message)!='w'){
+				MessagePanel.active.clear();
+				return;
+			}
 		}
-		for(Combatant c:new ArrayList<>(Fight.state.blueTeam))
+		for(var c:new ArrayList<>(Fight.state.blueTeam))
 			c.escape(Fight.state);
 		throw new EndBattle();
 	}

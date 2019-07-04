@@ -27,7 +27,7 @@ import javelin.view.screen.BattleScreen;
 public class MonsterMadness extends Minigame{
 	class Setup extends BattleSetup{
 		@Override
-		public void place(){
+		protected void place(boolean strict){
 			//
 		}
 

@@ -1,7 +1,6 @@
 package javelin.controller.fight.minigame.battlefield;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -24,20 +23,19 @@ import javelin.view.screen.BattleScreen;
 
 public class Battlefield extends Minigame{
 	public static final boolean DEBUG=false;
-	public static final int HIGHESTEL=ChallengeCalculator
-			.crtoel(RPG.pick(Monster.BYCR
-					.get(Monster.BYCR.descendingKeySet().first())).cr);
+	public static final int HIGHESTEL=ChallengeCalculator.crtoel(
+			RPG.pick(Monster.BYCR.get(Monster.BYCR.descendingKeySet().first())).cr);
 
 	/** This is used as a come-back mechanic (negative feedback loop). */
 	static final float MAXARMY=30;
 	static final int CHOICES=3;
-	static final List<Terrain> TERRAINS=Arrays.asList(Terrain.NONWATER);
+	static final List<Terrain> TERRAINS=Terrain.NONWATER;
 	static final float POINTSPERTURN=1f;
 	static final int[] FLAGS=new int[]{1,2,4};
 
 	class BattlefieldSetup extends BattleSetup{
 		@Override
-		public void place(){
+		protected void place(boolean strict){
 			try{
 				int width=map.map.length;
 				int height=map.map[0].length;
@@ -59,8 +57,8 @@ public class Battlefield extends Minigame{
 				placesquads(redsquads,redflagpoles);
 			}catch(GaveUp e){
 				map=Map.random();
-				generatemap(Battlefield.this);
-				place();
+				generatemap(Battlefield.this,null);
+				place(strict);
 			}
 		}
 

@@ -28,6 +28,9 @@ import javelin.view.screen.BattleScreen;
  * @author alex
  */
 public class EndBattle extends BattleEvent{
+	/** For debugging purposes. Reset manually. */
+	public static boolean skipresultmessage=false;
+
 	/** Start after-{@link Fight} cleanup. */
 	public static void end(){
 		Fight.victory=Javelin.app.fight.win();
@@ -86,7 +89,7 @@ public class EndBattle extends BattleEvent{
 				Squad.active.updateavatar();
 			}
 		}
-		if(combatresult==null) return;
+		if(combatresult==null|skipresultmessage) return;
 		Javelin.message(combatresult+"\nPress any key to continue...",
 				Javelin.Delay.BLOCK);
 		BattleScreen.active.getUserInput();

@@ -10,6 +10,7 @@ import javelin.controller.Weather;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.map.Map;
+import javelin.controller.map.terrain.plain.Field;
 import javelin.controller.terrain.Terrain;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
@@ -25,8 +26,12 @@ import javelin.old.RPG;
  * @author alex
  */
 public class BattleSetup{
+	/** 1 = strict pass, 2 = relaxed pass, 3 {@link Field} override. */
+	static final int PLACEMENTSPASSES=3;
+	static final int PLACEMENTATTEMPTS=150/PLACEMENTSPASSES;
 	static final Point NOTPLACED=new Point(-1,-1);
 	static final int MAXDISTANCE=6;
+
 	/**
 	 * Improving battle placement by not allowing more than 1 adjacent ally at a
 	 * time (otherwise it's too easy to cramp an entire army together so that each
@@ -34,21 +39,33 @@ public class BattleSetup{
 	 */
 	static final int MAXADJACENT=1;
 
+	/** Exposes which placement pass the last setup ended on. */
+	static public int pass;
+
 	/** Starts the setup steps. */
 	public void setup(){
 		rollinitiative();
-		Fight f=Javelin.app.fight;
-		generatemap(f);
-		try{
-			place();
-		}catch(GaveUp e){
-			throw new RuntimeException("Could not place combatants!",e);
-		}
-		Weather.flood();
+		var f=Javelin.app.fight;
+		generatemap(f,null);
+		for(pass=1;pass<=PLACEMENTSPASSES;pass++)
+			try{
+				if(pass==3) generatemap(f,new Field());
+				place(pass!=2);
+				Weather.flood();
+				return;
+			}catch(GaveUp e){
+				if(pass<PLACEMENTSPASSES) continue;
+				var info="\nMap: "+f.map.name;
+				var blue=Fight.originalblueteam;
+				info+="\nBlue team ("+blue.size()+"): "+blue;
+				var red=Fight.originalredteam;
+				info+="\nRed team ("+red.size()+"): "+red;
+				throw new RuntimeException("Could not place combatants!"+info,e);
+			}
 	}
 
 	/** Allows greater control of {@link Map} generation. */
-	public void generatemap(Fight f){
+	public void generatemap(Fight f,Map m){
 		if(f.map==null){
 			Terrain t;
 			if(Dungeon.active!=null)
@@ -58,6 +75,14 @@ public class BattleSetup{
 			else
 				t=f.terrain;
 			f.map=t.getmaps().pick();
+		}
+		if(m!=null){
+			if(f.map!=null){
+				m.flooded=f.map.flooded;
+				m.floor=f.map.floor;
+				m.obstacle=f.map.obstacle;
+			}
+			f.map=m;
 		}
 		f.map.generate();
 		Fight.state.map=f.map.map;
@@ -74,13 +99,14 @@ public class BattleSetup{
 	/**
 	 * Sets each {@link Combatant} in a sensible starting location.
 	 *
+	 * @param strict If <code>false</code> will relax some of the placement
+	 *          constraints.
 	 * @throws GaveUp If exceeded maximum allowed attempts.
 	 */
-	public void place() throws GaveUp{
-		var state=Fight.state;
-		for(int i=0;i<1000;i++)
+	protected void place(boolean strict) throws GaveUp{
+		for(int i=0;i<PLACEMENTATTEMPTS;i++)
 			try{
-				place(state);
+				place(Fight.state,strict);
 				return;
 			}catch(GaveUp e){
 				continue;
@@ -88,7 +114,7 @@ public class BattleSetup{
 		throw new GaveUp();
 	}
 
-	void place(BattleState s) throws GaveUp{
+	void place(BattleState s,boolean strict) throws GaveUp{
 		for(var c:s.getcombatants())
 			c.setlocation(NOTPLACED);
 		var blueseed=RPG.chancein(2);
@@ -100,7 +126,7 @@ public class BattleSetup{
 		var seedb=b.pop();
 		seeda.setlocation(getrandompoint(s));
 		placeda.add(seeda);
-		placecombatant(seedb,seeda,null,null,s);
+		placecombatant(seedb,seeda,null,null,s,true);
 		placedb.add(seedb);
 		while(!a.isEmpty()||!b.isEmpty()){
 			var queue=RPG.chancein(2)?a:b;
@@ -110,7 +136,7 @@ public class BattleSetup{
 			var enemies=queue==a?placedb:placeda;
 			var success=false;
 			for(var ally:RPG.shuffle(allies))
-				if(placecombatant(unit,ally,allies,enemies,s)){
+				if(placecombatant(unit,ally,allies,enemies,s,strict)){
 					success=true;
 					break;
 				}
@@ -120,7 +146,8 @@ public class BattleSetup{
 	}
 
 	boolean placecombatant(Combatant c,Combatant reference,
-			ArrayList<Combatant> allies,List<Combatant> enemies,BattleState s){
+			ArrayList<Combatant> allies,List<Combatant> enemies,BattleState s,
+			boolean strict){
 		var source=reference.getlocation();
 		var vision=reference.calculatevision(s);
 		var all=s.getcombatants();
@@ -129,11 +156,13 @@ public class BattleSetup{
 		for(var p:RPG.shuffle(new ArrayList<>(vision))){
 			if(p.distanceinsteps(source)>MAXDISTANCE||s.map[p.x][p.y].blocked)
 				continue;
-			if(allies!=null
-					&&allies.stream().filter(a->a.getlocation().distanceinsteps(p)==1)
-							.limit(MAXADJACENT+1).count()==MAXADJACENT)
-				continue;
-			if(enemies!=null&&cansee(enemies,p)) continue;
+			if(strict){
+				if(allies!=null
+						&&allies.stream().filter(a->a.getlocation().distanceinsteps(p)==1)
+								.limit(MAXADJACENT+1).count()==MAXADJACENT)
+					continue;
+				if(enemies!=null&&cansee(enemies,p)) continue;
+			}
 			c.setlocation(p);
 			return true;
 		}

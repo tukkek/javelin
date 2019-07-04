@@ -1,7 +1,6 @@
 package javelin.controller.generator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -71,7 +70,7 @@ public class NpcGenerator{
 				for(int i=0;i<npcs;i++){
 					Monster m=RPG.pick(candidates);
 					Combatant c=generatenpc(m,cr);
-					if(c!=null) register(c,Arrays.asList(Terrain.NONWATER));
+					if(c!=null) register(c,Terrain.NONWATER);
 				}
 			}
 			if(tier!=null) for(Monster m:tier)

@@ -1,8 +1,6 @@
 package javelin.model.item.consumable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.action.world.UseItems;
@@ -58,9 +56,8 @@ public class Ruby extends Item{
 	@Override
 	public boolean use(Combatant user){
 		try{
-			List<Terrain> terrains=Arrays.asList(Terrain.NONWATER);
 			int el=Math.max(1,Math.round(user.source.cr));
-			Combatants summoned=EncounterGenerator.generate(el,terrains);
+			Combatants summoned=EncounterGenerator.generate(el,Terrain.NONWATER);
 			for(Combatant c:summoned)
 				Summon.place(user,c,Fight.state.blueTeam,Fight.state);
 			Javelin.redraw();

@@ -70,4 +70,9 @@ public class CountingSet{
 		}
 		return text.isEmpty()?"(empty)":text.substring(0,text.length()-2);
 	}
+
+	/** @param pass Calls {@link #add(String)} after a {@link #toString()}. */
+	public void add(Object o){
+		add(String.valueOf(o));
+	}
 }

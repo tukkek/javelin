@@ -3,6 +3,8 @@ package javelin.controller.map;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.controller.Point;
 import javelin.controller.Weather;
@@ -150,8 +152,7 @@ public abstract class Map{
 	 *         typical fights like {@link DeepWaters}.
 	 */
 	public static Map random(){
-		Terrain t=Terrain.NONWATER[RPG.r(0,Terrain.NONWATER.length-1)];
-		return RPG.pick(t.getmaps());
+		return RPG.pick(RPG.pick(Terrain.NONWATER).getmaps());
 	}
 
 	@Override
@@ -204,5 +205,11 @@ public abstract class Map{
 	/** @return Total map area in tiles (width times height). */
 	protected int getarea(){
 		return map.length*map[0].length;
+	}
+
+	/** @return All {@link Terrain#NONWATER} maps. */
+	public static List<Map> getall(){
+		return Terrain.NONWATER.stream().map(t->t.getmaps())
+				.flatMap(ms->ms.stream()).collect(Collectors.toList());
 	}
 }

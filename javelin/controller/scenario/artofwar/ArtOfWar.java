@@ -1,7 +1,6 @@
 package javelin.controller.scenario.artofwar;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -111,9 +110,9 @@ public class ArtOfWar extends Scenario{
 	}
 
 	static Terrain selectregion(){
-		var terrains=Arrays.asList(Terrain.NONWATER);
+		var terrains=new ArrayList<>(Terrain.NONWATER);
 		terrains.sort((o1,o2)->o1.toString().compareTo(o2.toString()));
-		ArrayList<Object> choices=new ArrayList<>(terrains);
+		var choices=new ArrayList<Object>(terrains);
 		var random="random";
 		choices.add(random);
 		int i=Javelin.choose("Select your region:",choices,true,false);

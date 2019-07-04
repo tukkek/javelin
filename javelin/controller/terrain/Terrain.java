@@ -3,6 +3,7 @@ package javelin.controller.terrain;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javelin.Javelin;
@@ -81,8 +82,8 @@ public abstract class Terrain implements Serializable{
 	public static final Terrain[] NONUNDERGROUND=new Terrain[]{PLAIN,HILL,FOREST,
 			MOUNTAINS,DESERT,MARSH,WATER};
 	/** All terrain types except {@link #water}. */
-	public static final Terrain[] NONWATER=new Terrain[]{PLAIN,HILL,FOREST,
-			MOUNTAINS,DESERT,MARSH,UNDERGROUND};
+	public static final List<Terrain> NONWATER=List.of(PLAIN,HILL,FOREST,
+			MOUNTAINS,DESERT,MARSH,UNDERGROUND);
 
 	static final int[] STEPS=new int[]{-1,0,+1};
 

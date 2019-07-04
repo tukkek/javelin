@@ -50,6 +50,7 @@ public class BattlePanel extends MapPanel{
 		try{
 			updatestate();
 			super.refresh();
+			if(Fight.state==null) return;
 			final HashSet<Point> update=new HashSet<>(
 					Fight.state.redTeam.size()+Fight.state.blueTeam.size());
 			for(Combatant c:Fight.state.getcombatants())
@@ -105,6 +106,7 @@ public class BattlePanel extends MapPanel{
 
 	void updatestate(){
 		previousstate=state;
+		if(Fight.state==null) return;
 		state=Fight.state.clonedeeply();
 		if(previousstate==null) previousstate=state;
 		BattleTile.panel=this;

@@ -27,7 +27,7 @@ public class LocationFightSetup extends BattleSetup{
 	}
 
 	@Override
-	public void place(){
+	protected void place(boolean strict){
 		clear(Fight.state.blueTeam);
 		clear(Fight.state.redTeam);
 		place(Fight.state.blueTeam,map.startingareablue);

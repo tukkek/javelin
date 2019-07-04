@@ -1,7 +1,6 @@
 package javelin.controller.challenge;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -142,7 +141,7 @@ public class TensionDirector{
 	 * @throws GaveUp If cannot fulfill this condition.
 	 */
 	protected List<Combatant> generate(int el) throws GaveUp{
-		return EncounterGenerator.generate(el,Arrays.asList(Terrain.NONWATER));
+		return EncounterGenerator.generate(el,Terrain.NONWATER);
 	}
 
 	/**

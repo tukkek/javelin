@@ -12,6 +12,7 @@ import javelin.controller.fight.minigame.arena.building.ArenaFountain;
 import javelin.controller.fight.minigame.arena.building.ArenaShop;
 import javelin.controller.fight.minigame.arena.building.ArenaTown;
 import javelin.controller.fight.setup.BattleSetup;
+import javelin.controller.map.Map;
 import javelin.model.state.Square;
 import javelin.model.unit.Building;
 import javelin.model.unit.Combatant;
@@ -27,8 +28,8 @@ public class ArenaSetup extends BattleSetup{
 	}
 
 	@Override
-	public void generatemap(Fight f){
-		super.generatemap(f);
+	public void generatemap(Fight f,Map m){
+		super.generatemap(f,null);
 		Square[][] original=f.map.map;
 		Square[][] map=new Square[MAPSIZE][];
 		f.map.map=map;
@@ -44,7 +45,7 @@ public class ArenaSetup extends BattleSetup{
 	}
 
 	@Override
-	public void place(){
+	protected void place(boolean strict){
 		ArenaTown home=placebuildings();
 		var blue=Arena.get().getallies();
 		fight.enter(blue,Fight.state.blueTeam,home.getlocation());

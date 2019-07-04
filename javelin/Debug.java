@@ -2,14 +2,18 @@ package javelin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import javelin.controller.CountingSet;
 import javelin.controller.action.Help;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.db.Preferences;
 import javelin.controller.event.EventCard;
 import javelin.controller.exception.RepeatTurn;
+import javelin.controller.exception.battle.EndBattle;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
+import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.generator.NpcGenerator;
 import javelin.controller.generator.WorldGenerator;
 import javelin.controller.kit.Kit;
@@ -19,6 +23,7 @@ import javelin.model.Realm;
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
@@ -46,6 +51,32 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class Debug{
+	static class DebugFight extends Fight{
+		Combatants foes;
+		Boolean avoid=null;
+		Boolean win=null;
+
+		public DebugFight(Combatants foes){
+			super();
+			this.foes=foes;
+		}
+
+		@Override
+		public ArrayList<Combatant> getfoes(Integer teamel){
+			return foes;
+		}
+
+		@Override
+		public boolean avoid(List<Combatant> foes){
+			return avoid==null?super.avoid(foes):avoid;
+		}
+
+		@Override
+		public boolean win(){
+			return win==null?super.win():win;
+		}
+	}
+
 	static class Helpers{
 		static void healteam(){
 			for(Combatant c:Squad.active.members){
@@ -82,25 +113,13 @@ public class Debug{
 		}
 
 		static void fight(Map m){
-			Fight maptest=new Fight(){
-				@Override
-				public ArrayList<Combatant> getfoes(Integer teamel){
-					ArrayList<Combatant> monsters=new ArrayList<>(1);
-					Combatant c=new Combatant(Monster.get("Orc"),true);
-					c.source.initiative=-20;
-					monsters.add(c);
-					return monsters;
-				}
-
-				@Override
-				public boolean win(){
-					return false;
-				}
-			};
-			maptest.map=m;
-			maptest.bribe=false;
-			maptest.hide=false;
-			throw new StartBattle(maptest);
+			var f=new DebugFight(
+					new Combatants(List.of(new Combatant(Monster.get("orc"),false))));
+			f.win=false;
+			f.map=m;
+			f.bribe=false;
+			f.hide=false;
+			throw new StartBattle(f);
 		}
 
 		static void freezeopponents(){
@@ -192,6 +211,49 @@ public class Debug{
 
 		static void reloadimages(){
 			Images.clearcache();
+		}
+
+		/** Put Fight.withdrawall(false) on {@link Debug#onbattlestart()}. */
+		static void place(Integer times,List<? extends Class<? extends Map>> maps){
+			if(maps==null) maps=Map.getall().stream().map(m->m.getClass())
+					.collect(Collectors.toList());
+			if(times==null) times=60;
+			try{
+				EndBattle.skipresultmessage=true;
+				var measures=new ArrayList<Long>(times*maps.size());
+				var passes=new CountingSet();
+				var opponents=makearmy(100);
+				for(var map:maps)
+					for(var i=1;i<=times;i++){
+						System.out.println(map.getCanonicalName()+" "+i+"/"+times);
+						var f=new DebugFight(opponents);
+						f.avoid=false;
+						f.map=map.getConstructor().newInstance();
+						Javelin.app.fight=f;
+						var clock=System.currentTimeMillis();
+						try{
+							new StartBattle(f).battle();
+						}catch(EndBattle e){
+							EndBattle.end();
+						}
+						measures.add(System.currentTimeMillis()-clock);
+						passes.add(BattleSetup.pass);
+					}
+				measures.sort(null);
+				System.out.println("Passes: "+passes+"\nMedian time: "
+						+measures.get(measures.size()/2)+"ms");
+			}catch(ReflectiveOperationException e){
+				throw new RuntimeException(e);
+			}finally{
+				EndBattle.skipresultmessage=false;
+			}
+		}
+
+		static Combatants makearmy(int opponents){
+			var monsters=new Combatants(opponents);
+			while(monsters.size()<opponents)
+				monsters.add(new Combatant(Monster.get("Orc"),true));
+			return monsters;
 		}
 	}
 

@@ -23,6 +23,7 @@ import javelin.controller.fight.minigame.arena.building.ArenaFountain;
 import javelin.controller.fight.setup.BattleSetup;
 import javelin.controller.generator.encounter.AlignmentDetector;
 import javelin.controller.generator.encounter.Encounter;
+import javelin.controller.map.Map;
 import javelin.controller.upgrade.Upgrade;
 import javelin.model.item.Item;
 import javelin.model.item.artifact.Artifact;
@@ -95,8 +96,8 @@ public class CrimsonWar extends Minigame{
 	public CrimsonWar(){
 		setup=new BattleSetup(){
 			@Override
-			public void generatemap(Fight f){
-				super.generatemap(f);
+			public void generatemap(Fight f,Map m){
+				super.generatemap(f,m);
 				Square[][] map=new Square[MAPSIZE][];
 				for(int i=0;i<MAPSIZE;i++)
 					map[i]=Arrays.copyOfRange(f.map.map[i],0,MAPSIZE);

@@ -54,6 +54,10 @@ public class Summon extends Spell{
 	static final int[] DISPLACE=new int[]{-1,0,+1};
 	static final float CRFACTOR=5f;
 
+	/**
+	 * Summoned {@link Monster#name}. Since this can come from XML,
+	 * {@link String#equalsIgnoreCase(String)} is recommended with it.
+	 */
 	public String monstername;
 	float chance;
 	/**
@@ -65,6 +69,7 @@ public class Summon extends Spell{
 	 */
 	public static final List<Summon> SUMMONS=new ArrayList<>();
 
+	/** Constructor. */
 	public Summon(String monstername,float chance){
 		super("Summon "+monstername.toLowerCase(),0,0);
 		if(chance!=1) throw new RuntimeException("Cannot be a Spell if random!");
@@ -74,10 +79,6 @@ public class Summon extends Spell{
 		if(!Monster.BYCR.isEmpty()) postloadmonsters();
 		isring=false;
 		isscroll=false;
-	}
-
-	public Summon(String name){
-		this(name,1);
 	}
 
 	/**
@@ -210,8 +211,8 @@ public class Summon extends Spell{
 	 * @see MonsterReader
 	 */
 	public static void setupsummons(){
-		Monster.MONSTERS.stream().filter(m->!m.passive).map(m->new Summon(m.name,1))
-				.forEach(s->SUMMONS.add(s));
+		SUMMONS.addAll(Monster.MONSTERS.stream().filter(m->!m.passive)
+				.map(m->new Summon(m.name,1)).collect(Collectors.toList()));
 		for(var k:Kit.KITS)
 			k.finish();
 	}

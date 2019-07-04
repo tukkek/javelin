@@ -80,6 +80,22 @@ public class ContentSummary{
 
 	@SuppressWarnings("unused")
 	void printitems() throws IOException{
+		print("Item type (low|mid|high|epic)");
+		for(var type:ITEMTYPES){
+			var all=Item.ITEMS.stream().filter(i->type.equals(i.getClass()))
+					.collect(Collectors.toList());
+			var count=new HashMap<Tier,Integer>();
+			for(var t:Tier.TIERS)
+				count.put(t,0);
+			for(var i:all){
+				var t=Tier.get(i.getlevel());
+				count.put(t,count.get(t)+1);
+			}
+			var result=Tier.TIERS.stream().map(t->String.valueOf(count.get(t)))
+					.collect(Collectors.joining("|"));
+			print("  "+type.getSimpleName()+" ("+all.size()+": "+result+")");
+		}
+		print();
 		for(var t:Tier.TIERS){
 			var items=Item.BYTIER.get(t);
 			print(t+"-tier items ("+items.size()+")");

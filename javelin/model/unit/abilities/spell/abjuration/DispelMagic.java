@@ -3,6 +3,7 @@ package javelin.model.unit.abilities.spell.abjuration;
 import java.util.ArrayList;
 import java.util.List;
 
+import javelin.Javelin;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.state.BattleState;
@@ -30,19 +31,20 @@ public class DispelMagic extends Spell{
 	@Override
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
-		Summon summon;
-		try{
-			summon=new Summon(target.source.name,1);
-		}catch(RuntimeException e){
-			summon=null;
-			/* TODO figure out why Summon#ratechallenge is throwing NPE */
+		if(target.summoned){
+			var name=target.source.name;
+			var summon=Summon.SUMMONS.stream()
+					.filter(spell->spell.monstername.equalsIgnoreCase(name)).findAny()
+					.orElse(null);
+			if(Javelin.DEBUG&&summon==null)
+				throw new RuntimeException("No summon for: "+name);
+			if(summon!=null&&casterlevel>summon.casterlevel){
+				s.remove(target);
+				return target+" goes back to its plane of existence!";
+			}
 		}
-		if(target.summoned&&summon!=null&&casterlevel>summon.casterlevel){
-			s.remove(target);
-			return target+" goes back to its plane of existence!";
-		}
-		ArrayList<Condition> dispelled=new ArrayList<>();
-		for(Condition c:target.getconditions())
+		var dispelled=new ArrayList<Condition>();
+		for(var c:target.getconditions())
 			if(c.casterlevel!=null&&casterlevel>c.casterlevel){
 				c.dispel();
 				target.removecondition(c);

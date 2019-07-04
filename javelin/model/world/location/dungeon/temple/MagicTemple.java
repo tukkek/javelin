@@ -1,6 +1,6 @@
 package javelin.model.world.location.dungeon.temple;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.terrain.Hill;
@@ -35,11 +35,7 @@ public class MagicTemple extends Temple{
 	}
 
 	@Override
-	public ArrayList<Terrain> getterrains(){
-		ArrayList<Terrain> terrains=new ArrayList<>();
-		for(Terrain t:Terrain.NONUNDERGROUND)
-			terrains.add(t);
-		terrains.add(Terrain.UNDERGROUND);
-		return terrains;
+	public List<Terrain> getterrains(){
+		return Terrain.NONWATER;
 	}
 }

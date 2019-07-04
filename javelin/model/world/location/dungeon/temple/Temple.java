@@ -227,11 +227,13 @@ public abstract class Temple extends UniqueLocation{
 	}
 
 	/** See {@link Fight#getterrains(Terrain)}; */
-	public ArrayList<Terrain> getterrains(){
-		ArrayList<Terrain> terrains=new ArrayList<>();
-		terrains.add(Terrain.UNDERGROUND);
-		terrains.add(terrain);
-		return terrains;
+	public List<Terrain> getterrains(){
+		/**
+		 * TODO Terrain.UNDERGROUND left out for now so that each temple will be
+		 * more unique instead, may need to reintroduce or find an alternative if
+		 * there aren't enough encounters for every possible challenge level.
+		 */
+		return List.of(terrain);
 	}
 
 	@Override

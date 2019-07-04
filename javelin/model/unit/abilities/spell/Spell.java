@@ -20,6 +20,7 @@ import javelin.model.item.Item;
 import javelin.model.item.artifact.CasterRing;
 import javelin.model.item.consumable.Scroll;
 import javelin.model.item.focus.Rod;
+import javelin.model.item.focus.Staff;
 import javelin.model.item.focus.Wand;
 import javelin.model.item.potion.Potion;
 import javelin.model.state.BattleState;
@@ -93,7 +94,7 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 	public boolean isring=true;
 	/** @see Potion */
 	public boolean ispotion=false;
-	/** @see Wand */
+	/** See {@link Wand} and {@link Staff}. */
 	public boolean iswand=false;
 	/** @see Rod */
 	public boolean isrod=false;
@@ -438,14 +439,18 @@ public abstract class Spell extends Upgrade implements javelin.model.Cloneable{
 	}
 
 	/**
-	 * Until a better {@link Condition}s approach is developer to save every turn,
-	 * this function helps calculate duration for ongoing efects.
+	 * Until a better {@link Condition}s approach is developed to continually
+	 * retry a save every turn for Spells, that allow it, this function helps
+	 * calculate the average duration for ongoing efects.
 	 *
 	 * @param save Target's save bonus.
-	 * @param caster {@link Spell} caster.
+	 * @param caster {@link Spell} caster (used to determinde save DC).
 	 * @return Average of turns before the target will pass a saving throw. Will
 	 *         not return less than 1 so that the effect will be in place for at
 	 *         least some amount of time.
+	 * @see Monster#ref
+	 * @see Monster#fort
+	 * @see Monster#getwill()
 	 */
 	protected int calculateduration(int save,Combatant caster){
 		var rolltarget=getsavetarget(save,caster);

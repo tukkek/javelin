@@ -21,7 +21,7 @@ public class HoldMonster extends Spell{
 	public String cast(Combatant caster,Combatant target,boolean saved,
 			BattleState s,ChanceNode cn){
 		if(saved) return target+" resists.";
-		int duration=calculateduration(target.source.getwill(),caster);
+		var duration=calculateduration(target.source.getwill(),caster);
 		target.addcondition(new Paralyzed(caster.ap+duration,target,casterlevel));
 		if(cn!=null) cn.overlay=new AiOverlay(target);
 		return target+" is paralyzed for "+duration+" turns!";

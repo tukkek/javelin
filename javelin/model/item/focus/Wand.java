@@ -14,32 +14,31 @@ import javelin.model.world.location.town.labor.basic.Shop;
 import javelin.old.RPG;
 
 /**
- * Generates both {@link Wand}s and {@link Staff}s. Any single-target,
- * non-{@link Touch} {@link Spell} can be a wand, even if it produces an area of
- * effect.
- *
- * Each wand has up to 50 charges and is spent when empty. Wands found through
- * exploration may have less {@link #charges} while wands bought brand-new on
- * {@link Shop}s should be {@link #FULL}.
+ * Any single-target, non-{@link Touch} {@link Spell} can be a Wand, even if it
+ * produces an area of effect. Each wand has up to 50 charges and is spent when
+ * empty. Wands found through exploration may have less {@link #charges} while
+ * wands bought brand-new on {@link Shop}s should be {@link #FULL}.
  *
  * @see Spell#iswand
  * @author alex
  */
 public class Wand extends Item{
-	/** Wands should not be higher than level 4, subclasses may vary. */
+	/**
+	 * Wand {@link Spell}s should not be higher than level 4.
+	 *
+	 * @see Staff
+	 */
 	public static final int MAXLEVEL=4;
 	static final int FULL=50;
 
-	/** {@link #spell} uses left. */
-	public int charges;
-
 	int pricepercharge;
 	int maxcharges;
+	int charges;
 	Spell spell;
 
 	/**
-	 * @return A name in the format Name of Spell, cleaning any common prefixes
-	 *         like "ray of".
+	 * @return A name in the format "Name of spell", removing any unnecessary
+	 *         element (such as "Ray of").
 	 */
 	public static String name(String name,Spell s){
 		name=name+" of "+s.name.toLowerCase();
@@ -48,10 +47,10 @@ public class Wand extends Item{
 	}
 
 	/**
-	 * Internal constructor for subclasses. Defers registration until the proper
-	 * {@link #price} can be determined .
+	 * @param checklevel If <code>false</code>, will ignore {@link #MAXLEVEL}
+	 *          errors.
 	 */
-	Wand(Spell s,boolean checklevel){
+	public Wand(Spell s,boolean checklevel){
 		super(name("Wand",s),0,false);
 		if(Javelin.DEBUG&&checklevel&(!s.iswand||s.level>MAXLEVEL))
 			throw new InvalidParameterException();
@@ -66,6 +65,7 @@ public class Wand extends Item{
 		register();
 	}
 
+	/** Constructor. */
 	public Wand(Spell s){
 		this(s,true);
 	}
@@ -141,7 +141,7 @@ public class Wand extends Item{
 
 	@Override
 	public Item randomize(){
-		Wand clone=(Wand)super.randomize();
+		var clone=(Wand)super.randomize();
 		clone.define(RPG.r(1,50));
 		return clone;
 	}

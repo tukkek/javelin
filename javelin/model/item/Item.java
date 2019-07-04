@@ -86,7 +86,7 @@ public abstract class Item implements Serializable,Cloneable{
 					new Wand(s);
 				else
 					new Staff(s);
-			else if(s.isscroll) new Scroll(s);
+			else if(s.isscroll&&!s.provokeaoo) new Scroll(s);
 			//use-activated
 			if(s.isrod)
 				new Rod(s);

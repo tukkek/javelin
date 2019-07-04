@@ -35,7 +35,7 @@ public class DispelMagic extends Spell{
 			summon=new Summon(target.source.name,1);
 		}catch(RuntimeException e){
 			summon=null;
-			/* TODO figure out why Summon#ratechallenge is throwin NPE */
+			/* TODO figure out why Summon#ratechallenge is throwing NPE */
 		}
 		if(target.summoned&&summon!=null&&casterlevel>summon.casterlevel){
 			s.remove(target);

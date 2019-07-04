@@ -1,34 +1,23 @@
 package javelin.model.item.potion;
 
 import java.security.InvalidParameterException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.ContentSummary;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.view.screen.BattleScreen;
 
 /**
- * Represents a consumable potion to be used in-battle. Any monster can use a
- * potion. Any self-affecting, benefitial {@link Spell} can be a potion.
+ * Represents a consumable potion to be used in-battle. Any {@link Monster} can
+ * use a potion. Any self-affecting, benefitial {@link Spell} can be a Potion.
  *
- * TODO if it's ever necessary to increase the number of potions compared to
- * other items, Flasks can be added, which refresh their content every 24 hours.
- * Same can be repeated with Big flasks (2x/day), ad aeternum. See
- * {@link ContentSummary}.
- *
+ * @see Flask
  * @author alex
  */
 public class Potion extends Item{
-	javelin.model.unit.abilities.spell.Spell spell;
-
-	/** Constructor. */
-	public Potion(Spell s){
-		this("Potion",s,s.level*s.casterlevel*50,true);
-	}
+	Spell spell;
 
 	/** Subclass constructor. */
 	protected Potion(String name,Spell s,int price,boolean register){
@@ -37,6 +26,11 @@ public class Potion extends Item{
 		usedinbattle=s.castinbattle;
 		usedoutofbattle=s.castoutofbattle;
 		spell=s;
+	}
+
+	/** Constructor. */
+	public Potion(Spell s){
+		this("Potion",s,s.level*s.casterlevel*50,true);
 	}
 
 	@Override
@@ -52,11 +46,5 @@ public class Potion extends Item{
 	public boolean usepeacefully(Combatant user){
 		spell.castpeacefully(user,user,null);
 		return true;
-	}
-
-	/** @return All potion types in the game. */
-	public static List<Potion> getpotions(){
-		return ITEMS.stream().filter(i->i instanceof Potion).map(i->(Potion)i)
-				.collect(Collectors.toList());
 	}
 }

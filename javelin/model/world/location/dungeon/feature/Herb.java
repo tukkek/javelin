@@ -2,6 +2,7 @@ package javelin.model.world.location.dungeon.feature;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Debug;
 import javelin.Javelin;
@@ -37,10 +38,14 @@ public class Herb extends Feature{
 	 */
 	public static final int MAXLEVEL;
 
-	static final List<Potion> POTIONS=Potion.getpotions();
+	static final List<Potion> POTIONS=Item.ITEMS.stream()
+			.filter(i->i.getClass().equals(Potion.class)).map(i->(Potion)i)
+			.collect(Collectors.toList());
 	static final int MAXCOPIES=5;
 
 	static{
+		if(Javelin.DEBUG&&POTIONS.isEmpty())
+			throw new RuntimeException("Could not find potions!");
 		int ceiling=POTIONS.get(POTIONS.size()-1).price;
 		ceiling*=MAXCOPIES;
 		int level=1;

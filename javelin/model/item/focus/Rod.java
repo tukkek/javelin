@@ -18,8 +18,8 @@ import javelin.model.unit.abilities.spell.Touch;
  * causes an area of effect, such as Fireball).
  *
  * As much as benefitial spells could be Rods too, its unlimited use would just
- * incentivize micro-management on part of the player (such as optimally buffing
- * allies before entering a dungeon, etc).
+ * incentivize endless micro-management on part of the player (such as optimally
+ * buffing allies before entering a dungeon, etc).
  *
  * @see Spell#isrod
  * @author alex
@@ -32,9 +32,8 @@ public class Rod extends Artifact{
 	 *
 	 * @param register
 	 */
-	protected Rod(String name,Spell s,boolean register){
-		super(Wand.name(name,s),s.level*s.casterlevel*2000+s.components*100,
-				Slot.HAND,register);
+	protected Rod(String name,int price,Spell s,boolean register){
+		super(Wand.name(name,s),price,Slot.HAND,register);
 		if(Javelin.DEBUG&&!s.iswand) throw new InvalidParameterException();
 		spell=s.clone();
 		spell.provokeaoo=false;
@@ -45,7 +44,7 @@ public class Rod extends Artifact{
 
 	/** Constructor. */
 	public Rod(Spell s){
-		this("Rod",s,true);
+		this("Rod",s.level*s.casterlevel*2000+s.components*100,s,true);
 	}
 
 	@Override

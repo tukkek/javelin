@@ -28,12 +28,7 @@ public class NeutralizePoison extends Touch{
 	 * @author alex
 	 */
 	public class Neutralized extends Condition{
-		/**
-		 * Constructor.
-		 *
-		 * @param casterlevel
-		 */
-		public Neutralized(Combatant c,Integer casterlevel){
+		Neutralized(Combatant c,Integer casterlevel){
 			super(c,"poison-neutral",Effect.POSITIVE,casterlevel,Float.MAX_VALUE,1);
 		}
 

@@ -1,27 +1,21 @@
 EIDOLONS
-
-A magic stone that, when spent summons an ally for the duration of the battle.
+A magic stone that, when spent, summons an ally for the duration of the battle.
 
 POTIONS AND FLASKS
-
-Potions are one-use items that produce a spell-like effect on the user. Their effect is automatic - no prerequisites or rolls are needed. Flasks are like potions but they aren't discarded after use: they will slowly refill (especially while you rest) and need not be discarded.
+Potions are one-use items that produce a spell-like effect on the user. Their effect is automatic - no prerequisites or rolls are needed. Flasks are like potions but they aren't discarded after use and will slowly refill (especially while you rest), needing not be discarded.
 
 ART PIECES AND GEMS
-
 Do not have any use other than selling them for their full value in gold - but if you're lucky some of these objects can sell for very high prices indeed!
 
 SCROLLS
-
-A scroll is a one-use item that works like a magic spell but requires its reader to have at least one mental attribute score (Intelligence, Wisdom or Charisma) equal or higher to 10 + spell level. The reader's caster level must also be higher than the spell's caster level (see the spell guide for more information). The Spellcraft and Use Magic Device skills grants bonuses to these calculations.  
+A scroll is a one-use item that works like a magic spell but requires its reader to have at least one mental attribute score (Intelligence, Wisdom or Charisma) equal or higher to 10 + spell level. The reader's caster level must also be higher than the spell's caster level (see the spell guide for more information). The Spellcraft and Use Magic Device skills may overcome these limitation when high enough.
 
 TRANSPORT
-
-* Carriage: reduces chance of battle and increases travel speed; costs $2/day in upkeep.
+* Carriage: reduces chance of battle and increases travel speed. Costs $2/day in upkeep.
 * Ship: avoids combat on water; can be transported on land if necessary (but extremely slow when out of water).
-* Airship: avoids combat and crosses water and land quickly; costs $16/day in upkeep.
+* Airship: avoids combat and crosses water and land quickly. Costs $16/day in upkeep.
 
 WANDS, STAVES AND RODS
+Each of those items allow certain types of spells to be cast. Wands don't need to be equiped and can be used at any time straight out of the inventory, containing a limited number of charges. Staves are higher-level wands that need to be equiped, prior to battle, before they can be used. Both Wands and Staves have a limited number of uses and become worthless after these charges are spent. A player also needs to have enough knowledge to be able to use these items (usually through levels or the Spellcraft and Use Magic Device skills).
 
-Each of those items allow certain types of spells to be cast. Wands don't need to be equiped and can be used at any time straight out of the inventory and contain a limited number of charges. Staves are higher-level wands that need to be equiped, prior to battle, before they can be used. Both Wands and Staves have a limited number of uses and become worthless after these charges are spent. A player also needs to have enough knowledge to be able to use these items - usually either through the Spellcraft or Use Magic Device skills.
-
-Rods are similar to staves in that they need to be equipped before being used - but they don't have a limited number of charges nor they require magical expertise to be used. Note that each squad member can only have one Rod or Staff equipped at once at any given time.
+Rods are similar to staves in that they need to be equipped before being used but they don't have a limited number of charges nor they require magical expertise to be used. Note that each squad member can only have one Rod or Staff equipped at once at any given time.

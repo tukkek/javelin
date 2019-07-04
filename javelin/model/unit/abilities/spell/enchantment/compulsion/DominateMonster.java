@@ -74,7 +74,7 @@ public class DominateMonster extends Ray{
 		cn.overlay=new AiOverlay(target.getlocation());
 		if(saved) return target+" resists!";
 		switchteams(target,s);
-		int duration=calculateduration(target.source.getwill()+2,caster);
+		var duration=calculateduration(target.source.getwill()+2,caster);
 		var d=new Dominated(duration,target,casterlevel);
 		target.addcondition(d);
 		return "Dominated "+target+" for "+duration+" round(s)!";

@@ -73,13 +73,15 @@ public class RPG{
 	 * considerations. Uses float for parameters since they'd have to be convered
 	 * anyways.
 	 *
+	 * TODO change all project int to long, all float to double
+	 *
 	 * @param dice Given this number of dice...
 	 * @param size ...and this number of faces per dice...
 	 * @return ... the most likely outcome of this roll.
 	 */
-	public static int average(float dice,int size){
+	public static int average(double dice,int size){
 		size+=1;
-		return Math.round(dice*size/2);
+		return Math.round(Math.round(dice*size/2.0));
 	}
 
 	/**

@@ -11,7 +11,7 @@ import javelin.model.unit.abilities.spell.Spell;
 /**
  * A more powerful type of equipable {@link Wand} that works like a {@link Rod}.
  *
- * @see Spell#isstaff
+ * @see Spell#iswandf
  * @author alex
  */
 public class Staff extends Rod{
@@ -23,12 +23,14 @@ public class Staff extends Rod{
 
 	/** Constructor. */
 	public Staff(Spell s){
-		super("Staff",s,false);
+		super("Staff",0,s,false);
 		if(Javelin.DEBUG&&s.level<MINLEVEL)
 			throw new InvalidParameterException(s.name);
 		consumable=true;
 		wand=new Wand(s,false);
 		price=wand.price;
+		usedinbattle=s.castinbattle;
+		usedoutofbattle=s.castoutofbattle;
 		register();
 	}
 
@@ -56,7 +58,7 @@ public class Staff extends Rod{
 		wand.waste(resourcesused,c,bag);
 		if(before==wand.charges) return null;
 		var name=this.name.toLowerCase();
-		if(wand.charges>0) return name+" ("+(before-wand.charges)+" times)";
+		if(wand.charges>0) return name+" ("+(before-wand.charges)+" charges)";
 		bag.remove(this);
 		return "exhausted "+name;
 	}

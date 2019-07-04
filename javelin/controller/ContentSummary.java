@@ -66,7 +66,7 @@ public class ContentSummary{
 	 * Whether to include or not non-functional objects when listing by
 	 * {@link Tier}.
 	 */
-	static final boolean SHOWPRECIOUS=false;
+	static final boolean SHOWPRECIOUS=true;
 
 	FileWriter out;
 

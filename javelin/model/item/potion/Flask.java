@@ -6,7 +6,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 
 /**
- * Flaks are like {@link Potion}s that can be {@link #refresh(int)}.
+ * Flaks are like {@link Potion}s that can be {@link #refresh(int)}-ed.
  *
  * @author alex
  */
@@ -14,9 +14,9 @@ public class Flask extends Potion{
 	/** How many types of Flasks to generate, {@link #capacity}-wise. */
 	public static final List<Integer> VARIATIONS=List.of(5);
 
+	double charging=0;
 	int capacity;
 	int used=0;
-	int charging=0;
 
 	/** Constructor. */
 	public Flask(Spell s,int capacity){
@@ -51,8 +51,13 @@ public class Flask extends Potion{
 	@Override
 	public void refresh(int hours){
 		super.refresh(hours);
+		/**
+		 * could be easily refactored to Recharger class for reuse, probably with
+		 * Item#recharge() to inform of a new charge (default throws
+		 * UnsupportedOperationException.
+		 */
 		charging+=hours;
-		var hourspercharge=24/capacity;
+		var hourspercharge=24.0/capacity;
 		while(charging>=hourspercharge&&used>0){
 			used-=1;
 			charging-=hourspercharge;

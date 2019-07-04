@@ -13,11 +13,6 @@ import javelin.view.mappanel.battle.overlay.AiOverlay;
  */
 public class FoxsCunning extends TotemsSpell{
 	class Cunning extends Condition{
-		/**
-		 * Constructor.
-		 *
-		 * @param casterlevelp
-		 */
 		Cunning(Combatant c,Integer casterlevelp){
 			super(c,"cunning",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE);
 		}

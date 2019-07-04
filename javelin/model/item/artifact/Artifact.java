@@ -148,7 +148,7 @@ public abstract class Artifact extends Item{
 
 	@Override
 	public String canuse(Combatant c){
-		return c.source.humanoid?null:"mot humanoid";
+		return c.source.humanoid?null:"Not humanoid";
 	}
 
 	@Override

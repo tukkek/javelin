@@ -1,7 +1,6 @@
 package javelin.model.item.relic;
 
 import javelin.Javelin;
-import javelin.controller.challenge.RewardCalculator;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -19,7 +18,7 @@ public abstract class Relic extends Item{
 
 	/** Constructor. */
 	public Relic(String name,int templelevel){
-		super(name,RewardCalculator.getgold(templelevel),false);
+		super(name,0,false);
 		consumable=false;
 		waste=false;
 		provokesaoo=false;

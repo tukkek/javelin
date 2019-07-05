@@ -3,7 +3,6 @@ package javelin.model.item.key;
 import java.util.ArrayList;
 
 import javelin.Javelin;
-import javelin.controller.challenge.RewardCalculator;
 import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
@@ -33,21 +32,21 @@ public class TempleKey extends Item{
 	 * @see #generate()
 	 */
 	public TempleKey(Realm color){
-		super(color.getname()+" key",determineprice(color),false);
+		super(color.getname()+" key",0,false);
 		this.color=color;
 		usedinbattle=false;
 		waste=false;
 	}
 
-	private static int determineprice(Realm r){
-		for(Actor a:World.getactors())
-			if(a instanceof Temple){
-				Temple temple=(Temple)a;
-				if(temple.realm.equals(r))
-					return 4*RewardCalculator.getgold(temple.level);
-			}
-		return 0;
-	}
+	//	private static int determineprice(Realm r){
+	//		for(Actor a:World.getactors())
+	//			if(a instanceof Temple){
+	//				Temple temple=(Temple)a;
+	//				if(temple.realm.equals(r))
+	//					return 4*RewardCalculator.getgold(temple.level);
+	//			}
+	//		return 0;
+	//	}
 
 	@Override
 	public boolean use(Combatant user){

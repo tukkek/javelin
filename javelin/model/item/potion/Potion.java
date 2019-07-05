@@ -20,7 +20,7 @@ public class Potion extends Item{
 	Spell spell;
 
 	/** Subclass constructor. */
-	protected Potion(String name,Spell s,int price,boolean register){
+	protected Potion(String name,Spell s,double price,boolean register){
 		super(name+" of "+s.name.toLowerCase(),price,register);
 		if(Javelin.DEBUG&&!s.ispotion) throw new InvalidParameterException();
 		usedinbattle=s.castinbattle;

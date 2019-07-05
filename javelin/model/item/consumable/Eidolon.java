@@ -32,7 +32,7 @@ public class Eidolon extends Item{
 
 	/** Constructor. */
 	public Eidolon(Summon s,int charges){
-		super("Eidolon",s.level*s.casterlevel*(charges==0?50:2000/(5/charges)),
+		super("Eidolon",s.level*s.casterlevel*(charges==0?50:2000/(5.0/charges)),
 				true);
 		m=Monster.get(s.monstername);
 		if(charges==0)

@@ -29,40 +29,41 @@ import javelin.model.world.location.town.Town;
  * @author alex
  */
 public abstract class Artifact extends Item{
+	@SuppressWarnings("unused")
 	public static void setup(){
-		new AmuletOfHealth(+2,4000);
-		new AmuletOfHealth(+4,16000);
-		new AmuletOfHealth(+6,36000);
-		new BeltOfGiantStrength(+2,4000);
-		new BeltOfGiantStrength(+4,16000);
-		new BeltOfGiantStrength(+6,36000);
-		new CloakOfCharisma(+2,4000);
-		new CloakOfCharisma(+4,16000);
-		new CloakOfCharisma(+6,36000);
-		new CloakOfResistance(+1,1000);
-		new CloakOfResistance(+2,4000);
-		new CloakOfResistance(+3,9000);
-		new CloakOfResistance(+4,16000);
-		new GlovesOfDexterity(+2,4000);
-		new GlovesOfDexterity(+4,16000);
-		new GlovesOfDexterity(+6,36000);
-		new GogglesOfNight(12000);
-		new HeadbandOfIntellect(+2,4000);
-		new HeadbandOfIntellect(+4,16000);
-		new HeadbandOfIntellect(+6,36000);
-		new PeriaptOfWisdom(+2,4000);
-		new PeriaptOfWisdom(+4,16000);
-		new PeriaptOfWisdom(+6,36000);
-		new RingOfEnergyResistance(+2,18000);
-		new RingOfEnergyResistance(+4,28000);
-		new RingOfEnergyResistance(+6,44000);
-		new RingOfProtection(+1,2000);
-		new RingOfProtection(+2,8000);
-		new RingOfProtection(+3,18000);
-		new RingOfProtection(+4,32000);
-		new RingOfProtection(+5,50000);
-		new MantleOfSpellResistance(90000);
-		new WingsOfFlying(54000);
+		new AmuletOfHealth(+2,4_000);
+		new AmuletOfHealth(+4,16_000);
+		new AmuletOfHealth(+6,36_000);
+		new BeltOfGiantStrength(+2,4_000);
+		new BeltOfGiantStrength(+4,16_000);
+		new BeltOfGiantStrength(+6,36_000);
+		new CloakOfCharisma(+2,4_000);
+		new CloakOfCharisma(+4,16_000);
+		new CloakOfCharisma(+6,36_000);
+		new CloakOfResistance(+1,1_000);
+		new CloakOfResistance(+2,4_000);
+		new CloakOfResistance(+3,9_000);
+		new CloakOfResistance(+4,16_000);
+		new GlovesOfDexterity(+2,4_000);
+		new GlovesOfDexterity(+4,16_000);
+		new GlovesOfDexterity(+6,36_000);
+		new GogglesOfNight(12_000);
+		new HeadbandOfIntellect(+2,4_000);
+		new HeadbandOfIntellect(+4,16_000);
+		new HeadbandOfIntellect(+6,36_000);
+		new PeriaptOfWisdom(+2,4_000);
+		new PeriaptOfWisdom(+4,16_000);
+		new PeriaptOfWisdom(+6,36_000);
+		new RingOfEnergyResistance(+2,18_000);
+		new RingOfEnergyResistance(+4,28_000);
+		new RingOfEnergyResistance(+6,44_000);
+		new RingOfProtection(+1,2_000);
+		new RingOfProtection(+2,8_000);
+		new RingOfProtection(+3,18_000);
+		new RingOfProtection(+4,32_000);
+		new RingOfProtection(+5,50_000);
+		new MantleOfSpellResistance(90_000);
+		new WingsOfFlying(54_000);
 	}
 
 	public Slot slot;

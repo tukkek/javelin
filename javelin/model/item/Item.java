@@ -137,13 +137,28 @@ public abstract class Item implements Serializable,Cloneable{
 	public double sellvalue=.5f;
 
 	/**
-	 * @param upgradeset One the static constants in this class, like
-	 *          {@link #MAGIC}.
+	 * Constructor.
+	 *
+	 * @param price Some price calculations require divisions, which are performed
+	 *          wrong by Java if you only use {@link Integer}s. This being a
+	 *          {@link Double} makes it easier to just declare real numbers in
+	 *          such formulas, even though the final result will be passed to
+	 *          {@link #setprice(double)} and thus made into an {@link Integer}.
+	 * @param register If <code>true</code> will {@link #register()}. Subclasses
+	 *          amy choose to do that later on with <code>false</code>.
 	 */
-	public Item(final String name,final int price,boolean register){
+	public Item(final String name,double price,boolean register){
 		this.name=name;
-		this.price=Javelin.round(price);
+		setprice(price);
 		if(register) register();
+	}
+
+	/**
+	 * @param price Will round this to an {@link Integer} and
+	 *          {@link Javelin#round(int)}, replacing #{@link #price}.
+	 */
+	protected void setprice(double price){
+		this.price=Javelin.round(Math.round(Math.round(price)));
 	}
 
 	/** Register this item as a generation/purhcase option. */

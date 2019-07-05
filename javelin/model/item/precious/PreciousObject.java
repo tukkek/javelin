@@ -21,7 +21,7 @@ public abstract class PreciousObject extends Item{
 	/** Constructor. */
 	protected PreciousObject(String name,int dice,int sides,int multiplier,
 			String type){
-		super(name,Math.round(dice*(sides+1)/2f*multiplier),true);
+		super(name,dice*(sides+1)/2.0*multiplier,true);
 		this.type=type.toLowerCase();
 		this.name+=" ("+type+")";
 		usedinbattle=false;

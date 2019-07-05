@@ -39,7 +39,7 @@ public class Wand extends Item{
 	public static final int MAXLEVEL=4;
 	static final int FULL=50;
 
-	int pricepercharge;
+	double pricepercharge;
 	int maxcharges;
 	int charges;
 	Spell spell;
@@ -68,7 +68,7 @@ public class Wand extends Item{
 		usedinbattle=s.castinbattle;
 		usedoutofbattle=s.castoutofbattle;
 		apcost=s.apcost;
-		pricepercharge=s.level*s.casterlevel*750/FULL+s.components;
+		pricepercharge=s.level*s.casterlevel*750.0/FULL+s.components;
 		define(FULL);
 		register();
 	}
@@ -85,7 +85,7 @@ public class Wand extends Item{
 	void define(Integer charges){
 		maxcharges=charges;
 		this.charges=charges;
-		price=pricepercharge*this.charges;
+		setprice(pricepercharge*this.charges);
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class Wand extends Item{
 	/** @return <code>true</code> if empty. */
 	protected boolean discharge(){
 		charges-=1;
-		price=pricepercharge*charges;
+		setprice(pricepercharge*charges);
 		return charges==0;
 	}
 

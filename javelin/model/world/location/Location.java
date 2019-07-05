@@ -415,4 +415,14 @@ public abstract class Location extends Actor{
 		return garrison.isEmpty()?Integer.MIN_VALUE
 				:ChallengeCalculator.calculateel(garrison);
 	}
+
+	/**
+	 * @param p Places the location at this point of the map. Note that forcing
+	 *          placement skips {@link #generate()}.
+	 * @see #place()
+	 */
+	public void place(Point p){
+		setlocation(p);
+		place();
+	}
 }

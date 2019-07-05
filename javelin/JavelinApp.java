@@ -76,11 +76,8 @@ public class JavelinApp extends QuestApp{
 		}
 		Preferences.setup();// post
 		preparedebug();
-		if(Javelin.DEBUG){
-			Debug.oninit();
-			while(true)
-				loop();
-		}
+		if(Javelin.DEBUG) while(true)
+			loop();
 		while(true)
 			try{
 				loop();

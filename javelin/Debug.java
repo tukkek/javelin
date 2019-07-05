@@ -191,21 +191,16 @@ public class Debug{
 		}
 
 		static void test(Kit kit){
-			Squad.active.members.clear();
+			var s=Squad.active;
+			s.members.clear();
 			var human=Monster.get("human");
 			for(var level:new int[]{3,8,13,18}){
 				var npc=NpcGenerator.generatenpc(human,kit,level);
-				if(npc!=null) Squad.active.members.add(npc);
+				if(npc!=null) s.members.add(npc);
 			}
-			place(kit.createguild());
-		}
-
-		static void place(Location l){
 			if(BattleScreen.active.getClass()==WorldScreen.class){
-				l.x=Squad.active.x;
-				l.y=Squad.active.y;
-				l.place();
-				Squad.active.displace();
+				kit.createguild().place(s.getlocation());
+				s.displace();
 			}
 		}
 
@@ -288,10 +283,7 @@ public class Debug{
 
 	}
 
-	/**
-	 * Called every time a game starts (roughly the first time the
-	 * {@link WorldScreen} is shown.
-	 */
+	/** Called every time a game starts (before player interaction). */
 	public static void oninit(){
 
 	}

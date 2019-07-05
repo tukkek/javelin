@@ -114,6 +114,7 @@ public class Javelin{
 		Spell.setup();
 		Artifact.setup();
 		Item.setup();
+		Debug.oninit();
 	}
 
 	/**

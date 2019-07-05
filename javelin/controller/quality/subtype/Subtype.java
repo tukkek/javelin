@@ -10,7 +10,7 @@ import javelin.model.unit.Monster;
  * @author alex
  */
 public class Subtype extends Quality{
-
+	/** Constructor. */
 	public Subtype(){
 		super("subtype");
 	}

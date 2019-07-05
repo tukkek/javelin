@@ -1,8 +1,9 @@
 package javelin.model.item.potion;
 
-import java.io.Serializable;
 import java.util.List;
 
+import javelin.model.item.Item;
+import javelin.model.item.Recharger;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 
@@ -12,61 +13,26 @@ import javelin.model.unit.abilities.spell.Spell;
  * @author alex
  */
 public class Flask extends Potion{
-	/** How many types of Flasks to generate, {@link #capacity}-wise. */
+	/**
+	 * How many types of Flasks to generate, {@link #capacity}-wise.
+	 *
+	 * TODO eventually want 1-5 enabled, but cannot overwhelmed other {@link Item}
+	 * types.
+	 */
 	public static final List<Integer> VARIATIONS=List.of(5);
 
-	class Recharger implements Serializable{
-		int capacity;
-		int used=0;
-		int recharging=0;
-		double hourspercharge;
-
-		public Recharger(int capacity){
-			this.capacity=capacity;
-			hourspercharge=24.0/capacity;
-		}
-
-		public boolean isempty(){
-			return used==capacity;
-		}
-
-		public void discharge(){
-			used+=1;
-		}
-
-		/**
-		 * @param hours Hours spent recharging.
-		 * @return <code>true</code> if it has at least one usable charge.
-		 */
-		public boolean recharge(int hours){
-			recharging+=hours;
-			var hourspercharge=24.0/capacity;
-			while(recharging>=hourspercharge&&used>0){
-				used-=1;
-				recharging-=hourspercharge;
-			}
-			if(used==0) recharging=0;
-			return used<capacity;
-		}
-
-		public int getleft(){
-			return capacity-used;
-		}
-	}
-
-	Recharger recharger;
+	Recharger charges;
 
 	/** Constructor. */
 	public Flask(Spell s,int capacity){
 		super("Flask",s,
 				s.level*s.casterlevel*2000/(5/capacity)+s.components*capacity,true);
-		recharger=new Recharger(capacity);
+		charges=new Recharger(capacity);
 		consumable=false;
 	}
 
 	void quaff(){
-		recharger.discharge();
-		if(recharger.isempty()){
+		if(charges.discharge()){
 			usedinbattle=false;
 			usedoutofbattle=false;
 		}
@@ -89,7 +55,7 @@ public class Flask extends Potion{
 	@Override
 	public void refresh(int hours){
 		super.refresh(hours);
-		if(recharger.recharge(hours)){
+		if(charges.recharge(hours)){
 			usedinbattle=spell.castinbattle;
 			usedoutofbattle=spell.castoutofbattle;
 		}
@@ -97,7 +63,6 @@ public class Flask extends Potion{
 
 	@Override
 	public String toString(){
-		var left=recharger.getleft();
-		return super.toString()+" ["+(left==0?"empty":left)+"]";
+		return super.toString()+" "+charges;
 	}
 }

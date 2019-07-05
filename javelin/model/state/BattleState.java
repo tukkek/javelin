@@ -362,7 +362,7 @@ public class BattleState implements Node,TeamContainer{
 	}
 
 	public void flee(Combatant c){
-		fleeing.add(c);
+		if(!c.summoned) fleeing.add(c);
 		remove(c);
 	}
 

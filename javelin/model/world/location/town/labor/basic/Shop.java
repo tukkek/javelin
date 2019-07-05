@@ -1,11 +1,13 @@
 package javelin.model.world.location.town.labor.basic;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
+import javelin.controller.comparator.OptionsByPriority;
 import javelin.model.Realm;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
@@ -165,6 +167,18 @@ public class Shop extends Location{
 				return true;
 			}
 			return super.select(o);
+		}
+
+		@Override
+		protected Comparator<Option> sort(){
+			return (a,b)->{
+				if(!(a instanceof PurchaseOption&&b instanceof PurchaseOption))
+					return OptionsByPriority.INSTANCE.compare(a,b);
+				var itema=(PurchaseOption)a;
+				var itemb=(PurchaseOption)b;
+				var difference=Math.round(Math.round(itema.price-itemb.price));
+				return difference==0?a.name.compareTo(b.name):difference;
+			};
 		}
 	}
 

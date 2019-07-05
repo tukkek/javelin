@@ -49,7 +49,7 @@ public class UseItem extends Action{
 	 */
 	public static Item queryforitemselection(final Combatant c,boolean validate){
 		final List<Item> items=new ArrayList<>(Javelin.app.fight.getbag(c));
-		var noeligible=c+" doesn't have any usabla battle items right now...";
+		var noeligible=c+" doesn't have any usable battle items right now...";
 		if(items.isEmpty()){
 			Javelin.message(noeligible,false);
 			return null;

@@ -6,6 +6,7 @@ import javelin.Javelin;
 import javelin.controller.ContentSummary;
 import javelin.controller.fight.Fight;
 import javelin.model.item.Item;
+import javelin.model.item.Recharger;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
@@ -21,21 +22,27 @@ public class Eidolon extends Item{
 	 * This has to be fine-tuned so as not to overwhelm the list of all
 	 * {@link Item}s with a huge number of eidolons.
 	 *
+	 * TODO eventually want 1-5 enabled, but cannot overwhelmed other {@link Item}
+	 * types.
+	 *
 	 * @see ContentSummary
 	 */
-	static final List<Integer> VARIATIONS=List.of(1,2,3,4,5);
+	static final List<Integer> VARIATIONS=List.of(0,1,2,3);
 
+	Recharger charges=null;
 	Monster m;
-	int charges;
-	int used=0;
 
 	/** Constructor. */
 	public Eidolon(Summon s,int charges){
-		super("Eidolon",s.level*s.casterlevel*2000/(5/charges),true);
-		this.charges=charges;
+		super("Eidolon",s.level*s.casterlevel*(charges==0?50:2000/(5/charges)),
+				true);
 		m=Monster.get(s.monstername);
-		name+=" ["+m.name.toLowerCase()+"]";
-		consumable=true;
+		consumable=charges==0;
+		if(charges>0)
+			this.charges=new Recharger(charges);
+		else
+			name="Minor "+name.toLowerCase();
+		name+=" ("+m.name.toLowerCase()+")";
 		provokesaoo=true;
 		targeted=false;
 		usedinbattle=true;
@@ -46,23 +53,23 @@ public class Eidolon extends Item{
 	@Override
 	public boolean use(Combatant user){
 		var summoned=Summon.summon(m,user,Fight.state);
-		used+=1;
-		if(used==0) usedinbattle=false;
 		Javelin.redraw();
-		var name=summoned.source.name;
-		Javelin.message(user+" summons a creature: "+name+"!",false);
+		var message=user+" summons a creature: "+summoned.source.name+"!";
+		Javelin.message(message,false);
+		if(charges!=null&&charges.discharge()) usedinbattle=false;
 		return true;
 	}
 
 	@Override
 	public String toString(){
-		var left=charges-used;
-		return super.toString()+" ["+(left==0?"empty":left)+"]";
+		var name=super.toString();
+		return charges==null?name:name+" "+charges;
 	}
 
 	@Override
 	public void refresh(int hours){
 		super.refresh(hours);
+		if(charges!=null&&charges.recharge(hours)) usedinbattle=true;
 	}
 
 	/** Dinamically initializes a proper amount of Eidolon instances. */

@@ -280,6 +280,7 @@ public class Debug{
 
 	/** @see StartBattle */
 	public static void onbattlestart(){
+
 	}
 
 	/** Called only once when a {@link Scenario} is initialized. */

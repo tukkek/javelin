@@ -39,7 +39,7 @@ public class BasicShop extends Shop{
 		selection.addAll(List.of(new Potion(new CureLightWounds()),
 				new Potion(new LesserRestoration()),new Scroll(new Bless())));
 		for(var summon:Summon.select(Summon.SUMMONS,2,1))
-			selection.add(new Eidolon(summon));
+			selection.add(new Eidolon(summon,0));
 	}
 
 	@Override

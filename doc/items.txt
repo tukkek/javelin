@@ -1,5 +1,5 @@
 EIDOLONS
-A magic stone that carries the essence of a creature and can be used to manifest a temporary copy of it on the battlefield. A minor eidolon is immediately spent, while normal eidolons have charges - which will replenish over time and rest.
+A magic stone that carries the essence of a creature and can be used to manifest a temporary copy of it on the battlefield. A minor eidolon is immediately spent, while normal eidolons have charges (which will replenish with time and rest).
 
 POTIONS AND FLASKS
 Potions are one-use items that produce a spell-like effect on the user. Their effect is automatic - no prerequisites or rolls are needed. Flasks are like potions but they aren't discarded after use and will slowly refill (especially while you rest), needing not be discarded.

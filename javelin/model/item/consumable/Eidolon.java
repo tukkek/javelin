@@ -1,5 +1,6 @@
 package javelin.model.item.consumable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javelin.Javelin;
@@ -19,11 +20,8 @@ import javelin.model.unit.abilities.spell.conjuration.Summon;
  */
 public class Eidolon extends Item{
 	/**
-	 * This has to be fine-tuned so as not to overwhelm the list of all
+	 * TODO This has to be fine-tuned so as not to overwhelm the list of all
 	 * {@link Item}s with a huge number of eidolons.
-	 *
-	 * TODO eventually want 1-5 enabled, but cannot overwhelmed other {@link Item}
-	 * types.
 	 *
 	 * @see ContentSummary
 	 */
@@ -37,11 +35,12 @@ public class Eidolon extends Item{
 		super("Eidolon",s.level*s.casterlevel*(charges==0?50:2000/(5/charges)),
 				true);
 		m=Monster.get(s.monstername);
-		consumable=charges==0;
-		if(charges>0)
-			this.charges=new Recharger(charges);
-		else
+		if(charges==0)
 			name="Minor "+name.toLowerCase();
+		else{
+			this.charges=new Recharger(charges);
+			consumable=false;
+		}
 		name+=" ("+m.name.toLowerCase()+")";
 		provokesaoo=true;
 		targeted=false;
@@ -52,9 +51,9 @@ public class Eidolon extends Item{
 
 	@Override
 	public boolean use(Combatant user){
-		var summoned=Summon.summon(m,user,Fight.state);
+		var s=Summon.summon(m,user,Fight.state);
 		Javelin.redraw();
-		var message=user+" summons a creature: "+summoned.source.name+"!";
+		var message=user+" summons a creature: "+s.source.name+"!";
 		Javelin.message(message,false);
 		if(charges!=null&&charges.discharge()) usedinbattle=false;
 		return true;
@@ -78,5 +77,11 @@ public class Eidolon extends Item{
 		for(var dailyuses:VARIATIONS)
 			for(var s:Summon.select(Summon.SUMMONS,1))
 				new Eidolon(s,dailyuses);
+	}
+
+	@Override
+	public String waste(float resourcesused,Combatant c,ArrayList<Item> bag){
+		if(charges==null) super.waste(resourcesused,c,bag);
+		return charges.waste(c,this,resourcesused,bag);
 	}
 }

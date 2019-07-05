@@ -8,7 +8,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 
 /**
- * Flaks are like {@link Potion}s that can be {@link #refresh(int)}-ed.
+ * Flaks are {@link Potion}s that can be {@link #refresh(int)}-ed.
  *
  * @author alex
  */
@@ -29,6 +29,7 @@ public class Flask extends Potion{
 				s.level*s.casterlevel*2000/(5/capacity)+s.components*capacity,true);
 		charges=new Recharger(capacity);
 		consumable=false;
+		waste=true;
 	}
 
 	void quaff(){

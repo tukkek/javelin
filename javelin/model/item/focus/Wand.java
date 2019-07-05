@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javelin.Javelin;
 import javelin.controller.action.CastSpell;
 import javelin.model.item.Item;
+import javelin.model.item.Recharger;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.Touch;
@@ -18,6 +19,13 @@ import javelin.old.RPG;
  * produces an area of effect. Each wand has up to 50 charges and is spent when
  * empty. Wands found through exploration may have less {@link #charges} while
  * wands bought brand-new on {@link Shop}s should be {@link #FULL}.
+ *
+ * TODO use {@link Recharger} (but without {@link #refresh(int)}). It will need
+ * a bit of enhancing since it doesn't currently know about non
+ * max-charge/renewable items. In partiular
+ * {@link Recharger#waste(Combatant, Item, float, java.util.List)} has been
+ * improved, and can also be used by {@link Staff} since it relies on
+ * {@link Wand#waste(float, Combatant, ArrayList)}.
  *
  * @see Spell#iswand
  * @author alex

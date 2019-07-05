@@ -188,6 +188,8 @@ public class Dungeon extends Location{
 		if(Javelin.prompt("You are about to enter: "+describe()+".\n"
 				+"Press ENTER to continue or any other key to cancel...")!='\n')
 			return true;
+		var stairs=features.get(StairsUp.class);
+		if(stairs!=null) squadlocation=stairs.getlocation();
 		activate(false);
 		return true;
 	}
@@ -310,7 +312,7 @@ public class Dungeon extends Location{
 		var encounters=nrooms*1.1f*ratiomonster;
 		var tilesperroom=countfloor()/nrooms;
 		var steps=encounters*tilesperroom/(DISCOVEREDPERSTEP*squadvision);
-		return Math.round(steps/2);
+		return Math.round(steps*2);
 	}
 
 	int countfloor(){

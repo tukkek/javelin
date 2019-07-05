@@ -21,10 +21,12 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.feature.Brazier;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.model.world.location.dungeon.feature.LearningStone;
 import javelin.model.world.location.dungeon.feature.Mirror;
 import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.Throne;
+import javelin.model.world.location.dungeon.feature.inhabitant.Prisoner;
 import javelin.old.RPG;
 import javelin.view.Images;
 import javelin.view.mappanel.Tile;
@@ -58,7 +60,7 @@ public class Wilderness extends Dungeon{
 	/** Placeholder to prevent an uneeded call {@link #baptize(String)}.p */
 	static final String DESCRIPTION="Wilderness";
 	static final Set<Class<? extends Feature>> FORBIDDEN=Set.of(Brazier.class,
-			Mirror.class,Throne.class);
+			Mirror.class,Throne.class,Fountain.class,Prisoner.class);
 
 	class Entrance extends StairsUp{
 		Entrance(Point p){
@@ -122,18 +124,20 @@ public class Wilderness extends Dungeon{
 	protected int calculateencounterrate(){
 		var totalsteps=countfloor()/(DISCOVEREDPERSTEP*squadvision);
 		var attemptstoclear=RPG.r(1,4);
-		return totalsteps/attemptstoclear;
+		return 2*(totalsteps/attemptstoclear);
 	}
 
 	@Override
 	protected void generateencounters(){
 		var target=RPG.rolldice(2,10);
+		var failures=100;
 		while(encounters.size()<target)
 			try{
 				var el=level+Difficulty.get()+makeeasy();
 				encounters.add(EncounterGenerator.generate(el,type));
 			}catch(GaveUp e){
-				if(!encounters.isEmpty()) return;
+				failures-=1;
+				if(failures<=0&&!encounters.isEmpty()) return;
 			}
 	}
 
@@ -144,11 +148,9 @@ public class Wilderness extends Dungeon{
 	@Override
 	public Fight fight(){
 		var e=new RandomDungeonEncounter(this);
-		if(Difficulty.calculate(Squad.active.members,
-				Fight.originalredteam)<=Difficulty.VERYEASY)
-			return null;
 		e.map.wall=Images.get(tilewall);
 		e.map.floor=Images.get(tilefloor);
+		e.map.wallfloor=e.map.floor;
 		return e;
 	}
 

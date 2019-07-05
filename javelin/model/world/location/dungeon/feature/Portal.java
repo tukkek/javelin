@@ -3,6 +3,7 @@ package javelin.model.world.location.dungeon.feature;
 import java.io.Serializable;
 
 import javelin.Javelin;
+import javelin.controller.Point;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.generator.dungeon.template.Template;
 import javelin.controller.table.dungeon.feature.FeatureModifierTable;
@@ -46,14 +47,18 @@ public class Portal extends Feature{
 	static final Destination STAIRSUP=new Destination("to the level entrance"){
 		@Override
 		void go(){
-			var d=Dungeon.active;
-			var stairs=d.features.get(StairsUp.class);
-			var to=RPG.shuffle(stairs.getlocation().getadjacent()).stream()
-					.filter(p->d.map[p.x][p.y]==Template.FLOOR).findAny().orElse(null);
+			var stairs=Dungeon.active.features.get(StairsUp.class);
+			var near=RPG.shuffle(stairs.getlocation().getadjacent());
+			var to=near.stream().filter(p->validate(p)).findAny().orElse(null);
 			if(to!=null)
-				d.squadlocation=to;
+				Dungeon.active.squadlocation=to;
 			else if(Javelin.DEBUG)
 				throw new RuntimeException("Cannot teleport to entrance!");
+		}
+
+		boolean validate(Point p){
+			var d=Dungeon.active;
+			return p.validate(0,0,d.size,d.size)&&d.map[p.x][p.y]==Template.FLOOR;
 		}
 	};
 	static final String CONFIRM="Press ENTER to cross the portal or any other key to cancel...";

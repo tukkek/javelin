@@ -13,7 +13,9 @@ import javelin.model.world.location.dungeon.feature.Portal;
  * Found atop a {@link Hill}. 1 portal per level takes you immediately outside.
  * All types of monsters can be found here.
  *
- * @see Temple
+ * TODO would be pretty cool if the magic temple had all doors replaced with
+ * walls and only {@link Portal}s could be used for exploration between rooms.
+ *
  * @author alex
  */
 public class MagicTemple extends Temple{

@@ -65,10 +65,10 @@ public class Grapple extends ExpertiseAction{
 		s=s.clone();
 		current=s.clone(current);
 		target=s.clone(target);
-		//		int duration=Math
-		//				.round(1/calculatesavechance(current,calculatesavebonus(target)));
-		//		if(duration<1) duration=1;
-		var duration=1;
+		int duration=Math
+				.round(1/calculatesavechance(current,calculatesavebonus(target)));
+		if(duration<1) duration=1;
+		//		var duration=1;
 		String message=current+" grapples "+target+" for "+duration+" turn(s)!";
 		message+=constrict(current,target,duration,s);
 		message+=constrict(target,current,duration,s);

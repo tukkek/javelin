@@ -1,5 +1,6 @@
 package javelin.model.item.potion;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javelin.model.unit.Combatant;
@@ -14,21 +15,58 @@ public class Flask extends Potion{
 	/** How many types of Flasks to generate, {@link #capacity}-wise. */
 	public static final List<Integer> VARIATIONS=List.of(5);
 
-	double charging=0;
-	int capacity;
-	int used=0;
+	class Recharger implements Serializable{
+		int capacity;
+		int used=0;
+		int recharging=0;
+		double hourspercharge;
+
+		public Recharger(int capacity){
+			this.capacity=capacity;
+			hourspercharge=24.0/capacity;
+		}
+
+		public boolean isempty(){
+			return used==capacity;
+		}
+
+		public void discharge(){
+			used+=1;
+		}
+
+		/**
+		 * @param hours Hours spent recharging.
+		 * @return <code>true</code> if it has at least one usable charge.
+		 */
+		public boolean recharge(int hours){
+			recharging+=hours;
+			var hourspercharge=24.0/capacity;
+			while(recharging>=hourspercharge&&used>0){
+				used-=1;
+				recharging-=hourspercharge;
+			}
+			if(used==0) recharging=0;
+			return used<capacity;
+		}
+
+		public int getleft(){
+			return capacity-used;
+		}
+	}
+
+	Recharger recharger;
 
 	/** Constructor. */
 	public Flask(Spell s,int capacity){
 		super("Flask",s,
 				s.level*s.casterlevel*2000/(5/capacity)+s.components*capacity,true);
-		this.capacity=capacity;
+		recharger=new Recharger(capacity);
 		consumable=false;
 	}
 
 	void quaff(){
-		used+=1;
-		if(used==capacity){
+		recharger.discharge();
+		if(recharger.isempty()){
 			usedinbattle=false;
 			usedoutofbattle=false;
 		}
@@ -51,25 +89,15 @@ public class Flask extends Potion{
 	@Override
 	public void refresh(int hours){
 		super.refresh(hours);
-		/**
-		 * could be easily refactored to Recharger class for reuse, probably with
-		 * Item#recharge() to inform of a new charge (default throws
-		 * UnsupportedOperationException.
-		 */
-		charging+=hours;
-		var hourspercharge=24.0/capacity;
-		while(charging>=hourspercharge&&used>0){
-			used-=1;
-			charging-=hourspercharge;
+		if(recharger.recharge(hours)){
 			usedinbattle=spell.castinbattle;
 			usedoutofbattle=spell.castoutofbattle;
 		}
-		if(used==0) charging=0;
 	}
 
 	@Override
 	public String toString(){
-		var left=capacity-used;
+		var left=recharger.getleft();
 		return super.toString()+" ["+(left==0?"empty":left)+"]";
 	}
 }

@@ -96,21 +96,30 @@ public class EndBattle extends BattleEvent{
 	}
 
 	static void updateoriginal(List<Combatant> originalteam){
-		ArrayList<Combatant> update=new ArrayList<>(Fight.state.blueTeam);
+		var update=new ArrayList<>(Fight.state.blueTeam);
 		update.addAll(Fight.state.dead);
-		for(final Combatant inbattle:update){
+		for(var inbattle:update){
 			int originali=originalteam.indexOf(inbattle);
-			if(originali>=0) update(inbattle,originalteam.get(originali));
+			if(originali>=0){
+				inbattle.terminateconditions(0);
+				originalteam.set(originali,inbattle);
+				//				update(inbattle,originalteam.get(originali));
+			}
 		}
 	}
 
+	/**
+	 * TODO remove if replacing in-battle with current is enough.
+	 *
+	 * TODO also remove #transferconditions and Condition#transfer
+	 */
 	static void update(final Combatant from,final Combatant to){
-		from.transferconditions(to);
-		to.hp=from.hp;
-		if(to.hp>to.maxhp)
-			to.hp=to.maxhp;
-		else if(to.hp<1) to.hp=1;
-		copyspells(from,to);
+		//		from.transferconditions(to);
+		//		to.hp=from.hp;
+		//		if(to.hp>to.maxhp)
+		//			to.hp=to.maxhp;
+		//		else if(to.hp<1) to.hp=1;
+		//		copyspells(from,to);
 	}
 
 	static void copyspells(final Combatant from,final Combatant to){

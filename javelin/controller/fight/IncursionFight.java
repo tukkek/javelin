@@ -5,6 +5,7 @@ import java.util.List;
 
 import javelin.controller.map.location.TownMap;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Squad;
 import javelin.model.world.Incursion;
 
 /**
@@ -46,16 +47,20 @@ public class IncursionFight extends Fight{
 		super.onend();
 		if(Fight.victory)
 			incursion.remove();
-		else
-			for(Combatant incursant:new ArrayList<>(incursion.squad)){
+		else{
+			var squad=Squad.active.getlocation();
+			if(!Fight.state.fleeing.isEmpty()&&incursion.getlocation().equals(squad))
+				Squad.active.displace();
+			for(var incursant:new ArrayList<>(incursion.squad)){
 				Combatant alive=null;
-				for(Combatant inbattle:Fight.state.getcombatants())
+				for(var inbattle:Fight.state.getcombatants())
 					if(inbattle.id==incursant.id){
 						alive=inbattle;
 						break;
 					}
 				if(alive==null) incursion.squad.remove(incursant);
 			}
+		}
 		return true;
 	}
 

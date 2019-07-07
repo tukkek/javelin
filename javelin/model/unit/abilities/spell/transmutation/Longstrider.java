@@ -33,6 +33,7 @@ public class Longstrider extends Spell{
 
 		@Override
 		public void end(Combatant c){
+			c.source=c.source.clone();
 			c.source.walk-=10;
 		}
 	}

@@ -171,8 +171,7 @@ public abstract class Condition
 	 * @param time Elapsed time in hours.
 	 */
 	public void terminate(int time,Combatant c){
-		if(longterm==null) return;
-		if(expire(time,c)) c.removecondition(this);
+		if(longterm==null||expire(time,c)) c.removecondition(this);
 	}
 
 	/**

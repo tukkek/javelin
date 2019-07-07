@@ -9,8 +9,8 @@ import javelin.Javelin;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.Item;
 import javelin.model.item.ItemSelection;
-import javelin.model.item.artifact.Artifact;
 import javelin.model.item.key.TempleKey;
+import javelin.model.item.precious.PreciousObject;
 import javelin.model.unit.Combatant;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.basic.Growth;
@@ -76,7 +76,7 @@ public class Caravan extends Actor{
 		determinedestination(Town.gettowns());
 		while(inventory.size()<NUMBEROFITEMS){
 			Item i=RPG.pick(Item.ITEMS);
-			if(!(i instanceof Artifact)){
+			if(!(i instanceof PreciousObject)){
 				i=i.clone();
 				inventory.add(i);
 			}

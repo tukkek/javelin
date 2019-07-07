@@ -537,11 +537,15 @@ public class Combatant implements Serializable,Cloneable{
 			previous.merge(this,c);
 	}
 
-	public void terminateconditions(int timecost){
-		for(Condition co:new ArrayList<>(conditions)){
-			co.terminate(timecost,this);
+	/**
+	 * @param time Hours spend.
+	 * @see Condition#terminate(int, Combatant)
+	 */
+	public void terminateconditions(int time){
+		for(var c:new ArrayList<>(conditions)){
+			c.terminate(time,this);
 			if(hp<=DEADATHP){
-				String s=this+" dies from being "+co.description+"!";
+				var s=this+" dies from being "+c.description+"!";
 				Javelin.message(s,true);
 				Squad.active.remove(this);
 				return;

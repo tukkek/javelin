@@ -16,6 +16,8 @@ import javelin.model.world.location.dungeon.feature.inhabitant.Inhabitant;
  * Generates a rare {@link Dungeon} {@link Feature}, including
  * {@link Inhabitant}s.
  *
+ * TODO map feature, which shows the entire map (or a big portion of it)
+ *
  * @author alex
  * @see InhabitantTable
  * @see FeatureRarityTable

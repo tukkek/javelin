@@ -54,6 +54,8 @@ import javelin.view.mappanel.Tile;
  * small change of taking from the other instead, giving each more personality.
  * Common would be common to both.
  *
+ * TODO could have town quests place trinkets to be retrieved from wildernessesn
+ *
  * @author alex
  */
 public class Wilderness extends Dungeon{

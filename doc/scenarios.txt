@@ -6,9 +6,6 @@ A long, epic quest to retrieve the seven Relics from deep inside their ancient T
 DUNGEON DELVE
 One mega-dungeon stands before you. Can you return from its depths with the ultimate object of power in this roguelike adventure?
 
-DUNGEON WORLD
-Explore a static game world while conquering increasingly difficult dungeons and unlocking new areas in a more traditional RPG experience.
-
 ART OF WAR
 A more straightforward game mode focusing on larger battles. No upgrades, training, items or city management - just win battles, get stronger, hire more units and march onwards until all of your foes are vanquished!
 

@@ -98,7 +98,8 @@ public class Images{
 			NAMES.put(i,file);
 			return i;
 		}catch(IOException e){
-			throw new RuntimeException(file,e);
+			var dir=" (pwd="+System.getProperty("user.dir")+")";
+			throw new RuntimeException(file+dir,e);
 		}
 	}
 

@@ -3,14 +3,12 @@ package javelin.controller.challenge;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.comparator.DescendingLevelComparator;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.world.World;
@@ -147,33 +145,31 @@ public class RewardCalculator{
 
 	/**
 	 * This discounts a linear parcel for any mercenaries involved and then
-	 * distributes the remainder in a non-linear parcel according to unit power,
-	 * with weaker units receiving more XP, as to emulate offical d20 XP
-	 * progressions. This is necessary because Javelin actually uses a CR value
-	 * (100XP = 1CR) instead of the official exponential XP tables.
+	 * distributes the remainder in a parcel according to unit power, with weaker
+	 * units receiving more XP, as to emulate offical d20 XP progressions. This is
+	 * necessary because Javelin actually uses a CR value (100XP = 1CR) instead of
+	 * the official exponential XP tables.
 	 *
-	 * @param units {@link Combatant}s to receive experience.
+	 * @param units {@link Combatant}s to receive experience. Summons and
+	 *          mercenaries don't receive XP.
 	 * @param xp Total amount of experience to be distributed.
 	 * @see #rewardxp(ArrayList, List, List, int)
 	 */
 	public static void distributexp(List<Combatant> units,double xp){
-		units=new ArrayList<>(units); /* safe copy */
-		for(Combatant c:new ArrayList<>(units))
-			/* ignore summons */
-			if(c.summoned) units.remove(c);
-		List<Combatant> members=new ArrayList<>();
-		for(Combatant c:units)
-			/* mercenaries get a flat share */
-			if(!c.mercenary) members.add(c);
+		units=units.stream().filter(u->!u.summoned).collect(Collectors.toList());
+		var members=units.stream().filter(u->!u.mercenary)
+				.collect(Collectors.toList());
 		if(members.isEmpty()) return;
-		xp=xp*new Float(members.size())/new Float(units.size());
-		Collections.sort(members,DescendingLevelComparator.SINGLETON);
-		float segments=0;
-		for(int i=1;i<=members.size();i++)
-			segments+=i;
-		for(int i=1;i<=members.size();i++){
-			final Combatant survivor=members.get(i-1);
-			survivor.learn(xp*i/segments);
+		xp=xp*members.size()/units.size();
+		var power=members.stream().sequential()
+				.map(m->m.xp.doubleValue()+m.source.cr).collect(Collectors.toList());
+		var leader=power.stream().max((a,b)->Double.compare(a,b)).orElse(null);
+		var reversepower=power.stream().sequential().map(m->leader-m+1)
+				.collect(Collectors.toList());
+		var total=reversepower.stream().collect(Collectors.summingDouble(p->p));
+		for(var i=0;i<members.size();i++){
+			var m=members.get(i);
+			m.xp=m.xp.add(new BigDecimal(xp*reversepower.get(i)/total));
 		}
 	}
 

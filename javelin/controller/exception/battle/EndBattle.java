@@ -102,24 +102,10 @@ public class EndBattle extends BattleEvent{
 			int originali=originalteam.indexOf(inbattle);
 			if(originali>=0){
 				inbattle.terminateconditions(0);
+				inbattle.xp=originalteam.get(originali).xp;
 				originalteam.set(originali,inbattle);
-				//				update(inbattle,originalteam.get(originali));
 			}
 		}
-	}
-
-	/**
-	 * TODO remove if replacing in-battle with current is enough.
-	 *
-	 * TODO also remove #transferconditions and Condition#transfer
-	 */
-	static void update(final Combatant from,final Combatant to){
-		//		from.transferconditions(to);
-		//		to.hp=from.hp;
-		//		if(to.hp>to.maxhp)
-		//			to.hp=to.maxhp;
-		//		else if(to.hp<1) to.hp=1;
-		//		copyspells(from,to);
 	}
 
 	static void copyspells(final Combatant from,final Combatant to){
@@ -155,14 +141,11 @@ public class EndBattle extends BattleEvent{
 	 * short, we need a screen for all that.
 	 */
 	static boolean revive(Combatant dead,List<Combatant> originalteam){
-		List<Combatant> alive=new ArrayList<>(originalteam);
+		var alive=new ArrayList<>(originalteam);
 		alive.removeAll(Fight.state.dead);
-		Spell spell=castrevive(alive);
-		Scroll scroll=null;
-		if(scroll==null){
-			scroll=findressurectscroll(alive);
-			if(scroll!=null) spell=scroll.spell;
-		}
+		var spell=castrevive(alive);
+		var scroll=findressurectscroll(alive);
+		if(scroll!=null) spell=scroll.spell;
 		if(spell==null||!spell.validate(null,dead)) return false;
 		spell.castpeacefully(null,dead,originalteam);
 		if(scroll==null)

@@ -57,7 +57,10 @@ public class WorldPanel extends MapPanel{
 
 	@Override
 	public void refresh(){
-		if(initial) resize(this,Squad.active.x,Squad.active.y);
+		if(initial){
+			initial=false;
+			resize(this,Squad.active.x,Squad.active.y);
+		}
 		super.refresh();
 		updateactors();
 		for(Tile[] ts:tiles)

@@ -7,6 +7,7 @@ import java.awt.Image;
 import java.awt.Panel;
 import java.awt.ScrollPane;
 
+import javelin.Javelin;
 import javelin.controller.db.Preferences;
 import javelin.view.Images;
 import javelin.view.mappanel.overlay.Overlay;
@@ -67,12 +68,11 @@ public abstract class MapPanel extends Panel{
 		canvas.setSize(tilesize*mapwidth,tilesize*mapheight);
 	}
 
+	/**
+	 * TODO could use this to cache position instead of calculating on the fly
+	 */
 	protected void updatetilesize(){
 		try{
-			/*
-			 * TODO could use this to cache position instead of calculating on
-			 * the fly
-			 */
 			updatesize();
 			scroll.validate();
 		}catch(NullPointerException e){
@@ -125,6 +125,7 @@ public abstract class MapPanel extends Panel{
 	public void zoom(int factor,boolean save,int x,int y){
 		tilesize+=factor*4;
 		updatetilesize();
+		Javelin.redraw();
 		center(x,y,true);
 		Preferences.setoption(configurationkey,tilesize);
 	}

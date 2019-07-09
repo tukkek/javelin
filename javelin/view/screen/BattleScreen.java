@@ -9,7 +9,6 @@ import java.awt.event.KeyEvent;
 
 import javelin.Javelin;
 import javelin.Javelin.Delay;
-import javelin.controller.Point;
 import javelin.controller.action.Action;
 import javelin.controller.action.ActionCost;
 import javelin.controller.action.ActionMapping;
@@ -148,16 +147,12 @@ public class BattleScreen extends Screen{
 	public void mainLoop(){
 		callback=null;
 		mappanel.setVisible(false);
-		Combatant hero=Fight.state.next;
-		javelin.controller.Point t=new Point(hero.location[0],hero.location[1]);
-		mappanel.setposition(t.x,t.y);
-		Javelin.redraw();
-		mappanel.center(t.x,t.y,true);
+		var t=Fight.state.next.getlocation();
+		//		mappanel.setposition(t.x,t.y);
+		//		Javelin.redraw();
+		mappanel.zoom(0,true,t.x,t.y);
+		//		Javelin.redraw();
 		mappanel.setVisible(true);
-		if(Fight.state!=null){
-			Point center=Fight.state.next.getlocation();
-			mappanel.zoom(0,true,center.x,center.y);
-		}
 		try{
 			Thread.sleep(1000);
 		}catch(InterruptedException e){

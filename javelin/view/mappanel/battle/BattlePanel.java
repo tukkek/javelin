@@ -28,6 +28,8 @@ public class BattlePanel extends MapPanel{
 	BattleState previousstate=null;
 	BattleState state=null;
 
+	boolean updating=false;
+
 	public BattlePanel(BattleState s){
 		super(s.map.length,s.map[0].length,Preferences.KEYTILEBATTLE);
 		String period=Javelin.app.fight.period;
@@ -51,20 +53,20 @@ public class BattlePanel extends MapPanel{
 			updatestate();
 			super.refresh();
 			if(Fight.state==null) return;
-			final HashSet<Point> update=new HashSet<>(
+			var update=new HashSet<Point>(
 					Fight.state.redTeam.size()+Fight.state.blueTeam.size());
-			for(Combatant c:Fight.state.getcombatants())
+			for(var c:Fight.state.getcombatants())
 				update.add(new Point(c.location[0],c.location[1]));
-			for(Combatant c:previousstate.getcombatants())
+			for(var c:previousstate.getcombatants())
 				update.add(new Point(c.location[0],c.location[1]));
 			updatestate();
-			for(Combatant c:Fight.state.getcombatants())
+			for(var c:Fight.state.getcombatants())
 				update.add(new Point(c.location[0],c.location[1]));
 			if(!daylight) calculatevision(update);
 			if(overlay!=null) update.addAll(overlay.affected);
 			if(Javelin.app.fight.meld) for(Meld m:Fight.state.meld)
 				update.add(new Point(m.x,m.y));
-			for(Point p:update)
+			for(var p:update)
 				tiles[p.x][p.y].repaint();
 		}catch(ConcurrentModificationException e){
 			/*
@@ -77,9 +79,17 @@ public class BattlePanel extends MapPanel{
 
 	@Override
 	public void paint(Graphics g){
+		synchronized(this){
+			if(updating){
+				System.out.println("BattlePanel: double draw.");
+				return;
+			}
+			updating=true;
+		}
 		updatestate();
 		if(!daylight) calculatevision(null);
 		super.paint(g);
+		updating=false;
 	}
 
 	private void calculatevision(final HashSet<Point> update){

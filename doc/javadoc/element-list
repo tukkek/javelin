@@ -95,9 +95,11 @@ javelin.model.diplomacy.mandate.unit
 javelin.model.item
 javelin.model.item.artifact
 javelin.model.item.consumable
+javelin.model.item.focus
 javelin.model.item.instrument
 javelin.model.item.key
 javelin.model.item.key.door
+javelin.model.item.potion
 javelin.model.item.precious
 javelin.model.item.relic
 javelin.model.state
@@ -119,8 +121,8 @@ javelin.model.unit.abilities.spell.evocation
 javelin.model.unit.abilities.spell.illusion
 javelin.model.unit.abilities.spell.necromancy
 javelin.model.unit.abilities.spell.necromancy.wounds
-javelin.model.unit.abilities.spell.totem
 javelin.model.unit.abilities.spell.transmutation
+javelin.model.unit.abilities.spell.transmutation.totem
 javelin.model.unit.attack
 javelin.model.unit.condition
 javelin.model.unit.condition.abilitydamage
@@ -142,7 +144,6 @@ javelin.model.world.location.dungeon.feature.door.trap
 javelin.model.world.location.dungeon.feature.inhabitant
 javelin.model.world.location.dungeon.feature.trap
 javelin.model.world.location.dungeon.temple
-javelin.model.world.location.fortification
 javelin.model.world.location.haunt
 javelin.model.world.location.order
 javelin.model.world.location.town

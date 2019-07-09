@@ -27,7 +27,7 @@ clean:
 	rm -rf "build/output/"
 
 askversion:
-	read -e -i "$(shell git log --oneline -1 --decorate)" -p "Edit release name: " version;echo $$version > /tmp/VERSION.txt
+	read -e -i '$(shell git log --oneline -1 --decorate)' -p "Edit release name: " version;echo $$version > /tmp/VERSION.txt
 
 showjavaversion:
 	echo "Using jlink: ${shell $(JLINK) --version}"

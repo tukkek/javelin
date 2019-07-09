@@ -14,6 +14,13 @@ import javelin.model.world.location.dungeon.feature.Fountain;
 /**
  * Found next to {@link Water}. Always flooded.
  *
+ * TODO would be pretty cool to have "breath underwater" shrines that only take
+ * you a certain number of tiles forward, forcing you to go back to shrines and
+ * think strategically during exploration, with each level being flooded
+ * according to their depth (meaning a 3/4-level water temple would be quite
+ * tricky to finish). Swim skill/movement speed could factor into it, as well as
+ * having the appropriate spell/scrolls.
+ *
  * @see Temple
  * @see Fight#weather
  * @author alex

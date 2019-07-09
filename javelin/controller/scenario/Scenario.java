@@ -170,7 +170,13 @@ public class Scenario implements Serializable{
 	 * @see Town#ishostile()
 	 */
 	public boolean dominationwin=true;
-	/** Number of {@link Location}s to spawn. See {@link LocationGenerator}. */
+	/**
+	 * Number of {@link Location}s to spawn. Ideally we want the player finding a
+	 * new location every one or two steps into the unknown (fog of war), given
+	 * that the map scale is very concentrated.
+	 *
+	 * {@link LocationGenerator}.
+	 */
 	public int startingfeatures=size*size/7;
 	/** {@link Trove}s will only offer gold and experience rewards. */
 	public boolean simpletroves=true;

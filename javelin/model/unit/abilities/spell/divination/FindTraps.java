@@ -7,6 +7,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.condition.Condition;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.feature.trap.Trap;
 
 /**
  * http://www.d20srd.org/srd/spells/findTraps.htm
@@ -17,24 +18,25 @@ import javelin.model.world.location.dungeon.Dungeon;
  * @author alex
  */
 public class FindTraps extends Spell{
+	/** @see Trap */
 	public class FindingTraps extends Condition{
 		/**
 		 * Constructor.
 		 *
 		 * @param casterlevelp
 		 */
-		public FindingTraps(Combatant c,Integer casterlevelp){
+		FindingTraps(Combatant c,Integer casterlevelp){
 			super(c,"finding traps",Effect.NEUTRAL,casterlevelp,Float.MAX_VALUE,1);
 		}
 
 		@Override
 		public void start(Combatant c){
-			// c.source.skills.search += 3;
+			//see Trap
 		}
 
 		@Override
 		public void end(Combatant c){
-			// c.source.skills.search -= 3;
+			//see Trap
 		}
 	}
 

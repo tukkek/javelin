@@ -12,7 +12,7 @@ import javelin.model.unit.attack.AttackSequence;
  * @author alex
  */
 public class Shaken extends Condition{
-
+	/** Constructor. */
 	public Shaken(float expireatp,Combatant c,Integer casterlevel){
 		super(c,"shaken",Effect.NEGATIVE,casterlevel,expireatp,1);
 	}
@@ -20,22 +20,26 @@ public class Shaken extends Condition{
 	@Override
 	public void start(Combatant c){
 		c.source=c.source.clone();
-		penalizeattacks(c.source.melee);
-		penalizeattacks(c.source.ranged);
+		penalizeattacks(-2,c.source.melee);
+		penalizeattacks(-2,c.source.ranged);
 		c.source.fort-=2;
 		c.source.ref-=2;
 		c.source.addwill(-2);
 	}
 
-	private void penalizeattacks(ArrayList<AttackSequence> sequences){
+	void penalizeattacks(int bonus,ArrayList<AttackSequence> sequences){
 		for(AttackSequence sequence:sequences)
 			for(Attack a:sequence)
-				a.bonus-=2;
+				a.bonus+=bonus;
 	}
 
 	@Override
 	public void end(Combatant c){
-		// lasts at least one minute
+		c.source=c.source.clone();
+		penalizeattacks(+2,c.source.melee);
+		penalizeattacks(+2,c.source.ranged);
+		c.source.fort+=2;
+		c.source.ref+=2;
+		c.source.addwill(+2);
 	}
-
 }

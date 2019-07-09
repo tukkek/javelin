@@ -15,8 +15,8 @@ import javelin.model.unit.condition.Condition;
  * See the d20 SRD for more info.
  */
 public class Barkskin extends Touch{
-	public class BarkskinCondition extends Condition{
-		public BarkskinCondition(Combatant c,Integer casterlevelp){
+	class BarkskinCondition extends Condition{
+		BarkskinCondition(Combatant c,Integer casterlevelp){
 			super(c,"barkskin",Effect.POSITIVE,casterlevelp,Float.MAX_VALUE,1);
 		}
 

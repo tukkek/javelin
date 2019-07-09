@@ -83,3 +83,13 @@ Javelin follows the rules from the open-gaming System Reference Document (includ
 WHY CAN’T I JUST PLAN AND BUILD CHARACTERS LIKE IN MOST RPGS? WHY CAN'T I FIGHT USING FIXED TURNS LIKE IN MOST RPGS?
 
 Javelin envisions a class-less progression mechanic, with hundreds of free-form upgrades available instead of fixed tables. The battles use an action-point system to achieve more granular, complex, dynamic and engaging tactical possibilities. If you prefer traditional RPG mechanics, you can find hundreds of traditional RPG titles on online stores such as Steam, Good Old Games, Humble Bundle and also community websites like Rogue Basin and the Libre Game Wiki - if you ever grow tired of them, maybe come back and give Javelin another try!
+
+HOW CAN I SEE CONSOLE OUTPUT?
+
+On Windows 10, if a terminal window doesn't open automatically, you can follow the steps below. (Do not include the "quotes", only text).
+
+1. Open the command prompt, either by searching for "command prompt" on your Start Menu or by selecting "Run Command" and typing "cmd". I believe you can also access the Run Command dialog by pressing "Win+r".
+2. Type "cd c:\path\to\javelin\" and hit ENTER (use the path to your Javelin download location, where the "javelin.bat" file is).
+3. Type "javelin.bat" and hit ENTER, this will launch the game and keep the terminal window open, where you can see the output.
+
+The procedure is very similar for Mac and Linux, you just need to find the proper program (terminal emulator) from your system menu (step #1), and instead of "javelin.bat" the command for step #3 is simply "javelin" (or "./javelin", if the previous one doesn't work).

@@ -576,16 +576,6 @@ public class Combatant implements Serializable,Cloneable{
 		}
 	}
 
-	public void transferconditions(Combatant to){
-		for(Condition c:conditions){
-			if(c.longterm==null) continue;
-			c.transfer(this,to);
-			if(c.longterm==0)
-				c.end(to);
-			else if(!to.conditions.contains(c)) to.conditions.add(c);
-		}
-	}
-
 	/**
 	 * @return a copy of the current conditions in effect.
 	 */

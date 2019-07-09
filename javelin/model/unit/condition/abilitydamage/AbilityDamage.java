@@ -37,7 +37,8 @@ public abstract class AbilityDamage extends Condition{
 	abstract void modifyability(Combatant c,int change);
 
 	@Override
-	public void end(Combatant c){}
+	public void end(Combatant c){
+	}
 
 	@Override
 	public boolean validate(Combatant c){
@@ -52,11 +53,6 @@ public abstract class AbilityDamage extends Condition{
 			damage(-Math.min(2,damagepool),c);
 		}
 		return damagepool==0;
-	}
-
-	@Override
-	public void transfer(Combatant from,Combatant to){
-		to.source.wisdom=from.source.wisdom;
 	}
 
 	@Override

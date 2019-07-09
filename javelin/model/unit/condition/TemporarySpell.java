@@ -44,12 +44,9 @@ public class TemporarySpell extends Condition{
 	}
 
 	@Override
-	public void transfer(Combatant from,Combatant to){
-		super.transfer(from,to);
-		var spell=from.spells.get(this.spell.getClass());
-		if(spell!=null&&spell.exhausted()){
-			remove(to,spell);
-			to.removecondition(this);
-		}
+	protected boolean expire(int time,Combatant c){
+		if(super.expire(time,c)) return true;
+		var spell=c.spells.get(this.spell.getClass());
+		return spell!=null&&spell.exhausted();
 	}
 }

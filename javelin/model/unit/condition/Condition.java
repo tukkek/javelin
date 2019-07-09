@@ -153,17 +153,6 @@ public abstract class Condition
 	}
 
 	/**
-	 * Migrates a temporary condition to the original {@link Combatant} instance
-	 * outside of battle. {@link #start(Combatant)} is not called again but this
-	 * Condition is transferred to the original {@link Combatant}.
-	 *
-	 * @param to The original combatant.
-	 */
-	public void transfer(Combatant from,Combatant to){
-		// nothing by default
-	}
-
-	/**
 	 * This is called one or more times, eventually calling
 	 * {@link Combatant#removecondition(Condition)} (and thus
 	 * {@link #end(Combatant)}) once {@link #longterm} decreases to zero or less.

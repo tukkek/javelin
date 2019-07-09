@@ -76,6 +76,8 @@ public abstract class MapPanel extends Panel{
 			updatesize();
 			scroll.validate();
 		}catch(NullPointerException e){
+			//TODO remove once win double-vision problem is fixed
+			System.out.println("NPE on MapPanel#updatetilesize()");
 			return;
 		}
 	}
@@ -118,6 +120,8 @@ public abstract class MapPanel extends Panel{
 		try{
 			return getParent().getBounds().getSize();
 		}catch(NullPointerException e){
+			//TODO remove once win double-vision problem is fixed
+			System.out.println("MapPanel: default new dimension.");
 			return new Dimension(0,0);
 		}
 	}

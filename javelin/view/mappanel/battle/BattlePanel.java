@@ -69,6 +69,8 @@ public class BattlePanel extends MapPanel{
 			for(var p:update)
 				tiles[p.x][p.y].repaint();
 		}catch(ConcurrentModificationException e){
+			//TODO remove once win double-vision problem is fixed
+			System.out.println("BattlePanel: CME.");
 			/*
 			 * I have no idea why this is being thrown since the HashSet is local and the
 			 * method is synchronized on top of it.
@@ -81,6 +83,7 @@ public class BattlePanel extends MapPanel{
 	public void paint(Graphics g){
 		synchronized(this){
 			if(updating){
+				//TODO remove once win double-vision problem is fixed
 				System.out.println("BattlePanel: double draw.");
 				return;
 			}

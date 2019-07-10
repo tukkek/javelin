@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import javelin.controller.Point;
 import javelin.controller.db.Preferences;
-import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
@@ -57,22 +56,10 @@ public class WorldPanel extends MapPanel{
 
 	@Override
 	public void refresh(){
-		if(initial){
-			initial=false;
-			resize(this,Squad.active.x,Squad.active.y);
-		}
-		super.refresh();
 		updateactors();
 		for(Tile[] ts:tiles)
 			for(Tile t:ts)
 				t.repaint();
-	}
-
-	static public void resize(MapPanel p,int x,int y){
-		p.scroll.setSize(p.getBounds().getSize());
-		p.zoom(0,true,x,y);
-		p.center(x,y,true);
-		p.scroll.setVisible(true);
 	}
 
 	@Override

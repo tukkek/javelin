@@ -36,11 +36,6 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class JavelinApp extends QuestApp{
-	/** Bootstrapper for minigames. */
-	public static Minigame minigame=null;
-	/** TODO change into actual context (separate from UI code). */
-	static public WorldScreen context;
-
 	static final String CRASHMESSAGE="\n\nUnfortunately an error ocurred.\n"
 			+"Please send a screenshot of the next message or the log file (error.txt)\n"
 			+"to one of the channels below, so we can get this fixed on future releases.\n\n"
@@ -53,6 +48,14 @@ public class JavelinApp extends QuestApp{
 	static final String[] CRASHQUOTES=new String[]{"A wild error appears!",
 			"You were eaten by a grue.","So again it has come to pass...",
 			"Mamma mia!",};
+
+	/** Lower-case operating system name. */
+	public static final String SYSTEM=System.getProperty("os.name").toLowerCase();
+
+	/** Bootstrapper for minigames. */
+	public static Minigame minigame=null;
+	/** TODO change into actual context (separate from UI code). */
+	static public WorldScreen context;
 
 	/** Controller. */
 

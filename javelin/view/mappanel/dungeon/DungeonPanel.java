@@ -5,7 +5,6 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.view.mappanel.MapPanel;
 import javelin.view.mappanel.Mouse;
 import javelin.view.mappanel.Tile;
-import javelin.view.mappanel.world.WorldPanel;
 
 public class DungeonPanel extends MapPanel{
 	Dungeon dungeon;
@@ -38,12 +37,6 @@ public class DungeonPanel extends MapPanel{
 
 	@Override
 	public void refresh(){
-		if(initial){
-			WorldPanel.resize(this,Dungeon.active.squadlocation.x,
-					Dungeon.active.squadlocation.y);
-			scroll.setVisible(true);
-		}
-		super.refresh();
 		repaint();
 	}
 

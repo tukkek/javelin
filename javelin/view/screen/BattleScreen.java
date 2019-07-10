@@ -9,6 +9,8 @@ import java.awt.event.KeyEvent;
 
 import javelin.Javelin;
 import javelin.Javelin.Delay;
+import javelin.JavelinApp;
+import javelin.controller.Point;
 import javelin.controller.action.Action;
 import javelin.controller.action.ActionCost;
 import javelin.controller.action.ActionMapping;
@@ -129,6 +131,11 @@ public class BattleScreen extends Screen{
 		BattleScreen.active=this;
 		Javelin.delayblock=false;
 		partialmove=0;
+		var p=getsquadlocation();
+		mappanel.scroll.setSize(mappanel.getBounds().getSize());
+		mappanel.zoom(0,p.x,p.y,false);
+		mappanel.center(p.x,p.y,true);
+		mappanel.scroll.setVisible(true);
 	}
 
 	/**
@@ -138,28 +145,43 @@ public class BattleScreen extends Screen{
 		return new BattlePanel(Fight.state);
 	}
 
+	/** TODO on 2.0+, move to Context */
+	public Point getsquadlocation(){
+		return Fight.state.next.getlocation();
+	}
+
 	/**
 	 * this is the main game loop. it catches any exceptions for stability and
 	 * lets the game continue <br>
 	 * very important that endTurn() gets called after the player moves, this
 	 * ensures that the rest of the map stays up to date <br>
 	 */
-	public void mainLoop(){
+	public void mainloop(){
 		callback=null;
-		mappanel.setVisible(false);
-		var t=Fight.state.next.getlocation();
-		//		mappanel.setposition(t.x,t.y);
-		//		Javelin.redraw();
-		mappanel.zoom(0,true,t.x,t.y);
-		//		Javelin.redraw();
-		mappanel.setVisible(true);
+		delayedredraw();
+		while(true)
+			turn();
+	}
+
+	/**
+	 * On at least some systems, there's a double-vision issue with
+	 * {@link BattleScreen} drawing. This redraws after one second to try to fix
+	 * it.
+	 *
+	 * https://www.reddit.com/r/javelinrl/comments/catb13/17b18_windows_display_bug/
+	 */
+	static public void delayedredraw(){
+		if(!JavelinApp.SYSTEM.contains("windows")) return;
+		if(BattleScreen.active==null
+				||BattleScreen.active.getClass()!=BattleScreen.class)
+			return;
 		try{
 			Thread.sleep(1000);
 		}catch(InterruptedException e){
 			//continue
 		}
-		while(true)
-			turn();
+		System.out.println("Windows redraw (double vision fix)...");
+		Javelin.redraw();
 	}
 
 	/** Routine for human interaction. */

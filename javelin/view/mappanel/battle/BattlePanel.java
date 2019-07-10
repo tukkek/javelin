@@ -21,18 +21,19 @@ import javelin.view.mappanel.Tile;
  * @author alex
  */
 public class BattlePanel extends MapPanel{
+	/** Active unit. */
 	static public Combatant current=null;
 
+	/** If <code>true</code>, all {@link BattleTile}s are visible. */
 	public boolean daylight;
 
 	BattleState previousstate=null;
 	BattleState state=null;
 
-	boolean updating=false;
-
+	/** Constructor. */
 	public BattlePanel(BattleState s){
 		super(s.map.length,s.map[0].length,Preferences.KEYTILEBATTLE);
-		String period=Javelin.app.fight.period;
+		var period=Javelin.app.fight.period;
 		daylight=period.equals(Javelin.PERIODMORNING)
 				||period.equals(Javelin.PERIODNOON);
 	}
@@ -51,26 +52,23 @@ public class BattlePanel extends MapPanel{
 	public synchronized void refresh(){
 		try{
 			updatestate();
-			super.refresh();
-			if(Fight.state==null) return;
-			var update=new HashSet<Point>(
-					Fight.state.redTeam.size()+Fight.state.blueTeam.size());
-			for(var c:Fight.state.getcombatants())
+			var s=Fight.state;
+			if(s==null) return;
+			var update=new HashSet<Point>(s.redTeam.size()+s.blueTeam.size());
+			for(var c:s.getcombatants())
 				update.add(new Point(c.location[0],c.location[1]));
 			for(var c:previousstate.getcombatants())
 				update.add(new Point(c.location[0],c.location[1]));
 			updatestate();
-			for(var c:Fight.state.getcombatants())
+			for(var c:s.getcombatants())
 				update.add(new Point(c.location[0],c.location[1]));
 			if(!daylight) calculatevision(update);
 			if(overlay!=null) update.addAll(overlay.affected);
-			if(Javelin.app.fight.meld) for(Meld m:Fight.state.meld)
+			if(Javelin.app.fight.meld) for(Meld m:s.meld)
 				update.add(new Point(m.x,m.y));
 			for(var p:update)
 				tiles[p.x][p.y].repaint();
 		}catch(ConcurrentModificationException e){
-			//TODO remove once win double-vision problem is fixed
-			System.out.println("BattlePanel: CME.");
 			/*
 			 * I have no idea why this is being thrown since the HashSet is local and the
 			 * method is synchronized on top of it.
@@ -81,18 +79,9 @@ public class BattlePanel extends MapPanel{
 
 	@Override
 	public void paint(Graphics g){
-		synchronized(this){
-			if(updating){
-				//TODO remove once win double-vision problem is fixed
-				System.out.println("BattlePanel: double draw.");
-				return;
-			}
-			updating=true;
-		}
 		updatestate();
 		if(!daylight) calculatevision(null);
 		super.paint(g);
-		updating=false;
 	}
 
 	private void calculatevision(final HashSet<Point> update){

@@ -51,7 +51,7 @@ public class StartBattle extends BattleEvent{
 			BattlePanel.current=Fight.state.next;
 			BattleScreen screen=new BattleScreen(true,true);
 			fight.draw();
-			screen.mainLoop();
+			screen.mainloop();
 		}else
 			quickbattle(diffifculty);
 	}

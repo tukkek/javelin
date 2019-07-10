@@ -183,14 +183,14 @@ public class WorldScreen extends BattleScreen{
 		messagepanel.clear();
 	}
 
-	/** TODO remove on 2.0+ */
+	@Override
 	public Point getsquadlocation(){
-		return Squad.active==null?null:new Point(Squad.active.x,Squad.active.y);
+		return Squad.active==null?null:Squad.active.getlocation();
 	}
 
 	void redraw(){
 		Javelin.app.switchScreen(this);
-		Point h=JavelinApp.context.getsquadlocation();
+		var h=JavelinApp.context.getsquadlocation();
 		center(h.x,h.y);
 		view(h.x,h.y);
 		Javelin.redraw();

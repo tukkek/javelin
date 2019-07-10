@@ -6,19 +6,41 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Panel;
 import java.awt.ScrollPane;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import javelin.Javelin;
 import javelin.controller.db.Preferences;
 import javelin.view.Images;
 import javelin.view.mappanel.overlay.Overlay;
+import javelin.view.screen.BattleScreen;
 
+/**
+ * Game map view, either in or out of battle.
+ *
+ * @author alex
+ */
 public abstract class MapPanel extends Panel{
+	/** Current tile size. */
 	public static int tilesize=Preferences.tilesizeworld;
-
+	/** Produces a temporary overlay effect on-screen. */
 	public static Overlay overlay=null;
 
+	/** Grid of tiles by coordinate. */
 	public Tile[][] tiles=null;
+	/** Scrollbar functionality. */
 	public ScrollPane scroll=new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS);
+	/** Main component for panel. */
+	public Canvas canvas=new Canvas(){
+		@Override
+		public void paint(Graphics g){
+			super.paint(g);
+			for(Tile[] ts:tiles)
+				for(Tile t:ts)
+					t.repaint();
+		}
+	};
+
 	Panel container=new Panel(){
 		@Override
 		public void paint(Graphics g){
@@ -29,28 +51,16 @@ public abstract class MapPanel extends Panel{
 			super.paint(g);
 		}
 	};
-	public Canvas canvas=new Canvas(){
-		@Override
-		public void paint(Graphics g){
-			super.paint(g);
-			for(Tile[] ts:tiles)
-				for(Tile t:ts)
-					t.repaint();
-		}
-	};
-	int mapwidth;
-	int mapheight;
-
-	protected boolean initial=true;
-
 	/**
 	 * Make sure we have a field for this to ensure we're going to instantiate
 	 * {@link #tilesize}**2 listeners for this.
 	 */
 	Mouse mouse=getmouselistener();
+	String configurationkey;
+	int mapwidth;
+	int mapheight;
 
-	final private String configurationkey;
-
+	/** Constructor. */
 	public MapPanel(int widthp,int heightp,String configurationkeyp){
 		mapwidth=widthp;
 		mapheight=heightp;
@@ -61,10 +71,10 @@ public abstract class MapPanel extends Panel{
 		configurationkey=configurationkeyp;
 	}
 
+	/** @return Reactions to mouse events. */
 	abstract protected Mouse getmouselistener();
 
 	void updatesize(){
-		// container.setSize(tilesize * mapwidth, tilesize * mapheight);
 		canvas.setSize(tilesize*mapwidth,tilesize*mapheight);
 	}
 
@@ -76,13 +86,23 @@ public abstract class MapPanel extends Panel{
 			updatesize();
 			scroll.validate();
 		}catch(NullPointerException e){
-			//TODO remove once win double-vision problem is fixed
-			System.out.println("NPE on MapPanel#updatetilesize()");
 			return;
 		}
 	}
 
+	/** Configures size, scrolling, listeners, etc. */
 	public void setup(){
+		addComponentListener(new ComponentAdapter(){
+			@Override
+			public void componentShown(ComponentEvent e){
+				scroll.setBounds(getBounds());
+			}
+
+			@Override
+			public void componentResized(ComponentEvent e){
+				componentShown(e);
+			}
+		});
 		tilesize=gettilesize();
 		scroll.setVisible(false);
 		updatesize();
@@ -98,14 +118,18 @@ public abstract class MapPanel extends Panel{
 		scroll.setVisible(true);
 	}
 
+	/** @see Preferences */
 	protected abstract int gettilesize();
 
+	/** TODO can probably use reflection instead */
 	protected abstract Tile newtile(int x,int y);
 
+	/** Non-forceful {@link #center(int, int, boolean)}. */
 	public void viewposition(int x,int y){
 		center(x,y,false);
 	}
 
+	/** Forceful {@link #center(int, int, boolean)}. */
 	public void setposition(int x,int y){
 		center(x,y,true);
 	}
@@ -120,24 +144,36 @@ public abstract class MapPanel extends Panel{
 		try{
 			return getParent().getBounds().getSize();
 		}catch(NullPointerException e){
-			//TODO remove once win double-vision problem is fixed
-			System.out.println("MapPanel: default new dimension.");
 			return new Dimension(0,0);
 		}
 	}
 
-	public void zoom(int factor,boolean save,int x,int y){
+	/**
+	 * @param factor How much to zoom in (positive) or out (negative) for. 0
+	 *          results in no changes.
+	 * @param x Coordinate to center on.
+	 * @param y Coordinate to center on.
+	 * @param redraw <code>true</code> to {@link Javelin#redraw()}.
+	 */
+	public void zoom(int factor,int x,int y,boolean redraw){
 		tilesize+=factor*4;
 		updatetilesize();
-		Javelin.redraw();
+		if(redraw){
+			Javelin.redraw();
+			BattleScreen.delayedredraw();
+		}
 		center(x,y,true);
 		Preferences.setoption(configurationkey,tilesize);
 	}
 
+	/**
+	 * @param force If false, will only center if coordinates are out-of-view.
+	 * @return Whether a scroll reposition has been performed.
+	 */
 	public boolean center(int x,int y,boolean force){
 		int width=scroll.getWidth();
 		int height=scroll.getHeight();
-		java.awt.Point current=scroll.getScrollPosition();
+		var current=scroll.getScrollPosition();
 		x*=tilesize;
 		y*=tilesize;
 		if(!force&&isinside(current.getX(),x,width-tilesize*2)
@@ -159,15 +195,10 @@ public abstract class MapPanel extends Panel{
 		return from<=value&&value<=from+offset;
 	}
 
-	public void refresh(){
-		if(initial){
-			initial=false;
-			scroll.setBounds(getBounds());
-			int before=tilesize;
-			if(tilesize!=before) updatetilesize();
-		}
-	}
+	/** Updates {@link Tile}s without redrawing the whole screen. */
+	abstract public void refresh();
 
+	/** @return {@link Canvas#getGraphics()}. */
 	public Graphics getdrawgraphics(){
 		return canvas.getGraphics();
 	}

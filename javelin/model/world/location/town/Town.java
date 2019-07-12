@@ -10,7 +10,6 @@ import java.util.TreeSet;
 
 import javelin.Javelin;
 import javelin.controller.Point;
-import javelin.controller.challenge.Difficulty;
 import javelin.controller.event.urban.UrbanEvent;
 import javelin.controller.event.urban.UrbanEvents;
 import javelin.controller.event.urban.negative.Riot;
@@ -41,8 +40,8 @@ import javelin.model.world.location.ResourceSite.Resource;
 import javelin.model.world.location.town.governor.Governor;
 import javelin.model.world.location.town.governor.HumanGovernor;
 import javelin.model.world.location.town.governor.MonsterGovernor;
-import javelin.model.world.location.town.labor.LaborDeck;
 import javelin.model.world.location.town.labor.Labor;
+import javelin.model.world.location.town.labor.LaborDeck;
 import javelin.model.world.location.town.quest.Quest;
 import javelin.old.RPG;
 import javelin.view.Images;
@@ -408,9 +407,8 @@ public class Town extends Location{
 
 	@Override
 	public String describe(){
-		String difficulty="";
-		if(ishostile()) difficulty=" ("+Difficulty.describe(garrison)+" fight)";
-		return getrank().title+" of "+description+difficulty+'.';
+		var name=getrank().title+" of "+description+'.';
+		return ishostile()?describe(garrison,name,showgarrison,this):name;
 	}
 
 	/** @see #setgovernor(Governor) */

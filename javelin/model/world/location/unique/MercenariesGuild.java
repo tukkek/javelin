@@ -110,9 +110,9 @@ public class MercenariesGuild extends Fortification{
 		long advance=Math.max(1,Javelin.getHour()*c.pay()/24);
 		if(Squad.active.gold<advance){
 			if(message){
-				Javelin.app.switchScreen(new InfoScreen(
-						"You don't have the money to pay today's advancement ($"
-								+Javelin.format(advance)+")!"));
+				var output="You don't have the money to pay today's advancement ($"
+						+Javelin.format(advance)+")!";
+				Javelin.app.switchScreen(new InfoScreen(output));
 				Javelin.input();
 			}
 			return false;

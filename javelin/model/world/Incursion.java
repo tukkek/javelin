@@ -142,7 +142,7 @@ public class Incursion extends Actor{
 		if(arrived!=null) attack(arrived);
 	}
 
-	void attack(Actor target){
+	public void attack(Actor target){
 		fightdefenders(target);
 		Boolean status=target.destroy(this);
 		if(status==null) return;
@@ -308,7 +308,8 @@ public class Incursion extends Actor{
 			remove();
 			return true;
 		}
-		if(!Location.headsup(squad,toString(),true,this)) return false;
+		var description=Location.describe(squad,toString(),true,this);
+		if(!Location.headsup(squad,description,true,this)) return false;
 		throw new StartBattle(new IncursionFight(this));
 	}
 

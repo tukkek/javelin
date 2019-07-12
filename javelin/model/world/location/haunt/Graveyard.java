@@ -1,19 +1,16 @@
 package javelin.model.world.location.haunt;
 
-import javelin.controller.map.location.LocationMap;
-import javelin.controller.map.location.haunt.GraveyardMap;
+import java.util.stream.Collectors;
 
-public class Graveyard extends Haunt{
+import javelin.controller.map.location.haunt.GraveyardMap;
+import javelin.model.unit.Monster;
+
+public class Graveyard extends NewHaunt{
 
 	public Graveyard(){
-		super("Graveyard",5,15,
-				new String[]{"zombie","Small skeleton","Skeleton","ghoul","ghast"});
-		elmodifier=+5;
-	}
-
-	@Override
-	public
-	LocationMap getmap(){
-		return new GraveyardMap();
+		super("Graveyeard",GraveyardMap.class,
+				Monster.MONSTERS.stream()
+						.filter(m->m.type.equals(Monster.MonsterType.UNDEAD))
+						.collect(Collectors.toList()));
 	}
 }

@@ -225,7 +225,7 @@ public abstract class Location extends Actor{
 			capture();
 			return false;
 		}
-		if(headsup(garrison,toString(),showgarrison,this))
+		if(headsup(garrison,describe(),showgarrison,this))
 			throw new StartBattle(fight());
 		throw new RuntimeException("headsup sould throw #wplace");
 	}
@@ -242,7 +242,7 @@ public abstract class Location extends Actor{
 	 * Offers information and a chance to back out of the fight.
 	 *
 	 * @param opponents Will be {@link Squad#spot}ted.
-	 * @param description What to describe this place as.
+	 * @param name What to describe this place as.
 	 * @return <code>true</code> if player confirms engaging in battle.
 	 * @throws RepeatTurn
 	 */
@@ -250,14 +250,14 @@ public abstract class Location extends Actor{
 			boolean showgarrison,Actor a){
 		opponents.sort((o1,o2)->o1.toString().compareTo(o2.toString()));
 		MessagePanel.active.clear();
-		final String prompt=describe(opponents,description,showgarrison,a)
+		final String prompt=description
 				+"\n\nPress s to storm or any other key to retreat.";
 		Javelin.message(prompt,Javelin.Delay.NONE);
 		if(InfoScreen.feedback()=='s') return true;
 		throw new RepeatTurn();
 	}
 
-	static String describe(List<Combatant> opponents,String name,
+	public static String describe(List<Combatant> opponents,String name,
 			boolean showgarrison,Actor a){
 		String description=name;
 		if(!opponents.isEmpty()){

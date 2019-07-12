@@ -1,8 +1,11 @@
 package javelin.view.frame.keys;
 
 import java.awt.BorderLayout;
+import java.awt.Button;
 import java.awt.Container;
 import java.awt.TextArea;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JPanel;
 
@@ -35,11 +38,27 @@ public abstract class TextScreen extends Frame{
 	protected Container generate(){
 		JPanel panel=new JPanel(new BorderLayout());
 		panel.add(text,BorderLayout.CENTER);
-		java.awt.Button save=new java.awt.Button();
+		var save=new Button();
 		save.setLabel("Save");
 		save.addActionListener(e->enter());
 		panel.add(save,BorderLayout.SOUTH);
 		return panel;
+	}
+
+	@Override
+	public void show(){
+		text.addKeyListener(new KeyAdapter(){
+			@Override
+			public void keyReleased(KeyEvent e){
+				super.keyReleased(e);
+				var key=e.getKeyCode();
+				if(key==KeyEvent.VK_ESCAPE)
+					frame.dispose();
+				else if(key==KeyEvent.VK_ENTER&&e.isControlDown()) enter();
+			}
+		});
+		super.show();
+		text.requestFocus();
 	}
 
 	@Override

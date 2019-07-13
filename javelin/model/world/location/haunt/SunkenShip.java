@@ -1,9 +1,12 @@
 package javelin.model.world.location.haunt;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javelin.controller.Point;
-import javelin.controller.map.location.LocationMap;
 import javelin.controller.map.location.haunt.SunkenShipMap;
 import javelin.controller.terrain.Terrain;
+import javelin.model.unit.Monster;
 import javelin.model.world.World;
 
 /**
@@ -12,15 +15,23 @@ import javelin.model.world.World;
  * @author alex
  */
 public class SunkenShip extends Haunt{
+	/**
+	 * Compare with previous pool: "Aquatic elf","merfolk","Locathah",
+	 * "octopus","Skum","Sahuagin","Malenti","Sahuagin mutant"
+	 */
+	static final List<Monster> POOL=Monster.MONSTERS.stream().filter(m->m.swim>0)
+			.collect(Collectors.toList());
+
 	/** Constructor. */
 	public SunkenShip(){
-		super("Sunken ship",5,10,new String[]{"Aquatic elf","merfolk","Locathah",
-				"octopus","Skum","Sahuagin","Malenti","Sahuagin mutant"});
+		super("Sunken ship",SunkenShipMap.class,POOL);
 	}
 
-	@Override
-	public LocationMap getmap(){
-		return new SunkenShipMap();
+	boolean nearland(){
+		var size=World.scenario.size;
+		return new Point(x,y).getadjacent().stream()
+				.anyMatch(p->p.validate(0,0,size,size)
+						&&!Terrain.get(p.x,p.y).equals(Terrain.WATER));
 	}
 
 	@Override
@@ -30,10 +41,4 @@ public class SunkenShip extends Haunt{
 			generate(this,true);
 	}
 
-	boolean nearland(){
-		var size=World.scenario.size;
-		return new Point(x,y).getadjacent().stream()
-				.anyMatch(p->p.validate(0,0,size,size)
-						&&!Terrain.get(p.x,p.y).equals(Terrain.WATER));
-	}
 }

@@ -25,42 +25,40 @@ public class Speed extends FieldReader{
 	@Override
 	public void read(String value) throws PropertyVetoException{
 		try{
-			final int commentBegin=value.lastIndexOf("(");
+			var commentBegin=value.lastIndexOf("(");
 			if(value.substring(commentBegin,value.lastIndexOf(")")).contains(","))
 				value=value.substring(0,commentBegin).trim();
 		}catch(final StringIndexOutOfBoundsException e){
 			// doesn't have commentaries
 		}
-
-		final Monster m=reader.monster;
-		for(String speedType:value.split(",")){
-			speedType=speedType.toLowerCase().replace(" feet."," ft.")
-					.replace(" ft.","").trim();
-			final int or=speedType.indexOf(" or");
-			if(or!=-1) speedType=speedType.substring(0,or).trim();
-			if(speedType.contains("(")&&!speedType.contains(" ("))
-				speedType=speedType.replaceAll("\\("," \\(");
-			if(speedType.contains("climb ")){
-				// ignore
-			}else if(speedType.contains("fly ")){
-				final String maneuverability=speedType
-						.substring(speedType.indexOf("(")+1,speedType.indexOf(")"));
-				m.fly=Integer.parseInt(speedType.replace("fly ","")
-						.replace(" ("+maneuverability+")","").trim());
-			}else if(speedType.contains("swim "))
-				m.swim=Integer
-						.parseInt(MonsterReader.clean(speedType).replace("swim ",""));
-			else if(speedType.contains("burrow "))
-				m.burrow=Integer.parseInt(speedType.replace("burrow ",""));
-			else if(speedType.contains("base")) // ignores base value
-				continue;
-			else
-				m.walk=Integer.parseInt(MonsterReader.clean(speedType));
+		var m=reader.monster;
+		for(var type:value.split(",")){
+			type=type.toLowerCase().replace(" feet.","").replace(" ft.","").trim();
+			register(m,type);
 		}
 		if(m.fly>0) m.walk=0;
 		m.walk=limit(m.walk);
 		m.fly=limit(m.fly);
 		m.swim=limit(m.swim);
+	}
+
+	void register(Monster m,String type){
+		var or=type.indexOf(" or");
+		if(or!=-1) type=type.substring(0,or).trim();
+		if(type.contains("(")&&!type.contains(" ("))
+			type=type.replaceAll("\\("," \\(");
+		if(type.contains("climb ")){
+			// TODO
+		}else if(type.contains("fly ")){
+			var maneuverability=type.substring(type.indexOf("(")+1,type.indexOf(")"));
+			type=type.replace("fly ","").replace(" ("+maneuverability+")","").trim();
+			m.fly=Integer.parseInt(type);
+		}else if(type.contains("swim "))
+			m.swim=Integer.parseInt(MonsterReader.clean(type).replace("swim ",""));
+		else if(type.contains("burrow "))
+			m.burrow=Integer.parseInt(type.replace("burrow ",""));
+		else if(!type.contains("base"))
+			m.walk=Integer.parseInt(MonsterReader.clean(type));
 	}
 
 	/** @see #MAXSPEED */

@@ -10,7 +10,6 @@ import javelin.controller.fight.minigame.Minigame;
 import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
-import javelin.model.world.location.haunt.Haunt;
 import javelin.old.RPG;
 
 /**

@@ -28,12 +28,10 @@ import javelin.model.world.location.ResourceSite;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Wilderness;
 import javelin.model.world.location.dungeon.temple.Temple;
-import javelin.model.world.location.haunt.AbandonedManor;
 import javelin.model.world.location.haunt.Graveyard;
 import javelin.model.world.location.haunt.OrcSettlement;
 import javelin.model.world.location.haunt.ShatteredTemple;
 import javelin.model.world.location.haunt.SunkenShip;
-import javelin.model.world.location.haunt.WitchesHideout;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.governor.MonsterGovernor;
 import javelin.model.world.location.town.labor.basic.Dwelling;
@@ -166,8 +164,8 @@ public class LocationGenerator implements Serializable{
 
 	/** @return An instance of each haunt type. */
 	public static List<Fortification> generatehaunts(){
-		return List.of(new AbandonedManor(),new SunkenShip(),new ShatteredTemple(),
-				new WitchesHideout(),new Graveyard(),new OrcSettlement());
+		return List.of(new SunkenShip(),new ShatteredTemple(),new Graveyard(),
+				new OrcSettlement());
 	}
 
 	static void generatestartingarea(World seed,Town t){

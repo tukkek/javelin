@@ -1,18 +1,26 @@
 package javelin.model.world.location.haunt;
 
-import javelin.controller.map.location.LocationMap;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javelin.controller.map.location.haunt.OrcSettlementMap;
+import javelin.model.unit.Monster;
+import javelin.model.unit.Monster.MonsterType;
 
+/**
+ * TODO test and compare to previous pool
+ *
+ * @author alex
+ */
 public class OrcSettlement extends Haunt{
-	public OrcSettlement(){
-		super("Orc settlement",5,10,
-				new String[]{"Kobold","Goblin","Orc","Half orc","Hobgoblin"});
-		elmodifier=+4;
-	}
+	static final List<String> GROUPS=List.of("reptilian,goblinoid,orc");
+	static final List<Monster> POOL=Monster.MONSTERS.stream()
+			.filter(m->m.type.equals(MonsterType.HUMANOID)
+					&&GROUPS.contains(m.group.toLowerCase()))
+			.collect(Collectors.toList());
 
-	@Override
-	public
-	LocationMap getmap(){
-		return new OrcSettlementMap();
+	/** Constructor. */
+	public OrcSettlement(){
+		super("Orc settlement",OrcSettlementMap.class,POOL);
 	}
 }

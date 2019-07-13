@@ -1,17 +1,25 @@
 package javelin.model.world.location.haunt;
 
-import javelin.controller.map.location.LocationMap;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javelin.controller.map.location.haunt.ShatteredTempleMap;
+import javelin.model.unit.Monster;
+import javelin.model.unit.Monster.MonsterType;
 
+/**
+ * TODO
+ *
+ * @author alex
+ */
 public class ShatteredTemple extends Haunt{
-	public ShatteredTemple(){
-		super("Shaterred temple",10,15,new String[]{"Tiefling","Aasimar","Satyr",
-				"Satyr with pipes","azer","Janni"});
-	}
+	static final List<MonsterType> TYPES=List.of(MonsterType.UNDEAD,
+			MonsterType.FEY);
+	static final List<Monster> POOL=Monster.MONSTERS.stream()
+			.filter(m->TYPES.contains(m.type)).collect(Collectors.toList());
 
-	@Override
-	public
-	LocationMap getmap(){
-		return new ShatteredTempleMap();
+	/** Constructor. */
+	public ShatteredTemple(){
+		super("Shaterred temple",ShatteredTempleMap.class,POOL);
 	}
 }

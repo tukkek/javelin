@@ -8,7 +8,6 @@ import java.util.Set;
 import javelin.controller.Point;
 import javelin.controller.map.DndMap;
 import javelin.controller.map.Map;
-import javelin.model.world.location.haunt.Haunt;
 import javelin.old.RPG;
 import javelin.view.Images;
 

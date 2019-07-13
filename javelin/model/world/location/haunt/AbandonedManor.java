@@ -1,19 +1,25 @@
 package javelin.model.world.location.haunt;
 
-import javelin.controller.map.location.LocationMap;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javelin.controller.map.location.haunt.AbandonedManorMap;
+import javelin.model.unit.Monster;
+import javelin.model.unit.Monster.MonsterType;
 
+/**
+ * TODO test pool
+ *
+ * @author alex
+ */
 public class AbandonedManor extends Haunt{
-	public AbandonedManor(){
-		super("Abandoned manor",5,10,
-				new String[]{"Small animated object","animated object",
-						"Small monstrous spider","monstrous spider","Phantom fungus",
-						"Ethereal marauder",});
-	}
+	static final List<MonsterType> TYPES=List.of(MonsterType.CONSTRUCT,
+			MonsterType.VERMIN,MonsterType.PLANT,MonsterType.MAGICALBEAST);
+	static final List<Monster> POOL=Monster.MONSTERS.stream()
+			.filter(m->TYPES.contains(m.type)).collect(Collectors.toList());
 
-	@Override
-	public
-	LocationMap getmap(){
-		return new AbandonedManorMap();
+	/** Constructor. */
+	public AbandonedManor(){
+		super("Abandoned manor",AbandonedManorMap.class,POOL);
 	}
 }

@@ -19,13 +19,11 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.DungeonTier;
 import javelin.model.world.location.haunt.Haunt;
 import javelin.model.world.location.haunt.SunkenShip;
-import javelin.model.world.location.haunt.WitchesHideout;
 import javelin.old.RPG;
 
 /** {@link LocationGenerator} for {@link ArtOfWar}. */
 public class AowGenerator extends LocationGenerator{
-	static final Set<Class<? extends Location>> BANNED=Set
-			.of(WitchesHideout.class,SunkenShip.class);
+	static final Set<Class<? extends Location>> BANNED=Set.of(SunkenShip.class);
 
 	class Territory{
 		Set<Point> area=new HashSet<>();

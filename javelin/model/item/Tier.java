@@ -38,7 +38,7 @@ public class Tier{
 	}
 
 	/** @return The relevant tier, given a character level. */
-	public static Tier get(int level){
+	public static Tier get(double level){
 		if(level<LOW.minlevel) return LOW;
 		if(level>EPIC.maxlevel) return EPIC;
 		for(var t:TIERS)

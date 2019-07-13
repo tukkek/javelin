@@ -1,8 +1,11 @@
 package javelin.model.world.location.haunt;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -29,14 +32,28 @@ import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
 
 public abstract class NewHaunt extends Fortification{
+	static final int ATTEMPTS=10_000;
+	/** EL modifier by number of waves. */
+	static final Map<Integer,Integer> WAVECR=new TreeMap<>();
+
+	static Set<Monster> defeated=new HashSet<>(0);
+
+	static{
+		WAVECR.put(1,0);
+		WAVECR.put(2,-2);
+		WAVECR.put(3,-3);
+		WAVECR.put(4,-4);
+	}
+
 	class RecruitOption extends Option{
 		Monster hire;
 
 		RecruitOption(Monster m){
 			super(m.toString(),MercenariesGuild.getfee(m),null);
 			hire=m;
+			var available=hires.stream().filter(h->h.equals(hire)).count();
+			name=available+" "+name;
 		}
-
 	}
 
 	class HauntScreen extends SelectScreen{
@@ -46,8 +63,8 @@ public abstract class NewHaunt extends Fortification{
 
 		@Override
 		public List<Option> getoptions(){
-			return hires.stream().sequential().map(h->new RecruitOption(h))
-					.collect(Collectors.toList());
+			return new HashSet<>(hires).stream().sequential()
+					.map(h->new RecruitOption(h)).collect(Collectors.toList());
 		}
 
 		@Override
@@ -68,23 +85,14 @@ public abstract class NewHaunt extends Fortification{
 
 		@Override
 		public boolean select(Option o){
-			RecruitOption ro=(RecruitOption)o;
-			if(MercenariesGuild.recruit(new Combatant(ro.hire,false),false))
+			var h=((RecruitOption)o).hire;
+			if(MercenariesGuild.recruit(new Combatant(h,false),false)){
+				hires.remove(h);
 				return true;
+			}
 			print(text+"\nNot enough gold to hire this unit!");
 			return false;
 		}
-	}
-
-	static final int ATTEMPTS=10_000;
-	/** EL modifier by number of waves. */
-	static final Map<Integer,Integer> WAVECR=new TreeMap<>();
-
-	static{
-		WAVECR.put(1,0);
-		WAVECR.put(2,-2);
-		WAVECR.put(3,-3);
-		WAVECR.put(4,-4);
 	}
 
 	class HauntFight extends LocationFight{
@@ -110,6 +118,14 @@ public abstract class NewHaunt extends Fortification{
 				if(Javelin.DEBUG) throw new RuntimeException(e);
 			}
 			super.checkend();
+		}
+
+		@Override
+		public boolean win(){
+			if(!super.win()) return false;
+			defeated=Fight.originalredteam.stream().map(c->c.source)
+					.collect(Collectors.toSet());
+			return true;
 		}
 	}
 
@@ -195,7 +211,7 @@ public abstract class NewHaunt extends Fortification{
 	public void turn(long time,WorldScreen world){
 		super.turn(time,world);
 		if(ishostile()||!RPG.chancein(30)) return;
-		targetel+=RPG.r(1,4);
+		raiselevel();
 		generategarrison();
 	}
 
@@ -208,27 +224,59 @@ public abstract class NewHaunt extends Fortification{
 		}
 	}
 
-	@Override
-	public void capture(){
-		super.capture();
-		hires.clear();
-		var nhires=RPG.rolldice(2,4);
-		var pool=RPG.shuffle(getpool());
-		for(var i=0;i<pool.size()&&hires.size()<nhires;i++)
-			hires.add(pool.get(i));
-		hires.sort(MonstersByName.INSTANCE);
+	void add(Set<Monster> hires){
+		this.hires.clear();
+		for(var h:hires){
+			if(!pool.contains(h)) continue;
+			var quantity=getquantity(h);
+			for(var i=0;i<quantity;i++)
+				this.hires.add(h);
+		}
+		this.hires.sort(MonstersByName.INSTANCE);
+		if(this.hires.isEmpty()){
+			var pool=RPG.shuffle(getpool());
+			var nhires=Math.min(RPG.rolldice(2,4),pool.size());
+			add(new HashSet<>(pool.subList(0,nhires)));
+		}
+	}
+
+	int getquantity(Monster hire){
+		var t=Tier.get(hire.cr);
+		if(t==Tier.LOW) return RPG.r(1,8);
+		if(t==Tier.MID) return RPG.r(1,6);
+		if(t==Tier.HIGH) return RPG.r(1,4);
+		if(t==Tier.EPIC) return 1;
+		if(Javelin.DEBUG) throw new InvalidParameterException();
+		return 1;
+	}
+
+	void raiselevel(){
+		targetel+=RPG.r(1,4);
 	}
 
 	@Override
 	protected void captureforai(Incursion attacker){
 		super.captureforai(attacker);
+		raiselevel();
 		waves=0;
 	}
 
 	@Override
 	public boolean interact(){
 		if(!super.interact()) return false;
+		if(hires.isEmpty()){
+			var empty="The "+descriptionknown.toLowerCase()+" is curently empty...";
+			Javelin.message(empty,false);
+			return true;
+		}
 		new HauntScreen().show();
 		return true;
+	}
+
+	@Override
+	public void capture(){
+		super.capture();
+		add(defeated);
+		defeated.clear();
 	}
 }

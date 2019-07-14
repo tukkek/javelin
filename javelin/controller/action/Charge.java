@@ -123,8 +123,8 @@ public class Charge extends Fire implements AiAction{
 	}
 
 	@Override
-	protected int calculatehitdc(Combatant active,Combatant target,BattleState s){
-		return target.getac()-(2+usedefaultattack(active).bonus);
+	protected int predictchance(Combatant c,Combatant target,BattleState s){
+		return target.getac()-(2+usedefaultattack(c).bonus);
 	}
 
 	@Override

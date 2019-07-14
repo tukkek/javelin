@@ -55,7 +55,6 @@ import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.old.RPG;
-import javelin.old.messagepanel.MessagePanel;
 import javelin.view.mappanel.battle.action.BattleMouseAction;
 import javelin.view.screen.BattleScreen;
 
@@ -109,13 +108,6 @@ public class Combatant implements Serializable,Cloneable{
 	 * share a same {@link #source} with a same id.
 	 */
 	public int id=STATUSUNCONSCIOUS;
-	/**
-	 * Which of the current melee attack sequences is being used and how far it is
-	 * in this sequence.
-	 */
-	public CurrentAttack currentmelee=new CurrentAttack();
-	/** See {@link #currentmelee}. */
-	public CurrentAttack currentranged=new CurrentAttack();
 	/** Temporary modifier to {@link Monster#ac}. */
 	public int acmodifier=0;
 	/** List of current active {@link Condition}s on this unit. */
@@ -158,7 +150,7 @@ public class Combatant implements Serializable,Cloneable{
 	 *          measure to allow 1.0 monster who would have spell powers to use
 	 *          the currently implemented spells TODO
 	 */
-	public Combatant(final Monster sourcep,boolean generatespells){
+	public Combatant(Monster sourcep,boolean generatespells){
 		super();
 		source=sourcep.clone();
 		newid();
@@ -200,9 +192,7 @@ public class Combatant implements Serializable,Cloneable{
 	@Override
 	public Combatant clone(){
 		try{
-			final Combatant c=(Combatant)super.clone();
-			c.currentmelee=currentmelee.clone();
-			c.currentranged=currentranged.clone();
+			Combatant c=(Combatant)super.clone();
 			c.location=location.clone();
 			c.conditions=conditions.clone();
 			c.spells=(Spells)spells.clone();
@@ -215,35 +205,28 @@ public class Combatant implements Serializable,Cloneable{
 		}
 	}
 
-	/**
-	 * Rolls for hit and applies damage.
-	 *
-	 * @param targetCombatant The monster being attacked.
-	 */
-	public void meleeattacks(Combatant targetCombatant,BattleState state){
-		Combatant current=state.clone(this);
-		targetCombatant=state.clone(targetCombatant);
-		Action.outcome(MeleeAttack.SINGLETON.attack(state,this,targetCombatant,
-				current.chooseattack(current.source.melee,targetCombatant),0));
+	/** @see MeleeAttack */
+	public void meleeattacks(Combatant target,BattleState state){
+		var a=chooseattack(source.melee);
+		Action.outcome(MeleeAttack.SINGLETON.attack(state,this,target,a,0));
 	}
 
-	public void rangedattacks(Combatant targetCombatant,BattleState state){
-		Combatant current=state.clone(this);
-		targetCombatant=state.clone(targetCombatant);
-		Action.outcome(RangedAttack.SINGLETON.attack(state,this,targetCombatant,
-				current.chooseattack(current.source.ranged,targetCombatant),0));
+	/** @see RangedAttack */
+	public void rangedattacks(Combatant target,BattleState state){
+		var a=chooseattack(source.ranged);
+		Action.outcome(RangedAttack.SINGLETON.attack(state,this,target,a,0));
 	}
 
-	public List<AttackSequence> getattacks(final boolean melee){
+	public List<AttackSequence> getattacks(boolean melee){
 		return melee?source.melee:source.ranged;
 	}
 
-	public boolean isally(final Combatant c,final TeamContainer tc){
+	public boolean isally(Combatant c,TeamContainer tc){
 		return getteam(tc)==c.getteam(tc);
 	}
 
-	public List<Combatant> getteam(final TeamContainer tc){
-		final List<Combatant> red=tc.getredteam();
+	public List<Combatant> getteam(TeamContainer tc){
+		List<Combatant> red=tc.getredteam();
 		return red.contains(this)?red:tc.getblueteam();
 	}
 
@@ -253,11 +236,11 @@ public class Combatant implements Serializable,Cloneable{
 		return mercenary?s+" mercenary":s;
 	}
 
-	public boolean hasattacktype(final boolean meleeonly){
+	public boolean hasattacktype(boolean meleeonly){
 		return !getattacks(meleeonly).isEmpty();
 	}
 
-	public void checkattacktype(final boolean meleeonly){
+	public void checkattacktype(boolean meleeonly){
 		if(!hasattacktype(meleeonly)){
 			Javelin.message("No "+(meleeonly?"mẽlée":"ranged")+" attacks.",
 					Javelin.Delay.WAIT);
@@ -270,7 +253,7 @@ public class Combatant implements Serializable,Cloneable{
 			lastrefresh=ap;
 		else if(ap!=lastrefresh){
 			ap-=.01;
-			final float turns=ap-lastrefresh;
+			float turns=ap-lastrefresh;
 			if(source.fasthealing>0) heal(Math.round(source.fasthealing*turns),false);
 			/*
 			 * don't clone the list here or you'll be acting on different
@@ -301,11 +284,11 @@ public class Combatant implements Serializable,Cloneable{
 	 * energy resistance universal and all damage reduction impenetrable this is a
 	 * measure to avoid monsters from becoming invincible.
 	 */
-	public void damage(final int damagep,BattleState s,final int reduce){
+	public void damage(int damagep,BattleState s,int reduce){
 		if(reduce==Integer.MAX_VALUE) return;
 		int damage=damagep-reduce;
 		if(damage<1) damage=1;
-		final int tenth=damagep/10;
+		int tenth=damagep/10;
 		if(damage<tenth) damage=tenth;
 		hp-=damage;
 		if(hp<=0){
@@ -314,31 +297,14 @@ public class Combatant implements Serializable,Cloneable{
 		}
 	}
 
-	public CurrentAttack getcurrentattack(List<AttackSequence> attacktype){
-		return attacktype==source.melee?currentmelee:currentranged;
-	}
-
 	/**
 	 * % are against AC only, no bonuses included except attack bonus
 	 */
-	public CurrentAttack chooseattack(List<AttackSequence> attacktype,
-			Combatant target){
-		CurrentAttack currentattack=getcurrentattack(attacktype);
-		if(currentattack.continueattack()) return currentattack;
-		int attackindex=0;
-		if(attacktype.size()>1){
-			ArrayList<String> attacks=new ArrayList<>();
-			for(AttackSequence sequence:attacktype)
-				attacks.add(sequence.toString(target));
-			attackindex=Javelin.choose("Start which attack sequence?",attacks,false,
-					false);
-			if(attackindex==STATUSUNCONSCIOUS){
-				MessagePanel.active.clear();
-				throw new RepeatTurn();
-			}
-		}
-		currentattack.setcurrent(attackindex,attacktype);
-		return currentattack;
+	public AttackSequence chooseattack(List<AttackSequence> attacks){
+		if(attacks.size()==1) return attacks.get(0);
+		var i=Javelin.choose("Start which attack sequence?",attacks,false,false);
+		if(i==-1) throw new RepeatTurn();
+		return attacks.get(i);
 	}
 
 	/**
@@ -346,7 +312,7 @@ public class Combatant implements Serializable,Cloneable{
 	 */
 	public int surprise(){
 		if(ap>initialap) return 0;
-		final int dexbonus=Monster.getbonus(source.dexterity);
+		int dexbonus=Monster.getbonus(source.dexterity);
 		return dexbonus>0?-dexbonus:0;
 	}
 
@@ -472,14 +438,14 @@ public class Combatant implements Serializable,Cloneable{
 		else if(source.hasfeat(Cleave.SINGLETON)) this.ap-=ap/2f;
 	}
 
-	public ArrayList<String> liststatus(final BattleState s){
-		final ArrayList<String> statuslist=new ArrayList<>();
+	public ArrayList<String> liststatus(BattleState s){
+		var statuslist=new ArrayList<String>();
 		if(s.isengaged(this)){
 			statuslist.add("engaged");
 			if(isflanked(s)) statuslist.add("flanked");
 		}
 		if(surprise()!=0) statuslist.add("flat-footed");
-		Vision v=s.haslineofsight(s.next,this);
+		var v=s.haslineofsight(s.next,this);
 		if(RangedAttack.iscovered(v,this,s))
 			statuslist.add("covered");
 		else if(v==Vision.BLOCKED) statuslist.add("blocked");
@@ -498,7 +464,7 @@ public class Combatant implements Serializable,Cloneable{
 		return false;
 	}
 
-	public boolean ispenalized(final BattleState s){
+	public boolean ispenalized(BattleState s){
 		if(surprise()!=0||s.map[location[0]][location[1]].flooded&&source.swim()==0)
 			return true;
 		for(Condition c:conditions)
@@ -920,7 +886,7 @@ public class Combatant implements Serializable,Cloneable{
 	 * @param target Unit that is potentially being flanked.
 	 * @return <code>true</code> if there is a third unit flanking the target.
 	 */
-	public boolean flank(final Combatant target,BattleState s){
+	public boolean flank(Combatant target,BattleState s){
 		if(burrowed||getlocation().distanceinsteps(target.getlocation())!=1)
 			return false;
 		List<Combatant> team=getteam(s);

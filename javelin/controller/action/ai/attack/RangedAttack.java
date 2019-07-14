@@ -30,27 +30,26 @@ import javelin.model.unit.feat.attack.shot.PreciseShot;
  * @see RangedTarget
  */
 public class RangedAttack extends AbstractAttack{
-	static final public RangedAttack SINGLETON=new RangedAttack();
+	static public RangedAttack SINGLETON=new RangedAttack();
 	/**
 	 * Currently if the AI sees an infinitesimal chance to hit, it'll rather
 	 * damage any unit for immediate utility. This is very statoc, with units
 	 * always attacking from far away if they have ranged attacks. Let's disable
 	 * this for {@link #getoutcomes(Combatant, BattleState)} for now.
 	 */
-	static final boolean AISKIPUNLIKELY=true;
+	static boolean AISKIPUNLIKELY=true;
 
 	private RangedAttack(){
 		super("Ranged attack","ranged-hit","ranged-miss");
 	}
 
 	@Override
-	List<AttackSequence> getattacks(final Combatant active){
+	List<AttackSequence> getattacks(Combatant active){
 		return active.source.ranged;
 	}
 
 	@Override
-	public int getpenalty(final Combatant attacker,final Combatant target,
-			final BattleState s){
+	public int getpenalty(Combatant attacker,Combatant target,BattleState s){
 		int penalty=super.getpenalty(attacker,target,s);
 		if(!attacker.source.hasfeat(PreciseShot.SINGLETON)&&s.isengaged(target))
 			penalty+=4;
@@ -67,25 +66,19 @@ public class RangedAttack extends AbstractAttack{
 				&&s.map[target.location[0]][target.location[1]].obstructed;
 	}
 
-	static boolean ispointblankshot(final Combatant attacker,
-			final Combatant target){
+	static boolean ispointblankshot(Combatant attacker,Combatant target){
 		return attacker.source.hasfeat(PointBlankShot.SINGLETON)
 				&&Walker.distance(attacker,target)<=6;
 	}
 
 	@Override
-	public List<List<ChanceNode>> getoutcomes(final Combatant active,
-			final BattleState gameState){
-		if(gameState.isengaged(active)) return Collections.EMPTY_LIST;
-		final var successors=new ArrayList<List<ChanceNode>>();
-		for(final Combatant target:gameState.gettargets(active))
-			for(final Integer attack:getcurrentattack(active)){
-				final BattleState newstate=gameState.clone();
-				final Combatant newactive=newstate.clone(active);
-				newactive.currentranged.setcurrent(attack,newactive.source.ranged);
-				var outcome=attack(newstate,newactive,target,newactive.currentranged,0);
-				if(skip(active,(DamageNode)outcome.get(0),gameState)) continue;
-				successors.add(outcome);
+	public List<List<ChanceNode>> getoutcomes(Combatant active,BattleState s){
+		if(s.isengaged(active)) return Collections.EMPTY_LIST;
+		var successors=new ArrayList<List<ChanceNode>>();
+		for(var target:s.gettargets(active))
+			for(var attacks:active.source.ranged){
+				var outcome=attack(s,active,target,attacks,0);
+				if(!skip(active,(DamageNode)outcome.get(0),s)) successors.add(outcome);
 			}
 		return successors;
 	}

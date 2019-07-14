@@ -158,7 +158,7 @@ public abstract class ExpertiseAction extends Target implements AiAction{
 	abstract int getattackerbonus(Combatant combatant);
 
 	@Override
-	protected int calculatehitdc(Combatant active,Combatant target,BattleState s){
-		return Math.round(20-(1-calculatemisschance(target,active,s,0))*20);
+	protected int predictchance(Combatant c,Combatant target,BattleState s){
+		return Math.round(20-(1-calculatemisschance(target,c,s,0))*20);
 	}
 }

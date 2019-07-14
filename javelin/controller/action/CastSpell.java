@@ -169,7 +169,7 @@ public class CastSpell extends Fire implements AiAction{
 	}
 
 	@Override
-	protected int calculatehitdc(Combatant active,Combatant target,BattleState s){
+	protected int predictchance(Combatant active,Combatant target,BattleState s){
 		return casting.hit(active,target,s);
 	}
 

@@ -1,5 +1,7 @@
 package javelin.model.unit.attack;
 
+import java.util.Comparator;
+
 import javelin.model.unit.CloneableList;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.feat.attack.PowerAttack;
@@ -13,6 +15,9 @@ import javelin.view.screen.StatisticsScreen;
  * @author alex
  */
 public class AttackSequence extends CloneableList<Attack>{
+	static final Comparator<Attack> ATTACKSBYDESCENDINGBONUS=(a,b)->b.bonus
+			-a.bonus;
+
 	/** @see PowerAttack */
 	public boolean powerful=false;
 	/** @see RapidShot */
@@ -25,7 +30,9 @@ public class AttackSequence extends CloneableList<Attack>{
 
 	@Override
 	public AttackSequence clone(){
-		return (AttackSequence)super.clone();
+		var c=(AttackSequence)super.clone();
+		c.sort();
+		return c;
 	}
 
 	public String toString(Combatant target){
@@ -33,5 +40,10 @@ public class AttackSequence extends CloneableList<Attack>{
 		for(Attack a:this)
 			line+=StatisticsScreen.capitalize(a.toString(target))+", ";
 		return line.substring(0,line.length()-2);
+	}
+
+	/** Guarantees that attacks are sorted by descending {@link Attack#bonus}. */
+	public void sort(){
+		sort(ATTACKSBYDESCENDINGBONUS);
 	}
 }

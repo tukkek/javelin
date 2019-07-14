@@ -1,7 +1,6 @@
 package javelin.controller.action;
 
 import javelin.model.unit.Combatant;
-import javelin.model.unit.CurrentAttack;
 import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;

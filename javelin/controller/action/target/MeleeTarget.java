@@ -25,8 +25,9 @@ public class MeleeTarget extends RangedTarget{
 	}
 
 	@Override
-	protected int calculatehitdc(Combatant active,Combatant target,BattleState s){
-		return calculatehiddc(active,target,a,MeleeAttack.SINGLETON,s);
+	protected int predictchance(Combatant c,Combatant target,BattleState s){
+		var a=c.source.melee.get(0).get(0);
+		return calculatehiddc(c,target,a,MeleeAttack.SINGLETON,s);
 	}
 
 	@Override

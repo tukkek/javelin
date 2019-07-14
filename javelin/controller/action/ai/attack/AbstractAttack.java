@@ -6,13 +6,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javelin.Javelin;
 import javelin.controller.action.Action;
+import javelin.controller.action.ActionCost;
 import javelin.controller.action.ai.AiAction;
+import javelin.controller.ai.BattleAi;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.ai.Node;
 import javelin.controller.audio.Audio;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.CurrentAttack;
 import javelin.model.unit.abilities.discipline.Maneuver;
 import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.abilities.spell.Spell;
@@ -23,7 +24,34 @@ import javelin.model.unit.skill.Bluff;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
 
 /**
- * Base class for {@link MeleeAttack} and {@link RangedAttack}.
+ * In Javelin 1.7 a new approach of rolling one d20 to resolve attack sequences
+ * will be attempted. This is a major win for the game because latter iterative
+ * attacks are unlikely to hit, especially on higher levels and represent a
+ * major pain for players - even more than inthe tabletop game where it's a
+ * constant source of house rules and criticism. It will also help eliminate the
+ * number of {@link BattleState} during {@link BattleAi} machinations, which
+ * could represent something between a small to huge performance improvement. It
+ * also overall helps with attack feeling more powerful and less
+ * "choppy"/confusing gameplay overall and removes some implementation
+ * complexity of keeping track of {@link AttackSequence} state.
+ *
+ * The first attack of the sequence will take a {@link ActionCost#STANDARD}
+ * action, which is equivalent to both a single-attack sequence and a standard
+ * (non-full) attack action. The rest of the attacks take a total of
+ * {@link ActionCost#SWIFT} action, which each attempted attack taking an equal
+ * share of that total. This makes a full-attack equivalent to a full turn of a
+ * Standard, a Swift and a {@link ActionCost#FIVEFOOTSTEP} (1AP total).
+ *
+ * If an attack fails, the remainder of the sequence is halted, adding an amount
+ * of dynamism and unpredactibility to attacking and improving performance since
+ * later attacks would fail anyway, assuming they are ordered by attack bonus.
+ *
+ * Implementation details: for each 5% chance of a d20, a cache is created
+ * holding the result of each attack. This cache will determine as equal any
+ * rolls with the same results, so that outcome chances can be calculated
+ * appropriately instead of generating {@link BattleState}s for all 20
+ * possibilities. A second pass will then resolve criticals and a third pass
+ * will calculate damage.
  *
  * @author alex
  */
@@ -69,7 +97,7 @@ public abstract class AbstractAttack extends Action implements AiAction{
 	}
 
 	public List<ChanceNode> attack(final BattleState s,final Combatant current,
-			final Combatant target,CurrentAttack attacks,int bonus){
+			final Combatant target,AttackSequence attacks,int bonus){
 		final Attack a=attacks.getnext();
 		final int damagebonus=getdamagebonus(current,target);
 		final float ap=AbstractAttack
@@ -285,25 +313,19 @@ public abstract class AbstractAttack extends Action implements AiAction{
 
 	abstract List<AttackSequence> getattacks(Combatant active);
 
-	/**
-	 * @return An ongoing attack or all the possible {@link AttackSequence}s that
-	 *         can be initiated.
-	 */
-	List<Integer> getcurrentattack(final Combatant active){
-		final List<AttackSequence> attacktype=getattacks(active);
-		if(attacktype.isEmpty()) return new ArrayList<>(0);
-		final CurrentAttack current=active.getcurrentattack(attacktype);
-		if(current.continueattack()){
-			final ArrayList<Integer> attacks=new ArrayList<>(1);
-			attacks.add(current.sequenceindex);
-			return attacks;
-		}
-		final int nattacks=attacktype.size();
-		final ArrayList<Integer> attacks=new ArrayList<>(nattacks);
-		for(int i=0;i<nattacks;i++)
-			attacks.add(i);
-		return attacks;
-	}
+	//	/**
+	//	 * @return An ongoing attack or all the possible {@link AttackSequence}s that
+	//	 *         can be initiated.
+	//	 */
+	//	List<Integer> getcurrentattack(final Combatant active){
+	//		var attacktype=;
+	//		if(attacktype.isEmpty()) return new ArrayList<>(0);
+	//		var nattacks=attacktype.size();
+	//		var attacks=new ArrayList<Integer>(nattacks);
+	//		for(var i=0;i<nattacks;i++)
+	//			attacks.add(i);
+	//		return attacktype.stream().map;
+	//	}
 
 	@Override
 	public boolean perform(Combatant active){
@@ -321,12 +343,8 @@ public abstract class AbstractAttack extends Action implements AiAction{
 	 *         {@link #getchance(Combatant, Combatant, Attack, BattleState)} but
 	 *         predicts {@link CurrentAttack}.
 	 */
-	public String getchance(Combatant c,Combatant target,BattleState s){
-		CurrentAttack current=c.getcurrentattack(getattacks(c));
-		final List<Attack> attack=current.next==null||current.next.isEmpty()
-				?c.source.melee.get(0)
-				:current.next;
-		return MeleeAttack.SINGLETON.getchance(c,target,attack.get(0),s);
+	public String getchance(Combatant c,Attack a,Combatant target,BattleState s){
+		return MeleeAttack.SINGLETON.getchance(c,target,a,s);
 	}
 
 	static Strike getmaneuver(){

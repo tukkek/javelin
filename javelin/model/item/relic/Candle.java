@@ -18,16 +18,15 @@ public class Candle extends Relic{
 	protected boolean activate(Combatant user){
 		new Target(""){
 			@Override
-			protected int calculatehitdc(Combatant active,Combatant target,
-					BattleState s){
+			protected int predictchance(Combatant c,Combatant target,BattleState s){
 				return 1;
 			}
 
 			@Override
-			protected void attack(Combatant active,Combatant target,BattleState s){
+			protected void attack(Combatant c,Combatant target,BattleState s){
 				target.hp=1;
-				Javelin.message("A roaring column of flame engulfs "+target+"!",
-						Javelin.Delay.BLOCK);
+				var text="A roaring column of flame engulfs "+target+"!";
+				Javelin.message(text,Javelin.Delay.BLOCK);
 			}
 		}.perform(user);
 		return true;

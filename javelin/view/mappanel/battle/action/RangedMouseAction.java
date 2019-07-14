@@ -27,7 +27,8 @@ public class RangedMouseAction extends BattleMouseAction{
 
 	@Override
 	public void onenter(Combatant current,Combatant target,Tile t,BattleState s){
-		String hitchance=Fire.SINGLETON.describehitchance(current,target,s);
+		var a=current.source.ranged.get(0).get(0);
+		var hitchance=Fire.SINGLETON.describehitchance(current,target,s);
 		BattleMouse.showstatus(hitchance,target,true);
 	}
 }

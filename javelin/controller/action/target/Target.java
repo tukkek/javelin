@@ -29,8 +29,8 @@ import javelin.view.screen.StatisticsScreen;
  */
 public abstract class Target extends Action{
 	public class SelectTarget implements Comparator<Combatant>{
-		final Combatant c;
-		final BattleState state;
+		Combatant c;
+		BattleState state;
 		private Target action;
 
 		public SelectTarget(Combatant c,BattleState state,Target action){
@@ -40,12 +40,12 @@ public abstract class Target extends Action{
 		}
 
 		@Override
-		public int compare(final Combatant o1,final Combatant o2){
+		public int compare(Combatant o1,Combatant o2){
 			int priority1=action.prioritize(c,state,o1);
 			int priority2=action.prioritize(c,state,o2);
 			if(priority1!=priority2) return priority1>priority2?-1:1;
-			final double distance1=Walker.distance(o1,c)*10;
-			final double distance2=Walker.distance(o2,c)*10;
+			double distance1=Walker.distance(o1,c)*10;
+			double distance2=Walker.distance(o2,c)*10;
 			return Math.round(Math.round(distance1-distance2));
 		}
 	}
@@ -79,7 +79,7 @@ public abstract class Target extends Action{
 	 * @return Minimum number the active combatant has to roll on a d20 to hit the
 	 *         target.
 	 */
-	protected abstract int calculatehitdc(Combatant active,final Combatant target,
+	protected abstract int predictchance(Combatant active,Combatant target,
 			BattleState s);
 
 	/** Called once a target is confirmed. */
@@ -87,17 +87,16 @@ public abstract class Target extends Action{
 			BattleState s);
 
 	@Override
-	public boolean perform(final Combatant c){
+	public boolean perform(Combatant c){
 		checkhero(c);
-		final BattleState state=Fight.state.clone();
+		BattleState state=Fight.state.clone();
 		if(checkengaged(state,state.clone(c))){
 			MessagePanel.active.clear();
 			Javelin.message("Disengage first...",Javelin.Delay.WAIT);
 			throw new RepeatTurn();
 		}
-		final Combatant combatant=state.clone(c);
-		final List<Combatant> targets=state.gettargets(combatant,
-				state.getcombatants());
+		Combatant combatant=state.clone(c);
+		List<Combatant> targets=state.gettargets(combatant,state.getcombatants());
 		filtertargets(combatant,targets,state);
 		if(targets.isEmpty()){
 			MessagePanel.active.clear();
@@ -109,13 +108,13 @@ public abstract class Target extends Action{
 		return true;
 	}
 
-	private void selecttarget(final Combatant combatant,
-			final List<Combatant> targets,BattleState state){
-		int targeti=0;
-		lockTarget(targets.get(0),combatant,state);
+	void selecttarget(Combatant combatant,List<Combatant> targets,
+			BattleState state){
+		var targeti=0;
+		locktarget(combatant,targets.get(0),state);
 		while(true){
 			Javelin.redraw();
-			final Character key=InfoScreen.feedback();
+			Character key=InfoScreen.feedback();
 			if(Action.MOVE_W.isPressed(key)||key=='-')
 				targeti-=1;
 			else if(Action.MOVE_E.isPressed(key)||key=='+')
@@ -132,11 +131,11 @@ public abstract class Target extends Action{
 				MessagePanel.active.clear();
 				throw new RepeatTurn();
 			}
-			final int max=targets.size()-1;
+			int max=targets.size()-1;
 			if(targeti>max)
 				targeti=0;
 			else if(targeti<0) targeti=max;
-			lockTarget(targets.get(targeti),combatant,state);
+			locktarget(combatant,targets.get(targeti),state);
 		}
 	}
 
@@ -146,7 +145,7 @@ public abstract class Target extends Action{
 	 * @return <code>true</code> if the active unit is currently engaded and
 	 *         should not be allowed to continue targetting.
 	 */
-	protected boolean checkengaged(final BattleState state,Combatant c){
+	protected boolean checkengaged(BattleState state,Combatant c){
 		return state.isengaged(c);
 	}
 
@@ -156,7 +155,7 @@ public abstract class Target extends Action{
 	 * @param hero Active unit.
 	 * @throws RepeatTurn
 	 */
-	protected void checkhero(final Combatant hero){
+	protected void checkhero(Combatant hero){
 
 	}
 
@@ -174,8 +173,7 @@ public abstract class Target extends Action{
 				targets.remove(target);
 	}
 
-	private void lockTarget(final Combatant target,Combatant active,
-			BattleState state){
+	void locktarget(Combatant active,Combatant target,BattleState state){
 		MapPanel.overlay=new TargetOverlay(target.location[0],target.location[1]);
 		MessagePanel.active.clear();
 		String prompt="Use ← and → to select target, ENTER or "+confirmkey
@@ -186,22 +184,13 @@ public abstract class Target extends Action{
 		BattleScreen.active.center(target.location[0],target.location[1]);
 	}
 
-	/**
-	 * @return Text with the name of the target and chance to hit.
-	 */
-	public String describehitchance(Combatant active,final Combatant target,
-			BattleState state){
-		String conditions="";
-		ArrayList<String> status=target.liststatus(state);
-		if(!status.isEmpty()){
-			conditions+=", ";
-			for(String s:status)
-				conditions+=s+", ";
-			conditions=conditions.substring(0,conditions.length()-2);
-		}
-		return target+" ("+target.getstatus()+", "
-				+Javelin.translatetochance(calculatehitdc(active,target,state))
-				+" to hit"+conditions+")";
+	/** @return Text with the name of the target and chance to hit. */
+	public String describehitchance(Combatant c,Combatant target,BattleState s){
+		var status=new ArrayList<String>(2);
+		status.add(target.getstatus());
+		status.add(Javelin.translatetochance(predictchance(c,target,s)));
+		status.addAll(target.liststatus(s));
+		return String.join(", ",status);
 	}
 
 	/**
@@ -209,8 +198,7 @@ public abstract class Target extends Action{
 	 *
 	 * TODO turn into dynamic instead?
 	 */
-	public int prioritize(final Combatant c,final BattleState state,
-			final Combatant target){
+	public int prioritize(Combatant c,BattleState state,Combatant target){
 		int priority=-target.surprise();
 		if(state.haslineofsight(c,target)==Vision.COVERED) priority-=4;
 		/* TODO take into account relevant feats */

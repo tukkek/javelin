@@ -45,7 +45,7 @@ public class TouchAttack extends Fire implements AiAction{
 		active.ap+=.5;
 		var attack=active.source.touch;
 		var name=attack.name.toLowerCase();
-		var rolltarget=calculatehitdc(active,target,s);
+		var rolltarget=predictchance(active,target,s);
 		var miss=Action.bind(rolltarget/20f);
 		List<ChanceNode> nodes=new ArrayList<>(3);
 		nodes.add(new ChanceNode(s,miss,active+" misses "+name+"...",Delay.WAIT));
@@ -104,7 +104,7 @@ public class TouchAttack extends Fire implements AiAction{
 	}
 
 	@Override
-	protected int calculatehitdc(Combatant active,Combatant target,BattleState s){
-		return target.getac()-target.source.armor-active.source.getbab();
+	protected int predictchance(Combatant c,Combatant target,BattleState s){
+		return target.getac()-target.source.armor-c.source.getbab();
 	}
 }

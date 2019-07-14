@@ -153,14 +153,14 @@ public class Examine extends Action{
 		Javelin.redraw();
 	}
 
-	static String describestatus(final Combatant c,final BattleState s){
-		String status=c.toString();
-		String list=c.printstatus(s);
+	static String describestatus(Combatant c,BattleState s){
 		var current=BattlePanel.current;
-		if(c!=current&&current.getlocation().distanceinsteps(c.getlocation())==1)
-			list+=", "+MeleeAttack.SINGLETON.getchance(current,c,s);
-		if(!list.isEmpty()) status+=" ("+list+")";
-		return status;
+		var status=c.printstatus(s);
+		if(current.getlocation().distanceinsteps(c.getlocation())==1){
+			var a=current.source.melee.get(0).get(0);
+			status+=", "+MeleeAttack.SINGLETON.getchance(current,a,c,s);
+		}
+		return status.isEmpty()?c.toString():c+" ("+status+")";
 	}
 
 	static char convertkey(final KeyEvent e){

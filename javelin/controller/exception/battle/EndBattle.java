@@ -182,10 +182,6 @@ public class EndBattle extends BattleEvent{
 		updateoriginal(originalteam);
 		bury(originalteam);
 		Squad.active.members=originalteam;
-		for(Combatant member:Squad.active.members){
-			member.currentmelee.sequenceindex=-1;
-			member.currentranged.sequenceindex=-1;
-		}
 		ThreadManager.printbattlerecord();
 	}
 }

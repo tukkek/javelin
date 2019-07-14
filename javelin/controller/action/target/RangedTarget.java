@@ -40,7 +40,7 @@ public class RangedTarget extends Fire{
 	}
 
 	@Override
-	protected int calculatehitdc(Combatant active,Combatant target,BattleState s){
-		return calculatehiddc(active,target,a,RangedAttack.SINGLETON,s);
+	protected int predictchance(Combatant c,Combatant target,BattleState s){
+		return calculatehiddc(c,target,a,RangedAttack.SINGLETON,s);
 	}
 }

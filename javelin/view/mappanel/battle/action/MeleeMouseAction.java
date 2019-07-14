@@ -14,15 +14,15 @@ public class MeleeMouseAction extends BattleMouseAction{
 	}
 
 	@Override
-	public Runnable act(final Combatant current,final Combatant target,
-			final BattleState s){
+	public Runnable act(Combatant current,Combatant target,BattleState s){
 		return ()->current.meleeattacks(target,s);
 	}
 
 	@Override
-	public void onenter(Combatant current,Combatant target,Tile t,BattleState s){
-		final String chance=MeleeAttack.SINGLETON.getchance(current,target,s);
-		final String status=target+" ("+target.getstatus()+", "+chance+")";
+	public void onenter(Combatant c,Combatant target,Tile t,BattleState s){
+		var a=c.source.melee.get(0).get(0);
+		var chance=MeleeAttack.SINGLETON.getchance(c,a,target,s);
+		var status=target+" ("+target.getstatus()+", "+chance+")";
 		BattleMouse.showstatus(status,target,true);
 	}
 }

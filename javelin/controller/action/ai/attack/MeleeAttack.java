@@ -33,16 +33,10 @@ public class MeleeAttack extends AbstractAttack{
 	@Override
 	public List<List<ChanceNode>> getoutcomes(final Combatant active,
 			final BattleState s){
-		final ArrayList<List<ChanceNode>> successors=new ArrayList<>();
-		for(final Combatant target:s.getsurroundings(active))
-			for(final Integer attack:getcurrentattack(active)){
-				if(target.isally(active,s)) continue;
-				final BattleState newstate=s.clone();
-				final Combatant newactive=newstate.clone(active);
-				newactive.currentmelee.setcurrent(attack,newactive.source.melee);
-				var outcome=attack(newstate,newactive,target,newactive.currentmelee,0);
-				successors.add(outcome);
-			}
+		var successors=new ArrayList<List<ChanceNode>>();
+		for(var target:s.getsurroundings(active))
+			if(!target.isally(active,s)) for(var attacks:active.source.melee)
+				successors.add(attack(s,active,target,attacks,0));
 		return successors;
 	}
 

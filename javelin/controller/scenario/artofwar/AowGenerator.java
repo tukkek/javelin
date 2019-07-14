@@ -87,7 +87,7 @@ public class AowGenerator extends LocationGenerator{
 	public Location generate(LinkedList<Realm> realmsp,
 			ArrayList<HashSet<Point>> regions,World w){
 		var realms=realmsp.subList(0,RPG.r(2,realmsp.size()));
-		var haunts=generatehaunts();
+		var haunts=makehaunts();
 		var nlocations=ArtOfWar.ENDGAME-ArtOfWar.INITIALEL+realms.size()
 				+haunts.size()-BANNED.size();
 		var dungeons=nlocations/10;

@@ -28,6 +28,7 @@ import javelin.model.world.location.ResourceSite;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Wilderness;
 import javelin.model.world.location.dungeon.temple.Temple;
+import javelin.model.world.location.haunt.AbandonedManor;
 import javelin.model.world.location.haunt.Graveyard;
 import javelin.model.world.location.haunt.OrcSettlement;
 import javelin.model.world.location.haunt.ShatteredTemple;
@@ -153,19 +154,19 @@ public class LocationGenerator implements Serializable{
 	void generatestaticlocations(){
 		var locations=new ArrayList<Location>();
 		locations.addAll(List.of(new PillarOfSkulls(),new DeepDungeon()));
-		locations.addAll(generatehaunts());
+		locations.addAll(makehaunts());
 		for(var level=Tier.LOW.minlevel;level<=Tier.EPIC.maxlevel;level++)
 			locations.add(Dungeon.generate(level));
 		for(var i=0;i<10;i++)
 			locations.add(new Wilderness());
-		for(Location l:locations)
+		for(Location l:RPG.shuffle(locations))
 			l.place();
 	}
 
 	/** @return An instance of each haunt type. */
-	public static List<Fortification> generatehaunts(){
+	public static List<Fortification> makehaunts(){
 		return List.of(new SunkenShip(),new ShatteredTemple(),new Graveyard(),
-				new OrcSettlement());
+				new OrcSettlement(),new AbandonedManor());
 	}
 
 	static void generatestartingarea(World seed,Town t){

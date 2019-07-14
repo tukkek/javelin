@@ -15,6 +15,7 @@ import javelin.controller.SpellbookGenerator;
 import javelin.controller.Weather;
 import javelin.controller.action.Action;
 import javelin.controller.action.ActionCost;
+import javelin.controller.action.ai.attack.AttackResolver;
 import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.controller.action.ai.attack.RangedAttack;
 import javelin.controller.ai.BattleAi;
@@ -208,13 +209,17 @@ public class Combatant implements Serializable,Cloneable{
 	/** @see MeleeAttack */
 	public void meleeattacks(Combatant target,BattleState state){
 		var a=chooseattack(source.melee);
-		Action.outcome(MeleeAttack.INSTANCE.attack(state,this,target,a,0));
+		var resolver=new AttackResolver(MeleeAttack.INSTANCE,this,target,a.get(0),a,
+				state);
+		Action.outcome(resolver.attack());
 	}
 
 	/** @see RangedAttack */
 	public void rangedattacks(Combatant target,BattleState state){
 		var a=chooseattack(source.ranged);
-		Action.outcome(RangedAttack.INSTANCE.attack(state,this,target,a,0));
+		var resolver=new AttackResolver(RangedAttack.INSTANCE,this,target,a.get(0),
+				a,state);
+		Action.outcome(resolver.attack());
 	}
 
 	public List<AttackSequence> getattacks(boolean melee){

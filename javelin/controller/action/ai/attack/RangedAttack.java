@@ -6,6 +6,7 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.action.ai.attack.AttackResolver.DamageNode;
 import javelin.controller.action.target.RangedTarget;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.walker.Walker;
@@ -79,7 +80,8 @@ public class RangedAttack extends AbstractAttack{
 		var successors=new ArrayList<List<ChanceNode>>();
 		for(var target:s.gettargets(active))
 			for(var attacks:active.source.ranged){
-				var outcome=attack(s,active,target,attacks,0);
+				var outcome=new AttackResolver(this,active,target,attacks.get(0),
+						attacks,s).attack();
 				if(!skip(active,(DamageNode)outcome.get(0),s)) successors.add(outcome);
 			}
 		return successors;

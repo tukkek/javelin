@@ -10,6 +10,7 @@ import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.attack.Attack;
+import javelin.model.unit.attack.AttackSequence;
 import javelin.view.mappanel.battle.BattleMouse;
 
 /**
@@ -20,14 +21,9 @@ import javelin.view.mappanel.battle.BattleMouse;
  * @author alex
  */
 public class MeleeTarget extends RangedTarget{
-	public MeleeTarget(Attack a,float ap,char confirmkey,AbstractAttack action){
-		super(a,ap,confirmkey,action);
-	}
-
-	@Override
-	protected int predictchance(Combatant c,Combatant target,BattleState s){
-		var a=c.source.melee.get(0).get(0);
-		return calculatehiddc(c,target,a,action,s);
+	public MeleeTarget(Attack a,AttackSequence sequence,char confirmkey,
+			AbstractAttack action){
+		super(a,sequence,confirmkey,action);
 	}
 
 	@Override

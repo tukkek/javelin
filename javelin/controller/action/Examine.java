@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import javelin.Javelin;
 import javelin.controller.Point;
+import javelin.controller.action.ai.attack.AttackResolver;
 import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
@@ -157,8 +158,10 @@ public class Examine extends Action{
 		var current=BattlePanel.current;
 		var status=c.printstatus(s);
 		if(current.getlocation().distanceinsteps(c.getlocation())==1){
-			var a=current.source.melee.get(0).get(0);
-			status+=", "+MeleeAttack.INSTANCE.getchance(current,c,a,s);
+			var sequence=current.source.melee.get(0);
+			var resolver=new AttackResolver(MeleeAttack.INSTANCE,current,c,
+					sequence.get(0),sequence,s);
+			status+=", "+resolver.chance;
 		}
 		return status.isEmpty()?c.toString():c+" ("+status+")";
 	}

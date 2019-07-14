@@ -6,6 +6,7 @@ import java.util.List;
 import javelin.Javelin;
 import javelin.controller.action.Action;
 import javelin.controller.action.ai.AiAction;
+import javelin.controller.action.ai.attack.AttackResolver;
 import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.controller.action.target.Target;
 import javelin.controller.ai.ChanceNode;
@@ -13,6 +14,8 @@ import javelin.controller.exception.RepeatTurn;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
+import javelin.model.unit.attack.Attack;
+import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.feat.Feat;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
@@ -141,12 +144,12 @@ public abstract class ExpertiseAction extends Target implements AiAction{
 		return Action.bind(1-(dc-bonus)/20f);
 	}
 
-	float calculatemisschance(final Combatant combatant,
-			final Combatant targetCombatant,final BattleState battleState,
-			final int touchattackbonus){
-		return MeleeAttack.INSTANCE.misschance(battleState,combatant,
-				targetCombatant,
-				touchattackbonus+combatant.source.melee.get(0).get(0).bonus);
+	float calculatemisschance(final Combatant c,final Combatant target,
+			final BattleState s,final int touchattackbonus){
+		AttackSequence sequence=c.source.melee.get(0);
+		Attack attack=sequence.get(0);
+		return new AttackResolver(MeleeAttack.INSTANCE,c,target,attack,sequence,
+				s).misschance;
 	}
 
 	static int size(final Combatant combatant){

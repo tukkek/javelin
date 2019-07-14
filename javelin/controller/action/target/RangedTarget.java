@@ -4,11 +4,13 @@ import javelin.controller.action.Action;
 import javelin.controller.action.Fire;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.ai.attack.AbstractAttack;
+import javelin.controller.action.ai.attack.AttackResolver;
 import javelin.controller.action.ai.attack.RangedAttack;
 import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.attack.Attack;
+import javelin.model.unit.attack.AttackSequence;
 import javelin.view.mappanel.battle.BattleMouse;
 
 /**
@@ -21,18 +23,21 @@ import javelin.view.mappanel.battle.BattleMouse;
 public class RangedTarget extends Fire{
 	AbstractAttack action=RangedAttack.INSTANCE;
 	Attack a;
-	float ap;
+	AttackSequence sequence;
 
-	public RangedTarget(Attack a,float ap,char confirmkey,AbstractAttack action){
+	public RangedTarget(Attack a,AttackSequence sequence,char confirmkey,
+			AbstractAttack action){
 		super("Manual targetting","",confirmkey);
 		this.a=a;
-		this.ap=ap;
+		this.sequence=sequence;
 		this.action=action;
 	}
 
 	@Override
 	protected void attack(Combatant active,Combatant target,BattleState s){
-		Action.outcome(action.attack(active,target,a,0,0,ap,Fight.state));
+		var resolver=new AttackResolver(action,active,target,a,sequence,
+				Fight.state);
+		Action.outcome(resolver.attack());
 	}
 
 	@Override
@@ -42,6 +47,6 @@ public class RangedTarget extends Fire{
 
 	@Override
 	protected int predictchance(Combatant c,Combatant target,BattleState s){
-		return calculatehiddc(c,target,a,action,s);
+		return calculatehiddc(c,target,a,sequence,action,s);
 	}
 }

@@ -99,7 +99,7 @@ public abstract class Action implements Serializable,ActionDescription{
 	 * @param sides Type of dice.
 	 * @return Map of percentual chances mapped by total result (sum).
 	 */
-	static protected TreeMap<Integer,Float> distributeroll(final int dices,
+	static public TreeMap<Integer,Float> distributeroll(final int dices,
 			final int sides){
 		final int nCombinations=dices*sides;
 		final int[][] combinations=new int[nCombinations][dices];
@@ -213,5 +213,13 @@ public abstract class Action implements Serializable,ActionDescription{
 	@Override
 	public void setMainKey(String key){
 		if(keys.length>0) keys[0]=key;
+	}
+
+	/**
+	 * @return the chance of at least 1 out of 2 independent events happening,
+	 *         given two percentage odds (1 = 100%).
+	 */
+	static public float or(float a,float b){
+		return a+b-a*b;
 	}
 }

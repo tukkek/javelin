@@ -3,24 +3,21 @@ package javelin.model.unit.abilities.discipline;
 import java.util.ArrayList;
 import java.util.List;
 
-import javelin.Javelin;
 import javelin.controller.action.ActionCost;
 import javelin.controller.action.ai.attack.AbstractAttack;
+import javelin.controller.action.ai.attack.AttackResolver.DamageNode;
 import javelin.controller.action.ai.attack.DamageChance;
 import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.controller.action.ai.attack.RangedAttack;
 import javelin.controller.action.target.MeleeTarget;
 import javelin.controller.action.target.RangedTarget;
-import javelin.controller.action.target.Target;
 import javelin.controller.ai.ChanceNode;
-import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.discipline.serpent.DizzyingVenomPrana;
 import javelin.model.unit.attack.Attack;
-import javelin.model.unit.attack.AttackSequence;
 
 /**
  * Lets the user select a standard attack (not a full sequence) then sets (and
@@ -69,33 +66,13 @@ public abstract class Strike extends Maneuver{
 		 * TODO this assumes you can only attack if you're engaged. implementing
 		 * reach may change this? how does engagement work with reach?
 		 */
-		boolean engaged=Fight.state.isengaged(c);
-		ArrayList<Attack> attacks=getattacks(c,
-				engaged?c.source.melee:c.source.ranged);
-		Attack a;
-		if(attacks.size()==1)
-			a=attacks.get(0);
-		else{
-			final String prompt="Which attack will you use?";
-			int choice=Javelin.choose(prompt,attacks,attacks.size()>3,false);
-			if(choice==-1) throw new RepeatTurn();
-			a=attacks.get(choice);
-		}
-		final Target action=engaged?new MeleeTarget(a,ap,'m',new MeleeAttack(this))
-				:new RangedTarget(a,ap,'m',new RangedAttack(this));
+		var engaged=Fight.state.isengaged(c);
+		var sequence=c.chooseattack(engaged?c.source.melee:c.source.ranged);
+		var a=sequence.get(0);
+		var action=engaged?new MeleeTarget(a,sequence,'m',new MeleeAttack(this))
+				:new RangedTarget(a,sequence,'m',new RangedAttack(this));
 		action.perform(c);
 		return true;
-	}
-
-	/**
-	 * @return First attack of each {@link AttackSequence}.
-	 */
-	ArrayList<Attack> getattacks(Combatant c,List<AttackSequence> attacktype){
-		AttackSet attacks=new AttackSet();
-		for(AttackSequence sequence:attacktype)
-			for(Attack a:sequence)
-				attacks.addattack(a);
-		return attacks;
 	}
 
 	@Override

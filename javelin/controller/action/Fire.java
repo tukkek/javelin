@@ -1,11 +1,13 @@
 package javelin.controller.action;
 
 import javelin.controller.action.ai.attack.AbstractAttack;
+import javelin.controller.action.ai.attack.AttackResolver;
 import javelin.controller.action.ai.attack.RangedAttack;
 import javelin.controller.action.target.Target;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.attack.Attack;
+import javelin.model.unit.attack.AttackSequence;
 
 /**
  * Basic ranged attack.
@@ -41,14 +43,14 @@ public class Fire extends Target{
 	@Override
 	protected int predictchance(Combatant active,Combatant target,BattleState s){
 		var attacktype=RangedAttack.INSTANCE;
-		var a=active.source.ranged.get(0).get(0);
-		return calculatehiddc(active,target,a,attacktype,s);
+		var sequence=active.source.ranged.get(0);
+		return calculatehiddc(active,target,sequence.get(0),sequence,attacktype,s);
 	}
 
 	public static int calculatehiddc(Combatant active,final Combatant target,
-			Attack a,AbstractAttack attacktype,BattleState s){
-		final float dc=20*attacktype.misschance(s,active,target,a.bonus);
-		return Math.round(dc);
+			Attack a,AttackSequence sequence,AbstractAttack attacktype,BattleState s){
+		var resolver=new AttackResolver(attacktype,active,target,a,sequence,s);
+		return Math.round(20*resolver.misschance);
 	}
 
 	@Override

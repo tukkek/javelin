@@ -7,6 +7,7 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.action.ai.AiAction;
 import javelin.controller.action.ai.AiMovement;
+import javelin.controller.action.ai.attack.AttackResolver;
 import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.fight.Fight;
@@ -14,7 +15,6 @@ import javelin.controller.walker.Walker;
 import javelin.controller.walker.state.ChargePath;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.attack.Attack;
 import javelin.model.unit.condition.Charging;
 import javelin.model.unit.condition.Fatigued;
 import javelin.model.unit.feat.attack.BullRush;
@@ -75,8 +75,12 @@ public class Charge extends Fire implements AiAction{
 		me.location[0]=destination.x;
 		me.location[1]=destination.y;
 		charge(me);
-		final List<ChanceNode> move=MeleeAttack.INSTANCE.attack(me,target,
-				usedefaultattack(me),2,0,1,state);
+		var sequence=me.source.melee.get(0);
+		var resolver=new AttackResolver(MeleeAttack.INSTANCE,me,target,
+				sequence.get(0),sequence,state);
+		resolver.attackbonus+=2;
+		resolver.ap=1;
+		final List<ChanceNode> move=resolver.attack();
 		final boolean bullrush=me.source.hasfeat(BullRush.SINGLETON);
 		List<Point> steps=new ArrayList<>(walk.subList(0,walk.size()-1));
 		steps.add(from);
@@ -118,13 +122,9 @@ public class Charge extends Fire implements AiAction{
 		return target.location[i]+target.location[i]-me.location[i];
 	}
 
-	Attack usedefaultattack(Combatant me){
-		return me.source.melee.get(0).get(0);
-	}
-
 	@Override
 	protected int predictchance(Combatant c,Combatant target,BattleState s){
-		return target.getac()-(2+usedefaultattack(c).bonus);
+		return target.getac()-(2+c.source.melee.get(0).get(0).bonus);
 	}
 
 	@Override

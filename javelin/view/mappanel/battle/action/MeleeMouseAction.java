@@ -1,5 +1,6 @@
 package javelin.view.mappanel.battle.action;
 
+import javelin.controller.action.ai.attack.AttackResolver;
 import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
@@ -20,9 +21,10 @@ public class MeleeMouseAction extends BattleMouseAction{
 
 	@Override
 	public void onenter(Combatant c,Combatant target,Tile t,BattleState s){
-		var a=c.source.melee.get(0).get(0);
-		var chance=MeleeAttack.INSTANCE.getchance(c,target,a,s);
-		var status=target+" ("+target.getstatus()+", "+chance+")";
+		var sequence=c.source.melee.get(0);
+		var resolver=new AttackResolver(MeleeAttack.INSTANCE,c,target,
+				sequence.get(0),sequence,s);
+		var status=target+" ("+target.getstatus()+", "+resolver.chance+")";
 		BattleMouse.showstatus(status,target,true);
 	}
 }

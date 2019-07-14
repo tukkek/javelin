@@ -37,8 +37,11 @@ public class MeleeAttack extends AbstractAttack{
 			final BattleState s){
 		var successors=new ArrayList<List<ChanceNode>>();
 		for(var target:s.getsurroundings(active))
-			if(!target.isally(active,s)) for(var attacks:active.source.melee)
-				successors.add(attack(s,active,target,attacks,0));
+			if(!target.isally(active,s)) for(var attacks:active.source.melee){
+				var resolver=new AttackResolver(this,active,target,attacks.get(0),
+						attacks,s);
+				successors.add(resolver.attack());
+			}
 		return successors;
 	}
 

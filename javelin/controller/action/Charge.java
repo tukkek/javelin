@@ -75,7 +75,7 @@ public class Charge extends Fire implements AiAction{
 		me.location[0]=destination.x;
 		me.location[1]=destination.y;
 		charge(me);
-		final List<ChanceNode> move=MeleeAttack.SINGLETON.attack(me,target,
+		final List<ChanceNode> move=MeleeAttack.INSTANCE.attack(me,target,
 				usedefaultattack(me),2,0,1,state);
 		final boolean bullrush=me.source.hasfeat(BullRush.SINGLETON);
 		List<Point> steps=new ArrayList<>(walk.subList(0,walk.size()-1));

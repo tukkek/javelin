@@ -40,7 +40,7 @@ public class Fire extends Target{
 
 	@Override
 	protected int predictchance(Combatant active,Combatant target,BattleState s){
-		var attacktype=RangedAttack.SINGLETON;
+		var attacktype=RangedAttack.INSTANCE;
 		var a=active.source.ranged.get(0).get(0);
 		return calculatehiddc(active,target,a,attacktype,s);
 	}

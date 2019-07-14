@@ -21,7 +21,7 @@ public class MeleeMouseAction extends BattleMouseAction{
 	@Override
 	public void onenter(Combatant c,Combatant target,Tile t,BattleState s){
 		var a=c.source.melee.get(0).get(0);
-		var chance=MeleeAttack.SINGLETON.getchance(c,a,target,s);
+		var chance=MeleeAttack.INSTANCE.getchance(c,target,a,s);
 		var status=target+" ("+target.getstatus()+", "+chance+")";
 		BattleMouse.showstatus(status,target,true);
 	}

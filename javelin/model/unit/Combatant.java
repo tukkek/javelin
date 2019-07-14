@@ -208,13 +208,13 @@ public class Combatant implements Serializable,Cloneable{
 	/** @see MeleeAttack */
 	public void meleeattacks(Combatant target,BattleState state){
 		var a=chooseattack(source.melee);
-		Action.outcome(MeleeAttack.SINGLETON.attack(state,this,target,a,0));
+		Action.outcome(MeleeAttack.INSTANCE.attack(state,this,target,a,0));
 	}
 
 	/** @see RangedAttack */
 	public void rangedattacks(Combatant target,BattleState state){
 		var a=chooseattack(source.ranged);
-		Action.outcome(RangedAttack.SINGLETON.attack(state,this,target,a,0));
+		Action.outcome(RangedAttack.INSTANCE.attack(state,this,target,a,0));
 	}
 
 	public List<AttackSequence> getattacks(boolean melee){

@@ -65,31 +65,26 @@ public abstract class Strike extends Maneuver{
 
 	@Override
 	public boolean perform(Combatant c){
-		try{
-			/**
-			 * TODO this assumes you can only attack if you're engaged. implementing
-			 * reach may change this? how does engagement work with reach?
-			 */
-			boolean engaged=Fight.state.isengaged(c);
-			ArrayList<Attack> attacks=getattacks(c,
-					engaged?c.source.melee:c.source.ranged);
-			Attack a;
-			if(attacks.size()==1)
-				a=attacks.get(0);
-			else{
-				final String prompt="Which attack will you use?";
-				int choice=Javelin.choose(prompt,attacks,attacks.size()>3,false);
-				if(choice==-1) throw new RepeatTurn();
-				a=attacks.get(choice);
-			}
-			AbstractAttack.setmaneuver(this);
-			final Target action=engaged?new MeleeTarget(a,ap,'m')
-					:new RangedTarget(a,ap,'m');
-			action.perform(c);
-			return true;
-		}finally{
-			AbstractAttack.setmaneuver(null);
+		/**
+		 * TODO this assumes you can only attack if you're engaged. implementing
+		 * reach may change this? how does engagement work with reach?
+		 */
+		boolean engaged=Fight.state.isengaged(c);
+		ArrayList<Attack> attacks=getattacks(c,
+				engaged?c.source.melee:c.source.ranged);
+		Attack a;
+		if(attacks.size()==1)
+			a=attacks.get(0);
+		else{
+			final String prompt="Which attack will you use?";
+			int choice=Javelin.choose(prompt,attacks,attacks.size()>3,false);
+			if(choice==-1) throw new RepeatTurn();
+			a=attacks.get(choice);
 		}
+		final Target action=engaged?new MeleeTarget(a,ap,'m',new MeleeAttack(this))
+				:new RangedTarget(a,ap,'m',new RangedAttack(this));
+		action.perform(c);
+		return true;
 	}
 
 	/**
@@ -105,21 +100,10 @@ public abstract class Strike extends Maneuver{
 
 	@Override
 	public List<List<ChanceNode>> getoutcomes(Combatant c,BattleState s){
-		try{
-			AbstractAttack.setmaneuver(this);
-			ArrayList<List<ChanceNode>> outcomes=new ArrayList<>();
-			getoutcomes(c,s,c.source.melee,MeleeAttack.SINGLETON,outcomes);
-			getoutcomes(c,s,c.source.ranged,RangedAttack.SINGLETON,outcomes);
-			return outcomes;
-		}finally{
-			AbstractAttack.setmaneuver(null);
-		}
-	}
-
-	void getoutcomes(Combatant c,BattleState s,ArrayList<AttackSequence> attacks,
-			AbstractAttack action,ArrayList<List<ChanceNode>> outcomes){
-		for(Attack a:getattacks(c,attacks))
-			outcomes.addAll(action.getoutcomes(c,s));
+		var outcomes=new ArrayList<List<ChanceNode>>();
+		outcomes.addAll(new MeleeAttack(this).getoutcomes(c,s));
+		outcomes.addAll(new RangedAttack(this).getoutcomes(c,s));
+		return outcomes;
 	}
 
 	@Override

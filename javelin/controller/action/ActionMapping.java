@@ -57,7 +57,7 @@ public class ActionMapping{
 
 			Action.MOVE_N,Action.MOVE_NE,Action.MOVE_E,Action.MOVE_SE,Action.MOVE_S,
 			Action.MOVE_SW,Action.MOVE_W,Action.MOVE_NW,AiMovement.SINGLETON,
-			MeleeAttack.SINGLETON,RangedAttack.SINGLETON,};
+			MeleeAttack.INSTANCE,RangedAttack.INSTANCE,};
 	/** Only instance of this class. */
 	public static final ActionMapping SINGLETON=new ActionMapping();
 	/** If true will reload keys. */

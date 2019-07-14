@@ -27,7 +27,7 @@ public abstract class Ray extends Spell{
 			ac=10;
 		}else{
 			ac=target.gettouchac();
-			bonus-=RangedAttack.SINGLETON.getpenalty(active,target,state);
+			bonus-=RangedAttack.INSTANCE.getpenalty(active,target,state);
 		}
 		return ac-bonus;
 	}

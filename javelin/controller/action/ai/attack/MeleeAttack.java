@@ -7,6 +7,7 @@ import javelin.controller.action.target.MeleeTarget;
 import javelin.controller.ai.ChanceNode;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.condition.Prone;
 
@@ -17,10 +18,11 @@ import javelin.model.unit.condition.Prone;
  * @author alex
  */
 public class MeleeAttack extends AbstractAttack{
-	static final public MeleeAttack SINGLETON=new MeleeAttack();
+	static final public MeleeAttack INSTANCE=new MeleeAttack(null);
 
-	MeleeAttack(){
-		super("Melee attack","melee-hit","melee-miss");
+	/** Constructor. */
+	public MeleeAttack(Strike m){
+		super("Melee attack",m,"melee-hit","melee-miss");
 		feign=true;
 		cleave=true;
 	}

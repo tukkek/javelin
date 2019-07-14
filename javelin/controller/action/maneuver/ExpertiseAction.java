@@ -144,7 +144,7 @@ public abstract class ExpertiseAction extends Target implements AiAction{
 	float calculatemisschance(final Combatant combatant,
 			final Combatant targetCombatant,final BattleState battleState,
 			final int touchattackbonus){
-		return MeleeAttack.SINGLETON.misschance(battleState,combatant,
+		return MeleeAttack.INSTANCE.misschance(battleState,combatant,
 				targetCombatant,
 				touchattackbonus+combatant.source.melee.get(0).get(0).bonus);
 	}

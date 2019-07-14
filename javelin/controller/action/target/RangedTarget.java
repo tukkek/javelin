@@ -19,19 +19,20 @@ import javelin.view.mappanel.battle.BattleMouse;
  * @author alex
  */
 public class RangedTarget extends Fire{
-	AbstractAttack attacktype=RangedAttack.SINGLETON;
+	AbstractAttack action=RangedAttack.INSTANCE;
 	Attack a;
 	float ap;
 
-	public RangedTarget(Attack a,float ap,char confirmkey){
+	public RangedTarget(Attack a,float ap,char confirmkey,AbstractAttack action){
 		super("Manual targetting","",confirmkey);
 		this.a=a;
 		this.ap=ap;
+		this.action=action;
 	}
 
 	@Override
 	protected void attack(Combatant active,Combatant target,BattleState s){
-		Action.outcome(attacktype.attack(active,target,a,0,0,ap,Fight.state));
+		Action.outcome(action.attack(active,target,a,0,0,ap,Fight.state));
 	}
 
 	@Override
@@ -41,6 +42,6 @@ public class RangedTarget extends Fire{
 
 	@Override
 	protected int predictchance(Combatant c,Combatant target,BattleState s){
-		return calculatehiddc(c,target,a,RangedAttack.SINGLETON,s);
+		return calculatehiddc(c,target,a,action,s);
 	}
 }

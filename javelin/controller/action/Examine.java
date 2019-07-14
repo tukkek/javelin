@@ -158,7 +158,7 @@ public class Examine extends Action{
 		var status=c.printstatus(s);
 		if(current.getlocation().distanceinsteps(c.getlocation())==1){
 			var a=current.source.melee.get(0).get(0);
-			status+=", "+MeleeAttack.SINGLETON.getchance(current,a,c,s);
+			status+=", "+MeleeAttack.INSTANCE.getchance(current,c,a,s);
 		}
 		return status.isEmpty()?c.toString():c+" ("+status+")";
 	}

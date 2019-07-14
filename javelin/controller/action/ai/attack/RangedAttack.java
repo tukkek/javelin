@@ -12,6 +12,7 @@ import javelin.controller.walker.Walker;
 import javelin.model.state.BattleState;
 import javelin.model.state.BattleState.Vision;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.condition.Prone;
 import javelin.model.unit.feat.attack.shot.ImprovedPreciseShot;
@@ -30,7 +31,7 @@ import javelin.model.unit.feat.attack.shot.PreciseShot;
  * @see RangedTarget
  */
 public class RangedAttack extends AbstractAttack{
-	static public RangedAttack SINGLETON=new RangedAttack();
+	static public RangedAttack INSTANCE=new RangedAttack(null);
 	/**
 	 * Currently if the AI sees an infinitesimal chance to hit, it'll rather
 	 * damage any unit for immediate utility. This is very statoc, with units
@@ -39,8 +40,9 @@ public class RangedAttack extends AbstractAttack{
 	 */
 	static boolean AISKIPUNLIKELY=true;
 
-	private RangedAttack(){
-		super("Ranged attack","ranged-hit","ranged-miss");
+	/** Constructor. */
+	public RangedAttack(Strike m){
+		super("Ranged attack",m,"ranged-hit","ranged-miss");
 	}
 
 	@Override

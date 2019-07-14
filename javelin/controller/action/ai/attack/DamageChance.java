@@ -6,7 +6,7 @@ package javelin.controller.action.ai.attack;
  * @author alex
  */
 public class DamageChance{
-	public final float chance;
+	public float chance;
 	public int damage;
 	public boolean critical;
 	/**

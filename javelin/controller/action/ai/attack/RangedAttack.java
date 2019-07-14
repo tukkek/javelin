@@ -81,7 +81,7 @@ public class RangedAttack extends AbstractAttack{
 		for(var target:s.gettargets(active))
 			for(var attacks:active.source.ranged){
 				var outcome=new AttackResolver(this,active,target,attacks.get(0),
-						attacks,s).attack();
+						attacks,s).attack(active,target,s);
 				if(!skip(active,(DamageNode)outcome.get(0),s)) successors.add(outcome);
 			}
 		return successors;

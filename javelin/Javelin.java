@@ -425,7 +425,8 @@ public class Javelin{
 	 * @param t TODO remove
 	 * @param See {@link Javelin.Delay}.
 	 */
-	public static void message(final String out,final Javelin.Delay d){
+	public static void message(String out,Javelin.Delay d){
+		if(BattleScreen.lastaicheck==null&&d==Delay.BLOCK) d=Delay.WAIT;
 		MessagePanel.active.add(out);
 		switch(d){
 			case WAIT:

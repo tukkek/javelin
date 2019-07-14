@@ -100,7 +100,7 @@ public class BattleScreen extends Screen{
 	Combatant lastwascomputermove;
 	boolean jointurns;
 	private boolean addsidebar;
-	Float lastaicheck=-Float.MAX_VALUE;
+	static public Float lastaicheck=-Float.MAX_VALUE;
 
 	/**
 	 * @param addsidebar If <code>true</code> will add a {@link StatusPanel} to
@@ -275,7 +275,7 @@ public class BattleScreen extends Screen{
 			if(!c.automatic&&!c.source.passive) return;
 		String prompt="All of your units are in automatic mode. Continue?\n"
 				+"Press r to reset all your units to manual mode.\n"
-				+"Press n to not see this message again.\n"
+				+"Press n to not see this message again until the game is restarted.\n"
 				+"Press any other key to continue...";
 		Character input=Javelin.prompt(prompt);
 		messagepanel.clear();

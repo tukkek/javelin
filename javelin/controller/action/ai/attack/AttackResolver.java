@@ -42,7 +42,8 @@ public class AttackResolver{
 	public class DamageNode extends ChanceNode{
 		public DamageChance damage;
 
-		DamageNode(DamageChance damage,String action,Delay delay,String audio){
+		DamageNode(Combatant attacker,Combatant target,BattleState state,
+				DamageChance damage,String action,Delay delay,String audio){
 			super(state,damage.chance,action,delay);
 			this.damage=damage;
 			overlay=new AiOverlay(target.location[0],target.location[1]);
@@ -51,17 +52,11 @@ public class AttackResolver{
 	}
 
 	AbstractAttack action;
-	BattleState state;
-	Combatant attacker;
-	Combatant target;
 	public int attackbonus=0;
 	public int damagebonus=0;
 	public float misschance;
 	float hitchance;
 	public String chance;
-	/**
-	 * TODO apply
-	 */
 	public float ap;
 	Attack attack;
 	AttackSequence sequence;
@@ -71,15 +66,12 @@ public class AttackResolver{
 	public AttackResolver(AbstractAttack action,Combatant attacker,
 			Combatant target,Attack a,AttackSequence sequence,BattleState state){
 		this.action=action;
-		this.state=state.clone();
-		this.attacker=state.clone(attacker).clonesource();
-		this.target=state.clone(target).clonesource();
 		attack=a;
 		this.sequence=sequence;
 		attackbonus+=a.bonus;
 		if(a.touch) attackbonus+=target.source.armor;
 		attackbonus-=action.getpenalty(attacker,target,state);
-		damagebonus+=action.getdamagebonus(null,null);
+		damagebonus+=action.getdamagebonus(attacker,target);
 		misschance=(target.getac()-attackbonus)/20f;
 		misschance=Action.bind(Action.or(misschance,target.source.misschance));
 		hitchance=1-misschance;
@@ -95,16 +87,8 @@ public class AttackResolver{
 			throw new RuntimeException("Attack sum not whole: "+sum);
 	}
 
-	String posthit(DamageChance dc){
-		if(target.hp>0){
-			if(dc.save!=null)
-				return attack.geteffect().cast(attacker,target,dc.save,state,null);
-		}else if(action.cleave) attacker.cleave(ap);
-		return null;
-	}
-
-	DamageNode miss(DamageChance dc){
-		if(action.feign&&target.source.dexterity>=12) Bluff.feign(attacker,target);
+	DamageNode miss(Combatant c,Combatant target,BattleState s,DamageChance dc){
+		if(action.feign&&target.source.dexterity>=12) Bluff.feign(c,target);
 		String name;
 		Delay wait;
 		if(maneuver==null){
@@ -114,34 +98,8 @@ public class AttackResolver{
 			name=maneuver.name.toLowerCase();
 			wait=Delay.BLOCK;
 		}
-		var output=attacker+" misses "+name+" ("+chance+")...";
-		return new DamageNode(dc,output,wait,action.soundmiss);
-	}
-
-	DamageNode createnode(DamageChance dc){
-		if(dc.damage==0) return miss(dc);
-		if(maneuver!=null) maneuver.prehit(attacker,target,attack,dc,state);
-		var name=maneuver==null?attack.name:maneuver.name.toLowerCase();
-		var lines=new ArrayList<String>(5);
-		var tohit=" ("+chance+")...";
-		lines.add(attacker+" "+dc.message+" "+target+" with "+name+tohit);
-		if(dc.critical) lines.add("Critical hit!");
-		if(dc.damage==0)
-			lines.add("Damage absorbed!");
-		else{
-			var resistance=attack.energy?target.source.energyresistance
-					:target.source.dr;
-			target.damage(dc.damage,state,resistance);
-			lines.add(target+" is "+target.getstatus()+".");
-			var posthit=posthit(dc);
-			if(posthit!=null) lines.add(posthit);
-		}
-		if(maneuver!=null) maneuver.posthit(attacker,target,attack,dc,state);
-		var wait=target.source.passive
-				&&target.getnumericstatus()>Combatant.STATUSUNCONSCIOUS;
-		var delay=wait?Delay.WAIT:Delay.BLOCK;
-		var output=String.join("\n",lines);
-		return new DamageNode(dc,output,delay,action.soundhit);
+		var output=c+" misses "+name+" ("+chance+")...";
+		return new DamageNode(c,target,s,dc,output,wait,action.soundmiss);
 	}
 
 	List<DamageChance> hit(float hitchance,int multiplier,Boolean savep){
@@ -159,7 +117,7 @@ public class AttackResolver{
 		}).collect(Collectors.toList());
 	}
 
-	List<DamageChance> dealattack(){
+	List<DamageChance> dealattack(Combatant c,Combatant target){
 		var chances=new ArrayList<DamageChance>();
 		chances.add(new DamageChance(misschance,0,false,null));
 		var graze=GRAZE?(target.getac()-target.gettouchac())/20f:0;
@@ -169,7 +127,7 @@ public class AttackResolver{
 			chances.add(dc);
 		}
 		var effect=target.source.passive?null:attack.geteffect();
-		var save=effect==null?1:effect.getsavechance(attacker,target);
+		var save=effect==null?1:effect.getsavechance(c,target);
 		var nosave=1-save;
 		var hit=1-misschance-graze;
 		var threat=(21-attack.threat)/20f;
@@ -182,15 +140,57 @@ public class AttackResolver{
 		return chances;
 	}
 
-	public List<ChanceNode> attack(){
-		if(maneuver!=null) maneuver.preattacks(attacker,target,attack,state);
-		var nodes=new ArrayList<ChanceNode>();
-		for(var dc:dealattack()){
-			if(dc.damage>0) dc.damage+=damagebonus;
-			if(dc.damage<0) dc.damage=0;
-			nodes.add(createnode(dc));
+	String posthit(Combatant c,Combatant target,BattleState s,DamageChance dc){
+		if(target.hp>0){
+			if(dc.save!=null) return attack.geteffect().cast(c,target,dc.save,s,null);
+		}else if(action.cleave) c.cleave(ap);
+		return null;
+	}
+
+	DamageNode createnode(Combatant c,Combatant target,BattleState s,
+			DamageChance dc){
+		s=s.clone();
+		c=s.clone(c).clonesource();
+		target=s.clone(target).clonesource();
+		if(dc.damage>0) dc.damage+=damagebonus;
+		if(dc.damage<0) dc.damage=0;
+		if(dc.damage==0) return miss(c,target,s,dc);
+		if(maneuver!=null) maneuver.prehit(c,target,attack,dc,s);
+		var name=maneuver==null?attack.name:maneuver.name.toLowerCase();
+		var lines=new ArrayList<String>(5);
+		var tohit=" ("+chance+")...";
+		lines.add(c+" "+dc.message+" "+target+" with "+name+tohit);
+		if(dc.critical) lines.add("Critical hit!");
+		if(dc.damage==0)
+			lines.add("Damage absorbed!");
+		else{
+			var resistance=attack.energy?target.source.energyresistance
+					:target.source.dr;
+			target.damage(dc.damage,s,resistance);
+			lines.add(target+" is "+target.getstatus()+".");
+			var posthit=posthit(c,target,s,dc);
+			if(posthit!=null) lines.add(posthit);
 		}
-		if(maneuver!=null) maneuver.postattacks(attacker,target,attack,state);
+		if(maneuver!=null){
+			maneuver.posthit(c,target,attack,dc,s);
+			maneuver.postattacks(c,target,attack,s);
+		}
+		var wait=target.source.passive
+				&&target.getnumericstatus()>Combatant.STATUSUNCONSCIOUS;
+		var delay=wait?Delay.WAIT:Delay.BLOCK;
+		var output=String.join("\n",lines);
+		return new DamageNode(c,target,s,dc,output,delay,action.soundhit);
+	}
+
+	public List<ChanceNode> attack(Combatant c,Combatant target,BattleState s){
+		s=s.clone();
+		c=s.clone(c).clonesource();
+		target=s.clone(target).clonesource();
+		c.ap+=ap;
+		if(maneuver!=null) maneuver.preattacks(c,target,attack,s);
+		var nodes=new ArrayList<ChanceNode>();
+		for(var dc:dealattack(c,target))
+			nodes.add(createnode(c,target,s,dc));
 		return nodes;
 	}
 }

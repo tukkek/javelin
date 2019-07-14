@@ -13,7 +13,7 @@ import javelin.model.unit.Monster.MonsterType;
  * @author alex
  */
 public class OrcSettlement extends Haunt{
-	static final List<String> GROUPS=List.of("reptilian,goblinoid,orc");
+	static final List<String> GROUPS=List.of("reptilian","goblinoid","orc");
 	static final List<Monster> POOL=Monster.MONSTERS.stream()
 			.filter(m->m.type.equals(MonsterType.HUMANOID)
 					&&GROUPS.contains(m.group.toLowerCase()))

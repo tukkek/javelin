@@ -139,6 +139,8 @@ public abstract class Haunt extends Fortification{
 	protected Haunt(String description,Class<? extends LocationMap> map,
 			List<Monster> pool){
 		super(description,description,0,0);
+		if(Javelin.DEBUG&&pool.isEmpty())
+			throw new RuntimeException("empty pool: "+getClass());
 		discard=false;
 		allowentry=false;
 		this.map=map;

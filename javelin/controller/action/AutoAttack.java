@@ -37,6 +37,10 @@ public class AutoAttack extends Action{
 			active.meleeattacks(melee.get(0),s);
 			return true;
 		}
+		if(active.source.ranged.isEmpty()){
+			Javelin.message(active+" has no ranged attacks...",Javelin.Delay.WAIT);
+			throw new RepeatTurn();
+		}
 		List<Combatant> ranged=s.gettargets(active);
 		ranged.removeAll(melee);
 		filterpassive(ranged);

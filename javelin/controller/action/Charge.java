@@ -60,27 +60,27 @@ public class Charge extends Fire implements AiAction{
 		Action.outcome(charge(Fight.state,combatant,targetCombatant).get(0));
 	}
 
-	ArrayList<List<ChanceNode>> charge(BattleState state,Combatant me,
+	ArrayList<List<ChanceNode>> charge(BattleState s,Combatant me,
 			Combatant target){
 		final ArrayList<List<ChanceNode>> chances=new ArrayList<>();
 		if(me.source.melee.isEmpty()||me.hascondition(Fatigued.class)!=null)
 			return chances;
 		Point from=new Point(me.location[0],me.location[1]);
-		state=state.clone();
-		me=state.clone(me);
-		target=state.clone(target);
-		final List<Point> walk=walk(me,target,state);
+		s=s.clone();
+		me=s.clone(me);
+		target=s.clone(target);
+		final List<Point> walk=walk(me,target,s);
 		final Point destination=walk.get(walk.size()-1);
-		if(state.getmeld(destination.x,destination.y)!=null) return chances;
+		if(s.getmeld(destination.x,destination.y)!=null) return chances;
 		me.location[0]=destination.x;
 		me.location[1]=destination.y;
 		charge(me);
 		var sequence=me.source.melee.get(0);
 		var resolver=new AttackResolver(MeleeAttack.INSTANCE,me,target,
-				sequence.get(0),sequence,state);
+				sequence.get(0),sequence,s);
 		resolver.attackbonus+=2;
 		resolver.ap=1;
-		final List<ChanceNode> move=resolver.attack();
+		final List<ChanceNode> move=resolver.attack(me,target,s);
 		final boolean bullrush=me.source.hasfeat(BullRush.SINGLETON);
 		List<Point> steps=new ArrayList<>(walk.subList(0,walk.size()-1));
 		steps.add(from);
@@ -96,9 +96,8 @@ public class Charge extends Fire implements AiAction{
 					final int pushx=Charge.push(me,posttarget,0);
 					final int pushy=Charge.push(me,posttarget,1);
 					if(!Charge.outoufbounds(post,pushx,pushy)
-							&&!state.map[pushx][pushy].blocked
-							&&state.getcombatant(pushx,pushy)==null
-							&&state.getmeld(pushx,pushy)==null){
+							&&!s.map[pushx][pushy].blocked&&s.getcombatant(pushx,pushy)==null
+							&&s.getmeld(pushx,pushy)==null){
 						posttarget.location[0]=pushx;
 						posttarget.location[1]=pushy;
 					}

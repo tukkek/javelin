@@ -37,7 +37,7 @@ public class RangedTarget extends Fire{
 	protected void attack(Combatant active,Combatant target,BattleState s){
 		var resolver=new AttackResolver(action,active,target,a,sequence,
 				Fight.state);
-		Action.outcome(resolver.attack());
+		Action.outcome(resolver.attack(active,target,s));
 	}
 
 	@Override

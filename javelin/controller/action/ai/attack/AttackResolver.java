@@ -37,6 +37,17 @@ public class AttackResolver{
 			overlay=new AiOverlay(target.location[0],target.location[1]);
 			this.audio=target.hp<=0?new Audio("die",target):new Audio(audio,attacker);
 		}
+
+		@Override
+		public boolean equals(Object o){
+			var r=o instanceof DamageNode?(DamageNode)o:null;
+			return r!=null&&action.equals(r.action);
+		}
+
+		@Override
+		public int hashCode(){
+			return action.hashCode();
+		}
 	}
 
 	enum Outcome{
@@ -50,9 +61,9 @@ public class AttackResolver{
 		GRAZE,HIT,CRITICAL_UNCONFIRMED,CRITICAL
 	}
 
-	class SequenceResult{
-		List<Outcome> outcomes;
-		List<String> chances;
+	class SequenceResult implements Cloneable{
+		ArrayList<Outcome> outcomes;
+		ArrayList<String> chances;
 
 		public SequenceResult(){
 			var size=sequence.size();
@@ -77,6 +88,18 @@ public class AttackResolver{
 		@Override
 		public String toString(){
 			return outcomes.toString();
+		}
+
+		@Override
+		public SequenceResult clone(){
+			try{
+				var clone=(SequenceResult)super.clone();
+				clone.outcomes=new ArrayList<>(outcomes);
+				clone.chances=new ArrayList<>(chances);
+				return clone;
+			}catch(CloneNotSupportedException e){
+				throw new RuntimeException(e);
+			}
 		}
 	}
 
@@ -319,8 +342,21 @@ public class AttackResolver{
 	}
 
 	List<ChanceNode> merge(List<ChanceNode> nodes){
+		if(Javelin.DEBUG)
+			validate(nodes.stream().map(n->n.chance).collect(Collectors.toList()));
 		// TODO merge same damage (for example, if killed target in first attack)
 		//TODO can probably do by message?
+		var merged=new HashMap<DamageNode,DamageNode>(nodes.size());
+		for(var n:nodes){
+			var dn=(DamageNode)n;
+			var equal=merged.get(dn);
+			if(equal==null)
+				merged.put(dn,dn);
+			else
+				equal.chance+=dn.chance;
+		}
+		nodes.clear();
+		nodes.addAll(merged.values());
 		if(Javelin.DEBUG)
 			validate(nodes.stream().map(n->n.chance).collect(Collectors.toList()));
 		return nodes;
@@ -345,8 +381,6 @@ public class AttackResolver{
 		var nodes=results.entrySet().stream()
 				.map(entry->apply(entry.getKey(),entry.getValue(),s,c,target))
 				.collect(Collectors.toList());
-		if(Javelin.DEBUG)
-			validate(nodes.stream().map(n->n.chance).collect(Collectors.toList()));
 		return merge(nodes);
 	}
 }

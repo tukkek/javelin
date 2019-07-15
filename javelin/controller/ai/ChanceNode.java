@@ -22,7 +22,7 @@ public class ChanceNode implements Cloneable{
 	/**
 	 * Chance of this outcome happening.
 	 */
-	public final float chance;
+	public float chance;
 	/**
 	 * Delay for the outcome.
 	 */

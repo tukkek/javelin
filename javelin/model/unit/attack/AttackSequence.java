@@ -41,9 +41,7 @@ public class AttackSequence extends CloneableList<Attack>{
 
 	@Override
 	public AttackSequence clone(){
-		var c=(AttackSequence)super.clone();
-		c.sort();
-		return c;
+		return (AttackSequence)super.clone();
 	}
 
 	public String toString(Combatant target){

@@ -51,9 +51,14 @@ public class AttackResolver{
 
 	class SequenceResult{
 		List<Outcome> outcomes;
+		List<String> chances;
 
-		public SequenceResult(List<Outcome> result){
-			outcomes=result;
+		public SequenceResult(){
+			var size=sequence.size();
+			outcomes=new ArrayList<>(size);
+			while(outcomes.size()<size)
+				outcomes.add(Outcome.MISS);
+			chances=new ArrayList<>(size);
 		}
 
 		@Override
@@ -100,6 +105,7 @@ public class AttackResolver{
 			Combatant target,AttackSequence sequence,BattleState state){
 		this.action=action;
 		this.sequence=sequence;
+		sequence.sort();
 		maneuver=action.maneuver;
 		attackbonus=-action.getpenalty(attacker,target,state);
 		damagebonus=action.getdamagebonus(attacker,target);
@@ -108,7 +114,7 @@ public class AttackResolver{
 		misschance=(target.getac()-attackbonus-preview.getbonus(target))/20f;
 		misschance=Action.bind(Action.or(misschance,target.source.misschance));
 		hitchance=1-misschance;
-		chance=Javelin.translatetochance(Math.round(20*misschance))+" to hit";
+		chance=Javelin.getchance(Math.round(20*misschance))+" to hit";
 	}
 
 	/** Single-{@link Attack} constructor. */
@@ -214,25 +220,24 @@ public class AttackResolver{
 		return chances;
 	}*/
 
-	SequenceResult dealattacks(int rollp,Combatant c,Combatant target,
-			BattleState s){
-		var outcomes=new ArrayList<Outcome>(sequence.size());
-		while(outcomes.size()<sequence.size())
-			outcomes.add(Outcome.MISS);
-		if(rollp>1) for(int i=0;i<sequence.size();i++){
+	SequenceResult dealattacks(int rollp,Combatant target){
+		var r=new SequenceResult();
+		for(int i=0;i<sequence.size();i++){
 			var a=sequence.get(i);
+			var bonus=a.getbonus(target)+attackbonus;
+			var ac=target.getac();
+			r.chances.add(Javelin.getchance(ac-bonus));
 			if(rollp>=a.threat){
-				outcomes.set(i,Outcome.CRITICAL_UNCONFIRMED);
+				r.outcomes.set(i,Outcome.CRITICAL_UNCONFIRMED);
 				continue;
 			}
-			var roll=rollp+a.getbonus(target)+attackbonus;
-			var ac=target.getac();
+			var roll=rollp+bonus;
 			if(roll>=ac)
-				outcomes.set(i,Outcome.HIT);
-			else if(roll>=ac-target.source.armor) outcomes.set(i,Outcome.GRAZE);
+				r.outcomes.set(i,Outcome.HIT);
+			else if(roll>=ac-target.source.armor) r.outcomes.set(i,Outcome.GRAZE);
 		}
 		//TODO maybe have only result structure (DamageNode)
-		return new SequenceResult(outcomes);
+		return r;
 	}
 
 	void confirm(HashMap<SequenceResult,Float> results){
@@ -275,17 +280,16 @@ public class AttackResolver{
 			var a=sequence.get(i);
 			ap+=sequence.indexOf(a)==0?ActionCost.STANDARD
 					:ActionCost.SWIFT/(sequence.size()-1);
+			var chancetohit=" ("+result.chances.get(i)+" to hit)";
 			var name=i==0?StatisticsScreen.capitalize(a.name):a.name;
 			if(o==Outcome.MISS){
-				descriptions.add(name+": miss");
+				descriptions.add(name+": miss"+chancetohit);
 				break;
 			}
 			hit=true;
-			descriptions.add(name+": "+damage(target,o,a,s));
+			descriptions.add(name+": "+damage(target,o,a,s)+chancetohit);
 			if(target.hp<=0) break;
 		}
-		//		if(s.blueTeam.contains(c)) //TODO
-		//			System.out.println("ap cost: "+(this.ap==null?ap:this.ap));
 		c.ap+=this.ap==null?ap:this.ap;
 		if(maneuver!=null) maneuver.postattacks(c,target,sequence,s);
 		var delay=hit?Delay.BLOCK:Delay.WAIT;
@@ -311,7 +315,7 @@ public class AttackResolver{
 		if(maneuver!=null) maneuver.preattacks(c,target,sequence,s);
 		var results=new HashMap<SequenceResult,Float>(20);
 		for(var roll=1;roll<=20;roll++){
-			var result=dealattacks(roll,c,target,s);
+			var result=dealattacks(roll,target);
 			var previous=results.get(result);
 			var chance=1/20f;
 			if(previous!=null) chance+=previous;

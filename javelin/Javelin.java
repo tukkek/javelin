@@ -248,7 +248,7 @@ public class Javelin{
 	 * @return A textual representation of how easy or hard this action is to
 	 *         achieve.
 	 */
-	static public String translatetochance(int rolltohit){
+	static public String getchance(int rolltohit){
 		if(rolltohit<=EFFORTLESS) return "effortless";
 		if(rolltohit<=EASY) return "easy";
 		if(rolltohit<=FAIR) return "fair";

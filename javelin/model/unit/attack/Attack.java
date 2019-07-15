@@ -76,7 +76,7 @@ public class Attack implements Serializable,javelin.model.Cloneable{
 			chance=(bonus>=0?"+":"")+bonus;
 		else{
 			int rolltarget=target.getac()-bonus;
-			chance=Javelin.translatetochance(rolltarget)+" to hit";
+			chance=Javelin.getchance(rolltarget)+" to hit";
 		}
 		return name+" ("+chance+", "+formatDamage()+")";
 	}

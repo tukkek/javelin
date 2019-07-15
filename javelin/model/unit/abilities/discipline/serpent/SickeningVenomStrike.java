@@ -17,30 +17,12 @@ public class SickeningVenomStrike extends Strike{
 	}
 
 	@Override
-	public void preattacks(Combatant current,Combatant target,Attack a,
+	public void hit(Combatant current,Combatant target,Attack a,DamageChance dc,
 			BattleState s){
-		// nothing
-	}
-
-	@Override
-	public void postattacks(Combatant current,Combatant target,Attack a,
-			BattleState s){
-		// nothing
-	}
-
-	@Override
-	public void prehit(Combatant current,Combatant target,Attack a,
-			DamageChance dc,BattleState s){
 		target.addcondition(new ConstitutionDamage(2,current));
 		if(!save(target.source.getfortitude(),13,current)){
 			final float expireat=current.ap+SICKENDURATION;
 			target.addcondition(new Sickened(expireat,target,null));
 		}
-	}
-
-	@Override
-	public void posthit(Combatant current,Combatant target,Attack a,
-			DamageChance dc,BattleState s){
-		// nothing
 	}
 }

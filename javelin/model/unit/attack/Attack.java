@@ -136,4 +136,11 @@ public class Attack implements Serializable,javelin.model.Cloneable{
 	public int getminimumdamage(){
 		return Math.max(0,damage[0]+damage[2]);
 	}
+
+	/** @return Attack {@link #bonus} against this enemy. */
+	public int getbonus(Combatant target){
+		var bonus=this.bonus;
+		if(touch) bonus+=target.source.armor;
+		return bonus;
+	}
 }

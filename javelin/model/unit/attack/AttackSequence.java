@@ -1,5 +1,6 @@
 package javelin.model.unit.attack;
 
+import java.util.Collection;
 import java.util.Comparator;
 
 import javelin.model.unit.CloneableList;
@@ -22,6 +23,16 @@ public class AttackSequence extends CloneableList<Attack>{
 	public boolean powerful=false;
 	/** @see RapidShot */
 	public boolean rapid=false;
+
+	/** Constructor. */
+	public AttackSequence(){
+		super();
+	}
+
+	/** Constructor. */
+	public AttackSequence(Collection<Attack> attacks){
+		super(attacks);
+	}
 
 	@Override
 	public String toString(){

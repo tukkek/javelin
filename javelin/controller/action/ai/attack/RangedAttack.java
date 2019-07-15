@@ -80,8 +80,8 @@ public class RangedAttack extends AbstractAttack{
 		var successors=new ArrayList<List<ChanceNode>>();
 		for(var target:s.gettargets(active))
 			for(var attacks:active.source.ranged){
-				var outcome=new AttackResolver(this,active,target,attacks.get(0),
-						attacks,s).attack(active,target,s);
+				var outcome=new AttackResolver(this,active,target,attacks,s)
+						.attack(active,target,s);
 				if(!skip(active,(DamageNode)outcome.get(0),s)) successors.add(outcome);
 			}
 		return successors;
@@ -96,8 +96,6 @@ public class RangedAttack extends AbstractAttack{
 	 */
 	static boolean skip(Combatant active,DamageNode miss,BattleState previous){
 		if(!AISKIPUNLIKELY) return false;
-		if(Javelin.DEBUG&&miss.damage.damage!=0)
-			throw new RuntimeException("Miss damage != 0");
 		if(miss.chance<=Javelin.HARD/20f||active.source.melee.isEmpty())
 			return false;
 		var map=previous.map;

@@ -39,30 +39,12 @@ public class StingOfTheAdder extends Strike{
 	}
 
 	@Override
-	public void preattacks(Combatant current,Combatant target,Attack a,
+	public void hit(Combatant current,Combatant target,Attack a,DamageChance dc,
 			BattleState s){
-		// nothing
-	}
-
-	@Override
-	public void postattacks(Combatant current,Combatant target,Attack a,
-			BattleState s){
-		// nothing
-	}
-
-	@Override
-	public void prehit(Combatant current,Combatant target,Attack a,
-			DamageChance dc,BattleState s){
 		dc.damage+=DAMAGE;
 		final boolean save=save(target.source.getfortitude(),14,current);
 		final int wisdomdamage=save?WISDOMDAMAGE/2:WISDOMDAMAGE;
 		target.addcondition(new WisdomDamage(wisdomdamage,target));
 		if(!save) target.addcondition(new AdderSting(current.ap+1,target));
-	}
-
-	@Override
-	public void posthit(Combatant current,Combatant target,Attack a,
-			DamageChance dc,BattleState s){
-		// nothing
 	}
 }

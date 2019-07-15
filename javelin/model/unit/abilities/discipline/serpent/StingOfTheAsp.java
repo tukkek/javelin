@@ -43,29 +43,11 @@ public class StingOfTheAsp extends Strike{
 	}
 
 	@Override
-	public void preattacks(Combatant current,Combatant target,Attack a,
-			BattleState s){
-
-	}
-
-	@Override
-	public void postattacks(Combatant current,Combatant target,Attack a,
-			BattleState s){
-
-	}
-
-	@Override
-	public void prehit(Combatant active,Combatant target,Attack a,DamageChance dc,
+	public void hit(Combatant active,Combatant target,Attack a,DamageChance dc,
 			BattleState s){
 		dc.damage+=EXTRADAMAGE;
 		boolean save=save(target.source.getfortitude(),12,active);
 		target.addcondition(new StrengthDamage(save?1:2,target));
 		if(!save) target.addcondition(new AspString(active.ap+1,target));
-	}
-
-	@Override
-	public void posthit(Combatant current,Combatant target,Attack a,
-			DamageChance dc,BattleState s){
-
 	}
 }

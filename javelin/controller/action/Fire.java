@@ -49,7 +49,7 @@ public class Fire extends Target{
 
 	public static int calculatehiddc(Combatant active,final Combatant target,
 			Attack a,AttackSequence sequence,AbstractAttack attacktype,BattleState s){
-		var resolver=new AttackResolver(attacktype,active,target,a,sequence,s);
+		var resolver=new AttackResolver(attacktype,active,target,sequence,s);
 		return Math.round(20*resolver.misschance);
 	}
 

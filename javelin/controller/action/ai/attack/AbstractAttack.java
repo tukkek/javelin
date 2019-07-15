@@ -43,6 +43,9 @@ import javelin.model.unit.skill.Bluff;
  * possibilities. A second pass will then resolve criticals and a third pass
  * will calculate damage.
  *
+ * The heavy lifting is mostly done by {@link AttackResolver}, while this class
+ * mostly models different types and attack scenarios and their particularities.
+ *
  * @author alex
  */
 public abstract class AbstractAttack extends Action implements AiAction{

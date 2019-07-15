@@ -43,27 +43,9 @@ public class StingOfTheRattler extends Strike{
 	}
 
 	@Override
-	public void prehit(Combatant active,Combatant target,Attack a,DamageChance dc,
+	public void hit(Combatant active,Combatant target,Attack a,DamageChance dc,
 			BattleState s){
 		dc.damage+=DAMAGEBONUS;
 		target.addcondition(new RattlerSting(active.ap+ActionCost.FULL,target));
-	}
-
-	@Override
-	public void posthit(Combatant attacker,Combatant target,Attack a,
-			DamageChance dc,BattleState s){
-		// no cleanup
-	}
-
-	@Override
-	public void preattacks(Combatant current,Combatant target,Attack a,
-			BattleState s){
-		// nothing
-	}
-
-	@Override
-	public void postattacks(Combatant current,Combatant target,Attack a,
-			BattleState s){
-		// nothing
 	}
 }

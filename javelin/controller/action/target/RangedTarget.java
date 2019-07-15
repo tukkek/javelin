@@ -18,6 +18,9 @@ import javelin.view.mappanel.battle.BattleMouse;
  * This is to be used internally for convenience. Tupical ranged attacks are
  * handled by {@link Fire} (through {@link BattleMouse} if using the mouse).
  *
+ * Performs a single {@link Attack}, not an {@link AttackSequence}. See
+ * {@link AttackResolver}.
+ *
  * @author alex
  */
 public class RangedTarget extends Fire{
@@ -35,8 +38,7 @@ public class RangedTarget extends Fire{
 
 	@Override
 	protected void attack(Combatant active,Combatant target,BattleState s){
-		var resolver=new AttackResolver(action,active,target,a,sequence,
-				Fight.state);
+		var resolver=new AttackResolver(action,active,target,a,Fight.state);
 		Action.outcome(resolver.attack(active,target,s));
 	}
 

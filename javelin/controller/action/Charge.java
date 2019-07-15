@@ -77,9 +77,9 @@ public class Charge extends Fire implements AiAction{
 		charge(me);
 		var sequence=me.source.melee.get(0);
 		var resolver=new AttackResolver(MeleeAttack.INSTANCE,me,target,
-				sequence.get(0),sequence,s);
+				sequence.get(0),s);
 		resolver.attackbonus+=2;
-		resolver.ap=1;
+		resolver.ap=1f;
 		final List<ChanceNode> move=resolver.attack(me,target,s);
 		final boolean bullrush=me.source.hasfeat(BullRush.SINGLETON);
 		List<Point> steps=new ArrayList<>(walk.subList(0,walk.size()-1));

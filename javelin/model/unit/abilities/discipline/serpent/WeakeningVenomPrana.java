@@ -16,28 +16,11 @@ public class WeakeningVenomPrana extends Strike{
 	}
 
 	@Override
-	public void preattacks(Combatant current,Combatant target,Attack a,
+	public void hit(Combatant current,Combatant target,Attack a,DamageChance dc,
 			BattleState s){
-		// nothing
-	}
-
-	@Override
-	public void postattacks(Combatant current,Combatant target,Attack a,
-			BattleState s){
-		// nothing
-	}
-
-	@Override
-	public void prehit(Combatant current,Combatant target,Attack a,
-			DamageChance dc,BattleState s){
 		final int damage=save(target.source.getfortitude(),12,current)?DAMAGE/2
 				:DAMAGE;
 		target.addcondition(new StrengthDamage(damage,target));
 	}
 
-	@Override
-	public void posthit(Combatant current,Combatant target,Attack a,
-			DamageChance dc,BattleState s){
-		// nothing
-	}
 }

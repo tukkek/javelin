@@ -160,7 +160,7 @@ public class Examine extends Action{
 		if(current.getlocation().distanceinsteps(c.getlocation())==1){
 			var sequence=current.source.melee.get(0);
 			var resolver=new AttackResolver(MeleeAttack.INSTANCE,current,c,
-					sequence.get(0),sequence,s);
+					sequence.get(0),s);
 			status+=", "+resolver.chance;
 		}
 		return status.isEmpty()?c.toString():c+" ("+status+")";

@@ -5,7 +5,6 @@ import java.util.List;
 
 import javelin.controller.action.ActionCost;
 import javelin.controller.action.ai.attack.AbstractAttack;
-import javelin.controller.action.ai.attack.AttackResolver.DamageNode;
 import javelin.controller.action.ai.attack.DamageChance;
 import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.controller.action.ai.attack.RangedAttack;
@@ -18,6 +17,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.discipline.serpent.DizzyingVenomPrana;
 import javelin.model.unit.attack.Attack;
+import javelin.model.unit.attack.AttackSequence;
 
 /**
  * Lets the user select a standard attack (not a full sequence) then sets (and
@@ -93,18 +93,22 @@ public abstract class Strike extends Maneuver{
 	 * Called before any {@link DamageNode}s are created. Useful for setting up
 	 * effects and the like. This is also called only once per
 	 * {@link AbstractAttack} run, making it preferable to
-	 * {@link #prehit(Combatant, Combatant, Attack, DamageChance, BattleState)}.
+	 * {@link #hit(Combatant, Combatant, Attack, DamageChance, BattleState)}.
 	 */
-	abstract public void preattacks(Combatant current,Combatant target,Attack a,
-			BattleState s);
+	public void preattacks(Combatant current,Combatant target,
+			AttackSequence sequence,BattleState s){
+		//nothing by default
+	}
 
 	/**
 	 * Like
 	 * {@link #posthit(Combatant, Combatant, Attack, DamageChance, BattleState)}
 	 * but for {@link #postattacks(Combatant, Combatant, Attack, BattleState)}.
 	 */
-	abstract public void postattacks(Combatant current,Combatant target,Attack a,
-			BattleState s);
+	public void postattacks(Combatant current,Combatant target,
+			AttackSequence sequence,BattleState s){
+		//nothing by default
+	}
 
 	/**
 	 * Called before a strike hits. Mostly used to setup bonus damage, secondary
@@ -122,15 +126,8 @@ public abstract class Strike extends Maneuver{
 	 * @param dc Make sure to use this to apply extra damage so it will handle
 	 *          death, {@link Monster#dr}, etc.
 	 */
-	abstract public void prehit(Combatant current,Combatant target,Attack a,
-			DamageChance dc,BattleState s);
-
-	/**
-	 * Called after all damage consequences have been ealt with. Mostly used to
-	 * clean-up
-	 * {@link #prehit(Combatant, Combatant, Attack, DamageChance, BattleState)}
-	 * actions.
-	 */
-	abstract public void posthit(Combatant current,Combatant target,Attack a,
-			DamageChance dc,BattleState s);
+	public void hit(Combatant current,Combatant target,Attack a,DamageChance dc,
+			BattleState s){
+		//nothing by default
+	}
 }

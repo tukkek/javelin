@@ -9,6 +9,7 @@ import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.necromancy.Poison;
 import javelin.model.unit.attack.Attack;
+import javelin.model.unit.attack.AttackSequence;
 import javelin.old.RPG;
 
 /**
@@ -29,9 +30,10 @@ public class IronFang extends Strike{
 	}
 
 	@Override
-	public void preattacks(Combatant current,Combatant target,Attack a,
-			BattleState s){
-		modifypoisondc(a,+2);
+	public void preattacks(Combatant current,Combatant target,
+			AttackSequence sequence,BattleState s){
+		for(var a:sequence)
+			modifypoisondc(a,+2);
 		final Monster m=target.source.clone();
 		target.source=m;
 		originaldr=m.dr;
@@ -39,14 +41,15 @@ public class IronFang extends Strike{
 	}
 
 	@Override
-	public void postattacks(Combatant current,Combatant target,Attack a,
-			BattleState s){
+	public void postattacks(Combatant current,Combatant target,
+			AttackSequence sequence,BattleState s){
 		target.source.dr+=originaldr;
-		modifypoisondc(a,-2);
+		for(var a:sequence)
+			modifypoisondc(a,-2);
 	}
 
 	@Override
-	public void prehit(Combatant active,Combatant target,Attack a,DamageChance dc,
+	public void hit(Combatant active,Combatant target,Attack a,DamageChance dc,
 			BattleState s){
 		dc.damage+=BONUSDAMAGE;
 	}
@@ -58,8 +61,4 @@ public class IronFang extends Strike{
 			p.dcbonus+=dcbonus;
 		}
 	}
-
-	@Override
-	public void posthit(Combatant attacker,Combatant target,Attack a,
-			DamageChance dc,BattleState s){}
 }

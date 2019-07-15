@@ -161,6 +161,7 @@ public class Examine extends Action{
 			var sequence=current.source.melee.get(0);
 			var resolver=new AttackResolver(MeleeAttack.INSTANCE,current,c,
 					sequence.get(0),s);
+			resolver.preview(c);
 			status+=", "+resolver.chance;
 		}
 		return status.isEmpty()?c.toString():c+" ("+status+")";

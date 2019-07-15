@@ -24,6 +24,7 @@ public class MeleeMouseAction extends BattleMouseAction{
 		var sequence=c.source.melee.get(0);
 		var resolver=new AttackResolver(MeleeAttack.INSTANCE,c,target,
 				sequence.get(0),s);
+		resolver.preview(target);
 		var status=target+" ("+target.getstatus()+", "+resolver.chance+")";
 		BattleMouse.showstatus(status,target,true);
 	}

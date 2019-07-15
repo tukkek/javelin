@@ -148,8 +148,9 @@ public abstract class ExpertiseAction extends Target implements AiAction{
 			final BattleState s,final int touchattackbonus){
 		AttackSequence sequence=c.source.melee.get(0);
 		Attack attack=sequence.get(0);
-		return new AttackResolver(MeleeAttack.INSTANCE,c,target,attack,
-				s).misschance;
+		var r=new AttackResolver(MeleeAttack.INSTANCE,c,target,attack,s);
+		r.preview(target);
+		return r.misschance;
 	}
 
 	static int size(final Combatant combatant){

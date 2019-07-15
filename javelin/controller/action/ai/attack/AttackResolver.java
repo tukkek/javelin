@@ -56,8 +56,6 @@ public class AttackResolver{
 		public SequenceResult(){
 			var size=sequence.size();
 			outcomes=new ArrayList<>(size);
-			while(outcomes.size()<size)
-				outcomes.add(Outcome.MISS);
 			chances=new ArrayList<>(size);
 		}
 
@@ -87,10 +85,12 @@ public class AttackResolver{
 	 * calculated by also adding the first {@link Attack#bonus} of the
 	 * {@link #sequence}.
 	 */
-	public int attackbonus;
-	public int damagebonus;
-	/** Preview, see {@link #attackbonus}. */
+	public int attackbonus=0;
+	/** @see Attack#damage */
+	public int damagebonus=0;
+	/** @see #preview(Combatant, AttackSequence) */
 	public float misschance;
+	/** @see #preview(Combatant, AttackSequence) */
 	public float hitchance;
 	/** Human-text preview, see {@link #attackbonus}. */
 	public String chance;
@@ -107,9 +107,13 @@ public class AttackResolver{
 		this.sequence=sequence;
 		sequence.sort();
 		maneuver=action.maneuver;
-		attackbonus=-action.getpenalty(attacker,target,state);
-		damagebonus=action.getdamagebonus(attacker,target);
-		//TODO hide behind preview() function since not used normally
+		attackbonus-=action.getpenalty(attacker,target,state);
+		attackbonus-=20*target.source.misschance; //TODO is this naive?
+		damagebonus+=action.getdamagebonus(attacker,target);
+	}
+
+	/** Calculates some fields to expose attack information and statistics. */
+	public void preview(Combatant target){
 		var preview=sequence.get(0);
 		misschance=(target.getac()-attackbonus-preview.getbonus(target))/20f;
 		misschance=Action.bind(Action.or(misschance,target.source.misschance));
@@ -143,7 +147,7 @@ public class AttackResolver{
 		var output=c+" misses "+name+" ("+chance+")...";
 		return new DamageNode(c,target,s,dc,output,wait,action.soundmiss);
 	}
-	
+
 	List<DamageChance> hit(Attack a,float hitchance,int multiplier,Boolean savep){
 		if(hitchance==0) return List.of();
 		if(FLATDAMAGE) return List.of(
@@ -157,7 +161,7 @@ public class AttackResolver{
 			return new DamageChance(chance,damage,multiplier!=1,save);
 		}).collect(Collectors.toList());
 	}
-	
+
 	String posthit(Attack a,Combatant c,Combatant target,BattleState s,
 			DamageChance dc){
 		if(target.hp>0){
@@ -165,7 +169,7 @@ public class AttackResolver{
 		}else if(action.cleave) c.cleave(ap);
 		return null;
 	}
-	
+
 	DamageNode createnode(Combatant c,Combatant target,BattleState s,
 			DamageChance dc){
 		s=s.clone();
@@ -196,7 +200,7 @@ public class AttackResolver{
 		var output=String.join("\n",lines);
 		return new DamageNode(c,target,s,dc,output,delay,action.soundhit);
 	}
-	
+
 	List<DamageChance> dealattack(Combatant c,Combatant target){
 		var chances=new ArrayList<DamageChance>();
 		chances.add(new DamageChance(misschance,0,false,null));
@@ -220,23 +224,25 @@ public class AttackResolver{
 		return chances;
 	}*/
 
-	SequenceResult dealattacks(int rollp,Combatant target){
+	SequenceResult dealattacks(int roll,Combatant target){
 		var r=new SequenceResult();
-		for(int i=0;i<sequence.size();i++){
-			var a=sequence.get(i);
+		for(var a:sequence){
 			var bonus=a.getbonus(target)+attackbonus;
 			var ac=target.getac();
 			r.chances.add(Javelin.getchance(ac-bonus));
-			if(rollp>=a.threat){
-				r.outcomes.set(i,Outcome.CRITICAL_UNCONFIRMED);
-				continue;
-			}
-			var roll=rollp+bonus;
-			if(roll>=ac)
-				r.outcomes.set(i,Outcome.HIT);
-			else if(roll>=ac-target.source.armor) r.outcomes.set(i,Outcome.GRAZE);
+			Outcome o;
+			if(roll==1) o=Outcome.MISS;
+			if(roll>=a.threat)
+				o=Outcome.CRITICAL_UNCONFIRMED;
+			else if(roll+bonus>=ac)
+				o=Outcome.HIT;
+			else if(roll+bonus>=ac-target.source.armor)
+				o=Outcome.GRAZE;
+			else
+				o=Outcome.MISS;
+			r.outcomes.add(o);
+			if(o==Outcome.MISS) break;
 		}
-		//TODO maybe have only result structure (DamageNode)
 		return r;
 	}
 

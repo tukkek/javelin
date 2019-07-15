@@ -34,7 +34,7 @@ public class AttackResolver{
 		DamageNode(Combatant attacker,Combatant target,BattleState state,
 				float chance,String action,Delay delay,String audio){
 			super(state,chance,action,delay);
-			overlay=new AiOverlay(target.location[0],target.location[1]);
+			overlay=new AiOverlay(target);
 			this.audio=target.hp<=0?new Audio("die",target):new Audio(audio,attacker);
 		}
 
@@ -79,10 +79,11 @@ public class AttackResolver{
 
 		@Override
 		public int hashCode(){
+			var exponent=Outcome.values().length;
 			var hash=0;
 			for(int i=0;i<outcomes.size();i++)
-				hash+=(outcomes.get(i).ordinal()+1)*Math.pow(Outcome.values().length,i);
-			return Math.round(Math.round(hash));
+				hash+=(outcomes.get(i).ordinal()+1)*Math.pow(exponent,i);
+			return hash;
 		}
 
 		@Override
@@ -120,6 +121,7 @@ public class AttackResolver{
 	/** Can be overriden to force a particular {@link ActionCost}. */
 	public Float ap=null;
 
+	List<Float> critical;
 	AttackSequence sequence;
 	AbstractAttack action;
 	Strike maneuver;
@@ -130,10 +132,16 @@ public class AttackResolver{
 		this.action=action;
 		this.sequence=sequence;
 		sequence.sort();
+		critical=new ArrayList<>(sequence.size());
 		maneuver=action.maneuver;
 		attackbonus-=action.getpenalty(attacker,target,state);
-		//		attackbonus-=20*target.source.misschance; //TODO is this naive?
 		damagebonus+=action.getdamagebonus(attacker,target);
+	}
+
+	/** Single-{@link Attack} constructor. */
+	public AttackResolver(AbstractAttack action,Combatant attacker,
+			Combatant target,Attack attack,BattleState state){
+		this(action,attacker,target,new AttackSequence(List.of(attack)),state);
 	}
 
 	/** Calculates some fields to expose attack information and statistics. */
@@ -143,12 +151,6 @@ public class AttackResolver{
 		misschance=Action.bind(Action.or(misschance,target.source.misschance));
 		hitchance=1-misschance;
 		chance=Javelin.getchance(Math.round(20*misschance))+" to hit";
-	}
-
-	/** Single-{@link Attack} constructor. */
-	public AttackResolver(AbstractAttack action,Combatant attacker,
-			Combatant target,Attack attack,BattleState state){
-		this(action,attacker,target,new AttackSequence(List.of(attack)),state);
 	}
 
 	static void validate(final Collection<Float> chances){
@@ -250,9 +252,9 @@ public class AttackResolver{
 
 	/** @return Attack roll penalty equivalent to {@link Monster#misschance}. */
 	int getmisspenalty(int bonus,Combatant target){
-		var misschance=Action.bind((target.getac()-bonus)/20f);
-		var totalmisschance=Action.or(misschance,target.source.misschance);
-		return Math.round(Action.bind(totalmisschance-misschance)*20);
+		var attackmisschance=Action.bind((target.getac()-bonus)/20f);
+		var totalmisschance=Action.or(attackmisschance,target.source.misschance);
+		return Math.round(Action.bind(totalmisschance-attackmisschance)*20);
 	}
 
 	SequenceResult dealattacks(int roll,Combatant target){
@@ -265,9 +267,10 @@ public class AttackResolver{
 			final Outcome o;
 			if(roll==1)
 				o=Outcome.MISS;
-			else if(roll>=a.threat)
+			else if(roll>=a.threat){
 				o=Outcome.CRITICAL_UNCONFIRMED;
-			else if(roll+bonus>=ac)
+				if(roll==20) critical.add(Action.bind((20+ac-bonus)/20f));
+			}else if(roll+bonus>=ac)
 				o=Outcome.HIT;
 			else if(roll+bonus>=ac-target.source.armor)
 				o=Outcome.GRAZE;
@@ -280,33 +283,48 @@ public class AttackResolver{
 	}
 
 	void confirm(HashMap<SequenceResult,Float> results){
-		//TODO just confirming all for now
-		for(var r:results.keySet())
-			for(int i=0;i<r.outcomes.size();i++)
-				if(r.outcomes.get(i)==Outcome.CRITICAL_UNCONFIRMED)
-					r.outcomes.set(i,Outcome.CRITICAL);
+		while(true){
+			SequenceResult result=null;
+			int i=0;
+			for(var r:results.keySet()){
+				i=r.outcomes.indexOf(Outcome.CRITICAL_UNCONFIRMED);
+				if(i>=0){
+					result=r;
+					break;
+				}
+			}
+			if(result==null) break;
+			var chance=results.remove(result);
+			var criticalchance=critical.get(i);
+			result.outcomes.set(i,Outcome.CRITICAL);
+			var previous=results.getOrDefault(result,0f);
+			results.put(result,chance*criticalchance+previous);
+			result=result.clone();
+			result.outcomes.set(i,Outcome.HIT);
+			previous=results.getOrDefault(result,0f);
+		}
 	}
 
 	String damage(Combatant target,Outcome o,Attack a,BattleState s){
-		var damage=a.getaveragedamage()+damagebonus;
+		final int damage;
 		final String description;
 		if(o==Outcome.GRAZE){
-			description="graze";
 			damage=a.getminimumdamage()+damagebonus;
-		}else if(o==Outcome.HIT)
+			description="graze";
+		}else if(o==Outcome.HIT){
+			damage=a.getaveragedamage()+damagebonus;
 			description="hit";
-		else if(o==Outcome.CRITICAL){
+		}else if(o==Outcome.CRITICAL){
 			//TODO critical sound would be nice
+			damage=(a.getaveragedamage()+damagebonus)*a.multiplier;
 			description="CRITICAL";
-			damage*=a.multiplier;
 		}else
 			throw new InvalidParameterException(o.toString());
-		if(damage<1) damage=1;
-		target.damage(damage,s,0);//TODO reduction
+		target.damage(Math.max(1,damage),s,0);//TODO reduction
 		return description;
 	}
 
-	ChanceNode apply(SequenceResult result,Float chance,BattleState s,Combatant c,
+	ChanceNode apply(SequenceResult r,Float chance,BattleState s,Combatant c,
 			Combatant target){
 		s=s.clone();
 		c=s.clone(c).clonesource();
@@ -315,12 +333,12 @@ public class AttackResolver{
 		var hit=false;
 		var ap=0f;
 		for(int i=0;i<sequence.size();i++){
-			var o=result.outcomes.get(i);
 			var a=sequence.get(i);
 			ap+=sequence.indexOf(a)==0?ActionCost.STANDARD
 					:ActionCost.SWIFT/(sequence.size()-1);
-			var chancetohit=" ("+result.chances.get(i)+" to hit)";
+			var chancetohit=" ("+r.chances.get(i)+" to hit)";
 			var name=i==0?StatisticsScreen.capitalize(a.name):a.name;
+			var o=r.outcomes.get(i);
 			if(o==Outcome.MISS){
 				descriptions.add(name+": miss"+chancetohit);
 				break;
@@ -342,23 +360,17 @@ public class AttackResolver{
 	}
 
 	List<ChanceNode> merge(List<ChanceNode> nodes){
-		if(Javelin.DEBUG)
-			validate(nodes.stream().map(n->n.chance).collect(Collectors.toList()));
-		// TODO merge same damage (for example, if killed target in first attack)
-		//TODO can probably do by message?
 		var merged=new HashMap<DamageNode,DamageNode>(nodes.size());
 		for(var n:nodes){
 			var dn=(DamageNode)n;
-			var equal=merged.get(dn);
-			if(equal==null)
+			var previous=merged.get(dn);
+			if(previous==null)
 				merged.put(dn,dn);
 			else
-				equal.chance+=dn.chance;
+				previous.chance+=dn.chance;
 		}
 		nodes.clear();
 		nodes.addAll(merged.values());
-		if(Javelin.DEBUG)
-			validate(nodes.stream().map(n->n.chance).collect(Collectors.toList()));
 		return nodes;
 	}
 
@@ -376,11 +388,14 @@ public class AttackResolver{
 			if(previous!=null) chance+=previous;
 			results.put(result,chance);
 		}
+		if(Javelin.DEBUG) validate(results.values());
 		confirm(results);
 		if(Javelin.DEBUG) validate(results.values());
-		var nodes=results.entrySet().stream()
+		var nodes=merge(results.entrySet().stream()
 				.map(entry->apply(entry.getKey(),entry.getValue(),s,c,target))
-				.collect(Collectors.toList());
-		return merge(nodes);
+				.collect(Collectors.toList()));
+		if(Javelin.DEBUG)
+			validate(nodes.stream().map(n->n.chance).collect(Collectors.toList()));
+		return nodes;
 	}
 }

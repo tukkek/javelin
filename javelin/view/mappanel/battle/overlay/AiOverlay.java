@@ -31,7 +31,7 @@ public class AiOverlay extends Overlay{
 	}
 
 	public AiOverlay(Combatant c){
-		this(c.getlocation());
+		this(c.location[0],c.location[1]);
 	}
 
 	@Override

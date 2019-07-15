@@ -3,7 +3,7 @@ package javelin.model.unit.attack;
 import java.io.Serializable;
 
 import javelin.Javelin;
-import javelin.controller.db.reader.fields.Damage;
+import javelin.model.Cloneable;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.spell.Spell;
@@ -13,22 +13,16 @@ import javelin.model.unit.abilities.spell.Spell;
  *
  * @author alex
  */
-public class Attack implements Serializable,javelin.model.Cloneable{
+public class Attack implements Serializable,Cloneable{
 	/** Attack description. */
 	public final String name;
-	/**
-	 * Attack bonus as it appears on the XML data/stat block.
-	 */
+	/** Attack bonus as it appears on the XML data/stat block. */
 	public int bonus;
-	/**
-	 * Format by index: 0d1+2
-	 */
+	/** Format by index: 0d1+2. */
 	public int[] damage=null;
 	/** Critical hit range (usually only on a natural 20). */
 	public int threat=-1;
-	/**
-	 * Number of times damage should be multiplied for in case of critical hit.
-	 */
+	/** Critical hit {@link #damage} multiplier. */
 	public int multiplier=-1;
 	/**
 	 * If changed to <code>true</code> will use energy resistance instead of
@@ -38,22 +32,16 @@ public class Attack implements Serializable,javelin.model.Cloneable{
 	 */
 	public boolean energy=false;
 	/**
-	 * This spell will be cast upon hitting with attack.
-	 *
-	 * @see Damage
-	 */
-	private Spell effect=null;
-	/**
 	 * Allols for overriding {@link #effect} without having to deal with complex
 	 * clean-up actions. Just set back to <code>null</code> once the new effect is
 	 * over.
 	 */
 	public Spell temporaryeffect=null;
-
-	/**
-	 * If <code>true</code> ignores armor class.
-	 */
+	/** If <code>true</code> ignores armor class. */
 	public boolean touch=false;
+
+	/** This spell will be cast upon hitting with attack. */
+	Spell effect=null;
 
 	/** Constructor. */
 	public Attack(final String name,final int bonusp,boolean touch){

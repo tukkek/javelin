@@ -1,7 +1,6 @@
 package javelin.model.unit.abilities.discipline.serpent;
 
 import javelin.controller.action.ActionCost;
-import javelin.controller.action.ai.attack.DamageChance;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.discipline.Strike;
@@ -39,9 +38,8 @@ public class StingOfTheAdder extends Strike{
 	}
 
 	@Override
-	public void hit(Combatant current,Combatant target,Attack a,DamageChance dc,
-			BattleState s){
-		dc.damage+=DAMAGE;
+	public void prehit(Combatant current,Combatant target,Attack a,BattleState s){
+		target.damage(DAMAGE,s,0);
 		final boolean save=save(target.source.getfortitude(),14,current);
 		final int wisdomdamage=save?WISDOMDAMAGE/2:WISDOMDAMAGE;
 		target.addcondition(new WisdomDamage(wisdomdamage,target));

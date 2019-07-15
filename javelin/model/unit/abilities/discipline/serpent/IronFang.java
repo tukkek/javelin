@@ -1,7 +1,6 @@
 package javelin.model.unit.abilities.discipline.serpent;
 
 import javelin.controller.action.ActionCost;
-import javelin.controller.action.ai.attack.DamageChance;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -49,9 +48,8 @@ public class IronFang extends Strike{
 	}
 
 	@Override
-	public void hit(Combatant active,Combatant target,Attack a,DamageChance dc,
-			BattleState s){
-		dc.damage+=BONUSDAMAGE;
+	public void prehit(Combatant active,Combatant target,Attack a,BattleState s){
+		target.damage(BONUSDAMAGE,s,0);
 	}
 
 	void modifypoisondc(Attack a,int dcbonus){

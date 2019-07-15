@@ -1,7 +1,6 @@
 package javelin.model.unit.abilities.discipline.serpent;
 
 import javelin.controller.action.ActionCost;
-import javelin.controller.action.ai.attack.DamageChance;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.discipline.Strike;
@@ -43,11 +42,16 @@ public class StingOfTheAsp extends Strike{
 	}
 
 	@Override
-	public void hit(Combatant active,Combatant target,Attack a,DamageChance dc,
-			BattleState s){
-		dc.damage+=EXTRADAMAGE;
+	public void prehit(Combatant active,Combatant target,Attack a,BattleState s){
+		a.damage[2]+=EXTRADAMAGE;
 		boolean save=save(target.source.getfortitude(),12,active);
 		target.addcondition(new StrengthDamage(save?1:2,target));
 		if(!save) target.addcondition(new AspString(active.ap+1,target));
+	}
+
+	@Override
+	public void posthit(Combatant c,Combatant target,Attack a,BattleState s){
+		super.posthit(c,target,a,s);
+		a.damage[2]-=EXTRADAMAGE;
 	}
 }

@@ -5,7 +5,6 @@ import java.util.List;
 
 import javelin.controller.action.ActionCost;
 import javelin.controller.action.ai.attack.AbstractAttack;
-import javelin.controller.action.ai.attack.DamageChance;
 import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.controller.action.ai.attack.RangedAttack;
 import javelin.controller.action.target.MeleeTarget;
@@ -14,7 +13,6 @@ import javelin.controller.ai.ChanceNode;
 import javelin.controller.fight.Fight;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
-import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.discipline.serpent.DizzyingVenomPrana;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
@@ -93,7 +91,7 @@ public abstract class Strike extends Maneuver{
 	 * Called before any {@link DamageNode}s are created. Useful for setting up
 	 * effects and the like. This is also called only once per
 	 * {@link AbstractAttack} run, making it preferable to
-	 * {@link #hit(Combatant, Combatant, Attack, DamageChance, BattleState)}.
+	 * {@link #prehit(Combatant, Combatant, Attack, BattleState)}.
 	 */
 	public void preattacks(Combatant current,Combatant target,
 			AttackSequence sequence,BattleState s){
@@ -122,12 +120,16 @@ public abstract class Strike extends Maneuver{
 	 *
 	 * This is called before {@link Attack#effect} is taken into effect (if it is
 	 * at all).
-	 *
-	 * @param dc Make sure to use this to apply extra damage so it will handle
-	 *          death, {@link Monster#dr}, etc.
 	 */
-	public void hit(Combatant current,Combatant target,Attack a,DamageChance dc,
-			BattleState s){
+	public void prehit(Combatant current,Combatant target,Attack a,BattleState s){
+		//nothing by default
+	}
+
+	/**
+	 * Simialr to {@link #prehit(Combatant, Combatant, Attack, BattleState)} but
+	 * called afterward, for clean-up.
+	 */
+	public void posthit(Combatant c,Combatant target,Attack a,BattleState s){
 		//nothing by default
 	}
 }

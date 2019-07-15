@@ -1,6 +1,5 @@
 package javelin.model.unit.abilities.discipline.serpent;
 
-import javelin.controller.action.ai.attack.DamageChance;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.discipline.Strike;
@@ -17,8 +16,7 @@ public class SickeningVenomStrike extends Strike{
 	}
 
 	@Override
-	public void hit(Combatant current,Combatant target,Attack a,DamageChance dc,
-			BattleState s){
+	public void prehit(Combatant current,Combatant target,Attack a,BattleState s){
 		target.addcondition(new ConstitutionDamage(2,current));
 		if(!save(target.source.getfortitude(),13,current)){
 			final float expireat=current.ap+SICKENDURATION;

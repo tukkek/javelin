@@ -15,6 +15,7 @@ import javelin.controller.ai.ChanceNode;
 import javelin.controller.audio.Audio;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.discipline.Strike;
 import javelin.model.unit.attack.Attack;
 import javelin.model.unit.attack.AttackSequence;
@@ -79,7 +80,6 @@ public class AttackResolver{
 		}
 	}
 
-	AbstractAttack action;
 	/**
 	 * Bonus to applied to all {@link Attack}s. Not a preview, previews are
 	 * calculated by also adding the first {@link Attack#bonus} of the
@@ -89,15 +89,16 @@ public class AttackResolver{
 	/** @see Attack#damage */
 	public int damagebonus=0;
 	/** @see #preview(Combatant, AttackSequence) */
-	public float misschance;
+	public Float misschance=null;
 	/** @see #preview(Combatant, AttackSequence) */
-	public float hitchance;
+	public Float hitchance=null;
 	/** Human-text preview, see {@link #attackbonus}. */
-	public String chance;
+	public String chance=null;
 	/** Can be overriden to force a particular {@link ActionCost}. */
 	public Float ap=null;
 
 	AttackSequence sequence;
+	AbstractAttack action;
 	Strike maneuver;
 
 	/** {@link AttackSequence} Constructor. */
@@ -108,7 +109,7 @@ public class AttackResolver{
 		sequence.sort();
 		maneuver=action.maneuver;
 		attackbonus-=action.getpenalty(attacker,target,state);
-		attackbonus-=20*target.source.misschance; //TODO is this naive?
+		//		attackbonus-=20*target.source.misschance; //TODO is this naive?
 		damagebonus+=action.getdamagebonus(attacker,target);
 	}
 
@@ -224,15 +225,24 @@ public class AttackResolver{
 		return chances;
 	}*/
 
+	/** @return Attack roll penalty equivalent to {@link Monster#misschance}. */
+	int getmisspenalty(int bonus,Combatant target){
+		var misschance=Action.bind((target.getac()-bonus)/20f);
+		var totalmisschance=Action.or(misschance,target.source.misschance);
+		return Math.round(Action.bind(totalmisschance-misschance)*20);
+	}
+
 	SequenceResult dealattacks(int roll,Combatant target){
 		var r=new SequenceResult();
 		for(var a:sequence){
 			var bonus=a.getbonus(target)+attackbonus;
+			if(target.source.misschance>0) bonus-=getmisspenalty(bonus,target);
 			var ac=target.getac();
 			r.chances.add(Javelin.getchance(ac-bonus));
-			Outcome o;
-			if(roll==1) o=Outcome.MISS;
-			if(roll>=a.threat)
+			final Outcome o;
+			if(roll==1)
+				o=Outcome.MISS;
+			else if(roll>=a.threat)
 				o=Outcome.CRITICAL_UNCONFIRMED;
 			else if(roll+bonus>=ac)
 				o=Outcome.HIT;
@@ -256,7 +266,7 @@ public class AttackResolver{
 
 	String damage(Combatant target,Outcome o,Attack a,BattleState s){
 		var damage=a.getaveragedamage()+damagebonus;
-		String description;
+		final String description;
 		if(o==Outcome.GRAZE){
 			description="graze";
 			damage=a.getminimumdamage()+damagebonus;
@@ -293,7 +303,10 @@ public class AttackResolver{
 				break;
 			}
 			hit=true;
+			var apply=maneuver!=null&&o!=Outcome.GRAZE;
+			if(apply) maneuver.prehit(c,target,a,s);
 			descriptions.add(name+": "+damage(target,o,a,s)+chancetohit);
+			if(apply) maneuver.posthit(c,target,a,s);
 			if(target.hp<=0) break;
 		}
 		c.ap+=this.ap==null?ap:this.ap;

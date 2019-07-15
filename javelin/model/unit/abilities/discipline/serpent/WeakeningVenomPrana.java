@@ -1,6 +1,5 @@
 package javelin.model.unit.abilities.discipline.serpent;
 
-import javelin.controller.action.ai.attack.DamageChance;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.discipline.Strike;
@@ -16,8 +15,7 @@ public class WeakeningVenomPrana extends Strike{
 	}
 
 	@Override
-	public void hit(Combatant current,Combatant target,Attack a,DamageChance dc,
-			BattleState s){
+	public void prehit(Combatant current,Combatant target,Attack a,BattleState s){
 		final int damage=save(target.source.getfortitude(),12,current)?DAMAGE/2
 				:DAMAGE;
 		target.addcondition(new StrengthDamage(damage,target));

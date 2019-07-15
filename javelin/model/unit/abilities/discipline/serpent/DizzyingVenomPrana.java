@@ -1,7 +1,6 @@
 package javelin.model.unit.abilities.discipline.serpent;
 
 import javelin.controller.action.ActionCost;
-import javelin.controller.action.ai.attack.DamageChance;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.abilities.discipline.Strike;
@@ -14,8 +13,7 @@ public class DizzyingVenomPrana extends Strike{
 	}
 
 	@Override
-	public void hit(Combatant active,Combatant target,Attack a,DamageChance dc,
-			BattleState s){
+	public void prehit(Combatant active,Combatant target,Attack a,BattleState s){
 		target.ap+=ActionCost.PARTIAL;
 		if(save(target.source.getfortitude(),11,active))
 			target.addcondition(new WisdomDamage(2,target));

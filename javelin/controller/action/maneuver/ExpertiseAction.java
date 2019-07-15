@@ -103,17 +103,20 @@ public abstract class ExpertiseAction extends Target implements AiAction{
 		return outcomes;
 	}
 
+	float getfailchance(Combatant c,Combatant target,BattleState s){
+		final float savechance=calculatesavechance(c,calculatesavebonus(target));
+		final float misschance=calculatemisschance(c,target,s,
+				Math.max(0,Monster.getbonus(target.source.dexterity)));
+		return savechance+(1-savechance)*misschance;
+	}
+
 	List<ChanceNode> maneuver(Combatant combatant,Combatant target,BattleState s){
 		s=s.clone();
 		combatant=s.clone(combatant);
 		target=s.clone(target);
 		combatant.ap+=.5f;
-		final float savechance=calculatesavechance(combatant,
-				calculatesavebonus(target));
-		final float misschance=calculatemisschance(combatant,target,s,
-				Math.max(0,Monster.getbonus(target.source.dexterity)));
+		final float failurechance=getfailchance(combatant,target,s);
 		final ArrayList<ChanceNode> chances=new ArrayList<>();
-		final float failurechance=savechance+(1-savechance)*misschance;
 		chances.add(mark(miss(combatant,target,s,failurechance),target));
 		chances.add(mark(hit(combatant,target,s,1-failurechance),target));
 		return chances;
@@ -163,6 +166,6 @@ public abstract class ExpertiseAction extends Target implements AiAction{
 
 	@Override
 	protected int predictchance(Combatant c,Combatant target,BattleState s){
-		return Math.round(20-(1-calculatemisschance(target,c,s,0))*20);
+		return Math.round(20*getfailchance(c,target,s));
 	}
 }

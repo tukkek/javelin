@@ -188,7 +188,7 @@ public abstract class Target extends Action{
 	public String describehitchance(Combatant c,Combatant target,BattleState s){
 		var status=new ArrayList<String>(2);
 		status.add(target.getstatus());
-		status.add(Javelin.getchance(predictchance(c,target,s))+" to shit");
+		status.add(Javelin.getchance(predictchance(c,target,s))+" to hit");
 		status.addAll(target.liststatus(s));
 		return target+" ("+String.join(", ",status)+")";
 	}

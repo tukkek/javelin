@@ -179,6 +179,7 @@ public class JavelinApp extends QuestApp{
 		if(Javelin.DEBUG){
 			new ContentSummary().produce();
 			Debug.oncampaignstart();
+			StateManager.save(true,StateManager.SAVEFILE);
 		}
 	}
 

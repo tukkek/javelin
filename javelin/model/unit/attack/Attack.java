@@ -1,8 +1,10 @@
 package javelin.model.unit.attack;
 
 import java.io.Serializable;
+import java.util.Random;
 
 import javelin.Javelin;
+import javelin.controller.ai.AiThread;
 import javelin.model.Cloneable;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
@@ -130,5 +132,13 @@ public class Attack implements Serializable,Cloneable{
 		var bonus=this.bonus;
 		if(touch) bonus+=target.source.armor;
 		return bonus;
+	}
+
+	/** TODO workaround: can't really use {@link AiThread#getrandom()}. */
+	public int rolldamage(Random r){
+		var result=damage[2];
+		for(var i=0;i<damage[0];i++)
+			result+=r.nextInt(damage[1])+1;
+		return result;
 	}
 }

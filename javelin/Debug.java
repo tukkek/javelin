@@ -124,7 +124,7 @@ public class Debug{
 
 		static void freezeopponents(){
 			for(Combatant c:Fight.state.redTeam)
-				c.ap=Float.MAX_VALUE;
+				c.ap=1000;
 		}
 
 		static void generateincursion(Location l,Realm r,List<Combatant> members){

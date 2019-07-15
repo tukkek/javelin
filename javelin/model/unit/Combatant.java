@@ -44,6 +44,7 @@ import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.Spells;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
 import javelin.model.unit.attack.AttackSequence;
+import javelin.model.unit.condition.Cleaving;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.condition.Condition.Effect;
 import javelin.model.unit.condition.Melding;
@@ -435,10 +436,14 @@ public class Combatant implements Serializable,Cloneable{
 		return id;
 	}
 
+	/** @see Cleaving. */
 	public void cleave(float ap){
-		if(source.hasfeat(GreatCleave.SINGLETON))
+		var great=source.hasfeat(GreatCleave.SINGLETON);
+		var cleaving=hascondition(Cleaving.class)!=null;
+		if(great||source.hasfeat(Cleave.SINGLETON)&&cleaving){
 			this.ap-=ap;
-		else if(source.hasfeat(Cleave.SINGLETON)) this.ap-=ap/2f;
+			if(!great) addcondition(new Cleaving(this));
+		}
 	}
 
 	public ArrayList<String> liststatus(BattleState s){

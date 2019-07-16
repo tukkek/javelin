@@ -79,8 +79,9 @@ public abstract class Haunt extends Fortification{
 
 		@Override
 		public String printinfo(){
-			return "Your currently have $"+Javelin.format(Squad.active.gold)+".\n\n"
-					+"Your squad: "+Javelin.group(Squad.active.members);
+			var gold=Javelin.format(Squad.active.gold);
+			var squad=Javelin.group(Squad.active.members);
+			return "Your currently have $"+gold+".\n\nYour squad: "+squad;
 		}
 
 		@Override
@@ -90,7 +91,7 @@ public abstract class Haunt extends Fortification{
 				hires.remove(h);
 				return true;
 			}
-			print(text+"\nNot enough gold to hire this unit!");
+			print(text+"\nNot enough gold to hire this unit...");
 			return false;
 		}
 	}
@@ -107,7 +108,7 @@ public abstract class Haunt extends Fortification{
 				if(s.redTeam.isEmpty()&&generatewave()!=null){
 					for(var c:garrison)
 						c.rollinitiative(s.next.ap);
-					s.redTeam.clear();
+					//					s.redTeam.clear();
 					s.redTeam.addAll(garrison);
 					Fight.originalredteam.addAll(garrison);
 					((LocationFightSetup)setup).placeredteam();
@@ -186,9 +187,6 @@ public abstract class Haunt extends Fortification{
 		throw new GaveUp();
 	}
 
-	/**
-	 * @return
-	 */
 	List<Monster> getpool(){
 		return pool.stream().filter(m->m.cr<=waveel).collect(Collectors.toList());
 	}
@@ -222,16 +220,16 @@ public abstract class Haunt extends Fortification{
 		return new HauntFight();
 	}
 
-	void add(Set<Monster> hires){
-		this.hires.clear();
-		for(var h:hires){
+	void add(Set<Monster> defeated){
+		hires.clear();
+		for(var h:defeated){
 			if(!pool.contains(h)) continue;
 			var quantity=getquantity(h);
 			for(var i=0;i<quantity;i++)
-				this.hires.add(h);
+				hires.add(h);
 		}
-		this.hires.sort(MonstersByName.INSTANCE);
-		if(this.hires.isEmpty()){
+		hires.sort(MonstersByName.INSTANCE);
+		if(hires.isEmpty()){
 			var pool=RPG.shuffle(getpool());
 			var nhires=Math.min(RPG.rolldice(2,4),pool.size());
 			add(new HashSet<>(pool.subList(0,nhires)));

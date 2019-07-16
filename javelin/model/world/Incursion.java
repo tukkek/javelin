@@ -142,6 +142,7 @@ public class Incursion extends Actor{
 		if(arrived!=null) attack(arrived);
 	}
 
+	/** Can be used from {@link Debug} to simulate captures. */
 	public void attack(Actor target){
 		fightdefenders(target);
 		Boolean status=target.destroy(this);
@@ -309,7 +310,7 @@ public class Incursion extends Actor{
 			return true;
 		}
 		var description=Location.describe(squad,toString(),true,this);
-		if(!Location.headsup(squad,description,true,this)) return false;
+		if(!Location.headsup(description)) return false;
 		throw new StartBattle(new IncursionFight(this));
 	}
 

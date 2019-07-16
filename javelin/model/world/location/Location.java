@@ -12,6 +12,7 @@ import javelin.controller.challenge.Difficulty;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
+import javelin.controller.fight.LocationFight;
 import javelin.controller.fight.Siege;
 import javelin.controller.generator.WorldGenerator;
 import javelin.controller.terrain.Terrain;
@@ -225,8 +226,7 @@ public abstract class Location extends Actor{
 			capture();
 			return false;
 		}
-		if(headsup(garrison,describe(),showgarrison,this))
-			throw new StartBattle(fight());
+		if(headsup(describe())) throw new StartBattle(fight());
 		throw new RuntimeException("headsup sould throw #wplace");
 	}
 
@@ -242,32 +242,28 @@ public abstract class Location extends Actor{
 	 * Offers information and a chance to back out of the fight.
 	 *
 	 * @param opponents Will be {@link Squad#spot}ted.
-	 * @param name What to describe this place as.
+	 * @param description See {@link #describe()}.
 	 * @return <code>true</code> if player confirms engaging in battle.
 	 * @throws RepeatTurn
 	 */
-	static public boolean headsup(List<Combatant> opponents,String description,
-			boolean showgarrison,Actor a){
-		opponents.sort((o1,o2)->o1.toString().compareTo(o2.toString()));
+	static public boolean headsup(String description){
 		MessagePanel.active.clear();
-		final String prompt=description
-				+"\n\nPress s to storm or any other key to retreat.";
+		final String prompt=description+"\n\n"
+				+"Press s to storm or any other key to retreat.";
 		Javelin.message(prompt,Javelin.Delay.NONE);
 		if(InfoScreen.feedback()=='s') return true;
 		throw new RepeatTurn();
 	}
 
+	/** @return A {@link LocationFight}-like description. */
 	public static String describe(List<Combatant> opponents,String name,
 			boolean showgarrison,Actor a){
-		String description=name;
+		var description=name;
 		if(!opponents.isEmpty()){
 			description+=" ("+Difficulty.describe(opponents)+" fight).";
-			if(showgarrison)
-				description+="\n\n"+Squad.active.spotenemies(opponents,a);
-			//			return description;
+			if(showgarrison) description+="\n\nSpotted: "
+					+Squad.active.spotenemies(opponents,a)+"...";
 		}
-		description=description.trim();
-		if(!description.endsWith(".")) description+=".";
 		return description;
 	}
 

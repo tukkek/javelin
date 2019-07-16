@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
-import javelin.controller.CountingSet;
 import javelin.controller.action.world.WorldMove;
 import javelin.controller.ai.BattleAi;
 import javelin.controller.challenge.ChallengeCalculator;
@@ -306,12 +305,10 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	 */
 	public String spotenemies(List<Combatant> opponents,Actor target){
 		if(target!=null&&distanceinsteps(target.x,target.y)>1) return "";
-		CountingSet spotted=new CountingSet();
-		spotted.casesensitive=true;
 		int spot=perceive(true,true,true);
-		for(Combatant c:opponents)
-			spotted.add(spot>=c.taketen(Skill.STEALTH)?c.toString():"?");
-		return spotted.toString();
+		var spotted=opponents.stream().filter(c->spot>=c.taketen(Skill.STEALTH))
+				.collect(Collectors.toList());
+		return Javelin.group(spotted);
 	}
 
 	/**

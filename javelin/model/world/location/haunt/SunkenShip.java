@@ -15,10 +15,6 @@ import javelin.model.world.World;
  * @author alex
  */
 public class SunkenShip extends Haunt{
-	/**
-	 * Compare with previous pool: "Aquatic elf","merfolk","Locathah",
-	 * "octopus","Skum","Sahuagin","Malenti","Sahuagin mutant"
-	 */
 	static final List<Monster> POOL=Monster.MONSTERS.stream().filter(m->m.swim>0)
 			.collect(Collectors.toList());
 

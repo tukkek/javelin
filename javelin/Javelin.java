@@ -462,15 +462,8 @@ public class Javelin{
 	public static String group(List<?> foes){
 		CountingSet count=new CountingSet();
 		count.casesensitive=true;
-		boolean hasunknown=false;
-		for(Object c:foes){
-			String foe=c.toString();
-			if(foe.equals("?")){
-				if(hasunknown) continue;
-				hasunknown=true;
-			}
-			count.add(foe);
-		}
+		for(Object c:foes)
+			count.add(c.toString());
 		return count.toString();
 	}
 

@@ -30,6 +30,7 @@ import javelin.model.world.location.dungeon.Wilderness;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.haunt.AbandonedManor;
 import javelin.model.world.location.haunt.Graveyard;
+import javelin.model.world.location.haunt.Haunt;
 import javelin.model.world.location.haunt.OrcSettlement;
 import javelin.model.world.location.haunt.ShatteredTemple;
 import javelin.model.world.location.haunt.SunkenShip;
@@ -164,7 +165,7 @@ public class LocationGenerator implements Serializable{
 	}
 
 	/** @return An instance of each haunt type. */
-	public static List<Fortification> makehaunts(){
+	public static List<Haunt> makehaunts(){
 		return List.of(new SunkenShip(),new ShatteredTemple(),new Graveyard(),
 				new OrcSettlement(),new AbandonedManor());
 	}

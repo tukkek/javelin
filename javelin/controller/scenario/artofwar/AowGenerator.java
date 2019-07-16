@@ -14,7 +14,6 @@ import javelin.controller.generator.feature.LocationGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.world.World;
-import javelin.model.world.location.Fortification;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.DungeonTier;
 import javelin.model.world.location.haunt.Haunt;
@@ -111,7 +110,7 @@ public class AowGenerator extends LocationGenerator{
 		}
 	}
 
-	Location generatelocations(List<Realm> realms,List<Fortification> haunts,
+	Location generatelocations(List<Realm> realms,List<Haunt> haunts,
 			int dungeons){
 		var territories=RPG.shuffle(new LinkedList<>(this.territories));
 		realms.forEach(r->{
@@ -119,13 +118,11 @@ public class AowGenerator extends LocationGenerator{
 			town.town=true;
 			territories.pop().place(town).realm=r;
 		});
-		for(var h:haunts){
-			Haunt haunt=h instanceof Haunt?(Haunt)h:null;
-			if(haunt!=null&&!BANNED.contains(h.getClass())){
-				haunt.generategarrison();
-				territories.pop().place(new WarLocation(haunt));
+		for(var h:haunts)
+			if(BANNED.contains(h.getClass())){
+				h.generategarrison();
+				territories.pop().place(new WarLocation(h));
 			}
-		}
 		for(var i=0;i<dungeons;i++){
 			var el=RPG.r(ArtOfWar.INITIALEL,ArtOfWar.ENDGAME);
 			var dungeon=new WarLocation(el,DungeonTier.get(el).getimagename());

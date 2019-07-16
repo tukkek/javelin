@@ -50,4 +50,9 @@ public class Tier{
 	public String toString(){
 		return name;
 	}
+
+	/** @return 0 for {@link #LOW}, 1 for {@link #MID}... */
+	public int getordinal(){
+		return TIERS.indexOf(this);
+	}
 }

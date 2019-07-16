@@ -17,8 +17,10 @@ import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.LocationFight;
 import javelin.controller.fight.setup.LocationFightSetup;
+import javelin.controller.generator.NpcGenerator;
 import javelin.controller.map.location.LocationMap;
 import javelin.model.item.Tier;
+import javelin.model.item.consumable.Ruby;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
@@ -31,6 +33,13 @@ import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.SelectScreen;
 
+/**
+ * Shorter-lived {@link LocationFight}s, granting level-appropriate mercenaries
+ * and an Easy/Very Easy recruit. Once cleared, they become stronger and
+ * respawn.
+ *
+ * @author alex
+ */
 public abstract class Haunt extends Fortification{
 	static final int ATTEMPTS=10_000;
 	/** EL modifier by number of waves. */
@@ -49,7 +58,7 @@ public abstract class Haunt extends Fortification{
 		Monster hire;
 
 		RecruitOption(Monster m){
-			super(m.toString(),MercenariesGuild.getfee(m),null);
+			super(m.toString().toLowerCase(),MercenariesGuild.getfee(m),null);
 			hire=m;
 			var available=hires.stream().filter(h->h.equals(hire)).count();
 			name=available+" "+name;
@@ -57,14 +66,24 @@ public abstract class Haunt extends Fortification{
 	}
 
 	class HauntScreen extends SelectScreen{
+		Option recruitment=null;
+
 		HauntScreen(){
 			super("Select your mercenaries:",null);
+			var r=recruit;
+			if(r!=null){
+				var rubies=Tier.get(r.source.cr).getordinal()+1;
+				recruitment=new Option("Recruit: "+r,rubies);
+			}
 		}
 
 		@Override
 		public List<Option> getoptions(){
-			return new HashSet<>(hires).stream().sequential()
+			var hirable=new HashSet<>(hires).stream().sequential()
 					.map(h->new RecruitOption(h)).collect(Collectors.toList());
+			var options=new ArrayList<Option>(hirable);
+			if(recruitment!=null) options.add(recruitment);
+			return options;
 		}
 
 		@Override
@@ -74,25 +93,40 @@ public abstract class Haunt extends Fortification{
 
 		@Override
 		public String printpriceinfo(Option o){
-			return " ($"+Javelin.format(o.price)+"/day)";
+			String price;
+			if(o==recruitment)
+				price=Math.round(o.price)+" "+(o.price==1?"ruby":"rubies");
+			else
+				price="$"+Javelin.format(o.price)+"/day";
+			return " ("+price+")";
 		}
 
 		@Override
 		public String printinfo(){
 			var gold=Javelin.format(Squad.active.gold);
 			var squad=Javelin.group(Squad.active.members);
-			return "Your currently have $"+gold+".\n\nYour squad: "+squad;
+			return "Your currently have $"+gold+".\n\nYour squad:\n  "+squad+".";
 		}
 
 		@Override
 		public boolean select(Option o){
-			var h=((RecruitOption)o).hire;
-			if(MercenariesGuild.recruit(new Combatant(h,false),false)){
-				hires.remove(h);
+			if(o==recruitment){
+				if(!Squad.active.equipment.pay(Ruby.class,Math.round(o.price))){
+					print(text+"\nYou don't have enough rubies...");
+					return false;
+				}
+				Squad.active.recruit(recruit);
+				recruitment=null;
+				recruit=null;
 				return true;
 			}
-			print(text+"\nNot enough gold to hire this unit...");
-			return false;
+			var h=((RecruitOption)o).hire;
+			if(!MercenariesGuild.recruit(new Combatant(h,true),false)){
+				print(text+"\nNot enough gold to hire this unit...");
+				return false;
+			}
+			hires.remove(h);
+			return true;
 		}
 	}
 
@@ -133,6 +167,7 @@ public abstract class Haunt extends Fortification{
 	List<Monster> hires=new ArrayList<>();
 	Class<? extends LocationMap> map;
 	List<Monster> pool;
+	Combatant recruit;
 	int waves;
 	int waveel;
 
@@ -248,6 +283,11 @@ public abstract class Haunt extends Fortification{
 
 	void raiselevel(){
 		targetel+=RPG.r(1,4);
+		var easy=targetel+Difficulty.EASY;
+		var recruits=pool.stream().filter(m->m.cr<=easy)
+				.collect(Collectors.toList());
+		if(!recruits.isEmpty())
+			recruit=NpcGenerator.generate(RPG.pick(recruits),easy);
 	}
 
 	@Override

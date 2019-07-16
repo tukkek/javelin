@@ -169,4 +169,16 @@ public class Equipment implements Serializable{
 	public void refresh(int hours){
 		getall().forEach(i->i.refresh(hours));
 	}
+
+	/**
+	 * @return <code>true</code> if can pay the given amoutn of items.
+	 *         <code>false</code> if can't, in which case no items will be
+	 *         removed.
+	 */
+	public boolean pay(Class<? extends Item> item,long amount){
+		if(getall(item).size()<amount) return false;
+		for(var i=0;i<amount;i++)
+			pop(item);
+		return true;
+	}
 }

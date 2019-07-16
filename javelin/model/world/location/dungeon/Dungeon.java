@@ -136,7 +136,7 @@ public class Dungeon extends Location{
 	float ratiomonster=RPG.r(25,50)/100f;
 	float ratiofeatures=RPG.r(50,95)/100f;
 	float ratiotraps=RPG.r(10,25)/100f;
-	float ratiotreasure=RPG.r(5,10)/100f;
+	float ratiotreasure=RPG.pick(List.of(5,10,20))/100f;
 
 	int revealed=0;
 	Dungeon parent;

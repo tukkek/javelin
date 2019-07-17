@@ -41,11 +41,11 @@ public abstract class Target extends Action{
 
 		@Override
 		public int compare(Combatant o1,Combatant o2){
-			int priority1=action.prioritize(c,state,o1);
-			int priority2=action.prioritize(c,state,o2);
+			var priority1=action.prioritize(c,state,o1);
+			var priority2=action.prioritize(c,state,o2);
 			if(priority1!=priority2) return priority1>priority2?-1:1;
-			double distance1=Walker.distance(o1,c)*10;
-			double distance2=Walker.distance(o2,c)*10;
+			var distance1=Walker.distance(o1,c)*10;
+			var distance2=Walker.distance(o2,c)*10;
 			return Math.round(Math.round(distance1-distance2));
 		}
 	}
@@ -79,12 +79,11 @@ public abstract class Target extends Action{
 	 * @return Minimum number the active combatant has to roll on a d20 to hit the
 	 *         target.
 	 */
-	protected abstract int predictchance(Combatant active,Combatant target,
+	protected abstract int predictchance(Combatant c,Combatant target,
 			BattleState s);
 
 	/** Called once a target is confirmed. */
-	protected abstract void attack(Combatant active,Combatant target,
-			BattleState s);
+	protected abstract void attack(Combatant c,Combatant target,BattleState s);
 
 	@Override
 	public boolean perform(Combatant c){
@@ -108,10 +107,9 @@ public abstract class Target extends Action{
 		return true;
 	}
 
-	void selecttarget(Combatant combatant,List<Combatant> targets,
-			BattleState state){
+	void selecttarget(Combatant c,List<Combatant> targets,BattleState state){
 		var targeti=0;
-		locktarget(combatant,targets.get(0),state);
+		locktarget(c,targets.get(0),state);
 		while(true){
 			Javelin.redraw();
 			Character key=InfoScreen.feedback();
@@ -122,7 +120,7 @@ public abstract class Target extends Action{
 			else if(key=='\n'||key==confirmkey){
 				if(MapPanel.overlay!=null) MapPanel.overlay.clear();
 				MessagePanel.active.clear();
-				attack(combatant,targets.get(targeti),state);
+				attack(c,targets.get(targeti),state);
 				break;
 			}else if(key=='v'&&!targets.get(targeti).source.passive)
 				new StatisticsScreen(targets.get(targeti));
@@ -135,7 +133,7 @@ public abstract class Target extends Action{
 			if(targeti>max)
 				targeti=0;
 			else if(targeti<0) targeti=max;
-			locktarget(combatant,targets.get(targeti),state);
+			locktarget(c,targets.get(targeti),state);
 		}
 	}
 
@@ -173,12 +171,12 @@ public abstract class Target extends Action{
 				targets.remove(target);
 	}
 
-	void locktarget(Combatant active,Combatant target,BattleState state){
+	void locktarget(Combatant c,Combatant target,BattleState state){
 		MapPanel.overlay=new TargetOverlay(target.location[0],target.location[1]);
 		MessagePanel.active.clear();
 		String prompt="Use ← and → to select target, ENTER or "+confirmkey
 				+" to confirm, v to view target's sheet, q to quit.\n\n";
-		prompt+=describehitchance(active,target,state);
+		prompt+=describehitchance(c,target,state);
 		Javelin.message(prompt,Javelin.Delay.NONE);
 		Javelin.app.switchScreen(BattleScreen.active);
 		BattleScreen.active.center(target.location[0],target.location[1]);

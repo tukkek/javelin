@@ -25,8 +25,8 @@ import javelin.view.mappanel.battle.BattleMouse;
  */
 public class RangedTarget extends Fire{
 	AbstractAttack action=RangedAttack.INSTANCE;
-	Attack a;
 	AttackSequence sequence;
+	Attack a;
 
 	public RangedTarget(Attack a,AttackSequence sequence,char confirmkey,
 			AbstractAttack action){

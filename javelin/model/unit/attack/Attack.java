@@ -129,9 +129,9 @@ public class Attack implements Serializable,Cloneable{
 
 	/** @return Attack {@link #bonus} against this enemy. */
 	public int getbonus(Combatant target){
-		var bonus=this.bonus;
-		if(touch) bonus+=target.source.armor;
-		return bonus;
+		var b=bonus;
+		if(touch) b+=target.source.armor;
+		return b;
 	}
 
 	/** TODO workaround: can't really use {@link AiThread#getrandom()}. */

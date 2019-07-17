@@ -29,15 +29,23 @@ import javelin.view.screen.StatisticsScreen;
  * This new utility class is being created in the hopes of simplifying it after
  * a number of incarnations and revisions.
  *
+ * TODO ideally would have listeners instead of having the feature creep of
+ * maneuvers, feats like cleave, skills like feign, etc, but where and when to
+ * include those is critical to performance. During initialization would be the
+ * cloest to 1:1 approach but not as perfomant as skipping feat/maneuver hooks
+ * if that's not necessary at all.
+ *
  * @author alex
  */
 public class AttackResolver{
 	class DamageNode extends ChanceNode{
 		DamageNode(Combatant attacker,Combatant target,BattleState state,
-				float chance,String action,Delay delay,String audio){
-			super(state,chance,action,delay);
+				float chance,String message,boolean hit){
+			super(state,chance,message,hit?Delay.BLOCK:Delay.WAIT);
 			overlay=new AiOverlay(target);
-			this.audio=target.hp<=0?new Audio("die",target):new Audio(audio,attacker);
+			var action=AttackResolver.this.action;
+			audio=target.hp<=0?new Audio("die",target)
+					:new Audio(hit?action.soundhit:action.soundmiss,attacker);
 		}
 
 		@Override
@@ -137,6 +145,7 @@ public class AttackResolver{
 		sequence.sort();
 		critical=new ArrayList<>(sequence.size());
 		maneuver=action.maneuver;
+		if(maneuver!=null) ap=maneuver.ap;
 		attackbonus-=action.getpenalty(attacker,target,state);
 		damagebonus+=action.getdamagebonus(attacker,target);
 	}
@@ -219,10 +228,11 @@ public class AttackResolver{
 		}
 	}
 
-	/** TODO shouldn't use random for damage/saves or AI will preempt outcomes */
-	String damage(Combatant c,Combatant target,Outcome o,Attack a,BattleState s){
-		final int damage;
-		final String description;
+	/** TODO shouldn't use random for damage/saves or AI will preempt outcomes. */
+	String damage(Combatant c,Combatant target,Outcome o,Attack a,float ap,
+			BattleState s){
+		int damage;
+		String description;
 		if(o==Outcome.GRAZE){
 			damage=a.getminimumdamage()+damagebonus;
 			description="graze";
@@ -235,6 +245,8 @@ public class AttackResolver{
 			description="CRITICAL";
 		}else
 			throw new InvalidParameterException(o.toString());
+		var apply=maneuver!=null&&o!=Outcome.GRAZE;
+		if(apply) maneuver.prehit(c,target,a,s);
 		var resistance=a.energy?target.source.energyresistance:target.source.dr;
 		target.damage(Math.max(1,damage),s,resistance);
 		var e=a.geteffect();
@@ -242,7 +254,19 @@ public class AttackResolver{
 			var save=AiThread.getrandom().nextFloat()<=e.getsavechance(c,target);
 			effects.add(e.cast(c,target,save,s,null));
 		}
+		if(apply) maneuver.posthit(c,target,a,s);
+		if(target.hp<=0&&action.cleave) c.cleave(ap);
 		return description;
+	}
+
+	String contextualize(Combatant c,Combatant target,boolean hit,
+			ArrayList<String> attacks){
+		var message=c+" attacks "+target+"!";
+		message+="\n"+String.join("; ",attacks)+"...";
+		if(!effects.isEmpty()) message+="\n"+String.join(" ",effects);
+		effects.clear();
+		if(hit) message+="\n"+target+" is "+target.getstatus()+".";
+		return message;
 	}
 
 	ChanceNode apply(SequenceResult r,Float chance,BattleState s,Combatant c,
@@ -250,10 +274,10 @@ public class AttackResolver{
 		s=s.clone();
 		c=s.clone(c).clonesource();
 		target=s.clone(target).clonesource();
-		var descriptions=new ArrayList<String>(sequence.size());
+		var attacks=new ArrayList<String>(sequence.size());
 		var hit=false;
 		var ap=0f;
-		for(int i=0;i<sequence.size();i++){
+		for(var i=0;i<sequence.size();i++){
 			var a=sequence.get(i);
 			var apcost=sequence.indexOf(a)==0?ActionCost.STANDARD
 					:ActionCost.SWIFT/(sequence.size()-1);
@@ -264,29 +288,17 @@ public class AttackResolver{
 			var o=r.outcomes.get(i);
 			if(o==Outcome.MISS){
 				if(action.feign&&target.source.dexterity>=12) Bluff.feign(c,target);
-				descriptions.add(name+": miss"+chancetohit);
+				attacks.add(name+": miss"+chancetohit);
 				break;
 			}
 			hit=true;
-			var apply=maneuver!=null&&o!=Outcome.GRAZE;
-			if(apply) maneuver.prehit(c,target,a,s);
-			descriptions.add(name+": "+damage(c,target,o,a,s)+chancetohit);
-			if(apply) maneuver.posthit(c,target,a,s);
-			if(target.hp<=0){
-				if(action.cleave) c.cleave(apcost);
-				break;
-			}
+			attacks.add(name+": "+damage(c,target,o,a,apcost,s)+chancetohit);
+			if(target.hp<=0) break;
 		}
 		c.ap+=this.ap==null?ap:this.ap;
 		if(maneuver!=null) maneuver.postattacks(c,target,sequence,s);
-		var delay=hit?Delay.BLOCK:Delay.WAIT;
-		var sound=hit?action.soundhit:action.soundmiss;
-		var message=c+" attacks "+target+"!";
-		message+="\n"+String.join("; ",descriptions)+"...";
-		if(!effects.isEmpty()) message+="\n"+String.join(" ",effects);
-		effects.clear();
-		if(hit) message+="\n"+target+" is "+target.getstatus()+".";
-		return new DamageNode(c,target,s,chance,message,delay,sound);
+		var message=contextualize(c,target,hit,attacks);
+		return new DamageNode(c,target,s,chance,message,hit);
 	}
 
 	List<ChanceNode> merge(List<ChanceNode> nodes){
@@ -319,14 +331,10 @@ public class AttackResolver{
 			if(previous!=null) chance+=previous;
 			results.put(result,chance);
 		}
-		//		if(Javelin.DEBUG) validate(results.values());
 		confirm(results);
-		//		if(Javelin.DEBUG) validate(results.values());
 		var nodes=merge(results.entrySet().stream()
 				.map(entry->apply(entry.getKey(),entry.getValue(),s,c,target))
 				.collect(Collectors.toList()));
-		//		if(Javelin.DEBUG)
-		//			validate(nodes.stream().map(n->n.chance).collect(Collectors.toList()));
 		return nodes;
 	}
 }

@@ -58,10 +58,8 @@ public class DefensiveAttack extends ExpertiseAction{
 	}
 
 	@Override
-	float calculatemisschance(Combatant current,Combatant targetCombatant,
-			BattleState battleState,int touchattackbonus){
-		final float misschance=super.calculatemisschance(current,targetCombatant,
-				battleState,touchattackbonus)-amount(current,4)/20f;
+	float getmisschance(Combatant c,Combatant target,BattleState s,int bonus){
+		var misschance=super.getmisschance(c,target,s,bonus)-amount(c,4)/20f;
 		return Math.max(.05f,misschance);
 	}
 

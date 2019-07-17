@@ -236,7 +236,7 @@ public class Javelin{
 		StateManager.clear();
 		BattleScreen.active.messagepanel.clear();
 		String sadface="You have lost all your units! Game over T_T\n\n";
-		Javelin.message(sadface+Highscore.record(),Javelin.Delay.NONE);
+		Javelin.message(sadface+Highscore.record(),Delay.NONE);
 		while(InfoScreen.feedback()!='\n')
 			continue;
 		System.exit(0);
@@ -294,7 +294,7 @@ public class Javelin{
 		else{
 			app.switchScreen(BattleScreen.active);
 			MessagePanel.active.clear();
-			Javelin.message(prompt,Javelin.Delay.NONE);
+			Javelin.message(prompt,Delay.NONE);
 		}
 		while(true)
 			try{
@@ -323,7 +323,7 @@ public class Javelin{
 		//		screen.center();
 		MessagePanel.active.clear();
 		text+="\nPress "+(requireenter?"ENTER":"any key")+" to continue...";
-		Javelin.message(text,Javelin.Delay.NONE);
+		Javelin.message(text,Delay.NONE);
 		KeyEvent input=Javelin.input();
 		while(requireenter&&input.getKeyChar()!='\n')
 			input=Javelin.input();
@@ -340,7 +340,7 @@ public class Javelin{
 	static public Character prompt(final String prompt,boolean center){
 		MessagePanel.active.clear();
 		BattleScreen.active.center();
-		Javelin.message(prompt,Javelin.Delay.NONE);
+		Javelin.message(prompt,Delay.NONE);
 		if(center) BattleScreen.active.center();
 		return InfoScreen.feedback();
 	}
@@ -423,9 +423,9 @@ public class Javelin{
 	 *
 	 * @param message Text to be printed.
 	 * @param t TODO remove
-	 * @param See {@link Javelin.Delay}.
+	 * @param See {@link Delay}.
 	 */
-	public static void message(String out,Javelin.Delay d){
+	public static void message(String out,Delay d){
 		if(BattleScreen.lastaicheck==null&&d==Delay.BLOCK) d=Delay.WAIT;
 		MessagePanel.active.add(out);
 		switch(d){
@@ -440,7 +440,7 @@ public class Javelin{
 				break;
 			case BLOCK:
 				MessagePanel.active.add("\n"+TextZone.BLACK+"-- ENTER --");
-				Javelin.delayblock=true;
+				delayblock=true;
 				break;
 		}
 	}

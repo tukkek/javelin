@@ -14,8 +14,6 @@ import javelin.controller.exception.RepeatTurn;
 import javelin.model.state.BattleState;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
-import javelin.model.unit.attack.Attack;
-import javelin.model.unit.attack.AttackSequence;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.feat.Feat;
 import javelin.view.mappanel.battle.overlay.AiOverlay;
@@ -104,9 +102,8 @@ public abstract class ExpertiseAction extends Target implements AiAction{
 	}
 
 	float getfailchance(Combatant c,Combatant target,BattleState s){
-		final float savechance=calculatesavechance(c,calculatesavebonus(target));
-		final float misschance=calculatemisschance(c,target,s,
-				Math.max(0,Monster.getbonus(target.source.dexterity)));
+		var savechance=calculatesavechance(c,calculatesavebonus(target));
+		var misschance=getmisschance(c,target,s,0);
 		return savechance+(1-savechance)*misschance;
 	}
 
@@ -115,22 +112,21 @@ public abstract class ExpertiseAction extends Target implements AiAction{
 		combatant=s.clone(combatant);
 		target=s.clone(target);
 		combatant.ap+=.5f;
-		final float failurechance=getfailchance(combatant,target,s);
-		final ArrayList<ChanceNode> chances=new ArrayList<>();
+		var failurechance=getfailchance(combatant,target,s);
+		var chances=new ArrayList<ChanceNode>();
 		chances.add(mark(miss(combatant,target,s,failurechance),target));
 		chances.add(mark(hit(combatant,target,s,1-failurechance),target));
 		return chances;
 	}
 
-	private ChanceNode mark(ChanceNode hit,Combatant target){
+	ChanceNode mark(ChanceNode hit,Combatant target){
 		hit.overlay=new AiOverlay(target.location[0],target.location[1]);
 		return hit;
 	}
 
-	public float calculatesavechance(Combatant current,final int savebonus){
-		int dc=10+current.source.getbab()/2+getattackerbonus(current)+size(current)
-				+featbonus;
-		return calculatesavechance(dc,savebonus);
+	public float calculatesavechance(Combatant c,final int bonus){
+		var dc=10+c.source.getbab()/2+getattackerbonus(c)+size(c)+featbonus;
+		return calculatesavechance(dc,bonus);
 	}
 
 	public int calculatesavebonus(Combatant target){
@@ -147,11 +143,12 @@ public abstract class ExpertiseAction extends Target implements AiAction{
 		return Action.bind(1-(dc-bonus)/20f);
 	}
 
-	float calculatemisschance(final Combatant c,final Combatant target,
-			final BattleState s,final int touchattackbonus){
-		AttackSequence sequence=c.source.melee.get(0);
-		Attack attack=sequence.get(0);
+	float getmisschance(Combatant c,Combatant target,BattleState s,int bonus){
+		var attack=c.source.melee.get(0).get(0);
 		var r=new AttackResolver(MeleeAttack.INSTANCE,c,target,attack,s);
+		var dexbonus=Monster.getbonus(target.source.dexterity);
+		if(dexbonus>0) bonus+=dexbonus;
+		r.attackbonus+=bonus;
 		r.preview(target);
 		return r.misschance;
 	}

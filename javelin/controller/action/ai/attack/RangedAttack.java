@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.Point;
-import javelin.controller.action.ai.attack.AttackResolver.DamageNode;
 import javelin.controller.action.target.RangedTarget;
 import javelin.controller.ai.ChanceNode;
 import javelin.controller.walker.Walker;
@@ -75,14 +73,13 @@ public class RangedAttack extends AbstractAttack{
 	}
 
 	@Override
-	public List<List<ChanceNode>> getoutcomes(Combatant active,BattleState s){
-		if(s.isengaged(active)) return Collections.EMPTY_LIST;
+	public List<List<ChanceNode>> getoutcomes(Combatant c,BattleState s){
+		if(s.isengaged(c)) return Collections.EMPTY_LIST;
 		var successors=new ArrayList<List<ChanceNode>>();
-		for(var target:s.gettargets(active))
-			for(var attacks:active.source.ranged){
-				var outcome=new AttackResolver(this,active,target,attacks,s)
-						.attack(active,target,s);
-				if(!skip(active,(DamageNode)outcome.get(0),s)) successors.add(outcome);
+		for(var target:s.gettargets(c))
+			for(var attacks:c.source.ranged){
+				var r=new AttackResolver(this,c,target,attacks,s);
+				if(!skip(r,c,target)) successors.add(r.attack(c,target,s));
 			}
 		return successors;
 	}
@@ -94,19 +91,10 @@ public class RangedAttack extends AbstractAttack{
 	 *
 	 * @see #AISKIPUNLIKELY
 	 */
-	static boolean skip(Combatant active,DamageNode miss,BattleState previous){
-		if(!AISKIPUNLIKELY) return false;
-		if(miss.chance<=Javelin.HARD/20f||active.source.melee.isEmpty())
-			return false;
-		var map=previous.map;
-		for(Point p:Point.getadjacent2()){
-			p.x+=active.location[0];
-			p.y+=active.location[1];
-			if(!p.validate(0,0,map.length,map[0].length)) continue;
-			if(previous.getcombatant(p.x,p.y)!=null) continue;
-			if(!map[p.x][p.y].blocked||active.source.fly>0) return true;
-		}
-		return false;
+	static boolean skip(AttackResolver r,Combatant c,Combatant target){
+		if(!AISKIPUNLIKELY||c.source.melee.isEmpty()) return false;
+		r.preview(target);
+		return r.misschance>Javelin.HARD/20f;
 	}
 
 	@Override

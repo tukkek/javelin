@@ -1,7 +1,7 @@
 package javelin.model.world.location.haunt;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javelin.controller.map.location.haunt.OrcSettlementMap;
 import javelin.model.unit.Monster;
@@ -14,10 +14,16 @@ import javelin.model.unit.Monster.MonsterType;
  */
 public class OrcSettlement extends Haunt{
 	static final List<String> GROUPS=List.of("reptilian","goblinoid","orc");
-	static final List<Monster> POOL=Monster.MONSTERS.stream()
-			.filter(m->m.type.equals(MonsterType.HUMANOID)
-					&&GROUPS.contains(m.group.toLowerCase()))
-			.collect(Collectors.toList());
+	static final List<Monster> POOL=new ArrayList<>();
+
+	static{
+		for(var m:Monster.MONSTERS)
+			if(m.type.equals(MonsterType.HUMANOID)) for(String subtype:m.subtypes)
+				if(GROUPS.contains(subtype)){
+					POOL.add(m);
+					break;
+				}
+	}
 
 	/** Constructor. */
 	public OrcSettlement(){

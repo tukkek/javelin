@@ -14,8 +14,8 @@ public class Name extends FieldReader{
 
 	@Override
 	public void read(final String value) throws PropertyVetoException{
-		final int typeSeparator=value.indexOf(":");
-		final int reverseSeparator;
+		var typeSeparator=value.indexOf(":");
+		int reverseSeparator;
 		String name;
 		String type;
 		if(typeSeparator==-1){
@@ -25,7 +25,6 @@ public class Name extends FieldReader{
 			name=value.substring(typeSeparator+1);
 			type=value.substring(0,typeSeparator).toLowerCase();
 		}
-
 		reverseSeparator=name.indexOf(",");
 		if(reverseSeparator>0) name=name.substring(reverseSeparator+2)+" "
 				+name.substring(0,reverseSeparator);

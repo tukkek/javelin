@@ -206,7 +206,7 @@ public class Monster implements Cloneable,Serializable{
 	 * @see #size()
 	 */
 	public int size=-1;
-	/** Subgroup of {@link #type}, merely descriptive. */
+	/** Group description, as found in "Name (group)". */
 	public String group;
 	/** Challenge rating (cache for {@link ChallengeCalculator}). */
 	public Float cr=null;
@@ -334,6 +334,8 @@ public class Monster implements Cloneable,Serializable{
 	int ac;
 	/** Lawful/chaotic and good/evil axis. */
 	public Alignment alignment=new Alignment();
+	/** Lowercase subtypes (eg. aquatic, reptilian, goblinoid...). */
+	public List<String> subtypes=new ArrayList<>(1);
 
 	@Override
 	public Monster clone(){

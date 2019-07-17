@@ -5,7 +5,6 @@ import java.util.List;
 
 import javelin.Javelin;
 import javelin.controller.action.ActionCost;
-import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.fight.Fight;
 import javelin.controller.quality.Quality;
 import javelin.controller.upgrade.classes.ClassLevelUpgrade;
@@ -68,17 +67,17 @@ public class StatisticsScreen extends InfoScreen{
 	}
 
 	static void showheader(Combatant c,Monster m,ArrayList<String> lines){
-		String monstername=m.toString();
-		if(m.name!=monstername) monstername+=" ("+m.name.toLowerCase()+")";
+		var monstername=m.name;
+		if(!m.group.isEmpty()) monstername+=", "+m.group.toLowerCase();
 		lines.add(monstername);
-		String type=m.type.toString().replaceAll("_"," ").toLowerCase();
-		if(!m.group.isEmpty()) type+=" ("+m.group+")";
-		lines.add(capitalize(Monster.SIZES[m.size])+" "+type);
+		var type=capitalize(Monster.SIZES[m.size]);
+		type=capitalize(m.type.toString().replaceAll("_"," ").toLowerCase());
+		if(!m.subtypes.isEmpty()) type+=" ("+String.join(",",m.subtypes)+")";
+		lines.add(type);
 		lines.add("");
 		if(c.mercenary) lines.add("Mercenary ($"+Javelin.format(c.pay())+"/day)");
-		lines.add(
-				"Challenge rating "+Math.round(ChallengeCalculator.calculatecr(m)));
-		for(ClassLevelUpgrade classlevels:ClassLevelUpgrade.classes){
+		lines.add("Challenge rating "+Math.round(m.cr));
+		for(var classlevels:ClassLevelUpgrade.classes){
 			int level=classlevels.getlevel(m);
 			if(level>0) lines.add(classlevels.descriptivename+" level "+level);
 		}

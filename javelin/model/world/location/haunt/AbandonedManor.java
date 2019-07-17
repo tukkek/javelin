@@ -16,7 +16,8 @@ public class AbandonedManor extends Haunt{
 	static final List<MonsterType> TYPES=List.of(MonsterType.CONSTRUCT,
 			MonsterType.VERMIN,MonsterType.PLANT,MonsterType.MAGICALBEAST);
 	static final List<Monster> POOL=Monster.MONSTERS.stream()
-			.filter(m->TYPES.contains(m.type)).collect(Collectors.toList());
+			.filter(m->!m.passive&&TYPES.contains(m.type))
+			.collect(Collectors.toList());
 
 	/** Constructor. */
 	public AbandonedManor(){

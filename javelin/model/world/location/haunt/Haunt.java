@@ -44,6 +44,7 @@ public abstract class Haunt extends Fortification{
 	static final int ATTEMPTS=10_000;
 	/** EL modifier by number of waves. */
 	static final Map<Integer,Integer> WAVECR=new TreeMap<>();
+	static final int LEADER=20;
 
 	static Set<Monster> defeated=new HashSet<>(0);
 
@@ -210,9 +211,17 @@ public abstract class Haunt extends Fortification{
 		var wave=new Combatants();
 		for(var attempt=1;attempt<=ATTEMPTS;attempt++){
 			wave.clear();
-			Integer el=null;
-			while(el==null||el<waveel){
-				wave.add(new Combatant(RPG.pick(pool),true));
+			var el=-Integer.MAX_VALUE;
+			while(el<waveel){
+				var m=RPG.pick(pool);
+				Combatant c;
+				if(RPG.chancein(LEADER)||m.cr<waveel-20){
+					if(m.cr>=waveel) continue;
+					c=NpcGenerator.generate(m,RPG.r(Math.round(m.cr),waveel));
+					if(c==null) continue;
+				}else
+					c=new Combatant(m,true);
+				wave.add(c);
 				el=ChallengeCalculator.calculateel(wave);
 			}
 			if(el>waveel) continue;

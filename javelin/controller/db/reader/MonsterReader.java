@@ -149,15 +149,14 @@ public class MonsterReader extends DefaultHandler{
 			final int size=getSize(attributes.getValue("Size"));
 			if(size==-1) errorhandler.setInvalid("Size");
 			monster.size=size;
-			String type=attributes.getValue("Type").replaceAll(" ","").toUpperCase();
+			var type=attributes.getValue("Type").replaceAll(" ","").toUpperCase();
 			monster.type=!type.equals("BEAST")?MonsterType.valueOf(type)
 					:MonsterType.MAGICALBEAST;
-			String humanoid=attributes.getValue("Humanoid");
-			if(humanoid!=null){
-				if("true".equalsIgnoreCase(humanoid))
-					monster.humanoid=true;
-				else if("false".equalsIgnoreCase(humanoid)) monster.humanoid=false;
-			}else
+			var subtypes=attributes.getValue("Subtypes");
+			if(subtypes!=null) for(var subtype:subtypes.split(","))
+				monster.subtypes.add(subtype.trim().toLowerCase());
+			var humanoid=attributes.getValue("Humanoid");
+			if(humanoid==null)
 				switch(monster.type){
 					case HUMANOID:
 					case MONSTROUSHUMANOID:
@@ -174,6 +173,9 @@ public class MonsterReader extends DefaultHandler{
 					default:
 						break;
 				}
+			else if("true".equalsIgnoreCase(humanoid))
+				monster.humanoid=true;
+			else if("false".equalsIgnoreCase(humanoid)) monster.humanoid=false;
 		}else if(name.equalsIgnoreCase("avatar"))
 			monster.avatarfile=attributes.getValue("Image");
 		else if(name.equalsIgnoreCase("Climateandterrain")){

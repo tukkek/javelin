@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.controller.Point;
-import javelin.controller.map.location.haunt.SunkenShipMap;
+import javelin.controller.map.location.LocationMap;
 import javelin.controller.terrain.Terrain;
+import javelin.model.state.Square;
 import javelin.model.unit.Monster;
 import javelin.model.world.World;
+import javelin.view.Images;
 
 /**
  * Semi-aquatic haunt, with only a small platform to stand on.
@@ -18,9 +20,27 @@ public class SunkenShip extends Haunt{
 	static final List<Monster> POOL=Monster.MONSTERS.stream().filter(m->m.swim>0)
 			.collect(Collectors.toList());
 
+	class SunkenShipMap extends LocationMap{
+		SunkenShipMap(){
+			super("Sunken ship");
+			floor=Images.get("terrainshipfloor");
+			flooded=Images.get("terrainaquatic");
+		}
+
+		@Override
+		protected Square processtile(int x,int y,char c){
+			Square s=super.processtile(x,y,c);
+			if(c=='3'){
+				s.flooded=true;
+				startingareared.add(new Point(x,y));
+			}
+			return s;
+		}
+	}
+
 	/** Constructor. */
 	public SunkenShip(){
-		super("Sunken ship",SunkenShipMap.class,POOL);
+		super("Sunken ship",SunkenShipMap.class,POOL,null);
 	}
 
 	boolean nearland(){

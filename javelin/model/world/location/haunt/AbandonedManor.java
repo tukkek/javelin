@@ -3,9 +3,11 @@ package javelin.model.world.location.haunt;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javelin.controller.map.location.haunt.AbandonedManorMap;
+import javelin.controller.map.location.LocationMap;
+import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Monster.MonsterType;
+import javelin.view.Images;
 
 /**
  * TODO test pool
@@ -18,9 +20,21 @@ public class AbandonedManor extends Haunt{
 	static final List<Monster> POOL=Monster.MONSTERS.stream()
 			.filter(m->!m.passive&&TYPES.contains(m.type))
 			.collect(Collectors.toList());
+	static final List<Terrain> TERRAINS=List.of(Terrain.FOREST,Terrain.MARSH,
+			Terrain.MOUNTAINS);
+
+	class AbandonedManorMap extends LocationMap{
+		AbandonedManorMap(){
+			super("Abandoned manor");
+			floor=Images.get("dungeonfloortempleevil");
+			wall=Images.get("terrainmoldwall");
+			obstacle=Images.get("terraintreeforest");
+			flying=false;
+		}
+	}
 
 	/** Constructor. */
 	public AbandonedManor(){
-		super("Abandoned manor",AbandonedManorMap.class,POOL);
+		super("Abandoned manor",AbandonedManorMap.class,POOL,TERRAINS);
 	}
 }

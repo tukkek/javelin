@@ -19,6 +19,7 @@ import javelin.controller.fight.LocationFight;
 import javelin.controller.fight.setup.LocationFightSetup;
 import javelin.controller.generator.NpcGenerator;
 import javelin.controller.map.location.LocationMap;
+import javelin.controller.terrain.Terrain;
 import javelin.model.item.Tier;
 import javelin.model.item.consumable.Ruby;
 import javelin.model.unit.Combatant;
@@ -165,19 +166,22 @@ public abstract class Haunt extends Fortification{
 		}
 	}
 
+	protected List<Monster> pool;
+
 	List<Monster> hires=new ArrayList<>();
 	Class<? extends LocationMap> map;
-	List<Monster> pool;
+	transient List<Terrain> terrains;
 	Combatant recruit;
 	int waves;
 	int waveel;
 
 	/** Constructor. */
 	protected Haunt(String description,Class<? extends LocationMap> map,
-			List<Monster> pool){
+			List<Monster> pool,List<Terrain> terrains){
 		super(description,description,0,0);
 		if(Javelin.DEBUG&&pool.isEmpty())
 			throw new RuntimeException("empty pool: "+getClass());
+		this.terrains=terrains;
 		discard=false;
 		allowentry=false;
 		this.map=map;
@@ -332,5 +336,19 @@ public abstract class Haunt extends Fortification{
 		}catch(ReflectiveOperationException e){
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	protected void generate(){
+		while(x==-1||!terrains.contains(Terrain.get(x,y)))
+			super.generate();
+	}
+
+	/** @return <code>true</code> if monster has any of the subtypes. */
+	protected static boolean include(Monster m,List<String> subtypes){
+		if(subtypes.contains(m.group.toLowerCase())) return true;
+		for(String subtype:m.subtypes)
+			if(subtypes.contains(subtype)) return true;
+		return false;
 	}
 }

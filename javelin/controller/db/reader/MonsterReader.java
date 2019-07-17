@@ -55,32 +55,25 @@ public class MonsterReader extends DefaultHandler{
 	public CountingSet unimplementedqualities=new CountingSet();
 	public CountingSet sAtks=new CountingSet();
 	public CountingSet debugfeats=new CountingSet();
+	public Monster monster;
+
 	HashMap<Monster,String> spelldata=new HashMap<>();
 	ArrayList<FieldReader> readers=new ArrayList<>();
 	static int debugnmonsters=0;
-
-	public Monster monster;
+	boolean description=false;
 	String section=null;
 	int total;
-	boolean description=false;
 
-	{
-		readers.add(new Name(this,"Name"));
-		readers.add(new Skills(this,"Skills"));
-		readers.add(new Feats(this,"Feats"));
-		readers.add(new SpecialQualities(this,"SpecialQualities"));
-		readers.add(new FaceAndReach(this,"FaceAndReach"));
-		readers.add(new SpecialAttacks(this,"SpecialAttacks"));
-		readers.add(new Attacks(this,"Attacks"));
-		readers.add(new Damage(this,"Damage"));
-		readers.add(new ArmorClass(this,"ArmorClass"));
-		readers.add(new Initiative(this,"Initiative"));
-		readers.add(new Speed(this,"Speed"));
-		readers.add(new HitDice(this,"HitDice"));
-		readers.add(new Paragraph(this,"Paragraph"));
-		readers.add(new Organization(this,"Organization"));
-		readers.add(new Alignment(this,"Alignment"));
-
+	/** Constructor. */
+	public MonsterReader(){
+		readers.addAll(List.of(new Name(this,"Name"),new Skills(this,"Skills"),
+				new Feats(this,"Feats"),new SpecialQualities(this,"SpecialQualities"),
+				new FaceAndReach(this,"FaceAndReach"),
+				new SpecialAttacks(this,"SpecialAttacks"),new Attacks(this,"Attacks"),
+				new Damage(this,"Damage"),new ArmorClass(this,"ArmorClass"),
+				new Initiative(this,"Initiative"),new Speed(this,"Speed"),
+				new HitDice(this,"HitDice"),new Paragraph(this,"Paragraph"),
+				new Organization(this,"Organization"),new Alignment(this,"Alignment")));
 	}
 
 	@Override
@@ -341,7 +334,6 @@ public class MonsterReader extends DefaultHandler{
 		debugSpecials(unimplementedqualities,"Special qualities:");
 		debugSpecials(debugfeats,"Feats:");
 		postprocessspells();
-		int nMonsters=0;
 		for(Monster m:Monster.MONSTERS){
 			if(m.passive) continue;
 			List<Monster> list=Monster.BYCR.get(m.cr);
@@ -351,17 +343,27 @@ public class MonsterReader extends DefaultHandler{
 			}
 			list.add(m);
 		}
-		for(Entry<Float,List<Monster>> e:Monster.BYCR.entrySet()){
-			final List<Monster> value=e.getValue();
-			final int n=value.size();
-			nMonsters+=n;
-			final Float key=e.getKey();
-			String listing="";
-			for(final Monster m:value)
-				listing+=m.toString()+", ";
-			log("CR "+key+" ("+value.size()+"): "+listing,"organization.log");
+		logorganization();
+	}
+
+	void logorganization(){
+		String log="organization.log";
+		var nMonsters=0;
+		for(var e:Monster.BYCR.entrySet()){
+			var tier=e.getValue();
+			var size=tier.size();
+			nMonsters+=size;
+			var list=String.join(", ",tier.toString());
+			log("CR "+e.getKey()+" ("+size+"): "+list,log);
 		}
-		log(nMonsters+"/"+total+" monsters succesfully loaded.","organization.log");
+		log(nMonsters+"/"+total+" monsters succesfully loaded.",log);
+		var types=new CountingSet();
+		types.comparator=(a,b)->a.toString().compareTo(b.toString());
+		for(var m:Monster.MONSTERS){
+			if(!m.group.isEmpty()) types.add(m.group);
+			types.addAll(m.subtypes);
+		}
+		log("\nGroups and subtypes: "+types.toString(),log);
 	}
 
 	/** Close all <code>monsters.xml</code>-related logs. */

@@ -10,7 +10,20 @@ import javelin.controller.Point;
 import javelin.controller.map.Map;
 import javelin.model.state.Square;
 
+/**
+ * A map read and interpreted from a text file on the "maps" folder.
+ *
+ * @author alex
+ */
 public class LocationMap extends Map{
+	/**
+	 * Possible starting positions for the player team. If empty, will be ignored.
+	 */
+	public ArrayList<Point> startingareablue=new ArrayList<>(0);
+	/** Same as {@link #startingareablue} but for enemies. */
+	public ArrayList<Point> startingareared=new ArrayList<>(0);
+
+	/** Constructor. */
 	public LocationMap(String name){
 		super(name,0,0);
 	}

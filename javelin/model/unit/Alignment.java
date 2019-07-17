@@ -163,4 +163,15 @@ public class Alignment implements Serializable{
 		}
 		return String.join("\n",result);
 	}
+
+	@Override
+	public boolean equals(Object o){
+		var a=o instanceof Alignment?(Alignment)o:null;
+		return a!=null&&a.ethics.equals(ethics)&&a.morals.equals(morals);
+	}
+
+	@Override
+	public int hashCode(){
+		return toString().hashCode();
+	}
 }

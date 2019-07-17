@@ -1,7 +1,6 @@
 package javelin.controller.map;
 
 import java.awt.Image;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,12 +54,6 @@ public abstract class Map{
 	 * @see #random()
 	 */
 	public boolean standard=true;
-	/**
-	 * Possible starting positions for the player team. If empty, will be ignored.
-	 */
-	public ArrayList<Point> startingareablue=new ArrayList<>(0);
-	/** Same as {@link #startingareablue} but for enemies. */
-	public ArrayList<Point> startingareared=new ArrayList<>(0);
 
 	/**
 	 * Usually <code>true</code> but confined spaces where flyers cannot fly over
@@ -200,6 +193,14 @@ public abstract class Map{
 	/** @return Any random point in this map. */
 	protected Point getrandompoint(){
 		return new Point(RPG.r(0,map.length-1),RPG.r(0,map[0].length-1));
+	}
+
+	/** @return A non {@link Square#blocked} {@link #getrandompoint()}. */
+	protected Point getempty(){
+		Point p=null;
+		while(p==null||map[p.x][p.y].blocked)
+			p=getrandompoint();
+		return p;
 	}
 
 	/** @return Total map area in tiles (width times height). */

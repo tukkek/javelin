@@ -29,11 +29,20 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.Wilderness;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.haunt.AbandonedManor;
+import javelin.model.world.location.haunt.BeastLair;
+import javelin.model.world.location.haunt.Conflux;
+import javelin.model.world.location.haunt.DarkShrine;
 import javelin.model.world.location.haunt.Graveyard;
 import javelin.model.world.location.haunt.Haunt;
+import javelin.model.world.location.haunt.HolyGrounds;
 import javelin.model.world.location.haunt.OrcSettlement;
 import javelin.model.world.location.haunt.ShatteredTemple;
+import javelin.model.world.location.haunt.Spire;
 import javelin.model.world.location.haunt.SunkenShip;
+import javelin.model.world.location.haunt.settlement.ChaoticSettlement;
+import javelin.model.world.location.haunt.settlement.EvilSettlement;
+import javelin.model.world.location.haunt.settlement.GoodSettlement;
+import javelin.model.world.location.haunt.settlement.LawfulSettlement;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.governor.MonsterGovernor;
 import javelin.model.world.location.town.labor.basic.Dwelling;
@@ -167,7 +176,10 @@ public class LocationGenerator implements Serializable{
 	/** @return An instance of each haunt type. */
 	public static List<Haunt> makehaunts(){
 		return List.of(new SunkenShip(),new ShatteredTemple(),new Graveyard(),
-				new OrcSettlement(),new AbandonedManor());
+				new OrcSettlement(),new AbandonedManor(),new BeastLair(),new Spire(),
+				new Conflux(),new GoodSettlement(),new EvilSettlement(),
+				new LawfulSettlement(),new ChaoticSettlement(),new HolyGrounds(),
+				new DarkShrine());
 	}
 
 	static void generatestartingarea(World seed,Town t){

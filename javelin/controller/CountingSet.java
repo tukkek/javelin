@@ -1,6 +1,7 @@
 package javelin.controller;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -15,9 +16,11 @@ import java.util.TreeMap;
  * @author alex
  */
 public class CountingSet{
-	TreeMap<String,Integer> map=new TreeMap<>();
+	/** Can be overriden to dictate ordering. */
+	public Comparator<? super String> comparator=(a,b)->getcount(a)-getcount(b);
 	/** Set to true if you don't want elements to be converted to lowercase. */
 	public boolean casesensitive=false;
+	TreeMap<String,Integer> map=new TreeMap<>();
 
 	/**
 	 * @param s Adds and counts this element (case-insensitive).
@@ -49,13 +52,13 @@ public class CountingSet{
 
 	public List<String> getorderedelements(){
 		ArrayList<String> elements=new ArrayList<>(getelements());
-		elements.sort((a,b)->getcount(a)-getcount(b));
+		elements.sort(comparator);
 		return elements;
 	}
 
 	public List<String> getinvertedelements(){
 		ArrayList<String> elements=new ArrayList<>(getelements());
-		elements.sort((a,b)->getcount(b)-getcount(a));
+		elements.sort((a,b)->-comparator.compare(a,b));
 		return elements;
 	}
 
@@ -74,5 +77,11 @@ public class CountingSet{
 	/** @param pass Calls {@link #add(String)} after a {@link #toString()}. */
 	public void add(Object o){
 		add(String.valueOf(o));
+	}
+
+	/** @param items Consumed by {@link #add(Object)}. */
+	public void addAll(List<?> items){
+		for(var i:items)
+			add(i);
 	}
 }

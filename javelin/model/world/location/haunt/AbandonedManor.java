@@ -23,8 +23,8 @@ public class AbandonedManor extends Haunt{
 	static final List<Terrain> TERRAINS=List.of(Terrain.FOREST,Terrain.MARSH,
 			Terrain.MOUNTAINS);
 
-	class AbandonedManorMap extends LocationMap{
-		AbandonedManorMap(){
+	public static class AbandonedManorMap extends LocationMap{
+		public AbandonedManorMap(){
 			super("Abandoned manor");
 			floor=Images.get("dungeonfloortempleevil");
 			wall=Images.get("terrainmoldwall");

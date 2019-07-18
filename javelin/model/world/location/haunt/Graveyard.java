@@ -23,8 +23,8 @@ public class Graveyard extends Haunt{
 	static final List<Terrain> TERRAINS=List.of(Terrain.FOREST,Terrain.HILL,
 			Terrain.MOUNTAINS,Terrain.PLAIN);
 
-	class GraveyardMap extends LocationMap{
-		GraveyardMap(){
+	public static class GraveyardMap extends LocationMap{
+		public GraveyardMap(){
 			super("graveyard");
 			wall=Images.get("terraintombstone");
 			obstacle=Images.get("terrainbush");
@@ -32,8 +32,8 @@ public class Graveyard extends Haunt{
 		}
 
 		@Override
-		protected Square processtile(Square tile,int x,int y, char c){
-			Square s=super.processtile(tile,x,y, c);
+		protected Square processtile(Square tile,int x,int y,char c){
+			Square s=super.processtile(tile,x,y,c);
 			if(!s.blocked&&RPG.chancein(20)) s.obstructed=true;
 			return s;
 		}

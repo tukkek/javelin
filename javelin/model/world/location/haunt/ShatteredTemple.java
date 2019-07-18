@@ -32,8 +32,8 @@ public class ShatteredTemple extends Haunt{
 		POOL.removeAll(DarkShrine.POOL);
 	}
 
-	class ShatteredTempleMap extends LocationMap{
-		ShatteredTempleMap(){
+	public static class ShatteredTempleMap extends LocationMap{
+		public ShatteredTempleMap(){
 			super("Shattered temple");
 			floor=Images.get("dungeonfloortempleevil");
 			wall=Images.get("terrainrockwall2");
@@ -41,8 +41,8 @@ public class ShatteredTemple extends Haunt{
 		}
 
 		@Override
-		protected Square processtile(Square tile,int x,int y, char c){
-			Square s=super.processtile(tile,x,y, c);
+		protected Square processtile(Square tile,int x,int y,char c){
+			Square s=super.processtile(tile,x,y,c);
 			if(!s.blocked&&RPG.r(1,6)==1) s.obstructed=true;
 			return s;
 		}

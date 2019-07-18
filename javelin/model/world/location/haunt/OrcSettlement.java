@@ -24,8 +24,8 @@ public class OrcSettlement extends Haunt{
 			.filter(m->m.type.equals(MonsterType.HUMANOID)&&include(m,SUBTYPES))
 			.collect(Collectors.toList());
 
-	class OrcSettlementMap extends LocationMap{
-		OrcSettlementMap(){
+	public static class OrcSettlementMap extends LocationMap{
+		public OrcSettlementMap(){
 			super("Orc settlement");
 			wall=Images.get("terrainorcwall");
 			flying=false;

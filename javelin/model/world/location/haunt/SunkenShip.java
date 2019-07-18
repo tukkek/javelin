@@ -32,7 +32,7 @@ public class SunkenShip extends Haunt{
 			Square s=super.processtile(tile,x,y,c);
 			if(c=='3'){
 				s.flooded=true;
-				startingareared.add(new Point(x,y));
+				spawnred.add(new Point(x,y));
 			}
 			return s;
 		}

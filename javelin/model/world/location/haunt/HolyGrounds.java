@@ -31,6 +31,7 @@ public class HolyGrounds extends Haunt{
 			super("Holy grounds");
 			wall=Images.get("terrainrockwall");
 			obstacle=Images.get("terrainbush2");
+			floor=Images.get("terrainwoodfloor2");
 		}
 
 		@Override

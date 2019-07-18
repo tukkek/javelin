@@ -53,7 +53,7 @@ public class BeastLair extends Haunt{
 			else if(c==' '){
 				s.blocked=RPG.chancein(6);
 				if(!s.blocked){
-					startingareared.add(new Point(x,y));
+					spawnred.add(new Point(x,y));
 					s.obstructed=RPG.r(1,4)>=2;
 				}
 			}else

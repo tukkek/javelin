@@ -38,8 +38,8 @@ public abstract class Settlement extends Haunt{
 			var target=RPG.r(1,6)+4;
 			while(area.size()<target){
 				var p=getempty();
-				if(p.distanceinsteps(start)<=9&&!startingareablue.contains(p)
-						&&!startingareared.contains(p))
+				if(p.distanceinsteps(start)<=9&&!spawnblue.contains(p)
+						&&!spawnred.contains(p))
 					area.add(p);
 			}
 		}
@@ -58,8 +58,8 @@ public abstract class Settlement extends Haunt{
 				red=getempty();
 				blue=getempty();
 			}
-			expand(blue,startingareablue);
-			expand(red,startingareared);
+			expand(blue,spawnblue);
+			expand(red,spawnred);
 		}
 	}
 

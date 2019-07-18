@@ -19,9 +19,9 @@ public class LocationMap extends Map{
 	/**
 	 * Possible starting positions for the player team. If empty, will be ignored.
 	 */
-	public ArrayList<Point> startingareablue=new ArrayList<>(0);
-	/** Same as {@link #startingareablue} but for enemies. */
-	public ArrayList<Point> startingareared=new ArrayList<>(0);
+	public ArrayList<Point> spawnblue=new ArrayList<>(0);
+	/** Same as {@link #spawnblue} but for enemies. */
+	public ArrayList<Point> spawnred=new ArrayList<>(0);
 
 	/** Constructor. */
 	public LocationMap(String name){
@@ -64,8 +64,8 @@ public class LocationMap extends Map{
 		else if(c=='x')
 			s.obstructed=true;
 		else if(c=='1')
-			startingareablue.add(new Point(x,y));
-		else if(c=='2') startingareared.add(new Point(x,y));
+			spawnblue.add(new Point(x,y));
+		else if(c=='2') spawnred.add(new Point(x,y));
 		return s;
 	}
 }

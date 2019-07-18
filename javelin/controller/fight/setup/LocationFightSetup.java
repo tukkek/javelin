@@ -30,12 +30,12 @@ public class LocationFightSetup extends BattleSetup{
 	protected void place(boolean strict){
 		clear(Fight.state.blueTeam);
 		clear(Fight.state.redTeam);
-		place(Fight.state.blueTeam,map.startingareablue);
+		place(Fight.state.blueTeam,map.spawnblue);
 		placeredteam();
 	}
 
 	public void placeredteam(){
-		place(Fight.state.redTeam,map.startingareared);
+		place(Fight.state.redTeam,map.spawnred);
 	}
 
 	protected void place(List<Combatant> team,List<Point> startingarea){

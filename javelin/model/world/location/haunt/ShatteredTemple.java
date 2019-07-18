@@ -41,8 +41,8 @@ public class ShatteredTemple extends Haunt{
 		}
 
 		@Override
-		protected Square processtile(int x,int y,char c){
-			Square s=super.processtile(x,y,c);
+		protected Square processtile(Square tile,int x,int y, char c){
+			Square s=super.processtile(tile,x,y, c);
 			if(!s.blocked&&RPG.r(1,6)==1) s.obstructed=true;
 			return s;
 		}

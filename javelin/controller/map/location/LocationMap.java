@@ -48,23 +48,24 @@ public class LocationMap extends Map{
 		this.map=new Square[height][width];
 		for(int x=0;x<width;x++){
 			char[] line=map.get(x).toCharArray();
-			for(int y=0;y<line.length;y++)
-				processtile(y,x,line[y]);
+			for(int y=0;y<line.length;y++){
+				var s=new Square();
+				this.map[y][x]=s;
+				processtile(s,y,x,line[y]);
+			}
 		}
 	}
 
-	protected Square processtile(int x,int y,char c){
-		Square tile=new Square();
-		map[x][y]=tile;
+	protected Square processtile(Square s,int x,int y,char c){
 		if(c=='~')
-			tile.flooded=true;
+			s.flooded=true;
 		else if(c=='#')
-			tile.blocked=true;
+			s.blocked=true;
 		else if(c=='x')
-			tile.obstructed=true;
+			s.obstructed=true;
 		else if(c=='1')
 			startingareablue.add(new Point(x,y));
 		else if(c=='2') startingareared.add(new Point(x,y));
-		return tile;
+		return s;
 	}
 }

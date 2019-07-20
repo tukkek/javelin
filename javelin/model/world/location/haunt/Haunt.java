@@ -206,14 +206,6 @@ public abstract class Haunt extends Fortification{
 		}
 	}
 
-	Combatants generatewave() throws GaveUp{
-		garrison.clear();
-		waves-=1;
-		if(waves<0) return null;
-		garrison=generatemonsters();
-		return garrison;
-	}
-
 	Combatants generatemonsters() throws GaveUp{
 		var pool=getpool();
 		if(pool.isEmpty()) throw new GaveUp();
@@ -233,10 +225,17 @@ public abstract class Haunt extends Fortification{
 				wave.add(c);
 				el=ChallengeCalculator.calculateel(wave);
 			}
-			if(el>waveel) continue;
-			return garrison;
+			if(el<=waveel) return wave;
 		}
 		throw new GaveUp();
+	}
+
+	Combatants generatewave() throws GaveUp{
+		garrison.clear();
+		waves-=1;
+		if(waves<0) return null;
+		garrison=generatemonsters();
+		return garrison;
 	}
 
 	List<Monster> getpool(){

@@ -45,7 +45,6 @@ import javelin.model.world.location.haunt.settlement.GoodSettlement;
 import javelin.model.world.location.haunt.settlement.LawfulSettlement;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.governor.MonsterGovernor;
-import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.model.world.location.town.labor.basic.Lodge;
 import javelin.model.world.location.town.labor.basic.starting.BasicAcademy;
 import javelin.model.world.location.town.labor.basic.starting.BasicShop;
@@ -72,7 +71,7 @@ public class LocationGenerator implements Serializable{
 	 */
 	void setup(){
 		generators.put(Outpost.class,new Frequency(.1f));
-		generators.put(Dwelling.class,new Frequency());
+		//		generators.put(Dwelling.class,new Frequency());
 		generators.put(PointOfInterest.class,new Frequency(2f));
 		var resources=new Frequency(.5f);
 		resources.seeds=Realm.values().length*2;
@@ -194,7 +193,7 @@ public class LocationGenerator implements Serializable{
 			if(difference==0) return 0;
 			return difference>0?1:-1;
 		});
-		spawnnear(t,new Dwelling(recruits.get(RPG.r(1,7))),seed,1,2,true);
+		//		spawnnear(t,new Dwelling(recruits.get(RPG.r(1,7))),seed,1,2,true);
 		spawnnear(t,new AdventurersGuild(),seed,2,3,true);
 		spawnnear(t,new TrainingHall(),seed,2,3,false);
 	}

@@ -1,8 +1,10 @@
 package javelin.model.world.location.unique;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -21,7 +23,6 @@ import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.Town;
-import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.old.RPG;
 import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
@@ -132,11 +133,11 @@ public class PillarOfSkulls extends UniqueLocation{
 		}
 
 		boolean showlocation(){
-			if(!Dwelling.canrecruit(50)){
+			if(!PillarOfSkulls.canrecruit(50)){
 				print(text+"\nReturn when you have more experience!");
 				return false;
 			}
-			Dwelling.spend(.5f);
+			PillarOfSkulls.spend(.5f);
 			Actor closest=find(UniqueLocation.class);
 			if(closest==null) closest=find(Town.class);
 			if(closest==null) closest=find(Location.class);
@@ -223,6 +224,61 @@ public class PillarOfSkulls extends UniqueLocation{
 	@Override
 	public List<Combatant> getcombatants(){
 		return null;
+	}
+
+	/**
+	 * @param cr Spend this much CR in recruiting a rookie (1CR = 100XP).
+	 */
+	static public void spend(double cr){
+		double nmembers=Squad.active.members.size();
+		double percapita=cr/nmembers;
+		boolean buyfromall=true;
+		for(Combatant c:Squad.active.members)
+			if(percapita>c.xp.doubleValue()){
+				buyfromall=false;
+				break;
+			}
+		if(buyfromall)
+			for(Combatant c:Squad.active.members)
+				c.xp=c.xp.subtract(new BigDecimal(percapita));
+		else{
+			ArrayList<Combatant> squad=new ArrayList<>(Squad.active.members);
+			ChallengeCalculator.calculateel(squad);
+			Collections.sort(squad,(o1,o2)->{
+				final Float cr1=o2.xp.floatValue()+o2.source.cr;
+				final Float cr2=o1.xp.floatValue()+o1.source.cr;
+				return cr1.compareTo(cr2);
+			});
+			for(Combatant c:squad){
+				if(c.xp.doubleValue()>=cr){
+					c.xp=c.xp.subtract(new BigDecimal(cr));
+					return;
+				}
+				cr-=c.xp.doubleValue();
+				c.xp=new BigDecimal(0);
+			}
+		}
+	}
+
+	/**
+	 * @param m Given a monster...
+	 * @return recruits into {@link Squad#active} and {@link PillarOfSkulls#spend(double)} XP if
+	 *         {@link canrecruit}.
+	 */
+	public static boolean recruit(Monster m){
+		if(!canrecruit(m.cr*100)) return false;
+		PillarOfSkulls.spend(m.cr);
+		Squad.active.recruit(m);
+		return true;
+	}
+
+	/**
+	 * @param price Price in XP (100XP = 1CR).
+	 * @return <code>true</code> if currently active {@link Squad} can afford this
+	 *         much.
+	 */
+	static public boolean canrecruit(double price){
+		return price<=Squad.active.sumxp();
 	}
 
 	/**

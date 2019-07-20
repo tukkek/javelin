@@ -18,11 +18,10 @@ import javelin.model.unit.abilities.discipline.serpent.SteelSerpent;
 import javelin.model.world.World;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.basic.Cancel;
-import javelin.model.world.location.town.labor.basic.Dwelling.BuildDwelling;
 import javelin.model.world.location.town.labor.basic.Growth;
 import javelin.model.world.location.town.labor.basic.Lodge.BuildLodge;
-import javelin.model.world.location.town.labor.basic.Shop.BuildShop;
 import javelin.model.world.location.town.labor.basic.Redraw;
+import javelin.model.world.location.town.labor.basic.Shop.BuildShop;
 import javelin.model.world.location.town.labor.criminal.Sewers.BuildSewers;
 import javelin.model.world.location.town.labor.criminal.Slums.BuildSlums;
 import javelin.model.world.location.town.labor.criminal.ThievesGuild.BuildThievesGuild;
@@ -57,8 +56,9 @@ public class LaborDeck extends ArrayList<Labor>{
 	public static final List<Trait> TRAITS=new ArrayList<>(7);
 	static final boolean DEBUG=false;
 
-	static final Labor[] BASE=new Labor[]{new BuildDwelling(),new BuildLodge(),
-			new Cancel(),new Growth(),new Redraw(),new BuildShop()};
+	static final Labor[] BASE=new Labor[]{
+			/*new BuildDwelling(),*/new BuildLodge(),new Cancel(),new Growth(),
+			new Redraw(),new BuildShop()};
 	static final Labor[] CRIMINAL=new Labor[]{new BuildNinjaDojo(),
 			new BuildSewers(),new BuildSlums(),new BuildThievesGuild(),
 			BlackDragoon.INSTANCE.buildguild()};

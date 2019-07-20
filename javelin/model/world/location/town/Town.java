@@ -514,4 +514,9 @@ public class Town extends Location{
 				el+=1;
 			}
 	}
+
+	@Override
+	public Integer getel(Integer attackerel){
+		return population;
+	}
 }

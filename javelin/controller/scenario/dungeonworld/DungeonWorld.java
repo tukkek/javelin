@@ -32,7 +32,6 @@ public class DungeonWorld extends Campaign{
 		worldencounters=false;
 		worldhazards=false;
 		helpfile="Dungeon world";
-		spawn=false;
 		labormodifier=0;
 		locationgenerator=ZoneGenerator.class;
 		worldgenerator=DungeonWorldGenerator.class;

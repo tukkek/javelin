@@ -49,7 +49,6 @@ public class ArtOfWar extends Scenario{
 		locationgenerator=AowGenerator.class;
 		helpfile="Art of war";
 		labormodifier=0;
-		spawn=false;
 		asksquadnames=false;
 	}
 

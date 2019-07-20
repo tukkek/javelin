@@ -139,11 +139,6 @@ public abstract class Fortification extends Location{
 	}
 
 	@Override
-	public Integer getel(Integer attackerel){
-		return ChallengeCalculator.calculateel(garrison);
-	}
-
-	@Override
 	public String toString(){
 		if(targetel==null||!ishostile()) return descriptionknown;
 		int knowledge=Squad.active.getbest(Skill.KNOWLEDGE)

@@ -9,12 +9,14 @@ import javelin.Javelin;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
+import javelin.controller.exception.GaveUp;
 import javelin.controller.exception.RepeatTurn;
 import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.LocationFight;
 import javelin.controller.fight.Siege;
 import javelin.controller.generator.WorldGenerator;
+import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
 import javelin.model.Realm;
@@ -389,21 +391,12 @@ public abstract class Location extends Actor{
 	}
 
 	public void spawn(){
-		if(realm==null||!ishostile()||garrison.isEmpty()) return;
-		Combatant spawn=RPG.pick(garrison);
-		Float cr=spawn.source.cr;
-		if(!RPG.chancein(Math.round(400*cr/20))) return;
-		Location reinforce=this;
-		for(Town t:Town.gettowns())
-			if(t!=this&&t.realm==realm&&t.population>=cr
-					&&t.getel(0)<ChallengeCalculator.calculateel(reinforce.garrison))
-				reinforce=t;
-		if(Javelin.DEBUG&&false)
-			System.out.println("Spawning a "+spawn+" (cr "+cr+") from "+this+" (el "
-					+ChallengeCalculator.calculateel(garrison)+") to "+reinforce+" (cr "
-					+ChallengeCalculator.calculateel(reinforce.garrison)+")");
-		reinforce.garrison.add(new Combatant(spawn.source,true));
-		Incursion.raid(reinforce);
+		try{
+			Incursion.spawn(new Incursion(x,y,garrison,realm));
+			garrison=EncounterGenerator.generate(getel(null),Terrain.get(x,y));
+		}catch(GaveUp e){
+			return;
+		}
 	}
 
 	@Override

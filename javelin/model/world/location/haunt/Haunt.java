@@ -210,6 +210,11 @@ public abstract class Haunt extends Fortification{
 		garrison.clear();
 		waves-=1;
 		if(waves<0) return null;
+		garrison=generatemonsters();
+		return garrison;
+	}
+
+	Combatants generatemonsters() throws GaveUp{
 		var pool=getpool();
 		if(pool.isEmpty()) throw new GaveUp();
 		var wave=new Combatants();
@@ -229,7 +234,6 @@ public abstract class Haunt extends Fortification{
 				el=ChallengeCalculator.calculateel(wave);
 			}
 			if(el>waveel) continue;
-			garrison=wave;
 			return garrison;
 		}
 		throw new GaveUp();
@@ -350,5 +354,14 @@ public abstract class Haunt extends Fortification{
 		for(String subtype:m.subtypes)
 			if(subtypes.contains(subtype)) return true;
 		return false;
+	}
+
+	@Override
+	public void spawn(){
+		try{
+			Incursion.spawn(new Incursion(x,y,generatemonsters(),realm));
+		}catch(GaveUp e){
+			return;
+		}
 	}
 }

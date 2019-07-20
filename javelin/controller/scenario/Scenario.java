@@ -195,15 +195,6 @@ public class Scenario implements Serializable{
 	public int boost=3;
 
 	/**
-	 * If <code>true</code>, hostile {@link Location}s will spawn more monsters
-	 * over time.
-	 *
-	 * @see Location#ishostile()
-	 * @see Location#spawn()
-	 * @see Incursion
-	 */
-	public boolean spawn=false;
-	/**
 	 * Generates {@link Actor}s and {@link Location}s during world generation and
 	 * during play.
 	 *
@@ -243,6 +234,8 @@ public class Scenario implements Serializable{
 	public boolean quests=false;
 	/** Whether to allow {@link UrbanEvents} in {@link Town}s. */
 	public boolean urbanevents=false;
+	/** How many days on average to call {@link Location#spawn()}. 0 = never. */
+	public int spawnrate=30;
 
 	/**
 	 * {@link Upgrade} or not the starting squad after it's been selected.

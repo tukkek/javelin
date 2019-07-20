@@ -9,6 +9,7 @@ import java.util.List;
 
 import javelin.Debug;
 import javelin.Javelin;
+import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.challenge.Difficulty;
 import javelin.controller.comparator.CombatantByCr;
@@ -20,7 +21,6 @@ import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.location.Fortification;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.feature.Portal;
 import javelin.model.world.location.town.District;
@@ -47,7 +47,6 @@ public class Incursion extends Actor{
 	/** Move even if {@link Debug#disablecombat} is enabled. */
 	static final boolean FORCEMOVEMENT=false;
 	static final VictoryChance VICTORYCHANCES=new VictoryChance();
-	static final int[] DELTAS=new int[]{-1,0,+1};
 
 	static class VictoryChance{
 		HashMap<Integer,Integer> chances=new HashMap<>();
@@ -223,35 +222,18 @@ public class Incursion extends Actor{
 		move();
 	}
 
-	/**
-	 * Creates and places a new incursion. Finds an empty spot close to the given
-	 * coordinates.
-	 *
-	 * @param r See {@link Actor#realm}.
-	 * @param xp Starting {@link World} coordinate.
-	 * @param yp Starting {@link World} coordinate.
-	 * @param squadp See {@link Incursion#squad}.
-	 * @see Actor#place()
-	 */
+	/** Finds an suitable spot and places the incursion. */
 	@SuppressWarnings("unused")
-	static Incursion place(Realm r,int xp,int yp,List<Combatant> squadp){
-		if(Javelin.DEBUG&&!SPAWN) return null;
+	public static void spawn(Incursion i){
+		if(Javelin.DEBUG&&!SPAWN) return;
 		int size=World.scenario.size;
-		ArrayList<Actor> actors=World.getactors();
-		int x=xp;
-		int y=yp;
-		while(World.get(x,y,actors)!=null||Terrain.get(x,y).equals(Terrain.WATER)){
-			int delta=DELTAS[RPG.r(DELTAS.length)];
-			if(RPG.chancein(2))
-				x+=delta;
-			else
-				y+=delta;
-			if(x<0||x>=size) x=xp;
-			if(y<0||y>=size) y=yp;
-		}
-		Incursion i=new Incursion(x,y,squadp,r);
+		var actors=World.getactors();
+		var p=new Point(i.x,i.y);
+		while(World.get(p.x,p.y,actors)!=null
+				||Terrain.get(p.x,p.y).equals(Terrain.WATER))
+			p.displace();
+		i.setlocation(p);
 		i.place();
-		return i;
 	}
 
 	@Override
@@ -382,27 +364,24 @@ public class Incursion extends Actor{
 		return all;
 	}
 
-	/**
-	 * @param l Possibly spawns an Incursion here.
-	 */
-	public static void raid(Location l){
-		if(l.garrison.size()<2) return;
-		Fortification f=l instanceof Fortification?(Fortification)l:null;
-		int target;
-		if(l instanceof Town)
-			target=((Town)l).population;
-		else if(f!=null&&f.targetel!=null)
-			target=f.targetel;
-		else{
-			int day=Math.round(Math.round(WorldScreen.lastday));
-			target=Math.min(20,20*day/400);
-		}
-		if(ChallengeCalculator.calculateel(l.garrison)<=target+2) return;
-		l.garrison.sort(CombatantByCr.SINGLETON);
-		List<Combatant> incursion=new ArrayList<>(
-				l.garrison.subList(0,l.garrison.size()/2));
-		l.garrison.removeAll(incursion);
-		Incursion.place(l.realm,l.x,l.y,incursion);
-		if(f!=null&&f.targetel!=null) f.targetel+=1;
-	}
+	//	/** @param l Possibly spawns an Incursion here. */
+	//	public static void raid(Location l){
+	//		if(l.garrison.size()<2) return;
+	//		var f=l instanceof Fortification?(Fortification)l:null;
+	//		int target;
+	//		if(l instanceof Town)
+	//			target=((Town)l).population;
+	//		else if(f!=null&&f.targetel!=null)
+	//			target=f.targetel;
+	//		else{
+	//			var day=Math.round(Math.round(WorldScreen.lastday));
+	//			target=Math.min(20,20*day/400);
+	//		}
+	//		if(ChallengeCalculator.calculateel(l.garrison)<=target+2) return;
+	//		l.garrison.sort(CombatantByCr.SINGLETON);
+	//		var incursion=new ArrayList<>(l.garrison.subList(0,l.garrison.size()/2));
+	//		l.garrison.removeAll(incursion);
+	//		place(l.realm,l.x,l.y,incursion);
+	//		if(f!=null&&f.targetel!=null) f.targetel+=1;
+	//	}
 }

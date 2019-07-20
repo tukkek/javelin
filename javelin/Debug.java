@@ -19,7 +19,6 @@ import javelin.controller.generator.WorldGenerator;
 import javelin.controller.kit.Kit;
 import javelin.controller.map.Map;
 import javelin.controller.scenario.Scenario;
-import javelin.model.Realm;
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
@@ -27,9 +26,7 @@ import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
-import javelin.model.world.Incursion;
 import javelin.model.world.World;
-import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.town.Town;
 import javelin.view.Images;
@@ -125,14 +122,6 @@ public class Debug{
 		static void freezeopponents(){
 			for(Combatant c:Fight.state.redTeam)
 				c.ap=1000;
-		}
-
-		static void generateincursion(Location l,Realm r,List<Combatant> members){
-			for(Actor a:Incursion.getall())
-				a.remove();
-			Incursion i=new Incursion(l.x,l.y,members,r);
-			i.displace();
-			i.place();
 		}
 
 		static void teleport(Class<? extends Actor> type){

@@ -3,9 +3,7 @@ package javelin.view.screen;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import javelin.Debug;
@@ -219,24 +217,25 @@ public class WorldScreen extends BattleScreen{
 	void endturn(){
 		World.scenario.endturn();
 		if(Dungeon.active!=null) return;
-		Squad act=Javelin.act();
-		long time=act.gettime();
-		final int day=Double.valueOf(Math.ceil(time/24.0)).intValue();
-		List<Actor> squads=World.getall(Squad.class);
+		var act=Javelin.act();
+		var time=act.gettime();
+		var day=Double.valueOf(Math.ceil(time/24.0)).intValue();
+		var squads=World.getall(Squad.class);
 		while(day>WorldScreen.lastday||squads.isEmpty()){
 			WorldScreen.lastday+=1;
 			Season.change(day);
 			Weather.weather();
 			World.seed.featuregenerator.spawn(1f/SPAWNPERIOD,false);
 			World.scenario.endday();
-			ArrayList<Actor> actors=World.getactors();
-			ArrayList<Incursion> incursions=Incursion.getall();
+			var actors=World.getactors();
+			var incursions=Incursion.getall();
 			actors.removeAll(incursions);
-			Collections.shuffle(actors);
-			for(Actor a:actors){
+			for(Actor a:RPG.shuffle(actors)){
 				a.turn(time,this);
-				Location l=a instanceof Location?(Location)a:null;
-				if(l!=null&&World.scenario.spawn) l.spawn();
+				var l=a instanceof Location?(Location)a:null;
+				if(World.scenario.spawnrate>0&&RPG.chancein(World.scenario.spawnrate)
+						&&l!=null&&l.realm!=null&&l.ishostile()&&!l.garrison.isEmpty())
+					l.spawn();
 			}
 			dofights(time,incursions);
 		}

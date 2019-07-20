@@ -26,7 +26,6 @@ public class NpcGenerator{
 
 	void register(Combatant c,List<?> terrains){
 		if(c.source.isaquatic()) return;
-		c.source.elite=true;
 		for(Object t:terrains){
 			ArrayList<Combatant> encounter=new ArrayList<>(1);
 			encounter.add(c);
@@ -88,6 +87,7 @@ public class NpcGenerator{
 		c.source.customName="Elite "+c.source.name.toLowerCase();
 		while(c.source.cr<targetcr&&Commoner.SINGLETON.upgrade(c))
 			ChallengeCalculator.calculatecr(c.source);
+		c.source.elite=true;
 		return c;
 	}
 
@@ -126,6 +126,7 @@ public class NpcGenerator{
 		}
 		if(c.source.cr<=originalcr) return null;
 		k.rename(c.source);
+		c.source.elite=true;
 		return c;
 	}
 

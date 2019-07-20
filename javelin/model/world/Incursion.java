@@ -229,9 +229,16 @@ public class Incursion extends Actor{
 		int size=World.scenario.size;
 		var actors=World.getactors();
 		var p=new Point(i.x,i.y);
-		while(World.get(p.x,p.y,actors)!=null
-				||Terrain.get(p.x,p.y).equals(Terrain.WATER))
+		var tries=0;
+		while(!p.validate(0,0,size,size)||World.get(p.x,p.y,actors)!=null
+				||Terrain.get(p.x,p.y).equals(Terrain.WATER)){
 			p.displace();
+			tries+=1;
+			if(tries==20){
+				p=new Point(i.x,i.y);
+				tries=0;
+			}
+		}
 		i.setlocation(p);
 		i.place();
 	}

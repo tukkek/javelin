@@ -95,11 +95,19 @@ public class Wilderness extends Dungeon{
 
 	/** Places {@link Entrance} and {@link Squad} on a border {@link Tile}. */
 	void generateentrance(char[][] map){
-		squadlocation=new Point(RPG.r(0,map.length-1),RPG.r(0,map[0].length-1));
-		if(RPG.chancein(2))
-			squadlocation.x=RPG.chancein(2)?0:map.length-1;
-		else
-			squadlocation.y=RPG.chancein(2)?0:map[0].length-1;
+		squadlocation=null;
+		var width=map.length;
+		var height=map[0].length;
+		while(squadlocation==null){
+			squadlocation=new Point(RPG.r(0,width-1),RPG.r(0,height-1));
+			if(RPG.chancein(2))
+				squadlocation.x=RPG.chancein(2)?0:width-1;
+			else
+				squadlocation.y=RPG.chancein(2)?0:height-1;
+			var empty=squadlocation.getadjacent().stream().filter(
+					p->p.validate(0,0,width,height)&&map[p.x][p.y]==Template.FLOOR);
+			if(empty.count()==0) squadlocation=null;
+		}
 		map[squadlocation.x][squadlocation.y]=Template.FLOOR;
 		new Entrance(squadlocation).place(this,squadlocation);
 	}

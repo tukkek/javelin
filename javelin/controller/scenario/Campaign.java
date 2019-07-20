@@ -75,7 +75,7 @@ public class Campaign extends Scenario{
 		worldencounters=true;
 		worldhazards=true;
 		dominationwin=false;
-		startingfeatures=size*size/(5*2);
+		startingfeatures=Math.round(size*size/(5*1.5f));
 		simpletroves=false;
 		boost=1;
 		randomrealms=false;

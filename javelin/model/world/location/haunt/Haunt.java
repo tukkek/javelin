@@ -27,6 +27,7 @@ import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
 import javelin.model.unit.Squad;
 import javelin.model.world.Incursion;
+import javelin.model.world.World;
 import javelin.model.world.location.Fortification;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.old.RPG;
@@ -362,5 +363,10 @@ public abstract class Haunt extends Fortification{
 		}catch(GaveUp e){
 			return;
 		}
+	}
+
+	static public List<Haunt> gethaunts(){
+		return World.getactors().stream().filter(a->a instanceof Haunt)
+				.map(a->(Haunt)a).collect(Collectors.toList());
 	}
 }

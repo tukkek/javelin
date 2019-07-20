@@ -20,7 +20,6 @@ import javelin.model.unit.Squad;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.town.District;
 import javelin.model.world.location.town.Town;
-import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.WorldScreen;
 
@@ -117,22 +116,16 @@ public abstract class Actor implements Serializable{
 			if(Javelin.DEBUG) System.err.println("Too many calls to displace!");
 			return;
 		}
-		int deltax=0,deltay=0;
-		while(deltax==0&&deltay==0){
-			deltax=NUDGES[RPG.r(NUDGES.length)];
-			deltay=NUDGES[RPG.r(NUDGES.length)];
-		}
-		int tox=x+deltax;
-		int toy=y+deltay;
-		if(!World.validatecoordinate(tox,toy)||!cancross(tox,toy)){
+		var p=getlocation();
+		p.displace();
+		if(!World.validatecoordinate(p.x,p.y)||!cancross(p.x,p.y)){
 			displace(depth+1);
 			return;
 		}
-		ArrayList<Actor> actors=World.getactors();
+		var actors=World.getactors();
 		actors.remove(this);
-		if(tox>=0&&toy>=0&&tox<World.scenario.size&&toy<World.scenario.size
-				&&World.get(tox,toy,actors)==null)
-			move(tox,toy);
+		if(World.get(p.x,p.y,actors)==null)
+			move(p.x,p.y);
 		else
 			displace(depth+1);
 	}
@@ -327,5 +320,10 @@ public abstract class Actor implements Serializable{
 	 */
 	public void reveal(){
 		WorldScreen.current.mappanel.tiles[x][y].discovered=true;
+	}
+
+	/** @return <code>true</code> to signal the game shouldn't be lost yet. */
+	public boolean hold(){
+		return false;
 	}
 }

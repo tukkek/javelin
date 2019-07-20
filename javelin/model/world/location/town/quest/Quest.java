@@ -101,7 +101,7 @@ public abstract class Quest implements Serializable{
 
 		@Override
 		public Integer getel(Integer attackerel){
-			return null;
+			return 0;
 		}
 
 		@Override

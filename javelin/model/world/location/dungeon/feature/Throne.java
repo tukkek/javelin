@@ -64,7 +64,7 @@ public class Throne extends Feature{
 
 	@Override
 	public boolean activate(){
-		if(Squad.active.gettime()-lastuse<24){
+		if(Javelin.gettime()-lastuse<24){
 			String inert="You approach the throne but nothing happens right now...";
 			Javelin.message(inert,false);
 			return false;
@@ -80,7 +80,7 @@ public class Throne extends Feature{
 			return false;
 		}
 		combatant.addcondition(new TemporarySpell("Throne gift",spell,combatant));
-		lastuse=Squad.active.gettime();
+		lastuse=Javelin.gettime();
 		var result=combatant+" has been gifted with a use of "+name+"!";
 		Javelin.app.switchScreen(WorldScreen.current);
 		Javelin.message(result,false);

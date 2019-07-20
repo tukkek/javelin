@@ -212,6 +212,6 @@ public abstract class Governor implements Serializable{
 	}
 
 	long getseason(){
-		return Math.min(4,Squad.active.gettime()/(24*100));
+		return Math.min(4,Javelin.gettime()/(24*100));
 	}
 }

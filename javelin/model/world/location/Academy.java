@@ -16,7 +16,6 @@ import javelin.controller.upgrade.classes.ClassLevelUpgrade;
 import javelin.model.transport.Transport;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
-import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.order.Order;
@@ -27,6 +26,7 @@ import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Build;
 import javelin.old.RPG;
 import javelin.view.screen.Option;
+import javelin.view.screen.WorldScreen;
 import javelin.view.screen.upgrading.AcademyScreen;
 
 /**
@@ -135,31 +135,6 @@ public abstract class Academy extends Fortification{
 				upgrades.size()+1,upgrades,null,null);
 	}
 
-	/**
-	 * Normally {@link #training} units don't get out of the academy by themselves
-	 * since this would mean being alone in the wild but if the game is about to
-	 * be lost due to the absence of {@link Squad}s then the unit gets out to
-	 * prevent the game from ending.
-	 *
-	 * @return <code>false</code> if there was no unit in {@link #training}.
-	 */
-	public static boolean train(){
-		var trained=false;
-		for(var actor:World.getactors())
-			if(actor instanceof Academy){
-				var a=(Academy)actor;
-				/* don't inline */
-				for(var order:a.training.queue){
-					var o=(TrainingOrder)order;
-					var done=Math.max(o.completionat,Squad.active.gettime());
-					a.completetraining(o).settime(done);
-					trained=true;
-				}
-				a.training.clear();
-			}
-		return trained;
-	}
-
 	public int getlabor(){
 		return upgrades.size();
 	}
@@ -174,13 +149,14 @@ public abstract class Academy extends Fortification{
 	@Override
 	public boolean interact(){
 		if(!super.interact()) return false;
-		completetraining();
+		completetraining(false);
 		getscreen().show();
 		return true;
 	}
 
-	void completetraining(){
-		for(Order o:training.reclaim(Squad.active.gettime()))
+	void completetraining(boolean force){
+		var complete=force?training.queue:training.reclaim(Javelin.gettime());
+		for(Order o:complete)
 			completetraining((TrainingOrder)o);
 	}
 
@@ -239,32 +215,28 @@ public abstract class Academy extends Fortification{
 	 * @return The Squad the trainee is now into.
 	 */
 	public Squad moveout(TrainingOrder o,Combatant member){
-		ArrayList<Point> free=new ArrayList<>();
-		ArrayList<Actor> actors=World.getactors();
-		HashSet<Point> district=getdistrict()==null?null:getdistrict().getarea();
-		for(Point p:Point.getadjacent2()){
-			p.x+=x;
-			p.y+=y;
+		var district=getdistrict()==null?Set.of():getdistrict().getarea();
+		var free=new ArrayList<Point>();
+		var actors=World.getactors();
+		for(var p:RPG.shuffle(getlocation().getadjacent())){
 			if(!World.validatecoordinate(p.x,p.y)
 					||Terrain.get(p.x,p.y).equals(Terrain.WATER))
 				continue;
-			Squad stationed=(Squad)World.get(p.x,p.y,Squad.class);
-			if(stationed==null){
-				if(World.get(p.x,p.y,actors)==null
-						&&(district==null||district.contains(p)))
-					free.add(new Point(p.x,p.y));
-			}else{
-				stationed.add(member,o.equipment);
-				return stationed;
+			var existing=(Squad)World.get(p.x,p.y,Squad.class);
+			if(existing!=null){
+				existing.add(member,o.equipment);
+				if(existing.gettime()<o.completionat) existing.settime(o.completionat);
+				return existing;
 			}
+			if(World.get(p.x,p.y,actors)==null&&district.contains(p))
+				free.add(new Point(p.x,p.y));
 		}
-
-		Point destination=free.isEmpty()?getlocation():RPG.pick(free);
-		Squad s=new Squad(destination.x,destination.y,
-				Math.round(Math.ceil(o.completionat/24f)*24),null);
+		var nodistrict=free.isEmpty();
+		var destination=nodistrict?getlocation():RPG.pick(free);
+		var s=new Squad(destination.x,destination.y,o.completionat,null);
 		s.add(member,o.equipment);
 		s.place();
-		if(free.isEmpty()) s.displace();
+		if(nodistrict) s.displace();
 		return s;
 	}
 
@@ -275,6 +247,7 @@ public abstract class Academy extends Fortification{
 
 	@Override
 	protected void captureforai(Incursion attacker){
+		completetraining(true);
 		super.captureforai(attacker);
 		training.clear();
 		stash=0;
@@ -300,18 +273,30 @@ public abstract class Academy extends Fortification{
 		boolean anydone=false;
 		for(Order o:training.queue){
 			s+=o+"\n";
-			anydone=anydone||o.completed(Squad.active.gettime());
+			anydone=anydone||o.completed(Javelin.gettime());
 		}
 		s+="\n";
 		if(anydone)
 			s+="To move units who have completed their trainings into a new squad press m (or any other key to continue)...";
 		else
 			s+="Clicking this location again once any training period is over will allow you to have units exit into the world map. ";
-		if(Javelin.promptscreen(s)=='m'&&anydone) completetraining();
+		if(Javelin.promptscreen(s)=='m'&&anydone) completetraining(false);
 	}
 
 	@Override
 	public boolean canupgrade(){
 		return super.canupgrade()&&training.isempty();
+	}
+
+	@Override
+	public boolean hold(){
+		return !training.isempty();
+	}
+
+	@Override
+	public void turn(long time,WorldScreen world){
+		super.turn(time,world);
+		if(training.reportalldone()&&Squad.getsquads().isEmpty())
+			completetraining(false);
 	}
 }

@@ -202,7 +202,7 @@ public class ArtOfWar extends Scenario{
 				||World.get(from.x,from.y,actors)!=null
 				||Terrain.get(from.x,from.y).equals(Terrain.WATER))
 			from.displace();
-		var s=new Squad(from.x,from.y,Squad.active.gettime(),null);
+		var s=new Squad(from.x,from.y,Javelin.gettime(),null);
 		s.place();
 		for(var c:captured){
 			var hires=new ArrayList<>(c.hires);

@@ -24,6 +24,7 @@ import javelin.controller.event.wild.WildEvents;
 import javelin.controller.wish.Ressurect;
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.Season;
@@ -90,7 +91,10 @@ public class StateManager{
 	 */
 	public static synchronized void save(boolean force,File to){
 		long now=System.currentTimeMillis();
-		if(!force&&now-lastsave<Preferences.saveinterval*MINUTE) return;
+		if(!force){
+			if(now-lastsave<Preferences.saveinterval*MINUTE) return;
+			if(Squad.active==null) return;
+		}
 		lastsave=now;
 		try{
 			ObjectOutputStream writer=new ObjectOutputStream(
@@ -193,5 +197,4 @@ public class StateManager{
 		abandoned=true;
 		save(true,StateManager.SAVEFILE);
 	}
-
 }

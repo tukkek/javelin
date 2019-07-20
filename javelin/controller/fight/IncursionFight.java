@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javelin.controller.map.location.TownMap;
+import javelin.controller.terrain.Terrain;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Incursion;
+import javelin.old.RPG;
 
 /**
  * @see Incursion
@@ -17,14 +19,14 @@ public class IncursionFight extends Fight{
 	public final Incursion incursion;
 
 	/** Constructor. */
-	public IncursionFight(final Incursion incursion){
-		this.incursion=incursion;
+	public IncursionFight(final Incursion i){
+		incursion=i;
 		meld=true;
 		hide=false;
 		canflee=true;
 		rewardreputation=true;
-		var d=incursion.getdistrict();
-		if(d!=null) map=new TownMap(d.town);
+		var d=i.getdistrict();
+		map=d==null?RPG.pick(Terrain.get(i.x,i.y).getmaps()):new TownMap(d.town);
 	}
 
 	@Override

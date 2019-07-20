@@ -172,12 +172,13 @@ public class WorldScreen extends BattleScreen{
 		else if(World.scenario.win()){
 			StateManager.clear();
 			System.exit(0);
-		}
+		}else
+			Javelin.lose();
 		StateManager.save(false,StateManager.SAVEFILE);
 		endturn();
 		if(World.getall(Squad.class).isEmpty()) return;
 		updateplayerinformation();
-		move();
+		if(Squad.active!=null) move();
 		messagepanel.clear();
 	}
 
@@ -189,8 +190,10 @@ public class WorldScreen extends BattleScreen{
 	void redraw(){
 		Javelin.app.switchScreen(this);
 		var h=JavelinApp.context.getsquadlocation();
-		center(h.x,h.y);
-		view(h.x,h.y);
+		if(h!=null){
+			center(h.x,h.y);
+			view(h.x,h.y);
+		}
 		Javelin.redraw();
 	}
 
@@ -215,29 +218,31 @@ public class WorldScreen extends BattleScreen{
 	 * @see Squad#time
 	 */
 	void endturn(){
-		World.scenario.endturn();
+		var s=World.scenario;
+		s.endturn();
 		if(Dungeon.active!=null) return;
 		var act=Javelin.act();
-		var time=act.gettime();
-		var day=Double.valueOf(Math.ceil(time/24.0)).intValue();
-		var squads=World.getall(Squad.class);
-		while(day>WorldScreen.lastday||squads.isEmpty()){
+		var time=Math.round(act==null?lastday*24:act.gettime());
+		var day=Math.round(Math.round(Math.ceil(time/24.0)));
+		while(day>WorldScreen.lastday||World.getall(Squad.class).isEmpty()){
 			WorldScreen.lastday+=1;
 			Season.change(day);
 			Weather.weather();
 			World.seed.featuregenerator.spawn(1f/SPAWNPERIOD,false);
-			World.scenario.endday();
+			s.endday();
 			var actors=World.getactors();
 			var incursions=Incursion.getall();
 			actors.removeAll(incursions);
-			for(Actor a:RPG.shuffle(actors)){
+			for(var a:RPG.shuffle(actors)){
 				a.turn(time,this);
 				var l=a instanceof Location?(Location)a:null;
-				if(World.scenario.spawnrate>0&&RPG.chancein(World.scenario.spawnrate)
-						&&l!=null&&l.realm!=null&&l.ishostile()&&!l.garrison.isEmpty())
+				if(s.spawnrate>0&&RPG.chancein(s.spawnrate)&&l!=null&&l.realm!=null
+						&&l.ishostile()&&!l.garrison.isEmpty())
 					l.spawn();
 			}
 			dofights(time,incursions);
+			if(World.getall(Squad.class).isEmpty()) Javelin.redraw();
+			if(Javelin.lose()) break;
 		}
 	}
 
@@ -256,6 +261,8 @@ public class WorldScreen extends BattleScreen{
 
 	/** Show party/world status. */
 	public void updateplayerinformation(){
+		Squad s=Squad.active;
+		if(s==null) return;
 		MessagePanel.active.clear();
 		final ArrayList<String> infos=new ArrayList<>();
 		String date="Day "+currentday();
@@ -270,10 +277,8 @@ public class WorldScreen extends BattleScreen{
 					.add(Dungeon.active.description+", floor "+Dungeon.active.getfloor());
 		infos.add("");
 		if(Dungeon.active==null){
-			final int mph=Squad.active.speed(Terrain.current(),Squad.active.x,
-					Squad.active.y);
-			infos.add(mph+" mph"+(Squad.active.transport==null?""
-					:Squad.active.transport.load(Squad.active.members)));
+			final int mph=s.speed(Terrain.current(),Squad.active.x,Squad.active.y);
+			infos.add(mph+" mph"+(s.transport==null?"":s.transport.load(s.members)));
 		}
 		infos.add(printgold());
 		final ArrayList<String> hps=showstatusinformation();

@@ -10,7 +10,6 @@ import javelin.controller.generator.encounter.EncounterGenerator;
 import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.controller.walker.Walker;
-import javelin.model.Realm;
 import javelin.model.unit.Squad;
 import javelin.model.unit.skill.Knowledge;
 import javelin.model.unit.skill.Skill;
@@ -88,7 +87,6 @@ public abstract class Fortification extends Location{
 		super(null);
 		this.minlevel=minlevel;
 		this.maxlevel=maxlevel;
-		realm=Realm.AIR;// see #place()
 		discard=false;
 		allowentry=false;
 		this.descriptionknown=descriptionknown;
@@ -141,6 +139,7 @@ public abstract class Fortification extends Location{
 	@Override
 	public String toString(){
 		if(targetel==null||!ishostile()) return descriptionknown;
+		if(Squad.active==null) return descriptionunknown;
 		int knowledge=Squad.active.getbest(Skill.KNOWLEDGE)
 				.taketen(Skill.KNOWLEDGE);
 		return knowledge>=10+targetel?descriptionknown:descriptionunknown;

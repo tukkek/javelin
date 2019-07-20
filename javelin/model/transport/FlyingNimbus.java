@@ -1,5 +1,6 @@
 package javelin.model.transport;
 
+import javelin.Javelin;
 import javelin.controller.map.terrain.water.DeepWaters;
 import javelin.controller.terrain.Terrain;
 import javelin.model.item.relic.Flute;
@@ -30,7 +31,7 @@ public class FlyingNimbus extends Airship{
 		maintenance=0;
 		parkeable=false;
 		oldtransport=oldtransportp;
-		expireat=Squad.active.gettime()+24;
+		expireat=Javelin.gettime()+24;
 	}
 
 	@Override

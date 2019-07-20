@@ -47,7 +47,7 @@ public class Bless extends Spell{
 			BattleState s,ChanceNode cn){
 		s=s.clone();
 		for(Combatant c:s.getteam(caster))
-			c.addcondition(new Blessed(c));
+			s.clone(c).addcondition(new Blessed(c));
 		return "All allies are blessed!";
 	}
 

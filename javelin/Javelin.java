@@ -32,9 +32,7 @@ import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.unit.abilities.spell.Spell;
 import javelin.model.unit.abilities.spell.conjuration.Summon;
-import javelin.model.world.Actor;
 import javelin.model.world.World;
-import javelin.model.world.location.Academy;
 import javelin.old.Interface;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.old.messagepanel.TextZone;
@@ -171,7 +169,7 @@ public class Javelin{
 	 * @return Hour of the day, from 0 to 23.
 	 */
 	public static long getHour(){
-		return Squad.active==null?0:Squad.active.gettime()%24;
+		return Squad.active==null?0:Javelin.gettime()%24;
 	}
 
 	/**
@@ -185,7 +183,7 @@ public class Javelin{
 		Squad next=nexttoact();
 		Squad.active=next;
 		if(WorldScreen.lastday==-1)
-			WorldScreen.lastday=Math.ceil(Squad.active.gettime()/24.0);
+			WorldScreen.lastday=Math.ceil(Javelin.gettime()/24.0);
 		return next;
 	}
 
@@ -195,8 +193,8 @@ public class Javelin{
 	 */
 	public static Squad nexttoact(){
 		Squad next=null;
-		for(final Actor a:World.getall(Squad.class)){
-			Squad s=(Squad)a;
+		for(var s:Squad.getsquads()){
+			if(s.gettime()<(WorldScreen.lastday-1)*24) continue;
 			if(next==null||s.gettime()<next.gettime()) next=s;
 		}
 		return next;
@@ -230,16 +228,19 @@ public class Javelin{
 	 * control call this to stop the current game, invalidate the save file,
 	 * record the highscore and exit the application.
 	 */
-	public static void lose(){
-		if(Academy.train()) return;
+	public static boolean lose(){
+		if(!Squad.getsquads().isEmpty()
+				||World.getactors().stream().filter(a->a.hold()).findAny().isPresent())
+			return false;
 		Javelin.app.switchScreen(BattleScreen.active);
 		StateManager.clear();
 		BattleScreen.active.messagepanel.clear();
-		String sadface="You have lost all your units! Game over T_T\n\n";
+		var sadface="You have lost all your units! Game over T_T\n\n";
 		Javelin.message(sadface+Highscore.record(),Delay.NONE);
 		while(InfoScreen.feedback()!='\n')
 			continue;
 		System.exit(0);
+		return true;
 	}
 
 	/**
@@ -470,5 +471,10 @@ public class Javelin{
 	/** @return A "Capitalized" version of the input. */
 	public static String capitalize(String s){
 		return Character.toUpperCase(s.charAt(0))+s.substring(1).toLowerCase();
+	}
+
+	public static long gettime(){
+		return Squad.active==null?Math.round(WorldScreen.lastday*24)
+				:Squad.active.gettime();
 	}
 }

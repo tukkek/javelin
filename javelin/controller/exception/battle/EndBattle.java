@@ -36,11 +36,11 @@ public class EndBattle extends BattleEvent{
 		Fight.victory=Javelin.app.fight.win();
 		terminateconditions(Fight.state,BattleScreen.active);
 		if(Javelin.app.fight.onend()){
-			int nsquads=World.getall(Squad.class).size();
-			if(Squad.active!=null&&nsquads==World.getall(Squad.class).size()){
-				while(World.get(Squad.active.x,Squad.active.y,Incursion.class)!=null){
-					Squad.active.displace();
-					Squad.active.place();
+			var s=Squad.active;
+			if(s!=null){
+				while(World.get(s.x,s.y,Incursion.class)!=null){
+					s.displace();
+					s.place();
 				}
 				end(Fight.originalblueteam);
 				if(Dungeon.active!=null) Dungeon.active.activate(false);
@@ -97,7 +97,8 @@ public class EndBattle extends BattleEvent{
 
 	static void updateoriginal(List<Combatant> originalteam){
 		var update=new ArrayList<>(Fight.state.blueTeam);
-		update.addAll(Fight.state.dead);
+		for(var d:Fight.state.dead)
+			if(d.hp>Combatant.DEADATHP) update.add(d);
 		for(var inbattle:update){
 			int originali=originalteam.indexOf(inbattle);
 			if(originali>=0){

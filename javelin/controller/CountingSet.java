@@ -71,7 +71,7 @@ public class CountingSet{
 			if(n>1) text+=" (x"+n+")";
 			text+=", ";
 		}
-		return text.isEmpty()?"(empty)":text.substring(0,text.length()-2);
+		return text.isEmpty()?"...":text.substring(0,text.length()-2);
 	}
 
 	/** @param pass Calls {@link #add(String)} after a {@link #toString()}. */

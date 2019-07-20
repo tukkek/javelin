@@ -89,7 +89,7 @@ public class Divide extends WorldAction{
 	void spawn(final Combatants oldsquad,Combatants newsquad,int gold){
 		Actor nearto=findtown(Squad.active.x,Squad.active.y);
 		int x,y;
-		Squad s=new Squad(0,0,Squad.active.gettime(),Squad.active.lasttown);
+		Squad s=new Squad(0,0,Javelin.gettime(),Squad.active.lasttown);
 		s.members=newsquad;
 		s.gold=gold;
 		s.strategic=Squad.active.strategic;

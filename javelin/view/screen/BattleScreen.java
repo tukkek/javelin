@@ -9,7 +9,6 @@ import java.awt.event.KeyEvent;
 
 import javelin.Javelin;
 import javelin.Javelin.Delay;
-import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.action.Action;
 import javelin.controller.action.ActionCost;
@@ -171,7 +170,7 @@ public class BattleScreen extends Screen{
 	 * https://www.reddit.com/r/javelinrl/comments/catb13/17b18_windows_display_bug/
 	 */
 	static public void delayedredraw(){
-		if(!JavelinApp.SYSTEM.contains("windows")) return;
+		//		if(!JavelinApp.SYSTEM.contains("windows")) return;
 		if(BattleScreen.active==null
 				||BattleScreen.active.getClass()!=BattleScreen.class)
 			return;

@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Debug;
 import javelin.Javelin;
@@ -126,10 +127,8 @@ public class Incursion extends Actor{
 			displace();
 			return;
 		}
-		final int targetx=target.x;
-		final int targety=target.y;
-		int newx=x+determinemove(x,targetx);
-		int newy=y+determinemove(y,targety);
+		int newx=x+determinemove(x,target.x);
+		int newy=y+determinemove(y,target.y);
 		if(Terrain.get(newx,newy).equals(Terrain.WATER)){
 			displace();
 			return;
@@ -143,7 +142,7 @@ public class Incursion extends Actor{
 
 	/** Can be used from {@link Debug} to simulate captures. */
 	public void attack(Actor target){
-		fightdefenders(target);
+		//		fightdefenders(target);
 		Boolean status=target.destroy(this);
 		if(status==null) return;
 		if(status)
@@ -152,6 +151,7 @@ public class Incursion extends Actor{
 			remove();
 	}
 
+	/** TODO disabled */
 	void fightdefenders(Actor target){
 		if(target instanceof Squad) return;
 		if(target instanceof Location&&((Location)target).ishostile()) return;
@@ -175,22 +175,25 @@ public class Incursion extends Actor{
 	 * use the nearest valid target.
 	 */
 	protected void choosetarget(){
-		final ArrayList<Actor> actors=World.getactors();
-		List<Actor> targets=new ArrayList<>();
-		int vision=Math.max(1,
-				(Squad.perceive(true,true,true,squad)+Terrain.get(x,y).visionbonus)/5);
-		for(final Actor a:actors)
-			if(!a.impermeable&&a.realm!=realm&&a.distanceinsteps(x,y)<=vision
-					&&!crosseswater(this,a.x,a.y))
-				targets.add(a);
+		var vision=Math.max(1,
+				Squad.perceive(true,true,true,squad)+Terrain.get(x,y).visionbonus/5);
+		var targets=World.getactors().stream()
+				.filter(a->!a.impermeable&&a.realm!=realm&&!(a instanceof Incursion)
+						&&a.distanceinsteps(x,y)<=vision&&!crosseswater(this,a.x,a.y))
+				.collect(Collectors.toList());
 		if(targets.isEmpty()){
 			target=null;
 			return;
 		}
-		final int incursionel=getel();
-		targets.sort((o1,o2)->o1.getel(incursionel)-o2.getel(incursionel));
-		for(Actor a:targets)
-			if(a.getel(incursionel)<incursionel){
+		var el=getel();
+		targets.sort((o1,o2)->o1.getel(el)-o2.getel(el));
+		for(var a:targets)
+			if(a instanceof Incursion&&realm==a.realm){
+				target=a;
+				return;
+			}
+		for(var a:targets)
+			if(a.getel(el)<el){
 				target=a;
 				return;
 			}
@@ -245,9 +248,9 @@ public class Incursion extends Actor{
 
 	@Override
 	public Boolean destroy(Incursion attacker){
-		/* don't inline the return statement: null bug */
-		if(attacker.realm==realm) return ignore(attacker);
-		return fight(attacker.getel(),getel());
+		if(attacker.realm!=realm) return fight(attacker.getel(),getel());
+		squad.addAll(attacker.squad);
+		return false;
 	}
 
 	/**

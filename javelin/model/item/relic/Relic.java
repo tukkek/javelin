@@ -48,12 +48,12 @@ public abstract class Relic extends Item{
 			return true;
 		}
 		if(!activate(user)) return false;
-		lastused=Squad.active.gettime();
+		lastused=Javelin.gettime();
 		return true;
 	}
 
 	boolean charge(){
-		return Squad.active.gettime()-lastused<RECHARGEPERIOD;
+		return Javelin.gettime()-lastused<RECHARGEPERIOD;
 	}
 
 	/**

@@ -2,6 +2,7 @@ package javelin.model.world.location.order;
 
 import java.io.Serializable;
 
+import javelin.Javelin;
 import javelin.model.item.Item;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
@@ -27,7 +28,7 @@ public class Order implements Serializable{
 	 * @param namep See {@link #name}.
 	 */
 	public Order(long eta,String namep){
-		long time=Squad.active==null?0:Squad.active.gettime();
+		long time=Squad.active==null?0:Javelin.gettime();
 		completionat=eta+time;
 		name=namep;
 	}
@@ -42,7 +43,7 @@ public class Order implements Serializable{
 
 	@Override
 	public String toString(){
-		return name+" ("+geteta(Squad.active.gettime())+")";
+		return name+" ("+geteta(Javelin.gettime())+")";
 	}
 
 	public String geteta(long now){

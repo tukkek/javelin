@@ -243,7 +243,7 @@ public class Shop extends Location{
 	@Override
 	public boolean interact(){
 		if(!super.interact()) return false;
-		for(Order o:crafting.reclaim(Squad.active.gettime())){
+		for(Order o:crafting.reclaim(Javelin.gettime())){
 			CraftingOrder done=(CraftingOrder)o;
 			done.item.grab();
 		}

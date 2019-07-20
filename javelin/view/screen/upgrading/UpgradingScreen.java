@@ -220,6 +220,7 @@ public abstract class UpgradingScreen extends SelectScreen{
 		}
 		upgrade(o,c);
 		c.xp=c.xp.subtract(cost);
+		ChallengeCalculator.calculatecr(c.source);
 		return cost;
 	}
 

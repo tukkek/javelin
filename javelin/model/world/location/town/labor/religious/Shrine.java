@@ -140,9 +140,9 @@ public class Shrine extends Fortification{
 	@Override
 	public boolean interact(){
 		if(!super.interact()) return false;
-		String output;
-		output="You enter a shrine. \"What can we do for you today?\", says the "
+		String output="You enter a shrine. \"What can we do for you today?\", says the "
 				+(RPG.r(1,2)==1?"priest":"priestess")+".\n";
+		//		var members=Squad.active.members.size();
 		output+="\n1 - "+rituals.get(0).name+" ($"+price(0)+")";
 		if(level>1) output+="\n2 - "+rituals.get(1).name+" ($"+price(1)+")";
 		output+="\nq - Quit for now ";

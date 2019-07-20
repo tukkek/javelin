@@ -94,18 +94,15 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 		x=xp;
 		y=yp;
 		time=hourselapsedp;
-		if(Squad.active==null) Squad.active=this;
+		//		if(Squad.active==null) Squad.active=this;s
 		lasttown=lasttownp;
 	}
 
-	/**
-	 * Removes this squad from the game, likely triggering {@link Javelin#lose()}.
-	 */
+	/** Removes this squad from the game. */
 	public void disband(){
-		ArrayList<Actor> squads=World.getall(Squad.class);
+		var squads=World.getall(Squad.class);
 		squads.remove(this);
-		if(squads.isEmpty()) Javelin.lose();
-		//		if(Squad.active==this) Squad.active=Javelin.nexttoact();
+		//		if(squads.isEmpty()) Javelin.lose();
 		if(Dungeon.active!=null) Dungeon.active.leave();
 	}
 

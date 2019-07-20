@@ -20,7 +20,6 @@ import javelin.model.unit.Monster;
 import javelin.model.world.Actor;
 import javelin.model.world.Caravan;
 import javelin.model.world.World;
-import javelin.model.world.location.Fortification;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.Outpost;
 import javelin.model.world.location.PointOfInterest;
@@ -127,10 +126,10 @@ public class LocationGenerator implements Serializable{
 			if(RPG.random()<=chance*g.chance){
 				var f=g.generate(feature);
 				f.place();
-				if(f.realm!=null&&f instanceof Fortification&&generatingworld){
-					Actor town=((Fortification)f).findclosest(Town.class);
-					f.realm=town==null?null:((Town)town).realm;
-				}
+				//				if(f.realm!=null&&f instanceof Fortification&&generatingworld){
+				//					Actor town=((Fortification)f).findclosest(Town.class);
+				//					f.realm=town==null?null:((Town)town).realm;
+				//				}
 			}
 		}
 	}

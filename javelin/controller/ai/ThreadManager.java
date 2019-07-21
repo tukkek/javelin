@@ -8,7 +8,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import javelin.Javelin;
-import javelin.controller.action.world.ShowOptions;
+import javelin.controller.action.world.meta.ShowOptions;
 import javelin.controller.ai.cache.AiCache;
 import javelin.controller.db.Preferences;
 import javelin.model.state.BattleState;

@@ -17,13 +17,15 @@ import javax.swing.JOptionPane;
 import javelin.Javelin;
 import javelin.JavelinApp;
 import javelin.controller.Weather;
-import javelin.controller.action.world.OpenJournal;
+import javelin.controller.action.world.meta.OpenJournal;
 import javelin.controller.event.EventDealer;
 import javelin.controller.event.urban.UrbanEvents;
 import javelin.controller.event.wild.WildEvents;
 import javelin.controller.wish.Ressurect;
+import javelin.model.Miniatures;
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
 import javelin.model.world.Actor;
 import javelin.model.world.Incursion;
 import javelin.model.world.Season;
@@ -108,6 +110,7 @@ public class StateManager{
 			writer.writeObject(WildEvents.instance);
 			writer.writeObject(UrbanEvents.instance);
 			writer.writeObject(Diplomacy.instance);
+			writer.writeObject(Miniatures.miniatures);
 			writer.flush();
 			writer.close();
 		}catch(final IOException e){
@@ -149,6 +152,7 @@ public class StateManager{
 			WildEvents.instance=(EventDealer)stream.readObject();
 			UrbanEvents.instance=(UrbanEvents)stream.readObject();
 			Diplomacy.instance=(Diplomacy)stream.readObject();
+			Miniatures.miniatures=(ArrayList<Monster>)stream.readObject();
 			stream.close();
 			filestream.close();
 			backup();

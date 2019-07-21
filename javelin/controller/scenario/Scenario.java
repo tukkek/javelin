@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import javelin.Javelin;
-import javelin.controller.action.world.Guide;
+import javelin.controller.action.world.meta.help.Guide;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.db.StateManager;
 import javelin.controller.event.urban.UrbanEvents;

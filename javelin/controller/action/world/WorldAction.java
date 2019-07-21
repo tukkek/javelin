@@ -4,6 +4,18 @@ import java.awt.event.KeyEvent;
 
 import javelin.controller.action.Action;
 import javelin.controller.action.ActionDescription;
+import javelin.controller.action.world.meta.Abandon;
+import javelin.controller.action.world.meta.Automate;
+import javelin.controller.action.world.meta.ClearHighscore;
+import javelin.controller.action.world.meta.ConfigureWorldKeys;
+import javelin.controller.action.world.meta.OpenJournal;
+import javelin.controller.action.world.meta.Rename;
+import javelin.controller.action.world.meta.ShowOptions;
+import javelin.controller.action.world.meta.ShowStatistics;
+import javelin.controller.action.world.meta.help.Guide;
+import javelin.controller.action.world.meta.help.WorldHelp;
+import javelin.controller.action.world.meta.zoom.ZoomWorldIn;
+import javelin.controller.action.world.meta.zoom.ZoomWorldOut;
 import javelin.view.screen.WorldScreen;
 
 /**
@@ -29,6 +41,7 @@ public abstract class WorldAction implements ActionDescription{
 			new ShowDiplomacy(), //D
 			new Infiltrate(), //I
 			new ConfigureWorldKeys(), // K
+			new ShowMiniatures(), // M
 			new Retire(), // R
 			new ZoomWorldIn(), // +
 			new ZoomWorldOut(), // +

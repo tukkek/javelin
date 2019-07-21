@@ -1,7 +1,8 @@
-package javelin.controller.action.world;
+package javelin.controller.action.world.meta;
 
 import javelin.Javelin;
 import javelin.controller.Highscore;
+import javelin.controller.action.world.WorldAction;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.WorldScreen;

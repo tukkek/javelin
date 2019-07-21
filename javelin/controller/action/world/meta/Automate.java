@@ -1,4 +1,4 @@
-package javelin.controller.action.world;
+package javelin.controller.action.world.meta;
 
 import java.awt.Button;
 import java.awt.Checkbox;
@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import javelin.JavelinApp;
 import javelin.controller.action.SimpleAction;
+import javelin.controller.action.world.WorldAction;
 import javelin.controller.fight.Fight;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;

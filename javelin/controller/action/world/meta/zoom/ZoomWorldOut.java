@@ -1,6 +1,7 @@
-package javelin.controller.action.world;
+package javelin.controller.action.world.meta.zoom;
 
 import javelin.controller.action.ZoomOut;
+import javelin.controller.action.world.WorldAction;
 import javelin.view.screen.WorldScreen;
 
 public class ZoomWorldOut extends WorldAction{

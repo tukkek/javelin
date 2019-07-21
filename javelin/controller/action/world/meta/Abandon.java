@@ -1,6 +1,7 @@
-package javelin.controller.action.world;
+package javelin.controller.action.world.meta;
 
 import javelin.Javelin;
+import javelin.controller.action.world.WorldAction;
 import javelin.controller.db.StateManager;
 import javelin.view.screen.WorldScreen;
 

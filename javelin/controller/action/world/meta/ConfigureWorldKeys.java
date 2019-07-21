@@ -1,5 +1,6 @@
-package javelin.controller.action.world;
+package javelin.controller.action.world.meta;
 
+import javelin.controller.action.world.WorldAction;
 import javelin.view.frame.keys.WorldKeysScreen;
 import javelin.view.screen.WorldScreen;
 

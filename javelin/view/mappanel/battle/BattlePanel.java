@@ -34,8 +34,8 @@ public class BattlePanel extends MapPanel{
 	public BattlePanel(BattleState s){
 		super(s.map.length,s.map[0].length,Preferences.KEYTILEBATTLE);
 		var period=Javelin.app.fight.period;
-		daylight=period.equals(Javelin.PERIODMORNING)
-				||period.equals(Javelin.PERIODNOON);
+		daylight=period.equalsIgnoreCase(Javelin.PERIODMORNING)
+				||period.equalsIgnoreCase(Javelin.PERIODNOON);
 	}
 
 	@Override

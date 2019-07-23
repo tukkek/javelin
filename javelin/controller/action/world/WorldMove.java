@@ -105,7 +105,9 @@ public class WorldMove extends WorldAction{
 			heal();
 			return !stop;
 		}finally{
-			if(t!=Terrain.UNDERGROUND) Squad.active.move(true,t,tox,toy);
+			if(!t.equals(Terrain.UNDERGROUND)
+					&&!(t.equals(Terrain.WATER)&&!Squad.active.swim()))
+				Squad.active.move(true,t,tox,toy);
 		}
 	}
 

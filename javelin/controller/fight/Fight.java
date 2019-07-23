@@ -99,7 +99,7 @@ public abstract class Fight{
 	 * @see Weather#current
 	 * @see Map#maxflooding
 	 */
-	public Integer weather=null;
+	public Integer weather=Weather.current;
 	/**
 	 * Since {@link Squad#time} is always ticking and needs to be updated even
 	 * when fights do happen this by default holds the period at the moment of

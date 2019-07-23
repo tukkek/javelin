@@ -20,19 +20,19 @@ public class SunkenShip extends Haunt{
 	static final List<Monster> POOL=Monster.MONSTERS.stream().filter(m->m.swim>0)
 			.collect(Collectors.toList());
 
-	class SunkenShipMap extends LocationMap{
-		SunkenShipMap(){
+	public static class SunkenShipMap extends LocationMap{
+		public SunkenShipMap(){
 			super("Sunken ship");
 			floor=Images.get("terrainshipfloor");
 			flooded=Images.get("terrainaquatic");
 		}
 
 		@Override
-		protected Square processtile(int x,int y,char c){
-			Square s=super.processtile(x,y,c);
+		protected Square processtile(Square tile,int x,int y,char c){
+			Square s=super.processtile(tile,x,y,c);
 			if(c=='3'){
 				s.flooded=true;
-				startingareared.add(new Point(x,y));
+				spawnred.add(new Point(x,y));
 			}
 			return s;
 		}
@@ -41,6 +41,7 @@ public class SunkenShip extends Haunt{
 	/** Constructor. */
 	public SunkenShip(){
 		super("Sunken ship",SunkenShipMap.class,POOL,null);
+		allowentry=false;
 	}
 
 	boolean nearland(){

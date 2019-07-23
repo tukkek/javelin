@@ -1,11 +1,16 @@
 package javelin.controller.comparator;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import javelin.model.unit.Monster;
 
-public class MonstersByCr implements Comparator<Monster>{
+public class MonstersByCr implements Comparator<Monster>,Serializable{
 	public static final MonstersByCr SINGLETON=new MonstersByCr();
+
+	private MonstersByCr(){
+		super();
+	}
 
 	@Override
 	public int compare(Monster a,Monster b){

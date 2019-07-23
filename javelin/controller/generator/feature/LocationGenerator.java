@@ -16,7 +16,6 @@ import javelin.controller.scenario.Scenario;
 import javelin.controller.terrain.Terrain;
 import javelin.model.Realm;
 import javelin.model.item.Tier;
-import javelin.model.unit.Monster;
 import javelin.model.world.Actor;
 import javelin.model.world.Caravan;
 import javelin.model.world.World;
@@ -47,6 +46,7 @@ import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.governor.MonsterGovernor;
 import javelin.model.world.location.town.labor.basic.Dwelling;
 import javelin.model.world.location.town.labor.basic.Lodge;
+import javelin.model.world.location.town.labor.basic.MiniatureParlor;
 import javelin.model.world.location.town.labor.basic.starting.BasicAcademy;
 import javelin.model.world.location.town.labor.basic.starting.BasicShop;
 import javelin.model.world.location.unique.AdventurersGuild;
@@ -183,12 +183,11 @@ public class LocationGenerator implements Serializable{
 	}
 
 	static void generatestartingarea(World seed,Town t){
-		spawnnear(t,new Lodge(),seed,1,2,true);
-		spawnnear(t,new BasicShop(),seed,1,2,true);
-		spawnnear(t,new BasicAcademy(),seed,1,2,true);
-		Point p=t.getlocation();
-		ArrayList<Monster> recruits=Terrain.get(p.x,p.y).getmonsters();
-		Collections.shuffle(recruits);
+		for(var l:RPG.shuffle(new ArrayList<>(List.of(new Lodge(),new BasicShop(),
+				new BasicAcademy(),new MiniatureParlor()))))
+			spawnnear(t,l,seed,1,2,true);
+		var p=t.getlocation();
+		var recruits=RPG.shuffle(Terrain.get(p.x,p.y).getmonsters());
 		recruits.sort((o1,o2)->{
 			float difference=o1.cr-o2.cr;
 			if(difference==0) return 0;

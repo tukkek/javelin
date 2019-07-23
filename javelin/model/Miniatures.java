@@ -14,6 +14,7 @@ import javelin.controller.exception.battle.StartBattle;
 import javelin.controller.fight.Fight;
 import javelin.controller.map.Map;
 import javelin.controller.upgrade.classes.Commoner;
+import javelin.model.item.Tier;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.unit.Monster;
@@ -161,5 +162,33 @@ public class Miniatures{
 			continue;
 		if(!bluearmy.isEmpty()&&!redarmy.isEmpty()) throw new StartBattle(
 				new MiniatureFight(bluearmy,redarmy,miniatures,opponent));
+	}
+
+	/** @return Collection of given size and rough average {@link Monster#cr}. */
+	public static List<Monster> buildcollection(int size,int averagecr){
+		var collection=new ArrayList<Monster>(size);
+		while(collection.size()<size){
+			var cr=averagecr+RPG.randomize(4);
+			var tier=Monster.MONSTERS.stream().filter(m->m.cr==cr)
+					.collect(Collectors.toList());
+			if(!tier.isEmpty()) add(RPG.pick(tier),collection);
+		}
+		return collection;
+	}
+
+	/** @param mini Adds appropriate number of these to collection. */
+	public static void add(Monster mini,ArrayList<Monster> collection){
+		var t=Tier.get(mini.cr);
+		int quantity;
+		if(t==Tier.LOW)
+			quantity=RPG.r(1,8);
+		else if(t==Tier.MID)
+			quantity=RPG.r(1,6);
+		else if(t==Tier.HIGH)
+			quantity=RPG.r(1,4);
+		else
+			quantity=1;
+		for(int i=0;i<quantity;i++)
+			collection.add(mini);
 	}
 }

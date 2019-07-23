@@ -6,7 +6,6 @@ import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.Trait;
-import javelin.model.world.location.town.labor.basic.Dwelling.BuildDwelling;
 import javelin.model.world.location.town.labor.basic.Growth;
 import javelin.old.RPG;
 
@@ -48,7 +47,7 @@ public class MonsterGovernor extends Governor{
 		long season=getseason();
 		int rank=town.getrank().rank;
 		if(rank<=season&&start(filter(Growth.class,hand))) return;
-		if(rank>=season&&start(filter(BuildDwelling.class,hand))) return;
+		//		if(rank>=season&&start(filter(BuildDwelling.class,hand))) return;
 		if(rank>=Rank.TOWN.rank&&town.traits.isEmpty()&&startttrait(traits)) return;
 		if(countprojects()<nprojects) if(start(hand)||startttrait(traits)) return;
 	}

@@ -162,7 +162,7 @@ public abstract class Temple extends UniqueLocation{
 		if(open)
 			floors.get(0).activate(false);
 		else{
-			if(!Debug.unlcoktemples&&!open()) return true;
+			if(!Debug.unlocktemples&&!open()) return true;
 			open=true;
 			Javelin.message(fluff,true);
 		}

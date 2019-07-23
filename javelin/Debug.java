@@ -269,7 +269,7 @@ public class Debug{
 	/** @see Preferences */
 	public static String season;
 	/** @see Preferences */
-	public static boolean unlcoktemples;
+	public static boolean unlocktemples;
 	/** @see Preferences */
 	public static boolean bypassdoors;
 

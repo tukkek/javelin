@@ -10,10 +10,13 @@ import javelin.Javelin;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.MonstersByCr;
 import javelin.model.Miniatures;
-import javelin.model.item.Tier;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Monster;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.town.District;
+import javelin.model.world.location.town.Rank;
+import javelin.model.world.location.town.labor.Build;
+import javelin.model.world.location.town.labor.Labor;
 import javelin.old.RPG;
 import javelin.view.screen.Option;
 import javelin.view.screen.WorldScreen;
@@ -22,6 +25,24 @@ import javelin.view.screen.town.PurchaseScreen;
 public class MiniatureParlor extends Location{
 	static final Option PLAY=new Option("Play a match",0);
 	static final int MINIMUMSTOCK=5;
+
+	/** {@link Labor} with cost 1 so as not to penalize actual game content. */
+	public static class BuildMiniatureParlor extends Build{
+		/** Constructor. */
+		public BuildMiniatureParlor(){
+			super("Build miniature parlor",1,Rank.VILLAGE,null);
+		}
+
+		@Override
+		public Location getgoal(){
+			return new MiniatureParlor();
+		}
+
+		@Override
+		public boolean validate(District d){
+			return super.validate(d)&&d.getlocation(MiniatureParlor.class)==null;
+		}
+	}
 
 	class MiniaturePurchase extends Option{
 		Monster mini;
@@ -61,18 +82,15 @@ public class MiniatureParlor extends Location{
 		@Override
 		public boolean select(Option o){
 			if(o==PLAY){
-				var opponent=new ArrayList<Monster>();
 				var target=RPG.rolldice(miniatures.size(),4);
-				var external=RPG.r(1,4);
-				while(opponent.size()<target){
-					var mini=RPG.pick(miniatures);
-					add(mini,opponent);
-					while(RPG.r(1,4)<external&&opponent.size()<target){
-						var cr=mini.cr+RPG.randomize(4);
-						var tier=Monster.MONSTERS.stream().filter(m->m.cr==cr)
-								.collect(Collectors.toList());
-						if(!tier.isEmpty()) add(RPG.pick(tier),opponent);
-					}
+				var opponent=new ArrayList<Monster>(target);
+				var external=Math.round(target*(4-RPG.r(1,4))/4f);
+				while(opponent.size()<target-external)
+					Miniatures.add(RPG.pick(miniatures),opponent);
+				if(external>0){
+					var d=getdistrict();
+					var cr=d==null||d.town==null?RPG.r(1,20):d.town.population;
+					opponent.addAll(Miniatures.buildcollection(external,cr));
 				}
 				Miniatures.play(opponent);
 				return true;
@@ -80,19 +98,11 @@ public class MiniatureParlor extends Location{
 			return super.select(o);
 		}
 
-		void add(Monster mini,ArrayList<Monster> collection){
-			var t=Tier.get(mini.cr);
-			int quantity;
-			if(t==Tier.LOW)
-				quantity=RPG.r(1,8);
-			else if(t==Tier.MID)
-				quantity=RPG.r(1,6);
-			else if(t==Tier.HIGH)
-				quantity=RPG.r(1,4);
-			else
-				quantity=1;
-			for(int i=0;i<quantity;i++)
-				collection.add(mini);
+		@Override
+		public String printinfo(){
+			var collection=Miniatures.miniatures.isEmpty()?"empty..."
+					:Javelin.group(Miniatures.miniatures)+".";
+			return super.printinfo()+"\n\nYour collection: "+collection;
 		}
 	}
 
@@ -111,7 +121,7 @@ public class MiniatureParlor extends Location{
 		int maxlevel;
 		int stock;
 		var d=getdistrict();
-		if(d==null){
+		if(d==null||d.town==null){
 			maxlevel=1;
 			stock=MINIMUMSTOCK;
 		}else{

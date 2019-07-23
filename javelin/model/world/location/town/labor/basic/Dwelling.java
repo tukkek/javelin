@@ -194,6 +194,18 @@
 //		return garrison;
 //	}
 //
+//	/**
+//	 * @param m Given a monster...
+//	 * @return recruits into {@link Squad#active} and {@link #spend(double)} XP if
+//	 *         {@link #canrecruit(double)}.
+//	 */
+//	public static boolean recruit(Monster m){
+//		if(!canrecruit(m.cr*100)) return false;
+//		spend(m.cr);
+//		Squad.active.recruit(m);
+//		return true;
+//	}
+//
 //	/** Bump population to maximum size. */
 //	public void maximize(){
 //		volunteers=getmaximumpopulation();

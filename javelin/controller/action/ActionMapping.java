@@ -8,11 +8,11 @@ import javelin.controller.action.ai.AiMovement;
 import javelin.controller.action.ai.attack.MeleeAttack;
 import javelin.controller.action.ai.attack.RangedAttack;
 import javelin.controller.action.maneuver.ExecuteManeuver;
-import javelin.controller.action.world.Automate;
-import javelin.controller.action.world.Guide;
-import javelin.controller.action.world.OpenJournal;
-import javelin.controller.action.world.ShowOptions;
 import javelin.controller.action.world.WorldAction;
+import javelin.controller.action.world.meta.Automate;
+import javelin.controller.action.world.meta.OpenJournal;
+import javelin.controller.action.world.meta.ShowOptions;
+import javelin.controller.action.world.meta.help.Guide;
 import javelin.controller.exception.RepeatTurn;
 
 /**

@@ -1,8 +1,9 @@
-package javelin.controller.action.world;
+package javelin.controller.action.world.meta.help;
 
 import java.awt.event.KeyEvent;
 
 import javelin.controller.action.SimpleAction;
+import javelin.controller.action.world.WorldAction;
 import javelin.model.world.World;
 import javelin.view.TextWindow;
 import javelin.view.screen.WorldScreen;

@@ -1,8 +1,9 @@
-package javelin.controller.action.world;
+package javelin.controller.action.world.meta;
 
 import java.util.List;
 
 import javelin.Javelin;
+import javelin.controller.action.world.WorldAction;
 import javelin.model.unit.Squad;
 import javelin.view.screen.StatisticsScreen;
 import javelin.view.screen.WorldScreen;

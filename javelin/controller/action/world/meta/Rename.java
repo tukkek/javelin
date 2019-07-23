@@ -1,6 +1,7 @@
-package javelin.controller.action.world;
+package javelin.controller.action.world.meta;
 
 import javelin.Javelin;
+import javelin.controller.action.world.WorldAction;
 import javelin.controller.exception.RepeatTurn;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;

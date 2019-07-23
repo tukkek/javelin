@@ -228,7 +228,7 @@ public class Preferences{
 		Debug.period=getstring("cheat.period");
 		Debug.weather=getstring("cheat.weather");
 		Debug.season=getstring("cheat.season");
-		Debug.unlcoktemples=getboolean("cheat.temples");
+		Debug.unlocktemples=getboolean("cheat.temples");
 		Debug.bypassdoors=getboolean("cheat.doors");
 		initdebug();
 	}

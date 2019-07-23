@@ -133,11 +133,11 @@ public class PillarOfSkulls extends UniqueLocation{
 		}
 
 		boolean showlocation(){
-			if(!PillarOfSkulls.canrecruit(50)){
+			if(!canrecruit(50)){
 				print(text+"\nReturn when you have more experience!");
 				return false;
 			}
-			PillarOfSkulls.spend(.5f);
+			spend(.5f);
 			Actor closest=find(UniqueLocation.class);
 			if(closest==null) closest=find(Town.class);
 			if(closest==null) closest=find(Location.class);
@@ -226,6 +226,40 @@ public class PillarOfSkulls extends UniqueLocation{
 		return null;
 	}
 
+	//	/**
+	//	 * @param m Given a monster...
+	//	 * @return recruits into {@link Squad#active} and
+	//	 *         {@link PillarOfSkulls#spend(double)} XP if {@link canrecruit}.
+	//	 */
+	//	public static boolean recruit(Monster m){
+	//		if(!canrecruit(m.cr*100)) return false;
+	//		PillarOfSkulls.spend(m.cr);
+	//		Squad.active.recruit(m);
+	//		return true;
+	//	}
+
+	/**
+	 * @param price Price in XP (100XP = 1CR).
+	 * @return <code>true</code> if currently active {@link Squad} can afford this
+	 *         much.
+	 */
+	static public boolean canrecruit(double price){
+		return price<=Squad.active.sumxp();
+	}
+
+	/**
+	 * @return A random element from the list, guaranteed to be the same for a 24
+	 *         hour period.
+	 */
+	public static String getdailyquote(List<String> list){
+		Calendar now=Calendar.getInstance();
+		String seed="";
+		seed+=now.get(Calendar.DAY_OF_MONTH);
+		seed+=now.get(Calendar.MONTH)+1;
+		seed+=now.get(Calendar.YEAR);
+		return list.get(new Random(seed.hashCode()).nextInt(list.size()-1));
+	}
+
 	/**
 	 * @param cr Spend this much CR in recruiting a rookie (1CR = 100XP).
 	 */
@@ -258,39 +292,5 @@ public class PillarOfSkulls extends UniqueLocation{
 				c.xp=new BigDecimal(0);
 			}
 		}
-	}
-
-	/**
-	 * @param m Given a monster...
-	 * @return recruits into {@link Squad#active} and {@link PillarOfSkulls#spend(double)} XP if
-	 *         {@link canrecruit}.
-	 */
-	public static boolean recruit(Monster m){
-		if(!canrecruit(m.cr*100)) return false;
-		PillarOfSkulls.spend(m.cr);
-		Squad.active.recruit(m);
-		return true;
-	}
-
-	/**
-	 * @param price Price in XP (100XP = 1CR).
-	 * @return <code>true</code> if currently active {@link Squad} can afford this
-	 *         much.
-	 */
-	static public boolean canrecruit(double price){
-		return price<=Squad.active.sumxp();
-	}
-
-	/**
-	 * @return A random element from the list, guaranteed to be the same for a 24
-	 *         hour period.
-	 */
-	public static String getdailyquote(List<String> list){
-		Calendar now=Calendar.getInstance();
-		String seed="";
-		seed+=now.get(Calendar.DAY_OF_MONTH);
-		seed+=now.get(Calendar.MONTH)+1;
-		seed+=now.get(Calendar.YEAR);
-		return list.get(new Random(seed.hashCode()).nextInt(list.size()-1));
 	}
 }

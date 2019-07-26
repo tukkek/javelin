@@ -188,7 +188,7 @@ public class WorldScreen extends BattleScreen{
 	}
 
 	void redraw(){
-		Javelin.app.switchScreen(this);
+		//		Javelin.app.switchScreen(this);
 		var h=JavelinApp.context.getsquadlocation();
 		if(h!=null){
 			center(h.x,h.y);
@@ -340,6 +340,7 @@ public class WorldScreen extends BattleScreen{
 
 	private void saywelcome(){
 		Javelin.message(Javelin.welcome(),Javelin.Delay.NONE);
+		WorldScreen.current.center();
 		InfoScreen.feedback();
 		messagepanel.clear();
 		WorldScreen.welcome=false;

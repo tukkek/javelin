@@ -57,13 +57,10 @@ public abstract class QuestApp extends Applet implements Runnable{
 	public void init(){
 		// recreate lib in background
 		instance=this;
-
 		super.init();
 		setLayout(new BorderLayout());
 		setBackground(Color.black);
 		setFont(QuestApp.mainfont);
-		// "+KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner());
-
 		// set game in action
 		Interface.userinterface=new Interface();
 		QuestApp.thread=new Thread(this);
@@ -72,21 +69,30 @@ public abstract class QuestApp extends Applet implements Runnable{
 
 	// switches to a new screen, discarding the old one
 	public void switchScreen(final Component s){
-		if(s==null) return;
-		if(mainComponent==s){
-			//TODO using switch to repaint is bad practice but done in many places
-			s.repaint();
-			return;
-		}
+		//		if(s==null) return;
+		//		if(mainComponent==s){
+		//			//TODO using switch to repaint is bad practice but done in many places
+		//			s.repaint();
+		//			return;
+		//		}
+		setVisible(false);
 		MapPanel.overlay=null;
 		if(mainComponent instanceof Screen) ((Screen)mainComponent).close();
-		setVisible(false);
 		removeAll();
 		add(s);
-		invalidate();
-		validate();
-		if(s instanceof WorldScreen&&Squad.active!=null)
-			((WorldScreen)s).firstdraw=true;
+		//		s.validate();
+		//		invalidate();
+		revalidate();
+		//		repaint();
+		//		repaint();
+		var world=s instanceof WorldScreen?(WorldScreen)s:null;
+		if(world!=null&&Squad.active!=null) world.firstdraw=true;
+		try{
+			Thread.sleep(100);
+		}catch(InterruptedException e){
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		setVisible(true);
 		/*
 		 * CBG This is needed to give the focus to the contained screen.

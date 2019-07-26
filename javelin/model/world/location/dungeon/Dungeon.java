@@ -371,10 +371,12 @@ public class Dungeon extends Location{
 		for(int x=squadlocation.x-1;x<=squadlocation.x+1;x++)
 			for(int y=squadlocation.y-1;y<=squadlocation.y+1;y++)
 				map[x][y]=Template.FLOOR;
-		if(floors.indexOf(this)<floors.size()-1){
-			var p=zoner.getpoint();
-			new StairsDown().place(this,p);
-		}
+		if(!isdeepest()) new StairsDown().place(this,zoner.getpoint());
+	}
+
+	/** @return <code>true</code> if final floor. */
+	public boolean isdeepest(){
+		return floors.indexOf(this)==floors.size()-1;
 	}
 
 	/** @param nfeatures Target quantity of Features to place. */
@@ -471,8 +473,8 @@ public class Dungeon extends Location{
 
 	/** @return Most special chest here. */
 	protected Feature createspecialchest(){
-		var item=World.scenario.openspecialchest();
-		return new Chest(item,true);
+		var iitem=World.scenario.openspecialchest();
+		return new Chest(iitem,true);
 	}
 
 	public boolean isoccupied(Point p){

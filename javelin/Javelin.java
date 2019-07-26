@@ -236,7 +236,7 @@ public class Javelin{
 		StateManager.clear();
 		BattleScreen.active.messagepanel.clear();
 		var sadface="You have lost all your units! Game over T_T\n\n";
-		Javelin.message(sadface+Highscore.record(),Delay.NONE);
+		message(sadface+Highscore.record(),Delay.NONE);
 		while(InfoScreen.feedback()!='\n')
 			continue;
 		System.exit(0);
@@ -297,15 +297,19 @@ public class Javelin{
 			MessagePanel.active.clear();
 			Javelin.message(prompt,Delay.NONE);
 		}
-		while(true)
-			try{
-				Character c=InfoScreen.feedback();
-				if(!forceselection&&(c=='q'||c==InfoScreen.ESCAPE)) return -1;
-				int selected=SelectScreen.convertkeytoindex(c);
-				if(0<=selected&&selected<names.size()) return selected;
-			}catch(Exception e){
-				continue;
-			}
+		try{
+			while(true)
+				try{
+					Character c=InfoScreen.feedback();
+					if(!forceselection&&(c=='q'||c==InfoScreen.ESCAPE)) return -1;
+					int selected=SelectScreen.convertkeytoindex(c);
+					if(0<=selected&&selected<names.size()) return selected;
+				}catch(Exception e){
+					continue;
+				}
+		}finally{
+			if(fullscreen) app.switchScreen(BattleScreen.active);
+		}
 	}
 
 	/**
@@ -340,7 +344,6 @@ public class Javelin{
 	 */
 	static public Character prompt(final String prompt,boolean center){
 		MessagePanel.active.clear();
-		BattleScreen.active.center();
 		Javelin.message(prompt,Delay.NONE);
 		if(center) BattleScreen.active.center();
 		return InfoScreen.feedback();
@@ -409,6 +412,7 @@ public class Javelin{
 	}
 
 	public static void redraw(){
+		//		BattleScreen.active.validate();
 		BattleScreen.active.mappanel.refresh();
 		MessagePanel.active.repaint();
 	}

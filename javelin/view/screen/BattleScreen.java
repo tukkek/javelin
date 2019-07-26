@@ -212,7 +212,7 @@ public class BattleScreen extends Screen{
 
 	synchronized void humanmove(){
 		lastaicheck=Fight.state.next.ap;
-		Javelin.app.switchScreen(BattleScreen.active);
+		//		Javelin.app.switchScreen(BattleScreen.active);
 		if(current==null||current.automatic||Fight.state.fleeing.contains(
 				current)) /** fled or set an unit as automatic during its turn */
 			return;
@@ -373,7 +373,6 @@ public class BattleScreen extends Screen{
 	 * @return User-input.
 	 */
 	public KeyEvent getUserInput(){
-		// Game.instance().clearMessageList();
 		return Javelin.input();
 	}
 
@@ -421,7 +420,7 @@ public class BattleScreen extends Screen{
 	}
 
 	public void center(){
-		Javelin.app.switchScreen(this);
+		//		Javelin.app.switchScreen(this);
 		center(current.location[0],current.location[1]);
 	}
 }

@@ -13,12 +13,14 @@ import javelin.controller.exception.UnbalancedTeams;
 import javelin.model.Realm;
 import javelin.model.diplomacy.Diplomacy;
 import javelin.model.item.Item;
+import javelin.model.item.consumable.Ruby;
 import javelin.model.item.key.TempleKey;
 import javelin.model.unit.Combatant;
 import javelin.model.unit.Squad;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.Temple;
 import javelin.model.world.location.town.Town;
 import javelin.model.world.location.town.governor.HumanGovernor;
@@ -112,7 +114,7 @@ public class Campaign extends Scenario{
 
 	@Override
 	public Item openspecialchest(){
-		return TempleKey.generate();
+		return Dungeon.active.isdeepest()?TempleKey.generate():new Ruby();
 	}
 
 	@Override

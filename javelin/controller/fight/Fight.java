@@ -41,7 +41,6 @@ import javelin.model.world.location.dungeon.Dungeon;
 import javelin.old.RPG;
 import javelin.old.messagepanel.MessagePanel;
 import javelin.view.screen.BattleScreen;
-import javelin.view.screen.InfoScreen;
 
 /**
  * A battle scenario.
@@ -471,8 +470,7 @@ public abstract class Fight{
 		}
 		if(Javelin.DEBUG) withdrawall(true);
 		if(Fight.state.isengaged(combatant)){
-			Javelin.message("Disengage first!",Javelin.Delay.BLOCK);
-			InfoScreen.feedback();
+			Javelin.prompt("Disengage first!");
 			throw new RepeatTurn();
 		}
 		var prompt="Are you sure you want to escape? Press ENTER to confirm...\n";

@@ -94,7 +94,6 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 		x=xp;
 		y=yp;
 		time=hourselapsedp;
-		//		if(Squad.active==null) Squad.active=this;s
 		lasttown=lasttownp;
 	}
 
@@ -102,7 +101,7 @@ public class Squad extends Actor implements Cloneable,Iterable<Combatant>{
 	public void disband(){
 		var squads=World.getall(Squad.class);
 		squads.remove(this);
-		//		if(squads.isEmpty()) Javelin.lose();
+		Javelin.lose();
 		if(Dungeon.active!=null) Dungeon.active.leave();
 	}
 

@@ -96,11 +96,11 @@ public class JavelinApp extends QuestApp{
 				throw new StartBattle(minigame);
 			}
 			if(Dungeon.active==null)
-				JavelinApp.context=new WorldScreen(true);
+				context=new WorldScreen(true);
 			else
 				Dungeon.active.activate(true);
 			while(true){
-				switchScreen(JavelinApp.context);
+				Javelin.redraw();
 				JavelinApp.context.turn();
 			}
 		}catch(final StartBattle e){

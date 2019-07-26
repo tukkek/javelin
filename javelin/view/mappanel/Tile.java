@@ -63,7 +63,7 @@ public abstract class Tile{
 	}
 
 	protected void drawcover(final Graphics g){
-		Point p=getposition();
+		var p=getposition();
 		g.setColor(Color.BLACK);
 		g.fillRect(p.x,p.y,MapPanel.tilesize,MapPanel.tilesize);
 	}

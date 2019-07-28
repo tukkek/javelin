@@ -1,16 +1,12 @@
 package javelin.model.world.location.town.labor.basic.starting;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
+import javelin.model.item.Item;
 import javelin.model.item.Tier;
-import javelin.model.item.consumable.Eidolon;
-import javelin.model.item.consumable.Scroll;
-import javelin.model.item.potion.Potion;
-import javelin.model.unit.abilities.spell.conjuration.Summon;
-import javelin.model.unit.abilities.spell.conjuration.healing.LesserRestoration;
-import javelin.model.unit.abilities.spell.conjuration.healing.wounds.CureLightWounds;
-import javelin.model.unit.abilities.spell.enchantment.compulsion.Bless;
 import javelin.model.world.location.town.labor.basic.Shop;
+import javelin.old.RPG;
 
 /**
  * Same as shop but with a fixed selection of {@link Tier#LOW} items ti prevent
@@ -36,10 +32,14 @@ public class BasicShop extends Shop{
 			super.stock();
 			return;
 		}
-		selection.addAll(List.of(new Potion(new CureLightWounds()),
-				new Potion(new LesserRestoration()),new Scroll(new Bless())));
-		for(var summon:Summon.select(Summon.SUMMONS,2,1))
-			selection.add(new Eidolon(summon,0));
+		var cheap=RPG.shuffle(new ArrayList<>(Item.ITEMS.stream()
+				.filter(i->i.price<100).collect(Collectors.toList())));
+		for(var i=0;i<5&&i<cheap.size();i++)
+			selection.add(cheap.get(i));
+		//	selection.addAll(List.of(new Potion(new CureLightWounds()),
+		//	new Potion(new LesserRestoration()),new Scroll(new Bless())));
+		//for(var summon:Summon.select(Summon.SUMMONS,2,1))
+		//selection.add(new Eidolon(summon,0));
 	}
 
 	@Override

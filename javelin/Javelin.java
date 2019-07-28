@@ -20,7 +20,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
 import javelin.controller.CountingSet;
-import javelin.controller.Highscore;
 import javelin.controller.db.Preferences;
 import javelin.controller.db.StateManager;
 import javelin.controller.db.reader.MonsterReader;
@@ -235,10 +234,9 @@ public class Javelin{
 		Javelin.app.switchScreen(BattleScreen.active);
 		StateManager.clear();
 		BattleScreen.active.messagepanel.clear();
-		var sadface="You have lost all your units! Game over T_T\n\n";
-		message(sadface+Highscore.record(),Delay.NONE);
-		while(InfoScreen.feedback()!='\n')
-			continue;
+		message("You have lost all your units! Game over T_T",true);
+		//		while(InfoScreen.feedback()!='\n')
+		//			continue;
 		System.exit(0);
 		return true;
 	}

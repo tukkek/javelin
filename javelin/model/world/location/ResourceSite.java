@@ -199,7 +199,7 @@ public class ResourceSite extends Location{
 			generate(this,true);
 		description=type.name+" (resource)";
 		sacrificeable=true;
-		allowentry=false;
+		allowentry=type!=FISH;
 	}
 
 	@Override

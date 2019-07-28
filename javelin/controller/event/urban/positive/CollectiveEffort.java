@@ -37,7 +37,7 @@ public class CollectiveEffort extends UrbanEvent{
 		var labors=projects.stream().map(p->p.toString().toLowerCase())
 				.collect(Collectors.joining(", "));
 		var input=Javelin.prompt("The citizens of "+town
-				+" ask you for help witht their labors. Do you want to spend the day helping?\n"
+				+" ask you for help with their labors. Do you want to spend the day helping?\n"
 				+"They are working on: "+labors+".\n"
 				+"Press h to help or i to ignore their request...",Set.of('h','i'));
 		if(input!='h') return;

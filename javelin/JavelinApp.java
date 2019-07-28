@@ -100,6 +100,7 @@ public class JavelinApp extends QuestApp{
 			else
 				Dungeon.active.activate(true);
 			while(true){
+				Javelin.app.switchScreen(context);
 				Javelin.redraw();
 				JavelinApp.context.turn();
 			}

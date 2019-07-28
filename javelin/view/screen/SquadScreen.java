@@ -49,6 +49,7 @@ public class SquadScreen extends InfoScreen{
 	}
 
 	void select(){
+		Javelin.app.switchScreen(this);
 		page(0);
 		if(World.scenario!=null) World.scenario.upgradesquad(squad);
 		squad.gold+=getstartinggold();
@@ -70,7 +71,8 @@ public class SquadScreen extends InfoScreen{
 		text="Available monsters:\n";
 		int next=index+MONSTERPERPAGE;
 		int letter=printpage(index,next);
-		Javelin.app.switchScreen(this);
+		repaint();
+		//		Javelin.app.switchScreen(this);
 		Character input=InfoScreen.feedback();
 		if(input.equals(' '))
 			page(next<candidates.size()?next:0);

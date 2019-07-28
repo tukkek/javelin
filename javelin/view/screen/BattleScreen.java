@@ -171,16 +171,16 @@ public class BattleScreen extends Screen{
 	 */
 	static public void delayedredraw(){
 		//		if(!JavelinApp.SYSTEM.contains("windows")) return;
-		if(BattleScreen.active==null
-				||BattleScreen.active.getClass()!=BattleScreen.class)
-			return;
-		try{
-			Thread.sleep(1000);
-		}catch(InterruptedException e){
-			//continue
-		}
-		System.out.println("Windows redraw (double vision fix)...");
-		Javelin.redraw();
+		//		if(BattleScreen.active==null
+		//				||BattleScreen.active.getClass()!=BattleScreen.class)
+		//			return;
+		//		try{
+		//			Thread.sleep(1000);
+		//		}catch(InterruptedException e){
+		//			//continue
+		//		}
+		//		System.out.println("Windows redraw (double vision fix)...");
+		//		Javelin.redraw();
 	}
 
 	/** Routine for human interaction. */

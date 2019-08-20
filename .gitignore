@@ -13,3 +13,4 @@ backup
 error.txt
 build/jdk/
 build/output/
+doc/javadoc

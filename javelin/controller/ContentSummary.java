@@ -38,6 +38,7 @@ import javelin.model.unit.skill.Skill.SkillUpgrade;
 import javelin.model.world.Actor;
 import javelin.model.world.World;
 import javelin.model.world.location.Location;
+import javelin.model.world.location.haunt.Haunt;
 import javelin.model.world.location.town.labor.LaborDeck;
 import javelin.model.world.location.town.quest.Quest;
 import javelin.model.world.location.unique.UniqueLocation;
@@ -166,13 +167,16 @@ public class ContentSummary{
 		printmaps();
 		HashSet<Class<? extends Actor>> locationtypes=new HashSet<>();
 		int uniquelocations=0;
+		var haunts=0;
 		for(Actor a:World.getactors()){
 			if(!(a instanceof Location)) continue;
 			locationtypes.add(a.getClass());
-			if(a instanceof UniqueLocation) uniquelocations+=1;
+			if(a instanceof UniqueLocation)
+				uniquelocations+=1;
+			else if(a instanceof Haunt) haunts+=1;
 		}
 		print(locationtypes.size()-uniquelocations+" world location types, "
-				+uniquelocations+" unique locations");
+				+uniquelocations+" unique locations ("+haunts+" haunts)");
 		print(LaborDeck.getsummary());
 		print(Quest.printsummary());
 		print(WildEvents.instance.printsummary("wilderness events"));

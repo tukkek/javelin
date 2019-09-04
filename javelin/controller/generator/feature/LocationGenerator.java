@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javelin.controller.Point;
 import javelin.controller.exception.RestartWorldGeneration;
@@ -161,7 +162,7 @@ public class LocationGenerator implements Serializable{
 
 	void generatestaticlocations(){
 		var locations=new ArrayList<Location>();
-		locations.addAll(List.of(new PillarOfSkulls(),new DeepDungeon()));
+		locations.add(new PillarOfSkulls());
 		locations.addAll(makehaunts());
 		for(var level=Tier.LOW.minlevel;level<=Tier.EPIC.maxlevel;level++)
 			locations.add(Dungeon.generate(level));
@@ -180,10 +181,10 @@ public class LocationGenerator implements Serializable{
 				new DarkShrine());
 	}
 
-	static void generatestartingarea(World seed,Town t){
+	static void generatestartingarea(World w,Town t){
 		for(var l:RPG.shuffle(new ArrayList<>(List.of(new Lodge(),new BasicShop(),
 				new BasicAcademy(),new MiniatureParlor()))))
-			spawnnear(t,l,seed,1,2,true);
+			spawnnear(t,l,w,1,2,true);
 		var p=t.getlocation();
 		var recruits=RPG.shuffle(Terrain.get(p.x,p.y).getmonsters());
 		recruits.sort((o1,o2)->{
@@ -191,9 +192,25 @@ public class LocationGenerator implements Serializable{
 			if(difference==0) return 0;
 			return difference>0?1:-1;
 		});
-		//		spawnnear(t,new Dwelling(recruits.get(RPG.r(1,7))),seed,1,2,true);
-		spawnnear(t,new AdventurersGuild(),seed,2,3,true);
-		spawnnear(t,new TrainingHall(),seed,2,3,false);
+		spawnnear(t,new AdventurersGuild(),w,2,3,true);
+		spawnnear(t,new TrainingHall(),w,2,3,false);
+		placedeepdungeon(w,t);
+	}
+
+	/**
+	 * The {@link DeepDungeon} represents one of the major playstyles for Javelin.
+	 * As such we want it to be easily accessible from the start. This way,
+	 * players who only want to dungeon crawl can learn to look for it and focus
+	 * mostly on that.
+	 */
+	static void placedeepdungeon(World w,Town t){
+		var deep=new DeepDungeon();
+		var allowed=Set.of(Terrain.FOREST,Terrain.HILL,Terrain.PLAIN);
+		while(deep.x<0||!allowed.contains(Terrain.get(deep.x,deep.y))){
+			deep.remove();
+			spawnnear(t,deep,w,4,6,false);
+		}
+		w.discovered.add(deep.getlocation());
 	}
 
 	/**

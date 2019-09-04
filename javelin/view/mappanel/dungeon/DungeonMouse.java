@@ -11,6 +11,7 @@ import javelin.view.mappanel.Tile;
 import javelin.view.mappanel.overlay.DrawMoveOverlay;
 import javelin.view.mappanel.overlay.MoveOverlay;
 import javelin.view.mappanel.world.WorldMouse;
+import javelin.view.screen.BattleScreen;
 
 public class DungeonMouse extends Mouse{
 	public DungeonMouse(MapPanel panel){
@@ -23,8 +24,11 @@ public class DungeonMouse extends Mouse{
 		if(!Interface.userinterface.waiting) return;
 		final Tile t=gettile(e);
 		if(!t.discovered) return;
-		if(e.getButton()==MouseEvent.BUTTON1&&WorldMouse.move()) return;
-		super.mouseClicked(e);
+		if(e.getButton()==MouseEvent.BUTTON1&&WorldMouse.move()){
+			var p=Dungeon.active.squadlocation;
+			BattleScreen.active.mappanel.center(p.x,p.y,true);
+		}else
+			super.mouseClicked(e);
 	}
 
 	@Override
@@ -33,8 +37,8 @@ public class DungeonMouse extends Mouse{
 		if(MapPanel.overlay!=null) MapPanel.overlay.clear();
 		final Tile t=gettile(e);
 		if(!t.discovered) return;
-		DrawMoveOverlay.draw(new MoveOverlay(new DungeonWalker(
-				new Point(Dungeon.active.squadlocation.x,Dungeon.active.squadlocation.y),
-				new Point(t.x,t.y))));
+		DrawMoveOverlay.draw(new MoveOverlay(
+				new DungeonWalker(new Point(Dungeon.active.squadlocation.x,
+						Dungeon.active.squadlocation.y),new Point(t.x,t.y))));
 	}
 }

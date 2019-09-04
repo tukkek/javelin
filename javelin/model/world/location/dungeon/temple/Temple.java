@@ -92,7 +92,7 @@ public abstract class Temple extends UniqueLocation{
 	 * Each floor has a {@link Chest} with a ruby in it and there is also an
 	 * {@link Altar} on the deepest level.
 	 */
-	public List<TempleDungeon> floors=new ArrayList<>();
+	public List<Dungeon> floors=new ArrayList<>();
 	/** Encounter level equivalent for {@link #level}. */
 	public int el;
 	String fluff;

@@ -96,4 +96,9 @@ public class Features implements Iterable<Feature>,Serializable{
 	public int size(){
 		return list.size();
 	}
+
+	/** @return A copy of the internal Feature list. */
+	public List<Feature> getall(){
+		return new ArrayList<>(list);
+	}
 }

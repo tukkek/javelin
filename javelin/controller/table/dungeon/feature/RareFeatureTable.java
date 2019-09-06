@@ -1,8 +1,11 @@
 package javelin.controller.table.dungeon.feature;
 
+import java.util.List;
+
 import javelin.controller.table.Table;
 import javelin.controller.table.dungeon.InhabitantTable;
 import javelin.model.world.location.dungeon.Dungeon;
+import javelin.model.world.location.dungeon.feature.DungeonMap;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Fountain;
 import javelin.model.world.location.dungeon.feature.LearningStone;
@@ -23,13 +26,11 @@ import javelin.model.world.location.dungeon.feature.inhabitant.Inhabitant;
  * @see FeatureRarityTable
  */
 public class RareFeatureTable extends Table implements DungeonFeatureTable{
+	/** Constructor. */
 	public RareFeatureTable(){
-		add(Fountain.class,ROWS);
-		add(LearningStone.class,ROWS);
-		add(Mirror.class,ROWS);
-		add(Throne.class,ROWS);
-		add(Portal.class,ROWS);
-		add(Spirit.class,ROWS);
+		for(var f:List.of(Fountain.class,LearningStone.class,Mirror.class,
+				Throne.class,Portal.class,Spirit.class,DungeonMap.class))
+			add(f,ROWS);
 	}
 
 	@SuppressWarnings("unchecked")

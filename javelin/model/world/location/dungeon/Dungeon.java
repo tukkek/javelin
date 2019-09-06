@@ -45,7 +45,6 @@ import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.Passage;
-import javelin.model.world.location.dungeon.feature.Spirit;
 import javelin.model.world.location.dungeon.feature.StairsDown;
 import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.door.Door;
@@ -70,7 +69,7 @@ import javelin.view.screen.WorldScreen;
  * @author alex
  */
 public class Dungeon extends Location{
-	static final Class<? extends Feature> DEBUGFEATURE=Spirit.class;
+	static final Class<? extends Feature> DEBUGFEATURE=null;
 	static final int MAXTRIES=1000;
 	static final int[] DELTAS={-1,0,1};
 

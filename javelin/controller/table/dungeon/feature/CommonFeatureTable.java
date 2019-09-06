@@ -1,5 +1,7 @@
 package javelin.controller.table.dungeon.feature;
 
+import java.util.List;
+
 import javelin.controller.table.Table;
 import javelin.controller.table.dungeon.InhabitantTable;
 import javelin.model.world.location.dungeon.Dungeon;
@@ -18,13 +20,11 @@ import javelin.model.world.location.dungeon.feature.inhabitant.Inhabitant;
  * @see FeatureRarityTable
  */
 public class CommonFeatureTable extends Table implements DungeonFeatureTable{
+	/** Constructor. */
 	public CommonFeatureTable(){
-		add(Brazier.class,ROWS);
-		add(FruitTree.class,ROWS);
-		add(Herb.class,ROWS);
-		add(Inhabitant.class,ROWS);
-		add(Passage.class,ROWS);
-		add(Campfire.class,ROWS);
+		for(var f:List.of(Brazier.class,FruitTree.class,Herb.class,Inhabitant.class,
+				Passage.class,Campfire.class))
+			add(f,ROWS);
 	}
 
 	/**

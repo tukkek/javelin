@@ -12,6 +12,7 @@ import javelin.controller.walker.Walker;
 import javelin.controller.walker.pathing.DirectPath;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.temple.FireTemple;
+import javelin.view.mappanel.dungeon.DungeonTile;
 
 /**
  * Lights up any square on this feature's field of vision, revealing any hidden
@@ -71,15 +72,23 @@ public class Brazier extends Feature{
 		for(var r:new ArrayList<>(revealed))
 			if(Dungeon.active.map[r.x][r.y]!=Template.WALL)
 				revealed.addAll(r.getadjacent());
-		for(var r:revealed){
-			Dungeon.active.setvisible(r.x,r.y);
-			var f=Dungeon.active.features.get(r.x,r.y);
-			if(f!=null) f.discover(null,9000);
-		}
+		for(var r:revealed)
+			reveal(r);
 		Javelin.redraw();
 		var p=JavelinApp.context.getsquadlocation();
 		JavelinApp.context.view(p.x,p.y);
 		Javelin.message("You light up the brazier!",false);
 		return true;
+	}
+
+	/**
+	 * @param r Shows {@link DungeonTile} and
+	 *          {@link Feature#discover(javelin.model.unit.Combatant, int)} any
+	 *          feature in that tile.i
+	 */
+	static public void reveal(Point r){
+		Dungeon.active.setvisible(r.x,r.y);
+		var f=Dungeon.active.features.get(r.x,r.y);
+		if(f!=null) f.discover(null,9000);
 	}
 }

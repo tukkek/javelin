@@ -10,7 +10,11 @@ import javelin.view.mappanel.dungeon.DungeonTile;
 import javelin.view.screen.BattleScreen;
 
 /**
+ * Shows and reveals the (best guessed) closest {@link Feature} in this
+ * {@link Dungeon} level, if any.
+ *
  * @see GoodTemple
+ * @see Feature#discover(javelin.model.unit.Combatant, int)
  * @author alex
  */
 public class Spirit extends Feature{
@@ -22,12 +26,15 @@ public class Spirit extends Feature{
 
 	@Override
 	public boolean activate(){
-		Feature show=Dungeon.active.features.getundiscovered();
-		if(show==null){
+		var undiscovered=Dungeon.active.features.getallundiscovered();
+		if(undiscovered.isEmpty()){
 			Javelin.message("The spirit flees from your presence in shame...",false);
 			return true;
 		}
-		reveal(RPG.chancein(2)?"'Hey, look!'":"'Hey, listen!'",show);
+		var closest=undiscovered.stream()
+				.min((a,b)->a.getlocation().distanceinsteps(b.getlocation()))
+				.orElse(null);
+		reveal(RPG.chancein(2)?"'Hey, look!'":"'Hey, listen!'",closest);
 		return true;
 	}
 

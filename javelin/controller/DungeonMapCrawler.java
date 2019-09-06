@@ -12,7 +12,7 @@ import javelin.model.world.location.dungeon.feature.door.Door;
  *
  * @author alex
  */
-public class DungeonCrawler{
+public class DungeonMapCrawler{
 	HashSet<Point> visited=new HashSet<>();
 	Point origin;
 	int depth;
@@ -24,7 +24,7 @@ public class DungeonCrawler{
 	 * @param depth How many steps at most to take.
 	 * @param d Dungeon instance being traversed.
 	 */
-	public DungeonCrawler(Point origin,int depth,Dungeon d){
+	public DungeonMapCrawler(Point origin,int depth,Dungeon d){
 		this.origin=origin;
 		this.depth=depth;
 		dungeon=d;
@@ -67,13 +67,10 @@ public class DungeonCrawler{
 
 	void crawl(Point p,int depth){
 		if(depth>this.depth||visited.contains(p)||!validate(p)) return;
-		Feature f=dungeon.features.get(p.x, p.y);
+		Feature f=dungeon.features.get(p.x,p.y);
 		if(!validate(f)) return;
 		visited.add(p);
-		if(proceed(p,f)) for(Point adjacent:Point.getadjacent2()){
-			adjacent.x+=p.x;
-			adjacent.y+=p.y;
+		if(proceed(p,f)) for(Point adjacent:p.getadjacent())
 			crawl(adjacent,depth+1);
-		}
 	}
 }

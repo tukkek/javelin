@@ -4,11 +4,11 @@ import javelin.controller.table.Table;
 import javelin.controller.table.dungeon.InhabitantTable;
 import javelin.model.world.location.dungeon.Dungeon;
 import javelin.model.world.location.dungeon.feature.Brazier;
+import javelin.model.world.location.dungeon.feature.Campfire;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.FruitTree;
 import javelin.model.world.location.dungeon.feature.Herb;
 import javelin.model.world.location.dungeon.feature.Passage;
-import javelin.model.world.location.dungeon.feature.Spirit;
 import javelin.model.world.location.dungeon.feature.inhabitant.Inhabitant;
 
 /**
@@ -18,16 +18,13 @@ import javelin.model.world.location.dungeon.feature.inhabitant.Inhabitant;
  * @see FeatureRarityTable
  */
 public class CommonFeatureTable extends Table implements DungeonFeatureTable{
-	/** Default number of chances per {@link Feature}. */
-	public static final int MAX=10;
-
 	public CommonFeatureTable(){
-		add(Brazier.class,MAX);
-		add(FruitTree.class,MAX);
-		add(Spirit.class,MAX);
-		add(Herb.class,MAX);
-		add(Inhabitant.class,MAX);
-		add(Passage.class,MAX);
+		add(Brazier.class,ROWS);
+		add(FruitTree.class,ROWS);
+		add(Herb.class,ROWS);
+		add(Inhabitant.class,ROWS);
+		add(Passage.class,ROWS);
+		add(Campfire.class,ROWS);
 	}
 
 	/**

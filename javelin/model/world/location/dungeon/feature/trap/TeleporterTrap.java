@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import javelin.Javelin;
-import javelin.controller.DungeonCrawler;
+import javelin.controller.DungeonMapCrawler;
 import javelin.controller.Point;
 import javelin.controller.generator.dungeon.template.Template;
 import javelin.model.unit.Combatant;
@@ -22,7 +22,7 @@ import javelin.old.RPG;
  * @author alex
  */
 public class TeleporterTrap extends Trap{
-	class TeleportCrawl extends DungeonCrawler{
+	class TeleportCrawl extends DungeonMapCrawler{
 		public TeleportCrawl(){
 			super(new Point(x,y),Integer.MAX_VALUE,Dungeon.active);
 		}

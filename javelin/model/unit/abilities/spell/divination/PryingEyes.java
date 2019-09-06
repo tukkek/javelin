@@ -2,7 +2,7 @@ package javelin.model.unit.abilities.spell.divination;
 
 import java.util.List;
 
-import javelin.controller.DungeonCrawler;
+import javelin.controller.DungeonMapCrawler;
 import javelin.controller.Point;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.model.unit.Combatant;
@@ -32,7 +32,7 @@ public class PryingEyes extends Spell{
 		if(dungeon==null)
 			Outpost.discover(Squad.active.x,Squad.active.y,Outpost.VISIONRANGE);
 		else{
-			var crawler=new DungeonCrawler(dungeon.squadlocation,9000,dungeon){
+			var crawler=new DungeonMapCrawler(dungeon.squadlocation,9000,dungeon){
 				@Override
 				protected boolean validate(Feature f){
 					return !(f instanceof Door);

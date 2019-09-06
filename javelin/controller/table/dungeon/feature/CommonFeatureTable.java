@@ -7,6 +7,7 @@ import javelin.model.world.location.dungeon.feature.Brazier;
 import javelin.model.world.location.dungeon.feature.Feature;
 import javelin.model.world.location.dungeon.feature.FruitTree;
 import javelin.model.world.location.dungeon.feature.Herb;
+import javelin.model.world.location.dungeon.feature.Passage;
 import javelin.model.world.location.dungeon.feature.Spirit;
 import javelin.model.world.location.dungeon.feature.inhabitant.Inhabitant;
 
@@ -21,11 +22,12 @@ public class CommonFeatureTable extends Table implements DungeonFeatureTable{
 	public static final int MAX=10;
 
 	public CommonFeatureTable(){
-		add(Brazier.class,CommonFeatureTable.MAX);
-		add(FruitTree.class,CommonFeatureTable.MAX);
-		add(Spirit.class,CommonFeatureTable.MAX);
-		add(Herb.class,CommonFeatureTable.MAX);
-		add(Inhabitant.class,CommonFeatureTable.MAX);
+		add(Brazier.class,MAX);
+		add(FruitTree.class,MAX);
+		add(Spirit.class,MAX);
+		add(Herb.class,MAX);
+		add(Inhabitant.class,MAX);
+		add(Passage.class,MAX);
 	}
 
 	/**

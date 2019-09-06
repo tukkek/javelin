@@ -1,6 +1,7 @@
 package javelin.model.world.location.dungeon.feature;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javelin.controller.Point;
 import javelin.controller.table.Table;
@@ -88,5 +89,10 @@ public abstract class Feature implements Serializable{
 	/** @return A point representing this feature. */
 	public Point getlocation(){
 		return new Point(x,y);
+	}
+
+	/** Called once per feature after all {@link Dungeon} floors are generated. */
+	public void define(Dungeon current,List<Dungeon> floors){
+		// nothing by default
 	}
 }

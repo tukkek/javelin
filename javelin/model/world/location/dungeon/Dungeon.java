@@ -6,8 +6,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javelin.Javelin;
+import javelin.Javelin.Delay;
 import javelin.JavelinApp;
 import javelin.controller.Point;
 import javelin.controller.action.world.WorldMove;
@@ -16,6 +18,7 @@ import javelin.controller.challenge.Difficulty;
 import javelin.controller.challenge.RewardCalculator;
 import javelin.controller.comparator.EncountersByEl;
 import javelin.controller.exception.GaveUp;
+import javelin.controller.exception.RepeatTurn;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.RandomDungeonEncounter;
 import javelin.controller.generator.dungeon.DungeonGenerator;
@@ -41,6 +44,7 @@ import javelin.model.world.World;
 import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.feature.Chest;
 import javelin.model.world.location.dungeon.feature.Feature;
+import javelin.model.world.location.dungeon.feature.Passage;
 import javelin.model.world.location.dungeon.feature.StairsDown;
 import javelin.model.world.location.dungeon.feature.StairsUp;
 import javelin.model.world.location.dungeon.feature.door.Door;
@@ -142,13 +146,12 @@ public class Dungeon extends Location{
 	Dungeon parent;
 
 	/** All floors that make part of this dungeon. */
-	protected List<? extends Dungeon> floors;
+	protected List<Dungeon> floors;
 
 	transient int nrooms;
 
 	/** Constructor. */
-	public Dungeon(String name,Integer level,Dungeon parent,
-			List<? extends Dungeon> floors){
+	public Dungeon(String name,Integer level,Dungeon parent,List<Dungeon> floors){
 		super(null);
 		this.level=level;
 		this.parent=parent;
@@ -196,17 +199,58 @@ public class Dungeon extends Location{
 
 	/** Create or recreate dungeon. */
 	public void activate(@SuppressWarnings("unused") boolean loading){
-		active=this;
-		while(features.isEmpty()){
-			MessagePanel.active.clear();
-			Javelin.message("Generating dungeon map...",Javelin.Delay.NONE);
-			define();
-		}
-		JavelinApp.context=new DungeonScreen(this);
+		//		active=this;
+		if(features.isEmpty()) generatefloors();
+		active=chooseentrance();
+		if(active==null) throw new RepeatTurn();
+		JavelinApp.context=new DungeonScreen(active);
 		BattleScreen.active=JavelinApp.context;
 		Squad.active.updateavatar();
 		BattleScreen.active.mappanel.center(squadlocation.x,squadlocation.y,true);
 		features.getknown();
+	}
+
+	/**
+	 * If there are already explored {@link Passage}s in this dungeon which lead
+	 * outside, allow the player to use them as entrances.
+	 *
+	 * @return Dungeon to open a {@link DungeonScreen} on or <code>null</code> to
+	 *         cancel.
+	 */
+	protected Dungeon chooseentrance(){
+		if(active!=null||this!=floors.get(0)) return this;
+		var entrances=new ArrayList<Feature>(floors.stream().sequential()
+				.flatMap(f->f.features.getall(Passage.class).stream())
+				.filter(p->p.destination==null&&p.found).collect(Collectors.toList()));
+		if(entrances.isEmpty()) return this;
+		entrances.add(0,features.get(StairsUp.class));
+		var choice=Javelin.choose("Use which entrance?",entrances,true,false);
+		if(choice<0) return null;
+		if(choice==0) return this;
+		var p=(Passage)entrances.get(choice);
+		p.floor.squadlocation=p.getlocation();
+		return p.floor;
+	}
+
+	/**
+	 * Calls {@link #define()} on all floors and then {@link Feature#define()} on
+	 * each floor's {@link #features}. Should be called only once, from top-level.
+	 */
+	void generatefloors(){
+		MessagePanel.active.clear();
+		for(int i=0;i<floors.size();i++){
+			active=floors.get(i);
+			var progress=Math.round(100f*i/floors.size());
+			MessagePanel.active.clear();
+			Javelin.message("Generating dungeon ("+progress+"%)...",Delay.NONE);
+			MessagePanel.active.repaint();
+			active.define();
+		}
+		for(var floor:floors){
+			active=floor;
+			for(var feature:floor.features.getall())
+				feature.define(floor,floors);
+		}
 	}
 
 	/**
@@ -359,7 +403,8 @@ public class Dungeon extends Location{
 		}
 	}
 
-	Point getunnocupied(){
+	/** * @return A free space in this dungeon floor. */
+	public Point getunnocupied(){
 		Point p=null;
 		while(p==null||isoccupied(p))
 			p=new Point(RPG.r(0,size-1),RPG.r(0,size-1));
@@ -367,7 +412,7 @@ public class Dungeon extends Location{
 	}
 
 	void createstairs(DungeonZoner zoner){
-		new StairsUp(squadlocation).place(this,squadlocation);
+		new StairsUp(squadlocation,this).place(this,squadlocation);
 		for(int x=squadlocation.x-1;x<=squadlocation.x+1;x++)
 			for(int y=squadlocation.y-1;y<=squadlocation.y+1;y++)
 				map[x][y]=Template.FLOOR;
@@ -486,6 +531,7 @@ public class Dungeon extends Location{
 
 	/** Exit and destroy this dungeon. */
 	public void leave(){
+		WorldMove.abort=true;
 		JavelinApp.context=new WorldScreen(true);
 		BattleScreen.active=JavelinApp.context;
 		Squad.active.place();
@@ -505,8 +551,11 @@ public class Dungeon extends Location{
 		int floor=floors.indexOf(this);
 		if(floor==0)
 			Dungeon.active.leave();
-		else
-			floors.get(floor-1).activate(false);
+		else{
+			var up=floors.get(floor-1);
+			up.squadlocation=up.features.get(StairsDown.class).getlocation();
+			up.activate(false);
+		}
 	}
 
 	/**
@@ -514,7 +563,9 @@ public class Dungeon extends Location{
 	 */
 	public void godown(){
 		Squad.active.delay(1);
-		floors.get(floors.indexOf(this)+1).activate(false);
+		var floor=floors.get(floors.indexOf(this)+1);
+		floor.squadlocation=floor.features.get(StairsUp.class).getlocation();
+		floor.activate(false);
 	}
 
 	@Override

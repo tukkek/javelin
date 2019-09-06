@@ -13,11 +13,14 @@ import javelin.model.world.location.dungeon.Dungeon;
 public class StairsUp extends Feature{
 	static final String PROMPT="Go up the stairs?";
 
+	Dungeon floor;
+
 	/** Cosntructor. */
-	public StairsUp(Point p){
+	public StairsUp(Point p,Dungeon floor){
 		super("dungeonstairsup");
 		remove=false;
 		enter=true;
+		this.floor=floor;
 	}
 
 	@Override
@@ -33,5 +36,10 @@ public class StairsUp extends Feature{
 
 	protected String prompt(){
 		return PROMPT;
+	}
+
+	@Override
+	public String toString(){
+		return "Stairs to level "+floor.getfloor();
 	}
 }

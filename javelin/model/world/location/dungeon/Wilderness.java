@@ -66,7 +66,7 @@ public class Wilderness extends Dungeon{
 
 	class Entrance extends StairsUp{
 		Entrance(Point p){
-			super(p);
+			super(p,Wilderness.this);
 			avatarfile="locationwilderness";
 		}
 
@@ -186,5 +186,10 @@ public class Wilderness extends Dungeon{
 			if(f!=null&&!FORBIDDEN.contains(f.getClass()))
 				f.place(this,getunnocupied());
 		}
+	}
+
+	@Override
+	protected Dungeon chooseentrance(){
+		return this;
 	}
 }

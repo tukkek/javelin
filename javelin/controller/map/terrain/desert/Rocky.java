@@ -20,7 +20,7 @@ public class Rocky extends DndMap{
 	}
 
 	@Override
-	public Image getobstacle(){
+	public Image getobstacle(int x, int y){
 		return RPG.r(1,6)<=1?obstacle:rock;
 	}
 

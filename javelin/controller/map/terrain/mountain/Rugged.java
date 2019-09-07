@@ -19,7 +19,7 @@ public class Rugged extends DndMap{
 	}
 
 	@Override
-	public Image getobstacle(){
+	public Image getobstacle(int x, int y){
 		return RPG.r(1,3)<=2?obstacle:rock;
 	}
 }

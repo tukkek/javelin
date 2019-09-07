@@ -41,18 +41,18 @@ public class BattleTile extends Tile{
 		final Map m=Javelin.app.fight.map;
 		final Square s=Fight.state.map[x][y];
 		if(!s.blocked){
-			if(m.floor==null)
-				throw new RuntimeException("No floor for map "+m.getClass());
-			draw(g,m.floor);
+			//			if(m.floor==null)
+			//				throw new RuntimeException("No floor for map "+m.getClass());
+			draw(g,m.getfloor(x,y));
 			if(s.obstructed){
-				if(obstacle==null) obstacle=m.getobstacle();
+				if(obstacle==null) obstacle=m.getobstacle(x,y);
 				draw(g,obstacle);
 			}
 		}else if(m.wallfloor!=null){
 			draw(g,m.wallfloor);
 			draw(g,m.wall);
 		}else{
-			draw(g,m.floor);
+			draw(g,m.getfloor(x,y));
 			draw(g,m.wall);
 		}
 		if(s.flooded) draw(g,m.flooded);

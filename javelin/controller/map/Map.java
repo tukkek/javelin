@@ -97,10 +97,12 @@ public abstract class Map{
 	}
 
 	/**
+	 * @param x TODO
+	 * @param y TODO
 	 * @return {@link #obstacle} representation for this map. May be overridden
 	 *         for dynamic purposes.
 	 */
-	public Image getobstacle(){
+	public Image getobstacle(int x,int y){
 		return obstacle;
 	}
 
@@ -212,5 +214,10 @@ public abstract class Map{
 	public static List<Map> getall(){
 		return Terrain.NONWATER.stream().map(t->t.getmaps())
 				.flatMap(ms->ms.stream()).collect(Collectors.toList());
+	}
+
+	/** @return Floor image for the given coordinate (usually {@link #floor}). */
+	public Image getfloor(int x,int y){
+		return floor;
 	}
 }

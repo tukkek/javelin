@@ -19,7 +19,7 @@ public class Gentle extends DndMap{
 	}
 
 	@Override
-	public Image getobstacle(){
+	public Image getobstacle(int x, int y){
 		return RPG.r(1,2)==1?rock:obstacle;
 	}
 }

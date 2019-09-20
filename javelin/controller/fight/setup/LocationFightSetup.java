@@ -38,7 +38,7 @@ public class LocationFightSetup extends BattleSetup{
 		place(Fight.state.redTeam,map.spawnred);
 	}
 
-	protected void place(List<Combatant> team,List<Point> startingarea){
+	public void place(List<Combatant> team,List<Point> startingarea){
 		Collections.shuffle(team);
 		teamplacement:for(Combatant c:team){
 			Collections.shuffle(startingarea);

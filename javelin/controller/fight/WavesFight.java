@@ -1,12 +1,15 @@
 package javelin.controller.fight;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import javelin.Javelin;
+import javelin.controller.Point;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.setup.LocationFightSetup;
 import javelin.controller.map.location.LocationMap;
+import javelin.model.unit.Combatant;
 import javelin.model.unit.Combatants;
 import javelin.model.world.location.Location;
 import javelin.old.RPG;
@@ -23,6 +26,8 @@ import javelin.old.RPG;
 public abstract class WavesFight extends LocationFight{
 	/** EL modifier by number of waves. */
 	public static final Map<Integer,Integer> ELMODIFIER=new TreeMap<>();
+	/** Shown when a new wave appears. */
+	protected String message="A new wave of enemies appears!";
 
 	static{
 		WavesFight.ELMODIFIER.put(1,0);
@@ -52,23 +57,27 @@ public abstract class WavesFight extends LocationFight{
 	public void checkend(){
 		try{
 			if(waves<=0) return;
-			var s=Fight.state;
-			if(!s.redTeam.isEmpty()) return;
+			if(!Fight.state.redTeam.isEmpty()) return;
 			var wave=generatewave(el);
 			waves-=1;
 			if(wave==null) return;
-			for(var c:wave)
-				c.rollinitiative(s.next.ap);
-			s.redTeam.addAll(wave);
-			Fight.originalredteam.addAll(wave);
-			((LocationFightSetup)setup).placeredteam();
+			add(wave,Fight.state.redTeam,((LocationMap)map).spawnred);
 			Javelin.redraw();
-			Javelin.message("A new wave of enemies appear!",true);
+			Javelin.message(message,true);
 		}catch(GaveUp e){
 			if(Javelin.DEBUG) throw new RuntimeException(e);
 		}finally{
 			super.checkend();
 		}
+	}
+
+	protected void add(Combatants wave,List<Combatant> team,List<Point> spawn){
+		for(var c:wave)
+			c.rollinitiative(Fight.state.next.ap);
+		team.addAll(wave);
+		(team==Fight.state.redTeam?Fight.originalredteam:Fight.originalblueteam)
+				.addAll(wave);
+		((LocationFightSetup)setup).place(wave,spawn);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package javelin.model.world.location.town.labor.military;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import javelin.controller.Calendar;
 import javelin.controller.challenge.ChallengeCalculator;
 import javelin.controller.upgrade.FeatUpgrade;
 import javelin.model.unit.Combatant;
+import javelin.model.unit.Monster;
 import javelin.model.unit.abilities.discipline.Discipline;
 import javelin.model.unit.feat.Feat;
 import javelin.model.unit.feat.MartialTraining;
@@ -16,9 +18,9 @@ import javelin.model.world.location.town.Rank;
 import javelin.model.world.location.town.labor.Labor;
 import javelin.model.world.location.town.labor.Trait;
 import javelin.model.world.location.unique.MercenariesGuild;
-import javelin.model.world.location.unique.TrainingHall;
 import javelin.old.RPG;
 import javelin.view.screen.Option;
+import javelin.view.screen.SquadScreen;
 import javelin.view.screen.WorldScreen;
 import javelin.view.screen.town.option.ScreenOption;
 import javelin.view.screen.upgrading.AcademyScreen;
@@ -35,6 +37,13 @@ public class DisciplineAcademy extends Academy{
 	static final int LEVERSTUDENT=9;
 	static final int LEVELTEACHER=12;
 	static final int LEVERMASTER=16;
+
+	public final static ArrayList<Monster> CANDIDATES=new ArrayList<>();
+
+	static{
+		for(Monster sensei:SquadScreen.CANDIDATES)
+			if(sensei.think(0)) CANDIDATES.add(sensei);
+	}
 
 	/**
 	 * TODO use one per {@link Discipline} so the {@link Labor}s don't have to be
@@ -166,7 +175,7 @@ public class DisciplineAcademy extends Academy{
 
 	Combatant train(Combatant c,int level,int period){
 		if(c!=null||!RPG.chancein(period)) return c;
-		c=new Combatant(RPG.pick(TrainingHall.CANDIDATES),true);
+		c=new Combatant(RPG.pick(CANDIDATES),true);
 		c.setmercenary(true);
 		train(c,level,ChallengeCalculator.calculaterawcr(c.source)[1]);
 		c.postupgradeautomatic();

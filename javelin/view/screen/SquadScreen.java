@@ -72,7 +72,6 @@ public class SquadScreen extends InfoScreen{
 		int next=index+MONSTERPERPAGE;
 		int letter=printpage(index,next);
 		repaint();
-		//		Javelin.app.switchScreen(this);
 		Character input=InfoScreen.feedback();
 		if(input.equals(' '))
 			page(next<candidates.size()?next:0);

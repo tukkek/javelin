@@ -48,6 +48,7 @@ import javelin.model.unit.condition.Cleaving;
 import javelin.model.unit.condition.Condition;
 import javelin.model.unit.condition.Condition.Effect;
 import javelin.model.unit.condition.Melding;
+import javelin.model.unit.condition.Poisoned;
 import javelin.model.unit.feat.Feat;
 import javelin.model.unit.feat.attack.Cleave;
 import javelin.model.unit.feat.attack.GreatCleave;
@@ -277,9 +278,9 @@ public class Combatant implements Serializable,Cloneable{
 	 * @return If the unit is being affected by the given condition type, returns
 	 *         its instance - otherwise <code>null</code>.
 	 */
-	public Condition hascondition(Class<? extends Condition> clazz){
+	public <K extends Condition> K hascondition(Class<K> type){
 		for(Condition c:conditions)
-			if(c.getClass().equals(clazz)) return c;
+			if(c.getClass().equals(type)) return (K)c;
 		return null;
 	}
 
@@ -565,6 +566,11 @@ public class Combatant implements Serializable,Cloneable{
 		if(detox>0&&source.poison>0){
 			detox=Math.min(detox*2,source.poison);
 			source.poison-=detox;
+			var p=hascondition(Poisoned.class);
+			if(source.poison<=0&&p!=null){
+				p.neutralized=true;
+				removecondition(p);
+			}
 			source.changeconstitutionscore(this,+detox);
 		}
 	}

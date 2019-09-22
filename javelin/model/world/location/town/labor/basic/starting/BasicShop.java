@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import javelin.model.item.Item;
 import javelin.model.item.Tier;
+import javelin.model.item.precious.PreciousObject;
 import javelin.model.world.location.town.labor.basic.Shop;
 import javelin.old.RPG;
 
@@ -33,13 +34,10 @@ public class BasicShop extends Shop{
 			return;
 		}
 		var cheap=RPG.shuffle(new ArrayList<>(Item.ITEMS.stream()
-				.filter(i->i.price<100).collect(Collectors.toList())));
+				.filter(i->i.price<100&&!(i instanceof PreciousObject))
+				.collect(Collectors.toList())));
 		for(var i=0;i<5&&i<cheap.size();i++)
 			selection.add(cheap.get(i));
-		//	selection.addAll(List.of(new Potion(new CureLightWounds()),
-		//	new Potion(new LesserRestoration()),new Scroll(new Bless())));
-		//for(var summon:Summon.select(Summon.SUMMONS,2,1))
-		//selection.add(new Eidolon(summon,0));
 	}
 
 	@Override

@@ -4,9 +4,7 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import javelin.Javelin;
@@ -16,7 +14,7 @@ import javelin.controller.comparator.MonstersByName;
 import javelin.controller.exception.GaveUp;
 import javelin.controller.fight.Fight;
 import javelin.controller.fight.LocationFight;
-import javelin.controller.fight.setup.LocationFightSetup;
+import javelin.controller.fight.WavesFight;
 import javelin.controller.generator.NpcGenerator;
 import javelin.controller.map.location.LocationMap;
 import javelin.controller.terrain.Terrain;
@@ -29,6 +27,7 @@ import javelin.model.unit.Squad;
 import javelin.model.world.Incursion;
 import javelin.model.world.World;
 import javelin.model.world.location.Fortification;
+import javelin.model.world.location.Location;
 import javelin.model.world.location.unique.MercenariesGuild;
 import javelin.old.RPG;
 import javelin.view.screen.Option;
@@ -44,18 +43,9 @@ import javelin.view.screen.town.SelectScreen;
  */
 public abstract class Haunt extends Fortification{
 	static final int ATTEMPTS=10_000;
-	/** EL modifier by number of waves. */
-	static final Map<Integer,Integer> WAVECR=new TreeMap<>();
 	static final int LEADER=20;
 
 	static Set<Monster> defeated=new HashSet<>(0);
-
-	static{
-		WAVECR.put(1,0);
-		WAVECR.put(2,-2);
-		WAVECR.put(3,-3);
-		WAVECR.put(4,-4);
-	}
 
 	class RecruitOption extends Option{
 		Monster hire;
@@ -133,29 +123,15 @@ public abstract class Haunt extends Fortification{
 		}
 	}
 
-	class HauntFight extends LocationFight{
-		HauntFight(){
-			super(Haunt.this,getmap());
+	class HauntFight extends WavesFight{
+		HauntFight(Location l,LocationMap m){
+			super(l,m,-1);
+			waves=Haunt.this.waves; //TODO can we remove this data from Haunt?
 		}
 
 		@Override
-		public void checkend(){
-			try{
-				var s=Fight.state;
-				if(s.redTeam.isEmpty()&&generatewave()!=null){
-					for(var c:garrison)
-						c.rollinitiative(s.next.ap);
-					//					s.redTeam.clear();
-					s.redTeam.addAll(garrison);
-					Fight.originalredteam.addAll(garrison);
-					((LocationFightSetup)setup).placeredteam();
-					Javelin.redraw();
-					Javelin.message("A new wave of enemies appear!",true);
-				}
-			}catch(GaveUp e){
-				if(Javelin.DEBUG) throw new RuntimeException(e);
-			}
-			super.checkend();
+		protected Combatants generatewave(int el) throws GaveUp{
+			return Haunt.this.generatewave();
 		}
 
 		@Override
@@ -198,7 +174,7 @@ public abstract class Haunt extends Fortification{
 	public void generategarrison(){
 		waves=RPG.r(1,4);
 		if(waves>targetel) waves=targetel;
-		waveel=targetel+WAVECR.get(waves);
+		waveel=targetel+WavesFight.ELMODIFIER.get(waves);
 		try{
 			generatewave();
 		}catch(GaveUp e){
@@ -269,7 +245,7 @@ public abstract class Haunt extends Fortification{
 
 	@Override
 	protected Fight fight(){
-		return new HauntFight();
+		return new HauntFight(this,getmap());
 	}
 
 	void add(Set<Monster> defeated){

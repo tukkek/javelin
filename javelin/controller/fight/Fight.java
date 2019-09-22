@@ -200,6 +200,7 @@ public abstract class Fight{
 
 	/**
 	 * Called when a battle ends but before {@link EndBattle} clean-ups.
+	 * Fight{@link #reward()} is called by the default implementation.
 	 *
 	 * @param screen Currently open screen.
 	 * @param originalTeam Team state before the battle started.

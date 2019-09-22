@@ -37,6 +37,7 @@ import javelin.old.messagepanel.MessagePanel;
 import javelin.old.messagepanel.TextZone;
 import javelin.view.Images;
 import javelin.view.LauncherDialog;
+import javelin.view.mappanel.MapPanel;
 import javelin.view.screen.BattleScreen;
 import javelin.view.screen.InfoScreen;
 import javelin.view.screen.Option;
@@ -409,6 +410,7 @@ public class Javelin{
 		return roundto*Math.round((float)gold/roundto);
 	}
 
+	/** Updates the {@link MapPanel} and {@link MessagePanel}. */
 	public static void redraw(){
 		//		BattleScreen.active.validate();
 		BattleScreen.active.mappanel.refresh();

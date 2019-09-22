@@ -135,8 +135,9 @@ public abstract class UpgradingScreen extends SelectScreen{
 		if(showmoneyinfo)
 			text+="Your squad has $"+Javelin.format(getgold())+".\n\n";
 		text+="Which squad member? Press r to return to upgrade selection.";
+		Javelin.app.switchScreen(this);
 		while(true){
-			Javelin.app.switchScreen(this);
+			repaint();
 			try{
 				final Character input=InfoScreen.feedback();
 				if(input=='r'){

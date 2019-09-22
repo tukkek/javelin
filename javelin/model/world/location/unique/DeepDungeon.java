@@ -5,7 +5,6 @@ import java.util.List;
 
 import javelin.model.item.Tier;
 import javelin.model.unit.Combatant;
-import javelin.model.world.location.Location;
 import javelin.model.world.location.dungeon.Dungeon;
 
 /**
@@ -17,15 +16,18 @@ import javelin.model.world.location.dungeon.Dungeon;
  *
  * @author alex
  */
-public class DeepDungeon extends Location{
+public class DeepDungeon extends UniqueLocation{
+	static final String DESCRIPTION="Deep dungeon";
+
 	List<Dungeon> floors=new ArrayList<>(20);
 
 	/** Constructor. */
 	public DeepDungeon(){
-		super("Deep dungeon");
+		super(DESCRIPTION,DESCRIPTION,20,20);
+		generategarrison=false;
 		for(var level=Tier.LOW.minlevel;level<=Tier.EPIC.maxlevel;level++){
 			var parent=floors.isEmpty()?null:floors.get(floors.size()-1);
-			floors.add(new Dungeon("Deep dungeon",level,parent,floors));
+			floors.add(new Dungeon(DESCRIPTION,level,parent,floors));
 		}
 	}
 

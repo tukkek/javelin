@@ -116,8 +116,9 @@ public abstract class SelectScreen extends InfoScreen{
 	 */
 	public void processinput(final List<Option> options){
 		char feedback=' ';
+		Javelin.app.switchScreen(this);
 		while(feedback!=PROCEED){
-			Javelin.app.switchScreen(this);
+			repaint();
 			feedback=InfoScreen.feedback();
 			if(select(feedback,options)){
 				originaltext=null;

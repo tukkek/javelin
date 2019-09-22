@@ -117,6 +117,8 @@ public class Divide extends WorldAction{
 	int transfergold(char input,ArrayList<Combatant> newsquad){
 		int gold=Squad.active.gold*newsquad.size()/Squad.active.members.size();
 		final int increment=Squad.active.gold/10;
+		Javelin.app.switchScreen(BattleScreen.active);
+		BattleScreen.active.center();
 		while(input!='\n'){
 			clear();
 			String prompt="How much gold do you want to transfer to the new squad? Use the + and - keys to change and ENTER to confirm.\n"
